@@ -11,3 +11,4 @@ dndshare.log
 .DS_Store
 /frontend/node/
 /docs/*.pdf
+/.claude/settings.local.json
