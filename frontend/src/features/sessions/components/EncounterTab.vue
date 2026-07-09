@@ -233,7 +233,16 @@
       </div>
     </div>
 
-    <NpcPickerModal v-if="enc.showNpcPicker" @close="enc.showNpcPicker = false" @pick="enc.addNpc" />
+    <ItemPickerModal
+      v-if="enc.showNpcPicker"
+      :item-type-ids="[6]"
+      title="Бестиарий"
+      search-placeholder="Поиск существ..."
+      allow-quantity
+      create-show-name-en
+      @close="enc.showNpcPicker = false"
+      @pick="enc.addNpc"
+    />
 
     <AppModal v-if="enc.showSimpleForm" @close="enc.showSimpleForm = false">
       <div class="hp-edit-title">Своё существо</div>
@@ -312,7 +321,7 @@ import FormNumberInput from '@/shared/ui/form/FormNumberInput'
 import FormTextInput from '@/shared/ui/form/FormTextInput'
 import FormTextarea from '@/shared/ui/form/FormTextarea'
 import ItemViewModal from '@/shared/ui/ItemViewModal'
-import NpcPickerModal from '@/features/sessions/components/NpcPickerModal'
+import ItemPickerModal from '@/features/character-editor/components/ItemPickerModal'
 import { useEncounter } from '@/features/sessions/composables/useEncounter'
 
 const props = defineProps({

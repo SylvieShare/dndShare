@@ -115,6 +115,7 @@
         <ItemEditModal
           v-if="createOpen && activeTypeId != null"
           :type-id="activeTypeId"
+          :show-name-en="createShowNameEn"
           @close="createOpen = false"
           @saved="onItemCreated"
         />
@@ -143,6 +144,7 @@ const props = defineProps({
   searchPlaceholder: { type: String, default: 'Поиск...' },
   excludeItems: { type: Array, default: () => [] },
   allowQuantity: { type: Boolean, default: false },
+  createShowNameEn: { type: Boolean, default: false },
 })
 
 const emit = defineEmits(['close', 'pick'])
