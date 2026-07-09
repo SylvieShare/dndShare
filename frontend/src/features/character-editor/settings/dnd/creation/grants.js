@@ -46,6 +46,26 @@ function asList(v) {
   return Array.isArray(v) ? v : []
 }
 
+// Capture the race-side "pick N" offers (skills / language / feat) from one data
+// object (base race, subrace, or a chosen variant option) into grants.
+function captureRaceChoices(d, grants) {
+  if (d.skill_choice && num(d.skill_choice.count) != null) {
+    grants.raceSkillChoice = {
+      count: num(d.skill_choice.count),
+      from: asList(d.skill_choice.from).map((id) => num(id) ?? id),
+    }
+  }
+  if (d.lang_choice && num(d.lang_choice.count) != null) {
+    grants.langChoice = {
+      count: num(d.lang_choice.count),
+      from: asList(d.lang_choice.from).map((id) => num(id) ?? id),
+    }
+  }
+  if (d.feat_choice && num(d.feat_choice.count) != null) {
+    grants.featChoice = { count: num(d.feat_choice.count) }
+  }
+}
+
 function pushUnique(arr, value) {
   if (value != null && value !== '' && !arr.includes(value)) arr.push(value)
 }
@@ -59,11 +79,16 @@ function mergeIds(target, ids) {
  * one object. Each argument is a handbook item (`{ data }`) or null. Sub items
  * are merged on top of their base.
  */
-export function extractGrants({ race, subrace, charClass, subclass } = {}) {
+export function extractGrants({ race, subrace, charClass, subclass, raceVariant } = {}) {
   const grants = {
     size: null,
     speed: null,
     asi: [],
+    asiChoice: null,
+    raceVariants: null,
+    raceSkillChoice: null,
+    langChoice: null,
+    featChoice: null,
     saves: [],
     proficiencies: { armor: [], weapon: [], tool: [] },
     languages: [],
@@ -85,10 +110,37 @@ export function extractGrants({ race, subrace, charClass, subclass } = {}) {
       const bonus = num(row?.bonus)
       if (stat && bonus != null) grants.asi.push({ stat, bonus })
     }
+    // Floating ASI: "choose N abilities, +V each" (e.g. Half-Elf).
+    if (d.asi_choice && num(d.asi_choice.count)) {
+      grants.asiChoice = { count: num(d.asi_choice.count), bonus: num(d.asi_choice.bonus) ?? 1 }
+    }
+    // Named race variants ("pick one", e.g. Human Standard / Gifted); each option
+    // can carry its own fixed asi and/or floating asi_choice.
+    if (Array.isArray(d.variants) && d.variants.length) grants.raceVariants = d.variants
+    // Race-side "pick N" offers: extra skills / language / feat (e.g. Half-Elf).
+    captureRaceChoices(d, grants)
     mergeIds(grants.languages, d.languages)
     mergeIds(grants.proficiencies.armor, d.armor_prof)
     mergeIds(grants.proficiencies.weapon, d.weapon_prof)
     mergeIds(grants.proficiencies.tool, d.tool_prof)
+  }
+
+  // Apply the chosen variant (if any) on top of the base race grants.
+  if (grants.raceVariants && raceVariant) {
+    const opt = grants.raceVariants.find((o) => o.value === raceVariant)
+    if (opt) {
+      for (const row of asList(opt.asi)) {
+        const stat = statKey(row?.ability)
+        const bonus = num(row?.bonus)
+        if (stat && bonus != null) grants.asi.push({ stat, bonus })
+      }
+      if (opt.asi_choice && num(opt.asi_choice.count)) {
+        grants.asiChoice = { count: num(opt.asi_choice.count), bonus: num(opt.asi_choice.bonus) ?? 1 }
+      }
+      // A variant can also carry its own skills / language / feat offers
+      // (e.g. Gifted Human → one feat).
+      captureRaceChoices(opt, grants)
+    }
   }
 
   for (const d of classData) {

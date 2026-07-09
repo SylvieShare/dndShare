@@ -3,6 +3,7 @@ package web
 import (
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -108,6 +109,9 @@ func (s *Server) handleUploadTrack(w http.ResponseWriter, r *http.Request) {
 	if !ok {
 		return
 	}
+	// Ограничиваем всё тело запроса до разбора multipart, иначе 50-МБ проверка ниже
+	// сработает только после того, как гигабайтное тело уже прочитано на диск.
+	r.Body = http.MaxBytesReader(w, r.Body, maxTrackBytes+1<<20)
 	if err := r.ParseMultipartForm(maxTrackBytes + 1<<20); err != nil {
 		badRequest(w, "empty file")
 		return
@@ -241,7 +245,9 @@ func (s *Server) handleDeleteTrack(w http.ResponseWriter, r *http.Request) {
 		serverError(w, err)
 		return
 	}
-	_ = s.s3.DeleteObject(r.Context(), t.FileKey)
+	if err := s.s3.DeleteObject(r.Context(), t.FileKey); err != nil {
+		log.Printf("delete track object %q: %v", t.FileKey, err)
+	}
 	writeJSON(w, http.StatusNoContent, nil)
 }
 

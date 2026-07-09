@@ -356,7 +356,8 @@ func (s *Server) handleCloneChar(w http.ResponseWriter, r *http.Request) {
 // --- POST /api/chars/poll ---
 
 func (s *Server) handlePollChars(w http.ResponseWriter, r *http.Request) {
-	if _, ok := mustUser(w, r); !ok {
+	uid, ok := mustUser(w, r)
+	if !ok {
 		return
 	}
 	var items []store.PollItem
@@ -364,7 +365,7 @@ func (s *Server) handlePollChars(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "Некорректный запрос")
 		return
 	}
-	results, err := s.store.PollChars(r.Context(), items)
+	results, err := s.store.PollChars(r.Context(), items, uid)
 	if err != nil {
 		serverError(w, err)
 		return
@@ -376,7 +377,12 @@ func (s *Server) handlePollChars(w http.ResponseWriter, r *http.Request) {
 
 // loadChar грузит персонажа по {uuid} либо пишет 404.
 func (s *Server) loadChar(w http.ResponseWriter, r *http.Request) (store.CharacterItem, bool) {
-	char, err := s.store.GetCharacter(r.Context(), r.PathValue("uuid"))
+	uuid := r.PathValue("uuid")
+	if !isUUID(uuid) {
+		notFound(w, "")
+		return store.CharacterItem{}, false
+	}
+	char, err := s.store.GetCharacter(r.Context(), uuid)
 	if err != nil {
 		if errors.Is(err, store.ErrNotFound) {
 			notFound(w, "")

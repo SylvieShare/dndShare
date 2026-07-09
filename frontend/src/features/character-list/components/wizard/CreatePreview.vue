@@ -16,14 +16,15 @@
       </div>
     </div>
 
-    <div v-if="anyScore" class="pv-block">
+    <div v-if="showStats" class="pv-block">
+      <div v-if="!scoresEntered" class="pv-cap">Бонусы расы</div>
       <div class="pv-mods">
         <div v-for="s in STATS" :key="s" class="pv-mod">
           <span class="pv-mod-k">{{ STAT_SHORT[s] }}</span>
-          <span class="pv-mod-v" :class="modClass(mods[s])">{{ formatMod(mods[s]) }}</span>
+          <span class="pv-mod-v" :class="statClass(s)">{{ statDisplay(s) }}</span>
         </div>
       </div>
-      <div class="pv-derived">
+      <div v-if="scoresEntered" class="pv-derived">
         <span v-if="maxHp != null" class="pv-chip"><b>{{ maxHp }}</b> хиты</span>
         <span class="pv-chip"><b>{{ unarmoredAc }}</b> КД</span>
         <span class="pv-chip">Иниц. <b>{{ formatMod(initiativeMod) }}</b></span>
@@ -54,8 +55,18 @@ const {
 const mono = computed(() => monogramOf(state.charClass?.name || state.race?.name || '?'))
 const raceLine = computed(() => [state.subrace?.name || state.race?.name].filter(Boolean).join(''))
 const classLine = computed(() => [state.charClass?.name, state.subclass?.name].filter(Boolean).join(' · '))
-const anyScore = computed(() => STATS.some((s) => state.scores[s] != null) || grants.value.asi.length > 0)
+const scoresEntered = computed(() => STATS.some((s) => state.scores[s] != null))
+const showStats = computed(() => !!state.race || scoresEntered.value)
 function modClass(m) { return m > 0 ? 'pos' : m < 0 ? 'neg' : '' }
+// Racial bonus for a stat (fixed ASI + chosen floating). Shown before ability
+// scores are picked, so no misleading negative modifiers appear.
+function racialBonus(s) {
+  const fixed = (grants.value.asi || []).filter((a) => a.stat === s).reduce((x, a) => x + a.bonus, 0)
+  const floating = state.asiChoice.includes(s) ? (grants.value.asiChoice?.bonus || 0) : 0
+  return fixed + floating
+}
+function statDisplay(s) { return scoresEntered.value ? formatMod(mods.value[s]) : (racialBonus(s) ? '+' + racialBonus(s) : '0') }
+function statClass(s) { return scoresEntered.value ? modClass(mods.value[s]) : (racialBonus(s) > 0 ? 'pos' : '') }
 
 const grantLines = computed(() => {
   const g = grants.value
@@ -107,6 +118,7 @@ const grantLines = computed(() => {
 .pv-lvl { display: inline-block; margin-top: 5px; font-size: 11px; font-weight: 600; background: color-mix(in srgb, var(--accent) 22%, transparent); color: #c4a0ff; border-radius: 5px; padding: 2px 8px; }
 
 .pv-block { border-top: 1px solid var(--border); padding-top: 12px; }
+.pv-cap { font-size: 10px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
 .pv-mods { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; }
 .pv-mod { display: flex; flex-direction: column; align-items: center; gap: 1px; }
 .pv-mod-k { font-size: 9px; letter-spacing: 0.03em; color: var(--text-muted); }

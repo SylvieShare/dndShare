@@ -25,10 +25,22 @@
 
     <footer class="cc-foot">
       <button class="btn ghost" @click="back">{{ current === 0 ? 'Отмена' : 'Назад' }}</button>
-      <span v-if="blockReason" class="cc-reason">{{ blockReason }}</span>
-      <button v-if="!isLast" class="btn next" :disabled="!canNext" @click="next">Далее</button>
-      <button v-else class="btn create" :disabled="!canNext || creating" @click="submit">{{ creating ? 'Создание…' : 'Создать персонажа' }}</button>
+      <span v-if="blockReason && !isLast" class="cc-reason">{{ blockReason }}</span>
+      <div class="cc-actions">
+        <button v-if="!isLast" class="btn soft" :disabled="creating" @click="createNow">Создать</button>
+        <button v-if="!isLast" class="btn next" :disabled="!canNext" @click="next">Далее</button>
+        <button v-else class="btn create" :disabled="creating" @click="createNow">{{ creating ? 'Создание…' : 'Создать персонажа' }}</button>
+      </div>
     </footer>
+
+    <ConfirmDialog
+      v-if="confirmOpen"
+      title="Создать персонажа?"
+      message="Часть полей не заполнена — их можно дозаполнить позже на листе. Создать как есть?"
+      confirm-label="Создать"
+      @cancel="confirmOpen = false"
+      @confirm="submit"
+    />
   </div>
 </template>
 
@@ -44,6 +56,8 @@ import StepReview from '@/features/character-list/components/wizard/steps/StepRe
 import StepSkills from '@/features/character-list/components/wizard/steps/StepSkills.vue'
 import StepSpells from '@/features/character-list/components/wizard/steps/StepSpells.vue'
 import StepStats from '@/features/character-list/components/wizard/steps/StepStats.vue'
+import StepVersion from '@/features/character-list/components/wizard/steps/StepVersion.vue'
+import ConfirmDialog from '@/shared/ui/ConfirmDialog'
 import { fetchPost } from '@/shared/api/http'
 import { resolveSetting } from '@/features/character-editor/settings'
 import { useAccountStore } from '@/stores/account'
@@ -56,13 +70,18 @@ const wz = useDndCreateWizard()
 provide('createWizard', wz)
 
 const {
-  state, load, loadSpells, buildPayload,
+  state, load, loadSpells, buildPayload, restore, clearPersist,
   isCaster, featureChoices, requiresSubrace, requiresSubclass,
   scoresComplete, pointsLeft, skillLimit, choicesComplete, spellsComplete,
+  asiChoiceComplete, raceVariantsComplete,
 } = wz
 
+const confirmOpen = ref(false)
+const isComplete = computed(() =>
+  state.version === '2014' && !!state.race && !!state.charClass && !!state.name.trim() && scoresComplete.value)
+
 const STEP_COMPONENTS = {
-  race: StepRace, class: StepClass, stats: StepStats, skills: StepSkills,
+  version: StepVersion, race: StepRace, class: StepClass, stats: StepStats, skills: StepSkills,
   features: StepChoices, spells: StepSpells, review: StepReview,
 }
 
@@ -71,6 +90,7 @@ const dndTemplateId = ref(null)
 
 const steps = computed(() => {
   const s = [
+    { key: 'version', title: 'Версия' },
     { key: 'race', title: 'Раса' },
     { key: 'class', title: 'Класс' },
     { key: 'stats', title: 'Характеристики' },
@@ -91,9 +111,13 @@ watch(() => steps.value.length, (len) => { if (state.step > len - 1) state.step 
 
 const validation = computed(() => {
   switch (stepKey.value) {
+    case 'version':
+      return state.version === '2014' ? { ok: true } : { ok: false, reason: '2024 в разработке — выбери 2014' }
     case 'race':
       if (!state.race) return { ok: false, reason: 'Выбери расу' }
       if (requiresSubrace.value && !state.subrace) return { ok: false, reason: 'Выбери происхождение' }
+      if (!raceVariantsComplete.value) return { ok: false, reason: 'Сделай выбор расы' }
+      if (!asiChoiceComplete.value) return { ok: false, reason: 'Распредели расовый бонус' }
       return { ok: true }
     case 'class':
       if (!state.charClass) return { ok: false, reason: 'Выбери класс' }
@@ -134,12 +158,21 @@ function back() {
 function goTo(i) { if (i <= current.value) state.step = i }
 function exit() { router.push('/chars') }
 
+// "Создать" is available on every step (an empty character is allowed) — confirm
+// first when something's missing, then build with whatever's filled (blanks default).
+function createNow() {
+  if (creating.value) return
+  if (isComplete.value) submit()
+  else confirmOpen.value = true
+}
+
 async function submit() {
-  if (creating.value || !canNext.value || !dndTemplateId.value) return
+  confirmOpen.value = false
+  if (creating.value || !dndTemplateId.value) return
   creating.value = true
   try {
     const res = await fetchPost('/chars', { templateId: dndTemplateId.value, ...buildPayload() })
-    if (res?.uuid) router.push('/char/' + res.uuid)
+    if (res?.uuid) { clearPersist(); router.push('/char/' + res.uuid) }
   } finally {
     creating.value = false
   }
@@ -148,6 +181,7 @@ async function submit() {
 onMounted(async () => {
   useAccountStore().ensureAuth()
   load()
+  restore()
   await templateStore.ensure()
   dndTemplateId.value = templateStore.all.find((t) => resolveSetting(t)?.system === 'dnd5e')?.id ?? null
 })
@@ -202,12 +236,15 @@ onMounted(async () => {
   border-top: 1px solid var(--border);
 }
 .cc-reason { font-size: 12px; color: var(--text-muted); }
+.cc-actions { margin-left: auto; display: flex; gap: 10px; }
 .btn { border: none; border-radius: 9px; padding: 10px 22px; font: inherit; font-weight: 600; cursor: pointer; }
 .btn.ghost { background: transparent; color: var(--text-2); box-shadow: inset 0 0 0 1px var(--border-strong); }
 .btn.ghost:hover { color: var(--text-1); }
-.btn.next { margin-left: auto; background: var(--accent); color: #fff; }
+.btn.soft { background: var(--surface-1); color: var(--text-1); }
+.btn.soft:hover:not(:disabled) { background: var(--surface-2); }
+.btn.next { background: var(--accent); color: #fff; }
 .btn.next:hover:not(:disabled) { background: var(--accent-dim); }
-.btn.create { margin-left: auto; background: var(--accent-2); color: #06231d; }
+.btn.create { background: var(--accent-2); color: #06231d; }
 .btn.create:hover:not(:disabled) { background: var(--accent-2-dim); }
 .btn:disabled { opacity: 0.5; cursor: default; }
 

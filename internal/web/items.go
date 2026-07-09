@@ -62,7 +62,7 @@ func (s *Server) handleGetItems(w http.ResponseWriter, r *http.Request) {
 	limit := coerceIn(queryInt(q, "limit", 30), 1, 500)
 	offset := coerceAtLeast(queryInt(q, "offset", 0), 0)
 	filters := parseFilters(q.Get("filters"))
-	items, err := s.store.GetByTypeAndUser(r.Context(), typeID, itemsOptionalUserPtr(r), limit, offset, filters)
+	items, err := s.store.GetByTypeAndUser(r.Context(), typeID, optionalUserPtr(r), limit, offset, filters)
 	if err != nil {
 		serverError(w, err)
 		return
@@ -108,7 +108,7 @@ func (s *Server) handleSearchItems(w http.ResponseWriter, r *http.Request) {
 	limit := coerceIn(queryInt(q, "limit", 20), 1, 500)
 	offset := coerceAtLeast(queryInt(q, "offset", 0), 0)
 	filters := parseFilters(q.Get("filters"))
-	items, err := s.store.SearchByTypeAndName(r.Context(), typeID, q.Get("q"), itemsOptionalUserPtr(r), limit, offset, filters)
+	items, err := s.store.SearchByTypeAndName(r.Context(), typeID, q.Get("q"), optionalUserPtr(r), limit, offset, filters)
 	if err != nil {
 		serverError(w, err)
 		return
@@ -123,7 +123,7 @@ func (s *Server) handleSearchItemsMulti(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 	ids := parseIDList(q.Get("typeIds"))
-	items, err := s.store.SearchByTypesAndName(r.Context(), ids, q.Get("q"), itemsOptionalUserPtr(r))
+	items, err := s.store.SearchByTypesAndName(r.Context(), ids, q.Get("q"), optionalUserPtr(r))
 	if err != nil {
 		serverError(w, err)
 		return
@@ -240,13 +240,6 @@ func (s *Server) hasRole(w http.ResponseWriter, r *http.Request, uid int64, role
 		}
 	}
 	return false, true
-}
-
-func itemsOptionalUserPtr(r *http.Request) *int64 {
-	if uid, ok := optionalUser(r); ok {
-		return &uid
-	}
-	return nil
 }
 
 func queryInt(q map[string][]string, key string, def int) int {

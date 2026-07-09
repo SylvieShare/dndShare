@@ -528,7 +528,7 @@ type bestiaryImport struct {
 }
 
 func jobBestiaryImport(s *Server, jc *JobContext) error {
-	b := &bestiaryImport{s: s, client: &http.Client{}}
+	b := &bestiaryImport{s: s, client: &http.Client{Timeout: 30 * time.Second}}
 	ctx := context.Background()
 
 	imported := 0
@@ -936,6 +936,9 @@ func (b *bestiaryImport) sendPost(url string, body any) (any, error) {
 			time.Sleep(time.Duration(delayMs) * time.Millisecond)
 			delayMs *= 2
 			continue
+		}
+		if resp.StatusCode/100 != 2 {
+			return nil, fmt.Errorf("%s: unexpected status %d", url, resp.StatusCode)
 		}
 		var node any
 		if err := json.Unmarshal(respBody, &node); err != nil {

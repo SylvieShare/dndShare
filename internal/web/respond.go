@@ -6,6 +6,11 @@ import (
 	"net/http"
 )
 
+// maxJSONBody — верхний предел тела JSON-запроса. Крупнейший легитимный запрос —
+// полный лист персонажа (data), поэтому лимит щедрый, но защищает от буферизации
+// многогигабайтного тела в память (в т.ч. на неавторизованных /user/auth, /registration).
+const maxJSONBody int64 = 16 << 20
+
 // errorBody повторяет ErrorResponse прежней версии: {"type":..,"desc":..} с NON_NULL —
 // null-поля опускаются (потому оба поля — указатели с omitempty).
 type errorBody struct {
@@ -63,5 +68,6 @@ func conflict(w http.ResponseWriter, desc string) {
 }
 
 func decodeJSON(r *http.Request, dst any) error {
+	r.Body = http.MaxBytesReader(nil, r.Body, maxJSONBody)
 	return json.NewDecoder(r.Body).Decode(dst)
 }

@@ -70,14 +70,16 @@ function addLanguages(values, labels) {
  */
 export function buildCharacterData(input) {
   const {
-    name = '', race, subrace = null, charClass, subclass = null,
-    scores = {}, skillIds = [], spellIds = [], choices = [],
+    name = '', race, subrace = null, charClass, subclass = null, raceVariant = null,
+    scores = {}, asiChoice = [], skillIds = [], spellIds = [], choices = [],
+    raceSkillIds = [], raceLangIds = [], featIds = [],
     raceAbilityItems = [], classAbilityItems = [], suggestValue,
   } = input || {}
 
   const grants = extractGrants({
     race: race?.item, subrace: subrace?.item,
     charClass: charClass?.item, subclass: subclass?.item,
+    raceVariant,
   })
 
   const raceBinding = { raceId: race?.id, subraceId: subrace?.id }
@@ -87,14 +89,17 @@ export function buildCharacterData(input) {
 
   let { values } = applyGrants(blankValues(), grants, { suggestValue, raceAbilityIds, classAbilityIds })
 
-  // Ability scores: chosen base + racial ASI as a named bonus.
+  // Ability scores: chosen base + racial ASI (fixed + floating choice) as a named bonus.
+  const floatBonus = grants.asiChoice?.bonus || 0
   const finalScore = {}
   for (const stat of STATS) {
     const base = Number(scores[stat] ?? 10)
-    const asiBonus = (grants.asi || []).filter((a) => a.stat === stat).reduce((s, a) => s + a.bonus, 0)
-    const bonuses = asiBonus ? [{ title: ref(race)?.name || 'Раса', value: asiBonus }] : []
+    const fixed = (grants.asi || []).filter((a) => a.stat === stat).reduce((s, a) => s + a.bonus, 0)
+    const floating = asiChoice.includes(stat) ? floatBonus : 0
+    const racial = fixed + floating
+    const bonuses = racial ? [{ title: ref(race)?.name || 'Раса', value: racial }] : []
     values[stat] = { ...(values[stat] || {}), value: { base, bonuses } }
-    finalScore[stat] = base + asiBonus
+    finalScore[stat] = base + racial
   }
 
   // HP at level 1 = hit-die face (set by applyGrants) + CON modifier.
@@ -103,8 +108,15 @@ export function buildCharacterData(input) {
     values.hp = { ...values.hp, max: hp, current: hp }
   }
 
-  // Skill proficiencies (class skill_choice) into the owning stat block.
+  // Skill proficiencies (class skill_choice + race skill choice) into the owning stat block.
   for (const raw of skillIds) addSkillProf(values, raw)
+  for (const raw of raceSkillIds) addSkillProf(values, raw)
+
+  // Race-chosen extra languages (suggest 6) into the Языки bucket.
+  addLanguages(values, raceLangIds.map((id) => suggestValue?.(6, id)).filter(Boolean))
+
+  // Chosen feats (handbook type 7) → the sheet's Черты block (`abilities_feats`).
+  if (featIds.length) values.abilities_feats = featIds.map((id) => ({ id }))
 
   // Feature choices (granted abilities' `choice`): skill/language picks are
   // applied mechanically; every choice is recorded under `feature_choices`.
@@ -135,6 +147,7 @@ export function buildCharacterData(input) {
   values.class = ref(charClass)
   if (subrace) values.subrace = ref(subrace)
   if (subclass) values.subclass = ref(subclass)
+  if (raceVariant) values.race_variant = raceVariant
 
   return { name: name || 'Без имени', data: { values } }
 }

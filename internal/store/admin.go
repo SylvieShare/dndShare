@@ -58,10 +58,11 @@ func (s *Store) UpdateUserPassword(ctx context.Context, id int64, hash string) e
 	return err
 }
 
-// ListLogs возвращает логи в порядке убывания created_at.
+// ListLogs возвращает последние логи в порядке убывания created_at (с ограничением, чтобы
+// после года ошибок эндпоинт не тянул всю таблицу).
 func (s *Store) ListLogs(ctx context.Context) ([]LogEntity, error) {
 	rows, err := s.pool.Query(ctx,
-		`SELECT id, "path", "type", "desc", trace, created_at FROM dndshare.logs ORDER BY created_at DESC`)
+		`SELECT id, "path", "type", "desc", trace, created_at FROM dndshare.logs ORDER BY created_at DESC LIMIT 1000`)
 	if err != nil {
 		return nil, err
 	}

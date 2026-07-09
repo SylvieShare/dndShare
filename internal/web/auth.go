@@ -3,6 +3,7 @@ package web
 import (
 	"errors"
 	"net/http"
+	"strings"
 	"time"
 
 	"dndshare/internal/store"
@@ -112,6 +113,10 @@ func (s *Server) handleRegistration(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "Некорректный запрос")
 		return
 	}
+	if strings.TrimSpace(req.Login) == "" || req.Password == "" {
+		badRequest(w, "Логин и пароль обязательны")
+		return
+	}
 	exists, err := s.store.ExistsByLogin(r.Context(), req.Login)
 	if err != nil {
 		serverError(w, err)
@@ -128,6 +133,12 @@ func (s *Server) handleRegistration(w http.ResponseWriter, r *http.Request) {
 	}
 	user, err := s.store.CreateUser(r.Context(), req.Login, hash)
 	if err != nil {
+		// Гонка check-then-act: параллельная регистрация того же логина упирается в
+		// users_login_uindex — отдаём 409, а не 500.
+		if store.IsUniqueViolation(err) {
+			conflict(w, "User exist")
+			return
+		}
 		serverError(w, err)
 		return
 	}
@@ -135,10 +146,10 @@ func (s *Server) handleRegistration(w http.ResponseWriter, r *http.Request) {
 		serverError(w, err)
 		return
 	}
+	// Хэш пароля в ответе не отдаём (утечка без нужды; фронт его не использует).
 	writeJSON(w, http.StatusOK, map[string]any{
 		"id":        user.ID,
 		"login":     user.Login,
-		"password":  user.Password,
 		"createdAt": time.Now().UTC().Format(time.RFC3339),
 	})
 }

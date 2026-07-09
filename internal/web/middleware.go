@@ -31,12 +31,20 @@ const (
 func (s *Server) recoverer(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		defer func() {
-			if v := recover(); v != nil {
-				msg := fmt.Sprintf("%v", v)
-				log.Printf("panic: %s %s: %v", r.Method, r.URL.Path, v)
-				s.store.LogError(r.Context(), r.URL.Path, "panic", msg, msg)
-				apiError(w, http.StatusInternalServerError, "RuntimeException", msg)
+			v := recover()
+			if v == nil {
+				return
 			}
+			// http.ErrAbortHandler — санкционированный stdlib способ прервать ответ; не логируем
+			// как панику и пробрасываем дальше.
+			if v == http.ErrAbortHandler {
+				panic(v)
+			}
+			msg := fmt.Sprintf("%v", v)
+			log.Printf("panic: %s %s: %v", r.Method, r.URL.Path, v)
+			// Контекст запроса мог быть уже отменён (клиент отключился) — пишем лог без отмены.
+			s.store.LogError(context.WithoutCancel(r.Context()), r.URL.Path, "panic", msg, msg)
+			apiError(w, http.StatusInternalServerError, "RuntimeException", msg)
 		}()
 		next.ServeHTTP(w, r)
 	})
@@ -66,8 +74,11 @@ func (s *Server) cors(next http.Handler) http.Handler {
 // авторизацию проверяют сами хендлеры (mustUser / requireRole).
 func (s *Server) session(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if uid, ok := s.resolveUser(r); ok {
-			r = r.WithContext(context.WithValue(r.Context(), userIDKey, uid))
+		// Статике и SPA-фолбэку личность не нужна — не ходим в БД на каждый JS/CSS/картинку.
+		if isAPIPath(r.URL.Path) {
+			if uid, ok := s.resolveUser(r); ok {
+				r = r.WithContext(context.WithValue(r.Context(), userIDKey, uid))
+			}
 		}
 		next.ServeHTTP(w, r)
 	})
@@ -143,13 +154,17 @@ func (s *Server) requireRole(w http.ResponseWriter, r *http.Request, roles ...st
 }
 
 func (s *Server) setSessionCookies(w http.ResponseWriter, r *http.Request, userID int64, session string) {
-	http.SetCookie(w, &http.Cookie{Name: cookieSessionID, Value: strconv.FormatInt(userID, 10), Path: "/", Secure: s.secure(r)})
-	http.SetCookie(w, &http.Cookie{Name: cookieSessionUUID, Value: session, Path: "/", Secure: s.secure(r)})
+	secure := s.secure(r)
+	// HttpOnly: фронт не читает document.cookie, поэтому куки недоступны из JS (защита от
+	// кражи сессии через XSS). SameSite=Lax — базовая защита от CSRF при same-origin.
+	http.SetCookie(w, &http.Cookie{Name: cookieSessionID, Value: strconv.FormatInt(userID, 10), Path: "/", Secure: secure, HttpOnly: true, SameSite: http.SameSiteLaxMode})
+	http.SetCookie(w, &http.Cookie{Name: cookieSessionUUID, Value: session, Path: "/", Secure: secure, HttpOnly: true, SameSite: http.SameSiteLaxMode})
 }
 
 func (s *Server) clearSessionCookies(w http.ResponseWriter, r *http.Request) {
-	http.SetCookie(w, &http.Cookie{Name: cookieSessionID, Value: "", Path: "/", Secure: s.secure(r)})
-	http.SetCookie(w, &http.Cookie{Name: cookieSessionUUID, Value: "", Path: "/", Secure: s.secure(r)})
+	secure := s.secure(r)
+	http.SetCookie(w, &http.Cookie{Name: cookieSessionID, Value: "", Path: "/", Secure: secure, HttpOnly: true, SameSite: http.SameSiteLaxMode, MaxAge: -1})
+	http.SetCookie(w, &http.Cookie{Name: cookieSessionUUID, Value: "", Path: "/", Secure: secure, HttpOnly: true, SameSite: http.SameSiteLaxMode, MaxAge: -1})
 }
 
 // secure решает, ставить ли Secure на cookie (режим auto/true/false).

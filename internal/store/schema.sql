@@ -63,6 +63,7 @@ CREATE TABLE IF NOT EXISTS dndshare.logs (
     created_at timestamp DEFAULT now() NOT NULL,
     CONSTRAINT logs_pk PRIMARY KEY (id)
 );
+CREATE INDEX IF NOT EXISTS idx_logs_created_at ON dndshare.logs USING btree (created_at DESC);
 
 -- ---------------------------------------------------------------------------
 -- Admin job runs
@@ -219,7 +220,7 @@ CREATE TABLE IF NOT EXISTS dndshare."char" (
     changed_at     timestamptz DEFAULT now() NOT NULL,
     "name"         varchar NULL,
     deleted        bool DEFAULT false NOT NULL,
-    death          varchar DEFAULT false NOT NULL,
+    death          varchar DEFAULT 'false' NOT NULL,
     "version"      int8 DEFAULT 1 NOT NULL,
     CONSTRAINT char_pk PRIMARY KEY (id),
     CONSTRAINT char_uuid_key UNIQUE (uuid)
@@ -293,7 +294,7 @@ CREATE TABLE IF NOT EXISTS dndshare."session" (
     owner_user_id      int8 NOT NULL REFERENCES dndshare.users(id),
     "name"             varchar(255) NOT NULL,
     description        text NULL,
-    system_id          int8 NOT NULL REFERENCES dndshare."source"(id),
+    system_id          int8 NULL REFERENCES dndshare."source"(id),
     invite_code        varchar(16) NOT NULL,
     status             varchar(32) DEFAULT 'active'::character varying NOT NULL,
     created_at         timestamptz DEFAULT now() NOT NULL,
@@ -401,7 +402,7 @@ CREATE INDEX IF NOT EXISTS idx_session_participant_user_id ON dndshare.session_p
 -- suggest type Редкость(23) + значения. ON CONFLICT DO NOTHING → no-op на проде.
 -- ---------------------------------------------------------------------------
 INSERT INTO dndshare.item_type (id, name, fields, source_id, color, important, description)
-VALUES (8, 'Расы', '[{"name":"Раса (словарь)","key":"suggest_id","type":"suggest","suggest_id":1},{"name":"Размер","key":"size","type":"text"},{"name":"Скорость","key":"speed","type":"int","default":30},{"name":"Бонусы характеристик","key":"asi","type":"object_array","fields":[{"name":"Характеристика","key":"ability","type":"suggest","suggest_id":16},{"name":"Бонус","key":"bonus","type":"int","default":1}]},{"name":"Языки","key":"languages","type":"suggest_array","suggest_id":6},{"name":"Владение доспехами","key":"armor_prof","type":"suggest_array","suggest_id":3},{"name":"Владение оружием","key":"weapon_prof","type":"suggest_array","suggest_id":4},{"name":"Владение инструментами","key":"tool_prof","type":"suggest_array","suggest_id":5},{"name":"Описание","key":"description","type":"description"}]'::jsonb, 1, '#5aaf72', true, 'Расы и подрасы персонажей: бонусы характеристик, скорость, размер, языки, владения.')
+VALUES (8, 'Расы', '[{"name":"Раса (словарь)","key":"suggest_id","type":"suggest","suggest_id":1},{"name":"Размер","key":"size","type":"text"},{"name":"Скорость","key":"speed","type":"int","default":30},{"name":"Бонусы характеристик","key":"asi","type":"object_array","fields":[{"name":"Характеристика","key":"ability","type":"suggest","suggest_id":16},{"name":"Бонус","key":"bonus","type":"int","default":1}]},{"name":"Плавающий бонус (выбор)","key":"asi_choice","type":"object","fields":[{"name":"Сколько выбрать","key":"count","type":"int","default":2},{"name":"Бонус","key":"bonus","type":"int","default":1}]},{"name":"Языки","key":"languages","type":"suggest_array","suggest_id":6},{"name":"Владение доспехами","key":"armor_prof","type":"suggest_array","suggest_id":3},{"name":"Владение оружием","key":"weapon_prof","type":"suggest_array","suggest_id":4},{"name":"Владение инструментами","key":"tool_prof","type":"suggest_array","suggest_id":5},{"name":"Описание","key":"description","type":"description"}]'::jsonb, 1, '#5aaf72', true, 'Расы и подрасы персонажей: бонусы характеристик, скорость, размер, языки, владения.')
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO dndshare.item_type (id, name, fields, source_id, color, important, description)
@@ -424,3 +425,9 @@ INSERT INTO dndshare.suggest (id, type_id, value, color, code) VALUES
     (4, 23, 'Легендарное',  '#f0b03c', 'legendary'),
     (5, 23, 'Артефакт',     '#e0524e', 'artifact')
 ON CONFLICT (type_id, id) DO NOTHING;
+
+-- Сиды вставляют явные id в bigserial-колонки — двигаем последовательности за максимум,
+-- иначе nextval рано или поздно выдаст занятый id и вставка упадёт (23505). setval до MAX(id)
+-- идемпотентен и безопасен на проде (последовательность уже не ниже максимума).
+SELECT setval(pg_get_serial_sequence('dndshare.item_type', 'id'), GREATEST((SELECT MAX(id) FROM dndshare.item_type), 1));
+SELECT setval(pg_get_serial_sequence('dndshare.suggest_type', 'id'), GREATEST((SELECT MAX(id) FROM dndshare.suggest_type), 1));

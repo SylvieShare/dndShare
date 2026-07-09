@@ -132,14 +132,22 @@ func (s *Store) RenameScene(ctx context.Context, id int64, name string) error {
 	return err
 }
 
-// DeleteScene — удаление сцены вместе с её айтемами (порт deleteScene).
+// DeleteScene — удаление сцены вместе с её айтемами (порт deleteScene). В одной транзакции,
+// чтобы сбой между двумя DELETE не оставил сцену без айтемов (или наоборот).
 func (s *Store) DeleteScene(ctx context.Context, id int64) error {
-	if _, err := s.pool.Exec(ctx,
+	tx, err := s.pool.Begin(ctx)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback(ctx)
+	if _, err := tx.Exec(ctx,
 		`DELETE FROM dndshare.session_scene_item WHERE scene_id = $1`, id); err != nil {
 		return err
 	}
-	_, err := s.pool.Exec(ctx, `DELETE FROM dndshare.session_scene WHERE id = $1`, id)
-	return err
+	if _, err := tx.Exec(ctx, `DELETE FROM dndshare.session_scene WHERE id = $1`, id); err != nil {
+		return err
+	}
+	return tx.Commit(ctx)
 }
 
 // GetSceneItems — айтемы сцены, порядок по order,id (порт getItemsByScene).

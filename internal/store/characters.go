@@ -165,7 +165,10 @@ func (s *Store) DeleteCharacter(ctx context.Context, uuid string) error {
 }
 
 // PollChars возвращает по каждому запрошенному id, изменился ли data относительно клиентской версии.
-func (s *Store) PollChars(ctx context.Context, items []PollItem) ([]PollResult, error) {
+// Отдаёт данные только тех персонажей, которые вызывающий вправе видеть: свои, публичные или
+// делящие с ним сессию (мастер опрашивает игроков, игроки — соигроков). Чужие id молча выпадают
+// из выборки — это чинит IDOR-перечисление приватных листов по числовому id.
+func (s *Store) PollChars(ctx context.Context, items []PollItem, userID int64) ([]PollResult, error) {
 	if len(items) == 0 {
 		return []PollResult{}, nil
 	}
@@ -176,7 +179,25 @@ func (s *Store) PollChars(ctx context.Context, items []PollItem) ([]PollResult, 
 		clientVersion[it.CharID] = it.Version
 	}
 	rows, err := s.pool.Query(ctx,
-		`SELECT id, data, "version" FROM dndshare."char" WHERE id = ANY($1) AND deleted = false`, ids)
+		`SELECT c.id, c.data, c."version"
+		 FROM dndshare."char" c
+		 WHERE c.id = ANY($1) AND c.deleted = false
+		   AND (
+		     c.user_id = $2
+		     OR c.public_visible = true
+		     OR EXISTS (
+		       SELECT 1 FROM dndshare.session_participant sp
+		       JOIN dndshare."session" s ON s.id = sp.session_id AND s.deleted = false
+		       WHERE sp.char_id = c.id
+		         AND (
+		           s.owner_user_id = $2
+		           OR EXISTS (
+		             SELECT 1 FROM dndshare.session_participant sp2
+		             WHERE sp2.session_id = s.id AND sp2.user_id = $2
+		           )
+		         )
+		     )
+		   )`, ids, userID)
 	if err != nil {
 		return nil, err
 	}

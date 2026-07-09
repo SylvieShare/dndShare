@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/url"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -49,7 +50,7 @@ func Load() (Config, error) {
 		DevOrigin:    "http://localhost:5173",
 
 		MCPAuthToken:    env("MCP_AUTH_TOKEN", "dev-mcp-token-change-me"),
-		MCPWriteEnabled: env("MCP_WRITE_ENABLED", "true") == "true",
+		MCPWriteEnabled: envBool("MCP_WRITE_ENABLED", false),
 
 		Storage: StorageConfig{
 			Endpoint:  env("OBJECT_STORAGE_ENDPOINT", "https://storage.yandexcloud.net"),
@@ -83,4 +84,17 @@ func env(key, def string) string {
 		return v
 	}
 	return def
+}
+
+// envBool читает булев env (true/1/yes и т.п. через strconv.ParseBool); пусто/битое → def.
+func envBool(key string, def bool) bool {
+	v := os.Getenv(key)
+	if v == "" {
+		return def
+	}
+	b, err := strconv.ParseBool(strings.TrimSpace(v))
+	if err != nil {
+		return def
+	}
+	return b
 }

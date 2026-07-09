@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -55,5 +56,8 @@ func Open(ctx context.Context, dsn string) (*Store, error) {
 
 func (s *Store) Close() { s.pool.Close() }
 
-// Pool отдаёт пул для фич, которым нужны транзакции/батчи напрямую.
-func (s *Store) Pool() *pgxpool.Pool { return s.pool }
+// IsUniqueViolation — ошибка нарушения уникального ограничения (SQLSTATE 23505).
+func IsUniqueViolation(err error) bool {
+	var pgErr *pgconn.PgError
+	return errors.As(err, &pgErr) && pgErr.Code == "23505"
+}

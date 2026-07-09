@@ -2,10 +2,11 @@ package store
 
 import (
 	"context"
+	"crypto/rand"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"math/rand"
+	"math/big"
 	"strings"
 	"time"
 
@@ -473,31 +474,43 @@ func (s *Store) GetEncounterData(ctx context.Context, sessionID int64) (*string,
 	return data, err
 }
 
-// SaveEncounterData обновляет последний энкаунтер или создаёт новый (порт saveEncounterData).
+// SaveEncounterData обновляет последний активный энкаунтер или создаёт новый (порт saveEncounterData).
+// Один statement под транзакцией, чтобы конкурентные сохранения не плодили дубли (у таблицы нет
+// UNIQUE по session_id, поэтому используем UPDATE-затем-INSERT в tx с блокировкой строки).
 func (s *Store) SaveEncounterData(ctx context.Context, sessionID int64, status string, round int, data string) error {
+	tx, err := s.pool.Begin(ctx)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback(ctx)
+
 	var existing int64
-	err := s.pool.QueryRow(ctx,
+	err = tx.QueryRow(ctx,
 		`SELECT id FROM dndshare.session_encounter
-		 WHERE session_id = $1 AND deleted = false ORDER BY id DESC LIMIT 1`,
+		 WHERE session_id = $1 AND deleted = false ORDER BY id DESC LIMIT 1 FOR UPDATE`,
 		sessionID,
 	).Scan(&existing)
 	if err != nil && !errors.Is(err, pgx.ErrNoRows) {
 		return err
 	}
 	if errors.Is(err, pgx.ErrNoRows) {
-		_, err = s.pool.Exec(ctx,
+		if _, err = tx.Exec(ctx,
 			`INSERT INTO dndshare.session_encounter (session_id, status, round, data)
 			 VALUES ($1, $2, $3, CAST($4 AS jsonb))`,
 			sessionID, status, round, data,
-		)
-		return err
+		); err != nil {
+			return err
+		}
+	} else {
+		if _, err = tx.Exec(ctx,
+			`UPDATE dndshare.session_encounter SET status = $2, round = $3, data = CAST($4 AS jsonb), changed_at = now()
+			 WHERE id = $1`,
+			existing, status, round, data,
+		); err != nil {
+			return err
+		}
 	}
-	_, err = s.pool.Exec(ctx,
-		`UPDATE dndshare.session_encounter SET status = $2, round = $3, data = CAST($4 AS jsonb), changed_at = now()
-		 WHERE id = $1`,
-		existing, status, round, data,
-	)
-	return err
+	return tx.Commit(ctx)
 }
 
 // GetMusicStateData возвращает состояние плеера сессии как JSON-строку или nil
@@ -515,24 +528,12 @@ func (s *Store) GetMusicStateData(ctx context.Context, sessionID int64) (*string
 }
 
 // SaveMusicStateData сохраняет состояние плеера (upsert по session_id, порт saveStateData).
+// UNIQUE(session_id) позволяет сделать это одним атомарным INSERT ... ON CONFLICT без гонки.
 func (s *Store) SaveMusicStateData(ctx context.Context, sessionID int64, data string) error {
-	var existing int64
-	err := s.pool.QueryRow(ctx,
-		`SELECT id FROM dndshare.session_music_state WHERE session_id = $1`, sessionID,
-	).Scan(&existing)
-	if err != nil && !errors.Is(err, pgx.ErrNoRows) {
-		return err
-	}
-	if errors.Is(err, pgx.ErrNoRows) {
-		_, err = s.pool.Exec(ctx,
-			`INSERT INTO dndshare.session_music_state (session_id, data) VALUES ($1, CAST($2 AS jsonb))`,
-			sessionID, data,
-		)
-		return err
-	}
-	_, err = s.pool.Exec(ctx,
-		`UPDATE dndshare.session_music_state SET data = CAST($2 AS jsonb), changed_at = now() WHERE id = $1`,
-		existing, data,
+	_, err := s.pool.Exec(ctx,
+		`INSERT INTO dndshare.session_music_state (session_id, data) VALUES ($1, CAST($2 AS jsonb))
+		 ON CONFLICT (session_id) DO UPDATE SET data = EXCLUDED.data, changed_at = now()`,
+		sessionID, data,
 	)
 	return err
 }
@@ -562,13 +563,21 @@ func (s *Store) GetMusicTrackFileKey(ctx context.Context, trackID int64) (fileKe
 func generateInviteCode() string {
 	const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	const digits = "0123456789"
+	// crypto/rand: инвайт-код — единственный гейт на вход в сессию, он не должен быть предсказуемым.
+	pick := func(alphabet string) byte {
+		n, err := rand.Int(rand.Reader, big.NewInt(int64(len(alphabet))))
+		if err != nil {
+			return alphabet[0]
+		}
+		return alphabet[n.Int64()]
+	}
 	var b strings.Builder
 	for i := 0; i < 5; i++ {
-		b.WriteByte(letters[rand.Intn(len(letters))])
+		b.WriteByte(pick(letters))
 	}
 	b.WriteByte('-')
 	for i := 0; i < 5; i++ {
-		b.WriteByte(digits[rand.Intn(len(digits))])
+		b.WriteByte(pick(digits))
 	}
 	return b.String()
 }

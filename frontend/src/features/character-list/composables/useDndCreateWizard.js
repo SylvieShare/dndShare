@@ -1,5 +1,5 @@
 import { abilityModifier, proficiencyBonus } from '@/shared/lib/dnd'
-import { computed, reactive, ref, watch } from 'vue'
+import { computed, nextTick, reactive, ref, watch } from 'vue'
 import { fetchGet } from '@/shared/api/http'
 import { SKILL_BY_STAT, buildCharacterData } from '@/features/character-editor/settings/dnd/creation/buildCharacter'
 import { extractGrants } from '@/features/character-editor/settings/dnd/creation/grants'
@@ -11,6 +11,9 @@ const CLASS_TYPE = 9
 const RACE_ABIL_TYPE = 3
 const CLASS_ABIL_TYPE = 4
 const SPELL_TYPE = 5
+const FEAT_TYPE = 7
+const SKILL_SUGGEST = 15
+const LANG_SUGGEST = 6
 const STATS = ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA']
 const STAT_BY_SUGGEST16 = { 1: 'STR', 2: 'DEX', 3: 'CON', 4: 'INT', 5: 'WIS', 6: 'CHA' }
 const NAME_POOL = ['Талион', 'Мираэль', 'Гром', 'Лиа', 'Кадан', 'Сельена', 'Дорн', 'Аэлита', 'Вэйлин', 'Мирра', 'Торин', 'Ниала', 'Ксандер', 'Элара', 'Роган', 'Сафира']
@@ -45,48 +48,71 @@ export function useDndCreateWizard() {
   const raceAbilities = ref([])
   const classAbilities = ref([])
   const spellPool = ref([])
+  const featPool = ref([])
   const loading = ref(false)
 
   const state = reactive({
     step: 0,
+    version: '2014',
     name: '',
     race: null,
     subrace: null,
     charClass: null,
     subclass: null,
+    raceVariant: null,
     statMethod: 'array',
     scores: emptyScores(),
     rollPool: [],
+    asiChoice: [],
+    raceSkillIds: [],
+    raceLangIds: [],
+    featIds: [],
     skillIds: [],
     spellIds: [],
     choices: {},
   })
+  // True while restoring from localStorage — suppresses the reset watchers below.
+  let hydrating = false
 
   async function load() {
     loading.value = true
     try {
-      const [r, c, ra, ca] = await Promise.all([
+      const [r, c, ra, ca, ft] = await Promise.all([
         fetchGet(`/items?typeId=${RACE_TYPE}&limit=300`),
         fetchGet(`/items?typeId=${CLASS_TYPE}&limit=300`),
         fetchGet(`/items?typeId=${RACE_ABIL_TYPE}&limit=500`),
         fetchGet(`/items?typeId=${CLASS_ABIL_TYPE}&limit=500`),
+        fetchGet(`/items?typeId=${FEAT_TYPE}&limit=500`),
       ])
-      races.value = r?.items || []
-      classes.value = c?.items || []
+      // Base races/classes only — subraces/subclasses are children (parentId set).
+      races.value = (r?.items || []).filter((i) => !i.parentId)
+      classes.value = (c?.items || []).filter((i) => !i.parentId)
       raceAbilities.value = ra?.items || []
       classAbilities.value = ca?.items || []
+      featPool.value = ft?.items || []
     } finally {
       loading.value = false
     }
   }
 
   watch(() => state.race, async (r) => {
+    if (hydrating) return
     state.subrace = null
+    state.raceVariant = null
     subraces.value = r ? ((await fetchGet(`/items/children?parentId=${r.id}`))?.items || []).filter((i) => i.typeId === RACE_TYPE) : []
   })
   watch(() => state.charClass, async (c) => {
+    if (hydrating) return
     state.subclass = null
     subclasses.value = c ? ((await fetchGet(`/items/children?parentId=${c.id}`))?.items || []).filter((i) => i.typeId === CLASS_TYPE) : []
+  })
+  // A different race/subrace/variant means a different set of race offers — clear the picks.
+  watch(() => [state.race?.id, state.subrace?.id, state.raceVariant], () => {
+    if (hydrating) return
+    state.asiChoice = []
+    state.raceSkillIds = []
+    state.raceLangIds = []
+    state.featIds = []
   })
 
   function suggestValue(typeId, id) {
@@ -99,6 +125,7 @@ export function useDndCreateWizard() {
     subrace: state.subrace,
     charClass: state.charClass,
     subclass: state.subclass,
+    raceVariant: state.raceVariant,
   }))
 
   const isCaster = computed(() => !!grants.value.spellcasting)
@@ -109,16 +136,68 @@ export function useDndCreateWizard() {
   })))
   const skillLimit = computed(() => grants.value.skillChoice?.count || 0)
 
-  // Final ability scores = chosen base + racial ASI (for live preview).
+  // Final ability scores = chosen base + racial ASI (fixed + floating choice).
   const finalScores = computed(() => {
     const out = {}
+    const floatBonus = grants.value.asiChoice?.bonus || 0
     for (const s of STATS) {
       const base = Number(state.scores[s] ?? 0)
       const asi = (grants.value.asi || []).filter((a) => a.stat === s).reduce((sum, a) => sum + a.bonus, 0)
-      out[s] = base + asi
+      const floating = state.asiChoice.includes(s) ? floatBonus : 0
+      out[s] = base + asi + floating
     }
     return out
   })
+
+  // Floating racial ASI ("choose N abilities, +V each" — Variant Human, Half-Elf).
+  function toggleAsiChoice(stat) {
+    const i = state.asiChoice.indexOf(stat)
+    if (i >= 0) { state.asiChoice.splice(i, 1); return }
+    const limit = grants.value.asiChoice?.count || 0
+    if (limit && state.asiChoice.length >= limit) return
+    state.asiChoice.push(stat)
+  }
+  const asiChoiceComplete = computed(() => {
+    const c = grants.value.asiChoice
+    return !c || state.asiChoice.length === c.count
+  })
+  // Races offering named variants (e.g. Human Standard/Gifted) must have one picked.
+  const raceVariantsComplete = computed(() => !grants.value.raceVariants || !!state.raceVariant)
+
+  // ─── Race extra picks: skills / language / feat (Half-Elf, Variant Human) ───
+  function toggleFromList(list, id, limit) {
+    const i = list.findIndex((x) => String(x) === String(id))
+    if (i >= 0) { list.splice(i, 1); return }
+    if (limit && list.length >= limit) return
+    list.push(id)
+  }
+  // Race skill choice: `from` (skill suggest ids) or, when empty, all skills.
+  const raceSkillOptions = computed(() => {
+    const c = grants.value.raceSkillChoice
+    if (!c) return []
+    const ids = c.from?.length ? c.from : suggestStore.items(SKILL_SUGGEST).map((s) => s.id)
+    return ids.map((id) => ({ id, name: suggestValue(SKILL_SUGGEST, id) || `#${id}` }))
+  })
+  const raceSkillLimit = computed(() => grants.value.raceSkillChoice?.count || 0)
+  function toggleRaceSkill(id) { toggleFromList(state.raceSkillIds, id, raceSkillLimit.value) }
+  const raceSkillsComplete = computed(() => !grants.value.raceSkillChoice || state.raceSkillIds.length === raceSkillLimit.value)
+
+  // Race language choice: `from` (language suggest ids) or, when empty, all languages.
+  const raceLangOptions = computed(() => {
+    const c = grants.value.langChoice
+    if (!c) return []
+    const ids = c.from?.length ? c.from : suggestStore.items(LANG_SUGGEST).map((s) => s.id)
+    return ids.map((id) => ({ id, name: suggestValue(LANG_SUGGEST, id) || `#${id}` }))
+  })
+  const raceLangLimit = computed(() => grants.value.langChoice?.count || 0)
+  function toggleRaceLang(id) { toggleFromList(state.raceLangIds, id, raceLangLimit.value) }
+  const raceLangsComplete = computed(() => !grants.value.langChoice || state.raceLangIds.length === raceLangLimit.value)
+
+  // Feat choice (Variant/Gifted Human): pick from handbook feats (type 7).
+  const featOptions = computed(() => (grants.value.featChoice ? featPool.value : []))
+  const featLimit = computed(() => grants.value.featChoice?.count || 0)
+  function toggleFeat(id) { toggleFromList(state.featIds, id, featLimit.value) }
+  const featComplete = computed(() => !grants.value.featChoice || state.featIds.length === featLimit.value)
 
   const pointsSpent = computed(() => STATS.reduce((sum, s) => sum + pointCost(Number(state.scores[s] ?? 8)), 0))
   const pointsLeft = computed(() => POINT_BUY_BUDGET - pointsSpent.value)
@@ -261,7 +340,12 @@ export function useDndCreateWizard() {
       subrace: toSel(state.subrace),
       charClass: toSel(state.charClass),
       subclass: toSel(state.subclass),
+      raceVariant: state.raceVariant,
       scores: Object.fromEntries(STATS.map((s) => [s, Number(state.scores[s] ?? 10)])),
+      asiChoice: state.asiChoice.slice(),
+      raceSkillIds: state.raceSkillIds.slice(),
+      raceLangIds: state.raceLangIds.slice(),
+      featIds: state.featIds.slice(),
       skillIds: state.skillIds.slice(),
       spellIds: state.spellIds.slice(),
       choices: featureChoices.value.map((fc) => ({
@@ -274,6 +358,35 @@ export function useDndCreateWizard() {
       suggestValue,
     })
   }
+
+  // ─── Persistence (localStorage) — survives reload; going back keeps forward picks ─
+  const STORAGE_KEY = 'dnd-create-wizard-v1'
+  function serialize() {
+    const { step, version, name, race, subrace, charClass, subclass, raceVariant, statMethod, scores, rollPool, asiChoice, skillIds, spellIds, choices } = state
+    return { step, version, name, race, subrace, charClass, subclass, raceVariant, statMethod, scores, rollPool, asiChoice, skillIds, spellIds, choices }
+  }
+  function persist() {
+    if (hydrating) return
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(serialize())) } catch { /* quota/private mode */ }
+  }
+  function clearPersist() {
+    try { localStorage.removeItem(STORAGE_KEY) } catch { /* ignore */ }
+  }
+  async function restore() {
+    let saved = null
+    try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null') } catch { saved = null }
+    if (!saved) return
+    hydrating = true
+    Object.assign(state, saved)
+    if (state.race) subraces.value = ((await fetchGet(`/items/children?parentId=${state.race.id}`))?.items || []).filter((i) => i.typeId === RACE_TYPE)
+    if (state.charClass) subclasses.value = ((await fetchGet(`/items/children?parentId=${state.charClass.id}`))?.items || []).filter((i) => i.typeId === CLASS_TYPE)
+    if (isCaster.value) await loadSpells()
+    // Let the reset watchers (guarded by `hydrating`) flush before unlocking, so
+    // they can't wipe the restored subrace / variant / floating-ASI picks.
+    await nextTick()
+    hydrating = false
+  }
+  watch(state, persist, { deep: true })
 
   return {
     STATS,
@@ -288,6 +401,10 @@ export function useDndCreateWizard() {
     mods, maxHp, unarmoredAc, initiativeMod, spellDc, spellAtk, castingAbility, primaryAbilities,
     // sub-selection gating
     subclassAtCreation, requiresSubrace, requiresSubclass,
+    // floating racial ASI + named variants
+    toggleAsiChoice, asiChoiceComplete, raceVariantsComplete,
+    // persistence
+    restore, clearPersist,
     // skills
     skillStat, skillMod, toggleSkill,
     // spells

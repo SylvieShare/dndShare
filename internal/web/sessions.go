@@ -582,8 +582,12 @@ func (s *Server) handleSaveEncounter(w http.ResponseWriter, r *http.Request) {
 		forbidden(w)
 		return
 	}
-	raw, err := io.ReadAll(r.Body)
+	raw, err := io.ReadAll(http.MaxBytesReader(w, r.Body, maxJSONBody))
 	if err != nil {
+		badRequest(w, "Некорректный запрос")
+		return
+	}
+	if !json.Valid(raw) {
 		badRequest(w, "Некорректный запрос")
 		return
 	}
@@ -637,8 +641,12 @@ func (s *Server) handleSaveMusicState(w http.ResponseWriter, r *http.Request) {
 		forbidden(w)
 		return
 	}
-	raw, err := io.ReadAll(r.Body)
+	raw, err := io.ReadAll(http.MaxBytesReader(w, r.Body, maxJSONBody))
 	if err != nil {
+		badRequest(w, "Некорректный запрос")
+		return
+	}
+	if !json.Valid(raw) {
 		badRequest(w, "Некорректный запрос")
 		return
 	}
@@ -726,7 +734,12 @@ func (s *Server) handleDeleteSession(w http.ResponseWriter, r *http.Request) {
 // lookupSession читает сессию по {uuid} из пути, отдавая 404 при отсутствии.
 // Возвращает ошибку, если ответ уже записан (вызывающему нужно только выйти).
 func (s *Server) lookupSession(w http.ResponseWriter, r *http.Request) (store.GameSession, error) {
-	session, err := s.store.GetGameSessionByUUID(r.Context(), r.PathValue("uuid"))
+	uuid := r.PathValue("uuid")
+	if !isUUID(uuid) {
+		notFound(w, "")
+		return store.GameSession{}, store.ErrNotFound
+	}
+	session, err := s.store.GetGameSessionByUUID(r.Context(), uuid)
 	if err != nil {
 		if errors.Is(err, store.ErrNotFound) {
 			notFound(w, "")

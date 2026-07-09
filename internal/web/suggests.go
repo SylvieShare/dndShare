@@ -3,6 +3,7 @@ package web
 import (
 	"errors"
 	"io"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -197,7 +198,7 @@ func (s *Server) handleSuggestUpdate(w http.ResponseWriter, r *http.Request) {
 	if req.SvgChanged {
 		svgID = req.SvgID
 	}
-	svgSwapped := req.SvgChanged && !equalInt64Ptr(svgID, old.SvgID)
+	svgSwapped := req.SvgChanged && !int64PtrEqual(svgID, old.SvgID)
 	if svgSwapped && svgID != nil {
 		if _, err := s.store.GetSuggestSvgData(r.Context(), *svgID); err != nil {
 			if errors.Is(err, store.ErrNotFound) {
@@ -213,7 +214,9 @@ func (s *Server) handleSuggestUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if svgSwapped && old.SvgID != nil {
-		_ = s.store.DeleteSuggestSvg(r.Context(), *old.SvgID)
+		if err := s.store.DeleteSuggestSvg(r.Context(), *old.SvgID); err != nil {
+			log.Printf("delete suggest svg %d: %v", *old.SvgID, err)
+		}
 	}
 	updated, err := s.store.GetEditableSuggest(r.Context(), id, typeID, uid, isAdmin)
 	if err != nil {
@@ -249,6 +252,7 @@ func (s *Server) handleSuggestUploadSvg(w http.ResponseWriter, r *http.Request) 
 		serverError(w, err)
 		return
 	}
+	r.Body = http.MaxBytesReader(w, r.Body, 2<<20)
 	if err := r.ParseMultipartForm(1 << 20); err != nil {
 		badRequest(w, "Некорректный запрос")
 		return
@@ -346,7 +350,9 @@ func (s *Server) handleSuggestDelete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if deleted && suggest.SvgID != nil {
-		_ = s.store.DeleteSuggestSvg(r.Context(), *suggest.SvgID)
+		if err := s.store.DeleteSuggestSvg(r.Context(), *suggest.SvgID); err != nil {
+			log.Printf("delete suggest svg %d: %v", *suggest.SvgID, err)
+		}
 	}
 	writeJSON(w, http.StatusNoContent, nil)
 }
@@ -371,14 +377,6 @@ func optionalUserPtr(r *http.Request) *int64 {
 		return &uid
 	}
 	return nil
-}
-
-// equalInt64Ptr — равны ли два *int64 (оба nil считаются равными).
-func equalInt64Ptr(a, b *int64) bool {
-	if a == nil || b == nil {
-		return a == b
-	}
-	return *a == *b
 }
 
 // pathInt64 разбирает числовой path-параметр или отвечает 400.

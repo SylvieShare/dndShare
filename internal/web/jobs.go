@@ -3,6 +3,7 @@ package web
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"runtime/debug"
@@ -43,7 +44,10 @@ func registerJob(code, name, description string, fn jobFn) {
 	jobDefs = append(jobDefs, jobDef{jobMeta{code, name, description}, fn})
 }
 
-var errJobCancelled = fmt.Errorf("job cancelled")
+var errJobCancelled = errors.New("job cancelled")
+
+// errJobAlreadyRunning — джоба с таким кодом уже выполняется (маппится в 409, не в 500).
+var errJobAlreadyRunning = errors.New("job already running")
 
 // JobContext — прогресс и отмена одной джобы (порт JobContext).
 type JobContext struct {
@@ -145,6 +149,16 @@ func newJobRunner(s *Server) *jobRunner {
 	return r
 }
 
+// isCodeActiveLocked — есть ли уже активная (в этом процессе) джоба с таким кодом. Вызывать под r.mu.
+func (r *jobRunner) isCodeActiveLocked(code string) bool {
+	for _, a := range r.active {
+		if a.code == code {
+			return true
+		}
+	}
+	return false
+}
+
 func (r *jobRunner) listAvailable() []jobMeta {
 	out := make([]jobMeta, 0, len(r.order))
 	for _, code := range r.order {
@@ -158,13 +172,20 @@ func (r *jobRunner) start(ctx context.Context, code string, userID int64) (any, 
 	if !ok {
 		return nil, false, nil // неизвестный код
 	}
+	// Держим лок на всём check-then-create, чтобы два параллельных старта одного кода не
+	// запустили мутирующую джобу дважды (в оригинале старт был @Synchronized).
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	if r.isCodeActiveLocked(code) {
+		return nil, true, errJobAlreadyRunning
+	}
 	running, err := r.server.store.ExistsRunningJobByCode(ctx, code)
 	if err != nil {
 		return nil, true, err
 	}
 	if running {
-		// уже выполняется — вернём текущую запись (как оригинал: не плодим дубли)
-		return nil, true, fmt.Errorf("job %s already running", code)
+		return nil, true, errJobAlreadyRunning
 	}
 	run, err := r.server.store.CreateJobRun(ctx, code, def.meta.Name, userID)
 	if err != nil {
@@ -173,9 +194,7 @@ func (r *jobRunner) start(ctx context.Context, code string, userID int64) (any, 
 
 	cancel := &atomic.Bool{}
 	a := &activeJob{runID: run.ID, code: code, cancel: cancel, flushedCurrent: -1}
-	r.mu.Lock()
 	r.active[run.ID] = a
-	r.mu.Unlock()
 
 	jc := &JobContext{
 		server: r.server,
@@ -208,6 +227,7 @@ func (r *jobRunner) run(def jobDef, jc *JobContext, a *activeJob) {
 	}()
 
 	current, total, message := jc.snapshot()
+	var finishErr error
 	switch {
 	case err == nil:
 		var result json.RawMessage
@@ -216,15 +236,20 @@ func (r *jobRunner) run(def jobDef, jc *JobContext, a *activeJob) {
 				result = b
 			}
 		}
-		_ = r.server.store.FinishJobRun(bg, a.runID, jobSuccess, current, total, message, nil, result)
-	case err == errJobCancelled:
-		_ = r.server.store.FinishJobRun(bg, a.runID, jobCancelled, current, total, message, nil, nil)
+		finishErr = r.server.store.FinishJobRun(bg, a.runID, jobSuccess, current, total, message, nil, result)
+	case errors.Is(err, errJobCancelled):
+		finishErr = r.server.store.FinishJobRun(bg, a.runID, jobCancelled, current, total, message, nil, nil)
 	default:
 		errStr := err.Error()
 		if len(errStr) > 2000 {
 			errStr = errStr[:2000]
 		}
-		_ = r.server.store.FinishJobRun(bg, a.runID, jobFailed, current, total, message, &errStr, nil)
+		finishErr = r.server.store.FinishJobRun(bg, a.runID, jobFailed, current, total, message, &errStr, nil)
+	}
+	if finishErr != nil {
+		// Если финальный UPDATE не прошёл, джоба останется RUNNING до перезапуска (там её
+		// подчистит MarkRunningJobsFailedAtBoot). Логируем, чтобы это было диагностируемо.
+		log.Printf("finish job run %d: %v", a.runID, finishErr)
 	}
 }
 

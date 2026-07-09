@@ -175,14 +175,24 @@ func (s *Store) FindBaseSuggestByCode(ctx context.Context, typeID int64, code st
 	return sg, err
 }
 
+// suggestInsertRetries — сколько раз повторить вставку suggest при гонке за id = MAX+1
+// (составной PK (type_id, id); две конкурентные вставки одного типа дают 23505).
+const suggestInsertRetries = 5
+
 // AddBaseSuggest вставляет базовую (user_id NULL) подсказку. id = MAX(id по типу)+1 (PK составной).
 func (s *Store) AddBaseSuggest(ctx context.Context, typeID int64, value string, code, desc, color *string) (Suggest, error) {
 	var id int64
-	err := s.pool.QueryRow(ctx,
-		`INSERT INTO dndshare.suggest (id, type_id, user_id, value, code, color, "desc")
-		 VALUES (COALESCE((SELECT MAX(id) FROM dndshare.suggest WHERE type_id = $1), 0) + 1, $1, NULL, $2, $3, $4, $5)
-		 RETURNING id`,
-		typeID, value, code, color, desc).Scan(&id)
+	var err error
+	for attempt := 0; attempt < suggestInsertRetries; attempt++ {
+		err = s.pool.QueryRow(ctx,
+			`INSERT INTO dndshare.suggest (id, type_id, user_id, value, code, color, "desc")
+			 VALUES (COALESCE((SELECT MAX(id) FROM dndshare.suggest WHERE type_id = $1), 0) + 1, $1, NULL, $2, $3, $4, $5)
+			 RETURNING id`,
+			typeID, value, code, color, desc).Scan(&id)
+		if err == nil || !IsUniqueViolation(err) {
+			break
+		}
+	}
 	if err != nil {
 		return Suggest{}, err
 	}
@@ -192,11 +202,17 @@ func (s *Store) AddBaseSuggest(ctx context.Context, typeID int64, value string, 
 // AddSuggest вставляет пользовательскую подсказку. id = MAX(id по типу)+1.
 func (s *Store) AddSuggest(ctx context.Context, typeID, userID int64, value string, code, color, desc *string) (Suggest, error) {
 	var id int64
-	err := s.pool.QueryRow(ctx,
-		`INSERT INTO dndshare.suggest (id, type_id, user_id, value, code, color, "desc")
-		 VALUES (COALESCE((SELECT MAX(id) FROM dndshare.suggest WHERE type_id = $1), 0) + 1, $1, $2, $3, $4, $5, $6)
-		 RETURNING id`,
-		typeID, userID, value, code, color, desc).Scan(&id)
+	var err error
+	for attempt := 0; attempt < suggestInsertRetries; attempt++ {
+		err = s.pool.QueryRow(ctx,
+			`INSERT INTO dndshare.suggest (id, type_id, user_id, value, code, color, "desc")
+			 VALUES (COALESCE((SELECT MAX(id) FROM dndshare.suggest WHERE type_id = $1), 0) + 1, $1, $2, $3, $4, $5, $6)
+			 RETURNING id`,
+			typeID, userID, value, code, color, desc).Scan(&id)
+		if err == nil || !IsUniqueViolation(err) {
+			break
+		}
+	}
 	if err != nil {
 		return Suggest{}, err
 	}
@@ -294,32 +310,23 @@ func (s *Store) GetAllSuggestTypes(ctx context.Context, sourceID *int64) ([]Sugg
 	return out, rows.Err()
 }
 
-// --- svg_storage (порт SvgStorageRepository.save/getData/delete) ---
-// Локальные хелперы, чтобы suggests-фича не зависела от порядка сборки соседних агентов.
+// --- svg_storage ---
+// Тонкие обёртки над общими SaveSvg/GetSvg/DeleteSvg (svg.go) — те же svg_storage,
+// имена сохранены ради читаемости вызовов suggests/mcp.
 
 // SaveSuggestSvg сохраняет svg-разметку и возвращает её id.
 func (s *Store) SaveSuggestSvg(ctx context.Context, data string) (int64, error) {
-	var id int64
-	err := s.pool.QueryRow(ctx,
-		`INSERT INTO dndshare.svg_storage ("data") VALUES ($1) RETURNING id`, data).Scan(&id)
-	return id, err
+	return s.SaveSvg(ctx, data)
 }
 
 // GetSuggestSvgData возвращает svg-разметку по id (ErrNotFound, если нет).
 func (s *Store) GetSuggestSvgData(ctx context.Context, id int64) (string, error) {
-	var data string
-	err := s.pool.QueryRow(ctx,
-		`SELECT "data" FROM dndshare.svg_storage WHERE id = $1`, id).Scan(&data)
-	if errors.Is(err, pgx.ErrNoRows) {
-		return "", ErrNotFound
-	}
-	return data, err
+	return s.GetSvg(ctx, id)
 }
 
 // DeleteSuggestSvg удаляет svg-разметку по id.
 func (s *Store) DeleteSuggestSvg(ctx context.Context, id int64) error {
-	_, err := s.pool.Exec(ctx, `DELETE FROM dndshare.svg_storage WHERE id = $1`, id)
-	return err
+	return s.DeleteSvg(ctx, id)
 }
 
 // int64InClause строит плейсхолдеры $start.. для IN (...) и соответствующий срез args.

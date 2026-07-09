@@ -31,6 +31,10 @@ func (s *Server) handleGetSvg(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "image/svg+xml")
+	// SVG загружается пользователями и отдаётся с того же origin — жёсткий CSP не даёт
+	// исполнять скрипты/внешние ресурсы внутри картинки (защита от stored XSS).
+	w.Header().Set("Content-Security-Policy", "default-src 'none'; style-src 'unsafe-inline'; sandbox")
+	w.Header().Set("X-Content-Type-Options", "nosniff")
 	w.WriteHeader(http.StatusOK)
 	_, _ = w.Write([]byte(data))
 }

@@ -225,11 +225,17 @@ func (s *Store) MigrateBestiaryFindSuggestByValue(ctx context.Context, typeID in
 // MigrateBestiaryAddSuggest добавляет базовый suggest (id = MAX+1 в рамках типа) и возвращает id.
 func (s *Store) MigrateBestiaryAddSuggest(ctx context.Context, typeID int64, value string, code, desc *string) (int64, error) {
 	var id int64
-	err := s.pool.QueryRow(ctx,
-		`INSERT INTO dndshare.suggest (id, type_id, user_id, value, code, color, "desc")
-		 VALUES (COALESCE((SELECT MAX(id) FROM dndshare.suggest WHERE type_id = $1), 0) + 1, $1, NULL, $2, $3, NULL, $4)
-		 RETURNING id`,
-		typeID, value, code, desc,
-	).Scan(&id)
+	var err error
+	for attempt := 0; attempt < suggestInsertRetries; attempt++ {
+		err = s.pool.QueryRow(ctx,
+			`INSERT INTO dndshare.suggest (id, type_id, user_id, value, code, color, "desc")
+			 VALUES (COALESCE((SELECT MAX(id) FROM dndshare.suggest WHERE type_id = $1), 0) + 1, $1, NULL, $2, $3, NULL, $4)
+			 RETURNING id`,
+			typeID, value, code, desc,
+		).Scan(&id)
+		if err == nil || !IsUniqueViolation(err) {
+			break
+		}
+	}
 	return id, err
 }

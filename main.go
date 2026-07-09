@@ -46,6 +46,11 @@ func main() {
 		Addr:              ":" + cfg.Port,
 		Handler:           web.New(cfg, st, s3).Handler(),
 		ReadHeaderTimeout: 15 * time.Second,
+		// ReadTimeout щедрый: аплоады треков до 50 МБ. WriteTimeout закрывает медленных
+		// читателей, IdleTimeout — простаивающие keep-alive соединения (защита от slowloris).
+		ReadTimeout:  120 * time.Second,
+		WriteTimeout: 120 * time.Second,
+		IdleTimeout:  120 * time.Second,
 	}
 
 	go func() {
