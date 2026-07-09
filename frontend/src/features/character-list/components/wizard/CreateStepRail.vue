@@ -4,8 +4,8 @@
       v-for="(s, i) in steps"
       :key="s.key"
       class="rail-step"
-      :class="{ active: i === current, done: i < current }"
-      :disabled="i > current"
+      :class="{ active: i === current, done: i < current, reachable: i <= reachable }"
+      :disabled="i > reachable"
       @click="$emit('go', i)"
     >
       <span class="rail-strip" />
@@ -22,6 +22,7 @@
 defineProps({
   steps: { type: Array, required: true },
   current: { type: Number, default: 0 },
+  reachable: { type: Number, default: 0 },
 })
 defineEmits(['go'])
 </script>

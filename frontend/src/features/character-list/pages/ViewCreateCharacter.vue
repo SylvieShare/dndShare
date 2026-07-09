@@ -12,7 +12,7 @@
     </header>
 
     <div class="cc-body">
-      <CreateStepRail class="cc-rail" :steps="steps" :current="current" @go="goTo" />
+      <CreateStepRail class="cc-rail" :steps="steps" :current="current" :reachable="maxReachable" @go="goTo" />
 
       <main class="cc-main">
         <transition name="cc-fade" mode="out-in">
@@ -74,6 +74,7 @@ const {
   isCaster, featureChoices, requiresSubrace, requiresSubclass,
   scoresComplete, pointsLeft, skillLimit, choicesComplete, spellsComplete,
   asiChoiceComplete, raceVariantsComplete,
+  raceSkillsComplete, raceLangsComplete, featComplete,
 } = wz
 
 const confirmOpen = ref(false)
@@ -109,8 +110,8 @@ const isLast = computed(() => current.value >= steps.value.length - 1)
 // The step list is dynamic (Выборы/Магия appear/disappear) — keep the index valid.
 watch(() => steps.value.length, (len) => { if (state.step > len - 1) state.step = len - 1 })
 
-const validation = computed(() => {
-  switch (stepKey.value) {
+function validateStep(key) {
+  switch (key) {
     case 'version':
       return state.version === '2014' ? { ok: true } : { ok: false, reason: '2024 в разработке — выбери 2014' }
     case 'race':
@@ -118,6 +119,9 @@ const validation = computed(() => {
       if (requiresSubrace.value && !state.subrace) return { ok: false, reason: 'Выбери происхождение' }
       if (!raceVariantsComplete.value) return { ok: false, reason: 'Сделай выбор расы' }
       if (!asiChoiceComplete.value) return { ok: false, reason: 'Распредели расовый бонус' }
+      if (!raceSkillsComplete.value) return { ok: false, reason: 'Выбери расовые навыки' }
+      if (!raceLangsComplete.value) return { ok: false, reason: 'Выбери язык' }
+      if (!featComplete.value) return { ok: false, reason: 'Выбери черту' }
       return { ok: true }
     case 'class':
       if (!state.charClass) return { ok: false, reason: 'Выбери класс' }
@@ -142,9 +146,21 @@ const validation = computed(() => {
     default:
       return { ok: true }
   }
-})
+}
+const validation = computed(() => validateStep(stepKey.value))
 const canNext = computed(() => validation.value.ok)
 const blockReason = computed(() => (validation.value.ok ? '' : validation.value.reason))
+
+// Furthest step the user may jump to via the rail: the first invalid step (which
+// still needs filling), or the last step when everything so far is valid. Going
+// back never locks the forward steps you already completed.
+const maxReachable = computed(() => {
+  const list = steps.value
+  for (let i = 0; i < list.length; i++) {
+    if (!validateStep(list[i].key).ok) return i
+  }
+  return list.length - 1
+})
 
 async function next() {
   if (!canNext.value) return
@@ -155,7 +171,7 @@ function back() {
   if (current.value === 0) { exit(); return }
   state.step--
 }
-function goTo(i) { if (i <= current.value) state.step = i }
+function goTo(i) { if (i <= maxReachable.value) state.step = i }
 function exit() { router.push('/chars') }
 
 // "Создать" is available on every step (an empty character is allowed) — confirm

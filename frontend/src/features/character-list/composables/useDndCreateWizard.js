@@ -362,8 +362,8 @@ export function useDndCreateWizard() {
   // ─── Persistence (localStorage) — survives reload; going back keeps forward picks ─
   const STORAGE_KEY = 'dnd-create-wizard-v1'
   function serialize() {
-    const { step, version, name, race, subrace, charClass, subclass, raceVariant, statMethod, scores, rollPool, asiChoice, skillIds, spellIds, choices } = state
-    return { step, version, name, race, subrace, charClass, subclass, raceVariant, statMethod, scores, rollPool, asiChoice, skillIds, spellIds, choices }
+    const { step, version, name, race, subrace, charClass, subclass, raceVariant, statMethod, scores, rollPool, asiChoice, raceSkillIds, raceLangIds, featIds, skillIds, spellIds, choices } = state
+    return { step, version, name, race, subrace, charClass, subclass, raceVariant, statMethod, scores, rollPool, asiChoice, raceSkillIds, raceLangIds, featIds, skillIds, spellIds, choices }
   }
   function persist() {
     if (hydrating) return
@@ -403,6 +403,10 @@ export function useDndCreateWizard() {
     subclassAtCreation, requiresSubrace, requiresSubclass,
     // floating racial ASI + named variants
     toggleAsiChoice, asiChoiceComplete, raceVariantsComplete,
+    // race extra picks: skills / language / feat
+    raceSkillOptions, raceSkillLimit, toggleRaceSkill, raceSkillsComplete,
+    raceLangOptions, raceLangLimit, toggleRaceLang, raceLangsComplete,
+    featOptions, featLimit, toggleFeat, featComplete,
     // persistence
     restore, clearPersist,
     // skills
