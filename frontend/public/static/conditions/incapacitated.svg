@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-labelledby="title">
+  <title id="title">Выход из строя</title>
+  <g fill="none" stroke="#b9b9c6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 3.2v17.6"/>
+    <path d="M5.8 6.1 18.2 18.5"/>
+    <path d="M18.2 6.1 5.8 18.5"/>
+    <circle cx="12" cy="12" r="8.6"/>
+    <path d="M8 12h8"/>
+  </g>
+</svg>

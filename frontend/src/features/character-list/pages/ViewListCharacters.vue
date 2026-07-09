@@ -1,0 +1,268 @@
+<template>
+  <div class="page">
+    <div class="page-header">
+      <h1 class="page-title">Персонажи</h1>
+    </div>
+
+    <div class="chars-grid">
+      <template v-if="loading">
+        <div v-for="n in 2" :key="n" class="char-skeleton">
+          <div class="sk-ava" />
+          <div class="sk-lines">
+            <div class="sk-line sk-name" />
+            <div class="sk-line sk-who" />
+            <div class="sk-line sk-meta" />
+          </div>
+        </div>
+      </template>
+
+      <template v-else>
+        <CharBox
+          v-for="char in chars"
+          :key="char.uuid"
+          :uuid="char.uuid"
+          :data="char.data"
+          :raw="char"
+          :templateName="templateName(char.templateId)"
+          :accessors="accessorsFor(char.templateId)"
+          :pathValues="templatePathValues(char.templateId)"
+          :session="topSession(char.uuid)"
+          :publicVisible="char.publicVisible"
+          :changedAt="char.changedAt"
+          @clone="cloneChar"
+          @delete="deleteChar"
+        />
+        <div class="char-create" @click="openCreateModal">
+          <div class="create-icon">+</div>
+          <div class="create-label">Новый персонаж</div>
+        </div>
+      </template>
+    </div>
+
+    <CharacterCreateModal
+      v-if="showModal"
+      :templates="templates"
+      :creating="creating"
+      :origin-rect="createOriginRect"
+      :origin-el="createOriginEl"
+      @close="closeCreateModal"
+      @create="createChar"
+    />
+  </div>
+</template>
+
+<script>
+// Named so App.vue's <keep-alive include="ViewListCharacters"> can cache the list
+// across expand-from-tile navigations (tiles stay mounted for the VT snapshots).
+export default { name: 'ViewListCharacters' }
+</script>
+
+<script setup>
+import { computed, onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import CharBox from "@/features/character-list/components/CharBox"
+import CharacterCreateModal from "@/features/character-list/components/CharacterCreateModal"
+import { consumePrefetch } from '@/app/router'
+import { fetchGet, fetchPost, fetchDelete } from '@/shared/api/http'
+import { resolveSetting, settingAccessors } from '@/features/character-editor/settings'
+import { useTemplateStore } from '@/stores/template'
+
+const router = useRouter()
+const route = useRoute()
+const templateStore = useTemplateStore()
+const chars = ref([])
+const sessionsByChar = ref({})
+const loading = ref(true)
+const showModal = ref(false)
+const creating = ref(false)
+const createOriginEl = ref(null)
+const createOriginRect = ref(null)
+const templates = computed(() => templateStore.all)
+
+function loadChars(preFetched) {
+  loading.value = true
+  const promise = preFetched || fetchGet('/chars')
+  promise.then(res => {
+    chars.value = res?.chars || []
+    sessionsByChar.value = res?.sessionsByChar || {}
+    loading.value = false
+  })
+}
+
+function templateById(id) {
+  return templates.value.find(t => t.id === id) || null
+}
+
+function templateName(id) {
+  return templateById(id)?.name || ''
+}
+
+function templatePathValues(id) {
+  return templateById(id)?.pathValuesForList || null
+}
+
+function accessorsFor(id) {
+  // Identity is resolved from the template's `name` (see settings/index.js), so
+  // pass the whole template — the DB `schema` is no longer consulted here.
+  return settingAccessors(templateById(id))
+}
+
+function topSession(uuid) {
+  return sessionsByChar.value[uuid]?.[0] || null
+}
+
+function openCreateModal(e) {
+  // D&D creation is a dedicated page; legacy settings (VTM createForm) keep the modal.
+  const dnd = templates.value.find(t => resolveSetting(t)?.system === 'dnd5e')
+  if (dnd) { router.push('/chars/new'); return }
+  const el = e?.currentTarget || null
+  createOriginEl.value = el
+  if (el) {
+    const r = el.getBoundingClientRect()
+    createOriginRect.value = { left: r.left, top: r.top, width: r.width, height: r.height }
+  }
+  showModal.value = true
+}
+
+function closeCreateModal() {
+  showModal.value = false
+}
+
+async function createChar(payload) {
+  if (creating.value) return
+  creating.value = true
+  try {
+    const res = await fetchPost('/chars', payload)
+    showModal.value = false
+    router.push('/char/' + res.uuid)
+  } finally {
+    creating.value = false
+  }
+}
+
+async function cloneChar(uuid) {
+  await fetchPost('/char/' + uuid + '/clone', null)
+  loadChars()
+}
+
+async function deleteChar(uuid) {
+  await fetchDelete('/char/' + uuid)
+  chars.value = chars.value.filter(c => c.uuid !== uuid)
+}
+
+onMounted(() => {
+  loadChars(consumePrefetch(route.fullPath))
+  templateStore.ensure()
+})
+</script>
+
+<style scoped>
+.page {
+  padding: 24px;
+  min-height: calc(100vh - var(--header-h));
+  max-width: 1400px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.page-header {
+  margin-bottom: 24px;
+}
+
+.page-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-1, #fff);
+  margin: 0;
+}
+
+.chars-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(440px, 1fr));
+  gap: 16px;
+}
+
+.char-skeleton {
+  height: 124px;
+  background: var(--block-bg);
+  border-radius: var(--r-lg);
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.sk-ava {
+  flex-shrink: 0;
+  width: 96px;
+  align-self: stretch;
+  background: #26263a;
+  animation: sk-pulse 1.4s ease-in-out infinite;
+}
+
+.sk-lines {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 14px;
+}
+
+.sk-line {
+  height: 10px;
+  border-radius: 5px;
+  background: #26263a;
+  animation: sk-pulse 1.4s ease-in-out infinite;
+}
+
+.sk-name  { width: 60%; animation-delay: 0.1s; }
+.sk-who   { width: 80%; animation-delay: 0.2s; }
+.sk-meta  { width: 40%; animation-delay: 0.3s; }
+
+@keyframes sk-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+.char-create {
+  height: 124px;
+  background-color: var(--block-bg);
+  border: 2px dashed var(--border);
+  border-radius: var(--r-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  gap: 4px;
+  transition: border-color 0.2s, background 0.2s;
+  box-sizing: border-box;
+}
+
+.char-create:hover {
+  border-color: var(--accent-dim);
+  background-color: #1e1a2e;
+}
+
+.create-icon {
+  font-size: 28px;
+  color: var(--accent-dim);
+  line-height: 1;
+}
+
+.create-label {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+@media (max-width: 420px) {
+  .page {
+    padding: 16px 12px;
+  }
+
+  .chars-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+</style>

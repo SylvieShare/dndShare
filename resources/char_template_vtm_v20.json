@@ -1,0 +1,1133 @@
+{
+  "schemaVersion": 2,
+  "blocks": {
+    "char_name": {
+      "id": "char_name",
+      "type": "INPUT_TEXT",
+      "content": {
+        "color": "#c8a04a",
+        "placeholder": "Имя персонажа"
+      }
+    },
+    "ava": {
+      "id": "ava",
+      "type": "AVATARS",
+      "content": {
+        "width": 220,
+        "height": 360
+      }
+    },
+    "clan": {
+      "id": "clan",
+      "type": "INPUT_TEXT",
+      "content": {
+        "placeholder": "Клан"
+      }
+    },
+    "nature": {
+      "id": "nature",
+      "type": "INPUT_TEXT",
+      "content": {
+        "placeholder": "Натура"
+      },
+      "title": "Натура:"
+    },
+    "mask": {
+      "id": "mask",
+      "type": "INPUT_TEXT",
+      "content": {
+        "placeholder": "Маска"
+      },
+      "title": "Маска:"
+    },
+    "persona": {
+      "id": "persona",
+      "type": "INPUT_TEXT",
+      "content": {
+        "placeholder": "Амплуа"
+      },
+      "title": "Амплуа:"
+    },
+    "sire": {
+      "id": "sire",
+      "type": "INPUT_TEXT",
+      "content": {
+        "placeholder": "Сир"
+      },
+      "title": "Сир:"
+    },
+    "section_header_tab_0_0_0_3_0": {
+      "type": "SECTION_HEADER",
+      "title": "ЗДОРОВЬЕ",
+      "id": "section_header_tab_0_0_0_3_0"
+    },
+    "health": {
+      "id": "health",
+      "type": "VTM_HEALTH"
+    },
+    "section_header_tab_0_0_0_4": {
+      "type": "SECTION_HEADER",
+      "title": "ОПЫТ",
+      "id": "section_header_tab_0_0_0_4"
+    },
+    "xp_total": {
+      "id": "xp_total",
+      "type": "INPUT_INT_BLOCK",
+      "title": "Всего"
+    },
+    "xp_spent": {
+      "id": "xp_spent",
+      "type": "INPUT_INT_BLOCK",
+      "title": "Потрачено"
+    },
+    "section_header_tab_0_0_1_0": {
+      "type": "SECTION_HEADER",
+      "content": {
+        "align": "center"
+      },
+      "title": "Характеристики",
+      "id": "section_header_tab_0_0_1_0"
+    },
+    "section_header_tab_0_0_1_1_0_0": {
+      "type": "SECTION_HEADER",
+      "title": "ФИЗИЧЕСКИЕ",
+      "id": "section_header_tab_0_0_1_1_0_0"
+    },
+    "strength": {
+      "id": "strength",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 5,
+        "title": "Сила"
+      }
+    },
+    "dexterity": {
+      "id": "dexterity",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 5,
+        "title": "Ловкость"
+      }
+    },
+    "stamina": {
+      "id": "stamina",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 5,
+        "title": "Выносливость"
+      }
+    },
+    "section_header_tab_0_0_1_1_1_0": {
+      "type": "SECTION_HEADER",
+      "title": "СОЦИАЛЬНЫЕ",
+      "id": "section_header_tab_0_0_1_1_1_0"
+    },
+    "charisma": {
+      "id": "charisma",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 5,
+        "title": "Обаяние"
+      }
+    },
+    "manipulation": {
+      "id": "manipulation",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 5,
+        "title": "Манипуляция"
+      }
+    },
+    "appearance": {
+      "id": "appearance",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 5,
+        "title": "Внешность"
+      }
+    },
+    "section_header_tab_0_0_1_1_2_0": {
+      "type": "SECTION_HEADER",
+      "title": "МЕНТАЛЬНЫЕ",
+      "id": "section_header_tab_0_0_1_1_2_0"
+    },
+    "perception": {
+      "id": "perception",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 5,
+        "title": "Восприятие"
+      }
+    },
+    "intelligence": {
+      "id": "intelligence",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 5,
+        "title": "Интеллект"
+      }
+    },
+    "wits": {
+      "id": "wits",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 5,
+        "title": "Смекалка"
+      }
+    },
+    "section_header_tab_0_0_1_2": {
+      "type": "SECTION_HEADER",
+      "content": {
+        "align": "center"
+      },
+      "title": "Способности",
+      "id": "section_header_tab_0_0_1_2"
+    },
+    "section_header_tab_0_0_1_3_0_0": {
+      "type": "SECTION_HEADER",
+      "title": "ТАЛАНТЫ",
+      "id": "section_header_tab_0_0_1_3_0_0"
+    },
+    "athletics": {
+      "id": "athletics",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 5,
+        "title": "Атлетика"
+      }
+    },
+    "alertness": {
+      "id": "alertness",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 5,
+        "title": "Бдительность"
+      }
+    },
+    "brawl": {
+      "id": "brawl",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 5,
+        "title": "Драка"
+      }
+    },
+    "intimidation": {
+      "id": "intimidation",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 5,
+        "title": "Запугивание"
+      }
+    },
+    "expression": {
+      "id": "expression",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 5,
+        "title": "Красноречие"
+      }
+    },
+    "leadership": {
+      "id": "leadership",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 5,
+        "title": "Лидерство"
+      }
+    },
+    "streetwise": {
+      "id": "streetwise",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 5,
+        "title": "Уличное чутье"
+      }
+    },
+    "subterfuge": {
+      "id": "subterfuge",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 5,
+        "title": "Хитрость"
+      }
+    },
+    "dodge": {
+      "id": "dodge",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 5,
+        "title": "Шестое чувство"
+      }
+    },
+    "empathy": {
+      "id": "empathy",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 5,
+        "title": "Эмпатия"
+      }
+    },
+    "section_header_tab_0_0_1_3_1_0": {
+      "type": "SECTION_HEADER",
+      "title": "НАВЫКИ",
+      "id": "section_header_tab_0_0_1_3_1_0"
+    },
+    "drive": {
+      "id": "drive",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 5,
+        "title": "Вождение"
+      }
+    },
+    "security": {
+      "id": "security",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 5,
+        "title": "Воровство"
+      }
+    },
+    "survival": {
+      "id": "survival",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 5,
+        "title": "Выживание"
+      }
+    },
+    "performance": {
+      "id": "performance",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 5,
+        "title": "Исполнение"
+      }
+    },
+    "animal_ken": {
+      "id": "animal_ken",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 5,
+        "title": "Обращение с животными"
+      }
+    },
+    "crafts": {
+      "id": "crafts",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 5,
+        "title": "Ремесло"
+      }
+    },
+    "stealth": {
+      "id": "stealth",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 5,
+        "title": "Скрытность"
+      }
+    },
+    "firearms": {
+      "id": "firearms",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 5,
+        "title": "Стрельба"
+      }
+    },
+    "melee": {
+      "id": "melee",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 5,
+        "title": "Фехтование"
+      }
+    },
+    "etiquette": {
+      "id": "etiquette",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 5,
+        "title": "Этикет"
+      }
+    },
+    "section_header_tab_0_0_1_3_2_0": {
+      "type": "SECTION_HEADER",
+      "title": "ЗНАНИЯ",
+      "id": "section_header_tab_0_0_1_3_2_0"
+    },
+    "linguistics": {
+      "id": "linguistics",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 5,
+        "title": "Гуманитарные науки"
+      }
+    },
+    "academics": {
+      "id": "academics",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 5,
+        "title": "Естественные науки"
+      }
+    },
+    "law": {
+      "id": "law",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 5,
+        "title": "Законы"
+      }
+    },
+    "computer": {
+      "id": "computer",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 5,
+        "title": "Информатика"
+      }
+    },
+    "medicine": {
+      "id": "medicine",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 5,
+        "title": "Медицина"
+      }
+    },
+    "occult": {
+      "id": "occult",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 5,
+        "title": "Оккультизм"
+      }
+    },
+    "politics": {
+      "id": "politics",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 5,
+        "title": "Политика"
+      }
+    },
+    "investigation": {
+      "id": "investigation",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 5,
+        "title": "Расследование"
+      }
+    },
+    "finance": {
+      "id": "finance",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 5,
+        "title": "Финансы"
+      }
+    },
+    "electronics": {
+      "id": "electronics",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 5,
+        "title": "Электроника"
+      }
+    },
+    "section_header_tab_0_0_1_4": {
+      "type": "SECTION_HEADER",
+      "content": {
+        "align": "center"
+      },
+      "title": "Преимущества",
+      "id": "section_header_tab_0_0_1_4"
+    },
+    "section_header_tab_0_0_1_5_0_0": {
+      "type": "SECTION_HEADER",
+      "title": "ДИСЦИПЛИНЫ",
+      "id": "section_header_tab_0_0_1_5_0_0"
+    },
+    "disciplines": {
+      "id": "disciplines",
+      "type": "LINE_POINTS_LIST",
+      "content": {
+        "rows": 5,
+        "max": 5
+      }
+    },
+    "section_header_tab_0_0_1_5_1_0": {
+      "type": "SECTION_HEADER",
+      "title": "ПРЕДЫСТОРИИ",
+      "id": "section_header_tab_0_0_1_5_1_0"
+    },
+    "backgrounds": {
+      "id": "backgrounds",
+      "type": "LINE_POINTS_LIST",
+      "content": {
+        "rows": 5,
+        "max": 5
+      }
+    },
+    "section_header_tab_0_0_1_5_2_0": {
+      "type": "SECTION_HEADER",
+      "title": "ДОБРОДЕТЕЛИ",
+      "id": "section_header_tab_0_0_1_5_2_0"
+    },
+    "conscience": {
+      "id": "conscience",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 5,
+        "title": "Совесть/Решимость"
+      }
+    },
+    "self_control": {
+      "id": "self_control",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 5,
+        "title": "Самоконтроль/Инстинкты"
+      }
+    },
+    "courage": {
+      "id": "courage",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 5,
+        "title": "Смелость"
+      }
+    },
+    "section_header_tab_0_0_1_6": {
+      "type": "SECTION_HEADER",
+      "content": {
+        "align": "center"
+      },
+      "title": "",
+      "id": "section_header_tab_0_0_1_6"
+    },
+    "section_header_tab_0_0_1_7_0_0": {
+      "type": "SECTION_HEADER",
+      "title": "Деньги",
+      "id": "section_header_tab_0_0_1_7_0_0"
+    },
+    "money": {
+      "id": "money",
+      "type": "BLOCK_MONEY",
+      "preset": [
+        {
+          "title": "Доллары",
+          "short_title": "$",
+          "color": "#00FF00",
+          "amount": 0
+        }
+      ]
+    },
+    "section_header_tab_0_0_1_7_1_0": {
+      "type": "SECTION_HEADER",
+      "title": "ЧЕЛОВЕЧНОСТЬ / ПУТЬ",
+      "id": "section_header_tab_0_0_1_7_1_0"
+    },
+    "humanity": {
+      "id": "humanity",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 10,
+        "title": "Человечность"
+      }
+    },
+    "section_header_tab_0_0_1_7_1_2": {
+      "type": "SECTION_HEADER",
+      "title": "СИЛА ВОЛИ",
+      "id": "section_header_tab_0_0_1_7_1_2"
+    },
+    "willpower_perm": {
+      "id": "willpower_perm",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 10,
+        "title": "Постоянная"
+      }
+    },
+    "willpower_temp": {
+      "id": "willpower_temp",
+      "type": "LINE_POINTS",
+      "content": {
+        "max": 10,
+        "title": "Временная"
+      }
+    },
+    "section_header_tab_0_0_1_7_2_0": {
+      "type": "SECTION_HEADER",
+      "title": "ЗАПАС КРОВИ",
+      "id": "section_header_tab_0_0_1_7_2_0"
+    },
+    "blood_pool": {
+      "id": "blood_pool",
+      "type": "VTM_BLOOD_POOL",
+      "content": {
+        "default": 20,
+        "in_row": 10
+      }
+    },
+    "clan_weakness": {
+      "id": "clan_weakness",
+      "type": "INPUT_DESCRIPTION",
+      "title": "Слабость клана",
+      "content": {
+        "placeholder": "Слабость клана..."
+      }
+    },
+    "notes": {
+      "id": "notes",
+      "type": "INPUT_DESCRIPTION",
+      "title": "Заметки",
+      "content": {
+        "placeholder": "Заметки..."
+      }
+    }
+  },
+  "layouts": {
+    "desktop": {
+      "tabs": [
+        {
+          "title": "База",
+          "content": {
+            "kind": "layout",
+            "type": "row",
+            "props": {
+              "gap": "15px",
+              "hr": true
+            },
+            "children": [
+              {
+                "kind": "layout",
+                "type": "column",
+                "props": {
+                  "gap": "15px"
+                },
+                "children": [
+                  {
+                    "kind": "block",
+                    "ref": "char_name"
+                  },
+                  {
+                    "kind": "block",
+                    "ref": "ava"
+                  },
+                  {
+                    "kind": "layout",
+                    "type": "column",
+                    "props": {
+                      "gap": "8px"
+                    },
+                    "children": [
+                      {
+                        "kind": "block",
+                        "ref": "clan"
+                      },
+                      {
+                        "kind": "block",
+                        "ref": "nature"
+                      },
+                      {
+                        "kind": "block",
+                        "ref": "mask"
+                      },
+                      {
+                        "kind": "block",
+                        "ref": "persona"
+                      },
+                      {
+                        "kind": "block",
+                        "ref": "sire"
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "layout",
+                    "type": "column",
+                    "props": {
+                      "gap": "4px"
+                    },
+                    "children": [
+                      {
+                        "kind": "block",
+                        "ref": "section_header_tab_0_0_0_3_0"
+                      },
+                      {
+                        "kind": "block",
+                        "ref": "health"
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "block",
+                    "ref": "section_header_tab_0_0_0_4"
+                  },
+                  {
+                    "kind": "layout",
+                    "type": "row",
+                    "props": {
+                      "gap": "10px"
+                    },
+                    "children": [
+                      {
+                        "kind": "block",
+                        "ref": "xp_total"
+                      },
+                      {
+                        "kind": "block",
+                        "ref": "xp_spent"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "kind": "layout",
+                "type": "column",
+                "props": {
+                  "gap": "15px",
+                  "width": "880px"
+                },
+                "children": [
+                  {
+                    "kind": "block",
+                    "ref": "section_header_tab_0_0_1_0"
+                  },
+                  {
+                    "kind": "layout",
+                    "type": "grid",
+                    "props": {
+                      "gap": "30px"
+                    },
+                    "children": [
+                      {
+                        "kind": "layout",
+                        "type": "column",
+                        "props": {
+                          "gap": "4px"
+                        },
+                        "children": [
+                          {
+                            "kind": "block",
+                            "ref": "section_header_tab_0_0_1_1_0_0"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "strength"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "dexterity"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "stamina"
+                          }
+                        ]
+                      },
+                      {
+                        "kind": "layout",
+                        "type": "column",
+                        "props": {
+                          "gap": "4px"
+                        },
+                        "children": [
+                          {
+                            "kind": "block",
+                            "ref": "section_header_tab_0_0_1_1_1_0"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "charisma"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "manipulation"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "appearance"
+                          }
+                        ]
+                      },
+                      {
+                        "kind": "layout",
+                        "type": "column",
+                        "props": {
+                          "gap": "4px"
+                        },
+                        "children": [
+                          {
+                            "kind": "block",
+                            "ref": "section_header_tab_0_0_1_1_2_0"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "perception"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "intelligence"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "wits"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "block",
+                    "ref": "section_header_tab_0_0_1_2"
+                  },
+                  {
+                    "kind": "layout",
+                    "type": "grid",
+                    "props": {
+                      "gap": "30px"
+                    },
+                    "children": [
+                      {
+                        "kind": "layout",
+                        "type": "column",
+                        "props": {
+                          "gap": "4px"
+                        },
+                        "children": [
+                          {
+                            "kind": "block",
+                            "ref": "section_header_tab_0_0_1_3_0_0"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "athletics"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "alertness"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "brawl"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "intimidation"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "expression"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "leadership"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "streetwise"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "subterfuge"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "dodge"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "empathy"
+                          }
+                        ]
+                      },
+                      {
+                        "kind": "layout",
+                        "type": "column",
+                        "props": {
+                          "gap": "4px"
+                        },
+                        "children": [
+                          {
+                            "kind": "block",
+                            "ref": "section_header_tab_0_0_1_3_1_0"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "drive"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "security"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "survival"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "performance"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "animal_ken"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "crafts"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "stealth"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "firearms"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "melee"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "etiquette"
+                          }
+                        ]
+                      },
+                      {
+                        "kind": "layout",
+                        "type": "column",
+                        "props": {
+                          "gap": "4px"
+                        },
+                        "children": [
+                          {
+                            "kind": "block",
+                            "ref": "section_header_tab_0_0_1_3_2_0"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "linguistics"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "academics"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "law"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "computer"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "medicine"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "occult"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "politics"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "investigation"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "finance"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "electronics"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "block",
+                    "ref": "section_header_tab_0_0_1_4"
+                  },
+                  {
+                    "kind": "layout",
+                    "type": "grid",
+                    "props": {
+                      "gap": "30px"
+                    },
+                    "children": [
+                      {
+                        "kind": "layout",
+                        "type": "column",
+                        "props": {
+                          "gap": "4px"
+                        },
+                        "children": [
+                          {
+                            "kind": "block",
+                            "ref": "section_header_tab_0_0_1_5_0_0"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "disciplines"
+                          }
+                        ]
+                      },
+                      {
+                        "kind": "layout",
+                        "type": "column",
+                        "props": {
+                          "gap": "4px"
+                        },
+                        "children": [
+                          {
+                            "kind": "block",
+                            "ref": "section_header_tab_0_0_1_5_1_0"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "backgrounds"
+                          }
+                        ]
+                      },
+                      {
+                        "kind": "layout",
+                        "type": "column",
+                        "props": {
+                          "gap": "4px"
+                        },
+                        "children": [
+                          {
+                            "kind": "block",
+                            "ref": "section_header_tab_0_0_1_5_2_0"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "conscience"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "self_control"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "courage"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "block",
+                    "ref": "section_header_tab_0_0_1_6"
+                  },
+                  {
+                    "kind": "layout",
+                    "type": "grid",
+                    "props": {
+                      "gap": "30px"
+                    },
+                    "children": [
+                      {
+                        "kind": "layout",
+                        "type": "column",
+                        "props": {
+                          "gap": "4px"
+                        },
+                        "children": [
+                          {
+                            "kind": "block",
+                            "ref": "section_header_tab_0_0_1_7_0_0"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "money"
+                          }
+                        ]
+                      },
+                      {
+                        "kind": "layout",
+                        "type": "column",
+                        "props": {
+                          "gap": "4px"
+                        },
+                        "children": [
+                          {
+                            "kind": "block",
+                            "ref": "section_header_tab_0_0_1_7_1_0"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "humanity"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "section_header_tab_0_0_1_7_1_2"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "willpower_perm"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "willpower_temp"
+                          }
+                        ]
+                      },
+                      {
+                        "kind": "layout",
+                        "type": "column",
+                        "props": {
+                          "gap": "4px"
+                        },
+                        "children": [
+                          {
+                            "kind": "block",
+                            "ref": "section_header_tab_0_0_1_7_2_0"
+                          },
+                          {
+                            "kind": "block",
+                            "ref": "blood_pool"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "default": true,
+          "width": 1390
+        },
+        {
+          "title": "Личность",
+          "content": {
+            "kind": "block",
+            "ref": "clan_weakness"
+          },
+          "svg": "/static/tab-personality.svg"
+        },
+        {
+          "title": "Заметки",
+          "content": {
+            "kind": "block",
+            "ref": "notes"
+          },
+          "width": 1390,
+          "svg": "/static/tab-notes.svg"
+        }
+      ]
+    }
+  }
+}

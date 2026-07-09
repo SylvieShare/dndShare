@@ -1,0 +1,349 @@
+{
+  "tabs": [
+    {
+      "svg": "/static/tab-stats.svg",
+      "title": "Статы",
+      "content": {
+        "kind": "layout",
+        "type": "column",
+        "props": {
+          "gap": "20px"
+        },
+        "children": [
+          {
+            "ref": "STR",
+            "kind": "block",
+            "props": {
+              "variant": "mobile"
+            }
+          },
+          {
+            "ref": "DEX",
+            "kind": "block",
+            "props": {
+              "variant": "mobile"
+            }
+          },
+          {
+            "ref": "CON",
+            "kind": "block",
+            "props": {
+              "variant": "mobile"
+            }
+          },
+          {
+            "ref": "INT",
+            "kind": "block",
+            "props": {
+              "variant": "mobile"
+            }
+          },
+          {
+            "ref": "WIS",
+            "kind": "block",
+            "props": {
+              "variant": "mobile"
+            }
+          },
+          {
+            "ref": "CHA",
+            "kind": "block",
+            "props": {
+              "variant": "mobile"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "svg": "/static/tab-weapons.svg",
+      "title": "Оружие",
+      "content": {
+        "ref": "weapon",
+        "kind": "block",
+        "props": {
+          "variant": "list",
+          "show_add_in_view": true
+        }
+      }
+    },
+    {
+      "svg": "/static/tab-magic.svg",
+      "title": "Магия",
+      "content": {
+        "ref": "spells",
+        "kind": "block",
+        "props": {
+          "show_add_in_view": true
+        }
+      }
+    },
+    {
+      "svg": "/static/container-box.svg",
+      "title": "Предметы",
+      "content": {
+        "kind": "layout",
+        "type": "column",
+        "props": {
+          "gap": "20px"
+        },
+        "children": [
+          {
+            "ref": "counters",
+            "kind": "block"
+          },
+          {
+            "ref": "money",
+            "kind": "block"
+          },
+          {
+            "ref": "potions",
+            "kind": "block"
+          },
+          {
+            "ref": "items",
+            "kind": "block"
+          }
+        ]
+      }
+    },
+    {
+      "svg": "/static/tab-skills.svg",
+      "title": "Умения",
+      "content": {
+        "kind": "layout",
+        "type": "column",
+        "props": {
+          "gap": "20px"
+        },
+        "children": [
+          {
+            "ref": "proficiencies",
+            "kind": "block"
+          },
+          {
+            "ref": "abilities_feats",
+            "kind": "block"
+          },
+          {
+            "ref": "abilities_race",
+            "kind": "block"
+          },
+          {
+            "ref": "abilities_class",
+            "kind": "block"
+          }
+        ]
+      }
+    },
+    {
+      "svg": "/static/tab-personality.svg",
+      "title": "Личность",
+      "content": {
+        "kind": "layout",
+        "type": "column",
+        "props": {
+          "gap": "16px"
+        },
+        "children": [
+          {
+            "kind": "layout",
+            "type": "row",
+            "props": {
+              "gap": "12px",
+              "align-items": "stretch"
+            },
+            "children": [
+              {
+                "ref": "ava",
+                "kind": "block",
+                "props": {
+                  "width": "112px",
+                  "height": "148px",
+                  "shrink": 0
+                }
+              },
+              {
+                "kind": "layout",
+                "type": "column",
+                "props": {
+                  "gap": "8px",
+                  "grow": 1,
+                  "basis": 0,
+                  "minWidth": 0
+                },
+                "children": [
+                  {
+                    "ref": "name",
+                    "kind": "block"
+                  },
+                  {
+                    "ref": "race",
+                    "kind": "block"
+                  },
+                  {
+                    "ref": "class",
+                    "kind": "block"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "layout",
+            "type": "grid",
+            "props": {
+              "gap": "10px",
+              "columns": 2
+            },
+            "children": [
+              {
+                "ref": "person_origin",
+                "kind": "block"
+              },
+              {
+                "ref": "person_alignment",
+                "kind": "block"
+              }
+            ]
+          },
+          {
+            "ref": "person_appearance",
+            "kind": "block"
+          },
+          {
+            "kind": "layout",
+            "type": "grid",
+            "props": {
+              "gap": "10px",
+              "columns": 2
+            },
+            "children": [
+              {
+                "ref": "person_height",
+                "kind": "block"
+              },
+              {
+                "ref": "person_weight",
+                "kind": "block"
+              },
+              {
+                "ref": "person_age",
+                "kind": "block"
+              },
+              {
+                "ref": "person_eyes",
+                "kind": "block"
+              },
+              {
+                "ref": "person_skin",
+                "kind": "block"
+              },
+              {
+                "ref": "person_hair",
+                "kind": "block"
+              }
+            ]
+          },
+          {
+            "kind": "layout",
+            "type": "column",
+            "props": {
+              "gap": "14px"
+            },
+            "children": [
+              {
+                "ref": "person_traits",
+                "kind": "block"
+              },
+              {
+                "ref": "person_ideals",
+                "kind": "block"
+              },
+              {
+                "ref": "person_bonds",
+                "kind": "block"
+              },
+              {
+                "ref": "person_flaws",
+                "kind": "block"
+              }
+            ]
+          },
+          {
+            "ref": "person_backstory",
+            "kind": "block"
+          },
+          {
+            "ref": "person_allies",
+            "kind": "block"
+          }
+        ]
+      }
+    }
+  ],
+  "toolbar_blocks": [
+    {
+      "ref": "armor",
+      "kind": "block",
+      "variant": "mini"
+    },
+    {
+      "ref": "initiative",
+      "kind": "block",
+      "variant": "mini"
+    },
+    {
+      "ref": "speed",
+      "kind": "block",
+      "variant": "mini"
+    },
+    {
+      "ref": "prof_bonus",
+      "kind": "block",
+      "variant": "mini"
+    },
+    {
+      "ref": "lvl",
+      "kind": "block",
+      "variant": "mini"
+    }
+  ],
+  "header_title_path": [
+    "values.name",
+    "values.race",
+    "values.class"
+  ],
+  "common_mobile_blocks": {
+    "kind": "layout",
+    "type": "row",
+    "props": {
+      "gap": "10px",
+      "columns": [
+        {
+          "width": "100%"
+        }
+      ]
+    },
+    "children": [
+      {
+        "ref": "hp",
+        "kind": "block",
+        "props": {
+          "variant": "compact",
+          "style": {
+            "width": "100%"
+          }
+        }
+      },
+      {
+        "ref": "states",
+        "kind": "block",
+        "props": {
+          "variant": "compact"
+        }
+      }
+    ]
+  },
+  "common_mobile_blocks_scroll_hide": false
+}

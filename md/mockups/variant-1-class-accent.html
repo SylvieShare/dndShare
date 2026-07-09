@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Вариант 1 — Классовый акцент</title>
+<style>
+  /* ─────────────────────────────────────────────────────────────
+     VARIANT 1 — "CLASS ACCENT"
+     Идея: остаёмся в тёмной теме, но вводим КЛАССОВЫЙ цвет как
+     второй акцент. Плут = бирюзово-зелёный. Каждая характеристика
+     получает свой оттенок и цветную левую грань -> карточки больше
+     не сливаются. Добавлена слоистость: фон страницы темнее, чем
+     карточки, у карточек тонкая верхняя подсветка.
+     ───────────────────────────────────────────────────────────── */
+  :root{
+    --bg-deep:#0e0f17;
+    --bg:#14161f;
+    --bg-header:#181b26;
+    --block-bg:#1d2030;
+    --block-bg-2:#22263a;
+    --surface-1:#282c44;
+    --border:rgba(255,255,255,.07);
+    --border-strong:rgba(255,255,255,.13);
+    --text-1:#eef0f7;
+    --text-2:#a8acc2;
+    --text-muted:#787e9c;
+
+    --accent:#7c5cff;          /* навигация / уровень */
+    --accent-dim:#5a43cc;
+    --class:#34c6ac;           /* КЛАССОВЫЙ цвет — Плут */
+    --class-soft:rgba(52,198,172,.14);
+    --gold:#f0b537;
+    --danger:#e05555;
+    --hp:#3ddc84;
+
+    /* цвета характеристик */
+    --str:#ff7a59; --dex:#34c6ac; --con:#f0b537;
+    --int:#5b8dff; --wis:#b06bff; --cha:#ff6fae;
+
+    --r-md:10px; --r-lg:16px; --r-pill:999px;
+    --font:'Inter','Segoe UI',system-ui,sans-serif;
+    --serif:'Cormorant Garamond','Times New Roman',serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:
+      radial-gradient(1200px 500px at 80% -10%, rgba(52,198,172,.07), transparent 60%),
+      radial-gradient(900px 500px at 0% 0%, rgba(124,92,255,.08), transparent 55%),
+      var(--bg-deep);
+    color:var(--text-1);font-family:var(--font);font-size:14px;line-height:1.4;
+    -webkit-font-smoothing:antialiased;min-height:100vh}
+
+  /* ── HEADER ── */
+  header{display:flex;align-items:center;gap:30px;height:58px;padding:0 26px;
+    background:var(--bg-header);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10}
+  .logo{font-weight:800;font-size:18px;background:linear-gradient(90deg,#9d83ff,#34c6ac);
+    -webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:.3px}
+  nav{display:flex;gap:24px}
+  nav a{color:var(--text-2);text-decoration:none;font-weight:500;font-size:15px;position:relative;padding:4px 0}
+  nav a.active{color:var(--text-1)}
+  nav a.active::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:2px;
+    background:var(--accent);border-radius:2px}
+  .spacer{flex:1}
+  .search{background:#0f1018;border:1px solid var(--border);border-radius:var(--r-pill);
+    padding:8px 16px;color:var(--text-muted);width:230px}
+  .avatar{display:flex;align-items:center;gap:9px;background:var(--block-bg);
+    border:1px solid var(--border);padding:5px 12px 5px 5px;border-radius:var(--r-pill)}
+  .avatar .a{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#7c5cff,#34c6ac);
+    display:grid;place-items:center;font-weight:700;font-size:13px}
+
+  /* ── SUBHEADER ── */
+  .subbar{display:flex;align-items:center;gap:16px;padding:14px 26px;border-bottom:1px solid var(--border)}
+  .back{color:var(--text-2);font-size:14px}
+  .campaign{display:flex;align-items:center;gap:10px;background:var(--block-bg);
+    border:1px solid var(--border);border-left:3px solid var(--class);
+    padding:8px 16px;border-radius:var(--r-md)}
+  .campaign small{color:var(--text-muted);font-size:11px;display:block}
+  .tabs{display:flex;gap:6px;margin:0 auto}
+  .tabs button{background:transparent;border:0;color:var(--text-2);font-size:15px;font-weight:600;
+    padding:7px 16px;border-radius:var(--r-pill);cursor:pointer}
+  .tabs button.active{background:var(--class-soft);color:var(--class)}
+  .edit-toggle{display:flex;align-items:center;gap:10px;color:var(--text-2)}
+  .toggle{width:40px;height:22px;background:var(--surface-1);border-radius:var(--r-pill);position:relative}
+  .toggle::after{content:"";position:absolute;left:3px;top:3px;width:16px;height:16px;border-radius:50%;background:var(--text-2)}
+
+  /* ── GRID ── */
+  .grid{display:grid;grid-template-columns:320px 1fr 300px;gap:18px;padding:22px 26px;max-width:1500px;margin:0 auto}
+  .col{display:flex;flex-direction:column;gap:14px}
+
+  /* ── ABILITY CARDS ── */
+  .ability{position:relative;background:var(--block-bg);border:1px solid var(--border);
+    border-radius:var(--r-lg);padding:14px 16px;overflow:hidden}
+  .ability::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--c)}
+  .ability::after{content:"";position:absolute;left:0;top:0;right:0;height:1px;
+    background:linear-gradient(90deg,color-mix(in srgb,var(--c) 60%,transparent),transparent)}
+  .ability .top{display:flex;justify-content:space-between;align-items:flex-start}
+  .ability .name{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);font-weight:700}
+  .ability .save{background:color-mix(in srgb,var(--c) 16%,transparent);color:var(--c);
+    font-size:12px;font-weight:700;padding:3px 9px;border-radius:var(--r-pill);
+    border:1px solid color-mix(in srgb,var(--c) 35%,transparent)}
+  .ability .mod{font-size:38px;font-weight:800;line-height:1;margin-top:4px;font-variant-numeric:tabular-nums;color:var(--c)}
+  .ability .score{color:var(--text-muted);font-size:15px;font-weight:600;margin-left:6px}
+  .skills{margin-top:10px;display:flex;flex-direction:column;gap:1px}
+  .skill{display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:7px}
+  .skill:hover{background:rgba(255,255,255,.03)}
+  .skill .dot{width:7px;height:7px;border-radius:50%;background:var(--text-muted)}
+  .skill.prof .dot{background:var(--c);box-shadow:0 0 6px var(--c)}
+  .skill.expert .dot{background:var(--c);box-shadow:0 0 0 2px color-mix(in srgb,var(--c) 40%,transparent),0 0 6px var(--c)}
+  .skill .l{flex:1;color:var(--text-2);font-size:13.5px}
+  .skill.prof .l{color:var(--text-1)}
+  .skill .v{font-weight:700;font-size:13px;background:var(--surface-1);padding:2px 9px;border-radius:6px;font-variant-numeric:tabular-nums}
+  .skill.prof .v{color:var(--c)}
+
+  /* ── HERO ── */
+  .hero{background:linear-gradient(180deg,var(--block-bg-2),var(--block-bg));
+    border:1px solid var(--border-strong);border-radius:var(--r-lg);padding:18px;
+    display:flex;gap:18px;position:relative;overflow:hidden}
+  .hero::before{content:"";position:absolute;inset:0;background:radial-gradient(400px 200px at 100% 0,var(--class-soft),transparent 70%)}
+  .portrait{width:118px;height:118px;border-radius:14px;flex-shrink:0;
+    background:linear-gradient(135deg,#3a4a5a,#1d2030);border:2px solid var(--class);position:relative;z-index:1;
+    box-shadow:0 0 0 4px rgba(52,198,172,.12);object-fit:cover}
+  .hero-main{flex:1;position:relative;z-index:1}
+  .hero h1{font-family:var(--serif);font-size:34px;font-weight:700;line-height:1}
+  .hero .meta{color:var(--text-2);margin:4px 0 14px;font-size:15px}
+  .hero .meta b{color:var(--class)}
+  .hpbar{background:var(--bg-deep);border:1px solid var(--border);border-radius:14px;padding:14px 16px}
+  .hpbar .row{display:flex;align-items:center;gap:10px}
+  .hp-num{font-size:30px;font-weight:800;color:var(--hp);font-variant-numeric:tabular-nums}
+  .hp-max{color:var(--text-muted);font-size:18px;font-weight:600}
+  .hp-state{background:rgba(61,220,132,.15);color:var(--hp);font-size:11px;font-weight:700;
+    padding:3px 10px;border-radius:var(--r-pill);letter-spacing:.5px}
+  .hp-dice{margin-left:auto;color:var(--text-2);font-size:13px}
+  .hp-dice b{background:var(--surface-1);padding:2px 8px;border-radius:6px;color:var(--text-1)}
+  .track{height:9px;border-radius:var(--r-pill);background:#0a0b12;margin-top:12px;overflow:hidden}
+  .track i{display:block;height:100%;width:100%;border-radius:var(--r-pill);
+    background:linear-gradient(90deg,#2bbf6e,#3ddc84);box-shadow:0 0 14px rgba(61,220,132,.5)}
+  .status-btn{margin-top:12px;color:var(--text-muted);font-size:13px;border:1px dashed var(--border-strong);
+    border-radius:var(--r-pill);padding:6px 14px;display:inline-block}
+
+  /* ── TOP STAT PILLS ── */
+  .statpills{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .statpill{background:var(--block-bg);border:1px solid var(--border);border-radius:var(--r-md);padding:12px 14px;position:relative;overflow:hidden}
+  .statpill .k{font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--text-muted);font-weight:700}
+  .statpill .val{font-size:26px;font-weight:800;margin-top:2px;font-variant-numeric:tabular-nums}
+  .statpill .sub{font-size:11px;color:var(--text-muted)}
+  .statpill.ac{border-top:2px solid var(--int)} .statpill.ac .val{color:var(--int)}
+  .statpill.init{border-top:2px solid var(--dex)} .statpill.init .val{color:var(--dex)}
+  .statpill.spd .val{color:var(--text-1)}
+  .statpill.prof{border-top:2px solid var(--gold)} .statpill.prof .val{color:var(--gold)}
+
+  /* ── WEAPON TABLE ── */
+  .panel{background:var(--block-bg);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden}
+  .panel-tabs{display:flex;gap:4px;padding:6px;border-bottom:1px solid var(--border);background:var(--bg)}
+  .panel-tabs button{background:transparent;border:0;color:var(--text-2);font-weight:600;
+    padding:8px 16px;border-radius:8px;cursor:pointer;font-size:14px}
+  .panel-tabs button.active{background:var(--class-soft);color:var(--class)}
+  table{width:100%;border-collapse:collapse}
+  thead th{text-align:left;font-size:10px;letter-spacing:1px;text-transform:uppercase;
+    color:var(--text-muted);font-weight:700;padding:10px 16px}
+  tbody td{padding:13px 16px;border-top:1px solid var(--border);vertical-align:middle}
+  tbody tr:hover{background:rgba(255,255,255,.02)}
+  .wname{font-weight:600;font-size:15px}
+  .wname small{display:block;color:var(--text-muted);font-weight:400;font-size:12px;margin-top:2px}
+  .atk{background:color-mix(in srgb,var(--accent) 18%,transparent);color:#bca8ff;
+    border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);
+    font-weight:700;padding:5px 12px;border-radius:8px;font-variant-numeric:tabular-nums}
+  .dmg{color:var(--text-2);font-size:13.5px}
+  .props{display:flex;gap:6px;flex-wrap:wrap}
+  .chip{background:var(--surface-1);border:1px solid var(--border);color:var(--text-2);
+    font-size:11.5px;font-weight:600;padding:4px 10px;border-radius:var(--r-pill)}
+
+  /* ── RIGHT COL ── */
+  .level-card{background:linear-gradient(135deg,#241d4a,var(--block-bg));
+    border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);border-radius:var(--r-lg);padding:14px}
+  .level-card .row{display:flex;align-items:center;gap:12px}
+  .lvl-badge{width:48px;height:48px;border-radius:12px;background:var(--accent);display:grid;place-items:center;flex-shrink:0}
+  .lvl-badge small{font-size:9px;letter-spacing:1px;color:rgba(255,255,255,.7)}
+  .lvl-badge b{font-size:22px;line-height:.8}
+  .xp{flex:1}
+  .xp .nums{display:flex;justify-content:space-between;font-size:12px;color:var(--text-2);margin-bottom:5px}
+  .xp .bar{height:7px;background:#0a0b12;border-radius:var(--r-pill);overflow:hidden}
+  .xp .bar i{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--accent),#a78bff)}
+  .plus{width:38px;height:38px;border-radius:10px;background:var(--accent);border:0;color:#fff;font-size:22px;cursor:pointer}
+
+  .sec{margin-top:4px}
+  .sec-title{font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--text-muted);font-weight:700;margin:14px 0 9px}
+  .wallet{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+  .coin{display:flex;align-items:center;gap:9px;background:var(--block-bg);border:1px solid var(--border);
+    border-radius:var(--r-md);padding:10px 12px}
+  .coin .c{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:12px;color:#1a1205}
+  .coin.s .c{background:linear-gradient(135deg,#d8dce4,#a9afbd)}
+  .coin.g .c{background:linear-gradient(135deg,#f7cf5a,#d99a1f)}
+  .coin .amt{font-weight:800;font-size:17px;font-variant-numeric:tabular-nums}
+  .coin small{color:var(--text-muted);font-size:11px}
+  .taglist{display:flex;flex-wrap:wrap;gap:7px}
+  .tag{background:var(--block-bg);border:1px solid var(--border-strong);color:var(--text-2);
+    font-size:12.5px;font-weight:500;padding:6px 12px;border-radius:8px}
+  .tag.accent{border-color:color-mix(in srgb,var(--class) 40%,transparent);
+    background:var(--class-soft);color:var(--class)}
+  .feat-row{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--border);color:var(--text-2)}
+  .feat-row .q{margin-left:auto;width:18px;height:18px;border-radius:50%;border:1px solid var(--border-strong);
+    color:var(--text-muted);display:grid;place-items:center;font-size:11px}
+  .note{max-width:1500px;margin:0 auto;padding:6px 26px 40px;color:var(--text-muted);font-size:12.5px}
+</style>
+</head>
+<body>
+  <header>
+    <span class="logo">DnD Share</span>
+    <nav>
+      <a>Справочник</a><a>Сессии</a><a class="active">Персонажи</a><a>Шаблоны</a><a>Админка</a>
+    </nav>
+    <span class="spacer"></span>
+    <div class="search">Поиск…</div>
+    <div class="avatar"><span class="a">S</span>SylvieShare ▾</div>
+  </header>
+
+  <div class="subbar">
+    <span class="back">‹ к Списку</span>
+    <div class="campaign">◆ <div><b>Тирания дракона</b><small>Гл. 2 · Гринвест</small></div></div>
+    <div class="tabs"><button class="active">База</button><button>Личность</button><button>Заметки</button></div>
+    <div class="edit-toggle"><span class="toggle"></span>Редактировать ☰</div>
+  </div>
+
+  <div class="grid">
+    <!-- LEFT: abilities -->
+    <div class="col">
+      <div class="ability" style="--c:var(--str)">
+        <div class="top"><span class="name">Сила</span><span class="save">🛡 −1</span></div>
+        <div><span class="mod">−1</span><span class="score">(9)</span></div>
+        <div class="skills"><div class="skill prof"><span class="dot"></span><span class="l">Атлетика</span><span class="v">+1</span></div></div>
+      </div>
+
+      <div class="ability" style="--c:var(--dex)">
+        <div class="top"><span class="name">Ловкость</span><span class="save">🛡 +5</span></div>
+        <div><span class="mod">+3</span><span class="score">(16)</span></div>
+        <div class="skills">
+          <div class="skill prof"><span class="dot"></span><span class="l">Акробатика</span><span class="v">+5</span></div>
+          <div class="skill expert"><span class="dot"></span><span class="l">Скрытность</span><span class="v">+7</span></div>
+          <div class="skill expert"><span class="dot"></span><span class="l">Ловкость рук</span><span class="v">+7</span></div>
+        </div>
+      </div>
+
+      <div class="ability" style="--c:var(--con)">
+        <div class="top"><span class="name">Выносливость</span><span class="save">🛡 +2</span></div>
+        <div><span class="mod">+2</span><span class="score">(14)</span></div>
+      </div>
+
+      <div class="ability" style="--c:var(--int)">
+        <div class="top"><span class="name">Интеллект</span><span class="save">🛡 +3</span></div>
+        <div><span class="mod">+1</span><span class="score">(12)</span></div>
+        <div class="skills">
+          <div class="skill"><span class="dot"></span><span class="l">Магия</span><span class="v">+1</span></div>
+          <div class="skill"><span class="dot"></span><span class="l">История</span><span class="v">+1</span></div>
+          <div class="skill expert"><span class="dot"></span><span class="l">Расследование</span><span class="v">+3</span></div>
+        </div>
+      </div>
+
+      <div class="ability" style="--c:var(--wis)">
+        <div class="top"><span class="name">Мудрость</span><span class="save">🛡 0</span></div>
+        <div><span class="mod">0</span><span class="score">(10)</span></div>
+        <div class="skills"><div class="skill prof"><span class="dot"></span><span class="l">Внимание</span><span class="v">+2</span></div></div>
+      </div>
+    </div>
+
+    <!-- CENTER -->
+    <div class="col">
+      <div class="hero">
+        <div class="portrait"></div>
+        <div class="hero-main">
+          <h1>Лиссара</h1>
+          <div class="meta">Полуэльф · <b>Плут</b></div>
+          <div class="hpbar">
+            <div class="row">
+              <span style="color:var(--hp)">♥</span>
+              <span class="hp-num">17</span><span class="hp-max">/ 17</span>
+              <span class="hp-state">ЗДОРОВ</span>
+              <span class="hp-dice">Хит-кубики <b>1</b> ◆</span>
+            </div>
+            <div class="track"><i></i></div>
+          </div>
+          <span class="status-btn">+ статус</span>
+        </div>
+      </div>
+
+      <div class="statpills">
+        <div class="statpill ac"><div class="k">КД</div><div class="val">14</div><div class="sub">Броня + Ловкость</div></div>
+        <div class="statpill init"><div class="k">Инициатива</div><div class="val">+3</div><div class="sub">Ловкость</div></div>
+        <div class="statpill spd"><div class="k">Скорость</div><div class="val">30<span style="font-size:13px;color:var(--text-muted)"> фт</span></div><div class="sub">Ходьба</div></div>
+        <div class="statpill prof"><div class="k">Бонус умения</div><div class="val">+2</div><div class="sub">Мастерство</div></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-tabs"><button class="active">Оружие</button><button>Магия</button><button>Снаряжение</button></div>
+        <table>
+          <thead><tr><th>Название</th><th>Атака</th><th>Урон</th><th>Свойства</th></tr></thead>
+          <tbody>
+            <tr><td class="wname">Рапира</td><td><span class="atk">+5</span></td>
+              <td class="dmg">3 + ✦ Колющий, ☄ Излучением</td>
+              <td><div class="props"><span class="chip">Фехтовальное</span></div></td></tr>
+            <tr><td class="wname">Короткий лук<small>дист. 80/320 фт.</small></td><td><span class="atk">+5</span></td>
+              <td class="dmg">3 + Колющий</td>
+              <td><div class="props"><span class="chip">Боеприпас</span><span class="chip">Двуручное</span></div></td></tr>
+            <tr><td class="wname">Кинжал<small>дист. 20/60 фт.</small></td><td><span class="atk">+5</span></td>
+              <td class="dmg">3 + Колющий</td>
+              <td><div class="props"><span class="chip">Лёгкое</span><span class="chip">Фехтовальное</span><span class="chip">Метательное</span></div></td></tr>
+            <tr><td class="wname">Кинжал<small>дист. 20/60 фт.</small></td><td><span class="atk">+5</span></td>
+              <td class="dmg">3 + Колющий</td>
+              <td><div class="props"><span class="chip">Лёгкое</span><span class="chip">Фехтовальное</span><span class="chip">Метательное</span></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="col">
+      <div class="level-card">
+        <div class="row">
+          <div class="lvl-badge"><small>УР.</small><b>2</b></div>
+          <div class="xp"><div class="nums"><span>900</span><span>900</span></div><div class="bar"><i></i></div></div>
+          <button class="plus">+</button>
+        </div>
+      </div>
+
+      <div class="sec">
+        <div class="sec-title">Кошелёк</div>
+        <div class="wallet">
+          <div class="coin s"><span class="c">см</span><div><div class="amt">2</div><small>серебро</small></div></div>
+          <div class="coin g"><span class="c">зм</span><div><div class="amt">16</div><small>золото</small></div></div>
+        </div>
+      </div>
+
+      <div class="sec">
+        <div class="sec-title">Доспехи</div>
+        <div class="taglist"><span class="tag">Лёгкие доспехи</span><span class="tag">Щиты</span></div>
+        <div class="sec-title">Оружие</div>
+        <div class="taglist"><span class="tag">Простое оружие</span><span class="tag">Ручные арбалеты</span></div>
+        <div class="sec-title">Инструменты</div>
+        <div class="taglist"><span class="tag accent">Воровские инструменты</span></div>
+        <div class="sec-title">Языки</div>
+        <div class="taglist"><span class="tag">Эльфийский</span><span class="tag">Полуросликов</span></div>
+      </div>
+
+      <div class="sec">
+        <div class="sec-title">Расовые</div>
+        <div class="feat-row">Наследие фей <span class="q">?</span></div>
+        <div class="feat-row">Тёмное зрение <span class="q">?</span></div>
+        <div class="sec-title">Классовые</div>
+        <div class="feat-row">Скрытая атака <span class="q">?</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">Вариант 1 — «Классовый акцент». Бирюзовый = цвет класса (Плут), фиолетовый закреплён за уровнем/навигацией, у каждой характеристики свой цвет грани. Слоистый фон + подсветка карточек убирают «слипание».</div>
+</body>
+</html>

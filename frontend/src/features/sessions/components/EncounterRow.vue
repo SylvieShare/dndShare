@@ -1,0 +1,541 @@
+<template>
+  <div
+    class="enc-row"
+    :class="rowClasses"
+    :data-sortable-key="combatant.uid"
+    @pointerdown="onRowPointerDown"
+  >
+    <span v-if="stripColor" class="enc-row-strip" :style="{ background: stripColor }" />
+    <EncCheckbox
+      v-if="showCheckbox"
+      :model-value="enc.isSelected(combatant)"
+      @update:model-value="enc.toggleSelected(combatant)"
+    />
+
+    <div class="enc-init-block" :class="{ 'enc-init-block--current': isCurrent }" @click.stop>
+      <span class="enc-init-label">иниц.</span>
+      <input
+        class="enc-init-input"
+        type="number"
+        :value="combatant.initiative"
+        placeholder="·"
+        @change="enc.setInitiative(combatant, $event.target.value)"
+        @click.stop
+      />
+    </div>
+
+    <div v-if="showAcChip" class="enc-ac-chip">
+      <svg width="12" height="12" viewBox="0 0 13 13" fill="none">
+        <path d="M6.5 1.5L2 3.5v3.5c0 2.5 2 4.5 4.5 5 2.5-.5 4.5-2.5 4.5-5V3.5L6.5 1.5z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+      </svg>
+      {{ enc.displayAc(combatant) }}
+    </div>
+
+    <EncounterAvatar :combatant="combatant" />
+
+    <div class="enc-info">
+      <div class="enc-name-row">
+        <span
+          class="enc-name"
+          :class="{ 'enc-name--clickable': isNpc && hasItem }"
+          @click="isNpc && hasItem && enc.openNpcDetail(combatant)"
+        >{{ displayName }}</span>
+        <span
+          ref="badgeEl"
+          class="enc-badge"
+          :class="[enc.badgeClass(combatant), { 'enc-badge--clickable': isNpc }]"
+          @click="onBadgeClick"
+        >{{ enc.badgeLabel(combatant) }}</span>
+        <template v-if="section === 'combat'">
+          <span
+            v-if="!enc.encounter.active"
+            class="enc-surprised-toggle"
+            :class="{ active: combatant.surprised }"
+            @click="enc.toggleSurprised(combatant)"
+          >врасплох</span>
+          <span
+            v-else-if="enc.encounter.round === 0 && combatant.surprised"
+            class="enc-surprised-chip"
+          >врасплох</span>
+        </template>
+        <BlockStates
+          v-if="statesBlock"
+          class="enc-states"
+          :block="statesBlock"
+          :value="statesValue"
+          @update:value="onStatesUpdate"
+        />
+        <span v-if="isNpc && combatant.note" class="enc-note" :title="combatant.note">{{ combatant.note }}</span>
+      </div>
+      <EncounterHpBar class="enc-info-hp" :combatant="combatant" :section="section" />
+      <div v-if="subtitleText" class="enc-sub">{{ subtitleText }}</div>
+    </div>
+
+    <button
+      v-if="canRollNpcHp"
+      type="button"
+      class="enc-hp-dice-btn"
+      :title="`Бросить хиты (${npcFormula})`"
+      @click.stop="enc.rollNpcHpFromFormula(combatant)"
+    >
+      <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+        <path d="M8 1.2l5.6 3.2v7.2L8 14.8 2.4 11.6V4.4L8 1.2z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+        <circle cx="8" cy="8" r="1.1" fill="currentColor"/>
+        <circle cx="5.4" cy="6.2" r="0.8" fill="currentColor"/>
+        <circle cx="10.6" cy="9.8" r="0.8" fill="currentColor"/>
+      </svg>
+    </button>
+
+    <EncounterRowMenu
+      v-if="rowMenuVisible"
+      :combatant="combatant"
+      :section="section"
+      :states-block="statesBlock"
+      @edit-states="openStatesEditor"
+      @edit-note="openNoteEditor"
+    />
+  </div>
+
+  <BasePopover v-model:open="sideMenuOpen" :anchor="badgeEl" :min-width="160">
+    <button
+      v-for="opt in enc.SIDE_OPTIONS"
+      :key="opt.value"
+      type="button"
+      class="enc-popover-item"
+      :class="[`enc-popover-item--${opt.value}`, { 'enc-popover-item--active': enc.badgeLabel(combatant) === opt.label.toUpperCase() || combatant.side === opt.value }]"
+      @click="pickSide(opt.value)"
+    >{{ opt.label }}</button>
+  </BasePopover>
+
+  <SuggestMultiSelect
+    v-if="statesEditorOpen && statesBlock"
+    :suggest-type-id="statesBlock.content.suggest_id"
+    :items="statesAllItems"
+    :active-ids="statesValue"
+    title="Статусы"
+    @toggle="onStatesToggle"
+    @close="statesEditorOpen = false"
+    @created="onStatesCreated"
+  />
+
+  <AppModal v-if="noteEditorOpen" :z-index="9200" @close="cancelNoteEdit">
+    <div class="enc-note-title">Заметка — {{ displayName }}</div>
+    <FormTextarea
+      v-model:value="noteDraft"
+      :rows="5"
+      :maxlength="2000"
+      placeholder="Заметка о существе"
+    />
+    <FormActionButtons
+      submit-text="Сохранить"
+      @cancel="cancelNoteEdit"
+      @submit="commitNoteEdit"
+    />
+  </AppModal>
+</template>
+
+<script setup>
+import { computed, inject, provide, reactive, ref } from 'vue'
+import BlockStates from '@/features/character-editor/blocks/generic/BlockStates'
+import EncounterAvatar from '@/features/sessions/components/EncounterAvatar.vue'
+import EncounterHpBar from '@/features/sessions/components/EncounterHpBar.vue'
+import EncounterRowMenu from '@/features/sessions/components/EncounterRowMenu.vue'
+import AppModal from '@/shared/ui/AppModal'
+import BasePopover from '@/shared/ui/BasePopover.vue'
+import EncCheckbox from '@/shared/ui/EncCheckbox.vue'
+import FormActionButtons from '@/shared/ui/form/FormActionButtons'
+import FormTextarea from '@/shared/ui/form/FormTextarea'
+import SuggestMultiSelect from '@/shared/ui/SuggestMultiSelect'
+import { useSuggestStore } from '@/stores/suggest'
+
+const props = defineProps({
+  combatant: { type: Object, required: true },
+  section: { type: String, required: true },
+  idx: { type: Number, default: -1 },
+  isCurrent: { type: Boolean, default: false },
+})
+
+const enc = inject('encounter')
+
+const isPlayer = computed(() => props.combatant.type === 'player')
+const isNpc = computed(() => props.combatant.type === 'npc')
+
+const displayName = computed(() =>
+  isPlayer.value ? enc.playerDisplayName(props.combatant) : enc.npcName(props.combatant)
+)
+
+const hasItem = computed(() => isNpc.value && props.combatant.itemId != null)
+
+const subtitleText = computed(() => enc.subtitle(props.combatant))
+
+const showAcChip = computed(() => {
+  if (isNpc.value && props.section === 'reserve-npc' && enc.npcAc(props.combatant) == null) return false
+  return true
+})
+
+const skippedInTurn = computed(() =>
+  props.section === 'combat' && enc.encounter.active && !enc.isActiveInTurn(props.combatant)
+)
+
+const rowClasses = computed(() => ({
+  'enc-row--current': props.isCurrent,
+  'enc-row--placeholder': enc.sortable.isSource(props.combatant),
+  'enc-row--skipped': skippedInTurn.value,
+}))
+
+// The whole row is a drag handle now. Bail when the pointer lands on an
+// interactive control so clicks/typing still work there.
+const DRAG_IGNORE = 'input, textarea, button, a, [role="button"], .enc-init-block, .enc-hp-area, .enc-badge, .enc-surprised-toggle, .enc-states, .enc-name--clickable'
+function onRowPointerDown(e) {
+  if (e.button !== undefined && e.button !== 0) return
+  if (e.target.closest(DRAG_IGNORE)) return
+  enc.sortable.startDrag(e, props.combatant, props.section, props.idx)
+}
+
+const npcFormula = computed(() => isNpc.value ? enc.npcHpFormula(props.combatant) : '')
+const canRollNpcHp = computed(() => isNpc.value && props.section !== 'combat' && !!npcFormula.value)
+
+const showCheckbox = computed(() => !!enc.canEditPlayerHp())
+
+const badgeEl = ref(null)
+const sideMenuOpen = ref(false)
+
+function onBadgeClick() {
+  if (!isNpc.value) return
+  sideMenuOpen.value = true
+}
+
+function pickSide(side) {
+  enc.setSide(props.combatant, side)
+  sideMenuOpen.value = false
+}
+
+const statesBlock = computed(() => enc.statesBlock(props.combatant))
+const statesValue = computed(() => enc.statesValue(props.combatant))
+
+function onStatesUpdate(_id, ids) {
+  enc.setStates(props.combatant, ids)
+}
+
+const localCharCtx = reactive({ editMode: false, ownerMode: false, dictionaries: {}, var: {} })
+provide('charCtx', localCharCtx)
+
+const suggestStoreLocal = useSuggestStore()
+const statesAllItems = computed(() => {
+  const sid = statesBlock.value?.content?.suggest_id
+  if (sid == null) return []
+  return suggestStoreLocal.items(sid) || []
+})
+
+const canEdit = computed(() => !!enc.canEditPlayerHp())
+const rowMenuVisible = computed(() => canEdit.value)
+const stripColor = computed(() => enc.tileColor(props.combatant))
+
+const statesEditorOpen = ref(false)
+
+function openStatesEditor() {
+  statesEditorOpen.value = true
+}
+
+function onStatesToggle(id) {
+  const cur = statesValue.value
+  const next = cur.includes(id) ? cur.filter(x => x !== id) : [...cur, id]
+  enc.setStates(props.combatant, next)
+}
+
+function onStatesCreated(item) {
+  const sid = statesBlock.value?.content?.suggest_id
+  if (sid != null) suggestStoreLocal.addItem(sid, item)
+  enc.setStates(props.combatant, [...statesValue.value, item.id])
+}
+
+const noteEditorOpen = ref(false)
+const noteDraft = ref('')
+
+function openNoteEditor() {
+  noteDraft.value = props.combatant.note || ''
+  noteEditorOpen.value = true
+}
+
+function cancelNoteEdit() {
+  noteEditorOpen.value = false
+}
+
+function commitNoteEdit() {
+  enc.setNote(props.combatant, noteDraft.value.trim())
+  noteEditorOpen.value = false
+}
+</script>
+
+<style scoped>
+.enc-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  transition: background 0.12s, opacity 0.12s;
+  position: relative;
+  cursor: grab;
+  touch-action: none;
+}
+
+.enc-row:active { cursor: grabbing; }
+.enc-row:hover { background: color-mix(in srgb, #fff 3%, transparent); }
+
+.enc-row--current {
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+.enc-row--placeholder {
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  border: 2px dashed color-mix(in srgb, var(--accent) 50%, transparent);
+  border-radius: 12px;
+}
+.enc-row--placeholder > * { visibility: hidden; }
+.enc-row--placeholder:hover { background: color-mix(in srgb, var(--accent) 8%, transparent); }
+
+.enc-row--skipped { opacity: 0.5; }
+.enc-row--skipped.enc-row--current { opacity: 1; }
+
+.enc-row-strip {
+  position: absolute;
+  left: 0;
+  top: 10px;
+  bottom: 10px;
+  width: 3px;
+  border-radius: 0 2px 2px 0;
+  pointer-events: none;
+}
+
+.enc-init-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  background: color-mix(in srgb, #fff 4%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 3px 8px 5px;
+  flex-shrink: 0;
+  width: 64px;
+  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+  cursor: text;
+}
+
+.enc-init-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #5a5a78;
+  text-transform: uppercase;
+  line-height: 1;
+}
+.enc-init-block--current .enc-init-label { color: color-mix(in srgb, var(--color-attack) 70%, transparent); }
+
+.enc-init-block:focus-within {
+  border-color: color-mix(in srgb, #fff 18%, transparent);
+  background: var(--border);
+}
+
+.enc-init-block--current {
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+.enc-init-block--current:focus-within { border-color: color-mix(in srgb, var(--accent) 70%, transparent); }
+
+.enc-init-input {
+  background: none;
+  border: none;
+  color: var(--text-1);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  width: 100%;
+  text-align: center;
+  outline: none;
+  padding: 0;
+  -moz-appearance: textfield;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.enc-init-input::-webkit-outer-spin-button,
+.enc-init-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+.enc-init-input::placeholder { color: #2a2a40; }
+
+.enc-init-block--current .enc-init-input { color: #c8b0ff; }
+
+.enc-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.enc-info-hp { margin-top: 1px; }
+
+.enc-name-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.enc-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.enc-name--clickable { cursor: pointer; transition: color 0.12s; }
+.enc-name--clickable:hover { color: var(--accent); }
+
+.enc-sub {
+  font-size: 11px;
+  color: var(--text-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.enc-states {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 2px;
+}
+
+.enc-note {
+  font-size: 11px;
+  color: var(--text-2);
+  font-style: italic;
+  background: color-mix(in srgb, #fff 4%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 1px 7px;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.enc-note-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-1);
+  margin-bottom: 4px;
+}
+
+.enc-badge {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  border-radius: 4px;
+  padding: 2px 5px;
+  border: 1px solid;
+}
+
+.enc-badge--clickable { cursor: pointer; }
+.enc-badge--clickable:hover { opacity: 0.75; }
+
+.badge--pc      { color: #5cb0e8; background: rgba(92,176,232,0.12); border-color: rgba(92,176,232,0.25); }
+.badge--enemy   { color: #e85c8a; background: rgba(232,92,138,0.12); border-color: rgba(232,92,138,0.25); }
+.badge--ally    { color: #5ce87c; background: rgba(92,232,124,0.12); border-color: rgba(92,232,124,0.25); }
+.badge--neutral { color: #8888aa; background: rgba(136,136,170,0.12); border-color: rgba(136,136,170,0.25); }
+.badge--minion  { color: #a06ce8; background: rgba(160,108,232,0.12); border-color: rgba(160,108,232,0.28); }
+
+.enc-popover-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  color: var(--text-2);
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
+}
+.enc-popover-item:hover { background: color-mix(in srgb, #fff 5%, transparent); color: var(--text-1); }
+.enc-popover-item--active { background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--text-1); border-color: color-mix(in srgb, var(--accent) 40%, transparent); }
+
+.enc-popover-item--enemy   { color: #e85c8a; }
+.enc-popover-item--ally    { color: #5ce87c; }
+.enc-popover-item--neutral { color: #8888aa; }
+.enc-popover-item--minion  { color: #a06ce8; }
+.enc-popover-item--danger  { color: var(--danger); }
+.enc-popover-item--danger:hover { background: color-mix(in srgb, var(--danger) 12%, transparent); }
+
+.enc-surprised-toggle {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  border: 1px solid #252535;
+  border-radius: 4px;
+  padding: 2px 5px;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
+}
+
+.enc-surprised-toggle.active {
+  color: #e89c3c;
+  border-color: rgba(232,156,60,0.4);
+  background: rgba(232,156,60,0.12);
+}
+
+.enc-surprised-chip {
+  font-size: 9px;
+  font-weight: 700;
+  color: #e89c3c;
+  background: rgba(232,156,60,0.15);
+  border: 1px solid rgba(232,156,60,0.35);
+  border-radius: 4px;
+  padding: 2px 5px;
+}
+
+.enc-hp-dice-btn {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  background: color-mix(in srgb, #fff 4%, transparent);
+  border: 1px solid color-mix(in srgb, #fff 8%, transparent);
+  border-radius: 7px;
+  color: var(--text-2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s, background 0.12s, border-color 0.12s, transform 0.08s;
+}
+.enc-hp-dice-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+}
+.enc-hp-dice-btn:active { transform: scale(0.94); }
+
+.enc-ac-chip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: color-mix(in srgb, #fff 6%, transparent);
+  border: 1px solid color-mix(in srgb, #fff 9%, transparent);
+  border-radius: 7px;
+  padding: 5px 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-2);
+  flex-shrink: 0;
+  min-width: 52px;
+  justify-content: center;
+}
+</style>

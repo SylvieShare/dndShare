@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "frontend",
+      "runtimeExecutable": "/Users/wrz2/MyProjects/dndShare/frontend/node/node",
+      "runtimeArgs": [
+        "/Users/wrz2/MyProjects/dndShare/frontend/node_modules/vite/bin/vite.js",
+        "/Users/wrz2/MyProjects/dndShare/frontend",
+        "--port",
+        "5173",
+        "--strictPort"
+      ],
+      "port": 5173
+    }
+  ]
+}

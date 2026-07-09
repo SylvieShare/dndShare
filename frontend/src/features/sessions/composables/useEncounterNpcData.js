@@ -1,0 +1,103 @@
+import { ref } from 'vue'
+import { itemsApi } from '@/shared/api/itemsApi'
+
+export function useEncounterNpcData() {
+  const npcItemCache = ref({})
+
+  function cacheItem(item) {
+    if (item && item.id != null) {
+      npcItemCache.value = { ...npcItemCache.value, [item.id]: item }
+    }
+  }
+
+  async function ensureNpcItems(combatants) {
+    const ids = [...new Set(
+      (combatants || [])
+        .filter(c => c.type === 'npc' && c.itemId != null && !npcItemCache.value[c.itemId])
+        .map(c => c.itemId)
+    )]
+    if (!ids.length) return
+    const res = await itemsApi.byIds(ids).catch(() => null)
+    const items = res?.items || []
+    if (!items.length) return
+    const next = { ...npcItemCache.value }
+    items.forEach(it => { if (it && it.id != null) next[it.id] = it })
+    npcItemCache.value = next
+  }
+
+  function npcItem(c) {
+    if (!c || c.type !== 'npc' || c.itemId == null) return null
+    return npcItemCache.value[c.itemId] || null
+  }
+
+  function npcData(c) {
+    const it = npcItem(c)?.data || {}
+    const flat = {
+      ...(it.identity || {}),
+      ...(it.combat || {}),
+      ...(it.stats || {}),
+    }
+    return { ...flat, ...(c?.override || {}) }
+  }
+
+  function npcName(c) {
+    const ov = c?.override?.name
+    if (ov != null && String(ov).trim() !== '') return ov
+    return npcItem(c)?.name || 'Существо'
+  }
+
+  function npcAc(c) {
+    const v = npcData(c).ac
+    return v == null || v === '' ? null : v
+  }
+
+  function npcHpMax(c) {
+    return Number(npcData(c).hp) || 0
+  }
+
+  function npcDex(c) {
+    const v = Number(npcData(c).dex)
+    return Number.isFinite(v) ? v : null
+  }
+
+  function npcHpFormula(c) {
+    return (npcData(c).hp_formula || '').toString()
+  }
+
+  function migrateCombatant(c) {
+    if (!c || c.type !== 'npc') return
+    if (c.itemRaw) {
+      if (c.itemId != null) cacheItem(c.itemRaw)
+      delete c.itemRaw
+    }
+    if (!c.override || typeof c.override !== 'object') {
+      const ov = {}
+      if (c.name != null) ov.name = c.name
+      if (c.ac != null) ov.ac = c.ac
+      if (c.hpMax != null) ov.hp = c.hpMax
+      if (c.cr != null) ov.cr = c.cr
+      if (c.creatureType != null) ov.creature_type = c.creatureType
+      c.override = ov
+    }
+    delete c.name
+    delete c.ac
+    delete c.hpMax
+    delete c.cr
+    delete c.creatureType
+    delete c.itemSvg
+  }
+
+  return {
+    npcItemCache,
+    cacheItem,
+    ensureNpcItems,
+    npcItem,
+    npcData,
+    npcName,
+    npcAc,
+    npcHpMax,
+    npcDex,
+    npcHpFormula,
+    migrateCombatant,
+  }
+}

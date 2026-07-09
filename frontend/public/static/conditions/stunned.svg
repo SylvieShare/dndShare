@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-labelledby="title">
+  <title id="title">Шок</title>
+  <g fill="none" stroke="#b9b9c6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m13.4 2.8-4.8 9h4.1l-2.1 8.8 5.8-10.8h-4.1Z"/>
+    <path d="M5.2 6.2 3.4 4.4"/>
+    <path d="M4.3 12H2.2"/>
+    <path d="M5.2 17.8l-1.8 1.8"/>
+    <path d="M18.8 6.2l1.8-1.8"/>
+    <path d="M19.7 12h2.1"/>
+    <path d="m18.8 17.8 1.8 1.8"/>
+  </g>
+</svg>

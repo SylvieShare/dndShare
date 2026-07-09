@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-labelledby="title">
+  <title id="title">Захват</title>
+  <g fill="none" stroke="#b9b9c6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M6.8 13.8 4.6 12a2.1 2.1 0 0 1 2.7-3.2l2 1.7"/>
+    <path d="m9.3 10.5 2.8 2.4"/>
+    <path d="M17.2 10.2 19.4 12a2.1 2.1 0 0 1-2.7 3.2l-2-1.7"/>
+    <path d="m14.7 13.5-2.8-2.4"/>
+    <path d="M8.1 15.8a4.8 4.8 0 0 0 7.8 0"/>
+    <path d="M8.1 8.2a4.8 4.8 0 0 1 7.8 0"/>
+  </g>
+</svg>

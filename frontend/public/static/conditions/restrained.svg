@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-labelledby="title">
+  <title id="title">Обездвиженность</title>
+  <g fill="none" stroke="#b9b9c6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M7 5.4h10"/>
+    <path d="M7 18.6h10"/>
+    <path d="M9 5.4v13.2"/>
+    <path d="M15 5.4v13.2"/>
+    <path d="M5.3 9.2h13.4"/>
+    <path d="M5.3 14.8h13.4"/>
+    <circle cx="12" cy="12" r="2.1"/>
+  </g>
+</svg>

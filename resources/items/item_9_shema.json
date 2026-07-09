@@ -1,0 +1,116 @@
+[
+  {
+    "name": "Класс (словарь)",
+    "key": "suggest_id",
+    "type": "suggest",
+    "suggest_id": 2
+  },
+  {
+    "name": "Кость хитов",
+    "key": "hit_die",
+    "type": "suggest",
+    "suggest_id": 11
+  },
+  {
+    "name": "Основные характеристики",
+    "key": "primary_abilities",
+    "type": "suggest_array",
+    "suggest_id": 16
+  },
+  {
+    "name": "Спасброски",
+    "key": "saves",
+    "type": "suggest_array",
+    "suggest_id": 16
+  },
+  {
+    "name": "Владение доспехами",
+    "key": "armor_prof",
+    "type": "suggest_array",
+    "suggest_id": 3
+  },
+  {
+    "name": "Владение оружием",
+    "key": "weapon_prof",
+    "type": "suggest_array",
+    "suggest_id": 4
+  },
+  {
+    "name": "Владение инструментами",
+    "key": "tool_prof",
+    "type": "suggest_array",
+    "suggest_id": 5
+  },
+  {
+    "name": "Выбор навыков",
+    "key": "skill_choice",
+    "type": "object",
+    "fields": [
+      {
+        "name": "Количество",
+        "key": "count",
+        "type": "int",
+        "default": 2
+      },
+      {
+        "name": "Из навыков",
+        "key": "from",
+        "type": "suggest_array",
+        "suggest_id": 15
+      }
+    ]
+  },
+  {
+    "name": "Заклинательство",
+    "key": "spellcasting",
+    "type": "object",
+    "fields": [
+      {
+        "name": "Характеристика заклинаний",
+        "key": "ability",
+        "type": "suggest",
+        "suggest_id": 16
+      },
+      {
+        "name": "Заговоров на 1 уровне",
+        "key": "cantrips_known",
+        "type": "int"
+      },
+      {
+        "name": "Заклинаний на 1 уровне",
+        "key": "spells_known",
+        "type": "int"
+      },
+      {
+        "name": "Подготавливает заклинания",
+        "key": "prepares",
+        "type": "bool"
+      },
+      {
+        "name": "Примечание",
+        "key": "note",
+        "type": "description"
+      }
+    ]
+  },
+  {
+    "name": "Уровень выбора архетипа",
+    "key": "subclass_level",
+    "type": "int"
+  },
+  {
+    "name": "Уровни прироста характеристик (ASI)",
+    "key": "asi_levels",
+    "type": "text"
+  },
+  {
+    "name": "Стартовое снаряжение",
+    "key": "starting_equipment",
+    "type": "description"
+  },
+  {
+    "name": "Описание",
+    "key": "description",
+    "type": "description"
+  }
+]

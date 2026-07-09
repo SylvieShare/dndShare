@@ -1,0 +1,256 @@
+[
+  {
+    "name": "Уровень заклинания",
+    "key": "lvl",
+    "type": "int",
+    "filter": true,
+    "filter_values": [0,1,2,3,4,5,6,7,8,9],
+    "filter_labels": {
+      "0": "Заговор"
+    }
+  },
+  {
+    "name": "Время выполнения",
+    "key": "time",
+    "type": "text"
+  },
+  {
+    "name": "Расстояние",
+    "key": "range",
+    "type": "text"
+  },
+  {
+    "name": "Классы",
+    "key": "classIds",
+    "type": "suggest_array",
+    "suggest_id": 2,
+    "filter": true
+  },
+  {
+    "name": "Классы (предметы)",
+    "key": "classes",
+    "type": "object_array",
+    "filter": true,
+    "fields": [
+      {
+        "name": "Класс",
+        "key": "id",
+        "type": "item",
+        "item_type": 9
+      }
+    ]
+  },
+  {
+    "name": "Длительность",
+    "key": "duration",
+    "type": "text"
+  },
+  {
+    "name": "Школа",
+    "key": "schoolId",
+    "type": "suggest",
+    "suggest_id": 7,
+    "filter": true
+  },
+  {
+    "name": "Источник",
+    "key": "sourceId",
+    "type": "suggest",
+    "suggest_id": 8,
+    "filter": true
+  },
+  {
+    "name": "Тип источника",
+    "key": "source_kind",
+    "type": "text",
+    "filter": true,
+    "filter_values": ["base", "addon", "third"],
+    "filter_labels": { "base": "База (PHB)", "addon": "Дополнение", "third": "Стороннее" }
+  },
+  {
+    "name": "Компоненты",
+    "key": "components",
+    "type": "object",
+    "fields": [
+      {
+        "name": "Материалы",
+        "key": "m",
+        "type": "text"
+      },
+      {
+        "name": "Соматический",
+        "key": "s",
+        "type": "bool"
+      },
+      {
+        "name": "Вербальный",
+        "key": "v",
+        "type": "bool"
+      }
+    ]
+  },
+  {
+    "name": "Урон",
+    "key": "damage",
+    "type": "object",
+    "fields": [
+      {
+        "name": "Дальнобойная атака",
+        "key": "range_attack",
+        "type": "boolean"
+      },
+      {
+        "name": "Спасбросок (хар-ка)",
+        "key": "save_ability",
+        "type": "text"
+      },
+      {
+        "name": "Спасбросок (эффект)",
+        "key": "save_effect",
+        "type": "text"
+      },
+      {
+        "name": "Тип роста",
+        "key": "scaling",
+        "type": "text",
+        "default": "none",
+        "filter_values": ["none", "slot", "cantrip"],
+        "filter_labels": { "none": "нет", "slot": "за круг ячейки", "cantrip": "за уровень героя" }
+      },
+      {
+        "name": "Снарядов/лучей",
+        "key": "instances",
+        "type": "int",
+        "default": 1
+      },
+      {
+        "name": "Снарядов за круг выше",
+        "key": "addon_instances",
+        "type": "int"
+      },
+      {
+        "name": "Кубики (база)",
+        "key": "dices",
+        "type": "object_array",
+        "fields": [
+          {
+            "name": "Количество кубиков",
+            "key": "count",
+            "type": "int",
+            "default": 1
+          },
+          {
+            "name": "Кубик",
+            "key": "dice_id",
+            "type": "suggest",
+            "suggest_id": 11
+          },
+          {
+            "name": "Вид урона",
+            "key": "type",
+            "type": "suggest",
+            "suggest_id": 12
+          },
+          {
+            "name": "Бонус",
+            "key": "bonus",
+            "type": "int"
+          }
+        ]
+      },
+      {
+        "name": "Кубики (аддон за уровень)",
+        "key": "addon",
+        "type": "object_array",
+        "fields": [
+          {
+            "name": "Количество кубиков",
+            "key": "count",
+            "type": "int",
+            "default": 1
+          },
+          {
+            "name": "Кубик",
+            "key": "dice_id",
+            "type": "suggest",
+            "suggest_id": 11
+          },
+          {
+            "name": "Вид урона",
+            "key": "type",
+            "type": "suggest",
+            "suggest_id": 12
+          },
+          {
+            "name": "Бонус",
+            "key": "bonus",
+            "type": "int"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Лечение",
+    "key": "heal",
+    "type": "object",
+    "fields": [
+      {
+        "name": "Плюс модификатор хар-ки",
+        "key": "add_mod",
+        "type": "bool"
+      },
+      {
+        "name": "Тип роста",
+        "key": "scaling",
+        "type": "text",
+        "default": "none",
+        "filter_values": ["none", "slot", "cantrip"],
+        "filter_labels": { "none": "нет", "slot": "за круг ячейки", "cantrip": "за уровень героя" }
+      },
+      {
+        "name": "Кубики (база)",
+        "key": "dices",
+        "type": "object_array",
+        "fields": [
+          {
+            "name": "Количество кубиков",
+            "key": "count",
+            "type": "int",
+            "default": 1
+          },
+          {
+            "name": "Кубик",
+            "key": "dice_id",
+            "type": "suggest",
+            "suggest_id": 11
+          }
+        ]
+      },
+      {
+        "name": "Кубики (аддон за уровень)",
+        "key": "addon",
+        "type": "object_array",
+        "fields": [
+          {
+            "name": "Количество кубиков",
+            "key": "count",
+            "type": "int",
+            "default": 1
+          },
+          {
+            "name": "Кубик",
+            "key": "dice_id",
+            "type": "suggest",
+            "suggest_id": 11
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Описание",
+    "key": "description",
+    "type": "description"
+  }
+]

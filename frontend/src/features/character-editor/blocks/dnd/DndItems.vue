@@ -1,0 +1,821 @@
+<template>
+  <div class="di-block">
+    <BlockHeader v-if="block.title" :title="block.title">
+      <template #actions>
+        <button
+          v-if="block.hide_button"
+          class="di-collapse-btn"
+          :title="contentHidden ? 'Развернуть' : 'Свернуть'"
+          @click="contentHidden = !contentHidden"
+        >{{ contentHidden ? '▸' : '▾' }}</button>
+      </template>
+    </BlockHeader>
+
+    <template v-if="!contentHidden">
+      <div v-if="loading" class="di-list-col">
+        <div v-for="i in 3" :key="i" class="di-skeleton"></div>
+      </div>
+
+      <template v-else>
+        <div
+          v-for="section in allSections"
+          :key="section.id"
+          class="di-section"
+          :class="{ 'di-section-locked': section.locked }"
+        >
+          <div class="di-section-head">
+            <input
+              v-if="canManage && !section.locked && renamingId === section.id"
+              ref="renameInputs"
+              class="di-section-rename"
+              :value="section.name"
+              @blur="finishRename(section.id, $event.target.value)"
+              @keydown.enter.prevent="finishRename(section.id, $event.target.value)"
+              @keydown.escape.prevent="renamingId = null"
+            />
+            <button
+              v-else
+              class="di-section-name"
+              :class="{ 'di-section-name-editable': canManage && !section.locked }"
+              :disabled="!canManage || section.locked"
+              :title="canManage && !section.locked ? 'Переименовать' : ''"
+              @click="canManage && !section.locked && startRename(section.id)"
+            >{{ section.name }}</button>
+            <span v-if="visibleItems(section).length" class="di-section-count">{{ visibleItems(section).length }}</span>
+            <span class="di-section-line" aria-hidden="true"></span>
+            <button
+              v-if="canManage && !section.locked && model.sections.length > 1"
+              class="di-section-del"
+              title="Удалить секцию"
+              @click="askDeleteSection(section)"
+            >×</button>
+          </div>
+
+          <div
+            class="di-rows"
+            :data-sortable-container="sectionGroup(section.id)"
+          >
+            <div
+              v-for="(entry, idx) in displaySectionItems(section.id)"
+              :key="entry.uid"
+              class="di-row"
+              :class="{
+                'sortable-placeholder': sortable.isSource(entry),
+                'di-row-draggable': canDrag,
+              }"
+              :data-sortable-key="entry.uid"
+              @pointerdown="onRowDown($event, entry, section.id, idx)"
+              @mouseenter="e => showTooltip(e, entry)"
+              @mouseleave="hideTooltip"
+            >
+              <span class="di-row-name" @click="onNameClick(entry)">
+                <span class="di-row-name-text">{{ entry.display.name }}</span>
+                <span v-if="!canManage && entry.count > 1" class="di-count-badge">
+                  <span class="di-count-x">x</span>{{ entry.count }}
+                </span>
+              </span>
+
+              <div v-if="canManage" class="di-row-ctrls">
+                <button
+                  v-if="entry.display.consumable"
+                  class="di-use-btn"
+                  :title="`Использовать (осталось ${entry.count})`"
+                  @click.stop="decrement(section.id, entry.uid)"
+                >
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M8 2v9M4.5 7.5L8 11l3.5-3.5M3 13h10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+
+                <div class="di-count-ctrl">
+                  <button class="di-count-btn" @click.stop="bumpCount(section.id, entry.uid, -1)">−</button>
+                  <input
+                    class="di-count-input"
+                    type="number"
+                    min="1"
+                    :value="entry.count"
+                    @click.stop
+                    @input.stop="setCount(section.id, entry.uid, $event.target.value)"
+                  />
+                  <button class="di-count-btn" @click.stop="bumpCount(section.id, entry.uid, 1)">+</button>
+                </div>
+
+                <button
+                  v-if="entry.display.isCustom"
+                  class="di-icon-btn"
+                  title="Редактировать"
+                  @click.stop="openInlineForm(section.id, entry)"
+                >✦</button>
+
+                <button class="di-icon-btn di-del" title="Удалить" @click.stop="removeEntry(section.id, entry.uid)">
+                  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M4 7h16M10 11v6M14 11v6M5 7l1 13a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1l1-13M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div v-if="!visibleItems(section).length" class="di-empty">пусто</div>
+          </div>
+
+          <div v-if="canAdd" class="di-add-row">
+            <button class="di-add-catalog" @click="openPicker(section.id)">+ Добавить из справочника</button>
+            <button
+              class="di-add-custom"
+              title="Добавить предмет вручную"
+              @click="openInlineForm(section.id, null)"
+            >+ предмет</button>
+          </div>
+        </div>
+
+        <div v-if="canManage" class="di-add-section-row">
+          <button class="di-add-section" @click="addSection">+ Добавить секцию</button>
+        </div>
+      </template>
+    </template>
+
+    <ItemTooltip
+      v-if="tooltip.visible"
+      :title="tooltip.name"
+      :desc="tooltip.desc"
+      :x="tooltip.x"
+      :top="tooltip.top"
+      :bottom="tooltip.bottom"
+    >
+      <template v-if="tooltip.item && (tooltip.item.data?.cost || tooltip.item.data?.weight != null)" #details>
+        <ItemTooltipDetails :item="tooltip.item" />
+      </template>
+    </ItemTooltip>
+
+    <ItemViewModal
+      v-if="modalItem"
+      :item-type-id="modalItem.typeId ?? 2"
+      :item-id="modalItem.id"
+      :item="modalItem"
+      @close="modalItemId = null"
+    />
+
+    <ItemPickerModal
+      v-if="pickerOpen && pickerTypeIds.length"
+      :item-type-ids="pickerTypeIds"
+      title="Предметы"
+      search-placeholder="Поиск предмета..."
+      allow-quantity
+      @close="pickerOpen = false"
+      @pick="onPickerPick"
+    />
+
+    <ItemInlineFormModal
+      v-if="form.open"
+      :entry="form.entry"
+      :base-item="form.baseItem"
+      @close="form.open = false"
+      @save="onInlineFormSave"
+    />
+
+    <ConfirmDialog
+      v-if="confirmDel.open"
+      title="Удалить секцию?"
+      :message="`Секция «${confirmDel.name}» и все её предметы будут удалены.`"
+      confirm-label="Удалить"
+      @confirm="doDeleteSection"
+      @cancel="confirmDel.open = false"
+    />
+  </div>
+</template>
+
+<script setup>
+import { computed, inject, nextTick, onMounted, reactive, ref, watch } from 'vue'
+
+import BlockHeader from '@/features/character-editor/components/BlockHeader'
+import ItemInlineFormModal from '@/features/character-editor/components/ItemInlineFormModal'
+import ItemPickerModal from '@/features/character-editor/components/ItemPickerModal'
+import ItemTooltip from '@/features/character-editor/components/ItemTooltip'
+import ItemTooltipDetails from '@/features/items/detail-components/ItemTooltipDetails'
+import ItemViewModal from '@/shared/ui/ItemViewModal'
+import ConfirmDialog from '@/shared/ui/ConfirmDialog'
+import { itemsApi } from '@/shared/api/itemsApi'
+import { useSortable } from '@/shared/composables/useSortable'
+import {
+  EQUIPPED_ID,
+  EQUIPPED_NAME,
+  allCatalogIds,
+  cloneModel,
+  entryDisplayData,
+  makeEntryUid,
+  makeSectionId,
+  normalizeValue,
+} from '@/features/character-editor/blocks/dnd/lib/itemSection'
+
+const props = defineProps({ block: Object, value: { default: null } })
+const emit = defineEmits(['update:value'])
+const charCtx = inject('charCtx', () => ({ ownerMode: false }))
+
+const catalog = reactive({})
+const loading = ref(true)
+const contentHidden = ref(false)
+const modalItemId = ref(null)
+const pickerOpen = ref(false)
+const pickerSectionId = ref(null)
+const tooltip = reactive({ visible: false, name: '', desc: '', item: null, x: 0, top: null, bottom: null })
+const form = reactive({ open: false, sectionId: null, entry: null, baseItem: null })
+const confirmDel = reactive({ open: false, id: null, name: '' })
+const renamingId = ref(null)
+const renameInputs = ref([])
+
+const model = computed(() => normalizeValue(props.value))
+
+const allSections = computed(() => [
+  { id: EQUIPPED_ID, name: EQUIPPED_NAME, items: model.value.equipped, locked: true },
+  ...model.value.sections.map(s => ({ ...s, locked: false })),
+])
+
+function visibleItems(section) {
+  return section.items || []
+}
+
+// Returns mutable reference to items array (equipped or sections[i].items) on a cloned model
+function itemsRef(next, sectionId) {
+  if (sectionId === EQUIPPED_ID) return next.equipped
+  const sec = next.sections.find(s => s.id === sectionId)
+  return sec ? sec.items : null
+}
+
+function setItems(next, sectionId, items) {
+  if (sectionId === EQUIPPED_ID) { next.equipped = items; return }
+  const sec = next.sections.find(s => s.id === sectionId)
+  if (sec) sec.items = items
+}
+
+const typeIdsList = computed(() => props.block.content?.item_ids || [])
+// Single mode: owners get every control (add / manage / drag); viewers see a read-only list.
+const canManage = computed(() => !!charCtx.ownerMode)
+const canAdd = computed(() => !!charCtx.ownerMode)
+const canDrag = computed(() => !!charCtx.ownerMode)
+
+const modalItem = computed(() => modalItemId.value != null ? catalog[modalItemId.value] ?? null : null)
+const pickerTypeIds = computed(() => typeIdsList.value)
+
+function sectionGroup(id) { return 'sec_' + id }
+
+function entryWithDisplay(entry) {
+  return { ...entry, display: entryDisplayData(entry, catalog) }
+}
+
+function sectionItems(sectionId) {
+  if (sectionId === EQUIPPED_ID) return model.value.equipped.map(entryWithDisplay)
+  const sec = model.value.sections.find(s => s.id === sectionId)
+  return sec ? sec.items.map(entryWithDisplay) : []
+}
+
+const sortable = useSortable({
+  groups: new Proxy({}, {
+    get(_, groupName) {
+      return {
+        items: { get value() { return sectionItems(parseGroup(groupName)) } },
+      }
+    },
+    has() { return true },
+    ownKeys() {
+      return [sectionGroup(EQUIPPED_ID), ...model.value.sections.map(s => sectionGroup(s.id))]
+    },
+    getOwnPropertyDescriptor() { return { enumerable: true, configurable: true } },
+  }),
+  getKey: e => e.uid,
+  onDrop: ({ item, fromGroup, toGroup, toIndex }) => {
+    const fromSecId = parseGroup(fromGroup)
+    const toSecId = parseGroup(toGroup)
+    const next = cloneModel(model.value)
+    const fromList = itemsRef(next, fromSecId)
+    const toList = itemsRef(next, toSecId)
+    if (!fromList || !toList) return
+    const idx = fromList.findIndex(i => i.uid === item.uid)
+    if (idx === -1) return
+    const [moved] = fromList.splice(idx, 1)
+    const adjustedIdx = (fromSecId === toSecId && idx < toIndex) ? toIndex - 1 : toIndex
+    toList.splice(Math.min(adjustedIdx, toList.length), 0, moved)
+    emit('update:value', props.block.id, next)
+  },
+})
+
+function parseGroup(g) { return String(g).slice(4) }
+
+function displaySectionItems(sectionId) {
+  return sortable.displayItems(sectionGroup(sectionId))
+    .map(entryWithDisplay)
+}
+
+// Whole-row drag (like spells/weapons). The sortable's 4px threshold keeps a plain tap a click; a
+// drag flips `sortable.dragging` mid-gesture, which we remember so the trailing click on the name
+// doesn't open the item modal.
+let draggedThisGesture = false
+watch(() => sortable.dragging, v => { if (v) draggedThisGesture = true })
+
+function onRowDown(e, entry, sectionId, idx) {
+  if (e.target.closest('button') || e.target.closest('input')) return
+  draggedThisGesture = false
+  if (!canDrag.value) return
+  sortable.startDrag(e, entry, sectionGroup(sectionId), idx)
+}
+
+function emitModel(next) {
+  emit('update:value', props.block.id, next)
+}
+
+function startRename(id) {
+  renamingId.value = id
+  nextTick(() => {
+    const el = renameInputs.value?.[0]
+    el?.focus()
+    el?.select()
+  })
+}
+
+function finishRename(id, value) {
+  if (renamingId.value !== id) return
+  const trimmed = (value || '').trim()
+  const next = cloneModel(model.value)
+  const sec = next.sections.find(s => s.id === id)
+  if (sec) sec.name = trimmed || sec.name
+  renamingId.value = null
+  emitModel(next)
+}
+
+function addSection() {
+  const next = cloneModel(model.value)
+  next.sections.push({ id: makeSectionId(), name: 'Новая секция', items: [] })
+  emitModel(next)
+}
+
+function askDeleteSection(section) {
+  Object.assign(confirmDel, { open: true, id: section.id, name: section.name })
+}
+
+function doDeleteSection() {
+  const next = cloneModel(model.value)
+  next.sections = next.sections.filter(s => s.id !== confirmDel.id)
+  if (next.sections.length === 0) {
+    next.sections.push({ id: makeSectionId(), name: 'Рюкзак', items: [] })
+  }
+  confirmDel.open = false
+  emitModel(next)
+}
+
+function bumpCount(sectionId, uid, delta) {
+  const next = cloneModel(model.value)
+  const list = itemsRef(next, sectionId)
+  if (!list) return
+  const item = list.find(i => i.uid === uid)
+  if (!item) return
+  item.count = Math.max(1, (item.count || 1) + delta)
+  emitModel(next)
+}
+
+function setCount(sectionId, uid, val) {
+  const count = Math.max(1, parseInt(val, 10) || 1)
+  const next = cloneModel(model.value)
+  const list = itemsRef(next, sectionId)
+  if (!list) return
+  const item = list.find(i => i.uid === uid)
+  if (!item) return
+  item.count = count
+  emitModel(next)
+}
+
+function decrement(sectionId, uid) {
+  const next = cloneModel(model.value)
+  const list = itemsRef(next, sectionId)
+  if (!list) return
+  const idx = list.findIndex(i => i.uid === uid)
+  if (idx === -1) return
+  const item = list[idx]
+  if ((item.count || 1) > 1) item.count -= 1
+  else list.splice(idx, 1)
+  emitModel(next)
+}
+
+function removeEntry(sectionId, uid) {
+  const next = cloneModel(model.value)
+  const list = itemsRef(next, sectionId)
+  if (!list) return
+  setItems(next, sectionId, list.filter(i => i.uid !== uid))
+  emitModel(next)
+}
+
+function openPicker(sectionId) {
+  pickerSectionId.value = sectionId
+  pickerOpen.value = true
+}
+
+function onPickerPick(item, qty = 1) {
+  const n = Math.max(1, Math.min(999, Math.floor(Number(qty) || 1)))
+  if (!catalog[item.id]) catalog[item.id] = item
+  const next = cloneModel(model.value)
+  const list = itemsRef(next, pickerSectionId.value) || next.sections[0]?.items
+  if (!list) return
+  for (let i = 0; i < n; i++) {
+    list.push({ uid: makeEntryUid(), id: item.id, count: 1, override: null })
+  }
+  emitModel(next)
+}
+
+function openInlineForm(sectionId, entry) {
+  const baseItem = entry?.id != null ? (catalog[entry.id] || null) : null
+  Object.assign(form, { open: true, sectionId, entry, baseItem })
+}
+
+function onInlineFormSave(fields) {
+  const next = cloneModel(model.value)
+  const list = itemsRef(next, form.sectionId) || next.sections[0]?.items
+  if (!list) return
+  if (form.entry) {
+    const item = list.find(i => i.uid === form.entry.uid)
+    if (item) {
+      const baseData = form.baseItem?.data || {}
+      const baseName = form.baseItem?.name
+      const ov = {}
+      if (fields.name !== baseName) ov.name = fields.name
+      if (fields.desc !== (baseData.desc || '')) ov.desc = fields.desc
+      if (fields.consumable !== !!baseData.consumable) ov.consumable = fields.consumable
+      item.override = Object.keys(ov).length ? ov : null
+    }
+  } else {
+    list.push({
+      uid: makeEntryUid(),
+      id: null,
+      count: 1,
+      override: { name: fields.name, desc: fields.desc, consumable: fields.consumable },
+    })
+  }
+  form.open = false
+  emitModel(next)
+}
+
+function onNameClick(entry) {
+  if (draggedThisGesture) { draggedThisGesture = false; return }
+  if (entry.display.isCustom) {
+    if (canManage.value) openInlineForm(findSectionOfEntry(entry.uid), entry)
+    return
+  }
+  if (entry.id != null) modalItemId.value = entry.id
+}
+
+function findSectionOfEntry(uid) {
+  if (model.value.equipped.some(i => i.uid === uid)) return EQUIPPED_ID
+  for (const s of model.value.sections) {
+    if (s.items.some(i => i.uid === uid)) return s.id
+  }
+  return model.value.sections[0]?.id || null
+}
+
+function showTooltip(e, entry) {
+  const d = entry.display
+  if (!d.desc && !d.cost && d.weight == null) return
+  const rect = e.currentTarget.getBoundingClientRect()
+  const above = window.innerHeight - rect.bottom < 150
+  Object.assign(tooltip, {
+    visible: true, name: d.name, desc: d.desc,
+    item: d.base || (d.isCustom ? { name: d.name, data: { desc: d.desc, consumable: d.consumable } } : null),
+    x: Math.min(rect.left, window.innerWidth - 320),
+    top: above ? null : rect.bottom + 6,
+    bottom: above ? window.innerHeight - rect.top + 6 : null,
+  })
+}
+function hideTooltip() { tooltip.visible = false }
+
+onMounted(async () => {
+  try {
+    const ids = allCatalogIds(model.value)
+    if (ids.length) {
+      const r = await itemsApi.byIds(ids)
+      for (const item of r?.items || []) catalog[item.id] = item
+    }
+  } catch { /* ignore */ } finally {
+    loading.value = false
+  }
+})
+</script>
+
+<style scoped>
+.di-block {
+  color: var(--text-1);
+}
+
+.di-collapse-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 0 2px;
+  line-height: 1;
+  transition: color 0.12s;
+}
+.di-collapse-btn:hover { color: var(--text-2); }
+
+/* ─── Skeleton ─── */
+.di-skeleton {
+  height: 38px;
+  border-radius: 10px;
+  background: var(--surface-1);
+  margin-bottom: 6px;
+  animation: di-shimmer 1.3s ease-in-out infinite;
+  opacity: 0.4;
+}
+@keyframes di-shimmer {
+  0%, 100% { opacity: 0.3; }
+  50%       { opacity: 0.55; }
+}
+
+/* ─── Section ─── */
+.di-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+.di-section:last-child { margin-bottom: 8px; }
+
+.di-section-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 24px;
+}
+
+.di-section-name {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 12px;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  line-height: 1.15;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  cursor: default;
+  transition: color 0.15s;
+}
+.di-section-name-editable { cursor: text; }
+.di-section-name-editable:hover { color: var(--text-1); }
+
+.di-section-rename {
+  background: var(--input-bg);
+  border: 1px solid var(--input-focus);
+  border-radius: 6px;
+  color: var(--text-1);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 3px 8px;
+  outline: none;
+  min-width: 0;
+  max-width: 220px;
+}
+
+.di-section-count {
+  color: #777b88;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.di-section-line {
+  flex: 1;
+  min-width: 20px;
+  height: 1px;
+  background: rgba(91, 101, 126, 0.42);
+}
+
+.di-section-del {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: color 0.12s, background 0.12s;
+}
+.di-section-del:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 12%, transparent); }
+
+/* ─── Rows (frameless, divider-separated — matches weapons/spells) ─── */
+.di-rows {
+  display: flex;
+  flex-direction: column;
+}
+
+.di-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 6px 4px;
+  transition: background 0.12s;
+}
+.di-row + .di-row {
+  border-top: 1px solid color-mix(in srgb, #fff 7%, transparent);
+}
+.di-row-draggable { cursor: grab; touch-action: pan-y; }
+.di-row-draggable:active { cursor: grabbing; }
+@media (hover: hover) {
+  .di-row:hover { background: rgba(255, 255, 255, 0.025); }
+}
+
+.di-row-name {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-1);
+  padding: 2px 4px;
+}
+.di-row-name:hover .di-row-name-text { color: var(--accent); }
+
+.di-row-name-text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.di-count-badge {
+  flex-shrink: 0;
+  min-width: 16px;
+  height: 16px;
+  box-sizing: border-box;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 22%, transparent);
+  color: var(--text-1);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 14px;
+  text-align: center;
+}
+.di-count-x { font-size: 8px; opacity: 0.75; margin-right: 1px; }
+
+.di-empty {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-style: italic;
+  padding: 4px 6px;
+}
+
+/* ─── Owner row controls ─── */
+.di-row-ctrls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.di-icon-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 6px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.12s, background 0.12s;
+}
+.di-icon-btn:hover { color: var(--text-1); background: var(--surface-1); }
+.di-del:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, transparent); }
+
+/* ─── Use button (consumable) ─── */
+.di-use-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  color: color-mix(in srgb, var(--accent) 90%, var(--text-1));
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.di-use-btn:hover {
+  background: color-mix(in srgb, var(--accent) 28%, transparent);
+  color: #fff;
+}
+.di-use-btn:active { background: color-mix(in srgb, var(--accent) 40%, transparent); }
+
+/* ─── Equipped section accent ─── */
+.di-section-locked .di-section-name {
+  color: color-mix(in srgb, var(--accent) 60%, var(--text-2));
+}
+
+.di-count-ctrl { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+.di-count-btn {
+  width: 22px;
+  height: 22px;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-2);
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.12s, color 0.12s;
+}
+.di-count-btn:hover { background: var(--surface-2); color: var(--text-1); }
+.di-count-input {
+  width: 40px;
+  height: 22px;
+  box-sizing: border-box;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-1);
+  font: inherit;
+  font-size: 12px;
+  text-align: center;
+  outline: none;
+}
+.di-count-input:focus { border-color: var(--input-focus); }
+
+/* ─── Add row ─── */
+.di-add-row {
+  display: flex;
+  gap: 6px;
+  align-items: stretch;
+  margin-top: 6px;
+}
+
+.di-add-catalog {
+  flex: 1;
+  min-height: 34px;
+  border: 1px dashed var(--border-strong);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.di-add-catalog:hover {
+  color: var(--text-2);
+  border-color: color-mix(in srgb, var(--accent) 50%, var(--border-strong));
+  background: color-mix(in srgb, var(--accent) 5%, transparent);
+}
+
+.di-add-custom {
+  flex-shrink: 0;
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px dashed var(--border-strong);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.di-add-custom:hover {
+  color: var(--text-2);
+  border-color: color-mix(in srgb, var(--accent) 50%, var(--border-strong));
+  background: color-mix(in srgb, var(--accent) 5%, transparent);
+}
+
+.di-add-section-row { margin-top: 4px; }
+.di-add-section {
+  width: 100%;
+  min-height: 30px;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+.di-add-section:hover { color: var(--text-2); border-color: var(--border-strong); }
+
+/* ─── Drag placeholder ─── */
+.sortable-placeholder {
+  background: color-mix(in srgb, var(--accent) 8%, transparent) !important;
+  outline: 2px dashed color-mix(in srgb, var(--accent) 50%, transparent);
+  outline-offset: -2px;
+  border-radius: 8px;
+}
+.sortable-placeholder > * { visibility: hidden; }
+</style>

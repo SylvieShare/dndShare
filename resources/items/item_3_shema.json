@@ -1,0 +1,107 @@
+[
+  {
+    "name": "Описание",
+    "key": "desc",
+    "type": "description"
+  },
+  {
+    "name": "Макс. использований",
+    "key": "max_use",
+    "type": "int"
+  },
+  {
+    "name": "Редактируемое количество использований",
+    "key": "manual_size",
+    "type": "bool"
+  },
+  {
+    "name": "Восстанавливается на коротком отдыхе",
+    "key": "rollback_short_rest",
+    "type": "bool"
+  },
+  {
+    "name": "Восстанавливается на длинном отдыхе",
+    "key": "rollback_long_rest",
+    "type": "bool"
+  },
+  {
+    "name": "Уровень получения",
+    "key": "level",
+    "type": "int",
+    "default": 1,
+    "filter": true
+  },
+  {
+    "name": "Расы",
+    "key": "race_ids",
+    "type": "object_array",
+    "fields": [
+      { "name": "Раса", "key": "id", "type": "item", "item_type": 8 }
+    ]
+  },
+  {
+    "name": "Подрасы",
+    "key": "subrace_ids",
+    "type": "object_array",
+    "fields": [
+      { "name": "Подраса", "key": "id", "type": "item", "item_type": 8 }
+    ]
+  },
+  {
+    "name": "Прогрессия по уровням",
+    "key": "scaling",
+    "type": "object_array",
+    "fields": [
+      { "name": "Уровень", "key": "level", "type": "int" },
+      { "name": "Значение", "key": "value", "type": "text" },
+      { "name": "Использований", "key": "uses", "type": "int" },
+      { "name": "Примечание", "key": "note", "type": "text" }
+    ]
+  },
+  {
+    "name": "Требование (prereq)",
+    "key": "prereq",
+    "type": "object",
+    "fields": [
+      { "name": "Текст", "key": "text", "type": "text" },
+      {
+        "name": "Мин. характеристики",
+        "key": "min_stats",
+        "type": "object_array",
+        "fields": [
+          { "name": "Характеристика", "key": "ability", "type": "suggest", "suggest_id": 16 },
+          { "name": "Значение", "key": "value", "type": "int" }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Условие использования (usage)",
+    "key": "usage",
+    "type": "object",
+    "fields": [
+      { "name": "Текст", "key": "text", "type": "text" },
+      { "name": "Без брони (категории)", "key": "not_armor", "type": "suggest_array", "suggest_id": 3 },
+      { "name": "Требует брони (категории)", "key": "requires_armor", "type": "suggest_array", "suggest_id": 3 }
+    ]
+  },
+  {
+    "name": "Выбор (choice)",
+    "key": "choice",
+    "type": "object",
+    "fields": [
+      { "name": "Текст", "key": "text", "type": "text" },
+      { "name": "Сколько выбрать", "key": "count", "type": "int" },
+      { "name": "Из словаря (suggest type id)", "key": "from_suggest_id", "type": "int" },
+      {
+        "name": "Варианты",
+        "key": "options",
+        "type": "object_array",
+        "fields": [
+          { "name": "Название", "key": "label", "type": "text" },
+          { "name": "Описание", "key": "desc", "type": "text" }
+        ]
+      }
+    ]
+  }
+]

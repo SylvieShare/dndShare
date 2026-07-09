@@ -1,0 +1,314 @@
+<template>
+  <teleport to="body">
+    <div
+      ref="overlay"
+      class="am-overlay"
+      :style="zIndex !== 3000 ? { zIndex } : {}"
+      @mousedown.self="requestClose"
+    >
+      <div
+        ref="card"
+        class="am-card"
+        :class="{ 'am-card-wide': wide, 'am-card-full': fullscreen, 'am-card-tile': tile }"
+        @touchstart.passive="onTouchStart"
+        @touchmove="onTouchMove"
+        @touchend.passive="onTouchEnd"
+        @touchcancel.passive="cancelDrag"
+      >
+        <div class="am-handle"></div>
+        <button v-if="!fullscreen" class="am-close" @click="requestClose">✕</button>
+        <slot />
+      </div>
+    </div>
+  </teleport>
+</template>
+
+<script>
+const MOBILE = () => window.innerWidth <= 640
+const DUR_IN  = 260
+const DUR_OUT = 280
+const EASE_SLIDE = 'cubic-bezier(0.32, 0.72, 0, 1)'
+</script>
+
+<script setup>
+import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
+
+defineProps({
+  zIndex: { type: Number, default: 3000 },
+  wide: { type: Boolean, default: false },
+  fullscreen: { type: Boolean, default: false },
+  // Use the BaseTile block surface (var(--block-bg)) instead of the page bg.
+  tile: { type: Boolean, default: false },
+})
+const emit = defineEmits(['close'])
+
+const overlay = ref(null)
+const card    = ref(null)
+
+const isDragging          = ref(false)
+const dragY               = ref(0)
+const touchStartY         = ref(0)
+const touchStartScrollTop = ref(0)
+
+let _unmounted  = false
+let _closeTimer = null
+
+function _onKeydown(e) {
+  if (e.key === 'Escape') requestClose()
+}
+
+function _animateIn() {
+  const ov = overlay.value; const c = card.value
+  if (!ov || !c) return
+  ov.style.opacity = '0'
+  ov.style.backdropFilter = 'blur(0px)'
+  ov.style.webkitBackdropFilter = 'blur(0px)'
+  if (MOBILE()) {
+    c.style.transform = 'translateY(100%)'
+  } else {
+    c.style.transform = 'scale(0.95) translateY(10px)'
+    c.style.opacity = '0'
+  }
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      const EASE_OPACITY_IN = 'cubic-bezier(0, 0, 0.4, 1)'
+      const ovTr = `opacity ${DUR_IN}ms ${EASE_OPACITY_IN}, backdrop-filter ${DUR_IN}ms ${EASE_OPACITY_IN}, -webkit-backdrop-filter ${DUR_IN}ms ${EASE_OPACITY_IN}`
+      ov.style.transition = ovTr
+      ov.style.opacity = '1'
+      ov.style.backdropFilter = 'blur(6px)'
+      ov.style.webkitBackdropFilter = 'blur(6px)'
+      if (MOBILE()) {
+        c.style.transition = `transform ${DUR_IN}ms ${EASE_SLIDE}`
+        c.style.transform = 'translateY(0)'
+      } else {
+        c.style.transition = `transform ${DUR_IN}ms ${EASE_SLIDE}, opacity ${DUR_IN}ms ${EASE_OPACITY_IN}`
+        c.style.transform = 'none'
+        c.style.opacity = '1'
+      }
+      setTimeout(() => {
+        if (_unmounted) return
+        ov.style.transition = ''
+        // Keep the blur applied inline. Clearing it would fall back to the `.am-overlay` CSS rule,
+        // whose unprefixed `backdrop-filter` the minifier drops (and which is unreliable in some
+        // Chromium builds), so the blur would snap off at the end of the open animation.
+        ov.style.backdropFilter = 'blur(6px)'
+        ov.style.webkitBackdropFilter = 'blur(6px)'
+        c.style.transition = ''
+        c.style.transform = ''
+        c.style.opacity = ''
+      }, DUR_IN + 50)
+    })
+  })
+}
+
+function _animateOut() {
+  const ov = overlay.value; const c = card.value
+  if (!ov || !c) {
+    _closeTimer = setTimeout(() => { if (!_unmounted) emit('close') }, 0)
+    return
+  }
+  const ovTr = `opacity ${DUR_OUT}ms ease, backdrop-filter ${DUR_OUT}ms ease, -webkit-backdrop-filter ${DUR_OUT}ms ease`
+  ov.style.transition = ovTr
+  ov.style.opacity = '0'
+  ov.style.backdropFilter = 'blur(0px)'
+  ov.style.webkitBackdropFilter = 'blur(0px)'
+  if (MOBILE()) {
+    c.style.transition = `transform ${DUR_OUT}ms ${EASE_SLIDE}`
+    c.style.transform = 'translateY(100%)'
+  } else {
+    c.style.transition = `transform ${DUR_OUT}ms ease, opacity ${DUR_OUT}ms ease`
+    c.style.transform = 'scale(0.95) translateY(10px)'
+    c.style.opacity = '0'
+  }
+  _closeTimer = setTimeout(() => {
+    if (!_unmounted) emit('close')
+  }, DUR_OUT + 20)
+}
+
+function requestClose() {
+  _animateOut()
+}
+
+function onTouchStart(e) {
+  touchStartY.value = e.touches[0].clientY
+  touchStartScrollTop.value = card.value?.scrollTop || 0
+  isDragging.value = false
+  dragY.value = 0
+}
+
+function onTouchMove(e) {
+  const dy = e.touches[0].clientY - touchStartY.value
+  if (!isDragging.value) {
+    if (dy > 8 && touchStartScrollTop.value <= 0) {
+      isDragging.value = true
+    } else {
+      return
+    }
+  }
+  e.preventDefault()
+  dragY.value = Math.max(0, dy)
+  const c = card.value; const ov = overlay.value
+  if (c)  { c.style.transition = 'none'; c.style.transform = `translateY(${dragY.value}px)` }
+  if (ov) { ov.style.transition = 'none'; ov.style.opacity = String(Math.max(0, 1 - dragY.value / 320)) }
+}
+
+function onTouchEnd() {
+  if (!isDragging.value) return
+  isDragging.value = false
+  const c = card.value; const ov = overlay.value
+  if (dragY.value > 100) {
+    if (c)  { c.style.transition = `transform ${DUR_OUT}ms ${EASE_SLIDE}`; c.style.transform = 'translateY(100%)' }
+    if (ov) { ov.style.transition = `opacity ${DUR_OUT}ms ease`; ov.style.opacity = '0' }
+    _closeTimer = setTimeout(() => {
+      if (!_unmounted) emit('close')
+    }, DUR_OUT + 20)
+  } else {
+    if (c)  { c.style.transition = `transform ${DUR_OUT}ms ${EASE_SLIDE}`; c.style.transform = 'translateY(0)' }
+    if (ov) { ov.style.transition = 'opacity 200ms ease'; ov.style.opacity = '1' }
+    dragY.value = 0
+    setTimeout(() => {
+      if (_unmounted) return
+      if (c)  { c.style.transition = ''; c.style.transform = '' }
+      if (ov) { ov.style.transition = ''; ov.style.opacity = '' }
+    }, DUR_OUT + 50)
+  }
+}
+
+function cancelDrag() {
+  if (!isDragging.value) return
+  isDragging.value = false
+  dragY.value = 0
+  const c = card.value; const ov = overlay.value
+  if (c)  { c.style.transition = `transform ${DUR_OUT}ms ${EASE_SLIDE}`; c.style.transform = 'translateY(0)' }
+  if (ov) { ov.style.transition = 'opacity 200ms ease'; ov.style.opacity = '1' }
+  setTimeout(() => {
+    if (_unmounted) return
+    if (c)  { c.style.transition = ''; c.style.transform = '' }
+    if (ov) { ov.style.transition = ''; ov.style.opacity = '' }
+  }, DUR_OUT + 50)
+}
+
+onMounted(() => {
+  document.addEventListener('keydown', _onKeydown)
+  nextTick(() => _animateIn())
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('keydown', _onKeydown)
+  clearTimeout(_closeTimer)
+  _unmounted = true
+})
+</script>
+
+<style scoped>
+.am-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+}
+
+.am-card {
+  position: relative;
+  background: var(--bg);
+  border: 1px solid var(--border-strong);
+  border-radius: 18px;
+  padding: 28px 28px 24px;
+  width: 480px;
+  max-width: 94vw;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.am-card-tile {
+  background: var(--block-bg);
+  border: none;
+}
+
+.am-card-wide {
+  width: 720px;
+}
+
+.am-card-full {
+  width: min(1400px, 96vw);
+  max-width: none;
+  height: 92vh;
+  max-height: 92vh;
+  padding: 0;
+  gap: 0;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.am-handle {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .am-handle {
+    display: block;
+    width: 36px;
+    height: 4px;
+    background: var(--text-muted);
+    border-radius: 2px;
+    margin: -32px auto 20px;
+  }
+}
+
+.am-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: var(--r-sm);
+  transition: color 0.15s;
+  touch-action: manipulation;
+  line-height: 1;
+}
+.am-close:hover { color: var(--text-2); }
+
+@media (max-width: 640px) {
+  .am-overlay {
+    align-items: flex-end;
+  }
+
+  .am-card {
+    width: 100%;
+    max-width: 100%;
+    max-height: 80vh;
+    border-radius: 18px 18px 0 0;
+    padding: 52px 20px 32px;
+  }
+
+  .am-close {
+    top: 14px;
+    right: 14px;
+    font-size: 18px;
+    padding: 8px;
+    color: var(--text-muted);
+  }
+
+  .am-card-full {
+    width: 100%;
+    max-width: 100%;
+    height: 94vh;
+    max-height: 94vh;
+    padding: 0;
+    border-radius: 16px 16px 0 0;
+  }
+}
+</style>

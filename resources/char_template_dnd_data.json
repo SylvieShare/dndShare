@@ -1,0 +1,1183 @@
+﻿{
+  "blocks": {
+    "hp": {
+      "id": "hp",
+      "type": "DND_HP",
+      "content": {
+        "dice_suggest_type_id": 11
+      }
+    },
+    "CHA": {
+      "id": "CHA",
+      "type": "DND_CHAR_STAT_10",
+      "content": {
+        "color": "#9a60c8",
+        "title": {
+          "suggest_id": 6,
+          "suggest_type_id": 16
+        },
+        "bonus_path": "prof_bonus.v",
+        "suggest_ids": [
+          15,
+          16,
+          17,
+          18
+        ],
+        "suggest_type_id": 15,
+        "allow_add_skills": true,
+        "allow_override_title": true
+      }
+    },
+    "CON": {
+      "id": "CON",
+      "type": "DND_CHAR_STAT_10",
+      "content": {
+        "color": "#666",
+        "title": {
+          "suggest_id": 3,
+          "suggest_type_id": 16
+        },
+        "bonus_path": "prof_bonus.v",
+        "suggest_ids": [],
+        "suggest_type_id": 15,
+        "allow_add_skills": true,
+        "allow_override_title": true
+      }
+    },
+    "DEX": {
+      "id": "DEX",
+      "type": "DND_CHAR_STAT_10",
+      "content": {
+        "color": "#5aaf72",
+        "title": {
+          "suggest_id": 2,
+          "suggest_type_id": 16
+        },
+        "bonus_path": "prof_bonus.v",
+        "suggest_ids": [
+          2,
+          3,
+          4
+        ],
+        "suggest_type_id": 15,
+        "allow_add_skills": true,
+        "allow_override_title": true
+      }
+    },
+    "INT": {
+      "id": "INT",
+      "type": "DND_CHAR_STAT_10",
+      "content": {
+        "color": "#4f8fcc",
+        "title": {
+          "suggest_id": 4,
+          "suggest_type_id": 16
+        },
+        "bonus_path": "prof_bonus.v",
+        "suggest_ids": [
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "suggest_type_id": 15,
+        "allow_add_skills": true,
+        "allow_override_title": true
+      }
+    },
+    "STR": {
+      "id": "STR",
+      "type": "DND_CHAR_STAT_10",
+      "content": {
+        "color": "#d4784a",
+        "title": {
+          "suggest_id": 1,
+          "suggest_type_id": 16
+        },
+        "bonus_path": "prof_bonus.v",
+        "suggest_ids": [
+          1
+        ],
+        "suggest_type_id": 15,
+        "allow_add_skills": true,
+        "allow_override_title": true
+      }
+    },
+    "WIS": {
+      "id": "WIS",
+      "type": "DND_CHAR_STAT_10",
+      "content": {
+        "color": "#7aaabb",
+        "title": {
+          "suggest_id": 5,
+          "suggest_type_id": 16
+        },
+        "bonus_path": "prof_bonus.v",
+        "suggest_ids": [
+          10,
+          11,
+          12,
+          13,
+          14
+        ],
+        "suggest_type_id": 15,
+        "allow_add_skills": true,
+        "allow_override_title": true
+      }
+    },
+    "ava": {
+      "id": "ava",
+      "type": "AVATARS"
+    },
+    "lvl": {
+      "id": "lvl",
+      "type": "BLOCK_LVL",
+      "content": {
+        "experience": [
+          300,
+          900,
+          2700,
+          6500,
+          14000,
+          23000,
+          34000,
+          48000,
+          64000,
+          85000,
+          100000,
+          120000,
+          140000,
+          165000,
+          195000,
+          225000,
+          265000,
+          305000,
+          355000
+        ]
+      }
+    },
+    "name": {
+      "id": "name",
+      "type": "INPUT_TEXT",
+      "content": {
+        "color": "#fcbe24",
+        "placeholder": "Имя персонажа"
+      }
+    },
+    "race": {
+      "id": "race",
+      "type": "INPUT_SUGGEST",
+      "content": {
+        "suggest_id": 1,
+        "placeholder": "Раса"
+      }
+    },
+    "armor": {
+      "id": "armor",
+      "type": "DND_ARMOR",
+      "content": {
+        "dex_mod_path": "values.DEX.mod"
+      }
+    },
+    "class": {
+      "id": "class",
+      "type": "INPUT_SUGGEST",
+      "content": {
+        "suggest_id": 2,
+        "placeholder": "Класс"
+      }
+    },
+    "items": {
+      "id": "items",
+      "type": "BLOCK_ITEMS",
+      "content": {
+        "item_ids": [
+          2,
+          1
+        ]
+      }
+    },
+    "money": {
+      "id": "money",
+      "type": "BLOCK_MONEY",
+      "title": "Кошелек",
+      "content": {
+        "suggest_type_id": 17
+      }
+    },
+    "notes": {
+      "id": "notes",
+      "type": "INPUT_DESCRIPTION",
+      "title": "Заметки",
+      "content": {
+        "placeholder": "Заметки..."
+      }
+    },
+    "speed": {
+      "id": "speed",
+      "type": "DND_SPEED",
+      "content": {
+        "svg": "/static/speed.svg"
+      }
+    },
+    "spells": {
+      "id": "spells",
+      "type": "DND_SPELLS",
+      "content": {
+        "item_type_id": 5,
+        "prof_bonus_path": "prof_bonus.v",
+        "class_suggest_id": 2,
+        "school_suggest_id": 7,
+        "source_suggest_id": 8,
+        "stat_suggest_type_id": 16
+      },
+      "hide_on_empty": true
+    },
+    "states": {
+      "id": "states",
+      "type": "BLOCK_STATES",
+      "content": {
+        "suggest_id": 9
+      }
+    },
+    "weapon": {
+      "id": "weapon",
+      "type": "DND_WEAPONS",
+      "content": {
+        "bonus_path": "prof_bonus.v",
+        "item_type_id": 1,
+        "dice_suggest_type_id": 11,
+        "stat_suggest_type_id": 16,
+        "type_attack_suggest_type_id": 12
+      }
+    },
+    "resources": {
+      "id": "resources",
+      "type": "BLOCK_RESOURCES",
+      "content": {
+        "max_in_row": 10
+      },
+      "hide_on_empty": true
+    },
+    "initiative": {
+      "id": "initiative",
+      "type": "DND_INITIATIVE",
+      "content": {
+        "svg": "/static/initiative.svg",
+        "visible_plus": true
+      }
+    },
+    "person_age": {
+      "id": "person_age",
+      "type": "INPUT_TEXT",
+      "title": "Возраст",
+      "content": {
+        "placeholder": "Возраст"
+      }
+    },
+    "prof_bonus": {
+      "id": "prof_bonus",
+      "type": "DND_PROF_BONUS",
+      "content": {
+        "svg": "/static/prof-bonus.svg",
+        "level_id": "lvl"
+      }
+    },
+    "person_eyes": {
+      "id": "person_eyes",
+      "type": "INPUT_TEXT",
+      "title": "Глаза",
+      "content": {
+        "placeholder": "Глаза"
+      }
+    },
+    "person_hair": {
+      "id": "person_hair",
+      "type": "INPUT_TEXT",
+      "title": "Волосы",
+      "content": {
+        "placeholder": "Волосы"
+      }
+    },
+    "person_skin": {
+      "id": "person_skin",
+      "type": "INPUT_TEXT",
+      "title": "Кожа",
+      "content": {
+        "placeholder": "Кожа"
+      }
+    },
+    "person_bonds": {
+      "id": "person_bonds",
+      "type": "INPUT_DESCRIPTION",
+      "title": "Привязанности",
+      "content": {
+        "placeholder": "Привязанности..."
+      }
+    },
+    "person_flaws": {
+      "id": "person_flaws",
+      "type": "INPUT_DESCRIPTION",
+      "title": "Слабости",
+      "content": {
+        "placeholder": "Слабости..."
+      }
+    },
+    "char_identity": {
+      "id": "char_identity",
+      "type": "DND_CHAR_IDENTITY",
+      "content": {
+        "name_id": "name",
+        "race_id": "race",
+        "class_id": "class"
+      }
+    },
+    "person_allies": {
+      "id": "person_allies",
+      "type": "INPUT_DESCRIPTION",
+      "title": "Союзники и организации",
+      "content": {
+        "placeholder": "Союзники, организации, контакты..."
+      }
+    },
+    "person_height": {
+      "id": "person_height",
+      "type": "INPUT_TEXT",
+      "title": "Рост",
+      "content": {
+        "placeholder": "Рост"
+      }
+    },
+    "person_ideals": {
+      "id": "person_ideals",
+      "type": "INPUT_DESCRIPTION",
+      "title": "Идеалы",
+      "content": {
+        "placeholder": "Идеалы..."
+      }
+    },
+    "person_origin": {
+      "id": "person_origin",
+      "type": "INPUT_TEXT",
+      "title": "Происхождение",
+      "content": {
+        "placeholder": "Происхождение"
+      }
+    },
+    "person_traits": {
+      "id": "person_traits",
+      "type": "INPUT_DESCRIPTION",
+      "title": "Черты характера",
+      "content": {
+        "placeholder": "Черты характера..."
+      }
+    },
+    "person_weight": {
+      "id": "person_weight",
+      "type": "INPUT_TEXT",
+      "title": "Вес",
+      "content": {
+        "placeholder": "Вес"
+      }
+    },
+    "proficiencies": {
+      "id": "proficiencies",
+      "type": "BLOCK_TAGS",
+      "content": {
+        "gap": "10px",
+        "fixed_list": [
+          {
+            "title": "Доспехи",
+            "suggest_id": 3
+          },
+          {
+            "title": "Оружие",
+            "suggest_id": 4
+          },
+          {
+            "title": "Инструменты",
+            "suggest_id": 5
+          },
+          {
+            "title": "Языки",
+            "suggest_id": 6
+          }
+        ],
+        "custom_tags": true,
+        "custom_suggest_id": 10
+      }
+    },
+    "abilities_race": {
+      "id": "abilities_race",
+      "type": "DND_ABILITIES",
+      "title": "Расовые",
+      "content": {
+        "item_id": 3
+      }
+    },
+    "abilities_class": {
+      "id": "abilities_class",
+      "type": "DND_ABILITIES",
+      "title": "Классовые",
+      "content": {
+        "item_id": 4
+      }
+    },
+    "abilities_feats": {
+      "id": "abilities_feats",
+      "type": "DND_ABILITIES",
+      "title": "Черты",
+      "content": {
+        "item_id": 7
+      }
+    },
+    "person_alignment": {
+      "id": "person_alignment",
+      "type": "INPUT_TEXT",
+      "title": "Мировоззрение",
+      "content": {
+        "placeholder": "Мировоззрение"
+      }
+    },
+    "person_backstory": {
+      "id": "person_backstory",
+      "type": "INPUT_DESCRIPTION",
+      "title": "Предыстория персонажа",
+      "content": {
+        "placeholder": "Предыстория персонажа..."
+      }
+    },
+    "person_appearance": {
+      "id": "person_appearance",
+      "type": "INPUT_DESCRIPTION",
+      "title": "Внешность",
+      "content": {
+        "placeholder": "Описание внешности..."
+      }
+    }
+  },
+  "layouts": {
+    "mobile": {
+      "tabs": [
+        {
+          "svg": "/static/tab-stats.svg",
+          "title": "Статы",
+          "content": {
+            "kind": "layout",
+            "type": "column",
+            "props": {
+              "gap": "20px"
+            },
+            "children": [
+              {
+                "ref": "STR",
+                "kind": "block",
+                "props": {
+                  "variant": "mobile"
+                }
+              },
+              {
+                "ref": "DEX",
+                "kind": "block",
+                "props": {
+                  "variant": "mobile"
+                }
+              },
+              {
+                "ref": "CON",
+                "kind": "block",
+                "props": {
+                  "variant": "mobile"
+                }
+              },
+              {
+                "ref": "INT",
+                "kind": "block",
+                "props": {
+                  "variant": "mobile"
+                }
+              },
+              {
+                "ref": "WIS",
+                "kind": "block",
+                "props": {
+                  "variant": "mobile"
+                }
+              },
+              {
+                "ref": "CHA",
+                "kind": "block",
+                "props": {
+                  "variant": "mobile"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "svg": "/static/tab-weapons.svg",
+          "title": "Оружие",
+          "content": {
+            "ref": "weapon",
+            "kind": "block",
+            "props": {
+              "variant": "list",
+              "show_add_in_view": true
+            }
+          }
+        },
+        {
+          "svg": "/static/tab-magic.svg",
+          "title": "Магия",
+          "content": {
+            "ref": "spells",
+            "kind": "block",
+            "props": {
+              "show_add_in_view": true
+            }
+          }
+        },
+        {
+          "svg": "/static/container-box.svg",
+          "title": "Предметы",
+          "content": {
+            "kind": "layout",
+            "type": "column",
+            "props": {
+              "gap": "20px"
+            },
+            "children": [
+              {
+                "ref": "money",
+                "kind": "block"
+              },
+              {
+                "ref": "items",
+                "kind": "block"
+              }
+            ]
+          }
+        },
+        {
+          "svg": "/static/tab-skills.svg",
+          "title": "Умения",
+          "content": {
+            "kind": "layout",
+            "type": "column",
+            "props": {
+              "gap": "20px"
+            },
+            "children": [
+              {
+                "ref": "proficiencies",
+                "kind": "block"
+              },
+              {
+                "ref": "abilities_feats",
+                "kind": "block"
+              },
+              {
+                "ref": "abilities_race",
+                "kind": "block"
+              },
+              {
+                "ref": "abilities_class",
+                "kind": "block"
+              }
+            ]
+          }
+        },
+        {
+          "svg": "/static/tab-personality.svg",
+          "title": "Личность",
+          "content": {
+            "kind": "layout",
+            "type": "column",
+            "props": {
+              "gap": "16px"
+            },
+            "children": [
+              {
+                "kind": "layout",
+                "type": "row",
+                "props": {
+                  "gap": "12px",
+                  "align-items": "stretch"
+                },
+                "children": [
+                  {
+                    "ref": "ava",
+                    "kind": "block",
+                    "props": {
+                      "width": "112px",
+                      "height": "148px",
+                      "shrink": 0
+                    }
+                  },
+                  {
+                    "kind": "layout",
+                    "type": "column",
+                    "props": {
+                      "gap": "8px",
+                      "grow": 1,
+                      "basis": 0,
+                      "minWidth": 0
+                    },
+                    "children": [
+                      {
+                        "ref": "name",
+                        "kind": "block"
+                      },
+                      {
+                        "ref": "race",
+                        "kind": "block"
+                      },
+                      {
+                        "ref": "class",
+                        "kind": "block"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "kind": "layout",
+                "type": "grid",
+                "props": {
+                  "gap": "10px",
+                  "columns": 2
+                },
+                "children": [
+                  {
+                    "ref": "person_origin",
+                    "kind": "block"
+                  },
+                  {
+                    "ref": "person_alignment",
+                    "kind": "block"
+                  }
+                ]
+              },
+              {
+                "ref": "person_appearance",
+                "kind": "block"
+              },
+              {
+                "kind": "layout",
+                "type": "grid",
+                "props": {
+                  "gap": "10px",
+                  "columns": 2
+                },
+                "children": [
+                  {
+                    "ref": "person_height",
+                    "kind": "block"
+                  },
+                  {
+                    "ref": "person_weight",
+                    "kind": "block"
+                  },
+                  {
+                    "ref": "person_age",
+                    "kind": "block"
+                  },
+                  {
+                    "ref": "person_eyes",
+                    "kind": "block"
+                  },
+                  {
+                    "ref": "person_skin",
+                    "kind": "block"
+                  },
+                  {
+                    "ref": "person_hair",
+                    "kind": "block"
+                  }
+                ]
+              },
+              {
+                "kind": "layout",
+                "type": "column",
+                "props": {
+                  "gap": "14px"
+                },
+                "children": [
+                  {
+                    "ref": "person_traits",
+                    "kind": "block"
+                  },
+                  {
+                    "ref": "person_ideals",
+                    "kind": "block"
+                  },
+                  {
+                    "ref": "person_bonds",
+                    "kind": "block"
+                  },
+                  {
+                    "ref": "person_flaws",
+                    "kind": "block"
+                  }
+                ]
+              },
+              {
+                "ref": "person_backstory",
+                "kind": "block"
+              },
+              {
+                "ref": "person_allies",
+                "kind": "block"
+              }
+            ]
+          }
+        }
+      ],
+      "toolbar_blocks": [
+        {
+          "ref": "armor",
+          "kind": "block",
+          "variant": "mini"
+        },
+        {
+          "ref": "initiative",
+          "kind": "block",
+          "variant": "mini"
+        },
+        {
+          "ref": "speed",
+          "kind": "block",
+          "variant": "mini"
+        },
+        {
+          "ref": "prof_bonus",
+          "kind": "block",
+          "variant": "mini"
+        },
+        {
+          "ref": "lvl",
+          "kind": "block",
+          "variant": "mini"
+        }
+      ],
+      "header_title_path": [
+        "values.name",
+        "values.race",
+        "values.class"
+      ],
+      "common_mobile_blocks": {
+        "kind": "layout",
+        "type": "row",
+        "props": {
+          "gap": "10px",
+          "columns": [
+            {
+              "width": "100%"
+            }
+          ]
+        },
+        "children": [
+          {
+            "ref": "hp",
+            "kind": "block",
+            "props": {
+              "variant": "compact",
+              "style": {
+                "width": "100%"
+              }
+            }
+          },
+          {
+            "ref": "states",
+            "kind": "block",
+            "props": {
+              "variant": "compact"
+            }
+          }
+        ]
+      },
+      "common_mobile_blocks_scroll_hide": false
+    },
+    "desktop": {
+      "tabs": [
+        {
+          "title": "База",
+          "width": 1390,
+          "content": {
+            "kind": "layout",
+            "type": "row",
+            "children": [
+              {
+                "kind": "layout",
+                "type": "column",
+                "props": {
+                  "gap": "10px",
+                  "style": {
+                    "width": "300px",
+                    "padding": "20px",
+                    "background": "var(--bg)",
+                    "border-right": "1px solid var(--border)"
+                  },
+                  "shrink": "0"
+                },
+                "children": [
+                  {
+                    "ref": "STR",
+                    "kind": "block"
+                  },
+                  {
+                    "ref": "DEX",
+                    "kind": "block"
+                  },
+                  {
+                    "ref": "CON",
+                    "kind": "block"
+                  },
+                  {
+                    "ref": "INT",
+                    "kind": "block"
+                  },
+                  {
+                    "ref": "WIS",
+                    "kind": "block"
+                  },
+                  {
+                    "ref": "CHA",
+                    "kind": "block"
+                  }
+                ]
+              },
+              {
+                "kind": "layout",
+                "type": "column",
+                "props": {
+                  "grow": "1",
+                  "style": {}
+                },
+                "children": [
+                  {
+                    "kind": "layout",
+                    "type": "row",
+                    "props": {
+                      "gap": "20px",
+                      "style": {
+                        "padding": "20px",
+                        "background": "var(--bg)",
+                        "border-bottom": "1px solid var(--border)"
+                      },
+                      "align-items": "flex-start"
+                    },
+                    "children": [
+                      {
+                        "ref": "ava",
+                        "kind": "block",
+                        "props": {
+                          "width": "110px",
+                          "height": "150px"
+                        }
+                      },
+                      {
+                        "kind": "layout",
+                        "type": "column",
+                        "props": {
+                          "gap": "10px",
+                          "grow": "1"
+                        },
+                        "children": [
+                          {
+                            "ref": "char_identity",
+                            "kind": "block"
+                          },
+                          {
+                            "ref": "hp",
+                            "kind": "block"
+                          },
+                          {
+                            "ref": "states",
+                            "kind": "block",
+                            "title": "Состояния"
+                          }
+                        ]
+                      },
+                      {
+                        "kind": "layout",
+                        "type": "grid",
+                        "props": {
+                          "gap": "8px",
+                          "width": "300px",
+                          "shrink": "0",
+                          "columns": "2"
+                        },
+                        "children": [
+                          {
+                            "ref": "armor",
+                            "kind": "block",
+                            "props": {
+                              "variant": "tile"
+                            }
+                          },
+                          {
+                            "ref": "initiative",
+                            "kind": "block",
+                            "props": {
+                              "variant": "tile"
+                            }
+                          },
+                          {
+                            "ref": "speed",
+                            "kind": "block",
+                            "props": {
+                              "variant": "tile"
+                            }
+                          },
+                          {
+                            "ref": "prof_bonus",
+                            "kind": "block",
+                            "props": {
+                              "variant": "tile"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "layout",
+                    "type": "row",
+                    "props": {
+                      "align-items": "stretch"
+                    },
+                    "children": [
+                      {
+                        "kind": "layout",
+                        "type": "column",
+                        "props": {
+                          "gap": "0",
+                          "grow": "1"
+                        },
+                        "children": [
+                          {
+                            "kind": "layout",
+                            "type": "inner_tabs",
+                            "children": [
+                              {
+                                "title": "Оружие",
+                                "content": {
+                                  "ref": "weapon",
+                                  "kind": "block",
+                                  "props": {
+                                    "style": {
+                                      "padding": "20px"
+                                    }
+                                  }
+                                }
+                              },
+                              {
+                                "title": "Магия",
+                                "content": {
+                                  "ref": "spells",
+                                  "kind": "block",
+                                  "props": {
+                                    "style": {
+                                      "padding": "20px"
+                                    }
+                                  }
+                                }
+                              },
+                              {
+                                "title": "Снаряжение",
+                                "content": {
+                                  "ref": "items",
+                                  "kind": "block",
+                                  "props": {
+                                    "style": {
+                                      "padding": "20px"
+                                    }
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "kind": "layout",
+                        "type": "column",
+                        "props": {
+                          "gap": "20px",
+                          "style": {
+                            "width": "320px",
+                            "padding": "20px",
+                            "background": "var(--bg)",
+                            "border-left": "1px solid var(--border)",
+                            "border-bottom": "1px solid var(--border)"
+                          },
+                          "shrink": "0"
+                        },
+                        "children": [
+                          {
+                            "ref": "lvl",
+                            "kind": "block"
+                          },
+                          {
+                            "ref": "resources",
+                            "kind": "block"
+                          },
+                          {
+                            "ref": "money",
+                            "kind": "block",
+                            "title": "Кошелек"
+                          },
+                          {
+                            "ref": "proficiencies",
+                            "kind": "block"
+                          },
+                          {
+                            "ref": "abilities_feats",
+                            "kind": "block",
+                            "title": "Черты"
+                          },
+                          {
+                            "ref": "abilities_race",
+                            "kind": "block",
+                            "title": "Расовые способности"
+                          },
+                          {
+                            "ref": "abilities_class",
+                            "kind": "block",
+                            "title": "Классовые способности"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "default": true
+        },
+        {
+          "title": "Личность",
+          "width": 1000,
+          "content": {
+            "kind": "layout",
+            "type": "column",
+            "props": {
+              "gap": "18px"
+            },
+            "children": [
+              {
+                "kind": "layout",
+                "type": "row",
+                "props": {
+                  "gap": "16px"
+                },
+                "children": [
+                  {
+                    "ref": "person_origin",
+                    "kind": "block",
+                    "props": {
+                      "grow": 1,
+                      "basis": 0
+                    }
+                  },
+                  {
+                    "ref": "person_alignment",
+                    "kind": "block",
+                    "props": {
+                      "grow": 1,
+                      "basis": 0
+                    }
+                  }
+                ]
+              },
+              {
+                "ref": "person_appearance",
+                "kind": "block"
+              },
+              {
+                "kind": "layout",
+                "type": "grid",
+                "props": {
+                  "gap": "10px",
+                  "columns": 3
+                },
+                "children": [
+                  {
+                    "ref": "person_height",
+                    "kind": "block"
+                  },
+                  {
+                    "ref": "person_weight",
+                    "kind": "block"
+                  },
+                  {
+                    "ref": "person_age",
+                    "kind": "block"
+                  },
+                  {
+                    "ref": "person_eyes",
+                    "kind": "block"
+                  },
+                  {
+                    "ref": "person_skin",
+                    "kind": "block"
+                  },
+                  {
+                    "ref": "person_hair",
+                    "kind": "block"
+                  }
+                ]
+              },
+              {
+                "kind": "layout",
+                "type": "grid",
+                "props": {
+                  "gap": "14px",
+                  "columns": 2
+                },
+                "children": [
+                  {
+                    "ref": "person_traits",
+                    "kind": "block"
+                  },
+                  {
+                    "ref": "person_ideals",
+                    "kind": "block"
+                  },
+                  {
+                    "ref": "person_bonds",
+                    "kind": "block"
+                  },
+                  {
+                    "ref": "person_flaws",
+                    "kind": "block"
+                  }
+                ]
+              },
+              {
+                "ref": "person_backstory",
+                "kind": "block"
+              },
+              {
+                "ref": "person_allies",
+                "kind": "block"
+              }
+            ]
+          }
+        },
+        {
+          "title": "Заметки",
+          "width": 1390,
+          "content": {
+            "ref": "notes",
+            "kind": "block"
+          }
+        }
+      ]
+    }
+  },
+  "schemaVersion": 2
+}

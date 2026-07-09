@@ -1,0 +1,31 @@
+[
+  {
+    "key": "desc",
+    "name": "Описание",
+    "type": "description"
+  },
+  {
+    "key": "color",
+    "name": "Цвет зелья",
+    "type": "color",
+    "default": "#7c5cff"
+  },
+  {
+    "key": "rarity",
+    "name": "Редкость",
+    "type": "suggest",
+    "suggest_id": 23,
+    "filter": true
+  },
+  {
+    "key": "cost",
+    "name": "Стоимость",
+    "type": "int_by_suggest",
+    "suggest_type_id": 17
+  },
+  {
+    "key": "weight",
+    "name": "Вес",
+    "type": "int"
+  }
+]

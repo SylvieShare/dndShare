@@ -1,0 +1,119 @@
+<template>
+  <div ref="root" class="br-block">
+    <BaseTile class="br-tile">
+      <BlockResourcesView
+        :resources="resources"
+        :manage="ownerMode"
+        :can-interact="ownerMode"
+        @toggle="toggle"
+        @manage="onManage"
+      />
+    </BaseTile>
+
+    <MorphEditorShell
+      v-if="editorOpen"
+      :origin-rect="originRect"
+      :origin-el="originEl"
+      :strip="false"
+      @close="close"
+    >
+      <template #view="{ revealed }">
+        <BlockResourcesView
+          :resources="resources"
+          :manage="ownerMode"
+          :can-interact="ownerMode"
+          :edit-fade="revealed"
+          panel
+          @toggle="toggle"
+        />
+      </template>
+      <template #editor>
+        <BlockResourcesEditor
+          :resources="resources"
+          @reorder="reorder"
+          @change-color="changeColor"
+          @rename="rename"
+          @set-total="setTotal"
+          @set-rest="setRest"
+          @remove="remove"
+          @add="add"
+        />
+      </template>
+    </MorphEditorShell>
+  </div>
+</template>
+
+<script setup>
+import { computed, inject, ref } from 'vue'
+import BaseTile from '@/shared/ui/BaseTile'
+import BlockResourcesEditor from '@/features/character-editor/blocks/generic/components/BlockResourcesEditor'
+import BlockResourcesView from '@/features/character-editor/blocks/generic/components/BlockResourcesView'
+import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
+import { useMorphOrigin } from '@/features/character-editor/composables/useMorphOrigin'
+
+const props = defineProps(['block', 'value'])
+const emit = defineEmits(['update:value'])
+const charCtx = inject('charCtx', { ownerMode: true })
+const root = ref(null)
+const { editorOpen, originRect, originEl, openFrom, close } = useMorphOrigin()
+
+const resources = computed(() => Array.isArray(props.value) ? props.value : [])
+const ownerMode = computed(() => charCtx.ownerMode)
+
+function emitResources(next) {
+  emit('update:value', props.block.id, next)
+}
+
+function onManage() {
+  openFrom(root.value)
+}
+
+function toggle(ri, p) {
+  if (!ownerMode.value) return
+  emitResources(resources.value.map((r, i) => {
+    if (i !== ri) return r
+    const value = p <= r.value ? p - 1 : p
+    return { ...r, value }
+  }))
+}
+
+function setTotal(ri, total) {
+  const t = Math.max(0, parseInt(total) || 0)
+  emitResources(resources.value.map((r, i) => i === ri ? { ...r, total: t, value: Math.min(r.value, t) } : r))
+}
+
+function rename(ri, title) {
+  emitResources(resources.value.map((r, i) => i === ri ? { ...r, title } : r))
+}
+
+function changeColor(ri, color_point) {
+  emitResources(resources.value.map((r, i) => i === ri ? { ...r, color_point } : r))
+}
+
+function setRest(ri, kind, value) {
+  emitResources(resources.value.map((r, i) => i === ri ? { ...r, [kind]: !!value } : r))
+}
+
+function remove(ri) {
+  emitResources(resources.value.filter((_, i) => i !== ri))
+}
+
+function reorder(next) {
+  emitResources(next)
+}
+
+function add(title, color_point) {
+  emitResources([...resources.value, { title, color_point, value: 0, total: 0, short_rest: false, long_rest: false }])
+}
+</script>
+
+<style scoped>
+.br-block { min-width: 0; }
+
+.br-tile {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+}
+</style>

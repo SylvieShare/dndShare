@@ -1,0 +1,488 @@
+{
+  "tabs": [
+    {
+      "title": "База",
+      "width": 1390,
+      "content": {
+        "kind": "layout",
+        "type": "row",
+        "props": {
+          "gap": "11px"
+        },
+        "children": [
+          {
+            "kind": "layout",
+            "type": "column",
+            "props": {
+              "gap": "10px",
+              "style": {
+                "width": "300px",
+                "padding": "20px",
+                "background": "var(--bg)",
+                "border-right": "1px solid var(--border)"
+              },
+              "shrink": "0"
+            },
+            "children": [
+              {
+                "ref": "STR",
+                "kind": "block"
+              },
+              {
+                "ref": "DEX",
+                "kind": "block"
+              },
+              {
+                "ref": "CON",
+                "kind": "block"
+              },
+              {
+                "ref": "INT",
+                "kind": "block"
+              },
+              {
+                "ref": "WIS",
+                "kind": "block"
+              },
+              {
+                "ref": "CHA",
+                "kind": "block"
+              }
+            ]
+          },
+          {
+            "kind": "layout",
+            "type": "column",
+            "props": {
+              "grow": "1",
+              "style": {},
+              "gap": "12px"
+            },
+            "children": [
+              {
+                "kind": "layout",
+                "type": "row",
+                "props": {
+                  "gap": "20px",
+                  "align-items": "stretch",
+                  "style": {
+                    "margin-top": "20px"
+                  }
+                },
+                "children": [
+                  {
+                    "kind": "layout",
+                    "type": "row",
+                    "props": {
+                      "gap": "0",
+                      "grow": "1",
+                      "style": {
+                        "padding": "0",
+                        "overflow": "hidden"
+                      },
+                      "align-items": "stretch",
+                      "tile": true
+                    },
+                    "children": [
+                      {
+                        "ref": "ava",
+                        "kind": "block",
+                        "props": {
+                          "fill": true,
+                          "width": "115px"
+                        }
+                      },
+                      {
+                        "kind": "layout",
+                        "type": "column",
+                        "props": {
+                          "gap": "10px",
+                          "grow": "1",
+                          "style": {
+                            "padding": "15px"
+                          }
+                        },
+                        "children": [
+                          {
+                            "kind": "layout",
+                            "type": "row",
+                            "props": {
+                              "gap": "12px",
+                              "align-items": "center"
+                            },
+                            "children": [
+                              {
+                                "ref": "char_identity",
+                                "kind": "block",
+                                "props": {
+                                  "grow": "1",
+                                  "basis": "0",
+                                  "style": {
+                                    "min-width": "0"
+                                  }
+                                }
+                              },
+                              {
+                                "ref": "campaign",
+                                "kind": "block",
+                                "props": {
+                                  "shrink": "0",
+                                  "style": {
+                                    "max-width": "200px"
+                                  }
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "ref": "hp",
+                            "kind": "block"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "layout",
+                    "type": "grid",
+                    "props": {
+                      "gap": "8px",
+                      "width": "400px",
+                      "shrink": "0",
+                      "columns": "3",
+                      "style": {
+                        "margin-right": "16px"
+                      }
+                    },
+                    "children": [
+                      {
+                        "ref": "armor",
+                        "kind": "block",
+                        "props": {
+                          "variant": "tile"
+                        }
+                      },
+                      {
+                        "ref": "initiative",
+                        "kind": "block",
+                        "props": {
+                          "variant": "tile"
+                        }
+                      },
+                      {
+                        "ref": "settings",
+                        "kind": "block"
+                      },
+                      {
+                        "ref": "speed",
+                        "kind": "block",
+                        "props": {
+                          "variant": "tile"
+                        }
+                      },
+                      {
+                        "ref": "prof_bonus",
+                        "kind": "block",
+                        "props": {
+                          "variant": "tile"
+                        }
+                      },
+                      {
+                        "ref": "rest",
+                        "kind": "block"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "kind": "layout",
+                "type": "row",
+                "props": {
+                  "align-items": "stretch"
+                },
+                "children": [
+                  {
+                    "kind": "layout",
+                    "type": "column",
+                    "props": {
+                      "gap": "0",
+                      "grow": "1"
+                    },
+                    "children": [
+                      {
+                        "kind": "layout",
+                        "type": "inner_tabs",
+                        "children": [
+                          {
+                            "title": "Оружие",
+                            "content": {
+                              "ref": "weapon",
+                              "kind": "block",
+                              "props": {
+                                "style": {
+                                  "padding": "0"
+                                }
+                              }
+                            }
+                          },
+                          {
+                            "title": "Магия",
+                            "content": {
+                              "ref": "spells",
+                              "kind": "block",
+                              "props": {
+                                "style": {
+                                  "padding": "20px"
+                                }
+                              }
+                            }
+                          },
+                          {
+                            "title": "Снаряжение",
+                            "content": {
+                              "kind": "layout",
+                              "type": "column",
+                              "props": {
+                                "gap": "0",
+                                "style": {
+                                  "padding": "20px"
+                                }
+                              },
+                              "children": [
+                                {
+                                  "kind": "layout",
+                                  "type": "row",
+                                  "props": {
+                                    "justify-content": "space-between",
+                                    "align-items": "center",
+                                    "gap": "16px",
+                                    "style": {
+                                      "margin-bottom": "16px"
+                                    }
+                                  },
+                                  "children": [
+                                    {
+                                      "ref": "counters",
+                                      "kind": "block"
+                                    },
+                                    {
+                                      "ref": "money",
+                                      "kind": "block",
+                                      "title": "Кошелек"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "ref": "potions",
+                                  "kind": "block"
+                                },
+                                {
+                                  "ref": "items",
+                                  "kind": "block"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "title": "Личность",
+                            "content": {
+                              "kind": "layout",
+                              "type": "column",
+                              "props": {
+                                "style": {
+                                  "padding": "20px"
+                                }
+                              },
+                              "children": [
+                                {
+                                  "kind": "layout",
+                                  "type": "column",
+                                  "props": {
+                                    "gap": "18px"
+                                  },
+                                  "children": [
+                                    {
+                                      "kind": "layout",
+                                      "type": "row",
+                                      "props": {
+                                        "gap": "16px"
+                                      },
+                                      "children": [
+                                        {
+                                          "ref": "person_origin",
+                                          "kind": "block",
+                                          "props": {
+                                            "grow": 1,
+                                            "basis": 0
+                                          }
+                                        },
+                                        {
+                                          "ref": "person_alignment",
+                                          "kind": "block",
+                                          "props": {
+                                            "grow": 1,
+                                            "basis": 0
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "ref": "person_appearance",
+                                      "kind": "block"
+                                    },
+                                    {
+                                      "kind": "layout",
+                                      "type": "grid",
+                                      "props": {
+                                        "gap": "10px",
+                                        "columns": 3
+                                      },
+                                      "children": [
+                                        {
+                                          "ref": "person_height",
+                                          "kind": "block"
+                                        },
+                                        {
+                                          "ref": "person_weight",
+                                          "kind": "block"
+                                        },
+                                        {
+                                          "ref": "person_age",
+                                          "kind": "block"
+                                        },
+                                        {
+                                          "ref": "person_eyes",
+                                          "kind": "block"
+                                        },
+                                        {
+                                          "ref": "person_skin",
+                                          "kind": "block"
+                                        },
+                                        {
+                                          "ref": "person_hair",
+                                          "kind": "block"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "kind": "layout",
+                                      "type": "grid",
+                                      "props": {
+                                        "gap": "14px",
+                                        "columns": 2
+                                      },
+                                      "children": [
+                                        {
+                                          "ref": "person_traits",
+                                          "kind": "block"
+                                        },
+                                        {
+                                          "ref": "person_ideals",
+                                          "kind": "block"
+                                        },
+                                        {
+                                          "ref": "person_bonds",
+                                          "kind": "block"
+                                        },
+                                        {
+                                          "ref": "person_flaws",
+                                          "kind": "block"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "ref": "person_backstory",
+                                      "kind": "block"
+                                    },
+                                    {
+                                      "ref": "person_allies",
+                                      "kind": "block"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "title": "Дневник",
+                            "content": {
+                              "ref": "notes",
+                              "kind": "block",
+                              "props": {
+                                "style": {
+                                  "padding": "20px"
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "layout",
+                    "type": "column",
+                    "props": {
+                      "gap": "11px",
+                      "style": {
+                        "width": "320px",
+                        "padding": "20px",
+                        "background": "var(--bg)",
+                        "border-left": "1px solid var(--border)",
+                        "border-bottom": "1px solid var(--border)"
+                      },
+                      "shrink": "0"
+                    },
+                    "children": [
+                      {
+                        "ref": "lvl",
+                        "kind": "block"
+                      },
+                      {
+                        "ref": "resources",
+                        "kind": "block"
+                      },
+                      {
+                        "ref": "exhaustion",
+                        "kind": "block"
+                      },
+                      {
+                        "ref": "states",
+                        "kind": "block",
+                        "title": "Состояния",
+                        "props": {
+                          "variant": "summary_tile"
+                        }
+                      },
+                      {
+                        "ref": "proficiencies",
+                        "kind": "block"
+                      },
+                      {
+                        "ref": "abilities_feats",
+                        "kind": "block",
+                        "title": "Черты"
+                      },
+                      {
+                        "ref": "abilities_race",
+                        "kind": "block",
+                        "title": "Расовые способности"
+                      },
+                      {
+                        "ref": "abilities_class",
+                        "kind": "block",
+                        "title": "Классовые способности"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "default": true
+    }
+  ]
+}

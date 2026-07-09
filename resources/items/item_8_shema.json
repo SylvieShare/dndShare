@@ -1,0 +1,67 @@
+[
+  {
+    "name": "Раса (словарь)",
+    "key": "suggest_id",
+    "type": "suggest",
+    "suggest_id": 1
+  },
+  {
+    "name": "Размер",
+    "key": "size",
+    "type": "text"
+  },
+  {
+    "name": "Скорость",
+    "key": "speed",
+    "type": "int",
+    "default": 30
+  },
+  {
+    "name": "Бонусы характеристик",
+    "key": "asi",
+    "type": "object_array",
+    "fields": [
+      {
+        "name": "Характеристика",
+        "key": "ability",
+        "type": "suggest",
+        "suggest_id": 16
+      },
+      {
+        "name": "Бонус",
+        "key": "bonus",
+        "type": "int",
+        "default": 1
+      }
+    ]
+  },
+  {
+    "name": "Языки",
+    "key": "languages",
+    "type": "suggest_array",
+    "suggest_id": 6
+  },
+  {
+    "name": "Владение доспехами",
+    "key": "armor_prof",
+    "type": "suggest_array",
+    "suggest_id": 3
+  },
+  {
+    "name": "Владение оружием",
+    "key": "weapon_prof",
+    "type": "suggest_array",
+    "suggest_id": 4
+  },
+  {
+    "name": "Владение инструментами",
+    "key": "tool_prof",
+    "type": "suggest_array",
+    "suggest_id": 5
+  },
+  {
+    "name": "Описание",
+    "key": "description",
+    "type": "description"
+  }
+]

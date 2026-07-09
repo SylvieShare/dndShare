@@ -1,0 +1,28 @@
+[
+  {
+    "key": "desc",
+    "name": "Описание",
+    "type": "description"
+  },
+  {
+    "key": "cost",
+    "name": "Стоимость",
+    "type": "int_by_suggest",
+    "suggest_type_id": 17
+  },
+  {
+    "key": "weight",
+    "name": "Вес",
+    "type": "int"
+  },
+  {
+    "key": "is_container",
+    "name": "Контейнер",
+    "type": "bool"
+  },
+  {
+    "key": "consumable",
+    "name": "Расходуемое",
+    "type": "bool"
+  }
+]

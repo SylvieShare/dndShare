@@ -1,0 +1,10 @@
+{
+  "ava": "values.ava.url",
+  "name": "values.name",
+  "who_1": "values.race",
+  "who_2": "values.class",
+  "lvl": "values.lvl",
+  "hp": "values.hp",
+  "armor": "values.armor",
+  ""
+}

@@ -1,0 +1,205 @@
+[
+  {
+    "name": "Идентичность",
+    "key": "identity",
+    "type": "object",
+    "layout": "horizontal",
+    "fields": [
+      {
+        "name": "Тип существа",
+        "nameShort": "Тип",
+        "key": "creature_type",
+        "type": "suggest_array",
+        "suggestTypeId": 19,
+        "tag": true,
+        "group": "true"
+      },
+      {
+        "name": "Размер",
+        "key": "size",
+        "type": "suggest_array",
+        "suggestTypeId": 18,
+        "tag": true
+      },
+      {
+        "name": "Мировоззрение",
+        "key": "alignment",
+        "type": "text",
+        "tag": true
+      },
+      {
+        "name": "Легендарный",
+        "key": "is_legendary",
+        "type": "bool",
+        "tag": true
+      },
+      {
+        "name": "Именованный НИП",
+        "key": "named_npc",
+        "type": "bool"
+      },
+      {
+        "name": "Источник",
+        "key": "source",
+        "type": "text"
+      },
+      {
+        "name": "Среда обитания",
+        "nameShort": "Среда",
+        "key": "environment",
+        "type": "suggest_array",
+        "suggestTypeId": 21,
+        "group": "true"
+      }
+    ]
+  },
+  {
+    "name": "Параметры",
+    "key": "combat",
+    "type": "object",
+    "layout": "horizontal",
+    "fields": [
+      {
+        "name": "Класс брони",
+        "nameShort": "КД",
+        "key": "ac",
+        "type": "int"
+      },
+      {
+        "name": "Тип брони",
+        "key": "ac_note",
+        "type": "text"
+      },
+      {
+        "name": "Хиты",
+        "nameShort": "ХИТ",
+        "key": "hp",
+        "type": "int"
+      },
+      {
+        "name": "Формула хитов",
+        "key": "hp_formula",
+        "type": "text"
+      },
+      {
+        "name": "Скорость",
+        "key": "speed",
+        "type": "text"
+      },
+      {
+        "name": "Скорость (опции)",
+        "key": "speed_opt",
+        "type": "speed_opt"
+      },
+      {
+        "name": "Опасность (CR)",
+        "nameShort": "CR",
+        "key": "cr",
+        "type": "text",
+        "filter": true,
+        "group": "true"
+      },
+      {
+        "name": "Опыт",
+        "nameShort": "XP",
+        "key": "xp",
+        "type": "int"
+      },
+      {
+        "name": "Бонус мастерства",
+        "nameShort": "БМ",
+        "key": "proficiencyBonus",
+        "type": "int"
+      }
+    ]
+  },
+  {
+    "name": "Характеристики",
+    "key": "stats",
+    "type": "object",
+    "layout": "horizontal",
+    "fields": [
+      { "name": "Сила", "nameShort": "СИЛ", "key": "str", "type": "int" },
+      { "name": "Ловкость", "nameShort": "ЛВК", "key": "dex", "type": "int" },
+      { "name": "Телосложение", "nameShort": "ТЕЛ", "key": "con", "type": "int" },
+      { "name": "Интеллект", "nameShort": "ИНТ", "key": "int", "type": "int" },
+      { "name": "Мудрость", "nameShort": "МДР", "key": "wis", "type": "int" },
+      { "name": "Харизма", "nameShort": "ХАР", "key": "cha", "type": "int" }
+    ]
+  },
+  {
+    "name": "Спасброски",
+    "key": "saving_throws",
+    "type": "object",
+    "layout": "horizontal",
+    "fields": [
+      { "name": "Сила", "nameShort": "СИЛ", "key": "str", "type": "int" },
+      { "name": "Ловкость", "nameShort": "ЛВК", "key": "dex", "type": "int" },
+      { "name": "Телосложение", "nameShort": "ТЕЛ", "key": "con", "type": "int" },
+      { "name": "Интеллект", "nameShort": "ИНТ", "key": "int", "type": "int" },
+      { "name": "Мудрость", "nameShort": "МДР", "key": "wis", "type": "int" },
+      { "name": "Харизма", "nameShort": "ХАР", "key": "cha", "type": "int" }
+    ]
+  },
+  {
+    "name": "Навыки",
+    "key": "skills",
+    "type": "text"
+  },
+  {
+    "name": "Иммунитеты к урону",
+    "key": "damage_immunities",
+    "type": "text"
+  },
+  {
+    "name": "Сопротивления к урону",
+    "key": "damage_resistances",
+    "type": "text"
+  },
+  {
+    "name": "Иммунитеты к состояниям",
+    "key": "condition_immunities",
+    "type": "text"
+  },
+  {
+    "name": "Чувства",
+    "key": "senses",
+    "type": "text"
+  },
+  {
+    "name": "Языки",
+    "key": "languages",
+    "type": "text"
+  },
+  {
+    "name": "Изображение",
+    "key": "image_url",
+    "type": "text"
+  },
+  {
+    "name": "Особенности",
+    "key": "feats",
+    "type": "blocks"
+  },
+  {
+    "name": "Действия",
+    "key": "actions",
+    "type": "blocks"
+  },
+  {
+    "name": "Реакции",
+    "key": "reactions",
+    "type": "blocks"
+  },
+  {
+    "name": "Описание",
+    "key": "description",
+    "type": "description"
+  },
+  {
+    "name": "Теги",
+    "key": "tags",
+    "type": "suggest_array",
+    "suggestTypeId": 22
+  }
+]

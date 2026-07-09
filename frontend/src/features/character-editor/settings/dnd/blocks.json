@@ -1,0 +1,500 @@
+{
+  "hp": {
+    "id": "hp",
+    "type": "DND_HP",
+    "content": {
+      "dice_suggest_type_id": 11
+    }
+  },
+  "CHA": {
+    "id": "CHA",
+    "type": "DND_CHAR_STAT_10",
+    "content": {
+      "title": {
+        "suggest_id": 6,
+        "suggest_type_id": 16
+      },
+      "bonus_path": "prof_bonus.v",
+      "suggest_ids": [
+        15,
+        16,
+        17,
+        18
+      ],
+      "suggest_type_id": 15,
+      "allow_add_skills": true,
+      "allow_override_title": true
+    }
+  },
+  "CON": {
+    "id": "CON",
+    "type": "DND_CHAR_STAT_10",
+    "content": {
+      "title": {
+        "suggest_id": 3,
+        "suggest_type_id": 16
+      },
+      "bonus_path": "prof_bonus.v",
+      "suggest_ids": [],
+      "suggest_type_id": 15,
+      "allow_add_skills": true,
+      "allow_override_title": true
+    }
+  },
+  "DEX": {
+    "id": "DEX",
+    "type": "DND_CHAR_STAT_10",
+    "content": {
+      "title": {
+        "suggest_id": 2,
+        "suggest_type_id": 16
+      },
+      "bonus_path": "prof_bonus.v",
+      "suggest_ids": [
+        2,
+        3,
+        4
+      ],
+      "suggest_type_id": 15,
+      "allow_add_skills": true,
+      "allow_override_title": true
+    }
+  },
+  "INT": {
+    "id": "INT",
+    "type": "DND_CHAR_STAT_10",
+    "content": {
+      "title": {
+        "suggest_id": 4,
+        "suggest_type_id": 16
+      },
+      "bonus_path": "prof_bonus.v",
+      "suggest_ids": [
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "suggest_type_id": 15,
+      "allow_add_skills": true,
+      "allow_override_title": true
+    }
+  },
+  "STR": {
+    "id": "STR",
+    "type": "DND_CHAR_STAT_10",
+    "content": {
+      "title": {
+        "suggest_id": 1,
+        "suggest_type_id": 16
+      },
+      "bonus_path": "prof_bonus.v",
+      "suggest_ids": [
+        1
+      ],
+      "suggest_type_id": 15,
+      "allow_add_skills": true,
+      "allow_override_title": true
+    }
+  },
+  "WIS": {
+    "id": "WIS",
+    "type": "DND_CHAR_STAT_10",
+    "content": {
+      "title": {
+        "suggest_id": 5,
+        "suggest_type_id": 16
+      },
+      "bonus_path": "prof_bonus.v",
+      "suggest_ids": [
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "suggest_type_id": 15,
+      "allow_add_skills": true,
+      "allow_override_title": true
+    }
+  },
+  "ava": {
+    "id": "ava",
+    "type": "AVATARS"
+  },
+  "lvl": {
+    "id": "lvl",
+    "type": "BLOCK_LVL",
+    "content": {
+      "experience": [
+        300,
+        900,
+        2700,
+        6500,
+        14000,
+        23000,
+        34000,
+        48000,
+        64000,
+        85000,
+        100000,
+        120000,
+        140000,
+        165000,
+        195000,
+        225000,
+        265000,
+        305000,
+        355000
+      ]
+    }
+  },
+  "name": {
+    "id": "name",
+    "type": "INPUT_TEXT",
+    "content": {
+      "color": "#fcbe24",
+      "placeholder": "Имя персонажа"
+    }
+  },
+  "race": {
+    "id": "race",
+    "type": "INPUT_ITEM",
+    "content": {
+      "item_type": 8,
+      "placeholder": "Раса",
+      "child_id": "subrace",
+      "child_placeholder": "Без происхождения",
+      "child_display": "replace"
+    }
+  },
+  "armor": {
+    "id": "armor",
+    "type": "DND_ARMOR",
+    "content": {
+      "dex_mod_path": "values.DEX.mod",
+      "svg": "/static/shield.svg",
+      "accent": "#4f8fcc"
+    }
+  },
+  "settings": {
+    "id": "settings",
+    "type": "SETTINGS_MENU",
+    "content": {
+      "svg": "/static/settings.svg",
+      "accent": "#8a8f9e"
+    }
+  },
+  "rest": {
+    "id": "rest",
+    "type": "DND_REST",
+    "content": {
+      "hp_id": "hp",
+      "spells_id": "spells",
+      "resources_id": "resources",
+      "exhaustion_id": "exhaustion",
+      "con_id": "CON"
+    }
+  },
+  "class": {
+    "id": "class",
+    "type": "INPUT_ITEM",
+    "content": {
+      "item_type": 9,
+      "placeholder": "Класс",
+      "child_id": "subclass",
+      "child_placeholder": "Без архетипа",
+      "child_display": "paren"
+    }
+  },
+  "items": {
+    "id": "items",
+    "type": "BLOCK_ITEMS",
+    "content": {
+      "item_ids": [
+        2,
+        1
+      ]
+    }
+  },
+  "counters": {
+    "id": "counters",
+    "type": "BLOCK_COUNTERS",
+    "content": {}
+  },
+  "money": {
+    "id": "money",
+    "type": "BLOCK_MONEY",
+    "title": "Кошелек",
+    "content": {
+      "suggest_type_id": 17
+    }
+  },
+  "potions": {
+    "id": "potions",
+    "type": "DND_POTIONS",
+    "content": {}
+  },
+  "notes": {
+    "id": "notes",
+    "type": "INPUT_DESCRIPTION",
+    "title": "Заметки",
+    "content": {
+      "placeholder": "Заметки..."
+    }
+  },
+  "speed": {
+    "id": "speed",
+    "type": "DND_SPEED",
+    "content": {
+      "svg": "/static/speed.svg",
+      "accent": "#4bb3b8"
+    }
+  },
+  "spells": {
+    "id": "spells",
+    "type": "DND_SPELLS",
+    "content": {
+      "item_type_id": 5,
+      "prof_bonus_path": "prof_bonus.v",
+      "school_suggest_id": 7,
+      "source_suggest_id": 8,
+      "stat_suggest_type_id": 16
+    },
+    "hide_on_empty": true
+  },
+  "states": {
+    "id": "states",
+    "type": "BLOCK_STATES",
+    "content": {
+      "suggest_id": 9
+    }
+  },
+  "weapon": {
+    "id": "weapon",
+    "type": "DND_WEAPONS",
+    "content": {
+      "bonus_path": "prof_bonus.v",
+      "item_type_id": 1,
+      "dice_suggest_type_id": 11,
+      "stat_suggest_type_id": 16,
+      "type_attack_suggest_type_id": 12
+    }
+  },
+  "resources": {
+    "id": "resources",
+    "type": "BLOCK_RESOURCES",
+    "content": {
+      "max_in_row": 10
+    }
+  },
+  "initiative": {
+    "id": "initiative",
+    "type": "DND_INITIATIVE",
+    "content": {
+      "svg": "/static/initiative.svg",
+      "visible_plus": true,
+      "accent": "#5aaf72"
+    }
+  },
+  "person_age": {
+    "id": "person_age",
+    "type": "INPUT_TEXT",
+    "title": "Возраст",
+    "content": {
+      "placeholder": "Возраст"
+    }
+  },
+  "prof_bonus": {
+    "id": "prof_bonus",
+    "type": "DND_PROF_BONUS",
+    "content": {
+      "svg": "/static/prof-bonus.svg",
+      "level_id": "lvl",
+      "accent": "#b07bd4"
+    }
+  },
+  "person_eyes": {
+    "id": "person_eyes",
+    "type": "INPUT_TEXT",
+    "title": "Глаза",
+    "content": {
+      "placeholder": "Глаза"
+    }
+  },
+  "person_hair": {
+    "id": "person_hair",
+    "type": "INPUT_TEXT",
+    "title": "Волосы",
+    "content": {
+      "placeholder": "Волосы"
+    }
+  },
+  "person_skin": {
+    "id": "person_skin",
+    "type": "INPUT_TEXT",
+    "title": "Кожа",
+    "content": {
+      "placeholder": "Кожа"
+    }
+  },
+  "person_bonds": {
+    "id": "person_bonds",
+    "type": "INPUT_DESCRIPTION",
+    "title": "Привязанности",
+    "content": {
+      "placeholder": "Привязанности..."
+    }
+  },
+  "person_flaws": {
+    "id": "person_flaws",
+    "type": "INPUT_DESCRIPTION",
+    "title": "Слабости",
+    "content": {
+      "placeholder": "Слабости..."
+    }
+  },
+  "char_identity": {
+    "id": "char_identity",
+    "type": "DND_CHAR_IDENTITY",
+    "content": {
+      "name_id": "name",
+      "race_id": "race",
+      "class_id": "class"
+    }
+  },
+  "person_allies": {
+    "id": "person_allies",
+    "type": "INPUT_DESCRIPTION",
+    "title": "Союзники и организации",
+    "content": {
+      "placeholder": "Союзники, организации, контакты..."
+    }
+  },
+  "person_height": {
+    "id": "person_height",
+    "type": "INPUT_TEXT",
+    "title": "Рост",
+    "content": {
+      "placeholder": "Рост"
+    }
+  },
+  "person_ideals": {
+    "id": "person_ideals",
+    "type": "INPUT_DESCRIPTION",
+    "title": "Идеалы",
+    "content": {
+      "placeholder": "Идеалы..."
+    }
+  },
+  "person_origin": {
+    "id": "person_origin",
+    "type": "INPUT_TEXT",
+    "title": "Происхождение",
+    "content": {
+      "placeholder": "Происхождение"
+    }
+  },
+  "person_traits": {
+    "id": "person_traits",
+    "type": "INPUT_DESCRIPTION",
+    "title": "Черты характера",
+    "content": {
+      "placeholder": "Черты характера..."
+    }
+  },
+  "person_weight": {
+    "id": "person_weight",
+    "type": "INPUT_TEXT",
+    "title": "Вес",
+    "content": {
+      "placeholder": "Вес"
+    }
+  },
+  "proficiencies": {
+    "id": "proficiencies",
+    "type": "BLOCK_TAGS",
+    "content": {
+      "gap": "10px",
+      "fixed_list": [
+        {
+          "title": "Доспехи",
+          "suggest_id": 3
+        },
+        {
+          "title": "Оружие",
+          "suggest_id": 4
+        },
+        {
+          "title": "Инструменты",
+          "suggest_id": 5
+        },
+        {
+          "title": "Языки",
+          "suggest_id": 6
+        }
+      ],
+      "custom_tags": true,
+      "custom_suggest_id": 10
+    }
+  },
+  "abilities_race": {
+    "id": "abilities_race",
+    "type": "DND_ABILITIES",
+    "title": "Расовые",
+    "content": {
+      "item_id": 3
+    }
+  },
+  "abilities_class": {
+    "id": "abilities_class",
+    "type": "DND_ABILITIES",
+    "title": "Классовые",
+    "content": {
+      "item_id": 4
+    }
+  },
+  "abilities_feats": {
+    "id": "abilities_feats",
+    "type": "DND_ABILITIES",
+    "title": "Черты",
+    "content": {
+      "item_id": 7
+    }
+  },
+  "person_alignment": {
+    "id": "person_alignment",
+    "type": "INPUT_TEXT",
+    "title": "Мировоззрение",
+    "content": {
+      "placeholder": "Мировоззрение"
+    }
+  },
+  "person_backstory": {
+    "id": "person_backstory",
+    "type": "INPUT_DESCRIPTION",
+    "title": "Предыстория персонажа",
+    "content": {
+      "placeholder": "Предыстория персонажа..."
+    }
+  },
+  "person_appearance": {
+    "id": "person_appearance",
+    "type": "INPUT_DESCRIPTION",
+    "title": "Внешность",
+    "content": {
+      "placeholder": "Описание внешности..."
+    }
+  },
+  "exhaustion": {
+    "id": "exhaustion",
+    "type": "DND_EXHAUSTION",
+    "content": {}
+  },
+  "campaign": {
+    "id": "campaign",
+    "type": "CAMPAIGN_BADGE",
+    "content": {}
+  }
+}

@@ -1,0 +1,31 @@
+[Unit]
+Description=dndShare (Go)
+After=network-online.target
+Wants=network-online.target
+# Не молотить бесконечно при падениях (напр. недоступна БД):
+# максимум 4 рестарта за 120с, иначе systemd останавливает unit до ручного start.
+StartLimitIntervalSec=120
+StartLimitBurst=4
+
+[Service]
+Type=simple
+User=sylvieshare
+WorkingDirectory=/home/sylvieshare
+# run.sh тянет секреты из Lockbox (через YC service account, привязанный к VM),
+# грузит env и exec'ает бинарь. ID секрета 'dndshare-secrets' (не секрет):
+Environment=LOCKBOX_SECRET_ID=e6qc2l631pr9823st3lg
+# Подключение к БД (не секрет — пароль приходит из Lockbox как DB_PASSWORD).
+# DB_URL в JDBC-формате: Go сам приводит его к DSN pgx.
+Environment=DB_URL=jdbc:postgresql://rc1a-53oq8gi7zdrgmy2u.mdb.yandexcloud.net:6432/sylvieshare
+Environment=DB_USER=sylvie
+# auto: Secure-cookie по схеме запроса. За nginx схему сообщает X-Forwarded-Proto.
+Environment=SESSION_SECURE_COOKIE=auto
+ExecStart=/home/sylvieshare/dndshare-run.sh
+Restart=always
+RestartSec=15
+SuccessExitStatus=143
+StandardOutput=append:/home/sylvieshare/dndshare-log.txt
+StandardError=append:/home/sylvieshare/dndshare-log.txt
+
+[Install]
+WantedBy=multi-user.target

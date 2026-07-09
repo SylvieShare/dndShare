@@ -1,0 +1,426 @@
+{
+  "preset": {
+    "lvl": 1,
+    "speed": 30,
+    "hp": {
+      "max": 10,
+      "current": 10,
+      "diceCount": 1
+    },
+    "armor": {
+      "ac": 10,
+      "shield": false,
+      "bonuses": [],
+      "shield_bonus": 2
+    },
+    "CHA": {
+      "value": 10
+    },
+    "CON": {
+      "value": 10
+    },
+    "DEX": {
+      "value": 10
+    },
+    "INT": {
+      "value": 10
+    },
+    "STR": {
+      "value": 10
+    },
+    "WIS": {
+      "value": 10
+    },
+    "prof_bonus": {
+      "v": 2,
+      "auto": true
+    },
+    "money": [
+      {
+        "id": "gp",
+        "title": "Золотая",
+        "short_title": "зм.",
+        "color": "#FFD700",
+        "amount": 0
+      },
+      {
+        "id": "sp",
+        "title": "Серебряная",
+        "short_title": "см.",
+        "color": "#C0C0C0",
+        "amount": 0
+      },
+      {
+        "id": "cp",
+        "title": "Медная",
+        "short_title": "мм.",
+        "color": "#B87333",
+        "amount": 0
+      }
+    ]
+  },
+  "fields": [
+    {
+      "title": "Имя",
+      "type": "text",
+      "suggest_id": 1,
+      "path_to": "name"
+    },
+    {
+      "title": "Раса",
+      "type": "suggest",
+      "suggest_id": 1,
+      "path_to": "race",
+      "rules_preset": {
+        "Дварф": {
+          "add": {
+            "proficiencies": {
+              "Оружие": [
+                "Боевые топоры",
+                "Ручные топоры",
+                "Легкие молоты",
+                "Боевые молоты"
+              ],
+              "Инструменты": [
+                "Инструменты кузнеца",
+                "Инструменты пивовара",
+                "Инструменты каменщика"
+              ],
+              "Языки": [
+                "Общий",
+                "Дварфский"
+              ]
+            },
+            "abilities_race": [
+              {
+                "id": 65
+              },
+              {
+                "id": 1435
+              }
+            ]
+          },
+          "set": {
+            "speed": 25
+          }
+        },
+        "Эльф": {
+          "add": {
+            "proficiencies": {
+              "Языки": [
+                "Общий",
+                "Эльфийский"
+              ]
+            },
+            "abilities_race": [
+              {
+                "id": 65
+              },
+              {
+                "id": 1435
+              }
+            ]
+          },
+          "set": {
+            "WIS": {
+              "Внимание": 1
+            }
+          }
+        },
+        "Человек": {
+          "add": {
+            "proficiencies": {
+              "Языки": [
+                "Общий"
+              ]
+            }
+          }
+        },
+        "Тифлинг": {
+          "add": {
+            "proficiencies": {
+              "Языки": [
+                "Общий",
+                "Инфернальный"
+              ]
+            },
+            "abilities_race": [
+              {
+                "id": 65
+              },
+              {
+                "id": 1442
+              }
+            ],
+            "spells": [
+              {
+                "id": 537
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "title": "Класс",
+      "type": "suggest",
+      "suggest_id": 2,
+      "path_to": "class",
+      "rules_preset": {
+        "Варвар": {
+          "add": {
+            "proficiencies": {
+              "Оружие": [
+                "Простое оружие",
+                "Воинское оружие"
+              ],
+              "Доспехи": [
+                "Лёгкие доспехи",
+                "Средние доспехи",
+                "Щиты"
+              ]
+            },
+            "abilities_class": [
+              {
+                "id": 1437
+              },
+              {
+                "id": 1438
+              }
+            ],
+            "weapon": [
+              {
+                "name": "Секира",
+                "notes": "Двуручное, тяжёлое",
+                "attacks": [
+                  {
+                    "v": "1d12",
+                    "type": "рубящий"
+                  }
+                ],
+                "stat_id": "STR.mod",
+                "proficient": true,
+                "cost": "30 зм",
+                "weight": "7 фнт."
+              }
+            ],
+            "resources": [
+              {
+                "used": 2,
+                "title": "Ярость",
+                "total": 2,
+                "color_point": "#f87171"
+              }
+            ]
+          },
+          "set": {
+            "hp": {
+              "max": 12,
+              "current": 12,
+              "dice": "d12"
+            },
+            "STR": {
+              "save_up": true
+            },
+            "CON": {
+              "save_up": true
+            }
+          }
+        },
+        "Бард": {
+          "add": {
+            "proficiencies": {
+              "Оружие": [
+                "Простое оружие",
+                "Длинные мечи",
+                "Короткие мечи",
+                "Рапиры",
+                "Ручные арбалеты"
+              ],
+              "Доспехи": [
+                "Лёгкие доспехи"
+              ]
+            },
+            "abilities_class": [
+              {
+                "id": 1439
+              },
+              {
+                "id": 1440
+              }
+            ],
+            "weapon": [],
+            "spell_slots": [
+              {
+                "used": 0,
+                "level": 1,
+                "total": 2
+              }
+            ]
+          },
+          "set": {
+            "hp": {
+              "max": 8,
+              "current": 8,
+              "dice": "d8"
+            },
+            "DEX": {
+              "save_up": true
+            },
+            "CHA": {
+              "save_up": true
+            }
+          }
+        },
+        "Плут": {
+          "add": {
+            "proficiencies": {
+              "Оружие": [
+                "Простое оружие",
+                "Ручные арбалеты",
+                "Длинные мечи",
+                "Рапиры",
+                "Короткие мечи"
+              ],
+              "Доспехи": [
+                "Лёгкие доспехи"
+              ]
+            },
+            "abilities_class": [
+              {
+                "id": 1442
+              },
+              {
+                "id": 68
+              }
+            ],
+            "weapon": []
+          },
+          "set": {
+            "hp": {
+              "max": 8,
+              "current": 8,
+              "dice": "d8"
+            },
+            "DEX": {
+              "save_up": true
+            },
+            "INT": {
+              "save_up": true
+            }
+          }
+        },
+        "Колдун": {
+          "add": {
+            "proficiencies": {
+              "Оружие": [
+                "Простое оружие"
+              ],
+              "Доспехи": [
+                "Лёгкие доспехи"
+              ]
+            },
+            "weapon": [],
+            "spell_slots": [
+              {
+                "used": 0,
+                "level": 1,
+                "total": 1
+              }
+            ]
+          },
+          "set": {
+            "hp": {
+              "max": 8,
+              "current": 8,
+              "dice": "d8"
+            },
+            "WIS": {
+              "save_up": true
+            },
+            "CHA": {
+              "save_up": true
+            }
+          }
+        },
+        "Монах": {
+          "add": {
+            "proficiencies": {
+              "Оружие": [
+                "Простое оружие",
+                "Короткие мечи"
+              ],
+              "Доспехи": [
+                "Лёгкие доспехи"
+              ]
+            },
+            "weapon": [],
+            "resources": [
+              {
+                "used": 0,
+                "title": "Очки ци",
+                "total": 0,
+                "color_point": "#4ade80"
+              }
+            ]
+          },
+          "set": {
+            "hp": {
+              "max": 8,
+              "current": 8,
+              "dice": "d8"
+            },
+            "STR": {
+              "save_up": true
+            },
+            "DEX": {
+              "save_up": true
+            }
+          }
+        },
+        "Чародей": {
+          "add": {
+            "proficiencies": {
+              "Оружие": [
+                "Боевые посохи",
+                "Дротики",
+                "Кинжалы",
+                "Легкие арбалеты",
+                "Пращи"
+              ]
+            },
+            "weapon": [],
+            "resources": [
+              {
+                "used": 0,
+                "title": "Единицы чародейства",
+                "total": 0,
+                "color_point": "#c084fc"
+              }
+            ],
+            "spell_slots": [
+              {
+                "used": 0,
+                "level": 1,
+                "total": 2
+              }
+            ]
+          },
+          "set": {
+            "hp": {
+              "max": 6,
+              "current": 6,
+              "dice": "d6"
+            },
+            "CON": {
+              "save_up": true
+            },
+            "CHA": {
+              "save_up": true
+            }
+          }
+        }
+      }
+    }
+  ]
+}

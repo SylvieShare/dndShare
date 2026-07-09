@@ -1,0 +1,117 @@
+[
+  {
+    "key": "attacks",
+    "name": "Атаки",
+    "type": "object_array",
+    "fields": [
+      {
+        "key": "count",
+        "name": "Количество кубиков",
+        "type": "int",
+        "default": 1
+      },
+      {
+        "key": "dice_id",
+        "name": "Кубик",
+        "type": "suggest",
+        "suggest_id": 11
+      },
+      {
+        "key": "type",
+        "name": "Вид урона",
+        "type": "suggest",
+        "suggest_id": 12
+      }
+    ]
+  },
+  {
+    "key": "tags",
+    "name": "Свойства",
+    "type": "suggest_array",
+    "filter": true,
+    "suggest_id": 14
+  },
+  {
+    "key": "is_military",
+    "name": "Воинское оружие",
+    "type": "boolean",
+    "filter": true
+  },
+  {
+    "key": "is_long_range",
+    "name": "Дальнобойное оружие",
+    "type": "boolean",
+    "filter": true
+  },
+  {
+    "key": "universe_attacks",
+    "name": "Универсальная атака",
+    "type": "object_array",
+    "fields": [
+      {
+        "key": "count",
+        "name": "Количество кубиков",
+        "type": "int",
+        "default": 1
+      },
+      {
+        "key": "dice_id",
+        "name": "Кубик",
+        "type": "suggest",
+        "suggest_id": 11
+      },
+      {
+        "key": "type",
+        "name": "Вид урона",
+        "type": "suggest",
+        "suggest_id": 12
+      }
+    ],
+    "show_on": {
+      "key": "tags",
+      "value": 10
+    }
+  },
+  {
+    "key": "range_min",
+    "name": "Дистанция мин",
+    "type": "int",
+    "show_on": {
+      "key": "tags",
+      "value": [
+        1,
+        4,
+        6
+      ]
+    }
+  },
+  {
+    "key": "range_max",
+    "name": "Дистанция макс",
+    "type": "int",
+    "show_on": {
+      "key": "tags",
+      "value": [
+        1,
+        4,
+        6
+      ]
+    }
+  },
+  {
+    "key": "cost",
+    "name": "Стоимость",
+    "type": "int_by_suggest",
+    "suggest_type_id": 17
+  },
+  {
+    "key": "weight",
+    "name": "Вес",
+    "type": "int"
+  },
+  {
+    "key": "notes",
+    "name": "Заметки",
+    "type": "description"
+  }
+]

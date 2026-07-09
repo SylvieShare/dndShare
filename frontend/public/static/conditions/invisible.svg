@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-labelledby="title">
+  <title id="title">Невидимость</title>
+  <g fill="none" stroke="#b9b9c6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 12s3.4-5.4 9-5.4 9 5.4 9 5.4-3.4 5.4-9 5.4S3 12 3 12Z"/>
+    <circle cx="12" cy="12" r="2.5"/>
+    <path d="M3.8 20.2 20.2 3.8"/>
+  </g>
+</svg>
