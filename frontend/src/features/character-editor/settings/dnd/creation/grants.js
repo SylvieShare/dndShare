@@ -15,9 +15,7 @@
  * Pinia, so this module stays pure and testable).
  */
 
-// suggest type 16 (characteristics) id -> ability score key. Same order the
-// stat blocks / accessors use (STR=1 … CHA=6).
-const STAT_BY_SUGGEST16 = { 1: 'STR', 2: 'DEX', 3: 'CON', 4: 'INT', 5: 'WIS', 6: 'CHA' }
+import { SUGGEST16_TO_STAT as STAT_BY_SUGGEST16 } from '@/shared/lib/dndStats'
 
 // proficiency bucket -> (character proficiencies key, suggest type id)
 const PROF_BUCKETS = {

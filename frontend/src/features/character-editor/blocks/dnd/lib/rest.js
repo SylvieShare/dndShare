@@ -1,27 +1,13 @@
 // Pure rest transforms for DND_REST. No Pinia / no Vue — the block injects raw block values
 // and writes the returned objects back via update:value(<id>, ...).
 
-import { abilityModifier } from '@/shared/lib/dnd'
+import { abilityModifier, resolveNumValue } from '@/shared/lib/dnd'
 
 // Ability modifier from a stat value (same shape DND_CHAR_STAT_10 stores: `{ value: { base, bonuses } }`,
-// or a legacy plain number). Used for the hit-die heal (1dX + CON mod).
+// or a legacy plain number). Used for the hit-die heal (1dX + CON mod). Absent value defaults to 10.
 export function statMod(statVal) {
-  let score = 10
-  if (statVal && typeof statVal === 'object') {
-    const v = statVal.value
-    if (v && typeof v === 'object') {
-      const base = Number(v.base) || 0
-      const bonuses = Array.isArray(v.bonuses)
-        ? v.bonuses.reduce((acc, b) => acc + (Number(b?.value) || 0), 0)
-        : 0
-      score = base + bonuses
-    } else if (v != null) {
-      score = Number(v) || 0
-    }
-  } else if (statVal != null) {
-    score = Number(statVal) || 0
-  }
-  return abilityModifier(score)
+  const v = statVal && typeof statVal === 'object' ? statVal.value : statVal
+  return abilityModifier(v == null ? 10 : resolveNumValue(v))
 }
 
 // Hit dice regained on a long rest: half the total (round down), minimum 1.

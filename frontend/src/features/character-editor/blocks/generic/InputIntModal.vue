@@ -12,6 +12,7 @@
 
 <script setup>
 import { computed } from 'vue'
+import { sumBonuses } from '@/shared/lib/dnd'
 import BonusList from '@/shared/ui/BonusList'
 import AppModal from '@/shared/ui/AppModal'
 import EditorTotal from '@/features/character-editor/components/EditorTotal'
@@ -23,9 +24,7 @@ const props = defineProps({
   title: { type: String, default: '' },
 })
 const emit = defineEmits(['close', 'change'])
-const total = computed(() =>
-  (props.data.base || 0) + (props.data.bonuses || []).reduce((s, b) => s + (parseInt(b.value) || 0), 0)
-)
+const total = computed(() => (props.data.base || 0) + sumBonuses(props.data.bonuses))
 
 function setBase(v) {
   emit('change', { ...props.data, base: v })

@@ -57,7 +57,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { abilityModifier } from '@/shared/lib/dnd'
+import { abilityModifier, resolveNumValue, sumBonuses } from '@/shared/lib/dnd'
 import BonusList from '@/shared/ui/BonusList'
 import EditorPanel from '@/features/character-editor/components/EditorPanel'
 import EditorSection from '@/features/character-editor/components/EditorSection'
@@ -85,10 +85,7 @@ const dexMod = computed(() => {
   const stat = path.split('.').slice(0, -1).reduce((cur, key) => cur?.[key], root)
   const val = stat?.value
   if (val != null) {
-    const total = typeof val === 'object'
-      ? (parseInt(val.base) || 0) + (Array.isArray(val.bonuses) ? val.bonuses.reduce((s, b) => s + (parseInt(b.value) || 0), 0) : 0)
-      : (parseInt(val) || 0)
-    return abilityModifier(total)
+    return abilityModifier(resolveNumValue(val))
   }
   // fallback: stat carries no live value → use the persisted `mod` (e.g. values.DEX.mod)
   const direct = path.split('.').reduce((cur, key) => cur?.[key], root)
@@ -97,7 +94,7 @@ const dexMod = computed(() => {
 })
 const baseTotal = computed(() => {
   const d = armorData.value
-  const bonuses = (d.bonuses || []).reduce((s, b) => s + (parseInt(b.value) || 0), 0)
+  const bonuses = sumBonuses(d.bonuses)
   const dex = d.use_dex && dexMod.value !== null ? dexMod.value : 0
   return (d.ac || 0) + dex + bonuses
 })

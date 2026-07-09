@@ -10,6 +10,7 @@
 
 <script setup>
 import { computed } from 'vue'
+import { sumBonuses } from '@/shared/lib/dnd'
 import BonusList from '@/shared/ui/BonusList'
 import EditorPanel from '@/features/character-editor/components/EditorPanel'
 import EditorTotal from '@/features/character-editor/components/EditorTotal'
@@ -28,14 +29,12 @@ const props = defineProps({
 })
 const emit = defineEmits(['change'])
 
-const total = computed(() =>
-  (props.data.base || 0) + (props.data.bonuses || []).reduce((s, b) => s + (parseInt(b.value) || 0), 0)
-)
+const total = computed(() => (props.data.base || 0) + sumBonuses(props.data.bonuses))
 
 function commit(next) {
   const base = parseInt(next.base) || 0
   const bonuses = Array.isArray(next.bonuses) ? next.bonuses : []
-  const value = base + bonuses.reduce((s, b) => s + (parseInt(b.value) || 0), 0)
+  const value = base + sumBonuses(bonuses)
   emit('change', { ...next, base, bonuses, value })
 }
 function setBase(v) { commit({ ...props.data, base: v }) }

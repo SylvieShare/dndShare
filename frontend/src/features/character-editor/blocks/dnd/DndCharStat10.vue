@@ -93,7 +93,7 @@
 
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
-import { abilityModifier, d20Expr } from '@/shared/lib/dnd'
+import { abilityModifier, d20Expr, sumBonuses } from '@/shared/lib/dnd'
 import BaseTile from '@/shared/ui/BaseTile'
 import DndStatEditor from '@/features/character-editor/blocks/dnd/components/DndStatEditor'
 import DndStatSkillEditor from '@/features/character-editor/blocks/dnd/components/DndStatSkillEditor'
@@ -123,7 +123,7 @@ const numData = computed(() => {
 })
 
 const statDisplayValue = computed(() =>
-  (numData.value.base || 0) + (numData.value.bonuses || []).reduce((s, b) => s + (parseInt(b.value) || 0), 0)
+  (numData.value.base || 0) + sumBonuses(numData.value.bonuses)
 )
 
 const titleConfig = computed(() => props.block.content.title)
@@ -161,7 +161,7 @@ const profBonus = computed(() => {
 })
 const mod = computed(() => abilityModifier(statDisplayValue.value))
 const save = computed(() => {
-  const extra = (statData.value.save_bonuses || []).reduce((s, b) => s + (parseInt(b.value) || 0), 0)
+  const extra = sumBonuses(statData.value.save_bonuses)
   return mod.value + (statData.value.save_up ? profBonus.value : 0) + extra
 })
 
@@ -236,7 +236,7 @@ function skillTitle(id) { return skillsList.value.find(s => s.id === String(id))
 
 function skillBonus(id) {
   const skill = skillsMap.value[String(id)] || { up: 0 }
-  const extra = (skill.bonuses || []).reduce((s, b) => s + (parseInt(b.value) || 0), 0)
+  const extra = sumBonuses(skill.bonuses)
   return mod.value + (skill.up || 0) * profBonus.value + extra
 }
 

@@ -3,14 +3,11 @@
  * Kept out of the composable so presentational components share one source.
  */
 
-export const STAT_SHORT = { STR: 'СИЛ', DEX: 'ЛОВ', CON: 'ВЫН', INT: 'ИНТ', WIS: 'МДР', CHA: 'ХАР' }
-export const STAT_FULL = { STR: 'Сила', DEX: 'Ловкость', CON: 'Выносливость', INT: 'Интеллект', WIS: 'Мудрость', CHA: 'Харизма' }
-export const SUGGEST16_TO_STAT = { 1: 'STR', 2: 'DEX', 3: 'CON', 4: 'INT', 5: 'WIS', 6: 'CHA' }
+import { STAT_FULL, STAT_SHORT, SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
+import { formatBonus } from '@/shared/lib/dnd'
 
-export function formatMod(m) {
-  const n = Number(m) || 0
-  return (n >= 0 ? '+' : '') + n
-}
+export { STAT_FULL, STAT_SHORT, SUGGEST16_TO_STAT }
+export { formatBonus as formatMod }
 
 export function monogramOf(name) {
   return String(name || '?').trim().charAt(0).toUpperCase()

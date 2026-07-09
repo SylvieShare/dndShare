@@ -1,5 +1,5 @@
 import { getByPath } from '@/features/sessions/lib/encounterHelpers'
-import { abilityModifier, d20Expr } from '@/shared/lib/dnd'
+import { abilityModifier, d20Expr, resolveNumValue } from '@/shared/lib/dnd'
 import { useDiceStore } from '@/stores/dice'
 import { useTemplateStore } from '@/stores/template'
 
@@ -23,17 +23,7 @@ export function useEncounterInitiative({ findParticipant, playerDisplayName, npc
     const cfg = findFirstBlockByType(templateStore, p.templateId, 'DND_INITIATIVE')
     if (!cfg) return 0
     const raw = getByPath(p.data ?? {}, `values.${cfg.blockId}`)
-    if (raw == null) return 0
-    if (typeof raw === 'number') return raw
-    if (typeof raw === 'object') {
-      if (Number.isFinite(Number(raw.value))) return Number(raw.value)
-      const base = Number(raw.base) || 0
-      const bonuses = Array.isArray(raw.bonuses)
-        ? raw.bonuses.reduce((s, b) => s + (Number(b?.value) || 0), 0)
-        : 0
-      return base + bonuses
-    }
-    return Number(raw) || 0
+    return resolveNumValue(raw)
   }
 
   function npcInitiativeBonus(c) {

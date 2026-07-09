@@ -50,7 +50,7 @@
 
 <script setup>
 import { computed, watch } from 'vue'
-import { d20Expr, proficiencyBonus } from '@/shared/lib/dnd'
+import { d20Expr, proficiencyBonus, sumBonuses } from '@/shared/lib/dnd'
 import BonusList from '@/shared/ui/BonusList'
 import EditorPanel from '@/features/character-editor/components/EditorPanel'
 import EditorSection from '@/features/character-editor/components/EditorSection'
@@ -85,7 +85,7 @@ const stored = computed(() => {
 })
 const displayValue = computed(() => {
   const base = stored.value.auto !== false ? autoValue.value : (stored.value.v || 0)
-  return base + stored.value.bonuses.reduce((s, b) => s + (parseInt(b.value) || 0), 0)
+  return base + sumBonuses(stored.value.bonuses)
 })
 
 watch(autoValue, newVal => {

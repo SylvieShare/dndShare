@@ -52,6 +52,7 @@ import BasePopover from '@/shared/ui/BasePopover.vue'
 import BaseTile from '@/shared/ui/BaseTile'
 import CharStatRadar from '@/features/character-list/components/CharStatRadar.vue'
 import ConfirmDialog from '@/shared/ui/ConfirmDialog'
+import { getByPath } from '@/shared/lib/objectPath'
 import { setCharSeed } from '@/shared/lib/charSeed'
 import { useSuggestStore } from '@/stores/suggest'
 
@@ -60,11 +61,6 @@ const ABILITY_SUGGEST_TYPE = 16
 const STATUS_COLOR = {
   live: '#e85c5c', active: '#5ce87c', planned: '#5c95e8', paused: '#e89c3c',
   completed: '#707080', draft: 'var(--text-muted)', archived: 'var(--text-muted)',
-}
-
-function getByPath(obj, path) {
-  if (!obj || !path) return null
-  return path.split('.').reduce((cur, key) => (cur != null ? cur[key] : null), obj)
 }
 
 function toStr(val) {

@@ -50,6 +50,7 @@
 
 <script setup>
 import { computed, nextTick, reactive, ref } from 'vue'
+import { signedOrZero as signed, sumBonuses } from '@/shared/lib/dnd'
 import BonusList from '@/shared/ui/BonusList'
 import EditorPanel from '@/features/character-editor/components/EditorPanel'
 import EditorSection from '@/features/character-editor/components/EditorSection'
@@ -85,11 +86,9 @@ const profOptions = [
 ]
 
 const total = computed(() => {
-  const extra = (local.bonuses || []).reduce((s, b) => s + (parseInt(b.value) || 0), 0)
+  const extra = sumBonuses(local.bonuses)
   return props.mod + (local.up || 0) * props.profBonus + extra
 })
-
-function signed(n) { return (n > 0 ? '+' : '') + n }
 
 function update(field, value) {
   local[field] = value

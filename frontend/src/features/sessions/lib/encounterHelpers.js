@@ -1,5 +1,8 @@
 import { ref } from 'vue'
+import { getByPath, setDeep } from '@/shared/lib/objectPath'
 import { useItemTypesStore } from '@/stores/itemTypes'
+
+export { getByPath, setDeep }
 
 export const BESTIARY_TYPE_ID = 6
 export const SAVE_DEBOUNCE_MS = 500
@@ -17,22 +20,6 @@ export function ensureBestiaryType() {
 
 export function makeUid() {
   return Math.random().toString(36).slice(2) + Date.now().toString(36)
-}
-
-export function getByPath(obj, path) {
-  if (!path) return null
-  return path.split('.').reduce((cur, key) => cur?.[key], obj) ?? null
-}
-
-export function setDeep(obj, path, value) {
-  const parts = String(path).split('.')
-  let cur = obj
-  for (let i = 0; i < parts.length - 1; i++) {
-    const k = parts[i]
-    if (cur[k] == null || typeof cur[k] !== 'object') cur[k] = {}
-    cur = cur[k]
-  }
-  cur[parts[parts.length - 1]] = value
 }
 
 export function nextTieBreak(combatants) {

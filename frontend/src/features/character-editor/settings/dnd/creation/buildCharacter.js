@@ -10,12 +10,13 @@
  */
 
 import { abilityModifier } from '@/shared/lib/dnd'
+import { STAT_KEYS } from '@/shared/lib/dndStats'
 import { defaultSlots } from '../../../blocks/dnd/lib/spellEntry.js'
 import { blankValues } from '../newCharacter.js'
 import { applyGrants, extractGrants } from './grants.js'
 import { featureIdsForBinding } from './progression.js'
 
-const STATS = ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA']
+const STATS = STAT_KEYS
 
 // skill suggest id (type 15) -> owning ability score. Mirrors the per-stat
 // `content.suggest_ids` in settings/dnd/blocks.json.

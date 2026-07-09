@@ -17,7 +17,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { d20Expr } from '@/shared/lib/dnd'
+import { d20Expr, sumBonuses } from '@/shared/lib/dnd'
 import NumBonusEditor from '@/features/character-editor/blocks/dnd/components/NumBonusEditor'
 import StatTile from '@/features/character-editor/blocks/dnd/components/StatTile'
 import { useDiceStore } from '@/stores/dice'
@@ -36,7 +36,7 @@ const numData = computed(() => {
 })
 const displayValue = computed(() => {
   const d = numData.value
-  return (d.base || 0) + (d.bonuses || []).reduce((s, b) => s + (parseInt(b.value) || 0), 0)
+  return (d.base || 0) + sumBonuses(d.bonuses)
 })
 
 function onChange(data) { emit('update:value', props.block.id, data) }

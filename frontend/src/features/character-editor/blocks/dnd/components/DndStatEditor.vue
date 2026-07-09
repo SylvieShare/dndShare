@@ -63,6 +63,7 @@
 
 <script setup>
 import { nextTick, ref } from 'vue'
+import { signedOrZero as signed } from '@/shared/lib/dnd'
 import AddButton from '@/shared/ui/AddButton'
 import BonusList from '@/shared/ui/BonusList'
 import EditorPanel from '@/features/character-editor/components/EditorPanel'
@@ -84,7 +85,6 @@ const newSkillName = ref('')
 const adding = ref(false)
 const addInputEl = ref(null)
 
-function signed(n) { return (n > 0 ? '+' : '') + n }
 function profLabel(up) { return up >= 2 ? 'Мастерство' : up === 1 ? 'Владение' : '—' }
 
 function setBase(v) { emit('update-base', { ...props.baseData, base: v }) }

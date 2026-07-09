@@ -74,6 +74,7 @@
 
 <script setup>
 import { ref } from 'vue'
+import { signedOrZero as signed } from '@/shared/lib/dnd'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip'
 import SheetBlockTitle from '@/shared/ui/SheetBlockTitle'
 import SvgIcon from '@/shared/ui/SvgIcon'
@@ -99,8 +100,6 @@ const props = defineProps({
 defineEmits(['edit', 'roll-stat', 'roll-save', 'roll-skill'])
 
 const tooltip = ref({ visible: false, title: '', desc: '', x: 0, top: null, bottom: null })
-
-function signed(n) { return (n > 0 ? '+' : '') + n }
 
 function showTooltip(event, skill) {
   if (!skill.desc) return

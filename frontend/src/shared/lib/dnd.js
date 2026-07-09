@@ -25,3 +25,31 @@ export function d20Expr(bonus) {
   const n = Number(bonus) || 0
   return n === 0 ? 'd20' : `d20${n > 0 ? '+' : '-'}${Math.abs(n)}`
 }
+
+/** Signed string but bare "0" for zero: 3 → "+3", 0 → "0", -1 → "-1". Used on
+ *  stat/skill chips where a plain "0" reads cleaner than "+0". */
+export function signedOrZero(value) {
+  const n = Number(value) || 0
+  return (n > 0 ? '+' : '') + n
+}
+
+/** Sum of a bonus list — accepts `[{value}]` rows or plain numbers. */
+export function sumBonuses(bonuses) {
+  if (!Array.isArray(bonuses)) return 0
+  return bonuses.reduce((sum, b) => {
+    const v = b && typeof b === 'object' ? b.value : b
+    return sum + (Number(v) || 0)
+  }, 0)
+}
+
+/** Resolve a numeric field that may be a number, `{value}` or `{base, bonuses[]}`. */
+export function resolveNumValue(raw) {
+  if (raw == null) return 0
+  if (typeof raw === 'number') return raw
+  if (typeof raw === 'object') {
+    if (Array.isArray(raw.bonuses) || 'base' in raw) return (Number(raw.base) || 0) + sumBonuses(raw.bonuses)
+    if ('value' in raw) return Number(raw.value) || 0
+    return 0
+  }
+  return Number(raw) || 0
+}

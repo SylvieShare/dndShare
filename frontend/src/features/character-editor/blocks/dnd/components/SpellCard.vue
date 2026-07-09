@@ -81,6 +81,7 @@
 import { computed, inject, ref, watch } from 'vue'
 
 import AttackDamage from '@/features/character-editor/blocks/dnd/components/AttackDamage.vue'
+import { SAVE_ABBR } from '@/shared/lib/dndStats'
 
 const props = defineProps({
   entry: { type: Object, required: true },
@@ -113,7 +114,6 @@ const healParts = computed(() => ctx.healDiceParts(props.entry.item, castLevel.v
 const damageModifier = computed(() => damageParts.value.reduce((s, p) => s + (p.bonus || 0), 0))
 const hasMetrics = computed(() => ctx.hasSpellMetrics(props.entry.item))
 
-const SAVE_ABBR = { str: 'СИЛ', dex: 'ЛВК', con: 'ТЕЛ', int: 'ИНТ', wis: 'МДР', cha: 'ХАР' }
 const saveTag = computed(() => {
   const a = dmg.value.save_ability
   if (!a) return ''

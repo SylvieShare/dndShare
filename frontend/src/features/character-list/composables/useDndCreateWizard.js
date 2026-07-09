@@ -2,6 +2,7 @@ import { abilityModifier, proficiencyBonus } from '@/shared/lib/dnd'
 import { computed, nextTick, reactive, ref, watch } from 'vue'
 import { fetchGet } from '@/shared/api/http'
 import { SKILL_BY_STAT, buildCharacterData } from '@/features/character-editor/settings/dnd/creation/buildCharacter'
+import { STAT_KEYS, SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
 import { extractGrants } from '@/features/character-editor/settings/dnd/creation/grants'
 import { featuresForBinding } from '@/features/character-editor/settings/dnd/creation/progression'
 import { useSuggestStore } from '@/stores/suggest'
@@ -14,8 +15,8 @@ const SPELL_TYPE = 5
 const FEAT_TYPE = 7
 const SKILL_SUGGEST = 15
 const LANG_SUGGEST = 6
-const STATS = ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA']
-const STAT_BY_SUGGEST16 = { 1: 'STR', 2: 'DEX', 3: 'CON', 4: 'INT', 5: 'WIS', 6: 'CHA' }
+const STATS = STAT_KEYS
+const STAT_BY_SUGGEST16 = SUGGEST16_TO_STAT
 const NAME_POOL = ['Талион', 'Мираэль', 'Гром', 'Лиа', 'Кадан', 'Сельена', 'Дорн', 'Аэлита', 'Вэйлин', 'Мирра', 'Торин', 'Ниала', 'Ксандер', 'Элара', 'Роган', 'Сафира']
 
 export const STANDARD_ARRAY = [15, 14, 13, 12, 10, 8]

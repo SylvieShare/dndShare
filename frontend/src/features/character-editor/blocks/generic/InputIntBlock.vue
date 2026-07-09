@@ -38,6 +38,7 @@
 
 <script setup>
 import { computed, inject, ref } from 'vue'
+import { sumBonuses } from '@/shared/lib/dnd'
 import InputIntModal from './InputIntModal'
 
 const props = defineProps(['block', 'value'])
@@ -50,7 +51,7 @@ const numData = computed(() => {
 })
 const displayValue = computed(() => {
   const d = numData.value
-  return (d.base || 0) + (d.bonuses || []).reduce((s, b) => s + (parseInt(b.value) || 0), 0)
+  return (d.base || 0) + sumBonuses(d.bonuses)
 })
 const showPlus = computed(() => props.block.content?.visible_plus && displayValue.value > 0)
 const variant = computed(() => props.block.props?.variant || props.block.content?.variant || '')

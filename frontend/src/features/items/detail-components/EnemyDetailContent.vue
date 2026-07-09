@@ -166,7 +166,8 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue'
-import { abilityModifier } from '@/shared/lib/dnd'
+import { abilityModifier, formatBonus as signedBonus } from '@/shared/lib/dnd'
+import { SAVE_ABBR } from '@/shared/lib/dndStats'
 import { getSuggestId } from '@/features/handbook/objects/lib/schemaFields'
 import DetailSection from '@/shared/ui/DetailSection.vue'
 import RichContent from '@/shared/ui/RichContent'
@@ -229,14 +230,7 @@ watch(
   { immediate: true, deep: true },
 )
 
-const abilities = [
-  { key: 'str', label: 'СИЛ' },
-  { key: 'dex', label: 'ЛВК' },
-  { key: 'con', label: 'ТЕЛ' },
-  { key: 'int', label: 'ИНТ' },
-  { key: 'wis', label: 'МДР' },
-  { key: 'cha', label: 'ХАР' },
-]
+const abilities = Object.entries(SAVE_ABBR).map(([key, label]) => ({ key, label }))
 
 const identity = computed(() => props.item.data?.identity || {})
 const combat = computed(() => props.item.data?.combat || {})
@@ -308,8 +302,7 @@ const environmentLabels = computed(() => {
 })
 
 function formatBonus(n) {
-  if (n == null) return ''
-  return n >= 0 ? `+${n}` : `${n}`
+  return n == null ? '' : signedBonus(n)
 }
 
 function speedLabel(name) {
