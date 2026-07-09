@@ -8,10 +8,6 @@ export function getJobRuns() {
   return fetchGet('/admin-panel/jobs')
 }
 
-export function getJobRun(id) {
-  return fetchGet(`/admin-panel/jobs/${id}`)
-}
-
 export function startJob(code) {
   return fetchPost(`/admin-panel/jobs/${code}/start`, {})
 }

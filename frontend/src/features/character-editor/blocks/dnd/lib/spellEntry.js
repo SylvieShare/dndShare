@@ -33,13 +33,3 @@ export function groupTitle(level) {
   if (level == null || level < 0) return 'Без уровня'
   return `${level} круг`
 }
-
-// Источник заклинания (data.source_kind). Заполняется ttg-обогащением:
-// base = книга правил (PHB), addon = офиц. дополнение (Котёл Таши и т.п.), third = стороннее (контент игроков).
-export const SPELL_SOURCE_KIND = { BASE: 'base', ADDON: 'addon', THIRD: 'third' }
-export const SPELL_SOURCE_KIND_LABELS = { base: 'База', addon: 'Дополнение', third: 'Стороннее' }
-
-// Тип роста урона/лечения (data.damage.scaling / data.heal.scaling):
-// none = фиксировано, slot = +addon за круг ячейки выше базового, cantrip = +addon по уровню героя (5/11/17).
-export const SPELL_DAMAGE_SCALING = { NONE: 'none', SLOT: 'slot', CANTRIP: 'cantrip' }
-export const SPELL_DAMAGE_SCALING_LABELS = { none: 'нет', slot: 'за круг ячейки', cantrip: 'за уровень героя' }

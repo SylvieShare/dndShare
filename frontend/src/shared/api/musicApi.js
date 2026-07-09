@@ -6,14 +6,6 @@ export function getTracks() {
   return fetchGet('/music/tracks')
 }
 
-export function searchTracks({ q, tagIds } = {}) {
-  const params = new URLSearchParams()
-  if (q) params.set('q', q)
-  if (tagIds && tagIds.length) params.set('tagIds', tagIds.join(','))
-  const qs = params.toString()
-  return fetchGet('/music/tracks/search' + (qs ? '?' + qs : ''))
-}
-
 export function uploadTrack({ file, name, durationSec, albumId, onProgress }) {
   const form = new FormData()
   form.append('file', file)

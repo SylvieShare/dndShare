@@ -587,18 +587,6 @@ function onClose() {
 }
 .music-lib-sub { font-size: 13px; color: var(--text-muted); }
 .music-lib-head-actions { margin-left: auto; display: flex; align-items: center; gap: 12px; }
-.music-lib-upload {
-  background: rgba(255,255,255,0.06);
-  border: 1px solid var(--input-border);
-  border-radius: 8px;
-  padding: 7px 14px;
-  color: var(--text-1);
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-.music-lib-upload:hover { background: color-mix(in srgb, var(--accent) 15%, transparent); border-color: var(--accent); }
 .music-lib-close {
   background: none; border: none; color: var(--text-2);
   font-size: 24px; cursor: pointer; line-height: 1;
@@ -826,7 +814,6 @@ function onClose() {
   padding: 0 16px;
   min-width: 320px;
 }
-.foot-cross-label { font-size: 9px; letter-spacing: 0.1em; font-weight: 700; color: var(--text-2); }
 .foot-cross-btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 7px;
   background: var(--accent);

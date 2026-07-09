@@ -32,7 +32,6 @@ onMounted(() => {
   --bg:         #181a24;
   --bg-deep:    #11121a;
   --block-bg:   #1f2230;   /* фон карточек-блоков */
-  --group-bg:   #16171f;   /* фон групповых плиток-панелей (темнее задника) */
   --surface-1:  #26283e;   /* фон инпутов, кнопок */
   --surface-2:  #2d304b;   /* focused-состояние */
   --popup-bg:   #1c1f2a;   /* фон дропдаунов/тултипов */
@@ -52,9 +51,6 @@ onMounted(() => {
   --danger-dim: #c95a52;   /* приглушённый danger (death-save пипсы, graveyard) */
   --success:    #4caf6e;   /* подтверждения, положительные индикаторы */
   --warning:    #fcbe24;   /* предупреждения, золото */
-  --shadow-xs:  0 1px 1px rgba(0,0,0,0.25);
-  --shadow-sm:  0 1px 2px rgba(0,0,0,0.4);
-  --shadow-md:  0 4px 14px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.04);
   --shadow-lg:  0 14px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04);
   --r-xs:       4px;
   --r-sm:       6px;

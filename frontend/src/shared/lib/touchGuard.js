@@ -7,10 +7,6 @@ if (typeof window !== 'undefined') {
   window.addEventListener('touchcancel', () => { _down = false; _lastTouchEndAt = Date.now() }, { passive: true })
 }
 
-export function isTouchDown() {
-  return _down
-}
-
 export function isTouchActiveOrRecent() {
   return _down || (Date.now() - _lastTouchEndAt < 150)
 }

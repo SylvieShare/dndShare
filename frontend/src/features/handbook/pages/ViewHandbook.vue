@@ -514,9 +514,6 @@ onBeforeUnmount(() => {
     padding: 0 10px 10px;
   }
 
-  /* Desktop type bar hidden on mobile — grid replaces it */
-  .handbook-type-bar { display: none; }
-
   /* Mobile collection grid */
   .handbook-type-grid {
     display: grid;

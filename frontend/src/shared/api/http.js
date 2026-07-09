@@ -1,24 +1,3 @@
-export function myFetch(url, method = 'GET', body, consumerSuccess, consumerError) {
-    return fetch(url, {
-        method: method,
-        headers: {
-            'Content-Type': 'application/json;charset=utf-8'
-        },
-        body: body ? JSON.stringify(body) : null
-    }).then(async res => {
-        let json = await res.json()
-        if (res.ok) {
-            consumerSuccess(json)
-        } else {
-            consumerError(res.status, json.type)
-        }
-        return json
-    }).catch(err => {
-        console.log("ERROR!!!!!!!!!!!!!!!")
-        console.log(err)
-    })
-}
-
 export function fetchGetEmpty(url) {
     return fetch('/api' + url, {
         method: 'GET',

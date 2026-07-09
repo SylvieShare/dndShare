@@ -3,7 +3,7 @@
  *
  * This is the in-code replacement for the per-template `preset` that used to
  * live in the DB (`char_template.create_form.preset`). The create flow seeds a
- * fresh character from `blankCharacter()` and then layers race/class grants and
+ * fresh character from `blankValues()` and then layers race/class grants and
  * the chosen ability scores on top (see `creation/grants.js`).
  *
  * Keep this in sync with the D&D sheet blocks (`settings/dnd/blocks.json`): the
@@ -31,11 +31,6 @@ const PRESET = {
     { id: 'sp', title: 'Серебряная', short_title: 'см.', color: '#C0C0C0', amount: 0 },
     { id: 'cp', title: 'Медная', short_title: 'мм.', color: '#B87333', amount: 0 },
   ],
-}
-
-/** A fresh character data object: `{ values: { ...preset } }`. */
-export function blankCharacter() {
-  return { values: clone(PRESET) }
 }
 
 /** The blank `values` payload only (no wrapper). */

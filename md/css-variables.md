@@ -59,10 +59,7 @@ Accent rule of thumb: `--accent` (purple) = navigation / selection / active stat
 
 | Var          | Value                                                    |
 | ------------ | -------------------------------------------------------- |
-| `--shadow-xs`| `0 1px 1px rgba(0,0,0,0.25)` (faint lift for chips/pills) |
-| `--shadow-sm`| `0 1px 2px rgba(0,0,0,0.4)`                              |
-| `--shadow-md`| `0 4px 14px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.04)` |
-| `--shadow-lg`| `0 14px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04)` |
+| `--shadow-lg`| `0 14px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04)` (only shadow token in use) |
 | `--r-xs`     | `4px` (tight chips, inner inputs)                        |
 | `--r-sm`     | `6px` (small buttons, mini chips)                        |
 | `--r-md`     | `10px` (default card radius)                             |

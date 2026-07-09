@@ -64,12 +64,6 @@ export function collectSuggestIds(fields) {
   return ids
 }
 
-export function collectFieldKeys(fields) {
-  const keys = new Set()
-  for (const field of fields || []) keys.add(field.key)
-  return keys
-}
-
 export function findField(fields, key) {
   for (const f of fields || []) {
     if (f.key === key) return f
