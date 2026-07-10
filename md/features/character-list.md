@@ -47,6 +47,8 @@ D&D creation is a **full page**, not a modal. The "+ Новый персонаж
 
 **Racial bonus display:** `CreatePreview` shows two clearly-distinct modes so a bonus never reads as a modifier. Before scores are entered: a "Бонусы расы к значению" grid of `+N` / `—` badges (accent when positive). Once scores are set: a "Характеристики" grid showing the **final score** (big) with its **modifier** (small, signed, coloured) beneath — score and mod are visually separate, never conflated.
 
+**"Что получаете" — per-step breakdown:** below the stats, the preview lists **every** accrued bonus grouped by the wizard step that grants it (`sections` computed): **Раса** (fixed ASI, chosen floating ASI, speed, size, fixed + chosen languages, chosen race skills, chosen feat, race proficiencies, racial features), **Класс** (hit die, saves, class proficiencies, spellcasting, class features), **Навыки** (chosen skill proficiencies), **Магия** (chosen spells). Proficiencies are read **directly off each item's `data`** (`itemProfs`) so they're attributed to their real source (race vs class), not the merged `grants`. This makes it easy to see what each choice adds and to spot leftovers after a change/rollback. `featPool` is exported from the composable for feat-name resolution.
+
 **Base list vs children:** `load()` filters races/classes to base items (`!item.parentId`) — subraces/subclasses are children (fetched per-parent via `/items/children`), so they never leak into the top-level Раса/Класс grids.
 
 **Race choices live on the Race step** (`StepRace`, under Происхождение, in the "Выборы расы" block — shown when `hasRaceChoices`). All are read from the race/subrace item `data` and merged in `extractGrants(..., raceVariant)`:

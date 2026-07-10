@@ -403,7 +403,7 @@ export function useDndCreateWizard() {
   return {
     STATS,
     state,
-    races, classes, subraces, subclasses, spellPool, loading,
+    races, classes, subraces, subclasses, spellPool, featPool, loading,
     raceAbilities, classAbilities,
     grants, isCaster, skillOptions, skillLimit, finalScores,
     pointsSpent, pointsLeft,
