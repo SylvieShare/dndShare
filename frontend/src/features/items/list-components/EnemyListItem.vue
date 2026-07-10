@@ -1,37 +1,32 @@
 <template>
-  <div class="enemy-item">
-    <span v-if="cr != null" class="enemy-item-cr-num">{{ cr }}</span>
-
-    <div class="enemy-item-main">
-      <div class="enemy-item-name-row">
-        <span class="enemy-item-name">{{ item.name }}</span>
-        <span v-if="item.data?.identity?.named_npc" class="enemy-item-named">Именной</span>
-      </div>
-      <div class="enemy-item-sub">
+  <ObjectListItem :item="item" name-center>
+    <template v-if="cr != null" #leading><span class="enemy-item-cr-num">{{ cr }}</span></template>
+    <template v-if="item.data?.identity?.named_npc" #name-extras>
+      <span class="enemy-item-named">Именной</span>
+    </template>
+    <template #subtitle>
+      <span class="enemy-item-sub">
         <template v-for="(part, i) in subtitle" :key="i">
           <span v-if="i > 0" class="enemy-sub-dot">·</span>
           <span class="enemy-sub-part">{{ part }}</span>
         </template>
-      </div>
-    </div>
-
-    <div class="enemy-item-right">
-      <span v-if="hp != null" class="enemy-item-hp">
+      </span>
+    </template>
+    <template v-if="hp != null" #trailing>
+      <span class="enemy-item-hp">
         <svg class="enemy-hp-icon" viewBox="0 0 16 16" fill="none" width="11" height="11">
           <path d="M8 13C8 13 2.5 9.2 2.5 5.5C2.5 3.57 4.07 2 6 2C7.05 2 8 2.67 8 2.67C8 2.67 8.95 2 10 2C11.93 2 13.5 3.57 13.5 5.5C13.5 9.2 8 13 8 13Z" fill="currentColor"/>
         </svg>
         {{ hp }}
       </span>
-      <svg class="enemy-item-chevron" viewBox="0 0 16 16" fill="none" width="14" height="14">
-        <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </div>
-  </div>
+    </template>
+  </ObjectListItem>
 </template>
 
 <script setup>
 import { computed, watch } from 'vue'
-import { getSuggestId } from '@/features/handbook/objects/lib/schemaFields'
+import ObjectListItem from '@/features/items/list-components/ObjectListItem'
+import { findField, getSuggestId } from '@/features/handbook/objects/lib/schemaFields'
 import { useSuggestStore } from '@/stores/suggest'
 
 const props = defineProps({
@@ -51,17 +46,6 @@ function walkFields(fields, data) {
     }
   }
   return out
-}
-
-function findFieldByKeyDeep(fields, key) {
-  for (const f of fields || []) {
-    if (f.key === key) return f
-    if (f.type === 'object') {
-      const nested = findFieldByKeyDeep(f.fields, key)
-      if (nested) return nested
-    }
-  }
-  return null
 }
 
 watch(
@@ -88,7 +72,7 @@ watch(
 
 function resolveField(key, val) {
   if (val == null || val === '') return null
-  const field = findFieldByKeyDeep(props.type?.fields, key)
+  const field = findField(props.type?.fields, key)
   if (!field) return String(val)
   if (field.type === 'suggest_array') {
     const sid = getSuggestId(field)
@@ -119,14 +103,6 @@ const subtitle = computed(() => {
 </script>
 
 <style scoped>
-.enemy-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-  min-width: 0;
-}
-
 .enemy-item-cr-num {
   flex-shrink: 0;
   font-family: var(--font-display);
@@ -136,32 +112,6 @@ const subtitle = computed(() => {
   line-height: 1;
   min-width: 24px;
   text-align: center;
-}
-
-.enemy-item-main {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-}
-
-.enemy-item-name-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  min-width: 0;
-}
-
-.enemy-item-name {
-  font-family: var(--font-display);
-  font-size: 17px;
-  font-weight: 600;
-  color: var(--text-1);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  line-height: 1.2;
 }
 
 .enemy-item-named {
@@ -197,13 +147,6 @@ const subtitle = computed(() => {
   white-space: nowrap;
 }
 
-.enemy-item-right {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
-}
-
 .enemy-item-hp {
   display: flex;
   align-items: center;
@@ -215,11 +158,6 @@ const subtitle = computed(() => {
 
 .enemy-hp-icon {
   color: #b05050;
-  flex-shrink: 0;
-}
-
-.enemy-item-chevron {
-  color: var(--text-muted);
   flex-shrink: 0;
 }
 </style>
