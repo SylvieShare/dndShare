@@ -215,6 +215,14 @@ export function useDndCreateWizard() {
     state.scores = emptyScores()
   }
 
+  // Spells are chosen on the Class step now, so load them as soon as a caster
+  // class/subclass is picked (not when advancing to a separate step).
+  watch(() => [state.charClass?.id, state.subclass?.id], () => {
+    if (hydrating) return
+    if (isCaster.value) loadSpells()
+    else spellPool.value = []
+  })
+
   async function loadSpells() {
     if (!state.charClass) { spellPool.value = []; return }
     const res = await fetchGet(`/items?typeId=${SPELL_TYPE}&limit=500`)
@@ -228,15 +236,19 @@ export function useDndCreateWizard() {
   }
 
   // Level-1 granted features that carry an actionable `choice` (suggest dictionary
-  // or named options) — drives the "Выборы" step.
-  const level1Features = computed(() => {
-    const race = featuresForBinding(raceAbilities.value, { raceId: state.race?.id, subraceId: state.subrace?.id }, 1)
-    const cls = featuresForBinding(classAbilities.value, { classId: state.charClass?.id, subclassId: state.subclass?.id }, 1)
-    return [...race, ...cls]
-  })
-  const featureChoices = computed(() => level1Features.value
-    .filter((a) => a?.data?.choice && (a.data.choice.from_suggest_id || (a.data.choice.options || []).length))
-    .map((a) => ({ id: a.id, name: a.name, choice: a.data.choice })))
+  // or named options), split by source so each is made on its own step (race
+  // choices on the Race step, class choices on the Class step).
+  function toChoices(list) {
+    return list
+      .filter((a) => a?.data?.choice && (a.data.choice.from_suggest_id || (a.data.choice.options || []).length))
+      .map((a) => ({ id: a.id, name: a.name, choice: a.data.choice }))
+  }
+  const raceFeatureChoices = computed(() => toChoices(featuresForBinding(raceAbilities.value, { raceId: state.race?.id, subraceId: state.subrace?.id }, 1)))
+  const classFeatureChoices = computed(() => toChoices(featuresForBinding(classAbilities.value, { classId: state.charClass?.id, subclassId: state.subclass?.id }, 1)))
+  const featureChoices = computed(() => [...raceFeatureChoices.value, ...classFeatureChoices.value])
+  const isChoiceComplete = (fc) => (state.choices[fc.id] || []).length === (Number(fc.choice.count) || 1)
+  const raceChoicesComplete = computed(() => raceFeatureChoices.value.every(isChoiceComplete))
+  const classChoicesComplete = computed(() => classFeatureChoices.value.every(isChoiceComplete))
 
   watch(featureChoices, (list) => {
     list.forEach((fc) => { if (fc.choice.from_suggest_id) suggestStore.ensure(Number(fc.choice.from_suggest_id)) })
@@ -407,7 +419,9 @@ export function useDndCreateWizard() {
     raceAbilities, classAbilities,
     grants, isCaster, skillOptions, skillLimit, finalScores,
     pointsSpent, pointsLeft,
-    featureChoices, choiceOptionList, choiceSelected, toggleChoice, choicesComplete,
+    featureChoices, raceFeatureChoices, classFeatureChoices,
+    choiceOptionList, choiceSelected, toggleChoice, choicesComplete,
+    raceChoicesComplete, classChoicesComplete,
     suggestValue,
     // derived level-1 stats + preview
     mods, maxHp, unarmoredAc, initiativeMod, spellDc, spellAtk, castingAbility, primaryAbilities,

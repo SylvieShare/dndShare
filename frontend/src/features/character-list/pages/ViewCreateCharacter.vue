@@ -62,12 +62,9 @@ import { computed, onMounted, provide, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import CreatePreview from '@/features/character-list/components/wizard/CreatePreview.vue'
 import CreateStepRail from '@/features/character-list/components/wizard/CreateStepRail.vue'
-import StepChoices from '@/features/character-list/components/wizard/steps/StepChoices.vue'
 import StepClass from '@/features/character-list/components/wizard/steps/StepClass.vue'
 import StepRace from '@/features/character-list/components/wizard/steps/StepRace.vue'
 import StepReview from '@/features/character-list/components/wizard/steps/StepReview.vue'
-import StepSkills from '@/features/character-list/components/wizard/steps/StepSkills.vue'
-import StepSpells from '@/features/character-list/components/wizard/steps/StepSpells.vue'
 import StepStats from '@/features/character-list/components/wizard/steps/StepStats.vue'
 import StepVersion from '@/features/character-list/components/wizard/steps/StepVersion.vue'
 import ConfirmDialog from '@/shared/ui/ConfirmDialog'
@@ -83,11 +80,12 @@ const wz = useDndCreateWizard()
 provide('createWizard', wz)
 
 const {
-  state, load, loadSpells, buildPayload, restore, clearPersist, reset,
-  isCaster, featureChoices, requiresSubrace, requiresSubclass,
-  scoresComplete, pointsLeft, skillLimit, choicesComplete, spellsComplete,
+  state, load, buildPayload, restore, clearPersist, reset,
+  requiresSubrace, requiresSubclass,
+  scoresComplete, pointsLeft, skillLimit, spellsComplete,
   asiChoiceComplete, raceVariantsComplete,
   raceSkillsComplete, raceLangsComplete, featComplete,
+  raceChoicesComplete, classChoicesComplete,
 } = wz
 
 const confirmOpen = ref(false)
@@ -97,26 +95,21 @@ const isComplete = computed(() =>
   state.version === '2014' && !!state.race && !!state.charClass && !!state.name.trim() && scoresComplete.value)
 
 const STEP_COMPONENTS = {
-  version: StepVersion, race: StepRace, class: StepClass, stats: StepStats, skills: StepSkills,
-  features: StepChoices, spells: StepSpells, review: StepReview,
+  version: StepVersion, race: StepRace, class: StepClass, stats: StepStats, review: StepReview,
 }
 
 const creating = ref(false)
 const dndTemplateId = ref(null)
 
-const steps = computed(() => {
-  const s = [
-    { key: 'version', title: 'Версия' },
-    { key: 'race', title: 'Раса' },
-    { key: 'class', title: 'Класс' },
-    { key: 'stats', title: 'Характеристики' },
-    { key: 'skills', title: 'Навыки' },
-  ]
-  if (featureChoices.value.length) s.push({ key: 'features', title: 'Выборы' })
-  if (isCaster.value) s.push({ key: 'spells', title: 'Магия' })
-  s.push({ key: 'review', title: 'Обзор' })
-  return s
-})
+// Race/class choices are made inline on their own steps now (skills, feature
+// choices and spells are folded into the Class step; race choices into Race).
+const steps = computed(() => [
+  { key: 'version', title: 'Версия' },
+  { key: 'race', title: 'Раса' },
+  { key: 'class', title: 'Класс' },
+  { key: 'stats', title: 'Характеристики' },
+  { key: 'review', title: 'Обзор' },
+])
 const current = computed(() => state.step)
 const stepKey = computed(() => steps.value[current.value]?.key)
 const stepComponent = computed(() => STEP_COMPONENTS[stepKey.value])
@@ -137,23 +130,18 @@ function validateStep(key) {
       if (!raceSkillsComplete.value) return { ok: false, reason: 'Выбери расовые навыки' }
       if (!raceLangsComplete.value) return { ok: false, reason: 'Выбери язык' }
       if (!featComplete.value) return { ok: false, reason: 'Выбери черту' }
+      if (!raceChoicesComplete.value) return { ok: false, reason: 'Заверши выборы расы' }
       return { ok: true }
     case 'class':
       if (!state.charClass) return { ok: false, reason: 'Выбери класс' }
       if (requiresSubclass.value && !state.subclass) return { ok: false, reason: 'Выбери архетип' }
+      if (skillLimit.value && state.skillIds.length !== skillLimit.value) return { ok: false, reason: `Навыки: ${state.skillIds.length} из ${skillLimit.value}` }
+      if (!classChoicesComplete.value) return { ok: false, reason: 'Заверши выборы класса' }
+      if (!spellsComplete.value) return { ok: false, reason: 'Слишком много заклинаний' }
       return { ok: true }
     case 'stats':
       if (!scoresComplete.value) return { ok: false, reason: 'Заполни все характеристики' }
       if (pointsLeft.value < 0) return { ok: false, reason: 'Превышен бюджет очков' }
-      return { ok: true }
-    case 'skills':
-      if (skillLimit.value && state.skillIds.length !== skillLimit.value) return { ok: false, reason: `Навыки: ${state.skillIds.length} из ${skillLimit.value}` }
-      return { ok: true }
-    case 'features':
-      if (!choicesComplete.value) return { ok: false, reason: 'Сделай все выборы' }
-      return { ok: true }
-    case 'spells':
-      if (!spellsComplete.value) return { ok: false, reason: 'Слишком много заклинаний' }
       return { ok: true }
     case 'review':
       if (!state.name.trim()) return { ok: false, reason: 'Впиши имя' }
@@ -177,9 +165,8 @@ const maxReachable = computed(() => {
   return list.length - 1
 })
 
-async function next() {
+function next() {
   if (!canNext.value) return
-  if (steps.value[current.value + 1]?.key === 'spells') await loadSpells()
   state.step++
 }
 function back() {

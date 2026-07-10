@@ -117,6 +117,8 @@
           Выбрать черту
         </button>
       </div>
+
+      <StepChoices v-if="raceFeatureChoices.length" scope="race" />
     </template>
 
     <ItemPickerModal
@@ -135,18 +137,19 @@
 import { computed, inject, ref } from 'vue'
 import ItemPickerModal from '@/features/character-editor/components/ItemPickerModal.vue'
 import SelectTile from '@/features/character-list/components/wizard/SelectTile.vue'
+import StepChoices from '@/features/character-list/components/wizard/steps/StepChoices.vue'
 import { STAT_SHORT, asiSummary, monogramOf } from '@/features/character-list/components/wizard/labels'
 
 const {
   races, subraces, state, loading, grants, STATS, toggleAsiChoice,
   raceSkillOptions, raceSkillLimit, toggleRaceSkill, raceSkillsComplete,
   raceLangOptions, raceLangLimit, toggleRaceLang, raceLangsComplete,
-  featPool, featLimit, toggleFeat, featComplete,
+  featPool, featLimit, toggleFeat, featComplete, raceFeatureChoices,
 } = inject('createWizard')
 const atAsiLimit = computed(() => grants.value.asiChoice && state.asiChoice.length >= grants.value.asiChoice.count)
 const hasRaceChoices = computed(() => {
   const g = grants.value
-  return g.raceVariants || g.asiChoice || g.raceSkillChoice || g.langChoice || g.featChoice
+  return g.raceVariants || g.asiChoice || g.raceSkillChoice || g.langChoice || g.featChoice || raceFeatureChoices.value.length
 })
 
 const pickerOpen = ref(false)

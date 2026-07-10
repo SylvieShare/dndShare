@@ -1,8 +1,6 @@
 <template>
   <div class="step">
-    <p v-if="!featureChoices.length" class="hint">На первом уровне дополнительный выбор не требуется.</p>
-
-    <template v-for="fc in featureChoices" :key="fc.id">
+    <template v-for="fc in list" :key="fc.id">
       <div class="sheet-section-title">
         {{ fc.name }}
         <span class="count" :class="{ done: choiceSelected(fc.id).length === (Number(fc.choice.count) || 1) }">{{ choiceSelected(fc.id).length }} / {{ Number(fc.choice.count) || 1 }}</span>
@@ -31,9 +29,16 @@
 </template>
 
 <script setup>
-import { inject } from 'vue'
+import { computed, inject } from 'vue'
 
-const { featureChoices, choiceOptionList, choiceSelected, toggleChoice } = inject('createWizard')
+const props = defineProps({ scope: { type: String, default: 'all' } })
+const wz = inject('createWizard')
+const { featureChoices, raceFeatureChoices, classFeatureChoices, choiceOptionList, choiceSelected, toggleChoice } = wz
+const list = computed(() => (
+  props.scope === 'race' ? raceFeatureChoices.value
+    : props.scope === 'class' ? classFeatureChoices.value
+      : featureChoices.value
+))
 
 function isSel(fc, opt) { return choiceSelected(fc.id).some((v) => String(v) === String(opt.value)) }
 function locked(fc, opt) {

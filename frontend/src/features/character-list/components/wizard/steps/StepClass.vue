@@ -32,15 +32,27 @@
       </div>
       <p v-else class="step-muted">Пока архетип не нужен — выберешь его позже, при повышении уровня.</p>
     </template>
+
+    <template v-if="state.charClass">
+      <StepSkills v-if="skillOptions.length" class="cls-sub" />
+      <StepChoices v-if="classFeatureChoices.length" scope="class" class="cls-sub" />
+      <StepSpells v-if="isCaster" class="cls-sub" />
+    </template>
   </div>
 </template>
 
 <script setup>
 import { inject } from 'vue'
 import SelectTile from '@/features/character-list/components/wizard/SelectTile.vue'
+import StepChoices from '@/features/character-list/components/wizard/steps/StepChoices.vue'
+import StepSkills from '@/features/character-list/components/wizard/steps/StepSkills.vue'
+import StepSpells from '@/features/character-list/components/wizard/steps/StepSpells.vue'
 import { classSummary, monogramOf } from '@/features/character-list/components/wizard/labels'
 
-const { classes, subclasses, state, loading, suggestValue, subclassAtCreation } = inject('createWizard')
+const {
+  classes, subclasses, state, loading, suggestValue, subclassAtCreation,
+  skillOptions, classFeatureChoices, isCaster,
+} = inject('createWizard')
 </script>
 
 <style scoped>
@@ -49,4 +61,5 @@ const { classes, subclasses, state, loading, suggestValue, subclassAtCreation } 
 .step-note { font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--text-muted); }
 .step-muted { font-size: 13px; color: var(--text-muted); margin: 0; }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
+.cls-sub { margin-top: 8px; padding-top: 14px; border-top: 1px solid var(--border); }
 </style>
