@@ -413,6 +413,10 @@ INSERT INTO dndshare.item_type (id, name, fields, source_id, color, important, d
 VALUES (10, 'Зелья', '[{"name":"Описание","key":"desc","type":"description"},{"name":"Цвет зелья","key":"color","type":"color","default":"#7c5cff"},{"name":"Редкость","key":"rarity","type":"suggest","suggest_id":23,"filter":true},{"name":"Стоимость","key":"cost","type":"int_by_suggest","suggest_type_id":17},{"name":"Вес","key":"weight","type":"int"}]'::jsonb, 1, '#3fb6a8', false, 'Зелья и эликсиры: расходуемые предметы, отображаются колбами в инвентаре персонажа.')
 ON CONFLICT (id) DO NOTHING;
 
+INSERT INTO dndshare.item_type (id, name, fields, source_id, color, important, description)
+VALUES (11, 'Предыстории', '[{"name":"Владение навыками","key":"skills","type":"suggest_array","suggest_id":15},{"name":"Языки","key":"languages","type":"suggest_array","suggest_id":6},{"name":"Языки на выбор","key":"lang_choice","type":"object","fields":[{"name":"Количество","key":"count","type":"int","default":1}]},{"name":"Владение инструментами","key":"tool_prof","type":"suggest_array","suggest_id":5},{"name":"Черта предыстории","key":"feature","type":"text"},{"name":"Описание черты","key":"feature_desc","type":"description"},{"name":"Стартовое снаряжение","key":"equipment","type":"description"},{"name":"Описание","key":"description","type":"description"}]'::jsonb, 1, '#c98a3a', true, 'Предыстории персонажей: владение навыками, инструменты, языки, черта предыстории и стартовое снаряжение.')
+ON CONFLICT (id) DO NOTHING;
+
 INSERT INTO dndshare.suggest_type (id, name, source_id, color, count_items)
 VALUES (23, 'Редкость', 1, '#caa8ff', 6)
 ON CONFLICT (id) DO NOTHING;
