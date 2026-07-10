@@ -107,9 +107,8 @@
 <script setup>
 import { computed, ref } from 'vue'
 import RichContent from '@/shared/ui/RichContent'
-import { findField, getSuggestId } from '@/features/handbook/objects/lib/schemaFields'
 import { useCostFormatter } from '@/features/items/lib/useCostFormatter'
-import { useSuggestStore } from '@/stores/suggest'
+import { useSchemaSuggests } from '@/features/handbook/objects/lib/useSchemaSuggests'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip'
 
 const props = defineProps({
@@ -117,12 +116,7 @@ const props = defineProps({
   type: { type: Object, default: null },
 })
 
-const suggestStore = useSuggestStore()
-
-function suggestItems(fieldKey) {
-  const sid = getSuggestId(findField(props.type?.fields, fieldKey))
-  return sid != null ? suggestStore.items(sid) : []
-}
+const { suggestItems } = useSchemaSuggests(() => props.type)
 
 const diceDetailsMap = computed(() => Object.fromEntries(suggestItems('dice_id').map(s => [s.id, s])))
 const damageTypeMap = computed(() => Object.fromEntries(suggestItems('type').map(s => [s.id, s.value])))

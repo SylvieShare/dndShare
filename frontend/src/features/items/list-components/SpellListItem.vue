@@ -21,20 +21,14 @@
 import { computed } from 'vue'
 import ObjectListItem from '@/features/items/list-components/ObjectListItem'
 import ObjectTypeIcon from '@/features/items/list-components/ObjectTypeIcon'
-import { findField, getSuggestId } from '@/features/handbook/objects/lib/schemaFields'
-import { useSuggestStore } from '@/stores/suggest'
+import { useSchemaSuggests } from '@/features/handbook/objects/lib/useSchemaSuggests'
 
 const props = defineProps({
   item: { type: Object, required: true },
   type: { type: Object, default: null },
 })
 
-const suggestStore = useSuggestStore()
-
-function suggestItems(fieldKey) {
-  const sid = getSuggestId(findField(props.type?.fields, fieldKey))
-  return sid != null ? suggestStore.items(sid) : []
-}
+const { suggestItems } = useSchemaSuggests(() => props.type)
 
 const schoolMap = computed(() => Object.fromEntries(suggestItems('schoolId').map(s => [s.id, s.value])))
 
