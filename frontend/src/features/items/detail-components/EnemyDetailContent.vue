@@ -168,7 +168,7 @@
 import { computed, ref, watch } from 'vue'
 import { abilityModifier, formatBonus as signedBonus } from '@/shared/lib/dnd'
 import { SAVE_ABBR } from '@/shared/lib/dndStats'
-import { getSuggestId } from '@/features/handbook/objects/lib/schemaFields'
+import { findField, getSuggestId } from '@/features/handbook/objects/lib/schemaFields'
 import DetailSection from '@/shared/ui/DetailSection.vue'
 import RichContent from '@/shared/ui/RichContent'
 import SvgIcon from '@/shared/ui/SvgIcon'
@@ -191,17 +191,6 @@ function walkFields(fields, data) {
     }
   }
   return out
-}
-
-function findFieldByKeyDeep(fields, key) {
-  for (const f of fields || []) {
-    if (f.key === key) return f
-    if (f.type === 'object') {
-      const nested = findFieldByKeyDeep(f.fields, key)
-      if (nested) return nested
-    }
-  }
-  return null
 }
 
 watch(
@@ -270,7 +259,7 @@ watch(() => props.item?.id, () => { expandedTag.value = null })
 
 const tagSuggests = computed(() => {
   const fields = props.type?.fields || []
-  const field = findFieldByKeyDeep(fields, 'tags')
+  const field = findField(fields, 'tags')
   const val = props.item.data?.tags
   if (!field || !Array.isArray(val) || !val.length) return []
   const sid = getSuggestId(field)
@@ -293,7 +282,7 @@ const infoRows = computed(() => {
 
 const environmentLabels = computed(() => {
   const fields = props.type?.fields || []
-  const field = findFieldByKeyDeep(fields, 'environment')
+  const field = findField(fields, 'environment')
   const val = identity.value.environment
   if (!field || !Array.isArray(val) || !val.length) return []
   const sid = getSuggestId(field)

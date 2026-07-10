@@ -40,18 +40,6 @@ import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } 
 import { useAccountStore } from '@/stores/account'
 import { useRoute } from 'vue-router'
 
-const vClickOutside = {
-  beforeMount(el, binding) {
-    el._clickOutside = e => { if (!el.contains(e.target)) binding.value() }
-    document.addEventListener('mousedown', el._clickOutside)
-    document.addEventListener('touchstart', el._clickOutside, { passive: true })
-  },
-  unmounted(el) {
-    document.removeEventListener('mousedown', el._clickOutside)
-    document.removeEventListener('touchstart', el._clickOutside)
-  },
-}
-
 const route = useRoute()
 
 const mobileOpen = ref(false)

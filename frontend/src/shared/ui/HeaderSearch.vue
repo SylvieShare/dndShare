@@ -55,18 +55,6 @@ import { useItemTypesStore } from '@/stores/itemTypes'
 
 const NO_ICON_TYPE_IDS = new Set([5, 6])
 
-const vClickOutside = {
-  beforeMount(el, binding) {
-    el._co = e => { if (!el.contains(e.target)) binding.value() }
-    document.addEventListener('mousedown', el._co)
-    document.addEventListener('touchstart', el._co, { passive: true })
-  },
-  unmounted(el) {
-    document.removeEventListener('mousedown', el._co)
-    document.removeEventListener('touchstart', el._co)
-  },
-}
-
 const router = useRouter()
 const inputEl = ref(null)
 const query = ref('')

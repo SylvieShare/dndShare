@@ -39,16 +39,6 @@ const props = defineProps({
 })
 const emit = defineEmits(['update:modelValue'])
 
-const vClickOutside = {
-  beforeMount(el, binding) {
-    el._clickOutside = e => { if (!el.contains(e.target)) binding.value() }
-    document.addEventListener('mousedown', el._clickOutside)
-  },
-  unmounted(el) {
-    document.removeEventListener('mousedown', el._clickOutside)
-  },
-}
-
 const search = ref(null)
 const open = ref(false)
 const query = ref('')

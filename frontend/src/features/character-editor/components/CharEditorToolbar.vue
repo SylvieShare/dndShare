@@ -141,22 +141,6 @@
   </div>
 </template>
 
-<script>
-const ClickOutside = {
-  beforeMount(el, binding) {
-    el._clickOutside = event => {
-      if (!el.contains(event.target)) binding.value(event)
-    }
-    document.addEventListener('mousedown', el._clickOutside)
-    document.addEventListener('touchstart', el._clickOutside, { passive: true })
-  },
-  unmounted(el) {
-    document.removeEventListener('mousedown', el._clickOutside)
-    document.removeEventListener('touchstart', el._clickOutside)
-  },
-}
-</script>
-
 <script setup>
 import { computed, defineAsyncComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -184,7 +168,6 @@ const props = defineProps({
 })
 const emit = defineEmits(['update:editMode', 'update:publicVisible', 'update:activeTab', 'update:value', 'update:var', 'close'])
 
-const vClickOutside = ClickOutside
 const router = useRouter()
 const menuOpen = ref(false)
 const sessionMenuOpen = ref(false)

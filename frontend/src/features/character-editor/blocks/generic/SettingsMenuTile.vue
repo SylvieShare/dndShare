@@ -33,27 +33,11 @@
   </div>
 </template>
 
-<script>
-const ClickOutside = {
-  beforeMount(el, binding) {
-    el._co = e => { if (!el.contains(e.target)) binding.value(e) }
-    document.addEventListener('mousedown', el._co)
-    document.addEventListener('touchstart', el._co, { passive: true })
-  },
-  unmounted(el) {
-    document.removeEventListener('mousedown', el._co)
-    document.removeEventListener('touchstart', el._co)
-  },
-}
-</script>
-
 <script setup>
 import { computed, inject, ref } from 'vue'
 import BaseTile from '@/shared/ui/BaseTile'
 import ToggleSwitch from '@/shared/ui/ToggleSwitch'
 import { svgColorFilter } from '@/shared/lib/svgColorFilter'
-
-const vClickOutside = ClickOutside
 
 const props = defineProps(['block'])
 const ctx = inject('charCtx', { editMode: false, canEdit: false, publicVisible: false, canTogglePublic: false, saveStatus: 'idle', pendingSecondsLeft: 0 })

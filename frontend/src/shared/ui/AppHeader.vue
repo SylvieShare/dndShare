@@ -42,18 +42,6 @@ import UserBox from "@/features/auth/components/UserBox"
 import { useUiStore } from '@/stores/ui'
 import { useAccountStore } from '@/stores/account'
 
-const vClickOutside = {
-  beforeMount(el, binding) {
-    el._clickOutside = e => { if (!el.contains(e.target)) binding.value() }
-    document.addEventListener('mousedown', el._clickOutside)
-    document.addEventListener('touchstart', el._clickOutside, { passive: true })
-  },
-  unmounted(el) {
-    document.removeEventListener('mousedown', el._clickOutside)
-    document.removeEventListener('touchstart', el._clickOutside)
-  },
-}
-
 const route = useRoute()
 const router = useRouter()
 

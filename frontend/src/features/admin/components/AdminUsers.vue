@@ -84,16 +84,6 @@ import { addRole, getUsers, removeRole, resetPassword } from '../api/adminApi'
 
 const ALL_ROLES = ['ADMIN', 'HANDBOOK_ADMIN', 'TEMPLATE_ADMIN']
 
-const vClickOutside = {
-  beforeMount(el, binding) {
-    el._co = e => { if (!el.contains(e.target)) binding.value(e) }
-    document.addEventListener('mousedown', el._co)
-  },
-  unmounted(el) {
-    document.removeEventListener('mousedown', el._co)
-  },
-}
-
 const users = ref([])
 const loading = ref(true)
 const error = ref('')

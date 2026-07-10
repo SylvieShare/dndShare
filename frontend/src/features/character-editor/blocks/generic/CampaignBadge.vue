@@ -36,24 +36,8 @@
   </div>
 </template>
 
-<script>
-const ClickOutside = {
-  beforeMount(el, binding) {
-    el._co = e => { if (!el.contains(e.target)) binding.value(e) }
-    document.addEventListener('mousedown', el._co)
-    document.addEventListener('touchstart', el._co, { passive: true })
-  },
-  unmounted(el) {
-    document.removeEventListener('mousedown', el._co)
-    document.removeEventListener('touchstart', el._co)
-  },
-}
-</script>
-
 <script setup>
 import { computed, inject, ref } from 'vue'
-
-const vClickOutside = ClickOutside
 
 defineProps(['block'])
 const ctx = inject('charCtx', { sessions: [], topSession: null })
