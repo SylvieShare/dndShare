@@ -8,6 +8,10 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4V2M15 16v-2M8 9h2M20 9h2M17.8 11.8L19 13M17.8 6.2L19 5M3 21l9-9M12.2 6.2L11 5" /></svg>
         Создание персонажа
       </div>
+      <button class="cc-clear" title="Начать создание сначала" @click="resetOpen = true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5" /></svg>
+        Очистить
+      </button>
       <span class="cc-progress">Шаг {{ current + 1 }} из {{ steps.length }}</span>
     </header>
 
@@ -41,6 +45,15 @@
       @cancel="confirmOpen = false"
       @confirm="submit"
     />
+
+    <ConfirmDialog
+      v-if="resetOpen"
+      title="Начать сначала?"
+      message="Все выборы будут сброшены, и создание начнётся заново."
+      confirm-label="Очистить"
+      @cancel="resetOpen = false"
+      @confirm="doReset"
+    />
   </div>
 </template>
 
@@ -70,7 +83,7 @@ const wz = useDndCreateWizard()
 provide('createWizard', wz)
 
 const {
-  state, load, loadSpells, buildPayload, restore, clearPersist,
+  state, load, loadSpells, buildPayload, restore, clearPersist, reset,
   isCaster, featureChoices, requiresSubrace, requiresSubclass,
   scoresComplete, pointsLeft, skillLimit, choicesComplete, spellsComplete,
   asiChoiceComplete, raceVariantsComplete,
@@ -78,6 +91,8 @@ const {
 } = wz
 
 const confirmOpen = ref(false)
+const resetOpen = ref(false)
+function doReset() { resetOpen.value = false; reset() }
 const isComplete = computed(() =>
   state.version === '2014' && !!state.race && !!state.charClass && !!state.name.trim() && scoresComplete.value)
 
@@ -227,7 +242,15 @@ onMounted(async () => {
 .cc-x svg { width: 18px; height: 18px; }
 .cc-title { display: flex; align-items: center; gap: 9px; font-family: var(--font-display); font-size: 23px; font-weight: 600; color: var(--warning); }
 .cc-title svg { width: 20px; height: 20px; color: var(--accent); }
-.cc-progress { margin-left: auto; font-size: 12px; color: var(--text-muted); }
+.cc-clear {
+  margin-left: auto;
+  display: inline-flex; align-items: center; gap: 6px;
+  background: none; border: none; color: var(--text-muted);
+  font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; padding: 6px 8px; border-radius: 8px;
+}
+.cc-clear:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, transparent); }
+.cc-clear svg { width: 14px; height: 14px; }
+.cc-progress { font-size: 12px; color: var(--text-muted); }
 
 .cc-body {
   flex: 1;

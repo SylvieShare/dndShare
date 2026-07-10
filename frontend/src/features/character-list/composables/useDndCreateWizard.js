@@ -373,6 +373,17 @@ export function useDndCreateWizard() {
   function clearPersist() {
     try { localStorage.removeItem(STORAGE_KEY) } catch { /* ignore */ }
   }
+  // Start over: wipe every pick back to defaults and drop the saved draft.
+  function reset() {
+    Object.assign(state, {
+      step: 0, version: '2014', name: '', race: null, subrace: null,
+      charClass: null, subclass: null, raceVariant: null, statMethod: 'array',
+      scores: emptyScores(), rollPool: [], asiChoice: [],
+      raceSkillIds: [], raceLangIds: [], featIds: [], skillIds: [], spellIds: [], choices: {},
+    })
+    spellPool.value = []
+    clearPersist()
+  }
   async function restore() {
     let saved = null
     try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null') } catch { saved = null }
@@ -409,7 +420,7 @@ export function useDndCreateWizard() {
     raceLangOptions, raceLangLimit, toggleRaceLang, raceLangsComplete,
     featOptions, featLimit, toggleFeat, featComplete,
     // persistence
-    restore, clearPersist,
+    restore, clearPersist, reset,
     // skills
     skillStat, skillMod, toggleSkill,
     // spells

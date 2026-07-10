@@ -45,7 +45,7 @@ D&D creation is a **full page**, not a modal. The "+ Новый персонаж
 
 **Steps (dynamic):** Версия → Раса → Класс → Характеристики → Навыки → [Выборы] → [Магия] → Обзор. First step picks the ruleset (`StepVersion`; **2014** active, **2024** a disabled "Скоро" stub → `state.version`). Race/class are separate card-grid steps; subrace/subclass appear inline (subclass only when `subclass_level ≤ 1`, else a note). `CreatePreview` (always visible on desktop) shows the growing character: editable name (+ 🎲 random), monogram medallion, race·class·level, live ability **modifiers** + HP/AC/initiative/spell-DC, and a "Вы получите" list.
 
-**Racial bonus display:** before ability scores are entered the preview shows each stat's **racial bonus** (`0` / `+N`), never a misleading negative modifier; it flips to real modifiers once scores are set.
+**Racial bonus display:** `CreatePreview` shows two clearly-distinct modes so a bonus never reads as a modifier. Before scores are entered: a "Бонусы расы к значению" grid of `+N` / `—` badges (accent when positive). Once scores are set: a "Характеристики" grid showing the **final score** (big) with its **modifier** (small, signed, coloured) beneath — score and mod are visually separate, never conflated.
 
 **Base list vs children:** `load()` filters races/classes to base items (`!item.parentId`) — subraces/subclasses are children (fetched per-parent via `/items/children`), so they never leak into the top-level Раса/Класс grids.
 
@@ -58,7 +58,9 @@ D&D creation is a **full page**, not a modal. The "+ Новый персонаж
 
 All feed `finalScores`/proficiencies via `buildCharacterData({ raceVariant, asiChoice, raceSkillIds, raceLangIds, featIds })`. Completeness computeds (`raceVariantsComplete`, `asiChoiceComplete`, `raceSkillsComplete`, `raceLangsComplete`, `featComplete`) gate the Race step and the rail. The `asi_choice`/`skill_choice`/`lang_choice` fields are in the type-8 schema seed (`variants`/`feat_choice` are data-only); `ON CONFLICT DO NOTHING` → fresh DBs only, prod carries data via MCP.
 
-**Rail forward-navigation:** `ViewCreateCharacter` computes `maxReachable` = the first step that fails `validateStep`, or the last step when all pass. `CreateStepRail` gets it as `:reachable` and enables any step `i ≤ reachable` (not just `i ≤ current`) — so after going back, every already-completed step ahead (and the next step once the current one validates) stays clickable. `goTo` is gated on `maxReachable`.
+**Rail forward-navigation + 4 states:** `ViewCreateCharacter` computes `maxReachable` = the first step that fails `validateStep`, or the last step when all pass. `CreateStepRail` gets it as `:reachable` and enables any step `i ≤ reachable` (not just `i ≤ current`). Each step renders in one of **four visual states**: `locked` (`i > reachable`, dimmed, disabled), `done` (`i < current`, purple check badge), `ahead` (`i > current && i ≤ reachable` — completed but past current: accent-outlined badge + a `›` jump chevron, clickable), and `active` (current, filled badge + strip). `goTo` is gated on `maxReachable`.
+
+**Start-over:** the header carries an **Очистить** button → a `ConfirmDialog` → `reset()` (composable), which wipes `state` back to defaults, clears `spellPool`, and drops the localStorage draft.
 
 **PHB races (type 8):** Human, Elf (High/Wood/Drow), Dwarf (Mountain/Hill), Halfling (Lightfoot/Stout), Gnome (Forest/Rock), Dragonborn, Half-Elf, **Half-Orc (Полуорк 4321)**, **Tiefling (Тифлинг 4322)** — the full core roster. A starter set of ~12 feats (type 7, ids 4323–4334) backs the feat picker.
 

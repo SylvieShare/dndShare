@@ -4,7 +4,7 @@
       v-for="(s, i) in steps"
       :key="s.key"
       class="rail-step"
-      :class="{ active: i === current, done: i < current, reachable: i <= reachable }"
+      :class="{ active: i === current, done: i < current, ahead: i > current && i <= reachable, locked: i > reachable }"
       :disabled="i > reachable"
       @click="$emit('go', i)"
     >
@@ -14,6 +14,7 @@
         <template v-else>{{ i + 1 }}</template>
       </span>
       <span class="rail-title">{{ s.title }}</span>
+      <svg v-if="i > current && i <= reachable" class="rail-jump" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6" /></svg>
     </button>
   </nav>
 </template>
@@ -37,7 +38,15 @@ defineEmits(['go'])
   transition: background 0.15s;
 }
 .rail-step:disabled { cursor: default; }
-.rail-step:not(:disabled):hover { background: color-mix(in srgb, #fff 4%, transparent); }
+
+/* ── State 1: locked / недоступен ── */
+.rail-step.locked { opacity: 0.4; }
+
+/* hover only for the clickable states */
+.rail-step.done:hover,
+.rail-step.ahead:hover { background: color-mix(in srgb, #fff 4%, transparent); }
+
+/* ── State 4: current / текущий ── */
 .rail-step.active { background: color-mix(in srgb, var(--accent) 16%, transparent); }
 .rail-strip { position: absolute; top: 9px; bottom: 9px; left: 0; width: 3px; border-radius: 0 2px 2px 0; background: var(--accent); opacity: 0; }
 .rail-step.active .rail-strip { opacity: 1; }
@@ -50,8 +59,17 @@ defineEmits(['go'])
 }
 .rail-badge svg { width: 13px; height: 13px; }
 .rail-step.active .rail-badge { background: var(--accent); color: #fff; box-shadow: none; }
+
+/* ── State 2: done / пройден (behind current) ── */
 .rail-step.done .rail-badge { background: color-mix(in srgb, var(--accent) 30%, transparent); color: #c4a0ff; box-shadow: none; }
+
+/* ── State 3: ahead / можно вернуться вперёд (completed, past current) ── */
+.rail-step.ahead .rail-badge { color: var(--accent); box-shadow: inset 0 0 0 1.5px var(--accent); }
+.rail-step.ahead .rail-title { color: var(--text-2); }
+.rail-jump { width: 13px; height: 13px; margin-left: auto; color: var(--accent); opacity: 0.55; }
+.rail-step.ahead:hover .rail-jump { opacity: 1; }
 
 .rail-title { font-size: 13px; color: var(--text-2); }
 .rail-step.active .rail-title { color: var(--text-1); font-weight: 500; }
+.rail-step.locked .rail-title { color: var(--text-muted); }
 </style>

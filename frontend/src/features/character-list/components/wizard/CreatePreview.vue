@@ -17,11 +17,15 @@
     </div>
 
     <div v-if="showStats" class="pv-block">
-      <div v-if="!scoresEntered" class="pv-cap">Бонусы расы</div>
-      <div class="pv-mods">
-        <div v-for="s in STATS" :key="s" class="pv-mod">
-          <span class="pv-mod-k">{{ STAT_SHORT[s] }}</span>
-          <span class="pv-mod-v" :class="statClass(s)">{{ statDisplay(s) }}</span>
+      <div class="pv-cap">{{ scoresEntered ? 'Характеристики' : 'Бонусы расы к значению' }}</div>
+      <div class="pv-stats">
+        <div v-for="s in STATS" :key="s" class="pv-stat">
+          <span class="pv-stat-k">{{ STAT_SHORT[s] }}</span>
+          <template v-if="scoresEntered">
+            <span class="pv-stat-score">{{ finalScores[s] }}</span>
+            <span class="pv-stat-mod" :class="modClass(mods[s])">{{ formatMod(mods[s]) }}</span>
+          </template>
+          <span v-else class="pv-stat-bonus" :class="{ has: racialBonus(s) > 0 }">{{ racialBonus(s) > 0 ? '+' + racialBonus(s) : '—' }}</span>
         </div>
       </div>
       <div v-if="scoresEntered" class="pv-derived">
@@ -48,7 +52,7 @@ import { STAT_SHORT, formatMod, monogramOf } from '@/features/character-list/com
 
 const wz = inject('createWizard')
 const {
-  STATS, state, grants, mods, maxHp, unarmoredAc, initiativeMod, spellDc,
+  STATS, state, grants, mods, finalScores, maxHp, unarmoredAc, initiativeMod, spellDc,
   suggestValue, raceAbilities, classAbilities, randomName,
 } = wz
 
@@ -65,8 +69,6 @@ function racialBonus(s) {
   const floating = state.asiChoice.includes(s) ? (grants.value.asiChoice?.bonus || 0) : 0
   return fixed + floating
 }
-function statDisplay(s) { return scoresEntered.value ? formatMod(mods.value[s]) : (racialBonus(s) ? '+' + racialBonus(s) : '0') }
-function statClass(s) { return scoresEntered.value ? modClass(mods.value[s]) : (racialBonus(s) > 0 ? 'pos' : '') }
 
 const grantLines = computed(() => {
   const g = grants.value
@@ -119,12 +121,15 @@ const grantLines = computed(() => {
 
 .pv-block { border-top: 1px solid var(--border); padding-top: 12px; }
 .pv-cap { font-size: 10px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
-.pv-mods { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; }
-.pv-mod { display: flex; flex-direction: column; align-items: center; gap: 1px; }
-.pv-mod-k { font-size: 9px; letter-spacing: 0.03em; color: var(--text-muted); }
-.pv-mod-v { font-size: 13px; font-weight: 700; color: var(--text-1); font-variant-numeric: tabular-nums; }
-.pv-mod-v.pos { color: var(--success); }
-.pv-mod-v.neg { color: var(--danger); }
+.pv-stats { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; }
+.pv-stat { display: flex; flex-direction: column; align-items: center; gap: 1px; background: var(--block-bg); border-radius: var(--r-sm); padding: 5px 2px 4px; }
+.pv-stat-k { font-size: 9px; letter-spacing: 0.03em; color: var(--text-muted); font-weight: 650; }
+.pv-stat-score { font-size: 17px; font-weight: 700; color: var(--text-1); font-variant-numeric: tabular-nums; line-height: 1.1; }
+.pv-stat-mod { font-size: 10px; font-weight: 600; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.pv-stat-mod.pos { color: var(--success); }
+.pv-stat-mod.neg { color: var(--danger); }
+.pv-stat-bonus { font-size: 15px; font-weight: 700; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.pv-stat-bonus.has { color: var(--accent); }
 .pv-derived { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
 .pv-chip { font-size: 11px; color: var(--text-2); background: var(--block-bg); border-radius: var(--r-sm); padding: 3px 9px; }
 .pv-chip b { color: var(--text-1); font-variant-numeric: tabular-nums; }
