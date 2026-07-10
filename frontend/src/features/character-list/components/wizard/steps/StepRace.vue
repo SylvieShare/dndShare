@@ -104,29 +104,36 @@
           Черта на выбор
           <span class="count" :class="{ done: featComplete }">{{ state.featIds.length }} / {{ featLimit }}</span>
         </p>
-        <p v-if="!featOptions.length" class="hint">В справочнике пока нет черт.</p>
-        <div v-else class="opts">
-          <div
-            v-for="f in featOptions"
-            :key="f.id"
-            class="opt"
-            :class="{ on: state.featIds.includes(f.id), off: !state.featIds.includes(f.id) && featComplete }"
-            @click="toggleFeat(f.id)"
-          >
-            <span class="box"><svg v-if="state.featIds.includes(f.id)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6" /></svg></span>
-            <div class="opt-body">
-              <div class="opt-label">{{ f.name }}</div>
-              <div v-if="featDesc(f)" class="opt-desc">{{ featDesc(f) }}</div>
-            </div>
+        <div v-if="state.featIds.length" class="feat-tags">
+          <div v-for="id in state.featIds" :key="id" class="feat-tag">
+            <span class="feat-tag-name">{{ featName(id) }}</span>
+            <button class="feat-x" title="Убрать" @click="toggleFeat(id)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
+            </button>
           </div>
         </div>
+        <button v-if="state.featIds.length < featLimit" class="feat-add" @click="pickerOpen = true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14" /></svg>
+          Выбрать черту
+        </button>
       </div>
     </template>
+
+    <ItemPickerModal
+      v-if="pickerOpen"
+      :item-type-ids="[7]"
+      title="Выбор черты"
+      search-placeholder="Поиск черты…"
+      :exclude-items="state.featIds"
+      @pick="onFeatPick"
+      @close="pickerOpen = false"
+    />
   </div>
 </template>
 
 <script setup>
-import { computed, inject } from 'vue'
+import { computed, inject, ref } from 'vue'
+import ItemPickerModal from '@/features/character-editor/components/ItemPickerModal.vue'
 import SelectTile from '@/features/character-list/components/wizard/SelectTile.vue'
 import { STAT_SHORT, asiSummary, monogramOf } from '@/features/character-list/components/wizard/labels'
 
@@ -134,17 +141,17 @@ const {
   races, subraces, state, loading, grants, STATS, toggleAsiChoice,
   raceSkillOptions, raceSkillLimit, toggleRaceSkill, raceSkillsComplete,
   raceLangOptions, raceLangLimit, toggleRaceLang, raceLangsComplete,
-  featOptions, featLimit, toggleFeat, featComplete,
+  featPool, featLimit, toggleFeat, featComplete,
 } = inject('createWizard')
 const atAsiLimit = computed(() => grants.value.asiChoice && state.asiChoice.length >= grants.value.asiChoice.count)
 const hasRaceChoices = computed(() => {
   const g = grants.value
   return g.raceVariants || g.asiChoice || g.raceSkillChoice || g.langChoice || g.featChoice
 })
-function featDesc(f) {
-  const raw = f?.data?.description || ''
-  return raw.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
-}
+
+const pickerOpen = ref(false)
+function featName(id) { return featPool.value.find((f) => f.id === id)?.name || `#${id}` }
+function onFeatPick(item) { if (item?.id != null) toggleFeat(item.id) }
 </script>
 
 <style scoped>
@@ -183,4 +190,28 @@ function featDesc(f) {
 .asi-chip.on b { color: #fff; }
 .asi-chip.off { opacity: 0.4; cursor: default; }
 .asi-chip.off:hover { background: var(--block-bg); }
+
+.feat-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.feat-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: color-mix(in srgb, var(--accent) 14%, var(--block-bg));
+  border-radius: 999px; padding: 6px 8px 6px 14px;
+}
+.feat-tag-name { font-size: 13px; color: var(--text-1); font-weight: 500; }
+.feat-x {
+  display: flex; align-items: center; justify-content: center;
+  width: 20px; height: 20px; border: none; border-radius: 50%;
+  background: color-mix(in srgb, #fff 8%, transparent); color: var(--text-2); cursor: pointer;
+}
+.feat-x:hover { background: var(--danger); color: #fff; }
+.feat-x svg { width: 12px; height: 12px; }
+.feat-add {
+  align-self: flex-start;
+  display: inline-flex; align-items: center; gap: 7px;
+  background: var(--block-bg); border: none; border-radius: var(--r-md);
+  color: var(--accent); font: inherit; font-size: 13px; font-weight: 600;
+  padding: 9px 15px; cursor: pointer; transition: background 0.15s;
+}
+.feat-add:hover { background: color-mix(in srgb, var(--accent) 14%, var(--block-bg)); }
+.feat-add svg { width: 16px; height: 16px; }
 </style>
