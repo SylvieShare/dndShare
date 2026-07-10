@@ -1,6 +1,6 @@
 <template>
   <div class="di-block">
-    <BlockHeader v-if="block.title" :title="block.title">
+    <SectionLabel v-if="block.title" :title="block.title" border>
       <template #actions>
         <button
           v-if="block.hide_button"
@@ -9,7 +9,7 @@
           @click="contentHidden = !contentHidden"
         >{{ contentHidden ? '▸' : '▾' }}</button>
       </template>
-    </BlockHeader>
+    </SectionLabel>
 
     <template v-if="!contentHidden">
       <div v-if="loading" class="di-list-col">
@@ -187,13 +187,13 @@
 <script setup>
 import { computed, inject, nextTick, onMounted, reactive, ref, watch } from 'vue'
 
-import BlockHeader from '@/features/character-editor/components/BlockHeader'
 import ItemInlineFormModal from '@/features/character-editor/components/ItemInlineFormModal'
 import ItemPickerModal from '@/features/character-editor/components/ItemPickerModal'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip'
 import ItemTooltipDetails from '@/features/items/detail-components/ItemTooltipDetails'
 import ItemViewModal from '@/shared/ui/ItemViewModal'
 import ConfirmDialog from '@/shared/ui/ConfirmDialog'
+import SectionLabel from '@/shared/ui/SectionLabel'
 import { itemsApi } from '@/shared/api/itemsApi'
 import { useSortable } from '@/shared/composables/useSortable'
 import {

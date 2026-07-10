@@ -16,11 +16,11 @@
   </component>
 
   <component :is="block.content?.tile ? BaseTile : 'div'" v-else-if="block.type === 'VERTICAL_LIST'" v-show="!childHidden" class="layout-vertical" :style="[blockStyle, { gap: block.content?.gap }]">
-    <BlockHeader v-if="block.title" :title="block.title">
+    <SectionLabel v-if="block.title" :title="block.title" border>
       <template v-if="block.hide_button" #actions>
         <button class="tb-collapse-btn" :title="collapsed ? 'Развернуть' : 'Свернуть'" @click="collapsed = !collapsed">{{ collapsed ? '▸' : '▾' }}</button>
       </template>
-    </BlockHeader>
+    </SectionLabel>
     <template v-if="!collapsed">
       <TemplateBlockInner
         v-for="(child, i) in block.blocks"
@@ -196,7 +196,7 @@ export default { name: 'TemplateBlockInner' }
 <script setup>
 import ToggleSwitch from '@/shared/ui/ToggleSwitch'
 import BaseTile from '@/shared/ui/BaseTile'
-import BlockHeader from '@/features/character-editor/components/BlockHeader'
+import SectionLabel from '@/shared/ui/SectionLabel'
 import { computed, inject, nextTick, onBeforeUnmount, onMounted, provide, ref, watch } from 'vue'
 import { BLOCK_REGISTRY } from '@/features/character-editor/blocks/blockRegistry'
 
