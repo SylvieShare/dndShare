@@ -28,6 +28,8 @@
       <span class="rv-row-k">{{ row.k }}</span>
       <span class="rv-row-v">{{ row.v }}</span>
     </div>
+
+    <p class="rv-note">Личность, снаряжение и заметки можно дополнить в любой момент — на вкладках «Личность» и «Инвентарь» листа персонажа.</p>
   </div>
 </template>
 
@@ -49,10 +51,13 @@ function modClass(m) { return m > 0 ? 'pos' : m < 0 ? 'neg' : '' }
 
 const summary = computed(() => {
   const out = []
-  const skills = skillOptions.value.filter((o) => state.skillIds.includes(o.id)).map((o) => o.name)
+  if (state.background) out.push({ k: 'Предыстория', v: state.background.name })
+  if (state.persona.alignment) out.push({ k: 'Мировоззрение', v: state.persona.alignment })
+  const allSkillIds = [...state.skillIds, ...state.raceSkillIds, ...(grants.value.backgroundSkills || [])]
+  const skills = [...new Set(allSkillIds)].map((id) => suggestValue(15, id)).filter(Boolean)
   if (skills.length) out.push({ k: 'Навыки', v: skills.join(', ') })
-  const langs = grants.value.languages.map((id) => suggestValue(6, id)).filter(Boolean)
-  if (langs.length) out.push({ k: 'Языки', v: langs.join(', ') })
+  const langs = [...grants.value.languages, ...state.raceLangIds, ...state.bgLangIds].map((id) => suggestValue(6, id)).filter(Boolean)
+  if (langs.length) out.push({ k: 'Языки', v: [...new Set(langs)].join(', ') })
   const feats = [
     ...featuresForBinding(raceAbilities.value, { raceId: state.race?.id, subraceId: state.subrace?.id }, 1),
     ...featuresForBinding(classAbilities.value, { classId: state.charClass?.id, subclassId: state.subclass?.id }, 1),
@@ -60,6 +65,7 @@ const summary = computed(() => {
   if (feats.length) out.push({ k: 'Способности', v: feats.join(', ') })
   const spells = [...cantripPool.value, ...spell1Pool.value].filter((sp) => state.spellIds.includes(sp.id)).map((sp) => sp.name)
   if (spells.length) out.push({ k: 'Заклинания', v: spells.join(', ') })
+  if (state.equipment.length) out.push({ k: 'Снаряжение', v: state.equipment.map((e) => e.count > 1 ? `${e.name} ×${e.count}` : e.name).join(', ') })
   return out
 })
 </script>
@@ -94,4 +100,5 @@ const summary = computed(() => {
 .rv-row { display: flex; gap: 12px; border-top: 1px solid var(--border); padding-top: 11px; }
 .rv-row-k { flex-shrink: 0; width: 96px; font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); padding-top: 1px; }
 .rv-row-v { flex: 1; font-size: 13px; color: var(--text-1); line-height: 1.5; }
+.rv-note { font-size: 12px; color: var(--text-muted); line-height: 1.5; margin: 4px 0 0; font-style: italic; }
 </style>

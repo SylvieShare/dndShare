@@ -13,8 +13,12 @@ const RACE_ABIL_TYPE = 3
 const CLASS_ABIL_TYPE = 4
 const SPELL_TYPE = 5
 const FEAT_TYPE = 7
+const BG_TYPE = 11
 const SKILL_SUGGEST = 15
 const LANG_SUGGEST = 6
+// Standard player languages (suggest 6) for the background "extra language" picker —
+// the full type-6 dict is polluted with monster/telepathy entries, so we curate.
+const STANDARD_LANG_IDS = [21, 19, 39, 55, 52, 20, 40, 25, 31, 23, 33, 30, 34, 35, 60]
 const STATS = STAT_KEYS
 const STAT_BY_SUGGEST16 = SUGGEST16_TO_STAT
 const NAME_POOL = ['Талион', 'Мираэль', 'Гром', 'Лиа', 'Кадан', 'Сельена', 'Дорн', 'Аэлита', 'Вэйлин', 'Мирра', 'Торин', 'Ниала', 'Ксандер', 'Элара', 'Роган', 'Сафира']
@@ -50,6 +54,7 @@ export function useDndCreateWizard() {
   const classAbilities = ref([])
   const spellPool = ref([])
   const featPool = ref([])
+  const bgPool = ref([])
   const loading = ref(false)
 
   const state = reactive({
@@ -71,6 +76,10 @@ export function useDndCreateWizard() {
     skillIds: [],
     spellIds: [],
     choices: {},
+    background: null,
+    bgLangIds: [],
+    equipment: [],
+    persona: { alignment: '', traits: '', ideals: '', bonds: '', flaws: '', appearance: '', age: '', height: '', weight: '', eyes: '', hair: '', skin: '' },
   })
   // True while restoring from localStorage — suppresses the reset watchers below.
   let hydrating = false
@@ -78,12 +87,13 @@ export function useDndCreateWizard() {
   async function load() {
     loading.value = true
     try {
-      const [r, c, ra, ca, ft] = await Promise.all([
+      const [r, c, ra, ca, ft, bg] = await Promise.all([
         fetchGet(`/items?typeId=${RACE_TYPE}&limit=300`),
         fetchGet(`/items?typeId=${CLASS_TYPE}&limit=300`),
         fetchGet(`/items?typeId=${RACE_ABIL_TYPE}&limit=500`),
         fetchGet(`/items?typeId=${CLASS_ABIL_TYPE}&limit=500`),
         fetchGet(`/items?typeId=${FEAT_TYPE}&limit=500`),
+        fetchGet(`/items?typeId=${BG_TYPE}&limit=200`),
       ])
       // Base races/classes only — subraces/subclasses are children (parentId set).
       races.value = (r?.items || []).filter((i) => !i.parentId)
@@ -91,6 +101,7 @@ export function useDndCreateWizard() {
       raceAbilities.value = ra?.items || []
       classAbilities.value = ca?.items || []
       featPool.value = ft?.items || []
+      bgPool.value = bg?.items || []
     } finally {
       loading.value = false
     }
@@ -121,12 +132,16 @@ export function useDndCreateWizard() {
     return it?.value || ''
   }
 
+  // Changing background clears its chosen languages.
+  watch(() => state.background?.id, () => { if (!hydrating) state.bgLangIds = [] })
+
   const grants = computed(() => extractGrants({
     race: state.race,
     subrace: state.subrace,
     charClass: state.charClass,
     subclass: state.subclass,
     raceVariant: state.raceVariant,
+    background: state.background,
   }))
 
   const isCaster = computed(() => !!grants.value.spellcasting)
@@ -199,6 +214,32 @@ export function useDndCreateWizard() {
   const featLimit = computed(() => grants.value.featChoice?.count || 0)
   function toggleFeat(id) { toggleFromList(state.featIds, id, featLimit.value) }
   const featComplete = computed(() => !grants.value.featChoice || state.featIds.length === featLimit.value)
+
+  // ─── Background (type 11): fixed skills/tools/languages + a chosen language ──
+  const backgroundSkillNames = computed(() => (grants.value.backgroundSkills || []).map((id) => suggestValue(SKILL_SUGGEST, id)).filter(Boolean))
+  const backgroundToolNames = computed(() => (state.background?.data?.tool_prof || []).map((id) => suggestValue(5, id)).filter(Boolean))
+  const bgLangOptions = computed(() => (grants.value.bgLangChoice ? STANDARD_LANG_IDS.map((id) => ({ id, name: suggestValue(LANG_SUGGEST, id) || `#${id}` })) : []))
+  const bgLangLimit = computed(() => grants.value.bgLangChoice?.count || 0)
+  function toggleBgLang(id) { toggleFromList(state.bgLangIds, id, bgLangLimit.value) }
+  const bgLangsComplete = computed(() => !grants.value.bgLangChoice || state.bgLangIds.length === bgLangLimit.value)
+
+  // ─── Equipment: starting items picked into the inventory ───────────────────
+  function addEquipment(item, qty = 1) {
+    if (!item?.id) return
+    const n = Math.max(1, Math.floor(Number(qty) || 1))
+    const existing = state.equipment.find((e) => e.id === item.id)
+    if (existing) existing.count += n
+    else state.equipment.push({ id: item.id, name: item.name, count: n, typeId: item.typeId })
+  }
+  function removeEquipment(id) {
+    const i = state.equipment.findIndex((e) => e.id === id)
+    if (i >= 0) state.equipment.splice(i, 1)
+  }
+  function bumpEquipment(id, delta) {
+    const e = state.equipment.find((x) => x.id === id)
+    if (!e) return
+    e.count = Math.max(1, e.count + delta)
+  }
 
   const pointsSpent = computed(() => STATS.reduce((sum, s) => sum + pointCost(Number(state.scores[s] ?? 8)), 0))
   const pointsLeft = computed(() => POINT_BUY_BUDGET - pointsSpent.value)
@@ -354,11 +395,15 @@ export function useDndCreateWizard() {
       charClass: toSel(state.charClass),
       subclass: toSel(state.subclass),
       raceVariant: state.raceVariant,
+      background: toSel(state.background),
       scores: Object.fromEntries(STATS.map((s) => [s, Number(state.scores[s] ?? 10)])),
       asiChoice: state.asiChoice.slice(),
       raceSkillIds: state.raceSkillIds.slice(),
       raceLangIds: state.raceLangIds.slice(),
       featIds: state.featIds.slice(),
+      bgLangIds: state.bgLangIds.slice(),
+      equipment: state.equipment.map((e) => ({ ...e })),
+      persona: { ...state.persona },
       skillIds: state.skillIds.slice(),
       spellIds: state.spellIds.slice(),
       choices: featureChoices.value.map((fc) => ({
@@ -375,8 +420,8 @@ export function useDndCreateWizard() {
   // ─── Persistence (localStorage) — survives reload; going back keeps forward picks ─
   const STORAGE_KEY = 'dnd-create-wizard-v1'
   function serialize() {
-    const { step, version, name, race, subrace, charClass, subclass, raceVariant, statMethod, scores, rollPool, asiChoice, raceSkillIds, raceLangIds, featIds, skillIds, spellIds, choices } = state
-    return { step, version, name, race, subrace, charClass, subclass, raceVariant, statMethod, scores, rollPool, asiChoice, raceSkillIds, raceLangIds, featIds, skillIds, spellIds, choices }
+    const { step, version, name, race, subrace, charClass, subclass, raceVariant, statMethod, scores, rollPool, asiChoice, raceSkillIds, raceLangIds, featIds, skillIds, spellIds, choices, background, bgLangIds, equipment, persona } = state
+    return { step, version, name, race, subrace, charClass, subclass, raceVariant, statMethod, scores, rollPool, asiChoice, raceSkillIds, raceLangIds, featIds, skillIds, spellIds, choices, background, bgLangIds, equipment, persona }
   }
   function persist() {
     if (hydrating) return
@@ -392,6 +437,8 @@ export function useDndCreateWizard() {
       charClass: null, subclass: null, raceVariant: null, statMethod: 'array',
       scores: emptyScores(), rollPool: [], asiChoice: [],
       raceSkillIds: [], raceLangIds: [], featIds: [], skillIds: [], spellIds: [], choices: {},
+      background: null, bgLangIds: [], equipment: [],
+      persona: { alignment: '', traits: '', ideals: '', bonds: '', flaws: '', appearance: '', age: '', height: '', weight: '', eyes: '', hair: '', skin: '' },
     })
     spellPool.value = []
     clearPersist()
@@ -415,7 +462,7 @@ export function useDndCreateWizard() {
   return {
     STATS,
     state,
-    races, classes, subraces, subclasses, spellPool, featPool, loading,
+    races, classes, subraces, subclasses, spellPool, featPool, bgPool, loading,
     raceAbilities, classAbilities,
     grants, isCaster, skillOptions, skillLimit, finalScores,
     pointsSpent, pointsLeft,
@@ -433,6 +480,9 @@ export function useDndCreateWizard() {
     raceSkillOptions, raceSkillLimit, toggleRaceSkill, raceSkillsComplete,
     raceLangOptions, raceLangLimit, toggleRaceLang, raceLangsComplete,
     featOptions, featLimit, toggleFeat, featComplete,
+    // background + equipment
+    backgroundSkillNames, backgroundToolNames, bgLangOptions, bgLangLimit, toggleBgLang, bgLangsComplete,
+    addEquipment, removeEquipment, bumpEquipment,
     // persistence
     restore, clearPersist, reset,
     // skills

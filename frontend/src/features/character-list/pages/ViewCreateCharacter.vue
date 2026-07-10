@@ -62,7 +62,10 @@ import { computed, onMounted, provide, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import CreatePreview from '@/features/character-list/components/wizard/CreatePreview.vue'
 import CreateStepRail from '@/features/character-list/components/wizard/CreateStepRail.vue'
+import StepBackground from '@/features/character-list/components/wizard/steps/StepBackground.vue'
 import StepClass from '@/features/character-list/components/wizard/steps/StepClass.vue'
+import StepEquipment from '@/features/character-list/components/wizard/steps/StepEquipment.vue'
+import StepPersona from '@/features/character-list/components/wizard/steps/StepPersona.vue'
 import StepRace from '@/features/character-list/components/wizard/steps/StepRace.vue'
 import StepReview from '@/features/character-list/components/wizard/steps/StepReview.vue'
 import StepStats from '@/features/character-list/components/wizard/steps/StepStats.vue'
@@ -85,29 +88,34 @@ const {
   scoresComplete, pointsLeft, skillLimit, spellsComplete,
   asiChoiceComplete, raceVariantsComplete,
   raceSkillsComplete, raceLangsComplete, featComplete,
-  raceChoicesComplete, classChoicesComplete,
+  raceChoicesComplete, classChoicesComplete, bgLangsComplete,
 } = wz
 
 const confirmOpen = ref(false)
 const resetOpen = ref(false)
 function doReset() { resetOpen.value = false; reset() }
 const isComplete = computed(() =>
-  state.version === '2014' && !!state.race && !!state.charClass && !!state.name.trim() && scoresComplete.value)
+  state.version === '2014' && !!state.race && !!state.charClass && !!state.background && !!state.name.trim() && scoresComplete.value)
 
 const STEP_COMPONENTS = {
-  version: StepVersion, race: StepRace, class: StepClass, stats: StepStats, review: StepReview,
+  version: StepVersion, race: StepRace, class: StepClass, background: StepBackground,
+  stats: StepStats, equipment: StepEquipment, persona: StepPersona, review: StepReview,
 }
 
 const creating = ref(false)
 const dndTemplateId = ref(null)
 
-// Race/class choices are made inline on their own steps now (skills, feature
-// choices and spells are folded into the Class step; race choices into Race).
+// Race/class choices are made inline on their own steps (skills, feature choices
+// and spells are folded into the Class step; race choices into Race). Снаряжение
+// и Личность — необязательные шаги.
 const steps = computed(() => [
   { key: 'version', title: 'Версия' },
   { key: 'race', title: 'Раса' },
   { key: 'class', title: 'Класс' },
+  { key: 'background', title: 'Предыстория' },
   { key: 'stats', title: 'Характеристики' },
+  { key: 'equipment', title: 'Снаряжение' },
+  { key: 'persona', title: 'Личность' },
   { key: 'review', title: 'Обзор' },
 ])
 const current = computed(() => state.step)
@@ -138,6 +146,10 @@ function validateStep(key) {
       if (skillLimit.value && state.skillIds.length !== skillLimit.value) return { ok: false, reason: `Навыки: ${state.skillIds.length} из ${skillLimit.value}` }
       if (!classChoicesComplete.value) return { ok: false, reason: 'Заверши выборы класса' }
       if (!spellsComplete.value) return { ok: false, reason: 'Слишком много заклинаний' }
+      return { ok: true }
+    case 'background':
+      if (!state.background) return { ok: false, reason: 'Выбери предысторию' }
+      if (!bgLangsComplete.value) return { ok: false, reason: 'Выбери языки предыстории' }
       return { ok: true }
     case 'stats':
       if (!scoresComplete.value) return { ok: false, reason: 'Заполни все характеристики' }

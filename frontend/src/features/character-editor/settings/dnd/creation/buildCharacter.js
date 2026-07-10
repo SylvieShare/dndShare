@@ -72,15 +72,17 @@ function addLanguages(values, labels) {
 export function buildCharacterData(input) {
   const {
     name = '', race, subrace = null, charClass, subclass = null, raceVariant = null,
+    background = null,
     scores = {}, asiChoice = [], skillIds = [], spellIds = [], choices = [],
-    raceSkillIds = [], raceLangIds = [], featIds = [],
+    raceSkillIds = [], raceLangIds = [], featIds = [], bgLangIds = [],
+    equipment = [], persona = null,
     raceAbilityItems = [], classAbilityItems = [], suggestValue,
   } = input || {}
 
   const grants = extractGrants({
     race: race?.item, subrace: subrace?.item,
     charClass: charClass?.item, subclass: subclass?.item,
-    raceVariant,
+    raceVariant, background: background?.item,
   })
 
   const raceBinding = { raceId: race?.id, subraceId: subrace?.id }
@@ -109,12 +111,14 @@ export function buildCharacterData(input) {
     values.hp = { ...values.hp, max: hp, current: hp }
   }
 
-  // Skill proficiencies (class skill_choice + race skill choice) into the owning stat block.
+  // Skill proficiencies (class skill_choice + race skill choice + background fixed).
   for (const raw of skillIds) addSkillProf(values, raw)
   for (const raw of raceSkillIds) addSkillProf(values, raw)
+  for (const raw of (grants.backgroundSkills || [])) addSkillProf(values, raw)
 
-  // Race-chosen extra languages (suggest 6) into the Языки bucket.
+  // Race-chosen + background-chosen extra languages (suggest 6) into the Языки bucket.
   addLanguages(values, raceLangIds.map((id) => suggestValue?.(6, id)).filter(Boolean))
+  addLanguages(values, bgLangIds.map((id) => suggestValue?.(6, id)).filter(Boolean))
 
   // Chosen feats (handbook type 7) → the sheet's Черты block (`abilities_feats`).
   if (featIds.length) values.abilities_feats = featIds.map((id) => ({ id }))
@@ -139,6 +143,40 @@ export function buildCharacterData(input) {
       stat_path: grants.spellcasting?.stat ? `${grants.spellcasting.stat}.mod` : '',
       spells: spellIds.map((id) => ({ id, prepared: true })),
       slots,
+    }
+  }
+
+  // Background: identity ref + name shown in the sheet's "Происхождение" field +
+  // its feature appended to notes (create-time notes are empty).
+  if (background) {
+    values.background = ref(background)
+    values.person_origin = ref(background)?.name || ''
+    const bd = background.item?.data || {}
+    const featTitle = bd.feature ? String(bd.feature).trim() : ''
+    const featDesc = bd.feature_desc ? String(bd.feature_desc).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim() : ''
+    if (featTitle || featDesc) {
+      values.notes = `Черта предыстории — ${featTitle}${featTitle && featDesc ? ': ' : ''}${featDesc}`
+    }
+  }
+
+  // Starting equipment → the inventory block (`values.items`) as one bag section.
+  if (equipment.length) {
+    values.items = {
+      equipped: [],
+      sections: [{
+        id: 'bag',
+        name: 'Снаряжение',
+        items: equipment.map((e, i) => ({ uid: `eq_${i}`, id: e.id, count: Math.max(1, Number(e.count) || 1), override: null })),
+      }],
+    }
+  }
+
+  // Personality / description → the person_* sheet blocks (all optional, plain strings).
+  if (persona) {
+    const P = { alignment: 'person_alignment', traits: 'person_traits', ideals: 'person_ideals', bonds: 'person_bonds', flaws: 'person_flaws', appearance: 'person_appearance', age: 'person_age', height: 'person_height', weight: 'person_weight', eyes: 'person_eyes', hair: 'person_hair', skin: 'person_skin' }
+    for (const [k, blockId] of Object.entries(P)) {
+      const v = persona[k]
+      if (v != null && String(v).trim() !== '') values[blockId] = v
     }
   }
 

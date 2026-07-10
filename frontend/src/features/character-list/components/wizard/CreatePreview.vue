@@ -120,11 +120,25 @@ const sections = computed(() => {
     if (items.length) out.push({ title: 'Класс', items })
   }
 
+  if (state.background) {
+    const items = []
+    const bd = state.background.data || {}
+    push(items, 'Навыки', names(g.backgroundSkills || [], 15).join(', '))
+    push(items, 'Инструменты', names(bd.tool_prof || [], 5).join(', '))
+    push(items, 'Языки', names(state.bgLangIds, 6).join(', '))
+    if (bd.feature) push(items, 'Черта', bd.feature)
+    if (items.length) out.push({ title: 'Предыстория', items })
+  }
+
   if (state.skillIds.length) out.push({ title: 'Навыки', items: [{ k: 'Владение', v: names(state.skillIds, 15).join(', ') }] })
 
   if (state.spellIds.length) {
     const spellNames = state.spellIds.map((id) => spellPool.value.find((sp) => sp.id === id)?.name).filter(Boolean)
     if (spellNames.length) out.push({ title: 'Магия', items: [{ k: 'Заклинания', v: spellNames.join(', ') }] })
+  }
+
+  if (state.equipment.length) {
+    out.push({ title: 'Снаряжение', items: [{ k: 'Предметы', v: state.equipment.map((e) => e.count > 1 ? `${e.name} ×${e.count}` : e.name).join(', ') }] })
   }
 
   return out

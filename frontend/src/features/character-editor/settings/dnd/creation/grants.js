@@ -77,7 +77,7 @@ function mergeIds(target, ids) {
  * one object. Each argument is a handbook item (`{ data }`) or null. Sub items
  * are merged on top of their base.
  */
-export function extractGrants({ race, subrace, charClass, subclass, raceVariant } = {}) {
+export function extractGrants({ race, subrace, charClass, subclass, raceVariant, background } = {}) {
   const grants = {
     size: null,
     speed: null,
@@ -87,6 +87,8 @@ export function extractGrants({ race, subrace, charClass, subclass, raceVariant 
     raceSkillChoice: null,
     langChoice: null,
     featChoice: null,
+    backgroundSkills: [],
+    bgLangChoice: null,
     saves: [],
     proficiencies: { armor: [], weapon: [], tool: [] },
     languages: [],
@@ -167,6 +169,17 @@ export function extractGrants({ race, subrace, charClass, subclass, raceVariant 
     }
     if (num(d.subclass_level) != null) grants.subclassLevel = num(d.subclass_level)
     if (d.asi_levels != null && d.asi_levels !== '') grants.asiLevels = d.asi_levels
+  }
+
+  // Background (type 11): fixed skill proficiencies, fixed + chosen languages, tools.
+  const bgData = background?.data || null
+  if (bgData) {
+    asList(bgData.skills).forEach((id) => pushUnique(grants.backgroundSkills, num(id) ?? id))
+    mergeIds(grants.languages, bgData.languages)
+    mergeIds(grants.proficiencies.tool, bgData.tool_prof)
+    if (bgData.lang_choice && num(bgData.lang_choice.count)) {
+      grants.bgLangChoice = { count: num(bgData.lang_choice.count) }
+    }
   }
 
   return grants
