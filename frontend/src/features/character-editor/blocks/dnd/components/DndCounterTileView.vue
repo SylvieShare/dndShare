@@ -2,21 +2,6 @@
   <!-- Shared counter face, rendered in the tile and in the morph #view so they never drift.
        Chrome (border/bg/radius) lives on the wrapper; this owns only padding + content. -->
   <div class="dctv" :style="counter.color ? { '--cc': counter.color } : null">
-    <span v-if="counter.color" class="dctv-strip"></span>
-
-    <button
-      v-if="manage"
-      class="dctv-pen"
-      :class="{ 'dctv-pen--fade': editFade }"
-      type="button"
-      title="Настроить"
-      @click.stop="$emit('edit')"
-    >
-      <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M12 20h9" /><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
-      </svg>
-    </button>
-
     <div class="dctv-head">
       <component :is="icon" class="dctv-icon" :size="15" :stroke-width="2" :style="counter.color ? { color: counter.color } : null" />
       <span class="dctv-name" :class="{ 'dctv-name--empty': !counter.name }">{{ counter.name || 'Без названия' }}</span>
@@ -31,6 +16,8 @@
       <button v-if="manage" class="dctv-step" type="button" :disabled="!interactive" @click.stop="$emit('inc')">+</button>
     </div>
 
+    <span v-if="counter.color" class="dctv-strip"></span>
+
     <div v-if="counter.max != null" class="dctv-bar">
       <span class="dctv-fill" :style="{ width: pct + '%' }"></span>
     </div>
@@ -44,12 +31,11 @@ import { resolveIcon } from '@/shared/ui/icons/counterIcons'
 
 const props = defineProps({
   counter: { type: Object, required: true },
-  manage: { type: Boolean, default: false },     // owner → show pencil + steppers
+  manage: { type: Boolean, default: false },     // owner → show steppers
   interactive: { type: Boolean, default: true }, // false in the morph clone → controls inert
-  editFade: { type: Boolean, default: false },   // fade the pencil out as the morph opens
 })
 
-defineEmits(['edit', 'inc', 'dec'])
+defineEmits(['inc', 'dec'])
 
 const icon = computed(() => resolveIcon(props.counter.icon))
 const pct = computed(() => {
@@ -72,36 +58,12 @@ const pct = computed(() => {
 }
 
 .dctv-strip {
-  position: absolute;
-  left: 0;
-  top: 9px;
-  bottom: 9px;
-  width: 3px;
-  border-radius: 0 3px 3px 0;
+  width: 34px;
+  max-width: 70%;
+  height: 3px;
+  border-radius: 999px;
   background: var(--cc, var(--accent));
 }
-
-.dctv-pen {
-  position: absolute;
-  top: 3px;
-  right: 3px;
-  width: 20px;
-  height: 20px;
-  display: grid;
-  place-items: center;
-  border: none;
-  border-radius: 5px;
-  background: none;
-  color: var(--text-muted);
-  cursor: pointer;
-  opacity: 0.55;
-  transition: opacity 0.25s ease, color 0.12s, background 0.12s;
-}
-@media (hover: hover) {
-  .dctv:hover .dctv-pen { opacity: 1; }
-  .dctv-pen:hover { color: var(--accent); background: rgba(255, 255, 255, 0.06); }
-}
-.dctv-pen--fade { opacity: 0 !important; pointer-events: none; }
 
 .dctv-head {
   display: flex;
@@ -127,22 +89,23 @@ const pct = computed(() => {
 .dctv-body { display: flex; align-items: center; gap: 10px; }
 
 .dctv-step {
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
   flex-shrink: 0;
   display: grid;
   place-items: center;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  background: var(--surface-1);
+  border: none;
+  border-radius: 7px;
+  background: transparent;
   color: var(--text-2);
-  font-size: 15px;
+  font-size: 19px;
+  font-weight: 800;
   line-height: 1;
   cursor: pointer;
   transition: background 0.12s, color 0.12s;
 }
-.dctv-step:hover { background: var(--surface-2); color: var(--text-1); }
-.dctv-step:disabled { cursor: default; opacity: 0.6; }
+.dctv-step:hover { background: rgba(255, 255, 255, 0.09); color: var(--text-1); }
+.dctv-step:disabled { cursor: default; opacity: 0.5; background: transparent; }
 
 .dctv-num { display: inline-flex; align-items: baseline; }
 .dctv-val {

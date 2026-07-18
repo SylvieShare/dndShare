@@ -57,13 +57,18 @@
     </EditorSection>
 
     <div class="dce-foot">
-      <button class="dce-del" type="button" @click="$emit('remove')">
+      <button v-if="mode === 'create'" class="dce-cancel" type="button" @click="$emit('close')">Отмена</button>
+      <button v-else class="dce-del" type="button" @click="$emit('remove')">
         <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M4 7h16M10 11v6M14 11v6M5 7l1 13a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1l1-13M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3" />
         </svg>
         Удалить
       </button>
-      <button class="dce-done" type="button" @click="$emit('close')">Готово</button>
+      <button
+        class="dce-done"
+        type="button"
+        @click="mode === 'create' ? $emit('save') : $emit('close')"
+      >{{ mode === 'create' ? 'Сохранить' : 'Готово' }}</button>
     </div>
   </EditorPanel>
 </template>
@@ -79,8 +84,9 @@ import ToggleSwitch from '@/shared/ui/ToggleSwitch'
 
 const props = defineProps({
   counter: { type: Object, required: true },
+  mode: { type: String, default: 'edit' },   // 'edit' → live tile | 'create' → draft, commit on save
 })
-const emit = defineEmits(['update', 'remove', 'close'])
+const emit = defineEmits(['update', 'remove', 'close', 'save'])
 
 function onToggleMax(on) {
   // Enabling defaults the max to the current value (so the bar reads full), with a floor of 1.
@@ -124,6 +130,19 @@ function onToggleMax(on) {
   transition: color 0.12s, background 0.12s;
 }
 .dce-del:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 12%, transparent); }
+
+.dce-cancel {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 7px 10px;
+  border-radius: 8px;
+  transition: color 0.12s, background 0.12s;
+}
+.dce-cancel:hover { color: var(--text-1); background: rgba(255, 255, 255, 0.06); }
 
 .dce-done {
   background: var(--accent);

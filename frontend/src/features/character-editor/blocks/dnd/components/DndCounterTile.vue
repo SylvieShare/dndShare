@@ -5,12 +5,12 @@
     :class="{ 'sortable-placeholder': ctx.sortable.isSource(counter), 'dct--draggable': ctx.ownerMode }"
     :data-sortable-key="counter.id"
     @pointerdown="onDown"
+    @pointerup="onUp"
   >
     <DndCounterTileView
       :counter="counter"
       :manage="ctx.ownerMode"
       interactive
-      @edit="openEditor"
       @inc="ctx.adjust(counter.id, 1)"
       @dec="ctx.adjust(counter.id, -1)"
     />
@@ -24,9 +24,9 @@
       :min-view-width="320"
       @close="close"
     >
-      <template #view="{ revealed }">
+      <template #view>
         <div class="dct-morph">
-          <DndCounterTileView :counter="counter" :manage="ctx.ownerMode" :interactive="false" :edit-fade="revealed" />
+          <DndCounterTileView :counter="counter" :manage="ctx.ownerMode" :interactive="false" />
         </div>
       </template>
       <template #editor>
@@ -42,7 +42,7 @@
 </template>
 
 <script setup>
-import { inject, onMounted, ref } from 'vue'
+import { inject, ref } from 'vue'
 import DndCounterEditor from '@/features/character-editor/blocks/dnd/components/DndCounterEditor.vue'
 import DndCounterTileView from '@/features/character-editor/blocks/dnd/components/DndCounterTileView.vue'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
@@ -57,41 +57,43 @@ const ctx = inject('countersBlockCtx')
 const tileEl = ref(null)
 const { editorOpen, originRect, originEl, openFrom, close } = useMorphOrigin()
 
+let downX = 0
+let downY = 0
+
 function openEditor() { openFrom(tileEl.value) }
 
 function onDown(e) {
+  downX = e.clientX
+  downY = e.clientY
   if (e.target.closest('button') || e.target.closest('input')) return
   if (!ctx.ownerMode) return
   ctx.onDragStart(e, props.counter, props.index)
+}
+
+function onUp(e) {
+  if (e.target.closest('button') || e.target.closest('input')) return
+  if (Math.hypot(e.clientX - downX, e.clientY - downY) >= 4) return
+  openEditor()
 }
 
 function onRemove() {
   close()
   ctx.remove(props.counter.id)
 }
-
-onMounted(() => {
-  // A freshly added tile opens its editor straight away so name/icon can be set without a second tap.
-  if (ctx.justAddedId === props.counter.id) {
-    ctx.clearJustAdded()
-    openEditor()
-  }
-})
 </script>
 
 <style scoped>
 .dct {
   position: relative;
   min-width: 112px;
-  border: 1px solid var(--border);
   border-radius: 10px;
   background: color-mix(in srgb, #fff 2%, var(--block-bg));
-  transition: border-color 0.12s, background 0.12s;
+  transition: background 0.12s;
 }
-.dct--draggable { cursor: grab; touch-action: pan-y; }
+.dct--draggable { cursor: pointer; touch-action: pan-y; }
 .dct--draggable:active { cursor: grabbing; }
 @media (hover: hover) {
-  .dct--draggable:hover { border-color: var(--border-strong); }
+  .dct--draggable:hover { background: color-mix(in srgb, #fff 5%, var(--block-bg)); }
 }
 
 .dct.sortable-placeholder {

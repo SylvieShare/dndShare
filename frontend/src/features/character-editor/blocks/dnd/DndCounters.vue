@@ -7,19 +7,48 @@
         :counter="c"
         :index="i"
       />
-      <button v-if="ownerMode" class="dc-add" type="button" @click="add">
+      <button v-if="ownerMode" ref="addBtnEl" class="dc-add" type="button" @click="add">
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
           <path d="M12 5v14M5 12h14" />
         </svg>
         плитка
       </button>
     </div>
+
+    <MorphEditorShell
+      v-if="editorOpen && draft"
+      :origin-rect="originRect"
+      :origin-el="originEl"
+      :strip="false"
+      orientation="vertical"
+      :min-view-width="320"
+      @close="closeDraft"
+    >
+      <template #view>
+        <div class="dct-morph">
+          <DndCounterTileView :counter="draft" :manage="false" :interactive="false" />
+        </div>
+      </template>
+      <template #editor>
+        <DndCounterEditor
+          :counter="draft"
+          mode="create"
+          @update="updateDraft"
+          @save="saveDraft"
+          @close="closeDraft"
+        />
+      </template>
+    </MorphEditorShell>
   </div>
 </template>
 
 <script setup>
 import { computed, inject, provide, reactive, ref } from 'vue'
+import DndCounterEditor from '@/features/character-editor/blocks/dnd/components/DndCounterEditor.vue'
 import DndCounterTile from '@/features/character-editor/blocks/dnd/components/DndCounterTile.vue'
+import DndCounterTileView from '@/features/character-editor/blocks/dnd/components/DndCounterTileView.vue'
+import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
+import { useMorphOrigin } from '@/features/character-editor/composables/useMorphOrigin'
 import { useSortable, reorderByDrop } from '@/shared/composables/useSortable'
 import {
   defaultCounter,
@@ -33,7 +62,10 @@ const charCtx = inject('charCtx', () => ({ ownerMode: false }))
 
 const counters = computed(() => normalizeCounters(props.value))
 const ownerMode = computed(() => !!charCtx.ownerMode)
-const justAddedId = ref(null)
+
+const addBtnEl = ref(null)
+const draft = ref(null)
+const { editorOpen, originRect, originEl, openFrom, close } = useMorphOrigin()
 
 function emitCounters(next) {
   emit('update:value', props.block.id, next)
@@ -72,9 +104,23 @@ function remove(id) {
 }
 
 function add() {
-  const c = defaultCounter()
-  justAddedId.value = c.id
-  emitCounters([...counters.value, c])
+  // Don't commit yet — edit a local draft and only push it into the list on save.
+  draft.value = defaultCounter()
+  openFrom(addBtnEl.value)
+}
+
+function updateDraft(patch) {
+  draft.value = patchCounter(draft.value, patch)
+}
+
+function saveDraft() {
+  emitCounters([...counters.value, draft.value])
+  closeDraft()
+}
+
+function closeDraft() {
+  close()
+  draft.value = null
 }
 
 provide('countersBlockCtx', reactive({
@@ -85,13 +131,13 @@ provide('countersBlockCtx', reactive({
   adjust,
   update,
   remove,
-  justAddedId,
-  clearJustAdded: () => { justAddedId.value = null },
 }))
 </script>
 
 <style scoped>
 .dc-block { min-width: 0; }
+
+.dct-morph { min-width: 0; }
 
 .dc-row {
   display: flex;
