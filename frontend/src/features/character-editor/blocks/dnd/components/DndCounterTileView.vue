@@ -16,12 +16,10 @@
       <button v-if="manage" class="dctv-step" type="button" :disabled="!interactive" @click.stop="$emit('inc')">+</button>
     </div>
 
-    <span v-if="counter.color" class="dctv-strip"></span>
-
-    <div v-if="counter.max != null" class="dctv-bar">
-      <span class="dctv-fill" :style="{ width: pct + '%' }"></span>
+    <div class="dctv-bar">
+      <span class="dctv-fill" :style="{ width: fillPct + '%' }"></span>
     </div>
-    <div v-else-if="counter.unit" class="dctv-unit">{{ counter.unit }}</div>
+    <div v-if="counter.max == null && counter.unit" class="dctv-unit">{{ counter.unit }}</div>
   </div>
 </template>
 
@@ -38,9 +36,9 @@ const props = defineProps({
 defineEmits(['inc', 'dec'])
 
 const icon = computed(() => resolveIcon(props.counter.icon))
-const pct = computed(() => {
+const fillPct = computed(() => {
   const { value, max } = props.counter
-  if (max == null || max <= 0) return 0
+  if (max == null || max <= 0) return 100
   return Math.round(Math.min(1, Math.max(0, value / max)) * 100)
 })
 </script>
@@ -55,14 +53,6 @@ const pct = computed(() => {
   padding: 11px 12px;
   min-width: 0;
   box-sizing: border-box;
-}
-
-.dctv-strip {
-  width: 34px;
-  max-width: 70%;
-  height: 3px;
-  border-radius: 999px;
-  background: var(--cc, var(--accent));
 }
 
 .dctv-head {
