@@ -418,7 +418,7 @@
                                   "ref": "notes",
                                   "kind": "block",
                                   "props": {
-                                    "max-width": "820px",
+                                    "max-width": "min(640px, 100%)",
                                     "min-width": "0"
                                   }
                                 }

@@ -1,5 +1,14 @@
 <template>
   <div class="input-desc">
+    <div v-if="showToggle" class="desc-head">
+      <button v-if="!editOn" class="field-edit-btn" type="button" title="Редактировать" @click="editOn = true">
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 20h9" /><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
+        </svg>
+      </button>
+      <button v-else class="desc-done-btn" type="button" @click="editOn = false">Готово</button>
+    </div>
+
     <template v-if="editing">
       <div class="desc-toolbar" ref="toolbar">
 
