@@ -3,7 +3,6 @@
     <CharEditorToolbar
       v-if="isMobile"
       ref="charToolbarEl"
-      :editMode="charCtx.editMode"
       :publicVisible="publicVisible"
       :saveStatus="saveStatus"
       :pendingSecondsLeft="pendingSecondsLeft"
@@ -17,7 +16,6 @@
       :charSub="charSub"
       :sessions="sessions"
       :topSession="topSession"
-      @update:editMode="charCtx.editMode = $event"
       @update:publicVisible="onPublicToggle"
       @update:activeTab="onSetActiveTab"
       @update:value="onUpdateValue"
@@ -80,7 +78,6 @@
     <div
       ref="sheetScrollEl"
       class="sheet-scroll"
-      :class="{ 'sheet-scroll--edit': charCtx.editMode }"
       @touchstart.passive="e => { if (!isMobile) onTouchStart(e, sheetScrollEl) }"
       @touchmove="e => { if (!isMobile) onTouchMove(e) }"
       @touchend.passive="e => { if (!isMobile) onTouchEnd(e) }"
@@ -266,8 +263,6 @@ watch([activeTab, isMobile], () => {
   nextTick(() => syncActiveScrollListener({ preserveHeaderHidden }))
 })
 
-watch(() => charCtx.editMode, () => { pushQueryState() })
-
 // ── Event handlers (bridge composable calls + side-effects) ──────────
 
 function onUpdateValue(event) {
@@ -391,13 +386,12 @@ let versionPollInFlight = false
 
 async function tickVersionPoll() {
   if (versionPollInFlight) return
-  if (charCtx.editMode) return
   if (saveStatus.value !== 'idle') return
   if (!hasActiveSession.value) return
   versionPollInFlight = true
   try {
     const remote = await pollVersion()
-    if (remote > version.value && saveStatus.value === 'idle' && !charCtx.editMode) {
+    if (remote > version.value && saveStatus.value === 'idle') {
       await refreshFromServer()
     }
   } finally {
@@ -421,7 +415,6 @@ function pushQueryState() {
   const def = defaultIdx >= 0 ? defaultIdx : 0
   const query = {}
   if (activeTab.value !== def) query.tab = String(activeTab.value)
-  if (charCtx.editMode) query.edit = '1'
   router.replace({ query })
 }
 
@@ -433,7 +426,6 @@ onMounted(async () => {
   window.scrollTo(0, 0)
 
   const savedQueryTab = parseInt(route.query.tab)
-  const savedQueryEdit = route.query.edit
 
   mediaQuery = window.matchMedia('(max-width: 640px)')
   isMobile.value = mediaQuery.matches
@@ -459,9 +451,6 @@ onMounted(async () => {
 
   if (!isNaN(savedQueryTab) && savedQueryTab >= 0 && savedQueryTab < activeTabs.value.length) {
     onSetActiveTab(savedQueryTab)
-  }
-  if (savedQueryEdit === '1' && isOwner.value) {
-    charCtx.editMode = true
   }
 
   ready = true
@@ -508,11 +497,6 @@ onBeforeUnmount(() => {
   max-width: 100vw;
   overflow-x: auto;
   overflow-y: auto;
-  transition: box-shadow 0.3s ease;
-}
-
-.sheet-scroll--edit {
-  box-shadow: inset 3px 0 0 rgba(122, 106, 255, 0.45), inset -3px 0 0 rgba(122, 106, 255, 0.45);
 }
 
 .container {

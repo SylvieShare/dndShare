@@ -10,7 +10,7 @@
     @mouseenter="hovered = true"
     @mouseleave="hovered = false"
   >
-    <td v-if="ctx.charCtx.editMode" class="w-order">
+    <td v-if="ctx.charCtx.ownerMode" class="w-order">
       <span class="drag-handle w-order-handle" @pointerdown="ctx.onDragStart($event, entry, index)">
         <svg width="8" height="14" viewBox="0 0 8 14" fill="currentColor">
           <circle cx="2" cy="2" r="1"/><circle cx="6" cy="2" r="1"/>
@@ -29,7 +29,7 @@
         </div>
         <div class="w-name-actions">
           <button
-            v-if="ctx.charCtx.editMode"
+            v-if="ctx.charCtx.ownerMode"
             class="w-note-btn"
             type="button"
             :class="{ 'w-note-btn-filled': entry.desc }"
@@ -54,7 +54,7 @@
       <span v-if="ctx.itemSubtitle(entry)" class="w-subtitle">{{ ctx.itemSubtitle(entry) }}</span>
     </td>
 
-    <td v-if="ctx.charCtx.editMode" class="w-stat-controls">
+    <td v-if="ctx.charCtx.ownerMode" class="w-stat-controls">
       <ValueSelect
         class="w-stat-select"
         :model-value="entry.stat_suggest_id"
@@ -74,7 +74,7 @@
       </button>
     </td>
 
-    <td v-if="ctx.charCtx.editMode">
+    <td v-if="ctx.charCtx.ownerMode">
       <ValueSelect
         class="w-magic-select"
         :model-value="entry.magic_up ?? 0"
@@ -84,7 +84,7 @@
       />
     </td>
 
-    <td v-if="!ctx.charCtx.editMode" class="w-attack-cell">
+    <td v-if="!ctx.charCtx.ownerMode" class="w-attack-cell">
       <span
         class="w-attack w-attack-clickable"
         title="Бросить атаку"
@@ -93,7 +93,7 @@
     </td>
 
     <td class="w-damage">
-      <template v-if="ctx.charCtx.editMode">
+      <template v-if="ctx.charCtx.ownerMode">
         <div v-for="(attack, attackIndex) in (entry.add_attacks || [])" :key="attackIndex" class="w-extra-row">
           <input
             class="w-count"
@@ -150,13 +150,13 @@
       </span>
     </td>
 
-    <td v-if="ctx.charCtx.editMode" class="w-delete-cell">
+    <td v-if="ctx.charCtx.ownerMode" class="w-delete-cell">
       <button class="w-delete" type="button" title="Удалить оружие" @click="ctx.deleteWeapon(index)">
         <span class="w-cross" aria-hidden="true"></span>
       </button>
     </td>
 
-    <td v-if="!ctx.charCtx.editMode" class="w-props-text">
+    <td v-if="!ctx.charCtx.ownerMode" class="w-props-text">
       <template v-if="ctx.propertyItems(entry).length">
         <template v-for="(property, propertyIndex) in ctx.propertyItems(entry)" :key="property.id ?? propertyIndex">
           <span v-if="propertyIndex > 0" class="w-props-sep">, </span>
@@ -173,7 +173,7 @@
   </tr>
 
   <tr
-    v-if="ctx.charCtx.editMode && (entry.desc || ctx.activeNoteKey === entry._key)"
+    v-if="ctx.charCtx.ownerMode && (entry.desc || ctx.activeNoteKey === entry._key)"
     class="w-desc-row"
     :class="{ 'w-row-hovered': hovered }"
     @mouseenter="hovered = true"
@@ -184,6 +184,7 @@
       <div v-if="ctx.activeNoteKey === entry._key" class="w-note-editor-row">
         <InputDescription
           class="w-note-editor"
+          editable
           :block="{ id: 'desc', content: { placeholder: 'Заметки...' } }"
           :value="entry.desc || ''"
           @update:value="(_, value) => ctx.setField(index, 'desc', value)"
@@ -192,7 +193,7 @@
     </td>
   </tr>
   <tr
-    v-else-if="!ctx.charCtx.editMode && entry.desc"
+    v-else-if="!ctx.charCtx.ownerMode && entry.desc"
     class="w-desc-row"
     :class="{ 'w-row-hovered': hovered }"
     @mouseenter="hovered = true"
@@ -217,7 +218,7 @@ defineProps({
 
 const ctx = inject('weaponsBlockCtx')
 const hovered = ref(false)
-const colspan = computed(() => ctx.charCtx.editMode ? 6 : 4)
+const colspan = computed(() => ctx.charCtx.ownerMode ? 6 : 4)
 </script>
 
 <style scoped>

@@ -11,8 +11,8 @@
       />
     </div>
 
-    <table v-else class="w-table" :class="{ 'w-edit': charCtx.editMode }">
-      <colgroup v-if="charCtx.editMode">
+    <table v-else class="w-table" :class="{ 'w-edit': charCtx.ownerMode }">
+      <colgroup v-if="charCtx.ownerMode">
         <col class="w-order-col" />
         <col class="w-name-col" />
         <col class="w-stat-col" />
@@ -28,14 +28,14 @@
       </colgroup>
       <thead>
         <tr>
-          <th v-if="charCtx.editMode"></th>
+          <th v-if="charCtx.ownerMode"></th>
           <th>Название</th>
-          <th v-if="charCtx.editMode">Стата / владение</th>
-          <th v-if="charCtx.editMode">Магия</th>
-          <th v-if="!charCtx.editMode">Атака</th>
-          <th>{{ charCtx.editMode ? 'Доп урон' : 'Урон' }}</th>
-          <th v-if="!charCtx.editMode">Свойства</th>
-          <th v-if="charCtx.editMode"></th>
+          <th v-if="charCtx.ownerMode">Стата / владение</th>
+          <th v-if="charCtx.ownerMode">Магия</th>
+          <th v-if="!charCtx.ownerMode">Атака</th>
+          <th>{{ charCtx.ownerMode ? 'Доп урон' : 'Урон' }}</th>
+          <th v-if="!charCtx.ownerMode">Свойства</th>
+          <th v-if="charCtx.ownerMode"></th>
         </tr>
       </thead>
       <tbody data-sortable-container="weapons">
@@ -108,7 +108,7 @@ import { useSuggestStore } from '@/stores/suggest'
 
 const props = defineProps(['block', 'value', 'values', 'vars'])
 const emit  = defineEmits(['update:value'])
-const charCtx = inject('charCtx', () => ({ editMode: true, dictionaries: {}, var: {} }))
+const charCtx = inject('charCtx', () => ({ ownerMode: true, dictionaries: {}, var: {} }))
 
 const entries                = ref([])
 const modalItemId            = ref(null)

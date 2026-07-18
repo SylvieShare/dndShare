@@ -64,6 +64,7 @@
       <template v-if="item.type === 'text'">
         <InputDescription
           v-if="editing"
+          editable
           :block="descBlock"
           :value="draft.text"
           @update:value="onDescUpdate"
@@ -144,7 +145,7 @@ const stripColor = computed(() => currentColor.value || 'rgba(255,255,255,0.08)'
 
 const typeLabel = computed(() => props.item.type === 'list' ? 'список' : 'текст')
 
-provide('charCtx', { editMode: true, ownerMode: false, dictionaries: {}, var: {} })
+provide('charCtx', { ownerMode: false, dictionaries: {}, var: {} })
 
 const descBlock = { id: 'scene-text', content: { placeholder: 'Расширенное описание' } }
 

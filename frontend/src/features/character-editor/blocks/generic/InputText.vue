@@ -3,11 +3,11 @@
     <span class="input-text-label">{{ block.title }}</span>
     <input
       class="input-text"
-      :class="{ 'input-outlined': focused || (!value && charCtx.editMode), 'input-empty': !value && charCtx.editMode }"
+      :class="{ 'input-outlined': focused || (!value && charCtx.ownerMode), 'input-empty': !value && charCtx.ownerMode }"
       :style="block.content.color ? { color: block.content.color } : {}"
       :value="value"
-      :placeholder="charCtx.editMode ? block.content.placeholder : ''"
-      :readonly="!charCtx.editMode"
+      :placeholder="charCtx.ownerMode ? block.content.placeholder : ''"
+      :readonly="!charCtx.ownerMode"
       spellcheck="false"
       @focus="focused = true"
       @blur="focused = false"
@@ -17,11 +17,11 @@
   <input
     v-else
     class="input-text"
-    :class="{ 'input-outlined': focused || (!value && charCtx.editMode), 'input-empty': !value && charCtx.editMode }"
+    :class="{ 'input-outlined': focused || (!value && charCtx.ownerMode), 'input-empty': !value && charCtx.ownerMode }"
     :style="block.content.color ? { color: block.content.color } : {}"
     :value="value"
-    :placeholder="charCtx.editMode ? block.content.placeholder : ''"
-    :readonly="!charCtx.editMode"
+    :placeholder="charCtx.ownerMode ? block.content.placeholder : ''"
+    :readonly="!charCtx.ownerMode"
     spellcheck="false"
     @focus="focused = true"
     @blur="focused = false"
@@ -34,7 +34,7 @@ import { inject, ref } from 'vue'
 
 defineProps(['block', 'value'])
 defineEmits(['update:value'])
-const charCtx = inject('charCtx', { editMode: true, ownerMode: false, dictionaries: {}, var: {} })
+const charCtx = inject('charCtx', { ownerMode: true, dictionaries: {}, var: {} })
 const focused = ref(false)
 </script>
 

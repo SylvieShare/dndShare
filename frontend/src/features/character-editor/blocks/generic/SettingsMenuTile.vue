@@ -15,13 +15,6 @@
           <span class="sm-save-label">{{ saveLabel }}</span>
         </div>
         <ToggleSwitch
-          v-if="ctx.canEdit"
-          class="sm-item"
-          :modelValue="ctx.editMode"
-          label="Редактировать"
-          @update:modelValue="v => (ctx.editMode = v)"
-        />
-        <ToggleSwitch
           v-if="ctx.canTogglePublic"
           class="sm-item"
           :modelValue="ctx.publicVisible"
@@ -40,7 +33,7 @@ import ToggleSwitch from '@/shared/ui/ToggleSwitch'
 import { svgColorFilter } from '@/shared/lib/svgColorFilter'
 
 const props = defineProps(['block'])
-const ctx = inject('charCtx', { editMode: false, canEdit: false, publicVisible: false, canTogglePublic: false, saveStatus: 'idle', pendingSecondsLeft: 0 })
+const ctx = inject('charCtx', { canTogglePublic: false, publicVisible: false, saveStatus: 'idle', pendingSecondsLeft: 0 })
 const open = ref(false)
 
 const accent = computed(() => props.block?.content?.accent || '#8a8f9e')

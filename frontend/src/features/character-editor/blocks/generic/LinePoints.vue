@@ -6,8 +6,8 @@
         v-for="i in block.content.max"
         :key="i"
         class="dot"
-        :class="{ filled: i <= current, clickable: charCtx.editMode }"
-        @click="charCtx.editMode && toggle(i)"
+        :class="{ filled: i <= current, clickable: charCtx.ownerMode }"
+        @click="charCtx.ownerMode && toggle(i)"
       />
     </div>
   </div>
@@ -18,7 +18,7 @@ import { computed, inject } from 'vue'
 
 const props = defineProps(['block', 'value'])
 const emit = defineEmits(['update:value'])
-const charCtx = inject('charCtx', { editMode: true, ownerMode: false, dictionaries: {}, var: {} })
+const charCtx = inject('charCtx', { ownerMode: true, dictionaries: {}, var: {} })
 const current = computed(() => props.value ?? 0)
 
 function toggle(i) {

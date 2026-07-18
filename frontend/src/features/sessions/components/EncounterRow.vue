@@ -217,7 +217,7 @@ function onStatesUpdate(_id, ids) {
   enc.setStates(props.combatant, ids)
 }
 
-const localCharCtx = reactive({ editMode: false, ownerMode: false, dictionaries: {}, var: {} })
+const localCharCtx = reactive({ ownerMode: false, dictionaries: {}, var: {} })
 provide('charCtx', localCharCtx)
 
 const suggestStoreLocal = useSuggestStore()

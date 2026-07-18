@@ -1,6 +1,6 @@
 <template>
   <div class="hit-dice">
-    <div class="dice-type" :class="{ 'dice-clickable': charCtx.editMode }" @click="charCtx.editMode && cycleDice()" :style="{ color: diceColor }">
+    <div class="dice-type" :class="{ 'dice-clickable': charCtx.ownerMode }" @click="charCtx.ownerMode && cycleDice()" :style="{ color: diceColor }">
       {{ data.dice || 'd8' }}
     </div>
     <div class="dice-divider"></div>
@@ -10,7 +10,7 @@
         :v="data.count"
         :checkerV="countRx"
         :defaultV="1"
-        :readonly="!charCtx.editMode"
+        :readonly="!charCtx.ownerMode"
         @update:v="v => emit({ count: v === '' ? v : parseInt(v) })"
         @change:v="v => emit({ count: parseInt(v) || 1 })"
       />
@@ -34,7 +34,7 @@ const DICE_COLORS = {
 
 const props = defineProps(['block', 'value'])
 const emit = defineEmits(['update:value'])
-const charCtx = inject('charCtx', { editMode: true, ownerMode: false, dictionaries: {}, var: {} })
+const charCtx = inject('charCtx', { ownerMode: true, dictionaries: {}, var: {} })
 const countRx = /^\d{0,2}$/
 const data = computed(() => ({ dice: 'd8', count: 1, ...props.value }))
 const diceColor = computed(() => DICE_COLORS[data.value.dice] || '#7ab8e8')

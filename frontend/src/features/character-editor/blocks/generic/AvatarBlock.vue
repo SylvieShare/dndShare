@@ -32,7 +32,7 @@
     </div>
 
     <!-- Оверлей «изменить» при наведении поверх картинки -->
-    <div v-if="imageUrl && charCtx.editMode" class="avatar-change-overlay">
+    <div v-if="imageUrl && charCtx.ownerMode" class="avatar-change-overlay">
       <svg class="avatar-upload-icon" viewBox="0 0 24 24" fill="none">
         <path d="M12 16V8M12 8L9 11M12 8L15 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
         <path d="M6 20H18M3 14v2a3 3 0 003 3h12a3 3 0 003-3v-2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
@@ -54,7 +54,7 @@ import { computed, inject, onMounted, ref, watch } from 'vue'
 
 const props = defineProps(['block', 'value'])
 const emit = defineEmits(['update:value'])
-const charCtx = inject('charCtx', { editMode: true, ownerMode: false, dictionaries: {}, var: {} })
+const charCtx = inject('charCtx', { ownerMode: true, dictionaries: {}, var: {} })
 const isDragging = ref(false)
 const uploading = ref(false)
 const imageUrl = ref(null)
@@ -72,7 +72,7 @@ const avatarSize = computed(() => {
   return { width: w || '120px', height: h || '120px' }
 })
 const avatarStyle = computed(() => avatarSize.value)
-const canUpload = computed(() => charCtx.editMode || (charCtx.ownerMode && !imageUrl.value))
+const canUpload = computed(() => charCtx.ownerMode)
 
 onMounted(() => {
   imageUrl.value = resolveImageUrl(props.value)

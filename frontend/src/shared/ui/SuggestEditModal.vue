@@ -57,6 +57,7 @@
     <FormField label="DESCRIPTION" vertical>
       <div class="sem-desc-wrap">
         <InputDescription
+          editable
           :block="descBlock"
           :value="form.desc"
           @update:value="(_id, v) => form.desc = v"

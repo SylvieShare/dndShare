@@ -63,14 +63,6 @@
         </div>
       </div>
 
-      <!-- Mobile (has-blocks) edit toggle — sits left of toolbar blocks -->
-      <ToggleSwitch
-        v-if="canEdit && toolbarBlocksList"
-        class="tb-edit-toggle-mobile"
-        :modelValue="editMode"
-        @update:modelValue="$emit('update:editMode', $event)"
-      />
-
       <!-- Center: toolbar blocks or tabs -->
       <template v-if="toolbarBlocksList">
         <div
@@ -102,15 +94,8 @@
         </button>
       </div>
 
-      <!-- Right: edit toggle + menu -->
+      <!-- Right: menu -->
       <div class="tb-right">
-        <ToggleSwitch
-          v-if="canEdit"
-          class="tb-edit-toggle"
-          :modelValue="editMode"
-          label="Редактировать"
-          @update:modelValue="$emit('update:editMode', $event)"
-        />
         <div v-if="canEdit" class="menu-wrap" v-click-outside="closeMenu">
           <button class="menu-btn" :class="{ open: menuOpen }" title="Меню" @click="menuOpen = !menuOpen">
             <span class="bar"></span>
@@ -149,7 +134,6 @@ import ToggleSwitch from "@/shared/ui/ToggleSwitch"
 const TemplateBlockInner = defineAsyncComponent(() => import("./TemplateBlockInner"))
 
 const props = defineProps({
-  editMode: Boolean,
   publicVisible: Boolean,
   canEdit: { type: Boolean, default: false },
   canTogglePublic: { type: Boolean, default: true },
@@ -166,7 +150,7 @@ const props = defineProps({
   sessions: { type: Array, default: () => [] },
   topSession: { type: Object, default: null },
 })
-const emit = defineEmits(['update:editMode', 'update:publicVisible', 'update:activeTab', 'update:value', 'update:var', 'close'])
+const emit = defineEmits(['update:publicVisible', 'update:activeTab', 'update:value', 'update:var', 'close'])
 
 const router = useRouter()
 const menuOpen = ref(false)
@@ -580,8 +564,6 @@ function goBack() {
 .dropdown-enter-from,
 .dropdown-leave-to { opacity: 0; transform: translateY(-4px); }
 
-.tb-edit-toggle-mobile { display: none; }
-
 /* ── Toolbar blocks (mobile-style) ── */
 @media (max-width: 640px) {
   .toolbar-inner {
@@ -610,18 +592,6 @@ function goBack() {
     flex: 0 0 auto;
     padding: 0 6px;
     border-left: 1px solid var(--border);
-  }
-
-  .toolbar-inner.has-blocks .tb-edit-toggle {
-    display: none;
-  }
-
-  .toolbar-inner.has-blocks .tb-edit-toggle-mobile {
-    display: inline-flex;
-    flex: 0 0 auto;
-    padding: 0 8px;
-    border-right: 1px solid var(--border);
-    align-self: stretch;
   }
 
   .toolbar-block-wrap {

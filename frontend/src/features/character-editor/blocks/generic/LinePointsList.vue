@@ -2,7 +2,7 @@
   <div class="lp-list">
     <div class="lp-row" v-for="(row, i) in rows" :key="i">
       <input
-        v-if="charCtx.editMode"
+        v-if="charCtx.ownerMode"
         class="lp-name-input"
         :value="row.name"
         placeholder="—"
@@ -14,8 +14,8 @@
           v-for="d in block.content.max"
           :key="d"
           class="dot"
-          :class="{ filled: d <= row.value, clickable: charCtx.editMode }"
-          @click="charCtx.editMode && toggleDot(i, d)"
+          :class="{ filled: d <= row.value, clickable: charCtx.ownerMode }"
+          @click="charCtx.ownerMode && toggleDot(i, d)"
         />
       </div>
     </div>
@@ -27,7 +27,7 @@ import { computed, inject } from 'vue'
 
 const props = defineProps(['block', 'value'])
 const emit = defineEmits(['update:value'])
-const charCtx = inject('charCtx', { editMode: true, ownerMode: false, dictionaries: {}, var: {} })
+const charCtx = inject('charCtx', { ownerMode: true, dictionaries: {}, var: {} })
 const rows = computed(() => {
   const count = props.block.content.rows
   const saved = props.value || []

@@ -20,7 +20,7 @@ export function useCharacterData(uuid, isMobile) {
   const loading = ref(true)
   const template = ref(null)
   const data = ref({ values: {}, var: {} })
-  const charCtx = reactive({ editMode: false, ownerMode: false, dictionaries: {}, var: {} })
+  const charCtx = reactive({ ownerMode: false, dictionaries: {}, var: {} })
   const isOwner = ref(false)
   const publicVisible = ref(false)
   const version = ref(0)
@@ -46,7 +46,6 @@ export function useCharacterData(uuid, isMobile) {
     const currentUserId = useAccountStore().user?.id
     isOwner.value = !!currentUserId && res.userId === currentUserId
     charCtx.ownerMode = isOwner.value
-    charCtx.editMode = false
     loading.value = false
 
     document.title = data.value.values?.name || 'Персонаж'

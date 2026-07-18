@@ -55,6 +55,7 @@
         <template v-if="field.type === 'description'">
           <InputDescription
             class="iem-description"
+            editable
             :block="{ id: field.key, content: { placeholder: field.name + '...' } }"
             :value="formData[field.key] || ''"
             @update:value="(_, value) => formData[field.key] = value"
@@ -439,6 +440,7 @@
               />
               <InputDescription
                 class="iem-description"
+                editable
                 :block="{ id: `${field.key}-${bIdx}`, content: { placeholder: 'Описание...' } }"
                 :value="b.value || ''"
                 @update:value="(_, value) => setBlockField(field.key, bIdx, 'value', value)"

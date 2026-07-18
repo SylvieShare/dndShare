@@ -5,9 +5,9 @@
       'int-block-compact': variant === 'compact',
       'int-block-mini': variant === 'mini',
       'int-block-tile': variant === 'tile',
-      'int-block-editable': charCtx.editMode,
+      'int-block-editable': charCtx.ownerMode,
     }"
-    @click="charCtx.editMode && (modalOpen = true)"
+    @click="charCtx.ownerMode && (modalOpen = true)"
   >
     <template v-if="variant === 'tile'">
       <div v-if="block.title" class="int-title">{{ block.title }}</div>
@@ -43,7 +43,7 @@ import InputIntModal from './InputIntModal'
 
 const props = defineProps(['block', 'value'])
 const emit = defineEmits(['update:value'])
-const charCtx = inject('charCtx', { editMode: true, ownerMode: false, dictionaries: {}, var: {} })
+const charCtx = inject('charCtx', { ownerMode: true, dictionaries: {}, var: {} })
 const modalOpen = ref(false)
 const numData = computed(() => {
   if (props.value && typeof props.value === 'object') return props.value

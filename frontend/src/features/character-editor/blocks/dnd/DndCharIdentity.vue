@@ -107,9 +107,9 @@ const CLASS_TYPE = 9
 
 const props = defineProps(['block', 'value', 'values'])
 const emit = defineEmits(['update:value'])
-const charCtx = inject('charCtx', { editMode: true, ownerMode: false })
+const charCtx = inject('charCtx', { ownerMode: true })
 
-const canEdit = computed(() => charCtx.ownerMode || charCtx.editMode)
+const canEdit = computed(() => charCtx.ownerMode)
 
 const windowOpen = ref(false)
 const nameInput = ref(null)

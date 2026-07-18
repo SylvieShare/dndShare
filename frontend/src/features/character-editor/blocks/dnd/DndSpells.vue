@@ -109,7 +109,7 @@ import { useSuggestStore } from '@/stores/suggest'
 
 const props = defineProps(['block', 'value', 'values'])
 const emit  = defineEmits(['update:value'])
-const charCtx       = inject('charCtx',       () => ({ editMode: true, dictionaries: {} }))
+const charCtx       = inject('charCtx',       () => ({ ownerMode: true, dictionaries: {} }))
 const setBlockHidden = inject('setBlockHidden', () => () => {})
 
 const spells     = ref([])
@@ -160,10 +160,10 @@ const attackBonus  = computed(() => profBonus.value + statMod.value + attackBonu
 const statLabel    = computed(() =>
   statOptions.value.find(stat => String(stat.value) === String(statPath.value))?.label || ''
 )
-const canInteract  = computed(() => charCtx.editMode || charCtx.ownerMode)
+const canInteract  = computed(() => charCtx.ownerMode)
 const canAddItems  = computed(() => !!charCtx.ownerMode)
 const blockHidden  = computed(() =>
-  props.block.hide_on_empty && !charCtx.editMode && !canAddItems.value && spells.value.length === 0
+  props.block.hide_on_empty && !charCtx.ownerMode && !canAddItems.value && spells.value.length === 0
 )
 const showStatsBar = computed(() => hasStatConfig.value || canInteract.value || activeSlots.value.length > 0)
 
@@ -271,7 +271,7 @@ async function loadDetails() {
 }
 
 function togglePrepared(id) {
-  if (!charCtx.editMode && !charCtx.ownerMode) return
+  if (!charCtx.ownerMode) return
   const entry = spells.value.find(s => s.id === id)
   if (entry) { entry.prepared = !entry.prepared; emitChange() }
 }

@@ -4,9 +4,9 @@
       v-model="query"
       class="input-suggest-picker"
       :suggest-type-id="block.content.suggest_id"
-      :placeholder="charCtx.editMode ? (block.content.placeholder || 'Поиск...') : ''"
-      :readonly="!charCtx.editMode"
-      :invalid="!query && charCtx.editMode"
+      :placeholder="charCtx.ownerMode ? (block.content.placeholder || 'Поиск...') : ''"
+      :readonly="!charCtx.ownerMode"
+      :invalid="!query && charCtx.ownerMode"
     />
   </div>
 </template>
@@ -17,7 +17,7 @@ import SuggestPicker from '@/shared/ui/SuggestPicker'
 
 const props = defineProps(['block', 'value'])
 const emit = defineEmits(['update:value'])
-const charCtx = inject('charCtx', { editMode: true, ownerMode: false, dictionaries: {}, var: {} })
+const charCtx = inject('charCtx', { ownerMode: true, dictionaries: {}, var: {} })
 const query = ref(props.value || '')
 
 watch(() => props.value, v => {

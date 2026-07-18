@@ -3,7 +3,6 @@
     <div class="csm">
       <CharEditorToolbar
         modal
-        :editMode="charCtx.editMode"
         :publicVisible="publicVisible"
         :canEdit="canEdit"
         :canTogglePublic="isOwner"
@@ -16,7 +15,6 @@
         :toolbarVars="data.var"
         :charName="charName"
         :charSub="charSub"
-        @update:editMode="charCtx.editMode = $event"
         @update:publicVisible="onPublicToggle"
         @update:activeTab="setActiveTab"
         @update:value="onUpdateValue"
@@ -24,7 +22,7 @@
         @close="emit('close')"
       />
 
-      <div class="csm-body" :class="{ 'csm-body--edit': charCtx.editMode }">
+      <div class="csm-body">
         <div v-if="loading" class="container sk-container">
           <div class="sk-block" style="width:100%; height:52px" />
           <div class="sk-block" style="width:180px; height:160px" />
@@ -105,6 +103,7 @@ function onUpdateVar(patch) {
 
 onMounted(async () => {
   await load()
+  charCtx.ownerMode = canEdit.value
   const tabs = getInitialTabs()
   const defaultIdx = tabs.findIndex(t => t.default)
   setActiveTab(defaultIdx >= 0 ? defaultIdx : 0)
@@ -126,11 +125,6 @@ onMounted(async () => {
   overflow-x: auto;
   overflow-y: auto;
   background: var(--bg-deep);
-  transition: box-shadow 0.3s ease;
-}
-
-.csm-body--edit {
-  box-shadow: inset 3px 0 0 rgba(122, 106, 255, 0.45), inset -3px 0 0 rgba(122, 106, 255, 0.45);
 }
 
 .container {

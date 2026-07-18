@@ -14,7 +14,7 @@
     </div>
     <div class="blood-footer">
       <span class="blood-count">{{ current }} / {{ max }}</span>
-      <div v-if="charCtx.editMode" class="blood-max-ctrl">
+      <div v-if="charCtx.ownerMode" class="blood-max-ctrl">
         <button class="ctrl-btn" @click="changeMax(-1)">−</button>
         <span class="ctrl-label">макс</span>
         <button class="ctrl-btn" @click="changeMax(1)">+</button>
@@ -28,7 +28,7 @@ import { computed, inject } from 'vue'
 
 const props = defineProps(['block', 'value'])
 const emit = defineEmits(['update:value'])
-const charCtx = inject('charCtx', { editMode: true, ownerMode: false, dictionaries: {}, var: {} })
+const charCtx = inject('charCtx', { ownerMode: true, dictionaries: {}, var: {} })
 const defaultMax = computed(() => props.block.content.default ?? 10)
 const current = computed(() => props.value?.current ?? 0)
 const max = computed(() => props.value?.max ?? defaultMax.value)

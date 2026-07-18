@@ -93,13 +93,6 @@
       >
         <div class="left-bar-panel-head">
           <span>{{ entry.column.left_bar?.title || 'Раздел' }}</span>
-          <ToggleSwitch
-            v-if="charCtx.ownerMode"
-            class="bar-panel-edit-toggle"
-            :modelValue="charCtx.editMode"
-            label="Редактирование"
-            @update:modelValue="charCtx.editMode = $event"
-          />
         </div>
         <TemplateBlockInner
           :block="entry.child"
@@ -133,13 +126,6 @@
       >
         <div class="right-bar-panel-head">
           <span>{{ entry.column.right_bar?.title || 'Раздел' }}</span>
-          <ToggleSwitch
-            v-if="charCtx.ownerMode"
-            class="bar-panel-edit-toggle"
-            :modelValue="charCtx.editMode"
-            label="Редактирование"
-            @update:modelValue="charCtx.editMode = $event"
-          />
         </div>
         <TemplateBlockInner
           :block="entry.child"
@@ -194,7 +180,6 @@ export default { name: 'TemplateBlockInner' }
 </script>
 
 <script setup>
-import ToggleSwitch from '@/shared/ui/ToggleSwitch'
 import BaseTile from '@/shared/ui/BaseTile'
 import SectionLabel from '@/shared/ui/SectionLabel'
 import { computed, inject, nextTick, onBeforeUnmount, onMounted, provide, ref, watch } from 'vue'
@@ -202,7 +187,7 @@ import { BLOCK_REGISTRY } from '@/features/character-editor/blocks/blockRegistry
 
 const props = defineProps(['block', 'values', 'vars', 'colStyle'])
 const emit = defineEmits(['update:value', 'update:var'])
-const charCtx = inject('charCtx', { editMode: false, ownerMode: false })
+const charCtx = inject('charCtx', { ownerMode: false })
 
 // ─── Reactive state ────────────────────────────────────────────────────────
 const openLeftBarIndex  = ref(null)
@@ -618,29 +603,6 @@ onBeforeUnmount(() => {
   .left-bar-panel-head > span,
   .right-bar-panel-head > span {
     min-width: 0;
-  }
-
-  .bar-panel-edit-toggle {
-    flex-shrink: 0;
-    gap: 8px;
-  }
-
-  .bar-panel-edit-toggle :deep(.toggle-text) {
-    display: none;
-  }
-
-  .bar-panel-edit-toggle::after {
-    content: "";
-    width: 20px;
-    height: 20px;
-    background-color: var(--text-muted);
-    mask: url("/static/edit-note.svg") center / contain no-repeat;
-    -webkit-mask: url("/static/edit-note.svg") center / contain no-repeat;
-    transition: background-color 0.2s ease;
-  }
-
-  .bar-panel-edit-toggle.active::after {
-    background-color: var(--text-2);
   }
 }
 </style>

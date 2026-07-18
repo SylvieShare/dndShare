@@ -67,10 +67,11 @@ const props = defineProps({
   editable: { type: Boolean, default: false },
 })
 const emit = defineEmits(['update:value'])
-const charCtx = inject('charCtx', { editMode: true, ownerMode: false, dictionaries: {}, var: {} })
+const charCtx = inject('charCtx', { ownerMode: true, dictionaries: {}, var: {} })
 
-// `editable` forces the editor on regardless of the global edit mode (e.g. inside a morph editor)
-const editing = computed(() => props.editable || charCtx.editMode)
+// `editable` forces the editor on regardless of ownership (e.g. inside a morph editor);
+// otherwise the owner edits in place.
+const editing = computed(() => props.editable || charCtx.ownerMode)
 
 const hOpen = ref(false)
 const editor = ref(null)

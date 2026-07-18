@@ -1,6 +1,6 @@
 <template>
   <div class="input-item">
-    <template v-if="charCtx.editMode">
+    <template v-if="charCtx.ownerMode">
       <select
         class="ii-select"
         :value="currentId"
@@ -29,7 +29,7 @@ import { fetchGet } from '@/shared/api/http'
 
 const props = defineProps(['block', 'value', 'values'])
 const emit = defineEmits(['update:value'])
-const charCtx = inject('charCtx', { editMode: true })
+const charCtx = inject('charCtx', { ownerMode: true })
 
 const items = ref([])
 const children = ref([])
