@@ -19,7 +19,7 @@
     <div class="dctv-bar">
       <span class="dctv-fill" :style="{ width: fillPct + '%' }"></span>
     </div>
-    <div v-if="counter.max == null && counter.unit" class="dctv-unit">{{ counter.unit }}</div>
+    <div v-if="counter.unit" class="dctv-unit">{{ counter.unit }}</div>
   </div>
 </template>
 
