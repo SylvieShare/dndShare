@@ -60,8 +60,19 @@
       />
     </template>
 
-    <RichContent v-else-if="value" class="desc-view" :html="value" />
-    <div v-else class="desc-empty">{{ block.content?.placeholder ?? '' }}</div>
+    <RichContent
+      v-else-if="value"
+      class="desc-view"
+      :class="{ 'desc-view--owner': showToggle }"
+      :html="value"
+      @click="showToggle && (editOn = true)"
+    />
+    <div
+      v-else
+      class="desc-empty"
+      :class="{ 'desc-empty--owner': showToggle }"
+      @click="showToggle && (editOn = true)"
+    >{{ block.content?.placeholder ?? '' }}</div>
   </div>
 </template>
 
@@ -78,9 +89,12 @@ const props = defineProps({
 const emit = defineEmits(['update:value'])
 const charCtx = inject('charCtx', { ownerMode: true, dictionaries: {}, var: {} })
 
-// `editable` forces the editor on regardless of ownership (e.g. inside a morph editor);
-// otherwise the owner edits in place.
-const editing = computed(() => props.editable || charCtx.ownerMode)
+// `editable` forces the editor on regardless of ownership (e.g. inside a morph editor).
+// Otherwise the owner reads by default and flips into edit via the pencil (editOn).
+const owner = computed(() => !!charCtx.ownerMode)
+const showToggle = computed(() => owner.value && !props.editable)
+const editOn = ref(false)
+const editing = computed(() => props.editable || (owner.value && editOn.value))
 
 const hOpen = ref(false)
 const editor = ref(null)
@@ -273,6 +287,49 @@ function tryCreateListFromDash() {
   display: flex;
   flex-direction: column;
 }
+
+/* ── Owner edit toggle ── */
+.desc-head {
+  display: flex;
+  justify-content: flex-end;
+  min-height: 24px;
+  margin-bottom: 2px;
+}
+
+.field-edit-btn {
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 6px;
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.15s, color 0.12s, background 0.12s;
+}
+@media (hover: hover) {
+  .input-desc:hover .field-edit-btn { opacity: 1; }
+}
+.field-edit-btn:hover { color: var(--accent); background: rgba(255, 255, 255, 0.06); }
+
+.desc-done-btn {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 3px 8px;
+  border-radius: 6px;
+  transition: background 0.12s;
+}
+.desc-done-btn:hover { background: rgba(255, 255, 255, 0.06); }
+
+.desc-view--owner,
+.desc-empty--owner { cursor: text; }
 
 /* ── Toolbar ── */
 .desc-toolbar {
