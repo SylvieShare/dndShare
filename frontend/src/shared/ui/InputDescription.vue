@@ -1,12 +1,13 @@
 <template>
   <div class="input-desc">
-    <div v-if="showToggle" class="desc-head">
-      <button v-if="!editOn" class="field-edit-btn" type="button" title="Редактировать" @click="editOn = true">
+    <div v-if="block.title || showToggle" class="desc-head">
+      <span v-if="block.title" class="desc-title">{{ block.title }}</span>
+      <button v-if="showToggle && !editOn" class="field-edit-btn" type="button" title="Редактировать" @click="editOn = true">
         <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M12 20h9" /><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
         </svg>
       </button>
-      <button v-else class="desc-done-btn" type="button" @click="editOn = false">Готово</button>
+      <button v-else-if="showToggle" class="desc-done-btn" type="button" @click="editOn = false">Готово</button>
     </div>
 
     <template v-if="editing">
@@ -288,12 +289,30 @@ function tryCreateListFromDash() {
   flex-direction: column;
 }
 
-/* ── Owner edit toggle ── */
+/* ── Title + owner edit toggle ── */
 .desc-head {
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
   min-height: 24px;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
+}
+
+.desc-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.desc-head .field-edit-btn,
+.desc-head .desc-done-btn {
+  margin-left: auto;
 }
 
 .field-edit-btn {

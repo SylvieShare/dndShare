@@ -16,12 +16,13 @@
         autofocus
         @update:value="v => $emit('update', { title: v })"
       />
-      <FormTextarea
+      <InputDescription
         v-if="event.type !== 'newday'"
+        class="dee-desc"
+        :block="descBlock"
         :value="event.desc"
-        placeholder="Что произошло…"
-        :rows="4"
-        @update:value="v => $emit('update', { desc: v })"
+        editable
+        @update:value="(id, html) => $emit('update', { desc: html })"
       />
     </EditorSection>
 
