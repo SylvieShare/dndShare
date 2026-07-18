@@ -197,7 +197,9 @@
                     "type": "column",
                     "props": {
                       "gap": "0",
-                      "grow": "1"
+                      "grow": "1",
+                      "basis": "0",
+                      "min-width": "0"
                     },
                     "children": [
                       {
@@ -418,7 +420,6 @@
                                   "ref": "notes",
                                   "kind": "block",
                                   "props": {
-                                    "max-width": "min(640px, 100%)",
                                     "min-width": "0"
                                   }
                                 }

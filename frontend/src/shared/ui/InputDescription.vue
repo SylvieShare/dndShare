@@ -444,6 +444,8 @@ function tryCreateListFromDash() {
 /* ── Editor ── */
 .desc-editor {
   -webkit-touch-callout: none;
+  min-width: 0;
+  overflow-wrap: anywhere;
   padding: 10px 12px;
   color: var(--text-2);
   font-size: 14px;
@@ -481,6 +483,8 @@ function tryCreateListFromDash() {
   color: var(--text-2);
   line-height: 1.42;
   padding: 2px 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .desc-empty {
