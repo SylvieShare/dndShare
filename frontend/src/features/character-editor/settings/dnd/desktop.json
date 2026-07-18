@@ -397,13 +397,28 @@
                           {
                             "title": "Дневник",
                             "content": {
-                              "ref": "notes",
-                              "kind": "block",
+                              "kind": "layout",
+                              "type": "column",
                               "props": {
+                                "gap": "22px",
                                 "style": {
                                   "padding": "20px"
                                 }
-                              }
+                              },
+                              "children": [
+                                {
+                                  "ref": "quests",
+                                  "kind": "block"
+                                },
+                                {
+                                  "ref": "diary",
+                                  "kind": "block"
+                                },
+                                {
+                                  "ref": "notes",
+                                  "kind": "block"
+                                }
+                              ]
                             }
                           }
                         ]

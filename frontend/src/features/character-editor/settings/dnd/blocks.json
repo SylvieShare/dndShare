@@ -244,6 +244,16 @@
       "placeholder": "Заметки..."
     }
   },
+  "quests": {
+    "id": "quests",
+    "type": "DND_QUESTS",
+    "content": {}
+  },
+  "diary": {
+    "id": "diary",
+    "type": "DND_DIARY",
+    "content": {}
+  },
   "speed": {
     "id": "speed",
     "type": "DND_SPEED",
