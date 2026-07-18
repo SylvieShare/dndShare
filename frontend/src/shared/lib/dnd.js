@@ -42,6 +42,20 @@ export function sumBonuses(bonuses) {
   }, 0)
 }
 
+/** Ability modifier resolved from a `values`-relative path like "values.DEX.mod":
+ *  prefers the stat's live `{value}` (so score edits apply immediately), falls back
+ *  to the persisted `mod` field. `null` when the path can't be resolved. */
+export function abilityModByPath(values, path) {
+  if (!path || !values) return null
+  const root = { values }
+  const stat = path.split('.').slice(0, -1).reduce((cur, key) => cur?.[key], root)
+  const val = stat?.value
+  if (val != null) return abilityModifier(resolveNumValue(val))
+  const direct = path.split('.').reduce((cur, key) => cur?.[key], root)
+  if (direct != null && direct !== '') return Number(direct) || 0
+  return null
+}
+
 /** Resolve a numeric field that may be a number, `{value}` or `{base, bonuses[]}`. */
 export function resolveNumValue(raw) {
   if (raw == null) return 0

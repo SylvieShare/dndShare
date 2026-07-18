@@ -303,6 +303,7 @@
     "id": "initiative",
     "type": "DND_INITIATIVE",
     "content": {
+      "dex_mod_path": "values.DEX.mod",
       "svg": "/static/initiative.svg",
       "visible_plus": true,
       "accent": "#5aaf72"

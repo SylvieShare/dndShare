@@ -19,6 +19,7 @@ const PRESET = {
   speed: 30,
   hp: { max: 10, current: 10, diceCount: 1 },
   armor: { ac: 10, shield: false, bonuses: [], shield_bonus: 2 },
+  initiative: { base: 0, bonuses: [], use_dex: true },
   STR: { value: 10 },
   DEX: { value: 10 },
   CON: { value: 10 },

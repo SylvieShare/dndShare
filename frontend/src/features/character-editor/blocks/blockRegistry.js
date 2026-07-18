@@ -63,7 +63,7 @@ export const BLOCK_REGISTRY = {
   DND_EXHAUSTION:   { component: DndExhaustion },
   DND_HIT_DICE:     { component: DndHitDice },
   DND_HP:           { component: DndHp, passValues: true },
-  DND_INITIATIVE:   { component: DndInitiative },
+  DND_INITIATIVE:   { component: DndInitiative, passValuesOnly: true },
   DND_POTIONS:      { component: DndPotions },
   DND_PROF_BONUS:   { component: DndProfBonus, passValues: true },
   DND_QUESTS:       { component: DndQuests },

@@ -1,12 +1,13 @@
+import { settingRenderSchema } from '@/features/character-editor/settings'
 import { getByPath } from '@/features/sessions/lib/encounterHelpers'
-import { abilityModifier, d20Expr, resolveNumValue } from '@/shared/lib/dnd'
+import { abilityModByPath, abilityModifier, d20Expr, resolveNumValue } from '@/shared/lib/dnd'
 import { useDiceStore } from '@/stores/dice'
 import { useTemplateStore } from '@/stores/template'
 
 function findFirstBlockByType(templateStore, templateId, type) {
   if (!templateId) return null
   const tpl = templateStore.byId(templateId)
-  const blocks = tpl?.schema?.blocks
+  const blocks = settingRenderSchema(tpl)?.blocks
   if (!blocks || typeof blocks !== 'object') return null
   for (const [id, b] of Object.entries(blocks)) {
     if (b?.type === type) return { blockId: id, content: b.content || {} }
@@ -23,7 +24,11 @@ export function useEncounterInitiative({ findParticipant, playerDisplayName, npc
     const cfg = findFirstBlockByType(templateStore, p.templateId, 'DND_INITIATIVE')
     if (!cfg) return 0
     const raw = getByPath(p.data ?? {}, `values.${cfg.blockId}`)
-    return resolveNumValue(raw)
+    let bonus = resolveNumValue(raw)
+    if (raw && typeof raw === 'object' && raw.use_dex) {
+      bonus += abilityModByPath(p.data?.values, cfg.content?.dex_mod_path) || 0
+    }
+    return bonus
   }
 
   function npcInitiativeBonus(c) {

@@ -3,6 +3,7 @@
     <FormField label="Основное значение">
       <FormNumberInput :value="data.base" :min="min" :max="max" @change="setBase" />
     </FormField>
+    <slot></slot>
     <BonusList :bonuses="data.bonuses || []" @update:bonuses="setBonuses" />
     <EditorTotal>Итого: <strong>{{ pre }}{{ total }}{{ unit ? ' ' + unit : '' }}</strong></EditorTotal>
   </EditorPanel>
@@ -26,10 +27,11 @@ const props = defineProps({
   max: { default: undefined },
   pre: { type: String, default: '' },
   unit: { type: String, default: '' },
+  extra: { type: Number, default: 0 },
 })
 const emit = defineEmits(['change'])
 
-const total = computed(() => (props.data.base || 0) + sumBonuses(props.data.bonuses))
+const total = computed(() => (props.data.base || 0) + sumBonuses(props.data.bonuses) + props.extra)
 
 function commit(next) {
   const base = parseInt(next.base) || 0

@@ -57,7 +57,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { abilityModifier, resolveNumValue, sumBonuses } from '@/shared/lib/dnd'
+import { abilityModByPath, sumBonuses } from '@/shared/lib/dnd'
 import BonusList from '@/shared/ui/BonusList'
 import EditorPanel from '@/features/character-editor/components/EditorPanel'
 import EditorSection from '@/features/character-editor/components/EditorSection'
@@ -77,21 +77,7 @@ const armorData = computed(() => {
   if (props.value && typeof props.value === 'object') return props.value
   return { ac: parseInt(props.value) || 10, shield_bonus: 2, shield: false }
 })
-const dexMod = computed(() => {
-  const path = props.block.content?.dex_mod_path
-  if (!path || !props.values) return null
-  const root = { values: props.values }
-  // primary: derive from the stat's live value so changing DEX updates the AC immediately
-  const stat = path.split('.').slice(0, -1).reduce((cur, key) => cur?.[key], root)
-  const val = stat?.value
-  if (val != null) {
-    return abilityModifier(resolveNumValue(val))
-  }
-  // fallback: stat carries no live value → use the persisted `mod` (e.g. values.DEX.mod)
-  const direct = path.split('.').reduce((cur, key) => cur?.[key], root)
-  if (direct != null && direct !== '') return Number(direct) || 0
-  return null
-})
+const dexMod = computed(() => abilityModByPath(props.values, props.block.content?.dex_mod_path))
 const baseTotal = computed(() => {
   const d = armorData.value
   const bonuses = sumBonuses(d.bonuses)

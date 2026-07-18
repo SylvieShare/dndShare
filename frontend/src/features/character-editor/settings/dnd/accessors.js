@@ -9,7 +9,7 @@
  * Every function takes the character `data` object (`{ values, var }`).
  */
 
-import { abilityModifier } from '@/shared/lib/dnd'
+import { abilityModByPath, abilityModifier } from '@/shared/lib/dnd'
 
 function str(val) {
   if (val == null) return ''
@@ -88,8 +88,9 @@ export const dndAccessors = {
     if (raw == null) return 0
     if (typeof raw === 'number') return raw
     if (typeof raw === 'object') {
-      if (Number.isFinite(Number(raw.value))) return Number(raw.value)
-      return (Number(raw.base) || 0) + sumBonuses(raw.bonuses, b => b?.value)
+      const dex = raw.use_dex ? (abilityModByPath(data?.values, 'values.DEX.mod') || 0) : 0
+      if (Number.isFinite(Number(raw.value))) return Number(raw.value) + dex
+      return (Number(raw.base) || 0) + sumBonuses(raw.bonuses, b => b?.value) + dex
     }
     return Number(raw) || 0
   },
