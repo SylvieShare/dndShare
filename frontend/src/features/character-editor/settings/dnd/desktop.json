@@ -416,7 +416,11 @@
                                 },
                                 {
                                   "ref": "notes",
-                                  "kind": "block"
+                                  "kind": "block",
+                                  "props": {
+                                    "max-width": "820px",
+                                    "min-width": "0"
+                                  }
                                 }
                               ]
                             }
