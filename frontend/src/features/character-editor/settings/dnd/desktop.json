@@ -121,16 +121,6 @@
                                     "min-width": "0"
                                   }
                                 }
-                              },
-                              {
-                                "ref": "campaign",
-                                "kind": "block",
-                                "props": {
-                                  "shrink": "0",
-                                  "style": {
-                                    "max-width": "200px"
-                                  }
-                                }
                               }
                             ]
                           },
