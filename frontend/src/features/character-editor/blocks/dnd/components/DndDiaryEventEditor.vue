@@ -47,7 +47,7 @@
 import EditorPanel from '@/features/character-editor/components/EditorPanel'
 import EditorSection from '@/features/character-editor/components/EditorSection'
 import FormTextInput from '@/shared/ui/form/FormTextInput'
-import FormTextarea from '@/shared/ui/form/FormTextarea'
+import InputDescription from '@/shared/ui/InputDescription'
 import MultiToggle from '@/shared/ui/MultiToggle'
 import { EVENT_TYPES } from '@/features/character-editor/blocks/dnd/lib/diaryEntry'
 
@@ -58,6 +58,7 @@ defineProps({
 defineEmits(['update', 'remove', 'close', 'save'])
 
 const typeOptions = EVENT_TYPES.map(t => ({ value: t.value, label: t.label }))
+const descBlock = { id: 'desc', content: { placeholder: 'Что произошло…' } }
 </script>
 
 <style scoped>

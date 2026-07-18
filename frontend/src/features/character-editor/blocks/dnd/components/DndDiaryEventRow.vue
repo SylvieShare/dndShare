@@ -15,13 +15,14 @@
     </span>
     <div class="der-body">
       <div class="der-title" :class="{ 'der-title--empty': !event.title }">{{ event.title || meta.label }}</div>
-      <div v-if="event.desc" class="der-desc">{{ event.desc }}</div>
+      <RichContent v-if="hasDesc" class="der-desc" :html="descHtml" />
     </div>
   </div>
 </template>
 
 <script setup>
 import { computed } from 'vue'
+import RichContent from '@/shared/ui/RichContent'
 import { eventTypeMeta } from '@/features/character-editor/blocks/dnd/lib/diaryEntry'
 
 const props = defineProps({
@@ -29,6 +30,20 @@ const props = defineProps({
 })
 
 const meta = computed(() => eventTypeMeta(props.event.type))
+
+function escapeHtml(s) {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+}
+
+// Rich HTML from the editor as-is; legacy plain-text descs get escaped with line breaks kept.
+const descHtml = computed(() => {
+  const d = props.event.desc || ''
+  if (!d) return ''
+  if (/<[a-z][\s\S]*>/i.test(d)) return d
+  return escapeHtml(d).split('\n').join('<br>')
+})
+
+const hasDesc = computed(() => descHtml.value.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim() !== '')
 </script>
 
 <style scoped>
@@ -72,10 +87,8 @@ const meta = computed(() => eventTypeMeta(props.event.type))
 
 .der-desc {
   font-size: 12.5px;
-  line-height: 1.45;
   color: var(--text-2);
-  white-space: pre-line;
-  overflow-wrap: anywhere;
+  min-width: 0;
 }
 
 .der-day {
