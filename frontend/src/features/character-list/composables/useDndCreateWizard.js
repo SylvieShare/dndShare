@@ -1,4 +1,5 @@
 import { abilityModifier, proficiencyBonus } from '@/shared/lib/dnd'
+import { chosenOptionLabels, grantedSpellsAt } from '@/features/character-editor/blocks/dnd/lib/levelUp'
 import { computed, nextTick, reactive, ref, watch } from 'vue'
 import { fetchGet } from '@/shared/api/http'
 import { SKILL_BY_STAT, buildCharacterData } from '@/features/character-editor/settings/dnd/creation/buildCharacter'
@@ -374,6 +375,23 @@ export function useDndCreateWizard() {
   }
   const spellsComplete = computed(() => cantripChosen.value <= cantripLimit.value && spell1Chosen.value <= spell1Limit.value)
 
+  // ─── Даруемые заклинания архетипа (домен жреца на 1 уровне) ────────────────
+  const grantedSpellIds = computed(() => [...new Set(grantedSpellsAt(
+    [state.charClass, state.subclass].filter(Boolean),
+    1,
+    { options: chosenOptionLabels(state.choices) },
+  ).map((r) => r.spellId))])
+  const grantedSpellNames = ref({})
+  watch(grantedSpellIds, async (ids) => {
+    const missing = ids.filter((id) => !grantedSpellNames.value[id])
+    if (!missing.length) return
+    const res = await fetchGet('/items/by-ids?ids=' + missing.join(','))
+    const next = { ...grantedSpellNames.value }
+    ;(res?.items || []).forEach((it) => { next[it.id] = it.name })
+    grantedSpellNames.value = next
+  }, { immediate: true })
+  const grantedSpellList = computed(() => grantedSpellIds.value.map((id) => ({ id, name: grantedSpellNames.value[id] || `#${id}` })))
+
   // ─── Convenience actions ───────────────────────────────────────────────────
   function randomName() { state.name = NAME_POOL[Math.floor(Math.random() * NAME_POOL.length)] }
   function quickBuild() {
@@ -408,6 +426,7 @@ export function useDndCreateWizard() {
       persona: { ...state.persona },
       skillIds: state.skillIds.slice(),
       spellIds: state.spellIds.slice(),
+      grantedSpellIds: grantedSpellIds.value.slice(),
       choices: featureChoices.value.map((fc) => ({
         abilityId: fc.id,
         from_suggest_id: fc.choice.from_suggest_id,
@@ -491,6 +510,7 @@ export function useDndCreateWizard() {
     skillStat, skillMod, toggleSkill,
     // spells
     cantripPool, spell1Pool, cantripLimit, spell1Limit, cantripChosen, spell1Chosen, toggleSpell, spellsComplete,
+    grantedSpellList,
     // actions
     randomName, quickBuild,
     load, loadSpells, setMethod, rollStats, scoresComplete, buildPayload,

@@ -104,6 +104,31 @@
             </button>
           </div>
           <div v-if="featSnippet(f)" class="lu-feat-desc">{{ featSnippet(f) }}</div>
+          <template v-if="featChoice(f)">
+            <div class="lu-feat-choice-title">
+              {{ featChoice(f).text || 'Сделай выбор' }}
+              <span class="lu-req" :class="{ done: choiceCompleteFor(f) }">{{ choiceSel(f.id).length }} / {{ choiceCount(f) }}</span>
+            </div>
+            <div class="lu-chips">
+              <button
+                v-for="opt in choiceOptions(f)"
+                :key="opt.value"
+                class="lu-chip"
+                :class="{ on: choiceSel(f.id).some((v) => String(v) === String(opt.value)), off: choiceLocked(f, opt) }"
+                :title="opt.desc || ''"
+                @click="toggleFeatureChoice(f, opt.value)"
+              >{{ opt.label }}</button>
+            </div>
+          </template>
+        </div>
+      </div>
+
+      <!-- даруемые заклинания (домен/клятва/круг) -->
+      <div v-if="grantedSpellList.length" class="lu-sec">
+        <div class="lu-sec-title">Заклинания архетипа</div>
+        <p class="lu-muted">Всегда подготовлены и не учитываются в числе подготовленных.</p>
+        <div class="lu-chips">
+          <span v-for="sp in grantedSpellList" :key="sp.id" class="lu-spell-tag">{{ sp.name }}</span>
         </div>
       </div>
 
@@ -202,7 +227,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import AppModal from '@/shared/ui/AppModal'
 import FormNumberInput from '@/shared/ui/form/FormNumberInput'
 import ItemPickerModal from '@/features/character-editor/components/ItemPickerModal.vue'
@@ -211,7 +236,8 @@ import MultiToggle from '@/shared/ui/MultiToggle.vue'
 import { abilityModifier, proficiencyBonus, resolveNumValue } from '@/shared/lib/dnd'
 import { STAT_KEYS, STAT_SHORT } from '@/shared/lib/dndStats'
 import {
-  avgHitDie, classEntriesOf, computeSlots, dieFaceOf, multiclassCheck,
+  avgHitDie, castingAbilityIdOf, chosenOptionLabels, classEntriesOf, computeSlots,
+  dieFaceOf, grantedSpellsAt, multiclassCheck,
   MULTICLASS_PROFS, MULTICLASS_REQS, parseAsiLevels, totalLevel,
 } from '@/features/character-editor/blocks/dnd/lib/levelUp'
 import { defaultSlots } from '@/features/character-editor/blocks/dnd/lib/spellEntry'
@@ -299,6 +325,75 @@ function featSnippet(f) {
   const text = String(raw).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
   return text.length > 180 ? text.slice(0, 177).trim() + '…' : text
 }
+
+// ─── выборы у получаемых фич (местность круга, стиль боя, тотем…) ──────────
+const featureChoiceSel = ref({}) // abilityId → [выбранные значения]
+function featChoice(f) {
+  const c = f?.data?.choice
+  if (!c) return null
+  return (c.from_suggest_id || (Array.isArray(c.options) && c.options.length)) ? c : null
+}
+const choosableFeatures = computed(() => features.value.filter((f) => featChoice(f)))
+watch(choosableFeatures, (list) => {
+  list.forEach((f) => {
+    const c = featChoice(f)
+    if (c?.from_suggest_id) suggestStore.ensure(Number(c.from_suggest_id))
+  })
+}, { immediate: true })
+function choiceCount(f) { return Number(featChoice(f)?.count) || 1 }
+function choiceOptions(f) {
+  const c = featChoice(f)
+  if (!c) return []
+  if (c.from_suggest_id) {
+    return suggestStore.items(Number(c.from_suggest_id)).map((it) => ({ value: it.id, label: it.value }))
+  }
+  return (c.options || []).map((o) => ({ value: o.label, label: o.label, desc: o.desc }))
+}
+function choiceSel(abilityId) { return featureChoiceSel.value[abilityId] || [] }
+function choiceLocked(f, opt) {
+  const sel = choiceSel(f.id)
+  if (sel.some((v) => String(v) === String(opt.value))) return false
+  return sel.length >= choiceCount(f)
+}
+function toggleFeatureChoice(f, value) {
+  const cur = choiceSel(f.id)
+  const has = cur.some((v) => String(v) === String(value))
+  let next
+  if (choiceCount(f) === 1) next = has ? [] : [value]
+  else if (has) next = cur.filter((v) => String(v) !== String(value))
+  else next = cur.length < choiceCount(f) ? [...cur, value] : cur
+  featureChoiceSel.value = { ...featureChoiceSel.value, [f.id]: next }
+}
+function choiceCompleteFor(f) { return choiceSel(f.id).length === choiceCount(f) }
+const featureChoicesComplete = computed(() => choosableFeatures.value.every(choiceCompleteFor))
+
+// ─── даруемые заклинания (домен/клятва/круг) ────────────────────────────────
+const effectiveSubclassItem = computed(() => (subclassPick.value
+  ? subclassPick.value
+  : (targetEntry.value?.subclass ? itemsById.value[targetEntry.value.subclass.id] : null)))
+const grantedRows = computed(() => {
+  if (isPlain.value || !classItem.value) return []
+  const items = [classItem.value, effectiveSubclassItem.value].filter(Boolean)
+  const options = chosenOptionLabels(props.values?.feature_choices, featureChoiceSel.value)
+  if (isNew.value) return grantedSpellsAt(items, 1, { options })
+  // Только что выбранный архетип отдаёт весь накопленный список, иначе — дельту уровня.
+  if (subclassPick.value) return grantedSpellsAt(items, newClassLevel.value, { options })
+  return grantedSpellsAt(items, newClassLevel.value, { exact: true, options })
+})
+const grantedNewIds = computed(() => {
+  const have = new Set((props.values?.spells?.spells || []).map((s) => s.id))
+  return [...new Set(grantedRows.value.map((r) => r.spellId))].filter((id) => !have.has(id))
+})
+const spellNames = ref({})
+watch(grantedNewIds, async (ids) => {
+  const missing = ids.filter((id) => !spellNames.value[id])
+  if (!missing.length) return
+  const res = await itemsApi.byIds(missing)
+  const next = { ...spellNames.value }
+  ;(res?.items || []).forEach((it) => { next[it.id] = it.name })
+  spellNames.value = next
+}, { immediate: true })
+const grantedSpellList = computed(() => grantedNewIds.value.map((id) => ({ id, name: spellNames.value[id] || `#${id}` })))
 
 // ─── хиты ───────────────────────────────────────────────────────────────────
 const hitDieLabel = computed(() => {
@@ -470,6 +565,7 @@ const canAccept = computed(() => {
   if (!classItem.value) return false
   if (needSubclass.value && !subclassPick.value) return false
   if (asiNow.value && !asiSkipped.value && !asiComplete.value) return false
+  if (!featureChoicesComplete.value) return false
   return true
 })
 
@@ -526,19 +622,34 @@ function accept() {
       }
     }
 
-    // ячейки заклинаний
-    if (applySlots.value && slotDiff.value.length && slotsAfter.value?.isCaster) {
+    // выборы получаемых фич (местность круга, стиль боя…) → values.feature_choices
+    const madeChoices = Object.entries(featureChoiceSel.value).filter(([, sel]) => sel.length)
+    if (madeChoices.length) {
+      updates.feature_choices = {
+        ...(v.feature_choices && typeof v.feature_choices === 'object' ? v.feature_choices : {}),
+        ...Object.fromEntries(madeChoices.map(([id, sel]) => [id, sel.slice()])),
+      }
+    }
+
+    // ячейки заклинаний + даруемые заклинания архетипа
+    const applySlotChange = applySlots.value && slotDiff.value.length && slotsAfter.value?.isCaster
+    if (applySlotChange || grantedNewIds.value.length) {
       const spells = v.spells && typeof v.spells === 'object'
         ? { ...v.spells }
-        : { stat_path: classItem.value?.data?.spellcasting?.ability ?? '', spells: [], slots: defaultSlots() }
-      const slots = Array.isArray(spells.slots) && spells.slots.length
-        ? spells.slots.map((s) => ({ ...s }))
-        : defaultSlots()
-      slotsAfter.value.totals.forEach((n, i) => {
-        slots[i] = { level: i + 1, used: 0, ...(slots[i] || {}), total: n }
-      })
-      spells.slots = slots
-      if (slotsAfter.value.pactMerged) spells.slots_rest = 'short_rest'
+        : { stat_path: castingAbilityIdOf(classItem.value) ?? '', spells: [], slots: defaultSlots() }
+      if (applySlotChange) {
+        const slots = Array.isArray(spells.slots) && spells.slots.length
+          ? spells.slots.map((s) => ({ ...s }))
+          : defaultSlots()
+        slotsAfter.value.totals.forEach((n, i) => {
+          slots[i] = { level: i + 1, used: 0, ...(slots[i] || {}), total: n }
+        })
+        spells.slots = slots
+        if (slotsAfter.value.pactMerged) spells.slots_rest = 'short_rest'
+      }
+      if (grantedNewIds.value.length) {
+        spells.spells = [...(spells.spells || []), ...grantedNewIds.value.map((id) => ({ id, prepared: true }))]
+      }
       updates.spells = spells
     }
   }
@@ -633,6 +744,13 @@ onMounted(async () => {
 .lu-feat-view:hover { color: var(--accent); background: color-mix(in srgb, var(--accent) 15%, transparent); }
 .lu-feat-view svg { width: 15px; height: 15px; }
 .lu-feat-desc { font-size: 12px; color: var(--text-muted); line-height: 1.45; margin-top: 3px; }
+.lu-feat-choice-title { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; color: var(--text-2); margin-top: 8px; margin-bottom: 6px; }
+.lu-spell-tag {
+  display: inline-flex; align-items: center;
+  background: color-mix(in srgb, var(--accent) 13%, var(--block-bg));
+  border-radius: 999px; color: var(--text-1); font-size: 12px; font-weight: 500;
+  padding: 6px 13px;
+}
 
 .lu-hp { display: flex; flex-direction: column; gap: 8px; }
 .lu-hp-val { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }

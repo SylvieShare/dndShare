@@ -74,7 +74,7 @@ export function buildCharacterData(input) {
   const {
     name = '', race, subrace = null, charClass, subclass = null, raceVariant = null,
     background = null,
-    scores = {}, asiChoice = [], skillIds = [], spellIds = [], choices = [],
+    scores = {}, asiChoice = [], skillIds = [], spellIds = [], grantedSpellIds = [], choices = [],
     raceSkillIds = [], raceLangIds = [], featIds = [], bgLangIds = [],
     equipment = [], persona = null,
     raceAbilityItems = [], classAbilityItems = [], suggestValue,
@@ -138,7 +138,9 @@ export function buildCharacterData(input) {
 
   // Spells (casters): known/prepared list + level-1 slots. Slot totals come from
   // the shared caster table (full 2 / half 0 / artificer 2 / warlock pact 1).
-  if (grants.spellcasting || spellIds.length) {
+  // Granted subclass spells (cleric domains) are appended as prepared.
+  const grantedExtra = grantedSpellIds.filter((id) => !spellIds.includes(id))
+  if (grants.spellcasting || spellIds.length || grantedExtra.length) {
     const slots = defaultSlots()
     const slotInfo = charClass ? computeSlots(
       [{ id: charClass.id, level: 1, subclass: subclass ? { id: subclass.id } : null }],
@@ -148,7 +150,7 @@ export function buildCharacterData(input) {
     else if (grants.spellcasting) slots[0] = { ...slots[0], total: 2 }
     values.spells = {
       stat_path: grants.spellcasting?.abilityId ?? '',
-      spells: spellIds.map((id) => ({ id, prepared: true })),
+      spells: [...spellIds, ...grantedExtra].map((id) => ({ id, prepared: true })),
       slots,
       ...(slotInfo?.pactMerged ? { slots_rest: 'short_rest' } : {}),
     }

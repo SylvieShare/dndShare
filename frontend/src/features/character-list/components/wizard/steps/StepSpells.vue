@@ -2,6 +2,14 @@
   <div class="step">
     <p v-if="grants.spellcasting?.note" class="hint" v-html="grants.spellcasting.note" />
 
+    <div v-if="grantedSpellList.length" class="sec">
+      <div class="sheet-section-title">Заклинания архетипа</div>
+      <p class="hint">Всегда подготовлены и не учитываются в числе подготовленных.</p>
+      <div class="granted">
+        <span v-for="sp in grantedSpellList" :key="sp.id" class="granted-tag">{{ sp.name }}</span>
+      </div>
+    </div>
+
     <div class="search">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" /></svg>
       <input v-model="query" type="text" placeholder="Поиск заклинания…" />
@@ -53,6 +61,7 @@ import ItemViewModal from '@/shared/ui/ItemViewModal'
 const {
   state, grants, suggestValue,
   cantripPool, spell1Pool, cantripLimit, spell1Limit, cantripChosen, spell1Chosen, toggleSpell,
+  grantedSpellList,
 } = inject('createWizard')
 
 const query = ref('')
@@ -87,6 +96,12 @@ function school(sp) { return suggestValue(7, sp.data?.schoolId) || '' }
 }
 .search input:focus { border-color: var(--input-focus); }
 .sec { display: flex; flex-direction: column; gap: 8px; }
+.granted { display: flex; flex-wrap: wrap; gap: 7px; }
+.granted-tag {
+  display: inline-flex; align-items: center;
+  background: color-mix(in srgb, var(--accent) 13%, var(--block-bg));
+  border-radius: 999px; color: var(--text-1); font-size: 12px; padding: 6px 13px;
+}
 .count { font-size: 12px; font-weight: 600; color: var(--text-muted); letter-spacing: 0; text-transform: none; }
 .count.done { color: var(--success); }
 .list { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 6px; }

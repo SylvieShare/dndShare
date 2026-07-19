@@ -13,6 +13,12 @@
 
 export const LEVEL_CAP = 20
 
+function num(v) {
+  if (v == null) return null
+  const n = Number(v)
+  return Number.isFinite(n) ? n : null
+}
+
 // ─── class entries ──────────────────────────────────────────────────────────
 
 export function classEntriesOf(values) {
@@ -158,6 +164,65 @@ export function computeSlots(entries, itemsById) {
   if (pactMerged) totals[pact.slotLevel - 1] += pact.count
 
   return { totals, casterLevel, pact, pactMerged, isCaster: casterLevel > 0 || !!pact }
+}
+
+// ─── granted spells (domain / oath / circle lists) ──────────────────────────
+
+/**
+ * Rows of `data.granted_spells` from class/subclass handbook items, normalized:
+ * `{ spellId, level, option }`. `spell` tolerates a bare id or `{ id }`;
+ * `option` (e.g. a Circle of the Land terrain) gates the row on a feature
+ * choice the character made.
+ */
+export function grantedSpellRows(items) {
+  const rows = []
+  for (const it of items || []) {
+    const list = Array.isArray(it?.data?.granted_spells) ? it.data.granted_spells : []
+    for (const r of list) {
+      const spellId = num(r?.spell?.id ?? r?.spell)
+      if (spellId == null) continue
+      rows.push({ spellId, level: num(r?.level) ?? 1, option: r?.option ? String(r.option) : null })
+    }
+  }
+  return rows
+}
+
+/**
+ * Granted spells available at `classLevel`. `opts.exact` → only rows gained at
+ * exactly that level (level-up delta), default cumulative. `opts.options` — the
+ * character's selected feature-choice labels; rows with an `option` match only
+ * when it is among them.
+ */
+export function grantedSpellsAt(items, classLevel, opts = {}) {
+  const lvl = num(classLevel) ?? 1
+  const chosen = (opts.options || []).map((o) => String(o))
+  return grantedSpellRows(items).filter((r) => {
+    if (opts.exact ? r.level !== lvl : r.level > lvl) return false
+    return !r.option || chosen.includes(r.option)
+  })
+}
+
+/** Flatten `values.feature_choices` (+ extra maps) into a list of chosen labels. */
+export function chosenOptionLabels(...choiceMaps) {
+  const out = []
+  for (const map of choiceMaps) {
+    if (!map || typeof map !== 'object') continue
+    for (const sel of Object.values(map)) {
+      ;(Array.isArray(sel) ? sel : [sel]).forEach((v) => { if (v != null && v !== '') out.push(String(v)) })
+    }
+  }
+  return out
+}
+
+/** Spellcasting stat (suggest-16 id) for a class item; PHB fallback for the
+ *  half-casters whose items don't carry a `spellcasting` block. */
+export function castingAbilityIdOf(classItem) {
+  const own = num(classItem?.data?.spellcasting?.ability)
+  if (own != null) return own
+  const n = String(classItem?.nameEn || '').trim().toLowerCase()
+  if (n === 'paladin') return 6
+  if (n === 'ranger') return 5
+  return null
 }
 
 // ─── multiclassing rules (PHB, keyed by class nameEn) ───────────────────────

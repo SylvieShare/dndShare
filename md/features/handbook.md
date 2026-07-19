@@ -113,7 +113,16 @@ Race and class **content** are first-class handbook items, not suggests:
   suggest type 2), `hit_die` (suggest 11), `primary_abilities`/`saves` (suggest 16),
   `armor_prof`/`weapon_prof`/`tool_prof`, `skill_choice` (`{ count, from(15) }`),
   `spellcasting` (`{ ability(16), cantrips_known, spells_known, prepares, note }`),
-  `subclass_level`, `asi_levels`, `starting_equipment`, `description`.
+  `subclass_level`, `asi_levels`, `granted_spells`, `starting_equipment`, `description`.
+  `granted_spells` (added 2026-07-19 via an idempotent `UPDATE` in `schema.sql` — the
+  seed `INSERT` is a no-op on existing DBs) models domain/oath/circle spell lists on
+  **subclass** items: an object_array of `{ level, spell, option }` where `level` is
+  the CLASS level the spells arrive at, `spell` is a type-5 item id (bare number from
+  the editor; the engine also tolerates `{id}`), and `option` gates the row on a
+  feature-choice label (Circle of the Land terrains — must match the `choice.options[].label`
+  of the granting ability, e.g. «Арктика»). Consumed by the create wizard (level-1 domain
+  spells → `values.spells.spells` as prepared) and the level-up window (delta rows at the
+  new class level; a just-picked subclass grants its whole backlog).
 
 **Subraces/subclasses** are separate items of the **same type** linked to their base
 via `item.parent_id` (see `md/database.md`). Base ⇔ `parent_id IS NULL`. Fetch a
