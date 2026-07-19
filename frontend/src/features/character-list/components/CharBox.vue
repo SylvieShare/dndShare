@@ -1,7 +1,5 @@
 <template>
   <BaseTile class="char-card" @click="navigate">
-    <CharStatRadar v-if="radarAxes" class="char-radar" :axes="radarAxes" />
-
     <div class="char-ava">
       <img v-if="avaUrl" :src="avaUrl" class="ava-img" alt="" />
       <div v-else class="ava-placeholder" />
@@ -46,17 +44,13 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import BasePopover from '@/shared/ui/BasePopover.vue'
 import BaseTile from '@/shared/ui/BaseTile'
-import CharStatRadar from '@/features/character-list/components/CharStatRadar.vue'
 import ConfirmDialog from '@/shared/ui/ConfirmDialog'
 import { getByPath } from '@/shared/lib/objectPath'
 import { setCharSeed } from '@/shared/lib/charSeed'
-import { useSuggestStore } from '@/stores/suggest'
-
-const ABILITY_SUGGEST_TYPE = 16
 
 const STATUS_COLOR = {
   live: '#e85c5c', active: '#5ce87c', planned: '#5c95e8', paused: '#e89c3c',
@@ -86,7 +80,6 @@ const props = defineProps({
 const emit = defineEmits(['clone', 'delete'])
 
 const router = useRouter()
-const suggestStore = useSuggestStore()
 const menuOpen = ref(false)
 const menuBtnEl = ref(null)
 const confirmDelete = ref(false)
@@ -111,16 +104,6 @@ const who = computed(() => {
 const lvl = computed(() => {
   if (props.accessors) return toStr(props.accessors.level(props.data))
   return toStr(getByPath(props.data, props.pathValues?.lvl))
-})
-
-const radarAxes = computed(() => {
-  if (!props.accessors?.abilities) return null
-  const abilities = props.accessors.abilities(props.data)
-  if (!abilities.length) return null
-  return abilities.map(a => {
-    const suggest = suggestStore.items(a.suggestTypeId).find(s => String(s.id) === String(a.titleSuggestId))
-    return { id: a.id, score: a.score, svg: suggest?.svg || '', color: suggest?.color || '' }
-  })
 })
 
 const chapterLabel = computed(() => {
@@ -181,14 +164,6 @@ function doDelete() {
   confirmDelete.value = false
   emit('delete', props.uuid)
 }
-
-// Accessors arrive once the template store loads (possibly after mount), so load
-// the ability-icon suggests as soon as a D&D character is in play.
-watch(
-  () => !!props.accessors?.abilities,
-  hasAbilities => { if (hasAbilities) suggestStore.ensure(ABILITY_SUGGEST_TYPE) },
-  { immediate: true },
-)
 </script>
 
 <style scoped>
@@ -208,11 +183,15 @@ watch(
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 30%, transparent);
 }
 
-/* Flush to the container — no padding, fills the full height of the card. */
+/* Inset from the left edge with a rounded frame; the inner radius is chosen so
+   the corner curve stays concentric with the tile's own --r-lg rounding. */
 .char-ava {
   flex-shrink: 0;
-  width: 96px;
+  width: 84px;
   align-self: stretch;
+  margin: 12px 0 12px 12px;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .ava-img {
@@ -227,10 +206,6 @@ watch(
   width: 100%;
   height: 100%;
   background: linear-gradient(135deg, #482f6c, #623cd7);
-}
-
-.char-radar {
-  align-self: center;
 }
 
 .char-body {
