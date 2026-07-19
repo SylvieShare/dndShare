@@ -41,15 +41,40 @@
       <div v-for="sec in sections" :key="sec.title" class="pv-sec">
         <div class="pv-sec-h">{{ sec.title }}</div>
         <ul class="pv-grants">
-          <li v-for="(g, i) in sec.items" :key="i"><span class="gk">{{ g.k }}</span>{{ g.v }}</li>
+          <li v-for="(g, i) in sec.items" :key="i">
+            <span class="gk">{{ g.k }}</span>
+            <template v-if="g.abilities">
+              <template v-for="(ab, j) in g.abilities" :key="j"><span
+                class="pv-ability"
+                @mouseenter="(e) => showTooltip(e, ab)"
+                @mouseleave="hideTooltip"
+              >{{ ab.name }}</span><span v-if="j < g.abilities.length - 1">, </span></template>
+            </template>
+            <template v-else>{{ g.v }}</template>
+          </li>
         </ul>
       </div>
     </div>
+
+    <ItemTooltip
+      v-if="tooltip.visible"
+      :title="tooltip.name"
+      :desc="tooltip.desc"
+      :x="tooltip.x"
+      :top="tooltip.top"
+      :bottom="tooltip.bottom"
+    >
+      <template v-if="tooltip.item && (tooltip.item.data?.max_use || tooltip.item.data?.rollback_short_rest || tooltip.item.data?.rollback_long_rest)" #details>
+        <AbilityTooltipDetails :item="tooltip.item" />
+      </template>
+    </ItemTooltip>
   </aside>
 </template>
 
 <script setup>
-import { computed, inject } from 'vue'
+import { computed, inject, reactive } from 'vue'
+import ItemTooltip from '@/features/character-editor/components/ItemTooltip'
+import AbilityTooltipDetails from '@/features/items/detail-components/AbilityTooltipDetails'
 import { featuresForBinding } from '@/features/character-editor/settings/dnd/creation/progression'
 import { STAT_SHORT, formatMod, monogramOf } from '@/features/character-list/components/wizard/labels'
 
@@ -83,11 +108,28 @@ function itemProfs(item) {
     ...(d.tool_prof || []).map((id) => suggestValue(5, id)),
   ].filter(Boolean)
 }
-function featureNames(items, binding) {
-  return featuresForBinding(items, binding, 1).map((i) => i.name).filter(Boolean)
+function featureList(items, binding) {
+  return featuresForBinding(items, binding, 1)
+    .filter((i) => i.name)
+    .map((i) => ({ name: i.name, desc: i.data?.desc || '', item: i }))
 }
+
+const tooltip = reactive({ visible: false, name: '', desc: '', item: null, x: 0, top: null, bottom: null })
+function showTooltip(e, ab) {
+  if (!ab.desc) return
+  const rect = e.currentTarget.getBoundingClientRect()
+  const above = window.innerHeight - rect.bottom < 220
+  Object.assign(tooltip, {
+    visible: true, name: ab.name, desc: ab.desc, item: ab.item,
+    x: Math.min(rect.left, window.innerWidth - 350),
+    top: above ? null : rect.bottom + 8,
+    bottom: above ? window.innerHeight - rect.top + 8 : null,
+  })
+}
+function hideTooltip() { tooltip.visible = false }
 function names(ids, typeId) { return ids.map((id) => suggestValue(typeId, id)).filter(Boolean) }
 function push(items, k, v) { if (v && v.length) items.push({ k, v }) }
+function pushAbilities(items, abilities) { if (abilities.length) items.push({ k: 'Способности', abilities }) }
 
 // Every bonus the character accrues, grouped by the wizard step that grants it —
 // so it's easy to see what each choice adds and to spot leftovers after a rollback.
@@ -106,7 +148,7 @@ const sections = computed(() => {
     push(items, 'Навыки расы', names(state.raceSkillIds, 15).join(', '))
     push(items, 'Черта', state.featIds.map((id) => featPool.value.find((f) => f.id === id)?.name).filter(Boolean).join(', '))
     push(items, 'Владения', [...itemProfs(state.race.item), ...itemProfs(state.subrace?.item)].join(', '))
-    push(items, 'Способности', featureNames(raceAbilities.value, { raceId: state.race?.id, subraceId: state.subrace?.id }).join(', '))
+    pushAbilities(items, featureList(raceAbilities.value, { raceId: state.race?.id, subraceId: state.subrace?.id }))
     if (items.length) out.push({ title: 'Раса', items })
   }
 
@@ -116,7 +158,7 @@ const sections = computed(() => {
     push(items, 'Спасброски', g.saves.map((s) => STAT_SHORT[s]).join(', '))
     push(items, 'Владения', [...itemProfs(state.charClass.item), ...itemProfs(state.subclass?.item)].join(', '))
     if (g.spellcasting?.stat) push(items, 'Магия', `заклинатель (${STAT_SHORT[g.spellcasting.stat]})`)
-    push(items, 'Способности', featureNames(classAbilities.value, { classId: state.charClass?.id, subclassId: state.subclass?.id }).join(', '))
+    pushAbilities(items, featureList(classAbilities.value, { classId: state.charClass?.id, subclassId: state.subclass?.id }))
     if (items.length) out.push({ title: 'Класс', items })
   }
 
@@ -194,4 +236,6 @@ const sections = computed(() => {
 .pv-grants { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
 .pv-grants li { font-size: 12px; color: var(--text-2); line-height: 1.35; }
 .gk { display: block; font-size: 10px; letter-spacing: 0.03em; text-transform: uppercase; color: var(--text-muted); }
+.pv-ability { cursor: help; text-decoration: underline dotted; text-underline-offset: 2px; text-decoration-color: var(--text-muted); }
+.pv-ability:hover { color: var(--text-1); text-decoration-color: var(--accent); }
 </style>
