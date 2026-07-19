@@ -153,18 +153,16 @@ export function useDndCreateWizard() {
   })))
   const skillLimit = computed(() => grants.value.skillChoice?.count || 0)
 
+  function racialBonus(s) {
+    const fixed = (grants.value.asi || []).filter((a) => a.stat === s).reduce((sum, a) => sum + a.bonus, 0)
+    const floating = state.asiChoice.includes(s) ? (grants.value.asiChoice?.bonus || 0) : 0
+    return fixed + floating
+  }
+
   // Final ability scores = chosen base + racial ASI (fixed + floating choice).
-  const finalScores = computed(() => {
-    const out = {}
-    const floatBonus = grants.value.asiChoice?.bonus || 0
-    for (const s of STATS) {
-      const base = Number(state.scores[s] ?? 0)
-      const asi = (grants.value.asi || []).filter((a) => a.stat === s).reduce((sum, a) => sum + a.bonus, 0)
-      const floating = state.asiChoice.includes(s) ? floatBonus : 0
-      out[s] = base + asi + floating
-    }
-    return out
-  })
+  const finalScores = computed(() => Object.fromEntries(
+    STATS.map((s) => [s, Number(state.scores[s] ?? 0) + racialBonus(s)]),
+  ))
 
   // Floating racial ASI ("choose N abilities, +V each" — Variant Human, Half-Elf).
   function toggleAsiChoice(stat) {
@@ -324,7 +322,10 @@ export function useDndCreateWizard() {
 
   // ─── Derived level-1 stats (live preview) ──────────────────────────────────
   const PROF_BONUS = proficiencyBonus(1)
-  const mods = computed(() => Object.fromEntries(STATS.map((s) => [s, abilityModifier(finalScores.value[s] || 10)])))
+  const mods = computed(() => Object.fromEntries(STATS.map((s) => {
+    const base = Number(state.scores[s] ?? 0)
+    return [s, abilityModifier((base > 0 ? base : 10) + racialBonus(s))]
+  })))
   const hitDieFace = computed(() => {
     const m = String(suggestValue(11, grants.value.hitDieId)).match(/(\d+)/)
     return m ? Number(m[1]) : null
@@ -465,7 +466,7 @@ export function useDndCreateWizard() {
     state,
     races, classes, subraces, subclasses, spellPool, featPool, bgPool, loading,
     raceAbilities, classAbilities,
-    grants, isCaster, skillOptions, skillLimit, finalScores,
+    grants, isCaster, skillOptions, skillLimit, finalScores, racialBonus,
     pointsSpent, pointsLeft,
     featureChoices, raceFeatureChoices, classFeatureChoices,
     choiceOptionList, choiceSelected, toggleChoice, choicesComplete,

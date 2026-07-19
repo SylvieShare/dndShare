@@ -81,7 +81,7 @@ import { STAT_SHORT, formatMod, monogramOf } from '@/features/character-list/com
 const wz = inject('createWizard')
 const {
   STATS, state, grants, mods, finalScores, maxHp, unarmoredAc, initiativeMod, spellDc,
-  suggestValue, raceAbilities, classAbilities, featPool, spellPool, randomName,
+  suggestValue, raceAbilities, classAbilities, featPool, spellPool, randomName, racialBonus,
 } = wz
 
 const mono = computed(() => monogramOf(state.charClass?.name || state.race?.name || '?'))
@@ -90,13 +90,6 @@ const classLine = computed(() => [state.charClass?.name, state.subclass?.name].f
 const scoresEntered = computed(() => STATS.some((s) => state.scores[s] != null))
 const showStats = computed(() => !!state.race || scoresEntered.value)
 function modClass(m) { return m > 0 ? 'pos' : m < 0 ? 'neg' : '' }
-// Racial bonus for a stat (fixed ASI + chosen floating). Shown before ability
-// scores are picked, so no misleading negative modifiers appear.
-function racialBonus(s) {
-  const fixed = (grants.value.asi || []).filter((a) => a.stat === s).reduce((x, a) => x + a.bonus, 0)
-  const floating = state.asiChoice.includes(s) ? (grants.value.asiChoice?.bonus || 0) : 0
-  return fixed + floating
-}
 
 // Proficiency labels declared directly on one handbook item's data — so each
 // prof is attributed to its true source (race vs class), not the merged grants.
