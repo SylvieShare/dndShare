@@ -8,7 +8,7 @@
     </div>
 
     <template v-for="sec in sections" :key="sec.kind">
-      <div v-if="sec.pool.length" class="sec">
+      <div v-if="sec.pool.length && sec.limit" class="sec">
         <div class="sheet-section-title">
           {{ sec.title }}
           <span class="count" :class="{ done: sec.chosen === sec.limit }">{{ sec.chosen }} / {{ sec.limit }}</span>
@@ -26,17 +26,29 @@
             </span>
             <span class="sp-name">{{ sp.name }}</span>
             <span v-if="school(sp)" class="sp-school">{{ school(sp) }}</span>
+            <button class="sp-view" title="Посмотреть заклинание" @click.stop="viewId = sp.id">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12z" /><circle cx="12" cy="12" r="3" /></svg>
+            </button>
           </div>
         </div>
       </div>
     </template>
 
+    <p v-if="preparesNote" class="hint">{{ preparesNote }}</p>
     <p v-if="!cantripPool.length && !spell1Pool.length" class="hint">Доступных заклинаний для класса не найдено.</p>
+
+    <ItemViewModal
+      v-if="viewId != null"
+      :item-type-id="5"
+      :item-id="viewId"
+      @close="viewId = null"
+    />
   </div>
 </template>
 
 <script setup>
 import { computed, inject, ref } from 'vue'
+import ItemViewModal from '@/shared/ui/ItemViewModal'
 
 const {
   state, grants, suggestValue,
@@ -44,11 +56,18 @@ const {
 } = inject('createWizard')
 
 const query = ref('')
+const viewId = ref(null)
 
 const sections = computed(() => [
   { kind: 'cantrip', title: 'Заговоры', pool: cantripPool.value, limit: cantripLimit.value, chosen: cantripChosen.value },
   { kind: 'spell', title: 'Заклинания 1 круга', pool: spell1Pool.value, limit: spell1Limit.value, chosen: spell1Chosen.value },
 ])
+
+const preparesNote = computed(() => (
+  grants.value.spellcasting?.prepares && spell1Limit.value === 0 && spell1Pool.value.length
+    ? 'Заклинания 1 круга ты подготавливаешь из всего списка класса каждый день — выбирать их при создании не нужно.'
+    : ''
+))
 
 function filtered(pool) {
   const q = query.value.trim().toLowerCase()
@@ -85,4 +104,11 @@ function school(sp) { return suggestValue(7, sp.data?.schoolId) || '' }
 .box svg { width: 12px; height: 12px; color: #fff; }
 .sp-name { flex: 1; font-size: 13px; color: var(--text-1); }
 .sp-school { font-size: 10px; color: var(--text-muted); white-space: nowrap; }
+.sp-view {
+  flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px; border: none; border-radius: 6px;
+  background: none; color: var(--text-muted); cursor: pointer; transition: background 0.15s, color 0.15s;
+}
+.sp-view:hover { background: color-mix(in srgb, var(--accent) 18%, transparent); color: var(--accent); }
+.sp-view svg { width: 15px; height: 15px; }
 </style>
