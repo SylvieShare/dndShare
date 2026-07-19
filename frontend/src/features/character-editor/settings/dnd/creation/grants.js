@@ -161,6 +161,7 @@ export function extractGrants({ race, subrace, charClass, subclass, raceVariant,
     if (d.spellcasting && (statKey(d.spellcasting.ability) || d.spellcasting.cantrips_known != null)) {
       grants.spellcasting = {
         stat: statKey(d.spellcasting.ability),
+        abilityId: num(d.spellcasting.ability),
         cantripsKnown: num(d.spellcasting.cantrips_known) ?? 0,
         spellsKnown: num(d.spellcasting.spells_known) ?? 0,
         prepares: !!d.spellcasting.prepares,

@@ -140,7 +140,7 @@ export function buildCharacterData(input) {
     const slots = defaultSlots()
     if (grants.spellcasting) slots[0] = { ...slots[0], total: 2 }
     values.spells = {
-      stat_path: grants.spellcasting?.stat ? `${grants.spellcasting.stat}.mod` : '',
+      stat_path: grants.spellcasting?.abilityId ?? '',
       spells: spellIds.map((id) => ({ id, prepared: true })),
       slots,
     }
