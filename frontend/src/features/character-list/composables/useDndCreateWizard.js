@@ -116,6 +116,7 @@ export function useDndCreateWizard() {
   watch(() => state.charClass, async (c) => {
     if (hydrating) return
     state.subclass = null
+    state.skillIds = []
     subclasses.value = c ? ((await fetchGet(`/items/children?parentId=${c.id}`))?.items || []).filter((i) => i.typeId === CLASS_TYPE) : []
   })
   // A different race/subrace/variant means a different set of race offers — clear the picks.
