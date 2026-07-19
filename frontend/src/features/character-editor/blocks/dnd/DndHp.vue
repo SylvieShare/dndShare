@@ -38,7 +38,12 @@ const emit = defineEmits(['update:value'])
 const { editorOpen, originRect, originEl, open, close } = useMorphOrigin()
 
 const isCompact = computed(() => props.block?.props?.variant === 'compact')
-const hp = computed(() => ({ max: 0, current: 0, temp: 0, dice: 'd8', diceCount: 1, diceUsed: 0, ds_success: 0, ds_failure: 0, ...props.value }))
+const level = computed(() => {
+  const lvl = props.values?.lvl
+  const n = lvl && typeof lvl === 'object' ? (lvl.level ?? lvl.lvl ?? lvl.v) : lvl
+  return Math.max(1, parseInt(n) || 1)
+})
+const hp = computed(() => ({ max: 0, current: 0, temp: 0, dice: 'd8', diceUsed: 0, ds_success: 0, ds_failure: 0, ...props.value, diceCount: level.value }))
 
 const barPct = computed(() => {
   const max = parseInt(hp.value.max) || 0

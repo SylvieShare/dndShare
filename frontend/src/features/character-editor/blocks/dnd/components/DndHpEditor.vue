@@ -26,9 +26,6 @@
     <FormField label="Максимум HP">
       <FormNumberInput :value="hp.max || 0" :min="0" :max="999" @change="set('max', $event)" />
     </FormField>
-    <FormField label="Костей хитов">
-      <FormNumberInput :value="hp.diceCount || 1" :min="1" :max="99" @change="set('diceCount', $event)" />
-    </FormField>
     <div class="hpe-field">
       <span class="hpe-label">Тип кубика</span>
       <div class="hpe-pills">
