@@ -7,7 +7,16 @@
       </div>
       <p v-if="fc.choice.text" class="hint">{{ fc.choice.text }}</p>
 
-      <div v-if="isChips(fc.choice)" class="chips">
+      <MultiSearchSelect
+        v-if="isLangChoice(fc.choice)"
+        :options="optionsFor(fc.choice)"
+        :selected="choiceSelected(fc.id)"
+        :limit="Number(fc.choice.count) || 1"
+        placeholder="Найти язык…"
+        @toggle="(id) => toggleChoice(fc.id, id, Number(fc.choice.count) || 1)"
+      />
+
+      <div v-else-if="isChips(fc.choice)" class="chips">
         <button
           v-for="opt in choiceOptionList(fc.choice)"
           :key="opt.value"
@@ -40,6 +49,7 @@
 
 <script setup>
 import { computed, inject } from 'vue'
+import MultiSearchSelect from '@/features/character-list/components/wizard/MultiSearchSelect.vue'
 
 const props = defineProps({ scope: { type: String, default: 'all' } })
 const wz = inject('createWizard')
@@ -56,6 +66,8 @@ function locked(fc, opt) {
   return count > 1 && !isSel(fc, opt) && choiceSelected(fc.id).length >= count
 }
 function isChips(choice) { return !!choice?.from_suggest_id }
+function isLangChoice(choice) { return Number(choice?.from_suggest_id) === 6 }
+function optionsFor(choice) { return choiceOptionList(choice).map((o) => ({ id: o.value, name: o.label })) }
 </script>
 
 <style scoped>

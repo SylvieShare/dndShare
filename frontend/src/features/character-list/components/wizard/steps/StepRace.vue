@@ -91,15 +91,13 @@
           Дополнительный язык на выбор
           <span class="count" :class="{ done: raceLangsComplete }">{{ state.raceLangIds.length }} / {{ raceLangLimit }}</span>
         </p>
-        <div class="asi-chips">
-          <button
-            v-for="o in raceLangOptions"
-            :key="o.id"
-            class="asi-chip"
-            :class="{ on: state.raceLangIds.includes(o.id), off: !state.raceLangIds.includes(o.id) && raceLangsComplete }"
-            @click="toggleRaceLang(o.id)"
-          >{{ o.name }}</button>
-        </div>
+        <MultiSearchSelect
+          :options="raceLangOptions"
+          :selected="state.raceLangIds"
+          :limit="raceLangLimit"
+          placeholder="Найти язык…"
+          @toggle="toggleRaceLang"
+        />
       </div>
 
       <div v-if="grants.featChoice" class="pick">
@@ -139,6 +137,7 @@
 <script setup>
 import { computed, inject, ref } from 'vue'
 import ItemPickerModal from '@/features/character-editor/components/ItemPickerModal.vue'
+import MultiSearchSelect from '@/features/character-list/components/wizard/MultiSearchSelect.vue'
 import RichContent from '@/shared/ui/RichContent'
 import SelectTile from '@/features/character-list/components/wizard/SelectTile.vue'
 import StepChoices from '@/features/character-list/components/wizard/steps/StepChoices.vue'

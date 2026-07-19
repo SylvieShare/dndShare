@@ -29,15 +29,13 @@
           Дополнительные языки на выбор
           <span class="count" :class="{ done: bgLangsComplete }">{{ state.bgLangIds.length }} / {{ bgLangLimit }}</span>
         </p>
-        <div class="chips">
-          <button
-            v-for="o in bgLangOptions"
-            :key="o.id"
-            class="chip"
-            :class="{ on: state.bgLangIds.includes(o.id), off: !state.bgLangIds.includes(o.id) && bgLangsComplete }"
-            @click="toggleBgLang(o.id)"
-          >{{ o.name }}</button>
-        </div>
+        <MultiSearchSelect
+          :options="bgLangOptions"
+          :selected="state.bgLangIds"
+          :limit="bgLangLimit"
+          placeholder="Найти язык…"
+          @toggle="toggleBgLang"
+        />
       </div>
     </template>
   </div>
@@ -45,6 +43,7 @@
 
 <script setup>
 import { computed, inject } from 'vue'
+import MultiSearchSelect from '@/features/character-list/components/wizard/MultiSearchSelect.vue'
 import SelectTile from '@/features/character-list/components/wizard/SelectTile.vue'
 import { monogramOf } from '@/features/character-list/components/wizard/labels'
 
@@ -82,13 +81,4 @@ const equipmentText = computed(() => {
 .fk { display: block; font-size: 10px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 1px; }
 
 .pick { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
-.chips { display: flex; flex-wrap: wrap; gap: 7px; }
-.chip {
-  background: var(--block-bg); border: none; border-radius: 999px;
-  color: var(--text-2); font: inherit; font-size: 12px; padding: 6px 13px; cursor: pointer; transition: background 0.15s;
-}
-.chip:hover { background: color-mix(in srgb, var(--accent) 14%, var(--block-bg)); }
-.chip.on { background: var(--accent); color: #fff; }
-.chip.off { opacity: 0.4; cursor: default; }
-.chip.off:hover { background: var(--block-bg); }
 </style>
