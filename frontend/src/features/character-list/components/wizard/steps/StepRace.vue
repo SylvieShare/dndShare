@@ -15,6 +15,8 @@
       />
     </div>
 
+    <RichContent v-if="raceDesc" class="step-desc" :html="raceDesc" />
+
     <template v-if="subraces.length">
       <div class="sheet-section-title step-gap">Происхождение</div>
       <div class="grid">
@@ -28,6 +30,7 @@
           @select="state.subrace = s"
         />
       </div>
+      <RichContent v-if="subraceDesc" class="step-desc" :html="subraceDesc" />
     </template>
 
     <template v-if="state.race && hasRaceChoices">
@@ -136,6 +139,7 @@
 <script setup>
 import { computed, inject, ref } from 'vue'
 import ItemPickerModal from '@/features/character-editor/components/ItemPickerModal.vue'
+import RichContent from '@/shared/ui/RichContent'
 import SelectTile from '@/features/character-list/components/wizard/SelectTile.vue'
 import StepChoices from '@/features/character-list/components/wizard/steps/StepChoices.vue'
 import { STAT_SHORT, asiSummary, monogramOf } from '@/features/character-list/components/wizard/labels'
@@ -146,6 +150,8 @@ const {
   raceLangOptions, raceLangLimit, toggleRaceLang, raceLangsComplete,
   featPool, featLimit, toggleFeat, featComplete, raceFeatureChoices,
 } = inject('createWizard')
+const raceDesc = computed(() => state.race?.data?.description || '')
+const subraceDesc = computed(() => state.subrace?.data?.description || '')
 const atAsiLimit = computed(() => grants.value.asiChoice && state.asiChoice.length >= grants.value.asiChoice.count)
 const hasRaceChoices = computed(() => {
   const g = grants.value
@@ -160,6 +166,12 @@ function onFeatPick(item) { if (item?.id != null) toggleFeat(item.id) }
 <style scoped>
 .step { display: flex; flex-direction: column; gap: 12px; }
 .step-gap { margin-top: 8px; }
+.step-desc {
+  font-size: 13px; color: var(--text-2); line-height: 1.5;
+  background: var(--block-bg); border-radius: var(--r-md);
+  border-left: 3px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  padding: 11px 14px;
+}
 .hint { font-size: 12px; color: var(--text-muted); margin: 0; display: flex; align-items: center; gap: 8px; }
 .count { font-size: 12px; font-weight: 600; color: var(--text-muted); }
 .count.done { color: var(--success); }

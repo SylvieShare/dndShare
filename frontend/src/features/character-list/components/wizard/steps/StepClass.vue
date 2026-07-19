@@ -15,6 +15,8 @@
       />
     </div>
 
+    <RichContent v-if="classDesc" class="step-desc" :html="classDesc" />
+
     <template v-if="state.charClass && subclasses.length">
       <div class="sheet-section-title step-gap">
         Архетип
@@ -31,6 +33,7 @@
         />
       </div>
       <p v-else class="step-muted">Пока архетип не нужен — выберешь его позже, при повышении уровня.</p>
+      <RichContent v-if="subclassAtCreation && subclassDesc" class="step-desc" :html="subclassDesc" />
     </template>
 
     <template v-if="state.charClass">
@@ -42,7 +45,8 @@
 </template>
 
 <script setup>
-import { inject } from 'vue'
+import { computed, inject } from 'vue'
+import RichContent from '@/shared/ui/RichContent'
 import SelectTile from '@/features/character-list/components/wizard/SelectTile.vue'
 import StepChoices from '@/features/character-list/components/wizard/steps/StepChoices.vue'
 import StepSkills from '@/features/character-list/components/wizard/steps/StepSkills.vue'
@@ -53,6 +57,8 @@ const {
   classes, subclasses, state, loading, suggestValue, subclassAtCreation,
   skillOptions, classFeatureChoices, isCaster,
 } = inject('createWizard')
+const classDesc = computed(() => state.charClass?.data?.description || '')
+const subclassDesc = computed(() => state.subclass?.data?.description || '')
 </script>
 
 <style scoped>
@@ -60,6 +66,12 @@ const {
 .step-gap { margin-top: 8px; }
 .step-note { font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--text-muted); }
 .step-muted { font-size: 13px; color: var(--text-muted); margin: 0; }
+.step-desc {
+  font-size: 13px; color: var(--text-2); line-height: 1.5;
+  background: var(--block-bg); border-radius: var(--r-md);
+  border-left: 3px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  padding: 11px 14px;
+}
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
 .cls-sub { margin-top: 8px; padding-top: 14px; border-top: 1px solid var(--border); }
 </style>
