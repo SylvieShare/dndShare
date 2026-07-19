@@ -11,6 +11,7 @@
 
 import { abilityModifier } from '@/shared/lib/dnd'
 import { STAT_KEYS } from '@/shared/lib/dndStats'
+import { computeSlots } from '../../../blocks/dnd/lib/levelUp.js'
 import { defaultSlots } from '../../../blocks/dnd/lib/spellEntry.js'
 import { blankValues } from '../newCharacter.js'
 import { applyGrants, extractGrants } from './grants.js'
@@ -135,14 +136,21 @@ export function buildCharacterData(input) {
     }
   }
 
-  // Spells (casters): known/prepared list + a level-1 slot row.
+  // Spells (casters): known/prepared list + level-1 slots. Slot totals come from
+  // the shared caster table (full 2 / half 0 / artificer 2 / warlock pact 1).
   if (grants.spellcasting || spellIds.length) {
     const slots = defaultSlots()
-    if (grants.spellcasting) slots[0] = { ...slots[0], total: 2 }
+    const slotInfo = charClass ? computeSlots(
+      [{ id: charClass.id, level: 1, subclass: subclass ? { id: subclass.id } : null }],
+      { [charClass.id]: charClass.item, ...(subclass?.item ? { [subclass.id]: subclass.item } : {}) },
+    ) : null
+    if (slotInfo?.isCaster) slotInfo.totals.forEach((n, i) => { if (n) slots[i] = { ...slots[i], total: n } })
+    else if (grants.spellcasting) slots[0] = { ...slots[0], total: 2 }
     values.spells = {
       stat_path: grants.spellcasting?.abilityId ?? '',
       spells: spellIds.map((id) => ({ id, prepared: true })),
       slots,
+      ...(slotInfo?.pactMerged ? { slots_rest: 'short_rest' } : {}),
     }
   }
 
@@ -187,6 +195,8 @@ export function buildCharacterData(input) {
   if (subrace) values.subrace = ref(subrace)
   if (subclass) values.subclass = ref(subclass)
   if (raceVariant) values.race_variant = raceVariant
+  // Multiclass-ready class list (level-up / identity window edit it later).
+  if (charClass) values.classes = [{ ...ref(charClass), level: 1, subclass: ref(subclass) }]
 
   return { name: name || 'Без имени', data: { values } }
 }

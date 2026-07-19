@@ -68,23 +68,48 @@
           />
         </FormField>
 
-        <FormField label="Класс" vertical>
-          <ValueSelect
-            :model-value="form.classId"
-            :options="classOptions"
-            placeholder="Класс"
-            searchable
-            @update:model-value="onClassChange"
-          />
-        </FormField>
-
-        <FormField v-if="subclasses.length" label="Архетип" vertical>
-          <ValueSelect
-            :model-value="form.subclassId"
-            :options="subclassOptions"
-            placeholder="Без архетипа"
-            @update:model-value="form.subclassId = $event"
-          />
+        <FormField :label="form.classes.length > 1 ? 'Классы' : 'Класс'" vertical>
+          <div class="dciw-classes">
+            <div v-for="(row, i) in form.classes" :key="i" class="dciw-cls-row">
+              <div class="dciw-cls-main">
+                <ValueSelect
+                  class="dciw-cls-sel"
+                  :model-value="row.classId"
+                  :options="classOptions"
+                  placeholder="Класс"
+                  searchable
+                  @update:model-value="onRowClassChange(row, $event)"
+                />
+                <div v-if="form.classes.length > 1" class="dciw-cls-lvl">
+                  <span class="dciw-cls-lvl-label">ур.</span>
+                  <FormNumberInput :value="row.level" :min="1" :max="20" @change="row.level = $event" />
+                </div>
+                <button
+                  v-if="form.classes.length > 1"
+                  class="dciw-cls-x"
+                  type="button"
+                  title="Убрать класс"
+                  @click="removeClassRow(i)"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
+                </button>
+              </div>
+              <ValueSelect
+                v-if="row.subclasses.length"
+                :model-value="row.subclassId"
+                :options="toOptions(row.subclasses)"
+                placeholder="Без архетипа"
+                @update:model-value="row.subclassId = $event"
+              />
+            </div>
+            <div class="dciw-cls-foot">
+              <button class="dciw-cls-add" type="button" @click="addClassRow">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14" /></svg>
+                Добавить класс
+              </button>
+              <span v-if="form.classes.length > 1" class="dciw-cls-total">Суммарный уровень: <b>{{ classLevelSum }}</b></span>
+            </div>
+          </div>
         </FormField>
       </div>
 
@@ -98,8 +123,10 @@ import { computed, inject, nextTick, reactive, ref, watch } from 'vue'
 import AppModal from '@/shared/ui/AppModal'
 import FormActionButtons from '@/shared/ui/form/FormActionButtons'
 import FormField from '@/shared/ui/form/FormField'
+import FormNumberInput from '@/shared/ui/form/FormNumberInput'
 import FormTextInput from '@/shared/ui/form/FormTextInput'
 import ValueSelect from '@/shared/ui/ValueSelect'
+import { classEntriesOf, classesLabel } from '@/features/character-editor/blocks/dnd/lib/levelUp'
 import { fetchGet } from '@/shared/api/http'
 
 const RACE_TYPE = 8
@@ -115,11 +142,11 @@ const windowOpen = ref(false)
 const nameInput = ref(null)
 
 // race/class/subrace/subclass are item references `{ id, name }`; a legacy plain string is tolerated.
-const form = reactive({ name: '', raceId: '', subraceId: '', classId: '', subclassId: '' })
+// form.classes — multiclass rows: `{ classId, subclassId, level, subclasses }`.
+const form = reactive({ name: '', raceId: '', subraceId: '', classes: [] })
 const races = ref([])
 const classes = ref([])
 const subraces = ref([])
-const subclasses = ref([])
 
 // ─── avatar (own block, edited here too) ───────────────────────────────────
 const avaInput = ref(null)
@@ -138,6 +165,8 @@ const raceId     = computed(() => props.block.content?.race_id     || 'race')
 const classId    = computed(() => props.block.content?.class_id    || 'class')
 const subraceId  = computed(() => props.block.content?.subrace_id  || 'subrace')
 const subclassId = computed(() => props.block.content?.subclass_id || 'subclass')
+const classesId  = computed(() => props.block.content?.classes_id  || 'classes')
+const lvlId      = computed(() => props.block.content?.lvl_id      || 'lvl')
 const avatarId   = computed(() => props.block.content?.avatar_id   || 'ava')
 
 function nameOf(v) {
@@ -162,9 +191,14 @@ const subraceVal  = computed(() => nameOf(props.values?.[subraceId.value]))
 const subclassVal = computed(() => nameOf(props.values?.[subclassId.value]))
 
 const racePart  = computed(() => subraceVal.value || raceVal.value)
-const classPart = computed(() => (classVal.value && subclassVal.value)
-  ? `${classVal.value} (${subclassVal.value})`
-  : (classVal.value || subclassVal.value))
+const classPart = computed(() => {
+  const list = props.values?.[classesId.value]
+  const multi = Array.isArray(list) ? list.filter((c) => c && c.id != null) : []
+  if (multi.length > 1) return classesLabel(multi)
+  return (classVal.value && subclassVal.value)
+    ? `${classVal.value} (${subclassVal.value})`
+    : (classVal.value || subclassVal.value)
+})
 const subline = computed(() => [racePart.value, classPart.value].filter(Boolean).join(' · '))
 
 const nameColor = computed(() => props.block.content?.name_color || '#ffffff')
@@ -173,7 +207,7 @@ const nameStyle = computed(() => ({ color: nameColor.value }))
 const raceOptions     = computed(() => toOptions(races.value))
 const classOptions    = computed(() => toOptions(classes.value))
 const subraceOptions  = computed(() => toOptions(subraces.value))
-const subclassOptions = computed(() => toOptions(subclasses.value))
+const classLevelSum   = computed(() => form.classes.reduce((s, r) => s + (r.classId ? Math.max(1, parseInt(r.level) || 1) : 0), 0))
 
 async function ensureBaseItems() {
   if (!races.value.length) {
@@ -190,9 +224,9 @@ async function loadSubraces(parentId) {
     ? ((await fetchGet(`/items/children?parentId=${parentId}`))?.items || []).filter((i) => i.typeId === RACE_TYPE)
     : []
 }
-async function loadSubclasses(parentId) {
-  subclasses.value = parentId
-    ? ((await fetchGet(`/items/children?parentId=${parentId}`))?.items || []).filter((i) => i.typeId === CLASS_TYPE)
+async function loadRowSubclasses(row) {
+  row.subclasses = row.classId
+    ? ((await fetchGet(`/items/children?parentId=${row.classId}`))?.items || []).filter((i) => i.typeId === CLASS_TYPE)
     : []
 }
 
@@ -201,10 +235,17 @@ async function onRaceChange(id) {
   form.subraceId = ''
   await loadSubraces(id)
 }
-async function onClassChange(id) {
-  form.classId = id
-  form.subclassId = ''
-  await loadSubclasses(id)
+async function onRowClassChange(row, id) {
+  row.classId = id
+  row.subclassId = ''
+  await loadRowSubclasses(row)
+}
+function addClassRow() {
+  form.classes.push({ classId: '', subclassId: '', level: 1, subclasses: [] })
+}
+function removeClassRow(i) {
+  form.classes.splice(i, 1)
+  if (!form.classes.length) addClassRow()
 }
 
 function openWindow() {
@@ -216,14 +257,21 @@ watch(windowOpen, async (open) => {
   form.name       = nameVal.value
   form.raceId     = refId(props.values?.[raceId.value])
   form.subraceId  = refId(props.values?.[subraceId.value])
-  form.classId    = refId(props.values?.[classId.value])
-  form.subclassId = refId(props.values?.[subclassId.value])
+  const entries = classEntriesOf({
+    classes: props.values?.[classesId.value],
+    class: props.values?.[classId.value],
+    subclass: props.values?.[subclassId.value],
+    lvl: props.values?.[lvlId.value],
+  })
+  form.classes = entries.length
+    ? entries.map((e) => ({ classId: e.id, subclassId: e.subclass?.id ?? '', level: e.level, subclasses: [] }))
+    : [{ classId: '', subclassId: '', level: 1, subclasses: [] }]
   avaValue.value  = props.values?.[avatarId.value] ?? null
   avaDragging.value = false
   await ensureBaseItems()
   await Promise.all([
     loadSubraces(form.raceId || null),
-    loadSubclasses(form.classId || null),
+    ...form.classes.map((row) => loadRowSubclasses(row)),
   ])
   await nextTick()
   nameInput.value?.focus?.()
@@ -266,9 +314,27 @@ async function uploadAva(file) {
 function save() {
   emit('update:value', nameId.value, form.name)
   emit('update:value', raceId.value, resolveRef(races.value, form.raceId))
-  emit('update:value', classId.value, resolveRef(classes.value, form.classId))
   emit('update:value', subraceId.value, resolveRef(subraces.value, form.subraceId))
-  emit('update:value', subclassId.value, resolveRef(subclasses.value, form.subclassId))
+
+  const entries = form.classes
+    .filter((r) => r.classId)
+    .map((r) => ({
+      ...resolveRef(classes.value, r.classId),
+      level: Math.max(1, Math.min(20, parseInt(r.level) || 1)),
+      subclass: resolveRef(r.subclasses, r.subclassId),
+    }))
+    .filter((e) => e.id != null)
+  emit('update:value', classId.value, entries[0] ? { id: entries[0].id, name: entries[0].name } : null)
+  emit('update:value', subclassId.value, entries[0]?.subclass || null)
+  emit('update:value', classesId.value, entries.length ? entries : null)
+  // Мультикласс задаёт суммарный уровень листа; одиночный класс уровень не трогает —
+  // им управляет блок уровня (опыт/level up).
+  if (entries.length > 1) {
+    const lvlVal = props.values?.[lvlId.value]
+    const sum = entries.reduce((s, e) => s + e.level, 0)
+    emit('update:value', lvlId.value, { exp: 0, ...(lvlVal && typeof lvlVal === 'object' ? lvlVal : {}), level: Math.min(20, sum) })
+  }
+
   emit('update:value', avatarId.value, avaValue.value)
   windowOpen.value = false
 }
@@ -348,6 +414,32 @@ function close() {
   flex-direction: column;
   gap: 12px;
 }
+
+/* multiclass rows */
+.dciw-classes { display: flex; flex-direction: column; gap: 10px; }
+.dciw-cls-row { display: flex; flex-direction: column; gap: 6px; }
+.dciw-cls-row + .dciw-cls-row { border-top: 1px dashed var(--border); padding-top: 10px; }
+.dciw-cls-main { display: flex; align-items: center; gap: 8px; }
+.dciw-cls-sel { flex: 1; min-width: 0; }
+.dciw-cls-lvl { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
+.dciw-cls-lvl :deep(input) { width: 52px; }
+.dciw-cls-lvl-label { font-size: 11px; color: var(--text-muted); }
+.dciw-cls-x {
+  display: grid; place-items: center; width: 26px; height: 26px; flex-shrink: 0;
+  border: none; border-radius: 7px; background: none; color: var(--text-muted); cursor: pointer;
+}
+.dciw-cls-x:hover { background: color-mix(in srgb, var(--danger) 14%, transparent); color: var(--danger); }
+.dciw-cls-x svg { width: 13px; height: 13px; }
+.dciw-cls-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.dciw-cls-add {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: none; border: none; color: var(--accent);
+  font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; padding: 2px 0;
+}
+.dciw-cls-add:hover { color: var(--text-1); }
+.dciw-cls-add svg { width: 14px; height: 14px; }
+.dciw-cls-total { font-size: 11px; color: var(--text-muted); }
+.dciw-cls-total b { color: var(--text-2); }
 
 /* avatar uploader */
 .dciw-ava {

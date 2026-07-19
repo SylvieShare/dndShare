@@ -6,7 +6,13 @@
       <button class="lved-add lved-add-main" type="button" :disabled="evalAmount <= 0" @click="applyXp(1)">+ {{ evalAmount > 0 ? evalAmount : '' }} опыт</button>
     </div>
 
-    <button v-if="canLevelUp" class="lved-levelup" type="button" @click="levelUp">↑ Level Up! → {{ level + 1 }} уровень</button>
+    <button
+      v-if="level < 20"
+      class="lved-levelup"
+      :class="{ 'lved-levelup-ready': canLevelUp }"
+      type="button"
+      @click="$emit('levelup')"
+    >↑ {{ canLevelUp ? 'Level Up!' : 'Повысить уровень' }} → {{ level + 1 }}</button>
 
     <FormField label="Уровень">
       <FormNumberInput :value="level" :min="1" :max="20" @change="set('level', $event)" />
@@ -31,7 +37,7 @@ const EXPERIENCE = [
 ]
 
 const props = defineProps({ data: { type: Object, required: true } })
-const emit = defineEmits(['change'])
+const emit = defineEmits(['change', 'levelup'])
 const calcAmount = ref('')
 
 const level = computed(() => Math.max(1, Math.min(20, parseInt(props.data.level) || 1)))
@@ -55,7 +61,6 @@ function applyXp(sign) {
   emit('change', { ...props.data, exp: newExp })
   calcAmount.value = ''
 }
-function levelUp() { emit('change', { ...props.data, level: Math.min(20, level.value + 1) }) }
 function set(field, value) { emit('change', { ...props.data, [field]: value }) }
 </script>
 
@@ -67,6 +72,8 @@ function set(field, value) { emit('change', { ...props.data, [field]: value }) }
 .lved-add:hover:not(:disabled) { background: color-mix(in srgb, var(--accent) 32%, transparent); }
 .lved-add:disabled { opacity: 0.3; cursor: not-allowed; }
 
-.lved-levelup { width: 100%; background: color-mix(in srgb, var(--accent) 18%, transparent); border: 1px solid var(--accent); border-radius: 10px; color: var(--color-attack); font-size: 14px; font-weight: 800; font-family: inherit; padding: 10px 16px; cursor: pointer; transition: background 0.15s; }
+.lved-levelup { width: 100%; background: color-mix(in srgb, var(--accent) 10%, transparent); border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent); border-radius: 10px; color: var(--color-attack); font-size: 14px; font-weight: 800; font-family: inherit; padding: 10px 16px; cursor: pointer; transition: background 0.15s; }
 .lved-levelup:hover { background: color-mix(in srgb, var(--accent) 32%, transparent); }
+.lved-levelup-ready { background: color-mix(in srgb, var(--accent) 18%, transparent); border-color: var(--accent); animation: lved-pulse 2s ease-in-out infinite; }
+@keyframes lved-pulse { 0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 40%, transparent); } 50% { box-shadow: 0 0 12px 2px color-mix(in srgb, var(--accent) 30%, transparent); } }
 </style>

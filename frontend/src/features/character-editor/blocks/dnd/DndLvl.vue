@@ -14,27 +14,51 @@
     @close="close"
   >
     <template #view><DndLvlView :data="data" /></template>
-    <template #editor><DndLvlEditor :data="data" @change="onChange" /></template>
+    <template #editor><DndLvlEditor :data="data" @change="onChange" @levelup="openLevelUp" /></template>
   </MorphEditorShell>
+
+  <DndLevelUpModal
+    v-if="levelUpOpen"
+    :values="values"
+    @apply="applyLevelUp"
+    @close="levelUpOpen = false"
+  />
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import BaseTile from '@/shared/ui/BaseTile'
+import DndLevelUpModal from '@/features/character-editor/blocks/dnd/components/DndLevelUpModal'
 import DndLvlEditor from '@/features/character-editor/blocks/dnd/components/DndLvlEditor'
 import DndLvlView from '@/features/character-editor/blocks/dnd/components/DndLvlView'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
 import { useMorphOrigin } from '@/features/character-editor/composables/useMorphOrigin'
 
-const props = defineProps(['block', 'value'])
+const props = defineProps(['block', 'value', 'values'])
 const emit = defineEmits(['update:value'])
 const { editorOpen, originRect, originEl, open, close } = useMorphOrigin()
+
+const levelUpOpen = ref(false)
 
 const isCompact = computed(() => props.block?.props?.variant === 'compact')
 const isMini = computed(() => props.block?.props?.variant === 'mini')
 const data = computed(() => ({ level: 1, exp: 0, ...props.value }))
 
 function onChange(d) { emit('update:value', props.block.id, d) }
+
+function openLevelUp() {
+  close()
+  levelUpOpen.value = true
+}
+
+// Окно повышения возвращает пачку изменений по разным блокам листа
+// (lvl / classes / hp / abilities_class / ...) — раскладываем по ключам.
+function applyLevelUp(updates) {
+  for (const [id, value] of Object.entries(updates)) {
+    emit('update:value', id === 'lvl' ? props.block.id : id, value)
+  }
+  levelUpOpen.value = false
+}
 </script>
 
 <style scoped>
