@@ -7,7 +7,17 @@
       </div>
       <p v-if="fc.choice.text" class="hint">{{ fc.choice.text }}</p>
 
-      <div class="list">
+      <div v-if="isChips(fc.choice)" class="chips">
+        <button
+          v-for="opt in choiceOptionList(fc.choice)"
+          :key="opt.value"
+          class="chip"
+          :class="{ on: isSel(fc, opt), off: locked(fc, opt) }"
+          @click="toggleChoice(fc.id, opt.value, Number(fc.choice.count) || 1)"
+        >{{ opt.label }}</button>
+      </div>
+
+      <div v-else class="list">
         <div
           v-for="opt in choiceOptionList(fc.choice)"
           :key="opt.value"
@@ -45,6 +55,7 @@ function locked(fc, opt) {
   const count = Number(fc.choice.count) || 1
   return count > 1 && !isSel(fc, opt) && choiceSelected(fc.id).length >= count
 }
+function isChips(choice) { return !!choice?.from_suggest_id }
 </script>
 
 <style scoped>
@@ -52,6 +63,16 @@ function locked(fc, opt) {
 .count { font-size: 12px; font-weight: 600; color: var(--text-muted); letter-spacing: 0; text-transform: none; }
 .count.done { color: var(--success); }
 .hint { font-size: 12px; color: var(--text-muted); margin: 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 4px; }
+.chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: var(--block-bg); border: none; border-radius: 999px;
+  color: var(--text-2); font: inherit; font-size: 12px; padding: 6px 13px; cursor: pointer; transition: background 0.15s;
+}
+.chip:hover { background: color-mix(in srgb, var(--accent) 14%, var(--block-bg)); }
+.chip.on { background: var(--accent); color: #fff; }
+.chip.off { opacity: 0.4; cursor: default; }
+.chip.off:hover { background: var(--block-bg); }
 .list { display: flex; flex-direction: column; gap: 7px; margin-bottom: 4px; }
 .opt {
   display: flex; align-items: flex-start; gap: 11px;
