@@ -49,6 +49,14 @@ Do not spread endpoint strings directly through components when adding new behav
 - `DELETE /api/items/{id}`
 - `POST /api/items/{id}/make-base`
 
+## Page Error Report Routes
+
+- `POST /api/error-reports` — public/optional-auth submit endpoint. Body: `{ description, pageUrl, element }`; `element` is a JSON object containing at least `selector`. A signed-in reporter is attached to the row automatically.
+- `GET /api/admin-panel/error-reports?limit=200&offset=0` — `ADMIN` list, newest first.
+- `DELETE /api/admin-panel/error-reports/{id}` — `ADMIN` deletion of one report.
+
+See `md/features/error-reports.md` for the selector payload and validation limits.
+
 ## MCP Endpoint (agent channel)
 
-`POST/GET /mcp` — embedded MCP server exposing handbook read/write tools to AI agents. Bearer-token auth (not the user session cookies), write tools gated by a flag. Not for the Vue frontend. See `md/features/mcp.md`.
+`POST /mcp` — embedded MCP server exposing handbook tools and page-error-report tools to AI agents. Bearer-token auth (not the user session cookies), write tools gated by a flag. Not for the Vue frontend. See `md/features/mcp.md`.

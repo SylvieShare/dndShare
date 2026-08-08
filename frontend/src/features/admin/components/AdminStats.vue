@@ -27,6 +27,12 @@
           <div class="stat-value" :class="{ 'value-warn': stats.logs > 0 }">{{ stats.logs }}</div>
           <div class="stat-label">Ошибок в логах</div>
         </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">🎯</div>
+          <div class="stat-value" :class="{ 'value-warn': stats.errorReports > 0 }">{{ stats.errorReports }}</div>
+          <div class="stat-label">Заявок со страниц</div>
+        </div>
       </div>
 
       <div class="section-title">Справочник</div>

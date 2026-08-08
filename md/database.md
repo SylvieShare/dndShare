@@ -16,6 +16,18 @@ All tables live in the `dndshare` schema. There used to be a second `base`
 schema (auth/logs/jobs); it was consolidated into `dndshare` (see v2 below) and
 dropped. **Never create new objects in `base`.**
 
+## Page error reports
+
+`dndshare.error_report` is created idempotently by the current Go schema and contains:
+
+- `id bigserial` primary key;
+- `description text` and `page_url text`;
+- `element jsonb` with the browser-generated selector and diagnostic metadata;
+- nullable `user_id` referencing `users(id)` with `ON DELETE SET NULL`;
+- `created_at timestamptz`.
+
+Indexes cover newest-first listing (`created_at DESC`) and the optional reporter (`user_id`). See `md/features/error-reports.md` for the API and payload.
+
 ## Systems and rules editions
 
 `source` is the game system (`DND5e`, `Vampire: TM`). Its editions live in

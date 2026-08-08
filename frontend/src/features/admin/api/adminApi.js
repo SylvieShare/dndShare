@@ -31,3 +31,11 @@ export function deleteAllLogs() {
 export function getStats() {
   return fetchGet('/admin-panel/stats')
 }
+
+export function getErrorReports() {
+  return fetchGet('/admin-panel/error-reports?limit=500')
+}
+
+export function deleteErrorReport(id) {
+  return fetchDelete(`/admin-panel/error-reports/${id}`)
+}

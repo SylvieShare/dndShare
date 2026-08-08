@@ -9,15 +9,16 @@ Feature lives in `features/admin/`:
 ```
 features/admin/
   api/
-    adminApi.js            # users/logs/stats API client
+    adminApi.js            # users/logs/error reports/stats API client
     adminJobsApi.js        # jobs API client
   components/
     AdminStats.vue         # Stats tab — cards with entity counts
     AdminUsers.vue         # Users tab — table with createdAt, roles, add/remove role, password reset
     AdminLogs.vue          # Logs tab — table with delete per-row and delete-all
+    AdminErrorReports.vue  # Page-error reports — selected element metadata + per-row delete
     AdminJobs.vue          # Jobs tab — available jobs + runs history with live progress
   pages/
-    ViewAdmin.vue          # Page: sidebar with tabs (stats/users/logs/jobs) + content area
+    ViewAdmin.vue          # Page: sidebar with tabs (stats/users/logs/error reports/jobs) + content area
 ```
 
 Route: `/admin` → `ViewAdmin.vue`.
@@ -51,7 +52,16 @@ All endpoints require `@UserNeedRole([Role.ADMIN])`.
 
 | Method | Path | Description |
 |--------|------|-------------|
-| GET | `/api/admin-panel/stats` | Counts: users, characters, templates, baseItems, userItems, baseSuggests, userSuggests, logs |
+| GET | `/api/admin-panel/stats` | Counts: users, characters, templates, baseItems, userItems, baseSuggests, userSuggests, logs, errorReports |
+
+### Page error report endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/api/admin-panel/error-reports?limit=200&offset=0` | Reports sorted by `createdAt` descending |
+| DELETE | `/api/admin-panel/error-reports/{id}` | Delete one handled report |
+
+The **«Ошибки страниц»** tab renders the submitted description, page URL, optional reporter, selected CSS selector and expandable element JSON. See `md/features/error-reports.md` for the public submit flow.
 
 ### Supporting changes
 

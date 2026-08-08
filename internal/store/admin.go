@@ -32,6 +32,7 @@ type AdminStats struct {
 	BaseSuggests int64 `json:"baseSuggests"`
 	UserSuggests int64 `json:"userSuggests"`
 	Logs         int64 `json:"logs"`
+	ErrorReports int64 `json:"errorReports"`
 }
 
 // ListUsers возвращает всех пользователей (без хэшей).
@@ -99,7 +100,8 @@ func (s *Store) GetAdminStats(ctx context.Context) (AdminStats, error) {
 		(SELECT COUNT(*) FROM dndshare.item WHERE user_id IS NOT NULL),
 		(SELECT COUNT(*) FROM dndshare.suggest WHERE user_id IS NULL),
 		(SELECT COUNT(*) FROM dndshare.suggest WHERE user_id IS NOT NULL),
-		(SELECT COUNT(*) FROM dndshare.logs)`,
-	).Scan(&st.Users, &st.Characters, &st.Templates, &st.BaseItems, &st.UserItems, &st.BaseSuggests, &st.UserSuggests, &st.Logs)
+		(SELECT COUNT(*) FROM dndshare.logs),
+		(SELECT COUNT(*) FROM dndshare.error_report)`,
+	).Scan(&st.Users, &st.Characters, &st.Templates, &st.BaseItems, &st.UserItems, &st.BaseSuggests, &st.UserSuggests, &st.Logs, &st.ErrorReports)
 	return st, err
 }

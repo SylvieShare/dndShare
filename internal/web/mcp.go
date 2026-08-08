@@ -246,6 +246,34 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 		}
 		return s.store.SearchSuggestsByName(ctx, q, nil, coerceIn(limit, 1, 100))
 
+	case "error_reports_list":
+		limit, err := argIntDefault(args, "limit", 100)
+		if err != nil {
+			return nil, err
+		}
+		offset, err := argIntDefault(args, "offset", 0)
+		if err != nil {
+			return nil, err
+		}
+		return s.store.ListErrorReports(ctx, coerceIn(limit, 1, 500), coerceAtLeast(offset, 0))
+
+	case "error_report_delete":
+		if err := s.mcpRequireWrite(); err != nil {
+			return nil, err
+		}
+		id, err := argInt64(args, "id")
+		if err != nil {
+			return nil, err
+		}
+		deleted, err := s.store.DeleteErrorReport(ctx, id)
+		if err != nil {
+			return nil, err
+		}
+		if !deleted {
+			return nil, fmt.Errorf("error report %d not found", id)
+		}
+		return fmt.Sprintf("deleted error report %d", id), nil
+
 	case "handbook_item_create":
 		return s.toolItemCreate(ctx, args)
 	case "handbook_item_update":
@@ -656,6 +684,17 @@ func mcpToolDefs() []map[string]any {
 				"q":     strP("Value query"),
 				"limit": intP("Max rows, 1..100 (default 20)"),
 			}, "q")),
+		tool("error_reports_list",
+			"List user-submitted page error reports, newest first. Each report contains its description, page URL, selected element metadata, optional reporter, and creation time.",
+			schema(map[string]any{
+				"limit":  intP("Max rows, 1..500 (default 100)"),
+				"offset": intP("Offset for pagination (default 0)"),
+			})),
+		tool("error_report_delete",
+			"Delete one page error report after it has been handled. Requires MCP write operations to be enabled.",
+			schema(map[string]any{
+				"id": intP("Error report id"),
+			}, "id")),
 		tool("handbook_item_create",
 			"Create a base (shared, user_id=null) item. Use handbook_item_types first to learn the `data` schema for the given typeId.",
 			schema(map[string]any{

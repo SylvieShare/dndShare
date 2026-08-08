@@ -42,6 +42,7 @@ frontend/src/
   features/
     admin/             # admin panel (users, roles, logs) — see md/features/admin.md
     auth/
+    error-report/      # global point-at-element bug reports — see md/features/error-reports.md
     character-list/
     character-editor/
     handbook/
@@ -70,7 +71,7 @@ The router uses HTML5 history mode (clean URLs, no `#`), so deep-linking a route
 
 ### Route transitions and prefetch
 
-`App.vue` wraps the routed content (but not `AppHeader` or the global dice popup) in a short horizontal Vue transition. `router.js` exposes `pageTransitionName` and derives its direction from route meta: moving deeper within one section is forward, moving back to its parent is backward, and moving between top-level sections follows the `HorizontalMenu` order. Query-only changes reuse the same `route.path` key and do not animate. Initial deep links do not animate because the transition has no `appear` prop. `prefers-reduced-motion` disables the motion.
+`App.vue` wraps the routed content (but not `AppHeader`, the global dice popup, or the global error reporter) in a short horizontal Vue transition. `router.js` exposes `pageTransitionName` and derives its direction from route meta: moving deeper within one section is forward, moving back to its parent is backward, and moving between top-level sections follows the `HorizontalMenu` order. Query-only changes reuse the same `route.path` key and do not animate. Initial deep links do not animate because the transition has no `appear` prop. `prefers-reduced-motion` disables the motion.
 
 Every page route must declare `meta.section` and `meta.depth`; sibling detail routes may also use `meta.pageOrder`. Keep the section order in `router.js` aligned with `HorizontalMenu` when changing the main navigation. The fixed `mode="out-in"`, a single keyed component branch, and the always-present transition wrapper are intentional: do not switch modes dynamically or add `v-if/v-else` branches around the route component.
 

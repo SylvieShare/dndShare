@@ -66,6 +66,21 @@ CREATE TABLE IF NOT EXISTS dndshare.logs (
 CREATE INDEX IF NOT EXISTS idx_logs_created_at ON dndshare.logs USING btree (created_at DESC);
 
 -- ---------------------------------------------------------------------------
+-- User error reports
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS dndshare.error_report (
+    id          bigserial NOT NULL,
+    description text NOT NULL,
+    page_url    text NOT NULL,
+    element     jsonb NOT NULL,
+    user_id     int8 NULL REFERENCES dndshare.users(id) ON DELETE SET NULL,
+    created_at  timestamptz DEFAULT now() NOT NULL,
+    CONSTRAINT error_report_pk PRIMARY KEY (id)
+);
+CREATE INDEX IF NOT EXISTS idx_error_report_created_at ON dndshare.error_report USING btree (created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_error_report_user_id ON dndshare.error_report USING btree (user_id);
+
+-- ---------------------------------------------------------------------------
 -- Admin job runs
 -- ---------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS dndshare.job_run (
