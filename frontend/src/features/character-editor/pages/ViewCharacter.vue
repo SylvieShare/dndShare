@@ -681,7 +681,8 @@ onBeforeUnmount(() => {
 
 .sk-block {
   border-radius: 12px;
-  background: #1e1e26;
+  background: var(--block-bg);
+  box-shadow: inset 0 0 0 1px var(--border);
   animation: sk-pulse 1.4s ease-in-out infinite;
 }
 

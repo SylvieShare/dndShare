@@ -207,7 +207,7 @@ function adjustDice(delta) {
   height: 7px;
   overflow: hidden;
   border-radius: 999px;
-  background: #151519;
+  background: var(--bg-deep);
 }
 
 .hc-bar {
@@ -243,7 +243,7 @@ function adjustDice(delta) {
   align-items: center;
   gap: 10px;
   padding-top: 4px;
-  border-top: 1px solid #252530;
+  border-top: 1px solid var(--border);
 }
 
 .hc-dice-label {

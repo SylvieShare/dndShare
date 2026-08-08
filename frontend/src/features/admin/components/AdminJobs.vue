@@ -253,7 +253,7 @@ onBeforeUnmount(() => {
 
 .job-card {
   background: var(--surface-2, #1c1c2c);
-  border: 1px solid #2e2e44;
+  border: 1px solid var(--input-border);
   border-radius: 10px;
   padding: 14px 16px;
 }
@@ -279,7 +279,7 @@ onBeforeUnmount(() => {
 }
 
 .btn-primary {
-  background: #7c5cff;
+  background: var(--accent);
   border: none;
   border-radius: 6px;
   color: #fff;
@@ -395,7 +395,7 @@ onBeforeUnmount(() => {
 
 .progress-bar-fill {
   height: 100%;
-  background: #7c5cff;
+  background: var(--accent);
   transition: width 0.3s ease;
 }
 
@@ -432,7 +432,7 @@ onBeforeUnmount(() => {
 .btn-link {
   background: none;
   border: none;
-  color: #7c5cff;
+  color: var(--accent);
   cursor: pointer;
   font: inherit;
   font-size: 11px;

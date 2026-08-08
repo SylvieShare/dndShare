@@ -48,8 +48,8 @@ export default {
   min-height: calc(100vh - 54px);
   overflow: hidden;
   background:
-    radial-gradient(circle at 18% 22%, rgba(106, 100, 216, 0.2), transparent 28%),
-    linear-gradient(135deg, #1f1f1f 0%, #242428 48%, #171719 100%);
+    radial-gradient(circle at 18% 22%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 30%),
+    linear-gradient(135deg, var(--bg) 0%, var(--block-bg) 48%, var(--bg-deep) 100%);
 }
 
 .hero {
@@ -69,7 +69,7 @@ export default {
 
 .eyebrow {
   margin: 0 0 14px;
-  color: #9b97ff;
+  color: var(--accent-soft);
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.16em;
@@ -78,7 +78,7 @@ export default {
 
 h1 {
   margin: 0;
-  color: #f4f1ea;
+  color: var(--text-1);
   font-size: clamp(42px, 7vw, 78px);
   line-height: 0.98;
   font-weight: 800;
@@ -88,7 +88,7 @@ h1 {
 .lead {
   max-width: 600px;
   margin: 26px 0 0;
-  color: #c9c4bd;
+  color: var(--text-2);
   font-size: 19px;
   line-height: 1.6;
 }
@@ -100,9 +100,9 @@ h1 {
   border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 8px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03)),
-    #28282e;
-  box-shadow: 0 26px 80px rgba(0, 0, 0, 0.32);
+    linear-gradient(180deg, color-mix(in srgb, white 5%, transparent), transparent),
+    var(--block-bg);
+  box-shadow: var(--shadow-lg);
 }
 
 .sheet-preview::before {

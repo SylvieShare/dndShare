@@ -217,7 +217,7 @@ function deletePanelItem(item) {
   min-width: 24px;
   height: 24px;
   border-radius: 50%;
-  border: 1px dashed #3a3a46;
+  border: 1px dashed var(--border-strong);
   background: none;
   color: var(--text-muted);
   cursor: pointer;
@@ -283,8 +283,8 @@ function deletePanelItem(item) {
 .sa-input {
   width: 180px;
   height: 28px;
-  background: #18181c;
-  border: 1px dashed rgba(140, 140, 154, 0.48);
+  background: var(--input-bg);
+  border: 1px dashed var(--border-strong);
   border-radius: 7px;
   color: var(--text-2);
   font: inherit;
@@ -294,7 +294,7 @@ function deletePanelItem(item) {
 }
 
 .sa-input:focus {
-  border-color: rgba(126, 118, 255, 0.7);
+  border-color: var(--accent);
 }
 
 /* ── Mobile panel ── */
@@ -316,11 +316,11 @@ function deletePanelItem(item) {
   width: 300px;
   max-width: 90vw;
   max-height: 75vh;
-  background: #1a1a22;
-  border-top: 1px solid #2e2e3c;
-  border-left: 1px solid #2e2e3c;
+  background: var(--popup-bg);
+  border-top: 1px solid var(--border-strong);
+  border-left: 1px solid var(--border-strong);
   border-radius: 16px 0 0 0;
-  box-shadow: -8px -4px 32px rgba(0, 0, 0, 0.5);
+  box-shadow: var(--shadow-lg);
 }
 
 .sa-panel-head {
@@ -328,7 +328,7 @@ function deletePanelItem(item) {
   align-items: center;
   gap: 8px;
   padding: 14px 12px 12px;
-  border-bottom: 1px solid #2a2a36;
+  border-bottom: 1px solid var(--border);
   flex-shrink: 0;
 }
 
@@ -345,7 +345,7 @@ function deletePanelItem(item) {
   width: 28px;
   height: 28px;
   border-radius: 7px;
-  border: 1px dashed #3a3a46;
+  border: 1px dashed var(--border-strong);
   background: none;
   color: var(--text-muted);
   cursor: pointer;
@@ -381,15 +381,15 @@ function deletePanelItem(item) {
 
 .sa-panel-search {
   padding: 0 14px 10px;
-  border-bottom: 1px solid #2a2a30;
+  border-bottom: 1px solid var(--border);
   flex-shrink: 0;
 }
 
 .sa-panel-input {
   width: 100%;
   height: 36px;
-  background: #18181c;
-  border: 1px solid rgba(140, 140, 154, 0.35);
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
   border-radius: 8px;
   color: var(--text-1);
   font: inherit;
@@ -400,7 +400,7 @@ function deletePanelItem(item) {
 }
 
 .sa-panel-input:focus {
-  border-color: rgba(126, 118, 255, 0.7);
+  border-color: var(--accent);
 }
 
 .sa-panel-list {
@@ -438,7 +438,7 @@ function deletePanelItem(item) {
 }
 
 .sa-panel-custom-mark {
-  color: #7a6aaa;
+  color: var(--accent-soft);
   font-size: 9px;
   flex-shrink: 0;
 }

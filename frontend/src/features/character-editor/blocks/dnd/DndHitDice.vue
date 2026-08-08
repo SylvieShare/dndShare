@@ -53,7 +53,7 @@ function cycleDice() {
 .hit-dice {
   width: 100px;
   height: 100px;
-  background-color: #2a2a2e;
+  background-color: var(--surface-1);
   border-radius: 14px;
   display: flex;
   flex-direction: column;
@@ -84,7 +84,7 @@ function cycleDice() {
 .dice-divider {
   width: 44px;
   height: 1px;
-  background-color: #3a3a3e;
+  background-color: var(--border-strong);
 }
 
 .dice-count-row {

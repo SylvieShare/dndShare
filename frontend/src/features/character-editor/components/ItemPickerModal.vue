@@ -282,10 +282,10 @@ onMounted(async () => {
 }
 
 .picker-modal {
-  background: var(--bg, #13131a);
-  border: 1px solid rgba(255,255,255,0.08);
+  background: var(--bg);
+  border: 1px solid var(--border-strong);
   border-radius: 16px;
-  box-shadow: 0 24px 64px rgba(0,0,0,0.75);
+  box-shadow: var(--shadow-lg);
   width: 100%;
   max-width: 1100px;
   height: 85vh;
@@ -329,8 +329,8 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.09);
+  background: var(--surface-1);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 0 12px;
   height: 36px;
@@ -367,7 +367,7 @@ onMounted(async () => {
 
 .picker-group-btn {
   background: none;
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1px solid var(--border);
   border-radius: 5px;
   color: var(--text-2, var(--text-2));
   font: inherit;
@@ -378,7 +378,7 @@ onMounted(async () => {
   transition: background 0.12s, color 0.12s, border-color 0.12s;
 }
 
-.picker-group-btn:hover { background: rgba(255,255,255,0.06); color: var(--text-1, var(--text-1)); }
+.picker-group-btn:hover { background: var(--surface-1); color: var(--text-1); }
 .picker-group-btn.active {
   background: color-mix(in srgb, var(--accent) 15%, transparent);
   border-color: color-mix(in srgb, var(--accent) 35%, transparent);
@@ -397,7 +397,7 @@ onMounted(async () => {
   flex-shrink: 0;
   transition: color 0.12s, background 0.12s;
 }
-.picker-close:hover { color: var(--text-1, var(--text-1)); background: rgba(255,255,255,0.06); }
+.picker-close:hover { color: var(--text-1); background: var(--surface-1); }
 
 .picker-tabs {
   display: flex;

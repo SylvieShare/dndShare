@@ -309,7 +309,7 @@ onMounted(async () => {
 .btn.soft:hover:not(:disabled) { background: color-mix(in srgb, #fff 5%, transparent); color: var(--text-1); }
 .btn.next { background: var(--accent); color: #fff; }
 .btn.next:hover:not(:disabled) { background: var(--accent-dim); }
-.btn.create { background: var(--accent-2); color: #06231d; }
+.btn.create { background: var(--accent-2); color: var(--text-on-accent); }
 .btn.create:hover:not(:disabled) { background: var(--accent-2-dim); }
 .btn:disabled { opacity: 0.5; cursor: default; }
 

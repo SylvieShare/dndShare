@@ -350,7 +350,7 @@ onMounted(() => loadSessions(consumePrefetch(route.fullPath)))
   height: 34px;
   padding: 0 16px;
   background: var(--accent-2);
-  color: #06231d;
+  color: var(--text-on-accent);
   border: none;
   border-radius: 8px;
   font: inherit;

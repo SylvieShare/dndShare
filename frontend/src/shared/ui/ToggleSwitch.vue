@@ -66,6 +66,6 @@ defineEmits(['update:modelValue'])
 
 .toggle-track.on .toggle-thumb {
   transform: translateX(16px);
-  background-color: #fff;
+  background-color: var(--text-on-accent);
 }
 </style>

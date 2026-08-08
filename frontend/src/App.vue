@@ -36,37 +36,43 @@ onMounted(() => {
 :root {
   --header-h: 54px;
   --content-max: 1400px;   /* единая ширина контента страниц/тулбара/раскрытия */
-  --bg:         #181a24;
-  --bg-deep:    #11121a;
-  --block-bg:   #1f2230;   /* фон карточек-блоков */
-  --surface-1:  #26283e;   /* фон инпутов, кнопок */
-  --surface-2:  #2d304b;   /* focused-состояние */
-  --popup-bg:   #1c1f2a;   /* фон дропдаунов/тултипов */
-  --input-bg:   #1e1e22;   /* фон полей форм в модалках */
-  --input-border: #2e2e44; /* рамка полей форм в модалках */
+  --bg-deep:    #121214;   /* самый глубокий фон приложения */
+  --bg:         #1b1b1d;   /* основной графитовый фон */
+  --block-bg:   #242427;   /* карточки и крупные блоки */
+  --surface-1:  #2c2c30;   /* контролы и приподнятые поверхности */
+  --surface-2:  #35353b;   /* hover / active поверхности */
+  --surface-hover: #313136;
+  --surface-active: #393940;
+  --popup-bg:   #202024;   /* дропдауны, поповеры и тултипы */
+  --input-bg:   #1f1f22;   /* поля форм в модалках */
+  --input-border: #38383f; /* рамка полей форм */
   --input-focus: var(--accent);
-  --border:     rgba(255,255,255,0.07);  /* разделители */
-  --border-strong: rgba(255,255,255,0.14);
-  --text-1:     #e8e8ef;   /* основной текст */
-  --text-2:     #a6a6b8;   /* вторичный текст */
-  --text-muted: #7c7c92;   /* заголовки секций */
-  --accent:     #7c5cff;   /* акцент навигации (фиолетовый) */
-  --accent-dim: #5a43cc;   /* акцент приглушённый */
-  --accent-2:     #34c6ac; /* акцент позитивных действий (создать/войти) */
-  --accent-2-dim: #2aa28d; /* позитивный приглушённый */
+  --border:     rgba(255,255,255,0.08);  /* тонкие разделители */
+  --border-strong: rgba(255,255,255,0.16);
+  --text-1:     #ececed;   /* основной текст */
+  --text-2:     #a6a6ab;   /* вторичный текст */
+  --text-muted: #8a8a92;   /* подписи и плейсхолдеры, AA на карточках */
+  --text-faint: #73737b;   /* только декоративный и disabled-текст */
+  --text-on-accent: #ffffff;
+  --accent:     #7c5ce2;   /* единый продуктовый акцент, AA с белым текстом */
+  --accent-dim: #6847c7;   /* pressed / насыщенный акцент */
+  --accent-soft: #b9a8ff;  /* текст поверх спокойных акцентных подложек */
+  --accent-2:     var(--accent);     /* legacy: primary CTA теперь тоже фиолетовый */
+  --accent-2-dim: var(--accent-dim);
   --danger:     #e05555;   /* кнопки удалить, ошибки, hp-низкий */
   --danger-dim: #c95a52;   /* приглушённый danger (death-save пипсы, graveyard) */
   --success:    #4caf6e;   /* подтверждения, положительные индикаторы */
   --warning:    #fcbe24;   /* предупреждения, золото */
-  --shadow-lg:  0 14px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04);
+  --shadow-lg:  0 18px 48px rgba(0,0,0,0.42), 0 0 0 1px rgba(255,255,255,0.05);
   --r-xs:       4px;
   --r-sm:       6px;
   --r-md:       10px;
   --r-lg:       14px;
   --r-pill:     999px;
+  --font-ui: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
   --font-display: 'Cormorant Garamond', 'Times New Roman', serif;
-  --bg-header:  #1c1f2a;
-  --color-attack: #a292ff;
+  --bg-header:  #18181b;
+  --color-attack: #aa98ff;
 }
 
 html, body {
@@ -75,14 +81,26 @@ html, body {
 }
 body {
   background-color: var(--bg-deep);
+  color: var(--text-1);
+  color-scheme: dark;
   overflow-x: clip;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: var(--font-ui);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 #app {
   width: 100%;
-  color: #fff;
+  color: var(--text-1);
+}
+
+::selection {
+  color: var(--text-on-accent);
+  background: color-mix(in srgb, var(--accent) 72%, transparent);
+}
+
+:where(button, a, input, textarea, select, [tabindex]):focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--accent) 76%, white);
+  outline-offset: 2px;
 }
 
 .page-transition-stage {
@@ -175,9 +193,9 @@ body {
 /* Unified title style for the small header at the top of every block tile. */
 .sheet-tile-title {
   color: var(--text-muted);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.09em;
   line-height: 1.15;
   text-transform: uppercase;
 }
@@ -198,8 +216,8 @@ body {
 /* ─── Кастомный скроллбар ──────────────────────── */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #444; }
+::-webkit-scrollbar-thumb { background: var(--surface-2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--surface-active); }
 
 p { margin: 0 0 10px; }
 p:last-child { margin-bottom: 0; }

@@ -168,7 +168,7 @@ The footer is intentionally **inside** `.music-lib-main-col` so it spans only th
 
 Single row. Layout: `[drag-handle?] [play] [title + state badge] [tags] [time] [«след.» button] [⋯ menu]`.
 
-- Background is transparent by default; only the **currently playing** row gets `rgba(124, 92, 255, 0.07)` plus the accent border. The `--current` class (currently-playing but paused) gets a subtler `#2e2e44` border. This keeps the list visually quiet — only one row stands out.
+- Background is transparent by default; only the **currently playing** row gets a quiet `color-mix()` tint derived from `--accent` plus the accent border. The `--current` class (currently-playing but paused) uses `--input-border`. This keeps the list visually quiet — only one row stands out.
 - The «след.» toggle is disabled when `isCurrent` (you can't queue the track that's already playing).
 - The menu items are `Изменить альбом`, `Теги`, `Переименовать`, `Удалить`. There is no "Добавить в очередь" — the row's own «след.» button is the only way to set the next track.
 - The drag handle (6 dots, 3×2) is rendered only when `draggable` is true. The parent passes an `onDragStart(e, track)` callback that wraps `sortable.startDrag` with the correct index.

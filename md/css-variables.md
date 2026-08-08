@@ -6,23 +6,25 @@ Global design tokens are declared on `:root` in `frontend/src/App.vue`. Always p
 
 | Var              | Value                       | Use                                        |
 | ---------------- | --------------------------- | ------------------------------------------ |
-| `--bg`           | `#181a24`                   | Page background.                           |
-| `--bg-deep`      | `#11121a`                   | Deepest background (behind everything).    |
-| `--bg-header`    | `#1c1f2a`                   | App header.                                |
-| `--block-bg`     | `#1f2230`                   | Card / tile background (e.g. block cards, encounter combatant tiles). |
-| `--surface-1`    | `#26283e`                   | Inputs, default buttons.                   |
-| `--surface-2`    | `#2d304b`                   | Focused / hovered input states.            |
-| `--popup-bg`     | `#1c1f2a`                   | Dropdowns, popovers, tooltips, modals.     |
-| `--input-bg`     | `#1e1e22`                   | Form input background (use in modal forms). |
-| `--input-border` | `#2e2e44`                   | Form input border.                          |
+| `--bg-deep`      | `#121214`                   | Deepest background (behind everything).    |
+| `--bg`           | `#1b1b1d`                   | Main graphite page / recessed background.  |
+| `--bg-header`    | `#18181b`                   | App and character header.                  |
+| `--block-bg`     | `#242427`                   | Card / tile background (e.g. block cards, encounter combatant tiles). |
+| `--surface-1`    | `#2c2c30`                   | Inputs, default buttons and quiet hover states. |
+| `--surface-2`    | `#35353b`                   | Focused / selected surfaces.               |
+| `--surface-hover`| `#313136`                   | Hovered cards and list rows.                |
+| `--surface-active`| `#393940`                  | Pressed controls and strong surface lift.   |
+| `--popup-bg`     | `#202024`                   | Dropdowns, popovers, tooltips, modals.     |
+| `--input-bg`     | `#1f1f22`                   | Form input background (use in modal forms). |
+| `--input-border` | `#38383f`                   | Form input border.                          |
 | `--input-focus`  | `var(--accent)`             | Form input focus ring colour.               |
 
 ## Borders & dividers
 
 | Var               | Value                       | Use                                  |
 | ----------------- | --------------------------- | ------------------------------------ |
-| `--border`        | `rgba(255,255,255,0.07)`    | Subtle dividers and tile borders.    |
-| `--border-strong` | `rgba(255,255,255,0.14)`    | Modal / popover outlines.            |
+| `--border`        | `rgba(255,255,255,0.08)`    | Subtle dividers and tile borders.    |
+| `--border-strong` | `rgba(255,255,255,0.16)`    | Modal / popover outlines.            |
 
 Clickable list tiles (character list `CharBox`, session list `SessionCard`, their skeletons / "create" placeholders) share one look built from existing tokens — do **not** add card-specific tokens: `background: var(--block-bg); border: 1px solid var(--border); border-radius: var(--r-lg);` with hover `border-color: var(--accent-dim); box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 18%, transparent);`.
 
@@ -30,21 +32,24 @@ Clickable list tiles (character list `CharBox`, session list `SessionCard`, thei
 
 | Var            | Value     | Use                                 |
 | -------------- | --------- | ----------------------------------- |
-| `--text-1`     | `#e8e8ef` | Primary body text, bright labels.   |
-| `--text-2`     | `#a6a6b8` | Secondary text, subtitles.          |
-| `--text-muted` | `#7c7c92` | Quiet section headers, placeholders (raised for WCAG contrast). |
+| `--text-1`     | `#ececed` | Primary body text, bright labels.   |
+| `--text-2`     | `#a6a6ab` | Secondary text, subtitles.          |
+| `--text-muted` | `#8a8a92` | Quiet section headers and placeholders; AA on `--block-bg`. |
+| `--text-faint` | `#73737b` | Decorative or disabled text that is not required for comprehension. |
+| `--text-on-accent` | `#ffffff` | Text and icons on the primary accent. |
 
 ## Accent
 
 | Var            | Value     | Use                                              |
 | -------------- | --------- | ------------------------------------------------ |
-| `--accent`     | `#7c5cff` | Navigation accent (active nav, links, selection, "combat" section). |
-| `--accent-dim` | `#5a43cc` | Hover/pressed for `--accent` buttons.            |
-| `--accent-2`     | `#34c6ac` | Positive/creative actions (Войти, Создать, регистрация). Pair with dark text `#06231d`. |
-| `--accent-2-dim` | `#2aa28d` | Hover/pressed for `--accent-2` buttons.          |
-| `--color-attack` | `#a292ff` | Attack-related highlights in character sheets.  |
+| `--accent`     | `#7c5ce2` | Product accent: navigation, links, selection and primary CTA; AA with white text. |
+| `--accent-dim` | `#6847c7` | Hover/pressed for accent buttons.                |
+| `--accent-soft`| `#b9a8ff` | Accent text on quiet tinted surfaces.            |
+| `--accent-2`   | `var(--accent)` | Legacy alias; positive/create actions now use the same purple. |
+| `--accent-2-dim` | `var(--accent-dim)` | Legacy pressed-state alias.                 |
+| `--color-attack` | `#aa98ff` | Attack-related highlights in character sheets.  |
 
-Accent rule of thumb: `--accent` (purple) = navigation / selection / active state; `--accent-2` (teal) = the primary confirm/create action of a flow (one per modal/page).
+Accent rule of thumb: use one purple product accent for navigation, selection and the primary action of a flow. Keep green, yellow and red exclusively for semantic success, warning and danger states.
 
 ## Semantic state colors
 
@@ -59,7 +64,7 @@ Accent rule of thumb: `--accent` (purple) = navigation / selection / active stat
 
 | Var          | Value                                                    |
 | ------------ | -------------------------------------------------------- |
-| `--shadow-lg`| `0 14px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04)` (only shadow token in use) |
+| `--shadow-lg`| `0 18px 48px rgba(0,0,0,0.42), 0 0 0 1px rgba(255,255,255,0.05)` (only shadow token in use) |
 | `--r-xs`     | `4px` (tight chips, inner inputs)                        |
 | `--r-sm`     | `6px` (small buttons, mini chips)                        |
 | `--r-md`     | `10px` (default card radius)                             |
@@ -76,6 +81,7 @@ Accent rule of thumb: `--accent` (purple) = navigation / selection / active stat
 
 | Var              | Value                                                       |
 | ---------------- | ----------------------------------------------------------- |
+| `--font-ui`      | `'Segoe UI', system-ui, ...` — product UI and numeric data. |
 | `--font-display` | `'Cormorant Garamond', 'Times New Roman', serif` — display headings and entity names ONLY. |
 
 Do NOT use `--font-display` for data numbers (ability modifiers, AC/HP/CR stat values): the serif glyphs misread (`+3` looks like `+З`). Use the inherited sans with `font-variant-numeric: tabular-nums` for numeric data. Serif stays for names/titles and the decorative big collection-card counts.

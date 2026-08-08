@@ -538,7 +538,7 @@ async function onDeleteAlbum() {
   await musicStore.deleteAlbum(id)
 }
 
-const ALBUM_COLORS = ['#7c5cff', '#5ce87c', '#e89c3c', '#e85c5c', '#5cb5e8', '#e85cc6']
+const ALBUM_COLORS = ['#7c5ce2', '#5ce87c', '#e89c3c', '#e85c5c', '#5cb5e8', '#e85cc6']
 function pickColor() {
   return ALBUM_COLORS[musicStore.albums.length % ALBUM_COLORS.length]
 }

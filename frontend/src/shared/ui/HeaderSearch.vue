@@ -191,8 +191,8 @@ function onKeydown(e) {
   display: flex;
   align-items: center;
   gap: 6px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid var(--border, #2a2a2e);
+  background: var(--surface-1);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 0 8px;
   height: 32px;
@@ -251,10 +251,10 @@ function onKeydown(e) {
   min-width: 320px;
   max-height: 360px;
   overflow-y: auto;
-  background: #1c1c22;
-  border: 1px solid #2a2a2e;
+  background: var(--popup-bg);
+  border: 1px solid var(--border-strong);
   border-radius: 10px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.55);
+  box-shadow: var(--shadow-lg);
   z-index: 200;
   padding: 4px;
 }
@@ -279,7 +279,7 @@ function onKeydown(e) {
 
 .hs-row:hover,
 .hs-row-active {
-  background: rgba(255, 255, 255, 0.055);
+  background: var(--surface-1);
 }
 
 .hs-row-icon {
@@ -331,5 +331,5 @@ function onKeydown(e) {
   width: 4px;
 }
 .hs-dropdown::-webkit-scrollbar-track { background: transparent; }
-.hs-dropdown::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+.hs-dropdown::-webkit-scrollbar-thumb { background: var(--surface-2); border-radius: 4px; }
 </style>

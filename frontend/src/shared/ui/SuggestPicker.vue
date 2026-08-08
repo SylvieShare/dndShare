@@ -144,8 +144,8 @@ function pickItem(item) {
 .sp-input {
   width: 100%;
   min-height: 28px;
-  background: #18181c;
-  border: 1px dashed rgba(140, 140, 154, 0.48);
+  background: var(--input-bg);
+  border: 1px dashed var(--border-strong);
   border-radius: 7px;
   color: var(--text-2);
   font: inherit;
@@ -196,7 +196,7 @@ function pickItem(item) {
 }
 
 .sp-input:focus {
-  border-color: rgba(126, 118, 255, 0.7);
+  border-color: var(--accent);
 }
 
 .sp-invalid {

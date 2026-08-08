@@ -217,7 +217,7 @@ onMounted(() => {
   border: 0;
   border-radius: 9px;
   background: var(--accent);
-  color: #fff;
+  color: var(--text-on-accent);
   font: inherit;
   font-size: 12px;
   font-weight: 700;
@@ -289,7 +289,7 @@ onMounted(() => {
   flex-shrink: 0;
   width: 96px;
   align-self: stretch;
-  background: #26263a;
+  background: var(--surface-1);
   animation: sk-pulse 1.4s ease-in-out infinite;
 }
 
@@ -305,7 +305,7 @@ onMounted(() => {
 .sk-line {
   height: 10px;
   border-radius: 5px;
-  background: #26263a;
+  background: var(--surface-1);
   animation: sk-pulse 1.4s ease-in-out infinite;
 }
 

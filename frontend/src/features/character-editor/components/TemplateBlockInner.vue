@@ -468,7 +468,7 @@ onBeforeUnmount(() => {
 
 .layout-hr-sep {
   width: 2px;
-  background: #333;
+  background: var(--border-strong);
   flex-shrink: 0;
   align-self: stretch;
 }
@@ -508,8 +508,8 @@ onBeforeUnmount(() => {
     display: block;
     max-width: 92px;
     padding: 10px 6px;
-    border: 1px solid #333;
-    background: #1c1c1f;
+    border: 1px solid var(--border-strong);
+    background: var(--popup-bg);
     color: var(--text-muted);
     font: inherit;
     font-size: 12px;
@@ -561,20 +561,20 @@ onBeforeUnmount(() => {
     width: min(86vw, 340px);
     padding: 14px 16px 24px;
     overflow-y: auto;
-    background: #1f1f23;
+    background: var(--bg);
     transition: transform 0.18s ease;
     touch-action: pan-y;
   }
 
   .left-bar-panel {
     left: 0;
-    border-right: 1px solid #333;
+    border-right: 1px solid var(--border-strong);
     transform: translateX(-100%);
   }
 
   .right-bar-panel {
     right: 0;
-    border-left: 1px solid #333;
+    border-left: 1px solid var(--border-strong);
     transform: translateX(100%);
   }
 

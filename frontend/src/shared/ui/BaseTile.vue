@@ -37,12 +37,13 @@ const resolvedColor = computed(() => props.color || 'var(--accent)')
   background: var(--block-bg);
   border: none;
   border-radius: var(--r-lg);
+  box-shadow: inset 0 0 0 1px var(--border);
   box-sizing: border-box;
-  transition: background 0.15s;
+  transition: background 0.15s, box-shadow 0.15s;
 }
 
 .base-tile--tint {
-  background: color-mix(in srgb, var(--tile-color) 8%, var(--block-bg));
+  background: color-mix(in srgb, var(--tile-color) 6%, var(--block-bg));
 }
 
 .base-tile--interactive {
@@ -50,12 +51,14 @@ const resolvedColor = computed(() => props.color || 'var(--accent)')
 }
 
 .base-tile--interactive:hover {
-  background: color-mix(in srgb, var(--tile-color) 16%, var(--block-bg));
+  background: color-mix(in srgb, var(--tile-color) 11%, var(--block-bg));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tile-color) 28%, var(--border));
 }
 
 /* gradient + colored border (HP block look) */
 .base-tile--framed {
-  background: linear-gradient(135deg, var(--block-bg) 50%, color-mix(in srgb, var(--tile-color) 8%, var(--block-bg)));
+  background: linear-gradient(135deg, var(--block-bg) 50%, color-mix(in srgb, var(--tile-color) 6%, var(--block-bg)));
+  box-shadow: none;
   transition: background 0.3s ease;
 }
 .base-tile--framed::before {
@@ -70,6 +73,7 @@ const resolvedColor = computed(() => props.color || 'var(--accent)')
 }
 .base-tile--framed.base-tile--interactive:hover {
   background: linear-gradient(135deg, var(--block-bg) 50%, color-mix(in srgb, var(--tile-color) 8%, var(--block-bg)));
+  box-shadow: none;
 }
 .base-tile--framed.base-tile--interactive:hover::before {
   border-color: color-mix(in srgb, var(--tile-color) 55%, var(--border));

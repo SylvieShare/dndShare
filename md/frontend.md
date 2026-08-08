@@ -254,7 +254,7 @@ This environment usually **cannot run the real app**: there is no backend/DB (no
 When you make a **visible** UI change and can't run it, the owner explicitly likes seeing a **rendered mockup** of the result. Do this:
 
 - Use the visualization tool (`show_widget`) to render an **HTML/SVG fragment** inline in the chat — a faithful, static reproduction of the component you changed.
-- Reproduce it honestly: use the **real CSS tokens / hex values** from `App.vue` (e.g. `#1f2230`, `#7c5cff`, `#fcbe24`), the real layout (flex order, sizes, paddings), and for computed graphics (e.g. the `CharStatRadar` hexagon) compute the geometry with the **same formulas the component uses** (center 50, grid radius, 60° axis steps) so the mockup matches what ships.
+- Reproduce it honestly: use the **real CSS tokens / hex values** from `App.vue` (e.g. `#242427`, `#7c5ce2`, `#fcbe24`), the real layout (flex order, sizes, paddings), and for computed graphics (e.g. the `CharStatRadar` hexagon) compute the geometry with the **same formulas the component uses** (center 50, grid radius, 60° axis steps) so the mockup matches what ships.
 - **Label it as a mockup, not proof of correctness.** It confirms layout/geometry/visual intent only — it does **not** prove the code compiles or that data binds correctly (it uses hardcoded sample data, doesn't import the component, doesn't hit the backend). Always say so, and flag that `npm run build` + a real run on a working machine are still needed.
 
 This is the agreed substitute for the `preview_*` verification workflow when the preview/app can't run.

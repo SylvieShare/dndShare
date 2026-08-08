@@ -199,7 +199,7 @@ async function submitReg() {
   background: var(--accent-2);
   border: none;
   border-radius: 6px;
-  color: #06231d;
+  color: var(--text-on-accent);
   font-size: 13px;
   font-family: inherit;
   font-weight: 600;
@@ -244,8 +244,8 @@ async function submitReg() {
 
 .reg-input {
   height: 36px;
-  background: #2a2a2e;
-  border: 1px solid transparent;
+  background: var(--surface-1);
+  border: 1px solid var(--input-border);
   border-radius: 8px;
   color: var(--text-1);
   font-size: 13px;
@@ -255,7 +255,7 @@ async function submitReg() {
   transition: border-color 0.15s, background 0.15s;
 }
 .reg-input::placeholder { color: var(--text-2); }
-.reg-input:focus { border-color: var(--accent); background: #323238; }
+.reg-input:focus { border-color: var(--accent); background: var(--surface-2); }
 .reg-input:disabled { opacity: 0.5; }
 .reg-input.invalid { border-color: #5a2020; }
 
@@ -277,7 +277,7 @@ async function submitReg() {
 
 .reg-cancel {
   background: none;
-  border: 1px solid #333;
+  border: 1px solid var(--border-strong);
   color: var(--text-muted);
   font-family: inherit;
   font-size: 13px;
@@ -291,7 +291,7 @@ async function submitReg() {
 .reg-submit {
   background: var(--accent-2);
   border: none;
-  color: #06231d;
+  color: var(--text-on-accent);
   font-family: inherit;
   font-size: 13px;
   font-weight: 600;

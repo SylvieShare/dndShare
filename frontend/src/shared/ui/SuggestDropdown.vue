@@ -119,11 +119,12 @@ function hideTooltip() {
   top: calc(100% + 4px);
   left: 0;
   min-width: 220px;
-  background-color: #2e2d30;
+  background-color: var(--popup-bg);
+  border: 1px solid var(--border-strong);
   border-radius: 10px;
   padding: 6px 0;
   z-index: 50;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+  box-shadow: var(--shadow-lg);
 }
 
 .sd-item {
@@ -163,11 +164,11 @@ function hideTooltip() {
 }
 
 .sd-item:hover .sd-item-value {
-  color: #fff;
+  color: var(--text-1);
 }
 
 .sd-custom-mark {
-  color: #7a6aaa;
+  color: var(--accent-soft);
   font-size: 9px;
   flex-shrink: 0;
   line-height: 1;
@@ -198,7 +199,7 @@ function hideTooltip() {
 
 .sd-add {
   padding: 8px 14px;
-  color: #7a7aff;
+  color: var(--accent-soft);
   font-size: 15px;
   cursor: pointer;
   border-radius: 6px;
@@ -206,7 +207,7 @@ function hideTooltip() {
 }
 
 .sd-add:hover {
-  background-color: rgba(122, 122, 255, 0.12);
+  background-color: color-mix(in srgb, var(--accent) 12%, transparent);
 }
 
 .sd-empty {

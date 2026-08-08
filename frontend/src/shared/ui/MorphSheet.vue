@@ -305,14 +305,14 @@ defineExpose({ close })
    is unsupported/disabled in some Chromium builds (e.g. Yandex Browser). */
 .ms-overlay { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(0,0,0,0); transition: background .3s ease; }
 .ms-overlay.visible { background: rgba(0,0,0,.45); }
-.ms-sheet { flex: none; position: relative; box-sizing: border-box; width: var(--ms-w, 440px); max-width: 100%; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; background: var(--block-bg); border: 0; border-radius: 18px; box-shadow: var(--shadow-lg); opacity: 0; }
+.ms-sheet { flex: none; position: relative; box-sizing: border-box; width: var(--ms-w, 440px); max-width: 100%; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; background: var(--block-bg); border: 1px solid var(--border); border-radius: 18px; box-shadow: var(--shadow-lg); opacity: 0; }
 /* framed panel: the morphing block's gradient + colored border spans the whole window */
-.ms-sheet.ms-framed { background: linear-gradient(135deg, var(--block-bg) 55%, color-mix(in srgb, var(--ms-frame) 12%, var(--block-bg))); }
+.ms-sheet.ms-framed { background: linear-gradient(135deg, var(--block-bg) 55%, color-mix(in srgb, var(--ms-frame) 8%, var(--block-bg))); border-color: transparent; }
 .ms-sheet.ms-framed::before {
   content: "";
   position: absolute;
   inset: 0;
-  border: 1px solid color-mix(in srgb, var(--ms-frame) 38%, var(--border));
+  border: 1px solid color-mix(in srgb, var(--ms-frame) 32%, var(--border));
   border-radius: inherit;
   pointer-events: none;
   z-index: 5;
@@ -329,7 +329,7 @@ defineExpose({ close })
 
 @media (max-width: 768px) {
   .ms-overlay { padding: 0; align-items: stretch; justify-content: stretch; }
-  .ms-sheet { width: 100%; max-width: none; height: 100dvh; max-height: none; border-radius: 0; }
+  .ms-sheet { width: 100%; max-width: none; height: 100dvh; max-height: none; border: 0; border-radius: 0; }
   .ms-body { flex: 1; height: auto; width: auto; }
   .ms-grab { display: block; position: absolute; top: calc(7px + env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); width: 40px; height: 4px; border-radius: 2px; background: var(--border-strong); z-index: 6; pointer-events: none; }
 }

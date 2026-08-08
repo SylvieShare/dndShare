@@ -36,7 +36,7 @@
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 
-const AVATAR_COLORS = ['#7c5cff', '#c85ce8', '#5cb0e8', '#e85c8a', '#5ce884', '#e89c3c', '#ff6b6b']
+const AVATAR_COLORS = ['#7c5ce2', '#c85ce8', '#5cb0e8', '#e85c8a', '#5ce884', '#e89c3c', '#ff6b6b']
 
 const STATUS_CFG = {
   live:      { label: 'Идёт игра',    color: '#e85c5c' },

@@ -30,7 +30,7 @@ const alignStyle = computed(() => {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  color: #7a7a86;
+  color: var(--text-muted);
   font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
@@ -40,7 +40,7 @@ const alignStyle = computed(() => {
 
 .slabel--border {
   padding-bottom: 5px;
-  border-bottom: 1px solid #2a2a2e;
+  border-bottom: 1px solid var(--border);
   margin-bottom: 6px;
 }
 </style>

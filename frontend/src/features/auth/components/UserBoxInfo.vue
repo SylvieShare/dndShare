@@ -49,7 +49,7 @@ function closeMenu() {
 
 .user-trigger:hover,
 .user-trigger.open {
-  background: #222228;
+  background: var(--surface-1);
 }
 
 .user-avatar {
@@ -94,10 +94,10 @@ function closeMenu() {
   flex-direction: column;
   gap: 2px;
   padding: 6px;
-  border: 1px solid #2a2a2e;
+  border: 1px solid var(--border-strong);
   border-radius: 10px;
-  background: #1e1e22;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  background: var(--popup-bg);
+  box-shadow: var(--shadow-lg);
 }
 
 .user-menu-item {

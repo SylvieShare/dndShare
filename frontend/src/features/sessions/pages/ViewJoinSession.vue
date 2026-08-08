@@ -268,7 +268,7 @@ onMounted(async () => {
 .state-title { font-size: 18px; font-weight: 700; color: var(--text-1); margin: 0; }
 .state-text { font-size: 13px; color: var(--text-2); margin: 0 0 8px; }
 .state-btn {
-  background: var(--accent, #7c5cff);
+  background: var(--accent);
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -444,7 +444,7 @@ onMounted(async () => {
   color: rgba(124,92,255,0.6);
   transition: transform 0.15s, color 0.15s;
 }
-.char-tile:hover:not(:disabled) .tile-arrow { color: var(--accent, #7c5cff); transform: translateX(3px); }
+.char-tile:hover:not(:disabled) .tile-arrow { color: var(--accent); transform: translateX(3px); }
 
 .char-tile--create {
   flex-direction: column;
@@ -457,10 +457,10 @@ onMounted(async () => {
   min-height: 92px;
 }
 .char-tile--create:hover:not(:disabled) {
-  border-color: var(--accent, #7c5cff);
+  border-color: var(--accent);
   background: rgba(124,92,255,0.06);
 }
-.create-icon { font-size: 26px; color: var(--accent, #7c5cff); line-height: 1; }
+.create-icon { font-size: 26px; color: var(--accent); line-height: 1; }
 .create-label { font-size: 12px; color: var(--text-muted); font-weight: 600; }
 
 .no-chars {

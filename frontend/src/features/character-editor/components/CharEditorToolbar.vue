@@ -235,7 +235,7 @@ function goBack() {
   transition: color 0.15s, background 0.15s;
   padding: 0 8px 0 4px;
 }
-.tb-back:hover { color: var(--text-2); background: #222; }
+.tb-back:hover { color: var(--text-2); background: var(--surface-1); }
 
 .tb-back-label {
   font-size: 12px;
@@ -246,7 +246,7 @@ function goBack() {
 .tb-divider {
   width: 1px;
   height: 22px;
-  background: #2e2e36;
+  background: var(--border-strong);
   flex-shrink: 0;
   margin: 0 10px;
 }
@@ -262,7 +262,7 @@ function goBack() {
 .tb-name {
   font-size: 14px;
   font-weight: 600;
-  color: #d8d5e4;
+  color: var(--text-1);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -292,9 +292,9 @@ function goBack() {
   gap: 7px;
   height: 34px;
   padding: 0 10px;
-  border: 1px solid rgba(91, 101, 126, 0.32);
+  border: 1px solid var(--border-strong);
   border-radius: 7px;
-  background: rgba(255, 255, 255, 0.03);
+  background: color-mix(in srgb, var(--surface-1) 56%, transparent);
   color: var(--text-1, var(--text-1));
   font: inherit;
   cursor: default;
@@ -305,8 +305,8 @@ function goBack() {
 .tb-session-clickable { cursor: pointer; }
 .tb-session-clickable:hover,
 .tb-session.open {
-  background: var(--border);
-  border-color: rgba(140, 140, 154, 0.5);
+  background: var(--surface-1);
+  border-color: color-mix(in srgb, var(--accent) 38%, var(--border-strong));
 }
 
 .tb-session-status {
@@ -361,10 +361,10 @@ function goBack() {
   flex-direction: column;
   gap: 2px;
   padding: 6px;
-  background: #1e1e22;
-  border: 1px solid #2a2a2e;
+  background: var(--popup-bg);
+  border: 1px solid var(--border-strong);
   border-radius: 10px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  box-shadow: var(--shadow-lg);
 }
 
 .tb-session-option {
@@ -377,7 +377,7 @@ function goBack() {
   text-decoration: none;
   transition: background 0.1s;
 }
-.tb-session-option:hover { background: rgba(255, 255, 255, 0.05); }
+.tb-session-option:hover { background: var(--surface-1); }
 
 .tb-session-meta {
   display: inline-flex;
@@ -432,8 +432,8 @@ function goBack() {
 
 .tb-tab:hover { color: var(--text-muted); }
 
-.tb-tab.active { color: #fff; font-weight: 700; }
-.tb-tab.active::after { background: #7a5cff; }
+.tb-tab.active { color: var(--text-1); font-weight: 700; }
+.tb-tab.active::after { background: var(--accent); }
 
 .tb-tab-icon {
   width: 18px;
@@ -480,8 +480,8 @@ function goBack() {
 
 .menu-btn:hover,
 .menu-btn.open {
-  background: #2a2a2e;
-  border-color: #333;
+  background: var(--surface-1);
+  border-color: var(--border-strong);
 }
 
 .bar {
@@ -500,12 +500,12 @@ function goBack() {
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
-  background: #1e1e22;
-  border: 1px solid #2a2a2e;
+  background: var(--popup-bg);
+  border: 1px solid var(--border-strong);
   border-radius: 10px;
   padding: 8px;
   min-width: 220px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  box-shadow: var(--shadow-lg);
   z-index: 100;
 }
 
@@ -514,10 +514,10 @@ function goBack() {
   border-radius: 7px;
   transition: background 0.12s;
 }
-.menu-item:hover { background: #26262c; }
+.menu-item:hover { background: var(--surface-1); }
 
 .menu-save-item {
-  border-bottom: 1px solid #252530;
+  border-bottom: 1px solid var(--border);
   margin-bottom: 4px;
   padding-bottom: 12px;
 }

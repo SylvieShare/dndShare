@@ -66,7 +66,7 @@ import { computed } from 'vue'
 import StatBar from '@/shared/ui/StatBar.vue'
 import { pvAvatar, pvHp, pvName, pvSubtitle } from '@/features/sessions/lib/participantView'
 
-const AVATAR_COLORS = ['#7c5cff', '#c85ce8', '#5cb0e8', '#e85c8a', '#5ce884', '#e89c3c', '#ff6b6b']
+const AVATAR_COLORS = ['#7c5ce2', '#c85ce8', '#5cb0e8', '#e85c8a', '#5ce884', '#e89c3c', '#ff6b6b']
 
 const props = defineProps({
   participant: { type: Object, required: true },

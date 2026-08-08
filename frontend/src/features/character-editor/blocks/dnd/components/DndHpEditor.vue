@@ -158,7 +158,7 @@ function set(field, value) { emit('change', { ...props.hp, [field]: value }) }
 .hpe-pills { display: flex; flex-wrap: wrap; gap: 6px; }
 .hpe-pill {
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid #3a3a46;
+  border: 1px solid var(--border-strong);
   border-radius: 7px;
   color: var(--text-muted);
   font-size: 13px;

@@ -144,7 +144,7 @@ onBeforeUnmount(() => {
 }
 
 .nav-link.active {
-  color: #fff;
+  color: var(--text-1);
 }
 
 .nav-indicator {
@@ -183,9 +183,9 @@ onBeforeUnmount(() => {
     align-items: center;
     justify-content: space-between;
     gap: 6px;
-    border: 1px solid #2f2f36;
+    border: 1px solid var(--border-strong);
     border-radius: 7px;
-    background: #202024;
+    background: var(--popup-bg);
     color: var(--text-1);
     font: inherit;
     font-size: 13px;
@@ -220,10 +220,10 @@ onBeforeUnmount(() => {
     flex-direction: column;
     gap: 2px;
     padding: 6px;
-    border: 1px solid #2a2a2e;
+    border: 1px solid var(--border-strong);
     border-radius: 10px;
-    background: #1e1e22;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+    background: var(--popup-bg);
+    box-shadow: var(--shadow-lg);
   }
 
   .mobile-nav-item {
@@ -236,8 +236,8 @@ onBeforeUnmount(() => {
   }
 
   .mobile-nav-item.active {
-    color: #fff;
-    background: #2a2a2e;
+    color: var(--text-1);
+    background: var(--surface-1);
   }
 }
 </style>

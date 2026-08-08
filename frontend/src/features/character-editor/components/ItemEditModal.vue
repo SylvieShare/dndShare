@@ -988,8 +988,8 @@ async function submit() {
   width: 100%;
   box-sizing: border-box;
   height: 38px;
-  background: #141418;
-  border: 1px solid rgba(140, 140, 154, 0.35);
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
   border-radius: 8px;
   color: var(--text-1);
   font: inherit;
@@ -997,7 +997,7 @@ async function submit() {
   padding: 0 11px;
   outline: none;
 }
-.iem-input:focus { border-color: rgba(126, 118, 255, 0.7); }
+.iem-input:focus { border-color: var(--accent); }
 .iem-input-sm { height: 32px; font-size: 13px; }
 
 .iem-textarea {
@@ -1005,8 +1005,8 @@ async function submit() {
   box-sizing: border-box;
   min-height: 72px;
   resize: vertical;
-  background: #141418;
-  border: 1px solid rgba(140, 140, 154, 0.35);
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
   border-radius: 8px;
   color: var(--text-1);
   font: inherit;
@@ -1015,11 +1015,11 @@ async function submit() {
   padding: 8px 10px;
   outline: none;
 }
-.iem-textarea:focus { border-color: rgba(126, 118, 255, 0.7); }
+.iem-textarea:focus { border-color: var(--accent); }
 
 .iem-select {
-  background: #141418;
-  border: 1px solid rgba(140, 140, 154, 0.35);
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
   border-radius: 8px;
   color: var(--text-1);
   font: inherit;
@@ -1028,7 +1028,7 @@ async function submit() {
   outline: none;
   cursor: pointer;
 }
-.iem-select:focus { border-color: rgba(126, 118, 255, 0.7); }
+.iem-select:focus { border-color: var(--accent); }
 .iem-select-sm { align-self: flex-start; }
 
 .iem-toggle {
@@ -1051,8 +1051,8 @@ async function submit() {
   width: 36px;
   height: 20px;
   border-radius: 999px;
-  background: #27272f;
-  border: 1px solid rgba(140, 140, 154, 0.35);
+  background: var(--surface-1);
+  border: 1px solid var(--border-strong);
   transition: background 0.14s, border-color 0.14s;
   flex-shrink: 0;
 }
@@ -1073,12 +1073,12 @@ async function submit() {
 }
 
 .iem-toggle-on .iem-toggle-track {
-  background: rgba(122, 106, 255, 0.25);
-  border-color: rgba(122, 106, 255, 0.65);
+  background: color-mix(in srgb, var(--accent) 25%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 65%, transparent);
 }
 
 .iem-toggle-on .iem-toggle-thumb {
-  background: #b0a4ff;
+  background: var(--accent-soft);
   transform: translateX(16px);
 }
 
@@ -1100,8 +1100,8 @@ async function submit() {
   min-width: 0;
   text-align: left;
   height: 38px;
-  background: #141418;
-  border: 1px solid rgba(140, 140, 154, 0.35);
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
   border-radius: 8px;
   color: var(--text-1);
   font: inherit;
@@ -1113,7 +1113,7 @@ async function submit() {
   white-space: nowrap;
   transition: border-color 0.12s;
 }
-.iem-item-ref-btn:hover { border-color: rgba(126, 118, 255, 0.7); }
+.iem-item-ref-btn:hover { border-color: var(--accent); }
 
 .iem-item-ref-clear {
   flex-shrink: 0;

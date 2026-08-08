@@ -133,13 +133,13 @@ function onCreated(item) {
   width: 300px;
   max-width: 90vw;
   max-height: 75vh;
-  background: #1a1a22;
-  border-top: 1px solid #2e2e3c;
-  border-left: 1px solid #2e2e3c;
+  background: var(--popup-bg);
+  border-top: 1px solid var(--border-strong);
+  border-left: 1px solid var(--border-strong);
   border-radius: 16px 0 0 0;
   display: flex;
   flex-direction: column;
-  box-shadow: -8px -4px 32px rgba(0, 0, 0, 0.5);
+  box-shadow: var(--shadow-lg);
 }
 
 .sms-header {
@@ -147,7 +147,7 @@ function onCreated(item) {
   align-items: center;
   gap: 8px;
   padding: 14px 12px 12px;
-  border-bottom: 1px solid #2a2a36;
+  border-bottom: 1px solid var(--border);
   flex-shrink: 0;
 }
 
@@ -164,7 +164,7 @@ function onCreated(item) {
   width: 28px;
   height: 28px;
   border-radius: 7px;
-  border: 1px dashed #3a3a46;
+  border: 1px dashed var(--border-strong);
   background: none;
   color: var(--text-muted);
   cursor: pointer;
@@ -231,8 +231,8 @@ function onCreated(item) {
   user-select: none;
 }
 
-@media (hover: hover) { .sms-item:hover { background: rgba(255, 255, 255, 0.04); } }
-.sms-item-on { background: rgba(255, 255, 255, 0.03); }
+@media (hover: hover) { .sms-item:hover { background: var(--surface-1); } }
+.sms-item-on { background: color-mix(in srgb, var(--surface-1) 72%, transparent); }
 
 .sms-icon {
   flex-shrink: 0;
@@ -299,7 +299,7 @@ function onCreated(item) {
   border-radius: 6px;
   border: none;
   background: none;
-  color: #444;
+  color: var(--text-muted);
   font-size: 11px;
   font-weight: 700;
   line-height: 1;
@@ -327,7 +327,7 @@ function onCreated(item) {
 
 .sms-empty {
   padding: 20px 14px;
-  color: #444;
+  color: var(--text-muted);
   font-size: 13px;
 }
 

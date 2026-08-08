@@ -256,7 +256,7 @@ function hideTooltip() {
   height: 26px;
   padding: 0 10px;
   border-radius: 7px;
-  border: 1px dashed #3a3a46;
+  border: 1px dashed var(--border-strong);
   background: none;
   color: var(--text-muted);
   cursor: pointer;

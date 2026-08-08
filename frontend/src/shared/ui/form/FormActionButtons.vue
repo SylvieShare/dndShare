@@ -58,7 +58,7 @@ defineEmits(['cancel', 'submit'])
 .form-actions__submit {
   background: var(--accent);
   border: none;
-  color: #fff;
+  color: var(--text-on-accent);
   font-weight: 600;
 }
 .form-actions__submit:hover:not(:disabled) { background: var(--accent-dim); }

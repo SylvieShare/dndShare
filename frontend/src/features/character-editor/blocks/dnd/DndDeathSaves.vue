@@ -93,8 +93,8 @@ function togglePip(type, index) {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  border: 1px solid #4a4a52;
-  background-color: #1e1e22;
+  border: 1px solid var(--border-strong);
+  background-color: var(--input-bg);
   box-shadow: inset 0 1px 2px rgba(0,0,0,0.5);
   cursor: pointer;
   transition: background-color 0.2s, border-color 0.2s, transform 0.15s;

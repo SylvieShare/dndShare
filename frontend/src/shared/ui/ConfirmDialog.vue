@@ -38,13 +38,13 @@ defineEmits(['confirm', 'cancel'])
 }
 
 .cd-dialog {
-  background: #1c1c2a;
-  border: 1px solid var(--input-border);
+  background: var(--popup-bg);
+  border: 1px solid var(--border-strong);
   border-radius: 16px;
   padding: 26px 26px 20px;
   min-width: 280px;
   max-width: 360px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7);
+  box-shadow: var(--shadow-lg);
 }
 
 .cd-title {
@@ -56,7 +56,7 @@ defineEmits(['confirm', 'cancel'])
 
 .cd-message {
   font-size: 13px;
-  color: #9090b0;
+  color: var(--text-2);
   margin-bottom: 22px;
   line-height: 1.5;
 }
@@ -72,7 +72,7 @@ defineEmits(['confirm', 'cancel'])
   border-radius: 8px;
   border: 1px solid var(--input-border);
   background: none;
-  color: #9090b0;
+  color: var(--text-2);
   font: inherit;
   font-size: 14px;
   cursor: pointer;
@@ -80,8 +80,8 @@ defineEmits(['confirm', 'cancel'])
 }
 
 .cd-btn-cancel:hover {
-  background: #242438;
-  color: var(--text-2);
+  background: var(--surface-1);
+  color: var(--text-1);
 }
 
 .cd-btn-confirm {
@@ -96,20 +96,20 @@ defineEmits(['confirm', 'cancel'])
 }
 
 .cd-btn--danger {
-  background: #7a1c1c;
-  color: #ffc8c8;
+  background: color-mix(in srgb, var(--danger) 24%, var(--surface-1));
+  color: color-mix(in srgb, var(--danger) 42%, white);
 }
 
 .cd-btn--danger:hover {
-  background: #9a2222;
+  background: color-mix(in srgb, var(--danger) 36%, var(--surface-1));
 }
 
 .cd-btn--warning {
-  background: #5a3a10;
-  color: #ffd8a0;
+  background: color-mix(in srgb, var(--warning) 20%, var(--surface-1));
+  color: color-mix(in srgb, var(--warning) 50%, white);
 }
 
 .cd-btn--warning:hover {
-  background: #7a4f18;
+  background: color-mix(in srgb, var(--warning) 30%, var(--surface-1));
 }
 </style>

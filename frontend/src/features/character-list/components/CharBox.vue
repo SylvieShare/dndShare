@@ -185,8 +185,8 @@ function doDelete() {
 }
 
 .char-card:hover {
-  background: #242838;
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 30%, transparent);
+  background: var(--surface-hover);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 28%, var(--border));
 }
 
 /* Inset from the left edge with a rounded frame; the inner radius is chosen so
@@ -211,7 +211,7 @@ function doDelete() {
 .ava-placeholder {
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #482f6c, #623cd7);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--accent-dim) 72%, var(--bg)), var(--accent));
 }
 
 .char-body {
@@ -234,7 +234,7 @@ function doDelete() {
 .char-name {
   font-size: 16px;
   font-weight: 600;
-  color: var(--warning);
+  color: var(--text-1);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -243,7 +243,7 @@ function doDelete() {
 
 .char-who {
   font-size: 12px;
-  color: #a0a0b8;
+  color: var(--text-2);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -260,8 +260,8 @@ function doDelete() {
 .meta-lvl {
   font-size: 11px;
   font-weight: 600;
-  background: #2e1d5c;
-  color: #c4a0ff;
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  color: var(--accent-soft);
   border-radius: 5px;
   padding: 1px 7px;
 }
@@ -339,8 +339,8 @@ function doDelete() {
 }
 
 .menu-btn:hover {
-  background: #26263a;
-  color: #a0a0cc;
+  background: var(--surface-1);
+  color: var(--text-2);
 }
 
 .dropdown-item {
@@ -352,20 +352,20 @@ function doDelete() {
 }
 
 .dropdown-item:hover {
-  background: #242438;
+  background: var(--surface-1);
 }
 
 .dropdown-item.danger {
-  color: #d85555;
+  color: var(--danger);
 }
 
 .dropdown-item.danger:hover {
-  background: #281818;
+  background: color-mix(in srgb, var(--danger) 10%, transparent);
 }
 
 .dropdown-sep {
   height: 1px;
-  background: #2a2a3e;
+  background: var(--border);
   margin: 2px 0;
 }
 </style>
