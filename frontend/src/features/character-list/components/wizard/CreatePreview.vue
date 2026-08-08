@@ -53,7 +53,7 @@
                 class="pv-ability"
                 @mouseenter="(e) => showTooltip(e, ab)"
                 @mouseleave="hideTooltip"
-              >{{ ab.name }}</span><span v-if="j < g.abilities.length - 1">, </span></template>
+              >{{ ab.name }}<span v-if="ab.choices.length" class="pv-ability-choice">: {{ ab.choices.join(', ') }}</span></span><span v-if="j < g.abilities.length - 1">, </span></template>
             </template>
             <template v-else>{{ g.v }}</template>
           </li>
@@ -106,10 +106,22 @@ function itemProfs(item) {
     ...(d.tool_prof || []).map((id) => suggestValue(5, id)),
   ].filter(Boolean)
 }
+function choiceLabels(item) {
+  const choice = item?.data?.choice
+  const selected = state.choices[item?.id] || []
+  if (!choice || !selected.length) return []
+  if (choice.from_suggest_id) {
+    return selected.map((id) => suggestValue(Number(choice.from_suggest_id), id) || `#${id}`)
+  }
+  return selected.map((value) => {
+    const option = (choice.options || []).find((o) => String(o.value ?? o.label) === String(value))
+    return option?.label || String(value)
+  })
+}
 function featureList(items, binding) {
   return featuresForBinding(items, binding, 1)
     .filter((i) => i.name)
-    .map((i) => ({ name: i.name, desc: i.data?.desc || '', item: i }))
+    .map((i) => ({ name: i.name, desc: i.data?.desc || '', item: i, choices: choiceLabels(i) }))
 }
 
 const tooltip = reactive({ visible: false, name: '', desc: '', item: null, x: 0, top: null, bottom: null })
@@ -249,5 +261,6 @@ const isEmpty = computed(() => !showStats.value && !sections.value.length)
 .pv-grants li { font-size: 12px; color: var(--text-2); line-height: 1.35; }
 .gk { display: block; font-size: 10px; letter-spacing: 0.03em; text-transform: uppercase; color: var(--text-muted); }
 .pv-ability { cursor: help; text-decoration: underline dotted; text-underline-offset: 2px; text-decoration-color: var(--text-muted); }
+.pv-ability-choice { color: var(--text-1); text-decoration: none; }
 .pv-ability:hover { color: var(--text-1); text-decoration-color: var(--accent); }
 </style>

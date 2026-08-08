@@ -112,13 +112,21 @@ export function useDndCreateWizard() {
     if (hydrating) return
     state.subrace = null
     state.raceVariant = null
-    subraces.value = r ? ((await fetchGet(`/items/children?parentId=${r.id}`))?.items || []).filter((i) => i.typeId === RACE_TYPE) : []
+    subraces.value = []
+    if (!r) return
+    const raceId = r.id
+    const items = ((await fetchGet(`/items/children?parentId=${raceId}`))?.items || []).filter((i) => i.typeId === RACE_TYPE)
+    if (state.race?.id === raceId) subraces.value = items
   })
   watch(() => state.charClass, async (c) => {
     if (hydrating) return
     state.subclass = null
     state.skillIds = []
-    subclasses.value = c ? ((await fetchGet(`/items/children?parentId=${c.id}`))?.items || []).filter((i) => i.typeId === CLASS_TYPE) : []
+    subclasses.value = []
+    if (!c) return
+    const classId = c.id
+    const items = ((await fetchGet(`/items/children?parentId=${classId}`))?.items || []).filter((i) => i.typeId === CLASS_TYPE)
+    if (state.charClass?.id === classId) subclasses.value = items
   })
   // A different race/subrace/variant means a different set of race offers — clear the picks.
   watch(() => [state.race?.id, state.subrace?.id, state.raceVariant], () => {
