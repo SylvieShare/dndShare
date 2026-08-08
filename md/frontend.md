@@ -68,9 +68,13 @@ Route components are imported **statically** into `router.js` — the whole app 
 
 The router uses HTML5 history mode (clean URLs, no `#`), so deep-linking a route like `/chars` makes the browser request that path from the backend. The backend serves the SPA for such navigation paths via a `PathResourceResolver` fallback to `index.html` in `backend/.../base/WebApplicationConfig.kt` (any path that isn't an existing static file, `/api/**`, `/mcp`, or a file with an extension returns `index.html`). Do not remove this when upgrading Spring — in Boot 4 the old `ErrorPage(NOT_FOUND → /notFound)` fallback stopped working because `ResponseEntityExceptionHandler` now intercepts `NoResourceFoundException` and returns a ProblemDetail 404 first.
 
-### Route prefetch
+### Route transitions and prefetch
 
-There is **no Vue route transition**. `App.vue` is a plain `<router-view>` wrapped only in `<keep-alive include="ViewListCharacters">` (see "List ↔ character navigation (plain)" below; the old `route-slide-*` / `route-fade` CSS was deleted from `App.vue`). The prefetch guard below is independent of any animation — it warms a page's data the moment navigation starts so the view usually has it on mount.
+`App.vue` wraps the routed content (but not `AppHeader` or the global dice popup) in a short horizontal Vue transition. `router.js` exposes `pageTransitionName` and derives its direction from route meta: moving deeper within one section is forward, moving back to its parent is backward, and moving between top-level sections follows the `HorizontalMenu` order. Query-only changes reuse the same `route.path` key and do not animate. Initial deep links do not animate because the transition has no `appear` prop. `prefers-reduced-motion` disables the motion.
+
+Every page route must declare `meta.section` and `meta.depth`; sibling detail routes may also use `meta.pageOrder`. Keep the section order in `router.js` aligned with `HorizontalMenu` when changing the main navigation. The fixed `mode="out-in"`, a single keyed component branch, and the always-present transition wrapper are intentional: do not switch modes dynamically or add `v-if/v-else` branches around the route component.
+
+Route prefetch is independent of the animation — it warms a page's data the moment navigation starts so the view usually has it on mount.
 
 Main-menu pages declare `meta.prefetch(to)` in `router.js`. A `router.beforeEach` guard fires the prefetch function the moment navigation starts and stores the returned promise in a Map keyed by `to.fullPath` (TTL 30s). The new page reads it inside `onMounted` via `consumePrefetch(route.fullPath)` and feeds it to its loader instead of starting a fresh request. If nothing is prefetched (deep link, reload mid-transition, or admin page), the loader falls back to its normal HTTP call.
 
@@ -79,13 +83,13 @@ When adding a new main-menu page:
 2. In the page's `onMounted`, import `consumePrefetch` from `@/app/router` and pass its result to the loader as the optional first arg. The loader should accept `(preFetched)` and use `preFetched || freshFetch()`.
 3. Don't use this for nested pages with route params (`/char/:uuid`, `/session/:uuid`) yet — those need a different scheme (per-id cache, not per-path).
 
-### List ↔ character navigation (plain)
+### List ↔ character navigation
 
-Opening a character from the list (`CharBox.navigate`) and "back" (`CharEditorToolbar.goBack`) are **plain `router.push` navigations** between `/chars` and `/char/:uuid`. There is **no** tile-expand morph anymore.
+Opening a character from the list (`CharBox.navigate`) and "back" (`CharEditorToolbar.goBack`) are plain `router.push` navigations between `/chars` and `/char/:uuid`. The shared route transition supplies the small forward/backward page slide; there is no tile-expand morph.
 
 History: this used to be a tile→page **View Transition** morph (shared elements `char-expand` / `char-expand-ava`, driven by `expandController.js` / `expandState.js` / `viewTransition.js`, with the timing block in `App.vue` global CSS). All of that was **deleted** — the three files are gone, the VT CSS is gone, and `AvatarBlock` / `ViewCharacter` no longer tag a `viewTransitionName`. If you find references to `openExpand` / `closeExpand` / `expandingUuid` / `char-expand`, they're stale.
 
-**No Vue page transition at all.** `App.vue` is a plain `<router-view/>` wrapped only in `<keep-alive include="ViewListCharacters">` (so returning to the list restores scroll + avoids a refetch). Do **not** add a `<transition>` wrapper: every prior attempt broke (dynamic `:mode` stuck enter-classes; `v-if/v-else` remounted the page and double-loaded data; `mode="out-in"` with a zero-duration no-op name stalled the swap so the page read a stale `uuid` → `/char/undefined`).
+`App.vue` keeps `ViewListCharacters` alive, so returning to the list restores scroll and avoids a refetch. The transition has one keyed component branch (`route.path`) inside that same `keep-alive`: this preserves the list cache and remounts parameterized detail pages with their current id. Query changes intentionally keep the same key.
 
 **Synchronous content (kept).** `CharBox` still seeds the full character into `charSeed.js` on click; `useCharacterData.loadSync()` applies it **synchronously in `ViewCharacter` setup()** (auth resolves in the background and only flips `isOwner` after). Idempotent (one-shot seed). No `/char/:uuid` fetch when seeded → the page renders content immediately with no skeleton flash. This is a prefetch optimization, independent of any animation.
 

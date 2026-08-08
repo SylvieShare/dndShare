@@ -1,3 +1,4 @@
+import {ref} from 'vue'
 import {createRouter, createWebHistory} from 'vue-router'
 import PageMain from '@/views/PageMain'
 import ViewAdmin from '@/features/admin/pages/ViewAdmin'
@@ -18,6 +19,48 @@ import { useTemplateStore } from '@/stores/template'
 
 const prefetchCache = new Map()
 const PREFETCH_TTL_MS = 30_000
+
+// The order mirrors HorizontalMenu. Routes inside the same section use depth
+// first, so opening a detail page moves forward and returning to its list moves
+// backward. Keeping this in route meta also makes programmatic and browser
+// navigations behave identically.
+const sectionOrder = {
+    home: -1,
+    handbook: 0,
+    sessions: 1,
+    characters: 2,
+    templates: 3,
+    admin: 4,
+}
+
+export const pageTransitionName = ref('page-forward')
+
+function transitionRank(route) {
+    return {
+        section: route.meta?.section,
+        sectionOrder: sectionOrder[route.meta?.section] ?? 0,
+        depth: route.meta?.depth ?? 0,
+        pageOrder: route.meta?.pageOrder ?? 0,
+    }
+}
+
+function updatePageTransition(to, from) {
+    if (!from.name || to.path === from.path) return
+
+    const next = transitionRank(to)
+    const current = transitionRank(from)
+    let direction
+
+    if (next.section === current.section) {
+        direction = next.depth !== current.depth
+            ? next.depth - current.depth
+            : next.pageOrder - current.pageOrder
+    } else {
+        direction = next.sectionOrder - current.sectionOrder
+    }
+
+    pageTransitionName.value = direction < 0 ? 'page-backward' : 'page-forward'
+}
 
 export function consumePrefetch(fullPath) {
     const entry = prefetchCache.get(fullPath)
@@ -40,13 +83,13 @@ const routes = [
         path: '/',
         name: "Home",
         component: PageMain,
-        meta: { title: 'Главная' },
+        meta: { title: 'Главная', section: 'home', depth: 0 },
     },
     {
         path: '/admin',
         name: "Admin",
         component: ViewAdmin,
-        meta: { title: 'Админка' },
+        meta: { title: 'Админка', section: 'admin', depth: 0 },
     },
     {
         path: '/sessions',
@@ -54,6 +97,8 @@ const routes = [
         component: ViewSessions,
         meta: {
             title: 'Сессии',
+            section: 'sessions',
+            depth: 0,
             prefetch: () => getSessions(),
         },
     },
@@ -61,12 +106,13 @@ const routes = [
         path: '/sessions/:uuid',
         name: "Session",
         component: ViewSession,
+        meta: { section: 'sessions', depth: 1 },
     },
     {
         path: '/join/:code',
         name: "JoinSession",
         component: ViewJoinSession,
-        meta: { title: 'Вступить в приключение' },
+        meta: { title: 'Вступить в приключение', section: 'sessions', depth: 1, pageOrder: 1 },
     },
     {
         path: '/chars',
@@ -74,6 +120,8 @@ const routes = [
         component: ViewListCharacters,
         meta: {
             title: 'Персонажи',
+            section: 'characters',
+            depth: 0,
             prefetch: () => {
                 useTemplateStore().ensure()
                 return fetchGet('/chars')
@@ -86,6 +134,9 @@ const routes = [
         component: ViewCreateCharacter,
         meta: {
             title: 'Создание персонажа',
+            section: 'characters',
+            depth: 1,
+            pageOrder: 1,
             prefetch: () => useTemplateStore().ensure(),
         },
     },
@@ -93,6 +144,7 @@ const routes = [
         path: '/char/:uuid',
         name: "Character",
         component: ViewCharacter,
+        meta: { section: 'characters', depth: 1, pageOrder: 2 },
     },
     {
         path: '/templates',
@@ -100,6 +152,8 @@ const routes = [
         component: ViewTemplates,
         meta: {
             title: 'Шаблоны',
+            section: 'templates',
+            depth: 0,
             prefetch: () => useTemplateStore().ensure(),
         },
     },
@@ -107,7 +161,7 @@ const routes = [
         path: '/template/:id/edit',
         name: "TemplateEditor",
         component: ViewTemplateEditor,
-        meta: { title: 'Редактор шаблона' },
+        meta: { title: 'Редактор шаблона', section: 'templates', depth: 1 },
     },
     {
         path: '/handbook',
@@ -115,6 +169,8 @@ const routes = [
         component: ViewHandbook,
         meta: {
             title: 'Справочник',
+            section: 'handbook',
+            depth: 0,
             prefetch: () => useItemTypesStore().ensureAll(),
         },
     },
@@ -122,13 +178,13 @@ const routes = [
         path: '/handbook/dictionary',
         name: "HandbookDictionary",
         component: ViewDictionary,
-        meta: { title: 'Словари' },
+        meta: { title: 'Словари', section: 'handbook', depth: 1, pageOrder: 2 },
     },
     {
         path: '/handbook/objects',
         name: "HandbookObjects",
         component: ViewHandbook,
-        meta: { title: 'Справочник - Коллекции' },
+        meta: { title: 'Справочник - Коллекции', section: 'handbook', depth: 1, pageOrder: 1 },
     },
     {
         path: '/:pathMatch(.*)*',
@@ -142,7 +198,9 @@ export const router = createRouter({
     routes,
 })
 
-router.beforeEach((to) => {
+router.beforeEach((to, from) => {
+    updatePageTransition(to, from)
+
     const fn = to.meta?.prefetch
     if (typeof fn !== 'function') return
     try {

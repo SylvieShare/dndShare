@@ -2,11 +2,15 @@
   <AppHeader/>
   <!-- The character LIST is kept alive so returning from a character page restores
        its scroll position and avoids a refetch flash. -->
-  <router-view v-slot="{ Component }">
-    <keep-alive include="ViewListCharacters">
-      <component :is="Component"/>
-    </keep-alive>
-  </router-view>
+  <div class="page-transition-stage">
+    <router-view v-slot="{ Component, route }">
+      <transition :name="pageTransitionName" mode="out-in">
+        <keep-alive include="ViewListCharacters">
+          <component :is="Component" :key="route.path"/>
+        </keep-alive>
+      </transition>
+    </router-view>
+  </div>
   <DiceRollPopup/>
 </template>
 
@@ -14,6 +18,7 @@
 import { onMounted } from 'vue'
 import AppHeader from "@/shared/ui/AppHeader";
 import DiceRollPopup from "@/shared/ui/DiceRollPopup.vue";
+import { pageTransitionName } from '@/app/router'
 import { useAccountStore } from '@/stores/account'
 import { useTextStore } from '@/stores/text'
 
@@ -68,6 +73,7 @@ html, body {
 }
 body {
   background-color: var(--bg-deep);
+  overflow-x: clip;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -75,6 +81,42 @@ body {
 #app {
   width: 100%;
   color: #fff;
+}
+
+.page-transition-stage {
+  min-height: calc(100vh - var(--header-h));
+  min-height: calc(100dvh - var(--header-h));
+}
+
+.page-forward-enter-active,
+.page-forward-leave-active,
+.page-backward-enter-active,
+.page-backward-leave-active {
+  transition:
+    transform 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.14s ease !important;
+  will-change: transform, opacity;
+}
+
+.page-forward-enter-from,
+.page-backward-leave-to {
+  opacity: 0;
+  transform: translateX(18px);
+}
+
+.page-forward-leave-to,
+.page-backward-enter-from {
+  opacity: 0;
+  transform: translateX(-18px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-forward-enter-active,
+  .page-forward-leave-active,
+  .page-backward-enter-active,
+  .page-backward-leave-active {
+    transition: none;
+  }
 }
 
 * {
