@@ -2,6 +2,10 @@
   <div class="page">
     <div class="page-header">
       <h1 class="page-title">Персонажи</h1>
+      <button class="create-btn" type="button" @click="openCreateModal">
+        <span class="create-btn-plus" aria-hidden="true">+</span>
+        Новый персонаж
+      </button>
     </div>
 
     <div v-if="loading" class="chars-grid">
@@ -40,13 +44,6 @@
           />
         </div>
       </section>
-
-      <div class="chars-grid chars-create-grid">
-        <div class="char-create" @click="openCreateModal">
-          <div class="create-icon">+</div>
-          <div class="create-label">Новый персонаж</div>
-        </div>
-      </div>
     </template>
 
     <CharacterCreateModal
@@ -196,6 +193,10 @@ onMounted(() => {
 }
 
 .page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
   margin-bottom: 24px;
 }
 
@@ -204,6 +205,39 @@ onMounted(() => {
   font-weight: 700;
   color: var(--text-1, #fff);
   margin: 0;
+}
+
+.create-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 34px;
+  padding: 0 13px;
+  border: 0;
+  border-radius: 9px;
+  background: var(--accent);
+  color: #fff;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: filter 0.15s, transform 0.15s;
+}
+
+.create-btn:hover {
+  filter: brightness(1.1);
+}
+
+.create-btn:active {
+  transform: translateY(1px);
+}
+
+.create-btn-plus {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1;
 }
 
 .chars-grid {
@@ -239,10 +273,6 @@ onMounted(() => {
   font-size: 10px;
   font-weight: 700;
   text-align: center;
-}
-
-.chars-create-grid {
-  margin-top: 28px;
 }
 
 .char-skeleton {
@@ -286,37 +316,6 @@ onMounted(() => {
 @keyframes sk-pulse {
   0%, 100% { opacity: 1; }
   50%       { opacity: 0.4; }
-}
-
-.char-create {
-  height: 124px;
-  background-color: var(--block-bg);
-  border: 2px dashed var(--border);
-  border-radius: var(--r-lg);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  gap: 4px;
-  transition: border-color 0.2s, background 0.2s;
-  box-sizing: border-box;
-}
-
-.char-create:hover {
-  border-color: var(--accent-dim);
-  background-color: #1e1a2e;
-}
-
-.create-icon {
-  font-size: 28px;
-  color: var(--accent-dim);
-  line-height: 1;
-}
-
-.create-label {
-  font-size: 13px;
-  color: var(--text-muted);
 }
 
 @media (max-width: 420px) {
