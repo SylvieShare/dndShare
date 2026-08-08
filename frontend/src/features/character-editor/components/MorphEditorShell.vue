@@ -55,7 +55,6 @@ const showBack = computed(() => !!props.nav && props.nav.view.value !== 'detail'
           </div>
         </div>
         <div class="mes-rest" :class="{ 'mes-revealed': revealed }">
-          <div class="mes-divider"></div>
           <div class="mes-editor"><slot name="editor" /></div>
         </div>
       </div>
@@ -86,11 +85,11 @@ const showBack = computed(() => !!props.nav && props.nav.view.value !== 'detail'
   min-width: 0;
   display: flex;
   align-items: stretch;
+  background: var(--bg);
   opacity: 0;
   transition: opacity 0.42s ease;
 }
 .mes-rest.mes-revealed { opacity: 1; }
-.mes-divider { flex: 0 0 1px; background: var(--border); margin: 0; }
 .mes-editor { flex: 1; min-width: 0; }
 
 /* Horizontal morph keeps the view column layout-identical to the source tile.
@@ -101,12 +100,10 @@ const showBack = computed(() => !!props.nav && props.nav.view.value !== 'detail'
 .mes-split.mes-vertical { flex-direction: column; }
 .mes-vertical .mes-view { flex: none; width: 100%; }
 .mes-vertical .mes-rest { flex: none; width: 100%; flex-direction: column; }
-.mes-vertical .mes-divider { flex: none; height: 1px; margin: 0 18px; }
 
 @media (max-width: 768px) {
   .mes-split { flex-direction: column; }
-  .mes-view { flex: none; }
-  .mes-rest { flex-direction: column; }
-  .mes-divider { flex: none; height: 1px; margin: 0 18px; }
+  .mes-view { flex: none; width: 100%; }
+  .mes-rest { flex: none; width: 100%; flex-direction: column; }
 }
 </style>

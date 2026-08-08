@@ -497,6 +497,7 @@ onBeforeUnmount(() => {
   max-width: 100vw;
   overflow-x: auto;
   overflow-y: auto;
+  overscroll-behavior-y: none;
 }
 
 .container {
@@ -583,6 +584,7 @@ onBeforeUnmount(() => {
     height: 100%;
     overflow-x: hidden;
     overflow-y: auto;
+    overscroll-behavior-y: none;
     -webkit-overflow-scrolling: touch;
     scroll-padding-bottom: max(88px, calc(24px + env(safe-area-inset-bottom)));
   }

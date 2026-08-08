@@ -111,6 +111,7 @@ const dragY = ref(0)
 let dragging = false
 let startX = 0, startY = 0, decided = null, backDx = 0, startTarget = null
 let lastX = 0, lastT = 0, vx = 0
+const CLOSE_DOWN_DUR = 260
 function onTouchStart(e) {
   if (!isMobile.value || morphing.value) return
   startX = e.touches[0].clientX
@@ -175,11 +176,12 @@ function onTouchEnd() {
 }
 function closeDown() {
   const el = panelEl.value
-  if (el) { el.style.transition = `transform .26s ${EASE}`; el.style.transform = `translateY(${window.innerHeight}px)` }
+  if (el) { el.style.transition = `transform ${CLOSE_DOWN_DUR}ms ${EASE}`; el.style.transform = `translateY(${window.innerHeight}px)` }
   visible.value = false
   revealed.value = false
+  revealOriginSmoothly()
   setBgBlur(false)
-  setTimeout(() => emit('close'), 240)
+  setTimeout(() => emit('close'), CLOSE_DOWN_DUR)
 }
 
 // Blur the page content behind the window. We blur `#app` (the overlay is teleported to <body>, a
@@ -197,10 +199,38 @@ function setBgBlur(on) {
 // Hide the source tile (instantly, without unmounting it) while the window is open — the morph panel
 // IS its visual stand-in, so leaving the tile visible behind would read as a duplicate. `opacity` keeps
 // its layout box and `getBoundingClientRect` intact, so the close morph can still target it.
+let originOpacity = ''
+let originTransition = ''
+let originRevealing = false
+
+function rememberOriginStyle() {
+  const el = props.originEl
+  if (!el) return
+  originOpacity = el.style.opacity
+  originTransition = el.style.transition
+}
+
 function setOriginHidden(hidden) {
   const el = props.originEl
   if (!el) return
-  el.style.opacity = hidden ? '0' : ''
+  el.style.opacity = hidden ? '0' : originOpacity
+}
+
+// A swipe-down close has no reverse container morph to cover the source tile. Fade that tile back
+// while the sheet leaves the viewport, then restore its original inline transition untouched.
+function revealOriginSmoothly() {
+  const el = props.originEl
+  if (!el) return
+  originRevealing = true
+  const prefix = originTransition && originTransition !== 'none' ? `${originTransition}, ` : ''
+  el.style.transition = `${prefix}opacity ${CLOSE_DOWN_DUR}ms ease`
+  el.style.opacity = '0'
+  requestAnimationFrame(() => { el.style.opacity = originOpacity })
+  setTimeout(() => {
+    el.style.opacity = originOpacity
+    el.style.transition = originTransition
+    originRevealing = false
+  }, CLOSE_DOWN_DUR + 20)
 }
 
 let prevHtmlOverflow = ''
@@ -217,6 +247,7 @@ onMounted(async () => {
   syncHeight(false)
   observeContent()
   shown.value = true
+  rememberOriginStyle()
   setOriginHidden(true)
   playOpen(panelEl.value, props.originRect, { fromRadius: props.originRadius, toRadius: endRadius() })
   setBgBlur(true)
@@ -232,7 +263,7 @@ onMounted(async () => {
 onBeforeUnmount(() => {
   document.documentElement.style.overflow = prevHtmlOverflow
   setBgBlur(false)
-  setOriginHidden(false)
+  if (!originRevealing) setOriginHidden(false)
   document.removeEventListener('keydown', onKey)
   window.removeEventListener('resize', onWinResize)
   ro?.disconnect()
