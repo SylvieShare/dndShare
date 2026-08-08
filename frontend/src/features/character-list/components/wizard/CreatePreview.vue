@@ -16,6 +16,11 @@
       </div>
     </div>
 
+    <div v-if="isEmpty" class="pv-empty">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1" /><circle cx="12" cy="12" r="3.5" /></svg>
+      <span>Выборы будут появляться здесь и постепенно соберутся в персонажа.</span>
+    </div>
+
     <div v-if="showStats" class="pv-block">
       <div class="pv-cap">{{ scoresEntered ? 'Характеристики' : 'Бонусы расы к значению' }}</div>
       <div class="pv-stats">
@@ -178,6 +183,7 @@ const sections = computed(() => {
 
   return out
 })
+const isEmpty = computed(() => !showStats.value && !sections.value.length)
 </script>
 
 <style scoped>
@@ -204,6 +210,19 @@ const sections = computed(() => {
 .pv-line { font-family: var(--font-display); font-size: 16px; color: var(--text-1); line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .pv-line + .pv-line { color: var(--text-2); font-size: 14px; }
 .pv-lvl { display: inline-block; margin-top: 5px; font-size: 11px; font-weight: 600; background: color-mix(in srgb, var(--accent) 22%, transparent); color: #c4a0ff; border-radius: 5px; padding: 2px 8px; }
+
+.pv-empty {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  padding: 11px;
+  border: 1px dashed color-mix(in srgb, var(--border-strong) 72%, transparent);
+  border-radius: 9px;
+  color: var(--wizard-muted, var(--text-muted));
+  font-size: 11px;
+  line-height: 1.4;
+}
+.pv-empty svg { flex-shrink: 0; width: 16px; height: 16px; margin-top: 1px; color: var(--accent); }
 
 .pv-block { border-top: 1px solid var(--border); padding-top: 12px; }
 .pv-cap { font-size: 10px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }

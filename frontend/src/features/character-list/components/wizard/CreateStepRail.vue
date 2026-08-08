@@ -40,7 +40,7 @@ defineEmits(['go'])
 .rail-step:disabled { cursor: default; }
 
 /* ── State 1: locked / недоступен ── */
-.rail-step.locked { opacity: 0.4; }
+.rail-step.locked { opacity: 0.56; }
 
 /* hover only for the clickable states */
 .rail-step.done:hover,
@@ -55,7 +55,7 @@ defineEmits(['go'])
   flex-shrink: 0; width: 24px; height: 24px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums;
-  color: var(--text-muted); box-shadow: inset 0 0 0 1px var(--border-strong);
+  color: var(--wizard-muted, var(--text-muted)); box-shadow: inset 0 0 0 1px var(--border-strong);
 }
 .rail-badge svg { width: 13px; height: 13px; }
 .rail-step.active .rail-badge { background: var(--accent); color: #fff; box-shadow: none; }
@@ -71,5 +71,5 @@ defineEmits(['go'])
 
 .rail-title { font-size: 13px; color: var(--text-2); }
 .rail-step.active .rail-title { color: var(--text-1); font-weight: 500; }
-.rail-step.locked .rail-title { color: var(--text-muted); }
+.rail-step.locked .rail-title { color: var(--wizard-muted, var(--text-muted)); }
 </style>
