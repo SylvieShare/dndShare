@@ -16,6 +16,18 @@ All tables live in the `dndshare` schema. There used to be a second `base`
 schema (auth/logs/jobs); it was consolidated into `dndshare` (see v2 below) and
 dropped. **Never create new objects in `base`.**
 
+## Systems and rules editions
+
+`source` is the game system (`DND5e`, `Vampire: TM`). Its editions live in
+`source_version(id, source_id, version)` with a unique `(source_id, version)`.
+`char.source_version_id` points to one concrete edition; the system is derived
+through `source_version.source_id`, so `char` intentionally has no duplicate
+`source_id`. The old nullable `source.version` column is retained only as a safe
+startup-migration input and is not read by application code. On startup its
+values are inserted into `source_version`, then known pre-existing `DND5` and
+VTM characters are backfilled. `char.version` remains a separate technical
+revision counter used by save/poll synchronization.
+
 ## Layout
 
 - Config: `spring.liquibase.change-log: classpath:changelog-master.yaml`

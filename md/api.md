@@ -31,8 +31,12 @@ Do not spread endpoint strings directly through components when adding new behav
 
 ## Character Routes
 
-- `GET /api/chars`, `POST /api/chars`, `GET /api/char/{uuid}`, `PUT /api/char/{uuid}/data`, `PUT /api/char/{uuid}/public`, `DELETE /api/char/{uuid}`, `POST /api/char/{uuid}/clone`, `POST /api/chars/poll` — standard CRUD and full-data save. `POST /api/chars` returns `{ uuid, charId }` (the numeric id lets the session add the new character via `/join`). `PUT /api/char/{uuid}/data` (full-data save) is authorized for the character owner OR the DM of a session containing this character (same `isCharInSessionOwnedBy` check as `data-patch`), so the DM can edit a participant's sheet from `CharacterSheetModal`.
+- `GET /api/chars`, `POST /api/chars`, `GET /api/char/{uuid}`, `PUT /api/char/{uuid}/data`, `PUT /api/char/{uuid}/public`, `DELETE /api/char/{uuid}`, `POST /api/char/{uuid}/clone`, `POST /api/chars/poll` — standard CRUD and full-data save. `POST /api/chars` accepts `sourceVersionId` alongside `templateId` and `data`; old clients get the known D&D/VTM edition inferred from the template. Character list/detail objects expose `sourceVersionId`, `sourceId`, `sourceName`, and `sourceVersion`. `POST /api/chars` returns `{ uuid, charId }` (the numeric id lets the session add the new character via `/join`). `PUT /api/char/{uuid}/data` (full-data save) is authorized for the character owner OR the DM of a session containing this character (same `isCharInSessionOwnedBy` check as `data-patch`), so the DM can edit a participant's sheet from `CharacterSheetModal`.
 - `PATCH /api/char/{uuid}/data-patch` — partial path-based update. Body: `{ updates: [{ path: "hp.current", value: 12 }, ...] }`. Each `path` is a dotted JSON path (e.g. `hp.current`). Applied via Postgres `jsonb_set` (creates missing intermediate objects). Increments `version` and `changed_at`. Authorized for: character owner, OR the DM of a session that contains this character (`session.owner_user_id == userId` and the char is in `session_participant`). Used by the encounter HP modal so the DM can edit player HP without owning the character. The poll loop (2s) picks up the version bump and refreshes participant data.
+
+## Source Routes
+
+- `GET /api/sources` — systems with their editions: `{ sources: [{ id, name, versions: [{ id, sourceId, version }], version?, countItems }] }`. The singular `version` is a compatibility alias for the first edition; new consumers use `versions`.
 
 ## Item Object Routes
 

@@ -93,10 +93,28 @@ CREATE INDEX IF NOT EXISTS idx_job_run_started_by_user_id ON dndshare.job_run US
 CREATE TABLE IF NOT EXISTS dndshare."source" (
     id          bigserial NOT NULL,
     "name"      varchar NOT NULL,
+    -- Legacy migration source. New code reads editions from source_version.
     "version"   varchar NULL,
     count_items int8 DEFAULT 0 NOT NULL,
     CONSTRAINT newtable_pk PRIMARY KEY (id)
 );
+
+CREATE TABLE IF NOT EXISTS dndshare.source_version (
+    id        bigserial NOT NULL,
+    source_id int8 NOT NULL REFERENCES dndshare."source"(id),
+    "version" varchar NOT NULL,
+    CONSTRAINT source_version_pk PRIMARY KEY (id),
+    CONSTRAINT source_version_source_id_version_key UNIQUE (source_id, "version")
+);
+CREATE INDEX IF NOT EXISTS idx_source_version_source_id ON dndshare.source_version USING btree (source_id);
+
+-- Move the old one-version-per-source model into the edition catalogue. The
+-- source.version column stays for a safe rolling migration, but is no longer read.
+INSERT INTO dndshare.source_version (source_id, "version")
+SELECT id, "version"
+FROM dndshare."source"
+WHERE "version" IS NOT NULL AND btrim("version") <> ''
+ON CONFLICT (source_id, "version") DO NOTHING;
 
 CREATE TABLE IF NOT EXISTS dndshare.svg_storage (
     id     bigserial NOT NULL,
@@ -214,6 +232,7 @@ CREATE TABLE IF NOT EXISTS dndshare."char" (
     "uuid"         uuid DEFAULT gen_random_uuid() NOT NULL,
     user_id        int8 NOT NULL REFERENCES dndshare.users(id),
     template_id    int8 NOT NULL REFERENCES dndshare.char_template(id),
+    source_version_id int8 NULL REFERENCES dndshare.source_version(id),
     "data"         jsonb NOT NULL,
     public_visible bool DEFAULT true NOT NULL,
     created_at     timestamptz DEFAULT now() NOT NULL,
@@ -225,9 +244,27 @@ CREATE TABLE IF NOT EXISTS dndshare."char" (
     CONSTRAINT char_pk PRIMARY KEY (id),
     CONSTRAINT char_uuid_key UNIQUE (uuid)
 );
+ALTER TABLE dndshare."char"
+    ADD COLUMN IF NOT EXISTS source_version_id int8 NULL REFERENCES dndshare.source_version(id);
 CREATE INDEX IF NOT EXISTS idx_char_user_id ON dndshare."char" USING btree (user_id);
 CREATE INDEX IF NOT EXISTS idx_char_user_changed ON dndshare."char" USING btree (user_id, changed_at DESC) WHERE (deleted = false);
 CREATE INDEX IF NOT EXISTS idx_char_template_id ON dndshare."char" USING btree (template_id);
+CREATE INDEX IF NOT EXISTS idx_char_source_version_id ON dndshare."char" USING btree (source_version_id);
+
+-- Existing characters predate source_version_id. Backfill the two known
+-- template families without touching already classified rows.
+UPDATE dndshare."char" c
+SET source_version_id = sv.id
+FROM dndshare.char_template ct
+JOIN dndshare."source" src ON (
+    (upper(ct.name) IN ('DND5', 'DND5E') AND lower(src.name) = 'dnd5e')
+    OR ((upper(ct.name) LIKE '%VTM%' OR upper(ct.name) LIKE '%VAMPIRE%') AND lower(src.name) = 'vampire: tm')
+)
+JOIN dndshare.source_version sv ON sv.source_id = src.id AND (
+    (upper(ct.name) IN ('DND5', 'DND5E') AND sv.version = '2014')
+    OR ((upper(ct.name) LIKE '%VTM%' OR upper(ct.name) LIKE '%VAMPIRE%') AND upper(sv.version) = 'V20')
+)
+WHERE c.template_id = ct.id AND c.source_version_id IS NULL;
 
 -- ---------------------------------------------------------------------------
 -- Music library

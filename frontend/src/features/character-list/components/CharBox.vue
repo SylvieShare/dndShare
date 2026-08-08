@@ -11,7 +11,8 @@
         <div v-if="who" class="char-who">{{ who }}</div>
         <div class="char-meta">
           <span v-if="lvl" class="meta-lvl">Ур.&nbsp;{{ lvl }}</span>
-          <span v-if="templateName" class="meta-template">{{ templateName }}</span>
+          <span v-if="sourceVersion" class="meta-version">Редакция {{ sourceVersion }}</span>
+          <span v-else-if="templateName" class="meta-template">{{ templateName }}</span>
           <span v-if="relativeDate" class="meta-date">{{ relativeDate }}</span>
         </div>
       </div>
@@ -68,6 +69,7 @@ const props = defineProps({
   data: { type: Object, default: () => ({}) },
   raw: { type: Object, default: null },
   templateName: String,
+  sourceVersion: String,
   // D&D semantic accessors (see settings/dnd/accessors.js). When present the card
   // reads fields + ability radar through them; otherwise it falls back to the
   // legacy per-template `pathValues`.
@@ -137,6 +139,10 @@ function navigate() {
       userId: props.raw.userId,
       publicVisible: props.raw.publicVisible,
       templateId: props.raw.templateId,
+      sourceVersionId: props.raw.sourceVersionId,
+      sourceId: props.raw.sourceId,
+      sourceName: props.raw.sourceName,
+      sourceVersion: props.raw.sourceVersion,
     })
   }
   router.push('/char/' + props.uuid)
@@ -263,6 +269,12 @@ function doDelete() {
 .meta-template {
   font-size: 11px;
   color: var(--text-muted);
+}
+
+.meta-version {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent-soft, #b9a6ff);
 }
 
 .meta-date {

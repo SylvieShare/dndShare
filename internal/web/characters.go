@@ -61,8 +61,9 @@ func (s *Server) handleGetChars(w http.ResponseWriter, r *http.Request) {
 // --- POST /api/chars ---
 
 type characterCreateRequest struct {
-	TemplateID int64           `json:"templateId"`
-	Data       json.RawMessage `json:"data"`
+	TemplateID      int64           `json:"templateId"`
+	SourceVersionID *int64          `json:"sourceVersionId"`
+	Data            json.RawMessage `json:"data"`
 }
 
 type characterCreatedResponse struct {
@@ -80,7 +81,8 @@ func (s *Server) handleCreateChar(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "Некорректный запрос")
 		return
 	}
-	if _, err := s.store.GetTemplate(r.Context(), req.TemplateID); err != nil {
+	template, err := s.store.GetTemplate(r.Context(), req.TemplateID)
+	if err != nil {
 		if errors.Is(err, store.ErrNotFound) {
 			notFound(w, "")
 			return
@@ -88,7 +90,24 @@ func (s *Server) handleCreateChar(w http.ResponseWriter, r *http.Request) {
 		serverError(w, err)
 		return
 	}
-	uuid, err := s.store.CreateCharacter(r.Context(), uid, req.TemplateID, req.Data)
+	if req.SourceVersionID != nil {
+		exists, err := s.store.SourceVersionExists(r.Context(), *req.SourceVersionID)
+		if err != nil {
+			serverError(w, err)
+			return
+		}
+		if !exists {
+			badRequest(w, "Неизвестная версия системы")
+			return
+		}
+	} else {
+		req.SourceVersionID, err = s.store.DefaultSourceVersionIDForTemplate(r.Context(), template.Name)
+		if err != nil {
+			serverError(w, err)
+			return
+		}
+	}
+	uuid, err := s.store.CreateCharacter(r.Context(), uid, req.TemplateID, req.SourceVersionID, req.Data)
 	if err != nil {
 		serverError(w, err)
 		return
@@ -122,12 +141,16 @@ func (s *Server) handleGetTemplates(w http.ResponseWriter, r *http.Request) {
 // --- GET /api/char/{uuid} ---
 
 type characterResponse struct {
-	Template      json.RawMessage `json:"template"`
-	TemplateName  string          `json:"templateName"`
-	Data          json.RawMessage `json:"data"`
-	PublicVisible bool            `json:"publicVisible"`
-	UserID        int64           `json:"userId"`
-	Version       int64           `json:"version"`
+	Template        json.RawMessage `json:"template"`
+	TemplateName    string          `json:"templateName"`
+	SourceVersionID *int64          `json:"sourceVersionId,omitempty"`
+	SourceID        *int64          `json:"sourceId,omitempty"`
+	SourceName      *string         `json:"sourceName,omitempty"`
+	SourceVersion   *string         `json:"sourceVersion,omitempty"`
+	Data            json.RawMessage `json:"data"`
+	PublicVisible   bool            `json:"publicVisible"`
+	UserID          int64           `json:"userId"`
+	Version         int64           `json:"version"`
 }
 
 func (s *Server) handleGetChar(w http.ResponseWriter, r *http.Request) {
@@ -145,12 +168,16 @@ func (s *Server) handleGetChar(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	writeJSON(w, http.StatusOK, characterResponse{
-		Template:      template.Schema,
-		TemplateName:  template.Name,
-		Data:          char.Data,
-		PublicVisible: char.PublicVisible,
-		UserID:        char.UserID,
-		Version:       char.Version,
+		Template:        template.Schema,
+		TemplateName:    template.Name,
+		SourceVersionID: char.SourceVersionID,
+		SourceID:        char.SourceID,
+		SourceName:      char.SourceName,
+		SourceVersion:   char.SourceVersion,
+		Data:            char.Data,
+		PublicVisible:   char.PublicVisible,
+		UserID:          char.UserID,
+		Version:         char.Version,
 	})
 }
 
@@ -345,7 +372,7 @@ func (s *Server) handleCloneChar(w http.ResponseWriter, r *http.Request) {
 		serverError(w, err)
 		return
 	}
-	newUUID, err := s.store.CreateCharacter(r.Context(), uid, char.TemplateID, data)
+	newUUID, err := s.store.CreateCharacter(r.Context(), uid, char.TemplateID, char.SourceVersionID, data)
 	if err != nil {
 		serverError(w, err)
 		return

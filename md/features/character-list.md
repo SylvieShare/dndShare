@@ -23,6 +23,11 @@ The list card reads its display fields through the **per-setting semantic access
 
 ## Card layout
 
+The list is grouped by character system (`sourceName`). Each character stores a
+`sourceVersionId` and the card shows `Редакция <sourceVersion>`; characters that
+predate classification fall into `Без системы`. `char.version` is unrelated — it
+remains the technical save/poll revision.
+
 `CharBox` is a flex row, **no border**, taller + wider than before (`min-height: 124px`, grid `minmax(440px, …)`):
 
 1. **Ability radar** (`CharStatRadar`) — on the **left**, only when `accessors.abilities` exists (D&D). Hexagon: 6 axes 60° apart from center, the value polygon shows each ability score (mapped against `max`, default 20). Each axis is labelled with the ability's **suggest icon** (suggest type 16, title ids STR=1…CHA=6 → `svg` + `color`) fixed at the **outer rim vertex** of that axis (centered on it; `GRID_R` is kept at 42 so the rim icons stay fully inside the box). No numeric values. `CharBox` `ensure(16)`s the suggest store (via a watch, because accessors arrive after the template store loads).
@@ -39,7 +44,7 @@ Plain `router.push` (no morph) — see `md/frontend.md` "List ↔ character navi
 
 ## D&D create wizard — dedicated page `/chars/new`
 
-D&D creation is a **full page**, not a modal. The "+ Новый персонаж" tile's `openCreateModal(e)` checks for a dnd5e template (`resolveSetting(t)?.system === 'dnd5e'`) and, if found, `router.push('/chars/new')`; only legacy settings (VTM `createForm`) still open the `CharacterCreateModal` morph sheet. Route: `pages/ViewCreateCharacter.vue` (`meta.prefetch` ensures the template store). The page resolves the target `templateId` itself (`templateStore.all.find(resolveSetting…dnd5e)`) and POSTs `/chars` on finish, then routes to `/char/:uuid`.
+D&D creation is a **full page**, not a modal. The "+ Новый персонаж" tile's `openCreateModal(e)` checks for a dnd5e template (`resolveSetting(t)?.system === 'dnd5e'`) and, if found, `router.push('/chars/new')`; only legacy settings (VTM `createForm`) still open the `CharacterCreateModal` morph sheet. Route: `pages/ViewCreateCharacter.vue` (`meta.prefetch` ensures the template store). The page resolves the target `templateId` itself (`templateStore.all.find(resolveSetting…dnd5e)`) and the selected rules edition through `/sources → source.versions`; `POST /chars` carries the resulting `sourceVersionId`, then routes to `/char/:uuid`.
 
 **Layout (borderless, matches the sheet look):** three columns — `CreateStepRail` (left) · step content (center) · `CreatePreview` (right). Under 920px the rail + preview hide (single column). Selection uses the `BaseTile` vocabulary: `--block-bg` fills, **no borders**, accent-tint + 3px strip for the chosen item, `.sheet-section-title` headers, `MultiToggle` for stat methods, `--font-display` for names/titles, tabular sans for numbers, `--accent-2` (teal) for the Создать button.
 

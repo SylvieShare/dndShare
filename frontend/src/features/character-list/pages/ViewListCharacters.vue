@@ -4,40 +4,50 @@
       <h1 class="page-title">Персонажи</h1>
     </div>
 
-    <div class="chars-grid">
-      <template v-if="loading">
-        <div v-for="n in 2" :key="n" class="char-skeleton">
-          <div class="sk-ava" />
-          <div class="sk-lines">
-            <div class="sk-line sk-name" />
-            <div class="sk-line sk-who" />
-            <div class="sk-line sk-meta" />
-          </div>
+    <div v-if="loading" class="chars-grid">
+      <div v-for="n in 2" :key="n" class="char-skeleton">
+        <div class="sk-ava" />
+        <div class="sk-lines">
+          <div class="sk-line sk-name" />
+          <div class="sk-line sk-who" />
+          <div class="sk-line sk-meta" />
         </div>
-      </template>
+      </div>
+    </div>
 
-      <template v-else>
-        <CharBox
-          v-for="char in chars"
-          :key="char.uuid"
-          :uuid="char.uuid"
-          :data="char.data"
-          :raw="char"
-          :templateName="templateName(char.templateId)"
-          :accessors="accessorsFor(char.templateId)"
-          :pathValues="templatePathValues(char.templateId)"
-          :session="topSession(char.uuid)"
-          :publicVisible="char.publicVisible"
-          :changedAt="char.changedAt"
-          @clone="cloneChar"
-          @delete="deleteChar"
-        />
+    <template v-else>
+      <section v-for="group in groupedChars" :key="group.key" class="char-section">
+        <div class="char-section-head">
+          <h2 class="char-section-title">{{ group.name }}</h2>
+          <span class="char-section-count">{{ group.chars.length }}</span>
+        </div>
+        <div class="chars-grid">
+          <CharBox
+            v-for="char in group.chars"
+            :key="char.uuid"
+            :uuid="char.uuid"
+            :data="char.data"
+            :raw="char"
+            :templateName="templateName(char.templateId)"
+            :sourceVersion="char.sourceVersion"
+            :accessors="accessorsFor(char.templateId)"
+            :pathValues="templatePathValues(char.templateId)"
+            :session="topSession(char.uuid)"
+            :publicVisible="char.publicVisible"
+            :changedAt="char.changedAt"
+            @clone="cloneChar"
+            @delete="deleteChar"
+          />
+        </div>
+      </section>
+
+      <div class="chars-grid chars-create-grid">
         <div class="char-create" @click="openCreateModal">
           <div class="create-icon">+</div>
           <div class="create-label">Новый персонаж</div>
         </div>
-      </template>
-    </div>
+      </div>
+    </template>
 
     <CharacterCreateModal
       v-if="showModal"
@@ -78,6 +88,26 @@ const creating = ref(false)
 const createOriginEl = ref(null)
 const createOriginRect = ref(null)
 const templates = computed(() => templateStore.all)
+const groupedChars = computed(() => {
+  const groups = new Map()
+  for (const char of chars.value) {
+    const key = char.sourceId != null ? `source:${char.sourceId}` : 'source:unknown'
+    if (!groups.has(key)) {
+      groups.set(key, {
+        key,
+        name: char.sourceName || 'Без системы',
+        sourceId: char.sourceId ?? null,
+        chars: [],
+      })
+    }
+    groups.get(key).chars.push(char)
+  }
+  return [...groups.values()].sort((a, b) => {
+    if (a.sourceId == null) return 1
+    if (b.sourceId == null) return -1
+    return a.name.localeCompare(b.name, 'ru')
+  })
+})
 
 function loadChars(preFetched) {
   loading.value = true
@@ -180,6 +210,39 @@ onMounted(() => {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(440px, 1fr));
   gap: 16px;
+}
+
+.char-section + .char-section {
+  margin-top: 28px;
+}
+
+.char-section-head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 10px;
+}
+
+.char-section-title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-2);
+}
+
+.char-section-count {
+  min-width: 20px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 13%, transparent);
+  color: var(--accent-soft, #b9a6ff);
+  font-size: 10px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.chars-create-grid {
+  margin-top: 28px;
 }
 
 .char-skeleton {

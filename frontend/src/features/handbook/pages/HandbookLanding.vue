@@ -17,7 +17,7 @@
           @click="selectedSourceId = src.id"
         >
           <span class="hb-source-name">{{ src.name }}</span>
-          <span v-if="src.version" class="hb-source-version">{{ src.version }}</span>
+          <span v-if="sourceVersionLabel(src)" class="hb-source-version">{{ sourceVersionLabel(src) }}</span>
         </button>
       </div>
     </aside>
@@ -31,7 +31,7 @@
           <h1 class="hb-title">Справочник</h1>
           <p class="hb-subtitle">
             {{ selectedSource.name }}
-            <template v-if="selectedSource.version">· {{ selectedSource.version }}</template>
+            <template v-if="sourceVersionLabel(selectedSource)">· {{ sourceVersionLabel(selectedSource) }}</template>
             · {{ itemTypes.length }} коллекций
             · {{ selectedSource.countItems.toLocaleString('ru') }} записей
           </p>
@@ -41,7 +41,7 @@
         <div class="hb-section-header">
           <span class="hb-section-title">Коллекции</span>
           <span class="hb-section-count">{{ itemTypes.length }}</span>
-          <span class="hb-section-meta">· ядро {{ selectedSource.name }}<template v-if="selectedSource.version"> ({{ selectedSource.version }})</template> · только чтение</span>
+          <span class="hb-section-meta">· ядро {{ selectedSource.name }}<template v-if="sourceVersionLabel(selectedSource)"> ({{ sourceVersionLabel(selectedSource) }})</template> · только чтение</span>
         </div>
 
         <div v-if="loadingTypes" class="hb-loading">Загрузка…</div>
@@ -118,6 +118,7 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
 import { fetchGet } from '@/shared/api/http'
+import { sourceVersionLabel } from '@/shared/lib/sourceVersions'
 import { useItemTypesStore } from '@/stores/itemTypes'
 
 const itemTypesStore = useItemTypesStore()

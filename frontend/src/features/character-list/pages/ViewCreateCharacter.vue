@@ -71,7 +71,8 @@ import StepReview from '@/features/character-list/components/wizard/steps/StepRe
 import StepStats from '@/features/character-list/components/wizard/steps/StepStats.vue'
 import StepVersion from '@/features/character-list/components/wizard/steps/StepVersion.vue'
 import ConfirmDialog from '@/shared/ui/ConfirmDialog'
-import { fetchPost } from '@/shared/api/http'
+import { fetchGet, fetchPost } from '@/shared/api/http'
+import { findSourceVersion } from '@/shared/lib/sourceVersions'
 import { resolveSetting } from '@/features/character-editor/settings'
 import { useAccountStore } from '@/stores/account'
 import { useDndCreateWizard } from '@/features/character-list/composables/useDndCreateWizard'
@@ -104,6 +105,8 @@ const STEP_COMPONENTS = {
 
 const creating = ref(false)
 const dndTemplateId = ref(null)
+const dndSource = ref(null)
+const sourceVersionId = computed(() => findSourceVersion(dndSource.value, state.version)?.id ?? null)
 
 // Race/class choices are made inline on their own steps (skills, feature choices
 // and spells are folded into the Class step; race choices into Race). Снаряжение
@@ -198,10 +201,14 @@ function createNow() {
 
 async function submit() {
   confirmOpen.value = false
-  if (creating.value || !dndTemplateId.value) return
+  if (creating.value || !dndTemplateId.value || !sourceVersionId.value) return
   creating.value = true
   try {
-    const res = await fetchPost('/chars', { templateId: dndTemplateId.value, ...buildPayload() })
+    const res = await fetchPost('/chars', {
+      templateId: dndTemplateId.value,
+      sourceVersionId: sourceVersionId.value,
+      ...buildPayload(),
+    })
     if (res?.uuid) { clearPersist(); router.push('/char/' + res.uuid) }
   } finally {
     creating.value = false
@@ -212,8 +219,9 @@ onMounted(async () => {
   useAccountStore().ensureAuth()
   load()
   restore()
-  await templateStore.ensure()
+  const [, sourcesRes] = await Promise.all([templateStore.ensure(), fetchGet('/sources')])
   dndTemplateId.value = templateStore.all.find((t) => resolveSetting(t)?.system === 'dnd5e')?.id ?? null
+  dndSource.value = (sourcesRes?.sources || []).find((source) => source.name.toLowerCase() === 'dnd5e') || null
 })
 </script>
 

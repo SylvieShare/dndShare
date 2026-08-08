@@ -72,7 +72,7 @@ The `CUSTOM_RENDERERS` map in `HandbookItemDetail.vue` maps type id → componen
 
 ## API endpoints (handbook-related)
 
-- `GET /api/sources` — list all sources (`id`, `name`, `version`, `countItems`)
+- `GET /api/sources` — list all systems (`id`, `name`, `versions: [{id, sourceId, version}]`, `countItems`; singular `version` is a compatibility alias)
 - `GET /api/item-types?sourceId=` — list item types, optionally filtered by source
 - `GET /api/suggest/types?sourceId=` — list suggest types, optionally filtered by source
 - `GET /api/svg/{id}` — returns raw SVG content from `svg_storage` as `image/svg+xml`

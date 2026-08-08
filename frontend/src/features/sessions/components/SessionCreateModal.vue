@@ -22,7 +22,7 @@
           @click="selectedSourceId = selectedSourceId === src.id ? null : src.id"
         >
           <span class="source-name">{{ src.name }}</span>
-          <span v-if="src.version" class="source-version">{{ src.version }}</span>
+          <span v-if="sourceVersionLabel(src)" class="source-version">{{ sourceVersionLabel(src) }}</span>
         </button>
         <div v-if="loadingSources" class="source-loading">Загрузка…</div>
       </div>
@@ -56,6 +56,7 @@ import FormField from '@/shared/ui/form/FormField'
 import FormTextInput from '@/shared/ui/form/FormTextInput'
 import FormTextarea from '@/shared/ui/form/FormTextarea'
 import { fetchGet } from '@/shared/api/http'
+import { sourceVersionLabel } from '@/shared/lib/sourceVersions'
 
 const emit = defineEmits(['close', 'create'])
 

@@ -13,16 +13,20 @@ import (
 
 // CharacterItem — строка dndshare."char" (порт CharacterItem + CharacterRepository.rowMapper).
 type CharacterItem struct {
-	ID            int64           `json:"id"`
-	UUID          string          `json:"uuid"`
-	UserID        int64           `json:"userId"`
-	TemplateID    int64           `json:"templateId"`
-	Data          json.RawMessage `json:"data"`
-	PublicVisible bool            `json:"publicVisible"`
-	Deleted       bool            `json:"deleted"`
-	CreatedAt     time.Time       `json:"createdAt"`
-	ChangedAt     time.Time       `json:"changedAt"`
-	Version       int64           `json:"version"`
+	ID              int64           `json:"id"`
+	UUID            string          `json:"uuid"`
+	UserID          int64           `json:"userId"`
+	TemplateID      int64           `json:"templateId"`
+	SourceVersionID *int64          `json:"sourceVersionId,omitempty"`
+	SourceID        *int64          `json:"sourceId,omitempty"`
+	SourceName      *string         `json:"sourceName,omitempty"`
+	SourceVersion   *string         `json:"sourceVersion,omitempty"`
+	Data            json.RawMessage `json:"data"`
+	PublicVisible   bool            `json:"publicVisible"`
+	Deleted         bool            `json:"deleted"`
+	CreatedAt       time.Time       `json:"createdAt"`
+	ChangedAt       time.Time       `json:"changedAt"`
+	Version         int64           `json:"version"`
 }
 
 // PathUpdate — одно точечное изменение data по пути (порт CharacterRepository.PathUpdate).
@@ -55,12 +59,16 @@ type CharSessionBrief struct {
 	IsGm          bool    `json:"isGm"`
 }
 
-const characterCols = `id, uuid::text, user_id, template_id, data, public_visible, deleted, created_at, changed_at, "version"`
+const characterCols = `c.id, c.uuid::text, c.user_id, c.template_id,
+ c.source_version_id, sv.source_id, src.name, sv.version,
+ c.data, c.public_visible, c.deleted, c.created_at, c.changed_at, c."version"`
 
 func scanCharacter(row pgx.Row) (CharacterItem, error) {
 	var c CharacterItem
 	var data []byte
-	err := row.Scan(&c.ID, &c.UUID, &c.UserID, &c.TemplateID, &data, &c.PublicVisible, &c.Deleted, &c.CreatedAt, &c.ChangedAt, &c.Version)
+	err := row.Scan(&c.ID, &c.UUID, &c.UserID, &c.TemplateID,
+		&c.SourceVersionID, &c.SourceID, &c.SourceName, &c.SourceVersion,
+		&data, &c.PublicVisible, &c.Deleted, &c.CreatedAt, &c.ChangedAt, &c.Version)
 	if err != nil {
 		return CharacterItem{}, err
 	}
@@ -71,7 +79,11 @@ func scanCharacter(row pgx.Row) (CharacterItem, error) {
 // GetCharacter возвращает персонажа по uuid (ErrNotFound, если нет либо удалён).
 func (s *Store) GetCharacter(ctx context.Context, uuid string) (CharacterItem, error) {
 	c, err := scanCharacter(s.pool.QueryRow(ctx,
-		`SELECT `+characterCols+` FROM dndshare."char" WHERE uuid = $1::uuid AND deleted = false`, uuid))
+		`SELECT `+characterCols+`
+		 FROM dndshare."char" c
+		 LEFT JOIN dndshare.source_version sv ON sv.id = c.source_version_id
+		 LEFT JOIN dndshare.source src ON src.id = sv.source_id
+		 WHERE c.uuid = $1::uuid AND c.deleted = false`, uuid))
 	if errors.Is(err, pgx.ErrNoRows) {
 		return CharacterItem{}, ErrNotFound
 	}
@@ -81,7 +93,12 @@ func (s *Store) GetCharacter(ctx context.Context, uuid string) (CharacterItem, e
 // GetCharacters — персонажи пользователя (свежие сверху).
 func (s *Store) GetCharacters(ctx context.Context, userID int64) ([]CharacterItem, error) {
 	rows, err := s.pool.Query(ctx,
-		`SELECT `+characterCols+` FROM dndshare."char" WHERE user_id = $1 AND deleted = false ORDER BY changed_at DESC`, userID)
+		`SELECT `+characterCols+`
+		 FROM dndshare."char" c
+		 LEFT JOIN dndshare.source_version sv ON sv.id = c.source_version_id
+		 LEFT JOIN dndshare.source src ON src.id = sv.source_id
+		 WHERE c.user_id = $1 AND c.deleted = false
+		 ORDER BY c.changed_at DESC`, userID)
 	if err != nil {
 		return nil, err
 	}
@@ -98,15 +115,15 @@ func (s *Store) GetCharacters(ctx context.Context, userID int64) ([]CharacterIte
 }
 
 // CreateCharacter вставляет нового персонажа и возвращает его uuid.
-func (s *Store) CreateCharacter(ctx context.Context, userID, templateID int64, data json.RawMessage) (string, error) {
+func (s *Store) CreateCharacter(ctx context.Context, userID, templateID int64, sourceVersionID *int64, data json.RawMessage) (string, error) {
 	if len(data) == 0 {
 		data = json.RawMessage("{}")
 	}
 	var uuid string
 	err := s.pool.QueryRow(ctx,
-		`INSERT INTO dndshare."char" (user_id, template_id, data, public_visible)
-		 VALUES ($1, $2, CAST($3 AS jsonb), true) RETURNING uuid::text`,
-		userID, templateID, string(data),
+		`INSERT INTO dndshare."char" (user_id, template_id, source_version_id, data, public_visible)
+		 VALUES ($1, $2, $3, CAST($4 AS jsonb), true) RETURNING uuid::text`,
+		userID, templateID, sourceVersionID, string(data),
 	).Scan(&uuid)
 	return uuid, err
 }

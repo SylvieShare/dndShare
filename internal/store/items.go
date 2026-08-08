@@ -3,6 +3,7 @@ package store
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"regexp"
 	"strings"
@@ -39,12 +40,20 @@ type ItemType struct {
 	Count       int64           `json:"count"`
 }
 
-// Source — строка dndshare.source (порт model/Source.kt).
+// SourceVersion — редакция системы из dndshare.source_version.
+type SourceVersion struct {
+	ID       int64  `json:"id"`
+	SourceID int64  `json:"sourceId"`
+	Version  string `json:"version"`
+}
+
+// Source — система из dndshare.source с доступными редакциями.
 type Source struct {
-	ID         int64   `json:"id"`
-	Name       string  `json:"name"`
-	Version    *string `json:"version,omitempty"`
-	CountItems int64   `json:"countItems"`
+	ID         int64           `json:"id"`
+	Name       string          `json:"name"`
+	Versions   []SourceVersion `json:"versions"`
+	Version    *string         `json:"version,omitempty"` // compatibility for old clients
+	CountItems int64           `json:"countItems"`
 }
 
 // ItemFilter — порт ItemRepository.ItemFilter. Type: "values"/"suggest"/"suggest_array"/"boolean".
@@ -469,21 +478,77 @@ func (s *Store) ItemTypeGetById(ctx context.Context, id int64) (ItemType, error)
 // SourceGetAll — все источники.
 func (s *Store) SourceGetAll(ctx context.Context) ([]Source, error) {
 	rows, err := s.pool.Query(ctx,
-		"SELECT id, name, version, count_items FROM dndshare.source ORDER BY name",
+		`SELECT src.id, src.name, src.count_items, sv.id, sv.version
+		 FROM dndshare.source src
+		 LEFT JOIN dndshare.source_version sv ON sv.source_id = src.id
+		 ORDER BY src.name, sv.id`,
 	)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 	out := []Source{}
+	byID := map[int64]int{}
 	for rows.Next() {
-		var src Source
+		var sourceID, countItems int64
+		var name string
+		var versionID *int64
 		var version *string
-		if err := rows.Scan(&src.ID, &src.Name, &version, &src.CountItems); err != nil {
+		if err := rows.Scan(&sourceID, &name, &countItems, &versionID, &version); err != nil {
 			return nil, err
 		}
-		src.Version = version
-		out = append(out, src)
+		idx, ok := byID[sourceID]
+		if !ok {
+			idx = len(out)
+			byID[sourceID] = idx
+			out = append(out, Source{ID: sourceID, Name: name, CountItems: countItems, Versions: []SourceVersion{}})
+		}
+		if versionID != nil && version != nil {
+			out[idx].Versions = append(out[idx].Versions, SourceVersion{ID: *versionID, SourceID: sourceID, Version: *version})
+			if out[idx].Version == nil {
+				v := *version
+				out[idx].Version = &v
+			}
+		}
 	}
 	return out, rows.Err()
+}
+
+// SourceVersionExists проверяет, что выбранная редакция существует.
+func (s *Store) SourceVersionExists(ctx context.Context, id int64) (bool, error) {
+	var exists bool
+	err := s.pool.QueryRow(ctx,
+		`SELECT EXISTS(SELECT 1 FROM dndshare.source_version WHERE id = $1)`, id,
+	).Scan(&exists)
+	return exists, err
+}
+
+// DefaultSourceVersionIDForTemplate сохраняет совместимость со старыми
+// клиентами создания персонажей, которые ещё не передают sourceVersionId.
+func (s *Store) DefaultSourceVersionIDForTemplate(ctx context.Context, templateName string) (*int64, error) {
+	upperName := strings.ToUpper(templateName)
+	var sourceName, version string
+	switch {
+	case upperName == "DND5" || upperName == "DND5E":
+		sourceName, version = "DND5e", "2014"
+	case strings.Contains(upperName, "VTM") || strings.Contains(upperName, "VAMPIRE"):
+		sourceName, version = "Vampire: TM", "V20"
+	default:
+		return nil, nil
+	}
+	var id int64
+	err := s.pool.QueryRow(ctx,
+		`SELECT sv.id
+		 FROM dndshare.source_version sv
+		 JOIN dndshare.source src ON src.id = sv.source_id
+		 WHERE lower(src.name) = lower($1) AND lower(sv.version) = lower($2)
+		 LIMIT 1`, sourceName, version,
+	).Scan(&id)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	return &id, nil
 }
