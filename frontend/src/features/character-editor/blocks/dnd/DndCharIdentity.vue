@@ -128,6 +128,7 @@ import FormTextInput from '@/shared/ui/form/FormTextInput'
 import ValueSelect from '@/shared/ui/ValueSelect'
 import { classEntriesOf, classesLabel } from '@/features/character-editor/blocks/dnd/lib/levelUp'
 import { fetchGet } from '@/shared/api/http'
+import { contentScopeQuery } from '@/shared/api/contentSourcesApi'
 
 const RACE_TYPE = 8
 const CLASS_TYPE = 9
@@ -137,6 +138,7 @@ const emit = defineEmits(['update:value'])
 const charCtx = inject('charCtx', { ownerMode: true })
 
 const canEdit = computed(() => charCtx.ownerMode)
+const sourceSuffix = () => contentScopeQuery(charCtx.contentSources, charCtx.sourceVersionId)
 
 const windowOpen = ref(false)
 const nameInput = ref(null)
@@ -209,24 +211,31 @@ const classOptions    = computed(() => toOptions(classes.value))
 const subraceOptions  = computed(() => toOptions(subraces.value))
 const classLevelSum   = computed(() => form.classes.reduce((s, r) => s + (r.classId ? Math.max(1, parseInt(r.level) || 1) : 0), 0))
 
+watch(() => JSON.stringify(charCtx.contentSources || {}), async () => {
+  races.value = []
+  classes.value = []
+  subraces.value = []
+  if (windowOpen.value) await ensureBaseItems()
+})
+
 async function ensureBaseItems() {
   if (!races.value.length) {
-    const items = (await fetchGet(`/items?typeId=${RACE_TYPE}&limit=500`))?.items || []
+    const items = (await fetchGet(`/items?typeId=${RACE_TYPE}&limit=500${sourceSuffix()}`))?.items || []
     races.value = items.filter((i) => i.parentId == null)
   }
   if (!classes.value.length) {
-    const items = (await fetchGet(`/items?typeId=${CLASS_TYPE}&limit=500`))?.items || []
+    const items = (await fetchGet(`/items?typeId=${CLASS_TYPE}&limit=500${sourceSuffix()}`))?.items || []
     classes.value = items.filter((i) => i.parentId == null)
   }
 }
 async function loadSubraces(parentId) {
   subraces.value = parentId
-    ? ((await fetchGet(`/items/children?parentId=${parentId}`))?.items || []).filter((i) => i.typeId === RACE_TYPE)
+    ? ((await fetchGet(`/items/children?parentId=${parentId}${sourceSuffix()}`))?.items || []).filter((i) => i.typeId === RACE_TYPE)
     : []
 }
 async function loadRowSubclasses(row) {
   row.subclasses = row.classId
-    ? ((await fetchGet(`/items/children?parentId=${row.classId}`))?.items || []).filter((i) => i.typeId === CLASS_TYPE)
+    ? ((await fetchGet(`/items/children?parentId=${row.classId}${sourceSuffix()}`))?.items || []).filter((i) => i.typeId === CLASS_TYPE)
     : []
 }
 

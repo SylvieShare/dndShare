@@ -18,19 +18,31 @@
         <div class="ver-desc">Редакция 2024 года — в разработке.</div>
       </button>
     </div>
+
+    <div class="sources">
+      <div class="sheet-section-title">Источники персонажа</div>
+      <p class="hint">Ограничь книги, из которых можно выбирать расы, классы, черты, заклинания и снаряжение.</p>
+      <ContentSourceSelector
+        :source-version-id="sourceVersionId"
+        :model-value="state.contentSources"
+        @update:model-value="state.contentSources = $event"
+      />
+    </div>
   </div>
 </template>
 
 <script setup>
 import { inject } from 'vue'
+import ContentSourceSelector from '@/features/character-editor/components/ContentSourceSelector.vue'
 
-const { state } = inject('createWizard')
+const { state, sourceVersionId } = inject('createWizard')
 </script>
 
 <style scoped>
 .step { display: flex; flex-direction: column; gap: 12px; }
 .hint { font-size: 12px; color: var(--text-muted); margin: 0; }
 .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.sources { display: flex; flex-direction: column; gap: 9px; margin-top: 8px; }
 .ver {
   position: relative; text-align: left;
   background: var(--surface); border: none; border-radius: var(--r-lg);

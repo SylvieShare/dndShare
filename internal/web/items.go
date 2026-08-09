@@ -13,6 +13,7 @@ func init() { registerRoutes((*Server).routesItems) }
 
 func (s *Server) routesItems(mux *http.ServeMux) {
 	mux.HandleFunc("GET /api/sources", s.handleGetSources)
+	mux.HandleFunc("GET /api/content-sources", s.handleGetContentSources)
 	mux.HandleFunc("GET /api/item-types", s.handleGetItemTypes)
 	mux.HandleFunc("GET /api/items", s.handleGetItems)
 	mux.HandleFunc("GET /api/items/by-ids", s.handleGetItemsByIds)
@@ -32,6 +33,32 @@ func (s *Server) handleGetSources(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	writeJSON(w, http.StatusOK, map[string]any{"sources": nonNil(sources)})
+}
+
+func (s *Server) handleGetContentSources(w http.ResponseWriter, r *http.Request) {
+	var sourceID, sourceVersionID *int64
+	if raw := r.URL.Query().Get("sourceId"); raw != "" {
+		id, err := strconv.ParseInt(raw, 10, 64)
+		if err != nil {
+			badRequest(w, "bad sourceId")
+			return
+		}
+		sourceID = &id
+	}
+	if raw := r.URL.Query().Get("sourceVersionId"); raw != "" {
+		id, err := strconv.ParseInt(raw, 10, 64)
+		if err != nil {
+			badRequest(w, "bad sourceVersionId")
+			return
+		}
+		sourceVersionID = &id
+	}
+	items, err := s.store.GetContentSources(r.Context(), sourceID, sourceVersionID)
+	if err != nil {
+		serverError(w, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]any{"sources": nonNil(items)})
 }
 
 func (s *Server) handleGetItemTypes(w http.ResponseWriter, r *http.Request) {
@@ -62,7 +89,7 @@ func (s *Server) handleGetItems(w http.ResponseWriter, r *http.Request) {
 	limit := coerceIn(queryInt(q, "limit", 30), 1, 500)
 	offset := coerceAtLeast(queryInt(q, "offset", 0), 0)
 	filters := parseFilters(q.Get("filters"))
-	items, err := s.store.GetByTypeAndUser(r.Context(), typeID, optionalUserPtr(r), limit, offset, filters)
+	items, err := s.store.GetByTypeAndUser(r.Context(), typeID, optionalUserPtr(r), limit, offset, filters, parseContentScope(q))
 	if err != nil {
 		serverError(w, err)
 		return
@@ -86,7 +113,7 @@ func (s *Server) handleGetItemChildren(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "bad parentId")
 		return
 	}
-	items, err := s.store.FindChildren(r.Context(), parentID)
+	items, err := s.store.FindChildren(r.Context(), parentID, parseContentScope(r.URL.Query()))
 	if err != nil {
 		serverError(w, err)
 		return
@@ -108,7 +135,7 @@ func (s *Server) handleSearchItems(w http.ResponseWriter, r *http.Request) {
 	limit := coerceIn(queryInt(q, "limit", 20), 1, 500)
 	offset := coerceAtLeast(queryInt(q, "offset", 0), 0)
 	filters := parseFilters(q.Get("filters"))
-	items, err := s.store.SearchByTypeAndName(r.Context(), typeID, q.Get("q"), optionalUserPtr(r), limit, offset, filters)
+	items, err := s.store.SearchByTypeAndName(r.Context(), typeID, q.Get("q"), optionalUserPtr(r), limit, offset, filters, parseContentScope(q))
 	if err != nil {
 		serverError(w, err)
 		return
@@ -137,10 +164,11 @@ func (s *Server) handleCreateItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var req struct {
-		TypeID   int64           `json:"typeId"`
-		Name     string          `json:"name"`
-		Data     json.RawMessage `json:"data"`
-		ParentID *int64          `json:"parentId"`
+		TypeID           int64           `json:"typeId"`
+		Name             string          `json:"name"`
+		Data             json.RawMessage `json:"data"`
+		ParentID         *int64          `json:"parentId"`
+		ContentSourceIDs *[]int64        `json:"contentSourceIds"`
 	}
 	if err := decodeJSON(r, &req); err != nil {
 		badRequest(w, "bad body")
@@ -150,6 +178,15 @@ func (s *Server) handleCreateItem(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		serverError(w, err)
 		return
+	}
+	if req.ContentSourceIDs != nil {
+		if err := s.store.SetItemContentSources(r.Context(), item.ID, uid, false, *req.ContentSourceIDs); err != nil {
+			serverError(w, err)
+			return
+		}
+		if enriched, err := s.store.AttachItemContentSources(r.Context(), []store.Item{item}); err == nil && len(enriched) > 0 {
+			item = enriched[0]
+		}
 	}
 	writeJSON(w, http.StatusOK, item)
 }
@@ -165,9 +202,10 @@ func (s *Server) handleUpdateItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var req struct {
-		Name   string          `json:"name"`
-		NameEn *string         `json:"nameEn"`
-		Data   json.RawMessage `json:"data"`
+		Name             string          `json:"name"`
+		NameEn           *string         `json:"nameEn"`
+		Data             json.RawMessage `json:"data"`
+		ContentSourceIDs *[]int64        `json:"contentSourceIds"`
 	}
 	if err := decodeJSON(r, &req); err != nil {
 		badRequest(w, "bad body")
@@ -180,6 +218,12 @@ func (s *Server) handleUpdateItem(w http.ResponseWriter, r *http.Request) {
 	if err := s.store.Update(r.Context(), id, uid, isAdmin, req.Name, req.NameEn, req.Data); err != nil {
 		serverError(w, err)
 		return
+	}
+	if req.ContentSourceIDs != nil {
+		if err := s.store.SetItemContentSources(r.Context(), id, uid, isAdmin, *req.ContentSourceIDs); err != nil {
+			serverError(w, err)
+			return
+		}
 	}
 	w.WriteHeader(http.StatusNoContent)
 }
@@ -279,6 +323,28 @@ func parseIDList(raw string) []int64 {
 		}
 	}
 	return out
+}
+
+func parseContentScope(q map[string][]string) store.ContentScope {
+	_, restrictToIDs := q["contentSourceIds"]
+	scope := store.ContentScope{
+		IDs:           parseIDList(firstQuery(q, "contentSourceIds")),
+		RestrictToIDs: restrictToIDs,
+	}
+	if raw := firstQuery(q, "sourceVersionId"); raw != "" {
+		if id, err := strconv.ParseInt(raw, 10, 64); err == nil {
+			scope.SourceVersionID = &id
+		}
+	}
+	scope.AllowLegacy = strings.EqualFold(firstQuery(q, "allowLegacy"), "true")
+	return scope
+}
+
+func firstQuery(q map[string][]string, key string) string {
+	if values := q[key]; len(values) > 0 {
+		return values[0]
+	}
+	return ""
 }
 
 // parseFilters повторяет ItemController.parseFilters: пустое/битое → [], значения-списки

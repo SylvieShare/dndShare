@@ -13,6 +13,10 @@
         </div>
       </div>
 
+      <div v-if="item.contentSources?.length" class="detail-sources">
+        <span v-for="source in item.contentSources" :key="source.id" :title="source.name">{{ source.code || source.name }}</span>
+      </div>
+
       <!-- Custom renderer (Weapon, Spell, Enemy…) -->
       <component
         v-if="customRenderer"
@@ -227,6 +231,9 @@ function formatSubValue(sub, value) {
   font-size: 10px;
   color: var(--accent);
 }
+
+.detail-sources { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+.detail-sources span { border-radius: 999px; background: color-mix(in srgb, var(--accent) 12%, var(--surface)); color: var(--accent); padding: 3px 8px; font-size: 9px; font-weight: 700; letter-spacing: .04em; }
 
 .detail-head-actions {
   margin-left: auto;

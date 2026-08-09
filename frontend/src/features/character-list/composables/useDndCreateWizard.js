@@ -14,6 +14,7 @@ import {
   startingEquipmentProfile,
 } from '@/features/character-editor/settings/dnd/creation/startingEquipment'
 import { useSuggestStore } from '@/stores/suggest'
+import { contentScopeQuery, normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'
 
 const RACE_TYPE = 8
 const CLASS_TYPE = 9
@@ -64,10 +65,12 @@ export function useDndCreateWizard() {
   const featPool = ref([])
   const bgPool = ref([])
   const loading = ref(false)
+  const sourceVersionId = ref(null)
 
   const state = reactive({
     step: 0,
     version: '2014',
+    contentSources: normalizeContentSourceSettings(null),
     name: '',
     race: null,
     subrace: null,
@@ -93,17 +96,27 @@ export function useDndCreateWizard() {
   })
   // True while restoring from localStorage — suppresses the reset watchers below.
   let hydrating = false
+  let loadedOnce = false
+  let scopeReloadTimer = null
+
+  function sourceSuffix() {
+    return contentScopeQuery(state.contentSources, sourceVersionId.value)
+  }
+
+  function setSourceVersionId(id) {
+    sourceVersionId.value = id == null ? null : Number(id)
+  }
 
   async function load() {
     loading.value = true
     try {
       const [r, c, ra, ca, ft, bg] = await Promise.all([
-        fetchGet(`/items?typeId=${RACE_TYPE}&limit=300`),
-        fetchGet(`/items?typeId=${CLASS_TYPE}&limit=300`),
-        fetchGet(`/items?typeId=${RACE_ABIL_TYPE}&limit=500`),
-        fetchGet(`/items?typeId=${CLASS_ABIL_TYPE}&limit=500`),
-        fetchGet(`/items?typeId=${FEAT_TYPE}&limit=500`),
-        fetchGet(`/items?typeId=${BG_TYPE}&limit=200`),
+        fetchGet(`/items?typeId=${RACE_TYPE}&limit=300${sourceSuffix()}`),
+        fetchGet(`/items?typeId=${CLASS_TYPE}&limit=300${sourceSuffix()}`),
+        fetchGet(`/items?typeId=${RACE_ABIL_TYPE}&limit=500${sourceSuffix()}`),
+        fetchGet(`/items?typeId=${CLASS_ABIL_TYPE}&limit=500${sourceSuffix()}`),
+        fetchGet(`/items?typeId=${FEAT_TYPE}&limit=500${sourceSuffix()}`),
+        fetchGet(`/items?typeId=${BG_TYPE}&limit=200${sourceSuffix()}`),
       ])
       // Base races/classes only — subraces/subclasses are children (parentId set).
       races.value = (r?.items || []).filter((i) => !i.parentId)
@@ -114,8 +127,18 @@ export function useDndCreateWizard() {
       bgPool.value = bg?.items || []
     } finally {
       loading.value = false
+      loadedOnce = true
     }
   }
+
+  watch(
+    [sourceVersionId, () => JSON.stringify(normalizeContentSourceSettings(state.contentSources))],
+    () => {
+      if (hydrating || !loadedOnce) return
+      clearTimeout(scopeReloadTimer)
+      scopeReloadTimer = setTimeout(() => load(), 120)
+    },
+  )
 
   watch(() => state.race, async (r) => {
     if (hydrating) return
@@ -124,7 +147,7 @@ export function useDndCreateWizard() {
     subraces.value = []
     if (!r) return
     const raceId = r.id
-    const items = ((await fetchGet(`/items/children?parentId=${raceId}`))?.items || []).filter((i) => i.typeId === RACE_TYPE)
+    const items = ((await fetchGet(`/items/children?parentId=${raceId}${sourceSuffix()}`))?.items || []).filter((i) => i.typeId === RACE_TYPE)
     if (state.race?.id === raceId) subraces.value = items
   })
   watch(() => state.charClass, async (c) => {
@@ -135,7 +158,7 @@ export function useDndCreateWizard() {
     subclasses.value = []
     if (!c) return
     const classId = c.id
-    const items = ((await fetchGet(`/items/children?parentId=${classId}`))?.items || []).filter((i) => i.typeId === CLASS_TYPE)
+    const items = ((await fetchGet(`/items/children?parentId=${classId}${sourceSuffix()}`))?.items || []).filter((i) => i.typeId === CLASS_TYPE)
     if (state.charClass?.id === classId) subclasses.value = items
   })
   // A different race/subrace/variant means a different set of race offers — clear the picks.
@@ -353,7 +376,7 @@ export function useDndCreateWizard() {
 
   async function loadSpells() {
     if (!state.charClass) { spellPool.value = []; return }
-    const res = await fetchGet(`/items?typeId=${SPELL_TYPE}&limit=500`)
+    const res = await fetchGet(`/items?typeId=${SPELL_TYPE}&limit=500${sourceSuffix()}`)
     const classId = state.charClass.id
     spellPool.value = (res?.items || []).filter((sp) => {
       const lvl = Number(sp.data?.lvl ?? 0)
@@ -561,14 +584,15 @@ export function useDndCreateWizard() {
       raceAbilityItems: raceAbilities.value,
       classAbilityItems: classAbilities.value,
       suggestValue,
+      contentSources: normalizeContentSourceSettings(state.contentSources),
     })
   }
 
   // ─── Persistence (localStorage) — survives reload; going back keeps forward picks ─
   const STORAGE_KEY = 'dnd-create-wizard-v1'
   function serialize() {
-    const { step, version, name, race, subrace, charClass, subclass, raceVariant, statMethod, scores, rollPool, asiChoice, raceSkillIds, raceLangIds, featIds, featSelections, skillIds, spellIds, choices, background, bgLangIds, classEquipmentChoices, equipment, persona } = state
-    return { step, version, name, race, subrace, charClass, subclass, raceVariant, statMethod, scores, rollPool, asiChoice, raceSkillIds, raceLangIds, featIds, featSelections, skillIds, spellIds, choices, background, bgLangIds, classEquipmentChoices, equipment, persona }
+    const { step, version, contentSources, name, race, subrace, charClass, subclass, raceVariant, statMethod, scores, rollPool, asiChoice, raceSkillIds, raceLangIds, featIds, featSelections, skillIds, spellIds, choices, background, bgLangIds, classEquipmentChoices, equipment, persona } = state
+    return { step, version, contentSources, name, race, subrace, charClass, subclass, raceVariant, statMethod, scores, rollPool, asiChoice, raceSkillIds, raceLangIds, featIds, featSelections, skillIds, spellIds, choices, background, bgLangIds, classEquipmentChoices, equipment, persona }
   }
   function persist() {
     if (hydrating) return
@@ -580,7 +604,7 @@ export function useDndCreateWizard() {
   // Start over: wipe every pick back to defaults and drop the saved draft.
   function reset() {
     Object.assign(state, {
-      step: 0, version: '2014', name: '', race: null, subrace: null,
+      step: 0, version: '2014', contentSources: normalizeContentSourceSettings(null), name: '', race: null, subrace: null,
       charClass: null, subclass: null, raceVariant: null, statMethod: 'array',
       scores: emptyScores(), rollPool: [], asiChoice: [],
       raceSkillIds: [], raceLangIds: [], featIds: [], featSelections: {}, skillIds: [], spellIds: [], choices: {},
@@ -596,8 +620,9 @@ export function useDndCreateWizard() {
     if (!saved) return
     hydrating = true
     Object.assign(state, saved)
-    if (state.race) subraces.value = ((await fetchGet(`/items/children?parentId=${state.race.id}`))?.items || []).filter((i) => i.typeId === RACE_TYPE)
-    if (state.charClass) subclasses.value = ((await fetchGet(`/items/children?parentId=${state.charClass.id}`))?.items || []).filter((i) => i.typeId === CLASS_TYPE)
+    state.contentSources = normalizeContentSourceSettings(state.contentSources)
+    if (state.race) subraces.value = ((await fetchGet(`/items/children?parentId=${state.race.id}${sourceSuffix()}`))?.items || []).filter((i) => i.typeId === RACE_TYPE)
+    if (state.charClass) subclasses.value = ((await fetchGet(`/items/children?parentId=${state.charClass.id}${sourceSuffix()}`))?.items || []).filter((i) => i.typeId === CLASS_TYPE)
     if (isCaster.value) await loadSpells()
     // Let the reset watchers (guarded by `hydrating`) flush before unlocking, so
     // they can't wipe the restored subrace / variant / floating-ASI picks.
@@ -608,7 +633,7 @@ export function useDndCreateWizard() {
 
   return {
     STATS,
-    state,
+    state, sourceVersionId, setSourceVersionId,
     races, classes, subraces, subclasses, spellPool, featPool, bgPool, loading,
     raceAbilities, classAbilities,
     grants, isCaster, skillOptions, skillLimit, finalScores, racialBonus,

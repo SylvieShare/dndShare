@@ -37,17 +37,20 @@ Do not spread endpoint strings directly through components when adding new behav
 ## Source Routes
 
 - `GET /api/sources` — systems with their editions: `{ sources: [{ id, name, versions: [{ id, sourceId, version }], version?, countItems }] }`. The singular `version` is a compatibility alias for the first edition; new consumers use `versions`.
+- `GET /api/content-sources?sourceVersionId=...` — publications compatible with a concrete rules edition. Each source includes its native edition, description, kind, default flag and effective `compatibilityStatus`. `sourceId=...` lists the whole publication catalogue for handbook editing.
 
 ## Item Object Routes
 
 - `GET /api/item-types`
-- `GET /api/items?typeId=...`
-- `GET /api/items/search?typeId=...&q=...`
+- `GET /api/items?typeId=...` — also accepts `contentSourceIds=1,2`, `sourceVersionId=...`, and `allowLegacy=true`; filtering happens before pagination.
+- `GET /api/items/search?typeId=...&q=...` — accepts the same content-source scope.
 - `GET /api/items/by-ids?ids=...`
-- `POST /api/items`
-- `PUT /api/items/{id}`
+- `POST /api/items` — accepts common item metadata `contentSourceIds`.
+- `PUT /api/items/{id}` — accepts common item metadata `contentSourceIds`.
 - `DELETE /api/items/{id}`
 - `POST /api/items/{id}/make-base`
+
+Item responses expose `contentSourceIds` plus compact `contentSources`. User-authored and not-yet-classified items remain visible in scoped lists; `by-ids` intentionally ignores the scope so existing character references always resolve.
 
 ## Page Error Report Routes
 

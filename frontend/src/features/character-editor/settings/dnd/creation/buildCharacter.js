@@ -88,7 +88,7 @@ export function buildCharacterData(input) {
     background = null,
     scores = {}, asiChoice = [], skillIds = [], spellIds = [], grantedSpellIds = [], choices = [],
     raceSkillIds = [], raceLangIds = [], featIds = [], feats = [], bgLangIds = [],
-    equipment = [], persona = null,
+    equipment = [], persona = null, contentSources = null,
     raceAbilityItems = [], classAbilityItems = [], suggestValue,
   } = input || {}
 
@@ -258,7 +258,13 @@ export function buildCharacterData(input) {
   // Multiclass-ready class list (level-up / identity window edit it later).
   if (charClass) values.classes = [{ ...ref(charClass), level: 1, subclass: ref(subclass) }]
 
-  return { name: name || 'Без имени', data: { values } }
+  return {
+    name: name || 'Без имени',
+    data: {
+      values,
+      settings: contentSources ? { contentSources } : {},
+    },
+  }
 }
 
 export { SKILL_BY_STAT }

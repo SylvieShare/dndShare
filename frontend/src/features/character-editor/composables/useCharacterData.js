@@ -4,6 +4,7 @@ import { fetchGet, fetchPut } from '@/shared/api/http'
 import { useAccountStore } from '@/stores/account'
 import { useTemplateStore } from '@/stores/template'
 import { settingRenderSchema } from '@/features/character-editor/settings'
+import { normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'
 import {
   activeLayoutProfile,
   initialTabs,
@@ -21,12 +22,15 @@ export function useCharacterData(uuid, isMobile) {
   const template = ref(null)
   const data = ref({ values: {}, var: {} })
   const charCtx = reactive({ ownerMode: false, dictionaries: {}, var: {} })
+  const sourceVersionId = ref(null)
+  const contentSources = computed(() => normalizeContentSourceSettings(data.value.settings?.contentSources))
   const isOwner = ref(false)
   const publicVisible = ref(false)
   const version = ref(0)
   const sessions = ref([])
 
   provide('charCtx', charCtx)
+  Object.assign(charCtx, { sourceVersionId, contentSources })
 
   function apply(res) {
     if (!res) {
@@ -40,6 +44,7 @@ export function useCharacterData(uuid, isMobile) {
     data.value = { values: {}, var: {}, ...res.data }
     publicVisible.value = res.publicVisible
     version.value = Number(res.version) || 0
+    sourceVersionId.value = res.sourceVersionId ?? null
     charCtx.dictionaries = res.template.dictionaries || {}
     charCtx.var = data.value.var || {}
 
@@ -67,6 +72,7 @@ export function useCharacterData(uuid, isMobile) {
       publicVisible: seed.publicVisible,
       userId: seed.userId,
       version: seed.version,
+      sourceVersionId: seed.sourceVersionId,
     }
   }
 
@@ -193,6 +199,16 @@ export function useCharacterData(uuid, isMobile) {
     charCtx.var = data.value.var
   }
 
+  function updateContentSources(value) {
+    data.value = {
+      ...data.value,
+      settings: {
+        ...(data.value.settings || {}),
+        contentSources: normalizeContentSourceSettings(value),
+      },
+    }
+  }
+
   function onPublicToggle(val) {
     publicVisible.value = val
     fetchPut('/char/' + uuid + '/public', { publicVisible: val })
@@ -229,6 +245,7 @@ export function useCharacterData(uuid, isMobile) {
       if (!res) return false
       data.value = { values: {}, var: {}, ...res.data }
       version.value = Number(res.version) || 0
+      sourceVersionId.value = res.sourceVersionId ?? sourceVersionId.value
       charCtx.var = data.value.var || {}
       document.title = data.value.values?.name || 'Персонаж'
       return true
@@ -244,6 +261,8 @@ export function useCharacterData(uuid, isMobile) {
     template,
     data,
     charCtx,
+    sourceVersionId,
+    contentSources,
     isOwner,
     publicVisible,
     version,
@@ -269,6 +288,7 @@ export function useCharacterData(uuid, isMobile) {
     getInitialTabs,
     updateValue,
     updateVar,
+    updateContentSources,
     onPublicToggle,
     invalidateTabCache,
   }

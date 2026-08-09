@@ -66,7 +66,6 @@ const { suggestItems } = useSchemaSuggests(() => props.type)
 
 const schoolDetailsMap = computed(() => Object.fromEntries(suggestItems('schoolId').map(s => [s.id, s])))
 const schoolMap = computed(() => Object.fromEntries(suggestItems('schoolId').map(s => [s.id, s.value])))
-const sourceMap = computed(() => Object.fromEntries(suggestItems('sourceId').map(s => [s.id, s.value])))
 const classMap = computed(() => Object.fromEntries(suggestItems('classIds').map(s => [s.id, s.value])))
 
 const data = computed(() => props.item.data || {})
@@ -98,7 +97,7 @@ const schoolStyle = computed(() => {
     color: schoolColor.value,
   }
 })
-const source = computed(() => sourceMap.value[data.value.sourceId] || '')
+const source = computed(() => (props.item.contentSources || []).map((entry) => entry.name || entry.code).filter(Boolean).join(', '))
 const classes = computed(() => (data.value.classIds || []).map(id => classMap.value[id]).filter(Boolean))
 const hasComponents = computed(() => {
   const c = data.value.components

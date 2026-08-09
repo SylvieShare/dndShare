@@ -26,10 +26,12 @@
 <script setup>
 import { computed, inject, onMounted, ref, watch } from 'vue'
 import { fetchGet } from '@/shared/api/http'
+import { contentScopeQuery } from '@/shared/api/contentSourcesApi'
 
 const props = defineProps(['block', 'value', 'values'])
 const emit = defineEmits(['update:value'])
 const charCtx = inject('charCtx', { ownerMode: true })
+const sourceSuffix = () => contentScopeQuery(charCtx.contentSources, charCtx.sourceVersionId)
 
 const items = ref([])
 const children = ref([])
@@ -60,12 +62,12 @@ const display = computed(() => {
 
 async function loadBaseItems() {
   if (!itemType.value) return
-  const res = await fetchGet(`/items?typeId=${itemType.value}&limit=500`)
+  const res = await fetchGet(`/items?typeId=${itemType.value}&limit=500${sourceSuffix()}`)
   items.value = (res?.items || []).filter((i) => i.parentId == null)
 }
 async function loadChildren(parentId) {
   children.value = (childId.value && parentId)
-    ? ((await fetchGet(`/items/children?parentId=${parentId}`))?.items || []).filter((i) => i.typeId === itemType.value)
+    ? ((await fetchGet(`/items/children?parentId=${parentId}${sourceSuffix()}`))?.items || []).filter((i) => i.typeId === itemType.value)
     : []
 }
 
@@ -75,6 +77,10 @@ onMounted(async () => {
 })
 
 watch(currentId, (id) => { loadChildren(id || null) })
+watch(() => JSON.stringify(charCtx.contentSources || {}), async () => {
+  await loadBaseItems()
+  await loadChildren(currentId.value || null)
+})
 
 function onPick(id) {
   const it = items.value.find((x) => String(x.id) === String(id))

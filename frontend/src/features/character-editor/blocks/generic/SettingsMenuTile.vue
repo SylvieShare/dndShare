@@ -21,6 +21,12 @@
           label="Публичная ссылка"
           @update:modelValue="v => ctx.setPublic && ctx.setPublic(v)"
         />
+        <button v-if="ctx.canEdit" class="sm-action" type="button" @click="openSources">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H11v16H6.5A2.5 2.5 0 0 0 4 21.5z" /><path d="M20 5.5A2.5 2.5 0 0 0 17.5 3H13v16h4.5a2.5 2.5 0 0 1 2.5 2.5z" />
+          </svg>
+          <span class="sm-action-copy"><b>Источники</b><small>{{ sourceSummary }}</small></span>
+        </button>
         <button class="sm-action" type="button" @click="openPrintView">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M6 9V2h9l3 3v4" />
@@ -31,25 +37,51 @@
         </button>
       </div>
     </transition>
+
+    <AppModal v-if="sourcesOpen" wide tile @close="sourcesOpen = false">
+      <div class="sm-modal">
+        <div class="sm-modal-title">Источники персонажа</div>
+        <p>Выбранные книги ограничивают новые варианты в справочниках. Уже добавленный контент останется на листе.</p>
+        <ContentSourceSelector
+          :source-version-id="ctx.sourceVersionId"
+          :model-value="sourceDraft"
+          @update:model-value="sourceDraft = $event"
+        />
+        <div class="sm-modal-actions">
+          <button type="button" class="sm-cancel" @click="sourcesOpen = false">Отмена</button>
+          <button type="button" class="sm-confirm" @click="saveSources">Сохранить</button>
+        </div>
+      </div>
+    </AppModal>
   </div>
 </template>
 
 <script setup>
 import { computed, inject, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import AppModal from '@/shared/ui/AppModal'
 import BaseTile from '@/shared/ui/BaseTile'
 import ToggleSwitch from '@/shared/ui/ToggleSwitch'
+import ContentSourceSelector from '@/features/character-editor/components/ContentSourceSelector.vue'
+import { normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'
 import { svgColorFilter } from '@/shared/lib/svgColorFilter'
 
 const props = defineProps(['block'])
-const ctx = inject('charCtx', { canTogglePublic: false, publicVisible: false, saveStatus: 'idle', pendingSecondsLeft: 0 })
+const ctx = inject('charCtx', { canEdit: false, canTogglePublic: false, publicVisible: false, saveStatus: 'idle', pendingSecondsLeft: 0 })
 const open = ref(false)
+const sourcesOpen = ref(false)
+const sourceDraft = ref(normalizeContentSourceSettings(null))
 const route = useRoute()
 const router = useRouter()
 
 const accent = computed(() => props.block?.content?.accent || 'var(--text-muted)')
 const iconSrc = computed(() => props.block?.content?.svg || null)
 const iconStyle = computed(() => ({ filter: svgColorFilter(accent.value) }))
+const sourceSummary = computed(() => {
+  const settings = normalizeContentSourceSettings(ctx.contentSources)
+  if (settings.mode === 'all') return settings.allowLegacy ? 'Все, включая Legacy' : 'Все совместимые'
+  return `${settings.ids.length} выбрано`
+})
 
 const saveLabel = computed(() => {
   switch (ctx.saveStatus) {
@@ -63,6 +95,17 @@ const saveLabel = computed(() => {
 function openPrintView() {
   open.value = false
   router.push({ name: 'CharacterPrint', params: { uuid: route.params.uuid } })
+}
+
+function openSources() {
+  sourceDraft.value = normalizeContentSourceSettings(ctx.contentSources)
+  sourcesOpen.value = true
+  open.value = false
+}
+
+function saveSources() {
+  ctx.setContentSources?.(sourceDraft.value)
+  sourcesOpen.value = false
 }
 </script>
 
@@ -123,6 +166,17 @@ function openPrintView() {
 }
 .sm-action:hover { background: color-mix(in srgb, var(--text-on-accent) 4%, transparent); color: var(--text-1); }
 .sm-action svg { color: var(--text-muted); flex: 0 0 auto; }
+.sm-action-copy { display: flex; flex-direction: column; gap: 1px; }
+.sm-action-copy b { font-size: 12px; font-weight: 600; }
+.sm-action-copy small { color: var(--text-muted); font-size: 10px; }
+
+.sm-modal { width: min(760px, calc(100vw - 48px)); max-height: min(760px, calc(100vh - 80px)); overflow: auto; display: flex; flex-direction: column; gap: 14px; padding: 22px; box-sizing: border-box; }
+.sm-modal-title { font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--text-1); }
+.sm-modal > p { margin: 0; color: var(--text-muted); font-size: 12px; line-height: 1.45; }
+.sm-modal-actions { display: flex; justify-content: flex-end; gap: 8px; padding-top: 4px; }
+.sm-modal-actions button { border: 0; border-radius: 8px; padding: 8px 14px; font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; }
+.sm-cancel { background: var(--surface-raised); color: var(--text-2); }
+.sm-confirm { background: var(--accent); color: var(--text-on-accent); }
 
 .sm-save { display: flex; align-items: center; gap: 7px; padding: 6px 8px 10px; border-bottom: 1px solid var(--border); margin-bottom: 2px; }
 .sm-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; transition: background-color 0.3s; }

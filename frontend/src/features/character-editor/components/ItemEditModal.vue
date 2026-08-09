@@ -24,6 +24,25 @@
       />
     </div>
 
+    <div v-if="contentSources.length" class="iem-field iem-source-field">
+      <label class="iem-label">Источники</label>
+      <div class="iem-source-list">
+        <button
+          v-for="source in contentSources"
+          :key="source.id"
+          type="button"
+          class="iem-source"
+          :class="{ selected: contentSourceSelected(source.id) }"
+          :title="source.description || source.name"
+          @click="toggleContentSource(source.id)"
+        >
+          <span class="iem-source-mark">{{ contentSourceSelected(source.id) ? '✓' : '' }}</span>
+          <span>{{ source.name }}</span>
+          <small>{{ source.code }}</small>
+        </button>
+      </div>
+    </div>
+
     <!-- Schema fields -->
     <div class="iem-fields-grid">
     <template v-for="field in typeFields" :key="field.key">
@@ -608,6 +627,7 @@ import ColorPresetPicker from '@/shared/ui/ColorPresetPicker'
 import InputDescription from '@/shared/ui/InputDescription'
 import ItemPickerModal from '@/features/character-editor/components/ItemPickerModal'
 import { fetchPost, fetchPut } from '@/shared/api/http'
+import { contentSourcesApi } from '@/shared/api/contentSourcesApi'
 import { useItemTypesStore } from '@/stores/itemTypes'
 import { useSuggestStore } from '@/stores/suggest'
 import { ensureItemNames, itemName } from '@/features/handbook/objects/lib/itemNames'
@@ -635,6 +655,8 @@ const suggestStore = useSuggestStore()
 const itemTypesStore = useItemTypesStore()
 const nameInput = ref(null)
 const typeFields = ref([])
+const contentSources = ref([])
+const selectedContentSourceIds = ref([])
 const formName = ref(props.initialName)
 const formNameEn = ref(props.initialNameEn)
 const formData = reactive({})
@@ -681,6 +703,10 @@ function initSections(fields) {
 onMounted(async () => {
   const type = await itemTypesStore.ensureType(props.typeId)
   typeFields.value = type?.fields || []
+  if (type?.sourceId != null) {
+    const sourceRes = await contentSourcesApi.listForSystem(type.sourceId)
+    contentSources.value = sourceRes?.sources || []
+  }
 
   for (const id of collectSuggestIds(typeFields.value)) {
     suggestStore.ensure(id)
@@ -690,10 +716,12 @@ onMounted(async () => {
     formName.value = props.item.name || ''
     formNameEn.value = props.item.nameEn || ''
     Object.assign(formData, JSON.parse(JSON.stringify(props.item.data || {})))
+    selectedContentSourceIds.value = [...(props.item.contentSourceIds || [])]
   } else {
     Object.assign(formData, defaultDataForFields(typeFields.value))
     formName.value = props.initialName
     formNameEn.value = props.initialNameEn
+    selectedContentSourceIds.value = contentSources.value.filter((source) => source.isDefault).map((source) => source.id)
   }
   ensureContainerFields(typeFields.value)
   initSections(typeFields.value)
@@ -702,6 +730,16 @@ onMounted(async () => {
   await nextTick()
   nameInput.value?.focus()
 })
+
+function contentSourceSelected(id) {
+  return selectedContentSourceIds.value.some((value) => String(value) === String(id))
+}
+
+function toggleContentSource(id) {
+  selectedContentSourceIds.value = contentSourceSelected(id)
+    ? selectedContentSourceIds.value.filter((value) => String(value) !== String(id))
+    : [...selectedContentSourceIds.value, id]
+}
 
 function isFieldVisible(field) {
   return schemaIsFieldVisible(field, formData)
@@ -959,6 +997,7 @@ async function submit() {
     const payload = {
       name: formName.value.trim(),
       data,
+      contentSourceIds: selectedContentSourceIds.value,
     }
     if (props.showNameEn) payload.nameEn = formNameEn.value.trim() || null
     if (props.item) {
@@ -990,6 +1029,12 @@ async function submit() {
   gap: 14px 16px;
   align-items: start;
 }
+.iem-source-field { margin-bottom: 14px; }
+.iem-source-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.iem-source { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--border-strong); border-radius: 999px; background: var(--surface-raised); color: var(--text-2); padding: 6px 9px; font: inherit; font-size: 11px; cursor: pointer; }
+.iem-source.selected { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 13%, var(--surface)); color: var(--text-1); }
+.iem-source-mark { width: 13px; height: 13px; display: grid; place-items: center; border: 1px solid currentColor; border-radius: 4px; font-size: 9px; }
+.iem-source small { color: var(--text-muted); font-size: 9px; }
 
 @media (max-width: 720px) {
   .iem-fields-grid { grid-template-columns: 1fr; }

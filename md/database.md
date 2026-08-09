@@ -59,6 +59,19 @@ values are inserted into `source_version`, then known pre-existing `DND5` and
 VTM characters are backfilled. `char.version` remains a separate technical
 revision counter used by save/poll synchronization.
 
+Books and other content packs live in `content_source`. A publication belongs to
+the game system, has an optional native `source_version`, description/kind and a
+stable code. The code is unique per system and native edition, so both the 2014
+and 2024 catalogues can contain their own `PHB`. Cross-edition availability is many-to-many in
+`content_source_compatibility`; a 2014 supplement can therefore be compatible
+with a 2024 character without pretending to be a 2024 publication.
+`item_content_source` links handbook items to one or more publications (with an
+optional page and primary flag). Sparse `item_version_compatibility` rows
+override the book-level rule for replaced/Legacy/adapted items and can point to
+the replacement item. Startup migrates referenced suggest type «Источники», its
+descriptions and spell `data.sourceId` links. Existing core 2014 non-spell
+catalogues are assigned to PHB exactly once through `schema_data_migration`.
+
 ## Layout
 
 - Config: `spring.liquibase.change-log: classpath:changelog-master.yaml`

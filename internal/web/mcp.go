@@ -212,7 +212,7 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 		if err != nil {
 			return nil, err
 		}
-		return s.store.GetByTypeAndUser(ctx, typeID, nil, coerceIn(limit, 1, 500), coerceAtLeast(offset, 0), nil)
+		return s.store.GetByTypeAndUser(ctx, typeID, nil, coerceIn(limit, 1, 500), coerceAtLeast(offset, 0), nil, store.ContentScope{})
 
 	case "handbook_items_search":
 		typeID, err := argInt64(args, "typeId")
@@ -227,7 +227,7 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 		if err != nil {
 			return nil, err
 		}
-		return s.store.SearchByTypeAndName(ctx, typeID, q, nil, coerceIn(limit, 1, 500), 0, nil)
+		return s.store.SearchByTypeAndName(ctx, typeID, q, nil, coerceIn(limit, 1, 500), 0, nil, store.ContentScope{})
 
 	case "handbook_items_get":
 		ids, err := argInt64Slice(args, "ids")

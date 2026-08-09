@@ -212,6 +212,40 @@ FROM dndshare."source"
 WHERE "version" IS NOT NULL AND btrim("version") <> ''
 ON CONFLICT (source_id, "version") DO NOTHING;
 
+-- Publications / content packs are separate from the game system and its rules
+-- edition. A 2014 book can be compatible with a 2024 character, so the native
+-- edition is metadata rather than an ownership boundary.
+CREATE TABLE IF NOT EXISTS dndshare.content_source (
+    id                       bigserial NOT NULL,
+    source_id                int8 NOT NULL REFERENCES dndshare."source"(id),
+    native_source_version_id int8 NULL REFERENCES dndshare.source_version(id),
+    "name"                   varchar NOT NULL,
+    code                     varchar NOT NULL,
+    description              text NULL,
+    kind                     varchar DEFAULT 'addon' NOT NULL,
+    is_default               bool DEFAULT false NOT NULL,
+    sort_order               int4 DEFAULT 0 NOT NULL,
+    legacy_suggest_id        int8 NULL,
+    CONSTRAINT content_source_pk PRIMARY KEY (id),
+    CONSTRAINT content_source_kind_check CHECK (kind IN ('base', 'addon', 'third_party'))
+);
+-- The same publication code may exist in multiple editions (PHB 2014 and PHB
+-- 2024). COALESCE also keeps edition-neutral packs unique within a system.
+ALTER TABLE dndshare.content_source DROP CONSTRAINT IF EXISTS content_source_source_code_key;
+CREATE UNIQUE INDEX IF NOT EXISTS content_source_system_edition_code_key
+    ON dndshare.content_source (source_id, COALESCE(native_source_version_id, 0), code);
+CREATE INDEX IF NOT EXISTS idx_content_source_source_id ON dndshare.content_source USING btree (source_id, sort_order, name);
+CREATE INDEX IF NOT EXISTS idx_content_source_native_version ON dndshare.content_source USING btree (native_source_version_id);
+
+CREATE TABLE IF NOT EXISTS dndshare.content_source_compatibility (
+    content_source_id int8 NOT NULL REFERENCES dndshare.content_source(id) ON DELETE CASCADE,
+    source_version_id int8 NOT NULL REFERENCES dndshare.source_version(id) ON DELETE CASCADE,
+    status            varchar NOT NULL,
+    CONSTRAINT content_source_compatibility_pk PRIMARY KEY (content_source_id, source_version_id),
+    CONSTRAINT content_source_compatibility_status_check CHECK (status IN ('native', 'compatible', 'legacy', 'blocked'))
+);
+CREATE INDEX IF NOT EXISTS idx_content_source_compatibility_version ON dndshare.content_source_compatibility USING btree (source_version_id, status);
+
 CREATE TABLE IF NOT EXISTS dndshare.svg_storage (
     id     bigserial NOT NULL,
     "data" text NOT NULL,
@@ -267,6 +301,28 @@ CREATE INDEX IF NOT EXISTS item_type_user_name_idx ON dndshare.item USING btree 
 CREATE INDEX IF NOT EXISTS item_parent_id_idx ON dndshare.item USING btree (parent_id) WHERE (parent_id IS NOT NULL);
 CREATE INDEX IF NOT EXISTS idx_item_user_id ON dndshare.item USING btree (user_id);
 
+CREATE TABLE IF NOT EXISTS dndshare.item_content_source (
+    item_id           int8 NOT NULL REFERENCES dndshare.item(id) ON DELETE CASCADE,
+    content_source_id int8 NOT NULL REFERENCES dndshare.content_source(id) ON DELETE CASCADE,
+    page              int4 NULL,
+    primary_source    bool DEFAULT false NOT NULL,
+    CONSTRAINT item_content_source_pk PRIMARY KEY (item_id, content_source_id)
+);
+CREATE INDEX IF NOT EXISTS idx_item_content_source_source_item ON dndshare.item_content_source USING btree (content_source_id, item_id);
+
+-- Overrides are sparse: normally an item inherits the compatibility of its
+-- publication. Rows are needed only for replaced, legacy or adapted options.
+CREATE TABLE IF NOT EXISTS dndshare.item_version_compatibility (
+    item_id             int8 NOT NULL REFERENCES dndshare.item(id) ON DELETE CASCADE,
+    source_version_id   int8 NOT NULL REFERENCES dndshare.source_version(id) ON DELETE CASCADE,
+    status              varchar NOT NULL,
+    replaced_by_item_id int8 NULL REFERENCES dndshare.item(id) ON DELETE SET NULL,
+    adapter_code        varchar NULL,
+    CONSTRAINT item_version_compatibility_pk PRIMARY KEY (item_id, source_version_id),
+    CONSTRAINT item_version_compatibility_status_check CHECK (status IN ('native', 'compatible', 'legacy', 'blocked', 'requires_adaptation'))
+);
+CREATE INDEX IF NOT EXISTS idx_item_version_compatibility_version ON dndshare.item_version_compatibility USING btree (source_version_id, status);
+
 CREATE TABLE IF NOT EXISTS dndshare.suggest_type (
     id          bigserial NOT NULL,
     "name"      varchar NOT NULL,
@@ -293,6 +349,171 @@ CREATE TABLE IF NOT EXISTS dndshare.suggest (
 CREATE INDEX IF NOT EXISTS suggest_base_type_value_idx ON dndshare.suggest USING btree (type_id, lower((value)::text), id) WHERE (user_id IS NULL);
 CREATE INDEX IF NOT EXISTS suggest_user_type_user_value_idx ON dndshare.suggest USING btree (type_id, user_id, lower((value)::text), id) WHERE (user_id IS NOT NULL);
 CREATE INDEX IF NOT EXISTS idx_suggest_svg_id ON dndshare.suggest USING btree (svg_id);
+
+-- Migrate the old D&D "Источники" suggest catalogue. Only values referenced by
+-- actual items are migrated: historical snapshots contain unrelated polluted
+-- rows in this suggest type. The old suggest rows remain readable during the
+-- rolling migration, but all new code uses content_source.
+INSERT INTO dndshare.content_source (
+    source_id, native_source_version_id, name, code, description, kind, is_default, sort_order
+)
+SELECT src.id, sv.id, 'Player''s Handbook', 'PHB',
+       'Основная книга правил для создания персонажей D&D пятой редакции.',
+       'base', true, 0
+FROM dndshare."source" src
+LEFT JOIN dndshare.source_version sv ON sv.source_id = src.id AND lower(sv.version) = '2014'
+WHERE lower(src.name) = 'dnd5e'
+ON CONFLICT DO NOTHING;
+
+INSERT INTO dndshare.content_source (
+    source_id, native_source_version_id, name, code, description, kind,
+    is_default, sort_order, legacy_suggest_id
+)
+SELECT DISTINCT
+    src.id,
+    sv.id,
+    CASE upper(sg.value)
+      WHEN 'PHB' THEN 'Player''s Handbook'
+      WHEN 'XGE' THEN 'Xanathar''s Guide to Everything'
+      WHEN 'TCE' THEN 'Tasha''s Cauldron of Everything'
+      WHEN 'FTD' THEN 'Fizban''s Treasury of Dragons'
+      WHEN 'SCAG' THEN 'Sword Coast Adventurer''s Guide'
+      WHEN 'BMT' THEN 'The Book of Many Things'
+      WHEN 'IDROTF' THEN 'Icewind Dale: Rime of the Frostmaiden'
+      WHEN 'EGTW' THEN 'Explorer''s Guide to Wildemount'
+      WHEN 'AI' THEN 'Acquisitions Incorporated'
+      WHEN 'LLK' THEN 'Lost Laboratory of Kwalish'
+      ELSE sg.value
+    END,
+    upper(sg.value),
+    COALESCE(NULLIF(btrim(sg."desc"), ''),
+      CASE upper(sg.value)
+        WHEN 'PHB' THEN 'Основная книга правил для создания персонажей D&D пятой редакции.'
+        WHEN 'XGE' THEN 'Официальное дополнение с подклассами, заклинаниями, чертами и расширенными правилами.'
+        WHEN 'TCE' THEN 'Официальное дополнение с вариантами классов, подклассами, чертами и заклинаниями.'
+        WHEN 'FTD' THEN 'Официальное дополнение о драконах с вариантами персонажей, заклинаниями и сокровищами.'
+        WHEN 'SCAG' THEN 'Путеводитель по Побережью Мечей с вариантами персонажей и региональным материалом.'
+        WHEN 'BMT' THEN 'Официальное дополнение, посвящённое Колоде многих вещей и связанным вариантам персонажей.'
+        WHEN 'IDROTF' THEN 'Приключение в Долине Ледяного Ветра с дополнительным игровым материалом.'
+        WHEN 'EGTW' THEN 'Сеттинг-путеводитель по Уайлдмаунту с вариантами персонажей и заклинаниями.'
+        WHEN 'AI' THEN 'Официальное дополнение для кампаний Acquisitions Incorporated.'
+        WHEN 'LLK' THEN 'Приключение Lost Laboratory of Kwalish с дополнительным игровым материалом.'
+        ELSE 'Дополнительный источник материалов для D&D пятой редакции.'
+      END),
+    CASE
+      WHEN upper(sg.value) IN ('PHB', 'DMF5E') THEN 'base'
+      WHEN upper(sg.value) LIKE 'UA%' THEN 'third_party'
+      ELSE 'addon'
+    END,
+    upper(sg.value) = 'PHB',
+    CASE WHEN upper(sg.value) = 'PHB' THEN 0 ELSE 100 END,
+    sg.id
+FROM dndshare.suggest sg
+JOIN dndshare.suggest_type st ON st.id = sg.type_id
+JOIN dndshare."source" src ON src.id = st.source_id
+LEFT JOIN dndshare.source_version sv ON sv.source_id = src.id AND lower(sv.version) = '2014'
+WHERE lower(st.name) = lower('Источники')
+  AND EXISTS (
+    SELECT 1 FROM dndshare.item i
+    WHERE i.data ->> 'sourceId' = sg.id::text
+  )
+ON CONFLICT DO NOTHING;
+
+-- PHB is seeded above before the legacy catalogue is inspected, so attach its
+-- old suggest id separately. Matching the native edition prevents a future
+-- PHB 2024 row from being mistaken for the 2014 publication.
+UPDATE dndshare.content_source cs
+SET legacy_suggest_id = COALESCE(cs.legacy_suggest_id, sg.id),
+    description = COALESCE(cs.description, NULLIF(btrim(sg."desc"), ''))
+FROM dndshare.suggest sg
+JOIN dndshare.suggest_type st ON st.id = sg.type_id
+JOIN dndshare."source" src ON src.id = st.source_id
+LEFT JOIN dndshare.source_version sv ON sv.source_id = src.id AND lower(sv.version) = '2014'
+WHERE lower(st.name) = lower('Источники')
+  AND cs.source_id = src.id
+  AND cs.native_source_version_id IS NOT DISTINCT FROM sv.id
+  AND upper(cs.code) = upper(sg.value)
+  AND EXISTS (
+    SELECT 1 FROM dndshare.item i
+    WHERE i.data ->> 'sourceId' = sg.id::text
+  );
+
+-- Native compatibility always exists. When a 2024 edition is added, 2014
+-- supplements become compatible by default while the old core PHB is Legacy.
+INSERT INTO dndshare.content_source_compatibility (content_source_id, source_version_id, status)
+SELECT cs.id, cs.native_source_version_id, 'native'
+FROM dndshare.content_source cs
+WHERE cs.native_source_version_id IS NOT NULL
+ON CONFLICT (content_source_id, source_version_id) DO NOTHING;
+
+INSERT INTO dndshare.content_source_compatibility (content_source_id, source_version_id, status)
+SELECT cs.id, target.id,
+       CASE WHEN upper(cs.code) = 'PHB' THEN 'legacy' ELSE 'compatible' END
+FROM dndshare.content_source cs
+JOIN dndshare.source_version native ON native.id = cs.native_source_version_id AND lower(native.version) = '2014'
+JOIN dndshare.source_version target ON target.source_id = cs.source_id AND lower(target.version) = '2024'
+ON CONFLICT (content_source_id, source_version_id) DO NOTHING;
+
+INSERT INTO dndshare.item_content_source (item_id, content_source_id, page, primary_source)
+SELECT i.id, cs.id,
+       CASE WHEN (i.data ->> 'source_page') ~ '^[0-9]+$' THEN (i.data ->> 'source_page')::int ELSE NULL END,
+       true
+FROM dndshare.item i
+JOIN dndshare.item_type it ON it.id = i.type_id
+JOIN dndshare.content_source cs ON cs.source_id = it.source_id
+WHERE cs.legacy_suggest_id IS NOT NULL
+  AND i.data ->> 'sourceId' = cs.legacy_suggest_id::text
+ON CONFLICT (item_id, content_source_id) DO NOTHING;
+
+-- Existing non-spell D&D catalogues predate source metadata and currently
+-- contain the core 2014 roster. Backfill them exactly once; newly created items
+-- are assigned explicitly by ItemEditModal and are never guessed on restart.
+CREATE TABLE IF NOT EXISTS dndshare.schema_data_migration (
+    code       varchar NOT NULL,
+    applied_at timestamptz DEFAULT now() NOT NULL,
+    CONSTRAINT schema_data_migration_pk PRIMARY KEY (code)
+);
+WITH marker AS (
+    INSERT INTO dndshare.schema_data_migration (code)
+    SELECT 'content-sources-core-2014-v1'
+    WHERE EXISTS (
+        SELECT 1
+        FROM dndshare.content_source cs
+        JOIN dndshare."source" src ON src.id = cs.source_id
+        WHERE lower(src.name) = 'dnd5e' AND upper(cs.code) = 'PHB'
+    )
+      AND EXISTS (
+        SELECT 1 FROM dndshare.item WHERE type_id IN (1, 2, 3, 4, 7, 8, 9, 10, 11)
+    )
+    ON CONFLICT (code) DO NOTHING
+    RETURNING code
+)
+INSERT INTO dndshare.item_content_source (item_id, content_source_id, primary_source)
+SELECT i.id, cs.id, true
+FROM marker
+JOIN dndshare."source" src ON lower(src.name) = 'dnd5e'
+JOIN dndshare.content_source cs ON cs.source_id = src.id AND upper(cs.code) = 'PHB'
+JOIN dndshare.item_type it ON it.source_id = src.id
+JOIN dndshare.item i ON i.type_id = it.id AND i.user_id IS NULL
+WHERE i.type_id IN (1, 2, 3, 4, 7, 8, 9, 10, 11)
+  AND NOT EXISTS (SELECT 1 FROM dndshare.item_content_source existing WHERE existing.item_id = i.id)
+ON CONFLICT (item_id, content_source_id) DO NOTHING;
+
+-- Source metadata is now common to every item type and edited through
+-- item_content_source, not through spell-specific JSON fields.
+UPDATE dndshare.item_type
+SET fields = COALESCE((
+    SELECT jsonb_agg(field ORDER BY ord)
+    FROM jsonb_array_elements(fields) WITH ORDINALITY AS rows(field, ord)
+    WHERE field ->> 'key' NOT IN ('sourceId', 'source_kind')
+), '[]'::jsonb)
+WHERE id = 5
+  AND fields IS NOT NULL
+  AND jsonb_typeof(fields) = 'array'
+  AND EXISTS (
+    SELECT 1 FROM jsonb_array_elements(fields) field
+    WHERE field ->> 'key' IN ('sourceId', 'source_kind')
+  );
 
 CREATE TABLE IF NOT EXISTS dndshare.dictionary_text (
     id     bigserial NOT NULL,

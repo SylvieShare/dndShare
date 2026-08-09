@@ -53,21 +53,6 @@
     "filter": true
   },
   {
-    "name": "Источник",
-    "key": "sourceId",
-    "type": "suggest",
-    "suggest_id": 8,
-    "filter": true
-  },
-  {
-    "name": "Тип источника",
-    "key": "source_kind",
-    "type": "text",
-    "filter": true,
-    "filter_values": ["base", "addon", "third"],
-    "filter_labels": { "base": "База (PHB)", "addon": "Дополнение", "third": "Стороннее" }
-  },
-  {
     "name": "Компоненты",
     "key": "components",
     "type": "object",

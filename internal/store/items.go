@@ -14,15 +14,17 @@ import (
 
 // Item — строка dndshare.item (порт model/Item.kt). svg заполняется только в GetByIds.
 type Item struct {
-	ID        int64           `json:"id"`
-	UserID    *int64          `json:"userId,omitempty"`
-	Name      string          `json:"name"`
-	NameEn    *string         `json:"nameEn,omitempty"`
-	Data      json.RawMessage `json:"data"`
-	TypeID    int64           `json:"typeId"`
-	CreatedAt time.Time       `json:"createdAt"`
-	ParentID  *int64          `json:"parentId,omitempty"`
-	SVG       *string         `json:"svg,omitempty"`
+	ID               int64              `json:"id"`
+	UserID           *int64             `json:"userId,omitempty"`
+	Name             string             `json:"name"`
+	NameEn           *string            `json:"nameEn,omitempty"`
+	Data             json.RawMessage    `json:"data"`
+	TypeID           int64              `json:"typeId"`
+	CreatedAt        time.Time          `json:"createdAt"`
+	ParentID         *int64             `json:"parentId,omitempty"`
+	SVG              *string            `json:"svg,omitempty"`
+	ContentSourceIDs []int64            `json:"contentSourceIds"`
+	ContentSources   []ContentSourceRef `json:"contentSources"`
 }
 
 // ItemType — строка dndshare.item_type (порт model/ItemType.kt). count дублирует countItems.
@@ -94,25 +96,40 @@ func collectItems(rows pgx.Rows) ([]Item, error) {
 }
 
 // FindChildren — дети по parent_id (подрасы/архетипы).
-func (s *Store) FindChildren(ctx context.Context, parentID int64) ([]Item, error) {
+func (s *Store) FindChildren(ctx context.Context, parentID int64, scope ContentScope) ([]Item, error) {
+	args := []any{parentID}
+	where := []string{"i.parent_id = $1"}
+	where = appendContentScopeSQL(where, &args, scope)
 	rows, err := s.pool.Query(ctx,
-		"SELECT "+itemColumns+" FROM dndshare.item WHERE parent_id = $1 ORDER BY name, id",
-		parentID,
+		"SELECT "+prefixedItemColumns("i")+" FROM dndshare.item i WHERE "+strings.Join(where, " AND ")+" ORDER BY i.name, i.id",
+		args...,
 	)
 	if err != nil {
 		return nil, err
 	}
-	return collectItems(rows)
+	items, err := collectItems(rows)
+	if err != nil {
+		return nil, err
+	}
+	return s.AttachItemContentSources(ctx, items)
 }
 
 // GetByTypeAndUser — базовые + пользовательские предметы типа с фильтрами/пагинацией.
-func (s *Store) GetByTypeAndUser(ctx context.Context, typeID int64, userID *int64, limit, offset int, filters []ItemFilter) ([]Item, error) {
-	return s.searchItems(ctx, typeID, nil, userID, limit, offset, filters)
+func (s *Store) GetByTypeAndUser(ctx context.Context, typeID int64, userID *int64, limit, offset int, filters []ItemFilter, scope ContentScope) ([]Item, error) {
+	return s.searchItems(ctx, typeID, nil, userID, limit, offset, filters, scope)
 }
 
 // SearchByTypeAndName — то же, но с ILIKE-поиском по имени.
-func (s *Store) SearchByTypeAndName(ctx context.Context, typeID int64, q string, userID *int64, limit, offset int, filters []ItemFilter) ([]Item, error) {
-	return s.searchItems(ctx, typeID, &q, userID, limit, offset, filters)
+func (s *Store) SearchByTypeAndName(ctx context.Context, typeID int64, q string, userID *int64, limit, offset int, filters []ItemFilter, scope ContentScope) ([]Item, error) {
+	return s.searchItems(ctx, typeID, &q, userID, limit, offset, filters, scope)
+}
+
+func prefixedItemColumns(alias string) string {
+	parts := strings.Split(itemColumns, ", ")
+	for i := range parts {
+		parts[i] = alias + "." + parts[i]
+	}
+	return strings.Join(parts, ", ")
 }
 
 var pathSegmentRegex = regexp.MustCompile(`^[A-Za-z_][A-Za-z0-9_]*$`)
@@ -150,37 +167,39 @@ func nestedSingletonJson(path []string, leaf any) any {
 	return current
 }
 
-func (s *Store) searchItems(ctx context.Context, typeID int64, q *string, userID *int64, limit, offset int, filters []ItemFilter) ([]Item, error) {
+func (s *Store) searchItems(ctx context.Context, typeID int64, q *string, userID *int64, limit, offset int, filters []ItemFilter, scope ContentScope) ([]Item, error) {
 	args := []any{}
 	add := func(v any) string {
 		args = append(args, v)
 		return fmt.Sprintf("$%d", len(args))
 	}
-	where := []string{"type_id = " + add(typeID)}
+	where := []string{"i.type_id = " + add(typeID)}
 
 	if userID != nil {
-		where = append(where, "(user_id = "+add(*userID)+" OR user_id IS NULL)")
+		where = append(where, "(i.user_id = "+add(*userID)+" OR i.user_id IS NULL)")
 	} else {
-		where = append(where, "user_id IS NULL")
+		where = append(where, "i.user_id IS NULL")
 	}
 
 	if q != nil && strings.TrimSpace(*q) != "" {
-		where = append(where, "name ILIKE "+add("%"+*q+"%"))
+		where = append(where, "i.name ILIKE "+add("%"+*q+"%"))
 	}
+
+	where = appendContentScopeSQL(where, &args, scope)
 
 	for _, filter := range filters {
 		path := parseFilterPath(filter.Key)
 		if path == nil {
 			continue
 		}
-		textExtract := textExtractSqlForPath(path)
+		textExtract := strings.Replace(textExtractSqlForPath(path), "data", "i.data", 1)
 
 		switch filter.Type {
 		case "suggest_array":
 			parts := []string{}
 			for _, value := range filter.Values {
 				raw, _ := json.Marshal(nestedSingletonJson(path, []any{value}))
-				parts = append(parts, "data @> "+add(string(raw))+"::jsonb")
+				parts = append(parts, "i.data @> "+add(string(raw))+"::jsonb")
 			}
 			if len(parts) > 0 {
 				where = append(where, "("+strings.Join(parts, " OR ")+")")
@@ -194,7 +213,7 @@ func (s *Store) searchItems(ctx context.Context, typeID int64, q *string, userID
 			arrayParts := []string{}
 			for _, value := range filter.Values {
 				raw, _ := json.Marshal(nestedSingletonJson(path, []any{value}))
-				arrayParts = append(arrayParts, "data @> "+add(string(raw))+"::jsonb")
+				arrayParts = append(arrayParts, "i.data @> "+add(string(raw))+"::jsonb")
 			}
 			all := append([]string{scalarCondition}, arrayParts...)
 			where = append(where, "("+strings.Join(all, " OR ")+")")
@@ -209,13 +228,73 @@ func (s *Store) searchItems(ctx context.Context, typeID int64, q *string, userID
 		}
 	}
 
-	sql := "SELECT " + itemColumns + " FROM dndshare.item WHERE " + strings.Join(where, " AND ") +
-		" ORDER BY name, id LIMIT " + add(limit) + " OFFSET " + add(offset)
+	sql := "SELECT " + prefixedItemColumns("i") + " FROM dndshare.item i WHERE " + strings.Join(where, " AND ") +
+		" ORDER BY i.name, i.id LIMIT " + add(limit) + " OFFSET " + add(offset)
 	rows, err := s.pool.Query(ctx, sql, args...)
 	if err != nil {
 		return nil, err
 	}
-	return collectItems(rows)
+	items, err := collectItems(rows)
+	if err != nil {
+		return nil, err
+	}
+	return s.AttachItemContentSources(ctx, items)
+}
+
+func appendContentScopeSQL(where []string, args *[]any, scope ContentScope) []string {
+	if !scope.RestrictToIDs && scope.SourceVersionID == nil {
+		return where
+	}
+	add := func(v any) string {
+		*args = append(*args, v)
+		return fmt.Sprintf("$%d", len(*args))
+	}
+	selectedCondition := "TRUE"
+	if len(scope.IDs) > 0 {
+		selectedCondition = "ics.content_source_id = ANY(" + add(scope.IDs) + ")"
+	} else if scope.RestrictToIDs {
+		selectedCondition = "FALSE"
+	}
+	compatibility := "TRUE"
+	if scope.SourceVersionID != nil {
+		target := add(*scope.SourceVersionID)
+		effective := `COALESCE(ivc.status,
+		  CASE WHEN cs.native_source_version_id = ` + target + ` THEN 'native' ELSE csc.status END,
+		  'blocked')`
+		compatibility = effective + " <> 'blocked'"
+		if !scope.AllowLegacy {
+			compatibility += " AND " + effective + " <> 'legacy'"
+		}
+		compatibility = `(` + compatibility + `)
+		  AND (ivc.item_id IS NOT NULL OR cs.native_source_version_id = ` + target + ` OR csc.content_source_id IS NOT NULL)`
+	}
+	where = append(where, `(
+	  i.user_id IS NOT NULL
+	  OR NOT EXISTS (SELECT 1 FROM dndshare.item_content_source unassigned WHERE unassigned.item_id = i.id)
+	  OR EXISTS (
+	    SELECT 1
+	      FROM dndshare.item_content_source ics
+	      JOIN dndshare.content_source cs ON cs.id = ics.content_source_id
+	      LEFT JOIN dndshare.item_version_compatibility ivc
+	        ON ivc.item_id = i.id`+func() string {
+		if scope.SourceVersionID == nil {
+			return " AND false"
+		}
+		return " AND ivc.source_version_id = " + fmt.Sprintf("$%d", len(*args))
+	}()+`
+	      LEFT JOIN dndshare.content_source_compatibility csc
+	        ON csc.content_source_id = cs.id`+func() string {
+		if scope.SourceVersionID == nil {
+			return " AND false"
+		}
+		return " AND csc.source_version_id = " + fmt.Sprintf("$%d", len(*args))
+	}()+`
+	     WHERE ics.item_id = i.id
+		       AND `+selectedCondition+`
+	       AND `+compatibility+`
+	  )
+	)`)
+	return where
 }
 
 // GetByIds — предметы по списку id, с svg из svg_storage (JOIN по svg_id).
@@ -256,7 +335,10 @@ func (s *Store) GetByIds(ctx context.Context, ids []int64) ([]Item, error) {
 		it.SVG = svg
 		out = append(out, it)
 	}
-	return out, rows.Err()
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return s.AttachItemContentSources(ctx, out)
 }
 
 // SearchByTypesAndName — поиск сразу по нескольким типам (для search-multi).
@@ -287,7 +369,11 @@ func (s *Store) SearchByTypesAndName(ctx context.Context, typeIDs []int64, q str
 	if err != nil {
 		return nil, err
 	}
-	return collectItems(rows)
+	items, err := collectItems(rows)
+	if err != nil {
+		return nil, err
+	}
+	return s.AttachItemContentSources(ctx, items)
 }
 
 // FindBaseByTypeAndNameEn — базовый предмет по типу и nameEn (case-insensitive). ErrNotFound если нет.

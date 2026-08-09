@@ -208,12 +208,12 @@ const TabPane = {
 
 const {
   loading, template, data, charCtx, isOwner, publicVisible,
-  version, sessions, topSession, hasActiveSession,
+  version, sourceVersionId, contentSources, sessions, topSession, hasActiveSession,
   loadSessions, pollVersion, refreshFromServer,
   activeTabs, toolbarTabs, mobileTabs,
   headerTitle, charName, charSub, toolbarBlocksList, commonMobileBlockNode, commonMobileScrollHide,
   load, loadSync, blocksForTab, containerWidthForTab, getInitialTabs,
-  updateValue, updateVar, onPublicToggle, invalidateTabCache,
+  updateValue, updateVar, updateContentSources, onPublicToggle, invalidateTabCache,
 } = useCharacterData(uuid, isMobile)
 
 // Apply the list seed synchronously in setup so the expand overlay renders with
@@ -232,6 +232,12 @@ Object.assign(charCtx, {
   canTogglePublic: isOwner,
   saveStatus,
   pendingSecondsLeft,
+  sourceVersionId,
+  contentSources,
+  setContentSources: value => {
+    updateContentSources(value)
+    scheduleSave()
+  },
   sessions,
   topSession,
 })

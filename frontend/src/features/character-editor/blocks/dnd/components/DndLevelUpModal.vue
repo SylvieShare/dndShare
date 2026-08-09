@@ -236,7 +236,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, inject, onMounted, ref, watch } from 'vue'
 import AppModal from '@/shared/ui/AppModal'
 import FeatChoiceModal from '@/features/character-editor/components/FeatChoiceModal.vue'
 import FormNumberInput from '@/shared/ui/form/FormNumberInput'
@@ -264,6 +264,7 @@ import { SKILL_BY_STAT } from '@/features/character-editor/settings/dnd/creation
 import { featuresForBinding } from '@/features/character-editor/settings/dnd/creation/progression'
 import { fetchGet } from '@/shared/api/http'
 import { itemsApi } from '@/shared/api/itemsApi'
+import { contentScopeQuery } from '@/shared/api/contentSourcesApi'
 import { useDiceStore } from '@/stores/dice'
 import { useSuggestStore } from '@/stores/suggest'
 
@@ -276,6 +277,8 @@ const emit = defineEmits(['close', 'apply'])
 
 const dice = useDiceStore()
 const suggestStore = useSuggestStore()
+const charCtx = inject('charCtx', {})
+const sourceSuffix = () => contentScopeQuery(charCtx.contentSources, charCtx.sourceVersionId)
 suggestStore.ensure(11)
 ;[3, 4, 5, 6, 15, 16].forEach((typeId) => suggestStore.ensure(typeId))
 
@@ -596,7 +599,7 @@ async function loadSubclasses(cls, currentLevel) {
   const d = cls?.data || {}
   const at = Number(d.subclass_level) || 99
   if (at > currentLevel) return
-  const res = await fetchGet(`/items/children?parentId=${cls.id}`)
+  const res = await fetchGet(`/items/children?parentId=${cls.id}${sourceSuffix()}`)
   subclassOptions.value = (res?.items || []).filter((i) => i.typeId === CLASS_TYPE)
 }
 
@@ -798,8 +801,8 @@ onMounted(async () => {
     entries.value.forEach((e) => { ids.add(e.id); if (e.subclass) ids.add(e.subclass.id) })
     const [byIds, abils, classes] = await Promise.all([
       ids.size ? itemsApi.byIds([...ids]) : Promise.resolve({ items: [] }),
-      fetchGet(`/items?typeId=${CLASS_ABIL_TYPE}&limit=500`),
-      fetchGet(`/items?typeId=${CLASS_TYPE}&limit=300`),
+      fetchGet(`/items?typeId=${CLASS_ABIL_TYPE}&limit=500${sourceSuffix()}`),
+      fetchGet(`/items?typeId=${CLASS_TYPE}&limit=300${sourceSuffix()}`),
     ])
     const map = {}
     ;(byIds?.items || []).forEach((it) => { map[it.id] = it })

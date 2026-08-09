@@ -87,7 +87,7 @@ const wz = useDndCreateWizard()
 provide('createWizard', wz)
 
 const {
-  state, load, buildPayload, restore, clearPersist, reset,
+  state, load, buildPayload, restore, clearPersist, reset, setSourceVersionId,
   requiresSubrace, requiresSubclass,
   scoresComplete, pointsLeft, skillLimit, spellsComplete,
   asiChoiceComplete, raceVariantsComplete,
@@ -110,6 +110,7 @@ const creating = ref(false)
 const dndTemplateId = ref(null)
 const dndSource = ref(null)
 const sourceVersionId = computed(() => findSourceVersion(dndSource.value, state.version)?.id ?? null)
+watch(sourceVersionId, (id) => setSourceVersionId(id), { immediate: true })
 
 // Race/class choices are made inline on their own steps (skills, feature choices
 // and spells are folded into the Class step; race choices into Race). Снаряжение
@@ -221,11 +222,13 @@ async function submit() {
 
 onMounted(async () => {
   useAccountStore().ensureAuth()
-  load()
-  restore()
   const [, sourcesRes] = await Promise.all([templateStore.ensure(), fetchGet('/sources')])
   dndTemplateId.value = templateStore.all.find((t) => resolveSetting(t)?.system === 'dnd5e')?.id ?? null
   dndSource.value = (sourcesRes?.sources || []).find((source) => source.name.toLowerCase() === 'dnd5e') || null
+  setSourceVersionId(sourceVersionId.value)
+  await load()
+  await restore()
+  await load()
 })
 </script>
 

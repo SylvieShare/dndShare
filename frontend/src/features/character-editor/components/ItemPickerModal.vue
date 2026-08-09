@@ -129,8 +129,9 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, inject, onMounted, ref, watch } from 'vue'
 import { fetchGet } from '@/shared/api/http'
+import { contentScopeQuery } from '@/shared/api/contentSourcesApi'
 import HandbookItemDetail from '@/features/handbook/components/HandbookItemDetail'
 import SvgIcon from '@/shared/ui/SvgIcon'
 import HandbookItemList from '@/features/handbook/components/HandbookItemList'
@@ -150,10 +151,18 @@ const props = defineProps({
   createShowNameEn: { type: Boolean, default: false },
   itemEligibility: { type: Function, default: null },
   zIndex: { type: Number, default: 3000 },
+  contentSources: { type: Object, default: null },
+  sourceVersionId: { type: [Number, String], default: null },
 })
 
 const emit = defineEmits(['close', 'pick'])
 const quantity = ref(1)
+const charCtx = inject('charCtx', null)
+const createWizard = inject('createWizard', null)
+const effectiveContentSources = computed(() =>
+  props.contentSources || createWizard?.state?.contentSources || charCtx?.contentSources || null)
+const effectiveSourceVersionId = computed(() =>
+  props.sourceVersionId ?? createWizard?.sourceVersionId?.value ?? createWizard?.sourceVersionId ?? charCtx?.sourceVersionId ?? null)
 
 const allTypes = ref([])
 const activeTypeId = ref(props.itemTypeIds[0] ?? null)
@@ -227,9 +236,10 @@ async function fetchItems(q, append = false) {
   else { loading.value = true; hasMore.value = false }
   try {
     const lq = `&limit=${PAGE_SIZE}&offset=${off}`
+    const sourceQ = contentScopeQuery(effectiveContentSources.value, effectiveSourceVersionId.value)
     const url = q.trim()
-      ? `/items/search?typeId=${activeTypeId.value}&q=${encodeURIComponent(q.trim())}${lq}`
-      : `/items?typeId=${activeTypeId.value}${lq}`
+      ? `/items/search?typeId=${activeTypeId.value}&q=${encodeURIComponent(q.trim())}${lq}${sourceQ}`
+      : `/items?typeId=${activeTypeId.value}${lq}${sourceQ}`
     const res = await fetchGet(url)
     if (id !== reqSeq) return
     const next = res?.items || []
@@ -257,6 +267,12 @@ watch(searchQ, (val) => {
   clearTimeout(searchTimer)
   searchTimer = setTimeout(() => fetchItems(val), 280)
 })
+
+watch([effectiveContentSources, effectiveSourceVersionId], () => {
+  selectedItem.value = null
+  items.value = []
+  fetchItems(searchQ.value)
+}, { deep: true })
 
 function pick() {
   if (!selectedItem.value || !selectedEligibility.value.eligible) return
