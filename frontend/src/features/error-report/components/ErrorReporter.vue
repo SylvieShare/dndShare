@@ -141,7 +141,6 @@ const highlight = reactive({ visible: false, top: 0, left: 0, width: 0, height: 
 let hoveredElement = null
 let toastTimer = null
 let screenshotGeneration = 0
-let selectedDOMElement = null
 const screenshotContextElements = ref([])
 
 const highlightStyle = computed(() => ({
@@ -225,7 +224,6 @@ function onElementClick(event) {
   event.stopImmediatePropagation()
 
   selectedElement.value = describeElement(target)
-  selectedDOMElement = target
   screenshotContextElements.value = screenshotContextsFor(target)
   screenshotContextLevel.value = 0
   updateScreenshotContextMetadata()
@@ -300,10 +298,7 @@ async function changeScreenshotContext(delta) {
     const contextElement = screenshotContextElements.value[nextLevel]
     if (!contextElement?.isConnected) throw new Error('context element detached')
     const rect = contextElement.getBoundingClientRect()
-    screenshotDataURL.value = await withSelectedMarker(
-      contextElement,
-      () => withTimeout(captureSelectedElement(contextElement, rect), 7000),
-    )
+    screenshotDataURL.value = await withTimeout(captureSelectedElement(contextElement, rect), 7000)
   } catch {
     if (generation === screenshotGeneration) {
       screenshotContextLevel.value = previousLevel
@@ -334,28 +329,6 @@ function updateScreenshotContextMetadata() {
     screenshotContextLevel: screenshotContextLevel.value,
     screenshotContextSelector: contextElement ? selectorFor(contextElement) : selectedElement.value.selector,
   }
-}
-
-async function withSelectedMarker(contextElement, capture) {
-  if (!selectedDOMElement || contextElement === selectedDOMElement) return capture()
-  const style = selectedDOMElement.style
-  const outline = style.getPropertyValue('outline')
-  const outlinePriority = style.getPropertyPriority('outline')
-  const outlineOffset = style.getPropertyValue('outline-offset')
-  const outlineOffsetPriority = style.getPropertyPriority('outline-offset')
-  style.setProperty('outline', '3px solid #ff6b6b', 'important')
-  style.setProperty('outline-offset', '2px', 'important')
-  try {
-    return await capture()
-  } finally {
-    restoreStyleProperty(style, 'outline', outline, outlinePriority)
-    restoreStyleProperty(style, 'outline-offset', outlineOffset, outlineOffsetPriority)
-  }
-}
-
-function restoreStyleProperty(style, name, value, priority) {
-  if (value) style.setProperty(name, value, priority)
-  else style.removeProperty(name)
 }
 
 async function captureViewport() {
@@ -569,7 +542,6 @@ function resetScreenshot() {
   screenshotError.value = ''
   screenshotContextLevel.value = 0
   screenshotContextElements.value = []
-  selectedDOMElement = null
 }
 
 function showToast(message) {
