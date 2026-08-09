@@ -87,6 +87,19 @@ CREATE INDEX IF NOT EXISTS idx_error_report_created_at ON dndshare.error_report 
 CREATE INDEX IF NOT EXISTS idx_error_report_user_id ON dndshare.error_report USING btree (user_id);
 CREATE INDEX IF NOT EXISTS idx_error_report_approved_created_at ON dndshare.error_report USING btree (created_at DESC) WHERE approved;
 
+CREATE TABLE IF NOT EXISTS dndshare.error_report_message (
+    id             bigserial NOT NULL,
+    error_report_id int8 NOT NULL REFERENCES dndshare.error_report(id) ON DELETE CASCADE,
+    sender         varchar(20) NOT NULL,
+    message        text NOT NULL,
+    admin_user_id  int8 NULL REFERENCES dndshare.users(id) ON DELETE SET NULL,
+    created_at     timestamptz DEFAULT now() NOT NULL,
+    CONSTRAINT error_report_message_pk PRIMARY KEY (id),
+    CONSTRAINT error_report_message_sender_check CHECK (sender IN ('AI', 'ADMIN'))
+);
+CREATE INDEX IF NOT EXISTS idx_error_report_message_report_id_id
+    ON dndshare.error_report_message USING btree (error_report_id, id);
+
 CREATE TABLE IF NOT EXISTS dndshare.error_report_automation_lock (
     id          int2 NOT NULL DEFAULT 1,
     token       varchar(64) NOT NULL,

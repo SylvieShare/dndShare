@@ -55,6 +55,7 @@ Do not spread endpoint strings directly through components when adding new behav
 - `GET /api/admin-panel/error-reports?limit=200&offset=0` — `ADMIN` list, newest first.
 - `GET /api/admin-panel/error-reports/{id}/screenshot` — `ADMIN` raw attached image.
 - `PATCH /api/admin-panel/error-reports/{id}/approval` — `ADMIN` sets `{ approved: boolean }`, controlling MCP visibility.
+- `POST /api/admin-panel/error-reports/{id}/messages` — `ADMIN` answers the latest AI question with `{ message }`; the report becomes actionable through MCP again.
 - `DELETE /api/admin-panel/error-reports/{id}` — `ADMIN` deletion of one report.
 
 See `md/features/error-reports.md` for the selector payload and validation limits.

@@ -30,6 +30,16 @@ dropped. **Never create new objects in `base`.**
 
 Indexes cover newest-first listing (`created_at DESC`), approved newest-first MCP listing, and the optional reporter (`user_id`). See `md/features/error-reports.md` for the API and payload.
 
+`dndshare.error_report_message` stores the feedback thread for a report:
+
+- `error_report_id` references `error_report(id)` with `ON DELETE CASCADE`;
+- `sender` is `AI` for a neural question or `ADMIN` for a human answer;
+- `message text` stores the question/answer;
+- nullable `admin_user_id` identifies the answering administrator;
+- `created_at` and the monotonic `id` define conversation order.
+
+For MCP listing, a report is actionable only when it is approved and its latest message is not an unanswered `AI` question. A following `ADMIN` message returns it to the MCP queue.
+
 `dndshare.error_report_automation_lock` is a singleton lease row (`id = 1`) used by scheduled MCP consumers. It stores an unguessable owner token plus acquisition and expiration timestamps. Atomic `INSERT ... ON CONFLICT DO UPDATE ... WHERE expires_at <= now()` prevents concurrent automation runs; expired leases are replaceable.
 
 ## Systems and rules editions

@@ -43,3 +43,7 @@ export function deleteErrorReport(id) {
 export function setErrorReportApproval(id, approved) {
   return fetchPatch(`/admin-panel/error-reports/${id}/approval`, { approved })
 }
+
+export function answerErrorReport(id, message) {
+  return fetchPost(`/admin-panel/error-reports/${id}/messages`, { message })
+}

@@ -50,3 +50,19 @@ func TestDecodeErrorReportScreenshotRejectsInvalidAndOversizedData(t *testing.T)
 		t.Fatal("expected oversized screenshot to fail")
 	}
 }
+
+func TestNormalizeErrorReportMessage(t *testing.T) {
+	message, err := normalizeErrorReportMessage("  Что должно происходить после нажатия?  ")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if message != "Что должно происходить после нажатия?" {
+		t.Fatalf("unexpected normalized message: %q", message)
+	}
+	if _, err := normalizeErrorReportMessage("   "); err == nil {
+		t.Fatal("expected blank message to fail")
+	}
+	if _, err := normalizeErrorReportMessage(strings.Repeat("я", maxErrorReportMessageRunes+1)); err == nil {
+		t.Fatal("expected oversized message to fail")
+	}
+}

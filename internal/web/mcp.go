@@ -346,6 +346,34 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 		}
 		return fmt.Sprintf("deleted error report %d", id), nil
 
+	case "error_report_question_create":
+		if err := s.mcpRequireWrite(); err != nil {
+			return nil, err
+		}
+		id, err := argInt64(args, "id")
+		if err != nil {
+			return nil, err
+		}
+		question, err := argString(args, "question")
+		if err != nil {
+			return nil, err
+		}
+		question, err = normalizeErrorReportMessage(question)
+		if err != nil {
+			return nil, err
+		}
+		created, err := s.store.CreateErrorReportAIQuestion(ctx, id, question)
+		if err != nil {
+			if errors.Is(err, store.ErrNotFound) {
+				return nil, fmt.Errorf("approved error report %d not found", id)
+			}
+			if errors.Is(err, store.ErrErrorReportAwaitingAnswer) {
+				return nil, fmt.Errorf("error report %d is already awaiting an admin answer", id)
+			}
+			return nil, err
+		}
+		return created, nil
+
 	case "error_report_screenshot":
 		id, err := argInt64(args, "id")
 		if err != nil {
@@ -775,7 +803,7 @@ func mcpToolDefs() []map[string]any {
 				"limit": intP("Max rows, 1..100 (default 20)"),
 			}, "q")),
 		tool("error_reports_list",
-			"List admin-approved user-submitted page error reports, newest first. Unapproved reports are not exposed through MCP. Includes description, page URL, selected element metadata with a semantic class-based CSS selector and visible text, userId/userLogin (null for guests), hasScreenshot, screenshotContentType, and creation time.",
+			"List actionable admin-approved page error reports, newest first. Unapproved reports and reports whose latest feedback message is an unanswered AI question are not exposed. A report becomes visible again after an admin answer. Includes the full feedback message history, description, page URL, selected element metadata, userId/userLogin (null for guests), screenshot metadata, and creation time.",
 			schema(map[string]any{
 				"limit":  intP("Max rows, 1..500 (default 100)"),
 				"offset": intP("Offset for pagination (default 0)"),
@@ -801,6 +829,12 @@ func mcpToolDefs() []map[string]any {
 			schema(map[string]any{
 				"id": intP("Error report id"),
 			}, "id")),
+		tool("error_report_question_create",
+			"Ask an admin a question when an approved error report cannot be handled confidently. After this call the report is hidden from error_reports_list until an admin answers. Ask one concrete question that explains exactly which missing fact or decision blocks the fix. Requires MCP write operations to be enabled.",
+			schema(map[string]any{
+				"id":       intP("Error report id"),
+				"question": strP("Concrete question for the administrator, 1..4000 characters"),
+			}, "id", "question")),
 		tool("error_report_screenshot",
 			"Fetch the screenshot attached to one admin-approved page error report as base64. Use hasScreenshot from error_reports_list before calling it.",
 			schema(map[string]any{

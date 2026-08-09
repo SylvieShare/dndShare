@@ -21,6 +21,7 @@ func (s *Server) routesErrorReports(mux *http.ServeMux) {
 	mux.HandleFunc("GET /api/admin-panel/error-reports", s.handleAdminErrorReports)
 	mux.HandleFunc("GET /api/admin-panel/error-reports/{id}/screenshot", s.handleAdminErrorReportScreenshot)
 	mux.HandleFunc("PATCH /api/admin-panel/error-reports/{id}/approval", s.handleAdminSetErrorReportApproval)
+	mux.HandleFunc("POST /api/admin-panel/error-reports/{id}/messages", s.handleAdminAnswerErrorReport)
 	mux.HandleFunc("DELETE /api/admin-panel/error-reports/{id}", s.handleAdminDeleteErrorReport)
 }
 
@@ -32,6 +33,7 @@ type createErrorReportRequest struct {
 }
 
 const maxErrorReportScreenshotBytes = 2 << 20
+const maxErrorReportMessageRunes = 4000
 
 func (s *Server) handleCreateErrorReport(w http.ResponseWriter, r *http.Request) {
 	var body createErrorReportRequest
@@ -206,6 +208,51 @@ func (s *Server) handleAdminSetErrorReportApproval(w http.ResponseWriter, r *htt
 		return
 	}
 	writeJSON(w, http.StatusOK, map[string]bool{"approved": *body.Approved})
+}
+
+func (s *Server) handleAdminAnswerErrorReport(w http.ResponseWriter, r *http.Request) {
+	adminUserID, ok := s.requireRole(w, r, RoleAdmin)
+	if !ok {
+		return
+	}
+	id, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
+	if err != nil || id <= 0 {
+		badRequest(w, "bad id")
+		return
+	}
+	var body struct {
+		Message string `json:"message"`
+	}
+	if err := decodeJSON(r, &body); err != nil {
+		badRequest(w, "Некорректный ответ")
+		return
+	}
+	message, err := normalizeErrorReportMessage(body.Message)
+	if err != nil {
+		badRequest(w, err.Error())
+		return
+	}
+	created, err := s.store.CreateErrorReportAdminAnswer(r.Context(), id, adminUserID, message)
+	if err != nil {
+		switch {
+		case errors.Is(err, store.ErrNotFound):
+			notFound(w, "Заявка не найдена")
+		case errors.Is(err, store.ErrErrorReportNotAwaitingAnswer):
+			conflict(w, "У заявки нет вопроса, ожидающего ответа")
+		default:
+			serverError(w, err)
+		}
+		return
+	}
+	writeJSON(w, http.StatusCreated, created)
+}
+
+func normalizeErrorReportMessage(message string) (string, error) {
+	message = strings.TrimSpace(message)
+	if message == "" || utf8.RuneCountInString(message) > maxErrorReportMessageRunes {
+		return "", fmt.Errorf("Сообщение должно содержать от 1 до %d символов", maxErrorReportMessageRunes)
+	}
+	return message, nil
 }
 
 func (s *Server) handleAdminErrorReportScreenshot(w http.ResponseWriter, r *http.Request) {

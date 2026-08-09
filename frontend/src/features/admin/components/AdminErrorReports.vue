@@ -73,6 +73,46 @@
           <summary>Все данные элемента</summary>
           <pre>{{ formatElement(report.element) }}</pre>
         </details>
+
+        <section class="report-feedback">
+          <div class="feedback-head">
+            <h2>Обратная связь с нейронкой</h2>
+            <span v-if="report.waitingForAnswer" class="waiting-badge">Ожидает ответа</span>
+            <span v-else-if="report.messages?.length" class="answered-badge">Ответ передан</span>
+          </div>
+
+          <div v-if="report.messages?.length" class="feedback-thread">
+            <div
+              v-for="message in report.messages"
+              :key="message.id"
+              class="feedback-message"
+              :class="message.sender === 'AI' ? 'from-ai' : 'from-admin'"
+            >
+              <div class="feedback-message-head">
+                <strong>{{ message.sender === 'AI' ? 'Нейронка' : (message.adminUserLogin || 'Администратор') }}</strong>
+                <span>{{ formatTime(message.createdAt) }}</span>
+              </div>
+              <div class="feedback-message-text">{{ message.message }}</div>
+            </div>
+          </div>
+          <p v-else class="feedback-empty">Нейронка пока не запрашивала уточнений.</p>
+
+          <form v-if="report.waitingForAnswer" class="feedback-reply" @submit.prevent="onAnswer(report)">
+            <textarea
+              v-model="replyDrafts[report.id]"
+              maxlength="4000"
+              rows="3"
+              placeholder="Ответьте на вопрос — после этого заявка снова появится в MCP"
+              :disabled="answeringIds.has(report.id)"
+            />
+            <button
+              type="submit"
+              :disabled="answeringIds.has(report.id) || !replyDrafts[report.id]?.trim()"
+            >
+              {{ answeringIds.has(report.id) ? 'Отправка…' : 'Ответить' }}
+            </button>
+          </form>
+        </section>
       </article>
     </div>
   </div>
@@ -80,13 +120,15 @@
 
 <script setup>
 import { onMounted, reactive, ref } from 'vue'
-import { deleteErrorReport, getErrorReports, setErrorReportApproval } from '../api/adminApi'
+import { answerErrorReport, deleteErrorReport, getErrorReports, setErrorReportApproval } from '../api/adminApi'
 
 const reports = ref([])
 const loading = ref(true)
 const error = ref('')
 const deletingIds = reactive(new Set())
 const approvingIds = reactive(new Set())
+const answeringIds = reactive(new Set())
+const replyDrafts = reactive({})
 
 async function load() {
   loading.value = true
@@ -128,6 +170,24 @@ async function onApprovalChange(report, approved) {
     error.value = `Не удалось изменить одобрение заявки #${report.id}`
   } finally {
     approvingIds.delete(report.id)
+  }
+}
+
+async function onAnswer(report) {
+  const message = replyDrafts[report.id]?.trim()
+  if (!message || answeringIds.has(report.id)) return
+  error.value = ''
+  answeringIds.add(report.id)
+  try {
+    const created = await answerErrorReport(report.id, message)
+    if (!Array.isArray(report.messages)) report.messages = []
+    report.messages.push(created)
+    report.waitingForAnswer = false
+    replyDrafts[report.id] = ''
+  } catch {
+    error.value = `Не удалось ответить по заявке #${report.id}`
+  } finally {
+    answeringIds.delete(report.id)
   }
 }
 
@@ -364,11 +424,140 @@ onMounted(load)
   word-break: break-word;
 }
 
+.report-feedback {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.feedback-head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.feedback-head h2 {
+  margin: 0;
+  color: var(--text-1);
+  font-size: 13px;
+}
+
+.waiting-badge,
+.answered-badge {
+  padding: 3px 7px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.waiting-badge {
+  background: rgba(232, 184, 90, 0.14);
+  color: #e8b85a;
+}
+
+.answered-badge {
+  background: rgba(100, 183, 123, 0.14);
+  color: #75c58b;
+}
+
+.feedback-thread {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.feedback-message {
+  max-width: min(760px, 94%);
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+}
+
+.feedback-message.from-ai {
+  align-self: flex-start;
+  background: var(--bg-deep);
+}
+
+.feedback-message.from-admin {
+  align-self: flex-end;
+  background: rgba(100, 183, 123, 0.08);
+  border-color: rgba(100, 183, 123, 0.24);
+}
+
+.feedback-message-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 5px;
+  color: var(--text-muted);
+  font-size: 10px;
+}
+
+.feedback-message-head strong { color: var(--text-2); }
+
+.feedback-message-text {
+  color: var(--text-1);
+  font-size: 13px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.feedback-empty {
+  margin: 9px 0 0;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.feedback-reply {
+  display: flex;
+  align-items: flex-end;
+  gap: 9px;
+  margin-top: 10px;
+}
+
+.feedback-reply textarea {
+  min-height: 74px;
+  flex: 1;
+  resize: vertical;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  outline: none;
+  background: var(--surface-1);
+  color: var(--text-1);
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.4;
+  padding: 9px 10px;
+}
+
+.feedback-reply textarea:focus { border-color: #8d7ee8; }
+
+.feedback-reply button {
+  border: 1px solid rgba(141, 126, 232, 0.45);
+  border-radius: 7px;
+  background: rgba(141, 126, 232, 0.16);
+  color: #c2b8ff;
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  padding: 8px 13px;
+}
+
+.feedback-reply button:disabled,
+.feedback-reply textarea:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
 @media (max-width: 760px) {
   .admin-reports { padding: 16px; }
   .report-meta { grid-template-columns: 1fr; }
   .reports-toolbar { align-items: center; }
   .report-head { align-items: flex-start; }
   .report-actions { align-items: flex-end; flex-direction: column; }
+  .feedback-reply { align-items: stretch; flex-direction: column; }
+  .feedback-reply button { align-self: flex-end; }
 }
 </style>
