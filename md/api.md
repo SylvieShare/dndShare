@@ -51,7 +51,7 @@ Do not spread endpoint strings directly through components when adding new behav
 
 ## Page Error Report Routes
 
-- `POST /api/error-reports` — public/optional-auth submit endpoint. Body: `{ title, description, pageUrl, element, screenshot?, viewportScreenshot? }`; `element` contains at least `selector` and can include the chosen screenshot context. A signed-in reporter is attached automatically; guests store `userId = null`.
+- `POST /api/error-reports` — public/optional-auth submit endpoint. Body: `{ description, pageUrl, element, screenshot?, viewportScreenshot?, title? }`; the current UI omits nullable `title`, which is filled later by the AI. `element` contains at least `selector` and can include the chosen screenshot context. A signed-in reporter is attached automatically; guests store `userId = null`.
 - `GET /api/error-report-review/reports?limit=500` — `ERROR_REPORT_REVIEWER` or `ADMIN`; non-archived reviewer inbox.
 - `GET /api/error-report-review/reports/{id}/screenshot` — `ERROR_REPORT_REVIEWER` or `ADMIN`; raw selected-element crop for a non-archived report.
 - `GET /api/error-report-review/reports/{id}/viewport-screenshot` — `ERROR_REPORT_REVIEWER` or `ADMIN`; raw page-context screenshot for a non-archived report.

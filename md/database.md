@@ -21,7 +21,7 @@ dropped. **Never create new objects in `base`.**
 `dndshare.error_report` is created idempotently by the current Go schema and contains:
 
 - `id bigserial` primary key;
-- `title text`, `description text`, and `page_url text`;
+- nullable `title text` (filled by the AI after claim), plus required `description text` and `page_url text`;
 - `element jsonb` with the browser-generated selector and diagnostic metadata;
 - nullable `screenshot bytea` and `screenshot_content_type varchar(50)` for the selected element;
 - nullable `viewport_screenshot bytea` and `viewport_screenshot_content_type varchar(50)` for surrounding page context;

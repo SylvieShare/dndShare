@@ -44,6 +44,7 @@ Write tools (gated, see below):
 - `error_report_lock_renew(leaseId, ttlMinutes?)` — extend a still-active lease owned by the handle.
 - `error_report_lock_release(leaseId)` — release the lease in the scheduled run's final cleanup step.
 - `error_reports_claim(ids, leaseId)` — atomically claim the current post-lock queue as `IN_PROGRESS`; release or expiry requeues unfinished work.
+- `error_report_title_set(id, title, leaseId)` — set the concise title after the owning AI run has understood a claimed report.
 
 Handbook writes run as a synthetic `HANDBOOK_ADMIN` (repositories called with `isAdmin = true`, `userId = 0`). Creates always produce **base** records (`user_id = NULL`). Error-report resolution and AI feedback succeed for an actionable open row or for an `IN_PROGRESS` row owned by the supplied `leaseId`. Lease mutation and all other write tools require `MCP_WRITE_ENABLED=true`.
 

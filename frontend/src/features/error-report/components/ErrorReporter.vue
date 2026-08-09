@@ -32,34 +32,26 @@
   </teleport>
 
   <AppModal v-if="formOpen" :z-index="9500" wide @close="closeForm">
-    <form class="report-form" data-error-report-ignore @submit.prevent="submitReport">
+    <form ref="reportForm" class="report-form" data-error-report-ignore @submit.prevent="submitReport">
       <div class="report-form-title">Что работает неправильно?</div>
       <div class="selected-element">
         <span class="selected-label">Выбранный элемент</span>
         <code>{{ selectedElement?.selector }}</code>
         <span v-if="selectedElement?.text" class="selected-text">{{ selectedElement.text }}</span>
       </div>
-      <label class="description-label" for="error-report-title">Заголовок</label>
-      <input
-        id="error-report-title"
-        ref="titleInput"
-        v-model="reportTitle"
-        class="title-input"
-        maxlength="160"
-        placeholder="Коротко: что именно сломано"
-        :disabled="submitting"
-      />
       <div class="screenshot-field">
-        <span class="selected-label">Скриншоты</span>
-        <div v-if="screenshotCapturing" class="screenshot-state">Создаём снимки элемента и видимой страницы…</div>
-        <div v-else-if="screenshotDataURL || viewportScreenshotDataURL" class="screenshot-previews">
-          <figure v-if="screenshotDataURL">
+        <span class="selected-label">Скриншот области</span>
+        <div v-if="screenshotCapturing && !screenshotDataURL" class="screenshot-state">Создаём снимок…</div>
+        <div v-else-if="screenshotDataURL" class="screenshot-previews">
+          <figure>
             <figcaption>Выбранный элемент</figcaption>
-            <img
-              class="screenshot-preview"
-              :src="screenshotDataURL"
-              alt="Скриншот выбранного элемента"
-            />
+            <div class="screenshot-preview-frame" :style="screenshotFrameStyle">
+              <img
+                class="screenshot-preview"
+                :src="screenshotDataURL"
+                alt="Скриншот выбранного элемента"
+              />
+            </div>
             <div class="screenshot-context-controls">
               <button
                 type="button"
@@ -74,14 +66,6 @@
               >Больше</button>
             </div>
           </figure>
-          <figure v-if="viewportScreenshotDataURL">
-            <figcaption>Видимая область страницы</figcaption>
-            <img
-              class="screenshot-preview"
-              :src="viewportScreenshotDataURL"
-              alt="Скриншот видимой области страницы"
-            />
-          </figure>
         </div>
         <div v-if="!screenshotCapturing && screenshotError" class="screenshot-state screenshot-state-error">
           {{ screenshotError }} Заявку можно отправить без снимка.
@@ -90,6 +74,7 @@
       <label class="description-label" for="error-report-description">Описание</label>
       <textarea
         id="error-report-description"
+        ref="descriptionInput"
         v-model="description"
         class="description-input"
         rows="5"
@@ -103,7 +88,7 @@
       </div>
       <div class="form-actions">
         <button type="button" class="cancel-button" :disabled="submitting" @click="closeForm">Отмена</button>
-        <button type="submit" class="submit-button" :disabled="submitting || screenshotCapturing || !reportTitle.trim() || !description.trim()">
+        <button type="submit" class="submit-button" :disabled="submitting || screenshotCapturing || !description.trim()">
           {{ submitting ? 'Отправка…' : 'Отправить' }}
         </button>
       </div>
@@ -124,18 +109,19 @@ import { createErrorReport } from '../api/errorReportApi'
 const selecting = ref(false)
 const formOpen = ref(false)
 const submitting = ref(false)
-const reportTitle = ref('')
 const description = ref('')
 const submitError = ref('')
 const selectedElement = ref(null)
 const selectedPageURL = ref('')
-const titleInput = ref(null)
+const reportForm = ref(null)
+const descriptionInput = ref(null)
 const toast = ref('')
 const screenshotDataURL = ref('')
 const viewportScreenshotDataURL = ref('')
 const screenshotCapturing = ref(false)
 const screenshotError = ref('')
 const screenshotContextLevel = ref(0)
+const screenshotFrameSize = reactive({ width: 0, height: 0 })
 const highlight = reactive({ visible: false, top: 0, left: 0, width: 0, height: 0 })
 
 let hoveredElement = null
@@ -154,6 +140,10 @@ const maxScreenshotContextLevel = computed(() => Math.max(0, screenshotContextEl
 const screenshotContextLabel = computed(() => screenshotContextLevel.value === 0
   ? 'Точная область'
   : `Контекст +${screenshotContextLevel.value}`)
+const screenshotFrameStyle = computed(() => ({
+  width: `${screenshotFrameSize.width}px`,
+  height: `${screenshotFrameSize.height}px`,
+}))
 
 function startSelection() {
   if (selecting.value || formOpen.value) return
@@ -231,7 +221,7 @@ function onElementClick(event) {
   stopSelection()
   formOpen.value = true
   void captureElementScreenshot(target)
-  nextTick(() => titleInput.value?.focus())
+  nextTick(() => descriptionInput.value?.focus())
 }
 
 async function captureElementScreenshot(element) {
@@ -248,7 +238,7 @@ async function captureElementScreenshot(element) {
       withTimeout(captureViewport(), 7000),
     ])
     if (generation !== screenshotGeneration) return
-    if (elementResult.status === 'fulfilled') screenshotDataURL.value = elementResult.value
+    if (elementResult.status === 'fulfilled') applyElementScreenshot(elementResult.value)
     if (viewportResult.status === 'fulfilled') viewportScreenshotDataURL.value = viewportResult.value
     if (!screenshotDataURL.value && !viewportScreenshotDataURL.value) throw new Error('screenshots failed')
     if (elementResult.status === 'rejected' || viewportResult.status === 'rejected') {
@@ -273,7 +263,7 @@ async function captureSelectedArea(rect) {
     1200 / width,
     800 / height,
   ))
-  return checkedScreenshot(await toJpeg(document.body, {
+  const dataURL = checkedScreenshot(await toJpeg(document.body, {
     backgroundColor: screenshotBackground(),
     cacheBust: true,
     width,
@@ -288,6 +278,15 @@ async function captureSelectedArea(rect) {
       height,
     ),
   }))
+  return { dataURL, width, height }
+}
+
+function applyElementScreenshot(capture) {
+  const availableWidth = reportForm.value?.clientWidth || capture.width
+  const displayScale = Math.min(1, availableWidth / capture.width, 420 / capture.height)
+  screenshotDataURL.value = capture.dataURL
+  screenshotFrameSize.width = Math.max(1, Math.round(capture.width * displayScale))
+  screenshotFrameSize.height = Math.max(1, Math.round(capture.height * displayScale))
 }
 
 async function changeScreenshotContext(delta) {
@@ -299,6 +298,7 @@ async function changeScreenshotContext(delta) {
 
   const previousLevel = screenshotContextLevel.value
   const previousScreenshot = screenshotDataURL.value
+  const previousFrameSize = { ...screenshotFrameSize }
   screenshotContextLevel.value = nextLevel
   updateScreenshotContextMetadata()
   screenshotError.value = ''
@@ -308,11 +308,14 @@ async function changeScreenshotContext(delta) {
     const contextElement = screenshotContextElements.value[nextLevel]
     if (!contextElement?.isConnected) throw new Error('context element detached')
     const rect = contextElement.getBoundingClientRect()
-    screenshotDataURL.value = await withTimeout(captureSelectedArea(rect), 7000)
+    const capture = await withTimeout(captureSelectedArea(rect), 7000)
+    if (generation !== screenshotGeneration) return
+    applyElementScreenshot(capture)
   } catch {
     if (generation === screenshotGeneration) {
       screenshotContextLevel.value = previousLevel
       screenshotDataURL.value = previousScreenshot
+      Object.assign(screenshotFrameSize, previousFrameSize)
       updateScreenshotContextMetadata()
       screenshotError.value = 'Не удалось изменить область снимка.'
     }
@@ -507,7 +510,6 @@ function compactObject(value) {
 function closeForm() {
   if (submitting.value) return
   formOpen.value = false
-  reportTitle.value = ''
   description.value = ''
   selectedElement.value = null
   selectedPageURL.value = ''
@@ -523,7 +525,6 @@ async function submitReport() {
   submitError.value = ''
   try {
     await createErrorReport({
-      title: reportTitle.value.trim(),
       description: trimmed,
       pageUrl: selectedPageURL.value,
       element: selectedElement.value,
@@ -541,7 +542,6 @@ async function submitReport() {
 
 function closeAfterSubmit() {
   formOpen.value = false
-  reportTitle.value = ''
   description.value = ''
   selectedElement.value = null
   selectedPageURL.value = ''
@@ -556,6 +556,8 @@ function resetScreenshot() {
   screenshotError.value = ''
   screenshotContextLevel.value = 0
   screenshotContextElements.value = []
+  screenshotFrameSize.width = 0
+  screenshotFrameSize.height = 0
 }
 
 function showToast(message) {
@@ -762,13 +764,19 @@ onBeforeUnmount(() => {
 
 .screenshot-preview {
   display: block;
-  max-width: 100%;
-  max-height: 420px;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
   object-position: left center;
+}
+
+.screenshot-preview-frame {
+  max-width: 100%;
+  overflow: hidden;
   border: 1px solid var(--border);
   border-radius: 8px;
   background: var(--bg-deep);
+  transition: width 0.24s cubic-bezier(.22, 1, .36, 1), height 0.24s cubic-bezier(.22, 1, .36, 1);
 }
 
 .screenshot-previews {
@@ -778,7 +786,6 @@ onBeforeUnmount(() => {
 }
 
 .screenshot-previews figure {
-  min-width: 0;
   margin: 0;
 }
 
@@ -834,7 +841,6 @@ onBeforeUnmount(() => {
 
 .screenshot-state-error { color: #ef9b7b; }
 
-.title-input,
 .description-input {
   width: 100%;
   padding: 11px 12px;
@@ -848,18 +854,12 @@ onBeforeUnmount(() => {
   line-height: 1.45;
 }
 
-.title-input {
-  height: 42px;
-}
-
 .description-input {
   resize: vertical;
   min-height: 116px;
 }
 
-.title-input:focus,
 .description-input:focus { border-color: var(--accent); }
-.title-input::placeholder,
 .description-input::placeholder { color: var(--text-muted); }
 
 .description-meta {

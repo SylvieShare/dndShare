@@ -65,7 +65,7 @@ All endpoints require `@UserNeedRole([Role.ADMIN])`.
 | POST | `/api/error-report-review/reports/{id}/serious-approval` | ADMIN-only serious-change confirmation |
 | DELETE | `/api/admin-panel/error-reports/{id}` | Delete one handled report |
 
-The **«Ошибки страниц»** tab renders title, description, page URL, reporter (`Гость` for null `user_id`), selector, screenshots, MCP approval, serious-change confirmation, conversation, and separate open/waiting/finished/archive states. See `md/features/error-reports.md` for the public submit flow and global reviewer inbox.
+The **«Ошибки страниц»** tab renders the AI-generated title (or a truncated description until it exists), description, page URL, reporter (`Гость` for null `user_id`), selector, screenshots, MCP approval, serious-change confirmation, conversation, and separate queued/in-progress/waiting/finished/archive states. See `md/features/error-reports.md` for the public submit flow and global reviewer inbox.
 
 ### Supporting changes
 

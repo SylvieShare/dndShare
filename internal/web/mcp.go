@@ -358,6 +358,35 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 		}
 		return claim, nil
 
+	case "error_report_title_set":
+		if err := s.mcpRequireWrite(); err != nil {
+			return nil, err
+		}
+		id, err := argInt64(args, "id")
+		if err != nil {
+			return nil, err
+		}
+		title, err := argString(args, "title")
+		if err != nil {
+			return nil, err
+		}
+		title, err = normalizeErrorReportTitle(title)
+		if err != nil {
+			return nil, err
+		}
+		leaseID, err := errorReportLeaseIDArg(args)
+		if err != nil {
+			return nil, err
+		}
+		updated, err := s.store.SetClaimedErrorReportTitle(ctx, id, title, leaseID)
+		if err != nil {
+			return nil, err
+		}
+		if !updated {
+			return nil, fmt.Errorf("claimed approved error report %d not found or lease is no longer active", id)
+		}
+		return map[string]any{"id": id, "title": title}, nil
+
 	case "error_report_delete":
 		if err := s.mcpRequireWrite(); err != nil {
 			return nil, err
@@ -947,7 +976,7 @@ func mcpToolDefs() []map[string]any {
 				"limit": intP("Max rows, 1..100 (default 20)"),
 			}, "q")),
 		tool("error_reports_list",
-			"List actionable open admin-approved page error reports, newest first. Finished/unapproved reports, unanswered AI questions, and serious changes awaiting ADMIN approval are not exposed. A report becomes visible again after an answer or serious-change approval. Includes title, full feedback history, approval/lifecycle metadata, description, page URL, selected element metadata, reporter, screenshot metadata, and creation time.",
+			"List actionable open admin-approved page error reports, newest first. Finished/unapproved reports, unanswered AI questions, and serious changes awaiting ADMIN approval are not exposed. A report becomes visible again after an answer or serious-change approval. New reports have title=null until the owning AI run analyzes and titles them. Includes full feedback history, approval/lifecycle metadata, description, page URL, selected element metadata, reporter, screenshot metadata, and creation time.",
 			schema(map[string]any{
 				"limit":  intP("Max rows, 1..500 (default 100)"),
 				"offset": intP("Offset for pagination (default 0)"),
@@ -974,6 +1003,13 @@ func mcpToolDefs() []map[string]any {
 				"ids":     map[string]any{"type": "array", "items": map[string]any{"type": "integer"}, "description": "All actionable report ids from the post-lock list, 1..500"},
 				"leaseId": strP("Opaque handle returned by error_report_lock_acquire"),
 			}, "ids", "leaseId")),
+		tool("error_report_title_set",
+			"Set a concise diagnostic title after the AI has inspected a claimed report. New reports intentionally have title=null; call this once the symptom is understood. Only the active lease that owns the IN_PROGRESS report can set it.",
+			schema(map[string]any{
+				"id":      intP("Claimed error report id"),
+				"title":   strP("Concise diagnostic title in Russian, 1..160 characters"),
+				"leaseId": strP("Opaque handle that owns the IN_PROGRESS report"),
+			}, "id", "title", "leaseId")),
 		tool("error_report_delete",
 			"Deprecated compatibility alias: mark one open approved report as finished instead of physically deleting it. Prefer error_report_resolve so the resolution and commit can be recorded. Requires MCP write operations to be enabled.",
 			schema(map[string]any{

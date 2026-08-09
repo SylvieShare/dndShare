@@ -14,7 +14,7 @@ import (
 // metadata without requiring a schema migration for every new diagnostic field.
 type ErrorReport struct {
 	ID                            int64                `json:"id"`
-	Title                         string               `json:"title"`
+	Title                         *string              `json:"title"`
 	Description                   string               `json:"description"`
 	PageURL                       string               `json:"pageUrl"`
 	Element                       json.RawMessage      `json:"element"`
@@ -70,7 +70,8 @@ type ErrorReportMessage struct {
 
 func (s *Store) CreateErrorReport(
 	ctx context.Context,
-	title, description, pageURL string,
+	title *string,
+	description, pageURL string,
 	element json.RawMessage,
 	screenshot []byte,
 	screenshotContentType *string,
@@ -462,6 +463,25 @@ func (s *Store) deleteErrorReport(ctx context.Context, id int64, approvedOnly bo
 
 func (s *Store) SetErrorReportApproved(ctx context.Context, id int64, approved bool) (bool, error) {
 	result, err := s.pool.Exec(ctx, `UPDATE dndshare.error_report SET approved = $2 WHERE id = $1`, id, approved)
+	if err != nil {
+		return false, err
+	}
+	return result.RowsAffected() > 0, nil
+}
+
+func (s *Store) SetClaimedErrorReportTitle(ctx context.Context, id int64, title, leaseID string) (bool, error) {
+	result, err := s.pool.Exec(ctx, `
+		UPDATE dndshare.error_report er
+		SET title = $2
+		WHERE er.id = $1
+		  AND er.approved
+		  AND er.status = 'IN_PROGRESS'
+		  AND (er.title IS NULL OR BTRIM(er.title) = '')
+		  AND er.processing_run_id = $3
+		  AND EXISTS (
+		      SELECT 1 FROM dndshare.error_report_automation_lock l
+		      WHERE l.id = 1 AND l.token = $4 AND l.expires_at > now()
+		  )`, id, title, errorReportProcessingRunID(leaseID), leaseID)
 	if err != nil {
 		return false, err
 	}

@@ -23,3 +23,12 @@ export function errorReportStatusLabel(report) {
 export function shouldShowErrorReportAuthor(report, currentUserId) {
   return report.userId == null || report.userId !== currentUserId
 }
+
+export function errorReportDisplayTitle(report, fallbackLength = 84) {
+  const title = String(report?.title || '').trim()
+  if (title) return title
+  const description = String(report?.description || '').replace(/\s+/g, ' ').trim()
+  const characters = [...description]
+  if (characters.length <= fallbackLength) return description || 'Без описания'
+  return `${characters.slice(0, Math.max(1, fallbackLength - 1)).join('').trimEnd()}…`
+}

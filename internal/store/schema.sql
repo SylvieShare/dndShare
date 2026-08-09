@@ -70,7 +70,7 @@ CREATE INDEX IF NOT EXISTS idx_logs_created_at ON dndshare.logs USING btree (cre
 -- ---------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS dndshare.error_report (
     id          bigserial NOT NULL,
-    title       text NOT NULL,
+    title       text NULL,
     description text NOT NULL,
     page_url    text NOT NULL,
     element     jsonb NOT NULL,
@@ -92,10 +92,7 @@ CREATE TABLE IF NOT EXISTS dndshare.error_report (
     CONSTRAINT error_report_pk PRIMARY KEY (id)
 );
 ALTER TABLE dndshare.error_report ADD COLUMN IF NOT EXISTS title text NULL;
-UPDATE dndshare.error_report
-SET title = LEFT(description, 160)
-WHERE title IS NULL OR BTRIM(title) = '';
-ALTER TABLE dndshare.error_report ALTER COLUMN title SET NOT NULL;
+ALTER TABLE dndshare.error_report ALTER COLUMN title DROP NOT NULL;
 ALTER TABLE dndshare.error_report ADD COLUMN IF NOT EXISTS screenshot bytea NULL;
 ALTER TABLE dndshare.error_report ADD COLUMN IF NOT EXISTS screenshot_content_type varchar(50) NULL;
 ALTER TABLE dndshare.error_report ADD COLUMN IF NOT EXISTS viewport_screenshot bytea NULL;

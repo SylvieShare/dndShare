@@ -34,7 +34,7 @@ func (s *Server) routesErrorReports(mux *http.ServeMux) {
 }
 
 type createErrorReportRequest struct {
-	Title              string          `json:"title"`
+	Title              *string         `json:"title,omitempty"`
 	Description        string          `json:"description"`
 	PageURL            string          `json:"pageUrl"`
 	Element            json.RawMessage `json:"element"`
@@ -54,15 +54,15 @@ func (s *Server) handleCreateErrorReport(w http.ResponseWriter, r *http.Request)
 	}
 
 	body.Description = strings.TrimSpace(body.Description)
-	if strings.TrimSpace(body.Title) == "" {
-		body.Title = defaultErrorReportTitle(body.Description)
+	var normalizedTitle *string
+	if body.Title != nil && strings.TrimSpace(*body.Title) != "" {
+		title, err := normalizeErrorReportTitle(*body.Title)
+		if err != nil {
+			badRequest(w, err.Error())
+			return
+		}
+		normalizedTitle = &title
 	}
-	normalizedTitle, err := normalizeErrorReportTitle(body.Title)
-	if err != nil {
-		badRequest(w, err.Error())
-		return
-	}
-	body.Title = normalizedTitle
 	body.PageURL = strings.TrimSpace(body.PageURL)
 	if body.Description == "" || utf8.RuneCountInString(body.Description) > 4000 {
 		badRequest(w, "Описание должно содержать от 1 до 4000 символов")
@@ -108,7 +108,7 @@ func (s *Server) handleCreateErrorReport(w http.ResponseWriter, r *http.Request)
 		}
 	}
 	report, err := s.store.CreateErrorReport(
-		r.Context(), body.Title, body.Description, body.PageURL, body.Element,
+		r.Context(), normalizedTitle, body.Description, body.PageURL, body.Element,
 		screenshot, screenshotContentType,
 		viewportScreenshot, viewportScreenshotContentType,
 		userID, autoApproved,
@@ -386,18 +386,6 @@ func normalizeErrorReportTitle(title string) (string, error) {
 		return "", fmt.Errorf("Заголовок должен содержать от 1 до %d символов", maxErrorReportTitleRunes)
 	}
 	return title, nil
-}
-
-func defaultErrorReportTitle(description string) string {
-	description = strings.TrimSpace(description)
-	if line, _, found := strings.Cut(description, "\n"); found {
-		description = strings.TrimSpace(line)
-	}
-	runes := []rune(description)
-	if len(runes) > maxErrorReportTitleRunes {
-		description = strings.TrimSpace(string(runes[:maxErrorReportTitleRunes-1])) + "…"
-	}
-	return description
 }
 
 func (s *Server) handleAdminErrorReportScreenshot(w http.ResponseWriter, r *http.Request) {

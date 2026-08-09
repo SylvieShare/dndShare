@@ -43,7 +43,7 @@
               <div class="report-main-row">
                 <span class="report-dot" aria-hidden="true"></span>
                 <div class="report-copy">
-                  <strong>{{ report.title }}</strong>
+                  <strong>{{ displayTitle(report) }}</strong>
                   <span v-if="showAuthor(report)" class="report-author">{{ report.userLogin || 'Гость' }}</span>
                 </div>
                 <span class="report-status">{{ statusLabel(report) }}</span>
@@ -82,7 +82,7 @@
       <div class="review-modal-head">
         <div>
           <span class="review-modal-id">Заявка #{{ activeReport.id }}</span>
-          <h2>{{ activeReport.title }}</h2>
+          <h2>{{ displayTitle(activeReport, 120) }}</h2>
         </div>
         <span class="modal-status" :class="`state-${statusKey(activeReport).toLowerCase()}`">
           {{ statusLabel(activeReport) }}
@@ -183,6 +183,7 @@ import { useAccountStore } from '@/stores/account'
 import {
   errorReportStatusKey,
   errorReportStatusLabel,
+  errorReportDisplayTitle,
   shouldShowErrorReportAuthor,
 } from '../lib/errorReportPresentation'
 import {
@@ -337,6 +338,10 @@ function statusKey(report) {
 
 function statusLabel(report) {
   return errorReportStatusLabel(report)
+}
+
+function displayTitle(report, fallbackLength) {
+  return errorReportDisplayTitle(report, fallbackLength)
 }
 
 function reviewScreenshotURL(id, kind) {

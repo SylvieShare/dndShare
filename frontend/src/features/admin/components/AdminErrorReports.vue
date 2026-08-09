@@ -71,7 +71,7 @@
           </div>
         </div>
 
-        <h2 class="report-title">{{ report.title }}</h2>
+        <h2 class="report-title">{{ displayTitle(report) }}</h2>
         <div class="report-description">{{ report.description }}</div>
 
         <section v-if="report.waitingForSeriousApproval" class="serious-change-request">
@@ -184,6 +184,7 @@
 <script setup>
 import { computed, onMounted, reactive, ref } from 'vue'
 import { answerErrorReport, approveSeriousErrorReportChange, deleteErrorReport, getErrorReports, reopenErrorReport, setErrorReportApproval } from '../api/adminApi'
+import { errorReportDisplayTitle } from '@/features/error-report/lib/errorReportPresentation'
 
 const reports = ref([])
 const loading = ref(true)
@@ -331,6 +332,10 @@ function formatTime(iso) {
 
 function formatElement(element) {
   return JSON.stringify(element || {}, null, 2)
+}
+
+function displayTitle(report) {
+  return errorReportDisplayTitle(report, 120)
 }
 
 function screenshotURL(id, kind) {

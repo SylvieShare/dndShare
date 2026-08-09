@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import {
   errorReportStatusKey,
   errorReportStatusLabel,
+  errorReportDisplayTitle,
   shouldShowErrorReportAuthor,
 } from './errorReportPresentation'
 
@@ -18,5 +19,10 @@ describe('error report presentation', () => {
     expect(shouldShowErrorReportAuthor({ userId: 7 }, 7)).toBe(false)
     expect(shouldShowErrorReportAuthor({ userId: 8 }, 7)).toBe(true)
     expect(shouldShowErrorReportAuthor({ userId: null }, 7)).toBe(true)
+  })
+
+  it('uses a truncated description until the AI supplies a title', () => {
+    expect(errorReportDisplayTitle({ title: '  Готовый заголовок  ', description: 'Описание' })).toBe('Готовый заголовок')
+    expect(errorReportDisplayTitle({ title: null, description: 'Очень длинное описание ошибки' }, 12)).toBe('Очень длинн…')
   })
 })

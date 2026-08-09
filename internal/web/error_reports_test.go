@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"strings"
 	"testing"
-	"unicode/utf8"
 )
 
 func TestErrorReportLeaseID(t *testing.T) {
@@ -112,15 +111,6 @@ func TestNormalizeErrorReportTitle(t *testing.T) {
 	}
 	if _, err := normalizeErrorReportTitle(strings.Repeat("я", maxErrorReportTitleRunes+1)); err == nil {
 		t.Fatal("expected oversized title to fail")
-	}
-}
-
-func TestDefaultErrorReportTitleSupportsOlderClients(t *testing.T) {
-	if got := defaultErrorReportTitle("  Первая строка\nПодробности  "); got != "Первая строка" {
-		t.Fatalf("unexpected fallback title: %q", got)
-	}
-	if got := defaultErrorReportTitle(strings.Repeat("я", maxErrorReportTitleRunes+10)); utf8.RuneCountInString(got) != maxErrorReportTitleRunes {
-		t.Fatalf("fallback title has unexpected length: %d", utf8.RuneCountInString(got))
 	}
 }
 
