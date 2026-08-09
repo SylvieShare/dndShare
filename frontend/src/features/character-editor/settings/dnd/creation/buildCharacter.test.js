@@ -50,6 +50,8 @@ describe('buildCharacterData starting equipment', () => {
       charClass: selection(2, 'Плут'),
       background: selection(3, 'Дворянин', {
         equipment: '<p>Изящная одежда, перстень-печатка, свиток родословной, кошель с 25 зм.</p>',
+        feature: 'Привилегированное положение',
+        feature_desc: '<p>Люди склонны думать о вас хорошо.</p>',
       }),
       equipment: [{ id: null, name: 'Рапира', count: 1 }],
       suggestValue: () => '',
@@ -60,6 +62,7 @@ describe('buildCharacterData starting equipment', () => {
       'Рапира', 'Изящная одежда', 'перстень-печатка', 'свиток родословной',
     ])
     expect(result.data.values.money.amounts['3']).toBe(25)
+    expect(result.data.values.notes).toBe('Умение предыстории — Привилегированное положение: Люди склонны думать о вас хорошо.')
   })
 })
 

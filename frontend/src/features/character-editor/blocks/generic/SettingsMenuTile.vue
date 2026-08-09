@@ -45,12 +45,8 @@
         <ContentSourceSelector
           :source-version-id="ctx.sourceVersionId"
           :model-value="sourceDraft"
-          @update:model-value="sourceDraft = $event"
+          @update:model-value="updateSources"
         />
-        <div class="sm-modal-actions">
-          <button type="button" class="sm-cancel" @click="sourcesOpen = false">Отмена</button>
-          <button type="button" class="sm-confirm" @click="saveSources">Сохранить</button>
-        </div>
       </div>
     </AppModal>
   </div>
@@ -103,9 +99,9 @@ function openSources() {
   open.value = false
 }
 
-function saveSources() {
+function updateSources(value) {
+  sourceDraft.value = normalizeContentSourceSettings(value)
   ctx.setContentSources?.(sourceDraft.value)
-  sourcesOpen.value = false
 }
 </script>
 
@@ -170,13 +166,9 @@ function saveSources() {
 .sm-action-copy b { font-size: 12px; font-weight: 600; }
 .sm-action-copy small { color: var(--text-muted); font-size: 10px; }
 
-.sm-modal { width: min(760px, calc(100vw - 48px)); max-height: min(760px, calc(100vh - 80px)); overflow: auto; display: flex; flex-direction: column; gap: 14px; padding: 22px; box-sizing: border-box; }
+.sm-modal { width: 100%; max-width: 100%; min-width: 0; max-height: min(760px, calc(100vh - 80px)); overflow-x: hidden; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; padding: 22px; box-sizing: border-box; }
 .sm-modal-title { font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--text-1); }
 .sm-modal > p { margin: 0; color: var(--text-muted); font-size: 12px; line-height: 1.45; }
-.sm-modal-actions { display: flex; justify-content: flex-end; gap: 8px; padding-top: 4px; }
-.sm-modal-actions button { border: 0; border-radius: 8px; padding: 8px 14px; font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; }
-.sm-cancel { background: var(--surface-raised); color: var(--text-2); }
-.sm-confirm { background: var(--accent); color: var(--text-on-accent); }
 
 .sm-save { display: flex; align-items: center; gap: 7px; padding: 6px 8px 10px; border-bottom: 1px solid var(--border); margin-bottom: 2px; }
 .sm-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; transition: background-color 0.3s; }

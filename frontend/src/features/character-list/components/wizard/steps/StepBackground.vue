@@ -20,7 +20,7 @@
       <ul class="facts">
         <li v-if="backgroundSkillNames.length"><span class="fk">Навыки</span>{{ backgroundSkillNames.join(', ') }}</li>
         <li v-if="backgroundToolNames.length"><span class="fk">Инструменты</span>{{ backgroundToolNames.join(', ') }}</li>
-        <li v-if="feature.title"><span class="fk">Черта</span><b>{{ feature.title }}</b>{{ feature.desc ? ' — ' + feature.desc : '' }}</li>
+        <li v-if="feature.title"><span class="fk">Умение</span><b>{{ feature.title }}</b>{{ feature.desc ? ' — ' + feature.desc : '' }}</li>
         <li v-if="backgroundStart.items.length"><span class="fk">Снаряжение</span>{{ equipmentLabel }}</li>
         <li v-if="moneyLabel"><span class="fk">Кошелёк</span>{{ moneyLabel }}</li>
       </ul>

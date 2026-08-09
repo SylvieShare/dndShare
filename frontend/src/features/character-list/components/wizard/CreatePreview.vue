@@ -207,7 +207,7 @@ const sections = computed(() => {
     push(items, 'Инструменты', names(bd.tool_prof || [], 5).join(', '))
     push(items, 'Языки', names(state.bgLangIds, 6).join(', '))
     push(items, 'Кошелёк', formatStartingCoins(backgroundStart.value.coins))
-    if (bd.feature) push(items, 'Черта', bd.feature)
+    if (bd.feature) push(items, 'Умение', bd.feature)
     if (items.length) out.push({ title: 'Предыстория', items })
   }
 

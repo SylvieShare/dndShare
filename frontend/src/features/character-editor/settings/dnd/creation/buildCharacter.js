@@ -214,7 +214,7 @@ export function buildCharacterData(input) {
     const featTitle = bd.feature ? String(bd.feature).trim() : ''
     const featDesc = bd.feature_desc ? String(bd.feature_desc).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim() : ''
     if (featTitle || featDesc) {
-      values.notes = `Черта предыстории — ${featTitle}${featTitle && featDesc ? ': ' : ''}${featDesc}`
+      values.notes = `Умение предыстории — ${featTitle}${featTitle && featDesc ? ': ' : ''}${featDesc}`
     }
     values.money = addStartingCoins(values.money, backgroundStart.coins)
   }

@@ -7,7 +7,7 @@
         :class="{ 'sli-lvl-zero': data.lvl === 0 }"
         :title="data.lvl === 0 ? 'Заговор' : null"
       >
-        {{ data.lvl === 0 ? 'З' : (data.lvl != null ? data.lvl : '—') }}
+        {{ data.lvl === 0 ? '—' : (data.lvl != null ? data.lvl : '—') }}
       </span>
     </template>
     <template #trailing>
