@@ -9,7 +9,7 @@
 
       <MultiSearchSelect
         v-if="isLangChoice(fc.choice)"
-        :options="optionsFor(fc.choice)"
+        :options="optionsFor(fc)"
         :selected="choiceSelected(fc.id)"
         :limit="Number(fc.choice.count) || 1"
         placeholder="Найти язык…"
@@ -18,7 +18,7 @@
 
       <div v-else-if="isChips(fc.choice)" class="chips">
         <button
-          v-for="opt in choiceOptionList(fc.choice)"
+          v-for="opt in choiceOptionList(fc)"
           :key="opt.value"
           class="chip"
           :class="{ on: isSel(fc, opt), off: locked(fc, opt) }"
@@ -28,7 +28,7 @@
 
       <div v-else class="list">
         <div
-          v-for="opt in choiceOptionList(fc.choice)"
+          v-for="opt in choiceOptionList(fc)"
           :key="opt.value"
           class="opt"
           :class="{ on: isSel(fc, opt), off: locked(fc, opt) }"
@@ -67,7 +67,7 @@ function locked(fc, opt) {
 }
 function isChips(choice) { return !!choice?.from_suggest_id }
 function isLangChoice(choice) { return Number(choice?.from_suggest_id) === 6 }
-function optionsFor(choice) { return choiceOptionList(choice).map((o) => ({ id: o.value, name: o.label })) }
+function optionsFor(fc) { return choiceOptionList(fc).map((o) => ({ id: o.value, name: o.label })) }
 </script>
 
 <style scoped>

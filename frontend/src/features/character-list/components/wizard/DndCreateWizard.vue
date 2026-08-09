@@ -79,7 +79,7 @@
         <template v-for="fc in featureChoices" :key="fc.id">
           <div class="wz-sec-title">{{ fc.name }} <span class="wz-count">{{ choiceSelected(fc.id).length }} / {{ fc.choice.count || 1 }}</span></div>
           <p v-if="fc.choice.text" class="wz-muted">{{ fc.choice.text }}</p>
-          <label v-for="opt in choiceOptionList(fc.choice)" :key="opt.value" class="wz-check">
+          <label v-for="opt in choiceOptionList(fc)" :key="opt.value" class="wz-check">
             <input
               :type="(fc.choice.count || 1) === 1 ? 'radio' : 'checkbox'"
               :name="'fc-' + fc.id"

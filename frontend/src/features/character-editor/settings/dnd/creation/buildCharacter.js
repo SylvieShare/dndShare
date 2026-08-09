@@ -38,11 +38,12 @@ function ref(sel) {
 }
 
 // Grant a skill proficiency (suggest 15) into its owning stat block.
-function addSkillProf(values, skillId) {
+function addSkillProf(values, skillId, up = 1) {
   const stat = SKILL_BY_STAT[String(skillId)]
   if (!stat) return
   const block = { ...(values[stat] || {}) }
-  block.skills = { ...(block.skills || {}), [String(skillId)]: { up: 1, override_title: '', bonuses: [] } }
+  const saved = block.skills?.[String(skillId)] || {}
+  block.skills = { ...(block.skills || {}), [String(skillId)]: { ...saved, up: Math.max(Number(saved.up) || 0, up), override_title: saved.override_title || '', bonuses: saved.bonuses || [] } }
   values[stat] = block
 }
 
@@ -129,7 +130,7 @@ export function buildCharacterData(input) {
   for (const ch of choices) {
     const sel = ch?.selected || []
     if (!sel.length) continue
-    if (Number(ch.from_suggest_id) === 15) sel.forEach((id) => addSkillProf(values, id))
+    if (Number(ch.from_suggest_id) === 15) sel.forEach((id) => addSkillProf(values, id, ch.expertise ? 2 : 1))
     else if (Number(ch.from_suggest_id) === 6) addLanguages(values, sel.map((id) => suggestValue?.(6, id)).filter(Boolean))
     if (ch.abilityId != null) {
       values.feature_choices = { ...(values.feature_choices || {}), [ch.abilityId]: sel.slice() }

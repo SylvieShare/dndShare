@@ -2,21 +2,21 @@
   <div class="step">
     <div class="sheet-section-title">
       Владение навыками
-      <span class="count" :class="{ done: skillLimit && state.skillIds.length === skillLimit }">{{ state.skillIds.length }} / {{ skillLimit }}</span>
+      <span class="count" :class="{ done: limit && selected.length === limit }">{{ selected.length }} / {{ limit }}</span>
     </div>
-    <p class="hint">От класса ты владеешь выбранными навыками — бонус мастерства прибавляется к профильной характеристике.</p>
-    <p v-if="!skillOptions.length" class="hint">Класс не предлагает выбор навыков.</p>
+    <p class="hint">{{ source === 'race' ? 'Раса даёт владение выбранными навыками — бонус мастерства прибавляется к профильной характеристике.' : 'От класса ты владеешь выбранными навыками — бонус мастерства прибавляется к профильной характеристике.' }}</p>
+    <p v-if="!options.length" class="hint">{{ source === 'race' ? 'Раса не предлагает выбор навыков.' : 'Класс не предлагает выбор навыков.' }}</p>
 
     <div class="list">
       <div
-        v-for="opt in skillOptions"
+        v-for="opt in options"
         :key="opt.id"
         class="skill"
-        :class="{ on: state.skillIds.includes(opt.id), off: !state.skillIds.includes(opt.id) && atLimit }"
-        @click="toggleSkill(opt.id)"
+        :class="{ on: selected.includes(opt.id), off: !selected.includes(opt.id) && atLimit }"
+        @click="toggle(opt.id)"
       >
         <span class="box">
-          <svg v-if="state.skillIds.includes(opt.id)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6" /></svg>
+          <svg v-if="selected.includes(opt.id)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6" /></svg>
         </span>
         <span class="sk-name">{{ opt.name }}</span>
         <span v-if="skillStat(opt.id)" class="sk-abil">{{ STAT_SHORT[skillStat(opt.id)] }}</span>
@@ -30,8 +30,13 @@
 import { computed, inject } from 'vue'
 import { STAT_SHORT, formatMod } from '@/features/character-list/components/wizard/labels'
 
-const { state, skillOptions, skillLimit, skillStat, skillMod, toggleSkill } = inject('createWizard')
-const atLimit = computed(() => skillLimit.value > 0 && state.skillIds.length >= skillLimit.value)
+const props = defineProps({ source: { type: String, default: 'class' } })
+const { state, skillOptions, skillLimit, toggleSkill, raceSkillOptions, raceSkillLimit, toggleRaceSkill, skillStat, skillMod } = inject('createWizard')
+const options = computed(() => props.source === 'race' ? raceSkillOptions.value : skillOptions.value)
+const limit = computed(() => props.source === 'race' ? raceSkillLimit.value : skillLimit.value)
+const selected = computed(() => props.source === 'race' ? state.raceSkillIds : state.skillIds)
+const toggle = (id) => (props.source === 'race' ? toggleRaceSkill(id) : toggleSkill(id))
+const atLimit = computed(() => limit.value > 0 && selected.value.length >= limit.value)
 function modClass(m) { return m > 0 ? 'pos' : m < 0 ? 'neg' : '' }
 </script>
 

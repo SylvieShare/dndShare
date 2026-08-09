@@ -72,21 +72,7 @@
             </div>
           </div>
 
-          <div v-if="grants.raceSkillChoice" class="pick">
-            <p class="hint">
-              Владение навыками на выбор
-              <span class="count" :class="{ done: raceSkillsComplete }">{{ state.raceSkillIds.length }} / {{ raceSkillLimit }}</span>
-            </p>
-            <div class="asi-chips">
-              <button
-                v-for="o in raceSkillOptions"
-                :key="o.id"
-                class="asi-chip"
-                :class="{ on: state.raceSkillIds.includes(o.id), off: !state.raceSkillIds.includes(o.id) && raceSkillsComplete }"
-                @click="toggleRaceSkill(o.id)"
-              >{{ o.name }}</button>
-            </div>
-          </div>
+          <StepSkills v-if="grants.raceSkillChoice" source="race" class="pick" />
 
           <div v-if="grants.langChoice" class="pick">
             <p class="hint">
@@ -145,11 +131,11 @@ import MultiSearchSelect from '@/features/character-list/components/wizard/Multi
 import RichContent from '@/shared/ui/RichContent'
 import SelectTile from '@/features/character-list/components/wizard/SelectTile.vue'
 import StepChoices from '@/features/character-list/components/wizard/steps/StepChoices.vue'
+import StepSkills from '@/features/character-list/components/wizard/steps/StepSkills.vue'
 import { STAT_SHORT, asiSummary, monogramOf } from '@/features/character-list/components/wizard/labels'
 
 const {
   races, subraces, state, loading, grants, STATS, toggleAsiChoice,
-  raceSkillOptions, raceSkillLimit, toggleRaceSkill, raceSkillsComplete,
   raceLangOptions, raceLangLimit, toggleRaceLang, raceLangsComplete,
   featPool, featLimit, toggleFeat, featComplete, raceFeatureChoices,
 } = inject('createWizard')

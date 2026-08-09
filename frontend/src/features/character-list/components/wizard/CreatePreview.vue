@@ -118,10 +118,17 @@ function choiceLabels(item) {
     return option?.label || String(value)
   })
 }
+function isSkillChoice(item) { return Number(item?.data?.choice?.from_suggest_id) === 15 }
+function isExpertise(item) { return isSkillChoice(item) && /компетентност/i.test(item?.name || '') }
 function featureList(items, binding) {
   return featuresForBinding(items, binding, 1)
-    .filter((i) => i.name)
+    .filter((i) => i.name && !isSkillChoice(i))
     .map((i) => ({ name: i.name, desc: i.data?.desc || '', item: i, choices: choiceLabels(i) }))
+}
+function selectedSkillChoices(items, binding, predicate) {
+  return featuresForBinding(items, binding, 1)
+    .filter((item) => isSkillChoice(item) && predicate(item))
+    .flatMap((item) => state.choices[item.id] || [])
 }
 
 const tooltip = reactive({ visible: false, name: '', desc: '', item: null, x: 0, top: null, bottom: null })
@@ -146,6 +153,19 @@ function pushAbilities(items, abilities) { if (abilities.length) items.push({ k:
 const sections = computed(() => {
   const g = grants.value
   const out = []
+  const raceSkillsFromFeatures = selectedSkillChoices(raceAbilities.value, { raceId: state.race?.id, subraceId: state.subrace?.id }, (item) => !isExpertise(item))
+  const classSkillsFromFeatures = selectedSkillChoices(classAbilities.value, { classId: state.charClass?.id, subclassId: state.subclass?.id }, (item) => !isExpertise(item))
+  const expertiseIds = new Set([
+    ...selectedSkillChoices(raceAbilities.value, { raceId: state.race?.id, subraceId: state.subrace?.id }, isExpertise),
+    ...selectedSkillChoices(classAbilities.value, { classId: state.charClass?.id, subclassId: state.subclass?.id }, isExpertise),
+  ].map(String))
+  const skillIds = [...new Set([
+    ...state.raceSkillIds,
+    ...state.skillIds,
+    ...(g.backgroundSkills || []),
+    ...raceSkillsFromFeatures,
+    ...classSkillsFromFeatures,
+  ])]
 
   if (state.race) {
     const items = []
@@ -155,7 +175,6 @@ const sections = computed(() => {
     push(items, 'Размер', g.size || '')
     push(items, 'Языки', names(g.languages, 6).join(', '))
     push(items, 'Доп. язык', names(state.raceLangIds, 6).join(', '))
-    push(items, 'Навыки расы', names(state.raceSkillIds, 15).join(', '))
     push(items, 'Черта', state.featIds.map((id) => featPool.value.find((f) => f.id === id)?.name).filter(Boolean).join(', '))
     push(items, 'Владения', [...itemProfs(state.race.item), ...itemProfs(state.subrace?.item)].join(', '))
     pushAbilities(items, featureList(raceAbilities.value, { raceId: state.race?.id, subraceId: state.subrace?.id }))
@@ -182,7 +201,13 @@ const sections = computed(() => {
     if (items.length) out.push({ title: 'Предыстория', items })
   }
 
-  if (state.skillIds.length) out.push({ title: 'Навыки', items: [{ k: 'Владение', v: names(state.skillIds, 15).join(', ') }] })
+  if (skillIds.length) {
+    const labels = skillIds.map((id) => {
+      const name = suggestValue(15, id)
+      return expertiseIds.has(String(id)) ? `${name} (Компетентность)` : name
+    }).filter(Boolean)
+    if (labels.length) out.push({ title: 'Навыки', items: [{ k: 'Владение', v: labels.join(', ') }] })
+  }
 
   if (state.spellIds.length) {
     const spellNames = state.spellIds.map((id) => spellPool.value.find((sp) => sp.id === id)?.name).filter(Boolean)
