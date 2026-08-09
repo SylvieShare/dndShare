@@ -244,7 +244,7 @@ async function captureElementScreenshot(element) {
     const rect = element.getBoundingClientRect()
     if (rect.width <= 0 || rect.height <= 0) throw new Error('empty element')
     const [elementResult, viewportResult] = await Promise.allSettled([
-      withTimeout(captureSelectedElement(element, rect), 7000),
+      withTimeout(captureSelectedArea(rect), 7000),
       withTimeout(captureViewport(), 7000),
     ])
     if (generation !== screenshotGeneration) return
@@ -263,20 +263,30 @@ async function captureElementScreenshot(element) {
   }
 }
 
-async function captureSelectedElement(element, rect) {
+async function captureSelectedArea(rect) {
   if (rect.width <= 0 || rect.height <= 0) throw new Error('empty screenshot context')
+  const width = Math.max(1, Math.ceil(rect.width))
+  const height = Math.max(1, Math.ceil(rect.height))
   const scale = Math.max(0.1, Math.min(
     window.devicePixelRatio || 1,
     2,
-    1200 / rect.width,
-    800 / rect.height,
+    1200 / width,
+    800 / height,
   ))
-  return checkedScreenshot(await toJpeg(element, {
+  return checkedScreenshot(await toJpeg(document.body, {
     backgroundColor: screenshotBackground(),
     cacheBust: true,
+    width,
+    height,
     pixelRatio: scale,
     quality: 0.82,
     filter: screenshotFilter,
+    style: pageCropStyle(
+      window.scrollX + rect.left,
+      window.scrollY + rect.top,
+      width,
+      height,
+    ),
   }))
 }
 
@@ -298,7 +308,7 @@ async function changeScreenshotContext(delta) {
     const contextElement = screenshotContextElements.value[nextLevel]
     if (!contextElement?.isConnected) throw new Error('context element detached')
     const rect = contextElement.getBoundingClientRect()
-    screenshotDataURL.value = await withTimeout(captureSelectedElement(contextElement, rect), 7000)
+    screenshotDataURL.value = await withTimeout(captureSelectedArea(rect), 7000)
   } catch {
     if (generation === screenshotGeneration) {
       screenshotContextLevel.value = previousLevel
@@ -348,13 +358,17 @@ async function captureViewport() {
     pixelRatio: scale,
     quality: 0.68,
     filter: screenshotFilter,
-    style: {
-      transform: `translate(${-window.scrollX}px, ${-window.scrollY}px)`,
-      transformOrigin: 'top left',
-      width: `${Math.max(document.documentElement.scrollWidth, width)}px`,
-      height: `${Math.max(document.documentElement.scrollHeight, height)}px`,
-    },
+    style: pageCropStyle(window.scrollX, window.scrollY, width, height),
   }))
+}
+
+function pageCropStyle(left, top, width, height) {
+  return {
+    transform: `translate(${-left}px, ${-top}px)`,
+    transformOrigin: 'top left',
+    width: `${Math.max(document.documentElement.scrollWidth, left + width)}px`,
+    height: `${Math.max(document.documentElement.scrollHeight, top + height)}px`,
+  }
 }
 
 function screenshotFilter(node) {
