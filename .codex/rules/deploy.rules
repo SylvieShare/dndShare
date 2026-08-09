@@ -1,0 +1,10 @@
+# The deploy workflow is explicitly authorized for this project in CLAUDE.md.
+# Keep this allow-list entry scoped to the single checked-in deploy script.
+prefix_rule(
+    pattern = ["./deploy/deploy.sh"],
+    decision = "allow",
+    justification = "Штатный деплой dndShare разрешён после каждой завершённой правки",
+    match = [
+        "./deploy/deploy.sh",
+    ],
+)
