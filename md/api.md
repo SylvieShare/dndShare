@@ -51,7 +51,11 @@ Do not spread endpoint strings directly through components when adding new behav
 
 ## Page Error Report Routes
 
-- `POST /api/error-reports` — public/optional-auth submit endpoint. Body: `{ description, pageUrl, element, screenshot?, viewportScreenshot? }`; `element` is a JSON object containing at least `selector`, while the two optional JPEG/PNG/WebP data URLs contain the selected-element crop and visible page context. A signed-in reporter is attached to the row automatically; guests store `userId = null`.
+- `POST /api/error-reports` — public/optional-auth submit endpoint. Body: `{ title, description, pageUrl, element, screenshot?, viewportScreenshot? }`; `element` contains at least `selector` and can include the chosen screenshot context. A signed-in reporter is attached automatically; guests store `userId = null`.
+- `GET /api/error-report-review/reports?limit=500` — `ERROR_REPORT_REVIEWER` or `ADMIN`; non-archived reviewer inbox.
+- `POST /api/error-report-review/reports/{id}/messages` — `ERROR_REPORT_REVIEWER` or `ADMIN`; answer a pending AI question.
+- `POST /api/error-report-review/reports/{id}/archive` — `ERROR_REPORT_REVIEWER` or `ADMIN`; archive a finished report.
+- `POST /api/error-report-review/reports/{id}/serious-approval` — `ADMIN` only; confirm a pending serious change.
 - `GET /api/admin-panel/error-reports?limit=200&offset=0` — `ADMIN` list, newest first.
 - `GET /api/admin-panel/error-reports/{id}/screenshot` — `ADMIN` raw selected-element crop.
 - `GET /api/admin-panel/error-reports/{id}/viewport-screenshot` — `ADMIN` raw visible-page screenshot.

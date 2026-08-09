@@ -10,7 +10,7 @@ The application has a global user-facing flow for pointing at a broken element a
 - The trigger is teleported directly to `body`, outside `#app`, so morph windows can blur `#app` without blurring or trapping the button in their stacking context. Its global overlay layer remains clickable above application modals; it hides only while its own report form or element picker is active.
 - While selection mode is active, the element under the pointer is outlined. Click/tap selects it; `Esc` cancels.
 - Reporter UI is marked with `data-error-report-ignore`, so the selector cannot accidentally target the button, hint, or form.
-- The form uses `html-to-image` to render both the selected element crop and the visible viewport, shows both JPEG previews, then sends them with the required description, current `window.location.href`, and element JSON through `features/error-report/api/errorReportApi.js`. Each capture is best-effort and independent: unsupported/cross-origin content can omit one or both images without blocking the report.
+- The form requires a short title and detailed description. It uses `html-to-image` to render both the selected element crop and the visible viewport, shows both JPEG previews, then sends them with the current `window.location.href` and element JSON through `features/error-report/api/errorReportApi.js`. The crop has **Меньше/Больше** controls: users can move from the exact element to as many as three parent containers, then move back. A wider crop outlines the exact selected element and stores `screenshotContextLevel`/`screenshotContextSelector` in the element metadata. Each capture is best-effort and independent.
 - The element object contains a semantic CSS selector, tag/id/classes, short visible text, selected accessibility attributes, its viewport rect, and viewport size. The selector prefers a unique id or test attribute, then builds a readable tag-and-class ancestry without positional `nth-*` indexes, so admin and MCP consumers can understand the UI area from the locator itself. It deliberately does not contain `outerHTML` or form values.
 
 The public submit endpoint accepts both guests and signed-in users. A valid cookie session is attached as `user_id`; anonymous reports keep it null. Reports start unapproved unless the signed-in reporter has `ERROR_REPORT_AUTO_APPROVE`, in which case the new row is immediately available to MCP.
@@ -19,32 +19,39 @@ The public submit endpoint accepts both guests and signed-in users. A valid cook
 
 | Method | Path | Auth | Description |
 |--------|------|------|-------------|
-| POST | `/api/error-reports` | Optional | Create a report from `{ description, pageUrl, element, screenshot?, viewportScreenshot? }` |
+| POST | `/api/error-reports` | Optional | Create a report from `{ title, description, pageUrl, element, screenshot?, viewportScreenshot? }` |
+| GET | `/api/error-report-review/reports?limit=500` | `ERROR_REPORT_REVIEWER` or `ADMIN` | Poll non-archived reports; expired finished rows are archived first |
+| POST | `/api/error-report-review/reports/{id}/messages` | `ERROR_REPORT_REVIEWER` or `ADMIN` | Answer the latest AI question |
+| POST | `/api/error-report-review/reports/{id}/archive` | `ERROR_REPORT_REVIEWER` or `ADMIN` | Archive a finished report immediately |
+| POST | `/api/error-report-review/reports/{id}/serious-approval` | `ADMIN` | Approve a serious proposed change |
 | GET | `/api/admin-panel/error-reports?limit=200&offset=0` | `ADMIN` | List reports newest first |
 | GET | `/api/admin-panel/error-reports/{id}/screenshot` | `ADMIN` | Return the selected-element crop |
 | GET | `/api/admin-panel/error-reports/{id}/viewport-screenshot` | `ADMIN` | Return the visible-page screenshot |
 | PATCH | `/api/admin-panel/error-reports/{id}/approval` | `ADMIN` | Set `{ approved: boolean }` for MCP visibility |
 | POST | `/api/admin-panel/error-reports/{id}/messages` | `ADMIN` | Answer the latest AI question with `{ message }` |
-| POST | `/api/admin-panel/error-reports/{id}/reopen` | `ADMIN` | Return an archived report to the active queue |
+| POST | `/api/admin-panel/error-reports/{id}/reopen` | `ADMIN` | Return a finished or archived report to the active queue |
 | DELETE | `/api/admin-panel/error-reports/{id}` | `ADMIN` | Permanently delete one report and its conversation |
 
-Limits: description and feedback messages are 1–4000 characters, page URL is 1–2048 characters, and element JSON is up to 16 KiB and must contain a non-empty `selector`. Each screenshot accepts a JPEG, PNG, or WebP data URL up to 2 MiB decoded.
+Limits: title is 1–160 characters, description and feedback messages are 1–4000 characters, page URL is 1–2048 characters, and element JSON is up to 16 KiB and must contain a non-empty `selector`. Each screenshot accepts a JPEG, PNG, or WebP data URL up to 2 MiB decoded. During rolling deploys, an older frontend that omits `title` gets a server-generated title from the first description line.
 
 ## Storage
 
-`dndshare.error_report` stores `description`, `page_url`, `element jsonb`, optional `user_id`, an optional selected-element crop and visible-viewport image (each as `bytea` plus MIME type), `approved`, and lifecycle fields: `status` (`OPEN`/`RESOLVED`), optional `resolution`, deployed `resolved_commit_sha`, and `resolved_at`. `dndshare.error_report_message` stores the ordered AI/admin conversation for a report and cascades only on permanent report deletion. An admin message records the answering user when available. The tables and columns are created idempotently from `internal/store/schema.sql`; old rows simply have no screenshots or conversation and remain `OPEN`. The reporter FK is null for guests and the list joins `users.login` for signed-in reporters.
+`dndshare.error_report` stores `title`, `description`, `page_url`, `element jsonb`, optional `user_id`, an optional selected-element crop and visible-viewport image, `approved`, and lifecycle fields. Status moves through `OPEN → RESOLVED → ARCHIVED`: MCP resolution marks a report finished, reviewers see it for one hour, and polling then archives it automatically unless a reviewer clicks × first. Serious-change fields store the AI reason, request time, ADMIN approval time, and approving user. `dndshare.error_report_message` stores the ordered AI/human conversation and cascades only on permanent deletion.
 
 ## Admin and MCP
 
-The **«Ошибки страниц»** admin tab displays the description, page URL, reporter, selector, short element text, expandable full JSON, and the AI/admin feedback thread. Filters separate active, waiting, and archived reports. When the AI asks a question, the card is marked as waiting and shows an admin reply form. A resolved card displays its resolution, time, and commit SHA and can be returned to work. Permanent deletion remains an explicit admin-only action for spam or invalid records.
+Users with `ERROR_REPORT_REVIEWER` get a global floating inbox above the report button on every page. It polls once per second, shows title, status and only authors different from the current user, expands description/page/selector on hover, and opens a full conversation/reply modal. Finished reports remain visible for one hour and have a quick archive ×. The `ADMIN` role is additionally required for the serious-change confirmation button; reviewer access alone cannot approve it.
+
+The **«Ошибки страниц»** admin tab remains the full management surface: approval for MCP, screenshots, active/waiting/finished/archive filters, feedback, serious-change approval, reopen and permanent deletion.
 
 MCP exposes:
 
-- `error_reports_list(limit?, offset?)` — read actionable `OPEN` approved reports with the normal MCP token; includes the complete `messages` history plus lifecycle, reporter, and screenshot metadata. Resolved reports and reports whose latest message is an unanswered AI question are omitted; an admin answer or explicit reopen makes an open report visible again.
+- `error_reports_list(limit?, offset?)` — read actionable `OPEN` approved reports with title and complete metadata. Finished reports, unanswered AI questions, and serious changes awaiting ADMIN approval are omitted.
 - `error_report_screenshot(id, kind?)` — read an attached image for an approved report as native MCP image content without embedding base64 in the text response. `kind=element` (default) returns the crop and `kind=viewport` returns the surrounding page context.
 - `error_report_question_create(id, question)` — append a concrete AI question and hide the report from subsequent MCP lists until an admin answers; gated by `MCP_WRITE_ENABLED`.
-- `error_report_resolve(id, resolution, commitSha?)` — archive a successfully deployed fix while preserving the report, conversation, resolution, and commit; gated by `MCP_WRITE_ENABLED`.
-- `error_report_delete(id)` — deprecated compatibility alias that now archives instead of physically deleting.
+- `error_report_serious_change_request(id, reason)` — pause work that changes schema, authorization, security, data semantics, infrastructure, or another high-impact area until an `ADMIN` confirms it; gated by `MCP_WRITE_ENABLED`.
+- `error_report_resolve(id, resolution, commitSha?)` — mark a successfully deployed fix as `RESOLVED`; it remains in the reviewer inbox for one hour before archival.
+- `error_report_delete(id)` — deprecated compatibility alias that marks a report finished instead of physically deleting it.
 
 ## Scheduled automation lease
 

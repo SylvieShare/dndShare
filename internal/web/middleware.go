@@ -26,6 +26,7 @@ const (
 	RoleHandbookAdmin          = "HANDBOOK_ADMIN"
 	RoleTemplateAdmin          = "TEMPLATE_ADMIN"
 	RoleErrorReportAutoApprove = "ERROR_REPORT_AUTO_APPROVE"
+	RoleErrorReportReviewer    = "ERROR_REPORT_REVIEWER"
 )
 
 // recoverer ловит панику, логирует её в dndshare.logs и отдаёт 500 (аналог Advice).
@@ -152,6 +153,28 @@ func (s *Server) requireRole(w http.ResponseWriter, r *http.Request, roles ...st
 		}
 	}
 	return uid, true
+}
+
+// requireAnyRole authorizes a user that has at least one of the supplied roles.
+func (s *Server) requireAnyRole(w http.ResponseWriter, r *http.Request, roles ...string) (int64, bool) {
+	uid, ok := mustUser(w, r)
+	if !ok {
+		return 0, false
+	}
+	have, err := s.store.RolesByUser(r.Context(), uid)
+	if err != nil {
+		serverError(w, err)
+		return 0, false
+	}
+	for _, current := range have {
+		for _, need := range roles {
+			if current == need {
+				return uid, true
+			}
+		}
+	}
+	unauthorized(w)
+	return 0, false
 }
 
 func (s *Server) setSessionCookies(w http.ResponseWriter, r *http.Request, userID int64, session string) {

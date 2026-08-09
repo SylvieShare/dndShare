@@ -21,14 +21,15 @@ dropped. **Never create new objects in `base`.**
 `dndshare.error_report` is created idempotently by the current Go schema and contains:
 
 - `id bigserial` primary key;
-- `description text` and `page_url text`;
+- `title text`, `description text`, and `page_url text`;
 - `element jsonb` with the browser-generated selector and diagnostic metadata;
 - nullable `screenshot bytea` and `screenshot_content_type varchar(50)` for the selected element;
 - nullable `viewport_screenshot bytea` and `viewport_screenshot_content_type varchar(50)` for surrounding page context;
 - nullable `user_id` referencing `users(id)` with `ON DELETE SET NULL`;
 - `approved bool NOT NULL DEFAULT false`, which gates MCP visibility;
-- `status varchar(20) NOT NULL DEFAULT 'OPEN'` (`OPEN` or `RESOLVED`);
-- nullable `resolution`, `resolved_commit_sha`, and `resolved_at` archive successful fixes without deleting their history;
+- `status varchar(20) NOT NULL DEFAULT 'OPEN'` (`OPEN`, `RESOLVED`, or `ARCHIVED`);
+- nullable `resolution`, `resolved_commit_sha`, and `resolved_at` record successful fixes; finished rows are reviewer-visible for one hour before archival;
+- nullable `serious_change_reason`, request/approval timestamps, and approving ADMIN id gate high-impact changes;
 - `created_at timestamptz`.
 
 Indexes cover newest-first listing (`created_at DESC`), approved newest-first MCP listing, and the optional reporter (`user_id`). See `md/features/error-reports.md` for the API and payload.
@@ -41,7 +42,7 @@ Indexes cover newest-first listing (`created_at DESC`), approved newest-first MC
 - nullable `admin_user_id` identifies the answering administrator;
 - `created_at` and the monotonic `id` define conversation order.
 
-For MCP listing, a report is actionable only when it is approved, has `status = 'OPEN'`, and its latest message is not an unanswered `AI` question. A following `ADMIN` message returns an open report to the MCP queue; resolving archives it, and reopening clears resolution metadata.
+For MCP listing, a report is actionable only when it is approved, has `status = 'OPEN'`, its latest message is not an unanswered `AI` question, and any serious-change request has ADMIN approval. A human answer or serious approval returns it to the queue. Resolution moves it to `RESOLVED`; reviewer polling moves it to `ARCHIVED` after one hour.
 
 `dndshare.error_report_automation_lock` is a singleton lease row (`id = 1`) used by scheduled MCP consumers. It stores an opaque lease id plus acquisition and expiration timestamps. Atomic `INSERT ... ON CONFLICT DO UPDATE ... WHERE expires_at <= now()` prevents concurrent automation runs; expired leases are replaceable. MCP leases default to 45 minutes and can be renewed up to 120 minutes at a time.
 

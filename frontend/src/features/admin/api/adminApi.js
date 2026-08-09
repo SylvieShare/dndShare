@@ -51,3 +51,7 @@ export function answerErrorReport(id, message) {
 export function reopenErrorReport(id) {
   return fetchPost(`/admin-panel/error-reports/${id}/reopen`)
 }
+
+export function approveSeriousErrorReportChange(id) {
+  return fetchPost(`/error-report-review/reports/${id}/serious-approval`)
+}

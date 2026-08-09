@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"strings"
 	"testing"
+	"unicode/utf8"
 )
 
 func TestErrorReportLeaseID(t *testing.T) {
@@ -98,6 +99,28 @@ func TestNormalizeErrorReportMessage(t *testing.T) {
 	}
 	if _, err := normalizeErrorReportMessage(strings.Repeat("я", maxErrorReportMessageRunes+1)); err == nil {
 		t.Fatal("expected oversized message to fail")
+	}
+}
+
+func TestNormalizeErrorReportTitle(t *testing.T) {
+	title, err := normalizeErrorReportTitle("  Не открывается окно морфа  ")
+	if err != nil || title != "Не открывается окно морфа" {
+		t.Fatalf("unexpected normalized title: %q, %v", title, err)
+	}
+	if _, err := normalizeErrorReportTitle("   "); err == nil {
+		t.Fatal("expected blank title to fail")
+	}
+	if _, err := normalizeErrorReportTitle(strings.Repeat("я", maxErrorReportTitleRunes+1)); err == nil {
+		t.Fatal("expected oversized title to fail")
+	}
+}
+
+func TestDefaultErrorReportTitleSupportsOlderClients(t *testing.T) {
+	if got := defaultErrorReportTitle("  Первая строка\nПодробности  "); got != "Первая строка" {
+		t.Fatalf("unexpected fallback title: %q", got)
+	}
+	if got := defaultErrorReportTitle(strings.Repeat("я", maxErrorReportTitleRunes+10)); utf8.RuneCountInString(got) != maxErrorReportTitleRunes {
+		t.Fatalf("fallback title has unexpected length: %d", utf8.RuneCountInString(got))
 	}
 }
 

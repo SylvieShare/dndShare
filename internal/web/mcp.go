@@ -342,7 +342,7 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 		if err != nil {
 			return nil, err
 		}
-		resolution := "Архивировано через устаревший MCP-инструмент error_report_delete"
+		resolution := "Завершено через устаревший MCP-инструмент error_report_delete"
 		resolved, err := s.store.ResolveApprovedErrorReport(ctx, id, resolution, nil)
 		if err != nil {
 			return nil, err
@@ -350,7 +350,7 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 		if !resolved {
 			return nil, fmt.Errorf("error report %d not found", id)
 		}
-		return fmt.Sprintf("archived error report %d", id), nil
+		return fmt.Sprintf("finished error report %d", id), nil
 
 	case "error_report_resolve":
 		if err := s.mcpRequireWrite(); err != nil {
@@ -417,6 +417,35 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 			return nil, err
 		}
 		return created, nil
+
+	case "error_report_serious_change_request":
+		if err := s.mcpRequireWrite(); err != nil {
+			return nil, err
+		}
+		id, err := argInt64(args, "id")
+		if err != nil {
+			return nil, err
+		}
+		reason, err := argString(args, "reason")
+		if err != nil {
+			return nil, err
+		}
+		reason, err = normalizeErrorReportMessage(reason)
+		if err != nil {
+			return nil, err
+		}
+		requested, err := s.store.RequestApprovedErrorReportSeriousChange(ctx, id, reason)
+		if err != nil {
+			return nil, err
+		}
+		if !requested {
+			return nil, fmt.Errorf("open approved error report %d not found or already awaiting serious-change approval", id)
+		}
+		return map[string]any{
+			"id":                        id,
+			"waitingForSeriousApproval": true,
+			"seriousChangeReason":       reason,
+		}, nil
 
 	case "error_report_screenshot":
 		id, err := argInt64(args, "id")
@@ -882,7 +911,7 @@ func mcpToolDefs() []map[string]any {
 				"limit": intP("Max rows, 1..100 (default 20)"),
 			}, "q")),
 		tool("error_reports_list",
-			"List actionable open admin-approved page error reports, newest first. Resolved/unapproved reports and reports whose latest feedback message is an unanswered AI question are not exposed. A report becomes visible again after an admin answer or explicit reopen. Includes the full feedback history, status/resolution metadata, description, page URL, selected element metadata, reporter, screenshot metadata, and creation time.",
+			"List actionable open admin-approved page error reports, newest first. Finished/unapproved reports, unanswered AI questions, and serious changes awaiting ADMIN approval are not exposed. A report becomes visible again after an answer or serious-change approval. Includes title, full feedback history, approval/lifecycle metadata, description, page URL, selected element metadata, reporter, screenshot metadata, and creation time.",
 			schema(map[string]any{
 				"limit":  intP("Max rows, 1..500 (default 100)"),
 				"offset": intP("Offset for pagination (default 0)"),
@@ -904,12 +933,12 @@ func mcpToolDefs() []map[string]any {
 				"leaseId": strP("Opaque handle returned by error_report_lock_acquire"),
 			}, "leaseId")),
 		tool("error_report_delete",
-			"Deprecated compatibility alias: archive one open approved report as resolved instead of physically deleting it. Prefer error_report_resolve so the resolution and commit can be recorded. Requires MCP write operations to be enabled.",
+			"Deprecated compatibility alias: mark one open approved report as finished instead of physically deleting it. Prefer error_report_resolve so the resolution and commit can be recorded. Requires MCP write operations to be enabled.",
 			schema(map[string]any{
 				"id": intP("Error report id"),
 			}, "id")),
 		tool("error_report_resolve",
-			"Archive one successfully fixed open approved report. Records a concise resolution and optional deployed commit SHA; the report remains visible in admin history but is removed from the actionable MCP queue. Call only after successful tests, push, and deploy. Requires MCP write operations to be enabled.",
+			"Mark one successfully fixed open approved report as finished. Records a concise resolution and optional deployed commit SHA; the report remains visible to reviewers for one hour before automatic archival and is removed from the actionable MCP queue. Call only after successful tests, push, and deploy. Requires MCP write operations to be enabled.",
 			schema(map[string]any{
 				"id":         intP("Error report id"),
 				"resolution": strP("Concise root cause and deployed fix, 1..4000 characters"),
@@ -921,6 +950,12 @@ func mcpToolDefs() []map[string]any {
 				"id":       intP("Error report id"),
 				"question": strP("Concrete question for the administrator, 1..4000 characters"),
 			}, "id", "question")),
+		tool("error_report_serious_change_request",
+			"Pause an approved report because the proposed fix changes schema, authorization, security, data semantics, infrastructure, or another high-impact area that requires explicit ADMIN approval. The report is hidden from error_reports_list until an ADMIN confirms it in the application. Use a normal question instead when only product context is missing. Requires MCP write operations to be enabled.",
+			schema(map[string]any{
+				"id":     intP("Error report id"),
+				"reason": strP("Concrete proposed high-impact change, risks, and why ADMIN approval is required, 1..4000 characters"),
+			}, "id", "reason")),
 		tool("error_report_screenshot",
 			"Fetch an attached screenshot for one admin-approved page error report as native MCP image content. kind=element returns the selected-element crop; kind=viewport returns the visible page context. Check hasScreenshot/hasViewportScreenshot first.",
 			schema(map[string]any{

@@ -14,6 +14,7 @@ import (
 // metadata without requiring a schema migration for every new diagnostic field.
 type ErrorReport struct {
 	ID                            int64                `json:"id"`
+	Title                         string               `json:"title"`
 	Description                   string               `json:"description"`
 	PageURL                       string               `json:"pageUrl"`
 	Element                       json.RawMessage      `json:"element"`
@@ -30,12 +31,19 @@ type ErrorReport struct {
 	ViewportScreenshotContentType *string              `json:"viewportScreenshotContentType,omitempty"`
 	Messages                      []ErrorReportMessage `json:"messages"`
 	WaitingForAnswer              bool                 `json:"waitingForAnswer"`
+	SeriousChangeReason           *string              `json:"seriousChangeReason,omitempty"`
+	SeriousChangeRequestedAt      *time.Time           `json:"seriousChangeRequestedAt,omitempty"`
+	SeriousChangeApprovedAt       *time.Time           `json:"seriousChangeApprovedAt,omitempty"`
+	SeriousChangeApprovedByUserID *int64               `json:"seriousChangeApprovedByUserId,omitempty"`
+	SeriousChangeApprovedByLogin  *string              `json:"seriousChangeApprovedByLogin,omitempty"`
+	WaitingForSeriousApproval     bool                 `json:"waitingForSeriousApproval"`
 	CreatedAt                     time.Time            `json:"createdAt"`
 }
 
 const (
 	ErrorReportStatusOpen     = "OPEN"
 	ErrorReportStatusResolved = "RESOLVED"
+	ErrorReportStatusArchived = "ARCHIVED"
 
 	ErrorReportMessageSenderAI    = "AI"
 	ErrorReportMessageSenderAdmin = "ADMIN"
@@ -58,7 +66,7 @@ type ErrorReportMessage struct {
 
 func (s *Store) CreateErrorReport(
 	ctx context.Context,
-	description, pageURL string,
+	title, description, pageURL string,
 	element json.RawMessage,
 	screenshot []byte,
 	screenshotContentType *string,
@@ -71,17 +79,18 @@ func (s *Store) CreateErrorReport(
 	var elementBytes []byte
 	err := s.pool.QueryRow(ctx, `
 		INSERT INTO dndshare.error_report (
-			description, page_url, element, screenshot, screenshot_content_type,
+			title, description, page_url, element, screenshot, screenshot_content_type,
 			viewport_screenshot, viewport_screenshot_content_type, user_id, approved
 		)
-		VALUES ($1, $2, CAST($3 AS jsonb), $4, $5, $6, $7, $8, $9)
-		RETURNING id, description, page_url, element, user_id, approved, status, resolution,
+		VALUES ($1, $2, $3, CAST($4 AS jsonb), $5, $6, $7, $8, $9, $10)
+		RETURNING id, title, description, page_url, element, user_id, approved, status, resolution,
 		          resolved_commit_sha, resolved_at, screenshot IS NOT NULL, screenshot_content_type,
 		          viewport_screenshot IS NOT NULL, viewport_screenshot_content_type, created_at`,
-		description, pageURL, string(element), screenshot, screenshotContentType,
+		title, description, pageURL, string(element), screenshot, screenshotContentType,
 		viewportScreenshot, viewportScreenshotContentType, userID, approved,
 	).Scan(
 		&report.ID,
+		&report.Title,
 		&report.Description,
 		&report.PageURL,
 		&elementBytes,
@@ -103,16 +112,34 @@ func (s *Store) CreateErrorReport(
 }
 
 func (s *Store) ListErrorReports(ctx context.Context, limit, offset int) ([]ErrorReport, error) {
-	return s.listErrorReports(ctx, limit, offset, false)
+	if err := s.archiveExpiredResolvedErrorReports(ctx); err != nil {
+		return nil, err
+	}
+	return s.listErrorReports(ctx, limit, offset, false, false)
 }
 
 func (s *Store) ListApprovedErrorReports(ctx context.Context, limit, offset int) ([]ErrorReport, error) {
-	return s.listErrorReports(ctx, limit, offset, true)
+	return s.listErrorReports(ctx, limit, offset, true, true)
 }
 
-func (s *Store) listErrorReports(ctx context.Context, limit, offset int, approvedOnly bool) ([]ErrorReport, error) {
+func (s *Store) ListReviewerErrorReports(ctx context.Context, limit, offset int) ([]ErrorReport, error) {
+	if err := s.archiveExpiredResolvedErrorReports(ctx); err != nil {
+		return nil, err
+	}
+	return s.listErrorReports(ctx, limit, offset, false, true)
+}
+
+func (s *Store) archiveExpiredResolvedErrorReports(ctx context.Context) error {
+	_, err := s.pool.Exec(ctx, `
+		UPDATE dndshare.error_report er
+		SET status = 'ARCHIVED'
+		WHERE status = 'RESOLVED' AND resolved_at <= now() - interval '1 hour'`)
+	return err
+}
+
+func (s *Store) listErrorReports(ctx context.Context, limit, offset int, approvedOnly, reviewerVisibleOnly bool) ([]ErrorReport, error) {
 	rows, err := s.pool.Query(ctx, `
-		SELECT er.id, er.description, er.page_url, er.element, er.user_id, u.login,
+		SELECT er.id, er.title, er.description, er.page_url, er.element, er.user_id, u.login,
 		       er.approved, er.status, er.resolution, er.resolved_commit_sha, er.resolved_at,
 		       er.screenshot IS NOT NULL, er.screenshot_content_type,
 		       er.viewport_screenshot IS NOT NULL, er.viewport_screenshot_content_type,
@@ -122,10 +149,17 @@ func (s *Store) listErrorReports(ctx context.Context, limit, offset int, approve
 		           WHERE m.error_report_id = er.id
 		           ORDER BY m.id DESC
 		           LIMIT 1
-		       ), false), er.created_at
+		       ), false),
+		       er.serious_change_reason, er.serious_change_requested_at,
+		       er.serious_change_approved_at, er.serious_change_approved_by_user_id,
+		       approver.login,
+		       er.serious_change_requested_at IS NOT NULL AND er.serious_change_approved_at IS NULL,
+		       er.created_at
 		FROM dndshare.error_report er
 		LEFT JOIN dndshare.users u ON u.id = er.user_id
-		WHERE NOT $3::bool OR (
+		LEFT JOIN dndshare.users approver ON approver.id = er.serious_change_approved_by_user_id
+		WHERE (NOT $4::bool OR er.status <> 'ARCHIVED')
+		  AND (NOT $3::bool OR (
 		    er.approved AND er.status = 'OPEN' AND COALESCE((
 		        SELECT m.sender <> 'AI'
 		        FROM dndshare.error_report_message m
@@ -133,9 +167,10 @@ func (s *Store) listErrorReports(ctx context.Context, limit, offset int, approve
 		        ORDER BY m.id DESC
 		        LIMIT 1
 		    ), true)
-		)
+		    AND (er.serious_change_requested_at IS NULL OR er.serious_change_approved_at IS NOT NULL)
+		  ))
 		ORDER BY er.created_at DESC, er.id DESC
-		LIMIT $1 OFFSET $2`, limit, offset, approvedOnly)
+		LIMIT $1 OFFSET $2`, limit, offset, approvedOnly, reviewerVisibleOnly)
 	if err != nil {
 		return nil, err
 	}
@@ -149,6 +184,7 @@ func (s *Store) listErrorReports(ctx context.Context, limit, offset int, approve
 		var elementBytes []byte
 		if err := rows.Scan(
 			&report.ID,
+			&report.Title,
 			&report.Description,
 			&report.PageURL,
 			&elementBytes,
@@ -164,6 +200,12 @@ func (s *Store) listErrorReports(ctx context.Context, limit, offset int, approve
 			&report.HasViewportScreenshot,
 			&report.ViewportScreenshotContentType,
 			&report.WaitingForAnswer,
+			&report.SeriousChangeReason,
+			&report.SeriousChangeRequestedAt,
+			&report.SeriousChangeApprovedAt,
+			&report.SeriousChangeApprovedByUserID,
+			&report.SeriousChangeApprovedByLogin,
+			&report.WaitingForSeriousApproval,
 			&report.CreatedAt,
 		); err != nil {
 			return nil, err
@@ -361,11 +403,58 @@ func (s *Store) SetErrorReportApproved(ctx context.Context, id int64, approved b
 	return result.RowsAffected() > 0, nil
 }
 
+func (s *Store) RequestApprovedErrorReportSeriousChange(ctx context.Context, id int64, reason string) (bool, error) {
+	result, err := s.pool.Exec(ctx, `
+		UPDATE dndshare.error_report er
+		SET serious_change_reason = $2,
+		    serious_change_requested_at = now(),
+		    serious_change_approved_at = NULL,
+		    serious_change_approved_by_user_id = NULL
+		WHERE id = $1
+		  AND approved
+		  AND status = 'OPEN'
+		  AND COALESCE((
+		      SELECT m.sender <> 'AI'
+		      FROM dndshare.error_report_message m
+		      WHERE m.error_report_id = er.id
+		      ORDER BY m.id DESC
+		      LIMIT 1
+		  ), true)
+		  AND NOT (serious_change_requested_at IS NOT NULL AND serious_change_approved_at IS NULL)`,
+		id, reason)
+	if err != nil {
+		return false, err
+	}
+	return result.RowsAffected() > 0, nil
+}
+
+func (s *Store) ApproveErrorReportSeriousChange(ctx context.Context, id, adminUserID int64) (bool, error) {
+	result, err := s.pool.Exec(ctx, `
+		UPDATE dndshare.error_report er
+		SET serious_change_approved_at = now(), serious_change_approved_by_user_id = $2
+		WHERE id = $1
+		  AND status = 'OPEN'
+		  AND serious_change_requested_at IS NOT NULL
+		  AND serious_change_approved_at IS NULL`, id, adminUserID)
+	if err != nil {
+		return false, err
+	}
+	return result.RowsAffected() > 0, nil
+}
+
 func (s *Store) ResolveApprovedErrorReport(ctx context.Context, id int64, resolution string, commitSHA *string) (bool, error) {
 	result, err := s.pool.Exec(ctx, `
-		UPDATE dndshare.error_report
+		UPDATE dndshare.error_report er
 		SET status = 'RESOLVED', resolution = $2, resolved_commit_sha = $3, resolved_at = now()
-		WHERE id = $1 AND approved AND status = 'OPEN'`, id, resolution, commitSHA)
+		WHERE id = $1 AND approved AND status = 'OPEN'
+		  AND COALESCE((
+		      SELECT m.sender <> 'AI'
+		      FROM dndshare.error_report_message m
+		      WHERE m.error_report_id = er.id
+		      ORDER BY m.id DESC
+		      LIMIT 1
+		  ), true)
+		  AND (serious_change_requested_at IS NULL OR serious_change_approved_at IS NOT NULL)`, id, resolution, commitSHA)
 	if err != nil {
 		return false, err
 	}
@@ -375,7 +464,20 @@ func (s *Store) ResolveApprovedErrorReport(ctx context.Context, id int64, resolu
 func (s *Store) ReopenErrorReport(ctx context.Context, id int64) (bool, error) {
 	result, err := s.pool.Exec(ctx, `
 		UPDATE dndshare.error_report
-		SET status = 'OPEN', resolution = NULL, resolved_commit_sha = NULL, resolved_at = NULL
+		SET status = 'OPEN', resolution = NULL, resolved_commit_sha = NULL, resolved_at = NULL,
+		    serious_change_reason = NULL, serious_change_requested_at = NULL,
+		    serious_change_approved_at = NULL, serious_change_approved_by_user_id = NULL
+		WHERE id = $1 AND status IN ('RESOLVED', 'ARCHIVED')`, id)
+	if err != nil {
+		return false, err
+	}
+	return result.RowsAffected() > 0, nil
+}
+
+func (s *Store) ArchiveResolvedErrorReport(ctx context.Context, id int64) (bool, error) {
+	result, err := s.pool.Exec(ctx, `
+		UPDATE dndshare.error_report
+		SET status = 'ARCHIVED'
 		WHERE id = $1 AND status = 'RESOLVED'`, id)
 	if err != nil {
 		return false, err

@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS dndshare."role" (
     CONSTRAINT role_pk PRIMARY KEY (id)
 );
 INSERT INTO dndshare."role" ("name")
-SELECT r FROM (VALUES ('NONE'), ('ADMIN'), ('HANDBOOK_ADMIN'), ('TEMPLATE_ADMIN'), ('ERROR_REPORT_AUTO_APPROVE')) AS v(r)
+SELECT r FROM (VALUES ('NONE'), ('ADMIN'), ('HANDBOOK_ADMIN'), ('TEMPLATE_ADMIN'), ('ERROR_REPORT_AUTO_APPROVE'), ('ERROR_REPORT_REVIEWER')) AS v(r)
 WHERE NOT EXISTS (SELECT 1 FROM dndshare."role" e WHERE e."name" = v.r);
 
 CREATE TABLE IF NOT EXISTS dndshare.users (
@@ -70,6 +70,7 @@ CREATE INDEX IF NOT EXISTS idx_logs_created_at ON dndshare.logs USING btree (cre
 -- ---------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS dndshare.error_report (
     id          bigserial NOT NULL,
+    title       text NOT NULL,
     description text NOT NULL,
     page_url    text NOT NULL,
     element     jsonb NOT NULL,
@@ -83,9 +84,18 @@ CREATE TABLE IF NOT EXISTS dndshare.error_report (
     resolution  text NULL,
     resolved_commit_sha varchar(64) NULL,
     resolved_at timestamptz NULL,
+    serious_change_reason text NULL,
+    serious_change_requested_at timestamptz NULL,
+    serious_change_approved_at timestamptz NULL,
+    serious_change_approved_by_user_id int8 NULL,
     created_at  timestamptz DEFAULT now() NOT NULL,
     CONSTRAINT error_report_pk PRIMARY KEY (id)
 );
+ALTER TABLE dndshare.error_report ADD COLUMN IF NOT EXISTS title text NULL;
+UPDATE dndshare.error_report
+SET title = LEFT(description, 160)
+WHERE title IS NULL OR BTRIM(title) = '';
+ALTER TABLE dndshare.error_report ALTER COLUMN title SET NOT NULL;
 ALTER TABLE dndshare.error_report ADD COLUMN IF NOT EXISTS screenshot bytea NULL;
 ALTER TABLE dndshare.error_report ADD COLUMN IF NOT EXISTS screenshot_content_type varchar(50) NULL;
 ALTER TABLE dndshare.error_report ADD COLUMN IF NOT EXISTS viewport_screenshot bytea NULL;
@@ -95,21 +105,37 @@ ALTER TABLE dndshare.error_report ADD COLUMN IF NOT EXISTS status varchar(20) DE
 ALTER TABLE dndshare.error_report ADD COLUMN IF NOT EXISTS resolution text NULL;
 ALTER TABLE dndshare.error_report ADD COLUMN IF NOT EXISTS resolved_commit_sha varchar(64) NULL;
 ALTER TABLE dndshare.error_report ADD COLUMN IF NOT EXISTS resolved_at timestamptz NULL;
+ALTER TABLE dndshare.error_report ADD COLUMN IF NOT EXISTS serious_change_reason text NULL;
+ALTER TABLE dndshare.error_report ADD COLUMN IF NOT EXISTS serious_change_requested_at timestamptz NULL;
+ALTER TABLE dndshare.error_report ADD COLUMN IF NOT EXISTS serious_change_approved_at timestamptz NULL;
+ALTER TABLE dndshare.error_report ADD COLUMN IF NOT EXISTS serious_change_approved_by_user_id int8 NULL;
 DO $$ BEGIN
     IF NOT EXISTS (
         SELECT 1 FROM pg_constraint
-        WHERE conname = 'error_report_status_check'
+        WHERE conname = 'error_report_serious_change_approved_by_fk'
           AND conrelid = 'dndshare.error_report'::regclass
     ) THEN
         ALTER TABLE dndshare.error_report
-            ADD CONSTRAINT error_report_status_check CHECK (status IN ('OPEN', 'RESOLVED'));
+            ADD CONSTRAINT error_report_serious_change_approved_by_fk
+            FOREIGN KEY (serious_change_approved_by_user_id)
+            REFERENCES dndshare.users(id) ON DELETE SET NULL;
     END IF;
+END $$;
+DO $$ BEGIN
+    ALTER TABLE dndshare.error_report DROP CONSTRAINT IF EXISTS error_report_status_check;
+    ALTER TABLE dndshare.error_report
+        ADD CONSTRAINT error_report_status_check CHECK (status IN ('OPEN', 'RESOLVED', 'ARCHIVED'));
 END $$;
 CREATE INDEX IF NOT EXISTS idx_error_report_created_at ON dndshare.error_report USING btree (created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_error_report_user_id ON dndshare.error_report USING btree (user_id);
 CREATE INDEX IF NOT EXISTS idx_error_report_approved_created_at ON dndshare.error_report USING btree (created_at DESC) WHERE approved;
 CREATE INDEX IF NOT EXISTS idx_error_report_open_approved_created_at
     ON dndshare.error_report USING btree (created_at DESC) WHERE approved AND status = 'OPEN';
+CREATE INDEX IF NOT EXISTS idx_error_report_resolved_at
+    ON dndshare.error_report USING btree (resolved_at) WHERE status = 'RESOLVED';
+CREATE INDEX IF NOT EXISTS idx_error_report_serious_change_approved_by_user_id
+    ON dndshare.error_report USING btree (serious_change_approved_by_user_id)
+    WHERE serious_change_approved_by_user_id IS NOT NULL;
 
 CREATE TABLE IF NOT EXISTS dndshare.error_report_message (
     id             bigserial NOT NULL,

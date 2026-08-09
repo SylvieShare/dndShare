@@ -62,16 +62,17 @@ All endpoints require `@UserNeedRole([Role.ADMIN])`.
 | GET | `/api/admin-panel/error-reports/{id}/screenshot` | Raw attached element screenshot |
 | GET | `/api/admin-panel/error-reports/{id}/viewport-screenshot` | Raw visible-page screenshot |
 | PATCH | `/api/admin-panel/error-reports/{id}/approval` | Approve or revoke MCP access with `{ approved: boolean }` |
+| POST | `/api/error-report-review/reports/{id}/serious-approval` | ADMIN-only serious-change confirmation |
 | DELETE | `/api/admin-panel/error-reports/{id}` | Delete one handled report |
 
-The **«Ошибки страниц»** tab renders the submitted description, page URL, reporter (`Гость` for null `user_id`), selected CSS selector, optional element and viewport screenshot previews, MCP approval checkbox, and expandable element JSON. See `md/features/error-reports.md` for the public submit flow.
+The **«Ошибки страниц»** tab renders title, description, page URL, reporter (`Гость` for null `user_id`), selector, screenshots, MCP approval, serious-change confirmation, conversation, and separate open/waiting/finished/archive states. See `md/features/error-reports.md` for the public submit flow and global reviewer inbox.
 
 ### Supporting changes
 
 - `UserRoleRepository` — added `findRolesByAllUsers()`, `addRole(userId, role)`, `removeRole(userId, role)`.
 - `UserRoleService` — exposed `getRolesByAllUsers()`, `addRole()`, `removeRole()`.
 
-Role names match the backend constants: `ADMIN`, `HANDBOOK_ADMIN`, `TEMPLATE_ADMIN`, `ERROR_REPORT_AUTO_APPROVE`. The latter auto-approves new page-error reports submitted by that signed-in user.
+Role names match the backend constants: `ADMIN`, `HANDBOOK_ADMIN`, `TEMPLATE_ADMIN`, `ERROR_REPORT_AUTO_APPROVE`, `ERROR_REPORT_REVIEWER`. Auto-approve affects new reports; reviewer exposes the global queue and reply UI. Only `ADMIN` can confirm serious changes.
 
 ## Jobs (асинхронные задачи)
 

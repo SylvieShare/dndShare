@@ -13,6 +13,7 @@
   </div>
   <DiceRollPopup/>
   <ErrorReporter/>
+  <ErrorReportInbox/>
 </template>
 
 <script setup>
@@ -20,6 +21,7 @@ import { onMounted } from 'vue'
 import AppHeader from "@/shared/ui/AppHeader";
 import DiceRollPopup from "@/shared/ui/DiceRollPopup.vue";
 import ErrorReporter from '@/features/error-report/components/ErrorReporter.vue'
+import ErrorReportInbox from '@/features/error-report/components/ErrorReportInbox.vue'
 import { pageTransitionName } from '@/app/router'
 import { useAccountStore } from '@/stores/account'
 import { useTextStore } from '@/stores/text'

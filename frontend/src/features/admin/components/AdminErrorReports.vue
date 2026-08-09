@@ -33,12 +33,14 @@
             <span class="report-id">#{{ report.id }}</span>
             <span class="report-time">{{ formatTime(report.createdAt) }}</span>
             <span class="report-user">{{ report.userLogin || 'Гость' }}</span>
-            <span v-if="report.status === 'RESOLVED'" class="status-badge resolved">В архиве</span>
+            <span v-if="report.status === 'ARCHIVED'" class="status-badge resolved">В архиве</span>
+            <span v-else-if="report.status === 'RESOLVED'" class="status-badge resolved">Завершена</span>
+            <span v-else-if="report.waitingForSeriousApproval" class="status-badge serious">Нужно решение ADMIN</span>
             <span v-else-if="report.waitingForAnswer" class="status-badge waiting">Ждёт ответа</span>
             <span v-else class="status-badge open">В работе</span>
           </div>
           <div class="report-actions">
-            <label v-if="report.status !== 'RESOLVED'" class="approval-toggle" :class="{ approved: report.approved }">
+            <label v-if="report.status === 'OPEN'" class="approval-toggle" :class="{ approved: report.approved }">
               <input
                 type="checkbox"
                 :checked="report.approved"
@@ -48,7 +50,7 @@
               <span>{{ report.approved ? 'Одобрено для MCP' : 'Одобрить для MCP' }}</span>
             </label>
             <button
-              v-if="report.status === 'RESOLVED'"
+              v-if="report.status === 'RESOLVED' || report.status === 'ARCHIVED'"
               class="reopen-button"
               type="button"
               :disabled="reopeningIds.has(report.id)"
@@ -67,7 +69,20 @@
           </div>
         </div>
 
+        <h2 class="report-title">{{ report.title }}</h2>
         <div class="report-description">{{ report.description }}</div>
+
+        <section v-if="report.waitingForSeriousApproval" class="serious-change-request">
+          <div>
+            <strong>Нейронка запрашивает подтверждение серьёзной переделки</strong>
+            <p>{{ report.seriousChangeReason }}</p>
+          </div>
+          <button
+            type="button"
+            :disabled="approvingSeriousIds.has(report.id)"
+            @click="onApproveSeriousChange(report)"
+          >{{ approvingSeriousIds.has(report.id) ? 'Подтверждение…' : 'Подтвердить изменение' }}</button>
+        </section>
 
         <dl class="report-meta">
           <div>
@@ -111,7 +126,7 @@
           <pre>{{ formatElement(report.element) }}</pre>
         </details>
 
-        <section v-if="report.status === 'RESOLVED'" class="report-resolution">
+        <section v-if="report.status === 'RESOLVED' || report.status === 'ARCHIVED'" class="report-resolution">
           <div class="resolution-head">
             <strong>Результат исправления</strong>
             <span>{{ formatTime(report.resolvedAt) }}</span>
@@ -166,7 +181,7 @@
 
 <script setup>
 import { computed, onMounted, reactive, ref } from 'vue'
-import { answerErrorReport, deleteErrorReport, getErrorReports, reopenErrorReport, setErrorReportApproval } from '../api/adminApi'
+import { answerErrorReport, approveSeriousErrorReportChange, deleteErrorReport, getErrorReports, reopenErrorReport, setErrorReportApproval } from '../api/adminApi'
 
 const reports = ref([])
 const loading = ref(true)
@@ -175,13 +190,16 @@ const deletingIds = reactive(new Set())
 const approvingIds = reactive(new Set())
 const answeringIds = reactive(new Set())
 const reopeningIds = reactive(new Set())
+const approvingSeriousIds = reactive(new Set())
 const replyDrafts = reactive({})
 const activeFilter = ref('OPEN')
 
 const filters = computed(() => [
-  { value: 'OPEN', label: 'В работе', count: reports.value.filter(report => report.status === 'OPEN' && !report.waitingForAnswer).length },
+  { value: 'OPEN', label: 'В работе', count: reports.value.filter(report => report.status === 'OPEN' && !report.waitingForAnswer && !report.waitingForSeriousApproval).length },
   { value: 'WAITING', label: 'Ждут ответа', count: reports.value.filter(report => report.status === 'OPEN' && report.waitingForAnswer).length },
-  { value: 'RESOLVED', label: 'Архив', count: reports.value.filter(report => report.status === 'RESOLVED').length },
+  { value: 'APPROVAL', label: 'Ждут решения', count: reports.value.filter(report => report.status === 'OPEN' && report.waitingForSeriousApproval).length },
+  { value: 'RESOLVED', label: 'Завершены', count: reports.value.filter(report => report.status === 'RESOLVED').length },
+  { value: 'ARCHIVED', label: 'Архив', count: reports.value.filter(report => report.status === 'ARCHIVED').length },
   { value: 'ALL', label: 'Все', count: reports.value.length },
 ])
 
@@ -190,10 +208,16 @@ const filteredReports = computed(() => {
   if (activeFilter.value === 'WAITING') {
     return reports.value.filter(report => report.status === 'OPEN' && report.waitingForAnswer)
   }
+  if (activeFilter.value === 'APPROVAL') {
+    return reports.value.filter(report => report.status === 'OPEN' && report.waitingForSeriousApproval)
+  }
   if (activeFilter.value === 'RESOLVED') {
     return reports.value.filter(report => report.status === 'RESOLVED')
   }
-  return reports.value.filter(report => report.status === 'OPEN' && !report.waitingForAnswer)
+  if (activeFilter.value === 'ARCHIVED') {
+    return reports.value.filter(report => report.status === 'ARCHIVED')
+  }
+  return reports.value.filter(report => report.status === 'OPEN' && !report.waitingForAnswer && !report.waitingForSeriousApproval)
 })
 
 async function load() {
@@ -272,6 +296,22 @@ async function onReopen(report) {
     error.value = `Не удалось вернуть заявку #${report.id} в работу`
   } finally {
     reopeningIds.delete(report.id)
+  }
+}
+
+async function onApproveSeriousChange(report) {
+  if (approvingSeriousIds.has(report.id)) return
+  error.value = ''
+  approvingSeriousIds.add(report.id)
+  try {
+    await approveSeriousErrorReportChange(report.id)
+    report.waitingForSeriousApproval = false
+    report.seriousChangeApprovedAt = new Date().toISOString()
+    activeFilter.value = 'OPEN'
+  } catch {
+    error.value = `Не удалось подтвердить серьёзное изменение заявки #${report.id}`
+  } finally {
+    approvingSeriousIds.delete(report.id)
   }
 }
 
@@ -425,6 +465,7 @@ onMounted(load)
 
 .status-badge.open { background: rgba(141, 126, 232, 0.14); color: #c2b8ff; }
 .status-badge.waiting { background: rgba(232, 184, 90, 0.14); color: #e8b85a; }
+.status-badge.serious { background: rgba(224, 85, 85, 0.14); color: #ef9b8f; }
 .status-badge.resolved { background: rgba(100, 183, 123, 0.14); color: #75c58b; }
 
 .approval-toggle {
@@ -453,14 +494,48 @@ onMounted(load)
 .report-id { color: #c2b8ff; font-weight: 700; }
 .report-user { color: var(--text-1); }
 
+.report-title {
+  margin: 14px 0 0;
+  color: var(--text-1);
+  font-size: 17px;
+}
+
 .report-description {
-  margin-top: 13px;
+  margin-top: 7px;
   color: var(--text-1);
   font-size: 14px;
   line-height: 1.45;
   overflow-wrap: anywhere;
   white-space: pre-wrap;
 }
+
+.serious-change-request {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  margin-top: 14px;
+  padding: 13px 14px;
+  border: 1px solid rgba(224, 85, 85, 0.3);
+  border-radius: 10px;
+  background: rgba(224, 85, 85, 0.08);
+}
+
+.serious-change-request strong { color: #efb0a8; font-size: 12px; }
+.serious-change-request p { margin: 6px 0 0; color: var(--text-2); font-size: 12px; line-height: 1.45; }
+.serious-change-request button {
+  flex: 0 0 auto;
+  border: none;
+  border-radius: 8px;
+  background: var(--danger);
+  color: white;
+  cursor: pointer;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 8px 11px;
+}
+.serious-change-request button:disabled { cursor: wait; opacity: .5; }
 
 .report-meta {
   display: grid;

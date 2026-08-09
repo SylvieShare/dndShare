@@ -39,6 +39,16 @@
         <code>{{ selectedElement?.selector }}</code>
         <span v-if="selectedElement?.text" class="selected-text">{{ selectedElement.text }}</span>
       </div>
+      <label class="description-label" for="error-report-title">Заголовок</label>
+      <input
+        id="error-report-title"
+        ref="titleInput"
+        v-model="reportTitle"
+        class="title-input"
+        maxlength="160"
+        placeholder="Коротко: что именно сломано"
+        :disabled="submitting"
+      />
       <div class="screenshot-field">
         <span class="selected-label">Скриншоты</span>
         <div v-if="screenshotCapturing" class="screenshot-state">Создаём снимки элемента и видимой страницы…</div>
@@ -50,6 +60,19 @@
               :src="screenshotDataURL"
               alt="Скриншот выбранного элемента"
             />
+            <div class="screenshot-context-controls">
+              <button
+                type="button"
+                :disabled="screenshotCapturing || screenshotContextLevel === 0"
+                @click="changeScreenshotContext(-1)"
+              >Меньше</button>
+              <span>{{ screenshotContextLabel }}</span>
+              <button
+                type="button"
+                :disabled="screenshotCapturing || screenshotContextLevel >= maxScreenshotContextLevel"
+                @click="changeScreenshotContext(1)"
+              >Больше</button>
+            </div>
           </figure>
           <figure v-if="viewportScreenshotDataURL">
             <figcaption>Видимая область страницы</figcaption>
@@ -67,7 +90,6 @@
       <label class="description-label" for="error-report-description">Описание</label>
       <textarea
         id="error-report-description"
-        ref="descriptionInput"
         v-model="description"
         class="description-input"
         rows="5"
@@ -81,7 +103,7 @@
       </div>
       <div class="form-actions">
         <button type="button" class="cancel-button" :disabled="submitting" @click="closeForm">Отмена</button>
-        <button type="submit" class="submit-button" :disabled="submitting || screenshotCapturing || !description.trim()">
+        <button type="submit" class="submit-button" :disabled="submitting || screenshotCapturing || !reportTitle.trim() || !description.trim()">
           {{ submitting ? 'Отправка…' : 'Отправить' }}
         </button>
       </div>
@@ -102,21 +124,25 @@ import { createErrorReport } from '../api/errorReportApi'
 const selecting = ref(false)
 const formOpen = ref(false)
 const submitting = ref(false)
+const reportTitle = ref('')
 const description = ref('')
 const submitError = ref('')
 const selectedElement = ref(null)
 const selectedPageURL = ref('')
-const descriptionInput = ref(null)
+const titleInput = ref(null)
 const toast = ref('')
 const screenshotDataURL = ref('')
 const viewportScreenshotDataURL = ref('')
 const screenshotCapturing = ref(false)
 const screenshotError = ref('')
+const screenshotContextLevel = ref(0)
 const highlight = reactive({ visible: false, top: 0, left: 0, width: 0, height: 0 })
 
 let hoveredElement = null
 let toastTimer = null
 let screenshotGeneration = 0
+let selectedDOMElement = null
+const screenshotContextElements = ref([])
 
 const highlightStyle = computed(() => ({
   top: `${highlight.top}px`,
@@ -124,6 +150,11 @@ const highlightStyle = computed(() => ({
   width: `${highlight.width}px`,
   height: `${highlight.height}px`,
 }))
+
+const maxScreenshotContextLevel = computed(() => Math.max(0, screenshotContextElements.value.length - 1))
+const screenshotContextLabel = computed(() => screenshotContextLevel.value === 0
+  ? 'Точная область'
+  : `Контекст +${screenshotContextLevel.value}`)
 
 function startSelection() {
   if (selecting.value || formOpen.value) return
@@ -194,11 +225,15 @@ function onElementClick(event) {
   event.stopImmediatePropagation()
 
   selectedElement.value = describeElement(target)
+  selectedDOMElement = target
+  screenshotContextElements.value = screenshotContextsFor(target)
+  screenshotContextLevel.value = 0
+  updateScreenshotContextMetadata()
   selectedPageURL.value = window.location.href
   stopSelection()
   formOpen.value = true
   void captureElementScreenshot(target)
-  nextTick(() => descriptionInput.value?.focus())
+  nextTick(() => titleInput.value?.focus())
 }
 
 async function captureElementScreenshot(element) {
@@ -231,6 +266,7 @@ async function captureElementScreenshot(element) {
 }
 
 async function captureSelectedElement(element, rect) {
+  if (rect.width <= 0 || rect.height <= 0) throw new Error('empty screenshot context')
   const scale = Math.max(0.1, Math.min(
     window.devicePixelRatio || 1,
     2,
@@ -244,6 +280,82 @@ async function captureSelectedElement(element, rect) {
     quality: 0.82,
     filter: screenshotFilter,
   }))
+}
+
+async function changeScreenshotContext(delta) {
+  const nextLevel = Math.max(0, Math.min(
+    maxScreenshotContextLevel.value,
+    screenshotContextLevel.value + delta,
+  ))
+  if (nextLevel === screenshotContextLevel.value || screenshotCapturing.value) return
+
+  const previousLevel = screenshotContextLevel.value
+  const previousScreenshot = screenshotDataURL.value
+  screenshotContextLevel.value = nextLevel
+  updateScreenshotContextMetadata()
+  screenshotError.value = ''
+  screenshotCapturing.value = true
+  const generation = ++screenshotGeneration
+  try {
+    const contextElement = screenshotContextElements.value[nextLevel]
+    if (!contextElement?.isConnected) throw new Error('context element detached')
+    const rect = contextElement.getBoundingClientRect()
+    screenshotDataURL.value = await withSelectedMarker(
+      contextElement,
+      () => withTimeout(captureSelectedElement(contextElement, rect), 7000),
+    )
+  } catch {
+    if (generation === screenshotGeneration) {
+      screenshotContextLevel.value = previousLevel
+      screenshotDataURL.value = previousScreenshot
+      updateScreenshotContextMetadata()
+      screenshotError.value = 'Не удалось изменить область снимка.'
+    }
+  } finally {
+    if (generation === screenshotGeneration) screenshotCapturing.value = false
+  }
+}
+
+function screenshotContextsFor(element) {
+  const contexts = [element]
+  let current = element.parentElement
+  while (current && current !== document.body && current !== document.documentElement && contexts.length < 4) {
+    contexts.push(current)
+    current = current.parentElement
+  }
+  return contexts
+}
+
+function updateScreenshotContextMetadata() {
+  if (!selectedElement.value) return
+  const contextElement = screenshotContextElements.value[screenshotContextLevel.value]
+  selectedElement.value = {
+    ...selectedElement.value,
+    screenshotContextLevel: screenshotContextLevel.value,
+    screenshotContextSelector: contextElement ? selectorFor(contextElement) : selectedElement.value.selector,
+  }
+}
+
+async function withSelectedMarker(contextElement, capture) {
+  if (!selectedDOMElement || contextElement === selectedDOMElement) return capture()
+  const style = selectedDOMElement.style
+  const outline = style.getPropertyValue('outline')
+  const outlinePriority = style.getPropertyPriority('outline')
+  const outlineOffset = style.getPropertyValue('outline-offset')
+  const outlineOffsetPriority = style.getPropertyPriority('outline-offset')
+  style.setProperty('outline', '3px solid #ff6b6b', 'important')
+  style.setProperty('outline-offset', '2px', 'important')
+  try {
+    return await capture()
+  } finally {
+    restoreStyleProperty(style, 'outline', outline, outlinePriority)
+    restoreStyleProperty(style, 'outline-offset', outlineOffset, outlineOffsetPriority)
+  }
+}
+
+function restoreStyleProperty(style, name, value, priority) {
+  if (value) style.setProperty(name, value, priority)
+  else style.removeProperty(name)
 }
 
 async function captureViewport() {
@@ -408,6 +520,7 @@ function compactObject(value) {
 function closeForm() {
   if (submitting.value) return
   formOpen.value = false
+  reportTitle.value = ''
   description.value = ''
   selectedElement.value = null
   selectedPageURL.value = ''
@@ -423,6 +536,7 @@ async function submitReport() {
   submitError.value = ''
   try {
     await createErrorReport({
+      title: reportTitle.value.trim(),
       description: trimmed,
       pageUrl: selectedPageURL.value,
       element: selectedElement.value,
@@ -440,6 +554,7 @@ async function submitReport() {
 
 function closeAfterSubmit() {
   formOpen.value = false
+  reportTitle.value = ''
   description.value = ''
   selectedElement.value = null
   selectedPageURL.value = ''
@@ -452,6 +567,9 @@ function resetScreenshot() {
   viewportScreenshotDataURL.value = ''
   screenshotCapturing.value = false
   screenshotError.value = ''
+  screenshotContextLevel.value = 0
+  screenshotContextElements.value = []
+  selectedDOMElement = null
 }
 
 function showToast(message) {
@@ -487,8 +605,8 @@ onBeforeUnmount(() => {
   position: fixed;
   left: 16px;
   bottom: 16px;
-  /* Above every application modal/menu, but below the report picker and its form. */
-  z-index: 9400;
+  /* Keep the entry point clickable above every application modal, including the review dialog. */
+  z-index: 9700;
   display: inline-flex;
   align-items: center;
   gap: 0;
@@ -684,6 +802,41 @@ onBeforeUnmount(() => {
   font-size: 11px;
 }
 
+.screenshot-context-controls {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 7px;
+  margin-top: 7px;
+}
+
+.screenshot-context-controls span {
+  color: var(--text-muted);
+  font-size: 10px;
+  text-align: center;
+}
+
+.screenshot-context-controls button {
+  border: 1px solid var(--input-border);
+  border-radius: 6px;
+  background: var(--surface-1);
+  color: var(--text-2);
+  cursor: pointer;
+  font: inherit;
+  font-size: 10px;
+  padding: 5px 8px;
+}
+
+.screenshot-context-controls button:hover:not(:disabled) {
+  border-color: var(--border-strong);
+  color: var(--text-1);
+}
+
+.screenshot-context-controls button:disabled {
+  cursor: not-allowed;
+  opacity: 0.38;
+}
+
 .screenshot-state {
   padding: 10px 12px;
   border: 1px solid var(--border);
@@ -699,10 +852,9 @@ onBeforeUnmount(() => {
   .screenshot-previews { grid-template-columns: 1fr; }
 }
 
+.title-input,
 .description-input {
   width: 100%;
-  resize: vertical;
-  min-height: 116px;
   padding: 11px 12px;
   border: 1px solid var(--input-border);
   border-radius: 8px;
@@ -714,7 +866,18 @@ onBeforeUnmount(() => {
   line-height: 1.45;
 }
 
+.title-input {
+  height: 42px;
+}
+
+.description-input {
+  resize: vertical;
+  min-height: 116px;
+}
+
+.title-input:focus,
 .description-input:focus { border-color: var(--accent); }
+.title-input::placeholder,
 .description-input::placeholder { color: var(--text-muted); }
 
 .description-meta {

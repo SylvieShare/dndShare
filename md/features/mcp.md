@@ -25,7 +25,7 @@ Read tools (always on):
 - `handbook_suggest_types(sourceId?)` — suggest types.
 - `handbook_suggests(typeId)` — base suggests of a type.
 - `handbook_suggests_search(q, limit?)` — base suggests by value.
-- `error_reports_list(limit?, offset?)` — actionable open, admin-approved page error reports newest first, including description, URL, selected element JSON, optional reporter, screenshot metadata, feedback history, lifecycle fields, and creation time. Resolved/unapproved rows and reports waiting for an admin answer are not exposed; answering or reopening makes an open report visible again.
+- `error_reports_list(limit?, offset?)` — actionable open, approved reports including title and complete diagnostic metadata. Finished/unapproved rows, unanswered AI questions, and serious changes awaiting ADMIN approval are hidden.
 - `error_report_screenshot(id, kind?)` — fetch the selected-element crop (`element`, default) or page context (`viewport`) as native MCP image content.
 
 Write tools (gated, see below):
@@ -36,9 +36,10 @@ Write tools (gated, see below):
 - `handbook_suggest_update(typeId, id, value, code?, color?, desc?)` — admin update; preserves existing svg.
 - `handbook_suggest_set_svg(typeId, id, svg)` — admin set/replace the suggest icon. `svg` is raw `<svg>` markup (empty string clears it); stores it in `svg_storage`, repoints `suggest.svg_id`, deletes the old svg row. Validates `<svg>` presence and 512 KB max.
 - `handbook_suggest_delete(typeId, id)` — admin delete.
-- `error_report_resolve(id, resolution, commitSha?)` — archive one successfully deployed fix, preserving its resolution and commit SHA in admin history.
-- `error_report_delete(id)` — deprecated compatibility alias; archives rather than physically deleting.
+- `error_report_resolve(id, resolution, commitSha?)` — mark one successfully deployed fix as finished; reviewers see it for one hour before automatic archival.
+- `error_report_delete(id)` — deprecated compatibility alias; marks finished rather than physically deleting.
 - `error_report_question_create(id, question)` — append a concrete AI question for an approved report. The report is then hidden from `error_reports_list` until an administrator answers in the admin panel.
+- `error_report_serious_change_request(id, reason)` — pause a high-impact fix until an `ADMIN` confirms it in the application.
 - `error_report_lock_acquire(ttlMinutes?)` — atomically acquire the singleton automation lease; returns an opaque `leaseId` only when `acquired = true` (default 45 minutes, accepted 5–120).
 - `error_report_lock_renew(leaseId, ttlMinutes?)` — extend a still-active lease owned by the handle.
 - `error_report_lock_release(leaseId)` — release the lease in the scheduled run's final cleanup step.

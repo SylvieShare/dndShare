@@ -18,6 +18,10 @@ func init() { registerRoutes((*Server).routesErrorReports) }
 
 func (s *Server) routesErrorReports(mux *http.ServeMux) {
 	mux.HandleFunc("POST /api/error-reports", s.handleCreateErrorReport)
+	mux.HandleFunc("GET /api/error-report-review/reports", s.handleReviewerErrorReports)
+	mux.HandleFunc("POST /api/error-report-review/reports/{id}/messages", s.handleReviewerAnswerErrorReport)
+	mux.HandleFunc("POST /api/error-report-review/reports/{id}/serious-approval", s.handleApproveErrorReportSeriousChange)
+	mux.HandleFunc("POST /api/error-report-review/reports/{id}/archive", s.handleReviewerArchiveErrorReport)
 	mux.HandleFunc("GET /api/admin-panel/error-reports", s.handleAdminErrorReports)
 	mux.HandleFunc("GET /api/admin-panel/error-reports/{id}/screenshot", s.handleAdminErrorReportScreenshot)
 	mux.HandleFunc("GET /api/admin-panel/error-reports/{id}/viewport-screenshot", s.handleAdminErrorReportViewportScreenshot)
@@ -28,6 +32,7 @@ func (s *Server) routesErrorReports(mux *http.ServeMux) {
 }
 
 type createErrorReportRequest struct {
+	Title              string          `json:"title"`
 	Description        string          `json:"description"`
 	PageURL            string          `json:"pageUrl"`
 	Element            json.RawMessage `json:"element"`
@@ -37,6 +42,7 @@ type createErrorReportRequest struct {
 
 const maxErrorReportScreenshotBytes = 2 << 20
 const maxErrorReportMessageRunes = 4000
+const maxErrorReportTitleRunes = 160
 
 func (s *Server) handleCreateErrorReport(w http.ResponseWriter, r *http.Request) {
 	var body createErrorReportRequest
@@ -46,6 +52,15 @@ func (s *Server) handleCreateErrorReport(w http.ResponseWriter, r *http.Request)
 	}
 
 	body.Description = strings.TrimSpace(body.Description)
+	if strings.TrimSpace(body.Title) == "" {
+		body.Title = defaultErrorReportTitle(body.Description)
+	}
+	normalizedTitle, err := normalizeErrorReportTitle(body.Title)
+	if err != nil {
+		badRequest(w, err.Error())
+		return
+	}
+	body.Title = normalizedTitle
 	body.PageURL = strings.TrimSpace(body.PageURL)
 	if body.Description == "" || utf8.RuneCountInString(body.Description) > 4000 {
 		badRequest(w, "Описание должно содержать от 1 до 4000 символов")
@@ -91,7 +106,7 @@ func (s *Server) handleCreateErrorReport(w http.ResponseWriter, r *http.Request)
 		}
 	}
 	report, err := s.store.CreateErrorReport(
-		r.Context(), body.Description, body.PageURL, body.Element,
+		r.Context(), body.Title, body.Description, body.PageURL, body.Element,
 		screenshot, screenshotContentType,
 		viewportScreenshot, viewportScreenshotContentType,
 		userID, autoApproved,
@@ -101,6 +116,22 @@ func (s *Server) handleCreateErrorReport(w http.ResponseWriter, r *http.Request)
 		return
 	}
 	writeJSON(w, http.StatusCreated, report)
+}
+
+func (s *Server) handleReviewerErrorReports(w http.ResponseWriter, r *http.Request) {
+	if _, ok := s.requireAnyRole(w, r, RoleErrorReportReviewer, RoleAdmin); !ok {
+		return
+	}
+	limit, ok := boundedQueryInt(w, r, "limit", 200, 1, 500)
+	if !ok {
+		return
+	}
+	reports, err := s.store.ListReviewerErrorReports(r.Context(), limit, 0)
+	if err != nil {
+		serverError(w, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]any{"reports": nonNil(reports)})
 }
 
 func decodeErrorReportScreenshot(dataURL *string) ([]byte, *string, error) {
@@ -228,6 +259,18 @@ func (s *Server) handleAdminAnswerErrorReport(w http.ResponseWriter, r *http.Req
 	if !ok {
 		return
 	}
+	s.handleErrorReportAnswer(w, r, adminUserID)
+}
+
+func (s *Server) handleReviewerAnswerErrorReport(w http.ResponseWriter, r *http.Request) {
+	reviewerUserID, ok := s.requireAnyRole(w, r, RoleErrorReportReviewer, RoleAdmin)
+	if !ok {
+		return
+	}
+	s.handleErrorReportAnswer(w, r, reviewerUserID)
+}
+
+func (s *Server) handleErrorReportAnswer(w http.ResponseWriter, r *http.Request, answeringUserID int64) {
 	id, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
 	if err != nil || id <= 0 {
 		badRequest(w, "bad id")
@@ -245,7 +288,7 @@ func (s *Server) handleAdminAnswerErrorReport(w http.ResponseWriter, r *http.Req
 		badRequest(w, err.Error())
 		return
 	}
-	created, err := s.store.CreateErrorReportAdminAnswer(r.Context(), id, adminUserID, message)
+	created, err := s.store.CreateErrorReportAdminAnswer(r.Context(), id, answeringUserID, message)
 	if err != nil {
 		switch {
 		case errors.Is(err, store.ErrNotFound):
@@ -258,6 +301,52 @@ func (s *Server) handleAdminAnswerErrorReport(w http.ResponseWriter, r *http.Req
 		return
 	}
 	writeJSON(w, http.StatusCreated, created)
+}
+
+func (s *Server) handleApproveErrorReportSeriousChange(w http.ResponseWriter, r *http.Request) {
+	adminUserID, ok := s.requireRole(w, r, RoleAdmin)
+	if !ok {
+		return
+	}
+	id, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
+	if err != nil || id <= 0 {
+		badRequest(w, "bad id")
+		return
+	}
+	approved, err := s.store.ApproveErrorReportSeriousChange(r.Context(), id, adminUserID)
+	if err != nil {
+		serverError(w, err)
+		return
+	}
+	if !approved {
+		conflict(w, "Заявка не ожидает подтверждения серьёзных изменений")
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]any{
+		"waitingForSeriousApproval":     false,
+		"seriousChangeApprovedByUserId": adminUserID,
+	})
+}
+
+func (s *Server) handleReviewerArchiveErrorReport(w http.ResponseWriter, r *http.Request) {
+	if _, ok := s.requireAnyRole(w, r, RoleErrorReportReviewer, RoleAdmin); !ok {
+		return
+	}
+	id, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
+	if err != nil || id <= 0 {
+		badRequest(w, "bad id")
+		return
+	}
+	archived, err := s.store.ArchiveResolvedErrorReport(r.Context(), id)
+	if err != nil {
+		serverError(w, err)
+		return
+	}
+	if !archived {
+		conflict(w, "Архивировать можно только завершённую заявку")
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]string{"status": store.ErrorReportStatusArchived})
 }
 
 func (s *Server) handleAdminReopenErrorReport(w http.ResponseWriter, r *http.Request) {
@@ -287,6 +376,26 @@ func normalizeErrorReportMessage(message string) (string, error) {
 		return "", fmt.Errorf("Сообщение должно содержать от 1 до %d символов", maxErrorReportMessageRunes)
 	}
 	return message, nil
+}
+
+func normalizeErrorReportTitle(title string) (string, error) {
+	title = strings.TrimSpace(title)
+	if title == "" || utf8.RuneCountInString(title) > maxErrorReportTitleRunes {
+		return "", fmt.Errorf("Заголовок должен содержать от 1 до %d символов", maxErrorReportTitleRunes)
+	}
+	return title, nil
+}
+
+func defaultErrorReportTitle(description string) string {
+	description = strings.TrimSpace(description)
+	if line, _, found := strings.Cut(description, "\n"); found {
+		description = strings.TrimSpace(line)
+	}
+	runes := []rune(description)
+	if len(runes) > maxErrorReportTitleRunes {
+		description = strings.TrimSpace(string(runes[:maxErrorReportTitleRunes-1])) + "…"
+	}
+	return description
 }
 
 func (s *Server) handleAdminErrorReportScreenshot(w http.ResponseWriter, r *http.Request) {
