@@ -31,7 +31,7 @@
     </div>
   </teleport>
 
-  <AppModal v-if="formOpen" :z-index="9500" @close="closeForm">
+  <AppModal v-if="formOpen" :z-index="9500" wide @close="closeForm">
     <form class="report-form" data-error-report-ignore @submit.prevent="submitReport">
       <div class="report-form-title">Что работает неправильно?</div>
       <div class="selected-element">
@@ -777,7 +777,7 @@ onBeforeUnmount(() => {
 .screenshot-preview {
   display: block;
   max-width: 100%;
-  max-height: 240px;
+  max-height: 420px;
   object-fit: contain;
   object-position: left center;
   border: 1px solid var(--border);
@@ -787,7 +787,7 @@ onBeforeUnmount(() => {
 
 .screenshot-previews {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 10px;
 }
 
@@ -847,10 +847,6 @@ onBeforeUnmount(() => {
 }
 
 .screenshot-state-error { color: #ef9b7b; }
-
-@media (max-width: 640px) {
-  .screenshot-previews { grid-template-columns: 1fr; }
-}
 
 .title-input,
 .description-input {
