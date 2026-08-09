@@ -324,7 +324,8 @@ onBeforeUnmount(() => {
   position: fixed;
   left: 16px;
   bottom: 16px;
-  z-index: 850;
+  /* Above every application modal/menu, but below the report picker and its form. */
+  z-index: 9400;
   display: inline-flex;
   align-items: center;
   gap: 0;

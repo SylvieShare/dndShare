@@ -7,6 +7,7 @@ The application has a global user-facing flow for pointing at a broken element a
 `features/error-report/components/ErrorReporter.vue` is mounted once in `App.vue` and is available on every route.
 
 - Start with the fixed error icon or `Alt+Shift+E` (`event.code = KeyE`, so the keyboard layout does not matter). On desktop the **«На странице ошибка»** label expands on hover or keyboard focus; mobile keeps the compact icon.
+- The trigger uses the global overlay layer and remains clickable above application modals; it hides only while its own report form or element picker is active.
 - While selection mode is active, the element under the pointer is outlined. Click/tap selects it; `Esc` cancels.
 - Reporter UI is marked with `data-error-report-ignore`, so the selector cannot accidentally target the button, hint, or form.
 - The form sends a required description, the current `window.location.href`, and an element JSON object through `features/error-report/api/errorReportApi.js`.
