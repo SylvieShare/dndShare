@@ -65,7 +65,13 @@
             </section>
             <section class="box attacks-box"><BoxTitle>Атаки</BoxTitle>
               <table><thead><tr><th>Название</th><th>Бонус</th><th>Урон / тип</th></tr></thead><tbody>
-                <tr v-for="attack in attacks" :key="attack.key"><td>{{ attack.name }}</td><td>{{ signed(attack.bonus) }}</td><td>{{ attack.damage || '—' }}</td></tr>
+                <template v-for="attack in attacks" :key="attack.key">
+                  <tr class="attack-row">
+                    <td><strong class="attack-name">{{ attack.name }}</strong><span v-if="attack.properties" class="attack-properties">{{ attack.properties }}</span></td>
+                    <td>{{ signed(attack.bonus) }}</td><td>{{ attack.damage || '—' }}</td>
+                  </tr>
+                  <tr v-if="attack.description" class="attack-description-row"><td colspan="3"><RichContent :html="attack.description" /></td></tr>
+                </template>
                 <tr v-for="i in attackBlankRows" :key="'attack-empty-' + i"><td>&nbsp;</td><td></td><td></td></tr>
               </tbody></table>
             </section>
@@ -237,6 +243,12 @@ const passivePerception = computed(() => 10 + (skills.value.find(skill => skill.
 function itemById(id) { return catalog.value[String(id)] || catalog.value[id] || null }
 function diceLabel(id, fallback = '') { return suggest.items(11).find(item => String(item.id) === String(id))?.value || fallback || '' }
 function damageType(id) { return suggest.items(12).find(item => String(item.id) === String(id))?.value || '' }
+function weaponProperties(item) {
+  return (Array.isArray(item?.data?.tags) ? item.data.tags : []).map(tag => {
+    if (tag && typeof tag === 'object') return text(tag)
+    return suggest.items(14).find(entry => String(entry.id) === String(tag))?.value || String(tag ?? '')
+  }).filter(Boolean).join(' · ')
+}
 function attackParts(entry, item) {
   const parts = [...(item?.data?.attacks || item?.data?.add_attacks || []), ...(entry.add_attacks || [])]
   const result = parts.map(part => [diceLabel(part.dice_id ?? part.dice_suggest_id, part.v ?? part.dice) ? `${Number(part.count) || 1}${diceLabel(part.dice_id ?? part.dice_suggest_id, part.v ?? part.dice)}` : '', damageType(part.type ?? part.type_suggest_id)].filter(Boolean).join(' ')).filter(Boolean)
@@ -246,7 +258,7 @@ function attackParts(entry, item) {
 }
 const attacks = computed(() => (Array.isArray(values.value.weapon) ? values.value.weapon : []).slice(0, 8).map((entry, index) => {
   const item = itemById(entry.item_id); const statKey = SUGGEST16_TO_STAT[Number(entry.stat_suggest_id)]; const statMod = statKey ? abilityModifier(abilityScore(statKey)) : Number(vars.value.stats?.[String(entry.stat_suggest_id)]) || 0
-  return { key: `${entry.item_id}-${index}`, name: item?.name || `Оружие #${entry.item_id || '—'}`, bonus: statMod + (Number(entry.magic_up) || 0) + (entry.proficient ? profBonus.value : 0), damage: attackParts(entry, item) }
+  return { key: `${entry.item_id}-${index}`, name: item?.name || `Оружие #${entry.item_id || '—'}`, bonus: statMod + (Number(entry.magic_up) || 0) + (entry.proficient ? profBonus.value : 0), damage: attackParts(entry, item), properties: weaponProperties(item), description: entry.desc || '' }
 }))
 const attackBlankRows = computed(() => Math.max(0, 5 - attacks.value.length))
 const proficiencyGroups = computed(() => Object.entries(values.value.proficiencies || {}).map(([name, value]) => ({ name, value: Array.isArray(value) ? value.map(text).filter(Boolean).join(', ') : text(value) })).filter(group => group.value))
@@ -381,7 +393,7 @@ async function load() {
   try {
     const res = await fetchGet('/char/' + route.params.uuid); if (!res?.data || res?.type) throw new Error(res?.desc || 'Персонаж не найден или недоступен.')
     response.value = res; const itemIds = collectItemIds(res.data?.values || {})
-    const tasks = [7, 11, 12, 15, 17].map(id => suggest.ensure(id).catch(() => null))
+    const tasks = [7, 11, 12, 14, 15, 17].map(id => suggest.ensure(id).catch(() => null))
     if (itemIds.length) tasks.push(itemsApi.byIds(itemIds).then(result => { catalog.value = Object.fromEntries((result?.items || []).map(item => [String(item.id), item])) }).catch(() => null))
     await Promise.all(tasks); document.title = `${characterName.value} — лист для печати`
   } catch (e) { error.value = e?.message || 'Произошла ошибка при загрузке.' } finally { loading.value = false }
@@ -414,7 +426,7 @@ onBeforeUnmount(() => document.documentElement.classList.remove('character-print
 .combat-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2mm; }:deep(.metric-box) { min-width: 0; min-height: 23mm; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.5mm; padding: 2mm 1mm; border: 1px solid #695a44; border-radius: 4mm 4mm 1mm 1mm; text-align: center; box-shadow: inset 0 0 0 .6mm #fffefa, inset 0 0 0 .8mm #c8baa0; }:deep(.metric-box strong) { font: 700 18px/1 Georgia, serif; }:deep(.metric-box span) { max-width: 100%; font-size: 5px; font-weight: 800; line-height: 1.15; letter-spacing: .045em; text-transform: uppercase; overflow-wrap: anywhere; }
 .hp-box { display: grid; grid-template-columns: 1fr 1fr; gap: 2mm; }.hp-box > div { display: flex; align-items: center; justify-content: center; gap: 2mm; text-align: center; }.hp-max { grid-column: 1 / -1; padding-bottom: 1.5mm; border-bottom: .5px solid #baaa8d; font-size: 7px; }.hp-max strong { font-size: 12px; }.hp-current, .hp-temp { min-height: 15mm; flex-direction: column; }.hp-current { border-right: .5px solid #baaa8d; }.hp-current strong, .hp-temp strong { font: 700 19px/1 Georgia, serif; }.hp-current span, .hp-temp span { font-size: 5px; font-weight: 800; text-transform: uppercase; }
 .mini-grid { display: grid; grid-template-columns: .85fr 1.15fr; gap: 2mm; }.compact-box { min-height: 18mm; text-align: center; }.large-value { font: 700 12px/1 Georgia, serif; }.death-saves > div { display: flex; justify-content: flex-end; align-items: center; gap: 1mm; margin-top: 1.2mm; font-size: 5.5px; }.death-saves i, .slots-box i { width: 2.7mm; height: 2.7mm; display: inline-block; border: .7px solid #4f4639; border-radius: 50%; }.death-saves i.marked, .slots-box i.used { background: #4f4639; box-shadow: inset 0 0 0 .5mm #fffefa; }
-table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 6.8px; }th { padding: 1.2mm; border-bottom: .7px solid #695a44; color: #756751; font-size: 5px; letter-spacing: .06em; text-align: left; text-transform: uppercase; }td { height: 5.5mm; padding: 1mm 1.2mm; border-bottom: .35px solid #baaa8d; overflow-wrap: anywhere; }th:nth-child(2), td:nth-child(2) { width: 17%; text-align: center; }th:nth-child(3), td:nth-child(3) { width: 40%; }
+table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 6.8px; }th { padding: 1.2mm; border-bottom: .7px solid #695a44; color: #756751; font-size: 5px; letter-spacing: .06em; text-align: left; text-transform: uppercase; }td { height: 5.5mm; padding: 1mm 1.2mm; border-bottom: .35px solid #baaa8d; overflow-wrap: anywhere; }th:nth-child(2), td:nth-child(2) { width: 17%; text-align: center; }th:nth-child(3), td:nth-child(3) { width: 40%; }.attack-name { display: block; font-weight: 700; }.attack-properties { display: block; margin-top: .5mm; color: #756751; font-size: 5.2px; font-weight: 700; line-height: 1.25; }.attack-description-row td { height: auto; padding: .8mm 1.2mm 1.2mm; background: rgba(186, 170, 141, .08); color: #554b3d; text-align: left; }.attack-description-row :deep(.rc) { font: italic 5.8px/1.35 Georgia, serif; }.attack-description-row :deep(.rc > :first-child) { margin-top: 0; }.attack-description-row :deep(.rc > :last-child) { margin-bottom: 0; }
 .passive-box { display: flex; align-items: center; gap: 2.2mm; }.passive-box strong { flex: 0 0 auto; width: 8mm; font: 700 13px/1 Georgia, serif; text-align: center; }.passive-box span { min-width: 0; font-size: 5px; font-weight: 800; line-height: 1.25; text-transform: uppercase; }.skills-box { padding-inline: 2.2mm; }.skills-box .line-row { grid-template-columns: 3mm 6.5mm minmax(0, 1fr); min-height: 4.7mm; }
 .main-proficiencies { margin-top: 3mm; padding: 2.5mm 3mm; }.main-proficiencies :deep(.box-title) { margin-bottom: 2mm; }.main-proficiency-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2mm 4mm; }.main-proficiency-grid .prose-group + .prose-group { margin-top: 0; }.main-proficiency-grid .prose-group { min-width: 0; }.main-proficiency-grid .prose-group p { font-size: 6.5px; line-height: 1.3; }
 .equipment-grid { display: grid; grid-template-columns: minmax(0, 1fr) 59mm; gap: 5mm; align-items: start; min-width: 0; }.equipment-grid--full { grid-template-columns: 1fr; }.inventory-section + .inventory-section { margin-top: 4mm; }.inventory-section h3, .prose-group h3 { margin: 0 0 1.2mm; font: 700 6px/1 Arial, sans-serif; letter-spacing: .08em; text-transform: uppercase; color: #756751; }.inventory-row, .list-box > div { display: flex; justify-content: space-between; gap: 4mm; min-height: 6mm; padding: 1.2mm 0; border-bottom: .35px solid #baaa8d; font-size: 8px; }.inventory-row span, .list-box span { min-width: 0; overflow-wrap: anywhere; }.inventory-row strong, .list-box strong { flex: 0 0 auto; white-space: nowrap; }
