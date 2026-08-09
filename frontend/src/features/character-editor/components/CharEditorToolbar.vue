@@ -117,6 +117,14 @@
                   @update:modelValue="$emit('update:publicVisible', $event)"
                 />
               </div>
+              <button class="menu-item menu-pdf" type="button" @click="openPrintView">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M6 9V2h9l3 3v4" />
+                  <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+                  <rect x="6" y="14" width="12" height="8" rx="1" />
+                </svg>
+                <span>Получить PDF</span>
+              </button>
             </div>
           </transition>
         </div>
@@ -175,6 +183,10 @@ const saveLabel = computed(() => {
 })
 
 function closeMenu() { menuOpen.value = false }
+function openPrintView() {
+  menuOpen.value = false
+  router.push({ name: 'CharacterPrint', params: { uuid: router.currentRoute.value.params.uuid } })
+}
 function goBack() {
   if (props.modal) { emit('close'); return }
   router.push('/chars')
@@ -506,6 +518,21 @@ function goBack() {
   transition: background 0.12s;
 }
 .menu-item:hover { background: var(--surface-raised); }
+
+.menu-pdf {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border: 0;
+  background: transparent;
+  color: var(--text-2);
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+}
+.menu-pdf svg { color: var(--text-muted); flex: 0 0 auto; }
 
 .menu-save-item {
   border-bottom: 1px solid var(--border);

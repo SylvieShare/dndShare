@@ -21,6 +21,14 @@
           label="Публичная ссылка"
           @update:modelValue="v => ctx.setPublic && ctx.setPublic(v)"
         />
+        <button class="sm-action" type="button" @click="openPrintView">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M6 9V2h9l3 3v4" />
+            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+            <rect x="6" y="14" width="12" height="8" rx="1" />
+          </svg>
+          <span>Получить PDF</span>
+        </button>
       </div>
     </transition>
   </div>
@@ -28,6 +36,7 @@
 
 <script setup>
 import { computed, inject, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import BaseTile from '@/shared/ui/BaseTile'
 import ToggleSwitch from '@/shared/ui/ToggleSwitch'
 import { svgColorFilter } from '@/shared/lib/svgColorFilter'
@@ -35,6 +44,8 @@ import { svgColorFilter } from '@/shared/lib/svgColorFilter'
 const props = defineProps(['block'])
 const ctx = inject('charCtx', { canTogglePublic: false, publicVisible: false, saveStatus: 'idle', pendingSecondsLeft: 0 })
 const open = ref(false)
+const route = useRoute()
+const router = useRouter()
 
 const accent = computed(() => props.block?.content?.accent || 'var(--text-muted)')
 const iconSrc = computed(() => props.block?.content?.svg || null)
@@ -48,6 +59,11 @@ const saveLabel = computed(() => {
     default: return 'Сохранено'
   }
 })
+
+function openPrintView() {
+  open.value = false
+  router.push({ name: 'CharacterPrint', params: { uuid: route.params.uuid } })
+}
 </script>
 
 <style scoped>
@@ -88,6 +104,25 @@ const saveLabel = computed(() => {
 }
 .sm-item { padding: 6px 8px; border-radius: 7px; }
 .sm-item:hover { background: color-mix(in srgb, var(--text-on-accent) 4%, transparent); }
+
+.sm-action {
+  width: 100%;
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 8px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--text-2);
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+}
+.sm-action:hover { background: color-mix(in srgb, var(--text-on-accent) 4%, transparent); color: var(--text-1); }
+.sm-action svg { color: var(--text-muted); flex: 0 0 auto; }
 
 .sm-save { display: flex; align-items: center; gap: 7px; padding: 6px 8px 10px; border-bottom: 1px solid var(--border); margin-bottom: 2px; }
 .sm-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; transition: background-color 0.3s; }

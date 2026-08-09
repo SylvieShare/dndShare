@@ -7,6 +7,7 @@ import ViewDictionary from '@/features/handbook/dictionary/ViewDictionary'
 import ViewCreateCharacter from '@/features/character-list/pages/ViewCreateCharacter'
 import ViewListCharacters from '@/features/character-list/pages/ViewListCharacters'
 import ViewCharacter from '@/features/character-editor/pages/ViewCharacter'
+import ViewCharacterPrint from '@/features/character-editor/pages/ViewCharacterPrint'
 import ViewJoinSession from '@/features/sessions/pages/ViewJoinSession'
 import ViewSession from '@/features/sessions/pages/ViewSession'
 import ViewSessions from '@/features/sessions/pages/ViewSessions'
@@ -145,6 +146,18 @@ const routes = [
         name: "Character",
         component: ViewCharacter,
         meta: { section: 'characters', depth: 1, pageOrder: 2 },
+    },
+    {
+        path: '/char/:uuid/print',
+        name: "CharacterPrint",
+        component: ViewCharacterPrint,
+        meta: {
+            title: 'Печатный лист персонажа',
+            section: 'characters',
+            depth: 2,
+            pageOrder: 3,
+            printView: true,
+        },
     },
     {
         path: '/templates',
