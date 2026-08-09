@@ -1,17 +1,19 @@
 <template>
-  <div class="error-reporter" data-error-report-ignore>
-    <button
-      v-if="!selecting && !formOpen"
-      class="report-button"
-      type="button"
-      title="Сообщить об ошибке на странице (Alt+Shift+E)"
-      aria-label="Сообщить об ошибке на странице"
-      @click="startSelection"
-    >
-      <span class="report-button-icon" aria-hidden="true">!</span>
-      <span class="report-button-label">На странице ошибка</span>
-    </button>
-  </div>
+  <teleport to="body">
+    <div class="error-reporter" data-error-report-ignore>
+      <button
+        v-if="!selecting && !formOpen"
+        class="report-button"
+        type="button"
+        title="Сообщить об ошибке на странице (Alt+Shift+E)"
+        aria-label="Сообщить об ошибке на странице"
+        @click="startSelection"
+      >
+        <span class="report-button-icon" aria-hidden="true">!</span>
+        <span class="report-button-label">На странице ошибка</span>
+      </button>
+    </div>
+  </teleport>
 
   <teleport v-if="selecting" to="body">
     <div
