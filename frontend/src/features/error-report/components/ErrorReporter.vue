@@ -9,7 +9,7 @@
       @click="startSelection"
     >
       <span class="report-button-icon" aria-hidden="true">!</span>
-      <span>На странице ошибка</span>
+      <span class="report-button-label">На странице ошибка</span>
     </button>
   </div>
 
@@ -327,9 +327,9 @@ onBeforeUnmount(() => {
   z-index: 850;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 0;
   min-height: 36px;
-  padding: 7px 12px 7px 8px;
+  padding: 7px;
   border: 1px solid var(--border-strong);
   border-radius: var(--r-pill);
   background: color-mix(in srgb, var(--popup-bg) 92%, transparent);
@@ -340,6 +340,7 @@ onBeforeUnmount(() => {
   font-size: 12px;
   font-weight: 600;
   backdrop-filter: blur(8px);
+  overflow: hidden;
   transition: color 0.15s, border-color 0.15s, transform 0.15s;
 }
 
@@ -350,6 +351,7 @@ onBeforeUnmount(() => {
 }
 
 .report-button-icon {
+  flex: 0 0 auto;
   width: 20px;
   height: 20px;
   display: inline-flex;
@@ -360,6 +362,22 @@ onBeforeUnmount(() => {
   color: #ef7b7b;
   font-size: 13px;
   font-weight: 800;
+}
+
+.report-button-label {
+  max-width: 0;
+  margin-left: 0;
+  overflow: hidden;
+  opacity: 0;
+  white-space: nowrap;
+  transition: max-width 0.2s ease, margin-left 0.2s ease, opacity 0.12s ease;
+}
+
+.report-button:hover .report-button-label,
+.report-button:focus-visible .report-button-label {
+  max-width: 140px;
+  margin-left: 8px;
+  opacity: 1;
 }
 
 .selection-highlight {
@@ -551,7 +569,7 @@ onBeforeUnmount(() => {
     bottom: max(10px, env(safe-area-inset-bottom));
   }
 
-  .report-button span:last-child { display: none; }
+  .report-button-label { display: none; }
   .report-button { width: 38px; height: 38px; padding: 8px; justify-content: center; }
   .report-button-icon { width: 22px; height: 22px; }
 
