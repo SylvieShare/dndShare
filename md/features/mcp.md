@@ -53,6 +53,39 @@ Config (`application.yml`):
 
 Works from Claude Code, Claude Desktop, and Claude.ai (web), since the transport is HTTP.
 
+## PostgreSQL MCP for Codex
+
+The repository also contains a separate development integration that gives Codex direct, read-only
+access to PostgreSQL. Do not confuse it with the application `/mcp` endpoint described above:
+
+- `.codex/config.toml` registers the project-scoped MCP server as `postgres_dndshare`;
+- `.codex/postgres-mcp.sh` starts `postgres-mcp==0.3.0` through `uvx`;
+- the server runs with `--access-mode=restricted` and connects over TLS to the Yandex Cloud pooler;
+- the database role is `codex`: it has `SELECT`, but no `INSERT`, `UPDATE`, or `DELETE` privileges;
+- the password is stored in the macOS Keychain and is never committed to the repository.
+
+Prerequisites: `uvx` must be installed and the password for the `codex` database role must be added
+to the Keychain. The following commands prompt for it without putting the value into shell history:
+
+```bash
+read -rs -p "PostgreSQL password: " DND_SHARE_CODEX_PG_PASSWORD; echo
+security add-generic-password \
+  -a codex \
+  -s dndshare-postgres-mcp \
+  -w "$DND_SHARE_CODEX_PG_PASSWORD" \
+  -U
+unset DND_SHARE_CODEX_PG_PASSWORD
+```
+
+Restart Codex after cloning or changing the MCP configuration. Use `/mcp` to verify that
+`postgres_dndshare` is connected. On the first launch, `uvx` may need internet access to download
+the pinned Python packages.
+
+The integration provides schema inspection, read-only SQL, query plans, database-health checks, and
+index analysis. Typical requests are: “list the tables in `dndshare`”, “show the columns and indexes
+of this table”, or “explain this query”. Schema or data changes must still go through the application
+code and `internal/store/schema.sql`; PostgreSQL MCP is not a migration or administration channel.
+
 ## Adding a tool
 
 Add a method to `HandbookMcpTools` annotated `@McpTool(name, description)`, annotate each param with `@McpToolParam(description, required)`, and call the relevant repository. Gate any new write tool behind `requireWrite()`. No registration wiring is needed.
