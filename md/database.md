@@ -23,7 +23,8 @@ dropped. **Never create new objects in `base`.**
 - `id bigserial` primary key;
 - `description text` and `page_url text`;
 - `element jsonb` with the browser-generated selector and diagnostic metadata;
-- nullable `screenshot bytea` and `screenshot_content_type varchar(50)`;
+- nullable `screenshot bytea` and `screenshot_content_type varchar(50)` for the selected element;
+- nullable `viewport_screenshot bytea` and `viewport_screenshot_content_type varchar(50)` for surrounding page context;
 - nullable `user_id` referencing `users(id)` with `ON DELETE SET NULL`;
 - `approved bool NOT NULL DEFAULT false`, which gates MCP visibility;
 - `status varchar(20) NOT NULL DEFAULT 'OPEN'` (`OPEN` or `RESOLVED`);
@@ -42,7 +43,7 @@ Indexes cover newest-first listing (`created_at DESC`), approved newest-first MC
 
 For MCP listing, a report is actionable only when it is approved, has `status = 'OPEN'`, and its latest message is not an unanswered `AI` question. A following `ADMIN` message returns an open report to the MCP queue; resolving archives it, and reopening clears resolution metadata.
 
-`dndshare.error_report_automation_lock` is a singleton lease row (`id = 1`) used by scheduled MCP consumers. It stores an unguessable owner token plus acquisition and expiration timestamps. Atomic `INSERT ... ON CONFLICT DO UPDATE ... WHERE expires_at <= now()` prevents concurrent automation runs; expired leases are replaceable.
+`dndshare.error_report_automation_lock` is a singleton lease row (`id = 1`) used by scheduled MCP consumers. It stores an opaque lease id plus acquisition and expiration timestamps. Atomic `INSERT ... ON CONFLICT DO UPDATE ... WHERE expires_at <= now()` prevents concurrent automation runs; expired leases are replaceable. MCP leases default to 45 minutes and can be renewed up to 120 minutes at a time.
 
 ## Systems and rules editions
 

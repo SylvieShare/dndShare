@@ -39,7 +39,10 @@ printf '\n' > internal/assets/dist/.gitkeep
 
 echo "==> Кросс-компиляция статического бинаря (linux/amd64)"
 mkdir -p build
-CGO_ENABLED=0 GOOS=linux GOARCH=amd64 "$GO" build -trimpath -ldflags="-s -w" -o build/dndshare .
+BUILD_COMMIT="$(git rev-parse HEAD)"
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 "$GO" build -trimpath \
+  -ldflags="-s -w -X dndshare/internal/web.BuildCommit=$BUILD_COMMIT" \
+  -o build/dndshare .
 ls -lh build/dndshare | awk '{print "    бинарь:", $5}'
 
 echo "==> Копирование бинаря + unit + run.sh на $VM_HOST"
@@ -49,16 +52,34 @@ scp -i "$SSH_KEY" deploy/dndshare.service   "$VM_USER@$VM_HOST:~/dndshare.servic
 scp -i "$SSH_KEY" deploy/dndshare-run.sh    "$VM_USER@$VM_HOST:~/dndshare-run.sh"
 
 echo "==> Обновление unit + перезапуск сервиса (секреты подтянутся в run.sh)"
-ssh -i "$SSH_KEY" -t "$VM_USER@$VM_HOST" '
+ssh -i "$SSH_KEY" "$VM_USER@$VM_HOST" "bash -s -- '$BUILD_COMMIT'" <<'REMOTE'
   set -e
+  expected_commit="$1"
   chmod +x ~/dndshare.new ~/dndshare-run.sh ~/fetch-secrets.sh
   mv ~/dndshare.new ~/dndshare
   sudo install -m 644 ~/dndshare.service /etc/systemd/system/dndshare.service
   sudo systemctl daemon-reload
   sudo systemctl restart dndshare
-  sleep 3
+  ready=false
+  health=''
+  for _ in $(seq 1 30); do
+    health="$(curl -fsS --max-time 2 http://127.0.0.1:8080/api/health 2>/dev/null || true)"
+    if printf '%s' "$health" | grep -Fq '"status":"ok"' \
+      && printf '%s' "$health" | grep -Fq "\"commitSha\":\"$expected_commit\""; then
+      ready=true
+      break
+    fi
+    sleep 1
+  done
+  if [ "$ready" != true ]; then
+    echo "ОШИБКА: readiness не подтвердил commit $expected_commit; последний ответ: ${health:-<пусто>}" >&2
+    sudo systemctl --no-pager --lines=30 status dndshare || true
+    tail -n 60 ~/dndshare-log.txt 2>/dev/null || true
+    exit 1
+  fi
+  echo "readiness OK: $health"
   sudo systemctl --no-pager --lines=20 status dndshare || true
   echo "----- последние строки ~/dndshare-log.txt (вывод Go-приложения) -----"
   tail -n 40 ~/dndshare-log.txt 2>/dev/null || echo "(dndshare-log.txt пуст/нет)"
-'
+REMOTE
 echo "==> Done"

@@ -1,0 +1,10 @@
+# The scheduled error-report worker checks the exact remote branch after it has
+# acquired the server-side lease. This rule is intentionally read-only.
+prefix_rule(
+    pattern = ["git", "fetch", "origin", "main"],
+    decision = "allow",
+    justification = "Проверка актуальности origin/main перед автономной обработкой ошибок",
+    match = [
+        "git fetch origin main",
+    ],
+)

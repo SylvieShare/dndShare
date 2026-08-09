@@ -20,6 +20,7 @@ func (s *Server) routesErrorReports(mux *http.ServeMux) {
 	mux.HandleFunc("POST /api/error-reports", s.handleCreateErrorReport)
 	mux.HandleFunc("GET /api/admin-panel/error-reports", s.handleAdminErrorReports)
 	mux.HandleFunc("GET /api/admin-panel/error-reports/{id}/screenshot", s.handleAdminErrorReportScreenshot)
+	mux.HandleFunc("GET /api/admin-panel/error-reports/{id}/viewport-screenshot", s.handleAdminErrorReportViewportScreenshot)
 	mux.HandleFunc("PATCH /api/admin-panel/error-reports/{id}/approval", s.handleAdminSetErrorReportApproval)
 	mux.HandleFunc("POST /api/admin-panel/error-reports/{id}/messages", s.handleAdminAnswerErrorReport)
 	mux.HandleFunc("POST /api/admin-panel/error-reports/{id}/reopen", s.handleAdminReopenErrorReport)
@@ -27,10 +28,11 @@ func (s *Server) routesErrorReports(mux *http.ServeMux) {
 }
 
 type createErrorReportRequest struct {
-	Description string          `json:"description"`
-	PageURL     string          `json:"pageUrl"`
-	Element     json.RawMessage `json:"element"`
-	Screenshot  *string         `json:"screenshot,omitempty"`
+	Description        string          `json:"description"`
+	PageURL            string          `json:"pageUrl"`
+	Element            json.RawMessage `json:"element"`
+	Screenshot         *string         `json:"screenshot,omitempty"`
+	ViewportScreenshot *string         `json:"viewportScreenshot,omitempty"`
 }
 
 const maxErrorReportScreenshotBytes = 2 << 20
@@ -72,6 +74,11 @@ func (s *Server) handleCreateErrorReport(w http.ResponseWriter, r *http.Request)
 		badRequest(w, err.Error())
 		return
 	}
+	viewportScreenshot, viewportScreenshotContentType, err := decodeErrorReportScreenshot(body.ViewportScreenshot)
+	if err != nil {
+		badRequest(w, "Скриншот страницы: "+err.Error())
+		return
+	}
 
 	var userID *int64
 	autoApproved := false
@@ -83,7 +90,12 @@ func (s *Server) handleCreateErrorReport(w http.ResponseWriter, r *http.Request)
 			return
 		}
 	}
-	report, err := s.store.CreateErrorReport(r.Context(), body.Description, body.PageURL, body.Element, screenshot, screenshotContentType, userID, autoApproved)
+	report, err := s.store.CreateErrorReport(
+		r.Context(), body.Description, body.PageURL, body.Element,
+		screenshot, screenshotContentType,
+		viewportScreenshot, viewportScreenshotContentType,
+		userID, autoApproved,
+	)
 	if err != nil {
 		serverError(w, err)
 		return
@@ -278,6 +290,14 @@ func normalizeErrorReportMessage(message string) (string, error) {
 }
 
 func (s *Server) handleAdminErrorReportScreenshot(w http.ResponseWriter, r *http.Request) {
+	s.handleAdminErrorReportImage(w, r, false)
+}
+
+func (s *Server) handleAdminErrorReportViewportScreenshot(w http.ResponseWriter, r *http.Request) {
+	s.handleAdminErrorReportImage(w, r, true)
+}
+
+func (s *Server) handleAdminErrorReportImage(w http.ResponseWriter, r *http.Request, viewport bool) {
 	if _, ok := s.requireRole(w, r, RoleAdmin); !ok {
 		return
 	}
@@ -286,7 +306,13 @@ func (s *Server) handleAdminErrorReportScreenshot(w http.ResponseWriter, r *http
 		badRequest(w, "bad id")
 		return
 	}
-	screenshot, contentType, err := s.store.GetErrorReportScreenshot(r.Context(), id)
+	var screenshot []byte
+	var contentType string
+	if viewport {
+		screenshot, contentType, err = s.store.GetErrorReportViewportScreenshot(r.Context(), id)
+	} else {
+		screenshot, contentType, err = s.store.GetErrorReportScreenshot(r.Context(), id)
+	}
 	if err != nil {
 		if errors.Is(err, store.ErrNotFound) {
 			notFound(w, "Скриншот не найден")

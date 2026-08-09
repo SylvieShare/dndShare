@@ -26,9 +26,9 @@ func (s *Server) routesMCP(mux *http.ServeMux) {
 const mcpAdminUser = int64(0)
 
 const (
-	defaultErrorReportLeaseMinutes = 240
+	defaultErrorReportLeaseMinutes = 45
 	minErrorReportLeaseMinutes     = 5
-	maxErrorReportLeaseMinutes     = 720
+	maxErrorReportLeaseMinutes     = 120
 )
 
 // --- JSON-RPC 2.0 envelope ---
@@ -54,8 +54,10 @@ type rpcResponse struct {
 
 // tools/call result shape.
 type mcpContent struct {
-	Type string `json:"type"`
-	Text string `json:"text"`
+	Type     string `json:"type"`
+	Text     string `json:"text,omitempty"`
+	Data     string `json:"data,omitempty"`
+	MimeType string `json:"mimeType,omitempty"`
 }
 
 type mcpToolResult struct {
@@ -160,6 +162,9 @@ func (s *Server) handleToolsCall(r *http.Request, req rpcRequest) rpcResponse {
 			Content: []mcpContent{{Type: "text", Text: err.Error()}},
 			IsError: true,
 		})
+	}
+	if direct, ok := value.(mcpToolResult); ok {
+		return rpcOKResponse(req.ID, direct)
 	}
 	text, merr := json.Marshal(value)
 	if merr != nil {
@@ -275,11 +280,11 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 		if err != nil {
 			return nil, err
 		}
-		token, err := newErrorReportLeaseToken()
+		leaseID, err := newErrorReportLeaseID()
 		if err != nil {
 			return nil, err
 		}
-		lease, acquired, err := s.store.AcquireErrorReportAutomationLease(ctx, token, time.Duration(coerceIn(ttlMinutes, minErrorReportLeaseMinutes, maxErrorReportLeaseMinutes))*time.Minute)
+		lease, acquired, err := s.store.AcquireErrorReportAutomationLease(ctx, leaseID, time.Duration(coerceIn(ttlMinutes, minErrorReportLeaseMinutes, maxErrorReportLeaseMinutes))*time.Minute)
 		if err != nil {
 			return nil, err
 		}
@@ -288,7 +293,7 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 			"expiresAt": lease.ExpiresAt,
 		}
 		if acquired {
-			result["token"] = lease.Token
+			result["leaseId"] = lease.LeaseID
 			result["acquiredAt"] = lease.AcquiredAt
 		}
 		return result, nil
@@ -297,7 +302,7 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 		if err := s.mcpRequireWrite(); err != nil {
 			return nil, err
 		}
-		token, err := argString(args, "token")
+		leaseID, err := errorReportLeaseIDArg(args)
 		if err != nil {
 			return nil, err
 		}
@@ -305,7 +310,7 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 		if err != nil {
 			return nil, err
 		}
-		lease, renewed, err := s.store.RenewErrorReportAutomationLease(ctx, token, time.Duration(coerceIn(ttlMinutes, minErrorReportLeaseMinutes, maxErrorReportLeaseMinutes))*time.Minute)
+		lease, renewed, err := s.store.RenewErrorReportAutomationLease(ctx, leaseID, time.Duration(coerceIn(ttlMinutes, minErrorReportLeaseMinutes, maxErrorReportLeaseMinutes))*time.Minute)
 		if err != nil {
 			return nil, err
 		}
@@ -319,11 +324,11 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 		if err := s.mcpRequireWrite(); err != nil {
 			return nil, err
 		}
-		token, err := argString(args, "token")
+		leaseID, err := errorReportLeaseIDArg(args)
 		if err != nil {
 			return nil, err
 		}
-		released, err := s.store.ReleaseErrorReportAutomationLease(ctx, token)
+		released, err := s.store.ReleaseErrorReportAutomationLease(ctx, leaseID)
 		if err != nil {
 			return nil, err
 		}
@@ -418,18 +423,34 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 		if err != nil {
 			return nil, err
 		}
-		screenshot, contentType, err := s.store.GetApprovedErrorReportScreenshot(ctx, id)
+		kindValue, err := argStringOpt(args, "kind")
+		if err != nil {
+			return nil, err
+		}
+		kind := "element"
+		if kindValue != nil && *kindValue != "" {
+			kind = *kindValue
+		}
+		var screenshot []byte
+		var contentType string
+		switch kind {
+		case "element":
+			screenshot, contentType, err = s.store.GetApprovedErrorReportScreenshot(ctx, id)
+		case "viewport":
+			screenshot, contentType, err = s.store.GetApprovedErrorReportViewportScreenshot(ctx, id)
+		default:
+			return nil, errors.New("kind must be element or viewport")
+		}
 		if err != nil {
 			if errors.Is(err, store.ErrNotFound) {
 				return nil, fmt.Errorf("screenshot for error report %d not found", id)
 			}
 			return nil, err
 		}
-		return map[string]any{
-			"id":          id,
-			"contentType": contentType,
-			"base64":      base64.StdEncoding.EncodeToString(screenshot),
-		}, nil
+		return mcpToolResult{Content: []mcpContent{
+			{Type: "text", Text: fmt.Sprintf("error report %d %s screenshot", id, kind)},
+			{Type: "image", Data: base64.StdEncoding.EncodeToString(screenshot), MimeType: contentType},
+		}}, nil
 
 	case "handbook_item_create":
 		return s.toolItemCreate(ctx, args)
@@ -867,21 +888,21 @@ func mcpToolDefs() []map[string]any {
 				"offset": intP("Offset for pagination (default 0)"),
 			})),
 		tool("error_report_lock_acquire",
-			"Atomically acquire the shared error-report automation lease before reading or changing reports. If acquired is false, another run is active and this run must stop. Keep the returned token secret and release it in a final cleanup step. Requires MCP write operations to be enabled.",
+			"Atomically acquire the shared error-report automation lease before reading or changing reports. If acquired is false, another run is active and this run must stop. Returns a short-lived opaque leaseId handle; release it in a final cleanup step. Requires MCP write operations to be enabled.",
 			schema(map[string]any{
-				"ttlMinutes": intP("Lease lifetime, 5..720 minutes (default 240)"),
+				"ttlMinutes": intP("Lease lifetime, 5..120 minutes (default 45)"),
 			})),
 		tool("error_report_lock_renew",
-			"Extend a still-active error-report automation lease owned by the supplied token. Use before the current expiresAt when a run takes a long time. Requires MCP write operations to be enabled.",
+			"Extend a still-active error-report automation lease owned by the supplied leaseId. Renew before tests, push, and deploy or whenever expiry is less than 15 minutes away. Requires MCP write operations to be enabled.",
 			schema(map[string]any{
-				"token":      strP("Ownership token returned by error_report_lock_acquire"),
-				"ttlMinutes": intP("New lease lifetime from now, 5..720 minutes (default 240)"),
-			}, "token")),
+				"leaseId":    strP("Opaque handle returned by error_report_lock_acquire"),
+				"ttlMinutes": intP("New lease lifetime from now, 5..120 minutes (default 45)"),
+			}, "leaseId")),
 		tool("error_report_lock_release",
 			"Release the shared error-report automation lease. Always call this in the run's final cleanup step, including when no approved reports exist. Requires MCP write operations to be enabled.",
 			schema(map[string]any{
-				"token": strP("Ownership token returned by error_report_lock_acquire"),
-			}, "token")),
+				"leaseId": strP("Opaque handle returned by error_report_lock_acquire"),
+			}, "leaseId")),
 		tool("error_report_delete",
 			"Deprecated compatibility alias: archive one open approved report as resolved instead of physically deleting it. Prefer error_report_resolve so the resolution and commit can be recorded. Requires MCP write operations to be enabled.",
 			schema(map[string]any{
@@ -901,9 +922,10 @@ func mcpToolDefs() []map[string]any {
 				"question": strP("Concrete question for the administrator, 1..4000 characters"),
 			}, "id", "question")),
 		tool("error_report_screenshot",
-			"Fetch the screenshot attached to one admin-approved page error report as base64. Use hasScreenshot from error_reports_list before calling it.",
+			"Fetch an attached screenshot for one admin-approved page error report as native MCP image content. kind=element returns the selected-element crop; kind=viewport returns the visible page context. Check hasScreenshot/hasViewportScreenshot first.",
 			schema(map[string]any{
-				"id": intP("Error report id"),
+				"id":   intP("Error report id"),
+				"kind": strP("Optional screenshot kind: element (default) or viewport"),
 			}, "id")),
 		tool("handbook_item_create",
 			"Create a base (shared, user_id=null) item. Use handbook_item_types first to learn the `data` schema for the given typeId.",
@@ -961,10 +983,18 @@ func mcpToolDefs() []map[string]any {
 	}
 }
 
-func newErrorReportLeaseToken() (string, error) {
-	data := make([]byte, 32)
+func newErrorReportLeaseID() (string, error) {
+	data := make([]byte, 16)
 	if _, err := rand.Read(data); err != nil {
-		return "", fmt.Errorf("generate error-report lease token: %w", err)
+		return "", fmt.Errorf("generate error-report lease id: %w", err)
 	}
 	return hex.EncodeToString(data), nil
+}
+
+func errorReportLeaseIDArg(args map[string]json.RawMessage) (string, error) {
+	if _, ok := args["leaseId"]; ok {
+		return argString(args, "leaseId")
+	}
+	// Compatibility for an already-running client during the rolling deploy.
+	return argString(args, "token")
 }

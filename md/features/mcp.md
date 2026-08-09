@@ -26,7 +26,7 @@ Read tools (always on):
 - `handbook_suggests(typeId)` — base suggests of a type.
 - `handbook_suggests_search(q, limit?)` — base suggests by value.
 - `error_reports_list(limit?, offset?)` — actionable open, admin-approved page error reports newest first, including description, URL, selected element JSON, optional reporter, screenshot metadata, feedback history, lifecycle fields, and creation time. Resolved/unapproved rows and reports waiting for an admin answer are not exposed; answering or reopening makes an open report visible again.
-- `error_report_screenshot(id)` — fetch one attached screenshot for an approved report as base64 plus its MIME type.
+- `error_report_screenshot(id, kind?)` — fetch the selected-element crop (`element`, default) or page context (`viewport`) as native MCP image content.
 
 Write tools (gated, see below):
 - `handbook_item_create(typeId, name, nameEn, data, parentId?)` — `data` is a JSON object string; creates a **base** item (`user_id = NULL`) via `ItemRepository.createBase`. `parentId` links a variant/sub-entity (subrace → race item, subclass → class item).
@@ -39,9 +39,9 @@ Write tools (gated, see below):
 - `error_report_resolve(id, resolution, commitSha?)` — archive one successfully deployed fix, preserving its resolution and commit SHA in admin history.
 - `error_report_delete(id)` — deprecated compatibility alias; archives rather than physically deleting.
 - `error_report_question_create(id, question)` — append a concrete AI question for an approved report. The report is then hidden from `error_reports_list` until an administrator answers in the admin panel.
-- `error_report_lock_acquire(ttlMinutes?)` — atomically acquire the singleton automation lease; returns an owner token only when `acquired = true`.
-- `error_report_lock_renew(token, ttlMinutes?)` — extend a still-active lease owned by the token.
-- `error_report_lock_release(token)` — release the lease in the scheduled run's final cleanup step.
+- `error_report_lock_acquire(ttlMinutes?)` — atomically acquire the singleton automation lease; returns an opaque `leaseId` only when `acquired = true` (default 45 minutes, accepted 5–120).
+- `error_report_lock_renew(leaseId, ttlMinutes?)` — extend a still-active lease owned by the handle.
+- `error_report_lock_release(leaseId)` — release the lease in the scheduled run's final cleanup step.
 
 Handbook writes run as a synthetic `HANDBOOK_ADMIN` (repositories called with `isAdmin = true`, `userId = 0`). Creates always produce **base** records (`user_id = NULL`). Error-report resolution and AI feedback use the report id directly but succeed only for an open approved row. Lease mutation and all other write tools require `MCP_WRITE_ENABLED=true`.
 

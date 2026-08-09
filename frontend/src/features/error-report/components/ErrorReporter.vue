@@ -40,15 +40,27 @@
         <span v-if="selectedElement?.text" class="selected-text">{{ selectedElement.text }}</span>
       </div>
       <div class="screenshot-field">
-        <span class="selected-label">Скриншот области</span>
-        <div v-if="screenshotCapturing" class="screenshot-state">Создаём снимок выбранного элемента…</div>
-        <img
-          v-else-if="screenshotDataURL"
-          class="screenshot-preview"
-          :src="screenshotDataURL"
-          alt="Скриншот выбранного элемента"
-        />
-        <div v-else-if="screenshotError" class="screenshot-state screenshot-state-error">
+        <span class="selected-label">Скриншоты</span>
+        <div v-if="screenshotCapturing" class="screenshot-state">Создаём снимки элемента и видимой страницы…</div>
+        <div v-else-if="screenshotDataURL || viewportScreenshotDataURL" class="screenshot-previews">
+          <figure v-if="screenshotDataURL">
+            <figcaption>Выбранный элемент</figcaption>
+            <img
+              class="screenshot-preview"
+              :src="screenshotDataURL"
+              alt="Скриншот выбранного элемента"
+            />
+          </figure>
+          <figure v-if="viewportScreenshotDataURL">
+            <figcaption>Видимая область страницы</figcaption>
+            <img
+              class="screenshot-preview"
+              :src="viewportScreenshotDataURL"
+              alt="Скриншот видимой области страницы"
+            />
+          </figure>
+        </div>
+        <div v-if="!screenshotCapturing && screenshotError" class="screenshot-state screenshot-state-error">
           {{ screenshotError }} Заявку можно отправить без снимка.
         </div>
       </div>
@@ -97,6 +109,7 @@ const selectedPageURL = ref('')
 const descriptionInput = ref(null)
 const toast = ref('')
 const screenshotDataURL = ref('')
+const viewportScreenshotDataURL = ref('')
 const screenshotCapturing = ref(false)
 const screenshotError = ref('')
 const highlight = reactive({ visible: false, top: 0, left: 0, width: 0, height: 0 })
@@ -191,30 +204,23 @@ function onElementClick(event) {
 async function captureElementScreenshot(element) {
   const generation = ++screenshotGeneration
   screenshotDataURL.value = ''
+  viewportScreenshotDataURL.value = ''
   screenshotError.value = ''
   screenshotCapturing.value = true
   try {
     const rect = element.getBoundingClientRect()
     if (rect.width <= 0 || rect.height <= 0) throw new Error('empty element')
-    const scale = Math.max(0.1, Math.min(
-      window.devicePixelRatio || 1,
-      2,
-      1200 / rect.width,
-      800 / rect.height,
-    ))
-    const dataURL = await withTimeout(toJpeg(element, {
-      backgroundColor: getComputedStyle(document.body).backgroundColor || '#11121a',
-      cacheBust: true,
-      pixelRatio: scale,
-      quality: 0.82,
-      filter: node => !(node instanceof Element && (
-        node.matches('.am-overlay, .selection-highlight, .selection-hint, .error-reporter, .report-toast')
-        || Boolean(node.closest('[data-error-report-ignore]'))
-      )),
-    }), 5000)
+    const [elementResult, viewportResult] = await Promise.allSettled([
+      withTimeout(captureSelectedElement(element, rect), 7000),
+      withTimeout(captureViewport(), 7000),
+    ])
     if (generation !== screenshotGeneration) return
-    if (estimatedDataURLBytes(dataURL) > 2 * 1024 * 1024) throw new Error('large screenshot')
-    screenshotDataURL.value = dataURL
+    if (elementResult.status === 'fulfilled') screenshotDataURL.value = elementResult.value
+    if (viewportResult.status === 'fulfilled') viewportScreenshotDataURL.value = viewportResult.value
+    if (!screenshotDataURL.value && !viewportScreenshotDataURL.value) throw new Error('screenshots failed')
+    if (elementResult.status === 'rejected' || viewportResult.status === 'rejected') {
+      screenshotError.value = 'Не удалось создать один из снимков.'
+    }
   } catch {
     if (generation === screenshotGeneration) {
       screenshotError.value = 'Не удалось создать скриншот.'
@@ -222,6 +228,64 @@ async function captureElementScreenshot(element) {
   } finally {
     if (generation === screenshotGeneration) screenshotCapturing.value = false
   }
+}
+
+async function captureSelectedElement(element, rect) {
+  const scale = Math.max(0.1, Math.min(
+    window.devicePixelRatio || 1,
+    2,
+    1200 / rect.width,
+    800 / rect.height,
+  ))
+  return checkedScreenshot(await toJpeg(element, {
+    backgroundColor: screenshotBackground(),
+    cacheBust: true,
+    pixelRatio: scale,
+    quality: 0.82,
+    filter: screenshotFilter,
+  }))
+}
+
+async function captureViewport() {
+  const width = Math.max(1, window.innerWidth)
+  const height = Math.max(1, window.innerHeight)
+  const scale = Math.max(0.1, Math.min(
+    window.devicePixelRatio || 1,
+    1.25,
+    1600 / width,
+    1000 / height,
+  ))
+  return checkedScreenshot(await toJpeg(document.body, {
+    backgroundColor: screenshotBackground(),
+    cacheBust: true,
+    width,
+    height,
+    pixelRatio: scale,
+    quality: 0.68,
+    filter: screenshotFilter,
+    style: {
+      transform: `translate(${-window.scrollX}px, ${-window.scrollY}px)`,
+      transformOrigin: 'top left',
+      width: `${Math.max(document.documentElement.scrollWidth, width)}px`,
+      height: `${Math.max(document.documentElement.scrollHeight, height)}px`,
+    },
+  }))
+}
+
+function screenshotFilter(node) {
+  return !(node instanceof Element && (
+    node.matches('.am-overlay, .selection-highlight, .selection-hint, .error-reporter, .report-toast')
+    || Boolean(node.closest('[data-error-report-ignore]'))
+  ))
+}
+
+function screenshotBackground() {
+  return getComputedStyle(document.body).backgroundColor || '#11121a'
+}
+
+function checkedScreenshot(dataURL) {
+  if (estimatedDataURLBytes(dataURL) > 2 * 1024 * 1024) throw new Error('large screenshot')
+  return dataURL
 }
 
 async function withTimeout(promise, milliseconds) {
@@ -363,6 +427,7 @@ async function submitReport() {
       pageUrl: selectedPageURL.value,
       element: selectedElement.value,
       screenshot: screenshotDataURL.value || undefined,
+      viewportScreenshot: viewportScreenshotDataURL.value || undefined,
     })
     closeAfterSubmit()
     showToast('Спасибо! Заявка об ошибке отправлена')
@@ -384,6 +449,7 @@ function closeAfterSubmit() {
 function resetScreenshot() {
   screenshotGeneration += 1
   screenshotDataURL.value = ''
+  viewportScreenshotDataURL.value = ''
   screenshotCapturing.value = false
   screenshotError.value = ''
 }
@@ -601,6 +667,23 @@ onBeforeUnmount(() => {
   background: var(--bg-deep);
 }
 
+.screenshot-previews {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.screenshot-previews figure {
+  min-width: 0;
+  margin: 0;
+}
+
+.screenshot-previews figcaption {
+  margin-bottom: 5px;
+  color: var(--text-2);
+  font-size: 11px;
+}
+
 .screenshot-state {
   padding: 10px 12px;
   border: 1px solid var(--border);
@@ -611,6 +694,10 @@ onBeforeUnmount(() => {
 }
 
 .screenshot-state-error { color: #ef9b7b; }
+
+@media (max-width: 640px) {
+  .screenshot-previews { grid-template-columns: 1fr; }
+}
 
 .description-input {
   width: 100%;

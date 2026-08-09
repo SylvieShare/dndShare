@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Form controls visual fixture</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg-deep: #121214;
+        --bg: #1b1b1d;
+        --block-bg: #242427;
+        --surface-1: #2c2c30;
+        --popup-bg: #202024;
+        --input-bg: #1f1f22;
+        --input-border: #38383f;
+        --input-focus: #7c5ce2;
+        --border-strong: rgba(255, 255, 255, 0.16);
+        --text-1: #ececed;
+        --text-2: #a6a6ab;
+        --text-muted: #8a8a92;
+        --text-on-accent: #fff;
+        --accent: #7c5ce2;
+        --shadow-lg: 0 18px 48px rgba(0, 0, 0, 0.42);
+        --r-sm: 6px;
+        --r-md: 10px;
+        --font-ui: 'Segoe UI', system-ui, sans-serif;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        padding: 32px;
+        background: var(--bg-deep);
+        color: var(--text-1);
+        font-family: var(--font-ui);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="./form-controls.js"></script>
+  </body>
+</html>

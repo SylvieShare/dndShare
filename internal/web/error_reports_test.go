@@ -2,24 +2,58 @@ package web
 
 import (
 	"encoding/base64"
+	"encoding/json"
 	"strings"
 	"testing"
 )
 
-func TestErrorReportLeaseToken(t *testing.T) {
-	first, err := newErrorReportLeaseToken()
+func TestErrorReportLeaseID(t *testing.T) {
+	first, err := newErrorReportLeaseID()
 	if err != nil {
-		t.Fatalf("generate first token: %v", err)
+		t.Fatalf("generate first lease id: %v", err)
 	}
-	second, err := newErrorReportLeaseToken()
+	second, err := newErrorReportLeaseID()
 	if err != nil {
-		t.Fatalf("generate second token: %v", err)
+		t.Fatalf("generate second lease id: %v", err)
 	}
-	if len(first) != 64 || len(second) != 64 {
-		t.Fatalf("unexpected token lengths: %d and %d", len(first), len(second))
+	if len(first) != 32 || len(second) != 32 {
+		t.Fatalf("unexpected lease id lengths: %d and %d", len(first), len(second))
 	}
 	if first == second {
-		t.Fatal("lease tokens must be unique")
+		t.Fatal("lease ids must be unique")
+	}
+}
+
+func TestErrorReportLeaseIDArgSupportsRollingCompatibility(t *testing.T) {
+	leaseID, err := errorReportLeaseIDArg(map[string]json.RawMessage{
+		"leaseId": json.RawMessage(`"new-handle"`),
+	})
+	if err != nil || leaseID != "new-handle" {
+		t.Fatalf("unexpected leaseId result: %q, %v", leaseID, err)
+	}
+	legacy, err := errorReportLeaseIDArg(map[string]json.RawMessage{
+		"token": json.RawMessage(`"legacy-handle"`),
+	})
+	if err != nil || legacy != "legacy-handle" {
+		t.Fatalf("unexpected legacy result: %q, %v", legacy, err)
+	}
+}
+
+func TestMCPImageContentIsTypedInsteadOfJSONText(t *testing.T) {
+	result := mcpToolResult{Content: []mcpContent{
+		{Type: "text", Text: "error report 7 element screenshot"},
+		{Type: "image", Data: "YWJj", MimeType: "image/jpeg"},
+	}}
+	raw, err := json.Marshal(result)
+	if err != nil {
+		t.Fatalf("marshal result: %v", err)
+	}
+	value := string(raw)
+	if !strings.Contains(value, `"type":"image"`) || !strings.Contains(value, `"mimeType":"image/jpeg"`) {
+		t.Fatalf("missing typed image content: %s", value)
+	}
+	if strings.Contains(value, `"text":"YWJj"`) {
+		t.Fatalf("image bytes must not be exposed as text: %s", value)
 	}
 }
 

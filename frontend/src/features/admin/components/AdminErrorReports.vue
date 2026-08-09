@@ -83,15 +83,27 @@
           </div>
         </dl>
 
-        <div v-if="report.hasScreenshot" class="report-screenshot">
-          <span>Скриншот выбранной области</span>
-          <a :href="screenshotURL(report.id)" target="_blank" rel="noopener">
-            <img
-              :src="screenshotURL(report.id)"
-              :alt="`Скриншот заявки #${report.id}`"
-              loading="lazy"
-            />
-          </a>
+        <div v-if="report.hasScreenshot || report.hasViewportScreenshot" class="report-screenshots">
+          <div v-if="report.hasScreenshot" class="report-screenshot">
+            <span>Выбранный элемент</span>
+            <a :href="screenshotURL(report.id, 'element')" target="_blank" rel="noopener">
+              <img
+                :src="screenshotURL(report.id, 'element')"
+                :alt="`Скриншот элемента заявки #${report.id}`"
+                loading="lazy"
+              />
+            </a>
+          </div>
+          <div v-if="report.hasViewportScreenshot" class="report-screenshot">
+            <span>Видимая область страницы</span>
+            <a :href="screenshotURL(report.id, 'viewport')" target="_blank" rel="noopener">
+              <img
+                :src="screenshotURL(report.id, 'viewport')"
+                :alt="`Скриншот страницы заявки #${report.id}`"
+                loading="lazy"
+              />
+            </a>
+          </div>
         </div>
 
         <details class="element-details">
@@ -275,8 +287,9 @@ function formatElement(element) {
   return JSON.stringify(element || {}, null, 2)
 }
 
-function screenshotURL(id) {
-  return `/api/admin-panel/error-reports/${id}/screenshot`
+function screenshotURL(id, kind) {
+  const suffix = kind === 'viewport' ? 'viewport-screenshot' : 'screenshot'
+  return `/api/admin-panel/error-reports/${id}/${suffix}`
 }
 
 onMounted(load)
@@ -494,12 +507,18 @@ onMounted(load)
   white-space: nowrap;
 }
 
+.report-screenshots {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 12px;
+}
+
 .report-screenshot {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 7px;
-  margin-top: 12px;
 }
 
 .report-screenshot > span {
@@ -524,6 +543,10 @@ onMounted(load)
   border: 1px solid var(--border);
   border-radius: 8px;
   background: var(--bg-deep);
+}
+
+@media (max-width: 760px) {
+  .report-screenshots { grid-template-columns: 1fr; }
 }
 
 .element-details { margin-top: 12px; }

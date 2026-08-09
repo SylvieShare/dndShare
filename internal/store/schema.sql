@@ -75,6 +75,8 @@ CREATE TABLE IF NOT EXISTS dndshare.error_report (
     element     jsonb NOT NULL,
     screenshot  bytea NULL,
     screenshot_content_type varchar(50) NULL,
+    viewport_screenshot bytea NULL,
+    viewport_screenshot_content_type varchar(50) NULL,
     user_id     int8 NULL REFERENCES dndshare.users(id) ON DELETE SET NULL,
     approved    bool DEFAULT false NOT NULL,
     status      varchar(20) DEFAULT 'OPEN' NOT NULL,
@@ -86,6 +88,8 @@ CREATE TABLE IF NOT EXISTS dndshare.error_report (
 );
 ALTER TABLE dndshare.error_report ADD COLUMN IF NOT EXISTS screenshot bytea NULL;
 ALTER TABLE dndshare.error_report ADD COLUMN IF NOT EXISTS screenshot_content_type varchar(50) NULL;
+ALTER TABLE dndshare.error_report ADD COLUMN IF NOT EXISTS viewport_screenshot bytea NULL;
+ALTER TABLE dndshare.error_report ADD COLUMN IF NOT EXISTS viewport_screenshot_content_type varchar(50) NULL;
 ALTER TABLE dndshare.error_report ADD COLUMN IF NOT EXISTS approved bool DEFAULT false NOT NULL;
 ALTER TABLE dndshare.error_report ADD COLUMN IF NOT EXISTS status varchar(20) DEFAULT 'OPEN' NOT NULL;
 ALTER TABLE dndshare.error_report ADD COLUMN IF NOT EXISTS resolution text NULL;

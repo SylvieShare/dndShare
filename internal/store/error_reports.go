@@ -13,22 +13,24 @@ import (
 // Element stays as JSON so the browser can include selector and accessibility
 // metadata without requiring a schema migration for every new diagnostic field.
 type ErrorReport struct {
-	ID                    int64                `json:"id"`
-	Description           string               `json:"description"`
-	PageURL               string               `json:"pageUrl"`
-	Element               json.RawMessage      `json:"element"`
-	UserID                *int64               `json:"userId"`
-	UserLogin             *string              `json:"userLogin"`
-	Approved              bool                 `json:"approved"`
-	Status                string               `json:"status"`
-	Resolution            *string              `json:"resolution"`
-	ResolvedCommitSHA     *string              `json:"resolvedCommitSha"`
-	ResolvedAt            *time.Time           `json:"resolvedAt"`
-	HasScreenshot         bool                 `json:"hasScreenshot"`
-	ScreenshotContentType *string              `json:"screenshotContentType,omitempty"`
-	Messages              []ErrorReportMessage `json:"messages"`
-	WaitingForAnswer      bool                 `json:"waitingForAnswer"`
-	CreatedAt             time.Time            `json:"createdAt"`
+	ID                            int64                `json:"id"`
+	Description                   string               `json:"description"`
+	PageURL                       string               `json:"pageUrl"`
+	Element                       json.RawMessage      `json:"element"`
+	UserID                        *int64               `json:"userId"`
+	UserLogin                     *string              `json:"userLogin"`
+	Approved                      bool                 `json:"approved"`
+	Status                        string               `json:"status"`
+	Resolution                    *string              `json:"resolution"`
+	ResolvedCommitSHA             *string              `json:"resolvedCommitSha"`
+	ResolvedAt                    *time.Time           `json:"resolvedAt"`
+	HasScreenshot                 bool                 `json:"hasScreenshot"`
+	ScreenshotContentType         *string              `json:"screenshotContentType,omitempty"`
+	HasViewportScreenshot         bool                 `json:"hasViewportScreenshot"`
+	ViewportScreenshotContentType *string              `json:"viewportScreenshotContentType,omitempty"`
+	Messages                      []ErrorReportMessage `json:"messages"`
+	WaitingForAnswer              bool                 `json:"waitingForAnswer"`
+	CreatedAt                     time.Time            `json:"createdAt"`
 }
 
 const (
@@ -54,15 +56,30 @@ type ErrorReportMessage struct {
 	CreatedAt      time.Time `json:"createdAt"`
 }
 
-func (s *Store) CreateErrorReport(ctx context.Context, description, pageURL string, element json.RawMessage, screenshot []byte, screenshotContentType *string, userID *int64, approved bool) (ErrorReport, error) {
+func (s *Store) CreateErrorReport(
+	ctx context.Context,
+	description, pageURL string,
+	element json.RawMessage,
+	screenshot []byte,
+	screenshotContentType *string,
+	viewportScreenshot []byte,
+	viewportScreenshotContentType *string,
+	userID *int64,
+	approved bool,
+) (ErrorReport, error) {
 	var report ErrorReport
 	var elementBytes []byte
 	err := s.pool.QueryRow(ctx, `
-		INSERT INTO dndshare.error_report (description, page_url, element, screenshot, screenshot_content_type, user_id, approved)
-		VALUES ($1, $2, CAST($3 AS jsonb), $4, $5, $6, $7)
+		INSERT INTO dndshare.error_report (
+			description, page_url, element, screenshot, screenshot_content_type,
+			viewport_screenshot, viewport_screenshot_content_type, user_id, approved
+		)
+		VALUES ($1, $2, CAST($3 AS jsonb), $4, $5, $6, $7, $8, $9)
 		RETURNING id, description, page_url, element, user_id, approved, status, resolution,
-		          resolved_commit_sha, resolved_at, screenshot IS NOT NULL, screenshot_content_type, created_at`,
-		description, pageURL, string(element), screenshot, screenshotContentType, userID, approved,
+		          resolved_commit_sha, resolved_at, screenshot IS NOT NULL, screenshot_content_type,
+		          viewport_screenshot IS NOT NULL, viewport_screenshot_content_type, created_at`,
+		description, pageURL, string(element), screenshot, screenshotContentType,
+		viewportScreenshot, viewportScreenshotContentType, userID, approved,
 	).Scan(
 		&report.ID,
 		&report.Description,
@@ -76,6 +93,8 @@ func (s *Store) CreateErrorReport(ctx context.Context, description, pageURL stri
 		&report.ResolvedAt,
 		&report.HasScreenshot,
 		&report.ScreenshotContentType,
+		&report.HasViewportScreenshot,
+		&report.ViewportScreenshotContentType,
 		&report.CreatedAt,
 	)
 	report.Element = json.RawMessage(elementBytes)
@@ -96,6 +115,7 @@ func (s *Store) listErrorReports(ctx context.Context, limit, offset int, approve
 		SELECT er.id, er.description, er.page_url, er.element, er.user_id, u.login,
 		       er.approved, er.status, er.resolution, er.resolved_commit_sha, er.resolved_at,
 		       er.screenshot IS NOT NULL, er.screenshot_content_type,
+		       er.viewport_screenshot IS NOT NULL, er.viewport_screenshot_content_type,
 		       COALESCE((
 		           SELECT m.sender = 'AI'
 		           FROM dndshare.error_report_message m
@@ -141,6 +161,8 @@ func (s *Store) listErrorReports(ctx context.Context, limit, offset int, approve
 			&report.ResolvedAt,
 			&report.HasScreenshot,
 			&report.ScreenshotContentType,
+			&report.HasViewportScreenshot,
+			&report.ViewportScreenshotContentType,
 			&report.WaitingForAnswer,
 			&report.CreatedAt,
 		); err != nil {
@@ -272,21 +294,32 @@ func (s *Store) createErrorReportMessage(ctx context.Context, reportID int64, se
 }
 
 func (s *Store) GetErrorReportScreenshot(ctx context.Context, id int64) ([]byte, string, error) {
-	return s.getErrorReportScreenshot(ctx, id, false)
+	return s.getErrorReportScreenshot(ctx, id, false, false)
 }
 
 func (s *Store) GetApprovedErrorReportScreenshot(ctx context.Context, id int64) ([]byte, string, error) {
-	return s.getErrorReportScreenshot(ctx, id, true)
+	return s.getErrorReportScreenshot(ctx, id, true, false)
 }
 
-func (s *Store) getErrorReportScreenshot(ctx context.Context, id int64, approvedOnly bool) ([]byte, string, error) {
+func (s *Store) GetErrorReportViewportScreenshot(ctx context.Context, id int64) ([]byte, string, error) {
+	return s.getErrorReportScreenshot(ctx, id, false, true)
+}
+
+func (s *Store) GetApprovedErrorReportViewportScreenshot(ctx context.Context, id int64) ([]byte, string, error) {
+	return s.getErrorReportScreenshot(ctx, id, true, true)
+}
+
+func (s *Store) getErrorReportScreenshot(ctx context.Context, id int64, approvedOnly, viewport bool) ([]byte, string, error) {
 	var screenshot []byte
 	var contentType *string
 	err := s.pool.QueryRow(ctx, `
-		SELECT screenshot, screenshot_content_type
+		SELECT CASE WHEN $3::bool THEN viewport_screenshot ELSE screenshot END,
+		       CASE WHEN $3::bool THEN viewport_screenshot_content_type ELSE screenshot_content_type END
 		FROM dndshare.error_report
-		WHERE id = $1 AND screenshot IS NOT NULL
+		WHERE id = $1
+		  AND CASE WHEN $3::bool THEN viewport_screenshot IS NOT NULL ELSE screenshot IS NOT NULL END
 		  AND (NOT $2::bool OR (approved AND status = 'OPEN'))`, id, approvedOnly,
+		viewport,
 	).Scan(&screenshot, &contentType)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, "", ErrNotFound

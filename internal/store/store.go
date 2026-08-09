@@ -56,6 +56,9 @@ func Open(ctx context.Context, dsn string) (*Store, error) {
 
 func (s *Store) Close() { s.pool.Close() }
 
+// Ping verifies that the database is reachable for readiness checks.
+func (s *Store) Ping(ctx context.Context) error { return s.pool.Ping(ctx) }
+
 // IsUniqueViolation — ошибка нарушения уникального ограничения (SQLSTATE 23505).
 func IsUniqueViolation(err error) bool {
 	var pgErr *pgconn.PgError

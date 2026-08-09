@@ -8,8 +8,9 @@
 1. Запустить подходящие проверки: для фронтенда — `cd frontend && npm run build`, для Go-бэкенда —
    `go build ./... && go vet ./...`.
 2. Сразу закоммитить изменение и отправить его в `origin/main`.
-3. Сразу после успешного push запустить `./deploy/deploy.sh` и убедиться по выводу скрипта, что
-   `dndshare.service` имеет статус `active (running)` и приложение снова слушает `:8080`.
+3. Сразу после успешного push запустить `./deploy/deploy.sh`. Скрипт ждёт `GET /api/health`,
+   проверяет доступность БД и точное совпадение `commitSha` с выкатываемым Git SHA; только после
+   этого деплой считается успешным и печатается статус `dndshare.service`.
 
 Не пропускать push или деплой, если пользователь прямо не попросил оставить правку локально либо
 не выкатывать её на стенд.
@@ -17,7 +18,8 @@
 > **Порт на Go.** Прод теперь — один статический Go-бинарь (фронт вшит через `go:embed`), а не JAR.
 > Деплой: `./deploy/deploy.sh` (собирает фронт в `frontend/target/dist`, вшивает в
 > `internal/assets/dist`, кросс-компилит `linux/amd64`, заливает бинарь + `dndshare.service` +
-> `dndshare-run.sh`, рестартит systemd). Секреты — по-прежнему из Lockbox через `fetch-secrets.sh`.
+> `dndshare-run.sh`, рестартит systemd, затем подтверждает readiness и SHA новой версии через
+> `/api/health`). Секреты — по-прежнему из Lockbox через `fetch-secrets.sh`.
 > Ниже — исходное описание (JAR/Spring); инфраструктура (VM, Lockbox, nginx) та же.
 
 Prod runs as a bare JAR under **systemd** on a Yandex Cloud VM (`213.165.196.171`, user `sylvieshare`, SSH key `~/.ssh/dndshare`). Secrets come from **Yandex Lockbox** and are fetched on the VM at every service start — they are never in the repo and never travel from the dev machine. Same pattern as the sibling `havenShare` project.

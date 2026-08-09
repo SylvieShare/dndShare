@@ -156,6 +156,7 @@ import { useTabSwipe } from '@/features/character-editor/composables/useTabSwipe
 import { useScrollHide } from '@/features/character-editor/composables/useScrollHide'
 import { useUiStore } from '@/stores/ui'
 import { initialTabs } from '@/features/character-editor/lib/templateSchema'
+import { defaultTabIndex, parseTabQuery, queryForTab } from '@/features/character-editor/lib/tabQuery'
 
 const route = useRoute()
 const router = useRouter()
@@ -257,6 +258,15 @@ watch(activeTabs, () => { invalidateTabCache() })
 watch(headerTitle, () => { uiStore.setHeaderTitle(headerTitle.value) })
 
 watch(activeTab, () => { pushQueryState() })
+
+watch(() => route.query.tab, tab => {
+  if (!ready) return
+  const nextTab = parseTabQuery(tab, activeTabs.value.length, defaultTabIndex(getInitialTabs()))
+  if (nextTab === activeTab.value) return
+  syncingTabFromRoute = true
+  onSetActiveTab(nextTab)
+  nextTick(() => { syncingTabFromRoute = false })
+})
 
 watch([activeTab, isMobile], () => {
   const preserveHeaderHidden = uiStore.headerHidden
@@ -378,6 +388,7 @@ function stopViewportHeightSync() {
 // ── URL sync ──────────────────────────────────────────────────────────
 
 let ready = false
+let syncingTabFromRoute = false
 
 // ── Polling сессий / версии ───────────────────────────────────────────
 const VERSION_POLL_MS = 5000
@@ -409,13 +420,10 @@ function stopVersionPolling() {
 }
 
 function pushQueryState() {
-  if (!ready) return
+  if (!ready || syncingTabFromRoute) return
   const tabs = getInitialTabs()
-  const defaultIdx = tabs.findIndex(t => t.default)
-  const def = defaultIdx >= 0 ? defaultIdx : 0
-  const query = {}
-  if (activeTab.value !== def) query.tab = String(activeTab.value)
-  router.replace({ query })
+  const query = queryForTab(route.query, activeTab.value, defaultTabIndex(tabs))
+  router.push({ query })
 }
 
 // ── Lifecycle ─────────────────────────────────────────────────────────
@@ -425,7 +433,7 @@ onMounted(async () => {
   startViewportHeightSync()
   window.scrollTo(0, 0)
 
-  const savedQueryTab = parseInt(route.query.tab)
+  const savedQueryTab = route.query.tab
 
   mediaQuery = window.matchMedia('(max-width: 640px)')
   isMobile.value = mediaQuery.matches
@@ -439,8 +447,8 @@ onMounted(async () => {
   if (!res) return
 
   const tabs = initialTabs(res.template)
-  const defaultIdx = tabs.findIndex(t => t.default)
-  activeTab.value = defaultIdx >= 0 ? defaultIdx : 0
+  const defaultIdx = defaultTabIndex(tabs)
+  activeTab.value = defaultIdx
   markTabVisited(activeTab.value)
 
   uiStore.setHeaderTitle(headerTitle.value)
@@ -449,9 +457,7 @@ onMounted(async () => {
 
   await nextTick()
 
-  if (!isNaN(savedQueryTab) && savedQueryTab >= 0 && savedQueryTab < activeTabs.value.length) {
-    onSetActiveTab(savedQueryTab)
-  }
+  onSetActiveTab(parseTabQuery(savedQueryTab, activeTabs.value.length, defaultIdx))
 
   ready = true
 

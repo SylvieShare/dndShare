@@ -10,12 +10,12 @@ import (
 )
 
 type ErrorReportAutomationLease struct {
-	Token      string    `json:"token"`
+	LeaseID    string    `json:"leaseId"`
 	AcquiredAt time.Time `json:"acquiredAt"`
 	ExpiresAt  time.Time `json:"expiresAt"`
 }
 
-func (s *Store) AcquireErrorReportAutomationLease(ctx context.Context, token string, ttl time.Duration) (ErrorReportAutomationLease, bool, error) {
+func (s *Store) AcquireErrorReportAutomationLease(ctx context.Context, leaseID string, ttl time.Duration) (ErrorReportAutomationLease, bool, error) {
 	seconds := int64(ttl / time.Second)
 	for attempt := 0; attempt < 2; attempt++ {
 		var lease ErrorReportAutomationLease
@@ -27,8 +27,8 @@ func (s *Store) AcquireErrorReportAutomationLease(ctx context.Context, token str
 			    acquired_at = EXCLUDED.acquired_at,
 			    expires_at = EXCLUDED.expires_at
 			WHERE dndshare.error_report_automation_lock.expires_at <= now()
-			RETURNING token, acquired_at, expires_at`, token, seconds,
-		).Scan(&lease.Token, &lease.AcquiredAt, &lease.ExpiresAt)
+			RETURNING token, acquired_at, expires_at`, leaseID, seconds,
+		).Scan(&lease.LeaseID, &lease.AcquiredAt, &lease.ExpiresAt)
 		if err == nil {
 			return lease, true, nil
 		}
@@ -40,7 +40,7 @@ func (s *Store) AcquireErrorReportAutomationLease(ctx context.Context, token str
 			SELECT token, acquired_at, expires_at
 			FROM dndshare.error_report_automation_lock
 			WHERE id = 1`,
-		).Scan(&lease.Token, &lease.AcquiredAt, &lease.ExpiresAt)
+		).Scan(&lease.LeaseID, &lease.AcquiredAt, &lease.ExpiresAt)
 		if err == nil {
 			return lease, false, nil
 		}
@@ -51,15 +51,15 @@ func (s *Store) AcquireErrorReportAutomationLease(ctx context.Context, token str
 	return ErrorReportAutomationLease{}, false, fmt.Errorf("automation lease changed concurrently")
 }
 
-func (s *Store) RenewErrorReportAutomationLease(ctx context.Context, token string, ttl time.Duration) (ErrorReportAutomationLease, bool, error) {
+func (s *Store) RenewErrorReportAutomationLease(ctx context.Context, leaseID string, ttl time.Duration) (ErrorReportAutomationLease, bool, error) {
 	var lease ErrorReportAutomationLease
 	seconds := int64(ttl / time.Second)
 	err := s.pool.QueryRow(ctx, `
 		UPDATE dndshare.error_report_automation_lock
 		SET expires_at = now() + ($2::double precision * interval '1 second')
 		WHERE id = 1 AND token = $1 AND expires_at > now()
-		RETURNING token, acquired_at, expires_at`, token, seconds,
-	).Scan(&lease.Token, &lease.AcquiredAt, &lease.ExpiresAt)
+		RETURNING token, acquired_at, expires_at`, leaseID, seconds,
+	).Scan(&lease.LeaseID, &lease.AcquiredAt, &lease.ExpiresAt)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return ErrorReportAutomationLease{}, false, nil
 	}
@@ -69,10 +69,10 @@ func (s *Store) RenewErrorReportAutomationLease(ctx context.Context, token strin
 	return lease, true, nil
 }
 
-func (s *Store) ReleaseErrorReportAutomationLease(ctx context.Context, token string) (bool, error) {
+func (s *Store) ReleaseErrorReportAutomationLease(ctx context.Context, leaseID string) (bool, error) {
 	result, err := s.pool.Exec(ctx, `
 		DELETE FROM dndshare.error_report_automation_lock
-		WHERE id = 1 AND token = $1`, token,
+		WHERE id = 1 AND token = $1`, leaseID,
 	)
 	if err != nil {
 		return false, err

@@ -51,15 +51,20 @@ Do not spread endpoint strings directly through components when adding new behav
 
 ## Page Error Report Routes
 
-- `POST /api/error-reports` — public/optional-auth submit endpoint. Body: `{ description, pageUrl, element, screenshot? }`; `element` is a JSON object containing at least `selector`, and `screenshot` is an optional JPEG/PNG/WebP data URL. A signed-in reporter is attached to the row automatically; guests store `userId = null`.
+- `POST /api/error-reports` — public/optional-auth submit endpoint. Body: `{ description, pageUrl, element, screenshot?, viewportScreenshot? }`; `element` is a JSON object containing at least `selector`, while the two optional JPEG/PNG/WebP data URLs contain the selected-element crop and visible page context. A signed-in reporter is attached to the row automatically; guests store `userId = null`.
 - `GET /api/admin-panel/error-reports?limit=200&offset=0` — `ADMIN` list, newest first.
-- `GET /api/admin-panel/error-reports/{id}/screenshot` — `ADMIN` raw attached image.
+- `GET /api/admin-panel/error-reports/{id}/screenshot` — `ADMIN` raw selected-element crop.
+- `GET /api/admin-panel/error-reports/{id}/viewport-screenshot` — `ADMIN` raw visible-page screenshot.
 - `PATCH /api/admin-panel/error-reports/{id}/approval` — `ADMIN` sets `{ approved: boolean }`, controlling MCP visibility.
 - `POST /api/admin-panel/error-reports/{id}/messages` — `ADMIN` answers the latest AI question with `{ message }`; the report becomes actionable through MCP again.
 - `POST /api/admin-panel/error-reports/{id}/reopen` — `ADMIN` returns an archived report to the active queue and clears its resolution metadata.
 - `DELETE /api/admin-panel/error-reports/{id}` — `ADMIN` permanently deletes one report and its conversation; normal MCP completion archives instead.
 
 See `md/features/error-reports.md` for the selector payload and validation limits.
+
+## Health Route
+
+- `GET /api/health` — public readiness check. Returns `{ status, commitSha }`; HTTP 200 means the database is reachable and HTTP 503 means the instance is not ready. Production builds inject the deployed Git SHA into `commitSha`.
 
 ## MCP Endpoint (agent channel)
 
