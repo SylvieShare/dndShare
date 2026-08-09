@@ -2,6 +2,7 @@ import { ref, computed, onBeforeUnmount } from 'vue'
 import { useUiStore } from '@/stores/ui'
 
 export function useScrollHide(isMobile, commonMobileScrollHide) {
+  const SCROLL_SETTLE_MS = 120
   const toolbarHeight = ref(45)
   const stripHidden = ref(false)
 
@@ -22,17 +23,53 @@ export function useScrollHide(isMobile, commonMobileScrollHide) {
   let lastScrollY = 0
   let scrollEl = null
   let touchLastY = null
+  let scrollSettleTimer = null
+  let pendingStripHidden = null
+
+  function clearPendingChromeUpdate() {
+    clearTimeout(scrollSettleTimer)
+    scrollSettleTimer = null
+    pendingStripHidden = null
+  }
+
+  function scheduleChromeUpdate(y, delta) {
+    clearTimeout(scrollSettleTimer)
+    if (delta > 8) pendingStripHidden = true
+    else if (delta < -5 || y < 10) pendingStripHidden = false
+    scrollSettleTimer = setTimeout(() => {
+      scrollSettleTimer = null
+      uiStore.setHeaderHidden(y > 10)
+      if (commonMobileScrollHide.value && pendingStripHidden != null) {
+        stripHidden.value = pendingStripHidden
+      }
+      pendingStripHidden = null
+    }, SCROLL_SETTLE_MS)
+  }
 
   function onScroll() {
     if (!scrollEl) return
     const y = scrollEl.scrollTop
     uiStore.setScrollY(y)
-    if (y > 10) uiStore.setHeaderHidden(true)
-    if (!isMobile.value || !commonMobileScrollHide.value) return
     const delta = y - lastScrollY
-    if (delta > 8) stripHidden.value = true
-    else if (delta < -5 || y < 10) stripHidden.value = false
     lastScrollY = y
+
+    if (!isMobile.value) {
+      if (y > 10) uiStore.setHeaderHidden(true)
+      return
+    }
+
+    if (y < 10) {
+      clearPendingChromeUpdate()
+      uiStore.setHeaderHidden(false)
+      stripHidden.value = false
+      return
+    }
+
+    // Collapsing the app header or the common strip changes the height of the
+    // native momentum scroller. Mobile browsers can amplify the active fling
+    // when that happens, most noticeably on the first scroll after a reload.
+    // Wait for the scroll stream to settle before changing either height.
+    scheduleChromeUpdate(y, delta)
   }
 
   function onTouchStart(event) {
@@ -56,6 +93,7 @@ export function useScrollHide(isMobile, commonMobileScrollHide) {
 
   function startScrollListener(el, options = {}) {
     if (scrollEl === el) return
+    clearPendingChromeUpdate()
     if (scrollEl) removeScrollElementListeners(scrollEl)
     scrollEl = el
     lastScrollY = el?.scrollTop || 0
@@ -66,6 +104,7 @@ export function useScrollHide(isMobile, commonMobileScrollHide) {
   }
 
   function stopScrollListener(el) {
+    clearPendingChromeUpdate()
     removeScrollElementListeners(el)
     scrollEl = null
     touchLastY = null

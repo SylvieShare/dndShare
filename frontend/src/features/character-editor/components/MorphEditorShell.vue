@@ -102,8 +102,8 @@ const showBack = computed(() => !!props.nav && props.nav.view.value !== 'detail'
 .mes-vertical .mes-rest { flex: none; width: 100%; flex-direction: column; }
 
 @media (max-width: 768px) {
-  .mes-split { flex-direction: column; }
+  .mes-split { flex-direction: column; min-height: 100%; }
   .mes-view { flex: none; width: 100%; }
-  .mes-rest { flex: none; width: 100%; flex-direction: column; }
+  .mes-rest { flex: 1 0 auto; width: 100%; flex-direction: column; }
 }
 </style>
