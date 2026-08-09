@@ -409,8 +409,8 @@ onMounted(async () => {
   slotsRest.value = Array.isArray(raw) ? 'long_rest' : (raw?.slots_rest || 'long_rest')
   preparation.value = Array.isArray(raw) ? false : !!raw?.preparation
   loadSlots(Array.isArray(raw) ? [] : (raw?.slots || []))
-  const { school_suggest_id, source_suggest_id, stat_suggest_type_id } = props.block.content || {}
-  const ensures = [school_suggest_id, source_suggest_id, stat_suggest_type_id, diceSuggestTypeId.value, damageTypeSuggestTypeId.value]
+  const { school_suggest_id, stat_suggest_type_id } = props.block.content || {}
+  const ensures = [school_suggest_id, stat_suggest_type_id, diceSuggestTypeId.value, damageTypeSuggestTypeId.value]
     .filter(Boolean)
     .map(id => useSuggestStore().ensure(id))
   await Promise.all([loadDetails(), ...ensures])

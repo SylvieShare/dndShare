@@ -79,7 +79,7 @@ const iconSrc = computed(() => props.block?.content?.svg || null)
 const iconStyle = computed(() => ({ filter: svgColorFilter(accent.value) }))
 const sourceSummary = computed(() => {
   const settings = normalizeContentSourceSettings(ctx.contentSources)
-  if (settings.mode === 'all') return settings.allowLegacy ? 'Все, включая Legacy' : 'Все совместимые'
+  if (settings.mode === 'all') return settings.allowLegacy ? 'Все источники + Legacy' : 'Все источники'
   return `${settings.ids.length} выбрано`
 })
 

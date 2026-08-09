@@ -1,18 +1,15 @@
 <template>
   <div class="css">
-    <div class="css-mode">
-      <button type="button" :class="{ active: settings.mode === 'all' }" @click="setMode('all')">
-        Все совместимые
-      </button>
-      <button type="button" :class="{ active: settings.mode === 'selected' }" @click="setMode('selected')">
-        Только выбранные
-      </button>
-    </div>
+    <ToggleSwitch
+      :model-value="settings.mode === 'all'"
+      label="Использовать все источники"
+      @update:model-value="setUseAll"
+    />
 
-    <p v-if="loading" class="css-empty">Загрузка источников…</p>
-    <p v-else-if="!sources.length" class="css-empty">Для этой редакции источники пока не заведены.</p>
+    <p v-if="settings.mode !== 'all' && loading" class="css-empty">Загрузка источников…</p>
+    <p v-else-if="settings.mode !== 'all' && !sources.length" class="css-empty">Для этой редакции источники пока не заведены.</p>
 
-    <div v-else class="css-list" :class="{ disabled: settings.mode === 'all' }">
+    <div v-else-if="settings.mode !== 'all'" class="css-list">
       <button
         v-for="source in sources"
         :key="source.id"
@@ -46,6 +43,7 @@
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
 import { contentSourcesApi, normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'
+import ToggleSwitch from '@/shared/ui/ToggleSwitch'
 
 const props = defineProps({
   sourceVersionId: { type: [Number, String], default: null },
@@ -61,7 +59,8 @@ const hasLegacy = computed(() => sources.value.some((source) => source.compatibi
 function update(patch) {
   emit('update:modelValue', { ...settings.value, ...patch })
 }
-function setMode(mode) {
+function setUseAll(useAll) {
+  const mode = useAll ? 'all' : 'selected'
   const patch = { mode }
   if (mode === 'selected' && !settings.value.ids.length) {
     patch.ids = sources.value.filter((source) => source.isDefault && source.compatibilityStatus !== 'legacy').map((source) => source.id)
@@ -70,7 +69,6 @@ function setMode(mode) {
 }
 function selected(id) { return settings.value.ids.some((value) => String(value) === String(id)) }
 function toggle(id) {
-  if (settings.value.mode === 'all') return
   const ids = selected(id)
     ? settings.value.ids.filter((value) => String(value) !== String(id))
     : [...settings.value.ids, id]
@@ -99,11 +97,7 @@ watch(() => props.sourceVersionId, load)
 
 <style scoped>
 .css { display: flex; flex-direction: column; gap: 12px; }
-.css-mode { display: inline-flex; align-self: flex-start; padding: 3px; border-radius: 10px; background: var(--surface-raised); }
-.css-mode button { border: 0; border-radius: 8px; background: transparent; color: var(--text-muted); padding: 7px 12px; font: inherit; font-size: 12px; cursor: pointer; }
-.css-mode button.active { background: var(--accent); color: var(--text-on-accent); }
 .css-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 8px; }
-.css-list.disabled { opacity: .55; }
 .css-source { display: flex; gap: 10px; text-align: left; border: 1px solid transparent; border-radius: var(--r-md); background: var(--surface); color: var(--text-1); padding: 11px 12px; cursor: pointer; }
 .css-source.selected { border-color: color-mix(in srgb, var(--accent) 55%, transparent); background: color-mix(in srgb, var(--accent) 10%, var(--surface)); }
 .css-check { width: 18px; height: 18px; flex: 0 0 auto; display: grid; place-items: center; border: 1px solid var(--border-strong); border-radius: 5px; margin-top: 1px; }

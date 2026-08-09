@@ -217,8 +217,7 @@
         "prof_bonus_path": "prof_bonus.v",
         "item_type_id": 5,
         "class_suggest_id": 2,
-        "school_suggest_id": 7,
-        "source_suggest_id": 8
+        "school_suggest_id": 7
       },
       "hide_on_empty": true
     },

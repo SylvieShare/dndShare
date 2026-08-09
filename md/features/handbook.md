@@ -76,6 +76,7 @@ The `CUSTOM_RENDERERS` map in `HandbookItemDetail.vue` maps type id → componen
 
 - `GET /api/sources` — list all systems (`id`, `name`, `versions: [{id, sourceId, version}]`, `countItems`; singular `version` is a compatibility alias)
 - `GET /api/content-sources?sourceVersionId=` — publications available to an edition, including descriptions and native/compatible/Legacy status. `ItemEditModal` assigns these publications to every item type through `contentSourceIds`.
+- Publications are not suggest dictionaries: the legacy «Источники» suggest type is removed after migration and is no longer listed in the handbook or suggest API.
 - `GET /api/item-types?sourceId=` — list item types, optionally filtered by source
 - `GET /api/suggest/types?sourceId=` — list suggest types, optionally filtered by source
 - `GET /api/svg/{id}` — returns raw SVG content from `svg_storage` as `image/svg+xml`

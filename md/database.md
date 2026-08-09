@@ -71,6 +71,8 @@ override the book-level rule for replaced/Legacy/adapted items and can point to
 the replacement item. Startup migrates referenced suggest type «Источники», its
 descriptions and spell `data.sourceId` links. Existing core 2014 non-spell
 catalogues are assigned to PHB exactly once through `schema_data_migration`.
+After the links are created, startup removes the legacy spell keys, template
+setting and the old «Источники» suggest type with its values.
 
 ## Layout
 

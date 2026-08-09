@@ -269,7 +269,6 @@
       "item_type_id": 5,
       "prof_bonus_path": "prof_bonus.v",
       "school_suggest_id": 7,
-      "source_suggest_id": 8,
       "stat_suggest_type_id": 16
     },
     "hide_on_empty": true

@@ -515,6 +515,27 @@ WHERE id = 5
     WHERE field ->> 'key' IN ('sourceId', 'source_kind')
   );
 
+-- All runtime consumers use item_content_source now. Once the links above have
+-- been copied, remove the old spell payload, template flag and suggest
+-- catalogue so the generic handbook/API cannot expose it again.
+UPDATE dndshare.item
+SET data = data - 'sourceId' - 'source_kind'
+WHERE type_id = 5
+  AND (data ? 'sourceId' OR data ? 'source_kind');
+
+DELETE FROM dndshare.suggest
+WHERE type_id IN (
+    SELECT id FROM dndshare.suggest_type
+    WHERE lower(name) = lower('Источники')
+);
+
+DELETE FROM dndshare.suggest_type
+WHERE lower(name) = lower('Источники');
+
+UPDATE dndshare.content_source
+SET legacy_suggest_id = NULL
+WHERE legacy_suggest_id IS NOT NULL;
+
 CREATE TABLE IF NOT EXISTS dndshare.dictionary_text (
     id     bigserial NOT NULL,
     lang   text NOT NULL,
@@ -534,6 +555,10 @@ CREATE TABLE IF NOT EXISTS dndshare.char_template (
     path_values_for_list jsonb NULL,
     CONSTRAINT char_template_pk PRIMARY KEY (id)
 );
+
+UPDATE dndshare.char_template
+SET schema = schema #- '{blocks,spells,content,source_suggest_id}'
+WHERE (schema #> '{blocks,spells,content}') ? 'source_suggest_id';
 
 CREATE TABLE IF NOT EXISTS dndshare.template_block_type (
     "type"          varchar NOT NULL,
