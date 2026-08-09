@@ -11,14 +11,27 @@
       </select>
     </label>
 
-    <div class="two">
-      <label class="fld"><span class="lbl">Черты характера</span><textarea v-model="p.traits" class="inp ta" rows="2" placeholder="Как ведёт себя персонаж" /></label>
-      <label class="fld"><span class="lbl">Идеалы</span><textarea v-model="p.ideals" class="inp ta" rows="2" placeholder="Во что верит" /></label>
-      <label class="fld"><span class="lbl">Привязанности</span><textarea v-model="p.bonds" class="inp ta" rows="2" placeholder="Что дорого" /></label>
-      <label class="fld"><span class="lbl">Слабости</span><textarea v-model="p.flaws" class="inp ta" rows="2" placeholder="Пороки и уязвимости" /></label>
+    <div class="two rich-fields">
+      <InputDescription
+        v-for="field in personalityFields"
+        :key="field.id"
+        class="rich-field"
+        :block="field"
+        :value="p[field.key]"
+        editable
+        @update:value="(_id, value) => p[field.key] = value"
+      />
     </div>
 
-    <label class="fld"><span class="lbl">Внешность</span><textarea v-model="p.appearance" class="inp ta" rows="2" placeholder="Как выглядит персонаж" /></label>
+    <InputDescription
+      v-for="field in storyFields"
+      :key="field.id"
+      class="rich-field"
+      :block="field"
+      :value="p[field.key]"
+      editable
+      @update:value="(_id, value) => p[field.key] = value"
+    />
 
     <div class="phys">
       <label class="fld sm"><span class="lbl">Возраст</span><input v-model="p.age" class="inp" type="text" /></label>
@@ -33,6 +46,7 @@
 
 <script setup>
 import { inject } from 'vue'
+import InputDescription from '@/shared/ui/InputDescription'
 
 const { state } = inject('createWizard')
 const p = state.persona
@@ -42,6 +56,19 @@ const ALIGNMENTS = [
   'Законно-нейтральный', 'Нейтральный', 'Хаотично-нейтральный',
   'Законно-злой', 'Нейтрально-злой', 'Хаотично-злой',
 ]
+
+const personalityFields = [
+  { id: 'person_traits', key: 'traits', title: 'Черты характера', content: { placeholder: 'Как ведёт себя персонаж' } },
+  { id: 'person_ideals', key: 'ideals', title: 'Идеалы', content: { placeholder: 'Во что верит' } },
+  { id: 'person_bonds', key: 'bonds', title: 'Привязанности', content: { placeholder: 'Что дорого' } },
+  { id: 'person_flaws', key: 'flaws', title: 'Слабости', content: { placeholder: 'Пороки и уязвимости' } },
+]
+
+const storyFields = [
+  { id: 'person_appearance', key: 'appearance', title: 'Внешность', content: { placeholder: 'Как выглядит персонаж' } },
+  { id: 'person_backstory', key: 'backstory', title: 'Предыстория персонажа', content: { placeholder: 'Расскажи историю персонажа' } },
+  { id: 'person_allies', key: 'allies', title: 'Союзники и организации', content: { placeholder: 'Союзники, организации, контакты' } },
+]
 </script>
 
 <style scoped>
@@ -49,6 +76,9 @@ const ALIGNMENTS = [
 .opt { font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--text-muted); }
 .hint { font-size: 12px; color: var(--text-muted); margin: 0; }
 .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+.rich-fields { align-items: start; }
+.rich-field { min-width: 0; }
+.rich-field :deep(.desc-title) { font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); font-weight: 650; }
 .phys { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; }
 .fld { display: flex; flex-direction: column; gap: 5px; }
 .lbl { font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); font-weight: 650; }
@@ -57,5 +87,4 @@ const ALIGNMENTS = [
   color: var(--text-1); font: inherit; font-size: 13px; padding: 8px 10px; outline: none; box-sizing: border-box; width: 100%;
 }
 .inp:focus { border-color: var(--accent); }
-.ta { resize: vertical; line-height: 1.4; }
 </style>

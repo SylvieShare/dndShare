@@ -87,7 +87,7 @@ export function useDndCreateWizard() {
     bgLangIds: [],
     classEquipmentChoices: {},
     equipment: [],
-    persona: { alignment: '', traits: '', ideals: '', bonds: '', flaws: '', appearance: '', age: '', height: '', weight: '', eyes: '', hair: '', skin: '' },
+    persona: { alignment: '', traits: '', ideals: '', bonds: '', flaws: '', appearance: '', backstory: '', allies: '', age: '', height: '', weight: '', eyes: '', hair: '', skin: '' },
   })
   // True while restoring from localStorage — suppresses the reset watchers below.
   let hydrating = false
@@ -552,7 +552,7 @@ export function useDndCreateWizard() {
       scores: emptyScores(), rollPool: [], asiChoice: [],
       raceSkillIds: [], raceLangIds: [], featIds: [], skillIds: [], spellIds: [], choices: {},
       background: null, bgLangIds: [], classEquipmentChoices: {}, equipment: [],
-      persona: { alignment: '', traits: '', ideals: '', bonds: '', flaws: '', appearance: '', age: '', height: '', weight: '', eyes: '', hair: '', skin: '' },
+      persona: { alignment: '', traits: '', ideals: '', bonds: '', flaws: '', appearance: '', backstory: '', allies: '', age: '', height: '', weight: '', eyes: '', hair: '', skin: '' },
     })
     spellPool.value = []
     clearPersist()

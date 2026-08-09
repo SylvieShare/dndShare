@@ -187,9 +187,10 @@ export function buildCharacterData(input) {
     }
   }
 
-  // Personality / description → the person_* sheet blocks (all optional, plain strings).
+  // Personality / description → the person_* sheet blocks. Rich-text fields are
+  // already HTML strings produced by InputDescription and must be preserved as-is.
   if (persona) {
-    const P = { alignment: 'person_alignment', traits: 'person_traits', ideals: 'person_ideals', bonds: 'person_bonds', flaws: 'person_flaws', appearance: 'person_appearance', age: 'person_age', height: 'person_height', weight: 'person_weight', eyes: 'person_eyes', hair: 'person_hair', skin: 'person_skin' }
+    const P = { alignment: 'person_alignment', traits: 'person_traits', ideals: 'person_ideals', bonds: 'person_bonds', flaws: 'person_flaws', appearance: 'person_appearance', backstory: 'person_backstory', allies: 'person_allies', age: 'person_age', height: 'person_height', weight: 'person_weight', eyes: 'person_eyes', hair: 'person_hair', skin: 'person_skin' }
     for (const [k, blockId] of Object.entries(P)) {
       const v = persona[k]
       if (v != null && String(v).trim() !== '') values[blockId] = v
