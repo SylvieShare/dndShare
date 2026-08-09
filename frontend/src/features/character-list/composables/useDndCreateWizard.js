@@ -210,12 +210,25 @@ export function useDndCreateWizard() {
   const raceLangOptions = computed(() => {
     const c = grants.value.langChoice
     if (!c) return []
-    const ids = c.from?.length ? c.from : suggestStore.items(LANG_SUGGEST).map((s) => s.id)
-    return ids.map((id) => ({ id, name: suggestValue(LANG_SUGGEST, id) || `#${id}` }))
+    const allowedIds = c.from?.length ? c.from : suggestStore.items(LANG_SUGGEST).map((s) => s.id)
+    const ids = [...new Set([...allowedIds, ...state.raceLangIds])]
+    return ids
+      .map((id) => ({ id, name: suggestValue(LANG_SUGGEST, id) }))
+      .filter((option) => option.name)
   })
   const raceLangLimit = computed(() => grants.value.langChoice?.count || 0)
   function toggleRaceLang(id) { toggleFromList(state.raceLangIds, id, raceLangLimit.value) }
   const raceLangsComplete = computed(() => !grants.value.langChoice || state.raceLangIds.length === raceLangLimit.value)
+
+  // A handbook update can remove a language referenced by an older saved draft.
+  // Once the dictionary is loaded, discard that stale ID instead of showing it as
+  // an opaque technical tag such as "#21".
+  watch([raceLangOptions, () => suggestStore.loaded(LANG_SUGGEST)], ([options, loaded]) => {
+    if (!loaded) return
+    const allowed = new Set(options.map((option) => String(option.id)))
+    const valid = state.raceLangIds.filter((id) => allowed.has(String(id)))
+    if (valid.length !== state.raceLangIds.length) state.raceLangIds = valid
+  }, { immediate: true })
 
   // Feat choice (Variant/Gifted Human): pick from handbook feats (type 7).
   const featOptions = computed(() => (grants.value.featChoice ? featPool.value : []))
@@ -226,7 +239,12 @@ export function useDndCreateWizard() {
   // ─── Background (type 11): fixed skills/tools/languages + a chosen language ──
   const backgroundSkillNames = computed(() => (grants.value.backgroundSkills || []).map((id) => suggestValue(SKILL_SUGGEST, id)).filter(Boolean))
   const backgroundToolNames = computed(() => (state.background?.data?.tool_prof || []).map((id) => suggestValue(5, id)).filter(Boolean))
-  const bgLangOptions = computed(() => (grants.value.bgLangChoice ? STANDARD_LANG_IDS.map((id) => ({ id, name: suggestValue(LANG_SUGGEST, id) || `#${id}` })) : []))
+  const bgLangOptions = computed(() => {
+    if (!grants.value.bgLangChoice) return []
+    return [...new Set([...STANDARD_LANG_IDS, ...state.bgLangIds])]
+      .map((id) => ({ id, name: suggestValue(LANG_SUGGEST, id) }))
+      .filter((option) => option.name)
+  })
   const bgLangLimit = computed(() => grants.value.bgLangChoice?.count || 0)
   function toggleBgLang(id) { toggleFromList(state.bgLangIds, id, bgLangLimit.value) }
   const bgLangsComplete = computed(() => !grants.value.bgLangChoice || state.bgLangIds.length === bgLangLimit.value)

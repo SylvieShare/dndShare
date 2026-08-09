@@ -33,6 +33,8 @@
           :options="bgLangOptions"
           :selected="state.bgLangIds"
           :limit="bgLangLimit"
+          :suggest-type-id="6"
+          allow-create
           placeholder="Найти язык…"
           @toggle="toggleBgLang"
         />

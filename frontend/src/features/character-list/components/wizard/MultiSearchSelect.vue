@@ -28,19 +28,31 @@
           @mousedown.prevent="pick(o.id)"
         >{{ o.name }}</button>
       </div>
-      <div v-else-if="open && query.trim()" class="mss-empty">Ничего не найдено</div>
+      <div v-else-if="open && query.trim()" class="mss-empty">
+        <template v-if="canCreate">
+          <span>Ничего не найдено</span>
+          <button class="mss-create" :disabled="creating" @mousedown.prevent="create">
+            {{ creating ? 'Добавляем…' : `Добавить «${query.trim()}»` }}
+          </button>
+        </template>
+        <span v-else>Ничего не найдено</span>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { fetchPost } from '@/shared/api/http'
+import { useSuggestStore } from '@/stores/suggest'
 
 const props = defineProps({
   options: { type: Array, default: () => [] },
   selected: { type: Array, default: () => [] },
   limit: { type: Number, default: 0 },
   placeholder: { type: String, default: 'Поиск…' },
+  suggestTypeId: { type: [Number, String], default: null },
+  allowCreate: { type: Boolean, default: false },
 })
 const emit = defineEmits(['toggle'])
 
@@ -48,6 +60,7 @@ const root = ref(null)
 const input = ref(null)
 const query = ref('')
 const open = ref(false)
+const creating = ref(false)
 
 const selectedSet = computed(() => new Set(props.selected.map((v) => String(v))))
 const selectedItems = computed(() => props.selected
@@ -58,6 +71,11 @@ const filtered = computed(() => {
   const q = query.value.trim().toLowerCase()
   return props.options.filter((o) => !selectedSet.value.has(String(o.id)) && (!q || String(o.name).toLowerCase().includes(q)))
 })
+const canCreate = computed(() => {
+  const value = query.value.trim()
+  return props.allowCreate && props.suggestTypeId != null && !!value
+    && !props.options.some((o) => String(o.name).trim().toLocaleLowerCase() === value.toLocaleLowerCase())
+})
 
 function pick(id) {
   emit('toggle', id)
@@ -65,8 +83,23 @@ function pick(id) {
   input.value?.focus()
 }
 function pickTop() { if (filtered.value.length) pick(filtered.value[0].id) }
-function close() { open.value = false }
-function onDocPointer(e) { if (root.value && !root.value.contains(e.target)) open.value = false }
+function close() { open.value = false; query.value = '' }
+function onDocPointer(e) { if (root.value && !root.value.contains(e.target)) close() }
+
+async function create() {
+  if (!canCreate.value || creating.value) return
+  creating.value = true
+  try {
+    const item = await fetchPost('/suggest/' + props.suggestTypeId, { value: query.value.trim() })
+    if (!item?.id) return
+    useSuggestStore().addItem(props.suggestTypeId, item)
+    emit('toggle', item.id)
+    query.value = ''
+    input.value?.focus()
+  } finally {
+    creating.value = false
+  }
+}
 
 onMounted(() => document.addEventListener('mousedown', onDocPointer))
 onBeforeUnmount(() => document.removeEventListener('mousedown', onDocPointer))
@@ -112,5 +145,12 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', onDocPointer))
   position: absolute; z-index: 30; top: calc(100% + 4px); left: 0; right: 0;
   background: var(--surface); border: 1px solid var(--border); border-radius: 9px;
   color: var(--text-muted); font-size: 12px; padding: 10px 12px;
+  display: flex; flex-direction: column; align-items: flex-start; gap: 7px;
 }
+.mss-create {
+  border: 0; border-radius: 6px; background: color-mix(in srgb, var(--accent) 16%, var(--surface));
+  color: var(--accent); font: inherit; font-size: 12px; font-weight: 600; padding: 6px 9px; cursor: pointer;
+}
+.mss-create:hover { background: color-mix(in srgb, var(--accent) 26%, var(--surface)); }
+.mss-create:disabled { cursor: wait; opacity: 0.65; }
 </style>

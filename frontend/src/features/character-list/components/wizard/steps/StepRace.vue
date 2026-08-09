@@ -83,6 +83,8 @@
               :options="raceLangOptions"
               :selected="state.raceLangIds"
               :limit="raceLangLimit"
+              :suggest-type-id="6"
+              allow-create
               placeholder="Найти язык…"
               @toggle="toggleRaceLang"
             />

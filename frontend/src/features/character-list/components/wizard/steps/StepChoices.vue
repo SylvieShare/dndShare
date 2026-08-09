@@ -12,6 +12,8 @@
         :options="optionsFor(fc)"
         :selected="choiceSelected(fc.id)"
         :limit="Number(fc.choice.count) || 1"
+        :suggest-type-id="6"
+        allow-create
         placeholder="Найти язык…"
         @toggle="(id) => toggleChoice(fc.id, id, Number(fc.choice.count) || 1)"
       />
