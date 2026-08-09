@@ -80,6 +80,23 @@
             </section>
           </div>
         </section>
+        <section v-if="mainProficiencyGroups.length" class="box main-proficiencies">
+          <BoxTitle>Владения и языки</BoxTitle>
+          <div class="main-proficiency-grid">
+            <div v-for="group in mainProficiencyGroups" :key="group.name" class="prose-group">
+              <h3>{{ group.name }}</h3><p>{{ group.value }}</p>
+            </div>
+          </div>
+        </section>
+      </PrintPage>
+
+      <PrintPage
+        v-for="(page, index) in featurePages"
+        :key="'features-' + index"
+        :number="pageNumber(featuresStart + index)"
+        :title="index ? 'Особенности и черты · продолжение' : 'Особенности и черты'"
+      >
+        <div class="feature-grid"><PrintFeatureCard v-for="feature in page.cards" :key="feature.key" :feature="feature" /></div>
       </PrintPage>
 
       <PrintPage
@@ -100,7 +117,7 @@
             <section v-if="coins.length" class="box coins-box"><BoxTitle>Монеты</BoxTitle><div v-for="coin in coins" :key="coin.id"><strong>{{ coin.amount }}</strong><span>{{ coin.name }}</span></div></section>
             <section v-if="counters.length" class="box list-box"><BoxTitle>Ресурсы</BoxTitle><div v-for="counter in counters" :key="counter.id"><span>{{ counter.name || 'Ресурс' }}</span><strong>{{ counter.value }}<template v-if="counter.max != null"> / {{ counter.max }}</template> {{ counter.unit }}</strong></div></section>
             <section v-if="potions.length" class="box list-box"><BoxTitle>Зелья</BoxTitle><div v-for="potion in potions" :key="potion.uid"><span>{{ potion.name }}</span><strong>× {{ potion.count }}</strong></div></section>
-            <section v-if="proficiencyGroups.length" class="box prose-box"><BoxTitle>Владения и языки</BoxTitle><div v-for="group in proficiencyGroups" :key="group.name" class="prose-group"><h3>{{ group.name }}</h3><p>{{ group.value }}</p></div></section>
+            <section v-if="equipmentProficiencyGroups.length" class="box prose-box"><BoxTitle>Владения и языки</BoxTitle><div v-for="group in equipmentProficiencyGroups" :key="group.name" class="prose-group"><h3>{{ group.name }}</h3><p>{{ group.value }}</p></div></section>
           </div>
         </div>
       </PrintPage>
@@ -137,14 +154,6 @@
         <section v-if="values.person_backstory" class="box text-box backstory-box"><BoxTitle>Предыстория персонажа</BoxTitle><RichContent :html="String(values.person_backstory)" /></section>
       </PrintPage>
 
-      <PrintPage
-        v-for="(page, index) in featurePages"
-        :key="'features-' + index"
-        :number="pageNumber(featuresStart + index)"
-        :title="index ? 'Особенности и черты · продолжение' : 'Особенности и черты'"
-      >
-        <div class="feature-grid"><PrintFeatureCard v-for="feature in page.cards" :key="feature.key" :feature="feature" /></div>
-      </PrintPage>
     </div>
   </main>
 </template>
@@ -241,6 +250,12 @@ const attacks = computed(() => (Array.isArray(values.value.weapon) ? values.valu
 }))
 const attackBlankRows = computed(() => Math.max(0, 5 - attacks.value.length))
 const proficiencyGroups = computed(() => Object.entries(values.value.proficiencies || {}).map(([name, value]) => ({ name, value: Array.isArray(value) ? value.map(text).filter(Boolean).join(', ') : text(value) })).filter(group => group.value))
+const mainCanFitProficiencies = computed(() => {
+  const contentLength = proficiencyGroups.value.reduce((sum, group) => sum + group.name.length + group.value.length, 0)
+  return characterName.value.length <= 28 && classAndLevel.value.length <= 38 && contentLength <= 360
+})
+const mainProficiencyGroups = computed(() => mainCanFitProficiencies.value ? proficiencyGroups.value : [])
+const equipmentProficiencyGroups = computed(() => mainCanFitProficiencies.value ? [] : proficiencyGroups.value)
 
 const inventoryModel = computed(() => normalizeValue(values.value.items))
 function inventoryEntry(entry) { return { ...entry, name: entry.override?.name || itemById(entry.id)?.name || (entry.id != null ? `Предмет #${entry.id}` : 'Предмет') } }
@@ -251,17 +266,38 @@ const inventorySections = computed(() => [
 const counters = computed(() => normalizeCounters(values.value.counters))
 const coins = computed(() => { const raw = values.value.money?.amounts || values.value.money || {}; return Object.entries(raw).filter(([, amount]) => Number(amount)).map(([id, amount]) => ({ id, amount: Number(amount), name: suggest.items(17).find(item => String(item.id) === id)?.short_title || suggest.items(17).find(item => String(item.id) === id)?.value || `мон. ${id}` })) })
 const potions = computed(() => (Array.isArray(values.value.potions) ? values.value.potions : []).map(entry => ({ ...entry, count: Number(entry.count) || 1, name: entry.override?.name || itemById(entry.id)?.name || 'Зелье' })))
-const hasEquipmentSide = computed(() => counters.value.length || coins.value.length || potions.value.length || proficiencyGroups.value.length)
+const hasEquipmentSide = computed(() => counters.value.length || coins.value.length || potions.value.length || equipmentProficiencyGroups.value.length)
 const hasEquipment = computed(() => inventorySections.value.length || hasEquipmentSide.value)
 const equipmentPages = computed(() => {
   if (!hasEquipment.value) return []
-  const pages = []; let page = { sections: [], count: 0 }; const firstLimit = hasEquipmentSide.value ? 22 : 38; let limit = firstLimit
+  const pages = []
+  let page = { sections: [], weight: 0 }
+  const limit = 39
   for (const section of inventorySections.value) {
-    let offset = 0
-    while (offset < section.items.length) {
-      const room = Math.max(1, limit - page.count - 2); const chunk = section.items.slice(offset, offset + room)
-      page.sections.push({ ...section, id: `${section.id}-${offset}`, name: offset ? `${section.name} · продолжение` : section.name, items: chunk }); page.count += chunk.length + 2; offset += chunk.length
-      if (offset < section.items.length || page.count >= limit) { pages.push(page); page = { sections: [], count: 0 }; limit = 42 }
+    let chunk = null
+    let sectionEntryIndex = 0
+    for (const entry of section.items) {
+      const entryWeight = Math.max(1, Math.ceil(entry.name.length / 48))
+      const headingWeight = chunk ? 0 : 2
+      if (page.weight + headingWeight + entryWeight > limit && page.sections.length) {
+        pages.push(page)
+        page = { sections: [], weight: 0 }
+        chunk = null
+      }
+      if (!chunk) {
+        const continued = sectionEntryIndex > 0
+        chunk = {
+          ...section,
+          id: `${section.id}-${pages.length}-${page.sections.length}`,
+          name: continued ? `${section.name} · продолжение` : section.name,
+          items: [],
+        }
+        page.sections.push(chunk)
+        page.weight += 2
+      }
+      chunk.items.push(entry)
+      page.weight += entryWeight
+      sectionEntryIndex += 1
     }
   }
   if (page.sections.length || !pages.length) pages.push(page)
@@ -327,10 +363,10 @@ const featureCards = computed(() => [
 })))
 const featurePages = computed(() => featureCards.value.length ? paginateGrid(featureCards.value, 2, 230, 230) : [])
 
-const equipmentStart = computed(() => 2)
+const featuresStart = computed(() => 2)
+const equipmentStart = computed(() => featuresStart.value + featurePages.value.length)
 const spellStart = computed(() => equipmentStart.value + equipmentPages.value.length)
 const personalityNumber = computed(() => spellStart.value + spellPages.value.length)
-const featuresStart = computed(() => personalityNumber.value + (hasPersonality.value ? 1 : 0))
 
 function collectItemIds(data) {
   const ids = new Set(); const add = id => { if (id != null && id !== '') ids.add(id) }
@@ -380,6 +416,7 @@ onBeforeUnmount(() => document.documentElement.classList.remove('character-print
 .mini-grid { display: grid; grid-template-columns: .85fr 1.15fr; gap: 2mm; }.compact-box { min-height: 18mm; text-align: center; }.large-value { font: 700 12px/1 Georgia, serif; }.death-saves > div { display: flex; justify-content: flex-end; align-items: center; gap: 1mm; margin-top: 1.2mm; font-size: 5.5px; }.death-saves i, .slots-box i { width: 2.7mm; height: 2.7mm; display: inline-block; border: .7px solid #4f4639; border-radius: 50%; }.death-saves i.marked, .slots-box i.used { background: #4f4639; box-shadow: inset 0 0 0 .5mm #fffefa; }
 table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 6.8px; }th { padding: 1.2mm; border-bottom: .7px solid #695a44; color: #756751; font-size: 5px; letter-spacing: .06em; text-align: left; text-transform: uppercase; }td { height: 5.5mm; padding: 1mm 1.2mm; border-bottom: .35px solid #baaa8d; overflow-wrap: anywhere; }th:nth-child(2), td:nth-child(2) { width: 17%; text-align: center; }th:nth-child(3), td:nth-child(3) { width: 40%; }
 .passive-box { display: flex; align-items: center; gap: 2.2mm; }.passive-box strong { flex: 0 0 auto; width: 8mm; font: 700 13px/1 Georgia, serif; text-align: center; }.passive-box span { min-width: 0; font-size: 5px; font-weight: 800; line-height: 1.25; text-transform: uppercase; }.skills-box { padding-inline: 2.2mm; }.skills-box .line-row { grid-template-columns: 3mm 6.5mm minmax(0, 1fr); min-height: 4.7mm; }
+.main-proficiencies { margin-top: 3mm; padding: 2.5mm 3mm; }.main-proficiencies :deep(.box-title) { margin-bottom: 2mm; }.main-proficiency-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2mm 4mm; }.main-proficiency-grid .prose-group + .prose-group { margin-top: 0; }.main-proficiency-grid .prose-group { min-width: 0; }.main-proficiency-grid .prose-group p { font-size: 6.5px; line-height: 1.3; }
 .equipment-grid { display: grid; grid-template-columns: minmax(0, 1fr) 59mm; gap: 5mm; align-items: start; min-width: 0; }.equipment-grid--full { grid-template-columns: 1fr; }.inventory-section + .inventory-section { margin-top: 4mm; }.inventory-section h3, .prose-group h3 { margin: 0 0 1.2mm; font: 700 6px/1 Arial, sans-serif; letter-spacing: .08em; text-transform: uppercase; color: #756751; }.inventory-row, .list-box > div { display: flex; justify-content: space-between; gap: 4mm; min-height: 6mm; padding: 1.2mm 0; border-bottom: .35px solid #baaa8d; font-size: 8px; }.inventory-row span, .list-box span { min-width: 0; overflow-wrap: anywhere; }.inventory-row strong, .list-box strong { flex: 0 0 auto; white-space: nowrap; }
 .coins-box { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2mm; }.coins-box :deep(.box-title) { grid-column: 1 / -1; }.coins-box > div { min-width: 0; text-align: center; }.coins-box strong { display: block; font: 700 13px/1 Georgia, serif; }.coins-box > div > span { display: block; margin-top: 1mm; font-size: 5px; text-transform: uppercase; overflow-wrap: anywhere; }.prose-group + .prose-group { margin-top: 2.5mm; }.prose-group p { margin: 0; font: 7px/1.4 Georgia, serif; overflow-wrap: anywhere; }.empty-state { padding: 12mm 0; color: #8a7a61; font: italic 9px Georgia, serif; text-align: center; }
 .spell-summary { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-bottom: 4mm; }.slots-box { display: flex; align-items: flex-start; flex-wrap: wrap; gap: 2.5mm 6mm; margin-bottom: 4mm; }.slots-box :deep(.box-title) { width: 100%; justify-content: flex-start; }.slots-box > div { display: flex; align-items: center; gap: .8mm; font-size: 7px; }.slots-box > div > span { min-width: 11mm; font-weight: 700; }.spell-card-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-flow: row dense; gap: 3mm; align-items: start; min-width: 0; }
