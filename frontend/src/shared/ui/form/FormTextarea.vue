@@ -21,7 +21,7 @@ defineEmits(['update:value'])
 
 <style scoped>
 .form-textarea {
-  background: var(--input-bg);
+  background: var(--control-bg, var(--input-bg));
   border: 1px solid var(--input-border);
   border-radius: 8px;
   color: var(--text-1);

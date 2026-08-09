@@ -92,7 +92,7 @@ function pick(value) {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  background: var(--bg);
+  background: var(--control-bg, var(--bg));
   border: 1px solid var(--input-border);
   border-radius: 8px;
   color: var(--text-1);
@@ -144,7 +144,7 @@ function pick(value) {
   box-sizing: border-box;
   height: 34px;
   margin-bottom: 4px;
-  background: var(--bg);
+  background: var(--control-bg, var(--bg));
   border: 1px solid var(--input-border);
   border-radius: 8px;
   color: var(--text-1);

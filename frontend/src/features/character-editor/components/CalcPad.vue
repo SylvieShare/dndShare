@@ -55,7 +55,7 @@ function backspace() {
   flex: 1;
   display: flex;
   align-items: center;
-  background: var(--bg);
+  background: var(--control-bg, var(--bg));
   border: 1px solid var(--input-border);
   border-radius: 8px;
   padding: 6px 12px;

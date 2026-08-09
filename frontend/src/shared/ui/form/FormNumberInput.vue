@@ -40,7 +40,8 @@ function step(delta) {
 .fn-wrap {
   display: flex;
   align-items: center;
-  background: var(--bg);
+  background: var(--control-bg, var(--bg));
+  box-shadow: inset 0 0 0 1px var(--input-border);
   border-radius: 8px;
   overflow: hidden;
 }

@@ -35,7 +35,7 @@ defineExpose({ focus: () => inputRef.value?.focus() })
 
 <style scoped>
 .form-text-input {
-  background: var(--bg);
+  background: var(--control-bg, var(--bg));
   border: 1px solid var(--input-border);
   border-radius: 8px;
   color: var(--text-1);

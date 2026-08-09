@@ -43,7 +43,8 @@ defineEmits(['update:modelValue'])
   display: inline-block;
   width: 38px;
   height: 22px;
-  background-color: var(--bg);
+  background-color: var(--control-bg, var(--bg));
+  box-shadow: inset 0 0 0 1px var(--input-border);
   border-radius: 11px;
   transition: background-color 0.2s ease;
   flex-shrink: 0;
@@ -51,6 +52,7 @@ defineEmits(['update:modelValue'])
 
 .toggle-track.on {
   background-color: var(--accent);
+  box-shadow: none;
 }
 
 .toggle-thumb {
