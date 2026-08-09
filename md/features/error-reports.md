@@ -40,3 +40,14 @@ MCP exposes:
 - `error_reports_list(limit?, offset?)` — read approved reports with the normal MCP token; includes `userId`, `userLogin`, `approved`, `hasScreenshot`, and `screenshotContentType` metadata.
 - `error_report_screenshot(id)` — read one attached image for an approved report as `{ id, contentType, base64 }` without bloating the list response.
 - `error_report_delete(id)` — delete one approved report; gated by `MCP_WRITE_ENABLED`.
+
+## Scheduled automation lease
+
+Scheduled runs coordinate through a singleton database lease exposed by MCP, so the protection works across local checkouts, Git worktrees, and different machines.
+
+1. The first tool call must be `error_report_lock_acquire(ttlMinutes?)`. If it returns `acquired: false`, another run is active and the new run must stop without reading or changing reports.
+2. Keep the returned ownership `token` private for the duration of the run. The default lease lifetime is four hours; accepted values are 5–720 minutes.
+3. A long-running task can call `error_report_lock_renew(token, ttlMinutes?)` before `expiresAt`.
+4. Always finish with `error_report_lock_release(token)`, including runs that find no approved reports or stop after an error.
+
+Acquisition is atomic in PostgreSQL. An expired lease can be replaced by the next run, so an interrupted automation cannot block the queue forever. Only the owner token can renew or release an active lease. All three coordination tools require `MCP_WRITE_ENABLED=true`.

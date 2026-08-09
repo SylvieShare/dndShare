@@ -37,8 +37,11 @@ Write tools (gated, see below):
 - `handbook_suggest_set_svg(typeId, id, svg)` — admin set/replace the suggest icon. `svg` is raw `<svg>` markup (empty string clears it); stores it in `svg_storage`, repoints `suggest.svg_id`, deletes the old svg row. Validates `<svg>` presence and 512 KB max.
 - `handbook_suggest_delete(typeId, id)` — admin delete.
 - `error_report_delete(id)` — delete one approved, handled page error report.
+- `error_report_lock_acquire(ttlMinutes?)` — atomically acquire the singleton automation lease; returns an owner token only when `acquired = true`.
+- `error_report_lock_renew(token, ttlMinutes?)` — extend a still-active lease owned by the token.
+- `error_report_lock_release(token)` — release the lease in the scheduled run's final cleanup step.
 
-Handbook writes run as a synthetic `HANDBOOK_ADMIN` (repositories called with `isAdmin = true`, `userId = 0`). Creates always produce **base** records (`user_id = NULL`). Error-report deletion uses the report id directly but succeeds only for an approved row. All write tools, including `error_report_delete`, require `MCP_WRITE_ENABLED=true`.
+Handbook writes run as a synthetic `HANDBOOK_ADMIN` (repositories called with `isAdmin = true`, `userId = 0`). Creates always produce **base** records (`user_id = NULL`). Error-report deletion uses the report id directly but succeeds only for an approved row. Lease mutation and all other write tools require `MCP_WRITE_ENABLED=true`.
 
 ## Auth
 

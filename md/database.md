@@ -30,6 +30,8 @@ dropped. **Never create new objects in `base`.**
 
 Indexes cover newest-first listing (`created_at DESC`), approved newest-first MCP listing, and the optional reporter (`user_id`). See `md/features/error-reports.md` for the API and payload.
 
+`dndshare.error_report_automation_lock` is a singleton lease row (`id = 1`) used by scheduled MCP consumers. It stores an unguessable owner token plus acquisition and expiration timestamps. Atomic `INSERT ... ON CONFLICT DO UPDATE ... WHERE expires_at <= now()` prevents concurrent automation runs; expired leases are replaceable.
+
 ## Systems and rules editions
 
 `source` is the game system (`DND5e`, `Vampire: TM`). Its editions live in

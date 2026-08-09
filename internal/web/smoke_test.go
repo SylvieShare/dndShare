@@ -44,7 +44,14 @@ func TestMCPPublishesErrorReportTools(t *testing.T) {
 		found[name] = true
 	}
 
-	for _, name := range []string{"error_reports_list", "error_report_delete", "error_report_screenshot"} {
+	for _, name := range []string{
+		"error_reports_list",
+		"error_report_delete",
+		"error_report_screenshot",
+		"error_report_lock_acquire",
+		"error_report_lock_renew",
+		"error_report_lock_release",
+	} {
 		if !found[name] {
 			raw, _ := json.Marshal(definitions)
 			t.Fatalf("MCP tool %q is missing from %s", name, raw)

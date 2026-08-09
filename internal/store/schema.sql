@@ -87,6 +87,15 @@ CREATE INDEX IF NOT EXISTS idx_error_report_created_at ON dndshare.error_report 
 CREATE INDEX IF NOT EXISTS idx_error_report_user_id ON dndshare.error_report USING btree (user_id);
 CREATE INDEX IF NOT EXISTS idx_error_report_approved_created_at ON dndshare.error_report USING btree (created_at DESC) WHERE approved;
 
+CREATE TABLE IF NOT EXISTS dndshare.error_report_automation_lock (
+    id          int2 NOT NULL DEFAULT 1,
+    token       varchar(64) NOT NULL,
+    acquired_at timestamptz NOT NULL,
+    expires_at  timestamptz NOT NULL,
+    CONSTRAINT error_report_automation_lock_pk PRIMARY KEY (id),
+    CONSTRAINT error_report_automation_lock_singleton CHECK (id = 1)
+);
+
 -- ---------------------------------------------------------------------------
 -- Admin job runs
 -- ---------------------------------------------------------------------------

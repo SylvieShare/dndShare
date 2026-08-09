@@ -2,13 +2,16 @@ package web
 
 import (
 	"context"
+	"crypto/rand"
 	"crypto/subtle"
 	"encoding/base64"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 
 	"dndshare/internal/store"
 )
@@ -21,6 +24,12 @@ func (s *Server) routesMCP(mux *http.ServeMux) {
 }
 
 const mcpAdminUser = int64(0)
+
+const (
+	defaultErrorReportLeaseMinutes = 240
+	minErrorReportLeaseMinutes     = 5
+	maxErrorReportLeaseMinutes     = 720
+)
 
 // --- JSON-RPC 2.0 envelope ---
 
@@ -257,6 +266,68 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 			return nil, err
 		}
 		return s.store.ListApprovedErrorReports(ctx, coerceIn(limit, 1, 500), coerceAtLeast(offset, 0))
+
+	case "error_report_lock_acquire":
+		if err := s.mcpRequireWrite(); err != nil {
+			return nil, err
+		}
+		ttlMinutes, err := argIntDefault(args, "ttlMinutes", defaultErrorReportLeaseMinutes)
+		if err != nil {
+			return nil, err
+		}
+		token, err := newErrorReportLeaseToken()
+		if err != nil {
+			return nil, err
+		}
+		lease, acquired, err := s.store.AcquireErrorReportAutomationLease(ctx, token, time.Duration(coerceIn(ttlMinutes, minErrorReportLeaseMinutes, maxErrorReportLeaseMinutes))*time.Minute)
+		if err != nil {
+			return nil, err
+		}
+		result := map[string]any{
+			"acquired":  acquired,
+			"expiresAt": lease.ExpiresAt,
+		}
+		if acquired {
+			result["token"] = lease.Token
+			result["acquiredAt"] = lease.AcquiredAt
+		}
+		return result, nil
+
+	case "error_report_lock_renew":
+		if err := s.mcpRequireWrite(); err != nil {
+			return nil, err
+		}
+		token, err := argString(args, "token")
+		if err != nil {
+			return nil, err
+		}
+		ttlMinutes, err := argIntDefault(args, "ttlMinutes", defaultErrorReportLeaseMinutes)
+		if err != nil {
+			return nil, err
+		}
+		lease, renewed, err := s.store.RenewErrorReportAutomationLease(ctx, token, time.Duration(coerceIn(ttlMinutes, minErrorReportLeaseMinutes, maxErrorReportLeaseMinutes))*time.Minute)
+		if err != nil {
+			return nil, err
+		}
+		result := map[string]any{"renewed": renewed}
+		if renewed {
+			result["expiresAt"] = lease.ExpiresAt
+		}
+		return result, nil
+
+	case "error_report_lock_release":
+		if err := s.mcpRequireWrite(); err != nil {
+			return nil, err
+		}
+		token, err := argString(args, "token")
+		if err != nil {
+			return nil, err
+		}
+		released, err := s.store.ReleaseErrorReportAutomationLease(ctx, token)
+		if err != nil {
+			return nil, err
+		}
+		return map[string]bool{"released": released}, nil
 
 	case "error_report_delete":
 		if err := s.mcpRequireWrite(); err != nil {
@@ -709,6 +780,22 @@ func mcpToolDefs() []map[string]any {
 				"limit":  intP("Max rows, 1..500 (default 100)"),
 				"offset": intP("Offset for pagination (default 0)"),
 			})),
+		tool("error_report_lock_acquire",
+			"Atomically acquire the shared error-report automation lease before reading or changing reports. If acquired is false, another run is active and this run must stop. Keep the returned token secret and release it in a final cleanup step. Requires MCP write operations to be enabled.",
+			schema(map[string]any{
+				"ttlMinutes": intP("Lease lifetime, 5..720 minutes (default 240)"),
+			})),
+		tool("error_report_lock_renew",
+			"Extend a still-active error-report automation lease owned by the supplied token. Use before the current expiresAt when a run takes a long time. Requires MCP write operations to be enabled.",
+			schema(map[string]any{
+				"token":      strP("Ownership token returned by error_report_lock_acquire"),
+				"ttlMinutes": intP("New lease lifetime from now, 5..720 minutes (default 240)"),
+			}, "token")),
+		tool("error_report_lock_release",
+			"Release the shared error-report automation lease. Always call this in the run's final cleanup step, including when no approved reports exist. Requires MCP write operations to be enabled.",
+			schema(map[string]any{
+				"token": strP("Ownership token returned by error_report_lock_acquire"),
+			}, "token")),
 		tool("error_report_delete",
 			"Delete one admin-approved page error report after it has been handled. Requires MCP write operations to be enabled.",
 			schema(map[string]any{
@@ -773,4 +860,12 @@ func mcpToolDefs() []map[string]any {
 				"id":     intP("Suggest id"),
 			}, "typeId", "id")),
 	}
+}
+
+func newErrorReportLeaseToken() (string, error) {
+	data := make([]byte, 32)
+	if _, err := rand.Read(data); err != nil {
+		return "", fmt.Errorf("generate error-report lease token: %w", err)
+	}
+	return hex.EncodeToString(data), nil
 }
