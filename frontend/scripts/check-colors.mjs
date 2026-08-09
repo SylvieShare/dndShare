@@ -10,6 +10,9 @@ const allowedRawColorFiles = new Set([
   // The print-only character sheet is deliberately isolated from the dark app theme:
   // its monochrome ink/paper palette must be stable in browsers and generated PDFs.
   path.join(sourceRoot, 'features/character-editor/pages/ViewCharacterPrint.vue'),
+  path.join(sourceRoot, 'features/character-editor/components/print/PrintPage.vue'),
+  path.join(sourceRoot, 'features/character-editor/components/print/PrintSpellCard.vue'),
+  path.join(sourceRoot, 'features/character-editor/components/print/PrintFeatureCard.vue'),
 ])
 const rawColor = /#[0-9a-f]{3,8}\b|rgba?\s*\(|hsla?\s*\(|(?<![-\w])(?:white|black)(?![-\w])/i
 const deprecatedToken = /--(?:bg-deep|block-bg|surface-[12]|surface-hover|popup-bg|input-(?:bg|border|focus)|accent-(?:dim|2)|danger-dim|color-attack|control-bg)\b/
