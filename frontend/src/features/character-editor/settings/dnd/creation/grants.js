@@ -217,7 +217,17 @@ export function applyGrants(values, grants, opts = {}) {
   if (grants.hitDieId != null) {
     const face = dieFace(suggestValue?.(DICE_TYPE_ID, grants.hitDieId)) || dieFace(grants.hitDieId)
     if (face) {
-      out.hp = { ...(out.hp || {}), max: face, current: face, diceCount: 1, dice: `d${face}` }
+      const die = `d${face}`
+      out.hp = {
+        ...(out.hp || {}),
+        max: face,
+        current: face,
+        hitDice: [{ die, total: 1, used: 0 }],
+        // Legacy mirrors remain for old clients and exported sheets.
+        dice: die,
+        diceCount: 1,
+        diceUsed: 0,
+      }
     }
   }
 

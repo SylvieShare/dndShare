@@ -11,14 +11,16 @@
     <!-- Hit dice usage -->
     <div class="hpe-dice-section">
       <span class="hpe-dice-label">Кости хитов</span>
-      <div class="hpe-dice-controls">
-        <button class="hpe-dice-btn" type="button" :disabled="diceUsed >= (hp.diceCount || 1)" @click="adjustDice(1)">−</button>
-        <div class="hpe-dice-val">
-          <span>{{ diceRemaining }}/{{ hp.diceCount || 1 }}</span>
-          <span v-if="diceSvg" class="hpe-dice-svg" v-html="diceSvg" />
-          <span v-else>{{ hp.dice || 'd8' }}</span>
+      <div v-for="pool in hitDice" :key="pool.die" class="hpe-dice-row">
+        <div class="hpe-dice-controls">
+          <button class="hpe-dice-btn" type="button" :disabled="pool.used >= pool.total" @click="adjustDice(pool, 1)">−</button>
+          <div class="hpe-dice-val">
+            <span>{{ pool.total - pool.used }}/{{ pool.total }}</span>
+            <span v-if="diceSvg(pool.die)" class="hpe-dice-svg" v-html="diceSvg(pool.die)" />
+            <span v-else>{{ pool.die }}</span>
+          </div>
+          <button class="hpe-dice-btn" type="button" :disabled="pool.used <= 0" @click="adjustDice(pool, -1)">+</button>
         </div>
-        <button class="hpe-dice-btn" type="button" :disabled="diceUsed <= 0" @click="adjustDice(-1)">+</button>
       </div>
     </div>
 
@@ -26,17 +28,17 @@
     <FormField label="Максимум HP">
       <FormNumberInput :value="hp.max || 0" :min="0" :max="999" @change="set('max', $event)" />
     </FormField>
-    <div class="hpe-field">
+    <div v-if="hitDice.length === 1" class="hpe-field">
       <span class="hpe-label">Тип кубика</span>
       <div class="hpe-pills">
         <button
           v-for="opt in diceOptions"
           :key="opt.value"
           class="hpe-pill"
-          :class="{ active: (hp.dice || 'd8') === opt.value, 'hpe-pill-svg': opt.svg }"
+          :class="{ active: hitDice[0].die === opt.value, 'hpe-pill-svg': opt.svg }"
           :title="opt.value"
           type="button"
-          @click="set('dice', opt.value)"
+          @click="setDie(opt.value)"
         >
           <SvgIcon v-if="opt.svg" class="hpe-pill-img" :svg="opt.svg" />
           <span v-else>{{ opt.value }}</span>
@@ -53,6 +55,11 @@ import EditorPanel from '@/features/character-editor/components/EditorPanel'
 import FormField from '@/shared/ui/form/FormField'
 import FormNumberInput from '@/shared/ui/form/FormNumberInput'
 import SvgIcon from '@/shared/ui/SvgIcon'
+import {
+  changeHitDieType,
+  normalizeHitDice,
+  setHitDieUsed,
+} from '@/features/character-editor/blocks/dnd/lib/hitDice'
 
 const props = defineProps({
   hp: { type: Object, required: true },
@@ -61,12 +68,8 @@ const props = defineProps({
 const emit = defineEmits(['change'])
 const calcAmount = ref('')
 
-const diceUsed = computed(() => Math.max(0, Math.min(props.hp.diceCount || 1, parseInt(props.hp.diceUsed) || 0)))
-const diceRemaining = computed(() => Math.max(0, (parseInt(props.hp.diceCount) || 1) - diceUsed.value))
-const diceSvg = computed(() => {
-  const current = props.hp.dice || 'd8'
-  return props.diceOptions.find(o => o.value === current)?.svg || null
-})
+const hitDice = computed(() => normalizeHitDice(props.hp))
+function diceSvg(die) { return props.diceOptions.find(o => o.value === die)?.svg || null }
 
 function evalExpr(expr) {
   const clean = String(expr).replace(/−/g, '-').replace(/[^0-9+\-*/\s.]/g, '')
@@ -95,10 +98,10 @@ function applyCalc(type) {
   calcAmount.value = ''
 }
 
-function adjustDice(delta) {
-  const used = Math.max(0, Math.min((props.hp.diceCount || 1), diceUsed.value + delta))
-  emit('change', { ...props.hp, diceUsed: used })
+function adjustDice(pool, delta) {
+  emit('change', setHitDieUsed(props.hp, pool.die, pool.used + delta))
 }
+function setDie(die) { emit('change', changeHitDieType(props.hp, hitDice.value[0].die, die)) }
 function set(field, value) { emit('change', { ...props.hp, [field]: value }) }
 </script>
 
@@ -124,12 +127,14 @@ function set(field, value) { emit('change', { ...props.hp, [field]: value }) }
 
 .hpe-dice-section {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
   gap: 10px;
   padding-bottom: 4px;
   border-bottom: 1px solid var(--border);
 }
-.hpe-dice-label { color: var(--text-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; flex: 1; }
+.hpe-dice-label { color: var(--text-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; }
+.hpe-dice-row { display: flex; justify-content: flex-end; }
 .hpe-dice-controls { display: flex; align-items: center; gap: 8px; }
 .hpe-dice-val { display: flex; align-items: center; gap: 5px; color: var(--text-2); font-size: 14px; font-weight: 700; min-width: 60px; justify-content: center; }
 .hpe-dice-svg { width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; opacity: 0.8; flex-shrink: 0; }

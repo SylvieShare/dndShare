@@ -15,9 +15,11 @@
         <span v-if="hpTemp > 0" class="hp-c-temp">+{{ hpTemp }}</span>
       </div>
       <div class="hp-c-dice">
-        <span class="hp-c-dice-count">{{ hp.diceCount || 1 }}</span>
-        <span v-if="diceSvg" class="hp-c-dice-svg" v-html="diceSvg" />
-        <span v-else class="hp-c-dice-type">{{ hp.dice || 'd8' }}</span>
+        <span v-for="pool in hitDice" :key="pool.die" class="hp-c-dice-pool">
+          <span class="hp-c-dice-count">{{ pool.total - pool.used }}/{{ pool.total }}</span>
+          <span v-if="dieSvg(pool.die)" class="hp-c-dice-svg" v-html="dieSvg(pool.die)" />
+          <span v-else class="hp-c-dice-type">{{ pool.die }}</span>
+        </span>
       </div>
     </div>
     <StatBar size="small" :percent="barPct" :color="barColor" :temp-percent="tempBarPct" temp-color="var(--info)" />
@@ -39,10 +41,12 @@
           <span v-if="hpStatus" class="hp-status-badge" :class="hpStatus.cls">{{ hpStatus.label }}</span>
         </div>
         <div class="hp-dice-row">
-          <span class="hp-dice-label">Хит-кубики</span>
-          <span class="hp-dice-count">{{ hp.diceCount || 1 }}</span>
-          <span v-if="diceSvg" class="hp-dice-svg" v-html="diceSvg" />
-          <span v-else class="hp-dice-type">{{ hp.dice || 'd8' }}</span>
+          <span class="hp-dice-label">Кости хитов</span>
+          <span v-for="pool in hitDice" :key="pool.die" class="hp-dice-pool">
+            <span class="hp-dice-count">{{ pool.total - pool.used }}/{{ pool.total }}</span>
+            <span v-if="dieSvg(pool.die)" class="hp-dice-svg" v-html="dieSvg(pool.die)" />
+            <span v-else class="hp-dice-type">{{ pool.die }}</span>
+          </span>
         </div>
       </div>
       <StatBar size="large" decorated :percent="barPct" :color="barColor" :temp-percent="tempBarPct" temp-color="var(--info)" />
@@ -55,6 +59,7 @@
 import { computed } from 'vue'
 import StatBar from '@/shared/ui/StatBar.vue'
 import DndDeathSaves from '@/features/character-editor/blocks/dnd/DndDeathSaves'
+import { normalizeHitDice } from '@/features/character-editor/blocks/dnd/lib/hitDice'
 
 const props = defineProps({
   hp: { type: Object, required: true },
@@ -66,6 +71,7 @@ defineEmits(['open', 'change'])
 const hpCurrent = computed(() => parseInt(props.hp.current) || 0)
 const hpMax = computed(() => parseInt(props.hp.max) || 0)
 const hpTemp = computed(() => parseInt(props.hp.temp) || 0)
+const hitDice = computed(() => normalizeHitDice(props.hp))
 const barPct = computed(() => {
   const max = hpMax.value
   if (max <= 0) return 0
@@ -104,11 +110,7 @@ const svgColorFilter = computed(() => {
   if (p > 25) return 'invert(65%) sepia(60%) saturate(600%) hue-rotate(10deg) brightness(1.05)'
   return 'invert(30%) sepia(80%) saturate(700%) hue-rotate(330deg) brightness(0.9)'
 })
-const diceSvg = computed(() => {
-  const current = props.hp.dice || 'd8'
-  const opt = props.diceOptions.find(o => o.value === current)
-  return opt?.svg || null
-})
+function dieSvg(die) { return props.diceOptions.find(o => o.value === die)?.svg || null }
 </script>
 
 <style scoped>
@@ -121,7 +123,8 @@ const diceSvg = computed(() => {
 .hp-c-sep { color: var(--text-muted); font-size: 16px; font-weight: 600; margin: 0 2px; }
 .hp-c-max { color: var(--text-2); font-size: 16px; font-weight: 600; line-height: 1; }
 .hp-c-temp { color: var(--info); font-size: 13px; font-weight: 700; margin-left: 4px; line-height: 1; }
-.hp-c-dice { display: flex; align-items: center; gap: 3px; }
+.hp-c-dice { display: flex; align-items: center; justify-content: flex-end; gap: 7px; flex-wrap: wrap; }
+.hp-c-dice-pool { display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; }
 .hp-c-dice-count { color: var(--text-2); font-size: 13px; font-weight: 700; }
 .hp-c-dice-type { color: var(--text-2); font-size: 13px; font-weight: 700; }
 .hp-c-dice-svg { width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center; opacity: 0.75; flex-shrink: 0; }
@@ -156,8 +159,9 @@ const diceSvg = computed(() => {
 .hp-max { color: var(--text-2); font-size: 22px; font-weight: bold; min-width: 16px; text-align: center; line-height: 1; }
 .hp-temp-sep { color: var(--text-muted); font-size: 16px; font-weight: bold; padding: 0 1px; }
 .hp-temp { color: var(--info); font-size: 18px; font-weight: bold; min-width: 12px; text-align: center; line-height: 1; }
-.hp-dice-row { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
+.hp-dice-row { display: flex; align-items: center; justify-content: flex-end; gap: 7px; flex-shrink: 0; flex-wrap: wrap; }
 .hp-dice-label { color: var(--text-muted); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-right: 2px; }
+.hp-dice-pool { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
 .hp-dice-count { color: var(--text-2); font-size: 14px; font-weight: 700; }
 .hp-dice-type { color: var(--text-2); font-size: 14px; font-weight: 700; }
 .hp-dice-svg { width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center; opacity: 0.8; flex-shrink: 0; }

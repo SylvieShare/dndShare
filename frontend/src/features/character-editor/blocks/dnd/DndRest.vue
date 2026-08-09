@@ -7,23 +7,20 @@
     <AppModal v-if="shortOpen" tile @close="shortOpen = false">
       <DndShortRestEditor
         :hp="hp"
-        :die-label="dieLabel"
         :con-mod="conMod"
         @spend="spendDie"
         @finish="finishShort"
       />
     </AppModal>
 
-    <ConfirmDialog
-      v-if="confirmLong"
-      title="Длинный отдых"
-      message="Восстановит все хиты, ячейки заклинаний и ресурсы, вернёт часть костей хитов и снизит истощение на 1."
-      confirm-label="Отдохнуть"
-      cancel-label="Отмена"
-      variant="warning"
-      @confirm="applyLong"
-      @cancel="confirmLong = false"
-    />
+    <AppModal v-if="longOpen" tile @close="longOpen = false">
+      <DndLongRestEditor
+        :hp="hp"
+        :recovery-count="longRestRecoveryCount(hp)"
+        @confirm="applyLong"
+        @cancel="longOpen = false"
+      />
+    </AppModal>
   </div>
 </template>
 
@@ -31,7 +28,7 @@
 import { computed, inject, ref } from 'vue'
 import AppModal from '@/shared/ui/AppModal'
 import BaseTile from '@/shared/ui/BaseTile'
-import ConfirmDialog from '@/shared/ui/ConfirmDialog'
+import DndLongRestEditor from '@/features/character-editor/blocks/dnd/components/DndLongRestEditor'
 import DndRestView from '@/features/character-editor/blocks/dnd/components/DndRestView'
 import DndShortRestEditor from '@/features/character-editor/blocks/dnd/components/DndShortRestEditor'
 import { useDiceStore } from '@/stores/dice'
@@ -39,6 +36,7 @@ import {
   exhaustionLevel,
   longRestExhaustion,
   longRestHp,
+  longRestRecoveryCount,
   longRestSpells,
   restResources,
   shortRestSpells,
@@ -54,7 +52,7 @@ const charCtx = inject('charCtx', { ownerMode: true })
 const dice = useDiceStore()
 
 const shortOpen = ref(false)
-const confirmLong = ref(false)
+const longOpen = ref(false)
 
 const ownerMode = computed(() => charCtx.ownerMode)
 
@@ -70,7 +68,6 @@ const ids = computed(() => {
 })
 
 const hp = computed(() => props.values?.[ids.value.hp] || {})
-const dieLabel = computed(() => hp.value.dice || 'd8')
 const conMod = computed(() => statMod(props.values?.[ids.value.con]))
 
 function onShort() {
@@ -80,15 +77,15 @@ function onShort() {
 
 function onLong() {
   if (!ownerMode.value) return
-  confirmLong.value = true
+  longOpen.value = true
 }
 
-function spendDie() {
-  const sides = parseInt(String(dieLabel.value).replace(/\D/g, ''), 10) || 8
+function spendDie(die) {
+  const sides = parseInt(String(die).replace(/\D/g, ''), 10) || 8
   const mod = conMod.value
   const expr = `1d${sides}${mod >= 0 ? '+' + mod : mod}`
-  const result = dice.roll('Кость хитов', expr)
-  emit('update:value', ids.value.hp, spendHitDie(hp.value, result?.total ?? 0))
+  const result = dice.roll(`Кость хитов ${die}`, expr)
+  emit('update:value', ids.value.hp, spendHitDie(hp.value, result?.total ?? 0, die))
 }
 
 function finishShort() {
@@ -101,15 +98,15 @@ function finishShort() {
   shortOpen.value = false
 }
 
-function applyLong() {
+function applyLong(recovery) {
   const i = ids.value
-  emit('update:value', i.hp, longRestHp(hp.value))
+  emit('update:value', i.hp, longRestHp(hp.value, recovery))
   const spells = props.values?.[i.spells]
   if (spells && typeof spells === 'object') emit('update:value', i.spells, longRestSpells(spells))
   emit('update:value', i.resources, restResources(props.values?.[i.resources], 'long'))
   const ex = props.values?.[i.exhaustion]
   if (exhaustionLevel(ex) > 0) emit('update:value', i.exhaustion, longRestExhaustion(ex))
-  confirmLong.value = false
+  longOpen.value = false
 }
 </script>
 

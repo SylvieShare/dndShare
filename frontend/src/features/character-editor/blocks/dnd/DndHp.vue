@@ -29,9 +29,8 @@ import DndHpEditor from '@/features/character-editor/blocks/dnd/components/DndHp
 import DndHpView from '@/features/character-editor/blocks/dnd/components/DndHpView'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
 import { useMorphOrigin } from '@/features/character-editor/composables/useMorphOrigin'
+import { HIT_DIE_TYPES, normalizeHitDice, withHitDice } from '@/features/character-editor/blocks/dnd/lib/hitDice'
 import { useSuggestStore } from '@/stores/suggest'
-
-const DICE = ['d4', 'd6', 'd8', 'd10', 'd12']
 
 const props = defineProps(['block', 'value', 'values'])
 const emit = defineEmits(['update:value'])
@@ -43,7 +42,10 @@ const level = computed(() => {
   const n = lvl && typeof lvl === 'object' ? (lvl.level ?? lvl.lvl ?? lvl.v) : lvl
   return Math.max(1, parseInt(n) || 1)
 })
-const hp = computed(() => ({ max: 0, current: 0, temp: 0, dice: 'd8', diceUsed: 0, ds_success: 0, ds_failure: 0, ...props.value, diceCount: level.value }))
+const hp = computed(() => {
+  const raw = { max: 0, current: 0, temp: 0, dice: 'd8', diceUsed: 0, ds_success: 0, ds_failure: 0, ...props.value }
+  return withHitDice(raw, normalizeHitDice(raw, level.value))
+})
 
 const barPct = computed(() => {
   const max = parseInt(hp.value.max) || 0
@@ -64,7 +66,7 @@ const diceOptions = computed(() => {
     const items = useSuggestStore().items(typeId)
     if (items?.length) opts = items.map(s => ({ value: s.value || String(s.id), svg: s.svg || null }))
   }
-  if (!opts) opts = DICE.map(d => ({ value: d, svg: null }))
+  if (!opts) opts = HIT_DIE_TYPES.map(d => ({ value: d, svg: null }))
   return opts.slice().sort((a, b) => (parseInt(a.value) || 0) - (parseInt(b.value) || 0))
 })
 
@@ -74,6 +76,6 @@ onMounted(async () => {
 })
 
 function onHpChange(h) {
-  emit('update:value', props.block.id, h)
+  emit('update:value', props.block.id, withHitDice(h, normalizeHitDice(h, level.value)))
 }
 </script>

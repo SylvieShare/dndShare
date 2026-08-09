@@ -180,6 +180,7 @@ export function useEncounterHp({
       { path: `${hpPath}.current`,    value: Number(hp.current) || 0 },
       { path: `${hpPath}.max`,        value: Number(hp.max) || 0 },
       { path: `${hpPath}.temp`,       value: Number(hp.temp) || 0 },
+      { path: `${hpPath}.hitDice`,    value: Array.isArray(hp.hitDice) ? hp.hitDice : [] },
       { path: `${hpPath}.dice`,       value: hp.dice ?? 'd8' },
       { path: `${hpPath}.diceCount`,  value: Number(hp.diceCount) || 1 },
       { path: `${hpPath}.diceUsed`,   value: Number(hp.diceUsed) || 0 },

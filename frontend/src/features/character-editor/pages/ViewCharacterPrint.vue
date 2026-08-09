@@ -177,6 +177,7 @@ import { abilityModifier, proficiencyBonus, resolveNumValue, sumBonuses } from '
 import { SAVE_ABBR, STAT_FULL, STAT_KEYS, STAT_SHORT, SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
 import { normalizeValue } from '@/features/character-editor/blocks/dnd/lib/itemSection'
 import { normalizeCounters } from '@/features/character-editor/blocks/dnd/lib/counterEntry'
+import { formatHitDice, normalizeHitDice } from '@/features/character-editor/blocks/dnd/lib/hitDice'
 import { useSuggestStore } from '@/stores/suggest'
 
 const PrintField = defineComponent({
@@ -230,7 +231,7 @@ const initiative = computed(() => {
   return (Number(data?.base ?? data?.value) || 0) + sumBonuses(data?.bonuses) + (data?.use_dex === false ? 0 : abilityModifier(abilityScore('DEX')))
 })
 const speedLabel = computed(() => `${Number(values.value.speed?.value ?? values.value.speed) || 0} фт.`)
-const hitDice = computed(() => { const dice = text(hp.value.dice) || 'd8'; const total = Number(hp.value.diceCount) || level.value; const used = Number(hp.value.diceUsed) || 0; return `${Math.max(0, total - used)}${dice} / ${total}${dice}` })
+const hitDice = computed(() => formatHitDice(normalizeHitDice(hp.value, level.value)))
 
 const SKILL_STAT = { 1: 'STR', 2: 'DEX', 3: 'DEX', 4: 'DEX', 5: 'INT', 6: 'INT', 7: 'INT', 8: 'INT', 9: 'INT', 10: 'WIS', 11: 'WIS', 12: 'WIS', 13: 'WIS', 14: 'WIS', 15: 'CHA', 16: 'CHA', 17: 'CHA', 18: 'CHA' }
 const SKILL_FALLBACK = { 1: 'Атлетика', 2: 'Акробатика', 3: 'Ловкость рук', 4: 'Скрытность', 5: 'Анализ', 6: 'История', 7: 'Магия', 8: 'Природа', 9: 'Религия', 10: 'Восприятие', 11: 'Выживание', 12: 'Медицина', 13: 'Проницательность', 14: 'Уход за животными', 15: 'Выступление', 16: 'Запугивание', 17: 'Обман', 18: 'Убеждение' }

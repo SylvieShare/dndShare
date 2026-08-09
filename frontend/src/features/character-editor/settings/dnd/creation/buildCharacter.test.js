@@ -28,6 +28,26 @@ describe('buildCharacterData skill choices', () => {
   })
 })
 
+describe('buildCharacterData hit dice', () => {
+  it('creates the level-1 pool from the class selected in the wizard', () => {
+    const result = buildCharacterData({
+      race: selection(1, 'Человек'),
+      charClass: selection(2, 'Волшебник', { hit_die: 6 }),
+      scores: { CON: 14 },
+      suggestValue: (typeId, id) => typeId === 11 && id === 6 ? 'd6' : '',
+    })
+
+    expect(result.data.values.hp).toMatchObject({
+      max: 8,
+      current: 8,
+      hitDice: [{ die: 'd6', total: 1, used: 0 }],
+      dice: 'd6',
+      diceCount: 1,
+      diceUsed: 0,
+    })
+  })
+})
+
 describe('buildCharacterData starting equipment', () => {
   it('stores PHB rows without catalog ids as editable custom inventory items', () => {
     const result = buildCharacterData({

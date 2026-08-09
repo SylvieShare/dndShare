@@ -267,6 +267,11 @@ import { itemsApi } from '@/shared/api/itemsApi'
 import { contentScopeQuery } from '@/shared/api/contentSourcesApi'
 import { useDiceStore } from '@/stores/dice'
 import { useSuggestStore } from '@/stores/suggest'
+import {
+  addHitDie,
+  hitDiceFromClasses,
+  withHitDice,
+} from '@/features/character-editor/blocks/dnd/lib/hitDice'
 
 const CLASS_TYPE = 9
 const CLASS_ABIL_TYPE = 4
@@ -421,12 +426,13 @@ watch(grantedNewIds, async (ids) => {
 const grantedSpellList = computed(() => grantedNewIds.value.map((id) => ({ id, name: spellNames.value[id] || `#${id}` })))
 
 // ─── хиты ───────────────────────────────────────────────────────────────────
-const hitDieLabel = computed(() => {
-  const id = classItem.value?.data?.hit_die
+function hitDieLabelOf(item) {
+  const id = item?.data?.hit_die
   const label = suggestStore.items(11).find((s) => String(s.id) === String(id))?.value
   const face = dieFaceOf(label)
   return face ? `d${face}` : ''
-})
+}
+const hitDieLabel = computed(() => hitDieLabelOf(classItem.value))
 const hitDieFace = computed(() => dieFaceOf(hitDieLabel.value) || 8)
 function statScore(s) {
   const v = props.values?.[s]
@@ -679,8 +685,10 @@ function accept() {
     const hp = { ...(v.hp || {}) }
     hp.max = (Number(hp.max) || 0) + hpGain.value
     hp.current = Math.min(hp.max, (Number(hp.current) || 0) + hpGain.value)
-    hp.diceCount = (Number(hp.diceCount) || 1) + 1
-    updates.hp = hp
+    const classDice = next.map((entry) => hitDieLabelOf(itemsById.value[entry.id]))
+    updates.hp = classDice.every(Boolean)
+      ? withHitDice(hp, hitDiceFromClasses(hp, next, (entry) => hitDieLabelOf(itemsById.value[entry.id])))
+      : addHitDie(hp, hitDieLabel.value || hp.dice || 'd8')
 
     // ASI
     if (asiNow.value && !asiSkipped.value) {

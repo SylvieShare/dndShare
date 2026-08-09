@@ -2,6 +2,13 @@
 // and writes the returned objects back via update:value(<id>, ...).
 
 import { abilityModifier, resolveNumValue } from '@/shared/lib/dnd'
+import {
+  hitDiceTotal,
+  hitDiceUsed,
+  normalizeHitDie,
+  normalizeHitDice,
+  withHitDice,
+} from '@/features/character-editor/blocks/dnd/lib/hitDice'
 
 // Ability modifier from a stat value (same shape DND_CHAR_STAT_10 stores: `{ value: { base, bonuses } }`,
 // or a legacy plain number). Used for the hit-die heal (1dX + CON mod). Absent value defaults to 10.
@@ -15,15 +22,33 @@ export function recoveredHitDice(diceCount) {
   return Math.max(1, Math.floor((Number(diceCount) || 1) / 2))
 }
 
+export function longRestRecoveryCount(hp) {
+  const pools = normalizeHitDice(hp)
+  return Math.min(hitDiceUsed(pools), recoveredHitDice(hitDiceTotal(pools)))
+}
+
+function recoveryFor(recovery, die) {
+  if (Array.isArray(recovery)) {
+    return Number(recovery.find((row) => normalizeHitDie(row?.die) === die)?.count) || 0
+  }
+  return Number(recovery?.[die]) || 0
+}
+
 // Long rest: full HP, drop temp + death saves, regain half the spent hit dice.
-export function longRestHp(hp) {
-  const h = { ...(hp || {}) }
+export function longRestHp(hp, recovery = null) {
+  let h = { ...(hp || {}) }
   const max = Number(h.max) || 0
-  const diceCount = Number(h.diceCount) || 1
-  const diceUsed = Number(h.diceUsed) || 0
+  const pools = normalizeHitDice(h).map((row) => ({ ...row }))
+  let left = longRestRecoveryCount(h)
+  for (const row of pools) {
+    const requested = recovery == null ? left : Math.max(0, Math.floor(recoveryFor(recovery, row.die)))
+    const restored = Math.min(row.used, left, requested)
+    row.used -= restored
+    left -= restored
+  }
+  h = withHitDice(h, pools)
   h.current = max
   h.temp = 0
-  h.diceUsed = Math.max(0, diceUsed - recoveredHitDice(diceCount))
   h.ds_success = 0
   h.ds_failure = 0
   return h
@@ -72,13 +97,17 @@ export function exhaustionLevel(ex) {
 }
 
 // Apply one spent hit die: heal by `amount` (rolled elsewhere), clamp to max, mark one die used.
-export function spendHitDie(hp, amount) {
-  const h = { ...(hp || {}) }
+export function spendHitDie(hp, amount, die = null) {
+  let h = { ...(hp || {}) }
   const max = Number(h.max) || 0
   const current = Number(h.current) || 0
-  const diceCount = Number(h.diceCount) || 1
-  const diceUsed = Number(h.diceUsed) || 0
+  const pools = normalizeHitDice(h).map((row) => ({ ...row }))
+  const selected = die
+    ? pools.find((row) => row.die === normalizeHitDie(die) && row.used < row.total)
+    : pools.find((row) => row.used < row.total)
+  if (!selected) return h
+  selected.used += 1
+  h = withHitDice(h, pools)
   h.current = Math.min(max, current + Math.max(0, amount))
-  h.diceUsed = Math.min(diceCount, diceUsed + 1)
   return h
 }

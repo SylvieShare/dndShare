@@ -35,14 +35,16 @@
     <!-- Hit dice -->
     <div class="hc-dice-section">
       <span class="hc-dice-label">Кости хитов</span>
-      <div class="hc-dice-controls">
-        <button class="hc-dice-btn" :disabled="diceUsed >= hp.diceCount" @click="adjustDice(1)">−</button>
-        <div class="hc-dice-val">
-          <span>{{ diceRemaining }}/{{ hp.diceCount || 1 }}</span>
-          <span v-if="diceSvg" class="hc-dice-svg" v-html="diceSvg" />
-          <span v-else>{{ hp.dice || 'd8' }}</span>
+      <div v-for="pool in hitDice" :key="pool.die" class="hc-dice-row">
+        <div class="hc-dice-controls">
+          <button class="hc-dice-btn" :disabled="pool.used >= pool.total" @click="adjustDice(pool, 1)">−</button>
+          <div class="hc-dice-val">
+            <span>{{ pool.total - pool.used }}/{{ pool.total }}</span>
+            <span v-if="diceSvg(pool.die)" class="hc-dice-svg" v-html="diceSvg(pool.die)" />
+            <span v-else>{{ pool.die }}</span>
+          </div>
+          <button class="hc-dice-btn" :disabled="pool.used <= 0" @click="adjustDice(pool, -1)">+</button>
         </div>
-        <button class="hc-dice-btn" :disabled="diceUsed <= 0" @click="adjustDice(-1)">+</button>
       </div>
     </div>
 
@@ -54,6 +56,7 @@ import { computed, ref } from 'vue'
 import CalcPad from '@/features/character-editor/components/CalcPad'
 import AppModal from '@/shared/ui/AppModal'
 import DndDeathSaves from './DndDeathSaves'
+import { normalizeHitDice, setHitDieUsed } from '@/features/character-editor/blocks/dnd/lib/hitDice'
 
 const props = defineProps({
   hp:          { type: Object, required: true },
@@ -66,8 +69,7 @@ const hpCurrent = computed(() => parseInt(props.hp.current) || 0)
 const isDead = computed(() => hpCurrent.value <= 0)
 const hpMax = computed(() => parseInt(props.hp.max) || 0)
 const hpTemp = computed(() => parseInt(props.hp.temp) || 0)
-const diceUsed = computed(() => Math.max(0, Math.min(props.hp.diceCount || 1, parseInt(props.hp.diceUsed) || 0)))
-const diceRemaining = computed(() => Math.max(0, (parseInt(props.hp.diceCount) || 1) - diceUsed.value))
+const hitDice = computed(() => normalizeHitDice(props.hp))
 const barPct = computed(() => {
   const max = hpMax.value
   if (max <= 0) return 0
@@ -99,11 +101,7 @@ const svgColorFilter = computed(() => {
   if (p > 25) return 'invert(65%) sepia(60%) saturate(600%) hue-rotate(10deg) brightness(1.05)'
   return 'invert(30%) sepia(80%) saturate(700%) hue-rotate(330deg) brightness(0.9)'
 })
-const diceSvg = computed(() => {
-  const current = props.hp.dice || 'd8'
-  const opt = props.diceOptions.find(o => o.value === current)
-  return opt?.svg || null
-})
+function diceSvg(die) { return props.diceOptions.find(o => o.value === die)?.svg || null }
 
 function evalExpr(expr) {
   const clean = String(expr).replace(/−/g, '-').replace(/[^0-9+\-*/\s.]/g, '')
@@ -132,9 +130,8 @@ function applyCalc(type) {
   calcAmount.value = ''
 }
 
-function adjustDice(delta) {
-  const used = Math.max(0, Math.min((props.hp.diceCount || 1), diceUsed.value + delta))
-  emit('change', { ...props.hp, diceUsed: used })
+function adjustDice(pool, delta) {
+  emit('change', setHitDieUsed(props.hp, pool.die, pool.used + delta))
 }
 </script>
 
@@ -240,7 +237,8 @@ function adjustDice(delta) {
 /* Hit dice */
 .hc-dice-section {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
   gap: 10px;
   padding-top: 4px;
   border-top: 1px solid var(--border);
@@ -251,8 +249,9 @@ function adjustDice(delta) {
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  flex: 1;
 }
+
+.hc-dice-row { display: flex; justify-content: flex-end; }
 
 .hc-dice-controls {
   display: flex;

@@ -13,6 +13,7 @@
  * participant or a joinable character.
  */
 import { settingAccessors } from '@/features/character-editor/settings'
+import { hitDiceTotal, hitDiceUsed, normalizeHitDice } from '@/features/character-editor/blocks/dnd/lib/hitDice'
 import { useTemplateStore } from '@/stores/template'
 
 function getByPath(obj, path) {
@@ -69,13 +70,15 @@ export function pvHp(entry) {
   const a = accessorsFor(entry)
   const v = a ? a.hp(entry?.data) : getByPath(entry?.data ?? {}, pvMap(entry).hp)
   if (!v || typeof v !== 'object') return null
+  const hitDice = normalizeHitDice(v)
   return {
     current: Number(v.current) || 0,
     max: Number(v.max) || 0,
     temp: Number(v.temp) || 0,
-    dice: v.dice || 'd8',
-    diceCount: Number(v.diceCount) || 1,
-    diceUsed: Number(v.diceUsed) || 0,
+    hitDice,
+    dice: hitDice[0].die,
+    diceCount: hitDiceTotal(hitDice),
+    diceUsed: hitDiceUsed(hitDice),
     ds_success: Number(v.ds_success) || 0,
     ds_failure: Number(v.ds_failure) || 0,
   }

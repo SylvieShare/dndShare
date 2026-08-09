@@ -9,21 +9,20 @@
   </EditorSection>
 
   <EditorSection title="Кости хитов">
-    <div class="sre-row">
-      <span class="sre-label">Осталось</span>
+    <div v-for="pool in hitDice" :key="pool.die" class="sre-pool">
       <span class="sre-dice">
-        <span class="sre-dice-val">{{ remaining }} / {{ count }}</span>
-        <span class="sre-dice-meta">{{ dieLabel }} · ТЕЛ {{ conLabel }}</span>
+        <span class="sre-dice-val">{{ pool.total - pool.used }} / {{ pool.total }} {{ pool.die }}</span>
+        <span class="sre-dice-meta">ТЕЛ {{ conLabel }}</span>
       </span>
+      <button
+        class="sre-btn sre-spend"
+        type="button"
+        :disabled="!canSpend(pool)"
+        @click="$emit('spend', pool.die)"
+      >
+        Потратить {{ pool.die }}
+      </button>
     </div>
-    <button
-      class="sre-btn sre-spend"
-      type="button"
-      :disabled="!canSpend"
-      @click="$emit('spend')"
-    >
-      Потратить кость хитов
-    </button>
   </EditorSection>
 
   <button class="sre-btn sre-finish" type="button" @click="$emit('finish')">
@@ -35,29 +34,29 @@
 <script setup>
 import { computed } from 'vue'
 import EditorSection from '@/features/character-editor/components/EditorSection'
+import { normalizeHitDice } from '@/features/character-editor/blocks/dnd/lib/hitDice'
 
 const props = defineProps({
   hp: { type: Object, required: true },
-  dieLabel: { type: String, default: 'd8' },
   conMod: { type: Number, default: 0 },
 })
 defineEmits(['spend', 'finish'])
 
 const current = computed(() => Number(props.hp.current) || 0)
 const max = computed(() => Number(props.hp.max) || 0)
-const count = computed(() => Number(props.hp.diceCount) || 1)
-const used = computed(() => Math.max(0, Math.min(count.value, Number(props.hp.diceUsed) || 0)))
-const remaining = computed(() => count.value - used.value)
+const hitDice = computed(() => normalizeHitDice(props.hp))
 const conLabel = computed(() => (props.conMod >= 0 ? '+' : '') + props.conMod)
-const canSpend = computed(() => remaining.value > 0 && current.value < max.value)
+function canSpend(pool) { return pool.used < pool.total && current.value < max.value }
 </script>
 
 <style scoped>
 .sre-title { color: var(--text-1); font-size: 16px; font-weight: 700; }
 .sre-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.sre-pool { display: grid; grid-template-columns: 1fr minmax(130px, auto); align-items: center; gap: 10px; }
+.sre-pool + .sre-pool { padding-top: 8px; border-top: 1px solid var(--border); }
 .sre-label { color: var(--text-muted); font-size: 13px; }
 .sre-hp { color: var(--text-1); font-size: 15px; font-weight: 700; }
-.sre-dice { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; }
+.sre-dice { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; }
 .sre-dice-val { color: var(--text-1); font-size: 15px; font-weight: 700; }
 .sre-dice-meta { color: var(--text-muted); font-size: 11px; }
 
