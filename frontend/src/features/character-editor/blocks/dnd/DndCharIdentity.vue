@@ -119,7 +119,7 @@
 </template>
 
 <script setup>
-import { computed, inject, nextTick, reactive, ref, watch } from 'vue'
+import { computed, inject, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import AppModal from '@/shared/ui/AppModal'
 import FormActionButtons from '@/shared/ui/form/FormActionButtons'
 import FormField from '@/shared/ui/form/FormField'
@@ -260,6 +260,13 @@ function removeClassRow(i) {
 function openWindow() {
   windowOpen.value = true
 }
+
+function onIdentityEditRequest() {
+  if (canEdit.value) openWindow()
+}
+
+onMounted(() => window.addEventListener('dndshare:edit-character-identity', onIdentityEditRequest))
+onBeforeUnmount(() => window.removeEventListener('dndshare:edit-character-identity', onIdentityEditRequest))
 
 watch(windowOpen, async (open) => {
   if (!open) return

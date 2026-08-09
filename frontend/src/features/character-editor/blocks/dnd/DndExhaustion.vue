@@ -1,5 +1,9 @@
 <template>
-  <BaseTile class="exh-tile" :color="color" :strip="level > 0" interactive @click="open">
+  <button v-if="isCompact" class="exh-compact" :class="{ 'exh-compact--on': level > 0 }" type="button" @click="open">
+    <span>Истощение</span>
+    <strong>{{ level }}</strong>
+  </button>
+  <BaseTile v-else class="exh-tile" :color="color" :strip="level > 0" interactive @click="open">
     <DndExhaustionView :level="level" :value-text="valueText" :active-effects="activeEffects" />
   </BaseTile>
 
@@ -111,6 +115,7 @@ const level = computed(() => Math.max(0, Math.min(max.value, parseInt(data.value
 const activeEffects = computed(() => effects.value.slice(0, level.value))
 const valueText = computed(() => (level.value > 0 ? `${level.value} ур.` : 'нет'))
 const color = computed(() => (level.value > 0 ? 'var(--danger)' : 'var(--text-muted)'))
+const isCompact = computed(() => props.block?.props?.variant === 'compact')
 
 function emitValue(patch) {
   const cur = props.value && typeof props.value === 'object' ? props.value : { level: level.value }
@@ -133,6 +138,27 @@ function setEffect(i, text) {
   min-height: 42px;
   padding: 10px 12px 10px 14px;
 }
+
+.exh-compact {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-width: 68px;
+  min-height: 42px;
+  padding: 5px 8px;
+  border: 0;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--text-on-accent) 3%, transparent);
+  color: var(--text-muted);
+  font: inherit;
+  cursor: pointer;
+}
+.exh-compact span { font-size: 9px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+.exh-compact strong { color: var(--text-2); font-size: 17px; line-height: 1; }
+.exh-compact--on { color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, transparent); }
+.exh-compact--on strong { color: var(--danger); }
 
 /* morph view (left column) — match the tile's top/left padding so it doesn't jump during the morph */
 .exh-face { padding: 10px 14px; }

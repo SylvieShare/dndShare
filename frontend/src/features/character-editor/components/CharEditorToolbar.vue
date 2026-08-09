@@ -117,6 +117,13 @@
                   @update:modelValue="$emit('update:publicVisible', $event)"
                 />
               </div>
+              <button v-if="canEdit" class="menu-item menu-action" type="button" @click="openSources">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H11v16H6.5A2.5 2.5 0 0 0 4 21.5z" />
+                  <path d="M20 5.5A2.5 2.5 0 0 0 17.5 3H13v16h4.5A2.5 2.5 0 0 1 20 21.5z" />
+                </svg>
+                <span class="menu-action-copy"><b>Источники</b><small>{{ sourceSummary }}</small></span>
+              </button>
               <button class="menu-item menu-pdf" type="button" @click="openPrintView">
                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <path d="M6 9V2h9l3 3v4" />
@@ -132,13 +139,28 @@
 
     </div>
   </div>
+
+  <AppModal v-if="sourcesOpen" wide tile @close="sourcesOpen = false">
+    <div class="sources-modal">
+      <div class="sources-modal-title">Источники персонажа</div>
+      <p>Выбранные книги ограничивают новые варианты в справочниках. Уже добавленный контент останется на листе.</p>
+      <ContentSourceSelector
+        :source-version-id="sourceVersionId"
+        :model-value="sourceDraft"
+        @update:model-value="updateSources"
+      />
+    </div>
+  </AppModal>
 </template>
 
 <script setup>
 import { computed, defineAsyncComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import AppModal from '@/shared/ui/AppModal'
+import ContentSourceSelector from '@/features/character-editor/components/ContentSourceSelector.vue'
 import ToggleSwitch from "@/shared/ui/ToggleSwitch"
 import { sessionStatusColor, sessionStatusLabel } from '@/features/sessions/composables/useSessionStatus'
+import { normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'
 
 const TemplateBlockInner = defineAsyncComponent(() => import("./TemplateBlockInner"))
 
@@ -156,14 +178,18 @@ const props = defineProps({
   toolbarVars: { type: Object, default: () => ({}) },
   charName: { type: String, default: '' },
   charSub: { type: String, default: '' },
+  sourceVersionId: { type: [Number, String], default: null },
+  contentSources: { type: [Object, Array], default: null },
   sessions: { type: Array, default: () => [] },
   topSession: { type: Object, default: null },
 })
-const emit = defineEmits(['update:publicVisible', 'update:activeTab', 'update:value', 'update:var', 'close'])
+const emit = defineEmits(['update:publicVisible', 'update:activeTab', 'update:value', 'update:var', 'update:contentSources', 'close'])
 
 const router = useRouter()
 const menuOpen = ref(false)
 const sessionMenuOpen = ref(false)
+const sourcesOpen = ref(false)
+const sourceDraft = ref(normalizeContentSourceSettings(null))
 
 const statusColor = sessionStatusColor
 const statusLabel = sessionStatusLabel
@@ -182,7 +208,22 @@ const saveLabel = computed(() => {
   }
 })
 
+const sourceSummary = computed(() => {
+  const settings = normalizeContentSourceSettings(props.contentSources)
+  if (settings.mode === 'all') return settings.allowLegacy ? 'Все источники + Legacy' : 'Все источники'
+  return `${settings.ids.length} выбрано`
+})
+
 function closeMenu() { menuOpen.value = false }
+function openSources() {
+  sourceDraft.value = normalizeContentSourceSettings(props.contentSources)
+  sourcesOpen.value = true
+  menuOpen.value = false
+}
+function updateSources(value) {
+  sourceDraft.value = normalizeContentSourceSettings(value)
+  emit('update:contentSources', sourceDraft.value)
+}
 function openPrintView() {
   menuOpen.value = false
   router.push({ name: 'CharacterPrint', params: { uuid: router.currentRoute.value.params.uuid } })
@@ -532,6 +573,39 @@ function goBack() {
   text-align: left;
   cursor: pointer;
 }
+.menu-action {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border: 0;
+  background: transparent;
+  color: var(--text-2);
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+}
+.menu-action svg { color: var(--text-muted); flex: 0 0 auto; }
+.menu-action-copy { display: flex; flex-direction: column; gap: 1px; }
+.menu-action-copy b { font-size: 12px; font-weight: 600; }
+.menu-action-copy small { color: var(--text-muted); font-size: 10px; }
+
+.sources-modal {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  max-height: min(760px, calc(100vh - 80px));
+  overflow-x: hidden;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 22px;
+  box-sizing: border-box;
+}
+.sources-modal-title { font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--text-1); }
+.sources-modal > p { margin: 0; color: var(--text-muted); font-size: 12px; line-height: 1.45; }
 .menu-pdf svg { color: var(--text-muted); flex: 0 0 auto; }
 
 .menu-save-item {

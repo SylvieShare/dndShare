@@ -14,18 +14,31 @@
       :toolbarVars="data.var"
       :charName="charName"
       :charSub="charSub"
+      :sourceVersionId="sourceVersionId"
+      :contentSources="contentSources"
       :sessions="sessions"
       :topSession="topSession"
       @update:publicVisible="onPublicToggle"
       @update:activeTab="onSetActiveTab"
       @update:value="onUpdateValue"
       @update:var="onUpdateVar"
+      @update:contentSources="onUpdateContentSources"
       @wheel.prevent="onFixedHeaderWheel"
       @touchstart.passive="onFixedHeaderTouchStart"
       @touchmove="onFixedHeaderTouchMove"
       @touchend.passive="onFixedHeaderTouchEnd"
       @touchcancel.passive="onFixedHeaderTouchEnd"
     />
+
+    <div v-if="mobileIdentityEditorBlock" class="mobile-identity-editor">
+      <TemplateBlockInner
+        :block="mobileIdentityEditorBlock"
+        :values="data.values"
+        :vars="data.var"
+        @update:value="onUpdateValue"
+        @update:var="onUpdateVar"
+      />
+    </div>
 
     <div
       v-if="isMobile && (commonMobileBlockNode || mobileTabs.length)"
@@ -155,7 +168,7 @@ import { useSaveDebounce } from '@/features/character-editor/composables/useSave
 import { useTabSwipe } from '@/features/character-editor/composables/useTabSwipe'
 import { useScrollHide } from '@/features/character-editor/composables/useScrollHide'
 import { useUiStore } from '@/stores/ui'
-import { initialTabs } from '@/features/character-editor/lib/templateSchema'
+import { initialTabs, layoutNodeToBlock } from '@/features/character-editor/lib/templateSchema'
 import { defaultTabIndex, parseTabQuery, queryForTab } from '@/features/character-editor/lib/tabQuery'
 
 const route = useRoute()
@@ -215,6 +228,12 @@ const {
   load, loadSync, blocksForTab, containerWidthForTab, getInitialTabs,
   updateValue, updateVar, updateContentSources, onPublicToggle, invalidateTabCache,
 } = useCharacterData(uuid, isMobile)
+
+const mobileIdentityEditorBlock = computed(() =>
+  isMobile.value && template.value
+    ? layoutNodeToBlock({ kind: 'block', ref: 'char_identity' }, template.value)
+    : null
+)
 
 // Apply the list seed synchronously in setup so the expand overlay renders with
 // content in the same tick the View Transition snapshots it. onMounted then does
@@ -289,6 +308,11 @@ function onUpdateValue(event) {
 
 function onUpdateVar(patch) {
   updateVar(patch)
+  scheduleSave()
+}
+
+function onUpdateContentSources(value) {
+  updateContentSources(value)
   scheduleSave()
 }
 
@@ -510,6 +534,13 @@ onBeforeUnmount(() => {
   overflow-x: auto;
   overflow-y: auto;
   overscroll-behavior-y: none;
+}
+
+.mobile-identity-editor {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
 }
 
 .container {

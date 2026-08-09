@@ -22,7 +22,14 @@
 
       <HorizontalMenu class="header-nav" />
 
-      <div v-if="headerTitle" class="header-title header-title-inline">{{ headerTitle }}</div>
+      <button
+        v-if="headerTitle"
+        class="header-title header-title-inline"
+        :class="{ 'header-title-editable': isCharacterView }"
+        type="button"
+        :disabled="!isCharacterView"
+        @click="requestIdentityEdit"
+      >{{ headerTitle }}</button>
 
       <HeaderSearch class="header-search" />
 
@@ -58,6 +65,7 @@ const isAuth = computed(() => useAccountStore().authStatus === 'success')
 const isHandbook = computed(() => route.path.startsWith('/handbook'))
 const isTemplateAdmin = computed(() => useAccountStore().hasRole('TEMPLATE_ADMIN'))
 const isAdmin = computed(() => useAccountStore().hasRole('ADMIN'))
+const isCharacterView = computed(() => /^\/char\/[^/]+\/?$/.test(route.path))
 const visibleItems = computed(() => {
   const items = [
     { title: 'Справочник', to: '/handbook', active: isHandbook.value },
@@ -117,6 +125,11 @@ function toggleBrandMenu() {
     return
   }
   menuOpen.value = !menuOpen.value
+}
+
+function requestIdentityEdit() {
+  if (!isCharacterView.value) return
+  window.dispatchEvent(new CustomEvent('dndshare:edit-character-identity'))
 }
 
 </script>
@@ -228,7 +241,15 @@ function toggleBrandMenu() {
   color: var(--text-1);
   font-size: 14px;
   font-weight: 600;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  text-align: left;
 }
+
+.header-title:disabled { opacity: 1; }
+.header-title-editable { cursor: pointer; }
 
 .header-title-inline {
   display: none;

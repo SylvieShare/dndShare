@@ -93,7 +93,7 @@ const canLevelUp = computed(() => {
 .cmini-label { font-size: 9px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; line-height: 1; }
 .cmini-value { font-size: 18px; font-weight: 700; color: var(--text-1); line-height: 1; }
 .cmini-up { color: var(--accent); font-size: 12px; font-weight: 900; }
-.cmini-bar { position: absolute; left: 6px; right: 6px; bottom: 3px; height: 2px; border-radius: 2px; background: var(--accent); opacity: 0.5; }
+.cmini-bar { position: absolute; left: 6px; bottom: 3px; max-width: calc(100% - 12px); height: 2px; border-radius: 2px; background: var(--accent); opacity: 0.5; }
 
 /* ── Widget ── */
 .lvl-widget { display: flex; align-items: center; gap: 16px; padding: 12px 14px; cursor: pointer; }

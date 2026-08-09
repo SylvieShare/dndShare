@@ -14,13 +14,6 @@
         <span class="hp-c-max">{{ hpMax }}</span>
         <span v-if="hpTemp > 0" class="hp-c-temp">+{{ hpTemp }}</span>
       </div>
-      <div class="hp-c-dice">
-        <span v-for="pool in hitDice" :key="pool.die" class="hp-c-dice-pool">
-          <span class="hp-c-dice-count">{{ pool.total - pool.used }}/{{ pool.total }}</span>
-          <span v-if="dieSvg(pool.die)" class="hp-c-dice-svg" v-html="dieSvg(pool.die)" />
-          <span v-else class="hp-c-dice-type">{{ pool.die }}</span>
-        </span>
-      </div>
     </div>
     <StatBar size="small" :percent="barPct" :color="barColor" :temp-percent="tempBarPct" temp-color="var(--info)" />
   </div>
@@ -116,19 +109,13 @@ function dieSvg(die) { return props.diceOptions.find(o => o.value === die)?.svg 
 <style scoped>
 /* ── Compact variant ── */
 .hp-compact { display: flex; flex-direction: column; gap: 8px; padding: 10px 14px; border-radius: 10px; transition: background 0.3s ease; cursor: pointer; }
-.hp-c-header { display: flex; align-items: center; justify-content: space-between; }
+.hp-c-header { display: flex; align-items: center; }
 .hp-c-nums { display: flex; align-items: center; gap: 3px; }
 .hp-c-icon { width: 20px; height: 20px; flex-shrink: 0; transition: filter 0.3s ease; }
 .hp-c-cur { font-size: 22px; font-weight: 800; line-height: 1; }
 .hp-c-sep { color: var(--text-muted); font-size: 16px; font-weight: 600; margin: 0 2px; }
 .hp-c-max { color: var(--text-2); font-size: 16px; font-weight: 600; line-height: 1; }
 .hp-c-temp { color: var(--info); font-size: 13px; font-weight: 700; margin-left: 4px; line-height: 1; }
-.hp-c-dice { display: flex; align-items: center; justify-content: flex-end; gap: 7px; flex-wrap: wrap; }
-.hp-c-dice-pool { display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; }
-.hp-c-dice-count { color: var(--text-2); font-size: 13px; font-weight: 700; }
-.hp-c-dice-type { color: var(--text-2); font-size: 13px; font-weight: 700; }
-.hp-c-dice-svg { width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center; opacity: 0.75; flex-shrink: 0; }
-.hp-c-dice-svg :deep(svg) { width: 18px; height: 18px; }
 
 /* ── Main widget (frameless — the frame comes from the BaseTile/morph panel wrapper) ── */
 .hp-widget {
