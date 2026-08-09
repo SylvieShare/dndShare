@@ -34,6 +34,8 @@ echo "==> Вшиваем собранный фронт в бинарь (internal
 rm -rf internal/assets/dist
 mkdir -p internal/assets/dist
 cp -R "$FRONTEND_DIR/target/dist/." internal/assets/dist/
+# Сохраняем отслеживаемый плейсхолдер для чистого состояния Git после деплоя.
+printf '\n' > internal/assets/dist/.gitkeep
 
 echo "==> Кросс-компиляция статического бинаря (linux/amd64)"
 mkdir -p build
