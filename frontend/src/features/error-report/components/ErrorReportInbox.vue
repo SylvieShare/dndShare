@@ -8,10 +8,11 @@
           class="inbox-trigger"
           type="button"
           aria-expanded="false"
-          @click="expanded = true"
+          :disabled="!reports.length"
+          @click="expanded = reports.length > 0"
         >
-          <span class="inbox-trigger-icon" aria-hidden="true">⌁</span>
-          <span class="inbox-trigger-label">Заявки</span>
+          <span class="inbox-trigger-icon" aria-hidden="true">{{ reports.length ? '⌁' : '✓' }}</span>
+          <span class="inbox-trigger-label">{{ reports.length ? 'Заявки' : 'Список пуст' }}</span>
           <span v-if="attentionCount" class="inbox-count">{{ attentionCount }}</span>
         </button>
 
@@ -254,6 +255,10 @@ async function loadReports() {
     if (nextPayload !== lastReportsPayload) {
       reports.value = nextReports
       lastReportsPayload = nextPayload
+      if (!nextReports.length) {
+        expanded.value = false
+        closeDetails()
+      }
     }
     loadError.value = ''
     if (activeReportId.value && !activeReport.value) closeDetails()
@@ -322,6 +327,7 @@ async function archiveReport(report) {
     await archiveReviewErrorReport(report.id)
     reports.value = reports.value.filter(item => item.id !== report.id)
     lastReportsPayload = JSON.stringify(reports.value)
+    if (!reports.value.length) expanded.value = false
     if (activeReportId.value === report.id) closeDetails()
   } catch {
     loadError.value = `Не удалось архивировать заявку #${report.id}`
@@ -390,6 +396,17 @@ onBeforeUnmount(stopPolling)
   font-size: 12px;
   font-weight: 700;
   backdrop-filter: blur(12px);
+}
+
+.inbox-trigger:disabled {
+  border-color: var(--border);
+  color: var(--text-muted);
+  cursor: default;
+}
+
+.inbox-trigger:disabled .inbox-trigger-icon {
+  background: color-mix(in srgb, var(--success) 14%, transparent);
+  color: var(--success);
 }
 
 .inbox-trigger-icon {
