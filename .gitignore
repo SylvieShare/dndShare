@@ -12,3 +12,4 @@ dndshare.log
 /frontend/node/
 /docs/*.pdf
 /.claude/settings.local.json
+/.idea/
