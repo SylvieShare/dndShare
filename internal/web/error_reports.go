@@ -22,6 +22,7 @@ func (s *Server) routesErrorReports(mux *http.ServeMux) {
 	mux.HandleFunc("GET /api/admin-panel/error-reports/{id}/screenshot", s.handleAdminErrorReportScreenshot)
 	mux.HandleFunc("PATCH /api/admin-panel/error-reports/{id}/approval", s.handleAdminSetErrorReportApproval)
 	mux.HandleFunc("POST /api/admin-panel/error-reports/{id}/messages", s.handleAdminAnswerErrorReport)
+	mux.HandleFunc("POST /api/admin-panel/error-reports/{id}/reopen", s.handleAdminReopenErrorReport)
 	mux.HandleFunc("DELETE /api/admin-panel/error-reports/{id}", s.handleAdminDeleteErrorReport)
 }
 
@@ -245,6 +246,27 @@ func (s *Server) handleAdminAnswerErrorReport(w http.ResponseWriter, r *http.Req
 		return
 	}
 	writeJSON(w, http.StatusCreated, created)
+}
+
+func (s *Server) handleAdminReopenErrorReport(w http.ResponseWriter, r *http.Request) {
+	if _, ok := s.requireRole(w, r, RoleAdmin); !ok {
+		return
+	}
+	id, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
+	if err != nil || id <= 0 {
+		badRequest(w, "bad id")
+		return
+	}
+	reopened, err := s.store.ReopenErrorReport(r.Context(), id)
+	if err != nil {
+		serverError(w, err)
+		return
+	}
+	if !reopened {
+		notFound(w, "Архивная заявка не найдена")
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]string{"status": store.ErrorReportStatusOpen})
 }
 
 func normalizeErrorReportMessage(message string) (string, error) {

@@ -25,7 +25,7 @@ Read tools (always on):
 - `handbook_suggest_types(sourceId?)` — suggest types.
 - `handbook_suggests(typeId)` — base suggests of a type.
 - `handbook_suggests_search(q, limit?)` — base suggests by value.
-- `error_reports_list(limit?, offset?)` — actionable admin-approved page error reports newest first, including description, URL, selected element JSON, optional reporter, screenshot metadata, feedback history, and creation time. Unapproved rows and reports waiting for an admin answer are not exposed; answering makes a report visible again.
+- `error_reports_list(limit?, offset?)` — actionable open, admin-approved page error reports newest first, including description, URL, selected element JSON, optional reporter, screenshot metadata, feedback history, lifecycle fields, and creation time. Resolved/unapproved rows and reports waiting for an admin answer are not exposed; answering or reopening makes an open report visible again.
 - `error_report_screenshot(id)` — fetch one attached screenshot for an approved report as base64 plus its MIME type.
 
 Write tools (gated, see below):
@@ -36,13 +36,14 @@ Write tools (gated, see below):
 - `handbook_suggest_update(typeId, id, value, code?, color?, desc?)` — admin update; preserves existing svg.
 - `handbook_suggest_set_svg(typeId, id, svg)` — admin set/replace the suggest icon. `svg` is raw `<svg>` markup (empty string clears it); stores it in `svg_storage`, repoints `suggest.svg_id`, deletes the old svg row. Validates `<svg>` presence and 512 KB max.
 - `handbook_suggest_delete(typeId, id)` — admin delete.
-- `error_report_delete(id)` — delete one approved, handled page error report.
+- `error_report_resolve(id, resolution, commitSha?)` — archive one successfully deployed fix, preserving its resolution and commit SHA in admin history.
+- `error_report_delete(id)` — deprecated compatibility alias; archives rather than physically deleting.
 - `error_report_question_create(id, question)` — append a concrete AI question for an approved report. The report is then hidden from `error_reports_list` until an administrator answers in the admin panel.
 - `error_report_lock_acquire(ttlMinutes?)` — atomically acquire the singleton automation lease; returns an owner token only when `acquired = true`.
 - `error_report_lock_renew(token, ttlMinutes?)` — extend a still-active lease owned by the token.
 - `error_report_lock_release(token)` — release the lease in the scheduled run's final cleanup step.
 
-Handbook writes run as a synthetic `HANDBOOK_ADMIN` (repositories called with `isAdmin = true`, `userId = 0`). Creates always produce **base** records (`user_id = NULL`). Error-report deletion and AI feedback use the report id directly but succeed only for an approved row. Lease mutation and all other write tools require `MCP_WRITE_ENABLED=true`.
+Handbook writes run as a synthetic `HANDBOOK_ADMIN` (repositories called with `isAdmin = true`, `userId = 0`). Creates always produce **base** records (`user_id = NULL`). Error-report resolution and AI feedback use the report id directly but succeed only for an open approved row. Lease mutation and all other write tools require `MCP_WRITE_ENABLED=true`.
 
 ## Auth
 

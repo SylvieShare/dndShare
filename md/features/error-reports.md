@@ -24,24 +24,26 @@ The public submit endpoint accepts both guests and signed-in users. A valid cook
 | GET | `/api/admin-panel/error-reports/{id}/screenshot` | `ADMIN` | Return the raw attached image |
 | PATCH | `/api/admin-panel/error-reports/{id}/approval` | `ADMIN` | Set `{ approved: boolean }` for MCP visibility |
 | POST | `/api/admin-panel/error-reports/{id}/messages` | `ADMIN` | Answer the latest AI question with `{ message }` |
-| DELETE | `/api/admin-panel/error-reports/{id}` | `ADMIN` | Delete one handled report |
+| POST | `/api/admin-panel/error-reports/{id}/reopen` | `ADMIN` | Return an archived report to the active queue |
+| DELETE | `/api/admin-panel/error-reports/{id}` | `ADMIN` | Permanently delete one report and its conversation |
 
 Limits: description and feedback messages are 1–4000 characters, page URL is 1–2048 characters, and element JSON is up to 16 KiB and must contain a non-empty `selector`. Screenshots accept JPEG, PNG, or WebP data URLs up to 2 MiB decoded.
 
 ## Storage
 
-`dndshare.error_report` stores `description`, `page_url`, `element jsonb`, optional `user_id`, optional `screenshot bytea` + MIME type, `approved`, and `created_at`. `dndshare.error_report_message` stores the ordered AI/admin conversation for a report and cascades on report deletion. An admin message records the answering user when available. The tables and columns are created idempotently from `internal/store/schema.sql`; old rows simply have no screenshot, no conversation, and start unapproved. The reporter FK is null for guests and the list joins `users.login` for signed-in reporters.
+`dndshare.error_report` stores `description`, `page_url`, `element jsonb`, optional `user_id`, optional `screenshot bytea` + MIME type, `approved`, and lifecycle fields: `status` (`OPEN`/`RESOLVED`), optional `resolution`, deployed `resolved_commit_sha`, and `resolved_at`. `dndshare.error_report_message` stores the ordered AI/admin conversation for a report and cascades only on permanent report deletion. An admin message records the answering user when available. The tables and columns are created idempotently from `internal/store/schema.sql`; old rows simply have no screenshot or conversation and remain `OPEN`. The reporter FK is null for guests and the list joins `users.login` for signed-in reporters.
 
 ## Admin and MCP
 
-The **«Ошибки страниц»** admin tab displays the description, page URL, reporter, selector, short element text, expandable full JSON, and the AI/admin feedback thread. When the AI asks a question, the card is marked as waiting and shows an admin reply form. An admin checkbox controls whether each report is approved for MCP; unchecking it revokes MCP visibility again. The tab deletes reports one at a time.
+The **«Ошибки страниц»** admin tab displays the description, page URL, reporter, selector, short element text, expandable full JSON, and the AI/admin feedback thread. Filters separate active, waiting, and archived reports. When the AI asks a question, the card is marked as waiting and shows an admin reply form. A resolved card displays its resolution, time, and commit SHA and can be returned to work. Permanent deletion remains an explicit admin-only action for spam or invalid records.
 
 MCP exposes:
 
-- `error_reports_list(limit?, offset?)` — read actionable approved reports with the normal MCP token; includes the complete `messages` history plus `userId`, `userLogin`, `approved`, `hasScreenshot`, and `screenshotContentType` metadata. A report whose latest message is an unanswered AI question is omitted; an admin answer makes it visible again.
+- `error_reports_list(limit?, offset?)` — read actionable `OPEN` approved reports with the normal MCP token; includes the complete `messages` history plus lifecycle, reporter, and screenshot metadata. Resolved reports and reports whose latest message is an unanswered AI question are omitted; an admin answer or explicit reopen makes an open report visible again.
 - `error_report_screenshot(id)` — read one attached image for an approved report as `{ id, contentType, base64 }` without bloating the list response.
 - `error_report_question_create(id, question)` — append a concrete AI question and hide the report from subsequent MCP lists until an admin answers; gated by `MCP_WRITE_ENABLED`.
-- `error_report_delete(id)` — delete one approved report; gated by `MCP_WRITE_ENABLED`.
+- `error_report_resolve(id, resolution, commitSha?)` — archive a successfully deployed fix while preserving the report, conversation, resolution, and commit; gated by `MCP_WRITE_ENABLED`.
+- `error_report_delete(id)` — deprecated compatibility alias that now archives instead of physically deleting.
 
 ## Scheduled automation lease
 

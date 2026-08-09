@@ -77,15 +77,35 @@ CREATE TABLE IF NOT EXISTS dndshare.error_report (
     screenshot_content_type varchar(50) NULL,
     user_id     int8 NULL REFERENCES dndshare.users(id) ON DELETE SET NULL,
     approved    bool DEFAULT false NOT NULL,
+    status      varchar(20) DEFAULT 'OPEN' NOT NULL,
+    resolution  text NULL,
+    resolved_commit_sha varchar(64) NULL,
+    resolved_at timestamptz NULL,
     created_at  timestamptz DEFAULT now() NOT NULL,
     CONSTRAINT error_report_pk PRIMARY KEY (id)
 );
 ALTER TABLE dndshare.error_report ADD COLUMN IF NOT EXISTS screenshot bytea NULL;
 ALTER TABLE dndshare.error_report ADD COLUMN IF NOT EXISTS screenshot_content_type varchar(50) NULL;
 ALTER TABLE dndshare.error_report ADD COLUMN IF NOT EXISTS approved bool DEFAULT false NOT NULL;
+ALTER TABLE dndshare.error_report ADD COLUMN IF NOT EXISTS status varchar(20) DEFAULT 'OPEN' NOT NULL;
+ALTER TABLE dndshare.error_report ADD COLUMN IF NOT EXISTS resolution text NULL;
+ALTER TABLE dndshare.error_report ADD COLUMN IF NOT EXISTS resolved_commit_sha varchar(64) NULL;
+ALTER TABLE dndshare.error_report ADD COLUMN IF NOT EXISTS resolved_at timestamptz NULL;
+DO $$ BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_constraint
+        WHERE conname = 'error_report_status_check'
+          AND conrelid = 'dndshare.error_report'::regclass
+    ) THEN
+        ALTER TABLE dndshare.error_report
+            ADD CONSTRAINT error_report_status_check CHECK (status IN ('OPEN', 'RESOLVED'));
+    END IF;
+END $$;
 CREATE INDEX IF NOT EXISTS idx_error_report_created_at ON dndshare.error_report USING btree (created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_error_report_user_id ON dndshare.error_report USING btree (user_id);
 CREATE INDEX IF NOT EXISTS idx_error_report_approved_created_at ON dndshare.error_report USING btree (created_at DESC) WHERE approved;
+CREATE INDEX IF NOT EXISTS idx_error_report_open_approved_created_at
+    ON dndshare.error_report USING btree (created_at DESC) WHERE approved AND status = 'OPEN';
 
 CREATE TABLE IF NOT EXISTS dndshare.error_report_message (
     id             bigserial NOT NULL,

@@ -26,6 +26,8 @@ dropped. **Never create new objects in `base`.**
 - nullable `screenshot bytea` and `screenshot_content_type varchar(50)`;
 - nullable `user_id` referencing `users(id)` with `ON DELETE SET NULL`;
 - `approved bool NOT NULL DEFAULT false`, which gates MCP visibility;
+- `status varchar(20) NOT NULL DEFAULT 'OPEN'` (`OPEN` or `RESOLVED`);
+- nullable `resolution`, `resolved_commit_sha`, and `resolved_at` archive successful fixes without deleting their history;
 - `created_at timestamptz`.
 
 Indexes cover newest-first listing (`created_at DESC`), approved newest-first MCP listing, and the optional reporter (`user_id`). See `md/features/error-reports.md` for the API and payload.
@@ -38,7 +40,7 @@ Indexes cover newest-first listing (`created_at DESC`), approved newest-first MC
 - nullable `admin_user_id` identifies the answering administrator;
 - `created_at` and the monotonic `id` define conversation order.
 
-For MCP listing, a report is actionable only when it is approved and its latest message is not an unanswered `AI` question. A following `ADMIN` message returns it to the MCP queue.
+For MCP listing, a report is actionable only when it is approved, has `status = 'OPEN'`, and its latest message is not an unanswered `AI` question. A following `ADMIN` message returns an open report to the MCP queue; resolving archives it, and reopening clears resolution metadata.
 
 `dndshare.error_report_automation_lock` is a singleton lease row (`id = 1`) used by scheduled MCP consumers. It stores an unguessable owner token plus acquisition and expiration timestamps. Atomic `INSERT ... ON CONFLICT DO UPDATE ... WHERE expires_at <= now()` prevents concurrent automation runs; expired leases are replaceable.
 

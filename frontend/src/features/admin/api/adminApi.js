@@ -47,3 +47,7 @@ export function setErrorReportApproval(id, approved) {
 export function answerErrorReport(id, message) {
   return fetchPost(`/admin-panel/error-reports/${id}/messages`, { message })
 }
+
+export function reopenErrorReport(id) {
+  return fetchPost(`/admin-panel/error-reports/${id}/reopen`)
+}

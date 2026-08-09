@@ -337,14 +337,53 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 		if err != nil {
 			return nil, err
 		}
-		deleted, err := s.store.DeleteApprovedErrorReport(ctx, id)
+		resolution := "Архивировано через устаревший MCP-инструмент error_report_delete"
+		resolved, err := s.store.ResolveApprovedErrorReport(ctx, id, resolution, nil)
 		if err != nil {
 			return nil, err
 		}
-		if !deleted {
+		if !resolved {
 			return nil, fmt.Errorf("error report %d not found", id)
 		}
-		return fmt.Sprintf("deleted error report %d", id), nil
+		return fmt.Sprintf("archived error report %d", id), nil
+
+	case "error_report_resolve":
+		if err := s.mcpRequireWrite(); err != nil {
+			return nil, err
+		}
+		id, err := argInt64(args, "id")
+		if err != nil {
+			return nil, err
+		}
+		resolution, err := argString(args, "resolution")
+		if err != nil {
+			return nil, err
+		}
+		resolution, err = normalizeErrorReportMessage(resolution)
+		if err != nil {
+			return nil, err
+		}
+		commitSHA, err := argStringOpt(args, "commitSha")
+		if err != nil {
+			return nil, err
+		}
+		commitSHA, err = normalizeErrorReportCommitSHA(commitSHA)
+		if err != nil {
+			return nil, err
+		}
+		resolved, err := s.store.ResolveApprovedErrorReport(ctx, id, resolution, commitSHA)
+		if err != nil {
+			return nil, err
+		}
+		if !resolved {
+			return nil, fmt.Errorf("open approved error report %d not found", id)
+		}
+		return map[string]any{
+			"id":         id,
+			"status":     store.ErrorReportStatusResolved,
+			"resolution": resolution,
+			"commitSha":  commitSHA,
+		}, nil
 
 	case "error_report_question_create":
 		if err := s.mcpRequireWrite(); err != nil {
@@ -749,6 +788,25 @@ func parseMcpData(s string) (json.RawMessage, error) {
 	return raw, nil
 }
 
+func normalizeErrorReportCommitSHA(value *string) (*string, error) {
+	if value == nil {
+		return nil, nil
+	}
+	trimmed := strings.TrimSpace(*value)
+	if trimmed == "" {
+		return nil, nil
+	}
+	if len(trimmed) < 7 || len(trimmed) > 64 {
+		return nil, errors.New("commitSha must contain 7..64 hexadecimal characters")
+	}
+	for _, char := range trimmed {
+		if !((char >= '0' && char <= '9') || (char >= 'a' && char <= 'f') || (char >= 'A' && char <= 'F')) {
+			return nil, errors.New("commitSha must contain 7..64 hexadecimal characters")
+		}
+	}
+	return &trimmed, nil
+}
+
 // --- tools/list schema ---
 
 func mcpToolDefs() []map[string]any {
@@ -803,7 +861,7 @@ func mcpToolDefs() []map[string]any {
 				"limit": intP("Max rows, 1..100 (default 20)"),
 			}, "q")),
 		tool("error_reports_list",
-			"List actionable admin-approved page error reports, newest first. Unapproved reports and reports whose latest feedback message is an unanswered AI question are not exposed. A report becomes visible again after an admin answer. Includes the full feedback message history, description, page URL, selected element metadata, userId/userLogin (null for guests), screenshot metadata, and creation time.",
+			"List actionable open admin-approved page error reports, newest first. Resolved/unapproved reports and reports whose latest feedback message is an unanswered AI question are not exposed. A report becomes visible again after an admin answer or explicit reopen. Includes the full feedback history, status/resolution metadata, description, page URL, selected element metadata, reporter, screenshot metadata, and creation time.",
 			schema(map[string]any{
 				"limit":  intP("Max rows, 1..500 (default 100)"),
 				"offset": intP("Offset for pagination (default 0)"),
@@ -825,10 +883,17 @@ func mcpToolDefs() []map[string]any {
 				"token": strP("Ownership token returned by error_report_lock_acquire"),
 			}, "token")),
 		tool("error_report_delete",
-			"Delete one admin-approved page error report after it has been handled. Requires MCP write operations to be enabled.",
+			"Deprecated compatibility alias: archive one open approved report as resolved instead of physically deleting it. Prefer error_report_resolve so the resolution and commit can be recorded. Requires MCP write operations to be enabled.",
 			schema(map[string]any{
 				"id": intP("Error report id"),
 			}, "id")),
+		tool("error_report_resolve",
+			"Archive one successfully fixed open approved report. Records a concise resolution and optional deployed commit SHA; the report remains visible in admin history but is removed from the actionable MCP queue. Call only after successful tests, push, and deploy. Requires MCP write operations to be enabled.",
+			schema(map[string]any{
+				"id":         intP("Error report id"),
+				"resolution": strP("Concise root cause and deployed fix, 1..4000 characters"),
+				"commitSha":  strP("Optional deployed Git commit SHA, 7..64 hexadecimal characters"),
+			}, "id", "resolution")),
 		tool("error_report_question_create",
 			"Ask an admin a question when an approved error report cannot be handled confidently. After this call the report is hidden from error_reports_list until an admin answers. Ask one concrete question that explains exactly which missing fact or decision blocks the fix. Requires MCP write operations to be enabled.",
 			schema(map[string]any{

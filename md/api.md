@@ -56,7 +56,8 @@ Do not spread endpoint strings directly through components when adding new behav
 - `GET /api/admin-panel/error-reports/{id}/screenshot` — `ADMIN` raw attached image.
 - `PATCH /api/admin-panel/error-reports/{id}/approval` — `ADMIN` sets `{ approved: boolean }`, controlling MCP visibility.
 - `POST /api/admin-panel/error-reports/{id}/messages` — `ADMIN` answers the latest AI question with `{ message }`; the report becomes actionable through MCP again.
-- `DELETE /api/admin-panel/error-reports/{id}` — `ADMIN` deletion of one report.
+- `POST /api/admin-panel/error-reports/{id}/reopen` — `ADMIN` returns an archived report to the active queue and clears its resolution metadata.
+- `DELETE /api/admin-panel/error-reports/{id}` — `ADMIN` permanently deletes one report and its conversation; normal MCP completion archives instead.
 
 See `md/features/error-reports.md` for the selector payload and validation limits.
 

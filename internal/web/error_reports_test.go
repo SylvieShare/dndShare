@@ -66,3 +66,22 @@ func TestNormalizeErrorReportMessage(t *testing.T) {
 		t.Fatal("expected oversized message to fail")
 	}
 }
+
+func TestNormalizeErrorReportCommitSHA(t *testing.T) {
+	value := " 43485ee "
+	sha, err := normalizeErrorReportCommitSHA(&value)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if sha == nil || *sha != "43485ee" {
+		t.Fatalf("unexpected normalized sha: %v", sha)
+	}
+	invalid := "not-a-sha"
+	if _, err := normalizeErrorReportCommitSHA(&invalid); err == nil {
+		t.Fatal("expected non-hex commit sha to fail")
+	}
+	empty := "   "
+	if sha, err := normalizeErrorReportCommitSHA(&empty); err != nil || sha != nil {
+		t.Fatalf("expected empty sha to become nil, got %v, %v", sha, err)
+	}
+}

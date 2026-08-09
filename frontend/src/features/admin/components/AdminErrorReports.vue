@@ -10,19 +10,35 @@
       </button>
     </div>
 
+    <div v-if="reports.length" class="report-filters">
+      <button
+        v-for="filter in filters"
+        :key="filter.value"
+        type="button"
+        :class="{ active: activeFilter === filter.value }"
+        @click="activeFilter = filter.value"
+      >
+        {{ filter.label }} <span>{{ filter.count }}</span>
+      </button>
+    </div>
+
     <div v-if="error" class="state-msg error">{{ error }}</div>
     <div v-if="loading && !reports.length" class="state-msg">Загрузка...</div>
     <div v-else-if="!reports.length && !error" class="state-msg">Заявок нет</div>
-    <div v-else-if="reports.length" class="reports-list">
-      <article v-for="report in reports" :key="report.id" class="report-card">
+    <div v-else-if="!filteredReports.length && !error" class="state-msg">В этом разделе заявок нет</div>
+    <div v-else-if="filteredReports.length" class="reports-list">
+      <article v-for="report in filteredReports" :key="report.id" class="report-card">
         <div class="report-head">
           <div class="report-identity">
             <span class="report-id">#{{ report.id }}</span>
             <span class="report-time">{{ formatTime(report.createdAt) }}</span>
             <span class="report-user">{{ report.userLogin || 'Гость' }}</span>
+            <span v-if="report.status === 'RESOLVED'" class="status-badge resolved">В архиве</span>
+            <span v-else-if="report.waitingForAnswer" class="status-badge waiting">Ждёт ответа</span>
+            <span v-else class="status-badge open">В работе</span>
           </div>
           <div class="report-actions">
-            <label class="approval-toggle" :class="{ approved: report.approved }">
+            <label v-if="report.status !== 'RESOLVED'" class="approval-toggle" :class="{ approved: report.approved }">
               <input
                 type="checkbox"
                 :checked="report.approved"
@@ -32,12 +48,21 @@
               <span>{{ report.approved ? 'Одобрено для MCP' : 'Одобрить для MCP' }}</span>
             </label>
             <button
+              v-if="report.status === 'RESOLVED'"
+              class="reopen-button"
+              type="button"
+              :disabled="reopeningIds.has(report.id)"
+              @click="onReopen(report)"
+            >
+              {{ reopeningIds.has(report.id) ? 'Возврат…' : 'Вернуть в работу' }}
+            </button>
+            <button
               class="delete-button"
               type="button"
               :disabled="deletingIds.has(report.id)"
               @click="onDelete(report)"
             >
-              {{ deletingIds.has(report.id) ? 'Удаление…' : 'Удалить' }}
+              {{ deletingIds.has(report.id) ? 'Удаление…' : 'Удалить навсегда' }}
             </button>
           </div>
         </div>
@@ -73,6 +98,15 @@
           <summary>Все данные элемента</summary>
           <pre>{{ formatElement(report.element) }}</pre>
         </details>
+
+        <section v-if="report.status === 'RESOLVED'" class="report-resolution">
+          <div class="resolution-head">
+            <strong>Результат исправления</strong>
+            <span>{{ formatTime(report.resolvedAt) }}</span>
+          </div>
+          <div class="resolution-text">{{ report.resolution || 'Описание результата не указано' }}</div>
+          <code v-if="report.resolvedCommitSha">commit {{ report.resolvedCommitSha }}</code>
+        </section>
 
         <section class="report-feedback">
           <div class="feedback-head">
@@ -119,8 +153,8 @@
 </template>
 
 <script setup>
-import { onMounted, reactive, ref } from 'vue'
-import { answerErrorReport, deleteErrorReport, getErrorReports, setErrorReportApproval } from '../api/adminApi'
+import { computed, onMounted, reactive, ref } from 'vue'
+import { answerErrorReport, deleteErrorReport, getErrorReports, reopenErrorReport, setErrorReportApproval } from '../api/adminApi'
 
 const reports = ref([])
 const loading = ref(true)
@@ -128,7 +162,27 @@ const error = ref('')
 const deletingIds = reactive(new Set())
 const approvingIds = reactive(new Set())
 const answeringIds = reactive(new Set())
+const reopeningIds = reactive(new Set())
 const replyDrafts = reactive({})
+const activeFilter = ref('OPEN')
+
+const filters = computed(() => [
+  { value: 'OPEN', label: 'В работе', count: reports.value.filter(report => report.status === 'OPEN' && !report.waitingForAnswer).length },
+  { value: 'WAITING', label: 'Ждут ответа', count: reports.value.filter(report => report.status === 'OPEN' && report.waitingForAnswer).length },
+  { value: 'RESOLVED', label: 'Архив', count: reports.value.filter(report => report.status === 'RESOLVED').length },
+  { value: 'ALL', label: 'Все', count: reports.value.length },
+])
+
+const filteredReports = computed(() => {
+  if (activeFilter.value === 'ALL') return reports.value
+  if (activeFilter.value === 'WAITING') {
+    return reports.value.filter(report => report.status === 'OPEN' && report.waitingForAnswer)
+  }
+  if (activeFilter.value === 'RESOLVED') {
+    return reports.value.filter(report => report.status === 'RESOLVED')
+  }
+  return reports.value.filter(report => report.status === 'OPEN' && !report.waitingForAnswer)
+})
 
 async function load() {
   loading.value = true
@@ -144,7 +198,7 @@ async function load() {
 }
 
 async function onDelete(report) {
-  if (!confirm(`Удалить заявку #${report.id}?`)) return
+  if (!confirm(`Удалить заявку #${report.id} навсегда вместе с перепиской?`)) return
   deletingIds.add(report.id)
   try {
     const response = await deleteErrorReport(report.id)
@@ -188,6 +242,24 @@ async function onAnswer(report) {
     error.value = `Не удалось ответить по заявке #${report.id}`
   } finally {
     answeringIds.delete(report.id)
+  }
+}
+
+async function onReopen(report) {
+  if (reopeningIds.has(report.id)) return
+  error.value = ''
+  reopeningIds.add(report.id)
+  try {
+    await reopenErrorReport(report.id)
+    report.status = 'OPEN'
+    report.resolution = null
+    report.resolvedCommitSha = null
+    report.resolvedAt = null
+    activeFilter.value = 'OPEN'
+  } catch {
+    error.value = `Не удалось вернуть заявку #${report.id} в работу`
+  } finally {
+    reopeningIds.delete(report.id)
   }
 }
 
@@ -236,7 +308,8 @@ onMounted(load)
 }
 
 .refresh-button,
-.delete-button {
+.delete-button,
+.reopen-button {
   flex-shrink: 0;
   border-radius: 7px;
   cursor: pointer;
@@ -260,7 +333,15 @@ onMounted(load)
 }
 
 .delete-button:hover:not(:disabled) { background: rgba(224, 85, 85, 0.2); }
-.refresh-button:disabled, .delete-button:disabled { cursor: not-allowed; opacity: 0.45; }
+
+.reopen-button {
+  border: 1px solid rgba(100, 183, 123, 0.3);
+  background: rgba(100, 183, 123, 0.1);
+  color: #75c58b;
+}
+
+.reopen-button:hover:not(:disabled) { background: rgba(100, 183, 123, 0.18); }
+.refresh-button:disabled, .delete-button:disabled, .reopen-button:disabled { cursor: not-allowed; opacity: 0.45; }
 
 .state-msg {
   padding: 16px 0;
@@ -269,6 +350,31 @@ onMounted(load)
 }
 
 .state-msg.error { color: #e87575; }
+
+.report-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 16px;
+}
+
+.report-filters button {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-1);
+  color: var(--text-2);
+  cursor: pointer;
+  font: inherit;
+  font-size: 11px;
+  padding: 6px 10px;
+}
+
+.report-filters button span { color: var(--text-muted); }
+.report-filters button.active {
+  border-color: rgba(141, 126, 232, 0.5);
+  background: rgba(141, 126, 232, 0.14);
+  color: #c2b8ff;
+}
 
 .reports-list {
   display: flex;
@@ -296,6 +402,17 @@ onMounted(load)
   flex-shrink: 0;
   gap: 10px;
 }
+
+.status-badge {
+  padding: 3px 7px;
+  border-radius: 999px;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.status-badge.open { background: rgba(141, 126, 232, 0.14); color: #c2b8ff; }
+.status-badge.waiting { background: rgba(232, 184, 90, 0.14); color: #e8b85a; }
+.status-badge.resolved { background: rgba(100, 183, 123, 0.14); color: #75c58b; }
 
 .approval-toggle {
   display: inline-flex;
@@ -422,6 +539,39 @@ onMounted(load)
   font-size: 11px;
   white-space: pre-wrap;
   word-break: break-word;
+}
+
+.report-resolution {
+  margin-top: 14px;
+  padding: 11px 12px;
+  border: 1px solid rgba(100, 183, 123, 0.25);
+  border-radius: 8px;
+  background: rgba(100, 183, 123, 0.07);
+}
+
+.resolution-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--text-muted);
+  font-size: 10px;
+}
+
+.resolution-head strong { color: #75c58b; }
+
+.resolution-text {
+  margin-top: 7px;
+  color: var(--text-1);
+  font-size: 13px;
+  line-height: 1.45;
+  white-space: pre-wrap;
+}
+
+.report-resolution code {
+  display: inline-block;
+  margin-top: 7px;
+  color: #c2b8ff;
+  font-size: 11px;
 }
 
 .report-feedback {
