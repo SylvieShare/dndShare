@@ -27,3 +27,20 @@ describe('buildCharacterData skill choices', () => {
     expect(result.data.values.STR.skills['1'].up).toBe(1)
   })
 })
+
+describe('buildCharacterData starting equipment', () => {
+  it('stores PHB rows without catalog ids as editable custom inventory items', () => {
+    const result = buildCharacterData({
+      race: selection(1, 'Человек'),
+      charClass: selection(2, 'Плут'),
+      equipment: [{ id: null, name: 'Кинжал', count: 2 }],
+      suggestValue: () => '',
+    })
+
+    expect(result.data.values.items.sections[0].items[0]).toMatchObject({
+      id: null,
+      count: 2,
+      override: { name: 'Кинжал' },
+    })
+  })
+})

@@ -6,6 +6,12 @@ import { SKILL_BY_STAT, buildCharacterData } from '@/features/character-editor/s
 import { STAT_KEYS, SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
 import { extractGrants } from '@/features/character-editor/settings/dnd/creation/grants'
 import { featuresForBinding } from '@/features/character-editor/settings/dnd/creation/progression'
+import {
+  mergeEquipment,
+  selectedStartingEquipment,
+  startingEquipmentComplete,
+  startingEquipmentProfile,
+} from '@/features/character-editor/settings/dnd/creation/startingEquipment'
 import { useSuggestStore } from '@/stores/suggest'
 
 const RACE_TYPE = 8
@@ -79,6 +85,7 @@ export function useDndCreateWizard() {
     choices: {},
     background: null,
     bgLangIds: [],
+    classEquipmentChoices: {},
     equipment: [],
     persona: { alignment: '', traits: '', ideals: '', bonds: '', flaws: '', appearance: '', age: '', height: '', weight: '', eyes: '', hair: '', skin: '' },
   })
@@ -122,6 +129,7 @@ export function useDndCreateWizard() {
     if (hydrating) return
     state.subclass = null
     state.skillIds = []
+    state.classEquipmentChoices = {}
     subclasses.value = []
     if (!c) return
     const classId = c.id
@@ -249,7 +257,31 @@ export function useDndCreateWizard() {
   function toggleBgLang(id) { toggleFromList(state.bgLangIds, id, bgLangLimit.value) }
   const bgLangsComplete = computed(() => !grants.value.bgLangChoice || state.bgLangIds.length === bgLangLimit.value)
 
-  // ─── Equipment: starting items picked into the inventory ───────────────────
+  // ─── Equipment: PHB class choices + optional handbook additions ────────────
+  const classEquipmentProfile = computed(() => startingEquipmentProfile(state.charClass))
+  const classEquipmentComplete = computed(() => startingEquipmentComplete(classEquipmentProfile.value, state.classEquipmentChoices))
+  const classEquipment = computed(() => selectedStartingEquipment(classEquipmentProfile.value, state.classEquipmentChoices))
+  const allEquipment = computed(() => mergeEquipment(classEquipment.value, state.equipment))
+
+  function selectEquipmentOption(groupId, optionId) {
+    state.classEquipmentChoices = {
+      ...state.classEquipmentChoices,
+      [groupId]: { optionId, picks: {} },
+    }
+  }
+  function setEquipmentPick(groupId, optionId, pickId, index, value) {
+    const current = state.classEquipmentChoices[groupId]
+    const picks = current?.optionId === optionId ? { ...(current.picks || {}) } : {}
+    const values = [...(picks[pickId] || [])]
+    if (value) values[index] = value
+    else values[index] = ''
+    picks[pickId] = values
+    state.classEquipmentChoices = {
+      ...state.classEquipmentChoices,
+      [groupId]: { optionId, picks },
+    }
+  }
+
   function addEquipment(item, qty = 1) {
     if (!item?.id) return
     const n = Math.max(1, Math.floor(Number(qty) || 1))
@@ -482,7 +514,7 @@ export function useDndCreateWizard() {
       raceLangIds: state.raceLangIds.slice(),
       featIds: state.featIds.slice(),
       bgLangIds: state.bgLangIds.slice(),
-      equipment: state.equipment.map((e) => ({ ...e })),
+      equipment: allEquipment.value.map((e) => ({ ...e })),
       persona: { ...state.persona },
       skillIds: state.skillIds.slice(),
       spellIds: state.spellIds.slice(),
@@ -502,8 +534,8 @@ export function useDndCreateWizard() {
   // ─── Persistence (localStorage) — survives reload; going back keeps forward picks ─
   const STORAGE_KEY = 'dnd-create-wizard-v1'
   function serialize() {
-    const { step, version, name, race, subrace, charClass, subclass, raceVariant, statMethod, scores, rollPool, asiChoice, raceSkillIds, raceLangIds, featIds, skillIds, spellIds, choices, background, bgLangIds, equipment, persona } = state
-    return { step, version, name, race, subrace, charClass, subclass, raceVariant, statMethod, scores, rollPool, asiChoice, raceSkillIds, raceLangIds, featIds, skillIds, spellIds, choices, background, bgLangIds, equipment, persona }
+    const { step, version, name, race, subrace, charClass, subclass, raceVariant, statMethod, scores, rollPool, asiChoice, raceSkillIds, raceLangIds, featIds, skillIds, spellIds, choices, background, bgLangIds, classEquipmentChoices, equipment, persona } = state
+    return { step, version, name, race, subrace, charClass, subclass, raceVariant, statMethod, scores, rollPool, asiChoice, raceSkillIds, raceLangIds, featIds, skillIds, spellIds, choices, background, bgLangIds, classEquipmentChoices, equipment, persona }
   }
   function persist() {
     if (hydrating) return
@@ -519,7 +551,7 @@ export function useDndCreateWizard() {
       charClass: null, subclass: null, raceVariant: null, statMethod: 'array',
       scores: emptyScores(), rollPool: [], asiChoice: [],
       raceSkillIds: [], raceLangIds: [], featIds: [], skillIds: [], spellIds: [], choices: {},
-      background: null, bgLangIds: [], equipment: [],
+      background: null, bgLangIds: [], classEquipmentChoices: {}, equipment: [],
       persona: { alignment: '', traits: '', ideals: '', bonds: '', flaws: '', appearance: '', age: '', height: '', weight: '', eyes: '', hair: '', skin: '' },
     })
     spellPool.value = []
@@ -564,6 +596,8 @@ export function useDndCreateWizard() {
     featOptions, featLimit, toggleFeat, featComplete,
     // background + equipment
     backgroundSkillNames, backgroundToolNames, bgLangOptions, bgLangLimit, toggleBgLang, bgLangsComplete,
+    classEquipmentProfile, classEquipmentComplete, classEquipment, allEquipment,
+    selectEquipmentOption, setEquipmentPick,
     addEquipment, removeEquipment, bumpEquipment,
     // persistence
     restore, clearPersist, reset,

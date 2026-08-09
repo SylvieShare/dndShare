@@ -92,14 +92,14 @@ const {
   scoresComplete, pointsLeft, skillLimit, spellsComplete,
   asiChoiceComplete, raceVariantsComplete,
   raceSkillsComplete, raceLangsComplete, featComplete,
-  raceChoicesComplete, classChoicesComplete, bgLangsComplete,
+  raceChoicesComplete, classChoicesComplete, classEquipmentComplete, bgLangsComplete,
 } = wz
 
 const confirmOpen = ref(false)
 const resetOpen = ref(false)
 function doReset() { resetOpen.value = false; reset() }
 const isComplete = computed(() =>
-  state.version === '2014' && !!state.race && !!state.charClass && !!state.background && !!state.name.trim() && scoresComplete.value)
+  state.version === '2014' && !!state.race && !!state.charClass && classEquipmentComplete.value && !!state.background && !!state.name.trim() && scoresComplete.value)
 
 const STEP_COMPONENTS = {
   version: StepVersion, race: StepRace, class: StepClass, background: StepBackground,
@@ -152,6 +152,7 @@ function validateStep(key) {
       if (skillLimit.value && state.skillIds.length !== skillLimit.value) return { ok: false, reason: `Навыки: ${state.skillIds.length} из ${skillLimit.value}` }
       if (!classChoicesComplete.value) return { ok: false, reason: 'Заверши выборы класса' }
       if (!spellsComplete.value) return { ok: false, reason: 'Слишком много заклинаний' }
+      if (!classEquipmentComplete.value) return { ok: false, reason: 'Выбери стартовое снаряжение' }
       return { ok: true }
     case 'background':
       if (!state.background) return { ok: false, reason: 'Выбери предысторию' }

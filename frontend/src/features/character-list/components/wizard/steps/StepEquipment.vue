@@ -1,12 +1,12 @@
 <template>
   <div class="step">
     <div class="sheet-section-title">Снаряжение</div>
-    <p class="hint">Добавь стартовые предметы из справочника — они попадут в инвентарь листа. Ниже — рекомендованное снаряжение класса и предыстории.</p>
+    <p class="hint">Классовое снаряжение уже выбрано на шаге «Класс». Здесь можно добавить снаряжение предыстории или любые другие предметы.</p>
 
-    <div v-if="classEquip || bgEquip" class="refs">
-      <div v-if="classEquip" class="ref">
-        <span class="ref-k">От класса</span>
-        <span class="ref-v">{{ classEquip }}</span>
+    <div v-if="classEquipment.length || bgEquip" class="refs">
+      <div v-if="classEquipment.length" class="ref">
+        <span class="ref-k">Выбрано от класса</span>
+        <span class="ref-v">{{ equipmentLabel(classEquipment) }}</span>
       </div>
       <div v-if="bgEquip" class="ref">
         <span class="ref-k">От предыстории</span>
@@ -49,13 +49,15 @@
 import { computed, inject, ref } from 'vue'
 import ItemPickerModal from '@/features/character-editor/components/ItemPickerModal.vue'
 
-const { state, addEquipment, removeEquipment, bumpEquipment } = inject('createWizard')
+const { state, classEquipment, addEquipment, removeEquipment, bumpEquipment } = inject('createWizard')
 
 const pickerOpen = ref(false)
 function onPick(item, qty = 1) { addEquipment(item, qty) }
 function stripHtml(s) { return String(s || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim() }
-const classEquip = computed(() => stripHtml(state.charClass?.data?.starting_equipment))
 const bgEquip = computed(() => stripHtml(state.background?.data?.equipment))
+function equipmentLabel(items) {
+  return items.map((entry) => entry.count > 1 ? `${entry.name} ×${entry.count}` : entry.name).join(', ')
+}
 </script>
 
 <style scoped>

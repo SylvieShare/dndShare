@@ -38,6 +38,7 @@
           <RichContent v-if="subclassAtCreation && subclassDesc" class="step-desc" :html="subclassDesc" />
         </template>
 
+        <StepClassEquipment class="cls-sub" />
         <StepSkills v-if="skillOptions.length" class="cls-sub" />
         <StepChoices v-if="classFeatureChoices.length" scope="class" class="cls-sub" />
         <StepSpells v-if="isCaster" class="cls-sub" />
@@ -51,6 +52,7 @@ import { computed, inject, ref } from 'vue'
 import RichContent from '@/shared/ui/RichContent'
 import SelectTile from '@/features/character-list/components/wizard/SelectTile.vue'
 import StepChoices from '@/features/character-list/components/wizard/steps/StepChoices.vue'
+import StepClassEquipment from '@/features/character-list/components/wizard/steps/StepClassEquipment.vue'
 import StepSkills from '@/features/character-list/components/wizard/steps/StepSkills.vue'
 import StepSpells from '@/features/character-list/components/wizard/steps/StepSpells.vue'
 import { classSummary, monogramOf } from '@/features/character-list/components/wizard/labels'

@@ -88,6 +88,7 @@ const wz = inject('createWizard')
 const {
   STATS, state, grants, mods, finalScores, maxHp, unarmoredAc, initiativeMod, spellDc,
   suggestValue, raceAbilities, classAbilities, featPool, spellPool, randomName, racialBonus,
+  allEquipment,
 } = wz
 
 const mono = computed(() => monogramOf(state.charClass?.name || state.race?.name || '?'))
@@ -210,8 +211,8 @@ const sections = computed(() => {
     if (spellNames.length) out.push({ title: 'Магия', items: [{ k: 'Заклинания', v: spellNames.join(', ') }] })
   }
 
-  if (state.equipment.length) {
-    out.push({ title: 'Снаряжение', items: [{ k: 'Предметы', v: state.equipment.map((e) => e.count > 1 ? `${e.name} ×${e.count}` : e.name).join(', ') }] })
+  if (allEquipment.value.length) {
+    out.push({ title: 'Снаряжение', items: [{ k: 'Предметы', v: allEquipment.value.map((e) => e.count > 1 ? `${e.name} ×${e.count}` : e.name).join(', ') }] })
   }
 
   return out

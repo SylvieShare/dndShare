@@ -177,7 +177,12 @@ export function buildCharacterData(input) {
       sections: [{
         id: 'bag',
         name: 'Снаряжение',
-        items: equipment.map((e, i) => ({ uid: `eq_${i}`, id: e.id, count: Math.max(1, Number(e.count) || 1), override: null })),
+        items: equipment.map((e, i) => ({
+          uid: `eq_${i}`,
+          id: e.id ?? null,
+          count: Math.max(1, Number(e.count) || 1),
+          override: e.id == null ? { name: e.name || 'Предмет' } : null,
+        })),
       }],
     }
   }
