@@ -19,6 +19,8 @@ func init() { registerRoutes((*Server).routesErrorReports) }
 func (s *Server) routesErrorReports(mux *http.ServeMux) {
 	mux.HandleFunc("POST /api/error-reports", s.handleCreateErrorReport)
 	mux.HandleFunc("GET /api/error-report-review/reports", s.handleReviewerErrorReports)
+	mux.HandleFunc("GET /api/error-report-review/reports/{id}/screenshot", s.handleReviewerErrorReportScreenshot)
+	mux.HandleFunc("GET /api/error-report-review/reports/{id}/viewport-screenshot", s.handleReviewerErrorReportViewportScreenshot)
 	mux.HandleFunc("POST /api/error-report-review/reports/{id}/messages", s.handleReviewerAnswerErrorReport)
 	mux.HandleFunc("POST /api/error-report-review/reports/{id}/serious-approval", s.handleApproveErrorReportSeriousChange)
 	mux.HandleFunc("POST /api/error-report-review/reports/{id}/archive", s.handleReviewerArchiveErrorReport)
@@ -399,15 +401,27 @@ func defaultErrorReportTitle(description string) string {
 }
 
 func (s *Server) handleAdminErrorReportScreenshot(w http.ResponseWriter, r *http.Request) {
-	s.handleAdminErrorReportImage(w, r, false)
+	s.handleErrorReportImage(w, r, false, false)
 }
 
 func (s *Server) handleAdminErrorReportViewportScreenshot(w http.ResponseWriter, r *http.Request) {
-	s.handleAdminErrorReportImage(w, r, true)
+	s.handleErrorReportImage(w, r, true, false)
 }
 
-func (s *Server) handleAdminErrorReportImage(w http.ResponseWriter, r *http.Request, viewport bool) {
-	if _, ok := s.requireRole(w, r, RoleAdmin); !ok {
+func (s *Server) handleReviewerErrorReportScreenshot(w http.ResponseWriter, r *http.Request) {
+	s.handleErrorReportImage(w, r, false, true)
+}
+
+func (s *Server) handleReviewerErrorReportViewportScreenshot(w http.ResponseWriter, r *http.Request) {
+	s.handleErrorReportImage(w, r, true, true)
+}
+
+func (s *Server) handleErrorReportImage(w http.ResponseWriter, r *http.Request, viewport, reviewerAccess bool) {
+	if reviewerAccess {
+		if _, ok := s.requireAnyRole(w, r, RoleErrorReportReviewer, RoleAdmin); !ok {
+			return
+		}
+	} else if _, ok := s.requireRole(w, r, RoleAdmin); !ok {
 		return
 	}
 	id, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
@@ -417,7 +431,11 @@ func (s *Server) handleAdminErrorReportImage(w http.ResponseWriter, r *http.Requ
 	}
 	var screenshot []byte
 	var contentType string
-	if viewport {
+	if reviewerAccess && viewport {
+		screenshot, contentType, err = s.store.GetReviewerErrorReportViewportScreenshot(r.Context(), id)
+	} else if reviewerAccess {
+		screenshot, contentType, err = s.store.GetReviewerErrorReportScreenshot(r.Context(), id)
+	} else if viewport {
 		screenshot, contentType, err = s.store.GetErrorReportViewportScreenshot(r.Context(), id)
 	} else {
 		screenshot, contentType, err = s.store.GetErrorReportScreenshot(r.Context(), id)

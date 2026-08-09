@@ -21,6 +21,8 @@ The public submit endpoint accepts both guests and signed-in users. A valid cook
 |--------|------|------|-------------|
 | POST | `/api/error-reports` | Optional | Create a report from `{ title, description, pageUrl, element, screenshot?, viewportScreenshot? }` |
 | GET | `/api/error-report-review/reports?limit=500` | `ERROR_REPORT_REVIEWER` or `ADMIN` | Poll non-archived reports; expired finished rows are archived first |
+| GET | `/api/error-report-review/reports/{id}/screenshot` | `ERROR_REPORT_REVIEWER` or `ADMIN` | Return the element crop for a non-archived report |
+| GET | `/api/error-report-review/reports/{id}/viewport-screenshot` | `ERROR_REPORT_REVIEWER` or `ADMIN` | Return the page-context image for a non-archived report |
 | POST | `/api/error-report-review/reports/{id}/messages` | `ERROR_REPORT_REVIEWER` or `ADMIN` | Answer the latest AI question |
 | POST | `/api/error-report-review/reports/{id}/archive` | `ERROR_REPORT_REVIEWER` or `ADMIN` | Archive a finished report immediately |
 | POST | `/api/error-report-review/reports/{id}/serious-approval` | `ADMIN` | Approve a serious proposed change |
@@ -40,7 +42,7 @@ Limits: title is 1–160 characters, description and feedback messages are 1–4
 
 ## Admin and MCP
 
-Users with `ERROR_REPORT_REVIEWER` get a global floating inbox above the report button on every page. It polls once per second, shows title, status and only authors different from the current user, expands description/page/selector on hover, and opens a full conversation/reply modal. Finished reports remain visible for one hour and have a quick archive ×. The `ADMIN` role is additionally required for the serious-change confirmation button; reviewer access alone cannot approve it.
+Users with `ERROR_REPORT_REVIEWER` get a global floating inbox above the report button on every page. The button morphs into a panel that grows upward without internal scrollbars and renders at most eight reports; overflow is summarized below the list. It still polls once per second, but applies a completed response atomically and only when its payload changed. Each row expands description/page/selector inline on hover, avoiding a side popover. The extra-wide report modal renders element and viewport screenshots at full available width before the conversation. Finished reports remain visible for one hour and have a quick archive ×. The `ADMIN` role is additionally required for the serious-change confirmation button; reviewer access alone cannot approve it.
 
 The **«Ошибки страниц»** admin tab remains the full management surface: approval for MCP, screenshots, active/waiting/finished/archive filters, feedback, serious-change approval, reopen and permanent deletion.
 

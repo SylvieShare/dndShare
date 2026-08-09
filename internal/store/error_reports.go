@@ -336,22 +336,30 @@ func (s *Store) createErrorReportMessage(ctx context.Context, reportID int64, se
 }
 
 func (s *Store) GetErrorReportScreenshot(ctx context.Context, id int64) ([]byte, string, error) {
-	return s.getErrorReportScreenshot(ctx, id, false, false)
+	return s.getErrorReportScreenshot(ctx, id, false, false, false)
 }
 
 func (s *Store) GetApprovedErrorReportScreenshot(ctx context.Context, id int64) ([]byte, string, error) {
-	return s.getErrorReportScreenshot(ctx, id, true, false)
+	return s.getErrorReportScreenshot(ctx, id, true, false, false)
+}
+
+func (s *Store) GetReviewerErrorReportScreenshot(ctx context.Context, id int64) ([]byte, string, error) {
+	return s.getErrorReportScreenshot(ctx, id, false, true, false)
 }
 
 func (s *Store) GetErrorReportViewportScreenshot(ctx context.Context, id int64) ([]byte, string, error) {
-	return s.getErrorReportScreenshot(ctx, id, false, true)
+	return s.getErrorReportScreenshot(ctx, id, false, false, true)
 }
 
 func (s *Store) GetApprovedErrorReportViewportScreenshot(ctx context.Context, id int64) ([]byte, string, error) {
-	return s.getErrorReportScreenshot(ctx, id, true, true)
+	return s.getErrorReportScreenshot(ctx, id, true, false, true)
 }
 
-func (s *Store) getErrorReportScreenshot(ctx context.Context, id int64, approvedOnly, viewport bool) ([]byte, string, error) {
+func (s *Store) GetReviewerErrorReportViewportScreenshot(ctx context.Context, id int64) ([]byte, string, error) {
+	return s.getErrorReportScreenshot(ctx, id, false, true, true)
+}
+
+func (s *Store) getErrorReportScreenshot(ctx context.Context, id int64, approvedOnly, reviewerVisibleOnly, viewport bool) ([]byte, string, error) {
 	var screenshot []byte
 	var contentType *string
 	err := s.pool.QueryRow(ctx, `
@@ -360,8 +368,8 @@ func (s *Store) getErrorReportScreenshot(ctx context.Context, id int64, approved
 		FROM dndshare.error_report
 		WHERE id = $1
 		  AND CASE WHEN $3::bool THEN viewport_screenshot IS NOT NULL ELSE screenshot IS NOT NULL END
-		  AND (NOT $2::bool OR (approved AND status = 'OPEN'))`, id, approvedOnly,
-		viewport,
+		  AND (NOT $2::bool OR (approved AND status = 'OPEN'))
+		  AND (NOT $4::bool OR status <> 'ARCHIVED')`, id, approvedOnly, viewport, reviewerVisibleOnly,
 	).Scan(&screenshot, &contentType)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, "", ErrNotFound

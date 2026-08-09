@@ -1,18 +1,25 @@
 <template>
   <teleport v-if="canReview" to="body">
     <aside class="review-inbox" :class="{ expanded }" data-error-report-ignore>
-      <button class="inbox-trigger" type="button" :aria-expanded="expanded" @click="expanded = !expanded">
-        <span class="inbox-trigger-icon" aria-hidden="true">⌁</span>
-        <span class="inbox-trigger-label">Заявки</span>
-        <span v-if="attentionCount" class="inbox-count">{{ attentionCount }}</span>
-      </button>
+      <transition name="inbox-morph" mode="out-in">
+        <button
+          v-if="!expanded"
+          key="trigger"
+          class="inbox-trigger"
+          type="button"
+          aria-expanded="false"
+          @click="expanded = true"
+        >
+          <span class="inbox-trigger-icon" aria-hidden="true">⌁</span>
+          <span class="inbox-trigger-label">Заявки</span>
+          <span v-if="attentionCount" class="inbox-count">{{ attentionCount }}</span>
+        </button>
 
-      <transition name="inbox-panel">
-        <section v-if="expanded" class="inbox-panel">
+        <section v-else key="panel" class="inbox-panel">
           <header class="inbox-head">
             <div>
               <strong>Ошибки на страницах</strong>
-              <span>{{ reports.length ? `${reports.length} в обзоре` : 'Очередь пуста' }}</span>
+              <span>{{ inboxSummary }}</span>
             </div>
             <button type="button" aria-label="Свернуть список" @click="expanded = false">×</button>
           </header>
@@ -26,7 +33,7 @@
 
           <div v-else class="inbox-list">
             <article
-              v-for="report in reports"
+              v-for="report in displayedReports"
               :key="report.id"
               class="inbox-report"
               :class="`state-${statusKey(report).toLowerCase()}`"
@@ -70,16 +77,15 @@
             </article>
           </div>
 
-          <footer class="inbox-foot">
-            <span :class="{ live: !loadError }"></span>
-            Обновление каждую секунду
-          </footer>
+          <div v-if="hiddenReportsCount" class="inbox-limit">
+            Не показано заявок: {{ hiddenReportsCount }}
+          </div>
         </section>
       </transition>
     </aside>
   </teleport>
 
-  <AppModal v-if="activeReport" :z-index="9600" wide @close="closeDetails">
+  <AppModal v-if="activeReport" :z-index="9600" extra-wide @close="closeDetails">
     <div class="review-modal" data-error-report-ignore>
       <div class="review-modal-head">
         <div>
@@ -98,6 +104,30 @@
         <div><dt>Страница</dt><dd><code>{{ activeReport.pageUrl }}</code></dd></div>
         <div><dt>Элемент</dt><dd><code>{{ activeReport.element?.selector || '—' }}</code></dd></div>
       </dl>
+
+      <section
+        v-if="activeReport.hasScreenshot || activeReport.hasViewportScreenshot"
+        class="review-screenshots"
+      >
+        <figure v-if="activeReport.hasScreenshot">
+          <figcaption>Выбранный элемент</figcaption>
+          <a :href="reviewScreenshotURL(activeReport.id, 'element')" target="_blank" rel="noopener">
+            <img
+              :src="reviewScreenshotURL(activeReport.id, 'element')"
+              :alt="`Скриншот элемента заявки #${activeReport.id}`"
+            />
+          </a>
+        </figure>
+        <figure v-if="activeReport.hasViewportScreenshot">
+          <figcaption>Видимая область страницы</figcaption>
+          <a :href="reviewScreenshotURL(activeReport.id, 'viewport')" target="_blank" rel="noopener">
+            <img
+              :src="reviewScreenshotURL(activeReport.id, 'viewport')"
+              :alt="`Скриншот страницы заявки #${activeReport.id}`"
+            />
+          </a>
+        </figure>
+      </section>
 
       <section v-if="activeReport.waitingForSeriousApproval" class="serious-approval-box">
         <div class="serious-icon">!</div>
@@ -184,16 +214,27 @@ const archivingIds = new Set()
 
 let pollTimer = null
 let requestInFlight = false
+let lastReportsPayload = ''
+
+const visibleReportsLimit = 8
 
 const canReview = computed(() => accountStore.user?.roles?.includes('ERROR_REPORT_REVIEWER'))
 const isAdmin = computed(() => accountStore.user?.roles?.includes('ADMIN'))
 const activeReport = computed(() => reports.value.find(report => report.id === activeReportId.value) || null)
 const attentionCount = computed(() => reports.value.filter(report => report.status === 'OPEN').length)
+const displayedReports = computed(() => reports.value.slice(0, visibleReportsLimit))
+const hiddenReportsCount = computed(() => Math.max(0, reports.value.length - visibleReportsLimit))
+const inboxSummary = computed(() => {
+  if (!reports.value.length) return 'Очередь пуста'
+  if (!hiddenReportsCount.value) return `${reports.value.length} в обзоре`
+  return `Показано ${displayedReports.value.length} из ${reports.value.length}`
+})
 
 watch(canReview, allowed => {
   stopPolling()
   if (!allowed) {
     reports.value = []
+    lastReportsPayload = ''
     expanded.value = false
     closeDetails()
     return
@@ -208,7 +249,12 @@ async function loadReports() {
   if (!reports.value.length) loading.value = true
   try {
     const response = await getReviewErrorReports()
-    reports.value = response.reports || []
+    const nextReports = Array.isArray(response.reports) ? response.reports : []
+    const nextPayload = JSON.stringify(nextReports)
+    if (nextPayload !== lastReportsPayload) {
+      reports.value = nextReports
+      lastReportsPayload = nextPayload
+    }
     loadError.value = ''
     if (activeReportId.value && !activeReport.value) closeDetails()
   } catch {
@@ -275,6 +321,7 @@ async function archiveReport(report) {
   try {
     await archiveReviewErrorReport(report.id)
     reports.value = reports.value.filter(item => item.id !== report.id)
+    lastReportsPayload = JSON.stringify(reports.value)
     if (activeReportId.value === report.id) closeDetails()
   } catch {
     loadError.value = `Не удалось архивировать заявку #${report.id}`
@@ -302,6 +349,11 @@ function shortPage(value) {
   } catch {
     return value
   }
+}
+
+function reviewScreenshotURL(id, kind) {
+  const suffix = kind === 'viewport' ? 'viewport-screenshot' : 'screenshot'
+  return `/api/error-report-review/reports/${id}/${suffix}`
 }
 
 function formatTime(value) {
@@ -362,14 +414,11 @@ onBeforeUnmount(stopPolling)
 }
 
 .inbox-panel {
-  position: absolute;
-  left: 0;
-  bottom: 46px;
-  width: min(390px, calc(100vw - 32px));
-  max-height: min(620px, calc(100vh - 132px));
+  position: relative;
+  width: min(420px, calc(100vw - 32px));
   display: flex;
   flex-direction: column;
-  overflow: visible;
+  overflow: hidden;
   border: 1px solid var(--border-strong);
   border-radius: 16px;
   background: color-mix(in srgb, var(--popup-bg) 97%, transparent);
@@ -393,9 +442,8 @@ onBeforeUnmount(stopPolling)
 }
 
 .inbox-list {
-  min-height: 0;
   padding: 8px;
-  overflow-y: auto;
+  overflow: visible;
 }
 
 .inbox-report {
@@ -404,14 +452,13 @@ onBeforeUnmount(stopPolling)
   border: 1px solid transparent;
   border-radius: 11px;
   cursor: pointer;
-  transition: background 0.15s, border-color 0.15s, transform 0.15s;
+  transition: background 0.15s, border-color 0.15s;
 }
 
 .inbox-report:hover {
   z-index: 2;
   border-color: var(--border-strong);
   background: var(--surface-hover);
-  transform: translateX(2px);
 }
 
 .report-main-row {
@@ -448,22 +495,30 @@ onBeforeUnmount(stopPolling)
 .report-inline-actions .approval-action { border-color: rgba(224, 85, 85, .35); color: #ef9b8f; }
 
 .report-tooltip {
-  position: absolute;
-  left: calc(100% + 10px);
-  top: 0;
-  width: 330px;
-  padding: 13px 14px;
-  border: 1px solid var(--border-strong);
-  border-radius: 12px;
-  background: var(--popup-bg);
-  box-shadow: var(--shadow-lg);
+  max-height: 0;
+  margin-left: 17px;
+  overflow: hidden;
   opacity: 0;
   pointer-events: none;
-  transform: translateX(-5px);
-  transition: opacity .15s, transform .15s;
+  transform: translateY(-3px);
+  transition: max-height .2s ease, padding-top .2s ease, opacity .15s ease, transform .2s ease;
 }
-.inbox-report:hover .report-tooltip { opacity: 1; transform: none; }
-.report-tooltip p { margin: 0; color: var(--text-2); font-size: 11px; line-height: 1.45; }
+.inbox-report:hover .report-tooltip {
+  max-height: 170px;
+  padding-top: 10px;
+  opacity: 1;
+  transform: none;
+}
+.report-tooltip p {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  color: var(--text-2);
+  font-size: 11px;
+  line-height: 1.45;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+}
 .report-tooltip dl { display: grid; gap: 6px; margin: 10px 0 0; }
 .report-tooltip dl div { display: grid; grid-template-columns: 56px 1fr; gap: 8px; }
 .report-tooltip dt { color: var(--text-muted); font-size: 9px; }
@@ -474,9 +529,13 @@ onBeforeUnmount(stopPolling)
 .inbox-empty > span { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: rgba(76,175,110,.14); color: var(--success); }
 .inbox-empty small { color: var(--text-muted); }
 .inbox-error { padding: 8px 16px; color: #ef8b7b; font-size: 10px; }
-.inbox-foot { display: flex; align-items: center; gap: 6px; padding: 9px 14px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 9px; }
-.inbox-foot span { width: 6px; height: 6px; border-radius: 50%; background: var(--danger); }
-.inbox-foot span.live { background: var(--success); animation: live-pulse 1.5s infinite; }
+.inbox-limit {
+  padding: 9px 14px 11px;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 9px;
+  text-align: center;
+}
 
 .review-modal { display: grid; gap: 16px; }
 .review-modal-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding-right: 26px; }
@@ -490,6 +549,41 @@ onBeforeUnmount(stopPolling)
 .review-meta dt { color: var(--text-muted); font-size: 10px; }
 .review-meta dd { min-width: 0; margin: 0; color: var(--text-2); font-size: 11px; overflow-wrap: anywhere; }
 .review-meta code { color: var(--accent-soft); }
+
+.review-screenshots {
+  display: grid;
+  gap: 18px;
+}
+
+.review-screenshots figure {
+  min-width: 0;
+  margin: 0;
+}
+
+.review-screenshots figcaption {
+  margin-bottom: 7px;
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+
+.review-screenshots a {
+  display: block;
+  width: 100%;
+}
+
+.review-screenshots img {
+  display: block;
+  width: 100%;
+  max-height: 620px;
+  object-fit: contain;
+  object-position: left top;
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  background: var(--bg-deep);
+}
 
 .serious-approval-box { display: grid; grid-template-columns: 34px 1fr; gap: 12px; padding: 14px; border: 1px solid rgba(224,85,85,.3); border-radius: 12px; background: rgba(224,85,85,.08); }
 .serious-icon { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 10px; background: rgba(224,85,85,.18); color: #ef8b7b; font-weight: 800; }
@@ -518,9 +612,11 @@ onBeforeUnmount(stopPolling)
 .reply-form button { border: none; border-radius: 8px; background: var(--accent); color: white; cursor: pointer; font: inherit; font-size: 12px; font-weight: 700; padding: 8px 13px; }
 .reply-form button:disabled, .serious-approval-box button:disabled { cursor: not-allowed; opacity: .45; }
 
-.inbox-panel-enter-active, .inbox-panel-leave-active { transition: opacity .16s ease, transform .16s ease; transform-origin: left bottom; }
-.inbox-panel-enter-from, .inbox-panel-leave-to { opacity: 0; transform: translateY(8px) scale(.97); }
-@keyframes live-pulse { 50% { opacity: .35; } }
+.inbox-morph-enter-active, .inbox-morph-leave-active {
+  transition: opacity .14s ease, transform .18s cubic-bezier(.22, 1, .36, 1);
+  transform-origin: left bottom;
+}
+.inbox-morph-enter-from, .inbox-morph-leave-to { opacity: 0; transform: scale(.82); }
 
 @media (max-width: 900px) {
   .report-tooltip { display: none; }
@@ -528,7 +624,8 @@ onBeforeUnmount(stopPolling)
 
 @media (max-width: 640px) {
   .review-inbox { left: 10px; bottom: 58px; }
-  .inbox-panel { width: calc(100vw - 20px); max-height: calc(100dvh - 122px); }
+  .inbox-panel { width: calc(100vw - 20px); }
+  .review-screenshots img { max-height: 70dvh; }
   .thread-message.from-ai { margin-right: 12px; }
   .thread-message.from-human { margin-left: 12px; }
 }

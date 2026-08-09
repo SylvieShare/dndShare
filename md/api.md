@@ -53,6 +53,8 @@ Do not spread endpoint strings directly through components when adding new behav
 
 - `POST /api/error-reports` — public/optional-auth submit endpoint. Body: `{ title, description, pageUrl, element, screenshot?, viewportScreenshot? }`; `element` contains at least `selector` and can include the chosen screenshot context. A signed-in reporter is attached automatically; guests store `userId = null`.
 - `GET /api/error-report-review/reports?limit=500` — `ERROR_REPORT_REVIEWER` or `ADMIN`; non-archived reviewer inbox.
+- `GET /api/error-report-review/reports/{id}/screenshot` — `ERROR_REPORT_REVIEWER` or `ADMIN`; raw selected-element crop for a non-archived report.
+- `GET /api/error-report-review/reports/{id}/viewport-screenshot` — `ERROR_REPORT_REVIEWER` or `ADMIN`; raw page-context screenshot for a non-archived report.
 - `POST /api/error-report-review/reports/{id}/messages` — `ERROR_REPORT_REVIEWER` or `ADMIN`; answer a pending AI question.
 - `POST /api/error-report-review/reports/{id}/archive` — `ERROR_REPORT_REVIEWER` or `ADMIN`; archive a finished report.
 - `POST /api/error-report-review/reports/{id}/serious-approval` — `ADMIN` only; confirm a pending serious change.

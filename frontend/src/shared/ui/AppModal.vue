@@ -9,7 +9,7 @@
       <div
         ref="card"
         class="am-card"
-        :class="{ 'am-card-wide': wide, 'am-card-full': fullscreen, 'am-card-tile': tile }"
+        :class="{ 'am-card-wide': wide, 'am-card-extra-wide': extraWide, 'am-card-full': fullscreen, 'am-card-tile': tile }"
         @touchstart.passive="onTouchStart"
         @touchmove="onTouchMove"
         @touchend.passive="onTouchEnd"
@@ -36,6 +36,7 @@ import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 defineProps({
   zIndex: { type: Number, default: 3000 },
   wide: { type: Boolean, default: false },
+  extraWide: { type: Boolean, default: false },
   fullscreen: { type: Boolean, default: false },
   // Use the BaseTile block surface (var(--block-bg)) instead of the page bg.
   tile: { type: Boolean, default: false },
@@ -236,6 +237,10 @@ onBeforeUnmount(() => {
 
 .am-card-wide {
   width: 720px;
+}
+
+.am-card-extra-wide {
+  width: 1100px;
 }
 
 .am-card-full {
