@@ -31,7 +31,7 @@
     </div>
   </teleport>
 
-  <AppModal v-if="formOpen" :z-index="9500" wide @close="closeForm">
+  <AppModal v-if="formOpen" :z-index="9500" wide @opened="onReportModalOpened" @close="closeForm">
     <form ref="reportForm" class="report-form" data-error-report-ignore @submit.prevent="submitReport">
       <div class="report-form-title">Что работает неправильно?</div>
       <div class="selected-element">
@@ -101,7 +101,7 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
 import { toCanvas, toJpeg } from 'html-to-image'
 import AppModal from '@/shared/ui/AppModal.vue'
 import { createErrorReport } from '../api/errorReportApi'
@@ -128,6 +128,8 @@ const highlight = reactive({ visible: false, top: 0, left: 0, width: 0, height: 
 let hoveredElement = null
 let toastTimer = null
 let screenshotGeneration = 0
+let screenshotSession = 0
+let pendingScreenshot = null
 const screenshotContextElements = ref([])
 
 const highlightStyle = computed(() => ({
@@ -220,38 +222,65 @@ function onElementClick(event) {
   updateScreenshotContextMetadata()
   selectedPageURL.value = window.location.href
   stopSelection()
-  formOpen.value = true
-  void captureElementScreenshot(target)
-  nextTick(() => descriptionInput.value?.focus({ preventScroll: true }))
-}
-
-async function captureElementScreenshot(element) {
-  const generation = ++screenshotGeneration
+  const session = ++screenshotSession
+  pendingScreenshot = { element: target, session }
   screenshotDataURL.value = ''
   viewportScreenshotDataURL.value = ''
   screenshotError.value = ''
   screenshotCapturing.value = true
+  formOpen.value = true
+}
+
+function onReportModalOpened() {
+  descriptionInput.value?.focus({ preventScroll: true })
+  const capture = pendingScreenshot
+  pendingScreenshot = null
+  if (!capture || capture.session !== screenshotSession || !formOpen.value) return
+  if (!capture.element?.isConnected) {
+    screenshotCapturing.value = false
+    screenshotError.value = 'Не удалось создать скриншот области.'
+    return
+  }
+  void captureElementScreenshot(capture.element, capture.session)
+}
+
+async function captureElementScreenshot(element, session) {
+  const generation = ++screenshotGeneration
+  screenshotCapturing.value = true
   try {
     const rect = element.getBoundingClientRect()
     if (rect.width <= 0 || rect.height <= 0) throw new Error('empty element')
-    const [elementResult, viewportResult] = await Promise.allSettled([
-      withTimeout(captureSelectedArea(element), 7000),
-      withTimeout(captureViewport(), 7000),
-    ])
+    const elementResult = await withTimeout(captureSelectedArea(element), 10000)
     if (generation !== screenshotGeneration) return
-    if (elementResult.status === 'fulfilled') applyElementScreenshot(elementResult.value)
-    if (viewportResult.status === 'fulfilled') viewportScreenshotDataURL.value = viewportResult.value
-    if (!screenshotDataURL.value && !viewportScreenshotDataURL.value) throw new Error('screenshots failed')
-    if (elementResult.status === 'rejected' || viewportResult.status === 'rejected') {
-      screenshotError.value = 'Не удалось создать один из снимков.'
-    }
+    applyElementScreenshot(elementResult)
   } catch {
     if (generation === screenshotGeneration) {
-      screenshotError.value = 'Не удалось создать скриншот.'
+      screenshotError.value = 'Не удалось создать скриншот области.'
     }
   } finally {
     if (generation === screenshotGeneration) screenshotCapturing.value = false
   }
+
+  if (session !== screenshotSession || !formOpen.value) return
+  await afterNextPaint()
+  if (session === screenshotSession && formOpen.value) void captureViewportScreenshot(session)
+}
+
+async function captureViewportScreenshot(session) {
+  try {
+    const screenshot = await withTimeout(captureViewport(), 10000)
+    if (session === screenshotSession && formOpen.value) {
+      viewportScreenshotDataURL.value = screenshot
+    }
+  } catch {
+    // The full viewport is supplemental and must not block the form or hide a successful area crop.
+  }
+}
+
+function afterNextPaint() {
+  return new Promise(resolve => {
+    requestAnimationFrame(() => requestAnimationFrame(resolve))
+  })
 }
 
 async function captureSelectedArea(element) {
@@ -593,6 +622,8 @@ function closeAfterSubmit() {
 
 function resetScreenshot() {
   screenshotGeneration += 1
+  screenshotSession += 1
+  pendingScreenshot = null
   screenshotDataURL.value = ''
   viewportScreenshotDataURL.value = ''
   screenshotCapturing.value = false

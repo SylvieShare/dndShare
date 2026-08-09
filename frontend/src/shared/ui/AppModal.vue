@@ -41,7 +41,7 @@ defineProps({
   // Use the BaseTile block surface (var(--surface)) instead of the page bg.
   tile: { type: Boolean, default: false },
 })
-const emit = defineEmits(['close'])
+const emit = defineEmits(['close', 'opened'])
 
 const overlay = ref(null)
 const card    = ref(null)
@@ -97,6 +97,7 @@ function _animateIn() {
         c.style.transition = ''
         c.style.transform = ''
         c.style.opacity = ''
+        emit('opened')
       }, DUR_IN + 50)
     })
   })
