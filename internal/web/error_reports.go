@@ -20,6 +20,7 @@ func (s *Server) routesErrorReports(mux *http.ServeMux) {
 	mux.HandleFunc("POST /api/error-reports", s.handleCreateErrorReport)
 	mux.HandleFunc("GET /api/admin-panel/error-reports", s.handleAdminErrorReports)
 	mux.HandleFunc("GET /api/admin-panel/error-reports/{id}/screenshot", s.handleAdminErrorReportScreenshot)
+	mux.HandleFunc("PATCH /api/admin-panel/error-reports/{id}/approval", s.handleAdminSetErrorReportApproval)
 	mux.HandleFunc("DELETE /api/admin-panel/error-reports/{id}", s.handleAdminDeleteErrorReport)
 }
 
@@ -70,10 +71,16 @@ func (s *Server) handleCreateErrorReport(w http.ResponseWriter, r *http.Request)
 	}
 
 	var userID *int64
+	autoApproved := false
 	if id, ok := optionalUser(r); ok {
 		userID = &id
+		var rolesOK bool
+		autoApproved, rolesOK = s.hasRole(w, r, id, RoleErrorReportAutoApprove)
+		if !rolesOK {
+			return
+		}
 	}
-	report, err := s.store.CreateErrorReport(r.Context(), body.Description, body.PageURL, body.Element, screenshot, screenshotContentType, userID)
+	report, err := s.store.CreateErrorReport(r.Context(), body.Description, body.PageURL, body.Element, screenshot, screenshotContentType, userID, autoApproved)
 	if err != nil {
 		serverError(w, err)
 		return
@@ -171,6 +178,34 @@ func (s *Server) handleAdminDeleteErrorReport(w http.ResponseWriter, r *http.Req
 		return
 	}
 	writeJSON(w, http.StatusOK, nil)
+}
+
+func (s *Server) handleAdminSetErrorReportApproval(w http.ResponseWriter, r *http.Request) {
+	if _, ok := s.requireRole(w, r, RoleAdmin); !ok {
+		return
+	}
+	id, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
+	if err != nil || id <= 0 {
+		badRequest(w, "bad id")
+		return
+	}
+	var body struct {
+		Approved *bool `json:"approved"`
+	}
+	if err := decodeJSON(r, &body); err != nil || body.Approved == nil {
+		badRequest(w, "Поле approved обязательно")
+		return
+	}
+	updated, err := s.store.SetErrorReportApproved(r.Context(), id, *body.Approved)
+	if err != nil {
+		serverError(w, err)
+		return
+	}
+	if !updated {
+		notFound(w, "Заявка не найдена")
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]bool{"approved": *body.Approved})
 }
 
 func (s *Server) handleAdminErrorReportScreenshot(w http.ResponseWriter, r *http.Request) {

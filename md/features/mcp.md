@@ -25,8 +25,8 @@ Read tools (always on):
 - `handbook_suggest_types(sourceId?)` — suggest types.
 - `handbook_suggests(typeId)` — base suggests of a type.
 - `handbook_suggests_search(q, limit?)` — base suggests by value.
-- `error_reports_list(limit?, offset?)` — page error reports newest first, including description, URL, selected element JSON, optional reporter, screenshot metadata, and creation time.
-- `error_report_screenshot(id)` — fetch one attached screenshot as base64 plus its MIME type.
+- `error_reports_list(limit?, offset?)` — admin-approved page error reports newest first, including description, URL, selected element JSON, optional reporter, screenshot metadata, and creation time. Unapproved rows are not exposed.
+- `error_report_screenshot(id)` — fetch one attached screenshot for an approved report as base64 plus its MIME type.
 
 Write tools (gated, see below):
 - `handbook_item_create(typeId, name, nameEn, data, parentId?)` — `data` is a JSON object string; creates a **base** item (`user_id = NULL`) via `ItemRepository.createBase`. `parentId` links a variant/sub-entity (subrace → race item, subclass → class item).
@@ -36,9 +36,9 @@ Write tools (gated, see below):
 - `handbook_suggest_update(typeId, id, value, code?, color?, desc?)` — admin update; preserves existing svg.
 - `handbook_suggest_set_svg(typeId, id, svg)` — admin set/replace the suggest icon. `svg` is raw `<svg>` markup (empty string clears it); stores it in `svg_storage`, repoints `suggest.svg_id`, deletes the old svg row. Validates `<svg>` presence and 512 KB max.
 - `handbook_suggest_delete(typeId, id)` — admin delete.
-- `error_report_delete(id)` — delete one handled page error report.
+- `error_report_delete(id)` — delete one approved, handled page error report.
 
-Handbook writes run as a synthetic `HANDBOOK_ADMIN` (repositories called with `isAdmin = true`, `userId = 0`). Creates always produce **base** records (`user_id = NULL`). Error-report deletion uses the report id directly. All write tools, including `error_report_delete`, require `MCP_WRITE_ENABLED=true`.
+Handbook writes run as a synthetic `HANDBOOK_ADMIN` (repositories called with `isAdmin = true`, `userId = 0`). Creates always produce **base** records (`user_id = NULL`). Error-report deletion uses the report id directly but succeeds only for an approved row. All write tools, including `error_report_delete`, require `MCP_WRITE_ENABLED=true`.
 
 ## Auth
 

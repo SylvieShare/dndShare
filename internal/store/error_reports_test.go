@@ -12,7 +12,7 @@ func TestAnonymousErrorReportSerializesNullUser(t *testing.T) {
 		t.Fatalf("marshal report: %v", err)
 	}
 	jsonText := string(raw)
-	for _, field := range []string{`"userId":null`, `"userLogin":null`} {
+	for _, field := range []string{`"userId":null`, `"userLogin":null`, `"approved":false`} {
 		if !strings.Contains(jsonText, field) {
 			t.Fatalf("anonymous reporter field %s missing from %s", field, jsonText)
 		}

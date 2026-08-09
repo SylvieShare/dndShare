@@ -25,9 +25,10 @@ dropped. **Never create new objects in `base`.**
 - `element jsonb` with the browser-generated selector and diagnostic metadata;
 - nullable `screenshot bytea` and `screenshot_content_type varchar(50)`;
 - nullable `user_id` referencing `users(id)` with `ON DELETE SET NULL`;
+- `approved bool NOT NULL DEFAULT false`, which gates MCP visibility;
 - `created_at timestamptz`.
 
-Indexes cover newest-first listing (`created_at DESC`) and the optional reporter (`user_id`). See `md/features/error-reports.md` for the API and payload.
+Indexes cover newest-first listing (`created_at DESC`), approved newest-first MCP listing, and the optional reporter (`user_id`). See `md/features/error-reports.md` for the API and payload.
 
 ## Systems and rules editions
 

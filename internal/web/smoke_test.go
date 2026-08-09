@@ -25,6 +25,7 @@ func TestHandlerRegistersAllRoutesWithoutConflict(t *testing.T) {
 		{"GET", "/ping", 200},
 		{"POST", "/mcp", 401},
 		{"POST", "/api/error-reports", 400},
+		{"PATCH", "/api/admin-panel/error-reports/1/approval", 401},
 	}
 	for _, c := range cases {
 		rec := httptest.NewRecorder()

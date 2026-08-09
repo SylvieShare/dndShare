@@ -42,7 +42,7 @@ deploy/                     сборка + деплой на VM (systemd/Lockbox
   чтение, `$n::uuid` на запись. `store.ErrNotFound` — когда строки нет.
 - **Аутентификация** — две cookie `sylvieshare-session-id` (userId) + `sylvieshare-session-uuid`
   (uuid), серверный стор — таблица `users_session`. CSRF нет (как в оригинале). Роли: ADMIN,
-  HANDBOOK_ADMIN, TEMPLATE_ADMIN.
+  HANDBOOK_ADMIN, TEMPLATE_ADMIN, ERROR_REPORT_AUTO_APPROVE.
 - **Ошибки** — тело `{"type":..,"desc":..}` (NON_NULL: null-поля опускаются), как прежний
   `ErrorResponse`/`RestResponseEntityExceptionHandler`. Необработанная паника → 500 + запись в `logs`.
 - **JSON-совместимость (важно):** ключи — точный camelCase из прежних Kotlin-DTO. Nullable-поля —

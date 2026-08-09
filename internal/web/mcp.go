@@ -256,7 +256,7 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 		if err != nil {
 			return nil, err
 		}
-		return s.store.ListErrorReports(ctx, coerceIn(limit, 1, 500), coerceAtLeast(offset, 0))
+		return s.store.ListApprovedErrorReports(ctx, coerceIn(limit, 1, 500), coerceAtLeast(offset, 0))
 
 	case "error_report_delete":
 		if err := s.mcpRequireWrite(); err != nil {
@@ -266,7 +266,7 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 		if err != nil {
 			return nil, err
 		}
-		deleted, err := s.store.DeleteErrorReport(ctx, id)
+		deleted, err := s.store.DeleteApprovedErrorReport(ctx, id)
 		if err != nil {
 			return nil, err
 		}
@@ -280,7 +280,7 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 		if err != nil {
 			return nil, err
 		}
-		screenshot, contentType, err := s.store.GetErrorReportScreenshot(ctx, id)
+		screenshot, contentType, err := s.store.GetApprovedErrorReportScreenshot(ctx, id)
 		if err != nil {
 			if errors.Is(err, store.ErrNotFound) {
 				return nil, fmt.Errorf("screenshot for error report %d not found", id)
@@ -704,18 +704,18 @@ func mcpToolDefs() []map[string]any {
 				"limit": intP("Max rows, 1..100 (default 20)"),
 			}, "q")),
 		tool("error_reports_list",
-			"List user-submitted page error reports, newest first. Includes description, page URL, selected element metadata with a semantic class-based CSS selector and visible text, userId/userLogin (null for guests), hasScreenshot, screenshotContentType, and creation time.",
+			"List admin-approved user-submitted page error reports, newest first. Unapproved reports are not exposed through MCP. Includes description, page URL, selected element metadata with a semantic class-based CSS selector and visible text, userId/userLogin (null for guests), hasScreenshot, screenshotContentType, and creation time.",
 			schema(map[string]any{
 				"limit":  intP("Max rows, 1..500 (default 100)"),
 				"offset": intP("Offset for pagination (default 0)"),
 			})),
 		tool("error_report_delete",
-			"Delete one page error report after it has been handled. Requires MCP write operations to be enabled.",
+			"Delete one admin-approved page error report after it has been handled. Requires MCP write operations to be enabled.",
 			schema(map[string]any{
 				"id": intP("Error report id"),
 			}, "id")),
 		tool("error_report_screenshot",
-			"Fetch the screenshot attached to one page error report as base64. Use hasScreenshot from error_reports_list before calling it.",
+			"Fetch the screenshot attached to one admin-approved page error report as base64. Use hasScreenshot from error_reports_list before calling it.",
 			schema(map[string]any{
 				"id": intP("Error report id"),
 			}, "id")),

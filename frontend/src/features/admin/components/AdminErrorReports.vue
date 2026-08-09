@@ -21,14 +21,25 @@
             <span class="report-time">{{ formatTime(report.createdAt) }}</span>
             <span class="report-user">{{ report.userLogin || 'Гость' }}</span>
           </div>
-          <button
-            class="delete-button"
-            type="button"
-            :disabled="deletingIds.has(report.id)"
-            @click="onDelete(report)"
-          >
-            {{ deletingIds.has(report.id) ? 'Удаление…' : 'Удалить' }}
-          </button>
+          <div class="report-actions">
+            <label class="approval-toggle" :class="{ approved: report.approved }">
+              <input
+                type="checkbox"
+                :checked="report.approved"
+                :disabled="approvingIds.has(report.id)"
+                @change="onApprovalChange(report, $event.target.checked)"
+              />
+              <span>{{ report.approved ? 'Одобрено для MCP' : 'Одобрить для MCP' }}</span>
+            </label>
+            <button
+              class="delete-button"
+              type="button"
+              :disabled="deletingIds.has(report.id)"
+              @click="onDelete(report)"
+            >
+              {{ deletingIds.has(report.id) ? 'Удаление…' : 'Удалить' }}
+            </button>
+          </div>
         </div>
 
         <div class="report-description">{{ report.description }}</div>
@@ -69,12 +80,13 @@
 
 <script setup>
 import { onMounted, reactive, ref } from 'vue'
-import { deleteErrorReport, getErrorReports } from '../api/adminApi'
+import { deleteErrorReport, getErrorReports, setErrorReportApproval } from '../api/adminApi'
 
 const reports = ref([])
 const loading = ref(true)
 const error = ref('')
 const deletingIds = reactive(new Set())
+const approvingIds = reactive(new Set())
 
 async function load() {
   loading.value = true
@@ -100,6 +112,22 @@ async function onDelete(report) {
     error.value = `Не удалось удалить заявку #${report.id}`
   } finally {
     deletingIds.delete(report.id)
+  }
+}
+
+async function onApprovalChange(report, approved) {
+  if (approvingIds.has(report.id)) return
+  error.value = ''
+  const previous = report.approved
+  report.approved = approved
+  approvingIds.add(report.id)
+  try {
+    await setErrorReportApproval(report.id, approved)
+  } catch {
+    report.approved = previous
+    error.value = `Не удалось изменить одобрение заявки #${report.id}`
+  } finally {
+    approvingIds.delete(report.id)
   }
 }
 
@@ -201,6 +229,27 @@ onMounted(load)
   justify-content: space-between;
   gap: 12px;
 }
+
+.report-actions {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 10px;
+}
+
+.approval-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--text-2);
+  cursor: pointer;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.approval-toggle.approved { color: #75c58b; }
+.approval-toggle input { accent-color: #64b77b; cursor: pointer; }
+.approval-toggle input:disabled { cursor: wait; opacity: 0.6; }
 
 .report-identity {
   display: flex;
@@ -319,5 +368,7 @@ onMounted(load)
   .admin-reports { padding: 16px; }
   .report-meta { grid-template-columns: 1fr; }
   .reports-toolbar { align-items: center; }
+  .report-head { align-items: flex-start; }
+  .report-actions { align-items: flex-end; flex-direction: column; }
 }
 </style>

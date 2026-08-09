@@ -13,7 +13,7 @@ The application has a global user-facing flow for pointing at a broken element a
 - The form uses `html-to-image` to render the selected element with the browser's modern CSS engine, shows the JPEG preview, then sends it with the required description, current `window.location.href`, and element JSON through `features/error-report/api/errorReportApi.js`. Capture is best-effort: unsupported/cross-origin content may produce no screenshot, but does not block the report.
 - The element object contains a semantic CSS selector, tag/id/classes, short visible text, selected accessibility attributes, its viewport rect, and viewport size. The selector prefers a unique id or test attribute, then builds a readable tag-and-class ancestry without positional `nth-*` indexes, so admin and MCP consumers can understand the UI area from the locator itself. It deliberately does not contain `outerHTML` or form values.
 
-The public submit endpoint accepts both guests and signed-in users. A valid cookie session is attached as `user_id`; anonymous reports keep it null.
+The public submit endpoint accepts both guests and signed-in users. A valid cookie session is attached as `user_id`; anonymous reports keep it null. Reports start unapproved unless the signed-in reporter has `ERROR_REPORT_AUTO_APPROVE`, in which case the new row is immediately available to MCP.
 
 ## API
 
@@ -22,20 +22,21 @@ The public submit endpoint accepts both guests and signed-in users. A valid cook
 | POST | `/api/error-reports` | Optional | Create a report from `{ description, pageUrl, element, screenshot? }` |
 | GET | `/api/admin-panel/error-reports?limit=200&offset=0` | `ADMIN` | List reports newest first |
 | GET | `/api/admin-panel/error-reports/{id}/screenshot` | `ADMIN` | Return the raw attached image |
+| PATCH | `/api/admin-panel/error-reports/{id}/approval` | `ADMIN` | Set `{ approved: boolean }` for MCP visibility |
 | DELETE | `/api/admin-panel/error-reports/{id}` | `ADMIN` | Delete one handled report |
 
 Limits: description 1–4000 characters, page URL 1–2048 characters, element JSON up to 16 KiB and must contain a non-empty `selector`. Screenshots accept JPEG, PNG, or WebP data URLs up to 2 MiB decoded.
 
 ## Storage
 
-`dndshare.error_report` stores `description`, `page_url`, `element jsonb`, optional `user_id`, optional `screenshot bytea` + MIME type, and `created_at`. The table and columns are created idempotently from `internal/store/schema.sql`; old rows simply have no screenshot. The reporter FK is null for guests and the list joins `users.login` for signed-in reporters.
+`dndshare.error_report` stores `description`, `page_url`, `element jsonb`, optional `user_id`, optional `screenshot bytea` + MIME type, `approved`, and `created_at`. The table and columns are created idempotently from `internal/store/schema.sql`; old rows simply have no screenshot and start unapproved. The reporter FK is null for guests and the list joins `users.login` for signed-in reporters.
 
 ## Admin and MCP
 
-The **«Ошибки страниц»** admin tab displays the description, page URL, reporter, selector, short element text, and expandable full JSON. It deletes reports one at a time.
+The **«Ошибки страниц»** admin tab displays the description, page URL, reporter, selector, short element text, and expandable full JSON. An admin checkbox controls whether each report is approved for MCP; unchecking it revokes MCP visibility again. The tab deletes reports one at a time.
 
 MCP exposes:
 
-- `error_reports_list(limit?, offset?)` — read reports with the normal MCP token; includes `userId`, `userLogin`, `hasScreenshot`, and `screenshotContentType` metadata.
-- `error_report_screenshot(id)` — read one attached image as `{ id, contentType, base64 }` without bloating the list response.
-- `error_report_delete(id)` — delete one report; gated by `MCP_WRITE_ENABLED`.
+- `error_reports_list(limit?, offset?)` — read approved reports with the normal MCP token; includes `userId`, `userLogin`, `approved`, `hasScreenshot`, and `screenshotContentType` metadata.
+- `error_report_screenshot(id)` — read one attached image for an approved report as `{ id, contentType, base64 }` without bloating the list response.
+- `error_report_delete(id)` — delete one approved report; gated by `MCP_WRITE_ENABLED`.

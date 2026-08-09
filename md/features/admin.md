@@ -15,7 +15,7 @@ features/admin/
     AdminStats.vue         # Stats tab — cards with entity counts
     AdminUsers.vue         # Users tab — table with createdAt, roles, add/remove role, password reset
     AdminLogs.vue          # Logs tab — table with delete per-row and delete-all
-    AdminErrorReports.vue  # Page-error reports — selected element metadata + per-row delete
+    AdminErrorReports.vue  # Page-error reports — selected element metadata + MCP approval + per-row delete
     AdminJobs.vue          # Jobs tab — available jobs + runs history with live progress
   pages/
     ViewAdmin.vue          # Page: sidebar with tabs (stats/users/logs/error reports/jobs) + content area
@@ -60,16 +60,17 @@ All endpoints require `@UserNeedRole([Role.ADMIN])`.
 |--------|------|-------------|
 | GET | `/api/admin-panel/error-reports?limit=200&offset=0` | Reports sorted by `createdAt` descending |
 | GET | `/api/admin-panel/error-reports/{id}/screenshot` | Raw attached element screenshot |
+| PATCH | `/api/admin-panel/error-reports/{id}/approval` | Approve or revoke MCP access with `{ approved: boolean }` |
 | DELETE | `/api/admin-panel/error-reports/{id}` | Delete one handled report |
 
-The **«Ошибки страниц»** tab renders the submitted description, page URL, reporter (`Гость` for null `user_id`), selected CSS selector, optional screenshot preview, and expandable element JSON. See `md/features/error-reports.md` for the public submit flow.
+The **«Ошибки страниц»** tab renders the submitted description, page URL, reporter (`Гость` for null `user_id`), selected CSS selector, optional screenshot preview, MCP approval checkbox, and expandable element JSON. See `md/features/error-reports.md` for the public submit flow.
 
 ### Supporting changes
 
 - `UserRoleRepository` — added `findRolesByAllUsers()`, `addRole(userId, role)`, `removeRole(userId, role)`.
 - `UserRoleService` — exposed `getRolesByAllUsers()`, `addRole()`, `removeRole()`.
 
-Role names match the `Role` enum: `ADMIN`, `HANDBOOK_ADMIN`, `TEMPLATE_ADMIN`.
+Role names match the backend constants: `ADMIN`, `HANDBOOK_ADMIN`, `TEMPLATE_ADMIN`, `ERROR_REPORT_AUTO_APPROVE`. The latter auto-approves new page-error reports submitted by that signed-in user.
 
 ## Jobs (асинхронные задачи)
 

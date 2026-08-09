@@ -1,4 +1,4 @@
-import { fetchDelete, fetchGet, fetchPost } from '@/shared/api/http'
+import { fetchDelete, fetchGet, fetchPatch, fetchPost } from '@/shared/api/http'
 
 export function getUsers() {
   return fetchGet('/admin-panel/users')
@@ -38,4 +38,8 @@ export function getErrorReports() {
 
 export function deleteErrorReport(id) {
   return fetchDelete(`/admin-panel/error-reports/${id}`)
+}
+
+export function setErrorReportApproval(id, approved) {
+  return fetchPatch(`/admin-panel/error-reports/${id}/approval`, { approved })
 }

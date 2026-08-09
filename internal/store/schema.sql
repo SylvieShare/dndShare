@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS dndshare."role" (
     CONSTRAINT role_pk PRIMARY KEY (id)
 );
 INSERT INTO dndshare."role" ("name")
-SELECT r FROM (VALUES ('NONE'), ('ADMIN'), ('HANDBOOK_ADMIN'), ('TEMPLATE_ADMIN')) AS v(r)
+SELECT r FROM (VALUES ('NONE'), ('ADMIN'), ('HANDBOOK_ADMIN'), ('TEMPLATE_ADMIN'), ('ERROR_REPORT_AUTO_APPROVE')) AS v(r)
 WHERE NOT EXISTS (SELECT 1 FROM dndshare."role" e WHERE e."name" = v.r);
 
 CREATE TABLE IF NOT EXISTS dndshare.users (
@@ -76,13 +76,16 @@ CREATE TABLE IF NOT EXISTS dndshare.error_report (
     screenshot  bytea NULL,
     screenshot_content_type varchar(50) NULL,
     user_id     int8 NULL REFERENCES dndshare.users(id) ON DELETE SET NULL,
+    approved    bool DEFAULT false NOT NULL,
     created_at  timestamptz DEFAULT now() NOT NULL,
     CONSTRAINT error_report_pk PRIMARY KEY (id)
 );
 ALTER TABLE dndshare.error_report ADD COLUMN IF NOT EXISTS screenshot bytea NULL;
 ALTER TABLE dndshare.error_report ADD COLUMN IF NOT EXISTS screenshot_content_type varchar(50) NULL;
+ALTER TABLE dndshare.error_report ADD COLUMN IF NOT EXISTS approved bool DEFAULT false NOT NULL;
 CREATE INDEX IF NOT EXISTS idx_error_report_created_at ON dndshare.error_report USING btree (created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_error_report_user_id ON dndshare.error_report USING btree (user_id);
+CREATE INDEX IF NOT EXISTS idx_error_report_approved_created_at ON dndshare.error_report USING btree (created_at DESC) WHERE approved;
 
 -- ---------------------------------------------------------------------------
 -- Admin job runs
