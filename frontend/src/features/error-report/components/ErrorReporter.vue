@@ -102,9 +102,10 @@
 
 <script setup>
 import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
-import { toJpeg } from 'html-to-image'
+import { toCanvas, toJpeg } from 'html-to-image'
 import AppModal from '@/shared/ui/AppModal.vue'
 import { createErrorReport } from '../api/errorReportApi'
+import { planAncestorCrop } from '../lib/screenshotGeometry'
 
 const selecting = ref(false)
 const formOpen = ref(false)
@@ -221,7 +222,7 @@ function onElementClick(event) {
   stopSelection()
   formOpen.value = true
   void captureElementScreenshot(target)
-  nextTick(() => descriptionInput.value?.focus())
+  nextTick(() => descriptionInput.value?.focus({ preventScroll: true }))
 }
 
 async function captureElementScreenshot(element) {
@@ -234,7 +235,7 @@ async function captureElementScreenshot(element) {
     const rect = element.getBoundingClientRect()
     if (rect.width <= 0 || rect.height <= 0) throw new Error('empty element')
     const [elementResult, viewportResult] = await Promise.allSettled([
-      withTimeout(captureSelectedArea(rect), 7000),
+      withTimeout(captureSelectedArea(element), 7000),
       withTimeout(captureViewport(), 7000),
     ])
     if (generation !== screenshotGeneration) return
@@ -253,32 +254,20 @@ async function captureElementScreenshot(element) {
   }
 }
 
-async function captureSelectedArea(rect) {
+async function captureSelectedArea(element) {
+  const rect = element.getBoundingClientRect()
   if (rect.width <= 0 || rect.height <= 0) throw new Error('empty screenshot context')
-  const width = Math.max(1, Math.ceil(rect.width))
-  const height = Math.max(1, Math.ceil(rect.height))
+  const captureRoot = screenshotCaptureRoot(element)
+  const plan = planAncestorCrop(rect, captureRoot.getBoundingClientRect())
+  if (plan.crop.width <= 0 || plan.crop.height <= 0) throw new Error('empty screenshot crop')
   const scale = Math.max(0.1, Math.min(
     window.devicePixelRatio || 1,
     2,
-    1200 / width,
-    800 / height,
+    2400 / plan.render.width,
+    1600 / plan.render.height,
   ))
-  const dataURL = checkedScreenshot(await toJpeg(document.body, {
-    backgroundColor: screenshotBackground(),
-    cacheBust: true,
-    width,
-    height,
-    pixelRatio: scale,
-    quality: 0.82,
-    filter: screenshotFilter,
-    style: pageCropStyle(
-      window.scrollX + rect.left,
-      window.scrollY + rect.top,
-      width,
-      height,
-    ),
-  }))
-  return { dataURL, width, height }
+  const pageCanvas = await renderElementCanvas(captureRoot, plan.render, scale)
+  return cropScreenshot(pageCanvas, plan, 0.82)
 }
 
 function applyElementScreenshot(capture) {
@@ -307,8 +296,7 @@ async function changeScreenshotContext(delta) {
   try {
     const contextElement = screenshotContextElements.value[nextLevel]
     if (!contextElement?.isConnected) throw new Error('context element detached')
-    const rect = contextElement.getBoundingClientRect()
-    const capture = await withTimeout(captureSelectedArea(rect), 7000)
+    const capture = await withTimeout(captureSelectedArea(contextElement), 7000)
     if (generation !== screenshotGeneration) return
     applyElementScreenshot(capture)
   } catch {
@@ -365,6 +353,43 @@ async function captureViewport() {
   }))
 }
 
+async function renderElementCanvas(element, render, pixelRatio) {
+  return toCanvas(element, {
+    backgroundColor: screenshotBackground(),
+    cacheBust: true,
+    width: render.width,
+    height: render.height,
+    pixelRatio,
+    filter: screenshotFilter,
+  })
+}
+
+function cropScreenshot(source, plan, quality) {
+  const scaleX = source.width / plan.render.width
+  const scaleY = source.height / plan.render.height
+  const output = document.createElement('canvas')
+  output.width = Math.max(1, Math.round(plan.crop.width * scaleX))
+  output.height = Math.max(1, Math.round(plan.crop.height * scaleY))
+  const context = output.getContext('2d')
+  if (!context) throw new Error('screenshot canvas unavailable')
+  context.drawImage(
+    source,
+    plan.crop.left * scaleX,
+    plan.crop.top * scaleY,
+    plan.crop.width * scaleX,
+    plan.crop.height * scaleY,
+    0,
+    0,
+    output.width,
+    output.height,
+  )
+  return {
+    dataURL: checkedScreenshot(output.toDataURL('image/jpeg', quality)),
+    width: plan.crop.width,
+    height: plan.crop.height,
+  }
+}
+
 function pageCropStyle(left, top, width, height) {
   return {
     transform: `translate(${-left}px, ${-top}px)`,
@@ -372,6 +397,24 @@ function pageCropStyle(left, top, width, height) {
     width: `${Math.max(document.documentElement.scrollWidth, left + width)}px`,
     height: `${Math.max(document.documentElement.scrollHeight, top + height)}px`,
   }
+}
+
+function screenshotCaptureRoot(element) {
+  let current = element
+  while (current && current !== document.body) {
+    if (elementPaintsBackground(current)) return current
+    current = current.parentElement
+  }
+  return document.body
+}
+
+function elementPaintsBackground(element) {
+  const style = getComputedStyle(element)
+  return style.backgroundImage !== 'none' || !isTransparentColor(style.backgroundColor)
+}
+
+function isTransparentColor(color) {
+  return !color || color === 'transparent' || /rgba?\([^)]*[, /]0(?:\.0+)?\s*\)$/.test(color)
 }
 
 function screenshotFilter(node) {
