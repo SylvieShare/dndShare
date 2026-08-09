@@ -31,3 +31,15 @@ func TestErrorReportMessageSerializesNullableAdmin(t *testing.T) {
 		}
 	}
 }
+
+func TestErrorReportProcessingRunIDIsStableAndDoesNotExposeLease(t *testing.T) {
+	const leaseID = "super-secret-lease-handle"
+	first := errorReportProcessingRunID(leaseID)
+	second := errorReportProcessingRunID(leaseID)
+	if first != second {
+		t.Fatalf("processing run id is not stable: %q != %q", first, second)
+	}
+	if first == leaseID || len(first) != 16 {
+		t.Fatalf("processing run id must be a short non-secret handle, got %q", first)
+	}
+}

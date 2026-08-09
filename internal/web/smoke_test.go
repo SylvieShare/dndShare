@@ -51,6 +51,7 @@ func TestMCPPublishesErrorReportTools(t *testing.T) {
 		"error_report_lock_acquire",
 		"error_report_lock_renew",
 		"error_report_lock_release",
+		"error_reports_claim",
 	} {
 		if !found[name] {
 			raw, _ := json.Marshal(definitions)

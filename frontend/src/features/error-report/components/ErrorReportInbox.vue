@@ -66,15 +66,6 @@
                   @click.stop="openDetails(report)"
                 >Подтвердить</button>
               </div>
-
-              <div class="report-tooltip" role="tooltip">
-                <p>{{ report.description }}</p>
-                <dl>
-                  <div><dt>Страница</dt><dd>{{ shortPage(report.pageUrl) }}</dd></div>
-                  <div><dt>Элемент</dt><dd>{{ report.element?.selector || '—' }}</dd></div>
-                </dl>
-                <p v-if="report.seriousChangeReason" class="tooltip-warning">{{ report.seriousChangeReason }}</p>
-              </div>
             </article>
           </div>
 
@@ -222,7 +213,7 @@ const visibleReportsLimit = 8
 const canReview = computed(() => accountStore.user?.roles?.includes('ERROR_REPORT_REVIEWER'))
 const isAdmin = computed(() => accountStore.user?.roles?.includes('ADMIN'))
 const activeReport = computed(() => reports.value.find(report => report.id === activeReportId.value) || null)
-const attentionCount = computed(() => reports.value.filter(report => report.status === 'OPEN').length)
+const attentionCount = computed(() => reports.value.filter(report => ['OPEN', 'IN_PROGRESS'].includes(report.status)).length)
 const displayedReports = computed(() => reports.value.slice(0, visibleReportsLimit))
 const hiddenReportsCount = computed(() => Math.max(0, reports.value.length - visibleReportsLimit))
 const inboxSummary = computed(() => {
@@ -346,15 +337,6 @@ function statusKey(report) {
 
 function statusLabel(report) {
   return errorReportStatusLabel(report)
-}
-
-function shortPage(value) {
-  try {
-    const url = new URL(value, window.location.origin)
-    return `${url.pathname}${url.search}`
-  } catch {
-    return value
-  }
 }
 
 function reviewScreenshotURL(id, kind) {
@@ -491,6 +473,7 @@ onBeforeUnmount(stopPolling)
 .state-answer .report-dot { background: var(--warning); box-shadow: 0 0 12px rgba(252, 190, 36, .35); }
 .state-approval .report-dot { background: var(--danger); box-shadow: 0 0 12px rgba(224, 85, 85, .4); }
 .state-unapproved .report-dot { background: var(--text-faint); box-shadow: none; }
+.state-in_progress .report-dot { background: #5ba9e6; box-shadow: 0 0 12px rgba(91, 169, 230, .42); }
 .state-resolved .report-dot { background: var(--success); box-shadow: 0 0 12px rgba(76, 175, 110, .35); }
 
 .report-copy { min-width: 0; flex: 1; display: grid; gap: 2px; }
@@ -510,37 +493,6 @@ onBeforeUnmount(stopPolling)
   color: var(--text-2); cursor: pointer; font: inherit; font-size: 9px; padding: 4px 8px;
 }
 .report-inline-actions .approval-action { border-color: rgba(224, 85, 85, .35); color: #ef9b8f; }
-
-.report-tooltip {
-  max-height: 0;
-  margin-left: 17px;
-  overflow: hidden;
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(-3px);
-  transition: max-height .2s ease, padding-top .2s ease, opacity .15s ease, transform .2s ease;
-}
-.inbox-report:hover .report-tooltip {
-  max-height: 170px;
-  padding-top: 10px;
-  opacity: 1;
-  transform: none;
-}
-.report-tooltip p {
-  display: -webkit-box;
-  margin: 0;
-  overflow: hidden;
-  color: var(--text-2);
-  font-size: 11px;
-  line-height: 1.45;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 4;
-}
-.report-tooltip dl { display: grid; gap: 6px; margin: 10px 0 0; }
-.report-tooltip dl div { display: grid; grid-template-columns: 56px 1fr; gap: 8px; }
-.report-tooltip dt { color: var(--text-muted); font-size: 9px; }
-.report-tooltip dd { min-width: 0; margin: 0; overflow: hidden; color: var(--text-2); font: 10px monospace; text-overflow: ellipsis; white-space: nowrap; }
-.report-tooltip .tooltip-warning { margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(224,85,85,.2); color: #ef9b8f; }
 
 .inbox-empty { display: grid; justify-items: center; gap: 5px; padding: 34px 20px; color: var(--text-2); }
 .inbox-empty > span { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: rgba(76,175,110,.14); color: var(--success); }
@@ -634,10 +586,6 @@ onBeforeUnmount(stopPolling)
   transform-origin: left bottom;
 }
 .inbox-morph-enter-from, .inbox-morph-leave-to { opacity: 0; transform: scale(.82); }
-
-@media (max-width: 900px) {
-  .report-tooltip { display: none; }
-}
 
 @media (max-width: 640px) {
   .review-inbox { left: 10px; bottom: 58px; }

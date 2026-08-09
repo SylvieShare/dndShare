@@ -43,8 +43,9 @@ Write tools (gated, see below):
 - `error_report_lock_acquire(ttlMinutes?)` — atomically acquire the singleton automation lease; returns an opaque `leaseId` only when `acquired = true` (default 45 minutes, accepted 5–120).
 - `error_report_lock_renew(leaseId, ttlMinutes?)` — extend a still-active lease owned by the handle.
 - `error_report_lock_release(leaseId)` — release the lease in the scheduled run's final cleanup step.
+- `error_reports_claim(ids, leaseId)` — atomically claim the current post-lock queue as `IN_PROGRESS`; release or expiry requeues unfinished work.
 
-Handbook writes run as a synthetic `HANDBOOK_ADMIN` (repositories called with `isAdmin = true`, `userId = 0`). Creates always produce **base** records (`user_id = NULL`). Error-report resolution and AI feedback use the report id directly but succeed only for an open approved row. Lease mutation and all other write tools require `MCP_WRITE_ENABLED=true`.
+Handbook writes run as a synthetic `HANDBOOK_ADMIN` (repositories called with `isAdmin = true`, `userId = 0`). Creates always produce **base** records (`user_id = NULL`). Error-report resolution and AI feedback succeed for an actionable open row or for an `IN_PROGRESS` row owned by the supplied `leaseId`. Lease mutation and all other write tools require `MCP_WRITE_ENABLED=true`.
 
 ## Auth
 

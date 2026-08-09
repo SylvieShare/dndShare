@@ -22,6 +22,9 @@ type ErrorReport struct {
 	UserLogin                     *string              `json:"userLogin"`
 	Approved                      bool                 `json:"approved"`
 	Status                        string               `json:"status"`
+	ProcessingRunID               *string              `json:"processingRunId,omitempty"`
+	ProcessingStartedAt           *time.Time           `json:"processingStartedAt,omitempty"`
+	ProcessingExpiresAt           *time.Time           `json:"processingExpiresAt,omitempty"`
 	Resolution                    *string              `json:"resolution"`
 	ResolvedCommitSHA             *string              `json:"resolvedCommitSha"`
 	ResolvedAt                    *time.Time           `json:"resolvedAt"`
@@ -41,9 +44,10 @@ type ErrorReport struct {
 }
 
 const (
-	ErrorReportStatusOpen     = "OPEN"
-	ErrorReportStatusResolved = "RESOLVED"
-	ErrorReportStatusArchived = "ARCHIVED"
+	ErrorReportStatusOpen       = "OPEN"
+	ErrorReportStatusInProgress = "IN_PROGRESS"
+	ErrorReportStatusResolved   = "RESOLVED"
+	ErrorReportStatusArchived   = "ARCHIVED"
 
 	ErrorReportMessageSenderAI    = "AI"
 	ErrorReportMessageSenderAdmin = "ADMIN"
@@ -112,6 +116,9 @@ func (s *Store) CreateErrorReport(
 }
 
 func (s *Store) ListErrorReports(ctx context.Context, limit, offset int) ([]ErrorReport, error) {
+	if err := s.requeueExpiredErrorReportClaims(ctx); err != nil {
+		return nil, err
+	}
 	if err := s.archiveExpiredResolvedErrorReports(ctx); err != nil {
 		return nil, err
 	}
@@ -119,14 +126,30 @@ func (s *Store) ListErrorReports(ctx context.Context, limit, offset int) ([]Erro
 }
 
 func (s *Store) ListApprovedErrorReports(ctx context.Context, limit, offset int) ([]ErrorReport, error) {
+	if err := s.requeueExpiredErrorReportClaims(ctx); err != nil {
+		return nil, err
+	}
 	return s.listErrorReports(ctx, limit, offset, true, true)
 }
 
 func (s *Store) ListReviewerErrorReports(ctx context.Context, limit, offset int) ([]ErrorReport, error) {
+	if err := s.requeueExpiredErrorReportClaims(ctx); err != nil {
+		return nil, err
+	}
 	if err := s.archiveExpiredResolvedErrorReports(ctx); err != nil {
 		return nil, err
 	}
 	return s.listErrorReports(ctx, limit, offset, false, true)
+}
+
+func (s *Store) requeueExpiredErrorReportClaims(ctx context.Context) error {
+	_, err := s.pool.Exec(ctx, `
+		UPDATE dndshare.error_report
+		SET status = 'OPEN', processing_run_id = NULL,
+		    processing_started_at = NULL, processing_expires_at = NULL
+		WHERE status = 'IN_PROGRESS'
+		  AND (processing_expires_at IS NULL OR processing_expires_at <= now())`)
+	return err
 }
 
 func (s *Store) archiveExpiredResolvedErrorReports(ctx context.Context) error {
@@ -140,7 +163,8 @@ func (s *Store) archiveExpiredResolvedErrorReports(ctx context.Context) error {
 func (s *Store) listErrorReports(ctx context.Context, limit, offset int, approvedOnly, reviewerVisibleOnly bool) ([]ErrorReport, error) {
 	rows, err := s.pool.Query(ctx, `
 		SELECT er.id, er.title, er.description, er.page_url, er.element, er.user_id, u.login,
-		       er.approved, er.status, er.resolution, er.resolved_commit_sha, er.resolved_at,
+		       er.approved, er.status, er.processing_run_id, er.processing_started_at,
+		       er.processing_expires_at, er.resolution, er.resolved_commit_sha, er.resolved_at,
 		       er.screenshot IS NOT NULL, er.screenshot_content_type,
 		       er.viewport_screenshot IS NOT NULL, er.viewport_screenshot_content_type,
 		       COALESCE((
@@ -192,6 +216,9 @@ func (s *Store) listErrorReports(ctx context.Context, limit, offset int, approve
 			&report.UserLogin,
 			&report.Approved,
 			&report.Status,
+			&report.ProcessingRunID,
+			&report.ProcessingStartedAt,
+			&report.ProcessingExpiresAt,
 			&report.Resolution,
 			&report.ResolvedCommitSHA,
 			&report.ResolvedAt,
@@ -267,15 +294,15 @@ func (s *Store) listErrorReportMessages(ctx context.Context, reportIDs []int64) 
 	return messages, rows.Err()
 }
 
-func (s *Store) CreateErrorReportAIQuestion(ctx context.Context, reportID int64, message string) (ErrorReportMessage, error) {
-	return s.createErrorReportMessage(ctx, reportID, ErrorReportMessageSenderAI, message, nil, true)
+func (s *Store) CreateErrorReportAIQuestion(ctx context.Context, reportID int64, message string, leaseID *string) (ErrorReportMessage, error) {
+	return s.createErrorReportMessage(ctx, reportID, ErrorReportMessageSenderAI, message, nil, true, leaseID)
 }
 
 func (s *Store) CreateErrorReportAdminAnswer(ctx context.Context, reportID, adminUserID int64, message string) (ErrorReportMessage, error) {
-	return s.createErrorReportMessage(ctx, reportID, ErrorReportMessageSenderAdmin, message, &adminUserID, false)
+	return s.createErrorReportMessage(ctx, reportID, ErrorReportMessageSenderAdmin, message, &adminUserID, false, nil)
 }
 
-func (s *Store) createErrorReportMessage(ctx context.Context, reportID int64, sender, message string, adminUserID *int64, requireApproved bool) (ErrorReportMessage, error) {
+func (s *Store) createErrorReportMessage(ctx context.Context, reportID int64, sender, message string, adminUserID *int64, requireApproved bool, leaseID *string) (ErrorReportMessage, error) {
 	tx, err := s.pool.Begin(ctx)
 	if err != nil {
 		return ErrorReportMessage{}, err
@@ -284,9 +311,10 @@ func (s *Store) createErrorReportMessage(ctx context.Context, reportID int64, se
 
 	var approved bool
 	var status string
+	var processingRunID *string
 	var latestSender string
 	err = tx.QueryRow(ctx, `
-		SELECT er.approved, er.status, COALESCE((
+		SELECT er.approved, er.status, er.processing_run_id, COALESCE((
 		    SELECT m.sender
 		    FROM dndshare.error_report_message m
 		    WHERE m.error_report_id = er.id
@@ -295,15 +323,35 @@ func (s *Store) createErrorReportMessage(ctx context.Context, reportID int64, se
 		), '')
 		FROM dndshare.error_report er
 		WHERE er.id = $1
-		FOR UPDATE`, reportID).Scan(&approved, &status, &latestSender)
+		FOR UPDATE`, reportID).Scan(&approved, &status, &processingRunID, &latestSender)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return ErrorReportMessage{}, ErrNotFound
 	}
 	if err != nil {
 		return ErrorReportMessage{}, err
 	}
-	if status != ErrorReportStatusOpen || requireApproved && !approved {
+	if requireApproved && !approved {
 		return ErrorReportMessage{}, ErrNotFound
+	}
+	if sender == ErrorReportMessageSenderAdmin && status != ErrorReportStatusOpen {
+		return ErrorReportMessage{}, ErrNotFound
+	}
+	if sender == ErrorReportMessageSenderAI {
+		owned := status == ErrorReportStatusOpen && leaseID == nil
+		if status == ErrorReportStatusInProgress && leaseID != nil && processingRunID != nil && *processingRunID == errorReportProcessingRunID(*leaseID) {
+			var active bool
+			if err := tx.QueryRow(ctx, `
+				SELECT EXISTS (
+				    SELECT 1 FROM dndshare.error_report_automation_lock
+				    WHERE id = 1 AND token = $1 AND expires_at > now()
+				)`, *leaseID).Scan(&active); err != nil {
+				return ErrorReportMessage{}, err
+			}
+			owned = active
+		}
+		if !owned {
+			return ErrorReportMessage{}, ErrNotFound
+		}
 	}
 	if sender == ErrorReportMessageSenderAI && latestSender == ErrorReportMessageSenderAI {
 		return ErrorReportMessage{}, ErrErrorReportAwaitingAnswer
@@ -328,6 +376,15 @@ func (s *Store) createErrorReportMessage(ctx context.Context, reportID int64, se
 	)
 	if err != nil {
 		return ErrorReportMessage{}, err
+	}
+	if sender == ErrorReportMessageSenderAI {
+		if _, err := tx.Exec(ctx, `
+			UPDATE dndshare.error_report
+			SET status = 'OPEN', processing_run_id = NULL,
+			    processing_started_at = NULL, processing_expires_at = NULL
+			WHERE id = $1`, reportID); err != nil {
+			return ErrorReportMessage{}, err
+		}
 	}
 	if err := tx.Commit(ctx); err != nil {
 		return ErrorReportMessage{}, err
@@ -368,7 +425,7 @@ func (s *Store) getErrorReportScreenshot(ctx context.Context, id int64, approved
 		FROM dndshare.error_report
 		WHERE id = $1
 		  AND CASE WHEN $3::bool THEN viewport_screenshot IS NOT NULL ELSE screenshot IS NOT NULL END
-		  AND (NOT $2::bool OR (approved AND status = 'OPEN'))
+		  AND (NOT $2::bool OR (approved AND status IN ('OPEN', 'IN_PROGRESS')))
 		  AND (NOT $4::bool OR status <> 'ARCHIVED')`, id, approvedOnly, viewport, reviewerVisibleOnly,
 	).Scan(&screenshot, &contentType)
 	if errors.Is(err, pgx.ErrNoRows) {
@@ -411,16 +468,29 @@ func (s *Store) SetErrorReportApproved(ctx context.Context, id int64, approved b
 	return result.RowsAffected() > 0, nil
 }
 
-func (s *Store) RequestApprovedErrorReportSeriousChange(ctx context.Context, id int64, reason string) (bool, error) {
+func (s *Store) RequestApprovedErrorReportSeriousChange(ctx context.Context, id int64, reason string, leaseID *string) (bool, error) {
+	var processingRunID *string
+	if leaseID != nil {
+		runID := errorReportProcessingRunID(*leaseID)
+		processingRunID = &runID
+	}
 	result, err := s.pool.Exec(ctx, `
 		UPDATE dndshare.error_report er
 		SET serious_change_reason = $2,
 		    serious_change_requested_at = now(),
 		    serious_change_approved_at = NULL,
-		    serious_change_approved_by_user_id = NULL
+		    serious_change_approved_by_user_id = NULL,
+		    status = 'OPEN', processing_run_id = NULL,
+		    processing_started_at = NULL, processing_expires_at = NULL
 		WHERE id = $1
 		  AND approved
-		  AND status = 'OPEN'
+		  AND ((status = 'OPEN' AND $4::text IS NULL) OR (
+		      status = 'IN_PROGRESS' AND processing_run_id = $3
+		      AND EXISTS (
+		          SELECT 1 FROM dndshare.error_report_automation_lock l
+		          WHERE l.id = 1 AND l.token = $4 AND l.expires_at > now()
+		      )
+		  ))
 		  AND COALESCE((
 		      SELECT m.sender <> 'AI'
 		      FROM dndshare.error_report_message m
@@ -429,7 +499,7 @@ func (s *Store) RequestApprovedErrorReportSeriousChange(ctx context.Context, id 
 		      LIMIT 1
 		  ), true)
 		  AND NOT (serious_change_requested_at IS NOT NULL AND serious_change_approved_at IS NULL)`,
-		id, reason)
+		id, reason, processingRunID, leaseID)
 	if err != nil {
 		return false, err
 	}
@@ -450,11 +520,24 @@ func (s *Store) ApproveErrorReportSeriousChange(ctx context.Context, id, adminUs
 	return result.RowsAffected() > 0, nil
 }
 
-func (s *Store) ResolveApprovedErrorReport(ctx context.Context, id int64, resolution string, commitSHA *string) (bool, error) {
+func (s *Store) ResolveApprovedErrorReport(ctx context.Context, id int64, resolution string, commitSHA, leaseID *string) (bool, error) {
+	var processingRunID *string
+	if leaseID != nil {
+		runID := errorReportProcessingRunID(*leaseID)
+		processingRunID = &runID
+	}
 	result, err := s.pool.Exec(ctx, `
 		UPDATE dndshare.error_report er
-		SET status = 'RESOLVED', resolution = $2, resolved_commit_sha = $3, resolved_at = now()
-		WHERE id = $1 AND approved AND status = 'OPEN'
+		SET status = 'RESOLVED', resolution = $2, resolved_commit_sha = $3, resolved_at = now(),
+		    processing_run_id = NULL, processing_started_at = NULL, processing_expires_at = NULL
+		WHERE id = $1 AND approved
+		  AND ((status = 'OPEN' AND $5::text IS NULL) OR (
+		      status = 'IN_PROGRESS' AND processing_run_id = $4
+		      AND EXISTS (
+		          SELECT 1 FROM dndshare.error_report_automation_lock l
+		          WHERE l.id = 1 AND l.token = $5 AND l.expires_at > now()
+		      )
+		  ))
 		  AND COALESCE((
 		      SELECT m.sender <> 'AI'
 		      FROM dndshare.error_report_message m
@@ -462,7 +545,7 @@ func (s *Store) ResolveApprovedErrorReport(ctx context.Context, id int64, resolu
 		      ORDER BY m.id DESC
 		      LIMIT 1
 		  ), true)
-		  AND (serious_change_requested_at IS NULL OR serious_change_approved_at IS NOT NULL)`, id, resolution, commitSHA)
+		  AND (serious_change_requested_at IS NULL OR serious_change_approved_at IS NOT NULL)`, id, resolution, commitSHA, processingRunID, leaseID)
 	if err != nil {
 		return false, err
 	}
@@ -473,6 +556,7 @@ func (s *Store) ReopenErrorReport(ctx context.Context, id int64) (bool, error) {
 	result, err := s.pool.Exec(ctx, `
 		UPDATE dndshare.error_report
 		SET status = 'OPEN', resolution = NULL, resolved_commit_sha = NULL, resolved_at = NULL,
+		    processing_run_id = NULL, processing_started_at = NULL, processing_expires_at = NULL,
 		    serious_change_reason = NULL, serious_change_requested_at = NULL,
 		    serious_change_approved_at = NULL, serious_change_approved_by_user_id = NULL
 		WHERE id = $1 AND status IN ('RESOLVED', 'ARCHIVED')`, id)

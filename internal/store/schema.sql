@@ -109,6 +109,9 @@ ALTER TABLE dndshare.error_report ADD COLUMN IF NOT EXISTS serious_change_reason
 ALTER TABLE dndshare.error_report ADD COLUMN IF NOT EXISTS serious_change_requested_at timestamptz NULL;
 ALTER TABLE dndshare.error_report ADD COLUMN IF NOT EXISTS serious_change_approved_at timestamptz NULL;
 ALTER TABLE dndshare.error_report ADD COLUMN IF NOT EXISTS serious_change_approved_by_user_id int8 NULL;
+ALTER TABLE dndshare.error_report ADD COLUMN IF NOT EXISTS processing_run_id varchar(64) NULL;
+ALTER TABLE dndshare.error_report ADD COLUMN IF NOT EXISTS processing_started_at timestamptz NULL;
+ALTER TABLE dndshare.error_report ADD COLUMN IF NOT EXISTS processing_expires_at timestamptz NULL;
 DO $$ BEGIN
     IF NOT EXISTS (
         SELECT 1 FROM pg_constraint
@@ -124,7 +127,7 @@ END $$;
 DO $$ BEGIN
     ALTER TABLE dndshare.error_report DROP CONSTRAINT IF EXISTS error_report_status_check;
     ALTER TABLE dndshare.error_report
-        ADD CONSTRAINT error_report_status_check CHECK (status IN ('OPEN', 'RESOLVED', 'ARCHIVED'));
+        ADD CONSTRAINT error_report_status_check CHECK (status IN ('OPEN', 'IN_PROGRESS', 'RESOLVED', 'ARCHIVED'));
 END $$;
 CREATE INDEX IF NOT EXISTS idx_error_report_created_at ON dndshare.error_report USING btree (created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_error_report_user_id ON dndshare.error_report USING btree (user_id);
@@ -133,6 +136,8 @@ CREATE INDEX IF NOT EXISTS idx_error_report_open_approved_created_at
     ON dndshare.error_report USING btree (created_at DESC) WHERE approved AND status = 'OPEN';
 CREATE INDEX IF NOT EXISTS idx_error_report_resolved_at
     ON dndshare.error_report USING btree (resolved_at) WHERE status = 'RESOLVED';
+CREATE INDEX IF NOT EXISTS idx_error_report_processing_expires_at
+    ON dndshare.error_report USING btree (processing_expires_at) WHERE status = 'IN_PROGRESS';
 CREATE INDEX IF NOT EXISTS idx_error_report_serious_change_approved_by_user_id
     ON dndshare.error_report USING btree (serious_change_approved_by_user_id)
     WHERE serious_change_approved_by_user_id IS NOT NULL;

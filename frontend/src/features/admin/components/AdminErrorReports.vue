@@ -35,9 +35,11 @@
             <span class="report-user">{{ report.userLogin || 'Гость' }}</span>
             <span v-if="report.status === 'ARCHIVED'" class="status-badge resolved">В архиве</span>
             <span v-else-if="report.status === 'RESOLVED'" class="status-badge resolved">Завершена</span>
+            <span v-else-if="report.status === 'IN_PROGRESS'" class="status-badge processing">В работе</span>
             <span v-else-if="report.waitingForSeriousApproval" class="status-badge serious">Нужно решение ADMIN</span>
             <span v-else-if="report.waitingForAnswer" class="status-badge waiting">Ждёт ответа</span>
-            <span v-else class="status-badge open">В работе</span>
+            <span v-else-if="!report.approved" class="status-badge waiting">Не одобрена</span>
+            <span v-else class="status-badge open">В очереди</span>
           </div>
           <div class="report-actions">
             <label v-if="report.status === 'OPEN'" class="approval-toggle" :class="{ approved: report.approved }">
@@ -195,7 +197,8 @@ const replyDrafts = reactive({})
 const activeFilter = ref('OPEN')
 
 const filters = computed(() => [
-  { value: 'OPEN', label: 'В работе', count: reports.value.filter(report => report.status === 'OPEN' && !report.waitingForAnswer && !report.waitingForSeriousApproval).length },
+  { value: 'OPEN', label: 'В очереди', count: reports.value.filter(report => report.status === 'OPEN' && !report.waitingForAnswer && !report.waitingForSeriousApproval).length },
+  { value: 'IN_PROGRESS', label: 'В работе', count: reports.value.filter(report => report.status === 'IN_PROGRESS').length },
   { value: 'WAITING', label: 'Ждут ответа', count: reports.value.filter(report => report.status === 'OPEN' && report.waitingForAnswer).length },
   { value: 'APPROVAL', label: 'Ждут решения', count: reports.value.filter(report => report.status === 'OPEN' && report.waitingForSeriousApproval).length },
   { value: 'RESOLVED', label: 'Завершены', count: reports.value.filter(report => report.status === 'RESOLVED').length },
@@ -207,6 +210,9 @@ const filteredReports = computed(() => {
   if (activeFilter.value === 'ALL') return reports.value
   if (activeFilter.value === 'WAITING') {
     return reports.value.filter(report => report.status === 'OPEN' && report.waitingForAnswer)
+  }
+  if (activeFilter.value === 'IN_PROGRESS') {
+    return reports.value.filter(report => report.status === 'IN_PROGRESS')
   }
   if (activeFilter.value === 'APPROVAL') {
     return reports.value.filter(report => report.status === 'OPEN' && report.waitingForSeriousApproval)
@@ -464,6 +470,7 @@ onMounted(load)
 }
 
 .status-badge.open { background: rgba(141, 126, 232, 0.14); color: #c2b8ff; }
+.status-badge.processing { background: rgba(91, 169, 230, 0.14); color: #83c8f5; }
 .status-badge.waiting { background: rgba(232, 184, 90, 0.14); color: #e8b85a; }
 .status-badge.serious { background: rgba(224, 85, 85, 0.14); color: #ef9b8f; }
 .status-badge.resolved { background: rgba(100, 183, 123, 0.14); color: #75c58b; }
