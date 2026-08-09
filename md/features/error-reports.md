@@ -50,9 +50,10 @@ MCP exposes:
 
 Scheduled runs coordinate through a singleton database lease exposed by MCP, so the protection works across local checkouts, Git worktrees, and different machines.
 
-1. After tool discovery, the first application tool call must be `error_report_lock_acquire(ttlMinutes?)`. If it returns `acquired: false`, another run is active and the new run must stop without reading or changing reports.
-2. Keep the returned opaque `leaseId` for the duration of the run. The default lease lifetime is 45 minutes; accepted values are 5–120 minutes.
-3. Renew with `error_report_lock_renew(leaseId, ttlMinutes?)` before tests, push, and deploy, or whenever less than 15 minutes remain.
-4. Always finish with `error_report_lock_release(leaseId)`, including runs that find no approved reports or stop after an error.
+1. Before reading project files, make one lightweight `error_reports_list` call. An empty queue can exit immediately without taking a lease or loading repository context.
+2. When the initial list is non-empty, call `error_report_lock_acquire(ttlMinutes?)` before reading or changing the repository. If it returns `acquired: false`, another run is active and the new run must stop.
+3. Keep the returned opaque `leaseId` for the duration of the run. The default lease lifetime is 45 minutes; accepted values are 5–120 minutes. Repeat `error_reports_list` after acquisition and use that current snapshot, because the queue may have changed between the first read and the lease.
+4. Renew with `error_report_lock_renew(leaseId, ttlMinutes?)` before tests, push, and deploy, or whenever less than 15 minutes remain.
+5. Always finish with `error_report_lock_release(leaseId)`, including runs that find no approved reports after acquisition or stop after an error.
 
 Acquisition is atomic in PostgreSQL. An expired lease can be replaced by the next run, so an interrupted automation cannot block the queue forever. Only the matching opaque handle can renew or release an active lease. All three coordination tools require `MCP_WRITE_ENABLED=true`.
