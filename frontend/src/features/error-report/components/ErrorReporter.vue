@@ -105,7 +105,7 @@ import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
 import { toCanvas, toJpeg } from 'html-to-image'
 import AppModal from '@/shared/ui/AppModal.vue'
 import { createErrorReport } from '../api/errorReportApi'
-import { planAncestorCrop } from '../lib/screenshotGeometry'
+import { planAncestorCrop, scrollOffsetBetween } from '../lib/screenshotGeometry'
 
 const selecting = ref(false)
 const formOpen = ref(false)
@@ -289,7 +289,12 @@ function afterNextPaint() {
 async function captureSelectedArea(element) {
   const rect = element.getBoundingClientRect()
   if (rect.width <= 0 || rect.height <= 0) throw new Error('empty screenshot context')
-  const captureRoot = screenshotCaptureRoot(element)
+  const backgroundRoot = screenshotCaptureRoot(element)
+  const scrollOffset = scrollOffsetBetween(element, backgroundRoot)
+  // html-to-image does not preserve scrollTop/scrollLeft on cloned containers.
+  // Capture the selected context itself when it sits inside a scrolled parent;
+  // otherwise an off-screen part of the unscrolled clone lands in the crop.
+  const captureRoot = scrollOffset.left || scrollOffset.top ? element : backgroundRoot
   const plan = planAncestorCrop(rect, captureRoot.getBoundingClientRect())
   if (plan.crop.width <= 0 || plan.crop.height <= 0) throw new Error('empty screenshot crop')
   const scale = Math.max(0.1, Math.min(
@@ -387,7 +392,7 @@ async function captureViewport() {
 
 async function renderElementCanvas(element, render, pixelRatio) {
   return toCanvas(element, {
-    backgroundColor: screenshotBackground(),
+    backgroundColor: screenshotBackground(element),
     cacheBust: true,
     width: render.width,
     height: render.height,
@@ -460,8 +465,14 @@ function screenshotFilter(node) {
   ))
 }
 
-function screenshotBackground() {
-  return getComputedStyle(document.body).backgroundColor || '#11121a'
+function screenshotBackground(element = document.body) {
+  let current = element
+  while (current) {
+    const color = getComputedStyle(current).backgroundColor
+    if (!isTransparentColor(color)) return color
+    current = current.parentElement
+  }
+  return '#11121a'
 }
 
 function checkedScreenshot(dataURL) {

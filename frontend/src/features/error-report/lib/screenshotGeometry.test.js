@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { planAncestorCrop } from './screenshotGeometry'
+import { planAncestorCrop, scrollOffsetBetween } from './screenshotGeometry'
 
 describe('planAncestorCrop', () => {
   it('uses coordinates relative to the painted ancestor', () => {
@@ -19,5 +19,15 @@ describe('planAncestorCrop', () => {
     )
 
     expect(plan.crop).toEqual({ left: 0, top: 10, width: 160, height: 70 })
+  })
+
+  it('sums nested scroll offsets up to the capture root', () => {
+    const root = { scrollLeft: 3, scrollTop: 10, parentElement: null }
+    const scroller = { scrollLeft: 7, scrollTop: 365, parentElement: root }
+    const parent = { scrollLeft: 0, scrollTop: 0, parentElement: scroller }
+    const element = { parentElement: parent }
+
+    expect(scrollOffsetBetween(element, root)).toEqual({ left: 10, top: 375 })
+    expect(scrollOffsetBetween(root, root)).toEqual({ left: 0, top: 0 })
   })
 })

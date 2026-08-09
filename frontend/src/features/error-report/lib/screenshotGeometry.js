@@ -23,3 +23,17 @@ export function planAncestorCrop(rect, ancestorRect) {
     },
   }
 }
+
+export function scrollOffsetBetween(element, captureRoot) {
+  if (element === captureRoot) return { left: 0, top: 0 }
+  let left = 0
+  let top = 0
+  let current = element.parentElement
+  while (current) {
+    left += current.scrollLeft || 0
+    top += current.scrollTop || 0
+    if (current === captureRoot) break
+    current = current.parentElement
+  }
+  return { left, top }
+}
