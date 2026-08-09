@@ -13,7 +13,16 @@
         >
           <span class="inbox-trigger-icon" aria-hidden="true">{{ reports.length ? '⌁' : '✓' }}</span>
           <span class="inbox-trigger-label">{{ reports.length ? 'Заявки' : 'Список пуст' }}</span>
-          <span v-if="attentionCount" class="inbox-count">{{ attentionCount }}</span>
+          <span v-if="statusChips.length" class="inbox-statuses" aria-label="Заявки по статусам">
+            <span
+              v-for="status in statusChips"
+              :key="status.key"
+              class="inbox-status-chip"
+              :class="`status-${status.key.toLowerCase()}`"
+              :title="`${status.label}: ${status.count}`"
+              :aria-label="`${status.label}: ${status.count}`"
+            >{{ status.count }}</span>
+          </span>
         </button>
 
         <section v-else key="panel" class="inbox-panel">
@@ -183,6 +192,7 @@ import { useAccountStore } from '@/stores/account'
 import {
   errorReportStatusKey,
   errorReportStatusLabel,
+  errorReportStatusSummary,
   errorReportDisplayTitle,
   shouldShowErrorReportAuthor,
 } from '../lib/errorReportPresentation'
@@ -214,7 +224,7 @@ const visibleReportsLimit = 8
 const canReview = computed(() => accountStore.user?.roles?.includes('ERROR_REPORT_REVIEWER'))
 const isAdmin = computed(() => accountStore.user?.roles?.includes('ADMIN'))
 const activeReport = computed(() => reports.value.find(report => report.id === activeReportId.value) || null)
-const attentionCount = computed(() => reports.value.filter(report => ['OPEN', 'IN_PROGRESS'].includes(report.status)).length)
+const statusChips = computed(() => errorReportStatusSummary(reports.value))
 const displayedReports = computed(() => reports.value.slice(0, visibleReportsLimit))
 const hiddenReportsCount = computed(() => Math.max(0, reports.value.length - visibleReportsLimit))
 const inboxSummary = computed(() => {
@@ -407,14 +417,66 @@ onBeforeUnmount(stopPolling)
   font-size: 17px;
 }
 
-.inbox-count {
+.inbox-statuses {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.inbox-status-chip {
+  display: inline-grid;
+  place-items: center;
   min-width: 20px;
+  height: 20px;
   padding: 2px 6px;
+  border: 1px solid transparent;
   border-radius: 999px;
-  background: var(--accent);
-  color: white;
   font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
   text-align: center;
+}
+
+.inbox-status-chip.status-open {
+  border-color: color-mix(in srgb, var(--accent) 38%, transparent);
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  color: var(--accent-soft);
+}
+
+.inbox-status-chip.status-in_progress {
+  border-color: rgba(91, 169, 230, .38);
+  background: rgba(91, 169, 230, .16);
+  color: #83c8f5;
+}
+
+.inbox-status-chip.status-answer {
+  border-color: color-mix(in srgb, var(--warning) 40%, transparent);
+  background: color-mix(in srgb, var(--warning) 16%, transparent);
+  color: var(--warning);
+}
+
+.inbox-status-chip.status-approval {
+  border-color: rgba(224, 85, 85, .42);
+  background: rgba(224, 85, 85, .16);
+  color: #ef9b8f;
+}
+
+.inbox-status-chip.status-unapproved {
+  border-color: var(--border-strong);
+  background: var(--surface-1);
+  color: var(--text-muted);
+}
+
+.inbox-status-chip.status-resolved {
+  border-color: color-mix(in srgb, var(--success) 38%, transparent);
+  background: color-mix(in srgb, var(--success) 16%, transparent);
+  color: var(--success);
+}
+
+.inbox-status-chip.status-archived {
+  border-color: color-mix(in srgb, var(--text-muted) 34%, transparent);
+  background: color-mix(in srgb, var(--text-muted) 13%, transparent);
+  color: var(--text-2);
 }
 
 .inbox-panel {

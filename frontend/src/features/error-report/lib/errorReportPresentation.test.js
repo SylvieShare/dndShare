@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import {
   errorReportStatusKey,
   errorReportStatusLabel,
+  errorReportStatusSummary,
   errorReportDisplayTitle,
   shouldShowErrorReportAuthor,
 } from './errorReportPresentation'
@@ -19,6 +20,23 @@ describe('error report presentation', () => {
     expect(shouldShowErrorReportAuthor({ userId: 7 }, 7)).toBe(false)
     expect(shouldShowErrorReportAuthor({ userId: 8 }, 7)).toBe(true)
     expect(shouldShowErrorReportAuthor({ userId: null }, 7)).toBe(true)
+  })
+
+  it('groups compact inbox chips by visible status', () => {
+    expect(errorReportStatusSummary([
+      { status: 'OPEN', approved: true },
+      { status: 'OPEN', approved: true },
+      { status: 'OPEN', approved: false },
+      { status: 'OPEN', waitingForAnswer: true },
+      { status: 'IN_PROGRESS' },
+      { status: 'RESOLVED' },
+    ])).toEqual([
+      { key: 'OPEN', label: 'В очереди', count: 2 },
+      { key: 'IN_PROGRESS', label: 'В работе', count: 1 },
+      { key: 'ANSWER', label: 'Ждёт ответа', count: 1 },
+      { key: 'UNAPPROVED', label: 'Не одобрена', count: 1 },
+      { key: 'RESOLVED', label: 'Завершена', count: 1 },
+    ])
   })
 
   it('uses a truncated description until the AI supplies a title', () => {

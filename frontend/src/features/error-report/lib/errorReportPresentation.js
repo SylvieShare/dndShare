@@ -1,3 +1,15 @@
+const STATUS_PRESENTATION = {
+  OPEN: 'В очереди',
+  IN_PROGRESS: 'В работе',
+  ANSWER: 'Ждёт ответа',
+  APPROVAL: 'Нужно решение',
+  UNAPPROVED: 'Не одобрена',
+  RESOLVED: 'Завершена',
+  ARCHIVED: 'В архиве',
+}
+
+const STATUS_ORDER = ['OPEN', 'IN_PROGRESS', 'ANSWER', 'APPROVAL', 'UNAPPROVED', 'RESOLVED', 'ARCHIVED']
+
 export function errorReportStatusKey(report) {
   if (report.status === 'RESOLVED') return 'RESOLVED'
   if (report.status === 'ARCHIVED') return 'ARCHIVED'
@@ -9,15 +21,18 @@ export function errorReportStatusKey(report) {
 }
 
 export function errorReportStatusLabel(report) {
-  return {
-    RESOLVED: 'Завершена',
-    ARCHIVED: 'В архиве',
-    IN_PROGRESS: 'В работе',
-    APPROVAL: 'Нужно решение',
-    ANSWER: 'Ждёт ответа',
-    UNAPPROVED: 'Не одобрена',
-    OPEN: 'В очереди',
-  }[errorReportStatusKey(report)]
+  return STATUS_PRESENTATION[errorReportStatusKey(report)]
+}
+
+export function errorReportStatusSummary(reports) {
+  const counts = new Map()
+  for (const report of reports || []) {
+    const key = errorReportStatusKey(report)
+    counts.set(key, (counts.get(key) || 0) + 1)
+  }
+  return STATUS_ORDER
+    .filter(key => counts.has(key))
+    .map(key => ({ key, label: STATUS_PRESENTATION[key], count: counts.get(key) }))
 }
 
 export function shouldShowErrorReportAuthor(report, currentUserId) {
