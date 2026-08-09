@@ -4,18 +4,19 @@ The application palette lives in `frontend/src/app/theme.css`. Component styles 
 
 ## Surface model
 
-The dark UI uses a strict five-level surface scale. Do not create component-specific grey colors.
+The dark UI uses one application canvas plus a compact surface scale. Do not create component-specific grey colors.
 
 | Token | Value | Purpose |
 | --- | --- | --- |
-| `--bg` | `#1b1b1d` | Page canvas and the background of every form/wizard/editor. |
+| `--app-bg` | `#121214` | Global application canvas behind page content and forms. |
+| `--bg` | `#1b1b1d` | Background of every form, wizard and editor. |
 | `--surface` | `#242427` | Cards, tiles and grouped content on the canvas. |
 | `--surface-raised` | `#2c2c30` | Inputs, selects, toggles and quiet buttons. This is the default control background on `--bg`. |
 | `--surface-active` | `#35353b` | Hovered, pressed and selected neutral controls. |
 | `--popover-bg` | `#202024` | Dropdowns, tooltips and detached popovers. |
 | `--scrim` | black at 62% | Modal/overlay dimming. |
 
-Form rule: the form container is `background: var(--bg)`, its fields are `var(--surface-raised)`, field borders are `var(--border-strong)`, and focus is `var(--accent)`. This is the contrast model established by the character-sheet morph editors and used project-wide. `AppModal` already supplies `--bg`; do not wrap a form in an additional grey panel.
+Canvas rule: `--app-bg` belongs only to the application/page backdrop and global chrome. A form container uses `background: var(--bg)`, its fields are `var(--surface-raised)`, field borders are `var(--border-strong)`, and focus is `var(--accent)`. This is the contrast model established by the character-sheet morph editors and used project-wide. `AppModal` already supplies `--bg`; do not wrap a form in an additional grey panel.
 
 ## Lines and text
 

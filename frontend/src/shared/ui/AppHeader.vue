@@ -123,7 +123,7 @@ function toggleBrandMenu() {
 
 <style scoped>
 .app-header {
-  background: var(--bg);
+  background: var(--app-bg);
   border-bottom: 1px solid var(--border);
   position: relative;
   z-index: 30;

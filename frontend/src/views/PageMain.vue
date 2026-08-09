@@ -49,7 +49,7 @@ export default {
   overflow: hidden;
   background:
     radial-gradient(circle at 18% 22%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 30%),
-    linear-gradient(135deg, var(--bg) 0%, var(--surface) 48%, var(--bg) 100%);
+    linear-gradient(135deg, var(--app-bg) 0%, var(--surface) 48%, var(--app-bg) 100%);
 }
 
 .hero {

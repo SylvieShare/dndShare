@@ -40,7 +40,7 @@ html, body {
   margin: 0;
 }
 body {
-  background-color: var(--bg);
+  background-color: var(--app-bg);
   color: var(--text-1);
   color-scheme: dark;
   overflow-x: clip;
@@ -66,6 +66,7 @@ body {
 .page-transition-stage {
   min-height: calc(100vh - var(--header-h));
   min-height: calc(100dvh - var(--header-h));
+  background: var(--app-bg);
 }
 
 .page-forward-enter-active,

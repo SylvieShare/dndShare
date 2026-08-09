@@ -115,7 +115,7 @@ On the list page (`ViewSessions`), player-role cards are rendered with the `s-ca
 
 ## ViewSession layout
 
-The shell mirrors the character-page aesthetic: every region is a **tile** (`.tile` = `background: var(--surface); border-radius: var(--r-lg)`, **no borders**) floating on the `--bg` page, separated by `gap: 12px`. The page is **fixed-width**: `.layout` is `width: min(1480px, 100%); margin: 0 auto; padding: 12px` so it centers with `--bg` gutters on wide screens. Do not reintroduce the old `border-right` dividers — separation is the gap between tiles.
+The shell mirrors the character-page aesthetic: every region is a **tile** (`.tile` = `background: var(--surface); border-radius: var(--r-lg)`, **no borders**) floating on the `--app-bg` page canvas, separated by `gap: 12px`. The page is **fixed-width**: `.layout` is `width: min(1480px, 100%); margin: 0 auto; padding: 12px` so it centers with `--app-bg` gutters on wide screens. Do not reintroduce the old `border-right` dividers — separation is the gap between tiles.
 
 `.layout` is a flex row:
 - `col-left` tile (260px participants, full height, `overflow-y: auto`).
