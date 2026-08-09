@@ -142,7 +142,7 @@ const payload = computed(() => ({
 const nonZero = computed(() => coins.value.filter(coin => amount(coin.id) > 0))
 
 // flattened for BlockMoneyView (tile + morph share it): inject the resolved amount per coin
-const displayCoins = computed(() => nonZero.value.map(coin => ({
+const displayCoins = computed(() => [...nonZero.value].reverse().map(coin => ({
   id: coin.id,
   title: coin.title,
   iconUrl: coin.iconUrl,
