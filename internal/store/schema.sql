@@ -608,6 +608,69 @@ JOIN dndshare.source_version sv ON sv.source_id = src.id AND (
 )
 WHERE c.template_id = ct.id AND c.source_version_id IS NULL;
 
+-- Data correction: item 1421 was an old incomplete copy of the rogue class
+-- feature Cunning Action, accidentally stored as a spell. Item 4056 is the
+-- canonical PHB class feature. Redirect character JSON before deleting the
+-- duplicate so existing sheets keep the ability and its usage state.
+CREATE OR REPLACE FUNCTION dndshare.replace_item_id_in_jsonb(document jsonb, old_id int8, new_id int8)
+RETURNS jsonb
+LANGUAGE plpgsql
+IMMUTABLE
+AS $$
+DECLARE
+    result jsonb;
+BEGIN
+    IF document IS NULL THEN
+        RETURN NULL;
+    END IF;
+    CASE jsonb_typeof(document)
+        WHEN 'object' THEN
+            SELECT COALESCE(jsonb_object_agg(entry.key,
+                CASE
+                    WHEN entry.key = 'id' AND entry.value = to_jsonb(old_id) THEN to_jsonb(new_id)
+                    ELSE dndshare.replace_item_id_in_jsonb(entry.value, old_id, new_id)
+                END
+            ), '{}'::jsonb)
+            INTO result
+            FROM jsonb_each(document) entry;
+        WHEN 'array' THEN
+            SELECT COALESCE(jsonb_agg(
+                dndshare.replace_item_id_in_jsonb(entry.value, old_id, new_id)
+                ORDER BY entry.ord
+            ), '[]'::jsonb)
+            INTO result
+            FROM jsonb_array_elements(document) WITH ORDINALITY entry(value, ord);
+        ELSE
+            result := document;
+    END CASE;
+    RETURN result;
+END;
+$$;
+
+UPDATE dndshare."char"
+SET data = dndshare.replace_item_id_in_jsonb(data, 1421, 4056)
+WHERE data::text LIKE '%1421%'
+  AND EXISTS (SELECT 1 FROM dndshare.item WHERE id = 1421 AND type_id = 5 AND lower(name) = lower('Хитрое действие'))
+  AND EXISTS (SELECT 1 FROM dndshare.item WHERE id = 4056 AND type_id = 4 AND lower(name) = lower('Хитрое действие'));
+
+UPDATE dndshare.item
+SET parent_id = 4056
+WHERE parent_id = 1421
+  AND EXISTS (SELECT 1 FROM dndshare.item WHERE id = 4056 AND type_id = 4 AND lower(name) = lower('Хитрое действие'));
+
+UPDATE dndshare.item_version_compatibility
+SET replaced_by_item_id = 4056
+WHERE replaced_by_item_id = 1421
+  AND EXISTS (SELECT 1 FROM dndshare.item WHERE id = 4056 AND type_id = 4 AND lower(name) = lower('Хитрое действие'));
+
+DELETE FROM dndshare.item duplicate
+WHERE duplicate.id = 1421
+  AND duplicate.type_id = 5
+  AND lower(duplicate.name) = lower('Хитрое действие')
+  AND EXISTS (SELECT 1 FROM dndshare.item canonical WHERE canonical.id = 4056 AND canonical.type_id = 4 AND lower(canonical.name) = lower('Хитрое действие'));
+
+DROP FUNCTION dndshare.replace_item_id_in_jsonb(jsonb, int8, int8);
+
 -- ---------------------------------------------------------------------------
 -- Music library
 -- ---------------------------------------------------------------------------

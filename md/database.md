@@ -74,6 +74,10 @@ catalogues are assigned to PHB exactly once through `schema_data_migration`.
 After the links are created, startup removes the legacy spell keys, template
 setting and the old «Источники» suggest type with its values.
 
+The startup data corrections also redirect the obsolete spell item `1421`
+(«Хитрое действие») to canonical class-feature item `4056` inside character
+JSON, repair relational references, and delete the duplicate.
+
 ## Layout
 
 - Config: `spring.liquibase.change-log: classpath:changelog-master.yaml`
