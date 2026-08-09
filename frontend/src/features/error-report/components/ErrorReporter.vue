@@ -393,6 +393,10 @@ async function renderElementCanvas(element, render, pixelRatio) {
     height: render.height,
     pixelRatio,
     filter: screenshotFilter,
+    // The crop coordinates are already relative to the root border box. A computed
+    // auto-margin (for example the centered character wizard) would otherwise be
+    // copied inside the SVG and shift its contents a second time.
+    style: { margin: '0' },
   })
 }
 
