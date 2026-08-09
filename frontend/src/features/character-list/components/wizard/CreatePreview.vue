@@ -82,6 +82,7 @@ import ItemTooltip from '@/features/character-editor/components/ItemTooltip'
 import AbilityTooltipDetails from '@/features/items/detail-components/AbilityTooltipDetails'
 import { featuresForBinding } from '@/features/character-editor/settings/dnd/creation/progression'
 import { STAT_SHORT, formatMod, monogramOf } from '@/features/character-list/components/wizard/labels'
+import { sourceSkillLabels } from '@/features/character-list/components/wizard/previewSkills'
 
 const wz = inject('createWizard')
 const {
@@ -155,17 +156,8 @@ const sections = computed(() => {
   const out = []
   const raceSkillsFromFeatures = selectedSkillChoices(raceAbilities.value, { raceId: state.race?.id, subraceId: state.subrace?.id }, (item) => !isExpertise(item))
   const classSkillsFromFeatures = selectedSkillChoices(classAbilities.value, { classId: state.charClass?.id, subclassId: state.subclass?.id }, (item) => !isExpertise(item))
-  const expertiseIds = new Set([
-    ...selectedSkillChoices(raceAbilities.value, { raceId: state.race?.id, subraceId: state.subrace?.id }, isExpertise),
-    ...selectedSkillChoices(classAbilities.value, { classId: state.charClass?.id, subclassId: state.subclass?.id }, isExpertise),
-  ].map(String))
-  const skillIds = [...new Set([
-    ...state.raceSkillIds,
-    ...state.skillIds,
-    ...(g.backgroundSkills || []),
-    ...raceSkillsFromFeatures,
-    ...classSkillsFromFeatures,
-  ])]
+  const raceExpertiseIds = selectedSkillChoices(raceAbilities.value, { raceId: state.race?.id, subraceId: state.subrace?.id }, isExpertise)
+  const classExpertiseIds = selectedSkillChoices(classAbilities.value, { classId: state.charClass?.id, subclassId: state.subclass?.id }, isExpertise)
 
   if (state.race) {
     const items = []
@@ -175,6 +167,12 @@ const sections = computed(() => {
     push(items, 'Размер', g.size || '')
     push(items, 'Языки', names(g.languages, 6).join(', '))
     push(items, 'Доп. язык', names(state.raceLangIds, 6).join(', '))
+    push(items, 'Навыки', sourceSkillLabels({
+      proficiencyIds: state.raceSkillIds,
+      featureIds: raceSkillsFromFeatures,
+      expertiseIds: raceExpertiseIds,
+      labelFor: (id) => suggestValue(15, id),
+    }).join(', '))
     push(items, 'Черта', state.featIds.map((id) => featPool.value.find((f) => f.id === id)?.name).filter(Boolean).join(', '))
     push(items, 'Владения', [...itemProfs(state.race.item), ...itemProfs(state.subrace?.item)].join(', '))
     pushAbilities(items, featureList(raceAbilities.value, { raceId: state.race?.id, subraceId: state.subrace?.id }))
@@ -185,6 +183,12 @@ const sections = computed(() => {
     const items = []
     push(items, 'Кость хитов', g.hitDieId ? suggestValue(11, g.hitDieId) : '')
     push(items, 'Спасброски', g.saves.map((s) => STAT_SHORT[s]).join(', '))
+    push(items, 'Навыки', sourceSkillLabels({
+      proficiencyIds: state.skillIds,
+      featureIds: classSkillsFromFeatures,
+      expertiseIds: classExpertiseIds,
+      labelFor: (id) => suggestValue(15, id),
+    }).join(', '))
     push(items, 'Владения', [...itemProfs(state.charClass.item), ...itemProfs(state.subclass?.item)].join(', '))
     if (g.spellcasting?.stat) push(items, 'Магия', `заклинатель (${STAT_SHORT[g.spellcasting.stat]})`)
     pushAbilities(items, featureList(classAbilities.value, { classId: state.charClass?.id, subclassId: state.subclass?.id }))
@@ -199,14 +203,6 @@ const sections = computed(() => {
     push(items, 'Языки', names(state.bgLangIds, 6).join(', '))
     if (bd.feature) push(items, 'Черта', bd.feature)
     if (items.length) out.push({ title: 'Предыстория', items })
-  }
-
-  if (skillIds.length) {
-    const labels = skillIds.map((id) => {
-      const name = suggestValue(15, id)
-      return expertiseIds.has(String(id)) ? `${name} (Компетентность)` : name
-    }).filter(Boolean)
-    if (labels.length) out.push({ title: 'Навыки', items: [{ k: 'Владение', v: labels.join(', ') }] })
   }
 
   if (state.spellIds.length) {
