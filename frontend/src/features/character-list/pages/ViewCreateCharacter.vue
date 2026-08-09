@@ -286,7 +286,7 @@ onMounted(async () => {
   padding: 10px;
 }
 .cc-rail { position: sticky; top: 0; align-self: start; }
-.cc-main { min-width: 0; overflow-y: auto; padding: 4px 2px; }
+.cc-main { min-width: 0; overflow-x: clip; overflow-y: auto; padding: 4px 2px; }
 .cc-preview { overflow-y: auto; }
 
 .cc-fade-enter-active, .cc-fade-leave-active { transition: opacity 0.16s ease; }
