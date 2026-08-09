@@ -35,7 +35,9 @@
 
 <script setup>
 import { computed, inject } from 'vue'
+import { backgroundStartingEquipment, formatStartingCoins } from '@/features/character-editor/settings/dnd/creation/backgroundEquipment'
 import { featuresForBinding } from '@/features/character-editor/settings/dnd/creation/progression'
+import { mergeEquipment } from '@/features/character-editor/settings/dnd/creation/startingEquipment'
 import { STAT_SHORT, formatMod, monogramOf } from '@/features/character-list/components/wizard/labels'
 
 const wz = inject('createWizard')
@@ -48,6 +50,8 @@ const {
 const mono = computed(() => monogramOf(state.charClass?.name || state.race?.name || '?'))
 const subraceOrRace = computed(() => state.subrace?.name || state.race?.name || '')
 const klass = computed(() => [state.charClass?.name, state.subclass?.name].filter(Boolean).join(' · '))
+const backgroundStart = computed(() => backgroundStartingEquipment(state.background))
+const displayedEquipment = computed(() => mergeEquipment(allEquipment.value, backgroundStart.value.items))
 function modClass(m) { return m > 0 ? 'pos' : m < 0 ? 'neg' : '' }
 
 const summary = computed(() => {
@@ -59,6 +63,8 @@ const summary = computed(() => {
   if (skills.length) out.push({ k: 'Навыки', v: skills.join(', ') })
   const langs = [...grants.value.languages, ...state.raceLangIds, ...state.bgLangIds].map((id) => suggestValue(6, id)).filter(Boolean)
   if (langs.length) out.push({ k: 'Языки', v: [...new Set(langs)].join(', ') })
+  const money = formatStartingCoins(backgroundStart.value.coins)
+  if (money) out.push({ k: 'Кошелёк', v: money })
   const feats = [
     ...featuresForBinding(raceAbilities.value, { raceId: state.race?.id, subraceId: state.subrace?.id }, 1),
     ...featuresForBinding(classAbilities.value, { classId: state.charClass?.id, subclassId: state.subclass?.id }, 1),
@@ -66,7 +72,7 @@ const summary = computed(() => {
   if (feats.length) out.push({ k: 'Способности', v: feats.join(', ') })
   const spells = [...cantripPool.value, ...spell1Pool.value].filter((sp) => state.spellIds.includes(sp.id)).map((sp) => sp.name)
   if (spells.length) out.push({ k: 'Заклинания', v: spells.join(', ') })
-  if (allEquipment.value.length) out.push({ k: 'Снаряжение', v: allEquipment.value.map((e) => e.count > 1 ? `${e.name} ×${e.count}` : e.name).join(', ') })
+  if (displayedEquipment.value.length) out.push({ k: 'Снаряжение', v: displayedEquipment.value.map((e) => e.count > 1 ? `${e.name} ×${e.count}` : e.name).join(', ') })
   return out
 })
 </script>

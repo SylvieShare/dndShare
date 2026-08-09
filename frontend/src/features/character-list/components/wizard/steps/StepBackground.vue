@@ -21,7 +21,8 @@
         <li v-if="backgroundSkillNames.length"><span class="fk">Навыки</span>{{ backgroundSkillNames.join(', ') }}</li>
         <li v-if="backgroundToolNames.length"><span class="fk">Инструменты</span>{{ backgroundToolNames.join(', ') }}</li>
         <li v-if="feature.title"><span class="fk">Черта</span><b>{{ feature.title }}</b>{{ feature.desc ? ' — ' + feature.desc : '' }}</li>
-        <li v-if="equipmentText"><span class="fk">Снаряжение</span>{{ equipmentText }}</li>
+        <li v-if="backgroundStart.items.length"><span class="fk">Снаряжение</span>{{ equipmentLabel }}</li>
+        <li v-if="moneyLabel"><span class="fk">Кошелёк</span>{{ moneyLabel }}</li>
       </ul>
 
       <div v-if="grants.bgLangChoice" class="pick">
@@ -48,6 +49,7 @@ import { computed, inject } from 'vue'
 import MultiSearchSelect from '@/features/character-list/components/wizard/MultiSearchSelect.vue'
 import SelectTile from '@/features/character-list/components/wizard/SelectTile.vue'
 import { monogramOf } from '@/features/character-list/components/wizard/labels'
+import { backgroundStartingEquipment, formatStartingCoins } from '@/features/character-editor/settings/dnd/creation/backgroundEquipment'
 
 const {
   bgPool, state, loading, grants, suggestValue,
@@ -63,10 +65,9 @@ const feature = computed(() => {
   const desc = d.feature_desc ? String(d.feature_desc).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim() : ''
   return { title: d.feature || '', desc }
 })
-const equipmentText = computed(() => {
-  const raw = state.background?.data?.equipment || ''
-  return raw.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
-})
+const backgroundStart = computed(() => backgroundStartingEquipment(state.background))
+const equipmentLabel = computed(() => backgroundStart.value.items.map((entry) => entry.name).join(', '))
+const moneyLabel = computed(() => formatStartingCoins(backgroundStart.value.coins))
 </script>
 
 <style scoped>

@@ -1,16 +1,20 @@
 <template>
   <div class="step">
     <div class="sheet-section-title">Снаряжение</div>
-    <p class="hint">Классовое снаряжение уже выбрано на шаге «Класс». Здесь можно добавить снаряжение предыстории или любые другие предметы.</p>
+    <p class="hint">Снаряжение класса и предыстории добавится в инвентарь автоматически. Стартовые монеты из предыстории попадут в кошелёк. Здесь можно проверить набор и добавить другие предметы.</p>
 
-    <div v-if="classEquipment.length || bgEquip" class="refs">
+    <div v-if="classEquipment.length || backgroundStart.items.length || moneyLabel" class="refs">
       <div v-if="classEquipment.length" class="ref">
         <span class="ref-k">Выбрано от класса</span>
         <span class="ref-v">{{ equipmentLabel(classEquipment) }}</span>
       </div>
-      <div v-if="bgEquip" class="ref">
-        <span class="ref-k">От предыстории</span>
-        <span class="ref-v">{{ bgEquip }}</span>
+      <div v-if="backgroundStart.items.length" class="ref">
+        <span class="ref-k">Выбрано от предыстории</span>
+        <span class="ref-v">{{ equipmentLabel(backgroundStart.items) }}</span>
+      </div>
+      <div v-if="moneyLabel" class="ref">
+        <span class="ref-k">В кошелёк</span>
+        <span class="ref-v">{{ moneyLabel }}</span>
       </div>
     </div>
 
@@ -48,13 +52,14 @@
 <script setup>
 import { computed, inject, ref } from 'vue'
 import ItemPickerModal from '@/features/character-editor/components/ItemPickerModal.vue'
+import { backgroundStartingEquipment, formatStartingCoins } from '@/features/character-editor/settings/dnd/creation/backgroundEquipment'
 
 const { state, classEquipment, addEquipment, removeEquipment, bumpEquipment } = inject('createWizard')
 
 const pickerOpen = ref(false)
 function onPick(item, qty = 1) { addEquipment(item, qty) }
-function stripHtml(s) { return String(s || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim() }
-const bgEquip = computed(() => stripHtml(state.background?.data?.equipment))
+const backgroundStart = computed(() => backgroundStartingEquipment(state.background))
+const moneyLabel = computed(() => formatStartingCoins(backgroundStart.value.coins))
 function equipmentLabel(items) {
   return items.map((entry) => entry.count > 1 ? `${entry.name} ×${entry.count}` : entry.name).join(', ')
 }

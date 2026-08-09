@@ -14,8 +14,10 @@ import { STAT_KEYS } from '@/shared/lib/dndStats'
 import { computeSlots } from '../../../blocks/dnd/lib/levelUp.js'
 import { defaultSlots } from '../../../blocks/dnd/lib/spellEntry.js'
 import { blankValues } from '../newCharacter.js'
+import { addStartingCoins, backgroundStartingEquipment } from './backgroundEquipment.js'
 import { applyGrants, extractGrants } from './grants.js'
 import { featureIdsForBinding } from './progression.js'
+import { mergeEquipment } from './startingEquipment.js'
 
 const STATS = STAT_KEYS
 
@@ -86,6 +88,7 @@ export function buildCharacterData(input) {
     charClass: charClass?.item, subclass: subclass?.item,
     raceVariant, background: background?.item,
   })
+  const backgroundStart = backgroundStartingEquipment(background)
 
   const raceBinding = { raceId: race?.id, subraceId: subrace?.id }
   const classBinding = { classId: charClass?.id, subclassId: subclass?.id }
@@ -168,16 +171,19 @@ export function buildCharacterData(input) {
     if (featTitle || featDesc) {
       values.notes = `Черта предыстории — ${featTitle}${featTitle && featDesc ? ': ' : ''}${featDesc}`
     }
+    values.money = addStartingCoins(values.money, backgroundStart.coins)
   }
 
-  // Starting equipment → the inventory block (`values.items`) as one bag section.
-  if (equipment.length) {
+  // Class choices, background possessions and optional additions share one bag.
+  // Coin fragments from the background are intentionally kept in `values.money`.
+  const startingEquipment = mergeEquipment(equipment, backgroundStart.items)
+  if (startingEquipment.length) {
     values.items = {
       equipped: [],
       sections: [{
         id: 'bag',
         name: 'Снаряжение',
-        items: equipment.map((e, i) => ({
+        items: startingEquipment.map((e, i) => ({
           uid: `eq_${i}`,
           id: e.id ?? null,
           count: Math.max(1, Number(e.count) || 1),

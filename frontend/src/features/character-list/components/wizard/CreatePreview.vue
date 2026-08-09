@@ -81,6 +81,8 @@ import { computed, inject, reactive } from 'vue'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip'
 import AbilityTooltipDetails from '@/features/items/detail-components/AbilityTooltipDetails'
 import { featuresForBinding } from '@/features/character-editor/settings/dnd/creation/progression'
+import { backgroundStartingEquipment, formatStartingCoins } from '@/features/character-editor/settings/dnd/creation/backgroundEquipment'
+import { mergeEquipment } from '@/features/character-editor/settings/dnd/creation/startingEquipment'
 import { STAT_SHORT, formatMod, monogramOf } from '@/features/character-list/components/wizard/labels'
 import { sourceSkillLabels } from '@/features/character-list/components/wizard/previewSkills'
 
@@ -96,6 +98,8 @@ const raceLine = computed(() => [state.subrace?.name || state.race?.name].filter
 const classLine = computed(() => [state.charClass?.name, state.subclass?.name].filter(Boolean).join(' · '))
 const scoresEntered = computed(() => STATS.some((s) => state.scores[s] != null))
 const showStats = computed(() => !!state.race || scoresEntered.value)
+const backgroundStart = computed(() => backgroundStartingEquipment(state.background))
+const displayedEquipment = computed(() => mergeEquipment(allEquipment.value, backgroundStart.value.items))
 function modClass(m) { return m > 0 ? 'pos' : m < 0 ? 'neg' : '' }
 
 // Proficiency labels declared directly on one handbook item's data — so each
@@ -202,6 +206,7 @@ const sections = computed(() => {
     push(items, 'Навыки', names(g.backgroundSkills || [], 15).join(', '))
     push(items, 'Инструменты', names(bd.tool_prof || [], 5).join(', '))
     push(items, 'Языки', names(state.bgLangIds, 6).join(', '))
+    push(items, 'Кошелёк', formatStartingCoins(backgroundStart.value.coins))
     if (bd.feature) push(items, 'Черта', bd.feature)
     if (items.length) out.push({ title: 'Предыстория', items })
   }
@@ -211,8 +216,8 @@ const sections = computed(() => {
     if (spellNames.length) out.push({ title: 'Магия', items: [{ k: 'Заклинания', v: spellNames.join(', ') }] })
   }
 
-  if (allEquipment.value.length) {
-    out.push({ title: 'Снаряжение', items: [{ k: 'Предметы', v: allEquipment.value.map((e) => e.count > 1 ? `${e.name} ×${e.count}` : e.name).join(', ') }] })
+  if (displayedEquipment.value.length) {
+    out.push({ title: 'Снаряжение', items: [{ k: 'Предметы', v: displayedEquipment.value.map((e) => e.count > 1 ? `${e.name} ×${e.count}` : e.name).join(', ') }] })
   }
 
   return out

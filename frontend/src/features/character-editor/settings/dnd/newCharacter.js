@@ -27,11 +27,7 @@ const PRESET = {
   WIS: { value: 10 },
   CHA: { value: 10 },
   prof_bonus: { v: 2, auto: true },
-  money: [
-    { id: 'gp', title: 'Золотая', short_title: 'зм.', color: '#FFD700', amount: 0 },
-    { id: 'sp', title: 'Серебряная', short_title: 'см.', color: '#C0C0C0', amount: 0 },
-    { id: 'cp', title: 'Медная', short_title: 'мм.', color: '#B87333', amount: 0 },
-  ],
+  money: { order: [1, 2, 3, 4, 5], amounts: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 } },
 }
 
 /** The blank `values` payload only (no wrapper). */

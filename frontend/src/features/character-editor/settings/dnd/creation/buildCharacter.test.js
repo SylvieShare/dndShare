@@ -43,6 +43,24 @@ describe('buildCharacterData starting equipment', () => {
       override: { name: 'Кинжал' },
     })
   })
+
+  it('adds background possessions to inventory and its gold to the wallet', () => {
+    const result = buildCharacterData({
+      race: selection(1, 'Человек'),
+      charClass: selection(2, 'Плут'),
+      background: selection(3, 'Дворянин', {
+        equipment: '<p>Изящная одежда, перстень-печатка, свиток родословной, кошель с 25 зм.</p>',
+      }),
+      equipment: [{ id: null, name: 'Рапира', count: 1 }],
+      suggestValue: () => '',
+    })
+
+    const items = result.data.values.items.sections[0].items
+    expect(items.map((item) => item.override?.name)).toEqual([
+      'Рапира', 'Изящная одежда', 'перстень-печатка', 'свиток родословной',
+    ])
+    expect(result.data.values.money.amounts['3']).toBe(25)
+  })
 })
 
 describe('buildCharacterData persona', () => {
