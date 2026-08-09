@@ -107,6 +107,12 @@ db/changelog/
 
 Per-item icons reuse `svg_storage` (the shared SVG-markup table that `item_type.svg_id` already uses): `item.svg_id` references it, and `ItemRepository.getByIds` `LEFT JOIN`s `svg_storage` to return `item.svg` (other item queries leave `svg` null).
 
+The embedded Go `schema.sql` now also seeds item type 7 «Черты» when absent and
+appends every missing schema field by JSON key on existing databases. This keeps
+historical production fields intact while adding structured prerequisites,
+repeatability, acquisition choices, fixed and choice-driven grants, usage recovery and source
+metadata. `resources/items/item_7_shema.json` remains the readable source of truth.
+
 Changeset `08-potion-rarity.sql` shows the **type-changing data migration** pattern:
 `UPDATE dndshare.item SET type_id = 10, data = data - 'type' WHERE type_id = 2 AND
 data->>'type' = 'зелье'` keeps item **ids** (so character inventories, which reference

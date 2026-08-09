@@ -87,6 +87,16 @@
           />
         </template>
 
+        <!-- select (schema-defined finite options) -->
+        <template v-else-if="field.type === 'select'">
+          <select class="iem-select" v-model="formData[field.key]">
+            <option value="">—</option>
+            <option v-for="option in (field.options || [])" :key="option.value" :value="option.value">
+              {{ option.label || option.value }}
+            </option>
+          </select>
+        </template>
+
         <!-- color (hex swatch picker) -->
         <template v-else-if="field.type === 'color'">
           <ColorPresetPicker
@@ -201,6 +211,19 @@
                   />
                 </template>
 
+                <template v-else-if="sub.type === 'select'">
+                  <select
+                    class="iem-select"
+                    :value="objectValue(field.key)[sub.key] ?? ''"
+                    @change="setObjectField(field.key, sub.key, $event.target.value)"
+                  >
+                    <option value="">—</option>
+                    <option v-for="option in (sub.options || [])" :key="option.value" :value="option.value">
+                      {{ option.label || option.value }}
+                    </option>
+                  </select>
+                </template>
+
                 <template v-else-if="sub.type === 'item'">
                   <div class="iem-item-ref">
                     <button
@@ -287,6 +310,18 @@
                               :value="row[nested.key] ?? ''"
                               @input="setNestedObjectArrayField(field.key, sub.key, rowIdx, nested.key, numberOrNull($event.target.value))"
                             />
+
+                            <select
+                              v-else-if="nested.type === 'select'"
+                              class="iem-select"
+                              :value="row[nested.key] ?? ''"
+                              @change="setNestedObjectArrayField(field.key, sub.key, rowIdx, nested.key, $event.target.value)"
+                            >
+                              <option value="">—</option>
+                              <option v-for="option in (nested.options || [])" :key="option.value" :value="option.value">
+                                {{ option.label || option.value }}
+                              </option>
+                            </select>
 
                             <div v-else-if="nested.type === 'item'" class="iem-item-ref">
                               <button
@@ -383,6 +418,18 @@
                       @input="setObjectArrayField(field.key, rowIdx, sub.key, numberOrNull($event.target.value))"
                     />
 
+                    <select
+                      v-else-if="sub.type === 'select'"
+                      class="iem-select"
+                      :value="row[sub.key] ?? ''"
+                      @change="setObjectArrayField(field.key, rowIdx, sub.key, $event.target.value)"
+                    >
+                      <option value="">—</option>
+                      <option v-for="option in (sub.options || [])" :key="option.value" :value="option.value">
+                        {{ option.label || option.value }}
+                      </option>
+                    </select>
+
                     <div v-else-if="sub.type === 'item'" class="iem-item-ref">
                       <button
                         type="button"
@@ -406,6 +453,66 @@
                       <option value="">—</option>
                       <option v-for="s in getSuggests(getSuggestId(sub))" :key="s.id" :value="s.id">{{ s.value }}</option>
                     </select>
+
+                    <div v-else-if="sub.type === 'object_array'" class="iem-object-array iem-object-array-nested">
+                      <div
+                        v-for="(nestedRow, nestedIdx) in rowObjectArrayValue(field.key, rowIdx, sub.key)"
+                        :key="nestedIdx"
+                        class="iem-object-row"
+                      >
+                        <div class="iem-object-row-fields">
+                          <template v-for="nested in (sub.fields || [])" :key="nested.key">
+                            <div v-if="isObjectArrayFieldVisible(sub, nestedRow, nested)" class="iem-sub-field">
+                              <span v-if="!isBoolField(nested)" class="iem-sub-label">{{ nested.name }}</span>
+                              <button
+                                v-if="isBoolField(nested)"
+                                class="iem-toggle"
+                                :class="{ 'iem-toggle-on': !!nestedRow[nested.key] }"
+                                type="button"
+                                @click="setRowObjectArrayField(field.key, rowIdx, sub.key, nestedIdx, nested.key, !nestedRow[nested.key])"
+                              >
+                                <span class="iem-toggle-track"><span class="iem-toggle-thumb"></span></span>
+                                <span>{{ nested.name }}</span>
+                              </button>
+                              <input
+                                v-else-if="nested.type === 'int'"
+                                type="number"
+                                class="iem-input iem-input-sm"
+                                :value="nestedRow[nested.key] ?? ''"
+                                @input="setRowObjectArrayField(field.key, rowIdx, sub.key, nestedIdx, nested.key, numberOrNull($event.target.value))"
+                              />
+                              <select
+                                v-else-if="nested.type === 'select'"
+                                class="iem-select"
+                                :value="nestedRow[nested.key] ?? ''"
+                                @change="setRowObjectArrayField(field.key, rowIdx, sub.key, nestedIdx, nested.key, $event.target.value)"
+                              >
+                                <option value="">—</option>
+                                <option v-for="option in (nested.options || [])" :key="option.value" :value="option.value">{{ option.label || option.value }}</option>
+                              </select>
+                              <select
+                                v-else-if="nested.type === 'suggest'"
+                                class="iem-select"
+                                :value="nestedRow[nested.key] ?? ''"
+                                @change="setRowObjectArrayField(field.key, rowIdx, sub.key, nestedIdx, nested.key, numberOrNull($event.target.value))"
+                              >
+                                <option value="">—</option>
+                                <option v-for="s in getSuggests(getSuggestId(nested))" :key="s.id" :value="s.id">{{ s.value }}</option>
+                              </select>
+                              <input
+                                v-else
+                                type="text"
+                                class="iem-input iem-input-sm"
+                                :value="nestedRow[nested.key] ?? ''"
+                                @input="setRowObjectArrayField(field.key, rowIdx, sub.key, nestedIdx, nested.key, $event.target.value)"
+                              />
+                            </div>
+                          </template>
+                        </div>
+                        <button class="iem-row-remove" type="button" @click="removeRowObjectArrayRow(field.key, rowIdx, sub.key, nestedIdx)">Удалить</button>
+                      </div>
+                      <button class="iem-row-add" type="button" @click="addRowObjectArrayRow(field.key, rowIdx, sub)">+ Добавить вариант</button>
+                    </div>
 
                     <input
                       v-else
@@ -778,6 +885,26 @@ function setObjectArrayField(key, rowIdx, subKey, value) {
   formData[key] = objectArrayValue(key).map((row, idx) =>
     idx === rowIdx ? { ...row, [subKey]: value } : row
   )
+}
+
+function rowObjectArrayValue(key, rowIdx, subKey) {
+  const row = objectArrayValue(key)[rowIdx] || {}
+  return Array.isArray(row[subKey]) ? row[subKey] : []
+}
+
+function addRowObjectArrayRow(key, rowIdx, field) {
+  const rows = rowObjectArrayValue(key, rowIdx, field.key)
+  setObjectArrayField(key, rowIdx, field.key, [...rows, emptyObjectArrayRow(field)])
+}
+
+function removeRowObjectArrayRow(key, rowIdx, subKey, nestedIdx) {
+  setObjectArrayField(key, rowIdx, subKey, rowObjectArrayValue(key, rowIdx, subKey).filter((_, idx) => idx !== nestedIdx))
+}
+
+function setRowObjectArrayField(key, rowIdx, subKey, nestedIdx, nestedKey, value) {
+  setObjectArrayField(key, rowIdx, subKey, rowObjectArrayValue(key, rowIdx, subKey).map((row, idx) =>
+    idx === nestedIdx ? { ...row, [nestedKey]: value } : row
+  ))
 }
 
 function addNestedObjectArrayRow(objKey, field) {

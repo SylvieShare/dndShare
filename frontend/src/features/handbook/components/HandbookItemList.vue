@@ -37,6 +37,7 @@
                   <SpellListItem v-else-if="type.id === 5" :item="item" :type="type" />
                   <ItemListItem v-else-if="type.id === 2" :item="item" :type="type" />
                   <PotionListItem v-else-if="type.id === 10" :item="item" :type="type" />
+                  <FeatListItem v-else-if="type.id === 7" :item="item" :type="type" />
                   <template v-else>
                     <span class="item-name">{{ item.name }}</span>
                     <span v-if="item.userId != null" class="item-custom-mark" title="Ваш объект">✦</span>
@@ -60,6 +61,7 @@
               <SpellListItem v-else-if="type.id === 5" :item="item" :type="type" />
               <ItemListItem v-else-if="type.id === 2" :item="item" />
               <PotionListItem v-else-if="type.id === 10" :item="item" :type="type" />
+              <FeatListItem v-else-if="type.id === 7" :item="item" :type="type" />
               <template v-else>
                 <span class="item-name">{{ item.name }}</span>
                 <span v-if="item.userId != null" class="item-custom-mark" title="Ваш объект">✦</span>
@@ -85,6 +87,7 @@ import { computed, ref } from 'vue'
 import { findFieldByPath, getByPath, getSuggestId } from '@/features/handbook/objects/lib/schemaFields'
 import { useSuggestStore } from '@/stores/suggest'
 import EnemyListItem from '@/features/items/list-components/EnemyListItem'
+import FeatListItem from '@/features/items/list-components/FeatListItem'
 import ItemListItem from '@/features/items/list-components/ItemListItem'
 import PotionListItem from '@/features/items/list-components/PotionListItem'
 import SpellListItem from '@/features/items/list-components/SpellListItem'
@@ -111,7 +114,7 @@ function toggleGroup(label) {
   collapsedGroups.value = s
 }
 
-const hasRichRenderer = computed(() => [1, 2, 5, 6, 10].includes(props.type?.id))
+const hasRichRenderer = computed(() => [1, 2, 5, 6, 7, 10].includes(props.type?.id))
 
 function crToNum(cr) {
   if (!cr || cr === '—') return Infinity

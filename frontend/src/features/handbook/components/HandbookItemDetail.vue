@@ -96,6 +96,7 @@ import { ensureItemNames, itemName } from '@/features/handbook/objects/lib/itemN
 import { getSuggestId, isFieldVisible } from '@/features/handbook/objects/lib/schemaFields'
 import AbilityDetailContent from '@/features/items/detail-components/AbilityDetailContent'
 import EnemyDetailContent from '@/features/items/detail-components/EnemyDetailContent'
+import FeatDetailContent from '@/features/items/detail-components/FeatDetailContent'
 import ItemDetailContent from '@/features/items/detail-components/ItemDetailContent'
 import PotionDetailContent from '@/features/items/detail-components/PotionDetailContent'
 import SpellDetailContent from '@/features/items/detail-components/SpellDetailContent'
@@ -109,6 +110,7 @@ const CUSTOM_RENDERERS = {
   4: AbilityDetailContent,
   5: SpellDetailContent,
   6: EnemyDetailContent,
+  7: FeatDetailContent,
   10: PotionDetailContent,
 }
 

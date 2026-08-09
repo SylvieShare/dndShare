@@ -1,6 +1,6 @@
 <template>
   <Teleport to="body">
-    <div class="picker-overlay" @click.self="$emit('close')">
+    <div class="picker-overlay" :style="{ zIndex }" @click.self="$emit('close')">
       <div class="picker-modal">
 
         <div class="picker-topbar">
@@ -78,7 +78,10 @@
         </div>
 
         <div class="picker-footer">
-          <span v-if="selectedItem" class="picker-footer-name">{{ selectedItem.name }}</span>
+          <span v-if="selectedItem && selectedEligibility.eligible" class="picker-footer-name">{{ selectedItem.name }}</span>
+          <span v-else-if="selectedItem" class="picker-footer-ineligible">
+            Не выполнено: {{ selectedEligibility.reasons.join(', ') || selectedEligibility.text || 'требование черты' }}
+          </span>
           <span v-else class="picker-footer-hint">Выберите предмет</span>
           <button class="picker-create-btn" @click="createOpen = true">+ Создать новый</button>
           <div v-if="allowQuantity" class="picker-qty">
@@ -105,7 +108,7 @@
           </div>
           <button
             class="picker-add-btn"
-            :disabled="!selectedItem"
+            :disabled="!selectedItem || !selectedEligibility.eligible"
             @click="pick"
           >
             + Добавить<span v-if="allowQuantity && quantity > 1"> ×{{ quantity }}</span>
@@ -145,6 +148,8 @@ const props = defineProps({
   excludeItems: { type: Array, default: () => [] },
   allowQuantity: { type: Boolean, default: false },
   createShowNameEn: { type: Boolean, default: false },
+  itemEligibility: { type: Function, default: null },
+  zIndex: { type: Number, default: 3000 },
 })
 
 const emit = defineEmits(['close', 'pick'])
@@ -180,6 +185,11 @@ const filteredItems = computed(() =>
     .filter(i => !excludeSet.value.has(String(i.id)))
     .sort((a, b) => (a.name || '').localeCompare(b.name || '', 'ru'))
 )
+
+const selectedEligibility = computed(() => {
+  if (!selectedItem.value || !props.itemEligibility) return { eligible: true, reasons: [], text: '' }
+  return props.itemEligibility(selectedItem.value) || { eligible: true, reasons: [], text: '' }
+})
 
 async function loadTypes() {
   const itemTypesStore = useItemTypesStore()
@@ -249,7 +259,7 @@ watch(searchQ, (val) => {
 })
 
 function pick() {
-  if (!selectedItem.value) return
+  if (!selectedItem.value || !selectedEligibility.value.eligible) return
   const qty = props.allowQuantity ? Math.max(1, Math.min(999, Math.floor(Number(quantity.value) || 1))) : 1
   emit('pick', selectedItem.value, qty)
   emit('close')
@@ -500,6 +510,16 @@ onMounted(async () => {
   flex: 1;
   font-size: 13px;
   color: var(--text-muted);
+}
+
+.picker-footer-ineligible {
+  flex: 1;
+  min-width: 0;
+  font-size: 12px;
+  color: var(--warning);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .picker-add-btn {

@@ -6,6 +6,7 @@ import { SKILL_BY_STAT, buildCharacterData } from '@/features/character-editor/s
 import { STAT_KEYS, SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
 import { extractGrants } from '@/features/character-editor/settings/dnd/creation/grants'
 import { featuresForBinding } from '@/features/character-editor/settings/dnd/creation/progression'
+import { evaluateFeatEligibility } from '@/features/items/lib/featRules'
 import {
   mergeEquipment,
   selectedStartingEquipment,
@@ -80,6 +81,7 @@ export function useDndCreateWizard() {
     raceSkillIds: [],
     raceLangIds: [],
     featIds: [],
+    featSelections: {},
     skillIds: [],
     spellIds: [],
     choices: {},
@@ -143,6 +145,7 @@ export function useDndCreateWizard() {
     state.raceSkillIds = []
     state.raceLangIds = []
     state.featIds = []
+    state.featSelections = {}
   })
 
   function suggestValue(typeId, id) {
@@ -241,7 +244,33 @@ export function useDndCreateWizard() {
   // Feat choice (Variant/Gifted Human): pick from handbook feats (type 7).
   const featOptions = computed(() => (grants.value.featChoice ? featPool.value : []))
   const featLimit = computed(() => grants.value.featChoice?.count || 0)
-  function toggleFeat(id) { toggleFromList(state.featIds, id, featLimit.value) }
+  function toggleFeat(id) {
+    const exists = state.featIds.some((value) => String(value) === String(id))
+    toggleFromList(state.featIds, id, featLimit.value)
+    if (exists) {
+      const next = { ...state.featSelections }
+      delete next[id]
+      state.featSelections = next
+    }
+  }
+  function setFeatSelection(item, choices = {}) {
+    if (!item?.id) return
+    if (!state.featIds.some((id) => String(id) === String(item.id))) toggleFeat(item.id)
+    state.featSelections = { ...state.featSelections, [item.id]: choices }
+  }
+  function featEligibility(item) {
+    const result = evaluateFeatEligibility(item, {
+      stats: finalScores.value,
+      level: 1,
+      spellcasting: !!grants.value.spellcasting,
+      armorProfIds: grants.value.proficiencies?.armor || [],
+    })
+    const alreadyTaken = state.featIds.some((id) => String(id) === String(item?.id))
+    if (alreadyTaken && !item?.data?.repeatable) {
+      return { ...result, eligible: false, reasons: [...result.reasons, 'Черта уже выбрана'] }
+    }
+    return result
+  }
   const featComplete = computed(() => !grants.value.featChoice || state.featIds.length === featLimit.value)
 
   // ─── Background (type 11): fixed skills/tools/languages + a chosen language ──
@@ -513,6 +542,10 @@ export function useDndCreateWizard() {
       raceSkillIds: state.raceSkillIds.slice(),
       raceLangIds: state.raceLangIds.slice(),
       featIds: state.featIds.slice(),
+      feats: state.featIds.map((id) => ({
+        item: featPool.value.find((feat) => String(feat.id) === String(id)) || { id, data: {} },
+        choices: state.featSelections?.[id] || {},
+      })),
       bgLangIds: state.bgLangIds.slice(),
       equipment: allEquipment.value.map((e) => ({ ...e })),
       persona: { ...state.persona },
@@ -534,8 +567,8 @@ export function useDndCreateWizard() {
   // ─── Persistence (localStorage) — survives reload; going back keeps forward picks ─
   const STORAGE_KEY = 'dnd-create-wizard-v1'
   function serialize() {
-    const { step, version, name, race, subrace, charClass, subclass, raceVariant, statMethod, scores, rollPool, asiChoice, raceSkillIds, raceLangIds, featIds, skillIds, spellIds, choices, background, bgLangIds, classEquipmentChoices, equipment, persona } = state
-    return { step, version, name, race, subrace, charClass, subclass, raceVariant, statMethod, scores, rollPool, asiChoice, raceSkillIds, raceLangIds, featIds, skillIds, spellIds, choices, background, bgLangIds, classEquipmentChoices, equipment, persona }
+    const { step, version, name, race, subrace, charClass, subclass, raceVariant, statMethod, scores, rollPool, asiChoice, raceSkillIds, raceLangIds, featIds, featSelections, skillIds, spellIds, choices, background, bgLangIds, classEquipmentChoices, equipment, persona } = state
+    return { step, version, name, race, subrace, charClass, subclass, raceVariant, statMethod, scores, rollPool, asiChoice, raceSkillIds, raceLangIds, featIds, featSelections, skillIds, spellIds, choices, background, bgLangIds, classEquipmentChoices, equipment, persona }
   }
   function persist() {
     if (hydrating) return
@@ -550,7 +583,7 @@ export function useDndCreateWizard() {
       step: 0, version: '2014', name: '', race: null, subrace: null,
       charClass: null, subclass: null, raceVariant: null, statMethod: 'array',
       scores: emptyScores(), rollPool: [], asiChoice: [],
-      raceSkillIds: [], raceLangIds: [], featIds: [], skillIds: [], spellIds: [], choices: {},
+      raceSkillIds: [], raceLangIds: [], featIds: [], featSelections: {}, skillIds: [], spellIds: [], choices: {},
       background: null, bgLangIds: [], classEquipmentChoices: {}, equipment: [],
       persona: { alignment: '', traits: '', ideals: '', bonds: '', flaws: '', appearance: '', backstory: '', allies: '', age: '', height: '', weight: '', eyes: '', hair: '', skin: '' },
     })
@@ -593,7 +626,7 @@ export function useDndCreateWizard() {
     // race extra picks: skills / language / feat
     raceSkillOptions, raceSkillLimit, toggleRaceSkill, raceSkillsComplete,
     raceLangOptions, raceLangLimit, toggleRaceLang, raceLangsComplete,
-    featOptions, featLimit, toggleFeat, featComplete,
+    featOptions, featLimit, toggleFeat, setFeatSelection, featEligibility, featComplete,
     // background + equipment
     backgroundSkillNames, backgroundToolNames, bgLangOptions, bgLangLimit, toggleBgLang, bgLangsComplete,
     classEquipmentProfile, classEquipmentComplete, classEquipment, allEquipment,

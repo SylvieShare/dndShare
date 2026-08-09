@@ -45,6 +45,7 @@ Item-type-specific list renderers live in `features/items/list-components/`:
 - `ItemListItem.vue` (type 2)
 - `SpellListItem.vue` (type 5)
 - `EnemyListItem.vue` (type 6) — shows CR badge, name, ★ ЛЕГ, creature type
+- `FeatListItem.vue` (type 7) — gold sigil, prerequisite summary, repeat/choice badges
 
 Item-type-specific detail renderers live in `features/items/detail-components/`:
 - `WeaponDetailContent.vue` (type 1)
@@ -52,6 +53,7 @@ Item-type-specific detail renderers live in `features/items/detail-components/`:
 - `AbilityDetailContent.vue` (types 3 & 4)
 - `SpellDetailContent.vue` (type 5)
 - `EnemyDetailContent.vue` (type 6) — hero area, tags, stat blocks, ability scores
+- `FeatDetailContent.vue` (type 7) — sigil hero, requirements, grants, choices, uses and source page
 
 The `CUSTOM_RENDERERS` map in `HandbookItemDetail.vue` maps type id → component. Types without a custom renderer fall back to the generic schema-based display.
 
@@ -81,6 +83,34 @@ The `CUSTOM_RENDERERS` map in `HandbookItemDetail.vue` maps type id → componen
 Handbook items and suggests are also exposed to AI agents over MCP at `POST/GET /mcp` (read + admin write, base records only). See `md/features/mcp.md`.
 
 ## Item schema extensions
+
+### Feat (7) item type
+
+Type 7 «Черты» is seeded and extended idempotently from
+`resources/items/item_7_shema.json`; existing production fields and item data are
+preserved. Its structured fields are:
+
+- `description` (legacy consumers also accept `desc`);
+- `prereq`: canonical `text`, `min_stats[]`, `min_stats_mode` (`all`/`any`),
+  `spellcasting`, `armor_prof[]`, `min_level`;
+- `repeatable` + `unique_choice_key`;
+- `choices[]`: stable `key`, prompt, count and a source (`inline`, `suggest`, or
+  handbook `item`), including optional inline `options[]` and item filter. A
+  choice can bind `ability_bonus`, `grant_proficiency`, or `grant_spells` to the
+  values selected by the player (for feats such as Resilient or Magic Initiate);
+- `asi[]` / `asi_choice` and static `grants` for armor, weapon, tool, skill,
+  saving-throw and language proficiencies;
+- `max_use`, `manual_size`, short/long-rest recovery, `tags`, `source_page`.
+
+`ItemEditModal` supports schema `select` fields and nested `object_array` rows, so
+the whole feat model is editable through the normal handbook form. The custom
+feat detail renderer presents the structured metadata as a rulebook-like card
+instead of dumping generic JSON fields.
+
+`features/items/lib/featRules.js` is the shared rules boundary. It normalizes
+legacy `choice`, evaluates verifiable prerequisites, creates character entries,
+and exposes fixed and choice-driven ASI, proficiency, and spell grants. Free-form `prereq.text` is display-only and
+never blocks a pick when no structured equivalent exists.
 
 ### `tag: true`
 

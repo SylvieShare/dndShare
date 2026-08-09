@@ -4,10 +4,10 @@
     <div v-if="entries.length" class="abe-list" data-sortable-container="abilities">
       <div
         v-for="(entry, idx) in displayItems"
-        :key="entry.id"
+        :key="entry.key || entry.id"
         class="abe-row"
         :class="{ 'sortable-placeholder': sortable.isSource(entry) }"
-        :data-sortable-key="entry.id"
+        :data-sortable-key="entry.key || entry.id"
       >
         <span
           v-if="entries.length > 1"
@@ -21,7 +21,10 @@
           </svg>
         </span>
 
-        <span class="abe-name">{{ entry.name }}</span>
+        <span class="abe-copy">
+          <span class="abe-name">{{ entry.name }}</span>
+          <span v-if="entry.choice_summary" class="abe-choice">{{ entry.choice_summary }}</span>
+        </span>
 
         <div v-if="entry.manual_size" class="abe-uses" title="Количество ячеек">
           <button class="abe-step" type="button" @click="$emit('dec', entry)">−</button>
@@ -37,7 +40,7 @@
           @click="$emit('edit', entry)"
         >✦</button>
 
-        <RemoveButton label="Удалить способность" @click="$emit('remove', entry.id)" />
+        <RemoveButton label="Удалить способность" @click="$emit('remove', entry.key || String(entry.id))" />
       </div>
     </div>
     <div v-else class="abe-empty">Способностей нет</div>
@@ -65,10 +68,10 @@ const sortable = useSortable({
   groups: {
     abilities: { items: computed(() => props.entries) },
   },
-  getKey: e => e.id,
+  getKey: e => e.key || String(e.id),
   onDrop: ({ fromIndex, toIndex }) => {
     if (fromIndex === toIndex) return
-    emit('reorder', reorderByDrop(props.entries.map(e => e.id), fromIndex, toIndex))
+    emit('reorder', reorderByDrop(props.entries.map(e => e.key || String(e.id)), fromIndex, toIndex))
   },
 })
 
@@ -115,15 +118,20 @@ function onDragStart(e, entry, idx) {
 }
 .sortable-placeholder > * { visibility: hidden; }
 
-.abe-name {
+.abe-copy {
   flex: 1;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.abe-name {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: 13px;
   color: var(--text-1);
 }
+.abe-choice { color: var(--text-muted); font-size: 9px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 .abe-uses {
   display: flex;

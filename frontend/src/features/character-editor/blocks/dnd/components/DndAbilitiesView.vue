@@ -17,7 +17,7 @@
 
       <div
         v-for="entry in entries"
-        :key="entry.id"
+        :key="entry.key || entry.id"
         class="abv-card"
         title="Подробнее"
         @click="$emit('view', entry)"
@@ -37,7 +37,10 @@
           />
         </div>
 
-        <span class="abv-name">{{ entry.name }}</span>
+        <span class="abv-copy">
+          <span class="abv-name">{{ entry.name }}</span>
+          <span v-if="entry.choice_summary" class="abv-choice">{{ entry.choice_summary }}</span>
+        </span>
 
         <span v-if="entry.rollback_short_rest" class="abv-badge abv-sr" title="Восстанавливается на коротком отдыхе">КО</span>
         <span v-if="entry.rollback_long_rest" class="abv-badge abv-lr" title="Восстанавливается на длинном отдыхе">ДО</span>
@@ -148,15 +151,21 @@ defineEmits(['toggle-dot', 'view', 'show-tooltip', 'hide-tooltip', 'manage'])
 }
 .abv-dot:hover { opacity: 0.7; }
 
-.abv-name {
+.abv-copy {
   flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.abv-name {
   color: var(--text-2);
   font-size: 13px;
-  min-width: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.abv-choice { color: var(--text-muted); font-size: 9px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 .abv-badge {
   font-size: 9px;

@@ -83,6 +83,14 @@
       @saved="onFormSaved"
     />
 
+    <FeatChoiceModal
+      v-if="featConfigItem"
+      :item="featConfigItem"
+      :excluded-choices="featExcludedChoices"
+      @confirm="onFeatChoicesConfirm"
+      @close="featConfigItem = null"
+    />
+
     <ItemViewModal
       v-if="modalEntry && modalItem"
       :item-type-id="block.content.item_id ?? 3"
@@ -100,17 +108,22 @@ import { itemsApi } from '@/shared/api/itemsApi'
 import BaseTile from "@/shared/ui/BaseTile"
 import DndAbilitiesEditor from "@/features/character-editor/blocks/dnd/components/DndAbilitiesEditor"
 import DndAbilitiesView from "@/features/character-editor/blocks/dnd/components/DndAbilitiesView"
+import FeatChoiceModal from '@/features/character-editor/components/FeatChoiceModal.vue'
 import ItemEditModal from "@/features/character-editor/components/ItemEditModal"
 import ItemPickerModal from "@/features/character-editor/components/ItemPickerModal"
 import ItemTooltip from "@/features/character-editor/components/ItemTooltip"
 import MorphEditorShell from "@/features/character-editor/components/MorphEditorShell"
 import AbilityTooltipDetails from "@/features/items/detail-components/AbilityTooltipDetails"
 import ItemViewModal from "@/shared/ui/ItemViewModal"
+import { featChoices, featEntry } from '@/features/items/lib/featRules'
+import { ensureItemNames, itemName } from '@/features/handbook/objects/lib/itemNames'
+import { useSuggestStore } from '@/stores/suggest'
 import { useMorphOrigin } from "@/features/character-editor/composables/useMorphOrigin"
 
 const props = defineProps(['block', 'value'])
 const emit = defineEmits(['update:value'])
 const charCtx = inject('charCtx', { ownerMode: false })
+const suggestStore = useSuggestStore()
 
 const root        = ref(null)
 const catalog     = ref([])
@@ -119,6 +132,7 @@ const modalEntry  = ref(null)
 const pickerOpen  = ref(false)
 const tooltip     = reactive({ visible: false, name: '', desc: '', item: null, x: 0, top: null, bottom: null })
 const form        = reactive({ open: false, editingItem: null, initialName: '' })
+const featConfigItem = ref(null)
 const { editorOpen, originRect, originEl, openFrom, close } = useMorphOrigin()
 
 const ownerMode = computed(() => charCtx.ownerMode)
@@ -134,14 +148,18 @@ const entries = computed(() =>
       const catalogMaxUse = item.data?.max_use ?? null
       const maxUse = manualSize ? (s.max_use ?? catalogMaxUse ?? 0) : catalogMaxUse
       return {
+        key: s.uid || String(s.id),
+        uid: s.uid,
         id: s.id,
         name: item.name,
-        desc: item.data?.desc || '',
+        desc: item.data?.description || item.data?.desc || '',
         max_use: maxUse,
         manual_size: manualSize,
         rollback_short_rest: !!item.data?.rollback_short_rest,
         rollback_long_rest:  !!item.data?.rollback_long_rest,
         count: s.count ?? maxUse ?? 0,
+        choices: s.choices || {},
+        choice_summary: Number(props.block.content.item_id) === 7 ? featChoiceSummary(item, s.choices || {}) : '',
         isUserOwned: item.userId != null,
       }
     })
@@ -155,7 +173,53 @@ const modalItem = computed(() => {
 })
 
 const skeletonCount = computed(() => Math.max(1, stored.value.length) || 2)
-const usedIds       = computed(() => stored.value.map(s => s.id))
+const usedIds       = computed(() => stored.value
+  .filter((storedEntry) => !catalog.value.find((item) => item.id === storedEntry.id)?.data?.repeatable)
+  .map((storedEntry) => storedEntry.id))
+const featExcludedChoices = computed(() => {
+  const item = featConfigItem.value
+  if (!item?.data?.repeatable) return {}
+  const uniqueKeys = new Set([
+    item.data.unique_choice_key,
+    ...featChoices(item).filter((choice) => choice.unique_across_takes).map((choice) => choice.key),
+  ].filter(Boolean))
+  const result = {}
+  for (const entry of stored.value.filter((storedEntry) => storedEntry.id === item.id)) {
+    for (const key of uniqueKeys) result[key] = [...(result[key] || []), ...(entry.choices?.[key] || [])]
+  }
+  return result
+})
+
+function featChoiceSummary(item, selections) {
+  const labels = []
+  for (const choice of featChoices(item)) {
+    for (const value of (selections[choice.key] || [])) {
+      if (choice.source === 'suggest') {
+        labels.push(suggestStore.items(Number(choice.from_suggest_id)).find((entry) => String(entry.id) === String(value))?.value || `#${value}`)
+      } else if (choice.source === 'item') {
+        labels.push(itemName(value) || `#${value}`)
+      } else {
+        labels.push(choice.options?.find((option) => String(option.value ?? option.label) === String(value))?.label || String(value))
+      }
+    }
+  }
+  return labels.join(', ')
+}
+
+function hydrateFeatChoices() {
+  if (Number(props.block.content.item_id) !== 7) return
+  const itemIds = []
+  for (const item of catalog.value) {
+    for (const choice of featChoices(item)) {
+      if (choice.from_suggest_id) suggestStore.ensure(Number(choice.from_suggest_id))
+      if (choice.source !== 'item') continue
+      for (const storedEntry of stored.value.filter((entry) => entry.id === item.id)) {
+        itemIds.push(...(storedEntry?.choices?.[choice.key] || []))
+      }
+    }
+  }
+  if (itemIds.length) ensureItemNames(itemIds)
+}
 
 function emitChange(newStored) {
   emit('update:value', props.block.id, newStored)
@@ -172,6 +236,15 @@ function onView(entry) {
 
 function addFromCatalog(item) {
   if (!catalog.value.find(c => c.id === item.id)) catalog.value.push(item)
+  if (Number(props.block.content.item_id) === 7 && featChoices(item).length) {
+    featConfigItem.value = item
+    pickerOpen.value = false
+    return
+  }
+  if (Number(props.block.content.item_id) === 7) {
+    emitChange([...stored.value, featEntry(item)])
+    return
+  }
   const manualSize = !!item.data?.manual_size
   const maxUse = item.data?.max_use ?? null
   const entry = { id: item.id, count: maxUse ?? 0 }
@@ -179,32 +252,37 @@ function addFromCatalog(item) {
   emitChange([...stored.value, entry])
 }
 
-function removeAbility(id) {
-  hideTooltip()
-  emitChange(stored.value.filter(s => s.id !== id))
+function onFeatChoicesConfirm(choices) {
+  emitChange([...stored.value, featEntry(featConfigItem.value, choices)])
+  featConfigItem.value = null
 }
 
-function reorderAbilities(ids) {
-  const byId = new Map(stored.value.map(s => [s.id, s]))
-  emitChange(ids.map(id => byId.get(id)).filter(Boolean))
+function removeAbility(key) {
+  hideTooltip()
+  emitChange(stored.value.filter(s => (s.uid || String(s.id)) !== key))
+}
+
+function reorderAbilities(keys) {
+  const byKey = new Map(stored.value.map(s => [s.uid || String(s.id), s]))
+  emitChange(keys.map(key => byKey.get(key)).filter(Boolean))
 }
 
 function toggleDot(entry, i) {
   const newCount = i <= entry.count ? i - 1 : i
-  emitChange(stored.value.map(s => s.id === entry.id ? { ...s, count: newCount } : s))
+  emitChange(stored.value.map(s => (s.uid || String(s.id)) === entry.key ? { ...s, count: newCount } : s))
 }
 
 function increaseMaxUse(entry) {
   const newMax = (entry.max_use ?? 0) + 1
   emitChange(stored.value.map(s =>
-    s.id === entry.id ? { ...s, max_use: newMax, count: (s.count ?? 0) + 1 } : s
+    (s.uid || String(s.id)) === entry.key ? { ...s, max_use: newMax, count: (s.count ?? 0) + 1 } : s
   ))
 }
 
 function decreaseMaxUse(entry) {
   const newMax = Math.max(0, (entry.max_use ?? 0) - 1)
   emitChange(stored.value.map(s => {
-    if (s.id !== entry.id) return s
+    if ((s.uid || String(s.id)) !== entry.key) return s
     return { ...s, max_use: newMax, count: Math.min(s.count ?? 0, newMax) }
   }))
 }
@@ -245,6 +323,7 @@ onMounted(async () => {
     try {
       const r = await itemsApi.byIds(ids)
       catalog.value = r.items || []
+      hydrateFeatChoices()
     } catch (e) { /* show what we have */ }
   }
   loading.value = false

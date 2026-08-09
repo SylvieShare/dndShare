@@ -10,9 +10,10 @@
  */
 
 import { abilityModifier } from '@/shared/lib/dnd'
-import { STAT_KEYS } from '@/shared/lib/dndStats'
+import { STAT_KEYS, SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
 import { computeSlots } from '../../../blocks/dnd/lib/levelUp.js'
 import { defaultSlots } from '../../../blocks/dnd/lib/spellEntry.js'
+import { featAbilityBonuses, featEntry, featGrantedSpellIds, featGrants } from '@/features/items/lib/featRules'
 import { blankValues } from '../newCharacter.js'
 import { addStartingCoins, backgroundStartingEquipment } from './backgroundEquipment.js'
 import { applyGrants, extractGrants } from './grants.js'
@@ -58,6 +59,14 @@ function addLanguages(values, labels) {
   values.proficiencies = profs
 }
 
+function addProficiencies(values, bucket, labels) {
+  if (!labels.length) return
+  const profs = { ...(values.proficiencies || {}) }
+  profs[bucket] = [...(profs[bucket] || [])]
+  labels.forEach((label) => { if (label && !profs[bucket].includes(label)) profs[bucket].push(label) })
+  values.proficiencies = profs
+}
+
 /**
  * @param {object} input
  * @param {string} input.name
@@ -78,7 +87,7 @@ export function buildCharacterData(input) {
     name = '', race, subrace = null, charClass, subclass = null, raceVariant = null,
     background = null,
     scores = {}, asiChoice = [], skillIds = [], spellIds = [], grantedSpellIds = [], choices = [],
-    raceSkillIds = [], raceLangIds = [], featIds = [], bgLangIds = [],
+    raceSkillIds = [], raceLangIds = [], featIds = [], feats = [], bgLangIds = [],
     equipment = [], persona = null,
     raceAbilityItems = [], classAbilityItems = [], suggestValue,
   } = input || {}
@@ -110,6 +119,20 @@ export function buildCharacterData(input) {
     finalScore[stat] = base + racial
   }
 
+  // Feat ability bonuses are part of the starting score and therefore affect
+  // derived level-1 values such as HP. Each bonus row remains named and auditable.
+  for (const { item, choices: featChoices = {} } of feats) {
+    for (const bonus of featAbilityBonuses(item, featChoices)) {
+      const block = { ...(values[bonus.stat] || {}) }
+      const score = block.value && typeof block.value === 'object' ? block.value : { base: Number(block.value) || 10, bonuses: [] }
+      const applied = Math.max(0, Math.min(bonus.bonus, 20 - (finalScore[bonus.stat] || 0)))
+      if (!applied) continue
+      block.value = { ...score, bonuses: [...(score.bonuses || []), { title: item.name || 'Черта', value: applied }] }
+      values[bonus.stat] = block
+      finalScore[bonus.stat] = (finalScore[bonus.stat] || 0) + applied
+    }
+  }
+
   // HP at level 1 = hit-die face (set by applyGrants) + CON modifier.
   if (values.hp && Number(values.hp.max)) {
     const hp = values.hp.max + mod(finalScore.CON)
@@ -125,8 +148,26 @@ export function buildCharacterData(input) {
   addLanguages(values, raceLangIds.map((id) => suggestValue?.(6, id)).filter(Boolean))
   addLanguages(values, bgLangIds.map((id) => suggestValue?.(6, id)).filter(Boolean))
 
-  // Chosen feats (handbook type 7) → the sheet's Черты block (`abilities_feats`).
-  if (featIds.length) values.abilities_feats = featIds.map((id) => ({ id }))
+  // Chosen feats (handbook type 7) → the sheet's Черты block (`abilities_feats`)
+  // plus simple static proficiencies that can be applied without a combat rules engine.
+  if (feats.length) {
+    values.abilities_feats = feats.map(({ item, choices }) => featEntry(item, choices || {}))
+    for (const { item, choices: featChoices = {} } of feats) {
+      const featGrant = featGrants(item, featChoices)
+      addProficiencies(values, 'Доспехи', (featGrant.armor_prof || []).map((id) => suggestValue?.(3, id)).filter(Boolean))
+      addProficiencies(values, 'Оружие', (featGrant.weapon_prof || []).map((id) => suggestValue?.(4, id)).filter(Boolean))
+      addProficiencies(values, 'Инструменты', (featGrant.tool_prof || []).map((id) => suggestValue?.(5, id)).filter(Boolean))
+      addLanguages(values, (featGrant.languages || []).map((id) => suggestValue?.(6, id)).filter(Boolean))
+      for (const skillId of (featGrant.skill_prof || [])) addSkillProf(values, skillId)
+      for (const abilityId of (featGrant.save_prof || [])) {
+        const stat = SUGGEST16_TO_STAT[Number(abilityId)]
+        if (stat) values[stat] = { ...(values[stat] || {}), save_up: true }
+      }
+    }
+  }
+  else if (featIds.length) values.abilities_feats = featIds.map((id) => ({ id }))
+
+  const featSpellIds = feats.flatMap(({ item, choices: featChoices = {} }) => featGrantedSpellIds(item, featChoices))
 
   // Feature choices (granted abilities' `choice`): skill/language picks are
   // applied mechanically; every choice is recorded under `feature_choices`.
@@ -144,7 +185,7 @@ export function buildCharacterData(input) {
   // the shared caster table (full 2 / half 0 / artificer 2 / warlock pact 1).
   // Granted subclass spells (cleric domains) are appended as prepared.
   const grantedExtra = grantedSpellIds.filter((id) => !spellIds.includes(id))
-  if (grants.spellcasting || spellIds.length || grantedExtra.length) {
+  if (grants.spellcasting || spellIds.length || grantedExtra.length || featSpellIds.length) {
     const slots = defaultSlots()
     const slotInfo = charClass ? computeSlots(
       [{ id: charClass.id, level: 1, subclass: subclass ? { id: subclass.id } : null }],
@@ -154,7 +195,11 @@ export function buildCharacterData(input) {
     else if (grants.spellcasting) slots[0] = { ...slots[0], total: 2 }
     values.spells = {
       stat_path: grants.spellcasting?.abilityId ?? '',
-      spells: [...spellIds, ...grantedExtra].map((id) => ({ id, prepared: true })),
+      spells: [...new Set([...spellIds, ...grantedExtra, ...featSpellIds])].map((id) => ({
+        id,
+        prepared: true,
+        ...(featSpellIds.some((featId) => String(featId) === String(id)) ? { source: 'feat' } : {}),
+      })),
       slots,
       ...(slotInfo?.pactMerged ? { slots_rest: 'short_rest' } : {}),
     }

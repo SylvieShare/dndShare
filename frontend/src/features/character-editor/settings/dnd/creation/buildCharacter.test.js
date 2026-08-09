@@ -80,3 +80,32 @@ describe('buildCharacterData persona', () => {
     expect(result.data.values.person_allies).toBe('<ul><li>Гильдия картографов</li></ul>')
   })
 })
+
+describe('buildCharacterData feats', () => {
+  it('stores feat choices and applies simple ASI and proficiency grants', () => {
+    const feat = {
+      id: 70,
+      name: 'Стойкий ученик',
+      data: {
+        asi_choice: { choice_key: 'ability', bonus: 1 },
+        grants: { armor_prof: [2], skill_prof: [2], save_prof: [4] },
+        max_use: 2,
+      },
+    }
+    const labels = { '3:2': 'Средние доспехи' }
+    const result = buildCharacterData({
+      race: selection(1, 'Человек'),
+      charClass: selection(2, 'Воин'),
+      scores: { STR: 10, DEX: 10, CON: 15, INT: 10, WIS: 10, CHA: 10 },
+      feats: [{ item: feat, choices: { ability: [3] } }],
+      suggestValue: (typeId, id) => labels[`${typeId}:${id}`] || '',
+    })
+
+    expect(result.data.values.CON.value).toEqual({ base: 15, bonuses: [{ title: 'Стойкий ученик', value: 1 }] })
+    expect(result.data.values.hp.max).toBe(13)
+    expect(result.data.values.proficiencies['Доспехи']).toContain('Средние доспехи')
+    expect(result.data.values.DEX.skills['2'].up).toBe(1)
+    expect(result.data.values.INT.save_up).toBe(true)
+    expect(result.data.values.abilities_feats[0]).toMatchObject({ id: 70, count: 2, choices: { ability: [3] } })
+  })
+})

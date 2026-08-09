@@ -119,16 +119,26 @@
       :item-type-ids="[7]"
       title="Выбор черты"
       search-placeholder="Поиск черты…"
-      :exclude-items="state.featIds"
+      :item-eligibility="featEligibility"
       @pick="onFeatPick"
       @close="pickerOpen = false"
+    />
+
+    <FeatChoiceModal
+      v-if="featConfigItem"
+      :item="featConfigItem"
+      :initial-choices="state.featSelections?.[featConfigItem.id] || {}"
+      @confirm="onFeatChoicesConfirm"
+      @close="featConfigItem = null"
     />
   </div>
 </template>
 
 <script setup>
 import { computed, inject, ref } from 'vue'
+import FeatChoiceModal from '@/features/character-editor/components/FeatChoiceModal.vue'
 import ItemPickerModal from '@/features/character-editor/components/ItemPickerModal.vue'
+import { featChoices } from '@/features/items/lib/featRules'
 import MultiSearchSelect from '@/features/character-list/components/wizard/MultiSearchSelect.vue'
 import RichContent from '@/shared/ui/RichContent'
 import SelectTile from '@/features/character-list/components/wizard/SelectTile.vue'
@@ -139,7 +149,7 @@ import { STAT_SHORT, asiSummary, monogramOf } from '@/features/character-list/co
 const {
   races, subraces, state, loading, grants, STATS, toggleAsiChoice,
   raceLangOptions, raceLangLimit, toggleRaceLang, raceLangsComplete,
-  featPool, featLimit, toggleFeat, featComplete, raceFeatureChoices,
+  featPool, featLimit, toggleFeat, setFeatSelection, featEligibility, featComplete, raceFeatureChoices,
 } = inject('createWizard')
 const raceDesc = computed(() => state.race?.data?.description || '')
 const subraceDesc = computed(() => state.subrace?.data?.description || '')
@@ -150,6 +160,7 @@ const hasRaceChoices = computed(() => {
 })
 
 const pickerOpen = ref(false)
+const featConfigItem = ref(null)
 const raceDetails = ref(null)
 let scrollPending = false
 
@@ -167,7 +178,16 @@ function afterRaceDetailsEnter() {
   }))
 }
 function featName(id) { return featPool.value.find((f) => f.id === id)?.name || `#${id}` }
-function onFeatPick(item) { if (item?.id != null) toggleFeat(item.id) }
+function onFeatPick(item) {
+  if (item?.id == null) return
+  pickerOpen.value = false
+  if (featChoices(item).length) featConfigItem.value = item
+  else setFeatSelection(item, {})
+}
+function onFeatChoicesConfirm(choices) {
+  setFeatSelection(featConfigItem.value, choices)
+  featConfigItem.value = null
+}
 </script>
 
 <style scoped>

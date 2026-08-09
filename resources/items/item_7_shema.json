@@ -3,5 +3,302 @@
     "name": "Описание",
     "key": "description",
     "type": "description"
+  },
+  {
+    "name": "Требования",
+    "key": "prereq",
+    "type": "object",
+    "fields": [
+      {
+        "name": "Текст требования",
+        "key": "text",
+        "type": "text"
+      },
+      {
+        "name": "Минимальные характеристики",
+        "key": "min_stats",
+        "type": "object_array",
+        "fields": [
+          {
+            "name": "Характеристика",
+            "key": "ability",
+            "type": "suggest",
+            "suggest_id": 16
+          },
+          {
+            "name": "Минимум",
+            "key": "value",
+            "type": "int",
+            "default": 13
+          }
+        ]
+      },
+      {
+        "name": "Связь характеристик",
+        "key": "min_stats_mode",
+        "type": "select",
+        "default": "all",
+        "options": [
+          { "value": "all", "label": "Все условия (И)" },
+          { "value": "any", "label": "Любое условие (ИЛИ)" }
+        ]
+      },
+      {
+        "name": "Требуется заклинательство",
+        "key": "spellcasting",
+        "type": "bool"
+      },
+      {
+        "name": "Требуемое владение доспехами",
+        "key": "armor_prof",
+        "type": "suggest_array",
+        "suggest_id": 3
+      },
+      {
+        "name": "Минимальный уровень",
+        "key": "min_level",
+        "type": "int"
+      }
+    ]
+  },
+  {
+    "name": "Можно брать повторно",
+    "key": "repeatable",
+    "type": "bool",
+    "default": false,
+    "filter": true
+  },
+  {
+    "name": "Уникальный выбор при повторе",
+    "key": "unique_choice_key",
+    "type": "text",
+    "show_on": { "key": "repeatable", "value": true }
+  },
+  {
+    "name": "Выборы при получении",
+    "key": "choices",
+    "type": "object_array",
+    "fields": [
+      {
+        "name": "Ключ",
+        "key": "key",
+        "type": "text"
+      },
+      {
+        "name": "Подсказка игроку",
+        "key": "text",
+        "type": "text"
+      },
+      {
+        "name": "Сколько выбрать",
+        "key": "count",
+        "type": "int",
+        "default": 1
+      },
+      {
+        "name": "Источник вариантов",
+        "key": "source",
+        "type": "select",
+        "default": "inline",
+        "options": [
+          { "value": "inline", "label": "Варианты ниже" },
+          { "value": "suggest", "label": "Словарь" },
+          { "value": "item", "label": "Предметы справочника" }
+        ]
+      },
+      {
+        "name": "ID словаря",
+        "key": "from_suggest_id",
+        "type": "int",
+        "show_on": { "key": "source", "value": "suggest" }
+      },
+      {
+        "name": "ID типа предметов",
+        "key": "from_item_type_id",
+        "type": "int",
+        "show_on": { "key": "source", "value": "item" }
+      },
+      {
+        "name": "Фильтр предметов",
+        "key": "item_filter",
+        "type": "text",
+        "show_on": { "key": "source", "value": "item" }
+      },
+      {
+        "name": "Не повторять вариант",
+        "key": "unique_across_takes",
+        "type": "bool"
+      },
+      {
+        "name": "Бонус выбранной характеристики",
+        "key": "ability_bonus",
+        "type": "int"
+      },
+      {
+        "name": "Даруемое владение",
+        "key": "grant_proficiency",
+        "type": "select",
+        "options": [
+          { "value": "", "label": "Не применять" },
+          { "value": "armor_prof", "label": "Доспех" },
+          { "value": "weapon_prof", "label": "Оружие" },
+          { "value": "tool_prof", "label": "Инструмент" },
+          { "value": "skill_prof", "label": "Навык" },
+          { "value": "save_prof", "label": "Спасбросок" },
+          { "value": "languages", "label": "Язык" }
+        ]
+      },
+      {
+        "name": "Добавить выбранные заклинания",
+        "key": "grant_spells",
+        "type": "bool"
+      },
+      {
+        "name": "Варианты",
+        "key": "options",
+        "type": "object_array",
+        "show_on": { "key": "source", "value": "inline" },
+        "fields": [
+          {
+            "name": "Значение",
+            "key": "value",
+            "type": "text"
+          },
+          {
+            "name": "Название",
+            "key": "label",
+            "type": "text"
+          },
+          {
+            "name": "Описание",
+            "key": "desc",
+            "type": "text"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Фиксированные бонусы характеристик",
+    "key": "asi",
+    "type": "object_array",
+    "fields": [
+      {
+        "name": "Характеристика",
+        "key": "ability",
+        "type": "suggest",
+        "suggest_id": 16
+      },
+      {
+        "name": "Бонус",
+        "key": "bonus",
+        "type": "int",
+        "default": 1
+      }
+    ]
+  },
+  {
+    "name": "Бонус характеристики на выбор",
+    "key": "asi_choice",
+    "type": "object",
+    "fields": [
+      {
+        "name": "Ключ выбора",
+        "key": "choice_key",
+        "type": "text",
+        "default": "ability"
+      },
+      {
+        "name": "Сколько выбрать",
+        "key": "count",
+        "type": "int",
+        "default": 1
+      },
+      {
+        "name": "Бонус",
+        "key": "bonus",
+        "type": "int",
+        "default": 1
+      },
+      {
+        "name": "Доступные характеристики",
+        "key": "from",
+        "type": "suggest_array",
+        "suggest_id": 16
+      }
+    ]
+  },
+  {
+    "name": "Даруемые владения",
+    "key": "grants",
+    "type": "object",
+    "fields": [
+      {
+        "name": "Доспехи",
+        "key": "armor_prof",
+        "type": "suggest_array",
+        "suggest_id": 3
+      },
+      {
+        "name": "Оружие",
+        "key": "weapon_prof",
+        "type": "suggest_array",
+        "suggest_id": 4
+      },
+      {
+        "name": "Инструменты",
+        "key": "tool_prof",
+        "type": "suggest_array",
+        "suggest_id": 5
+      },
+      {
+        "name": "Навыки",
+        "key": "skill_prof",
+        "type": "suggest_array",
+        "suggest_id": 15
+      },
+      {
+        "name": "Спасброски",
+        "key": "save_prof",
+        "type": "suggest_array",
+        "suggest_id": 16
+      },
+      {
+        "name": "Языки",
+        "key": "languages",
+        "type": "suggest_array",
+        "suggest_id": 6
+      }
+    ]
+  },
+  {
+    "name": "Максимум использований",
+    "key": "max_use",
+    "type": "int"
+  },
+  {
+    "name": "Редактируемый максимум",
+    "key": "manual_size",
+    "type": "bool"
+  },
+  {
+    "name": "Восстановление на коротком отдыхе",
+    "key": "rollback_short_rest",
+    "type": "bool"
+  },
+  {
+    "name": "Восстановление на длинном отдыхе",
+    "key": "rollback_long_rest",
+    "type": "bool"
+  },
+  {
+    "name": "Теги",
+    "key": "tags",
+    "type": "text"
+  },
+  {
+    "name": "Страница источника",
+    "key": "source_page",
+    "type": "int"
   }
 ]

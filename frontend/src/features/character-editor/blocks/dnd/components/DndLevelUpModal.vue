@@ -219,9 +219,18 @@
       :item-type-ids="[7]"
       title="Выбор черты"
       search-placeholder="Поиск черты…"
-      :exclude-items="featPick ? [featPick.id] : []"
+      :item-eligibility="featEligibility"
       @pick="onFeatPick"
       @close="featPickerOpen = false"
+    />
+
+    <FeatChoiceModal
+      v-if="featConfigItem"
+      :item="featConfigItem"
+      :initial-choices="featConfigItem.selectedChoices || {}"
+      :excluded-choices="featExcludedChoices"
+      @confirm="onFeatChoicesConfirm"
+      @close="featConfigItem = null"
     />
   </AppModal>
 </template>
@@ -229,6 +238,7 @@
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
 import AppModal from '@/shared/ui/AppModal'
+import FeatChoiceModal from '@/features/character-editor/components/FeatChoiceModal.vue'
 import FormNumberInput from '@/shared/ui/form/FormNumberInput'
 import ItemPickerModal from '@/features/character-editor/components/ItemPickerModal.vue'
 import ItemViewModal from '@/shared/ui/ItemViewModal'
@@ -241,6 +251,16 @@ import {
   MULTICLASS_PROFS, MULTICLASS_REQS, parseAsiLevels, totalLevel,
 } from '@/features/character-editor/blocks/dnd/lib/levelUp'
 import { defaultSlots } from '@/features/character-editor/blocks/dnd/lib/spellEntry'
+import {
+  abilityScoresFromValues,
+  evaluateFeatEligibility,
+  featAbilityBonuses,
+  featChoices,
+  featEntry,
+  featGrantedSpellIds,
+  featGrants,
+} from '@/features/items/lib/featRules'
+import { SKILL_BY_STAT } from '@/features/character-editor/settings/dnd/creation/buildCharacter'
 import { featuresForBinding } from '@/features/character-editor/settings/dnd/creation/progression'
 import { fetchGet } from '@/shared/api/http'
 import { itemsApi } from '@/shared/api/itemsApi'
@@ -257,6 +277,7 @@ const emit = defineEmits(['close', 'apply'])
 const dice = useDiceStore()
 const suggestStore = useSuggestStore()
 suggestStore.ensure(11)
+;[3, 4, 5, 6, 15, 16].forEach((typeId) => suggestStore.ensure(typeId))
 
 const loading = ref(true)
 const step = ref('pick')
@@ -275,6 +296,7 @@ const asiStats = ref([])
 const asiSkipped = ref(false)
 const featPick = ref(null)
 const featPickerOpen = ref(false)
+const featConfigItem = ref(null)
 const applySlots = ref(true)
 const viewFeature = ref(null)
 
@@ -440,7 +462,7 @@ const asiModes = [
 ]
 const asiDelta = computed(() => (asiMode.value === '+2' ? 2 : 1))
 const asiLimit = computed(() => (asiMode.value === '+2' ? 1 : 2))
-function setAsiMode(m) { asiMode.value = m; asiStats.value = []; featPick.value = null }
+function setAsiMode(m) { asiMode.value = m; asiStats.value = []; featPick.value = null; featConfigItem.value = null }
 function asiChipLocked(s) {
   if (asiStats.value.includes(s)) return false
   if (asiStats.value.length >= asiLimit.value) return true
@@ -457,7 +479,61 @@ const asiComplete = computed(() => {
   if (asiMode.value === 'feat') return !!featPick.value
   return asiStats.value.length === asiLimit.value
 })
-function onFeatPick(item) { if (item?.id != null) { featPick.value = item; featPickerOpen.value = false } }
+const featRuleContext = computed(() => {
+  const armorLabels = [
+    ...(Array.isArray(props.values?.proficiencies?.['Доспехи']) ? props.values.proficiencies['Доспехи'] : []),
+    ...(Array.isArray(props.values?.proficiencies_armor) ? props.values.proficiencies_armor : []),
+  ]
+  const armorProfIds = (suggestStore.items(3) || [])
+    .filter((entry) => armorLabels.some((label) => String(label).toLowerCase() === String(entry.value).toLowerCase()))
+    .map((entry) => entry.id)
+  for (const entry of entries.value) {
+    for (const id of (itemsById.value[entry.id]?.data?.armor_prof || [])) {
+      if (!armorProfIds.includes(id)) armorProfIds.push(id)
+    }
+  }
+  return {
+    stats: abilityScoresFromValues(props.values),
+    level: newTotal.value,
+    spellcasting: !!props.values?.spells || entries.value.some((entry) => !!itemsById.value[entry.id]?.data?.spellcasting),
+    armorProfIds,
+  }
+})
+
+const featExcludedChoices = computed(() => {
+  const item = featConfigItem.value
+  if (!item?.data?.repeatable) return {}
+  const uniqueKeys = new Set([
+    item.data.unique_choice_key,
+    ...featChoices(item).filter((choice) => choice.unique_across_takes).map((choice) => choice.key),
+  ].filter(Boolean))
+  const result = {}
+  for (const entry of (props.values?.abilities_feats || []).filter((feat) => feat.id === item.id)) {
+    for (const key of uniqueKeys) result[key] = [...(result[key] || []), ...(entry.choices?.[key] || [])]
+  }
+  return result
+})
+
+function featEligibility(item) {
+  const result = evaluateFeatEligibility(item, featRuleContext.value)
+  const alreadyTaken = (props.values?.abilities_feats || []).some((entry) => entry.id === item.id)
+  if (alreadyTaken && !item.data?.repeatable) {
+    return { ...result, eligible: false, reasons: [...result.reasons, 'Черта уже выбрана'] }
+  }
+  return result
+}
+
+function onFeatPick(item) {
+  if (item?.id == null) return
+  featPickerOpen.value = false
+  if (featChoices(item).length) featConfigItem.value = item
+  else featPick.value = { ...item, selectedChoices: {} }
+}
+
+function onFeatChoicesConfirm(choices) {
+  featPick.value = { ...featConfigItem.value, selectedChoices: choices }
+  featConfigItem.value = null
+}
 
 // ─── бонус мастерства / ячейки ──────────────────────────────────────────────
 const profBefore = computed(() => proficiencyBonus(total.value))
@@ -556,6 +632,7 @@ function resetPreview() {
   asiStats.value = []
   asiSkipped.value = false
   featPick.value = null
+  featConfigItem.value = null
   applySlots.value = true
   viewFeature.value = null
 }
@@ -574,6 +651,7 @@ function accept() {
   if (!canAccept.value) return
   const v = props.values || {}
   const updates = {}
+  let featSpellIds = []
 
   updates.lvl = { exp: 0, ...(v.lvl || {}), level: newTotal.value }
 
@@ -605,8 +683,57 @@ function accept() {
     if (asiNow.value && !asiSkipped.value) {
       if (asiMode.value === 'feat' && featPick.value) {
         const feats = Array.isArray(v.abilities_feats) ? v.abilities_feats : []
-        if (!feats.some((f) => f.id === featPick.value.id)) {
-          updates.abilities_feats = [...feats, { id: featPick.value.id, count: featPick.value.data?.max_use ?? 0 }]
+        if (featPick.value.data?.repeatable || !feats.some((f) => f.id === featPick.value.id)) {
+          updates.abilities_feats = [...feats, featEntry(featPick.value, featPick.value.selectedChoices || {})]
+        }
+
+        const currentStatBlock = (stat) => ({ ...(updates[stat] || v[stat] || {}) })
+        const writeStatBonus = (stat, title, bonus) => {
+          const block = currentStatBlock(stat)
+          const oldValue = block.value
+          const base = oldValue && typeof oldValue === 'object'
+            ? (Number(oldValue.base) || 0)
+            : (oldValue == null ? 10 : Number(oldValue) || 0)
+          const bonuses = oldValue && typeof oldValue === 'object' && Array.isArray(oldValue.bonuses) ? oldValue.bonuses : []
+          const applied = Math.max(0, Math.min(Number(bonus) || 0, 20 - resolveNumValue(oldValue)))
+          if (applied) updates[stat] = { ...block, value: { base, bonuses: [...bonuses, { title, value: applied }] } }
+        }
+        for (const bonus of featAbilityBonuses(featPick.value, featPick.value.selectedChoices || {})) {
+          writeStatBonus(bonus.stat, featPick.value.name, bonus.bonus)
+        }
+
+        const selectedChoices = featPick.value.selectedChoices || {}
+        const grant = featGrants(featPick.value, selectedChoices)
+        featSpellIds = featGrantedSpellIds(featPick.value, selectedChoices)
+        const profs = { ...(v.proficiencies || {}) }
+        const addProf = (bucket, typeId, ids) => {
+          if (!ids?.length) return
+          const values = [...(profs[bucket] || [])]
+          for (const id of ids) {
+            const label = suggestStore.items(typeId).find((entry) => String(entry.id) === String(id))?.value
+            if (label && !values.includes(label)) values.push(label)
+          }
+          profs[bucket] = values
+        }
+        addProf('Доспехи', 3, grant.armor_prof)
+        addProf('Оружие', 4, grant.weapon_prof)
+        addProf('Инструменты', 5, grant.tool_prof)
+        addProf('Языки', 6, grant.languages)
+        if (Object.keys(profs).length) updates.proficiencies = profs
+
+        for (const skillId of (grant.skill_prof || [])) {
+          const stat = SKILL_BY_STAT[String(skillId)]
+          if (!stat) continue
+          const block = currentStatBlock(stat)
+          const saved = block.skills?.[String(skillId)] || {}
+          updates[stat] = {
+            ...block,
+            skills: { ...(block.skills || {}), [String(skillId)]: { ...saved, up: Math.max(Number(saved.up) || 0, 1), override_title: saved.override_title || '', bonuses: saved.bonuses || [] } },
+          }
+        }
+        for (const abilityId of (grant.save_prof || [])) {
+          const stat = STAT_KEYS[Number(abilityId) - 1]
+          if (stat) updates[stat] = { ...currentStatBlock(stat), save_up: true }
         }
       } else {
         for (const s of asiStats.value) {
@@ -633,7 +760,7 @@ function accept() {
 
     // ячейки заклинаний + даруемые заклинания архетипа
     const applySlotChange = applySlots.value && slotDiff.value.length && slotsAfter.value?.isCaster
-    if (applySlotChange || grantedNewIds.value.length) {
+    if (applySlotChange || grantedNewIds.value.length || featSpellIds.length) {
       const spells = v.spells && typeof v.spells === 'object'
         ? { ...v.spells }
         : { stat_path: castingAbilityIdOf(classItem.value) ?? '', spells: [], slots: defaultSlots() }
@@ -649,6 +776,13 @@ function accept() {
       }
       if (grantedNewIds.value.length) {
         spells.spells = [...(spells.spells || []), ...grantedNewIds.value.map((id) => ({ id, prepared: true }))]
+      }
+      if (featSpellIds.length) {
+        const existing = new Set((spells.spells || []).map((entry) => String(entry.id)))
+        const added = featSpellIds
+          .filter((id) => !existing.has(String(id)))
+          .map((id) => ({ id, prepared: true, source: 'feat' }))
+        spells.spells = [...(spells.spells || []), ...added]
       }
       updates.spells = spells
     }
