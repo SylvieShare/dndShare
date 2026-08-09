@@ -73,10 +73,14 @@ CREATE TABLE IF NOT EXISTS dndshare.error_report (
     description text NOT NULL,
     page_url    text NOT NULL,
     element     jsonb NOT NULL,
+    screenshot  bytea NULL,
+    screenshot_content_type varchar(50) NULL,
     user_id     int8 NULL REFERENCES dndshare.users(id) ON DELETE SET NULL,
     created_at  timestamptz DEFAULT now() NOT NULL,
     CONSTRAINT error_report_pk PRIMARY KEY (id)
 );
+ALTER TABLE dndshare.error_report ADD COLUMN IF NOT EXISTS screenshot bytea NULL;
+ALTER TABLE dndshare.error_report ADD COLUMN IF NOT EXISTS screenshot_content_type varchar(50) NULL;
 CREATE INDEX IF NOT EXISTS idx_error_report_created_at ON dndshare.error_report USING btree (created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_error_report_user_id ON dndshare.error_report USING btree (user_id);
 

@@ -23,6 +23,7 @@ dropped. **Never create new objects in `base`.**
 - `id bigserial` primary key;
 - `description text` and `page_url text`;
 - `element jsonb` with the browser-generated selector and diagnostic metadata;
+- nullable `screenshot bytea` and `screenshot_content_type varchar(50)`;
 - nullable `user_id` referencing `users(id)` with `ON DELETE SET NULL`;
 - `created_at timestamptz`.
 

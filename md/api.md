@@ -51,8 +51,9 @@ Do not spread endpoint strings directly through components when adding new behav
 
 ## Page Error Report Routes
 
-- `POST /api/error-reports` — public/optional-auth submit endpoint. Body: `{ description, pageUrl, element }`; `element` is a JSON object containing at least `selector`. A signed-in reporter is attached to the row automatically.
+- `POST /api/error-reports` — public/optional-auth submit endpoint. Body: `{ description, pageUrl, element, screenshot? }`; `element` is a JSON object containing at least `selector`, and `screenshot` is an optional JPEG/PNG/WebP data URL. A signed-in reporter is attached to the row automatically; guests store `userId = null`.
 - `GET /api/admin-panel/error-reports?limit=200&offset=0` — `ADMIN` list, newest first.
+- `GET /api/admin-panel/error-reports/{id}/screenshot` — `ADMIN` raw attached image.
 - `DELETE /api/admin-panel/error-reports/{id}` — `ADMIN` deletion of one report.
 
 See `md/features/error-reports.md` for the selector payload and validation limits.

@@ -25,7 +25,7 @@ Key Vite specifics (don't reintroduce webpack-isms):
 
 ### Dependency security
 
-`npm audit` is clean (**0 vulnerabilities**, ~116 packages) after the Vite migration — the whole vue-cli/webpack vuln surface is gone. Keep it that way: pin `axios` to a current patch (≥1.18.0; older 1.x has shipped runtime advisories) and prefer adding few, modern devDependencies.
+`npm audit` is clean (**0 vulnerabilities**, ~119 packages) after the Vite migration — the whole vue-cli/webpack vuln surface is gone. Keep it that way: pin `axios` to a current patch (≥1.18.0; older 1.x has shipped runtime advisories) and prefer adding few, modern dependencies. `html-to-image` is the error reporter's only DOM-to-image dependency.
 
 ## Structure
 

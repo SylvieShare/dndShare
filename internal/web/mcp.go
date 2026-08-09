@@ -3,6 +3,7 @@ package web
 import (
 	"context"
 	"crypto/subtle"
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -273,6 +274,24 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 			return nil, fmt.Errorf("error report %d not found", id)
 		}
 		return fmt.Sprintf("deleted error report %d", id), nil
+
+	case "error_report_screenshot":
+		id, err := argInt64(args, "id")
+		if err != nil {
+			return nil, err
+		}
+		screenshot, contentType, err := s.store.GetErrorReportScreenshot(ctx, id)
+		if err != nil {
+			if errors.Is(err, store.ErrNotFound) {
+				return nil, fmt.Errorf("screenshot for error report %d not found", id)
+			}
+			return nil, err
+		}
+		return map[string]any{
+			"id":          id,
+			"contentType": contentType,
+			"base64":      base64.StdEncoding.EncodeToString(screenshot),
+		}, nil
 
 	case "handbook_item_create":
 		return s.toolItemCreate(ctx, args)
@@ -685,13 +704,18 @@ func mcpToolDefs() []map[string]any {
 				"limit": intP("Max rows, 1..100 (default 20)"),
 			}, "q")),
 		tool("error_reports_list",
-			"List user-submitted page error reports, newest first. Each report contains its description, page URL, selected element metadata, optional reporter, and creation time.",
+			"List user-submitted page error reports, newest first. Includes description, page URL, selected element metadata, userId/userLogin (null for guests), hasScreenshot, screenshotContentType, and creation time.",
 			schema(map[string]any{
 				"limit":  intP("Max rows, 1..500 (default 100)"),
 				"offset": intP("Offset for pagination (default 0)"),
 			})),
 		tool("error_report_delete",
 			"Delete one page error report after it has been handled. Requires MCP write operations to be enabled.",
+			schema(map[string]any{
+				"id": intP("Error report id"),
+			}, "id")),
+		tool("error_report_screenshot",
+			"Fetch the screenshot attached to one page error report as base64. Use hasScreenshot from error_reports_list before calling it.",
 			schema(map[string]any{
 				"id": intP("Error report id"),
 			}, "id")),

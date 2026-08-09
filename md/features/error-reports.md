@@ -10,7 +10,7 @@ The application has a global user-facing flow for pointing at a broken element a
 - The trigger uses the global overlay layer and remains clickable above application modals; it hides only while its own report form or element picker is active.
 - While selection mode is active, the element under the pointer is outlined. Click/tap selects it; `Esc` cancels.
 - Reporter UI is marked with `data-error-report-ignore`, so the selector cannot accidentally target the button, hint, or form.
-- The form sends a required description, the current `window.location.href`, and an element JSON object through `features/error-report/api/errorReportApi.js`.
+- The form uses `html-to-image` to render the selected element with the browser's modern CSS engine, shows the JPEG preview, then sends it with the required description, current `window.location.href`, and element JSON through `features/error-report/api/errorReportApi.js`. Capture is best-effort: unsupported/cross-origin content may produce no screenshot, but does not block the report.
 - The element object contains a CSS selector, tag/id/classes, short visible text, selected accessibility attributes, its viewport rect, and viewport size. It deliberately does not contain `outerHTML` or form values.
 
 The public submit endpoint accepts both guests and signed-in users. A valid cookie session is attached as `user_id`; anonymous reports keep it null.
@@ -19,15 +19,16 @@ The public submit endpoint accepts both guests and signed-in users. A valid cook
 
 | Method | Path | Auth | Description |
 |--------|------|------|-------------|
-| POST | `/api/error-reports` | Optional | Create a report from `{ description, pageUrl, element }` |
+| POST | `/api/error-reports` | Optional | Create a report from `{ description, pageUrl, element, screenshot? }` |
 | GET | `/api/admin-panel/error-reports?limit=200&offset=0` | `ADMIN` | List reports newest first |
+| GET | `/api/admin-panel/error-reports/{id}/screenshot` | `ADMIN` | Return the raw attached image |
 | DELETE | `/api/admin-panel/error-reports/{id}` | `ADMIN` | Delete one handled report |
 
-Limits: description 1–4000 characters, page URL 1–2048 characters, element JSON up to 16 KiB and must contain a non-empty `selector`.
+Limits: description 1–4000 characters, page URL 1–2048 characters, element JSON up to 16 KiB and must contain a non-empty `selector`. Screenshots accept JPEG, PNG, or WebP data URLs up to 2 MiB decoded.
 
 ## Storage
 
-`dndshare.error_report` stores `description`, `page_url`, `element jsonb`, optional `user_id`, and `created_at`. The table and indexes are created idempotently from `internal/store/schema.sql`.
+`dndshare.error_report` stores `description`, `page_url`, `element jsonb`, optional `user_id`, optional `screenshot bytea` + MIME type, and `created_at`. The table and columns are created idempotently from `internal/store/schema.sql`; old rows simply have no screenshot. The reporter FK is null for guests and the list joins `users.login` for signed-in reporters.
 
 ## Admin and MCP
 
@@ -35,5 +36,6 @@ The **«Ошибки страниц»** admin tab displays the description, page
 
 MCP exposes:
 
-- `error_reports_list(limit?, offset?)` — read reports with the normal MCP token.
+- `error_reports_list(limit?, offset?)` — read reports with the normal MCP token; includes `userId`, `userLogin`, `hasScreenshot`, and `screenshotContentType` metadata.
+- `error_report_screenshot(id)` — read one attached image as `{ id, contentType, base64 }` without bloating the list response.
 - `error_report_delete(id)` — delete one report; gated by `MCP_WRITE_ENABLED`.

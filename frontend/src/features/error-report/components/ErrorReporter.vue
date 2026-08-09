@@ -37,6 +37,19 @@
         <code>{{ selectedElement?.selector }}</code>
         <span v-if="selectedElement?.text" class="selected-text">{{ selectedElement.text }}</span>
       </div>
+      <div class="screenshot-field">
+        <span class="selected-label">Скриншот области</span>
+        <div v-if="screenshotCapturing" class="screenshot-state">Создаём снимок выбранного элемента…</div>
+        <img
+          v-else-if="screenshotDataURL"
+          class="screenshot-preview"
+          :src="screenshotDataURL"
+          alt="Скриншот выбранного элемента"
+        />
+        <div v-else-if="screenshotError" class="screenshot-state screenshot-state-error">
+          {{ screenshotError }} Заявку можно отправить без снимка.
+        </div>
+      </div>
       <label class="description-label" for="error-report-description">Описание</label>
       <textarea
         id="error-report-description"
@@ -54,7 +67,7 @@
       </div>
       <div class="form-actions">
         <button type="button" class="cancel-button" :disabled="submitting" @click="closeForm">Отмена</button>
-        <button type="submit" class="submit-button" :disabled="submitting || !description.trim()">
+        <button type="submit" class="submit-button" :disabled="submitting || screenshotCapturing || !description.trim()">
           {{ submitting ? 'Отправка…' : 'Отправить' }}
         </button>
       </div>
@@ -68,6 +81,7 @@
 
 <script setup>
 import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
+import { toJpeg } from 'html-to-image'
 import AppModal from '@/shared/ui/AppModal.vue'
 import { createErrorReport } from '../api/errorReportApi'
 
@@ -80,10 +94,14 @@ const selectedElement = ref(null)
 const selectedPageURL = ref('')
 const descriptionInput = ref(null)
 const toast = ref('')
+const screenshotDataURL = ref('')
+const screenshotCapturing = ref(false)
+const screenshotError = ref('')
 const highlight = reactive({ visible: false, top: 0, left: 0, width: 0, height: 0 })
 
 let hoveredElement = null
 let toastTimer = null
+let screenshotGeneration = 0
 
 const highlightStyle = computed(() => ({
   top: `${highlight.top}px`,
@@ -164,7 +182,64 @@ function onElementClick(event) {
   selectedPageURL.value = window.location.href
   stopSelection()
   formOpen.value = true
+  void captureElementScreenshot(target)
   nextTick(() => descriptionInput.value?.focus())
+}
+
+async function captureElementScreenshot(element) {
+  const generation = ++screenshotGeneration
+  screenshotDataURL.value = ''
+  screenshotError.value = ''
+  screenshotCapturing.value = true
+  try {
+    const rect = element.getBoundingClientRect()
+    if (rect.width <= 0 || rect.height <= 0) throw new Error('empty element')
+    const scale = Math.max(0.1, Math.min(
+      window.devicePixelRatio || 1,
+      2,
+      1200 / rect.width,
+      800 / rect.height,
+    ))
+    const dataURL = await withTimeout(toJpeg(element, {
+      backgroundColor: getComputedStyle(document.body).backgroundColor || '#11121a',
+      cacheBust: true,
+      pixelRatio: scale,
+      quality: 0.82,
+      filter: node => !(node instanceof Element && (
+        node.matches('.am-overlay, .selection-highlight, .selection-hint, .error-reporter, .report-toast')
+        || Boolean(node.closest('[data-error-report-ignore]'))
+      )),
+    }), 5000)
+    if (generation !== screenshotGeneration) return
+    if (estimatedDataURLBytes(dataURL) > 2 * 1024 * 1024) throw new Error('large screenshot')
+    screenshotDataURL.value = dataURL
+  } catch {
+    if (generation === screenshotGeneration) {
+      screenshotError.value = 'Не удалось создать скриншот.'
+    }
+  } finally {
+    if (generation === screenshotGeneration) screenshotCapturing.value = false
+  }
+}
+
+async function withTimeout(promise, milliseconds) {
+  let timer
+  try {
+    return await Promise.race([
+      promise,
+      new Promise((_, reject) => {
+        timer = setTimeout(() => reject(new Error('screenshot timeout')), milliseconds)
+      }),
+    ])
+  } finally {
+    clearTimeout(timer)
+  }
+}
+
+function estimatedDataURLBytes(dataURL) {
+  const comma = dataURL.indexOf(',')
+  if (comma < 0) return Number.POSITIVE_INFINITY
+  return Math.ceil((dataURL.length - comma - 1) * 3 / 4)
 }
 
 function describeElement(element) {
@@ -261,6 +336,7 @@ function closeForm() {
   selectedElement.value = null
   selectedPageURL.value = ''
   submitError.value = ''
+  resetScreenshot()
 }
 
 async function submitReport() {
@@ -274,6 +350,7 @@ async function submitReport() {
       description: trimmed,
       pageUrl: selectedPageURL.value,
       element: selectedElement.value,
+      screenshot: screenshotDataURL.value || undefined,
     })
     closeAfterSubmit()
     showToast('Спасибо! Заявка об ошибке отправлена')
@@ -289,6 +366,14 @@ function closeAfterSubmit() {
   description.value = ''
   selectedElement.value = null
   selectedPageURL.value = ''
+  resetScreenshot()
+}
+
+function resetScreenshot() {
+  screenshotGeneration += 1
+  screenshotDataURL.value = ''
+  screenshotCapturing.value = false
+  screenshotError.value = ''
 }
 
 function showToast(message) {
@@ -486,6 +571,34 @@ onBeforeUnmount(() => {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.screenshot-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.screenshot-preview {
+  display: block;
+  max-width: 100%;
+  max-height: 240px;
+  object-fit: contain;
+  object-position: left center;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-deep);
+}
+
+.screenshot-state {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-deep);
+  color: var(--text-2);
+  font-size: 12px;
+}
+
+.screenshot-state-error { color: #ef9b7b; }
 
 .description-input {
   width: 100%;

@@ -47,6 +47,17 @@
           </div>
         </dl>
 
+        <div v-if="report.hasScreenshot" class="report-screenshot">
+          <span>Скриншот выбранной области</span>
+          <a :href="screenshotURL(report.id)" target="_blank" rel="noopener">
+            <img
+              :src="screenshotURL(report.id)"
+              :alt="`Скриншот заявки #${report.id}`"
+              loading="lazy"
+            />
+          </a>
+        </div>
+
         <details class="element-details">
           <summary>Все данные элемента</summary>
           <pre>{{ formatElement(report.element) }}</pre>
@@ -102,6 +113,10 @@ function formatTime(iso) {
 
 function formatElement(element) {
   return JSON.stringify(element || {}, null, 2)
+}
+
+function screenshotURL(id) {
+  return `/api/admin-panel/error-reports/${id}/screenshot`
 }
 
 onMounted(load)
@@ -251,6 +266,38 @@ onMounted(load)
   font-size: 12px;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.report-screenshot {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+  margin-top: 12px;
+}
+
+.report-screenshot > span {
+  color: var(--text-muted);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.report-screenshot a {
+  display: block;
+  max-width: min(680px, 100%);
+}
+
+.report-screenshot img {
+  display: block;
+  max-width: 100%;
+  max-height: 360px;
+  object-fit: contain;
+  object-position: left top;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-deep);
 }
 
 .element-details { margin-top: 12px; }

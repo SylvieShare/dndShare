@@ -25,7 +25,8 @@ Read tools (always on):
 - `handbook_suggest_types(sourceId?)` — suggest types.
 - `handbook_suggests(typeId)` — base suggests of a type.
 - `handbook_suggests_search(q, limit?)` — base suggests by value.
-- `error_reports_list(limit?, offset?)` — page error reports newest first, including description, URL, selected element JSON, optional reporter, and creation time.
+- `error_reports_list(limit?, offset?)` — page error reports newest first, including description, URL, selected element JSON, optional reporter, screenshot metadata, and creation time.
+- `error_report_screenshot(id)` — fetch one attached screenshot as base64 plus its MIME type.
 
 Write tools (gated, see below):
 - `handbook_item_create(typeId, name, nameEn, data, parentId?)` — `data` is a JSON object string; creates a **base** item (`user_id = NULL`) via `ItemRepository.createBase`. `parentId` links a variant/sub-entity (subrace → race item, subclass → class item).

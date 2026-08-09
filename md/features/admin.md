@@ -59,9 +59,10 @@ All endpoints require `@UserNeedRole([Role.ADMIN])`.
 | Method | Path | Description |
 |--------|------|-------------|
 | GET | `/api/admin-panel/error-reports?limit=200&offset=0` | Reports sorted by `createdAt` descending |
+| GET | `/api/admin-panel/error-reports/{id}/screenshot` | Raw attached element screenshot |
 | DELETE | `/api/admin-panel/error-reports/{id}` | Delete one handled report |
 
-The **«Ошибки страниц»** tab renders the submitted description, page URL, optional reporter, selected CSS selector and expandable element JSON. See `md/features/error-reports.md` for the public submit flow.
+The **«Ошибки страниц»** tab renders the submitted description, page URL, reporter (`Гость` for null `user_id`), selected CSS selector, optional screenshot preview, and expandable element JSON. See `md/features/error-reports.md` for the public submit flow.
 
 ### Supporting changes
 
