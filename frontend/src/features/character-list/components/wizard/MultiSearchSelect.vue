@@ -16,11 +16,11 @@
         class="mss-input"
         :placeholder="placeholder"
         spellcheck="false"
-        @focus="open = true"
+        @focus="openDrop"
         @keydown.enter.prevent="pickTop"
         @keydown.escape="close"
       />
-      <div v-if="open && filtered.length" class="mss-drop">
+      <div v-if="open && filtered.length" class="mss-drop" :class="{ up: dropUp }">
         <button
           v-for="o in filtered"
           :key="o.id"
@@ -28,7 +28,7 @@
           @mousedown.prevent="pick(o.id)"
         >{{ o.name }}</button>
       </div>
-      <div v-else-if="open && query.trim()" class="mss-empty">
+      <div v-else-if="open && query.trim()" class="mss-empty" :class="{ up: dropUp }">
         <template v-if="canCreate">
           <span>Ничего не найдено</span>
           <button class="mss-create" :disabled="creating" @mousedown.prevent="create">
@@ -42,8 +42,9 @@
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { fetchPost } from '@/shared/api/http'
+import { shouldOpenDropUp } from '@/features/character-list/components/wizard/dropdownPlacement'
 import { useSuggestStore } from '@/stores/suggest'
 
 const props = defineProps({
@@ -60,6 +61,7 @@ const root = ref(null)
 const input = ref(null)
 const query = ref('')
 const open = ref(false)
+const dropUp = ref(false)
 const creating = ref(false)
 
 const selectedSet = computed(() => new Set(props.selected.map((v) => String(v))))
@@ -80,11 +82,29 @@ const canCreate = computed(() => {
 function pick(id) {
   emit('toggle', id)
   query.value = ''
-  input.value?.focus()
+  nextTick(() => {
+    input.value?.focus()
+    updateDropDirection()
+  })
 }
 function pickTop() { if (filtered.value.length) pick(filtered.value[0].id) }
 function close() { open.value = false; query.value = '' }
 function onDocPointer(e) { if (root.value && !root.value.contains(e.target)) close() }
+function updateDropDirection() {
+  if (!input.value) return
+  const inputRect = input.value.getBoundingClientRect()
+  const scrollParent = root.value?.closest('.cc-main')
+  const parentRect = scrollParent?.getBoundingClientRect()
+  const boundary = {
+    top: Math.max(0, parentRect?.top ?? 0),
+    bottom: Math.min(window.innerHeight, parentRect?.bottom ?? window.innerHeight),
+  }
+  dropUp.value = shouldOpenDropUp(inputRect, boundary)
+}
+function openDrop() {
+  open.value = true
+  nextTick(updateDropDirection)
+}
 
 async function create() {
   if (!canCreate.value || creating.value) return
@@ -95,14 +115,27 @@ async function create() {
     useSuggestStore().addItem(props.suggestTypeId, item)
     emit('toggle', item.id)
     query.value = ''
-    input.value?.focus()
+    nextTick(() => {
+      input.value?.focus()
+      updateDropDirection()
+    })
   } finally {
     creating.value = false
   }
 }
 
-onMounted(() => document.addEventListener('mousedown', onDocPointer))
-onBeforeUnmount(() => document.removeEventListener('mousedown', onDocPointer))
+watch(() => props.selected, () => {
+  if (open.value) nextTick(updateDropDirection)
+}, { deep: true, flush: 'post' })
+
+onMounted(() => {
+  document.addEventListener('mousedown', onDocPointer)
+  window.addEventListener('resize', updateDropDirection)
+})
+onBeforeUnmount(() => {
+  document.removeEventListener('mousedown', onDocPointer)
+  window.removeEventListener('resize', updateDropDirection)
+})
 </script>
 
 <style scoped>
@@ -135,6 +168,7 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', onDocPointer))
   background: var(--surface); border: 1px solid var(--border); border-radius: 9px;
   box-shadow: 0 8px 24px color-mix(in srgb, var(--scrim) 73%, transparent); padding: 4px;
 }
+.mss-drop.up, .mss-empty.up { top: auto; bottom: calc(100% + 4px); }
 .mss-opt {
   display: block; width: 100%; text-align: left;
   background: none; border: none; border-radius: 6px;

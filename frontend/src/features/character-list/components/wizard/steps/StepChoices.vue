@@ -52,6 +52,7 @@
 <script setup>
 import { computed, inject } from 'vue'
 import MultiSearchSelect from '@/features/character-list/components/wizard/MultiSearchSelect.vue'
+import { choicePresentation } from '@/features/character-list/components/wizard/choicePresentation'
 
 const props = defineProps({ scope: { type: String, default: 'all' } })
 const wz = inject('createWizard')
@@ -67,8 +68,8 @@ function locked(fc, opt) {
   const count = Number(fc.choice.count) || 1
   return count > 1 && !isSel(fc, opt) && choiceSelected(fc.id).length >= count
 }
-function isChips(choice) { return !!choice?.from_suggest_id }
-function isLangChoice(choice) { return Number(choice?.from_suggest_id) === 6 }
+function isChips(choice) { return choicePresentation(choice) === 'chips' }
+function isLangChoice(choice) { return choicePresentation(choice) === 'language' }
 function optionsFor(fc) { return choiceOptionList(fc).map((o) => ({ id: o.value, name: o.label })) }
 </script>
 
