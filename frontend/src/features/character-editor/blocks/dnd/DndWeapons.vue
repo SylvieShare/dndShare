@@ -356,7 +356,7 @@ onMounted(() => {
 <style scoped>
 .weapons-block {
   min-width: 0;
-  color: #d5d5dc;
+  color: var(--text-1);
 }
 
 .w-list {
@@ -386,8 +386,8 @@ onMounted(() => {
 
 .w-table th {
   padding: 0 6px 7px;
-  border-bottom: 1px solid rgba(140, 140, 154, 0.3);
-  color: #7a7a86;
+  border-bottom: 1px solid color-mix(in srgb, var(--text-muted) 30%, transparent);
+  color: var(--text-muted);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -398,7 +398,7 @@ onMounted(() => {
 .w-table td {
   min-height: 42px;
   padding: 8px 6px;
-  border-bottom: 1px solid rgba(140, 140, 154, 0.18);
+  border-bottom: 1px solid color-mix(in srgb, var(--text-muted) 18%, transparent);
   vertical-align: middle;
 }
 
@@ -407,20 +407,20 @@ onMounted(() => {
 }
 
 .w-props-sep {
-  color: #777783;
+  color: var(--text-muted);
 }
 
 .w-add {
   padding: 12px 20px;
-  border-top: 1px solid rgba(140, 140, 154, 0.28);
+  border-top: 1px solid color-mix(in srgb, var(--text-muted) 28%, transparent);
 }
 
 .w-picker-btn {
   width: 100%;
   min-height: 34px;
-  border: 1px dashed rgba(140, 140, 154, 0.46);
+  border: 1px dashed color-mix(in srgb, var(--text-muted) 46%, transparent);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.02);
+  background: color-mix(in srgb, var(--text-on-accent) 2%, transparent);
   color: var(--text-muted);
   cursor: pointer;
   font: inherit;
@@ -429,9 +429,9 @@ onMounted(() => {
 }
 
 .w-picker-btn:hover {
-  color: #d8d8e0;
-  border-color: rgba(180, 180, 194, 0.58);
-  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-1);
+  border-color: color-mix(in srgb, var(--text-2) 58%, transparent);
+  background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
 }
 
 .w-empty {

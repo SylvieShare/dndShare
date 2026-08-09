@@ -62,7 +62,7 @@ function cycle(i) {
   width: 22px;
   text-align: right;
   font-size: 11px;
-  color: #b84e4e;
+  color: var(--danger);
   font-weight: 700;
   flex-shrink: 0;
 }
@@ -76,7 +76,7 @@ function cycle(i) {
 .health-box {
   width: 26px;
   height: 26px;
-  border: 2px solid #3a3a3a;
+  border: 2px solid var(--surface-active);
   border-radius: 4px;
   display: flex;
   align-items: center;
@@ -92,9 +92,9 @@ function cycle(i) {
 .health-box:hover { border-color: var(--text-muted); }
 
 .dmg-empty      { color: transparent; }
-.dmg-bashing    { border-color: #e0a020; color: #e0a020; }
-.dmg-lethal     { border-color: #c0392b; color: #c0392b; }
-.dmg-aggravated { border-color: #8b0000; color: #ff4444; background: #2a0505; }
+.dmg-bashing    { border-color: var(--warning); color: var(--warning); }
+.dmg-lethal     { border-color: var(--danger); color: var(--danger); }
+.dmg-aggravated { border-color: var(--bg); color: var(--danger); background: var(--bg); }
 
 .health-legend {
   display: flex;
@@ -108,7 +108,7 @@ function cycle(i) {
   letter-spacing: 0.04em;
 }
 
-.legend-item.bashing    { color: #e0a020; }
-.legend-item.lethal     { color: #c0392b; }
-.legend-item.aggravated { color: #ff4444; }
+.legend-item.bashing    { color: var(--warning); }
+.legend-item.lethal     { color: var(--danger); }
+.legend-item.aggravated { color: var(--danger); }
 </style>

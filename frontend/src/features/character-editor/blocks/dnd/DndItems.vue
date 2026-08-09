@@ -517,7 +517,7 @@ onMounted(async () => {
 .di-skeleton {
   height: 38px;
   border-radius: 10px;
-  background: var(--surface-1);
+  background: var(--surface-raised);
   margin-bottom: 6px;
   animation: di-shimmer 1.3s ease-in-out infinite;
   opacity: 0.4;
@@ -560,8 +560,8 @@ onMounted(async () => {
 .di-section-name-editable:hover { color: var(--text-1); }
 
 .di-section-rename {
-  background: var(--input-bg);
-  border: 1px solid var(--input-focus);
+  background: var(--surface-raised);
+  border: 1px solid var(--accent);
   border-radius: 6px;
   color: var(--text-1);
   font: inherit;
@@ -574,7 +574,7 @@ onMounted(async () => {
 }
 
 .di-section-count {
-  color: #777b88;
+  color: var(--text-muted);
   font-size: 12px;
   font-weight: 700;
 }
@@ -583,7 +583,7 @@ onMounted(async () => {
   flex: 1;
   min-width: 20px;
   height: 1px;
-  background: rgba(91, 101, 126, 0.42);
+  background: color-mix(in srgb, var(--text-muted) 42%, transparent);
 }
 
 .di-section-del {
@@ -615,12 +615,12 @@ onMounted(async () => {
   transition: background 0.12s;
 }
 .di-row + .di-row {
-  border-top: 1px solid color-mix(in srgb, #fff 7%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--text-on-accent) 7%, transparent);
 }
 .di-row-draggable { cursor: grab; touch-action: pan-y; }
 .di-row-draggable:active { cursor: grabbing; }
 @media (hover: hover) {
-  .di-row:hover { background: rgba(255, 255, 255, 0.025); }
+  .di-row:hover { background: color-mix(in srgb, var(--text-on-accent) 2.5%, transparent); }
 }
 
 .di-row-name {
@@ -688,7 +688,7 @@ onMounted(async () => {
   justify-content: center;
   transition: color 0.12s, background 0.12s;
 }
-.di-icon-btn:hover { color: var(--text-1); background: var(--surface-1); }
+.di-icon-btn:hover { color: var(--text-1); background: var(--surface-raised); }
 .di-del:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, transparent); }
 
 /* ─── Use button (consumable) ─── */
@@ -709,7 +709,7 @@ onMounted(async () => {
 }
 .di-use-btn:hover {
   background: color-mix(in srgb, var(--accent) 28%, transparent);
-  color: #fff;
+  color: var(--text-on-accent);
 }
 .di-use-btn:active { background: color-mix(in srgb, var(--accent) 40%, transparent); }
 
@@ -722,7 +722,7 @@ onMounted(async () => {
 .di-count-btn {
   width: 22px;
   height: 22px;
-  background: var(--surface-1);
+  background: var(--surface-raised);
   border: 1px solid var(--border);
   border-radius: 4px;
   color: var(--text-2);
@@ -734,12 +734,12 @@ onMounted(async () => {
   justify-content: center;
   transition: background 0.12s, color 0.12s;
 }
-.di-count-btn:hover { background: var(--surface-2); color: var(--text-1); }
+.di-count-btn:hover { background: var(--surface-active); color: var(--text-1); }
 .di-count-input {
   width: 40px;
   height: 22px;
   box-sizing: border-box;
-  background: var(--surface-1);
+  background: var(--surface-raised);
   border: 1px solid var(--border);
   border-radius: 4px;
   color: var(--text-1);
@@ -748,7 +748,7 @@ onMounted(async () => {
   text-align: center;
   outline: none;
 }
-.di-count-input:focus { border-color: var(--input-focus); }
+.di-count-input:focus { border-color: var(--accent); }
 
 /* ─── Add row ─── */
 .di-add-row {

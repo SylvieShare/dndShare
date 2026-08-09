@@ -77,40 +77,40 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', onDocPointer))
 .mss-tags { display: flex; flex-wrap: wrap; gap: 8px; }
 .mss-tag {
   display: inline-flex; align-items: center; gap: 8px;
-  background: color-mix(in srgb, var(--accent) 14%, var(--block-bg));
+  background: color-mix(in srgb, var(--accent) 14%, var(--surface));
   border-radius: 999px; padding: 6px 8px 6px 14px;
 }
 .mss-tag-name { font-size: 13px; color: var(--text-1); font-weight: 500; }
 .mss-x {
   display: flex; align-items: center; justify-content: center;
   width: 20px; height: 20px; border: none; border-radius: 50%;
-  background: color-mix(in srgb, #fff 8%, transparent); color: var(--text-2); cursor: pointer;
+  background: color-mix(in srgb, var(--text-on-accent) 8%, transparent); color: var(--text-2); cursor: pointer;
 }
-.mss-x:hover { background: var(--danger); color: #fff; }
+.mss-x:hover { background: var(--danger); color: var(--text-on-accent); }
 .mss-x svg { width: 12px; height: 12px; }
 
 .mss-field { position: relative; max-width: 320px; }
 .mss-input {
   width: 100%; box-sizing: border-box;
-  background: var(--bg); border: 1px solid var(--input-border); border-radius: 9px;
+  background: var(--surface-raised); border: 1px solid var(--border-strong); border-radius: 9px;
   color: var(--text-1); font: inherit; font-size: 13px; padding: 8px 12px; outline: none;
 }
-.mss-input:focus { border-color: var(--input-focus); }
+.mss-input:focus { border-color: var(--accent); }
 .mss-drop {
   position: absolute; z-index: 30; top: calc(100% + 4px); left: 0; right: 0;
   max-height: 240px; overflow-y: auto;
-  background: var(--block-bg); border: 1px solid var(--border); border-radius: 9px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45); padding: 4px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 9px;
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--scrim) 73%, transparent); padding: 4px;
 }
 .mss-opt {
   display: block; width: 100%; text-align: left;
   background: none; border: none; border-radius: 6px;
   color: var(--text-1); font: inherit; font-size: 13px; padding: 8px 10px; cursor: pointer;
 }
-.mss-opt:hover { background: color-mix(in srgb, var(--accent) 16%, var(--block-bg)); }
+.mss-opt:hover { background: color-mix(in srgb, var(--accent) 16%, var(--surface)); }
 .mss-empty {
   position: absolute; z-index: 30; top: calc(100% + 4px); left: 0; right: 0;
-  background: var(--block-bg); border: 1px solid var(--border); border-radius: 9px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 9px;
   color: var(--text-muted); font-size: 12px; padding: 10px 12px;
 }
 </style>

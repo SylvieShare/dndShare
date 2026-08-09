@@ -25,7 +25,7 @@
               :class="{ active: !selectedAlbumId }"
               @click="selectedAlbumId = null"
             >
-              <span class="sb-album-dot" :style="{ background: '#9090b0' }" />
+              <span class="sb-album-dot" :style="{ background: 'var(--text-muted)' }" />
               <span class="sb-album-name">Все треки</span>
               <span class="sb-album-count">{{ musicStore.tracks.length }}</span>
             </button>
@@ -58,7 +58,7 @@
           <div class="music-lib-main-col">
           <section class="music-lib-main">
             <div class="ml-main-head">
-              <span class="ml-main-color-dot" :style="{ background: selectedAlbum?.color || '#9090b0' }" />
+              <span class="ml-main-color-dot" :style="{ background: selectedAlbum?.color || 'var(--text-muted)' }" />
               <h3 class="ml-main-title">{{ selectedAlbum ? selectedAlbum.name : 'Все треки' }}</h3>
               <span class="ml-main-sub">{{ filteredTracks.length }} треков</span>
               <div class="ml-main-actions" v-if="selectedAlbum">
@@ -551,33 +551,33 @@ function onClose() {
 <style scoped>
 .music-lib-overlay {
   position: fixed; inset: 0;
-  background: rgba(0,0,0,0.7);
+  background: var(--scrim);
   display: flex; align-items: center; justify-content: center;
   z-index: 2200;
   padding: 24px;
 }
 .music-lib {
   background: var(--bg);
-  border: 1px solid var(--input-border);
+  border: 1px solid var(--border-strong);
   border-radius: 18px;
   width: min(1280px, 100%);
   height: min(840px, calc(100vh - 48px));
   display: flex; flex-direction: column;
   overflow: hidden;
-  box-shadow: 0 12px 48px rgba(0,0,0,0.8);
+  box-shadow: 0 12px 48px var(--scrim);
   position: relative;
 }
 
 .music-lib-head {
   display: flex; align-items: baseline; gap: 14px;
   padding: 18px 24px;
-  border-bottom: 1px solid #1e1e28;
-  background: var(--bg-header);
+  border-bottom: 1px solid var(--popover-bg);
+  background: var(--bg);
   flex-shrink: 0;
 }
 .music-lib-title { font-family: var(--font-display); font-size: 24px; font-weight: 600; color: var(--text-1); margin: 0; }
 .music-lib-count {
-  background: rgba(255,255,255,0.05);
+  background: color-mix(in srgb, var(--text-on-accent) 5%, transparent);
   border-radius: 6px;
   padding: 3px 9px;
   font-size: 11px;
@@ -601,7 +601,7 @@ function onClose() {
 
 .music-lib-sidebar {
   width: 260px; flex-shrink: 0;
-  border-right: 1px solid #1e1e28;
+  border-right: 1px solid var(--popover-bg);
   padding: 16px 12px;
   display: flex; flex-direction: column; gap: 4px;
   overflow-y: auto;
@@ -616,7 +616,7 @@ function onClose() {
 .sb-add {
   margin-left: auto;
   width: 22px; height: 22px;
-  background: none; border: 1px solid #3a3a55;
+  background: none; border: 1px solid var(--surface-active);
   border-radius: 5px;
   color: var(--text-2); cursor: pointer;
   font: inherit; font-size: 14px; line-height: 1;
@@ -635,8 +635,8 @@ function onClose() {
   text-align: left;
   transition: background 0.15s;
 }
-.sb-album:hover { background: rgba(255,255,255,0.04); }
-.sb-album.active { background: color-mix(in srgb, var(--accent) 15%, transparent); color: #fff; }
+.sb-album:hover { background: color-mix(in srgb, var(--text-on-accent) 4%, transparent); }
+.sb-album.active { background: color-mix(in srgb, var(--accent) 15%, transparent); color: var(--text-on-accent); }
 .sb-album-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 .sb-album-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .sb-album-count { color: var(--text-muted); font-size: 11px; }
@@ -645,7 +645,7 @@ function onClose() {
 .music-lib-dropzone {
   margin-top: auto;
   padding: 18px 14px;
-  border: 1px dashed var(--input-border);
+  border: 1px dashed var(--border-strong);
   border-radius: 10px;
   text-align: center;
   color: var(--text-2);
@@ -657,7 +657,7 @@ function onClose() {
   transition: border-color 0.15s, color 0.15s, background 0.15s;
 }
 .music-lib-dropzone > * { pointer-events: none; }
-.music-lib-dropzone:hover { border-color: #3a3a55; color: var(--text-2); background: rgba(255,255,255,0.02); }
+.music-lib-dropzone:hover { border-color: var(--surface-active); color: var(--text-2); background: color-mix(in srgb, var(--text-on-accent) 2%, transparent); }
 .music-lib-dropzone.active { border-color: var(--accent); color: var(--accent); background: color-mix(in srgb, var(--accent) 5%, transparent); }
 .music-lib-dropzone-icon { font-size: 22px; line-height: 1; }
 .music-lib-dropzone-sub { font-size: 10px; }
@@ -676,7 +676,7 @@ function onClose() {
   padding: 20px 24px;
   gap: 14px;
   overflow-y: auto;
-  background: var(--bg-deep);
+  background: var(--bg);
 }
 .ml-main-head { display: flex; align-items: center; gap: 12px; }
 .ml-main-color-dot { width: 12px; height: 12px; border-radius: 3px; }
@@ -688,12 +688,12 @@ function onClose() {
   font: inherit; font-size: 12px; cursor: pointer;
 }
 .ml-main-action:hover { color: var(--text-2); }
-.ml-main-action--danger:hover { color: #e85c5c; }
+.ml-main-action--danger:hover { color: var(--danger); }
 
 .ml-search {
   width: 100%;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid #252535;
+  background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
+  border: 1px solid var(--surface-raised);
   border-radius: 8px;
   padding: 10px 14px;
   color: var(--text-1); font: inherit; font-size: 13px;
@@ -704,7 +704,7 @@ function onClose() {
 .ml-tags { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .ml-tags-label { font-size: 10px; letter-spacing: 0.08em; font-weight: 700; color: var(--text-muted); }
 .ml-tag {
-  background: rgba(255,255,255,0.04);
+  background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
   border: 1px solid transparent;
   border-radius: 6px;
   padding: 4px 10px;
@@ -719,7 +719,7 @@ function onClose() {
 .ml-tags-edit {
   margin-left: 6px;
   background: none;
-  border: 1px dashed #3a3a55;
+  border: 1px dashed var(--surface-active);
   border-radius: 6px;
   color: var(--text-2);
   font: inherit; font-size: 11px;
@@ -737,8 +737,8 @@ function onClose() {
   position: absolute;
   bottom: 100px; left: 50%;
   transform: translateX(-50%);
-  background: #1c1c2c;
-  border: 1px solid var(--input-border);
+  background: var(--popover-bg);
+  border: 1px solid var(--border-strong);
   border-radius: 8px;
   padding: 8px 16px;
   font-size: 13px;
@@ -751,8 +751,8 @@ function onClose() {
   gap: 24px;
   align-items: center;
   padding: 12px 24px;
-  background: var(--bg-header);
-  border-top: 1px solid #1e1e28;
+  background: var(--bg);
+  border-top: 1px solid var(--popover-bg);
   flex-shrink: 0;
 }
 
@@ -763,17 +763,17 @@ function onClose() {
   border-radius: 50%;
   border: none;
   background: var(--accent);
-  color: #fff;
+  color: var(--text-on-accent);
   display: flex; align-items: center; justify-content: center;
   cursor: pointer;
   transition: background 0.15s;
 }
-.foot-play-btn:hover { background: #9070ff; }
+.foot-play-btn:hover { background: var(--accent); }
 .foot-loop-btn {
   width: 32px; height: 32px;
   flex-shrink: 0;
   border-radius: 8px;
-  border: 1px solid #3a3a55;
+  border: 1px solid var(--surface-active);
   background: none;
   color: var(--text-2);
   display: flex; align-items: center; justify-content: center;
@@ -784,7 +784,7 @@ function onClose() {
 .foot-loop-btn.active {
   background: var(--accent);
   border-color: var(--accent);
-  color: #fff;
+  color: var(--text-on-accent);
 }
 .foot-text { min-width: 0; flex: 1; }
 .foot-status { display: flex; align-items: center; gap: 5px; font-size: 9px; letter-spacing: 0.1em; font-weight: 700; color: var(--accent); }
@@ -798,11 +798,11 @@ function onClose() {
   margin-top: 6px;
   height: 4px;
   border-radius: 2px;
-  background: rgba(255,255,255,0.06);
+  background: color-mix(in srgb, var(--text-on-accent) 6%, transparent);
   overflow: hidden;
 }
 .foot-progress--clickable { cursor: pointer; }
-.foot-progress--clickable:hover { background: rgba(255,255,255,0.1); }
+.foot-progress--clickable:hover { background: color-mix(in srgb, var(--text-on-accent) 10%, transparent); }
 .foot-progress-bar { height: 100%; background: var(--accent); transition: width 0.2s linear; }
 .foot-time {
   font-size: 11px; color: var(--text-muted); margin-top: 3px;
@@ -819,14 +819,14 @@ function onClose() {
   background: var(--accent);
   border: none;
   border-radius: 9px;
-  color: #fff;
+  color: var(--text-on-accent);
   font: inherit; font-size: 13px; font-weight: 600;
   padding: 9px 18px;
   cursor: pointer;
   align-self: center;
   transition: background 0.15s, opacity 0.15s;
 }
-.foot-cross-btn:hover:not(:disabled) { background: #9070ff; }
+.foot-cross-btn:hover:not(:disabled) { background: var(--accent); }
 .foot-cross-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 .foot-cross-fade {
   display: flex; align-items: center; gap: 10px;
@@ -866,23 +866,23 @@ function onClose() {
   border-radius: 4px;
   transition: color 0.15s, background 0.15s;
 }
-.foot-next-clear:hover { color: #e85c5c; background: rgba(232, 92, 92, 0.08); }
+.foot-next-clear:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 8%, transparent); }
 
 .album-picker-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,0.55);
+  background: var(--scrim);
   display: flex; align-items: center; justify-content: center;
   z-index: 100;
 }
 .album-picker {
   width: 380px;
   max-width: 90%;
-  background: #1c1c2c;
-  border: 1px solid var(--input-border);
+  background: var(--popover-bg);
+  border: 1px solid var(--border-strong);
   border-radius: 12px;
   padding: 18px 18px 14px;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+  box-shadow: 0 12px 40px var(--scrim);
   display: flex; flex-direction: column; gap: 12px;
 }
 .album-picker-title { font-size: 14px; font-weight: 600; color: var(--text-1); }
@@ -895,7 +895,7 @@ function onClose() {
   font-size: 13px; color: var(--text-2);
   transition: background 0.15s;
 }
-.album-picker-row:hover { background: rgba(255,255,255,0.04); }
+.album-picker-row:hover { background: color-mix(in srgb, var(--text-on-accent) 4%, transparent); }
 .album-picker-row input[type=checkbox] { accent-color: var(--accent); }
 .album-picker-dot { width: 8px; height: 8px; border-radius: 50%; }
 .album-picker-name { flex: 1; }
@@ -905,12 +905,12 @@ function onClose() {
   background: var(--accent);
   border: none;
   border-radius: 7px;
-  color: #fff;
+  color: var(--text-on-accent);
   font: inherit; font-size: 13px; font-weight: 600;
   padding: 7px 16px;
   cursor: pointer;
 }
-.album-picker-close:hover:not(:disabled) { background: #9070ff; }
+.album-picker-close:hover:not(:disabled) { background: var(--accent); }
 .album-picker-close:disabled { opacity: 0.4; cursor: not-allowed; }
 
 .tag-manager-list {
@@ -924,12 +924,12 @@ function onClose() {
   font-size: 13px; color: var(--text-2);
   transition: background 0.15s;
 }
-.tag-manager-row:hover { background: rgba(255,255,255,0.04); }
+.tag-manager-row:hover { background: color-mix(in srgb, var(--text-on-accent) 4%, transparent); }
 .tag-manager-name { flex: 1; }
 .tag-manager-input {
   flex: 1; min-width: 0;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid var(--input-border);
+  background: color-mix(in srgb, var(--text-on-accent) 5%, transparent);
+  border: 1px solid var(--border-strong);
   border-radius: 6px;
   padding: 6px 9px;
   color: var(--text-1);
@@ -950,13 +950,13 @@ function onClose() {
   display: flex; align-items: center; justify-content: center;
   transition: background 0.15s, color 0.15s;
 }
-.tag-manager-btn:hover { background: rgba(255,255,255,0.06); color: var(--text-1); }
-.tag-manager-btn--danger:hover { color: #e85c5c; background: rgba(232, 92, 92, 0.1); }
+.tag-manager-btn:hover { background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); color: var(--text-1); }
+.tag-manager-btn--danger:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, transparent); }
 
 .tag-manager-new {
   display: flex; gap: 8px;
   padding-top: 8px;
-  border-top: 1px solid var(--input-border);
+  border-top: 1px solid var(--border-strong);
 }
 .tag-manager-new .album-picker-close { padding: 7px 14px; font-size: 12px; }
 </style>

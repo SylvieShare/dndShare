@@ -115,12 +115,12 @@ function set(field, value) { emit('change', { ...props.hp, [field]: value }) }
   cursor: pointer;
   touch-action: manipulation;
   transition: opacity 0.12s;
-  background: rgba(90, 140, 220, 0.25);
+  background: color-mix(in srgb, var(--info) 25%, transparent);
 }
 .hpe-btn:hover { opacity: 0.85; }
-.hpe-dmg { background: rgba(200, 60, 60, 0.25); color: #e07070; }
-.hpe-heal { background: rgba(60, 175, 110, 0.25); color: #5aaf72; }
-.hpe-temp { color: #7ab8e8; }
+.hpe-dmg { background: color-mix(in srgb, var(--danger) 25%, transparent); color: var(--danger); }
+.hpe-heal { background: color-mix(in srgb, var(--success) 25%, transparent); color: var(--success); }
+.hpe-temp { color: var(--info); }
 
 .hpe-dice-section {
   display: flex;
@@ -135,8 +135,8 @@ function set(field, value) { emit('change', { ...props.hp, [field]: value }) }
 .hpe-dice-svg { width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; opacity: 0.8; flex-shrink: 0; }
 .hpe-dice-svg :deep(svg) { width: 22px; height: 22px; }
 .hpe-dice-btn {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: color-mix(in srgb, var(--text-on-accent) 5%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-on-accent) 10%, transparent);
   border-radius: 6px;
   color: var(--text-muted);
   font-size: 16px;
@@ -150,14 +150,14 @@ function set(field, value) { emit('change', { ...props.hp, [field]: value }) }
   transition: background 0.1s, color 0.1s;
   touch-action: manipulation;
 }
-.hpe-dice-btn:hover:not(:disabled) { background: rgba(255, 255, 255, 0.12); color: var(--text-1); }
+.hpe-dice-btn:hover:not(:disabled) { background: color-mix(in srgb, var(--text-on-accent) 12%, transparent); color: var(--text-1); }
 .hpe-dice-btn:disabled { opacity: 0.25; cursor: not-allowed; }
 
 .hpe-field { display: flex; flex-direction: column; gap: 8px; }
 .hpe-label { color: var(--text-muted); font-size: 13px; }
 .hpe-pills { display: flex; flex-wrap: wrap; gap: 6px; }
 .hpe-pill {
-  background: rgba(255, 255, 255, 0.05);
+  background: color-mix(in srgb, var(--text-on-accent) 5%, transparent);
   border: 1px solid var(--border-strong);
   border-radius: 7px;
   color: var(--text-muted);
@@ -174,8 +174,8 @@ function set(field, value) { emit('change', { ...props.hp, [field]: value }) }
 }
 .hpe-pill-svg { padding: 4px; width: 36px; height: 36px; }
 .hpe-pill-img { width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; opacity: 0.55; transition: opacity 0.12s; flex-shrink: 0; }
-.hpe-pill:hover { background: rgba(255, 255, 255, 0.09); color: var(--text-2); }
+.hpe-pill:hover { background: color-mix(in srgb, var(--text-on-accent) 9%, transparent); color: var(--text-2); }
 .hpe-pill:hover .hpe-pill-img { opacity: 0.8; }
-.hpe-pill.active { background: color-mix(in srgb, var(--accent) 25%, transparent); border-color: var(--accent); color: var(--color-attack); }
+.hpe-pill.active { background: color-mix(in srgb, var(--accent) 25%, transparent); border-color: var(--accent); color: var(--accent-soft); }
 .hpe-pill.active .hpe-pill-img { opacity: 1; }
 </style>

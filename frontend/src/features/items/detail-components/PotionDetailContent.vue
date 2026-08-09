@@ -67,7 +67,7 @@ const hasMeta = computed(() => data.value.weight != null || !!costLabel.value)
 .pdc-name {
   font-size: 22px;
   font-weight: 700;
-  color: #eeeef4;
+  color: var(--text-1);
   line-height: 1.2;
   padding-right: 24px;
 }
@@ -91,7 +91,7 @@ const hasMeta = computed(() => data.value.weight != null || !!costLabel.value)
   line-height: 1.65;
 }
 
-.pdc-no-desc { font-size: 13px; color: #383838; font-style: italic; }
+.pdc-no-desc { font-size: 13px; color: var(--text-muted); font-style: italic; }
 
 .pdc-meta { display: flex; flex-wrap: wrap; gap: 6px; }
 
@@ -100,8 +100,8 @@ const hasMeta = computed(() => data.value.weight != null || !!costLabel.value)
   font-weight: 600;
   padding: 3px 9px;
   border-radius: 5px;
-  background: rgba(255, 255, 255, 0.06);
+  background: color-mix(in srgb, var(--text-on-accent) 6%, transparent);
   color: var(--text-muted);
 }
-.pdc-cost { background: rgba(252, 190, 36, 0.13); color: var(--warning); }
+.pdc-cost { background: color-mix(in srgb, var(--warning) 13%, transparent); color: var(--warning); }
 </style>

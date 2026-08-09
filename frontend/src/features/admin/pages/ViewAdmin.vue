@@ -65,7 +65,7 @@ function selectTab(tab) {
 .admin-sidebar {
   width: 180px;
   flex-shrink: 0;
-  border-right: 1px solid #2a2a2e;
+  border-right: 1px solid var(--surface-raised);
   padding: 16px 8px;
   display: flex;
   flex-direction: column;
@@ -87,13 +87,13 @@ function selectTab(tab) {
 }
 
 .sidebar-tab:hover {
-  background: #222226;
+  background: var(--surface);
   color: var(--text-1);
 }
 
 .sidebar-tab.active {
-  background: #222226;
-  color: #fff;
+  background: var(--surface);
+  color: var(--text-on-accent);
   font-weight: 600;
 }
 

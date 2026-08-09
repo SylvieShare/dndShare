@@ -188,7 +188,7 @@ function onFeatPick(item) { if (item?.id != null) toggleFeat(item.id) }
 .step-gap { margin-top: 8px; }
 .step-desc {
   font-size: 13px; color: var(--text-2); line-height: 1.5;
-  background: var(--block-bg); border-radius: var(--r-md);
+  background: var(--surface); border-radius: var(--r-md);
   border-left: 3px solid color-mix(in srgb, var(--accent) 55%, transparent);
   padding: 11px 14px;
 }
@@ -200,14 +200,14 @@ function onFeatPick(item) { if (item?.id != null) toggleFeat(item.id) }
 .opts { display: flex; flex-wrap: wrap; gap: 8px; }
 .opt {
   display: flex; align-items: flex-start; gap: 11px; flex: 1 1 220px;
-  background: var(--block-bg); border-radius: var(--r-md); padding: 11px 13px; cursor: pointer; transition: background 0.15s;
+  background: var(--surface); border-radius: var(--r-md); padding: 11px 13px; cursor: pointer; transition: background 0.15s;
 }
-.opt:hover { background: color-mix(in srgb, var(--accent) 12%, var(--block-bg)); }
-.opt.on { background: color-mix(in srgb, var(--accent) 16%, var(--block-bg)); }
+.opt:hover { background: color-mix(in srgb, var(--accent) 12%, var(--surface)); }
+.opt.on { background: color-mix(in srgb, var(--accent) 16%, var(--surface)); }
 .opt.off { opacity: 0.45; }
-.box { flex-shrink: 0; width: 18px; height: 18px; margin-top: 1px; border-radius: 50%; background: var(--bg); display: flex; align-items: center; justify-content: center; }
+.box { flex-shrink: 0; width: 18px; height: 18px; margin-top: 1px; border-radius: 50%; background: var(--surface-raised); display: flex; align-items: center; justify-content: center; }
 .opt.on .box { background: var(--accent); }
-.box svg { width: 12px; height: 12px; color: #fff; }
+.box svg { width: 12px; height: 12px; color: var(--text-on-accent); }
 .opt-body { min-width: 0; }
 .opt-label { font-size: 14px; color: var(--text-1); font-weight: 500; }
 .opt-desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
@@ -216,38 +216,38 @@ function onFeatPick(item) { if (item?.id != null) toggleFeat(item.id) }
 .asi-chips { display: flex; flex-wrap: wrap; gap: 7px; }
 .asi-chip {
   display: inline-flex; align-items: center; gap: 5px;
-  background: var(--block-bg); border: none; border-radius: 999px;
+  background: var(--surface); border: none; border-radius: 999px;
   color: var(--text-2); font: inherit; font-size: 12px; padding: 6px 13px; cursor: pointer; transition: background 0.15s;
 }
 .asi-chip b { color: var(--text-muted); font-variant-numeric: tabular-nums; }
-.asi-chip:hover { background: color-mix(in srgb, var(--accent) 14%, var(--block-bg)); }
-.asi-chip.on { background: var(--accent); color: #fff; }
-.asi-chip.on b { color: #fff; }
+.asi-chip:hover { background: color-mix(in srgb, var(--accent) 14%, var(--surface)); }
+.asi-chip.on { background: var(--accent); color: var(--text-on-accent); }
+.asi-chip.on b { color: var(--text-on-accent); }
 .asi-chip.off { opacity: 0.4; cursor: default; }
-.asi-chip.off:hover { background: var(--block-bg); }
+.asi-chip.off:hover { background: var(--surface); }
 
 .feat-tags { display: flex; flex-wrap: wrap; gap: 8px; }
 .feat-tag {
   display: inline-flex; align-items: center; gap: 8px;
-  background: color-mix(in srgb, var(--accent) 14%, var(--block-bg));
+  background: color-mix(in srgb, var(--accent) 14%, var(--surface));
   border-radius: 999px; padding: 6px 8px 6px 14px;
 }
 .feat-tag-name { font-size: 13px; color: var(--text-1); font-weight: 500; }
 .feat-x {
   display: flex; align-items: center; justify-content: center;
   width: 20px; height: 20px; border: none; border-radius: 50%;
-  background: color-mix(in srgb, #fff 8%, transparent); color: var(--text-2); cursor: pointer;
+  background: color-mix(in srgb, var(--text-on-accent) 8%, transparent); color: var(--text-2); cursor: pointer;
 }
-.feat-x:hover { background: var(--danger); color: #fff; }
+.feat-x:hover { background: var(--danger); color: var(--text-on-accent); }
 .feat-x svg { width: 12px; height: 12px; }
 .feat-add {
   align-self: flex-start;
   display: inline-flex; align-items: center; gap: 7px;
-  background: var(--block-bg); border: none; border-radius: var(--r-md);
+  background: var(--surface); border: none; border-radius: var(--r-md);
   color: var(--accent); font: inherit; font-size: 13px; font-weight: 600;
   padding: 9px 15px; cursor: pointer; transition: background 0.15s;
 }
-.feat-add:hover { background: color-mix(in srgb, var(--accent) 14%, var(--block-bg)); }
+.feat-add:hover { background: color-mix(in srgb, var(--accent) 14%, var(--surface)); }
 .feat-add svg { width: 16px; height: 16px; }
 
 .choice-panel-enter-active,

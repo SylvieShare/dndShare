@@ -93,7 +93,7 @@ function onRemove() {
 .dct--draggable { cursor: pointer; touch-action: pan-y; }
 .dct--draggable:active { cursor: grabbing; }
 @media (hover: hover) {
-  .dct--draggable:hover { background: rgba(255, 255, 255, 0.04); }
+  .dct--draggable:hover { background: color-mix(in srgb, var(--text-on-accent) 4%, transparent); }
 }
 
 .dct.sortable-placeholder {

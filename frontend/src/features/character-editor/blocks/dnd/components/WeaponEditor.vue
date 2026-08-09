@@ -122,8 +122,8 @@ function onDelete() {
 .wed-count {
   height: 34px;
   box-sizing: border-box;
-  background: var(--control-bg, var(--bg));
-  border: 1px solid var(--input-border);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
   border-radius: 6px;
   color: var(--text-1);
   font: inherit;

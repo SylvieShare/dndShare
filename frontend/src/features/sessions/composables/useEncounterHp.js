@@ -48,9 +48,9 @@ export function useEncounterHp({
 
   function hpColor(c) {
     const pct = hpPercent(c)
-    if (pct > 50) return '#5ce87c'
-    if (pct > 25) return '#e89c3c'
-    return '#e85c5c'
+    if (pct > 50) return 'var(--success)'
+    if (pct > 25) return 'var(--warning)'
+    return 'var(--danger)'
   }
 
   function hpLabel(c) {

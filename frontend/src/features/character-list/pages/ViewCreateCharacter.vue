@@ -230,16 +230,13 @@ onMounted(async () => {
 
 <style scoped>
 .cc {
-  --wizard-canvas: color-mix(in srgb, var(--bg-deep) 88%, var(--surface-1));
-  --wizard-panel: color-mix(in srgb, var(--surface-1) 34%, transparent);
-  --wizard-muted: #9292a8;
   display: flex;
   flex-direction: column;
   height: calc(100vh - var(--header-h));
   max-width: 1180px;
   margin: 0 auto;
   box-sizing: border-box;
-  background: var(--wizard-canvas);
+  background: var(--bg);
   color: var(--text-1);
   border-inline: 1px solid color-mix(in srgb, var(--border-strong) 55%, transparent);
 }
@@ -254,7 +251,7 @@ onMounted(async () => {
   width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
   background: none; border: none; color: var(--text-muted); cursor: pointer; border-radius: 8px;
 }
-.cc-x:hover { background: color-mix(in srgb, #fff 5%, transparent); color: var(--text-1); }
+.cc-x:hover { background: color-mix(in srgb, var(--text-on-accent) 5%, transparent); color: var(--text-1); }
 .cc-x svg { width: 18px; height: 18px; }
 .cc-title { display: flex; align-items: center; gap: 9px; font-family: var(--font-display); font-size: 23px; font-weight: 600; color: var(--warning); }
 .cc-title svg { width: 20px; height: 20px; color: var(--accent); }
@@ -266,7 +263,7 @@ onMounted(async () => {
 }
 .cc-clear:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, transparent); }
 .cc-clear svg { width: 14px; height: 14px; }
-.cc-progress { font-size: 12px; color: var(--wizard-muted); font-variant-numeric: tabular-nums; }
+.cc-progress { font-size: 12px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
 .cc-progress-short { display: none; }
 
 .cc-body {
@@ -280,7 +277,7 @@ onMounted(async () => {
 .cc-rail,
 .cc-preview {
   box-sizing: border-box;
-  background: var(--wizard-panel);
+  background: var(--surface);
   border: 1px solid color-mix(in srgb, var(--border-strong) 68%, transparent);
   border-radius: 12px;
   padding: 10px;
@@ -298,19 +295,19 @@ onMounted(async () => {
   gap: 14px;
   padding: 14px 24px;
   border-top: 1px solid color-mix(in srgb, var(--border-strong) 72%, transparent);
-  background: color-mix(in srgb, var(--wizard-canvas) 88%, var(--surface-1));
+  background: var(--bg);
 }
-.cc-reason { font-size: 12px; color: var(--wizard-muted); }
+.cc-reason { font-size: 12px; color: var(--text-muted); }
 .cc-actions { margin-left: auto; display: flex; gap: 10px; }
 .btn { border: none; border-radius: 9px; padding: 10px 22px; font: inherit; font-weight: 600; cursor: pointer; }
 .btn.ghost { background: transparent; color: var(--text-2); box-shadow: inset 0 0 0 1px var(--border-strong); }
 .btn.ghost:hover { color: var(--text-1); }
-.btn.soft { background: transparent; color: var(--wizard-muted); padding-inline: 14px; font-size: 13px; }
-.btn.soft:hover:not(:disabled) { background: color-mix(in srgb, #fff 5%, transparent); color: var(--text-1); }
-.btn.next { background: var(--accent); color: #fff; }
-.btn.next:hover:not(:disabled) { background: var(--accent-dim); }
-.btn.create { background: var(--accent-2); color: var(--text-on-accent); }
-.btn.create:hover:not(:disabled) { background: var(--accent-2-dim); }
+.btn.soft { background: transparent; color: var(--text-muted); padding-inline: 14px; font-size: 13px; }
+.btn.soft:hover:not(:disabled) { background: color-mix(in srgb, var(--text-on-accent) 5%, transparent); color: var(--text-1); }
+.btn.next { background: var(--accent); color: var(--text-on-accent); }
+.btn.next:hover:not(:disabled) { background: var(--accent-hover); }
+.btn.create { background: var(--accent); color: var(--text-on-accent); }
+.btn.create:hover:not(:disabled) { background: var(--accent-hover); }
 .btn:disabled { opacity: 0.5; cursor: default; }
 
 @media (max-width: 920px) {

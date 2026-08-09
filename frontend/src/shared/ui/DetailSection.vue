@@ -62,7 +62,7 @@ const open = ref(props.defaultOpen)
   transition: color 0.12s;
 }
 .detail-section-head--btn:hover .detail-section-label {
-  color: #fff;
+  color: var(--text-on-accent);
 }
 
 .detail-section-label {
@@ -70,16 +70,16 @@ const open = ref(props.defaultOpen)
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.12em;
-  color: #d8d0a8;
+  color: var(--text-2);
   text-transform: uppercase;
-  border-bottom: 1px solid rgba(216, 208, 168, 0.3);
+  border-bottom: 1px solid color-mix(in srgb, var(--text-2) 30%, transparent);
   padding-bottom: 4px;
   flex: 1;
   min-width: 0;
 }
 
 .detail-section-chevron {
-  color: #d8d0a8;
+  color: var(--text-2);
   flex-shrink: 0;
   transition: transform 0.18s;
   margin-bottom: 4px;

@@ -44,7 +44,7 @@ defineEmits(['go'])
 
 /* hover only for the clickable states */
 .rail-step.done:hover,
-.rail-step.ahead:hover { background: color-mix(in srgb, #fff 4%, transparent); }
+.rail-step.ahead:hover { background: color-mix(in srgb, var(--text-on-accent) 4%, transparent); }
 
 /* ── State 4: current / текущий ── */
 .rail-step.active { background: color-mix(in srgb, var(--accent) 16%, transparent); }
@@ -55,13 +55,13 @@ defineEmits(['go'])
   flex-shrink: 0; width: 24px; height: 24px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums;
-  color: var(--wizard-muted, var(--text-muted)); box-shadow: inset 0 0 0 1px var(--border-strong);
+  color: var(--text-muted); box-shadow: inset 0 0 0 1px var(--border-strong);
 }
 .rail-badge svg { width: 13px; height: 13px; }
-.rail-step.active .rail-badge { background: var(--accent); color: #fff; box-shadow: none; }
+.rail-step.active .rail-badge { background: var(--accent); color: var(--text-on-accent); box-shadow: none; }
 
 /* ── State 2: done / пройден (behind current) ── */
-.rail-step.done .rail-badge { background: color-mix(in srgb, var(--accent) 30%, transparent); color: #c4a0ff; box-shadow: none; }
+.rail-step.done .rail-badge { background: color-mix(in srgb, var(--accent) 30%, transparent); color: var(--accent-soft); box-shadow: none; }
 
 /* ── State 3: ahead / можно вернуться вперёд (completed, past current) ── */
 .rail-step.ahead .rail-badge { color: var(--accent); box-shadow: inset 0 0 0 1.5px var(--accent); }
@@ -71,5 +71,5 @@ defineEmits(['go'])
 
 .rail-title { font-size: 13px; color: var(--text-2); }
 .rail-step.active .rail-title { color: var(--text-1); font-weight: 500; }
-.rail-step.locked .rail-title { color: var(--wizard-muted, var(--text-muted)); }
+.rail-step.locked .rail-title { color: var(--text-muted); }
 </style>

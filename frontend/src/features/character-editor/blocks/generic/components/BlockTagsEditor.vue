@@ -100,8 +100,8 @@ function onBlur() {
 .bte-section-input {
   flex: 1;
   min-width: 0;
-  background: var(--control-bg, var(--bg));
-  border: 1px solid var(--input-border);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
   border-radius: 8px;
   color: var(--text-1);
   font: inherit;
@@ -111,14 +111,14 @@ function onBlur() {
   transition: border-color 0.12s;
 }
 .bte-section-input::placeholder { color: var(--text-muted); }
-.bte-section-input:focus { border-color: var(--input-focus); }
+.bte-section-input:focus { border-color: var(--accent); }
 .bte-section-input--error { border-color: var(--danger); }
 
 .bte-section-ok {
   flex-shrink: 0;
   border: none;
   border-radius: 8px;
-  background: var(--surface-2);
+  background: var(--surface-active);
   color: var(--text-1);
   font: inherit;
   font-size: 13px;
@@ -127,6 +127,6 @@ function onBlur() {
   cursor: pointer;
   transition: background 0.12s, opacity 0.12s;
 }
-.bte-section-ok:hover { background: color-mix(in srgb, var(--accent) 30%, var(--surface-2)); }
+.bte-section-ok:hover { background: color-mix(in srgb, var(--accent) 30%, var(--surface-active)); }
 .bte-section-ok:disabled { opacity: 0.4; cursor: default; }
 </style>

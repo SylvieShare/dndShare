@@ -507,7 +507,7 @@ watch(activeChapterId, id => { loadScenes(id) }, { immediate: true })
   display: flex;
   flex-direction: column;
   gap: 12px;
-  background: var(--block-bg);
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 12px;
@@ -533,7 +533,7 @@ watch(activeChapterId, id => { loadScenes(id) }, { immediate: true })
   align-items: center;
   gap: 6px;
   padding: 4px 10px;
-  background: var(--bg-deep, #0a0b10);
+  background: var(--bg);
   border: 1px solid var(--border);
   border-radius: 7px;
   font-family: inherit;
@@ -542,11 +542,11 @@ watch(activeChapterId, id => { loadScenes(id) }, { immediate: true })
   cursor: pointer;
   transition: background 0.12s, border-color 0.12s;
 }
-.scene-chapter-pill:hover { background: color-mix(in srgb, #fff 4%, var(--bg-deep, #0a0b10)); }
+.scene-chapter-pill:hover { background: color-mix(in srgb, var(--text-on-accent) 4%, var(--bg)); }
 .scene-chapter-pill.active {
   background: color-mix(in srgb, var(--accent) 18%, transparent);
   border-color: color-mix(in srgb, var(--accent) 50%, transparent);
-  color: #fff;
+  color: var(--text-on-accent);
 }
 .scene-chapter-num {
   font-size: 11px;
@@ -555,7 +555,7 @@ watch(activeChapterId, id => { loadScenes(id) }, { immediate: true })
   color: var(--text-muted);
   padding: 1px 5px;
   border-radius: 4px;
-  background: rgba(255,255,255,0.06);
+  background: color-mix(in srgb, var(--text-on-accent) 6%, transparent);
 }
 .scene-chapter-pill.active .scene-chapter-num { color: var(--accent); background: color-mix(in srgb, var(--accent) 18%, transparent); }
 .scene-chapter-name { font-weight: 600; }
@@ -581,7 +581,7 @@ watch(activeChapterId, id => { loadScenes(id) }, { immediate: true })
   align-items: center;
   justify-content: center;
   padding: 0;
-  background: var(--bg-deep, #0a0b10);
+  background: var(--bg);
   border: 1px solid var(--border);
   border-radius: 8px;
   color: var(--text-2);
@@ -591,12 +591,12 @@ watch(activeChapterId, id => { loadScenes(id) }, { immediate: true })
 .scene-action-btn:hover {
   color: var(--text-1);
   border-color: var(--border-strong);
-  background: color-mix(in srgb, #fff 4%, var(--bg-deep, #0a0b10));
+  background: color-mix(in srgb, var(--text-on-accent) 4%, var(--bg));
 }
 .scene-action-btn--danger:hover {
-  color: #e07070;
-  border-color: rgba(232, 92, 92, 0.45);
-  background: rgba(232, 92, 92, 0.1);
+  color: var(--danger);
+  border-color: color-mix(in srgb, var(--danger) 45%, transparent);
+  background: color-mix(in srgb, var(--danger) 10%, transparent);
 }
 
 .scene-picker-trigger {
@@ -605,7 +605,7 @@ watch(activeChapterId, id => { loadScenes(id) }, { immediate: true })
   gap: 10px;
   padding: 10px 14px;
   width: 100%;
-  background: var(--surface-1);
+  background: var(--surface-raised);
   border: 1px solid var(--border);
   border-radius: 9px;
   font-family: inherit;
@@ -614,7 +614,7 @@ watch(activeChapterId, id => { loadScenes(id) }, { immediate: true })
   cursor: pointer;
   transition: background 0.12s, border-color 0.12s;
 }
-.scene-picker-trigger:hover:not(:disabled) { border-color: var(--accent); background: var(--surface-2); }
+.scene-picker-trigger:hover:not(:disabled) { border-color: var(--accent); background: var(--surface-active); }
 .scene-picker-trigger:disabled { cursor: default; opacity: 0.5; }
 .scene-picker-trigger--empty { color: var(--text-muted); font-style: italic; }
 
@@ -646,7 +646,7 @@ watch(activeChapterId, id => { loadScenes(id) }, { immediate: true })
   top: calc(100% + 6px);
   left: 0;
   right: 0;
-  background: var(--popup-bg);
+  background: var(--popover-bg);
   border: 1px solid var(--border-strong);
   border-radius: 12px;
   box-shadow: var(--shadow-lg);
@@ -670,7 +670,7 @@ watch(activeChapterId, id => { loadScenes(id) }, { immediate: true })
 }
 .scene-picker-search {
   flex: 1;
-  background: var(--surface-1);
+  background: var(--surface-raised);
   border: 1px solid var(--border);
   border-radius: 7px;
   padding: 8px 12px 8px 30px;
@@ -705,7 +705,7 @@ watch(activeChapterId, id => { loadScenes(id) }, { immediate: true })
   text-align: left;
   transition: background 0.12s;
 }
-.scene-picker-item:hover { background: rgba(255,255,255,0.05); }
+.scene-picker-item:hover { background: color-mix(in srgb, var(--text-on-accent) 5%, transparent); }
 .scene-picker-item.active { background: color-mix(in srgb, var(--accent) 15%, transparent); }
 .scene-picker-item-num {
   color: var(--text-muted);
@@ -788,7 +788,7 @@ watch(activeChapterId, id => { loadScenes(id) }, { immediate: true })
   display: flex;
   gap: 10px;
   align-items: center;
-  background: rgba(255,255,255,0.02);
+  background: color-mix(in srgb, var(--text-on-accent) 2%, transparent);
   border: 1px dashed var(--border-strong);
   border-radius: 10px;
   padding: 12px 14px;
@@ -805,7 +805,7 @@ watch(activeChapterId, id => { loadScenes(id) }, { immediate: true })
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  background: var(--surface-1);
+  background: var(--surface-raised);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 8px 16px;
@@ -819,15 +819,15 @@ watch(activeChapterId, id => { loadScenes(id) }, { immediate: true })
 .scene-add-btn svg { color: var(--text-2); transition: color 0.12s; }
 .scene-add-btn:hover {
   border-color: var(--accent);
-  background: var(--surface-2);
-  color: #fff;
+  background: var(--surface-active);
+  color: var(--text-on-accent);
 }
 .scene-add-btn:hover svg { color: var(--accent); }
 
 .scene-create-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.55);
+  background: var(--scrim);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -837,7 +837,7 @@ watch(activeChapterId, id => { loadScenes(id) }, { immediate: true })
 .scene-create-dialog {
   width: 100%;
   max-width: 380px;
-  background: var(--popup-bg);
+  background: var(--popover-bg);
   border: 1px solid var(--border-strong);
   border-radius: 12px;
   padding: 18px;
@@ -851,7 +851,7 @@ watch(activeChapterId, id => { loadScenes(id) }, { immediate: true })
 }
 .scene-create-input {
   width: 100%;
-  background: var(--surface-1);
+  background: var(--surface-raised);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 9px 12px;
@@ -876,22 +876,22 @@ watch(activeChapterId, id => { loadScenes(id) }, { immediate: true })
   font-weight: 600;
   cursor: pointer;
   border: 1px solid var(--border);
-  background: var(--surface-1);
+  background: var(--surface-raised);
   color: var(--text-1);
 }
-.scene-create-cancel:hover { background: var(--surface-2); }
+.scene-create-cancel:hover { background: var(--surface-active); }
 .scene-create-submit {
   background: var(--accent);
   border-color: var(--accent);
-  color: #fff;
+  color: var(--text-on-accent);
 }
-.scene-create-submit:hover:not(:disabled) { background: var(--accent-dim); }
+.scene-create-submit:hover:not(:disabled) { background: var(--accent-hover); }
 .scene-create-submit:disabled { opacity: 0.4; cursor: not-allowed; }
 .scene-create-submit--danger {
-  background: #c84a4a;
-  border-color: #c84a4a;
+  background: var(--danger);
+  border-color: var(--danger);
 }
-.scene-create-submit--danger:hover:not(:disabled) { background: #b03c3c; }
+.scene-create-submit--danger:hover:not(:disabled) { background: var(--danger); }
 
 .scene-delete-msg {
   font-size: 13px;

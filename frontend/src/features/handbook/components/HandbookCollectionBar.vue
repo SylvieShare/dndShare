@@ -194,7 +194,7 @@ function setBoolFilter(key, value) {
 
 <style scoped>
 .col-bar {
-  background: var(--bg-header);
+  background: var(--bg);
   border-bottom: 1px solid var(--border);
 }
 
@@ -235,7 +235,7 @@ function setBoolFilter(key, value) {
   white-space: nowrap;
   transition: color 0.13s, background 0.13s;
 }
-.col-back-btn:hover { color: var(--text-1); background: rgba(255,255,255,0.05); }
+.col-back-btn:hover { color: var(--text-1); background: color-mix(in srgb, var(--text-on-accent) 5%, transparent); }
 
 .col-sep {
   width: 1px;
@@ -287,7 +287,7 @@ function setBoolFilter(key, value) {
   font-family: inherit;
   transition: color 0.15s, border-color 0.15s, background 0.15s;
 }
-.col-add-btn:hover { color: var(--text-1); border-color: var(--accent); background: rgba(106,100,216,0.08); }
+.col-add-btn:hover { color: var(--text-1); border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, transparent); }
 
 /* ── Right ── */
 .col-bar-right {
@@ -313,7 +313,7 @@ function setBoolFilter(key, value) {
 }
 .col-search {
   width: 200px;
-  background: var(--surface-1);
+  background: var(--surface-raised);
   border: 1px solid var(--border);
   border-radius: 8px;
   color: var(--text-1);
@@ -336,7 +336,7 @@ function setBoolFilter(key, value) {
   padding: 4px 6px;
   border: 1px solid var(--border);
   border-radius: 10px;
-  background: rgba(255,255,255,0.02);
+  background: color-mix(in srgb, var(--text-on-accent) 2%, transparent);
 }
 .col-group-label {
   padding: 2px 6px;
@@ -368,7 +368,7 @@ function setBoolFilter(key, value) {
 }
 .col-group-btn:hover { color: var(--text-2); }
 .col-group-btn.active {
-  color: #fff;
+  color: var(--text-on-accent);
   background: var(--accent);
 }
 
@@ -380,7 +380,7 @@ function setBoolFilter(key, value) {
   width: 36px;
   height: 36px;
   flex-shrink: 0;
-  background: var(--surface-1);
+  background: var(--surface-raised);
   border: 1px solid var(--border);
   border-radius: 8px;
   cursor: pointer;
@@ -393,8 +393,8 @@ function setBoolFilter(key, value) {
 }
 .col-filter-btn:hover,
 .col-filter-btn.active {
-  border-color: rgba(162,146,255,0.45);
-  background: rgba(162,146,255,0.12);
+  border-color: color-mix(in srgb, var(--accent-soft) 45%, transparent);
+  background: color-mix(in srgb, var(--accent-soft) 12%, transparent);
   color: var(--text-1);
 }
 
@@ -407,7 +407,7 @@ function setBoolFilter(key, value) {
   padding: 0 4px;
   border-radius: 8px;
   background: var(--accent);
-  color: #fff;
+  color: var(--text-on-accent);
   font-size: 10px;
   font-weight: 700;
   line-height: 15px;
@@ -431,18 +431,18 @@ function setBoolFilter(key, value) {
   margin-bottom: 10px;
   border-bottom: 1px solid var(--border);
 }
-.col-filter-head-title { color: #d0d0dc; font-size: 13px; font-weight: 700; }
+.col-filter-head-title { color: var(--text-1); font-size: 13px; font-weight: 700; }
 
 .col-filter-group {
   padding: 9px;
   border-radius: 8px;
-  background: rgba(255,255,255,0.025);
+  background: color-mix(in srgb, var(--text-on-accent) 2.5%, transparent);
 }
 .col-filter-group + .col-filter-group { margin-top: 8px; }
 
 .col-filter-title {
   margin-bottom: 6px;
-  color: #8c8c98;
+  color: var(--text-muted);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -462,11 +462,11 @@ function setBoolFilter(key, value) {
   padding: 0;
   text-align: left;
 }
-.col-filter-title-toggle.active { color: #c8c2ff; }
+.col-filter-title-toggle.active { color: var(--accent-soft); }
 
 .col-filter-switch {
   width: 28px; height: 16px; flex-shrink: 0;
-  border-radius: 999px; background: rgba(255,255,255,0.1);
+  border-radius: 999px; background: color-mix(in srgb, var(--text-on-accent) 10%, transparent);
   transition: background .12s;
 }
 .col-filter-switch::after {
@@ -477,16 +477,16 @@ function setBoolFilter(key, value) {
   margin: 3px 0 0 3px;
   transition: transform .12s, background .12s;
 }
-.col-filter-title-toggle.active .col-filter-switch { background: rgba(162,146,255,0.28); }
-.col-filter-title-toggle.active .col-filter-switch::after { transform: translateX(12px); background: #c8c2ff; }
+.col-filter-title-toggle.active .col-filter-switch { background: color-mix(in srgb, var(--accent-soft) 28%, transparent); }
+.col-filter-title-toggle.active .col-filter-switch::after { transform: translateX(12px); background: var(--accent-soft); }
 
 .col-filter-options { display: flex; flex-wrap: wrap; gap: 5px; }
 
 .col-filter-chip {
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1px solid color-mix(in srgb, var(--text-on-accent) 8%, transparent);
   border-radius: 999px;
-  background: rgba(255,255,255,0.04);
-  color: #9a9aa5;
+  background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
+  color: var(--text-2);
   font-family: inherit;
   font-size: 11px;
   padding: 4px 9px;
@@ -495,9 +495,9 @@ function setBoolFilter(key, value) {
 }
 .col-filter-chip:hover,
 .col-filter-chip.active {
-  border-color: rgba(162,146,255,0.35);
-  background: rgba(162,146,255,0.14);
-  color: #c8c2ff;
+  border-color: color-mix(in srgb, var(--accent-soft) 35%, transparent);
+  background: color-mix(in srgb, var(--accent-soft) 14%, transparent);
+  color: var(--accent-soft);
 }
 
 .col-filter-clear {

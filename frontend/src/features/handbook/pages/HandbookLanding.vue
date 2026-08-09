@@ -245,13 +245,13 @@ fetchSources()
 }
 
 .hb-source-item:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: color-mix(in srgb, var(--text-on-accent) 5%, transparent);
   color: var(--text-1);
 }
 
 .hb-source-item.active {
-  background: rgba(106, 100, 216, 0.2);
-  color: #fff;
+  background: color-mix(in srgb, var(--accent) 20%, transparent);
+  color: var(--text-on-accent);
 }
 
 .hb-source-name {
@@ -277,7 +277,7 @@ fetchSources()
 .hb-source-item.active .hb-source-version {
   border-color: var(--accent);
   background: color-mix(in srgb, var(--accent) 15%, transparent);
-  color: rgba(255, 255, 255, 0.75);
+  color: color-mix(in srgb, var(--text-on-accent) 75%, transparent);
 }
 
 /* ── Content ── */
@@ -343,7 +343,7 @@ fetchSources()
   font-weight: 700;
   padding: 1px 7px;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.08);
+  background: color-mix(in srgb, var(--text-on-accent) 8%, transparent);
   color: var(--text-2);
 }
 
@@ -367,7 +367,7 @@ fetchSources()
   padding: 18px 18px 16px;
   border-radius: 12px;
   border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.05);
+  background: color-mix(in srgb, var(--text-on-accent) 5%, transparent);
   color: var(--text-1);
   cursor: pointer;
   font-family: inherit;
@@ -501,7 +501,7 @@ fetchSources()
   padding: 10px 12px;
   border-radius: 10px;
   border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.02);
+  background: color-mix(in srgb, var(--text-on-accent) 2%, transparent);
   color: var(--text-1);
   text-decoration: none;
   overflow: hidden;
@@ -558,7 +558,7 @@ fetchSources()
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
+  background: color-mix(in srgb, var(--text-on-accent) 20%, transparent);
 }
 
 .hb-dict-info {
@@ -577,7 +577,7 @@ fetchSources()
 
 .hb-dict-count {
   font-size: 11px;
-  color: #67677a;
+  color: var(--text-muted);
   display: block;
   margin-top: 1px;
 }

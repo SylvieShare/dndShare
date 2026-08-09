@@ -149,12 +149,12 @@ function clear() {
   width: 22px;
   height: 22px;
   border-radius: 6px;
-  border: 2px solid rgba(255, 255, 255, 0.15);
+  border: 2px solid color-mix(in srgb, var(--text-on-accent) 15%, transparent);
   cursor: pointer;
   padding: 0;
   transition: border-color 0.15s, transform 0.15s;
 }
-.cpp-swatch:hover { border-color: rgba(255, 255, 255, 0.45); transform: scale(1.1); }
+.cpp-swatch:hover { border-color: color-mix(in srgb, var(--text-on-accent) 45%, transparent); transform: scale(1.1); }
 .cpp-swatch--empty { background: var(--bg); border-style: dashed; }
 
 .cpp-body {
@@ -181,7 +181,7 @@ function clear() {
   transition: transform 0.12s ease, border-color 0.12s ease;
 }
 .cpp-color:hover { transform: scale(1.18); }
-.cpp-color.active { border-color: rgba(255, 255, 255, 0.8); transform: scale(1.08); }
+.cpp-color.active { border-color: color-mix(in srgb, var(--text-on-accent) 80%, transparent); transform: scale(1.08); }
 
 .cpp-extra {
   display: flex;
@@ -195,7 +195,7 @@ function clear() {
   height: 28px;
   border-radius: 6px;
   overflow: hidden;
-  border: 1px solid var(--input-border);
+  border: 1px solid var(--border-strong);
   cursor: pointer;
   flex-shrink: 0;
 }
@@ -207,7 +207,7 @@ function clear() {
   min-width: 0;
   height: 28px;
   background: var(--bg);
-  border: 1px solid var(--input-border);
+  border: 1px solid var(--border-strong);
   border-radius: 6px;
   color: var(--text-1);
   font: inherit;

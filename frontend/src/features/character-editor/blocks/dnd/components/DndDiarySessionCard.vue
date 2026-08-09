@@ -83,7 +83,7 @@ const eventsCountLabel = computed(() => {
 
 <style scoped>
 .dsc {
-  background: var(--block-bg);
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   min-width: 0;
@@ -140,7 +140,7 @@ const eventsCountLabel = computed(() => {
   transition: color 0.12s, background 0.12s;
 }
 .dsc-count + .dsc-edit { margin-left: 0; }
-@media (hover: hover) { .dsc-edit:hover { color: var(--accent); background: rgba(255, 255, 255, 0.06); } }
+@media (hover: hover) { .dsc-edit:hover { color: var(--accent); background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); } }
 
 .dsc-body {
   display: flex;
@@ -181,7 +181,7 @@ const eventsCountLabel = computed(() => {
 }
 .dsc-event--clickable { cursor: pointer; border-radius: var(--r-sm); }
 @media (hover: hover) {
-  .dsc-event--clickable:hover { background: rgba(255, 255, 255, 0.03); }
+  .dsc-event--clickable:hover { background: color-mix(in srgb, var(--text-on-accent) 3%, transparent); }
 }
 
 .dsc-empty {

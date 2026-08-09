@@ -88,7 +88,7 @@ function openTile() { openFrom(tileRef.value?.$el || null) }
   box-sizing: border-box;
   cursor: pointer;
 }
-.cmini:hover .cmini-value { color: #fff; }
+.cmini:hover .cmini-value { color: var(--text-on-accent); }
 .cmini-label {
   font-size: 9px;
   font-weight: 700;

@@ -124,7 +124,7 @@ onMounted(async () => {
   min-height: 0;
   overflow-x: auto;
   overflow-y: auto;
-  background: var(--bg-deep);
+  background: var(--bg);
 }
 
 .container {
@@ -152,7 +152,7 @@ onMounted(async () => {
 
 .sk-block {
   border-radius: 12px;
-  background: #1e1e26;
+  background: var(--popover-bg);
   margin-bottom: 12px;
   animation: sk-pulse 1.4s ease-in-out infinite;
 }

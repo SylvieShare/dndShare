@@ -509,7 +509,7 @@ onBeforeUnmount(() => {
     max-width: 92px;
     padding: 10px 6px;
     border: 1px solid var(--border-strong);
-    background: var(--popup-bg);
+    background: var(--popover-bg);
     color: var(--text-muted);
     font: inherit;
     font-size: 12px;
@@ -546,7 +546,7 @@ onBeforeUnmount(() => {
     inset: 0;
     z-index: 79;
     display: block;
-    background: rgba(0, 0, 0, 0.35);
+    background: color-mix(in srgb, var(--scrim) 56%, transparent);
   }
 
   .left-bar-panel,

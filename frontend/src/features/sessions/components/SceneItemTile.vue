@@ -141,7 +141,7 @@ const draft = reactive({
 })
 
 const currentColor = computed(() => editing.value ? draft.color : props.item.color)
-const stripColor = computed(() => currentColor.value || 'rgba(255,255,255,0.08)')
+const stripColor = computed(() => currentColor.value || 'var(--border)')
 
 const typeLabel = computed(() => props.item.type === 'list' ? 'список' : 'текст')
 
@@ -225,7 +225,7 @@ watch(() => props.item, () => { if (!editing.value) syncDraft() }, { deep: true 
 <style scoped>
 .scene-item {
   position: relative;
-  background: var(--block-bg);
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 10px 12px 10px 14px;
@@ -263,7 +263,7 @@ watch(() => props.item, () => { if (!editing.value) syncDraft() }, { deep: true 
   align-items: center;
   justify-content: center;
   width: 22px;
-  color: #5a5a78;
+  color: var(--text-muted);
   cursor: grab;
   touch-action: none;
   flex-shrink: 0;
@@ -275,7 +275,7 @@ watch(() => props.item, () => { if (!editing.value) syncDraft() }, { deep: true 
   width: 28px;
   height: 28px;
   border-radius: 7px;
-  background: rgba(0, 0, 0, 0.35);
+  background: color-mix(in srgb, var(--scrim) 56%, transparent);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -335,7 +335,7 @@ watch(() => props.item, () => { if (!editing.value) syncDraft() }, { deep: true 
 }
 .scene-item-row-left,
 .scene-item-row-right {
-  background: var(--surface-1);
+  background: var(--surface-raised);
   border: 1px solid var(--border);
   border-radius: 7px;
   padding: 6px 10px;
@@ -358,7 +358,7 @@ watch(() => props.item, () => { if (!editing.value) syncDraft() }, { deep: true 
   cursor: pointer;
   border-radius: 5px;
 }
-.scene-item-row-del:hover { color: #e85c5c; background: rgba(232,92,92,0.1); }
+.scene-item-row-del:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, transparent); }
 .scene-item-row-add {
   margin-top: 4px;
   align-self: flex-start;
@@ -409,15 +409,15 @@ watch(() => props.item, () => { if (!editing.value) syncDraft() }, { deep: true 
   font-weight: 700;
   cursor: pointer;
   border: 1px solid var(--border);
-  background: var(--surface-1);
+  background: var(--surface-raised);
   color: var(--text-1);
   transition: background 0.12s, border-color 0.12s;
 }
-.scene-item-cancel-btn:hover { background: var(--surface-2); }
+.scene-item-cancel-btn:hover { background: var(--surface-active); }
 .scene-item-save-btn {
   background: var(--accent);
   border-color: var(--accent);
-  color: #fff;
+  color: var(--text-on-accent);
 }
-.scene-item-save-btn:hover { background: var(--accent-dim); }
+.scene-item-save-btn:hover { background: var(--accent-hover); }
 </style>

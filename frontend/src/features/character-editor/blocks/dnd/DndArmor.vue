@@ -117,7 +117,7 @@ function setShieldBonus(v) { patch({ shield_bonus: v }) }
   transition: color 0.12s, background 0.12s;
   z-index: 1;
 }
-@media (hover: hover) { .armor-tile .sb-edit:hover { color: var(--accent); background: rgba(255, 255, 255, 0.06); } }
+@media (hover: hover) { .armor-tile .sb-edit:hover { color: var(--accent); background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); } }
 .armor-btn {
   background: none;
   border: none;
@@ -135,7 +135,7 @@ function setShieldBonus(v) { patch({ shield_bonus: v }) }
 .armor-shield-icon {
   width: 68px;
   height: 74px;
-  background-color: var(--surface-1);
+  background-color: var(--surface-raised);
   mask: url("/static/shield.svg") center / contain no-repeat;
   -webkit-mask: url("/static/shield.svg") center / contain no-repeat;
   transition: background-color 0.25s, filter 0.25s;
@@ -164,5 +164,5 @@ function setShieldBonus(v) { patch({ shield_bonus: v }) }
   pointer-events: none;
   transition: color 0.2s, text-shadow 0.2s;
 }
-.armor-toggled .armor-num { color: #fff; text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); }
+.armor-toggled .armor-num { color: var(--text-on-accent); text-shadow: 0 0 10px color-mix(in srgb, var(--text-on-accent) 50%, transparent); }
 </style>

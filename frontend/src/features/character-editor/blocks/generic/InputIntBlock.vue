@@ -149,7 +149,7 @@ function onModalChange(data) {
   justify-content: flex-start;
   gap: 2px;
   padding: 10px 12px;
-  background: var(--block-bg);
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 10px;
 }

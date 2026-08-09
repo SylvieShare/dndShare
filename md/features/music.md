@@ -116,7 +116,7 @@ Owns both the library cache and the player engine. The engine is single-instance
 
 ### `features/sessions/components/MusicPanel.vue`
 
-Right-column widget. It renders **flat on the surrounding `.side-tile`** — content sits directly on the tile background (like `DicePanel`), NOT inside its own bordered/rounded card. Do **not** wrap the "now playing" area in a `var(--block-bg)` card again: a same-bg card inside the same-bg tile reads as a "block in a block". Layout:
+Right-column widget. It renders **flat on the surrounding `.side-tile`** — content sits directly on the tile background (like `DicePanel`), NOT inside its own bordered/rounded card. Do **not** wrap the "now playing" area in a `var(--surface)` card again: a same-bg card inside the same-bg tile reads as a "block in a block". Layout:
 - Header: `МУЗЫКА · «<album>» · библиотека ↗`.
 - `.now` (transparent, flows on the tile) with:
   - Transport row: play/pause button, status (`ИГРАЕТ` / `ПАУЗА` / `НИЧЕГО НЕ ИГРАЕТ`), track title, time `mm:ss / mm:ss`, and a loop button on the right (solid/outlined album-loop SVG; the `'track'` variant overlays a "1" glyph).
@@ -131,12 +131,12 @@ Cross-fade duration is **not** in the widget — it lives only in the library mo
 DOM tree (matters for layout):
 ```
 .music-lib
-├── .music-lib-head            (var(--bg-header))
+├── .music-lib-head            (var(--bg))
 └── .music-lib-body            (row flex)
     ├── .music-lib-sidebar     (260px, var(--bg)) — albums + dropzone
     └── .music-lib-main-col    (column flex)
-        ├── .music-lib-main    (var(--bg-deep)) — header/search/tags/tracks, scrollable
-        └── .music-lib-foot    (var(--bg-header)) — player bar, prevented from covering the sidebar by being nested inside main-col
+        ├── .music-lib-main    (var(--bg)) — header/search/tags/tracks, scrollable
+        └── .music-lib-foot    (var(--bg)) — player bar, prevented from covering the sidebar by being nested inside main-col
 ```
 
 The footer is intentionally **inside** `.music-lib-main-col` so it spans only the right column. Putting it back as a sibling of `.music-lib-body` will make it overlap the sidebar.
@@ -168,7 +168,7 @@ The footer is intentionally **inside** `.music-lib-main-col` so it spans only th
 
 Single row. Layout: `[drag-handle?] [play] [title + state badge] [tags] [time] [«след.» button] [⋯ menu]`.
 
-- Background is transparent by default; only the **currently playing** row gets a quiet `color-mix()` tint derived from `--accent` plus the accent border. The `--current` class (currently-playing but paused) uses `--input-border`. This keeps the list visually quiet — only one row stands out.
+- Background is transparent by default; only the **currently playing** row gets a quiet `color-mix()` tint derived from `--accent` plus the accent border. The `--current` class (currently-playing but paused) uses `--border-strong`. This keeps the list visually quiet — only one row stands out.
 - The «след.» toggle is disabled when `isCurrent` (you can't queue the track that's already playing).
 - The menu items are `Изменить альбом`, `Теги`, `Переименовать`, `Удалить`. There is no "Добавить в очередь" — the row's own «след.» button is the only way to set the next track.
 - The drag handle (6 dots, 3×2) is rendered only when `draggable` is true. The parent passes an `onDragStart(e, track)` callback that wraps `sortable.startDrag` with the correct index.

@@ -100,12 +100,12 @@ defineExpose({ close })
   align-items: center;
   justify-content: center;
 }
-.ram-trigger:hover { color: var(--text-1); background: rgba(255,255,255,0.06); }
+.ram-trigger:hover { color: var(--text-1); background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); }
 </style>
 
 <style>
 .ram-popover {
-  background: var(--popup-bg);
+  background: var(--popover-bg);
   border: 1px solid var(--border-strong);
   border-radius: 10px;
   padding: 8px;
@@ -132,9 +132,9 @@ defineExpose({ close })
   cursor: pointer;
   text-align: left;
 }
-.ram-item:hover { background: rgba(255,255,255,0.06); }
-.ram-item--danger { color: #e85c5c; }
-.ram-item--danger:hover { background: rgba(232,92,92,0.12); }
+.ram-item:hover { background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); }
+.ram-item--danger { color: var(--danger); }
+.ram-item--danger:hover { background: color-mix(in srgb, var(--danger) 12%, transparent); }
 
 .ram-label {
   font-size: 10px;
@@ -157,13 +157,13 @@ defineExpose({ close })
   width: 22px;
   height: 22px;
   border-radius: 6px;
-  border: 2px solid rgba(255,255,255,0.1);
+  border: 2px solid color-mix(in srgb, var(--text-on-accent) 10%, transparent);
   cursor: pointer;
   padding: 0;
   transition: transform 0.1s, border-color 0.15s;
 }
 .ram-swatch:hover { transform: scale(1.08); }
-.ram-swatch.ram-swatch--active { border-color: #fff; box-shadow: 0 0 0 2px var(--accent); }
+.ram-swatch.ram-swatch--active { border-color: var(--text-on-accent); box-shadow: 0 0 0 2px var(--accent); }
 .ram-swatch--reset {
   background: transparent;
   color: var(--text-muted);

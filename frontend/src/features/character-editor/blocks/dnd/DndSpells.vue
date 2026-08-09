@@ -420,7 +420,7 @@ onMounted(async () => {
 <style scoped>
 .spells-block {
   min-width: 0;
-  color: #d5d5dc;
+  color: var(--text-1);
 }
 
 .sg-lvl {
@@ -461,7 +461,7 @@ onMounted(async () => {
   padding: 5px 11px;
   border-radius: 8px;
   background: color-mix(in srgb, var(--accent) 14%, transparent);
-  color: color-mix(in srgb, var(--accent) 50%, #fff);
+  color: color-mix(in srgb, var(--accent) 50%, var(--text-on-accent));
   font-size: 13px;
   font-weight: 700;
 }
@@ -470,7 +470,7 @@ onMounted(async () => {
 .sp-prep-chip {
   padding: 5px 10px;
   border-radius: 8px;
-  background: color-mix(in srgb, #fff 5%, transparent);
+  background: color-mix(in srgb, var(--text-on-accent) 5%, transparent);
   color: var(--text-2);
   font-size: 12px;
   font-weight: 700;
@@ -521,7 +521,7 @@ onMounted(async () => {
   min-width: 20px;
   flex: 1;
   height: 1px;
-  background: rgba(91, 101, 126, 0.42);
+  background: color-mix(in srgb, var(--text-muted) 42%, transparent);
 }
 
 
@@ -529,15 +529,15 @@ onMounted(async () => {
 .sp-add-section {
   margin-top: 12px;
   padding-top: 12px;
-  border-top: 1px solid rgba(140, 140, 154, 0.22);
+  border-top: 1px solid color-mix(in srgb, var(--text-muted) 22%, transparent);
 }
 
 .sp-picker-btn {
   width: 100%;
   min-height: 34px;
-  border: 1px dashed rgba(140, 140, 154, 0.46);
+  border: 1px dashed color-mix(in srgb, var(--text-muted) 46%, transparent);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.02);
+  background: color-mix(in srgb, var(--text-on-accent) 2%, transparent);
   color: var(--text-muted);
   cursor: pointer;
   font: inherit;
@@ -546,9 +546,9 @@ onMounted(async () => {
 }
 
 .sp-picker-btn:hover {
-  color: #d8d8e0;
-  border-color: rgba(180, 180, 194, 0.58);
-  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-1);
+  border-color: color-mix(in srgb, var(--text-2) 58%, transparent);
+  background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
 }
 
 @media (max-width: 760px) {
@@ -599,7 +599,7 @@ onMounted(async () => {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: #6a6a82;
+  color: var(--text-muted);
   cursor: grab;
   padding: 4px 3px;
   border-radius: 4px;
@@ -607,7 +607,7 @@ onMounted(async () => {
   transition: color 0.12s, background 0.12s;
   flex-shrink: 0;
 }
-.drag-handle:hover { color: #d0d0e0; background: rgba(255,255,255,0.08); }
+.drag-handle:hover { color: var(--text-1); background: color-mix(in srgb, var(--text-on-accent) 8%, transparent); }
 .drag-handle:active { cursor: grabbing; }
 
 .sp-drag { margin-right: 2px; }

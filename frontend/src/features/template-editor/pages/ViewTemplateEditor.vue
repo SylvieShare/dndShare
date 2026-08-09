@@ -44,8 +44,8 @@ onMounted(async () => {
   gap: 16px;
   padding: 0 16px;
   height: 48px;
-  background: #18181b;
-  border-bottom: 1px solid #2a2a2e;
+  background: var(--bg);
+  border-bottom: 1px solid var(--surface-raised);
   flex-shrink: 0;
 }
 
@@ -81,9 +81,9 @@ onMounted(async () => {
 .schema-v2-placeholder {
   max-width: 460px;
   padding: 24px;
-  border: 1px solid #2a2a2e;
+  border: 1px solid var(--surface-raised);
   border-radius: 8px;
-  background: #1d1d22;
+  background: var(--popover-bg);
 }
 
 .schema-v2-title {

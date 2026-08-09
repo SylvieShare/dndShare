@@ -21,7 +21,7 @@ const hasDetails = computed(() => data.value.max_use || data.value.rollback_shor
 .atd-uses {
   font-size: 11px;
   color: var(--text-muted);
-  background: rgba(255,255,255,0.06);
+  background: color-mix(in srgb, var(--text-on-accent) 6%, transparent);
   border-radius: 4px;
   padding: 2px 7px;
 }
@@ -32,6 +32,6 @@ const hasDetails = computed(() => data.value.max_use || data.value.rollback_shor
   padding: 2px 6px;
   border-radius: 4px;
 }
-.atd-sr { background: rgba(90,175,114,0.15); color: #5aaf72; }
-.atd-lr { background: rgba(79,143,204,0.15); color: #4f8fcc; }
+.atd-sr { background: color-mix(in srgb, var(--success) 15%, transparent); color: var(--success); }
+.atd-lr { background: color-mix(in srgb, var(--info) 15%, transparent); color: var(--info); }
 </style>

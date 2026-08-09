@@ -174,7 +174,7 @@ function closeEditor() {
   font-size: 11px;
   font-weight: 700;
   color: var(--text-2);
-  background: rgba(255, 255, 255, 0.07);
+  background: color-mix(in srgb, var(--text-on-accent) 7%, transparent);
   border-radius: var(--r-pill);
   padding: 1px 7px;
 }
@@ -192,7 +192,7 @@ function closeEditor() {
   width: 100%;
   padding: 0;
   text-align: left;
-  background: var(--block-bg);
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   color: inherit;
@@ -252,7 +252,7 @@ function closeEditor() {
   border-radius: 6px;
   transition: color 0.12s, background 0.12s;
 }
-.dq-finished-toggle:hover { color: var(--text-2); background: rgba(255, 255, 255, 0.05); }
+.dq-finished-toggle:hover { color: var(--text-2); background: color-mix(in srgb, var(--text-on-accent) 5%, transparent); }
 .dq-chevron { transition: transform 0.15s; }
 .dq-chevron--open { transform: rotate(90deg); }
 </style>

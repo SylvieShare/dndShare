@@ -195,7 +195,7 @@ async function save() {
   align-items: center;
   gap: 12px;
   padding: 12px 14px;
-  background: color-mix(in srgb, #fff 2.5%, transparent);
+  background: color-mix(in srgb, var(--text-on-accent) 2.5%, transparent);
   border-radius: var(--r-md);
   border: 1px solid var(--border);
 }
@@ -204,8 +204,8 @@ async function save() {
   width: 44px;
   height: 44px;
   border-radius: 8px;
-  background: color-mix(in srgb, #fff 6%, transparent);
-  border: 1px solid color-mix(in srgb, #fff 9%, transparent);
+  background: color-mix(in srgb, var(--text-on-accent) 6%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-on-accent) 9%, transparent);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -245,7 +245,7 @@ async function save() {
   width: 40px;
   height: 40px;
   border-radius: 8px;
-  background: color-mix(in srgb, #fff 5%, transparent);
+  background: color-mix(in srgb, var(--text-on-accent) 5%, transparent);
   border: 1px solid var(--border);
   display: flex;
   align-items: center;
@@ -278,11 +278,11 @@ async function save() {
   cursor: pointer;
   padding: 5px 8px;
 }
-.sem-svg-clear-btn:hover { color: color-mix(in srgb, var(--danger) 80%, #fff); }
+.sem-svg-clear-btn:hover { color: color-mix(in srgb, var(--danger) 80%, var(--text-on-accent)); }
 
 .sem-desc-wrap {
-  background: color-mix(in srgb, #fff 4%, transparent);
-  border: 1px solid color-mix(in srgb, #fff 10%, transparent);
+  background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-on-accent) 10%, transparent);
   border-radius: 8px;
   padding: 8px 12px;
   min-height: 80px;

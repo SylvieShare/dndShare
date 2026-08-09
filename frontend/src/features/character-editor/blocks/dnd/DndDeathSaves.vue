@@ -64,7 +64,7 @@ function togglePip(type, index) {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: color-mix(in srgb, var(--block-bg, #1a1a24) 60%, transparent);
+  background: color-mix(in srgb, var(--surface, var(--bg)) 60%, transparent);
   border-radius: inherit;
   z-index: 1;
 }
@@ -94,17 +94,17 @@ function togglePip(type, index) {
   height: 16px;
   border-radius: 50%;
   border: 1px solid var(--border-strong);
-  background-color: var(--input-bg);
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.5);
+  background-color: var(--surface-raised);
+  box-shadow: inset 0 1px 2px color-mix(in srgb, var(--scrim) 81%, transparent);
   cursor: pointer;
   transition: background-color 0.2s, border-color 0.2s, transform 0.15s;
 }
 .ds-pip:hover { transform: scale(1.15); }
-.ds-pip-success.filled { background-color: var(--success); border-color: #67c584; box-shadow: 0 0 10px rgba(76,175,110,0.35); }
-.ds-pip-fail.filled    { background-color: var(--danger-dim); border-color: #df766f; box-shadow: 0 0 10px rgba(201,90,82,0.35); }
+.ds-pip-success.filled { background-color: var(--success); border-color: var(--success); box-shadow: 0 0 10px color-mix(in srgb, var(--success) 35%, transparent); }
+.ds-pip-fail.filled    { background-color: var(--danger); border-color: var(--danger); box-shadow: 0 0 10px color-mix(in srgb, var(--danger) 35%, transparent); }
 
 .ds-label  { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
-.ds-label-fail    { color: var(--danger-dim); }
+.ds-label-fail    { color: var(--danger); }
 .ds-label-success { color: var(--success); }
 
 .ds-enter-active, .ds-leave-active { transition: opacity 0.35s ease, transform 0.35s ease; }

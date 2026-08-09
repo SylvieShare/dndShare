@@ -48,7 +48,7 @@
       @click.stop="$emit('roll-heal')"
     >
       <span class="ad-heal-mark">♥</span>
-      <DamageDice :parts="healParts" :modifier="0" default-color="#66c895" />
+      <DamageDice :parts="healParts" :modifier="0" default-color="var(--success)" />
     </button>
   </div>
 </template>
@@ -110,13 +110,13 @@ const hasDamage = computed(() => props.damageParts.length > 0 || props.modifier 
 .ad-atk {
   padding: 5px 11px;
   border-radius: 8px;
-  border: 1px solid color-mix(in srgb, var(--color-attack) 32%, transparent);
-  background: color-mix(in srgb, var(--color-attack) 8%, transparent);
-  color: #d8d2ff;
+  border: 1px solid color-mix(in srgb, var(--accent-soft) 32%, transparent);
+  background: color-mix(in srgb, var(--accent-soft) 8%, transparent);
+  color: var(--text-1);
   font-size: 15px;
 }
 .ad-atk-label {
-  color: var(--color-attack);
+  color: var(--accent-soft);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -130,7 +130,7 @@ const hasDamage = computed(() => props.damageParts.length > 0 || props.modifier 
   align-self: center;
   flex-shrink: 0;
   padding: 2px 5px;
-  border: 1px solid color-mix(in srgb, #fff 16%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-on-accent) 16%, transparent);
   border-radius: 5px;
   color: var(--text-muted);
   font-size: 10px;
@@ -144,8 +144,8 @@ const hasDamage = computed(() => props.damageParts.length > 0 || props.modifier 
   border-radius: 8px;
   border: 1px solid color-mix(in srgb, var(--success) 50%, transparent);
   background: color-mix(in srgb, var(--success) 16%, transparent);
-  color: #66c895;
+  color: var(--success);
   font-size: 15px;
 }
-.ad-heal-mark { color: #66c895; font-size: 13px; }
+.ad-heal-mark { color: var(--success); font-size: 13px; }
 </style>

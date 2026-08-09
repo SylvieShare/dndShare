@@ -65,10 +65,10 @@ function attackDamage(attack) {
   align-items: center;
   gap: 3px;
   padding: 2px 6px 2px 4px;
-  border: 1px solid rgba(162,146,255,0.18);
+  border: 1px solid color-mix(in srgb, var(--accent-soft) 18%, transparent);
   border-radius: 6px;
-  background: rgba(162,146,255,0.09);
-  color: #d0d0dc;
+  background: color-mix(in srgb, var(--accent-soft) 9%, transparent);
+  color: var(--text-1);
   font-size: 11px;
   font-weight: 700;
 }

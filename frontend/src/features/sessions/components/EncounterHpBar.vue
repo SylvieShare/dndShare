@@ -165,7 +165,7 @@ function togglePip(type, i) {
   gap: 3px;
 }
 
-.enc-hp-temp { color: #5cb0e8; font-size: 10px; }
+.enc-hp-temp { color: var(--info); font-size: 10px; }
 
 .enc-ds-overlay {
   position: absolute;
@@ -175,12 +175,12 @@ function togglePip(type, i) {
   justify-content: center;
   gap: 8px;
   border-radius: inherit;
-  background: rgba(20, 12, 18, 0.35);
+  background: color-mix(in srgb, var(--bg) 35%, transparent);
 }
 
 .enc-ds-side { display: flex; gap: 4px; }
 .enc-ds-heart {
-  color: var(--danger-dim);
+  color: var(--danger);
   font-size: 14px;
   line-height: 1;
   animation: enc-ds-beat 1.4s ease-in-out infinite;
@@ -195,35 +195,35 @@ function togglePip(type, i) {
   width: 11px;
   height: 11px;
   border-radius: 50%;
-  border: 1px solid #4a4a52;
-  background: var(--input-bg);
+  border: 1px solid var(--surface-active);
+  background: var(--surface-raised);
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s, transform 0.12s;
 }
 .enc-ds-pip:hover { transform: scale(1.18); }
 .enc-ds-pip--succ.enc-ds-pip--filled {
   background: var(--success);
-  border-color: #67c584;
-  box-shadow: 0 0 7px rgba(76,175,110,0.35);
+  border-color: var(--success);
+  box-shadow: 0 0 7px color-mix(in srgb, var(--success) 35%, transparent);
 }
 .enc-ds-pip--fail.enc-ds-pip--filled {
-  background: var(--danger-dim);
-  border-color: #df766f;
-  box-shadow: 0 0 7px rgba(201,90,82,0.35);
+  background: var(--danger);
+  border-color: var(--danger);
+  box-shadow: 0 0 7px color-mix(in srgb, var(--danger) 35%, transparent);
 }
 
 .enc-ds-overlay--npc {
   gap: 10px;
-  background: rgba(20, 12, 18, 0.45);
+  background: color-mix(in srgb, var(--bg) 45%, transparent);
 }
 .enc-skull {
   font-size: 16px;
   line-height: 1;
-  filter: drop-shadow(0 0 4px rgba(200, 60, 60, 0.55));
+  filter: drop-shadow(0 0 4px color-mix(in srgb, var(--danger) 55%, transparent));
 }
 .enc-graveyard-btn {
   background: color-mix(in srgb, var(--danger) 18%, transparent);
-  color: #e07070;
+  color: var(--danger);
   border: 1px solid color-mix(in srgb, var(--danger) 40%, transparent);
   border-radius: 6px;
   padding: 3px 9px;
@@ -241,12 +241,12 @@ function togglePip(type, i) {
 }
 
 .enc-revive-btn {
-  background: rgba(92, 232, 124, 0.16);
-  color: #6fe09a;
-  border-color: rgba(92, 232, 124, 0.4);
+  background: color-mix(in srgb, var(--success) 16%, transparent);
+  color: var(--success);
+  border-color: color-mix(in srgb, var(--success) 40%, transparent);
 }
 .enc-revive-btn:hover {
-  background: rgba(92, 232, 124, 0.28);
-  border-color: rgba(92, 232, 124, 0.65);
+  background: color-mix(in srgb, var(--success) 28%, transparent);
+  border-color: color-mix(in srgb, var(--success) 65%, transparent);
 }
 </style>

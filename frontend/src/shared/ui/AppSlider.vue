@@ -69,16 +69,16 @@ function onPointerDown(e) {
   position: relative;
   flex: 1;
   height: 4px;
-  background: rgba(255,255,255,0.06);
+  background: color-mix(in srgb, var(--text-on-accent) 6%, transparent);
   border-radius: 2px;
   cursor: pointer;
 }
-.slider-track:hover { background: rgba(255,255,255,0.09); }
+.slider-track:hover { background: color-mix(in srgb, var(--text-on-accent) 9%, transparent); }
 
 .slider-fill {
   position: absolute;
   inset: 0 auto 0 0;
-  background: var(--accent, var(--accent));
+  background: var(--accent);
   border-radius: 2px;
 }
 
@@ -87,7 +87,7 @@ function onPointerDown(e) {
   top: 50%;
   width: 12px;
   height: 12px;
-  background: var(--accent, var(--accent));
+  background: var(--accent);
   border-radius: 50%;
   transform: translate(-50%, -50%);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent);

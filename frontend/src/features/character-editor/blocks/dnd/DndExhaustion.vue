@@ -200,7 +200,7 @@ function setEffect(i, text) {
   font-size: 13px;
   font-weight: 700;
   color: var(--text-2);
-  background: color-mix(in srgb, #fff 4%, transparent);
+  background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
   border: 1px solid var(--border-strong);
   border-radius: 8px;
   padding: 8px 14px;

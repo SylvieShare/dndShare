@@ -93,7 +93,7 @@ onMounted(load)
 }
 
 .state-msg.error {
-  color: #e05c5c;
+  color: var(--danger);
 }
 
 .section-title {
@@ -112,8 +112,8 @@ onMounted(load)
 }
 
 .stat-card {
-  background: #1e1e24;
-  border: 1px solid #2a2a2e;
+  background: var(--popover-bg);
+  border: 1px solid var(--surface-raised);
   border-radius: 12px;
   padding: 20px 20px 18px;
   display: flex;
@@ -123,7 +123,7 @@ onMounted(load)
 }
 
 .stat-card:hover {
-  border-color: #3a3a42;
+  border-color: var(--surface-active);
 }
 
 .stat-card.accent {
@@ -146,11 +146,11 @@ onMounted(load)
 }
 
 .stat-value.value-warn {
-  color: #e05c5c;
+  color: var(--danger);
 }
 
 .stat-card.accent .stat-value {
-  color: #a08aff;
+  color: var(--accent-soft);
 }
 
 .stat-label {

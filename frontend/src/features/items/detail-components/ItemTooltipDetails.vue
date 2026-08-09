@@ -25,8 +25,8 @@ const hasDetails = computed(() => data.value.weight != null || !!costLabel.value
   font-size: 11px;
   padding: 2px 7px;
   border-radius: 4px;
-  background: rgba(255,255,255,0.06);
+  background: color-mix(in srgb, var(--text-on-accent) 6%, transparent);
   color: var(--text-muted);
 }
-.itd-cost { color: var(--warning); background: rgba(252,190,36,0.12); }
+.itd-cost { color: var(--warning); background: color-mix(in srgb, var(--warning) 12%, transparent); }
 </style>

@@ -874,9 +874,9 @@ async function submit() {
 
 .iem-field--card {
   padding: 0;
-  border: 1px solid var(--border, rgba(140, 140, 154, 0.25));
+  border: 1px solid var(--border, color-mix(in srgb, var(--text-muted) 25%, transparent));
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.02);
+  background: color-mix(in srgb, var(--text-on-accent) 2%, transparent);
   gap: 0;
   overflow: hidden;
 }
@@ -896,7 +896,7 @@ async function submit() {
   text-align: left;
   transition: background 0.12s;
 }
-.iem-card-head:hover { background: rgba(255, 255, 255, 0.04); }
+.iem-card-head:hover { background: color-mix(in srgb, var(--text-on-accent) 4%, transparent); }
 
 .iem-card-head-name {
   font-size: 11px;
@@ -913,12 +913,12 @@ async function submit() {
 }
 .iem-card-head--open .iem-card-chevron {
   transform: rotate(180deg);
-  color: var(--accent, #a292ff);
+  color: var(--accent, var(--accent-soft));
 }
 
 .iem-card-body {
   padding: 12px 14px 14px;
-  border-top: 1px solid var(--border, rgba(140, 140, 154, 0.2));
+  border-top: 1px solid var(--border, color-mix(in srgb, var(--text-muted) 20%, transparent));
 }
 
 .iem-object--horizontal {
@@ -942,9 +942,9 @@ async function submit() {
   flex-direction: column;
   gap: 8px;
   padding: 10px 12px;
-  border: 1px solid var(--border, rgba(140, 140, 154, 0.25));
+  border: 1px solid var(--border, color-mix(in srgb, var(--text-muted) 25%, transparent));
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.025);
+  background: color-mix(in srgb, var(--text-on-accent) 2.5%, transparent);
 }
 .iem-block-name {
   font-weight: 600;
@@ -956,8 +956,8 @@ async function submit() {
 }
 .iem-block-move,
 .iem-block-remove {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: color-mix(in srgb, var(--text-on-accent) 5%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-on-accent) 10%, transparent);
   border-radius: 6px;
   color: var(--text-2);
   cursor: pointer;
@@ -966,9 +966,9 @@ async function submit() {
   padding: 3px 10px;
 }
 .iem-block-move:disabled { opacity: 0.3; cursor: not-allowed; }
-.iem-block-remove { color: #e05c5c; border-color: rgba(224, 92, 92, 0.3); }
-.iem-block-remove:hover { background: rgba(224, 92, 92, 0.15); }
-.iem-block-move:not(:disabled):hover { background: rgba(255, 255, 255, 0.1); color: var(--text-1); }
+.iem-block-remove { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 30%, transparent); }
+.iem-block-remove:hover { background: color-mix(in srgb, var(--danger) 15%, transparent); }
+.iem-block-move:not(:disabled):hover { background: color-mix(in srgb, var(--text-on-accent) 10%, transparent); color: var(--text-1); }
 
 .iem-field {
   display: flex;
@@ -988,8 +988,8 @@ async function submit() {
   width: 100%;
   box-sizing: border-box;
   height: 38px;
-  background: var(--input-bg);
-  border: 1px solid var(--input-border);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
   border-radius: 8px;
   color: var(--text-1);
   font: inherit;
@@ -1005,8 +1005,8 @@ async function submit() {
   box-sizing: border-box;
   min-height: 72px;
   resize: vertical;
-  background: var(--input-bg);
-  border: 1px solid var(--input-border);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
   border-radius: 8px;
   color: var(--text-1);
   font: inherit;
@@ -1018,8 +1018,8 @@ async function submit() {
 .iem-textarea:focus { border-color: var(--accent); }
 
 .iem-select {
-  background: var(--input-bg);
-  border: 1px solid var(--input-border);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
   border-radius: 8px;
   color: var(--text-1);
   font: inherit;
@@ -1051,7 +1051,7 @@ async function submit() {
   width: 36px;
   height: 20px;
   border-radius: 999px;
-  background: var(--surface-1);
+  background: var(--surface-raised);
   border: 1px solid var(--border-strong);
   transition: background 0.14s, border-color 0.14s;
   flex-shrink: 0;
@@ -1100,8 +1100,8 @@ async function submit() {
   min-width: 0;
   text-align: left;
   height: 38px;
-  background: var(--input-bg);
-  border: 1px solid var(--input-border);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
   border-radius: 8px;
   color: var(--text-1);
   font: inherit;
@@ -1119,7 +1119,7 @@ async function submit() {
   flex-shrink: 0;
   width: 28px;
   height: 28px;
-  border: 1px solid rgba(140, 140, 154, 0.35);
+  border: 1px solid color-mix(in srgb, var(--text-muted) 35%, transparent);
   border-radius: 6px;
   background: transparent;
   color: var(--text-muted);
@@ -1128,7 +1128,7 @@ async function submit() {
   cursor: pointer;
   transition: color 0.12s, border-color 0.12s;
 }
-.iem-item-ref-clear:hover { color: #e08080; border-color: rgba(224, 85, 85, 0.45); }
+.iem-item-ref-clear:hover { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 45%, transparent); }
 
 .iem-chip-row {
   display: flex;
@@ -1143,16 +1143,16 @@ async function submit() {
   gap: 4px;
   height: 28px;
   padding: 0 10px;
-  border: 1px solid rgba(162, 146, 255, 0.3);
+  border: 1px solid color-mix(in srgb, var(--accent-soft) 30%, transparent);
   border-radius: 6px;
-  background: rgba(162, 146, 255, 0.08);
-  color: #b0a4ff;
+  background: color-mix(in srgb, var(--accent-soft) 8%, transparent);
+  color: var(--accent-soft);
   font: inherit;
   font-size: 12px;
   cursor: pointer;
   transition: border-color 0.12s, background 0.12s;
 }
-.iem-chip:hover { border-color: rgba(224, 85, 85, 0.5); background: rgba(224, 85, 85, 0.08); color: #e08080; }
+.iem-chip:hover { border-color: color-mix(in srgb, var(--danger) 50%, transparent); background: color-mix(in srgb, var(--danger) 8%, transparent); color: var(--danger); }
 
 .iem-object,
 .iem-object-array {
@@ -1163,9 +1163,9 @@ async function submit() {
 
 .iem-object {
   padding: 12px;
-  border: 1px solid rgba(91, 101, 126, 0.38);
+  border: 1px solid color-mix(in srgb, var(--text-muted) 38%, transparent);
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.035);
+  background: color-mix(in srgb, var(--text-on-accent) 3.5%, transparent);
 }
 
 .iem-sub-field {
@@ -1185,9 +1185,9 @@ async function submit() {
   flex-direction: column;
   gap: 8px;
   padding: 10px;
-  border: 1px solid rgba(140, 140, 154, 0.18);
+  border: 1px solid color-mix(in srgb, var(--text-muted) 18%, transparent);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.025);
+  background: color-mix(in srgb, var(--text-on-accent) 2.5%, transparent);
 }
 
 .iem-object-row-fields {
@@ -1207,7 +1207,7 @@ async function submit() {
 .iem-row-add,
 .iem-row-remove {
   align-self: flex-start;
-  border: 1px dashed rgba(140, 140, 154, 0.35);
+  border: 1px dashed color-mix(in srgb, var(--text-muted) 35%, transparent);
   border-radius: 7px;
   background: transparent;
   color: var(--text-muted);
@@ -1216,8 +1216,8 @@ async function submit() {
   padding: 6px 10px;
   cursor: pointer;
 }
-.iem-row-add:hover { color: #c9c4ff; border-color: rgba(122, 106, 255, 0.55); }
-.iem-row-remove:hover { color: #e08080; border-color: rgba(224, 85, 85, 0.45); }
+.iem-row-add:hover { color: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 55%, transparent); }
+.iem-row-remove:hover { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 45%, transparent); }
 
 .iem-description :deep(.desc-editor) {
   min-height: 130px;
@@ -1233,7 +1233,7 @@ async function submit() {
 }
 
 .iem-cancel {
-  background: rgba(255, 255, 255, 0.06);
+  background: color-mix(in srgb, var(--text-on-accent) 6%, transparent);
   color: var(--text-muted);
   border: none;
   border-radius: 8px;
@@ -1246,10 +1246,10 @@ async function submit() {
 .iem-cancel:hover { color: var(--text-2); }
 
 .iem-submit {
-  background: rgba(122, 106, 255, 0.18);
-  border: 1px solid rgba(122, 106, 255, 0.4);
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
   border-radius: 8px;
-  color: #a89eff;
+  color: var(--accent-soft);
   font: inherit;
   font-size: 13px;
   font-weight: 600;
@@ -1257,6 +1257,6 @@ async function submit() {
   cursor: pointer;
   transition: background 0.12s, opacity 0.12s;
 }
-.iem-submit:hover:not(:disabled) { background: rgba(122, 106, 255, 0.28); }
+.iem-submit:hover:not(:disabled) { background: color-mix(in srgb, var(--accent) 28%, transparent); }
 .iem-submit:disabled { opacity: 0.35; cursor: not-allowed; }
 </style>

@@ -168,7 +168,7 @@ function fmtTime(sec) {
   font-weight: 600;
   letter-spacing: 0;
   font-size: 11px;
-  background: rgba(255,255,255,0.05);
+  background: color-mix(in srgb, var(--text-on-accent) 5%, transparent);
   border-radius: 6px;
   padding: 2px 7px;
 }
@@ -176,7 +176,7 @@ function fmtTime(sec) {
   margin-left: auto;
   background: none;
   border: none;
-  color: var(--accent, var(--accent));
+  color: var(--accent);
   font: inherit;
   font-size: 11px;
   font-weight: 600;
@@ -198,11 +198,11 @@ function fmtTime(sec) {
 .now-seek {
   height: 6px;
   border-radius: var(--r-pill);
-  background: color-mix(in srgb, #fff 6%, transparent);
+  background: color-mix(in srgb, var(--text-on-accent) 6%, transparent);
   overflow: hidden;
 }
 .now-seek--clickable { cursor: pointer; }
-.now-seek--clickable:hover { background: color-mix(in srgb, #fff 12%, transparent); }
+.now-seek--clickable:hover { background: color-mix(in srgb, var(--text-on-accent) 12%, transparent); }
 .now-seek-fill {
   height: 100%;
   background: var(--accent);
@@ -220,17 +220,17 @@ function fmtTime(sec) {
   flex-shrink: 0;
   border-radius: 50%;
   border: none;
-  background: var(--accent, var(--accent));
-  color: #fff;
+  background: var(--accent);
+  color: var(--text-on-accent);
   display: flex; align-items: center; justify-content: center;
   cursor: pointer;
   transition: background 0.15s, opacity 0.15s;
 }
-.now-play-btn:hover:not(:disabled) { background: var(--accent-dim); }
+.now-play-btn:hover:not(:disabled) { background: var(--accent-hover); }
 .now-play-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
 .now-text { min-width: 0; flex: 1; }
-.now-status { display: flex; align-items: center; gap: 5px; font-size: 9px; letter-spacing: 0.1em; font-weight: 700; color: var(--accent, var(--accent)); }
+.now-status { display: flex; align-items: center; gap: 5px; font-size: 9px; letter-spacing: 0.1em; font-weight: 700; color: var(--accent); }
 .now-status--dim { color: var(--text-muted); }
 .now-status-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
 .now-status-label { line-height: 1; }
@@ -254,7 +254,7 @@ function fmtTime(sec) {
 .now-loop-btn {
   width: 30px; height: 30px;
   flex-shrink: 0;
-  border: 1px solid var(--input-border);
+  border: 1px solid var(--border-strong);
   border-radius: 7px;
   background: none;
   color: var(--text-2);
@@ -266,19 +266,19 @@ function fmtTime(sec) {
 .now-loop-btn.active {
   background: var(--accent);
   border-color: var(--accent);
-  color: #fff;
+  color: var(--text-on-accent);
 }
 
 .next-card {
   display: flex; align-items: center; gap: 10px;
   padding: 8px 12px;
-  border: 1px dashed var(--input-border);
+  border: 1px dashed var(--border-strong);
   border-radius: 12px;
 }
 .next-play-btn {
   width: 26px; height: 26px;
   border-radius: 50%;
-  border: 1px solid var(--input-border);
+  border: 1px solid var(--border-strong);
   background: none;
   color: var(--text-2);
   display: flex; align-items: center; justify-content: center;

@@ -92,8 +92,8 @@ function pick(value) {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  background: var(--control-bg, var(--bg));
-  border: 1px solid var(--input-border);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
   border-radius: 8px;
   color: var(--text-1);
   font: inherit;
@@ -104,7 +104,7 @@ function pick(value) {
   transition: border-color 0.15s;
 }
 
-.vs-button:focus-visible { border-color: var(--input-focus); outline: none; }
+.vs-button:focus-visible { border-color: var(--accent); outline: none; }
 
 .vs-button.empty {
   color: var(--text-muted);
@@ -132,7 +132,7 @@ function pick(value) {
   max-height: 220px;
   overflow-y: auto;
   padding: 5px;
-  background: var(--popup-bg);
+  background: var(--popover-bg);
   border: 1px solid var(--border-strong);
   border-radius: var(--r-md);
   box-shadow: var(--shadow-lg);
@@ -144,8 +144,8 @@ function pick(value) {
   box-sizing: border-box;
   height: 34px;
   margin-bottom: 4px;
-  background: var(--control-bg, var(--bg));
-  border: 1px solid var(--input-border);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
   border-radius: 8px;
   color: var(--text-1);
   font: inherit;
@@ -170,7 +170,7 @@ function pick(value) {
 
 .vs-option:hover {
   color: var(--text-1);
-  background: var(--surface-1);
+  background: var(--surface-raised);
 }
 
 .vs-empty {

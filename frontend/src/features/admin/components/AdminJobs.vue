@@ -252,8 +252,8 @@ onBeforeUnmount(() => {
 }
 
 .job-card {
-  background: var(--surface-2, #1c1c2c);
-  border: 1px solid var(--input-border);
+  background: var(--surface-active, var(--popover-bg));
+  border: 1px solid var(--border-strong);
   border-radius: 10px;
   padding: 14px 16px;
 }
@@ -282,7 +282,7 @@ onBeforeUnmount(() => {
   background: var(--accent);
   border: none;
   border-radius: 6px;
-  color: #fff;
+  color: var(--text-on-accent);
   cursor: pointer;
   font: inherit;
   font-size: 12px;
@@ -290,7 +290,7 @@ onBeforeUnmount(() => {
 }
 
 .btn-primary:not(:disabled):hover {
-  background: #8d6fff;
+  background: var(--accent);
 }
 
 .btn-primary:disabled {
@@ -312,12 +312,12 @@ onBeforeUnmount(() => {
   text-transform: uppercase;
   letter-spacing: 0.06em;
   padding: 8px 12px;
-  border-bottom: 1px solid #2a2a2e;
+  border-bottom: 1px solid var(--surface-raised);
 }
 
 .data-table td {
   padding: 10px 12px;
-  border-bottom: 1px solid #222226;
+  border-bottom: 1px solid var(--surface);
   vertical-align: top;
   color: var(--text-1);
 }
@@ -360,23 +360,23 @@ onBeforeUnmount(() => {
 }
 
 .status-running {
-  background: rgba(124, 92, 255, 0.18);
-  color: #b9a8ff;
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  color: var(--accent-soft);
 }
 
 .status-success {
-  background: rgba(76, 175, 80, 0.18);
-  color: #7fd884;
+  background: color-mix(in srgb, var(--success) 18%, transparent);
+  color: var(--success);
 }
 
 .status-failed {
-  background: rgba(224, 92, 92, 0.18);
-  color: #e05c5c;
+  background: color-mix(in srgb, var(--danger) 18%, transparent);
+  color: var(--danger);
 }
 
 .status-cancelled {
-  background: rgba(160, 160, 160, 0.18);
-  color: #b0b0b0;
+  background: color-mix(in srgb, var(--text-2) 18%, transparent);
+  color: var(--text-2);
 }
 
 .progress-line {
@@ -388,7 +388,7 @@ onBeforeUnmount(() => {
 .progress-bar {
   flex: 1;
   height: 6px;
-  background: #2a2a2e;
+  background: var(--surface-raised);
   border-radius: 999px;
   overflow: hidden;
 }
@@ -414,10 +414,10 @@ onBeforeUnmount(() => {
 }
 
 .btn-danger-sm {
-  background: rgba(224, 92, 92, 0.15);
-  border: 1px solid rgba(224, 92, 92, 0.3);
+  background: color-mix(in srgb, var(--danger) 15%, transparent);
+  border: 1px solid color-mix(in srgb, var(--danger) 30%, transparent);
   border-radius: 6px;
-  color: #e05c5c;
+  color: var(--danger);
   cursor: pointer;
   font: inherit;
   font-size: 11px;
@@ -426,7 +426,7 @@ onBeforeUnmount(() => {
 }
 
 .btn-danger-sm:hover {
-  background: rgba(224, 92, 92, 0.25);
+  background: color-mix(in srgb, var(--danger) 25%, transparent);
 }
 
 .btn-link {
@@ -444,7 +444,7 @@ onBeforeUnmount(() => {
 }
 
 .details-row td {
-  background: #18181f;
+  background: var(--bg);
   padding: 12px 16px;
 }
 
@@ -461,7 +461,7 @@ onBeforeUnmount(() => {
 }
 
 .details-block.error .details-label {
-  color: #e05c5c;
+  color: var(--danger);
 }
 
 .details-pre {

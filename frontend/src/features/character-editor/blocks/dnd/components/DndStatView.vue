@@ -138,7 +138,7 @@ function hideTooltip() { tooltip.value.visible = false }
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  background: var(--surface-1);
+  background: var(--surface-raised);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 3px 8px 3px 6px;
@@ -203,7 +203,7 @@ function hideTooltip() { tooltip.value.visible = false }
 .skill-skeleton-bonus {
   display: block;
   border-radius: 999px;
-  background: linear-gradient(90deg, var(--block-bg), var(--surface-1), var(--block-bg));
+  background: linear-gradient(90deg, var(--surface), var(--surface-raised), var(--surface));
   background-size: 180% 100%;
   animation: skill-loading 1.1s ease-in-out infinite;
 }
@@ -235,7 +235,7 @@ function hideTooltip() { tooltip.value.visible = false }
 }
 
 .skill-chip {
-  background: var(--surface-1);
+  background: var(--surface-raised);
   border: 1px solid var(--border);
   border-radius: 7px;
   padding: 2px 7px 3px;
@@ -251,7 +251,7 @@ function hideTooltip() { tooltip.value.visible = false }
 }
 .skill-chip-active { color: var(--text-1); border-color: color-mix(in srgb, var(--sc, var(--accent)) 50%, transparent); }
 .skill-chip-master { border-width: 2px; border-color: color-mix(in srgb, var(--sc, var(--accent)) 75%, transparent); }
-@media (hover: hover) { .skill-chip:hover { border-color: var(--accent); background: var(--surface-2); } }
+@media (hover: hover) { .skill-chip:hover { border-color: var(--accent); background: var(--surface-active); } }
 
 /* ── Mobile variant ── */
 .stat-view--mobile .skill-item { min-height: 32px; padding: 2px 4px; border-radius: 10px; gap: 8px; }

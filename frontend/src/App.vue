@@ -35,54 +35,12 @@ onMounted(() => {
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&display=swap');
 
-:root {
-  --header-h: 54px;
-  --content-max: 1400px;   /* единая ширина контента страниц/тулбара/раскрытия */
-  --bg-deep:    #121214;   /* самый глубокий фон приложения */
-  --bg:         #1b1b1d;   /* основной графитовый фон */
-  --block-bg:   #242427;   /* карточки и крупные блоки */
-  --surface-1:  #2c2c30;   /* контролы и приподнятые поверхности */
-  --surface-2:  #35353b;   /* hover / active поверхности */
-  --surface-hover: #313136;
-  --surface-active: #393940;
-  --popup-bg:   #202024;   /* дропдауны, поповеры и тултипы */
-  --input-bg:   #1f1f22;   /* поля форм в модалках */
-  --input-border: #38383f; /* рамка полей форм */
-  --input-focus: var(--accent);
-  --border:     rgba(255,255,255,0.08);  /* тонкие разделители */
-  --border-strong: rgba(255,255,255,0.16);
-  --text-1:     #ececed;   /* основной текст */
-  --text-2:     #a6a6ab;   /* вторичный текст */
-  --text-muted: #8a8a92;   /* подписи и плейсхолдеры, AA на карточках */
-  --text-faint: #73737b;   /* только декоративный и disabled-текст */
-  --text-on-accent: #ffffff;
-  --accent:     #7c5ce2;   /* единый продуктовый акцент, AA с белым текстом */
-  --accent-dim: #6847c7;   /* pressed / насыщенный акцент */
-  --accent-soft: #b9a8ff;  /* текст поверх спокойных акцентных подложек */
-  --accent-2:     var(--accent);     /* legacy: primary CTA теперь тоже фиолетовый */
-  --accent-2-dim: var(--accent-dim);
-  --danger:     #e05555;   /* кнопки удалить, ошибки, hp-низкий */
-  --danger-dim: #c95a52;   /* приглушённый danger (death-save пипсы, graveyard) */
-  --success:    #4caf6e;   /* подтверждения, положительные индикаторы */
-  --warning:    #fcbe24;   /* предупреждения, золото */
-  --shadow-lg:  0 18px 48px rgba(0,0,0,0.42), 0 0 0 1px rgba(255,255,255,0.05);
-  --r-xs:       4px;
-  --r-sm:       6px;
-  --r-md:       10px;
-  --r-lg:       14px;
-  --r-pill:     999px;
-  --font-ui: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
-  --font-display: 'Cormorant Garamond', 'Times New Roman', serif;
-  --bg-header:  #18181b;
-  --color-attack: #aa98ff;
-}
-
 html, body {
   padding: 0;
   margin: 0;
 }
 body {
-  background-color: var(--bg-deep);
+  background-color: var(--bg);
   color: var(--text-1);
   color-scheme: dark;
   overflow-x: clip;
@@ -101,7 +59,7 @@ body {
 }
 
 :where(button, a, input, textarea, select, [tabindex]):focus-visible {
-  outline: 2px solid color-mix(in srgb, var(--accent) 76%, white);
+  outline: 2px solid color-mix(in srgb, var(--accent) 76%, var(--text-on-accent));
   outline-offset: 2px;
 }
 
@@ -153,7 +111,7 @@ body {
   gap: 4px;
   min-height: 28px;
   max-width: 100%;
-  background: color-mix(in srgb, var(--surface-1) 38%, var(--bg-deep));
+  background: color-mix(in srgb, var(--surface-raised) 38%, var(--bg));
   border: 1px solid color-mix(in srgb, var(--border-strong) 58%, transparent);
   border-radius: 7px;
   padding: 4px 11px;
@@ -189,7 +147,7 @@ body {
 }
 
 .sheet-tag-chip:hover .sheet-tag-remove {
-  color: #e05555;
+  color: var(--danger);
 }
 
 /* Unified title style for the small header at the top of every block tile. */
@@ -205,7 +163,7 @@ body {
 /* Anchored dropdown menu base — extend with own .position + .min-width */
 .app-dropdown {
   position: absolute;
-  background: var(--popup-bg);
+  background: var(--popover-bg);
   border: 1px solid var(--border-strong);
   border-radius: var(--r-md);
   box-shadow: var(--shadow-lg);
@@ -218,15 +176,11 @@ body {
 /* ─── Кастомный скроллбар ──────────────────────── */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--surface-2); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--surface-active); }
+::-webkit-scrollbar-thumb { background: var(--surface-active); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: color-mix(in srgb, var(--text-1) 28%, var(--surface-active)); }
 
 p { margin: 0 0 10px; }
 p:last-child { margin-bottom: 0; }
-
-@media (max-width: 640px) {
-  :root { --header-h: 50px; }
-}
 
 @media (max-width: 640px) {
   input.is-input,

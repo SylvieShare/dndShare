@@ -185,7 +185,7 @@ onBeforeUnmount(() => {
     gap: 6px;
     border: 1px solid var(--border-strong);
     border-radius: 7px;
-    background: var(--popup-bg);
+    background: var(--popover-bg);
     color: var(--text-1);
     font: inherit;
     font-size: 13px;
@@ -222,7 +222,7 @@ onBeforeUnmount(() => {
     padding: 6px;
     border: 1px solid var(--border-strong);
     border-radius: 10px;
-    background: var(--popup-bg);
+    background: var(--popover-bg);
     box-shadow: var(--shadow-lg);
   }
 
@@ -237,7 +237,7 @@ onBeforeUnmount(() => {
 
   .mobile-nav-item.active {
     color: var(--text-1);
-    background: var(--surface-1);
+    background: var(--surface-raised);
   }
 }
 </style>

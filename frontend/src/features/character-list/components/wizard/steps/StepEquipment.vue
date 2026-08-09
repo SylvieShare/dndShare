@@ -62,7 +62,7 @@ const bgEquip = computed(() => stripHtml(state.background?.data?.equipment))
 .step { display: flex; flex-direction: column; gap: 12px; }
 .hint { font-size: 12px; color: var(--text-muted); margin: 0; }
 .refs { display: flex; flex-direction: column; gap: 8px; }
-.ref { background: var(--block-bg); border-radius: var(--r-md); padding: 10px 13px; }
+.ref { background: var(--surface); border-radius: var(--r-md); padding: 10px 13px; }
 .ref-k { display: block; font-size: 10px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--accent); margin-bottom: 3px; }
 .ref-v { font-size: 12px; color: var(--text-2); line-height: 1.4; }
 
@@ -71,14 +71,14 @@ const bgEquip = computed(() => stripHtml(state.background?.data?.equipment))
   display: flex; align-items: center; gap: 10px;
   padding: 9px 4px;
 }
-.row + .row { border-top: 1px solid color-mix(in srgb, #fff 7%, transparent); }
+.row + .row { border-top: 1px solid color-mix(in srgb, var(--text-on-accent) 7%, transparent); }
 .row-name { flex: 1; font-size: 13px; color: var(--text-1); }
 .qty { display: flex; align-items: center; gap: 5px; }
 .q-btn {
-  width: 24px; height: 24px; border-radius: 6px; border: 1px solid var(--input-border);
-  background: var(--bg); color: var(--text-1); cursor: pointer; font-size: 15px; line-height: 1;
+  width: 24px; height: 24px; border-radius: 6px; border: 1px solid var(--border-strong);
+  background: var(--surface-raised); color: var(--text-1); cursor: pointer; font-size: 15px; line-height: 1;
 }
-.q-btn:hover { background: var(--surface-1); }
+.q-btn:hover { background: var(--surface-raised); }
 .q-val { min-width: 22px; text-align: center; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--text-1); }
 .row-x {
   display: flex; align-items: center; justify-content: center;
@@ -91,10 +91,10 @@ const bgEquip = computed(() => stripHtml(state.background?.data?.equipment))
 .add {
   align-self: flex-start;
   display: inline-flex; align-items: center; gap: 7px;
-  background: var(--block-bg); border: none; border-radius: var(--r-md);
+  background: var(--surface); border: none; border-radius: var(--r-md);
   color: var(--accent); font: inherit; font-size: 13px; font-weight: 600;
   padding: 9px 15px; cursor: pointer; transition: background 0.15s;
 }
-.add:hover { background: color-mix(in srgb, var(--accent) 14%, var(--block-bg)); }
+.add:hover { background: color-mix(in srgb, var(--accent) 14%, var(--surface)); }
 .add svg { width: 16px; height: 16px; }
 </style>

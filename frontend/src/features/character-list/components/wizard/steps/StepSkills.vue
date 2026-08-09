@@ -43,19 +43,19 @@ function modClass(m) { return m > 0 ? 'pos' : m < 0 ? 'neg' : '' }
 .list { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 6px; }
 .skill {
   display: flex; align-items: center; gap: 10px;
-  background: var(--block-bg); border-radius: var(--r-md);
+  background: var(--surface); border-radius: var(--r-md);
   padding: 9px 12px; cursor: pointer; transition: background 0.15s;
 }
-.skill:hover { background: color-mix(in srgb, var(--accent) 12%, var(--block-bg)); }
-.skill.on { background: color-mix(in srgb, var(--accent) 16%, var(--block-bg)); }
+.skill:hover { background: color-mix(in srgb, var(--accent) 12%, var(--surface)); }
+.skill.on { background: color-mix(in srgb, var(--accent) 16%, var(--surface)); }
 .skill.off { opacity: 0.45; cursor: default; }
-.skill.off:hover { background: var(--block-bg); }
+.skill.off:hover { background: var(--surface); }
 .box {
   flex-shrink: 0; width: 18px; height: 18px; border-radius: 5px;
-  background: var(--bg); display: flex; align-items: center; justify-content: center;
+  background: var(--surface-raised); display: flex; align-items: center; justify-content: center;
 }
 .skill.on .box { background: var(--accent); }
-.box svg { width: 12px; height: 12px; color: #fff; }
+.box svg { width: 12px; height: 12px; color: var(--text-on-accent); }
 .sk-name { flex: 1; font-size: 13px; color: var(--text-1); }
 .sk-abil { font-size: 10px; letter-spacing: 0.04em; color: var(--text-muted); }
 .sk-mod { font-size: 12px; font-weight: 600; color: var(--text-2); font-variant-numeric: tabular-nums; min-width: 24px; text-align: right; }

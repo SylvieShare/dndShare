@@ -48,9 +48,8 @@ const options = [
   padding: 28px;
   border: 1px solid var(--border-strong);
   border-radius: 14px;
-  background: var(--block-bg);
+  background: var(--bg);
   box-shadow: var(--shadow-lg);
-  --control-bg: var(--bg-deep);
 }
 
 .fixture-card h1 {

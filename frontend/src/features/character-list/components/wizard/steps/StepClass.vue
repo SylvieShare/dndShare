@@ -87,7 +87,7 @@ function afterClassDetailsEnter() {
 .step-muted { font-size: 13px; color: var(--text-muted); margin: 0; }
 .step-desc {
   font-size: 13px; color: var(--text-2); line-height: 1.5;
-  background: var(--block-bg); border-radius: var(--r-md);
+  background: var(--surface); border-radius: var(--r-md);
   border-left: 3px solid color-mix(in srgb, var(--accent) 55%, transparent);
   padding: 11px 14px;
 }

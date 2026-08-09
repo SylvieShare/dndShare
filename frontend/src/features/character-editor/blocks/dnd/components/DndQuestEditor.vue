@@ -96,12 +96,12 @@ const statusOptions = QUEST_STATUSES.map(s => ({ value: s.value, label: s.label 
   border-radius: 8px;
   transition: color 0.12s, background 0.12s;
 }
-.dqe-cancel:hover { color: var(--text-1); background: rgba(255, 255, 255, 0.06); }
+.dqe-cancel:hover { color: var(--text-1); background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); }
 
 .dqe-done {
   background: var(--accent);
   border: none;
-  color: #fff;
+  color: var(--text-on-accent);
   font: inherit;
   font-size: 13px;
   font-weight: 600;
@@ -110,5 +110,5 @@ const statusOptions = QUEST_STATUSES.map(s => ({ value: s.value, label: s.label 
   border-radius: 8px;
   transition: background 0.12s;
 }
-.dqe-done:hover { background: var(--accent-dim); }
+.dqe-done:hover { background: var(--accent-hover); }
 </style>

@@ -244,8 +244,8 @@ onMounted(resetForm)
 }
 
 .form-select {
-  background: var(--input-bg);
-  border: 1px solid var(--input-border);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
   border-radius: 8px;
   color: var(--text-1);
   font: inherit;
@@ -255,7 +255,7 @@ onMounted(resetForm)
   transition: border-color 0.15s;
 }
 
-.form-select:focus { border-color: var(--input-focus); }
+.form-select:focus { border-color: var(--accent); }
 
 .suggest-field {
   position: relative;

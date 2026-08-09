@@ -144,11 +144,11 @@ function stopEdit() {
 .input-outlined {
   padding-left: 8px;
   padding-right: 8px;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.15), 0 0 8px rgba(255, 255, 255, 0.05);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--text-on-accent) 15%, transparent), 0 0 8px color-mix(in srgb, var(--text-on-accent) 5%, transparent);
 }
 
 .input-outlined.input-empty {
-  box-shadow: 0 0 0 1px rgba(220, 80, 80, 0.4), 0 0 8px rgba(220, 80, 80, 0.2);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--danger) 40%, transparent), 0 0 8px color-mix(in srgb, var(--danger) 20%, transparent);
 }
 
 .field-edit-btn {
@@ -169,5 +169,5 @@ function stopEdit() {
   .input-text-row:hover .field-edit-btn,
   .input-text-wrap:hover .field-edit-btn { opacity: 1; }
 }
-.field-edit-btn:hover { color: var(--accent); background: rgba(255, 255, 255, 0.06); }
+.field-edit-btn:hover { color: var(--accent); background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); }
 </style>

@@ -118,15 +118,15 @@ function fmtTime(sec) {
   border-radius: 10px;
   transition: border-color 0.15s, background 0.15s;
 }
-.music-row:hover { border-color: #1e1e2c; }
+.music-row:hover { border-color: var(--popover-bg); }
 .music-row--playing {
   background: color-mix(in srgb, var(--accent) 7%, transparent);
-  border-color: var(--accent, var(--accent));
+  border-color: var(--accent);
 }
-.music-row--current { border-color: var(--input-border); }
+.music-row--current { border-color: var(--border-strong); }
 .music-row--placeholder {
   background: transparent !important;
-  border: 1px dashed var(--accent, var(--accent)) !important;
+  border: 1px dashed var(--accent) !important;
 }
 .music-row--placeholder > * { visibility: hidden; }
 
@@ -140,7 +140,7 @@ function fmtTime(sec) {
   gap: 2px;
   cursor: grab;
   align-content: center;
-  color: #3a3a55;
+  color: var(--text-muted);
   padding: 0 2px;
   margin-right: -6px;
 }
@@ -155,19 +155,19 @@ function fmtTime(sec) {
 .music-row-play {
   width: 28px; height: 28px; flex-shrink: 0;
   border-radius: 50%;
-  border: 1px solid #3a3a55;
+  border: 1px solid var(--surface-active);
   background: none;
   color: var(--text-2);
   display: flex; align-items: center; justify-content: center;
   cursor: pointer;
 }
 .music-row--playing .music-row-play {
-  background: var(--accent, var(--accent));
-  border-color: var(--accent, var(--accent));
-  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--text-on-accent);
 }
-.music-row-play:hover { color: var(--accent, var(--accent)); border-color: var(--accent, var(--accent)); }
-.music-row--playing .music-row-play:hover { color: #fff; }
+.music-row-play:hover { color: var(--accent); border-color: var(--accent); }
+.music-row--playing .music-row-play:hover { color: var(--text-on-accent); }
 
 .music-row-main { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; }
 .music-row-title {
@@ -182,7 +182,7 @@ function fmtTime(sec) {
   flex-shrink: 0;
 }
 .music-row-state--playing { color: var(--accent); background: color-mix(in srgb, var(--accent) 18%, transparent); }
-.music-row-state--queued { color: var(--text-2); border: 1px dashed #3a3a55; padding: 1px 6px; }
+.music-row-state--queued { color: var(--text-2); border: 1px dashed var(--surface-active); padding: 1px 6px; }
 
 .music-row-tags { display: flex; gap: 6px; flex-wrap: wrap; flex-shrink: 0; max-width: 240px; }
 .music-row-tag {
@@ -203,7 +203,7 @@ function fmtTime(sec) {
   font-size: 10px;
   color: var(--text-2);
   background: none;
-  border: 1px solid #3a3a55;
+  border: 1px solid var(--surface-active);
   border-radius: 6px;
   padding: 4px 10px;
   cursor: pointer;
@@ -212,8 +212,8 @@ function fmtTime(sec) {
   letter-spacing: 0.05em;
   transition: border-color 0.15s, background 0.15s, color 0.15s;
 }
-.music-row-queue:hover:not(:disabled) { border-color: var(--accent, var(--accent)); color: var(--accent, var(--accent)); }
-.music-row-queue.active { background: var(--accent, var(--accent)); color: #fff; border-color: var(--accent, var(--accent)); }
+.music-row-queue:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+.music-row-queue.active { background: var(--accent); color: var(--text-on-accent); border-color: var(--accent); }
 .music-row-queue:disabled { opacity: 0.3; cursor: not-allowed; }
 
 .music-row-menu-wrap { position: relative; }
@@ -225,13 +225,13 @@ function fmtTime(sec) {
 .music-row-menu:hover { color: var(--text-2); }
 .music-row-menu-pop {
   position: absolute; right: 0; top: calc(100% + 4px);
-  background: #1c1c2c;
-  border: 1px solid var(--input-border);
+  background: var(--popover-bg);
+  border: 1px solid var(--border-strong);
   border-radius: 8px;
   z-index: 50;
   min-width: 180px;
   padding: 4px;
-  box-shadow: 0 6px 24px rgba(0,0,0,0.55);
+  box-shadow: 0 6px 24px var(--scrim);
 }
 .music-row-menu-item {
   display: block;
@@ -245,7 +245,7 @@ function fmtTime(sec) {
   border-radius: 5px;
   cursor: pointer;
 }
-.music-row-menu-item:hover { background: #242438; }
-.music-row-menu-item--danger { color: #e85c5c; }
-.music-row-menu-item--danger:hover { background: rgba(232, 92, 92, 0.1); }
+.music-row-menu-item:hover { background: var(--surface-raised); }
+.music-row-menu-item--danger { color: var(--danger); }
+.music-row-menu-item--danger:hover { background: color-mix(in srgb, var(--danger) 10%, transparent); }
 </style>

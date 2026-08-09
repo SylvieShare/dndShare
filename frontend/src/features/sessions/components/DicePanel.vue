@@ -99,7 +99,7 @@ function rollDie(sides) {
 }
 
 .dice-panel-die {
-  background: var(--surface-1);
+  background: var(--surface-raised);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 10px 0;
@@ -113,8 +113,8 @@ function rollDie(sides) {
 }
 .dice-panel-die:hover {
   border-color: var(--accent);
-  color: #fff;
-  background: var(--surface-2);
+  color: var(--text-on-accent);
+  background: var(--surface-active);
 }
 .dice-panel-die:active { transform: scale(0.96); }
 </style>

@@ -78,7 +78,7 @@ function onNameClick() {
 .w-card {
   position: relative;
   padding-left: 16px;
-  border-bottom: 1px solid rgba(140, 140, 154, 0.18);
+  border-bottom: 1px solid color-mix(in srgb, var(--text-muted) 18%, transparent);
   transition: background 0.12s;
 }
 .w-card:last-child { border-bottom: none; }

@@ -49,7 +49,7 @@ function closeMenu() {
 
 .user-trigger:hover,
 .user-trigger.open {
-  background: var(--surface-1);
+  background: var(--surface-raised);
 }
 
 .user-avatar {
@@ -57,7 +57,7 @@ function closeMenu() {
   height: 32px;
   border-radius: 50%;
   background: var(--accent);
-  color: #fff;
+  color: var(--text-on-accent);
   font-size: 14px;
   font-weight: 600;
   display: flex;
@@ -96,7 +96,7 @@ function closeMenu() {
   padding: 6px;
   border: 1px solid var(--border-strong);
   border-radius: 10px;
-  background: var(--popup-bg);
+  background: var(--popover-bg);
   box-shadow: var(--shadow-lg);
 }
 
@@ -114,8 +114,8 @@ function closeMenu() {
 }
 
 .user-menu-item.logout:hover {
-  color: #f87171;
-  background: #2a1515;
+  color: var(--danger);
+  background: var(--bg);
 }
 
 @media (max-width: 640px) {

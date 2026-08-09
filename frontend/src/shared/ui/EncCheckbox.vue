@@ -38,7 +38,7 @@ function onClick() {
   margin: -9px;
   background: transparent;
   border: none;
-  color: #fff;
+  color: var(--text-on-accent);
   cursor: pointer;
   box-sizing: content-box;
   width: 18px;
@@ -53,8 +53,8 @@ function onClick() {
   transform: translate(-50%, -50%);
   width: 18px;
   height: 18px;
-  background: rgba(255,255,255,0.04);
-  border: 1.5px solid rgba(255,255,255,0.18);
+  background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
+  border: 1.5px solid color-mix(in srgb, var(--text-on-accent) 18%, transparent);
   border-radius: 5px;
   transition: background 0.12s, border-color 0.12s, box-shadow 0.12s;
 }
@@ -64,12 +64,12 @@ function onClick() {
 .enc-cb-tick { position: relative; z-index: 1; }
 
 .enc-cb--checked::before {
-  background: var(--accent, var(--accent));
-  border-color: var(--accent, var(--accent));
+  background: var(--accent);
+  border-color: var(--accent);
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 18%, transparent);
 }
-.enc-cb--checked:hover::before { background: #6a4aee; border-color: #6a4aee; }
+.enc-cb--checked:hover::before { background: var(--accent); border-color: var(--accent); }
 
 .enc-cb--disabled { opacity: 0.35; cursor: not-allowed; }
-.enc-cb--disabled:hover::before { border-color: rgba(255,255,255,0.18); background: rgba(255,255,255,0.04); }
+.enc-cb--disabled:hover::before { border-color: color-mix(in srgb, var(--text-on-accent) 18%, transparent); background: color-mix(in srgb, var(--text-on-accent) 4%, transparent); }
 </style>

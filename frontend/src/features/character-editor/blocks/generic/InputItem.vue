@@ -95,13 +95,13 @@ function onPickChild(id) {
   max-width: 260px;
   font-size: 18px;
   background: transparent;
-  border: 1px solid var(--input-border);
+  border: 1px solid var(--border-strong);
   border-radius: 8px;
   color: var(--text-1);
   padding: 4px 8px;
   outline: none;
 }
 .ii-child { font-size: 15px; }
-.ii-select:focus { border-color: var(--input-focus); }
+.ii-select:focus { border-color: var(--accent); }
 .ii-name { font-size: 18px; color: var(--text-1); }
 </style>

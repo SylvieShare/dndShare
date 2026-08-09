@@ -548,7 +548,7 @@ onBeforeUnmount(() => {
   .mobile-sticky-header {
     position: sticky;
     z-index: 19;
-    background: var(--bg-header);
+    background: var(--bg);
   }
 
   .common-mobile-strip {
@@ -608,7 +608,7 @@ onBeforeUnmount(() => {
     padding: 6px 8px 8px;
     overflow-x: auto;
     border-bottom: 1px solid var(--border);
-    background: var(--bg-header);
+    background: var(--bg);
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     min-height: 44px;
@@ -688,7 +688,7 @@ onBeforeUnmount(() => {
 
 .sk-block {
   border-radius: 12px;
-  background: var(--block-bg);
+  background: var(--surface);
   box-shadow: inset 0 0 0 1px var(--border);
   animation: sk-pulse 1.4s ease-in-out infinite;
 }

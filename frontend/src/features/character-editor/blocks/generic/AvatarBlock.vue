@@ -128,7 +128,7 @@ async function upload(file) {
 <style scoped>
 .avatar {
   position: relative;
-  background-color: color-mix(in srgb, var(--accent) 18%, var(--block-bg));
+  background-color: color-mix(in srgb, var(--accent) 18%, var(--surface));
   border-radius: 16px;
   flex-shrink: 0;
   overflow: hidden;
@@ -191,8 +191,8 @@ async function upload(file) {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.5);
-  color: rgba(255, 255, 255, 0.8);
+  background: color-mix(in srgb, var(--scrim) 81%, transparent);
+  color: color-mix(in srgb, var(--text-on-accent) 80%, transparent);
   opacity: 0;
   transition: opacity 0.18s ease;
   border-radius: 16px;

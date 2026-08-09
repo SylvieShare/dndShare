@@ -51,20 +51,20 @@ function toggle(i) {
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  border: 2px solid #484848;
+  border: 2px solid var(--surface-active);
   background: transparent;
   transition: background 0.12s, border-color 0.12s;
   flex-shrink: 0;
 }
 
 .dot.filled {
-  background: #c8a04a;
-  border-color: #c8a04a;
+  background: var(--warning);
+  border-color: var(--warning);
 }
 
 .dot.clickable { cursor: pointer; }
 
 .dot.clickable:hover {
-  border-color: #c8a04a;
+  border-color: var(--warning);
 }
 </style>

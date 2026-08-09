@@ -53,9 +53,9 @@ const ALIGNMENTS = [
 .fld { display: flex; flex-direction: column; gap: 5px; }
 .lbl { font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); font-weight: 650; }
 .inp {
-  background: var(--bg); border: 1px solid var(--input-border); border-radius: 8px;
+  background: var(--surface-raised); border: 1px solid var(--border-strong); border-radius: 8px;
   color: var(--text-1); font: inherit; font-size: 13px; padding: 8px 10px; outline: none; box-sizing: border-box; width: 100%;
 }
-.inp:focus { border-color: var(--input-focus); }
+.inp:focus { border-color: var(--accent); }
 .ta { resize: vertical; line-height: 1.4; }
 </style>

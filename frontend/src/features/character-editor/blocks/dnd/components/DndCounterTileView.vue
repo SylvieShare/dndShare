@@ -94,7 +94,7 @@ const fillPct = computed(() => {
   cursor: pointer;
   transition: background 0.12s, color 0.12s;
 }
-.dctv-step:hover { background: rgba(255, 255, 255, 0.09); color: var(--text-1); }
+.dctv-step:hover { background: color-mix(in srgb, var(--text-on-accent) 9%, transparent); color: var(--text-1); }
 .dctv-step:disabled { cursor: default; opacity: 0.5; background: transparent; }
 
 .dctv-num { display: inline-flex; align-items: baseline; }
@@ -112,8 +112,8 @@ const fillPct = computed(() => {
   width: 86px;
   max-width: 100%;
   height: 6px;
-  background: #0d0e15;
-  border: 1px solid #3a3d4d;
+  background: var(--bg);
+  border: 1px solid var(--surface-active);
   border-radius: 999px;
   overflow: hidden;
 }

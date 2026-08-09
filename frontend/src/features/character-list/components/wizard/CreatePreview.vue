@@ -202,11 +202,11 @@ const isEmpty = computed(() => !showStats.value && !sections.value.length)
 .pv { display: flex; flex-direction: column; gap: 14px; }
 .pv-name { position: relative; display: flex; align-items: center; }
 .pv-name input {
-  width: 100%; box-sizing: border-box; background: var(--bg); border: 1px solid var(--input-border);
+  width: 100%; box-sizing: border-box; background: var(--surface-raised); border: 1px solid var(--border-strong);
   border-radius: 9px; color: var(--text-1); font: inherit; font-family: var(--font-display); font-size: 18px;
   padding: 8px 38px 8px 12px; outline: none;
 }
-.pv-name input:focus { border-color: var(--input-focus); }
+.pv-name input:focus { border-color: var(--accent); }
 .dice { position: absolute; right: 6px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; background: none; border: none; color: var(--text-muted); cursor: pointer; }
 .dice:hover { color: var(--accent); }
 .dice svg { width: 17px; height: 17px; }
@@ -221,7 +221,7 @@ const isEmpty = computed(() => !showStats.value && !sections.value.length)
 .pv-id { min-width: 0; }
 .pv-line { font-family: var(--font-display); font-size: 16px; color: var(--text-1); line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .pv-line + .pv-line { color: var(--text-2); font-size: 14px; }
-.pv-lvl { display: inline-block; margin-top: 5px; font-size: 11px; font-weight: 600; background: color-mix(in srgb, var(--accent) 22%, transparent); color: #c4a0ff; border-radius: 5px; padding: 2px 8px; }
+.pv-lvl { display: inline-block; margin-top: 5px; font-size: 11px; font-weight: 600; background: color-mix(in srgb, var(--accent) 22%, transparent); color: var(--accent-soft); border-radius: 5px; padding: 2px 8px; }
 
 .pv-empty {
   display: flex;
@@ -230,7 +230,7 @@ const isEmpty = computed(() => !showStats.value && !sections.value.length)
   padding: 11px;
   border: 1px dashed color-mix(in srgb, var(--border-strong) 72%, transparent);
   border-radius: 9px;
-  color: var(--wizard-muted, var(--text-muted));
+  color: var(--text-muted);
   font-size: 11px;
   line-height: 1.4;
 }
@@ -239,7 +239,7 @@ const isEmpty = computed(() => !showStats.value && !sections.value.length)
 .pv-block { border-top: 1px solid var(--border); padding-top: 12px; }
 .pv-cap { font-size: 10px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
 .pv-stats { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; }
-.pv-stat { display: flex; flex-direction: column; align-items: center; gap: 1px; background: var(--block-bg); border-radius: var(--r-sm); padding: 5px 2px 4px; }
+.pv-stat { display: flex; flex-direction: column; align-items: center; gap: 1px; background: var(--surface); border-radius: var(--r-sm); padding: 5px 2px 4px; }
 .pv-stat-k { font-size: 9px; letter-spacing: 0.03em; color: var(--text-muted); font-weight: 650; }
 .pv-stat-score { font-size: 17px; font-weight: 700; color: var(--text-1); font-variant-numeric: tabular-nums; line-height: 1.1; }
 .pv-stat-mod { font-size: 10px; font-weight: 600; color: var(--text-muted); font-variant-numeric: tabular-nums; }
@@ -248,7 +248,7 @@ const isEmpty = computed(() => !showStats.value && !sections.value.length)
 .pv-stat-bonus { font-size: 15px; font-weight: 700; color: var(--text-muted); font-variant-numeric: tabular-nums; }
 .pv-stat-bonus.has { color: var(--accent); }
 .pv-derived { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
-.pv-chip { font-size: 11px; color: var(--text-2); background: var(--block-bg); border-radius: var(--r-sm); padding: 3px 9px; }
+.pv-chip { font-size: 11px; color: var(--text-2); background: var(--surface); border-radius: var(--r-sm); padding: 3px 9px; }
 .pv-chip b { color: var(--text-1); font-variant-numeric: tabular-nums; }
 
 .pv-grants-title { font-size: 11px; font-weight: 650; letter-spacing: 0.05em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }

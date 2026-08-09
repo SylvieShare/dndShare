@@ -38,7 +38,7 @@ defineProps({
   wide: { type: Boolean, default: false },
   extraWide: { type: Boolean, default: false },
   fullscreen: { type: Boolean, default: false },
-  // Use the BaseTile block surface (var(--block-bg)) instead of the page bg.
+  // Use the BaseTile block surface (var(--surface)) instead of the page bg.
   tile: { type: Boolean, default: false },
 })
 const emit = defineEmits(['close'])
@@ -205,7 +205,7 @@ onBeforeUnmount(() => {
 .am-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.62);
+  background: var(--scrim);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   display: flex;
@@ -231,7 +231,7 @@ onBeforeUnmount(() => {
 }
 
 .am-card-tile {
-  background: var(--block-bg);
+  background: var(--bg);
   border: none;
 }
 

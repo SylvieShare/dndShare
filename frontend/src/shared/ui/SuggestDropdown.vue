@@ -119,7 +119,7 @@ function hideTooltip() {
   top: calc(100% + 4px);
   left: 0;
   min-width: 220px;
-  background-color: var(--popup-bg);
+  background-color: var(--popover-bg);
   border: 1px solid var(--border-strong);
   border-radius: 10px;
   padding: 6px 0;
@@ -194,7 +194,7 @@ function hideTooltip() {
 
 .sd-delete-btn:hover {
   color: var(--danger);
-  background-color: rgba(224, 85, 85, 0.12);
+  background-color: color-mix(in srgb, var(--danger) 12%, transparent);
 }
 
 .sd-add {

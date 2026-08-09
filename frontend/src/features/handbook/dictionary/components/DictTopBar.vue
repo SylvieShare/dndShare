@@ -27,7 +27,7 @@ defineEmits(['add'])
 <style scoped>
 .dict-top-bar {
   flex-shrink: 0;
-  background: var(--bg-header);
+  background: var(--bg);
   border-bottom: 1px solid var(--border);
 }
 
@@ -76,7 +76,7 @@ defineEmits(['add'])
   cursor: pointer;
   transition: color 0.15s, border-color 0.15s, background 0.15s;
 }
-.bar-add-btn:hover { color: var(--text-1); border-color: var(--accent); background: rgba(106,100,216,0.08); }
+.bar-add-btn:hover { color: var(--text-1); border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, transparent); }
 
 @media (max-width: 520px) {
   .dict-top-bar-inner { padding: 8px 10px; gap: 10px; }

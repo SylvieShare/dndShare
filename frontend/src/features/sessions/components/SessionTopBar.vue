@@ -217,8 +217,8 @@ defineExpose({ chapters, currentChapter, loadChapters })
   font-weight: 700;
   letter-spacing: 0.05em;
   color: var(--dot);
-  background: color-mix(in srgb, #fff 4%, transparent);
-  border: 1px solid color-mix(in srgb, #fff 8%, transparent);
+  background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-on-accent) 8%, transparent);
   border-radius: 6px;
   padding: 3px 8px;
   white-space: nowrap;
@@ -227,7 +227,7 @@ defineExpose({ chapters, currentChapter, loadChapters })
   transition: background 0.15s;
 }
 
-.status-badge:hover { background: color-mix(in srgb, #fff 8%, transparent); }
+.status-badge:hover { background: color-mix(in srgb, var(--text-on-accent) 8%, transparent); }
 
 .status-dot {
   width: 6px;
@@ -255,7 +255,7 @@ defineExpose({ chapters, currentChapter, loadChapters })
   transition: background 0.15s;
 }
 
-.status-option:hover { background: color-mix(in srgb, #fff 5%, transparent); }
+.status-option:hover { background: color-mix(in srgb, var(--text-on-accent) 5%, transparent); }
 .status-option.active { color: var(--text-1); background: color-mix(in srgb, var(--accent) 10%, transparent); }
 .status-option .status-dot { color: var(--dot); }
 
@@ -273,7 +273,7 @@ defineExpose({ chapters, currentChapter, loadChapters })
   flex-shrink: 1;
 }
 
-.session-info:hover { background: color-mix(in srgb, #fff 5%, transparent); }
+.session-info:hover { background: color-mix(in srgb, var(--text-on-accent) 5%, transparent); }
 
 .session-title {
   font-family: var(--font-display);
@@ -290,7 +290,7 @@ defineExpose({ chapters, currentChapter, loadChapters })
 .top-rule {
   width: 1px;
   height: 16px;
-  background: color-mix(in srgb, #fff 10%, transparent);
+  background: color-mix(in srgb, var(--text-on-accent) 10%, transparent);
   flex-shrink: 0;
 }
 
@@ -304,7 +304,7 @@ defineExpose({ chapters, currentChapter, loadChapters })
   align-items: center;
   gap: 6px;
   background: transparent;
-  border: 1px solid color-mix(in srgb, #fff 6%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-on-accent) 6%, transparent);
   border-radius: 8px;
   padding: 3px 9px;
   font: inherit;
@@ -316,8 +316,8 @@ defineExpose({ chapters, currentChapter, loadChapters })
 }
 
 .chapter-trigger:hover:not(:disabled):not(.chapter-trigger--readonly) {
-  background: color-mix(in srgb, #fff 4%, transparent);
-  border-color: color-mix(in srgb, #fff 12%, transparent);
+  background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
+  border-color: color-mix(in srgb, var(--text-on-accent) 12%, transparent);
   color: var(--text-1);
 }
 
@@ -336,7 +336,7 @@ defineExpose({ chapters, currentChapter, loadChapters })
   height: 22px;
   padding: 0 6px;
   background: var(--accent);
-  color: #fff;
+  color: var(--text-on-accent);
   font-family: var(--font-display);
   font-size: 13px;
   font-weight: 700;
@@ -369,7 +369,7 @@ defineExpose({ chapters, currentChapter, loadChapters })
   transition: background 0.15s;
 }
 
-.chapter-row:hover { background: color-mix(in srgb, #fff 4%, transparent); }
+.chapter-row:hover { background: color-mix(in srgb, var(--text-on-accent) 4%, transparent); }
 .chapter-row--active { background: color-mix(in srgb, var(--accent) 14%, transparent); }
 .chapter-row--editing { background: color-mix(in srgb, var(--accent) 8%, transparent); }
 
@@ -392,7 +392,7 @@ defineExpose({ chapters, currentChapter, loadChapters })
 
 .chapter-row-num--filled {
   background: var(--accent);
-  color: #fff;
+  color: var(--text-on-accent);
   border-color: var(--accent);
 }
 
@@ -435,7 +435,7 @@ defineExpose({ chapters, currentChapter, loadChapters })
   transition: background 0.15s, color 0.15s, border-color 0.15s;
 }
 
-.chapter-row-btn:hover { background: color-mix(in srgb, #fff 6%, transparent); color: var(--text-1); }
+.chapter-row-btn:hover { background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); color: var(--text-1); }
 .chapter-row-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 .chapter-row-btn--save {
   color: var(--accent);
@@ -447,7 +447,7 @@ defineExpose({ chapters, currentChapter, loadChapters })
 
 .chapter-edit-input {
   flex: 1;
-  background: var(--surface-1);
+  background: var(--surface-raised);
   border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
   border-radius: 6px;
   padding: 4px 8px;
@@ -469,7 +469,7 @@ defineExpose({ chapters, currentChapter, loadChapters })
   gap: 6px;
   padding: 4px 6px;
   margin-top: 4px;
-  border-top: 1px solid color-mix(in srgb, #fff 5%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--text-on-accent) 5%, transparent);
   padding-top: 8px;
 }
 

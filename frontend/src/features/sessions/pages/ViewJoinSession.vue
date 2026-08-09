@@ -29,8 +29,8 @@
         <div class="hero-inner">
           <div class="hero-meta">
             <span class="hero-eyebrow">Приглашение в приключение</span>
-            <span class="hero-status" :style="{ background: statusColor(session.status) + '22', color: statusColor(session.status), borderColor: statusColor(session.status) + '55' }">
-              {{ statusLabel(session.status) }}
+            <span class="hero-status" :style="{ '--status-color': sessionStatusColor(session.status) }">
+              {{ sessionStatusLabel(session.status) }}
             </span>
           </div>
           <h1 class="hero-title">{{ session.name }}</h1>
@@ -114,6 +114,7 @@ import { getSessionByCode, joinSession } from '@/shared/api/sessionsApi'
 import { useAccountStore } from '@/stores/account'
 import { pvAvatar, pvLevel, pvName, pvSubtitle } from '@/features/sessions/lib/participantView'
 import { useTemplateStore } from '@/stores/template'
+import { sessionStatusColor, sessionStatusLabel } from '@/features/sessions/composables/useSessionStatus'
 
 const route = useRoute()
 const router = useRouter()
@@ -132,18 +133,6 @@ const joiningId = ref(null)
 const createOpen = ref(false)
 const creating = ref(false)
 const templates = computed(() => templateStore.all)
-
-const STATUS_CFG = {
-  live:      { label: 'Идёт игра',   color: '#e85c5c' },
-  active:    { label: 'Активна',     color: '#5ce87c' },
-  planned:   { label: 'Запланована', color: '#5c95e8' },
-  paused:    { label: 'Пауза',       color: '#e89c3c' },
-  completed: { label: 'Завершено',   color: '#707080' },
-  draft:     { label: 'Черновик',    color: '#888' },
-  archived:  { label: 'Архив',       color: '#888' },
-}
-function statusLabel(s) { return STATUS_CFG[s]?.label || s || '' }
-function statusColor(s) { return STATUS_CFG[s]?.color || '#888' }
 
 const ROMAN = ['', 'I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV','XVI','XVII','XVIII','XIX','XX']
 function romanNum(n) {
@@ -242,8 +231,8 @@ onMounted(async () => {
 }
 
 .join-loading { display: flex; flex-direction: column; gap: 14px; }
-.sk-hero { height: 180px; border-radius: 18px; background: #1a1a22; animation: sk-pulse 1.4s ease-in-out infinite; }
-.sk-row { height: 64px; border-radius: 12px; background: #1a1a22; animation: sk-pulse 1.4s ease-in-out infinite; }
+.sk-hero { height: 180px; border-radius: 18px; background: var(--bg); animation: sk-pulse 1.4s ease-in-out infinite; }
+.sk-row { height: 64px; border-radius: 12px; background: var(--bg); animation: sk-pulse 1.4s ease-in-out infinite; }
 
 .join-state {
   flex: 1;
@@ -253,8 +242,8 @@ onMounted(async () => {
   padding-top: 40px;
 }
 .state-card {
-  background: #1a1a22;
-  border: 1px solid #2a2a38;
+  background: var(--bg);
+  border: 1px solid var(--surface-raised);
   border-radius: 16px;
   padding: 32px 28px;
   text-align: center;
@@ -269,7 +258,7 @@ onMounted(async () => {
 .state-text { font-size: 13px; color: var(--text-2); margin: 0 0 8px; }
 .state-btn {
   background: var(--accent);
-  color: #fff;
+  color: var(--text-on-accent);
   border: none;
   border-radius: 8px;
   padding: 10px 18px;
@@ -287,8 +276,8 @@ onMounted(async () => {
   position: relative;
   border-radius: 22px;
   overflow: hidden;
-  border: 1px solid #2a2a3c;
-  background: linear-gradient(135deg, #1c1830 0%, #161620 70%);
+  border: 1px solid var(--surface-raised);
+  background: linear-gradient(135deg, var(--popover-bg) 0%, var(--bg) 70%);
   padding: 36px 32px 32px;
 }
 .hero-glow {
@@ -297,7 +286,7 @@ onMounted(async () => {
   right: -120px;
   width: 360px;
   height: 360px;
-  background: radial-gradient(circle, rgba(124,92,255,0.35), transparent 65%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 35%, transparent), transparent 65%);
   pointer-events: none;
 }
 .hero-inner { position: relative; display: flex; flex-direction: column; gap: 10px; }
@@ -314,6 +303,9 @@ onMounted(async () => {
   font-weight: 800;
   letter-spacing: 0.08em;
   border: 1px solid;
+  border-color: color-mix(in srgb, var(--status-color) 34%, transparent);
+  background: color-mix(in srgb, var(--status-color) 13%, transparent);
+  color: var(--status-color);
   border-radius: 5px;
   padding: 3px 8px;
   text-transform: uppercase;
@@ -331,19 +323,19 @@ onMounted(async () => {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  background: rgba(124,92,255,0.12);
-  border: 1px solid rgba(124,92,255,0.32);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 32%, transparent);
   color: var(--text-1);
   border-radius: 999px;
   padding: 5px 12px;
   font-size: 12px;
   font-weight: 600;
 }
-.hero-chip--chapter { background: rgba(124,92,255,0.18); }
+.hero-chip--chapter { background: color-mix(in srgb, var(--accent) 18%, transparent); }
 .chip-roman {
   font-family: var(--font-display, inherit);
   font-weight: 800;
-  color: #b9a6ff;
+  color: var(--accent-soft);
 }
 .hero-desc {
   margin: 8px 0 0;
@@ -368,7 +360,7 @@ onMounted(async () => {
 .char-skeleton {
   height: 92px;
   border-radius: 14px;
-  background: #1a1a22;
+  background: var(--bg);
   animation: sk-pulse 1.4s ease-in-out infinite;
 }
 
@@ -377,8 +369,8 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   gap: 12px;
-  background: #1a1a22;
-  border: 1px solid #2a2a38;
+  background: var(--bg);
+  border: 1px solid var(--surface-raised);
   border-radius: 14px;
   padding: 12px 14px;
   cursor: pointer;
@@ -388,8 +380,8 @@ onMounted(async () => {
   transition: border-color 0.15s, background 0.15s, transform 0.08s;
 }
 .char-tile:hover:not(:disabled) {
-  border-color: rgba(124,92,255,0.55);
-  background: #1e1c2c;
+  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+  background: var(--popover-bg);
 }
 .char-tile:active:not(:disabled) { transform: translateY(1px); }
 .char-tile.joining,
@@ -401,7 +393,7 @@ onMounted(async () => {
   height: 56px;
   border-radius: 10px;
   overflow: hidden;
-  background: linear-gradient(135deg, #2a2440, #1a1a22);
+  background: linear-gradient(135deg, var(--surface-raised), var(--bg));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -413,9 +405,9 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #5c4dbf, #2a2440);
+  background: linear-gradient(135deg, var(--accent-hover), var(--surface-raised));
 }
-.ava-letter { font-size: 22px; font-weight: 700; color: #fff; }
+.ava-letter { font-size: 22px; font-weight: 700; color: var(--text-on-accent); }
 
 .tile-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
 .tile-name {
@@ -431,8 +423,8 @@ onMounted(async () => {
 .meta-lvl {
   font-size: 10px;
   font-weight: 700;
-  background: rgba(124,92,255,0.22);
-  color: #c8b9ff;
+  background: color-mix(in srgb, var(--accent) 22%, transparent);
+  color: var(--accent-soft);
   border-radius: 4px;
   padding: 1px 6px;
 }
@@ -441,7 +433,7 @@ onMounted(async () => {
 .tile-arrow {
   flex-shrink: 0;
   font-size: 18px;
-  color: rgba(124,92,255,0.6);
+  color: color-mix(in srgb, var(--accent) 60%, transparent);
   transition: transform 0.15s, color 0.15s;
 }
 .char-tile:hover:not(:disabled) .tile-arrow { color: var(--accent); transform: translateX(3px); }
@@ -452,13 +444,13 @@ onMounted(async () => {
   align-items: center;
   text-align: center;
   border-style: dashed;
-  border-color: #2e2e42;
+  border-color: var(--surface-active);
   background: transparent;
   min-height: 92px;
 }
 .char-tile--create:hover:not(:disabled) {
   border-color: var(--accent);
-  background: rgba(124,92,255,0.06);
+  background: color-mix(in srgb, var(--accent) 6%, transparent);
 }
 .create-icon { font-size: 26px; color: var(--accent); line-height: 1; }
 .create-label { font-size: 12px; color: var(--text-muted); font-weight: 600; }
@@ -469,8 +461,8 @@ onMounted(async () => {
   align-items: center;
   gap: 12px;
   padding: 28px 16px;
-  background: #1a1a22;
-  border: 1px dashed #2a2a38;
+  background: var(--bg);
+  border: 1px dashed var(--surface-raised);
   border-radius: 14px;
   color: var(--text-2);
   font-size: 13px;

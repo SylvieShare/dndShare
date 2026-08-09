@@ -36,7 +36,7 @@ const props = defineProps(['block'])
 const ctx = inject('charCtx', { canTogglePublic: false, publicVisible: false, saveStatus: 'idle', pendingSecondsLeft: 0 })
 const open = ref(false)
 
-const accent = computed(() => props.block?.content?.accent || '#8a8f9e')
+const accent = computed(() => props.block?.content?.accent || 'var(--text-muted)')
 const iconSrc = computed(() => props.block?.content?.svg || null)
 const iconStyle = computed(() => ({ filter: svgColorFilter(accent.value) }))
 
@@ -81,20 +81,20 @@ const saveLabel = computed(() => {
   flex-direction: column;
   gap: 4px;
   padding: 8px;
-  background: var(--popup-bg);
+  background: var(--popover-bg);
   border: 1px solid var(--border-strong);
   border-radius: var(--r-md);
   box-shadow: var(--shadow-lg);
 }
 .sm-item { padding: 6px 8px; border-radius: 7px; }
-.sm-item:hover { background: rgba(255, 255, 255, 0.04); }
+.sm-item:hover { background: color-mix(in srgb, var(--text-on-accent) 4%, transparent); }
 
 .sm-save { display: flex; align-items: center; gap: 7px; padding: 6px 8px 10px; border-bottom: 1px solid var(--border); margin-bottom: 2px; }
 .sm-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; transition: background-color 0.3s; }
 .sm-save-label { font-size: 12px; white-space: nowrap; }
 .sm-save.idle .sm-dot { background: var(--success); } .sm-save.idle .sm-save-label { color: var(--success); }
 .sm-save.pending .sm-dot { background: var(--warning); } .sm-save.pending .sm-save-label { color: var(--warning); }
-.sm-save.saving .sm-dot { background: #7a8aff; animation: sm-pulse 0.9s ease-in-out infinite; } .sm-save.saving .sm-save-label { color: #7a8aff; }
+.sm-save.saving .sm-dot { background: var(--info); animation: sm-pulse 0.9s ease-in-out infinite; } .sm-save.saving .sm-save-label { color: var(--info); }
 .sm-save.error .sm-dot { background: var(--danger); } .sm-save.error .sm-save-label { color: var(--danger); }
 @keyframes sm-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 

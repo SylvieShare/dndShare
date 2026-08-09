@@ -171,7 +171,7 @@ onMounted(load)
 }
 
 .state-msg.error {
-  color: #e05c5c;
+  color: var(--danger);
 }
 
 .data-table {
@@ -188,12 +188,12 @@ onMounted(load)
   text-transform: uppercase;
   letter-spacing: 0.06em;
   padding: 8px 12px;
-  border-bottom: 1px solid #2a2a2e;
+  border-bottom: 1px solid var(--surface-raised);
 }
 
 .data-table td {
   padding: 10px 12px;
-  border-bottom: 1px solid #222226;
+  border-bottom: 1px solid var(--surface);
   vertical-align: middle;
   color: var(--text-1);
 }
@@ -222,7 +222,7 @@ onMounted(load)
   align-items: center;
   gap: 4px;
   background: color-mix(in srgb, var(--accent) 15%, transparent);
-  color: #a08aff;
+  color: var(--accent-soft);
   border-radius: 4px;
   padding: 2px 6px;
   font-size: 11px;
@@ -233,7 +233,7 @@ onMounted(load)
 .role-remove {
   background: none;
   border: none;
-  color: #a08aff;
+  color: var(--accent-soft);
   cursor: pointer;
   font-size: 14px;
   line-height: 1;
@@ -266,7 +266,7 @@ onMounted(load)
 }
 
 .btn-dots:hover {
-  background: #222226;
+  background: var(--surface);
   color: var(--text-1);
 }
 
@@ -280,15 +280,15 @@ onMounted(load)
   flex-direction: column;
   gap: 2px;
   padding: 6px;
-  border: 1px solid #2a2a2e;
+  border: 1px solid var(--surface-raised);
   border-radius: 8px;
-  background: #1e1e22;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  background: var(--popover-bg);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--scrim) 65%, transparent);
 }
 
 .dropdown-divider {
   height: 1px;
-  background: #2a2a2e;
+  background: var(--surface-raised);
   margin: 4px 0;
 }
 
@@ -306,8 +306,8 @@ onMounted(load)
 }
 
 .dropdown-item:hover {
-  background: #2a2a2e;
-  color: #fff;
+  background: var(--surface-raised);
+  color: var(--text-on-accent);
 }
 
 .modal-title {

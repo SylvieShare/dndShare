@@ -38,6 +38,7 @@
 
 <script setup>
 import { computed, inject, ref } from 'vue'
+import { sessionStatusColor } from '@/features/sessions/composables/useSessionStatus'
 
 defineProps(['block'])
 const ctx = inject('charCtx', { sessions: [], topSession: null })
@@ -52,11 +53,7 @@ const tag = computed(() => {
   return 'div'
 })
 
-const STATUS_CFG = {
-  live: '#e85c5c', active: '#5ce87c', planned: '#5c95e8', paused: '#e89c3c',
-  completed: '#707080', draft: 'var(--text-muted)', archived: 'var(--text-muted)',
-}
-function statusColor(s) { return STATUS_CFG[s] || 'var(--text-muted)' }
+const statusColor = sessionStatusColor
 function chapter(s) {
   const num = s.chapterNumber != null ? `Гл. ${s.chapterNumber}` : ''
   return [num, s.chapterName].filter(Boolean).join(' · ')
@@ -75,7 +72,7 @@ function sessionLink(s) { return '/sessions/' + s.uuid }
   padding: 8px 10px;
   border: 1px solid var(--border);
   border-radius: var(--r-md);
-  background: var(--block-bg);
+  background: var(--surface);
   color: inherit;
   text-decoration: none;
   font: inherit;
@@ -101,13 +98,13 @@ function sessionLink(s) { return '/sessions/' + s.uuid }
   flex-direction: column;
   gap: 2px;
   padding: 6px;
-  background: var(--popup-bg);
+  background: var(--popover-bg);
   border: 1px solid var(--border-strong);
   border-radius: var(--r-md);
   box-shadow: var(--shadow-lg);
 }
 .cb-option { display: flex; align-items: center; gap: 8px; padding: 7px 9px; border-radius: 7px; color: inherit; text-decoration: none; cursor: pointer; }
-.cb-option:hover { background: rgba(255, 255, 255, 0.05); }
+.cb-option:hover { background: color-mix(in srgb, var(--text-on-accent) 5%, transparent); }
 .cb-option--static { cursor: default; }
 .cb-option--static:hover { background: none; }
 

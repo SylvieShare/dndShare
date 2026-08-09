@@ -246,7 +246,7 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers }) {
   function avatarStyle(c) {
     if (c.type === 'player') {
       if (c.iconColor) return { borderColor: c.iconColor, color: c.iconColor }
-      return { borderColor: 'transparent', color: '#5cb0e8' }
+      return { borderColor: 'transparent', color: 'var(--info)' }
     }
     const color = c.iconColor || SIDE_COLOR[sideOf(c)]
     return { borderColor: color, color }

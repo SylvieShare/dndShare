@@ -84,14 +84,14 @@ const summaryStyle = computed(() => {
   if (p > 50) return {}
   const t = (50 - p) / 50
   return {
-    boxShadow: `0 0 0 1px rgba(180,40,40,${(t * 0.5).toFixed(2)}), 0 0 ${Math.round(t * 16)}px rgba(180,40,40,${(t * 0.25).toFixed(2)})`,
+    boxShadow: `0 0 0 1px color-mix(in srgb, var(--danger) ${Math.round(t * 50)}%, transparent), 0 0 ${Math.round(t * 16)}px color-mix(in srgb, var(--danger) ${Math.round(t * 25)}%, transparent)`,
   }
 })
 const barColor = computed(() => {
   const p = barPct.value
   if (p > 60) return 'var(--success)'
-  if (p > 25) return '#e0a020'
-  return '#c0392b'
+  if (p > 25) return 'var(--warning)'
+  return 'var(--danger)'
 })
 const svgColorFilter = computed(() => {
   const p = barPct.value
@@ -141,9 +141,9 @@ function adjustDice(delta) {
 <style scoped>
 .hc-summary {
   position: relative;
-  border: 1px solid rgba(140,140,154,0.18);
+  border: 1px solid color-mix(in srgb, var(--text-muted) 18%, transparent);
   border-radius: 8px;
-  background: rgba(255,255,255,0.035);
+  background: color-mix(in srgb, var(--text-on-accent) 3.5%, transparent);
   overflow: hidden;
   transition: box-shadow 0.3s ease;
 }
@@ -153,8 +153,8 @@ function adjustDice(delta) {
 }
 
 @keyframes hc-dead-pulse {
-  0%, 100% { box-shadow: 0 0 0 1px rgba(180,40,40,0.45), 0 0 14px rgba(180,40,40,0.22); }
-  50%       { box-shadow: 0 0 0 2px rgba(200,50,50,0.7),  0 0 28px rgba(180,40,40,0.38); }
+  0%, 100% { box-shadow: 0 0 0 1px color-mix(in srgb, var(--danger) 45%, transparent), 0 0 14px color-mix(in srgb, var(--danger) 22%, transparent); }
+  50%       { box-shadow: 0 0 0 2px color-mix(in srgb, var(--danger) 70%, transparent),  0 0 28px color-mix(in srgb, var(--danger) 38%, transparent); }
 }
 
 .hb-medium { animation: hc-heartbeat 1.7s ease-in-out infinite; }
@@ -200,14 +200,14 @@ function adjustDice(delta) {
 
 .hc-current { font-size: 28px; font-weight: 800; line-height: 1; }
 .hc-sep     { color: var(--text-muted); font-size: 18px; font-weight: 700; }
-.hc-max     { color: #b8b8c2; font-size: 18px; font-weight: 700; }
-.hc-temp    { margin-left: 4px; color: #7ab8e8; font-size: 15px; font-weight: 800; }
+.hc-max     { color: var(--text-2); font-size: 18px; font-weight: 700; }
+.hc-temp    { margin-left: 4px; color: var(--info); font-size: 15px; font-weight: 800; }
 
 .hc-bar-wrap {
   height: 7px;
   overflow: hidden;
   border-radius: 999px;
-  background: var(--bg-deep);
+  background: var(--bg);
 }
 
 .hc-bar {
@@ -229,13 +229,13 @@ function adjustDice(delta) {
   cursor: pointer;
   touch-action: manipulation;
   transition: opacity 0.12s;
-  background: rgba(90,140,220,0.25);
+  background: color-mix(in srgb, var(--info) 25%, transparent);
 }
 .hc-btn:hover { opacity: 0.85; }
 
-.hc-dmg  { background: rgba(200,60,60,0.25);  color: #e07070; }
-.hc-heal { background: rgba(60,175,110,0.25); color: #5aaf72; }
-.hc-temp { color: #7ab8e8; }
+.hc-dmg  { background: color-mix(in srgb, var(--danger) 25%, transparent);  color: var(--danger); }
+.hc-heal { background: color-mix(in srgb, var(--success) 25%, transparent); color: var(--success); }
+.hc-temp { color: var(--info); }
 
 /* Hit dice */
 .hc-dice-section {
@@ -286,8 +286,8 @@ function adjustDice(delta) {
 }
 
 .hc-dice-btn {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
+  background: color-mix(in srgb, var(--text-on-accent) 5%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-on-accent) 10%, transparent);
   border-radius: 6px;
   color: var(--text-muted);
   font-size: 16px;
@@ -301,7 +301,7 @@ function adjustDice(delta) {
   transition: background 0.1s, color 0.1s;
   touch-action: manipulation;
 }
-.hc-dice-btn:hover:not(:disabled) { background: rgba(255,255,255,0.12); color: var(--text-1); }
+.hc-dice-btn:hover:not(:disabled) { background: color-mix(in srgb, var(--text-on-accent) 12%, transparent); color: var(--text-1); }
 .hc-dice-btn:disabled { opacity: 0.25; cursor: not-allowed; }
 
 .hc-graveyard-overlay {
@@ -311,19 +311,19 @@ function adjustDice(delta) {
   align-items: center;
   justify-content: center;
   gap: 14px;
-  background: color-mix(in srgb, var(--block-bg, #1a1a24) 60%, transparent);
+  background: color-mix(in srgb, var(--surface, var(--bg)) 60%, transparent);
   border-radius: inherit;
   z-index: 1;
 }
 .hc-skull {
   font-size: 28px;
   line-height: 1;
-  filter: drop-shadow(0 0 8px rgba(200, 60, 60, 0.45));
+  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--danger) 45%, transparent));
 }
 .hc-graveyard-btn {
-  background: rgba(200, 60, 60, 0.18);
-  color: #e07070;
-  border: 1px solid rgba(200, 60, 60, 0.45);
+  background: color-mix(in srgb, var(--danger) 18%, transparent);
+  color: var(--danger);
+  border: 1px solid color-mix(in srgb, var(--danger) 45%, transparent);
   border-radius: 8px;
   padding: 8px 16px;
   font-family: inherit;
@@ -332,5 +332,5 @@ function adjustDice(delta) {
   cursor: pointer;
   transition: background 0.12s, border-color 0.12s;
 }
-.hc-graveyard-btn:hover { background: rgba(200, 60, 60, 0.32); border-color: rgba(220, 80, 80, 0.7); }
+.hc-graveyard-btn:hover { background: color-mix(in srgb, var(--danger) 32%, transparent); border-color: color-mix(in srgb, var(--danger) 70%, transparent); }
 </style>

@@ -35,18 +35,9 @@
 <script setup>
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { sessionStatusConfig } from '@/features/sessions/composables/useSessionStatus'
 
-const AVATAR_COLORS = ['#7c5ce2', '#c85ce8', '#5cb0e8', '#e85c8a', '#5ce884', '#e89c3c', '#ff6b6b']
-
-const STATUS_CFG = {
-  live:      { label: 'Идёт игра',    color: '#e85c5c' },
-  active:    { label: 'Активна',      color: '#5ce87c' },
-  planned:   { label: 'Запланована',  color: '#5c95e8' },
-  paused:    { label: 'Пауза',        color: '#e89c3c' },
-  completed: { label: 'Завершено',    color: '#707080' },
-  draft:     { label: 'Черновик',     color: 'var(--text-muted)' },
-  archived:  { label: 'Архив',        color: 'var(--text-muted)' },
-}
+const AVATAR_COLORS = ['var(--accent)', 'var(--accent)', 'var(--info)', 'var(--danger)', 'var(--success)', 'var(--warning)', 'var(--danger)']
 
 function uuidColor(uuid) {
   if (!uuid) return AVATAR_COLORS[0]
@@ -61,9 +52,7 @@ const props = defineProps({
   session: { type: Object, required: true },
 })
 
-const statusCfg = computed(() =>
-  STATUS_CFG[props.session.status] ?? { label: props.session.status ?? '', color: 'var(--text-muted)' }
-)
+const statusCfg = computed(() => sessionStatusConfig(props.session.status))
 
 const participants = computed(() => props.session.participants ?? [])
 const canEnter = computed(() => props.session.myRole === 'gm')
@@ -89,10 +78,10 @@ const participantLabel = computed(() => {
 
 <style scoped>
 .hero {
-  background: linear-gradient(135deg, #2c1a28 0%, #1c1020 60%, #1a1018 100%);
+  background: linear-gradient(135deg, var(--popover-bg) 0%, var(--bg) 60%, var(--bg) 100%);
   border-radius: 16px;
   padding: 28px 32px 24px;
-  border: 1px solid #3a2035;
+  border: 1px solid var(--surface-raised);
 }
 
 .hero-top {
@@ -121,15 +110,15 @@ const participantLabel = computed(() => {
 
 .badge-system {
   font-size: 11px;
-  color: #8888aa;
-  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-muted);
+  background: color-mix(in srgb, var(--text-on-accent) 6%, transparent);
   border-radius: 6px;
   padding: 3px 8px;
 }
 
 .badge-chapter {
   font-size: 11px;
-  color: #c8a8e8;
+  color: var(--accent-soft);
   background: color-mix(in srgb, var(--accent) 12%, transparent);
   border: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
   border-radius: 6px;
@@ -138,15 +127,15 @@ const participantLabel = computed(() => {
 
 .hero-role {
   font-size: 12px;
-  color: #8888aa;
+  color: var(--text-muted);
   display: flex;
   align-items: center;
   gap: 7px;
 }
 
 .role-pill {
-  background: #fff;
-  color: #111;
+  background: var(--text-on-accent);
+  color: var(--bg);
   font-size: 11px;
   font-weight: 700;
   border-radius: 6px;
@@ -157,14 +146,14 @@ const participantLabel = computed(() => {
   font-family: var(--font-display);
   font-size: 40px;
   font-weight: 600;
-  color: #fff;
+  color: var(--text-on-accent);
   line-height: 1.1;
   margin-bottom: 6px;
 }
 
 .hero-subtitle {
   font-size: 13px;
-  color: #9070a0;
+  color: var(--text-muted);
   margin-bottom: 24px;
 }
 
@@ -189,7 +178,7 @@ const participantLabel = computed(() => {
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  border: 2px solid #1c1020;
+  border: 2px solid var(--bg);
   margin-left: -6px;
   flex-shrink: 0;
 }
@@ -200,15 +189,15 @@ const participantLabel = computed(() => {
 
 .hero-count {
   font-size: 13px;
-  color: #b0a0c0;
+  color: var(--text-2);
 }
 
 .btn-enter {
   flex-shrink: 0;
   height: 42px;
   padding: 0 22px;
-  background: #fff;
-  color: #111;
+  background: var(--text-on-accent);
+  color: var(--bg);
   border: none;
   border-radius: 10px;
   font: inherit;

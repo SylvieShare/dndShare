@@ -150,14 +150,14 @@ function onRowClick() {
 }
 
 .spell-row + .spell-row {
-  border-top: 1px solid color-mix(in srgb, #fff 7%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--text-on-accent) 7%, transparent);
 }
 
 .spell-row-clickable { cursor: pointer; }
 .spell-row-draggable { cursor: grab; touch-action: pan-y; }
 .spell-row-draggable:active { cursor: grabbing; }
 @media (hover: hover) {
-  .spell-row-clickable:hover { background: rgba(255, 255, 255, 0.025); }
+  .spell-row-clickable:hover { background: color-mix(in srgb, var(--text-on-accent) 2.5%, transparent); }
 }
 
 .sp-lead {
@@ -186,13 +186,13 @@ function onRowClick() {
   place-items: center;
   border: none;
   background: none;
-  color: #43465a;
+  color: var(--text-muted);
   cursor: pointer;
   padding: 0;
   transition: color 0.12s, transform 0.1s;
 }
 @media (hover: hover) {
-  .sp-prepared:hover { color: #6a6d85; }
+  .sp-prepared:hover { color: var(--text-muted); }
   .sp-prepared.on:hover { color: var(--accent); }
 }
 .sp-prepared:active { transform: scale(0.88); }
@@ -221,8 +221,8 @@ function onRowClick() {
   padding: 2px 5px;
   border-radius: 4px;
 }
-.sp-tag-conc { background: rgba(162, 146, 255, 0.15); color: var(--color-attack); }
-.sp-tag-ritual { background: rgba(90, 175, 114, 0.13); color: #5aaf72; }
+.sp-tag-conc { background: color-mix(in srgb, var(--accent-soft) 15%, transparent); color: var(--accent-soft); }
+.sp-tag-ritual { background: color-mix(in srgb, var(--success) 13%, transparent); color: var(--success); }
 
 .sp-name {
   min-width: 0;
@@ -279,7 +279,7 @@ function onRowClick() {
   align-items: center;
   gap: 4px;
   padding: 2px 4px;
-  border: 1px solid color-mix(in srgb, #fff 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-on-accent) 12%, transparent);
   border-radius: 8px;
 }
 .sp-step-btn {
@@ -289,7 +289,7 @@ function onRowClick() {
   place-items: center;
   border: none;
   border-radius: 5px;
-  background: color-mix(in srgb, #fff 6%, transparent);
+  background: color-mix(in srgb, var(--text-on-accent) 6%, transparent);
   color: var(--text-1);
   cursor: pointer;
   font-size: 15px;

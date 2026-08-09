@@ -130,6 +130,7 @@
 import { computed, defineAsyncComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import ToggleSwitch from "@/shared/ui/ToggleSwitch"
+import { sessionStatusColor, sessionStatusLabel } from '@/features/sessions/composables/useSessionStatus'
 
 const TemplateBlockInner = defineAsyncComponent(() => import("./TemplateBlockInner"))
 
@@ -156,18 +157,8 @@ const router = useRouter()
 const menuOpen = ref(false)
 const sessionMenuOpen = ref(false)
 
-const STATUS_CFG = {
-  live:      { label: 'Идёт игра',   color: '#e85c5c' },
-  active:    { label: 'Активна',     color: '#5ce87c' },
-  planned:   { label: 'Запланована', color: '#5c95e8' },
-  paused:    { label: 'Пауза',       color: '#e89c3c' },
-  completed: { label: 'Завершено',   color: '#707080' },
-  draft:     { label: 'Черновик',    color: 'var(--text-muted)' },
-  archived:  { label: 'Архив',       color: 'var(--text-muted)' },
-}
-
-function statusColor(status) { return STATUS_CFG[status]?.color || 'var(--text-muted)' }
-function statusLabel(status) { return STATUS_CFG[status]?.label || status || '' }
+const statusColor = sessionStatusColor
+const statusLabel = sessionStatusLabel
 function chapterLabel(s) {
   const num = s.chapterNumber != null ? `Гл. ${s.chapterNumber}` : ''
   return [num, s.chapterName].filter(Boolean).join(' · ')
@@ -209,7 +200,7 @@ function goBack() {
   padding: 0 16px;
   height: 52px;
   border-bottom: 1px solid var(--border);
-  background-color: var(--bg-header);
+  background-color: var(--bg);
 }
 
 /* ── Left ── */
@@ -235,7 +226,7 @@ function goBack() {
   transition: color 0.15s, background 0.15s;
   padding: 0 8px 0 4px;
 }
-.tb-back:hover { color: var(--text-2); background: var(--surface-1); }
+.tb-back:hover { color: var(--text-2); background: var(--surface-raised); }
 
 .tb-back-label {
   font-size: 12px;
@@ -294,8 +285,8 @@ function goBack() {
   padding: 0 10px;
   border: 1px solid var(--border-strong);
   border-radius: 7px;
-  background: color-mix(in srgb, var(--surface-1) 56%, transparent);
-  color: var(--text-1, var(--text-1));
+  background: color-mix(in srgb, var(--surface-raised) 56%, transparent);
+  color: var(--text-1);
   font: inherit;
   cursor: default;
   transition: background 0.15s, border-color 0.15s;
@@ -305,7 +296,7 @@ function goBack() {
 .tb-session-clickable { cursor: pointer; }
 .tb-session-clickable:hover,
 .tb-session.open {
-  background: var(--surface-1);
+  background: var(--surface-raised);
   border-color: color-mix(in srgb, var(--accent) 38%, var(--border-strong));
 }
 
@@ -327,7 +318,7 @@ function goBack() {
 .tb-session-name {
   font-size: 12px;
   font-weight: 600;
-  color: var(--text-1, var(--text-1));
+  color: var(--text-1);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -336,7 +327,7 @@ function goBack() {
 
 .tb-session-chapter {
   font-size: 10px;
-  color: var(--text-muted, #6e7281);
+  color: var(--text-muted);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -344,7 +335,7 @@ function goBack() {
 }
 
 .tb-session-chevron {
-  color: var(--text-muted, #6e7281);
+  color: var(--text-muted);
   flex-shrink: 0;
   transition: transform 0.15s;
 }
@@ -361,7 +352,7 @@ function goBack() {
   flex-direction: column;
   gap: 2px;
   padding: 6px;
-  background: var(--popup-bg);
+  background: var(--popover-bg);
   border: 1px solid var(--border-strong);
   border-radius: 10px;
   box-shadow: var(--shadow-lg);
@@ -377,14 +368,14 @@ function goBack() {
   text-decoration: none;
   transition: background 0.1s;
 }
-.tb-session-option:hover { background: var(--surface-1); }
+.tb-session-option:hover { background: var(--surface-raised); }
 
 .tb-session-meta {
   display: inline-flex;
   align-items: center;
   gap: 4px;
   font-size: 10px;
-  color: var(--text-muted, #6e7281);
+  color: var(--text-muted);
 }
 .tb-session-status-label {
   font-weight: 700;
@@ -480,7 +471,7 @@ function goBack() {
 
 .menu-btn:hover,
 .menu-btn.open {
-  background: var(--surface-1);
+  background: var(--surface-raised);
   border-color: var(--border-strong);
 }
 
@@ -500,7 +491,7 @@ function goBack() {
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
-  background: var(--popup-bg);
+  background: var(--popover-bg);
   border: 1px solid var(--border-strong);
   border-radius: 10px;
   padding: 8px;
@@ -514,7 +505,7 @@ function goBack() {
   border-radius: 7px;
   transition: background 0.12s;
 }
-.menu-item:hover { background: var(--surface-1); }
+.menu-item:hover { background: var(--surface-raised); }
 
 .menu-save-item {
   border-bottom: 1px solid var(--border);
@@ -544,15 +535,15 @@ function goBack() {
 
 .save-widget.idle .save-dot   { background-color: var(--success); }
 .save-widget.idle .save-label { color: var(--success); }
-.save-widget.pending .save-dot   { background-color: #e0a020; }
-.save-widget.pending .save-label { color: #e0a020; }
+.save-widget.pending .save-dot   { background-color: var(--warning); }
+.save-widget.pending .save-label { color: var(--warning); }
 .save-widget.saving .save-dot {
-  background-color: #7a8aff;
+  background-color: var(--info);
   animation: pulse 0.9s ease-in-out infinite;
 }
-.save-widget.saving .save-label { color: #7a8aff; }
-.save-widget.error .save-dot   { background-color: #c0392b; }
-.save-widget.error .save-label { color: #c0392b; }
+.save-widget.saving .save-label { color: var(--info); }
+.save-widget.error .save-dot   { background-color: var(--danger); }
+.save-widget.error .save-label { color: var(--danger); }
 
 @keyframes pulse {
   0%, 100% { opacity: 1; }

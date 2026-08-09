@@ -201,7 +201,7 @@ const classPart = computed(() => {
 })
 const subline = computed(() => [racePart.value, classPart.value].filter(Boolean).join(' · '))
 
-const nameColor = computed(() => props.block.content?.name_color || '#ffffff')
+const nameColor = computed(() => props.block.content?.name_color || 'var(--text-on-accent)')
 const nameStyle = computed(() => ({ color: nameColor.value }))
 
 const raceOptions     = computed(() => toOptions(races.value))
@@ -400,7 +400,7 @@ function close() {
   cursor: pointer;
   transition: color 0.12s, background 0.12s;
 }
-@media (hover: hover) { .dci-edit:hover { color: var(--accent); background: rgba(255, 255, 255, 0.06); } }
+@media (hover: hover) { .dci-edit:hover { color: var(--accent); background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); } }
 
 .dciw-title {
   font-size: 16px;
@@ -449,12 +449,12 @@ function close() {
   border-radius: 14px;
   overflow: hidden;
   cursor: pointer;
-  background-color: color-mix(in srgb, var(--accent) 18%, var(--block-bg));
+  background-color: color-mix(in srgb, var(--accent) 18%, var(--surface));
   display: grid;
   place-items: center;
   transition: box-shadow 0.2s ease;
 }
-.dciw-ava--empty { border: 1px dashed var(--input-border); }
+.dciw-ava--empty { border: 1px dashed var(--border-strong); }
 @media (hover: hover) { .dciw-ava:hover { box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 50%, transparent); } }
 .dciw-ava--drag { box-shadow: 0 0 0 2px var(--accent), 0 0 20px color-mix(in srgb, var(--accent) 40%, transparent); }
 
@@ -465,8 +465,8 @@ function close() {
   inset: 0;
   display: grid;
   place-items: center;
-  background: rgba(0, 0, 0, 0.5);
-  color: rgba(255, 255, 255, 0.85);
+  background: color-mix(in srgb, var(--scrim) 81%, transparent);
+  color: color-mix(in srgb, var(--text-on-accent) 85%, transparent);
   font-size: 12px;
   opacity: 0;
   transition: opacity 0.18s ease;

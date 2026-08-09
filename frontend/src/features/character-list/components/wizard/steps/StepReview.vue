@@ -85,7 +85,7 @@ const summary = computed(() => {
 .rv-sub { font-size: 13px; color: var(--text-2); margin-top: 2px; }
 
 .rv-stats { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
-.rv-stat { display: flex; flex-direction: column; align-items: center; gap: 2px; background: var(--block-bg); border-radius: var(--r-md); padding: 10px 4px; }
+.rv-stat { display: flex; flex-direction: column; align-items: center; gap: 2px; background: var(--surface); border-radius: var(--r-md); padding: 10px 4px; }
 .rv-stat-k { font-size: 10px; letter-spacing: 0.04em; color: var(--text-muted); display: inline-flex; align-items: center; gap: 3px; }
 .save-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); display: inline-block; }
 .rv-stat-v { font-size: 22px; font-weight: 700; color: var(--text-1); font-variant-numeric: tabular-nums; line-height: 1; }
@@ -94,7 +94,7 @@ const summary = computed(() => {
 .rv-stat-m.neg { color: var(--danger); }
 
 .rv-chips { display: flex; flex-wrap: wrap; gap: 7px; }
-.rv-chip { font-size: 12px; color: var(--text-2); background: var(--block-bg); border-radius: var(--r-sm); padding: 4px 11px; }
+.rv-chip { font-size: 12px; color: var(--text-2); background: var(--surface); border-radius: var(--r-sm); padding: 4px 11px; }
 .rv-chip b { color: var(--text-1); font-variant-numeric: tabular-nums; }
 
 .rv-row { display: flex; gap: 12px; border-top: 1px solid var(--border); padding-top: 11px; }

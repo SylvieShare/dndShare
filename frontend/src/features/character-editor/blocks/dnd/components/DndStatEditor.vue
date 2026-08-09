@@ -109,7 +109,7 @@ function onAddSubmit() {
   align-items: center;
   gap: 8px;
   width: 100%;
-  background: var(--surface-1);
+  background: var(--surface-raised);
   border: 1px solid var(--border);
   border-radius: 9px;
   padding: 8px 12px;
@@ -119,7 +119,7 @@ function onAddSubmit() {
   text-align: left;
 }
 .se-prof-toggle:hover { border-color: var(--border-strong); }
-.se-prof-on { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, var(--surface-1)); }
+.se-prof-on { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, var(--surface-raised)); }
 
 .se-prof-dot {
   width: 9px;
@@ -142,7 +142,7 @@ function onAddSubmit() {
   align-items: center;
   gap: 8px;
   width: 100%;
-  background: var(--surface-1);
+  background: var(--surface-raised);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 7px 10px;
@@ -151,7 +151,7 @@ function onAddSubmit() {
   text-align: left;
   transition: border-color 0.12s, background 0.12s;
 }
-.se-skill-row:hover { border-color: var(--border-strong); background: var(--surface-2); }
+.se-skill-row:hover { border-color: var(--border-strong); background: var(--surface-active); }
 
 .se-skill-name {
   flex: 1;
@@ -176,7 +176,7 @@ function onAddSubmit() {
 .se-skill-chip {
   min-width: 34px;
   text-align: center;
-  background: var(--surface-2);
+  background: var(--surface-active);
   border-radius: 6px;
   padding: 2px 6px;
   color: var(--text-1);
@@ -188,7 +188,7 @@ function onAddSubmit() {
 .se-skill-del {
   width: 18px;
   text-align: center;
-  color: var(--danger-dim);
+  color: var(--danger);
   font-size: 15px;
   line-height: 1;
   flex-shrink: 0;
@@ -203,8 +203,8 @@ function onAddSubmit() {
 .se-add-input {
   flex: 1;
   min-width: 0;
-  background: var(--control-bg, var(--bg));
-  border: 1px solid var(--input-border);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
   border-radius: 8px;
   color: var(--text-1);
   font-size: 13px;
@@ -220,7 +220,7 @@ function onAddSubmit() {
   flex-shrink: 0;
   border: none;
   border-radius: 8px;
-  background: var(--surface-2);
+  background: var(--surface-active);
   color: var(--text-1);
   font-size: 13px;
   font-weight: 600;
@@ -229,6 +229,6 @@ function onAddSubmit() {
   cursor: pointer;
   transition: background 0.12s, opacity 0.12s;
 }
-.se-add-btn:hover { background: color-mix(in srgb, var(--accent) 30%, var(--surface-2)); }
+.se-add-btn:hover { background: color-mix(in srgb, var(--accent) 30%, var(--surface-active)); }
 .se-add-btn:disabled { opacity: 0.4; cursor: default; }
 </style>

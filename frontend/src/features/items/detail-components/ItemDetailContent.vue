@@ -44,7 +44,7 @@ const hasMeta = computed(() => data.value.weight != null || !!costLabel.value ||
 .idc-name {
   font-size: 22px;
   font-weight: 700;
-  color: #eeeeF4;
+  color: var(--text-1);
   line-height: 1.2;
   padding-right: 24px;
 }
@@ -57,7 +57,7 @@ const hasMeta = computed(() => data.value.weight != null || !!costLabel.value ||
   line-height: 1.65;
 }
 
-.idc-no-desc { font-size: 13px; color: #383838; font-style: italic; }
+.idc-no-desc { font-size: 13px; color: var(--text-muted); font-style: italic; }
 
 .idc-meta { display: flex; flex-wrap: wrap; gap: 6px; }
 
@@ -66,10 +66,10 @@ const hasMeta = computed(() => data.value.weight != null || !!costLabel.value ||
   font-weight: 600;
   padding: 3px 9px;
   border-radius: 5px;
-  background: rgba(255,255,255,0.06);
+  background: color-mix(in srgb, var(--text-on-accent) 6%, transparent);
   color: var(--text-muted);
 }
-.idc-cost { background: rgba(252,190,36,0.13); color: var(--warning); }
-.idc-container { background: rgba(162,146,255,0.15); color: var(--color-attack); }
-.idc-consumable { background: rgba(90,175,114,0.15); color: #5aaf72; }
+.idc-cost { background: color-mix(in srgb, var(--warning) 13%, transparent); color: var(--warning); }
+.idc-container { background: color-mix(in srgb, var(--accent-soft) 15%, transparent); color: var(--accent-soft); }
+.idc-consumable { background: color-mix(in srgb, var(--success) 15%, transparent); color: var(--success); }
 </style>

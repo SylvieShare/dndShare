@@ -645,8 +645,8 @@ onBeforeUnmount(() => {
   padding: 7px;
   border: 1px solid var(--border-strong);
   border-radius: var(--r-pill);
-  background: color-mix(in srgb, var(--popup-bg) 92%, transparent);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  background: color-mix(in srgb, var(--popover-bg) 92%, transparent);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--scrim) 48%, transparent);
   color: var(--text-2);
   cursor: pointer;
   font: inherit;
@@ -672,7 +672,7 @@ onBeforeUnmount(() => {
   justify-content: center;
   border-radius: 50%;
   background: color-mix(in srgb, var(--danger) 18%, transparent);
-  color: #ef7b7b;
+  color: var(--danger);
   font-size: 13px;
   font-weight: 800;
 }
@@ -697,10 +697,10 @@ onBeforeUnmount(() => {
   position: fixed;
   z-index: 9498;
   pointer-events: none;
-  border: 2px solid #ff6b6b;
+  border: 2px solid var(--danger);
   border-radius: 4px;
-  background: rgba(255, 107, 107, 0.12);
-  box-shadow: 0 0 0 2px rgba(17, 18, 26, 0.55), 0 0 24px rgba(255, 107, 107, 0.3);
+  background: color-mix(in srgb, var(--danger) 12%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--bg) 55%, transparent), 0 0 24px color-mix(in srgb, var(--danger) 30%, transparent);
   transition: top 0.04s, left 0.04s, width 0.04s, height 0.04s;
 }
 
@@ -716,9 +716,9 @@ onBeforeUnmount(() => {
   justify-content: space-between;
   gap: 16px;
   padding: 10px 12px 10px 16px;
-  border: 1px solid rgba(255, 107, 107, 0.45);
+  border: 1px solid color-mix(in srgb, var(--danger) 45%, transparent);
   border-radius: 12px;
-  background: var(--popup-bg);
+  background: var(--popover-bg);
   box-shadow: var(--shadow-lg);
   color: var(--text-1);
 }
@@ -737,7 +737,7 @@ onBeforeUnmount(() => {
   flex-shrink: 0;
   border: 1px solid var(--border-strong);
   border-radius: 7px;
-  background: var(--surface-1);
+  background: var(--surface-raised);
   color: var(--text-2);
   cursor: pointer;
   font: inherit;
@@ -770,7 +770,7 @@ onBeforeUnmount(() => {
   padding: 10px 12px;
   border: 1px solid var(--border);
   border-radius: 8px;
-  background: var(--bg-deep);
+  background: var(--bg);
   min-width: 0;
 }
 
@@ -785,7 +785,7 @@ onBeforeUnmount(() => {
 
 .selected-element code {
   overflow: hidden;
-  color: #c2b8ff;
+  color: var(--accent-soft);
   font-size: 11px;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -818,7 +818,7 @@ onBeforeUnmount(() => {
   overflow: hidden;
   border: 1px solid var(--border);
   border-radius: 8px;
-  background: var(--bg-deep);
+  background: var(--bg);
   transition: width 0.24s cubic-bezier(.22, 1, .36, 1), height 0.24s cubic-bezier(.22, 1, .36, 1);
 }
 
@@ -853,9 +853,9 @@ onBeforeUnmount(() => {
 }
 
 .screenshot-context-controls button {
-  border: 1px solid var(--input-border);
+  border: 1px solid var(--border-strong);
   border-radius: 6px;
-  background: var(--surface-1);
+  background: var(--surface-raised);
   color: var(--text-2);
   cursor: pointer;
   font: inherit;
@@ -877,20 +877,20 @@ onBeforeUnmount(() => {
   padding: 10px 12px;
   border: 1px solid var(--border);
   border-radius: 8px;
-  background: var(--bg-deep);
+  background: var(--bg);
   color: var(--text-2);
   font-size: 12px;
 }
 
-.screenshot-state-error { color: #ef9b7b; }
+.screenshot-state-error { color: var(--danger); }
 
 .description-input {
   width: 100%;
   padding: 11px 12px;
-  border: 1px solid var(--input-border);
+  border: 1px solid var(--border-strong);
   border-radius: 8px;
   outline: none;
-  background: var(--input-bg);
+  background: var(--surface-raised);
   color: var(--text-1);
   font: inherit;
   font-size: 14px;
@@ -913,7 +913,7 @@ onBeforeUnmount(() => {
   margin-top: -7px;
 }
 
-.submit-error { color: #ef7b7b; font-size: 12px; }
+.submit-error { color: var(--danger); font-size: 12px; }
 .char-count { margin-left: auto; color: var(--text-muted); font-size: 11px; }
 
 .form-actions {
@@ -932,7 +932,7 @@ onBeforeUnmount(() => {
 }
 
 .cancel-button {
-  border: 1px solid var(--input-border);
+  border: 1px solid var(--border-strong);
   background: transparent;
   color: var(--text-2);
 }
@@ -940,11 +940,11 @@ onBeforeUnmount(() => {
 .submit-button {
   border: none;
   background: var(--accent);
-  color: #fff;
+  color: var(--text-on-accent);
   font-weight: 600;
 }
 
-.submit-button:hover:not(:disabled) { background: var(--accent-dim); }
+.submit-button:hover:not(:disabled) { background: var(--accent-hover); }
 .cancel-button:disabled, .submit-button:disabled { cursor: not-allowed; opacity: 0.45; }
 
 .report-toast {
@@ -957,9 +957,9 @@ onBeforeUnmount(() => {
   padding: 10px 16px;
   border: 1px solid color-mix(in srgb, var(--success) 45%, transparent);
   border-radius: var(--r-pill);
-  background: var(--popup-bg);
+  background: var(--popover-bg);
   box-shadow: var(--shadow-lg);
-  color: #8bd3a1;
+  color: var(--text-2);
   font-size: 13px;
   text-align: center;
 }

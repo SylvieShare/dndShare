@@ -161,7 +161,7 @@ function onCreated(item) {
   padding: 8px 10px;
   border: 1px solid var(--border);
   border-radius: var(--r-sm);
-  background: color-mix(in srgb, #fff 2%, var(--block-bg));
+  background: color-mix(in srgb, var(--text-on-accent) 2%, var(--surface));
   color: var(--text-2);
   font: inherit;
   text-align: left;
@@ -172,13 +172,13 @@ function onCreated(item) {
 @media (hover: hover) {
   .bsp-item:hover {
     border-color: color-mix(in srgb, var(--c) 38%, var(--border));
-    background: color-mix(in srgb, var(--c) 8%, var(--block-bg));
+    background: color-mix(in srgb, var(--c) 8%, var(--surface));
   }
 }
 
 .bsp-item--on {
   border-color: color-mix(in srgb, var(--c) 48%, var(--border));
-  background: color-mix(in srgb, var(--c) 10%, var(--block-bg));
+  background: color-mix(in srgb, var(--c) 10%, var(--surface));
 }
 
 .bsp-icon {

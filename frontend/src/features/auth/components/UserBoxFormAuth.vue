@@ -196,7 +196,7 @@ async function submitReg() {
 .auth-btn {
   height: 34px;
   padding: 0 16px;
-  background: var(--accent-2);
+  background: var(--accent);
   border: none;
   border-radius: 6px;
   color: var(--text-on-accent);
@@ -207,7 +207,7 @@ async function submitReg() {
   white-space: nowrap;
   transition: background 0.15s;
 }
-.auth-btn:hover:not(:disabled) { background: var(--accent-2-dim); }
+.auth-btn:hover:not(:disabled) { background: var(--accent-hover); }
 .auth-btn:disabled { opacity: 0.6; cursor: default; }
 
 .reg-link {
@@ -244,8 +244,8 @@ async function submitReg() {
 
 .reg-input {
   height: 36px;
-  background: var(--surface-1);
-  border: 1px solid var(--input-border);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
   border-radius: 8px;
   color: var(--text-1);
   font-size: 13px;
@@ -255,15 +255,15 @@ async function submitReg() {
   transition: border-color 0.15s, background 0.15s;
 }
 .reg-input::placeholder { color: var(--text-2); }
-.reg-input:focus { border-color: var(--accent); background: var(--surface-2); }
+.reg-input:focus { border-color: var(--accent); background: var(--surface-active); }
 .reg-input:disabled { opacity: 0.5; }
-.reg-input.invalid { border-color: #5a2020; }
+.reg-input.invalid { border-color: var(--surface-raised); }
 
 .reg-error {
   font-size: 12px;
-  color: #f87171;
-  background: #2a1010;
-  border: 1px solid #5a2020;
+  color: var(--danger);
+  background: var(--bg);
+  border: 1px solid var(--surface-raised);
   border-radius: 6px;
   padding: 6px 12px;
 }
@@ -289,7 +289,7 @@ async function submitReg() {
 .reg-cancel:hover { border-color: var(--text-muted); color: var(--text-muted); }
 
 .reg-submit {
-  background: var(--accent-2);
+  background: var(--accent);
   border: none;
   color: var(--text-on-accent);
   font-family: inherit;
@@ -300,7 +300,7 @@ async function submitReg() {
   cursor: pointer;
   transition: background 0.15s;
 }
-.reg-submit:hover:not(:disabled) { background: var(--accent-2-dim); }
+.reg-submit:hover:not(:disabled) { background: var(--accent-hover); }
 .reg-submit:disabled { opacity: 0.4; cursor: default; }
 
 /* ─── Анимации ──────────────────────────────────── */

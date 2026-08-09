@@ -690,21 +690,21 @@ onMounted(async () => {
 .lu-sub { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--text-2); margin-top: 10px; }
 .lu-back {
   display: grid; place-items: center; width: 24px; height: 24px;
-  border: none; border-radius: 7px; background: var(--block-bg);
+  border: none; border-radius: 7px; background: var(--surface);
   color: var(--text-2); font-size: 14px; cursor: pointer;
 }
-.lu-back:hover { color: var(--text-1); background: color-mix(in srgb, var(--accent) 14%, var(--block-bg)); }
+.lu-back:hover { color: var(--text-1); background: color-mix(in srgb, var(--accent) 14%, var(--surface)); }
 
 .lu-opts { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
 .lu-opts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
 .lu-opt {
   display: flex; align-items: center; gap: 12px; text-align: left;
-  background: var(--block-bg); border: none; border-radius: var(--r-md);
+  background: var(--surface); border: none; border-radius: var(--r-md);
   padding: 11px 13px; cursor: pointer; font: inherit; transition: background 0.15s;
 }
-.lu-opt:hover:not(:disabled) { background: color-mix(in srgb, var(--accent) 13%, var(--block-bg)); }
+.lu-opt:hover:not(:disabled) { background: color-mix(in srgb, var(--accent) 13%, var(--surface)); }
 .lu-opt:disabled { opacity: 0.4; cursor: default; }
-.lu-opt.on { background: color-mix(in srgb, var(--accent) 20%, var(--block-bg)); box-shadow: inset 0 0 0 1px var(--accent); }
+.lu-opt.on { background: color-mix(in srgb, var(--accent) 20%, var(--surface)); box-shadow: inset 0 0 0 1px var(--accent); }
 .lu-opt-slim { padding: 9px 13px; }
 .lu-opt-mono {
   flex-shrink: 0; width: 36px; height: 36px; border-radius: 10px;
@@ -722,7 +722,7 @@ onMounted(async () => {
 
 .lu-note {
   font-size: 12px; color: var(--text-2); line-height: 1.5;
-  background: var(--block-bg); border-radius: var(--r-md);
+  background: var(--surface); border-radius: var(--r-md);
   border-left: 3px solid color-mix(in srgb, var(--accent) 55%, transparent);
   padding: 9px 12px; margin-top: 10px;
 }
@@ -734,7 +734,7 @@ onMounted(async () => {
 .lu-req { font-size: 11px; font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--warning); }
 .lu-req.done { color: var(--success); }
 
-.lu-feat { background: var(--block-bg); border-radius: var(--r-md); padding: 9px 12px; }
+.lu-feat { background: var(--surface); border-radius: var(--r-md); padding: 9px 12px; }
 .lu-feat-head { display: flex; align-items: center; gap: 8px; }
 .lu-feat-name { flex: 1; font-size: 13px; font-weight: 600; color: var(--text-1); }
 .lu-feat-view {
@@ -747,7 +747,7 @@ onMounted(async () => {
 .lu-feat-choice-title { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; color: var(--text-2); margin-top: 8px; margin-bottom: 6px; }
 .lu-spell-tag {
   display: inline-flex; align-items: center;
-  background: color-mix(in srgb, var(--accent) 13%, var(--block-bg));
+  background: color-mix(in srgb, var(--accent) 13%, var(--surface));
   border-radius: 999px; color: var(--text-1); font-size: 12px; font-weight: 500;
   padding: 6px 13px;
 }
@@ -769,15 +769,15 @@ onMounted(async () => {
 
 .lu-chips { display: flex; flex-wrap: wrap; gap: 7px; }
 .lu-chip {
-  background: var(--block-bg); border: none; border-radius: 999px;
+  background: var(--surface); border: none; border-radius: 999px;
   color: var(--text-2); font: inherit; font-size: 12px; font-weight: 600;
   padding: 7px 13px; cursor: pointer; transition: background 0.15s;
   font-variant-numeric: tabular-nums;
 }
-.lu-chip:hover { background: color-mix(in srgb, var(--accent) 14%, var(--block-bg)); }
-.lu-chip.on { background: var(--accent); color: #fff; }
+.lu-chip:hover { background: color-mix(in srgb, var(--accent) 14%, var(--surface)); }
+.lu-chip.on { background: var(--accent); color: var(--text-on-accent); }
 .lu-chip.off { opacity: 0.4; cursor: default; }
-.lu-chip.off:hover { background: var(--block-bg); }
+.lu-chip.off:hover { background: var(--surface); }
 .lu-skip { align-self: flex-start; background: none; border: none; color: var(--text-muted); font: inherit; font-size: 12px; cursor: pointer; padding: 0; text-decoration: underline dotted; }
 .lu-skip:hover { color: var(--text-2); }
 
@@ -787,7 +787,7 @@ onMounted(async () => {
 
 .lu-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px; }
 .lu-btn {
-  background: var(--accent); color: #fff; border: none; border-radius: 9px;
+  background: var(--accent); color: var(--text-on-accent); border: none; border-radius: 9px;
   padding: 9px 22px; font: inherit; font-weight: 600; cursor: pointer;
 }
 .lu-btn:disabled { opacity: 0.5; cursor: default; }

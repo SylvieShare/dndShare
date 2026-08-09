@@ -33,7 +33,7 @@ const props = defineProps({
   size: { type: String, default: 'medium' },
   // Optional temp-HP overlay width, 0–100 (clamped so it can't exceed the remainder).
   tempPercent: { type: Number, default: 0 },
-  tempColor: { type: String, default: '#5cb0e8' },
+  tempColor: { type: String, default: 'var(--info)' },
   // Character-sheet flourish: inner glow + shine line + rising bubbles.
   decorated: { type: Boolean, default: false },
 })
@@ -74,7 +74,7 @@ const clampedTemp = computed(() =>
 .stat-bar--small {
   height: 4px;
   border-radius: 3px;
-  background: var(--bg-deep);
+  background: var(--bg);
 }
 .stat-bar--small .stat-bar-fill { border-radius: 3px; }
 .stat-bar--small .stat-bar-temp { opacity: 0.7; }
@@ -83,33 +83,33 @@ const clampedTemp = computed(() =>
 .stat-bar--medium {
   height: 14px;
   border-radius: 999px;
-  background: var(--bg-deep);
+  background: var(--bg);
   border: 1px solid var(--border);
 }
 .stat-bar--medium .stat-bar-fill {
   border-radius: 999px 0 0 999px;
-  border-right: 2px solid rgba(255, 255, 255, 0.5);
+  border-right: 2px solid color-mix(in srgb, var(--text-on-accent) 50%, transparent);
 }
 .stat-bar--medium.stat-bar--full .stat-bar-fill { border-radius: 999px; }
 .stat-bar--medium .stat-bar-temp {
   opacity: 0.85;
-  border-right: 2px solid rgba(255, 255, 255, 0.45);
+  border-right: 2px solid color-mix(in srgb, var(--text-on-accent) 45%, transparent);
 }
 
 /* ── large ── tall pill (character HP widget) */
 .stat-bar--large {
   height: 22px;
   border-radius: 999px;
-  background: #0d0e15;
-  border: 1.5px solid #3a3d4d;
+  background: var(--bg);
+  border: 1.5px solid var(--surface-active);
 }
 .stat-bar--large .stat-bar-fill {
   border-radius: 999px 0 0 999px;
-  border-right: 2px solid rgba(255, 255, 255, 0.55);
+  border-right: 2px solid color-mix(in srgb, var(--text-on-accent) 55%, transparent);
 }
 .stat-bar--large.stat-bar--full .stat-bar-fill { border-radius: 999px; }
 .stat-bar--large .stat-bar-temp {
-  border-right: 2px solid rgba(255, 255, 255, 0.6);
+  border-right: 2px solid color-mix(in srgb, var(--text-on-accent) 60%, transparent);
 }
 
 /* ── decorated flourish (glow + shine + bubbles) ── */
@@ -121,14 +121,14 @@ const clampedTemp = computed(() =>
   right: 9px;
   height: 4px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.1);
+  background: color-mix(in srgb, var(--text-on-accent) 10%, transparent);
   pointer-events: none;
   z-index: 4;
 }
 .stat-bar-bub {
   position: absolute;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.45);
+  background: color-mix(in srgb, var(--text-on-accent) 45%, transparent);
   z-index: 3;
   pointer-events: none;
 }

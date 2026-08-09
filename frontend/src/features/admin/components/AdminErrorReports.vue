@@ -384,27 +384,27 @@ onMounted(load)
 
 .refresh-button {
   border: 1px solid var(--border-strong);
-  background: var(--surface-1);
+  background: var(--surface-raised);
   color: var(--text-2);
 }
 
 .refresh-button:hover:not(:disabled) { color: var(--text-1); }
 
 .delete-button {
-  border: 1px solid rgba(224, 85, 85, 0.3);
-  background: rgba(224, 85, 85, 0.1);
-  color: #e87575;
+  border: 1px solid color-mix(in srgb, var(--danger) 30%, transparent);
+  background: color-mix(in srgb, var(--danger) 10%, transparent);
+  color: var(--danger);
 }
 
-.delete-button:hover:not(:disabled) { background: rgba(224, 85, 85, 0.2); }
+.delete-button:hover:not(:disabled) { background: color-mix(in srgb, var(--danger) 20%, transparent); }
 
 .reopen-button {
-  border: 1px solid rgba(100, 183, 123, 0.3);
-  background: rgba(100, 183, 123, 0.1);
-  color: #75c58b;
+  border: 1px solid color-mix(in srgb, var(--success) 30%, transparent);
+  background: color-mix(in srgb, var(--success) 10%, transparent);
+  color: var(--success);
 }
 
-.reopen-button:hover:not(:disabled) { background: rgba(100, 183, 123, 0.18); }
+.reopen-button:hover:not(:disabled) { background: color-mix(in srgb, var(--success) 18%, transparent); }
 .refresh-button:disabled, .delete-button:disabled, .reopen-button:disabled { cursor: not-allowed; opacity: 0.45; }
 
 .state-msg {
@@ -413,7 +413,7 @@ onMounted(load)
   font-size: 14px;
 }
 
-.state-msg.error { color: #e87575; }
+.state-msg.error { color: var(--danger); }
 
 .report-filters {
   display: flex;
@@ -425,7 +425,7 @@ onMounted(load)
 .report-filters button {
   border: 1px solid var(--border);
   border-radius: 999px;
-  background: var(--surface-1);
+  background: var(--surface-raised);
   color: var(--text-2);
   cursor: pointer;
   font: inherit;
@@ -435,9 +435,9 @@ onMounted(load)
 
 .report-filters button span { color: var(--text-muted); }
 .report-filters button.active {
-  border-color: rgba(141, 126, 232, 0.5);
-  background: rgba(141, 126, 232, 0.14);
-  color: #c2b8ff;
+  border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  color: var(--accent-soft);
 }
 
 .reports-list {
@@ -450,7 +450,7 @@ onMounted(load)
   padding: 16px;
   border: 1px solid var(--border);
   border-radius: 10px;
-  background: var(--block-bg);
+  background: var(--surface);
 }
 
 .report-head {
@@ -474,11 +474,11 @@ onMounted(load)
   font-weight: 700;
 }
 
-.status-badge.open { background: rgba(141, 126, 232, 0.14); color: #c2b8ff; }
-.status-badge.processing { background: rgba(91, 169, 230, 0.14); color: #83c8f5; }
-.status-badge.waiting { background: rgba(232, 184, 90, 0.14); color: #e8b85a; }
-.status-badge.serious { background: rgba(224, 85, 85, 0.14); color: #ef9b8f; }
-.status-badge.resolved { background: rgba(100, 183, 123, 0.14); color: #75c58b; }
+.status-badge.open { background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent-soft); }
+.status-badge.processing { background: color-mix(in srgb, var(--info) 14%, transparent); color: var(--accent-soft); }
+.status-badge.waiting { background: color-mix(in srgb, var(--warning) 14%, transparent); color: var(--warning); }
+.status-badge.serious { background: color-mix(in srgb, var(--danger) 14%, transparent); color: var(--text-2); }
+.status-badge.resolved { background: color-mix(in srgb, var(--success) 14%, transparent); color: var(--success); }
 
 .approval-toggle {
   display: inline-flex;
@@ -490,8 +490,8 @@ onMounted(load)
   white-space: nowrap;
 }
 
-.approval-toggle.approved { color: #75c58b; }
-.approval-toggle input { accent-color: #64b77b; cursor: pointer; }
+.approval-toggle.approved { color: var(--success); }
+.approval-toggle input { accent-color: var(--success); cursor: pointer; }
 .approval-toggle input:disabled { cursor: wait; opacity: 0.6; }
 
 .report-identity {
@@ -503,7 +503,7 @@ onMounted(load)
   font-size: 12px;
 }
 
-.report-id { color: #c2b8ff; font-weight: 700; }
+.report-id { color: var(--accent-soft); font-weight: 700; }
 .report-user { color: var(--text-1); }
 
 .report-title {
@@ -528,19 +528,19 @@ onMounted(load)
   gap: 18px;
   margin-top: 14px;
   padding: 13px 14px;
-  border: 1px solid rgba(224, 85, 85, 0.3);
+  border: 1px solid color-mix(in srgb, var(--danger) 30%, transparent);
   border-radius: 10px;
-  background: rgba(224, 85, 85, 0.08);
+  background: color-mix(in srgb, var(--danger) 8%, transparent);
 }
 
-.serious-change-request strong { color: #efb0a8; font-size: 12px; }
+.serious-change-request strong { color: var(--text-2); font-size: 12px; }
 .serious-change-request p { margin: 6px 0 0; color: var(--text-2); font-size: 12px; line-height: 1.45; }
 .serious-change-request button {
   flex: 0 0 auto;
   border: none;
   border-radius: 8px;
   background: var(--danger);
-  color: white;
+  color: var(--text-on-accent);
   cursor: pointer;
   font: inherit;
   font-size: 11px;
@@ -560,7 +560,7 @@ onMounted(load)
   min-width: 0;
   padding: 9px 10px;
   border-radius: 7px;
-  background: var(--bg-deep);
+  background: var(--bg);
 }
 
 .report-meta dt {
@@ -581,7 +581,7 @@ onMounted(load)
 }
 
 .report-meta code {
-  color: #c2b8ff;
+  color: var(--accent-soft);
   font-size: 11px;
   overflow-wrap: anywhere;
 }
@@ -629,7 +629,7 @@ onMounted(load)
   object-position: left top;
   border: 1px solid var(--border);
   border-radius: 8px;
-  background: var(--bg-deep);
+  background: var(--bg);
 }
 
 @media (max-width: 760px) {
@@ -644,7 +644,7 @@ onMounted(load)
   margin: 8px 0 0;
   padding: 10px;
   border-radius: 7px;
-  background: var(--bg-deep);
+  background: var(--bg);
   color: var(--text-2);
   font-size: 11px;
   white-space: pre-wrap;
@@ -654,9 +654,9 @@ onMounted(load)
 .report-resolution {
   margin-top: 14px;
   padding: 11px 12px;
-  border: 1px solid rgba(100, 183, 123, 0.25);
+  border: 1px solid color-mix(in srgb, var(--success) 25%, transparent);
   border-radius: 8px;
-  background: rgba(100, 183, 123, 0.07);
+  background: color-mix(in srgb, var(--success) 7%, transparent);
 }
 
 .resolution-head {
@@ -667,7 +667,7 @@ onMounted(load)
   font-size: 10px;
 }
 
-.resolution-head strong { color: #75c58b; }
+.resolution-head strong { color: var(--success); }
 
 .resolution-text {
   margin-top: 7px;
@@ -680,7 +680,7 @@ onMounted(load)
 .report-resolution code {
   display: inline-block;
   margin-top: 7px;
-  color: #c2b8ff;
+  color: var(--accent-soft);
   font-size: 11px;
 }
 
@@ -711,13 +711,13 @@ onMounted(load)
 }
 
 .waiting-badge {
-  background: rgba(232, 184, 90, 0.14);
-  color: #e8b85a;
+  background: color-mix(in srgb, var(--warning) 14%, transparent);
+  color: var(--warning);
 }
 
 .answered-badge {
-  background: rgba(100, 183, 123, 0.14);
-  color: #75c58b;
+  background: color-mix(in srgb, var(--success) 14%, transparent);
+  color: var(--success);
 }
 
 .feedback-thread {
@@ -736,13 +736,13 @@ onMounted(load)
 
 .feedback-message.from-ai {
   align-self: flex-start;
-  background: var(--bg-deep);
+  background: var(--bg);
 }
 
 .feedback-message.from-admin {
   align-self: flex-end;
-  background: rgba(100, 183, 123, 0.08);
-  border-color: rgba(100, 183, 123, 0.24);
+  background: color-mix(in srgb, var(--success) 8%, transparent);
+  border-color: color-mix(in srgb, var(--success) 24%, transparent);
 }
 
 .feedback-message-head {
@@ -784,7 +784,7 @@ onMounted(load)
   border: 1px solid var(--border-strong);
   border-radius: 8px;
   outline: none;
-  background: var(--surface-1);
+  background: var(--surface-raised);
   color: var(--text-1);
   font: inherit;
   font-size: 13px;
@@ -792,13 +792,13 @@ onMounted(load)
   padding: 9px 10px;
 }
 
-.feedback-reply textarea:focus { border-color: #8d7ee8; }
+.feedback-reply textarea:focus { border-color: var(--accent); }
 
 .feedback-reply button {
-  border: 1px solid rgba(141, 126, 232, 0.45);
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
   border-radius: 7px;
-  background: rgba(141, 126, 232, 0.16);
-  color: #c2b8ff;
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  color: var(--accent-soft);
   cursor: pointer;
   font: inherit;
   font-size: 12px;

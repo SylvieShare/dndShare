@@ -23,7 +23,7 @@ import { svgColorFilter } from '@/shared/lib/svgColorFilter'
 const props = defineProps(['block'])
 
 const title = computed(() => props.block?.content?.title || props.block?.title || '')
-const accent = computed(() => props.block?.content?.accent || '#8a8f9e')
+const accent = computed(() => props.block?.content?.accent || 'var(--text-muted)')
 const iconSrc = computed(() => props.block?.content?.svg || null)
 const iconStyle = computed(() => ({ filter: svgColorFilter(accent.value) }))
 </script>

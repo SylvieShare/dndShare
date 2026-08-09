@@ -123,7 +123,7 @@ function toggleBrandMenu() {
 
 <style scoped>
 .app-header {
-  background: var(--bg-header);
+  background: var(--bg);
   border-bottom: 1px solid var(--border);
   position: relative;
   z-index: 30;
@@ -171,7 +171,7 @@ function toggleBrandMenu() {
 
 .brand-btn:hover,
 .brand-btn.open {
-  background: var(--surface-1);
+  background: var(--surface-raised);
 }
 
 .brand-arrow {
@@ -197,7 +197,7 @@ function toggleBrandMenu() {
   padding: 6px;
   border: 1px solid var(--border-strong);
   border-radius: 10px;
-  background: var(--popup-bg);
+  background: var(--popover-bg);
   box-shadow: var(--shadow-lg);
 }
 
@@ -217,7 +217,7 @@ function toggleBrandMenu() {
 .brand-menu-item:hover,
 .brand-menu-item.active {
   color: var(--text-1);
-  background: var(--surface-1);
+  background: var(--surface-raised);
 }
 
 .header-title {

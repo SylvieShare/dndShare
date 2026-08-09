@@ -46,7 +46,7 @@ import {
   statMod,
 } from '@/features/character-editor/blocks/dnd/lib/rest'
 
-const SHORT_COLOR = '#ca9a4a'
+const SHORT_COLOR = 'var(--warning)'
 
 const props = defineProps(['block', 'values'])
 const emit = defineEmits(['update:value'])

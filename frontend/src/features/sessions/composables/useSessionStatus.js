@@ -2,13 +2,27 @@ import { computed, ref } from 'vue'
 import { updateSessionStatus } from '@/shared/api/sessionsApi'
 
 export const STATUS_CFG = {
-  live:      { label: 'Идёт игра',     color: '#e85c5c' },
-  active:    { label: 'Активно',        color: '#5ce87c' },
-  planned:   { label: 'Запланировано',  color: '#5c95e8' },
-  paused:    { label: 'Пауза',          color: '#e89c3c' },
-  completed: { label: 'Завершено',      color: '#707080' },
-  draft:     { label: 'Черновик',       color: '#505060' },
-  archived:  { label: 'Архив',          color: '#505060' },
+  live:      { label: 'Идёт игра',    color: 'var(--danger)' },
+  active:    { label: 'Активна',      color: 'var(--success)' },
+  planned:   { label: 'Запланирована', color: 'var(--info)' },
+  paused:    { label: 'Пауза',        color: 'var(--warning)' },
+  completed: { label: 'Завершена',    color: 'var(--text-muted)' },
+  draft:     { label: 'Черновик',     color: 'var(--text-muted)' },
+  archived:  { label: 'Архив',        color: 'var(--text-muted)' },
+}
+
+const FALLBACK_STATUS = { label: '', color: 'var(--text-muted)' }
+
+export function sessionStatusConfig(status) {
+  return STATUS_CFG[status] ?? { ...FALLBACK_STATUS, label: status ?? '' }
+}
+
+export function sessionStatusColor(status) {
+  return sessionStatusConfig(status).color
+}
+
+export function sessionStatusLabel(status) {
+  return sessionStatusConfig(status).label
 }
 
 export const STATUS_OPTIONS = [
@@ -21,9 +35,7 @@ export const STATUS_OPTIONS = [
 export function useSessionStatus({ session, sessionUuid }) {
   const statusOpen = ref(false)
 
-  const statusCfg = computed(() =>
-    STATUS_CFG[session.value?.status] ?? { label: session.value?.status ?? '', color: '#505060' }
-  )
+  const statusCfg = computed(() => sessionStatusConfig(session.value?.status))
 
   async function setStatus(key) {
     statusOpen.value = false

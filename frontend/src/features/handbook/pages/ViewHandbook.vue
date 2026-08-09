@@ -530,7 +530,7 @@ onBeforeUnmount(() => {
     padding: 14px 14px;
     border-radius: 10px;
     border: 1px solid var(--border);
-    background: rgba(255,255,255,0.025);
+    background: color-mix(in srgb, var(--text-on-accent) 2.5%, transparent);
     color: var(--text-1);
     cursor: pointer;
     font-family: inherit;
@@ -538,8 +538,8 @@ onBeforeUnmount(() => {
     transition: border-color 0.15s, background 0.15s;
   }
   .type-grid-card:hover {
-    border-color: var(--card-accent, rgba(162,146,255,0.35));
-    background: rgba(255,255,255,0.04);
+    border-color: var(--card-accent, color-mix(in srgb, var(--accent-soft) 35%, transparent));
+    background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
   }
   .type-grid-icon {
     width: 24px;
@@ -551,7 +551,7 @@ onBeforeUnmount(() => {
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    background: rgba(255,255,255,0.1);
+    background: color-mix(in srgb, var(--text-on-accent) 10%, transparent);
   }
   .type-grid-name {
     font-size: 14px;

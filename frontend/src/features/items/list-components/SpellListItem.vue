@@ -48,7 +48,7 @@ const subtitle = computed(() => {
   font-family: var(--font-display);
   font-size: 20px;
   font-weight: 600;
-  color: var(--color-attack);
+  color: var(--accent-soft);
   line-height: 1;
   min-width: 20px;
   text-align: center;
@@ -63,12 +63,12 @@ const subtitle = computed(() => {
 }
 
 .sli-conc {
-  background: rgba(162,146,255,0.15);
-  color: var(--color-attack);
+  background: color-mix(in srgb, var(--accent-soft) 15%, transparent);
+  color: var(--accent-soft);
 }
 
 .sli-ritual {
-  background: rgba(90,175,114,0.13);
-  color: #5aaf72;
+  background: color-mix(in srgb, var(--success) 13%, transparent);
+  color: var(--success);
 }
 </style>

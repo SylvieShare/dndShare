@@ -35,8 +35,8 @@ defineExpose({ focus: () => inputRef.value?.focus() })
 
 <style scoped>
 .form-text-input {
-  background: var(--control-bg, var(--bg));
-  border: 1px solid var(--input-border);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
   border-radius: 8px;
   color: var(--text-1);
   font: inherit;
@@ -48,7 +48,7 @@ defineExpose({ focus: () => inputRef.value?.focus() })
   transition: border-color 0.15s;
 }
 
-.form-text-input:focus { border-color: var(--input-focus); }
+.form-text-input:focus { border-color: var(--accent); }
 .form-text-input::placeholder { color: var(--text-muted); }
 .form-text-input--mono { font-family: monospace; font-size: 13px; }
 </style>

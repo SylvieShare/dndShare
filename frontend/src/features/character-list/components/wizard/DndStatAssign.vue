@@ -94,25 +94,25 @@ function bump(stat, dir) {
 .sa { display: flex; flex-direction: column; gap: 12px; }
 .sa-hint { font-size: 12px; color: var(--text-muted); margin: 0; }
 .sa-budget { font-size: 13px; font-weight: 600; color: var(--text-2); }
-.sa-budget.over { color: var(--danger, #e5484d); }
+.sa-budget.over { color: var(--danger); }
 .sa-roll-cta { display: flex; justify-content: center; padding: 8px 0; }
 .sa-btn {
-  background: var(--accent); color: #fff; border: none; border-radius: 8px;
+  background: var(--accent); color: var(--text-on-accent); border: none; border-radius: 8px;
   padding: 9px 18px; font: inherit; font-weight: 600; cursor: pointer;
 }
 .sa-grid { display: flex; flex-direction: column; gap: 8px; }
 .sa-row { display: grid; grid-template-columns: 40px 1fr auto; align-items: center; gap: 10px; }
 .sa-stat { font-weight: 700; color: var(--text-1); }
 .sa-select {
-  background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 8px;
+  background: var(--surface-raised); border: 1px solid var(--border-strong); border-radius: 8px;
   color: var(--text-1); font: inherit; padding: 7px 10px; outline: none;
 }
 .sa-step {
-  width: 28px; height: 28px; border-radius: 6px; border: 1px solid var(--input-border);
-  background: var(--input-bg); color: var(--text-1); cursor: pointer; font-size: 16px; line-height: 1;
+  width: 28px; height: 28px; border-radius: 6px; border: 1px solid var(--border-strong);
+  background: var(--surface-raised); color: var(--text-1); cursor: pointer; font-size: 16px; line-height: 1;
 }
 .sa-step:disabled { opacity: 0.4; cursor: default; }
 .sa-val { min-width: 28px; text-align: center; font-weight: 700; color: var(--text-1); }
 .sa-final { font-size: 13px; color: var(--text-muted); justify-self: end; }
-.sa-asi { color: var(--success, #5aaf72); }
+.sa-asi { color: var(--success); }
 </style>

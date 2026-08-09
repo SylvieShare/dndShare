@@ -123,7 +123,7 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   gap: 12px;
-  background: var(--bg-deep);
+  background: var(--bg);
   border: 2px solid transparent;
   border-radius: 12px;
   padding: 10px 12px;
@@ -132,7 +132,7 @@ onMounted(async () => {
 }
 
 .char-tile:hover {
-  border-color: var(--accent-dim);
+  border-color: var(--accent-hover);
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 18%, transparent);
 }
 
@@ -159,7 +159,7 @@ onMounted(async () => {
 .ava-placeholder {
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, var(--accent-dim), var(--accent));
+  background: linear-gradient(135deg, var(--accent-hover), var(--accent));
 }
 
 .tile-info {
@@ -197,8 +197,8 @@ onMounted(async () => {
 .meta-lvl {
   font-size: 11px;
   font-weight: 600;
-  background: color-mix(in srgb, var(--accent) 25%, var(--bg-deep));
-  color: var(--color-attack);
+  background: color-mix(in srgb, var(--accent) 25%, var(--bg));
+  color: var(--accent-soft);
   border-radius: 5px;
   padding: 1px 6px;
 }
@@ -217,7 +217,7 @@ onMounted(async () => {
 .char-skeleton {
   height: 74px;
   border-radius: 12px;
-  background: var(--bg-deep);
+  background: var(--bg);
   animation: sk-pulse 1.4s ease-in-out infinite;
 }
 

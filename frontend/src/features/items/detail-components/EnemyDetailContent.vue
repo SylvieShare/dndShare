@@ -382,15 +382,15 @@ function formatXp(xp) {
   font-weight: 700;
   letter-spacing: 0.1em;
   color: var(--text-2);
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px solid color-mix(in srgb, var(--text-on-accent) 10%, transparent);
   border-radius: 4px;
   padding: 2px 7px;
 }
 
 .enemy-tag-named {
-  color: #d8c070;
-  background: rgba(216, 192, 112, 0.12);
-  border-color: rgba(216, 192, 112, 0.4);
+  color: var(--text-2);
+  background: color-mix(in srgb, var(--text-2) 12%, transparent);
+  border-color: color-mix(in srgb, var(--text-2) 40%, transparent);
 }
 
 /* ── Name ── */
@@ -406,7 +406,7 @@ function formatXp(xp) {
 .enemy-source {
   margin-top: 3px;
   font-size: 11px;
-  color: rgba(255,255,255,0.4);
+  color: color-mix(in srgb, var(--text-on-accent) 40%, transparent);
   letter-spacing: 0.05em;
 }
 
@@ -434,7 +434,7 @@ function formatXp(xp) {
 .enemy-stat-speed { min-width: 70px; }
 
 .enemy-stat-card {
-  background: var(--block-bg);
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 8px 12px;
@@ -444,11 +444,11 @@ function formatXp(xp) {
 }
 
 .enemy-stat-cr {
-  border-color: rgba(200,80,100,0.45);
-  background: rgba(160,40,60,0.1);
+  border-color: color-mix(in srgb, var(--danger) 45%, transparent);
+  background: color-mix(in srgb, var(--danger) 10%, transparent);
 }
-.enemy-stat-cr .stat-label { color: rgba(220,100,120,0.65); }
-.enemy-stat-cr .stat-value { color: #c87080; }
+.enemy-stat-cr .stat-label { color: color-mix(in srgb, var(--danger) 65%, transparent); }
+.enemy-stat-cr .stat-value { color: var(--danger); }
 
 .stat-label {
   font-size: 9px;
@@ -485,7 +485,7 @@ function formatXp(xp) {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 0;
-  background: var(--block-bg);
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 12px 4px;
@@ -514,8 +514,8 @@ function formatXp(xp) {
   color: var(--text-1);
   line-height: 1;
 }
-.ab-mod.mod-pos { color: #5ecb8e; }
-.ab-mod.mod-neg { color: #c87070; }
+.ab-mod.mod-pos { color: var(--success); }
+.ab-mod.mod-neg { color: var(--danger); }
 
 .ab-score {
   font-size: 11px;
@@ -528,9 +528,9 @@ function formatXp(xp) {
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.04em;
-  color: var(--accent, #a292ff);
-  background: rgba(162, 146, 255, 0.12);
-  border: 1px solid rgba(162, 146, 255, 0.3);
+  color: var(--accent, var(--accent-soft));
+  background: color-mix(in srgb, var(--accent-soft) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent-soft) 30%, transparent);
   border-radius: 4px;
   padding: 1px 5px;
   line-height: 1.2;
@@ -543,7 +543,7 @@ function formatXp(xp) {
   gap: 10px;
   margin-top: 14px;
   padding: 12px 14px;
-  background: rgba(255,255,255,0.025);
+  background: color-mix(in srgb, var(--text-on-accent) 2.5%, transparent);
   border-radius: 8px;
   border: 1px solid var(--border);
   font-size: 13px;
@@ -580,7 +580,7 @@ function formatXp(xp) {
   font-weight: 600;
   letter-spacing: 0.05em;
   color: var(--text-2);
-  background: rgba(255,255,255,0.05);
+  background: color-mix(in srgb, var(--text-on-accent) 5%, transparent);
   border: 1px solid var(--border);
   border-radius: 20px;
   padding: 3px 10px;
@@ -596,13 +596,13 @@ function formatXp(xp) {
 .enemy-tag-card {
   border: 1px solid var(--border);
   border-radius: 10px;
-  background: rgba(255,255,255,0.025);
+  background: color-mix(in srgb, var(--text-on-accent) 2.5%, transparent);
   overflow: hidden;
   transition: border-color 0.15s, background 0.15s;
 }
 .enemy-tag-card.active {
-  border-color: rgba(162, 146, 255, 0.35);
-  background: rgba(162, 146, 255, 0.06);
+  border-color: color-mix(in srgb, var(--accent-soft) 35%, transparent);
+  background: color-mix(in srgb, var(--accent-soft) 6%, transparent);
 }
 
 .enemy-tag-head {
@@ -620,7 +620,7 @@ function formatXp(xp) {
   cursor: default;
 }
 .enemy-tag-head.has-desc { cursor: pointer; }
-.enemy-tag-head.has-desc:hover { background: rgba(255,255,255,0.04); }
+.enemy-tag-head.has-desc:hover { background: color-mix(in srgb, var(--text-on-accent) 4%, transparent); }
 
 .enemy-tag-name {
   font-family: var(--font-display);
@@ -637,7 +637,7 @@ function formatXp(xp) {
 }
 .enemy-tag-card.active .enemy-tag-chevron {
   transform: rotate(180deg);
-  color: var(--accent, #a292ff);
+  color: var(--accent, var(--accent-soft));
 }
 
 .enemy-tag-body {
@@ -657,7 +657,7 @@ function formatXp(xp) {
 }
 
 .enemy-block-tile {
-  background: rgba(255,255,255,0.025);
+  background: color-mix(in srgb, var(--text-on-accent) 2.5%, transparent);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 10px 14px;

@@ -49,7 +49,7 @@ export default {
   overflow: hidden;
   background:
     radial-gradient(circle at 18% 22%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 30%),
-    linear-gradient(135deg, var(--bg) 0%, var(--block-bg) 48%, var(--bg-deep) 100%);
+    linear-gradient(135deg, var(--bg) 0%, var(--surface) 48%, var(--bg) 100%);
 }
 
 .hero {
@@ -97,11 +97,11 @@ h1 {
   position: relative;
   min-height: 520px;
   padding: 28px;
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  border: 1px solid color-mix(in srgb, var(--text-on-accent) 9%, transparent);
   border-radius: 8px;
   background:
-    linear-gradient(180deg, color-mix(in srgb, white 5%, transparent), transparent),
-    var(--block-bg);
+    linear-gradient(180deg, color-mix(in srgb, var(--text-on-accent) 5%, transparent), transparent),
+    var(--surface);
   box-shadow: var(--shadow-lg);
 }
 
@@ -109,7 +109,7 @@ h1 {
   content: "";
   position: absolute;
   inset: 16px;
-  border: 1px solid rgba(244, 241, 234, 0.08);
+  border: 1px solid color-mix(in srgb, var(--text-1) 8%, transparent);
   border-radius: 6px;
   pointer-events: none;
 }
@@ -130,7 +130,7 @@ h1 {
   width: 38px;
   height: 8px;
   border-radius: 999px;
-  background: rgba(244, 241, 234, 0.16);
+  background: color-mix(in srgb, var(--text-1) 16%, transparent);
 }
 
 .name-line {
@@ -139,7 +139,7 @@ h1 {
   width: 78%;
   height: 58px;
   margin-top: 34px;
-  border-bottom: 2px solid rgba(244, 241, 234, 0.22);
+  border-bottom: 2px solid color-mix(in srgb, var(--text-1) 22%, transparent);
 }
 
 .stats-grid {
@@ -151,9 +151,9 @@ h1 {
 
 .stats-grid span {
   aspect-ratio: 1;
-  border: 1px solid rgba(244, 241, 234, 0.12);
+  border: 1px solid color-mix(in srgb, var(--text-1) 12%, transparent);
   border-radius: 8px;
-  background: rgba(24, 24, 27, 0.5);
+  background: color-mix(in srgb, var(--bg) 50%, transparent);
 }
 
 .preview-columns {

@@ -40,8 +40,8 @@ function step(delta) {
 .fn-wrap {
   display: flex;
   align-items: center;
-  background: var(--control-bg, var(--bg));
-  box-shadow: inset 0 0 0 1px var(--input-border);
+  background: var(--surface-raised);
+  box-shadow: inset 0 0 0 1px var(--border-strong);
   border-radius: 8px;
   overflow: hidden;
 }
@@ -64,8 +64,8 @@ function step(delta) {
   user-select: none;
   touch-action: manipulation;
 }
-.fn-btn:hover { color: var(--text-2); background: rgba(255,255,255,0.06); }
-.fn-btn:active { background: rgba(255,255,255,0.12); }
+.fn-btn:hover { color: var(--text-2); background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); }
+.fn-btn:active { background: color-mix(in srgb, var(--text-on-accent) 12%, transparent); }
 
 .fn-input {
   width: 48px;

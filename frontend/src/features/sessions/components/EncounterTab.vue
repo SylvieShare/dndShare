@@ -415,11 +415,11 @@ function submitSimple() {
   padding: 12px 16px;
   /* Lighter tint + a brightness/saturate lift so the frosted blur actually reads
      on the dark UI (dark-on-dark blur is otherwise invisible — just looks tinted). */
-  background: color-mix(in srgb, var(--block-bg) 34%, transparent);
+  background: color-mix(in srgb, var(--surface) 34%, transparent);
   backdrop-filter: blur(16px) saturate(1.6) brightness(1.4);
   -webkit-backdrop-filter: blur(16px) saturate(1.6) brightness(1.4);
   border-radius: var(--r-lg) var(--r-lg) 0 0;
-  box-shadow: inset 0 -1px 0 color-mix(in srgb, #fff 8%, transparent);
+  box-shadow: inset 0 -1px 0 color-mix(in srgb, var(--text-on-accent) 8%, transparent);
   margin: 0;
   flex-wrap: wrap;
 }
@@ -433,11 +433,11 @@ function submitSimple() {
   top: 100%;
   height: 26px;
   pointer-events: none;
-  background: linear-gradient(to bottom, color-mix(in srgb, var(--block-bg) 34%, transparent), transparent);
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--surface) 34%, transparent), transparent);
   backdrop-filter: blur(9px) brightness(1.3);
   -webkit-backdrop-filter: blur(9px) brightness(1.3);
-  -webkit-mask-image: linear-gradient(to bottom, #000, transparent);
-  mask-image: linear-gradient(to bottom, #000, transparent);
+  -webkit-mask-image: linear-gradient(to bottom, var(--bg), transparent);
+  mask-image: linear-gradient(to bottom, var(--bg), transparent);
 }
 
 .enc-toolbar-left,
@@ -454,8 +454,8 @@ function submitSimple() {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  border: 1px solid rgba(255,255,255,0.1);
-  background: rgba(255,255,255,0.04);
+  border: 1px solid color-mix(in srgb, var(--text-on-accent) 10%, transparent);
+  background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
   color: var(--text-2);
   border-radius: 7px;
   padding: 7px 12px;
@@ -466,21 +466,21 @@ function submitSimple() {
   transition: background 0.15s, border-color 0.15s, color 0.15s;
 }
 .enc-tool-btn:hover:not(:disabled) {
-  background: rgba(255,255,255,0.09);
-  border-color: rgba(255,255,255,0.18);
+  background: color-mix(in srgb, var(--text-on-accent) 9%, transparent);
+  border-color: color-mix(in srgb, var(--text-on-accent) 18%, transparent);
   color: var(--text-1);
 }
 .enc-tool-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 
 .enc-tool-btn--danger {
-  background: rgba(232, 92, 92, 0.1);
-  border-color: rgba(232, 92, 92, 0.28);
-  color: #e07070;
+  background: color-mix(in srgb, var(--danger) 10%, transparent);
+  border-color: color-mix(in srgb, var(--danger) 28%, transparent);
+  color: var(--danger);
 }
 .enc-tool-btn--danger:hover:not(:disabled) {
-  background: rgba(232, 92, 92, 0.22);
-  border-color: rgba(232, 92, 92, 0.5);
-  color: #ec8888;
+  background: color-mix(in srgb, var(--danger) 22%, transparent);
+  border-color: color-mix(in srgb, var(--danger) 50%, transparent);
+  color: var(--danger);
 }
 
 .enc-tool-btn-count {
@@ -498,14 +498,14 @@ function submitSimple() {
 }
 
 .enc-status--live {
-  color: #e85c5c;
-  background: rgba(232, 92, 92, 0.15);
-  border: 1px solid rgba(232, 92, 92, 0.3);
+  color: var(--danger);
+  background: color-mix(in srgb, var(--danger) 15%, transparent);
+  border: 1px solid color-mix(in srgb, var(--danger) 30%, transparent);
 }
 
 .enc-status--idle {
   color: var(--text-2);
-  background: rgba(255,255,255,0.04);
+  background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
   border: 1px solid var(--border);
 }
 
@@ -513,8 +513,8 @@ function submitSimple() {
   display: flex;
   align-items: baseline;
   gap: 5px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.08);
+  background: color-mix(in srgb, var(--text-on-accent) 5%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-on-accent) 8%, transparent);
   border-radius: 7px;
   padding: 5px 11px;
 }
@@ -537,8 +537,8 @@ function submitSimple() {
   display: flex;
   align-items: center;
   gap: 5px;
-  border: 1px solid rgba(255,255,255,0.1);
-  background: rgba(255,255,255,0.04);
+  border: 1px solid color-mix(in srgb, var(--text-on-accent) 10%, transparent);
+  background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
   color: var(--text-2);
   border-radius: 7px;
   padding: 6px 12px;
@@ -550,8 +550,8 @@ function submitSimple() {
 }
 
 .enc-turn-btn:hover:not(:disabled) {
-  background: rgba(255,255,255,0.09);
-  border-color: rgba(255,255,255,0.18);
+  background: color-mix(in srgb, var(--text-on-accent) 9%, transparent);
+  border-color: color-mix(in srgb, var(--text-on-accent) 18%, transparent);
   color: var(--text-1);
 }
 
@@ -560,13 +560,13 @@ function submitSimple() {
 .enc-turn-btn--next {
   background: color-mix(in srgb, var(--accent) 12%, transparent);
   border-color: color-mix(in srgb, var(--accent) 25%, transparent);
-  color: var(--accent, var(--accent));
+  color: var(--accent);
 }
 
 .enc-turn-btn--next:hover:not(:disabled) {
   background: color-mix(in srgb, var(--accent) 24%, transparent);
   border-color: color-mix(in srgb, var(--accent) 40%, transparent);
-  color: #a080ff;
+  color: var(--accent);
 }
 
 .enc-combat-btn {
@@ -580,11 +580,11 @@ function submitSimple() {
   transition: background 0.15s;
 }
 
-.enc-combat-btn--start { background: var(--accent, var(--accent)); color: #fff; }
-.enc-combat-btn--start:hover { background: #6a4aee; }
+.enc-combat-btn--start { background: var(--accent); color: var(--text-on-accent); }
+.enc-combat-btn--start:hover { background: var(--accent); }
 
-.enc-combat-btn--end { background: rgba(232, 92, 92, 0.12); color: #e85c5c; }
-.enc-combat-btn--end:hover { background: rgba(232, 92, 92, 0.24); }
+.enc-combat-btn--end { background: color-mix(in srgb, var(--danger) 12%, transparent); color: var(--danger); }
+.enc-combat-btn--end:hover { background: color-mix(in srgb, var(--danger) 24%, transparent); }
 
 .enc-combat-btn:disabled { opacity: 0.45; cursor: not-allowed; }
 .enc-combat-btn-count {
@@ -672,10 +672,10 @@ function submitSimple() {
 }
 .enc-block:first-child { margin-top: 6px; }
 
-.enc-block--combat  { --section-color: #c84874; }
-.enc-block--npc     { --section-color: #6b4ed4; }
-.enc-block--players { --section-color: #4a93c4; }
-.enc-block--dead    { --section-color: #a84a44; }
+.enc-block--combat  { --section-color: var(--danger); }
+.enc-block--npc     { --section-color: var(--accent-hover); }
+.enc-block--players { --section-color: var(--info); }
+.enc-block--dead    { --section-color: var(--danger); }
 
 .enc-block--disabled { opacity: 0.45; }
 .enc-block--disabled .enc-add-dashed,
@@ -724,7 +724,7 @@ function submitSimple() {
 
 .enc-reserve-empty {
   font-size: 12px;
-  color: #404055;
+  color: var(--text-muted);
   padding: 6px 14px;
 }
 

@@ -263,7 +263,7 @@ onMounted(() => loadSessions(consumePrefetch(route.fullPath)))
 .page-title {
   font-size: 22px;
   font-weight: 700;
-  color: var(--text-1, #fff);
+  color: var(--text-1, var(--text-on-accent));
   margin: 0;
 }
 
@@ -271,7 +271,7 @@ onMounted(() => loadSessions(consumePrefetch(route.fullPath)))
   font-size: 12px;
   font-weight: 600;
   color: var(--text-2);
-  background: #222230;
+  background: var(--surface);
   border-radius: 6px;
   padding: 2px 8px;
 }
@@ -286,8 +286,8 @@ onMounted(() => loadSessions(consumePrefetch(route.fullPath)))
   display: flex;
   align-items: center;
   gap: 6px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--input-border);
+  background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
+  border: 1px solid var(--border-strong);
   border-radius: 8px;
   padding: 0 10px;
   height: 34px;
@@ -315,7 +315,7 @@ onMounted(() => loadSessions(consumePrefetch(route.fullPath)))
 }
 
 .code-input::placeholder {
-  color: #3a3a50;
+  color: var(--text-muted);
   font-weight: 400;
   letter-spacing: 0;
 }
@@ -323,9 +323,9 @@ onMounted(() => loadSessions(consumePrefetch(route.fullPath)))
 .btn-join {
   height: 24px;
   padding: 0 12px;
-  background: #252538;
-  color: #a0a0c8;
-  border: 1px solid #3a3a54;
+  background: var(--surface-raised);
+  color: var(--text-2);
+  border: 1px solid var(--surface-active);
   border-radius: 6px;
   font: inherit;
   font-size: 12px;
@@ -337,8 +337,8 @@ onMounted(() => loadSessions(consumePrefetch(route.fullPath)))
 }
 
 .btn-join:hover:not(:disabled) {
-  background: #312f5a;
-  color: #c4b0ff;
+  background: var(--surface-active);
+  color: var(--accent-soft);
 }
 
 .btn-join:disabled {
@@ -349,7 +349,7 @@ onMounted(() => loadSessions(consumePrefetch(route.fullPath)))
 .btn-create {
   height: 34px;
   padding: 0 16px;
-  background: var(--accent-2);
+  background: var(--accent);
   color: var(--text-on-accent);
   border: none;
   border-radius: 8px;
@@ -362,7 +362,7 @@ onMounted(() => loadSessions(consumePrefetch(route.fullPath)))
 }
 
 .btn-create:hover {
-  background: var(--accent-2-dim);
+  background: var(--accent-hover);
 }
 
 .filter-pills {
@@ -378,7 +378,7 @@ onMounted(() => loadSessions(consumePrefetch(route.fullPath)))
   height: 32px;
   padding: 0 14px;
   border-radius: 10px;
-  border: 1px solid #2a2a3e;
+  border: 1px solid var(--surface-raised);
   background: transparent;
   color: var(--text-2);
   font: inherit;
@@ -389,13 +389,13 @@ onMounted(() => loadSessions(consumePrefetch(route.fullPath)))
 }
 
 .pill:hover {
-  background: #1e1e2c;
+  background: var(--popover-bg);
   color: var(--text-2);
 }
 
 .pill.active {
-  background: #1e1e2c;
-  border-color: #4a4a70;
+  background: var(--popover-bg);
+  border-color: var(--surface-active);
   color: var(--text-1);
   font-weight: 600;
 }
@@ -406,7 +406,7 @@ onMounted(() => loadSessions(consumePrefetch(route.fullPath)))
 }
 
 .pill.active .pill-count {
-  color: #9090b0;
+  color: var(--text-muted);
 }
 
 .pill--lg {
@@ -435,7 +435,7 @@ onMounted(() => loadSessions(consumePrefetch(route.fullPath)))
 .hero-skeleton {
   height: 180px;
   border-radius: 16px;
-  background: #1a1a22;
+  background: var(--bg);
   animation: sk-pulse 1.4s ease-in-out infinite;
 }
 

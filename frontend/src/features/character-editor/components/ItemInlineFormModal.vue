@@ -89,7 +89,7 @@ function submit() {
   display: inline-block;
   width: 36px;
   height: 20px;
-  background: var(--surface-1);
+  background: var(--surface-raised);
   border-radius: 999px;
   transition: background 0.18s;
 }
@@ -105,6 +105,6 @@ function submit() {
   transition: transform 0.18s, background 0.18s;
 }
 
-.iim-toggle-on .iim-toggle-track { background: color-mix(in srgb, var(--accent) 60%, var(--surface-1)); }
-.iim-toggle-on .iim-toggle-thumb { transform: translateX(16px); background: #fff; }
+.iim-toggle-on .iim-toggle-track { background: color-mix(in srgb, var(--accent) 60%, var(--surface-raised)); }
+.iim-toggle-on .iim-toggle-thumb { transform: translateX(16px); background: var(--text-on-accent); }
 </style>

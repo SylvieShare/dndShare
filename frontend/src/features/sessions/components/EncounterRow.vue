@@ -280,7 +280,7 @@ function commitNoteEdit() {
 }
 
 .enc-row:active { cursor: grabbing; }
-.enc-row:hover { background: color-mix(in srgb, #fff 3%, transparent); }
+.enc-row:hover { background: color-mix(in srgb, var(--text-on-accent) 3%, transparent); }
 
 .enc-row--current {
   background: color-mix(in srgb, var(--accent) 10%, transparent);
@@ -312,7 +312,7 @@ function commitNoteEdit() {
   flex-direction: column;
   align-items: center;
   gap: 1px;
-  background: color-mix(in srgb, #fff 4%, transparent);
+  background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 3px 8px 5px;
@@ -326,14 +326,14 @@ function commitNoteEdit() {
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.06em;
-  color: #5a5a78;
+  color: var(--text-muted);
   text-transform: uppercase;
   line-height: 1;
 }
-.enc-init-block--current .enc-init-label { color: color-mix(in srgb, var(--color-attack) 70%, transparent); }
+.enc-init-block--current .enc-init-label { color: color-mix(in srgb, var(--accent-soft) 70%, transparent); }
 
 .enc-init-block:focus-within {
-  border-color: color-mix(in srgb, #fff 18%, transparent);
+  border-color: color-mix(in srgb, var(--text-on-accent) 18%, transparent);
   background: var(--border);
 }
 
@@ -362,9 +362,9 @@ function commitNoteEdit() {
 }
 .enc-init-input::-webkit-outer-spin-button,
 .enc-init-input::-webkit-inner-spin-button { -webkit-appearance: none; }
-.enc-init-input::placeholder { color: #2a2a40; }
+.enc-init-input::placeholder { color: var(--text-muted); }
 
-.enc-init-block--current .enc-init-input { color: #c8b0ff; }
+.enc-init-block--current .enc-init-input { color: var(--accent-soft); }
 
 .enc-info {
   flex: 1;
@@ -412,7 +412,7 @@ function commitNoteEdit() {
   font-size: 11px;
   color: var(--text-2);
   font-style: italic;
-  background: color-mix(in srgb, #fff 4%, transparent);
+  background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
   border: 1px solid var(--border);
   border-radius: 5px;
   padding: 1px 7px;
@@ -441,11 +441,11 @@ function commitNoteEdit() {
 .enc-badge--clickable { cursor: pointer; }
 .enc-badge--clickable:hover { opacity: 0.75; }
 
-.badge--pc      { color: #5cb0e8; background: rgba(92,176,232,0.12); border-color: rgba(92,176,232,0.25); }
-.badge--enemy   { color: #e85c8a; background: rgba(232,92,138,0.12); border-color: rgba(232,92,138,0.25); }
-.badge--ally    { color: #5ce87c; background: rgba(92,232,124,0.12); border-color: rgba(92,232,124,0.25); }
-.badge--neutral { color: #8888aa; background: rgba(136,136,170,0.12); border-color: rgba(136,136,170,0.25); }
-.badge--minion  { color: #a06ce8; background: rgba(160,108,232,0.12); border-color: rgba(160,108,232,0.28); }
+.badge--pc      { color: var(--info); background: color-mix(in srgb, var(--info) 12%, transparent); border-color: color-mix(in srgb, var(--info) 25%, transparent); }
+.badge--enemy   { color: var(--side-enemy); background: color-mix(in srgb, var(--side-enemy) 12%, transparent); border-color: color-mix(in srgb, var(--side-enemy) 25%, transparent); }
+.badge--ally    { color: var(--success); background: color-mix(in srgb, var(--success) 12%, transparent); border-color: color-mix(in srgb, var(--success) 25%, transparent); }
+.badge--neutral { color: var(--side-neutral); background: color-mix(in srgb, var(--side-neutral) 12%, transparent); border-color: color-mix(in srgb, var(--side-neutral) 25%, transparent); }
+.badge--minion  { color: var(--side-minion); background: color-mix(in srgb, var(--side-minion) 12%, transparent); border-color: color-mix(in srgb, var(--side-minion) 28%, transparent); }
 
 .enc-popover-item {
   display: block;
@@ -463,13 +463,13 @@ function commitNoteEdit() {
   color: var(--text-2);
   transition: background 0.12s, color 0.12s, border-color 0.12s;
 }
-.enc-popover-item:hover { background: color-mix(in srgb, #fff 5%, transparent); color: var(--text-1); }
+.enc-popover-item:hover { background: color-mix(in srgb, var(--text-on-accent) 5%, transparent); color: var(--text-1); }
 .enc-popover-item--active { background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--text-1); border-color: color-mix(in srgb, var(--accent) 40%, transparent); }
 
-.enc-popover-item--enemy   { color: #e85c8a; }
-.enc-popover-item--ally    { color: #5ce87c; }
-.enc-popover-item--neutral { color: #8888aa; }
-.enc-popover-item--minion  { color: #a06ce8; }
+.enc-popover-item--enemy   { color: var(--side-enemy); }
+.enc-popover-item--ally    { color: var(--success); }
+.enc-popover-item--neutral { color: var(--side-neutral); }
+.enc-popover-item--minion  { color: var(--side-minion); }
 .enc-popover-item--danger  { color: var(--danger); }
 .enc-popover-item--danger:hover { background: color-mix(in srgb, var(--danger) 12%, transparent); }
 
@@ -478,7 +478,7 @@ function commitNoteEdit() {
   font-weight: 700;
   letter-spacing: 0.05em;
   color: var(--text-muted);
-  border: 1px solid #252535;
+  border: 1px solid var(--surface-raised);
   border-radius: 4px;
   padding: 2px 5px;
   cursor: pointer;
@@ -486,17 +486,17 @@ function commitNoteEdit() {
 }
 
 .enc-surprised-toggle.active {
-  color: #e89c3c;
-  border-color: rgba(232,156,60,0.4);
-  background: rgba(232,156,60,0.12);
+  color: var(--warning);
+  border-color: color-mix(in srgb, var(--warning) 40%, transparent);
+  background: color-mix(in srgb, var(--warning) 12%, transparent);
 }
 
 .enc-surprised-chip {
   font-size: 9px;
   font-weight: 700;
-  color: #e89c3c;
-  background: rgba(232,156,60,0.15);
-  border: 1px solid rgba(232,156,60,0.35);
+  color: var(--warning);
+  background: color-mix(in srgb, var(--warning) 15%, transparent);
+  border: 1px solid color-mix(in srgb, var(--warning) 35%, transparent);
   border-radius: 4px;
   padding: 2px 5px;
 }
@@ -506,8 +506,8 @@ function commitNoteEdit() {
   width: 26px;
   height: 26px;
   padding: 0;
-  background: color-mix(in srgb, #fff 4%, transparent);
-  border: 1px solid color-mix(in srgb, #fff 8%, transparent);
+  background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-on-accent) 8%, transparent);
   border-radius: 7px;
   color: var(--text-2);
   cursor: pointer;
@@ -527,8 +527,8 @@ function commitNoteEdit() {
   display: flex;
   align-items: center;
   gap: 4px;
-  background: color-mix(in srgb, #fff 6%, transparent);
-  border: 1px solid color-mix(in srgb, #fff 9%, transparent);
+  background: color-mix(in srgb, var(--text-on-accent) 6%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-on-accent) 9%, transparent);
   border-radius: 7px;
   padding: 5px 10px;
   font-size: 13px;

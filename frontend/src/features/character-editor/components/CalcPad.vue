@@ -55,8 +55,8 @@ function backspace() {
   flex: 1;
   display: flex;
   align-items: center;
-  background: var(--control-bg, var(--bg));
-  border: 1px solid var(--input-border);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
   border-radius: 8px;
   padding: 6px 12px;
   min-height: 40px;
@@ -73,8 +73,8 @@ function backspace() {
 }
 
 .cp-bksp {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.08);
+  background: color-mix(in srgb, var(--text-on-accent) 5%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-on-accent) 8%, transparent);
   color: var(--text-muted);
   font-size: 18px;
   cursor: pointer;
@@ -84,7 +84,7 @@ function backspace() {
   touch-action: manipulation;
   flex-shrink: 0;
 }
-.cp-bksp:hover { color: #e07070; background: rgba(224,85,85,0.12); border-color: rgba(224,85,85,0.2); }
+.cp-bksp:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 12%, transparent); border-color: color-mix(in srgb, var(--danger) 20%, transparent); }
 
 .cp-pad {
   display: grid;
@@ -93,10 +93,10 @@ function backspace() {
 }
 
 .cp-key {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.08);
+  background: color-mix(in srgb, var(--text-on-accent) 5%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-on-accent) 8%, transparent);
   border-radius: 7px;
-  color: #d5d5dc;
+  color: var(--text-1);
   font-size: 17px;
   font-weight: 600;
   font-family: inherit;
@@ -106,13 +106,13 @@ function backspace() {
   transition: background 0.1s;
   touch-action: manipulation;
 }
-.cp-key:hover  { background: rgba(255,255,255,0.11); }
-.cp-key:active { background: rgba(255,255,255,0.18); }
+.cp-key:hover  { background: color-mix(in srgb, var(--text-on-accent) 11%, transparent); }
+.cp-key:active { background: color-mix(in srgb, var(--text-on-accent) 18%, transparent); }
 
 .cp-key-op {
-  color: var(--color-attack);
-  background: rgba(162,146,255,0.08);
-  border-color: rgba(162,146,255,0.15);
+  color: var(--accent-soft);
+  background: color-mix(in srgb, var(--accent-soft) 8%, transparent);
+  border-color: color-mix(in srgb, var(--accent-soft) 15%, transparent);
 }
-.cp-key-op:hover { background: rgba(162,146,255,0.18); }
+.cp-key-op:hover { background: color-mix(in srgb, var(--accent-soft) 18%, transparent); }
 </style>

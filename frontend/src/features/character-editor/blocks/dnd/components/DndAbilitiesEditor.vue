@@ -92,7 +92,7 @@ function onDragStart(e, entry, idx) {
   padding: 4px 4px 4px 4px;
   border: 1px solid var(--border);
   border-radius: var(--r-sm);
-  background: color-mix(in srgb, #fff 2%, var(--block-bg));
+  background: color-mix(in srgb, var(--text-on-accent) 2%, var(--surface));
 }
 
 .abe-drag {
@@ -162,7 +162,7 @@ function onDragStart(e, entry, idx) {
   flex-shrink: 0;
   background: none;
   border: none;
-  color: var(--color-attack);
+  color: var(--accent-soft);
   font-size: 12px;
   padding: 0 2px;
   cursor: pointer;

@@ -39,7 +39,7 @@ import { computed } from 'vue'
 const props = defineProps({
   parts: { type: Array, default: () => [] },
   modifier: { type: Number, default: 0 },
-  defaultColor: { type: String, default: '#f2ac4a' },
+  defaultColor: { type: String, default: 'var(--warning)' },
 })
 
 const groups = computed(() => {

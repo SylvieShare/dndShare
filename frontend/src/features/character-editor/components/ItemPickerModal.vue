@@ -271,7 +271,7 @@ onMounted(async () => {
 .picker-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: var(--scrim);
   backdrop-filter: blur(6px);
   display: flex;
   align-items: center;
@@ -302,7 +302,7 @@ onMounted(async () => {
   padding: 14px 20px;
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
-  background: var(--bg-header, #1a1a24);
+  background: var(--bg);
 }
 
 .picker-topbar-left {
@@ -316,12 +316,12 @@ onMounted(async () => {
   font-family: var(--font-display);
   font-size: 18px;
   font-weight: 600;
-  color: var(--text-1, var(--text-1));
+  color: var(--text-1);
 }
 
 .picker-count {
   font-size: 12px;
-  color: var(--text-muted, var(--text-muted));
+  color: var(--text-muted);
 }
 
 .picker-search-wrap {
@@ -329,19 +329,19 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: var(--surface-1);
+  background: var(--surface-raised);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 0 12px;
   height: 36px;
 }
 
-.picker-search-icon { color: var(--text-muted, var(--text-muted)); flex-shrink: 0; }
+.picker-search-icon { color: var(--text-muted); flex-shrink: 0; }
 
 .picker-search {
   background: none;
   border: none;
-  color: var(--text-1, var(--text-1));
+  color: var(--text-1);
   font: inherit;
   font-size: 13px;
   outline: none;
@@ -349,7 +349,7 @@ onMounted(async () => {
   min-width: 0;
 }
 
-.picker-search::placeholder { color: var(--text-muted, var(--text-muted)); }
+.picker-search::placeholder { color: var(--text-muted); }
 
 .picker-group {
   display: flex;
@@ -362,14 +362,14 @@ onMounted(async () => {
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.06em;
-  color: var(--text-muted, var(--text-muted));
+  color: var(--text-muted);
 }
 
 .picker-group-btn {
   background: none;
   border: 1px solid var(--border);
   border-radius: 5px;
-  color: var(--text-2, var(--text-2));
+  color: var(--text-2);
   font: inherit;
   font-size: 11px;
   font-weight: 600;
@@ -378,17 +378,17 @@ onMounted(async () => {
   transition: background 0.12s, color 0.12s, border-color 0.12s;
 }
 
-.picker-group-btn:hover { background: var(--surface-1); color: var(--text-1); }
+.picker-group-btn:hover { background: var(--surface-raised); color: var(--text-1); }
 .picker-group-btn.active {
   background: color-mix(in srgb, var(--accent) 15%, transparent);
   border-color: color-mix(in srgb, var(--accent) 35%, transparent);
-  color: var(--accent, var(--accent));
+  color: var(--accent);
 }
 
 .picker-close {
   background: none;
   border: none;
-  color: var(--text-muted, var(--text-muted));
+  color: var(--text-muted);
   cursor: pointer;
   padding: 6px;
   border-radius: 6px;
@@ -397,7 +397,7 @@ onMounted(async () => {
   flex-shrink: 0;
   transition: color 0.12s, background 0.12s;
 }
-.picker-close:hover { color: var(--text-1); background: var(--surface-1); }
+.picker-close:hover { color: var(--text-1); background: var(--surface-raised); }
 
 .picker-tabs {
   display: flex;
@@ -405,7 +405,7 @@ onMounted(async () => {
   gap: 2px;
   padding: 0 14px;
   border-bottom: 1px solid var(--border);
-  background: var(--bg-header, #1a1a24);
+  background: var(--bg);
   overflow-x: auto;
   scrollbar-width: none;
   flex-shrink: 0;
@@ -422,7 +422,7 @@ onMounted(async () => {
   cursor: pointer;
   font: inherit;
   font-size: 13px;
-  color: var(--text-muted, #6a6a7a);
+  color: var(--text-muted);
   padding: 10px 14px 12px;
   white-space: nowrap;
   transition: color 0.15s;
@@ -440,9 +440,9 @@ onMounted(async () => {
   transition: background 0.15s;
 }
 
-.picker-tab:hover { color: var(--text-2, #c0c0cc); }
-.picker-tab.active { color: #fff; font-weight: 700; }
-.picker-tab.active::after { background: var(--accent, var(--accent)); }
+.picker-tab:hover { color: var(--text-2); }
+.picker-tab.active { color: var(--text-on-accent); font-weight: 700; }
+.picker-tab.active::after { background: var(--accent); }
 
 .picker-tab-icon {
   width: 16px;
@@ -462,9 +462,9 @@ onMounted(async () => {
 .picker-tab-count {
   font-size: 11px;
   font-weight: 600;
-  color: var(--text-muted, var(--text-muted));
+  color: var(--text-muted);
 }
-.picker-tab.active .picker-tab-count { color: var(--text-2, #b0b0c0); }
+.picker-tab.active .picker-tab-count { color: var(--text-2); }
 
 .picker-body {
   flex: 1;
@@ -482,7 +482,7 @@ onMounted(async () => {
   align-items: center;
   gap: 12px;
   padding: 12px 20px;
-  background: var(--bg-header, #1a1a24);
+  background: var(--bg);
   flex-shrink: 0;
 }
 
@@ -490,7 +490,7 @@ onMounted(async () => {
   flex: 1;
   font-size: 13px;
   font-weight: 600;
-  color: var(--text-1, var(--text-1));
+  color: var(--text-1);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -499,12 +499,12 @@ onMounted(async () => {
 .picker-footer-hint {
   flex: 1;
   font-size: 13px;
-  color: var(--text-muted, var(--text-muted));
+  color: var(--text-muted);
 }
 
 .picker-add-btn {
-  background: var(--accent, var(--accent));
-  color: #fff;
+  background: var(--accent);
+  color: var(--text-on-accent);
   border: none;
   border-radius: 8px;
   padding: 9px 20px;
@@ -521,9 +521,9 @@ onMounted(async () => {
 
 .picker-create-btn {
   background: none;
-  border: 1px solid rgba(255,255,255,0.12);
+  border: 1px solid color-mix(in srgb, var(--text-on-accent) 12%, transparent);
   border-radius: 8px;
-  color: var(--text-2, var(--text-2));
+  color: var(--text-2);
   font: inherit;
   font-size: 13px;
   font-weight: 600;
@@ -533,9 +533,9 @@ onMounted(async () => {
   transition: color 0.15s, border-color 0.15s, background 0.15s;
 }
 .picker-create-btn:hover {
-  color: var(--text-1, var(--text-1));
-  border-color: rgba(255,255,255,0.25);
-  background: rgba(255,255,255,0.04);
+  color: var(--text-1);
+  border-color: color-mix(in srgb, var(--text-on-accent) 25%, transparent);
+  background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
 }
 
 .picker-qty {
@@ -543,8 +543,8 @@ onMounted(async () => {
   align-items: center;
   gap: 6px;
   flex-shrink: 0;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
+  background: color-mix(in srgb, var(--text-on-accent) 5%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-on-accent) 10%, transparent);
   border-radius: 8px;
   padding: 3px 6px;
 }
@@ -552,16 +552,16 @@ onMounted(async () => {
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.04em;
-  color: var(--text-muted, var(--text-muted));
+  color: var(--text-muted);
   text-transform: uppercase;
   padding: 0 4px;
 }
 .picker-qty-btn {
   width: 24px;
   height: 24px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.08);
-  color: var(--text-2, var(--text-2));
+  background: color-mix(in srgb, var(--text-on-accent) 5%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-on-accent) 8%, transparent);
+  color: var(--text-2);
   border-radius: 5px;
   font: inherit;
   font-size: 14px;
@@ -569,14 +569,14 @@ onMounted(async () => {
   cursor: pointer;
   transition: background 0.12s, color 0.12s;
 }
-.picker-qty-btn:hover:not(:disabled) { background: rgba(255,255,255,0.12); color: var(--text-1, var(--text-1)); }
+.picker-qty-btn:hover:not(:disabled) { background: color-mix(in srgb, var(--text-on-accent) 12%, transparent); color: var(--text-1); }
 .picker-qty-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 .picker-qty-input {
   width: 44px;
   text-align: center;
   background: none;
   border: none;
-  color: var(--text-1, var(--text-1));
+  color: var(--text-1);
   font: inherit;
   font-size: 13px;
   font-weight: 700;

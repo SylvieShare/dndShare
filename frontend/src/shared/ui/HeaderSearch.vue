@@ -191,7 +191,7 @@ function onKeydown(e) {
   display: flex;
   align-items: center;
   gap: 6px;
-  background: var(--surface-1);
+  background: var(--surface-raised);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 0 8px;
@@ -202,7 +202,7 @@ function onKeydown(e) {
 
 .hs-input-row.focused,
 .hs-input-row:focus-within {
-  border-color: var(--accent, var(--accent));
+  border-color: var(--accent);
   background: color-mix(in srgb, var(--accent) 6%, transparent);
   width: 260px;
 }
@@ -217,7 +217,7 @@ function onKeydown(e) {
   background: none;
   border: none;
   outline: none;
-  color: var(--text-1, var(--text-1));
+  color: var(--text-1);
   font: inherit;
   font-size: 13px;
   padding: 0;
@@ -225,7 +225,7 @@ function onKeydown(e) {
 }
 
 .hs-input::placeholder {
-  color: var(--text-2, var(--text-2));
+  color: var(--text-2);
 }
 
 .hs-clear {
@@ -241,7 +241,7 @@ function onKeydown(e) {
   flex-shrink: 0;
   transition: color 0.12s;
 }
-.hs-clear:hover { color: #e07070; }
+.hs-clear:hover { color: var(--danger); }
 
 /* ── Dropdown ── */
 .hs-dropdown {
@@ -251,7 +251,7 @@ function onKeydown(e) {
   min-width: 320px;
   max-height: 360px;
   overflow-y: auto;
-  background: var(--popup-bg);
+  background: var(--popover-bg);
   border: 1px solid var(--border-strong);
   border-radius: 10px;
   box-shadow: var(--shadow-lg);
@@ -279,7 +279,7 @@ function onKeydown(e) {
 
 .hs-row:hover,
 .hs-row-active {
-  background: var(--surface-1);
+  background: var(--surface-raised);
 }
 
 .hs-row-icon {
@@ -310,7 +310,7 @@ function onKeydown(e) {
 .hs-row-name {
   flex: 1;
   font-size: 13px;
-  color: var(--text-1, var(--text-1));
+  color: var(--text-1);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -331,5 +331,5 @@ function onKeydown(e) {
   width: 4px;
 }
 .hs-dropdown::-webkit-scrollbar-track { background: transparent; }
-.hs-dropdown::-webkit-scrollbar-thumb { background: var(--surface-2); border-radius: 4px; }
+.hs-dropdown::-webkit-scrollbar-thumb { background: var(--surface-active); border-radius: 4px; }
 </style>

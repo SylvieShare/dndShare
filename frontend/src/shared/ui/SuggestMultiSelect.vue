@@ -121,7 +121,7 @@ function onCreated(item) {
   position: fixed;
   inset: 0;
   z-index: 3490;
-  background: rgba(0, 0, 0, 0.4);
+  background: color-mix(in srgb, var(--scrim) 65%, transparent);
   backdrop-filter: blur(4px);
 }
 
@@ -133,7 +133,7 @@ function onCreated(item) {
   width: 300px;
   max-width: 90vw;
   max-height: 75vh;
-  background: var(--popup-bg);
+  background: var(--popover-bg);
   border-top: 1px solid var(--border-strong);
   border-left: 1px solid var(--border-strong);
   border-radius: 16px 0 0 0;
@@ -213,7 +213,7 @@ function onCreated(item) {
   transition: color 0.12s, background 0.12s;
 }
 
-@media (hover: hover) { .sms-close-btn:hover { color: var(--danger); background: rgba(224, 85, 85, 0.1); } }
+@media (hover: hover) { .sms-close-btn:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, transparent); } }
 
 .sms-list {
   flex: 1;
@@ -231,8 +231,8 @@ function onCreated(item) {
   user-select: none;
 }
 
-@media (hover: hover) { .sms-item:hover { background: var(--surface-1); } }
-.sms-item-on { background: color-mix(in srgb, var(--surface-1) 72%, transparent); }
+@media (hover: hover) { .sms-item:hover { background: var(--surface-raised); } }
+.sms-item-on { background: color-mix(in srgb, var(--surface-raised) 72%, transparent); }
 
 .sms-icon {
   flex-shrink: 0;
@@ -322,7 +322,7 @@ function onCreated(item) {
   font-size: 10px;
 }
 
-@media (hover: hover) { .sms-info-btn:hover { color: var(--text-2); background: rgba(255,255,255,0.05); } }
+@media (hover: hover) { .sms-info-btn:hover { color: var(--text-2); background: color-mix(in srgb, var(--text-on-accent) 5%, transparent); } }
 .sms-item-on .sms-info-btn { color: color-mix(in srgb, var(--c) 50%, var(--text-muted)); }
 
 .sms-empty {

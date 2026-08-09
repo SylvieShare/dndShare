@@ -9,7 +9,7 @@ import { MessagesSquare, Sparkles, Sunrise, Swords } from '@lucide/vue'
 export const EVENT_TYPES = [
   { value: 'battle', label: 'Бой', color: 'var(--danger)', icon: markRaw(Swords) },
   { value: 'dialog', label: 'Диалог', color: 'var(--accent)', icon: markRaw(MessagesSquare) },
-  { value: 'event', label: 'Событие', color: 'var(--accent-2)', icon: markRaw(Sparkles) },
+  { value: 'event', label: 'Событие', color: 'var(--accent)', icon: markRaw(Sparkles) },
   { value: 'newday', label: 'Новый день', color: 'var(--warning)', icon: markRaw(Sunrise) },
 ]
 

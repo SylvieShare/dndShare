@@ -78,30 +78,30 @@ function optionsFor(choice) { return choiceOptionList(choice).map((o) => ({ id: 
 .chips { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 4px; }
 .chip {
   display: inline-flex; align-items: center; gap: 5px;
-  background: var(--block-bg); border: none; border-radius: 999px;
+  background: var(--surface); border: none; border-radius: 999px;
   color: var(--text-2); font: inherit; font-size: 12px; padding: 6px 13px; cursor: pointer; transition: background 0.15s;
 }
-.chip:hover { background: color-mix(in srgb, var(--accent) 14%, var(--block-bg)); }
-.chip.on { background: var(--accent); color: #fff; }
+.chip:hover { background: color-mix(in srgb, var(--accent) 14%, var(--surface)); }
+.chip.on { background: var(--accent); color: var(--text-on-accent); }
 .chip.off { opacity: 0.4; cursor: default; }
-.chip.off:hover { background: var(--block-bg); }
+.chip.off:hover { background: var(--surface); }
 .list { display: flex; flex-direction: column; gap: 7px; margin-bottom: 4px; }
 .opt {
   display: flex; align-items: flex-start; gap: 11px;
-  background: var(--block-bg); border-radius: var(--r-md);
+  background: var(--surface); border-radius: var(--r-md);
   padding: 11px 13px; cursor: pointer; transition: background 0.15s;
 }
-.opt:hover { background: color-mix(in srgb, var(--accent) 12%, var(--block-bg)); }
-.opt.on { background: color-mix(in srgb, var(--accent) 16%, var(--block-bg)); }
+.opt:hover { background: color-mix(in srgb, var(--accent) 12%, var(--surface)); }
+.opt.on { background: color-mix(in srgb, var(--accent) 16%, var(--surface)); }
 .opt.off { opacity: 0.45; cursor: default; }
-.opt.off:hover { background: var(--block-bg); }
+.opt.off:hover { background: var(--surface); }
 .box {
   flex-shrink: 0; width: 18px; height: 18px; margin-top: 1px; border-radius: 5px;
-  background: var(--bg); display: flex; align-items: center; justify-content: center;
+  background: var(--surface-raised); display: flex; align-items: center; justify-content: center;
 }
 .box.radio { border-radius: 50%; }
 .opt.on .box { background: var(--accent); }
-.box svg { width: 12px; height: 12px; color: #fff; }
+.box svg { width: 12px; height: 12px; color: var(--text-on-accent); }
 .opt-body { min-width: 0; }
 .opt-label { font-size: 14px; color: var(--text-1); font-weight: 500; }
 .opt-desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; line-height: 1.4; }

@@ -237,18 +237,18 @@ function onScroll(e) {
   cursor: pointer;
   transition: background 0.12s;
 }
-.list-row:hover { background: rgba(255,255,255,0.05); }
-.list-row.selected { background: rgba(106,100,216,0.15); }
+.list-row:hover { background: color-mix(in srgb, var(--text-on-accent) 5%, transparent); }
+.list-row.selected { background: color-mix(in srgb, var(--accent) 15%, transparent); }
 
 .list-row-rich {
   margin: 2px 8px;
   padding: 10px 12px;
   border: 1px solid var(--border);
   border-radius: 10px;
-  background: rgba(255,255,255,0.02);
+  background: color-mix(in srgb, var(--text-on-accent) 2%, transparent);
 }
-.list-row-rich:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.12); }
-.list-row-rich.selected { background: rgba(106,100,216,0.15); border-color: rgba(106,100,216,0.35); }
+.list-row-rich:hover { background: color-mix(in srgb, var(--text-on-accent) 5%, transparent); border-color: color-mix(in srgb, var(--text-on-accent) 12%, transparent); }
+.list-row-rich.selected { background: color-mix(in srgb, var(--accent) 15%, transparent); border-color: color-mix(in srgb, var(--accent) 35%, transparent); }
 
 .item-name {
   font-size: 13px;
@@ -274,14 +274,14 @@ function onScroll(e) {
 .list-more:hover { color: var(--text-1); }
 .list-loading {
   display: flex; align-items: center; justify-content: center; gap: 8px;
-  border-top: 1px solid rgba(162,146,255,0.18);
-  background: linear-gradient(180deg, rgba(31,31,36,0.74), #1f1f24 42%), rgba(106,100,216,0.08);
-  color: #c8c2ff;
+  border-top: 1px solid color-mix(in srgb, var(--accent-soft) 18%, transparent);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--popover-bg) 74%, transparent), var(--popover-bg) 42%), color-mix(in srgb, var(--accent) 8%, transparent);
+  color: var(--accent-soft);
 }
 .list-spinner {
   width: 14px; height: 14px;
-  border: 2px solid rgba(162,146,255,0.25);
-  border-top-color: var(--color-attack);
+  border: 2px solid color-mix(in srgb, var(--accent-soft) 25%, transparent);
+  border-top-color: var(--accent-soft);
   border-radius: 50%;
   animation: spin .75s linear infinite;
 }

@@ -246,7 +246,7 @@ function applyCalc(sign) {
   padding: 0 10px;
   border: 1px solid var(--border-strong);
   border-radius: 7px;
-  background: color-mix(in srgb, var(--surface-1) 42%, var(--bg-deep));
+  background: color-mix(in srgb, var(--surface-raised) 42%, var(--bg));
   color: var(--text-1);
   font: inherit;
   font-size: 13px;
@@ -344,12 +344,12 @@ function applyCalc(sign) {
 .mc-btn:hover { opacity: 0.85; }
 
 .mc-minus {
-  color: #e07070;
-  background: rgba(200, 60, 60, 0.25);
+  color: var(--danger);
+  background: color-mix(in srgb, var(--danger) 25%, transparent);
 }
 
 .mc-plus {
-  color: #5aaf72;
-  background: rgba(60, 175, 110, 0.25);
+  color: var(--success);
+  background: color-mix(in srgb, var(--success) 25%, transparent);
 }
 </style>

@@ -110,8 +110,8 @@ function submit() {
   gap: 8px;
   padding: 9px 12px;
   border-radius: 8px;
-  border: 1px solid var(--input-border);
-  background: color-mix(in srgb, #fff 3%, transparent);
+  border: 1px solid var(--border-strong);
+  background: color-mix(in srgb, var(--text-on-accent) 3%, transparent);
   color: var(--text-2);
   font: inherit;
   font-size: 13px;
@@ -121,7 +121,7 @@ function submit() {
 }
 
 .source-item:hover {
-  background: color-mix(in srgb, #fff 6%, transparent);
+  background: color-mix(in srgb, var(--text-on-accent) 6%, transparent);
   color: var(--text-1);
 }
 

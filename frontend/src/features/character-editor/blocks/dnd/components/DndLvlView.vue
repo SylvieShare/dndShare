@@ -76,7 +76,7 @@ const canLevelUp = computed(() => {
   height: 24px;
   border-radius: 8px;
   overflow: hidden;
-  background: var(--bg-deep);
+  background: var(--bg);
   border: 1px solid var(--border);
   transition: border-color 0.15s;
 }

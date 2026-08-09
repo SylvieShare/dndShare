@@ -52,11 +52,7 @@ import BaseTile from '@/shared/ui/BaseTile'
 import ConfirmDialog from '@/shared/ui/ConfirmDialog'
 import { getByPath } from '@/shared/lib/objectPath'
 import { setCharSeed } from '@/shared/lib/charSeed'
-
-const STATUS_COLOR = {
-  live: '#e85c5c', active: '#5ce87c', planned: '#5c95e8', paused: '#e89c3c',
-  completed: '#707080', draft: 'var(--text-muted)', archived: 'var(--text-muted)',
-}
+import { sessionStatusColor } from '@/features/sessions/composables/useSessionStatus'
 
 function toStr(val) {
   if (val === null || val === undefined) return ''
@@ -115,7 +111,7 @@ const chapterLabel = computed(() => {
   return [num, s.chapterName].filter(Boolean).join(' · ')
 })
 
-function statusColor(status) { return STATUS_COLOR[status] || 'var(--text-muted)' }
+const statusColor = sessionStatusColor
 
 const relativeDate = computed(() => {
   if (!props.changedAt) return ''
@@ -185,7 +181,7 @@ function doDelete() {
 }
 
 .char-card:hover {
-  background: var(--surface-hover);
+  background: var(--surface-raised);
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 28%, var(--border));
 }
 
@@ -211,7 +207,7 @@ function doDelete() {
 .ava-placeholder {
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, color-mix(in srgb, var(--accent-dim) 72%, var(--bg)), var(--accent));
+  background: linear-gradient(135deg, color-mix(in srgb, var(--accent-hover) 72%, var(--bg)), var(--accent));
 }
 
 .char-body {
@@ -274,7 +270,7 @@ function doDelete() {
 .meta-version {
   font-size: 11px;
   font-weight: 600;
-  color: var(--accent-soft, #b9a6ff);
+  color: var(--accent-soft);
 }
 
 .meta-date {
@@ -339,7 +335,7 @@ function doDelete() {
 }
 
 .menu-btn:hover {
-  background: var(--surface-1);
+  background: var(--surface-raised);
   color: var(--text-2);
 }
 
@@ -352,7 +348,7 @@ function doDelete() {
 }
 
 .dropdown-item:hover {
-  background: var(--surface-1);
+  background: var(--surface-raised);
 }
 
 .dropdown-item.danger {

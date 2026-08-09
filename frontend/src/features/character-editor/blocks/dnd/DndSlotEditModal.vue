@@ -110,7 +110,7 @@ defineEmits(['close', 'change', 'set-stat-path', 'set-save-bonus', 'set-attack-b
 }
 
 .ssm-lvl {
-  color: #60a5fa;
+  color: var(--info);
   font-size: 12px;
   font-weight: 700;
   flex-shrink: 0;

@@ -231,7 +231,7 @@ function hideTooltip() {
   transition: background 0.12s;
 }
 
-@media (hover: hover) { .bs-compact-chip:hover { background: rgba(255, 255, 255, 0.06); } }
+@media (hover: hover) { .bs-compact-chip:hover { background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); } }
 
 .bs-compact-svg-img {
   width: 24px;
@@ -269,7 +269,7 @@ function hideTooltip() {
   .bs-compact-btn:hover {
     border-color: var(--text-muted);
     color: var(--text-2);
-    background: rgba(255, 255, 255, 0.04);
+    background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
   }
 }
 
@@ -317,15 +317,15 @@ function hideTooltip() {
 
 .bs-only-add :deep(.sa-trigger-text) {
   min-height: 28px;
-  border-color: rgba(140, 140, 154, 0.58);
-  color: #b8b8c4;
-  background: rgba(255, 255, 255, 0.02);
+  border-color: color-mix(in srgb, var(--text-muted) 58%, transparent);
+  color: var(--text-2);
+  background: color-mix(in srgb, var(--text-on-accent) 2%, transparent);
 }
 
 @media (hover: hover) {
   .bs-only-add :deep(.sa-trigger-text:hover) {
-    border-color: rgba(190, 190, 205, 0.72);
-    color: #fff;
+    border-color: color-mix(in srgb, var(--text-2) 72%, transparent);
+    color: var(--text-on-accent);
   }
 }
 
@@ -389,7 +389,7 @@ function hideTooltip() {
 }
 
 @media (hover: hover) {
-  .bs-add-tile:hover { border-color: var(--accent); color: var(--text-2); background: rgba(255, 255, 255, 0.04); }
+  .bs-add-tile:hover { border-color: var(--accent); color: var(--text-2); background: color-mix(in srgb, var(--text-on-accent) 4%, transparent); }
 }
 
 /* ── Empty ── */

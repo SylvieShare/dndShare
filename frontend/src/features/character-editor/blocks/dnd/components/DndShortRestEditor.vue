@@ -72,10 +72,10 @@ const canSpend = computed(() => remaining.value > 0 && current.value < max.value
   touch-action: manipulation;
   transition: opacity 0.12s, background 0.12s;
 }
-.sre-spend { background: rgba(60, 175, 110, 0.22); color: #5aaf72; }
+.sre-spend { background: color-mix(in srgb, var(--success) 22%, transparent); color: var(--success); }
 .sre-spend:hover:not(:disabled) { opacity: 0.85; }
 .sre-spend:disabled { opacity: 0.3; cursor: not-allowed; }
-.sre-finish { background: rgba(202, 154, 74, 0.22); color: #d8bd86; }
+.sre-finish { background: color-mix(in srgb, var(--warning) 22%, transparent); color: var(--text-2); }
 .sre-finish:hover { opacity: 0.85; }
 .sre-note { margin: 0; color: var(--text-muted); font-size: 11px; text-align: center; }
 </style>

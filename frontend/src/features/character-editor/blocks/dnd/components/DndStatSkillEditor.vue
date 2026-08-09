@@ -134,11 +134,11 @@ function update(field, value) {
   cursor: pointer;
   transition: color 0.12s, background 0.12s;
 }
-.sk-rename-btn:hover { color: var(--accent); background: rgba(255, 255, 255, 0.06); }
+.sk-rename-btn:hover { color: var(--accent); background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); }
 .sk-rename {
   flex: 1;
   min-width: 0;
-  background: var(--input-bg);
+  background: var(--surface-raised);
   border: 1px solid var(--accent);
   border-radius: 8px;
   color: var(--text-1);
@@ -169,6 +169,6 @@ function update(field, value) {
 .sk-prof-active {
   border-color: var(--accent);
   background: color-mix(in srgb, var(--accent) 12%, transparent);
-  color: var(--color-attack);
+  color: var(--accent-soft);
 }
 </style>

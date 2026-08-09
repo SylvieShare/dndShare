@@ -75,17 +75,17 @@ defineEmits(['short', 'long'])
   clip-path: polygon(0 0, 57% 0, 45% 100%, 0 100%);
   justify-content: flex-start;
   padding: 16px 50% 0 0;
-  color: #d8bd86;
+  color: var(--text-2);
 }
 .rest-half--long {
   clip-path: polygon(57% 0, 100% 0, 100% 100%, 45% 100%);
   justify-content: flex-end;
   padding: 0 0 16px 50%;
-  color: #b7b0ef;
+  color: var(--accent-soft);
 }
 
-.rest-face:not(.rest-face--static) .rest-half--short:hover { background: rgba(202, 154, 74, 0.18); }
-.rest-face:not(.rest-face--static) .rest-half--long:hover { background: rgba(127, 119, 221, 0.20); }
+.rest-face:not(.rest-face--static) .rest-half--short:hover { background: color-mix(in srgb, var(--warning) 18%, transparent); }
+.rest-face:not(.rest-face--static) .rest-half--long:hover { background: color-mix(in srgb, var(--accent) 20%, transparent); }
 .rest-face:not(.rest-face--static) .rest-half:active { transform: scale(0.95); }
 
 .rest-ic { width: 30px; height: 30px; flex-shrink: 0; }

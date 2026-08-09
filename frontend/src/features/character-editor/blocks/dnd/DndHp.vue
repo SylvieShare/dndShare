@@ -53,8 +53,8 @@ const barPct = computed(() => {
 const barColor = computed(() => {
   const p = barPct.value
   if (p > 60) return 'var(--success)'
-  if (p > 25) return '#e0a020'
-  return '#c0392b'
+  if (p > 25) return 'var(--warning)'
+  return 'var(--danger)'
 })
 
 const diceOptions = computed(() => {

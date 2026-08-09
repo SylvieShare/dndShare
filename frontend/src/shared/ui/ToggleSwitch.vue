@@ -43,8 +43,8 @@ defineEmits(['update:modelValue'])
   display: inline-block;
   width: 38px;
   height: 22px;
-  background-color: var(--control-bg, var(--bg));
-  box-shadow: inset 0 0 0 1px var(--input-border);
+  background-color: var(--surface-raised);
+  box-shadow: inset 0 0 0 1px var(--border-strong);
   border-radius: 11px;
   transition: background-color 0.2s ease;
   flex-shrink: 0;

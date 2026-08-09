@@ -242,7 +242,7 @@ function deletePanelItem(item) {
   .sa-trigger:hover {
     border-color: var(--text-muted);
     color: var(--text-2);
-    background: rgba(255, 255, 255, 0.04);
+    background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
   }
 }
 
@@ -283,7 +283,7 @@ function deletePanelItem(item) {
 .sa-input {
   width: 180px;
   height: 28px;
-  background: var(--input-bg);
+  background: var(--surface-raised);
   border: 1px dashed var(--border-strong);
   border-radius: 7px;
   color: var(--text-2);
@@ -302,7 +302,7 @@ function deletePanelItem(item) {
   position: fixed;
   inset: 0;
   z-index: 3490;
-  background: rgba(0, 0, 0, 0.4);
+  background: color-mix(in srgb, var(--scrim) 65%, transparent);
   backdrop-filter: blur(4px);
 }
 
@@ -316,7 +316,7 @@ function deletePanelItem(item) {
   width: 300px;
   max-width: 90vw;
   max-height: 75vh;
-  background: var(--popup-bg);
+  background: var(--popover-bg);
   border-top: 1px solid var(--border-strong);
   border-left: 1px solid var(--border-strong);
   border-radius: 16px 0 0 0;
@@ -377,7 +377,7 @@ function deletePanelItem(item) {
   transition: color 0.12s, background 0.12s;
 }
 
-@media (hover: hover) { .sa-panel-close-btn:hover { color: var(--danger); background: rgba(224, 85, 85, 0.1); } }
+@media (hover: hover) { .sa-panel-close-btn:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, transparent); } }
 
 .sa-panel-search {
   padding: 0 14px 10px;
@@ -388,8 +388,8 @@ function deletePanelItem(item) {
 .sa-panel-input {
   width: 100%;
   height: 36px;
-  background: var(--input-bg);
-  border: 1px solid var(--input-border);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
   border-radius: 8px;
   color: var(--text-1);
   font: inherit;
@@ -419,7 +419,7 @@ function deletePanelItem(item) {
 }
 
 .sa-panel-item:active {
-  background: rgba(255, 255, 255, 0.06);
+  background: color-mix(in srgb, var(--text-on-accent) 6%, transparent);
 }
 
 .sa-panel-dot {

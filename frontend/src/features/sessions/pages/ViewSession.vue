@@ -347,7 +347,7 @@ onBeforeUnmount(() => {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: var(--bg-deep);
+  background: var(--bg);
 }
 
 .layout {
@@ -364,7 +364,7 @@ onBeforeUnmount(() => {
 
 /* shared tile look: block-bg surface, rounded, no frame */
 .tile {
-  background: var(--block-bg);
+  background: var(--surface);
   border-radius: var(--r-lg);
 }
 
@@ -392,36 +392,36 @@ onBeforeUnmount(() => {
 .poll-indicator {
   flex: 1;
   height: 2px;
-  background: #1e1e2c;
+  background: var(--popover-bg);
   border-radius: 2px;
   overflow: hidden;
   transition: box-shadow 0.3s;
 }
 
 .poll-indicator.changed {
-  box-shadow: 0 0 6px #5ce87c;
+  box-shadow: 0 0 6px var(--success);
 }
 
 .poll-indicator.error {
-  box-shadow: 0 0 6px #e85c5c;
+  box-shadow: 0 0 6px var(--danger);
 }
 
 .poll-bar {
   height: 100%;
   width: 0%;
   border-radius: 2px;
-  background: #404058;
+  background: var(--surface-active);
   transition: background 0.3s;
 }
 
 .poll-indicator.changed .poll-bar {
   width: 100%;
-  background: #5ce87c;
+  background: var(--success);
 }
 
 .poll-indicator.error .poll-bar {
   width: 100%;
-  background: #e85c5c;
+  background: var(--danger);
 }
 
 .poll-bar.running {
@@ -472,7 +472,7 @@ onBeforeUnmount(() => {
 .invite-section {
   margin-top: auto;
   padding: 12px;
-  background: var(--bg-deep);
+  background: var(--bg);
   border-radius: var(--r-md);
 }
 
@@ -483,7 +483,7 @@ onBeforeUnmount(() => {
   gap: 6px;
   width: 100%;
   background: none;
-  border: 1px dashed #2e2e42;
+  border: 1px dashed var(--surface-active);
   border-radius: 8px;
   color: var(--text-2);
   font: inherit;
@@ -496,15 +496,15 @@ onBeforeUnmount(() => {
 }
 
 .create-char-btn:hover {
-  border-color: #6a3fcb;
+  border-color: var(--accent-hover);
   color: var(--text-1);
-  background: rgba(106, 63, 203, 0.08);
+  background: color-mix(in srgb, var(--accent-hover) 8%, transparent);
 }
 
 .cc-plus {
   font-size: 16px;
   line-height: 1;
-  color: #6a3fcb;
+  color: var(--accent-hover);
 }
 
 .invite-label {
@@ -519,7 +519,7 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   gap: 6px;
-  background: var(--block-bg);
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 7px 10px;
@@ -554,7 +554,7 @@ onBeforeUnmount(() => {
 
 .invite-copy:hover {
   color: var(--text-2);
-  background: #252535;
+  background: var(--surface-raised);
 }
 
 .sel-controls {
@@ -564,7 +564,7 @@ onBeforeUnmount(() => {
 
 .sel-btn {
   flex: 1;
-  background: var(--surface-1);
+  background: var(--surface-raised);
   border: none;
   border-radius: 8px;
   color: var(--text-2);
@@ -577,7 +577,7 @@ onBeforeUnmount(() => {
 }
 
 .sel-btn:hover:not(:disabled) {
-  background: var(--surface-2);
+  background: var(--surface-active);
   color: var(--text-1);
 }
 
@@ -599,7 +599,7 @@ onBeforeUnmount(() => {
   justify-content: center;
   gap: 7px;
   width: 100%;
-  background: var(--surface-1);
+  background: var(--surface-raised);
   border: none;
   border-radius: 8px;
   color: var(--text-2);
@@ -612,7 +612,7 @@ onBeforeUnmount(() => {
 }
 
 .action-btn:hover:not(:disabled) {
-  background: var(--surface-2);
+  background: var(--surface-active);
   color: var(--text-1);
 }
 
@@ -622,13 +622,13 @@ onBeforeUnmount(() => {
 }
 
 .action-btn--danger {
-  color: #e87070;
+  color: var(--danger);
   background: color-mix(in srgb, var(--danger) 14%, transparent);
 }
 
 .action-btn--danger:hover:not(:disabled) {
   background: color-mix(in srgb, var(--danger) 22%, transparent);
-  color: #ef8585;
+  color: var(--danger);
 }
 
 .main-area {
@@ -664,7 +664,7 @@ onBeforeUnmount(() => {
   min-height: 0;
   display: flex;
   flex-direction: column;
-  background: var(--block-bg);
+  background: var(--surface);
   border-radius: var(--r-lg);
 }
 
@@ -693,7 +693,7 @@ onBeforeUnmount(() => {
   flex: 1;
   margin: 24px;
   border-radius: 16px;
-  background: #1a1a22;
+  background: var(--bg);
   animation: sk-pulse 1.4s ease-in-out infinite;
   min-height: 200px;
 }

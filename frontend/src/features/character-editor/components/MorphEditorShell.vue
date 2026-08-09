@@ -81,7 +81,6 @@ const showBack = computed(() => !!props.nav && props.nav.view.value !== 'detail'
   background: var(--sc, var(--accent));
 }
 .mes-rest {
-  --control-bg: var(--surface-1);
   flex: 1;
   min-width: 0;
   display: flex;

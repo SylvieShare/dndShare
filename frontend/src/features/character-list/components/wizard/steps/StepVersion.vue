@@ -33,11 +33,11 @@ const { state } = inject('createWizard')
 .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
 .ver {
   position: relative; text-align: left;
-  background: var(--block-bg); border: none; border-radius: var(--r-lg);
+  background: var(--surface); border: none; border-radius: var(--r-lg);
   padding: 18px 18px 16px; cursor: pointer; overflow: hidden; transition: background 0.15s;
 }
-.ver:not(.soon):hover { background: color-mix(in srgb, var(--accent) 12%, var(--block-bg)); }
-.ver.on { background: color-mix(in srgb, var(--accent) 16%, var(--block-bg)); }
+.ver:not(.soon):hover { background: color-mix(in srgb, var(--accent) 12%, var(--surface)); }
+.ver.on { background: color-mix(in srgb, var(--accent) 16%, var(--surface)); }
 .ver.soon { opacity: 0.55; cursor: default; }
 .ver-strip { position: absolute; top: 12px; bottom: 12px; left: 0; width: 3px; border-radius: 0 2px 2px 0; background: var(--accent); }
 .ver-badge { font-family: var(--font-display); font-size: 30px; font-weight: 700; color: var(--accent); line-height: 1; }

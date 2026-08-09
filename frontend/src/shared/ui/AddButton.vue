@@ -31,7 +31,7 @@ defineEmits(['click'])
 
 .add-btn:hover {
   border-color: var(--accent);
-  color: var(--color-attack);
+  color: var(--accent-soft);
   background: color-mix(in srgb, var(--accent) 6%, transparent);
 }
 

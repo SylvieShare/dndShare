@@ -39,10 +39,10 @@ export function matchesGroup(c, group) {
 }
 
 export const SIDE_COLOR = {
-  enemy:   '#e85c8a',
-  ally:    '#5ce87c',
-  neutral: '#8888aa',
-  minion:  '#a06ce8',
+  enemy:   'var(--side-enemy)',
+  ally:    'var(--success)',
+  neutral: 'var(--side-neutral)',
+  minion:  'var(--side-minion)',
 }
 
 export const SIDE_LABEL = {

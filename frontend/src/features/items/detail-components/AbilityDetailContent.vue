@@ -39,7 +39,7 @@ const data = computed(() => props.item.data || {})
 .adc-name {
   font-size: 22px;
   font-weight: 700;
-  color: #eeeeF4;
+  color: var(--text-1);
   line-height: 1.2;
   padding-right: 24px;
 }
@@ -52,7 +52,7 @@ const data = computed(() => props.item.data || {})
   line-height: 1.65;
 }
 
-.adc-no-desc { font-size: 13px; color: #383838; font-style: italic; }
+.adc-no-desc { font-size: 13px; color: var(--text-muted); font-style: italic; }
 
 .adc-meta { display: flex; flex-wrap: wrap; gap: 6px; }
 
@@ -62,7 +62,7 @@ const data = computed(() => props.item.data || {})
   padding: 3px 9px;
   border-radius: 5px;
 }
-.adc-uses { background: rgba(255,255,255,0.06); color: var(--text-muted); }
-.adc-sr   { background: rgba(90,175,114,0.15);  color: #5aaf72; }
-.adc-lr   { background: rgba(79,143,204,0.15);  color: #4f8fcc; }
+.adc-uses { background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); color: var(--text-muted); }
+.adc-sr   { background: color-mix(in srgb, var(--success) 15%, transparent);  color: var(--success); }
+.adc-lr   { background: color-mix(in srgb, var(--info) 15%, transparent);  color: var(--info); }
 </style>

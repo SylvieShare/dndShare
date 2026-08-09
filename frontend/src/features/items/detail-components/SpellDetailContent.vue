@@ -147,10 +147,10 @@ function colorAlpha(color, alpha) {
   border-radius: 5px;
 }
 
-.sdc-pill-lvl    { background: rgba(162,146,255,0.15); color: var(--color-attack); }
-.sdc-pill-school { background: rgba(255,255,255,0.06); border: 1px solid transparent; color: var(--text-2); }
-.sdc-pill-conc   { background: rgba(90,175,114,0.15);  color: #5aaf72; }
-.sdc-pill-ritual { background: rgba(252,190,36,0.13);  color: var(--warning); }
+.sdc-pill-lvl    { background: color-mix(in srgb, var(--accent-soft) 15%, transparent); color: var(--accent-soft); }
+.sdc-pill-school { background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); border: 1px solid transparent; color: var(--text-2); }
+.sdc-pill-conc   { background: color-mix(in srgb, var(--success) 15%, transparent);  color: var(--success); }
+.sdc-pill-ritual { background: color-mix(in srgb, var(--warning) 13%, transparent);  color: var(--warning); }
 
 .sdc-title-row {
   display: flex;
@@ -163,7 +163,7 @@ function colorAlpha(color, alpha) {
 .sdc-name {
   font-size: 22px;
   font-weight: 700;
-  color: #eeeeF4;
+  color: var(--text-1);
   line-height: 1.2;
 }
 .sdc-name-en { font-size: 13px; color: var(--text-muted); }
@@ -174,8 +174,8 @@ function colorAlpha(color, alpha) {
   display: flex;
   border-radius: 10px;
   overflow: hidden;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.06);
+  background: color-mix(in srgb, var(--text-on-accent) 3%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-on-accent) 6%, transparent);
 }
 .sdc-meta-cell {
   flex: 1;
@@ -184,7 +184,7 @@ function colorAlpha(color, alpha) {
   align-items: center;
   gap: 2px;
   padding: 10px 8px;
-  border-right: 1px solid rgba(255,255,255,0.06);
+  border-right: 1px solid color-mix(in srgb, var(--text-on-accent) 6%, transparent);
 }
 .sdc-meta-cell:last-child { border-right: none; }
 .sdc-meta-icon {
@@ -193,16 +193,16 @@ function colorAlpha(color, alpha) {
   display: block;
   flex-shrink: 0;
 }
-.sdc-meta-val  { font-size: 12px; font-weight: 600; color: #d0d0dc; text-align: center; }
-.sdc-meta-lbl  { font-size: 10px; color: #444; letter-spacing: 0.06em; text-transform: uppercase; }
+.sdc-meta-val  { font-size: 12px; font-weight: 600; color: var(--text-1); text-align: center; }
+.sdc-meta-lbl  { font-size: 10px; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; }
 
 .sdc-comp-row { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
 .sdc-comp-lbl { font-size: 11px; color: var(--text-muted); flex-shrink: 0; }
 .sdc-comp {
   font-size: 12px;
   font-weight: 700;
-  color: #a0a0b0;
-  background: rgba(255,255,255,0.06);
+  color: var(--text-2);
+  background: color-mix(in srgb, var(--text-on-accent) 6%, transparent);
   border-radius: 4px;
   padding: 2px 7px;
 }
@@ -212,7 +212,7 @@ function colorAlpha(color, alpha) {
 .sdc-source {
   font-size: 11px;
   color: var(--text-muted);
-  background: rgba(255,255,255,0.04);
+  background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
   border-radius: 4px;
   padding: 2px 8px;
 }
@@ -225,5 +225,5 @@ function colorAlpha(color, alpha) {
   text-align: justify;
 }
 
-.sdc-no-desc { font-size: 13px; color: #383838; font-style: italic; }
+.sdc-no-desc { font-size: 13px; color: var(--text-muted); font-style: italic; }
 </style>

@@ -1,10 +1,10 @@
 export const POTION_RARITY = {
-  0: { code: 'common', label: 'Обычное', color: '#9aa0ad' },
-  1: { code: 'uncommon', label: 'Необычное', color: '#4fae6a' },
-  2: { code: 'rare', label: 'Редкое', color: '#4f8fe0' },
-  3: { code: 'very_rare', label: 'Очень редкое', color: '#a26cf0' },
-  4: { code: 'legendary', label: 'Легендарное', color: '#f0b03c' },
-  5: { code: 'artifact', label: 'Артефакт', color: '#e0524e' },
+  0: { code: 'common', label: 'Обычное', color: 'var(--text-muted)' },
+  1: { code: 'uncommon', label: 'Необычное', color: 'var(--success)' },
+  2: { code: 'rare', label: 'Редкое', color: 'var(--info)' },
+  3: { code: 'very_rare', label: 'Очень редкое', color: 'var(--accent)' },
+  4: { code: 'legendary', label: 'Легендарное', color: 'var(--warning)' },
+  5: { code: 'artifact', label: 'Артефакт', color: 'var(--danger)' },
 }
 
 export function rarityOf(id) {

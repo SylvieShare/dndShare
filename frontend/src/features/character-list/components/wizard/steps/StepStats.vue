@@ -102,7 +102,7 @@ function bump(stat, dir) {
 .roll-cta { display: flex; }
 .roll-btn {
   display: inline-flex; align-items: center; gap: 8px;
-  background: var(--accent); color: #fff; border: none; border-radius: 9px;
+  background: var(--accent); color: var(--text-on-accent); border: none; border-radius: 9px;
   padding: 10px 18px; font: inherit; font-weight: 600; cursor: pointer;
 }
 .roll-btn svg { width: 17px; height: 17px; }
@@ -110,12 +110,12 @@ function bump(stat, dir) {
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 11px; }
 .stat {
   position: relative;
-  background: var(--block-bg);
+  background: var(--surface);
   border-radius: var(--r-md);
   padding: 11px 13px 12px;
   overflow: hidden;
 }
-.stat.primary { background: color-mix(in srgb, var(--accent) 10%, var(--block-bg)); }
+.stat.primary { background: color-mix(in srgb, var(--accent) 10%, var(--surface)); }
 .stat-strip { position: absolute; top: 8px; bottom: 8px; left: 0; width: 3px; border-radius: 0 2px 2px 0; background: var(--accent); }
 .stat-head { display: flex; align-items: center; gap: 6px; }
 .stat-name { font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-muted); font-weight: 650; }
@@ -128,13 +128,13 @@ function bump(stat, dir) {
 .stat-asi { font-size: 10px; color: var(--accent); margin-top: 3px; }
 .stat-ctl { display: flex; align-items: center; gap: 8px; margin-top: 9px; }
 .pool-select {
-  flex: 1; background: var(--bg); border: 1px solid var(--input-border); border-radius: 7px;
+  flex: 1; background: var(--surface-raised); border: 1px solid var(--border-strong); border-radius: 7px;
   color: var(--text-1); font: inherit; font-size: 13px; padding: 6px 8px; outline: none;
 }
-.pool-select:focus { border-color: var(--input-focus); }
+.pool-select:focus { border-color: var(--accent); }
 .step-btn {
-  width: 28px; height: 28px; border-radius: 7px; border: 1px solid var(--input-border);
-  background: var(--bg); color: var(--text-1); cursor: pointer; font-size: 16px; line-height: 1;
+  width: 28px; height: 28px; border-radius: 7px; border: 1px solid var(--border-strong);
+  background: var(--surface-raised); color: var(--text-1); cursor: pointer; font-size: 16px; line-height: 1;
 }
 .step-btn:disabled { opacity: 0.4; cursor: default; }
 .step-val { min-width: 26px; text-align: center; font-weight: 700; color: var(--text-1); font-variant-numeric: tabular-nums; }

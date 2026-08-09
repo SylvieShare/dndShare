@@ -79,7 +79,7 @@ defineEmits(['toggle-dot', 'view', 'show-tooltip', 'hide-tooltip', 'manage'])
 .abv-skeleton {
   height: 28px;
   border-radius: 8px;
-  background: color-mix(in srgb, #fff 6%, var(--block-bg));
+  background: color-mix(in srgb, var(--text-on-accent) 6%, var(--surface));
   animation: abv-shimmer 1.3s ease-in-out infinite;
 }
 .abv-skeleton:nth-child(2) { animation-delay: 0.15s; width: 80%; }
@@ -99,7 +99,7 @@ defineEmits(['toggle-dot', 'view', 'show-tooltip', 'hide-tooltip', 'manage'])
   cursor: pointer;
   min-height: 30px;
 }
-.abv-card:hover { background-color: rgba(255, 255, 255, 0.06); }
+.abv-card:hover { background-color: color-mix(in srgb, var(--text-on-accent) 6%, transparent); }
 .abv-card:hover .abv-name { color: var(--text-1); }
 
 .abv-marker {
@@ -166,6 +166,6 @@ defineEmits(['toggle-dot', 'view', 'show-tooltip', 'hide-tooltip', 'manage'])
   border-radius: 4px;
   flex-shrink: 0;
 }
-.abv-sr { background-color: rgba(90, 175, 114, 0.18); color: #5aaf72; }
-.abv-lr { background-color: rgba(79, 143, 204, 0.18); color: #4f8fcc; }
+.abv-sr { background-color: color-mix(in srgb, var(--success) 18%, transparent); color: var(--success); }
+.abv-lr { background-color: color-mix(in srgb, var(--info) 18%, transparent); color: var(--info); }
 </style>

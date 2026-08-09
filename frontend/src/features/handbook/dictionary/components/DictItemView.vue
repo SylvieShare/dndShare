@@ -118,7 +118,7 @@ async function deleteItem() {
   gap: 12px;
   padding: 18px 16px;
   flex-shrink: 0;
-  background: var(--bg-header);
+  background: var(--bg);
 }
 
 .view-head-bg {
@@ -138,8 +138,8 @@ async function deleteItem() {
   width: 42px;
   height: 42px;
   border-radius: 10px;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.09);
+  background: color-mix(in srgb, var(--text-on-accent) 6%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-on-accent) 9%, transparent);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -185,8 +185,8 @@ async function deleteItem() {
   font-size: 11px;
   color: var(--text-muted);
   font-family: monospace;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.08);
+  background: color-mix(in srgb, var(--text-on-accent) 6%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-on-accent) 8%, transparent);
   border-radius: 4px;
   padding: 1px 6px;
 }
@@ -228,7 +228,7 @@ async function deleteItem() {
   border-radius: 5px;
   font-family: inherit;
 }
-.view-menu-btn:hover { color: var(--text-1); background: rgba(255,255,255,0.06); }
+.view-menu-btn:hover { color: var(--text-1); background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); }
 
 .view-menu {
   position: absolute;
@@ -236,10 +236,10 @@ async function deleteItem() {
   right: 0;
   z-index: 90;
   min-width: 180px;
-  background: #1e1e22;
-  border: 1px solid rgba(255,255,255,0.1);
+  background: var(--popover-bg);
+  border: 1px solid color-mix(in srgb, var(--text-on-accent) 10%, transparent);
   border-radius: 9px;
-  box-shadow: 0 10px 28px rgba(0,0,0,0.45);
+  box-shadow: 0 10px 28px color-mix(in srgb, var(--scrim) 73%, transparent);
   padding: 6px;
   display: flex;
   flex-direction: column;
@@ -256,9 +256,9 @@ async function deleteItem() {
   border-radius: 6px;
   text-align: left;
 }
-.view-menu-item:hover { background: rgba(255,255,255,0.06); color: var(--text-1); }
+.view-menu-item:hover { background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); color: var(--text-1); }
 .view-menu-item-danger { color: var(--danger); }
-.view-menu-item-danger:hover { color: var(--danger); background: rgba(224,85,85,0.08); }
+.view-menu-item-danger:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 8%, transparent); }
 
 /* ── Content ── */
 .view-content {

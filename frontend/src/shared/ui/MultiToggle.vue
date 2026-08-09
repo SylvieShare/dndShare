@@ -76,7 +76,7 @@ const pillStyle = computed(() => ({
 .mt-toggle {
   position: relative;
   display: inline-flex;
-  background: var(--surface-1);
+  background: var(--surface-raised);
   border: 1px solid var(--border);
   border-radius: 9px;
   padding: 3px;
@@ -116,10 +116,10 @@ const pillStyle = computed(() => ({
 .mt-toggle--block .mt-toggle-btn { flex: 1; }
 
 .mt-toggle-btn:hover { color: var(--text-1); }
-.mt-toggle-btn--active { color: #fff; }
+.mt-toggle-btn--active { color: var(--text-on-accent); }
 
 .mt-toggle-pill--neutral {
-  background: rgba(255, 255, 255, 0.1);
+  background: color-mix(in srgb, var(--text-on-accent) 10%, transparent);
   box-shadow: none;
 }
 .mt-toggle-btn--active-neutral { color: var(--text-1); }

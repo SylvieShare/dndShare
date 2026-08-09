@@ -66,7 +66,7 @@ function changeMax(delta) {
 .blood-box {
   width: 22px;
   height: 22px;
-  border: 2px solid #5a1a1a;
+  border: 2px solid var(--surface);
   border-radius: 3px;
   background: transparent;
   flex-shrink: 0;
@@ -75,12 +75,12 @@ function changeMax(delta) {
 }
 
 .blood-box.filled {
-  background: #8b0000;
-  border-color: #a00000;
+  background: var(--bg);
+  border-color: var(--surface);
 }
 
 .blood-box:hover {
-  border-color: #c0392b;
+  border-color: var(--danger);
 }
 
 .blood-footer {
@@ -110,7 +110,7 @@ function changeMax(delta) {
   width: 20px;
   height: 20px;
   background: transparent;
-  border: 1px solid #444;
+  border: 1px solid var(--surface-active);
   border-radius: 3px;
   color: var(--text-2);
   font-size: 14px;

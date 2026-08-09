@@ -57,8 +57,8 @@ const filtered = computed(() => {
   width: 100%;
   box-sizing: border-box;
   height: 32px;
-  background: var(--bg);
-  border: 1px solid var(--input-border);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
   border-radius: 8px;
   color: var(--text-1);
   font: inherit;
@@ -67,7 +67,7 @@ const filtered = computed(() => {
   outline: none;
   transition: border-color 0.15s;
 }
-.ip-search-input:focus { border-color: var(--input-focus); }
+.ip-search-input:focus { border-color: var(--accent); }
 .ip-search-input::placeholder { color: var(--text-muted); }
 
 .ip-grid {
@@ -87,16 +87,16 @@ const filtered = computed(() => {
   place-items: center;
   border: 1px solid var(--border);
   border-radius: 8px;
-  background: var(--surface-1);
+  background: var(--surface-raised);
   color: var(--text-2);
   cursor: pointer;
   transition: color 0.12s, background 0.12s, border-color 0.12s;
 }
-.ip-ico:hover { background: var(--surface-2); color: var(--text-1); }
+.ip-ico:hover { background: var(--surface-active); color: var(--text-1); }
 .ip-ico--sel {
   border-color: var(--accent);
-  color: #fff;
-  background: color-mix(in srgb, var(--accent) 24%, var(--surface-1));
+  color: var(--text-on-accent);
+  background: color-mix(in srgb, var(--accent) 24%, var(--surface-raised));
 }
 
 .ip-empty { color: var(--text-muted); font-size: 12px; padding: 6px 2px; }

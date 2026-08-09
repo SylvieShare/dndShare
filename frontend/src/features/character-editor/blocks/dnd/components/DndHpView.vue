@@ -20,7 +20,7 @@
         <span v-else class="hp-c-dice-type">{{ hp.dice || 'd8' }}</span>
       </div>
     </div>
-    <StatBar size="small" :percent="barPct" :color="barColor" :temp-percent="tempBarPct" temp-color="#7ab8e8" />
+    <StatBar size="small" :percent="barPct" :color="barColor" :temp-percent="tempBarPct" temp-color="var(--info)" />
   </div>
 
   <!-- Main widget -->
@@ -45,7 +45,7 @@
           <span v-else class="hp-dice-type">{{ hp.dice || 'd8' }}</span>
         </div>
       </div>
-      <StatBar size="large" decorated :percent="barPct" :color="barColor" :temp-percent="tempBarPct" temp-color="#7ab8e8" />
+      <StatBar size="large" decorated :percent="barPct" :color="barColor" :temp-percent="tempBarPct" temp-color="var(--info)" />
     </div>
     <DndDeathSaves :hp="hp" @click.stop @change="$emit('change', $event)" />
   </div>
@@ -79,8 +79,8 @@ const tempBarPct = computed(() => {
 const barColor = computed(() => {
   const p = barPct.value
   if (p > 60) return 'var(--success)'
-  if (p > 25) return '#e0a020'
-  return '#c0392b'
+  if (p > 25) return 'var(--warning)'
+  return 'var(--danger)'
 })
 const isDead = computed(() => hpCurrent.value <= 0)
 const hpStatus = computed(() => {
@@ -120,7 +120,7 @@ const diceSvg = computed(() => {
 .hp-c-cur { font-size: 22px; font-weight: 800; line-height: 1; }
 .hp-c-sep { color: var(--text-muted); font-size: 16px; font-weight: 600; margin: 0 2px; }
 .hp-c-max { color: var(--text-2); font-size: 16px; font-weight: 600; line-height: 1; }
-.hp-c-temp { color: #7ab8e8; font-size: 13px; font-weight: 700; margin-left: 4px; line-height: 1; }
+.hp-c-temp { color: var(--info); font-size: 13px; font-weight: 700; margin-left: 4px; line-height: 1; }
 .hp-c-dice { display: flex; align-items: center; gap: 3px; }
 .hp-c-dice-count { color: var(--text-2); font-size: 13px; font-weight: 700; }
 .hp-c-dice-type { color: var(--text-2); font-size: 13px; font-weight: 700; }
@@ -142,10 +142,10 @@ const diceSvg = computed(() => {
 .hp-main { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
 .hp-status-badge { font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; border: 1px solid currentColor; opacity: 0.85; margin-left: 6px; align-self: center; transition: color 0.3s ease, border-color 0.3s ease; }
 .status-full { color: var(--success); }
-.status-good { color: #6abf7a; }
-.status-ok { color: #bfa040; }
-.status-warn { color: #c07030; }
-.status-crit { color: #c0392b; animation: hp-crit-pulse 1.4s ease-in-out infinite; }
+.status-good { color: var(--success); }
+.status-ok { color: var(--warning); }
+.status-warn { color: var(--danger); }
+.status-crit { color: var(--danger); animation: hp-crit-pulse 1.4s ease-in-out infinite; }
 @keyframes hp-crit-pulse { 0%, 100% { opacity: 0.85; } 50% { opacity: 0.45; } }
 .hp-heart-icon { width: 26px; height: 26px; flex-shrink: 0; transition: filter 0.3s ease; align-self: center; margin-right: 2px; }
 .hb-medium { animation: hp-heartbeat 1.7s ease-in-out infinite; }
@@ -155,7 +155,7 @@ const diceSvg = computed(() => {
 .hp-sep { color: var(--text-muted); font-size: 22px; font-weight: bold; line-height: 1; }
 .hp-max { color: var(--text-2); font-size: 22px; font-weight: bold; min-width: 16px; text-align: center; line-height: 1; }
 .hp-temp-sep { color: var(--text-muted); font-size: 16px; font-weight: bold; padding: 0 1px; }
-.hp-temp { color: #7ab8e8; font-size: 18px; font-weight: bold; min-width: 12px; text-align: center; line-height: 1; }
+.hp-temp { color: var(--info); font-size: 18px; font-weight: bold; min-width: 12px; text-align: center; line-height: 1; }
 .hp-dice-row { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
 .hp-dice-label { color: var(--text-muted); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-right: 2px; }
 .hp-dice-count { color: var(--text-2); font-size: 14px; font-weight: 700; }

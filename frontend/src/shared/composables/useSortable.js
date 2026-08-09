@@ -100,7 +100,7 @@ export function useSortable(config) {
       margin: '0',
       transition: 'none',
       opacity: '0.92',
-      boxShadow: '0 16px 40px rgba(0, 0, 0, 0.55)',
+      boxShadow: 'var(--shadow-lg)',
       cursor: 'grabbing',
       transformOrigin: 'top left',
     })

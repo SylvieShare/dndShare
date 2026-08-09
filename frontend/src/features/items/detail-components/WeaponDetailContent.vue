@@ -240,7 +240,7 @@ function hideTagTooltip() {
 .wdc-name {
   font-size: 22px;
   font-weight: 700;
-  color: #eeeeF4;
+  color: var(--text-1);
   line-height: 1.2;
 }
 .wdc-name-en { font-size: 13px; color: var(--text-muted); }
@@ -260,19 +260,19 @@ function hideTagTooltip() {
   text-transform: uppercase;
   padding: 3px 8px;
   border-radius: 5px;
-  background: rgba(255,255,255,0.06);
+  background: color-mix(in srgb, var(--text-on-accent) 6%, transparent);
   color: var(--text-muted);
 }
-.wdc-pill-on    { background: rgba(162,146,255,0.15); color: var(--color-attack); }
-.wdc-pill-range { background: rgba(79,143,204,0.16);  color: #6da7df; }
+.wdc-pill-on    { background: color-mix(in srgb, var(--accent-soft) 15%, transparent); color: var(--accent-soft); }
+.wdc-pill-range { background: color-mix(in srgb, var(--info) 16%, transparent);  color: var(--info); }
 
 .wdc-stat-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
   overflow: hidden;
-  border: 1px solid rgba(255,255,255,0.06);
+  border: 1px solid color-mix(in srgb, var(--text-on-accent) 6%, transparent);
   border-radius: 8px;
-  background: rgba(255,255,255,0.03);
+  background: color-mix(in srgb, var(--text-on-accent) 3%, transparent);
 }
 
 .wdc-stat-grid:empty { display: none; }
@@ -285,19 +285,19 @@ function hideTagTooltip() {
   gap: 2px;
   min-height: 58px;
   padding: 9px 8px;
-  border-right: 1px solid rgba(255,255,255,0.06);
+  border-right: 1px solid color-mix(in srgb, var(--text-on-accent) 6%, transparent);
 }
 .wdc-stat-cell:last-child { border-right: none; }
 
 .wdc-stat-value {
   font-size: 14px;
   font-weight: 700;
-  color: #d0d0dc;
+  color: var(--text-1);
   text-align: center;
 }
 .wdc-stat-label {
   font-size: 9px;
-  color: #444;
+  color: var(--text-muted);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   text-align: center;
@@ -329,7 +329,7 @@ function hideTagTooltip() {
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #6e6e78;
+  color: var(--text-muted);
 }
 
 .wdc-attacks {
@@ -345,10 +345,10 @@ function hideTagTooltip() {
   width: fit-content;
   min-height: 36px;
   padding: 3px 10px 3px 6px;
-  border: 1px solid rgba(162,146,255,0.2);
+  border: 1px solid color-mix(in srgb, var(--accent-soft) 20%, transparent);
   border-radius: 7px;
-  background: rgba(162,146,255,0.1);
-  color: #d0d0dc;
+  background: color-mix(in srgb, var(--accent-soft) 10%, transparent);
+  color: var(--text-1);
 }
 
 .wdc-dice {
@@ -356,7 +356,7 @@ function hideTagTooltip() {
   align-items: center;
   gap: 5px;
   min-height: 30px;
-  color: #d0d0dc;
+  color: var(--text-1);
   font-size: 15px;
   font-weight: 700;
   padding: 0;
@@ -388,18 +388,18 @@ function hideTagTooltip() {
 }
 
 .wdc-attack-alt .wdc-dice {
-  color: #b9dbc2;
+  color: var(--text-1);
 }
 
 .wdc-attack-alt {
-  background: rgba(90,175,114,0.11);
-  border-color: rgba(90,175,114,0.22);
+  background: color-mix(in srgb, var(--success) 11%, transparent);
+  border-color: color-mix(in srgb, var(--success) 22%, transparent);
 }
 
 .wdc-attack-sep {
   width: 1px;
   height: 18px;
-  background: rgba(255,255,255,0.12);
+  background: color-mix(in srgb, var(--text-on-accent) 12%, transparent);
 }
 
 .wdc-damage-type {
@@ -420,7 +420,7 @@ function hideTagTooltip() {
   font-weight: 600;
   padding: 3px 9px;
   border-radius: 5px;
-  background: rgba(255,255,255,0.06);
+  background: color-mix(in srgb, var(--text-on-accent) 6%, transparent);
   color: var(--text-muted);
 }
 .wdc-tag-has-desc {
@@ -428,8 +428,8 @@ function hideTagTooltip() {
   transition: background .12s ease, color .12s ease;
 }
 .wdc-tag-has-desc:hover {
-  background: rgba(162,146,255,0.16);
-  color: #c8c2ff;
+  background: color-mix(in srgb, var(--accent-soft) 16%, transparent);
+  color: var(--accent-soft);
 }
 
 .wdc-notes {
@@ -438,7 +438,7 @@ function hideTagTooltip() {
   line-height: 1.65;
 }
 
-.wdc-no-desc { font-size: 13px; color: #383838; font-style: italic; }
+.wdc-no-desc { font-size: 13px; color: var(--text-muted); font-style: italic; }
 
 @media (max-width: 620px) {
   .wdc-damage-grid-paired { grid-template-columns: 1fr; }

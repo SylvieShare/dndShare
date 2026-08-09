@@ -89,7 +89,7 @@ async function onUse(p) {
   text-transform: uppercase;
 }
 .ps-count {
-  color: #777b88;
+  color: var(--text-muted);
   font-size: 12px;
   font-weight: 700;
 }
@@ -97,7 +97,7 @@ async function onUse(p) {
   flex: 1;
   min-width: 20px;
   height: 1px;
-  background: rgba(91, 101, 126, 0.42);
+  background: color-mix(in srgb, var(--text-muted) 42%, transparent);
 }
 
 .ps-row {
@@ -133,7 +133,7 @@ async function onUse(p) {
   box-sizing: border-box;
   padding: 1px 6px;
   border-radius: var(--r-pill);
-  background: var(--surface-1);
+  background: var(--surface-raised);
   border: 1px solid var(--border-strong);
   color: var(--text-1);
   font-size: 10px;

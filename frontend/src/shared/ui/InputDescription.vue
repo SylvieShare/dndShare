@@ -331,7 +331,7 @@ function tryCreateListFromDash() {
 @media (hover: hover) {
   .input-desc:hover .field-edit-btn { opacity: 1; }
 }
-.field-edit-btn:hover { color: var(--accent); background: rgba(255, 255, 255, 0.06); }
+.field-edit-btn:hover { color: var(--accent); background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); }
 
 .desc-done-btn {
   background: none;
@@ -345,7 +345,7 @@ function tryCreateListFromDash() {
   border-radius: 6px;
   transition: background 0.12s;
 }
-.desc-done-btn:hover { background: rgba(255, 255, 255, 0.06); }
+.desc-done-btn:hover { background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); }
 
 .desc-view--owner,
 .desc-empty--owner { cursor: text; }
@@ -378,7 +378,7 @@ function tryCreateListFromDash() {
   flex-shrink: 0;
 }
 
-.desc-btn:hover { background: var(--surface-1); color: var(--text-2); }
+.desc-btn:hover { background: var(--surface-raised); color: var(--text-2); }
 
 .desc-btn-wide {
   font-size: 12px;
@@ -415,7 +415,7 @@ function tryCreateListFromDash() {
   width: 14px;
   height: 3px;
   border-radius: 2px;
-  background: linear-gradient(90deg, var(--danger), var(--warning), #5aaf72, var(--color-attack), #5b8dd9);
+  background: linear-gradient(90deg, var(--danger), var(--warning), var(--success), var(--accent-soft), var(--info));
 }
 
 /* ── Dropdowns ── */
@@ -428,7 +428,7 @@ function tryCreateListFromDash() {
   top: calc(100% + 5px);
   left: 0;
   z-index: 150;
-  background: var(--popup-bg);
+  background: var(--popover-bg);
   border: 1px solid var(--border-strong);
   border-radius: var(--r-md);
   padding: 5px;
@@ -474,7 +474,7 @@ function tryCreateListFromDash() {
   outline: none;
   border: none;
   border-radius: var(--r-md);
-  background: var(--bg);
+  background: var(--surface-raised);
   transition: box-shadow 0.12s;
 }
 

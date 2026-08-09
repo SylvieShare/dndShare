@@ -34,7 +34,7 @@ defineEmits(['select'])
   display: flex;
   align-items: center;
   gap: 11px;
-  background: var(--block-bg);
+  background: var(--surface);
   border-radius: var(--r-md);
   padding: 11px 13px;
   cursor: pointer;
@@ -42,10 +42,10 @@ defineEmits(['select'])
   overflow: hidden;
 }
 .sel-tile:hover {
-  background: color-mix(in srgb, var(--sel) 12%, var(--block-bg));
+  background: color-mix(in srgb, var(--sel) 12%, var(--surface));
 }
 .sel-tile--on {
-  background: color-mix(in srgb, var(--sel) 16%, var(--block-bg));
+  background: color-mix(in srgb, var(--sel) 16%, var(--surface));
 }
 
 .sel-strip {

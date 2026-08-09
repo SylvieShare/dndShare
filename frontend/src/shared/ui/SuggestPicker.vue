@@ -144,7 +144,7 @@ function pickItem(item) {
 .sp-input {
   width: 100%;
   min-height: 28px;
-  background: var(--input-bg);
+  background: var(--surface-raised);
   border: 1px dashed var(--border-strong);
   border-radius: 7px;
   color: var(--text-2);
@@ -166,7 +166,7 @@ function pickItem(item) {
 .sp-trigger:hover:not(:disabled) {
   border-color: var(--text-muted);
   color: var(--text-2);
-  background: rgba(255, 255, 255, 0.04);
+  background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
 }
 
 .sp-trigger:disabled {
@@ -200,8 +200,8 @@ function pickItem(item) {
 }
 
 .sp-invalid {
-  border-color: rgba(220, 80, 80, 0.5);
-  box-shadow: 0 0 8px rgba(220, 80, 80, 0.14);
+  border-color: color-mix(in srgb, var(--danger) 50%, transparent);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--danger) 14%, transparent);
 }
 
 .sp-readonly {

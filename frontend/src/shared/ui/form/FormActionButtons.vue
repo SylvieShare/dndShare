@@ -47,11 +47,11 @@ defineEmits(['cancel', 'submit'])
 
 .form-actions__cancel {
   background: none;
-  border: 1px solid var(--input-border);
+  border: 1px solid var(--border-strong);
   color: var(--text-2);
 }
 .form-actions__cancel:hover:not(:disabled) {
-  background: var(--surface-1);
+  background: var(--surface-raised);
   color: var(--text-1);
 }
 
@@ -61,7 +61,7 @@ defineEmits(['cancel', 'submit'])
   color: var(--text-on-accent);
   font-weight: 600;
 }
-.form-actions__submit:hover:not(:disabled) { background: var(--accent-dim); }
+.form-actions__submit:hover:not(:disabled) { background: var(--accent-hover); }
 
 .form-actions__cancel:disabled,
 .form-actions__submit:disabled {

@@ -127,14 +127,14 @@ function orbOrder(total) {
   flex-direction: column;
   gap: 9px;
   overflow: hidden;
-  background: #0d0e15;
-  border: 1.5px solid #34384a;
+  background: var(--bg);
+  border: 1.5px solid var(--surface-active);
   border-radius: var(--r-md);
   padding: 12px 13px;
   --c: var(--accent);
 }
-.sp-tile--dc  { --c: #5b9bd5; }
-.sp-tile--atk { --c: var(--color-attack); }
+.sp-tile--dc  { --c: var(--info); }
+.sp-tile--atk { --c: var(--accent-soft); }
 
 .sp-tlabel {
   display: block;
@@ -158,11 +158,11 @@ function orbOrder(total) {
 .sp-tval-stat {
   font-size: 18px;
   font-weight: 700;
-  color: #efeefb;
+  color: var(--text-1);
 }
 
 .sp-tval-atk {
-  color: #d8d2ff;
+  color: var(--text-1);
 }
 
 .sp-tline {
@@ -180,7 +180,7 @@ function orbOrder(total) {
   align-items: center;
   gap: 12px;
   padding: 8px 0;
-  border-top: 1px solid color-mix(in srgb, #fff 7%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--text-on-accent) 7%, transparent);
 }
 .sp-slot-row:first-of-type {
   border-top: none;

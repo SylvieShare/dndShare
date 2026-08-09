@@ -108,7 +108,7 @@ const subtitle = computed(() => {
   font-family: var(--font-display);
   font-size: 20px;
   font-weight: 600;
-  color: #b06070;
+  color: var(--danger);
   line-height: 1;
   min-width: 24px;
   text-align: center;
@@ -120,9 +120,9 @@ const subtitle = computed(() => {
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #d8c070;
-  background: rgba(216, 192, 112, 0.12);
-  border: 1px solid rgba(216, 192, 112, 0.35);
+  color: var(--text-2);
+  background: color-mix(in srgb, var(--text-2) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-2) 35%, transparent);
   border-radius: 4px;
   padding: 1px 6px;
   line-height: 1.4;
@@ -157,7 +157,7 @@ const subtitle = computed(() => {
 }
 
 .enemy-hp-icon {
-  color: #b05050;
+  color: var(--danger);
   flex-shrink: 0;
 }
 </style>

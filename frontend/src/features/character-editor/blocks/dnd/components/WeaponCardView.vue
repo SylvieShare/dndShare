@@ -146,7 +146,7 @@ const nameClickable = computed(() => ctx.charCtx.ownerMode || !!ctx.item(props.e
 .w-name-magic {
   font-size: 11px;
   font-weight: 700;
-  color: var(--color-attack);
+  color: var(--accent-soft);
   flex-shrink: 0;
 }
 
@@ -166,7 +166,7 @@ const nameClickable = computed(() => ctx.charCtx.ownerMode || !!ctx.item(props.e
   cursor: pointer;
   transition: opacity 0.2s ease, color 0.12s, background 0.12s;
 }
-@media (hover: hover) { .w-edit-btn:hover { color: var(--accent); background: rgba(255, 255, 255, 0.06); } }
+@media (hover: hover) { .w-edit-btn:hover { color: var(--accent); background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); } }
 
 /* morph stand-in pencil: present so the row geometry matches the tile (no jitter), but fades out
    as the window opens and back in as it closes */

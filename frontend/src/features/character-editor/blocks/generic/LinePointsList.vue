@@ -64,7 +64,7 @@ function toggleDot(i, d) {
   flex: 1;
   background: transparent;
   border: none;
-  border-bottom: 1px solid #2e2e2e;
+  border-bottom: 1px solid var(--surface-raised);
   color: var(--text-1, var(--text-2));
   font-size: 13px;
   padding: 2px 2px;
@@ -74,7 +74,7 @@ function toggleDot(i, d) {
 }
 
 .lp-name-input:focus {
-  border-bottom-color: #6a3fcb;
+  border-bottom-color: var(--accent-hover);
 }
 
 .lp-name-static {
@@ -93,20 +93,20 @@ function toggleDot(i, d) {
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  border: 2px solid #484848;
+  border: 2px solid var(--surface-active);
   background: transparent;
   transition: background 0.12s, border-color 0.12s;
   flex-shrink: 0;
 }
 
 .dot.filled {
-  background: #c8a04a;
-  border-color: #c8a04a;
+  background: var(--warning);
+  border-color: var(--warning);
 }
 
 .dot.clickable { cursor: pointer; }
 
 .dot.clickable:hover {
-  border-color: #c8a04a;
+  border-color: var(--warning);
 }
 </style>

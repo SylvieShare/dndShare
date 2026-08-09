@@ -136,7 +136,7 @@ function rollProf() {
   cursor: pointer;
   transition: color 0.12s, background 0.12s;
 }
-@media (hover: hover) { .sb-edit:hover { color: var(--accent); background: rgba(255, 255, 255, 0.06); } }
+@media (hover: hover) { .sb-edit:hover { color: var(--accent); background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); } }
 .sb-display { cursor: pointer; }
 .skill-bonus-tile-compact { width: 76px; min-width: 76px; gap: 2px; }
 .skill-bonus-tile-compact .sb-plus { font-size: 18px; }

@@ -91,15 +91,15 @@ function school(sp) { return suggestValue(7, sp.data?.schoolId) || '' }
 .search { position: relative; display: flex; align-items: center; }
 .search svg { position: absolute; left: 11px; width: 15px; height: 15px; color: var(--text-muted); pointer-events: none; }
 .search input {
-  width: 100%; box-sizing: border-box; background: var(--bg); border: 1px solid var(--input-border);
+  width: 100%; box-sizing: border-box; background: var(--surface-raised); border: 1px solid var(--border-strong);
   border-radius: 9px; color: var(--text-1); font: inherit; font-size: 13px; padding: 8px 12px 8px 32px; outline: none;
 }
-.search input:focus { border-color: var(--input-focus); }
+.search input:focus { border-color: var(--accent); }
 .sec { display: flex; flex-direction: column; gap: 8px; }
 .granted { display: flex; flex-wrap: wrap; gap: 7px; }
 .granted-tag {
   display: inline-flex; align-items: center;
-  background: color-mix(in srgb, var(--accent) 13%, var(--block-bg));
+  background: color-mix(in srgb, var(--accent) 13%, var(--surface));
   border-radius: 999px; color: var(--text-1); font-size: 12px; padding: 6px 13px;
 }
 .count { font-size: 12px; font-weight: 600; color: var(--text-muted); letter-spacing: 0; text-transform: none; }
@@ -107,16 +107,16 @@ function school(sp) { return suggestValue(7, sp.data?.schoolId) || '' }
 .list { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 6px; }
 .spell {
   display: flex; align-items: center; gap: 10px;
-  background: var(--block-bg); border-radius: var(--r-md);
+  background: var(--surface); border-radius: var(--r-md);
   padding: 9px 12px; cursor: pointer; transition: background 0.15s;
 }
-.spell:hover { background: color-mix(in srgb, var(--accent) 12%, var(--block-bg)); }
-.spell.on { background: color-mix(in srgb, var(--accent) 16%, var(--block-bg)); }
+.spell:hover { background: color-mix(in srgb, var(--accent) 12%, var(--surface)); }
+.spell.on { background: color-mix(in srgb, var(--accent) 16%, var(--surface)); }
 .spell.off { opacity: 0.45; cursor: default; }
-.spell.off:hover { background: var(--block-bg); }
-.box { flex-shrink: 0; width: 18px; height: 18px; border-radius: 5px; background: var(--bg); display: flex; align-items: center; justify-content: center; }
+.spell.off:hover { background: var(--surface); }
+.box { flex-shrink: 0; width: 18px; height: 18px; border-radius: 5px; background: var(--surface-raised); display: flex; align-items: center; justify-content: center; }
 .spell.on .box { background: var(--accent); }
-.box svg { width: 12px; height: 12px; color: #fff; }
+.box svg { width: 12px; height: 12px; color: var(--text-on-accent); }
 .sp-name { flex: 1; font-size: 13px; color: var(--text-1); }
 .sp-school { font-size: 10px; color: var(--text-muted); white-space: nowrap; }
 .sp-view {

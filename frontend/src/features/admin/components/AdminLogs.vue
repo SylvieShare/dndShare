@@ -112,14 +112,14 @@ onMounted(load)
 }
 
 .state-msg.error {
-  color: #e05c5c;
+  color: var(--danger);
 }
 
 .btn-danger {
-  background: rgba(224, 92, 92, 0.15);
-  border: 1px solid rgba(224, 92, 92, 0.3);
+  background: color-mix(in srgb, var(--danger) 15%, transparent);
+  border: 1px solid color-mix(in srgb, var(--danger) 30%, transparent);
   border-radius: 6px;
-  color: #e05c5c;
+  color: var(--danger);
   cursor: pointer;
   font: inherit;
   font-size: 12px;
@@ -127,7 +127,7 @@ onMounted(load)
 }
 
 .btn-danger:not(:disabled):hover {
-  background: rgba(224, 92, 92, 0.25);
+  background: color-mix(in srgb, var(--danger) 25%, transparent);
 }
 
 .btn-danger:disabled {
@@ -149,12 +149,12 @@ onMounted(load)
   text-transform: uppercase;
   letter-spacing: 0.06em;
   padding: 8px 12px;
-  border-bottom: 1px solid #2a2a2e;
+  border-bottom: 1px solid var(--surface-raised);
 }
 
 .data-table td {
   padding: 10px 12px;
-  border-bottom: 1px solid #222226;
+  border-bottom: 1px solid var(--surface);
   vertical-align: top;
   color: var(--text-1);
 }
@@ -178,7 +178,7 @@ onMounted(load)
 
 .col-type {
   font-size: 12px;
-  color: #f0a040;
+  color: var(--warning);
   white-space: nowrap;
 }
 
@@ -220,7 +220,7 @@ onMounted(load)
 .btn-delete {
   background: none;
   border: none;
-  color: #e05c5c;
+  color: var(--danger);
   cursor: pointer;
   font-size: 18px;
   line-height: 1;

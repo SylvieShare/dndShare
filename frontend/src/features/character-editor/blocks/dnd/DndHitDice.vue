@@ -53,7 +53,7 @@ function cycleDice() {
 .hit-dice {
   width: 100px;
   height: 100px;
-  background-color: var(--surface-1);
+  background-color: var(--surface-raised);
   border-radius: 14px;
   display: flex;
   flex-direction: column;

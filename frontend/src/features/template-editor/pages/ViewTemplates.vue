@@ -91,8 +91,8 @@ onMounted(() => templateStore.ensure())
 }
 
 .btn-new {
-  background: #6a3fcb;
-  color: #fff;
+  background: var(--accent-hover);
+  color: var(--text-on-accent);
   border: none;
   border-radius: 8px;
   padding: 9px 18px;
@@ -100,7 +100,7 @@ onMounted(() => templateStore.ensure())
   cursor: pointer;
 }
 
-.btn-new:hover { background: #7a4fe0; }
+.btn-new:hover { background: var(--accent); }
 
 .templates-grid {
   display: flex;
@@ -110,7 +110,7 @@ onMounted(() => templateStore.ensure())
 
 .template-card {
   width: 220px;
-  background: #24292e;
+  background: var(--surface-raised);
   border-radius: 14px;
   padding: 20px 16px 16px;
   display: flex;
@@ -121,7 +121,7 @@ onMounted(() => templateStore.ensure())
   transition: border-color 0.2s;
 }
 
-.template-card:hover { border-color: #6a3fcb; }
+.template-card:hover { border-color: var(--accent-hover); }
 
 .card-icon { font-size: 32px; }
 
@@ -139,7 +139,7 @@ onMounted(() => templateStore.ensure())
 
 .card-edit-btn {
   margin-top: 4px;
-  background: #2a2a35;
+  background: var(--surface-raised);
   color: var(--text-2);
   border: none;
   border-radius: 7px;
@@ -149,7 +149,7 @@ onMounted(() => templateStore.ensure())
   width: 100%;
 }
 
-.card-edit-btn:hover { background: #6a3fcb; color: #fff; }
+.card-edit-btn:hover { background: var(--accent-hover); color: var(--text-on-accent); }
 
 .modal-title {
   font-size: 18px;

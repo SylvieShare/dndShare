@@ -225,7 +225,7 @@ const colspan = computed(() => ctx.charCtx.ownerMode ? 6 : 4)
 .w-row {
   transition: background 0.12s;
 }
-.w-row.w-row-hovered td { background: color-mix(in srgb, #fff 4%, transparent); }
+.w-row.w-row-hovered td { background: color-mix(in srgb, var(--text-on-accent) 4%, transparent); }
 .w-row-with-desc td { border-bottom: 0; }
 
 .w-row.sortable-placeholder td {
@@ -281,7 +281,7 @@ const colspan = computed(() => ctx.charCtx.ownerMode ? 6 : 4)
 .w-name-magic {
   font-size: 11px;
   font-weight: 700;
-  color: var(--color-attack);
+  color: var(--accent-soft);
   flex-shrink: 0;
 }
 
@@ -311,8 +311,8 @@ const colspan = computed(() => ctx.charCtx.ownerMode ? 6 : 4)
   width: 24px;
   height: 24px;
   padding: 0;
-  background: color-mix(in srgb, #fff 4%, transparent);
-  border: 1px solid color-mix(in srgb, #fff 8%, transparent);
+  background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-on-accent) 8%, transparent);
   border-radius: 6px;
   color: var(--text-muted);
   cursor: pointer;
@@ -323,7 +323,7 @@ const colspan = computed(() => ctx.charCtx.ownerMode ? 6 : 4)
 }
 .w-note-btn:hover, .w-info-btn:hover, .w-mini-btn:hover {
   color: var(--text-1);
-  border-color: color-mix(in srgb, #fff 14%, transparent);
+  border-color: color-mix(in srgb, var(--text-on-accent) 14%, transparent);
 }
 .w-note-btn-filled { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 40%, transparent); }
 .w-note-icon { width: 13px; height: 13px; }
@@ -340,8 +340,8 @@ const colspan = computed(() => ctx.charCtx.ownerMode ? 6 : 4)
   font-weight: 700;
   padding: 5px 8px;
   border-radius: 6px;
-  background: color-mix(in srgb, #fff 4%, transparent);
-  border: 1px solid color-mix(in srgb, #fff 8%, transparent);
+  background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-on-accent) 8%, transparent);
   color: var(--text-muted);
   cursor: pointer;
   font-family: inherit;
@@ -365,12 +365,12 @@ const colspan = computed(() => ctx.charCtx.ownerMode ? 6 : 4)
   min-width: 44px;
   height: 28px;
   padding: 0 8px;
-  background: color-mix(in srgb, #fff 5%, transparent);
-  border: 1px solid color-mix(in srgb, #fff 8%, transparent);
+  background: color-mix(in srgb, var(--text-on-accent) 5%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-on-accent) 8%, transparent);
   border-radius: 7px;
   font-size: 13px;
   font-weight: 700;
-  color: var(--color-attack);
+  color: var(--accent-soft);
 }
 .w-attack-clickable { cursor: pointer; transition: background 0.12s, border-color 0.12s; }
 .w-attack-clickable:hover {
@@ -420,8 +420,8 @@ const colspan = computed(() => ctx.charCtx.ownerMode ? 6 : 4)
 }
 
 .w-count {
-  background: var(--input-bg);
-  border: 1px solid var(--input-border);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
   border-radius: 6px;
   color: var(--text-1);
   font: inherit;
@@ -440,7 +440,7 @@ const colspan = computed(() => ctx.charCtx.ownerMode ? 6 : 4)
   font-size: 12px;
   color: var(--text-muted);
   background: none;
-  border: 1px dashed color-mix(in srgb, #fff 12%, transparent);
+  border: 1px dashed color-mix(in srgb, var(--text-on-accent) 12%, transparent);
   border-radius: 6px;
   padding: 4px 10px;
   cursor: pointer;
@@ -456,8 +456,8 @@ const colspan = computed(() => ctx.charCtx.ownerMode ? 6 : 4)
   justify-content: center;
   width: 26px;
   height: 26px;
-  background: color-mix(in srgb, #fff 4%, transparent);
-  border: 1px solid color-mix(in srgb, #fff 8%, transparent);
+  background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-on-accent) 8%, transparent);
   border-radius: 6px;
   color: var(--text-muted);
   cursor: pointer;
@@ -486,7 +486,7 @@ const colspan = computed(() => ctx.charCtx.ownerMode ? 6 : 4)
 }
 .w-props-sep { color: var(--text-muted); }
 .w-prop { color: var(--text-1); }
-.w-prop-has-desc { cursor: help; border-bottom: 1px dashed color-mix(in srgb, #fff 14%, transparent); }
+.w-prop-has-desc { cursor: help; border-bottom: 1px dashed color-mix(in srgb, var(--text-on-accent) 14%, transparent); }
 
 .w-desc-row td {
   padding: 4px 10px 8px;

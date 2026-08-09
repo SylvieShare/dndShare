@@ -104,7 +104,7 @@ const iconStyle = computed(() => ({
   transition: color 0.12s, background 0.12s;
 }
 @media (hover: hover) {
-  .stf-roll:hover { background: rgba(255, 255, 255, 0.06); }
+  .stf-roll:hover { background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); }
 }
 .stf-val { display: flex; align-items: baseline; gap: 2px; }
 .stf-pre { font-size: 16px; font-weight: 400; color: var(--text-2); line-height: 1; }

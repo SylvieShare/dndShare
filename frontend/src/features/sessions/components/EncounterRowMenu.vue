@@ -91,7 +91,7 @@ const cloneCount = ref(1)
 }
 .ram-clone-input {
   width: 44px;
-  background: var(--surface-1);
+  background: var(--surface-raised);
   border: 1px solid var(--border);
   border-radius: 5px;
   padding: 3px 6px;

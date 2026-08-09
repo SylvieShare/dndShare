@@ -97,17 +97,17 @@ function stripTags(html) {
   padding: 12px 14px;
   border-radius: 10px;
   border: 1px solid var(--card-border, var(--border));
-  background: rgba(255,255,255,0.025);
+  background: color-mix(in srgb, var(--text-on-accent) 2.5%, transparent);
   cursor: pointer;
   font-family: inherit;
   text-align: left;
   transition: border-color 0.15s, background 0.15s;
 }
-.item-card:hover { background: rgba(255,255,255,0.04); }
+.item-card:hover { background: color-mix(in srgb, var(--text-on-accent) 4%, transparent); }
 .item-card.selected {
-  background: var(--card-sel-bg, rgba(106,100,216,0.1));
-  border-color: var(--card-sel-border, rgba(162,146,255,0.35));
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--card-sel-border, rgba(162,146,255,0.25)) 50%, transparent);
+  background: var(--card-sel-bg, color-mix(in srgb, var(--accent) 10%, transparent));
+  border-color: var(--card-sel-border, color-mix(in srgb, var(--accent-soft) 35%, transparent));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--card-sel-border, color-mix(in srgb, var(--accent-soft) 25%, transparent)) 50%, transparent);
 }
 
 .card-icon {
@@ -115,8 +115,8 @@ function stripTags(html) {
   width: 44px;
   height: 44px;
   border-radius: 8px;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.09);
+  background: color-mix(in srgb, var(--text-on-accent) 6%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-on-accent) 9%, transparent);
   display: flex;
   align-items: center;
   justify-content: center;

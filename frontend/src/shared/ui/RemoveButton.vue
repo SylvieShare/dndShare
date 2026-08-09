@@ -44,8 +44,8 @@ defineEmits(['click'])
 .rm-btn--boxed {
   width: 30px;
   height: 30px;
-  border: 1px solid color-mix(in srgb, #fff 8%, transparent);
-  background: color-mix(in srgb, #fff 4%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-on-accent) 8%, transparent);
+  background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
   border-radius: 6px;
 }
 .rm-btn--boxed:hover { border-color: color-mix(in srgb, var(--danger) 40%, transparent); }

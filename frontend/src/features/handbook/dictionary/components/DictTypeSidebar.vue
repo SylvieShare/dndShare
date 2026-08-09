@@ -97,7 +97,7 @@ const filteredTypes = computed(() => {
 
 .sidebar-search {
   width: 100%;
-  background: rgba(255,255,255,0.04);
+  background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
   border: 1px solid var(--border);
   border-radius: 8px;
   color: var(--text-1);
@@ -129,9 +129,9 @@ const filteredTypes = computed(() => {
   text-align: left;
   transition: background 0.12s, border-color 0.12s;
 }
-.sidebar-row:hover { background: rgba(255,255,255,0.04); }
+.sidebar-row:hover { background: color-mix(in srgb, var(--text-on-accent) 4%, transparent); }
 .sidebar-row.active {
-  background: rgba(106,100,216,0.1);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
   border-left-color: var(--accent);
 }
 
@@ -147,7 +147,7 @@ const filteredTypes = computed(() => {
   font-weight: 600;
   color: var(--text-1);
 }
-.sidebar-row.active .sidebar-row-name { color: #fff; }
+.sidebar-row.active .sidebar-row-name { color: var(--text-on-accent); }
 
 .sidebar-row-count {
   font-size: 12px;

@@ -203,7 +203,7 @@ onMounted(() => {
 .page-title {
   font-size: 22px;
   font-weight: 700;
-  color: var(--text-1, #fff);
+  color: var(--text-1, var(--text-on-accent));
   margin: 0;
 }
 
@@ -269,7 +269,7 @@ onMounted(() => {
   padding: 1px 6px;
   border-radius: 999px;
   background: color-mix(in srgb, var(--accent) 13%, transparent);
-  color: var(--accent-soft, #b9a6ff);
+  color: var(--accent-soft);
   font-size: 10px;
   font-weight: 700;
   text-align: center;
@@ -277,7 +277,7 @@ onMounted(() => {
 
 .char-skeleton {
   height: 124px;
-  background: var(--block-bg);
+  background: var(--surface);
   border-radius: var(--r-lg);
   display: flex;
   align-items: stretch;
@@ -289,7 +289,7 @@ onMounted(() => {
   flex-shrink: 0;
   width: 96px;
   align-self: stretch;
-  background: var(--surface-1);
+  background: var(--surface-raised);
   animation: sk-pulse 1.4s ease-in-out infinite;
 }
 
@@ -305,7 +305,7 @@ onMounted(() => {
 .sk-line {
   height: 10px;
   border-radius: 5px;
-  background: var(--surface-1);
+  background: var(--surface-raised);
   animation: sk-pulse 1.4s ease-in-out infinite;
 }
 

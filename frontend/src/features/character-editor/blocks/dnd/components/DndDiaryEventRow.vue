@@ -63,7 +63,7 @@ const hasDesc = computed(() => descHtml.value.replace(/<[^>]*>/g, '').replace(/&
   height: 26px;
   flex-shrink: 0;
   border-radius: 50%;
-  background: color-mix(in srgb, var(--ec) 12%, var(--block-bg));
+  background: color-mix(in srgb, var(--ec) 12%, var(--surface));
   border: 1px solid color-mix(in srgb, var(--ec) 40%, var(--border));
   color: var(--ec);
 }

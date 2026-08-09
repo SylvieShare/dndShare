@@ -66,7 +66,7 @@ import { computed } from 'vue'
 import StatBar from '@/shared/ui/StatBar.vue'
 import { pvAvatar, pvHp, pvName, pvSubtitle } from '@/features/sessions/lib/participantView'
 
-const AVATAR_COLORS = ['#7c5ce2', '#c85ce8', '#5cb0e8', '#e85c8a', '#5ce884', '#e89c3c', '#ff6b6b']
+const AVATAR_COLORS = ['var(--accent)', 'var(--accent)', 'var(--info)', 'var(--danger)', 'var(--success)', 'var(--warning)', 'var(--danger)']
 
 const props = defineProps({
   participant: { type: Object, required: true },
@@ -106,9 +106,9 @@ const tempPercent = computed(() => {
   return Math.min(100 - hpPercent.value, (hp.value.temp / hp.value.max) * 100)
 })
 const hpColor = computed(() => {
-  if (hpPercent.value > 50) return '#5ce87c'
-  if (hpPercent.value > 25) return '#e89c3c'
-  return '#e85c5c'
+  if (hpPercent.value > 50) return 'var(--success)'
+  if (hpPercent.value > 25) return 'var(--warning)'
+  return 'var(--danger)'
 })
 
 const avatarColor = computed(() => {
@@ -130,7 +130,7 @@ const avatarColor = computed(() => {
 }
 
 .p-card:hover {
-  background: color-mix(in srgb, #fff 4%, transparent);
+  background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
 }
 
 .p-card--selected {
@@ -162,7 +162,7 @@ const avatarColor = computed(() => {
 .ava-initial {
   font-size: 14px;
   font-weight: 700;
-  color: #fff;
+  color: var(--text-on-accent);
 }
 
 .p-info {
@@ -192,7 +192,7 @@ const avatarColor = computed(() => {
   width: 18px;
   height: 18px;
   border-radius: 5px;
-  border: 1.5px solid #303045;
+  border: 1.5px solid var(--surface-active);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -229,12 +229,12 @@ const avatarColor = computed(() => {
 }
 
 .hp-temp {
-  color: #5cb0e8;
+  color: var(--info);
   font-size: 10px;
 }
 
 .hp-sep {
-  color: #404055;
+  color: var(--text-muted);
   margin: 0 1px;
 }
 
@@ -251,7 +251,7 @@ const avatarColor = computed(() => {
 
 .ds-label {
   font-size: 10px;
-  color: #e85c5c;
+  color: var(--danger);
   font-weight: 600;
   letter-spacing: 0.03em;
   flex-shrink: 0;
@@ -266,23 +266,23 @@ const avatarColor = computed(() => {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  border: 1px solid #404055;
+  border: 1px solid var(--surface-active);
   background: transparent;
   transition: background 0.15s, border-color 0.15s;
 }
 
 .ds-pip.ds-success.filled {
-  background: #5ce87c;
-  border-color: #5ce87c;
+  background: var(--success);
+  border-color: var(--success);
 }
 
 .ds-pip.ds-failure.filled {
-  background: #e85c5c;
-  border-color: #e85c5c;
+  background: var(--danger);
+  border-color: var(--danger);
 }
 
 .ds-sep {
   font-size: 10px;
-  color: #404055;
+  color: var(--text-muted);
 }
 </style>

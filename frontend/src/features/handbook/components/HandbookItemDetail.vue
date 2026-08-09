@@ -206,8 +206,8 @@ function formatSubValue(sub, value) {
   flex-wrap: wrap;
   margin: -16px -20px 14px;
   padding: 16px 20px 10px;
-  background: var(--bg-header);
-  border-bottom: 1px solid rgba(255,255,255,0.06);
+  background: var(--bg);
+  border-bottom: 1px solid color-mix(in srgb, var(--text-on-accent) 6%, transparent);
 }
 
 .detail-name {
@@ -246,7 +246,7 @@ function formatSubValue(sub, value) {
   font-family: inherit;
   transition: color 0.15s, border-color 0.15s, background 0.15s;
 }
-.btn-edit:hover { color: var(--text-1); border-color: var(--accent); background: rgba(106,100,216,0.08); }
+.btn-edit:hover { color: var(--text-1); border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, transparent); }
 
 /* ── Schema fields ── */
 .field-label {
@@ -276,7 +276,7 @@ function formatSubValue(sub, value) {
   gap: 4px 12px;
   align-items: center;
   padding: 8px 10px;
-  background: rgba(255,255,255,0.02);
+  background: color-mix(in srgb, var(--text-on-accent) 2%, transparent);
   border-radius: 8px;
   border: 1px solid var(--border);
 }
@@ -292,7 +292,7 @@ function formatSubValue(sub, value) {
   flex-wrap: wrap;
   gap: 8px 14px;
   padding: 7px 9px;
-  background: rgba(255,255,255,0.02);
+  background: color-mix(in srgb, var(--text-on-accent) 2%, transparent);
   border-radius: 7px;
   border: 1px solid var(--border);
 }

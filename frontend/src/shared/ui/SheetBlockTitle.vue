@@ -69,7 +69,7 @@ defineEmits(['edit'])
 }
 @media (hover: hover) {
   .sbt-main--clickable:hover .sbt-title { color: var(--text-2); }
-  .sbt-main--clickable:hover .sbt-edit { color: var(--accent); background: rgba(255, 255, 255, 0.06); }
+  .sbt-main--clickable:hover .sbt-edit { color: var(--accent); background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); }
 }
 
 .sbt-edit {
@@ -85,7 +85,7 @@ defineEmits(['edit'])
   cursor: pointer;
   transition: opacity 0.25s ease, color 0.12s, background 0.12s;
 }
-@media (hover: hover) { .sbt-edit:hover { color: var(--accent); background: rgba(255, 255, 255, 0.06); } }
+@media (hover: hover) { .sbt-edit:hover { color: var(--accent); background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); } }
 
 .sbt--fade .sbt-edit { opacity: 0; pointer-events: none; }
 

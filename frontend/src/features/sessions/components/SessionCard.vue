@@ -62,18 +62,9 @@
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import BasePopover from '@/shared/ui/BasePopover.vue'
+import { sessionStatusConfig } from '@/features/sessions/composables/useSessionStatus'
 
-const AVATAR_COLORS = ['#7c5ce2', '#c85ce8', '#5cb0e8', '#e85c8a', '#5ce884', '#e89c3c', '#ff6b6b']
-
-const STATUS_CFG = {
-  live:      { label: 'Идёт игра',   color: '#e85c5c' },
-  active:    { label: 'Активна',     color: '#5ce87c' },
-  planned:   { label: 'Запланована', color: '#5c95e8' },
-  paused:    { label: 'Пауза',       color: '#e89c3c' },
-  completed: { label: 'Завершено',   color: '#707080' },
-  draft:     { label: 'Черновик',    color: 'var(--text-muted)' },
-  archived:  { label: 'Архив',       color: 'var(--text-muted)' },
-}
+const AVATAR_COLORS = ['var(--accent)', 'var(--accent)', 'var(--info)', 'var(--danger)', 'var(--success)', 'var(--warning)', 'var(--danger)']
 
 function uuidColor(uuid) {
   if (!uuid) return AVATAR_COLORS[0]
@@ -109,7 +100,7 @@ function menuAction(type) {
   else emit('leave', props.session)
 }
 
-const statusCfg = computed(() => STATUS_CFG[props.session.status] ?? { label: props.session.status, color: 'var(--text-muted)' })
+const statusCfg = computed(() => sessionStatusConfig(props.session.status))
 const participants = computed(() => props.session.participants ?? [])
 
 const chapterLabel = computed(() => {
@@ -156,7 +147,7 @@ const relativeDate = computed(() => {
 
 <style scoped>
 .s-card {
-  background: var(--block-bg);
+  background: var(--surface);
   border-radius: var(--r-lg);
   border: 1px solid var(--border);
   padding: 16px;
@@ -170,7 +161,7 @@ const relativeDate = computed(() => {
 }
 
 .s-card:not(.s-card--readonly):hover {
-  border-color: var(--accent-dim);
+  border-color: var(--accent-hover);
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 18%, transparent);
 }
 
@@ -237,7 +228,7 @@ const relativeDate = computed(() => {
 .s-card:hover .menu-btn,
 .menu-btn:focus { opacity: 1; }
 
-.menu-btn:hover { background: #26263a; color: #a0a0cc; }
+.menu-btn:hover { background: var(--surface-raised); color: var(--text-2); }
 
 .menu-item {
   padding: 9px 14px;
@@ -246,13 +237,13 @@ const relativeDate = computed(() => {
   cursor: pointer;
   transition: background 0.15s;
 }
-.menu-item:hover { background: #242438; }
+.menu-item:hover { background: var(--surface-raised); }
 
-.menu-danger { color: #d85555; }
-.menu-danger:hover { background: #281818; }
+.menu-danger { color: var(--danger); }
+.menu-danger:hover { background: var(--bg); }
 
-.menu-warning { color: #c08040; }
-.menu-warning:hover { background: #201808; }
+.menu-warning { color: var(--danger); }
+.menu-warning:hover { background: var(--bg); }
 
 .card-name {
   font-family: var(--font-display);
@@ -264,7 +255,7 @@ const relativeDate = computed(() => {
 
 .card-chapter {
   font-size: 12px;
-  color: #a070d0;
+  color: var(--accent);
   align-self: flex-start;
   background: color-mix(in srgb, var(--accent) 8%, transparent);
   border: 1px solid color-mix(in srgb, var(--accent) 18%, transparent);
@@ -275,8 +266,8 @@ const relativeDate = computed(() => {
 
 .card-system {
   font-size: 11px;
-  color: #8888aa;
-  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-muted);
+  background: color-mix(in srgb, var(--text-on-accent) 6%, transparent);
   border-radius: 5px;
   padding: 2px 7px;
   align-self: flex-start;
@@ -317,12 +308,12 @@ const relativeDate = computed(() => {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: var(--text-on-accent);
   font-size: 12px;
   font-weight: 700;
 }
 
-.my-char--initial { color: #fff; }
+.my-char--initial { color: var(--text-on-accent); }
 .my-char-initial { font-size: 11px; }
 
 .my-char-label {
@@ -336,7 +327,7 @@ const relativeDate = computed(() => {
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  border: 2px solid #1a1a22;
+  border: 2px solid var(--bg);
   margin-left: -6px;
   flex-shrink: 0;
   background-size: cover;
@@ -344,7 +335,7 @@ const relativeDate = computed(() => {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: var(--text-on-accent);
   font-size: 10px;
   font-weight: 700;
 }

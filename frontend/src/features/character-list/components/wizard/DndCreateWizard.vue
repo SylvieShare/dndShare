@@ -243,31 +243,31 @@ function submit() {
 .wz-steps { display: flex; flex-wrap: wrap; gap: 6px; }
 .wz-pip {
   font-size: 11px; padding: 3px 9px; border-radius: 999px;
-  background: var(--input-bg); color: var(--text-muted); border: 1px solid var(--input-border);
+  background: var(--surface-raised); color: var(--text-muted); border: 1px solid var(--border-strong);
 }
-.wz-pip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.wz-pip.active { background: var(--accent); color: var(--text-on-accent); border-color: var(--accent); }
 .wz-pip.done { color: var(--text-2); }
 .wz-body { min-height: 180px; }
 .wz-sec { display: flex; flex-direction: column; gap: 12px; }
 .wz-sec-title { font-weight: 700; color: var(--text-1); display: flex; align-items: center; gap: 8px; }
 .wz-count { font-size: 12px; color: var(--text-muted); font-weight: 600; }
 .wz-select {
-  width: 100%; background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 8px;
+  width: 100%; background: var(--surface-raised); border: 1px solid var(--border-strong); border-radius: 8px;
   color: var(--text-1); font: inherit; padding: 9px 12px; outline: none;
 }
-.wz-select:focus { border-color: var(--input-focus); }
+.wz-select:focus { border-color: var(--accent); }
 .wz-check { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-1); cursor: pointer; }
 .wz-muted { font-size: 12px; color: var(--text-muted); margin: 0; }
 .wz-review { display: flex; flex-direction: column; gap: 6px; }
 .wz-scores { display: flex; flex-wrap: wrap; gap: 10px; font-weight: 600; color: var(--text-2); margin-top: 6px; }
-.wz-grants { background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 10px; padding: 12px 14px; }
+.wz-grants { background: var(--surface-raised); border: 1px solid var(--border-strong); border-radius: 10px; padding: 12px 14px; }
 .wz-grants-title { font-size: 12px; font-weight: 700; color: var(--accent); margin-bottom: 6px; }
 .wz-grants-list { margin: 0; padding-left: 18px; font-size: 12px; color: var(--text-muted); display: flex; flex-direction: column; gap: 3px; }
 .wz-nav { display: flex; justify-content: space-between; gap: 10px; padding-top: 4px; }
 .wz-btn {
-  background: var(--accent); color: #fff; border: none; border-radius: 8px;
+  background: var(--accent); color: var(--text-on-accent); border: none; border-radius: 8px;
   padding: 9px 20px; font: inherit; font-weight: 600; cursor: pointer;
 }
 .wz-btn:disabled { opacity: 0.5; cursor: default; }
-.wz-btn.ghost { background: transparent; color: var(--text-muted); border: 1px solid var(--input-border); }
+.wz-btn.ghost { background: transparent; color: var(--text-muted); border: 1px solid var(--border-strong); }
 </style>

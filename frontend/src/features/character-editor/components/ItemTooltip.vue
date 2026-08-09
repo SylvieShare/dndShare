@@ -107,7 +107,7 @@ const displayDesc = computed(() => {
   position: fixed;
   max-width: 360px;
   min-width: 192px;
-  background: var(--popup-bg);
+  background: var(--popover-bg);
   border: 1px solid var(--border-strong);
   border-radius: 10px;
   padding: 10px 14px;

@@ -58,7 +58,7 @@ defineProps({
   height: 12px;
   border-radius: 50%;
   flex-shrink: 0;
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.26), 0 0 0 1px rgba(0, 0, 0, 0.16);
+  box-shadow: inset 0 1px 1px color-mix(in srgb, var(--text-on-accent) 26%, transparent), 0 0 0 1px color-mix(in srgb, var(--scrim) 26%, transparent);
 }
 
 .ma-img {

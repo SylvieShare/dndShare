@@ -1,0 +1,53 @@
+:root {
+  /* Layout */
+  --header-h: 54px;
+  --content-max: 1400px;
+
+  /* Surfaces: every form lives on --bg; controls rise one level above it. */
+  --bg: #1b1b1d;
+  --surface: #242427;
+  --surface-raised: #2c2c30;
+  --surface-active: #35353b;
+  --popover-bg: #202024;
+  --scrim: rgb(0 0 0 / 62%);
+
+  /* Lines */
+  --border: rgb(255 255 255 / 8%);
+  --border-strong: rgb(255 255 255 / 16%);
+
+  /* Typography */
+  --text-1: #ececed;
+  --text-2: #a6a6ab;
+  --text-muted: #8a8a92;
+  --text-on-accent: #fff;
+
+  /* Product and semantic colors */
+  --accent: #7c5ce2;
+  --accent-hover: #6847c7;
+  --accent-soft: #b9a8ff;
+  --danger: #e05555;
+  --success: #4caf6e;
+  --warning: #fcbe24;
+  --info: #5c95e8;
+
+  /* Encounter sides are domain colors, not UI states. */
+  --side-enemy: #e85c8a;
+  --side-neutral: #8888aa;
+  --side-minion: #a06ce8;
+
+  /* Effects and shape */
+  --shadow-lg: 0 18px 48px rgb(0 0 0 / 42%), 0 0 0 1px rgb(255 255 255 / 5%);
+  --r-xs: 4px;
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 14px;
+  --r-pill: 999px;
+
+  /* Fonts */
+  --font-ui: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+  --font-display: 'Cormorant Garamond', 'Times New Roman', serif;
+}
+
+@media (max-width: 640px) {
+  :root { --header-h: 50px; }
+}
