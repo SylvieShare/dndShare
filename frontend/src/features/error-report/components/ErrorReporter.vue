@@ -131,6 +131,9 @@ let screenshotGeneration = 0
 let screenshotSession = 0
 let pendingScreenshot = null
 const screenshotContextElements = ref([])
+const semanticAncestorTags = new Set([
+  'article', 'aside', 'dialog', 'fieldset', 'footer', 'form', 'header', 'main', 'nav', 'section',
+])
 
 const highlightStyle = computed(() => ({
   top: `${highlight.top}px`,
@@ -501,6 +504,7 @@ function describeElement(element) {
     title: element.getAttribute('title') || undefined,
     name: element.getAttribute('name') || undefined,
     type: element.getAttribute('type') || undefined,
+    ancestorContext: ancestorContextFor(element),
     rect: {
       x: Math.round(rect.x),
       y: Math.round(rect.y),
@@ -511,6 +515,38 @@ function describeElement(element) {
       width: window.innerWidth,
       height: window.innerHeight,
     },
+  })
+}
+
+function ancestorContextFor(element) {
+  const ancestors = []
+  let current = element.parentElement
+  while (current && current !== document.body && current !== document.documentElement && ancestors.length < 5) {
+    const descriptor = semanticAncestorDescriptor(current)
+    if (descriptor) ancestors.push(descriptor)
+    current = current.parentElement
+  }
+  return ancestors.reverse()
+}
+
+function semanticAncestorDescriptor(element) {
+  const tagName = element.tagName.toLowerCase()
+  const hasIdentity = Boolean(
+    element.id
+    || element.getAttribute('class')?.trim()
+    || element.hasAttribute('data-testid')
+    || element.hasAttribute('data-test')
+    || element.getAttribute('role')
+    || element.getAttribute('aria-label')
+    || semanticAncestorTags.has(tagName),
+  )
+  if (!hasIdentity) return null
+
+  return compactObject({
+    selectorPart: semanticSelectorPart(element),
+    role: element.getAttribute('role') || undefined,
+    ariaLabel: element.getAttribute('aria-label') || undefined,
+    title: element.getAttribute('title') || undefined,
   })
 }
 
