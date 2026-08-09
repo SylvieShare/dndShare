@@ -704,7 +704,7 @@ func mcpToolDefs() []map[string]any {
 				"limit": intP("Max rows, 1..100 (default 20)"),
 			}, "q")),
 		tool("error_reports_list",
-			"List user-submitted page error reports, newest first. Includes description, page URL, selected element metadata, userId/userLogin (null for guests), hasScreenshot, screenshotContentType, and creation time.",
+			"List user-submitted page error reports, newest first. Includes description, page URL, selected element metadata with a semantic class-based CSS selector and visible text, userId/userLogin (null for guests), hasScreenshot, screenshotContentType, and creation time.",
 			schema(map[string]any{
 				"limit":  intP("Max rows, 1..500 (default 100)"),
 				"offset": intP("Offset for pagination (default 0)"),

@@ -285,25 +285,35 @@ function selectorFor(element) {
   const parts = []
   let current = element
   while (current && current !== document.documentElement && parts.length < 8) {
-    let part = current.tagName.toLowerCase()
-    const testAttribute = current.hasAttribute('data-testid')
-      ? 'data-testid'
-      : (current.hasAttribute('data-test') ? 'data-test' : '')
-    if (testAttribute) {
-      part += `[${testAttribute}="${escapeAttribute(current.getAttribute(testAttribute))}"]`
-    } else {
-      const parent = current.parentElement
-      if (parent) {
-        const sameTag = [...parent.children].filter(child => child.tagName === current.tagName)
-        if (sameTag.length > 1) part += `:nth-of-type(${sameTag.indexOf(current) + 1})`
-      }
-    }
-    parts.unshift(part)
+    parts.unshift(semanticSelectorPart(current))
     const candidate = parts.join(' > ')
     if (isUniqueSelector(candidate)) return candidate
     current = current.parentElement
   }
   return parts.join(' > ') || element.tagName.toLowerCase()
+}
+
+function semanticSelectorPart(element) {
+  if (element.id) return `#${escapeCSS(element.id)}`
+
+  const tagName = element.tagName.toLowerCase()
+  const testAttribute = element.hasAttribute('data-testid')
+    ? 'data-testid'
+    : (element.hasAttribute('data-test') ? 'data-test' : '')
+  if (testAttribute) {
+    return `${tagName}[${testAttribute}="${escapeAttribute(element.getAttribute(testAttribute))}"]`
+  }
+
+  const classes = (element.getAttribute('class') || '')
+    .split(/\s+/)
+    .map(value => value.trim())
+    .filter(Boolean)
+    .slice(0, 6)
+  if (classes.length) {
+    return `${tagName}${classes.map(className => `.${escapeCSS(className)}`).join('')}`
+  }
+
+  return tagName
 }
 
 function isUniqueSelector(selector) {

@@ -11,7 +11,7 @@ The application has a global user-facing flow for pointing at a broken element a
 - While selection mode is active, the element under the pointer is outlined. Click/tap selects it; `Esc` cancels.
 - Reporter UI is marked with `data-error-report-ignore`, so the selector cannot accidentally target the button, hint, or form.
 - The form uses `html-to-image` to render the selected element with the browser's modern CSS engine, shows the JPEG preview, then sends it with the required description, current `window.location.href`, and element JSON through `features/error-report/api/errorReportApi.js`. Capture is best-effort: unsupported/cross-origin content may produce no screenshot, but does not block the report.
-- The element object contains a CSS selector, tag/id/classes, short visible text, selected accessibility attributes, its viewport rect, and viewport size. It deliberately does not contain `outerHTML` or form values.
+- The element object contains a semantic CSS selector, tag/id/classes, short visible text, selected accessibility attributes, its viewport rect, and viewport size. The selector prefers a unique id or test attribute, then builds a readable tag-and-class ancestry without positional `nth-*` indexes, so admin and MCP consumers can understand the UI area from the locator itself. It deliberately does not contain `outerHTML` or form values.
 
 The public submit endpoint accepts both guests and signed-in users. A valid cookie session is attached as `user_id`; anonymous reports keep it null.
 
