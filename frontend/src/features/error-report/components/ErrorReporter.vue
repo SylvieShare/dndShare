@@ -105,6 +105,7 @@ import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
 import { toCanvas, toJpeg } from 'html-to-image'
 import AppModal from '@/shared/ui/AppModal.vue'
 import { createErrorReport } from '../api/errorReportApi'
+import { platformForViewport } from '../lib/errorReportContext'
 import { planAncestorCrop, scrollOffsetBetween } from '../lib/screenshotGeometry'
 
 const selecting = ref(false)
@@ -530,6 +531,7 @@ function describeElement(element) {
       width: window.innerWidth,
       height: window.innerHeight,
     },
+    platform: platformForViewport(window.innerWidth),
   })
 }
 

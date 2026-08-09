@@ -25,12 +25,18 @@ export function resolveDataPath(path, data) {
   return String(path).split('.').reduce((obj, key) => obj?.[key], root)
 }
 
+export function formatLayoutTitlePart(value) {
+  if (value == null || value === '') return ''
+  if (typeof value === 'object') return value.name != null ? String(value.name) : ''
+  return String(value)
+}
+
 export function resolveLayoutTitle(pathOrPaths, data) {
   const paths = Array.isArray(pathOrPaths) ? pathOrPaths : pathOrPaths ? [pathOrPaths] : []
   return paths
     .map(path => resolveDataPath(path, data))
-    .filter(value => value !== '' && value != null)
-    .map(String)
+    .map(formatLayoutTitlePart)
+    .filter(Boolean)
     .join(' • ')
 }
 

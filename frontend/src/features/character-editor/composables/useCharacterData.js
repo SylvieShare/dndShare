@@ -9,6 +9,7 @@ import {
   activeLayoutProfile,
   initialTabs,
   layoutNodeToBlock,
+  formatLayoutTitlePart,
   profileTabs,
   resolveDataPath,
   resolveLayoutTitle,
@@ -131,17 +132,15 @@ export function useCharacterData(uuid, isMobile) {
     const pathOrPaths = layout.value?.header_title_path ?? layout.value?.title_path
     const paths = Array.isArray(pathOrPaths) ? pathOrPaths : pathOrPaths ? [pathOrPaths] : []
     if (!paths.length) return ''
-    const val = resolveDataPath(paths[0], data.value)
-    return val != null && val !== '' ? String(val) : ''
+    return formatLayoutTitlePart(resolveDataPath(paths[0], data.value))
   })
 
   const charSub = computed(() => {
     const pathOrPaths = layout.value?.header_title_path ?? layout.value?.title_path
     const paths = Array.isArray(pathOrPaths) ? pathOrPaths : pathOrPaths ? [pathOrPaths] : []
     return paths.slice(1)
-      .map(p => resolveDataPath(p, data.value))
-      .filter(v => v != null && v !== '')
-      .map(String)
+      .map(p => formatLayoutTitlePart(resolveDataPath(p, data.value)))
+      .filter(Boolean)
       .join(' · ')
   })
 

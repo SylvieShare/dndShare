@@ -27,7 +27,7 @@
           </span>
         </button>
 
-        <button class="lu-opt lu-opt-ghost" @click="choosePlain">
+        <button class="lu-opt lu-opt-plain" @click="choosePlain">
           <span class="lu-opt-mono lu-opt-plus">↑</span>
           <span class="lu-opt-body">
             <span class="lu-opt-name">Просто повысить уровень</span>
@@ -860,6 +860,23 @@ onMounted(async () => {
 .lu-opt-plus { font-family: inherit; font-weight: 700; }
 .lu-opt-ghost { background: transparent; box-shadow: inset 0 0 0 1px var(--border-strong); }
 .lu-opt-ghost:hover { box-shadow: inset 0 0 0 1px var(--accent); }
+.lu-opt-plain {
+  align-self: flex-start;
+  gap: 9px;
+  padding: 7px 9px;
+  background: transparent;
+  color: var(--text-muted);
+}
+.lu-opt-plain:hover:not(:disabled) { background: color-mix(in srgb, var(--text-on-accent) 5%, transparent); }
+.lu-opt-plain .lu-opt-mono {
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  background: color-mix(in srgb, var(--text-on-accent) 5%, transparent);
+  color: var(--text-muted);
+  font-size: 15px;
+}
+.lu-opt-plain .lu-opt-name { color: var(--text-2); font-size: 13px; }
 .lu-opt-body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .lu-opt-name { font-size: 14px; font-weight: 600; color: var(--text-1); }
 .lu-opt-sub { font-weight: 400; color: var(--text-2); }

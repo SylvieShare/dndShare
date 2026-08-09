@@ -14,6 +14,7 @@ const props = defineProps({
   color: { type: String, default: 'var(--accent)' },   // strip color + --sc for the view slot
   editorWidth: { type: Number, default: 360 },          // width of the revealed editor column (horizontal)
   minViewWidth: { type: Number, default: 0 },           // floor for the view (tiny origins)
+  viewWidth: { type: Number, default: 0 },              // optional fixed view/panel width (vertical)
   orientation: { type: String, default: 'horizontal' }, // 'horizontal' (editor right) | 'vertical' (editor below)
   strip: { type: Boolean, default: true },
   frame: { type: String, default: '' },                 // gradient + colored border on the panel (block "unfolds" into the window)
@@ -23,6 +24,7 @@ defineEmits(['close'])
 
 const vertical = computed(() => props.orientation === 'vertical')
 const leftWidth = computed(() => {
+  if (props.viewWidth > 0) return props.viewWidth
   const w = props.originRect ? Math.round(props.originRect.width) : 280
   return Math.max(w, props.minViewWidth)
 })

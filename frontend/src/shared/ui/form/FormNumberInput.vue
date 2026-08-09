@@ -39,6 +39,7 @@ function step(delta) {
 <style scoped>
 .fn-wrap {
   display: flex;
+  width: fit-content;
   align-items: center;
   background: var(--surface-raised);
   box-shadow: inset 0 0 0 1px var(--border-strong);

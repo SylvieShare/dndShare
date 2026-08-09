@@ -76,6 +76,7 @@ const pillStyle = computed(() => ({
 .mt-toggle {
   position: relative;
   display: inline-flex;
+  width: fit-content;
   background: var(--surface-raised);
   border: 1px solid var(--border);
   border-radius: 9px;

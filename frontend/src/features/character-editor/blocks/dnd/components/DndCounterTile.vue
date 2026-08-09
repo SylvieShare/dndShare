@@ -20,7 +20,6 @@
       :origin-rect="originRect"
       :origin-el="originEl"
       :strip="false"
-      orientation="vertical"
       :min-view-width="320"
       @close="close"
     >

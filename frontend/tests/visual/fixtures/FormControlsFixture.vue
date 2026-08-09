@@ -10,6 +10,14 @@
       <FormNumberInput :value="number" @change="number = $event" />
     </label>
     <label>
+      Режим
+      <MultiToggle
+        :model-value="mode"
+        :options="modes"
+        @update:model-value="mode = $event"
+      />
+    </label>
+    <label>
       Характеристика
       <ValueSelect v-model="selected" :options="options" placeholder="Выберите характеристику" />
     </label>
@@ -26,6 +34,7 @@ import { ref } from 'vue'
 import FormNumberInput from '../../../src/shared/ui/form/FormNumberInput.vue'
 import FormTextInput from '../../../src/shared/ui/form/FormTextInput.vue'
 import FormTextarea from '../../../src/shared/ui/form/FormTextarea.vue'
+import MultiToggle from '../../../src/shared/ui/MultiToggle.vue'
 import ToggleSwitch from '../../../src/shared/ui/ToggleSwitch.vue'
 import ValueSelect from '../../../src/shared/ui/ValueSelect.vue'
 
@@ -33,7 +42,12 @@ const enabled = ref(false)
 const selected = ref(null)
 const text = ref('')
 const number = ref(12)
+const mode = ref('average')
 const description = ref('')
+const modes = [
+  { value: 'average', label: 'Среднее' },
+  { value: 'roll', label: 'Бросок' },
+]
 const options = [
   { value: 'strength', label: 'Сила' },
   { value: 'dexterity', label: 'Ловкость' },

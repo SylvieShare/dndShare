@@ -13,7 +13,7 @@
     :origin-el="originEl"
     orientation="vertical"
     :strip="false"
-    :min-view-width="260"
+    :view-width="300"
     @close="closeEditor"
   >
     <template #view>
@@ -240,6 +240,9 @@ function applyCalc(sign) {
 /* editor */
 .mc-coin-trigger {
   display: inline-flex;
+  flex: 0 0 112px;
+  width: 112px;
+  min-width: 0;
   align-items: center;
   gap: 6px;
   height: 36px;
@@ -280,7 +283,10 @@ function applyCalc(sign) {
 }
 
 .mc-coin-name {
-  min-width: 18px;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .mc-coin-chevron {
