@@ -6,7 +6,7 @@
         :key="tab.id"
         class="sidebar-tab"
         :class="{ active: activeTab === tab.id }"
-        @click="activeTab = tab.id"
+        @click="selectTab(tab.id)"
       >
         {{ tab.label }}
       </button>
@@ -23,7 +23,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import AdminJobs from '../components/AdminJobs.vue'
 import AdminLogs from '../components/AdminLogs.vue'
 import AdminErrorReports from '../components/AdminErrorReports.vue'
@@ -38,7 +39,21 @@ const tabs = [
   { id: 'jobs', label: 'Задачи' },
 ]
 
-const activeTab = ref('stats')
+const route = useRoute()
+const router = useRouter()
+const tabIds = new Set(tabs.map(tab => tab.id))
+
+const activeTab = computed(() => {
+  const tab = route.query.tab
+  return typeof tab === 'string' && tabIds.has(tab) ? tab : 'stats'
+})
+
+function selectTab(tab) {
+  const query = { ...route.query }
+  if (tab === 'stats') delete query.tab
+  else query.tab = tab
+  router.push({ query })
+}
 </script>
 
 <style scoped>
