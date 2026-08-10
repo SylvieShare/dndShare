@@ -8,7 +8,7 @@ The dark UI uses one application canvas plus a compact surface scale. Do not cre
 
 | Token | Value | Purpose |
 | --- | --- | --- |
-| `--app-bg` | `#121214` | Global application canvas behind page content and forms. |
+| `--app-bg` | `#151518` | Global application canvas behind page content and forms. |
 | `--bg` | `#1b1b1d` | Background of every form, wizard and editor. |
 | `--surface` | `#242427` | Cards, tiles and grouped content on the canvas. |
 | `--surface-raised` | `#2c2c30` | Inputs, selects, toggles and quiet buttons. This is the default control background on `--bg`. |
