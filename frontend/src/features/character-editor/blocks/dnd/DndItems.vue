@@ -70,7 +70,7 @@
             >
               <span class="di-row-name" @click="onNameClick(entry)">
                 <span class="di-row-name-text">{{ entry.display.name }}</span>
-                <span v-if="!canManage && entry.count > 1" class="di-count-badge">
+                <span v-if="entry.count > 1" class="di-count-badge">
                   <span class="di-count-x">x</span>{{ entry.count }}
                 </span>
               </span>
@@ -89,14 +89,6 @@
 
                 <div class="di-count-ctrl">
                   <button class="di-count-btn" @click.stop="bumpCount(section.id, entry.uid, -1)">−</button>
-                  <input
-                    class="di-count-input"
-                    type="number"
-                    min="1"
-                    :value="entry.count"
-                    @click.stop
-                    @input.stop="setCount(section.id, entry.uid, $event.target.value)"
-                  />
                   <button class="di-count-btn" @click.stop="bumpCount(section.id, entry.uid, 1)">+</button>
                 </div>
 
@@ -368,17 +360,6 @@ function bumpCount(sectionId, uid, delta) {
   const item = list.find(i => i.uid === uid)
   if (!item) return
   item.count = Math.max(1, (item.count || 1) + delta)
-  emitModel(next)
-}
-
-function setCount(sectionId, uid, val) {
-  const count = Math.max(1, parseInt(val, 10) || 1)
-  const next = cloneModel(model.value)
-  const list = itemsRef(next, sectionId)
-  if (!list) return
-  const item = list.find(i => i.uid === uid)
-  if (!item) return
-  item.count = count
   emitModel(next)
 }
 
@@ -735,21 +716,6 @@ onMounted(async () => {
   transition: background 0.12s, color 0.12s;
 }
 .di-count-btn:hover { background: var(--surface-active); color: var(--text-1); }
-.di-count-input {
-  width: 40px;
-  height: 22px;
-  box-sizing: border-box;
-  background: var(--surface-raised);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  color: var(--text-1);
-  font: inherit;
-  font-size: 12px;
-  text-align: center;
-  outline: none;
-}
-.di-count-input:focus { border-color: var(--accent); }
-
 /* ─── Add row ─── */
 .di-add-row {
   display: flex;

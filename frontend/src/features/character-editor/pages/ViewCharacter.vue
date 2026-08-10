@@ -564,6 +564,7 @@ onBeforeUnmount(() => {
 @media (max-width: 640px) {
   .view {
     height: calc(100vh - 50px); /* overridden by viewStyle computed */
+    background: var(--bg);
   }
 
   .container {
