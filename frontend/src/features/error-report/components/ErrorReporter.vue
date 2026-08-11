@@ -40,35 +40,65 @@
         <span v-if="selectedElement?.text" class="selected-text">{{ selectedElement.text }}</span>
       </div>
       <div class="screenshot-field">
-        <span class="selected-label">Скриншот области</span>
-        <div v-if="screenshotCapturing && !screenshotDataURL" class="screenshot-state">Создаём снимок…</div>
-        <div v-else-if="screenshotDataURL" class="screenshot-previews">
-          <figure>
-            <figcaption>Выбранный элемент</figcaption>
-            <div class="screenshot-preview-frame" :style="screenshotFrameStyle">
+        <span class="selected-label">Скриншоты</span>
+        <div class="screenshot-previews">
+          <figure class="screenshot-preview-card screenshot-preview-card-element">
+            <figcaption>
+              <strong>Скриншот элемента</strong>
+              <span>Выбранная область и контекст</span>
+            </figcaption>
+            <div v-if="screenshotCapturing && !screenshotDataURL" class="screenshot-state screenshot-state-inside">
+              Создаём снимок…
+            </div>
+            <div v-else-if="screenshotDataURL" class="screenshot-preview-frame" :style="screenshotFrameStyle">
               <img
                 class="screenshot-preview"
                 :src="screenshotDataURL"
                 alt="Скриншот выбранного элемента"
               />
-            </div>
-            <div class="screenshot-context-controls">
               <button
+                class="screenshot-context-button screenshot-context-button-less"
                 type="button"
+                title="Взять меньше контекста"
+                aria-label="Взять меньше контекста"
                 :disabled="screenshotCapturing || screenshotContextLevel === 0"
                 @click="changeScreenshotContext(-1)"
-              >Меньше</button>
-              <span>{{ screenshotContextLabel }}</span>
+              ><span aria-hidden="true">‹</span> Меньше</button>
+              <span class="screenshot-context-label">{{ screenshotContextLabel }}</span>
               <button
+                class="screenshot-context-button screenshot-context-button-more"
                 type="button"
+                title="Взять больше контекста"
+                aria-label="Взять больше контекста"
                 :disabled="screenshotCapturing || screenshotContextLevel >= maxScreenshotContextLevel"
                 @click="changeScreenshotContext(1)"
-              >Больше</button>
+              >Больше <span aria-hidden="true">›</span></button>
+            </div>
+            <div v-if="!screenshotCapturing && screenshotError" class="screenshot-state screenshot-state-error screenshot-state-inside">
+              {{ screenshotError }} Заявку можно отправить без снимка элемента.
             </div>
           </figure>
-        </div>
-        <div v-if="!screenshotCapturing && screenshotError" class="screenshot-state screenshot-state-error">
-          {{ screenshotError }} Заявку можно отправить без снимка.
+
+          <figure class="screenshot-preview-card screenshot-preview-card-viewport">
+            <figcaption>
+              <strong>Скриншот страницы</strong>
+              <span>Вся видимая область экрана</span>
+            </figcaption>
+            <div class="viewport-preview-frame">
+              <img
+                v-if="viewportScreenshotDataURL"
+                class="viewport-preview"
+                :src="viewportScreenshotDataURL"
+                alt="Скриншот видимой области страницы"
+              />
+              <div v-else-if="viewportScreenshotCapturing" class="screenshot-state screenshot-state-inside">
+                Создаём снимок страницы…
+              </div>
+              <div v-else class="screenshot-state screenshot-state-inside" :class="{ 'screenshot-state-error': viewportScreenshotError }">
+                {{ viewportScreenshotError || 'Снимок страницы недоступен.' }}
+              </div>
+            </div>
+          </figure>
         </div>
       </div>
       <label class="description-label" for="error-report-description">Описание</label>
@@ -122,6 +152,8 @@ const screenshotDataURL = ref('')
 const viewportScreenshotDataURL = ref('')
 const screenshotCapturing = ref(false)
 const screenshotError = ref('')
+const viewportScreenshotCapturing = ref(false)
+const viewportScreenshotError = ref('')
 const screenshotContextLevel = ref(0)
 const screenshotFrameSize = reactive({ width: 0, height: 0 })
 const highlight = reactive({ visible: false, top: 0, left: 0, width: 0, height: 0 })
@@ -231,7 +263,9 @@ function onElementClick(event) {
   screenshotDataURL.value = ''
   viewportScreenshotDataURL.value = ''
   screenshotError.value = ''
+  viewportScreenshotError.value = ''
   screenshotCapturing.value = true
+  viewportScreenshotCapturing.value = true
   formOpen.value = true
 }
 
@@ -243,6 +277,7 @@ function onReportModalOpened() {
   if (!capture.element?.isConnected) {
     screenshotCapturing.value = false
     screenshotError.value = 'Не удалось создать скриншот области.'
+    void captureViewportScreenshot(capture.session)
     return
   }
   void captureElementScreenshot(capture.element, capture.session)
@@ -271,13 +306,20 @@ async function captureElementScreenshot(element, session) {
 }
 
 async function captureViewportScreenshot(session) {
+  if (session !== screenshotSession || !formOpen.value) return
+  viewportScreenshotCapturing.value = true
+  viewportScreenshotError.value = ''
   try {
     const screenshot = await withTimeout(captureViewport(), 10000)
     if (session === screenshotSession && formOpen.value) {
       viewportScreenshotDataURL.value = screenshot
     }
   } catch {
-    // The full viewport is supplemental and must not block the form or hide a successful area crop.
+    if (session === screenshotSession && formOpen.value) {
+      viewportScreenshotError.value = 'Не удалось создать скриншот страницы.'
+    }
+  } finally {
+    if (session === screenshotSession) viewportScreenshotCapturing.value = false
   }
 }
 
@@ -681,6 +723,8 @@ function resetScreenshot() {
   viewportScreenshotDataURL.value = ''
   screenshotCapturing.value = false
   screenshotError.value = ''
+  viewportScreenshotCapturing.value = false
+  viewportScreenshotError.value = ''
   screenshotContextLevel.value = 0
   screenshotContextElements.value = []
   screenshotFrameSize.width = 0
@@ -894,14 +938,21 @@ onBeforeUnmount(() => {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  object-position: left center;
+  object-position: center;
 }
 
 .screenshot-preview-frame {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-width: min(320px, 100%);
+  min-height: 180px;
   max-width: 100%;
+  max-height: 420px;
+  margin: 0 auto;
   overflow: hidden;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 10px;
   background: var(--bg);
   transition: width 0.24s cubic-bezier(.22, 1, .36, 1), height 0.24s cubic-bezier(.22, 1, .36, 1);
 }
@@ -909,52 +960,121 @@ onBeforeUnmount(() => {
 .screenshot-previews {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 10px;
+  gap: 12px;
 }
 
-.screenshot-previews figure {
+.screenshot-preview-card {
   margin: 0;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--border-strong));
+  border-radius: 12px;
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--accent) 7%, transparent), transparent 52%),
+    color-mix(in srgb, var(--surface) 82%, var(--bg));
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--text-on-accent) 4%, transparent);
 }
 
 .screenshot-previews figcaption {
-  margin-bottom: 5px;
-  color: var(--text-2);
-  font-size: 11px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
 }
 
-.screenshot-context-controls {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 7px;
-  margin-top: 7px;
+.screenshot-previews figcaption strong {
+  color: var(--text-1);
+  font-size: 12px;
+  font-weight: 650;
 }
 
-.screenshot-context-controls span {
+.screenshot-previews figcaption span {
+  overflow: hidden;
   color: var(--text-muted);
   font-size: 10px;
-  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.screenshot-context-controls button {
+.screenshot-context-button {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 32px;
+  padding: 6px 9px;
   border: 1px solid var(--border-strong);
-  border-radius: 6px;
-  background: var(--surface-raised);
-  color: var(--text-2);
+  border-radius: var(--r-pill);
+  background: color-mix(in srgb, var(--popover-bg) 88%, transparent);
+  box-shadow: 0 5px 18px color-mix(in srgb, var(--scrim) 55%, transparent);
+  color: var(--text-1);
   cursor: pointer;
   font: inherit;
   font-size: 10px;
-  padding: 5px 8px;
+  font-weight: 650;
+  backdrop-filter: blur(8px);
+  transform: translateY(-50%);
+  transition: border-color 0.15s, background 0.15s, opacity 0.15s, transform 0.15s;
 }
 
-.screenshot-context-controls button:hover:not(:disabled) {
-  border-color: var(--border-strong);
-  color: var(--text-1);
+.screenshot-context-button-less { left: 8px; }
+.screenshot-context-button-more { right: 8px; }
+
+.screenshot-context-button:hover:not(:disabled) {
+  border-color: color-mix(in srgb, var(--accent) 60%, var(--border-strong));
+  background: color-mix(in srgb, var(--accent) 24%, var(--popover-bg));
 }
 
-.screenshot-context-controls button:disabled {
+.screenshot-context-button:disabled {
   cursor: not-allowed;
-  opacity: 0.38;
+  opacity: 0.3;
+}
+
+.screenshot-context-label {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  bottom: 8px;
+  max-width: calc(100% - 24px);
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  overflow: hidden;
+  background: color-mix(in srgb, var(--popover-bg) 86%, transparent);
+  color: var(--text-2);
+  font-size: 9px;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  backdrop-filter: blur(8px);
+  transform: translateX(-50%);
+}
+
+.viewport-preview-frame {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-height: 180px;
+  max-width: 100%;
+  height: clamp(180px, 30vh, 320px);
+  max-height: 320px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg);
+}
+
+.viewport-preview {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 320px;
+  object-fit: contain;
+  object-position: center;
 }
 
 .screenshot-state {
@@ -967,6 +1087,12 @@ onBeforeUnmount(() => {
 }
 
 .screenshot-state-error { color: var(--danger); }
+
+.screenshot-state-inside {
+  width: 100%;
+  border-style: dashed;
+  text-align: center;
+}
 
 .description-input {
   width: 100%;
@@ -1061,5 +1187,14 @@ onBeforeUnmount(() => {
   .selection-hint { top: max(10px, env(safe-area-inset-top)); }
   .selection-hint span { display: none; }
   .selection-hint button { font-size: 10px; }
+
+  .screenshot-preview-frame,
+  .viewport-preview-frame {
+    min-height: 160px;
+  }
+
+  .screenshot-preview-card { padding: 8px; }
+  .screenshot-previews figcaption { align-items: flex-start; flex-direction: column; gap: 2px; }
+  .screenshot-context-button { padding: 6px 8px; }
 }
 </style>
