@@ -161,10 +161,14 @@
   flex-direction: column;
 }
 
-.tab-content.tab-content--combat {
+.tab-content.tab-content--canvas {
   background: transparent;
   border: 0;
   box-shadow: none;
+}
+
+.tab-content.tab-content--graph > * {
+  overflow: hidden;
 }
 
 /* The active tab is the scroll container (not this rounded tile) — a rounded

@@ -36,7 +36,8 @@
           <h1 class="hero-title">{{ session.name }}</h1>
           <div v-if="session.chapterNumber != null || session.systemName" class="hero-pills">
             <span v-if="session.chapterNumber != null" class="hero-chip hero-chip--chapter">
-              <span class="chip-roman">{{ romanNum(session.chapterNumber) }}</span>
+              <span v-if="session.arcOrder" class="chip-roman">Арка {{ romanNumeral(session.arcOrder) }}</span>
+              <span class="chip-roman">Глава {{ session.chapterNumber }}</span>
               <span v-if="session.chapterName">{{ session.chapterName }}</span>
             </span>
             <span v-if="session.systemName" class="hero-chip">{{ session.systemName }}</span>
@@ -113,6 +114,7 @@ import { fetchGet, fetchPost } from '@/shared/api/http'
 import { getSessionByCode, joinSession } from '@/shared/api/sessionsApi'
 import { useAccountStore } from '@/stores/account'
 import { pvAvatar, pvLevel, pvName, pvSubtitle } from '@/features/sessions/lib/participantView'
+import { romanNumeral } from '@/features/sessions/lib/chapterGraph'
 import { useTemplateStore } from '@/stores/template'
 import { sessionStatusColor, sessionStatusLabel } from '@/features/sessions/composables/useSessionStatus'
 
@@ -133,12 +135,6 @@ const joiningId = ref(null)
 const createOpen = ref(false)
 const creating = ref(false)
 const templates = computed(() => templateStore.all)
-
-const ROMAN = ['', 'I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV','XVI','XVII','XVIII','XIX','XX']
-function romanNum(n) {
-  const i = Number(n)
-  return ROMAN[i] || (i > 20 ? String(i) : '')
-}
 
 function templateName(templateId) {
   return templateStore.all.find(t => t.id === templateId)?.name ?? ''

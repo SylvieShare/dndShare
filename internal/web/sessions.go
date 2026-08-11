@@ -22,8 +22,18 @@ func (s *Server) routesSessions(mux *http.ServeMux) {
 	mux.HandleFunc("GET /api/sessions/{uuid}", s.handleGetSession)
 	mux.HandleFunc("PATCH /api/sessions/{uuid}", s.handleUpdateSession)
 	mux.HandleFunc("POST /api/sessions/{uuid}/chapters", s.handleCreateChapter)
-	mux.HandleFunc("PATCH /api/sessions/{uuid}/chapters/{chapterId}", s.handleRenameChapter)
+	mux.HandleFunc("PATCH /api/sessions/{uuid}/chapters/{chapterId}", s.handleUpdateChapter)
+	mux.HandleFunc("DELETE /api/sessions/{uuid}/chapters/{chapterId}", s.handleDeleteChapter)
+	mux.HandleFunc("PATCH /api/sessions/{uuid}/chapters/{chapterId}/position", s.handleMoveChapterPosition)
+	mux.HandleFunc("PATCH /api/sessions/{uuid}/chapters/{chapterId}/arc", s.handleMoveChapterArc)
 	mux.HandleFunc("PATCH /api/sessions/{uuid}/current-chapter", s.handleSetCurrentChapter)
+	mux.HandleFunc("POST /api/sessions/{uuid}/arcs", s.handleCreateArc)
+	mux.HandleFunc("PATCH /api/sessions/{uuid}/arcs-order", s.handleReorderArcs)
+	mux.HandleFunc("PATCH /api/sessions/{uuid}/arcs/{arcId}", s.handleUpdateArc)
+	mux.HandleFunc("DELETE /api/sessions/{uuid}/arcs/{arcId}", s.handleDeleteArc)
+	mux.HandleFunc("POST /api/sessions/{uuid}/chapter-edges", s.handleCreateChapterEdge)
+	mux.HandleFunc("PATCH /api/sessions/{uuid}/chapter-edges/{edgeId}", s.handleUpdateChapterEdge)
+	mux.HandleFunc("DELETE /api/sessions/{uuid}/chapter-edges/{edgeId}", s.handleDeleteChapterEdge)
 	mux.HandleFunc("POST /api/sessions/{uuid}/join", s.handleJoinSession)
 	mux.HandleFunc("DELETE /api/sessions/{uuid}/participants/{charId}", s.handleKickParticipant)
 	mux.HandleFunc("PATCH /api/sessions/{uuid}/status", s.handleUpdateSessionStatus)
@@ -49,6 +59,8 @@ func (s *Server) handleSessionTwoSegGET(w http.ResponseWriter, r *http.Request) 
 	switch b {
 	case "chapters":
 		s.handleGetChapters(w, r)
+	case "chapter-graph":
+		s.handleGetChapterGraph(w, r)
 	case "encounter":
 		s.handleGetEncounter(w, r)
 	case "music":
@@ -160,7 +172,7 @@ func (s *Server) handleCreateSession(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "Некорректный запрос")
 		return
 	}
-	id, uuid, err := s.store.CreateSessionWithFirstChapter(r.Context(), userID, req.Name, req.Description, req.SystemID)
+	id, uuid, err := s.store.CreateSessionWithFirstArc(r.Context(), userID, req.Name, req.Description, req.SystemID)
 	if err != nil {
 		serverError(w, err)
 		return

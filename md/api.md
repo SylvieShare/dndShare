@@ -84,17 +84,33 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
 
 ## Sessions and scenes
 
-- list/create/get/update/delete sessions;
-- join/leave/kick participant;
-- create/rename/select chapter;
-- update status;
+- `GET|POST /api/sessions`, `GET|PATCH /api/sessions/{uuid}` and session delete;
+- join/leave/kick participant and update session status;
+- `GET /api/sessions/{uuid}/chapter-graph` returns `{arcs,chapters,edges}`;
+- `POST /api/sessions/{uuid}/arcs`, `PATCH|DELETE
+  /api/sessions/{uuid}/arcs/{arcId}` and `PATCH
+  /api/sessions/{uuid}/arcs-order`;
+- `GET|POST /api/sessions/{uuid}/chapters`, `PATCH|DELETE
+  /api/sessions/{uuid}/chapters/{chapterId}`, plus `/position` and `/arc`
+  PATCH actions;
+- `PATCH /api/sessions/{uuid}/current-chapter`;
+- `POST /api/sessions/{uuid}/chapter-edges` and `PATCH|DELETE
+  /api/sessions/{uuid}/chapter-edges/{edgeId}`;
 - read/write encounter and music state;
 - CRUD scenes and scene items, including explicit items-order endpoint.
 
+Arc, chapter and transition mutations are owner-only. Chapter `number` is a
+string. A chapter mutation uses `{arcId,number,name,description,status,
+imagePresetKey,customImageId,imageFocalX,imageFocalY,positionX,positionY}`.
+Transitions use `{arcId,fromChapterId,toChapterId,label}` and may only connect
+chapters from the same arc. Reordering arcs accepts `{ids:[...]}` containing
+every arc exactly once; response order becomes the new automatic numbering.
+
 Точные routes находятся в `internal/web/sessions.go` и
-`internal/web/session_scenes.go`. Encounter принимает только canonical
-combatants (`itemId` + `override` для NPC); embedded item payload не является
-контрактом.
+`internal/web/session_scenes.go`; graph validation is in
+`sessions_chapters.go` and `sessions_graph_actions.go`. Encounter принимает
+только canonical combatants (`itemId` + `override` для NPC); embedded item
+payload не является контрактом.
 
 ## Music and storage
 

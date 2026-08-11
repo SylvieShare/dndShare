@@ -1,0 +1,199 @@
+<template>
+  <article
+    class="chapter-node"
+    :class="[
+      `chapter-node--${status.tone}`,
+      { 'chapter-node--current': current, 'chapter-node--linking': linking, 'chapter-node--target': target },
+    ]"
+    :style="nodeStyle"
+    :data-chapter-id="chapter.id"
+    @pointerdown="$emit('pointerdown', $event, chapter)"
+  >
+    <div class="chapter-node-image">
+      <img v-if="imageUrl" :src="imageUrl" alt="" draggable="false" :style="imageStyle" />
+      <div v-else class="chapter-node-image-empty" />
+      <div class="chapter-node-shade" />
+      <span v-if="current" class="chapter-current-mark">Текущая</span>
+      <span class="chapter-status" :class="`chapter-status--${status.tone}`">{{ status.label }}</span>
+    </div>
+    <div class="chapter-node-copy">
+      <span class="chapter-node-number">Глава {{ chapter.number }}</span>
+      <span class="chapter-node-name">{{ chapter.name }}</span>
+    </div>
+    <button
+      type="button"
+      class="chapter-link-port"
+      :title="linking ? 'Отменить создание перехода' : 'Создать переход отсюда'"
+      @pointerdown.stop
+      @click.stop="$emit('start-link', chapter)"
+    >
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+        <path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </article>
+</template>
+
+<script setup>
+import { computed } from 'vue'
+import { chapterImageUrl, chapterStatus } from '@/features/sessions/lib/chapterGraph'
+
+const props = defineProps({
+  chapter: { type: Object, required: true },
+  current: { type: Boolean, default: false },
+  linking: { type: Boolean, default: false },
+  target: { type: Boolean, default: false },
+})
+defineEmits(['pointerdown', 'start-link'])
+
+const status = computed(() => chapterStatus(props.chapter.status))
+const imageUrl = computed(() => chapterImageUrl(props.chapter))
+const nodeStyle = computed(() => ({
+  transform: `translate(${props.chapter.positionX}px, ${props.chapter.positionY}px)`,
+}))
+const imageStyle = computed(() => ({
+  objectPosition: `${props.chapter.imageFocalX * 100}% ${props.chapter.imageFocalY * 100}%`,
+}))
+</script>
+
+<style scoped>
+.chapter-node {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 236px;
+  height: 156px;
+  overflow: visible;
+  border: 1px solid var(--border-strong);
+  border-radius: 13px;
+  background: var(--surface);
+  box-shadow: var(--shadow-lg);
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  transition: border-color 0.15s, box-shadow 0.15s, filter 0.15s;
+}
+
+.chapter-node:active { cursor: grabbing; }
+.chapter-node:hover { border-color: var(--surface-active); box-shadow: var(--shadow-lg); }
+.chapter-node--current {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 30%, transparent), var(--shadow-lg);
+}
+.chapter-node--linking { border-color: var(--warning); }
+.chapter-node--target { border-color: var(--success); cursor: crosshair; }
+.chapter-node--completed { filter: saturate(0.72); }
+
+.chapter-node-image {
+  position: relative;
+  height: 102px;
+  overflow: hidden;
+  border-radius: 12px 12px 0 0;
+  background: var(--surface-raised);
+}
+
+.chapter-node-image img,
+.chapter-node-image-empty {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.chapter-node-image-empty {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 20%, var(--surface)), var(--surface-raised));
+}
+
+.chapter-node-shade {
+  position: absolute;
+  inset: 42% 0 0;
+  background: linear-gradient(transparent, color-mix(in srgb, var(--bg) 90%, transparent));
+}
+
+.chapter-current-mark,
+.chapter-status {
+  position: absolute;
+  top: 8px;
+  border-radius: 5px;
+  padding: 3px 7px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  backdrop-filter: blur(8px);
+}
+
+.chapter-current-mark {
+  left: 8px;
+  color: var(--text-on-accent);
+  background: var(--accent);
+}
+
+.chapter-status {
+  right: 8px;
+  color: var(--text-2);
+  background: color-mix(in srgb, var(--bg) 72%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-on-accent) 10%, transparent);
+}
+.chapter-status--success { color: var(--success); }
+.chapter-status--danger { color: var(--danger); }
+.chapter-status--warning { color: var(--warning); }
+.chapter-status--accent { color: var(--accent); }
+.chapter-status--info { color: var(--info); }
+.chapter-status--violet { color: var(--accent-hover); }
+
+.chapter-node-copy {
+  height: 54px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  padding: 7px 12px 8px;
+}
+
+.chapter-node-number {
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.chapter-node-name {
+  overflow: hidden;
+  color: var(--text-1);
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chapter-link-port {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  right: -13px;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  background: var(--surface-raised);
+  color: var(--text-muted);
+  cursor: crosshair;
+  opacity: 0;
+  transform: translateY(-50%);
+  transition: opacity 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.chapter-node:hover .chapter-link-port,
+.chapter-node--linking .chapter-link-port,
+.chapter-node--target .chapter-link-port { opacity: 1; }
+.chapter-link-port:hover { color: var(--accent); border-color: var(--accent); }
+</style>

@@ -22,10 +22,10 @@ describe('ViewSession participant rail', () => {
     expect(source).not.toContain('invite-section')
   })
 
-  it('removes the outer combat surface without changing the scene tile', () => {
-    expect(source).toContain(":class=\"{ 'tab-content--combat': activeTab === 'combat' }\"")
+  it('keeps both combat and chapter canvases transparent without changing the scene tile', () => {
+    expect(source).toContain("'tab-content--canvas': activeTab === 'combat' || activeTab === 'chapters'")
     expect(source).toContain('class="tab-content"')
-    expect(styles).toContain('.tab-content.tab-content--combat {\n  background: transparent;\n  border: 0;\n  box-shadow: none;\n}')
+    expect(styles).toContain('.tab-content.tab-content--canvas {\n  background: transparent;\n  border: 0;\n  box-shadow: none;\n}')
   })
 
   it('uses per-participant actions without bulk selection controls', () => {

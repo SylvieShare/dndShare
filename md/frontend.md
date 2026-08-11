@@ -124,6 +124,14 @@ pointer lifecycle и перенос массива не копируются в 
 fromIndex, toIndex)`. Для нескольких контейнеров используются группы
 `useSortable`; DOM-контейнер помечается `data-sortable-container`.
 
+Свободная раскладка кампании использует отдельную pointer-модель, а не сортировку
+списка. `features/sessions/components/ChapterGraphCanvas.vue` владеет pan, zoom,
+перетаскиванием узлов и hit targets связей; `useChapterGraph.js` владеет
+серверным состоянием и optimistic preview координат. В local storage холст
+сохраняет только viewport. Позиции узлов, арки и переходы сохраняются через
+session graph API. Формы и разрушающие действия графа по-прежнему используют
+`AppModalFrame` и `ConfirmDialog`, обычный клик по узлу/связи — `BasePopover`.
+
 ## Форматированные описания
 
 Пара `InputDescription` + `RichContent` является единым контрактом расширенного

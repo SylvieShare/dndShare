@@ -37,14 +37,49 @@ the rail. Every participant trigger fills the rail width. A dashed `+` action
 beside the `ИГРОКИ` heading opens character creation and invite code/link copy
 actions; the rail has no separate invitation tile.
 
-The desktop session toolbar keeps the editable session name and chapter picker
-in the main row. For the DM, a right-aligned three-bar action menu owns session
-status changes; non-DM participants do not receive the mutation menu.
+The desktop session toolbar keeps the editable session name and current campaign
+location in the main row. The location is written as
+`Арка <roman> › Глава <number> <name>` and opens the chapter map. For the DM, a
+right-aligned three-bar action menu owns session status changes; non-DM
+participants do not receive the mutation menu.
 
 ## Chapters and scenes
 
-Chapters belong to a session; one can be current. Scenes belong to chapters and
-contain ordered scene items. Scene CRUD is in `session_scenes.go`.
+Every session has at least one ordered arc. Arc order is the canonical campaign
+order; the UI renders it as a Roman number and rewrites `1..N` atomically after
+reordering. Arcs do not have a status. Each arc owns an independent chapter
+canvas and its transitions.
+
+Chapters are graph nodes. A chapter has a free display number (`1`, `3A`,
+`Пролог`), name, optional description, status, image and canvas coordinates.
+Numbers are unique inside an arc, not across the campaign. The supported status
+set is `draft`, `planned`, `ready`, `available`, `in_progress`, `paused`,
+`completed`, `failed`, `skipped`, `cancelled`. Making a preparatory chapter
+current promotes it to `in_progress`; only one chapter in the session is
+current.
+
+The `Главы` tab is the default session workspace. `ChapterGraphToolbar` is the
+only backed tile in that tab; `ChapterGraphCanvas` is transparent, supports
+pan/zoom and stores the viewport per arc in local storage. Nodes can be dragged.
+A regular node click opens its action popover: make current, change status,
+edit, start a transition, open scenes, move to another arc or delete. Moving a
+node to another arc removes its old transitions after confirmation because a
+transition cannot cross arc boundaries.
+
+Chapter transitions are directed edges inside one arc. They may have a short
+optional label; clicking either the curve or label opens edit/reverse/delete
+actions. The graph API validates that both ends and the edge belong to the same
+arc and session.
+
+The built-in chapter image catalogue is served from
+`frontend/public/static/chapter-presets`: city, village, camp, road, forest,
+cave, ruins, castle, tavern, dungeon, mountains and coast. A DM may instead
+upload an image through the normal storage image endpoint and adjust its focal
+point. A chapter stores exactly one image source.
+
+Scenes belong to chapters and contain ordered scene items. `SceneTab.vue`
+switches arc first and then chapter; scene CRUD remains in
+`session_scenes.go`.
 
 `SceneTab.vue` uses project standards:
 

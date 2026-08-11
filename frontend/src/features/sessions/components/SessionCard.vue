@@ -63,6 +63,7 @@ import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import BasePopover from '@/shared/ui/BasePopover.vue'
 import { sessionStatusConfig } from '@/features/sessions/composables/useSessionStatus'
+import { currentChapterLabel } from '@/features/sessions/lib/chapterGraph'
 
 const AVATAR_COLORS = ['var(--accent)', 'var(--accent)', 'var(--info)', 'var(--danger)', 'var(--success)', 'var(--warning)', 'var(--danger)']
 
@@ -104,9 +105,7 @@ const statusCfg = computed(() => sessionStatusConfig(props.session.status))
 const participants = computed(() => props.session.participants ?? [])
 
 const chapterLabel = computed(() => {
-  const ch = props.session.currentChapter
-  if (!ch) return ''
-  return ch.name ? `Глава ${ch.number}: ${ch.name}` : `Глава ${ch.number}`
+  return currentChapterLabel(props.session.currentChapter)
 })
 
 const myParticipant = computed(() => {

@@ -36,6 +36,7 @@
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { sessionStatusConfig } from '@/features/sessions/composables/useSessionStatus'
+import { currentChapterLabel } from '@/features/sessions/lib/chapterGraph'
 
 const AVATAR_COLORS = ['var(--accent)', 'var(--accent)', 'var(--info)', 'var(--danger)', 'var(--success)', 'var(--warning)', 'var(--danger)']
 
@@ -58,9 +59,7 @@ const participants = computed(() => props.session.participants ?? [])
 const canEnter = computed(() => props.session.myRole === 'gm')
 
 const chapterLabel = computed(() => {
-  const ch = props.session.currentChapter
-  if (!ch) return ''
-  return ch.name ? `Глава ${ch.number}: ${ch.name}` : `Глава ${ch.number}`
+  return currentChapterLabel(props.session.currentChapter)
 })
 
 function avatarStyle(p) {

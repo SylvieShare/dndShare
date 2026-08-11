@@ -52,6 +52,7 @@ import BaseTile from '@/shared/ui/BaseTile'
 import ConfirmDialog from '@/shared/ui/ConfirmDialog'
 import { setCharSeed } from '@/shared/lib/charSeed'
 import { sessionStatusColor } from '@/features/sessions/composables/useSessionStatus'
+import { currentChapterLabel } from '@/features/sessions/lib/chapterGraph'
 
 const props = defineProps({
   uuid: String,
@@ -85,10 +86,7 @@ const lvl = computed(() => {
 })
 
 const chapterLabel = computed(() => {
-  const s = props.session
-  if (!s) return ''
-  const num = s.chapterNumber != null ? `Гл. ${s.chapterNumber}` : ''
-  return [num, s.chapterName].filter(Boolean).join(' · ')
+  return currentChapterLabel(props.session, true)
 })
 
 const statusColor = sessionStatusColor

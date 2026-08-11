@@ -54,8 +54,10 @@ type CharSessionBrief struct {
 	UUID          string  `json:"uuid"`
 	Name          string  `json:"name"`
 	Status        string  `json:"status"`
-	ChapterNumber *int    `json:"chapterNumber,omitempty"`
+	ChapterNumber *string `json:"chapterNumber,omitempty"`
 	ChapterName   *string `json:"chapterName,omitempty"`
+	ArcOrder      *int    `json:"arcOrder,omitempty"`
+	ArcName       *string `json:"arcName,omitempty"`
 	IsGm          bool    `json:"isGm"`
 }
 
@@ -266,7 +268,7 @@ func (s *Store) GetTemplates(ctx context.Context) ([]CharacterTemplate, error) {
 
 func scanCharSession(row pgx.Row, extra ...any) (CharSessionBrief, error) {
 	var b CharSessionBrief
-	dst := append(extra, &b.UUID, &b.Name, &b.Status, &b.ChapterNumber, &b.ChapterName, &b.IsGm)
+	dst := append(extra, &b.UUID, &b.Name, &b.Status, &b.ChapterNumber, &b.ChapterName, &b.ArcOrder, &b.ArcName, &b.IsGm)
 	if err := row.Scan(dst...); err != nil {
 		return CharSessionBrief{}, err
 	}
@@ -277,11 +279,13 @@ func scanCharSession(row pgx.Row, extra ...any) (CharSessionBrief, error) {
 func (s *Store) SessionsByCharUUID(ctx context.Context, charUUID string, userID int64) ([]CharSessionBrief, error) {
 	rows, err := s.pool.Query(ctx,
 		`SELECT s.uuid::text, s.name, s.status, ch.number AS chapter_number, ch.name AS chapter_name,
+		        arc."order" AS arc_order, arc.name AS arc_name,
 		        (s.owner_user_id = $2) AS is_gm
 		 FROM dndshare."session" s
 		 JOIN dndshare.session_participant sp ON sp.session_id = s.id
 		 JOIN dndshare."char" c ON c.id = sp.char_id AND c.deleted = false
 		 LEFT JOIN dndshare.session_chapter ch ON ch.id = s.current_chapter_id
+		 LEFT JOIN dndshare.session_arc arc ON arc.id = ch.arc_id
 		 WHERE c.uuid = $1::uuid AND s.deleted = false
 		 ORDER BY s.changed_at DESC`, charUUID, userID)
 	if err != nil {
@@ -307,11 +311,13 @@ func (s *Store) SessionsByCharUUIDs(ctx context.Context, charUUIDs []string, use
 	}
 	rows, err := s.pool.Query(ctx,
 		`SELECT c.uuid::text AS char_uuid, s.uuid::text, s.name, s.status, ch.number AS chapter_number, ch.name AS chapter_name,
+		        arc."order" AS arc_order, arc.name AS arc_name,
 		        (s.owner_user_id = $2) AS is_gm
 		 FROM dndshare."session" s
 		 JOIN dndshare.session_participant sp ON sp.session_id = s.id
 		 JOIN dndshare."char" c ON c.id = sp.char_id AND c.deleted = false
 		 LEFT JOIN dndshare.session_chapter ch ON ch.id = s.current_chapter_id
+		 LEFT JOIN dndshare.session_arc arc ON arc.id = ch.arc_id
 		 WHERE c.uuid::text = ANY($1) AND s.deleted = false
 		 ORDER BY s.changed_at DESC`, charUUIDs, userID)
 	if err != nil {

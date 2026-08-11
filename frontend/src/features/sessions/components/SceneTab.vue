@@ -1,17 +1,31 @@
 <template>
   <div class="scene-tab">
     <div class="scene-head">
+      <div v-if="arcs.length" class="scene-arcs">
+        <span class="scene-head-label">АРКА</span>
+        <button
+          v-for="arc in arcs"
+          :key="arc.id"
+          type="button"
+          class="scene-arc-pill"
+          :class="{ active: arc.id === activeArcId }"
+          @click="selectArc(arc.id)"
+        >
+          <span>{{ romanNumeral(arc.order) }}</span>
+          {{ arc.name }}
+        </button>
+      </div>
       <div class="scene-chapters">
         <span class="scene-head-label">ГЛАВА</span>
         <button
-          v-for="ch in chapters"
+          v-for="ch in arcChapters"
           :key="ch.id"
           type="button"
           class="scene-chapter-pill"
           :class="{ active: ch.id === activeChapterId }"
           @click="selectChapter(ch.id)"
         >
-          <span class="scene-chapter-num">{{ romanNum(ch.number) }}</span>
+          <span class="scene-chapter-num">{{ ch.number }}</span>
           <span class="scene-chapter-name">{{ ch.name }}</span>
           <span class="scene-chapter-count">{{ chapterSceneCount[ch.id] ?? '·' }}</span>
         </button>
@@ -26,7 +40,7 @@
           :disabled="!activeChapter"
           @click="togglePicker"
         >
-          <span v-if="currentScene" class="scene-picker-num">{{ activeChapter ? romanNum(activeChapter.number) : '' }}·{{ currentSceneNumber }}</span>
+          <span v-if="currentScene" class="scene-picker-num">{{ activeChapter?.number ?? '' }}·{{ currentSceneNumber }}</span>
           <span class="scene-picker-name">
             {{ currentScene ? currentScene.name : 'Сцена не выбрана' }}
           </span>
@@ -60,7 +74,7 @@
                 :class="{ active: s.id === currentSceneId }"
                 @click="pickScene(s)"
               >
-                <span class="scene-picker-item-num">{{ activeChapter ? romanNum(activeChapter.number) : '' }}·{{ scenes.indexOf(s) + 1 }}</span>
+                <span class="scene-picker-item-num">{{ activeChapter?.number ?? '' }}·{{ scenes.indexOf(s) + 1 }}</span>
                 <span class="scene-picker-item-name">{{ s.name }}</span>
               </button>
               <div v-if="!filteredScenes.length" class="scene-picker-empty">
@@ -179,6 +193,7 @@
 <script setup>
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import SceneItemTile from '@/features/sessions/components/SceneItemTile.vue'
+import { romanNumeral } from '@/features/sessions/lib/chapterGraph'
 import { randomSceneColor } from '@/features/sessions/lib/scenePalette'
 import ConfirmDialog from '@/shared/ui/ConfirmDialog.vue'
 import TextPromptDialog from '@/shared/ui/TextPromptDialog.vue'
@@ -195,26 +210,44 @@ import {
   updateSceneItem,
 } from '@/shared/api/scenesApi'
 
-const ROMAN = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X',
-  'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII', 'XIX', 'XX']
-function romanNum(n) {
-  const i = Number(n)
-  return ROMAN[i] || String(i)
-}
-
 const props = defineProps({
   sessionUuid: { type: String, required: true },
+  arcs: { type: Array, default: () => [] },
   chapters: { type: Array, default: () => [] },
   currentChapterId: { type: [Number, String], default: null },
+  requestedChapterId: { type: [Number, String], default: null },
   isDm: { type: Boolean, default: false },
 })
 
-const activeChapterId = ref(props.currentChapterId ?? props.chapters[0]?.id ?? null)
+const initialChapter = props.chapters.find(chapter => chapter.id === props.requestedChapterId)
+  ?? props.chapters.find(chapter => chapter.id === props.currentChapterId)
+  ?? props.chapters[0]
+  ?? null
+const activeArcId = ref(initialChapter?.arcId ?? props.arcs[0]?.id ?? null)
+const arcChapters = computed(() => props.chapters.filter(chapter => chapter.arcId === activeArcId.value))
+const activeChapterId = ref(initialChapter?.id ?? null)
 watch(() => props.currentChapterId, v => {
   if (v != null && activeChapterId.value == null) activeChapterId.value = v
 })
 watch(() => props.chapters, list => {
-  if (activeChapterId.value == null && list.length) activeChapterId.value = props.currentChapterId ?? list[0].id
+  const active = list.find(chapter => chapter.id === activeChapterId.value)
+  if (active) {
+    activeArcId.value = active.arcId
+  } else if (list.length) {
+    const chapter = list.find(item => item.id === props.currentChapterId) ?? list[0]
+    activeArcId.value = chapter.arcId
+    activeChapterId.value = chapter.id
+  } else {
+    activeArcId.value = props.arcs[0]?.id ?? null
+    activeChapterId.value = null
+  }
+})
+watch(() => props.requestedChapterId, id => {
+  if (id == null) return
+  const chapter = props.chapters.find(item => item.id === id)
+  if (!chapter) return
+  activeArcId.value = chapter.arcId
+  activeChapterId.value = chapter.id
 })
 
 const activeChapter = computed(() => props.chapters.find(c => c.id === activeChapterId.value) || null)
@@ -300,7 +333,12 @@ async function selectChapter(id) {
   sceneItems.value = []
   search.value = ''
   pickerOpen.value = false
-  await loadScenes(id)
+}
+
+function selectArc(id) {
+  activeArcId.value = id
+  const current = props.chapters.find(chapter => chapter.id === props.currentChapterId && chapter.arcId === id)
+  selectChapter(current?.id ?? props.chapters.find(chapter => chapter.arcId === id)?.id ?? null)
 }
 
 async function selectScene(id) {

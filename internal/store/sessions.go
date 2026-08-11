@@ -28,14 +28,6 @@ type GameSession struct {
 	ChangedAt        time.Time `json:"changedAt"`
 }
 
-// SessionChapter — строка dndshare.session_chapter (порт model/SessionChapter.kt).
-type SessionChapter struct {
-	ID        int64  `json:"id"`
-	SessionID int64  `json:"sessionId"`
-	Number    int64  `json:"number"`
-	Name      string `json:"name"`
-}
-
 // SessionParticipantData — участник сессии с данными персонажа (порт model/SessionParticipantData.kt).
 type SessionParticipantData struct {
 	CharID       int64          `json:"charId"`
@@ -54,8 +46,10 @@ type ParticipantBrief struct {
 
 // ChapterBrief — краткая инфа о текущей главе для списка сессий.
 type ChapterBrief struct {
-	Number int    `json:"number"`
-	Name   string `json:"name"`
+	Number   string `json:"number"`
+	Name     string `json:"name"`
+	ArcOrder int    `json:"arcOrder"`
+	ArcName  string `json:"arcName"`
 }
 
 // sessionSelect — общий SELECT сессии с именем системы (LEFT JOIN source).
@@ -233,9 +227,10 @@ func (s *Store) GetCurrentChapters(ctx context.Context, sessionIDs []int64) (map
 		return result, nil
 	}
 	rows, err := s.pool.Query(ctx,
-		`SELECT s.id, ch.number, ch.name
+		`SELECT s.id, ch.number, ch.name, arc."order", arc.name
 		 FROM dndshare."session" s
 		 JOIN dndshare.session_chapter ch ON ch.id = s.current_chapter_id
+		 JOIN dndshare.session_arc arc ON arc.id = ch.arc_id
 		 WHERE s.id = ANY($1)`,
 		sessionIDs,
 	)
@@ -246,7 +241,7 @@ func (s *Store) GetCurrentChapters(ctx context.Context, sessionIDs []int64) (map
 	for rows.Next() {
 		var sid int64
 		var cb ChapterBrief
-		if err := rows.Scan(&sid, &cb.Number, &cb.Name); err != nil {
+		if err := rows.Scan(&sid, &cb.Number, &cb.Name, &cb.ArcOrder, &cb.ArcName); err != nil {
 			return nil, err
 		}
 		result[sid] = cb
@@ -254,9 +249,8 @@ func (s *Store) GetCurrentChapters(ctx context.Context, sessionIDs []int64) (map
 	return result, rows.Err()
 }
 
-// CreateSessionWithFirstChapter создаёт сессию, первую главу «Вступление» и делает её
-// текущей — всё в одной транзакции (порт SessionController.createSession).
-func (s *Store) CreateSessionWithFirstChapter(ctx context.Context, userID int64, name string, description *string, systemID *int64) (int64, string, error) {
+// CreateSessionWithFirstArc создаёт сессию и её пустую первую арку одной транзакцией.
+func (s *Store) CreateSessionWithFirstArc(ctx context.Context, userID int64, name string, description *string, systemID *int64) (int64, string, error) {
 	tx, err := s.pool.Begin(ctx)
 	if err != nil {
 		return 0, "", err
@@ -273,19 +267,9 @@ func (s *Store) CreateSessionWithFirstChapter(ctx context.Context, userID int64,
 		return 0, "", err
 	}
 
-	var chapterID int64
-	if err := tx.QueryRow(ctx,
-		`INSERT INTO dndshare.session_chapter (session_id, number, name)
-		 VALUES ($1, (SELECT COALESCE(MAX(number), 0) + 1 FROM dndshare.session_chapter WHERE session_id = $1), $2)
-		 RETURNING id`,
-		id, "Вступление",
-	).Scan(&chapterID); err != nil {
-		return 0, "", err
-	}
-
 	if _, err := tx.Exec(ctx,
-		`UPDATE dndshare."session" SET current_chapter_id = $1, changed_at = now() WHERE id = $2`,
-		chapterID, id,
+		`INSERT INTO dndshare.session_arc (session_id, "order", name) VALUES ($1, 1, $2)`,
+		id, "Основная арка",
 	); err != nil {
 		return 0, "", err
 	}
@@ -312,16 +296,6 @@ func (s *Store) UpdateSessionStatus(ctx context.Context, uuid, status string) er
 		`UPDATE dndshare."session" SET status = $2, changed_at = now()
 		 WHERE uuid = $1::uuid AND deleted = false`,
 		uuid, status,
-	)
-	return err
-}
-
-// UpdateCurrentChapter выставляет текущую главу сессии (порт updateCurrentChapter).
-func (s *Store) UpdateCurrentChapter(ctx context.Context, uuid string, chapterID *int64) error {
-	_, err := s.pool.Exec(ctx,
-		`UPDATE dndshare."session" SET current_chapter_id = $2, changed_at = now()
-		 WHERE uuid = $1::uuid AND deleted = false`,
-		uuid, chapterID,
 	)
 	return err
 }
@@ -359,59 +333,6 @@ func (s *Store) RemoveSessionParticipantByCharID(ctx context.Context, sessionID,
 		`DELETE FROM dndshare.session_participant WHERE session_id = $1 AND char_id = $2`,
 		sessionID, charID,
 	)
-	return err
-}
-
-// GetChaptersBySession — главы сессии по порядку (порт SessionChapterRepository.getBySession).
-func (s *Store) GetChaptersBySession(ctx context.Context, sessionID int64) ([]SessionChapter, error) {
-	rows, err := s.pool.Query(ctx,
-		`SELECT id, session_id, number, name FROM dndshare.session_chapter
-		 WHERE session_id = $1 ORDER BY number`,
-		sessionID,
-	)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var out []SessionChapter
-	for rows.Next() {
-		var c SessionChapter
-		if err := rows.Scan(&c.ID, &c.SessionID, &c.Number, &c.Name); err != nil {
-			return nil, err
-		}
-		out = append(out, c)
-	}
-	return out, rows.Err()
-}
-
-// GetChapterByID — глава по id (ErrNotFound, если нет).
-func (s *Store) GetChapterByID(ctx context.Context, id int64) (SessionChapter, error) {
-	var c SessionChapter
-	err := s.pool.QueryRow(ctx,
-		`SELECT id, session_id, number, name FROM dndshare.session_chapter WHERE id = $1`, id,
-	).Scan(&c.ID, &c.SessionID, &c.Number, &c.Name)
-	if errors.Is(err, pgx.ErrNoRows) {
-		return SessionChapter{}, ErrNotFound
-	}
-	return c, err
-}
-
-// CreateChapter создаёт главу со следующим номером (порт SessionChapterRepository.create).
-func (s *Store) CreateChapter(ctx context.Context, sessionID int64, name string) (SessionChapter, error) {
-	var c SessionChapter
-	err := s.pool.QueryRow(ctx,
-		`INSERT INTO dndshare.session_chapter (session_id, number, name)
-		 VALUES ($1, (SELECT COALESCE(MAX(number), 0) + 1 FROM dndshare.session_chapter WHERE session_id = $1), $2)
-		 RETURNING id, session_id, number, name`,
-		sessionID, name,
-	).Scan(&c.ID, &c.SessionID, &c.Number, &c.Name)
-	return c, err
-}
-
-// RenameChapter переименовывает главу (порт SessionChapterRepository.rename).
-func (s *Store) RenameChapter(ctx context.Context, id int64, name string) error {
-	_, err := s.pool.Exec(ctx,
-		`UPDATE dndshare.session_chapter SET name = $2 WHERE id = $1`, id, name)
 	return err
 }
 

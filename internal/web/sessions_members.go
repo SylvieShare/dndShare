@@ -14,8 +14,10 @@ type sessionByCodeResponse struct {
 	Description   *string `json:"description,omitempty"`
 	Status        string  `json:"status"`
 	SystemName    *string `json:"systemName,omitempty"`
-	ChapterNumber *int64  `json:"chapterNumber,omitempty"`
+	ChapterNumber *string `json:"chapterNumber,omitempty"`
 	ChapterName   *string `json:"chapterName,omitempty"`
+	ArcOrder      *int    `json:"arcOrder,omitempty"`
+	ArcName       *string `json:"arcName,omitempty"`
 }
 
 func (s *Server) handleGetSessionByCode(w http.ResponseWriter, r *http.Request) {
@@ -44,6 +46,8 @@ func (s *Server) handleGetSessionByCode(w http.ResponseWriter, r *http.Request) 
 		if err == nil {
 			resp.ChapterNumber = &chapter.Number
 			resp.ChapterName = &chapter.Name
+			resp.ArcOrder = &chapter.ArcOrder
+			resp.ArcName = &chapter.ArcName
 		} else if !errors.Is(err, store.ErrNotFound) {
 			serverError(w, err)
 			return

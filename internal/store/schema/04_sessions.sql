@@ -80,14 +80,100 @@ CREATE INDEX IF NOT EXISTS idx_session_owner_user_id ON dndshare."session" USING
 CREATE INDEX IF NOT EXISTS idx_session_system_id ON dndshare."session" USING btree (system_id);
 CREATE INDEX IF NOT EXISTS idx_session_current_chapter_id ON dndshare."session" USING btree (current_chapter_id);
 
+CREATE TABLE IF NOT EXISTS dndshare.session_arc (
+    id          bigserial NOT NULL,
+    session_id  int8 NOT NULL REFERENCES dndshare."session"(id) ON DELETE CASCADE,
+    "order"     int4 NOT NULL,
+    "name"      varchar(160) NOT NULL,
+    description text NULL,
+    CONSTRAINT session_arc_pk PRIMARY KEY (id),
+    CONSTRAINT session_arc_session_order_key UNIQUE (session_id, "order")
+);
+CREATE INDEX IF NOT EXISTS idx_session_arc_session_id ON dndshare.session_arc USING btree (session_id, "order");
+
+-- Every existing campaign gets a first arc before its chapters become arc-scoped.
+INSERT INTO dndshare.session_arc (session_id, "order", "name")
+SELECT s.id, 1, 'Основная арка'
+FROM dndshare."session" s
+WHERE NOT EXISTS (
+    SELECT 1 FROM dndshare.session_arc arc WHERE arc.session_id = s.id
+);
+
 CREATE TABLE IF NOT EXISTS dndshare.session_chapter (
-    id         bigserial NOT NULL,
-    session_id int8 NOT NULL REFERENCES dndshare."session"(id),
-    "number"   int8 NOT NULL,
-    "name"     text NOT NULL,
+    id                 bigserial NOT NULL,
+    session_id         int8 NOT NULL REFERENCES dndshare."session"(id),
+    arc_id             int8 NULL,
+    "number"           text NOT NULL,
+    "name"             text NOT NULL,
+    description        text NULL,
+    status             varchar(32) DEFAULT 'planned' NOT NULL,
+    image_preset_key   varchar(32) NULL,
+    custom_image_id    int8 NULL REFERENCES dndshare.storage_image(id),
+    image_focal_x      float8 DEFAULT 0.5 NOT NULL,
+    image_focal_y      float8 DEFAULT 0.5 NOT NULL,
+    position_x         float8 DEFAULT 0 NOT NULL,
+    position_y         float8 DEFAULT 0 NOT NULL,
     CONSTRAINT session_chapter_pk PRIMARY KEY (id)
 );
+
+ALTER TABLE dndshare.session_chapter ADD COLUMN IF NOT EXISTS arc_id int8 NULL;
+ALTER TABLE dndshare.session_chapter ADD COLUMN IF NOT EXISTS description text NULL;
+ALTER TABLE dndshare.session_chapter ADD COLUMN IF NOT EXISTS status varchar(32) DEFAULT 'planned' NOT NULL;
+ALTER TABLE dndshare.session_chapter ADD COLUMN IF NOT EXISTS image_preset_key varchar(32) NULL;
+ALTER TABLE dndshare.session_chapter ADD COLUMN IF NOT EXISTS custom_image_id int8 NULL REFERENCES dndshare.storage_image(id);
+ALTER TABLE dndshare.session_chapter ADD COLUMN IF NOT EXISTS image_focal_x float8 DEFAULT 0.5 NOT NULL;
+ALTER TABLE dndshare.session_chapter ADD COLUMN IF NOT EXISTS image_focal_y float8 DEFAULT 0.5 NOT NULL;
+ALTER TABLE dndshare.session_chapter ADD COLUMN IF NOT EXISTS position_x float8 DEFAULT 0 NOT NULL;
+ALTER TABLE dndshare.session_chapter ADD COLUMN IF NOT EXISTS position_y float8 DEFAULT 0 NOT NULL;
+ALTER TABLE dndshare.session_chapter ALTER COLUMN "number" TYPE text USING "number"::text;
+
+UPDATE dndshare.session_chapter chapter
+SET arc_id = arc.id,
+    position_x = (chapter."number"::float8 - 1) * 300,
+    position_y = 80
+FROM dndshare.session_arc arc
+WHERE chapter.arc_id IS NULL
+  AND arc.session_id = chapter.session_id
+  AND arc."order" = 1;
+
+ALTER TABLE dndshare.session_chapter ALTER COLUMN arc_id SET NOT NULL;
+
+DO $$ BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'session_chapter_arc_fk') THEN
+        ALTER TABLE dndshare.session_chapter
+            ADD CONSTRAINT session_chapter_arc_fk FOREIGN KEY (arc_id) REFERENCES dndshare.session_arc(id) ON DELETE CASCADE;
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'session_chapter_arc_number_key') THEN
+        ALTER TABLE dndshare.session_chapter
+            ADD CONSTRAINT session_chapter_arc_number_key UNIQUE (arc_id, "number");
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'session_chapter_status_check') THEN
+        ALTER TABLE dndshare.session_chapter ADD CONSTRAINT session_chapter_status_check CHECK (
+            status IN ('draft', 'planned', 'ready', 'available', 'in_progress',
+                       'paused', 'completed', 'failed', 'skipped', 'cancelled')
+        );
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'session_chapter_image_source_check') THEN
+        ALTER TABLE dndshare.session_chapter ADD CONSTRAINT session_chapter_image_source_check CHECK (
+            NOT (image_preset_key IS NOT NULL AND custom_image_id IS NOT NULL)
+        );
+    END IF;
+END $$;
+
 CREATE INDEX IF NOT EXISTS idx_session_chapter_session_id ON dndshare.session_chapter USING btree (session_id);
+CREATE INDEX IF NOT EXISTS idx_session_chapter_arc_id ON dndshare.session_chapter USING btree (arc_id);
+
+CREATE TABLE IF NOT EXISTS dndshare.session_chapter_edge (
+    id              bigserial NOT NULL,
+    arc_id          int8 NOT NULL REFERENCES dndshare.session_arc(id) ON DELETE CASCADE,
+    from_chapter_id int8 NOT NULL REFERENCES dndshare.session_chapter(id) ON DELETE CASCADE,
+    to_chapter_id   int8 NOT NULL REFERENCES dndshare.session_chapter(id) ON DELETE CASCADE,
+    label           varchar(240) NULL,
+    CONSTRAINT session_chapter_edge_pk PRIMARY KEY (id),
+    CONSTRAINT session_chapter_edge_pair_key UNIQUE (from_chapter_id, to_chapter_id),
+    CONSTRAINT session_chapter_edge_not_self CHECK (from_chapter_id <> to_chapter_id)
+);
+CREATE INDEX IF NOT EXISTS idx_session_chapter_edge_arc_id ON dndshare.session_chapter_edge USING btree (arc_id);
 
 DO $$ BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'session_session_chapter_fk') THEN

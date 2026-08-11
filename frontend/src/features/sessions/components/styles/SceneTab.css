@@ -15,12 +15,35 @@
   padding: 12px;
 }
 
+.scene-arcs,
 .scene-chapters {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
 }
+
+.scene-arcs {
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.scene-arc-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--bg);
+  color: var(--text-2);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.scene-arc-pill > span { color: var(--accent); font-weight: 800; }
+.scene-arc-pill:hover { border-color: var(--border-strong); color: var(--text-1); }
+.scene-arc-pill.active { border-color: color-mix(in srgb, var(--accent) 50%, transparent); background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--text-1); }
 
 .scene-head-label {
   font-size: 10px;

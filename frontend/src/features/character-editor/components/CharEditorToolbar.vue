@@ -162,6 +162,7 @@ import { useRouter } from 'vue-router'
 import ContentSourcesModal from '@/features/character-editor/components/ContentSourcesModal.vue'
 import ToggleSwitch from "@/shared/ui/ToggleSwitch"
 import { sessionStatusColor, sessionStatusLabel } from '@/features/sessions/composables/useSessionStatus'
+import { currentChapterLabel } from '@/features/sessions/lib/chapterGraph'
 import { normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'
 
 const TemplateBlockInner = defineAsyncComponent(() => import("./TemplateBlockInner"))
@@ -199,8 +200,7 @@ defineExpose({ rootElement: () => toolbarRootEl.value })
 const statusColor = sessionStatusColor
 const statusLabel = sessionStatusLabel
 function chapterLabel(s) {
-  const num = s.chapterNumber != null ? `Гл. ${s.chapterNumber}` : ''
-  return [num, s.chapterName].filter(Boolean).join(' · ')
+  return currentChapterLabel(s, true)
 }
 function closeSessionMenu() { sessionMenuOpen.value = false }
 

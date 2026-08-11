@@ -64,20 +64,33 @@
       <div class="main-area">
         <BaseTile class="toolbar-tile">
           <SessionTopBar
-            ref="topBarRef"
             :session="session"
             :session-uuid="sessionUuid"
             :is-dm="isDm"
-            :initial-chapter="initialChapter"
+            :current-chapter="currentChapter"
             @edit="openEdit"
             @status-change="status => { session = { ...session, status } }"
+            @open-chapters="onActivateChapters"
           />
         </BaseTile>
 
         <div class="main-row">
           <div class="col-middle">
             <SlidingTabs :tabs="tabItems" :model-value="activeTab" @update:model-value="selectTab" />
-            <BaseTile class="tab-content" :class="{ 'tab-content--combat': activeTab === 'combat' }">
+            <BaseTile
+              class="tab-content"
+              :class="{
+                'tab-content--canvas': activeTab === 'combat' || activeTab === 'chapters',
+                'tab-content--graph': activeTab === 'chapters',
+              }"
+            >
+              <ChapterGraphTab
+                v-if="tabsLoaded.chapters"
+                v-show="activeTab === 'chapters'"
+                :graph="chapterGraph"
+                :session-uuid="sessionUuid"
+                @open-scenes="openChapterScenes"
+              />
               <EncounterTab
                 v-if="tabsLoaded.combat"
                 v-show="activeTab === 'combat'"
@@ -90,8 +103,10 @@
                 v-if="tabsLoaded.scene"
                 v-show="activeTab === 'scene'"
                 :session-uuid="sessionUuid"
+                :arcs="arcs"
                 :chapters="chapters"
                 :current-chapter-id="session.currentChapterId"
+                :requested-chapter-id="sceneRequestedChapterId"
                 :is-dm="isDm"
               />
             </BaseTile>
@@ -129,7 +144,7 @@
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 import BaseTile from '@/shared/ui/BaseTile.vue'
@@ -140,6 +155,7 @@ import FormTextarea from '@/shared/ui/form/FormTextarea'
 import SlidingTabs from '@/shared/ui/SlidingTabs'
 import CharacterCreateModal from '@/features/character-list/components/CharacterCreateModal'
 import CharacterSheetModal from '@/features/sessions/components/CharacterSheetModal.vue'
+import ChapterGraphTab from '@/features/sessions/components/ChapterGraphTab.vue'
 import DicePanel from '@/features/sessions/components/DicePanel.vue'
 import EncounterTab from '@/features/sessions/components/EncounterTab'
 import MusicLibraryModal from '@/features/sessions/components/MusicLibraryModal.vue'
@@ -149,6 +165,7 @@ import SceneTab from '@/features/sessions/components/SceneTab.vue'
 import SessionParticipantCard from '@/features/sessions/components/SessionParticipantCard'
 import SessionTopBar from '@/features/sessions/components/SessionTopBar.vue'
 import { useParticipantPolling } from '@/features/sessions/composables/useParticipantPolling'
+import { useChapterGraph } from '@/features/sessions/composables/useChapterGraph'
 import { useSessionSelection } from '@/features/sessions/composables/useSessionSelection'
 import { useAccountStore } from '@/stores/account'
 import { useMusicStore } from '@/stores/music'
@@ -168,20 +185,22 @@ const uiStore = useUiStore()
 const session = ref(null)
 const participants = ref([])
 const loading = ref(true)
-const activeTab = ref('combat')
-const tabsLoaded = reactive({ combat: true, scene: false, notes: false })
+const activeTab = ref('chapters')
+const tabsLoaded = reactive({ chapters: true, combat: false, scene: false, notes: false })
 const tabItems = [
+  { key: 'chapters', title: 'Главы' },
   { key: 'combat', title: 'Бой' },
   { key: 'scene', title: 'Сцена' },
   { key: 'notes', title: 'Заметки' },
 ]
 
 function selectTab(key) {
+  if (key === 'chapters') return onActivateChapters()
   if (key === 'scene') return onActivateScene()
+  tabsLoaded[key] = true
   activeTab.value = key
 }
 const initialChapter = ref(null)
-const topBarRef = ref(null)
 
 const editOpen = ref(false)
 const editName = ref('')
@@ -211,7 +230,13 @@ watch(session, (value) => {
   }, headerOwner)
 }, { immediate: true })
 
-const chapters = computed(() => topBarRef.value?.chapters ?? [])
+const chapterGraph = useChapterGraph({ sessionUuid, session })
+const arcs = computed(() => chapterGraph.arcs.value)
+const chapters = computed(() => chapterGraph.chapters.value)
+const currentChapter = computed(() => chapterGraph.loaded.value
+  ? chapterGraph.currentChapter.value
+  : initialChapter.value)
+const sceneRequestedChapterId = ref(null)
 
 const { pollStatus, pollRunning, startPolling, forgetVersion } =
   useParticipantPolling({ participants })
@@ -250,9 +275,20 @@ async function createChar(payload) {
 async function onActivateScene() {
   activeTab.value = 'scene'
   tabsLoaded.scene = true
-  if (topBarRef.value && !topBarRef.value.chapters.length) {
-    await topBarRef.value.loadChapters()
-  }
+  if (!chapterGraph.loaded.value) await chapterGraph.load()
+}
+
+async function onActivateChapters() {
+  activeTab.value = 'chapters'
+  tabsLoaded.chapters = true
+  if (!chapterGraph.loaded.value) await chapterGraph.load()
+}
+
+async function openChapterScenes(chapter) {
+  sceneRequestedChapterId.value = null
+  await onActivateScene()
+  await nextTick()
+  sceneRequestedChapterId.value = chapter.id
 }
 
 function openEdit() {
@@ -291,6 +327,7 @@ onMounted(() => {
       session.value = res?.session ?? null
       participants.value = res?.participants ?? []
       initialChapter.value = res?.currentChapter ?? null
+      await chapterGraph.load()
       startPolling()
       musicStore.setContext({ uuid: sessionUuid, dm: isDm.value })
       await musicStore.ensureLibrary().catch(() => {})

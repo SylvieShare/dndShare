@@ -39,6 +39,7 @@
 <script setup>
 import { computed, inject, ref } from 'vue'
 import { sessionStatusColor } from '@/features/sessions/composables/useSessionStatus'
+import { currentChapterLabel } from '@/features/sessions/lib/chapterGraph'
 
 defineProps(['block'])
 const ctx = inject('charCtx', { sessions: [], topSession: null })
@@ -55,8 +56,7 @@ const tag = computed(() => {
 
 const statusColor = sessionStatusColor
 function chapter(s) {
-  const num = s.chapterNumber != null ? `Гл. ${s.chapterNumber}` : ''
-  return [num, s.chapterName].filter(Boolean).join(' · ')
+  return currentChapterLabel(s, true)
 }
 function sessionLink(s) { return '/sessions/' + s.uuid }
 </script>
