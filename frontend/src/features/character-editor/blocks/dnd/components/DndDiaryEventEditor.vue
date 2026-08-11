@@ -13,7 +13,6 @@
       <FormTextInput
         :value="event.title"
         :placeholder="event.type === 'newday' ? 'Например, День 12' : 'Заголовок'"
-        autofocus
         @update:value="v => $emit('update', { title: v })"
       />
     </EditorSection>

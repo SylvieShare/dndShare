@@ -4,7 +4,6 @@
       <FormTextInput
         :value="counter.name"
         placeholder="Название"
-        autofocus
         @update:value="v => $emit('update', { name: v })"
       />
       <div class="dce-field">

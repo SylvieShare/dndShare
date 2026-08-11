@@ -4,7 +4,6 @@
       <FormTextInput
         :value="quest.title"
         placeholder="Название"
-        autofocus
         @update:value="v => $emit('update', { title: v })"
       />
       <FormTextarea

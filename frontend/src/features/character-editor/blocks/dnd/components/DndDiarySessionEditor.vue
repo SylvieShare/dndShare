@@ -4,7 +4,6 @@
       <FormTextInput
         :value="session.title"
         :placeholder="titlePlaceholder"
-        autofocus
         @update:value="v => $emit('update', { title: v })"
       />
       <div class="dse-field">
