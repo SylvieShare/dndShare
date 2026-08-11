@@ -87,7 +87,23 @@
       :item-id="modalSpell.id"
       :item="modalSpell"
       @close="modalSpell = null"
-    />
+    >
+      <template v-if="canInteract" #actions>
+        <button
+          v-if="preparation && modalSpellRef"
+          type="button"
+          class="sp-modal-action sp-modal-prepare"
+          :class="{ active: modalSpellRef.prepared }"
+          :aria-pressed="modalSpellRef.prepared"
+          @click="togglePrepared(modalSpellRef.id)"
+        >
+          {{ modalSpellRef.prepared ? 'Снять подготовку' : 'Подготовить' }}
+        </button>
+        <button type="button" class="sp-modal-action sp-modal-delete" @click="removeViewedSpell">
+          Удалить
+        </button>
+      </template>
+    </ItemViewModal>
 
   </div>
 </template>
@@ -191,6 +207,7 @@ const preparedSummary = computed(() => {
   }
   return { total, perLevel }
 })
+const modalSpellRef = computed(() => spells.value.find(spell => spell.id === modalSpell.value?.id) || null)
 
 // ─── Watch blockHidden → notify parent ────────────
 
@@ -274,6 +291,12 @@ function togglePrepared(id) {
 function removeSpell(id) {
   const idx = spells.value.findIndex(s => s.id === id)
   if (idx !== -1) { spells.value.splice(idx, 1); emitChange() }
+}
+
+function removeViewedSpell() {
+  if (!modalSpellRef.value) return
+  removeSpell(modalSpellRef.value.id)
+  modalSpell.value = null
 }
 
 const spellGroups = Object.fromEntries(SPELL_LEVELS.map(lvl => {

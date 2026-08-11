@@ -1,6 +1,6 @@
 <template>
   <div class="sdc-detail">
-    <div class="sdc-title-row">
+    <div v-if="showTitle" class="sdc-title-row">
       <div class="sdc-name">{{ item.name }}</div>
       <div v-if="item.nameEn" class="sdc-name-en">{{ nameEnFormatted }}</div>
     </div>
@@ -61,6 +61,7 @@ import { itemsApi } from '@/shared/api/itemsApi'
 const props = defineProps({
   item: { type: Object, required: true },
   type: { type: Object, default: null },
+  showTitle: { type: Boolean, default: true },
 })
 
 const { suggestItems } = useSchemaSuggests(() => props.type)

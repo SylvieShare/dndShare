@@ -279,6 +279,37 @@
 }
 .di-add-section:hover { color: var(--text-2); border-color: var(--border-strong); }
 
+.di-modal-quantity {
+  margin-right: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.di-modal-quantity-label {
+  color: var(--text-2);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.di-modal-delete {
+  min-height: 38px;
+  padding: 8px 16px;
+  border: 1px solid color-mix(in srgb, var(--danger) 42%, transparent);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--danger) 10%, transparent);
+  color: var(--danger);
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  transition: background 0.15s;
+}
+
+.di-modal-delete:hover {
+  background: color-mix(in srgb, var(--danger) 18%, transparent);
+}
+
 /* ─── Drag placeholder ─── */
 .sortable-placeholder {
   background: color-mix(in srgb, var(--accent) 8%, transparent) !important;

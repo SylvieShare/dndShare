@@ -1,15 +1,25 @@
 <template>
-  <AppModal wide @close="$emit('close')">
+  <AppEditorModal
+    wide
+    :padded="false"
+    :title="item?.name || (loading ? 'Загрузка…' : 'Предмет')"
+    :subtitle="formattedNameEn"
+    @close="$emit('close')"
+  >
     <div v-if="loading" class="iv-loading">Загрузка…</div>
-    <HandbookItemDetail v-else :item="item" :type="type" :can-edit="false" />
-  </AppModal>
+    <HandbookItemDetail v-else :item="item" :type="type" :can-edit="false" :show-title="false" />
+
+    <template v-if="item && $slots.actions" #footer>
+      <slot name="actions" :item="item" :type="type" />
+    </template>
+  </AppEditorModal>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { itemsApi } from '@/shared/api/itemsApi'
 import { useItemTypesStore } from '@/stores/itemTypes'
-import AppModal from '@/shared/ui/AppModal'
+import AppEditorModal from '@/shared/ui/AppEditorModal.vue'
 import HandbookItemDetail from '@/features/handbook/components/HandbookItemDetail'
 
 const itemCache = new Map()
@@ -41,6 +51,9 @@ const type = ref(null)
 const loading = ref(false)
 
 const itemTypesStore = useItemTypesStore()
+const formattedNameEn = computed(() => String(item.value?.nameEn || '')
+  .replace(/_/g, ' ')
+  .replace(/\b[a-z]/g, char => char.toUpperCase()))
 
 async function load() {
   loading.value = true

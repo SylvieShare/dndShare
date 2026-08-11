@@ -139,8 +139,21 @@
       :item-type-id="modalItem.typeId ?? 2"
       :item-id="modalItem.id"
       :item="modalItem"
-      @close="modalItemId = null"
-    />
+      @close="modalSelection = null"
+    >
+      <template v-if="canManage && modalEntry" #actions>
+        <div class="di-modal-quantity">
+          <span class="di-modal-quantity-label">Количество</span>
+          <FormNumberInput
+            :value="modalEntry.count"
+            :min="1"
+            :max="999"
+            @change="setModalCount"
+          />
+        </div>
+        <button type="button" class="di-modal-delete" @click="removeModalEntry">Удалить</button>
+      </template>
+    </ItemViewModal>
 
     <ItemPickerModal
       v-if="pickerOpen && pickerTypeIds.length"
@@ -181,6 +194,7 @@ import ItemTooltipDetails from '@/features/items/detail-components/ItemTooltipDe
 import ItemViewModal from '@/shared/ui/ItemViewModal'
 import ConfirmDialog from '@/shared/ui/ConfirmDialog'
 import SectionLabel from '@/shared/ui/SectionLabel'
+import FormNumberInput from '@/shared/ui/form/FormNumberInput.vue'
 import { itemsApi } from '@/shared/api/itemsApi'
 import { useSortable } from '@/shared/composables/useSortable'
 import {
@@ -201,7 +215,7 @@ const charCtx = inject('charCtx', () => ({ ownerMode: false }))
 const catalog = reactive({})
 const loading = ref(true)
 const contentHidden = ref(false)
-const modalItemId = ref(null)
+const modalSelection = ref(null)
 const pickerOpen = ref(false)
 const pickerSectionId = ref(null)
 const tooltip = reactive({ visible: false, name: '', desc: '', item: null, x: 0, top: null, bottom: null })
@@ -240,7 +254,12 @@ const canManage = computed(() => !!charCtx.ownerMode)
 const canAdd = computed(() => !!charCtx.ownerMode)
 const canDrag = computed(() => !!charCtx.ownerMode)
 
-const modalItem = computed(() => modalItemId.value != null ? catalog[modalItemId.value] ?? null : null)
+const modalEntry = computed(() => {
+  if (!modalSelection.value) return null
+  return itemsRef(model.value, modalSelection.value.sectionId)
+    ?.find(entry => entry.uid === modalSelection.value.uid) || null
+})
+const modalItem = computed(() => modalSelection.value?.id != null ? catalog[modalSelection.value.id] ?? null : null)
 const pickerTypeIds = computed(() => typeIdsList.value)
 
 function sectionGroup(id) { return 'sec_' + id }
@@ -368,6 +387,22 @@ function removeEntry(sectionId, uid) {
   emitModel(next)
 }
 
+function setModalCount(value) {
+  if (!modalSelection.value) return
+  const next = cloneModel(model.value)
+  const list = itemsRef(next, modalSelection.value.sectionId)
+  const entry = list?.find(item => item.uid === modalSelection.value.uid)
+  if (!entry) return
+  entry.count = Math.max(1, Math.min(999, Math.floor(Number(value) || 1)))
+  emitModel(next)
+}
+
+function removeModalEntry() {
+  if (!modalSelection.value) return
+  removeEntry(modalSelection.value.sectionId, modalSelection.value.uid)
+  modalSelection.value = null
+}
+
 function openPicker(sectionId) {
   pickerSectionId.value = sectionId
   pickerOpen.value = true
@@ -379,9 +414,7 @@ function onPickerPick(item, qty = 1) {
   const next = cloneModel(model.value)
   const list = itemsRef(next, pickerSectionId.value) || next.sections[0]?.items
   if (!list) return
-  for (let i = 0; i < n; i++) {
-    list.push({ uid: makeEntryUid(), id: item.id, count: 1, override: null })
-  }
+  list.push({ uid: makeEntryUid(), id: item.id, count: n, override: null })
   emitModel(next)
 }
 
@@ -423,7 +456,13 @@ function onNameClick(entry) {
     if (canManage.value) openInlineForm(findSectionOfEntry(entry.uid), entry)
     return
   }
-  if (entry.id != null) modalItemId.value = entry.id
+  if (entry.id != null) {
+    modalSelection.value = {
+      sectionId: findSectionOfEntry(entry.uid),
+      uid: entry.uid,
+      id: entry.id,
+    }
+  }
 }
 
 function findSectionOfEntry(uid) {

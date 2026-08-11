@@ -60,7 +60,9 @@ outside the page root.
 
 General-purpose labels, text, number, textarea and action rows use
 `shared/ui/form`; rule-specific calculators, stat controls and file inputs may
-own specialized controls. Complex windows use `AppModal`; confirm and one-line prompt use
+own specialized controls. Complex windows use `AppModal`; windows with a title
+and independently scrolling body use `AppEditorModal`, whose title, close
+button and mobile handle remain fixed. Confirm and one-line prompt use
 `ConfirmDialog` and `TextPromptDialog`. Item detail uses
 `ItemViewModal`, formatted descriptions use `InputDescription`/`RichContent`,
 sortable collections use `useSortable`. Full selection rules are documented in
@@ -128,8 +130,12 @@ counters and hit-dice pools without scalar mirrors.
 are a top-level array; user sections never double as equipped. Entry override
 is for a custom name/description/count metadata, while referenced item content
 comes from handbook. The list shows count as a badge; it has no ordinary
-increment/decrement controls. Consumables retain their use action, which
-decrements the count and removes the entry at zero.
+increment/decrement controls. The item detail modal provides the shared number
+input with a minimum of one and a delete action; a multi-quantity picker creates
+one entry with that count. Consumables retain their use action, which decrements
+the count and removes the entry at zero. Spell detail exposes prepare/unprepare
+when the spellbook uses preparation, plus delete; these actions update the same
+spell reference as the list row.
 
 Weapon handbook attacks use canonical `{dice_id,type,count}`. Character-added
 attack rows use `{count,dice_id,type_suggest_id}` and are explicitly adapted at

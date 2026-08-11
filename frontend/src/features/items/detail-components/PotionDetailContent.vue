@@ -3,7 +3,7 @@
     <div class="pdc-hero">
       <PotionVial :color="data.color" :rarity="rarity" size="lg" />
       <div class="pdc-hero-info">
-        <div class="pdc-name">{{ item.name }}</div>
+        <div v-if="showTitle" class="pdc-name">{{ item.name }}</div>
         <span class="pdc-rarity" :style="{ color: preset.color, borderColor: preset.color }">{{ preset.label }}</span>
       </div>
     </div>
@@ -34,6 +34,7 @@ import { useCostFormatter } from '@/features/items/lib/useCostFormatter'
 const props = defineProps({
   item: { type: Object, required: true },
   type: { type: Object, default: null },
+  showTitle: { type: Boolean, default: true },
 })
 
 const data = computed(() => props.item.data || {})

@@ -131,6 +131,40 @@
   background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
 }
 
+.sp-modal-action {
+  min-height: 38px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
+}
+
+.sp-modal-prepare {
+  border: 1px solid var(--border-strong);
+  background: var(--surface-raised);
+  color: var(--text-2);
+}
+
+.sp-modal-prepare:hover,
+.sp-modal-prepare.active {
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--border-strong));
+  background: color-mix(in srgb, var(--accent) 14%, var(--surface-raised));
+  color: var(--text-1);
+}
+
+.sp-modal-delete {
+  border: 1px solid color-mix(in srgb, var(--danger) 42%, transparent);
+  background: color-mix(in srgb, var(--danger) 10%, transparent);
+  color: var(--danger);
+}
+
+.sp-modal-delete:hover {
+  background: color-mix(in srgb, var(--danger) 18%, transparent);
+}
+
 @media (max-width: 760px) {
   .spells-groups {
     gap: 12px;

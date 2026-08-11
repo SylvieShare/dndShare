@@ -3,7 +3,7 @@
     <template v-if="item">
 
       <!-- Sticky header with name / ID / edit -->
-      <div v-if="!customRenderer" class="detail-head">
+      <div v-if="!customRenderer && showTitle" class="detail-head">
         <span class="detail-name">{{ item.name }}</span>
         <span v-if="item.nameEn" class="detail-name-en">{{ item.nameEn }}</span>
         <span v-if="item.userId != null" class="detail-custom-mark">✦ ваше</span>
@@ -23,6 +23,7 @@
         :is="customRenderer"
         :item="item"
         :type="type"
+        :show-title="showTitle"
       />
 
       <!-- Generic schema-based view -->
@@ -129,6 +130,7 @@ const props = defineProps({
   item: { type: Object, default: null },
   type: { type: Object, default: null },
   canEdit: { type: Boolean, default: false },
+  showTitle: { type: Boolean, default: true },
 })
 
 defineEmits(['edit'])

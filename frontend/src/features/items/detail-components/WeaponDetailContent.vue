@@ -1,6 +1,6 @@
 <template>
   <div class="wdc-detail">
-    <div class="wdc-title-row">
+    <div v-if="showTitle" class="wdc-title-row">
       <div class="wdc-name">{{ item.name }}</div>
       <div v-if="item.nameEn" class="wdc-name-en">{{ nameEnFormatted }}</div>
     </div>
@@ -116,6 +116,7 @@ import { diceById } from '@/shared/lib/systemDice'
 const props = defineProps({
   item: { type: Object, required: true },
   type: { type: Object, default: null },
+  showTitle: { type: Boolean, default: true },
 })
 
 const { suggestItems } = useSchemaSuggests(() => props.type)

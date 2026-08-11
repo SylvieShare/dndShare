@@ -1,13 +1,15 @@
 <template>
-  <AppModal fullscreen :show-close="false" :z-index="zIndex" @close="$emit('close')">
-      <div class="picker-modal">
-
-        <div class="picker-topbar">
-          <div class="picker-topbar-left">
-            <span class="picker-title">{{ title }}</span>
-            <span v-if="itemType" class="picker-count">{{ itemType.count ?? '' }}</span>
-          </div>
-
+  <AppEditorModal
+    fullscreen
+    :title="title"
+    :subtitle="itemType?.count ?? ''"
+    :padded="false"
+    :body-scroll="false"
+    :z-index="zIndex"
+    @close="$emit('close')"
+  >
+    <template #header-actions>
+      <div class="picker-header-controls">
           <div class="picker-search-wrap">
             <svg class="picker-search-icon" viewBox="0 0 16 16" fill="none" width="14" height="14">
               <circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/>
@@ -33,13 +35,10 @@
               @click="groupBy = groupBy === f.key ? null : f.key"
             >{{ f.nameShort || f.name }}</button>
           </div>
+      </div>
+    </template>
 
-          <button class="picker-close" @click="$emit('close')">
-            <svg viewBox="0 0 16 16" fill="none" width="16" height="16">
-              <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-            </svg>
-          </button>
-        </div>
+    <div class="picker-modal">
 
         <div v-if="allTypes.length > 1" class="picker-tabs">
           <button
@@ -122,8 +121,8 @@
           @saved="onItemCreated"
         />
 
-      </div>
-  </AppModal>
+    </div>
+  </AppEditorModal>
 </template>
 
 <script setup>
@@ -134,7 +133,7 @@ import HandbookItemDetail from '@/features/handbook/components/HandbookItemDetai
 import SvgIcon from '@/shared/ui/SvgIcon'
 import HandbookItemList from '@/features/handbook/components/HandbookItemList'
 import ItemEditModal from '@/features/character-editor/components/ItemEditModal'
-import AppModal from '@/shared/ui/AppModal.vue'
+import AppEditorModal from '@/shared/ui/AppEditorModal.vue'
 import { collectSuggestIds } from '@/features/handbook/objects/lib/schemaFields'
 import { useItemTypesStore } from '@/stores/itemTypes'
 import { useSuggestStore } from '@/stores/suggest'

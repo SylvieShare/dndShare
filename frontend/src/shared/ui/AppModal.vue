@@ -11,14 +11,20 @@
       <div
         ref="card"
         class="am-card"
-        :class="{ 'am-card-wide': wide, 'am-card-extra-wide': extraWide, 'am-card-full': fullscreen, 'am-card-tile': tile }"
+        :class="{
+          'am-card-wide': wide,
+          'am-card-extra-wide': extraWide,
+          'am-card-full': fullscreen,
+          'am-card-tile': tile,
+          'am-card-flush': flush,
+        }"
         tabindex="-1"
         @touchstart.passive="onTouchStart"
         @touchmove="onTouchMove"
         @touchend.passive="onTouchEnd"
         @touchcancel.passive="cancelDrag"
       >
-        <div class="am-handle"></div>
+        <div v-if="showHandle" class="am-handle"></div>
         <button v-if="showClose && !fullscreen" class="am-close" type="button" aria-label="Закрыть" @click="requestClose">✕</button>
         <slot />
       </div>
@@ -44,7 +50,10 @@ const props = defineProps({
   extraWide: { type: Boolean, default: false },
   fullscreen: { type: Boolean, default: false },
   showClose: { type: Boolean, default: true },
+  showHandle: { type: Boolean, default: true },
   dismissible: { type: Boolean, default: true },
+  // Lets a higher-level shell own padding, scrolling and fixed chrome.
+  flush: { type: Boolean, default: false },
   // Use the BaseTile block surface (var(--surface)) instead of the page bg.
   tile: { type: Boolean, default: false },
 })
@@ -164,10 +173,20 @@ function requestClose() {
   _animateOut()
 }
 
+defineExpose({ requestClose })
+
 function onTouchStart(e) {
   if (!props.dismissible) return
   touchStartY.value = e.touches[0].clientY
-  touchStartScrollTop.value = card.value?.scrollTop || 0
+  let scrollElement = e.target instanceof Element ? e.target : null
+  while (scrollElement && scrollElement !== card.value) {
+    const style = window.getComputedStyle(scrollElement)
+    const scrollable = /(auto|scroll)/.test(style.overflowY)
+      && scrollElement.scrollHeight > scrollElement.clientHeight
+    if (scrollable) break
+    scrollElement = scrollElement.parentElement
+  }
+  touchStartScrollTop.value = scrollElement?.scrollTop || card.value?.scrollTop || 0
   isDragging.value = false
   dragY.value = 0
 }
@@ -281,6 +300,12 @@ onBeforeUnmount(() => {
   border: none;
 }
 
+.am-card-flush {
+  padding: 0;
+  gap: 0;
+  overflow: hidden;
+}
+
 .am-card-wide {
   width: 720px;
 }
@@ -343,6 +368,10 @@ onBeforeUnmount(() => {
     max-height: 80vh;
     border-radius: 18px 18px 0 0;
     padding: 52px 20px 32px;
+  }
+
+  .am-card-flush {
+    padding: 0;
   }
 
   .am-close {

@@ -1,6 +1,6 @@
 <template>
   <div class="fn-wrap">
-    <button class="fn-btn" tabindex="-1" @click.stop="step(-1)">−</button>
+    <button type="button" class="fn-btn" tabindex="-1" @click.stop="step(-1)">−</button>
     <input
       class="fn-input"
       type="number"
@@ -9,7 +9,7 @@
       :max="max"
       @change="onChange"
     />
-    <button class="fn-btn" tabindex="-1" @click.stop="step(1)">+</button>
+    <button type="button" class="fn-btn" tabindex="-1" @click.stop="step(1)">+</button>
   </div>
 </template>
 

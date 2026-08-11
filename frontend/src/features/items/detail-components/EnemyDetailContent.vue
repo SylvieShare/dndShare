@@ -26,7 +26,7 @@
         </div>
 
         <!-- Name -->
-        <h1 class="enemy-title">{{ item.name }}</h1>
+        <h1 v-if="showTitle" class="enemy-title">{{ item.name }}</h1>
 
         <!-- Source badge -->
         <div v-if="identity.source" class="enemy-source">
@@ -177,6 +177,7 @@ import { useSuggestStore } from '@/stores/suggest'
 const props = defineProps({
   item: { type: Object, required: true },
   type: { type: Object, default: null },
+  showTitle: { type: Boolean, default: true },
 })
 
 const suggestStore = useSuggestStore()

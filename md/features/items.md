@@ -51,6 +51,8 @@ entries and selected choices.
 ## Visual conventions
 
 - descriptions render through `RichContent`;
-- details open through shared `ItemViewModal`/modal stack;
+- details open through shared `ItemViewModal`/modal stack; `ItemViewModal`
+  forwards an optional action slot into the fixed `AppEditorModal` footer, so
+  character-specific mutations do not leak into handbook detail renderers;
 - field labels and errors use shared form components;
 - direct color literals are rejected by `npm run check:colors`.

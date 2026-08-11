@@ -1,7 +1,5 @@
 <template>
-  <AppModal tile @close="$emit('close')">
-    <div class="ssm-title">Магия</div>
-
+  <AppEditorModal title="Магия" @close="$emit('close')">
     <EditorSection title="Подготовка">
       <ToggleSwitch
         :model-value="preparation"
@@ -47,12 +45,12 @@
         </div>
       </div>
     </EditorSection>
-  </AppModal>
+  </AppEditorModal>
 </template>
 
 <script setup>
 import EditorSection from '@/features/character-editor/components/EditorSection'
-import AppModal from '@/shared/ui/AppModal'
+import AppEditorModal from '@/shared/ui/AppEditorModal.vue'
 import MultiToggle from '@/shared/ui/MultiToggle'
 import ToggleSwitch from '@/shared/ui/ToggleSwitch'
 import ValueSelect from '@/shared/ui/ValueSelect'
@@ -76,14 +74,6 @@ defineEmits(['close', 'change', 'set-stat-path', 'set-save-bonus', 'set-attack-b
 </script>
 
 <style scoped>
-.ssm-title {
-  color: var(--text-1);
-  font-size: 16px;
-  font-weight: 700;
-  padding-right: 24px;
-  margin-bottom: 14px;
-}
-
 .ssm-bonus {
   display: flex;
   align-items: center;

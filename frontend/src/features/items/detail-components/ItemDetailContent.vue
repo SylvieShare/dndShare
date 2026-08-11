@@ -1,8 +1,8 @@
 <template>
   <div class="idc-detail">
-    <div class="idc-name">{{ item.name }}</div>
+    <div v-if="showTitle" class="idc-name">{{ item.name }}</div>
 
-    <div class="idc-divider"></div>
+    <div v-if="showTitle" class="idc-divider"></div>
 
     <RichContent v-if="data.desc" class="idc-desc" :html="data.desc" />
     <div v-else class="idc-no-desc">Описание отсутствует</div>
@@ -26,6 +26,7 @@ import { useCostFormatter } from '@/features/items/lib/useCostFormatter'
 
 const props = defineProps({
   item: { type: Object, required: true },
+  showTitle: { type: Boolean, default: true },
 })
 
 const data = computed(() => props.item.data || {})

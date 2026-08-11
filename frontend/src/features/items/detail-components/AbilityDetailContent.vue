@@ -1,8 +1,8 @@
 <template>
   <div class="adc-detail">
-    <div class="adc-name">{{ item.name }}</div>
+    <div v-if="showTitle" class="adc-name">{{ item.name }}</div>
 
-    <div class="adc-divider"></div>
+    <div v-if="showTitle" class="adc-divider"></div>
 
     <RichContent v-if="data.desc" class="adc-desc" :html="data.desc" />
     <div v-else class="adc-no-desc">Описание отсутствует</div>
@@ -24,6 +24,7 @@ import RichContent from '@/shared/ui/RichContent'
 
 const props = defineProps({
   item: { type: Object, required: true },
+  showTitle: { type: Boolean, default: true },
 })
 
 const data = computed(() => props.item.data || {})

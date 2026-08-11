@@ -9,7 +9,7 @@
         </svg>
       </div>
       <div class="fdc-heading">
-        <div class="fdc-title-row">
+        <div v-if="showTitle" class="fdc-title-row">
           <h2>{{ item.name }}</h2>
           <span v-if="item.nameEn" class="fdc-name-en">{{ nameEn }}</span>
         </div>
@@ -88,6 +88,7 @@ import { STAT_FULL, SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
 const props = defineProps({
   item: { type: Object, required: true },
   type: { type: Object, default: null },
+  showTitle: { type: Boolean, default: true },
 })
 
 const suggestStore = useSuggestStore()

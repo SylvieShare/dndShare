@@ -63,7 +63,9 @@ server-backed picker used by the character wizard/editor.
 
 Details are specialized by type where useful (weapon, spell, enemy, potion,
 feat), otherwise the generic field renderer is used. Item detail modals use the
-shared modal stack; descriptions use the shared rich renderer.
+shared `ItemViewModal` and fixed-chrome `AppEditorModal` stack; the standalone
+detail renderer keeps its own title, while the modal moves that title into the
+fixed header. Descriptions use the shared rich renderer.
 
 ## Schemas
 
