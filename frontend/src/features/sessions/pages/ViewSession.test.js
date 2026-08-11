@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest'
 import ViewSession from './ViewSession.vue'
 
 const source = readFileSync(fileURLToPath(new URL('./ViewSession.vue', import.meta.url)), 'utf8')
+const styles = readFileSync(fileURLToPath(new URL('./styles/ViewSession.css', import.meta.url)), 'utf8')
 const selectionSource = readFileSync(fileURLToPath(new URL('../composables/useSessionSelection.js', import.meta.url)), 'utf8')
 
 describe('ViewSession participant rail', () => {
@@ -11,9 +12,20 @@ describe('ViewSession participant rail', () => {
     expect(ViewSession).toBeTruthy()
   })
 
-  it('uses BaseTile for the complete invite section', () => {
-    expect(source).toContain('<BaseTile class="invite-section">')
-    expect(source).toContain('</BaseTile>')
+  it('keeps player actions in the heading menu instead of a bottom invite tile', () => {
+    expect(source).toContain('<div class="players-actions">')
+    expect(source).toContain('<RowActionMenu>')
+    expect(source).toContain('class="players-actions-trigger"')
+    expect(source).toContain('>Создать персонажа</button>')
+    expect(source).toContain('>Скопировать код приглашения</button>')
+    expect(source).toContain('>Скопировать ссылку приглашения</button>')
+    expect(source).not.toContain('invite-section')
+  })
+
+  it('removes the outer combat surface without changing the scene tile', () => {
+    expect(source).toContain(":class=\"{ 'tab-content--combat': activeTab === 'combat' }\"")
+    expect(source).toContain('class="tab-content"')
+    expect(styles).toContain('.tab-content.tab-content--combat {\n  background: transparent;\n  border: 0;\n  box-shadow: none;\n}')
   })
 
   it('uses per-participant actions without bulk selection controls', () => {

@@ -10,16 +10,17 @@ describe('SessionTopBar hierarchy', () => {
     expect(SessionTopBar).toBeTruthy()
   })
 
-  it('starts with the larger session name and has no sessions back-link', () => {
+  it('keeps title then chapter hierarchy and has no sessions back-link', () => {
     expect(source).not.toContain('К сессиям')
     expect(source).not.toContain('class="back-link"')
-    expect(source.indexOf('class="session-info"')).toBeLessThan(source.indexOf('class="status-wrap"'))
+    expect(source.indexOf('class="session-info"')).toBeLessThan(source.indexOf('class="chapter-wrap"'))
     expect(source).toMatch(/\.session-title\s*\{[\s\S]*?font-size: 21px;/)
   })
 
-  it('keeps status and chapter controls wired', () => {
-    expect(source).toContain('v-model:open="statusOpen"')
-    expect(source).toContain('@click="setStatus(opt.key)"')
+  it('shows the status menu only to the DM and keeps chapter controls wired', () => {
+    expect(source).toContain('<SessionStatusMenu')
+    expect(source).toContain('v-if="isDm"')
+    expect(source).toContain('@status-change="$emit(\'status-change\', $event)"')
     expect(source).toContain('@click="toggleChapterMenu"')
     expect(source).toContain('v-model:open="chapterOpen"')
   })

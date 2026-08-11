@@ -143,11 +143,17 @@ const avatarColor = computed(() => {
 
 <style scoped>
 .p-card {
+  width: 100%;
+  box-sizing: border-box;
   display: flex;
   align-items: flex-start;
   gap: 10px;
   padding: 10px 12px;
   user-select: none;
+}
+
+.p-card-menu {
+  width: 100%;
 }
 
 .p-card-menu :deep(.ram-custom-trigger) {

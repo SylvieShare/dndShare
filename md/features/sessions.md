@@ -33,8 +33,13 @@ an explicit rules `sourceVersionId`, then is joined and opened.
 The session participant rail has no shared backing surface: each participant is
 an individual interactive `BaseTile`. Clicking it opens `RowActionMenu` with a
 view action and a DM-only kick action; bulk participant selection is not part of
-the rail. Character creation and the invite code/link share one separate
-`BaseTile` at the bottom of the rail.
+the rail. Every participant trigger fills the rail width. A dashed `+` action
+beside the `ИГРОКИ` heading opens character creation and invite code/link copy
+actions; the rail has no separate invitation tile.
+
+The desktop session toolbar keeps the editable session name and chapter picker
+in the main row. For the DM, a right-aligned three-bar action menu owns session
+status changes; non-DM participants do not receive the mutation menu.
 
 ## Chapters and scenes
 
@@ -55,11 +60,11 @@ Encounter state is split into composables under `features/sessions/composables`:
 load/save, players, NPC item cache, HP, initiative, flow, states and dice.
 `useEncounter.js` composes them; row components remain presentation-only.
 
-The sticky encounter toolbar and every combatant row are separate `BaseTile`
-surfaces. Row strips use the current encounter section color (combat, NPC
-reserve, player reserve or graveyard), so moving a row also updates its spatial
-accent. Session dice pass the default accent color explicitly to every
-`SystemDie`.
+The encounter workspace has no shared backing surface. Its sticky toolbar and
+every combatant row are separate `BaseTile` surfaces. Row strips use the current
+encounter section color (combat, NPC reserve, player reserve or graveyard), so
+moving a row also updates its spatial accent. Session dice pass the default
+accent color explicitly to every `SystemDie`.
 
 Canonical combatants:
 

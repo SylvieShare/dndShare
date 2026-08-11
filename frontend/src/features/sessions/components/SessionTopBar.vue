@@ -5,35 +5,6 @@
         <span class="session-title">{{ session.name }}</span>
       </button>
 
-      <span class="top-rule" />
-
-      <div class="status-wrap">
-        <button
-          ref="statusBadgeEl"
-          class="status-badge"
-          :style="{ '--dot': statusCfg.color }"
-          @click="statusOpen = !statusOpen"
-        >
-          <span class="status-dot" />{{ statusCfg.label }}
-          <svg class="status-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none">
-            <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-
-        <BasePopover v-model:open="statusOpen" :anchor="statusBadgeEl" :min-width="148">
-          <button
-            v-for="opt in STATUS_OPTIONS"
-            :key="opt.key"
-            class="status-option"
-            :class="{ active: session.status === opt.key }"
-            :style="{ '--dot': STATUS_CFG[opt.key].color }"
-            @click="setStatus(opt.key)"
-          >
-            <span class="status-dot" />{{ opt.label }}
-          </button>
-        </BasePopover>
-      </div>
-
       <span v-if="isDm || currentChapter" class="top-rule" />
 
       <div v-if="isDm || currentChapter" class="chapter-wrap">
@@ -121,6 +92,13 @@
           </template>
         </BasePopover>
       </div>
+
+      <SessionStatusMenu
+        v-if="isDm"
+        :session="session"
+        :session-uuid="sessionUuid"
+        @status-change="$emit('status-change', $event)"
+      />
     </template>
   </div>
 </template>
@@ -128,8 +106,8 @@
 <script setup>
 import { ref, watch } from 'vue'
 import BasePopover from '@/shared/ui/BasePopover.vue'
+import SessionStatusMenu from '@/features/sessions/components/SessionStatusMenu.vue'
 import { romanNum, useSessionChapters } from '@/features/sessions/composables/useSessionChapters'
-import { STATUS_CFG, STATUS_OPTIONS, useSessionStatus } from '@/features/sessions/composables/useSessionStatus'
 
 const props = defineProps({
   session:        { type: Object, default: null },
@@ -145,17 +123,7 @@ watch(() => props.session, v => { sessionRef.value = v })
 const isDmRef = ref(props.isDm)
 watch(() => props.isDm, v => { isDmRef.value = v })
 
-const statusBadgeEl = ref(null)
 const chapterTriggerEl = ref(null)
-
-const { statusOpen, statusCfg, setStatus: persistStatus } =
-  useSessionStatus({ session: sessionRef, sessionUuid: props.sessionUuid })
-
-async function setStatus(key) {
-  const previous = sessionRef.value?.status
-  await persistStatus(key)
-  if (sessionRef.value?.status !== previous) emit('status-change', sessionRef.value.status)
-}
 
 const chaptersCtl = useSessionChapters({
   session: sessionRef,
@@ -197,61 +165,6 @@ defineExpose({ chapters, currentChapter, loadChapters })
   padding: 8px 16px;
   flex-shrink: 0;
 }
-
-.status-wrap {
-  position: relative;
-  flex-shrink: 0;
-}
-
-.status-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  color: var(--dot);
-  background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
-  border: 1px solid color-mix(in srgb, var(--text-on-accent) 8%, transparent);
-  border-radius: 6px;
-  padding: 3px 8px;
-  white-space: nowrap;
-  cursor: pointer;
-  font-family: inherit;
-  transition: background 0.15s;
-}
-
-.status-badge:hover { background: color-mix(in srgb, var(--text-on-accent) 8%, transparent); }
-
-.status-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: currentColor;
-  flex-shrink: 0;
-}
-
-.status-chevron { opacity: 0.55; }
-
-.status-option {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  width: 100%;
-  padding: 9px 14px;
-  background: none;
-  border: none;
-  font: inherit;
-  font-size: 13px;
-  color: var(--text-2);
-  cursor: pointer;
-  text-align: left;
-  transition: background 0.15s;
-}
-
-.status-option:hover { background: color-mix(in srgb, var(--text-on-accent) 5%, transparent); }
-.status-option.active { color: var(--text-1); background: color-mix(in srgb, var(--accent) 10%, transparent); }
-.status-option .status-dot { color: var(--dot); }
 
 .session-info {
   display: flex;

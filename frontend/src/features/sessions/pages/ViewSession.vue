@@ -26,10 +26,24 @@
     <div v-else-if="session" class="layout">
       <aside class="col-left">
         <div class="col-section-title">
-          ИГРОКИ
+          <span>ИГРОКИ</span>
           <span class="poll-indicator" :class="pollStatus">
             <span class="poll-bar" :class="{ running: pollRunning }" />
           </span>
+          <div class="players-actions">
+            <RowActionMenu>
+              <template #trigger>
+                <button type="button" class="players-actions-trigger" title="Действия с игроками" aria-label="Действия с игроками">
+                  +
+                </button>
+              </template>
+              <template #default="{ close }">
+                <button type="button" class="ram-item" @click="openCreate(); close()">Создать персонажа</button>
+                <button type="button" class="ram-item" @click="copyCode(); close()">Скопировать код приглашения</button>
+                <button type="button" class="ram-item" @click="copyLink(); close()">Скопировать ссылку приглашения</button>
+              </template>
+            </RowActionMenu>
+          </div>
         </div>
 
         <div v-if="participants.length" class="participants-list">
@@ -45,36 +59,6 @@
         </div>
         <div v-else class="no-participants">Участников пока нет</div>
         <div v-if="kickError" class="participant-action-error" role="alert">{{ kickError }}</div>
-
-        <BaseTile class="invite-section">
-          <button class="create-char-btn" @click="openCreate">
-            <span class="cc-plus">+</span>
-            Создать персонажа
-          </button>
-
-          <div class="invite-label">ПРИГЛАСИТЬ В СЕССИЮ</div>
-          <div class="invite-code-row">
-            <span class="invite-prefix">КОД</span>
-            <span class="invite-code">{{ session.inviteCode }}</span>
-            <button class="invite-copy" :title="codeCopied ? 'Скопировано' : 'Скопировать код'" @click="copyCode">
-              <svg v-if="!codeCopied" width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <rect x="4" y="4" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.4"/>
-                <path d="M2 10V2h8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-              </svg>
-              <svg v-else width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <path d="M2 7l3.5 3.5L12 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
-            <button class="invite-copy invite-copy--link" :title="linkCopied ? 'Скопировано' : 'Скопировать ссылку приглашения'" @click="copyLink">
-              <svg v-if="!linkCopied" width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <path d="M6 8l2 -2M5 9.5l-1 1a2.1 2.1 0 1 1 -3 -3l1 -1M9 4.5l1 -1a2.1 2.1 0 1 1 3 3l-1 1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
-              </svg>
-              <svg v-else width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <path d="M2 7l3.5 3.5L12 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
-          </div>
-        </BaseTile>
       </aside>
 
       <div class="main-area">
@@ -93,7 +77,7 @@
         <div class="main-row">
           <div class="col-middle">
             <SlidingTabs :tabs="tabItems" :model-value="activeTab" @update:model-value="selectTab" />
-            <BaseTile class="tab-content">
+            <BaseTile class="tab-content" :class="{ 'tab-content--combat': activeTab === 'combat' }">
               <EncounterTab
                 v-if="tabsLoaded.combat"
                 v-show="activeTab === 'combat'"
@@ -160,6 +144,7 @@ import DicePanel from '@/features/sessions/components/DicePanel.vue'
 import EncounterTab from '@/features/sessions/components/EncounterTab'
 import MusicLibraryModal from '@/features/sessions/components/MusicLibraryModal.vue'
 import MusicPanel from '@/features/sessions/components/MusicPanel.vue'
+import RowActionMenu from '@/shared/ui/RowActionMenu.vue'
 import SceneTab from '@/features/sessions/components/SceneTab.vue'
 import SessionParticipantCard from '@/features/sessions/components/SessionParticipantCard'
 import SessionTopBar from '@/features/sessions/components/SessionTopBar.vue'
@@ -288,22 +273,15 @@ async function saveEdit() {
   }
 }
 
-const codeCopied = ref(false)
-const linkCopied = ref(false)
-
 async function copyCode() {
   if (!session.value?.inviteCode) return
   await navigator.clipboard.writeText(session.value.inviteCode).catch(() => {})
-  codeCopied.value = true
-  setTimeout(() => { codeCopied.value = false }, 1500)
 }
 
 async function copyLink() {
   if (!session.value?.inviteCode) return
   const url = `${window.location.origin}/join/${encodeURIComponent(session.value.inviteCode)}`
   await navigator.clipboard.writeText(url).catch(() => {})
-  linkCopied.value = true
-  setTimeout(() => { linkCopied.value = false }, 1500)
 }
 
 onMounted(() => {
