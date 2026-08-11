@@ -1,11 +1,13 @@
+const DEFAULT_DIE_COLOR = '#7ab8e8'
+
 const DEFINITIONS = [
-  { id: 'd4', sides: 4, value: 'd4', legacyId: 1, color: '#e07b54', shape: 'd4' },
-  { id: 'd6', sides: 6, value: 'd6', legacyId: 2, color: '#e0c454', shape: 'd6' },
-  { id: 'd8', sides: 8, value: 'd8', legacyId: 3, color: '#7ab8e8', shape: 'd8' },
-  { id: 'd10', sides: 10, value: 'd10', legacyId: 4, color: '#a07ae8', shape: 'd10' },
-  { id: 'd12', sides: 12, value: 'd12', legacyId: 5, color: '#7ae8a0', shape: 'd12' },
-  { id: 'd20', sides: 20, value: 'd20', legacyId: 6, color: '#e87a9f', shape: 'd20' },
-  { id: 'd100', sides: 100, value: 'd100', legacyId: 7, color: '#55c9c2', shape: 'd10' },
+  { id: 'd4', sides: 4, value: 'd4', legacyId: 1, color: DEFAULT_DIE_COLOR, shape: 'd4' },
+  { id: 'd6', sides: 6, value: 'd6', legacyId: 2, color: DEFAULT_DIE_COLOR, shape: 'd6' },
+  { id: 'd8', sides: 8, value: 'd8', legacyId: 3, color: DEFAULT_DIE_COLOR, shape: 'd8' },
+  { id: 'd10', sides: 10, value: 'd10', legacyId: 4, color: DEFAULT_DIE_COLOR, shape: 'd10' },
+  { id: 'd12', sides: 12, value: 'd12', legacyId: 5, color: DEFAULT_DIE_COLOR, shape: 'd12' },
+  { id: 'd20', sides: 20, value: 'd20', legacyId: 6, color: DEFAULT_DIE_COLOR, shape: 'd20' },
+  { id: 'd100', sides: 100, value: 'd100', legacyId: 7, color: DEFAULT_DIE_COLOR, shape: 'd10' },
 ]
 
 export const SYSTEM_DICE = Object.freeze(DEFINITIONS.map((die) => Object.freeze({ ...die })))

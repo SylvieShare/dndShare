@@ -29,9 +29,6 @@
         />
         <rect class="system-die__shine" x="0" :y="shape.shineY" width="56" height="1.4" />
 
-        <circle class="system-die__speck system-die__speck--1" cx="22" cy="42" r="1.3" />
-        <circle class="system-die__speck system-die__speck--2" cx="34" cy="45" r="1" />
-
         <circle class="system-die__bubble system-die__bubble--1" cx="17" cy="49" r="2.1" />
         <circle class="system-die__bubble system-die__bubble--2" cx="31" cy="51" r="1.7" />
         <circle class="system-die__bubble system-die__bubble--3" cx="42" cy="48" r="1.9" />
@@ -159,11 +156,6 @@ const rootStyle = computed(() => ({
   fill: #fff;
   opacity: 0.55;
 }
-.system-die__speck {
-  fill: #fff;
-}
-.system-die__speck--1 { opacity: 0.4; }
-.system-die__speck--2 { opacity: 0.32; }
 .system-die__outline {
   fill: none;
   stroke: #3a3d4d;

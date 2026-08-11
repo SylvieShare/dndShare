@@ -16,6 +16,7 @@ describe('SystemDie', () => {
     expect(html).toContain('aria-label="d6: 6"')
     expect(html).toContain('font-size:27px')
     expect(html).toContain('>6</text>')
+    expect(html).not.toContain('system-die__speck')
   })
 
   it('substitutes an arbitrary value and scales long text to fit', async () => {
