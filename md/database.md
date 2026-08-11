@@ -1,9 +1,9 @@
 # Database and startup migrations
 
 PostgreSQL принадлежит Go-бэкенду. Единственный источник структуры —
-`internal/store/schema.sql`; он встраивается в бинарь и выполняется при каждом
-старте до регистрации HTTP-сервиса. Liquibase и отдельного Kotlin backend в
-проекте нет.
+упорядоченные файлы `internal/store/schema/*.sql`. `schema.go` встраивает их в
+бинарь и выполняет одной транзакцией при каждом старте до регистрации
+HTTP-сервиса. Liquibase и отдельного Kotlin backend в проекте нет.
 
 ## Правила
 
@@ -11,8 +11,8 @@ PostgreSQL принадлежит Go-бэкенду. Единственный и
 - DDL и data correction должны быть идемпотентны: `IF NOT EXISTS`, проверяемый
   `UPDATE`, `ON CONFLICT` или временная функция, которую в конце удаляют.
 - Приложение работает только с финальной схемой. Временные колонки можно
-  добавить для чтения старых данных внутри `schema.sql`, но после переноса их
-  нужно удалить в том же startup script.
+  добавить для чтения старых данных внутри соответствующего `schema/*.sql`, но
+  после переноса их нужно удалить в том же startup script.
 - Read-time миграции, fallback на старые JSON-ключи и постоянные one-shot admin
   jobs запрещены.
 - `jsonb` читается как `json.RawMessage`, при записи используется явный cast в
@@ -80,8 +80,8 @@ Startup data correction переводит прежние значения в э
 - черты используют `description`, `prerequisite_groups`, `choices`;
 - стоимость `int_by_suggest` хранится как `{value,suggest_id}`.
 
-При старте `schema.sql` переносит старые одинарные bindings, spell class ids,
-ключи черт и source metadata, затем удаляет исходные поля. Отдельных
+При старте `schema/02_handbook.sql` переносит старые одинарные bindings, spell
+class ids, ключи черт и source metadata, затем удаляет исходные поля. Отдельных
 `migrate-ability-binding`, `migrate-spell-classes` и подобных admin jobs нет.
 
 ### Сессии
@@ -113,7 +113,9 @@ startup schema, а не job registry.
 
 ## Как менять схему
 
-1. Добавить финальное DDL в логическое место `internal/store/schema.sql`.
+1. Добавить финальное DDL в логический файл `internal/store/schema/*.sql`:
+   foundation, handbook, characters, sessions или seed. Порядок файлов задаёт
+   зависимости и не должен меняться неявно.
 2. Если есть старые данные, перед удалением старого поля выполнить
    идемпотентный `UPDATE`/временную функцию.
 3. Удалить старую колонку/JSON key и runtime fallback в том же изменении.

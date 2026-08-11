@@ -25,8 +25,9 @@
 ## Jobs
 
 Реестр `internal/web/jobs.go` получает jobs через `registerJob(code, name,
-description, handler)`. `jobs_handlers.go` содержит handlers, `job_run` — их
-историю, progress, result/error и cooperative cancellation.
+description, handler)`. Реализации разделены по `jobs_handlers.go` и
+`job_*.go`; `job_run` хранит историю, progress, result/error и cooperative
+cancellation.
 
 В актуальном реестре:
 
@@ -35,7 +36,8 @@ description, handler)`. `jobs_handlers.go` содержит handlers, `job_run` 
 
 Одноразовых jobs по преобразованию форматов персонажа, bindings или spell
 classes нет. Такие изменения выполняются идемпотентно в
-`internal/store/schema.sql`, после чего старый формат удаляется.
+соответствующем `internal/store/schema/*.sql`, после чего старый формат
+удаляется.
 
 Чтобы добавить регулярную job:
 

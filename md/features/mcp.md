@@ -1,7 +1,8 @@
 # MCP endpoint
 
-MCP реализован непосредственно в `internal/web/mcp.go` как JSON-RPC 2.0 over
-`POST /mcp`. GET/SSE transport и Spring AI отсутствуют.
+MCP реализован в `internal/web/mcp*.go` как JSON-RPC 2.0 over `POST /mcp`.
+`mcp.go` содержит transport/dispatch, а tool schemas, аргументы и mutations
+вынесены в тематические файлы. GET/SSE transport и Spring AI отсутствуют.
 
 ## Access
 
@@ -65,8 +66,8 @@ unfinished reports to `OPEN`.
 When adding or changing a tool, update together:
 
 1. dispatch in `internal/web/mcp.go`;
-2. `tools/list` schema;
-3. argument validation and permission checks;
+2. `tools/list` schema in `internal/web/mcp_tool_defs.go`;
+3. argument validation in `internal/web/mcp_args.go` and permission checks;
 4. smoke/contract tests in `internal/web`;
 5. this page and any feature-specific documentation.
 

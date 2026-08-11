@@ -1,0 +1,201 @@
+.spells-block {
+  min-width: 0;
+  color: var(--text-1);
+}
+
+.sg-lvl {
+  display: block;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  line-height: 1.15;
+  text-transform: uppercase;
+}
+
+/* ── Группы заклинаний (каждый уровень — своя строка) ── */
+.spells-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.spells-empty {
+  color: var(--text-muted);
+  font-size: 13px;
+  padding: 8px 4px;
+}
+
+/* ── Сводка по подготовленным (перед заговорами) ── */
+.sp-prep-summary {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.sp-prep-total {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  color: color-mix(in srgb, var(--accent) 50%, var(--text-on-accent));
+  font-size: 13px;
+  font-weight: 700;
+}
+.sp-prep-total svg { color: var(--accent); }
+
+.sp-prep-chip {
+  padding: 5px 10px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--text-on-accent) 5%, transparent);
+  color: var(--text-2);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.spell-group {
+  min-width: 0;
+}
+
+.sg-spells {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Row removal: collapse height + fade + slide out. No `*-move` rule on purpose — live drag
+   reordering (handled by useSortable) must not trigger FLIP moves that fight the drag ghost. */
+.sp-row-leave-active {
+  overflow: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.22s ease,
+    transform 0.26s ease,
+    max-height 0.3s ease,
+    padding-top 0.3s ease,
+    padding-bottom 0.3s ease,
+    border-top-color 0.2s ease;
+}
+.sp-row-leave-from { max-height: 120px; }
+.sp-row-leave-to {
+  opacity: 0;
+  transform: translateX(18px);
+  max-height: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  border-top-color: transparent !important;
+}
+.sp-row-enter-active { transition: opacity 0.22s ease, transform 0.26s ease; }
+.sp-row-enter-from { opacity: 0; transform: translateX(18px); }
+
+.sg-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.sg-line {
+  min-width: 20px;
+  flex: 1;
+  height: 1px;
+  background: color-mix(in srgb, var(--text-muted) 42%, transparent);
+}
+
+
+/* ── Search / add ─────────────────────────────── */
+.sp-add-section {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid color-mix(in srgb, var(--text-muted) 22%, transparent);
+}
+
+.sp-picker-btn {
+  width: 100%;
+  min-height: 34px;
+  border: 1px dashed color-mix(in srgb, var(--text-muted) 46%, transparent);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--text-on-accent) 2%, transparent);
+  color: var(--text-muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+
+.sp-picker-btn:hover {
+  color: var(--text-1);
+  border-color: color-mix(in srgb, var(--text-2) 58%, transparent);
+  background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
+}
+
+@media (max-width: 760px) {
+  .sp-stat-row {
+    grid-template-columns: 1fr;
+  }
+
+  .sp-slots-row {
+    grid-template-columns: 1fr;
+  }
+
+  .sp-slots-wrap {
+    grid-template-columns: repeat(9, minmax(40px, 1fr));
+    gap: 4px;
+    overflow-x: auto;
+  }
+
+  .spell-row {
+    grid-template-columns: 18px minmax(0, 1fr) auto;
+    gap: 10px;
+    align-items: start;
+  }
+
+  .spell-row-edit {
+    grid-template-columns: 18px 18px minmax(0, 1fr) auto;
+  }
+
+  .sp-metrics {
+    grid-column: 2 / -1;
+    justify-content: flex-start;
+  }
+
+  .sp-del {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .sp-name {
+    font-size: 16px;
+  }
+
+  .sp-summary {
+    white-space: normal;
+  }
+}
+
+.drag-handle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  cursor: grab;
+  padding: 4px 3px;
+  border-radius: 4px;
+  touch-action: none;
+  transition: color 0.12s, background 0.12s;
+  flex-shrink: 0;
+}
+.drag-handle:hover { color: var(--text-1); background: color-mix(in srgb, var(--text-on-accent) 8%, transparent); }
+.drag-handle:active { cursor: grabbing; }
+
+.sp-drag { margin-right: 2px; }
+
+.sortable-placeholder {
+  background: color-mix(in srgb, var(--accent) 8%, transparent) !important;
+  outline: 2px dashed color-mix(in srgb, var(--accent) 50%, transparent);
+  outline-offset: -2px;
+  border-radius: 8px;
+}
+.sortable-placeholder > * { visibility: hidden; }

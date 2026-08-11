@@ -79,5 +79,6 @@ browser prompt/confirm is not used.
 ## Data changes
 
 Runtime accepts only current session/encounter JSON. If the encounter model
-changes, add an idempotent correction to `internal/store/schema.sql`, update all
-producers/consumers, then remove the previous keys and any read-time converter.
+changes, add an idempotent correction to
+`internal/store/schema/04_sessions.sql`, update all producers/consumers, then
+remove the previous keys and any read-time converter.

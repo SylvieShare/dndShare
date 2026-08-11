@@ -2,8 +2,8 @@ import { abilityModifier, proficiencyBonus } from '@/shared/lib/dnd'
 import { chosenOptionLabels, grantedSpellsAt } from '@/features/character-editor/blocks/dnd/lib/levelUp'
 import { computed, nextTick, reactive, ref, watch } from 'vue'
 import { fetchGet } from '@/shared/api/http'
-import { SKILL_BY_STAT, buildCharacterData } from '@/features/character-editor/settings/dnd/creation/buildCharacter'
-import { STAT_KEYS, SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
+import { SKILL_BY_STAT } from '@/features/character-editor/settings/dnd/creation/buildCharacter'
+import { SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
 import { extractGrants } from '@/features/character-editor/settings/dnd/creation/grants'
 import { featuresForBinding } from '@/features/character-editor/settings/dnd/creation/progression'
 import { evaluateFeatEligibility } from '@/features/items/lib/featRules'
@@ -15,6 +15,17 @@ import {
 } from '@/features/character-editor/settings/dnd/creation/startingEquipment'
 import { useSuggestStore } from '@/stores/suggest'
 import { contentScopeQuery, normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'
+import { buildDndCharacterPayload } from './dndCreateWizardPayload'
+import {
+  createDndWizardState,
+  DND_WIZARD_STORAGE_KEY,
+  serializeDndWizardState,
+} from './dndCreateWizardState'
+import {
+  POINT_BUY_BUDGET, pointCost, roll4d6DropLowest, STANDARD_ARRAY, STATS,
+} from './dndCreateWizardStats'
+
+export { POINT_BUY_BUDGET, pointCost, STANDARD_ARRAY } from './dndCreateWizardStats'
 
 const RACE_TYPE = 8
 const CLASS_TYPE = 9
@@ -28,27 +39,8 @@ const LANG_SUGGEST = 6
 // Standard player languages (suggest 6) for the background "extra language" picker —
 // the full type-6 dict is polluted with monster/telepathy entries, so we curate.
 const STANDARD_LANG_IDS = [21, 19, 39, 55, 52, 20, 40, 25, 31, 23, 33, 30, 34, 35, 60]
-const STATS = STAT_KEYS
 const STAT_BY_SUGGEST16 = SUGGEST16_TO_STAT
 const NAME_POOL = ['Талион', 'Мираэль', 'Гром', 'Лиа', 'Кадан', 'Сельена', 'Дорн', 'Аэлита', 'Вэйлин', 'Мирра', 'Торин', 'Ниала', 'Ксандер', 'Элара', 'Роган', 'Сафира']
-
-export const STANDARD_ARRAY = [15, 14, 13, 12, 10, 8]
-export const POINT_BUY_BUDGET = 27
-const POINT_COST = { 8: 0, 9: 1, 10: 2, 11: 3, 12: 4, 13: 5, 14: 7, 15: 9 }
-
-export function pointCost(score) {
-  return POINT_COST[score] ?? 0
-}
-
-function emptyScores() {
-  return Object.fromEntries(STATS.map((s) => [s, null]))
-}
-
-function roll4d6DropLowest() {
-  const dice = Array.from({ length: 4 }, () => 1 + Math.floor(Math.random() * 6))
-  dice.sort((a, b) => a - b)
-  return dice[1] + dice[2] + dice[3]
-}
 
 /** Wizard state + data loading + payload assembly for D&D character creation. */
 export function useDndCreateWizard() {
@@ -67,33 +59,7 @@ export function useDndCreateWizard() {
   const loading = ref(false)
   const sourceVersionId = ref(null)
 
-  const state = reactive({
-    step: 0,
-    version: '2014',
-    contentSources: normalizeContentSourceSettings(null),
-    name: '',
-    race: null,
-    subrace: null,
-    charClass: null,
-    subclass: null,
-    raceVariant: null,
-    statMethod: 'array',
-    scores: emptyScores(),
-    rollPool: [],
-    asiChoice: [],
-    raceSkillIds: [],
-    raceLangIds: [],
-    featIds: [],
-    featSelections: {},
-    skillIds: [],
-    spellIds: [],
-    choices: {},
-    background: null,
-    bgLangIds: [],
-    classEquipmentChoices: {},
-    equipment: [],
-    persona: { alignment: '', traits: '', ideals: '', bonds: '', flaws: '', appearance: '', backstory: '', allies: '', age: '', height: '', weight: '', eyes: '', hair: '', skin: '' },
-  })
+  const state = reactive(createDndWizardState())
   // True while restoring from localStorage — suppresses the reset watchers below.
   let hydrating = false
   let loadedOnce = false
@@ -547,76 +513,38 @@ export function useDndCreateWizard() {
 
   const scoresComplete = computed(() => STATS.every((s) => Number(state.scores[s]) > 0))
 
-  function toSel(item) {
-    return item ? { id: item.id, name: item.name, item } : null
-  }
-
   function buildPayload() {
-    return buildCharacterData({
-      name: state.name.trim(),
-      race: toSel(state.race),
-      subrace: toSel(state.subrace),
-      charClass: toSel(state.charClass),
-      subclass: toSel(state.subclass),
-      raceVariant: state.raceVariant,
-      background: toSel(state.background),
-      scores: Object.fromEntries(STATS.map((s) => [s, Number(state.scores[s] ?? 10)])),
-      asiChoice: state.asiChoice.slice(),
-      raceSkillIds: state.raceSkillIds.slice(),
-      raceLangIds: state.raceLangIds.slice(),
-      featIds: state.featIds.slice(),
-      feats: state.featIds.map((id) => ({
-        item: featPool.value.find((feat) => String(feat.id) === String(id)) || { id, data: {} },
-        choices: state.featSelections?.[id] || {},
-      })),
-      bgLangIds: state.bgLangIds.slice(),
-      equipment: allEquipment.value.map((e) => ({ ...e })),
-      persona: { ...state.persona },
-      skillIds: state.skillIds.slice(),
-      spellIds: state.spellIds.slice(),
-      grantedSpellIds: grantedSpellIds.value.slice(),
-      choices: featureChoices.value.map((fc) => ({
-        abilityId: fc.id,
-        from_suggest_id: fc.choice.from_suggest_id,
-        expertise: isExpertiseChoice(fc),
-        selected: (state.choices[fc.id] || []).slice(),
-      })),
-      raceAbilityItems: raceAbilities.value,
-      classAbilityItems: classAbilities.value,
+    return buildDndCharacterPayload({
+      state,
+      stats: STATS,
+      featPool: featPool.value,
+      equipment: allEquipment.value,
+      grantedSpellIds: grantedSpellIds.value,
+      featureChoices: featureChoices.value,
+      raceAbilities: raceAbilities.value,
+      classAbilities: classAbilities.value,
       suggestValue,
-      contentSources: normalizeContentSourceSettings(state.contentSources),
+      isExpertiseChoice,
     })
   }
 
   // ─── Persistence (localStorage) — survives reload; going back keeps forward picks ─
-  const STORAGE_KEY = 'dnd-create-wizard-v1'
-  function serialize() {
-    const { step, version, contentSources, name, race, subrace, charClass, subclass, raceVariant, statMethod, scores, rollPool, asiChoice, raceSkillIds, raceLangIds, featIds, featSelections, skillIds, spellIds, choices, background, bgLangIds, classEquipmentChoices, equipment, persona } = state
-    return { step, version, contentSources, name, race, subrace, charClass, subclass, raceVariant, statMethod, scores, rollPool, asiChoice, raceSkillIds, raceLangIds, featIds, featSelections, skillIds, spellIds, choices, background, bgLangIds, classEquipmentChoices, equipment, persona }
-  }
   function persist() {
     if (hydrating) return
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(serialize())) } catch { /* quota/private mode */ }
+    try { localStorage.setItem(DND_WIZARD_STORAGE_KEY, JSON.stringify(serializeDndWizardState(state))) } catch { /* quota/private mode */ }
   }
   function clearPersist() {
-    try { localStorage.removeItem(STORAGE_KEY) } catch { /* ignore */ }
+    try { localStorage.removeItem(DND_WIZARD_STORAGE_KEY) } catch { /* ignore */ }
   }
   // Start over: wipe every pick back to defaults and drop the saved draft.
   function reset() {
-    Object.assign(state, {
-      step: 0, version: '2014', contentSources: normalizeContentSourceSettings(null), name: '', race: null, subrace: null,
-      charClass: null, subclass: null, raceVariant: null, statMethod: 'array',
-      scores: emptyScores(), rollPool: [], asiChoice: [],
-      raceSkillIds: [], raceLangIds: [], featIds: [], featSelections: {}, skillIds: [], spellIds: [], choices: {},
-      background: null, bgLangIds: [], classEquipmentChoices: {}, equipment: [],
-      persona: { alignment: '', traits: '', ideals: '', bonds: '', flaws: '', appearance: '', backstory: '', allies: '', age: '', height: '', weight: '', eyes: '', hair: '', skin: '' },
-    })
+    Object.assign(state, createDndWizardState())
     spellPool.value = []
     clearPersist()
   }
   async function restore() {
     let saved = null
-    try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null') } catch { saved = null }
+    try { saved = JSON.parse(localStorage.getItem(DND_WIZARD_STORAGE_KEY) || 'null') } catch { saved = null }
     if (!saved) return
     hydrating = true
     Object.assign(state, saved)

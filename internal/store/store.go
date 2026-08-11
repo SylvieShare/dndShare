@@ -2,7 +2,6 @@ package store
 
 import (
 	"context"
-	_ "embed"
 	"errors"
 	"fmt"
 	"time"
@@ -11,9 +10,6 @@ import (
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
-
-//go:embed schema.sql
-var schemaSQL string
 
 // ErrNotFound — строки нет (аналог возврата null / Optional.empty у репозиториев).
 var ErrNotFound = errors.New("not found")
@@ -46,9 +42,9 @@ func Open(ctx context.Context, dsn string) (*Store, error) {
 		return nil, fmt.Errorf("ping: %w", err)
 	}
 
-	if _, err := pool.Exec(ctx, schemaSQL); err != nil {
+	if err := applySchema(ctx, pool); err != nil {
 		pool.Close()
-		return nil, fmt.Errorf("apply schema: %w", err)
+		return nil, err
 	}
 
 	return &Store{pool: pool}, nil

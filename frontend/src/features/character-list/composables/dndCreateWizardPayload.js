@@ -1,0 +1,54 @@
+import { buildCharacterData } from '@/features/character-editor/settings/dnd/creation/buildCharacter'
+import { normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'
+
+function selectedItem(item) {
+  return item ? { id: item.id, name: item.name, item } : null
+}
+
+export function buildDndCharacterPayload({
+  state,
+  stats,
+  featPool,
+  equipment,
+  grantedSpellIds,
+  featureChoices,
+  raceAbilities,
+  classAbilities,
+  suggestValue,
+  isExpertiseChoice,
+}) {
+  return buildCharacterData({
+    name: state.name.trim(),
+    race: selectedItem(state.race),
+    subrace: selectedItem(state.subrace),
+    charClass: selectedItem(state.charClass),
+    subclass: selectedItem(state.subclass),
+    raceVariant: state.raceVariant,
+    background: selectedItem(state.background),
+    scores: Object.fromEntries(stats.map((stat) => [stat, Number(state.scores[stat] ?? 10)])),
+    asiChoice: state.asiChoice.slice(),
+    raceSkillIds: state.raceSkillIds.slice(),
+    raceLangIds: state.raceLangIds.slice(),
+    featIds: state.featIds.slice(),
+    feats: state.featIds.map((id) => ({
+      item: featPool.find((feat) => String(feat.id) === String(id)) || { id, data: {} },
+      choices: state.featSelections?.[id] || {},
+    })),
+    bgLangIds: state.bgLangIds.slice(),
+    equipment: equipment.map((entry) => ({ ...entry })),
+    persona: { ...state.persona },
+    skillIds: state.skillIds.slice(),
+    spellIds: state.spellIds.slice(),
+    grantedSpellIds: grantedSpellIds.slice(),
+    choices: featureChoices.map((feature) => ({
+      abilityId: feature.id,
+      from_suggest_id: feature.choice.from_suggest_id,
+      expertise: isExpertiseChoice(feature),
+      selected: (state.choices[feature.id] || []).slice(),
+    })),
+    raceAbilityItems: raceAbilities,
+    classAbilityItems: classAbilities,
+    suggestValue,
+    contentSources: normalizeContentSourceSettings(state.contentSources),
+  })
+}

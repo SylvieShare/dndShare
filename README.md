@@ -17,7 +17,8 @@ frontend, PostgreSQL и S3-compatible object storage.
   `md/frontend.md`, CSS-токены — в `md/css-variables.md`, документация фич — в
   `md/features/*`.
 - `md/api.md`, `md/database.md` и `md/deploy.md` описывают контракт API, схему
-  БД и процесс деплоя.
+  БД и процесс деплоя; лимиты размера исходных файлов описаны в
+  `md/file-size-rules.md`.
 - При любом изменении архитектуры, поведения, UX, API, схемы или формата данных
   нужно проверить связанные страницы `md/` и актуализировать их в том же
   коммите. Изменение не считается завершённым, если wiki описывает прежнее
@@ -57,7 +58,7 @@ frontend, PostgreSQL и S3-compatible object storage.
 ```text
 main.go             запуск, graceful shutdown, остановка зависших jobs на старте
 internal/config     env → Config, JDBC URL → pgx DSN, S3 и MCP
-internal/store      pgx pool, идемпотентный schema.sql и запросы фич
+internal/store      pgx pool, атомарная startup-схема из schema/*.sql и запросы фич
 internal/storage    S3-клиент: upload, presign и delete
 internal/web        routes, session/CORS/recover middleware, jobs и MCP
 internal/assets     go:embed собранного frontend (dist)
@@ -68,15 +69,16 @@ deploy              сборка и deploy на VM через systemd/Lockbox
 
 ## Ключевые правила backend
 
-- Схема БД накатывается на старте идемпотентно из
-  `internal/store/schema.sql` (`CREATE ... IF NOT EXISTS`,
-  `ON CONFLICT DO NOTHING`), без Liquibase. Всё находится в схеме `dndshare`.
+- Схема БД накатывается на старте идемпотентно из упорядоченных файлов
+  `internal/store/schema/*.sql` (`CREATE ... IF NOT EXISTS`,
+  `ON CONFLICT DO NOTHING`). `schema.go` встраивает их и выполняет одной
+  транзакцией, без Liquibase. Всё находится в схеме `dndshare`.
 - На существующей БД startup-схема также приводит данные к единственному
   актуальному формату и удаляет старые колонки и JSON-ключи.
 - Runtime читает только текущую схему. Ломающее изменение сопровождается
-  startup data migration в `schema.sql`; старые поля, aliases, fallback-ветки
-  и временные admin jobs после этого удаляются. Обратная совместимость со
-  старыми форматами не поддерживается.
+  startup data migration в соответствующем `schema/*.sql`; старые поля,
+  aliases, fallback-ветки и временные admin jobs после этого удаляются.
+  Обратная совместимость со старыми форматами не поддерживается.
 - `jsonb` записывается как `json.RawMessage` через `CAST($n AS jsonb)`; `uuid`
   читается как `col::text` и записывается как `$n::uuid`.
 - Отсутствующая строка возвращается как `store.ErrNotFound`.
@@ -92,10 +94,10 @@ deploy              сборка и deploy на VM через systemd/Lockbox
   нормализуются через `nonNil`.
 - Админ-джобы регистрируются в `internal/web/jobs.go` через `registerJob`,
   выполняются в goroutine с прогрессом и кооперативной отменой; реализации
-  хендлеров находятся в `jobs_handlers.go`.
+  хендлеров разделены по `internal/web/jobs_handlers.go` и `job_*.go`.
 - MCP `/mcp` использует JSON-RPC, bearer-токен `MCP_AUTH_TOKEN` и флаг записи
-  `MCP_WRITE_ENABLED`; инструменты справочника находятся в
-  `internal/web/mcp.go`.
+  `MCP_WRITE_ENABLED`; dispatch, schemas, аргументы и mutations разделены по
+  `internal/web/mcp*.go`.
 
 ### Добавление HTTP routes
 

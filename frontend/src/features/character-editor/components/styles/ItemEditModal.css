@@ -1,0 +1,415 @@
+.iem-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-1);
+  padding-right: 24px;
+}
+
+.iem-fields-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 16px;
+  align-items: start;
+}
+.iem-source-field { margin-bottom: 14px; }
+.iem-source-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.iem-source { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--border-strong); border-radius: 999px; background: var(--surface-raised); color: var(--text-2); padding: 6px 9px; font: inherit; font-size: 11px; cursor: pointer; }
+.iem-source.selected { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 13%, var(--surface)); color: var(--text-1); }
+.iem-source-mark { width: 13px; height: 13px; display: grid; place-items: center; border: 1px solid currentColor; border-radius: 4px; font-size: 9px; }
+.iem-source small { color: var(--text-muted); font-size: 9px; }
+
+@media (max-width: 720px) {
+  .iem-fields-grid { grid-template-columns: 1fr; }
+}
+
+.iem-field--full {
+  grid-column: 1 / -1;
+}
+
+.iem-field--card {
+  padding: 0;
+  border: 1px solid var(--border, color-mix(in srgb, var(--text-muted) 25%, transparent));
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--text-on-accent) 2%, transparent);
+  gap: 0;
+  overflow: hidden;
+}
+
+.iem-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 14px;
+  background: none;
+  border: none;
+  font-family: inherit;
+  color: var(--text-1);
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.12s;
+}
+.iem-card-head:hover { background: color-mix(in srgb, var(--text-on-accent) 4%, transparent); }
+
+.iem-card-head-name {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-1);
+}
+
+.iem-card-chevron {
+  color: var(--text-muted);
+  flex-shrink: 0;
+  transition: transform 0.18s;
+}
+.iem-card-head--open .iem-card-chevron {
+  transform: rotate(180deg);
+  color: var(--accent, var(--accent-soft));
+}
+
+.iem-card-body {
+  padding: 12px 14px 14px;
+  border-top: 1px solid var(--border, color-mix(in srgb, var(--text-muted) 20%, transparent));
+}
+
+.iem-object--horizontal {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 10px;
+}
+.iem-object--horizontal .iem-sub-field {
+  flex: none;
+  min-width: 0;
+}
+
+/* Blocks editor */
+.iem-blocks {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.iem-block-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--border, color-mix(in srgb, var(--text-muted) 25%, transparent));
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--text-on-accent) 2.5%, transparent);
+}
+.iem-block-name {
+  font-weight: 600;
+}
+.iem-block-actions {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+}
+.iem-block-move,
+.iem-block-remove {
+  background: color-mix(in srgb, var(--text-on-accent) 5%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-on-accent) 10%, transparent);
+  border-radius: 6px;
+  color: var(--text-2);
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  padding: 3px 10px;
+}
+.iem-block-move:disabled { opacity: 0.3; cursor: not-allowed; }
+.iem-block-remove { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 30%, transparent); }
+.iem-block-remove:hover { background: color-mix(in srgb, var(--danger) 15%, transparent); }
+.iem-block-move:not(:disabled):hover { background: color-mix(in srgb, var(--text-on-accent) 10%, transparent); color: var(--text-1); }
+
+.iem-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.iem-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.iem-input {
+  width: 100%;
+  box-sizing: border-box;
+  height: 38px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  color: var(--text-1);
+  font: inherit;
+  font-size: 14px;
+  padding: 0 11px;
+  outline: none;
+}
+.iem-input:focus { border-color: var(--accent); }
+.iem-input-sm { height: 32px; font-size: 13px; }
+
+.iem-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 72px;
+  resize: vertical;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  color: var(--text-1);
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.45;
+  padding: 8px 10px;
+  outline: none;
+}
+.iem-textarea:focus { border-color: var(--accent); }
+
+.iem-select {
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  color: var(--text-1);
+  font: inherit;
+  font-size: 13px;
+  padding: 6px 10px;
+  outline: none;
+  cursor: pointer;
+}
+.iem-select:focus { border-color: var(--accent); }
+.iem-select-sm { align-self: flex-start; }
+
+.iem-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  border: none;
+  background: transparent;
+  padding: 0;
+  font-size: 13px;
+  color: var(--text-2);
+  font-family: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.iem-toggle-track {
+  position: relative;
+  width: 36px;
+  height: 20px;
+  border-radius: 999px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
+  transition: background 0.14s, border-color 0.14s;
+  flex-shrink: 0;
+}
+
+.iem-toggle-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  transition: transform 0.14s, background 0.14s;
+}
+
+.iem-toggle-on {
+  color: var(--text-1);
+}
+
+.iem-toggle-on .iem-toggle-track {
+  background: color-mix(in srgb, var(--accent) 25%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 65%, transparent);
+}
+
+.iem-toggle-on .iem-toggle-thumb {
+  background: var(--accent-soft);
+  transform: translateX(16px);
+}
+
+.iem-int-by-suggest {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.iem-int-by-suggest-input { width: 120px; }
+
+.iem-item-ref {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.iem-item-ref-btn {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  height: 38px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  color: var(--text-1);
+  font: inherit;
+  font-size: 13px;
+  padding: 0 11px;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: border-color 0.12s;
+}
+.iem-item-ref-btn:hover { border-color: var(--accent); }
+
+.iem-item-ref-clear {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border: 1px solid color-mix(in srgb, var(--text-muted) 35%, transparent);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 16px;
+  cursor: pointer;
+  transition: color 0.12s, border-color 0.12s;
+}
+.iem-item-ref-clear:hover { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 45%, transparent); }
+
+.iem-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.iem-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 28px;
+  padding: 0 10px;
+  border: 1px solid color-mix(in srgb, var(--accent-soft) 30%, transparent);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--accent-soft) 8%, transparent);
+  color: var(--accent-soft);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  transition: border-color 0.12s, background 0.12s;
+}
+.iem-chip:hover { border-color: color-mix(in srgb, var(--danger) 50%, transparent); background: color-mix(in srgb, var(--danger) 8%, transparent); color: var(--danger); }
+
+.iem-object,
+.iem-object-array {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.iem-object {
+  padding: 12px;
+  border: 1px solid color-mix(in srgb, var(--text-muted) 38%, transparent);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--text-on-accent) 3.5%, transparent);
+}
+
+.iem-sub-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.iem-sub-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.iem-object-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid color-mix(in srgb, var(--text-muted) 18%, transparent);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--text-on-accent) 2.5%, transparent);
+}
+
+.iem-object-row-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 8px;
+}
+
+.iem-object-array-nested {
+  gap: 6px;
+}
+
+.iem-object-array-nested .iem-object-row {
+  padding: 8px;
+}
+
+.iem-row-add,
+.iem-row-remove {
+  align-self: flex-start;
+  border: 1px dashed color-mix(in srgb, var(--text-muted) 35%, transparent);
+  border-radius: 7px;
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 12px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+.iem-row-add:hover { color: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 55%, transparent); }
+.iem-row-remove:hover { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 45%, transparent); }
+
+.iem-description .desc-editor {
+  min-height: 130px;
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.iem-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 4px;
+}
+
+.iem-cancel {
+  background: color-mix(in srgb, var(--text-on-accent) 6%, transparent);
+  color: var(--text-muted);
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  transition: color 0.12s;
+}
+.iem-cancel:hover { color: var(--text-2); }
+
+.iem-submit {
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+  border-radius: 8px;
+  color: var(--accent-soft);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 20px;
+  cursor: pointer;
+  transition: background 0.12s, opacity 0.12s;
+}
+.iem-submit:hover:not(:disabled) { background: color-mix(in srgb, var(--accent) 28%, transparent); }
+.iem-submit:disabled { opacity: 0.35; cursor: not-allowed; }

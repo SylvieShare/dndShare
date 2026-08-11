@@ -246,32 +246,21 @@ import MultiToggle from '@/shared/ui/MultiToggle.vue'
 import { abilityModifier, proficiencyBonus, resolveNumValue } from '@/shared/lib/dnd'
 import { STAT_KEYS, STAT_SHORT } from '@/shared/lib/dndStats'
 import {
-  avgHitDie, castingAbilityIdOf, chosenOptionLabels, classEntriesOf, computeSlots,
+  avgHitDie, chosenOptionLabels, classEntriesOf, computeSlots,
   dieFaceOf, grantedSpellsAt, multiclassCheck,
-  MULTICLASS_PROFS, MULTICLASS_REQS, parseAsiLevels, totalLevel,
+  MULTICLASS_PROFS, parseAsiLevels, totalLevel,
 } from '@/features/character-editor/blocks/dnd/lib/levelUp'
-import { defaultSlots } from '@/features/character-editor/blocks/dnd/lib/spellEntry'
-import {
-  abilityScoresFromValues,
-  evaluateFeatEligibility,
-  featAbilityBonuses,
-  featChoices,
-  featEntry,
-  featGrantedSpellIds,
-  featGrants,
-} from '@/features/items/lib/featRules'
-import { SKILL_BY_STAT } from '@/features/character-editor/settings/dnd/creation/buildCharacter'
 import { featuresForBinding } from '@/features/character-editor/settings/dnd/creation/progression'
 import { fetchGet } from '@/shared/api/http'
 import { itemsApi } from '@/shared/api/itemsApi'
 import { contentScopeQuery } from '@/shared/api/contentSourcesApi'
 import { useDiceStore } from '@/stores/dice'
 import { useSuggestStore } from '@/stores/suggest'
-import {
-  addHitDie,
-  hitDiceFromClasses,
-  withHitDice,
-} from '@/features/character-editor/blocks/dnd/lib/hitDice'
+import { useLevelUpFeatureChoices } from './useLevelUpFeatureChoices'
+import { buildLevelUpUpdates } from './buildLevelUpUpdates'
+import { useLevelUpFeatSelection } from './useLevelUpFeatSelection'
+import { useLevelUpTarget } from './useLevelUpTarget'
+import { featSnippet, hitDieLabel as resolveHitDieLabel, monogram, multiclassPrerequisiteLabel } from './levelUpPresentation'
 
 const CLASS_TYPE = 9
 const CLASS_ABIL_TYPE = 4
@@ -293,7 +282,6 @@ const entries = ref(classEntriesOf(props.values))
 const itemsById = ref({})
 const abilityPool = ref([])
 const baseClasses = ref([])
-const target = ref(null) // { kind: 'class'|'new'|'plain', index?, item? }
 const subclassOptions = ref([])
 const subclassPick = ref(null)
 const hpMode = ref('avg')
@@ -302,34 +290,26 @@ const hpManual = ref(null)
 const asiMode = ref('+2')
 const asiStats = ref([])
 const asiSkipped = ref(false)
-const featPick = ref(null)
-const featPickerOpen = ref(false)
-const featConfigItem = ref(null)
 const applySlots = ref(true)
 const viewFeature = ref(null)
+
+const {
+  target,
+  isPlain,
+  isNew,
+  targetEntry,
+  classItem,
+  newClassLevel,
+  effectiveSubclass,
+  needSubclass,
+  newClassOptions,
+} = useLevelUpTarget({ entries, itemsById, baseClasses, subclassOptions, subclassPick })
 
 const total = computed(() => Math.max(totalLevel(entries.value), parseInt(props.values?.lvl?.level) || 1))
 // Первый класс на пустом листе — это не рост уровня, а становление 1-м уровнем.
 const newTotal = computed(() => (isNew.value && !entries.value.length
   ? Math.max(1, total.value)
   : Math.min(20, total.value + 1)))
-
-const isPlain = computed(() => target.value?.kind === 'plain')
-const isNew = computed(() => target.value?.kind === 'new')
-const targetEntry = computed(() => (target.value?.kind === 'class' ? entries.value[target.value.index] : null))
-const classItem = computed(() => {
-  if (target.value?.kind === 'new') return target.value.item
-  if (targetEntry.value) return itemsById.value[targetEntry.value.id] || null
-  return null
-})
-const newClassLevel = computed(() => (isNew.value ? 1 : (targetEntry.value?.level || 0) + 1))
-const effectiveSubclass = computed(() => subclassPick.value || targetEntry.value?.subclass || null)
-
-const needSubclass = computed(() => {
-  const d = classItem.value?.data || {}
-  const at = Number(d.subclass_level) || 99
-  return !isPlain.value && at <= newClassLevel.value && !targetEntry.value?.subclass && subclassOptions.value.length > 0
-})
 
 // ─── фичи нового уровня ─────────────────────────────────────────────────────
 function isSubclassBound(item) {
@@ -350,52 +330,17 @@ const features = computed(() => {
   return exact
 })
 
-function featSnippet(f) {
-  const raw = f.data?.desc || ''
-  const text = String(raw).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
-  return text.length > 180 ? text.slice(0, 177).trim() + '…' : text
-}
-
-// ─── выборы у получаемых фич (местность круга, стиль боя, тотем…) ──────────
-const featureChoiceSel = ref({}) // abilityId → [выбранные значения]
-function featChoice(f) {
-  const c = f?.data?.choice
-  if (!c) return null
-  return (c.from_suggest_id || (Array.isArray(c.options) && c.options.length)) ? c : null
-}
-const choosableFeatures = computed(() => features.value.filter((f) => featChoice(f)))
-watch(choosableFeatures, (list) => {
-  list.forEach((f) => {
-    const c = featChoice(f)
-    if (c?.from_suggest_id) suggestStore.ensure(Number(c.from_suggest_id))
-  })
-}, { immediate: true })
-function choiceCount(f) { return Number(featChoice(f)?.count) || 1 }
-function choiceOptions(f) {
-  const c = featChoice(f)
-  if (!c) return []
-  if (c.from_suggest_id) {
-    return suggestStore.items(Number(c.from_suggest_id)).map((it) => ({ value: it.id, label: it.value }))
-  }
-  return (c.options || []).map((o) => ({ value: o.label, label: o.label, desc: o.desc }))
-}
-function choiceSel(abilityId) { return featureChoiceSel.value[abilityId] || [] }
-function choiceLocked(f, opt) {
-  const sel = choiceSel(f.id)
-  if (sel.some((v) => String(v) === String(opt.value))) return false
-  return sel.length >= choiceCount(f)
-}
-function toggleFeatureChoice(f, value) {
-  const cur = choiceSel(f.id)
-  const has = cur.some((v) => String(v) === String(value))
-  let next
-  if (choiceCount(f) === 1) next = has ? [] : [value]
-  else if (has) next = cur.filter((v) => String(v) !== String(value))
-  else next = cur.length < choiceCount(f) ? [...cur, value] : cur
-  featureChoiceSel.value = { ...featureChoiceSel.value, [f.id]: next }
-}
-function choiceCompleteFor(f) { return choiceSel(f.id).length === choiceCount(f) }
-const featureChoicesComplete = computed(() => choosableFeatures.value.every(choiceCompleteFor))
+const {
+  featureChoice: featChoice,
+  selections: featureChoiceSel,
+  choiceCount,
+  choiceOptions,
+  selected: choiceSel,
+  choiceLocked,
+  toggleChoice: toggleFeatureChoice,
+  choiceComplete: choiceCompleteFor,
+  complete: featureChoicesComplete,
+} = useLevelUpFeatureChoices(features, suggestStore)
 
 // ─── даруемые заклинания (домен/клятва/круг) ────────────────────────────────
 const effectiveSubclassItem = computed(() => (subclassPick.value
@@ -426,12 +371,7 @@ watch(grantedNewIds, async (ids) => {
 const grantedSpellList = computed(() => grantedNewIds.value.map((id) => ({ id, name: spellNames.value[id] || `#${id}` })))
 
 // ─── хиты ───────────────────────────────────────────────────────────────────
-function hitDieLabelOf(item) {
-  const id = item?.data?.hit_die
-  const label = suggestStore.items(11).find((s) => String(s.id) === String(id))?.value
-  const face = dieFaceOf(label)
-  return face ? `d${face}` : ''
-}
+const hitDieLabelOf = (item) => resolveHitDieLabel(item, suggestStore.items(11))
 const hitDieLabel = computed(() => hitDieLabelOf(classItem.value))
 const hitDieFace = computed(() => dieFaceOf(hitDieLabel.value) || 8)
 function statScore(s) {
@@ -488,61 +428,21 @@ const asiComplete = computed(() => {
   if (asiMode.value === 'feat') return !!featPick.value
   return asiStats.value.length === asiLimit.value
 })
-const featRuleContext = computed(() => {
-  const armorLabels = [
-    ...(Array.isArray(props.values?.proficiencies?.['Доспехи']) ? props.values.proficiencies['Доспехи'] : []),
-    ...(Array.isArray(props.values?.proficiencies_armor) ? props.values.proficiencies_armor : []),
-  ]
-  const armorProfIds = (suggestStore.items(3) || [])
-    .filter((entry) => armorLabels.some((label) => String(label).toLowerCase() === String(entry.value).toLowerCase()))
-    .map((entry) => entry.id)
-  for (const entry of entries.value) {
-    for (const id of (itemsById.value[entry.id]?.data?.armor_prof || [])) {
-      if (!armorProfIds.includes(id)) armorProfIds.push(id)
-    }
-  }
-  return {
-    stats: abilityScoresFromValues(props.values),
-    level: newTotal.value,
-    spellcasting: !!props.values?.spells || entries.value.some((entry) => !!itemsById.value[entry.id]?.data?.spellcasting),
-    armorProfIds,
-  }
+const {
+  featPick,
+  featPickerOpen,
+  featConfigItem,
+  featExcludedChoices,
+  featEligibility,
+  onFeatPick,
+  onFeatChoicesConfirm,
+} = useLevelUpFeatSelection({
+  values: () => props.values,
+  entries,
+  itemsById,
+  newTotal,
+  suggestStore,
 })
-
-const featExcludedChoices = computed(() => {
-  const item = featConfigItem.value
-  if (!item?.data?.repeatable) return {}
-  const uniqueKeys = new Set([
-    item.data.unique_choice_key,
-    ...featChoices(item).filter((choice) => choice.unique_across_takes).map((choice) => choice.key),
-  ].filter(Boolean))
-  const result = {}
-  for (const entry of (props.values?.abilities_feats || []).filter((feat) => feat.id === item.id)) {
-    for (const key of uniqueKeys) result[key] = [...(result[key] || []), ...(entry.choices?.[key] || [])]
-  }
-  return result
-})
-
-function featEligibility(item) {
-  const result = evaluateFeatEligibility(item, featRuleContext.value)
-  const alreadyTaken = (props.values?.abilities_feats || []).some((entry) => entry.id === item.id)
-  if (alreadyTaken && !item.data?.repeatable) {
-    return { ...result, eligible: false, reasons: [...result.reasons, 'Черта уже выбрана'] }
-  }
-  return result
-}
-
-function onFeatPick(item) {
-  if (item?.id == null) return
-  featPickerOpen.value = false
-  if (featChoices(item).length) featConfigItem.value = item
-  else featPick.value = { ...item, selectedChoices: {} }
-}
-
-function onFeatChoicesConfirm(choices) {
-  featPick.value = { ...featConfigItem.value, selectedChoices: choices }
-  featConfigItem.value = null
-}
 
 // ─── бонус мастерства / ячейки ──────────────────────────────────────────────
 const profBefore = computed(() => proficiencyBonus(total.value))
@@ -584,18 +484,9 @@ const slotDiff = computed(() => {
 })
 
 // ─── выбор цели ─────────────────────────────────────────────────────────────
-function monogram(name) { return String(name || '?').trim().charAt(0).toUpperCase() }
-const newClassOptions = computed(() => {
-  const taken = new Set(entries.value.map((e) => Number(e.id)))
-  return baseClasses.value.filter((c) => !taken.has(Number(c.id)))
-})
 const scores = computed(() => Object.fromEntries(STATS.map((s) => [s, statScore(s)])))
 function prereq(c) { return multiclassCheck(c, scores.value) }
-function prereqLabel(c) {
-  const key = String(c?.nameEn || '').trim().toLowerCase()
-  const groups = MULTICLASS_REQS[key] || []
-  return groups.map((alts) => alts.map((s) => `${STAT_SHORT[s]} 13`).join(' или ')).join(' и ')
-}
+const prereqLabel = multiclassPrerequisiteLabel
 const newPrereq = computed(() => (classItem.value ? prereq(classItem.value) : { ok: true }))
 const newProfs = computed(() => MULTICLASS_PROFS[String(classItem.value?.nameEn || '').trim().toLowerCase()] || '')
 
@@ -658,150 +549,31 @@ const canAccept = computed(() => {
 // ─── применение ─────────────────────────────────────────────────────────────
 function accept() {
   if (!canAccept.value) return
-  const v = props.values || {}
-  const updates = {}
-  let featSpellIds = []
-
-  updates.lvl = { exp: 0, ...(v.lvl || {}), level: newTotal.value }
-
-  if (!isPlain.value) {
-    const next = entriesAfter.value
-    updates.classes = next
-    updates.class = { id: next[0].id, name: next[0].name }
-    updates.subclass = next[0].subclass ? { ...next[0].subclass } : null
-
-    // умения → блок классовых способностей
-    const cur = Array.isArray(v.abilities_class) ? v.abilities_class : []
-    const have = new Set(cur.map((s) => s.id))
-    const add = features.value.filter((f) => !have.has(f.id)).map((f) => {
-      const maxUse = f.data?.max_use ?? null
-      const entry = { id: f.id, count: maxUse ?? 0 }
-      if (f.data?.manual_size) entry.max_use = maxUse ?? 0
-      return entry
-    })
-    if (add.length) updates.abilities_class = [...cur, ...add]
-
-    // хиты + кость хитов
-    const hp = { ...(v.hp || {}) }
-    hp.max = (Number(hp.max) || 0) + hpGain.value
-    hp.current = Math.min(hp.max, (Number(hp.current) || 0) + hpGain.value)
-    const classDice = next.map((entry) => hitDieLabelOf(itemsById.value[entry.id]))
-    updates.hp = classDice.every(Boolean)
-      ? withHitDice(hp, hitDiceFromClasses(hp, next, (entry) => hitDieLabelOf(itemsById.value[entry.id])))
-      : addHitDie(hp, hitDieLabel.value || 'd8')
-
-    // ASI
-    if (asiNow.value && !asiSkipped.value) {
-      if (asiMode.value === 'feat' && featPick.value) {
-        const feats = Array.isArray(v.abilities_feats) ? v.abilities_feats : []
-        if (featPick.value.data?.repeatable || !feats.some((f) => f.id === featPick.value.id)) {
-          updates.abilities_feats = [...feats, featEntry(featPick.value, featPick.value.selectedChoices || {})]
-        }
-
-        const currentStatBlock = (stat) => ({ ...(updates[stat] || v[stat] || {}) })
-        const writeStatBonus = (stat, title, bonus) => {
-          const block = currentStatBlock(stat)
-          const oldValue = block.value
-          const base = oldValue && typeof oldValue === 'object'
-            ? (Number(oldValue.base) || 0)
-            : (oldValue == null ? 10 : Number(oldValue) || 0)
-          const bonuses = oldValue && typeof oldValue === 'object' && Array.isArray(oldValue.bonuses) ? oldValue.bonuses : []
-          const applied = Math.max(0, Math.min(Number(bonus) || 0, 20 - resolveNumValue(oldValue)))
-          if (applied) updates[stat] = { ...block, value: { base, bonuses: [...bonuses, { title, value: applied }] } }
-        }
-        for (const bonus of featAbilityBonuses(featPick.value, featPick.value.selectedChoices || {})) {
-          writeStatBonus(bonus.stat, featPick.value.name, bonus.bonus)
-        }
-
-        const selectedChoices = featPick.value.selectedChoices || {}
-        const grant = featGrants(featPick.value, selectedChoices)
-        featSpellIds = featGrantedSpellIds(featPick.value, selectedChoices)
-        const profs = { ...(v.proficiencies || {}) }
-        const addProf = (bucket, typeId, ids) => {
-          if (!ids?.length) return
-          const values = [...(profs[bucket] || [])]
-          for (const id of ids) {
-            const label = suggestStore.items(typeId).find((entry) => String(entry.id) === String(id))?.value
-            if (label && !values.includes(label)) values.push(label)
-          }
-          profs[bucket] = values
-        }
-        addProf('Доспехи', 3, grant.armor_prof)
-        addProf('Оружие', 4, grant.weapon_prof)
-        addProf('Инструменты', 5, grant.tool_prof)
-        addProf('Языки', 6, grant.languages)
-        if (Object.keys(profs).length) updates.proficiencies = profs
-
-        for (const skillId of (grant.skill_prof || [])) {
-          const stat = SKILL_BY_STAT[String(skillId)]
-          if (!stat) continue
-          const block = currentStatBlock(stat)
-          const saved = block.skills?.[String(skillId)] || {}
-          updates[stat] = {
-            ...block,
-            skills: { ...(block.skills || {}), [String(skillId)]: { ...saved, up: Math.max(Number(saved.up) || 0, 1), override_title: saved.override_title || '', bonuses: saved.bonuses || [] } },
-          }
-        }
-        for (const abilityId of (grant.save_prof || [])) {
-          const stat = STAT_KEYS[Number(abilityId) - 1]
-          if (stat) updates[stat] = { ...currentStatBlock(stat), save_up: true }
-        }
-      } else {
-        for (const s of asiStats.value) {
-          const old = v[s]
-          const oldVal = old?.value && typeof old.value === 'object' ? old.value : { base: 10, bonuses: [] }
-          const base = Number(oldVal.base) || 0
-          const bonuses = Array.isArray(oldVal.bonuses) ? oldVal.bonuses : []
-          updates[s] = {
-            ...(old && typeof old === 'object' ? old : {}),
-            value: { base, bonuses: [...bonuses, { title: `Повышение (ур. ${newTotal.value})`, value: asiDelta.value }] },
-          }
-        }
-      }
-    }
-
-    // выборы получаемых фич (местность круга, стиль боя…) → values.feature_choices
-    const madeChoices = Object.entries(featureChoiceSel.value).filter(([, sel]) => sel.length)
-    if (madeChoices.length) {
-      updates.feature_choices = {
-        ...(v.feature_choices && typeof v.feature_choices === 'object' ? v.feature_choices : {}),
-        ...Object.fromEntries(madeChoices.map(([id, sel]) => [id, sel.slice()])),
-      }
-    }
-
-    // ячейки заклинаний + даруемые заклинания архетипа
-    const applySlotChange = applySlots.value && slotDiff.value.length && slotsAfter.value?.isCaster
-    if (applySlotChange || grantedNewIds.value.length || featSpellIds.length) {
-      const spells = v.spells && typeof v.spells === 'object'
-        ? { ...v.spells }
-        : { stat_path: castingAbilityIdOf(classItem.value) ?? '', spells: [], slots: defaultSlots() }
-      if (applySlotChange) {
-        const slots = Array.isArray(spells.slots) && spells.slots.length
-          ? spells.slots.map((s) => ({ ...s }))
-          : defaultSlots()
-        slotsAfter.value.totals.forEach((n, i) => {
-          slots[i] = { level: i + 1, used: 0, ...(slots[i] || {}), total: n }
-        })
-        spells.slots = slots
-        if (slotsAfter.value.pactMerged) spells.slots_rest = 'short_rest'
-      }
-      if (grantedNewIds.value.length) {
-        spells.spells = [...(spells.spells || []), ...grantedNewIds.value.map((id) => ({ id, prepared: true }))]
-      }
-      if (featSpellIds.length) {
-        const existing = new Set((spells.spells || []).map((entry) => String(entry.id)))
-        const added = featSpellIds
-          .filter((id) => !existing.has(String(id)))
-          .map((id) => ({ id, prepared: true, source: 'feat' }))
-        spells.spells = [...(spells.spells || []), ...added]
-      }
-      updates.spells = spells
-    }
-  }
-
-  emit('apply', updates)
+  emit('apply', buildLevelUpUpdates({
+    values: props.values || {},
+    newTotal: newTotal.value,
+    isPlain: isPlain.value,
+    entriesAfter: entriesAfter.value,
+    features: features.value,
+    itemsById: itemsById.value,
+    hitDieLabelOf,
+    hitDieLabel: hitDieLabel.value,
+    hpGain: hpGain.value,
+    asiNow: asiNow.value,
+    asiSkipped: asiSkipped.value,
+    asiMode: asiMode.value,
+    featPick: featPick.value,
+    suggestItems: (typeId) => suggestStore.items(typeId),
+    asiStats: asiStats.value,
+    asiDelta: asiDelta.value,
+    featureChoiceSelections: featureChoiceSel.value,
+    applySlots: applySlots.value,
+    slotDiff: slotDiff.value,
+    slotsAfter: slotsAfter.value,
+    grantedNewIds: grantedNewIds.value,
+    classItem: classItem.value,
+  }))
 }
-
 // ─── загрузка ───────────────────────────────────────────────────────────────
 onMounted(async () => {
   try {
@@ -824,134 +596,4 @@ onMounted(async () => {
 })
 </script>
 
-<style scoped>
-.lu-head { display: flex; align-items: baseline; gap: 12px; padding-right: 26px; }
-.lu-title { font-size: 17px; font-weight: 700; color: var(--text-1); }
-.lu-total { font-size: 14px; font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; }
-.lu-arrow { color: var(--text-muted); font-weight: 400; }
-.lu-muted { font-size: 12px; color: var(--text-muted); margin: 0; }
-.lu-warn { color: var(--warning); }
-
-.lu-sub { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--text-2); margin-top: 10px; }
-.lu-back {
-  display: grid; place-items: center; width: 24px; height: 24px;
-  border: none; border-radius: 7px; background: var(--surface);
-  color: var(--text-2); font-size: 14px; cursor: pointer;
-}
-.lu-back:hover { color: var(--text-1); background: color-mix(in srgb, var(--accent) 14%, var(--surface)); }
-
-.lu-opts { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
-.lu-opts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
-.lu-opt {
-  display: flex; align-items: center; gap: 12px; text-align: left;
-  background: var(--surface); border: none; border-radius: var(--r-md);
-  padding: 11px 13px; cursor: pointer; font: inherit; transition: background 0.15s;
-}
-.lu-opt:hover:not(:disabled) { background: color-mix(in srgb, var(--accent) 13%, var(--surface)); }
-.lu-opt:disabled { opacity: 0.4; cursor: default; }
-.lu-opt.on { background: color-mix(in srgb, var(--accent) 20%, var(--surface)); box-shadow: inset 0 0 0 1px var(--accent); }
-.lu-opt-slim { padding: 9px 13px; }
-.lu-opt-mono {
-  flex-shrink: 0; width: 36px; height: 36px; border-radius: 10px;
-  display: grid; place-items: center;
-  font-family: var(--font-display); font-size: 19px; font-weight: 600; color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 15%, transparent);
-}
-.lu-opt-plus { font-family: inherit; font-weight: 700; }
-.lu-opt-ghost { background: transparent; box-shadow: inset 0 0 0 1px var(--border-strong); }
-.lu-opt-ghost:hover { box-shadow: inset 0 0 0 1px var(--accent); }
-.lu-opt-plain {
-  align-self: flex-start;
-  gap: 9px;
-  padding: 7px 9px;
-  background: transparent;
-  color: var(--text-muted);
-}
-.lu-opt-plain:hover:not(:disabled) { background: color-mix(in srgb, var(--text-on-accent) 5%, transparent); }
-.lu-opt-plain .lu-opt-mono {
-  width: 26px;
-  height: 26px;
-  border-radius: 7px;
-  background: color-mix(in srgb, var(--text-on-accent) 5%, transparent);
-  color: var(--text-muted);
-  font-size: 15px;
-}
-.lu-opt-plain .lu-opt-name { color: var(--text-2); font-size: 13px; }
-.lu-opt-body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.lu-opt-name { font-size: 14px; font-weight: 600; color: var(--text-1); }
-.lu-opt-sub { font-weight: 400; color: var(--text-2); }
-.lu-opt-lvl { font-size: 11px; color: var(--text-muted); }
-
-.lu-note {
-  font-size: 12px; color: var(--text-2); line-height: 1.5;
-  background: var(--surface); border-radius: var(--r-md);
-  border-left: 3px solid color-mix(in srgb, var(--accent) 55%, transparent);
-  padding: 9px 12px; margin-top: 10px;
-}
-.lu-note-warn { border-left-color: var(--warning); }
-.lu-note b { color: var(--text-1); }
-
-.lu-sec { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
-.lu-sec-title { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--accent); }
-.lu-req { font-size: 11px; font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--warning); }
-.lu-req.done { color: var(--success); }
-
-.lu-feat { background: var(--surface); border-radius: var(--r-md); padding: 9px 12px; }
-.lu-feat-head { display: flex; align-items: center; gap: 8px; }
-.lu-feat-name { flex: 1; font-size: 13px; font-weight: 600; color: var(--text-1); }
-.lu-feat-view {
-  display: grid; place-items: center; width: 24px; height: 24px;
-  border: none; border-radius: 6px; background: none; color: var(--text-muted); cursor: pointer;
-}
-.lu-feat-view:hover { color: var(--accent); background: color-mix(in srgb, var(--accent) 15%, transparent); }
-.lu-feat-view svg { width: 15px; height: 15px; }
-.lu-feat-desc { font-size: 12px; color: var(--text-muted); line-height: 1.45; margin-top: 3px; }
-.lu-feat-choice-title { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; color: var(--text-2); margin-top: 8px; margin-bottom: 6px; }
-.lu-spell-tag {
-  display: inline-flex; align-items: center;
-  background: color-mix(in srgb, var(--accent) 13%, var(--surface));
-  border-radius: 999px; color: var(--text-1); font-size: 12px; font-weight: 500;
-  padding: 6px 13px;
-}
-
-.lu-hp { display: flex; flex-direction: column; gap: 8px; }
-.lu-hp-val { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-.lu-hp-input { max-width: 90px; }
-.lu-hp-n { font-size: 16px; font-weight: 700; color: var(--text-1); }
-.lu-hp-total { font-size: 13px; font-weight: 600; color: var(--success); }
-.lu-roll {
-  background: color-mix(in srgb, var(--accent) 16%, transparent);
-  border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
-  border-radius: 8px; color: var(--text-1); font: inherit; font-size: 13px; font-weight: 600;
-  padding: 7px 14px; cursor: pointer;
-}
-.lu-roll:hover { background: color-mix(in srgb, var(--accent) 28%, transparent); }
-.lu-reroll { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 14px; }
-.lu-reroll:hover { color: var(--accent); }
-
-.lu-chips { display: flex; flex-wrap: wrap; gap: 7px; }
-.lu-chip {
-  background: var(--surface); border: none; border-radius: 999px;
-  color: var(--text-2); font: inherit; font-size: 12px; font-weight: 600;
-  padding: 7px 13px; cursor: pointer; transition: background 0.15s;
-  font-variant-numeric: tabular-nums;
-}
-.lu-chip:hover { background: color-mix(in srgb, var(--accent) 14%, var(--surface)); }
-.lu-chip.on { background: var(--accent); color: var(--text-on-accent); }
-.lu-chip.off { opacity: 0.4; cursor: default; }
-.lu-chip.off:hover { background: var(--surface); }
-.lu-skip { align-self: flex-start; background: none; border: none; color: var(--text-muted); font: inherit; font-size: 12px; cursor: pointer; padding: 0; text-decoration: underline dotted; }
-.lu-skip:hover { color: var(--text-2); }
-
-.lu-list { margin: 0; padding-left: 18px; font-size: 13px; color: var(--text-2); display: flex; flex-direction: column; gap: 5px; }
-.lu-list b { color: var(--text-1); font-variant-numeric: tabular-nums; }
-.lu-slots-check { display: inline-flex; align-items: center; gap: 7px; cursor: pointer; }
-
-.lu-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px; }
-.lu-btn {
-  background: var(--accent); color: var(--text-on-accent); border: none; border-radius: 9px;
-  padding: 9px 22px; font: inherit; font-weight: 600; cursor: pointer;
-}
-.lu-btn:disabled { opacity: 0.5; cursor: default; }
-.lu-btn.ghost { background: transparent; color: var(--text-muted); box-shadow: inset 0 0 0 1px var(--border-strong); }
-</style>
+<style scoped src="./styles/DndLevelUpModal.css"></style>

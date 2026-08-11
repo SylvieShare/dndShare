@@ -62,9 +62,10 @@ The current shape under `data.values` is:
 - race/class/feat abilities: arrays of item references/current counters.
 
 There are no `class/subclass` mirrors, scalar level/stat/hit-dice forms, array
-spellbook, flat inventory or array wallet. `internal/store/schema.sql` migrates
-existing rows before HTTP start and removes the old keys. Components neither
-recognize nor write previous shapes.
+spellbook, flat inventory or array wallet.
+`internal/store/schema/03_characters.sql` migrates existing rows before HTTP
+start and removes the old keys. Components neither recognize nor write previous
+shapes.
 
 ## Semantic accessors
 

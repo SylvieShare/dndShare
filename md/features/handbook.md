@@ -57,9 +57,9 @@ shared modal stack; descriptions use the shared rich renderer.
 ## Schemas
 
 Human-readable item-type schemas live in `resources/items/item_N_shema.json`.
-`internal/store/schema.sql` seeds/extends the corresponding DB fields
-idempotently. When changing a field, update both representations and migrate
-stored `item.data` before deleting the old key.
+`internal/store/schema/02_handbook.sql` seeds/extends the corresponding DB
+fields idempotently. When changing a field, update both representations and
+migrate stored `item.data` before deleting the old key.
 
 Important types include weapons (1), items (2), race/class abilities (3/4),
 spells (5), bestiary (6), feats (7), races/classes (8/9), potions (10) and
