@@ -5,7 +5,7 @@ Shared dice-rolling module available from anywhere in the app.
 ## Files
 
 - `shared/lib/dice.js` — pure parser/roller. `parseDiceExpression(expr)` and `rollDiceExpression(expr)`.
-- `shared/lib/systemDice.js` — the fixed d4/d6/d8/d10/d12/d20/d100 catalogue. A die id is its number of sides; dice are rules-level values and are not loaded from `suggest`.
+- `shared/lib/systemDice.js` — the fixed d4/d6/d8/d10/d12/d20/d100 catalogue. Its persisted ids are the unambiguous strings `"d4"`…`"d100"`; dice are rules-level values and are not loaded from `suggest`.
 - `shared/ui/SystemDie.vue` — shared animated polyhedron. It accepts `sides`, an optional arbitrary displayed `value` (defaults to the maximum face), `size`, `color` and `animated`; bubbles rise inside the clipped die body like spell-slot bubbles.
 - `stores/dice.js` — Pinia store. `useDiceStore().roll(title, expression, opts?)` rolls, pushes onto a stack of up to 5 active popups, and returns the result. `dismiss(id)` or `clear()` close items immediately.
   - `opts.crit_mode: true` — if any rolled die shows its max face (e.g. `20` on `d20`, `8` on `d8`), the popup displays that die value in a golden "КРИТ" frame instead of the regular total. If no die is max but some die is `1`, a red "ПРОВАЛ" frame is shown with that die value. `crit` takes precedence over `fumble` when both happen in the same roll. Modifiers are ignored in this display. The result is exposed on the stack entry as `outcome: { kind: 'crit'|'fumble', sides, value }`.

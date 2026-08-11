@@ -502,6 +502,49 @@ WHERE fields IS DISTINCT FROM dndshare.systemize_dice_schema(fields);
 
 DROP FUNCTION dndshare.systemize_dice_schema(jsonb);
 
+-- The removed suggest catalogue used sequential ids, not face counts:
+-- 1=d4, 2=d6, 3=d8, 4=d10, 5=d12, 6=d20, 7=d100. Persist the canonical
+-- system value as a string so it can never be confused with either numbering.
+CREATE OR REPLACE FUNCTION dndshare.canonicalize_item_dice(document jsonb)
+RETURNS jsonb
+LANGUAGE plpgsql
+IMMUTABLE
+AS $$
+DECLARE
+    result jsonb;
+BEGIN
+    IF document IS NULL THEN RETURN NULL; END IF;
+    CASE jsonb_typeof(document)
+        WHEN 'array' THEN
+            SELECT COALESCE(jsonb_agg(dndshare.canonicalize_item_dice(value) ORDER BY ord), '[]'::jsonb)
+            INTO result
+            FROM jsonb_array_elements(document) WITH ORDINALITY rows(value, ord);
+        WHEN 'object' THEN
+            SELECT COALESCE(jsonb_object_agg(key,
+                CASE
+                    WHEN key IN ('dice_id', 'hit_die') AND value #>> '{}' IN ('1','2','3','4','5','6','7')
+                        THEN to_jsonb(CASE value #>> '{}'
+                            WHEN '1' THEN 'd4' WHEN '2' THEN 'd6' WHEN '3' THEN 'd8'
+                            WHEN '4' THEN 'd10' WHEN '5' THEN 'd12' WHEN '6' THEN 'd20'
+                            WHEN '7' THEN 'd100'
+                        END)
+                    ELSE dndshare.canonicalize_item_dice(value)
+                END
+            ), '{}'::jsonb)
+            INTO result
+            FROM jsonb_each(document);
+        ELSE result := document;
+    END CASE;
+    RETURN result;
+END;
+$$;
+
+UPDATE dndshare.item
+SET data = dndshare.canonicalize_item_dice(data)
+WHERE data IS DISTINCT FROM dndshare.canonicalize_item_dice(data);
+
+DROP FUNCTION dndshare.canonicalize_item_dice(jsonb);
+
 DELETE FROM dndshare.suggest WHERE type_id = 11;
 DELETE FROM dndshare.suggest_type WHERE id = 11;
 

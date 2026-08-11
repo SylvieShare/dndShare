@@ -103,7 +103,7 @@
       v-else-if="field.type === 'dice'"
       class="iem-select"
       :value="editor.formData[field.key] ?? ''"
-      @change="editor.formData[field.key] = editor.numberOrNull($event.target.value)"
+      @change="editor.formData[field.key] = $event.target.value || null"
     >
       <option value="">—</option>
       <option v-for="die in SYSTEM_DICE" :key="die.id" :value="die.id">{{ die.value }}</option>

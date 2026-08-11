@@ -374,6 +374,13 @@ BEGIN
                 END IF;
                 result := result - 'dice_suggest_id';
             END IF;
+            IF result ->> 'dice_id' IN ('1','2','3','4','5','6','7') THEN
+                result := jsonb_set(result, '{dice_id}', to_jsonb(CASE result ->> 'dice_id'
+                    WHEN '1' THEN 'd4' WHEN '2' THEN 'd6' WHEN '3' THEN 'd8'
+                    WHEN '4' THEN 'd10' WHEN '5' THEN 'd12' WHEN '6' THEN 'd20'
+                    WHEN '7' THEN 'd100'
+                END), false);
+            END IF;
         ELSE result := document;
     END CASE;
     RETURN result;

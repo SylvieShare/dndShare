@@ -17,6 +17,7 @@
  */
 
 import { SUGGEST16_TO_STAT as STAT_BY_SUGGEST16 } from '@/shared/lib/dndStats'
+import { dieLabel } from '@/shared/lib/systemDice'
 
 // proficiency bucket -> (character proficiencies key, suggest type id)
 const PROF_BUCKETS = {
@@ -144,7 +145,7 @@ export function extractGrants({ race, subrace, charClass, subclass, raceVariant,
   }
 
   for (const d of classData) {
-    if (d.hit_die != null) grants.hitDieId = num(d.hit_die)
+    if (d.hit_die != null) grants.hitDieId = dieLabel(d.hit_die) || null
     asList(d.saves).forEach((id) => {
       const stat = statKey(id)
       if (stat && !grants.saves.includes(stat)) grants.saves.push(stat)

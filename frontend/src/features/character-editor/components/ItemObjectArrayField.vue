@@ -62,7 +62,7 @@
               v-else-if="sub.type === 'dice'"
               class="iem-select"
               :value="row[sub.key] ?? ''"
-              @change="editor.setObjectArrayField(field.key, rowIndex, sub.key, editor.numberOrNull($event.target.value))"
+              @change="editor.setObjectArrayField(field.key, rowIndex, sub.key, $event.target.value || null)"
             >
               <option value="">—</option>
               <option v-for="die in SYSTEM_DICE" :key="die.id" :value="die.id">{{ die.value }}</option>
@@ -123,7 +123,7 @@
                         v-else-if="nested.type === 'dice'"
                         class="iem-select"
                         :value="nestedRow[nested.key] ?? ''"
-                        @change="editor.setRowObjectArrayField(field.key, rowIndex, sub.key, nestedIndex, nested.key, editor.numberOrNull($event.target.value))"
+                        @change="editor.setRowObjectArrayField(field.key, rowIndex, sub.key, nestedIndex, nested.key, $event.target.value || null)"
                       >
                         <option value="">—</option>
                         <option v-for="die in SYSTEM_DICE" :key="die.id" :value="die.id">{{ die.value }}</option>

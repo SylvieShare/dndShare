@@ -30,8 +30,9 @@ Canonical examples:
   `prerequisite_groups`, `choices`;
 - potion rarity is a suggest id and cost is `int_by_suggest`.
 
-`dice_id` is a system-die id equal to its number of sides (4, 6, 8, 10, 12, 20
-or 100). Schema fields use `type:"dice"`; there is no dice suggest catalogue.
+`dice_id` is a system-die string (`"d4"`, `"d6"`, `"d8"`, `"d10"`, `"d12"`,
+`"d20"` or `"d100"`). Schema fields use `type:"dice"`; there is no dice
+suggest catalogue.
 
 Feature code does not try alternative keys such as weapon `add_attacks`, spell
 `dice_suggest_id`, feat `desc` or spell `classIds`. Startup migrations fix item

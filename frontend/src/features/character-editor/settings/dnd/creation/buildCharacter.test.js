@@ -32,7 +32,7 @@ describe('buildCharacterData hit dice', () => {
   it('creates the level-1 pool from the class selected in the wizard', () => {
     const result = buildCharacterData({
       race: selection(1, 'Человек'),
-      charClass: selection(2, 'Волшебник', { hit_die: 6 }),
+      charClass: selection(2, 'Волшебник', { hit_die: 'd6' }),
       scores: { CON: 14 },
       suggestValue: () => '',
     })
