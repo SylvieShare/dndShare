@@ -29,9 +29,9 @@
         />
         <rect class="system-die__shine" x="0" :y="shape.shineY" width="56" height="1.4" />
 
-        <circle class="system-die__bubble system-die__bubble--1" cx="17" cy="49" r="2.1" />
-        <circle class="system-die__bubble system-die__bubble--2" cx="31" cy="51" r="1.7" />
-        <circle class="system-die__bubble system-die__bubble--3" cx="42" cy="48" r="1.9" />
+        <circle class="system-die__bubble system-die__bubble--1" cx="17" cy="49" r="2.8" />
+        <circle class="system-die__bubble system-die__bubble--2" cx="31" cy="51" r="2.2" />
+        <circle class="system-die__bubble system-die__bubble--3" cx="42" cy="48" r="2.5" />
       </g>
       <path class="system-die__outline" :d="shape.path" />
       <text
@@ -161,7 +161,9 @@ const rootStyle = computed(() => ({
   stroke-linejoin: round;
 }
 .system-die__bubble {
-  fill: rgba(255, 255, 255, 0.4);
+  fill: rgba(255, 255, 255, 0.55);
+  stroke: rgba(255, 255, 255, 0.38);
+  stroke-width: 0.65;
   opacity: 0;
   animation: system-die-bubble 3.4s ease-in infinite;
   pointer-events: none;
@@ -184,7 +186,8 @@ const rootStyle = computed(() => ({
 
 @keyframes system-die-bubble {
   0% { transform: translateY(0) scale(0.6); opacity: 0; }
-  18% { opacity: 0.6; }
+  18% { opacity: 0.78; }
+  68% { opacity: 0.48; }
   100% { transform: translateY(calc(-1 * var(--system-die-rise))) scale(1); opacity: 0; }
 }
 

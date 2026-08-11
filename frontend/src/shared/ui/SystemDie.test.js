@@ -17,6 +17,7 @@ describe('SystemDie', () => {
     expect(html).toContain('font-size:27px')
     expect(html).toContain('>6</text>')
     expect(html).not.toContain('system-die__speck')
+    expect(html).toContain('system-die__bubble--1" cx="17" cy="49" r="2.8"')
   })
 
   it('substitutes an arbitrary value and scales long text to fit', async () => {
