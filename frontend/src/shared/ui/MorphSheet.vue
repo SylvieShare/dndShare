@@ -184,14 +184,21 @@ function closeDown() {
   setTimeout(() => emit('close'), CLOSE_DOWN_DUR)
 }
 
-// Blur the page content behind the window. We blur `#app` (the overlay is teleported to <body>, a
-// sibling of #app, so it stays sharp) with a real `filter: blur()` — `backdrop-filter` is unreliable
-// (unsupported / hardware-accel-gated in some Chromium builds e.g. Yandex, and the unprefixed prop
-// gets dropped by our CSS minifier), whereas `filter` is universally supported.
+// Blur the page content behind the desktop window. We blur `#app` (the overlay is teleported to
+// <body>, a sibling of #app, so it stays sharp) with a real `filter: blur()` — `backdrop-filter` is
+// unreliable (unsupported / hardware-accel-gated in some Chromium builds e.g. Yandex, and the
+// unprefixed prop gets dropped by our CSS minifier), whereas `filter` is universally supported.
+// Mobile sheets cover the whole viewport, so blurring the hidden page only adds GPU work during the
+// morph without changing the final appearance.
 const BG_BLUR = '8px'
 function setBgBlur(on) {
   const el = document.getElementById('app')
   if (!el) return
+  if (isMobile.value) {
+    el.style.transition = ''
+    el.style.filter = ''
+    return
+  }
   el.style.transition = 'filter .3s ease'
   el.style.filter = on ? `blur(${BG_BLUR})` : ''
 }
@@ -301,8 +308,9 @@ defineExpose({ close })
 /* flex centering (not grid): a grid `auto` track + `max-width:100%` collapses the panel to its
    content min-width once the morph clears `position:fixed`. Flex resolves `max-width:100%` against
    the full overlay, so the panel keeps its `--ms-w` width. */
-/* Dim only — the blur is done by `filter: blur()` on #app (see setBgBlur), because `backdrop-filter`
-   is unsupported/disabled in some Chromium builds (e.g. Yandex Browser). */
+/* Dim only — on desktop the blur is done by `filter: blur()` on #app (see setBgBlur), because
+   `backdrop-filter` is unsupported/disabled in some Chromium builds (e.g. Yandex Browser). Mobile
+   sheets cover the viewport and intentionally skip the background blur. */
 .ms-overlay { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 16px; background: color-mix(in srgb, var(--scrim) 1%, transparent); transition: background .3s ease; }
 .ms-overlay.visible { background: color-mix(in srgb, var(--scrim) 73%, transparent); }
 .ms-sheet { flex: none; position: relative; box-sizing: border-box; width: var(--ms-w, 440px); max-width: 100%; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; background: var(--surface); border: 1px solid var(--border); border-radius: 18px; box-shadow: var(--shadow-lg); opacity: 0; }
