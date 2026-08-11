@@ -270,7 +270,11 @@ function onElementClick(event) {
 }
 
 function onReportModalOpened() {
-  descriptionInput.value?.focus({ preventScroll: true })
+  // Programmatic focus opens the virtual keyboard on some mobile browsers and
+  // changes the visual viewport while the page screenshot is being rendered.
+  if (platformForViewport(window.innerWidth) !== 'mobile') {
+    descriptionInput.value?.focus({ preventScroll: true })
+  }
   const capture = pendingScreenshot
   pendingScreenshot = null
   if (!capture || capture.session !== screenshotSession || !formOpen.value) return
@@ -413,22 +417,25 @@ function updateScreenshotContextMetadata() {
 }
 
 async function captureViewport() {
-  const width = Math.max(1, window.innerWidth)
-  const height = Math.max(1, window.innerHeight)
+  const visualViewport = window.visualViewport
+  const width = Math.max(1, Math.round(visualViewport?.width || window.innerWidth))
+  const height = Math.max(1, Math.round(visualViewport?.height || window.innerHeight))
+  const mobile = platformForViewport(width) === 'mobile'
   const scale = Math.max(0.1, Math.min(
     window.devicePixelRatio || 1,
-    1.25,
+    mobile ? 0.9 : 1.25,
     1600 / width,
     1000 / height,
   ))
   return checkedScreenshot(await toJpeg(document.body, {
     backgroundColor: screenshotBackground(),
-    cacheBust: true,
+    cacheBust: !mobile,
     width,
     height,
     pixelRatio: scale,
     quality: 0.68,
-    filter: screenshotFilter,
+    filter: mobile ? mobileViewportScreenshotFilter : screenshotFilter,
+    skipFonts: mobile,
     style: pageCropStyle(window.scrollX, window.scrollY, width, height),
   }))
 }
@@ -506,6 +513,24 @@ function screenshotFilter(node) {
     node.matches('noscript, .am-overlay, .selection-highlight, .selection-hint, .error-reporter, .report-toast')
     || Boolean(node.closest('[data-error-report-ignore]'))
   ))
+}
+
+function mobileViewportScreenshotFilter(node) {
+  const included = screenshotFilter(node)
+  if (!included || !(node instanceof HTMLElement)) return included
+  if (node === document.body || node === document.documentElement) return true
+
+  const rect = node.getBoundingClientRect()
+  // Keep zero-sized layout wrappers: their children can still be visible. Large
+  // off-screen subtrees are the expensive part that makes mobile capture fail.
+  if (rect.width <= 0 && rect.height <= 0) return true
+  const margin = 48
+  const width = window.visualViewport?.width || window.innerWidth
+  const height = window.visualViewport?.height || window.innerHeight
+  return rect.right >= -margin
+    && rect.left <= width + margin
+    && rect.bottom >= -margin
+    && rect.top <= height + margin
 }
 
 function screenshotBackground(element = document.body) {
