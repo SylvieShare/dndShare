@@ -74,15 +74,18 @@ describe('collapsible app-header scroll source', () => {
   it('keeps the header visible when collapse mode is disabled', () => {
     const source = new FakeElement()
     source.scrollTop = 80
+    const onSettled = vi.fn()
     const controller = useAppHeaderCollapse(ref(false), {
       ElementClass: FakeElement,
       windowObject: {},
+      onSettled,
     })
 
     controller.startScrollSource(source)
     source.dispatch('scroll')
     vi.advanceTimersByTime(120)
     expect(useUiStore().headerHidden).toBe(false)
+    expect(onSettled).toHaveBeenCalledWith({ y: 80, hidden: false })
     controller.dispose()
   })
 })

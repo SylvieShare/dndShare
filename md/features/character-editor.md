@@ -38,9 +38,15 @@ split into semantic `--surface` blocks instead of painting a whole tab: every
 weapon is a card; spell parameters, slots and each spell level are separate
 cards; inventory sections and utility widgets are separate; the personality
 profile declares the `Основное`, `Облик`, `Характер` and `История` tile groups
-in `mobile.json`. The character route opts into the shared
-`collapsible` app-header mode, and its active tab registers that DOM scroller
-through `useAppHeaderCollapse`; regular routes keep the header in document flow.
+in `mobile.json`. The character route hides the global app header at the mobile
+breakpoint and gives the full viewport to its own toolbar; that toolbar menu has
+an explicit **К персонажам** action, including on read-only public sheets. Its
+active tab still registers its DOM scroller through `useAppHeaderCollapse` so
+the compact common strip has one shared scroll/settle observer; regular routes
+keep the header in document flow. Completed tab changes are pushed into the
+`tab` route query. Browser Back and Forward therefore restore prior tabs (even
+after rapid history navigation), while **К персонажам** provides a direct exit
+to the character list.
 The sticky mobile tab chrome ends with a narrow static masked blur and subtle
 `--scrim` darkening over the scrolling content; only that 18px strip uses
 `backdrop-filter`, with a plain dark gradient as the unsupported-browser

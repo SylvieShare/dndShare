@@ -3,6 +3,7 @@
     class="app-header"
     :class="{
       'app-header--collapsible': headerCollapsible,
+      'app-header--mobile-hidden': mobileHeaderHidden,
       'header-hidden': effectiveHeaderHidden,
       'header-collapsing': headerCollapsible && collapsing,
     }"
@@ -55,7 +56,11 @@ import HorizontalMenu from '@/shared/ui/HorizontalMenu'
 import UserBox from "@/features/auth/components/UserBox"
 import { useUiStore } from '@/stores/ui'
 import { useAccountStore } from '@/stores/account'
-import { MOBILE_HEADER_COLLAPSIBLE, resolveMobileHeaderMode } from '@/shared/lib/mobileHeader'
+import {
+  MOBILE_HEADER_COLLAPSIBLE,
+  MOBILE_HEADER_HIDDEN,
+  resolveMobileHeaderMode,
+} from '@/shared/lib/mobileHeader'
 
 const route = useRoute()
 const router = useRouter()
@@ -67,6 +72,7 @@ let _collapseTimer = null
 const headerHidden = computed(() => useUiStore().headerHidden)
 const headerMode = computed(() => resolveMobileHeaderMode(route.meta))
 const headerCollapsible = computed(() => headerMode.value === MOBILE_HEADER_COLLAPSIBLE)
+const mobileHeaderHidden = computed(() => headerMode.value === MOBILE_HEADER_HIDDEN)
 const effectiveHeaderHidden = computed(() => headerCollapsible.value && headerHidden.value)
 const headerTitle = computed(() => useUiStore().headerTitle || '')
 const isAuth = computed(() => useAccountStore().authStatus === 'success')
@@ -252,6 +258,10 @@ function requestIdentityEdit() {
 }
 
 @media (max-width: 640px) {
+  .app-header--mobile-hidden {
+    display: none;
+  }
+
   .app-header {
     max-height: none;
   }

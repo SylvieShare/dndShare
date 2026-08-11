@@ -251,6 +251,7 @@ const {
   mobileTrackIndexes, mobileSwipeTrackStyle, mobileTabIndicatorStyle,
   markTabVisited, setMobileTabButtonRef, updateMobileTabRects,
   scrollActiveMobileTabIntoView, setActiveTab,
+  resetSwipe,
   onTouchStart, onTouchMove, onTouchEnd, cancelTouch,
   tabRenderComponent, tabKey,
 } = useTabSwipe(activeTabs, isMobile, mobileTabbarEl)
@@ -258,7 +259,7 @@ const {
 const {
   toolbarHeight, stripHidden, viewStyle,
   startScrollListener, stopScrollListener, revealHeader, observeToolbar, disconnectToolbar,
-} = useScrollHide(isMobile, commonMobileScrollHide)
+} = useScrollHide(isMobile, commonMobileScrollHide, { mobileAppHeaderVisible: false })
 
 const { startViewportHeightSync, stopViewportHeightSync } = useCharacterViewport(isMobile)
 
@@ -275,7 +276,10 @@ watch(() => route.query.tab, tab => {
   const nextTab = parseTabQuery(tab, activeTabs.value.length, defaultTabIndex(getInitialTabs()))
   if (nextTab === activeTab.value) return
   syncingTabFromRoute = true
-  onSetActiveTab(nextTab)
+  // History navigation must win over an in-flight swipe animation. Applying the
+  // route immediately keeps rapid Back/Forward presses and the URL in sync.
+  resetSwipe()
+  activeTab.value = nextTab
   nextTick(() => { syncingTabFromRoute = false })
 })
 
@@ -430,7 +434,7 @@ onMounted(async () => {
 
   const tabs = initialTabs(res.template)
   const defaultIdx = defaultTabIndex(tabs)
-  activeTab.value = defaultIdx
+  activeTab.value = parseTabQuery(savedQueryTab, activeTabs.value.length, defaultIdx)
   markTabVisited(activeTab.value)
 
   uiStore.setHeaderTitle(headerTitle.value)
@@ -438,8 +442,6 @@ onMounted(async () => {
   window.addEventListener('resize', onResize)
 
   await nextTick()
-
-  onSetActiveTab(parseTabQuery(savedQueryTab, activeTabs.value.length, defaultIdx))
 
   ready = true
 

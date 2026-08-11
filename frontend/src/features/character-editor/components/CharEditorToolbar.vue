@@ -96,7 +96,7 @@
 
       <!-- Right: menu -->
       <div class="tb-right">
-        <div v-if="canEdit" class="menu-wrap" v-click-outside="closeMenu">
+        <div v-if="!modal || canEdit" class="menu-wrap" v-click-outside="closeMenu">
           <button class="menu-btn" :class="{ open: menuOpen }" title="Меню" @click="menuOpen = !menuOpen">
             <span class="bar"></span>
             <span class="bar"></span>
@@ -104,13 +104,20 @@
           </button>
           <transition name="dropdown">
             <div v-if="menuOpen" class="menu-dropdown">
-              <div class="menu-item menu-save-item">
+              <button v-if="!modal" class="menu-item menu-action menu-navigation-item" type="button" @click="goBack">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M8 7l-5 5 5 5" />
+                  <path d="M3 12h18" />
+                </svg>
+                <span>К персонажам</span>
+              </button>
+              <div v-if="canEdit" class="menu-item menu-save-item">
                 <div class="save-widget" :class="saveStatus">
                   <span class="save-dot"></span>
                   <span class="save-label">{{ saveLabel }}</span>
                 </div>
               </div>
-              <div v-if="canTogglePublic" class="menu-item">
+              <div v-if="canEdit && canTogglePublic" class="menu-item">
                 <ToggleSwitch
                   :modelValue="publicVisible"
                   label="Публичная ссылка"
@@ -233,6 +240,7 @@ function openPrintView() {
 }
 function goBack() {
   if (props.modal) { emit('close'); return }
+  menuOpen.value = false
   router.push('/chars')
 }
 </script>

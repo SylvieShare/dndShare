@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import {
   MOBILE_HEADER_COLLAPSIBLE,
   MOBILE_HEADER_FLOW,
+  MOBILE_HEADER_HIDDEN,
   resolveMobileHeaderMode,
 } from './mobileHeader'
 
@@ -14,5 +15,9 @@ describe('mobile app-header mode', () => {
 
   it('enables programmatic collapse only when the route opts in', () => {
     expect(resolveMobileHeaderMode({ mobileHeader: 'collapsible' })).toBe(MOBILE_HEADER_COLLAPSIBLE)
+  })
+
+  it('can hide the app header for a fullscreen mobile workspace', () => {
+    expect(resolveMobileHeaderMode({ mobileHeader: 'hidden' })).toBe(MOBILE_HEADER_HIDDEN)
   })
 })

@@ -79,7 +79,10 @@ Vite работает на `:5173` и проксирует `/api` и `/mcp` в G
 `window.scrollY`. Полноэкранный workspace с собственным scroll-контейнером может
 явно задать `meta.mobileHeader: 'collapsible'`. Такой экран регистрирует активный
 DOM `Element` через `shared/composables/useAppHeaderCollapse.js`; контроллер один
-владеет scroll/touch listeners и состоянием `ui.headerHidden`.
+владеет scroll/touch listeners и состоянием `ui.headerHidden`. Полноэкранный
+экран со своей навигацией может использовать `meta.mobileHeader: 'hidden'`:
+тогда `AppHeader` не отображается на ширине до 640 px, а контент занимает всю
+высоту viewport.
 
 Feature-компоненты не должны самостоятельно слушать `window` или записывать
 `headerHidden`. При смене вложенной вкладки workspace перерегистрирует её scroll

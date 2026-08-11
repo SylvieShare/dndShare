@@ -61,11 +61,16 @@ export function useAppHeaderCollapse(enabled, options = {}) {
     uiStore.setScrollY(y)
     onPosition({ y, delta })
 
-    if (!enabled.value || y <= threshold) {
+    if (y <= threshold) {
       clearSettle()
       uiStore.setHeaderHidden(false)
       return
     }
+
+    // A fullscreen route may still use this controller as its single nested-scroll
+    // observer while keeping the app header disabled. Settling remains useful to
+    // feature chrome, but must never hide the header.
+    if (!enabled.value) uiStore.setHeaderHidden(false)
     scheduleSettle()
   }
 
