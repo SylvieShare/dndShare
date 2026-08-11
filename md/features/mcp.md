@@ -25,7 +25,7 @@ Read tools (always on):
 - `handbook_suggest_types(sourceId?)` — suggest types.
 - `handbook_suggests(typeId)` — base suggests of a type.
 - `handbook_suggests_search(q, limit?)` — base suggests by value.
-- `error_reports_list(limit?, offset?)` — actionable open, approved reports including title and complete diagnostic metadata. Finished/unapproved rows, unanswered AI questions, and serious changes awaiting ADMIN approval are hidden.
+- `error_reports_list(limit?, offset?, summaryOnly?)` — actionable open, approved reports including title and complete diagnostic metadata. `summaryOnly=true` returns only `{hasReports}` for a lightweight pre-lock probe. Finished/unapproved rows, unanswered AI questions, and serious changes awaiting ADMIN approval are hidden.
 - `error_report_screenshot(id, kind?)` — fetch the selected-element crop (`element`, default) or page context (`viewport`) as native MCP image content.
 
 Write tools (gated, see below):
@@ -40,7 +40,7 @@ Write tools (gated, see below):
 - `error_report_delete(id)` — deprecated compatibility alias; marks finished rather than physically deleting.
 - `error_report_question_create(id, question)` — append a concrete AI question for an approved report. The report is then hidden from `error_reports_list` until an administrator answers in the admin panel.
 - `error_report_serious_change_request(id, reason)` — pause a high-impact fix until an `ADMIN` confirms it in the application.
-- `error_report_lock_acquire(ttlMinutes?)` — atomically acquire the singleton automation lease; returns an opaque `leaseId` only when `acquired = true` (default 45 minutes, accepted 5–120).
+- `error_report_lock_acquire(ttlMinutes?)` — atomically acquire the singleton automation lease; returns an opaque `leaseId` only when `acquired = true` (default 45 minutes, accepted 5–120). Because MCP tool arguments/results are visible in the protected execution trace, callers must keep the handle inside direct MCP calls and never copy it to user-visible text, files, shell commands, memory, or subagent briefs.
 - `error_report_lock_renew(leaseId, ttlMinutes?)` — extend a still-active lease owned by the handle.
 - `error_report_lock_release(leaseId)` — release the lease in the scheduled run's final cleanup step.
 - `error_reports_claim(ids, leaseId)` — atomically claim the current post-lock queue as `IN_PROGRESS`; release or expiry requeues unfinished work.

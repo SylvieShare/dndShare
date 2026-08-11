@@ -60,3 +60,19 @@ func TestMCPPublishesErrorReportTools(t *testing.T) {
 		}
 	}
 }
+
+func TestMCPErrorReportListSupportsCompactProbe(t *testing.T) {
+	for _, definition := range mcpToolDefs() {
+		if definition["name"] != "error_reports_list" {
+			continue
+		}
+		input, _ := definition["inputSchema"].(map[string]any)
+		properties, _ := input["properties"].(map[string]any)
+		summaryOnly, _ := properties["summaryOnly"].(map[string]any)
+		if summaryOnly["type"] != "boolean" {
+			t.Fatalf("summaryOnly must be a boolean property: %#v", summaryOnly)
+		}
+		return
+	}
+	t.Fatal("error_reports_list definition not found")
+}

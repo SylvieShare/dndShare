@@ -65,6 +65,14 @@ type mcpToolResult struct {
 	IsError bool         `json:"isError,omitempty"`
 }
 
+type errorReportListProbe struct {
+	HasReports bool `json:"hasReports"`
+}
+
+func newErrorReportListProbe(reports []store.ErrorReport) errorReportListProbe {
+	return errorReportListProbe{HasReports: len(reports) > 0}
+}
+
 // handleMCP — bearer-authed JSON-RPC over a single HTTP POST (MCP streamable-HTTP).
 func (s *Server) handleMCP(w http.ResponseWriter, r *http.Request) {
 	if !s.mcpAuthorized(r) {
@@ -262,6 +270,10 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 		return s.store.SearchSuggestsByName(ctx, q, nil, coerceIn(limit, 1, 100))
 
 	case "error_reports_list":
+		summaryOnly, err := argBoolDefault(args, "summaryOnly", false)
+		if err != nil {
+			return nil, err
+		}
 		limit, err := argIntDefault(args, "limit", 100)
 		if err != nil {
 			return nil, err
@@ -270,7 +282,14 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 		if err != nil {
 			return nil, err
 		}
-		return s.store.ListApprovedErrorReports(ctx, coerceIn(limit, 1, 500), coerceAtLeast(offset, 0))
+		reports, err := s.store.ListApprovedErrorReports(ctx, coerceIn(limit, 1, 500), coerceAtLeast(offset, 0))
+		if err != nil {
+			return nil, err
+		}
+		if summaryOnly {
+			return newErrorReportListProbe(reports), nil
+		}
+		return reports, nil
 
 	case "error_report_lock_acquire":
 		if err := s.mcpRequireWrite(); err != nil {
@@ -852,6 +871,18 @@ func argIntDefault(args map[string]json.RawMessage, key string, def int) (int, e
 	return v, nil
 }
 
+func argBoolDefault(args map[string]json.RawMessage, key string, def bool) (bool, error) {
+	raw, ok := rawArg(args, key)
+	if !ok {
+		return def, nil
+	}
+	var v bool
+	if err := json.Unmarshal(raw, &v); err != nil {
+		return false, fmt.Errorf("parameter %q must be a boolean", key)
+	}
+	return v, nil
+}
+
 func argInt64Slice(args map[string]json.RawMessage, key string) ([]int64, error) {
 	raw, ok := rawArg(args, key)
 	if !ok {
@@ -927,6 +958,7 @@ func normalizeErrorReportCommitSHA(value *string) (*string, error) {
 func mcpToolDefs() []map[string]any {
 	strP := func(desc string) map[string]any { return map[string]any{"type": "string", "description": desc} }
 	intP := func(desc string) map[string]any { return map[string]any{"type": "integer", "description": desc} }
+	boolP := func(desc string) map[string]any { return map[string]any{"type": "boolean", "description": desc} }
 	schema := func(props map[string]any, required ...string) map[string]any {
 		if required == nil {
 			required = []string{}
@@ -976,10 +1008,11 @@ func mcpToolDefs() []map[string]any {
 				"limit": intP("Max rows, 1..100 (default 20)"),
 			}, "q")),
 		tool("error_reports_list",
-			"List actionable open admin-approved page error reports, newest first. Finished/unapproved reports, unanswered AI questions, and serious changes awaiting ADMIN approval are not exposed. A report becomes visible again after an answer or serious-change approval. New reports have title=null until the owning AI run analyzes and titles them. Includes full feedback history, approval/lifecycle metadata, description, page URL, selected element metadata, reporter, screenshot metadata, and creation time.",
+			"List actionable open admin-approved page error reports, newest first. Finished/unapproved reports, unanswered AI questions, and serious changes awaiting ADMIN approval are not exposed. A report becomes visible again after an answer or serious-change approval. Use summaryOnly=true with limit=1 for the pre-lock empty-queue probe; it returns only hasReports and avoids loading report payloads into model context. The normal response includes full diagnostic metadata.",
 			schema(map[string]any{
-				"limit":  intP("Max rows, 1..500 (default 100)"),
-				"offset": intP("Offset for pagination (default 0)"),
+				"limit":       intP("Max rows, 1..500 (default 100)"),
+				"offset":      intP("Offset for pagination (default 0)"),
+				"summaryOnly": boolP("Return only {hasReports}; use with limit=1 before acquiring the automation lease"),
 			})),
 		tool("error_report_lock_acquire",
 			"Atomically acquire the shared error-report automation lease before reading or changing reports. If acquired is false, another run is active and this run must stop. Returns a short-lived opaque leaseId handle; release it in a final cleanup step. Requires MCP write operations to be enabled.",

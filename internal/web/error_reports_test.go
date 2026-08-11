@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"strings"
 	"testing"
+
+	"dndshare/internal/store"
 )
 
 func TestErrorReportLeaseID(t *testing.T) {
@@ -36,6 +38,39 @@ func TestErrorReportLeaseIDArgSupportsRollingCompatibility(t *testing.T) {
 	})
 	if err != nil || legacy != "legacy-handle" {
 		t.Fatalf("unexpected legacy result: %q, %v", legacy, err)
+	}
+}
+
+func TestArgBoolDefault(t *testing.T) {
+	value, err := argBoolDefault(map[string]json.RawMessage{
+		"summaryOnly": json.RawMessage(`true`),
+	}, "summaryOnly", false)
+	if err != nil || !value {
+		t.Fatalf("unexpected boolean result: %v, %v", value, err)
+	}
+	value, err = argBoolDefault(map[string]json.RawMessage{}, "summaryOnly", false)
+	if err != nil || value {
+		t.Fatalf("unexpected default boolean result: %v, %v", value, err)
+	}
+	if _, err := argBoolDefault(map[string]json.RawMessage{
+		"summaryOnly": json.RawMessage(`"yes"`),
+	}, "summaryOnly", false); err == nil {
+		t.Fatal("expected non-boolean summaryOnly to fail")
+	}
+}
+
+func TestErrorReportListProbeOnlyExposesQueuePresence(t *testing.T) {
+	empty := newErrorReportListProbe(nil)
+	if empty.HasReports {
+		t.Fatal("empty queue must not report work")
+	}
+	probe := newErrorReportListProbe([]store.ErrorReport{{ID: 7}})
+	raw, err := json.Marshal(probe)
+	if err != nil {
+		t.Fatalf("marshal probe: %v", err)
+	}
+	if string(raw) != `{"hasReports":true}` {
+		t.Fatalf("unexpected probe payload: %s", raw)
 	}
 }
 
