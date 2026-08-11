@@ -2,6 +2,7 @@ package web
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"strconv"
 	"strings"
@@ -99,7 +100,7 @@ func (s *Server) handleGetItems(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) handleGetItemsByIds(w http.ResponseWriter, r *http.Request) {
 	ids := parseIDList(r.URL.Query().Get("ids"))
-	items, err := s.store.GetByIds(r.Context(), ids)
+	items, err := s.store.GetByIds(r.Context(), ids, optionalUserPtr(r))
 	if err != nil {
 		serverError(w, err)
 		return
@@ -113,7 +114,7 @@ func (s *Server) handleGetItemChildren(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "bad parentId")
 		return
 	}
-	items, err := s.store.FindChildren(r.Context(), parentID, parseContentScope(r.URL.Query()))
+	items, err := s.store.FindChildren(r.Context(), parentID, optionalUserPtr(r), parseContentScope(r.URL.Query()))
 	if err != nil {
 		serverError(w, err)
 		return
@@ -216,6 +217,10 @@ func (s *Server) handleUpdateItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if err := s.store.Update(r.Context(), id, uid, isAdmin, req.Name, req.NameEn, req.Data); err != nil {
+		if errors.Is(err, store.ErrNotFound) {
+			unauthorized(w)
+			return
+		}
 		serverError(w, err)
 		return
 	}
@@ -238,6 +243,10 @@ func (s *Server) handleMakeItemBase(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if err := s.store.MakeBase(r.Context(), id); err != nil {
+		if errors.Is(err, store.ErrNotFound) {
+			notFound(w, "item not found")
+			return
+		}
 		serverError(w, err)
 		return
 	}
@@ -259,6 +268,10 @@ func (s *Server) handleDeleteItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if err := s.store.Delete(r.Context(), id, uid, isAdmin); err != nil {
+		if errors.Is(err, store.ErrNotFound) {
+			unauthorized(w)
+			return
+		}
 		serverError(w, err)
 		return
 	}

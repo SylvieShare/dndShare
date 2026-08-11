@@ -75,6 +75,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { suggestApi } from '@/shared/api/suggestApi'
 import { useAccountStore } from '@/stores/account'
 import { useUiStore } from '@/stores/ui'
+import { createHeaderChip } from '@/shared/lib/appHeader'
 import DictItemGrid from '@/features/handbook/dictionary/components/DictItemGrid'
 import DictItemView from '@/features/handbook/dictionary/components/DictItemView'
 import DictTopBar from '@/features/handbook/dictionary/components/DictTopBar'
@@ -83,6 +84,7 @@ import SuggestEditModal from '@/shared/ui/SuggestEditModal'
 
 const route = useRoute()
 const router = useRouter()
+const headerOwner = String(route.name)
 const accountStore = useAccountStore()
 const uiStore = useUiStore()
 
@@ -196,9 +198,16 @@ watch(
   }
 )
 
-watch(selectedType, (type) => {
-  uiStore.setHeaderTitle(type?.name || '')
-}, { immediate: true })
+watch(
+  [selectedType, () => items.value.length, loading],
+  ([type, count, isLoading]) => {
+    uiStore.setHeaderContext({
+      title: type?.name || route.meta?.title || 'Словари',
+      chip: type && !isLoading ? createHeaderChip(count) : null,
+    }, headerOwner)
+  },
+  { immediate: true },
+)
 
 async function init() {
   await fetchTypes()
@@ -217,7 +226,7 @@ async function init() {
 
 init()
 
-onBeforeUnmount(() => uiStore.setHeaderTitle(''))
+onBeforeUnmount(() => uiStore.clearHeaderContext(headerOwner))
 </script>
 
 <style scoped>
@@ -271,6 +280,10 @@ onBeforeUnmount(() => uiStore.setHeaderTitle(''))
     overflow: visible;
     border-radius: 8px;
   }
+}
+
+@media (max-width: 640px) {
+  .dict-outer :deep(.bar-type-name) { display: none; }
 }
 
 @media (max-width: 520px) {

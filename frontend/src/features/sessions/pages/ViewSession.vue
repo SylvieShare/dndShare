@@ -110,6 +110,7 @@
             :is-dm="isDm"
             :initial-chapter="initialChapter"
             @edit="openEdit"
+            @status-change="status => { session = { ...session, status } }"
           />
         </div>
 
@@ -168,7 +169,7 @@
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import AppModal from '@/shared/ui/AppModal'
 import FormActionButtons from '@/shared/ui/form/FormActionButtons'
@@ -190,12 +191,17 @@ import { useSessionSelection } from '@/features/sessions/composables/useSessionS
 import { useAccountStore } from '@/stores/account'
 import { useMusicStore } from '@/stores/music'
 import { useTemplateStore } from '@/stores/template'
+import { useUiStore } from '@/stores/ui'
+import { sessionStatusConfig } from '@/features/sessions/composables/useSessionStatus'
+import { createHeaderChip } from '@/shared/lib/appHeader'
 import { fetchPost } from '@/shared/api/http'
 import { getSession, joinSession, updateSession } from '@/shared/api/sessionsApi'
 
 const route = useRoute()
 const router = useRouter()
 const sessionUuid = route.params.uuid
+const headerOwner = String(route.name)
+const uiStore = useUiStore()
 
 const session = ref(null)
 const participants = ref([])
@@ -234,6 +240,14 @@ const isDm = computed(() => {
   const uid = accountStore.user?.id
   return !!(uid && session.value && session.value.ownerUserId === uid)
 })
+
+watch(session, (value) => {
+  const status = sessionStatusConfig(value?.status)
+  uiStore.setHeaderContext({
+    title: value?.name || route.meta?.title || 'Сессия',
+    chip: value ? createHeaderChip(status.label, status.color) : null,
+  }, headerOwner)
+}, { immediate: true })
 
 const chapters = computed(() => topBarRef.value?.chapters ?? [])
 
@@ -337,8 +351,17 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+  uiStore.clearHeaderContext(headerOwner)
   musicStore.dispose()
 })
 </script>
 
 <style scoped src="./styles/ViewSession.css"></style>
+
+<style scoped>
+@media (max-width: 640px) {
+  .toolbar-tile :deep(.session-info) {
+    display: none;
+  }
+}
+</style>

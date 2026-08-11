@@ -113,7 +113,7 @@ func (s *Server) handleSuggestByIds(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	ids := int64ListQuery(r, "ids")
-	items, err := s.store.GetSuggestsByIds(r.Context(), typeID, ids)
+	items, err := s.store.GetSuggestsByIds(r.Context(), typeID, ids, optionalUserPtr(r))
 	if err != nil {
 		serverError(w, err)
 		return

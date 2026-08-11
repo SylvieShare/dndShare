@@ -31,13 +31,23 @@
       <HorizontalMenu class="header-nav" />
 
       <button
-        v-if="headerTitle"
+        v-if="headerContext.title"
         class="header-title header-title-inline"
         :class="{ 'header-title-editable': isCharacterView }"
         type="button"
         :disabled="!isCharacterView"
         @click="requestIdentityEdit"
-      >{{ headerTitle }}</button>
+      >{{ headerContext.title }}</button>
+
+      <span
+        v-if="headerContext.chip"
+        class="header-chip"
+        :class="{ 'header-chip--status': headerContext.chip.color }"
+        :style="headerContext.chip.color ? { '--chip-color': headerContext.chip.color } : {}"
+      >
+        <span v-if="headerContext.chip.color" class="header-chip-dot" aria-hidden="true" />
+        {{ headerContext.chip.label }}
+      </span>
 
       <HeaderSearch class="header-search" />
 
@@ -64,21 +74,26 @@ import {
 
 const route = useRoute()
 const router = useRouter()
+const uiStore = useUiStore()
 
 const menuOpen = ref(false)
 const collapsing = ref(false)
 let _collapseTimer = null
 
-const headerHidden = computed(() => useUiStore().headerHidden)
+const headerHidden = computed(() => uiStore.headerHidden)
 const headerMode = computed(() => resolveMobileHeaderMode(route.meta))
 const headerCollapsible = computed(() => headerMode.value === MOBILE_HEADER_COLLAPSIBLE)
 const mobileHeaderHidden = computed(() => headerMode.value === MOBILE_HEADER_HIDDEN)
 const effectiveHeaderHidden = computed(() => headerCollapsible.value && headerHidden.value)
-const headerTitle = computed(() => useUiStore().headerTitle || '')
 const isAuth = computed(() => useAccountStore().authStatus === 'success')
 const isHandbook = computed(() => route.path.startsWith('/handbook'))
 const isAdmin = computed(() => useAccountStore().hasRole('ADMIN'))
 const isCharacterView = computed(() => /^\/char\/[^/]+\/?$/.test(route.path))
+const headerContext = computed(() => uiStore.resolveHeader(
+  route.name,
+  route.meta?.title,
+  isCharacterView.value,
+))
 const visibleItems = computed(() => {
   const items = [
     { title: 'Справочник', to: '/handbook', active: isHandbook.value },
@@ -245,6 +260,10 @@ function requestIdentityEdit() {
   display: none;
 }
 
+.header-chip {
+  display: none;
+}
+
 
 .header-search {
   margin-left: auto;
@@ -327,6 +346,38 @@ function requestIdentityEdit() {
 
   .header-title-inline {
     display: block;
+  }
+
+  .header-chip {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    gap: 5px;
+    max-width: 112px;
+    min-height: 22px;
+    padding: 2px 7px;
+    overflow: hidden;
+    border: 1px solid var(--border-strong);
+    border-radius: 7px;
+    background: var(--surface);
+    color: var(--text-2);
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .header-chip--status {
+    color: var(--chip-color);
+  }
+
+  .header-chip-dot {
+    width: 6px;
+    height: 6px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: currentColor;
   }
 
   .header-title-strip {

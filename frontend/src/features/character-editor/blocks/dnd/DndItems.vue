@@ -87,11 +87,6 @@
                   </svg>
                 </button>
 
-                <div class="di-count-ctrl">
-                  <button class="di-count-btn" @click.stop="bumpCount(section.id, entry.uid, -1)">−</button>
-                  <button class="di-count-btn" @click.stop="bumpCount(section.id, entry.uid, 1)">+</button>
-                </div>
-
                 <button
                   v-if="entry.display.isCustom"
                   class="di-icon-btn"
@@ -350,16 +345,6 @@ function doDeleteSection() {
     next.sections.push({ id: makeSectionId(), name: 'Рюкзак', items: [] })
   }
   confirmDel.open = false
-  emitModel(next)
-}
-
-function bumpCount(sectionId, uid, delta) {
-  const next = cloneModel(model.value)
-  const list = itemsRef(next, sectionId)
-  if (!list) return
-  const item = list.find(i => i.uid === uid)
-  if (!item) return
-  item.count = Math.max(1, (item.count || 1) + delta)
   emitModel(next)
 }
 

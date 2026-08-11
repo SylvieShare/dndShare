@@ -127,7 +127,9 @@ counters and hit-dice pools without scalar mirrors.
 `DndItems` uses `lib/itemSection.js` and the shared item picker. Equipped items
 are a top-level array; user sections never double as equipped. Entry override
 is for a custom name/description/count metadata, while referenced item content
-comes from handbook.
+comes from handbook. The list shows count as a badge; it has no ordinary
+increment/decrement controls. Consumables retain their use action, which
+decrements the count and removes the entry at zero.
 
 Weapon handbook attacks use canonical `{dice_id,type,count}`. Character-added
 attack rows use their documented editor fields and are explicitly adapted at

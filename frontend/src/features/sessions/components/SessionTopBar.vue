@@ -139,7 +139,7 @@ const props = defineProps({
   isDm:           { type: Boolean, default: false },
   initialChapter: { type: Object, default: null },
 })
-defineEmits(['edit'])
+const emit = defineEmits(['edit', 'status-change'])
 
 const sessionRef = ref(props.session)
 watch(() => props.session, v => { sessionRef.value = v })
@@ -150,8 +150,14 @@ watch(() => props.isDm, v => { isDmRef.value = v })
 const statusBadgeEl = ref(null)
 const chapterTriggerEl = ref(null)
 
-const { statusOpen, statusCfg, setStatus } =
+const { statusOpen, statusCfg, setStatus: persistStatus } =
   useSessionStatus({ session: sessionRef, sessionUuid: props.sessionUuid })
+
+async function setStatus(key) {
+  const previous = sessionRef.value?.status
+  await persistStatus(key)
+  if (sessionRef.value?.status !== previous) emit('status-change', sessionRef.value.status)
+}
 
 const chaptersCtl = useSessionChapters({
   session: sessionRef,

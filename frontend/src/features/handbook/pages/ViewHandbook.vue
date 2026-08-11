@@ -114,6 +114,7 @@ import { useAccountStore } from '@/stores/account'
 import { useItemTypesStore } from '@/stores/itemTypes'
 import { useUiStore } from '@/stores/ui'
 import { useSuggestStore } from '@/stores/suggest'
+import { createHeaderChip } from '@/shared/lib/appHeader'
 import { collectSuggestIds, getSuggestId, walkFieldsWithPath } from '@/features/handbook/objects/lib/schemaFields'
 import HandbookLanding from '@/features/handbook/pages/HandbookLanding'
 import HandbookCollectionBar from '@/features/handbook/components/HandbookCollectionBar'
@@ -124,6 +125,7 @@ import ItemEditModal from '@/features/character-editor/components/ItemEditModal'
 // ── Router ──────────────────────────────────────────────────────────────────
 const route = useRoute()
 const router = useRouter()
+const headerOwner = String(route.name)
 
 // ── Stores ──────────────────────────────────────────────────────────────────
 const accountStore = useAccountStore()
@@ -385,8 +387,26 @@ watch(groupBy, () => {
   router.replace({ query: currentQuery() })
 })
 
+watch(
+  [selectedType, () => filteredItems.value.length, hasMore, isFiltered],
+  ([type, resultCount, more, filtered]) => {
+    const total = type?.count
+    let chip = null
+    if (type) {
+      const countLabel = filtered
+        ? `${resultCount}${more ? '+' : ''}${total != null ? ` из ${total}` : ''}`
+        : (total ?? resultCount)
+      chip = createHeaderChip(countLabel)
+    }
+    uiStore.setHeaderContext({
+      title: type?.name || route.meta?.title || 'Справочник',
+      chip,
+    }, headerOwner)
+  },
+  { immediate: true },
+)
+
 watch(selectedType, (type) => {
-  uiStore.setHeaderTitle(type?.name || 'Справочник')
   fetchContentSources(type)
 }, { immediate: true })
 
@@ -457,8 +477,17 @@ init()
 
 onBeforeUnmount(() => {
   clearTimeout(searchTimer)
-  uiStore.setHeaderTitle('')
+  uiStore.clearHeaderContext(headerOwner)
 })
 </script>
 
 <style scoped src="./styles/ViewHandbook.css"></style>
+
+<style scoped>
+@media (max-width: 640px) {
+  .handbook-col-bar :deep(.col-type-name),
+  .handbook-col-bar :deep(.col-type-count) {
+    display: none;
+  }
+}
+</style>

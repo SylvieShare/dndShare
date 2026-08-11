@@ -100,3 +100,12 @@ ON CONFLICT (type_id, id) DO NOTHING;
 -- идемпотентен и безопасен на проде (последовательность уже не ниже максимума).
 SELECT setval(pg_get_serial_sequence('dndshare.item_type', 'id'), GREATEST((SELECT MAX(id) FROM dndshare.item_type), 1));
 SELECT setval(pg_get_serial_sequence('dndshare.suggest_type', 'id'), GREATEST((SELECT MAX(id) FROM dndshare.suggest_type), 1));
+SELECT setval(
+    'dndshare.suggest_public_id_seq',
+    GREATEST(
+        COALESCE((SELECT MAX(id) FROM dndshare.suggest), 0),
+        (SELECT last_value FROM dndshare.suggest_public_id_seq)
+    ),
+    true
+)
+WHERE EXISTS (SELECT 1 FROM dndshare.suggest);

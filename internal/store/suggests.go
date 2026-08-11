@@ -135,15 +135,20 @@ func (s *Store) GetSuggestsByTypes(ctx context.Context, typeIDs []int64, userID 
 	return grouped, nil
 }
 
-// GetSuggestsByIds возвращает подсказки типа с заданными id (без учёта владельца).
-func (s *Store) GetSuggestsByIds(ctx context.Context, typeID int64, ids []int64) ([]Suggest, error) {
+// GetSuggestsByIds returns base suggestions plus rows owned by the current
+// user. Anonymous/API catalogue reads never expose user-owned rows.
+func (s *Store) GetSuggestsByIds(ctx context.Context, typeID int64, ids []int64, userID *int64) ([]Suggest, error) {
 	if len(ids) == 0 {
 		return []Suggest{}, nil
 	}
 	in, args := int64InClause(ids, 2)
 	allArgs := append([]any{typeID}, args...)
+	if userID != nil {
+		allArgs = append(allArgs, *userID)
+	}
+	visibility := publicOrOwnedPredicate("s", userID, len(allArgs))
 	rows, err := s.pool.Query(ctx,
-		suggestSelect+fmt.Sprintf(` WHERE s.type_id = $1 AND s.id IN (%s)`, in),
+		suggestSelect+fmt.Sprintf(` WHERE s.type_id = $1 AND s.id IN (%s) AND %s`, in, visibility),
 		allArgs...)
 	if err != nil {
 		return nil, err
@@ -175,44 +180,31 @@ func (s *Store) FindBaseSuggestByCode(ctx context.Context, typeID int64, code st
 	return sg, err
 }
 
-// suggestInsertRetries — сколько раз повторить вставку suggest при гонке за id = MAX+1
-// (составной PK (type_id, id); две конкурентные вставки одного типа дают 23505).
-const suggestInsertRetries = 5
-
-// AddBaseSuggest вставляет базовую (user_id NULL) подсказку. id = MAX(id по типу)+1 (PK составной).
+// AddBaseSuggest inserts a base suggestion. The database sequence allocates
+// public ids atomically; the (type_id, id) primary key keeps existing base ids
+// valid.
 func (s *Store) AddBaseSuggest(ctx context.Context, typeID int64, value string, code, desc, color *string) (Suggest, error) {
 	var id int64
-	var err error
-	for attempt := 0; attempt < suggestInsertRetries; attempt++ {
-		err = s.pool.QueryRow(ctx,
-			`INSERT INTO dndshare.suggest (id, type_id, user_id, value, code, color, "desc")
-			 VALUES (COALESCE((SELECT MAX(id) FROM dndshare.suggest WHERE type_id = $1), 0) + 1, $1, NULL, $2, $3, $4, $5)
-			 RETURNING id`,
-			typeID, value, code, color, desc).Scan(&id)
-		if err == nil || !IsUniqueViolation(err) {
-			break
-		}
-	}
+	err := s.pool.QueryRow(ctx,
+		`INSERT INTO dndshare.suggest (type_id, user_id, value, code, color, "desc")
+		 VALUES ($1, NULL, $2, $3, $4, $5)
+		 RETURNING id`,
+		typeID, value, code, color, desc).Scan(&id)
 	if err != nil {
 		return Suggest{}, err
 	}
 	return Suggest{ID: id, TypeID: typeID, UserID: nil, Value: value, Code: code, Color: color, Desc: desc}, nil
 }
 
-// AddSuggest вставляет пользовательскую подсказку. id = MAX(id по типу)+1.
+// AddSuggest inserts a user suggestion with a sequence-backed public id. New
+// user ids therefore cannot overlap, including under concurrent requests.
 func (s *Store) AddSuggest(ctx context.Context, typeID, userID int64, value string, code, color, desc *string) (Suggest, error) {
 	var id int64
-	var err error
-	for attempt := 0; attempt < suggestInsertRetries; attempt++ {
-		err = s.pool.QueryRow(ctx,
-			`INSERT INTO dndshare.suggest (id, type_id, user_id, value, code, color, "desc")
-			 VALUES (COALESCE((SELECT MAX(id) FROM dndshare.suggest WHERE type_id = $1), 0) + 1, $1, $2, $3, $4, $5, $6)
-			 RETURNING id`,
-			typeID, userID, value, code, color, desc).Scan(&id)
-		if err == nil || !IsUniqueViolation(err) {
-			break
-		}
-	}
+	err := s.pool.QueryRow(ctx,
+		`INSERT INTO dndshare.suggest (type_id, user_id, value, code, color, "desc")
+		 VALUES ($1, $2, $3, $4, $5, $6)
+		 RETURNING id`,
+		typeID, userID, value, code, color, desc).Scan(&id)
 	if err != nil {
 		return Suggest{}, err
 	}

@@ -21,6 +21,7 @@ type Item struct {
 	TypeID           int64              `json:"typeId"`
 	CreatedAt        time.Time          `json:"createdAt"`
 	ParentID         *int64             `json:"parentId,omitempty"`
+	CustomSourceID   *int64             `json:"customSourceId,omitempty"`
 	SVG              *string            `json:"svg,omitempty"`
 	ContentSourceIDs []int64            `json:"contentSourceIds"`
 	ContentSources   []ContentSourceRef `json:"contentSources"`
@@ -63,19 +64,20 @@ type ItemFilter struct {
 	Values []any
 }
 
-const itemColumns = "id, user_id, name, name_en, data, type_id, created_at, parent_id"
+const itemColumns = "id, user_id, name, name_en, data, type_id, created_at, parent_id, custom_source_id"
 
 func scanItemRow(rows pgx.Rows) (Item, error) {
 	var it Item
-	var userID, parentID *int64
+	var userID, parentID, customSourceID *int64
 	var nameEn *string
 	var data []byte
-	if err := rows.Scan(&it.ID, &userID, &it.Name, &nameEn, &data, &it.TypeID, &it.CreatedAt, &parentID); err != nil {
+	if err := rows.Scan(&it.ID, &userID, &it.Name, &nameEn, &data, &it.TypeID, &it.CreatedAt, &parentID, &customSourceID); err != nil {
 		return Item{}, err
 	}
 	it.UserID = userID
 	it.NameEn = nameEn
 	it.ParentID = parentID
+	it.CustomSourceID = customSourceID
 	it.Data = json.RawMessage(data)
 	return it, nil
 }
@@ -93,10 +95,21 @@ func collectItems(rows pgx.Rows) ([]Item, error) {
 	return out, rows.Err()
 }
 
+func publicOrOwnedPredicate(alias string, userID *int64, userParam int) string {
+	if userID == nil {
+		return alias + ".user_id IS NULL"
+	}
+	return fmt.Sprintf("(%s.user_id IS NULL OR %s.user_id = $%d)", alias, alias, userParam)
+}
+
 // FindChildren — дети по parent_id (подрасы/архетипы).
-func (s *Store) FindChildren(ctx context.Context, parentID int64, scope ContentScope) ([]Item, error) {
+func (s *Store) FindChildren(ctx context.Context, parentID int64, userID *int64, scope ContentScope) ([]Item, error) {
 	args := []any{parentID}
 	where := []string{"i.parent_id = $1"}
+	if userID != nil {
+		args = append(args, *userID)
+	}
+	where = append(where, publicOrOwnedPredicate("i", userID, len(args)))
 	where = appendContentScopeSQL(where, &args, scope)
 	rows, err := s.pool.Query(ctx,
 		"SELECT "+prefixedItemColumns("i")+" FROM dndshare.item i WHERE "+strings.Join(where, " AND ")+" ORDER BY i.name, i.id",
@@ -296,21 +309,20 @@ func appendContentScopeSQL(where []string, args *[]any, scope ContentScope) []st
 }
 
 // GetByIds — предметы по списку id, с svg из svg_storage (JOIN по svg_id).
-func (s *Store) GetByIds(ctx context.Context, ids []int64) ([]Item, error) {
+func (s *Store) GetByIds(ctx context.Context, ids []int64, userID *int64) ([]Item, error) {
 	if len(ids) == 0 {
 		return []Item{}, nil
 	}
-	args := make([]any, len(ids))
-	ph := make([]string, len(ids))
-	for i, id := range ids {
-		args[i] = id
-		ph[i] = fmt.Sprintf("$%d", i+1)
+	args := []any{ids}
+	if userID != nil {
+		args = append(args, *userID)
 	}
+	visibility := publicOrOwnedPredicate("i", userID, len(args))
 	rows, err := s.pool.Query(ctx,
-		`SELECT i.id, i.user_id, i.name, i.name_en, i.data, i.type_id, i.created_at, i.parent_id, ss.data AS svg_data
+		`SELECT i.id, i.user_id, i.name, i.name_en, i.data, i.type_id, i.created_at, i.parent_id, i.custom_source_id, ss.data AS svg_data
 		   FROM dndshare.item i
 		   LEFT JOIN dndshare.svg_storage ss ON ss.id = i.svg_id
-		  WHERE i.id IN (`+strings.Join(ph, ", ")+`)`,
+		  WHERE i.id = ANY($1) AND `+visibility,
 		args...,
 	)
 	if err != nil {
@@ -320,15 +332,16 @@ func (s *Store) GetByIds(ctx context.Context, ids []int64) ([]Item, error) {
 	out := []Item{}
 	for rows.Next() {
 		var it Item
-		var userID, parentID *int64
+		var rowUserID, parentID, customSourceID *int64
 		var nameEn, svg *string
 		var data []byte
-		if err := rows.Scan(&it.ID, &userID, &it.Name, &nameEn, &data, &it.TypeID, &it.CreatedAt, &parentID, &svg); err != nil {
+		if err := rows.Scan(&it.ID, &rowUserID, &it.Name, &nameEn, &data, &it.TypeID, &it.CreatedAt, &parentID, &customSourceID, &svg); err != nil {
 			return nil, err
 		}
-		it.UserID = userID
+		it.UserID = rowUserID
 		it.NameEn = nameEn
 		it.ParentID = parentID
+		it.CustomSourceID = customSourceID
 		it.Data = json.RawMessage(data)
 		it.SVG = svg
 		out = append(out, it)
@@ -391,92 +404,4 @@ func (s *Store) FindBaseByTypeAndNameEn(ctx context.Context, typeID int64, nameE
 		return Item{}, ErrNotFound
 	}
 	return items[0], nil
-}
-
-// UpdateBase — обновить базовый предмет по nameEn+type.
-func (s *Store) UpdateBase(ctx context.Context, nameEn, name string, data json.RawMessage, typeID int64) error {
-	_, err := s.pool.Exec(ctx,
-		"UPDATE dndshare.item SET name = $1, data = CAST($2 AS jsonb) WHERE lower(name_en) = lower($3) AND type_id = $4 AND user_id IS NULL",
-		name, jsonOrEmpty(data), nameEn, typeID,
-	)
-	return err
-}
-
-// CreateBase — создать базовый (user_id NULL) предмет.
-func (s *Store) CreateBase(ctx context.Context, name, nameEn string, data json.RawMessage, typeID int64, parentID *int64) (Item, error) {
-	data = jsonOrEmptyRaw(data)
-	var id int64
-	err := s.pool.QueryRow(ctx,
-		"INSERT INTO dndshare.item (user_id, name, name_en, data, type_id, parent_id) VALUES (NULL, $1, $2, CAST($3 AS jsonb), $4, $5) RETURNING id",
-		name, nameEn, string(data), typeID, parentID,
-	).Scan(&id)
-	if err != nil {
-		return Item{}, err
-	}
-	en := nameEn
-	return Item{ID: id, Name: name, NameEn: &en, Data: data, TypeID: typeID, CreatedAt: time.Now(), ParentID: parentID}, nil
-}
-
-// Create — создать пользовательский предмет.
-func (s *Store) Create(ctx context.Context, userID int64, name string, data json.RawMessage, typeID int64, parentID *int64) (Item, error) {
-	data = jsonOrEmptyRaw(data)
-	var id int64
-	err := s.pool.QueryRow(ctx,
-		"INSERT INTO dndshare.item (user_id, name, data, type_id, parent_id) VALUES ($1, $2, CAST($3 AS jsonb), $4, $5) RETURNING id",
-		userID, name, string(data), typeID, parentID,
-	).Scan(&id)
-	if err != nil {
-		return Item{}, err
-	}
-	uid := userID
-	return Item{ID: id, UserID: &uid, Name: name, Data: data, TypeID: typeID, CreatedAt: time.Now(), ParentID: parentID}, nil
-}
-
-// Update — обновить предмет; isAdmin снимает проверку владельца.
-func (s *Store) Update(ctx context.Context, id, userID int64, isAdmin bool, name string, nameEn *string, data json.RawMessage) error {
-	if isAdmin {
-		_, err := s.pool.Exec(ctx,
-			"UPDATE dndshare.item SET name = $1, name_en = $2, data = CAST($3 AS jsonb) WHERE id = $4",
-			name, nameEn, jsonOrEmpty(data), id,
-		)
-		return err
-	}
-	_, err := s.pool.Exec(ctx,
-		"UPDATE dndshare.item SET name = $1, name_en = $2, data = CAST($3 AS jsonb) WHERE id = $4 AND user_id = $5",
-		name, nameEn, jsonOrEmpty(data), id, userID,
-	)
-	return err
-}
-
-// SetParent — переустановить parent_id.
-func (s *Store) SetParent(ctx context.Context, id int64, parentID *int64) error {
-	_, err := s.pool.Exec(ctx, "UPDATE dndshare.item SET parent_id = $1 WHERE id = $2", parentID, id)
-	return err
-}
-
-// MakeBase — сделать предмет базовым (user_id = NULL).
-func (s *Store) MakeBase(ctx context.Context, id int64) error {
-	_, err := s.pool.Exec(ctx, "UPDATE dndshare.item SET user_id = NULL WHERE id = $1", id)
-	return err
-}
-
-// Delete — удалить предмет; isAdmin снимает проверку владельца.
-func (s *Store) Delete(ctx context.Context, id, userID int64, isAdmin bool) error {
-	if isAdmin {
-		_, err := s.pool.Exec(ctx, "DELETE FROM dndshare.item WHERE id = $1", id)
-		return err
-	}
-	_, err := s.pool.Exec(ctx, "DELETE FROM dndshare.item WHERE id = $1 AND user_id = $2", id, userID)
-	return err
-}
-
-func jsonOrEmpty(data json.RawMessage) string {
-	return string(jsonOrEmptyRaw(data))
-}
-
-func jsonOrEmptyRaw(data json.RawMessage) json.RawMessage {
-	if len(data) == 0 {
-		return json.RawMessage("{}")
-	}
-	return data
 }

@@ -1,6 +1,6 @@
 <template>
-  <button v-if="isCompact" class="exh-compact" :class="{ 'exh-compact--on': level > 0 }" type="button" @click="open">
-    <span>Истощение</span>
+  <button v-if="isCompact" class="exh-compact" :class="{ 'exh-compact--on': level > 0 }" type="button" title="Истощение" @click="open">
+    <span class="exh-compact-label">Истощение</span>
     <strong>{{ level }}</strong>
   </button>
   <BaseTile v-else class="exh-tile" :color="color" :strip="level > 0" interactive @click="open">
@@ -135,12 +135,15 @@ function setEffect(i, text) {
 
 .exh-compact {
   display: inline-flex;
+  flex: 0 1 58px;
+  flex-shrink: 1;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 2px;
   box-sizing: border-box;
-  min-width: 58px;
+  min-width: 0;
+  max-width: 100%;
   min-height: 32px;
   height: 32px;
   padding: 2px 7px;
@@ -151,7 +154,7 @@ function setEffect(i, text) {
   font: inherit;
   cursor: pointer;
 }
-.exh-compact span { font-size: 9px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+.exh-compact-label { width: 100%; overflow: hidden; font-size: 9px; font-weight: 700; letter-spacing: 0.04em; text-align: center; text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap; }
 .exh-compact strong { color: var(--text-2); font-size: 15px; line-height: 1; }
 .exh-compact--on { color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, transparent); }
 .exh-compact--on strong { color: var(--danger); }

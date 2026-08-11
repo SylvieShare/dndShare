@@ -104,20 +104,14 @@ func (s *Store) BestiaryFindSuggestByValue(ctx context.Context, typeID int64, va
 	return id, true, nil
 }
 
-// BestiaryAddSuggest добавляет базовый suggest (id = MAX+1 в рамках типа) и возвращает id.
+// BestiaryAddSuggest добавляет базовый suggest с sequence-backed id и возвращает id.
 func (s *Store) BestiaryAddSuggest(ctx context.Context, typeID int64, value string, code, desc *string) (int64, error) {
 	var id int64
-	var err error
-	for attempt := 0; attempt < suggestInsertRetries; attempt++ {
-		err = s.pool.QueryRow(ctx,
-			`INSERT INTO dndshare.suggest (id, type_id, user_id, value, code, color, "desc")
-			 VALUES (COALESCE((SELECT MAX(id) FROM dndshare.suggest WHERE type_id = $1), 0) + 1, $1, NULL, $2, $3, NULL, $4)
-			 RETURNING id`,
-			typeID, value, code, desc,
-		).Scan(&id)
-		if err == nil || !IsUniqueViolation(err) {
-			break
-		}
-	}
+	err := s.pool.QueryRow(ctx,
+		`INSERT INTO dndshare.suggest (type_id, user_id, value, code, color, "desc")
+		 VALUES ($1, NULL, $2, $3, NULL, $4)
+		 RETURNING id`,
+		typeID, value, code, desc,
+	).Scan(&id)
 	return id, err
 }

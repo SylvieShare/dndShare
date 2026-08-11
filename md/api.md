@@ -54,6 +54,18 @@ Editor определяет schema по `templateName` через frontend setti
 - `POST /api/items/{id}/make-base`
 - `DELETE /api/items/{id}`
 
+Item DTO содержит `customSourceId` только у пользовательского контента. При
+`POST /api/items` сервер в одной транзакции получает/создаёт default
+`custom_item_source` владельца и записывает FK; клиент не передаёт ownership в
+JSON `data`. `contentSourceIds` остаётся отдельной метаданной публикаций и не
+заменяет персональный источник.
+
+Все item reads по id/parent и suggest reads по ids возвращают только базовые
+строки и строки текущего пользователя; анонимный и MCP catalogue read видит
+только базовые. Update/delete владельца не может затронуть чужую строку,
+HANDBOOK_ADMIN сохраняет явный административный доступ. Make-base очищает
+персональную связь источника.
+
 Item list/search поддерживает publication scope через `contentSourceIds`,
 `sourceVersionId` и `allowLegacy`. Здесь Legacy — статус контента конкретной
 редакции правил, а не поддержка старого API/формата данных.
@@ -64,6 +76,11 @@ Suggest API:
 - `GET /api/suggest/{typeId}` и `/{typeId}/items`;
 - create/update/delete, make-base и SVG upload routes под
   `/api/suggest/{typeId}/...`.
+
+Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользовательские и
+базовые) выдаются общей DB sequence конкурентно-безопасно, поэтому новые
+пользовательские ids не пересекаются между владельцами; существующие базовые
+пары `(typeId,id)` не перенумеровываются.
 
 ## Sessions and scenes
 

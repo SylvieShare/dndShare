@@ -377,7 +377,7 @@
           "variant": "compact",
           "grow": 1,
           "basis": 0,
-          "min-width": "118px"
+          "min-width": "100px"
         }
       },
       {
@@ -385,7 +385,9 @@
         "kind": "block",
         "props": {
           "variant": "compact",
-          "shrink": 0
+          "shrink": 1,
+          "basis": "58px",
+          "min-width": 0
         }
       },
       {

@@ -239,7 +239,7 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 		if err != nil {
 			return nil, err
 		}
-		return s.store.GetByIds(ctx, ids)
+		return s.store.GetByIds(ctx, ids, nil)
 
 	case "handbook_suggest_types":
 		sourceID, err := argInt64Opt(args, "sourceId")

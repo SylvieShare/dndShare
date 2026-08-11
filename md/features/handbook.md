@@ -9,13 +9,21 @@ Frontend lives in `features/handbook`, item details/editors in
 - `source` — game system.
 - `source_version` — concrete rules edition.
 - `content_source` — publication/book.
+- `custom_item_source` — user-owned provenance for custom handbook content;
+  it is not a game system or publication.
 - `item_type` — item category and fields schema.
 - `item` — handbook entity.
 - `suggest_type/suggest` — dictionaries used by fields.
 
 `item.parentId` is the generic hierarchy edge: subrace→race,
 subclass→class and future variants. Items may link to several publications via
-`contentSourceIds`.
+`contentSourceIds`. A user item additionally has an explicit `customSourceId`;
+the server assigns the owner's default «Мои материалы» source atomically on
+creation. The schema allows more non-default personal sources later.
+
+Saved user items are backfilled to that source during startup. Personal source
+ids are never stored or read in `item.data`, and item/suggest id reads expose
+only base rows plus the current user's own rows.
 
 ## Publication scope
 

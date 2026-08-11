@@ -313,7 +313,7 @@ onMounted(() => {
   50%       { opacity: 0.4; }
 }
 
-@media (max-width: 420px) {
+@media (max-width: 640px) {
   .page {
     padding: 16px 12px;
   }

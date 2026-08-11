@@ -107,7 +107,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import SessionCard from '@/features/sessions/components/SessionCard'
 import SessionCreateModal from '@/features/sessions/components/SessionCreateModal'
@@ -116,6 +116,8 @@ import SessionJoinModal from '@/features/sessions/components/SessionJoinModal'
 import ConfirmDialog from '@/shared/ui/ConfirmDialog'
 import { consumePrefetch } from '@/app/router'
 import { createSession, deleteSession, getSessionByCode, getSessions, leaveSession } from '@/shared/api/sessionsApi'
+import { createHeaderChip } from '@/shared/lib/appHeader'
+import { useUiStore } from '@/stores/ui'
 
 const ACTIVE_STATUSES  = ['live', 'active']
 const ARCHIVE_STATUSES = ['completed', 'archived']
@@ -130,6 +132,8 @@ const FILTERS = [
 
 const router = useRouter()
 const route = useRoute()
+const headerOwner = String(route.name)
+const uiStore = useUiStore()
 const sessions = ref([])
 const loading = ref(true)
 const showModal = ref(false)
@@ -233,7 +237,19 @@ function filterCount(key) {
   return 0
 }
 
+watch(
+  [loading, () => sessions.value.length],
+  ([isLoading, count]) => {
+    uiStore.setHeaderContext({
+      title: route.meta?.title || 'Сессии',
+      chip: isLoading ? null : createHeaderChip(count),
+    }, headerOwner)
+  },
+  { immediate: true },
+)
+
 onMounted(() => loadSessions(consumePrefetch(route.fullPath)))
+onBeforeUnmount(() => uiStore.clearHeaderContext(headerOwner))
 </script>
 
 <style scoped>
@@ -482,6 +498,10 @@ onMounted(() => loadSessions(consumePrefetch(route.fullPath)))
 @media (max-width: 640px) {
   .page {
     padding: 16px 12px;
+  }
+
+  .header-left {
+    display: none;
   }
 
   .cards-grid {

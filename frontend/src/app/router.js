@@ -104,7 +104,7 @@ const routes = [
         path: '/sessions/:uuid',
         name: "Session",
         component: ViewSession,
-        meta: { section: 'sessions', depth: 1 },
+        meta: { title: 'Сессия', section: 'sessions', depth: 1 },
     },
     {
         path: '/join/:code',
@@ -142,7 +142,7 @@ const routes = [
         path: '/char/:uuid',
         name: "Character",
         component: ViewCharacter,
-        meta: { section: 'characters', depth: 1, pageOrder: 2, mobileHeader: 'hidden' },
+        meta: { title: 'Персонаж', section: 'characters', depth: 1, pageOrder: 2, mobileHeader: 'hidden' },
     },
     {
         path: '/char/:uuid/print',

@@ -219,23 +219,6 @@
   color: color-mix(in srgb, var(--accent) 60%, var(--text-2));
 }
 
-.di-count-ctrl { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
-.di-count-btn {
-  width: 22px;
-  height: 22px;
-  background: var(--surface-raised);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  color: var(--text-2);
-  font-size: 14px;
-  line-height: 1;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.12s, color 0.12s;
-}
-.di-count-btn:hover { background: var(--surface-active); color: var(--text-1); }
 /* ─── Add row ─── */
 .di-add-row {
   display: flex;

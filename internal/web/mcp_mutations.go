@@ -81,7 +81,7 @@ func (s *Server) toolItemUpdate(ctx context.Context, args map[string]json.RawMes
 			return nil, err
 		}
 	}
-	items, err := s.store.GetByIds(ctx, []int64{id})
+	items, err := s.store.GetByIds(ctx, []int64{id}, nil)
 	if err != nil {
 		return nil, err
 	}

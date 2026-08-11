@@ -112,6 +112,51 @@ CREATE TABLE IF NOT EXISTS dndshare.item_type (
 CREATE INDEX IF NOT EXISTS idx_item_type_source_id ON dndshare.item_type USING btree (source_id);
 CREATE INDEX IF NOT EXISTS idx_item_type_svg_id ON dndshare.item_type USING btree (svg_id);
 
+-- Personal handbook provenance is deliberately separate from both source
+-- (game systems) and content_source (published books/content packs). Each user
+-- has one default source today; the table can hold additional non-default
+-- sources later without changing item identity.
+CREATE TABLE IF NOT EXISTS dndshare.custom_item_source (
+    id         bigserial NOT NULL,
+    user_id    int8 NOT NULL REFERENCES dndshare.users(id),
+    "name"     varchar NOT NULL,
+    is_default bool DEFAULT false NOT NULL,
+    created_at timestamptz DEFAULT now() NOT NULL,
+    CONSTRAINT custom_item_source_pk PRIMARY KEY (id),
+    CONSTRAINT custom_item_source_id_user_key UNIQUE (id, user_id)
+);
+CREATE UNIQUE INDEX IF NOT EXISTS custom_item_source_user_default_key
+    ON dndshare.custom_item_source (user_id) WHERE is_default;
+CREATE INDEX IF NOT EXISTS idx_custom_item_source_user_id
+    ON dndshare.custom_item_source USING btree (user_id, id);
+
+INSERT INTO dndshare.custom_item_source (user_id, "name", is_default)
+SELECT u.id, 'Мои материалы', true
+FROM dndshare.users u
+WHERE NOT EXISTS (
+    SELECT 1 FROM dndshare.custom_item_source cis
+    WHERE cis.user_id = u.id AND cis.is_default
+);
+
+-- Registration happens before the handbook schema is known to users.go. A
+-- small database invariant therefore provisions the default source for every
+-- future user in the same transaction as the user row.
+CREATE OR REPLACE FUNCTION dndshare.create_default_custom_item_source()
+RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    INSERT INTO dndshare.custom_item_source (user_id, "name", is_default)
+    VALUES (NEW.id, 'Мои материалы', true)
+    ON CONFLICT (user_id) WHERE is_default DO NOTHING;
+    RETURN NEW;
+END;
+$$;
+DROP TRIGGER IF EXISTS users_default_custom_item_source ON dndshare.users;
+CREATE TRIGGER users_default_custom_item_source
+AFTER INSERT ON dndshare.users
+FOR EACH ROW EXECUTE FUNCTION dndshare.create_default_custom_item_source();
+
 CREATE TABLE IF NOT EXISTS dndshare.item (
     id         bigserial NOT NULL,
     user_id    int8 NULL REFERENCES dndshare.users(id),
@@ -122,8 +167,48 @@ CREATE TABLE IF NOT EXISTS dndshare.item (
     name_en    varchar NULL,
     parent_id  int8 NULL REFERENCES dndshare.item(id) ON DELETE SET NULL,
     svg_id     int8 NULL REFERENCES dndshare.svg_storage(id),
+    custom_source_id int8 NULL,
     CONSTRAINT item_pk PRIMARY KEY (id)
 );
+ALTER TABLE dndshare.item ADD COLUMN IF NOT EXISTS custom_source_id int8 NULL;
+
+-- Existing saved custom items acquire their owner's default source. Runtime
+-- only reads the column after this startup migration; legacy JSON aliases are
+-- removed rather than supported as fallbacks.
+UPDATE dndshare.item i
+SET custom_source_id = cis.id,
+    data = i.data - 'customSourceId' - 'custom_source_id'
+FROM dndshare.custom_item_source cis
+WHERE i.user_id = cis.user_id
+  AND cis.is_default
+  AND (i.custom_source_id IS NULL OR i.data ? 'customSourceId' OR i.data ? 'custom_source_id');
+UPDATE dndshare.item
+SET data = data - 'customSourceId' - 'custom_source_id'
+WHERE user_id IS NULL AND (data ? 'customSourceId' OR data ? 'custom_source_id');
+
+DO $$ BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_constraint
+        WHERE conname = 'item_custom_source_owner_fk'
+          AND conrelid = 'dndshare.item'::regclass
+    ) THEN
+        ALTER TABLE dndshare.item
+            ADD CONSTRAINT item_custom_source_owner_fk
+            FOREIGN KEY (custom_source_id, user_id)
+            REFERENCES dndshare.custom_item_source(id, user_id);
+    END IF;
+END $$;
+DO $$ BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_constraint
+        WHERE conname = 'item_custom_source_consistency_check'
+          AND conrelid = 'dndshare.item'::regclass
+    ) THEN
+        ALTER TABLE dndshare.item
+            ADD CONSTRAINT item_custom_source_consistency_check
+            CHECK ((user_id IS NULL) = (custom_source_id IS NULL));
+    END IF;
+END $$;
 CREATE INDEX IF NOT EXISTS item_data_gin_idx ON dndshare.item USING gin (data jsonb_path_ops);
 CREATE INDEX IF NOT EXISTS item_name_trgm_idx ON dndshare.item USING gin (name gin_trgm_ops);
 CREATE INDEX IF NOT EXISTS item_type_id_idx ON dndshare.item USING btree (type_id, name);
@@ -131,6 +216,7 @@ CREATE INDEX IF NOT EXISTS item_type_public_name_idx ON dndshare.item USING btre
 CREATE INDEX IF NOT EXISTS item_type_user_name_idx ON dndshare.item USING btree (type_id, user_id, name, id);
 CREATE INDEX IF NOT EXISTS item_parent_id_idx ON dndshare.item USING btree (parent_id) WHERE (parent_id IS NOT NULL);
 CREATE INDEX IF NOT EXISTS idx_item_user_id ON dndshare.item USING btree (user_id);
+CREATE INDEX IF NOT EXISTS idx_item_custom_source_id ON dndshare.item USING btree (custom_source_id);
 
 CREATE TABLE IF NOT EXISTS dndshare.item_content_source (
     item_id           int8 NOT NULL REFERENCES dndshare.item(id) ON DELETE CASCADE,
@@ -166,8 +252,9 @@ CREATE TABLE IF NOT EXISTS dndshare.suggest_type (
 CREATE INDEX IF NOT EXISTS idx_suggest_type_source_id ON dndshare.suggest_type USING btree (source_id);
 CREATE INDEX IF NOT EXISTS idx_suggest_type_svg_id ON dndshare.suggest_type USING btree (svg_id);
 
+CREATE SEQUENCE IF NOT EXISTS dndshare.suggest_public_id_seq;
 CREATE TABLE IF NOT EXISTS dndshare.suggest (
-    id      int8 NOT NULL,
+    id      int8 DEFAULT nextval('dndshare.suggest_public_id_seq'::regclass) NOT NULL,
     user_id int8 NULL REFERENCES dndshare.users(id),
     type_id int8 NOT NULL REFERENCES dndshare.suggest_type(id),
     value   varchar NOT NULL,
@@ -177,6 +264,17 @@ CREATE TABLE IF NOT EXISTS dndshare.suggest (
     svg_id  int8 NULL REFERENCES dndshare.svg_storage(id),
     CONSTRAINT suggest_pk PRIMARY KEY (type_id, id)
 );
+ALTER TABLE dndshare.suggest ALTER COLUMN id
+    SET DEFAULT nextval('dndshare.suggest_public_id_seq'::regclass);
+SELECT setval(
+    'dndshare.suggest_public_id_seq',
+    GREATEST(
+        COALESCE((SELECT MAX(id) FROM dndshare.suggest), 0),
+        (SELECT last_value FROM dndshare.suggest_public_id_seq)
+    ),
+    true
+)
+WHERE EXISTS (SELECT 1 FROM dndshare.suggest);
 CREATE INDEX IF NOT EXISTS suggest_base_type_value_idx ON dndshare.suggest USING btree (type_id, lower((value)::text), id) WHERE (user_id IS NULL);
 CREATE INDEX IF NOT EXISTS suggest_user_type_user_value_idx ON dndshare.suggest USING btree (type_id, user_id, lower((value)::text), id) WHERE (user_id IS NOT NULL);
 CREATE INDEX IF NOT EXISTS idx_suggest_svg_id ON dndshare.suggest USING btree (svg_id);
