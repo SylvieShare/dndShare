@@ -66,8 +66,8 @@ type errorReportListProbe struct {
 	HasReports bool `json:"hasReports"`
 }
 
-func newErrorReportListProbe(reports []store.ErrorReport) errorReportListProbe {
-	return errorReportListProbe{HasReports: len(reports) > 0}
+func newErrorReportListProbe(hasReports bool) errorReportListProbe {
+	return errorReportListProbe{HasReports: hasReports}
 }
 
 // handleMCP — bearer-authed JSON-RPC over a single HTTP POST (MCP streamable-HTTP).
@@ -279,12 +279,16 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 		if err != nil {
 			return nil, err
 		}
+		if summaryOnly {
+			hasReports, err := s.store.HasApprovedErrorReports(ctx)
+			if err != nil {
+				return nil, err
+			}
+			return newErrorReportListProbe(hasReports), nil
+		}
 		reports, err := s.store.ListApprovedErrorReports(ctx, coerceIn(limit, 1, 500), coerceAtLeast(offset, 0))
 		if err != nil {
 			return nil, err
-		}
-		if summaryOnly {
-			return newErrorReportListProbe(reports), nil
 		}
 		return reports, nil
 

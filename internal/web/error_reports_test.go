@@ -5,8 +5,6 @@ import (
 	"encoding/json"
 	"strings"
 	"testing"
-
-	"dndshare/internal/store"
 )
 
 func TestErrorReportLeaseID(t *testing.T) {
@@ -60,11 +58,11 @@ func TestArgBoolDefault(t *testing.T) {
 }
 
 func TestErrorReportListProbeOnlyExposesQueuePresence(t *testing.T) {
-	empty := newErrorReportListProbe(nil)
+	empty := newErrorReportListProbe(false)
 	if empty.HasReports {
 		t.Fatal("empty queue must not report work")
 	}
-	probe := newErrorReportListProbe([]store.ErrorReport{{ID: 7}})
+	probe := newErrorReportListProbe(true)
 	raw, err := json.Marshal(probe)
 	if err != nil {
 		t.Fatalf("marshal probe: %v", err)
