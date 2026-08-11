@@ -15,6 +15,13 @@ describe('D&D mobile sheet schema', () => {
       'Характер',
       'История',
     ])
+
+    const identityFields = groups[0]?.children?.[1]
+    expect(identityFields?.type).toBe('column')
+    expect(identityFields?.children?.map(block => block.ref)).toEqual([
+      'person_origin',
+      'person_alignment',
+    ])
   })
 
   it('keeps the mobile diary equivalent to the desktop diary section', () => {
@@ -32,7 +39,7 @@ describe('D&D mobile sheet schema', () => {
     expect(summary.children.map(block => block.ref)).toEqual(['hp', 'exhaustion', 'states'])
     expect(hp.props['min-width']).toBe('100px')
     expect(exhaustion.props.variant).toBe('compact')
-    expect(exhaustion.props).toMatchObject({ shrink: 1, basis: '58px', 'min-width': 0 })
+    expect(exhaustion.props).toMatchObject({ shrink: 0, basis: '58px', 'min-width': '58px' })
   })
 
   it('keeps identity editing out of the mobile personality tab', () => {

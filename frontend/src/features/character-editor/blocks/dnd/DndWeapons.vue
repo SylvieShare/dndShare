@@ -410,6 +410,7 @@ onMounted(() => {
 }
 
 .w-add {
+  margin-top: 12px;
   padding: 12px 20px;
   border-top: 1px solid color-mix(in srgb, var(--text-muted) 28%, transparent);
 }

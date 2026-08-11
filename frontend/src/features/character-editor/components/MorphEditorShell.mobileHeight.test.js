@@ -6,7 +6,6 @@ const source = readFileSync(fileURLToPath(new URL('./MorphEditorShell.vue', impo
 const morphEditorSources = [
   '../blocks/dnd/components/DndCounterEditor.vue',
   '../blocks/dnd/components/DndDiaryEventEditor.vue',
-  '../blocks/dnd/components/DndDiarySessionEditor.vue',
   '../blocks/dnd/components/DndQuestEditor.vue',
 ].map(path => readFileSync(fileURLToPath(new URL(path, import.meta.url)), 'utf8'))
 

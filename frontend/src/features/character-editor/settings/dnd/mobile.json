@@ -165,10 +165,9 @@
               },
               {
                 "kind": "layout",
-                "type": "grid",
+                "type": "column",
                 "props": {
-                  "gap": "10px",
-                  "columns": 2
+                  "gap": "10px"
                 },
                 "children": [
                   {
@@ -385,9 +384,9 @@
         "kind": "block",
         "props": {
           "variant": "compact",
-          "shrink": 1,
+          "shrink": 0,
           "basis": "58px",
-          "min-width": 0
+          "min-width": "58px"
         }
       },
       {

@@ -68,7 +68,12 @@
               @mouseenter="e => showTooltip(e, entry)"
               @mouseleave="hideTooltip"
             >
-              <span class="di-row-name" @click="onNameClick(entry)">
+              <span
+                class="di-row-name"
+                :class="{ 'di-row-name-editable': entry.display.isCustom && canManage }"
+                :title="entry.display.isCustom && canManage ? 'Редактировать' : entry.display.name"
+                @click="onNameClick(entry)"
+              >
                 <span class="di-row-name-text">{{ entry.display.name }}</span>
                 <span v-if="entry.count > 1" class="di-count-badge">
                   <span class="di-count-x">x</span>{{ entry.count }}
@@ -86,13 +91,6 @@
                     <path d="M8 2v9M4.5 7.5L8 11l3.5-3.5M3 13h10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
                 </button>
-
-                <button
-                  v-if="entry.display.isCustom"
-                  class="di-icon-btn"
-                  title="Редактировать"
-                  @click.stop="openInlineForm(section.id, entry)"
-                >✦</button>
 
                 <button class="di-icon-btn di-del" title="Удалить" @click.stop="removeEntry(section.id, entry.uid)">
                   <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">

@@ -55,6 +55,8 @@ The character viewport keeps its pre-keyboard height while a rich-text or form
 editor is focused. `useCharacterViewport` owns the visual/layout viewport
 synchronization and document-scoped focus handling needed by editors teleported
 outside the page root.
+The compact HP/status strip keeps exhaustion at a fixed readable width and
+shows a thin scrollbar only when the status icons actually overflow.
 
 ## Shared UI requirements
 
@@ -138,10 +140,16 @@ is for a custom name/description/count metadata, while referenced item content
 comes from handbook. The list shows count as a badge; it has no ordinary
 increment/decrement controls. The item detail modal provides the shared number
 input with a minimum of one and a delete action; a multi-quantity picker creates
-one entry with that count. Consumables retain their use action, which decrements
-the count and removes the entry at zero. Spell detail exposes prepare/unprepare
+one entry with that count. Potion tiles open the shared `RowActionMenu` with
+use, replenish-by-one and view actions; use decrements the count and removes
+the entry at zero. A custom inventory entry is edited through its marked
+clickable name rather than a separate star button. Spell detail exposes prepare/unprepare
 when the spellbook uses preparation, plus delete; these actions update the same
 spell reference as the list row.
+
+Diary sessions animate their disclosure body. Session create/edit forms use a
+regular `AppModalFrame`; event create/edit retains the element-origin
+`MorphEditorShell` flow.
 
 Weapon handbook attacks use canonical `{dice_id,type,count}`. Character-added
 attack rows use `{count,dice_id,type_suggest_id}` and are explicitly adapted at

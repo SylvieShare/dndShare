@@ -225,11 +225,21 @@ function hideTooltip() {
   overflow-x: auto;
   overscroll-behavior-x: contain;
   -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
+  scrollbar-color: var(--border-strong) transparent;
+  scrollbar-width: thin;
 }
 
 .bs-compact-icons::-webkit-scrollbar {
-  display: none;
+  height: 3px;
+}
+
+.bs-compact-icons::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.bs-compact-icons::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: var(--border-strong);
 }
 
 .bs-compact-chip {

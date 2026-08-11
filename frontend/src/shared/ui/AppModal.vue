@@ -3,7 +3,10 @@
     <div
       ref="overlay"
       class="am-overlay"
-      :style="zIndex !== 3000 ? { zIndex } : {}"
+      :style="[
+        zIndex !== 3000 ? { zIndex } : {},
+        { '--am-fullscreen-height': fullscreenHeight },
+      ]"
       role="dialog"
       aria-modal="true"
       @mousedown.self="requestClose"
@@ -42,6 +45,7 @@ const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), texta
 
 <script setup>
 import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
+import { useFullscreenViewportHeight } from '@/shared/composables/useFullscreenViewportHeight'
 
 const props = defineProps({
   zIndex: { type: Number, default: 3000 },
@@ -58,6 +62,7 @@ const emit = defineEmits(['close', 'opened'])
 
 const overlay = ref(null)
 const card    = ref(null)
+const fullscreenHeight = useFullscreenViewportHeight()
 
 const isDragging          = ref(false)
 const dragY               = ref(0)
@@ -379,6 +384,10 @@ onBeforeUnmount(() => {
     max-width: 100%;
     height: 94vh;
     max-height: 94vh;
+    height: 94dvh;
+    max-height: 94dvh;
+    height: var(--am-fullscreen-height, 94dvh);
+    max-height: var(--am-fullscreen-height, 94dvh);
     padding: 0;
     border-radius: 16px 16px 0 0;
   }

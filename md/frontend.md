@@ -53,7 +53,7 @@ Vite работает на `:5173` и проксирует `/api` и `/mcp` в G
 | Выбор значения | `shared/ui/ValueSelect.vue`, `SuggestPicker`, `SuggestAdd`, `SuggestMultiSelect` | Обычный select либо одиночный/множественный выбор из серверного справочника; компоненты сами отвечают за desktop dropdown и mobile sheet. |
 | Расширенное описание | `shared/ui/InputDescription.vue` | Редактирование форматированного описания. |
 | Отображение описания | `shared/ui/RichContent.vue` | Безопасный и единообразный вывод HTML, созданного `InputDescription`. Не использовать собственный `v-html` для такого контента. |
-| Popover/контекстное меню | `shared/ui/BasePopover.vue`, `RowActionMenu.vue` | Неблокирующий контент, привязанный к управляющему элементу. |
+| Popover/контекстное меню | `shared/ui/BasePopover.vue`, `RowActionMenu.vue` | Неблокирующий контент, привязанный к управляющему элементу. `RowActionMenu` поддерживает стандартный trigger с многоточием и feature-trigger через slot. |
 | Перетаскивание | `shared/composables/useSortable.js` | Сортировка и перенос между группами. `useSortable` ведёт drag-состояние, `reorderByDrop` выполняет чистую перестановку массива. |
 | Переключатели | `MultiToggle`, `ToggleSwitch`, `EncCheckbox` | Выбор режима, boolean и компактный checkbox соответственно. |
 
@@ -67,6 +67,10 @@ Vite работает на `:5173` и проксирует `/api` и `/mcp` в G
 - серверный поиск и выбор элемента —
   `features/handbook/components/ItemPickerModal`;
 - раскрытие из плитки — `MorphSheet`.
+
+Fullscreen-карточка `AppModal` ограничивает высоту по `visualViewport`, поэтому
+фиксированная шапка и поля остаются в видимой области при открытой мобильной
+клавиатуре; `dvh` используется как CSS fallback.
 
 Предметные действия не встраиваются в renderer карточки: владелец передаёт их
 в footer-slot `ItemViewModal`. Поэтому одно и то же окно описания поддерживает,

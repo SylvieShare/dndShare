@@ -8,15 +8,20 @@
 
     <div class="ps-row">
       <div v-for="p in potions" :key="p.uid" class="ps-vial">
-        <button
-          class="ps-glasswrap"
-          :class="{ 'ps-clickable': canUse }"
-          :title="canUse ? `Выпить: ${p.name}` : p.name"
-          @click="onUse(p)"
-        >
-          <PotionVial :ref="el => setVial(p.uid, el)" :color="p.color" :rarity="p.rarity" size="md" />
-          <span v-if="p.count > 1" class="ps-badge">×{{ p.count }}</span>
-        </button>
+        <RowActionMenu :title="`Действия: ${p.name}`">
+          <template #trigger>
+            <button class="ps-glasswrap ps-clickable" :title="`Действия: ${p.name}`">
+              <PotionVial :ref="el => setVial(p.uid, el)" :color="p.color" :rarity="p.rarity" size="md" />
+              <span v-if="p.count > 1" class="ps-badge">×{{ p.count }}</span>
+            </button>
+          </template>
+
+          <template #default="{ close }">
+            <button v-if="canUse" type="button" class="ram-item" @click="usePotion(p, close)">Использовать</button>
+            <button v-if="canAdd" type="button" class="ram-item" @click="replenishPotion(p, close)">Пополнить (+1)</button>
+            <button type="button" class="ram-item" @click="viewPotion(p, close)">Просмотреть</button>
+          </template>
+        </RowActionMenu>
 
         <span class="ps-name" :title="p.name">{{ p.name }}</span>
       </div>
@@ -31,13 +36,14 @@
 
 <script setup>
 import PotionVial from '@/features/items/components/PotionVial'
+import RowActionMenu from '@/shared/ui/RowActionMenu.vue'
 
 const props = defineProps({
   potions: { type: Array, default: () => [] },
   canUse: { type: Boolean, default: false },
   canAdd: { type: Boolean, default: false },
 })
-const emit = defineEmits(['use', 'add'])
+const emit = defineEmits(['use', 'replenish', 'view', 'add'])
 
 const vials = new Map()
 const busy = new Set()
@@ -64,6 +70,21 @@ async function onUse(p) {
   } finally {
     busy.delete(p.uid)
   }
+}
+
+async function usePotion(p, close) {
+  close()
+  await onUse(p)
+}
+
+function replenishPotion(p, close) {
+  close()
+  if (props.canAdd) emit('replenish', p.uid)
+}
+
+function viewPotion(p, close) {
+  close()
+  emit('view', p.uid)
 }
 </script>
 

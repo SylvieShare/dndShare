@@ -13,7 +13,7 @@
         </div>
       </div>
 
-      <div v-if="item.contentSources?.length" class="detail-sources">
+      <div v-if="item.contentSources?.length && type?.id !== 5" class="detail-sources">
         <span v-for="source in item.contentSources" :key="source.id" :title="source.name">{{ source.code || source.name }}</span>
       </div>
 

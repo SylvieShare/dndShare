@@ -21,35 +21,41 @@
       </button>
     </div>
 
-    <div v-if="open" class="dsc-body">
-      <div v-if="session.events.length" class="dsc-events">
-        <span class="dsc-rail" aria-hidden="true">
-          <svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M2 5.5 6 1.5l4 4M6 2v8.5" />
-          </svg>
-        </span>
-        <component
-          :is="ownerMode ? 'button' : 'div'"
-          v-for="e in displayedEvents"
-          :key="e.id"
-          :ref="el => setEventRef(e.id, el)"
-          class="dsc-event"
-          :class="{ 'dsc-event--clickable': ownerMode }"
-          :type="ownerMode ? 'button' : undefined"
-          @click="ownerMode && $emit('edit-event', e.id, eventEls[e.id])"
-        >
-          <DndDiaryEventRow :event="e" />
-        </component>
-      </div>
-      <div v-else class="dsc-empty">Пока нет событий</div>
+    <Transition name="dsc-expand">
+      <div v-if="open" class="dsc-body">
+        <div class="dsc-body-inner">
+          <div class="dsc-body-content">
+            <div v-if="session.events.length" class="dsc-events">
+              <span class="dsc-rail" aria-hidden="true">
+                <svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M2 5.5 6 1.5l4 4M6 2v8.5" />
+                </svg>
+              </span>
+              <component
+                :is="ownerMode ? 'button' : 'div'"
+                v-for="e in displayedEvents"
+                :key="e.id"
+                :ref="el => setEventRef(e.id, el)"
+                class="dsc-event"
+                :class="{ 'dsc-event--clickable': ownerMode }"
+                :type="ownerMode ? 'button' : undefined"
+                @click="ownerMode && $emit('edit-event', e.id, eventEls[e.id])"
+              >
+                <DndDiaryEventRow :event="e" />
+              </component>
+            </div>
+            <div v-else class="dsc-empty">Пока нет событий</div>
 
-      <button v-if="ownerMode" ref="addBtnEl" class="dsc-add" type="button" @click="$emit('add-event', addBtnEl)">
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-          <path d="M12 5v14M5 12h14" />
-        </svg>
-        событие
-      </button>
-    </div>
+            <button v-if="ownerMode" ref="addBtnEl" class="dsc-add" type="button" @click="$emit('add-event', addBtnEl)">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                <path d="M12 5v14M5 12h14" />
+              </svg>
+              событие
+            </button>
+          </div>
+        </div>
+      </div>
+    </Transition>
   </div>
 </template>
 
@@ -149,12 +155,27 @@ const eventsCountLabel = computed(() => {
 @media (hover: hover) { .dsc-edit:hover { color: var(--accent); background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); } }
 
 .dsc-body {
+  display: grid;
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transition: grid-template-rows 0.2s ease, opacity 0.15s ease;
+}
+.dsc-body-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+.dsc-body-content {
   display: flex;
   flex-direction: column;
   gap: 10px;
   padding: 2px 16px 14px;
   border-top: 1px solid var(--border);
   padding-top: 13px;
+}
+.dsc-expand-enter-from,
+.dsc-expand-leave-to {
+  grid-template-rows: 0fr;
+  opacity: 0;
 }
 
 .dsc-events {
@@ -226,5 +247,10 @@ const eventsCountLabel = computed(() => {
   color: var(--text-2);
   border-color: color-mix(in srgb, var(--accent) 50%, var(--border-strong));
   background: color-mix(in srgb, var(--accent) 5%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dsc-body,
+  .dsc-chevron { transition: none; }
 }
 </style>

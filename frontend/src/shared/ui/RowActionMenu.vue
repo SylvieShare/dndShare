@@ -1,5 +1,9 @@
 <template>
+  <span v-if="$slots.trigger" ref="triggerEl" class="ram-custom-trigger" @click.stop="toggle">
+    <slot name="trigger" :open="isOpen" />
+  </span>
   <button
+    v-else
     ref="triggerEl"
     type="button"
     class="ram-trigger"
@@ -87,6 +91,10 @@ defineExpose({ close })
 </script>
 
 <style scoped>
+.ram-custom-trigger {
+  display: inline-flex;
+}
+
 .ram-trigger {
   width: 26px;
   height: 26px;

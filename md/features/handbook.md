@@ -67,6 +67,9 @@ Details are specialized by type where useful (weapon, spell, enemy, potion,
 feat), otherwise the generic field renderer is used. Item detail modals use
 `ItemViewModal` and fixed-chrome `AppModalFrame`; the standalone detail renderer
 keeps its own title, while the modal moves that title into the fixed header.
+Spell detail owns its canonical publication label, so the wrapper does not
+render a duplicate source chip for spells; other item types retain the wrapper
+source chip when no specialized publication label exists.
 Feature-specific mutations are passed into the fixed footer through the
 `actions` slot. Descriptions use the shared rich renderer.
 

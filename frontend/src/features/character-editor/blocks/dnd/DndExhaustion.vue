@@ -135,14 +135,13 @@ function setEffect(i, text) {
 
 .exh-compact {
   display: inline-flex;
-  flex: 0 1 58px;
-  flex-shrink: 1;
+  flex: 0 0 58px;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 2px;
   box-sizing: border-box;
-  min-width: 0;
+  min-width: 58px;
   max-width: 100%;
   min-height: 32px;
   height: 32px;

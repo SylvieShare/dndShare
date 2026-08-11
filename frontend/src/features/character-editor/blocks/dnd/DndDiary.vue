@@ -25,34 +25,16 @@
     </div>
     <div v-else class="dd-empty">Здесь появится летопись приключений — добавьте первую сессию</div>
 
-    <MorphEditorShell
+    <DndDiarySessionModal
       v-if="editorOpen && editorKind === 'session' && currentSession"
-      :origin-rect="originRect"
-      :origin-el="originEl"
-      orientation="vertical"
-      :min-view-width="340"
+      :session="currentSession"
+      :title-placeholder="sessionPlaceholder"
+      :mode="mode"
+      @update="onSessionUpdate"
+      @save="saveSessionDraft"
+      @remove="askRemoveSession"
       @close="closeEditor"
-    >
-      <template #view>
-        <div class="dd-session-face">
-          <span class="dd-session-face-title" :class="{ 'dd-session-face-title--empty': !currentSession.title }">
-            {{ currentSession.title || sessionPlaceholder }}
-          </span>
-          <span v-if="currentSession.date" class="dd-session-face-date">{{ currentSession.date }}</span>
-        </div>
-      </template>
-      <template #editor>
-        <DndDiarySessionEditor
-          :session="currentSession"
-          :title-placeholder="sessionPlaceholder"
-          :mode="mode"
-          @update="onSessionUpdate"
-          @save="saveSessionDraft"
-          @remove="askRemoveSession"
-          @close="closeEditor"
-        />
-      </template>
-    </MorphEditorShell>
+    />
 
     <MorphEditorShell
       v-if="editorOpen && editorKind === 'event' && currentEvent"
@@ -97,7 +79,7 @@ import ConfirmDialog from '@/shared/ui/ConfirmDialog'
 import DndDiaryEventEditor from '@/features/character-editor/blocks/dnd/components/DndDiaryEventEditor.vue'
 import DndDiaryEventRow from '@/features/character-editor/blocks/dnd/components/DndDiaryEventRow.vue'
 import DndDiarySessionCard from '@/features/character-editor/blocks/dnd/components/DndDiarySessionCard.vue'
-import DndDiarySessionEditor from '@/features/character-editor/blocks/dnd/components/DndDiarySessionEditor.vue'
+import DndDiarySessionModal from '@/features/character-editor/blocks/dnd/components/DndDiarySessionModal.vue'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
 import { useMorphOrigin } from '@/features/character-editor/composables/useMorphOrigin'
 import {
@@ -282,26 +264,6 @@ function closeEditor() {
   font-size: 12.5px;
   color: var(--text-muted);
   font-style: italic;
-}
-
-.dd-session-face {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  padding: 14px 18px;
-  min-width: 0;
-}
-.dd-session-face-title {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--text-1);
-  overflow-wrap: anywhere;
-}
-.dd-session-face-title--empty { color: var(--text-2); }
-.dd-session-face-date {
-  flex-shrink: 0;
-  font-size: 12px;
-  color: var(--text-muted);
 }
 
 .dd-event-face {
