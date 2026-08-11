@@ -24,7 +24,7 @@
     </template>
 
     <div v-else-if="session" class="layout">
-      <aside class="col-left tile">
+      <BaseTile class="col-left">
         <div class="col-section-title">
           ИГРОКИ
           <span class="poll-indicator" :class="pollStatus">
@@ -100,10 +100,10 @@
             </button>
           </div>
         </div>
-      </aside>
+      </BaseTile>
 
       <div class="main-area">
-        <div class="toolbar-tile tile">
+        <BaseTile class="toolbar-tile">
           <SessionTopBar
             ref="topBarRef"
             :session="session"
@@ -113,12 +113,12 @@
             @edit="openEdit"
             @status-change="status => { session = { ...session, status } }"
           />
-        </div>
+        </BaseTile>
 
         <div class="main-row">
           <div class="col-middle">
             <SlidingTabs :tabs="tabItems" :model-value="activeTab" @update:model-value="selectTab" />
-            <div class="tab-content tile">
+            <BaseTile class="tab-content">
               <EncounterTab
                 v-if="tabsLoaded.combat"
                 v-show="activeTab === 'combat'"
@@ -135,16 +135,16 @@
                 :current-chapter-id="session.currentChapterId"
                 :is-dm="isDm"
               />
-            </div>
+            </BaseTile>
           </div>
 
           <aside class="col-right">
-            <div class="tile side-tile">
+            <BaseTile class="side-tile">
               <DicePanel />
-            </div>
-            <div class="tile side-tile">
+            </BaseTile>
+            <BaseTile class="side-tile">
               <MusicPanel :is-dm="isDm" @open-library="musicLibraryOpen = true" />
-            </div>
+            </BaseTile>
           </aside>
         </div>
       </div>
@@ -173,6 +173,7 @@
 import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
+import BaseTile from '@/shared/ui/BaseTile.vue'
 import FormActionButtons from '@/shared/ui/form/FormActionButtons'
 import FormField from '@/shared/ui/form/FormField'
 import FormTextInput from '@/shared/ui/form/FormTextInput'
