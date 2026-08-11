@@ -34,7 +34,7 @@
           <div v-if="loadError" class="inbox-error">{{ loadError }}</div>
           <div class="inbox-list">
             <article
-              v-for="report in displayedReports"
+              v-for="report in reports"
               :key="report.id"
               class="inbox-report"
               :class="`state-${statusKey(report).toLowerCase()}`"
@@ -69,9 +69,6 @@
             </article>
           </div>
 
-          <div v-if="hiddenReportsCount" class="inbox-limit">
-            Не показано заявок: {{ hiddenReportsCount }}
-          </div>
       </section>
     </aside>
   </teleport>
@@ -207,18 +204,10 @@ let pollTimer = null
 let requestInFlight = false
 let lastReportsPayload = ''
 
-const visibleReportsLimit = 8
-
 const canReview = computed(() => accountStore.user?.roles?.includes('ERROR_REPORT_REVIEWER'))
 const isAdmin = computed(() => accountStore.user?.roles?.includes('ADMIN'))
 const activeReport = computed(() => reports.value.find(report => report.id === activeReportId.value) || null)
-const displayedReports = computed(() => reports.value.slice(0, visibleReportsLimit))
-const hiddenReportsCount = computed(() => Math.max(0, reports.value.length - visibleReportsLimit))
-const inboxSummary = computed(() => {
-  if (!reports.value.length) return 'Очередь пуста'
-  if (!hiddenReportsCount.value) return `${reports.value.length} в обзоре`
-  return `Показано ${displayedReports.value.length} из ${reports.value.length}`
-})
+const inboxSummary = computed(() => `${reports.value.length} в обзоре`)
 
 watch(canReview, allowed => {
   stopPolling()
