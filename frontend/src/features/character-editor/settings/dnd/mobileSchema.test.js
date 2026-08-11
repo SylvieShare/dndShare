@@ -16,4 +16,27 @@ describe('D&D mobile sheet schema', () => {
     expect(summary.children.map(block => block.ref)).toEqual(['hp', 'exhaustion', 'states'])
     expect(exhaustion.props.variant).toBe('compact')
   })
+
+  it('keeps identity editing out of the mobile personality tab', () => {
+    const personality = schema.layouts.mobile.tabs.find(tab => tab.title === 'Личность')
+    const refs = []
+    const collectRefs = block => {
+      if (block.ref) refs.push(block.ref)
+      block.children?.forEach(collectRefs)
+    }
+
+    collectRefs(personality?.content)
+
+    for (const identityRef of ['ava', 'name', 'race', 'class']) {
+      expect(refs).not.toContain(identityRef)
+    }
+    expect(refs).toEqual(expect.arrayContaining([
+      'person_origin',
+      'person_alignment',
+      'person_appearance',
+      'person_traits',
+      'person_backstory',
+      'person_allies',
+    ]))
+  })
 })

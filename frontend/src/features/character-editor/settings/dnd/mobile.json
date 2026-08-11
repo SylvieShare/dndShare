@@ -148,49 +148,6 @@
         "children": [
           {
             "kind": "layout",
-            "type": "row",
-            "props": {
-              "gap": "12px",
-              "align-items": "stretch"
-            },
-            "children": [
-              {
-                "ref": "ava",
-                "kind": "block",
-                "props": {
-                  "width": "112px",
-                  "height": "148px",
-                  "shrink": 0
-                }
-              },
-              {
-                "kind": "layout",
-                "type": "column",
-                "props": {
-                  "gap": "8px",
-                  "grow": 1,
-                  "basis": 0,
-                  "minWidth": 0
-                },
-                "children": [
-                  {
-                    "ref": "name",
-                    "kind": "block"
-                  },
-                  {
-                    "ref": "race",
-                    "kind": "block"
-                  },
-                  {
-                    "ref": "class",
-                    "kind": "block"
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "kind": "layout",
             "type": "grid",
             "props": {
               "gap": "10px",
