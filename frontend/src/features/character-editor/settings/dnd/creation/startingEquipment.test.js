@@ -39,7 +39,7 @@ describe('PHB starting equipment', () => {
   })
 
   it('assembles the rogue equipment from the selected bundles and fixed items', () => {
-    const profile = startingEquipmentProfile('Плут')
+    const profile = startingEquipmentProfile({ name: 'Плут' })
     const equipment = selectedStartingEquipment(profile, {
       weapon_1: { optionId: 'rapier', picks: {} },
       weapon_2: { optionId: 'shortbow', picks: {} },
@@ -56,7 +56,7 @@ describe('PHB starting equipment', () => {
   })
 
   it('requires the concrete weapon behind an "any weapon" choice', () => {
-    const profile = startingEquipmentProfile('Варвар')
+    const profile = startingEquipmentProfile({ name: 'Варвар' })
     const choices = {
       weapon_1: { optionId: 'martial_melee', picks: {} },
       weapon_2: { optionId: 'handaxes', picks: {} },

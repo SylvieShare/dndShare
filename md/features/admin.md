@@ -1,128 +1,52 @@
-# Admin Panel
+# Admin panel
 
-Admin panel is available at `/admin`, visible in navigation only for users with `ADMIN` role.
+`/admin` доступен пользователям с подходящими ролями. Frontend находится в
+`frontend/src/features/admin`, Go routes — в `internal/web/admin.go`,
+`internal/web/error_reports.go` и `internal/web/jobs*.go`.
 
-## Frontend
+## Sections
 
-Feature lives in `features/admin/`:
+- статистика;
+- пользователи и роли;
+- server logs;
+- background jobs и история запусков;
+- error reports для ADMIN/reviewer.
 
-```
-features/admin/
-  api/
-    adminApi.js            # users/logs/error reports/stats API client
-    adminJobsApi.js        # jobs API client
-  components/
-    AdminStats.vue         # Stats tab — cards with entity counts
-    AdminUsers.vue         # Users tab — table with createdAt, roles, add/remove role, password reset
-    AdminLogs.vue          # Logs tab — table with delete per-row and delete-all
-    AdminErrorReports.vue  # Page-error reports — selected element metadata + MCP approval + per-row delete
-    AdminJobs.vue          # Jobs tab — available jobs + runs history with live progress
-  pages/
-    ViewAdmin.vue          # Page: sidebar with tabs (stats/users/logs/error reports/jobs) + content area
-```
+Актуальные роли: `ADMIN`, `HANDBOOK_ADMIN`,
+`ERROR_REPORT_AUTO_APPROVE`, `ERROR_REPORT_REVIEWER`. Роли управления
+шаблонами нет: character settings находятся в frontend code registry.
 
-Route: `/admin` → `ViewAdmin.vue`.
+## Users and logs
 
-Nav link shown only when `accountStore.hasRole('ADMIN')` is true — added in both `HorizontalMenu.vue` (desktop + mobile dropdown) and `AppHeader.vue` (brand mobile menu).
+`internal/web/admin.go` регистрирует endpoints управления ролями, сброса
+пароля, просмотра/удаления logs и статистики. Опасные операции подтверждаются
+через общий `ConfirmDialog`; browser confirm/alert не используется.
 
-## Backend
+## Jobs
 
-Controller: `rest/AdminPanelController.kt`, base path `/api/admin-panel`.
+Реестр `internal/web/jobs.go` получает jobs через `registerJob(code, name,
+description, handler)`. `jobs_handlers.go` содержит handlers, `job_run` — их
+историю, progress, result/error и cooperative cancellation.
 
-All endpoints require `@UserNeedRole([Role.ADMIN])`.
+В актуальном реестре:
 
-### Users endpoints
+- `recount` — пересчитывает counts справочника;
+- `bestiary-import` — импортирует/обновляет бестиарий.
 
-| Method | Path | Description |
-|--------|------|-------------|
-| GET | `/api/admin-panel/users` | All users with their roles and `createdAt` |
-| POST | `/api/admin-panel/users/{id}/roles` | Grant role `{ role: "ROLE_NAME" }` |
-| DELETE | `/api/admin-panel/users/{id}/roles/{role}` | Revoke role |
-| POST | `/api/admin-panel/users/{id}/password` | Reset password `{ password: "..." }` |
+Одноразовых jobs по преобразованию форматов персонажа, bindings или spell
+classes нет. Такие изменения выполняются идемпотентно в
+`internal/store/schema.sql`, после чего старый формат удаляется.
 
-### Logs endpoints
+Чтобы добавить регулярную job:
 
-| Method | Path | Description |
-|--------|------|-------------|
-| GET | `/api/admin-panel/logs` | All logs, sorted by createdAt desc |
-| DELETE | `/api/admin-panel/logs/{id}` | Delete single log |
-| DELETE | `/api/admin-panel/logs` | Delete all logs |
+1. реализовать handler с `context.Context` и progress reporter;
+2. зарегистрировать его в `init()` через `registerJob`;
+3. не дублировать migration, которую должен выполнять startup schema;
+4. проверить cancellation и отображение result/error в `AdminJobs.vue`.
 
-### Stats endpoint
+## Error reports
 
-| Method | Path | Description |
-|--------|------|-------------|
-| GET | `/api/admin-panel/stats` | Counts: users, characters, templates, baseItems, userItems, baseSuggests, userSuggests, logs, errorReports |
-
-### Page error report endpoints
-
-| Method | Path | Description |
-|--------|------|-------------|
-| GET | `/api/admin-panel/error-reports?limit=200&offset=0` | Reports sorted by `createdAt` descending |
-| GET | `/api/admin-panel/error-reports/{id}/screenshot` | Raw attached element screenshot |
-| GET | `/api/admin-panel/error-reports/{id}/viewport-screenshot` | Raw visible-page screenshot |
-| PATCH | `/api/admin-panel/error-reports/{id}/approval` | Approve or revoke MCP access with `{ approved: boolean }` |
-| POST | `/api/error-report-review/reports/{id}/serious-approval` | ADMIN-only serious-change confirmation |
-| DELETE | `/api/admin-panel/error-reports/{id}` | Delete one handled report |
-
-The **«Ошибки страниц»** tab renders the AI-generated title (or a truncated description until it exists), description, page URL, reporter (`Гость` for null `user_id`), selector, screenshots, MCP approval, serious-change confirmation, conversation, and separate queued/in-progress/waiting/finished/archive states. See `md/features/error-reports.md` for the public submit flow and global reviewer inbox.
-
-### Supporting changes
-
-- `UserRoleRepository` — added `findRolesByAllUsers()`, `addRole(userId, role)`, `removeRole(userId, role)`.
-- `UserRoleService` — exposed `getRolesByAllUsers()`, `addRole()`, `removeRole()`.
-
-Role names match the backend constants: `ADMIN`, `HANDBOOK_ADMIN`, `TEMPLATE_ADMIN`, `ERROR_REPORT_AUTO_APPROVE`, `ERROR_REPORT_REVIEWER`. Auto-approve affects new reports; reviewer exposes the global queue and reply UI. Only `ADMIN` can confirm serious changes.
-
-## Jobs (асинхронные задачи)
-
-Long-running admin operations are modeled as **jobs** with progress tracking. The Jobs tab in the admin panel lists available jobs and a history of runs with live progress bars.
-
-### Backend
-
-Infrastructure lives in `base/jobs/`:
-
-- `AdminJob` annotation — marks a class as a discoverable job (`code`, `name`, `description`). Includes `@Component`, so the class is auto-registered as a Spring bean.
-- `AdminJobHandler` interface — a job implements `fun run(ctx: JobContext)`.
-- `JobContext` — passed into the handler. Exposes:
-  - `setTotal(value)` — set/update the total work units (optional; when null, the UI shows just a counter).
-  - `progress(value, message?)` / `increment(delta = 1, message?)` — update current progress.
-  - `isCancelled` / `checkCancelled()` — cooperative cancellation; the handler should call `checkCancelled()` at safe points.
-  - `result: Any?` — assign before returning to persist a JSON result for the run.
-- `AdminJobService` — discovers `@AdminJob` beans via `ApplicationContext.getBeansWithAnnotation`, runs them on a fixed pool of 2 daemon threads, throttles progress updates to **at most one DB write every 500 ms**, prevents two simultaneous runs of the same `code`. On startup, any `RUNNING` row left by a previous process is marked `FAILED` with `error = "Прервано рестартом приложения"`.
-- `JobRunRepository` — manual `NamedParameterJdbcTemplate` repository writing to `base.job_run` (jsonb `result`).
-
-DDL: `resources/job_run.sql`. Table `base.job_run` with columns: `id, code, name, status, current_value, total_value, message, error, result jsonb, started_by_user_id, started_at, finished_at`.
-
-Job implementations live in `com.sylvieshare.dndshare.jobs`:
-
-- `BestiaryImportJob` (`code = "bestiary-import"`) — imports creatures from ttg.club into the enemy items handbook. Replaces the deleted `BestiaryImportController` / `GET /api/admin/import-bestiary`.
-- `RecountJob` (`code = "recount"`) — recalculates `count_items` for `item_type`, `source`, `suggest_type`. Replaces the deleted `GET /api/admin/recount`.
-
-### Adding a new job
-
-1. Create a class in `com.sylvieshare.dndshare.jobs` annotated with `@AdminJob(code, name, description)` implementing `AdminJobHandler`.
-2. Inject dependencies via constructor.
-3. In `run(ctx)`, call `ctx.setTotal(...)` if total is known, then drive progress with `ctx.progress(...)` / `ctx.increment(...)`. Call `ctx.checkCancelled()` at safe boundaries. Optionally assign `ctx.result = ...` for a JSON payload.
-4. That's it — Spring picks it up, frontend lists it automatically.
-
-### REST endpoints
-
-All under `/api/admin-panel/jobs`, all require `@UserNeedRole([Role.ADMIN])`:
-
-| Method | Path | Description |
-|--------|------|-------------|
-| GET | `/jobs/available` | List of registered jobs `[{ code, name, description }]` |
-| GET | `/jobs` | Recent runs (default 50, sorted by `started_at` desc) |
-| GET | `/jobs/{id}` | Single run |
-| POST | `/jobs/{code}/start` | Start a job; 500 if another run with same code is `RUNNING` |
-| POST | `/jobs/{id}/cancel` | Soft cancel (sets flag; handler exits at next `checkCancelled`) |
-
-### Frontend
-
-`AdminJobs.vue` renders:
-
-- Top: cards for available jobs with a launch button (disabled while a run with same code is `RUNNING`).
-- Bottom: runs history table with status chip, progress bar (`current/total (NN%)` when `total != null`, otherwise just `current`), message, duration, cancel button for running rows, and a collapsible result/error block.
-
-Polling: while at least one run is `RUNNING`, the page polls `GET /jobs` every 1.5 s; polling stops automatically when no runs are active.
+Admin может одобрить заявку для MCP, ответить на вопрос, подтвердить серьёзное
+изменение, вернуть завершённую заявку в работу или удалить её физически.
+Reviewer видит отдельную очередь и может архивировать результат. Подробный
+state machine — в `md/features/error-reports.md`.

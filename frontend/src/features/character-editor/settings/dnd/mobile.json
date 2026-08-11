@@ -294,11 +294,6 @@
       "variant": "mini"
     }
   ],
-  "header_title_path": [
-    "values.name",
-    "values.race",
-    "values.class"
-  ],
   "common_mobile_blocks": {
     "kind": "layout",
     "type": "row",

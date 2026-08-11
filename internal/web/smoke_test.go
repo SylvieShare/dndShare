@@ -46,7 +46,6 @@ func TestMCPPublishesErrorReportTools(t *testing.T) {
 
 	for _, name := range []string{
 		"error_reports_list",
-		"error_report_delete",
 		"error_report_screenshot",
 		"error_report_lock_acquire",
 		"error_report_lock_renew",

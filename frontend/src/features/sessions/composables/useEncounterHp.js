@@ -73,13 +73,13 @@ export function useEncounterHp({
   }
 
   function npcHpObj(c) {
-    return { current: c.hpCurrent ?? 0, max: npcHpMax(c), temp: c.hpTemp ?? 0, dice: 'd8', diceCount: 1, diceUsed: 0 }
+    return { current: c.hpCurrent ?? 0, max: npcHpMax(c), temp: c.hpTemp ?? 0, hitDice: [] }
   }
 
   function playerHpObj(c) {
     const p = findParticipant(c.charId)
     return (p && pvHp(p)) || {
-      current: 0, max: 0, temp: 0, dice: 'd8', diceCount: 1, diceUsed: 0, ds_success: 0, ds_failure: 0,
+      current: 0, max: 0, temp: 0, hitDice: [], ds_success: 0, ds_failure: 0,
     }
   }
 
@@ -181,9 +181,6 @@ export function useEncounterHp({
       { path: `${hpPath}.max`,        value: Number(hp.max) || 0 },
       { path: `${hpPath}.temp`,       value: Number(hp.temp) || 0 },
       { path: `${hpPath}.hitDice`,    value: Array.isArray(hp.hitDice) ? hp.hitDice : [] },
-      { path: `${hpPath}.dice`,       value: hp.dice ?? 'd8' },
-      { path: `${hpPath}.diceCount`,  value: Number(hp.diceCount) || 1 },
-      { path: `${hpPath}.diceUsed`,   value: Number(hp.diceUsed) || 0 },
       { path: `${hpPath}.ds_success`, value: Number(hp.ds_success) || 0 },
       { path: `${hpPath}.ds_failure`, value: Number(hp.ds_failure) || 0 },
     ]

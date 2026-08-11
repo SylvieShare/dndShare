@@ -1,72 +1,37 @@
-export function fetchGetEmpty(url) {
-    return fetch('/api' + url, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json;charset=utf-8'
-        },
+const JSON_HEADERS = { 'Content-Type': 'application/json;charset=utf-8' }
+
+async function apiRequest(url, { method = 'GET', body, response = 'json' } = {}) {
+    const res = await fetch('/api' + url, {
+        method,
+        headers: JSON_HEADERS,
+        body: body == null ? null : JSON.stringify(body),
     })
+    if (!res.ok) throw new Error(String(res.status))
+    if (response === 'raw') return res
+    const contentType = res.headers.get('content-type') || ''
+    return contentType.includes('application/json') ? res.json() : {}
+}
+
+export function fetchGetEmpty(url) {
+    return apiRequest(url, { response: 'raw' })
 }
 
 export function fetchGet(url) {
-    return fetch('/api' + url, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json;charset=utf-8'
-        },
-    })
-        .then(res => res.json().catch(() => {}))
+    return apiRequest(url)
 }
 
 export function fetchPost(url, body) {
-    return fetch('/api' + url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json;charset=utf-8'
-        },
-        body: body ? JSON.stringify(body) : null
-    })
-        .then(res => {
-            if (!res.ok) throw new Error(res.status)
-            const ct = res.headers.get('content-type')
-            return (ct && ct.includes('application/json')) ? res.json() : {}
-        })
+    return apiRequest(url, { method: 'POST', body })
 }
 
 export function fetchPut(url, body) {
-    return fetch('/api' + url, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json;charset=utf-8'
-        },
-        body: body ? JSON.stringify(body) : null
-    })
-        .then(res => {
-            if (!res.ok) throw new Error(res.status)
-            const ct = res.headers.get('content-type')
-            return (ct && ct.includes('application/json')) ? res.json() : {}
-        })
+    return apiRequest(url, { method: 'PUT', body })
 }
 
 export function fetchPatch(url, body) {
-    return fetch('/api' + url, {
-        method: 'PATCH',
-        headers: {
-            'Content-Type': 'application/json;charset=utf-8'
-        },
-        body: body ? JSON.stringify(body) : null
-    })
-        .then(res => {
-            if (!res.ok) throw new Error(res.status)
-            const ct = res.headers.get('content-type')
-            return (ct && ct.includes('application/json')) ? res.json() : {}
-        })
+    return apiRequest(url, { method: 'PATCH', body })
 }
 
 export function fetchDelete(url) {
-    return fetch('/api' + url, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json;charset=utf-8'
-        },
-    })
+    return apiRequest(url, { method: 'DELETE', response: 'raw' })
 }

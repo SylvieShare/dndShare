@@ -2,6 +2,7 @@
   <div class="admin-jobs">
     <section class="section">
       <h2 class="section-title">Доступные задачи</h2>
+      <div v-if="startError" class="state-msg error">{{ startError }}</div>
       <div v-if="loadingAvailable" class="state-msg">Загрузка...</div>
       <div v-else-if="!available.length" class="state-msg">Нет доступных задач</div>
       <div v-else class="jobs-grid">
@@ -89,11 +90,22 @@
         </tbody>
       </table>
     </section>
+
+    <ConfirmDialog
+      v-if="cancelTarget"
+      title="Отменить задачу?"
+      :message="cancelTarget.name"
+      confirm-label="Отменить задачу"
+      :loading="cancelling"
+      @cancel="cancelTarget = null"
+      @confirm="confirmCancel"
+    />
   </div>
 </template>
 
 <script setup>
 import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
+import ConfirmDialog from '@/shared/ui/ConfirmDialog.vue'
 import { cancelJob, getAvailableJobs, getJobRuns, startJob } from '../api/adminJobsApi'
 
 const available = ref([])
@@ -101,7 +113,10 @@ const runs = ref([])
 const loadingAvailable = ref(true)
 const loadingRuns = ref(true)
 const startingCode = ref('')
+const startError = ref('')
 const openDetails = reactive({})
+const cancelTarget = ref(null)
+const cancelling = ref(false)
 
 let pollTimer = null
 
@@ -146,22 +161,33 @@ function schedulePoll() {
 }
 
 async function onStart(job) {
+  startError.value = ''
   startingCode.value = job.code
   try {
     await startJob(job.code)
     await loadRuns()
     schedulePoll()
   } catch (e) {
-    alert(`Не удалось запустить: ${e?.message || e}`)
+    startError.value = `Не удалось запустить: ${e?.message || e}`
   } finally {
     startingCode.value = ''
   }
 }
 
-async function onCancel(run) {
-  if (!confirm(`Отменить задачу «${run.name}»?`)) return
-  await cancelJob(run.id)
-  await loadRuns()
+function onCancel(run) {
+  cancelTarget.value = run
+}
+
+async function confirmCancel() {
+  if (!cancelTarget.value || cancelling.value) return
+  cancelling.value = true
+  try {
+    await cancelJob(cancelTarget.value.id)
+    cancelTarget.value = null
+    await loadRuns()
+  } finally {
+    cancelling.value = false
+  }
 }
 
 function toggleDetails(id) {

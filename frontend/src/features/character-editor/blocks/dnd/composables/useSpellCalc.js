@@ -30,10 +30,10 @@ export function useSpellCalc({ diceMap, diceDetailsMap, damageTypeMap, damageTyp
 
   function dicePart(row) {
     const count = Number(row?.count) || 1
-    const diceId = row?.dice_id ?? row?.dice_suggest_id
+    const diceId = row?.dice_id
     const dice = diceDetailsMap.value[diceId] || null
-    const diceLabel = dice?.value || diceMap.value[diceId] || row?.dice || ''
-    const typeId = row?.type ?? row?.type_suggest_id
+    const diceLabel = dice?.value || diceMap.value[diceId] || ''
+    const typeId = row?.type
     return {
       count,
       diceLabel,

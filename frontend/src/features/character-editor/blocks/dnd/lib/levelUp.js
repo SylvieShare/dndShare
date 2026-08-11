@@ -2,10 +2,7 @@
  * D&D 5e level-up + multiclass math. Pure functions — no Vue, no stores.
  *
  * Character classes live in `values.classes`: `[{ id, name, level, subclass }]`
- * (`subclass` — `{ id, name }` or null). Legacy single-class sheets carry only
- * `values.class`/`values.subclass` + `values.lvl.level`; `classEntriesOf`
- * migrates that shape on read. `values.class`/`values.subclass` stay mirrored
- * to the first entry for old consumers (identity subline, spells stat).
+ * (`subclass` — `{ id, name }` or null).
  *
  * Caster math follows the PHB 2014 multiclass rules. Caster kind is detected
  * from the handbook item's `nameEn` (stable, unlike Russian display names).
@@ -36,16 +33,6 @@ export function classEntriesOf(values) {
       entries[0].level = Math.min(LEVEL_CAP, sheetLvl)
     }
     return entries
-  }
-  const cls = values?.class
-  if (cls && typeof cls === 'object' && cls.id != null) {
-    const sub = values?.subclass
-    return [{
-      id: cls.id,
-      name: cls.name || '',
-      level: Math.max(1, parseInt(values?.lvl?.level) || 1),
-      subclass: sub && typeof sub === 'object' && sub.id != null ? { id: sub.id, name: sub.name || '' } : null,
-    }]
   }
   return []
 }
@@ -214,15 +201,9 @@ export function chosenOptionLabels(...choiceMaps) {
   return out
 }
 
-/** Spellcasting stat (suggest-16 id) for a class item; PHB fallback for the
- *  half-casters whose items don't carry a `spellcasting` block. */
+/** Spellcasting stat (suggest-16 id) stored explicitly on the class item. */
 export function castingAbilityIdOf(classItem) {
-  const own = num(classItem?.data?.spellcasting?.ability)
-  if (own != null) return own
-  const n = String(classItem?.nameEn || '').trim().toLowerCase()
-  if (n === 'paladin') return 6
-  if (n === 'ranger') return 5
-  return null
+  return num(classItem?.data?.spellcasting?.ability ?? classItem?.data?.spellcasting_ability)
 }
 
 // ─── multiclassing rules (PHB, keyed by class nameEn) ───────────────────────

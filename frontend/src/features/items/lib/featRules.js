@@ -20,23 +20,17 @@ export function featData(item) {
 }
 
 export function featDescription(item) {
-  const data = featData(item)
-  return data.description || data.desc || ''
+  return featData(item).description || ''
 }
 
 export function featPrereq(item) {
   const data = featData(item)
-  const value = data.prereq || data.prerequisites
+  const value = data.prereq
   return value && typeof value === 'object' && !Array.isArray(value) ? value : {}
 }
 
-// New feats use `choices[]`; the old ability-style `choice` object remains a
-// supported one-row compatibility form so imported/custom content keeps working.
 export function featChoices(item) {
-  const data = featData(item)
-  const choices = asArray(data.choices)
-  if (choices.length) return choices.filter(Boolean).map((choice, index) => normalizeChoice(choice, index))
-  return data.choice ? [normalizeChoice(data.choice, 0)] : []
+  return asArray(featData(item).choices).filter(Boolean).map((choice, index) => normalizeChoice(choice, index))
 }
 
 function normalizeChoice(choice, index) {
@@ -54,7 +48,7 @@ function normalizeChoice(choice, index) {
 }
 
 export function abilityScoresFromValues(values = {}) {
-  return Object.fromEntries(STAT_KEYS.map((stat) => [stat, resolveNumValue(values?.[stat]?.value ?? values?.[stat])]))
+  return Object.fromEntries(STAT_KEYS.map((stat) => [stat, resolveNumValue(values?.[stat]?.value)]))
 }
 
 function scoreFor(context, abilityId) {

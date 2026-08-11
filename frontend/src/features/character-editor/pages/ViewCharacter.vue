@@ -165,9 +165,10 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, onBeforeUnmount, nextTick, h, computed } from 'vue'
+import { ref, watch, onMounted, onBeforeUnmount, nextTick, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import TemplateBlockInner from '@/features/character-editor/components/TemplateBlockInner'
+import CharacterTabPane from '@/features/character-editor/components/CharacterTabPane.vue'
 import CharEditorToolbar from '@/features/character-editor/components/CharEditorToolbar'
 import { useCharacterData } from '@/features/character-editor/composables/useCharacterData'
 import { useSaveDebounce } from '@/features/character-editor/composables/useSaveDebounce'
@@ -200,28 +201,7 @@ const mobileTrackEl = ref(null)
 const mobilePaneScrollRefs = ref([])
 const fixedHeaderTouch = ref(null)
 
-// ── TabPane: stable render component for tab content ──────────────────
-const TabPane = {
-  name: 'CharacterTabPane',
-  components: { TemplateBlockInner },
-  props: {
-    tabIndex: { type: Number, required: true },
-    blocks: { type: Array, default: () => [] },
-    values: { type: Object, default: () => ({}) },
-    vars: { type: Object, default: () => ({}) },
-  },
-  emits: ['update:value', 'update:var'],
-  render() {
-    return this.blocks.map((block, i) => h(TemplateBlockInner, {
-      key: i,
-      block,
-      values: this.values,
-      vars: this.vars,
-      'onUpdate:value': event => this.$emit('update:value', event),
-      'onUpdate:var': event => this.$emit('update:var', event),
-    }))
-  },
-}
+const TabPane = CharacterTabPane
 
 // ── Composables ───────────────────────────────────────────────────────
 

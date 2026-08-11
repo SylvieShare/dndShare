@@ -24,7 +24,6 @@ const (
 const (
 	RoleAdmin                  = "ADMIN"
 	RoleHandbookAdmin          = "HANDBOOK_ADMIN"
-	RoleTemplateAdmin          = "TEMPLATE_ADMIN"
 	RoleErrorReportAutoApprove = "ERROR_REPORT_AUTO_APPROVE"
 	RoleErrorReportReviewer    = "ERROR_REPORT_REVIEWER"
 )

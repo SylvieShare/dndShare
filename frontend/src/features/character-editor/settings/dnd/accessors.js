@@ -11,12 +11,8 @@
 
 import { abilityModByPath, abilityModifier } from '@/shared/lib/dnd'
 
-function str(val) {
-  if (val == null) return ''
-  // Race/class may be a `{ id, name }` reference (item-id binding) or a legacy
-  // plain string. Resolve the display name from the object, fall back to string.
-  if (typeof val === 'object') return String(val.name ?? val.value ?? val.title ?? '')
-  return String(val)
+function refName(val) {
+  return val && typeof val === 'object' ? String(val.name || '') : ''
 }
 
 function sumBonuses(list, pick) {
@@ -35,21 +31,20 @@ export const dndAccessors = {
   hpPath: 'values.hp',
 
   displayName(data) {
-    return str(data?.values?.name)
+    return String(data?.values?.name || '')
   },
 
   avatar(data) {
-    const ava = data?.values?.ava
-    if (typeof ava === 'string') return ava || null
-    return ava?.url || null
+    return data?.values?.ava?.url || null
   },
 
   race(data) {
-    return str(data?.values?.race)
+    return refName(data?.values?.race)
   },
 
   charClass(data) {
-    return str(data?.values?.class)
+    const entries = Array.isArray(data?.values?.classes) ? data.values.classes : []
+    return entries.map(refName).filter(Boolean).join(' / ')
   },
 
   subtitle(data) {
@@ -57,10 +52,7 @@ export const dndAccessors = {
   },
 
   level(data) {
-    const lvl = data?.values?.lvl
-    // BLOCK_LVL stores `{ level, exp }` (see DndLvlView).
-    if (lvl && typeof lvl === 'object') return lvl.level ?? lvl.lvl ?? lvl.v ?? ''
-    return lvl ?? ''
+    return data?.values?.lvl?.level ?? ''
   },
 
   hp(data) {
@@ -85,14 +77,9 @@ export const dndAccessors = {
 
   initiativeBonus(data) {
     const raw = data?.values?.initiative
-    if (raw == null) return 0
-    if (typeof raw === 'number') return raw
-    if (typeof raw === 'object') {
-      const dex = raw.use_dex ? (abilityModByPath(data?.values, 'values.DEX.mod') || 0) : 0
-      if (Number.isFinite(Number(raw.value))) return Number(raw.value) + dex
-      return (Number(raw.base) || 0) + sumBonuses(raw.bonuses, b => b?.value) + dex
-    }
-    return Number(raw) || 0
+    if (!raw || typeof raw !== 'object') return 0
+    const dex = raw.use_dex ? (abilityModByPath(data?.values, 'values.DEX.mod') || 0) : 0
+    return (Number(raw.base) || 0) + sumBonuses(raw.bonuses, b => b?.value) + dex
   },
 
   statesValue(data) {
@@ -116,13 +103,8 @@ export const dndAccessors = {
     return SPEC.map(({ id, titleSuggestId }) => {
       const raw = data?.values?.[id]
       let score = 10
-      if (raw && typeof raw === 'object') {
-        const v = raw.value
-        if (v && typeof v === 'object') {
-          score = (Number(v.base) || 0) + sumBonuses(v.bonuses, b => b?.value)
-        } else if (v != null) {
-          score = Number(v) || 0
-        }
+      if (raw?.value && typeof raw.value === 'object') {
+        score = (Number(raw.value.base) || 0) + sumBonuses(raw.value.bonuses, b => b?.value)
       }
       return { id, titleSuggestId, suggestTypeId: 16, score, mod: abilityModifier(score) }
     })

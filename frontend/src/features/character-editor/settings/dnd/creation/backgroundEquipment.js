@@ -56,23 +56,8 @@ export function formatStartingCoins(coins = {}) {
 }
 
 export function addStartingCoins(value, additions = {}) {
-  const amounts = {}
-  const order = []
-
-  if (value?.amounts && typeof value.amounts === 'object') {
-    Object.assign(amounts, value.amounts)
-    if (Array.isArray(value.order)) order.push(...value.order)
-  } else if (Array.isArray(value)) {
-    for (const coin of value) {
-      const id = coin?.item_id ?? coin?.itemId ?? coin?.id
-      if (id != null) {
-        amounts[id] = Number(coin.amount) || 0
-        order.push(id)
-      }
-    }
-  } else if (value && typeof value === 'object') {
-    Object.assign(amounts, value)
-  }
+  const amounts = value?.amounts && typeof value.amounts === 'object' ? { ...value.amounts } : {}
+  const order = Array.isArray(value?.order) ? [...value.order] : []
 
   for (const id of COIN_ORDER) {
     if (!order.some((saved) => String(saved) === String(id))) order.push(id)

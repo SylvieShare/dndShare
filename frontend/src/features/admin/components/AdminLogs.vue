@@ -41,17 +41,29 @@
         </tbody>
       </table>
     </template>
+
+    <ConfirmDialog
+      v-if="deleteAllOpen"
+      title="Удалить все логи?"
+      message="Действие нельзя отменить."
+      confirm-label="Удалить все"
+      :loading="deleting"
+      @cancel="deleteAllOpen = false"
+      @confirm="confirmDeleteAll"
+    />
   </div>
 </template>
 
 <script setup>
 import { onMounted, ref } from 'vue'
+import ConfirmDialog from '@/shared/ui/ConfirmDialog.vue'
 import { deleteAllLogs, deleteLog, getLogs } from '../api/adminApi'
 
 const logs = ref([])
 const loading = ref(true)
 const error = ref('')
 const deleting = ref(false)
+const deleteAllOpen = ref(false)
 
 async function load() {
   loading.value = true
@@ -79,12 +91,16 @@ async function onDelete(id) {
   logs.value = logs.value.filter(l => l.id !== id)
 }
 
-async function onDeleteAll() {
-  if (!confirm('Удалить все логи?')) return
+function onDeleteAll() {
+  deleteAllOpen.value = true
+}
+
+async function confirmDeleteAll() {
   deleting.value = true
   try {
     await deleteAllLogs()
     logs.value = []
+    deleteAllOpen.value = false
   } finally {
     deleting.value = false
   }

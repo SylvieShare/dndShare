@@ -16,18 +16,6 @@ function normalizeEntry(it) {
   }
 }
 
-function flattenLegacyEntries(list) {
-  const out = []
-  for (const s of list || []) {
-    if (!s || typeof s !== 'object') continue
-    out.push(normalizeEntry(s))
-    if (Array.isArray(s.items) && s.items.length) {
-      out.push(...flattenLegacyEntries(s.items))
-    }
-  }
-  return out
-}
-
 /**
  * Model:
  *   {
@@ -36,42 +24,18 @@ function flattenLegacyEntries(list) {
  *   }
  */
 export function normalizeValue(value) {
-  if (value && typeof value === 'object' && !Array.isArray(value)) {
-    // New shape with equipped split out
-    const equippedRaw = Array.isArray(value.equipped) ? value.equipped : []
-    // Backward compat: old sections-shape had equipped as a section with id 'equipped'
-    let migratedEquipped = null
-    let userSections = []
-    if (Array.isArray(value.sections)) {
-      for (const s of value.sections) {
-        if (!s || typeof s !== 'object') continue
-        if (s.id === EQUIPPED_ID && migratedEquipped == null) {
-          migratedEquipped = (s.items || []).map(normalizeEntry)
-          continue
-        }
-        userSections.push({
-          id: s.id || makeSectionId(),
-          name: typeof s.name === 'string' && s.name.trim() ? s.name : DEFAULT_SECTION_NAME,
-          items: (s.items || []).map(normalizeEntry),
-        })
-      }
-    }
-    const equipped = equippedRaw.map(normalizeEntry)
-    const merged = migratedEquipped ? [...equipped, ...migratedEquipped] : equipped
-    if (userSections.length === 0) {
-      userSections = [{ id: makeSectionId(), name: DEFAULT_SECTION_NAME, items: [] }]
-    }
-    return { equipped: merged, sections: userSections }
-  }
-  if (Array.isArray(value)) {
-    return {
-      equipped: [],
-      sections: [{ id: makeSectionId(), name: DEFAULT_SECTION_NAME, items: flattenLegacyEntries(value) }],
-    }
-  }
+  const source = value && typeof value === 'object' && !Array.isArray(value) ? value : {}
+  const equipped = Array.isArray(source.equipped) ? source.equipped.map(normalizeEntry) : []
+  const sections = Array.isArray(source.sections)
+    ? source.sections.filter(s => s && typeof s === 'object').map(s => ({
+        id: s.id || makeSectionId(),
+        name: typeof s.name === 'string' && s.name.trim() ? s.name : DEFAULT_SECTION_NAME,
+        items: Array.isArray(s.items) ? s.items.map(normalizeEntry) : [],
+      }))
+    : []
   return {
-    equipped: [],
-    sections: [{ id: makeSectionId(), name: DEFAULT_SECTION_NAME, items: [] }],
+    equipped,
+    sections: sections.length ? sections : [{ id: makeSectionId(), name: DEFAULT_SECTION_NAME, items: [] }],
   }
 }
 

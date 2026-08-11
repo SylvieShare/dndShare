@@ -2,27 +2,22 @@
   <AppModal wide tile :z-index="4500" @close="$emit('close')">
     <div class="iem-title">{{ item ? 'Редактировать предмет' : 'Новый предмет' }}</div>
 
-    <!-- Name -->
-    <div class="iem-field">
-      <label class="iem-label">Название</label>
-      <input
+    <FormField label="Название" vertical>
+      <FormTextInput
         ref="nameInput"
-        v-model="formName"
-        class="iem-input"
+        v-model:value="formName"
         placeholder="Название..."
-        @keydown.enter.prevent="submit"
+        @enter="submit"
       />
-    </div>
+    </FormField>
 
-    <div v-if="showNameEn" class="iem-field">
-      <label class="iem-label">EN</label>
-      <input
-        v-model="formNameEn"
-        class="iem-input"
+    <FormField v-if="showNameEn" label="EN" vertical>
+      <FormTextInput
+        v-model:value="formNameEn"
         placeholder="English name..."
-        @keydown.enter.prevent="submit"
+        @enter="submit"
       />
-    </div>
+    </FormField>
 
     <div v-if="contentSources.length" class="iem-field iem-source-field">
       <label class="iem-label">Источники</label>
@@ -626,6 +621,8 @@ import AppModal from '@/shared/ui/AppModal'
 import ColorPresetPicker from '@/shared/ui/ColorPresetPicker'
 import InputDescription from '@/shared/ui/InputDescription'
 import ItemPickerModal from '@/features/character-editor/components/ItemPickerModal'
+import FormField from '@/shared/ui/form/FormField.vue'
+import FormTextInput from '@/shared/ui/form/FormTextInput.vue'
 import { fetchPost, fetchPut } from '@/shared/api/http'
 import { contentSourcesApi } from '@/shared/api/contentSourcesApi'
 import { useItemTypesStore } from '@/stores/itemTypes'

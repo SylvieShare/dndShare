@@ -3,16 +3,13 @@ import { consumeCharSeed } from '@/shared/lib/charSeed'
 import { fetchGet, fetchPut } from '@/shared/api/http'
 import { useAccountStore } from '@/stores/account'
 import { useTemplateStore } from '@/stores/template'
-import { settingRenderSchema } from '@/features/character-editor/settings'
+import { settingAccessors, settingRenderSchema } from '@/features/character-editor/settings'
 import { normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'
 import {
   activeLayoutProfile,
   initialTabs,
   layoutNodeToBlock,
-  formatLayoutTitlePart,
   profileTabs,
-  resolveDataPath,
-  resolveLayoutTitle,
 } from '@/features/character-editor/lib/templateSchema'
 
 const STATUS_PRIORITY = { live: 5, active: 4, planned: 3, paused: 2, draft: 1, completed: 0, archived: -1 }
@@ -21,6 +18,7 @@ const ACTIVE_STATUSES = new Set(['live', 'active'])
 export function useCharacterData(uuid, isMobile) {
   const loading = ref(true)
   const template = ref(null)
+  const accessors = ref(null)
   const data = ref({ values: {}, var: {} })
   const charCtx = reactive({ ownerMode: false, dictionaries: {}, var: {} })
   const sourceVersionId = ref(null)
@@ -38,15 +36,14 @@ export function useCharacterData(uuid, isMobile) {
       throw new Error('Empty character response')
     }
 
-    // For settings that have been migrated to hardcoded code (D&D), render from
-    // the in-code schema instead of the DB JSON. The setting is keyed off the
-    // template name; legacy settings (VTM) fall back to the DB schema.
-    template.value = settingRenderSchema({ name: res.templateName, schema: res.template })
+    template.value = settingRenderSchema(res.templateName)
+    if (!template.value) throw new Error(`Unsupported character template: ${res.templateName}`)
+    accessors.value = settingAccessors(res.templateName)
     data.value = { values: {}, var: {}, ...res.data }
     publicVisible.value = res.publicVisible
     version.value = Number(res.version) || 0
     sourceVersionId.value = res.sourceVersionId ?? null
-    charCtx.dictionaries = res.template.dictionaries || {}
+    charCtx.dictionaries = template.value.dictionaries || {}
     charCtx.var = data.value.var || {}
 
     const currentUserId = useAccountStore().user?.id
@@ -59,15 +56,13 @@ export function useCharacterData(uuid, isMobile) {
     return res
   }
 
-  // Build a CharacterResponse-shaped object from the list seed + cached template
-  // schema, so opening a character from the list needs no /char/:uuid request.
+  // Build a CharacterResponse-shaped object from the list seed and template name.
   function buildFromSeed() {
     const seed = consumeCharSeed(uuid)
     if (!seed || seed.templateId == null) return null
     const tpl = useTemplateStore().byId(seed.templateId)
     if (!tpl) return null
     return {
-      template: tpl.schema || {},
       templateName: tpl.name,
       data: seed.data || {},
       publicVisible: seed.publicVisible,
@@ -121,28 +116,9 @@ export function useCharacterData(uuid, isMobile) {
     isMobile.value && activeTabs.value.length > 1 ? activeTabs.value : []
   )
 
-  const headerTitle = computed(() =>
-    resolveLayoutTitle(
-      layout.value?.header_title_path ?? layout.value?.title_path,
-      data.value,
-    )
-  )
-
-  const charName = computed(() => {
-    const pathOrPaths = layout.value?.header_title_path ?? layout.value?.title_path
-    const paths = Array.isArray(pathOrPaths) ? pathOrPaths : pathOrPaths ? [pathOrPaths] : []
-    if (!paths.length) return ''
-    return formatLayoutTitlePart(resolveDataPath(paths[0], data.value))
-  })
-
-  const charSub = computed(() => {
-    const pathOrPaths = layout.value?.header_title_path ?? layout.value?.title_path
-    const paths = Array.isArray(pathOrPaths) ? pathOrPaths : pathOrPaths ? [pathOrPaths] : []
-    return paths.slice(1)
-      .map(p => formatLayoutTitlePart(resolveDataPath(p, data.value)))
-      .filter(Boolean)
-      .join(' · ')
-  })
+  const headerTitle = computed(() => accessors.value?.headerTitle(data.value) || '')
+  const charName = computed(() => accessors.value?.displayName(data.value) || '')
+  const charSub = computed(() => accessors.value?.subtitle(data.value) || '')
 
   const toolbarBlocksList = computed(() => {
     const blocks = layout.value?.toolbar_blocks

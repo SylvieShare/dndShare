@@ -64,29 +64,6 @@ export function useEncounterNpcData() {
     return (npcData(c).hp_formula || '').toString()
   }
 
-  function migrateCombatant(c) {
-    if (!c || c.type !== 'npc') return
-    if (c.itemRaw) {
-      if (c.itemId != null) cacheItem(c.itemRaw)
-      delete c.itemRaw
-    }
-    if (!c.override || typeof c.override !== 'object') {
-      const ov = {}
-      if (c.name != null) ov.name = c.name
-      if (c.ac != null) ov.ac = c.ac
-      if (c.hpMax != null) ov.hp = c.hpMax
-      if (c.cr != null) ov.cr = c.cr
-      if (c.creatureType != null) ov.creature_type = c.creatureType
-      c.override = ov
-    }
-    delete c.name
-    delete c.ac
-    delete c.hpMax
-    delete c.cr
-    delete c.creatureType
-    delete c.itemSvg
-  }
-
   return {
     npcItemCache,
     cacheItem,
@@ -98,6 +75,5 @@ export function useEncounterNpcData() {
     npcHpMax,
     npcDex,
     npcHpFormula,
-    migrateCombatant,
   }
 }

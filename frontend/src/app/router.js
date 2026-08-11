@@ -11,8 +11,6 @@ import ViewCharacterPrint from '@/features/character-editor/pages/ViewCharacterP
 import ViewJoinSession from '@/features/sessions/pages/ViewJoinSession'
 import ViewSession from '@/features/sessions/pages/ViewSession'
 import ViewSessions from '@/features/sessions/pages/ViewSessions'
-import ViewTemplates from '@/features/template-editor/pages/ViewTemplates'
-import ViewTemplateEditor from '@/features/template-editor/pages/ViewTemplateEditor'
 import { fetchGet } from '@/shared/api/http'
 import { getSessions } from '@/shared/api/sessionsApi'
 import { useItemTypesStore } from '@/stores/itemTypes'
@@ -30,8 +28,7 @@ const sectionOrder = {
     handbook: 0,
     sessions: 1,
     characters: 2,
-    templates: 3,
-    admin: 4,
+    admin: 3,
 }
 
 export const pageTransitionName = ref('page-forward')
@@ -158,23 +155,6 @@ const routes = [
             pageOrder: 3,
             printView: true,
         },
-    },
-    {
-        path: '/templates',
-        name: "Templates",
-        component: ViewTemplates,
-        meta: {
-            title: 'Шаблоны',
-            section: 'templates',
-            depth: 0,
-            prefetch: () => useTemplateStore().ensure(),
-        },
-    },
-    {
-        path: '/template/:id/edit',
-        name: "TemplateEditor",
-        component: ViewTemplateEditor,
-        meta: { title: 'Редактор шаблона', section: 'templates', depth: 1 },
     },
     {
         path: '/handbook',

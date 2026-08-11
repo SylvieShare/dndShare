@@ -237,14 +237,14 @@ function columnStyle(column) {
   return {
     width,
     height:     column?.height,
-    maxWidth:   column?.maxWidth   ?? column?.['max-width'],
-    minWidth:   column?.minWidth   ?? column?.['min-width'] ?? 0,
-    maxHeight:  column?.maxHeight  ?? column?.['max-height'],
-    minHeight:  column?.minHeight  ?? column?.['min-height'],
-    flexGrow:   column?.grow       ?? column?.flexGrow   ?? column?.['flex-grow']   ?? (columnsFill ? 1 : undefined),
-    flexShrink: column?.shrink     ?? column?.flexShrink ?? column?.['flex-shrink'],
-    flexBasis:  column?.basis      ?? column?.flexBasis  ?? column?.['flex-basis']  ?? (columnsFill && !width ? 0 : undefined),
-    alignSelf:  column?.alignSelf  ?? column?.['align-self'],
+    maxWidth:   column?.['max-width'],
+    minWidth:   column?.['min-width'] ?? 0,
+    maxHeight:  column?.['max-height'],
+    minHeight:  column?.['min-height'],
+    flexGrow:   column?.grow ?? (columnsFill ? 1 : undefined),
+    flexShrink: column?.shrink,
+    flexBasis:  column?.basis ?? (columnsFill && !width ? 0 : undefined),
+    alignSelf:  column?.['align-self'],
   }
 }
 function leftBarTop(i)  { return `${sideBarBaseTop.value + (leftBarStartIndex.value  + i) * 108}px` }
@@ -257,14 +257,14 @@ const blockStyle = computed(() => {
   const own = {
     width:      p.width,
     height:     p.height,
-    maxWidth:   p.maxWidth   ?? p['max-width'],
-    minWidth:   p.minWidth   ?? p['min-width'],
-    maxHeight:  p.maxHeight  ?? p['max-height'],
-    minHeight:  p.minHeight  ?? p['min-height'],
-    flexGrow:   p.grow       ?? p.flexGrow   ?? p['flex-grow'],
-    flexShrink: p.shrink     ?? p.flexShrink ?? p['flex-shrink'],
-    flexBasis:  p.basis      ?? p.flexBasis  ?? p['flex-basis'],
-    alignSelf:  p.alignSelf  ?? p['align-self'],
+    maxWidth:   p['max-width'],
+    minWidth:   p['min-width'],
+    maxHeight:  p['max-height'],
+    minHeight:  p['min-height'],
+    flexGrow:   p.grow,
+    flexShrink: p.shrink,
+    flexBasis:  p.basis,
+    alignSelf:  p['align-self'],
   }
   return [props.colStyle, own, customStyle].filter(Boolean)
 })

@@ -16,13 +16,11 @@ export function useCostFormatter(suggestTypeId = COIN_SUGGEST_TYPE_ID) {
   function coinLabel(suggestId) {
     const s = suggestById.value[suggestId]
     if (!s) return ''
-    return s.code || s.short_title || s.value || ''
+    return s.code || s.value || ''
   }
 
   function format(cost) {
     if (cost == null || cost === '') return ''
-    if (typeof cost === 'number') return String(cost)
-    if (typeof cost === 'string') return cost
     if (typeof cost === 'object') {
       const value = cost.value
       const label = coinLabel(cost.suggest_id)

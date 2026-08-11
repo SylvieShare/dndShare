@@ -1,10 +1,9 @@
 /**
  * Hardcoded blank D&D 5e character.
  *
- * This is the in-code replacement for the per-template `preset` that used to
- * live in the DB (`char_template.create_form.preset`). The create flow seeds a
- * fresh character from `blankValues()` and then layers race/class grants and
- * the chosen ability scores on top (see `creation/grants.js`).
+ * The create flow seeds a fresh character from `blankValues()` and then layers
+ * race/class grants and the chosen ability scores on top (see
+ * `creation/grants.js`).
  *
  * Keep this in sync with the D&D sheet blocks (`settings/dnd/blocks.json`): the
  * keys here are block ids under `values`.
@@ -16,8 +15,8 @@ function clone(value) {
 
 const PRESET = {
   lvl: { level: 1, exp: 0 },
-  speed: 30,
-  hp: { max: 10, current: 10, diceCount: 1 },
+  speed: { base: 30, bonuses: [] },
+  hp: { max: 10, current: 10, hitDice: [{ die: 'd8', total: 1, used: 0 }] },
   armor: { ac: 10, shield: false, bonuses: [], shield_bonus: 2 },
   initiative: { base: 0, bonuses: [], use_dex: true },
   STR: { value: 10 },

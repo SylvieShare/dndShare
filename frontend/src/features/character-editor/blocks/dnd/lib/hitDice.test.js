@@ -8,13 +8,13 @@ import {
 } from './hitDice'
 
 describe('hit dice pools', () => {
-  it('reads the legacy scalar shape as one pool', () => {
-    expect(normalizeHitDice({ dice: 'd10', diceCount: 4, diceUsed: 2 })).toEqual([
+  it('normalizes the canonical pool shape', () => {
+    expect(normalizeHitDice({ hitDice: [{ die: 'd10', total: 4, used: 2 }] })).toEqual([
       { die: 'd10', total: 4, used: 2 },
     ])
   })
 
-  it('groups equal dice and keeps aggregate legacy mirrors', () => {
+  it('groups equal dice without adding scalar mirrors', () => {
     const hp = withHitDice({}, [
       { die: 'd10', total: 2, used: 1 },
       { die: 'd6', total: 1, used: 0 },
@@ -25,7 +25,9 @@ describe('hit dice pools', () => {
       { die: 'd10', total: 3, used: 1 },
       { die: 'd6', total: 1, used: 0 },
     ])
-    expect(hp).toMatchObject({ dice: 'd10', diceCount: 4, diceUsed: 1 })
+    expect(hp).not.toHaveProperty('dice')
+    expect(hp).not.toHaveProperty('diceCount')
+    expect(hp).not.toHaveProperty('diceUsed')
   })
 
   it('adds and spends a die in the selected type only', () => {
@@ -36,15 +38,15 @@ describe('hit dice pools', () => {
     ])
   })
 
-  it('reconstructs a legacy multiclass pool and assigns old usage to its old die first', () => {
+  it('reconstructs a multiclass pool and preserves usage by die type', () => {
     const entries = [{ id: 1, level: 3 }, { id: 2, level: 2 }]
     const pools = hitDiceFromClasses(
-      { dice: 'd10', diceCount: 5, diceUsed: 4 },
+      { hitDice: [{ die: 'd10', total: 3, used: 2 }, { die: 'd6', total: 2, used: 1 }] },
       entries,
       (entry) => entry.id === 1 ? 'd10' : 'd6',
     )
     expect(pools).toEqual([
-      { die: 'd10', total: 3, used: 3 },
+      { die: 'd10', total: 3, used: 2 },
       { die: 'd6', total: 2, used: 1 },
     ])
   })

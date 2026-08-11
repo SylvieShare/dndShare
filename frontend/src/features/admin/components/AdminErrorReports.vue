@@ -178,15 +178,27 @@
         </section>
       </article>
     </div>
+
+    <ConfirmDialog
+      v-if="deleteTarget"
+      title="Удалить заявку навсегда?"
+      :message="`Заявка #${deleteTarget.id} и вся переписка будут удалены без возможности восстановления.`"
+      confirm-label="Удалить навсегда"
+      :loading="deletingIds.has(deleteTarget.id)"
+      @cancel="deleteTarget = null"
+      @confirm="confirmDelete"
+    />
   </div>
 </template>
 
 <script setup>
 import { computed, onMounted, reactive, ref } from 'vue'
+import ConfirmDialog from '@/shared/ui/ConfirmDialog.vue'
 import { answerErrorReport, approveSeriousErrorReportChange, deleteErrorReport, getErrorReports, reopenErrorReport, setErrorReportApproval } from '../api/adminApi'
 import { errorReportDisplayTitle } from '@/features/error-report/lib/errorReportPresentation'
 
 const reports = ref([])
+const deleteTarget = ref(null)
 const loading = ref(true)
 const error = ref('')
 const deletingIds = reactive(new Set())
@@ -240,13 +252,19 @@ async function load() {
   }
 }
 
-async function onDelete(report) {
-  if (!confirm(`Удалить заявку #${report.id} навсегда вместе с перепиской?`)) return
+function onDelete(report) {
+  deleteTarget.value = report
+}
+
+async function confirmDelete() {
+  const report = deleteTarget.value
+  if (!report || deletingIds.has(report.id)) return
   deletingIds.add(report.id)
   try {
     const response = await deleteErrorReport(report.id)
     if (!response.ok) throw new Error(String(response.status))
     reports.value = reports.value.filter(item => item.id !== report.id)
+    deleteTarget.value = null
   } catch {
     error.value = `Не удалось удалить заявку #${report.id}`
   } finally {

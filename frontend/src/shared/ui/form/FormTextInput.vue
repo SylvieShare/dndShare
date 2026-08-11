@@ -2,7 +2,7 @@
   <input
     ref="inputRef"
     class="form-text-input"
-    :class="{ 'form-text-input--mono': mono }"
+    :class="{ 'form-text-input--mono': mono, 'form-text-input--invalid': invalid }"
     :type="type"
     :value="value"
     :placeholder="placeholder"
@@ -25,6 +25,7 @@ const props = defineProps({
   autocomplete: { type: String, default: 'off' },
   mono:         { type: Boolean, default: false },
   autofocus:    { type: Boolean, default: false },
+  invalid:      { type: Boolean, default: false },
 })
 defineEmits(['update:value', 'change', 'enter'])
 
@@ -49,6 +50,8 @@ defineExpose({ focus: () => inputRef.value?.focus() })
 }
 
 .form-text-input:focus { border-color: var(--accent); }
+.form-text-input--invalid { border-color: var(--danger); }
+.form-text-input:disabled { cursor: not-allowed; opacity: 0.55; }
 .form-text-input::placeholder { color: var(--text-muted); }
 .form-text-input--mono { font-family: monospace; font-size: 13px; }
 </style>

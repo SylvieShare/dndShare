@@ -37,6 +37,7 @@
             <div v-if="avaUrl" class="dciw-ava-overlay">Изменить</div>
             <input ref="avaInput" type="file" accept="image/*" style="display:none" @change="onAvaChange" />
           </div>
+          <span v-if="avaError" class="dciw-error">{{ avaError }}</span>
         </FormField>
 
         <FormField label="Имя" vertical>
@@ -143,7 +144,7 @@ const sourceSuffix = () => contentScopeQuery(charCtx.contentSources, charCtx.sou
 const windowOpen = ref(false)
 const nameInput = ref(null)
 
-// race/class/subrace/subclass are item references `{ id, name }`; a legacy plain string is tolerated.
+// race/class/subrace/subclass are item references `{ id, name }`.
 // form.classes — multiclass rows: `{ classId, subclassId, level, subclasses }`.
 const form = reactive({ name: '', raceId: '', subraceId: '', classes: [] })
 const races = ref([])
@@ -155,25 +156,22 @@ const avaInput = ref(null)
 const avaDragging = ref(false)
 const avaUploading = ref(false)
 const avaValue = ref(null)
+const avaError = ref('')
 const avaUrl = computed(() => {
   const v = avaValue.value
   if (!v) return null
-  if (typeof v === 'string') return v
   return v.url || null
 })
 
 const nameId     = computed(() => props.block.content?.name_id     || 'name')
 const raceId     = computed(() => props.block.content?.race_id     || 'race')
-const classId    = computed(() => props.block.content?.class_id    || 'class')
 const subraceId  = computed(() => props.block.content?.subrace_id  || 'subrace')
-const subclassId = computed(() => props.block.content?.subclass_id || 'subclass')
 const classesId  = computed(() => props.block.content?.classes_id  || 'classes')
 const lvlId      = computed(() => props.block.content?.lvl_id      || 'lvl')
 const avatarId   = computed(() => props.block.content?.avatar_id   || 'ava')
 
 function nameOf(v) {
-  if (v && typeof v === 'object') return v.name ?? ''
-  return v == null ? '' : String(v)
+  return v && typeof v === 'object' ? (v.name ?? '') : ''
 }
 function refId(v) {
   return v && typeof v === 'object' ? (v.id ?? '') : ''
@@ -188,19 +186,13 @@ function toOptions(list) {
 
 const nameVal     = computed(() => String(props.values?.[nameId.value] || ''))
 const raceVal     = computed(() => nameOf(props.values?.[raceId.value]))
-const classVal    = computed(() => nameOf(props.values?.[classId.value]))
 const subraceVal  = computed(() => nameOf(props.values?.[subraceId.value]))
-const subclassVal = computed(() => nameOf(props.values?.[subclassId.value]))
 
 const racePart  = computed(() => subraceVal.value || raceVal.value)
-const classPart = computed(() => {
-  const list = props.values?.[classesId.value]
-  const multi = Array.isArray(list) ? list.filter((c) => c && c.id != null) : []
-  if (multi.length > 1) return classesLabel(multi)
-  return (classVal.value && subclassVal.value)
-    ? `${classVal.value} (${subclassVal.value})`
-    : (classVal.value || subclassVal.value)
-})
+const classPart = computed(() => classesLabel(classEntriesOf({
+  classes: props.values?.[classesId.value],
+  lvl: props.values?.[lvlId.value],
+})))
 const subline = computed(() => [racePart.value, classPart.value].filter(Boolean).join(' · '))
 
 const nameColor = computed(() => props.block.content?.name_color || 'var(--text-on-accent)')
@@ -275,8 +267,6 @@ watch(windowOpen, async (open) => {
   form.subraceId  = refId(props.values?.[subraceId.value])
   const entries = classEntriesOf({
     classes: props.values?.[classesId.value],
-    class: props.values?.[classId.value],
-    subclass: props.values?.[subclassId.value],
     lvl: props.values?.[lvlId.value],
   })
   form.classes = entries.length
@@ -284,6 +274,7 @@ watch(windowOpen, async (open) => {
     : [{ classId: '', subclassId: '', level: 1, subclasses: [] }]
   avaValue.value  = props.values?.[avatarId.value] ?? null
   avaDragging.value = false
+  avaError.value = ''
   await ensureBaseItems()
   await Promise.all([
     loadSubraces(form.raceId || null),
@@ -305,8 +296,9 @@ function onAvaChange(e) {
   e.target.value = ''
 }
 async function uploadAva(file) {
+  avaError.value = ''
   if (file.size > 8 * 1024 * 1024) {
-    alert('Файл слишком большой (максимум 8 МБ)')
+    avaError.value = 'Файл слишком большой (максимум 8 МБ)'
     return
   }
   avaUploading.value = true
@@ -322,6 +314,7 @@ async function uploadAva(file) {
     avaValue.value = { url: data.url, upload_id: data.upload_id }
   } catch {
     avaValue.value = prev
+    avaError.value = 'Не удалось загрузить изображение'
   } finally {
     avaUploading.value = false
   }
@@ -340,8 +333,6 @@ function save() {
       subclass: resolveRef(r.subclasses, r.subclassId),
     }))
     .filter((e) => e.id != null)
-  emit('update:value', classId.value, entries[0] ? { id: entries[0].id, name: entries[0].name } : null)
-  emit('update:value', subclassId.value, entries[0]?.subclass || null)
   emit('update:value', classesId.value, entries.length ? entries : null)
   // Мультикласс задаёт суммарный уровень листа; одиночный класс уровень не трогает —
   // им управляет блок уровня (опыт/level up).
@@ -368,6 +359,11 @@ function close() {
   gap: 0;
   min-width: 0;
   overflow: hidden;
+}
+
+.dciw-error {
+  color: var(--danger);
+  font-size: 12px;
 }
 
 .dci-name {

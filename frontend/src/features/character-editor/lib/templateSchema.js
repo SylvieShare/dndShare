@@ -1,6 +1,6 @@
 /**
  * Pure helpers for resolving template layouts (blocks + layouts.desktop/mobile).
- * No reactive state — safe to use anywhere (composables, tests, template editor).
+ * No reactive state — safe to use in composables and tests.
  */
 
 export function profileTabs(profile) {
@@ -17,27 +17,6 @@ export function activeLayoutProfile(template, isMobile) {
   const layouts = template?.layouts || {}
   if (isMobile && layouts.mobile) return layouts.mobile
   return layouts.desktop
-}
-
-export function resolveDataPath(path, data) {
-  if (!path) return ''
-  const root = { values: data?.values || {}, var: data?.var || {} }
-  return String(path).split('.').reduce((obj, key) => obj?.[key], root)
-}
-
-export function formatLayoutTitlePart(value) {
-  if (value == null || value === '') return ''
-  if (typeof value === 'object') return value.name != null ? String(value.name) : ''
-  return String(value)
-}
-
-export function resolveLayoutTitle(pathOrPaths, data) {
-  const paths = Array.isArray(pathOrPaths) ? pathOrPaths : pathOrPaths ? [pathOrPaths] : []
-  return paths
-    .map(path => resolveDataPath(path, data))
-    .map(formatLayoutTitlePart)
-    .filter(Boolean)
-    .join(' • ')
 }
 
 export function mergeBlockPlacement(block, props = {}) {

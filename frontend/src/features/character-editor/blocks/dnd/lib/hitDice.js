@@ -1,10 +1,8 @@
 /**
  * Hit-dice pool helpers.
  *
- * Current sheets store one row per die type in `hp.hitDice`:
- * `[{ die: 'd10', total: 3, used: 1 }]`. Legacy sheets used the scalar
- * `dice` / `diceCount` / `diceUsed` fields; every reader accepts that shape
- * and every writer keeps scalar mirrors for older consumers.
+ * Sheets store one row per die type in `hp.hitDice`:
+ * `[{ die: 'd10', total: 3, used: 1 }]`.
  */
 
 export const HIT_DIE_TYPES = ['d4', 'd6', 'd8', 'd10', 'd12']
@@ -24,14 +22,14 @@ function nonNegativeInt(value) {
   return Number.isFinite(n) && n > 0 ? n : 0
 }
 
-export function normalizeHitDice(hp, fallbackTotal = 1) {
+export function normalizeHitDice(hp) {
   const source = Array.isArray(hp?.hitDice) ? hp.hitDice : []
   const merged = []
 
   for (const raw of source) {
-    const total = positiveInt(raw?.total ?? raw?.count)
+    const total = positiveInt(raw?.total)
     if (!total) continue
-    const die = normalizeHitDie(raw?.die ?? raw?.dice)
+    const die = normalizeHitDie(raw?.die)
     const used = Math.min(total, nonNegativeInt(raw?.used))
     const existing = merged.find((row) => row.die === die)
     if (existing) {
@@ -42,16 +40,7 @@ export function normalizeHitDice(hp, fallbackTotal = 1) {
     }
   }
 
-  if (merged.length) {
-    return merged.map((row) => ({ ...row, used: Math.min(row.total, row.used) }))
-  }
-
-  const total = positiveInt(hp?.diceCount, positiveInt(fallbackTotal, 1))
-  return [{
-    die: normalizeHitDie(hp?.dice),
-    total,
-    used: Math.min(total, nonNegativeInt(hp?.diceUsed)),
-  }]
+  return merged.map((row) => ({ ...row, used: Math.min(row.total, row.used) }))
 }
 
 export function hitDiceTotal(pools) {
@@ -66,16 +55,12 @@ export function hitDiceRemaining(pools) {
   return Math.max(0, hitDiceTotal(pools) - hitDiceUsed(pools))
 }
 
-/** Store normalized pools and maintain aggregate legacy mirrors. */
+/** Store normalized pools in the canonical HP object. */
 export function withHitDice(hp, pools) {
   const normalized = normalizeHitDice({ hitDice: pools })
-  const primary = normalized[0]
   return {
     ...(hp || {}),
     hitDice: normalized,
-    dice: primary.die,
-    diceCount: hitDiceTotal(normalized),
-    diceUsed: hitDiceUsed(normalized),
   }
 }
 
@@ -114,8 +99,7 @@ export function changeHitDieType(hp, fromDie, toDie) {
 }
 
 /**
- * Rebuild pools from class levels. Legacy spent dice are assigned to their old
- * die type first, then to the remaining pools. New-format per-type usage wins.
+ * Rebuild pools from class levels while preserving per-type usage.
  */
 export function hitDiceFromClasses(hp, entries, dieForEntry) {
   const pools = []
@@ -129,21 +113,10 @@ export function hitDiceFromClasses(hp, entries, dieForEntry) {
   }
   if (!pools.length) return normalizeHitDice(hp)
 
-  if (Array.isArray(hp?.hitDice) && hp.hitDice.length) {
-    const old = normalizeHitDice(hp)
-    pools.forEach((row) => {
-      row.used = Math.min(row.total, old.find((item) => item.die === row.die)?.used || 0)
-    })
-    return pools
-  }
-
-  let left = Math.min(hitDiceTotal(pools), nonNegativeInt(hp?.diceUsed))
-  const preferred = normalizeHitDie(hp?.dice)
-  const ordered = [...pools].sort((a, b) => Number(b.die === preferred) - Number(a.die === preferred))
-  for (const row of ordered) {
-    row.used = Math.min(row.total, left)
-    left -= row.used
-  }
+  const old = normalizeHitDice(hp)
+  pools.forEach((row) => {
+    row.used = Math.min(row.total, old.find((item) => item.die === row.die)?.used || 0)
+  })
   return pools
 }
 

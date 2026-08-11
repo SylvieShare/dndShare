@@ -212,7 +212,7 @@ export function applyGrants(values, grants, opts = {}) {
   const { suggestValue, raceAbilityIds = [], classAbilityIds = [] } = opts
   const out = clone(values) || {}
 
-  if (grants.speed != null) out.speed = grants.speed
+  if (grants.speed != null) out.speed = { base: grants.speed, bonuses: [] }
 
   if (grants.hitDieId != null) {
     const face = dieFace(suggestValue?.(DICE_TYPE_ID, grants.hitDieId)) || dieFace(grants.hitDieId)
@@ -223,10 +223,6 @@ export function applyGrants(values, grants, opts = {}) {
         max: face,
         current: face,
         hitDice: [{ die, total: 1, used: 0 }],
-        // Legacy mirrors remain for old clients and exported sheets.
-        dice: die,
-        diceCount: 1,
-        diceUsed: 0,
       }
     }
   }

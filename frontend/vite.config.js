@@ -20,8 +20,8 @@ export default defineConfig({
     },
   },
   build: {
-    // Matches the backend resource copy in backend/pom.xml (frontend/target/dist,
-    // static/**, index.html, favicon.ico).
+    // deploy/deploy.sh copies this directory into internal/assets/dist before
+    // building the embedded Go binary.
     outDir: 'target/dist',
     assetsDir: 'static',
     emptyOutDir: true,

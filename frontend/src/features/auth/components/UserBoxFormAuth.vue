@@ -9,98 +9,39 @@
     <!-- Модальное окно входа -->
     <AppModal v-if="mobileOpen" @close="mobileOpen = false">
       <div class="reg-title">Вход</div>
-      <form :class="{ shaking: showErrorShake }" @submit.prevent="authMobile">
-        <div class="reg-field">
-          <label class="reg-label">Логин</label>
-          <input
-            class="reg-input"
-            type="text"
-            placeholder="Введите логин"
-            autocomplete="username"
-            v-model="login"
-            :disabled="processAuth"
-          />
-        </div>
-        <div class="reg-field">
-          <label class="reg-label">Пароль</label>
-          <input
-            class="reg-input"
-            type="password"
-            placeholder="Введите пароль"
-            autocomplete="current-password"
-            v-model="password"
-            :disabled="processAuth"
-          />
-        </div>
+      <div class="auth-form" :class="{ shaking: showErrorShake }">
+        <FormField label="Логин" vertical>
+          <FormTextInput v-model:value="login" placeholder="Введите логин" autocomplete="username" :disabled="processAuth" />
+        </FormField>
+        <FormField label="Пароль" vertical>
+          <FormTextInput v-model:value="password" type="password" placeholder="Введите пароль" autocomplete="current-password" :disabled="processAuth" @enter="authMobile" />
+        </FormField>
         <transition name="err">
           <div v-if="showError" class="reg-error">Неверный логин или пароль</div>
         </transition>
-        <div class="reg-actions">
-          <button class="reg-cancel" type="button" @click="openReg">Регистрация</button>
-          <button class="reg-submit" type="submit" :disabled="processAuth">
-            {{ processAuth ? '...' : 'Войти' }}
-          </button>
-        </div>
-      </form>
+        <FormActionButtons cancel-text="Регистрация" submit-text="Войти" loading-text="Вход…" :loading="processAuth" @cancel="openReg" @submit="authMobile" />
+      </div>
     </AppModal>
 
     <!-- Модальное окно регистрации -->
     <AppModal v-if="regOpen" @close="closeReg">
       <div class="reg-title">Регистрация</div>
 
-      <div class="reg-field">
-        <label class="reg-label">Логин</label>
-        <input
-          class="reg-input"
-          type="text"
-          placeholder="Придумайте логин"
-          autocomplete="username"
-          v-model="reg.login"
-          :disabled="reg.busy"
-          @keydown.enter="submitReg"
-        />
-      </div>
-
-      <div class="reg-field">
-        <label class="reg-label">Пароль</label>
-        <input
-          class="reg-input"
-          type="password"
-          placeholder="Придумайте пароль"
-          autocomplete="new-password"
-          v-model="reg.password"
-          :disabled="reg.busy"
-          @keydown.enter="submitReg"
-        />
-      </div>
-
-      <div class="reg-field">
-        <label class="reg-label">Повторите пароль</label>
-        <input
-          class="reg-input"
-          :class="{ invalid: reg.password2 && reg.password !== reg.password2 }"
-          type="password"
-          placeholder="Повторите пароль"
-          autocomplete="new-password"
-          v-model="reg.password2"
-          :disabled="reg.busy"
-          @keydown.enter="submitReg"
-        />
-      </div>
+      <FormField label="Логин" vertical>
+        <FormTextInput v-model:value="reg.login" placeholder="Придумайте логин" autocomplete="username" :disabled="reg.busy" @enter="submitReg" />
+      </FormField>
+      <FormField label="Пароль" vertical>
+        <FormTextInput v-model:value="reg.password" type="password" placeholder="Придумайте пароль" autocomplete="new-password" :disabled="reg.busy" @enter="submitReg" />
+      </FormField>
+      <FormField label="Повторите пароль" vertical>
+        <FormTextInput v-model:value="reg.password2" type="password" placeholder="Повторите пароль" autocomplete="new-password" :disabled="reg.busy" :invalid="!!reg.password2 && reg.password !== reg.password2" @enter="submitReg" />
+      </FormField>
 
       <transition name="err">
         <div v-if="reg.error" class="reg-error">{{ reg.error }}</div>
       </transition>
 
-      <div class="reg-actions">
-        <button class="reg-cancel" type="button" @click="closeReg">Отмена</button>
-        <button
-          class="reg-submit"
-          type="button"
-          :disabled="!canSubmitReg || reg.busy"
-          @click="submitReg"
-        >{{ reg.busy ? '...' : 'Создать аккаунт' }}</button>
-      </div>
+      <FormActionButtons submit-text="Создать аккаунт" loading-text="Создание…" :loading="reg.busy" :can-submit="canSubmitReg" @cancel="closeReg" @submit="submitReg" />
     </AppModal>
   </div>
 </template>
@@ -109,6 +50,9 @@
 import { ref, computed } from 'vue'
 import { watch } from 'vue'
 import AppModal from '@/shared/ui/AppModal'
+import FormActionButtons from '@/shared/ui/form/FormActionButtons'
+import FormField from '@/shared/ui/form/FormField'
+import FormTextInput from '@/shared/ui/form/FormTextInput'
 import { fetchPost } from "@/shared/api/http"
 import { useAccountStore } from '@/stores/account'
 
@@ -229,35 +173,11 @@ async function submitReg() {
   color: var(--text-1);
 }
 
-.reg-field {
+.auth-form {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 12px;
 }
-
-.reg-label {
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text-muted);
-}
-
-.reg-input {
-  height: 36px;
-  background: var(--surface-raised);
-  border: 1px solid var(--border-strong);
-  border-radius: 8px;
-  color: var(--text-1);
-  font-size: 13px;
-  font-family: inherit;
-  padding: 0 12px;
-  outline: none;
-  transition: border-color 0.15s, background 0.15s;
-}
-.reg-input::placeholder { color: var(--text-2); }
-.reg-input:focus { border-color: var(--accent); background: var(--surface-active); }
-.reg-input:disabled { opacity: 0.5; }
-.reg-input.invalid { border-color: var(--surface-raised); }
 
 .reg-error {
   font-size: 12px;
@@ -267,41 +187,6 @@ async function submitReg() {
   border-radius: 6px;
   padding: 6px 12px;
 }
-
-.reg-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-  margin-top: 4px;
-}
-
-.reg-cancel {
-  background: none;
-  border: 1px solid var(--border-strong);
-  color: var(--text-muted);
-  font-family: inherit;
-  font-size: 13px;
-  padding: 7px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: border-color 0.15s, color 0.15s;
-}
-.reg-cancel:hover { border-color: var(--text-muted); color: var(--text-muted); }
-
-.reg-submit {
-  background: var(--accent);
-  border: none;
-  color: var(--text-on-accent);
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 600;
-  padding: 7px 20px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-.reg-submit:hover:not(:disabled) { background: var(--accent-hover); }
-.reg-submit:disabled { opacity: 0.4; cursor: default; }
 
 /* ─── Анимации ──────────────────────────────────── */
 .err-enter-active { transition: opacity 0.2s ease, transform 0.2s ease; }

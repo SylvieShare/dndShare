@@ -63,7 +63,6 @@ const headerHidden = computed(() => useUiStore().headerHidden)
 const headerTitle = computed(() => useUiStore().headerTitle || '')
 const isAuth = computed(() => useAccountStore().authStatus === 'success')
 const isHandbook = computed(() => route.path.startsWith('/handbook'))
-const isTemplateAdmin = computed(() => useAccountStore().hasRole('TEMPLATE_ADMIN'))
 const isAdmin = computed(() => useAccountStore().hasRole('ADMIN'))
 const isCharacterView = computed(() => /^\/char\/[^/]+\/?$/.test(route.path))
 const visibleItems = computed(() => {
@@ -73,9 +72,6 @@ const visibleItems = computed(() => {
   if (isAuth.value) {
     items.push({ title: 'Сессии', to: '/sessions', active: route.path.startsWith('/session') })
     items.push({ title: 'Персонажи', to: '/chars', active: route.path.startsWith('/char') || route.path === '/chars' })
-  }
-  if (isAuth.value && isTemplateAdmin.value) {
-    items.push({ title: 'Шаблоны', to: '/templates', active: route.path.startsWith('/template') || route.path === '/templates' })
   }
   if (isAuth.value && isAdmin.value) {
     items.push({ title: 'Админка', to: '/admin', active: route.path === '/admin' })

@@ -1,6 +1,5 @@
 export function sourceVersions(source) {
-  if (Array.isArray(source?.versions)) return source.versions
-  return source?.version ? [{ id: null, sourceId: source.id, version: source.version }] : []
+  return Array.isArray(source?.versions) ? source.versions : []
 }
 
 export function sourceVersionLabel(source) {

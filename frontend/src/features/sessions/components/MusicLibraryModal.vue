@@ -1,7 +1,6 @@
 <template>
-  <Teleport to="body">
-    <div class="music-lib-overlay" @click.self="onClose">
-      <div class="music-lib">
+  <AppModal fullscreen :z-index="2200" @close="onClose">
+    <div class="music-lib">
         <header class="music-lib-head">
           <h2 class="music-lib-title">Музыкальная библиотека</h2>
           <span class="music-lib-count">{{ musicStore.tracks.length }} треков</span>
@@ -190,7 +189,7 @@
           {{ uploadStatus }}
         </div>
 
-        <div v-if="tagPickerTrack" class="album-picker-overlay" @click.self="tagPickerTrack = null">
+        <AppModal v-if="tagPickerTrack" tile :z-index="2300" @close="tagPickerTrack = null">
           <div class="album-picker">
             <div class="album-picker-title">Теги для «{{ tagPickerTrack.name }}»</div>
             <div class="album-picker-list">
@@ -208,9 +207,9 @@
               <button class="album-picker-close" @click="tagPickerTrack = null">Готово</button>
             </div>
           </div>
-        </div>
+        </AppModal>
 
-        <div v-if="tagManagerOpen" class="album-picker-overlay" @click.self="tagManagerOpen = false">
+        <AppModal v-if="tagManagerOpen" tile :z-index="2300" @close="tagManagerOpen = false">
           <div class="album-picker">
             <div class="album-picker-title">Теги</div>
             <div class="tag-manager-list">
@@ -259,9 +258,9 @@
               <button class="album-picker-close" @click="tagManagerOpen = false">Готово</button>
             </div>
           </div>
-        </div>
+        </AppModal>
 
-        <div v-if="albumPickerTrack" class="album-picker-overlay" @click.self="albumPickerTrack = null">
+        <AppModal v-if="albumPickerTrack" tile :z-index="2300" @close="albumPickerTrack = null">
           <div class="album-picker">
             <div class="album-picker-title">Альбомы для «{{ albumPickerTrack.name }}»</div>
             <div class="album-picker-list">
@@ -280,10 +279,26 @@
               <button class="album-picker-close" @click="albumPickerTrack = null">Готово</button>
             </div>
           </div>
-        </div>
-      </div>
+        </AppModal>
+      <TextPromptDialog
+        v-if="textPrompt"
+        :title="textPrompt.title"
+        :value="textPrompt.value"
+        :loading="dialogLoading"
+        @cancel="textPrompt = null"
+        @confirm="confirmTextPrompt"
+      />
+      <ConfirmDialog
+        v-if="deleteTarget"
+        :title="deleteTarget.title"
+        :message="deleteTarget.message"
+        confirm-label="Удалить"
+        :loading="dialogLoading"
+        @cancel="deleteTarget = null"
+        @confirm="confirmDelete"
+      />
     </div>
-  </Teleport>
+  </AppModal>
 </template>
 
 <script setup>
@@ -292,8 +307,11 @@ import { storeToRefs } from 'pinia'
 import MusicTrackRow from '@/features/sessions/components/MusicTrackRow.vue'
 import { useTrackUpload } from '@/features/sessions/composables/useTrackUpload'
 import { fmtTime } from '@/features/sessions/lib/musicLibrary'
-import { useSortable } from '@/shared/composables/useSortable'
+import { reorderByDrop, useSortable } from '@/shared/composables/useSortable'
+import AppModal from '@/shared/ui/AppModal.vue'
 import AppSlider from '@/shared/ui/AppSlider.vue'
+import ConfirmDialog from '@/shared/ui/ConfirmDialog.vue'
+import TextPromptDialog from '@/shared/ui/TextPromptDialog.vue'
 import { useMusicStore } from '@/stores/music'
 
 const props = defineProps({
@@ -315,6 +333,9 @@ const editingTagName = ref('')
 const newTagName = ref('')
 const creatingTag = ref(false)
 const tagEditInput = ref(null)
+const textPrompt = ref(null)
+const deleteTarget = ref(null)
+const dialogLoading = ref(false)
 
 const {
   dropActive,
@@ -406,9 +427,7 @@ const sortable = useSortable({
   onDrop: async ({ fromIndex, toIndex }) => {
     if (!selectedAlbumId.value) return
     if (fromIndex === toIndex) return
-    const ids = displayedTracks.value.map(t => t.id)
-    const [moved] = ids.splice(fromIndex, 1)
-    ids.splice(toIndex, 0, moved)
+    const ids = reorderByDrop(displayedTracks.value.map(t => t.id), fromIndex, toIndex)
     await musicStore.reorderAlbum(selectedAlbumId.value, ids).catch(() => {})
   },
 })
@@ -443,14 +462,11 @@ function onQueueToggle(track) {
   if (isQueued(track.id)) musicStore.clearNext()
   else musicStore.setNext(track.id)
 }
-async function onRenameTrack(track) {
-  const name = prompt('Новое название', track.name)?.trim()
-  if (!name || name === track.name) return
-  await musicStore.renameTrack(track.id, name)
+function onRenameTrack(track) {
+  textPrompt.value = { kind: 'track', target: track, title: 'Новое название трека', value: track.name }
 }
-async function onDeleteTrack(track) {
-  if (!confirm(`Удалить трек «${track.name}»?`)) return
-  await musicStore.deleteTrack(track.id)
+function onDeleteTrack(track) {
+  deleteTarget.value = { kind: 'track', target: track, title: 'Удалить трек?', message: `«${track.name}»` }
 }
 
 function onChangeAlbums(track) {
@@ -496,10 +512,11 @@ async function commitTagEdit() {
   await musicStore.renameTag(id, name).catch(() => {})
   cancelTagEdit()
 }
-async function onDeleteTag(tag) {
-  if (!confirm(`Удалить тег «${tag.name}»? Он будет снят со всех треков.`)) return
-  await musicStore.deleteTag(tag.id).catch(() => {})
-  activeTagIds.value = activeTagIds.value.filter(id => id !== tag.id)
+function onDeleteTag(tag) {
+  deleteTarget.value = {
+    kind: 'tag', target: tag, title: 'Удалить тег?',
+    message: `«${tag.name}» будет снят со всех треков.`,
+  }
 }
 async function onCreateTag() {
   const name = newTagName.value.trim()
@@ -518,24 +535,56 @@ function onToggleLoop() {
   musicStore.toggleLoopMode()
 }
 
-async function onCreateAlbum() {
-  const name = prompt('Название альбома')?.trim()
-  if (!name) return
-  const a = await musicStore.createAlbum({ name, color: pickColor() })
-  selectedAlbumId.value = a.id
+function onCreateAlbum() {
+  textPrompt.value = { kind: 'album-create', title: 'Название альбома', value: '' }
 }
-async function onRenameAlbum() {
+function onRenameAlbum() {
   if (!selectedAlbum.value) return
-  const name = prompt('Новое название', selectedAlbum.value.name)?.trim()
-  if (!name || name === selectedAlbum.value.name) return
-  await musicStore.updateAlbum(selectedAlbum.value.id, { name })
+  textPrompt.value = { kind: 'album-rename', target: selectedAlbum.value, title: 'Новое название альбома', value: selectedAlbum.value.name }
 }
-async function onDeleteAlbum() {
+function onDeleteAlbum() {
   if (!selectedAlbum.value) return
-  if (!confirm(`Удалить альбом «${selectedAlbum.value.name}»? Треки останутся в библиотеке.`)) return
-  const id = selectedAlbum.value.id
-  selectedAlbumId.value = null
-  await musicStore.deleteAlbum(id)
+  deleteTarget.value = {
+    kind: 'album', target: selectedAlbum.value, title: 'Удалить альбом?',
+    message: `«${selectedAlbum.value.name}». Треки останутся в библиотеке.`,
+  }
+}
+
+async function confirmTextPrompt(name) {
+  const action = textPrompt.value
+  if (!action || dialogLoading.value || name === action.value) return
+  dialogLoading.value = true
+  try {
+    if (action.kind === 'track') await musicStore.renameTrack(action.target.id, name)
+    if (action.kind === 'album-rename') await musicStore.updateAlbum(action.target.id, { name })
+    if (action.kind === 'album-create') {
+      const album = await musicStore.createAlbum({ name, color: pickColor() })
+      selectedAlbumId.value = album.id
+    }
+    textPrompt.value = null
+  } finally {
+    dialogLoading.value = false
+  }
+}
+
+async function confirmDelete() {
+  const action = deleteTarget.value
+  if (!action || dialogLoading.value) return
+  dialogLoading.value = true
+  try {
+    if (action.kind === 'track') await musicStore.deleteTrack(action.target.id)
+    if (action.kind === 'tag') {
+      await musicStore.deleteTag(action.target.id)
+      activeTagIds.value = activeTagIds.value.filter(id => id !== action.target.id)
+    }
+    if (action.kind === 'album') {
+      selectedAlbumId.value = null
+      await musicStore.deleteAlbum(action.target.id)
+    }
+    deleteTarget.value = null
+  } finally {
+    dialogLoading.value = false
+  }
 }
 
 const ALBUM_COLORS = ['#7c5ce2', '#5ce87c', '#e89c3c', '#e85c5c', '#5cb5e8', '#e85cc6']
@@ -549,19 +598,12 @@ function onClose() {
 </script>
 
 <style scoped>
-.music-lib-overlay {
-  position: fixed; inset: 0;
-  background: var(--scrim);
-  display: flex; align-items: center; justify-content: center;
-  z-index: 2200;
-  padding: 24px;
-}
 .music-lib {
   background: var(--bg);
   border: 1px solid var(--border-strong);
   border-radius: 18px;
-  width: min(1280px, 100%);
-  height: min(840px, calc(100vh - 48px));
+  width: 100%;
+  height: 100%;
   display: flex; flex-direction: column;
   overflow: hidden;
   box-shadow: 0 12px 48px var(--scrim);
@@ -868,13 +910,6 @@ function onClose() {
 }
 .foot-next-clear:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 8%, transparent); }
 
-.album-picker-overlay {
-  position: absolute;
-  inset: 0;
-  background: var(--scrim);
-  display: flex; align-items: center; justify-content: center;
-  z-index: 100;
-}
 .album-picker {
   width: 380px;
   max-width: 90%;

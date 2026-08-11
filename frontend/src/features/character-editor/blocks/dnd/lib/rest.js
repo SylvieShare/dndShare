@@ -10,11 +10,9 @@ import {
   withHitDice,
 } from '@/features/character-editor/blocks/dnd/lib/hitDice'
 
-// Ability modifier from a stat value (same shape DND_CHAR_STAT_10 stores: `{ value: { base, bonuses } }`,
-// or a legacy plain number). Used for the hit-die heal (1dX + CON mod). Absent value defaults to 10.
+// Ability modifier from the DND_CHAR_STAT_10 shape: `{ value: { base, bonuses } }`.
 export function statMod(statVal) {
-  const v = statVal && typeof statVal === 'object' ? statVal.value : statVal
-  return abilityModifier(v == null ? 10 : resolveNumValue(v))
+  return abilityModifier(resolveNumValue(statVal?.value))
 }
 
 // Hit dice regained on a long rest: half the total (round down), minimum 1.
@@ -82,18 +80,12 @@ export function restResources(resources, kind) {
   })
 }
 
-// Long rest: reduce exhaustion by one level. Tolerates the legacy plain-number shape.
 export function longRestExhaustion(ex) {
-  if (ex && typeof ex === 'object') {
-    return { ...ex, level: Math.max(0, (Number(ex.level) || 0) - 1) }
-  }
-  return Math.max(0, (Number(ex) || 0) - 1)
+  return { ...(ex || {}), level: Math.max(0, (Number(ex?.level) || 0) - 1) }
 }
 
-// Current exhaustion level for either shape (used to decide whether there's anything to reduce).
 export function exhaustionLevel(ex) {
-  if (ex && typeof ex === 'object') return Number(ex.level) || 0
-  return Number(ex) || 0
+  return Number(ex?.level) || 0
 }
 
 // Apply one spent hit die: heal by `amount` (rolled elsewhere), clamp to max, mark one die used.

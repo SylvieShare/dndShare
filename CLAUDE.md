@@ -2,14 +2,14 @@
 
 D&D-мастерская: менеджер листов персонажей, справочник, сессии, музыка.
 **Go-бэкенд (один статический бинарь с вшитым фронтом) + Vue 3 (фронт)**, Postgres, S3.
-Порт прежней Kotlin/Spring-версии (`../dndShare-kotlin`, заморожена как архив). API байт-в-байт совместим —
-фронт не менялся.
+Прежняя Kotlin/Spring-версия не является runtime-зависимостью или контрактом
+совместимости. Актуальны только Go API, Vue frontend и данные текущего формата.
 
 ## Документация
 - `md/` — вики проекта (в основном про фронт: `frontend.md`, `css-variables.md`, фичи в
   `md/features/*`). Держать в актуальном виде при изменениях архитектуры/поведения/API.
 - `md/api.md`, `md/database.md`, `md/deploy.md` — описывают контракт API, схему БД и деплой.
-  Раздел бэкенда теперь про Go (см. ниже), но контракт (роуты, ключи JSON) не изменился.
+  При изменении контракта эти страницы обновляются в том же коммите.
 
 ## Стек бэкенда (Go, `internal/`)
 - stdlib `net/http` + `ServeMux` с method/pattern-роутингом (Go 1.22+), без веб-фреймворка.
@@ -35,21 +35,21 @@ deploy/                     сборка + деплой на VM (systemd/Lockbox
 ## Ключевые правила бэкенда
 - **Схема БД** накатывается на старте идемпотентно (`internal/store/schema.sql`,
   `CREATE ... IF NOT EXISTS` + `ON CONFLICT DO NOTHING`), **не Liquibase**. Всё в схеме `dndshare`.
-  На существующей проде — no-op; на чистой БД создаёт таблицы и v3-сиды (item_type 8/9/10,
-  suggest_type 23, роли). Базовые справочники (item types 1..7 и часть словарей) исторически
-  заводились только на проде — на чистой БД их нет (как и в прежней версии).
+  На существующей БД он также идемпотентно приводит данные к единственному
+  актуальному формату и удаляет старые колонки/JSON-ключи.
 - **jsonb** — как `json.RawMessage` + `CAST($n AS jsonb)` на запись. **uuid** — `col::text` на
   чтение, `$n::uuid` на запись. `store.ErrNotFound` — когда строки нет.
 - **Аутентификация** — две cookie `sylvieshare-session-id` (userId) + `sylvieshare-session-uuid`
-  (uuid), серверный стор — таблица `users_session`. CSRF нет (как в оригинале). Роли: ADMIN,
-  HANDBOOK_ADMIN, TEMPLATE_ADMIN, ERROR_REPORT_AUTO_APPROVE, ERROR_REPORT_REVIEWER.
-- **Ошибки** — тело `{"type":..,"desc":..}` (NON_NULL: null-поля опускаются), как прежний
-  `ErrorResponse`/`RestResponseEntityExceptionHandler`. Необработанная паника → 500 + запись в `logs`.
-- **JSON-совместимость (важно):** ключи — точный camelCase из прежних Kotlin-DTO. Nullable-поля —
-  Go-указатель `*T` с `,omitempty`; non-null примитивы — обычное поле без omitempty (сериализуются
-  и при 0/false/""). Срезы, которые должны быть `[]`, а не `null` — через `nonNil`.
+  (uuid), серверный стор — таблица `users_session`. Роли: ADMIN,
+  HANDBOOK_ADMIN, ERROR_REPORT_AUTO_APPROVE, ERROR_REPORT_REVIEWER.
+- **Ошибки** — тело `{"type":..,"desc":..}`. Необработанная паника → 500 + запись в `logs`.
+- **JSON-контракт:** camelCase для API DTO; nullable-поля — Go-указатель `*T` с `,omitempty`;
+  срезы, которые должны быть `[]`, а не `null`, — через `nonNil`.
+- **Без обратной совместимости:** runtime читает только текущую схему. Ломающее
+  изменение сопровождается startup data migration в `schema.sql`; старые поля,
+  aliases, fallback-ветки и временные admin jobs удаляются.
 - **Админ-джобы** — реестр в `internal/web/jobs.go` (`registerJob`), фоновый запуск в горутинах
-  с прогрессом и кооперативной отменой (порт AdminJobService). Хендлеры — `jobs_handlers.go`.
+  с прогрессом и кооперативной отменой. Хендлеры — `jobs_handlers.go`.
 - **MCP** — эндпоинт `/mcp` (JSON-RPC, bearer-токен `MCP_AUTH_TOKEN`, флаг записи
   `MCP_WRITE_ENABLED`), инструменты справочника — `internal/web/mcp.go`.
 

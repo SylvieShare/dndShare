@@ -1,94 +1,73 @@
-# Character List
+# Character list and creation
 
-Read this before touching `features/character-list`.
+## Files
 
-Main pages:
+- `features/character-list/pages/ViewListCharacters.vue` — grouped list.
+- `features/character-list/components/CharBox.vue` — card.
+- `features/character-list/pages/ViewCreateCharacter.vue` — full D&D wizard.
+- `features/character-list/components/CharacterCreateModal.vue` — compact
+  embedded creation used from join/session flows and for systems with simple
+  creation.
+- `features/character-list/composables/useDndCreateWizard.js` — wizard state
+  and orchestration.
+- `features/character-list/components/wizard/` — presentation steps and compact
+  D&D wizard.
+- `features/character-editor/settings/dnd/creation/` — pure assembly/grant
+  engine shared by both D&D presentations.
 
-- `features/character-list/pages/ViewListCharacters.vue` — the list.
-- `features/character-list/pages/ViewCreateCharacter.vue` — the D&D create wizard page (`/chars/new`; see below).
+## List contract
 
-Components:
+`GET /api/chars` returns `chars` and batched `sessionsByChar`. Cards are grouped
+by `sourceId/sourceName`, show the concrete rules edition and the most recently
+changed session.
 
-- `features/character-list/components/CharBox.vue`
-- `features/character-list/components/CharStatRadar.vue`
-- `features/character-list/components/CharacterCreateModal.vue` — legacy `createForm` modal (VTM only now).
-- `features/character-list/components/createFormData.js`
-- `features/character-list/components/wizard/` — the create-page pieces (`SelectTile`, `CreateStepRail`, `CreatePreview`, `labels.js`, `steps/Step*.vue`).
+Card display data comes only from per-setting accessors in
+`features/character-editor/settings/index.js`. `CharBox` receives
+`displayName/avatar/subtitle/level/abilities`; it does not know JSON paths and
+does not receive template `pathValues`. D&D and VTM both have registered
+accessors.
 
-## Card data — accessors, not `pathValues`
+The D&D card includes `CharStatRadar`; its six scores and suggest metadata also
+come from `dndAccessors`. Opening a card seeds `charSeed.js`, so the editor can
+render before the network response while preserving the same API-shaped data.
 
-The list card reads its display fields through the **per-setting semantic accessors** (`settings/dnd/accessors.js`, resolved via `settingAccessors(template.schema)` from `settings/index.js`), the same source the character sheet uses — **not** the backend `pathValuesForList` column. The page resolves a char's accessors with `accessorsFor(templateId)`; `CharBox` calls `accessors.displayName/avatar/subtitle/level/abilities(data)`.
+## Creation entry points
 
-`pathValues` remains a **fallback** in `CharBox` for legacy settings (e.g. VTM) that have no accessors yet. When `accessors` is null the card uses the old `getByPath(data, pathValues.*)` reads and renders no radar. Once VTM moves onto accessors, drop the `pathValues` path and the `path_values_for_list` dependency entirely.
+From `/chars`, D&D opens the full `/chars/new` page. From a session/join screen,
+`CharacterCreateModal` uses `MorphSheet` and embeds the same D&D rules engine so
+the created character can immediately join the session. For VTM the modal calls
+the registered `createData(name)`.
 
-## Card layout
+Both flows resolve `sourceVersionId` from `/api/sources` and send it explicitly
+to `POST /api/chars`. The server rejects a missing/unknown version; there is no
+default-version fallback.
 
-The list is grouped by character system (`sourceName`). Each character stores a
-`sourceVersionId` and the card shows `Редакция <sourceVersion>`; characters that
-predate classification fall into `Без системы`. `char.version` is unrelated — it
-remains the technical save/poll revision.
+## Full D&D wizard
 
-`CharBox` is a flex row, **no border**, taller + wider than before (`min-height: 124px`, grid `minmax(440px, …)`):
+The fixed steps are: Версия → Раса → Класс → Предыстория → Характеристики →
+Снаряжение → Личность → Обзор. The desktop layout has step rail, central content
+and live preview; on narrow screens it becomes one column.
 
-1. **Ability radar** (`CharStatRadar`) — on the **left**, only when `accessors.abilities` exists (D&D). Hexagon: 6 axes 60° apart from center, the value polygon shows each ability score (mapped against `max`, default 20). Each axis is labelled with the ability's **suggest icon** (suggest type 16, title ids STR=1…CHA=6 → `svg` + `color`) fixed at the **outer rim vertex** of that axis (centered on it; `GRID_R` is kept at 42 so the rim icons stay fully inside the box). No numeric values. `CharBox` `ensure(16)`s the suggest store (via a watch, because accessors arrive after the template store loads).
-2. **Avatar** — `width: 96px`, `align-self: stretch` (full card height), no padding.
-3. **Body** — name / subtitle (race · class) / meta chips (level, template name, relative date), and **below a divider the current session** when one exists. Level comes from `accessors.level` → `values.lvl.level` (BLOCK_LVL `{ level, exp }`).
+Key rules:
 
-## Sessions on the list
+- race/class/subrace/subclass are handbook item references;
+- all binding fields are arrays of item ids;
+- content publication scope is carried through every catalogue query;
+- choices granted by a race or class are completed on that source step;
+- equipment uses the same canonical inventory model as the sheet;
+- descriptions are edited/rendered through the shared rich-description pair;
+- feat and item selection uses shared `ItemPickerModal`;
+- resets and incomplete-create decisions use shared `ConfirmDialog`;
+- the draft persists in `localStorage` and is cleared after successful create.
 
-`GET /chars` returns `sessionsByChar: { [charUuid]: CharSessionBrief[] }` (batched in one query — `GameSessionRepository.getSessionsByCharUuids`, ordered by `session.changed_at DESC`). The page passes `topSession(uuid)` (first/most-recent brief) to `CharBox`, which shows a status dot + session name + chapter label. Status-dot colors mirror `CampaignBadge` / `CharEditorToolbar`.
+`buildCharacterData` is the only assembler. It produces current D&D data:
+`classes` (without `class/subclass` mirrors), object stats, object speed,
+`hp.hitDice`, object spells, sectioned inventory and object money. Creation does
+not emit historical variants for older readers.
 
-## Navigation
+## Navigation and destructive actions
 
-Plain `router.push` (no morph) — see `md/frontend.md` "List ↔ character navigation (plain)". `CharBox` still seeds `charSeed.js` on click so the page renders synchronously.
-
-## D&D create wizard — dedicated page `/chars/new`
-
-D&D creation is a **full page**, not a modal. The compact "+ Новый персонаж" button to the right of the page title calls `openCreateModal(e)`, which checks for a dnd5e template (`resolveSetting(t)?.system === 'dnd5e'`) and, if found, `router.push('/chars/new')`; only legacy settings (VTM `createForm`) still open the `CharacterCreateModal` morph sheet from that button's origin rect. Route: `pages/ViewCreateCharacter.vue` (`meta.prefetch` ensures the template store). The page resolves the target `templateId` itself (`templateStore.all.find(resolveSetting…dnd5e)`) and the selected rules edition through `/sources → source.versions`; `POST /chars` carries the resulting `sourceVersionId`, then routes to `/char/:uuid`.
-
-**Layout (borderless, matches the sheet look):** three columns — `CreateStepRail` (left) · step content (center) · `CreatePreview` (right). The page and form canvas are exactly `--bg`; the rail/preview and selectable cards use `--surface`, while all inputs use `--surface-raised`. Under 920px the rail + preview hide (single column). Selection uses an accent tint + 3px strip, `.sheet-section-title` headers, `MultiToggle` for stat methods, `--font-display` for names/titles, tabular sans for numbers, and the single purple `--accent` for primary actions.
-
-**Steps (fixed, 8):** Версия → Раса → Класс → Предыстория → Характеристики → Снаряжение → Личность → Обзор. First step picks the ruleset (`StepVersion`; **2014** active, **2024** a disabled "Скоро" stub → `state.version`) and the allowed publications through `ContentSourceSelector`. «Использовать все источники» is on by default and hides the checklist; turning it off reveals explicit publication choices. The choice is persisted as `data.settings.contentSources {mode,ids,allowLegacy}`; missing settings on an old character mean all compatible sources. Every wizard catalogue query carries the same edition/source scope. **Предыстория** and **Характеристики** are required (gate «Далее»); **Снаряжение** and **Личность** are optional (always pass validation).
-
-**Backgrounds (handbook type 11 «Предыстории»):** `StepBackground` — a card grid + a "что даёт" panel (fixed skills, tools, feature name+desc, equipment text) + a chosen-language chip picker. Item `data`: `skills` (suggest-15 ids, fixed profs), `languages` (fixed), `lang_choice {count}` (chosen from `STANDARD_LANG_IDS`), `tool_prof` (suggest-5), `feature`/`feature_desc`, `equipment`, `description`. `extractGrants(...,background)` adds `backgroundSkills` + merges languages/tools + `bgLangChoice`. `buildCharacterData` applies the fixed skills, chosen languages, stores `values.background = {id,name}`, sets `values.person_origin` to the background name, and appends the feature to `values.notes`. Type 11 is seeded in `schema.sql` (created on prod at startup via `ON CONFLICT DO NOTHING`); the 13 core PHB backgrounds (ids 4363–4375) live as data via MCP. Composable: `bgPool`, `state.background`/`bgLangIds`, `bgLangOptions`/`bgLangLimit`/`toggleBgLang`/`bgLangsComplete`, `backgroundSkillNames`/`backgroundToolNames`.
-
-**Equipment (`StepEquipment`, optional):** shows the class `starting_equipment` + background `equipment` text as reference, and an item list fed by the shared `ItemPickerModal` (types [2,1,10], `allow-quantity`) → `state.equipment [{id,name,count}]` with qty steppers/remove. `buildCharacterData` writes them into `values.items` as one "Снаряжение" bag section (`{equipped:[], sections:[{id:'bag',items:[{uid,id,count,override}]}]}`, the `DndItems` model shape).
-
-**Personality (`StepPersona`, optional):** alignment (9-way select), traits/ideals/bonds/flaws, appearance, and physical fields (age/height/weight/eyes/hair/skin) → `state.persona` → the `person_*` sheet blocks. Nothing here is required. The Обзор step carries a footnote that личность/снаряжение/заметки can be completed later on the sheet. **All choices a race/class grants are made inline on that source's step** (like the race choices): the Class step (`StepClass`) embeds the class **skill choice** (`StepSkills`), **feature choices** (`StepChoices scope="class"`), and **spell selection** (`StepSpells`) as sub-sections below the class/subclass grids; the Race step embeds race **feature choices** (`StepChoices scope="race"`). So there are no standalone Навыки/Выборы/Магия steps anymore. Subrace/subclass appear inline (subclass only when `subclass_level ≤ 1`, else a note). `CreatePreview` (always visible on desktop) shows the growing character: editable name (+ 🎲 random), monogram medallion, race·class·level, live ability **modifiers** + HP/AC/initiative/spell-DC, and the per-step "Что получаете" breakdown.
-
-**Feature-choice split:** `useDndCreateWizard` splits level-1 granted-ability `choice`s by binding source — `raceFeatureChoices` / `classFeatureChoices` (union kept as `featureChoices` for `buildPayload` + suggest-ensure). `StepChoices` takes a `scope` prop ('race' | 'class' | 'all') and renders the matching subset. Completeness gates per step: `raceChoicesComplete` (Race step), `classChoicesComplete` (Class step). **Spells load eagerly**: a watcher on `[charClass.id, subclass.id]` calls `loadSpells()` as soon as a caster is chosen (guarded by `hydrating`), since selection now happens on the Class step rather than a later step. Class-step validation also enforces the class `skillLimit` and `spellsComplete`.
-
-**Racial bonus display:** `CreatePreview` shows two clearly-distinct modes so a bonus never reads as a modifier. Before scores are entered: a "Бонусы расы к значению" grid of `+N` / `—` badges (accent when positive). Once scores are set: a "Характеристики" grid showing the **final score** (big) with its **modifier** (small, signed, coloured) beneath — score and mod are visually separate, never conflated.
-
-**"Что получаете" — per-step breakdown:** below the stats, the preview lists **every** accrued bonus grouped by the wizard step that grants it (`sections` computed): **Раса** (fixed ASI, chosen floating ASI, speed, size, fixed + chosen languages, race skill choices, chosen feat, race proficiencies, racial features), **Класс** (hit die, saves, class skill choices, class proficiencies, spellcasting, class features), **Предыстория** (background skills, tools, and languages), **Магия** (chosen spells). Each source's skill choices appear under its own `Навыки` label instead of a shared skill section; expertise stays marked as `Компетентность` in the source step where it was selected. Proficiencies are read **directly off each item's `data`** (`itemProfs`) so they're attributed to their real source (race vs class), not the merged `grants`. This makes it easy to see what each choice adds and to spot leftovers after a change/rollback. `featPool` is exported from the composable for feat-name resolution.
-
-When switching the selected race or class, its dependent description/choices use the same short horizontal transition vocabulary as page navigation and smoothly scroll into view. The race/class child arrays are cleared before their async reload and stale responses are ignored, so rapidly switching cards cannot flash or restore children from the previous selection. Skill choices are kept in the corresponding `Раса`, `Класс`, or `Предыстория` section of `CreatePreview`; `Компетентность` appears next to the relevant skill in the source step where it was selected rather than as a separate ability.
-
-**Base list vs children:** `load()` filters races/classes to base items (`!item.parentId`) — subraces/subclasses are children (fetched per-parent via `/items/children`), so they never leak into the top-level Раса/Класс grids.
-
-**Race choices live on the Race step** (`StepRace`, under Происхождение, in the "Выборы расы" block — shown when `hasRaceChoices`). All are read from the race/subrace item `data` and merged in `extractGrants(..., raceVariant)`:
-- **Floating ASI** `asi_choice = { count, bonus }` → `grants.asiChoice`; a chip picker (`toggleAsiChoice`, `asiChoiceComplete`) choosing `count` abilities for +`bonus`. Half-Elf (`+2 CHA` + `asi_choice {count:2}`).
-- **Named variants** `variants: [{ value, label, desc, asi?, asi_choice?, feat_choice? }]` → `grants.raceVariants`; a "pick one" whose chosen option's offers merge into grants. Human has **no subraces** — instead two variants: **Стандартный** (`asi` +1 to all six) and **Одарённый** (`asi_choice {count:2}` + `feat_choice {count:1}` → reveals a floating-ASI picker and a feat picker). `state.raceVariant` → `values.race_variant`.
-- **Extra skills** `skill_choice = { count, from? }` → `grants.raceSkillChoice`; chip picker over `from` skill ids or (empty `from`) all suggest-15 skills → `state.raceSkillIds` → skill proficiencies. Half-Elf `{count:2}` (any two).
-- **Extra language** `lang_choice = { count, from? }` → `grants.langChoice`; chip picker → `state.raceLangIds` → Языки proficiencies. Half-Elf carries a curated standard-language `from` list (Общий/Эльфийский excluded — already known).
-- **Feat** `feat_choice = { count }` → `grants.featChoice`; Gifted Human. The picker is the shared **`ItemPickerModal`** (a searchable modal window with list + detail, server-backed `/items/search` over **type 7** — so it browses the *full* feat roster, not a preloaded subset). `StepRace` shows chosen feats as removable chips + a "Выбрать черту" button (hidden at the limit); `onFeatPick` → `toggleFeat(item.id)` (respects `featLimit`), `exclude-items` = `state.featIds`. Chip names resolve via the exported `featPool`. Picks → `state.featIds` → the sheet's `values.abilities_feats = [{id}]` block. ~40 PHB feats seeded (type 7).
-
-All feed `finalScores`/proficiencies via `buildCharacterData({ raceVariant, asiChoice, raceSkillIds, raceLangIds, featIds })`. Completeness computeds (`raceVariantsComplete`, `asiChoiceComplete`, `raceSkillsComplete`, `raceLangsComplete`, `featComplete`) gate the Race step and the rail. The `asi_choice`/`skill_choice`/`lang_choice` fields are in the type-8 schema seed (`variants`/`feat_choice` are data-only); `ON CONFLICT DO NOTHING` → fresh DBs only, prod carries data via MCP.
-
-**Rail forward-navigation + 4 states:** `ViewCreateCharacter` computes `maxReachable` = the first step that fails `validateStep`, or the last step when all pass. `CreateStepRail` gets it as `:reachable` and enables any step `i ≤ reachable` (not just `i ≤ current`). Each step renders in one of **four visual states**: `locked` (`i > reachable`, dimmed, disabled), `done` (`i < current`, purple check badge), `ahead` (`i > current && i ≤ reachable` — completed but past current: accent-outlined badge + a `›` jump chevron, clickable), and `active` (current, filled badge + strip). `goTo` is gated on `maxReachable`.
-
-**Start-over:** the header carries an **Очистить** button → a `ConfirmDialog` → `reset()` (composable), which wipes `state` back to defaults, clears `spellPool`, and drops the localStorage draft.
-
-**PHB races (type 8):** Human, Elf (High/Wood/Drow), Dwarf (Mountain/Hill), Halfling (Lightfoot/Stout), Gnome (Forest/Rock), Dragonborn, Half-Elf, **Half-Orc (Полуорк 4321)**, **Tiefling (Тифлинг 4322)** — the full core roster. A starter set of ~12 feats (type 7, ids 4323–4334) backs the feat picker.
-
-**Persistence (localStorage `dnd-create-wizard-v1`):** the composable deep-watches `state` → `persist()`, and `restore()` (called on page mount) rehydrates it — so reload/back keeps every pick (forward selections survive going back). Restore sets a `hydrating` flag that suppresses the race/class reset watchers (and waits a `nextTick` before unlocking) so sub-selections aren't wiped. `clearPersist()` runs on successful create.
-
-**Create anytime (empty allowed):** a **Создать** button sits next to **Дал/ее** on every step (`createNow`). If the character is incomplete (missing version/race/class/name/scores) it opens a `ConfirmDialog` ("создать как есть?"); on confirm `buildCharacterData` fills blanks with defaults (name → «Без имени», scores → 10, null race/class). `submit()` is **not** gated by step validation — only `Далее` is.
-
-**State + logic:** `composables/useDndCreateWizard.js` owns everything and is **provided** (`provide('createWizard', wz)`) so step components `inject` it (no prop drilling). Beyond the base state (races/classes types 8/9, abilities 3/4, subs via `/items/children`, spells 5, `grants`, `isCaster`, `skillOptions`/`skillLimit`, `finalScores`, point-buy) it derives, for the live preview and nicer UX: `mods`, `maxHp`, `unarmoredAc`, `initiativeMod`, `spellDc`/`spellAtk`, `primaryAbilities` (★-marked stat tiles), `subclassAtCreation`/`requiresSubrace`/`requiresSubclass`, `skillStat`/`skillMod` (ability + live modifier per skill), the cantrip/1st-level **split with per-section limits** (`cantripPool`/`spell1Pool`/`cantripLimit`/`spell1Limit`/`toggleSpell(id,kind)`/`spellsComplete`), plus `randomName()` and `quickBuild()` (standard array by class priority). `STANDARD_ARRAY`, `POINT_BUY_BUDGET`, `pointCost` are exported for `StepStats`.
-
-**Components** (`components/wizard/`): `SelectTile.vue` (reusable borderless selectable tile — monogram, strip, check), `CreateStepRail.vue`, `CreatePreview.vue`, `labels.js` (STAT_SHORT/FULL, `asiSummary`, `classSummary`, `formatMod`, `monogramOf`), and `steps/{StepRace,StepClass,StepStats,StepSkills,StepChoices,StepSpells,StepReview}.vue`. The page + steps are thin presentation; **all mechanics stay in the composable + the pure engine**.
-
-**Character assembly** is still the pure, unit-tested engine under `settings/dnd/` (`newCharacter.js`, `creation/{grants,progression,buildCharacter}.js`; see `md/features/character-editor.md`). `buildCharacterData(selections)` produces `{ values }`: blank preset → grants → scores + racial ASI → HP (hit die + CON) → skill proficiencies → spells → race/class stored as `{ id, name }` refs.
-
-**Legacy:** `CharacterCreateModal.vue` (MorphSheet) + `createFormData.js` remain for non-D&D `createForm` settings (VTM). The old `components/wizard/DndCreateWizard.vue` + `DndStatAssign.vue` (single-modal wizard) are **superseded** by the page and no longer reached for D&D — safe to delete once VTM is confirmed unused.
+List ↔ sheet uses router navigation. Clone calls
+`POST /api/char/{uuid}/clone`; delete calls `DELETE /api/char/{uuid}` after a
+shared confirmation dialog. Feature code must not use browser confirm/prompt or
+implement a second card-to-sheet data resolver.

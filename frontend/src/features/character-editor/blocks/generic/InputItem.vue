@@ -44,11 +44,10 @@ function refId(v) {
   return v && typeof v === 'object' ? (v.id ?? '') : ''
 }
 function refName(v) {
-  if (v && typeof v === 'object') return v.name ?? ''
-  return typeof v === 'string' ? v : ''
+  return v && typeof v === 'object' ? (v.name ?? '') : ''
 }
 
-// value is an item reference `{ id, name }`; tolerate a legacy plain string.
+// value is an item reference `{ id, name }`.
 const currentId = computed(() => refId(props.value))
 const currentChildId = computed(() => (childId.value ? refId(props.values?.[childId.value]) : ''))
 const baseName = computed(() => refName(props.value))

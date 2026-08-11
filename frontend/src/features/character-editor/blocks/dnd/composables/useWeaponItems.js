@@ -47,9 +47,7 @@ export function useWeaponItems({ tagMap, tagDetailsMap }) {
 
   function itemBaseAttacks(entry) {
     const data = item(entry)?.data || {}
-    if (Array.isArray(data.attacks)) return data.attacks
-    if (Array.isArray(data.add_attacks)) return data.add_attacks
-    return []
+    return Array.isArray(data.attacks) ? data.attacks : []
   }
 
   // Versatile / two-handed damage dice (schema `universe_attacks`, set when the «Универсальное» tag is on).

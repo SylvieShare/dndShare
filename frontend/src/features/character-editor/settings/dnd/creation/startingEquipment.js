@@ -181,9 +181,7 @@ function normalized(value) {
 }
 
 export function startingEquipmentProfile(charClass) {
-  const names = typeof charClass === 'string'
-    ? [charClass]
-    : [charClass?.name, charClass?.nameEn]
+  const names = [charClass?.name, charClass?.nameEn]
   const normalizedNames = names.map(normalized).filter(Boolean)
   for (const [key, aliases] of Object.entries(ALIASES)) {
     if (aliases.some((alias) => normalizedNames.some((name) => name === alias || name.split(/[^a-zа-я]+/i).includes(alias)))) {

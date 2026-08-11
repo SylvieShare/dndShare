@@ -1,6 +1,5 @@
 <template>
-  <Teleport to="body">
-    <div class="picker-overlay" :style="{ zIndex }" @click.self="$emit('close')">
+  <AppModal fullscreen :show-close="false" :z-index="zIndex" @close="$emit('close')">
       <div class="picker-modal">
 
         <div class="picker-topbar">
@@ -124,8 +123,7 @@
         />
 
       </div>
-    </div>
-  </Teleport>
+  </AppModal>
 </template>
 
 <script setup>
@@ -136,6 +134,7 @@ import HandbookItemDetail from '@/features/handbook/components/HandbookItemDetai
 import SvgIcon from '@/shared/ui/SvgIcon'
 import HandbookItemList from '@/features/handbook/components/HandbookItemList'
 import ItemEditModal from '@/features/character-editor/components/ItemEditModal'
+import AppModal from '@/shared/ui/AppModal.vue'
 import { collectSuggestIds } from '@/features/handbook/objects/lib/schemaFields'
 import { useItemTypesStore } from '@/stores/itemTypes'
 import { useSuggestStore } from '@/stores/suggest'
@@ -294,28 +293,13 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.picker-overlay {
-  position: fixed;
-  inset: 0;
-  background: var(--scrim);
-  backdrop-filter: blur(6px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 3000;
-  padding: 24px;
-  box-sizing: border-box;
-}
-
 .picker-modal {
   background: var(--bg);
-  border: 1px solid var(--border-strong);
-  border-radius: 16px;
+  border: 0;
+  border-radius: inherit;
   box-shadow: var(--shadow-lg);
   width: 100%;
-  max-width: 1100px;
-  height: 85vh;
-  max-height: 820px;
+  height: 100%;
   display: flex;
   flex-direction: column;
   overflow: hidden;

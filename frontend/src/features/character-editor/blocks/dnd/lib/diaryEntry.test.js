@@ -8,7 +8,7 @@ import {
 } from './diaryEntry'
 
 describe('diary entry', () => {
-  it('preserves chronological legacy data and descriptions', () => {
+  it('preserves chronological data and descriptions', () => {
     const value = [{
       id: 'session',
       title: 'Первая',
@@ -37,8 +37,8 @@ describe('diary entry', () => {
     expect(stored.map(event => event.id)).toEqual(['old', 'new'])
   })
 
-  it('normalizes repeatable dialogue lines and accepts the legacy name alias', () => {
-    expect(normalizeDialogueLine({ id: 'line', name: 'Мира', text: 'Стойте!' })).toEqual({
+  it('normalizes repeatable dialogue lines', () => {
+    expect(normalizeDialogueLine({ id: 'line', speaker: 'Мира', text: 'Стойте!' })).toEqual({
       id: 'line',
       speaker: 'Мира',
       text: 'Стойте!',
@@ -72,7 +72,7 @@ describe('diary entry', () => {
     })
   })
 
-  it('keeps a legacy description while structured data is patched', () => {
+  it('keeps a description while structured data is patched', () => {
     const event = {
       id: 'dialog',
       type: 'dialog',

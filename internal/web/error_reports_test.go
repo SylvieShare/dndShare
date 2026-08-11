@@ -26,18 +26,18 @@ func TestErrorReportLeaseID(t *testing.T) {
 	}
 }
 
-func TestErrorReportLeaseIDArgSupportsRollingCompatibility(t *testing.T) {
+func TestErrorReportLeaseIDArgRequiresCurrentField(t *testing.T) {
 	leaseID, err := errorReportLeaseIDArg(map[string]json.RawMessage{
 		"leaseId": json.RawMessage(`"new-handle"`),
 	})
 	if err != nil || leaseID != "new-handle" {
 		t.Fatalf("unexpected leaseId result: %q, %v", leaseID, err)
 	}
-	legacy, err := errorReportLeaseIDArg(map[string]json.RawMessage{
-		"token": json.RawMessage(`"legacy-handle"`),
+	_, err = errorReportLeaseIDArg(map[string]json.RawMessage{
+		"token": json.RawMessage(`"removed-handle"`),
 	})
-	if err != nil || legacy != "legacy-handle" {
-		t.Fatalf("unexpected legacy result: %q, %v", legacy, err)
+	if err == nil {
+		t.Fatal("removed token alias must be rejected")
 	}
 }
 

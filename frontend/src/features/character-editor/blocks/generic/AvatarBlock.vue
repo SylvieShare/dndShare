@@ -46,6 +46,7 @@
       style="display:none"
       @change="onFileChange"
     />
+    <span v-if="uploadError" class="avatar-error">{{ uploadError }}</span>
   </div>
 </template>
 
@@ -60,6 +61,7 @@ const uploading = ref(false)
 const imageUrl = ref(null)
 const fileInput = ref(null)
 const avatarEl = ref(null)
+const uploadError = ref('')
 
 // `fill` → stretch to the container's full height (corners clipped by the container's overflow)
 const isFill = computed(() => props.block.props?.fill === true || props.block.props?.fill === 'true')
@@ -82,10 +84,7 @@ watch(() => props.value, value => {
 }, { deep: true })
 
 function resolveImageUrl(value) {
-  if (!value) return null
-  if (typeof value === 'string') return value
-  if (value.url) return value.url
-  return null
+  return value && typeof value === 'object' ? (value.url || null) : null
 }
 
 function onDrop(e) {
@@ -102,8 +101,9 @@ function onFileChange(e) {
 }
 
 async function upload(file) {
+  uploadError.value = ''
   if (file.size > 8 * 1024 * 1024) {
-    alert('Файл слишком большой (максимум 8 МБ)')
+    uploadError.value = 'Файл слишком большой (максимум 8 МБ)'
     return
   }
   uploading.value = true
@@ -119,6 +119,7 @@ async function upload(file) {
     emit('update:value', props.block.id, { url: data.url, upload_id: data.upload_id })
   } catch {
     imageUrl.value = resolveImageUrl(props.value)
+    uploadError.value = 'Не удалось загрузить изображение'
   } finally {
     uploading.value = false
   }
@@ -133,6 +134,17 @@ async function upload(file) {
   flex-shrink: 0;
   overflow: hidden;
   transition: box-shadow 0.2s ease;
+}
+
+.avatar-error {
+  position: absolute;
+  inset: auto 0 4px;
+  padding: 2px 4px;
+  color: var(--danger);
+  background: var(--surface);
+  font-size: 10px;
+  line-height: 1.2;
+  text-align: center;
 }
 
 /* fill mode: flush to the container edges, no own rounding (container clips), stretches full height */

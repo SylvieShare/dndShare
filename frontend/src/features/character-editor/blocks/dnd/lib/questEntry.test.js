@@ -2,11 +2,11 @@ import { describe, expect, it } from 'vitest'
 import { defaultQuest, normalizeQuest, patchQuest } from './questEntry'
 
 describe('quest entry', () => {
-  it('adds an empty reward to legacy quest data without changing its content', () => {
-    const quest = normalizeQuest({ id: 'legacy', title: 'Башня', desc: 'Найти мага', status: 'done' })
+  it('adds an empty optional reward without changing quest content', () => {
+    const quest = normalizeQuest({ id: 'quest', title: 'Башня', desc: 'Найти мага', status: 'done' })
 
     expect(quest).toEqual({
-      id: 'legacy',
+      id: 'quest',
       title: 'Башня',
       desc: 'Найти мага',
       reward: '',

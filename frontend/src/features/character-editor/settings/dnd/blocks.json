@@ -370,8 +370,7 @@
     "type": "DND_CHAR_IDENTITY",
     "content": {
       "name_id": "name",
-      "race_id": "race",
-      "class_id": "class"
+      "race_id": "race"
     }
   },
   "person_allies": {

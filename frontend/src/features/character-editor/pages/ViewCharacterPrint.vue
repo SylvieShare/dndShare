@@ -213,10 +213,13 @@ function signed(value) { const n = Number(value) || 0; return `${n >= 0 ? '+' : 
 function pageNumber(value) { return String(value).padStart(2, '0') }
 
 const characterName = computed(() => text(values.value.name) || 'Без имени')
-const level = computed(() => Number(values.value.lvl?.level ?? values.value.lvl ?? 1) || 1)
-const classAndLevel = computed(() => [displayRef(values.value.class), level.value ? `${level.value} ур.` : ''].filter(Boolean).join(', '))
-const avatar = computed(() => typeof values.value.ava === 'string' ? values.value.ava : values.value.ava?.url || '')
-function abilityScore(key) { const raw = values.value[key]; return resolveNumValue(raw && typeof raw === 'object' && 'value' in raw ? raw.value : raw) || 10 }
+const level = computed(() => Number(values.value.lvl?.level) || 1)
+const classAndLevel = computed(() => {
+  const names = (Array.isArray(values.value.classes) ? values.value.classes : []).map(entry => displayRef(entry)).filter(Boolean).join(' / ')
+  return [names, level.value ? `${level.value} ур.` : ''].filter(Boolean).join(', ')
+})
+const avatar = computed(() => values.value.ava?.url || '')
+function abilityScore(key) { return resolveNumValue(values.value[key]?.value) || 10 }
 const storedProf = computed(() => values.value.prof_bonus || {})
 const profBonus = computed(() => (storedProf.value.auto === false ? Number(storedProf.value.v) || 0 : proficiencyBonus(level.value)) + sumBonuses(storedProf.value.bonuses))
 const abilities = computed(() => STAT_KEYS.map(key => {
@@ -227,22 +230,21 @@ const abilities = computed(() => STAT_KEYS.map(key => {
 const hp = computed(() => ({ current: 0, max: 0, temp: 0, ds_success: 0, ds_failure: 0, ...(values.value.hp || {}) }))
 const armorClass = computed(() => { const armor = values.value.armor || {}; return (Number(armor.ac) || 0) + (armor.shield ? Number(armor.shield_bonus) || 0 : 0) + sumBonuses(armor.bonuses) })
 const initiative = computed(() => {
-  const data = values.value.initiative; if (typeof data === 'number') return data
-  return (Number(data?.base ?? data?.value) || 0) + sumBonuses(data?.bonuses) + (data?.use_dex === false ? 0 : abilityModifier(abilityScore('DEX')))
+  const data = values.value.initiative || {}
+  return (Number(data.base) || 0) + sumBonuses(data.bonuses) + (data.use_dex === false ? 0 : abilityModifier(abilityScore('DEX')))
 })
-const speedLabel = computed(() => `${Number(values.value.speed?.value ?? values.value.speed) || 0} фт.`)
-const hitDice = computed(() => formatHitDice(normalizeHitDice(hp.value, level.value)))
+const speedLabel = computed(() => `${(Number(values.value.speed?.base) || 0) + sumBonuses(values.value.speed?.bonuses)} фт.`)
+const hitDice = computed(() => formatHitDice(normalizeHitDice(hp.value)))
 
 const SKILL_STAT = { 1: 'STR', 2: 'DEX', 3: 'DEX', 4: 'DEX', 5: 'INT', 6: 'INT', 7: 'INT', 8: 'INT', 9: 'INT', 10: 'WIS', 11: 'WIS', 12: 'WIS', 13: 'WIS', 14: 'WIS', 15: 'CHA', 16: 'CHA', 17: 'CHA', 18: 'CHA' }
-const SKILL_FALLBACK = { 1: 'Атлетика', 2: 'Акробатика', 3: 'Ловкость рук', 4: 'Скрытность', 5: 'Анализ', 6: 'История', 7: 'Магия', 8: 'Природа', 9: 'Религия', 10: 'Восприятие', 11: 'Выживание', 12: 'Медицина', 13: 'Проницательность', 14: 'Уход за животными', 15: 'Выступление', 16: 'Запугивание', 17: 'Обман', 18: 'Убеждение' }
 const skills = computed(() => Object.entries(SKILL_STAT).map(([id, stat]) => {
   const stored = values.value[stat]?.skills?.[id] || {}; const rank = Number(stored.up) || 0
-  return { id, name: stored.override_title || suggest.items(15).find(item => String(item.id) === id)?.value || SKILL_FALLBACK[id], rank, statShort: STAT_SHORT[stat], bonus: abilityModifier(abilityScore(stat)) + rank * profBonus.value + sumBonuses(stored.bonuses) }
+  return { id, name: stored.override_title || suggest.items(15).find(item => String(item.id) === id)?.value || '', rank, statShort: STAT_SHORT[stat], bonus: abilityModifier(abilityScore(stat)) + rank * profBonus.value + sumBonuses(stored.bonuses) }
 }))
 const passivePerception = computed(() => 10 + (skills.value.find(skill => skill.id === '10')?.bonus || 0))
 
 function itemById(id) { return catalog.value[String(id)] || catalog.value[id] || null }
-function diceLabel(id, fallback = '') { return suggest.items(11).find(item => String(item.id) === String(id))?.value || fallback || '' }
+function diceLabel(id) { return suggest.items(11).find(item => String(item.id) === String(id))?.value || '' }
 function damageType(id) { return suggest.items(12).find(item => String(item.id) === String(id))?.value || '' }
 function weaponProperties(item) {
   return (Array.isArray(item?.data?.tags) ? item.data.tags : []).map(tag => {
@@ -251,8 +253,9 @@ function weaponProperties(item) {
   }).filter(Boolean).join(' · ')
 }
 function attackParts(entry, item) {
-  const parts = [...(item?.data?.attacks || item?.data?.add_attacks || []), ...(entry.add_attacks || [])]
-  const result = parts.map(part => [diceLabel(part.dice_id ?? part.dice_suggest_id, part.v ?? part.dice) ? `${Number(part.count) || 1}${diceLabel(part.dice_id ?? part.dice_suggest_id, part.v ?? part.dice)}` : '', damageType(part.type ?? part.type_suggest_id)].filter(Boolean).join(' ')).filter(Boolean)
+  const baseParts = (item?.data?.attacks || []).map(part => ({ ...part, diceKey: part.dice_id, typeKey: part.type }))
+  const extraParts = (entry.add_attacks || []).map(part => ({ ...part, diceKey: part.dice_suggest_id, typeKey: part.type_suggest_id }))
+  const result = [...baseParts, ...extraParts].map(part => [diceLabel(part.diceKey) ? `${Number(part.count) || 1}${diceLabel(part.diceKey)}` : '', damageType(part.typeKey)].filter(Boolean).join(' ')).filter(Boolean)
   const statKey = SUGGEST16_TO_STAT[Number(entry.stat_suggest_id)]; const flat = (statKey ? abilityModifier(abilityScore(statKey)) : 0) + (Number(entry.magic_up) || 0)
   if (flat && result.length) result[0] += ` ${signed(flat)}`
   return result.join(' + ')
@@ -277,7 +280,7 @@ const inventorySections = computed(() => [
   ...inventoryModel.value.sections.map(section => ({ ...section, items: section.items.map(inventoryEntry) })),
 ].filter(section => section.items.length))
 const counters = computed(() => normalizeCounters(values.value.counters))
-const coins = computed(() => { const raw = values.value.money?.amounts || values.value.money || {}; return Object.entries(raw).filter(([, amount]) => Number(amount)).map(([id, amount]) => ({ id, amount: Number(amount), name: suggest.items(17).find(item => String(item.id) === id)?.short_title || suggest.items(17).find(item => String(item.id) === id)?.value || `мон. ${id}` })) })
+const coins = computed(() => Object.entries(values.value.money?.amounts || {}).filter(([, amount]) => Number(amount)).map(([id, amount]) => ({ id, amount: Number(amount), name: suggest.items(17).find(item => String(item.id) === id)?.value || `мон. ${id}` })))
 const potions = computed(() => (Array.isArray(values.value.potions) ? values.value.potions : []).map(entry => ({ ...entry, count: Number(entry.count) || 1, name: entry.override?.name || itemById(entry.id)?.name || 'Зелье' })))
 const hasEquipmentSide = computed(() => counters.value.length || coins.value.length || potions.value.length || equipmentProficiencyGroups.value.length)
 const hasEquipment = computed(() => inventorySections.value.length || hasEquipmentSide.value)
@@ -317,13 +320,13 @@ const equipmentPages = computed(() => {
   return pages
 })
 
-const rawSpells = computed(() => Array.isArray(values.value.spells) ? values.value.spells : values.value.spells?.spells || [])
+const rawSpells = computed(() => Array.isArray(values.value.spells?.spells) ? values.value.spells.spells : [])
 const spellSlots = computed(() => (Array.isArray(values.value.spells?.slots) ? values.value.spells.slots : []).filter(slot => Number(slot.total) > 0))
 const spellcasting = computed(() => {
-  const data = Array.isArray(values.value.spells) ? {} : values.value.spells || {}; const statKey = SUGGEST16_TO_STAT[Number(data.stat_path)]; const mod = statKey ? abilityModifier(abilityScore(statKey)) : 0
+  const data = values.value.spells || {}; const statKey = SUGGEST16_TO_STAT[Number(data.stat_path)]; const mod = statKey ? abilityModifier(abilityScore(statKey)) : 0
   return { stat: statKey ? STAT_FULL[statKey] : '—', saveDc: 8 + profBonus.value + mod + (Number(data.save_bonus) || 0), attackBonus: profBonus.value + mod + (Number(data.attack_bonus) || 0) }
 })
-function spellDice(rows) { return (Array.isArray(rows) ? rows : []).map(row => { const die = diceLabel(row.dice_id ?? row.dice_suggest_id, row.dice); const typeValue = damageType(row.type ?? row.type_suggest_id); return [die ? `${Number(row.count) || 1}${die}` : '', typeValue].filter(Boolean).join(' ') }).filter(Boolean).join(' + ') }
+function spellDice(rows) { return (Array.isArray(rows) ? rows : []).map(row => { const die = diceLabel(row.dice_id); const typeValue = damageType(row.type); return [die ? `${Number(row.count) || 1}${die}` : '', typeValue].filter(Boolean).join(' ') }).filter(Boolean).join(' + ') }
 function spellCombatLine(item) {
   const data = item?.data || {}; const parts = []
   if (data.damage?.range_attack) parts.push('Атака заклинанием')
@@ -371,7 +374,7 @@ const hasPersonality = computed(() => avatar.value || appearanceFields.value.som
 const featureCards = computed(() => [
   { group: 'Расовые особенности', value: values.value.abilities_race }, { group: 'Классовые особенности', value: values.value.abilities_class }, { group: 'Черты', value: values.value.abilities_feats },
 ].flatMap(group => (Array.isArray(group.value) ? group.value : []).map((entry, index) => {
-  const item = itemById(entry.id); const description = item?.data?.description || item?.data?.desc || ''; const length = plainLength(description)
+  const item = itemById(entry.id); const description = item?.data?.description || ''; const length = plainLength(description)
   return { key: entry.uid || `${group.group}-${entry.id}-${index}`, group: group.group, name: item?.name || entry.name || `Особенность #${entry.id || '—'}`, description, countText: entry.max_use != null ? `${entry.count ?? entry.max_use} / ${entry.max_use}` : '', span: length > 700 ? 2 : 1, textLength: length }
 })))
 const featurePages = computed(() => featureCards.value.length ? paginateGrid(featureCards.value, 2, 230, 230) : [])
@@ -385,7 +388,7 @@ function collectItemIds(data) {
   const ids = new Set(); const add = id => { if (id != null && id !== '') ids.add(id) }
   for (const entry of data.weapon || []) add(entry.item_id)
   const inv = normalizeValue(data.items); inv.equipped.forEach(entry => add(entry.id)); inv.sections.forEach(section => section.items.forEach(entry => add(entry.id)))
-  ;(Array.isArray(data.potions) ? data.potions : []).forEach(entry => add(entry.id)); (Array.isArray(data.spells) ? data.spells : data.spells?.spells || []).forEach(entry => add(entry.id))
+  ;(Array.isArray(data.potions) ? data.potions : []).forEach(entry => add(entry.id)); (data.spells?.spells || []).forEach(entry => add(entry.id))
   for (const key of ['abilities_race', 'abilities_class', 'abilities_feats']) (data[key] || []).forEach(entry => add(entry.id))
   return [...ids]
 }

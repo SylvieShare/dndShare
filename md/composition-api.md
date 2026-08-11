@@ -25,10 +25,9 @@ New and touched Vue components must use Composition API. Prefer `<script setup>`
 - Keep API calls in `shared/api/*Api.js` or a feature API client; composables can orchestrate those clients.
 - Do not create global mutable module state unless it is an intentional cache/registry and documented near the declaration.
 
-## Legacy Migration Note
+## Existing code
 
-Some large legacy-migrated files still contain a temporary proxy compatibility layer (`const vm = new Proxy`) from the Vuex/Options API migration. Do not copy that pattern.
-
-When touching those files, remove the proxy in the same change by converting local state, computed values, watchers, lifecycle hooks, refs, emits, router access, and injected values to explicit Composition API code.
-
-For files over 400 lines, remove the proxy while also extracting a focused composable or child component for the changed behavior.
+Options API and temporary component-instance proxies are not part of the
+current architecture. If one is discovered, remove it in the same change and
+extract focused composables/children where size justifies it. Do not preserve a
+second implementation path for compatibility.

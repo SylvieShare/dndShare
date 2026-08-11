@@ -334,7 +334,7 @@ const needSubclass = computed(() => {
 // ─── фичи нового уровня ─────────────────────────────────────────────────────
 function isSubclassBound(item) {
   const d = item?.data || {}
-  return d.subclass_id != null || (Array.isArray(d.subclass_ids) && d.subclass_ids.length > 0)
+  return Array.isArray(d.subclass_ids) && d.subclass_ids.length > 0
 }
 const features = computed(() => {
   if (isPlain.value || !classItem.value) return []
@@ -351,7 +351,7 @@ const features = computed(() => {
 })
 
 function featSnippet(f) {
-  const raw = f.data?.desc || f.data?.description || ''
+  const raw = f.data?.desc || ''
   const text = String(raw).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
   return text.length > 180 ? text.slice(0, 177).trim() + '…' : text
 }
@@ -688,7 +688,7 @@ function accept() {
     const classDice = next.map((entry) => hitDieLabelOf(itemsById.value[entry.id]))
     updates.hp = classDice.every(Boolean)
       ? withHitDice(hp, hitDiceFromClasses(hp, next, (entry) => hitDieLabelOf(itemsById.value[entry.id])))
-      : addHitDie(hp, hitDieLabel.value || hp.dice || 'd8')
+      : addHitDie(hp, hitDieLabel.value || 'd8')
 
     // ASI
     if (asiNow.value && !asiSkipped.value) {
@@ -749,9 +749,9 @@ function accept() {
       } else {
         for (const s of asiStats.value) {
           const old = v[s]
-          const oldVal = old && typeof old === 'object' ? old.value : old
-          const base = oldVal && typeof oldVal === 'object' ? (Number(oldVal.base) || 0) : (oldVal == null ? 10 : Number(oldVal) || 0)
-          const bonuses = oldVal && typeof oldVal === 'object' && Array.isArray(oldVal.bonuses) ? oldVal.bonuses : []
+          const oldVal = old?.value && typeof old.value === 'object' ? old.value : { base: 10, bonuses: [] }
+          const base = Number(oldVal.base) || 0
+          const bonuses = Array.isArray(oldVal.bonuses) ? oldVal.bonuses : []
           updates[s] = {
             ...(old && typeof old === 'object' ? old : {}),
             value: { base, bonuses: [...bonuses, { title: `Повышение (ур. ${newTotal.value})`, value: asiDelta.value }] },

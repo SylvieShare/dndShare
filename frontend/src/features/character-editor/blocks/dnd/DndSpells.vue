@@ -132,12 +132,8 @@ const statSuggests = computed(() => {
   return id != null ? useSuggestStore().items(id) || [] : []
 })
 const statOptions  = computed(() => statSuggests.value.map(item => ({ value: item.id, label: item.value })))
-const diceSuggestTypeId = computed(() => props.block.content?.dice_suggest_id || props.block.content?.dice_suggest_type_id || 11)
-const damageTypeSuggestTypeId = computed(() =>
-  props.block.content?.damage_type_suggest_id ||
-  props.block.content?.type_attack_suggest_type_id ||
-  12
-)
+const diceSuggestTypeId = computed(() => props.block.content?.dice_suggest_type_id || 11)
+const damageTypeSuggestTypeId = computed(() => props.block.content?.type_attack_suggest_type_id || 12)
 const diceSuggests = computed(() => useSuggestStore().items(diceSuggestTypeId.value) || [])
 const damageTypeSuggests = computed(() => useSuggestStore().items(damageTypeSuggestTypeId.value) || [])
 const diceMap = computed(() => Object.fromEntries(diceSuggests.value.map(s => [s.id, s.value])))
@@ -400,15 +396,14 @@ provide('spellsBlockCtx', reactive({
 // ─── Lifecycle ─────────────────────────────────────
 
 onMounted(async () => {
-  const raw = props.value
-  const spellsArr = Array.isArray(raw) ? raw : (raw?.spells || [])
-  spells.value = spellsArr.map(s => ({ ...s }))
-  statPath.value = Array.isArray(raw) ? '' : (raw?.stat_path || '')
-  saveBonusExtra.value = Array.isArray(raw) ? 0 : (Number(raw?.save_bonus) || 0)
-  attackBonusExtra.value = Array.isArray(raw) ? 0 : (Number(raw?.attack_bonus) || 0)
-  slotsRest.value = Array.isArray(raw) ? 'long_rest' : (raw?.slots_rest || 'long_rest')
-  preparation.value = Array.isArray(raw) ? false : !!raw?.preparation
-  loadSlots(Array.isArray(raw) ? [] : (raw?.slots || []))
+  const raw = props.value && typeof props.value === 'object' && !Array.isArray(props.value) ? props.value : {}
+  spells.value = (Array.isArray(raw.spells) ? raw.spells : []).map(s => ({ ...s }))
+  statPath.value = raw.stat_path || ''
+  saveBonusExtra.value = Number(raw.save_bonus) || 0
+  attackBonusExtra.value = Number(raw.attack_bonus) || 0
+  slotsRest.value = raw.slots_rest || 'long_rest'
+  preparation.value = !!raw.preparation
+  loadSlots(raw.slots || [])
   const { school_suggest_id, stat_suggest_type_id } = props.block.content || {}
   const ensures = [school_suggest_id, stat_suggest_type_id, diceSuggestTypeId.value, damageTypeSuggestTypeId.value]
     .filter(Boolean)

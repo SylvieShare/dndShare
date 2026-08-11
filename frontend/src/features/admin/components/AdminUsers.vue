@@ -82,7 +82,7 @@ import FormField from '@/shared/ui/form/FormField'
 import FormTextInput from '@/shared/ui/form/FormTextInput'
 import { addRole, getUsers, removeRole, resetPassword } from '../api/adminApi'
 
-const ALL_ROLES = ['ADMIN', 'HANDBOOK_ADMIN', 'TEMPLATE_ADMIN', 'ERROR_REPORT_AUTO_APPROVE', 'ERROR_REPORT_REVIEWER']
+const ALL_ROLES = ['ADMIN', 'HANDBOOK_ADMIN', 'ERROR_REPORT_AUTO_APPROVE', 'ERROR_REPORT_REVIEWER']
 
 const users = ref([])
 const loading = ref(true)

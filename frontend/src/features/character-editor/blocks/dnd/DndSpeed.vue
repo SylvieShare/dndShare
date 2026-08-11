@@ -26,8 +26,9 @@ const variant = computed(() => props.block?.props?.variant || props.block?.conte
 const iconSrc = computed(() => props.block?.content?.svg || null)
 
 const numData = computed(() => {
-  if (props.value && typeof props.value === 'object') return props.value
-  return { base: parseInt(props.value) || 0, bonuses: [] }
+  return props.value && typeof props.value === 'object'
+    ? props.value
+    : { base: 0, bonuses: [] }
 })
 const displayValue = computed(() => {
   const d = numData.value

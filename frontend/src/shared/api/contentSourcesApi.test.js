@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { contentScopeQuery, normalizeContentSourceSettings } from './contentSourcesApi'
 
 describe('content source settings', () => {
-  it('keeps missing legacy characters in all-sources mode', () => {
+  it('uses all-sources mode when character settings are absent', () => {
     expect(normalizeContentSourceSettings(null)).toEqual({ mode: 'all', ids: [], allowLegacy: false })
   })
 

@@ -94,12 +94,7 @@ const { editorOpen, originRect, originEl, open, close } = useMorphOrigin()
 const configMode = ref(false)
 function closeEditor() { configMode.value = false; close() }
 
-// Value is an object `{ level, max?, effects? }`; tolerate the legacy plain-number form.
-const data = computed(() => {
-  const v = props.value
-  if (v && typeof v === 'object') return v
-  return { level: parseInt(v) || 0 }
-})
+const data = computed(() => props.value && typeof props.value === 'object' ? props.value : { level: 0 })
 
 const max = computed(() => {
   const m = parseInt(data.value.max)
@@ -118,8 +113,7 @@ const color = computed(() => (level.value > 0 ? 'var(--danger)' : 'var(--text-mu
 const isCompact = computed(() => props.block?.props?.variant === 'compact')
 
 function emitValue(patch) {
-  const cur = props.value && typeof props.value === 'object' ? props.value : { level: level.value }
-  emit('update:value', props.block.id, { ...cur, ...patch })
+  emit('update:value', props.block.id, { ...data.value, ...patch })
 }
 function setLevel(n) { emitValue({ level: n }) }
 function setMax(m) {

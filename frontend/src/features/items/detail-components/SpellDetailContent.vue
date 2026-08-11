@@ -53,9 +53,10 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import RichContent from '@/shared/ui/RichContent'
 import { useSchemaSuggests } from '@/features/handbook/objects/lib/useSchemaSuggests'
+import { itemsApi } from '@/shared/api/itemsApi'
 
 const props = defineProps({
   item: { type: Object, required: true },
@@ -66,9 +67,15 @@ const { suggestItems } = useSchemaSuggests(() => props.type)
 
 const schoolDetailsMap = computed(() => Object.fromEntries(suggestItems('schoolId').map(s => [s.id, s])))
 const schoolMap = computed(() => Object.fromEntries(suggestItems('schoolId').map(s => [s.id, s.value])))
-const classMap = computed(() => Object.fromEntries(suggestItems('classIds').map(s => [s.id, s.value])))
-
 const data = computed(() => props.item.data || {})
+const classNames = ref({})
+const classIds = computed(() => (Array.isArray(data.value.classes) ? data.value.classes : []).map(ref => Number(ref?.id)).filter(Boolean))
+
+watch(classIds, async ids => {
+  if (!ids.length) { classNames.value = {}; return }
+  const response = await itemsApi.byIds(ids).catch(() => null)
+  classNames.value = Object.fromEntries((response?.items || []).map(item => [item.id, item.name]))
+}, { immediate: true })
 
 const iconUrls = computed(() => {
   const base = import.meta.env.BASE_URL || '/'
@@ -98,7 +105,7 @@ const schoolStyle = computed(() => {
   }
 })
 const source = computed(() => (props.item.contentSources || []).map((entry) => entry.name || entry.code).filter(Boolean).join(', '))
-const classes = computed(() => (data.value.classIds || []).map(id => classMap.value[id]).filter(Boolean))
+const classes = computed(() => classIds.value.map(id => classNames.value[id]).filter(Boolean))
 const hasComponents = computed(() => {
   const c = data.value.components
   return c && (c.v || c.s || c.m)

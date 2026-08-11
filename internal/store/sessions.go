@@ -5,7 +5,6 @@ import (
 	"crypto/rand"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"math/big"
 	"strings"
 	"time"
@@ -39,13 +38,12 @@ type SessionChapter struct {
 
 // SessionParticipantData — участник сессии с данными персонажа (порт model/SessionParticipantData.kt).
 type SessionParticipantData struct {
-	CharID       int64             `json:"charId"`
-	CharUUID     string            `json:"charUuid"`
-	TemplateID   int64             `json:"templateId"`
-	TemplateName string            `json:"templateName"`
-	PathValues   map[string]string `json:"pathValues,omitempty"`
-	Data         map[string]any    `json:"data"`
-	Role         string            `json:"role"`
+	CharID       int64          `json:"charId"`
+	CharUUID     string         `json:"charUuid"`
+	TemplateID   int64          `json:"templateId"`
+	TemplateName string         `json:"templateName"`
+	Data         map[string]any `json:"data"`
+	Role         string         `json:"role"`
 }
 
 // ParticipantBrief — краткая инфа об участнике для списка сессий.
@@ -145,7 +143,7 @@ func (s *Store) GetGameSessionByInviteCode(ctx context.Context, code string) (Ga
 func (s *Store) GetSessionParticipants(ctx context.Context, sessionID int64) ([]SessionParticipantData, error) {
 	rows, err := s.pool.Query(ctx,
 		`SELECT sp.char_id, sp.role, c.uuid::text AS char_uuid, c.data AS char_data,
-		        c.template_id, ct.path_values_for_list AS path_values, ct.name AS template_name
+		        c.template_id, ct.name AS template_name
 		 FROM dndshare.session_participant sp
 		 JOIN dndshare."char" c ON c.id = sp.char_id AND c.deleted = false
 		 JOIN dndshare.char_template ct ON ct.id = c.template_id
@@ -161,15 +159,8 @@ func (s *Store) GetSessionParticipants(ctx context.Context, sessionID int64) ([]
 	for rows.Next() {
 		var p SessionParticipantData
 		var charData []byte
-		var pathValues *[]byte
-		if err := rows.Scan(&p.CharID, &p.Role, &p.CharUUID, &charData, &p.TemplateID, &pathValues, &p.TemplateName); err != nil {
+		if err := rows.Scan(&p.CharID, &p.Role, &p.CharUUID, &charData, &p.TemplateID, &p.TemplateName); err != nil {
 			return nil, err
-		}
-		if pathValues != nil {
-			var pv map[string]string
-			if json.Unmarshal(*pathValues, &pv) == nil {
-				p.PathValues = pv
-			}
 		}
 		_ = json.Unmarshal(charData, &p.Data)
 		out = append(out, p)
@@ -184,10 +175,9 @@ func (s *Store) GetSessionParticipantsBrief(ctx context.Context, sessionIDs []in
 		return result, nil
 	}
 	rows, err := s.pool.Query(ctx,
-		`SELECT sp.session_id, c.uuid::text, c.data AS char_data, ct.path_values_for_list AS path_values
+		`SELECT sp.session_id, c.uuid::text, c.data #>> '{values,ava,url}' AS avatar_url
 		 FROM dndshare.session_participant sp
 		 JOIN dndshare."char" c ON c.id = sp.char_id AND c.deleted = false
-		 JOIN dndshare.char_template ct ON ct.id = c.template_id
 		 WHERE sp.session_id = ANY($1)
 		 ORDER BY sp.joined_at`,
 		sessionIDs,
@@ -199,47 +189,13 @@ func (s *Store) GetSessionParticipantsBrief(ctx context.Context, sessionIDs []in
 	for rows.Next() {
 		var sid int64
 		var charUUID string
-		var charData []byte
-		var pathValues *[]byte
-		if err := rows.Scan(&sid, &charUUID, &charData, &pathValues); err != nil {
+		var avatarURL *string
+		if err := rows.Scan(&sid, &charUUID, &avatarURL); err != nil {
 			return nil, err
 		}
-		pv := map[string]string{}
-		if pathValues != nil {
-			_ = json.Unmarshal(*pathValues, &pv)
-		}
-		// path_values_for_list устаревает; путь к аватарке по умолчанию — values.ava.
-		avaPath := pv["ava"]
-		if avaPath == "" {
-			avaPath = "values.ava"
-		}
-		var data any
-		_ = json.Unmarshal(charData, &data)
-		var avaURL *string
-		if v := extractByPath(data, avaPath); v != nil {
-			sv := fmt.Sprintf("%v", v)
-			if strings.TrimSpace(sv) != "" {
-				avaURL = &sv
-			}
-		}
-		result[sid] = append(result[sid], ParticipantBrief{CharUUID: charUUID, AvaURL: avaURL})
+		result[sid] = append(result[sid], ParticipantBrief{CharUUID: charUUID, AvaURL: avatarURL})
 	}
 	return result, rows.Err()
-}
-
-func extractByPath(obj any, path string) any {
-	cur := obj
-	for _, key := range strings.Split(path, ".") {
-		m, ok := cur.(map[string]any)
-		if !ok {
-			return nil
-		}
-		cur = m[key]
-		if cur == nil {
-			return nil
-		}
-	}
-	return cur
 }
 
 // GetMyCharUuids — карта sessionId -> uuid моего персонажа в этих сессиях (порт getMyCharUuids).

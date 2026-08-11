@@ -81,7 +81,7 @@ func (s *Server) handleCreateChar(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "Некорректный запрос")
 		return
 	}
-	template, err := s.store.GetTemplate(r.Context(), req.TemplateID)
+	_, err := s.store.GetTemplate(r.Context(), req.TemplateID)
 	if err != nil {
 		if errors.Is(err, store.ErrNotFound) {
 			notFound(w, "")
@@ -90,22 +90,18 @@ func (s *Server) handleCreateChar(w http.ResponseWriter, r *http.Request) {
 		serverError(w, err)
 		return
 	}
-	if req.SourceVersionID != nil {
-		exists, err := s.store.SourceVersionExists(r.Context(), *req.SourceVersionID)
-		if err != nil {
-			serverError(w, err)
-			return
-		}
-		if !exists {
-			badRequest(w, "Неизвестная версия системы")
-			return
-		}
-	} else {
-		req.SourceVersionID, err = s.store.DefaultSourceVersionIDForTemplate(r.Context(), template.Name)
-		if err != nil {
-			serverError(w, err)
-			return
-		}
+	if req.SourceVersionID == nil {
+		badRequest(w, "Версия системы обязательна")
+		return
+	}
+	exists, err := s.store.SourceVersionExists(r.Context(), *req.SourceVersionID)
+	if err != nil {
+		serverError(w, err)
+		return
+	}
+	if !exists {
+		badRequest(w, "Неизвестная версия системы")
+		return
 	}
 	uuid, err := s.store.CreateCharacter(r.Context(), uid, req.TemplateID, req.SourceVersionID, req.Data)
 	if err != nil {
@@ -141,7 +137,6 @@ func (s *Server) handleGetTemplates(w http.ResponseWriter, r *http.Request) {
 // --- GET /api/char/{uuid} ---
 
 type characterResponse struct {
-	Template        json.RawMessage `json:"template"`
 	TemplateName    string          `json:"templateName"`
 	SourceVersionID *int64          `json:"sourceVersionId,omitempty"`
 	SourceID        *int64          `json:"sourceId,omitempty"`
@@ -168,7 +163,6 @@ func (s *Server) handleGetChar(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	writeJSON(w, http.StatusOK, characterResponse{
-		Template:        template.Schema,
 		TemplateName:    template.Name,
 		SourceVersionID: char.SourceVersionID,
 		SourceID:        char.SourceID,
@@ -460,16 +454,16 @@ func (s *Server) loadCharWritable(w http.ResponseWriter, r *http.Request) (int64
 	return uid, char, true
 }
 
-// templateNamePath достаёт pathValuesForList["name"] из шаблона.
+// templateNamePath is the code-backed identity contract for registered systems.
 func templateNamePath(t store.CharacterTemplate) string {
-	if len(t.PathValuesForList) == 0 {
+	switch strings.ToUpper(t.Name) {
+	case "DND5", "DND5E":
+		return "values.name"
+	case "VTM20":
+		return "values.char_name"
+	default:
 		return ""
 	}
-	var pv map[string]string
-	if err := json.Unmarshal(t.PathValuesForList, &pv); err != nil {
-		return ""
-	}
-	return pv["name"]
 }
 
 // getByPath читает значение по «a.b.c» из вложенных map (порт CharacterController.getByPath).

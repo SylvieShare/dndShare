@@ -31,18 +31,18 @@ describe('featRules', () => {
     expect(evaluateFeatEligibility(item, { spellcasting: true, armorProfIds: [2], level: 4 }).eligible).toBe(true)
   })
 
-  it('normalizes legacy choice and builds a persistent character entry', () => {
-    const item = { id: 7, data: { choice: { count: 1, from_suggest_id: 16 }, max_use: 3 } }
+  it('normalizes a choice and builds a persistent character entry', () => {
+    const item = { id: 7, data: { choices: [{ count: 1, from_suggest_id: 16 }], max_use: 3 } }
     expect(featChoices(item)[0]).toMatchObject({ key: 'choice_1', source: 'suggest', count: 1 })
     expect(choiceSelectionsComplete(item, { choice_1: [4] })).toBe(true)
     expect(featEntry(item, { choice_1: [4] })).toEqual({ id: 7, count: 3, choices: { choice_1: [4] } })
   })
 
-  it('resolves modern and legacy ability-score shapes', () => {
+  it('resolves canonical ability-score shapes', () => {
     expect(abilityScoresFromValues({
       STR: { value: { base: 13, bonuses: [{ value: 2 }] } },
-      DEX: { value: 12 },
-      CON: 14,
+      DEX: { value: { base: 12, bonuses: [] } },
+      CON: { value: { base: 14, bonuses: [] } },
     })).toMatchObject({ STR: 15, DEX: 12, CON: 14 })
   })
 

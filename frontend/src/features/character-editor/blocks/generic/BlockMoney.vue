@@ -112,26 +112,13 @@ const coins = computed(() => {
 })
 
 const stored = computed(() => {
-  if (props.value?.amounts && typeof props.value.amounts === 'object') return props.value.amounts
-  if (props.value && !Array.isArray(props.value) && typeof props.value === 'object') return props.value
-  if (!Array.isArray(props.value)) return {}
-
-  const byId = {}
-  for (const coin of props.value) {
-    const id = coin.item_id ?? coin.itemId ?? coin.id
-    if (id != null) byId[id] = Number(coin.amount) || 0
-  }
-  return byId
+  return props.value?.amounts && typeof props.value.amounts === 'object'
+    ? props.value.amounts
+    : {}
 })
 
 const order = computed(() => {
-  if (Array.isArray(props.value?.order)) return props.value.order
-  if (Array.isArray(props.value)) {
-    return props.value
-      .map(coin => coin.item_id ?? coin.itemId ?? coin.id)
-      .filter(id => id != null)
-  }
-  return []
+  return Array.isArray(props.value?.order) ? props.value.order : []
 })
 
 const payload = computed(() => ({
@@ -177,14 +164,13 @@ async function loadCoins() {
 }
 
 function normalizeCoin(item) {
-  const shortTitle = item.short_title || item.shortTitle || item.l || item.value?.[0] || ''
   return {
     id: item.id,
     title: item.value || '',
-    shortTitle,
+    shortTitle: item.value || '',
     color: item.color || '#cccccc',
-    iconUrl: item.svg || item.icon || item.iconUrl || item.icon_url || '',
-    defaultOrder: Number(item.order ?? item.sort ?? item.weight ?? item.id) || 0,
+    iconUrl: item.svg || '',
+    defaultOrder: Number(item.id) || 0,
   }
 }
 

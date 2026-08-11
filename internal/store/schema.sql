@@ -1,9 +1,9 @@
 -- Идемпотентная консолидированная схема (финальное состояние прежних Liquibase-миграций
 -- v1..v3). Всё живёт в схеме `dndshare`. На существующей проде CREATE ... IF NOT EXISTS и
 -- ON CONFLICT DO NOTHING — no-op; на чистой БД создаёт все таблицы, индексы и засевает
--- справочные строки, которые задавались миграциями (item_type 8/9/10, suggest_type 23, роли).
--- Базовые справочники (item types 1..7, часть suggest-типов) исторически заводились только на
--- проде и в миграциях не было — на чистой БД их нет (как и в прежней версии).
+-- зарегистрированные системы, шаблоны и справочные строки, которые задавались миграциями
+-- (item_type 7..11, suggest_type 23, роли). Базовые справочники item_type 1..6 и часть
+-- suggest-типов требуют отдельного импорта каталога и на чистой БД не создаются.
 
 CREATE SCHEMA IF NOT EXISTS dndshare;
 CREATE EXTENSION IF NOT EXISTS pg_trgm;
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS dndshare."role" (
     CONSTRAINT role_pk PRIMARY KEY (id)
 );
 INSERT INTO dndshare."role" ("name")
-SELECT r FROM (VALUES ('NONE'), ('ADMIN'), ('HANDBOOK_ADMIN'), ('TEMPLATE_ADMIN'), ('ERROR_REPORT_AUTO_APPROVE'), ('ERROR_REPORT_REVIEWER')) AS v(r)
+SELECT r FROM (VALUES ('NONE'), ('ADMIN'), ('HANDBOOK_ADMIN'), ('ERROR_REPORT_AUTO_APPROVE'), ('ERROR_REPORT_REVIEWER')) AS v(r)
 WHERE NOT EXISTS (SELECT 1 FROM dndshare."role" e WHERE e."name" = v.r);
 
 CREATE TABLE IF NOT EXISTS dndshare.users (
@@ -40,6 +40,11 @@ CREATE TABLE IF NOT EXISTS dndshare.users_role (
 );
 CREATE INDEX IF NOT EXISTS users_role_user_id_index ON dndshare.users_role USING btree (user_id);
 CREATE INDEX IF NOT EXISTS idx_users_role_role_id ON dndshare.users_role USING btree (role_id);
+
+DELETE FROM dndshare.users_role ur
+USING dndshare."role" r
+WHERE ur.role_id = r.id AND r.name = 'TEMPLATE_ADMIN';
+DELETE FROM dndshare."role" WHERE name = 'TEMPLATE_ADMIN';
 
 CREATE SEQUENCE IF NOT EXISTS dndshare.user_sessions_id_seq;
 CREATE TABLE IF NOT EXISTS dndshare.users_session (
@@ -189,10 +194,18 @@ CREATE INDEX IF NOT EXISTS idx_job_run_started_by_user_id ON dndshare.job_run US
 CREATE TABLE IF NOT EXISTS dndshare."source" (
     id          bigserial NOT NULL,
     "name"      varchar NOT NULL,
-    -- Legacy migration source. New code reads editions from source_version.
-    "version"   varchar NULL,
     count_items int8 DEFAULT 0 NOT NULL,
     CONSTRAINT newtable_pk PRIMARY KEY (id)
+);
+
+-- Registered game systems are application data, not deployment-specific seed
+-- files. Keep a clean database usable by the same code registry as production.
+INSERT INTO dndshare."source" ("name")
+SELECT seed.name
+FROM (VALUES ('DND5e'), ('Vampire: TM')) AS seed(name)
+WHERE NOT EXISTS (
+    SELECT 1 FROM dndshare."source" current
+    WHERE lower(current.name) = lower(seed.name)
 );
 
 CREATE TABLE IF NOT EXISTS dndshare.source_version (
@@ -204,13 +217,20 @@ CREATE TABLE IF NOT EXISTS dndshare.source_version (
 );
 CREATE INDEX IF NOT EXISTS idx_source_version_source_id ON dndshare.source_version USING btree (source_id);
 
--- Move the old one-version-per-source model into the edition catalogue. The
--- source.version column stays for a safe rolling migration, but is no longer read.
+INSERT INTO dndshare.source_version (source_id, "version")
+SELECT src.id, seed.version
+FROM (VALUES ('DND5e', '2014'), ('Vampire: TM', 'V20')) AS seed(source_name, version)
+JOIN dndshare."source" src ON lower(src.name) = lower(seed.source_name)
+ON CONFLICT (source_id, "version") DO NOTHING;
+
+-- One-time normalization from the old one-version-per-source model.
+ALTER TABLE dndshare."source" ADD COLUMN IF NOT EXISTS "version" varchar NULL;
 INSERT INTO dndshare.source_version (source_id, "version")
 SELECT id, "version"
 FROM dndshare."source"
 WHERE "version" IS NOT NULL AND btrim("version") <> ''
 ON CONFLICT (source_id, "version") DO NOTHING;
+ALTER TABLE dndshare."source" DROP COLUMN IF EXISTS "version";
 
 -- Publications / content packs are separate from the game system and its rules
 -- edition. A 2014 book can be compatible with a 2024 character, so the native
@@ -225,7 +245,6 @@ CREATE TABLE IF NOT EXISTS dndshare.content_source (
     kind                     varchar DEFAULT 'addon' NOT NULL,
     is_default               bool DEFAULT false NOT NULL,
     sort_order               int4 DEFAULT 0 NOT NULL,
-    legacy_suggest_id        int8 NULL,
     CONSTRAINT content_source_pk PRIMARY KEY (id),
     CONSTRAINT content_source_kind_check CHECK (kind IN ('base', 'addon', 'third_party'))
 );
@@ -236,6 +255,9 @@ CREATE UNIQUE INDEX IF NOT EXISTS content_source_system_edition_code_key
     ON dndshare.content_source (source_id, COALESCE(native_source_version_id, 0), code);
 CREATE INDEX IF NOT EXISTS idx_content_source_source_id ON dndshare.content_source USING btree (source_id, sort_order, name);
 CREATE INDEX IF NOT EXISTS idx_content_source_native_version ON dndshare.content_source USING btree (native_source_version_id);
+
+-- Temporary lookup used only while normalizing the former suggest-backed sources.
+ALTER TABLE dndshare.content_source ADD COLUMN IF NOT EXISTS legacy_suggest_id int8 NULL;
 
 CREATE TABLE IF NOT EXISTS dndshare.content_source_compatibility (
     content_source_id int8 NOT NULL REFERENCES dndshare.content_source(id) ON DELETE CASCADE,
@@ -532,9 +554,106 @@ WHERE type_id IN (
 DELETE FROM dndshare.suggest_type
 WHERE lower(name) = lower('Источники');
 
-UPDATE dndshare.content_source
-SET legacy_suggest_id = NULL
-WHERE legacy_suggest_id IS NOT NULL;
+ALTER TABLE dndshare.content_source DROP COLUMN IF EXISTS legacy_suggest_id;
+
+-- Canonical handbook JSON. These transforms deliberately end support for the
+-- former fields: startup fixes existing rows once, runtime code reads only the
+-- current arrays/objects afterwards.
+CREATE OR REPLACE FUNCTION dndshare.canonicalize_ability_binding(document jsonb)
+RETURNS jsonb
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    single_keys text[] := ARRAY['class_id', 'subclass_id', 'race_id', 'subrace_id'];
+    array_keys text[] := ARRAY['class_ids', 'subclass_ids', 'race_ids', 'subrace_ids'];
+    result jsonb := document;
+    owners jsonb;
+    owner_id jsonb;
+    idx int;
+BEGIN
+    FOR idx IN 1..array_length(single_keys, 1) LOOP
+        IF result ? single_keys[idx] THEN
+            owner_id := result -> single_keys[idx];
+            owners := CASE
+                WHEN jsonb_typeof(result -> array_keys[idx]) = 'array' THEN result -> array_keys[idx]
+                ELSE '[]'::jsonb
+            END;
+            IF owner_id IS NOT NULL AND owner_id <> 'null'::jsonb AND NOT EXISTS (
+                SELECT 1 FROM jsonb_array_elements(owners) entry WHERE entry -> 'id' = owner_id
+            ) THEN
+                owners := owners || jsonb_build_array(jsonb_build_object('id', owner_id));
+            END IF;
+            result := jsonb_set(result, ARRAY[array_keys[idx]], owners, true) - single_keys[idx];
+        END IF;
+    END LOOP;
+    RETURN result;
+END;
+$$;
+
+UPDATE dndshare.item
+SET data = dndshare.canonicalize_ability_binding(data)
+WHERE type_id IN (3, 4)
+  AND data ?| ARRAY['class_id', 'subclass_id', 'race_id', 'subrace_id'];
+
+DROP FUNCTION dndshare.canonicalize_ability_binding(jsonb);
+
+UPDATE dndshare.item_type
+SET fields = COALESCE((
+    SELECT jsonb_agg(field ORDER BY ord)
+    FROM jsonb_array_elements(fields) WITH ORDINALITY rows(field, ord)
+    WHERE field ->> 'key' NOT IN ('class_id', 'subclass_id', 'race_id', 'subrace_id')
+), '[]'::jsonb)
+WHERE id IN (3, 4) AND jsonb_typeof(fields) = 'array';
+
+UPDATE dndshare.item spell
+SET data = jsonb_set(
+    spell.data,
+    '{classes}',
+    COALESCE((
+        SELECT jsonb_agg(jsonb_build_object('id', class_item.id) ORDER BY class_item.id)
+        FROM jsonb_array_elements_text(spell.data -> 'classIds') old_class(suggest_id)
+        JOIN dndshare.item class_item
+          ON class_item.type_id = 9
+         AND class_item.data ->> 'suggest_id' = old_class.suggest_id
+    ), '[]'::jsonb),
+    true
+)
+WHERE spell.type_id = 5
+  AND jsonb_typeof(spell.data -> 'classIds') = 'array'
+  AND jsonb_typeof(spell.data -> 'classes') IS DISTINCT FROM 'array';
+
+UPDATE dndshare.item
+SET data = data - 'classIds'
+WHERE type_id = 5 AND data ? 'classIds';
+
+UPDATE dndshare.item_type
+SET fields = COALESCE((
+    SELECT jsonb_agg(field ORDER BY ord)
+    FROM jsonb_array_elements(fields) WITH ORDINALITY rows(field, ord)
+    WHERE field ->> 'key' <> 'classIds'
+), '[]'::jsonb)
+WHERE id = 5 AND jsonb_typeof(fields) = 'array';
+
+UPDATE dndshare.item
+SET data = CASE
+    WHEN data ? 'description' THEN data - 'desc'
+    ELSE (data - 'desc') || jsonb_build_object('description', data -> 'desc')
+END
+WHERE type_id = 7 AND data ? 'desc';
+
+UPDATE dndshare.item
+SET data = CASE
+    WHEN data ? 'prereq' THEN data - 'prerequisites'
+    ELSE (data - 'prerequisites') || jsonb_build_object('prereq', data -> 'prerequisites')
+END
+WHERE type_id = 7 AND data ? 'prerequisites';
+
+UPDATE dndshare.item
+SET data = CASE
+    WHEN jsonb_typeof(data -> 'choices') = 'array' THEN data - 'choice'
+    ELSE (data - 'choice') || jsonb_build_object('choices', jsonb_build_array(data -> 'choice'))
+END
+WHERE type_id = 7 AND data ? 'choice';
 
 CREATE TABLE IF NOT EXISTS dndshare.dictionary_text (
     id     bigserial NOT NULL,
@@ -550,24 +669,40 @@ CREATE TABLE IF NOT EXISTS dndshare.dictionary_text (
 CREATE TABLE IF NOT EXISTS dndshare.char_template (
     id                   bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
     "name"               varchar NOT NULL,
-    "schema"             jsonb NOT NULL,
-    create_form          jsonb NULL,
-    path_values_for_list jsonb NULL,
     CONSTRAINT char_template_pk PRIMARY KEY (id)
 );
 
-UPDATE dndshare.char_template
-SET schema = schema #- '{blocks,spells,content,source_suggest_id}'
-WHERE (schema #> '{blocks,spells,content}') ? 'source_suggest_id';
-
-CREATE TABLE IF NOT EXISTS dndshare.template_block_type (
-    "type"          varchar NOT NULL,
-    "label"         varchar NOT NULL,
-    category        varchar NOT NULL,
-    fields          jsonb DEFAULT '[]'::jsonb NOT NULL,
-    default_content jsonb DEFAULT '{}'::jsonb NOT NULL,
-    CONSTRAINT template_block_type_pkey PRIMARY KEY (type)
+INSERT INTO dndshare.char_template ("name")
+SELECT seed.name
+FROM (VALUES ('DND5'), ('VTM20')) AS seed(name)
+WHERE NOT EXISTS (
+    SELECT 1 FROM dndshare.char_template current
+    WHERE upper(current.name) = upper(seed.name)
 );
+
+ALTER TABLE dndshare.char_template DROP COLUMN IF EXISTS "schema";
+ALTER TABLE dndshare.char_template DROP COLUMN IF EXISTS create_form;
+ALTER TABLE dndshare.char_template DROP COLUMN IF EXISTS path_values_for_list;
+DROP TABLE IF EXISTS dndshare.template_block_type;
+
+-- Half-casters start casting after level 1, so they intentionally have no
+-- level-1 `spellcasting` grant. Their casting ability is still explicit data
+-- used by later level-ups; application code must not infer it from a name.
+UPDATE dndshare.item
+SET data = jsonb_set(data, '{spellcasting_ability}', '6'::jsonb, true)
+WHERE type_id = 9 AND lower(COALESCE(name_en, '')) = 'paladin'
+  AND NOT data ? 'spellcasting_ability';
+UPDATE dndshare.item
+SET data = jsonb_set(data, '{spellcasting_ability}', '5'::jsonb, true)
+WHERE type_id = 9 AND lower(COALESCE(name_en, '')) = 'ranger'
+  AND NOT data ? 'spellcasting_ability';
+UPDATE dndshare.item_type
+SET fields = fields || '[{"name":"Характеристика заклинаний после 1 уровня","key":"spellcasting_ability","type":"suggest","suggest_id":16}]'::jsonb
+WHERE id = 9
+  AND NOT EXISTS (
+    SELECT 1 FROM jsonb_array_elements(fields) field
+    WHERE field ->> 'key' = 'spellcasting_ability'
+  );
 
 CREATE TABLE IF NOT EXISTS dndshare."char" (
     id             bigserial NOT NULL,
@@ -607,6 +742,274 @@ JOIN dndshare.source_version sv ON sv.source_id = src.id AND (
     OR ((upper(ct.name) LIKE '%VTM%' OR upper(ct.name) LIKE '%VAMPIRE%') AND upper(sv.version) = 'V20')
 )
 WHERE c.template_id = ct.id AND c.source_version_id IS NULL;
+
+CREATE OR REPLACE FUNCTION dndshare.canonicalize_dnd_character(document jsonb)
+RETURNS jsonb
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    values_data jsonb := COALESCE(document -> 'values', '{}'::jsonb);
+    hp_data jsonb;
+    items_data jsonb;
+    spells_data jsonb;
+    money_data jsonb;
+    raw_amounts jsonb;
+    amounts jsonb;
+    coin jsonb;
+    flat_items jsonb;
+    level_data jsonb;
+    item_ref jsonb;
+    lookup_name text;
+    ref_key text;
+    ref_type int;
+    stat_key text;
+    score jsonb;
+    die text;
+    coin_key text;
+    coin_alias text;
+    amount_text text;
+    total int;
+    used int;
+BEGIN
+    FOREACH ref_key IN ARRAY ARRAY['race', 'subrace', 'class', 'subclass'] LOOP
+        IF jsonb_typeof(values_data -> ref_key) = 'string' THEN
+            lookup_name := btrim(values_data ->> ref_key);
+            IF ref_key IN ('class', 'subclass') AND lower(lookup_name) = lower('Прохиндей') THEN
+                lookup_name := 'Плут';
+            END IF;
+            ref_type := CASE WHEN ref_key IN ('race', 'subrace') THEN 8 ELSE 9 END;
+            SELECT jsonb_build_object('id', i.id, 'name', i.name)
+            INTO item_ref
+            FROM dndshare.item i
+            WHERE i.type_id = ref_type AND lower(i.name) = lower(lookup_name)
+            ORDER BY (i.parent_id IS NULL) DESC, i.id
+            LIMIT 1;
+            IF item_ref IS NOT NULL THEN
+                values_data := jsonb_set(values_data, ARRAY[ref_key], item_ref, true);
+            END IF;
+        END IF;
+    END LOOP;
+
+    level_data := values_data -> 'lvl';
+    IF jsonb_typeof(level_data) IS DISTINCT FROM 'object' THEN
+        values_data := jsonb_set(values_data, '{lvl}', jsonb_build_object(
+            'level', CASE
+                WHEN jsonb_typeof(level_data) = 'number' AND (level_data #>> '{}') ~ '^[0-9]+$'
+                    THEN GREATEST(1, (level_data #>> '{}')::int)
+                ELSE 1
+            END,
+            'exp', 0
+        ), true);
+    ELSE
+        level_data := jsonb_set(level_data, '{level}', to_jsonb(CASE
+            WHEN COALESCE(level_data ->> 'level', '') ~ '^[0-9]+$' THEN GREATEST(1, (level_data ->> 'level')::int)
+            ELSE 1
+        END), true);
+        IF NOT level_data ? 'exp' THEN level_data := jsonb_set(level_data, '{exp}', '0'::jsonb, true); END IF;
+        values_data := jsonb_set(values_data, '{lvl}', level_data, true);
+    END IF;
+
+    IF jsonb_typeof(values_data -> 'classes') IS DISTINCT FROM 'array'
+       AND jsonb_typeof(values_data -> 'class') = 'object'
+       AND (values_data -> 'class') ? 'id' THEN
+        values_data := jsonb_set(values_data, '{classes}', jsonb_build_array(
+            (values_data -> 'class')
+            || jsonb_build_object('level', (values_data #>> '{lvl,level}')::int)
+            || CASE
+                WHEN jsonb_typeof(values_data -> 'subclass') = 'object' THEN jsonb_build_object('subclass', values_data -> 'subclass')
+                ELSE '{}'::jsonb
+               END
+        ), true);
+    END IF;
+    values_data := values_data - 'class' - 'subclass';
+
+    FOREACH stat_key IN ARRAY ARRAY['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'] LOOP
+        IF jsonb_typeof(values_data -> stat_key) = 'number' THEN
+            score := values_data -> stat_key;
+            values_data := jsonb_set(values_data, ARRAY[stat_key], jsonb_build_object(
+                'value', jsonb_build_object('base', score, 'bonuses', '[]'::jsonb)
+            ), true);
+        ELSIF jsonb_typeof(values_data #> ARRAY[stat_key, 'value']) = 'number' THEN
+            score := values_data #> ARRAY[stat_key, 'value'];
+            values_data := jsonb_set(values_data, ARRAY[stat_key, 'value'], jsonb_build_object(
+                'base', score, 'bonuses', '[]'::jsonb
+            ), true);
+        END IF;
+        IF jsonb_typeof(values_data -> stat_key) = 'object' THEN
+            values_data := jsonb_set(
+                values_data,
+                ARRAY[stat_key],
+                (values_data -> stat_key) - 'mod' - 'skills_up',
+                true
+            );
+        END IF;
+    END LOOP;
+
+    IF jsonb_typeof(values_data -> 'initiative') = 'number' THEN
+        values_data := jsonb_set(values_data, '{initiative}', jsonb_build_object(
+            'base', values_data -> 'initiative', 'bonuses', '[]'::jsonb, 'use_dex', false
+        ), true);
+    END IF;
+    IF jsonb_typeof(values_data -> 'exhaustion') = 'number' THEN
+        values_data := jsonb_set(values_data, '{exhaustion}', jsonb_build_object('level', values_data -> 'exhaustion'), true);
+    END IF;
+    IF jsonb_typeof(values_data -> 'ava') = 'string' THEN
+        values_data := jsonb_set(values_data, '{ava}', jsonb_build_object('url', values_data -> 'ava'), true);
+    END IF;
+    IF jsonb_typeof(values_data -> 'speed') = 'number' THEN
+        values_data := jsonb_set(values_data, '{speed}', jsonb_build_object(
+            'base', values_data -> 'speed', 'bonuses', '[]'::jsonb
+        ), true);
+    END IF;
+
+    hp_data := CASE WHEN jsonb_typeof(values_data -> 'hp') = 'object' THEN values_data -> 'hp' ELSE '{}'::jsonb END;
+    IF jsonb_typeof(hp_data -> 'hitDice') IS DISTINCT FROM 'array' OR jsonb_array_length(hp_data -> 'hitDice') = 0 THEN
+        die := CASE WHEN COALESCE(hp_data ->> 'dice', '') ~ '^d[0-9]+$' THEN hp_data ->> 'dice' ELSE 'd8' END;
+        total := CASE
+            WHEN COALESCE(hp_data ->> 'diceCount', '') ~ '^[0-9]+$' THEN GREATEST(1, (hp_data ->> 'diceCount')::int)
+            ELSE GREATEST(1, (values_data #>> '{lvl,level}')::int)
+        END;
+        used := CASE WHEN COALESCE(hp_data ->> 'diceUsed', '') ~ '^[0-9]+$' THEN LEAST(total, (hp_data ->> 'diceUsed')::int) ELSE 0 END;
+        hp_data := jsonb_set(hp_data, '{hitDice}', jsonb_build_array(jsonb_build_object(
+            'die', die, 'total', total, 'used', used
+        )), true);
+    END IF;
+    hp_data := hp_data - 'dice' - 'diceCount' - 'diceUsed';
+    values_data := jsonb_set(values_data, '{hp}', hp_data, true);
+
+    spells_data := values_data -> 'spells';
+    IF jsonb_typeof(spells_data) = 'array' THEN
+        spells_data := jsonb_build_object(
+            'stat_path', '', 'save_bonus', 0, 'attack_bonus', 0,
+            'slots_rest', 'long_rest', 'preparation', false,
+            'spells', spells_data, 'slots', '[]'::jsonb
+        );
+        values_data := jsonb_set(values_data, '{spells}', spells_data, true);
+    ELSIF jsonb_typeof(spells_data) = 'object' THEN
+        IF jsonb_typeof(spells_data -> 'spells') IS DISTINCT FROM 'array' THEN
+            spells_data := jsonb_set(spells_data, '{spells}', '[]'::jsonb, true);
+        END IF;
+        IF jsonb_typeof(spells_data -> 'slots') IS DISTINCT FROM 'array' THEN
+            spells_data := jsonb_set(spells_data, '{slots}', '[]'::jsonb, true);
+        END IF;
+        IF upper(regexp_replace(COALESCE(spells_data ->> 'stat_path', ''), '\.mod$', '', 'i')) IN ('STR','DEX','CON','INT','WIS','CHA') THEN
+            spells_data := jsonb_set(spells_data, '{stat_path}', to_jsonb(CASE upper(regexp_replace(spells_data ->> 'stat_path', '\.mod$', '', 'i'))
+                WHEN 'STR' THEN '1' WHEN 'DEX' THEN '2' WHEN 'CON' THEN '3'
+                WHEN 'INT' THEN '4' WHEN 'WIS' THEN '5' WHEN 'CHA' THEN '6'
+            END), true);
+        END IF;
+        values_data := jsonb_set(values_data, '{spells}', spells_data, true);
+    END IF;
+
+    money_data := values_data -> 'money';
+    IF jsonb_typeof(money_data) IN ('array', 'object') THEN
+        amounts := '{}'::jsonb;
+        IF jsonb_typeof(money_data) = 'array' THEN
+            FOR coin IN SELECT value FROM jsonb_array_elements(money_data) LOOP
+                coin_key := lower(COALESCE(coin ->> 'id', ''));
+                coin_key := CASE
+                    WHEN coin_key = 'cp' OR lower(COALESCE(coin ->> 'title', '')) LIKE '%медн%' THEN '1'
+                    WHEN coin_key = 'sp' OR lower(COALESCE(coin ->> 'title', '')) LIKE '%серебр%' THEN '2'
+                    WHEN coin_key = 'gp' OR lower(COALESCE(coin ->> 'title', '')) LIKE '%золот%' THEN '3'
+                    WHEN coin_key = 'ep' OR lower(COALESCE(coin ->> 'title', '')) LIKE '%электр%' THEN '4'
+                    WHEN coin_key = 'pp' OR lower(COALESCE(coin ->> 'title', '')) LIKE '%платин%' THEN '5'
+                    ELSE coin_key
+                END;
+                amount_text := COALESCE(coin ->> 'amount', '0');
+                IF coin_key ~ '^[1-5]$' AND amount_text ~ '^[0-9]+$' THEN
+                    amounts := jsonb_set(amounts, ARRAY[coin_key], to_jsonb(amount_text::int), true);
+                END IF;
+            END LOOP;
+        ELSE
+            raw_amounts := CASE
+                WHEN jsonb_typeof(money_data -> 'amounts') = 'object' THEN money_data -> 'amounts'
+                ELSE money_data
+            END;
+            FOREACH coin_key IN ARRAY ARRAY['1','2','3','4','5'] LOOP
+                coin_alias := CASE coin_key WHEN '1' THEN 'cp' WHEN '2' THEN 'sp' WHEN '3' THEN 'gp' WHEN '4' THEN 'ep' ELSE 'pp' END;
+                amount_text := COALESCE(raw_amounts ->> coin_key, raw_amounts ->> coin_alias, '0');
+                IF amount_text ~ '^[0-9]+$' THEN
+                    amounts := jsonb_set(amounts, ARRAY[coin_key], to_jsonb(amount_text::int), true);
+                END IF;
+            END LOOP;
+        END IF;
+        FOREACH coin_key IN ARRAY ARRAY['1','2','3','4','5'] LOOP
+            IF NOT amounts ? coin_key THEN
+                amounts := jsonb_set(amounts, ARRAY[coin_key], '0'::jsonb, true);
+            END IF;
+        END LOOP;
+        values_data := jsonb_set(values_data, '{money}', jsonb_build_object(
+            'order', jsonb_build_array(1,2,3,4,5), 'amounts', amounts
+        ), true);
+    END IF;
+
+    IF jsonb_typeof(values_data -> 'items') = 'array' THEN
+        items_data := values_data -> 'items';
+        WITH RECURSIVE flat(entry) AS (
+            SELECT value FROM jsonb_array_elements(items_data)
+            UNION ALL
+            SELECT nested.value
+            FROM flat
+            CROSS JOIN LATERAL jsonb_array_elements(CASE
+                WHEN jsonb_typeof(flat.entry -> 'items') = 'array' THEN flat.entry -> 'items'
+                ELSE '[]'::jsonb
+            END) nested
+        )
+        SELECT COALESCE(jsonb_agg(jsonb_build_object(
+            'uid', COALESCE(entry ->> 'uid', 'migrated-' || md5(entry::text)),
+            'id', COALESCE(entry -> 'id', 'null'::jsonb),
+            'count', CASE WHEN COALESCE(entry ->> 'count', '') ~ '^[0-9]+$' THEN GREATEST(1, (entry ->> 'count')::int) ELSE 1 END,
+            'override', CASE WHEN jsonb_typeof(entry -> 'override') = 'object' THEN entry -> 'override' ELSE 'null'::jsonb END
+        )), '[]'::jsonb)
+        INTO flat_items
+        FROM flat
+        WHERE entry ? 'id' OR jsonb_typeof(entry -> 'override') = 'object';
+        items_data := jsonb_build_object(
+            'equipped', '[]'::jsonb,
+            'sections', jsonb_build_array(jsonb_build_object(
+                'id', 'migrated-bag', 'name', 'Рюкзак', 'items', flat_items
+            ))
+        );
+        values_data := jsonb_set(values_data, '{items}', items_data, true);
+    ELSIF jsonb_typeof(values_data -> 'items') = 'object' THEN
+        items_data := values_data -> 'items';
+        IF jsonb_typeof(items_data -> 'equipped') IS DISTINCT FROM 'array' THEN items_data := jsonb_set(items_data, '{equipped}', '[]'::jsonb, true); END IF;
+        IF jsonb_typeof(items_data -> 'sections') IS DISTINCT FROM 'array' THEN items_data := jsonb_set(items_data, '{sections}', '[]'::jsonb, true); END IF;
+        SELECT COALESCE(jsonb_agg(section ORDER BY ord), '[]'::jsonb)
+        INTO flat_items
+        FROM jsonb_array_elements(items_data -> 'sections') WITH ORDINALITY rows(section, ord)
+        WHERE section ->> 'id' <> 'equipped';
+        SELECT COALESCE(jsonb_agg(entry ORDER BY section_ord, entry_ord), '[]'::jsonb)
+        INTO raw_amounts
+        FROM jsonb_array_elements(items_data -> 'sections') WITH ORDINALITY section_rows(section, section_ord)
+        CROSS JOIN LATERAL jsonb_array_elements(CASE
+            WHEN jsonb_typeof(section -> 'items') = 'array' THEN section -> 'items'
+            ELSE '[]'::jsonb
+        END) WITH ORDINALITY entry_rows(entry, entry_ord)
+        WHERE section ->> 'id' = 'equipped';
+        items_data := jsonb_set(items_data, '{equipped}', (items_data -> 'equipped') || raw_amounts, true);
+        items_data := jsonb_set(items_data, '{sections}', flat_items, true);
+        values_data := jsonb_set(values_data, '{items}', items_data, true);
+    END IF;
+
+    RETURN jsonb_set(document, '{values}', values_data, true);
+END;
+$$;
+
+WITH normalized AS (
+    SELECT c.id, dndshare.canonicalize_dnd_character(c.data) AS data
+    FROM dndshare."char" c
+    JOIN dndshare.char_template t ON t.id = c.template_id
+    WHERE upper(t.name) IN ('DND5', 'DND5E')
+)
+UPDATE dndshare."char" c
+SET data = normalized.data,
+    version = c.version + 1,
+    changed_at = now()
+FROM normalized
+WHERE c.id = normalized.id AND c.data IS DISTINCT FROM normalized.data;
+
+DROP FUNCTION dndshare.canonicalize_dnd_character(jsonb);
 
 -- Data correction: item 1421 was an old incomplete copy of the rogue class
 -- feature Cunning Action, accidentally stored as a spell. Item 4056 is the
@@ -802,6 +1205,47 @@ CREATE TABLE IF NOT EXISTS dndshare.session_encounter (
 );
 CREATE INDEX IF NOT EXISTS idx_session_encounter_session_id ON dndshare.session_encounter USING btree (session_id);
 
+-- Encounter combatants now keep only itemId + override. Former item snapshots
+-- and denormalized NPC fields are folded into override once and removed.
+WITH normalized AS (
+    SELECT encounter.id, COALESCE(jsonb_agg(
+        CASE WHEN combatant ->> 'type' = 'npc' THEN
+            (combatant - ARRAY['itemRaw', 'itemSvg', 'name', 'ac', 'hpMax', 'cr', 'creatureType'])
+            || jsonb_build_object('override', CASE
+                WHEN jsonb_typeof(combatant -> 'override') = 'object' THEN combatant -> 'override'
+                ELSE jsonb_strip_nulls(jsonb_build_object(
+                    'name', combatant -> 'name',
+                    'ac', combatant -> 'ac',
+                    'hp', combatant -> 'hpMax',
+                    'cr', combatant -> 'cr',
+                    'creature_type', combatant -> 'creatureType'
+                ))
+            END)
+        ELSE combatant END
+        ORDER BY ord
+    ), '[]'::jsonb) AS combatants
+    FROM dndshare.session_encounter encounter
+    CROSS JOIN LATERAL jsonb_array_elements(CASE
+        WHEN jsonb_typeof(encounter.data -> 'combatants') = 'array' THEN encounter.data -> 'combatants'
+        ELSE '[]'::jsonb
+    END) WITH ORDINALITY rows(combatant, ord)
+    WHERE encounter.data IS NOT NULL
+      AND EXISTS (
+      SELECT 1
+      FROM jsonb_array_elements(CASE
+          WHEN jsonb_typeof(encounter.data -> 'combatants') = 'array' THEN encounter.data -> 'combatants'
+          ELSE '[]'::jsonb
+      END) combatant
+      WHERE combatant ?| ARRAY['itemRaw', 'itemSvg', 'name', 'ac', 'hpMax', 'cr', 'creatureType']
+      )
+    GROUP BY encounter.id
+)
+UPDATE dndshare.session_encounter encounter
+SET data = jsonb_set(encounter.data, '{combatants}', normalized.combatants, true),
+    changed_at = now()
+FROM normalized
+WHERE encounter.id = normalized.id;
+
 CREATE TABLE IF NOT EXISTS dndshare.session_event (
     id             bigserial NOT NULL,
     session_id     int8 NOT NULL REFERENCES dndshare."session"(id),
@@ -844,7 +1288,7 @@ CREATE INDEX IF NOT EXISTS idx_session_participant_user_id ON dndshare.session_p
 -- suggest type Редкость(23) + значения. ON CONFLICT DO NOTHING → no-op на проде.
 -- ---------------------------------------------------------------------------
 INSERT INTO dndshare.item_type (id, name, fields, source_id, color, important, description)
-VALUES (7, 'Черты', '[]'::jsonb, 1, '#d6a84f', true, 'Особые таланты и обучение персонажей: требования, выборы, бонусы и ограниченные использования.')
+VALUES (7, 'Черты', '[]'::jsonb, (SELECT id FROM dndshare."source" WHERE lower(name) = 'dnd5e' LIMIT 1), '#d6a84f', true, 'Особые таланты и обучение персонажей: требования, выборы, бонусы и ограниченные использования.')
 ON CONFLICT (id) DO NOTHING;
 
 -- v5 (2026-08-09): структурированная модель черт. Старый тип 7 исторически жил
@@ -899,11 +1343,11 @@ WHERE it.id = 7
   );
 
 INSERT INTO dndshare.item_type (id, name, fields, source_id, color, important, description)
-VALUES (8, 'Расы', '[{"name":"Раса (словарь)","key":"suggest_id","type":"suggest","suggest_id":1},{"name":"Размер","key":"size","type":"text"},{"name":"Скорость","key":"speed","type":"int","default":30},{"name":"Бонусы характеристик","key":"asi","type":"object_array","fields":[{"name":"Характеристика","key":"ability","type":"suggest","suggest_id":16},{"name":"Бонус","key":"bonus","type":"int","default":1}]},{"name":"Плавающий бонус (выбор)","key":"asi_choice","type":"object","fields":[{"name":"Сколько выбрать","key":"count","type":"int","default":2},{"name":"Бонус","key":"bonus","type":"int","default":1}]},{"name":"Выбор навыков","key":"skill_choice","type":"object","fields":[{"name":"Количество","key":"count","type":"int","default":2},{"name":"Из навыков (пусто = любые)","key":"from","type":"suggest_array","suggest_id":15}]},{"name":"Выбор языка","key":"lang_choice","type":"object","fields":[{"name":"Количество","key":"count","type":"int","default":1},{"name":"Из языков (пусто = любые)","key":"from","type":"suggest_array","suggest_id":6}]},{"name":"Языки","key":"languages","type":"suggest_array","suggest_id":6},{"name":"Владение доспехами","key":"armor_prof","type":"suggest_array","suggest_id":3},{"name":"Владение оружием","key":"weapon_prof","type":"suggest_array","suggest_id":4},{"name":"Владение инструментами","key":"tool_prof","type":"suggest_array","suggest_id":5},{"name":"Описание","key":"description","type":"description"}]'::jsonb, 1, '#5aaf72', true, 'Расы и подрасы персонажей: бонусы характеристик, скорость, размер, языки, владения.')
+VALUES (8, 'Расы', '[{"name":"Раса (словарь)","key":"suggest_id","type":"suggest","suggest_id":1},{"name":"Размер","key":"size","type":"text"},{"name":"Скорость","key":"speed","type":"int","default":30},{"name":"Бонусы характеристик","key":"asi","type":"object_array","fields":[{"name":"Характеристика","key":"ability","type":"suggest","suggest_id":16},{"name":"Бонус","key":"bonus","type":"int","default":1}]},{"name":"Плавающий бонус (выбор)","key":"asi_choice","type":"object","fields":[{"name":"Сколько выбрать","key":"count","type":"int","default":2},{"name":"Бонус","key":"bonus","type":"int","default":1}]},{"name":"Выбор навыков","key":"skill_choice","type":"object","fields":[{"name":"Количество","key":"count","type":"int","default":2},{"name":"Из навыков (пусто = любые)","key":"from","type":"suggest_array","suggest_id":15}]},{"name":"Выбор языка","key":"lang_choice","type":"object","fields":[{"name":"Количество","key":"count","type":"int","default":1},{"name":"Из языков (пусто = любые)","key":"from","type":"suggest_array","suggest_id":6}]},{"name":"Языки","key":"languages","type":"suggest_array","suggest_id":6},{"name":"Владение доспехами","key":"armor_prof","type":"suggest_array","suggest_id":3},{"name":"Владение оружием","key":"weapon_prof","type":"suggest_array","suggest_id":4},{"name":"Владение инструментами","key":"tool_prof","type":"suggest_array","suggest_id":5},{"name":"Описание","key":"description","type":"description"}]'::jsonb, (SELECT id FROM dndshare."source" WHERE lower(name) = 'dnd5e' LIMIT 1), '#5aaf72', true, 'Расы и подрасы персонажей: бонусы характеристик, скорость, размер, языки, владения.')
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO dndshare.item_type (id, name, fields, source_id, color, important, description)
-VALUES (9, 'Классы', '[{"name":"Класс (словарь)","key":"suggest_id","type":"suggest","suggest_id":2},{"name":"Кость хитов","key":"hit_die","type":"suggest","suggest_id":11},{"name":"Основные характеристики","key":"primary_abilities","type":"suggest_array","suggest_id":16},{"name":"Спасброски","key":"saves","type":"suggest_array","suggest_id":16},{"name":"Владение доспехами","key":"armor_prof","type":"suggest_array","suggest_id":3},{"name":"Владение оружием","key":"weapon_prof","type":"suggest_array","suggest_id":4},{"name":"Владение инструментами","key":"tool_prof","type":"suggest_array","suggest_id":5},{"name":"Выбор навыков","key":"skill_choice","type":"object","fields":[{"name":"Количество","key":"count","type":"int","default":2},{"name":"Из навыков","key":"from","type":"suggest_array","suggest_id":15}]},{"name":"Заклинательство","key":"spellcasting","type":"object","fields":[{"name":"Характеристика заклинаний","key":"ability","type":"suggest","suggest_id":16},{"name":"Заговоров на 1 уровне","key":"cantrips_known","type":"int"},{"name":"Заклинаний на 1 уровне","key":"spells_known","type":"int"},{"name":"Подготавливает заклинания","key":"prepares","type":"bool"},{"name":"Примечание","key":"note","type":"description"}]},{"name":"Уровень выбора архетипа","key":"subclass_level","type":"int"},{"name":"Уровни прироста характеристик (ASI)","key":"asi_levels","type":"text"},{"name":"Даруемые заклинания","key":"granted_spells","type":"object_array","fields":[{"name":"Уровень класса","key":"level","type":"int","default":1},{"name":"Заклинание","key":"spell","type":"item","item_type":5},{"name":"Вариант (напр. местность)","key":"option","type":"text"}]},{"name":"Стартовое снаряжение","key":"starting_equipment","type":"description"},{"name":"Описание","key":"description","type":"description"}]'::jsonb, 1, '#7c5cff', true, 'Классы и архетипы персонажей: кость хитов, владения, заклинательство, выбор навыков.')
+VALUES (9, 'Классы', '[{"name":"Класс (словарь)","key":"suggest_id","type":"suggest","suggest_id":2},{"name":"Кость хитов","key":"hit_die","type":"suggest","suggest_id":11},{"name":"Основные характеристики","key":"primary_abilities","type":"suggest_array","suggest_id":16},{"name":"Спасброски","key":"saves","type":"suggest_array","suggest_id":16},{"name":"Владение доспехами","key":"armor_prof","type":"suggest_array","suggest_id":3},{"name":"Владение оружием","key":"weapon_prof","type":"suggest_array","suggest_id":4},{"name":"Владение инструментами","key":"tool_prof","type":"suggest_array","suggest_id":5},{"name":"Выбор навыков","key":"skill_choice","type":"object","fields":[{"name":"Количество","key":"count","type":"int","default":2},{"name":"Из навыков","key":"from","type":"suggest_array","suggest_id":15}]},{"name":"Заклинательство","key":"spellcasting","type":"object","fields":[{"name":"Характеристика заклинаний","key":"ability","type":"suggest","suggest_id":16},{"name":"Заговоров на 1 уровне","key":"cantrips_known","type":"int"},{"name":"Заклинаний на 1 уровне","key":"spells_known","type":"int"},{"name":"Подготавливает заклинания","key":"prepares","type":"bool"},{"name":"Примечание","key":"note","type":"description"}]},{"name":"Уровень выбора архетипа","key":"subclass_level","type":"int"},{"name":"Уровни прироста характеристик (ASI)","key":"asi_levels","type":"text"},{"name":"Даруемые заклинания","key":"granted_spells","type":"object_array","fields":[{"name":"Уровень класса","key":"level","type":"int","default":1},{"name":"Заклинание","key":"spell","type":"item","item_type":5},{"name":"Вариант (напр. местность)","key":"option","type":"text"}]},{"name":"Стартовое снаряжение","key":"starting_equipment","type":"description"},{"name":"Описание","key":"description","type":"description"}]'::jsonb, (SELECT id FROM dndshare."source" WHERE lower(name) = 'dnd5e' LIMIT 1), '#7c5cff', true, 'Классы и архетипы персонажей: кость хитов, владения, заклинательство, выбор навыков.')
 ON CONFLICT (id) DO NOTHING;
 
 -- v4 (2026-07-19): «Даруемые заклинания» (granted_spells) у типа 9 — заклинания
@@ -915,15 +1359,15 @@ WHERE id = 9
   AND NOT EXISTS (SELECT 1 FROM jsonb_array_elements(fields) f WHERE f->>'key' = 'granted_spells');
 
 INSERT INTO dndshare.item_type (id, name, fields, source_id, color, important, description)
-VALUES (10, 'Зелья', '[{"name":"Описание","key":"desc","type":"description"},{"name":"Цвет зелья","key":"color","type":"color","default":"#7c5cff"},{"name":"Редкость","key":"rarity","type":"suggest","suggest_id":23,"filter":true},{"name":"Стоимость","key":"cost","type":"int_by_suggest","suggest_type_id":17},{"name":"Вес","key":"weight","type":"int"}]'::jsonb, 1, '#3fb6a8', false, 'Зелья и эликсиры: расходуемые предметы, отображаются колбами в инвентаре персонажа.')
+VALUES (10, 'Зелья', '[{"name":"Описание","key":"desc","type":"description"},{"name":"Цвет зелья","key":"color","type":"color","default":"#7c5cff"},{"name":"Редкость","key":"rarity","type":"suggest","suggest_id":23,"filter":true},{"name":"Стоимость","key":"cost","type":"int_by_suggest","suggest_type_id":17},{"name":"Вес","key":"weight","type":"int"}]'::jsonb, (SELECT id FROM dndshare."source" WHERE lower(name) = 'dnd5e' LIMIT 1), '#3fb6a8', false, 'Зелья и эликсиры: расходуемые предметы, отображаются колбами в инвентаре персонажа.')
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO dndshare.item_type (id, name, fields, source_id, color, important, description)
-VALUES (11, 'Предыстории', '[{"name":"Владение навыками","key":"skills","type":"suggest_array","suggest_id":15},{"name":"Языки","key":"languages","type":"suggest_array","suggest_id":6},{"name":"Языки на выбор","key":"lang_choice","type":"object","fields":[{"name":"Количество","key":"count","type":"int","default":1}]},{"name":"Владение инструментами","key":"tool_prof","type":"suggest_array","suggest_id":5},{"name":"Черта предыстории","key":"feature","type":"text"},{"name":"Описание черты","key":"feature_desc","type":"description"},{"name":"Стартовое снаряжение","key":"equipment","type":"description"},{"name":"Описание","key":"description","type":"description"}]'::jsonb, 1, '#c98a3a', true, 'Предыстории персонажей: владение навыками, инструменты, языки, черта предыстории и стартовое снаряжение.')
+VALUES (11, 'Предыстории', '[{"name":"Владение навыками","key":"skills","type":"suggest_array","suggest_id":15},{"name":"Языки","key":"languages","type":"suggest_array","suggest_id":6},{"name":"Языки на выбор","key":"lang_choice","type":"object","fields":[{"name":"Количество","key":"count","type":"int","default":1}]},{"name":"Владение инструментами","key":"tool_prof","type":"suggest_array","suggest_id":5},{"name":"Черта предыстории","key":"feature","type":"text"},{"name":"Описание черты","key":"feature_desc","type":"description"},{"name":"Стартовое снаряжение","key":"equipment","type":"description"},{"name":"Описание","key":"description","type":"description"}]'::jsonb, (SELECT id FROM dndshare."source" WHERE lower(name) = 'dnd5e' LIMIT 1), '#c98a3a', true, 'Предыстории персонажей: владение навыками, инструменты, языки, черта предыстории и стартовое снаряжение.')
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO dndshare.suggest_type (id, name, source_id, color, count_items)
-VALUES (23, 'Редкость', 1, '#caa8ff', 6)
+VALUES (23, 'Редкость', (SELECT id FROM dndshare."source" WHERE lower(name) = 'dnd5e' LIMIT 1), '#caa8ff', 6)
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO dndshare.suggest (id, type_id, value, color, code) VALUES

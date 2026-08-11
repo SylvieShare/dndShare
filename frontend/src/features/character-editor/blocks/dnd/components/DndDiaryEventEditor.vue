@@ -16,14 +16,6 @@
         autofocus
         @update:value="v => $emit('update', { title: v })"
       />
-      <InputDescription
-        v-if="event.type === 'event'"
-        class="dee-desc"
-        :block="descBlock"
-        :value="event.desc"
-        editable
-        @update:value="(id, html) => $emit('update', { desc: html })"
-      />
     </EditorSection>
 
     <EditorSection v-if="event.type === 'dialog'" title="Реплики">
@@ -40,11 +32,10 @@
       />
     </EditorSection>
 
-    <EditorSection v-if="hasLegacyDescription" title="Сохранённое ранее описание">
-      <div class="dee-legacy-hint">Оно сохранено отдельно от новых структурированных данных.</div>
+    <EditorSection v-if="event.type !== 'newday'" title="Описание">
       <InputDescription
         class="dee-desc"
-        :block="legacyDescBlock"
+        :block="descBlock"
         :value="event.desc"
         editable
         @update:value="(id, html) => $emit('update', { desc: html })"
@@ -69,7 +60,6 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
 import DndBattleCombatantsEditor from '@/features/character-editor/blocks/dnd/components/DndBattleCombatantsEditor.vue'
 import DndDialogueLinesEditor from '@/features/character-editor/blocks/dnd/components/DndDialogueLinesEditor.vue'
 import EditorPanel from '@/features/character-editor/components/EditorPanel'
@@ -87,14 +77,9 @@ defineEmits(['update', 'remove', 'close', 'save'])
 
 const typeOptions = EVENT_TYPES.map(t => ({ value: t.value, label: t.label }))
 const descBlock = { id: 'desc', content: { placeholder: 'Что произошло…' } }
-const legacyDescBlock = { id: 'legacy-desc', content: { placeholder: 'Старое описание' } }
-const hasLegacyDescription = computed(() =>
-  (props.event.type === 'dialog' || props.event.type === 'battle') && !!props.event.desc,
-)
 </script>
 
 <style scoped>
-.dee-legacy-hint { font-size: 11px; line-height: 1.4; color: var(--text-muted); }
 .dee-foot {
   display: flex;
   align-items: center;

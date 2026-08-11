@@ -46,9 +46,7 @@ export function normalizeDialogueLine(line) {
   const src = line && typeof line === 'object' ? line : {}
   return {
     id: typeof src.id === 'string' && src.id ? src.id : makeDialogueLineId(),
-    speaker: typeof src.speaker === 'string'
-      ? src.speaker
-      : (typeof src.name === 'string' ? src.name : ''),
+    speaker: typeof src.speaker === 'string' ? src.speaker : '',
     text: typeof src.text === 'string' ? src.text : '',
   }
 }

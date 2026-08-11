@@ -94,6 +94,12 @@
     ]
   },
   {
+    "name": "Характеристика заклинаний после 1 уровня",
+    "key": "spellcasting_ability",
+    "type": "suggest",
+    "suggest_id": 16
+  },
+  {
     "name": "Уровень выбора архетипа",
     "key": "subclass_level",
     "type": "int"

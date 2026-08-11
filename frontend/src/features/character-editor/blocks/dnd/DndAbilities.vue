@@ -152,7 +152,7 @@ const entries = computed(() =>
         uid: s.uid,
         id: s.id,
         name: item.name,
-        desc: item.data?.description || item.data?.desc || '',
+        desc: Number(props.block.content.item_id) === 7 ? (item.data?.description || '') : (item.data?.desc || ''),
         max_use: maxUse,
         manual_size: manualSize,
         rollback_short_rest: !!item.data?.rollback_short_rest,

@@ -24,7 +24,7 @@ describe('multiclass rests', () => {
   it('restores half the total dice using the chosen allocation', () => {
     expect(longRestRecoveryCount(hp)).toBe(2)
     const result = longRestHp(hp, { d10: 1, d6: 1 })
-    expect(result).toMatchObject({ current: 30, temp: 0, diceCount: 5, diceUsed: 2 })
+    expect(result).toMatchObject({ current: 30, temp: 0 })
     expect(result.hitDice).toEqual([
       { die: 'd10', total: 3, used: 1 },
       { die: 'd6', total: 2, used: 1 },

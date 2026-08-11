@@ -41,9 +41,6 @@ describe('buildCharacterData hit dice', () => {
       max: 8,
       current: 8,
       hitDice: [{ die: 'd6', total: 1, used: 0 }],
-      dice: 'd6',
-      diceCount: 1,
-      diceUsed: 0,
     })
   })
 })

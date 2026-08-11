@@ -65,7 +65,7 @@ function escapeHtml(s) {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 }
 
-// Rich HTML from the editor as-is; legacy plain-text descs get escaped with line breaks kept.
+// Rich HTML from the editor as-is; plain text is escaped with line breaks kept.
 const descHtml = computed(() => {
   const d = props.event.desc || ''
   if (!d) return ''

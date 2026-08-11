@@ -246,23 +246,18 @@ func (s *Store) PollChars(ctx context.Context, items []PollItem, userID int64) (
 // GetTemplates — все шаблоны по возрастанию id (порт getTemplates).
 func (s *Store) GetTemplates(ctx context.Context) ([]CharacterTemplate, error) {
 	rows, err := s.pool.Query(ctx,
-		`SELECT id, name, schema, create_form, path_values_for_list FROM dndshare.char_template ORDER BY id`)
+		`SELECT id, name FROM dndshare.char_template ORDER BY id`)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 	var out []CharacterTemplate
 	for rows.Next() {
-		var id int64
-		var name string
-		var schema, createForm, pathValues *[]byte
-		if err := rows.Scan(&id, &name, &schema, &createForm, &pathValues); err != nil {
+		var template CharacterTemplate
+		if err := rows.Scan(&template.ID, &template.Name); err != nil {
 			return nil, err
 		}
-		t := mapTemplate(schema, createForm, pathValues)
-		t.ID = id
-		t.Name = name
-		out = append(out, t)
+		out = append(out, template)
 	}
 	return out, rows.Err()
 }

@@ -52,10 +52,9 @@ MCP exposes:
 - `error_reports_claim(ids, leaseId)` — atomically move the post-lock batch to `IN_PROGRESS` for the current run.
 - `error_report_title_set(id, title, leaseId)` — let the owning AI run write a concise title after understanding a claimed report.
 - `error_report_screenshot(id, kind?)` — read an attached image for an approved report as native MCP image content without embedding base64 in the text response. `kind=element` (default) returns the crop and `kind=viewport` returns the surrounding page context.
-- `error_report_question_create(id, question)` — append a concrete AI question and hide the report from subsequent MCP lists until an admin answers; gated by `MCP_WRITE_ENABLED`.
-- `error_report_serious_change_request(id, reason)` — pause work that changes schema, authorization, security, data semantics, infrastructure, or another high-impact area until an `ADMIN` confirms it; gated by `MCP_WRITE_ENABLED`.
-- `error_report_resolve(id, resolution, commitSha?)` — mark a successfully deployed fix as `RESOLVED`; it remains in the reviewer inbox for one hour before archival.
-- `error_report_delete(id)` — deprecated compatibility alias that marks a report finished instead of physically deleting it.
+- `error_report_question_create(id, question, leaseId)` — append a concrete AI question and hide the report from subsequent MCP lists until an admin answers; gated by `MCP_WRITE_ENABLED`.
+- `error_report_serious_change_request(id, reason, leaseId)` — pause work that changes schema, authorization, security, data semantics, infrastructure, or another high-impact area until an `ADMIN` confirms it; gated by `MCP_WRITE_ENABLED`.
+- `error_report_resolve(id, resolution, leaseId, commitSha?)` — mark a successfully deployed fix as `RESOLVED`; it remains in the reviewer inbox for one hour before archival. Physical deletion exists only in the ADMIN HTTP API.
 
 ## Scheduled automation lease
 

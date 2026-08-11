@@ -50,15 +50,8 @@ import { useRouter } from 'vue-router'
 import BasePopover from '@/shared/ui/BasePopover.vue'
 import BaseTile from '@/shared/ui/BaseTile'
 import ConfirmDialog from '@/shared/ui/ConfirmDialog'
-import { getByPath } from '@/shared/lib/objectPath'
 import { setCharSeed } from '@/shared/lib/charSeed'
 import { sessionStatusColor } from '@/features/sessions/composables/useSessionStatus'
-
-function toStr(val) {
-  if (val === null || val === undefined) return ''
-  if (typeof val === 'object') return ''
-  return String(val)
-}
 
 const props = defineProps({
   uuid: String,
@@ -66,11 +59,7 @@ const props = defineProps({
   raw: { type: Object, default: null },
   templateName: String,
   sourceVersion: String,
-  // D&D semantic accessors (see settings/dnd/accessors.js). When present the card
-  // reads fields + ability radar through them; otherwise it falls back to the
-  // legacy per-template `pathValues`.
   accessors: { type: Object, default: null },
-  pathValues: { type: Object, default: null },
   session: { type: Object, default: null },
   publicVisible: { type: Boolean, default: true },
   changedAt: String,
@@ -83,25 +72,16 @@ const menuBtnEl = ref(null)
 const confirmDelete = ref(false)
 
 const displayName = computed(() => {
-  if (props.accessors) return props.accessors.displayName(props.data) || '(без имени)'
-  return toStr(getByPath(props.data, props.pathValues?.name)) || '(без имени)'
+  return props.accessors?.displayName(props.data) || '(без имени)'
 })
 const avaUrl = computed(() => {
-  if (props.accessors) return props.accessors.avatar(props.data)
-  const value = getByPath(props.data, props.pathValues?.ava)
-  if (typeof value === 'string') return value
-  if (value?.url) return value.url
-  return null
+  return props.accessors?.avatar(props.data) || null
 })
 const who = computed(() => {
-  if (props.accessors) return props.accessors.subtitle(props.data)
-  const w1 = toStr(getByPath(props.data, props.pathValues?.who_1))
-  const w2 = toStr(getByPath(props.data, props.pathValues?.who_2))
-  return [w1, w2].filter(Boolean).join(' · ')
+  return props.accessors?.subtitle(props.data) || ''
 })
 const lvl = computed(() => {
-  if (props.accessors) return toStr(props.accessors.level(props.data))
-  return toStr(getByPath(props.data, props.pathValues?.lvl))
+  return String(props.accessors?.level(props.data) || '')
 })
 
 const chapterLabel = computed(() => {

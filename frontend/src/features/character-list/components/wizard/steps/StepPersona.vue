@@ -3,13 +3,12 @@
     <div class="sheet-section-title">Личность <span class="opt">— необязательно</span></div>
     <p class="hint">Опиши характер персонажа. Всё это можно заполнить и позже — на вкладке «Личность» листа.</p>
 
-    <label class="fld">
-      <span class="lbl">Мировоззрение</span>
-      <select v-model="p.alignment" class="inp">
+    <FormField label="Мировоззрение" vertical>
+      <FormSelect v-model:value="p.alignment">
         <option value="">—</option>
         <option v-for="a in ALIGNMENTS" :key="a" :value="a">{{ a }}</option>
-      </select>
-    </label>
+      </FormSelect>
+    </FormField>
 
     <div class="two rich-fields">
       <InputDescription
@@ -34,12 +33,9 @@
     />
 
     <div class="phys">
-      <label class="fld sm"><span class="lbl">Возраст</span><input v-model="p.age" class="inp" type="text" /></label>
-      <label class="fld sm"><span class="lbl">Рост</span><input v-model="p.height" class="inp" type="text" /></label>
-      <label class="fld sm"><span class="lbl">Вес</span><input v-model="p.weight" class="inp" type="text" /></label>
-      <label class="fld sm"><span class="lbl">Глаза</span><input v-model="p.eyes" class="inp" type="text" /></label>
-      <label class="fld sm"><span class="lbl">Волосы</span><input v-model="p.hair" class="inp" type="text" /></label>
-      <label class="fld sm"><span class="lbl">Кожа</span><input v-model="p.skin" class="inp" type="text" /></label>
+      <FormField v-for="field in appearanceFields" :key="field.key" :label="field.label" vertical>
+        <FormTextInput v-model:value="p[field.key]" />
+      </FormField>
     </div>
   </div>
 </template>
@@ -47,6 +43,9 @@
 <script setup>
 import { inject } from 'vue'
 import InputDescription from '@/shared/ui/InputDescription'
+import FormField from '@/shared/ui/form/FormField'
+import FormSelect from '@/shared/ui/form/FormSelect'
+import FormTextInput from '@/shared/ui/form/FormTextInput'
 
 const { state } = inject('createWizard')
 const p = state.persona
@@ -55,6 +54,15 @@ const ALIGNMENTS = [
   'Законно-добрый', 'Нейтрально-добрый', 'Хаотично-добрый',
   'Законно-нейтральный', 'Нейтральный', 'Хаотично-нейтральный',
   'Законно-злой', 'Нейтрально-злой', 'Хаотично-злой',
+]
+
+const appearanceFields = [
+  { key: 'age', label: 'Возраст' },
+  { key: 'height', label: 'Рост' },
+  { key: 'weight', label: 'Вес' },
+  { key: 'eyes', label: 'Глаза' },
+  { key: 'hair', label: 'Волосы' },
+  { key: 'skin', label: 'Кожа' },
 ]
 
 const personalityFields = [
@@ -80,11 +88,4 @@ const storyFields = [
 .rich-field { min-width: 0; }
 .rich-field :deep(.desc-title) { font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); font-weight: 650; }
 .phys { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; }
-.fld { display: flex; flex-direction: column; gap: 5px; }
-.lbl { font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); font-weight: 650; }
-.inp {
-  background: var(--surface-raised); border: 1px solid var(--border-strong); border-radius: 8px;
-  color: var(--text-1); font: inherit; font-size: 13px; padding: 8px 10px; outline: none; box-sizing: border-box; width: 100%;
-}
-.inp:focus { border-color: var(--accent); }
 </style>

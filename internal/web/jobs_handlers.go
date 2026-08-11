@@ -3,8 +3,6 @@ package web
 import (
 	"bytes"
 	"context"
-	"crypto/rand"
-	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -14,17 +12,11 @@ import (
 	"time"
 )
 
-// Порт админ-джоб миграций из backend .../jobs/*.kt. Каждая джоба регистрируется в init().
+// Background-job handlers. Each job is registered in init().
 
 func init() {
 	registerJob("recount", "Пересчёт количеств в справочниках",
 		"Обновляет count_items для item_type, source и suggest_type.", jobRecount)
-	registerJob("migrate-items-to-sections", "Перевод items на секции",
-		"Оборачивает значения блоков BLOCK_ITEMS у всех персонажей в { sections: [{ name: 'Рюкзак', items: [...] }] }. Контейнеры выпрямляются.", jobMigrateItemsToSections)
-	registerJob("migrate-ability-binding", "Способности: single -> array биндинг",
-		"Переносит привязку способностей (типы 3/4) с одиночных полей class_id/subclass_id/race_id/subrace_id на массивы class_ids/race_ids/subclass_ids/subrace_ids ([{id}]). Идемпотентно: пропускает способности, где одиночных полей уже нет.", jobMigrateAbilityBinding)
-	registerJob("migrate-spell-classes", "Заклинания: classIds -> classes (item-id)",
-		"Переносит привязку классов у заклинаний (тип 5) с suggest-id (classIds) на item-id класса (classes: [{id}]). Маппинг через data.suggest_id у предметов-классов (тип 9). Требует, чтобы предметы-классы уже были заведены. Идемпотентно: пропускает заклинания, у которых classes уже заполнено.", jobMigrateSpellClasses)
 	registerJob("bestiary-import", "Импорт бестиария",
 		"Импортирует существ с ttg.club в справочник врагов.", jobBestiaryImport)
 }
@@ -75,7 +67,7 @@ func jobRecount(s *Server, jc *JobContext) error {
 	if err := jc.CheckCancelled(); err != nil {
 		return err
 	}
-	if err := s.store.MigrateRecountItemTypes(ctx); err != nil {
+	if err := s.store.RecountItemTypes(ctx); err != nil {
 		return err
 	}
 
@@ -83,7 +75,7 @@ func jobRecount(s *Server, jc *JobContext) error {
 	if err := jc.CheckCancelled(); err != nil {
 		return err
 	}
-	if err := s.store.MigrateRecountSources(ctx); err != nil {
+	if err := s.store.RecountSources(ctx); err != nil {
 		return err
 	}
 
@@ -91,409 +83,13 @@ func jobRecount(s *Server, jc *JobContext) error {
 	if err := jc.CheckCancelled(); err != nil {
 		return err
 	}
-	if err := s.store.MigrateRecountSuggestTypes(ctx); err != nil {
+	if err := s.store.RecountSuggestTypes(ctx); err != nil {
 		return err
 	}
 
 	jc.Progress(3, "Готово")
 	jc.SetResult(map[string]any{"ok": true})
 	return nil
-}
-
-// ===================== migrate-items-to-sections =====================
-
-func jobMigrateItemsToSections(s *Server, jc *JobContext) error {
-	ctx := context.Background()
-
-	jc.Progress(0, "Загрузка шаблонов")
-	templateItemsBlockIds, err := loadTemplateItemsBlockIds(ctx, s)
-	if err != nil {
-		return err
-	}
-
-	jc.Progress(0, "Загрузка персонажей")
-	rows, err := s.store.MigrateSectionsLoadChars(ctx)
-	if err != nil {
-		return err
-	}
-
-	jc.SetTotal(int64(len(rows)))
-	converted := 0
-	skipped := 0
-
-	for i, row := range rows {
-		if err := jc.CheckCancelled(); err != nil {
-			return err
-		}
-		cur := int64(i + 1)
-		blockIds := templateItemsBlockIds[row.TemplateID]
-		if len(blockIds) == 0 {
-			jc.Progress(cur, "Пропущено: нет items-блоков")
-			skipped++
-			continue
-		}
-
-		data, ok := parseJSONMap(row.Data)
-		if !ok {
-			jc.Progress(cur, "Пропущено: нет values")
-			skipped++
-			continue
-		}
-		values, ok := asAnyMap(data["values"])
-		if !ok {
-			jc.Progress(cur, "Пропущено: нет values")
-			skipped++
-			continue
-		}
-
-		anyChanged := false
-		for blockID := range blockIds {
-			v, present := values[blockID]
-			if !present || v == nil {
-				continue
-			}
-			migrated, ok := migrateSectionsValue(v)
-			if !ok {
-				continue
-			}
-			values[blockID] = migrated
-			anyChanged = true
-		}
-
-		if !anyChanged {
-			skipped++
-			jc.Progress(cur, "Пропущено: нечего обновлять")
-			continue
-		}
-
-		data["values"] = values
-		if err := s.store.MigrateSectionsUpdateChar(ctx, row.UUID, mustMarshal(data)); err != nil {
-			return err
-		}
-		converted++
-		jc.Progress(cur, fmt.Sprintf("Обновлено: %d, пропущено: %d", converted, skipped))
-	}
-
-	jc.SetResult(map[string]any{
-		"total":     len(rows),
-		"converted": converted,
-		"skipped":   skipped,
-	})
-	return nil
-}
-
-func loadTemplateItemsBlockIds(ctx context.Context, s *Server) (map[int64]map[string]struct{}, error) {
-	templates, err := s.store.MigrateSectionsLoadTemplates(ctx)
-	if err != nil {
-		return nil, err
-	}
-	out := map[int64]map[string]struct{}{}
-	for _, t := range templates {
-		if len(t.Schema) == 0 {
-			continue
-		}
-		schema, ok := parseJSONMap(t.Schema)
-		if !ok {
-			continue
-		}
-		blocks, ok := asAnyMap(schema["blocks"])
-		if !ok {
-			continue
-		}
-		ids := map[string]struct{}{}
-		for blockID, def := range blocks {
-			dm, ok := asAnyMap(def)
-			if !ok {
-				continue
-			}
-			if typ, _ := dm["type"].(string); typ == "BLOCK_ITEMS" {
-				ids[blockID] = struct{}{}
-			}
-		}
-		if len(ids) > 0 {
-			out[t.ID] = ids
-		}
-	}
-	return out, nil
-}
-
-// migrateSectionsValue — порт migrateValue: возвращает (newValue, true) если есть что мигрировать.
-func migrateSectionsValue(value any) (map[string]any, bool) {
-	if asMap, ok := asAnyMap(value); ok {
-		_, hasEquipped := asMap["equipped"].([]any)
-		sections, hasSections := asMap["sections"].([]any)
-		if hasEquipped || hasSections {
-			// already new shape with equipped split out
-			if hasEquipped {
-				return nil, false
-			}
-			// legacy nested shape { sections: [{id:'equipped', ...}, ...] }
-			var equippedItems []any
-			equippedFound := false
-			userSections := []any{}
-			for _, raw := range sections {
-				sm, ok := asAnyMap(raw)
-				if !ok {
-					continue
-				}
-				if id, _ := sm["id"].(string); id == "equipped" && !equippedFound {
-					if items, ok := sm["items"].([]any); ok {
-						equippedItems = items
-					} else {
-						equippedItems = []any{}
-					}
-					equippedFound = true
-				} else {
-					userSections = append(userSections, sm)
-				}
-			}
-			final := map[string]any{}
-			if equippedItems == nil {
-				equippedItems = []any{}
-			}
-			final["equipped"] = equippedItems
-			if len(userSections) > 0 {
-				final["sections"] = userSections
-			} else {
-				final["sections"] = []any{
-					map[string]any{"id": "backpack", "name": "Рюкзак", "items": []any{}},
-				}
-			}
-			return final, true
-		}
-	}
-
-	list, ok := asAnySlice(value)
-	if !ok {
-		return nil, false
-	}
-
-	flat := []any{}
-	flattenLegacyItems(list, &flat)
-
-	backpack := map[string]any{"id": "backpack", "name": "Рюкзак", "items": flat}
-	return map[string]any{
-		"equipped": []any{},
-		"sections": []any{backpack},
-	}, true
-}
-
-func flattenLegacyItems(list []any, out *[]any) {
-	for _, raw := range list {
-		sm, ok := asAnyMap(raw)
-		if !ok {
-			continue
-		}
-		entry := map[string]any{}
-		if uid, ok := sm["uid"].(string); ok {
-			entry["uid"] = uid
-		} else {
-			entry["uid"] = "item-mig-" + randHex8()
-		}
-		entry["id"] = sm["id"]
-		count := 1
-		if n, ok := asLong(sm["count"]); ok {
-			count = int(n)
-			if count < 1 {
-				count = 1
-			}
-		}
-		entry["count"] = count
-		if ov, ok := asAnyMap(sm["override"]); ok {
-			entry["override"] = ov
-		}
-		*out = append(*out, entry)
-		if nested, ok := asAnySlice(sm["items"]); ok {
-			flattenLegacyItems(nested, out)
-		}
-	}
-}
-
-func randHex8() string {
-	var b [4]byte
-	_, _ = rand.Read(b[:])
-	return hex.EncodeToString(b[:])
-}
-
-// ===================== migrate-ability-binding =====================
-
-func jobMigrateAbilityBinding(s *Server, jc *JobContext) error {
-	ctx := context.Background()
-
-	jc.Progress(0, "Загрузка способностей")
-	rows, err := s.store.MigrateLoadItemsByTypes(ctx, []int64{3, 4}, false)
-	if err != nil {
-		return err
-	}
-
-	jc.SetTotal(int64(len(rows)))
-	migrated := 0
-	skipped := 0
-
-	pairs := [][2]string{
-		{"class_id", "class_ids"},
-		{"subclass_id", "subclass_ids"},
-		{"race_id", "race_ids"},
-		{"subrace_id", "subrace_ids"},
-	}
-
-	for i, row := range rows {
-		if err := jc.CheckCancelled(); err != nil {
-			return err
-		}
-		cur := int64(i + 1)
-
-		data, ok := parseJSONMap(row.Data)
-		if !ok {
-			skipped++
-			jc.Progress(cur, "Пропущено: уже массивы")
-			continue
-		}
-		changed := false
-
-		for _, p := range pairs {
-			singleKey, arrayKey := p[0], p[1]
-			single, ok := asLong(data[singleKey])
-			if !ok {
-				continue
-			}
-			arr, _ := asAnySlice(data[arrayKey])
-			existing := map[int64]struct{}{}
-			for _, el := range arr {
-				if m, ok := asAnyMap(el); ok {
-					if id, ok := asLong(m["id"]); ok {
-						existing[id] = struct{}{}
-					}
-				}
-			}
-			if _, present := existing[single]; !present {
-				arr = append(arr, map[string]any{"id": single})
-			}
-			data[arrayKey] = arr
-			delete(data, singleKey)
-			changed = true
-		}
-
-		if !changed {
-			skipped++
-			jc.Progress(cur, "Пропущено: уже массивы")
-			continue
-		}
-
-		if err := s.store.MigrateItemUpdateData(ctx, row.ID, mustMarshal(data)); err != nil {
-			return err
-		}
-		migrated++
-		jc.Progress(cur, fmt.Sprintf("Мигрировано: %d", migrated))
-	}
-
-	jc.SetResult(map[string]any{"total": len(rows), "migrated": migrated, "skipped": skipped})
-	return nil
-}
-
-// ===================== migrate-spell-classes =====================
-
-const (
-	spellTypeID = int64(5)
-	classTypeID = int64(9)
-)
-
-func jobMigrateSpellClasses(s *Server, jc *JobContext) error {
-	ctx := context.Background()
-
-	jc.Progress(0, "Загрузка предметов-классов")
-	suggestToItem, err := loadClassSuggestToItemID(ctx, s)
-	if err != nil {
-		return err
-	}
-
-	jc.Progress(0, "Загрузка заклинаний")
-	rows, err := s.store.MigrateLoadItemsByTypes(ctx, []int64{spellTypeID}, true)
-	if err != nil {
-		return err
-	}
-
-	jc.SetTotal(int64(len(rows)))
-	migrated := 0
-	skipped := 0
-	unmapped := 0
-
-	for i, row := range rows {
-		if err := jc.CheckCancelled(); err != nil {
-			return err
-		}
-		cur := int64(i + 1)
-
-		data, ok := parseJSONMap(row.Data)
-		if !ok {
-			skipped++
-			jc.Progress(cur, "Пропущено: нет classIds")
-			continue
-		}
-
-		if existing, ok := asAnySlice(data["classes"]); ok && len(existing) > 0 {
-			skipped++
-			jc.Progress(cur, "Пропущено: classes уже заполнено")
-			continue
-		}
-
-		classIds, ok := asAnySlice(data["classIds"])
-		if !ok || len(classIds) == 0 {
-			skipped++
-			jc.Progress(cur, "Пропущено: нет classIds")
-			continue
-		}
-
-		classes := []any{}
-		for _, raw := range classIds {
-			suggestID, ok := asLong(raw)
-			if !ok {
-				continue
-			}
-			itemID, ok := suggestToItem[suggestID]
-			if !ok {
-				unmapped++
-				continue
-			}
-			classes = append(classes, map[string]any{"id": itemID})
-		}
-
-		data["classes"] = classes
-		if err := s.store.MigrateItemUpdateData(ctx, row.ID, mustMarshal(data)); err != nil {
-			return err
-		}
-		migrated++
-		jc.Progress(cur, fmt.Sprintf("Мигрировано: %d, без класса-предмета: %d", migrated, unmapped))
-	}
-
-	jc.SetResult(map[string]any{
-		"total":             len(rows),
-		"migrated":          migrated,
-		"skipped":           skipped,
-		"unmappedClassRefs": unmapped,
-		"classItemsFound":   len(suggestToItem),
-	})
-	return nil
-}
-
-func loadClassSuggestToItemID(ctx context.Context, s *Server) (map[int64]int64, error) {
-	rows, err := s.store.MigrateLoadItemsByTypes(ctx, []int64{classTypeID}, true)
-	if err != nil {
-		return nil, err
-	}
-	out := map[int64]int64{}
-	for _, row := range rows {
-		data, ok := parseJSONMap(row.Data)
-		if !ok {
-			continue
-		}
-		suggestID, ok := asLong(data["suggest_id"])
-		if !ok {
-			continue
-		}
-		out[suggestID] = row.ID
-	}
-	return out, nil
 }
 
 // ===================== bestiary-import =====================
@@ -598,21 +194,21 @@ func jobBestiaryImport(s *Server, jc *JobContext) error {
 					return
 				}
 
-				exists, err := b.s.store.MigrateBestiaryFindItemByNameEn(ctx, bestiaryItemTypeEnemy, nameEng)
+				exists, err := b.s.store.BestiaryFindItemByNameEn(ctx, bestiaryItemTypeEnemy, nameEng)
 				if err != nil {
 					errList = append(errList, fmt.Sprintf("%s: %s", slug, err.Error()))
 					jc.Increment(1, "Ошибка: "+slug)
 					return
 				}
 				if exists {
-					if err := b.s.store.MigrateBestiaryUpdateItem(ctx, nameEng, nameRus, mustMarshal(data), bestiaryItemTypeEnemy); err != nil {
+					if err := b.s.store.BestiaryUpdateItem(ctx, nameEng, nameRus, mustMarshal(data), bestiaryItemTypeEnemy); err != nil {
 						errList = append(errList, fmt.Sprintf("%s: %s", slug, err.Error()))
 						jc.Increment(1, "Ошибка: "+slug)
 						return
 					}
 					updated++
 				} else {
-					if _, err := b.s.store.MigrateBestiaryCreateItem(ctx, nameRus, nameEng, mustMarshal(data), bestiaryItemTypeEnemy); err != nil {
+					if _, err := b.s.store.BestiaryCreateItem(ctx, nameRus, nameEng, mustMarshal(data), bestiaryItemTypeEnemy); err != nil {
 						errList = append(errList, fmt.Sprintf("%s: %s", slug, err.Error()))
 						jc.Increment(1, "Ошибка: "+slug)
 						return
@@ -864,14 +460,14 @@ func (b *bestiaryImport) mapCreatureToData(ctx context.Context, d any, sizeIds [
 }
 
 func (b *bestiaryImport) getOrCreateSuggestByCode(ctx context.Context, typeID int64, value, code string) (int64, error) {
-	id, found, err := b.s.store.MigrateBestiaryFindSuggestByCode(ctx, typeID, code)
+	id, found, err := b.s.store.BestiaryFindSuggestByCode(ctx, typeID, code)
 	if err != nil {
 		return 0, err
 	}
 	if found {
 		return id, nil
 	}
-	return b.s.store.MigrateBestiaryAddSuggest(ctx, typeID, value, &code, nil)
+	return b.s.store.BestiaryAddSuggest(ctx, typeID, value, &code, nil)
 }
 
 func (b *bestiaryImport) getOrCreateSuggestByValue(ctx context.Context, typeID int64, value string) (int64, error) {
@@ -879,14 +475,14 @@ func (b *bestiaryImport) getOrCreateSuggestByValue(ctx context.Context, typeID i
 }
 
 func (b *bestiaryImport) getOrCreateSuggestByValueWithDesc(ctx context.Context, typeID int64, value string, desc *string) (int64, error) {
-	id, found, err := b.s.store.MigrateBestiaryFindSuggestByValue(ctx, typeID, value)
+	id, found, err := b.s.store.BestiaryFindSuggestByValue(ctx, typeID, value)
 	if err != nil {
 		return 0, err
 	}
 	if found {
 		return id, nil
 	}
-	return b.s.store.MigrateBestiaryAddSuggest(ctx, typeID, value, nil, desc)
+	return b.s.store.BestiaryAddSuggest(ctx, typeID, value, nil, desc)
 }
 
 func (b *bestiaryImport) resolveEnvironmentIds(ctx context.Context, node any) ([]int64, error) {

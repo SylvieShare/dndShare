@@ -8,8 +8,7 @@ import (
 	"strings"
 )
 
-// Config — вся конфигурация из env (совместима с прежней Spring-версией: те же имена
-// переменных DB_URL/DB_USER/DB_PASSWORD, MCP_*, OBJECT_STORAGE_*).
+// Config — конфигурация приложения из env.
 type Config struct {
 	Port         string
 	DSN          string
@@ -33,7 +32,7 @@ type StorageConfig struct {
 	KeyPrefix string
 }
 
-// Load читает env. Имена переменных те же, что у прежней Spring-версии (application.yml).
+// Load читает актуальный environment contract приложения.
 func Load() (Config, error) {
 	dsn, err := buildDSN(
 		env("DB_URL", "jdbc:postgresql://localhost:5432/sylvieshare"),

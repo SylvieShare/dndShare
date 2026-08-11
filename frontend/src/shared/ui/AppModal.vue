@@ -4,19 +4,22 @@
       ref="overlay"
       class="am-overlay"
       :style="zIndex !== 3000 ? { zIndex } : {}"
+      role="dialog"
+      aria-modal="true"
       @mousedown.self="requestClose"
     >
       <div
         ref="card"
         class="am-card"
         :class="{ 'am-card-wide': wide, 'am-card-extra-wide': extraWide, 'am-card-full': fullscreen, 'am-card-tile': tile }"
+        tabindex="-1"
         @touchstart.passive="onTouchStart"
         @touchmove="onTouchMove"
         @touchend.passive="onTouchEnd"
         @touchcancel.passive="cancelDrag"
       >
         <div class="am-handle"></div>
-        <button v-if="!fullscreen" class="am-close" @click="requestClose">✕</button>
+        <button v-if="showClose && !fullscreen" class="am-close" type="button" aria-label="Закрыть" @click="requestClose">✕</button>
         <slot />
       </div>
     </div>
@@ -28,16 +31,20 @@ const MOBILE = () => window.innerWidth <= 640
 const DUR_IN  = 260
 const DUR_OUT = 280
 const EASE_SLIDE = 'cubic-bezier(0.32, 0.72, 0, 1)'
+const modalStack = []
+const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
 </script>
 
 <script setup>
 import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 
-defineProps({
+const props = defineProps({
   zIndex: { type: Number, default: 3000 },
   wide: { type: Boolean, default: false },
   extraWide: { type: Boolean, default: false },
   fullscreen: { type: Boolean, default: false },
+  showClose: { type: Boolean, default: true },
+  dismissible: { type: Boolean, default: true },
   // Use the BaseTile block surface (var(--surface)) instead of the page bg.
   tile: { type: Boolean, default: false },
 })
@@ -53,9 +60,33 @@ const touchStartScrollTop = ref(0)
 
 let _unmounted  = false
 let _closeTimer = null
+let _closing = false
+const stackToken = Symbol('app-modal')
+const previouslyFocused = typeof document !== 'undefined' ? document.activeElement : null
 
 function _onKeydown(e) {
-  if (e.key === 'Escape') requestClose()
+  if (modalStack.at(-1) !== stackToken) return
+  if (e.key === 'Escape') {
+    requestClose()
+    return
+  }
+  if (e.key !== 'Tab') return
+  const focusable = [...(card.value?.querySelectorAll(FOCUSABLE) || [])]
+    .filter(element => element.getClientRects().length > 0)
+  if (!focusable.length) {
+    e.preventDefault()
+    card.value?.focus()
+    return
+  }
+  const first = focusable[0]
+  const last = focusable.at(-1)
+  if (e.shiftKey && (document.activeElement === first || !card.value?.contains(document.activeElement))) {
+    e.preventDefault()
+    last.focus()
+  } else if (!e.shiftKey && (document.activeElement === last || !card.value?.contains(document.activeElement))) {
+    e.preventDefault()
+    first.focus()
+  }
 }
 
 function _animateIn() {
@@ -128,10 +159,13 @@ function _animateOut() {
 }
 
 function requestClose() {
+  if (!props.dismissible || _closing) return
+  _closing = true
   _animateOut()
 }
 
 function onTouchStart(e) {
+  if (!props.dismissible) return
   touchStartY.value = e.touches[0].clientY
   touchStartScrollTop.value = card.value?.scrollTop || 0
   isDragging.value = false
@@ -139,6 +173,7 @@ function onTouchStart(e) {
 }
 
 function onTouchMove(e) {
+  if (!props.dismissible) return
   const dy = e.touches[0].clientY - touchStartY.value
   if (!isDragging.value) {
     if (dy > 8 && touchStartScrollTop.value <= 0) {
@@ -191,14 +226,24 @@ function cancelDrag() {
 }
 
 onMounted(() => {
+  modalStack.push(stackToken)
   document.addEventListener('keydown', _onKeydown)
-  nextTick(() => _animateIn())
+  nextTick(() => {
+    _animateIn()
+    if (!card.value?.contains(document.activeElement)) {
+      card.value?.querySelector(FOCUSABLE)?.focus()
+      if (!card.value?.contains(document.activeElement)) card.value?.focus()
+    }
+  })
 })
 
 onBeforeUnmount(() => {
+  const stackIndex = modalStack.indexOf(stackToken)
+  if (stackIndex >= 0) modalStack.splice(stackIndex, 1)
   document.removeEventListener('keydown', _onKeydown)
   clearTimeout(_closeTimer)
   _unmounted = true
+  if (previouslyFocused instanceof HTMLElement && previouslyFocused.isConnected) previouslyFocused.focus()
 })
 </script>
 
@@ -232,7 +277,7 @@ onBeforeUnmount(() => {
 }
 
 .am-card-tile {
-  background: var(--bg);
+  background: var(--surface);
   border: none;
 }
 

@@ -406,24 +406,6 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 		}
 		return map[string]any{"id": id, "title": title}, nil
 
-	case "error_report_delete":
-		if err := s.mcpRequireWrite(); err != nil {
-			return nil, err
-		}
-		id, err := argInt64(args, "id")
-		if err != nil {
-			return nil, err
-		}
-		resolution := "Завершено через устаревший MCP-инструмент error_report_delete"
-		resolved, err := s.store.ResolveApprovedErrorReport(ctx, id, resolution, nil, nil)
-		if err != nil {
-			return nil, err
-		}
-		if !resolved {
-			return nil, fmt.Errorf("error report %d not found", id)
-		}
-		return fmt.Sprintf("finished error report %d", id), nil
-
 	case "error_report_resolve":
 		if err := s.mcpRequireWrite(); err != nil {
 			return nil, err
@@ -448,11 +430,11 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 		if err != nil {
 			return nil, err
 		}
-		leaseID, err := errorReportLeaseIDArgOpt(args)
+		leaseID, err := errorReportLeaseIDArg(args)
 		if err != nil {
 			return nil, err
 		}
-		resolved, err := s.store.ResolveApprovedErrorReport(ctx, id, resolution, commitSHA, leaseID)
+		resolved, err := s.store.ResolveApprovedErrorReport(ctx, id, resolution, commitSHA, &leaseID)
 		if err != nil {
 			return nil, err
 		}
@@ -482,11 +464,11 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 		if err != nil {
 			return nil, err
 		}
-		leaseID, err := errorReportLeaseIDArgOpt(args)
+		leaseID, err := errorReportLeaseIDArg(args)
 		if err != nil {
 			return nil, err
 		}
-		created, err := s.store.CreateErrorReportAIQuestion(ctx, id, question, leaseID)
+		created, err := s.store.CreateErrorReportAIQuestion(ctx, id, question, &leaseID)
 		if err != nil {
 			if errors.Is(err, store.ErrNotFound) {
 				return nil, fmt.Errorf("approved error report %d not found", id)
@@ -514,11 +496,11 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 		if err != nil {
 			return nil, err
 		}
-		leaseID, err := errorReportLeaseIDArgOpt(args)
+		leaseID, err := errorReportLeaseIDArg(args)
 		if err != nil {
 			return nil, err
 		}
-		requested, err := s.store.RequestApprovedErrorReportSeriousChange(ctx, id, reason, leaseID)
+		requested, err := s.store.RequestApprovedErrorReportSeriousChange(ctx, id, reason, &leaseID)
 		if err != nil {
 			return nil, err
 		}
@@ -971,7 +953,7 @@ func mcpToolDefs() []map[string]any {
 
 	return []map[string]any{
 		tool("handbook_sources",
-			"List handbook systems. Returns id, name, versions [{id, sourceId, version}], countItems; version is a compatibility alias for the first edition.",
+			"List handbook systems. Returns id, name, versions [{id, sourceId, version}], countItems.",
 			schema(map[string]any{})),
 		tool("handbook_item_types",
 			"List item types (handbook object categories such as enemies, weapons). Each type's `fields` array is the schema describing which keys are allowed in an item's `data`. Read this before creating or updating items.",
@@ -1043,33 +1025,28 @@ func mcpToolDefs() []map[string]any {
 				"title":   strP("Concise diagnostic title in Russian, 1..160 characters"),
 				"leaseId": strP("Opaque handle that owns the IN_PROGRESS report"),
 			}, "id", "title", "leaseId")),
-		tool("error_report_delete",
-			"Deprecated compatibility alias: mark one open approved report as finished instead of physically deleting it. Prefer error_report_resolve so the resolution and commit can be recorded. Requires MCP write operations to be enabled.",
-			schema(map[string]any{
-				"id": intP("Error report id"),
-			}, "id")),
 		tool("error_report_resolve",
 			"Mark one successfully fixed open approved report as finished. Records a concise resolution and optional deployed commit SHA; the report remains visible to reviewers for one hour before automatic archival and is removed from the actionable MCP queue. Call only after successful tests, push, and deploy. Requires MCP write operations to be enabled.",
 			schema(map[string]any{
 				"id":         intP("Error report id"),
 				"resolution": strP("Concise root cause and deployed fix, 1..4000 characters"),
 				"commitSha":  strP("Optional deployed Git commit SHA, 7..64 hexadecimal characters"),
-				"leaseId":    strP("Lease that owns an IN_PROGRESS report; optional only for legacy OPEN reports"),
-			}, "id", "resolution")),
+				"leaseId":    strP("Lease that owns the IN_PROGRESS report"),
+			}, "id", "resolution", "leaseId")),
 		tool("error_report_question_create",
 			"Ask an admin a question when an approved error report cannot be handled confidently. After this call the report is hidden from error_reports_list until an admin answers. Ask one concrete question that explains exactly which missing fact or decision blocks the fix. Requires MCP write operations to be enabled.",
 			schema(map[string]any{
 				"id":       intP("Error report id"),
 				"question": strP("Concrete question for the administrator, 1..4000 characters"),
-				"leaseId":  strP("Lease that owns an IN_PROGRESS report; optional only for legacy OPEN reports"),
-			}, "id", "question")),
+				"leaseId":  strP("Lease that owns the IN_PROGRESS report"),
+			}, "id", "question", "leaseId")),
 		tool("error_report_serious_change_request",
 			"Pause an approved report because the proposed fix changes schema, authorization, security, data semantics, infrastructure, or another high-impact area that requires explicit ADMIN approval. The report is hidden from error_reports_list until an ADMIN confirms it in the application. Use a normal question instead when only product context is missing. Requires MCP write operations to be enabled.",
 			schema(map[string]any{
 				"id":      intP("Error report id"),
 				"reason":  strP("Concrete proposed high-impact change, risks, and why ADMIN approval is required, 1..4000 characters"),
-				"leaseId": strP("Lease that owns an IN_PROGRESS report; optional only for legacy OPEN reports"),
-			}, "id", "reason")),
+				"leaseId": strP("Lease that owns the IN_PROGRESS report"),
+			}, "id", "reason", "leaseId")),
 		tool("error_report_screenshot",
 			"Fetch an attached screenshot for one admin-approved page error report as native MCP image content. kind=element returns the selected-element crop; kind=viewport returns the visible page context. Check hasScreenshot/hasViewportScreenshot first.",
 			schema(map[string]any{
@@ -1141,19 +1118,5 @@ func newErrorReportLeaseID() (string, error) {
 }
 
 func errorReportLeaseIDArg(args map[string]json.RawMessage) (string, error) {
-	if _, ok := args["leaseId"]; ok {
-		return argString(args, "leaseId")
-	}
-	// Compatibility for an already-running client during the rolling deploy.
-	return argString(args, "token")
-}
-
-func errorReportLeaseIDArgOpt(args map[string]json.RawMessage) (*string, error) {
-	if _, ok := args["leaseId"]; ok {
-		return argStringOpt(args, "leaseId")
-	}
-	if _, ok := args["token"]; ok {
-		return argStringOpt(args, "token")
-	}
-	return nil, nil
+	return argString(args, "leaseId")
 }

@@ -35,7 +35,6 @@
             :templateName="templateName(char.templateId)"
             :sourceVersion="char.sourceVersion"
             :accessors="accessorsFor(char.templateId)"
-            :pathValues="templatePathValues(char.templateId)"
             :session="topSession(char.uuid)"
             :publicVisible="char.publicVisible"
             :changedAt="char.changedAt"
@@ -124,10 +123,6 @@ function templateName(id) {
   return templateById(id)?.name || ''
 }
 
-function templatePathValues(id) {
-  return templateById(id)?.pathValuesForList || null
-}
-
 function accessorsFor(id) {
   // Identity is resolved from the template's `name` (see settings/index.js), so
   // pass the whole template — the DB `schema` is no longer consulted here.
@@ -139,7 +134,7 @@ function topSession(uuid) {
 }
 
 function openCreateModal(e) {
-  // D&D creation is a dedicated page; legacy settings (VTM createForm) keep the modal.
+  // D&D creation has a dedicated full-page wizard; other registered systems use the compact modal.
   const dnd = templates.value.find(t => resolveSetting(t)?.system === 'dnd5e')
   if (dnd) { router.push('/chars/new'); return }
   const el = e?.currentTarget || null

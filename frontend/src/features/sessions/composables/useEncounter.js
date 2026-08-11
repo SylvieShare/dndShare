@@ -50,10 +50,6 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers }) {
     if (enc.active == null) enc.active = false
     if (enc.round == null) enc.round = 0
     if (enc.turnIndex == null) enc.turnIndex = 0
-    enc.combatants.forEach((c, i) => {
-      if (c.tieBreak == null) c.tieBreak = i
-      npcData.migrateCombatant(c)
-    })
     mergeParticipants(enc)
     encounter.value = enc
     npcData.ensureNpcItems(enc.combatants)

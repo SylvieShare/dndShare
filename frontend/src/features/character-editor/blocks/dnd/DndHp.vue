@@ -37,14 +37,9 @@ const emit = defineEmits(['update:value'])
 const { editorOpen, originRect, originEl, open, close } = useMorphOrigin()
 
 const isCompact = computed(() => props.block?.props?.variant === 'compact')
-const level = computed(() => {
-  const lvl = props.values?.lvl
-  const n = lvl && typeof lvl === 'object' ? (lvl.level ?? lvl.lvl ?? lvl.v) : lvl
-  return Math.max(1, parseInt(n) || 1)
-})
 const hp = computed(() => {
-  const raw = { max: 0, current: 0, temp: 0, dice: 'd8', diceUsed: 0, ds_success: 0, ds_failure: 0, ...props.value }
-  return withHitDice(raw, normalizeHitDice(raw, level.value))
+  const raw = { max: 0, current: 0, temp: 0, hitDice: [], ds_success: 0, ds_failure: 0, ...props.value }
+  return withHitDice(raw, normalizeHitDice(raw))
 })
 
 const barPct = computed(() => {
@@ -76,6 +71,6 @@ onMounted(async () => {
 })
 
 function onHpChange(h) {
-  emit('update:value', props.block.id, withHitDice(h, normalizeHitDice(h, level.value)))
+  emit('update:value', props.block.id, withHitDice(h, normalizeHitDice(h)))
 }
 </script>

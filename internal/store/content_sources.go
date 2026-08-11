@@ -33,8 +33,8 @@ type ContentSourceRef struct {
 }
 
 // ContentScope limits catalogue queries for a character/wizard. Empty IDs mean
-// "all sources"; unassigned and user-authored items remain visible so a
-// partially migrated handbook never loses content.
+// "all sources". User-authored and deliberately unclassified global items
+// remain visible independently of publication filters.
 type ContentScope struct {
 	IDs             []int64
 	RestrictToIDs   bool

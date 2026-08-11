@@ -20,9 +20,8 @@ func (s *Server) routesSessions(mux *http.ServeMux) {
 	mux.HandleFunc("DELETE /api/sessions/{uuid}/leave", s.handleLeaveSession)
 	// Go's ServeMux падает на «перекрёстных» wildcard'ах: GET /api/sessions/by-code/{code}
 	// (литерал в seg1) конфликтует с GET /api/sessions/{uuid}/{литерал} (литерал в seg2).
-	// Spring это разрешал (там {uuid} — только UUID). Поэтому все GET-роуты вида
-	// /api/sessions/<2 сегмента> обслуживает один диспетчер, а он через SetPathValue зовёт
-	// нужный хендлер. URL-контракт для фронта не меняется.
+	// Поэтому все GET-роуты вида /api/sessions/<2 сегмента> обслуживает один
+	// диспетчер, а он через SetPathValue вызывает нужный handler.
 	mux.HandleFunc("GET /api/sessions/{a}/{b}", s.handleSessionTwoSegGET)
 	mux.HandleFunc("GET /api/sessions/{uuid}", s.handleGetSession)
 	mux.HandleFunc("PATCH /api/sessions/{uuid}", s.handleUpdateSession)

@@ -141,76 +141,38 @@
     </div>
     <div v-else-if="activeChapter" class="scene-empty-pick">Выберите или создайте сцену</div>
 
-    <Teleport to="body">
-      <div v-if="renameModalOpen" class="scene-create-overlay" @click.self="renameModalOpen = false">
-        <div class="scene-create-dialog">
-          <div class="scene-create-title">Переименовать сцену</div>
-          <input
-            ref="renameInputEl"
-            v-model="renameDraft"
-            class="scene-create-input"
-            type="text"
-            maxlength="200"
-            @keydown.enter="confirmRename"
-            @keydown.escape="renameModalOpen = false"
-          />
-          <div class="scene-create-actions">
-            <button type="button" class="scene-create-cancel" @click="renameModalOpen = false">Отмена</button>
-            <button
-              type="button"
-              class="scene-create-submit"
-              :disabled="!renameDraft.trim() || renaming"
-              @click="confirmRename"
-            >Сохранить</button>
-          </div>
-        </div>
-      </div>
-    </Teleport>
+    <TextPromptDialog
+      v-if="renameModalOpen"
+      title="Переименовать сцену"
+      :value="renameDraft"
+      :maxlength="200"
+      :loading="renaming"
+      @cancel="renameModalOpen = false"
+      @confirm="confirmRename"
+    />
 
-    <Teleport to="body">
-      <div v-if="deleteModalOpen" class="scene-create-overlay" @click.self="deleteModalOpen = false">
-        <div class="scene-create-dialog">
-          <div class="scene-create-title">Удалить сцену?</div>
-          <div class="scene-delete-msg">«{{ currentScene?.name }}» — действие нельзя отменить.</div>
-          <div class="scene-create-actions">
-            <button type="button" class="scene-create-cancel" @click="deleteModalOpen = false">Отмена</button>
-            <button
-              type="button"
-              class="scene-create-submit scene-create-submit--danger"
-              :disabled="deleting"
-              @click="performDeleteScene"
-            >Удалить</button>
-          </div>
-        </div>
-      </div>
-    </Teleport>
+    <ConfirmDialog
+      v-if="deleteModalOpen"
+      title="Удалить сцену?"
+      :message="`«${currentScene?.name}» — действие нельзя отменить.`"
+      confirm-label="Удалить"
+      :loading="deleting"
+      @cancel="deleteModalOpen = false"
+      @confirm="performDeleteScene"
+    />
 
-    <Teleport to="body">
-      <div v-if="createModalOpen" class="scene-create-overlay" @click.self="createModalOpen = false">
-        <div class="scene-create-dialog">
-          <div class="scene-create-title">Новая сцена</div>
-          <input
-            ref="createInputEl"
-            v-model="createName"
-            class="scene-create-input"
-            type="text"
-            maxlength="200"
-            placeholder="Название сцены"
-            @keydown.enter="confirmCreate"
-            @keydown.escape="createModalOpen = false"
-          />
-          <div class="scene-create-actions">
-            <button type="button" class="scene-create-cancel" @click="createModalOpen = false">Отмена</button>
-            <button
-              type="button"
-              class="scene-create-submit"
-              :disabled="!createName.trim() || creating"
-              @click="confirmCreate"
-            >Создать</button>
-          </div>
-        </div>
-      </div>
-    </Teleport>
+    <TextPromptDialog
+      v-if="createModalOpen"
+      title="Новая сцена"
+      :value="createName"
+      placeholder="Название сцены"
+      confirm-label="Создать"
+      loading-label="Создание…"
+      :maxlength="200"
+      :loading="creating"
+      @cancel="createModalOpen = false"
+      @confirm="confirmCreate"
+    />
   </div>
 </template>
 
@@ -218,7 +180,9 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import SceneItemTile from '@/features/sessions/components/SceneItemTile.vue'
 import { randomSceneColor } from '@/features/sessions/lib/scenePalette'
-import { useSortable } from '@/shared/composables/useSortable'
+import ConfirmDialog from '@/shared/ui/ConfirmDialog.vue'
+import TextPromptDialog from '@/shared/ui/TextPromptDialog.vue'
+import { reorderByDrop, useSortable } from '@/shared/composables/useSortable'
 import {
   createScene as apiCreateScene,
   createSceneItem,
@@ -270,12 +234,10 @@ const searchEl = ref(null)
 
 const createModalOpen = ref(false)
 const createName = ref('')
-const createInputEl = ref(null)
 const creating = ref(false)
 
 const renameModalOpen = ref(false)
 const renameDraft = ref('')
-const renameInputEl = ref(null)
 const renaming = ref(false)
 
 const deleteModalOpen = ref(false)
@@ -378,11 +340,10 @@ function openCreateModal(seed) {
   pickerOpen.value = false
   createName.value = (seed ?? search.value ?? '').trim()
   createModalOpen.value = true
-  nextTick(() => createInputEl.value?.focus?.())
 }
 
-async function confirmCreate() {
-  const name = createName.value.trim()
+async function confirmCreate(value) {
+  const name = value.trim()
   if (!name || creating.value || activeChapterId.value == null) return
   creating.value = true
   try {
@@ -402,11 +363,10 @@ function openRenameModal() {
   if (!currentScene.value) return
   renameDraft.value = currentScene.value.name
   renameModalOpen.value = true
-  nextTick(() => renameInputEl.value?.focus?.())
 }
 
-async function confirmRename() {
-  const name = renameDraft.value.trim()
+async function confirmRename(value) {
+  const name = value.trim()
   if (!currentScene.value || !name || renaming.value) return
   renaming.value = true
   try {
@@ -457,9 +417,7 @@ const sortable = useSortable({
   getKey: item => item.id,
   onDrop({ fromIndex, toIndex }) {
     if (fromIndex === toIndex) return
-    const next = [...sceneItems.value]
-    const [moved] = next.splice(fromIndex, 1)
-    next.splice(toIndex, 0, moved)
+    const next = reorderByDrop(sceneItems.value, fromIndex, toIndex)
     sceneItems.value = next
     if (currentScene.value) {
       reorderSceneItems(props.sessionUuid, currentScene.value.id, next.map(x => x.id)).catch(() => {})
@@ -824,79 +782,4 @@ watch(activeChapterId, id => { loadScenes(id) }, { immediate: true })
 }
 .scene-add-btn:hover svg { color: var(--accent); }
 
-.scene-create-overlay {
-  position: fixed;
-  inset: 0;
-  background: var(--scrim);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9200;
-  padding: 16px;
-}
-.scene-create-dialog {
-  width: 100%;
-  max-width: 380px;
-  background: var(--popover-bg);
-  border: 1px solid var(--border-strong);
-  border-radius: 12px;
-  padding: 18px;
-  box-shadow: var(--shadow-lg);
-}
-.scene-create-title {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--text-1);
-  margin-bottom: 12px;
-}
-.scene-create-input {
-  width: 100%;
-  background: var(--surface-raised);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 9px 12px;
-  font-family: inherit;
-  font-size: 14px;
-  color: var(--text-1);
-  outline: none;
-}
-.scene-create-input:focus { border-color: var(--accent); }
-.scene-create-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-  margin-top: 14px;
-}
-.scene-create-cancel,
-.scene-create-submit {
-  padding: 8px 14px;
-  border-radius: 7px;
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  border: 1px solid var(--border);
-  background: var(--surface-raised);
-  color: var(--text-1);
-}
-.scene-create-cancel:hover { background: var(--surface-active); }
-.scene-create-submit {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: var(--text-on-accent);
-}
-.scene-create-submit:hover:not(:disabled) { background: var(--accent-hover); }
-.scene-create-submit:disabled { opacity: 0.4; cursor: not-allowed; }
-.scene-create-submit--danger {
-  background: var(--danger);
-  border-color: var(--danger);
-}
-.scene-create-submit--danger:hover:not(:disabled) { background: var(--danger); }
-
-.scene-delete-msg {
-  font-size: 13px;
-  color: var(--text-2);
-  line-height: 1.4;
-  margin-top: 4px;
-}
 </style>

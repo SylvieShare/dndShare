@@ -29,10 +29,10 @@ export function useWeaponCalc({
 
   function attackDisplay(attack) {
     const count = Number(attack.count) || 1
-    const diceId = attack.dice_id ?? attack.dice_suggest_id
+    const diceId = attack.dice_id
     const dice = diceDetailsMap.value[diceId] || null
-    const diceLabel = dice?.value || diceMap.value[diceId] || attack.v || attack.dice || ''
-    const typeId = attack.type ?? attack.type_suggest_id
+    const diceLabel = dice?.value || diceMap.value[diceId] || ''
+    const typeId = attack.type
     const typeDetails = damageTypeDetailsMap.value[typeId] || null
     const type = typeDetails?.value || damageTypeMap.value[typeId] || typeId || ''
     const typeColor = typeDetails?.color || ''
@@ -46,6 +46,14 @@ export function useWeaponCalc({
     }
   }
 
+  function customAttackDisplay(attack) {
+    return attackDisplay({
+      count: attack.count,
+      dice_id: attack.dice_suggest_id,
+      type: attack.type_suggest_id,
+    })
+  }
+
   function formatLabel(type, color) {
     if (!type) return ''
     return color ? `{${type}|${color}}` : `{${type}}`
@@ -55,7 +63,12 @@ export function useWeaponCalc({
     const segments = []
     let firstType = ''
     let firstColor = ''
-    const allAttacks = [...attacks, ...normalizeAddAttacks(entry.add_attacks)]
+    const customAttacks = normalizeAddAttacks(entry.add_attacks).map(attack => ({
+      count: attack.count,
+      dice_id: attack.dice_suggest_id,
+      type: attack.type_suggest_id,
+    }))
+    const allAttacks = [...attacks, ...customAttacks]
     for (const a of allAttacks) {
       const ad = attackDisplay(a)
       if (!ad.diceLabel) continue
@@ -78,7 +91,7 @@ export function useWeaponCalc({
     return buildDamageExpr(itemTwoHandedAttacks ? itemTwoHandedAttacks(entry) : [], entry)
   }
 
-  // Old shape (flat modifier injected into parts[0]) — kept for the table variant.
+  // Table presentation keeps the flat modifier on the first damage part.
   function damageParts(entry) {
     const parts = itemBaseAttacks(entry).map(attackDisplay)
     const bonus = damageBonus(entry)
@@ -86,7 +99,7 @@ export function useWeaponCalc({
     else if (!parts.length && bonus) parts.push({ label: formatBonus(bonus), type: '', iconUrl: '' })
     return [
       ...parts,
-      ...normalizeAddAttacks(entry.add_attacks).map(attackDisplay),
+      ...normalizeAddAttacks(entry.add_attacks).map(customAttackDisplay),
     ].filter(part => part.label || part.iconUrl)
   }
 
@@ -95,7 +108,7 @@ export function useWeaponCalc({
   function damagePartsRaw(entry) {
     return [
       ...itemBaseAttacks(entry).map(attackDisplay),
-      ...normalizeAddAttacks(entry.add_attacks).map(attackDisplay),
+      ...normalizeAddAttacks(entry.add_attacks).map(customAttackDisplay),
     ].filter(part => part.label || part.iconUrl)
   }
 
@@ -104,7 +117,7 @@ export function useWeaponCalc({
     if (!two.length) return []
     return [
       ...two.map(attackDisplay),
-      ...normalizeAddAttacks(entry.add_attacks).map(attackDisplay),
+      ...normalizeAddAttacks(entry.add_attacks).map(customAttackDisplay),
     ].filter(part => part.label || part.iconUrl)
   }
 

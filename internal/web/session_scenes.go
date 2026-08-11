@@ -450,7 +450,7 @@ func rawToStr(raw json.RawMessage) *string {
 	return &str
 }
 
-// isUUID — валидация каноничного uuid (как @PathVariable UUID в Spring: битый → 400).
+// isUUID валидирует каноническую строковую форму UUID.
 func isUUID(v string) bool {
 	if len(v) != 36 {
 		return false

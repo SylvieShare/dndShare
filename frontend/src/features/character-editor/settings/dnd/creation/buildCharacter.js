@@ -248,14 +248,11 @@ export function buildCharacterData(input) {
     }
   }
 
-  // Identity: store race/class as { id, name } references (item-id binding).
+  // Identity: race is a direct item reference; classes have one canonical list.
   values.name = name
   values.race = ref(race)
-  values.class = ref(charClass)
   if (subrace) values.subrace = ref(subrace)
-  if (subclass) values.subclass = ref(subclass)
   if (raceVariant) values.race_variant = raceVariant
-  // Multiclass-ready class list (level-up / identity window edit it later).
   if (charClass) values.classes = [{ ...ref(charClass), level: 1, subclass: ref(subclass) }]
 
   return {

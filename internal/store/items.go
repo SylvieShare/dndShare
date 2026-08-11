@@ -3,7 +3,6 @@ package store
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"regexp"
 	"strings"
@@ -54,7 +53,6 @@ type Source struct {
 	ID         int64           `json:"id"`
 	Name       string          `json:"name"`
 	Versions   []SourceVersion `json:"versions"`
-	Version    *string         `json:"version,omitempty"` // compatibility for old clients
 	CountItems int64           `json:"countItems"`
 }
 
@@ -591,10 +589,6 @@ func (s *Store) SourceGetAll(ctx context.Context) ([]Source, error) {
 		}
 		if versionID != nil && version != nil {
 			out[idx].Versions = append(out[idx].Versions, SourceVersion{ID: *versionID, SourceID: sourceID, Version: *version})
-			if out[idx].Version == nil {
-				v := *version
-				out[idx].Version = &v
-			}
 		}
 	}
 	return out, rows.Err()
@@ -607,34 +601,4 @@ func (s *Store) SourceVersionExists(ctx context.Context, id int64) (bool, error)
 		`SELECT EXISTS(SELECT 1 FROM dndshare.source_version WHERE id = $1)`, id,
 	).Scan(&exists)
 	return exists, err
-}
-
-// DefaultSourceVersionIDForTemplate сохраняет совместимость со старыми
-// клиентами создания персонажей, которые ещё не передают sourceVersionId.
-func (s *Store) DefaultSourceVersionIDForTemplate(ctx context.Context, templateName string) (*int64, error) {
-	upperName := strings.ToUpper(templateName)
-	var sourceName, version string
-	switch {
-	case upperName == "DND5" || upperName == "DND5E":
-		sourceName, version = "DND5e", "2014"
-	case strings.Contains(upperName, "VTM") || strings.Contains(upperName, "VAMPIRE"):
-		sourceName, version = "Vampire: TM", "V20"
-	default:
-		return nil, nil
-	}
-	var id int64
-	err := s.pool.QueryRow(ctx,
-		`SELECT sv.id
-		 FROM dndshare.source_version sv
-		 JOIN dndshare.source src ON src.id = sv.source_id
-		 WHERE lower(src.name) = lower($1) AND lower(sv.version) = lower($2)
-		 LIMIT 1`, sourceName, version,
-	).Scan(&id)
-	if errors.Is(err, pgx.ErrNoRows) {
-		return nil, nil
-	}
-	if err != nil {
-		return nil, err
-	}
-	return &id, nil
 }
