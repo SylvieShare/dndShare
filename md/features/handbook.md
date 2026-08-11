@@ -62,10 +62,11 @@ create title uses the current item type name. `components/ItemPickerModal.vue`
 is the standard server-backed picker used by the character wizard/editor;
 `components/ItemViewModal.vue` is the standard detail window. Both belong to
 the handbook feature because they compose handbook API, stores and renderers.
-On phone layouts an open item replaces the collection/search chrome; the back
-button and a deliberate right swipe both return to the list through the same
-query-navigation path. Vertical scrolling and gestures started on interactive
-controls remain untouched.
+On phone layouts the collection search occupies its own full-width toolbar row,
+so grouping and filter controls cannot compress the input. An open item replaces
+the collection/search chrome; the back button and a deliberate right swipe both
+return to the list through the same query-navigation path. Vertical scrolling
+and gestures started on interactive controls remain untouched.
 
 Details are specialized by type where useful (weapon, spell, enemy, potion,
 feat), otherwise the generic field renderer is used. Item detail modals use

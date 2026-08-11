@@ -30,6 +30,10 @@ fallback.
 character created inside a join/session flow uses `CharacterCreateModal`, gets
 an explicit rules `sourceVersionId`, then is joined and opened.
 
+The session participant rail has no shared backing surface: each participant is
+an individual interactive `BaseTile`, while selection controls and the invite
+section remain separate rail actions.
+
 ## Chapters and scenes
 
 Chapters belong to a session; one can be current. Scenes belong to chapters and

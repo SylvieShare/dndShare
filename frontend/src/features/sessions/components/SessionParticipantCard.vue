@@ -1,5 +1,10 @@
 <template>
-  <div class="p-card" :class="{ 'p-card--selected': selectionMode && selected }" @click="$emit('select', participant.charId)">
+  <BaseTile
+    class="p-card"
+    :class="{ 'p-card--selected': selectionMode && selected }"
+    interactive
+    @click="$emit('select', participant.charId)"
+  >
     <div class="p-avatar" :style="{ background: avatarColor }">
       <img v-if="avaUrl" :src="avaUrl" class="ava-img" alt="" />
       <span v-else class="ava-initial">{{ initial }}</span>
@@ -58,11 +63,12 @@
         <path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </div>
-  </div>
+  </BaseTile>
 </template>
 
 <script setup>
 import { computed } from 'vue'
+import BaseTile from '@/shared/ui/BaseTile.vue'
 import StatBar from '@/shared/ui/StatBar.vue'
 import { pvAvatar, pvHp, pvName, pvSubtitle } from '@/features/sessions/lib/participantView'
 
@@ -123,14 +129,7 @@ const avatarColor = computed(() => {
   align-items: flex-start;
   gap: 10px;
   padding: 10px 12px;
-  background: none;
-  cursor: pointer;
-  transition: background 0.15s;
   user-select: none;
-}
-
-.p-card:hover {
-  background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
 }
 
 .p-card--selected {

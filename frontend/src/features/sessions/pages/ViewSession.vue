@@ -24,7 +24,7 @@
     </template>
 
     <div v-else-if="session" class="layout">
-      <BaseTile class="col-left">
+      <aside class="col-left">
         <div class="col-section-title">
           ИГРОКИ
           <span class="poll-indicator" :class="pollStatus">
@@ -100,7 +100,7 @@
             </button>
           </div>
         </div>
-      </BaseTile>
+      </aside>
 
       <div class="main-area">
         <BaseTile class="toolbar-tile">

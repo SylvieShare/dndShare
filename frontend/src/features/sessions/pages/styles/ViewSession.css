@@ -23,7 +23,7 @@
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  padding: 16px 12px;
+  padding: 0;
   gap: 8px;
   overflow-y: auto;
 }
@@ -86,13 +86,7 @@
 .participants-list {
   display: flex;
   flex-direction: column;
-  gap: 0;
-  /* bleed past the column's horizontal padding so rows span the full tile width */
-  margin: 0 -12px;
-}
-
-.participants-list :deep(.p-card:not(:last-child)) {
-  border-bottom: 1px solid var(--border);
+  gap: 8px;
 }
 
 .no-participants {

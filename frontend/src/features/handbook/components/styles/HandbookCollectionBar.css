@@ -317,5 +317,5 @@
   .col-bar-right { width: 100%; flex-wrap: wrap; }
   .col-search { width: 100%; }
   .col-search:focus { width: 100%; }
-  .col-search-wrap { flex: 1; min-width: 0; }
+  .col-search-wrap { flex: 0 0 100%; min-width: 0; }
 }
