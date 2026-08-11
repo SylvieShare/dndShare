@@ -69,6 +69,15 @@ function onDocPointerDown(e) {
   close()
 }
 
+function onScroll(e) {
+  // A scrollable popover (the handbook filter on mobile, for example) emits a
+  // captured scroll event while the user is interacting with its contents.
+  // Keep that interaction inside the popover; only an outside/page scroll
+  // invalidates the anchor position and should dismiss it.
+  if (popoverEl.value?.contains(e.target)) return
+  close()
+}
+
 function onKey(e) {
   if (e.key === 'Escape') close()
 }
@@ -79,12 +88,12 @@ watch(() => props.open, (val) => {
     document.addEventListener('pointerdown', onDocPointerDown, true)
     document.addEventListener('keydown', onKey)
     window.addEventListener('resize', close)
-    window.addEventListener('scroll', close, true)
+    window.addEventListener('scroll', onScroll, true)
   } else {
     document.removeEventListener('pointerdown', onDocPointerDown, true)
     document.removeEventListener('keydown', onKey)
     window.removeEventListener('resize', close)
-    window.removeEventListener('scroll', close, true)
+    window.removeEventListener('scroll', onScroll, true)
   }
 })
 
@@ -92,7 +101,7 @@ onBeforeUnmount(() => {
   document.removeEventListener('pointerdown', onDocPointerDown, true)
   document.removeEventListener('keydown', onKey)
   window.removeEventListener('resize', close)
-  window.removeEventListener('scroll', close, true)
+  window.removeEventListener('scroll', onScroll, true)
 })
 </script>
 
