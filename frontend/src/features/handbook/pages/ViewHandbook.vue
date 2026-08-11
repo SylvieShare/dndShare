@@ -82,6 +82,10 @@
             :type="selectedType"
             :can-edit="canEdit"
             class="handbook-detail"
+            @touchstart="swipeBack.onTouchStart"
+            @touchmove="swipeBack.onTouchMove"
+            @touchend="swipeBack.onTouchEnd"
+            @touchcancel="swipeBack.onTouchCancel"
             @edit="openEditModal"
           />
         </div>
@@ -116,6 +120,7 @@ import { useUiStore } from '@/stores/ui'
 import { useSuggestStore } from '@/stores/suggest'
 import { createHeaderChip } from '@/shared/lib/appHeader'
 import { collectSuggestIds, getSuggestId, walkFieldsWithPath } from '@/features/handbook/objects/lib/schemaFields'
+import { useHandbookSwipeBack } from '@/features/handbook/composables/useHandbookSwipeBack'
 import HandbookLanding from '@/features/handbook/pages/HandbookLanding'
 import HandbookCollectionBar from '@/features/handbook/components/HandbookCollectionBar'
 import HandbookItemList from '@/features/handbook/components/HandbookItemList'
@@ -182,6 +187,10 @@ function goBack() {
     goToLanding()
   }
 }
+
+const swipeBack = useHandbookSwipeBack(goBack, {
+  enabled: () => mobilePanel.value === 'panel-detail',
+})
 
 // ── Suggest helpers ──────────────────────────────────────────────────────────
 function getSuggests(suggestId) { return suggestStore.items(suggestId) || [] }

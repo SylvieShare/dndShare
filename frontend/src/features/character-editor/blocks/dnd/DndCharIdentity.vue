@@ -77,6 +77,7 @@
                   :options="classOptions"
                   placeholder="Класс"
                   searchable
+                  drop-up
                   @update:model-value="onRowClassChange(row, $event)"
                 />
                 <div v-if="form.classes.length > 1" class="dciw-cls-lvl">

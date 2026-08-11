@@ -330,7 +330,13 @@ onMounted(async () => {
   .cc-clear-label, .cc-progress-full { display: none; }
   .cc-progress-short { display: inline; }
   .cc-body { padding: 4px 20px 14px; }
-  .cc-foot { gap: 8px; padding: 12px 20px; }
+  .cc-foot {
+    position: sticky;
+    bottom: 0;
+    z-index: 20;
+    gap: 8px;
+    padding: 12px 20px max(12px, env(safe-area-inset-bottom));
+  }
   .cc-actions { gap: 6px; }
   .btn { padding: 10px 18px; }
   .btn.soft { padding-inline: 10px; }

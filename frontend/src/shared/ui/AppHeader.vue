@@ -340,7 +340,7 @@ function requestIdentityEdit() {
   }
 
   .header-title {
-    flex: 1;
+    flex: 0 1 auto;
     font-size: 13px;
   }
 
@@ -378,6 +378,10 @@ function requestIdentityEdit() {
     flex-shrink: 0;
     border-radius: 50%;
     background: currentColor;
+  }
+
+  .header-right {
+    margin-left: auto;
   }
 
   .header-title-strip {

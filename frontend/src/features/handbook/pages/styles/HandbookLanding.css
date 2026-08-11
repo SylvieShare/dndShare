@@ -439,6 +439,7 @@
   .hb-sidebar {
     width: 100%;
     border-right: none;
+    border-left: none;
     border-bottom: 1px solid var(--border);
     padding: 12px 0;
   }
@@ -453,6 +454,8 @@
   }
   .hb-content {
     padding: 16px;
+    border-right: none;
+    border-left: none;
   }
   .hb-section-header {
     margin-left: -16px;

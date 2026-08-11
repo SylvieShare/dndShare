@@ -50,7 +50,7 @@ Vite работает на `:5173` и проксирует `/api` и `/mcp` в G
 | Поле формы | `shared/ui/form/FormField.vue` | Label, hint и горизонтальная/вертикальная раскладка одного поля. |
 | Текст/число/select/многострочный текст | `FormTextInput`, `FormNumberInput`, `FormSelect`, `FormTextarea` | Любой универсальный ввод соответствующего типа. Не вводить новые локальные классы input/select без отдельной UX-причины. |
 | Кнопки формы | `shared/ui/form/FormActionButtons.vue` | Стандартная пара отмена/сохранение и loading/disabled состояния. |
-| Выбор значения | `shared/ui/ValueSelect.vue`, `SuggestPicker`, `SuggestAdd`, `SuggestMultiSelect` | Обычный select либо одиночный/множественный выбор из серверного справочника; компоненты сами отвечают за desktop dropdown и mobile sheet. |
+| Выбор значения | `shared/ui/ValueSelect.vue`, `SuggestPicker`, `SuggestAdd`, `SuggestMultiSelect` | Обычный select либо одиночный/множественный выбор из серверного справочника; компоненты сами отвечают за desktop dropdown и mobile sheet. `ValueSelect` открывается вниз по умолчанию, а внутри ограниченного снизу scroll-контейнера может явно использовать `drop-up`. |
 | Расширенное описание | `shared/ui/InputDescription.vue` | Редактирование форматированного описания. |
 | Отображение описания | `shared/ui/RichContent.vue` | Безопасный и единообразный вывод HTML, созданного `InputDescription`. Не использовать собственный `v-html` для такого контента. |
 | Popover/контекстное меню | `shared/ui/BasePopover.vue`, `RowActionMenu.vue` | Неблокирующий контент, привязанный к управляющему элементу. `RowActionMenu` поддерживает стандартный trigger с многоточием и feature-trigger через slot. |

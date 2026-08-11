@@ -191,7 +191,7 @@
   .handbook-outer.panel-list .handbook-detail { display: none; }
   .handbook-outer.panel-list .handbook-list {
     display: flex;
-    border: 1px solid var(--border);
+    border: none;
     border-radius: 10px;
     overflow: hidden;
     max-height: none;
@@ -210,5 +210,8 @@
     overflow: hidden;
     max-height: none;
     min-height: 0;
+    touch-action: pan-y;
   }
+
+  .handbook-outer.panel-detail > .handbook-col-bar { display: none; }
 }

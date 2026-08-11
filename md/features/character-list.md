@@ -46,7 +46,8 @@ default-version fallback.
 
 The fixed steps are: Версия → Раса → Класс → Предыстория → Характеристики →
 Снаряжение → Личность → Обзор. The desktop layout has step rail, central content
-and live preview; on narrow screens it becomes one column.
+and live preview; on narrow screens it becomes one column, while the navigation
+footer stays pinned to the visible bottom edge.
 
 Key rules:
 

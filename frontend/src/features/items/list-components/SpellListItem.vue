@@ -1,7 +1,7 @@
 <template>
   <ObjectListItem :item="item" :name-en="item.nameEn || ''" :custom="item.userId != null" :subtitle="subtitle">
     <template #leading>
-      <ObjectTypeIcon :type="type" />
+      <ObjectTypeIcon class="sli-type-icon" :type="type" />
       <span
         class="sli-lvl"
         :class="{ 'sli-lvl-zero': data.lvl === 0 }"
@@ -70,5 +70,9 @@ const subtitle = computed(() => {
 .sli-ritual {
   background: color-mix(in srgb, var(--success) 13%, transparent);
   color: var(--success);
+}
+
+@media (max-width: 520px) {
+  .sli-type-icon { display: none; }
 }
 </style>

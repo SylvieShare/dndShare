@@ -4,7 +4,7 @@
       <span>{{ selectedLabel || placeholder }}</span>
       <span class="vs-arrow">▾</span>
     </button>
-    <div v-if="open" class="vs-drop">
+    <div v-if="open" class="vs-drop" :class="{ 'vs-drop-up': dropUp }">
       <input
         v-if="showSearch"
         ref="search"
@@ -36,6 +36,7 @@ const props = defineProps({
   placeholder: { type: String, default: 'Выберите' },
   searchable: { type: Boolean, default: false },
   searchPlaceholder: { type: String, default: 'Поиск...' },
+  dropUp: { type: Boolean, default: false },
 })
 const emit = defineEmits(['update:modelValue'])
 
@@ -137,6 +138,11 @@ function pick(value) {
   border-radius: var(--r-md);
   box-shadow: var(--shadow-lg);
   z-index: 250;
+}
+
+.vs-drop-up {
+  top: auto;
+  bottom: calc(100% + 4px);
 }
 
 .vs-search {
