@@ -45,10 +45,8 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, useId } from 'vue'
 import { diceByValue, SYSTEM_DICE } from '@/shared/lib/systemDice'
-
-let nextId = 0
 
 const SHAPES = {
   d4: {
@@ -115,7 +113,7 @@ const valueStrokeWidth = computed(() => {
   const length = String(shownValue.value).length
   return length >= 4 ? 2 : length === 3 ? 2.5 : 3
 })
-const instanceId = ++nextId
+const instanceId = useId()
 const clipId = `system-die-clip-${instanceId}`
 const glowId = `system-die-glow-${instanceId}`
 const rootStyle = computed(() => ({

@@ -5,7 +5,9 @@ describe('system dice catalogue', () => {
   it('keeps ids equal to the number of sides', () => {
     expect(SYSTEM_DICE.map((die) => die.id)).toEqual(['d4', 'd6', 'd8', 'd10', 'd12', 'd20', 'd100'])
     expect(SYSTEM_DICE.map((die) => die.legacyId)).toEqual([1, 2, 3, 4, 5, 6, 7])
-    expect(new Set(SYSTEM_DICE.map((die) => die.color))).toEqual(new Set(['#7ab8e8']))
+    expect(SYSTEM_DICE.map((die) => die.color)).toEqual([
+      '#e07b54', '#e0c454', '#7ab8e8', '#a07ae8', '#7ae8a0', '#e87a9f', '#55c9c2',
+    ])
     expect(HIT_DICE.map((die) => die.value)).toEqual(['d4', 'd6', 'd8', 'd10', 'd12'])
   })
 

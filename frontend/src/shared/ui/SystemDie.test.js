@@ -27,4 +27,15 @@ describe('SystemDie', () => {
     expect(html).toContain('stroke-width:2px')
     expect(html).toContain('>1234</text>')
   })
+
+  it('gives every rendered die unique SVG definition ids', async () => {
+    const html = await renderToString(createSSRApp({
+      render: () => h('div', [4, 6, 8].map((sides) => h(SystemDie, { sides }))),
+    }))
+    const clipIds = [...html.matchAll(/id="(system-die-clip-[^"]+)"/g)].map((match) => match[1])
+    const glowIds = [...html.matchAll(/id="(system-die-glow-[^"]+)"/g)].map((match) => match[1])
+
+    expect(new Set(clipIds).size).toBe(3)
+    expect(new Set(glowIds).size).toBe(3)
+  })
 })
