@@ -1,5 +1,12 @@
 <template>
-  <header class="app-header" :class="{ 'header-hidden': headerHidden, 'header-collapsing': collapsing }">
+  <header
+    class="app-header"
+    :class="{
+      'app-header--collapsible': headerCollapsible,
+      'header-hidden': effectiveHeaderHidden,
+      'header-collapsing': headerCollapsible && collapsing,
+    }"
+  >
     <div class="header-inner">
       <div class="brand-wrap" v-click-outside="closeMenu">
         <button class="brand-btn" type="button" :class="{ open: menuOpen }" @click="toggleBrandMenu">
@@ -41,13 +48,14 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, watch, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import HeaderSearch from '@/shared/ui/HeaderSearch'
 import HorizontalMenu from '@/shared/ui/HorizontalMenu'
 import UserBox from "@/features/auth/components/UserBox"
 import { useUiStore } from '@/stores/ui'
 import { useAccountStore } from '@/stores/account'
+import { MOBILE_HEADER_COLLAPSIBLE, resolveMobileHeaderMode } from '@/shared/lib/mobileHeader'
 
 const route = useRoute()
 const router = useRouter()
@@ -55,11 +63,11 @@ const router = useRouter()
 const menuOpen = ref(false)
 const collapsing = ref(false)
 let _collapseTimer = null
-let _onWindowScroll = null
-let _onViewportChange = null
-let _mobileHeaderQuery = null
 
 const headerHidden = computed(() => useUiStore().headerHidden)
+const headerMode = computed(() => resolveMobileHeaderMode(route.meta))
+const headerCollapsible = computed(() => headerMode.value === MOBILE_HEADER_COLLAPSIBLE)
+const effectiveHeaderHidden = computed(() => headerCollapsible.value && headerHidden.value)
 const headerTitle = computed(() => useUiStore().headerTitle || '')
 const isAuth = computed(() => useAccountStore().authStatus === 'success')
 const isHandbook = computed(() => route.path.startsWith('/handbook'))
@@ -79,7 +87,7 @@ const visibleItems = computed(() => {
   return items
 })
 
-watch(headerHidden, (val) => {
+watch(effectiveHeaderHidden, (val) => {
   collapsing.value = true
   clearTimeout(_collapseTimer)
   if (!val) {
@@ -87,32 +95,8 @@ watch(headerHidden, (val) => {
   }
 })
 
-onMounted(() => {
-  _mobileHeaderQuery = window.matchMedia('(max-width: 640px)')
-  _onViewportChange = () => {
-    if (!_mobileHeaderQuery.matches) {
-      useUiStore().setHeaderHidden(false)
-    }
-  }
-  _mobileHeaderQuery.addEventListener('change', _onViewportChange)
-  _onViewportChange()
-
-  _onWindowScroll = () => {
-    // Character pages own scrolling in their active .mobile-pane-scroll.
-    // A window scroll event there (notably while the visual viewport changes)
-    // must not overwrite the header state produced by useScrollHide.
-    if (isCharacterView.value) return
-    const uiStore = useUiStore()
-    uiStore.setScrollY(window.scrollY)
-    uiStore.setHeaderHidden(_mobileHeaderQuery.matches && window.scrollY > 10)
-  }
-  window.addEventListener('scroll', _onWindowScroll, { passive: true })
-})
-
 onBeforeUnmount(() => {
   clearTimeout(_collapseTimer)
-  window.removeEventListener('scroll', _onWindowScroll)
-  _mobileHeaderQuery?.removeEventListener('change', _onViewportChange)
 })
 
 function closeMenu() {
@@ -269,6 +253,10 @@ function requestIdentityEdit() {
 
 @media (max-width: 640px) {
   .app-header {
+    max-height: none;
+  }
+
+  .app-header.app-header--collapsible {
     position: sticky;
     top: 0;
     max-height: 60px;
@@ -278,11 +266,11 @@ function requestIdentityEdit() {
       border-color 0.24s ease;
   }
 
-  .app-header.header-collapsing {
+  .app-header--collapsible.header-collapsing {
     overflow: hidden;
   }
 
-  .app-header.header-hidden {
+  .app-header--collapsible.header-hidden {
     max-height: 0;
     opacity: 0;
     border-bottom-color: transparent;

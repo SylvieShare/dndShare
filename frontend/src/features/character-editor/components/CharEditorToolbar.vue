@@ -1,5 +1,5 @@
 <template>
-  <div class="toolbar">
+  <div ref="toolbarRootEl" class="toolbar">
     <div class="toolbar-inner" :class="{ 'has-blocks': toolbarBlocksList }">
 
       <!-- Left: back + identity -->
@@ -186,10 +186,13 @@ const props = defineProps({
 const emit = defineEmits(['update:publicVisible', 'update:activeTab', 'update:value', 'update:var', 'update:contentSources', 'close'])
 
 const router = useRouter()
+const toolbarRootEl = ref(null)
 const menuOpen = ref(false)
 const sessionMenuOpen = ref(false)
 const sourcesOpen = ref(false)
 const sourceDraft = ref(normalizeContentSourceSettings(null))
+
+defineExpose({ rootElement: () => toolbarRootEl.value })
 
 const statusColor = sessionStatusColor
 const statusLabel = sessionStatusLabel

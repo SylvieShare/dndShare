@@ -257,7 +257,7 @@ const {
 
 const {
   toolbarHeight, stripHidden, viewStyle,
-  startScrollListener, stopScrollListener, observeToolbar, disconnectToolbar,
+  startScrollListener, stopScrollListener, revealHeader, observeToolbar, disconnectToolbar,
 } = useScrollHide(isMobile, commonMobileScrollHide)
 
 const { startViewportHeightSync, stopViewportHeightSync } = useCharacterViewport(isMobile)
@@ -337,7 +337,7 @@ function scrollActiveContentBy(deltaY) {
   const el = activeScrollElement()
   if (!el || !deltaY) return
   if (el.scrollTop <= 0 && deltaY < -6) {
-    uiStore.setHeaderHidden(false)
+    revealHeader()
   }
   el.scrollTop += deltaY
 }
@@ -444,7 +444,7 @@ onMounted(async () => {
   ready = true
 
   nextTick(() => {
-    if (charToolbarEl.value) observeToolbar(charToolbarEl.value.$el)
+    observeToolbar(charToolbarEl.value?.rootElement?.())
     updateMobileTabRects(mobileTabbarEl.value)
     scrollActiveMobileTabIntoView()
     syncActiveScrollListener()
@@ -460,7 +460,7 @@ onBeforeUnmount(() => {
   stopViewportHeightSync()
   mediaQuery?.removeEventListener('change', onMediaQueryChange)
   window.removeEventListener('resize', onResize)
-  stopScrollListener(activeScrollElement())
+  stopScrollListener()
   disconnectToolbar()
   uiStore.setHeaderTitle('')
 })

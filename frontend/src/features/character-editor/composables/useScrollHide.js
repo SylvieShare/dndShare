@@ -1,14 +1,46 @@
 import { ref, computed, onBeforeUnmount } from 'vue'
-import { useUiStore } from '@/stores/ui'
+import { useAppHeaderCollapse } from '@/shared/composables/useAppHeaderCollapse'
+
+export function isResizeObserverElement(el, ElementClass = typeof Element !== 'undefined' ? Element : null) {
+  return !!ElementClass && el instanceof ElementClass
+}
 
 export function useScrollHide(isMobile, commonMobileScrollHide) {
-  const SCROLL_SETTLE_MS = 120
-  const toolbarHeight = ref(45)
+  const toolbarHeight = ref(48)
   const stripHidden = ref(false)
+  let pendingStripHidden = null
 
-  const uiStore = useUiStore()
+  function onScrollPosition({ y, delta }) {
+    if (!isMobile.value) {
+      pendingStripHidden = null
+      stripHidden.value = false
+      return
+    }
+    if (y <= 10) {
+      pendingStripHidden = null
+      stripHidden.value = false
+      return
+    }
+    if (delta > 8) pendingStripHidden = true
+    else if (delta < -5) pendingStripHidden = false
+  }
 
-  const headerHidden = computed(() => uiStore.headerHidden)
+  function onScrollSettled() {
+    if (commonMobileScrollHide.value && pendingStripHidden != null) {
+      stripHidden.value = pendingStripHidden
+    }
+    pendingStripHidden = null
+  }
+
+  const {
+    headerHidden,
+    startScrollSource,
+    stopScrollSource,
+    revealHeader,
+  } = useAppHeaderCollapse(isMobile, {
+    onPosition: onScrollPosition,
+    onSettled: onScrollSettled,
+  })
 
   const viewStyle = computed(() => {
     const headerH = isMobile.value ? 50 : 54
@@ -18,114 +50,20 @@ export function useScrollHide(isMobile, commonMobileScrollHide) {
     return { height: h, transition: 'height 0.34s cubic-bezier(0.22, 1, 0.36, 1)' }
   })
 
-  // ── Scroll listener on sheetScroll element ────────────────────────────
+  // ── Active scroll source ──────────────────────────────────────────────
 
-  let lastScrollY = 0
-  let scrollEl = null
-  let touchLastY = null
-  let scrollSettleTimer = null
-  let pendingStripHidden = null
-
-  function clearPendingChromeUpdate() {
-    clearTimeout(scrollSettleTimer)
-    scrollSettleTimer = null
+  function clearPendingStripUpdate() {
     pendingStripHidden = null
   }
 
-  function scheduleChromeUpdate(y, delta) {
-    clearTimeout(scrollSettleTimer)
-    if (delta > 8) pendingStripHidden = true
-    else if (delta < -5 || y < 10) pendingStripHidden = false
-    scrollSettleTimer = setTimeout(() => {
-      scrollSettleTimer = null
-      uiStore.setHeaderHidden(y > 10)
-      if (commonMobileScrollHide.value && pendingStripHidden != null) {
-        stripHidden.value = pendingStripHidden
-      }
-      pendingStripHidden = null
-    }, SCROLL_SETTLE_MS)
-  }
-
-  function onScroll() {
-    if (!scrollEl) return
-    const y = scrollEl.scrollTop
-    uiStore.setScrollY(y)
-    const delta = y - lastScrollY
-    lastScrollY = y
-
-    if (!isMobile.value) {
-      if (y > 10) uiStore.setHeaderHidden(true)
-      return
-    }
-
-    if (y < 10) {
-      clearPendingChromeUpdate()
-      uiStore.setHeaderHidden(false)
-      stripHidden.value = false
-      return
-    }
-
-    // Collapsing the app header or the common strip changes the height of the
-    // native momentum scroller. Mobile browsers can amplify the active fling
-    // when that happens, most noticeably on the first scroll after a reload.
-    // Wait for the scroll stream to settle before changing either height.
-    scheduleChromeUpdate(y, delta)
-  }
-
-  function onTouchStart(event) {
-    touchLastY = event.touches?.[0]?.clientY ?? null
-  }
-
-  function onTouchMove(event) {
-    const y = event.touches?.[0]?.clientY
-    if (touchLastY == null || y == null || !scrollEl) return
-
-    const fingerDelta = y - touchLastY
-    if (scrollEl.scrollTop <= 0 && fingerDelta > 6) {
-      uiStore.setHeaderHidden(false)
-    }
-    touchLastY = y
-  }
-
-  function onTouchEnd() {
-    touchLastY = null
-  }
-
   function startScrollListener(el, options = {}) {
-    if (scrollEl === el) return
-    clearPendingChromeUpdate()
-    if (scrollEl) removeScrollElementListeners(scrollEl)
-    scrollEl = el
-    lastScrollY = el?.scrollTop || 0
-    uiStore.setScrollY(lastScrollY)
-    uiStore.setHeaderHidden(lastScrollY > 10 || (options.preserveHidden && uiStore.headerHidden))
-    if (lastScrollY < 10) stripHidden.value = false
-    addScrollElementListeners(el)
+    clearPendingStripUpdate()
+    startScrollSource(el, options)
   }
 
-  function stopScrollListener(el) {
-    clearPendingChromeUpdate()
-    removeScrollElementListeners(el)
-    scrollEl = null
-    touchLastY = null
-    uiStore.setScrollY(0)
-    uiStore.setHeaderHidden(false)
-  }
-
-  function addScrollElementListeners(el) {
-    el?.addEventListener('scroll', onScroll, { passive: true })
-    el?.addEventListener('touchstart', onTouchStart, { passive: true })
-    el?.addEventListener('touchmove', onTouchMove, { passive: true })
-    el?.addEventListener('touchend', onTouchEnd, { passive: true })
-    el?.addEventListener('touchcancel', onTouchEnd, { passive: true })
-  }
-
-  function removeScrollElementListeners(el) {
-    el?.removeEventListener('scroll', onScroll)
-    el?.removeEventListener('touchstart', onTouchStart)
-    el?.removeEventListener('touchmove', onTouchMove)
-    el?.removeEventListener('touchend', onTouchEnd)
-    el?.removeEventListener('touchcancel', onTouchEnd)
+  function stopScrollListener() {
+    clearPendingStripUpdate()
+    stopScrollSource()
   }
 
   // ── Toolbar height observer ───────────────────────────────────────────
@@ -134,7 +72,8 @@ export function useScrollHide(isMobile, commonMobileScrollHide) {
 
   function observeToolbar(el) {
     toolbarObserver?.disconnect()
-    if (!el) return
+    toolbarObserver = null
+    if (typeof ResizeObserver === 'undefined' || !isResizeObserverElement(el)) return
     toolbarObserver = new ResizeObserver(entries => {
       const h = entries[0]?.contentRect?.height
       if (h) toolbarHeight.value = Math.round(h)
@@ -148,7 +87,7 @@ export function useScrollHide(isMobile, commonMobileScrollHide) {
   }
 
   onBeforeUnmount(() => {
-    if (scrollEl) stopScrollListener(scrollEl)
+    stopScrollListener()
     disconnectToolbar()
   })
 
@@ -159,6 +98,7 @@ export function useScrollHide(isMobile, commonMobileScrollHide) {
     viewStyle,
     startScrollListener,
     stopScrollListener,
+    revealHeader,
     observeToolbar,
     disconnectToolbar,
   }

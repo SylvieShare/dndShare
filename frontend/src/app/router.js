@@ -142,7 +142,7 @@ const routes = [
         path: '/char/:uuid',
         name: "Character",
         component: ViewCharacter,
-        meta: { section: 'characters', depth: 1, pageOrder: 2 },
+        meta: { section: 'characters', depth: 1, pageOrder: 2, mobileHeader: 'collapsible' },
     },
     {
         path: '/char/:uuid/print',
