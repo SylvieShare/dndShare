@@ -145,9 +145,11 @@ function setEffect(i, text) {
   align-items: center;
   justify-content: center;
   gap: 2px;
-  min-width: 68px;
-  min-height: 42px;
-  padding: 5px 8px;
+  box-sizing: border-box;
+  min-width: 58px;
+  min-height: 32px;
+  height: 32px;
+  padding: 2px 7px;
   border: 0;
   border-radius: 8px;
   background: color-mix(in srgb, var(--text-on-accent) 3%, transparent);
@@ -156,7 +158,7 @@ function setEffect(i, text) {
   cursor: pointer;
 }
 .exh-compact span { font-size: 9px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
-.exh-compact strong { color: var(--text-2); font-size: 17px; line-height: 1; }
+.exh-compact strong { color: var(--text-2); font-size: 15px; line-height: 1; }
 .exh-compact--on { color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, transparent); }
 .exh-compact--on strong { color: var(--danger); }
 

@@ -82,7 +82,13 @@
           :title="tab.title || 'Раздел'"
           @click="onSetActiveTab(i)"
         >
-          <img v-if="tab.svg" class="mobile-tab-icon" :src="tab.svg" :alt="tab.title || 'Раздел'" />
+          <span
+            v-if="tab.svg"
+            class="mobile-tab-icon"
+            :style="{ '--mobile-tab-icon': `url(&quot;${tab.svg}&quot;)` }"
+            role="img"
+            :aria-label="tab.title || 'Раздел'"
+          ></span>
           <span v-else>{{ tab.title || 'Раздел' }}</span>
         </button>
       </nav>
@@ -709,14 +715,15 @@ onBeforeUnmount(() => {
     width: 22px;
     height: 22px;
     display: block;
-    object-fit: contain;
-    opacity: 0.72;
-    transition: opacity 0.15s ease, filter 0.15s ease;
+    flex: 0 0 auto;
+    background: currentColor;
+    mask: var(--mobile-tab-icon) center / contain no-repeat;
+    -webkit-mask: var(--mobile-tab-icon) center / contain no-repeat;
+    transition: color 0.15s ease;
   }
 
   .mobile-tab-btn.active .mobile-tab-icon {
-    opacity: 1;
-    filter: brightness(1.35);
+    color: currentColor;
   }
 }
 

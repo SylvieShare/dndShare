@@ -19,6 +19,7 @@ export function useTabSwipe(activeTabs, isMobile) {
 
   let swipeSettleTimer = null
   let highlightSettleTimer = null
+  let mobileTabbarEl = null
   let touchStartX = null
   let touchStartY = null
 
@@ -96,14 +97,26 @@ export function useTabSwipe(activeTabs, isMobile) {
   // ── Tab refs / rects ──────────────────────────────────────────────────
 
   function setMobileTabButtonRef(el, index) {
-    if (el) mobileTabButtonRefs.value[index] = el
+    if (el) {
+      mobileTabButtonRefs.value[index] = el
+      nextTick(() => updateMobileTabRects())
+    } else {
+      mobileTabButtonRefs.value[index] = null
+    }
   }
 
   function updateMobileTabRects(tabbarEl) {
-    if (!tabbarEl) return
-    mobileTabRects.value = mobileTabButtonRefs.value.map(el =>
-      el ? { x: el.offsetLeft, width: el.offsetWidth } : null
-    )
+    mobileTabbarEl = tabbarEl || mobileTabbarEl
+    if (!mobileTabbarEl) return
+    const tabbarRect = mobileTabbarEl.getBoundingClientRect()
+    mobileTabRects.value = mobileTabButtonRefs.value.map(el => {
+      if (!el) return null
+      const rect = el.getBoundingClientRect()
+      return {
+        x: rect.left - tabbarRect.left + mobileTabbarEl.scrollLeft,
+        width: rect.width,
+      }
+    })
   }
 
   function scrollActiveMobileTabIntoView() {

@@ -212,12 +212,24 @@ function hideTooltip() {
   align-items: center;
   gap: 8px;
   position: relative;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .bs-compact-icons {
   display: flex;
   align-items: center;
   gap: 8px;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.bs-compact-icons::-webkit-scrollbar {
+  display: none;
 }
 
 .bs-compact-chip {
@@ -228,6 +240,7 @@ function hideTooltip() {
   height: 24px;
   cursor: default;
   border-radius: 6px;
+  flex: 0 0 auto;
   transition: background 0.12s;
 }
 
@@ -263,6 +276,7 @@ function hideTooltip() {
   font: inherit;
   font-size: 12px;
   transition: border-color 0.15s, color 0.15s, background 0.15s;
+  flex: 0 0 auto;
 }
 
 @media (hover: hover) {
