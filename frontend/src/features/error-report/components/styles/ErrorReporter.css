@@ -332,6 +332,30 @@
   text-align: center;
 }
 
+.viewport-screenshot-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 8px 10px;
+  line-height: 1.25;
+}
+
+.viewport-screenshot-status-icon {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--danger) 14%, transparent);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.viewport-screenshot-status strong { font-weight: 650; }
+
 .description-input {
   width: 100%;
   padding: 11px 12px;

@@ -79,7 +79,10 @@
             </div>
           </figure>
 
-          <figure class="screenshot-preview-card screenshot-preview-card-viewport">
+          <figure
+            v-if="viewportScreenshotDataURL || viewportScreenshotCapturing"
+            class="screenshot-preview-card screenshot-preview-card-viewport"
+          >
             <figcaption>
               <strong>Скриншот страницы</strong>
               <span>Вся видимая область экрана</span>
@@ -91,14 +94,20 @@
                 :src="viewportScreenshotDataURL"
                 alt="Скриншот видимой области страницы"
               />
-              <div v-else-if="viewportScreenshotCapturing" class="screenshot-state screenshot-state-inside">
+              <div v-else class="screenshot-state screenshot-state-inside">
                 Создаём снимок страницы…
-              </div>
-              <div v-else class="screenshot-state screenshot-state-inside" :class="{ 'screenshot-state-error': viewportScreenshotError }">
-                {{ viewportScreenshotError || 'Снимок страницы недоступен.' }}
               </div>
             </div>
           </figure>
+          <div
+            v-else
+            class="viewport-screenshot-status screenshot-state screenshot-state-error"
+            role="status"
+            aria-live="polite"
+          >
+            <span class="viewport-screenshot-status-icon" aria-hidden="true">!</span>
+            <span><strong>Скриншот страницы</strong> — {{ viewportScreenshotError || 'снимок недоступен.' }}</span>
+          </div>
         </div>
       </div>
       <label class="description-label" for="error-report-description">Описание</label>
