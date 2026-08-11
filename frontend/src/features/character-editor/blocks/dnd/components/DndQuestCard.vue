@@ -10,6 +10,13 @@
       </span>
     </div>
     <div v-if="quest.desc" class="dqc-desc">{{ quest.desc }}</div>
+    <div v-if="quest.reward" class="dqc-reward">
+      <span class="dqc-reward-icon" aria-hidden="true">✦</span>
+      <div class="dqc-reward-body">
+        <span class="dqc-reward-label">Награда</span>
+        <span class="dqc-reward-text">{{ quest.reward }}</span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -77,6 +84,44 @@ const meta = computed(() => questStatusMeta(props.quest.status))
   font-size: 13px;
   line-height: 1.45;
   color: var(--text-2);
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.dqc-reward {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 2px;
+  padding: 8px 10px;
+  border: 1px solid color-mix(in srgb, var(--warning) 28%, var(--border));
+  border-radius: 9px;
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--warning) 10%, transparent),
+    color-mix(in srgb, var(--warning) 3%, transparent));
+}
+.dqc-reward-icon {
+  flex-shrink: 0;
+  color: var(--warning);
+  line-height: 1.3;
+}
+.dqc-reward-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+.dqc-reward-label {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--warning) 72%, var(--text-2));
+}
+.dqc-reward-text {
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--text-1);
   white-space: pre-line;
   overflow-wrap: anywhere;
 }

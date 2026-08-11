@@ -1,6 +1,13 @@
 <template>
   <div ref="rootEl" class="mt-toggle" :class="{ 'mt-toggle--block': block }">
-    <div class="mt-toggle-pill" :class="{ 'mt-toggle-pill--neutral': isNeutralActive }" :style="pillStyle" />
+    <div
+      class="mt-toggle-pill"
+      :class="{
+        'mt-toggle-pill--neutral': isNeutralActive,
+        'mt-toggle-pill--instant': !pill.animate,
+      }"
+      :style="pillStyle"
+    />
     <button
       v-for="(opt, i) in options"
       :key="opt.value"
@@ -33,18 +40,32 @@ const emit = defineEmits(['update:modelValue'])
 
 const rootEl = ref(null)
 const btnEls = ref([])
-const pill = ref({ left: 0, width: 0, ready: false })
+const pill = ref({ left: 0, width: 0, ready: false, animate: false })
 
 function setBtnRef(el, i) { btnEls.value[i] = el }
 
-function measure() {
+let restoreAnimationFrame = null
+
+function measure(animate = false) {
   const idx = props.options.findIndex(o => o.value === props.modelValue)
   const el = btnEls.value[idx]
   if (!el) {
-    pill.value = { left: 0, width: 0, ready: false }
+    pill.value = { left: 0, width: 0, ready: false, animate: false }
     return
   }
-  pill.value = { left: el.offsetLeft, width: el.offsetWidth, ready: true }
+  pill.value = { left: el.offsetLeft, width: el.offsetWidth, ready: true, animate }
+
+  // A morph editor continuously resizes while opening. ResizeObserver used to start a new
+  // 240 ms pill transition on every animation frame, so the highlight visibly chased the
+  // buttons. Geometry updates caused by layout must be instant; only an actual selection
+  // change should animate.
+  if (!animate && typeof requestAnimationFrame !== 'undefined') {
+    if (restoreAnimationFrame != null) cancelAnimationFrame(restoreAnimationFrame)
+    restoreAnimationFrame = requestAnimationFrame(() => {
+      restoreAnimationFrame = null
+      pill.value = { ...pill.value, animate: true }
+    })
+  }
 }
 
 let ro = null
@@ -52,14 +73,17 @@ onMounted(async () => {
   await nextTick()
   measure()
   if (typeof ResizeObserver !== 'undefined' && rootEl.value) {
-    ro = new ResizeObserver(measure)
+    ro = new ResizeObserver(() => measure(false))
     ro.observe(rootEl.value)
   }
 })
-onBeforeUnmount(() => { if (ro) ro.disconnect() })
+onBeforeUnmount(() => {
+  if (ro) ro.disconnect()
+  if (restoreAnimationFrame != null) cancelAnimationFrame(restoreAnimationFrame)
+})
 
-watch(() => props.modelValue, async () => { await nextTick(); measure() })
-watch(() => props.options.length, async () => { await nextTick(); measure() })
+watch(() => props.modelValue, async () => { await nextTick(); measure(true) })
+watch(() => props.options.length, async () => { await nextTick(); measure(false) })
 
 function select(v) {
   if (v !== props.modelValue) emit('update:modelValue', v)
@@ -97,6 +121,7 @@ const pillStyle = computed(() => ({
   pointer-events: none;
   box-shadow: 0 2px 8px color-mix(in srgb, var(--accent) 35%, transparent);
 }
+.mt-toggle-pill--instant { transition: none; }
 
 .mt-toggle-btn {
   position: relative;

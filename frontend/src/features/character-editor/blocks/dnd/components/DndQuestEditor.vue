@@ -9,9 +9,15 @@
       />
       <FormTextarea
         :value="quest.desc"
-        placeholder="Что нужно сделать, кто дал, награда…"
+        placeholder="Что нужно сделать, кто дал задание…"
         :rows="5"
         @update:value="v => $emit('update', { desc: v })"
+      />
+      <FormTextarea
+        :value="quest.reward"
+        placeholder="Награда: золото, предмет, услуга…"
+        :rows="2"
+        @update:value="v => $emit('update', { reward: v })"
       />
     </EditorSection>
 

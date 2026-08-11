@@ -23,10 +23,14 @@
 
     <div v-if="open" class="dsc-body">
       <div v-if="session.events.length" class="dsc-events">
-        <span class="dsc-rail"></span>
+        <span class="dsc-rail" aria-hidden="true">
+          <svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 5.5 6 1.5l4 4M6 2v8.5" />
+          </svg>
+        </span>
         <component
           :is="ownerMode ? 'button' : 'div'"
-          v-for="e in session.events"
+          v-for="e in displayedEvents"
           :key="e.id"
           :ref="el => setEventRef(e.id, el)"
           class="dsc-event"
@@ -52,6 +56,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import DndDiaryEventRow from '@/features/character-editor/blocks/dnd/components/DndDiaryEventRow.vue'
+import { diaryEventsNewestFirst } from '@/features/character-editor/blocks/dnd/lib/diaryEntry'
 
 const props = defineProps({
   session: { type: Object, required: true },
@@ -65,6 +70,7 @@ const open = ref(props.defaultOpen)
 const titleEl = ref(null)
 const addBtnEl = ref(null)
 const eventEls = {}
+const displayedEvents = computed(() => diaryEventsNewestFirst(props.session.events))
 
 function setEventRef(id, el) {
   if (el) eventEls[id] = el
@@ -156,15 +162,24 @@ const eventsCountLabel = computed(() => {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  padding-top: 10px;
 }
 .dsc-rail {
   position: absolute;
   left: 12px;
-  top: 10px;
+  top: 0;
   bottom: 10px;
   width: 2px;
-  border-radius: 1px;
   background: var(--border);
+  color: var(--text-muted);
+}
+.dsc-rail svg {
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0 2px 3px;
+  background: var(--surface);
 }
 
 .dsc-event {

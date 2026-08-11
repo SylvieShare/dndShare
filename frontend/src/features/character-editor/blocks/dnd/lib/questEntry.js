@@ -1,5 +1,5 @@
 // Pure helpers for the DND_QUESTS block value: a flat array of quests
-//   { id, title, desc, status }
+//   { id, title, desc, reward, status }
 // `status` is one of QUEST_STATUSES values; unknown statuses normalize to 'active'.
 
 export const QUEST_STATUSES = [
@@ -21,7 +21,7 @@ export function makeQuestId() {
 }
 
 export function defaultQuest() {
-  return { id: makeQuestId(), title: '', desc: '', status: 'active' }
+  return { id: makeQuestId(), title: '', desc: '', reward: '', status: 'active' }
 }
 
 export function normalizeQuest(q) {
@@ -30,6 +30,7 @@ export function normalizeQuest(q) {
     id: typeof src.id === 'string' && src.id ? src.id : makeQuestId(),
     title: typeof src.title === 'string' ? src.title : '',
     desc: typeof src.desc === 'string' ? src.desc : '',
+    reward: typeof src.reward === 'string' ? src.reward : '',
     status: STATUS_VALUES.includes(src.status) ? src.status : 'active',
   }
 }

@@ -17,9 +17,34 @@
         @update:value="v => $emit('update', { title: v })"
       />
       <InputDescription
-        v-if="event.type !== 'newday'"
+        v-if="event.type === 'event'"
         class="dee-desc"
         :block="descBlock"
+        :value="event.desc"
+        editable
+        @update:value="(id, html) => $emit('update', { desc: html })"
+      />
+    </EditorSection>
+
+    <EditorSection v-if="event.type === 'dialog'" title="Реплики">
+      <DndDialogueLinesEditor
+        :model-value="event.dialogue"
+        @update:model-value="dialogue => $emit('update', { dialogue })"
+      />
+    </EditorSection>
+
+    <EditorSection v-if="event.type === 'battle'" title="Участники боя">
+      <DndBattleCombatantsEditor
+        :model-value="event.combatants"
+        @update:model-value="combatants => $emit('update', { combatants })"
+      />
+    </EditorSection>
+
+    <EditorSection v-if="hasLegacyDescription" title="Сохранённое ранее описание">
+      <div class="dee-legacy-hint">Оно сохранено отдельно от новых структурированных данных.</div>
+      <InputDescription
+        class="dee-desc"
+        :block="legacyDescBlock"
         :value="event.desc"
         editable
         @update:value="(id, html) => $emit('update', { desc: html })"
@@ -44,6 +69,9 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
+import DndBattleCombatantsEditor from '@/features/character-editor/blocks/dnd/components/DndBattleCombatantsEditor.vue'
+import DndDialogueLinesEditor from '@/features/character-editor/blocks/dnd/components/DndDialogueLinesEditor.vue'
 import EditorPanel from '@/features/character-editor/components/EditorPanel'
 import EditorSection from '@/features/character-editor/components/EditorSection'
 import FormTextInput from '@/shared/ui/form/FormTextInput'
@@ -51,7 +79,7 @@ import InputDescription from '@/shared/ui/InputDescription'
 import MultiToggle from '@/shared/ui/MultiToggle'
 import { EVENT_TYPES } from '@/features/character-editor/blocks/dnd/lib/diaryEntry'
 
-defineProps({
+const props = defineProps({
   event: { type: Object, required: true },
   mode: { type: String, default: 'edit' },   // 'edit' → live event | 'create' → draft, commit on save
 })
@@ -59,9 +87,14 @@ defineEmits(['update', 'remove', 'close', 'save'])
 
 const typeOptions = EVENT_TYPES.map(t => ({ value: t.value, label: t.label }))
 const descBlock = { id: 'desc', content: { placeholder: 'Что произошло…' } }
+const legacyDescBlock = { id: 'legacy-desc', content: { placeholder: 'Старое описание' } }
+const hasLegacyDescription = computed(() =>
+  (props.event.type === 'dialog' || props.event.type === 'battle') && !!props.event.desc,
+)
 </script>
 
 <style scoped>
+.dee-legacy-hint { font-size: 11px; line-height: 1.4; color: var(--text-muted); }
 .dee-foot {
   display: flex;
   align-items: center;

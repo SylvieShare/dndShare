@@ -15,6 +15,29 @@
     </span>
     <div class="der-body">
       <div class="der-title" :class="{ 'der-title--empty': !event.title }">{{ event.title || meta.label }}</div>
+      <div v-if="event.type === 'dialog' && event.dialogue.length" class="der-dialogue">
+        <div
+          v-for="line in event.dialogue"
+          :key="line.id"
+          class="der-line"
+          :class="{ 'der-line--anonymous': !line.speaker }"
+        >
+          <span v-if="line.speaker" class="der-speaker">{{ line.speaker }}</span>
+          <span class="der-line-text">{{ line.text || '…' }}</span>
+        </div>
+      </div>
+      <div v-if="event.type === 'battle' && event.combatants.length" class="der-combatants">
+        <div v-for="combatant in event.combatants" :key="combatant.id" class="der-combatant">
+          <span class="der-combatant-count">×{{ combatant.count }}</span>
+          <span class="der-combatant-name">{{ combatantName(combatant) }}</span>
+          <span v-if="combatant.source === 'custom' && (combatant.ac != null || combatant.hp != null)" class="der-combatant-stats">
+            <template v-if="combatant.ac != null">КБ {{ combatant.ac }}</template>
+            <template v-if="combatant.ac != null && combatant.hp != null"> · </template>
+            <template v-if="combatant.hp != null">HP {{ combatant.hp }}</template>
+          </span>
+          <span v-if="combatant.source === 'custom' && combatant.desc" class="der-combatant-desc">{{ combatant.desc }}</span>
+        </div>
+      </div>
       <RichContent v-if="hasDesc" class="der-desc" :html="descHtml" />
     </div>
   </div>
@@ -30,6 +53,13 @@ const props = defineProps({
 })
 
 const meta = computed(() => eventTypeMeta(props.event.type))
+
+function combatantName(combatant) {
+  if (combatant.source === 'handbook') {
+    return combatant.itemName || (combatant.itemId != null ? `Существо #${combatant.itemId}` : 'Существо не выбрано')
+  }
+  return combatant.name || 'Своё существо'
+}
 
 function escapeHtml(s) {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -89,6 +119,49 @@ const hasDesc = computed(() => descHtml.value.replace(/<[^>]*>/g, '').replace(/&
   font-size: 12.5px;
   color: var(--text-2);
   min-width: 0;
+}
+
+.der-dialogue,
+.der-combatants {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 2px;
+  min-width: 0;
+}
+.der-line {
+  display: grid;
+  grid-template-columns: minmax(58px, auto) 1fr;
+  gap: 7px;
+  padding: 5px 8px;
+  border-left: 2px solid color-mix(in srgb, var(--ec) 35%, var(--border));
+  background: color-mix(in srgb, var(--ec) 4%, transparent);
+  border-radius: 0 6px 6px 0;
+  min-width: 0;
+}
+.der-speaker { font-size: 11px; font-weight: 700; color: var(--ec); overflow-wrap: anywhere; }
+.der-line-text { font-size: 12px; line-height: 1.4; color: var(--text-2); white-space: pre-line; overflow-wrap: anywhere; }
+.der-line--anonymous { grid-template-columns: 1fr; }
+.der-combatant {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 6px;
+  padding: 5px 8px;
+  border: 1px solid color-mix(in srgb, var(--danger) 18%, var(--border));
+  border-radius: 7px;
+  background: color-mix(in srgb, var(--danger) 4%, transparent);
+}
+.der-combatant-count { color: var(--danger); font-size: 11px; font-weight: 800; }
+.der-combatant-name { color: var(--text-1); font-size: 12px; font-weight: 600; overflow-wrap: anywhere; }
+.der-combatant-stats { color: var(--text-muted); font-size: 10px; white-space: nowrap; }
+.der-combatant-desc {
+  grid-column: 2 / -1;
+  color: var(--text-2);
+  font-size: 11px;
+  line-height: 1.35;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
 }
 
 .der-day {
