@@ -14,6 +14,7 @@
   <DiceRollPopup v-if="!isPrintRoute"/>
   <ErrorReporter v-if="!isPrintRoute"/>
   <ErrorReportInbox v-if="!isPrintRoute"/>
+  <ConsoleErrorInbox v-if="!isPrintRoute"/>
 </template>
 
 <script setup>
@@ -23,6 +24,7 @@ import AppHeader from "@/shared/ui/AppHeader";
 import DiceRollPopup from "@/shared/ui/DiceRollPopup.vue";
 import ErrorReporter from '@/features/error-report/components/ErrorReporter.vue'
 import ErrorReportInbox from '@/features/error-report/components/ErrorReportInbox.vue'
+import ConsoleErrorInbox from '@/features/console-errors/components/ConsoleErrorInbox.vue'
 import { pageTransitionName } from '@/app/router'
 import { useAccountStore } from '@/stores/account'
 import { useTextStore } from '@/stores/text'
