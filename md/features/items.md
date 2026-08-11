@@ -7,7 +7,7 @@ rules helpers. Handbook navigation/data ownership is described in
 ## Editing
 
 `ItemEditModal.vue` renders `item_type.fields`. Supported field renderers
-include scalar text/number/bool, description, suggest/suggest arrays,
+include scalar text/number/bool, description, suggest/suggest arrays, system dice,
 `int_by_suggest`, object/object arrays and nested blocks. It uses shared form,
 modal, select and rich-description components.
 
@@ -30,11 +30,14 @@ Canonical examples:
   `prerequisite_groups`, `choices`;
 - potion rarity is a suggest id and cost is `int_by_suggest`.
 
+`dice_id` is a system-die id equal to its number of sides (4, 6, 8, 10, 12, 20
+or 100). Schema fields use `type:"dice"`; there is no dice suggest catalogue.
+
 Feature code does not try alternative keys such as weapon `add_attacks`, spell
 `dice_suggest_id`, feat `desc` or spell `classIds`. Startup migrations fix item
 rows before they can be read.
 
-Character-added weapon attack rows are a separate documented editor model. The
+Character-added weapon attack rows use `{count,dice_id,type_suggest_id}`. The
 weapon calculation composable adapts those rows explicitly when combining them
 with handbook attack rows; it is not a historical-format fallback.
 

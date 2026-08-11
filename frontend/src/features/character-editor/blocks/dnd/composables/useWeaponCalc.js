@@ -39,7 +39,7 @@ export function useWeaponCalc({
     return {
       count,
       diceLabel,
-      iconUrl: dice?.svg || '',
+      diceSides: dice?.sides || null,
       label: diceLabel ? `${count}${diceLabel}` : String(count),
       type,
       typeColor,
@@ -49,7 +49,7 @@ export function useWeaponCalc({
   function customAttackDisplay(attack) {
     return attackDisplay({
       count: attack.count,
-      dice_id: attack.dice_suggest_id,
+      dice_id: attack.dice_id,
       type: attack.type_suggest_id,
     })
   }
@@ -65,7 +65,7 @@ export function useWeaponCalc({
     let firstColor = ''
     const customAttacks = normalizeAddAttacks(entry.add_attacks).map(attack => ({
       count: attack.count,
-      dice_id: attack.dice_suggest_id,
+      dice_id: attack.dice_id,
       type: attack.type_suggest_id,
     }))
     const allAttacks = [...attacks, ...customAttacks]
@@ -96,11 +96,11 @@ export function useWeaponCalc({
     const parts = itemBaseAttacks(entry).map(attackDisplay)
     const bonus = damageBonus(entry)
     if (parts.length && bonus) parts[0] = { ...parts[0], modifier: bonus }
-    else if (!parts.length && bonus) parts.push({ label: formatBonus(bonus), type: '', iconUrl: '' })
+    else if (!parts.length && bonus) parts.push({ label: formatBonus(bonus), type: '', diceSides: null })
     return [
       ...parts,
       ...normalizeAddAttacks(entry.add_attacks).map(customAttackDisplay),
-    ].filter(part => part.label || part.iconUrl)
+    ].filter(part => part.label || part.diceSides)
   }
 
   // Raw dice parts (no flat modifier merged in) for the shared AttackDamage component — the flat
@@ -109,7 +109,7 @@ export function useWeaponCalc({
     return [
       ...itemBaseAttacks(entry).map(attackDisplay),
       ...normalizeAddAttacks(entry.add_attacks).map(customAttackDisplay),
-    ].filter(part => part.label || part.iconUrl)
+    ].filter(part => part.label || part.diceSides)
   }
 
   function twoHandedParts(entry) {
@@ -118,7 +118,7 @@ export function useWeaponCalc({
     return [
       ...two.map(attackDisplay),
       ...normalizeAddAttacks(entry.add_attacks).map(customAttackDisplay),
-    ].filter(part => part.label || part.iconUrl)
+    ].filter(part => part.label || part.diceSides)
   }
 
   return {

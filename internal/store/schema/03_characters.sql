@@ -347,6 +347,54 @@ WHERE c.id = normalized.id AND c.data IS DISTINCT FROM normalized.data;
 
 DROP FUNCTION dndshare.canonicalize_dnd_character(jsonb);
 
+-- Character-added weapon damage used a suggest-specific key even though the
+-- value itself is the stable die id. Rename it recursively and end support for
+-- the legacy payload shape.
+CREATE OR REPLACE FUNCTION dndshare.systemize_character_dice(document jsonb)
+RETURNS jsonb
+LANGUAGE plpgsql
+IMMUTABLE
+AS $$
+DECLARE
+    result jsonb;
+BEGIN
+    IF document IS NULL THEN RETURN NULL; END IF;
+    CASE jsonb_typeof(document)
+        WHEN 'array' THEN
+            SELECT COALESCE(jsonb_agg(dndshare.systemize_character_dice(value) ORDER BY ord), '[]'::jsonb)
+            INTO result
+            FROM jsonb_array_elements(document) WITH ORDINALITY rows(value, ord);
+        WHEN 'object' THEN
+            SELECT COALESCE(jsonb_object_agg(key, dndshare.systemize_character_dice(value)), '{}'::jsonb)
+            INTO result
+            FROM jsonb_each(document);
+            IF result ? 'dice_suggest_id' THEN
+                IF NOT result ? 'dice_id' THEN
+                    result := result || jsonb_build_object('dice_id', result -> 'dice_suggest_id');
+                END IF;
+                result := result - 'dice_suggest_id';
+            END IF;
+        ELSE result := document;
+    END CASE;
+    RETURN result;
+END;
+$$;
+
+WITH normalized AS (
+    SELECT c.id, dndshare.systemize_character_dice(c.data) AS data
+    FROM dndshare."char" c
+    JOIN dndshare.char_template t ON t.id = c.template_id
+    WHERE upper(t.name) IN ('DND5', 'DND5E')
+)
+UPDATE dndshare."char" c
+SET data = normalized.data,
+    version = c.version + 1,
+    changed_at = now()
+FROM normalized
+WHERE c.id = normalized.id AND c.data IS DISTINCT FROM normalized.data;
+
+DROP FUNCTION dndshare.systemize_character_dice(jsonb);
+
 -- Data correction: item 1421 was an old incomplete copy of the rogue class
 -- feature Cunning Action, accidentally stored as a spell. Item 4056 is the
 -- canonical PHB class feature. Redirect character JSON before deleting the

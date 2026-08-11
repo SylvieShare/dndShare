@@ -45,6 +45,11 @@
             <span class="field-text">{{ getItemRefLabel(item.data[field.key]) }}</span>
           </template>
 
+          <template v-else-if="field.type === 'dice'">
+            <SystemDie v-if="dieLabel(item.data[field.key])" :sides="item.data[field.key]" :size="42" />
+            <span v-else class="field-empty">—</span>
+          </template>
+
           <template v-else-if="field.type === 'suggest'">
             <span class="field-text">{{ getSuggestLabel(field, item.data[field.key]) || '—' }}</span>
           </template>
@@ -106,6 +111,8 @@ import PotionDetailContent from '@/features/items/detail-components/PotionDetail
 import SpellDetailContent from '@/features/items/detail-components/SpellDetailContent'
 import WeaponDetailContent from '@/features/items/detail-components/WeaponDetailContent'
 import RichContent from '@/shared/ui/RichContent'
+import SystemDie from '@/shared/ui/SystemDie.vue'
+import { dieLabel } from '@/shared/lib/systemDice'
 
 const CUSTOM_RENDERERS = {
   1: WeaponDetailContent,
@@ -177,6 +184,7 @@ function formatSubValue(sub, value) {
   if (value == null || value === '') return '—'
   if (sub.type === 'bool' || sub.type === 'boolean') return value ? '✓' : '✗'
   if (sub.type === 'suggest') return getSuggestLabel(sub, value) || '—'
+  if (sub.type === 'dice') return dieLabel(value) || '—'
   if (sub.type === 'item') return getItemRefLabel(value)
   return String(value)
 }

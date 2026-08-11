@@ -463,6 +463,48 @@ WHERE lower(name) = lower('Источники');
 
 ALTER TABLE dndshare.content_source DROP COLUMN IF EXISTS legacy_suggest_id;
 
+-- Dice are a finite rules-level catalogue, not user-editable handbook data.
+-- Keep their historical numeric ids in item JSON (id == number of sides), but
+-- rewrite every nested schema field to the system `dice` type and remove the
+-- obsolete suggest catalogue.
+CREATE OR REPLACE FUNCTION dndshare.systemize_dice_schema(document jsonb)
+RETURNS jsonb
+LANGUAGE plpgsql
+IMMUTABLE
+AS $$
+DECLARE
+    result jsonb;
+BEGIN
+    IF document IS NULL THEN RETURN NULL; END IF;
+    CASE jsonb_typeof(document)
+        WHEN 'array' THEN
+            SELECT COALESCE(jsonb_agg(dndshare.systemize_dice_schema(value) ORDER BY ord), '[]'::jsonb)
+            INTO result
+            FROM jsonb_array_elements(document) WITH ORDINALITY rows(value, ord);
+        WHEN 'object' THEN
+            SELECT COALESCE(jsonb_object_agg(key, dndshare.systemize_dice_schema(value)), '{}'::jsonb)
+            INTO result
+            FROM jsonb_each(document);
+            IF document ->> 'type' IN ('suggest', 'suggest_array')
+               AND COALESCE(document ->> 'suggest_id', document ->> 'suggest_type_id') = '11' THEN
+                result := (result - 'suggest_id' - 'suggest_type_id' - 'suggestTypeId')
+                    || jsonb_build_object('type', CASE WHEN document ->> 'type' = 'suggest_array' THEN 'dice_array' ELSE 'dice' END);
+            END IF;
+        ELSE result := document;
+    END CASE;
+    RETURN result;
+END;
+$$;
+
+UPDATE dndshare.item_type
+SET fields = dndshare.systemize_dice_schema(fields)
+WHERE fields IS DISTINCT FROM dndshare.systemize_dice_schema(fields);
+
+DROP FUNCTION dndshare.systemize_dice_schema(jsonb);
+
+DELETE FROM dndshare.suggest WHERE type_id = 11;
+DELETE FROM dndshare.suggest_type WHERE id = 11;
+
 -- Canonical handbook JSON. These transforms deliberately end support for the
 -- former fields: startup fixes existing rows once, runtime code reads only the
 -- current arrays/objects afterwards.

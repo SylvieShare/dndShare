@@ -3,9 +3,9 @@
     <template #leading><ObjectTypeIcon :type="type" /></template>
     <template v-if="damage" #trailing>
       <span class="wli-damage">
-        <template v-if="damage.iconUrl">
+        <template v-if="damage.diceSides">
           <span v-if="damage.count !== 1" class="wli-count">{{ damage.count }}</span>
-          <span class="wli-dice" v-html="damage.iconUrl" aria-hidden="true"></span>
+          <SystemDie :sides="damage.diceSides" :size="24" />
         </template>
         <template v-else>{{ damage.label }}</template>
       </span>
@@ -18,6 +18,8 @@ import { computed } from 'vue'
 import ObjectListItem from '@/features/items/list-components/ObjectListItem'
 import ObjectTypeIcon from '@/features/items/list-components/ObjectTypeIcon'
 import { useSchemaSuggests } from '@/features/handbook/objects/lib/useSchemaSuggests'
+import SystemDie from '@/shared/ui/SystemDie.vue'
+import { diceById } from '@/shared/lib/systemDice'
 
 const props = defineProps({
   item: { type: Object, required: true },
@@ -26,7 +28,6 @@ const props = defineProps({
 
 const { suggestItems } = useSchemaSuggests(() => props.type)
 
-const diceDetailsMap = computed(() => Object.fromEntries(suggestItems('dice_id').map(s => [s.id, s])))
 const damageTypeMap = computed(() => Object.fromEntries(suggestItems('type').map(s => [s.id, s.value])))
 const tagMap = computed(() => Object.fromEntries(suggestItems('tags').map(s => [s.id, s.value])))
 
@@ -52,10 +53,10 @@ const subtitle = computed(() => {
 function attackDamage(attack) {
   if (!attack) return null
   const count = Number(attack.count) || 1
-  const dice = diceDetailsMap.value[attack.dice_id] || null
+  const dice = diceById(attack.dice_id)
   const diceLabel = dice?.value || ''
-  if (!diceLabel) return { count, diceLabel: '', iconUrl: '', label: String(count) }
-  return { count, diceLabel, iconUrl: dice?.svg || '', label: `${count}${diceLabel}` }
+  if (!diceLabel) return { count, diceLabel: '', diceSides: null, label: String(count) }
+  return { count, diceLabel, diceSides: dice.sides, label: `${count}${diceLabel}` }
 }
 </script>
 
@@ -75,13 +76,4 @@ function attackDamage(attack) {
 
 .wli-count { min-width: 8px; text-align: right; }
 
-.wli-dice {
-  width: 22px;
-  height: 22px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-.wli-dice :deep(svg) { width: 22px; height: 22px; }
 </style>

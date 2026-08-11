@@ -106,6 +106,7 @@ import ItemViewModal from '@/shared/ui/ItemViewModal'
 import { useSortable } from '@/shared/composables/useSortable'
 import { useDiceStore } from '@/stores/dice'
 import { useSuggestStore } from '@/stores/suggest'
+import { SYSTEM_DICE } from '@/shared/lib/systemDice'
 
 const props = defineProps(['block', 'value', 'values'])
 const emit  = defineEmits(['update:value'])
@@ -132,12 +133,10 @@ const statSuggests = computed(() => {
   return id != null ? useSuggestStore().items(id) || [] : []
 })
 const statOptions  = computed(() => statSuggests.value.map(item => ({ value: item.id, label: item.value })))
-const diceSuggestTypeId = computed(() => props.block.content?.dice_suggest_type_id || 11)
 const damageTypeSuggestTypeId = computed(() => props.block.content?.type_attack_suggest_type_id || 12)
-const diceSuggests = computed(() => useSuggestStore().items(diceSuggestTypeId.value) || [])
 const damageTypeSuggests = computed(() => useSuggestStore().items(damageTypeSuggestTypeId.value) || [])
-const diceMap = computed(() => Object.fromEntries(diceSuggests.value.map(s => [s.id, s.value])))
-const diceDetailsMap = computed(() => Object.fromEntries(diceSuggests.value.map(s => [s.id, s])))
+const diceMap = computed(() => Object.fromEntries(SYSTEM_DICE.map(die => [die.id, die.value])))
+const diceDetailsMap = computed(() => Object.fromEntries(SYSTEM_DICE.map(die => [die.id, die])))
 const damageTypeMap = computed(() => Object.fromEntries(damageTypeSuggests.value.map(s => [s.id, s.value])))
 const damageTypeColorMap = computed(() => Object.fromEntries(damageTypeSuggests.value.map(s => [s.id, s.color])))
 const profBonus    = computed(() => {
@@ -405,7 +404,7 @@ onMounted(async () => {
   preparation.value = !!raw.preparation
   loadSlots(raw.slots || [])
   const { school_suggest_id, stat_suggest_type_id } = props.block.content || {}
-  const ensures = [school_suggest_id, stat_suggest_type_id, diceSuggestTypeId.value, damageTypeSuggestTypeId.value]
+  const ensures = [school_suggest_id, stat_suggest_type_id, damageTypeSuggestTypeId.value]
     .filter(Boolean)
     .map(id => useSuggestStore().ensure(id))
   await Promise.all([loadDetails(), ...ensures])

@@ -16,8 +16,7 @@
           <button class="hpe-dice-btn" type="button" :disabled="pool.used >= pool.total" @click="adjustDice(pool, 1)">−</button>
           <div class="hpe-dice-val">
             <span>{{ pool.total - pool.used }}/{{ pool.total }}</span>
-            <span v-if="diceSvg(pool.die)" class="hpe-dice-svg" v-html="diceSvg(pool.die)" />
-            <span v-else>{{ pool.die }}</span>
+            <SystemDie :sides="pool.die" :size="28" />
           </div>
           <button class="hpe-dice-btn" type="button" :disabled="pool.used <= 0" @click="adjustDice(pool, -1)">+</button>
         </div>
@@ -32,16 +31,15 @@
       <span class="hpe-label">Тип кубика</span>
       <div class="hpe-pills">
         <button
-          v-for="opt in diceOptions"
-          :key="opt.value"
+          v-for="die in HIT_DICE"
+          :key="die.id"
           class="hpe-pill"
-          :class="{ active: hitDice[0].die === opt.value, 'hpe-pill-svg': opt.svg }"
-          :title="opt.value"
+          :class="{ active: hitDice[0].die === die.value }"
+          :title="die.value"
           type="button"
-          @click="setDie(opt.value)"
+          @click="setDie(die.value)"
         >
-          <SvgIcon v-if="opt.svg" class="hpe-pill-img" :svg="opt.svg" />
-          <span v-else>{{ opt.value }}</span>
+          <SystemDie :sides="die.sides" :size="30" />
         </button>
       </div>
     </div>
@@ -54,7 +52,8 @@ import CalcPad from '@/features/character-editor/components/CalcPad'
 import EditorPanel from '@/features/character-editor/components/EditorPanel'
 import FormField from '@/shared/ui/form/FormField'
 import FormNumberInput from '@/shared/ui/form/FormNumberInput'
-import SvgIcon from '@/shared/ui/SvgIcon'
+import SystemDie from '@/shared/ui/SystemDie.vue'
+import { HIT_DICE } from '@/shared/lib/systemDice'
 import {
   changeHitDieType,
   normalizeHitDice,
@@ -63,13 +62,11 @@ import {
 
 const props = defineProps({
   hp: { type: Object, required: true },
-  diceOptions: { type: Array, default: () => [] },
 })
 const emit = defineEmits(['change'])
 const calcAmount = ref('')
 
 const hitDice = computed(() => normalizeHitDice(props.hp))
-function diceSvg(die) { return props.diceOptions.find(o => o.value === die)?.svg || null }
 
 function evalExpr(expr) {
   const clean = String(expr).replace(/−/g, '-').replace(/[^0-9+\-*/\s.]/g, '')
@@ -137,8 +134,6 @@ function set(field, value) { emit('change', { ...props.hp, [field]: value }) }
 .hpe-dice-row { display: flex; justify-content: flex-end; }
 .hpe-dice-controls { display: flex; align-items: center; gap: 8px; }
 .hpe-dice-val { display: flex; align-items: center; gap: 5px; color: var(--text-2); font-size: 14px; font-weight: 700; min-width: 60px; justify-content: center; }
-.hpe-dice-svg { width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; opacity: 0.8; flex-shrink: 0; }
-.hpe-dice-svg :deep(svg) { width: 22px; height: 22px; }
 .hpe-dice-btn {
   background: color-mix(in srgb, var(--text-on-accent) 5%, transparent);
   border: 1px solid color-mix(in srgb, var(--text-on-accent) 10%, transparent);
@@ -177,10 +172,6 @@ function set(field, value) { emit('change', { ...props.hp, [field]: value }) }
   align-items: center;
   justify-content: center;
 }
-.hpe-pill-svg { padding: 4px; width: 36px; height: 36px; }
-.hpe-pill-img { width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; opacity: 0.55; transition: opacity 0.12s; flex-shrink: 0; }
 .hpe-pill:hover { background: color-mix(in srgb, var(--text-on-accent) 9%, transparent); color: var(--text-2); }
-.hpe-pill:hover .hpe-pill-img { opacity: 0.8; }
 .hpe-pill.active { background: color-mix(in srgb, var(--accent) 25%, transparent); border-color: var(--accent); color: var(--accent-soft); }
-.hpe-pill.active .hpe-pill-img { opacity: 1; }
 </style>

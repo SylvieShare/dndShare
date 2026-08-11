@@ -178,6 +178,7 @@ import { SAVE_ABBR, STAT_FULL, STAT_KEYS, STAT_SHORT, SUGGEST16_TO_STAT } from '
 import { normalizeValue } from '@/features/character-editor/blocks/dnd/lib/itemSection'
 import { normalizeCounters } from '@/features/character-editor/blocks/dnd/lib/counterEntry'
 import { formatHitDice, normalizeHitDice } from '@/features/character-editor/blocks/dnd/lib/hitDice'
+import { dieLabel } from '@/shared/lib/systemDice'
 import { useSuggestStore } from '@/stores/suggest'
 
 const PrintField = defineComponent({
@@ -244,7 +245,7 @@ const skills = computed(() => Object.entries(SKILL_STAT).map(([id, stat]) => {
 const passivePerception = computed(() => 10 + (skills.value.find(skill => skill.id === '10')?.bonus || 0))
 
 function itemById(id) { return catalog.value[String(id)] || catalog.value[id] || null }
-function diceLabel(id) { return suggest.items(11).find(item => String(item.id) === String(id))?.value || '' }
+function diceLabel(id) { return dieLabel(id) }
 function damageType(id) { return suggest.items(12).find(item => String(item.id) === String(id))?.value || '' }
 function weaponProperties(item) {
   return (Array.isArray(item?.data?.tags) ? item.data.tags : []).map(tag => {
@@ -254,7 +255,7 @@ function weaponProperties(item) {
 }
 function attackParts(entry, item) {
   const baseParts = (item?.data?.attacks || []).map(part => ({ ...part, diceKey: part.dice_id, typeKey: part.type }))
-  const extraParts = (entry.add_attacks || []).map(part => ({ ...part, diceKey: part.dice_suggest_id, typeKey: part.type_suggest_id }))
+  const extraParts = (entry.add_attacks || []).map(part => ({ ...part, diceKey: part.dice_id, typeKey: part.type_suggest_id }))
   const result = [...baseParts, ...extraParts].map(part => [diceLabel(part.diceKey) ? `${Number(part.count) || 1}${diceLabel(part.diceKey)}` : '', damageType(part.typeKey)].filter(Boolean).join(' ')).filter(Boolean)
   const statKey = SUGGEST16_TO_STAT[Number(entry.stat_suggest_id)]; const flat = (statKey ? abilityModifier(abilityScore(statKey)) : 0) + (Number(entry.magic_up) || 0)
   if (flat && result.length) result[0] += ` ${signed(flat)}`
@@ -397,7 +398,7 @@ async function load() {
   try {
     const res = await fetchGet('/char/' + route.params.uuid); if (!res?.data || res?.type) throw new Error(res?.desc || 'Персонаж не найден или недоступен.')
     response.value = res; const itemIds = collectItemIds(res.data?.values || {})
-    const tasks = [7, 11, 12, 14, 15, 17].map(id => suggest.ensure(id).catch(() => null))
+    const tasks = [7, 12, 14, 15, 17].map(id => suggest.ensure(id).catch(() => null))
     if (itemIds.length) tasks.push(itemsApi.byIds(itemIds).then(result => { catalog.value = Object.fromEntries((result?.items || []).map(item => [String(item.id), item])) }).catch(() => null))
     await Promise.all(tasks); document.title = `${characterName.value} — лист для печати`
   } catch (e) { error.value = e?.message || 'Произошла ошибка при загрузке.' } finally { loading.value = false }

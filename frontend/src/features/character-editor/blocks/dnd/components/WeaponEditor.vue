@@ -41,12 +41,12 @@
         />
         <ValueSelect
           class="wed-dice"
-          :model-value="attack.dice_suggest_id"
+          :model-value="attack.dice_id"
           :options="ctx.diceOptions"
           placeholder="Куб"
           searchable
           search-placeholder="Куб..."
-          @update:model-value="ctx.setAttackField(index, attackIndex, 'dice_suggest_id', $event)"
+          @update:model-value="ctx.setAttackField(index, attackIndex, 'dice_id', $event)"
         />
         <ValueSelect
           class="wed-type"

@@ -12,7 +12,8 @@
  * Suggest-typed item fields store suggest **ids** (see HandbookItemDetail), while
  * the character keeps proficiencies as value **strings** — so `applyGrants`
  * needs an injected `suggestValue(typeId, id) -> label` lookup (decoupled from
- * Pinia, so this module stays pure and testable).
+ * Pinia, so this module stays pure and testable). Dice are system values whose
+ * stable ids equal their number of sides and do not use that lookup.
  */
 
 import { SUGGEST16_TO_STAT as STAT_BY_SUGGEST16 } from '@/shared/lib/dndStats'
@@ -24,7 +25,6 @@ const PROF_BUCKETS = {
   tool: { key: 'Инструменты', typeId: 5 },
 }
 const LANG_TYPE_ID = 6
-const DICE_TYPE_ID = 11
 
 function clone(v) {
   return v == null ? v : JSON.parse(JSON.stringify(v))
@@ -215,7 +215,7 @@ export function applyGrants(values, grants, opts = {}) {
   if (grants.speed != null) out.speed = { base: grants.speed, bonuses: [] }
 
   if (grants.hitDieId != null) {
-    const face = dieFace(suggestValue?.(DICE_TYPE_ID, grants.hitDieId)) || dieFace(grants.hitDieId)
+    const face = dieFace(grants.hitDieId)
     if (face) {
       const die = `d${face}`
       out.hp = {

@@ -92,6 +92,7 @@ import ItemListItem from '@/features/items/list-components/ItemListItem'
 import PotionListItem from '@/features/items/list-components/PotionListItem'
 import SpellListItem from '@/features/items/list-components/SpellListItem'
 import WeaponListItem from '@/features/items/list-components/WeaponListItem'
+import { dieLabel } from '@/shared/lib/systemDice'
 
 const props = defineProps({
   type: { type: Object, default: null },
@@ -129,6 +130,7 @@ const groupedItems = computed(() => {
   if (!props.groupBy) return []
   const field = findFieldByPath(props.type?.fields || [], props.groupBy)
   const isSuggest = field && (field.type === 'suggest' || field.type === 'suggest_array')
+  const isDice = field?.type === 'dice'
   const suggestId = isSuggest ? getSuggestId(field) : null
   const suggests = suggestId ? (suggestStore.items(suggestId) || []) : []
 
@@ -137,7 +139,9 @@ const groupedItems = computed(() => {
     let rawVal = getByPath(item.data, props.groupBy)
     if (Array.isArray(rawVal)) rawVal = rawVal[0]
     let label
-    if (isSuggest && rawVal != null) {
+    if (isDice && rawVal != null) {
+      label = dieLabel(rawVal) || String(rawVal)
+    } else if (isSuggest && rawVal != null) {
       label = suggests.find(s => s.id === rawVal)?.value ?? String(rawVal)
     } else {
       label = rawVal != null && rawVal !== '' ? String(rawVal) : '—'

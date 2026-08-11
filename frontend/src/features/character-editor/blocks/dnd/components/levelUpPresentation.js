@@ -19,9 +19,9 @@ export function multiclassPrerequisiteLabel(item) {
     .join(' и ')
 }
 
-export function hitDieLabel(item, diceOptions) {
+export function hitDieLabel(item, labelForDie) {
   const id = item?.data?.hit_die
-  const label = diceOptions.find((option) => String(option.id) === String(id))?.value
+  const label = labelForDie(id)
   const face = dieFaceOf(label)
   return face ? `d${face}` : ''
 }

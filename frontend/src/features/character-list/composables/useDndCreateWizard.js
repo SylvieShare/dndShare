@@ -15,6 +15,7 @@ import {
 } from '@/features/character-editor/settings/dnd/creation/startingEquipment'
 import { useSuggestStore } from '@/stores/suggest'
 import { contentScopeQuery, normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'
+import { dieSides } from '@/shared/lib/systemDice'
 import { buildDndCharacterPayload } from './dndCreateWizardPayload'
 import {
   createDndWizardState,
@@ -45,7 +46,7 @@ const NAME_POOL = ['Талион', 'Мираэль', 'Гром', 'Лиа', 'Ка
 /** Wizard state + data loading + payload assembly for D&D character creation. */
 export function useDndCreateWizard() {
   const suggestStore = useSuggestStore()
-  ;[3, 4, 5, 6, 7, 11, 15, 16].forEach((t) => suggestStore.ensure(t))
+  ;[3, 4, 5, 6, 7, 15, 16].forEach((t) => suggestStore.ensure(t))
 
   const races = ref([])
   const classes = ref([])
@@ -437,10 +438,7 @@ export function useDndCreateWizard() {
     const base = Number(state.scores[s] ?? 0)
     return [s, abilityModifier((base > 0 ? base : 10) + racialBonus(s))]
   })))
-  const hitDieFace = computed(() => {
-    const m = String(suggestValue(11, grants.value.hitDieId)).match(/(\d+)/)
-    return m ? Number(m[1]) : null
-  })
+  const hitDieFace = computed(() => dieSides(grants.value.hitDieId))
   const maxHp = computed(() => (hitDieFace.value ? hitDieFace.value + mods.value.CON : null))
   const unarmoredAc = computed(() => 10 + mods.value.DEX)
   const initiativeMod = computed(() => mods.value.DEX)

@@ -273,7 +273,6 @@
     <DndHpCalcModal
       v-if="enc.hpCalcNpc"
       :hp="enc.npcHpObj(enc.hpCalcNpc)"
-      :dice-options="[]"
       is-npc
       @close="enc.closeHpCalc"
       @change="enc.onNpcHpChange"
@@ -282,7 +281,6 @@
     <DndHpCalcModal
       v-if="enc.hpCalcPlayer"
       :hp="enc.playerHpObj(enc.hpCalcPlayer)"
-      :dice-options="[]"
       @close="enc.closeHpCalcPlayer"
       @change="enc.onPlayerHpChange"
     />

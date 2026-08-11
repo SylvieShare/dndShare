@@ -121,7 +121,7 @@
       <ul class="wz-grants-list">
         <li v-if="grants.speed != null">Скорость: {{ grants.speed }} фт.</li>
         <li v-if="grants.size">Размер: {{ grants.size }}</li>
-        <li v-if="grants.hitDieId">Кость хитов: {{ suggestValue(11, grants.hitDieId) || '—' }}</li>
+        <li v-if="grants.hitDieId">Кость хитов: {{ dieLabel(grants.hitDieId) || '—' }}</li>
         <li v-if="grants.saves.length">Спасброски: {{ grants.saves.join(', ') }}</li>
         <li v-if="grants.asi.length">Характеристики: {{ grants.asi.map(a => `${a.stat} +${a.bonus}`).join(', ') }}</li>
         <li v-if="profList.length">Владения: {{ profList.join(', ') }}</li>
@@ -145,6 +145,7 @@ import FormField from '@/shared/ui/form/FormField'
 import FormTextInput from '@/shared/ui/form/FormTextInput'
 import { featuresForBinding } from '@/features/character-editor/settings/dnd/creation/progression'
 import { useDndCreateWizard } from '@/features/character-list/composables/useDndCreateWizard'
+import { dieLabel } from '@/shared/lib/systemDice'
 
 const props = defineProps({
   templateId: { type: [Number, String], required: true },

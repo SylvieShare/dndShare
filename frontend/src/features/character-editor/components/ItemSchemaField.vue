@@ -100,6 +100,16 @@
     </div>
 
     <select
+      v-else-if="field.type === 'dice'"
+      class="iem-select"
+      :value="editor.formData[field.key] ?? ''"
+      @change="editor.formData[field.key] = editor.numberOrNull($event.target.value)"
+    >
+      <option value="">—</option>
+      <option v-for="die in SYSTEM_DICE" :key="die.id" :value="die.id">{{ die.value }}</option>
+    </select>
+
+    <select
       v-else-if="field.type === 'suggest'"
       class="iem-select"
       :value="editor.formData[field.key] ?? ''"
@@ -145,6 +155,7 @@ import ItemBlocksField from './ItemBlocksField.vue'
 import ItemObjectArrayField from './ItemObjectArrayField.vue'
 import ItemObjectField from './ItemObjectField.vue'
 import { itemFieldEditorKey } from './useItemFieldEditor'
+import { SYSTEM_DICE } from '@/shared/lib/systemDice'
 
 defineProps({ field: { type: Object, required: true } })
 const editor = inject(itemFieldEditorKey)

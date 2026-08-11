@@ -5,6 +5,7 @@
 
 import { STAT_FULL, STAT_SHORT, SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
 import { formatBonus } from '@/shared/lib/dnd'
+import { dieLabel } from '@/shared/lib/systemDice'
 
 export { STAT_FULL, STAT_SHORT, SUGGEST16_TO_STAT }
 export { formatBonus as formatMod }
@@ -29,11 +30,10 @@ export function asiSummary(item) {
 
 /** "d6 · ИНТ" — hit die face + primary ability, for a class item. */
 export function classSummary(item, suggestValue) {
-  const dieLabel = suggestValue?.(11, item?.data?.hit_die) || ''
-  const die = String(dieLabel).match(/d?\d+/)?.[0] || ''
+  const die = dieLabel(item?.data?.hit_die)
   const prim = (item?.data?.primary_abilities || [])
     .map((id) => STAT_SHORT[SUGGEST16_TO_STAT[Number(id)]])
     .filter(Boolean)
     .join('/')
-  return [die.startsWith('d') ? die : (die ? 'd' + die : ''), prim].filter(Boolean).join(' · ')
+  return [die, prim].filter(Boolean).join(' · ')
 }

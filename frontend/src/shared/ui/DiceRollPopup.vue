@@ -23,15 +23,15 @@
               class="dice-pop-rolls"
               :style="p.color ? { color: p.color } : null"
             >
-              <span class="dice-pop-rolls-br">[</span>
               <template v-for="(r, ri) in p.rolls" :key="ri">
                 <span v-if="ri > 0" class="dice-pop-rolls-plus">+</span>
                 <span
-                  class="dice-pop-roll"
+                  class="dice-pop-roll-wrap"
                   :class="{ 'dice-pop-roll--drop': p.dropped && p.dropped.includes(ri) }"
-                >{{ r }}</span>
+                >
+                  <SystemDie :sides="p.sides" :value="r" :size="38" :color="p.color" />
+                </span>
               </template>
-              <span class="dice-pop-rolls-br">]</span>
             </span>
             <span
               v-else
@@ -78,6 +78,7 @@
 
 <script setup>
 import { useDiceStore } from '@/stores/dice'
+import SystemDie from '@/shared/ui/SystemDie.vue'
 
 const store = useDiceStore()
 
@@ -192,14 +193,23 @@ function rawExpression(entry) {
   word-break: break-word;
   overflow-wrap: anywhere;
 }
-.dice-pop-rolls-br   { color: color-mix(in srgb, var(--text-1) 55%, transparent); }
 .dice-pop-rolls-plus { color: color-mix(in srgb, var(--text-1) 55%, transparent); margin: 0 2px; }
-.dice-pop-roll       { white-space: nowrap; }
+.dice-pop-roll-wrap  { display: inline-flex; white-space: nowrap; }
 .dice-pop-roll--drop {
-  color: color-mix(in srgb, var(--text-1) 35%, transparent);
-  text-decoration: line-through;
-  text-decoration-thickness: 1.5px;
-  font-weight: 600;
+  position: relative;
+  opacity: 0.38;
+  filter: grayscale(0.8);
+}
+.dice-pop-roll--drop::after {
+  content: '';
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  top: 50%;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  transform: rotate(-22deg);
 }
 .dice-pop-flat { color: color-mix(in srgb, var(--text-1) 55%, transparent); font-weight: 600; }
 .dice-pop-tag {

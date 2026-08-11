@@ -160,7 +160,7 @@ export function useItemFieldEditor(formData, openItemPicker) {
     for (const subField of field.fields || []) {
       if (Object.prototype.hasOwnProperty.call(subField, 'default')) row[subField.key] = cloneDefault(subField.default)
       else if (isBooleanField(subField)) row[subField.key] = false
-      else if (['int', 'suggest', 'item'].includes(subField.type)) row[subField.key] = null
+      else if (['int', 'suggest', 'item', 'dice'].includes(subField.type)) row[subField.key] = null
       else if (['suggest_array', 'object_array'].includes(subField.type)) row[subField.key] = []
       else if (subField.type === 'object') row[subField.key] = defaultDataForObject(subField)
       else row[subField.key] = ''

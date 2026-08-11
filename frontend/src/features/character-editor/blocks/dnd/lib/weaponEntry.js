@@ -5,7 +5,7 @@ export function defaultEntry() {
 export function normalizeAddAttacks(attacks) {
   return (attacks || []).map(attack => ({
     count: Number(attack.count) || 1,
-    dice_suggest_id: attack.dice_suggest_id ?? null,
+    dice_id: attack.dice_id ?? null,
     type_suggest_id: attack.type_suggest_id ?? null,
   }))
 }

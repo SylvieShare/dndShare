@@ -7,6 +7,7 @@ const allowedRawColorFiles = new Set([
   // These are data visualizations whose colors describe the object itself, not application chrome.
   path.join(sourceRoot, 'features/items/components/PotionVial.vue'),
   path.join(sourceRoot, 'features/items/components/SpellSlotSphere.vue'),
+  path.join(sourceRoot, 'shared/ui/SystemDie.vue'),
   // The print-only character sheet is deliberately isolated from the dark app theme:
   // its monochrome ink/paper palette must be stable in browsers and generated PDFs.
   path.join(sourceRoot, 'features/character-editor/pages/ViewCharacterPrint.vue'),

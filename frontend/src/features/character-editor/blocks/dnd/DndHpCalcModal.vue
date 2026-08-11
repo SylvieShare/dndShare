@@ -40,8 +40,7 @@
           <button class="hc-dice-btn" :disabled="pool.used >= pool.total" @click="adjustDice(pool, 1)">−</button>
           <div class="hc-dice-val">
             <span>{{ pool.total - pool.used }}/{{ pool.total }}</span>
-            <span v-if="diceSvg(pool.die)" class="hc-dice-svg" v-html="diceSvg(pool.die)" />
-            <span v-else>{{ pool.die }}</span>
+            <SystemDie :sides="pool.die" :size="28" />
           </div>
           <button class="hc-dice-btn" :disabled="pool.used <= 0" @click="adjustDice(pool, -1)">+</button>
         </div>
@@ -55,12 +54,12 @@
 import { computed, ref } from 'vue'
 import CalcPad from '@/features/character-editor/components/CalcPad'
 import AppModal from '@/shared/ui/AppModal'
+import SystemDie from '@/shared/ui/SystemDie.vue'
 import DndDeathSaves from './DndDeathSaves'
 import { normalizeHitDice, setHitDieUsed } from '@/features/character-editor/blocks/dnd/lib/hitDice'
 
 const props = defineProps({
   hp:          { type: Object, required: true },
-  diceOptions: { type: Array, default: () => [] },
   isNpc:       { type: Boolean, default: false },
 })
 const emit = defineEmits(['close', 'change', 'graveyard'])
@@ -101,7 +100,6 @@ const svgColorFilter = computed(() => {
   if (p > 25) return 'invert(65%) sepia(60%) saturate(600%) hue-rotate(10deg) brightness(1.05)'
   return 'invert(30%) sepia(80%) saturate(700%) hue-rotate(330deg) brightness(0.9)'
 })
-function diceSvg(die) { return props.diceOptions.find(o => o.value === die)?.svg || null }
 
 function evalExpr(expr) {
   const clean = String(expr).replace(/−/g, '-').replace(/[^0-9+\-*/\s.]/g, '')
@@ -268,20 +266,6 @@ function adjustDice(pool, delta) {
   font-weight: 700;
   min-width: 60px;
   justify-content: center;
-}
-
-.hc-dice-svg {
-  width: 22px;
-  height: 22px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0.8;
-  flex-shrink: 0;
-}
-.hc-dice-svg :deep(svg) {
-  width: 22px;
-  height: 22px;
 }
 
 .hc-dice-btn {

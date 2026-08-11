@@ -37,7 +37,7 @@ export function useSpellCalc({ diceMap, diceDetailsMap, damageTypeMap, damageTyp
     return {
       count,
       diceLabel,
-      iconUrl: dice?.svg || '',
+      diceSides: dice?.sides || null,
       label: diceLabel ? `${count}${diceLabel}` : '',
       type: damageTypeMap.value[typeId] || typeId || '',
       typeColor: damageTypeColorMap?.value?.[typeId] || '',
@@ -75,14 +75,14 @@ export function useSpellCalc({ diceMap, diceDetailsMap, damageTypeMap, damageTyp
     const dmg = item?.data?.damage || {}
     const steps = scalingSteps(dmg.scaling, item?.data?.lvl, castLevel, charLevel)
     return mergeRows(dmg.dices, dmg.addon, steps).map(dicePart)
-      .filter(part => part.label || part.iconUrl || part.type)
+      .filter(part => part.label || part.diceSides || part.type)
   }
 
   function healDiceParts(item, castLevel, charLevel) {
     const heal = item?.data?.heal || {}
     const steps = scalingSteps(heal.scaling, item?.data?.lvl, castLevel, charLevel)
     return mergeRows(heal.dices, heal.addon, steps).map(dicePart)
-      .filter(part => part.label || part.iconUrl)
+      .filter(part => part.label || part.diceSides)
   }
 
   function hasSpellMetrics(item) {

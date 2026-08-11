@@ -85,6 +85,7 @@ import { backgroundStartingEquipment, formatStartingCoins } from '@/features/cha
 import { mergeEquipment } from '@/features/character-editor/settings/dnd/creation/startingEquipment'
 import { STAT_SHORT, formatMod, monogramOf } from '@/features/character-list/components/wizard/labels'
 import { sourceSkillLabels } from '@/features/character-list/components/wizard/previewSkills'
+import { dieLabel } from '@/shared/lib/systemDice'
 
 const wz = inject('createWizard')
 const {
@@ -186,7 +187,7 @@ const sections = computed(() => {
 
   if (state.charClass) {
     const items = []
-    push(items, 'Кость хитов', g.hitDieId ? suggestValue(11, g.hitDieId) : '')
+    push(items, 'Кость хитов', g.hitDieId ? dieLabel(g.hitDieId) : '')
     push(items, 'Спасброски', g.saves.map((s) => STAT_SHORT[s]).join(', '))
     push(items, 'Навыки', sourceSkillLabels({
       proficiencyIds: state.skillIds,

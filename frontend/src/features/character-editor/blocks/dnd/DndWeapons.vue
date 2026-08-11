@@ -105,6 +105,7 @@ import ItemViewModal from "@/shared/ui/ItemViewModal"
 import { useSortable } from '@/shared/composables/useSortable'
 import { useDiceStore } from '@/stores/dice'
 import { useSuggestStore } from '@/stores/suggest'
+import { SYSTEM_DICE } from '@/shared/lib/systemDice'
 
 const props = defineProps(['block', 'value', 'values', 'vars'])
 const emit  = defineEmits(['update:value'])
@@ -127,14 +128,13 @@ function suggestItems(typeId) {
 const tagSuggestTypeId    = computed(() => props.block.content.tag_suggest_type_id || inferredTagSuggestTypeId.value)
 const statSuggests        = computed(() => suggestItems(props.block.content.stat_suggest_type_id))
 const damageTypeSuggests  = computed(() => suggestItems(props.block.content.type_attack_suggest_type_id))
-const diceSuggests        = computed(() => suggestItems(props.block.content.dice_suggest_type_id))
 const tagSuggests         = computed(() => suggestItems(tagSuggestTypeId.value))
 
 const statOptions        = computed(() => statSuggests.value.map(s => ({ value: s.id, label: s.value })))
 const damageTypeOptions  = computed(() => damageTypeSuggests.value.map(s => ({ value: s.id, label: s.value })))
-const diceOptions        = computed(() => diceSuggests.value.map(s => ({ value: s.id, label: s.value })))
-const diceMap            = computed(() => Object.fromEntries(diceSuggests.value.map(s => [s.id, s.value])))
-const diceDetailsMap     = computed(() => Object.fromEntries(diceSuggests.value.map(s => [s.id, s])))
+const diceOptions        = SYSTEM_DICE.map(die => ({ value: die.id, label: die.value }))
+const diceMap            = computed(() => Object.fromEntries(SYSTEM_DICE.map(die => [die.id, die.value])))
+const diceDetailsMap     = computed(() => Object.fromEntries(SYSTEM_DICE.map(die => [die.id, die])))
 const damageTypeMap      = computed(() => Object.fromEntries(damageTypeSuggests.value.map(s => [s.id, s.value])))
 const damageTypeDetailsMap = computed(() => Object.fromEntries(damageTypeSuggests.value.map(s => [s.id, s])))
 const tagMap             = computed(() => Object.fromEntries(tagSuggests.value.map(s => [s.id, s.value])))
@@ -236,7 +236,7 @@ function setAttackField(index, attackIndex, field, value) {
 
 function addAttack(index) {
   const attacks = normalizeAddAttacks(entries.value[index].add_attacks)
-  attacks.push({ count: 1, dice_suggest_id: null, type_suggest_id: null })
+  attacks.push({ count: 1, dice_id: null, type_suggest_id: null })
   entries.value[index] = { ...entries.value[index], add_attacks: attacks }
   emitChange()
 }
@@ -345,7 +345,6 @@ onMounted(() => {
   [
     props.block.content.stat_suggest_type_id,
     props.block.content.type_attack_suggest_type_id,
-    props.block.content.dice_suggest_type_id,
     tagSuggestTypeId.value,
   ].filter(Boolean).forEach(id => useSuggestStore().ensure(id))
   ensureTagSuggestType()

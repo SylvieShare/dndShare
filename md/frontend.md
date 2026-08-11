@@ -140,6 +140,10 @@ accessors; чтение путей из БД не допускается. D&D и
 выполняет startup-схема из `internal/store/schema/*.sql` до начала
 HTTP-обслуживания; компоненты не содержат read-time миграций.
 
+Фиксированный каталог кубиков находится в `shared/lib/systemDice.js`, а все
+экранные многогранники и выпавшие значения рисует `shared/ui/SystemDie.vue`.
+Кубики не зависят от Pinia suggest store.
+
 ## Router
 
 Актуальные страницы: `/`, `/sessions`, `/sessions/:uuid`, `/join/:code`,

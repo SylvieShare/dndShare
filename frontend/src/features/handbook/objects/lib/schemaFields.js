@@ -47,7 +47,7 @@ export function normalizeDataForSave(data, fields) {
     } else if (field.type === 'object_array') {
       next[field.key] = (Array.isArray(next[field.key]) ? next[field.key] : [])
         .map(row => normalizeDataForSave(row || {}, field.fields || []))
-    } else if (field.type === 'item') {
+    } else if (field.type === 'item' || field.type === 'dice') {
       next[field.key] = numberOrNull(next[field.key])
     }
   }

@@ -1,8 +1,8 @@
 <template>
   <BaseTile v-if="!isCompact" :color="barColor" framed interactive @click="open">
-    <DndHpView :hp="hp" :dice-options="diceOptions" @change="onHpChange" />
+    <DndHpView :hp="hp" @change="onHpChange" />
   </BaseTile>
-  <DndHpView v-else compact :hp="hp" :dice-options="diceOptions" @open="open" @change="onHpChange" />
+  <DndHpView v-else compact :hp="hp" @open="open" @change="onHpChange" />
 
   <MorphEditorShell
     v-if="editorOpen"
@@ -14,23 +14,22 @@
     @close="close"
   >
     <template #view>
-      <DndHpView :hp="hp" :dice-options="diceOptions" @change="onHpChange" />
+      <DndHpView :hp="hp" @change="onHpChange" />
     </template>
     <template #editor>
-      <DndHpEditor :hp="hp" :dice-options="diceOptions" @change="onHpChange" />
+      <DndHpEditor :hp="hp" @change="onHpChange" />
     </template>
   </MorphEditorShell>
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue'
+import { computed } from 'vue'
 import BaseTile from '@/shared/ui/BaseTile'
 import DndHpEditor from '@/features/character-editor/blocks/dnd/components/DndHpEditor'
 import DndHpView from '@/features/character-editor/blocks/dnd/components/DndHpView'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
 import { useMorphOrigin } from '@/features/character-editor/composables/useMorphOrigin'
-import { HIT_DIE_TYPES, normalizeHitDice, withHitDice } from '@/features/character-editor/blocks/dnd/lib/hitDice'
-import { useSuggestStore } from '@/stores/suggest'
+import { normalizeHitDice, withHitDice } from '@/features/character-editor/blocks/dnd/lib/hitDice'
 
 const props = defineProps(['block', 'value', 'values'])
 const emit = defineEmits(['update:value'])
@@ -52,22 +51,6 @@ const barColor = computed(() => {
   if (p > 60) return 'var(--success)'
   if (p > 25) return 'var(--warning)'
   return 'var(--danger)'
-})
-
-const diceOptions = computed(() => {
-  const typeId = props.block.content?.dice_suggest_type_id
-  let opts
-  if (typeId) {
-    const items = useSuggestStore().items(typeId)
-    if (items?.length) opts = items.map(s => ({ value: s.value || String(s.id), svg: s.svg || null }))
-  }
-  if (!opts) opts = HIT_DIE_TYPES.map(d => ({ value: d, svg: null }))
-  return opts.slice().sort((a, b) => (parseInt(a.value) || 0) - (parseInt(b.value) || 0))
-})
-
-onMounted(async () => {
-  const typeId = props.block.content?.dice_suggest_type_id
-  if (typeId) await useSuggestStore().ensure(typeId)
 })
 
 function onHpChange(h) {

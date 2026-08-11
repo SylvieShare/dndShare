@@ -6,12 +6,15 @@
     <MultiToggle v-model="mode" :options="modeOptions" :neutral-value="'normal'" block />
     <div class="dice-panel-grid">
       <button
-        v-for="d in DIES"
-        :key="d"
+        v-for="die in SYSTEM_DICE"
+        :key="die.id"
         type="button"
         class="dice-panel-die"
-        @click="rollDie(d)"
-      >d{{ d }}</button>
+        :title="`Бросить ${die.value}`"
+        @click="rollDie(die.sides)"
+      >
+        <SystemDie :sides="die.sides" :size="44" />
+      </button>
     </div>
   </div>
 </template>
@@ -19,9 +22,9 @@
 <script setup>
 import { ref } from 'vue'
 import MultiToggle from '@/shared/ui/MultiToggle.vue'
+import SystemDie from '@/shared/ui/SystemDie.vue'
 import { useDiceStore } from '@/stores/dice'
-
-const DIES = [4, 6, 8, 10, 12, 20, 100]
+import { SYSTEM_DICE } from '@/shared/lib/systemDice'
 
 const modeOptions = [
   { value: 'disadvantage', label: 'Помеха' },
@@ -102,7 +105,7 @@ function rollDie(sides) {
   background: var(--surface-raised);
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 10px 0;
+  padding: 6px 0;
   color: var(--text-1);
   font-family: inherit;
   font-size: 14px;
@@ -110,6 +113,9 @@ function rollDie(sides) {
   letter-spacing: 0.02em;
   cursor: pointer;
   transition: background 0.12s, border-color 0.15s, transform 0.08s, color 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .dice-panel-die:hover {
   border-color: var(--accent);

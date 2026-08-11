@@ -1,10 +1,7 @@
 {
   "hp": {
     "id": "hp",
-    "type": "DND_HP",
-    "content": {
-      "dice_suggest_type_id": 11
-    }
+    "type": "DND_HP"
   },
   "CHA": {
     "id": "CHA",
@@ -286,7 +283,6 @@
     "content": {
       "bonus_path": "prof_bonus.v",
       "item_type_id": 1,
-      "dice_suggest_type_id": 11,
       "stat_suggest_type_id": 16,
       "type_attack_suggest_type_id": 12
     }

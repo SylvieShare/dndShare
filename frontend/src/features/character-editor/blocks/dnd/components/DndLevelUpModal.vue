@@ -256,6 +256,7 @@ import { itemsApi } from '@/shared/api/itemsApi'
 import { contentScopeQuery } from '@/shared/api/contentSourcesApi'
 import { useDiceStore } from '@/stores/dice'
 import { useSuggestStore } from '@/stores/suggest'
+import { dieLabel } from '@/shared/lib/systemDice'
 import { useLevelUpFeatureChoices } from './useLevelUpFeatureChoices'
 import { buildLevelUpUpdates } from './buildLevelUpUpdates'
 import { useLevelUpFeatSelection } from './useLevelUpFeatSelection'
@@ -273,7 +274,6 @@ const dice = useDiceStore()
 const suggestStore = useSuggestStore()
 const charCtx = inject('charCtx', {})
 const sourceSuffix = () => contentScopeQuery(charCtx.contentSources, charCtx.sourceVersionId)
-suggestStore.ensure(11)
 ;[3, 4, 5, 6, 15, 16].forEach((typeId) => suggestStore.ensure(typeId))
 
 const loading = ref(true)
@@ -371,7 +371,7 @@ watch(grantedNewIds, async (ids) => {
 const grantedSpellList = computed(() => grantedNewIds.value.map((id) => ({ id, name: spellNames.value[id] || `#${id}` })))
 
 // ─── хиты ───────────────────────────────────────────────────────────────────
-const hitDieLabelOf = (item) => resolveHitDieLabel(item, suggestStore.items(11))
+const hitDieLabelOf = (item) => resolveHitDieLabel(item, dieLabel)
 const hitDieLabel = computed(() => hitDieLabelOf(classItem.value))
 const hitDieFace = computed(() => dieFaceOf(hitDieLabel.value) || 8)
 function statScore(s) {

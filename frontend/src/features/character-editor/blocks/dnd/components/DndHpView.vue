@@ -37,8 +37,7 @@
           <span class="hp-dice-label">Кости хитов</span>
           <span v-for="pool in hitDice" :key="pool.die" class="hp-dice-pool">
             <span class="hp-dice-count">{{ pool.total - pool.used }}/{{ pool.total }}</span>
-            <span v-if="dieSvg(pool.die)" class="hp-dice-svg" v-html="dieSvg(pool.die)" />
-            <span v-else class="hp-dice-type">{{ pool.die }}</span>
+            <SystemDie :sides="pool.die" :size="22" />
           </span>
         </div>
       </div>
@@ -51,12 +50,12 @@
 <script setup>
 import { computed } from 'vue'
 import StatBar from '@/shared/ui/StatBar.vue'
+import SystemDie from '@/shared/ui/SystemDie.vue'
 import DndDeathSaves from '@/features/character-editor/blocks/dnd/DndDeathSaves'
 import { normalizeHitDice } from '@/features/character-editor/blocks/dnd/lib/hitDice'
 
 const props = defineProps({
   hp: { type: Object, required: true },
-  diceOptions: { type: Array, default: () => [] },
   compact: { type: Boolean, default: false },
 })
 defineEmits(['open', 'change'])
@@ -103,7 +102,6 @@ const svgColorFilter = computed(() => {
   if (p > 25) return 'invert(65%) sepia(60%) saturate(600%) hue-rotate(10deg) brightness(1.05)'
   return 'invert(30%) sepia(80%) saturate(700%) hue-rotate(330deg) brightness(0.9)'
 })
-function dieSvg(die) { return props.diceOptions.find(o => o.value === die)?.svg || null }
 </script>
 
 <style scoped>
@@ -150,7 +148,4 @@ function dieSvg(die) { return props.diceOptions.find(o => o.value === die)?.svg 
 .hp-dice-label { color: var(--text-muted); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-right: 2px; }
 .hp-dice-pool { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
 .hp-dice-count { color: var(--text-2); font-size: 14px; font-weight: 700; }
-.hp-dice-type { color: var(--text-2); font-size: 14px; font-weight: 700; }
-.hp-dice-svg { width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center; opacity: 0.8; flex-shrink: 0; }
-.hp-dice-svg :deep(svg) { width: 18px; height: 18px; }
 </style>

@@ -132,9 +132,11 @@ increment/decrement controls. Consumables retain their use action, which
 decrements the count and removes the entry at zero.
 
 Weapon handbook attacks use canonical `{dice_id,type,count}`. Character-added
-attack rows use their documented editor fields and are explicitly adapted at
+attack rows use `{count,dice_id,type_suggest_id}` and are explicitly adapted at
 the calculation boundary; this is not a fallback between stored formats.
-Spell handbook dice use only `dice_id/type`. Spell class ownership uses item-id
+All `dice_id` values come from the fixed system catalogue whose ids equal their
+face counts; die visuals use `SystemDie` and never load suggest type 11. Spell
+handbook dice use only `dice_id/type`. Spell class ownership uses item-id
 references under `classes`.
 
 ## Rich text

@@ -34,7 +34,7 @@ describe('buildCharacterData hit dice', () => {
       race: selection(1, 'Человек'),
       charClass: selection(2, 'Волшебник', { hit_die: 6 }),
       scores: { CON: 14 },
-      suggestValue: (typeId, id) => typeId === 11 && id === 6 ? 'd6' : '',
+      suggestValue: () => '',
     })
 
     expect(result.data.values.hp).toMatchObject({

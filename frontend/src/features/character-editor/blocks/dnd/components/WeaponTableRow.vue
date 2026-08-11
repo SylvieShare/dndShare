@@ -104,12 +104,12 @@
           />
           <ValueSelect
             class="w-dice"
-            :model-value="attack.dice_suggest_id"
+            :model-value="attack.dice_id"
             :options="ctx.diceOptions"
             placeholder="Куб"
             searchable
             search-placeholder="Куб..."
-            @update:model-value="ctx.setAttackField(index, attackIndex, 'dice_suggest_id', $event)"
+            @update:model-value="ctx.setAttackField(index, attackIndex, 'dice_id', $event)"
           />
           <ValueSelect
             class="w-type"
@@ -139,9 +139,9 @@
           <span v-if="partIndex > 0" class="w-damage-comma">,</span>
           <span class="w-damage-part">
             <span v-if="part.modifier" class="w-damage-mod">{{ part.modifier }} +</span>
-            <template v-if="part.iconUrl">
+            <template v-if="part.diceSides">
               <span v-if="part.count !== 1" class="w-damage-count">{{ part.count }}</span>
-              <span class="w-damage-icon" v-html="part.iconUrl" aria-hidden="true" />
+              <SystemDie :sides="part.diceSides" :size="30" :color="part.typeColor" />
             </template>
             <template v-else>{{ part.label }}</template>
             <span v-if="part.type" class="w-damage-type">{{ part.type }}</span>
@@ -209,6 +209,7 @@
 import { computed, inject, ref } from 'vue'
 import InputDescription from '@/shared/ui/InputDescription'
 import RichContent from '@/shared/ui/RichContent'
+import SystemDie from '@/shared/ui/SystemDie.vue'
 import ValueSelect from '@/shared/ui/ValueSelect'
 
 defineProps({
@@ -407,8 +408,6 @@ const colspan = computed(() => ctx.charCtx.ownerMode ? 6 : 4)
 .w-damage-comma { color: var(--text-muted); }
 .w-damage-mod { color: var(--text-muted); font-size: 12px; }
 .w-damage-count { font-weight: 700; }
-.w-damage-icon { display: inline-flex; width: 14px; height: 14px; }
-.w-damage-icon :deep(svg) { width: 14px; height: 14px; }
 .w-damage-type { color: var(--text-2); font-size: 11px; }
 
 .w-extra-row {

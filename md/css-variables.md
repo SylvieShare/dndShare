@@ -72,7 +72,7 @@ Raw values are allowed only where color is data rather than application chrome:
 
 - `shared/ui/colorPresets.js` and stored user/entity colors;
 - rarity/album/dice palettes that must emit or persist concrete hex values;
-- the `PotionVial` and `SpellSlotSphere` CSS illustrations;
+- the `PotionVial`, `SpellSlotSphere` and `SystemDie` CSS/SVG illustrations;
 - SVG masks and generated screenshot/canvas color parsing where a concrete value is technically required.
 
 Do not use those exceptions for page, card, form, modal, text, border, hover or status styling.

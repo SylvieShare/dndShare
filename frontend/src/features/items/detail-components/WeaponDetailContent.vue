@@ -40,10 +40,10 @@
         <div class="wdc-section-title">Атака</div>
         <div class="wdc-attacks">
           <div v-for="(attack, idx) in attacks" :key="idx" class="wdc-attack">
-            <span class="wdc-dice" :class="{ 'wdc-dice-icon-wrap': attackDisplay(attack).iconUrl }">
-              <template v-if="attackDisplay(attack).iconUrl">
+            <span class="wdc-dice" :class="{ 'wdc-dice-icon-wrap': attackDisplay(attack).diceSides }">
+              <template v-if="attackDisplay(attack).diceSides">
                 <span v-if="attackDisplay(attack).count !== 1" class="wdc-dice-count">{{ attackDisplay(attack).count }}</span>
-                <span class="wdc-dice-icon" v-html="attackDisplay(attack).iconUrl" aria-hidden="true"></span>
+                <SystemDie :sides="attackDisplay(attack).diceSides" :size="46" />
               </template>
               <template v-else>{{ attackDisplay(attack).label }}</template>
             </span>
@@ -57,10 +57,10 @@
         <div class="wdc-section-title">Атака двумя руками</div>
         <div class="wdc-attacks">
           <div v-for="(attack, idx) in universeAttacks" :key="idx" class="wdc-attack wdc-attack-alt">
-            <span class="wdc-dice" :class="{ 'wdc-dice-icon-wrap': attackDisplay(attack).iconUrl }">
-              <template v-if="attackDisplay(attack).iconUrl">
+            <span class="wdc-dice" :class="{ 'wdc-dice-icon-wrap': attackDisplay(attack).diceSides }">
+              <template v-if="attackDisplay(attack).diceSides">
                 <span v-if="attackDisplay(attack).count !== 1" class="wdc-dice-count">{{ attackDisplay(attack).count }}</span>
-                <span class="wdc-dice-icon" v-html="attackDisplay(attack).iconUrl" aria-hidden="true"></span>
+                <SystemDie :sides="attackDisplay(attack).diceSides" :size="46" />
               </template>
               <template v-else>{{ attackDisplay(attack).label }}</template>
             </span>
@@ -110,6 +110,8 @@ import RichContent from '@/shared/ui/RichContent'
 import { useCostFormatter } from '@/features/items/lib/useCostFormatter'
 import { useSchemaSuggests } from '@/features/handbook/objects/lib/useSchemaSuggests'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip'
+import SystemDie from '@/shared/ui/SystemDie.vue'
+import { diceById } from '@/shared/lib/systemDice'
 
 const props = defineProps({
   item: { type: Object, required: true },
@@ -118,7 +120,6 @@ const props = defineProps({
 
 const { suggestItems } = useSchemaSuggests(() => props.type)
 
-const diceDetailsMap = computed(() => Object.fromEntries(suggestItems('dice_id').map(s => [s.id, s])))
 const damageTypeMap = computed(() => Object.fromEntries(suggestItems('type').map(s => [s.id, s.value])))
 const tagDetailsMap = computed(() => Object.fromEntries(suggestItems('tags').map(s => [s.id, s])))
 const tagMap = computed(() => Object.fromEntries(suggestItems('tags').map(s => [s.id, s.value])))
@@ -193,10 +194,10 @@ const nameEnFormatted = computed(() =>
 
 function attackDisplay(attack) {
   const count = Number(attack.count) || 1
-  const dice = diceDetailsMap.value[attack.dice_id] || null
+  const dice = diceById(attack.dice_id)
   const diceLabel = dice?.value || ''
-  if (!diceLabel) return { count, diceLabel: '', iconUrl: '', label: String(count) }
-  return { count, diceLabel, iconUrl: dice?.svg || '', label: `${count}${diceLabel}` }
+  if (!diceLabel) return { count, diceLabel: '', diceSides: null, label: String(count) }
+  return { count, diceLabel, diceSides: dice.sides, label: `${count}${diceLabel}` }
 }
 
 function damageTypeLabel(attack) {
@@ -372,19 +373,6 @@ function hideTagTooltip() {
 .wdc-dice-count {
   min-width: 10px;
   text-align: right;
-}
-
-.wdc-dice-icon {
-  width: 34px;
-  height: 34px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-.wdc-dice-icon :deep(svg) {
-  width: 34px;
-  height: 34px;
 }
 
 .wdc-attack-alt .wdc-dice {

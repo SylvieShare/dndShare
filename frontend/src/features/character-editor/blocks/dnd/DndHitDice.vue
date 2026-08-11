@@ -1,7 +1,7 @@
 <template>
   <div class="hit-dice">
-    <div class="dice-type" :class="{ 'dice-clickable': charCtx.ownerMode }" @click="charCtx.ownerMode && cycleDice()" :style="{ color: diceColor }">
-      {{ data.dice || 'd8' }}
+    <div class="dice-type" :class="{ 'dice-clickable': charCtx.ownerMode }" @click="charCtx.ownerMode && cycleDice()">
+      <SystemDie :sides="data.dice || 'd8'" :size="48" />
     </div>
     <div class="dice-divider"></div>
     <div class="dice-count-row">
@@ -22,22 +22,16 @@
 <script setup>
 import { computed, inject } from 'vue'
 import EditableDiv from "@/shared/ui/EditableDiv"
+import SystemDie from '@/shared/ui/SystemDie.vue'
+import { HIT_DICE } from '@/shared/lib/systemDice'
 
-const DICE = ['d4', 'd6', 'd8', 'd10', 'd12']
-const DICE_COLORS = {
-  d4:  '#e07b54',
-  d6:  '#e0c454',
-  d8:  '#7ab8e8',
-  d10: '#a07ae8',
-  d12: '#7ae8a0',
-}
+const DICE = HIT_DICE.map((die) => die.value)
 
 const props = defineProps(['block', 'value'])
 const emit = defineEmits(['update:value'])
 const charCtx = inject('charCtx', { ownerMode: true, dictionaries: {}, var: {} })
 const countRx = /^\d{0,2}$/
 const data = computed(() => ({ dice: 'd8', count: 1, ...props.value }))
-const diceColor = computed(() => DICE_COLORS[data.value.dice] || '#7ab8e8')
 
 function emitPatch(patch) {
   emit('update:value', props.block.id, { ...data.value, ...patch })
