@@ -1,5 +1,4 @@
-import { toCanvas, toJpeg } from 'html-to-image'
-import { platformForViewport } from './errorReportContext'
+import { toCanvas } from 'html-to-image'
 import { planAncestorCrop, scrollOffsetBetween } from './screenshotGeometry'
 
 export async function captureSelectedArea(element) {
@@ -21,30 +20,6 @@ export async function captureSelectedArea(element) {
   ))
   const pageCanvas = await renderElementCanvas(captureRoot, plan.render, scale)
   return cropScreenshot(pageCanvas, plan, 0.82)
-}
-
-export async function captureViewport() {
-  const visualViewport = window.visualViewport
-  const width = Math.max(1, Math.round(visualViewport?.width || window.innerWidth))
-  const height = Math.max(1, Math.round(visualViewport?.height || window.innerHeight))
-  const mobile = platformForViewport(width) === 'mobile'
-  const scale = Math.max(0.1, Math.min(
-    window.devicePixelRatio || 1,
-    mobile ? 0.9 : 1.25,
-    1600 / width,
-    1000 / height,
-  ))
-  return checkedScreenshot(await toJpeg(document.body, {
-    backgroundColor: screenshotBackground(),
-    cacheBust: !mobile,
-    width,
-    height,
-    pixelRatio: scale,
-    quality: 0.68,
-    filter: mobile ? mobileViewportScreenshotFilter : screenshotFilter,
-    skipFonts: mobile,
-    style: pageCropStyle(window.scrollX, window.scrollY, width, height),
-  }))
 }
 
 async function renderElementCanvas(element, render, pixelRatio) {
@@ -87,15 +62,6 @@ function cropScreenshot(source, plan, quality) {
   }
 }
 
-function pageCropStyle(left, top, width, height) {
-  return {
-    transform: `translate(${-left}px, ${-top}px)`,
-    transformOrigin: 'top left',
-    width: `${Math.max(document.documentElement.scrollWidth, left + width)}px`,
-    height: `${Math.max(document.documentElement.scrollHeight, top + height)}px`,
-  }
-}
-
 function screenshotCaptureRoot(element) {
   let current = element
   while (current && current !== document.body) {
@@ -119,24 +85,6 @@ function screenshotFilter(node) {
     node.matches('noscript, .am-overlay, .selection-highlight, .selection-hint, .error-reporter, .report-toast')
     || Boolean(node.closest('[data-error-report-ignore]'))
   ))
-}
-
-function mobileViewportScreenshotFilter(node) {
-  const included = screenshotFilter(node)
-  if (!included || !(node instanceof HTMLElement)) return included
-  if (node === document.body || node === document.documentElement) return true
-
-  const rect = node.getBoundingClientRect()
-  // Keep zero-sized layout wrappers: their children can still be visible. Large
-  // off-screen subtrees are the expensive part that makes mobile capture fail.
-  if (rect.width <= 0 && rect.height <= 0) return true
-  const margin = 48
-  const width = window.visualViewport?.width || window.innerWidth
-  const height = window.visualViewport?.height || window.innerHeight
-  return rect.right >= -margin
-    && rect.left <= width + margin
-    && rect.bottom >= -margin
-    && rect.top <= height + margin
 }
 
 function screenshotBackground(element = document.body) {

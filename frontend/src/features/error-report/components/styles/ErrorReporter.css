@@ -284,30 +284,6 @@
   transform: translateX(-50%);
 }
 
-.viewport-preview-frame {
-  display: grid;
-  place-items: center;
-  width: 100%;
-  min-height: 180px;
-  max-width: 100%;
-  height: clamp(180px, 30vh, 320px);
-  max-height: 320px;
-  overflow: hidden;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  background: var(--bg);
-}
-
-.viewport-preview {
-  display: block;
-  width: 100%;
-  height: 100%;
-  max-width: 100%;
-  max-height: 320px;
-  object-fit: contain;
-  object-position: center;
-}
-
 .screenshot-state {
   padding: 10px 12px;
   border: 1px solid var(--border);
@@ -324,30 +300,6 @@
   border-style: dashed;
   text-align: center;
 }
-
-.viewport-screenshot-status {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-width: 0;
-  padding: 8px 10px;
-  line-height: 1.25;
-}
-
-.viewport-screenshot-status-icon {
-  flex: 0 0 auto;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: color-mix(in srgb, var(--danger) 14%, transparent);
-  font-size: 11px;
-  font-weight: 800;
-}
-
-.viewport-screenshot-status strong { font-weight: 650; }
 
 .description-input {
   width: 100%;
@@ -443,10 +395,7 @@
   .selection-hint span { display: none; }
   .selection-hint button { font-size: 10px; }
 
-  .screenshot-preview-frame,
-  .viewport-preview-frame {
-    min-height: 160px;
-  }
+  .screenshot-preview-frame { min-height: 160px; }
 
   .screenshot-preview-card { padding: 8px; }
   .screenshot-previews figcaption { align-items: flex-start; flex-direction: column; gap: 2px; }

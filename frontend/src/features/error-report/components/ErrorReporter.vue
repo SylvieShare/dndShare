@@ -39,7 +39,7 @@
         <span v-if="selectedElement?.text" class="selected-text">{{ selectedElement.text }}</span>
       </div>
       <div class="screenshot-field">
-        <span class="selected-label">Скриншоты</span>
+        <span class="selected-label">Скриншот области</span>
         <div class="screenshot-previews">
           <figure class="screenshot-preview-card screenshot-preview-card-element">
             <figcaption>
@@ -77,36 +77,6 @@
               {{ screenshotError }} Заявку можно отправить без снимка элемента.
             </div>
           </figure>
-
-          <figure
-            v-if="viewportScreenshotDataURL || viewportScreenshotCapturing"
-            class="screenshot-preview-card screenshot-preview-card-viewport"
-          >
-            <figcaption>
-              <strong>Скриншот страницы</strong>
-              <span>Вся видимая область экрана</span>
-            </figcaption>
-            <div class="viewport-preview-frame">
-              <img
-                v-if="viewportScreenshotDataURL"
-                class="viewport-preview"
-                :src="viewportScreenshotDataURL"
-                alt="Скриншот видимой области страницы"
-              />
-              <div v-else class="screenshot-state screenshot-state-inside">
-                Создаём снимок страницы…
-              </div>
-            </div>
-          </figure>
-          <div
-            v-else
-            class="viewport-screenshot-status screenshot-state screenshot-state-error"
-            role="status"
-            aria-live="polite"
-          >
-            <span class="viewport-screenshot-status-icon" aria-hidden="true">!</span>
-            <span><strong>Скриншот страницы</strong> — {{ viewportScreenshotError || 'снимок недоступен.' }}</span>
-          </div>
         </div>
       </div>
       <label class="description-label" for="error-report-description">Описание</label>
@@ -146,7 +116,7 @@ import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 import { createErrorReport } from '../api/errorReportApi'
 import { describeElement, screenshotContextsFor, selectorFor } from '../lib/errorReportElement'
 import { platformForViewport } from '../lib/errorReportContext'
-import { captureSelectedArea, captureViewport, withTimeout } from '../lib/errorReportScreenshot'
+import { captureSelectedArea, withTimeout } from '../lib/errorReportScreenshot'
 
 const selecting = ref(false)
 const formOpen = ref(false)
@@ -159,11 +129,8 @@ const reportForm = ref(null)
 const descriptionInput = ref(null)
 const toast = ref('')
 const screenshotDataURL = ref('')
-const viewportScreenshotDataURL = ref('')
 const screenshotCapturing = ref(false)
 const screenshotError = ref('')
-const viewportScreenshotCapturing = ref(false)
-const viewportScreenshotError = ref('')
 const screenshotContextLevel = ref(0)
 const screenshotFrameSize = reactive({ width: 0, height: 0 })
 const highlight = reactive({ visible: false, top: 0, left: 0, width: 0, height: 0 })
@@ -268,11 +235,8 @@ function onElementClick(event) {
   const session = ++screenshotSession
   pendingScreenshot = { element: target, session }
   screenshotDataURL.value = ''
-  viewportScreenshotDataURL.value = ''
   screenshotError.value = ''
-  viewportScreenshotError.value = ''
   screenshotCapturing.value = true
-  viewportScreenshotCapturing.value = true
   formOpen.value = true
 }
 
@@ -288,13 +252,12 @@ function onReportModalOpened() {
   if (!capture.element?.isConnected) {
     screenshotCapturing.value = false
     screenshotError.value = 'Не удалось создать скриншот области.'
-    void captureViewportScreenshot(capture.session)
     return
   }
-  void captureElementScreenshot(capture.element, capture.session)
+  void captureElementScreenshot(capture.element)
 }
 
-async function captureElementScreenshot(element, session) {
+async function captureElementScreenshot(element) {
   const generation = ++screenshotGeneration
   screenshotCapturing.value = true
   try {
@@ -310,34 +273,6 @@ async function captureElementScreenshot(element, session) {
   } finally {
     if (generation === screenshotGeneration) screenshotCapturing.value = false
   }
-
-  if (session !== screenshotSession || !formOpen.value) return
-  await afterNextPaint()
-  if (session === screenshotSession && formOpen.value) void captureViewportScreenshot(session)
-}
-
-async function captureViewportScreenshot(session) {
-  if (session !== screenshotSession || !formOpen.value) return
-  viewportScreenshotCapturing.value = true
-  viewportScreenshotError.value = ''
-  try {
-    const screenshot = await withTimeout(captureViewport(), 10000)
-    if (session === screenshotSession && formOpen.value) {
-      viewportScreenshotDataURL.value = screenshot
-    }
-  } catch {
-    if (session === screenshotSession && formOpen.value) {
-      viewportScreenshotError.value = 'Не удалось создать скриншот страницы.'
-    }
-  } finally {
-    if (session === screenshotSession) viewportScreenshotCapturing.value = false
-  }
-}
-
-function afterNextPaint() {
-  return new Promise(resolve => {
-    requestAnimationFrame(() => requestAnimationFrame(resolve))
-  })
 }
 
 function applyElementScreenshot(capture) {
@@ -414,7 +349,6 @@ async function submitReport() {
       pageUrl: selectedPageURL.value,
       element: selectedElement.value,
       screenshot: screenshotDataURL.value || undefined,
-      viewportScreenshot: viewportScreenshotDataURL.value || undefined,
     })
     closeAfterSubmit()
     showToast('Спасибо! Заявка об ошибке отправлена')
@@ -438,11 +372,8 @@ function resetScreenshot() {
   screenshotSession += 1
   pendingScreenshot = null
   screenshotDataURL.value = ''
-  viewportScreenshotDataURL.value = ''
   screenshotCapturing.value = false
   screenshotError.value = ''
-  viewportScreenshotCapturing.value = false
-  viewportScreenshotError.value = ''
   screenshotContextLevel.value = 0
   screenshotContextElements.value = []
   screenshotFrameSize.width = 0
