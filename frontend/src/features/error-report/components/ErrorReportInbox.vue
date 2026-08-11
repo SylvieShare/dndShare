@@ -1,31 +1,28 @@
 <template>
   <teleport v-if="canReview" to="body">
-    <aside class="review-inbox" :class="{ expanded }" data-error-report-ignore>
-      <transition name="inbox-morph" mode="out-in">
-        <button
-          v-if="!expanded"
-          key="trigger"
-          class="inbox-trigger"
-          type="button"
-          aria-expanded="false"
-          :disabled="!reports.length"
-          @click="expanded = reports.length > 0"
-        >
-          <span class="inbox-trigger-icon" aria-hidden="true">{{ reports.length ? '⌁' : '✓' }}</span>
-          <span class="inbox-trigger-label">{{ reports.length ? 'Заявки' : 'Список пуст' }}</span>
-          <span v-if="statusChips.length" class="inbox-statuses" aria-label="Заявки по статусам">
-            <span
-              v-for="status in statusChips"
-              :key="status.key"
-              class="inbox-status-chip"
-              :class="`status-${status.key.toLowerCase()}`"
-              :title="`${status.label}: ${status.count}`"
-              :aria-label="`${status.label}: ${status.count}`"
-            >{{ status.count }}</span>
-          </span>
-        </button>
+    <aside
+      v-if="reports.length"
+      class="review-inbox"
+      :class="{ expanded }"
+      data-error-report-ignore
+    >
+      <button
+        class="inbox-trigger"
+        type="button"
+        aria-controls="error-report-review-list"
+        :aria-expanded="expanded"
+        :aria-hidden="expanded"
+        :tabindex="expanded ? -1 : 0"
+        :aria-label="`Открыть список заявок: ${reports.length}`"
+        @click="expanded = true"
+      >{{ reports.length }}</button>
 
-        <section v-else key="panel" class="inbox-panel">
+      <section
+        id="error-report-review-list"
+        class="inbox-panel"
+        :aria-hidden="!expanded"
+        :inert="!expanded"
+      >
           <header class="inbox-head">
             <div>
               <strong>Ошибки на страницах</strong>
@@ -35,13 +32,7 @@
           </header>
 
           <div v-if="loadError" class="inbox-error">{{ loadError }}</div>
-          <div v-if="!reports.length && !loading" class="inbox-empty">
-            <span>✓</span>
-            <strong>Всё разобрано</strong>
-            <small>Новые заявки появятся автоматически</small>
-          </div>
-
-          <div v-else class="inbox-list">
+          <div class="inbox-list">
             <article
               v-for="report in displayedReports"
               :key="report.id"
@@ -81,8 +72,7 @@
           <div v-if="hiddenReportsCount" class="inbox-limit">
             Не показано заявок: {{ hiddenReportsCount }}
           </div>
-        </section>
-      </transition>
+      </section>
     </aside>
   </teleport>
 
@@ -192,7 +182,6 @@ import { useAccountStore } from '@/stores/account'
 import {
   errorReportStatusKey,
   errorReportStatusLabel,
-  errorReportStatusSummary,
   errorReportDisplayTitle,
   shouldShowErrorReportAuthor,
 } from '../lib/errorReportPresentation'
@@ -206,7 +195,6 @@ import {
 const accountStore = useAccountStore()
 const reports = ref([])
 const expanded = ref(false)
-const loading = ref(false)
 const loadError = ref('')
 const activeReportId = ref(null)
 const answerDraft = ref('')
@@ -224,7 +212,6 @@ const visibleReportsLimit = 8
 const canReview = computed(() => accountStore.user?.roles?.includes('ERROR_REPORT_REVIEWER'))
 const isAdmin = computed(() => accountStore.user?.roles?.includes('ADMIN'))
 const activeReport = computed(() => reports.value.find(report => report.id === activeReportId.value) || null)
-const statusChips = computed(() => errorReportStatusSummary(reports.value))
 const displayedReports = computed(() => reports.value.slice(0, visibleReportsLimit))
 const hiddenReportsCount = computed(() => Math.max(0, reports.value.length - visibleReportsLimit))
 const inboxSummary = computed(() => {
@@ -249,7 +236,6 @@ watch(canReview, allowed => {
 async function loadReports() {
   if (requestInFlight || !canReview.value) return
   requestInFlight = true
-  if (!reports.value.length) loading.value = true
   try {
     const response = await getReviewErrorReports()
     const nextReports = Array.isArray(response.reports) ? response.reports : []
@@ -267,7 +253,6 @@ async function loadReports() {
   } catch {
     loadError.value = 'Не удалось обновить список'
   } finally {
-    loading.value = false
     requestInFlight = false
   }
 }
@@ -374,122 +359,85 @@ onBeforeUnmount(stopPolling)
   z-index: 9410;
   left: 16px;
   bottom: 62px;
-  font-family: var(--font-ui);
-}
-
-.inbox-trigger {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  min-height: 36px;
-  padding: 7px 10px;
+  width: 42px;
+  max-height: 42px;
+  overflow: hidden;
   border: 1px solid color-mix(in srgb, var(--accent) 42%, var(--border-strong));
-  border-radius: 12px;
+  border-radius: 50%;
   background: color-mix(in srgb, var(--popover-bg) 94%, transparent);
   box-shadow: 0 10px 28px color-mix(in srgb, var(--scrim) 61%, transparent);
-  color: var(--text-1);
-  cursor: pointer;
-  font: inherit;
-  font-size: 12px;
-  font-weight: 700;
+  font-family: var(--font-ui);
   backdrop-filter: blur(12px);
+  transform-origin: left bottom;
+  transition:
+    width .34s cubic-bezier(.22, 1, .36, 1),
+    max-height .38s cubic-bezier(.22, 1, .36, 1),
+    border-radius .28s ease,
+    border-color .2s ease,
+    box-shadow .28s ease;
 }
 
-.inbox-trigger:disabled {
-  border-color: var(--border);
-  color: var(--text-muted);
-  cursor: default;
-}
-
-.inbox-trigger:disabled .inbox-trigger-icon {
-  background: color-mix(in srgb, var(--success) 14%, transparent);
-  color: var(--success);
-}
-
-.inbox-trigger-icon {
-  display: grid;
-  place-items: center;
-  width: 21px;
-  height: 21px;
-  border-radius: 7px;
-  background: color-mix(in srgb, var(--accent) 22%, transparent);
-  color: var(--accent-soft);
-  font-size: 17px;
-}
-
-.inbox-statuses {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.inbox-status-chip {
-  display: inline-grid;
-  place-items: center;
-  min-width: 20px;
-  height: 20px;
-  padding: 2px 6px;
-  border: 1px solid transparent;
-  border-radius: 999px;
-  font-size: 10px;
-  font-variant-numeric: tabular-nums;
-  line-height: 1;
-  text-align: center;
-}
-
-.inbox-status-chip.status-open {
-  border-color: color-mix(in srgb, var(--accent) 38%, transparent);
-  background: color-mix(in srgb, var(--accent) 18%, transparent);
-  color: var(--accent-soft);
-}
-
-.inbox-status-chip.status-in_progress {
-  border-color: color-mix(in srgb, var(--info) 38%, transparent);
-  background: color-mix(in srgb, var(--info) 16%, transparent);
-  color: var(--accent-soft);
-}
-
-.inbox-status-chip.status-answer {
-  border-color: color-mix(in srgb, var(--warning) 40%, transparent);
-  background: color-mix(in srgb, var(--warning) 16%, transparent);
-  color: var(--warning);
-}
-
-.inbox-status-chip.status-approval {
-  border-color: color-mix(in srgb, var(--danger) 42%, transparent);
-  background: color-mix(in srgb, var(--danger) 16%, transparent);
-  color: var(--text-2);
-}
-
-.inbox-status-chip.status-unapproved {
-  border-color: var(--border-strong);
-  background: var(--surface-raised);
-  color: var(--text-muted);
-}
-
-.inbox-status-chip.status-resolved {
-  border-color: color-mix(in srgb, var(--success) 38%, transparent);
-  background: color-mix(in srgb, var(--success) 16%, transparent);
-  color: var(--success);
-}
-
-.inbox-status-chip.status-archived {
-  border-color: color-mix(in srgb, var(--text-muted) 34%, transparent);
-  background: color-mix(in srgb, var(--text-muted) 13%, transparent);
-  color: var(--text-2);
-}
-
-.inbox-panel {
-  position: relative;
+.review-inbox.expanded {
   width: min(420px, calc(100vw - 32px));
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  border: 1px solid var(--border-strong);
+  max-height: min(680px, calc(100dvh - 82px));
+  border-color: var(--border-strong);
   border-radius: 16px;
   background: color-mix(in srgb, var(--popover-bg) 97%, transparent);
   box-shadow: 0 24px 70px var(--scrim), 0 0 0 1px color-mix(in srgb, var(--accent) 8%, transparent);
   backdrop-filter: blur(18px);
+}
+
+.inbox-trigger {
+  position: absolute;
+  z-index: 2;
+  inset: 0 auto auto 0;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--accent) 22%, transparent);
+  color: var(--accent-soft);
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  text-align: center;
+  opacity: 1;
+  transform: scale(1);
+  visibility: visible;
+  transition: opacity .14s ease, transform .2s ease, visibility 0s linear 0s;
+}
+
+.review-inbox.expanded .inbox-trigger {
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(1.55);
+  visibility: hidden;
+  transition: opacity .12s ease, transform .2s ease, visibility 0s linear .12s;
+}
+
+.inbox-panel {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transform: translateY(8px) scale(.985);
+  transform-origin: left bottom;
+  visibility: hidden;
+  transition: opacity .15s ease, transform .24s cubic-bezier(.22, 1, .36, 1), visibility 0s linear .24s;
+}
+
+.review-inbox.expanded .inbox-panel {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  visibility: visible;
+  transition: opacity .18s ease .1s, transform .3s cubic-bezier(.22, 1, .36, 1) .05s, visibility 0s linear 0s;
 }
 
 .inbox-head {
@@ -561,9 +509,6 @@ onBeforeUnmount(stopPolling)
 }
 .report-inline-actions .approval-action { border-color: color-mix(in srgb, var(--danger) 35%, transparent); color: var(--text-2); }
 
-.inbox-empty { display: grid; justify-items: center; gap: 5px; padding: 34px 20px; color: var(--text-2); }
-.inbox-empty > span { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: color-mix(in srgb, var(--success) 14%, transparent); color: var(--success); }
-.inbox-empty small { color: var(--text-muted); }
 .inbox-error { padding: 8px 16px; color: var(--danger); font-size: 10px; }
 .inbox-limit {
   padding: 9px 14px 11px;
@@ -648,15 +593,9 @@ onBeforeUnmount(stopPolling)
 .reply-form button { border: none; border-radius: 8px; background: var(--accent); color: var(--text-on-accent); cursor: pointer; font: inherit; font-size: 12px; font-weight: 700; padding: 8px 13px; }
 .reply-form button:disabled, .serious-approval-box button:disabled { cursor: not-allowed; opacity: .45; }
 
-.inbox-morph-enter-active, .inbox-morph-leave-active {
-  transition: opacity .14s ease, transform .18s cubic-bezier(.22, 1, .36, 1);
-  transform-origin: left bottom;
-}
-.inbox-morph-enter-from, .inbox-morph-leave-to { opacity: 0; transform: scale(.82); }
-
 @media (max-width: 640px) {
   .review-inbox { left: 10px; bottom: 58px; }
-  .inbox-panel { width: calc(100vw - 20px); }
+  .review-inbox.expanded { width: calc(100vw - 20px); }
   .review-screenshots img { max-height: 70dvh; }
   .thread-message.from-ai { margin-right: 12px; }
   .thread-message.from-human { margin-left: 12px; }
