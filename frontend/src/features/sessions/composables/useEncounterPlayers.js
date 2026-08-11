@@ -20,8 +20,8 @@ export function useEncounterPlayers({ participants }) {
 
   function playerDisplayName(c) {
     const p = findParticipant(c.charId)
-    if (!p) return c.name || ('Игрок ' + c.charId)
-    return pvName(p) || c.name || ('Игрок ' + c.charId)
+    if (!p) return 'Игрок ' + c.charId
+    return pvName(p) || ('Игрок ' + c.charId)
   }
 
   function getPlayerAc(charId) {
@@ -40,13 +40,11 @@ export function useEncounterPlayers({ participants }) {
   }
 
   function participantToPlayer(p) {
-    const name = pvName(p) || p.templateName || ('Игрок ' + p.charId)
     return {
       uid: 'p-' + p.charId,
       type: 'player',
       charId: p.charId,
       charUuid: p.charUuid,
-      name: typeof name === 'string' ? name : String(name),
       position: 'reserve',
       initiative: null,
       surprised: false,

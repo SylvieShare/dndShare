@@ -1205,8 +1205,9 @@ CREATE TABLE IF NOT EXISTS dndshare.session_encounter (
 );
 CREATE INDEX IF NOT EXISTS idx_session_encounter_session_id ON dndshare.session_encounter USING btree (session_id);
 
--- Encounter combatants now keep only itemId + override. Former item snapshots
--- and denormalized NPC fields are folded into override once and removed.
+-- Encounter combatants now keep only references and combat state. Former NPC
+-- snapshots are folded into override once; the duplicated player name is
+-- removed because display data always comes from the current character.
 WITH normalized AS (
     SELECT encounter.id, COALESCE(jsonb_agg(
         CASE WHEN combatant ->> 'type' = 'npc' THEN
@@ -1221,6 +1222,8 @@ WITH normalized AS (
                     'creature_type', combatant -> 'creatureType'
                 ))
             END)
+        WHEN combatant ->> 'type' = 'player' THEN
+            combatant - 'name'
         ELSE combatant END
         ORDER BY ord
     ), '[]'::jsonb) AS combatants
@@ -1236,7 +1239,9 @@ WITH normalized AS (
           WHEN jsonb_typeof(encounter.data -> 'combatants') = 'array' THEN encounter.data -> 'combatants'
           ELSE '[]'::jsonb
       END) combatant
-      WHERE combatant ?| ARRAY['itemRaw', 'itemSvg', 'name', 'ac', 'hpMax', 'cr', 'creatureType']
+      WHERE (combatant ->> 'type' = 'npc'
+             AND combatant ?| ARRAY['itemRaw', 'itemSvg', 'name', 'ac', 'hpMax', 'cr', 'creatureType'])
+         OR (combatant ->> 'type' = 'player' AND combatant ? 'name')
       )
     GROUP BY encounter.id
 )
