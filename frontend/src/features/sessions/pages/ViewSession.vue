@@ -1,22 +1,23 @@
 <template>
   <div class="session-page">
-    <AppModal v-if="editOpen" @close="editOpen = false">
-      <h3 class="edit-title">Редактировать сессию</h3>
+    <AppModalFrame v-if="editOpen" title="Редактировать сессию" @close="editOpen = false">
       <FormField label="Название" vertical>
         <FormTextInput v-model:value="editName" :maxlength="255" autofocus @enter="saveEdit" />
       </FormField>
       <FormField label="Описание" vertical>
         <FormTextarea v-model:value="editDesc" :rows="3" :maxlength="1000" />
       </FormField>
-      <FormActionButtons
-        submit-text="Сохранить"
-        loading-text="Сохранение..."
-        :loading="editSaving"
-        :can-submit="!!editName.trim()"
-        @cancel="editOpen = false"
-        @submit="saveEdit"
-      />
-    </AppModal>
+      <template #footer>
+        <FormActionButtons
+          submit-text="Сохранить"
+          loading-text="Сохранение..."
+          :loading="editSaving"
+          :can-submit="!!editName.trim()"
+          @cancel="editOpen = false"
+          @submit="saveEdit"
+        />
+      </template>
+    </AppModalFrame>
 
     <template v-if="loading">
       <div class="loading-placeholder" />
@@ -171,7 +172,7 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import AppModal from '@/shared/ui/AppModal'
+import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 import FormActionButtons from '@/shared/ui/form/FormActionButtons'
 import FormField from '@/shared/ui/form/FormField'
 import FormTextInput from '@/shared/ui/form/FormTextInput'

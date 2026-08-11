@@ -1,5 +1,5 @@
 <template>
-  <AppEditorModal
+  <AppModalFrame
     fullscreen
     :title="title"
     :subtitle="itemType?.count ?? ''"
@@ -122,7 +122,7 @@
         />
 
     </div>
-  </AppEditorModal>
+  </AppModalFrame>
 </template>
 
 <script setup>
@@ -133,7 +133,7 @@ import HandbookItemDetail from '@/features/handbook/components/HandbookItemDetai
 import SvgIcon from '@/shared/ui/SvgIcon'
 import HandbookItemList from '@/features/handbook/components/HandbookItemList'
 import ItemEditModal from '@/features/character-editor/components/ItemEditModal'
-import AppEditorModal from '@/shared/ui/AppEditorModal.vue'
+import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 import { collectSuggestIds } from '@/features/handbook/objects/lib/schemaFields'
 import { useItemTypesStore } from '@/stores/itemTypes'
 import { useSuggestStore } from '@/stores/suggest'

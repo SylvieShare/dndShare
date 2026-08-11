@@ -118,20 +118,21 @@
     @created="onStatesCreated"
   />
 
-  <AppModal v-if="noteEditorOpen" :z-index="9200" @close="cancelNoteEdit">
-    <div class="enc-note-title">Заметка — {{ displayName }}</div>
+  <AppModalFrame v-if="noteEditorOpen" :title="`Заметка — ${displayName}`" :z-index="9200" @close="cancelNoteEdit">
     <FormTextarea
       v-model:value="noteDraft"
       :rows="5"
       :maxlength="2000"
       placeholder="Заметка о существе"
     />
-    <FormActionButtons
-      submit-text="Сохранить"
-      @cancel="cancelNoteEdit"
-      @submit="commitNoteEdit"
-    />
-  </AppModal>
+    <template #footer>
+      <FormActionButtons
+        submit-text="Сохранить"
+        @cancel="cancelNoteEdit"
+        @submit="commitNoteEdit"
+      />
+    </template>
+  </AppModalFrame>
 </template>
 
 <script setup>
@@ -140,7 +141,7 @@ import BlockStates from '@/features/character-editor/blocks/generic/BlockStates'
 import EncounterAvatar from '@/features/sessions/components/EncounterAvatar.vue'
 import EncounterHpBar from '@/features/sessions/components/EncounterHpBar.vue'
 import EncounterRowMenu from '@/features/sessions/components/EncounterRowMenu.vue'
-import AppModal from '@/shared/ui/AppModal'
+import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 import BasePopover from '@/shared/ui/BasePopover.vue'
 import EncCheckbox from '@/shared/ui/EncCheckbox.vue'
 import FormActionButtons from '@/shared/ui/form/FormActionButtons'
@@ -420,13 +421,6 @@ function commitNoteEdit() {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.enc-note-title {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--text-1);
-  margin-bottom: 4px;
 }
 
 .enc-badge {

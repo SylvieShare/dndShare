@@ -4,29 +4,29 @@
       <DndRestView :interactive="ownerMode" @short="onShort" @long="onLong" />
     </BaseTile>
 
-    <AppModal v-if="shortOpen" tile @close="shortOpen = false">
+    <AppModalFrame v-if="shortOpen" title="Короткий отдых" @close="shortOpen = false">
       <DndShortRestEditor
         :hp="hp"
         :con-mod="conMod"
         @spend="spendDie"
         @finish="finishShort"
       />
-    </AppModal>
+    </AppModalFrame>
 
-    <AppModal v-if="longOpen" tile @close="longOpen = false">
+    <AppModalFrame v-if="longOpen" title="Длинный отдых" @close="longOpen = false">
       <DndLongRestEditor
         :hp="hp"
         :recovery-count="longRestRecoveryCount(hp)"
         @confirm="applyLong"
         @cancel="longOpen = false"
       />
-    </AppModal>
+    </AppModalFrame>
   </div>
 </template>
 
 <script setup>
 import { computed, inject, ref } from 'vue'
-import AppModal from '@/shared/ui/AppModal'
+import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 import BaseTile from '@/shared/ui/BaseTile'
 import DndLongRestEditor from '@/features/character-editor/blocks/dnd/components/DndLongRestEditor'
 import DndRestView from '@/features/character-editor/blocks/dnd/components/DndRestView'

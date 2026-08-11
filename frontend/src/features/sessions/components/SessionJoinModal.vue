@@ -1,7 +1,5 @@
 <template>
-  <AppModal :wide="true" @close="$emit('close')">
-    <h2 class="modal-title">Войти в сессию</h2>
-    <p class="modal-sub">{{ sessionName }}</p>
+  <AppModalFrame wide title="Войти в сессию" :subtitle="sessionName" @close="$emit('close')">
 
     <div v-if="loadingChars" class="chars-loading">
       <div v-for="n in 3" :key="n" class="char-skeleton" />
@@ -31,13 +29,13 @@
     </div>
 
     <div v-else class="no-chars">Нет доступных персонажей</div>
-  </AppModal>
+  </AppModalFrame>
 </template>
 
 <script setup>
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import AppModal from '@/shared/ui/AppModal'
+import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 import { fetchGet } from '@/shared/api/http'
 import { joinSession } from '@/shared/api/sessionsApi'
 import { pvAvatar, pvLevel, pvName, pvSubtitle } from '@/features/sessions/lib/participantView'
@@ -97,22 +95,6 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.modal-title {
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--text-1);
-  margin: 0 0 2px;
-}
-
-.modal-sub {
-  font-size: 13px;
-  color: var(--text-2);
-  margin: 0 0 18px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 .chars-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -123,7 +105,7 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   gap: 12px;
-  background: var(--bg);
+  background: var(--surface-raised);
   border: 2px solid transparent;
   border-radius: 12px;
   padding: 10px 12px;
@@ -217,7 +199,7 @@ onMounted(async () => {
 .char-skeleton {
   height: 74px;
   border-radius: 12px;
-  background: var(--bg);
+  background: var(--surface-raised);
   animation: sk-pulse 1.4s ease-in-out infinite;
 }
 

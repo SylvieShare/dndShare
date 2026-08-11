@@ -53,16 +53,18 @@
     </aside>
   </teleport>
 
-  <AppModal v-if="activeError" :z-index="9800" extra-wide @close="activeErrorId = null">
+  <AppModalFrame
+    v-if="activeError"
+    :title="activeError.message"
+    :subtitle="sourceLabel(activeError.source)"
+    :z-index="9800"
+    extra-wide
+    @close="activeErrorId = null"
+  >
+    <template v-if="activeError.count > 1" #header-actions>
+      <strong class="console-error-repeat">Повторилась {{ activeError.count }} раз</strong>
+    </template>
     <article class="console-error-detail" data-error-report-ignore>
-      <header>
-        <div>
-          <span>{{ sourceLabel(activeError.source) }}</span>
-          <h2>{{ activeError.message }}</h2>
-        </div>
-        <strong v-if="activeError.count > 1">Повторилась {{ activeError.count }} раз</strong>
-      </header>
-
       <dl>
         <div><dt>Страница</dt><dd><code>{{ activeError.pageUrl || '—' }}</code></dd></div>
         <div><dt>Время</dt><dd>{{ formatFullTime(activeError.updatedAt) }}</dd></div>
@@ -73,12 +75,12 @@
         <pre>{{ activeError.detail }}</pre>
       </section>
     </article>
-  </AppModal>
+  </AppModalFrame>
 </template>
 
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import AppModal from '@/shared/ui/AppModal.vue'
+import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 import { useAccountStore } from '@/stores/account'
 import { subscribeConsoleErrors } from '../lib/consoleErrorCapture'
 

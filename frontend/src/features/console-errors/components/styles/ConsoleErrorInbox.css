@@ -160,11 +160,7 @@
 }
 
 .console-error-detail { display: grid; gap: 16px; min-width: 0; }
-.console-error-detail > header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding-right: 24px; }
-.console-error-detail > header > div { min-width: 0; }
-.console-error-detail > header span { color: var(--danger); font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
-.console-error-detail h2 { margin: 5px 0 0; color: var(--text-1); font-size: 20px; overflow-wrap: anywhere; }
-.console-error-detail > header > strong { flex: 0 0 auto; color: var(--danger); font-size: 10px; }
+.console-error-repeat { margin-left: auto; color: var(--danger); font-size: 10px; white-space: nowrap; }
 .console-error-detail dl { display: grid; gap: 8px; margin: 0; padding: 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface-raised); }
 .console-error-detail dl div { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 10px; }
 .console-error-detail dt { color: var(--text-muted); font-size: 10px; }
@@ -188,5 +184,4 @@
 @media (max-width: 640px) {
   .console-error-inbox { right: 10px; bottom: 64px; }
   .console-error-inbox.expanded { width: calc(100vw - 20px); }
-  .console-error-detail > header { flex-direction: column; gap: 8px; }
 }

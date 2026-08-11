@@ -38,27 +38,22 @@
       </div>
     </transition>
 
-    <AppModal v-if="sourcesOpen" wide tile @close="sourcesOpen = false">
-      <div class="sm-modal">
-        <div class="sm-modal-title">Источники персонажа</div>
-        <p>Выбранные книги ограничивают новые варианты в справочниках. Уже добавленный контент останется на листе.</p>
-        <ContentSourceSelector
-          :source-version-id="ctx.sourceVersionId"
-          :model-value="sourceDraft"
-          @update:model-value="updateSources"
-        />
-      </div>
-    </AppModal>
+    <ContentSourcesModal
+      v-if="sourcesOpen"
+      :source-version-id="ctx.sourceVersionId"
+      :model-value="sourceDraft"
+      @update:model-value="updateSources"
+      @close="sourcesOpen = false"
+    />
   </div>
 </template>
 
 <script setup>
 import { computed, inject, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import AppModal from '@/shared/ui/AppModal'
 import BaseTile from '@/shared/ui/BaseTile'
 import ToggleSwitch from '@/shared/ui/ToggleSwitch'
-import ContentSourceSelector from '@/features/character-editor/components/ContentSourceSelector.vue'
+import ContentSourcesModal from '@/features/character-editor/components/ContentSourcesModal.vue'
 import { normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'
 import { svgColorFilter } from '@/shared/lib/svgColorFilter'
 
@@ -165,10 +160,6 @@ function updateSources(value) {
 .sm-action-copy { display: flex; flex-direction: column; gap: 1px; }
 .sm-action-copy b { font-size: 12px; font-weight: 600; }
 .sm-action-copy small { color: var(--text-muted); font-size: 10px; }
-
-.sm-modal { width: 100%; max-width: 100%; min-width: 0; max-height: min(760px, calc(100vh - 80px)); overflow-x: hidden; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; padding: 22px; box-sizing: border-box; }
-.sm-modal-title { font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--text-1); }
-.sm-modal > p { margin: 0; color: var(--text-muted); font-size: 12px; line-height: 1.45; }
 
 .sm-save { display: flex; align-items: center; gap: 7px; padding: 6px 8px 10px; border-bottom: 1px solid var(--border); margin-bottom: 2px; }
 .sm-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; transition: background-color 0.3s; }

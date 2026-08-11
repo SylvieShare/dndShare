@@ -23,7 +23,7 @@
 <script setup>
 import { computed, inject, onMounted, reactive, ref } from 'vue'
 
-import ItemPickerModal from '@/features/character-editor/components/ItemPickerModal'
+import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import PotionShelf from '@/features/character-editor/blocks/dnd/components/PotionShelf'
 import { itemsApi } from '@/shared/api/itemsApi'
 import { makeEntryUid } from '@/features/character-editor/blocks/dnd/lib/itemSection'

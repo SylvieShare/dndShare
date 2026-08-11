@@ -1,6 +1,5 @@
 <template>
-  <AppModal :z-index="zIndex" wide tile @close="$emit('close')">
-    <div class="sem-title">{{ isEdit ? 'Редактировать' : 'Новый вариант' }}</div>
+  <AppModalFrame :title="isEdit ? 'Редактировать' : 'Новый вариант'" :z-index="zIndex" wide @close="$emit('close')">
 
     <!-- Preview -->
     <div class="sem-preview">
@@ -65,20 +64,22 @@
       </div>
     </FormField>
 
-    <FormActionButtons
-      :submit-text="isEdit ? 'Сохранить' : 'Добавить'"
-      loading-text="Сохранение..."
-      :loading="saving"
-      :can-submit="canSubmit"
-      @cancel="$emit('close')"
-      @submit="save"
-    />
-  </AppModal>
+    <template #footer>
+      <FormActionButtons
+        :submit-text="isEdit ? 'Сохранить' : 'Добавить'"
+        loading-text="Сохранение..."
+        :loading="saving"
+        :can-submit="canSubmit"
+        @cancel="$emit('close')"
+        @submit="save"
+      />
+    </template>
+  </AppModalFrame>
 </template>
 
 <script setup>
 import { computed, nextTick, onMounted, reactive, ref } from 'vue'
-import AppModal from '@/shared/ui/AppModal'
+import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 import ColorPresetPicker from '@/shared/ui/ColorPresetPicker'
 import FormActionButtons from '@/shared/ui/form/FormActionButtons'
 import FormField from '@/shared/ui/form/FormField'
@@ -182,14 +183,6 @@ async function save() {
 </script>
 
 <style scoped>
-.sem-title {
-  font-family: var(--font-display);
-  font-size: 22px;
-  font-weight: 600;
-  color: var(--text-1);
-  margin-bottom: 2px;
-}
-
 .sem-preview {
   display: flex;
   align-items: center;

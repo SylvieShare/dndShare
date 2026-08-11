@@ -137,7 +137,7 @@
 <script setup>
 import { computed, inject, ref } from 'vue'
 import FeatChoiceModal from '@/features/character-editor/components/FeatChoiceModal.vue'
-import ItemPickerModal from '@/features/character-editor/components/ItemPickerModal.vue'
+import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import { featChoices } from '@/features/items/lib/featRules'
 import MultiSearchSelect from '@/features/character-list/components/wizard/MultiSearchSelect.vue'
 import RichContent from '@/shared/ui/RichContent'

@@ -1,6 +1,5 @@
 <template>
-  <AppModal @close="$emit('close')">
-    <h2 class="modal-title">Новая сессия</h2>
+  <AppModalFrame title="Новая сессия" @close="$emit('close')">
 
     <FormField label="Название" vertical>
       <FormTextInput
@@ -37,20 +36,22 @@
       />
     </FormField>
 
-    <FormActionButtons
-      submit-text="Создать"
-      loading-text="Создаём..."
-      :loading="creating"
-      :can-submit="!!name.trim()"
-      @cancel="$emit('close')"
-      @submit="submit"
-    />
-  </AppModal>
+    <template #footer>
+      <FormActionButtons
+        submit-text="Создать"
+        loading-text="Создаём..."
+        :loading="creating"
+        :can-submit="!!name.trim()"
+        @cancel="$emit('close')"
+        @submit="submit"
+      />
+    </template>
+  </AppModalFrame>
 </template>
 
 <script setup>
 import { onMounted, ref } from 'vue'
-import AppModal from '@/shared/ui/AppModal'
+import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 import FormActionButtons from '@/shared/ui/form/FormActionButtons'
 import FormField from '@/shared/ui/form/FormField'
 import FormTextInput from '@/shared/ui/form/FormTextInput'
@@ -90,13 +91,6 @@ function submit() {
 </script>
 
 <style scoped>
-.modal-title {
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--text-1);
-  margin: 0 0 4px;
-}
-
 .source-list {
   display: flex;
   flex-direction: column;

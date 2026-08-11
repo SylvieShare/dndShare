@@ -1,6 +1,5 @@
 <template>
-  <AppModal :z-index="zIndex" :show-close="false" :dismissible="!loading" @close="cancel">
-    <div class="tpd-title">{{ title }}</div>
+  <AppModalFrame :title="title" :z-index="zIndex" :show-close="false" :dismissible="!loading" @close="cancel">
     <div v-if="message" class="tpd-message">{{ message }}</div>
     <FormTextInput
       :value="draft"
@@ -10,21 +9,23 @@
       @update:value="draft = $event"
       @enter="submit"
     />
-    <FormActionButtons
-      :submit-text="confirmLabel"
-      :cancel-text="cancelLabel"
-      :loading-text="loadingLabel"
-      :loading="loading"
-      :can-submit="!!draft.trim()"
-      @cancel="cancel"
-      @submit="submit"
-    />
-  </AppModal>
+    <template #footer>
+      <FormActionButtons
+        :submit-text="confirmLabel"
+        :cancel-text="cancelLabel"
+        :loading-text="loadingLabel"
+        :loading="loading"
+        :can-submit="!!draft.trim()"
+        @cancel="cancel"
+        @submit="submit"
+      />
+    </template>
+  </AppModalFrame>
 </template>
 
 <script setup>
 import { ref, watch } from 'vue'
-import AppModal from '@/shared/ui/AppModal.vue'
+import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 import FormActionButtons from '@/shared/ui/form/FormActionButtons.vue'
 import FormTextInput from '@/shared/ui/form/FormTextInput.vue'
 
@@ -56,12 +57,6 @@ function submit() {
 </script>
 
 <style scoped>
-.tpd-title {
-  color: var(--text-1);
-  font-size: 16px;
-  font-weight: 700;
-}
-
 .tpd-message {
   color: var(--text-2);
   font-size: 13px;

@@ -1,20 +1,19 @@
 <template>
-  <AppModal @close="$emit('close')">
-    <div class="im-title">{{ title || 'Значение' }}</div>
+  <AppModalFrame :title="title || 'Значение'" @close="$emit('close')">
     <FormField label="Основное значение">
       <FormNumberInput :value="data.base" @change="setBase" />
     </FormField>
     <BonusList :bonuses="data.bonuses || []" @update:bonuses="v => emit('change', { ...data, bonuses: v })" />
     <slot />
     <EditorTotal>Итого: <strong>{{ total }}</strong></EditorTotal>
-  </AppModal>
+  </AppModalFrame>
 </template>
 
 <script setup>
 import { computed } from 'vue'
 import { sumBonuses } from '@/shared/lib/dnd'
 import BonusList from '@/shared/ui/BonusList'
-import AppModal from '@/shared/ui/AppModal'
+import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 import EditorTotal from '@/features/character-editor/components/EditorTotal'
 import FormField from '@/shared/ui/form/FormField'
 import FormNumberInput from '@/shared/ui/form/FormNumberInput'
@@ -30,12 +29,3 @@ function setBase(v) {
   emit('change', { ...props.data, base: v })
 }
 </script>
-
-<style scoped>
-.im-title {
-  color: var(--text-1);
-  font-size: 16px;
-  font-weight: 700;
-  padding-right: 24px;
-}
-</style>

@@ -56,7 +56,7 @@
 
 <script setup>
 import { computed, inject, ref } from 'vue'
-import ItemViewModal from '@/shared/ui/ItemViewModal'
+import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
 
 const {
   state, grants, suggestValue,

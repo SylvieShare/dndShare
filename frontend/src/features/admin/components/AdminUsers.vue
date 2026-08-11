@@ -51,8 +51,7 @@
       </table>
     </template>
 
-    <AppModal v-if="passwordModal" @close="closePasswordReset">
-      <div class="modal-title">Сброс пароля — {{ passwordModal.login }}</div>
+    <AppModalFrame v-if="passwordModal" :title="`Сброс пароля — ${passwordModal.login}`" @close="closePasswordReset">
       <FormField label="Новый пароль" vertical>
         <FormTextInput
           v-model:value="newPassword"
@@ -62,21 +61,23 @@
           @enter="submitPasswordReset"
         />
       </FormField>
-      <FormActionButtons
-        submit-text="Сохранить"
-        loading-text="Сохранение..."
-        :loading="resetting"
-        :can-submit="!!newPassword.trim()"
-        @cancel="closePasswordReset"
-        @submit="submitPasswordReset"
-      />
-    </AppModal>
+      <template #footer>
+        <FormActionButtons
+          submit-text="Сохранить"
+          loading-text="Сохранение..."
+          :loading="resetting"
+          :can-submit="!!newPassword.trim()"
+          @cancel="closePasswordReset"
+          @submit="submitPasswordReset"
+        />
+      </template>
+    </AppModalFrame>
   </div>
 </template>
 
 <script setup>
 import { onMounted, ref } from 'vue'
-import AppModal from '@/shared/ui/AppModal'
+import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 import FormActionButtons from '@/shared/ui/form/FormActionButtons'
 import FormField from '@/shared/ui/form/FormField'
 import FormTextInput from '@/shared/ui/form/FormTextInput'
@@ -310,9 +311,4 @@ onMounted(load)
   color: var(--text-on-accent);
 }
 
-.modal-title {
-  color: var(--text-1);
-  font-size: 15px;
-  font-weight: 600;
-}
 </style>

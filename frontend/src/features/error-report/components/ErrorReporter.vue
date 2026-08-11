@@ -31,9 +31,8 @@
     </div>
   </teleport>
 
-  <AppModal v-if="formOpen" :z-index="9500" wide @opened="onReportModalOpened" @close="closeForm">
-    <form ref="reportForm" class="report-form" data-error-report-ignore @submit.prevent="submitReport">
-      <div class="report-form-title">Что работает неправильно?</div>
+  <AppModalFrame v-if="formOpen" title="Что работает неправильно?" :z-index="9500" wide @opened="onReportModalOpened" @close="closeForm">
+    <form id="error-report-form" ref="reportForm" class="report-form" data-error-report-ignore @submit.prevent="submitReport">
       <div class="selected-element">
         <span class="selected-label">Выбранный элемент</span>
         <code>{{ selectedElement?.selector }}</code>
@@ -125,14 +124,16 @@
         <span v-if="submitError" class="submit-error">{{ submitError }}</span>
         <span class="char-count">{{ description.length }} / 4000</span>
       </div>
+    </form>
+    <template #footer>
       <div class="form-actions">
         <button type="button" class="cancel-button" :disabled="submitting" @click="closeForm">Отмена</button>
-        <button type="submit" class="submit-button" :disabled="submitting || screenshotCapturing || !description.trim()">
+        <button type="submit" form="error-report-form" class="submit-button" :disabled="submitting || screenshotCapturing || !description.trim()">
           {{ submitting ? 'Отправка…' : 'Отправить' }}
         </button>
       </div>
-    </form>
-  </AppModal>
+    </template>
+  </AppModalFrame>
 
   <teleport v-if="toast" to="body">
     <div class="report-toast" role="status" data-error-report-ignore>{{ toast }}</div>
@@ -141,7 +142,7 @@
 
 <script setup>
 import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
-import AppModal from '@/shared/ui/AppModal.vue'
+import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 import { createErrorReport } from '../api/errorReportApi'
 import { describeElement, screenshotContextsFor, selectorFor } from '../lib/errorReportElement'
 import { platformForViewport } from '../lib/errorReportContext'

@@ -86,7 +86,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import ItemPickerModal from '@/features/character-editor/components/ItemPickerModal'
+import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import FormNumberInput from '@/shared/ui/form/FormNumberInput'
 import FormTextInput from '@/shared/ui/form/FormTextInput'
 import FormTextarea from '@/shared/ui/form/FormTextarea'

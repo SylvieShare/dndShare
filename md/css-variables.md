@@ -16,7 +16,7 @@ The dark UI uses one application canvas plus a compact surface scale. Do not cre
 | `--popover-bg` | `#202024` | Dropdowns, tooltips and detached popovers. |
 | `--scrim` | black at 62% | Modal/overlay dimming. |
 
-Canvas rule: `--app-bg` belongs only to the application/page backdrop. The global header uses `--bg` to separate from that backdrop; toolbar chrome inside a `--bg` editor uses `--surface`. A form container uses `background: var(--bg)`, its fields are `var(--surface-raised)`, field borders are `var(--border-strong)`, and focus is `var(--accent)`. This is the contrast model established by the character-sheet morph editors and used project-wide. `AppModal` already supplies `--bg`; do not wrap a form in an additional grey panel.
+Canvas rule: `--app-bg` belongs only to the application/page backdrop. The global header uses `--bg` to separate from that backdrop; toolbar chrome inside a `--bg` editor uses `--surface`. Regular forms and editors use `background: var(--bg)`, while modal windows and their fixed chrome use `--surface`. Fields are `var(--surface-raised)`, field borders are `var(--border-strong)`, and focus is `var(--accent)`. `AppModal`/`AppModalFrame` already supply the modal surface; do not wrap their content in an additional grey panel.
 
 ## Lines and text
 

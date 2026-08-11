@@ -147,24 +147,19 @@
     </div>
   </div>
 
-  <AppModal v-if="sourcesOpen" wide tile @close="sourcesOpen = false">
-    <div class="sources-modal">
-      <div class="sources-modal-title">Источники персонажа</div>
-      <p>Выбранные книги ограничивают новые варианты в справочниках. Уже добавленный контент останется на листе.</p>
-      <ContentSourceSelector
-        :source-version-id="sourceVersionId"
-        :model-value="sourceDraft"
-        @update:model-value="updateSources"
-      />
-    </div>
-  </AppModal>
+  <ContentSourcesModal
+    v-if="sourcesOpen"
+    :source-version-id="sourceVersionId"
+    :model-value="sourceDraft"
+    @update:model-value="updateSources"
+    @close="sourcesOpen = false"
+  />
 </template>
 
 <script setup>
 import { computed, defineAsyncComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import AppModal from '@/shared/ui/AppModal'
-import ContentSourceSelector from '@/features/character-editor/components/ContentSourceSelector.vue'
+import ContentSourcesModal from '@/features/character-editor/components/ContentSourcesModal.vue'
 import ToggleSwitch from "@/shared/ui/ToggleSwitch"
 import { sessionStatusColor, sessionStatusLabel } from '@/features/sessions/composables/useSessionStatus'
 import { normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'

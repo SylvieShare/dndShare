@@ -73,18 +73,20 @@
     </aside>
   </teleport>
 
-  <AppModal v-if="activeReport" :z-index="9600" extra-wide @close="closeDetails">
+  <AppModalFrame
+    v-if="activeReport"
+    :title="displayTitle(activeReport, 120)"
+    :subtitle="`Заявка #${activeReport.id}`"
+    :z-index="9600"
+    extra-wide
+    @close="closeDetails"
+  >
+    <template #header-actions>
+      <span class="modal-status" :class="`state-${statusKey(activeReport).toLowerCase()}`">
+        {{ statusLabel(activeReport) }}
+      </span>
+    </template>
     <div class="review-modal" data-error-report-ignore>
-      <div class="review-modal-head">
-        <div>
-          <span class="review-modal-id">Заявка #{{ activeReport.id }}</span>
-          <h2>{{ displayTitle(activeReport, 120) }}</h2>
-        </div>
-        <span class="modal-status" :class="`state-${statusKey(activeReport).toLowerCase()}`">
-          {{ statusLabel(activeReport) }}
-        </span>
-      </div>
-
       <p class="review-description">{{ activeReport.description }}</p>
       <div v-if="actionError" class="review-action-error">{{ actionError }}</div>
       <dl class="review-meta">
@@ -169,12 +171,12 @@
         </form>
       </section>
     </div>
-  </AppModal>
+  </AppModalFrame>
 </template>
 
 <script setup>
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
-import AppModal from '@/shared/ui/AppModal.vue'
+import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 import { useAccountStore } from '@/stores/account'
 import {
   errorReportStatusKey,

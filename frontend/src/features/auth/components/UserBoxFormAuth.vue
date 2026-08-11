@@ -7,8 +7,7 @@
     </div>
 
     <!-- Модальное окно входа -->
-    <AppModal v-if="mobileOpen" @close="mobileOpen = false">
-      <div class="reg-title">Вход</div>
+    <AppModalFrame v-if="mobileOpen" title="Вход" @close="mobileOpen = false">
       <div class="auth-form" :class="{ shaking: showErrorShake }">
         <FormField label="Логин" vertical>
           <FormTextInput v-model:value="login" placeholder="Введите логин" autocomplete="username" :disabled="processAuth" />
@@ -19,13 +18,14 @@
         <transition name="err">
           <div v-if="showError" class="reg-error">Неверный логин или пароль</div>
         </transition>
-        <FormActionButtons cancel-text="Регистрация" submit-text="Войти" loading-text="Вход…" :loading="processAuth" @cancel="openReg" @submit="authMobile" />
       </div>
-    </AppModal>
+      <template #footer>
+        <FormActionButtons cancel-text="Регистрация" submit-text="Войти" loading-text="Вход…" :loading="processAuth" @cancel="openReg" @submit="authMobile" />
+      </template>
+    </AppModalFrame>
 
     <!-- Модальное окно регистрации -->
-    <AppModal v-if="regOpen" @close="closeReg">
-      <div class="reg-title">Регистрация</div>
+    <AppModalFrame v-if="regOpen" title="Регистрация" @close="closeReg">
 
       <FormField label="Логин" vertical>
         <FormTextInput v-model:value="reg.login" placeholder="Придумайте логин" autocomplete="username" :disabled="reg.busy" @enter="submitReg" />
@@ -41,15 +41,17 @@
         <div v-if="reg.error" class="reg-error">{{ reg.error }}</div>
       </transition>
 
-      <FormActionButtons submit-text="Создать аккаунт" loading-text="Создание…" :loading="reg.busy" :can-submit="canSubmitReg" @cancel="closeReg" @submit="submitReg" />
-    </AppModal>
+      <template #footer>
+        <FormActionButtons submit-text="Создать аккаунт" loading-text="Создание…" :loading="reg.busy" :can-submit="canSubmitReg" @cancel="closeReg" @submit="submitReg" />
+      </template>
+    </AppModalFrame>
   </div>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
 import { watch } from 'vue'
-import AppModal from '@/shared/ui/AppModal'
+import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 import FormActionButtons from '@/shared/ui/form/FormActionButtons'
 import FormField from '@/shared/ui/form/FormField'
 import FormTextInput from '@/shared/ui/form/FormTextInput'
@@ -166,12 +168,6 @@ async function submitReg() {
   transition: color 0.15s;
 }
 .reg-link:hover { color: var(--text-1); }
-
-.reg-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--text-1);
-}
 
 .auth-form {
   display: flex;

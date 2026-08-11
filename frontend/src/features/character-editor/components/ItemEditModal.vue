@@ -1,6 +1,5 @@
 <template>
-  <AppModal wide tile :z-index="4500" @close="$emit('close')">
-    <div class="iem-title">{{ item ? 'Редактировать предмет' : (typeName ? `Новый элемент в «${typeName}»` : 'Новый элемент') }}</div>
+  <AppModalFrame wide :title="item ? 'Редактировать предмет' : (typeName ? `Новый элемент в «${typeName}»` : 'Новый элемент')" :z-index="4500" @close="$emit('close')">
 
     <FormField label="Название" vertical>
       <FormTextInput
@@ -42,13 +41,6 @@
       <ItemSchemaField v-for="field in typeFields" :key="field.key" :field="field" />
     </div>
 
-    <div class="iem-actions">
-      <button class="iem-cancel" @click="$emit('close')">Отмена</button>
-      <button class="iem-submit" :disabled="!formName.trim() || saving" @click="submit">
-        {{ saving ? '...' : (item ? 'Сохранить' : 'Создать') }}
-      </button>
-    </div>
-
     <ItemPickerModal
       v-if="picker.open"
       :item-type-ids="[picker.typeId]"
@@ -56,13 +48,21 @@
       @pick="onItemPicked"
       @close="picker.open = false"
     />
-  </AppModal>
+    <template #footer>
+      <div class="iem-actions">
+        <button class="iem-cancel" @click="$emit('close')">Отмена</button>
+        <button class="iem-submit" :disabled="!formName.trim() || saving" @click="submit">
+          {{ saving ? '...' : (item ? 'Сохранить' : 'Создать') }}
+        </button>
+      </div>
+    </template>
+  </AppModalFrame>
 </template>
 
 <script setup>
 import { nextTick, onMounted, provide, reactive, ref } from 'vue'
-import AppModal from '@/shared/ui/AppModal'
-import ItemPickerModal from '@/features/character-editor/components/ItemPickerModal'
+import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
+import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import ItemSchemaField from './ItemSchemaField.vue'
 import FormField from '@/shared/ui/form/FormField.vue'
 import FormTextInput from '@/shared/ui/form/FormTextInput.vue'

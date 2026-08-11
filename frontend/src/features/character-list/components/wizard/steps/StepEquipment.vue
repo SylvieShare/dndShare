@@ -51,7 +51,7 @@
 
 <script setup>
 import { computed, inject, ref } from 'vue'
-import ItemPickerModal from '@/features/character-editor/components/ItemPickerModal.vue'
+import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import { backgroundStartingEquipment, formatStartingCoins } from '@/features/character-editor/settings/dnd/creation/backgroundEquipment'
 
 const { state, classEquipment, addEquipment, removeEquipment, bumpEquipment } = inject('createWizard')

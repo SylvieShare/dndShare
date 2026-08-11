@@ -56,7 +56,7 @@ Key rules:
 - choices granted by a race or class are completed on that source step;
 - equipment uses the same canonical inventory model as the sheet;
 - descriptions are edited/rendered through the shared rich-description pair;
-- feat and item selection uses shared `ItemPickerModal`;
+- feat and item selection uses the handbook `ItemPickerModal`;
 - resets and incomplete-create decisions use shared `ConfirmDialog`;
 - the draft persists in `localStorage` and is cleared after successful create.
 

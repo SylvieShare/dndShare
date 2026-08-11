@@ -18,9 +18,7 @@
       </svg>
     </button>
 
-    <AppModal v-if="windowOpen" tile @close="close">
-      <div class="dciw-title">Персонаж</div>
-
+    <AppModalFrame v-if="windowOpen" title="Персонаж" @close="close">
       <div class="dciw-body">
         <FormField label="Аватар" vertical>
           <div
@@ -114,14 +112,16 @@
         </FormField>
       </div>
 
-      <FormActionButtons submit-text="Сохранить" @cancel="close" @submit="save" />
-    </AppModal>
+      <template #footer>
+        <FormActionButtons submit-text="Сохранить" @cancel="close" @submit="save" />
+      </template>
+    </AppModalFrame>
   </div>
 </template>
 
 <script setup>
 import { computed, inject, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
-import AppModal from '@/shared/ui/AppModal'
+import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 import FormActionButtons from '@/shared/ui/form/FormActionButtons'
 import FormField from '@/shared/ui/form/FormField'
 import FormNumberInput from '@/shared/ui/form/FormNumberInput'
@@ -413,13 +413,6 @@ function close() {
   transition: color 0.12s, background 0.12s;
 }
 @media (hover: hover) { .dci-edit:hover { color: var(--accent); background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); } }
-
-.dciw-title {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--text-1);
-  padding-right: 24px;
-}
 
 .dciw-body {
   display: flex;

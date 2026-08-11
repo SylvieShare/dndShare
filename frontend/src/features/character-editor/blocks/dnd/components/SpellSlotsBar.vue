@@ -62,7 +62,7 @@
       </div>
     </section>
 
-    <DndSlotEditModal
+    <DndSpellbookSettingsModal
       v-if="editOpen"
       :slots="allSlots"
       :stat-path="statPath"
@@ -85,7 +85,7 @@
 <script setup>
 import { ref } from 'vue'
 
-import DndSlotEditModal from '@/features/character-editor/blocks/dnd/DndSlotEditModal.vue'
+import DndSpellbookSettingsModal from '@/features/character-editor/blocks/dnd/DndSpellbookSettingsModal.vue'
 import SpellSlotSphere from '@/features/items/components/SpellSlotSphere.vue'
 import SheetBlockTitle from '@/shared/ui/SheetBlockTitle'
 

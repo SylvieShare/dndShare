@@ -1,6 +1,4 @@
 <template>
-  <div class="lre-title">Длинный отдых</div>
-
   <EditorSection title="Восстановление">
     <p class="lre-copy">
       Хиты и ячейки заклинаний восстановятся полностью, ресурсы отдыха перезарядятся,
@@ -71,7 +69,6 @@ function confirm() {
 </script>
 
 <style scoped>
-.lre-title { color: var(--text-1); font-size: 16px; font-weight: 700; }
 .lre-copy { margin: 0; color: var(--text-2); font-size: 13px; line-height: 1.5; }
 .lre-summary { color: var(--text-muted); font-size: 12px; }
 .lre-summary strong { color: var(--text-1); }

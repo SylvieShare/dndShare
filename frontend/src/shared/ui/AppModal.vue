@@ -15,7 +15,6 @@
           'am-card-wide': wide,
           'am-card-extra-wide': extraWide,
           'am-card-full': fullscreen,
-          'am-card-tile': tile,
           'am-card-flush': flush,
         }"
         tabindex="-1"
@@ -54,8 +53,6 @@ const props = defineProps({
   dismissible: { type: Boolean, default: true },
   // Lets a higher-level shell own padding, scrolling and fixed chrome.
   flush: { type: Boolean, default: false },
-  // Use the BaseTile block surface (var(--surface)) instead of the page bg.
-  tile: { type: Boolean, default: false },
 })
 const emit = defineEmits(['close', 'opened'])
 
@@ -281,7 +278,7 @@ onBeforeUnmount(() => {
 
 .am-card {
   position: relative;
-  background: var(--bg);
+  background: var(--surface);
   border: 1px solid var(--border-strong);
   border-radius: 18px;
   padding: 28px 28px 24px;
@@ -293,11 +290,6 @@ onBeforeUnmount(() => {
   display: flex;
   flex-direction: column;
   gap: 12px;
-}
-
-.am-card-tile {
-  background: var(--surface);
-  border: none;
 }
 
 .am-card-flush {

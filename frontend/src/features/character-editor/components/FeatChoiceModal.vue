@@ -1,8 +1,6 @@
 <template>
-  <AppModal wide tile :z-index="4600" @close="$emit('close')">
+  <AppModalFrame wide :title="item.name" subtitle="Настройка черты" :z-index="4600" @close="$emit('close')">
     <div class="fcm">
-      <div class="fcm-kicker">Настройка черты</div>
-      <div class="fcm-title">{{ item.name }}</div>
       <p class="fcm-intro">Сделайте обязательные выборы. Они сохранятся в листе персонажа вместе с чертой.</p>
 
       <div class="fcm-sections">
@@ -59,10 +57,6 @@
         </section>
       </div>
 
-      <div class="fcm-actions">
-        <button type="button" class="fcm-cancel" @click="$emit('close')">Отмена</button>
-        <button type="button" class="fcm-confirm" :disabled="!complete" @click="confirm">Готово</button>
-      </div>
     </div>
 
     <ItemPickerModal
@@ -75,14 +69,20 @@
       @pick="onItemPick"
       @close="itemPicker.choice = null"
     />
-  </AppModal>
+    <template #footer>
+      <div class="fcm-actions">
+        <button type="button" class="fcm-cancel" @click="$emit('close')">Отмена</button>
+        <button type="button" class="fcm-confirm" :disabled="!complete" @click="confirm">Готово</button>
+      </div>
+    </template>
+  </AppModalFrame>
 </template>
 
 <script setup>
 import { computed, onMounted, reactive, watch } from 'vue'
 
-import AppModal from '@/shared/ui/AppModal'
-import ItemPickerModal from '@/features/character-editor/components/ItemPickerModal.vue'
+import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
+import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import { choiceSelectionsComplete, featChoices } from '@/features/items/lib/featRules'
 import { useSuggestStore } from '@/stores/suggest'
 
@@ -198,9 +198,7 @@ function confirm() {
 
 <style scoped>
 .fcm { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
-.fcm-kicker { color: var(--accent); font-size: 10px; font-weight: 800; letter-spacing: 0.13em; text-transform: uppercase; }
-.fcm-title { padding-right: 30px; color: var(--text-1); font-family: var(--font-display); font-size: 25px; font-weight: 700; line-height: 1.15; }
-.fcm-intro { margin: -5px 0 2px; color: var(--text-muted); font-size: 12px; line-height: 1.5; }
+.fcm-intro { margin: 0 0 2px; color: var(--text-muted); font-size: 12px; line-height: 1.5; }
 .fcm-sections { display: flex; flex-direction: column; gap: 10px; max-height: min(60vh, 560px); overflow-y: auto; padding-right: 3px; }
 .fcm-section { padding: 13px; border: 1px solid var(--border); border-radius: var(--r-md); background: color-mix(in srgb, var(--surface) 86%, transparent); }
 .fcm-section-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 10px; }

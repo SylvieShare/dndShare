@@ -373,11 +373,3 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
 }
-
-.hp-edit-title {
-  color: var(--text-1);
-  font-size: 15px;
-  font-weight: 700;
-  padding-right: 24px;
-  margin-bottom: 4px;
-}

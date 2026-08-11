@@ -28,6 +28,7 @@
         </div>
 
         <button
+          v-if="showClose"
           class="aem-close"
           type="button"
           aria-label="Закрыть"
@@ -71,6 +72,7 @@ defineProps({
   padded: { type: Boolean, default: true },
   bodyScroll: { type: Boolean, default: true },
   dismissible: { type: Boolean, default: true },
+  showClose: { type: Boolean, default: true },
   zIndex: { type: Number, default: 3000 },
 })
 
@@ -88,7 +90,7 @@ function requestClose() {
   max-height: inherit;
   display: flex;
   flex-direction: column;
-  background: var(--bg);
+  background: var(--surface);
 }
 
 .aem-header {
@@ -101,7 +103,7 @@ function requestClose() {
   min-height: 58px;
   box-sizing: border-box;
   padding: 14px 54px 14px 24px;
-  background: var(--bg);
+  background: var(--surface);
   border-bottom: 1px solid var(--border);
 }
 
@@ -119,7 +121,7 @@ function requestClose() {
   overflow: hidden;
   color: var(--text-1);
   font-family: var(--font-display);
-  font-size: 18px;
+  font-size: 21px;
   font-weight: 700;
   line-height: 1.2;
   text-overflow: ellipsis;
@@ -199,7 +201,7 @@ function requestClose() {
   min-height: 62px;
   box-sizing: border-box;
   padding: 12px 24px;
-  background: var(--bg);
+  background: var(--surface);
   border-top: 1px solid var(--border);
 }
 
@@ -227,6 +229,10 @@ function requestClose() {
 
   .aem-heading {
     max-width: 100%;
+  }
+
+  .aem-title {
+    font-size: 20px;
   }
 
   .aem-header-actions {

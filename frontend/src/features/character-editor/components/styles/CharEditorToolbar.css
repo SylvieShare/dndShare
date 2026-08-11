@@ -361,21 +361,6 @@
   padding-bottom: 12px;
 }
 
-.sources-modal {
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-  max-height: min(760px, calc(100vh - 80px));
-  overflow-x: hidden;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  padding: 22px;
-  box-sizing: border-box;
-}
-.sources-modal-title { font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--text-1); }
-.sources-modal > p { margin: 0; color: var(--text-muted); font-size: 12px; line-height: 1.45; }
 .menu-pdf svg { color: var(--text-muted); flex: 0 0 auto; }
 
 .menu-save-item {

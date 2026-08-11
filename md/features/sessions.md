@@ -67,8 +67,9 @@ to the character only when the current user may perform the action.
 
 ## Music
 
-`MusicLibraryModal.vue` is a fullscreen `AppModal`. Album/track/tag CRUD uses
-shared prompt/confirm dialogs; track ordering uses `useSortable`. Playback state
+`MusicLibraryModal.vue` is a specialized fullscreen `AppModal`; its nested tag
+and album dialogs use `AppModalFrame`. Album/track/tag CRUD uses shared
+prompt/confirm dialogs; track ordering uses `useSortable`. Playback state
 is synchronized through the session music endpoint, while track files and
 signed URLs are served by `/api/music`.
 

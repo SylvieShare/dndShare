@@ -1,6 +1,5 @@
 <template>
-  <AppModal :z-index="4500" @close="$emit('close')">
-    <div class="iim-title">{{ entry ? 'Редактировать предмет' : 'Новый предмет' }}</div>
+  <AppModalFrame :title="entry ? 'Редактировать предмет' : 'Новый предмет'" :z-index="4500" @close="$emit('close')">
 
     <FormField label="Название" vertical>
       <FormTextInput v-model:value="name" placeholder="Название..." autofocus @enter="submit" />
@@ -22,18 +21,20 @@
       <span>Расходуемое</span>
     </button>
 
-    <FormActionButtons
-      :submit-text="entry ? 'Сохранить' : 'Создать'"
-      :can-submit="!!name.trim()"
-      @submit="submit"
-      @cancel="$emit('close')"
-    />
-  </AppModal>
+    <template #footer>
+      <FormActionButtons
+        :submit-text="entry ? 'Сохранить' : 'Создать'"
+        :can-submit="!!name.trim()"
+        @submit="submit"
+        @cancel="$emit('close')"
+      />
+    </template>
+  </AppModalFrame>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import AppModal from '@/shared/ui/AppModal'
+import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 import FormActionButtons from '@/shared/ui/form/FormActionButtons'
 import FormField from '@/shared/ui/form/FormField'
 import FormTextInput from '@/shared/ui/form/FormTextInput'
@@ -63,13 +64,6 @@ function submit() {
 </script>
 
 <style scoped>
-.iim-title {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--text-1);
-  margin-bottom: 14px;
-}
-
 .iim-toggle {
   display: inline-flex;
   align-items: center;

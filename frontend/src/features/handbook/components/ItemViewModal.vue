@@ -1,5 +1,5 @@
 <template>
-  <AppEditorModal
+  <AppModalFrame
     wide
     :padded="false"
     :title="item?.name || (loading ? 'Загрузка…' : 'Предмет')"
@@ -12,14 +12,14 @@
     <template v-if="item && $slots.actions" #footer>
       <slot name="actions" :item="item" :type="type" />
     </template>
-  </AppEditorModal>
+  </AppModalFrame>
 </template>
 
 <script setup>
 import { computed, ref, watch } from 'vue'
 import { itemsApi } from '@/shared/api/itemsApi'
 import { useItemTypesStore } from '@/stores/itemTypes'
-import AppEditorModal from '@/shared/ui/AppEditorModal.vue'
+import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 import HandbookItemDetail from '@/features/handbook/components/HandbookItemDetail'
 
 const itemCache = new Map()

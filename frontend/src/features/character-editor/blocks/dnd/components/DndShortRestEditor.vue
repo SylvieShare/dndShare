@@ -1,6 +1,4 @@
 <template>
-  <div class="sre-title">Короткий отдых</div>
-
   <EditorSection title="Хиты">
     <div class="sre-row">
       <span class="sre-label">Текущие</span>
@@ -50,7 +48,6 @@ function canSpend(pool) { return pool.used < pool.total && current.value < max.v
 </script>
 
 <style scoped>
-.sre-title { color: var(--text-1); font-size: 16px; font-weight: 700; }
 .sre-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .sre-pool { display: grid; grid-template-columns: 1fr minmax(130px, auto); align-items: center; gap: 10px; }
 .sre-pool + .sre-pool { padding-top: 8px; border-top: 1px solid var(--border); }

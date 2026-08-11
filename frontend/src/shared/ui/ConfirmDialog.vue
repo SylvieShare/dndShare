@@ -1,22 +1,23 @@
 <template>
-  <AppModal :z-index="zIndex" :show-close="false" :dismissible="!loading" @close="$emit('cancel')">
-    <div class="cd-title">{{ title }}</div>
+  <AppModalFrame :title="title" :z-index="zIndex" :show-close="false" :dismissible="!loading" @close="$emit('cancel')">
     <div v-if="message" class="cd-message">{{ message }}</div>
-    <div class="cd-actions">
-      <button type="button" class="cd-btn-cancel" :disabled="loading" @click="$emit('cancel')">{{ cancelLabel }}</button>
-      <button
-        type="button"
-        class="cd-btn-confirm"
-        :class="`cd-btn--${variant}`"
-        :disabled="loading"
-        @click="$emit('confirm')"
-      >{{ loading ? loadingLabel : confirmLabel }}</button>
-    </div>
-  </AppModal>
+    <template #footer>
+      <div class="cd-actions">
+        <button type="button" class="cd-btn-cancel" :disabled="loading" @click="$emit('cancel')">{{ cancelLabel }}</button>
+        <button
+          type="button"
+          class="cd-btn-confirm"
+          :class="`cd-btn--${variant}`"
+          :disabled="loading"
+          @click="$emit('confirm')"
+        >{{ loading ? loadingLabel : confirmLabel }}</button>
+      </div>
+    </template>
+  </AppModalFrame>
 </template>
 
 <script setup>
-import AppModal from '@/shared/ui/AppModal.vue'
+import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 
 defineProps({
   title:        { type: String, required: true },
@@ -32,17 +33,9 @@ defineEmits(['confirm', 'cancel'])
 </script>
 
 <style scoped>
-.cd-title {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--text-1);
-  margin-bottom: 8px;
-}
-
 .cd-message {
   font-size: 13px;
   color: var(--text-2);
-  margin-bottom: 22px;
   line-height: 1.5;
 }
 

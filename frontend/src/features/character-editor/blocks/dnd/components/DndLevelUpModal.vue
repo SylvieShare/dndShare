@@ -1,9 +1,5 @@
 <template>
-  <AppModal tile @close="$emit('close')">
-    <div class="lu-head">
-      <div class="lu-title">Повышение уровня</div>
-      <div class="lu-total">{{ total }} <span class="lu-arrow">→</span> {{ newTotal }}</div>
-    </div>
+  <AppModalFrame title="Повышение уровня" :subtitle="`${total} → ${newTotal}`" @close="$emit('close')">
 
     <p v-if="loading" class="lu-muted">Загрузка справочника…</p>
 
@@ -201,10 +197,6 @@
         </ul>
       </div>
 
-      <div class="lu-actions">
-        <button class="lu-btn ghost" @click="$emit('close')">Отмена</button>
-        <button class="lu-btn" :disabled="!canAccept" @click="accept">Принять</button>
-      </div>
     </template>
 
     <ItemViewModal
@@ -232,16 +224,22 @@
       @confirm="onFeatChoicesConfirm"
       @close="featConfigItem = null"
     />
-  </AppModal>
+    <template v-if="step === 'preview'" #footer>
+      <div class="lu-actions">
+        <button class="lu-btn ghost" @click="$emit('close')">Отмена</button>
+        <button class="lu-btn" :disabled="!canAccept" @click="accept">Принять</button>
+      </div>
+    </template>
+  </AppModalFrame>
 </template>
 
 <script setup>
 import { computed, inject, onMounted, ref, watch } from 'vue'
-import AppModal from '@/shared/ui/AppModal'
+import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 import FeatChoiceModal from '@/features/character-editor/components/FeatChoiceModal.vue'
 import FormNumberInput from '@/shared/ui/form/FormNumberInput'
-import ItemPickerModal from '@/features/character-editor/components/ItemPickerModal.vue'
-import ItemViewModal from '@/shared/ui/ItemViewModal'
+import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
+import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
 import MultiToggle from '@/shared/ui/MultiToggle.vue'
 import { abilityModifier, proficiencyBonus, resolveNumValue } from '@/shared/lib/dnd'
 import { STAT_KEYS, STAT_SHORT } from '@/shared/lib/dndStats'

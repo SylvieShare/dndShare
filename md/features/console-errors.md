@@ -22,4 +22,4 @@ the same page URL are grouped with an occurrence count, and at most 100 unique e
 When at least one error exists, a circular indicator appears at the bottom-right above transient
 dice notifications. A single occurrence is shown as `!`; multiple occurrences show their count
 (capped visually at `99+`). The circle expands into a scrollable list. Clicking a row opens the
-shared `AppModal` with the complete bounded error text, page URL and timestamp.
+shared `AppModalFrame` with the complete bounded error text, page URL and timestamp.

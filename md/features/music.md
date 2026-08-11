@@ -24,6 +24,7 @@ point to storage and playback uses short-lived URLs.
 
 `MusicLibraryModal.vue` is a fullscreen `AppModal`. It uses:
 
+- `AppModalFrame` for nested tag/album dialogs;
 - `TextPromptDialog` for create/rename;
 - `ConfirmDialog` for destructive actions;
 - `useSortable/reorderByDrop` for track order;

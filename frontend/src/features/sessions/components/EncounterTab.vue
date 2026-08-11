@@ -244,8 +244,7 @@
       @pick="enc.addNpc"
     />
 
-    <AppModal v-if="enc.showSimpleForm" @close="enc.showSimpleForm = false">
-      <div class="hp-edit-title">Своё существо</div>
+    <AppModalFrame v-if="enc.showSimpleForm" title="Своё существо" @close="enc.showSimpleForm = false">
       <FormField label="Имя" vertical>
         <FormTextInput v-model:value="simpleForm.name" placeholder="Гоблин-вожак" autofocus @enter="submitSimple" />
       </FormField>
@@ -263,13 +262,15 @@
       <FormField label="Описание" vertical>
         <FormTextarea v-model:value="simpleForm.description" :rows="3" :maxlength="2000" placeholder="Краткое описание" />
       </FormField>
-      <FormActionButtons
-        submit-text="Добавить"
-        :can-submit="!!simpleForm.name.trim()"
-        @cancel="enc.showSimpleForm = false"
-        @submit="submitSimple"
-      />
-    </AppModal>
+      <template #footer>
+        <FormActionButtons
+          submit-text="Добавить"
+          :can-submit="!!simpleForm.name.trim()"
+          @cancel="enc.showSimpleForm = false"
+          @submit="submitSimple"
+        />
+      </template>
+    </AppModalFrame>
     <DndHpCalcModal
       v-if="enc.hpCalcNpc"
       :hp="enc.npcHpObj(enc.hpCalcNpc)"
@@ -293,8 +294,7 @@
       @close="enc.closeNpcDetail"
     />
 
-    <AppModal v-if="enc.hpEditNpc" @close="enc.closeNpcHpEdit">
-      <div class="hp-edit-title">{{ enc.npcName(enc.hpEditNpc) }} · хиты</div>
+    <AppModalFrame v-if="enc.hpEditNpc" :title="`${enc.npcName(enc.hpEditNpc)} · хиты`" @close="enc.closeNpcHpEdit">
       <FormField label="Текущие HP">
         <FormNumberInput :value="enc.hpEditNpc.hpCurrent ?? 0" :min="0" :max="999" @change="enc.setNpcHpField('current', $event)" />
       </FormField>
@@ -304,13 +304,13 @@
       <FormField label="Временные HP">
         <FormNumberInput :value="enc.hpEditNpc.hpTemp ?? 0" :min="0" :max="999" @change="enc.setNpcHpField('temp', $event)" />
       </FormField>
-    </AppModal>
+    </AppModalFrame>
   </div>
 </template>
 
 <script setup>
 import { computed, provide, reactive, toRef } from 'vue'
-import AppModal from '@/shared/ui/AppModal'
+import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 import DndHpCalcModal from '@/features/character-editor/blocks/dnd/DndHpCalcModal'
 import EncounterRow from '@/features/sessions/components/EncounterRow'
 import FormActionButtons from '@/shared/ui/form/FormActionButtons'
@@ -318,8 +318,8 @@ import FormField from '@/shared/ui/form/FormField'
 import FormNumberInput from '@/shared/ui/form/FormNumberInput'
 import FormTextInput from '@/shared/ui/form/FormTextInput'
 import FormTextarea from '@/shared/ui/form/FormTextarea'
-import ItemViewModal from '@/shared/ui/ItemViewModal'
-import ItemPickerModal from '@/features/character-editor/components/ItemPickerModal'
+import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
+import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import { useEncounter } from '@/features/sessions/composables/useEncounter'
 
 const props = defineProps({

@@ -58,14 +58,17 @@ the item API before pagination. The publication filter has its own toolbar
 button for every collection, is passed as `contentSourceIds`, and its selected
 ids persist in browser local storage. Schema filter groups without available
 options are not shown. `ItemEditModal` is schema-driven and uses shared form primitives; its
-create title uses the current item type name. `ItemPickerModal` is the standard
-server-backed picker used by the character wizard/editor.
+create title uses the current item type name. `components/ItemPickerModal.vue`
+is the standard server-backed picker used by the character wizard/editor;
+`components/ItemViewModal.vue` is the standard detail window. Both belong to
+the handbook feature because they compose handbook API, stores and renderers.
 
 Details are specialized by type where useful (weapon, spell, enemy, potion,
-feat), otherwise the generic field renderer is used. Item detail modals use the
-shared `ItemViewModal` and fixed-chrome `AppEditorModal` stack; the standalone
-detail renderer keeps its own title, while the modal moves that title into the
-fixed header. Descriptions use the shared rich renderer.
+feat), otherwise the generic field renderer is used. Item detail modals use
+`ItemViewModal` and fixed-chrome `AppModalFrame`; the standalone detail renderer
+keeps its own title, while the modal moves that title into the fixed header.
+Feature-specific mutations are passed into the fixed footer through the
+`actions` slot. Descriptions use the shared rich renderer.
 
 ## Schemas
 

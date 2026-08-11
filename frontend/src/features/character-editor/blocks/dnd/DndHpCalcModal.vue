@@ -1,5 +1,5 @@
 <template>
-  <AppModal @close="$emit('close')">
+  <AppModalFrame title="Хиты" @close="$emit('close')">
 
     <!-- HP summary -->
     <div class="hc-summary" :class="{ 'hc-summary-dead': isDead }" :style="summaryStyle">
@@ -47,13 +47,13 @@
       </div>
     </div>
 
-  </AppModal>
+  </AppModalFrame>
 </template>
 
 <script setup>
 import { computed, ref } from 'vue'
 import CalcPad from '@/features/character-editor/components/CalcPad'
-import AppModal from '@/shared/ui/AppModal'
+import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 import SystemDie from '@/shared/ui/SystemDie.vue'
 import DndDeathSaves from './DndDeathSaves'
 import { normalizeHitDice, setHitDieUsed } from '@/features/character-editor/blocks/dnd/lib/hitDice'

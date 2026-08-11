@@ -189,9 +189,13 @@
           {{ uploadStatus }}
         </div>
 
-        <AppModal v-if="tagPickerTrack" tile :z-index="2300" @close="tagPickerTrack = null">
+        <AppModalFrame
+          v-if="tagPickerTrack"
+          :title="`Теги для «${tagPickerTrack.name}»`"
+          :z-index="2300"
+          @close="tagPickerTrack = null"
+        >
           <div class="album-picker">
-            <div class="album-picker-title">Теги для «{{ tagPickerTrack.name }}»</div>
             <div class="album-picker-list">
               <label v-for="tag in musicStore.tags" :key="tag.id" class="album-picker-row">
                 <input
@@ -203,15 +207,14 @@
               </label>
               <div v-if="!musicStore.tags.length" class="album-picker-empty">Создайте теги в окне «изменить теги»</div>
             </div>
-            <div class="album-picker-actions">
-              <button class="album-picker-close" @click="tagPickerTrack = null">Готово</button>
-            </div>
           </div>
-        </AppModal>
+          <template #footer>
+            <button class="album-picker-close" @click="tagPickerTrack = null">Готово</button>
+          </template>
+        </AppModalFrame>
 
-        <AppModal v-if="tagManagerOpen" tile :z-index="2300" @close="tagManagerOpen = false">
+        <AppModalFrame v-if="tagManagerOpen" title="Теги" :z-index="2300" @close="tagManagerOpen = false">
           <div class="album-picker">
-            <div class="album-picker-title">Теги</div>
             <div class="tag-manager-list">
               <div v-for="tag in musicStore.tags" :key="tag.id" class="tag-manager-row">
                 <template v-if="editingTagId === tag.id">
@@ -254,15 +257,19 @@
                 + добавить
               </button>
             </div>
-            <div class="album-picker-actions">
-              <button class="album-picker-close" @click="tagManagerOpen = false">Готово</button>
-            </div>
           </div>
-        </AppModal>
+          <template #footer>
+            <button class="album-picker-close" @click="tagManagerOpen = false">Готово</button>
+          </template>
+        </AppModalFrame>
 
-        <AppModal v-if="albumPickerTrack" tile :z-index="2300" @close="albumPickerTrack = null">
+        <AppModalFrame
+          v-if="albumPickerTrack"
+          :title="`Альбомы для «${albumPickerTrack.name}»`"
+          :z-index="2300"
+          @close="albumPickerTrack = null"
+        >
           <div class="album-picker">
-            <div class="album-picker-title">Альбомы для «{{ albumPickerTrack.name }}»</div>
             <div class="album-picker-list">
               <label v-for="album in musicStore.albums" :key="album.id" class="album-picker-row">
                 <input
@@ -275,11 +282,11 @@
               </label>
               <div v-if="!musicStore.albums.length" class="album-picker-empty">Создайте альбом в сайдбаре</div>
             </div>
-            <div class="album-picker-actions">
-              <button class="album-picker-close" @click="albumPickerTrack = null">Готово</button>
-            </div>
           </div>
-        </AppModal>
+          <template #footer>
+            <button class="album-picker-close" @click="albumPickerTrack = null">Готово</button>
+          </template>
+        </AppModalFrame>
       <TextPromptDialog
         v-if="textPrompt"
         :title="textPrompt.title"
@@ -309,6 +316,7 @@ import { useTrackUpload } from '@/features/sessions/composables/useTrackUpload'
 import { fmtTime } from '@/features/sessions/lib/musicLibrary'
 import { reorderByDrop, useSortable } from '@/shared/composables/useSortable'
 import AppModal from '@/shared/ui/AppModal.vue'
+import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 import AppSlider from '@/shared/ui/AppSlider.vue'
 import ConfirmDialog from '@/shared/ui/ConfirmDialog.vue'
 import TextPromptDialog from '@/shared/ui/TextPromptDialog.vue'

@@ -99,9 +99,9 @@ import {
   isSameCleanValue,
   normalizeAddAttacks,
 } from '@/features/character-editor/blocks/dnd/lib/weaponEntry'
-import ItemPickerModal from "@/features/character-editor/components/ItemPickerModal"
+import ItemPickerModal from "@/features/handbook/components/ItemPickerModal.vue"
 import ItemTooltip from "@/features/character-editor/components/ItemTooltip"
-import ItemViewModal from "@/shared/ui/ItemViewModal"
+import ItemViewModal from "@/features/handbook/components/ItemViewModal.vue"
 import { useSortable } from '@/shared/composables/useSortable'
 import { useDiceStore } from '@/stores/dice'
 import { useSuggestStore } from '@/stores/suggest'

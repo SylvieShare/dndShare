@@ -110,11 +110,11 @@ import DndAbilitiesEditor from "@/features/character-editor/blocks/dnd/component
 import DndAbilitiesView from "@/features/character-editor/blocks/dnd/components/DndAbilitiesView"
 import FeatChoiceModal from '@/features/character-editor/components/FeatChoiceModal.vue'
 import ItemEditModal from "@/features/character-editor/components/ItemEditModal"
-import ItemPickerModal from "@/features/character-editor/components/ItemPickerModal"
+import ItemPickerModal from "@/features/handbook/components/ItemPickerModal.vue"
 import ItemTooltip from "@/features/character-editor/components/ItemTooltip"
 import MorphEditorShell from "@/features/character-editor/components/MorphEditorShell"
 import AbilityTooltipDetails from "@/features/items/detail-components/AbilityTooltipDetails"
-import ItemViewModal from "@/shared/ui/ItemViewModal"
+import ItemViewModal from "@/features/handbook/components/ItemViewModal.vue"
 import { featChoices, featEntry } from '@/features/items/lib/featRules'
 import { ensureItemNames, itemName } from '@/features/handbook/objects/lib/itemNames'
 import { useSuggestStore } from '@/stores/suggest'

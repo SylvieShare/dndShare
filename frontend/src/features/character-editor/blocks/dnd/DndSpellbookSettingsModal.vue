@@ -1,5 +1,5 @@
 <template>
-  <AppEditorModal title="Магия" @close="$emit('close')">
+  <AppModalFrame title="Магия" @close="$emit('close')">
     <EditorSection title="Подготовка">
       <ToggleSwitch
         :model-value="preparation"
@@ -45,12 +45,12 @@
         </div>
       </div>
     </EditorSection>
-  </AppEditorModal>
+  </AppModalFrame>
 </template>
 
 <script setup>
 import EditorSection from '@/features/character-editor/components/EditorSection'
-import AppEditorModal from '@/shared/ui/AppEditorModal.vue'
+import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 import MultiToggle from '@/shared/ui/MultiToggle'
 import ToggleSwitch from '@/shared/ui/ToggleSwitch'
 import ValueSelect from '@/shared/ui/ValueSelect'

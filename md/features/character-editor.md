@@ -60,13 +60,19 @@ outside the page root.
 
 General-purpose labels, text, number, textarea and action rows use
 `shared/ui/form`; rule-specific calculators, stat controls and file inputs may
-own specialized controls. Complex windows use `AppModal`; windows with a title
-and independently scrolling body use `AppEditorModal`, whose title, close
-button and mobile handle remain fixed. Confirm and one-line prompt use
+own specialized controls. Regular windows use `AppModalFrame`, whose title,
+close button and mobile handle remain fixed while the body scrolls. Direct
+`AppModal` usage is reserved for specialized fullscreen workspaces. Confirm and one-line prompt use
 `ConfirmDialog` and `TextPromptDialog`. Item detail uses
 `ItemViewModal`, formatted descriptions use `InputDescription`/`RichContent`,
 sortable collections use `useSortable`. Full selection rules are documented in
 `md/frontend.md`.
+
+Spellbook settings use `DndSpellbookSettingsModal`; both character settings
+entry points reuse `ContentSourcesModal`. Handbook item viewing and search are
+independent `features/handbook` components. Character-specific item actions are
+supplied through the detail modal footer instead of being implemented by the
+handbook renderer.
 
 ## Canonical D&D document
 
@@ -126,7 +132,7 @@ counters and hit-dice pools without scalar mirrors.
 
 ## Items, weapons and spells
 
-`DndItems` uses `lib/itemSection.js` and the shared item picker. Equipped items
+`DndItems` uses `lib/itemSection.js` and the handbook item picker. Equipped items
 are a top-level array; user sections never double as equipped. Entry override
 is for a custom name/description/count metadata, while referenced item content
 comes from handbook. The list shows count as a badge; it has no ordinary
