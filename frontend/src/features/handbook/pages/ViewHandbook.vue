@@ -10,6 +10,8 @@
       :type="selectedType"
       :filter-fields="filterFields"
       :filter-suggests="filterSuggests"
+      :content-sources="contentSources"
+      :content-source-ids="contentSourceIds"
       :can-add="isAuth"
       :result-count="filteredItems.length"
       :has-more="hasMore"
@@ -17,6 +19,7 @@
       class="handbook-col-bar"
       @back="goToLanding"
       @add="openAddModal"
+      @update:content-source-ids="contentSourceIds = $event"
     />
 
     <!-- ── Inner: max-width centered ── -->
@@ -89,6 +92,7 @@
     <ItemEditModal
       v-if="itemForm.open && selectedType"
       :type-id="selectedType.id"
+      :type-name="selectedType.name"
       :item="itemForm.item"
       :initial-name="itemForm.initialName"
       :initial-name-en="itemForm.initialNameEn"
@@ -105,6 +109,7 @@ import { computed, onBeforeUnmount, reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { fetchGet } from '@/shared/api/http'
 import { itemsApi } from '@/shared/api/itemsApi'
+import { contentSourcesApi } from '@/shared/api/contentSourcesApi'
 import { useAccountStore } from '@/stores/account'
 import { useItemTypesStore } from '@/stores/itemTypes'
 import { useUiStore } from '@/stores/ui'
@@ -138,7 +143,10 @@ const itemPageSize = 30
 let itemOffset = 0
 let itemsRequestSeq = 0
 const searchQ = ref('')
+const handbookContentSourcesStorageKey = 'dndshare.handbook.contentSourceIds'
 const filters = ref({})
+const contentSources = ref([])
+const contentSourceIds = ref(readStoredContentSourceIds())
 const groupBy = ref(null)
 const skipSearchWatch = ref(false)
 const skipFiltersWatch = ref(false)
@@ -195,8 +203,19 @@ const filteredItems = computed(() =>
 )
 
 const isFiltered = computed(() =>
-  !!searchQ.value.trim() || Object.keys(filters.value).length > 0
+  !!searchQ.value.trim() || Object.keys(filters.value).length > 0 || contentSourceIds.value.length > 0
 )
+
+function readStoredContentSourceIds() {
+  try {
+    const stored = JSON.parse(localStorage.getItem(handbookContentSourcesStorageKey) || '[]')
+    return Array.isArray(stored)
+      ? [...new Set(stored.map(Number).filter(Number.isFinite))]
+      : []
+  } catch {
+    return []
+  }
+}
 
 function parseFilters(raw) {
   if (!raw) return {}
@@ -225,9 +244,21 @@ async function fetchTypes() {
 }
 
 function filtersQuery() {
-  return Object.keys(filters.value).length
-    ? '&filters=' + encodeURIComponent(JSON.stringify(filters.value))
-    : ''
+  const params = new URLSearchParams()
+  if (Object.keys(filters.value).length) params.set('filters', JSON.stringify(filters.value))
+  if (contentSourceIds.value.length) params.set('contentSourceIds', contentSourceIds.value.join(','))
+  const query = params.toString()
+  return query ? `&${query}` : ''
+}
+
+async function fetchContentSources(type) {
+  if (type?.sourceId == null) {
+    contentSources.value = []
+    return
+  }
+  const typeId = type.id
+  const res = await contentSourcesApi.listForSystem(type.sourceId)
+  if (selectedType.value?.id === typeId) contentSources.value = res?.sources || []
 }
 
 async function fetchItems(q, append = false) {
@@ -340,13 +371,23 @@ watch(filters, () => {
   router.replace({ query: currentQuery() })
 }, { deep: true })
 
+watch(contentSourceIds, (ids) => {
+  try {
+    localStorage.setItem(handbookContentSourcesStorageKey, JSON.stringify(ids))
+  } catch {
+    // Filtering remains available when browser storage is unavailable.
+  }
+  fetchItems(searchQ.value)
+}, { deep: true })
+
 watch(groupBy, () => {
   if (skipGroupWatch.value) { skipGroupWatch.value = false; return }
   router.replace({ query: currentQuery() })
 })
 
 watch(selectedType, (type) => {
-  uiStore.setHeaderTitle(type?.name || '')
+  uiStore.setHeaderTitle(type?.name || 'Справочник')
+  fetchContentSources(type)
 }, { immediate: true })
 
 // Sync from URL on initial load and back-navigation

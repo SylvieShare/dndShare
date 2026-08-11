@@ -46,9 +46,12 @@ and new fields, and there are no admin jobs for those migrations.
 ## UI
 
 `ViewHandbook` loads item types and collections. Search/filter happens through
-the item API before pagination. `ItemEditModal` is schema-driven and uses shared
-form primitives. `ItemPickerModal` is the standard server-backed picker used by
-the character wizard/editor.
+the item API before pagination. The publication filter has its own toolbar
+button for every collection, is passed as `contentSourceIds`, and its selected
+ids persist in browser local storage. Schema filter groups without available
+options are not shown. `ItemEditModal` is schema-driven and uses shared form primitives; its
+create title uses the current item type name. `ItemPickerModal` is the standard
+server-backed picker used by the character wizard/editor.
 
 Details are specialized by type where useful (weapon, spell, enemy, potion,
 feat), otherwise the generic field renderer is used. Item detail modals use the

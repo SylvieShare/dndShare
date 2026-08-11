@@ -1,6 +1,6 @@
 <template>
   <AppModal wide tile :z-index="4500" @close="$emit('close')">
-    <div class="iem-title">{{ item ? 'Редактировать предмет' : 'Новый предмет' }}</div>
+    <div class="iem-title">{{ item ? 'Редактировать предмет' : (typeName ? `Новый элемент в «${typeName}»` : 'Новый элемент') }}</div>
 
     <FormField label="Название" vertical>
       <FormTextInput
@@ -79,6 +79,7 @@ import { itemFieldEditorKey, useItemFieldEditor } from './useItemFieldEditor'
 
 const props = defineProps({
   typeId:      { type: Number, required: true },
+  typeName:    { type: String, default: '' },
   item:        { type: Object, default: null },
   initialName: { type: String, default: '' },
   initialNameEn: { type: String, default: '' },

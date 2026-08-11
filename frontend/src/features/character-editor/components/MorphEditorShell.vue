@@ -104,8 +104,12 @@ const showBack = computed(() => !!props.nav && props.nav.view.value !== 'detail'
 .mes-vertical .mes-rest { flex: none; width: 100%; flex-direction: column; }
 
 @media (max-width: 768px) {
-  .mes-split { flex-direction: column; min-height: 100%; }
+  /* The sheet body fills the viewport on mobile. Keep this wrapper equally tall so the
+     editor backing reaches the bottom even when the form is shorter than the viewport. */
+  .mes-split { flex-direction: column; min-height: 100%; background: var(--bg); }
   .mes-view { flex: none; width: 100%; }
   .mes-rest { flex: 1 0 auto; width: 100%; flex-direction: column; }
+  /* Overrides the desktop vertical variant (`flex: none`) with equal specificity. */
+  .mes-vertical .mes-rest { flex: 1 0 auto; }
 }
 </style>

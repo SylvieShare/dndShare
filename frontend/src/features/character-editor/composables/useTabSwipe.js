@@ -1,6 +1,19 @@
 import { ref, computed, watch, onBeforeUnmount, nextTick } from 'vue'
 
-export function useTabSwipe(activeTabs, isMobile) {
+export function measureMobileTabRects(tabbarEl, tabButtonEls) {
+  if (!tabbarEl) return []
+  const tabbarRect = tabbarEl.getBoundingClientRect()
+  return tabButtonEls.map(el => {
+    if (!el) return null
+    const rect = el.getBoundingClientRect()
+    return {
+      x: rect.left - tabbarRect.left + tabbarEl.scrollLeft,
+      width: rect.width,
+    }
+  })
+}
+
+export function useTabSwipe(activeTabs, isMobile, mobileTabbarRef = null) {
   const activeTab = ref(0)
   const visitedTabs = ref([])
   const highlightedMobileTab = ref(0)
@@ -19,7 +32,7 @@ export function useTabSwipe(activeTabs, isMobile) {
 
   let swipeSettleTimer = null
   let highlightSettleTimer = null
-  let mobileTabbarEl = null
+  let lastMobileTabbarEl = null
   let touchStartX = null
   let touchStartY = null
 
@@ -106,17 +119,9 @@ export function useTabSwipe(activeTabs, isMobile) {
   }
 
   function updateMobileTabRects(tabbarEl) {
-    mobileTabbarEl = tabbarEl || mobileTabbarEl
-    if (!mobileTabbarEl) return
-    const tabbarRect = mobileTabbarEl.getBoundingClientRect()
-    mobileTabRects.value = mobileTabButtonRefs.value.map(el => {
-      if (!el) return null
-      const rect = el.getBoundingClientRect()
-      return {
-        x: rect.left - tabbarRect.left + mobileTabbarEl.scrollLeft,
-        width: rect.width,
-      }
-    })
+    lastMobileTabbarEl = tabbarEl || mobileTabbarRef?.value || lastMobileTabbarEl
+    if (!lastMobileTabbarEl) return
+    mobileTabRects.value = measureMobileTabRects(lastMobileTabbarEl, mobileTabButtonRefs.value)
   }
 
   function scrollActiveMobileTabIntoView() {
@@ -296,13 +301,13 @@ export function useTabSwipe(activeTabs, isMobile) {
 
   // ── Public setActiveTab (also used by tabbar click) ──────────────────
 
-  function setActiveTab(index, mobileTrackEl, mobileTabbarEl) {
+  function setActiveTab(index, mobileTrackEl, tabbarEl) {
     if (index === activeTab.value) return
     if (isMobile.value) {
       if (tabDragSettling.value) return
       tabDragWidth.value =
         mobileTrackEl?.clientWidth ||
-        mobileTabbarEl?.clientWidth ||
+        tabbarEl?.clientWidth ||
         window.innerWidth || 1
       tabSwipeWrapMode.value = null
       tabSwipeBaseOffset.value = -mobileActiveSlot.value * tabDragWidth.value

@@ -98,6 +98,10 @@ onMounted(() => {
   _onViewportChange()
 
   _onWindowScroll = () => {
+    // Character pages own scrolling in their active .mobile-pane-scroll.
+    // A window scroll event there (notably while the visual viewport changes)
+    // must not overwrite the header state produced by useScrollHide.
+    if (isCharacterView.value) return
     const uiStore = useUiStore()
     uiStore.setScrollY(window.scrollY)
     uiStore.setHeaderHidden(_mobileHeaderQuery.matches && window.scrollY > 10)

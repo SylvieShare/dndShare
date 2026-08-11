@@ -174,6 +174,7 @@ import { useCharacterData } from '@/features/character-editor/composables/useCha
 import { useSaveDebounce } from '@/features/character-editor/composables/useSaveDebounce'
 import { useTabSwipe } from '@/features/character-editor/composables/useTabSwipe'
 import { useScrollHide } from '@/features/character-editor/composables/useScrollHide'
+import { useCharacterViewport } from '@/features/character-editor/composables/characterViewport'
 import { useUiStore } from '@/stores/ui'
 import { initialTabs, layoutNodeToBlock } from '@/features/character-editor/lib/templateSchema'
 import { defaultTabIndex, parseTabQuery, queryForTab } from '@/features/character-editor/lib/tabQuery'
@@ -189,9 +190,6 @@ const uuid = route.params.uuid || router.currentRoute.value.params.uuid
 const isMobile = ref(false)
 let mediaQuery = null
 let onMediaQueryChange = null
-let onViewportChange = null
-let onWindowResize = null
-let viewportHeightTimer = null
 
 // ── Template refs ─────────────────────────────────────────────────────
 const charToolbarEl = ref(null)
@@ -255,12 +253,14 @@ const {
   scrollActiveMobileTabIntoView, setActiveTab,
   onTouchStart, onTouchMove, onTouchEnd, cancelTouch,
   tabRenderComponent, tabKey,
-} = useTabSwipe(activeTabs, isMobile)
+} = useTabSwipe(activeTabs, isMobile, mobileTabbarEl)
 
 const {
   toolbarHeight, stripHidden, viewStyle,
   startScrollListener, stopScrollListener, observeToolbar, disconnectToolbar,
 } = useScrollHide(isMobile, commonMobileScrollHide)
+
+const { startViewportHeightSync, stopViewportHeightSync } = useCharacterViewport(isMobile)
 
 // ── Watchers ──────────────────────────────────────────────────────────
 
@@ -303,6 +303,7 @@ function onUpdateContentSources(value) {
 }
 
 function onSetActiveTab(index) {
+  updateMobileTabRects(mobileTabbarEl.value)
   setActiveTab(index, mobileTrackEl.value, mobileTabbarEl.value)
 }
 
@@ -361,46 +362,6 @@ function onFixedHeaderTouchEnd() {
   fixedHeaderTouch.value = null
 }
 
-function updateCharacterViewportHeight() {
-  const layoutHeight = window.innerHeight || document.documentElement.clientHeight
-  const visualHeight = window.visualViewport?.height || 0
-  const keyboardLikelyOpen = visualHeight > 0 && layoutHeight > 0 && visualHeight < layoutHeight - 120
-  const height = keyboardLikelyOpen
-    ? layoutHeight
-    : (visualHeight || layoutHeight)
-  if (height) {
-    document.documentElement.style.setProperty('--character-viewport-height', `${Math.round(height)}px`)
-  }
-}
-
-function scheduleViewportHeightUpdate() {
-  updateCharacterViewportHeight()
-  clearTimeout(viewportHeightTimer)
-  viewportHeightTimer = setTimeout(updateCharacterViewportHeight, 250)
-}
-
-function startViewportHeightSync() {
-  onViewportChange = scheduleViewportHeightUpdate
-  onWindowResize = scheduleViewportHeightUpdate
-
-  updateCharacterViewportHeight()
-  window.visualViewport?.addEventListener('resize', onViewportChange, { passive: true })
-  window.visualViewport?.addEventListener('scroll', onViewportChange, { passive: true })
-  window.addEventListener('resize', onWindowResize, { passive: true })
-  window.addEventListener('orientationchange', onWindowResize, { passive: true })
-}
-
-function stopViewportHeightSync() {
-  clearTimeout(viewportHeightTimer)
-  window.visualViewport?.removeEventListener('resize', onViewportChange)
-  window.visualViewport?.removeEventListener('scroll', onViewportChange)
-  window.removeEventListener('resize', onWindowResize)
-  window.removeEventListener('orientationchange', onWindowResize)
-  document.documentElement.style.removeProperty('--character-viewport-height')
-  onViewportChange = null
-  onWindowResize = null
-}
-
 // ── URL sync ──────────────────────────────────────────────────────────
 
 let ready = false
@@ -455,7 +416,6 @@ onMounted(async () => {
   isMobile.value = mediaQuery.matches
   onMediaQueryChange = e => {
     isMobile.value = e.matches
-    scheduleViewportHeightUpdate()
   }
   mediaQuery.addEventListener('change', onMediaQueryChange)
 

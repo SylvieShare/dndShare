@@ -32,7 +32,12 @@ receive data by block id.
 
 Desktop and mobile share block definitions but have separate placement
 profiles. Tab state is encoded in the route query. `CharacterTabPane.vue` owns
-one tab pane; swipe/drag logic is extracted into composables.
+one tab pane; swipe/drag logic is extracted into composables. On mobile, each
+tab owns its nested scroll position, that scroller is the sole source for app
+header visibility, and the character viewport keeps its pre-keyboard height
+while a rich-text or form editor is focused. `useCharacterViewport` owns the
+visual/layout viewport synchronization and document-scoped focus handling
+needed by editors teleported outside the page root.
 
 ## Shared UI requirements
 
