@@ -13,7 +13,7 @@
         :title="`Бросить ${die.value}`"
         @click="rollDie(die.sides)"
       >
-        <SystemDie :sides="die.sides" :size="44" />
+        <SystemDie :sides="die.sides" :size="44" color="var(--accent)" />
       </button>
     </div>
   </div>

@@ -37,41 +37,16 @@
             v-for="p in participants"
             :key="p.charId"
             :participant="p"
-            :selected="selectedIds.has(p.charId)"
-            :selection-mode="selectionMode"
-            @select="onTileClick"
+            :is-dm="isDm"
+            :kick-pending="kickingIds.has(p.charId)"
+            @view="openParticipant"
+            @kick="kickParticipant"
           />
         </div>
         <div v-else class="no-participants">Участников пока нет</div>
+        <div v-if="kickError" class="participant-action-error" role="alert">{{ kickError }}</div>
 
-        <template v-if="participants.length">
-          <button v-if="!selectionMode" class="pick-btn" @click="enterSelectionMode">
-            Выбрать игроков для действия
-          </button>
-          <template v-else>
-            <div class="sel-controls">
-              <button class="sel-btn" @click="selectAll">Выбрать всех</button>
-              <button
-                class="sel-btn"
-                @click="selectedIds.size ? clearSelection() : exitSelectionMode()"
-              >{{ selectedIds.size ? 'Сбросить' : 'Отмена' }}</button>
-            </div>
-            <div class="sel-actions">
-              <button
-                class="action-btn action-btn--danger"
-                :disabled="selectedIds.size === 0"
-                @click="kickSelected"
-              >
-                <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
-                  <path d="M2 11L11 2M11 11L2 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-                </svg>
-                Выгнать ({{ selectedIds.size }})
-              </button>
-            </div>
-          </template>
-        </template>
-
-        <div class="invite-section">
+        <BaseTile class="invite-section">
           <button class="create-char-btn" @click="openCreate">
             <span class="cc-plus">+</span>
             Создать персонажа
@@ -99,7 +74,7 @@
               </svg>
             </button>
           </div>
-        </div>
+        </BaseTile>
       </aside>
 
       <div class="main-area">
@@ -257,15 +232,10 @@ const { pollStatus, pollRunning, startPolling, forgetVersion } =
   useParticipantPolling({ participants })
 
 const {
-  selectedIds, selectionMode, enterSelectionMode, exitSelectionMode,
-  toggleSelect, selectAll, clearSelection, kickSelected,
+  kickingIds, kickError, kickParticipant,
 } = useSessionSelection({ sessionUuid, participants, forgetVersion })
 
-function onTileClick(charId) {
-  if (selectionMode.value) {
-    toggleSelect(charId)
-    return
-  }
+function openParticipant(charId) {
   const p = participants.value.find(x => x.charId === charId)
   if (p) sheetUuid.value = p.charUuid
 }

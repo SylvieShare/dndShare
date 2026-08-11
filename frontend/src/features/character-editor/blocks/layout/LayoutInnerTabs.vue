@@ -24,17 +24,27 @@
 
 <script setup>
 import { computed, nextTick, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import BaseTile from '@/shared/ui/BaseTile'
 import SlidingTabs from '@/shared/ui/SlidingTabs'
 import TemplateBlockInner from '@/features/character-editor/components/TemplateBlockInner'
+import {
+  innerTabQueryKey,
+  parseInnerTabQuery,
+  queryForInnerTab,
+} from '@/features/character-editor/lib/innerTabQuery'
 
 const props = defineProps(['block', 'values', 'vars'])
 const emit = defineEmits(['update:value', 'update:var'])
+const route = useRoute()
+const router = useRouter()
 
 const activeTab = ref(0)
 const visitedTabs = ref([0])
 const contentEl = ref(null)
 let pendingFrom = null
+
+const queryKey = computed(() => innerTabQueryKey(props.block))
 
 const tabItems = computed(() =>
   (props.block.tabs || []).map((tab, i) => ({ key: i, title: tab.title, svg: tab.svg }))
@@ -46,10 +56,14 @@ function contentDom() {
 }
 
 function setTab(i) {
-  if (i === activeTab.value) return
+  const nextTab = parseInnerTabQuery(String(i), tabItems.value.length)
+  if (nextTab === activeTab.value) return
   const el = contentDom()
   pendingFrom = el ? el.offsetHeight : null
-  activeTab.value = i
+  activeTab.value = nextTab
+  void router.push({
+    query: queryForInnerTab(route.query, queryKey.value, nextTab),
+  })
 }
 
 // Animate the content tile's height between the old and new pane (FLIP). Outside a switch the height
@@ -81,6 +95,18 @@ watch(activeTab, i => {
     pendingFrom = null
   })
 })
+
+watch(
+  [() => route.query[queryKey.value], () => tabItems.value.length],
+  ([value, tabCount]) => {
+    const nextTab = parseInnerTabQuery(value, tabCount)
+    if (nextTab !== activeTab.value) activeTab.value = nextTab
+    if (!visitedTabs.value.includes(nextTab)) {
+      visitedTabs.value = [...visitedTabs.value, nextTab]
+    }
+  },
+  { immediate: true },
+)
 
 function emitValue(patch) {
   emit('update:value', patch)

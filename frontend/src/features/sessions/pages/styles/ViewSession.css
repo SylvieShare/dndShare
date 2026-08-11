@@ -95,29 +95,15 @@
   padding: 4px 2px;
 }
 
-.pick-btn {
-  width: 100%;
-  background: color-mix(in srgb, var(--accent) 14%, transparent);
-  border: none;
-  border-radius: 8px;
-  color: var(--text-1);
-  font: inherit;
+.participant-action-error {
   font-size: 12px;
-  font-weight: 600;
-  padding: 9px 10px;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-.pick-btn:hover {
-  background: color-mix(in srgb, var(--accent) 22%, transparent);
+  color: var(--danger);
+  padding: 2px;
 }
 
 .invite-section {
   margin-top: auto;
   padding: 12px;
-  background: var(--bg);
-  border-radius: var(--r-md);
 }
 
 .create-char-btn {
@@ -199,80 +185,6 @@
 .invite-copy:hover {
   color: var(--text-2);
   background: var(--surface-raised);
-}
-
-.sel-controls {
-  display: flex;
-  gap: 6px;
-}
-
-.sel-btn {
-  flex: 1;
-  background: var(--surface-raised);
-  border: none;
-  border-radius: 8px;
-  color: var(--text-2);
-  font: inherit;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 7px 8px;
-  cursor: pointer;
-  transition: background 0.15s, color 0.15s;
-}
-
-.sel-btn:hover:not(:disabled) {
-  background: var(--surface-active);
-  color: var(--text-1);
-}
-
-.sel-btn:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-}
-
-.sel-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-top: 6px;
-}
-
-.action-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  width: 100%;
-  background: var(--surface-raised);
-  border: none;
-  border-radius: 8px;
-  color: var(--text-2);
-  font: inherit;
-  font-size: 12px;
-  font-weight: 600;
-  padding: 9px 10px;
-  cursor: pointer;
-  transition: background 0.15s, color 0.15s;
-}
-
-.action-btn:hover:not(:disabled) {
-  background: var(--surface-active);
-  color: var(--text-1);
-}
-
-.action-btn:disabled {
-  opacity: 0.35;
-  cursor: not-allowed;
-}
-
-.action-btn--danger {
-  color: var(--danger);
-  background: color-mix(in srgb, var(--danger) 14%, transparent);
-}
-
-.action-btn--danger:hover:not(:disabled) {
-  background: color-mix(in srgb, var(--danger) 22%, transparent);
-  color: var(--danger);
 }
 
 .main-area {

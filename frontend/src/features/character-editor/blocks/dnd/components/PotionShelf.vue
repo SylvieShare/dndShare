@@ -17,9 +17,9 @@
           </template>
 
           <template #default="{ close }">
-            <button v-if="canUse" type="button" class="ram-item" @click="usePotion(p, close)">Использовать</button>
-            <button v-if="canAdd" type="button" class="ram-item" @click="replenishPotion(p, close)">Пополнить (+1)</button>
-            <button type="button" class="ram-item" @click="viewPotion(p, close)">Просмотреть</button>
+            <button v-if="canUse" type="button" class="ram-item ram-item--warning" @click="usePotion(p, close)">Использовать</button>
+            <button v-if="canAdd" type="button" class="ram-item ram-item--success" @click="replenishPotion(p, close)">Пополнить (+1)</button>
+            <button type="button" class="ram-item ram-item--info" @click="viewPotion(p, close)">Просмотреть</button>
           </template>
         </RowActionMenu>
 

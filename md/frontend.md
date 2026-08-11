@@ -54,7 +54,7 @@ Vite работает на `:5173` и проксирует `/api` и `/mcp` в G
 | Расширенное описание | `shared/ui/InputDescription.vue` | Редактирование форматированного описания. |
 | Отображение описания | `shared/ui/RichContent.vue` | Безопасный и единообразный вывод HTML, созданного `InputDescription`. Не использовать собственный `v-html` для такого контента. |
 | Плитка/карточка контента | `shared/ui/BaseTile.vue` | Общая поверхность с фоном, скруглением и тихой рамкой. Поддерживает цветовой акцент, полосу, tint, framed- и interactive-состояния; не создавать локальный базовый класс плитки. |
-| Popover/контекстное меню | `shared/ui/BasePopover.vue`, `RowActionMenu.vue` | Неблокирующий контент, привязанный к управляющему элементу. `RowActionMenu` поддерживает стандартный trigger с многоточием и feature-trigger через slot. |
+| Popover/контекстное меню | `shared/ui/BasePopover.vue`, `RowActionMenu.vue` | Неблокирующий контент, привязанный к управляющему элементу. `RowActionMenu` поддерживает стандартный trigger с многоточием, feature-trigger через slot и семантические модификаторы действий `warning`, `success`, `info`, `danger`. |
 | Перетаскивание | `shared/composables/useSortable.js` | Сортировка и перенос между группами. `useSortable` ведёт drag-состояние, `reorderByDrop` выполняет чистую перестановку массива. |
 | Переключатели | `MultiToggle`, `ToggleSwitch`, `EncCheckbox` | Выбор режима, boolean и компактный checkbox соответственно. |
 

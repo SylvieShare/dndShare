@@ -1,9 +1,11 @@
 <template>
   <div class="top-bar">
-    <router-link class="back-link" to="/sessions">← К сессиям</router-link>
-
     <template v-if="session">
-      <span class="top-divider" />
+      <button class="session-info" @click="$emit('edit')">
+        <span class="session-title">{{ session.name }}</span>
+      </button>
+
+      <span class="top-rule" />
 
       <div class="status-wrap">
         <button
@@ -31,10 +33,6 @@
           </button>
         </BasePopover>
       </div>
-
-      <button class="session-info" @click="$emit('edit')">
-        <span class="session-title">{{ session.name }}</span>
-      </button>
 
       <span v-if="isDm || currentChapter" class="top-rule" />
 
@@ -205,16 +203,6 @@ defineExpose({ chapters, currentChapter, loadChapters })
   flex-shrink: 0;
 }
 
-.back-link {
-  font-size: 13px;
-  color: var(--text-2);
-  text-decoration: none;
-  white-space: nowrap;
-  transition: color 0.15s;
-}
-
-.back-link:hover { color: var(--text-2); }
-
 .status-badge {
   display: inline-flex;
   align-items: center;
@@ -283,7 +271,7 @@ defineExpose({ chapters, currentChapter, loadChapters })
 
 .session-title {
   font-family: var(--font-display);
-  font-size: 18px;
+  font-size: 21px;
   font-weight: 600;
   color: var(--text-1);
   white-space: nowrap;
@@ -292,7 +280,6 @@ defineExpose({ chapters, currentChapter, loadChapters })
   min-width: 0;
 }
 
-.top-divider,
 .top-rule {
   width: 1px;
   height: 16px;

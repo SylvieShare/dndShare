@@ -1,7 +1,7 @@
 <template>
-  <span v-if="$slots.trigger" ref="triggerEl" class="ram-custom-trigger" @click.stop="toggle">
+  <div v-if="$slots.trigger" ref="triggerEl" class="ram-custom-trigger" @click.stop="toggle">
     <slot name="trigger" :open="isOpen" />
-  </span>
+  </div>
   <button
     v-else
     ref="triggerEl"
@@ -141,6 +141,12 @@ defineExpose({ close })
   text-align: left;
 }
 .ram-item:hover { background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); }
+.ram-item--warning { color: var(--warning); }
+.ram-item--warning:hover { background: color-mix(in srgb, var(--warning) 12%, transparent); }
+.ram-item--success { color: var(--success); }
+.ram-item--success:hover { background: color-mix(in srgb, var(--success) 12%, transparent); }
+.ram-item--info { color: var(--info); }
+.ram-item--info:hover { background: color-mix(in srgb, var(--info) 12%, transparent); }
 .ram-item--danger { color: var(--danger); }
 .ram-item--danger:hover { background: color-mix(in srgb, var(--danger) 12%, transparent); }
 

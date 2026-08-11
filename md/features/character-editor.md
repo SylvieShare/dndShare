@@ -47,6 +47,10 @@ keep the header in document flow. Completed tab changes are pushed into the
 `tab` route query. Browser Back and Forward therefore restore prior tabs (even
 after rapid history navigation), while **К персонажам** provides a direct exit
 to the character list.
+Desktop `LayoutInnerTabs` groups also keep their selected pane in independent,
+schema-stable `innerTab-*` query keys. Reload and browser history restore both
+the outer character tab and its inner pane; invalid or stale inner indexes fall
+back to the first pane. Mobile uses the same outer `tab` route contract.
 The sticky mobile tab chrome ends with a narrow static masked blur and subtle
 `--scrim` darkening over the scrolling content; only that 18px strip uses
 `backdrop-filter`, with a plain dark gradient as the unsupported-browser
@@ -141,8 +145,9 @@ comes from handbook. The list shows count as a badge; it has no ordinary
 increment/decrement controls. The item detail modal provides the shared number
 input with a minimum of one and a delete action; a multi-quantity picker creates
 one entry with that count. Potion tiles open the shared `RowActionMenu` with
-use, replenish-by-one and view actions; use decrements the count and removes
-the entry at zero. A custom inventory entry is edited through its marked
+warning-colored use, success-colored replenish-by-one and info-colored view
+actions; use decrements the count and removes the entry at zero. A custom
+inventory entry is edited through its marked
 clickable name rather than a separate star button. Spell detail exposes prepare/unprepare
 when the spellbook uses preparation, plus delete; these actions update the same
 spell reference as the list row.

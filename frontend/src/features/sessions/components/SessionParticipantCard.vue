@@ -1,74 +1,81 @@
 <template>
-  <BaseTile
-    class="p-card"
-    :class="{ 'p-card--selected': selectionMode && selected }"
-    interactive
-    @click="$emit('select', participant.charId)"
-  >
-    <div class="p-avatar" :style="{ background: avatarColor }">
-      <img v-if="avaUrl" :src="avaUrl" class="ava-img" alt="" />
-      <span v-else class="ava-initial">{{ initial }}</span>
-    </div>
-
-    <div class="p-info">
-      <div class="p-name">{{ displayName }}</div>
-      <div v-if="who" class="p-who">{{ who }}</div>
-
-      <template v-if="showHp">
-        <template v-if="isDead">
-          <div class="ds-row">
-            <span class="ds-label">Смерть</span>
-            <span class="ds-group">
-              <span
-                v-for="i in 3"
-                :key="'s' + i"
-                class="ds-pip ds-success"
-                :class="{ filled: i <= hp.ds_success }"
-              />
-            </span>
-            <span class="ds-sep">/</span>
-            <span class="ds-group">
-              <span
-                v-for="i in 3"
-                :key="'f' + i"
-                class="ds-pip ds-failure"
-                :class="{ filled: i <= hp.ds_failure }"
-              />
-            </span>
+  <div class="p-card-menu">
+    <RowActionMenu>
+      <template #trigger>
+        <BaseTile class="p-card" interactive>
+          <div class="p-avatar" :style="{ background: avatarColor }">
+            <img v-if="avaUrl" :src="avaUrl" class="ava-img" alt="" />
+            <span v-else class="ava-initial">{{ initial }}</span>
           </div>
-        </template>
 
-        <template v-else>
-          <div class="hp-row">
-            <StatBar
-              class="p-hp-statbar"
-              size="small"
-              :percent="hpPercent"
-              :color="hpColor"
-              :temp-percent="tempPercent"
-            />
-            <div class="hp-numbers">
-              <span class="hp-current" :style="{ color: hpColor }">{{ hp.current }}</span>
-              <span v-if="hp.temp" class="hp-temp">+{{ hp.temp }}</span>
-              <span class="hp-sep">/</span>
-              <span class="hp-max">{{ hp.max }}</span>
-            </div>
+          <div class="p-info">
+            <div class="p-name">{{ displayName }}</div>
+            <div v-if="who" class="p-who">{{ who }}</div>
+
+            <template v-if="showHp">
+              <template v-if="isDead">
+                <div class="ds-row">
+                  <span class="ds-label">Смерть</span>
+                  <span class="ds-group">
+                    <span
+                      v-for="i in 3"
+                      :key="'s' + i"
+                      class="ds-pip ds-success"
+                      :class="{ filled: i <= hp.ds_success }"
+                    />
+                  </span>
+                  <span class="ds-sep">/</span>
+                  <span class="ds-group">
+                    <span
+                      v-for="i in 3"
+                      :key="'f' + i"
+                      class="ds-pip ds-failure"
+                      :class="{ filled: i <= hp.ds_failure }"
+                    />
+                  </span>
+                </div>
+              </template>
+
+              <template v-else>
+                <div class="hp-row">
+                  <StatBar
+                    class="p-hp-statbar"
+                    size="small"
+                    :percent="hpPercent"
+                    :color="hpColor"
+                    :temp-percent="tempPercent"
+                  />
+                  <div class="hp-numbers">
+                    <span class="hp-current" :style="{ color: hpColor }">{{ hp.current }}</span>
+                    <span v-if="hp.temp" class="hp-temp">+{{ hp.temp }}</span>
+                    <span class="hp-sep">/</span>
+                    <span class="hp-max">{{ hp.max }}</span>
+                  </div>
+                </div>
+              </template>
+            </template>
           </div>
-        </template>
+        </BaseTile>
       </template>
-    </div>
 
-    <div v-if="selectionMode" class="p-check">
-      <svg v-if="selected" width="12" height="12" viewBox="0 0 12 12" fill="none">
-        <path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </div>
-  </BaseTile>
+      <template #default="{ close }">
+        <button type="button" class="ram-item" @click="viewParticipant(close)">Просмотреть</button>
+        <button
+          v-if="isDm"
+          type="button"
+          class="ram-item ram-item--danger"
+          :disabled="kickPending"
+          @click="kickParticipant(close)"
+        >{{ kickPending ? 'Исключение…' : 'Выгнать' }}</button>
+      </template>
+    </RowActionMenu>
+  </div>
 </template>
 
 <script setup>
 import { computed } from 'vue'
 import BaseTile from '@/shared/ui/BaseTile.vue'
+import RowActionMenu from '@/shared/ui/RowActionMenu.vue'
 import StatBar from '@/shared/ui/StatBar.vue'
 import { pvAvatar, pvHp, pvName, pvSubtitle } from '@/features/sessions/lib/participantView'
 
@@ -76,10 +83,21 @@ const AVATAR_COLORS = ['var(--accent)', 'var(--accent)', 'var(--info)', 'var(--d
 
 const props = defineProps({
   participant: { type: Object, required: true },
-  selected: { type: Boolean, default: false },
-  selectionMode: { type: Boolean, default: false },
+  isDm: { type: Boolean, default: false },
+  kickPending: { type: Boolean, default: false },
 })
-defineEmits(['select'])
+const emit = defineEmits(['view', 'kick'])
+
+function viewParticipant(close) {
+  close()
+  emit('view', props.participant.charId)
+}
+
+function kickParticipant(close) {
+  if (props.kickPending) return
+  close()
+  emit('kick', props.participant.charId)
+}
 
 const displayName = computed(() => pvName(props.participant) || '(без имени)')
 const initial = computed(() => displayName.value.charAt(0).toUpperCase())
@@ -132,12 +150,9 @@ const avatarColor = computed(() => {
   user-select: none;
 }
 
-.p-card--selected {
-  background: color-mix(in srgb, var(--accent) 12%, transparent);
-}
-
-.p-card--selected:hover {
-  background: color-mix(in srgb, var(--accent) 16%, transparent);
+.p-card-menu :deep(.ram-custom-trigger) {
+  display: flex;
+  width: 100%;
 }
 
 .p-avatar {
@@ -184,25 +199,6 @@ const avatarColor = computed(() => {
 .p-who {
   font-size: 11px;
   color: var(--text-2);
-}
-
-.p-check {
-  flex-shrink: 0;
-  width: 18px;
-  height: 18px;
-  border-radius: 5px;
-  border: 1.5px solid var(--surface-active);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: border-color 0.15s, background 0.15s, color 0.15s;
-  color: var(--accent);
-  margin-top: 1px;
-}
-
-.p-card--selected .p-check {
-  border-color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 20%, transparent);
 }
 
 .hp-row {

@@ -1,11 +1,12 @@
 <template>
-  <div
+  <BaseTile
     class="enc-row"
     :class="rowClasses"
+    color="var(--section-color)"
+    strip
     :data-sortable-key="combatant.uid"
     @pointerdown="onRowPointerDown"
   >
-    <span v-if="stripColor" class="enc-row-strip" :style="{ background: stripColor }" />
     <EncCheckbox
       v-if="showCheckbox"
       :model-value="enc.isSelected(combatant)"
@@ -94,7 +95,7 @@
       @edit-states="openStatesEditor"
       @edit-note="openNoteEditor"
     />
-  </div>
+  </BaseTile>
 
   <BasePopover v-model:open="sideMenuOpen" :anchor="badgeEl" :min-width="160">
     <button
@@ -143,6 +144,7 @@ import EncounterHpBar from '@/features/sessions/components/EncounterHpBar.vue'
 import EncounterRowMenu from '@/features/sessions/components/EncounterRowMenu.vue'
 import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 import BasePopover from '@/shared/ui/BasePopover.vue'
+import BaseTile from '@/shared/ui/BaseTile.vue'
 import EncCheckbox from '@/shared/ui/EncCheckbox.vue'
 import FormActionButtons from '@/shared/ui/form/FormActionButtons'
 import FormTextarea from '@/shared/ui/form/FormTextarea'
@@ -230,7 +232,6 @@ const statesAllItems = computed(() => {
 
 const canEdit = computed(() => !!enc.canEditPlayerHp())
 const rowMenuVisible = computed(() => canEdit.value)
-const stripColor = computed(() => enc.tileColor(props.combatant))
 
 const statesEditorOpen = ref(false)
 
@@ -281,32 +282,22 @@ function commitNoteEdit() {
 }
 
 .enc-row:active { cursor: grabbing; }
-.enc-row:hover { background: color-mix(in srgb, var(--text-on-accent) 3%, transparent); }
+.enc-row:hover { background: color-mix(in srgb, var(--tile-color) 6%, var(--surface)); }
 
-.enc-row--current {
-  background: color-mix(in srgb, var(--accent) 10%, transparent);
+.enc-row.enc-row--current {
+  background: color-mix(in srgb, var(--accent) 10%, var(--surface));
 }
 
-.enc-row--placeholder {
-  background: color-mix(in srgb, var(--accent) 8%, transparent);
+.enc-row.enc-row--placeholder {
+  background: color-mix(in srgb, var(--accent) 8%, var(--surface));
   border: 2px dashed color-mix(in srgb, var(--accent) 50%, transparent);
   border-radius: 12px;
 }
 .enc-row--placeholder > * { visibility: hidden; }
-.enc-row--placeholder:hover { background: color-mix(in srgb, var(--accent) 8%, transparent); }
+.enc-row.enc-row--placeholder:hover { background: color-mix(in srgb, var(--accent) 8%, var(--surface)); }
 
 .enc-row--skipped { opacity: 0.5; }
 .enc-row--skipped.enc-row--current { opacity: 1; }
-
-.enc-row-strip {
-  position: absolute;
-  left: 0;
-  top: 10px;
-  bottom: 10px;
-  width: 3px;
-  border-radius: 0 2px 2px 0;
-  pointer-events: none;
-}
 
 .enc-init-block {
   display: flex;

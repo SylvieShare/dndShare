@@ -31,8 +31,10 @@ character created inside a join/session flow uses `CharacterCreateModal`, gets
 an explicit rules `sourceVersionId`, then is joined and opened.
 
 The session participant rail has no shared backing surface: each participant is
-an individual interactive `BaseTile`, while selection controls and the invite
-section remain separate rail actions.
+an individual interactive `BaseTile`. Clicking it opens `RowActionMenu` with a
+view action and a DM-only kick action; bulk participant selection is not part of
+the rail. Character creation and the invite code/link share one separate
+`BaseTile` at the bottom of the rail.
 
 ## Chapters and scenes
 
@@ -52,6 +54,12 @@ It does not own local backdrop/modal or drag implementations.
 Encounter state is split into composables under `features/sessions/composables`:
 load/save, players, NPC item cache, HP, initiative, flow, states and dice.
 `useEncounter.js` composes them; row components remain presentation-only.
+
+The sticky encounter toolbar and every combatant row are separate `BaseTile`
+surfaces. Row strips use the current encounter section color (combat, NPC
+reserve, player reserve or graveyard), so moving a row also updates its spatial
+accent. Session dice pass the default accent color explicitly to every
+`SystemDie`.
 
 Canonical combatants:
 

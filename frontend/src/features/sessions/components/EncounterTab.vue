@@ -2,7 +2,7 @@
   <div class="enc-wrap">
 
     <!-- ── Top toolbar ── -->
-    <div class="enc-toolbar">
+    <BaseTile class="enc-toolbar">
       <div class="enc-toolbar-left">
         <button
           class="enc-combat-btn"
@@ -53,7 +53,7 @@
           @click="enc.removeSelectedNpcs"
         >Удалить НПС<span v-if="enc.selectedNpcCount > 0" class="enc-tool-btn-count">({{ enc.selectedNpcCount }})</span></button>
       </div>
-    </div>
+    </BaseTile>
 
     <!-- ── Combat ── -->
     <div class="enc-block enc-block--combat">
@@ -311,6 +311,7 @@
 <script setup>
 import { computed, provide, reactive, toRef } from 'vue'
 import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
+import BaseTile from '@/shared/ui/BaseTile.vue'
 import DndHpCalcModal from '@/features/character-editor/blocks/dnd/DndHpCalcModal'
 import EncounterRow from '@/features/sessions/components/EncounterRow'
 import FormActionButtons from '@/shared/ui/form/FormActionButtons'
