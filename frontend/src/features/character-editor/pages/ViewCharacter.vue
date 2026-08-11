@@ -281,7 +281,13 @@ watch(() => route.query.tab, tab => {
 
 watch([activeTab, isMobile], () => {
   const preserveHeaderHidden = uiStore.headerHidden
-  nextTick(() => syncActiveScrollListener({ preserveHeaderHidden }))
+  nextTick(() => {
+    syncActiveScrollListener({ preserveHeaderHidden })
+    if (isMobile.value) {
+      updateMobileTabRects(mobileTabbarEl.value)
+      scrollActiveMobileTabIntoView()
+    }
+  })
 })
 
 // ── Event handlers (bridge composable calls + side-effects) ──────────

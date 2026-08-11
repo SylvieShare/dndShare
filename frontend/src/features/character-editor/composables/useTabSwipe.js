@@ -13,6 +13,15 @@ export function measureMobileTabRects(tabbarEl, tabButtonEls) {
   })
 }
 
+export function mobileTabRectsEqual(current, next) {
+  if (current.length !== next.length) return false
+  return current.every((rect, index) => {
+    const nextRect = next[index]
+    if (rect == null || nextRect == null) return rect === nextRect
+    return rect.x === nextRect.x && rect.width === nextRect.width
+  })
+}
+
 export function useTabSwipe(activeTabs, isMobile, mobileTabbarRef = null) {
   const activeTab = ref(0)
   const visitedTabs = ref([])
@@ -110,18 +119,19 @@ export function useTabSwipe(activeTabs, isMobile, mobileTabbarRef = null) {
   // ── Tab refs / rects ──────────────────────────────────────────────────
 
   function setMobileTabButtonRef(el, index) {
-    if (el) {
-      mobileTabButtonRefs.value[index] = el
-      nextTick(() => updateMobileTabRects())
-    } else {
-      mobileTabButtonRefs.value[index] = null
-    }
+    // Function refs run again after every indicator style update. Measuring
+    // from here would turn that update into a render -> ref -> measure loop.
+    // Mount, tab and resize paths schedule geometry reads after DOM updates.
+    mobileTabButtonRefs.value[index] = el || null
   }
 
   function updateMobileTabRects(tabbarEl) {
     lastMobileTabbarEl = tabbarEl || mobileTabbarRef?.value || lastMobileTabbarEl
     if (!lastMobileTabbarEl) return
-    mobileTabRects.value = measureMobileTabRects(lastMobileTabbarEl, mobileTabButtonRefs.value)
+    const nextRects = measureMobileTabRects(lastMobileTabbarEl, mobileTabButtonRefs.value)
+    if (!mobileTabRectsEqual(mobileTabRects.value, nextRects)) {
+      mobileTabRects.value = nextRects
+    }
   }
 
   function scrollActiveMobileTabIntoView() {
