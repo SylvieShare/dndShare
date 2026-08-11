@@ -128,9 +128,18 @@
             >
               <div
                 class="container"
-                :class="{ 'mobile-tab-surface': activeTabs[index]?.surface }"
+                :class="{ 'mobile-content-panel': activeTabs[index]?.surface }"
                 :style="containerWidthForTab(index)"
               >
+                <header v-if="activeTabs[index]?.surface" class="mobile-content-panel-head">
+                  <span
+                    v-if="activeTabs[index]?.svg"
+                    class="mobile-content-panel-icon"
+                    :style="{ '--mobile-content-panel-icon': `url(&quot;${activeTabs[index].svg}&quot;)` }"
+                    aria-hidden="true"
+                  ></span>
+                  <span class="mobile-content-panel-title">{{ activeTabs[index].title }}</span>
+                </header>
                 <component
                   :is="tabRenderComponent(index, TabPane)"
                   :tab-index="index"
