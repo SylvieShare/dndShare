@@ -93,4 +93,13 @@ onMounted(loadCatalog)
   display: flex;
   flex-direction: column;
 }
+
+@media (max-width: 760px) {
+  .dp-block {
+    padding: 14px;
+    border-radius: var(--r-lg);
+    background: var(--surface);
+    box-shadow: inset 0 0 0 1px var(--border);
+  }
+}
 </style>

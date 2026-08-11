@@ -441,12 +441,16 @@ onMounted(() => {
 }
 
 @media (max-width: 760px) {
+  .w-list {
+    gap: 12px;
+  }
+
   .w-list-header {
     display: none;
   }
 
   .w-card {
-    padding: 12px;
+    padding: 0 0 0 16px;
   }
 
   .w-card-view,
@@ -530,6 +534,18 @@ onMounted(() => {
 
   .w-extra-row .w-type {
     grid-column: 2 / -1;
+  }
+
+  .w-add {
+    padding: 0;
+    border-top: none;
+  }
+
+  .w-empty {
+    padding: 16px;
+    border-radius: var(--r-lg);
+    background: var(--surface);
+    box-shadow: inset 0 0 0 1px var(--border);
   }
 }
 </style>

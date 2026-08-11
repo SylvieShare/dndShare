@@ -58,7 +58,6 @@
     {
       "svg": "/static/tab-weapons.svg",
       "title": "Оружие",
-      "surface": true,
       "content": {
         "ref": "weapon",
         "kind": "block",
@@ -71,7 +70,6 @@
     {
       "svg": "/static/tab-magic.svg",
       "title": "Магия",
-      "surface": true,
       "content": {
         "ref": "spells",
         "kind": "block",
@@ -83,12 +81,11 @@
     {
       "svg": "/static/container-box.svg",
       "title": "Предметы",
-      "surface": true,
       "content": {
         "kind": "layout",
         "type": "column",
         "props": {
-          "gap": "20px"
+          "gap": "12px"
         },
         "children": [
           {
@@ -97,7 +94,8 @@
           },
           {
             "ref": "money",
-            "kind": "block"
+            "kind": "block",
+            "title": "Кошелек"
           },
           {
             "ref": "potions",
@@ -142,66 +140,49 @@
     {
       "svg": "/static/tab-personality.svg",
       "title": "Личность",
-      "surface": true,
       "content": {
         "kind": "layout",
         "type": "column",
         "props": {
-          "gap": "16px"
+          "gap": "12px"
         },
         "children": [
           {
             "kind": "layout",
-            "type": "grid",
+            "type": "column",
             "props": {
-              "gap": "10px",
-              "columns": 2
-            },
-            "children": [
-              {
-                "ref": "person_origin",
-                "kind": "block"
-              },
-              {
-                "ref": "person_alignment",
-                "kind": "block"
+              "gap": "12px",
+              "tile": true,
+              "style": {
+                "padding": "14px"
               }
-            ]
-          },
-          {
-            "ref": "person_appearance",
-            "kind": "block"
-          },
-          {
-            "kind": "layout",
-            "type": "grid",
-            "props": {
-              "gap": "10px",
-              "columns": 2
             },
             "children": [
               {
-                "ref": "person_height",
-                "kind": "block"
+                "type": "SECTION_HEADER",
+                "title": "Основное",
+                "content": {}
               },
               {
-                "ref": "person_weight",
-                "kind": "block"
+                "kind": "layout",
+                "type": "grid",
+                "props": {
+                  "gap": "10px",
+                  "columns": 2
+                },
+                "children": [
+                  {
+                    "ref": "person_origin",
+                    "kind": "block"
+                  },
+                  {
+                    "ref": "person_alignment",
+                    "kind": "block"
+                  }
+                ]
               },
               {
-                "ref": "person_age",
-                "kind": "block"
-              },
-              {
-                "ref": "person_eyes",
-                "kind": "block"
-              },
-              {
-                "ref": "person_skin",
-                "kind": "block"
-              },
-              {
-                "ref": "person_hair",
+                "ref": "person_appearance",
                 "kind": "block"
               }
             ]
@@ -210,9 +191,70 @@
             "kind": "layout",
             "type": "column",
             "props": {
-              "gap": "14px"
+              "gap": "12px",
+              "tile": true,
+              "style": {
+                "padding": "14px"
+              }
             },
             "children": [
+              {
+                "type": "SECTION_HEADER",
+                "title": "Облик",
+                "content": {}
+              },
+              {
+                "kind": "layout",
+                "type": "grid",
+                "props": {
+                  "gap": "10px",
+                  "columns": 2
+                },
+                "children": [
+                  {
+                    "ref": "person_height",
+                    "kind": "block"
+                  },
+                  {
+                    "ref": "person_weight",
+                    "kind": "block"
+                  },
+                  {
+                    "ref": "person_age",
+                    "kind": "block"
+                  },
+                  {
+                    "ref": "person_eyes",
+                    "kind": "block"
+                  },
+                  {
+                    "ref": "person_skin",
+                    "kind": "block"
+                  },
+                  {
+                    "ref": "person_hair",
+                    "kind": "block"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "layout",
+            "type": "column",
+            "props": {
+              "gap": "14px",
+              "tile": true,
+              "style": {
+                "padding": "14px"
+              }
+            },
+            "children": [
+              {
+                "type": "SECTION_HEADER",
+                "title": "Характер",
+                "content": {}
+              },
               {
                 "ref": "person_traits",
                 "kind": "block"
@@ -232,12 +274,30 @@
             ]
           },
           {
-            "ref": "person_backstory",
-            "kind": "block"
-          },
-          {
-            "ref": "person_allies",
-            "kind": "block"
+            "kind": "layout",
+            "type": "column",
+            "props": {
+              "gap": "14px",
+              "tile": true,
+              "style": {
+                "padding": "14px"
+              }
+            },
+            "children": [
+              {
+                "type": "SECTION_HEADER",
+                "title": "История",
+                "content": {}
+              },
+              {
+                "ref": "person_backstory",
+                "kind": "block"
+              },
+              {
+                "ref": "person_allies",
+                "kind": "block"
+              }
+            ]
           }
         ]
       }

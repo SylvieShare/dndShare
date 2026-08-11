@@ -126,20 +126,7 @@
               @touchend.passive="onTouchEnd"
               @touchcancel.passive="cancelTouch"
             >
-              <div
-                class="container"
-                :class="{ 'mobile-content-panel': activeTabs[index]?.surface }"
-                :style="containerWidthForTab(index)"
-              >
-                <header v-if="activeTabs[index]?.surface" class="mobile-content-panel-head">
-                  <span
-                    v-if="activeTabs[index]?.svg"
-                    class="mobile-content-panel-icon"
-                    :style="{ '--mobile-content-panel-icon': `url(&quot;${activeTabs[index].svg}&quot;)` }"
-                    aria-hidden="true"
-                  ></span>
-                  <span class="mobile-content-panel-title">{{ activeTabs[index].title }}</span>
-                </header>
+              <div class="container" :style="containerWidthForTab(index)">
                 <component
                   :is="tabRenderComponent(index, TabPane)"
                   :tab-index="index"

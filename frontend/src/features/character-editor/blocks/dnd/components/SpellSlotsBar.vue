@@ -1,22 +1,30 @@
 <template>
   <div class="sp-bar">
-    <div v-if="hasStatConfig" class="sp-stats">
-      <div class="sp-tile sp-tile--base">
-        <span class="sp-tlabel">Базовая хар-ка</span>
-        <span class="sp-tval sp-tval-stat">{{ statLabel || '—' }}</span>
-        <span class="sp-tline"></span>
+    <section v-if="hasStatConfig" class="sp-stats-panel">
+      <SheetBlockTitle
+        class="sp-mobile-panel-head"
+        title="Параметры магии"
+        :show-edit="canInteract"
+        @edit="editOpen = true"
+      />
+      <div class="sp-stats">
+        <div class="sp-tile sp-tile--base">
+          <span class="sp-tlabel">Базовая хар-ка</span>
+          <span class="sp-tval sp-tval-stat">{{ statLabel || '—' }}</span>
+          <span class="sp-tline"></span>
+        </div>
+        <div class="sp-tile sp-tile--dc">
+          <span class="sp-tlabel">СЛ спасброска</span>
+          <span class="sp-tval">{{ saveDC }}</span>
+          <span class="sp-tline"></span>
+        </div>
+        <div class="sp-tile sp-tile--atk">
+          <span class="sp-tlabel">Атака закл.</span>
+          <span class="sp-tval sp-tval-atk">{{ attackBonus >= 0 ? '+' + attackBonus : attackBonus }}</span>
+          <span class="sp-tline"></span>
+        </div>
       </div>
-      <div class="sp-tile sp-tile--dc">
-        <span class="sp-tlabel">СЛ спасброска</span>
-        <span class="sp-tval">{{ saveDC }}</span>
-        <span class="sp-tline"></span>
-      </div>
-      <div class="sp-tile sp-tile--atk">
-        <span class="sp-tlabel">Атака закл.</span>
-        <span class="sp-tval sp-tval-atk">{{ attackBonus >= 0 ? '+' + attackBonus : attackBonus }}</span>
-        <span class="sp-tline"></span>
-      </div>
-    </div>
+    </section>
 
     <div v-if="canInteract" class="sp-edit-head">
       <SheetBlockTitle
@@ -26,25 +34,33 @@
       />
     </div>
 
-    <div v-if="activeSlots.length > 0" class="sp-slots">
-      <div v-for="sl in activeSlots" :key="sl.level" class="sp-slot-row">
-        <div class="sp-lvl">
-          <span class="sp-lvl-num">{{ sl.level }}</span>
-          <span class="sp-lvl-unit">круг</span>
-        </div>
-        <div class="sp-orbs">
-          <SpellSlotSphere
-            v-for="i in orbOrder(sl.total)"
-            :key="i"
-            :spent="i <= sl.used"
-            :level="sl.level"
-            :interactive="canInteract"
-            @click="$emit('toggle-slot', sl.level, i)"
-          />
-          <span v-if="sl.total === 0" class="sp-orbs-empty">—</span>
+    <section v-if="activeSlots.length > 0" class="sp-slots-panel">
+      <SheetBlockTitle
+        class="sp-mobile-panel-head"
+        title="Ячейки заклинаний"
+        :show-edit="canInteract"
+        @edit="editOpen = true"
+      />
+      <div class="sp-slots">
+        <div v-for="sl in activeSlots" :key="sl.level" class="sp-slot-row">
+          <div class="sp-lvl">
+            <span class="sp-lvl-num">{{ sl.level }}</span>
+            <span class="sp-lvl-unit">круг</span>
+          </div>
+          <div class="sp-orbs">
+            <SpellSlotSphere
+              v-for="i in orbOrder(sl.total)"
+              :key="i"
+              :spent="i <= sl.used"
+              :level="sl.level"
+              :interactive="canInteract"
+              @click="$emit('toggle-slot', sl.level, i)"
+            />
+            <span v-if="sl.total === 0" class="sp-orbs-empty">—</span>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
 
     <DndSlotEditModal
       v-if="editOpen"
@@ -104,6 +120,8 @@ function orbOrder(total) {
   gap: 18px;
   margin-bottom: 18px;
 }
+
+.sp-mobile-panel-head { display: none; }
 
 /* ── Заголовок «Редактировать» (прижат справа над статами) ── */
 .sp-edit-head {
@@ -221,5 +239,58 @@ function orbOrder(total) {
 .sp-orbs-empty {
   color: var(--text-muted);
   font-size: 14px;
+}
+
+@media (max-width: 760px) {
+  .sp-bar {
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .sp-stats-panel,
+  .sp-slots-panel {
+    padding: 14px;
+    border-radius: var(--r-lg);
+    background: var(--surface);
+    box-shadow: inset 0 0 0 1px var(--border);
+  }
+
+  .sp-mobile-panel-head {
+    display: flex;
+    margin-bottom: 12px;
+  }
+
+  .sp-edit-head { display: none; }
+
+  .sp-stats {
+    flex-wrap: nowrap;
+    gap: 0;
+  }
+
+  .sp-tile {
+    flex-basis: 0;
+    gap: 7px;
+    padding: 6px 10px 4px;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+  }
+
+  .sp-tile + .sp-tile {
+    border-left: 1px solid var(--border);
+  }
+
+  .sp-tlabel {
+    min-height: 21px;
+    font-size: 9px;
+  }
+
+  .sp-tval { font-size: 23px; }
+  .sp-tval-stat { font-size: 16px; }
+  .sp-tline { width: 28px; }
+
+  .sp-slot-row {
+    padding: 9px 0;
+  }
 }
 </style>

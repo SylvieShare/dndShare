@@ -74,7 +74,7 @@ function onNameClick() {
 </script>
 
 <style scoped>
-/* No card backing — the block sits on the tab tile; entries are split by a divider. */
+/* Desktop inner tabs provide the shared backing; mobile promotes every weapon to its own tile. */
 .w-card {
   position: relative;
   padding-left: 16px;
@@ -100,4 +100,14 @@ function onNameClick() {
 /* morph window header — wraps the shared row so it morphs cleanly into the window. The left padding
    matches `.w-card` so the icon stays flush; the row's own padding lives inside WeaponCardView. */
 .w-morph-row { padding: 0 0 0 16px; }
+
+@media (max-width: 760px) {
+  .w-card {
+    border-bottom: none;
+    border-radius: var(--r-lg);
+    background: var(--surface);
+    box-shadow: inset 0 0 0 1px var(--border);
+    overflow: clip;
+  }
+}
 </style>

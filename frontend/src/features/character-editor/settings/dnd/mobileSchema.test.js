@@ -2,12 +2,19 @@ import { describe, expect, it } from 'vitest'
 import schema from './schema'
 
 describe('D&D mobile sheet schema', () => {
-  it('marks unified content tabs as their own surface', () => {
-    const surfaceTabs = schema.layouts.mobile.tabs
-      .filter(tab => tab.surface)
-      .map(tab => tab.title)
+  it('composes rich mobile tabs from separate content blocks', () => {
+    expect(schema.layouts.mobile.tabs.filter(tab => tab.surface)).toEqual([])
 
-    expect(surfaceTabs).toEqual(['Оружие', 'Магия', 'Предметы', 'Личность'])
+    const personality = schema.layouts.mobile.tabs.find(tab => tab.title === 'Личность')
+    const groups = personality?.content?.children || []
+
+    expect(groups.every(group => group.props?.tile === true)).toBe(true)
+    expect(groups.map(group => group.children?.[0]?.title)).toEqual([
+      'Основное',
+      'Облик',
+      'Характер',
+      'История',
+    ])
   })
 
   it('keeps the mobile diary equivalent to the desktop diary section', () => {

@@ -33,11 +33,12 @@ receive data by block id.
 Desktop and mobile share block definitions but have separate placement
 profiles. Tab state is encoded in the route query. `CharacterTabPane.vue` owns
 one tab pane; swipe/drag logic is extracted into composables. On mobile, each
-tab owns its nested scroll position. A mobile tab whose content is designed as
-one continuous panel declares `surface: true` in the layout profile. It renders
-as an inset `--surface` content block with rounded corners, a quiet outline and
-a compact icon/title header; tabs composed from separate tiles stay directly on
-the `--bg` sheet canvas. The character route opts into the shared
+tab owns its nested scroll position and keeps `--bg` as its canvas. Content is
+split into semantic `--surface` blocks instead of painting a whole tab: every
+weapon is a card; spell parameters, slots and each spell level are separate
+cards; inventory sections and utility widgets are separate; the personality
+profile declares the `Основное`, `Облик`, `Характер` and `История` tile groups
+in `mobile.json`. The character route opts into the shared
 `collapsible` app-header mode, and its active tab registers that DOM scroller
 through `useAppHeaderCollapse`; regular routes keep the header in document flow.
 The character viewport keeps its pre-keyboard height while a rich-text or form

@@ -105,4 +105,12 @@ function onRemove() {
 /* morph window header — wraps the shared view so it morphs cleanly into the window. No border here;
    the morph panel is the surface. The view owns its own padding so geometry matches the tile. */
 .dct-morph { min-width: 0; }
+
+@media (max-width: 760px) {
+  .dct {
+    border-radius: var(--r-lg);
+    background: var(--surface);
+    box-shadow: inset 0 0 0 1px var(--border);
+  }
+}
 </style>

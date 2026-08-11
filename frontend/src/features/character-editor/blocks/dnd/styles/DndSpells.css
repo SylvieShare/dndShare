@@ -132,6 +132,22 @@
 }
 
 @media (max-width: 760px) {
+  .spells-groups {
+    gap: 12px;
+  }
+
+  .spell-group {
+    padding: 12px 14px 4px;
+    border-radius: var(--r-lg);
+    background: var(--surface);
+    box-shadow: inset 0 0 0 1px var(--border);
+    overflow: clip;
+  }
+
+  .sg-header {
+    margin-bottom: 4px;
+  }
+
   .sp-stat-row {
     grid-template-columns: 1fr;
   }
