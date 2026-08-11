@@ -503,7 +503,7 @@ function isTransparentColor(color) {
 
 function screenshotFilter(node) {
   return !(node instanceof Element && (
-    node.matches('.am-overlay, .selection-highlight, .selection-hint, .error-reporter, .report-toast')
+    node.matches('noscript, .am-overlay, .selection-highlight, .selection-hint, .error-reporter, .report-toast')
     || Boolean(node.closest('[data-error-report-ignore]'))
   ))
 }
