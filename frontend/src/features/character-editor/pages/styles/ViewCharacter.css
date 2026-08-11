@@ -83,14 +83,14 @@
     pointer-events: none;
     background: linear-gradient(
       to bottom,
-      color-mix(in srgb, var(--surface) 52%, transparent),
+      color-mix(in srgb, var(--scrim) 24%, transparent),
       transparent
     );
   }
 
   @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
     .mobile-sticky-header::after {
-      background: color-mix(in srgb, var(--surface) 18%, transparent);
+      background: color-mix(in srgb, var(--scrim) 24%, transparent);
       backdrop-filter: blur(6px);
       -webkit-backdrop-filter: blur(6px);
       mask-image: linear-gradient(to bottom, var(--text-on-accent) 20%, transparent 100%);

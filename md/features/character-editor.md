@@ -41,9 +41,10 @@ profile declares the `Основное`, `Облик`, `Характер` and `�
 in `mobile.json`. The character route opts into the shared
 `collapsible` app-header mode, and its active tab registers that DOM scroller
 through `useAppHeaderCollapse`; regular routes keep the header in document flow.
-The sticky mobile tab chrome ends with a narrow static masked blur over the
-scrolling content; only that 18px strip uses `backdrop-filter`, with a plain
-surface gradient as the unsupported-browser fallback.
+The sticky mobile tab chrome ends with a narrow static masked blur and subtle
+`--scrim` darkening over the scrolling content; only that 18px strip uses
+`backdrop-filter`, with a plain dark gradient as the unsupported-browser
+fallback.
 The character viewport keeps its pre-keyboard height while a rich-text or form
 editor is focused. `useCharacterViewport` owns the visual/layout viewport
 synchronization and document-scoped focus handling needed by editors teleported
