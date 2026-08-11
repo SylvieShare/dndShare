@@ -58,6 +58,7 @@
     {
       "svg": "/static/tab-weapons.svg",
       "title": "Оружие",
+      "surface": true,
       "content": {
         "ref": "weapon",
         "kind": "block",
@@ -70,6 +71,7 @@
     {
       "svg": "/static/tab-magic.svg",
       "title": "Магия",
+      "surface": true,
       "content": {
         "ref": "spells",
         "kind": "block",
@@ -81,6 +83,7 @@
     {
       "svg": "/static/container-box.svg",
       "title": "Предметы",
+      "surface": true,
       "content": {
         "kind": "layout",
         "type": "column",
@@ -139,6 +142,7 @@
     {
       "svg": "/static/tab-personality.svg",
       "title": "Личность",
+      "surface": true,
       "content": {
         "kind": "layout",
         "type": "column",

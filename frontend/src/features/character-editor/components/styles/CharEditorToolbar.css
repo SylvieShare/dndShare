@@ -425,6 +425,7 @@
     padding: 0 10px;
     gap: 4px;
     height: 48px;
+    background-color: var(--surface);
   }
 
   .tb-tab {

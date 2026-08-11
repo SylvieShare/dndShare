@@ -126,7 +126,11 @@
               @touchend.passive="onTouchEnd"
               @touchcancel.passive="cancelTouch"
             >
-              <div class="container" :style="containerWidthForTab(index)">
+              <div
+                class="container"
+                :class="{ 'mobile-tab-surface': activeTabs[index]?.surface }"
+                :style="containerWidthForTab(index)"
+              >
                 <component
                   :is="tabRenderComponent(index, TabPane)"
                   :tab-index="index"

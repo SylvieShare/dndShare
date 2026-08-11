@@ -2,6 +2,14 @@ import { describe, expect, it } from 'vitest'
 import schema from './schema'
 
 describe('D&D mobile sheet schema', () => {
+  it('marks unified content tabs as their own surface', () => {
+    const surfaceTabs = schema.layouts.mobile.tabs
+      .filter(tab => tab.surface)
+      .map(tab => tab.title)
+
+    expect(surfaceTabs).toEqual(['Оружие', 'Магия', 'Предметы', 'Личность'])
+  })
+
   it('keeps the mobile diary equivalent to the desktop diary section', () => {
     const diary = schema.layouts.mobile.tabs.find(tab => tab.title === 'Дневник')
 

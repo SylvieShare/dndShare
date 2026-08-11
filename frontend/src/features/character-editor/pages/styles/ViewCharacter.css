@@ -61,6 +61,10 @@
     padding-bottom: max(88px, calc(24px + env(safe-area-inset-bottom)));
   }
 
+  .mobile-pane-scroll > .mobile-tab-surface {
+    background: var(--surface);
+  }
+
   .sheet-scroll {
     overflow-x: hidden;
     overflow-y: hidden;
@@ -69,7 +73,7 @@
   .mobile-sticky-header {
     position: sticky;
     z-index: 19;
-    background: var(--bg);
+    background: var(--surface);
   }
 
   .common-mobile-strip {
@@ -129,7 +133,7 @@
     padding: 6px 8px 8px;
     overflow-x: auto;
     border-bottom: 1px solid var(--border);
-    background: var(--bg);
+    background: var(--surface);
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     min-height: 44px;

@@ -120,7 +120,7 @@ function requestIdentityEdit() {
 
 <style scoped>
 .app-header {
-  background: var(--app-bg);
+  background: var(--bg);
   border-bottom: 1px solid var(--border);
   position: relative;
   z-index: 30;

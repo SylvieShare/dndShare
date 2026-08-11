@@ -33,7 +33,10 @@ receive data by block id.
 Desktop and mobile share block definitions but have separate placement
 profiles. Tab state is encoded in the route query. `CharacterTabPane.vue` owns
 one tab pane; swipe/drag logic is extracted into composables. On mobile, each
-tab owns its nested scroll position. The character route opts into the shared
+tab owns its nested scroll position. A mobile tab whose content is designed as
+one continuous panel declares `surface: true` in the layout profile and paints
+its full pane with `--surface`; tabs composed from separate tiles stay on the
+`--bg` sheet canvas. The character route opts into the shared
 `collapsible` app-header mode, and its active tab registers that DOM scroller
 through `useAppHeaderCollapse`; regular routes keep the header in document flow.
 The character viewport keeps its pre-keyboard height while a rich-text or form
