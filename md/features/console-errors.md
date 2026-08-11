@@ -11,6 +11,10 @@ the lifetime of the current tab it captures:
 - uncaught `window.error` events with filename, line, column and stack where available;
 - unhandled promise rejections.
 
+Browser-generated `ResizeObserver` delivery notifications without an associated `Error` object are
+excluded. They report deferred layout observation rather than an application exception; explicitly
+thrown errors with the same text are still captured.
+
 The collector is in-memory only: errors are neither persisted nor sent to the backend. Circular
 objects, `Error` values and DOM elements are converted to bounded text safely. Identical errors on
 the same page URL are grouped with an occurrence count, and at most 100 unique entries are retained.

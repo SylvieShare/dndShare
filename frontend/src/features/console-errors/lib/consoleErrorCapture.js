@@ -1,5 +1,6 @@
 const DEFAULT_LIMIT = 100
 const MAX_DETAIL_LENGTH = 30_000
+const RESIZE_OBSERVER_NOTIFICATION_RE = /^ResizeObserver loop (?:limit exceeded|completed with undelivered notifications)\.?$/
 
 export function formatConsoleValue(value) {
   if (value instanceof Error) return value.stack || `${value.name}: ${value.message}`
@@ -96,6 +97,11 @@ export function createConsoleErrorCollector(limit = DEFAULT_LIMIT) {
   return { record, snapshot, subscribe }
 }
 
+export function isIgnorableWindowError(event) {
+  return !(event?.error instanceof Error) &&
+    RESIZE_OBSERVER_NOTIFICATION_RE.test(String(event?.message || '').trim())
+}
+
 const collector = createConsoleErrorCollector()
 let installed = false
 
@@ -120,6 +126,8 @@ export function installConsoleErrorCapture() {
   }
 
   window.addEventListener('error', event => {
+    if (isIgnorableWindowError(event)) return
+
     const location = event.filename
       ? `${event.filename}:${event.lineno || 0}:${event.colno || 0}`
       : ''

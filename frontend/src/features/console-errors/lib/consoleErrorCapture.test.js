@@ -3,6 +3,7 @@ import {
   createConsoleErrorCollector,
   formatConsoleArguments,
   formatConsoleValue,
+  isIgnorableWindowError,
 } from './consoleErrorCapture'
 
 describe('console error formatting', () => {
@@ -43,5 +44,25 @@ describe('console error collector', () => {
 
     expect(collector.snapshot().entries.map(entry => entry.message))
       .toEqual(['third', 'second'])
+  })
+})
+
+describe('window error filtering', () => {
+  it('ignores browser ResizeObserver delivery notifications', () => {
+    expect(isIgnorableWindowError({
+      message: 'ResizeObserver loop completed with undelivered notifications.',
+      error: null,
+    })).toBe(true)
+    expect(isIgnorableWindowError({
+      message: 'ResizeObserver loop limit exceeded',
+    })).toBe(true)
+  })
+
+  it('keeps real exceptions even when their message resembles a browser notification', () => {
+    expect(isIgnorableWindowError({
+      message: 'ResizeObserver loop completed with undelivered notifications.',
+      error: new Error('ResizeObserver loop completed with undelivered notifications.'),
+    })).toBe(false)
+    expect(isIgnorableWindowError({ message: 'ResizeObserver callback failed' })).toBe(false)
   })
 })
