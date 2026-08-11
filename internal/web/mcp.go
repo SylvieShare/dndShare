@@ -58,8 +58,20 @@ type mcpContent struct {
 }
 
 type mcpToolResult struct {
-	Content []mcpContent `json:"content"`
-	IsError bool         `json:"isError,omitempty"`
+	Content           []mcpContent   `json:"content"`
+	StructuredContent map[string]any `json:"structuredContent,omitempty"`
+	IsError           bool           `json:"isError,omitempty"`
+}
+
+func newStructuredMCPToolResult(value any) (mcpToolResult, error) {
+	text, err := json.Marshal(value)
+	if err != nil {
+		return mcpToolResult{}, err
+	}
+	return mcpToolResult{
+		Content:           []mcpContent{{Type: "text", Text: string(text)}},
+		StructuredContent: map[string]any{"result": value},
+	}, nil
 }
 
 type errorReportListProbe struct {
@@ -171,16 +183,14 @@ func (s *Server) handleToolsCall(r *http.Request, req rpcRequest) rpcResponse {
 	if direct, ok := value.(mcpToolResult); ok {
 		return rpcOKResponse(req.ID, direct)
 	}
-	text, merr := json.Marshal(value)
+	result, merr := newStructuredMCPToolResult(value)
 	if merr != nil {
 		return rpcOKResponse(req.ID, mcpToolResult{
 			Content: []mcpContent{{Type: "text", Text: merr.Error()}},
 			IsError: true,
 		})
 	}
-	return rpcOKResponse(req.ID, mcpToolResult{
-		Content: []mcpContent{{Type: "text", Text: string(text)}},
-	})
+	return rpcOKResponse(req.ID, result)
 }
 
 func (s *Server) mcpRequireWrite() error {

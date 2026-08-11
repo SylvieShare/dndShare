@@ -37,6 +37,11 @@ Tool schemas должны совпадать с текущей item/suggest mode
 
 ## Error-report automation
 
+JSON-returning tools expose the typed value as
+`structuredContent.result` and keep the serialized value in the text content
+block for backwards compatibility. Automation code should validate the typed
+value instead of parsing the text block when `structuredContent` is available.
+
 Lifecycle tools:
 
 - `error_reports_list`;

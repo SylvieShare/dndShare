@@ -75,3 +75,25 @@ func TestMCPErrorReportListSupportsCompactProbe(t *testing.T) {
 	}
 	t.Fatal("error_reports_list definition not found")
 }
+
+func TestStructuredMCPToolResultKeepsJSONTextAndTypedValue(t *testing.T) {
+	value := map[string]any{
+		"id":       int64(42),
+		"released": true,
+	}
+
+	result, err := newStructuredMCPToolResult(value)
+	if err != nil {
+		t.Fatalf("newStructuredMCPToolResult: %v", err)
+	}
+	if len(result.Content) != 1 || result.Content[0].Text != `{"id":42,"released":true}` {
+		t.Fatalf("unexpected backwards-compatible text content: %#v", result.Content)
+	}
+	structured, ok := result.StructuredContent["result"].(map[string]any)
+	if !ok {
+		t.Fatalf("structured result is missing: %#v", result.StructuredContent)
+	}
+	if structured["id"] != int64(42) || structured["released"] != true {
+		t.Fatalf("unexpected structured result: %#v", structured)
+	}
+}
