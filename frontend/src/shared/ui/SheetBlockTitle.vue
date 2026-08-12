@@ -1,5 +1,5 @@
 <template>
-  <div class="sbt" :class="{ 'sbt--fade': editFade, 'sbt--divider': divider }">
+  <div class="sbt" :class="{ 'sbt--fade': editFade }">
     <div
       class="sbt-main"
       :class="{ 'sbt-main--clickable': clickableTitle && showEdit }"
@@ -19,7 +19,6 @@
         </svg>
       </button>
     </div>
-    <span v-if="divider" class="sbt-line" aria-hidden="true" />
     <div v-if="$slots.aside" class="sbt-aside"><slot name="aside" /></div>
   </div>
 </template>
@@ -37,7 +36,6 @@ defineProps({
   editFade: { type: Boolean, default: false },
   clickableTitle: { type: Boolean, default: true },
   upper: { type: Boolean, default: false },
-  divider: { type: Boolean, default: false },
 })
 defineEmits(['edit'])
 </script>
@@ -93,19 +91,4 @@ defineEmits(['edit'])
 
 .sbt-aside { flex-shrink: 0; }
 
-.sbt--divider {
-  gap: 12px;
-}
-
-.sbt--divider .sbt-title {
-  color: var(--text-2);
-  font-size: 11px;
-}
-
-.sbt-line {
-  min-width: 24px;
-  height: 1px;
-  flex: 1 1 auto;
-  background: color-mix(in srgb, var(--text-muted) 32%, transparent);
-}
 </style>

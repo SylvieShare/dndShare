@@ -16,12 +16,8 @@
   </component>
 
   <component :is="block.content?.tile ? BaseTile : 'div'" v-else-if="block.type === 'VERTICAL_LIST'" v-show="!childHidden" class="layout-vertical" :style="[blockStyle, { gap: block.content?.gap }]">
-    <SectionLabel
-      v-if="layoutTitle"
-      :title="layoutTitle"
-      :border="block.props?.title_variant !== 'divider'"
-      :divider="block.props?.title_variant === 'divider'"
-    >
+    <SectionDivider v-if="block.props?.divider_before" />
+    <SectionLabel v-if="block.title" :title="block.title" border>
       <template v-if="block.hide_button" #actions>
         <button class="tb-collapse-btn" :title="collapsed ? 'Развернуть' : 'Свернуть'" @click="collapsed = !collapsed">{{ collapsed ? '▸' : '▾' }}</button>
       </template>
@@ -187,6 +183,7 @@ export default { name: 'TemplateBlockInner' }
 <script setup>
 import BaseTile from '@/shared/ui/BaseTile'
 import SectionLabel from '@/shared/ui/SectionLabel'
+import SectionDivider from '@/shared/ui/SectionDivider'
 import { computed, inject, nextTick, onBeforeUnmount, onMounted, provide, ref, watch } from 'vue'
 import { BLOCK_REGISTRY } from '@/features/character-editor/blocks/blockRegistry'
 
@@ -273,8 +270,6 @@ const blockStyle = computed(() => {
   }
   return [props.colStyle, own, customStyle].filter(Boolean)
 })
-
-const layoutTitle = computed(() => props.block.title || props.block.props?.title || '')
 
 const visibleHorizontalChildren = computed(() =>
   (props.block.blocks || [])

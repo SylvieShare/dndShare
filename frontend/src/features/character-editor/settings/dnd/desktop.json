@@ -246,9 +246,7 @@
                                   "kind": "layout",
                                   "type": "column",
                                   "props": {
-                                    "gap": "10px",
-                                    "title": "Ресурсы",
-                                    "title_variant": "divider"
+                                    "gap": "10px"
                                   },
                                   "children": [
                                     {
@@ -278,8 +276,7 @@
                                   "type": "column",
                                   "props": {
                                     "gap": "0",
-                                    "title": "Зелья",
-                                    "title_variant": "divider"
+                                    "divider_before": true
                                   },
                                   "children": [
                                     {
@@ -293,8 +290,7 @@
                                   "type": "column",
                                   "props": {
                                     "gap": "0",
-                                    "title": "Инвентарь",
-                                    "title_variant": "divider"
+                                    "divider_before": true
                                   },
                                   "children": [
                                     {
@@ -328,9 +324,7 @@
                                       "kind": "layout",
                                       "type": "column",
                                       "props": {
-                                        "gap": "12px",
-                                        "title": "Основное",
-                                        "title_variant": "divider"
+                                        "gap": "12px"
                                       },
                                       "children": [
                                         {
@@ -365,8 +359,7 @@
                                       "type": "column",
                                       "props": {
                                         "gap": "12px",
-                                        "title": "Облик",
-                                        "title_variant": "divider"
+                                        "divider_before": true
                                       },
                                       "children": [
                                         {
@@ -414,8 +407,7 @@
                                       "type": "column",
                                       "props": {
                                         "gap": "12px",
-                                        "title": "Характер",
-                                        "title_variant": "divider"
+                                        "divider_before": true
                                       },
                                       "children": [
                                         {
@@ -451,8 +443,7 @@
                                       "type": "column",
                                       "props": {
                                         "gap": "14px",
-                                        "title": "История",
-                                        "title_variant": "divider"
+                                        "divider_before": true
                                       },
                                       "children": [
                                         {
@@ -484,16 +475,13 @@
                               "children": [
                                 {
                                   "ref": "quests",
-                                  "kind": "block",
-                                  "props": {
-                                    "title_variant": "divider"
-                                  }
+                                  "kind": "block"
                                 },
                                 {
                                   "ref": "diary",
                                   "kind": "block",
                                   "props": {
-                                    "title_variant": "divider"
+                                    "divider_before": true
                                   }
                                 },
                                 {
@@ -501,7 +489,7 @@
                                   "kind": "block",
                                   "props": {
                                     "min-width": "0",
-                                    "title_variant": "divider"
+                                    "divider_before": true
                                   }
                                 }
                               ]

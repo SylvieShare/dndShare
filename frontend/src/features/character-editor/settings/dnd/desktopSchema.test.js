@@ -15,31 +15,35 @@ describe('D&D desktop sheet schema', () => {
   const base = schema.layouts.desktop.tabs.find(tab => tab.title === 'База')
   const innerTabs = findNode(base?.content, node => node.type === 'inner_tabs')
 
-  it('groups equipment and personality with shared divider headings', () => {
+  it('separates equipment and personality groups without extra headings', () => {
     const equipment = innerTabs.children.find(tab => tab.title === 'Снаряжение')
     const personality = innerTabs.children.find(tab => tab.title === 'Личность')
 
-    expect(equipment.content.children.map(group => group.props?.title)).toEqual([
-      'Ресурсы',
-      'Зелья',
-      'Инвентарь',
+    expect(equipment.content.children.map(group => !!group.props?.divider_before)).toEqual([
+      false,
+      true,
+      true,
     ])
-    expect(equipment.content.children.every(group => group.props?.title_variant === 'divider')).toBe(true)
+    expect(equipment.content.children.every(group => group.props?.title == null)).toBe(true)
 
     const personalityGroups = personality.content.children[0].children
-    expect(personalityGroups.map(group => group.props?.title)).toEqual([
-      'Основное',
-      'Облик',
-      'Характер',
-      'История',
+    expect(personalityGroups.map(group => !!group.props?.divider_before)).toEqual([
+      false,
+      true,
+      true,
+      true,
     ])
-    expect(personalityGroups.every(group => group.props?.title_variant === 'divider')).toBe(true)
+    expect(personalityGroups.every(group => group.props?.title == null)).toBe(true)
   })
 
-  it('uses the same divider heading variant for diary sections', () => {
+  it('places decorative dividers only before later diary sections', () => {
     const diary = innerTabs.children.find(tab => tab.title === 'Дневник')
 
     expect(diary.content.children.map(block => block.ref)).toEqual(['quests', 'diary', 'notes'])
-    expect(diary.content.children.every(block => block.props?.title_variant === 'divider')).toBe(true)
+    expect(diary.content.children.map(block => !!block.props?.divider_before)).toEqual([
+      false,
+      true,
+      true,
+    ])
   })
 })

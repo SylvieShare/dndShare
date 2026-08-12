@@ -1,8 +1,8 @@
 <template>
   <div class="input-desc">
+    <SectionDivider v-if="block.props?.divider_before" />
     <div v-if="block.title || showToggle" class="desc-head">
-      <SectionLabel v-if="dividerTitle" class="desc-section-label" :title="block.title" divider />
-      <span v-else-if="block.title" class="desc-title">{{ block.title }}</span>
+      <span v-if="block.title" class="desc-title">{{ block.title }}</span>
       <button v-if="showToggle && !editOn" class="field-edit-btn" type="button" title="Редактировать" @click="editOn = true">
         <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M12 20h9" /><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
@@ -82,7 +82,7 @@
 import { computed, inject, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import ColorPresetPicker from '@/shared/ui/ColorPresetPicker'
 import RichContent from '@/shared/ui/RichContent'
-import SectionLabel from '@/shared/ui/SectionLabel'
+import SectionDivider from '@/shared/ui/SectionDivider'
 
 const props = defineProps({
   block: { type: Object, default: () => ({}) },
@@ -98,7 +98,6 @@ const owner = computed(() => !!charCtx.ownerMode)
 const showToggle = computed(() => owner.value && !props.editable)
 const editOn = ref(false)
 const editing = computed(() => props.editable || (owner.value && editOn.value))
-const dividerTitle = computed(() => !!props.block.title && props.block.props?.title_variant === 'divider')
 
 const hOpen = ref(false)
 const editor = ref(null)
@@ -313,11 +312,6 @@ function tryCreateListFromDash() {
   white-space: nowrap;
 }
 
-.desc-section-label {
-  min-width: 0;
-  flex: 1 1 auto;
-  margin-bottom: 0;
-}
 
 .desc-head .field-edit-btn,
 .desc-head .desc-done-btn {

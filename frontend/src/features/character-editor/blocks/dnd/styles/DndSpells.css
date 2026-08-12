@@ -3,8 +3,8 @@
   color: var(--text-1);
 }
 
-.sp-spells-section {
-  margin-bottom: 14px;
+.sp-spells-divider {
+  margin: 4px 0 14px;
 }
 
 .sg-lvl {
@@ -170,7 +170,7 @@
 }
 
 @media (max-width: 760px) {
-  .sp-spells-section {
+  .sp-spells-divider {
     display: none;
   }
 

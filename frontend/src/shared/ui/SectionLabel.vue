@@ -1,11 +1,6 @@
 <template>
-  <div
-    class="slabel"
-    :class="{ 'slabel--border': border && !divider, 'slabel--divider': divider }"
-    :style="alignStyle"
-  >
+  <div class="slabel" :class="{ 'slabel--border': border }" :style="alignStyle">
     <span class="slabel-text">{{ title }}</span>
-    <span v-if="divider" class="slabel-line" aria-hidden="true" />
     <slot name="actions" />
   </div>
 </template>
@@ -20,7 +15,6 @@ import { computed } from 'vue'
 const props = defineProps({
   title: { type: String, default: '' },
   border: { type: Boolean, default: false },
-  divider: { type: Boolean, default: false },
   align: { type: String, default: '' },
 })
 
@@ -50,22 +44,4 @@ const alignStyle = computed(() => {
   margin-bottom: 6px;
 }
 
-.slabel--divider {
-  gap: 12px;
-  margin-bottom: 14px;
-  color: var(--text-2);
-  font-size: 11px;
-  letter-spacing: 0.08em;
-}
-
-.slabel--divider .slabel-text {
-  flex: 0 0 auto;
-}
-
-.slabel-line {
-  min-width: 24px;
-  height: 1px;
-  flex: 1 1 auto;
-  background: color-mix(in srgb, var(--text-muted) 32%, transparent);
-}
 </style>

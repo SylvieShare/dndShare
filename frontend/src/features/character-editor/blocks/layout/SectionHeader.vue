@@ -1,10 +1,5 @@
 <template>
-  <SectionLabel
-    :title="block.title"
-    :border="block.content.variant !== 'divider'"
-    :divider="block.content.variant === 'divider'"
-    :align="block.content.align || ''"
-  />
+  <SectionLabel :title="block.title" border :align="block.content.align || ''" />
 </template>
 
 <script setup>
