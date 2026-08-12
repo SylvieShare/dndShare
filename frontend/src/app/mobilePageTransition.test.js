@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
+  completeMobilePageTransitionNavigation,
   mobilePageTransitionActive,
   shouldUseMobilePageTransition,
   startMobilePageTransition,
@@ -58,24 +59,30 @@ describe('mobile page View Transitions', () => {
     let updateCallback
     let finishTransition
     const finished = new Promise(resolve => { finishTransition = resolve })
+    const ready = Promise.resolve()
+    const updateCallbackDone = Promise.resolve()
     const documentObject = {
       documentElement: { classList },
       startViewTransition(callback) {
         updateCallback = callback
-        return { finished }
+        return { finished, ready, updateCallbackDone }
       },
     }
-    const windowObject = { requestAnimationFrame: callback => callback() }
 
     const navigationReady = startMobilePageTransition('page-backward', {
       documentObject,
-      windowObject,
     })
     expect(mobilePageTransitionActive.value).toBe(true)
     expect(classes.has('mobile-page-transition--backward')).toBe(true)
 
     const updateFinished = updateCallback()
     await navigationReady
+    let callbackFinished = false
+    updateFinished.then(() => { callbackFinished = true })
+    await Promise.resolve()
+    expect(callbackFinished).toBe(false)
+
+    completeMobilePageTransitionNavigation()
     await updateFinished
     finishTransition()
     await finished

@@ -11,6 +11,7 @@ const DIRECTION_CLASSES = [
 export const mobilePageTransitionActive = ref(false)
 
 let transitionGeneration = 0
+let completePendingNavigation = null
 
 export function shouldUseMobilePageTransition(to, from, options = {}) {
   const documentObject = options.documentObject ?? globalThis.document
@@ -30,27 +31,31 @@ function directionClass(transitionName) {
     : 'mobile-page-transition--forward'
 }
 
-function nextPaint(windowObject) {
-  return new Promise(resolve => {
-    if (typeof windowObject?.requestAnimationFrame === 'function') {
-      windowObject.requestAnimationFrame(() => resolve())
-      return
-    }
-    setTimeout(resolve, 0)
-  })
+export function completeMobilePageTransitionNavigation() {
+  completePendingNavigation?.()
+  completePendingNavigation = null
+}
+
+function silenceTransitionRejection(promise) {
+  Promise.resolve(promise).catch(() => {})
 }
 
 /**
  * Lets vue-router finish navigation inside one root View Transition snapshot.
  * Resolving the returned promise releases the navigation guard; the update
- * callback then waits for Vue and the browser to paint the destination route.
+ * callback then waits for router.afterEach and Vue's resulting DOM flush. A
+ * requestAnimationFrame must not be awaited here: browsers may pause frames
+ * while the View Transition update callback owns the rendering lifecycle.
  */
 export function startMobilePageTransition(transitionName, options = {}) {
   const documentObject = options.documentObject ?? globalThis.document
-  const windowObject = options.windowObject ?? globalThis.window
   const root = documentObject.documentElement
   const generation = ++transitionGeneration
   const activeDirectionClass = directionClass(transitionName)
+
+  // A rapid second navigation must never leave the previous update callback
+  // waiting for an afterEach notification that now belongs to another route.
+  completeMobilePageTransitionNavigation()
 
   root.classList.remove(...DIRECTION_CLASSES)
   root.classList.add(ROOT_CLASS, activeDirectionClass)
@@ -59,6 +64,9 @@ export function startMobilePageTransition(transitionName, options = {}) {
   let continueNavigation
   const navigationReady = new Promise(resolve => {
     continueNavigation = resolve
+  })
+  const navigationCompleted = new Promise(resolve => {
+    completePendingNavigation = resolve
   })
 
   const cleanup = () => {
@@ -70,12 +78,18 @@ export function startMobilePageTransition(transitionName, options = {}) {
   try {
     const transition = documentObject.startViewTransition(async () => {
       continueNavigation()
+      await navigationCompleted
       await nextTick()
-      await nextPaint(windowObject)
     })
+    // `ready` and `updateCallbackDone` reject independently from `finished`.
+    // Observe all three so a browser-aborted animation cannot reach the global
+    // console-error collector as an unhandled Promise rejection.
+    silenceTransitionRejection(transition.ready)
+    silenceTransitionRejection(transition.updateCallbackDone)
     Promise.resolve(transition.finished).catch(() => {}).finally(cleanup)
   } catch {
     continueNavigation()
+    completeMobilePageTransitionNavigation()
     cleanup()
   }
 

@@ -16,6 +16,7 @@ import { getSessions } from '@/shared/api/sessionsApi'
 import { useItemTypesStore } from '@/stores/itemTypes'
 import { useTemplateStore } from '@/stores/template'
 import {
+    completeMobilePageTransitionNavigation,
     shouldUseMobilePageTransition,
     startMobilePageTransition,
 } from '@/app/mobilePageTransition'
@@ -218,5 +219,6 @@ router.beforeResolve((to, from) => {
 })
 
 router.afterEach((to) => {
+    completeMobilePageTransitionNavigation()
     if (to.meta?.title) document.title = to.meta.title
 })
