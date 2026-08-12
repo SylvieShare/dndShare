@@ -59,9 +59,12 @@ The character viewport keeps its pre-keyboard height while a rich-text or form
 editor is focused. `useCharacterViewport` owns the visual/layout viewport
 synchronization and document-scoped focus handling needed by editors teleported
 outside the page root.
-The compact HP/status strip gives HP and statuses equal flexible space, keeps
-exhaustion within a narrow responsive 44–52 px slot, and shows a thin scrollbar
-only when the status icons actually overflow.
+The compact mobile strip keeps HP at its intrinsic number width and never lets
+the HP numbers shrink. Its right side contains a fixed **Статусы** action
+button with editors for conditions, exhaustion and heroic inspiration. Active
+condition icons, a non-zero exhaustion level and active inspiration stay visible
+in a horizontally scrollable summary; empty and zero values render no placeholder.
+Heroic inspiration is stored as the boolean `values.inspiration`.
 
 ## Shared UI requirements
 

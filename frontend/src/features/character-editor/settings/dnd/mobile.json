@@ -361,7 +361,7 @@
     "kind": "layout",
     "type": "row",
     "props": {
-      "gap": "10px",
+      "gap": "6px",
       "columns": [
         {
           "width": "100%"
@@ -373,30 +373,16 @@
         "ref": "hp",
         "kind": "block",
         "props": {
-          "variant": "compact",
-          "grow": 1,
-          "basis": 0,
-          "min-width": "100px"
+          "variant": "compact"
         }
       },
       {
-        "ref": "exhaustion",
+        "ref": "mobile_statuses",
         "kind": "block",
         "props": {
-          "variant": "compact",
-          "shrink": 1,
-          "basis": "clamp(44px, 14vw, 52px)",
-          "min-width": "44px"
-        }
-      },
-      {
-        "ref": "states",
-        "kind": "block",
-        "props": {
-          "variant": "compact",
           "grow": 1,
           "basis": 0,
-          "min-width": "76px"
+          "min-width": "0"
         }
       }
     ]

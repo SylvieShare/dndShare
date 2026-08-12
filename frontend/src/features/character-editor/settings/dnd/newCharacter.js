@@ -19,6 +19,7 @@ const PRESET = {
   hp: { max: 10, current: 10, hitDice: [{ die: 'd8', total: 1, used: 0 }] },
   armor: { ac: 10, shield: false, bonuses: [], shield_bonus: 2 },
   initiative: { base: 0, bonuses: [], use_dex: true },
+  inspiration: false,
   STR: { value: 10 },
   DEX: { value: 10 },
   CON: { value: 10 },

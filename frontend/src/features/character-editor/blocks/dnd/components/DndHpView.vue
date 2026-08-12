@@ -106,9 +106,9 @@ const svgColorFilter = computed(() => {
 
 <style scoped>
 /* ── Compact variant ── */
-.hp-compact { display: flex; flex: 1 1 0; flex-direction: column; gap: 4px; min-width: 0; padding: 6px 8px; border-radius: 10px; transition: background 0.3s ease; cursor: pointer; }
+.hp-compact { display: inline-flex; flex: 0 0 auto; flex-direction: column; gap: 4px; width: max-content; min-width: max-content; padding: 6px 8px; border-radius: 10px; transition: background 0.3s ease; cursor: pointer; }
 .hp-c-header { display: flex; align-items: center; }
-.hp-c-nums { display: flex; align-items: center; gap: 3px; min-width: 0; }
+.hp-c-nums { display: flex; align-items: center; gap: 3px; min-width: max-content; white-space: nowrap; }
 .hp-c-icon { width: 20px; height: 20px; flex-shrink: 0; transition: filter 0.3s ease; }
 .hp-c-cur { font-size: 22px; font-weight: 800; line-height: 1; }
 .hp-c-sep { color: var(--text-muted); font-size: 16px; font-weight: 600; margin: 0 2px; }

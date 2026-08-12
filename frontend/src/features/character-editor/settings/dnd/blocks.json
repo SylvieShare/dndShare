@@ -277,6 +277,16 @@
       "suggest_id": 9
     }
   },
+  "mobile_statuses": {
+    "id": "mobile_statuses",
+    "type": "DND_MOBILE_STATUS_MENU",
+    "content": {
+      "states_id": "states",
+      "states_suggest_id": 9,
+      "exhaustion_id": "exhaustion",
+      "inspiration_id": "inspiration"
+    }
+  },
   "weapon": {
     "id": "weapon",
     "type": "DND_WEAPONS",

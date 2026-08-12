@@ -31,25 +31,23 @@ describe('D&D mobile sheet schema', () => {
     expect(diary?.content?.children?.map(block => block.ref)).toEqual(['quests', 'diary', 'notes'])
   })
 
-  it('keeps the compact mobile summary readable and scrollable at narrow widths', () => {
+  it('keeps HP content-sized and groups the remaining mobile status actions', () => {
     const summary = schema.layouts.mobile.common_mobile_blocks
     const hp = summary.children.find(block => block.ref === 'hp')
-    const exhaustion = summary.children.find(block => block.ref === 'exhaustion')
-    const states = summary.children.find(block => block.ref === 'states')
+    const statuses = summary.children.find(block => block.ref === 'mobile_statuses')
 
-    expect(summary.children.map(block => block.ref)).toEqual(['hp', 'exhaustion', 'states'])
-    expect(hp.props).toMatchObject({ grow: 1, basis: 0, 'min-width': '100px' })
-    expect(exhaustion.props.variant).toBe('compact')
-    expect(exhaustion.props).toMatchObject({
-      shrink: 1,
-      basis: 'clamp(44px, 14vw, 52px)',
-      'min-width': '44px',
-    })
-    expect(states.props).toMatchObject({
-      variant: 'compact',
+    expect(summary.children.map(block => block.ref)).toEqual(['hp', 'mobile_statuses'])
+    expect(hp.props).toEqual({ variant: 'compact' })
+    expect(statuses.props).toMatchObject({
       grow: 1,
       basis: 0,
-      'min-width': '76px',
+      'min-width': '0',
+    })
+    expect(schema.blocks.mobile_statuses.content).toEqual({
+      states_id: 'states',
+      states_suggest_id: 9,
+      exhaustion_id: 'exhaustion',
+      inspiration_id: 'inspiration',
     })
   })
 

@@ -26,6 +26,7 @@ import DndInitiative from '@/features/character-editor/blocks/dnd/DndInitiative'
 import DndItems from '@/features/character-editor/blocks/dnd/DndItems'
 import DndSpeed from '@/features/character-editor/blocks/dnd/DndSpeed'
 import DndLvl from '@/features/character-editor/blocks/dnd/DndLvl'
+import DndMobileStatusMenu from '@/features/character-editor/blocks/dnd/DndMobileStatusMenu'
 import DndPotions from '@/features/character-editor/blocks/dnd/DndPotions'
 import DndProfBonus from '@/features/character-editor/blocks/dnd/DndProfBonus'
 import DndQuests from '@/features/character-editor/blocks/dnd/DndQuests'
@@ -64,6 +65,7 @@ export const BLOCK_REGISTRY = {
   DND_HIT_DICE:     { component: DndHitDice },
   DND_HP:           { component: DndHp, passValues: true },
   DND_INITIATIVE:   { component: DndInitiative, passValuesOnly: true },
+  DND_MOBILE_STATUS_MENU: { component: DndMobileStatusMenu, noValue: true, passValuesOnly: true },
   DND_POTIONS:      { component: DndPotions },
   DND_PROF_BONUS:   { component: DndProfBonus, passValues: true },
   DND_QUESTS:       { component: DndQuests },
