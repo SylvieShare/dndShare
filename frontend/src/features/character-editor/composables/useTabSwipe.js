@@ -75,7 +75,13 @@ export function useTabSwipe(activeTabs, isMobile, mobileTabbarRef = null) {
   )
 
   const mobileSwipeTrackStyle = computed(() => ({
-    transform: `translate3d(${currentMobileTrackOffsetValue.value}px, 0, 0)`,
+    // Before the first pointer interaction the pane width has not been measured
+    // yet (tabDragWidth intentionally starts at 1). A percentage keeps a tab
+    // restored from the route aligned immediately after reload; active swipes
+    // still use pixels because they follow the pointer continuously.
+    transform: (tabDragActive.value || tabDragSettling.value)
+      ? `translate3d(${currentMobileTrackOffsetValue.value}px, 0, 0)`
+      : `translate3d(${-mobileActiveSlot.value * 100}%, 0, 0)`,
   }))
 
   const mobileTabIndicatorStyle = computed(() => {

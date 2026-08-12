@@ -114,4 +114,28 @@ describe('mobile character tab geometry', () => {
     expect(renderCount).toBe(2)
     app.unmount()
   })
+
+  it('positions a restored tab before the mobile pane width is measured', async () => {
+    const tabs = ref([
+      { title: 'Статы' },
+      { title: 'Инвентарь' },
+      { title: 'Заклинания' },
+    ])
+    const mobile = ref(true)
+    let swipe
+
+    const app = testRenderer.createApp(defineComponent({
+      setup() {
+        swipe = useTabSwipe(tabs, mobile)
+        swipe.activeTab.value = 2
+        return () => h('div', { style: swipe.mobileSwipeTrackStyle.value })
+      },
+    }))
+
+    app.mount(hostNode('root'))
+    await nextTick()
+
+    expect(swipe.mobileSwipeTrackStyle.value.transform).toBe('translate3d(-200%, 0, 0)')
+    app.unmount()
+  })
 })
