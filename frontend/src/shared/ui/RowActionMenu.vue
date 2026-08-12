@@ -18,16 +18,18 @@
   </button>
 
   <Teleport to="body">
-    <div
-      v-if="isOpen"
-      ref="popoverEl"
-      class="ram-popover"
-      :style="popoverStyle"
-      @click.stop
-      @pointerdown.stop
-    >
-      <slot :close="close" />
-    </div>
+    <Transition name="ram-popover">
+      <div
+        v-if="isOpen"
+        ref="popoverEl"
+        class="ram-popover"
+        :style="popoverStyle"
+        @click.stop
+        @pointerdown.stop
+      >
+        <slot :close="close" />
+      </div>
+    </Transition>
   </Teleport>
 </template>
 
@@ -112,7 +114,7 @@ function placePopover() {
     visibility: 'visible',
     '--ram-origin-x': `${placement.originX}px`,
     '--ram-origin-y': `${placement.originY}px`,
-    '--ram-enter-y': placement.opensAbove ? '2px' : '-2px',
+    '--ram-enter-y': placement.opensAbove ? '5px' : '-5px',
   }
 }
 
@@ -167,7 +169,10 @@ defineExpose({ close })
 <style scoped>
 .ram-custom-trigger {
   display: inline-flex;
+  transform-origin: center;
+  transition: transform 90ms cubic-bezier(0.2, 0.8, 0.3, 1);
 }
+.ram-custom-trigger:active { transform: scale(0.97); }
 
 .ram-trigger {
   width: 26px;
@@ -181,8 +186,16 @@ defineExpose({ close })
   display: flex;
   align-items: center;
   justify-content: center;
+  transform-origin: center;
+  transition: color 100ms ease, background-color 100ms ease, transform 90ms cubic-bezier(0.2, 0.8, 0.3, 1);
 }
 .ram-trigger:hover { color: var(--text-1); background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); }
+.ram-trigger:active { transform: scale(0.88); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ram-custom-trigger, .ram-trigger { transition: none; }
+  .ram-custom-trigger:active, .ram-trigger:active { transform: none; }
+}
 </style>
 
 <style>
@@ -203,13 +216,27 @@ defineExpose({ close })
   overflow-y: auto;
   overscroll-behavior: contain;
   transform-origin: var(--ram-origin-x, 100%) var(--ram-origin-y, 0);
-  animation: ram-popover-enter 140ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
+  will-change: opacity, transform;
 }
 
-@keyframes ram-popover-enter {
-  from { opacity: 0; transform: translateY(var(--ram-enter-y, -2px)) scale(0.96); }
-  to { opacity: 1; transform: none; }
+.ram-popover-enter-active {
+  transition:
+    opacity 135ms ease-out,
+    transform 165ms cubic-bezier(0.16, 1, 0.3, 1);
 }
+.ram-popover-leave-active {
+  pointer-events: none;
+  transition:
+    opacity 90ms ease-in,
+    transform 110ms cubic-bezier(0.4, 0, 1, 1);
+}
+.ram-popover-enter-from,
+.ram-popover-leave-to {
+  opacity: 0;
+  transform: translateY(var(--ram-enter-y, -5px)) scale(0.96);
+}
+.ram-popover-enter-to,
+.ram-popover-leave-from { opacity: 1; transform: none; }
 
 .ram-label {
   font-size: 10px;
@@ -251,6 +278,6 @@ defineExpose({ close })
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ram-popover { animation: none; }
+  .ram-popover-enter-active, .ram-popover-leave-active { transition: none; }
 }
 </style>

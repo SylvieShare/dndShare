@@ -26,6 +26,13 @@ describe('RowActionItem', () => {
 
   it('supports the accent tone for primary game actions', () => {
     expect(source).toContain("['default', 'accent', 'warning', 'success', 'info', 'danger']")
-    expect(source).toContain('.ram-item--accent { color: var(--accent-soft); }')
+    expect(source).toContain('.ram-item--accent { color: var(--accent-soft);')
+  })
+
+  it('gives enabled actions a quick press response', () => {
+    expect(source).toContain('.ram-item:active:not(:disabled)')
+    expect(source).toContain('transform: scale(0.975);')
+    expect(source).toContain('.ram-item:active:not(:disabled) .ram-item__icon')
+    expect(source).toContain('prefers-reduced-motion: reduce')
   })
 })
