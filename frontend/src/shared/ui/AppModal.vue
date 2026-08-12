@@ -287,7 +287,7 @@ onBeforeUnmount(() => {
 
 .am-card {
   position: relative;
-  background: var(--surface);
+  background: var(--bg);
   border: 1px solid var(--border-strong);
   border-radius: 18px;
   padding: 28px 28px 24px;

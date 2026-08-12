@@ -200,7 +200,7 @@ function formatSubValue(sub, value) {
   flex-direction: column;
   padding: 16px 20px;
   overflow-y: auto;
-  background: var(--surface);
+  background: var(--bg);
 }
 
 .empty-hint {
@@ -222,7 +222,7 @@ function formatSubValue(sub, value) {
   flex-wrap: wrap;
   margin: -16px -20px 14px;
   padding: 16px 20px 10px;
-  background: var(--surface);
+  background: var(--bg);
   border-bottom: 1px solid color-mix(in srgb, var(--text-on-accent) 6%, transparent);
 }
 

@@ -116,7 +116,7 @@ onMounted(async () => {
   flex-direction: column;
   height: 100%;
   min-height: 0;
-  background: var(--surface);
+  background: var(--bg);
 }
 
 .csm-body {
@@ -124,7 +124,7 @@ onMounted(async () => {
   min-height: 0;
   overflow-x: auto;
   overflow-y: auto;
-  background: var(--surface);
+  background: var(--bg);
 }
 
 .container {

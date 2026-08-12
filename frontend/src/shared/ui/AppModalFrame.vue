@@ -90,7 +90,7 @@ function requestClose() {
   max-height: inherit;
   display: flex;
   flex-direction: column;
-  background: var(--surface);
+  background: var(--bg);
 }
 
 .aem-header {
@@ -201,7 +201,7 @@ function requestClose() {
   min-height: 62px;
   box-sizing: border-box;
   padding: 12px 24px;
-  background: var(--surface);
+  background: var(--bg);
   border-top: 1px solid var(--border);
 }
 

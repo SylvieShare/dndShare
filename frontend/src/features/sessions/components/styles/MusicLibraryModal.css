@@ -1,5 +1,5 @@
 .music-lib {
-  background: var(--surface);
+  background: var(--bg);
   border: 1px solid var(--border-strong);
   border-radius: 18px;
   width: 100%;
@@ -47,7 +47,7 @@
   padding: 16px 12px;
   display: flex; flex-direction: column; gap: 4px;
   overflow-y: auto;
-  background: var(--surface);
+  background: var(--bg);
 }
 .sb-section-title {
   display: flex; align-items: center;
@@ -118,7 +118,7 @@
   padding: 20px 24px;
   gap: 14px;
   overflow-y: auto;
-  background: var(--surface);
+  background: var(--bg);
 }
 .ml-main-head { display: flex; align-items: center; gap: 12px; }
 .ml-main-color-dot { width: 12px; height: 12px; border-radius: 3px; }
@@ -193,7 +193,7 @@
   gap: 24px;
   align-items: center;
   padding: 12px 24px;
-  background: var(--surface);
+  background: var(--bg);
   border-top: 1px solid var(--popover-bg);
   flex-shrink: 0;
 }
