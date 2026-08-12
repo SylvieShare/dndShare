@@ -36,7 +36,7 @@
 
     <section v-if="activeSlots.length > 0" class="sp-slots-panel">
       <SheetBlockTitle
-        class="sp-mobile-panel-head"
+        class="sp-slots-head"
         title="Ячейки заклинаний"
         :show-edit="canInteract"
         @edit="editOpen = true"
@@ -122,6 +122,8 @@ function orbOrder(total) {
 }
 
 .sp-mobile-panel-head { display: none; }
+
+.sp-slots-head { margin-bottom: 12px; }
 
 /* ── Заголовок «Редактировать» (прижат справа над статами) ── */
 .sp-edit-head {

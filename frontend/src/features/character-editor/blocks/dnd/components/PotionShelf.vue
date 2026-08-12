@@ -93,6 +93,7 @@ function viewPotion(p, close) {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  margin-bottom: 8px;
 }
 
 .ps-head {

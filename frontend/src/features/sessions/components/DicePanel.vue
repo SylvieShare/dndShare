@@ -2,19 +2,33 @@
   <div class="dice-panel">
     <div class="dice-panel-head">
       <span class="dice-panel-title">Кубики</span>
-    </div>
-    <MultiToggle v-model="mode" :options="modeOptions" :neutral-value="'normal'" block />
-    <div class="dice-panel-grid">
       <button
-        v-for="die in SYSTEM_DICE"
-        :key="die.id"
         type="button"
-        class="dice-panel-die"
-        :title="`Бросить ${die.value}`"
-        @click="rollDie(die.sides)"
+        class="dice-panel-collapse"
+        :title="collapsed ? 'Развернуть кубики' : 'Свернуть кубики'"
+        :aria-label="collapsed ? 'Развернуть кубики' : 'Свернуть кубики'"
+        :aria-expanded="!collapsed"
+        @click="collapsed = !collapsed"
       >
-        <SystemDie :sides="die.sides" :size="44" color="var(--accent)" />
+        <span aria-hidden="true">{{ collapsed ? '⌄' : '⌃' }}</span>
       </button>
+    </div>
+    <div class="dice-panel-body" :class="{ 'dice-panel-body--collapsed': collapsed }">
+      <div class="dice-panel-body-inner" :aria-hidden="collapsed" :inert="collapsed">
+        <MultiToggle v-model="mode" :options="modeOptions" :neutral-value="'normal'" block />
+        <div class="dice-panel-grid">
+          <button
+            v-for="die in SYSTEM_DICE"
+            :key="die.id"
+            type="button"
+            class="dice-panel-die"
+            :title="`Бросить ${die.value}`"
+            @click="rollDie(die.sides)"
+          >
+            <SystemDie :sides="die.sides" :size="44" color="var(--accent)" />
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -33,6 +47,7 @@ const modeOptions = [
 ]
 
 const mode = ref('normal')
+const collapsed = ref(false)
 const diceStore = useDiceStore()
 
 function rollOne(sides) {
@@ -78,13 +93,13 @@ function rollDie(sides) {
   padding: 16px 14px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
 }
 
 .dice-panel-head {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
+  min-height: 22px;
 }
 
 .dice-panel-title {
@@ -93,6 +108,43 @@ function rollDie(sides) {
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--text-muted);
+}
+
+.dice-panel-collapse {
+  width: 24px;
+  height: 22px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: none;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+}
+.dice-panel-collapse:hover {
+  border-color: var(--border);
+  color: var(--text-1);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+
+.dice-panel-body {
+  display: grid;
+  grid-template-rows: 1fr;
+  padding-top: 10px;
+  transition: grid-template-rows 0.2s ease, padding-top 0.2s ease;
+}
+.dice-panel-body--collapsed {
+  grid-template-rows: 0fr;
+  padding-top: 0;
+}
+.dice-panel-body-inner {
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .dice-panel-grid {

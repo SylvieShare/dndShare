@@ -10,16 +10,6 @@
     <div class="dict-page">
       <div class="dict-body">
 
-        <!-- Mobile back bar -->
-        <div class="mobile-back-bar">
-          <button class="mobile-back-btn" @click="mobileBack">
-            <svg viewBox="0 0 16 16" fill="none" width="14" height="14">
-              <path d="M10 13L5 8L10 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            {{ mobilePanelClass === 'panel-editor' ? (selectedItem && selectedItem.value) : 'Словари' }}
-          </button>
-        </div>
-
         <DictTypeSidebar
           :types="types"
           :selected-type-id="selectedType && selectedType.id"
@@ -70,11 +60,12 @@
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { suggestApi } from '@/shared/api/suggestApi'
 import { useAccountStore } from '@/stores/account'
 import { useUiStore } from '@/stores/ui'
+import { MOBILE_HEADER_BACK_EVENT } from '@/shared/lib/mobileBack'
 import { createHeaderChip } from '@/shared/lib/appHeader'
 import DictItemGrid from '@/features/handbook/dictionary/components/DictItemGrid'
 import DictItemView from '@/features/handbook/dictionary/components/DictItemView'
@@ -120,6 +111,12 @@ function mobileBack() {
     selectedItem.value = null
     router.replace({ query: {} })
   }
+}
+
+function onMobileHeaderBack(event) {
+  if (mobilePanelClass.value === 'panel-types') return
+  event.preventDefault()
+  mobileBack()
 }
 
 // ── Data loading ─────────────────────────────────────────────────────────────
@@ -226,7 +223,12 @@ async function init() {
 
 init()
 
-onBeforeUnmount(() => uiStore.clearHeaderContext(headerOwner))
+onMounted(() => window.addEventListener(MOBILE_HEADER_BACK_EVENT, onMobileHeaderBack))
+
+onBeforeUnmount(() => {
+  window.removeEventListener(MOBILE_HEADER_BACK_EVENT, onMobileHeaderBack)
+  uiStore.clearHeaderContext(headerOwner)
+})
 </script>
 
 <style scoped>
@@ -259,9 +261,6 @@ onBeforeUnmount(() => uiStore.clearHeaderContext(headerOwner))
   border-top: 1px solid var(--border);
   overflow: hidden;
 }
-
-/* Mobile back bar hidden on desktop */
-.mobile-back-bar { display: none; }
 
 /* ── Responsive ── */
 @media (max-width: 760px) {
@@ -300,28 +299,6 @@ onBeforeUnmount(() => uiStore.clearHeaderContext(headerOwner))
     overflow: visible;
   }
 
-  .mobile-back-bar {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 6px 0 8px;
-    flex-shrink: 0;
-  }
-
-  .mobile-back-btn {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    border: none;
-    background: none;
-    color: var(--text-2);
-    font: inherit;
-    font-size: 13px;
-    cursor: pointer;
-    padding: 4px 0;
-  }
-  .mobile-back-btn:hover { color: var(--text-1); }
-
   /* panel-types: show only sidebar */
   .panel-types .dict-sidebar-slot {
     display: flex;
@@ -332,7 +309,6 @@ onBeforeUnmount(() => uiStore.clearHeaderContext(headerOwner))
   }
   .panel-types .dict-grid-slot { display: none; }
   .panel-types .dict-editor-slot { display: none; }
-  .panel-types .mobile-back-bar { display: none; }
 
   /* panel-grid: show only grid */
   .panel-grid .dict-sidebar-slot { display: none; }
@@ -344,7 +320,6 @@ onBeforeUnmount(() => uiStore.clearHeaderContext(headerOwner))
     max-height: none;
   }
   .panel-grid .dict-editor-slot { display: none; }
-  .panel-grid .mobile-back-bar { display: flex; }
 
   /* panel-editor: show only view */
   .panel-editor .dict-sidebar-slot { display: none; }
@@ -357,6 +332,5 @@ onBeforeUnmount(() => uiStore.clearHeaderContext(headerOwner))
     max-height: none;
     width: 100%;
   }
-  .panel-editor .mobile-back-bar { display: flex; }
 }
 </style>

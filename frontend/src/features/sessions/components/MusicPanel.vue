@@ -4,88 +4,102 @@
       <span class="music-panel-title">МУЗЫКА</span>
       <span v-if="currentAlbum" class="music-panel-album">«{{ currentAlbum.name }}»</span>
       <button class="music-panel-library" @click="onOpenLibrary">библиотека ↗</button>
-    </div>
-
-    <div class="now" :class="{ 'now--empty': !current }">
-      <div class="now-row">
-        <button class="now-play-btn" :disabled="!current" @click="togglePlay">
-          <svg v-if="!state.playing" width="14" height="14" viewBox="0 0 14 14">
-            <path d="M3.5 2.5v9l8-4.5-8-4.5z" fill="currentColor"/>
-          </svg>
-          <svg v-else width="14" height="14" viewBox="0 0 14 14">
-            <rect x="3.5" y="2.5" width="2.6" height="9" fill="currentColor"/>
-            <rect x="7.9" y="2.5" width="2.6" height="9" fill="currentColor"/>
-          </svg>
-        </button>
-
-        <div class="now-text">
-          <div v-if="current" class="now-status">
-            <span class="now-status-dot" />
-            <span class="now-status-label">{{ state.playing ? 'ИГРАЕТ' : 'ПАУЗА' }}</span>
-          </div>
-          <div v-else class="now-status now-status--dim">
-            <span class="now-status-label">НИЧЕГО НЕ ИГРАЕТ</span>
-          </div>
-          <div class="now-title" :title="current?.name || ''">
-            {{ current?.name || '—' }}
-          </div>
-          <div v-if="current" class="now-time">
-            {{ fmtTime(state.positionSec) }} / {{ fmtTime(state.durationSec) }}
-          </div>
-        </div>
-
-        <button
-          class="now-loop-btn"
-          :class="{ active: state.loopMode === 'track' }"
-          :title="state.loopMode === 'track' ? 'Повтор одного трека' : 'Повтор альбома'"
-          @click="onToggleLoop"
-        >
-          <svg v-if="state.loopMode === 'track'" width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M3 5h7l-1.5-1.5M13 11H6l1.5 1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M3 5v3a3 3 0 0 0 3 3M13 11V8a3 3 0 0 0-3-3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-            <text x="8" y="9.5" text-anchor="middle" font-size="5" font-weight="700" fill="currentColor">1</text>
-          </svg>
-          <svg v-else width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M3 5h7l-1.5-1.5M13 11H6l1.5 1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M3 5v3a3 3 0 0 0 3 3M13 11V8a3 3 0 0 0-3-3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-          </svg>
-        </button>
-      </div>
-
-      <div
-        class="now-seek"
-        :class="{ 'now-seek--clickable': !!current && isDm }"
-        @click="onSeek"
+      <button
+        type="button"
+        class="music-panel-collapse"
+        :title="collapsed ? 'Развернуть музыку' : 'Свернуть музыку'"
+        :aria-label="collapsed ? 'Развернуть музыку' : 'Свернуть музыку'"
+        :aria-expanded="!collapsed"
+        @click="collapsed = !collapsed"
       >
-        <div class="now-seek-fill" :style="{ width: progressPct + '%' }" />
-      </div>
-
-      <div class="now-controls">
-        <div class="now-ctl">
-          <span class="now-ctl-label">громкость</span>
-          <AppSlider :model-value="state.volume" :min="0" :max="1" :step="0.01" @update:model-value="musicStore.setVolume" />
-          <span class="now-ctl-value">{{ Math.round(state.volume * 100) }}%</span>
-        </div>
-      </div>
+        <span aria-hidden="true">{{ collapsed ? '⌄' : '⌃' }}</span>
+      </button>
     </div>
 
-    <div v-if="next" class="next-card">
-      <button class="next-play-btn" title="Включить сейчас" @click="onPlayNextNow">
-        <svg width="12" height="12" viewBox="0 0 12 12">
-          <path d="M3 1.5v9l7-4.5-7-4.5z" fill="currentColor"/>
-        </svg>
-      </button>
-      <div class="next-text">
-        <div class="next-label">СЛЕДУЮЩИЙ</div>
-        <div class="next-title" :title="next.name">{{ next.name }}</div>
+    <div class="music-panel-body" :class="{ 'music-panel-body--collapsed': collapsed }">
+      <div class="music-panel-body-inner" :aria-hidden="collapsed" :inert="collapsed">
+        <div class="now" :class="{ 'now--empty': !current }">
+          <div class="now-row">
+            <button class="now-play-btn" :disabled="!current" @click="togglePlay">
+              <svg v-if="!state.playing" width="14" height="14" viewBox="0 0 14 14">
+                <path d="M3.5 2.5v9l8-4.5-8-4.5z" fill="currentColor"/>
+              </svg>
+              <svg v-else width="14" height="14" viewBox="0 0 14 14">
+                <rect x="3.5" y="2.5" width="2.6" height="9" fill="currentColor"/>
+                <rect x="7.9" y="2.5" width="2.6" height="9" fill="currentColor"/>
+              </svg>
+            </button>
+
+            <div class="now-text">
+              <div v-if="current" class="now-status">
+                <span class="now-status-dot" />
+                <span class="now-status-label">{{ state.playing ? 'ИГРАЕТ' : 'ПАУЗА' }}</span>
+              </div>
+              <div v-else class="now-status now-status--dim">
+                <span class="now-status-label">НИЧЕГО НЕ ИГРАЕТ</span>
+              </div>
+              <div class="now-title" :title="current?.name || ''">
+                {{ current?.name || '—' }}
+              </div>
+              <div v-if="current" class="now-time">
+                {{ fmtTime(state.positionSec) }} / {{ fmtTime(state.durationSec) }}
+              </div>
+            </div>
+
+            <button
+              class="now-loop-btn"
+              :class="{ active: state.loopMode === 'track' }"
+              :title="state.loopMode === 'track' ? 'Повтор одного трека' : 'Повтор альбома'"
+              @click="onToggleLoop"
+            >
+              <svg v-if="state.loopMode === 'track'" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M3 5h7l-1.5-1.5M13 11H6l1.5 1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M3 5v3a3 3 0 0 0 3 3M13 11V8a3 3 0 0 0-3-3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                <text x="8" y="9.5" text-anchor="middle" font-size="5" font-weight="700" fill="currentColor">1</text>
+              </svg>
+              <svg v-else width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M3 5h7l-1.5-1.5M13 11H6l1.5 1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M3 5v3a3 3 0 0 0 3 3M13 11V8a3 3 0 0 0-3-3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </div>
+
+          <div
+            class="now-seek"
+            :class="{ 'now-seek--clickable': !!current && isDm }"
+            @click="onSeek"
+          >
+            <div class="now-seek-fill" :style="{ width: progressPct + '%' }" />
+          </div>
+
+          <div class="now-controls">
+            <div class="now-ctl">
+              <span class="now-ctl-label">громкость</span>
+              <AppSlider :model-value="state.volume" :min="0" :max="1" :step="0.01" @update:model-value="musicStore.setVolume" />
+              <span class="now-ctl-value">{{ Math.round(state.volume * 100) }}%</span>
+            </div>
+          </div>
+        </div>
+
+        <div v-if="next" class="next-card">
+          <button class="next-play-btn" title="Включить сейчас" @click="onPlayNextNow">
+            <svg width="12" height="12" viewBox="0 0 12 12">
+              <path d="M3 1.5v9l7-4.5-7-4.5z" fill="currentColor"/>
+            </svg>
+          </button>
+          <div class="next-text">
+            <div class="next-label">СЛЕДУЮЩИЙ</div>
+            <div class="next-title" :title="next.name">{{ next.name }}</div>
+          </div>
+          <button class="next-clear" title="Убрать" @click="onClearNext">×</button>
+        </div>
       </div>
-      <button class="next-clear" title="Убрать" @click="onClearNext">×</button>
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import AppSlider from '@/shared/ui/AppSlider.vue'
 import { useMusicStore } from '@/stores/music'
@@ -100,6 +114,7 @@ const { state, currentTrack, nextTrack } = storeToRefs(musicStore)
 
 const current = currentTrack
 const next = nextTrack
+const collapsed = ref(false)
 
 const currentAlbum = computed(() => state.value.albumId ? musicStore.albumById(state.value.albumId) : null)
 const progressPct = computed(() => {
@@ -147,7 +162,6 @@ function fmtTime(sec) {
 .music-panel {
   display: flex;
   flex-direction: column;
-  gap: 10px;
   padding: 14px 12px;
 }
 
@@ -163,6 +177,10 @@ function fmtTime(sec) {
 }
 .music-panel-title { color: var(--text-muted); }
 .music-panel-album {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   color: var(--text-2);
   text-transform: none;
   font-weight: 600;
@@ -187,6 +205,43 @@ function fmtTime(sec) {
   border-radius: 4px;
 }
 .music-panel-library:hover { background: color-mix(in srgb, var(--accent) 10%, transparent); }
+.music-panel-collapse {
+  width: 24px;
+  height: 22px;
+  flex: 0 0 auto;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: none;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+}
+.music-panel-collapse:hover {
+  border-color: var(--border);
+  color: var(--text-1);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+
+.music-panel-body {
+  display: grid;
+  grid-template-rows: 1fr;
+  padding-top: 10px;
+  transition: grid-template-rows 0.2s ease, padding-top 0.2s ease;
+}
+.music-panel-body--collapsed {
+  grid-template-rows: 0fr;
+  padding-top: 0;
+}
+.music-panel-body-inner {
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 
 .now {
   display: flex;

@@ -9,6 +9,8 @@
     }"
   >
     <div class="header-inner">
+      <MobileHeaderBack v-if="showMobileBack" />
+
       <div class="brand-wrap" v-click-outside="closeMenu">
         <button class="brand-btn" type="button" :class="{ open: menuOpen }" @click="toggleBrandMenu">
           <span>DnD Share</span>
@@ -63,6 +65,7 @@ import { ref, computed, watch, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import HeaderSearch from '@/shared/ui/HeaderSearch'
 import HorizontalMenu from '@/shared/ui/HorizontalMenu'
+import MobileHeaderBack from '@/shared/ui/MobileHeaderBack.vue'
 import UserBox from "@/features/auth/components/UserBox"
 import { useUiStore } from '@/stores/ui'
 import { useAccountStore } from '@/stores/account'
@@ -87,6 +90,7 @@ const mobileHeaderHidden = computed(() => headerMode.value === MOBILE_HEADER_HID
 const effectiveHeaderHidden = computed(() => headerCollapsible.value && headerHidden.value)
 const isAuth = computed(() => useAccountStore().authStatus === 'success')
 const isHandbook = computed(() => route.path.startsWith('/handbook'))
+const showMobileBack = computed(() => route.path !== '/')
 const isAdmin = computed(() => useAccountStore().hasRole('ADMIN'))
 const isCharacterView = computed(() => /^\/char\/[^/]+\/?$/.test(route.path))
 const headerContext = computed(() => uiStore.resolveHeader(
@@ -313,6 +317,8 @@ function requestIdentityEdit() {
   .brand-arrow {
     display: inline;
   }
+
+  :deep(.mobile-header-back) + .brand-wrap { display: none; }
 
   .header-nav {
     display: none;

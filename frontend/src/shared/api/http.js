@@ -8,6 +8,7 @@ async function apiRequest(url, { method = 'GET', body, response = 'json' } = {})
     })
     if (!res.ok) throw new Error(String(res.status))
     if (response === 'raw') return res
+    if (res.status === 204) return {}
     const contentType = res.headers.get('content-type') || ''
     return contentType.includes('application/json') ? res.json() : {}
 }

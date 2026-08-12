@@ -61,6 +61,12 @@ Key rules:
 - resets and incomplete-create decisions use shared `ConfirmDialog`;
 - the draft persists in `localStorage` and is cleared after successful create.
 
+На шаге характеристик смена метода всегда очищает прежнее распределение.
+Point-buy подчёркивает остаток бюджета и цену следующего повышения каждой
+характеристики; режим броска постоянно показывает пул результатов и кнопку
+переброса. **Быстрая сборка** доступна на mobile и раскладывает стандартный
+набор по приоритетам выбранного класса.
+
 `buildCharacterData` is the only assembler. It produces current D&D data:
 `classes` (without `class/subclass` mirrors), object stats, object speed,
 `hp.hitDice`, object spells, sectioned inventory and object money. Creation does

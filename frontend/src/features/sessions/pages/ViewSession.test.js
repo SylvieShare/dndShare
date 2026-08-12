@@ -1,11 +1,15 @@
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
+import DiceRollPopup from '../../../shared/ui/DiceRollPopup.vue'
 import ViewSession from './ViewSession.vue'
 
 const source = readFileSync(fileURLToPath(new URL('./ViewSession.vue', import.meta.url)), 'utf8')
 const styles = readFileSync(fileURLToPath(new URL('./styles/ViewSession.css', import.meta.url)), 'utf8')
 const selectionSource = readFileSync(fileURLToPath(new URL('../composables/useSessionSelection.js', import.meta.url)), 'utf8')
+const dicePanelSource = readFileSync(fileURLToPath(new URL('../components/DicePanel.vue', import.meta.url)), 'utf8')
+const musicPanelSource = readFileSync(fileURLToPath(new URL('../components/MusicPanel.vue', import.meta.url)), 'utf8')
+const dicePopupSource = readFileSync(fileURLToPath(new URL('../../../shared/ui/DiceRollPopup.vue', import.meta.url)), 'utf8')
 
 describe('ViewSession participant rail', () => {
   it('compiles the page component', () => {
@@ -32,6 +36,23 @@ describe('ViewSession participant rail', () => {
     expect(styles).toContain('--chapter-safe-left: 276px;')
     expect(source).not.toContain('<SlidingTabs')
     expect(source).not.toContain('<SessionTopBar')
+  })
+
+  it('keeps session dice purple and lets both right-dock tools collapse independently', () => {
+    expect(dicePanelSource).toContain('color="var(--accent)"')
+    expect(dicePanelSource).toContain("const collapsed = ref(false)")
+    expect(dicePanelSource).toContain("aria-label=\"collapsed ? 'Развернуть кубики' : 'Свернуть кубики'\"")
+    expect(musicPanelSource).toContain("const collapsed = ref(false)")
+    expect(musicPanelSource).toContain("aria-label=\"collapsed ? 'Развернуть музыку' : 'Свернуть музыку'\"")
+  })
+
+  it('animates only displayed mobile rolls and cleans up popup timers', () => {
+    expect(DiceRollPopup).toBeTruthy()
+    expect(dicePopupSource).toContain("'(max-width: 640px)'")
+    expect(dicePopupSource).toContain("'(prefers-reduced-motion: reduce)'")
+    expect(dicePopupSource).toContain('displayedRoll(entry, i, ri, r)')
+    expect(dicePopupSource).toContain('clearEntryAnimation')
+    expect(dicePopupSource).not.toContain('part.rolls[rollIndex] =')
   })
 
   it('opens combat and chapter scenes as fullscreen contextual workspaces', () => {

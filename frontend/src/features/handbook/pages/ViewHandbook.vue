@@ -53,17 +53,6 @@
         <!-- ── Main content: list + detail ── -->
         <div class="handbook-body">
 
-          <!-- Mobile back button in list panel -->
-          <div class="mobile-back-bar">
-            <button class="mobile-back-btn" @click="goBack">
-              <svg viewBox="0 0 16 16" fill="none" width="14" height="14">
-                <path d="M10 13L5 8L10 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              {{ mobilePanel === 'panel-detail' ? (selectedType && selectedType.name) : 'Коллекции' }}
-            </button>
-            <span v-if="mobilePanel === 'panel-detail' && selectedItem" class="mobile-back-title">{{ selectedItem.name }}</span>
-          </div>
-
           <HandbookItemList
             :type="selectedType"
             :selected-item="selectedItem"
@@ -109,7 +98,7 @@
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, reactive, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { fetchGet } from '@/shared/api/http'
 import { itemsApi } from '@/shared/api/itemsApi'
@@ -119,6 +108,7 @@ import { useItemTypesStore } from '@/stores/itemTypes'
 import { useUiStore } from '@/stores/ui'
 import { useSuggestStore } from '@/stores/suggest'
 import { createHeaderChip } from '@/shared/lib/appHeader'
+import { MOBILE_HEADER_BACK_EVENT } from '@/shared/lib/mobileBack'
 import { collectSuggestIds, getSuggestId, walkFieldsWithPath } from '@/features/handbook/objects/lib/schemaFields'
 import { useHandbookSwipeBack } from '@/features/handbook/composables/useHandbookSwipeBack'
 import HandbookLanding from '@/features/handbook/pages/HandbookLanding'
@@ -186,6 +176,12 @@ function goBack() {
   } else {
     goToLanding()
   }
+}
+
+function onMobileHeaderBack(event) {
+  if (mobilePanel.value === 'panel-types') return
+  event.preventDefault()
+  goBack()
 }
 
 const swipeBack = useHandbookSwipeBack(goBack, {
@@ -484,8 +480,11 @@ async function init() {
 
 init()
 
+onMounted(() => window.addEventListener(MOBILE_HEADER_BACK_EVENT, onMobileHeaderBack))
+
 onBeforeUnmount(() => {
   clearTimeout(searchTimer)
+  window.removeEventListener(MOBILE_HEADER_BACK_EVENT, onMobileHeaderBack)
   uiStore.clearHeaderContext(headerOwner)
 })
 </script>

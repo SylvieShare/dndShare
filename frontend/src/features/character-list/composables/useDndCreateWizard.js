@@ -23,7 +23,7 @@ import {
   serializeDndWizardState,
 } from './dndCreateWizardState'
 import {
-  POINT_BUY_BUDGET, pointCost, roll4d6DropLowest, STANDARD_ARRAY, STATS,
+  emptyScores, POINT_BUY_BUDGET, pointCost, roll4d6DropLowest, STANDARD_ARRAY, STATS,
 } from './dndCreateWizardStats'
 
 export { POINT_BUY_BUDGET, pointCost, STANDARD_ARRAY } from './dndCreateWizardStats'

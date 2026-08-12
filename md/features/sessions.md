@@ -44,6 +44,9 @@ edge. CSS safe-area variables keep focus, zoom and newly created nodes in the
 uncovered part of the canvas. The right rail disappears first on narrow screens,
 then the participant rail.
 
+Панели кубиков и музыки в правом rail сворачиваются независимо, оставляя
+компактный доступный заголовок и не меняя состояние бросков или playback.
+
 ## Chapters and scenes
 
 Every session has at least one ordered arc. Arc order is the canonical campaign

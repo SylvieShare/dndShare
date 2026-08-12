@@ -48,19 +48,27 @@ const popoverStyle = ref(null)
 
 const isOpen = computed(() => openInstance.value === myId)
 
-function computeStyle() {
+function computeStyle(event) {
   const el = triggerEl.value
   if (!el) return null
   const rect = el.getBoundingClientRect()
+  const top = rect.bottom + 6
+  const right = Math.max(8, window.innerWidth - rect.right)
+  const popoverRight = window.innerWidth - right
+  const hasPointerOrigin = event?.detail > 0
+  const originX = hasPointerOrigin ? event.clientX : rect.left + rect.width / 2
+  const originY = hasPointerOrigin ? event.clientY : rect.bottom
   return {
     position: 'fixed',
-    top: (rect.bottom + 6) + 'px',
-    right: Math.max(8, window.innerWidth - rect.right) + 'px',
+    top: top + 'px',
+    right: right + 'px',
+    '--ram-origin-x': `calc(100% - ${popoverRight - originX}px)`,
+    '--ram-origin-y': `${originY - top}px`,
   }
 }
 
-function open() {
-  popoverStyle.value = computeStyle()
+function open(event) {
+  popoverStyle.value = computeStyle(event)
   openInstance.value = myId
   document.addEventListener('pointerdown', onDocPointerDown, true)
   window.addEventListener('resize', close)
@@ -74,9 +82,9 @@ function close() {
   window.removeEventListener('scroll', close, true)
 }
 
-function toggle() {
+function toggle(event) {
   if (isOpen.value) close()
-  else open()
+  else open(event)
 }
 
 function onDocPointerDown(e) {
@@ -124,6 +132,13 @@ defineExpose({ close })
   display: flex;
   flex-direction: column;
   gap: 2px;
+  transform-origin: var(--ram-origin-x, 100%) var(--ram-origin-y, 0);
+  animation: ram-popover-enter 140ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
+}
+
+@keyframes ram-popover-enter {
+  from { opacity: 0; transform: translateY(-2px) scale(0.96); }
+  to { opacity: 1; transform: none; }
 }
 
 .ram-item {
@@ -187,5 +202,9 @@ defineExpose({ close })
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ram-popover { animation: none; }
 }
 </style>

@@ -41,6 +41,10 @@ const DUR_OUT = 280
 const EASE_SLIDE = 'cubic-bezier(0.32, 0.72, 0, 1)'
 const modalStack = []
 const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+
+export function restoreFocus(element) {
+  element.focus({ preventScroll: true })
+}
 </script>
 
 <script setup>
@@ -264,7 +268,7 @@ onBeforeUnmount(() => {
   document.removeEventListener('keydown', _onKeydown)
   clearTimeout(_closeTimer)
   _unmounted = true
-  if (previouslyFocused instanceof HTMLElement && previouslyFocused.isConnected) previouslyFocused.focus()
+  if (previouslyFocused instanceof HTMLElement && previouslyFocused.isConnected) restoreFocus(previouslyFocused)
 })
 </script>
 

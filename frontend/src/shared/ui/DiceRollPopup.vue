@@ -29,7 +29,7 @@
                   class="dice-pop-roll-wrap"
                   :class="{ 'dice-pop-roll--drop': p.dropped && p.dropped.includes(ri) }"
                 >
-                  <SystemDie :sides="p.sides" :value="r" :size="38" :color="p.color" />
+                  <SystemDie :sides="p.sides" :value="displayedRoll(entry, i, ri, r)" :size="38" :color="p.color" />
                 </span>
               </template>
             </span>
@@ -77,10 +77,81 @@
 </template>
 
 <script setup>
+import { onBeforeUnmount, reactive, watch } from 'vue'
 import { useDiceStore } from '@/stores/dice'
 import SystemDie from '@/shared/ui/SystemDie.vue'
 
 const store = useDiceStore()
+const animatedRolls = reactive(new Map())
+const animationTimers = new Map()
+const animationDelays = [55, 125, 225, 360, 540, 760, 1000]
+
+function rollKey(entryId, partIndex, rollIndex) {
+  return `${entryId}:${partIndex}:${rollIndex}`
+}
+
+function displayedRoll(entry, partIndex, rollIndex, actual) {
+  return animatedRolls.get(rollKey(entry.id, partIndex, rollIndex)) ?? actual
+}
+
+function clearEntryAnimation(entryId) {
+  const timers = animationTimers.get(entryId)
+  if (timers) {
+    for (const timer of timers) clearTimeout(timer)
+    animationTimers.delete(entryId)
+  }
+  for (const key of animatedRolls.keys()) {
+    if (key.startsWith(`${entryId}:`)) animatedRolls.delete(key)
+  }
+}
+
+function setDisplayedRolls(entry, settle = false) {
+  entry.result.parts.forEach((part, partIndex) => {
+    if (part.kind !== 'dice') return
+    part.rolls.forEach((actual, rollIndex) => {
+      const value = settle ? actual : Math.floor(Math.random() * part.sides) + 1
+      animatedRolls.set(rollKey(entry.id, partIndex, rollIndex), value)
+    })
+  })
+}
+
+function shouldAnimateRolls() {
+  if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return false
+  return window.matchMedia('(max-width: 640px)').matches
+    && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+}
+
+function startEntryAnimation(entry) {
+  if (!shouldAnimateRolls()) return
+  setDisplayedRolls(entry)
+  const timers = new Set()
+  animationTimers.set(entry.id, timers)
+  animationDelays.forEach((delay, index) => {
+    const timer = setTimeout(() => {
+      timers.delete(timer)
+      setDisplayedRolls(entry, index === animationDelays.length - 1)
+      if (!timers.size) animationTimers.delete(entry.id)
+    }, delay)
+    timers.add(timer)
+  })
+}
+
+watch(
+  () => store.stack.map(entry => entry.id),
+  (ids, previousIds = []) => {
+    const activeIds = new Set(ids)
+    previousIds.filter(id => !activeIds.has(id)).forEach(clearEntryAnimation)
+    ids.filter(id => !previousIds.includes(id)).forEach(id => {
+      const entry = store.stack.find(item => item.id === id)
+      if (entry) startEntryAnimation(entry)
+    })
+  },
+  { immediate: true },
+)
+
+onBeforeUnmount(() => {
+  for (const entryId of animationTimers.keys()) clearEntryAnimation(entryId)
+})
 
 function hasMultipleTypes(entry) {
   return (entry?.result?.byType?.length || 0) > 1
@@ -212,18 +283,6 @@ function rawExpression(entry) {
   transform: rotate(-22deg);
 }
 .dice-pop-flat { color: color-mix(in srgb, var(--text-1) 55%, transparent); font-weight: 600; }
-.dice-pop-tag {
-  margin-left: 2px;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  padding: 1px 5px;
-  border: 1px solid var(--border-strong);
-  border-radius: 4px;
-  color: var(--text-2);
-}
-
 .dice-pop-total {
   flex-shrink: 0;
   align-self: center;

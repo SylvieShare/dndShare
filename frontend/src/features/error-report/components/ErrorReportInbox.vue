@@ -221,7 +221,7 @@ watch(canReview, allowed => {
     return
   }
   void loadReports()
-  pollTimer = setInterval(loadReports, 1000)
+  pollTimer = setInterval(loadReports, 5000)
 }, { immediate: true })
 
 async function loadReports() {

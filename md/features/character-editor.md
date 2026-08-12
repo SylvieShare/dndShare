@@ -156,6 +156,11 @@ Diary sessions animate their disclosure body. Session create/edit forms use a
 regular `AppModalFrame`; event create/edit retains the element-origin
 `MorphEditorShell` flow.
 
+Окна предметов восстанавливают фокус без прокрутки исходного листа. Общий
+`RowActionMenu` раскрывается короткой анимацией из точки trigger с учётом
+`prefers-reduced-motion`. Блок зелий отделён нижним отступом, а секция ячеек
+заклинаний имеет явный заголовок и на desktop, и на mobile.
+
 Weapon handbook attacks use canonical `{dice_id,type,count}`. Character-added
 attack rows use `{count,dice_id,type_suggest_id}` and are explicitly adapted at
 the calculation boundary; this is not a fallback between stored formats.
