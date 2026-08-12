@@ -9,14 +9,15 @@
 
 <script setup>
 import { useRouter } from 'vue-router'
-import { dispatchMobileHeaderBack } from '@/shared/lib/mobileBack'
+
+const props = defineProps({
+  to: { type: [String, Object], required: true },
+})
 
 const router = useRouter()
 
 function navigateBack() {
-  if (dispatchMobileHeaderBack()) return
-  if (window.history.state?.back) router.back()
-  else router.push('/')
+  router.push(props.to)
 }
 </script>
 

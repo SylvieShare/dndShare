@@ -1,0 +1,23 @@
+import { readFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
+import { describe, expect, it } from 'vitest'
+
+const headerSource = readFileSync(fileURLToPath(new URL('./AppHeader.vue', import.meta.url)), 'utf8')
+const backSource = readFileSync(fileURLToPath(new URL('./MobileHeaderBack.vue', import.meta.url)), 'utf8')
+const routerSource = readFileSync(fileURLToPath(new URL('../../app/router.js', import.meta.url)), 'utf8')
+
+describe('mobile app header navigation', () => {
+  it('keeps the brand menu and omits the current page title', () => {
+    expect(headerSource).toContain('<MobileHeaderBack v-if="mobileBackTarget"')
+    expect(headerSource).toContain('<span>DnD Share</span>')
+    expect(headerSource).toContain('class="brand-menu"')
+    expect(headerSource).not.toContain('header-title-inline')
+  })
+
+  it('navigates to a semantic parent without browser history', () => {
+    expect(backSource).toContain('router.push(props.to)')
+    expect(backSource).not.toContain('router.back')
+    expect(backSource).not.toContain('window.history')
+    expect(routerSource).toContain("mobileBackTo: { name: 'Sessions' }")
+  })
+})

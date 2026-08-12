@@ -9,7 +9,7 @@
     }"
   >
     <div class="header-inner">
-      <MobileHeaderBack v-if="showMobileBack" />
+      <MobileHeaderBack v-if="mobileBackTarget" :to="mobileBackTarget" />
 
       <div class="brand-wrap" v-click-outside="closeMenu">
         <button class="brand-btn" type="button" :class="{ open: menuOpen }" @click="toggleBrandMenu">
@@ -31,15 +31,6 @@
       </div>
 
       <HorizontalMenu class="header-nav" />
-
-      <button
-        v-if="headerContext.title"
-        class="header-title header-title-inline"
-        :class="{ 'header-title-editable': isCharacterView }"
-        type="button"
-        :disabled="!isCharacterView"
-        @click="requestIdentityEdit"
-      >{{ headerContext.title }}</button>
 
       <span
         v-if="headerContext.chip"
@@ -66,6 +57,7 @@ import { useRoute, useRouter } from 'vue-router'
 import HeaderSearch from '@/shared/ui/HeaderSearch'
 import HorizontalMenu from '@/shared/ui/HorizontalMenu'
 import MobileHeaderBack from '@/shared/ui/MobileHeaderBack.vue'
+import { resolveMobileBackTarget } from '@/shared/lib/mobileBack'
 import UserBox from "@/features/auth/components/UserBox"
 import { useUiStore } from '@/stores/ui'
 import { useAccountStore } from '@/stores/account'
@@ -90,13 +82,12 @@ const mobileHeaderHidden = computed(() => headerMode.value === MOBILE_HEADER_HID
 const effectiveHeaderHidden = computed(() => headerCollapsible.value && headerHidden.value)
 const isAuth = computed(() => useAccountStore().authStatus === 'success')
 const isHandbook = computed(() => route.path.startsWith('/handbook'))
-const showMobileBack = computed(() => route.path !== '/')
+const mobileBackTarget = computed(() => resolveMobileBackTarget(route))
 const isAdmin = computed(() => useAccountStore().hasRole('ADMIN'))
-const isCharacterView = computed(() => /^\/char\/[^/]+\/?$/.test(route.path))
 const headerContext = computed(() => uiStore.resolveHeader(
   route.name,
   route.meta?.title,
-  isCharacterView.value,
+  false,
 ))
 const visibleItems = computed(() => {
   const items = [
@@ -134,11 +125,6 @@ function toggleBrandMenu() {
     return
   }
   menuOpen.value = !menuOpen.value
-}
-
-function requestIdentityEdit() {
-  if (!isCharacterView.value) return
-  window.dispatchEvent(new CustomEvent('dndshare:edit-character-identity'))
 }
 
 </script>
@@ -242,28 +228,6 @@ function requestIdentityEdit() {
   background: var(--surface-raised);
 }
 
-.header-title {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  color: var(--text-1);
-  font-size: 14px;
-  font-weight: 600;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  font-family: inherit;
-  text-align: left;
-}
-
-.header-title:disabled { opacity: 1; }
-.header-title-editable { cursor: pointer; }
-
-.header-title-inline {
-  display: none;
-}
-
 .header-chip {
   display: none;
 }
@@ -318,8 +282,6 @@ function requestIdentityEdit() {
     display: inline;
   }
 
-  :deep(.mobile-header-back) + .brand-wrap { display: none; }
-
   .header-nav {
     display: none;
   }
@@ -343,15 +305,6 @@ function requestIdentityEdit() {
   .brand-btn span:first-child {
     overflow: hidden;
     text-overflow: ellipsis;
-  }
-
-  .header-title {
-    flex: 0 1 auto;
-    font-size: 13px;
-  }
-
-  .header-title-inline {
-    display: block;
   }
 
   .header-chip {

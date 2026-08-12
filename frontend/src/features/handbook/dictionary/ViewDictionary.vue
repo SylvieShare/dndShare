@@ -60,12 +60,11 @@
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { suggestApi } from '@/shared/api/suggestApi'
 import { useAccountStore } from '@/stores/account'
 import { useUiStore } from '@/stores/ui'
-import { MOBILE_HEADER_BACK_EVENT } from '@/shared/lib/mobileBack'
 import { createHeaderChip } from '@/shared/lib/appHeader'
 import DictItemGrid from '@/features/handbook/dictionary/components/DictItemGrid'
 import DictItemView from '@/features/handbook/dictionary/components/DictItemView'
@@ -101,23 +100,6 @@ const mobilePanelClass = computed(() => {
   if (!selectedItem.value) return 'panel-grid'
   return 'panel-editor'
 })
-
-function mobileBack() {
-  if (mobilePanelClass.value === 'panel-editor') {
-    selectedItem.value = null
-    router.replace({ query: { type: selectedType.value.id } })
-  } else {
-    selectedType.value = null
-    selectedItem.value = null
-    router.replace({ query: {} })
-  }
-}
-
-function onMobileHeaderBack(event) {
-  if (mobilePanelClass.value === 'panel-types') return
-  event.preventDefault()
-  mobileBack()
-}
 
 // ── Data loading ─────────────────────────────────────────────────────────────
 async function fetchTypes() {
@@ -223,10 +205,7 @@ async function init() {
 
 init()
 
-onMounted(() => window.addEventListener(MOBILE_HEADER_BACK_EVENT, onMobileHeaderBack))
-
 onBeforeUnmount(() => {
-  window.removeEventListener(MOBILE_HEADER_BACK_EVENT, onMobileHeaderBack)
   uiStore.clearHeaderContext(headerOwner)
 })
 </script>
