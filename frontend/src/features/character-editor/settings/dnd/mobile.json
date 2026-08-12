@@ -7,7 +7,7 @@
         "kind": "layout",
         "type": "column",
         "props": {
-          "gap": "20px"
+          "gap": "12px"
         },
         "children": [
           {

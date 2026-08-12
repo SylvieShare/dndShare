@@ -31,7 +31,8 @@ in `blockRegistry.js`. Generic blocks live in `blocks/generic`, D&D blocks in
 receive data by block id.
 
 Desktop and mobile share block definitions but have separate placement
-profiles. Tab state is encoded in the route query. `CharacterTabPane.vue` owns
+profiles. The mobile D&D stats tab uses a 12px top-level column gap. Tab state
+is encoded in the route query. `CharacterTabPane.vue` owns
 one tab pane; swipe/drag logic is extracted into composables. On mobile, each
 tab owns its nested scroll position and keeps `--bg` as its canvas. Content is
 split into semantic `--surface` blocks instead of painting a whole tab: every

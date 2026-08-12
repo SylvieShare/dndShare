@@ -130,6 +130,7 @@ onMounted(async () => {
 .container {
   margin: 0 auto;
   padding: 18px 16px 28px;
+  background: var(--bg);
 }
 
 .desktop-tabs {
