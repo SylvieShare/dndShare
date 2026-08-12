@@ -20,14 +20,62 @@ export function useDiceRollAnimation({
     return displayedRolls.get(rollKey(entry.id, partIndex, rollIndex)) ?? actual
   }
 
-  function setDisplayedRolls(entry, settle = false) {
+  function randomNearbyFace(actual, sides, maxDistance, minDistance = 1) {
+    const candidates = []
+    for (let value = 1; value <= sides; value += 1) {
+      const distance = Math.abs(value - actual)
+      if (distance >= minDistance && distance <= maxDistance) candidates.push(value)
+    }
+    if (!candidates.length) return actual
+    return candidates[Math.floor(random() * candidates.length)]
+  }
+
+  function nextDisplayedFace(actual, sides, previous, progress) {
+    const scheduledDistance = Math.max(1, Math.ceil((sides - 1) * ((1 - progress) ** 1.4)))
+    const previousDistance = Math.abs(previous - actual)
+    const maxDistance = Math.min(
+      scheduledDistance,
+      previousDistance > 1 ? previousDistance - 1 : 1,
+    )
+    const minDistance = Math.max(1, Math.ceil(maxDistance * 0.45))
+    return randomNearbyFace(actual, sides, maxDistance, minDistance)
+  }
+
+  function setDisplayedRolls(entry, step = 0) {
+    const settled = step >= DICE_ROLL_ANIMATION_DELAYS.length
+    const progress = step / DICE_ROLL_ANIMATION_DELAYS.length
     entry.result.parts.forEach((part, partIndex) => {
       if (part.kind !== 'dice') return
       part.rolls.forEach((actual, rollIndex) => {
-        const value = settle ? actual : Math.floor(random() * part.sides) + 1
-        displayedRolls.set(rollKey(entry.id, partIndex, rollIndex), value)
+        const key = rollKey(entry.id, partIndex, rollIndex)
+        const previous = displayedRolls.get(key)
+        const value = settled
+          ? actual
+          : previous == null
+            ? randomNearbyFace(
+                actual,
+                part.sides,
+                part.sides - 1,
+                Math.max(1, Math.ceil((part.sides - 1) * 0.35)),
+              )
+            : nextDisplayedFace(actual, part.sides, previous, progress)
+        displayedRolls.set(key, value)
       })
     })
+  }
+
+  function displayedTotal(entry) {
+    if (!isRolling(entry.id)) return entry.result.total
+    return entry.result.parts.reduce((total, part, partIndex) => {
+      let value = part.value
+      if (part.kind === 'dice') {
+        value = part.rolls.reduce((sum, actual, rollIndex) => {
+          if (part.dropped?.includes(rollIndex)) return sum
+          return sum + displayedRoll(entry, partIndex, rollIndex, actual)
+        }, 0)
+      }
+      return total + (part.sign === '-' ? -value : value)
+    }, 0)
   }
 
   function clearEntryAnimation(entryId) {
@@ -54,7 +102,7 @@ export function useDiceRollAnimation({
       const timer = setTimer(() => {
         timers.delete(timer)
         const settled = index === DICE_ROLL_ANIMATION_DELAYS.length - 1
-        setDisplayedRolls(entry, settled)
+        setDisplayedRolls(entry, index + 1)
         if (settled) rollingEntries.delete(entry.id)
         if (!timers.size) animationTimers.delete(entry.id)
       }, delay)
@@ -70,5 +118,12 @@ export function useDiceRollAnimation({
     for (const entryId of [...animationTimers.keys()]) clearEntryAnimation(entryId)
   }
 
-  return { displayedRoll, startEntryAnimation, clearEntryAnimation, isRolling, dispose }
+  return {
+    displayedRoll,
+    displayedTotal,
+    startEntryAnimation,
+    clearEntryAnimation,
+    isRolling,
+    dispose,
+  }
 }

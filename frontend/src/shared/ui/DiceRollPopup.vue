@@ -6,8 +6,8 @@
       :key="entry.id"
       class="dice-pop"
       :class="{
-        'dice-pop--crit': entry.outcome?.kind === 'crit',
-        'dice-pop--fumble': entry.outcome?.kind === 'fumble',
+        'dice-pop--crit': hasSettledOutcome(entry, 'crit'),
+        'dice-pop--fumble': hasSettledOutcome(entry, 'fumble'),
         'dice-pop--rolling': isRolling(entry.id),
       }"
     >
@@ -47,15 +47,23 @@
 
         <div class="dice-pop-sep" />
 
-        <div
-          v-if="entry.outcome"
-          class="dice-pop-outcome"
-          :class="`dice-pop-outcome--${entry.outcome.kind}`"
-        >
-          <span class="dice-pop-outcome-label">{{ entry.outcome.kind === 'crit' ? 'КРИТ' : 'ПРОВАЛ' }}</span>
-          <span class="dice-pop-outcome-val">{{ entry.outcome.value }}</span>
-        </div>
-        <div v-else class="dice-pop-total">{{ entry.result.total }}</div>
+        <Transition name="dice-result" mode="out-in">
+          <div
+            v-if="entry.outcome && !isRolling(entry.id)"
+            :key="entry.outcome.kind"
+            class="dice-pop-outcome"
+            :class="`dice-pop-outcome--${entry.outcome.kind}`"
+          >
+            <span class="dice-pop-outcome-label">{{ entry.outcome.kind === 'crit' ? 'КРИТ' : 'ПРОВАЛ' }}</span>
+            <span class="dice-pop-outcome-val">{{ entry.outcome.value }}</span>
+          </div>
+          <div
+            v-else
+            :key="isRolling(entry.id) ? 'rolling' : 'settled'"
+            class="dice-pop-total"
+            :class="{ 'dice-pop-total--rolling': isRolling(entry.id) }"
+          >{{ displayedTotal(entry) }}</div>
+        </Transition>
       </div>
 
       <div v-if="hasMultipleTypes(entry)" class="dice-pop-types">
@@ -96,6 +104,7 @@ function shouldAnimateRolls() {
 
 const {
   displayedRoll,
+  displayedTotal,
   startEntryAnimation,
   clearEntryAnimation,
   isRolling,
@@ -121,6 +130,10 @@ onBeforeUnmount(() => {
 
 function hasMultipleTypes(entry) {
   return (entry?.result?.byType?.length || 0) > 1
+}
+
+function hasSettledOutcome(entry, kind) {
+  return entry.outcome?.kind === kind && !isRolling(entry.id)
 }
 
 function rawExpression(entry) {
@@ -161,10 +174,12 @@ function rawExpression(entry) {
 .dice-pop--crit {
   border-color: var(--warning);
   box-shadow: 0 14px 40px var(--scrim), 0 0 0 1px color-mix(in srgb, var(--warning) 50%, transparent), 0 0 22px color-mix(in srgb, var(--warning) 25%, transparent);
+  animation: dice-pop-crit-settle 0.52s cubic-bezier(0.2, 0.9, 0.25, 1.15);
 }
 .dice-pop--fumble {
   border-color: var(--danger);
   box-shadow: 0 14px 40px var(--scrim), 0 0 0 1px color-mix(in srgb, var(--danger) 50%, transparent), 0 0 22px color-mix(in srgb, var(--danger) 22%, transparent);
+  animation: dice-pop-fumble-settle 0.52s cubic-bezier(0.2, 0.9, 0.25, 1.15);
 }
 .dice-pop--rolling {
   border-color: color-mix(in srgb, var(--accent) 72%, var(--border-strong));
@@ -268,6 +283,26 @@ function rawExpression(entry) {
   min-width: 44px;
   text-align: center;
 }
+.dice-pop-total--rolling {
+  opacity: 0.56;
+  filter: saturate(0.45);
+  text-shadow: 0 0 12px color-mix(in srgb, var(--accent) 42%, transparent);
+}
+
+.dice-result-enter-active,
+.dice-result-leave-active {
+  transition: opacity 0.16s ease, transform 0.2s cubic-bezier(0.2, 0.9, 0.25, 1.15), filter 0.16s ease;
+}
+.dice-result-enter-from {
+  opacity: 0;
+  transform: scale(0.72);
+  filter: blur(3px);
+}
+.dice-result-leave-to {
+  opacity: 0;
+  transform: scale(1.16);
+  filter: blur(2px);
+}
 
 .dice-pop-outcome {
   flex-shrink: 0;
@@ -369,4 +404,36 @@ function rawExpression(entry) {
 }
 .dice-stack-enter-from { opacity: 0; transform: translate(8px, 8px); }
 .dice-stack-leave-to   { opacity: 0; transform: translateX(120%); }
+
+@keyframes dice-pop-crit-settle {
+  0% {
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-lg);
+  }
+  48% {
+    border-color: var(--warning);
+    box-shadow: 0 14px 40px var(--scrim), 0 0 0 3px color-mix(in srgb, var(--warning) 68%, transparent), 0 0 34px color-mix(in srgb, var(--warning) 42%, transparent);
+  }
+}
+
+@keyframes dice-pop-fumble-settle {
+  0% {
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-lg);
+  }
+  48% {
+    border-color: var(--danger);
+    box-shadow: 0 14px 40px var(--scrim), 0 0 0 3px color-mix(in srgb, var(--danger) 64%, transparent), 0 0 34px color-mix(in srgb, var(--danger) 38%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dice-pop--crit,
+  .dice-pop--fumble,
+  .dice-result-enter-active,
+  .dice-result-leave-active {
+    animation: none;
+    transition: none;
+  }
+}
 </style>
