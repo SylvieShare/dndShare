@@ -4,7 +4,11 @@
        its scroll position and avoids a refetch flash. -->
   <div class="page-transition-stage" :class="{ 'page-transition-stage--print': isPrintRoute }">
     <router-view v-slot="{ Component, route }">
-      <transition :name="pageTransitionName" :mode="pageTransitionMode">
+      <transition
+        :name="pageTransitionName"
+        :mode="pageTransitionMode"
+        :css="!mobilePageTransitionActive"
+      >
         <keep-alive include="ViewListCharacters">
           <component :is="Component" :key="route.path"/>
         </keep-alive>
@@ -26,6 +30,7 @@ import ErrorReporter from '@/features/error-report/components/ErrorReporter.vue'
 import ErrorReportInbox from '@/features/error-report/components/ErrorReportInbox.vue'
 import ConsoleErrorInbox from '@/features/console-errors/components/ConsoleErrorInbox.vue'
 import { pageTransitionName } from '@/app/router'
+import { mobilePageTransitionActive } from '@/app/mobilePageTransition'
 import { useIsMobile } from '@/shared/composables/useIsMobile'
 import { useAccountStore } from '@/stores/account'
 import { useTextStore } from '@/stores/text'
@@ -88,8 +93,8 @@ body {
 .page-backward-enter-active,
 .page-backward-leave-active {
   transition:
-    transform 0.18s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.14s ease !important;
+    transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.18s ease !important;
   will-change: transform, opacity;
 }
 
@@ -105,9 +110,8 @@ body {
   transform: translateX(-18px);
 }
 
-/* On narrow screens both routes overlap briefly instead of leaving an empty
-   stage between the exit and entrance phases. The outgoing route is removed
-   from flow so pages with different heights cannot push each other around. */
+/* Fallback for browsers without the View Transition API. Both routes overlap,
+   and the outgoing route is removed from flow so page height cannot jump. */
 @media (max-width: 768px) {
   .page-transition-stage {
     position: relative;
@@ -119,21 +123,32 @@ body {
   .page-backward-enter-active,
   .page-backward-leave-active {
     transition:
-      transform 0.24s cubic-bezier(0.22, 1, 0.36, 1),
-      opacity 0.2s ease !important;
+      transform 0.38s cubic-bezier(0.22, 0.75, 0.25, 1),
+      opacity 0.3s ease !important;
     backface-visibility: hidden;
   }
 
-  .page-forward-enter-active,
+  .page-forward-enter-active {
+    position: relative;
+    z-index: 2;
+  }
+
+  .page-forward-leave-active {
+    position: absolute;
+    z-index: 1;
+    inset: 0 0 auto;
+    width: 100%;
+    pointer-events: none;
+  }
+
   .page-backward-enter-active {
     position: relative;
     z-index: 1;
   }
 
-  .page-forward-leave-active,
   .page-backward-leave-active {
     position: absolute;
-    z-index: 0;
+    z-index: 2;
     inset: 0 0 auto;
     width: 100%;
     pointer-events: none;
@@ -141,12 +156,88 @@ body {
 
   .page-forward-enter-from,
   .page-backward-leave-to {
-    transform: translate3d(10px, 0, 0);
+    opacity: 0.35;
+    transform: translate3d(22px, 0, 0) scale(0.995);
   }
 
   .page-forward-leave-to,
   .page-backward-enter-from {
-    transform: translate3d(-10px, 0, 0);
+    opacity: 0.45;
+    transform: translate3d(-10px, 0, 0) scale(0.995);
+  }
+}
+
+/* Modern mobile browsers animate one snapshot of the entire application.
+   Header visibility and routed content therefore change in one composition
+   pass, including the fullscreen character-sheet boundary. */
+@media (max-width: 768px) {
+  /* The root snapshot owns the motion. Internal header transitions are paused
+     so the destination snapshot captures its final geometry, not frame one of
+     a second animation. */
+  html.mobile-page-transition .app-header,
+  html.mobile-page-transition .app-header .header-inner {
+    transition: none !important;
+  }
+
+  html.mobile-page-transition::view-transition-group(root) {
+    animation-duration: 0.38s;
+    animation-timing-function: cubic-bezier(0.22, 0.75, 0.25, 1);
+  }
+
+  html.mobile-page-transition::view-transition-old(root),
+  html.mobile-page-transition::view-transition-new(root) {
+    animation-duration: 0.38s;
+    animation-fill-mode: both;
+    animation-timing-function: cubic-bezier(0.22, 0.75, 0.25, 1);
+    mix-blend-mode: normal;
+  }
+
+  html.mobile-page-transition--forward::view-transition-old(root) {
+    z-index: 1;
+    animation-name: mobile-page-old-forward;
+  }
+
+  html.mobile-page-transition--forward::view-transition-new(root) {
+    z-index: 2;
+    animation-name: mobile-page-new-forward;
+  }
+
+  html.mobile-page-transition--backward::view-transition-old(root) {
+    z-index: 2;
+    animation-name: mobile-page-old-backward;
+  }
+
+  html.mobile-page-transition--backward::view-transition-new(root) {
+    z-index: 1;
+    animation-name: mobile-page-new-backward;
+  }
+}
+
+@keyframes mobile-page-old-forward {
+  to {
+    opacity: 0.5;
+    transform: translate3d(-10px, 0, 0) scale(0.995);
+  }
+}
+
+@keyframes mobile-page-new-forward {
+  from {
+    opacity: 0.35;
+    transform: translate3d(22px, 0, 0) scale(0.995);
+  }
+}
+
+@keyframes mobile-page-old-backward {
+  to {
+    opacity: 0;
+    transform: translate3d(28px, 0, 0) scale(0.995);
+  }
+}
+
+@keyframes mobile-page-new-backward {
+  from {
+    opacity: 0.72;
+    transform: translate3d(-10px, 0, 0) scale(0.995);
   }
 }
 
@@ -156,6 +247,12 @@ body {
   .page-backward-enter-active,
   .page-backward-leave-active {
     transition: none;
+  }
+
+  html.mobile-page-transition::view-transition-group(root),
+  html.mobile-page-transition::view-transition-old(root),
+  html.mobile-page-transition::view-transition-new(root) {
+    animation: none;
   }
 }
 

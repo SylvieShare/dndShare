@@ -245,22 +245,33 @@ function toggleBrandMenu() {
 }
 
 @media (max-width: 640px) {
-  .app-header--mobile-hidden {
-    display: none;
+  .app-header.app-header--mobile-hidden {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    border-bottom-width: 0;
+    border-bottom-color: transparent;
+    pointer-events: none;
   }
 
   .app-header {
-    max-height: none;
+    max-height: 51px;
+    transition:
+      max-height 0.38s cubic-bezier(0.22, 0.75, 0.25, 1),
+      opacity 0.3s ease,
+      border-width 0.38s cubic-bezier(0.22, 0.75, 0.25, 1),
+      border-color 0.3s ease;
+  }
+
+  .app-header--mobile-hidden .header-inner {
+    opacity: 0;
+    transform: translateY(-10px);
   }
 
   .app-header.app-header--collapsible {
     position: sticky;
     top: 0;
-    max-height: 60px;
-    transition:
-      max-height 0.34s cubic-bezier(0.22, 1, 0.36, 1),
-      opacity 0.24s ease,
-      border-color 0.24s ease;
+    max-height: 51px;
   }
 
   .app-header--collapsible.header-collapsing {

@@ -15,6 +15,10 @@ import { fetchGet } from '@/shared/api/http'
 import { getSessions } from '@/shared/api/sessionsApi'
 import { useItemTypesStore } from '@/stores/itemTypes'
 import { useTemplateStore } from '@/stores/template'
+import {
+    shouldUseMobilePageTransition,
+    startMobilePageTransition,
+} from '@/app/mobilePageTransition'
 
 const prefetchCache = new Map()
 const PREFETCH_TTL_MS = 30_000
@@ -206,6 +210,11 @@ router.beforeEach((to, from) => {
     } catch (e) {
         console.warn('[prefetch] failed for', to.fullPath, e)
     }
+})
+
+router.beforeResolve((to, from) => {
+    if (!shouldUseMobilePageTransition(to, from)) return
+    return startMobilePageTransition(pageTransitionName.value)
 })
 
 router.afterEach((to) => {
