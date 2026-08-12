@@ -59,9 +59,9 @@
           </div>
           <div
             v-else
-            :key="isRolling(entry.id) ? 'rolling' : 'settled'"
+            :key="isTotalRolling(entry.id) ? 'rolling' : 'settled'"
             class="dice-pop-total"
-            :class="{ 'dice-pop-total--rolling': isRolling(entry.id) }"
+            :class="{ 'dice-pop-total--rolling': isTotalRolling(entry.id) }"
           >{{ displayedTotal(entry) }}</div>
         </Transition>
       </div>
@@ -107,6 +107,7 @@ const {
   startEntryAnimation,
   clearEntryAnimation,
   isRolling,
+  isTotalRolling,
   dispose: disposeRollAnimation,
 } = useDiceRollAnimation({ shouldAnimate: shouldAnimateRolls })
 

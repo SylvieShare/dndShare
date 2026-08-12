@@ -52,6 +52,7 @@ describe('ViewSession participant rail', () => {
     expect(dicePopupSource).toContain("'(prefers-reduced-motion: reduce)'")
     expect(dicePopupSource).toContain('displayedRoll(entry, i, ri, r)')
     expect(dicePopupSource).toContain('displayedTotal(entry)')
+    expect(dicePopupSource).toContain('isTotalRolling(entry.id)')
     expect(dicePopupSource).toContain("entry.outcome && !isRolling(entry.id)")
     expect(dicePopupSource).toContain('dice-pop-crit-settle')
     expect(dicePopupSource).toContain('clearEntryAnimation')

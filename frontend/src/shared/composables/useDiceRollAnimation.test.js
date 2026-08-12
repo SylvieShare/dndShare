@@ -53,12 +53,19 @@ describe('dice roll presentation animation', () => {
     const animation = useDiceRollAnimation({ shouldAnimate: () => true, random: () => 0 })
 
     animation.startEntryAnimation(resultEntry)
+    expect(animation.isTotalRolling(resultEntry.id)).toBe(true)
     const shownD20 = animation.displayedRoll(resultEntry, 0, 0, 17)
     const shownKeptD6 = animation.displayedRoll(resultEntry, 2, 1, 5)
     expect(animation.displayedTotal(resultEntry)).toBe(shownD20 + 3 - shownKeptD6)
 
-    vi.advanceTimersByTime(DICE_ROLL_ANIMATION_DELAYS.at(-1))
+    vi.advanceTimersByTime(DICE_ROLL_ANIMATION_DELAYS.at(-3))
+    expect(animation.isRolling(resultEntry.id)).toBe(true)
+    expect(animation.isTotalRolling(resultEntry.id)).toBe(false)
     expect(animation.displayedTotal(resultEntry)).toBe(15)
+    expect(animation.displayedRoll(resultEntry, 0, 0, 17)).not.toBe(17)
+
+    vi.advanceTimersByTime(DICE_ROLL_ANIMATION_DELAYS.at(-1) - DICE_ROLL_ANIMATION_DELAYS.at(-3))
+    expect(animation.isRolling(resultEntry.id)).toBe(false)
   })
 
   it('skips animation when motion should be reduced', () => {
@@ -66,6 +73,7 @@ describe('dice roll presentation animation', () => {
     animation.startEntryAnimation(entry)
 
     expect(animation.isRolling(entry.id)).toBe(false)
+    expect(animation.isTotalRolling(entry.id)).toBe(false)
     expect(animation.displayedRoll(entry, 0, 0, 17)).toBe(17)
     expect(animation.displayedTotal({ ...entry, result: { ...entry.result, total: 17 } })).toBe(17)
   })

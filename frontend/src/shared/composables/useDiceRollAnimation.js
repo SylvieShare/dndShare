@@ -10,6 +10,7 @@ export function useDiceRollAnimation({
 } = {}) {
   const displayedRolls = reactive(new Map())
   const rollingEntries = reactive(new Set())
+  const rollingTotals = reactive(new Set())
   const animationTimers = new Map()
 
   function rollKey(entryId, partIndex, rollIndex) {
@@ -65,7 +66,7 @@ export function useDiceRollAnimation({
   }
 
   function displayedTotal(entry) {
-    if (!isRolling(entry.id)) return entry.result.total
+    if (!isTotalRolling(entry.id)) return entry.result.total
     return entry.result.parts.reduce((total, part, partIndex) => {
       let value = part.value
       if (part.kind === 'dice') {
@@ -85,6 +86,7 @@ export function useDiceRollAnimation({
       animationTimers.delete(entryId)
     }
     rollingEntries.delete(entryId)
+    rollingTotals.delete(entryId)
     for (const key of displayedRolls.keys()) {
       if (key.startsWith(`${entryId}:`)) displayedRolls.delete(key)
     }
@@ -95,6 +97,7 @@ export function useDiceRollAnimation({
     if (!shouldAnimate?.()) return
 
     rollingEntries.add(entry.id)
+    rollingTotals.add(entry.id)
     setDisplayedRolls(entry)
     const timers = new Set()
     animationTimers.set(entry.id, timers)
@@ -102,7 +105,9 @@ export function useDiceRollAnimation({
       const timer = setTimer(() => {
         timers.delete(timer)
         const settled = index === DICE_ROLL_ANIMATION_DELAYS.length - 1
+        const totalSettled = index === DICE_ROLL_ANIMATION_DELAYS.length - 3
         setDisplayedRolls(entry, index + 1)
+        if (totalSettled) rollingTotals.delete(entry.id)
         if (settled) rollingEntries.delete(entry.id)
         if (!timers.size) animationTimers.delete(entry.id)
       }, delay)
@@ -112,6 +117,10 @@ export function useDiceRollAnimation({
 
   function isRolling(entryId) {
     return rollingEntries.has(entryId)
+  }
+
+  function isTotalRolling(entryId) {
+    return rollingTotals.has(entryId)
   }
 
   function dispose() {
@@ -124,6 +133,7 @@ export function useDiceRollAnimation({
     startEntryAnimation,
     clearEntryAnimation,
     isRolling,
+    isTotalRolling,
     dispose,
   }
 }
