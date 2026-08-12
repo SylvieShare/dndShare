@@ -2,19 +2,18 @@
   <div class="enc-row-menu">
   <RowActionMenu>
     <template #default="{ close }">
-      <button
+      <RowActionItem
         v-if="statesBlock"
-        type="button"
-        class="ram-item"
+        :icon="Activity"
         @click="$emit('edit-states'); close()"
-      >Изменить статусы</button>
-      <button
+      >Изменить статусы</RowActionItem>
+      <RowActionItem
         v-if="isNpc"
-        type="button"
-        class="ram-item"
+        action="note"
         @click="$emit('edit-note'); close()"
-      >Изменить заметку</button>
+      >Изменить заметку</RowActionItem>
       <div v-if="isNpc" class="ram-clone">
+        <Copy class="ram-clone-icon" :size="17" :stroke-width="1.9" aria-hidden="true" />
         <span class="ram-clone-label">Копировать</span>
         <input
           v-model.number="cloneCount"
@@ -39,18 +38,17 @@
           @update:model-value="color => enc.setIconColor(combatant, color)"
         />
       </div>
-      <button
+      <RowActionItem
         v-if="canRevive"
-        type="button"
-        class="ram-item"
+        action="revive"
         @click="enc.reviveCombatant(combatant); close()"
-      >Воскресить</button>
-      <button
+      >Воскресить</RowActionItem>
+      <RowActionItem
         v-if="canDelete"
-        type="button"
-        class="ram-item ram-item--danger"
+        action="delete"
+        tone="danger"
         @click="enc.removeNpc(combatant); close()"
-      >Удалить</button>
+      >Удалить</RowActionItem>
     </template>
   </RowActionMenu>
   </div>
@@ -58,7 +56,9 @@
 
 <script setup>
 import { computed, inject, ref } from 'vue'
+import { Activity, Copy } from '@lucide/vue'
 import ColorPresetPicker from '@/shared/ui/ColorPresetPicker'
+import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionMenu from '@/shared/ui/RowActionMenu.vue'
 
 const props = defineProps({
@@ -84,10 +84,12 @@ const cloneCount = ref(1)
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 4px 10px;
+  min-height: 36px;
+  padding: 4px 8px;
 }
+.ram-clone-icon { flex: 0 0 18px; }
 .ram-clone-label {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--text-2);
   flex: 1;
 }

@@ -30,18 +30,18 @@
         </button>
       </template>
       <template #default="{ close }">
-        <button class="ram-item dmsm-menu-item" type="button" @click="openEditor('states', close)">
-          <span>Статусы</span>
-          <span v-if="activeIds.length" class="dmsm-menu-value">{{ activeIds.length }}</span>
-        </button>
-        <button class="ram-item dmsm-menu-item" type="button" @click="openEditor('exhaustion', close)">
-          <span>Истощение</span>
-          <span v-if="exhaustionLevel > 0" class="dmsm-menu-value dmsm-menu-value--danger">{{ exhaustionLevel }}</span>
-        </button>
-        <button class="ram-item dmsm-menu-item" type="button" @click="openEditor('inspiration', close)">
-          <span>Вдохновение</span>
-          <span v-if="inspirationActive" class="dmsm-menu-value dmsm-menu-value--accent">✦</span>
-        </button>
+        <RowActionItem :icon="Activity" @click="openEditor('states', close)">
+          Статусы
+          <template v-if="activeIds.length" #suffix><span class="dmsm-menu-value">{{ activeIds.length }}</span></template>
+        </RowActionItem>
+        <RowActionItem :icon="BatteryLow" @click="openEditor('exhaustion', close)">
+          Истощение
+          <template v-if="exhaustionLevel > 0" #suffix><span class="dmsm-menu-value dmsm-menu-value--danger">{{ exhaustionLevel }}</span></template>
+        </RowActionItem>
+        <RowActionItem :icon="Sparkles" @click="openEditor('inspiration', close)">
+          Вдохновение
+          <template v-if="inspirationActive" #suffix><span class="dmsm-menu-value dmsm-menu-value--accent">✦</span></template>
+        </RowActionItem>
       </template>
     </RowActionMenu>
 
@@ -83,10 +83,12 @@
 
 <script setup>
 import { computed, inject, onMounted, ref } from 'vue'
+import { Activity, BatteryLow, Sparkles } from '@lucide/vue'
 import AppModalFrame from '@/shared/ui/AppModalFrame'
 import BlockStatesPickerEditor from '@/features/character-editor/blocks/generic/components/BlockStatesPickerEditor'
 import DndExhaustionEditor from '@/features/character-editor/blocks/dnd/components/DndExhaustionEditor'
 import EditorPanel from '@/features/character-editor/components/EditorPanel'
+import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionMenu from '@/shared/ui/RowActionMenu'
 import SvgIcon from '@/shared/ui/SvgIcon'
 import { normalizeExhaustion } from '@/features/character-editor/blocks/dnd/lib/exhaustion'
@@ -229,7 +231,6 @@ function setInspiration(value) {
   transition: transform 0.14s ease;
 }
 .dmsm-trigger--open .dmsm-chevron { transform: translateY(2px) rotate(225deg); }
-.dmsm-menu-item { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
 .dmsm-menu-value { color: var(--text-muted); font-size: 11px; }
 .dmsm-menu-value--danger { color: var(--danger); }
 .dmsm-menu-value--accent { color: var(--accent-soft); }

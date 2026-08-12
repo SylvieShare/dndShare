@@ -50,12 +50,12 @@
 
       <RowActionMenu v-if="isDm">
         <template #default="{ close }">
-          <button v-if="!editing" type="button" class="ram-item" @click="enterEdit(); close()">Редактировать</button>
+          <RowActionItem v-if="!editing" action="edit" @click="enterEdit(); close()">Редактировать</RowActionItem>
           <div class="ram-label">Цвет</div>
           <div class="ram-colors">
             <ColorPresetPicker inline allow-clear :model-value="currentColor || ''" @update:model-value="setColor" />
           </div>
-          <button type="button" class="ram-item ram-item--danger" @click="onDelete(); close()">Удалить плитку</button>
+          <RowActionItem action="delete" tone="danger" @click="onDelete(); close()">Удалить плитку</RowActionItem>
         </template>
       </RowActionMenu>
     </div>
@@ -113,6 +113,7 @@ import { computed, nextTick, onMounted, provide, reactive, ref, watch } from 'vu
 import ColorPresetPicker from '@/shared/ui/ColorPresetPicker'
 import InputDescription from '@/shared/ui/InputDescription.vue'
 import RichContent from '@/shared/ui/RichContent'
+import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionMenu from '@/shared/ui/RowActionMenu.vue'
 
 const props = defineProps({

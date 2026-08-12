@@ -20,9 +20,9 @@ describe('ViewSession participant rail', () => {
     expect(source).toContain('<div class="players-actions">')
     expect(source).toContain('<RowActionMenu>')
     expect(source).toContain('class="players-actions-trigger"')
-    expect(source).toContain('>Создать персонажа</button>')
-    expect(source).toContain('>Скопировать код приглашения</button>')
-    expect(source).toContain('>Скопировать ссылку приглашения</button>')
+    expect(source).toContain('<RowActionItem action="create"')
+    expect(source).toContain('<RowActionItem action="copy"')
+    expect(source).toContain('<RowActionItem action="copy-link"')
     expect(source).not.toContain('invite-section')
   })
 

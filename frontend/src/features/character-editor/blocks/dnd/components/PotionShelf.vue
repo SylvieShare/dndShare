@@ -17,9 +17,9 @@
           </template>
 
           <template #default="{ close }">
-            <button v-if="canUse" type="button" class="ram-item ram-item--warning" @click="usePotion(p, close)">Использовать</button>
-            <button v-if="canAdd" type="button" class="ram-item ram-item--success" @click="replenishPotion(p, close)">Пополнить (+1)</button>
-            <button type="button" class="ram-item ram-item--info" @click="viewPotion(p, close)">Просмотреть</button>
+            <RowActionItem v-if="canUse" action="use" tone="warning" @click="usePotion(p, close)">Использовать</RowActionItem>
+            <RowActionItem v-if="canAdd" action="replenish" tone="success" @click="replenishPotion(p, close)">Пополнить (+1)</RowActionItem>
+            <RowActionItem action="view" tone="info" @click="viewPotion(p, close)">Просмотреть</RowActionItem>
           </template>
         </RowActionMenu>
 
@@ -36,6 +36,7 @@
 
 <script setup>
 import PotionVial from '@/features/items/components/PotionVial'
+import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionMenu from '@/shared/ui/RowActionMenu.vue'
 
 const props = defineProps({

@@ -50,9 +50,9 @@
                 </button>
               </template>
               <template #default="{ close }">
-                <button type="button" class="ram-item" @click="openCreate(); close()">Создать персонажа</button>
-                <button type="button" class="ram-item" @click="copyCode(); close()">Скопировать код приглашения</button>
-                <button type="button" class="ram-item" @click="copyLink(); close()">Скопировать ссылку приглашения</button>
+                <RowActionItem action="create" @click="openCreate(); close()">Создать персонажа</RowActionItem>
+                <RowActionItem action="copy" @click="copyCode(); close()">Скопировать код приглашения</RowActionItem>
+                <RowActionItem action="copy-link" @click="copyLink(); close()">Скопировать ссылку приглашения</RowActionItem>
               </template>
             </RowActionMenu>
           </div>
@@ -155,6 +155,7 @@ import DicePanel from '@/features/sessions/components/DicePanel.vue'
 import EncounterTab from '@/features/sessions/components/EncounterTab'
 import MusicLibraryModal from '@/features/sessions/components/MusicLibraryModal.vue'
 import MusicPanel from '@/features/sessions/components/MusicPanel.vue'
+import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionMenu from '@/shared/ui/RowActionMenu.vue'
 import SceneTab from '@/features/sessions/components/SceneTab.vue'
 import SessionParticipantCard from '@/features/sessions/components/SessionParticipantCard'

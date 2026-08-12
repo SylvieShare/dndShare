@@ -14,17 +14,17 @@
         <div class="status-current" :style="{ '--dot': statusCfg.color }">
           <span class="status-dot" />{{ statusCfg.label }}
         </div>
-        <button
+        <RowActionItem
           v-for="opt in STATUS_OPTIONS"
           :key="opt.key"
-          class="ram-item status-option"
+          class="status-option"
           :class="{ 'status-option--active': session.status === opt.key }"
           :style="{ '--dot': STATUS_CFG[opt.key].color }"
-          type="button"
           @click="changeStatus(opt.key, close)"
         >
-          <span class="status-dot" />{{ opt.label }}
-        </button>
+          <template #icon><span class="status-dot" /></template>
+          {{ opt.label }}
+        </RowActionItem>
       </template>
     </RowActionMenu>
   </div>
@@ -32,6 +32,7 @@
 
 <script setup>
 import { ref, watch } from 'vue'
+import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionMenu from '@/shared/ui/RowActionMenu.vue'
 import { STATUS_CFG, STATUS_OPTIONS, useSessionStatus } from '@/features/sessions/composables/useSessionStatus'
 
@@ -77,10 +78,9 @@ async function changeStatus(key, close) {
 .session-menu-btn:hover { background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); color: var(--text-1); }
 .bar { width: 14px; height: 1.5px; border-radius: 2px; background: currentColor; }
 
-.status-current, .status-option { display: flex; align-items: center; gap: 7px; }
-.status-current { padding: 7px 10px; color: var(--dot); font-size: 12px; font-weight: 700; }
+.status-current { display: flex; align-items: center; gap: 9px; padding: 7px 8px; color: var(--dot); font-size: 13px; font-weight: 700; }
 .status-option { color: var(--text-2); }
 .status-option:hover, .status-option--active { color: var(--text-1); }
 .status-option--active { background: color-mix(in srgb, var(--accent) 10%, transparent); }
-.status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--dot); flex-shrink: 0; }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--dot); flex-shrink: 0; }
 </style>

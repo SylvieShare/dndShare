@@ -23,8 +23,8 @@ describe('SessionParticipantCard actions', () => {
   })
 
   it('offers view to everyone and kick only to the DM', () => {
-    expect(source).toContain('>Просмотреть</button>')
-    expect(source).toMatch(/v-if="isDm"[\s\S]*?>\{\{ kickPending \? 'Исключение…' : 'Выгнать' \}\}<\/button>/)
+    expect(source).toContain('<RowActionItem action="view"')
+    expect(source).toMatch(/v-if="isDm"[\s\S]*?action="kick"[\s\S]*?>\{\{ kickPending \? 'Исключение…' : 'Выгнать' \}\}<\/RowActionItem>/)
     expect(source).toContain("defineEmits(['view', 'kick'])")
   })
 })

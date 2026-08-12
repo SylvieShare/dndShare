@@ -59,14 +59,14 @@
       </template>
 
       <template #default="{ close }">
-        <button type="button" class="ram-item" @click="viewParticipant(close)">Просмотреть</button>
-        <button
+        <RowActionItem action="view" @click="viewParticipant(close)">Просмотреть</RowActionItem>
+        <RowActionItem
           v-if="isDm"
-          type="button"
-          class="ram-item ram-item--danger"
+          action="kick"
+          tone="danger"
           :disabled="kickPending"
           @click="kickParticipant(close)"
-        >{{ kickPending ? 'Исключение…' : 'Выгнать' }}</button>
+        >{{ kickPending ? 'Исключение…' : 'Выгнать' }}</RowActionItem>
       </template>
     </RowActionMenu>
   </div>
@@ -75,6 +75,7 @@
 <script setup>
 import { computed } from 'vue'
 import BaseTile from '@/shared/ui/BaseTile.vue'
+import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionMenu from '@/shared/ui/RowActionMenu.vue'
 import StatBar from '@/shared/ui/StatBar.vue'
 import { pvAvatar, pvHp, pvName, pvSubtitle } from '@/features/sessions/lib/participantView'

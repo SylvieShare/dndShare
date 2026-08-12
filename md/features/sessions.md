@@ -31,9 +31,9 @@ character created inside a join/session flow uses `CharacterCreateModal`, gets
 an explicit rules `sourceVersionId`, then is joined and opened.
 
 The session participant rail has no shared backing surface: each participant is
-an individual interactive `BaseTile`. Clicking it opens `RowActionMenu` with a
-view action and a DM-only kick action; bulk participant selection is not part of
-the rail. Every participant trigger fills the rail width. A dashed `+` action
+an individual interactive `BaseTile`. Clicking it opens `RowActionMenu` with an
+icon-labelled view action and a DM-only kick action; bulk participant selection
+is not part of the rail. Every participant trigger fills the rail width. A dashed `+` action
 beside the `ИГРОКИ` heading opens character creation and invite code/link copy
 actions; the rail has no separate invitation tile.
 

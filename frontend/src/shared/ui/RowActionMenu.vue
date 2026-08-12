@@ -124,14 +124,14 @@ defineExpose({ close })
   background: var(--popover-bg);
   border: 1px solid var(--border-strong);
   border-radius: 10px;
-  padding: 8px;
+  padding: 5px;
   box-shadow: var(--shadow-lg);
   z-index: 9300;
   min-width: 200px;
   max-width: 280px;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
   transform-origin: var(--ram-origin-x, 100%) var(--ram-origin-y, 0);
   animation: ram-popover-enter 140ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
 }
@@ -141,36 +141,12 @@ defineExpose({ close })
   to { opacity: 1; transform: none; }
 }
 
-.ram-item {
-  display: block;
-  width: 100%;
-  padding: 7px 10px;
-  background: none;
-  border: 1px solid transparent;
-  border-radius: 6px;
-  color: var(--text-1);
-  font-family: inherit;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  text-align: left;
-}
-.ram-item:hover { background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); }
-.ram-item--warning { color: var(--warning); }
-.ram-item--warning:hover { background: color-mix(in srgb, var(--warning) 12%, transparent); }
-.ram-item--success { color: var(--success); }
-.ram-item--success:hover { background: color-mix(in srgb, var(--success) 12%, transparent); }
-.ram-item--info { color: var(--info); }
-.ram-item--info:hover { background: color-mix(in srgb, var(--info) 12%, transparent); }
-.ram-item--danger { color: var(--danger); }
-.ram-item--danger:hover { background: color-mix(in srgb, var(--danger) 12%, transparent); }
-
 .ram-label {
   font-size: 10px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-muted);
-  margin: 6px 4px 4px;
+  margin: 5px 5px 3px;
 }
 
 .ram-colors {
@@ -179,7 +155,7 @@ defineExpose({ close })
   gap: 4px;
   justify-content: start;
   margin-bottom: 4px;
-  padding: 0 4px;
+  padding: 0 3px;
 }
 
 .ram-swatch {
