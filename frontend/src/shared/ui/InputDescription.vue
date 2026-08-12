@@ -1,6 +1,5 @@
 <template>
   <div class="input-desc">
-    <SectionDivider v-if="block.props?.divider_before" />
     <div v-if="block.title || showToggle" class="desc-head">
       <span v-if="block.title" class="desc-title">{{ block.title }}</span>
       <button v-if="showToggle && !editOn" class="field-edit-btn" type="button" title="Редактировать" @click="editOn = true">
@@ -82,7 +81,6 @@
 import { computed, inject, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import ColorPresetPicker from '@/shared/ui/ColorPresetPicker'
 import RichContent from '@/shared/ui/RichContent'
-import SectionDivider from '@/shared/ui/SectionDivider'
 
 const props = defineProps({
   block: { type: Object, default: () => ({}) },

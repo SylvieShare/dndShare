@@ -25,11 +25,6 @@
       @toggle-slot="toggleSlot"
     />
 
-    <SectionDivider
-      v-if="showStatsBar && (spellsByLevel.length || canAddItems)"
-      class="sp-spells-divider"
-    />
-
     <!-- Заклинания по уровням (мультиколонки) -->
     <div class="spells-groups">
       <div v-if="spellsByLevel.length === 0" class="spells-empty">
@@ -119,7 +114,6 @@ import { computed, inject, onMounted, provide, reactive, ref, watch } from 'vue'
 import { itemsApi } from '@/shared/api/itemsApi'
 import SpellCard from '@/features/character-editor/blocks/dnd/components/SpellCard.vue'
 import SpellSlotsBar from '@/features/character-editor/blocks/dnd/components/SpellSlotsBar.vue'
-import SectionDivider from '@/shared/ui/SectionDivider'
 import { useSpellCalc } from '@/features/character-editor/blocks/dnd/composables/useSpellCalc'
 import { useSpellSlots } from '@/features/character-editor/blocks/dnd/composables/useSpellSlots'
 import { SPELL_LEVELS, formatBonus, groupTitle, spellSummary } from '@/features/character-editor/blocks/dnd/lib/spellEntry'

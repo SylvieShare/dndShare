@@ -51,12 +51,12 @@ to the character list.
 Desktop `LayoutInnerTabs` groups also keep their selected pane in independent,
 schema-stable `innerTab-*` query keys. Reload and browser history restore both
 the outer character tab and its inner pane; invalid or stale inner indexes fall
-back to the first pane. Their content stays on one shared `BaseTile` surface;
-semantic groups inside the equipment, personality, diary and spellbook panes
-are separated by the shared decorative `SectionDivider`, without adding a
-second title or enclosing card. Desktop tab labels share the same muted,
-fixed-weight typography so the active underline changes state without shifting
-label geometry. Mobile uses the same outer `tab` route contract.
+back to the first pane. The tab chrome sits above a transparent content stage;
+weapons, equipment and personality groups use independent `BaseTile` surfaces,
+spell parameters/slots/levels use separate cards, and diary collections keep
+their own cards while notes have a dedicated surface. Desktop tab labels share
+the same muted, fixed-weight typography so the active underline changes state
+without shifting label geometry. Mobile uses the same outer `tab` route contract.
 The sticky mobile tab chrome ends with a narrow static masked blur and subtle
 `--scrim` darkening over the scrolling content; only that 18px strip uses
 `backdrop-filter`, with a plain dark gradient as the unsupported-browser

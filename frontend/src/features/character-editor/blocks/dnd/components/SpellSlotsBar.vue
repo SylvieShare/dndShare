@@ -26,14 +26,6 @@
       </div>
     </section>
 
-    <div v-if="canInteract" class="sp-edit-head">
-      <SheetBlockTitle
-        title="Редактировать"
-        :show-edit="true"
-        @edit="editOpen = true"
-      />
-    </div>
-
     <section v-if="activeSlots.length > 0" class="sp-slots-panel">
       <SheetBlockTitle
         class="sp-slots-head"
@@ -121,16 +113,20 @@ function orbOrder(total) {
   margin-bottom: 18px;
 }
 
-.sp-mobile-panel-head { display: none; }
+.sp-stats-panel,
+.sp-slots-panel {
+  padding: 18px;
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+
+.sp-mobile-panel-head {
+  display: flex;
+  margin-bottom: 12px;
+}
 
 .sp-slots-head { margin-bottom: 12px; }
-
-/* ── Заголовок «Редактировать» (прижат справа над статами) ── */
-.sp-edit-head {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: -8px;
-}
 
 /* ── Статы (строка безрамочных плиток сверху) ── */
 .sp-stats {
@@ -249,19 +245,9 @@ function orbOrder(total) {
     margin-bottom: 12px;
   }
 
-  .sp-mobile-panel-head {
-    display: flex;
-    margin-bottom: 12px;
-  }
-
-  .sp-edit-head { display: none; }
-
   .sp-stats-panel,
   .sp-slots-panel {
     padding: 14px;
-    border-radius: var(--r-lg);
-    background: var(--surface);
-    box-shadow: inset 0 0 0 1px var(--border);
   }
 
   .sp-stats {

@@ -1,6 +1,5 @@
 <template>
   <div v-if="sessions.length || ownerMode" class="dd-block">
-    <SectionDivider v-if="block.props?.divider_before" />
     <div class="dd-head">
       <span class="sheet-tile-title">События</span>
       <button v-if="ownerMode" ref="addBtnEl" class="dd-add" type="button" @click="addSession">
@@ -82,7 +81,6 @@ import DndDiaryEventRow from '@/features/character-editor/blocks/dnd/components/
 import DndDiarySessionCard from '@/features/character-editor/blocks/dnd/components/DndDiarySessionCard.vue'
 import DndDiarySessionModal from '@/features/character-editor/blocks/dnd/components/DndDiarySessionModal.vue'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
-import SectionDivider from '@/shared/ui/SectionDivider'
 import { useMorphOrigin } from '@/features/character-editor/composables/useMorphOrigin'
 import {
   defaultEvent,

@@ -209,25 +209,28 @@
                           {
                             "title": "Оружие",
                             "content": {
-                              "ref": "weapon",
-                              "kind": "block",
+                              "kind": "layout",
+                              "type": "column",
                               "props": {
+                                "gap": "0",
+                                "tile": true,
                                 "style": {
-                                  "padding": "0"
+                                  "padding": "20px"
                                 }
-                              }
+                              },
+                              "children": [
+                                {
+                                  "ref": "weapon",
+                                  "kind": "block"
+                                }
+                              ]
                             }
                           },
                           {
                             "title": "Магия",
                             "content": {
                               "ref": "spells",
-                              "kind": "block",
-                              "props": {
-                                "style": {
-                                  "padding": "20px"
-                                }
-                              }
+                              "kind": "block"
                             }
                           },
                           {
@@ -236,17 +239,18 @@
                               "kind": "layout",
                               "type": "column",
                               "props": {
-                                "gap": "20px",
-                                "style": {
-                                  "padding": "20px"
-                                }
+                                "gap": "16px"
                               },
                               "children": [
                                 {
                                   "kind": "layout",
                                   "type": "column",
                                   "props": {
-                                    "gap": "10px"
+                                    "gap": "10px",
+                                    "tile": true,
+                                    "style": {
+                                      "padding": "18px"
+                                    }
                                   },
                                   "children": [
                                     {
@@ -276,7 +280,10 @@
                                   "type": "column",
                                   "props": {
                                     "gap": "0",
-                                    "divider_before": true
+                                    "tile": true,
+                                    "style": {
+                                      "padding": "18px"
+                                    }
                                   },
                                   "children": [
                                     {
@@ -290,7 +297,10 @@
                                   "type": "column",
                                   "props": {
                                     "gap": "0",
-                                    "divider_before": true
+                                    "tile": true,
+                                    "style": {
+                                      "padding": "18px"
+                                    }
                                   },
                                   "children": [
                                     {
@@ -308,23 +318,25 @@
                               "kind": "layout",
                               "type": "column",
                               "props": {
-                                "style": {
-                                  "padding": "20px"
-                                }
+                                "gap": "0"
                               },
                               "children": [
                                 {
                                   "kind": "layout",
                                   "type": "column",
                                   "props": {
-                                    "gap": "20px"
+                                    "gap": "16px"
                                   },
                                   "children": [
                                     {
                                       "kind": "layout",
                                       "type": "column",
                                       "props": {
-                                        "gap": "12px"
+                                        "gap": "12px",
+                                        "tile": true,
+                                        "style": {
+                                          "padding": "18px"
+                                        }
                                       },
                                       "children": [
                                         {
@@ -359,7 +371,10 @@
                                       "type": "column",
                                       "props": {
                                         "gap": "12px",
-                                        "divider_before": true
+                                        "tile": true,
+                                        "style": {
+                                          "padding": "18px"
+                                        }
                                       },
                                       "children": [
                                         {
@@ -407,7 +422,10 @@
                                       "type": "column",
                                       "props": {
                                         "gap": "12px",
-                                        "divider_before": true
+                                        "tile": true,
+                                        "style": {
+                                          "padding": "18px"
+                                        }
                                       },
                                       "children": [
                                         {
@@ -443,7 +461,10 @@
                                       "type": "column",
                                       "props": {
                                         "gap": "14px",
-                                        "divider_before": true
+                                        "tile": true,
+                                        "style": {
+                                          "padding": "18px"
+                                        }
                                       },
                                       "children": [
                                         {
@@ -467,10 +488,7 @@
                               "kind": "layout",
                               "type": "column",
                               "props": {
-                                "gap": "22px",
-                                "style": {
-                                  "padding": "20px"
-                                }
+                                "gap": "24px"
                               },
                               "children": [
                                 {
@@ -479,18 +497,27 @@
                                 },
                                 {
                                   "ref": "diary",
-                                  "kind": "block",
-                                  "props": {
-                                    "divider_before": true
-                                  }
+                                  "kind": "block"
                                 },
                                 {
-                                  "ref": "notes",
-                                  "kind": "block",
+                                  "kind": "layout",
+                                  "type": "column",
                                   "props": {
-                                    "min-width": "0",
-                                    "divider_before": true
-                                  }
+                                    "gap": "0",
+                                    "tile": true,
+                                    "style": {
+                                      "padding": "18px"
+                                    }
+                                  },
+                                  "children": [
+                                    {
+                                      "ref": "notes",
+                                      "kind": "block",
+                                      "props": {
+                                        "min-width": "0"
+                                      }
+                                    }
+                                  ]
                                 }
                               ]
                             }

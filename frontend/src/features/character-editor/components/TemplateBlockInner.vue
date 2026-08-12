@@ -16,7 +16,6 @@
   </component>
 
   <component :is="block.content?.tile ? BaseTile : 'div'" v-else-if="block.type === 'VERTICAL_LIST'" v-show="!childHidden" class="layout-vertical" :style="[blockStyle, { gap: block.content?.gap }]">
-    <SectionDivider v-if="block.props?.divider_before" />
     <SectionLabel v-if="block.title" :title="block.title" border>
       <template v-if="block.hide_button" #actions>
         <button class="tb-collapse-btn" :title="collapsed ? 'Развернуть' : 'Свернуть'" @click="collapsed = !collapsed">{{ collapsed ? '▸' : '▾' }}</button>
@@ -183,7 +182,6 @@ export default { name: 'TemplateBlockInner' }
 <script setup>
 import BaseTile from '@/shared/ui/BaseTile'
 import SectionLabel from '@/shared/ui/SectionLabel'
-import SectionDivider from '@/shared/ui/SectionDivider'
 import { computed, inject, nextTick, onBeforeUnmount, onMounted, provide, ref, watch } from 'vue'
 import { BLOCK_REGISTRY } from '@/features/character-editor/blocks/blockRegistry'
 

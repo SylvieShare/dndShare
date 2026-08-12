@@ -2,7 +2,7 @@
   <div class="inner-tabs">
     <SlidingTabs :tabs="tabItems" :model-value="activeTab" @update:model-value="setTab" />
 
-    <BaseTile ref="contentEl" class="inner-tabs-content">
+    <div ref="contentEl" class="inner-tabs-content">
       <div
         v-for="(tab, i) in block.tabs"
         :key="i"
@@ -18,14 +18,13 @@
           @update:var="emitVar"
         />
       </div>
-    </BaseTile>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { computed, nextTick, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import BaseTile from '@/shared/ui/BaseTile'
 import SlidingTabs from '@/shared/ui/SlidingTabs'
 import TemplateBlockInner from '@/features/character-editor/components/TemplateBlockInner'
 import {
@@ -66,8 +65,8 @@ function setTab(i) {
   })
 }
 
-// Animate the content tile's height between the old and new pane (FLIP). Outside a switch the height
-// stays `auto`, so it tracks its content (and the page scrolls) without JS.
+// Animate the content stage's height between the old and new pane (FLIP). Outside a switch the
+// height stays `auto`, so it tracks its content (and the page scrolls) without JS.
 function animateHeight(from) {
   const el = contentDom()
   if (!el) return
@@ -127,13 +126,15 @@ function emitVar(patch) {
   gap: 0;
 }
 
-/* Content panel — a BaseTile (background + radius come from it). Height tracks the active pane's
-   content (auto); JS animates it between panes on tab switch. */
+/* Transparent content stage: each pane owns its semantic surfaces. Height tracks the active pane
+   (auto); JS animates it between panes on tab switch. */
 .inner-tabs-content {
+  position: relative;
   display: flex;
   flex-direction: column;
   flex: 0 0 auto;
   overflow: hidden;
+  padding-top: 12px;
 }
 
 /* All visited panes stay mounted; the active one is in flow (defines height, so
@@ -148,7 +149,7 @@ function emitVar(patch) {
 
 .inner-tab-pane:not(.inner-tab-pane--active) {
   position: absolute;
-  inset: 0;
+  inset: 12px 0 0;
   overflow: hidden;
 }
 
@@ -162,9 +163,4 @@ function emitVar(patch) {
   flex: 1 1 auto;
 }
 
-@media (max-width: 640px) {
-  .inner-tabs-content {
-    padding: 20px 16px;
-  }
-}
 </style>
