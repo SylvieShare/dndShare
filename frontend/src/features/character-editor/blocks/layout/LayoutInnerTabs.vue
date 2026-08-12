@@ -118,6 +118,7 @@ function emitVar(patch) {
 
 <style scoped>
 .inner-tabs {
+  position: relative;
   display: flex;
   flex-direction: column;
   flex: 0 0 auto;
@@ -129,7 +130,20 @@ function emitVar(patch) {
   background: color-mix(in srgb, var(--surface) 34%, var(--bg));
 }
 
+.inner-tabs::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0.42;
+  background-image: radial-gradient(circle, var(--border-strong) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
 .inner-tabs :deep(.sliding-tabs) {
+  position: relative;
+  z-index: 1;
   padding-inline: 12px;
 }
 
@@ -137,6 +151,7 @@ function emitVar(patch) {
    (auto); JS animates it between panes on tab switch. */
 .inner-tabs-content {
   position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   flex: 0 0 auto;

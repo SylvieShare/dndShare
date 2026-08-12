@@ -54,8 +54,9 @@ the outer character tab and its inner pane; invalid or stale inner indexes fall
 back to the first pane. Weapons, equipment and personality groups use independent `BaseTile` surfaces,
 spell parameters/slots/levels use separate `BaseTile` cards, and diary collections keep
 their own cards while notes have a dedicated surface. A quiet tinted canvas
-without a border or shadow groups the desktop tab chrome and its cards without
-turning the whole pane back into one tile. Desktop tab labels share
+with the same subtle 24px dot pattern as the session chapter canvas groups the
+desktop tab chrome and its cards without a border, shadow, or return to one
+large tile. Desktop tab labels share
 the same muted, fixed-weight typography so the active underline changes state
 without shifting label geometry; the central pane keeps the same explicit right
 gutter as the upper character summary. Mobile uses the same outer `tab` route contract.
