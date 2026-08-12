@@ -43,7 +43,7 @@
         </span>
       </div>
 
-      <div v-for="group in spellsByLevel" :key="group.level" class="spell-group">
+      <BaseTile v-for="group in spellsByLevel" :key="group.level" class="spell-group">
         <div class="sg-header">
           <span class="sg-lvl">{{ groupTitle(group.level) }}</span>
           <span class="sg-line"></span>
@@ -62,7 +62,7 @@
             :idx="idx"
           />
         </TransitionGroup><!-- sg-spells -->
-      </div>
+      </BaseTile>
     </div>
 
     <!-- Поиск / добавление -->
@@ -114,6 +114,7 @@ import { computed, inject, onMounted, provide, reactive, ref, watch } from 'vue'
 import { itemsApi } from '@/shared/api/itemsApi'
 import SpellCard from '@/features/character-editor/blocks/dnd/components/SpellCard.vue'
 import SpellSlotsBar from '@/features/character-editor/blocks/dnd/components/SpellSlotsBar.vue'
+import BaseTile from '@/shared/ui/BaseTile'
 import { useSpellCalc } from '@/features/character-editor/blocks/dnd/composables/useSpellCalc'
 import { useSpellSlots } from '@/features/character-editor/blocks/dnd/composables/useSpellSlots'
 import { SPELL_LEVELS, formatBonus, groupTitle, spellSummary } from '@/features/character-editor/blocks/dnd/lib/spellEntry'

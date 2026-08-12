@@ -199,7 +199,10 @@
                       "gap": "0",
                       "grow": "1",
                       "basis": "0",
-                      "min-width": "0"
+                      "min-width": "0",
+                      "style": {
+                        "margin-right": "16px"
+                      }
                     },
                     "children": [
                       {

@@ -78,8 +78,8 @@ defineExpose({ updateUnderline })
 .sliding-tabs {
   position: relative;
   display: flex;
-  gap: 24px;
-  min-height: 40px;
+  gap: 28px;
+  min-height: 44px;
   padding: 0 20px;
   flex-wrap: nowrap;
   align-items: stretch;
@@ -100,7 +100,7 @@ defineExpose({ updateUnderline })
   background: none;
   color: var(--text-muted);
   font: inherit;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.02em;
   cursor: pointer;
@@ -119,7 +119,7 @@ defineExpose({ updateUnderline })
 /* Sliding indicator — position/width are driven from JS and animate in CSS. */
 .sliding-tab-underline {
   position: absolute;
-  bottom: 0;
+  bottom: 5px;
   left: 0;
   height: 2px;
   border-radius: 2px 2px 0 0;

@@ -1,6 +1,6 @@
 <template>
   <div class="sp-bar">
-    <section v-if="hasStatConfig" class="sp-stats-panel">
+    <BaseTile v-if="hasStatConfig" class="sp-stats-panel">
       <SheetBlockTitle
         class="sp-mobile-panel-head"
         title="Параметры магии"
@@ -24,9 +24,9 @@
           <span class="sp-tline"></span>
         </div>
       </div>
-    </section>
+    </BaseTile>
 
-    <section v-if="activeSlots.length > 0" class="sp-slots-panel">
+    <BaseTile v-if="activeSlots.length > 0" class="sp-slots-panel">
       <SheetBlockTitle
         class="sp-slots-head"
         title="Ячейки заклинаний"
@@ -52,7 +52,7 @@
           </div>
         </div>
       </div>
-    </section>
+    </BaseTile>
 
     <DndSpellbookSettingsModal
       v-if="editOpen"
@@ -79,6 +79,7 @@ import { ref } from 'vue'
 
 import DndSpellbookSettingsModal from '@/features/character-editor/blocks/dnd/DndSpellbookSettingsModal.vue'
 import SpellSlotSphere from '@/features/items/components/SpellSlotSphere.vue'
+import BaseTile from '@/shared/ui/BaseTile'
 import SheetBlockTitle from '@/shared/ui/SheetBlockTitle'
 
 const editOpen = ref(false)
@@ -116,9 +117,6 @@ function orbOrder(total) {
 .sp-stats-panel,
 .sp-slots-panel {
   padding: 18px;
-  border-radius: var(--r-lg);
-  background: var(--surface);
-  box-shadow: inset 0 0 0 1px var(--border);
 }
 
 .sp-mobile-panel-head {

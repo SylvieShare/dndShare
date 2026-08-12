@@ -15,6 +15,15 @@ describe('D&D desktop sheet schema', () => {
   const base = schema.layouts.desktop.tabs.find(tab => tab.title === 'База')
   const innerTabs = findNode(base?.content, node => node.type === 'inner_tabs')
 
+  it('keeps an explicit right gutter around the central tab column', () => {
+    const tabColumn = findNode(
+      base?.content,
+      node => node.children?.some(child => child.type === 'inner_tabs'),
+    )
+
+    expect(tabColumn.props?.style?.['margin-right']).toBe('16px')
+  })
+
   it('uses independent surfaces for weapons, equipment and personality groups', () => {
     const weapons = innerTabs.children.find(tab => tab.title === 'Оружие')
     const equipment = innerTabs.children.find(tab => tab.title === 'Снаряжение')
