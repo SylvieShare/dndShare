@@ -33,7 +33,12 @@
                     'dice-pop-roll--rolling': isRolling(entry.id),
                   }"
                 >
-                  <SystemDie :sides="p.sides" :value="displayedRoll(entry, i, ri, r)" :size="38" :color="p.color" />
+                  <SystemDie
+                    :sides="p.sides"
+                    :value="displayedRoll(entry, i, ri, r)"
+                    :size="38"
+                    :color="p.color || entry.color || 'var(--accent)'"
+                  />
                 </span>
               </template>
             </span>

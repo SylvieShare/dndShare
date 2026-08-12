@@ -48,6 +48,7 @@ export const useDiceStore = defineStore('dice', () => {
       title: entry.title || '',
       result: entry.result,
       outcome: entry.outcome || null,
+      color: entry.color || null,
       duration,
     })
     while (stack.value.length > MAX_STACK) {
@@ -62,7 +63,7 @@ export const useDiceStore = defineStore('dice', () => {
   function roll(title, expression, opts = {}) {
     const result = rollDiceExpression(expression)
     const outcome = opts.crit_mode ? detectOutcome(result) : null
-    return pushEntry({ title, result, outcome })
+    return pushEntry({ title, result, outcome, color: opts.color })
   }
 
   function clear() {

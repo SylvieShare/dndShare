@@ -301,7 +301,7 @@ function closeEditor() {
 const diceStore = useDiceStore()
 function rollD20Plus(title, bonus) {
   const expr = d20Expr(bonus)
-  diceStore.roll(title, expr, { crit_mode: true })
+  diceStore.roll(title, expr, { crit_mode: true, color: statColor.value })
 }
 
 // ─── Watches ─────────────────────────────────────────────────────────────────
