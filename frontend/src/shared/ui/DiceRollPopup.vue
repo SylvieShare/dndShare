@@ -98,8 +98,7 @@ const store = useDiceStore()
 
 function shouldAnimateRolls() {
   if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return false
-  return window.matchMedia('(max-width: 640px)').matches
-    && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  return !window.matchMedia('(prefers-reduced-motion: reduce)').matches
 }
 
 const {

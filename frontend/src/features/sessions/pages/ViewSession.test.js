@@ -46,9 +46,9 @@ describe('ViewSession participant rail', () => {
     expect(musicPanelSource).toContain("aria-label=\"collapsed ? 'Развернуть музыку' : 'Свернуть музыку'\"")
   })
 
-  it('animates only displayed mobile rolls and cleans up popup timers', () => {
+  it('animates displayed rolls on every viewport and cleans up popup timers', () => {
     expect(DiceRollPopup).toBeTruthy()
-    expect(dicePopupSource).toContain("'(max-width: 640px)'")
+    expect(dicePopupSource).not.toContain("'(max-width: 640px)'")
     expect(dicePopupSource).toContain("'(prefers-reduced-motion: reduce)'")
     expect(dicePopupSource).toContain('displayedRoll(entry, i, ri, r)')
     expect(dicePopupSource).toContain('displayedTotal(entry)')
