@@ -23,6 +23,14 @@ describe('mobile HP and status strip', () => {
     expect(source.match(/<AppModalFrame/g)).toHaveLength(3)
   })
 
+  it('shows larger frameless condition icons with description tooltips', () => {
+    expect(source).toContain('@mouseenter="showStatusTooltip($event, item)"')
+    expect(source).toContain('<ItemTooltip')
+    expect(source).toMatch(/\.dmsm-status \{[^}]*width: 30px;[^}]*height: 30px;[^}]*\}/)
+    expect(source).toMatch(/\.dmsm-status-icon \{ width: 28px; height: 28px;/)
+    expect(source).not.toMatch(/\.dmsm-status \{[^}]*background:/)
+  })
+
   it('sizes compact HP by its numbers and prevents flex shrinking', () => {
     expect(hpSource).toMatch(/\.hp-compact \{[^}]*flex: 0 0 auto;[^}]*width: max-content;[^}]*min-width: max-content;/)
     expect(hpSource).toMatch(/\.hp-c-nums \{[^}]*min-width: max-content;[^}]*white-space: nowrap;/)

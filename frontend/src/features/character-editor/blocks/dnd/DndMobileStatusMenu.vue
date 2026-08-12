@@ -7,8 +7,9 @@
           :key="item.id"
           class="dmsm-status"
           :style="{ '--status-color': item.color || 'var(--text-muted)' }"
-          :title="item.value"
           :aria-label="item.value"
+          @mouseenter="showStatusTooltip($event, item)"
+          @mouseleave="hideStatusTooltip"
         >
           <SvgIcon v-if="item.svg" class="dmsm-status-icon" :svg="item.svg" :color="item.color || '#888888'" filter />
           <span v-else class="dmsm-status-dot"></span>
@@ -78,6 +79,15 @@
         <p class="dmsm-inspiration-note">Героическое вдохновение выдаёт мастер игры; его можно потратить, чтобы перебросить кубик.</p>
       </EditorPanel>
     </AppModalFrame>
+
+    <ItemTooltip
+      v-if="tooltip.visible"
+      :title="tooltip.title"
+      :desc="tooltip.desc"
+      :x="tooltip.x"
+      :top="tooltip.top"
+      :bottom="tooltip.bottom"
+    />
   </div>
 </template>
 
@@ -88,6 +98,7 @@ import AppModalFrame from '@/shared/ui/AppModalFrame'
 import BlockStatesPickerEditor from '@/features/character-editor/blocks/generic/components/BlockStatesPickerEditor'
 import DndExhaustionEditor from '@/features/character-editor/blocks/dnd/components/DndExhaustionEditor'
 import EditorPanel from '@/features/character-editor/components/EditorPanel'
+import ItemTooltip from '@/features/character-editor/components/ItemTooltip'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionMenu from '@/shared/ui/RowActionMenu'
 import SvgIcon from '@/shared/ui/SvgIcon'
@@ -103,6 +114,7 @@ const emit = defineEmits(['update:value'])
 const charCtx = inject('charCtx', { ownerMode: true })
 const suggestStore = useSuggestStore()
 const editorKind = ref(null)
+const tooltip = ref({ visible: false, title: '', desc: '', x: 0, top: null, bottom: null })
 
 const ids = computed(() => ({
   states: props.block.content?.states_id || 'states',
@@ -126,7 +138,24 @@ onMounted(() => {
 function updateValue(id, value) {
   emit('update:value', id, value)
 }
+function showStatusTooltip(event, item) {
+  if (!item.desc) return
+  const rect = event.currentTarget.getBoundingClientRect()
+  const above = window.innerHeight - rect.bottom < 180
+  tooltip.value = {
+    visible: true,
+    title: item.value,
+    desc: item.desc,
+    x: rect.left + rect.width / 2 - 180,
+    top: above ? null : rect.bottom + 8,
+    bottom: above ? window.innerHeight - rect.top + 8 : null,
+  }
+}
+function hideStatusTooltip() {
+  tooltip.value.visible = false
+}
 function openEditor(kind, closeMenu) {
+  hideStatusTooltip()
   closeMenu()
   editorKind.value = kind
 }
@@ -180,14 +209,12 @@ function setInspiration(value) {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
+  width: 30px;
+  height: 30px;
   flex: 0 0 auto;
-  border-radius: 6px;
-  background: color-mix(in srgb, var(--status-color) 9%, transparent);
 }
-.dmsm-status-icon { width: 22px; height: 22px; display: inline-flex; }
-.dmsm-status-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--status-color); }
+.dmsm-status-icon { width: 28px; height: 28px; display: inline-flex; }
+.dmsm-status-dot { width: 11px; height: 11px; border-radius: 50%; background: var(--status-color); }
 .dmsm-badge {
   display: inline-flex;
   align-items: center;

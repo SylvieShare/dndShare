@@ -63,7 +63,8 @@ The compact mobile strip keeps HP at its intrinsic number width and never lets
 the HP numbers shrink. Its right side contains a fixed **Статусы** action
 button with editors for conditions, exhaustion and heroic inspiration. Active
 condition icons, a non-zero exhaustion level and active inspiration stay visible
-in a horizontally scrollable summary; empty and zero values render no placeholder.
+in a horizontally scrollable summary; the larger condition icons are frameless
+and show the condition description on hover. Empty and zero values render no placeholder.
 Heroic inspiration is stored as the boolean `values.inspiration`.
 
 ## Shared UI requirements
