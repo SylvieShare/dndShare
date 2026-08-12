@@ -124,6 +124,13 @@ function emitVar(patch) {
   min-width: 0;
   box-sizing: border-box;
   gap: 0;
+  padding: 8px 12px 12px;
+  border-radius: calc(var(--r-lg) + 4px);
+  background: color-mix(in srgb, var(--surface) 34%, var(--bg));
+}
+
+.inner-tabs :deep(.sliding-tabs) {
+  padding-inline: 12px;
 }
 
 /* Transparent content stage: each pane owns its semantic surfaces. Height tracks the active pane
@@ -134,7 +141,7 @@ function emitVar(patch) {
   flex-direction: column;
   flex: 0 0 auto;
   overflow: hidden;
-  padding-top: 12px;
+  padding-top: 10px;
 }
 
 /* All visited panes stay mounted; the active one is in flow (defines height, so
@@ -149,7 +156,7 @@ function emitVar(patch) {
 
 .inner-tab-pane:not(.inner-tab-pane--active) {
   position: absolute;
-  inset: 12px 0 0;
+  inset: 10px 0 0;
   overflow: hidden;
 }
 
