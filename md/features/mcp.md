@@ -54,6 +54,11 @@ Lifecycle tools:
 - `error_report_resolve`;
 - `error_report_screenshot`.
 
+The scheduled run uses `error_reports_list(compact=true)` after acquiring the
+lease. This projection preserves diagnostic evidence and conversation while
+removing queue fields whose values are guaranteed by the actionable-list
+filter; full list payloads remain available to other MCP clients.
+
 Automation first acquires the singleton lock, then claims rows. Mutating a
 claimed report requires the exact `leaseId` returned by the lock/claim flow.
 `leaseId` is mandatory for resolve, question and serious-change request;

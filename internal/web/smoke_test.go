@@ -71,6 +71,10 @@ func TestMCPErrorReportListSupportsCompactProbe(t *testing.T) {
 		if summaryOnly["type"] != "boolean" {
 			t.Fatalf("summaryOnly must be a boolean property: %#v", summaryOnly)
 		}
+		compact, _ := properties["compact"].(map[string]any)
+		if compact["type"] != "boolean" {
+			t.Fatalf("compact must be a boolean property: %#v", compact)
+		}
 		return
 	}
 	t.Fatal("error_reports_list definition not found")

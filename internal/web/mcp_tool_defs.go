@@ -53,11 +53,12 @@ func mcpToolDefs() []map[string]any {
 				"limit": intP("Max rows, 1..100 (default 20)"),
 			}, "q")),
 		tool("error_reports_list",
-			"List actionable open admin-approved page error reports, newest first. Finished/unapproved reports, unanswered AI questions, and serious changes awaiting ADMIN approval are not exposed. A report becomes visible again after an answer or serious-change approval. Use summaryOnly=true with limit=1 for the pre-lock empty-queue probe; it returns only hasReports and avoids loading report payloads into model context. The normal response includes full diagnostic metadata.",
+			"List actionable open admin-approved page error reports, newest first. Finished/unapproved reports, unanswered AI questions, and serious changes awaiting ADMIN approval are not exposed. A report becomes visible again after an answer or serious-change approval. Use summaryOnly=true with limit=1 for the pre-lock empty-queue probe. Scheduled automation should use compact=true for the post-lock batch; it preserves diagnostic evidence while omitting fixed queue/workflow fields.",
 			schema(map[string]any{
 				"limit":       intP("Max rows, 1..500 (default 100)"),
 				"offset":      intP("Offset for pagination (default 0)"),
 				"summaryOnly": boolP("Return only {hasReports}; use with limit=1 before acquiring the automation lease"),
+				"compact":     boolP("Return the diagnostic projection used by automation without redundant queue/workflow fields"),
 			})),
 		tool("error_report_lock_acquire",
 			"Atomically acquire the shared error-report automation lease before reading or changing reports. If acquired is false, another run is active and this run must stop. Returns a short-lived opaque leaseId handle; release it in a final cleanup step. Requires MCP write operations to be enabled.",

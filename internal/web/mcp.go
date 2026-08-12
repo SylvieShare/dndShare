@@ -281,6 +281,10 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 		if err != nil {
 			return nil, err
 		}
+		compact, err := argBoolDefault(args, "compact", false)
+		if err != nil {
+			return nil, err
+		}
 		limit, err := argIntDefault(args, "limit", 100)
 		if err != nil {
 			return nil, err
@@ -299,6 +303,9 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 		reports, err := s.store.ListApprovedErrorReports(ctx, coerceIn(limit, 1, 500), coerceAtLeast(offset, 0))
 		if err != nil {
 			return nil, err
+		}
+		if compact {
+			return compactErrorReports(reports), nil
 		}
 		return reports, nil
 

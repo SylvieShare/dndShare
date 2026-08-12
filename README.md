@@ -67,6 +67,7 @@ internal/assets     go:embed собранного frontend (dist)
 frontend            Vue 3 application
 md                  актуальная project wiki (as built)
 deploy              сборка и deploy на VM через systemd/Lockbox
+scripts             исполняемые project guardrails для автоматизированных агентов
 ```
 
 ## Ключевые правила backend

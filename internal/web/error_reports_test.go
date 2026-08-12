@@ -5,6 +5,9 @@ import (
 	"encoding/json"
 	"strings"
 	"testing"
+	"time"
+
+	"dndshare/internal/store"
 )
 
 func TestErrorReportLeaseID(t *testing.T) {
@@ -69,6 +72,49 @@ func TestErrorReportListProbeOnlyExposesQueuePresence(t *testing.T) {
 	}
 	if string(raw) != `{"hasReports":true}` {
 		t.Fatalf("unexpected probe payload: %s", raw)
+	}
+}
+
+func TestCompactErrorReportsPreserveEvidenceAndOmitWorkflowFields(t *testing.T) {
+	title := "Не виден акцент"
+	login := "tester"
+	source := []store.ErrorReport{{
+		ID:                    84,
+		Title:                 &title,
+		Description:           "Кубик выглядит серым",
+		PageURL:               "/character/1",
+		Element:               json.RawMessage(`{"selector":".dice"}`),
+		UserLogin:             &login,
+		Approved:              true,
+		Status:                store.ErrorReportStatusOpen,
+		HasScreenshot:         true,
+		HasViewportScreenshot: false,
+		Messages:              []store.ErrorReportMessage{},
+		CreatedAt:             time.Unix(1, 0).UTC(),
+	}}
+	reports := compactErrorReports(source)
+
+	raw, err := json.Marshal(reports)
+	if err != nil {
+		t.Fatalf("marshal compact reports: %v", err)
+	}
+	value := string(raw)
+	for _, expected := range []string{`"id":84`, `"title":"Не виден акцент"`, `"description":"Кубик выглядит серым"`, `"pageUrl":"/character/1"`, `"element":{"selector":".dice"}`, `"userLogin":"tester"`, `"hasScreenshot":true`, `"messages":[]`} {
+		if !strings.Contains(value, expected) {
+			t.Fatalf("compact evidence %s missing from %s", expected, value)
+		}
+	}
+	for _, omitted := range []string{`"approved"`, `"status"`, `"processingRunId"`, `"resolution"`, `"resolvedCommitSha"`, `"waitingForAnswer"`} {
+		if strings.Contains(value, omitted) {
+			t.Fatalf("workflow field %s leaked into %s", omitted, value)
+		}
+	}
+	full, err := json.Marshal(source)
+	if err != nil {
+		t.Fatalf("marshal full reports: %v", err)
+	}
+	if len(raw) >= len(full) {
+		t.Fatalf("compact payload must be smaller: compact=%d full=%d", len(raw), len(full))
 	}
 }
 
