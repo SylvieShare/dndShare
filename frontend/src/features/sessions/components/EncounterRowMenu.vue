@@ -1,5 +1,6 @@
 <template>
-  <RowActionMenu class="enc-row-menu">
+  <div class="enc-row-menu">
+  <RowActionMenu>
     <template #default="{ close }">
       <button
         v-if="statesBlock"
@@ -52,6 +53,7 @@
       >Удалить</button>
     </template>
   </RowActionMenu>
+  </div>
 </template>
 
 <script setup>

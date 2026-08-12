@@ -37,11 +37,12 @@ the rail. Every participant trigger fills the rail width. A dashed `+` action
 beside the `ИГРОКИ` heading opens character creation and invite code/link copy
 actions; the rail has no separate invitation tile.
 
-The desktop session toolbar keeps the editable session name and current campaign
-location in the main row. The location is written as
-`Арка <roman> › Глава <number> <name>` and opens the chapter map. For the DM, a
-right-aligned three-bar action menu owns session status changes; non-DM
-participants do not receive the mutation menu.
+The session page is a campaign workspace rather than a stack of content tabs.
+The chapter canvas fills all available width below `AppHeader`; the participant
+rail floats above its left edge and the dice/music tiles float above its right
+edge. CSS safe-area variables keep focus, zoom and newly created nodes in the
+uncovered part of the canvas. The right rail disappears first on narrow screens,
+then the participant rail.
 
 ## Chapters and scenes
 
@@ -58,13 +59,21 @@ set is `draft`, `planned`, `ready`, `available`, `in_progress`, `paused`,
 current promotes it to `in_progress`; only one chapter in the session is
 current.
 
-The `Главы` tab is the default session workspace. `ChapterGraphToolbar` is the
-only backed tile in that tab; `ChapterGraphCanvas` is transparent, supports
+`ChapterGraphToolbar` is the one backed command bar in the workspace. It combines
+the editable session name/status, arc switcher and ordering, chapter creation,
+combat launcher, current-chapter focus and zoom. There is no second local tab
+switcher or session title bar. `ChapterGraphCanvas` is transparent, supports
 pan/zoom and stores the viewport per arc in local storage. Nodes can be dragged.
-A regular node click opens its action popover: make current, change status,
-edit, start a transition, open scenes, move to another arc or delete. Moving a
-node to another arc removes its old transitions after confirmation because a
-transition cannot cross arc boundaries.
+A regular node click opens its action popover: open the chapter scenarios, make
+current, change status, edit, start a transition, move to another arc or delete.
+Moving a node to another arc removes its old transitions after confirmation
+because a transition cannot cross arc boundaries.
+
+The chapter illustration covers the complete node. Number, title and optional
+scene count sit on a blurred translucent overlay above the image; lifecycle and
+current markers remain at the top. `sceneCount` is derived by the graph read API,
+not stored on `session_chapter`, and is updated optimistically when contextual
+scene CRUD changes the count.
 
 Chapter transitions are directed edges inside one arc. They may have a short
 optional label; clicking either the curve or label opens edit/reverse/delete
@@ -77,9 +86,14 @@ cave, ruins, castle, tavern, dungeon, mountains and coast. A DM may instead
 upload an image through the normal storage image endpoint and adjust its focal
 point. A chapter stores exactly one image source.
 
-Scenes belong to chapters and contain ordered scene items. `SceneTab.vue`
-switches arc first and then chapter; scene CRUD remains in
-`session_scenes.go`.
+Scenes belong to chapters and contain ordered scene items. They open as a
+fullscreen contextual workspace from the chapter action menu; in that mode
+`SceneTab.vue` hides redundant arc/chapter selectors and restores the last scene
+or opens the first scene on initial entry. The same component still
+supports the full arc-first/chapter-second selector contract when used outside
+that context. Combat likewise opens from the command bar in a fullscreen
+`AppModalFrame`, keeping the campaign canvas and its viewport intact underneath.
+Scene CRUD remains in `session_scenes.go`.
 
 `SceneTab.vue` uses project standards:
 

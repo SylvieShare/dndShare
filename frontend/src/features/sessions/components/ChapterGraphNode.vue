@@ -17,7 +17,10 @@
       <span class="chapter-status" :class="`chapter-status--${status.tone}`">{{ status.label }}</span>
     </div>
     <div class="chapter-node-copy">
-      <span class="chapter-node-number">Глава {{ chapter.number }}</span>
+      <div class="chapter-node-meta">
+        <span class="chapter-node-number">Глава {{ chapter.number }}</span>
+        <span v-if="chapter.sceneCount" class="chapter-node-scenes">{{ sceneLabel }}</span>
+      </div>
       <span class="chapter-node-name">{{ chapter.name }}</span>
     </div>
     <button
@@ -54,6 +57,14 @@ const nodeStyle = computed(() => ({
 const imageStyle = computed(() => ({
   objectPosition: `${props.chapter.imageFocalX * 100}% ${props.chapter.imageFocalY * 100}%`,
 }))
+const sceneLabel = computed(() => {
+  const count = props.chapter.sceneCount
+  const tail = count % 100
+  const word = tail >= 11 && tail <= 14
+    ? 'сцен'
+    : count % 10 === 1 ? 'сцена' : count % 10 >= 2 && count % 10 <= 4 ? 'сцены' : 'сцен'
+  return `${count} ${word}`
+})
 </script>
 
 <style scoped>
@@ -66,7 +77,7 @@ const imageStyle = computed(() => ({
   overflow: visible;
   border: 1px solid var(--border-strong);
   border-radius: 13px;
-  background: var(--surface);
+  background: var(--surface-raised);
   box-shadow: var(--shadow-lg);
   cursor: grab;
   user-select: none;
@@ -85,10 +96,10 @@ const imageStyle = computed(() => ({
 .chapter-node--completed { filter: saturate(0.72); }
 
 .chapter-node-image {
-  position: relative;
-  height: 102px;
+  position: absolute;
+  inset: 0;
   overflow: hidden;
-  border-radius: 12px 12px 0 0;
+  border-radius: 12px;
   background: var(--surface-raised);
 }
 
@@ -107,8 +118,10 @@ const imageStyle = computed(() => ({
 
 .chapter-node-shade {
   position: absolute;
-  inset: 42% 0 0;
-  background: linear-gradient(transparent, color-mix(in srgb, var(--bg) 90%, transparent));
+  inset: 0;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--bg) 38%, transparent) 0%, transparent 38%),
+    linear-gradient(180deg, transparent 42%, color-mix(in srgb, var(--bg) 88%, transparent) 100%);
 }
 
 .chapter-current-mark,
@@ -144,21 +157,47 @@ const imageStyle = computed(() => ({
 .chapter-status--violet { color: var(--accent-hover); }
 
 .chapter-node-copy {
-  height: 54px;
+  position: absolute;
+  z-index: 2;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  min-height: 62px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 2px;
-  padding: 7px 12px 8px;
+  gap: 3px;
+  overflow: hidden;
+  padding: 9px 12px 10px;
+  border-top: 1px solid color-mix(in srgb, var(--text-1) 13%, transparent);
+  border-radius: 0 0 12px 12px;
+  background: color-mix(in srgb, var(--bg) 58%, transparent);
+  backdrop-filter: blur(12px) saturate(1.15);
+  -webkit-backdrop-filter: blur(12px) saturate(1.15);
+}
+
+.chapter-node-meta {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
 }
 
 .chapter-node-number {
-  color: var(--accent);
+  color: var(--accent-soft);
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+}
+
+.chapter-node-scenes {
+  flex: none;
+  color: color-mix(in srgb, var(--text-1) 68%, transparent);
+  font-size: 9px;
+  font-weight: 700;
 }
 
 .chapter-node-name {
@@ -169,6 +208,7 @@ const imageStyle = computed(() => ({
   font-weight: 700;
   line-height: 1.2;
   text-overflow: ellipsis;
+  text-shadow: 0 1px 8px color-mix(in srgb, var(--bg) 75%, transparent);
   white-space: nowrap;
 }
 

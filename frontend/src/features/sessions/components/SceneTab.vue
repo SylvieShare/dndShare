@@ -1,7 +1,7 @@
 <template>
   <div class="scene-tab">
     <div class="scene-head">
-      <div v-if="arcs.length" class="scene-arcs">
+      <div v-if="!contextual && arcs.length" class="scene-arcs">
         <span class="scene-head-label">АРКА</span>
         <button
           v-for="arc in arcs"
@@ -15,7 +15,7 @@
           {{ arc.name }}
         </button>
       </div>
-      <div class="scene-chapters">
+      <div v-if="!contextual" class="scene-chapters">
         <span class="scene-head-label">ГЛАВА</span>
         <button
           v-for="ch in arcChapters"
@@ -217,7 +217,9 @@ const props = defineProps({
   currentChapterId: { type: [Number, String], default: null },
   requestedChapterId: { type: [Number, String], default: null },
   isDm: { type: Boolean, default: false },
+  contextual: { type: Boolean, default: false },
 })
+const emit = defineEmits(['scene-count'])
 
 const initialChapter = props.chapters.find(chapter => chapter.id === props.requestedChapterId)
   ?? props.chapters.find(chapter => chapter.id === props.currentChapterId)
@@ -318,9 +320,11 @@ async function loadScenes(chapterId) {
     const res = await listScenes(props.sessionUuid, chapterId)
     scenes.value = res?.scenes || []
     chapterSceneCount.value = { ...chapterSceneCount.value, [chapterId]: scenes.value.length }
+    emit('scene-count', chapterId, scenes.value.length)
     const lastId = readLastSceneId(chapterId)
     const restore = lastId != null ? scenes.value.find(s => s.id === lastId) : null
-    if (restore) await selectScene(restore.id)
+    const preferred = restore ?? (props.contextual ? scenes.value[0] : null)
+    if (preferred) await selectScene(preferred.id)
   } finally {
     scenesLoading.value = false
   }
@@ -388,6 +392,7 @@ async function confirmCreate(value) {
     const scene = await apiCreateScene(props.sessionUuid, activeChapterId.value, name)
     scenes.value = [...scenes.value, scene]
     chapterSceneCount.value = { ...chapterSceneCount.value, [activeChapterId.value]: scenes.value.length }
+    emit('scene-count', activeChapterId.value, scenes.value.length)
     createModalOpen.value = false
     createName.value = ''
     search.value = ''
@@ -431,6 +436,7 @@ async function performDeleteScene() {
     scenes.value = scenes.value.filter(s => s.id !== sceneId)
     if (activeChapterId.value != null) {
       chapterSceneCount.value = { ...chapterSceneCount.value, [activeChapterId.value]: scenes.value.length }
+      emit('scene-count', activeChapterId.value, scenes.value.length)
       writeLastSceneId(activeChapterId.value, null)
     }
     currentScene.value = null

@@ -1,5 +1,23 @@
 <template>
   <BaseTile class="chapter-toolbar">
+    <div v-if="session" class="chapter-session">
+      <button
+        type="button"
+        class="chapter-session-title"
+        :disabled="!isDm"
+        :title="isDm ? 'Редактировать сессию' : session.name"
+        @click="$emit('edit-session')"
+      >{{ session.name }}</button>
+      <SessionStatusMenu
+        v-if="isDm"
+        :session="session"
+        :session-uuid="sessionUuid"
+        @status-change="$emit('status-change', $event)"
+      />
+    </div>
+
+    <span v-if="session" class="chapter-toolbar-rule chapter-toolbar-rule--session" />
+
     <div class="chapter-toolbar-main">
       <span class="chapter-toolbar-label">АРКА</span>
       <button ref="arcTrigger" type="button" class="chapter-arc-trigger" @click="arcOpen = !arcOpen">
@@ -43,7 +61,15 @@
     </div>
 
     <div class="chapter-toolbar-view">
-      <button type="button" class="chapter-tool-btn" :disabled="!currentArc" @click="$emit('focus-current')">К текущей главе</button>
+      <button type="button" class="chapter-tool-btn chapter-tool-btn--combat" @click="$emit('open-combat')">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M3 2l7.5 7.5M11 2L3.5 9.5M2 11l1-1 1 1-1 1-1-1zm8-8 1-1 1 1-1 1-1-1z" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Бой
+      </button>
+      <button type="button" class="chapter-tool-btn" :disabled="!currentArc" @click="$emit('focus-current')">
+        {{ currentChapter ? `Глава ${currentChapter.number}` : 'Текущая глава' }}
+      </button>
       <div class="chapter-zoom">
         <button type="button" aria-label="Уменьшить" @click="$emit('zoom', 0.84)">−</button>
         <span>{{ Math.round(zoom * 100) }}%</span>
@@ -57,17 +83,22 @@
 import { ref } from 'vue'
 import BasePopover from '@/shared/ui/BasePopover.vue'
 import BaseTile from '@/shared/ui/BaseTile.vue'
+import SessionStatusMenu from '@/features/sessions/components/SessionStatusMenu.vue'
 import { romanNumeral } from '@/features/sessions/lib/chapterGraph'
 
 defineProps({
   arcs: { type: Array, default: () => [] },
   selectedArc: { type: Object, default: null },
   currentArc: { type: Object, default: null },
+  currentChapter: { type: Object, default: null },
+  session: { type: Object, default: null },
+  sessionUuid: { type: String, required: true },
+  isDm: { type: Boolean, default: false },
   zoom: { type: Number, default: 1 },
 })
 const emit = defineEmits([
   'select-arc', 'create-arc', 'edit-arc', 'delete-arc', 'move-arc',
-  'create-chapter', 'focus-current', 'zoom',
+  'create-chapter', 'focus-current', 'zoom', 'edit-session', 'status-change', 'open-combat',
 ])
 const arcTrigger = ref(null)
 const arcOpen = ref(false)
@@ -91,6 +122,12 @@ function pickArc(id) {
 .chapter-toolbar-main,
 .chapter-toolbar-view { display: flex; align-items: center; gap: 7px; min-width: 0; }
 .chapter-toolbar-view { margin-left: auto; }
+.chapter-session { min-width: 0; max-width: 240px; display: flex; align-items: center; gap: 4px; }
+.chapter-session-title { min-width: 0; overflow: hidden; padding: 4px 6px; border: 0; border-radius: 6px; background: none; color: var(--text-1); font: inherit; font-family: var(--font-display); font-size: 18px; font-weight: 650; text-align: left; text-overflow: ellipsis; white-space: nowrap; }
+.chapter-session-title:not(:disabled) { cursor: pointer; }
+.chapter-session-title:not(:disabled):hover { background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); }
+.chapter-session-title:disabled { opacity: 1; }
+.chapter-session :deep(.session-status-menu) { margin-left: 0; }
 .chapter-toolbar-label { color: var(--text-muted); font-size: 10px; font-weight: 800; letter-spacing: 0.1em; }
 .chapter-toolbar-rule { width: 1px; height: 22px; margin: 0 3px; background: var(--border-strong); }
 
@@ -117,6 +154,7 @@ function pickArc(id) {
 .chapter-tool-btn--icon { width: 31px; height: 31px; justify-content: center; padding: 0; }
 .chapter-tool-btn--danger:hover { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 45%, transparent); }
 .chapter-tool-btn--primary { border-color: color-mix(in srgb, var(--accent) 45%, transparent); background: color-mix(in srgb, var(--accent) 17%, transparent); color: var(--accent-soft); font-weight: 700; }
+.chapter-tool-btn--combat { border-color: color-mix(in srgb, var(--danger) 38%, transparent); color: color-mix(in srgb, var(--danger) 84%, var(--text-1)); font-weight: 700; }
 
 .chapter-zoom { gap: 0; overflow: hidden; }
 .chapter-zoom button { width: 29px; height: 29px; border: 0; background: none; color: var(--text-2); cursor: pointer; }
@@ -140,6 +178,7 @@ function pickArc(id) {
   .chapter-toolbar { align-items: stretch; flex-direction: column; }
   .chapter-toolbar-view { width: 100%; margin-left: 0; }
   .chapter-arc-trigger { min-width: 0; flex: 1; }
+  .chapter-session { max-width: none; }
   .chapter-toolbar-label, .chapter-toolbar-rule, .chapter-tool-btn--danger { display: none; }
 }
 </style>

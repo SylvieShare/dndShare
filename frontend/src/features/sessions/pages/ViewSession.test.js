@@ -22,10 +22,24 @@ describe('ViewSession participant rail', () => {
     expect(source).not.toContain('invite-section')
   })
 
-  it('keeps both combat and chapter canvases transparent without changing the scene tile', () => {
-    expect(source).toContain("'tab-content--canvas': activeTab === 'combat' || activeTab === 'chapters'")
-    expect(source).toContain('class="tab-content"')
-    expect(styles).toContain('.tab-content.tab-content--canvas {\n  background: transparent;\n  border: 0;\n  box-shadow: none;\n}')
+  it('uses the chapter canvas as the full workspace with tools floating above it', () => {
+    expect(source).toContain('class="campaign-workspace"')
+    expect(source).toContain('class="campaign-graph"')
+    expect(source).toContain('workspace-dock workspace-dock--left')
+    expect(source).toContain('workspace-dock workspace-dock--right')
+    expect(styles).toContain('.campaign-workspace {')
+    expect(styles).toContain('position: absolute;')
+    expect(styles).toContain('--chapter-safe-left: 276px;')
+    expect(source).not.toContain('<SlidingTabs')
+    expect(source).not.toContain('<SessionTopBar')
+  })
+
+  it('opens combat and chapter scenes as fullscreen contextual workspaces', () => {
+    expect(source).toContain('v-if="combatOpen"')
+    expect(source).toContain('v-if="sceneWorkspaceChapter"')
+    expect(source.match(/fullscreen/g)?.length).toBeGreaterThanOrEqual(2)
+    expect(source).toContain('<SceneTab\n          contextual')
+    expect(source).toContain('@scene-count="chapterGraph.setSceneCount"')
   })
 
   it('uses per-participant actions without bulk selection controls', () => {

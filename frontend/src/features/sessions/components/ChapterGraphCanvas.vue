@@ -114,6 +114,16 @@ function viewKey() {
   return `chapter-graph:view:${props.sessionUuid}:${props.arcId}`
 }
 
+function safeFrame() {
+  const rect = viewport.value?.getBoundingClientRect()
+  if (!rect) return null
+  const style = getComputedStyle(viewport.value)
+  const left = Number.parseFloat(style.getPropertyValue('--chapter-safe-left')) || 0
+  const right = Number.parseFloat(style.getPropertyValue('--chapter-safe-right')) || 0
+  const usableWidth = Math.max(0, rect.width - left - right)
+  return { rect, left, right, centerX: left + usableWidth / 2, centerY: rect.height / 2 }
+}
+
 function loadView() {
   try {
     const saved = JSON.parse(localStorage.getItem(viewKey()) || 'null')
@@ -124,7 +134,8 @@ function loadView() {
       return
     }
   } catch { /* ignore */ }
-  pan.value = { x: 80, y: 80 }
+  const frame = safeFrame()
+  pan.value = { x: (frame?.left ?? 0) + 48, y: 80 }
   zoom.value = 1
   announceView()
 }
@@ -224,32 +235,32 @@ function onWheel(event) {
 }
 
 function zoomBy(factor) {
-  const rect = viewport.value?.getBoundingClientRect()
-  if (!rect) return
-  const center = { clientX: rect.left + rect.width / 2, clientY: rect.top + rect.height / 2 }
+  const frame = safeFrame()
+  if (!frame) return
+  const center = { clientX: frame.rect.left + frame.centerX, clientY: frame.rect.top + frame.centerY }
   const before = pointInWorld(center)
   const next = Math.max(0.35, Math.min(1.8, zoom.value * factor))
   zoom.value = next
-  pan.value = { x: rect.width / 2 - before.x * next, y: rect.height / 2 - before.y * next }
+  pan.value = { x: frame.centerX - before.x * next, y: frame.centerY - before.y * next }
   saveView()
 }
 
 function focusChapter(chapter) {
-  const rect = viewport.value?.getBoundingClientRect()
-  if (!rect || !chapter) return
+  const frame = safeFrame()
+  if (!frame || !chapter) return
   pan.value = {
-    x: rect.width / 2 - (chapter.positionX + CHAPTER_NODE_WIDTH / 2) * zoom.value,
-    y: rect.height / 2 - (chapter.positionY + CHAPTER_NODE_HEIGHT / 2) * zoom.value,
+    x: frame.centerX - (chapter.positionX + CHAPTER_NODE_WIDTH / 2) * zoom.value,
+    y: frame.centerY - (chapter.positionY + CHAPTER_NODE_HEIGHT / 2) * zoom.value,
   }
   saveView()
 }
 
 function viewportCenter() {
-  const rect = viewport.value?.getBoundingClientRect()
-  if (!rect) return { x: 80, y: 80 }
+  const frame = safeFrame()
+  if (!frame) return { x: 80, y: 80 }
   return {
-    x: (rect.width / 2 - pan.value.x) / zoom.value - CHAPTER_NODE_WIDTH / 2,
-    y: (rect.height / 2 - pan.value.y) / zoom.value - CHAPTER_NODE_HEIGHT / 2,
+    x: (frame.centerX - pan.value.x) / zoom.value - CHAPTER_NODE_WIDTH / 2,
+    y: (frame.centerY - pan.value.y) / zoom.value - CHAPTER_NODE_HEIGHT / 2,
   }
 }
 
@@ -342,7 +353,7 @@ defineExpose({ zoomBy, focusChapter, viewportCenter })
 .chapter-canvas-empty {
   position: absolute;
   top: 50%;
-  left: 50%;
+  left: calc(var(--chapter-safe-left, 0px) + (100% - var(--chapter-safe-left, 0px) - var(--chapter-safe-right, 0px)) / 2);
   width: min(360px, calc(100% - 32px));
   display: flex;
   flex-direction: column;

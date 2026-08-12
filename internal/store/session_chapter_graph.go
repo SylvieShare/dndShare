@@ -35,6 +35,7 @@ type SessionChapter struct {
 	ImageFocalY    float64 `json:"imageFocalY"`
 	PositionX      float64 `json:"positionX"`
 	PositionY      float64 `json:"positionY"`
+	SceneCount     int64   `json:"sceneCount"`
 }
 
 type SessionChapterEdge struct {
@@ -69,7 +70,8 @@ const chapterSelect = `
 	SELECT ch.id, ch.session_id, ch.arc_id, arc."order", arc.name,
 	       ch.number, ch.name, ch.description, ch.status, ch.image_preset_key,
 	       ch.custom_image_id, img.url, ch.image_focal_x, ch.image_focal_y,
-	       ch.position_x, ch.position_y
+	       ch.position_x, ch.position_y,
+	       (SELECT count(*) FROM dndshare.session_scene scene WHERE scene.chapter_id = ch.id)
 	FROM dndshare.session_chapter ch
 	JOIN dndshare.session_arc arc ON arc.id = ch.arc_id
 	LEFT JOIN dndshare.storage_image img ON img.id = ch.custom_image_id AND img.deleted = false`
@@ -81,6 +83,7 @@ func scanChapter(row pgx.Row) (SessionChapter, error) {
 		&chapter.Number, &chapter.Name, &chapter.Description, &chapter.Status,
 		&chapter.ImagePresetKey, &chapter.CustomImageID, &chapter.CustomImageURL,
 		&chapter.ImageFocalX, &chapter.ImageFocalY, &chapter.PositionX, &chapter.PositionY,
+		&chapter.SceneCount,
 	)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return SessionChapter{}, ErrNotFound

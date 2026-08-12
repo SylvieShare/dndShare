@@ -123,6 +123,12 @@ export function useChapterGraph({ sessionUuid, session }) {
       : chapter)
   }
 
+  function setSceneCount(chapterId, count) {
+    chapters.value = chapters.value.map(chapter => chapter.id === chapterId
+      ? { ...chapter, sceneCount: count }
+      : chapter)
+  }
+
   async function savePosition(chapterId, x, y) {
     setLocalPosition(chapterId, x, y)
     await apiMovePosition(sessionUuid, chapterId, x, y)
@@ -180,7 +186,7 @@ export function useChapterGraph({ sessionUuid, session }) {
     arcs, chapters, edges, loading, loaded, error, selectedArcId,
     selectedArc, currentArc, currentChapter, visibleChapters, visibleEdges,
     load, selectArc, createArc, updateArc, reorderArcs, deleteArc,
-    createChapter, updateChapter, setLocalPosition, savePosition, moveChapterToArc,
+    createChapter, updateChapter, setLocalPosition, setSceneCount, savePosition, moveChapterToArc,
     deleteChapter, makeCurrent, createEdge, updateEdge, deleteEdge, focusCurrent,
   }
 }

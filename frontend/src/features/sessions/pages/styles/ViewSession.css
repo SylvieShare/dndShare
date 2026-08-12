@@ -6,26 +6,48 @@
   background: var(--app-bg);
 }
 
-.layout {
-  display: flex;
-  gap: 25px;
+.campaign-workspace {
+  position: relative;
   flex: 1;
   min-height: 0;
   overflow: hidden;
-  width: min(1480px, 100%);
-  margin: 0 auto;
-  padding: 16px;
-  box-sizing: border-box;
+  width: 100%;
 }
 
-.col-left {
-  width: 260px;
-  flex-shrink: 0;
+.campaign-graph {
+  --chapter-safe-left: 276px;
+  --chapter-safe-right: 324px;
+  width: 100%;
+  height: 100%;
+}
+
+.workspace-dock {
+  position: absolute;
+  z-index: 15;
+  top: 70px;
+  bottom: 14px;
   display: flex;
   flex-direction: column;
-  padding: 0;
-  gap: 8px;
+  gap: 12px;
   overflow-y: auto;
+  pointer-events: auto;
+}
+
+.workspace-dock--left {
+  left: 14px;
+  width: 246px;
+}
+
+.workspace-dock--right {
+  right: 14px;
+  width: 294px;
+  gap: 16px;
+}
+
+.workspace-tool-tile {
+  background: color-mix(in srgb, var(--surface) 91%, transparent);
+  backdrop-filter: blur(14px) saturate(1.1);
+  -webkit-backdrop-filter: blur(14px) saturate(1.1);
 }
 
 .col-section-title {
@@ -126,68 +148,6 @@
   padding: 2px;
 }
 
-.main-area {
-  flex: 1;
-  min-width: 0;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
-}
-
-.toolbar-tile {
-  flex-shrink: 0;
-}
-
-.main-row {
-  flex: 1;
-  min-height: 0;
-  display: flex;
-  gap: 25px;
-}
-
-.col-middle {
-  flex: 1;
-  min-width: 0;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.tab-content {
-  flex: 1;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.tab-content.tab-content--canvas {
-  background: transparent;
-  border: 0;
-  box-shadow: none;
-}
-
-.tab-content.tab-content--graph > * {
-  overflow: hidden;
-}
-
-/* The active tab is the scroll container (not this rounded tile) — a rounded
-   scroll container disables backdrop-filter blur on its sticky descendants. */
-.tab-content > * {
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-}
-
-.col-right {
-  width: 300px;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
-  overflow-y: auto;
-}
-
 .side-tile {
   flex-shrink: 0;
 }
@@ -207,17 +167,17 @@
 }
 
 @media (max-width: 900px) {
-  .col-right {
+  .campaign-graph { --chapter-safe-right: 0px; }
+
+  .workspace-dock--right {
     display: none;
   }
 }
 
-@media (max-width: 640px) {
-  .col-left {
-    display: none;
-  }
+@media (max-width: 760px) {
+  .campaign-graph { --chapter-safe-left: 0px; }
 
-  .top-bar {
-    padding: 10px 12px;
+  .workspace-dock--left {
+    display: none;
   }
 }

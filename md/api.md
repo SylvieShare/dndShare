@@ -102,6 +102,8 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
 Arc, chapter and transition mutations are owner-only. Chapter `number` is a
 string. A chapter mutation uses `{arcId,number,name,description,status,
 imagePresetKey,customImageId,imageFocalX,imageFocalY,positionX,positionY}`.
+Every chapter returned by graph/chapter reads also has the derived integer
+`sceneCount`; it is not accepted as mutation input.
 Transitions use `{arcId,fromChapterId,toChapterId,label}` and may only connect
 chapters from the same arc. Reordering arcs accepts `{ids:[...]}` containing
 every arc exactly once; response order becomes the new automatic numbering.

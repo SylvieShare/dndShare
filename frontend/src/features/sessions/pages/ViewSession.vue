@@ -23,8 +23,20 @@
       <div class="loading-placeholder" />
     </template>
 
-    <div v-else-if="session" class="layout">
-      <aside class="col-left">
+    <div v-else-if="session" class="campaign-workspace">
+      <ChapterGraphTab
+        class="campaign-graph"
+        :graph="chapterGraph"
+        :session="session"
+        :session-uuid="sessionUuid"
+        :is-dm="isDm"
+        @open-scenes="openChapterScenes"
+        @open-combat="combatOpen = true"
+        @edit-session="openEdit"
+        @status-change="status => { session = { ...session, status } }"
+      />
+
+      <aside class="workspace-dock workspace-dock--left">
         <div class="col-section-title">
           <span>ИГРОКИ</span>
           <span class="poll-indicator" :class="pollStatus">
@@ -61,67 +73,51 @@
         <div v-if="kickError" class="participant-action-error" role="alert">{{ kickError }}</div>
       </aside>
 
-      <div class="main-area">
-        <BaseTile class="toolbar-tile">
-          <SessionTopBar
-            :session="session"
-            :session-uuid="sessionUuid"
-            :is-dm="isDm"
-            :current-chapter="currentChapter"
-            @edit="openEdit"
-            @status-change="status => { session = { ...session, status } }"
-            @open-chapters="onActivateChapters"
-          />
+      <aside class="workspace-dock workspace-dock--right">
+        <BaseTile class="side-tile workspace-tool-tile">
+          <DicePanel />
         </BaseTile>
+        <BaseTile class="side-tile workspace-tool-tile">
+          <MusicPanel :is-dm="isDm" @open-library="musicLibraryOpen = true" />
+        </BaseTile>
+      </aside>
 
-        <div class="main-row">
-          <div class="col-middle">
-            <SlidingTabs :tabs="tabItems" :model-value="activeTab" @update:model-value="selectTab" />
-            <BaseTile
-              class="tab-content"
-              :class="{
-                'tab-content--canvas': activeTab === 'combat' || activeTab === 'chapters',
-                'tab-content--graph': activeTab === 'chapters',
-              }"
-            >
-              <ChapterGraphTab
-                v-if="tabsLoaded.chapters"
-                v-show="activeTab === 'chapters'"
-                :graph="chapterGraph"
-                :session-uuid="sessionUuid"
-                @open-scenes="openChapterScenes"
-              />
-              <EncounterTab
-                v-if="tabsLoaded.combat"
-                v-show="activeTab === 'combat'"
-                :session-uuid="sessionUuid"
-                :session="session"
-                :participants="participants"
-                :is-dm="isDm"
-              />
-              <SceneTab
-                v-if="tabsLoaded.scene"
-                v-show="activeTab === 'scene'"
-                :session-uuid="sessionUuid"
-                :arcs="arcs"
-                :chapters="chapters"
-                :current-chapter-id="session.currentChapterId"
-                :requested-chapter-id="sceneRequestedChapterId"
-                :is-dm="isDm"
-              />
-            </BaseTile>
-          </div>
+      <AppModalFrame
+        v-if="combatOpen"
+        title="Бой"
+        fullscreen
+        :padded="false"
+        :body-scroll="false"
+        @close="combatOpen = false"
+      >
+        <EncounterTab
+          :session-uuid="sessionUuid"
+          :session="session"
+          :participants="participants"
+          :is-dm="isDm"
+        />
+      </AppModalFrame>
 
-          <aside class="col-right">
-            <BaseTile class="side-tile">
-              <DicePanel />
-            </BaseTile>
-            <BaseTile class="side-tile">
-              <MusicPanel :is-dm="isDm" @open-library="musicLibraryOpen = true" />
-            </BaseTile>
-          </aside>
-        </div>
-      </div>
+      <AppModalFrame
+        v-if="sceneWorkspaceChapter"
+        :title="sceneWorkspaceTitle"
+        subtitle="Сценарии"
+        fullscreen
+        :padded="false"
+        :body-scroll="false"
+        @close="sceneWorkspaceChapterId = null"
+      >
+        <SceneTab
+          contextual
+          :session-uuid="sessionUuid"
+          :arcs="sceneWorkspaceArcs"
+          :chapters="[sceneWorkspaceChapter]"
+          :current-chapter-id="session.currentChapterId"
+          :requested-chapter-id="sceneWorkspaceChapter.id"
+          :is-dm="isDm"
+          @scene-count="chapterGraph.setSceneCount"
+        />
+      </AppModalFrame>
 
       <MusicLibraryModal v-if="musicLibraryOpen" :is-dm="isDm" @close="musicLibraryOpen = false" />
 
@@ -144,7 +140,7 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 import BaseTile from '@/shared/ui/BaseTile.vue'
@@ -152,7 +148,6 @@ import FormActionButtons from '@/shared/ui/form/FormActionButtons'
 import FormField from '@/shared/ui/form/FormField'
 import FormTextInput from '@/shared/ui/form/FormTextInput'
 import FormTextarea from '@/shared/ui/form/FormTextarea'
-import SlidingTabs from '@/shared/ui/SlidingTabs'
 import CharacterCreateModal from '@/features/character-list/components/CharacterCreateModal'
 import CharacterSheetModal from '@/features/sessions/components/CharacterSheetModal.vue'
 import ChapterGraphTab from '@/features/sessions/components/ChapterGraphTab.vue'
@@ -163,7 +158,6 @@ import MusicPanel from '@/features/sessions/components/MusicPanel.vue'
 import RowActionMenu from '@/shared/ui/RowActionMenu.vue'
 import SceneTab from '@/features/sessions/components/SceneTab.vue'
 import SessionParticipantCard from '@/features/sessions/components/SessionParticipantCard'
-import SessionTopBar from '@/features/sessions/components/SessionTopBar.vue'
 import { useParticipantPolling } from '@/features/sessions/composables/useParticipantPolling'
 import { useChapterGraph } from '@/features/sessions/composables/useChapterGraph'
 import { useSessionSelection } from '@/features/sessions/composables/useSessionSelection'
@@ -185,23 +179,6 @@ const uiStore = useUiStore()
 const session = ref(null)
 const participants = ref([])
 const loading = ref(true)
-const activeTab = ref('chapters')
-const tabsLoaded = reactive({ chapters: true, combat: false, scene: false, notes: false })
-const tabItems = [
-  { key: 'chapters', title: 'Главы' },
-  { key: 'combat', title: 'Бой' },
-  { key: 'scene', title: 'Сцена' },
-  { key: 'notes', title: 'Заметки' },
-]
-
-function selectTab(key) {
-  if (key === 'chapters') return onActivateChapters()
-  if (key === 'scene') return onActivateScene()
-  tabsLoaded[key] = true
-  activeTab.value = key
-}
-const initialChapter = ref(null)
-
 const editOpen = ref(false)
 const editName = ref('')
 const editDesc = ref('')
@@ -211,6 +188,7 @@ const accountStore = useAccountStore()
 const musicStore = useMusicStore()
 const templateStore = useTemplateStore()
 const musicLibraryOpen = ref(false)
+const combatOpen = ref(false)
 
 const sheetUuid = ref(null)
 const createOpen = ref(false)
@@ -233,10 +211,12 @@ watch(session, (value) => {
 const chapterGraph = useChapterGraph({ sessionUuid, session })
 const arcs = computed(() => chapterGraph.arcs.value)
 const chapters = computed(() => chapterGraph.chapters.value)
-const currentChapter = computed(() => chapterGraph.loaded.value
-  ? chapterGraph.currentChapter.value
-  : initialChapter.value)
-const sceneRequestedChapterId = ref(null)
+const sceneWorkspaceChapterId = ref(null)
+const sceneWorkspaceChapter = computed(() => chapters.value.find(chapter => chapter.id === sceneWorkspaceChapterId.value) ?? null)
+const sceneWorkspaceArcs = computed(() => arcs.value.filter(arc => arc.id === sceneWorkspaceChapter.value?.arcId))
+const sceneWorkspaceTitle = computed(() => sceneWorkspaceChapter.value
+  ? `Глава ${sceneWorkspaceChapter.value.number} · ${sceneWorkspaceChapter.value.name}`
+  : 'Сценарии главы')
 
 const { pollStatus, pollRunning, startPolling, forgetVersion } =
   useParticipantPolling({ participants })
@@ -272,23 +252,9 @@ async function createChar(payload) {
   }
 }
 
-async function onActivateScene() {
-  activeTab.value = 'scene'
-  tabsLoaded.scene = true
-  if (!chapterGraph.loaded.value) await chapterGraph.load()
-}
-
-async function onActivateChapters() {
-  activeTab.value = 'chapters'
-  tabsLoaded.chapters = true
-  if (!chapterGraph.loaded.value) await chapterGraph.load()
-}
-
 async function openChapterScenes(chapter) {
-  sceneRequestedChapterId.value = null
-  await onActivateScene()
-  await nextTick()
-  sceneRequestedChapterId.value = chapter.id
+  if (!chapterGraph.loaded.value) await chapterGraph.load()
+  sceneWorkspaceChapterId.value = chapter.id
 }
 
 function openEdit() {
@@ -326,7 +292,6 @@ onMounted(() => {
     .then(async res => {
       session.value = res?.session ?? null
       participants.value = res?.participants ?? []
-      initialChapter.value = res?.currentChapter ?? null
       await chapterGraph.load()
       startPolling()
       musicStore.setContext({ uuid: sessionUuid, dm: isDm.value })
@@ -344,11 +309,3 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped src="./styles/ViewSession.css"></style>
-
-<style scoped>
-@media (max-width: 640px) {
-  .toolbar-tile :deep(.session-info) {
-    display: none;
-  }
-}
-</style>
