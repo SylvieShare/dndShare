@@ -14,10 +14,10 @@
           <span v-else class="dmsm-status-dot"></span>
         </span>
         <span v-if="exhaustionLevel > 0" class="dmsm-badge dmsm-badge--exhaustion" :title="`Истощение: ${exhaustionLevel}`">
-          Ист. {{ exhaustionLevel }}
+          Истощение {{ exhaustionLevel }}
         </span>
         <span v-if="inspirationActive" class="dmsm-badge dmsm-badge--inspiration" title="Вдохновение">
-          <span aria-hidden="true">✦</span> Вдохн.
+          <span aria-hidden="true">✦</span> Вдохновение
         </span>
       </div>
     </div>
