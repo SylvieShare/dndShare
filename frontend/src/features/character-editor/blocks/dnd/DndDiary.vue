@@ -1,13 +1,25 @@
 <template>
   <div v-if="sessions.length || ownerMode" class="dd-block">
     <div class="dd-head">
-      <span class="sheet-tile-title">События</span>
-      <button v-if="ownerMode" ref="addBtnEl" class="dd-add" type="button" @click="addSession">
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-          <path d="M12 5v14M5 12h14" />
-        </svg>
-        сессия
-      </button>
+      <SectionLabel v-if="sectionHeading" class="dd-section-label" title="События" divider>
+        <template v-if="ownerMode" #actions>
+          <button ref="addBtnEl" class="dd-add" type="button" @click="addSession">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+            сессия
+          </button>
+        </template>
+      </SectionLabel>
+      <template v-else>
+        <span class="sheet-tile-title">События</span>
+        <button v-if="ownerMode" ref="addBtnEl" class="dd-add" type="button" @click="addSession">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+          сессия
+        </button>
+      </template>
     </div>
 
     <div v-if="displaySessions.length" class="dd-list">
@@ -81,6 +93,7 @@ import DndDiaryEventRow from '@/features/character-editor/blocks/dnd/components/
 import DndDiarySessionCard from '@/features/character-editor/blocks/dnd/components/DndDiarySessionCard.vue'
 import DndDiarySessionModal from '@/features/character-editor/blocks/dnd/components/DndDiarySessionModal.vue'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
+import SectionLabel from '@/shared/ui/SectionLabel'
 import { useMorphOrigin } from '@/features/character-editor/composables/useMorphOrigin'
 import {
   defaultEvent,
@@ -97,6 +110,7 @@ const charCtx = inject('charCtx', () => ({ ownerMode: false }))
 
 const sessions = computed(() => normalizeDiary(props.value))
 const ownerMode = computed(() => !!charCtx.ownerMode)
+const sectionHeading = computed(() => props.block.props?.title_variant === 'divider')
 
 const displaySessions = computed(() =>
   sessions.value.map((session, i) => ({ session, number: i + 1 })).reverse(),
@@ -232,6 +246,11 @@ function closeEditor() {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
+}
+
+.dd-section-label {
+  width: 100%;
+  margin-bottom: 0;
 }
 
 .dd-add {

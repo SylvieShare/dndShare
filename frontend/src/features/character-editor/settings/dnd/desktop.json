@@ -236,7 +236,7 @@
                               "kind": "layout",
                               "type": "column",
                               "props": {
-                                "gap": "0",
+                                "gap": "20px",
                                 "style": {
                                   "padding": "20px"
                                 }
@@ -244,34 +244,64 @@
                               "children": [
                                 {
                                   "kind": "layout",
-                                  "type": "row",
+                                  "type": "column",
                                   "props": {
-                                    "justify-content": "space-between",
-                                    "align-items": "center",
-                                    "gap": "16px",
-                                    "style": {
-                                      "margin-bottom": "16px"
-                                    }
+                                    "gap": "10px",
+                                    "title": "Ресурсы",
+                                    "title_variant": "divider"
                                   },
                                   "children": [
                                     {
-                                      "ref": "counters",
-                                      "kind": "block"
-                                    },
-                                    {
-                                      "ref": "money",
-                                      "kind": "block",
-                                      "title": "Кошелек"
+                                      "kind": "layout",
+                                      "type": "row",
+                                      "props": {
+                                        "justify-content": "space-between",
+                                        "align-items": "center",
+                                        "gap": "16px"
+                                      },
+                                      "children": [
+                                        {
+                                          "ref": "counters",
+                                          "kind": "block"
+                                        },
+                                        {
+                                          "ref": "money",
+                                          "kind": "block",
+                                          "title": "Кошелек"
+                                        }
+                                      ]
                                     }
                                   ]
                                 },
                                 {
-                                  "ref": "potions",
-                                  "kind": "block"
+                                  "kind": "layout",
+                                  "type": "column",
+                                  "props": {
+                                    "gap": "0",
+                                    "title": "Зелья",
+                                    "title_variant": "divider"
+                                  },
+                                  "children": [
+                                    {
+                                      "ref": "potions",
+                                      "kind": "block"
+                                    }
+                                  ]
                                 },
                                 {
-                                  "ref": "items",
-                                  "kind": "block"
+                                  "kind": "layout",
+                                  "type": "column",
+                                  "props": {
+                                    "gap": "0",
+                                    "title": "Инвентарь",
+                                    "title_variant": "divider"
+                                  },
+                                  "children": [
+                                    {
+                                      "ref": "items",
+                                      "kind": "block"
+                                    }
+                                  ]
                                 }
                               ]
                             }
@@ -291,105 +321,149 @@
                                   "kind": "layout",
                                   "type": "column",
                                   "props": {
-                                    "gap": "18px"
+                                    "gap": "20px"
                                   },
                                   "children": [
                                     {
                                       "kind": "layout",
-                                      "type": "row",
+                                      "type": "column",
                                       "props": {
-                                        "gap": "16px"
+                                        "gap": "12px",
+                                        "title": "Основное",
+                                        "title_variant": "divider"
                                       },
                                       "children": [
                                         {
-                                          "ref": "person_origin",
-                                          "kind": "block",
+                                          "kind": "layout",
+                                          "type": "row",
                                           "props": {
-                                            "grow": 1,
-                                            "basis": 0
-                                          }
-                                        },
-                                        {
-                                          "ref": "person_alignment",
-                                          "kind": "block",
-                                          "props": {
-                                            "grow": 1,
-                                            "basis": 0
-                                          }
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "ref": "person_appearance",
-                                      "kind": "block"
-                                    },
-                                    {
-                                      "kind": "layout",
-                                      "type": "grid",
-                                      "props": {
-                                        "gap": "10px",
-                                        "columns": 3
-                                      },
-                                      "children": [
-                                        {
-                                          "ref": "person_height",
-                                          "kind": "block"
-                                        },
-                                        {
-                                          "ref": "person_weight",
-                                          "kind": "block"
-                                        },
-                                        {
-                                          "ref": "person_age",
-                                          "kind": "block"
-                                        },
-                                        {
-                                          "ref": "person_eyes",
-                                          "kind": "block"
-                                        },
-                                        {
-                                          "ref": "person_skin",
-                                          "kind": "block"
-                                        },
-                                        {
-                                          "ref": "person_hair",
-                                          "kind": "block"
+                                            "gap": "16px"
+                                          },
+                                          "children": [
+                                            {
+                                              "ref": "person_origin",
+                                              "kind": "block",
+                                              "props": {
+                                                "grow": 1,
+                                                "basis": 0
+                                              }
+                                            },
+                                            {
+                                              "ref": "person_alignment",
+                                              "kind": "block",
+                                              "props": {
+                                                "grow": 1,
+                                                "basis": 0
+                                              }
+                                            }
+                                          ]
                                         }
                                       ]
                                     },
                                     {
                                       "kind": "layout",
-                                      "type": "grid",
+                                      "type": "column",
+                                      "props": {
+                                        "gap": "12px",
+                                        "title": "Облик",
+                                        "title_variant": "divider"
+                                      },
+                                      "children": [
+                                        {
+                                          "ref": "person_appearance",
+                                          "kind": "block"
+                                        },
+                                        {
+                                          "kind": "layout",
+                                          "type": "grid",
+                                          "props": {
+                                            "gap": "10px",
+                                            "columns": 3
+                                          },
+                                          "children": [
+                                            {
+                                              "ref": "person_height",
+                                              "kind": "block"
+                                            },
+                                            {
+                                              "ref": "person_weight",
+                                              "kind": "block"
+                                            },
+                                            {
+                                              "ref": "person_age",
+                                              "kind": "block"
+                                            },
+                                            {
+                                              "ref": "person_eyes",
+                                              "kind": "block"
+                                            },
+                                            {
+                                              "ref": "person_skin",
+                                              "kind": "block"
+                                            },
+                                            {
+                                              "ref": "person_hair",
+                                              "kind": "block"
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "kind": "layout",
+                                      "type": "column",
+                                      "props": {
+                                        "gap": "12px",
+                                        "title": "Характер",
+                                        "title_variant": "divider"
+                                      },
+                                      "children": [
+                                        {
+                                          "kind": "layout",
+                                          "type": "grid",
+                                          "props": {
+                                            "gap": "14px",
+                                            "columns": 2
+                                          },
+                                          "children": [
+                                            {
+                                              "ref": "person_traits",
+                                              "kind": "block"
+                                            },
+                                            {
+                                              "ref": "person_ideals",
+                                              "kind": "block"
+                                            },
+                                            {
+                                              "ref": "person_bonds",
+                                              "kind": "block"
+                                            },
+                                            {
+                                              "ref": "person_flaws",
+                                              "kind": "block"
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "kind": "layout",
+                                      "type": "column",
                                       "props": {
                                         "gap": "14px",
-                                        "columns": 2
+                                        "title": "История",
+                                        "title_variant": "divider"
                                       },
                                       "children": [
                                         {
-                                          "ref": "person_traits",
+                                          "ref": "person_backstory",
                                           "kind": "block"
                                         },
                                         {
-                                          "ref": "person_ideals",
-                                          "kind": "block"
-                                        },
-                                        {
-                                          "ref": "person_bonds",
-                                          "kind": "block"
-                                        },
-                                        {
-                                          "ref": "person_flaws",
+                                          "ref": "person_allies",
                                           "kind": "block"
                                         }
                                       ]
-                                    },
-                                    {
-                                      "ref": "person_backstory",
-                                      "kind": "block"
-                                    },
-                                    {
-                                      "ref": "person_allies",
-                                      "kind": "block"
                                     }
                                   ]
                                 }
@@ -410,17 +484,24 @@
                               "children": [
                                 {
                                   "ref": "quests",
-                                  "kind": "block"
+                                  "kind": "block",
+                                  "props": {
+                                    "title_variant": "divider"
+                                  }
                                 },
                                 {
                                   "ref": "diary",
-                                  "kind": "block"
+                                  "kind": "block",
+                                  "props": {
+                                    "title_variant": "divider"
+                                  }
                                 },
                                 {
                                   "ref": "notes",
                                   "kind": "block",
                                   "props": {
-                                    "min-width": "0"
+                                    "min-width": "0",
+                                    "title_variant": "divider"
                                   }
                                 }
                               ]

@@ -1,8 +1,15 @@
 <template>
   <div v-if="quests.length || ownerMode" class="dq-block">
     <div class="dq-head">
-      <span class="sheet-tile-title">Задания</span>
-      <span v-if="activeQuests.length" class="dq-count">{{ activeQuests.length }}</span>
+      <SectionLabel v-if="sectionHeading" class="dq-section-label" title="Задания" divider>
+        <template v-if="activeQuests.length" #actions>
+          <span class="dq-count">{{ activeQuests.length }}</span>
+        </template>
+      </SectionLabel>
+      <template v-else>
+        <span class="sheet-tile-title">Задания</span>
+        <span v-if="activeQuests.length" class="dq-count">{{ activeQuests.length }}</span>
+      </template>
     </div>
 
     <div v-if="activeQuests.length || ownerMode" class="dq-list">
@@ -85,6 +92,7 @@ import { computed, inject, ref } from 'vue'
 import DndQuestCard from '@/features/character-editor/blocks/dnd/components/DndQuestCard.vue'
 import DndQuestEditor from '@/features/character-editor/blocks/dnd/components/DndQuestEditor.vue'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
+import SectionLabel from '@/shared/ui/SectionLabel'
 import { useMorphOrigin } from '@/features/character-editor/composables/useMorphOrigin'
 import {
   defaultQuest,
@@ -99,6 +107,7 @@ const charCtx = inject('charCtx', () => ({ ownerMode: false }))
 
 const quests = computed(() => normalizeQuests(props.value))
 const ownerMode = computed(() => !!charCtx.ownerMode)
+const sectionHeading = computed(() => props.block.props?.title_variant === 'divider')
 
 const activeQuests = computed(() => quests.value.filter(q => q.status === 'active'))
 const finishedQuests = computed(() => quests.value.filter(q => q.status !== 'active'))
@@ -169,6 +178,10 @@ function closeEditor() {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+.dq-section-label {
+  width: 100%;
+  margin-bottom: 0;
 }
 .dq-count {
   font-size: 11px;

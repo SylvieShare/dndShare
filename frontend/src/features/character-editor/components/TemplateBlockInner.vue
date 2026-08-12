@@ -16,7 +16,12 @@
   </component>
 
   <component :is="block.content?.tile ? BaseTile : 'div'" v-else-if="block.type === 'VERTICAL_LIST'" v-show="!childHidden" class="layout-vertical" :style="[blockStyle, { gap: block.content?.gap }]">
-    <SectionLabel v-if="block.title" :title="block.title" border>
+    <SectionLabel
+      v-if="layoutTitle"
+      :title="layoutTitle"
+      :border="block.props?.title_variant !== 'divider'"
+      :divider="block.props?.title_variant === 'divider'"
+    >
       <template v-if="block.hide_button" #actions>
         <button class="tb-collapse-btn" :title="collapsed ? 'Развернуть' : 'Свернуть'" @click="collapsed = !collapsed">{{ collapsed ? '▸' : '▾' }}</button>
       </template>
@@ -268,6 +273,8 @@ const blockStyle = computed(() => {
   }
   return [props.colStyle, own, customStyle].filter(Boolean)
 })
+
+const layoutTitle = computed(() => props.block.title || props.block.props?.title || '')
 
 const visibleHorizontalChildren = computed(() =>
   (props.block.blocks || [])

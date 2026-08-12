@@ -5,6 +5,7 @@
         class="sp-mobile-panel-head"
         title="Параметры магии"
         :show-edit="canInteract"
+        divider
         @edit="editOpen = true"
       />
       <div class="sp-stats">
@@ -26,19 +27,12 @@
       </div>
     </section>
 
-    <div v-if="canInteract" class="sp-edit-head">
-      <SheetBlockTitle
-        title="Редактировать"
-        :show-edit="true"
-        @edit="editOpen = true"
-      />
-    </div>
-
     <section v-if="activeSlots.length > 0" class="sp-slots-panel">
       <SheetBlockTitle
         class="sp-slots-head"
         title="Ячейки заклинаний"
         :show-edit="canInteract"
+        divider
         @edit="editOpen = true"
       />
       <div class="sp-slots">
@@ -121,16 +115,9 @@ function orbOrder(total) {
   margin-bottom: 18px;
 }
 
-.sp-mobile-panel-head { display: none; }
+.sp-mobile-panel-head { margin-bottom: 12px; }
 
 .sp-slots-head { margin-bottom: 12px; }
-
-/* ── Заголовок «Редактировать» (прижат справа над статами) ── */
-.sp-edit-head {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: -8px;
-}
 
 /* ── Статы (строка безрамочных плиток сверху) ── */
 .sp-stats {
@@ -256,13 +243,6 @@ function orbOrder(total) {
     background: var(--surface);
     box-shadow: inset 0 0 0 1px var(--border);
   }
-
-  .sp-mobile-panel-head {
-    display: flex;
-    margin-bottom: 12px;
-  }
-
-  .sp-edit-head { display: none; }
 
   .sp-stats {
     flex-wrap: nowrap;

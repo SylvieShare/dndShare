@@ -78,9 +78,9 @@ defineExpose({ updateUnderline })
 .sliding-tabs {
   position: relative;
   display: flex;
-  gap: 30px;
+  gap: 24px;
   min-height: 40px;
-  padding: 0 30px;
+  padding: 0 20px;
   flex-wrap: nowrap;
   align-items: stretch;
   overflow-x: auto;
@@ -98,22 +98,22 @@ defineExpose({ updateUnderline })
   border: none;
   border-radius: 0;
   background: none;
-  color: var(--text-2);
+  color: var(--text-muted);
   font: inherit;
-  font-size: 15px;
-  font-weight: 500;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
   cursor: pointer;
   transition: color 0.15s;
   white-space: nowrap;
 }
 
 .sliding-tab:hover {
-  color: var(--text-1);
+  color: var(--text-2);
 }
 
 .sliding-tab.active {
   color: var(--text-1);
-  font-weight: 700;
 }
 
 /* Sliding indicator — position/width are driven from JS and animate in CSS. */
@@ -145,12 +145,12 @@ defineExpose({ updateUnderline })
 
 @media (max-width: 640px) {
   .sliding-tabs {
-    gap: 24px;
+    gap: 18px;
     padding: 0 16px;
   }
 
   .sliding-tab {
-    font-size: 14px;
+    font-size: 12px;
   }
 }
 </style>

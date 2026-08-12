@@ -3,6 +3,10 @@
   color: var(--text-1);
 }
 
+.sp-spells-section {
+  margin-bottom: 14px;
+}
+
 .sg-lvl {
   display: block;
   color: var(--text-muted);
@@ -166,6 +170,10 @@
 }
 
 @media (max-width: 760px) {
+  .sp-spells-section {
+    display: none;
+  }
+
   .spells-groups {
     gap: 12px;
   }
