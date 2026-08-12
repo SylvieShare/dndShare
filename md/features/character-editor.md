@@ -150,7 +150,7 @@ comes from handbook. The list shows count as a badge; it has no ordinary
 increment/decrement controls. The item detail modal provides the shared number
 input with a minimum of one and a delete action; a multi-quantity picker creates
 one entry with that count. Potion tiles open the shared `RowActionMenu` with
-icon-labelled, warning-colored use, success-colored replenish-by-one and
+icon-labelled, accent-colored use, success-colored replenish-by-one and
 info-colored view actions; use decrements the count and removes the entry at
 zero. Mobile status actions pass their domain icons for statuses, exhaustion
 and inspiration into the shared `RowActionItem`. A custom

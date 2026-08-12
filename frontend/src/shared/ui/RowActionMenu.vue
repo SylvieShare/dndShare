@@ -20,6 +20,7 @@
   <Teleport to="body">
     <div
       v-if="isOpen"
+      ref="popoverEl"
       class="ram-popover"
       :style="popoverStyle"
       @click.stop
@@ -31,7 +32,8 @@
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, ref, shallowRef } from 'vue'
+import { computed, nextTick, onBeforeUnmount, ref, shallowRef } from 'vue'
+import { computeRowActionPlacement, ROW_ACTION_MARGIN } from '@/shared/ui/rowActionPlacement'
 
 defineProps({
   title: { type: String, default: 'Действия' },
@@ -44,42 +46,101 @@ const openInstance = (() => {
 
 const myId = Symbol('row-action-menu')
 const triggerEl = ref(null)
+const popoverEl = ref(null)
 const popoverStyle = ref(null)
+let openOrigin = null
+let placementFrame = null
 
 const isOpen = computed(() => openInstance.value === myId)
 
-function computeStyle(event) {
+function initialStyle(event) {
   const el = triggerEl.value
   if (!el) return null
   const rect = el.getBoundingClientRect()
-  const top = rect.bottom + 6
-  const right = Math.max(8, window.innerWidth - rect.right)
-  const popoverRight = window.innerWidth - right
   const hasPointerOrigin = event?.detail > 0
-  const originX = hasPointerOrigin ? event.clientX : rect.left + rect.width / 2
-  const originY = hasPointerOrigin ? event.clientY : rect.bottom
+  openOrigin = {
+    x: hasPointerOrigin ? event.clientX : rect.left + rect.width / 2,
+    y: hasPointerOrigin ? event.clientY : rect.bottom,
+  }
   return {
     position: 'fixed',
-    top: top + 'px',
-    right: right + 'px',
-    '--ram-origin-x': `calc(100% - ${popoverRight - originX}px)`,
-    '--ram-origin-y': `${originY - top}px`,
+    top: `${ROW_ACTION_MARGIN}px`,
+    left: `${ROW_ACTION_MARGIN}px`,
+    visibility: 'hidden',
   }
 }
 
+function viewportRect() {
+  const viewport = window.visualViewport
+  return {
+    viewportWidth: viewport?.width || window.innerWidth,
+    viewportHeight: viewport?.height || window.innerHeight,
+    viewportLeft: viewport?.offsetLeft || 0,
+    viewportTop: viewport?.offsetTop || 0,
+  }
+}
+
+function placePopover() {
+  placementFrame = null
+  const trigger = triggerEl.value
+  const popover = popoverEl.value
+  if (!isOpen.value || !trigger || !popover) return
+
+  const viewport = viewportRect()
+  const availableWidth = Math.max(0, viewport.viewportWidth - ROW_ACTION_MARGIN * 2)
+  popover.style.minWidth = `${Math.min(200, availableWidth)}px`
+  popover.style.maxWidth = `${Math.min(280, availableWidth)}px`
+
+  const rect = trigger.getBoundingClientRect()
+  const popoverRect = popover.getBoundingClientRect()
+  const placement = computeRowActionPlacement({
+    triggerRect: rect,
+    popoverWidth: popoverRect.width,
+    popoverHeight: popover.scrollHeight,
+    originX: openOrigin?.x ?? rect.left + rect.width / 2,
+    originY: openOrigin?.y ?? rect.bottom,
+    ...viewport,
+  })
+
+  popoverStyle.value = {
+    position: 'fixed',
+    top: `${placement.top}px`,
+    left: `${placement.left}px`,
+    minWidth: `${Math.min(200, availableWidth)}px`,
+    maxWidth: `${Math.min(280, availableWidth)}px`,
+    maxHeight: `${placement.maxHeight}px`,
+    visibility: 'visible',
+    '--ram-origin-x': `${placement.originX}px`,
+    '--ram-origin-y': `${placement.originY}px`,
+    '--ram-enter-y': placement.opensAbove ? '2px' : '-2px',
+  }
+}
+
+function schedulePlacement() {
+  if (placementFrame != null) cancelAnimationFrame(placementFrame)
+  placementFrame = requestAnimationFrame(placePopover)
+}
+
 function open(event) {
-  popoverStyle.value = computeStyle(event)
+  popoverStyle.value = initialStyle(event)
   openInstance.value = myId
+  nextTick(schedulePlacement)
   document.addEventListener('pointerdown', onDocPointerDown, true)
-  window.addEventListener('resize', close)
-  window.addEventListener('scroll', close, true)
+  window.addEventListener('resize', schedulePlacement)
+  window.addEventListener('scroll', onWindowScroll, true)
+  window.visualViewport?.addEventListener('resize', schedulePlacement)
+  window.visualViewport?.addEventListener('scroll', schedulePlacement)
 }
 
 function close() {
   if (openInstance.value === myId) openInstance.value = null
+  if (placementFrame != null) cancelAnimationFrame(placementFrame)
+  placementFrame = null
   document.removeEventListener('pointerdown', onDocPointerDown, true)
-  window.removeEventListener('resize', close)
-  window.removeEventListener('scroll', close, true)
+  window.removeEventListener('resize', schedulePlacement)
+  window.removeEventListener('scroll', onWindowScroll, true)
+  window.visualViewport?.removeEventListener('resize', schedulePlacement)
+  window.visualViewport?.removeEventListener('scroll', schedulePlacement)
 }
 
 function toggle(event) {
@@ -90,6 +151,11 @@ function toggle(event) {
 function onDocPointerDown(e) {
   if (e.target?.closest?.('.ram-popover')) return
   if (e.target === triggerEl.value || triggerEl.value?.contains?.(e.target)) return
+  close()
+}
+
+function onWindowScroll(event) {
+  if (event.target === popoverEl.value || popoverEl.value?.contains?.(event.target)) return
   close()
 }
 
@@ -127,17 +193,21 @@ defineExpose({ close })
   padding: 5px;
   box-shadow: var(--shadow-lg);
   z-index: 9300;
-  min-width: 200px;
-  max-width: 280px;
+  min-width: min(200px, calc(100vw - 16px));
+  max-width: min(280px, calc(100vw - 16px));
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   gap: 1px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   transform-origin: var(--ram-origin-x, 100%) var(--ram-origin-y, 0);
   animation: ram-popover-enter 140ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
 }
 
 @keyframes ram-popover-enter {
-  from { opacity: 0; transform: translateY(-2px) scale(0.96); }
+  from { opacity: 0; transform: translateY(var(--ram-enter-y, -2px)) scale(0.96); }
   to { opacity: 1; transform: none; }
 }
 

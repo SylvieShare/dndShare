@@ -23,4 +23,9 @@ describe('RowActionItem', () => {
     expect(source).toContain('min-height: 36px;')
     expect(source).toContain('font-size: 13px;')
   })
+
+  it('supports the accent tone for primary game actions', () => {
+    expect(source).toContain("['default', 'accent', 'warning', 'success', 'info', 'danger']")
+    expect(source).toContain('.ram-item--accent { color: var(--accent-soft); }')
+  })
 })

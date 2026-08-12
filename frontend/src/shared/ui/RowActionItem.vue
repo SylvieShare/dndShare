@@ -54,7 +54,7 @@ const props = defineProps({
   tone: {
     type: String,
     default: 'default',
-    validator: value => ['default', 'warning', 'success', 'info', 'danger'].includes(value),
+    validator: value => ['default', 'accent', 'warning', 'success', 'info', 'danger'].includes(value),
   },
 })
 
@@ -92,6 +92,8 @@ const resolvedIcon = computed(() => props.icon || ACTION_ICONS[props.action] || 
 }
 .ram-item__content { flex: 1 1 auto; min-width: 0; }
 .ram-item__suffix { display: inline-flex; align-items: center; flex: 0 0 auto; }
+.ram-item--accent { color: var(--accent-soft); }
+.ram-item--accent:hover { background: color-mix(in srgb, var(--accent) 14%, transparent); }
 .ram-item--warning { color: var(--warning); }
 .ram-item--warning:hover { background: color-mix(in srgb, var(--warning) 12%, transparent); }
 .ram-item--success { color: var(--success); }
