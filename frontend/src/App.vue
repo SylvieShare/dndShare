@@ -4,7 +4,7 @@
        its scroll position and avoids a refetch flash. -->
   <div class="page-transition-stage" :class="{ 'page-transition-stage--print': isPrintRoute }">
     <router-view v-slot="{ Component, route }">
-      <transition :name="pageTransitionName" mode="out-in">
+      <transition :name="pageTransitionName" :mode="pageTransitionMode">
         <keep-alive include="ViewListCharacters">
           <component :is="Component" :key="route.path"/>
         </keep-alive>
@@ -26,11 +26,14 @@ import ErrorReporter from '@/features/error-report/components/ErrorReporter.vue'
 import ErrorReportInbox from '@/features/error-report/components/ErrorReportInbox.vue'
 import ConsoleErrorInbox from '@/features/console-errors/components/ConsoleErrorInbox.vue'
 import { pageTransitionName } from '@/app/router'
+import { useIsMobile } from '@/shared/composables/useIsMobile'
 import { useAccountStore } from '@/stores/account'
 import { useTextStore } from '@/stores/text'
 
 const route = useRoute()
+const isMobile = useIsMobile()
 const isPrintRoute = computed(() => !!route.meta?.printView)
+const pageTransitionMode = computed(() => (isMobile.value ? undefined : 'out-in'))
 
 onMounted(() => {
   useTextStore().downloadText()
@@ -100,6 +103,51 @@ body {
 .page-backward-enter-from {
   opacity: 0;
   transform: translateX(-18px);
+}
+
+/* On narrow screens both routes overlap briefly instead of leaving an empty
+   stage between the exit and entrance phases. The outgoing route is removed
+   from flow so pages with different heights cannot push each other around. */
+@media (max-width: 768px) {
+  .page-transition-stage {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .page-forward-enter-active,
+  .page-forward-leave-active,
+  .page-backward-enter-active,
+  .page-backward-leave-active {
+    transition:
+      transform 0.24s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.2s ease !important;
+    backface-visibility: hidden;
+  }
+
+  .page-forward-enter-active,
+  .page-backward-enter-active {
+    position: relative;
+    z-index: 1;
+  }
+
+  .page-forward-leave-active,
+  .page-backward-leave-active {
+    position: absolute;
+    z-index: 0;
+    inset: 0 0 auto;
+    width: 100%;
+    pointer-events: none;
+  }
+
+  .page-forward-enter-from,
+  .page-backward-leave-to {
+    transform: translate3d(10px, 0, 0);
+  }
+
+  .page-forward-leave-to,
+  .page-backward-enter-from {
+    transform: translate3d(-10px, 0, 0);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
