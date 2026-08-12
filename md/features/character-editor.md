@@ -59,8 +59,9 @@ The character viewport keeps its pre-keyboard height while a rich-text or form
 editor is focused. `useCharacterViewport` owns the visual/layout viewport
 synchronization and document-scoped focus handling needed by editors teleported
 outside the page root.
-The compact HP/status strip keeps exhaustion at a fixed readable width and
-shows a thin scrollbar only when the status icons actually overflow.
+The compact HP/status strip gives HP and statuses equal flexible space, keeps
+exhaustion within a narrow responsive 44–52 px slot, and shows a thin scrollbar
+only when the status icons actually overflow.
 
 ## Shared UI requirements
 
@@ -167,7 +168,10 @@ the calculation boundary; this is not a fallback between stored formats.
 All `dice_id` values are fixed system strings (`"d4"`…`"d100"`); die visuals
 use `SystemDie` and never load suggest type 11. Spell
 handbook dice use only `dice_id/type`. Spell class ownership uses item-id
-references under `classes`.
+references under `classes`. Compact spell rows show the English name after the
+Russian one and start their metadata with verbal/somatic/material components;
+concentration and ritual remain title badges instead of being repeated in the
+duration text.
 
 ## Rich text
 

@@ -40,6 +40,7 @@
     <div class="sp-info">
       <div class="sp-name-row">
         <span class="sp-name">{{ entry.item ? entry.item.name : '...' }}</span>
+        <span v-if="nameEn" class="sp-name-en">{{ nameEn }}</span>
         <span v-if="data.concentration" class="sp-tag sp-tag-conc" title="Концентрация">К</span>
         <span v-if="data.ritual" class="sp-tag sp-tag-ritual" title="Ритуал">Р</span>
       </div>
@@ -92,6 +93,7 @@ const props = defineProps({
 const ctx = inject('spellsBlockCtx')
 
 const data = computed(() => props.entry.item?.data || {})
+const nameEn = computed(() => String(props.entry.item?.nameEn || '').trim())
 const dmg = computed(() => data.value.damage || {})
 const school = computed(() => ctx.schoolMeta(props.entry.item))
 
@@ -231,6 +233,15 @@ function onRowClick() {
   font-size: 18px;
   font-weight: 700;
   line-height: 1.15;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sp-name-en {
+  min-width: 0;
+  color: var(--text-muted);
+  font-size: 11px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

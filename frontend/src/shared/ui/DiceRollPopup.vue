@@ -8,6 +8,7 @@
       :class="{
         'dice-pop--crit': entry.outcome?.kind === 'crit',
         'dice-pop--fumble': entry.outcome?.kind === 'fumble',
+        'dice-pop--rolling': isRolling(entry.id),
       }"
     >
       <button class="dice-pop-close" @click="store.dismiss(entry.id)" aria-label="Закрыть">×</button>
@@ -27,7 +28,10 @@
                 <span v-if="ri > 0" class="dice-pop-rolls-plus">+</span>
                 <span
                   class="dice-pop-roll-wrap"
-                  :class="{ 'dice-pop-roll--drop': p.dropped && p.dropped.includes(ri) }"
+                  :class="{
+                    'dice-pop-roll--drop': p.dropped && p.dropped.includes(ri),
+                    'dice-pop-roll--rolling': isRolling(entry.id),
+                  }"
                 >
                   <SystemDie :sides="p.sides" :value="displayedRoll(entry, i, ri, r)" :size="38" :color="p.color" />
                 </span>
@@ -77,43 +81,12 @@
 </template>
 
 <script setup>
-import { onBeforeUnmount, reactive, watch } from 'vue'
+import { onBeforeUnmount, watch } from 'vue'
 import { useDiceStore } from '@/stores/dice'
+import { useDiceRollAnimation } from '@/shared/composables/useDiceRollAnimation'
 import SystemDie from '@/shared/ui/SystemDie.vue'
 
 const store = useDiceStore()
-const animatedRolls = reactive(new Map())
-const animationTimers = new Map()
-const animationDelays = [55, 125, 225, 360, 540, 760, 1000]
-
-function rollKey(entryId, partIndex, rollIndex) {
-  return `${entryId}:${partIndex}:${rollIndex}`
-}
-
-function displayedRoll(entry, partIndex, rollIndex, actual) {
-  return animatedRolls.get(rollKey(entry.id, partIndex, rollIndex)) ?? actual
-}
-
-function clearEntryAnimation(entryId) {
-  const timers = animationTimers.get(entryId)
-  if (timers) {
-    for (const timer of timers) clearTimeout(timer)
-    animationTimers.delete(entryId)
-  }
-  for (const key of animatedRolls.keys()) {
-    if (key.startsWith(`${entryId}:`)) animatedRolls.delete(key)
-  }
-}
-
-function setDisplayedRolls(entry, settle = false) {
-  entry.result.parts.forEach((part, partIndex) => {
-    if (part.kind !== 'dice') return
-    part.rolls.forEach((actual, rollIndex) => {
-      const value = settle ? actual : Math.floor(Math.random() * part.sides) + 1
-      animatedRolls.set(rollKey(entry.id, partIndex, rollIndex), value)
-    })
-  })
-}
 
 function shouldAnimateRolls() {
   if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return false
@@ -121,20 +94,13 @@ function shouldAnimateRolls() {
     && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
 }
 
-function startEntryAnimation(entry) {
-  if (!shouldAnimateRolls()) return
-  setDisplayedRolls(entry)
-  const timers = new Set()
-  animationTimers.set(entry.id, timers)
-  animationDelays.forEach((delay, index) => {
-    const timer = setTimeout(() => {
-      timers.delete(timer)
-      setDisplayedRolls(entry, index === animationDelays.length - 1)
-      if (!timers.size) animationTimers.delete(entry.id)
-    }, delay)
-    timers.add(timer)
-  })
-}
+const {
+  displayedRoll,
+  startEntryAnimation,
+  clearEntryAnimation,
+  isRolling,
+  dispose: disposeRollAnimation,
+} = useDiceRollAnimation({ shouldAnimate: shouldAnimateRolls })
 
 watch(
   () => store.stack.map(entry => entry.id),
@@ -150,7 +116,7 @@ watch(
 )
 
 onBeforeUnmount(() => {
-  for (const entryId of animationTimers.keys()) clearEntryAnimation(entryId)
+  disposeRollAnimation()
 })
 
 function hasMultipleTypes(entry) {
@@ -199,6 +165,10 @@ function rawExpression(entry) {
 .dice-pop--fumble {
   border-color: var(--danger);
   box-shadow: 0 14px 40px var(--scrim), 0 0 0 1px color-mix(in srgb, var(--danger) 50%, transparent), 0 0 22px color-mix(in srgb, var(--danger) 22%, transparent);
+}
+.dice-pop--rolling {
+  border-color: color-mix(in srgb, var(--accent) 72%, var(--border-strong));
+  box-shadow: var(--shadow-lg), 0 0 18px color-mix(in srgb, var(--accent) 24%, transparent);
 }
 
 .dice-pop-close {
@@ -266,6 +236,10 @@ function rawExpression(entry) {
 }
 .dice-pop-rolls-plus { color: color-mix(in srgb, var(--text-1) 55%, transparent); margin: 0 2px; }
 .dice-pop-roll-wrap  { display: inline-flex; white-space: nowrap; }
+.dice-pop-roll--rolling {
+  opacity: 0.56;
+  filter: saturate(0.45);
+}
 .dice-pop-roll--drop {
   position: relative;
   opacity: 0.38;

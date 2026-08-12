@@ -135,17 +135,16 @@ function setEffect(i, text) {
 
 .exh-compact {
   display: inline-flex;
-  flex: 0 0 58px;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 2px;
   box-sizing: border-box;
-  min-width: 58px;
+  min-width: 0;
   max-width: 100%;
   min-height: 32px;
   height: 32px;
-  padding: 2px 7px;
+  padding: 2px clamp(1px, 1vw, 5px);
   border: 0;
   border-radius: 8px;
   background: color-mix(in srgb, var(--text-on-accent) 3%, transparent);
@@ -153,7 +152,7 @@ function setEffect(i, text) {
   font: inherit;
   cursor: pointer;
 }
-.exh-compact-label { width: 100%; overflow: hidden; font-size: 9px; font-weight: 700; letter-spacing: 0.04em; text-align: center; text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap; }
+.exh-compact-label { width: 100%; overflow: hidden; font-size: clamp(7.5px, 2.4vw, 9px); font-weight: 700; letter-spacing: 0.02em; text-align: center; text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap; }
 .exh-compact strong { color: var(--text-2); font-size: 15px; line-height: 1; }
 .exh-compact--on { color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, transparent); }
 .exh-compact--on strong { color: var(--danger); }

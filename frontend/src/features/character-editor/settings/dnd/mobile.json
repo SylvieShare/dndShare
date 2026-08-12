@@ -384,16 +384,19 @@
         "kind": "block",
         "props": {
           "variant": "compact",
-          "shrink": 0,
-          "basis": "58px",
-          "min-width": "58px"
+          "shrink": 1,
+          "basis": "clamp(44px, 14vw, 52px)",
+          "min-width": "44px"
         }
       },
       {
         "ref": "states",
         "kind": "block",
         "props": {
-          "variant": "compact"
+          "variant": "compact",
+          "grow": 1,
+          "basis": 0,
+          "min-width": "76px"
         }
       }
     ]

@@ -1,5 +1,9 @@
 import { componentsLabel } from '@/features/character-editor/blocks/dnd/lib/spellEntry'
 
+export function spellDurationLabel(duration) {
+  return String(duration || '').trim().replace(/^(?:(?:Концентрация|Ритуал)\s*,\s*)+/i, '')
+}
+
 export function useSpellCalc({ diceMap, diceDetailsMap, damageTypeMap, damageTypeColorMap, schoolMap }) {
   function schoolMeta(item) {
     const id = item?.data?.schoolId
@@ -24,7 +28,7 @@ export function useSpellCalc({ diceMap, diceDetailsMap, damageTypeMap, damageTyp
 
   function spellMetaLine(item) {
     const data = item?.data || {}
-    return [data.time, data.range, data.duration, componentsLabel(data.components)]
+    return [componentsLabel(data.components), data.time, data.range, spellDurationLabel(data.duration)]
       .filter(Boolean).map(truncSeg).join(' · ')
   }
 
