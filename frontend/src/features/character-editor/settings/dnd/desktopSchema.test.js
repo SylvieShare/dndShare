@@ -73,4 +73,18 @@ describe('D&D desktop sheet schema', () => {
       },
     })
   })
+
+  it('groups feats and race/class abilities in one visual tile', () => {
+    const features = findNode(
+      base?.content,
+      node => node.children?.map(child => child.ref).join(',') === 'abilities_feats,abilities_race,abilities_class',
+    )
+
+    expect(features?.props?.tile).toBe(true)
+    expect(features?.children?.map(block => block.content)).toEqual([
+      { embedded: true },
+      { embedded: true, divider: true },
+      { embedded: true, divider: true },
+    ])
+  })
 })

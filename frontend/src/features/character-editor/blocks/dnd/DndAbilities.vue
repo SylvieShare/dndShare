@@ -1,6 +1,13 @@
 <template>
-  <div ref="root" class="ab-block">
-    <BaseTile class="ab-tile">
+  <div
+    ref="root"
+    class="ab-block"
+    :class="{
+      'ab-block--embedded': block.content?.embedded,
+      'ab-block--divider': block.content?.divider,
+    }"
+  >
+    <component :is="block.content?.embedded ? 'div' : BaseTile" class="ab-tile">
       <DndAbilitiesView
         :entries="entries"
         :loading="loading"
@@ -13,7 +20,7 @@
         @show-tooltip="showTooltip"
         @hide-tooltip="hideTooltip"
       />
-    </BaseTile>
+    </component>
 
     <MorphEditorShell
       v-if="editorOpen"
@@ -333,6 +340,7 @@ onMounted(async () => {
 
 <style scoped>
 .ab-block { min-width: 0; }
+.ab-block--divider { border-top: 1px solid var(--border); }
 
 .ab-tile {
   display: block;

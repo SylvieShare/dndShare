@@ -33,13 +33,19 @@ describe('D&D mobile sheet schema', () => {
 
   it('shows resources first on the mobile skills tab', () => {
     const skills = schema.layouts.mobile.tabs.find(tab => tab.title === 'Умения')
+    const [resources, proficiencies, features] = skills?.content?.children || []
 
-    expect(skills?.content?.children?.map(block => block.ref)).toEqual([
-      'resources',
-      'proficiencies',
+    expect([resources?.ref, proficiencies?.ref]).toEqual(['resources', 'proficiencies'])
+    expect(features?.props?.tile).toBe(true)
+    expect(features?.children?.map(block => block.ref)).toEqual([
       'abilities_feats',
       'abilities_race',
       'abilities_class',
+    ])
+    expect(features?.children?.map(block => block.content)).toEqual([
+      { embedded: true },
+      { embedded: true, divider: true },
+      { embedded: true, divider: true },
     ])
   })
 

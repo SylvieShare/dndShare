@@ -152,8 +152,9 @@ defineEmits(['toggle-dot', 'view', 'show-tooltip', 'hide-tooltip', 'manage'])
   gap: 1px;
 }
 .abv-name {
-  color: var(--text-2);
+  color: var(--text-1);
   font-size: 13px;
+  font-weight: 500;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

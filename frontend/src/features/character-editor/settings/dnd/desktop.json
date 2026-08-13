@@ -548,19 +548,40 @@
                         "kind": "block"
                       },
                       {
-                        "ref": "abilities_feats",
-                        "kind": "block",
-                        "title": "Черты"
-                      },
-                      {
-                        "ref": "abilities_race",
-                        "kind": "block",
-                        "title": "Расовые способности"
-                      },
-                      {
-                        "ref": "abilities_class",
-                        "kind": "block",
-                        "title": "Классовые способности"
+                        "kind": "layout",
+                        "type": "column",
+                        "props": {
+                          "gap": "0",
+                          "tile": true,
+                          "style": {
+                            "padding": "0"
+                          }
+                        },
+                        "children": [
+                          {
+                            "ref": "abilities_feats",
+                            "kind": "block",
+                            "content": {
+                              "embedded": true
+                            }
+                          },
+                          {
+                            "ref": "abilities_race",
+                            "kind": "block",
+                            "content": {
+                              "embedded": true,
+                              "divider": true
+                            }
+                          },
+                          {
+                            "ref": "abilities_class",
+                            "kind": "block",
+                            "content": {
+                              "embedded": true,
+                              "divider": true
+                            }
+                          }
+                        ]
                       }
                     ]
                   }
