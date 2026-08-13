@@ -30,8 +30,6 @@
         </div>
       </div>
 
-      <HorizontalMenu class="header-nav" />
-
       <span
         v-if="headerContext.chip"
         class="header-chip"
@@ -55,7 +53,6 @@
 import { ref, computed, watch, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import HeaderSearch from '@/shared/ui/HeaderSearch'
-import HorizontalMenu from '@/shared/ui/HorizontalMenu'
 import MobileHeaderBack from '@/shared/ui/MobileHeaderBack.vue'
 import { resolveMobileBackTarget } from '@/shared/lib/mobileBack'
 import UserBox from "@/features/auth/components/UserBox"
@@ -66,6 +63,7 @@ import {
   MOBILE_HEADER_HIDDEN,
   resolveMobileHeaderMode,
 } from '@/shared/lib/mobileHeader'
+import { resolveAppNavigation } from '@/shared/lib/appNavigation'
 
 const route = useRoute()
 const router = useRouter()
@@ -81,7 +79,6 @@ const headerCollapsible = computed(() => headerMode.value === MOBILE_HEADER_COLL
 const mobileHeaderHidden = computed(() => headerMode.value === MOBILE_HEADER_HIDDEN)
 const effectiveHeaderHidden = computed(() => headerCollapsible.value && headerHidden.value)
 const isAuth = computed(() => useAccountStore().authStatus === 'success')
-const isHandbook = computed(() => route.path.startsWith('/handbook'))
 const mobileBackTarget = computed(() => resolveMobileBackTarget(route))
 const isAdmin = computed(() => useAccountStore().hasRole('ADMIN'))
 const headerContext = computed(() => uiStore.resolveHeader(
@@ -90,17 +87,11 @@ const headerContext = computed(() => uiStore.resolveHeader(
   false,
 ))
 const visibleItems = computed(() => {
-  const items = [
-    { title: 'Справочник', to: '/handbook', active: isHandbook.value },
-  ]
-  if (isAuth.value) {
-    items.push({ title: 'Сессии', to: '/sessions', active: route.path.startsWith('/session') })
-    items.push({ title: 'Персонажи', to: '/chars', active: route.path.startsWith('/char') || route.path === '/chars' })
-  }
-  if (isAuth.value && isAdmin.value) {
-    items.push({ title: 'Админка', to: '/admin', active: route.path === '/admin' })
-  }
-  return items
+  return resolveAppNavigation({
+    authenticated: isAuth.value,
+    admin: isAdmin.value,
+    path: route.path,
+  })
 })
 
 watch(effectiveHeaderHidden, (val) => {
@@ -209,10 +200,6 @@ function toggleBrandMenu() {
   box-shadow: var(--shadow-lg);
 }
 
-.header-nav {
-  min-width: 0;
-}
-
 .brand-menu-item {
   border-radius: 7px;
   color: var(--text-2);
@@ -293,10 +280,6 @@ function toggleBrandMenu() {
     display: inline;
   }
 
-  .header-nav {
-    display: none;
-  }
-
   .header-search {
     display: none;
   }
@@ -355,6 +338,12 @@ function toggleBrandMenu() {
   }
 
   .header-title-strip {
+    display: none;
+  }
+}
+
+@media (min-width: 641px) {
+  .app-header {
     display: none;
   }
 }

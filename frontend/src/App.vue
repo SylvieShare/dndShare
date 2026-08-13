@@ -1,4 +1,5 @@
 <template>
+  <DesktopSidebar v-if="!isPrintRoute" />
   <AppHeader v-if="!isPrintRoute"/>
   <!-- The character LIST is kept alive so returning from a character page restores
        its scroll position and avoids a refetch flash. -->
@@ -25,6 +26,7 @@
 import { computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import AppHeader from "@/shared/ui/AppHeader";
+import DesktopSidebar from '@/shared/ui/DesktopSidebar.vue'
 import DiceRollPopup from "@/shared/ui/DiceRollPopup.vue";
 import ErrorReporter from '@/features/error-report/components/ErrorReporter.vue'
 import ErrorReportInbox from '@/features/error-report/components/ErrorReportInbox.vue'
@@ -79,9 +81,22 @@ body {
   outline-offset: 2px;
 }
 
+@media (min-width: 641px) {
+  body:has(.app-sidebar:not(.app-sidebar--expanded)) .report-button,
+  body:has(.app-sidebar:not(.app-sidebar--expanded)) .review-inbox {
+    left: calc(var(--app-sidebar-w) + 16px);
+  }
+
+  body:has(.app-sidebar--expanded) .report-button,
+  body:has(.app-sidebar--expanded) .review-inbox {
+    left: calc(var(--sidebar-expanded-w) + 16px);
+  }
+}
+
 .page-transition-stage {
   min-height: calc(100vh - var(--header-h));
   min-height: calc(100dvh - var(--header-h));
+  margin-left: var(--app-sidebar-w);
   background-color: var(--app-canvas-bg);
   background-image: var(--app-canvas-pattern);
   background-size: var(--app-canvas-dot-size) var(--app-canvas-dot-size);
@@ -90,6 +105,7 @@ body {
 .page-transition-stage--print {
   min-height: 100vh;
   min-height: 100dvh;
+  margin-left: 0;
   background-image: none;
 }
 

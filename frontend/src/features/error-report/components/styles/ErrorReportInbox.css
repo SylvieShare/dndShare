@@ -14,6 +14,7 @@
   backdrop-filter: blur(12px);
   transform-origin: left bottom;
   transition:
+    left .28s cubic-bezier(.22, 1, .36, 1),
     width .34s cubic-bezier(.22, 1, .36, 1),
     max-height .38s cubic-bezier(.22, 1, .36, 1),
     border-radius .28s ease,

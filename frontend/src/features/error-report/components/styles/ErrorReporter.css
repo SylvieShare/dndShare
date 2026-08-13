@@ -20,7 +20,7 @@
   font-weight: 600;
   backdrop-filter: blur(8px);
   overflow: hidden;
-  transition: color 0.15s, border-color 0.15s, transform 0.15s;
+  transition: color 0.15s, border-color 0.15s, transform 0.15s, left 0.28s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .report-button:hover {

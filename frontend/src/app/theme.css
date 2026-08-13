@@ -1,6 +1,9 @@
 :root {
   /* Layout */
-  --header-h: 54px;
+  --header-h: 0px;
+  --app-sidebar-w: 64px;
+  --sidebar-collapsed-w: 64px;
+  --sidebar-expanded-w: 224px;
   --content-max: 1400px;
 
   /* Surfaces: the app canvas sits behind forms; controls rise above them. */
@@ -53,5 +56,8 @@
 }
 
 @media (max-width: 640px) {
-  :root { --header-h: 50px; }
+  :root {
+    --header-h: 50px;
+    --app-sidebar-w: 0px;
+  }
 }

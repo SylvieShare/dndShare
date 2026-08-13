@@ -24,7 +24,7 @@ import {
 const prefetchCache = new Map()
 const PREFETCH_TTL_MS = 30_000
 
-// The order mirrors HorizontalMenu. Routes inside the same section use depth
+// The order mirrors the shared app navigation. Routes inside the same section use depth
 // first, so opening a detail page moves forward and returning to its list moves
 // backward. Keeping this in route meta also makes programmatic and browser
 // navigations behave identically.
