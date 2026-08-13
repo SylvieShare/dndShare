@@ -25,33 +25,27 @@ defineProps({
 
 <style scoped>
 .inventory-item-icon {
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  flex: 0 0 30px;
-  border: 1px solid color-mix(in srgb, var(--accent) 24%, var(--border));
-  border-radius: 9px;
-  background: color-mix(in srgb, var(--accent) 9%, transparent);
+  flex: 0 0 32px;
   color: color-mix(in srgb, var(--accent) 78%, var(--text-1));
 }
 
 .inventory-item-icon__svg {
-  width: 20px;
-  height: 20px;
+  width: 26px;
+  height: 26px;
 }
 
 .inventory-item-icon--simplified {
-  border-style: dashed;
-  border-color: color-mix(in srgb, var(--text-muted) 42%, var(--border));
-  background: color-mix(in srgb, var(--text-muted) 7%, transparent);
   color: var(--text-muted);
 }
 
 .inventory-item-icon--simplified svg {
-  width: 19px;
-  height: 19px;
+  width: 24px;
+  height: 24px;
   display: block;
   stroke: currentColor;
   stroke-width: 1.6;
