@@ -65,3 +65,62 @@ entries and selected choices.
   character-specific mutations do not leak into handbook detail renderers;
 - field labels and errors use shared form components;
 - direct color literals are rejected by `npm run check:colors`.
+
+### Raster spell icon art direction
+
+Raster spell icons form one set of **painted magical emblems**. The Fireball
+icon is the rendering-quality reference: later icons copy its finish, visual
+density and readability, not its subject or palette.
+
+- Show one dominant magical subject with at most two or three supporting
+  elements. It must remain recognizable at the 36 px character-sheet size.
+- Use polished, semi-realistic fantasy painting with tactile energy, strong
+  local contrast, saturated color and a bright magical core. Light originates
+  inside the spell effect.
+- Center the silhouette and use roughly 75–85% of the square canvas, retaining
+  clear padding on every side. Nothing may be cropped.
+- Do not add a frame, badge, circular plate, square backdrop, scenery, caster,
+  hand, text, logo or watermark. A ring is allowed only when it is the spell's
+  actual subject.
+- Keep external glow compact and let it fade into transparency before the
+  canvas edge. Avoid detached edge particles, cast shadows and visual noise.
+- The spell effect selects the palette; the shared identity comes from the
+  painting technique, internal lighting, silhouette strength and detail
+  density. Harmful blood magic should feel dangerous but not graphic or gory.
+
+The production asset is a `128×128` RGBA WebP with transparent corners and
+clean antialiased edges without a chroma-key fringe. Generate at a larger
+square size, extract the background, then downsample with a high-quality
+filter. Inspect the result at 128, 64 and 36 px. Only the final WebP is uploaded
+to S3 and registered in `storage_image`; it is not added to frontend static
+assets. Generation masters may be retained outside the runtime repository.
+
+Use this base prompt for subsequent icons, replacing only the subject and
+palette sections:
+
+```text
+Use case: stylized-concept
+Asset type: transparent 128×128 fantasy game UI spell icon
+Primary request: <one dominant magical emblem for the spell>
+Style/medium: polished semi-realistic fantasy painting; match the Fireball
+  icon's finish, visual density and small-size readability
+Composition/framing: centered strong silhouette; fill 75–85% of the square;
+  generous clear padding; nothing cropped; at most 2–3 supporting elements
+Lighting/mood: intense internal magical light; compact glow contained before
+  the canvas edge
+Color palette: <spell-specific palette>
+Constraints: perfectly flat removable chroma-key background; no frame, badge,
+  plate, scenery, caster, hand, text, logo, watermark, cast shadow or detached
+  edge particles; no key color inside the subject
+```
+
+The initial semantic motifs are:
+
+- **Fireball:** a dense orange-red sphere of flame with a golden-white core.
+- **Bless:** a luminous holy-water drop beneath three small diverging rays or
+  blessing marks; gold, warm white and a restrained sky-blue accent.
+- **Aura of Vitality:** a bright life-energy core inside one broad aura ring
+  with a few rising flows; emerald, turquoise and golden white.
+- **Circle of Scarlet:** a blood-red ritual circle emitting a concentrated
+  vertical column of necrotic energy; scarlet, crimson, dark red and cold
+  white-pink highlights, without literal gore.
