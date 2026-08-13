@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import {
   DICE_ROLL_ANIMATION_DELAYS,
+  DICE_ROLL_PREFINAL_SETTLE_CHANCE,
   useDiceRollAnimation,
 } from './useDiceRollAnimation'
 
@@ -66,6 +67,34 @@ describe('dice roll presentation animation', () => {
 
     vi.advanceTimersByTime(DICE_ROLL_ANIMATION_DELAYS.at(-1) - DICE_ROLL_ANIMATION_DELAYS.at(-3))
     expect(animation.isRolling(resultEntry.id)).toBe(false)
+  })
+
+  it('can show the stored face on the pre-final tick without ending the animation', () => {
+    const animation = useDiceRollAnimation({ shouldAnimate: () => true, random: () => 0 })
+
+    animation.startEntryAnimation(entry)
+    vi.advanceTimersByTime(DICE_ROLL_ANIMATION_DELAYS.at(-2))
+
+    expect(DICE_ROLL_PREFINAL_SETTLE_CHANCE).toBeGreaterThan(0)
+    expect(animation.isRolling(entry.id)).toBe(true)
+    expect(animation.displayedRoll(entry, 0, 0, 17)).toBe(17)
+
+    vi.advanceTimersByTime(DICE_ROLL_ANIMATION_DELAYS.at(-1) - DICE_ROLL_ANIMATION_DELAYS.at(-2))
+    expect(animation.isRolling(entry.id)).toBe(false)
+    expect(animation.displayedRoll(entry, 0, 0, 17)).toBe(17)
+  })
+
+  it('can keep a nearby face until the final tick', () => {
+    const animation = useDiceRollAnimation({ shouldAnimate: () => true, random: () => 0.999 })
+
+    animation.startEntryAnimation(entry)
+    vi.advanceTimersByTime(DICE_ROLL_ANIMATION_DELAYS.at(-2))
+
+    expect(DICE_ROLL_PREFINAL_SETTLE_CHANCE).toBeLessThan(1)
+    expect(animation.displayedRoll(entry, 0, 0, 17)).not.toBe(17)
+
+    vi.advanceTimersByTime(DICE_ROLL_ANIMATION_DELAYS.at(-1) - DICE_ROLL_ANIMATION_DELAYS.at(-2))
+    expect(animation.displayedRoll(entry, 0, 0, 17)).toBe(17)
   })
 
   it('skips animation when motion should be reduced', () => {

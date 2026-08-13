@@ -1,6 +1,7 @@
 import { reactive } from 'vue'
 
 export const DICE_ROLL_ANIMATION_DELAYS = [40, 85, 145, 220, 310, 420, 560]
+export const DICE_ROLL_PREFINAL_SETTLE_CHANCE = 0.5
 
 export function useDiceRollAnimation({
   shouldAnimate,
@@ -44,13 +45,14 @@ export function useDiceRollAnimation({
 
   function setDisplayedRolls(entry, step = 0) {
     const settled = step >= DICE_ROLL_ANIMATION_DELAYS.length
+    const preFinal = step === DICE_ROLL_ANIMATION_DELAYS.length - 1
     const progress = step / DICE_ROLL_ANIMATION_DELAYS.length
     entry.result.parts.forEach((part, partIndex) => {
       if (part.kind !== 'dice') return
       part.rolls.forEach((actual, rollIndex) => {
         const key = rollKey(entry.id, partIndex, rollIndex)
         const previous = displayedRolls.get(key)
-        const value = settled
+        const value = settled || (preFinal && random() < DICE_ROLL_PREFINAL_SETTLE_CHANCE)
           ? actual
           : previous == null
             ? randomNearbyFace(
