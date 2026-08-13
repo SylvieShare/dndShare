@@ -6,6 +6,16 @@
     :subtitle="formattedNameEn"
     @close="$emit('close')"
   >
+    <template #title>
+      <div class="iv-title">
+        <ItemIcon v-if="item?.svg" :item="item" :fallback-to-type="false" :size="28" />
+        <div class="iv-title-text">
+          <h2 class="iv-title-name">{{ item?.name || (loading ? 'Загрузка…' : 'Предмет') }}</h2>
+          <span v-if="formattedNameEn" class="iv-title-subtitle">{{ formattedNameEn }}</span>
+        </div>
+      </div>
+    </template>
+
     <div v-if="loading" class="iv-loading">Загрузка…</div>
     <HandbookItemDetail v-else :item="item" :type="type" :can-edit="false" :show-title="false" />
 
@@ -19,6 +29,7 @@
 import { computed, ref, watch } from 'vue'
 import { itemsApi } from '@/shared/api/itemsApi'
 import { useItemTypesStore } from '@/stores/itemTypes'
+import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 import HandbookItemDetail from '@/features/handbook/components/HandbookItemDetail'
 
@@ -73,6 +84,39 @@ watch(() => [props.itemId, props.itemTypeId, props.item], load, { immediate: tru
 </script>
 
 <style scoped>
+.iv-title {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.iv-title-text {
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+}
+
+.iv-title-name {
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  color: var(--text-1);
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.iv-title-subtitle {
+  flex: none;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
 .iv-loading {
   padding: 60px 0;
   text-align: center;

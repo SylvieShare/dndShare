@@ -7,10 +7,10 @@
       <!-- Background: image or type svg -->
       <img v-if="item.data.image_url" :src="item.data.image_url" class="enemy-top-img" alt="" />
       <SvgIcon
-        v-else-if="type && type.svg"
+        v-else-if="item.svg || (type && type.svg)"
         class="enemy-top-svg"
-        :svg="type.svg"
-        :color="type.color"
+        :svg="item.svg || type.svg"
+        :color="item.svg ? null : type.color"
         :size="140"
       />
 

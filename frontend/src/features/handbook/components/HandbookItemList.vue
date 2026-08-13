@@ -39,6 +39,7 @@
                   <PotionListItem v-else-if="type.id === 10" :item="item" :type="type" />
                   <FeatListItem v-else-if="type.id === 7" :item="item" :type="type" />
                   <template v-else>
+                    <ItemIcon v-if="item.svg" :item="item" :fallback-to-type="false" :size="22" />
                     <span class="item-name">{{ item.name }}</span>
                     <span v-if="item.userId != null" class="item-custom-mark" title="Ваш объект">✦</span>
                   </template>
@@ -59,10 +60,11 @@
               <EnemyListItem v-if="type.id === 6" :item="item" :type="type" />
               <WeaponListItem v-else-if="type.id === 1" :item="item" :type="type" />
               <SpellListItem v-else-if="type.id === 5" :item="item" :type="type" />
-              <ItemListItem v-else-if="type.id === 2" :item="item" />
+              <ItemListItem v-else-if="type.id === 2" :item="item" :type="type" />
               <PotionListItem v-else-if="type.id === 10" :item="item" :type="type" />
               <FeatListItem v-else-if="type.id === 7" :item="item" :type="type" />
               <template v-else>
+                <ItemIcon v-if="item.svg" :item="item" :fallback-to-type="false" :size="22" />
                 <span class="item-name">{{ item.name }}</span>
                 <span v-if="item.userId != null" class="item-custom-mark" title="Ваш объект">✦</span>
               </template>
@@ -86,6 +88,7 @@
 import { computed, ref } from 'vue'
 import { findFieldByPath, getByPath, getSuggestId } from '@/features/handbook/objects/lib/schemaFields'
 import { useSuggestStore } from '@/stores/suggest'
+import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import EnemyListItem from '@/features/items/list-components/EnemyListItem'
 import FeatListItem from '@/features/items/list-components/FeatListItem'
 import ItemListItem from '@/features/items/list-components/ItemListItem'

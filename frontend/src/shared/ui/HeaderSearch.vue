@@ -114,7 +114,7 @@ async function doSearch() {
       return {
         key: 'item-' + item.id,
         label: item.name,
-        icon: (type && !NO_ICON_TYPE_IDS.has(item.typeId)) ? type.svg : null,
+        icon: item.svg || ((type && !NO_ICON_TYPE_IDS.has(item.typeId)) ? type.svg : null),
         source: type?.sourceName || type?.name || null,
         url: { path: '/handbook', query: { type: item.typeId, item: item.id } },
       }

@@ -1,6 +1,9 @@
 <template>
   <div class="idc-detail">
-    <div v-if="showTitle" class="idc-name">{{ item.name }}</div>
+    <div v-if="showTitle" class="idc-title-row">
+      <ItemIcon v-if="item.svg" :item="item" :fallback-to-type="false" :size="38" />
+      <div class="idc-name">{{ item.name }}</div>
+    </div>
 
     <div v-if="showTitle" class="idc-divider"></div>
 
@@ -21,6 +24,7 @@
 
 <script setup>
 import { computed } from 'vue'
+import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import RichContent from '@/shared/ui/RichContent'
 import { useCostFormatter } from '@/features/items/lib/useCostFormatter'
 
@@ -41,6 +45,8 @@ const hasMeta = computed(() => data.value.weight != null || !!costLabel.value ||
   flex-direction: column;
   gap: 12px;
 }
+
+.idc-title-row { display: flex; align-items: center; gap: 12px; }
 
 .idc-name {
   font-size: 22px;

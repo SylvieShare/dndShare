@@ -1,7 +1,10 @@
 <template>
   <ObjectListItem :item="item" :name-en="item.nameEn || ''" :custom="item.userId != null" :gap="11">
     <template #leading>
-      <span class="fli-sigil" aria-hidden="true">✦</span>
+      <span class="fli-sigil" aria-hidden="true">
+        <ItemIcon v-if="item.svg" :item="item" :fallback-to-type="false" :size="17" />
+        <template v-else>✦</template>
+      </span>
     </template>
     <template #subtitle>
       <span v-if="subtitle" class="fli-subtitle">{{ subtitle }}</span>
@@ -17,6 +20,7 @@
 <script setup>
 import { computed } from 'vue'
 
+import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import ObjectListItem from '@/features/items/list-components/ObjectListItem'
 import { featChoices, featPrereq } from '@/features/items/lib/featRules'
 import { STAT_FULL, SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'

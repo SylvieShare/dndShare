@@ -1,6 +1,6 @@
 <template>
   <ObjectListItem :item="item" :name-en="item.nameEn || ''" :custom="item.userId != null" :subtitle="subtitle">
-    <template #leading><ObjectTypeIcon :type="type" /></template>
+    <template #leading><ItemIcon :item="item" :type="type" /></template>
     <template v-if="damage" #trailing>
       <span class="wli-damage">
         <template v-if="damage.diceSides">
@@ -15,8 +15,8 @@
 
 <script setup>
 import { computed } from 'vue'
+import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import ObjectListItem from '@/features/items/list-components/ObjectListItem'
-import ObjectTypeIcon from '@/features/items/list-components/ObjectTypeIcon'
 import { useSchemaSuggests } from '@/features/handbook/objects/lib/useSchemaSuggests'
 import SystemDie from '@/shared/ui/SystemDie.vue'
 import { diceById } from '@/shared/lib/systemDice'

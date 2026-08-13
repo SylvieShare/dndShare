@@ -4,8 +4,11 @@
 
       <!-- Sticky header with name / ID / edit -->
       <div v-if="!customRenderer && showTitle" class="detail-head">
-        <span class="detail-name">{{ item.name }}</span>
-        <span v-if="item.nameEn" class="detail-name-en">{{ item.nameEn }}</span>
+        <ItemIcon v-if="item.svg" :item="item" :fallback-to-type="false" :size="28" />
+        <div class="detail-title-text">
+          <span class="detail-name">{{ item.name }}</span>
+          <span v-if="item.nameEn" class="detail-name-en">{{ item.nameEn }}</span>
+        </div>
         <span v-if="item.userId != null" class="detail-custom-mark">✦ ваше</span>
         <div class="detail-head-actions">
           <span class="detail-id">ID {{ item.id }}</span>
@@ -101,6 +104,7 @@
 
 <script setup>
 import { computed, watch } from 'vue'
+import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import { useSuggestStore } from '@/stores/suggest'
 import { ensureItemNames, itemName } from '@/features/handbook/objects/lib/itemNames'
 import { getSuggestId, isFieldVisible } from '@/features/handbook/objects/lib/schemaFields'
@@ -217,13 +221,21 @@ function formatSubValue(sub, value) {
   top: -16px;
   z-index: 5;
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 10px;
   flex-wrap: wrap;
   margin: -16px -20px 14px;
   padding: 16px 20px 10px;
   background: var(--bg);
   border-bottom: 1px solid color-mix(in srgb, var(--text-on-accent) 6%, transparent);
+}
+
+.detail-title-text {
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .detail-name {

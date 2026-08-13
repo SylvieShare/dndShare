@@ -1,7 +1,7 @@
 <template>
   <ObjectListItem :item="item" :name-en="item.nameEn || ''" :custom="item.userId != null" :subtitle="subtitle">
     <template #leading>
-      <ObjectTypeIcon class="sli-type-icon" :type="type" />
+      <ItemIcon class="sli-type-icon" :item="item" :type="type" />
       <span
         class="sli-lvl"
         :class="{ 'sli-lvl-zero': data.lvl === 0 }"
@@ -19,8 +19,8 @@
 
 <script setup>
 import { computed } from 'vue'
+import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import ObjectListItem from '@/features/items/list-components/ObjectListItem'
-import ObjectTypeIcon from '@/features/items/list-components/ObjectTypeIcon'
 import { useSchemaSuggests } from '@/features/handbook/objects/lib/useSchemaSuggests'
 
 const props = defineProps({

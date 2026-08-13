@@ -3,7 +3,8 @@
     <header class="fdc-hero">
       <div class="fdc-sigil" aria-hidden="true">
         <span class="fdc-sigil-ring"></span>
-        <svg viewBox="0 0 40 40" fill="none">
+        <ItemIcon v-if="item.svg" class="fdc-item-icon" :item="item" :fallback-to-type="false" :size="42" />
+        <svg v-else viewBox="0 0 40 40" fill="none">
           <path d="M20 5l4.4 10.6L35 20l-10.6 4.4L20 35l-4.4-10.6L5 20l10.6-4.4L20 5Z" stroke="currentColor" stroke-width="1.5" />
           <circle cx="20" cy="20" r="4.5" fill="currentColor" />
         </svg>
@@ -80,6 +81,7 @@
 <script setup>
 import { computed } from 'vue'
 
+import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import RichContent from '@/shared/ui/RichContent'
 import { featChoices, featDescription, featPrereq } from '@/features/items/lib/featRules'
 import { useSuggestStore } from '@/stores/suggest'
@@ -186,7 +188,7 @@ function choiceEffects(choice) {
 .fdc-sigil { position: relative; display: grid; place-items: center; width: 62px; height: 62px; flex-shrink: 0; color: var(--feat); }
 .fdc-sigil::before { content: ''; position: absolute; inset: 8px; border-radius: 50%; background: radial-gradient(circle, color-mix(in srgb, var(--feat) 25%, transparent), transparent 70%); filter: blur(3px); }
 .fdc-sigil-ring { position: absolute; inset: 3px; border: 1px solid color-mix(in srgb, var(--feat) 36%, transparent); border-radius: 50%; box-shadow: inset 0 0 18px color-mix(in srgb, var(--feat) 8%, transparent); }
-.fdc-sigil svg { position: relative; width: 42px; height: 42px; filter: drop-shadow(0 0 8px color-mix(in srgb, var(--feat) 35%, transparent)); }
+.fdc-sigil svg, .fdc-item-icon { position: relative; width: 42px; height: 42px; filter: drop-shadow(0 0 8px color-mix(in srgb, var(--feat) 35%, transparent)); }
 .fdc-heading { min-width: 0; display: flex; flex-direction: column; gap: 9px; }
 .fdc-title-row { display: flex; align-items: baseline; flex-wrap: wrap; gap: 9px; padding-right: 24px; }
 .fdc-title-row h2 { margin: 0; color: var(--text-1); font-family: var(--font-display); font-size: 25px; font-weight: 700; line-height: 1.12; }

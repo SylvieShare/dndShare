@@ -51,9 +51,12 @@ entries and selected choices.
 ## Visual conventions
 
 - descriptions render through `RichContent`;
-- base PHB weapons and ordinary equipment receive idempotent `item.svg` icons
-  from startup schema; inventory rows render that stored SVG rather than
-  inferring art from localized names;
+- base PHB weapons, ordinary equipment, feats and race/class abilities receive
+  idempotent `item.svg` icons from startup schema; related class mechanics may
+  share semantic artwork, while every item still has an explicit `svg_id`;
+- `ItemIcon.vue` prefers the item SVG and may fall back to the item-type SVG.
+  Handbook lists/pickers, the global header search, detail presentations and
+  modal titles use the same rule instead of inferring art from localized names;
 - details open through the handbook `ItemViewModal`/modal stack; `ItemViewModal`
   forwards an optional action slot into the fixed `AppModalFrame` footer, so
   character-specific mutations do not leak into handbook detail renderers;

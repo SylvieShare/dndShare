@@ -1,6 +1,9 @@
 <template>
   <div class="adc-detail">
-    <div v-if="showTitle" class="adc-name">{{ item.name }}</div>
+    <div v-if="showTitle" class="adc-title-row">
+      <ItemIcon v-if="item.svg" :item="item" :fallback-to-type="false" :size="38" />
+      <div class="adc-name">{{ item.name }}</div>
+    </div>
 
     <div v-if="showTitle" class="adc-divider"></div>
 
@@ -20,6 +23,7 @@
 
 <script setup>
 import { computed } from 'vue'
+import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import RichContent from '@/shared/ui/RichContent'
 
 const props = defineProps({
@@ -36,6 +40,8 @@ const data = computed(() => props.item.data || {})
   flex-direction: column;
   gap: 12px;
 }
+
+.adc-title-row { display: flex; align-items: center; gap: 12px; }
 
 .adc-name {
   font-size: 22px;

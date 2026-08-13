@@ -1,8 +1,11 @@
 <template>
   <div class="sdc-detail">
     <div v-if="showTitle" class="sdc-title-row">
-      <div class="sdc-name">{{ item.name }}</div>
-      <div v-if="item.nameEn" class="sdc-name-en">{{ nameEnFormatted }}</div>
+      <ItemIcon v-if="item.svg" :item="item" :fallback-to-type="false" :size="38" />
+      <div class="sdc-title-text">
+        <div class="sdc-name">{{ item.name }}</div>
+        <div v-if="item.nameEn" class="sdc-name-en">{{ nameEnFormatted }}</div>
+      </div>
     </div>
 
     <div class="sdc-pills">
@@ -54,6 +57,7 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue'
+import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import RichContent from '@/shared/ui/RichContent'
 import { useSchemaSuggests } from '@/features/handbook/objects/lib/useSchemaSuggests'
 import { itemsApi } from '@/shared/api/itemsApi'
@@ -161,11 +165,13 @@ function colorAlpha(color, alpha) {
 
 .sdc-title-row {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 10px;
   padding-right: 24px;
   flex-wrap: wrap;
 }
+
+.sdc-title-text { min-width: 0; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
 
 .sdc-name {
   font-size: 22px;

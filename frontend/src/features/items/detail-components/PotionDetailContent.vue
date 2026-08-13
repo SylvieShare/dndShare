@@ -1,7 +1,8 @@
 <template>
   <div class="pdc">
     <div class="pdc-hero">
-      <PotionVial :color="data.color" :rarity="rarity" size="lg" />
+      <ItemIcon v-if="item.svg" :item="item" :fallback-to-type="false" :size="56" />
+      <PotionVial v-else :color="data.color" :rarity="rarity" size="lg" />
       <div class="pdc-hero-info">
         <div v-if="showTitle" class="pdc-name">{{ item.name }}</div>
         <span class="pdc-rarity" :style="{ color: preset.color, borderColor: preset.color }">{{ preset.label }}</span>
@@ -26,6 +27,7 @@
 <script setup>
 import { computed } from 'vue'
 
+import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import PotionVial from '@/features/items/components/PotionVial'
 import RichContent from '@/shared/ui/RichContent'
 import { rarityOf } from '@/features/items/lib/potionRarity'

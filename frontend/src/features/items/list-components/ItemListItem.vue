@@ -1,14 +1,14 @@
 <template>
   <ObjectListItem :item="item" :name-en="item.nameEn || ''" :custom="item.userId != null" :subtitle="subtitle">
-    <template #leading><ObjectTypeIcon :type="type" /></template>
+    <template #leading><ItemIcon :item="item" :type="type" /></template>
     <template v-if="costLabel" #trailing><span class="ili-cost">{{ costLabel }}</span></template>
   </ObjectListItem>
 </template>
 
 <script setup>
 import { computed } from 'vue'
+import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import ObjectListItem from '@/features/items/list-components/ObjectListItem'
-import ObjectTypeIcon from '@/features/items/list-components/ObjectTypeIcon'
 import { useCostFormatter } from '@/features/items/lib/useCostFormatter'
 
 const props = defineProps({
