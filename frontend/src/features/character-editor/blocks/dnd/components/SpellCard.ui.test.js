@@ -9,6 +9,7 @@ describe('character spell card icon', () => {
     expect(source).toContain('v-if="entry.item?.iconImageUrl"')
     expect(source).toContain('<ItemIcon')
     expect(source).toContain(':fallback-to-type="false"')
+    expect(source).toContain(':size="48"')
   })
 
   it('keeps the current school symbol as the fallback', () => {

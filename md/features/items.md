@@ -73,7 +73,7 @@ icon is the rendering-quality reference: later icons copy its finish, visual
 density and readability, not its subject or palette.
 
 - Show one dominant magical subject with at most two or three supporting
-  elements. It must remain recognizable at the 36 px character-sheet size.
+  elements. It must remain recognizable at the 48 px character-sheet size.
 - Use polished, semi-realistic fantasy painting with tactile energy, strong
   local contrast, saturated color and a bright magical core. Light originates
   inside the spell effect.
@@ -91,7 +91,7 @@ density and readability, not its subject or palette.
 The production asset is a `128×128` RGBA WebP with transparent corners and
 clean antialiased edges without a chroma-key fringe. Generate at a larger
 square size, extract the background, then downsample with a high-quality
-filter. Inspect the result at 128, 64 and 36 px. Only the final WebP is uploaded
+filter. Inspect the result at 128, 64 and 48 px. Only the final WebP is uploaded
 to S3 and registered in `storage_image`; it is not added to frontend static
 assets. Generation masters may be retained outside the runtime repository.
 
