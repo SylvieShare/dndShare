@@ -287,6 +287,16 @@
       "inspiration_id": "inspiration"
     }
   },
+  "desktop_statuses": {
+    "id": "desktop_statuses",
+    "type": "DND_STATUS_OVERVIEW",
+    "content": {
+      "states_id": "states",
+      "states_suggest_id": 9,
+      "exhaustion_id": "exhaustion",
+      "inspiration_id": "inspiration"
+    }
+  },
   "weapon": {
     "id": "weapon",
     "type": "DND_WEAPONS",

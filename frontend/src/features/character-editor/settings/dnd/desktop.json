@@ -540,16 +540,8 @@
                         "kind": "block"
                       },
                       {
-                        "ref": "exhaustion",
+                        "ref": "desktop_statuses",
                         "kind": "block"
-                      },
-                      {
-                        "ref": "states",
-                        "kind": "block",
-                        "title": "Состояния",
-                        "props": {
-                          "variant": "summary_tile"
-                        }
                       },
                       {
                         "ref": "proficiencies",

@@ -62,22 +62,7 @@
     </AppModalFrame>
 
     <AppModalFrame v-if="editorKind === 'inspiration'" title="Вдохновение" :padded="false" @close="closeEditor">
-      <EditorPanel>
-        <button
-          class="dmsm-inspiration-toggle"
-          :class="{ 'dmsm-inspiration-toggle--active': inspirationActive }"
-          type="button"
-          :aria-pressed="inspirationActive"
-          @click="setInspiration(!inspirationActive)"
-        >
-          <span class="dmsm-inspiration-mark" aria-hidden="true">✦</span>
-          <span class="dmsm-inspiration-copy">
-            <strong>{{ inspirationActive ? 'Вдохновение есть' : 'Нет вдохновения' }}</strong>
-            <span>{{ inspirationActive ? 'Нажмите, чтобы потратить' : 'Нажмите, чтобы выдать' }}</span>
-          </span>
-        </button>
-        <p class="dmsm-inspiration-note">Героическое вдохновение выдаёт мастер игры; его можно потратить, чтобы перебросить кубик.</p>
-      </EditorPanel>
+      <DndInspirationEditor :value="inspirationValue" embedded @change="setInspiration" />
     </AppModalFrame>
 
     <ItemTooltip
@@ -97,7 +82,7 @@ import { Activity, BatteryLow, Sparkles } from '@lucide/vue'
 import AppModalFrame from '@/shared/ui/AppModalFrame'
 import BlockStatesPickerEditor from '@/features/character-editor/blocks/generic/components/BlockStatesPickerEditor'
 import DndExhaustionEditor from '@/features/character-editor/blocks/dnd/components/DndExhaustionEditor'
-import EditorPanel from '@/features/character-editor/components/EditorPanel'
+import DndInspirationEditor from '@/features/character-editor/blocks/dnd/components/DndInspirationEditor'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionMenu from '@/shared/ui/RowActionMenu'
@@ -127,7 +112,8 @@ const allItems = computed(() => suggestStore.items(suggestTypeId.value))
 const activeItems = computed(() => allItems.value.filter(item => activeIds.value.includes(item.id)))
 const exhaustionValue = computed(() => props.values?.[ids.value.exhaustion] || { level: 0 })
 const exhaustionLevel = computed(() => normalizeExhaustion(exhaustionValue.value).level)
-const inspirationActive = computed(() => isInspirationActive(props.values?.[ids.value.inspiration]))
+const inspirationValue = computed(() => props.values?.[ids.value.inspiration] ?? false)
+const inspirationActive = computed(() => isInspirationActive(inspirationValue.value))
 const hasActiveSummary = computed(() => activeItems.value.length > 0 || exhaustionLevel.value > 0 || inspirationActive.value)
 const canInteract = computed(() => !!charCtx.ownerMode)
 
@@ -261,29 +247,4 @@ function setInspiration(value) {
 .dmsm-menu-value { color: var(--text-muted); font-size: 11px; }
 .dmsm-menu-value--danger { color: var(--danger); }
 .dmsm-menu-value--accent { color: var(--accent-soft); }
-.dmsm-inspiration-toggle {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  width: 100%;
-  min-height: 72px;
-  padding: 13px 15px;
-  border: 1px solid var(--border-strong);
-  border-radius: var(--r-md);
-  background: color-mix(in srgb, var(--text-on-accent) 3%, transparent);
-  color: var(--text-muted);
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-.dmsm-inspiration-toggle--active {
-  border-color: color-mix(in srgb, var(--accent) 72%, var(--border-strong));
-  background: color-mix(in srgb, var(--accent) 13%, transparent);
-  color: var(--accent-soft);
-}
-.dmsm-inspiration-mark { flex: 0 0 auto; font-size: 28px; line-height: 1; }
-.dmsm-inspiration-copy { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
-.dmsm-inspiration-copy strong { color: var(--text-1); font-size: 14px; }
-.dmsm-inspiration-copy span { font-size: 12px; }
-.dmsm-inspiration-note { margin: 0; color: var(--text-muted); font-size: 12px; line-height: 1.5; }
 </style>

@@ -70,7 +70,13 @@ The character viewport keeps its pre-keyboard height while a rich-text or form
 editor is focused. `useCharacterViewport` owns the visual/layout viewport
 synchronization and document-scoped focus handling needed by editors teleported
 outside the page root.
-The compact mobile strip keeps HP at its intrinsic number width and never lets
+The desktop skills sidebar groups conditions, exhaustion and heroic inspiration
+inside one interactive **Статусы** tile. The tile keeps the rules term
+**Состояния** for the condition list itself, summarizes active condition chips,
+the exhaustion level and inspiration without expanding exhaustion effects, and
+opens one vertical morph editor with direct tabs for all three domains. Clicking
+a domain inside the tile opens its corresponding tab. The compact mobile strip
+keeps HP at its intrinsic number width and never lets
 the HP numbers shrink. Its right side contains a fixed **Статусы** action
 button with editors for conditions, exhaustion and heroic inspiration. Active
 condition icons, a non-zero exhaustion level and active inspiration stay visible

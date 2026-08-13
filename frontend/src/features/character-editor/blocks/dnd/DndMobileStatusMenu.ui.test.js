@@ -21,6 +21,7 @@ describe('mobile HP and status strip', () => {
       expect(source).toContain(`editorKind === '${editor}'`)
     }
     expect(source.match(/<AppModalFrame/g)).toHaveLength(3)
+    expect(source).toContain('<DndInspirationEditor')
   })
 
   it('shows larger frameless condition icons with description tooltips', () => {

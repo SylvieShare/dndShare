@@ -54,4 +54,23 @@ describe('D&D desktop sheet schema', () => {
     expect(diary.content.children[2].props?.tile).toBe(true)
     expect(diary.content.children[2].children?.[0]?.ref).toBe('notes')
   })
+
+  it('groups conditions, exhaustion and inspiration in one desktop status block', () => {
+    const statuses = findNode(base?.content, node => node.ref === 'desktop_statuses')
+    const separateExhaustion = findNode(base?.content, node => node.ref === 'exhaustion')
+    const separateStates = findNode(base?.content, node => node.ref === 'states')
+
+    expect(statuses).toBeTruthy()
+    expect(separateExhaustion).toBeNull()
+    expect(separateStates).toBeNull()
+    expect(schema.blocks.desktop_statuses).toMatchObject({
+      type: 'DND_STATUS_OVERVIEW',
+      content: {
+        states_id: 'states',
+        states_suggest_id: 9,
+        exhaustion_id: 'exhaustion',
+        inspiration_id: 'inspiration',
+      },
+    })
+  })
 })
