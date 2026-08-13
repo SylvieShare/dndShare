@@ -70,10 +70,7 @@
               @mouseenter="e => showTooltip(e, entry)"
               @mouseleave="hideTooltip"
             >
-              <InventoryItemIcon
-                :svg="entry.display.svg"
-                :simplified="entry.display.isCustom"
-              />
+              <InventoryItemIcon :svg="entry.display.svg" />
 
               <span
                 class="di-row-name"
