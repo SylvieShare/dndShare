@@ -5,6 +5,16 @@ export function isResizeObserverElement(el, ElementClass = typeof Element !== 'u
   return !!ElementClass && el instanceof ElementClass
 }
 
+export function resolveCharacterViewHeight({
+  isMobile,
+  mobileAppHeaderVisible,
+  headerHidden,
+  viewportHeight = 'var(--character-viewport-height, 100dvh)',
+}) {
+  if (!isMobile || !mobileAppHeaderVisible || headerHidden) return viewportHeight
+  return `calc(${viewportHeight} - var(--header-h))`
+}
+
 export function useScrollHide(isMobile, commonMobileScrollHide, options = {}) {
   const toolbarHeight = ref(48)
   const stripHidden = ref(false)
@@ -44,13 +54,13 @@ export function useScrollHide(isMobile, commonMobileScrollHide, options = {}) {
   })
 
   const viewStyle = computed(() => {
-    const headerH = isMobile.value ? 50 : 54
     const viewportH = 'var(--character-viewport-height, 100dvh)'
-    if (isMobile.value && !mobileAppHeaderVisible) {
-      return { height: viewportH }
-    }
-    const collapsed = headerHidden.value && isMobile.value
-    const h = collapsed ? viewportH : `calc(${viewportH} - ${headerH}px)`
+    const h = resolveCharacterViewHeight({
+      isMobile: isMobile.value,
+      mobileAppHeaderVisible,
+      headerHidden: headerHidden.value,
+      viewportHeight: viewportH,
+    })
     return { height: h, transition: 'height 0.34s cubic-bezier(0.22, 1, 0.36, 1)' }
   })
 

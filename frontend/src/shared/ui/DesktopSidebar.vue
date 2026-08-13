@@ -7,18 +7,6 @@
       </router-link>
     </div>
 
-    <button
-      class="sidebar-toggle"
-      type="button"
-      :aria-label="expanded ? 'Свернуть меню' : 'Раскрыть меню'"
-      :title="expanded ? 'Свернуть меню' : 'Раскрыть меню'"
-      @click="toggle"
-    >
-      <PanelLeftClose v-if="expanded" class="sidebar-icon" :size="19" aria-hidden="true" />
-      <PanelLeftOpen v-else class="sidebar-icon" :size="19" aria-hidden="true" />
-      <span class="sidebar-label">{{ expanded ? 'Свернуть меню' : 'Раскрыть меню' }}</span>
-    </button>
-
     <nav class="sidebar-nav" aria-label="Основная навигация">
       <router-link
         v-for="item in navigationItems"
@@ -34,6 +22,18 @@
     </nav>
 
     <div class="sidebar-tools">
+      <button
+        class="sidebar-toggle"
+        type="button"
+        :aria-label="expanded ? 'Свернуть панель' : 'Раскрыть панель'"
+        :title="expanded ? 'Свернуть панель' : 'Раскрыть панель'"
+        @click="toggle"
+      >
+        <PanelLeftClose v-if="expanded" class="sidebar-icon" :size="18" aria-hidden="true" />
+        <PanelLeftOpen v-else class="sidebar-icon" :size="18" aria-hidden="true" />
+        <span class="sidebar-label">{{ expanded ? 'Свернуть панель' : 'Раскрыть панель' }}</span>
+      </button>
+
       <button
         v-if="!expanded"
         class="sidebar-link sidebar-search-trigger"
@@ -178,10 +178,7 @@ function expandForSearch() {
 }
 
 .sidebar-toggle {
-  position: absolute;
-  top: 72px;
-  left: 10px;
-  right: 10px;
+  width: 100%;
   height: 44px;
   display: flex;
   align-items: center;
@@ -201,11 +198,16 @@ function expandForSearch() {
   background: var(--surface-raised);
 }
 
+.sidebar-toggle .sidebar-label {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
 .sidebar-nav {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  padding: 56px 10px 10px;
+  padding: 12px 10px 10px;
 }
 
 .sidebar-link {
@@ -274,7 +276,11 @@ function expandForSearch() {
 
 .sidebar-tools {
   margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
   padding: 10px;
+  border-top: 1px solid var(--border);
 }
 
 .sidebar-search-trigger {
@@ -283,6 +289,9 @@ function expandForSearch() {
 
 .sidebar-search {
   width: 100%;
+  height: 44px;
+  display: flex;
+  align-items: center;
 }
 
 .sidebar-search :deep(.hs-input-row),

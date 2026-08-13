@@ -1,7 +1,8 @@
 .view {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 54px); /* overridden by viewStyle computed */
+  height: 100vh;
+  height: 100dvh; /* overridden by viewStyle computed */
   overflow: hidden;
 }
 
@@ -45,10 +46,6 @@
 }
 
 @media (max-width: 640px) {
-  .view {
-    height: calc(100vh - 50px); /* overridden by viewStyle computed */
-  }
-
   .container {
     padding: 18px 14px 24px;
   }

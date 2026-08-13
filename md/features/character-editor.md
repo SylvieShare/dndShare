@@ -43,6 +43,8 @@ in `mobile.json`. The mobile skills tab starts with the shared resources block,
 followed by proficiencies and character abilities. The character route hides the global app header at the mobile
 breakpoint and gives the full viewport to its own toolbar; that toolbar menu has
 an explicit **К персонажам** action, including on read-only public sheets. Its
+desktop shell also occupies the full viewport because application navigation is
+provided by the fixed side rail and does not reserve a top-header offset. Its
 active tab still registers its DOM scroller through `useAppHeaderCollapse` so
 the compact common strip has one shared scroll/settle observer; regular routes
 keep the header in document flow. Completed tab changes are pushed into the
