@@ -119,6 +119,10 @@
         },
         "children": [
           {
+            "ref": "resources",
+            "kind": "block"
+          },
+          {
             "ref": "proficiencies",
             "kind": "block"
           },

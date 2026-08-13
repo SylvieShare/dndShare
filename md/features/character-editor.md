@@ -39,7 +39,8 @@ split into semantic `--surface` blocks instead of painting a whole tab: every
 weapon is a card; spell parameters, slots and each spell level are separate
 cards; inventory sections and utility widgets are separate; the personality
 profile declares the `Основное`, `Облик`, `Характер` and `История` tile groups
-in `mobile.json`. The character route hides the global app header at the mobile
+in `mobile.json`. The mobile skills tab starts with the shared resources block,
+followed by proficiencies and character abilities. The character route hides the global app header at the mobile
 breakpoint and gives the full viewport to its own toolbar; that toolbar menu has
 an explicit **К персонажам** action, including on read-only public sheets. Its
 active tab still registers its DOM scroller through `useAppHeaderCollapse` so

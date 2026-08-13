@@ -31,6 +31,18 @@ describe('D&D mobile sheet schema', () => {
     expect(diary?.content?.children?.map(block => block.ref)).toEqual(['quests', 'diary', 'notes'])
   })
 
+  it('shows resources first on the mobile skills tab', () => {
+    const skills = schema.layouts.mobile.tabs.find(tab => tab.title === 'Умения')
+
+    expect(skills?.content?.children?.map(block => block.ref)).toEqual([
+      'resources',
+      'proficiencies',
+      'abilities_feats',
+      'abilities_race',
+      'abilities_class',
+    ])
+  })
+
   it('keeps HP content-sized and groups the remaining mobile status actions', () => {
     const summary = schema.layouts.mobile.common_mobile_blocks
     const hp = summary.children.find(block => block.ref === 'hp')
