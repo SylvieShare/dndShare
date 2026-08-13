@@ -5,18 +5,19 @@
         <Dices class="sidebar-brand-icon" :size="22" :stroke-width="1.8" aria-hidden="true" />
         <span class="sidebar-label sidebar-brand-label">DnD Share</span>
       </router-link>
-
-      <button
-        class="sidebar-toggle"
-        type="button"
-        :aria-label="expanded ? 'Свернуть меню' : 'Раскрыть меню'"
-        :title="expanded ? 'Свернуть меню' : 'Раскрыть меню'"
-        @click="toggle"
-      >
-        <PanelLeftClose v-if="expanded" :size="19" aria-hidden="true" />
-        <PanelLeftOpen v-else :size="19" aria-hidden="true" />
-      </button>
     </div>
+
+    <button
+      class="sidebar-toggle"
+      type="button"
+      :aria-label="expanded ? 'Свернуть меню' : 'Раскрыть меню'"
+      :title="expanded ? 'Свернуть меню' : 'Раскрыть меню'"
+      @click="toggle"
+    >
+      <PanelLeftClose v-if="expanded" class="sidebar-icon" :size="19" aria-hidden="true" />
+      <PanelLeftOpen v-else class="sidebar-icon" :size="19" aria-hidden="true" />
+      <span class="sidebar-label">{{ expanded ? 'Свернуть меню' : 'Раскрыть меню' }}</span>
+    </button>
 
     <nav class="sidebar-nav" aria-label="Основная навигация">
       <router-link
@@ -142,7 +143,6 @@ function expandForSearch() {
   display: flex;
   align-items: center;
   flex-shrink: 0;
-  gap: 4px;
   padding: 0 10px;
   border-bottom: 1px solid var(--border);
 }
@@ -178,23 +178,22 @@ function expandForSearch() {
 }
 
 .sidebar-toggle {
-  width: 34px;
-  height: 34px;
-  display: flex;
-  flex: 0 0 34px;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  border-radius: 8px;
-  background: transparent;
-  cursor: pointer;
-  transition: color 0.15s ease, background 0.15s ease;
-}
-
-.app-sidebar:not(.app-sidebar--expanded) .sidebar-toggle {
   position: absolute;
   top: 72px;
-  left: 14px;
+  left: 10px;
+  right: 10px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0;
+  border: none;
+  border-radius: 9px;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.15s ease, background 0.15s ease;
 }
 
 .sidebar-toggle:hover {
@@ -207,10 +206,6 @@ function expandForSearch() {
   flex-direction: column;
   gap: 4px;
   padding: 56px 10px 10px;
-}
-
-.app-sidebar--expanded .sidebar-nav {
-  padding-top: 12px;
 }
 
 .sidebar-link {
