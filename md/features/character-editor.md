@@ -163,7 +163,10 @@ counters and hit-dice pools without scalar mirrors.
 `DndItems` uses `lib/itemSection.js` and the handbook item picker. Equipped items
 are a top-level array; user sections never double as equipped. Entry override
 is for a custom name/description/count metadata, while referenced item content
-comes from handbook. The list shows count as a badge; it has no ordinary
+comes from handbook. A referenced row renders its handbook `item.svg` when the
+item has one and does not reserve an empty icon slot otherwise. Simplified rows
+without an item id use the dedicated dashed document placeholder, so they are
+visually distinct from full handbook entries. The list shows count as a badge; it has no ordinary
 increment/decrement controls. The item detail modal provides the shared number
 input with a minimum of one and a delete action; a multi-quantity picker creates
 one entry with that count. Potion tiles open the shared `RowActionMenu` with

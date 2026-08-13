@@ -70,6 +70,11 @@
               @mouseenter="e => showTooltip(e, entry)"
               @mouseleave="hideTooltip"
             >
+              <InventoryItemIcon
+                :svg="entry.display.svg"
+                :simplified="entry.display.isCustom"
+              />
+
               <span
                 class="di-row-name"
                 :class="{ 'di-row-name-editable': entry.display.isCustom && canManage }"
@@ -188,6 +193,7 @@
 import { computed, inject, nextTick, onMounted, reactive, ref, watch } from 'vue'
 
 import BaseTile from '@/shared/ui/BaseTile'
+import InventoryItemIcon from '@/features/character-editor/components/InventoryItemIcon.vue'
 import ItemInlineFormModal from '@/features/character-editor/components/ItemInlineFormModal'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip'
@@ -412,6 +418,10 @@ function openPicker(sectionId) {
 function onPickerPick(item, qty = 1) {
   const n = Math.max(1, Math.min(999, Math.floor(Number(qty) || 1)))
   if (!catalog[item.id]) catalog[item.id] = item
+  itemsApi.byIds([item.id]).then((response) => {
+    const enriched = response?.items?.[0]
+    if (enriched) catalog[item.id] = enriched
+  }).catch(() => null)
   const next = cloneModel(model.value)
   const list = itemsRef(next, pickerSectionId.value) || next.sections[0]?.items
   if (!list) return

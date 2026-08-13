@@ -51,6 +51,9 @@ entries and selected choices.
 ## Visual conventions
 
 - descriptions render through `RichContent`;
+- base PHB weapons and ordinary equipment receive idempotent `item.svg` icons
+  from startup schema; inventory rows render that stored SVG rather than
+  inferring art from localized names;
 - details open through the handbook `ItemViewModal`/modal stack; `ItemViewModal`
   forwards an optional action slot into the fixed `AppModalFrame` footer, so
   character-specific mutations do not leak into handbook detail renderers;

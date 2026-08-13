@@ -73,5 +73,6 @@ export function entryDisplayData(entry, catalog) {
   const cost = ov.cost ?? base?.data?.cost ?? ''
   const weight = ov.weight ?? base?.data?.weight ?? null
   const isCustom = entry.id == null
-  return { name, desc, consumable, cost, weight, isCustom, base }
+  const svg = base?.svg ?? ''
+  return { name, desc, consumable, cost, weight, isCustom, svg, base }
 }
