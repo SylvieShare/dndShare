@@ -24,7 +24,9 @@
         @mouseenter="e => $emit('show-tooltip', e, entry)"
         @mouseleave="$emit('hide-tooltip')"
       >
-        <span class="abv-marker" aria-hidden="true" />
+        <span class="abv-icon" aria-hidden="true">
+          <SvgIcon v-if="entry.svg" class="abv-icon-svg" :svg="entry.svg" />
+        </span>
 
         <div v-if="entry.max_use" class="abv-uses">
           <button
@@ -51,6 +53,7 @@
 
 <script setup>
 import SheetBlockTitle from '@/shared/ui/SheetBlockTitle'
+import SvgIcon from '@/shared/ui/SvgIcon.vue'
 
 defineProps({
   entries: { type: Array, default: () => [] },
@@ -105,27 +108,17 @@ defineEmits(['toggle-dot', 'view', 'show-tooltip', 'hide-tooltip', 'manage'])
 .abv-card:hover { background-color: color-mix(in srgb, var(--text-on-accent) 6%, transparent); }
 .abv-card:hover .abv-name { color: var(--text-1); }
 
-.abv-marker {
+.abv-icon {
   flex-shrink: 0;
-  width: 13px;
-  height: 13px;
-  border-radius: 50%;
-  box-sizing: border-box;
-  border: 1.5px solid color-mix(in srgb, var(--accent) 50%, transparent);
-  display: grid;
-  place-items: center;
-  transition: border-color 0.12s;
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
 }
-.abv-marker::before {
-  content: "";
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background-color: color-mix(in srgb, var(--accent) 65%, transparent);
-  transition: background-color 0.12s;
-}
-.abv-card:hover .abv-marker { border-color: var(--accent); }
-.abv-card:hover .abv-marker::before { background-color: var(--accent); }
+.abv-icon-svg { width: 20px; height: 20px; }
+.abv-card:hover .abv-icon { color: var(--text-2); }
 
 .abv-uses {
   display: flex;

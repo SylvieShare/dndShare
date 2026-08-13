@@ -159,6 +159,11 @@ Spellcasting ability is explicit handbook data (`spellcasting.ability` or
 localized class name. Short/long rest update current spell slots, ability
 counters and hit-dice pools without scalar mirrors.
 
+Race abilities, class abilities and feats remain separate canonical arrays and
+use their corresponding handbook item types. Their sheet rows render the
+assigned `item.svg` in a fixed neutral-gray slot; a missing SVG leaves that slot
+empty instead of falling back to the former circle-with-dot marker.
+
 ## Items, weapons and spells
 
 `DndItems` uses `lib/itemSection.js` and the handbook item picker. Equipped items
