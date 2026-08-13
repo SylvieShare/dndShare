@@ -411,10 +411,11 @@ function close() {
   background: none;
   color: var(--text-muted);
   cursor: pointer;
-  opacity: 0.55;
+  opacity: 0.35;
   transition: opacity 0.15s;
 }
 @media (hover: hover) { .dci-edit:hover { opacity: 1; } }
+.dci-edit:focus-visible { opacity: 1; }
 
 .dciw-body {
   display: flex;

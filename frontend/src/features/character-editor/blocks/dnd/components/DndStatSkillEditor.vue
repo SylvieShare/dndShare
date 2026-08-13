@@ -132,9 +132,11 @@ function update(field, value) {
   background: none;
   color: var(--text-muted);
   cursor: pointer;
-  transition: color 0.12s, background 0.12s;
+  opacity: 0.35;
+  transition: opacity 0.15s;
 }
-.sk-rename-btn:hover { color: var(--accent); background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); }
+@media (hover: hover) { .sk-rename-btn:hover { opacity: 1; } }
+.sk-rename-btn:focus-visible { opacity: 1; }
 .sk-rename {
   flex: 1;
   min-width: 0;

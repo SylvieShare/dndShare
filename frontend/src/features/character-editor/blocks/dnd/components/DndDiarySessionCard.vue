@@ -149,10 +149,12 @@ const eventsCountLabel = computed(() => {
   background: none;
   color: var(--text-muted);
   cursor: pointer;
-  transition: color 0.12s, background 0.12s;
+  opacity: 0.35;
+  transition: opacity 0.15s;
 }
 .dsc-count + .dsc-edit { margin-left: 0; }
-@media (hover: hover) { .dsc-edit:hover { color: var(--accent); background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); } }
+@media (hover: hover) { .dsc-edit:hover { opacity: 1; } }
+.dsc-edit:focus-visible { opacity: 1; }
 
 .dsc-body {
   display: grid;

@@ -127,9 +127,6 @@ function hideTooltip() { tooltip.value.visible = false }
 
 /* ── Head ── */
 .stat-card-head { margin-bottom: 2px; }
-/* tint the head's pencil with the stat colour (SheetBlockTitle defaults to --accent) */
-.stat-card-head :deep(.sbt-main--clickable:hover .sbt-edit),
-.stat-card-head :deep(.sbt-edit:hover) { color: var(--sc, var(--accent)); }
 
 .stat-icon { width: 26px; height: 26px; align-self: center; flex-shrink: 0; }
 

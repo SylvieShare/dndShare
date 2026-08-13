@@ -134,9 +134,11 @@ function rollProf() {
   background: none;
   color: var(--text-muted);
   cursor: pointer;
-  transition: color 0.12s, background 0.12s;
+  opacity: 0.35;
+  transition: opacity 0.15s;
 }
-@media (hover: hover) { .sb-edit:hover { color: var(--accent); background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); } }
+@media (hover: hover) { .sb-edit:hover { opacity: 1; } }
+.sb-edit:focus-visible { opacity: 1; }
 .sb-display { cursor: pointer; }
 .skill-bonus-tile-compact { width: 76px; min-width: 76px; gap: 2px; }
 .skill-bonus-tile-compact .sb-plus { font-size: 18px; }

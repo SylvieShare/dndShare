@@ -115,5 +115,8 @@ defineEmits(['show-tooltip', 'hide-tooltip'])
   place-items: center;
   flex-shrink: 0;
   color: var(--text-muted);
+  opacity: 0.35;
+  transition: opacity 0.15s;
 }
+@media (hover: hover) { .bss-view:hover .bss-pencil { opacity: 1; } }
 </style>

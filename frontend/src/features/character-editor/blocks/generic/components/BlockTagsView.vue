@@ -63,7 +63,10 @@ const visibleSections = computed(() => props.sections.filter(s => (s.tags || [])
   place-items: center;
   flex-shrink: 0;
   color: var(--text-muted);
+  opacity: 0.35;
+  transition: opacity 0.15s;
 }
+@media (hover: hover) { .btv:hover .btv-pencil { opacity: 1; } }
 
 .btv-sections {
   display: flex;

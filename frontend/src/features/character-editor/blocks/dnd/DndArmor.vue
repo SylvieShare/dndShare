@@ -114,10 +114,12 @@ function setShieldBonus(v) { patch({ shield_bonus: v }) }
   background: none;
   color: var(--text-muted);
   cursor: pointer;
-  transition: color 0.12s, background 0.12s;
+  opacity: 0.35;
+  transition: opacity 0.15s;
   z-index: 1;
 }
-@media (hover: hover) { .armor-tile .sb-edit:hover { color: var(--accent); background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); } }
+@media (hover: hover) { .armor-tile .sb-edit:hover { opacity: 1; } }
+.armor-tile .sb-edit:focus-visible { opacity: 1; }
 .armor-btn {
   background: none;
   border: none;

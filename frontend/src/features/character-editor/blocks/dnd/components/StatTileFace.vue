@@ -72,9 +72,6 @@ const iconStyle = computed(() => ({
 /* compact label so "Бонус умения" + the pencil fit the narrow stat tile on one line (no truncation) */
 .stf-head :deep(.sbt-title) { font-size: 9px; letter-spacing: 0.04em; }
 .stf-head :deep(.sbt-edit) { width: 18px; height: 18px; }
-/* tint the pencil with the tile colour (SheetBlockTitle defaults to --accent) */
-.stf-head :deep(.sbt-main--clickable:hover .sbt-edit),
-.stf-head :deep(.sbt-edit:hover) { color: var(--sc, var(--accent)); }
 .stf-body { display: flex; align-items: center; gap: 8px; cursor: pointer; }
 .stf-ic {
   width: 24px;

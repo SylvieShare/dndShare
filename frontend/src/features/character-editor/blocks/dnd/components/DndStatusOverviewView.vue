@@ -101,7 +101,8 @@ function select(kind) {
 }
 
 .dsov-head { display: flex; align-items: center; gap: 8px; min-height: 18px; }
-.dsov-pencil { display: grid; place-items: center; flex-shrink: 0; color: var(--text-muted); }
+.dsov-pencil { display: grid; place-items: center; flex-shrink: 0; color: var(--text-muted); opacity: 0.35; transition: opacity 0.15s; }
+@media (hover: hover) { .dsov:hover .dsov-pencil { opacity: 1; } }
 .dsov-count {
   display: grid;
   place-items: center;
