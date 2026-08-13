@@ -411,9 +411,10 @@ function close() {
   background: none;
   color: var(--text-muted);
   cursor: pointer;
-  transition: color 0.12s, background 0.12s;
+  opacity: 0.55;
+  transition: opacity 0.15s;
 }
-@media (hover: hover) { .dci-edit:hover { color: var(--accent); background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); } }
+@media (hover: hover) { .dci-edit:hover { opacity: 1; } }
 
 .dciw-body {
   display: flex;
