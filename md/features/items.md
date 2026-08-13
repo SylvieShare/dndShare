@@ -68,25 +68,26 @@ entries and selected choices.
 
 ### Raster spell icon art direction
 
-Raster spell icons form one set of **painted magical emblems**. The Fireball
-icon is the rendering-quality reference: later icons copy its finish, visual
-density and readability, not its subject or palette.
+Raster spell icons form one set of **glossy interface emblems**. Their visual
+language comes from `SpellSlotSphere` and `PotionVial`: the Fireball icon is
+the concrete set reference, while later icons change only subject and palette.
 
-- Show one dominant magical subject with at most two or three supporting
-  elements. It must remain recognizable at the 48 px character-sheet size.
-- Use polished, semi-realistic fantasy painting with tactile energy, strong
-  local contrast, saturated color and a bright magical core. Light originates
-  inside the spell effect.
-- Center the silhouette and use roughly 75–85% of the square canvas, retaining
-  clear padding on every side. Nothing may be cropped.
-- Do not add a frame, badge, circular plate, square backdrop, scenery, caster,
-  hand, text, logo or watermark. A ring is allowed only when it is the spell's
-  actual subject.
-- Keep external glow compact and let it fade into transparency before the
-  canvas edge. Avoid detached edge particles, cast shadows and visual noise.
-- The spell effect selects the palette; the shared identity comes from the
-  painting technique, internal lighting, silhouette strength and detail
-  density. Harmful blood magic should feel dangerous but not graphic or gory.
+- Show one compact dominant magical symbol that remains recognizable at the
+  48 px character-sheet size. Use no more than six or seven major shapes.
+- Use crisp vector-like 2.5D drawing, a thick dark-navy contour, saturated
+  smooth fills and only a restrained soft gradient. Do not use painterly or
+  realistic texture.
+- Give every icon one large cream-white glossy highlight in the upper-left and
+  two smaller highlight bubbles. This repeats the glass/liquid treatment used
+  by spell slots and potions.
+- Center the silhouette and use roughly 70–80% of the square canvas, retaining
+  even clear padding on every side. Nothing may be cropped.
+- Do not add a decorative frame, unrelated badge or plate, square backdrop,
+  scenery, caster, hand, text, logo or watermark. A ring or drop is allowed
+  when it is part of the spell's semantic symbol.
+- Avoid external glow, cast shadows, detached particles and fine details. The
+  spell-specific palette and inner glyph convey the effect. Harmful blood
+  magic should feel dangerous but not graphic or gory.
 
 The production asset is a `128×128` RGBA WebP with transparent corners and
 clean antialiased edges without a chroma-key fringe. Generate at a larger
@@ -102,25 +103,25 @@ palette sections:
 Use case: stylized-concept
 Asset type: transparent 128×128 fantasy game UI spell icon
 Primary request: <one dominant magical emblem for the spell>
-Style/medium: polished semi-realistic fantasy painting; match the Fireball
-  icon's finish, visual density and small-size readability
-Composition/framing: centered strong silhouette; fill 75–85% of the square;
-  generous clear padding; nothing cropped; at most 2–3 supporting elements
-Lighting/mood: intense internal magical light; compact glow contained before
-  the canvas edge
+Style/medium: crisp vector-like 2.5D game UI illustration; match the Fireball
+  icon's thick dark-navy contour, smooth fill and glossy liquid finish
+Composition/framing: centered compact silhouette; fill 70–80% of the square;
+  even clear padding; nothing cropped; at most 6–7 major shapes
+Lighting/mood: one large cream-white upper-left highlight and two smaller
+  highlight bubbles; no external glow or cast shadow
 Color palette: <spell-specific palette>
 Constraints: perfectly flat removable chroma-key background; no frame, badge,
   plate, scenery, caster, hand, text, logo, watermark, cast shadow or detached
-  edge particles; no key color inside the subject
+  edge particles; no painterly texture; no key color inside the subject
 ```
 
 The initial semantic motifs are:
 
-- **Fireball:** a dense orange-red sphere of flame with a golden-white core.
-- **Bless:** a luminous holy-water drop beneath three small diverging rays or
-  blessing marks; gold, warm white and a restrained sky-blue accent.
-- **Aura of Vitality:** a bright life-energy core inside one broad aura ring
-  with a few rising flows; emerald, turquoise and golden white.
-- **Circle of Scarlet:** a blood-red ritual circle emitting a concentrated
-  vertical column of necrotic energy; scarlet, crimson, dark red and cold
-  white-pink highlights, without literal gore.
+- **Fireball:** a compact red-orange flame orb with one simple golden inner
+  flame.
+- **Bless:** a glossy golden holy-water drop beneath three short blessing rays,
+  with one ivory four-point inner spark.
+- **Aura of Vitality:** an emerald orb inside a broad turquoise ring with three
+  small leaf-like crests and one golden inner spark.
+- **Circle of Scarlet:** a glossy crimson energy pillar rising from a flattened
+  scarlet ritual ring, with one pale-pink inner spark and no literal gore.
