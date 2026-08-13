@@ -240,7 +240,6 @@ onMounted(async () => {
   max-width: 1180px;
   margin: 0 auto;
   box-sizing: border-box;
-  background: var(--bg);
   color: var(--text-1);
   border-inline: 1px solid color-mix(in srgb, var(--border-strong) 55%, transparent);
 }

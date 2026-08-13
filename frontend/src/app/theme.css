@@ -4,8 +4,11 @@
   --content-max: 1400px;
 
   /* Surfaces: the app canvas sits behind forms; controls rise above them. */
-  --app-bg: #151518;
   --bg: #1b1b1d;
+  --app-canvas-bg: var(--bg);
+  --app-canvas-dot-color: color-mix(in srgb, var(--border-strong) 42%, transparent);
+  --app-canvas-dot-size: 24px;
+  --app-canvas-pattern: radial-gradient(circle, var(--app-canvas-dot-color) 1px, transparent 1px);
   --surface: #242427;
   --surface-raised: #2c2c30;
   --surface-active: #35353b;

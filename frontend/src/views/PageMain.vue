@@ -47,9 +47,11 @@ export default {
 .landing-page {
   min-height: calc(100vh - 54px);
   overflow: hidden;
-  background:
-    radial-gradient(circle at 18% 22%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 30%),
-    linear-gradient(135deg, var(--app-bg) 0%, var(--surface) 48%, var(--app-bg) 100%);
+  background: radial-gradient(
+    circle at 18% 22%,
+    color-mix(in srgb, var(--accent) 18%, transparent),
+    transparent 30%
+  );
 }
 
 .hero {

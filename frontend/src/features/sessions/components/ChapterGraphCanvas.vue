@@ -293,8 +293,8 @@ defineExpose({ zoomBy, focusChapter, viewportCenter })
 .chapter-grid {
   position: absolute;
   inset: 0;
-  opacity: 0.42;
-  background-image: radial-gradient(circle, var(--border-strong) 1px, transparent 1px);
+  background-color: var(--app-canvas-bg);
+  background-image: radial-gradient(circle, var(--app-canvas-dot-color) 1px, transparent 1px);
 }
 
 .chapter-world {

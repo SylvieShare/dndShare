@@ -54,7 +54,9 @@ html, body {
   margin: 0;
 }
 body {
-  background-color: var(--app-bg);
+  background-color: var(--app-canvas-bg);
+  background-image: var(--app-canvas-pattern);
+  background-size: var(--app-canvas-dot-size) var(--app-canvas-dot-size);
   color: var(--text-1);
   color-scheme: dark;
   overflow-x: clip;
@@ -80,12 +82,15 @@ body {
 .page-transition-stage {
   min-height: calc(100vh - var(--header-h));
   min-height: calc(100dvh - var(--header-h));
-  background: var(--app-bg);
+  background-color: var(--app-canvas-bg);
+  background-image: var(--app-canvas-pattern);
+  background-size: var(--app-canvas-dot-size) var(--app-canvas-dot-size);
 }
 
 .page-transition-stage--print {
   min-height: 100vh;
   min-height: 100dvh;
+  background-image: none;
 }
 
 .page-forward-enter-active,

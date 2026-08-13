@@ -3,13 +3,6 @@
   flex-direction: column;
   height: calc(100vh - 54px); /* overridden by viewStyle computed */
   overflow: hidden;
-  background-color: var(--bg);
-  background-image: radial-gradient(
-    circle,
-    color-mix(in srgb, var(--border-strong) 42%, transparent) 1px,
-    transparent 1px
-  );
-  background-size: 24px 24px;
 }
 
 :global(body.character-view-active) {
@@ -54,7 +47,6 @@
 @media (max-width: 640px) {
   .view {
     height: calc(100vh - 50px); /* overridden by viewStyle computed */
-    background: var(--bg);
   }
 
   .container {

@@ -65,8 +65,10 @@ current.
 `ChapterGraphToolbar` is the one backed command bar in the workspace. It combines
 the editable session name/status, arc switcher and ordering, chapter creation,
 combat launcher, current-chapter focus and zoom. There is no second local tab
-switcher or session title bar. `ChapterGraphCanvas` is transparent, supports
-pan/zoom and stores the viewport per arc in local storage. Nodes can be dragged.
+switcher or session title bar. `ChapterGraphCanvas` uses the application-wide
+canvas background and dot-color tokens, supports pan/zoom and stores the
+viewport per arc in local storage; its 24px base grid repositions and scales
+with that viewport. Nodes can be dragged.
 A regular node click opens its action popover: open the chapter scenarios, make
 current, change status, edit, start a transition, move to another arc or delete.
 Moving a node to another arc removes its old transitions after confirmation
