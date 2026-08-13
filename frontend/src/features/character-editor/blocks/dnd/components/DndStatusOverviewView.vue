@@ -14,7 +14,7 @@
     <component
       :is="editable ? 'button' : 'div'"
       class="dsov-conditions"
-      :class="{ 'dsov-action': editable }"
+      :class="{ 'dsov-action': editable, 'dsov-conditions--last': !hasActiveMetrics }"
       :type="editable ? 'button' : undefined"
       @click.stop="select('states')"
     >
@@ -36,32 +36,34 @@
       <span v-else class="dsov-empty">нет</span>
     </component>
 
-    <div class="dsov-metrics">
+    <div v-if="hasActiveMetrics" class="dsov-metrics" :class="{ 'dsov-metrics--single': singleActiveMetric }">
       <component
+        v-if="exhaustionLevel > 0"
         :is="editable ? 'button' : 'div'"
         class="dsov-metric dsov-metric--exhaustion"
-        :class="{ 'dsov-action': editable, 'dsov-metric--active': exhaustionLevel > 0 }"
+        :class="{ 'dsov-action': editable }"
         :type="editable ? 'button' : undefined"
         @click.stop="select('exhaustion')"
       >
         <BatteryLow class="dsov-metric-icon" :size="18" :stroke-width="1.8" aria-hidden="true" />
         <span class="dsov-metric-copy">
           <span>Истощение</span>
-          <strong>{{ exhaustionLevel > 0 ? `${exhaustionLevel} ур.` : 'нет' }}</strong>
+          <strong>{{ exhaustionLevel }} ур.</strong>
         </span>
       </component>
 
       <component
+        v-if="inspirationActive"
         :is="editable ? 'button' : 'div'"
         class="dsov-metric dsov-metric--inspiration"
-        :class="{ 'dsov-action': editable, 'dsov-metric--active': inspirationActive }"
+        :class="{ 'dsov-action': editable }"
         :type="editable ? 'button' : undefined"
         @click.stop="select('inspiration')"
       >
         <Sparkles class="dsov-metric-icon" :size="18" :stroke-width="1.8" aria-hidden="true" />
         <span class="dsov-metric-copy">
           <span>Вдохновение</span>
-          <strong>{{ inspirationActive ? 'есть' : 'нет' }}</strong>
+          <strong>есть</strong>
         </span>
       </component>
     </div>
@@ -82,6 +84,8 @@ const props = defineProps({
 
 const emit = defineEmits(['select', 'show-tooltip', 'hide-tooltip'])
 const activeCount = computed(() => props.activeItems.length + Number(props.exhaustionLevel > 0) + Number(props.inspirationActive))
+const hasActiveMetrics = computed(() => props.exhaustionLevel > 0 || props.inspirationActive)
+const singleActiveMetric = computed(() => (props.exhaustionLevel > 0) !== props.inspirationActive)
 
 function select(kind) {
   if (props.editable) emit('select', kind)
@@ -129,6 +133,7 @@ function select(kind) {
   font: inherit;
   text-align: left;
 }
+.dsov-conditions--last { padding-bottom: 2px; border-bottom: 0; }
 
 .dsov-label {
   flex: 0 0 72px;
@@ -146,6 +151,7 @@ function select(kind) {
 .dsov-empty { padding-top: 2px; color: var(--text-muted); font-size: 12px; }
 
 .dsov-metrics { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0; padding-top: 9px; }
+.dsov-metrics--single { grid-template-columns: minmax(0, 1fr); }
 .dsov-metric {
   display: flex;
   align-items: center;
@@ -164,10 +170,10 @@ function select(kind) {
 .dsov-metric-copy { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
 .dsov-metric-copy span { overflow: hidden; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
 .dsov-metric-copy strong { color: var(--text-2); font-size: 12px; line-height: 1.2; }
-.dsov-metric--exhaustion.dsov-metric--active { color: var(--danger); }
-.dsov-metric--exhaustion.dsov-metric--active strong { color: var(--danger); }
-.dsov-metric--inspiration.dsov-metric--active { color: var(--accent-soft); }
-.dsov-metric--inspiration.dsov-metric--active strong { color: var(--accent-soft); }
+.dsov-metric--exhaustion { color: var(--danger); }
+.dsov-metric--exhaustion strong { color: var(--danger); }
+.dsov-metric--inspiration { color: var(--accent-soft); }
+.dsov-metric--inspiration strong { color: var(--accent-soft); }
 .dsov-action { cursor: pointer; border-radius: var(--r-sm); }
 
 @media (hover: hover) {

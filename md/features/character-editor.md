@@ -73,7 +73,8 @@ outside the page root.
 The desktop skills sidebar groups conditions, exhaustion and heroic inspiration
 inside one interactive **Статусы** tile. The tile keeps the rules term
 **Состояния** for the condition list itself, summarizes active condition chips,
-the exhaustion level and inspiration without expanding exhaustion effects, and
+the non-zero exhaustion level and active inspiration without expanding
+exhaustion effects, and omits both inactive indicators from the tile. It
 opens one vertical morph editor with direct tabs for all three domains. Clicking
 a domain inside the tile opens its corresponding tab. The compact mobile strip
 keeps HP at its intrinsic number width and never lets

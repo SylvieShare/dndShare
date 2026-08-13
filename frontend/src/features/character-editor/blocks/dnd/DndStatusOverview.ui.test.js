@@ -16,6 +16,14 @@ describe('desktop status overview', () => {
     expect(viewSource).toContain('>Вдохновение<')
   })
 
+  it('omits inactive exhaustion and inspiration from the tile summary', () => {
+    expect(viewSource).toContain('v-if="hasActiveMetrics"')
+    expect(viewSource).toContain('v-if="exhaustionLevel > 0"')
+    expect(viewSource).toContain('v-if="inspirationActive"')
+    expect(viewSource).not.toContain("inspirationActive ? 'есть' : 'нет'")
+    expect(viewSource).not.toContain("exhaustionLevel > 0 ? `${exhaustionLevel} ур.` : 'нет'")
+  })
+
   it('opens one editor with a direct tab for every status domain', () => {
     expect(source).toContain('role="tablist"')
     expect(source).toContain("v-if=\"editorKind === 'states'\"")
