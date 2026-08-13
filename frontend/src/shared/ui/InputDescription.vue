@@ -327,12 +327,12 @@ function tryCreateListFromDash() {
   color: var(--text-muted);
   cursor: pointer;
   opacity: 0.35;
-  transition: opacity 0.15s;
+  transition: color 0.15s, opacity 0.15s;
 }
 @media (hover: hover) {
-  .input-desc:hover .field-edit-btn { opacity: 1; }
+  .input-desc:hover .field-edit-btn { color: var(--accent); opacity: 1; }
 }
-.field-edit-btn:focus-visible { opacity: 1; }
+.field-edit-btn:focus-visible { color: var(--accent); opacity: 1; }
 
 .desc-done-btn {
   background: none;

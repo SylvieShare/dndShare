@@ -133,10 +133,10 @@ function update(field, value) {
   color: var(--text-muted);
   cursor: pointer;
   opacity: 0.35;
-  transition: opacity 0.15s;
+  transition: color 0.15s, opacity 0.15s;
 }
-@media (hover: hover) { .sk-rename-btn:hover { opacity: 1; } }
-.sk-rename-btn:focus-visible { opacity: 1; }
+@media (hover: hover) { .sk-rename-btn:hover { color: var(--accent); opacity: 1; } }
+.sk-rename-btn:focus-visible { color: var(--accent); opacity: 1; }
 .sk-rename {
   flex: 1;
   min-width: 0;

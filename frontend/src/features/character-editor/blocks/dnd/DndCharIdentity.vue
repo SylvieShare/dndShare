@@ -412,10 +412,10 @@ function close() {
   color: var(--text-muted);
   cursor: pointer;
   opacity: 0.35;
-  transition: opacity 0.15s;
+  transition: color 0.15s, opacity 0.15s;
 }
-@media (hover: hover) { .dci-edit:hover { opacity: 1; } }
-.dci-edit:focus-visible { opacity: 1; }
+@media (hover: hover) { .dci-edit:hover { color: var(--accent); opacity: 1; } }
+.dci-edit:focus-visible { color: var(--accent); opacity: 1; }
 
 .dciw-body {
   display: flex;

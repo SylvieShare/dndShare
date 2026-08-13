@@ -165,10 +165,10 @@ const nameClickable = computed(() => ctx.charCtx.ownerMode || !!ctx.item(props.e
   color: var(--text-muted);
   cursor: pointer;
   opacity: 0.35;
-  transition: opacity 0.2s ease;
+  transition: color 0.15s, opacity 0.2s ease;
 }
-@media (hover: hover) { .w-edit-btn:hover { opacity: 1; } }
-.w-edit-btn:focus-visible { opacity: 1; }
+@media (hover: hover) { .w-edit-btn:hover { color: var(--accent); opacity: 1; } }
+.w-edit-btn:focus-visible { color: var(--accent); opacity: 1; }
 
 /* morph stand-in pencil: present so the row geometry matches the tile (no jitter), but fades out
    as the window opens and back in as it closes */

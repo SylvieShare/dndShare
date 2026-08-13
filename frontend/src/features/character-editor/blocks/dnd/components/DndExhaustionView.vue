@@ -43,9 +43,9 @@ defineProps({
   flex-shrink: 0;
   color: var(--text-muted);
   opacity: 0.35;
-  transition: opacity 0.15s;
+  transition: color 0.15s, opacity 0.15s;
 }
-@media (hover: hover) { .exh-view:hover .exh-pencil { opacity: 1; } }
+@media (hover: hover) { .exh-view:hover .exh-pencil { color: var(--accent); opacity: 1; } }
 .exh-label {
   white-space: nowrap;
 }

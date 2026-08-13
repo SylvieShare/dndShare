@@ -150,11 +150,11 @@ const eventsCountLabel = computed(() => {
   color: var(--text-muted);
   cursor: pointer;
   opacity: 0.35;
-  transition: opacity 0.15s;
+  transition: color 0.15s, opacity 0.15s;
 }
 .dsc-count + .dsc-edit { margin-left: 0; }
-@media (hover: hover) { .dsc-edit:hover { opacity: 1; } }
-.dsc-edit:focus-visible { opacity: 1; }
+@media (hover: hover) { .dsc-edit:hover { color: var(--accent); opacity: 1; } }
+.dsc-edit:focus-visible { color: var(--accent); opacity: 1; }
 
 .dsc-body {
   display: grid;

@@ -135,10 +135,10 @@ function rollProf() {
   color: var(--text-muted);
   cursor: pointer;
   opacity: 0.35;
-  transition: opacity 0.15s;
+  transition: color 0.15s, opacity 0.15s;
 }
-@media (hover: hover) { .sb-edit:hover { opacity: 1; } }
-.sb-edit:focus-visible { opacity: 1; }
+@media (hover: hover) { .sb-edit:hover { color: var(--accent); opacity: 1; } }
+.sb-edit:focus-visible { color: var(--accent); opacity: 1; }
 .sb-display { cursor: pointer; }
 .skill-bonus-tile-compact { width: 76px; min-width: 76px; gap: 2px; }
 .skill-bonus-tile-compact .sb-plus { font-size: 18px; }

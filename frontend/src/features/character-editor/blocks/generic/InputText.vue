@@ -163,11 +163,11 @@ function stopEdit() {
   color: var(--text-muted);
   cursor: pointer;
   opacity: 0.35;
-  transition: opacity 0.15s;
+  transition: color 0.15s, opacity 0.15s;
 }
 @media (hover: hover) {
   .input-text-row:hover .field-edit-btn,
-  .input-text-wrap:hover .field-edit-btn { opacity: 1; }
+  .input-text-wrap:hover .field-edit-btn { color: var(--accent); opacity: 1; }
 }
-.field-edit-btn:focus-visible { opacity: 1; }
+.field-edit-btn:focus-visible { color: var(--accent); opacity: 1; }
 </style>
