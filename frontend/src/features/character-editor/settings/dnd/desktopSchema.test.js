@@ -24,13 +24,21 @@ describe('D&D desktop sheet schema', () => {
     expect(tabColumn.props?.style?.['margin-right']).toBe('16px')
   })
 
-  it('uses independent surfaces for weapons, equipment and personality groups', () => {
+  it('lets weapon entries and inventory sections own their surfaces', () => {
     const weapons = innerTabs.children.find(tab => tab.title === 'Оружие')
     const equipment = innerTabs.children.find(tab => tab.title === 'Снаряжение')
     const personality = innerTabs.children.find(tab => tab.title === 'Личность')
 
-    expect(weapons.content.props?.tile).toBe(true)
-    expect(equipment.content.children.every(group => group.props?.tile === true)).toBe(true)
+    expect(weapons.content.ref).toBe('weapon')
+    expect(weapons.content.props?.variant).toBe('list')
+
+    const inventoryGroup = equipment.content.children.find(group =>
+      group.children?.some(child => child.ref === 'items'),
+    )
+    const fixedEquipmentGroups = equipment.content.children.filter(group => group !== inventoryGroup)
+
+    expect(inventoryGroup.props?.tile).not.toBe(true)
+    expect(fixedEquipmentGroups.every(group => group.props?.tile === true)).toBe(true)
     expect(equipment.content.children.every(group => group.props?.title == null)).toBe(true)
 
     const personalityGroups = personality.content.children[0].children

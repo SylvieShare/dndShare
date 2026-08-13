@@ -1,6 +1,6 @@
 ﻿<template>
   <div class="weapons-block">
-    <div v-if="entries.length === 0 && !canAddItems" class="w-empty">Нет записей</div>
+    <BaseTile v-if="entries.length === 0 && !canAddItems" class="w-empty">Нет записей</BaseTile>
 
     <div v-else-if="variant === 'list'" class="w-list" data-sortable-container="weapons">
       <WeaponCard
@@ -87,6 +87,7 @@ function nextKey() { return ++keyCounter }
 <script setup>
 import { computed, inject, onMounted, provide, reactive, ref, watch } from 'vue'
 
+import BaseTile from '@/shared/ui/BaseTile'
 import { useItemTypesStore } from '@/stores/itemTypes'
 import WeaponCard from '@/features/character-editor/blocks/dnd/components/WeaponCard.vue'
 import WeaponTableRow from '@/features/character-editor/blocks/dnd/components/WeaponTableRow.vue'
@@ -361,7 +362,7 @@ onMounted(() => {
 .w-list {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 12px;
   min-width: 0;
 }
 
@@ -411,8 +412,6 @@ onMounted(() => {
 
 .w-add {
   margin-top: 12px;
-  padding: 12px 20px;
-  border-top: 1px solid color-mix(in srgb, var(--text-muted) 28%, transparent);
 }
 
 .w-picker-btn {
@@ -437,14 +436,10 @@ onMounted(() => {
 .w-empty {
   color: var(--text-muted);
   font-size: 13px;
-  padding: 14px 20px;
+  padding: 16px 20px;
 }
 
 @media (max-width: 760px) {
-  .w-list {
-    gap: 12px;
-  }
-
   .w-list-header {
     display: none;
   }
@@ -536,16 +531,6 @@ onMounted(() => {
     grid-column: 2 / -1;
   }
 
-  .w-add {
-    padding: 0;
-    border-top: none;
-  }
-
-  .w-empty {
-    padding: 16px;
-    border-radius: var(--r-lg);
-    background: var(--surface);
-    box-shadow: inset 0 0 0 1px var(--border);
-  }
+  .w-empty { padding: 16px; }
 }
 </style>

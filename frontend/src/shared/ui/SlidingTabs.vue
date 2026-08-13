@@ -121,8 +121,8 @@ defineExpose({ updateUnderline })
   position: absolute;
   bottom: 5px;
   left: 0;
-  height: 2px;
-  border-radius: 2px 2px 0 0;
+  height: 3px;
+  border-radius: 999px;
   background: var(--accent);
   pointer-events: none;
   transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),

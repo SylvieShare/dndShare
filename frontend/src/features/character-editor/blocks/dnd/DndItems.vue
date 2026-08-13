@@ -13,11 +13,13 @@
 
     <template v-if="!contentHidden">
       <div v-if="loading" class="di-list-col">
-        <div v-for="i in 3" :key="i" class="di-skeleton"></div>
+        <BaseTile v-for="i in 3" :key="i" class="di-section di-skeleton-tile">
+          <div class="di-skeleton"></div>
+        </BaseTile>
       </div>
 
       <template v-else>
-        <div
+        <BaseTile
           v-for="section in allSections"
           :key="section.id"
           class="di-section"
@@ -111,7 +113,7 @@
               @click="openInlineForm(section.id, null)"
             >+ предмет</button>
           </div>
-        </div>
+        </BaseTile>
 
         <div v-if="canManage" class="di-add-section-row">
           <button class="di-add-section" @click="addSection">+ Добавить секцию</button>
@@ -185,6 +187,7 @@
 <script setup>
 import { computed, inject, nextTick, onMounted, reactive, ref, watch } from 'vue'
 
+import BaseTile from '@/shared/ui/BaseTile'
 import ItemInlineFormModal from '@/features/character-editor/components/ItemInlineFormModal'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip'

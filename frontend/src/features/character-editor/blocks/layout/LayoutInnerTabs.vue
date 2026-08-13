@@ -139,7 +139,7 @@ function emitVar(patch) {
   flex-direction: column;
   flex: 0 0 auto;
   overflow: hidden;
-  padding-top: 10px;
+  padding-top: 14px;
 }
 
 /* All visited panes stay mounted; the active one is in flow (defines height, so
@@ -154,7 +154,7 @@ function emitVar(patch) {
 
 .inner-tab-pane:not(.inner-tab-pane--active) {
   position: absolute;
-  inset: 10px 0 0;
+  inset: 14px 0 0;
   overflow: hidden;
 }
 

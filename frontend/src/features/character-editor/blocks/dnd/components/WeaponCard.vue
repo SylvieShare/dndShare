@@ -1,5 +1,5 @@
 <template>
-  <div
+  <BaseTile
     ref="cardEl"
     class="w-card"
     :class="{ 'sortable-placeholder': ctx.sortable.isSource(entry) }"
@@ -36,11 +36,12 @@
         <WeaponEditor :entry="entry" :index="index" @close="close" />
       </template>
     </MorphEditorShell>
-  </div>
+  </BaseTile>
 </template>
 
 <script setup>
 import { inject, ref, watch } from 'vue'
+import BaseTile from '@/shared/ui/BaseTile'
 import RichContent from '@/shared/ui/RichContent'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
 import WeaponCardView from '@/features/character-editor/blocks/dnd/components/WeaponCardView.vue'
@@ -61,7 +62,7 @@ const { editorOpen, originRect, originEl, openFrom, close } = useMorphOrigin()
 let draggedThisGesture = false
 watch(() => ctx.sortable.dragging, v => { if (v) draggedThisGesture = true })
 
-function openEditor() { openFrom(cardEl.value) }
+function openEditor() { openFrom(cardEl.value?.$el || cardEl.value) }
 function onNameDown(e) {
   draggedThisGesture = false
   if (ctx.charCtx.ownerMode) ctx.onDragStart(e, props.entry, props.index)
@@ -74,14 +75,13 @@ function onNameClick() {
 </script>
 
 <style scoped>
-/* Desktop inner tabs provide the shared backing; mobile promotes every weapon to its own tile. */
+/* The same semantic tile is used on desktop and mobile: one weapon, one surface. */
 .w-card {
   position: relative;
   padding-left: 16px;
-  border-bottom: 1px solid color-mix(in srgb, var(--text-muted) 18%, transparent);
+  overflow: clip;
   transition: background 0.12s;
 }
-.w-card:last-child { border-bottom: none; }
 
 .w-card.sortable-placeholder {
   background: color-mix(in srgb, var(--accent) 8%, transparent);
@@ -101,13 +101,4 @@ function onNameClick() {
    matches `.w-card` so the icon stays flush; the row's own padding lives inside WeaponCardView. */
 .w-morph-row { padding: 0 0 0 16px; }
 
-@media (max-width: 760px) {
-  .w-card {
-    border-bottom: none;
-    border-radius: var(--r-lg);
-    background: var(--surface);
-    box-shadow: inset 0 0 0 1px var(--border);
-    overflow: clip;
-  }
-}
 </style>
