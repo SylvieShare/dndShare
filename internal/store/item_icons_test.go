@@ -30,8 +30,8 @@ func TestItemIconSeedIsCompleteAndValid(t *testing.T) {
 			t.Fatalf("icon %q has root <%s>, want <svg>", key, document.XMLName.Local)
 		}
 	}
-	if len(definitions) != 83 {
-		t.Fatalf("got %d item icon definitions, want 83", len(definitions))
+	if len(definitions) != 84 {
+		t.Fatalf("got %d item icon definitions, want 84", len(definitions))
 	}
 
 	seenItems := map[string]bool{}
@@ -52,8 +52,8 @@ func TestItemIconSeedIsCompleteAndValid(t *testing.T) {
 			equipmentCount++
 		}
 	}
-	if weaponCount != 38 || equipmentCount != 125 {
-		t.Fatalf("got %d weapon and %d equipment mappings, want 38 and 125", weaponCount, equipmentCount)
+	if weaponCount != 38 || equipmentCount != 127 {
+		t.Fatalf("got %d weapon and %d equipment mappings, want 38 and 127", weaponCount, equipmentCount)
 	}
 
 	for _, guard := range []string{"i.user_id IS NULL", "i.svg_id IS NULL"} {

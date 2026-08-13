@@ -11,6 +11,7 @@ BEGIN
             VALUES
                 ('unarmed', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7.5 11V6.5a1.5 1.5 0 0 1 3 0V10 5a1.5 1.5 0 0 1 3 0v5-4a1.5 1.5 0 0 1 3 0v5-2.5a1.5 1.5 0 0 1 3 0V14c0 4-2.7 7-6.8 7H11c-2.4 0-4.3-1.1-5.5-3l-2-3.1a1.7 1.7 0 0 1 2.7-2l1.3 1.4V11Z"/></svg>'),
                 ('shield', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2 20 5v6c0 5-3 9-8 11-5-2-8-6-8-11V5l8-3Z"/><path d="M12 6v11M7 10h10"/></svg>'),
+                ('metal-ball', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8"/><path d="M8 9c1-2 3-3 5-3M7 17c3 2 7 2 10 0"/><circle cx="8" cy="8" r="1"/></svg>'),
                 ('sword', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m14 4 6-2-2 6L9 17l-2-2 7-11Z"/><path d="m6 14 4 4M4 16l4 4M3 21l3-3"/></svg>'),
                 ('greatsword', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m13.5 3.5 5.8-1.8-1.8 5.8L8.8 16.2l-2-2 6.7-10.7Z"/><path d="m5.5 13 5.5 5.5M4 17l3 3M3 21l2.5-2.5"/></svg>'),
                 ('dagger', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m13 5 7-3-3 7-7 7-4-4 7-7Z"/><path d="m5 11 6 6M5 17l2 2M4 21l2-2"/></svg>'),
@@ -145,6 +146,7 @@ BEGIN
                 (2, 'Амулет', 'holy'),
                 (2, 'Амулет культиста', 'holy'),
                 (2, 'Щит', 'shield'),
+                (2, 'Металический шарик', 'metal-ball'),
                 (2, 'Противоядие (флакон)', 'vial'),
                 (2, 'Рюкзак', 'backpack'),
                 (2, 'Шарики (мешочек 1000 шт.)', 'pouch'),
@@ -236,6 +238,7 @@ BEGIN
                 (2, 'Подзорная труба', 'spyglass'),
                 (2, 'Нить (10 футов)', 'rope'),
                 (2, 'Палатка двухместная', 'tent'),
+                (2, 'Трудница', 'tinder'),
                 (2, 'Трутница', 'tinder'),
                 (2, 'Факел', 'torch'),
                 (2, 'Облачение', 'clothes'),
