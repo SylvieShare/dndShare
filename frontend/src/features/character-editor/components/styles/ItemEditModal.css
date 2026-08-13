@@ -10,6 +10,14 @@
 .iem-source.selected { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 13%, var(--surface)); color: var(--text-1); }
 .iem-source-mark { width: 13px; height: 13px; display: grid; place-items: center; border: 1px solid currentColor; border-radius: 4px; font-size: 9px; }
 .iem-source small { color: var(--text-muted); font-size: 9px; }
+.iem-icon-editor { display: flex; align-items: center; gap: 12px; }
+.iem-icon-preview { width: 72px; height: 72px; flex: none; display: grid; place-items: center; border: 1px solid var(--border-strong); border-radius: 12px; background: var(--surface-raised); overflow: hidden; }
+.iem-icon-preview > img { width: 64px; height: 64px; object-fit: contain; }
+.iem-icon-preview.empty { color: var(--text-muted); font-size: 10px; }
+.iem-icon-actions { display: flex; flex-wrap: wrap; gap: 7px; }
+.iem-icon-button { border: 1px solid var(--border-strong); border-radius: 8px; background: var(--surface-raised); color: var(--text-2); padding: 7px 10px; font: inherit; font-size: 12px; cursor: pointer; }
+.iem-icon-button:hover { border-color: var(--accent); color: var(--text-1); }
+.iem-icon-button.danger { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 35%, var(--border)); }
 
 @media (max-width: 720px) {
   .iem-fields-grid { grid-template-columns: 1fr; }

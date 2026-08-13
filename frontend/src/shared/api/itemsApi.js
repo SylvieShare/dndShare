@@ -17,6 +17,16 @@ export const itemsApi = {
   update(id, payload) {
     return fetchPut('/items/' + id, payload)
   },
+  async uploadIconImage(id, file) {
+    const form = new FormData()
+    form.append('file', file)
+    const response = await fetch(`/api/items/${id}/icon-image`, { method: 'POST', body: form })
+    if (!response.ok) throw new Error(String(response.status))
+    return response.json()
+  },
+  clearIcon(id) {
+    return fetchDelete('/items/' + id + '/icon')
+  },
   makeBase(id) {
     return fetchPost('/items/' + id + '/make-base', null)
   },

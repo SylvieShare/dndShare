@@ -18,6 +18,36 @@
       />
     </FormField>
 
+    <FormField v-if="typeId === 5" label="Иконка" hint="PNG или WebP, до 5 МБ" vertical>
+      <div class="iem-icon-editor">
+        <div class="iem-icon-preview" :class="{ empty: !hasIconPreview }">
+          <img v-if="iconPreviewUrl" :src="iconPreviewUrl" alt="" />
+          <ItemIcon
+            v-else-if="!iconRemoved && (item?.iconImageUrl || item?.svg)"
+            :item="item"
+            :fallback-to-type="false"
+            :size="64"
+          />
+          <span v-else>Нет иконки</span>
+        </div>
+        <div class="iem-icon-actions">
+          <button type="button" class="iem-icon-button" @click="iconFileInput?.click()">
+            {{ hasIconPreview ? 'Заменить' : 'Выбрать файл' }}
+          </button>
+          <button v-if="hasIconPreview" type="button" class="iem-icon-button danger" @click="removeIcon">
+            Удалить
+          </button>
+        </div>
+        <input
+          ref="iconFileInput"
+          type="file"
+          accept="image/png,image/webp,.png,.webp"
+          hidden
+          @change="onIconFileChange"
+        />
+      </div>
+    </FormField>
+
     <div v-if="contentSources.length" class="iem-field iem-source-field">
       <label class="iem-label">Источники</label>
       <div class="iem-source-list">
@@ -60,13 +90,15 @@
 </template>
 
 <script setup>
-import { nextTick, onMounted, provide, reactive, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, provide, reactive, ref } from 'vue'
 import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import ItemSchemaField from './ItemSchemaField.vue'
 import FormField from '@/shared/ui/form/FormField.vue'
 import FormTextInput from '@/shared/ui/form/FormTextInput.vue'
+import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import { fetchPost, fetchPut } from '@/shared/api/http'
+import { itemsApi } from '@/shared/api/itemsApi'
 import { contentSourcesApi } from '@/shared/api/contentSourcesApi'
 import { useItemTypesStore } from '@/stores/itemTypes'
 import { useSuggestStore } from '@/stores/suggest'
@@ -98,8 +130,15 @@ const formNameEn = ref(props.initialNameEn)
 const formData = reactive({})
 const saving = ref(false)
 const picker = reactive({ open: false, typeId: null, onPick: null })
+const iconFileInput = ref(null)
+const iconFile = ref(null)
+const iconPreviewUrl = ref('')
+const iconRemoved = ref(false)
+const hasIconPreview = computed(() => !!iconPreviewUrl.value || (!iconRemoved.value && !!(props.item?.iconImageUrl || props.item?.svg)))
 const fieldEditor = useItemFieldEditor(formData, openItemPicker)
 provide(itemFieldEditorKey, fieldEditor)
+
+onBeforeUnmount(revokeIconPreview)
 
 onMounted(async () => {
   const type = await itemTypesStore.ensureType(props.typeId)
@@ -154,6 +193,27 @@ function onItemPicked(item) {
   picker.open = false
 }
 
+function revokeIconPreview() {
+  if (iconPreviewUrl.value) URL.revokeObjectURL(iconPreviewUrl.value)
+  iconPreviewUrl.value = ''
+}
+
+function onIconFileChange(event) {
+  const file = event.target.files?.[0]
+  if (!file) return
+  revokeIconPreview()
+  iconFile.value = file
+  iconPreviewUrl.value = URL.createObjectURL(file)
+  iconRemoved.value = false
+  event.target.value = ''
+}
+
+function removeIcon() {
+  revokeIconPreview()
+  iconFile.value = null
+  iconRemoved.value = true
+}
+
 async function submit() {
   if (!formName.value.trim() || saving.value) return
   saving.value = true
@@ -172,6 +232,13 @@ async function submit() {
     } else {
       saved = await fetchPost('/items', { typeId: props.typeId, ...payload })
       if (props.showNameEn) saved = { ...saved, nameEn: payload.nameEn }
+    }
+    if (props.typeId === 5 && iconFile.value) {
+      const icon = await itemsApi.uploadIconImage(saved.id, iconFile.value)
+      saved = { ...saved, iconSvgId: null, svg: null, ...icon }
+    } else if (props.typeId === 5 && iconRemoved.value && props.item) {
+      await itemsApi.clearIcon(saved.id)
+      saved = { ...saved, iconSvgId: null, iconImageId: null, svg: null, iconImageUrl: null }
     }
     emit('saved', saved)
     emit('close')

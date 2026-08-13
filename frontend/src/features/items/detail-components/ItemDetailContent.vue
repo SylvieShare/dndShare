@@ -1,7 +1,7 @@
 <template>
   <div class="idc-detail">
     <div v-if="showTitle" class="idc-title-row">
-      <ItemIcon v-if="item.svg" :item="item" :fallback-to-type="false" :size="38" />
+      <ItemIcon v-if="item.iconImageUrl || item.svg" :item="item" :fallback-to-type="false" :size="38" />
       <div class="idc-name">{{ item.name }}</div>
     </div>
 

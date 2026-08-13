@@ -21,9 +21,11 @@ subclass→class and future variants. Items may link to several publications via
 the server assigns the owner's default «Мои материалы» source atomically on
 creation. The schema allows more non-default personal sources later.
 
-`item.svg` is the API projection of `item.svg_id → svg_storage.data`; it is not
-stored in rules JSON. All item reads, including paged lists and multi-type
-search, return the projection when assigned.
+Item icons are metadata outside rules JSON. `item.svg` is the API projection of
+`item.icon_svg_id → svg_storage.data`; raster icons use
+`item.iconImageId/iconImageUrl` from `item.icon_image_id → storage_image/S3`.
+The database allows at most one format. All item reads, including paged lists
+and multi-type search, return the assigned projection.
 
 Saved user items are backfilled to that source during startup. Personal source
 ids are never stored or read in `item.data`, and item/suggest id reads expose
@@ -65,7 +67,9 @@ an opaque `--bg` canvas so the global page grid does not show through; list
 rows use the opaque `--surface` level with distinct active and selected states.
 Schema filter groups without available
 options are not shown. `ItemEditModal` is schema-driven and uses shared form primitives; its
-create title uses the current item type name. `components/ItemPickerModal.vue`
+create title uses the current item type name. The spell form also accepts a
+transparent PNG/WebP icon on create or edit; upload is committed after the item
+has an id. `components/ItemPickerModal.vue`
 is the standard server-backed picker used by the character wizard/editor;
 `components/ItemViewModal.vue` is the standard detail window. Both belong to
 the handbook feature because they compose handbook API, stores and renderers.
@@ -80,8 +84,10 @@ Details are specialized by type where useful (weapon, spell, enemy, potion,
 feat), otherwise the generic field renderer is used. Item detail modals use
 `ItemViewModal` and fixed-chrome `AppModalFrame`; the standalone detail renderer
 keeps its own title, while the modal moves that title into the fixed header.
-An assigned item SVG is shown in list rows, standard pickers, the global header
-search and detail/modal headings; the item-type SVG is only a list fallback.
+An assigned raster or SVG item icon is shown in list rows, standard pickers,
+the global header search and detail/modal headings; raster has priority and the
+item-type SVG is only a list fallback. Spell rows on character sheets show the
+raster spell icon when assigned and otherwise keep the school symbol.
 Spell detail owns its canonical publication label, so the wrapper does not
 render a duplicate source chip for spells; other item types retain the wrapper
 source chip when no specialized publication label exists.

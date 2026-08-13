@@ -3,8 +3,10 @@ package store
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"time"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 )
 
@@ -87,26 +89,52 @@ func (s *Store) SetParent(ctx context.Context, id int64, parentID *int64) error 
 
 // MakeBase — сделать предмет базовым (user_id = NULL).
 func (s *Store) MakeBase(ctx context.Context, id int64) error {
-	result, err := s.pool.Exec(ctx, "UPDATE dndshare.item SET user_id = NULL, custom_source_id = NULL WHERE id = $1", id)
-	if err == nil && result.RowsAffected() == 0 {
+	tx, err := s.pool.Begin(ctx)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback(ctx)
+	var imageID *int64
+	err = tx.QueryRow(ctx,
+		`UPDATE dndshare.item
+		    SET user_id = NULL, custom_source_id = NULL
+		  WHERE id = $1
+		  RETURNING icon_image_id`,
+		id,
+	).Scan(&imageID)
+	if errors.Is(err, pgx.ErrNoRows) {
 		return ErrNotFound
 	}
-	return err
+	if err != nil {
+		return err
+	}
+	if imageID != nil {
+		if _, err := tx.Exec(ctx, `UPDATE dndshare.storage_image SET user_id = NULL WHERE id = $1`, *imageID); err != nil {
+			return err
+		}
+	}
+	return tx.Commit(ctx)
 }
 
 // Delete — удалить предмет; isAdmin снимает проверку владельца.
-func (s *Store) Delete(ctx context.Context, id, userID int64, isAdmin bool) error {
-	var result pgconn.CommandTag
+func (s *Store) Delete(ctx context.Context, id, userID int64, isAdmin bool) (ItemIconRefs, error) {
+	var refs ItemIconRefs
 	var err error
 	if isAdmin {
-		result, err = s.pool.Exec(ctx, "DELETE FROM dndshare.item WHERE id = $1", id)
+		err = s.pool.QueryRow(ctx,
+			"DELETE FROM dndshare.item WHERE id = $1 RETURNING icon_svg_id, icon_image_id",
+			id,
+		).Scan(&refs.SVGID, &refs.ImageID)
 	} else {
-		result, err = s.pool.Exec(ctx, "DELETE FROM dndshare.item WHERE id = $1 AND user_id = $2", id, userID)
+		err = s.pool.QueryRow(ctx,
+			"DELETE FROM dndshare.item WHERE id = $1 AND user_id = $2 RETURNING icon_svg_id, icon_image_id",
+			id, userID,
+		).Scan(&refs.SVGID, &refs.ImageID)
 	}
-	if err == nil && result.RowsAffected() == 0 {
-		return ErrNotFound
+	if errors.Is(err, pgx.ErrNoRows) {
+		return ItemIconRefs{}, ErrNotFound
 	}
-	return err
+	return refs, err
 }
 
 func jsonOrEmpty(data json.RawMessage) string {

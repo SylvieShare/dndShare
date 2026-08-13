@@ -56,7 +56,7 @@ func TestItemIconSeedIsCompleteAndValid(t *testing.T) {
 		t.Fatalf("got %d weapon and %d equipment mappings, want 38 and 127", weaponCount, equipmentCount)
 	}
 
-	for _, guard := range []string{"i.user_id IS NULL", "i.svg_id IS NULL"} {
+	for _, guard := range []string{"i.user_id IS NULL", "i.icon_svg_id IS NULL", "i.icon_image_id IS NULL"} {
 		if !strings.Contains(schemaItemIconsSQL, guard) {
 			t.Fatalf("item icon seed must contain guard %q", guard)
 		}

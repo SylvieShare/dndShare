@@ -8,7 +8,7 @@
   >
     <template #title>
       <div class="iv-title">
-        <ItemIcon v-if="item?.svg" :item="item" :fallback-to-type="false" :size="28" />
+        <ItemIcon v-if="item?.iconImageUrl || item?.svg" :item="item" :fallback-to-type="false" :size="28" />
         <div class="iv-title-text">
           <h2 class="iv-title-name">{{ item?.name || (loading ? 'Загрузка…' : 'Предмет') }}</h2>
           <span v-if="formattedNameEn" class="iv-title-subtitle">{{ formattedNameEn }}</span>

@@ -267,7 +267,8 @@ func (s *Server) handleDeleteItem(w http.ResponseWriter, r *http.Request) {
 	if !ok {
 		return
 	}
-	if err := s.store.Delete(r.Context(), id, uid, isAdmin); err != nil {
+	refs, err := s.store.Delete(r.Context(), id, uid, isAdmin)
+	if err != nil {
 		if errors.Is(err, store.ErrNotFound) {
 			unauthorized(w)
 			return
@@ -275,6 +276,7 @@ func (s *Server) handleDeleteItem(w http.ResponseWriter, r *http.Request) {
 		serverError(w, err)
 		return
 	}
+	s.cleanupItemIcon(r, refs)
 	w.WriteHeader(http.StatusNoContent)
 }
 

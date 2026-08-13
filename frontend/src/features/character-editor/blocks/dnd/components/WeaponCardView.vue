@@ -82,7 +82,7 @@ const emit = defineEmits(['name-down', 'name-click', 'edit', 'roll-attack', 'rol
 
 const ctx = inject('weaponsBlockCtx')
 
-// weapon icon comes from the linked handbook item (item.svg, stored in svg_storage by svg_id)
+// weapon icon comes from the linked handbook item (item.svg, stored in svg_storage by icon_svg_id)
 const itemSvg = computed(() => ctx.item(props.entry)?.svg || '')
 // owner: name opens the edit morph; non-owner: name opens the read-only item card (if linked)
 const nameClickable = computed(() => ctx.charCtx.ownerMode || !!ctx.item(props.entry))

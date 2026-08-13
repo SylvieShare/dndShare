@@ -70,9 +70,11 @@ Startup data correction переводит прежние значения в э
 
 `item_type` хранит schema fields типа, `item` — контент, `suggest_type/suggest`
 — словари. `item.parent_id` — единая связь для подрасы, подкласса и других
-вариантов. `item_content_source` связывает item с публикациями. SVG хранится в
-`svg_storage`, а `item.svg_id` указывает на иконку объекта; SVG не является
-частью `item.data`. Startup sections `schema/06_item_icons.sql` и
+вариантов. `item_content_source` связывает item с публикациями. Иконка item
+задаётся не более чем одной из колонок: `icon_svg_id → svg_storage` или
+`icon_image_id → storage_image/S3`; обе ссылки не являются частью `item.data`.
+Startup schema переименовывает прежний `item.svg_id` в `icon_svg_id` без
+runtime alias. Sections `schema/06_item_icons.sql` и
 `schema/07_feature_icons.sql` идемпотентно создают SVG для базового оружия,
 обычного снаряжения, черт, расовых и классовых способностей PHB 2014. Черты и
 расовые способности получают собственные рисунки, родственные классовые
@@ -98,7 +100,8 @@ Startup migration идемпотентно создаёт default source сущ�
 проставляет его всем сохранённым пользовательским item и удаляет прежние
 `customSourceId`/`custom_source_id` из JSON. Новые item получают default source
 атомарно при `INSERT`; runtime не читает JSON fallback. При make-base сервер
-одновременно очищает `user_id` и `custom_source_id`.
+одновременно очищает `user_id` и `custom_source_id`, а у связанной растровой
+иконки также очищает `storage_image.user_id`.
 
 Новые `suggest.id` выдаёт общая sequence, поэтому конкурентные вставки разных
 пользователей не пересекаются и не используют `MAX(id)+1`. Существующий API

@@ -39,7 +39,7 @@
                   <PotionListItem v-else-if="type.id === 10" :item="item" :type="type" />
                   <FeatListItem v-else-if="type.id === 7" :item="item" :type="type" />
                   <template v-else>
-                    <ItemIcon v-if="item.svg" :item="item" :fallback-to-type="false" :size="22" />
+                    <ItemIcon v-if="item.iconImageUrl || item.svg" :item="item" :fallback-to-type="false" :size="22" />
                     <span class="item-name">{{ item.name }}</span>
                     <span v-if="item.userId != null" class="item-custom-mark" title="Ваш объект">✦</span>
                   </template>
@@ -64,7 +64,7 @@
               <PotionListItem v-else-if="type.id === 10" :item="item" :type="type" />
               <FeatListItem v-else-if="type.id === 7" :item="item" :type="type" />
               <template v-else>
-                <ItemIcon v-if="item.svg" :item="item" :fallback-to-type="false" :size="22" />
+                <ItemIcon v-if="item.iconImageUrl || item.svg" :item="item" :fallback-to-type="false" :size="22" />
                 <span class="item-name">{{ item.name }}</span>
                 <span v-if="item.userId != null" class="item-custom-mark" title="Ваш объект">✦</span>
               </template>

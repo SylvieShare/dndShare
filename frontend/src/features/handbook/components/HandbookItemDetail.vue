@@ -4,7 +4,7 @@
 
       <!-- Sticky header with name / ID / edit -->
       <div v-if="!customRenderer && showTitle" class="detail-head">
-        <ItemIcon v-if="item.svg" :item="item" :fallback-to-type="false" :size="28" />
+        <ItemIcon v-if="item.iconImageUrl || item.svg" :item="item" :fallback-to-type="false" :size="28" />
         <div class="detail-title-text">
           <span class="detail-name">{{ item.name }}</span>
           <span v-if="item.nameEn" class="detail-name-en">{{ item.nameEn }}</span>

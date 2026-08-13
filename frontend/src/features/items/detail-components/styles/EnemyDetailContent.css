@@ -22,6 +22,15 @@
   object-fit: cover;
   object-position: left center;
 }
+.enemy-top-icon {
+  top: 24px;
+  right: 24px;
+  width: 160px;
+  height: 160px;
+  max-width: 42%;
+  object-fit: contain;
+  opacity: 0.18;
+}
 
 /* Fallback SVG: large, right-side, decorative */
 .enemy-top-svg {

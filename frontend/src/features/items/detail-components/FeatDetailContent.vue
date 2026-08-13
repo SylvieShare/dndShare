@@ -3,7 +3,7 @@
     <header class="fdc-hero">
       <div class="fdc-sigil" aria-hidden="true">
         <span class="fdc-sigil-ring"></span>
-        <ItemIcon v-if="item.svg" class="fdc-item-icon" :item="item" :fallback-to-type="false" :size="42" />
+        <ItemIcon v-if="item.iconImageUrl || item.svg" class="fdc-item-icon" :item="item" :fallback-to-type="false" :size="42" />
         <svg v-else viewBox="0 0 40 40" fill="none">
           <path d="M20 5l4.4 10.6L35 20l-10.6 4.4L20 35l-4.4-10.6L5 20l10.6-4.4L20 5Z" stroke="currentColor" stroke-width="1.5" />
           <circle cx="20" cy="20" r="4.5" fill="currentColor" />

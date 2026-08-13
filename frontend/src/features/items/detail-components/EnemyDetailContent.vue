@@ -6,6 +6,7 @@
 
       <!-- Background: image or type svg -->
       <img v-if="item.data.image_url" :src="item.data.image_url" class="enemy-top-img" alt="" />
+      <img v-else-if="item.iconImageUrl" :src="item.iconImageUrl" class="enemy-top-img enemy-top-icon" alt="" />
       <SvgIcon
         v-else-if="item.svg || (type && type.svg)"
         class="enemy-top-svg"

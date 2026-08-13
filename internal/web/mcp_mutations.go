@@ -99,9 +99,11 @@ func (s *Server) toolItemDelete(ctx context.Context, args map[string]json.RawMes
 	if err != nil {
 		return nil, err
 	}
-	if err := s.store.Delete(ctx, id, mcpAdminUser, true); err != nil {
+	refs, err := s.store.Delete(ctx, id, mcpAdminUser, true)
+	if err != nil {
 		return nil, err
 	}
+	s.cleanupItemIconContext(ctx, refs)
 	return fmt.Sprintf("deleted item %d", id), nil
 }
 

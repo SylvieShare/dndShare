@@ -269,7 +269,8 @@ BEGIN
           ON i.type_id = mapped.type_id
          AND lower(btrim(i.name)) = lower(mapped.item_name)
         WHERE i.user_id IS NULL
-          AND i.svg_id IS NULL
+          AND i.icon_svg_id IS NULL
+          AND i.icon_image_id IS NULL
         ORDER BY i.id
     LOOP
         INSERT INTO dndshare.svg_storage (data)
@@ -277,9 +278,10 @@ BEGIN
         RETURNING id INTO saved_svg_id;
 
         UPDATE dndshare.item
-        SET svg_id = saved_svg_id
+        SET icon_svg_id = saved_svg_id
         WHERE id = target.id
-          AND svg_id IS NULL;
+          AND icon_svg_id IS NULL
+          AND icon_image_id IS NULL;
     END LOOP;
 END
 $$;

@@ -1,7 +1,7 @@
 <template>
   <div class="pdc">
     <div class="pdc-hero">
-      <ItemIcon v-if="item.svg" :item="item" :fallback-to-type="false" :size="56" />
+      <ItemIcon v-if="item.iconImageUrl || item.svg" :item="item" :fallback-to-type="false" :size="56" />
       <PotionVial v-else :color="data.color" :rarity="rarity" size="lg" />
       <div class="pdc-hero-info">
         <div v-if="showTitle" class="pdc-name">{{ item.name }}</div>

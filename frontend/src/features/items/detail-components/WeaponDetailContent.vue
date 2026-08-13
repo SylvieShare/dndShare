@@ -1,7 +1,7 @@
 <template>
   <div class="wdc-detail">
     <div v-if="showTitle" class="wdc-title-row">
-      <ItemIcon v-if="item.svg" :item="item" :fallback-to-type="false" :size="38" />
+      <ItemIcon v-if="item.iconImageUrl || item.svg" :item="item" :fallback-to-type="false" :size="38" />
       <div class="wdc-title-text">
         <div class="wdc-name">{{ item.name }}</div>
         <div v-if="item.nameEn" class="wdc-name-en">{{ nameEnFormatted }}</div>

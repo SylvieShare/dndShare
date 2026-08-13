@@ -24,8 +24,15 @@
         </svg>
       </button>
 
+      <ItemIcon
+        v-if="entry.item?.iconImageUrl"
+        class="sp-item-icon"
+        :item="entry.item"
+        :fallback-to-type="false"
+        :size="36"
+      />
       <span
-        v-if="school"
+        v-else-if="school"
         class="sp-school"
         :style="{ color: school.color || 'var(--text-muted)' }"
         :title="school.value"
@@ -82,6 +89,7 @@
 import { computed, inject, ref, watch } from 'vue'
 
 import AttackDamage from '@/features/character-editor/blocks/dnd/components/AttackDamage.vue'
+import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import { SAVE_ABBR } from '@/shared/lib/dndStats'
 
 const props = defineProps({
@@ -177,6 +185,7 @@ function onRowClick() {
   height: 22px;
   flex: none;
 }
+.sp-item-icon { flex: none; }
 .sp-school-svg { display: inline-flex; }
 .sp-school-svg :deep(svg) { width: 20px; height: 20px; }
 

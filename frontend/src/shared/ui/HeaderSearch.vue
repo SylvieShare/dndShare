@@ -38,7 +38,8 @@
         @mouseenter="activeIdx = i"
       >
         <span class="hs-row-icon">
-          <span v-if="r.icon" class="hs-icon-svg" v-html="r.icon" />
+          <img v-if="r.iconImageUrl" class="hs-icon-image" :src="r.iconImageUrl" alt="" />
+          <span v-else-if="r.icon" class="hs-icon-svg" v-html="r.icon" />
         </span>
         <span class="hs-row-name">{{ r.label }}</span>
         <span v-if="r.source" class="hs-row-source">{{ r.source }}</span>
@@ -114,6 +115,7 @@ async function doSearch() {
       return {
         key: 'item-' + item.id,
         label: item.name,
+        iconImageUrl: item.iconImageUrl || null,
         icon: item.svg || ((type && !NO_ICON_TYPE_IDS.has(item.typeId)) ? type.svg : null),
         source: type?.sourceName || type?.name || null,
         url: { path: '/handbook', query: { type: item.typeId, item: item.id } },
@@ -298,6 +300,12 @@ function onKeydown(e) {
   width: 20px;
   height: 20px;
   color: var(--text-2, var(--text-muted));
+}
+.hs-icon-image {
+  display: block;
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
 }
 
 .hs-icon-svg :deep(svg) {

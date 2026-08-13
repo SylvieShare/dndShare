@@ -189,7 +189,8 @@ and inspiration into the shared `RowActionItem`. A custom
 inventory entry is edited through its marked
 clickable name rather than a separate star button. Spell detail exposes prepare/unprepare
 when the spellbook uses preparation, plus delete; these actions update the same
-spell reference as the list row.
+spell reference as the list row. A spell row renders its transparent raster
+`item.iconImageUrl` when assigned; otherwise it retains the school SVG symbol.
 
 Diary sessions animate their disclosure body. Session create/edit forms use a
 regular `AppModalFrame`; event create/edit retains the element-origin

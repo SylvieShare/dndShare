@@ -53,8 +53,11 @@ entries and selected choices.
 - descriptions render through `RichContent`;
 - base PHB weapons, ordinary equipment, feats and race/class abilities receive
   idempotent `item.svg` icons from startup schema; related class mechanics may
-  share semantic artwork, while every item still has an explicit `svg_id`;
-- `ItemIcon.vue` prefers the item SVG and may fall back to the item-type SVG.
+  share semantic artwork, while every item still has an explicit
+  `icon_svg_id`;
+- `ItemIcon.vue` prefers `iconImageUrl`, then the item SVG, and may finally fall
+  back to the item-type SVG. Raster item icons are PNG/WebP objects registered
+  through `storage_image` and stored in S3;
   Handbook lists/pickers, the global header search, detail presentations and
   modal titles use the same rule instead of inferring art from localized names;
 - details open through the handbook `ItemViewModal`/modal stack; `ItemViewModal`

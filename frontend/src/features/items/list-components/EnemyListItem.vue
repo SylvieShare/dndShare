@@ -1,7 +1,7 @@
 <template>
   <ObjectListItem :item="item" name-center>
-    <template v-if="item.svg || cr != null" #leading>
-      <ItemIcon v-if="item.svg" :item="item" :fallback-to-type="false" />
+    <template v-if="item.iconImageUrl || item.svg || cr != null" #leading>
+      <ItemIcon v-if="item.iconImageUrl || item.svg" :item="item" :fallback-to-type="false" />
       <span v-if="cr != null" class="enemy-item-cr-num">{{ cr }}</span>
     </template>
     <template v-if="item.data?.identity?.named_npc" #name-extras>

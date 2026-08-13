@@ -1,12 +1,13 @@
 <template>
   <span
-    v-if="iconSvg || placeholder"
+    v-if="iconImageUrl || iconSvg || placeholder"
     class="item-icon"
-    :class="{ 'item-icon--type': usesTypeIcon, 'item-icon--placeholder': !iconSvg }"
+    :class="{ 'item-icon--type': usesTypeIcon, 'item-icon--placeholder': !iconImageUrl && !iconSvg }"
     :style="iconStyle"
     aria-hidden="true"
   >
-    <SvgIcon v-if="iconSvg" class="item-icon__svg" :svg="iconSvg" :color="iconColor" />
+    <img v-if="iconImageUrl" class="item-icon__image" :src="iconImageUrl" alt="" />
+    <SvgIcon v-else-if="iconSvg" class="item-icon__svg" :svg="iconSvg" :color="iconColor" />
   </span>
 </template>
 
@@ -22,7 +23,8 @@ const props = defineProps({
   placeholder: { type: Boolean, default: false },
 })
 
-const usesTypeIcon = computed(() => !props.item?.svg && props.fallbackToType && !!props.type?.svg)
+const iconImageUrl = computed(() => props.item?.iconImageUrl || '')
+const usesTypeIcon = computed(() => !iconImageUrl.value && !props.item?.svg && props.fallbackToType && !!props.type?.svg)
 const iconSvg = computed(() => props.item?.svg || (usesTypeIcon.value ? props.type.svg : ''))
 const iconColor = computed(() => usesTypeIcon.value ? props.type?.color : null)
 const iconStyle = computed(() => {
@@ -41,6 +43,12 @@ const iconStyle = computed(() => {
 }
 
 .item-icon__svg { width: 100%; height: 100%; }
+.item-icon__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
 
 .item-icon--type { opacity: 0.5; }
 

@@ -1,7 +1,7 @@
 <template>
   <ObjectListItem :item="item" :gap="12" :custom="item.userId != null">
     <template #leading>
-      <ItemIcon v-if="item.svg" :item="item" :fallback-to-type="false" />
+      <ItemIcon v-if="item.iconImageUrl || item.svg" :item="item" :fallback-to-type="false" />
       <PotionVial v-else class="pli-vial" :color="data.color" :rarity="rarity" size="sm" />
     </template>
     <template #subtitle>

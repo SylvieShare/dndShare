@@ -1,5 +1,5 @@
 -- SVG icons for PHB racial traits, class features and feats.
--- The artwork is deliberately stored in svg_storage and assigned through item.svg_id:
+-- The artwork is deliberately stored in svg_storage and assigned through item.icon_svg_id:
 -- item.data remains rules-only JSON, while related class features may share one glyph.
 CREATE TEMP TABLE feature_icon_seed (
     icon_key text PRIMARY KEY,
@@ -199,7 +199,8 @@ BEGIN
           ON i.type_id = mapping.type_id
          AND lower(btrim(i.name)) = lower(mapping.item_name)
         WHERE i.user_id IS NULL
-          AND i.svg_id IS NULL
+          AND i.icon_svg_id IS NULL
+          AND i.icon_image_id IS NULL
         ORDER BY i.id
     LOOP
         INSERT INTO dndshare.svg_storage (data)
@@ -207,9 +208,10 @@ BEGIN
         RETURNING id INTO saved_svg_id;
 
         UPDATE dndshare.item
-        SET svg_id = saved_svg_id
+        SET icon_svg_id = saved_svg_id
         WHERE id = target.id
-          AND svg_id IS NULL;
+          AND icon_svg_id IS NULL
+          AND icon_image_id IS NULL;
     END LOOP;
 END
 $$;
@@ -264,7 +266,8 @@ BEGIN
             FROM dndshare.item i
             WHERE i.type_id = 4
               AND i.user_id IS NULL
-              AND i.svg_id IS NULL
+              AND i.icon_svg_id IS NULL
+              AND i.icon_image_id IS NULL
         )
         SELECT resolved.id, defs.svg
         FROM resolved
@@ -276,9 +279,10 @@ BEGIN
         RETURNING id INTO saved_svg_id;
 
         UPDATE dndshare.item
-        SET svg_id = saved_svg_id
+        SET icon_svg_id = saved_svg_id
         WHERE id = target.id
-          AND svg_id IS NULL;
+          AND icon_svg_id IS NULL
+          AND icon_image_id IS NULL;
     END LOOP;
 END
 $$;
@@ -301,7 +305,8 @@ BEGIN
         JOIN feature_icon_seed defs ON defs.icon_key = defaults.icon_key
         JOIN dndshare.item i ON i.type_id = defaults.type_id
         WHERE i.user_id IS NULL
-          AND i.svg_id IS NULL
+          AND i.icon_svg_id IS NULL
+          AND i.icon_image_id IS NULL
         ORDER BY i.id
     LOOP
         INSERT INTO dndshare.svg_storage (data)
@@ -309,9 +314,10 @@ BEGIN
         RETURNING id INTO saved_svg_id;
 
         UPDATE dndshare.item
-        SET svg_id = saved_svg_id
+        SET icon_svg_id = saved_svg_id
         WHERE id = target.id
-          AND svg_id IS NULL;
+          AND icon_svg_id IS NULL
+          AND icon_image_id IS NULL;
     END LOOP;
 END
 $$;

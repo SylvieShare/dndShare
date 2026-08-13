@@ -52,6 +52,8 @@ Editor определяет schema по `templateName` через frontend setti
 - `GET /api/items/search`, `GET /api/items/search-multi`
 - `POST /api/items`, `PUT /api/items/{id}`
 - `POST /api/items/{id}/make-base`
+- `POST /api/items/{id}/icon-image` (multipart PNG/WebP, максимум 5 МБ)
+- `DELETE /api/items/{id}/icon`
 - `DELETE /api/items/{id}`
 
 Item DTO содержит `customSourceId` только у пользовательского контента. При
@@ -64,7 +66,13 @@ JSON `data`. `contentSourceIds` остаётся отдельной метада
 строки и строки текущего пользователя; анонимный и MCP catalogue read видит
 только базовые. Update/delete владельца не может затронуть чужую строку,
 HANDBOOK_ADMIN сохраняет явный административный доступ. Make-base очищает
-персональную связь источника.
+персональную связь источника и систематизирует владельца растровой иконки.
+
+Item reads проецируют иконку как `iconSvgId` + `svg` либо как `iconImageId` +
+`iconImageUrl`. Upload атомарно регистрирует объект в `storage_image`, связывает
+его с item и заменяет прежний формат; clear удаляет любую иконку. Системная
+иконка имеет `storage_image.user_id = NULL`, пользовательская принадлежит
+владельцу item.
 
 Item list/search поддерживает publication scope через `contentSourceIds`,
 `sourceVersionId` и `allowLegacy`. Здесь Legacy — статус контента конкретной
@@ -118,7 +126,8 @@ payload не является контрактом.
 
 `/api/music` предоставляет CRUD tracks/albums/tags, track-to-album/tag links,
 album order и signed playback URLs. Image upload: `POST
-/api/storage/images`. SVG read: `GET /api/svg/{id}`.
+/api/storage/images`; item icons используют item-специфичный маршрут выше.
+SVG read: `GET /api/svg/{id}`.
 
 ## Admin and error reports
 

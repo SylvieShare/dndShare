@@ -10,7 +10,7 @@ import (
 // StorageImageRecord — строка dndshare.storage_image (порт StorageImageRepository.StorageImageRecord).
 type StorageImageRecord struct {
 	ID     int64
-	UserID int64
+	UserID *int64
 	Key    string
 	URL    string
 	Type   *string
@@ -58,22 +58,27 @@ func (s *Store) GetActiveStorageImageByURL(ctx context.Context, url, typ string)
 	)
 }
 
-// MarkStorageImageDeletedByUser помечает объект удалённым (порт markDeleted(id, userId)).
-func (s *Store) MarkStorageImageDeletedByUser(ctx context.Context, id, userID int64) error {
-	_, err := s.pool.Exec(ctx,
-		`UPDATE dndshare.storage_image SET deleted = true WHERE id = $1 AND user_id = $2`,
-		id, userID,
-	)
-	return err
-}
-
-// MarkStorageImageDeleted помечает объект удалённым (порт markDeleted(id)).
-func (s *Store) MarkStorageImageDeleted(ctx context.Context, id int64) error {
-	_, err := s.pool.Exec(ctx,
-		`UPDATE dndshare.storage_image SET deleted = true WHERE id = $1`,
+// MarkStorageImageDeletedIfUnreferenced marks an orphaned object as deleted
+// and returns its S3 key. A nil key means another record still references it.
+func (s *Store) MarkStorageImageDeletedIfUnreferenced(ctx context.Context, id int64) (*string, error) {
+	var key string
+	err := s.pool.QueryRow(ctx,
+		`UPDATE dndshare.storage_image img
+		    SET deleted = true
+		  WHERE img.id = $1
+		    AND img.deleted = false
+		    AND NOT EXISTS (SELECT 1 FROM dndshare.item i WHERE i.icon_image_id = img.id)
+		    AND NOT EXISTS (SELECT 1 FROM dndshare.session_chapter ch WHERE ch.custom_image_id = img.id)
+		  RETURNING img."key"`,
 		id,
-	)
-	return err
+	).Scan(&key)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	return &key, nil
 }
 
 func (s *Store) scanStorageImage(ctx context.Context, query string, args ...any) (StorageImageRecord, error) {

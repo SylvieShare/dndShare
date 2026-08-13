@@ -69,17 +69,22 @@ func (s *Server) handleUploadImage(w http.ResponseWriter, r *http.Request) {
 
 // deleteOldImage удаляет прежнее изображение пользователя (порт private deleteOldImage).
 func (s *Server) deleteOldImage(r *http.Request, userID, uploadID int64) {
-	old, err := s.store.GetActiveUserStorageImage(r.Context(), uploadID, userID)
+	_, err := s.store.GetActiveUserStorageImage(r.Context(), uploadID, userID)
 	if err != nil {
 		if !errors.Is(err, store.ErrNotFound) {
 			log.Printf("delete old image %d: lookup: %v", uploadID, err)
 		}
 		return
 	}
-	if err := s.s3.DeleteObject(r.Context(), old.Key); err != nil {
-		log.Printf("delete old image %d: s3 %q: %v", uploadID, old.Key, err)
-	}
-	if err := s.store.MarkStorageImageDeletedByUser(r.Context(), uploadID, userID); err != nil {
+	key, err := s.store.MarkStorageImageDeletedIfUnreferenced(r.Context(), uploadID)
+	if err != nil {
 		log.Printf("delete old image %d: mark deleted: %v", uploadID, err)
+		return
+	}
+	if key == nil {
+		return
+	}
+	if err := s.s3.DeleteObject(r.Context(), *key); err != nil {
+		log.Printf("delete old image %d: s3 %q: %v", uploadID, *key, err)
 	}
 }

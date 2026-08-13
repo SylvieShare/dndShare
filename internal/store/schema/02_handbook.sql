@@ -166,11 +166,37 @@ CREATE TABLE IF NOT EXISTS dndshare.item (
     type_id    int8 NOT NULL REFERENCES dndshare.item_type(id),
     name_en    varchar NULL,
     parent_id  int8 NULL REFERENCES dndshare.item(id) ON DELETE SET NULL,
-    svg_id     int8 NULL REFERENCES dndshare.svg_storage(id),
+    icon_svg_id int8 NULL REFERENCES dndshare.svg_storage(id),
+    icon_image_id int8 NULL REFERENCES dndshare.storage_image(id) ON DELETE SET NULL,
     custom_source_id int8 NULL,
     CONSTRAINT item_pk PRIMARY KEY (id)
 );
+DO $$ BEGIN
+    IF EXISTS (
+        SELECT 1 FROM information_schema.columns
+        WHERE table_schema = 'dndshare' AND table_name = 'item' AND column_name = 'svg_id'
+    ) AND NOT EXISTS (
+        SELECT 1 FROM information_schema.columns
+        WHERE table_schema = 'dndshare' AND table_name = 'item' AND column_name = 'icon_svg_id'
+    ) THEN
+        ALTER TABLE dndshare.item RENAME COLUMN svg_id TO icon_svg_id;
+    END IF;
+END $$;
+ALTER TABLE dndshare.item ADD COLUMN IF NOT EXISTS icon_svg_id int8 NULL REFERENCES dndshare.svg_storage(id);
+ALTER TABLE dndshare.item ADD COLUMN IF NOT EXISTS icon_image_id int8 NULL REFERENCES dndshare.storage_image(id) ON DELETE SET NULL;
 ALTER TABLE dndshare.item ADD COLUMN IF NOT EXISTS custom_source_id int8 NULL;
+
+DO $$ BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_constraint
+        WHERE conname = 'item_single_icon_check'
+          AND conrelid = 'dndshare.item'::regclass
+    ) THEN
+        ALTER TABLE dndshare.item
+            ADD CONSTRAINT item_single_icon_check
+            CHECK (num_nonnulls(icon_svg_id, icon_image_id) <= 1);
+    END IF;
+END $$;
 
 -- Existing saved custom items acquire their owner's default source. Runtime
 -- only reads the column after this startup migration; legacy JSON aliases are
@@ -217,6 +243,8 @@ CREATE INDEX IF NOT EXISTS item_type_user_name_idx ON dndshare.item USING btree 
 CREATE INDEX IF NOT EXISTS item_parent_id_idx ON dndshare.item USING btree (parent_id) WHERE (parent_id IS NOT NULL);
 CREATE INDEX IF NOT EXISTS idx_item_user_id ON dndshare.item USING btree (user_id);
 CREATE INDEX IF NOT EXISTS idx_item_custom_source_id ON dndshare.item USING btree (custom_source_id);
+CREATE INDEX IF NOT EXISTS idx_item_icon_svg_id ON dndshare.item USING btree (icon_svg_id) WHERE icon_svg_id IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_item_icon_image_id ON dndshare.item USING btree (icon_image_id) WHERE icon_image_id IS NOT NULL;
 
 CREATE TABLE IF NOT EXISTS dndshare.item_content_source (
     item_id           int8 NOT NULL REFERENCES dndshare.item(id) ON DELETE CASCADE,

@@ -58,7 +58,7 @@ func TestFeatureIconSeedIsCompleteAndValid(t *testing.T) {
 			t.Fatalf("missing class feature icon %q", iconKey)
 		}
 	}
-	for _, guard := range []string{"i.user_id IS NULL", "i.svg_id IS NULL", "i.type_id = 4"} {
+	for _, guard := range []string{"i.user_id IS NULL", "i.icon_svg_id IS NULL", "i.icon_image_id IS NULL", "i.type_id = 4"} {
 		if !strings.Contains(schemaFeatureIconsSQL, guard) {
 			t.Fatalf("feature icon seed must contain guard %q", guard)
 		}

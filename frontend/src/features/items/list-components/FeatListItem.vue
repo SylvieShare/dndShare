@@ -2,7 +2,7 @@
   <ObjectListItem :item="item" :name-en="item.nameEn || ''" :custom="item.userId != null" :gap="11">
     <template #leading>
       <span class="fli-sigil" aria-hidden="true">
-        <ItemIcon v-if="item.svg" :item="item" :fallback-to-type="false" :size="17" />
+        <ItemIcon v-if="item.iconImageUrl || item.svg" :item="item" :fallback-to-type="false" :size="17" />
         <template v-else>✦</template>
       </span>
     </template>
