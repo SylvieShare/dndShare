@@ -60,7 +60,10 @@ and new fields, and there are no admin jobs for those migrations.
 `ViewHandbook` loads item types and collections. Search/filter happens through
 the item API before pagination. The publication filter has its own toolbar
 button for every collection, is passed as `contentSourceIds`, and its selected
-ids persist in browser local storage. Schema filter groups without available
+ids persist in browser local storage. The landing and collection workspace use
+an opaque `--bg` canvas so the global page grid does not show through; list
+rows use the opaque `--surface` level with distinct active and selected states.
+Schema filter groups without available
 options are not shown. `ItemEditModal` is schema-driven and uses shared form primitives; its
 create title uses the current item type name. `components/ItemPickerModal.vue`
 is the standard server-backed picker used by the character wizard/editor;

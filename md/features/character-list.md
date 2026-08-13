@@ -47,7 +47,9 @@ default-version fallback.
 The fixed steps are: Версия → Раса → Класс → Предыстория → Характеристики →
 Снаряжение → Личность → Обзор. The desktop layout has step rail, central content
 and live preview; on narrow screens it becomes one column, while the navigation
-footer stays pinned to the visible bottom edge.
+footer stays pinned to the visible bottom edge. The wizard owns an opaque
+`--bg` canvas across its header, work area and footer so the global page grid
+does not show through the creation workspace.
 
 Key rules:
 

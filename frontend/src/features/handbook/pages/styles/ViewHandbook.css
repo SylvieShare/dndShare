@@ -4,6 +4,7 @@
   flex-direction: column;
   height: calc(100vh - 54px);
   overflow: hidden;
+  background: var(--bg);
 }
 
 .handbook-outer--landing {
@@ -29,6 +30,7 @@
   margin: 0 auto;
   width: 100%;
   box-sizing: border-box;
+  background: var(--bg);
 }
 
 .handbook-landing {
@@ -47,6 +49,7 @@
   min-height: 0;
   display: flex;
   overflow: hidden;
+  background: var(--bg);
   border-right: 1px solid var(--border);
   border-top: 1px solid var(--border);
 }

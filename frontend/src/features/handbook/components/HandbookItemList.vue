@@ -177,6 +177,7 @@ function onScroll(e) {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  background: var(--bg);
 }
 
 .empty-hint {
@@ -245,20 +246,21 @@ function onScroll(e) {
   gap: 6px;
   padding: 8px 14px;
   cursor: pointer;
+  background: var(--surface);
   transition: background 0.12s;
 }
-.list-row:hover { background: color-mix(in srgb, var(--text-on-accent) 5%, transparent); }
-.list-row.selected { background: color-mix(in srgb, var(--accent) 15%, transparent); }
+.list-row:hover { background: var(--surface-active); }
+.list-row.selected { background: color-mix(in srgb, var(--accent) 20%, var(--surface-active)); }
 
 .list-row-rich {
   margin: 2px 8px;
   padding: 10px 12px;
   border: 1px solid var(--border);
   border-radius: 10px;
-  background: color-mix(in srgb, var(--text-on-accent) 2%, transparent);
+  background: var(--surface);
 }
-.list-row-rich:hover { background: color-mix(in srgb, var(--text-on-accent) 5%, transparent); border-color: color-mix(in srgb, var(--text-on-accent) 12%, transparent); }
-.list-row-rich.selected { background: color-mix(in srgb, var(--accent) 15%, transparent); border-color: color-mix(in srgb, var(--accent) 35%, transparent); }
+.list-row-rich:hover { background: var(--surface-active); border-color: var(--border-strong); }
+.list-row-rich.selected { background: color-mix(in srgb, var(--accent) 20%, var(--surface-active)); border-color: var(--accent); }
 
 .item-name {
   font-size: 13px;
