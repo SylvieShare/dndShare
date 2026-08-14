@@ -184,10 +184,14 @@ HTTP-обслуживания; компоненты не содержат read-t
 
 ## Router
 
-Актуальные страницы: `/`, `/sessions`, `/sessions/:uuid`, `/join/:code`,
+Актуальные страницы: `/`, `/sessions`, `/sessions/:uuid`, `/screen/:uuid`, `/join/:code`,
 `/chars`, `/chars/new`, `/char/:uuid`, `/char/:uuid/print`, `/handbook`,
 `/handbook/dictionary`, `/handbook/objects`, `/admin`. Неизвестный клиентский
 маршрут перенаправляется на `/`.
+
+`/screen/:uuid` uses `meta.standaloneView`: like print mode, it removes the
+global sidebar, header and diagnostic overlays, but retains the dark application
+theme for a public read-only encounter display.
 
 Router prefetch хранится 30 секунд и используется страницами списков. Направление
 перехода определяется `meta.section/depth/pageOrder`; навигационные компоненты

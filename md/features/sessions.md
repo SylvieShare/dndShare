@@ -158,8 +158,10 @@ when used outside that context. Combat uses the same canvas layer from the
 command bar and focuses the current chapter. Its standalone combat header sits
 to the right of that node; combatants remain independent tiles below it rather
 than being wrapped in one central card. The header groups compact icon actions
-for starting or ending combat, turn navigation, returning selected participants
-to reserve, initiative rerolls and NPC deletion. Scene CRUD remains in
+for starting or ending combat and turn navigation. Its growing secondary action
+row is divided into labelled groups for the public screen, rolls, the current
+selection and dead combatants; nested action components use the same icon-button
+geometry and interaction states as direct toolbar buttons. Scene CRUD remains in
 `session_scenes.go`.
 
 `SceneTab.vue` uses project standards:
@@ -189,9 +191,9 @@ toggle, then rolls a d20 for every combatant currently on the combat scene. A
 normal check uses that creature's ability modifier. A saving throw also uses a
 player's save proficiency and extra save bonuses, or the explicit bestiary save
 bonus for an NPC; an NPC without one falls back to its ability modifier. Each
-row reserves a result strip immediately below HP with the natural roll, applied
-bonus and total. The same header action is highlighted while results exist and
-clears them on the next click.
+row reserves a compact result strip immediately to the right of HP with the
+natural roll, applied bonus and total. The same header action is highlighted
+while results exist and clears them on the next click.
 
 Players have no separate encounter reserve section. Opening combat smoothly
 widens the existing left participant rail; every player tile gains the
@@ -265,6 +267,23 @@ Canonical combatants:
 The optional encounter-level `challenge` object stores `{ability,
 savingThrow,results}`. `results` is keyed by combatant UID and each value is
 `{roll,bonus,total}`; removing `challenge` clears the shared result display.
+
+The DM combat header links to the standalone public route `/screen/:uuid` for
+a television or projector. It has no application navigation or authenticated
+controls and polls `GET /api/public/sessions/:uuid/encounter` every 1.5 seconds,
+with an immediate refresh when the tab becomes visible again. The screen shows
+the session name, round, current turn and the complete initiative order with
+portraits, markers and resolved condition names. Exact HP is intentionally not
+part of the public DTO or UI: health is presented as `Здоров` above 50%,
+`Ранен` above 25%, `Критически ранен` at 25% or below, and `Без сознания`
+(player) / `Повержен` (NPC) at zero. A lost poll keeps the last successful
+snapshot visible and marks the connection as interrupted.
+
+The public endpoint builds a dedicated projection on the server rather than
+returning raw encounter or character JSON. It may resolve the session owner's
+referenced custom bestiary entries and condition suggestions, but exposes only
+their display name, icon and condition label/color; character sheets, exact HP,
+AC, notes and challenge results remain private.
 
 The encounter never embeds `itemRaw` and does not read denormalized NPC fields.
 Startup SQL converts previous records to `itemId + override`; frontend only

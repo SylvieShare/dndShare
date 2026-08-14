@@ -1,9 +1,15 @@
 <template>
-  <DesktopSidebar v-if="!isPrintRoute" />
-  <AppHeader v-if="!isPrintRoute"/>
+  <DesktopSidebar v-if="!isStandaloneRoute" />
+  <AppHeader v-if="!isStandaloneRoute"/>
   <!-- The character LIST is kept alive so returning from a character page restores
        its scroll position and avoids a refetch flash. -->
-  <div class="page-transition-stage" :class="{ 'page-transition-stage--print': isPrintRoute }">
+  <div
+    class="page-transition-stage"
+    :class="{
+      'page-transition-stage--print': isPrintRoute,
+      'page-transition-stage--standalone': isStandaloneRoute,
+    }"
+  >
     <router-view v-slot="{ Component, route }">
       <transition
         :name="pageTransitionName"
@@ -16,10 +22,10 @@
       </transition>
     </router-view>
   </div>
-  <DiceRollPopup v-if="!isPrintRoute"/>
-  <ErrorReporter v-if="!isPrintRoute"/>
-  <ErrorReportInbox v-if="!isPrintRoute"/>
-  <ConsoleErrorInbox v-if="!isPrintRoute"/>
+  <DiceRollPopup v-if="!isStandaloneRoute"/>
+  <ErrorReporter v-if="!isStandaloneRoute"/>
+  <ErrorReportInbox v-if="!isStandaloneRoute"/>
+  <ConsoleErrorInbox v-if="!isStandaloneRoute"/>
 </template>
 
 <script setup>
@@ -40,9 +46,11 @@ import { useTextStore } from '@/stores/text'
 const route = useRoute()
 const isMobile = useIsMobile()
 const isPrintRoute = computed(() => !!route.meta?.printView)
+const isStandaloneRoute = computed(() => isPrintRoute.value || !!route.meta?.standaloneView)
 const pageTransitionMode = computed(() => (isMobile.value ? undefined : 'out-in'))
 
 onMounted(() => {
+  if (isStandaloneRoute.value) return
   useTextStore().downloadText()
   useAccountStore().checkAuth()
 })
@@ -107,6 +115,13 @@ body {
   min-height: 100dvh;
   margin-left: 0;
   background-image: none;
+}
+
+.page-transition-stage--standalone {
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin-left: 0;
+  background: none;
 }
 
 .page-forward-enter-active,

@@ -101,9 +101,38 @@
 .enc-toolbar-actions {
   grid-column: 1 / -1;
   justify-content: flex-end;
-  gap: 6px;
+  gap: 8px;
   padding-top: 9px;
   border-top: 1px solid var(--border);
+}
+
+.enc-action-group {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  gap: 5px;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: color-mix(in srgb, var(--text-on-accent) 3%, transparent);
+}
+
+.enc-action-group-label {
+  padding: 0 3px 0 5px;
+  color: var(--text-muted);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.055em;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.enc-action-group-controls {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 3px;
 }
 
 .enc-turn-group {
@@ -114,7 +143,7 @@
   background: color-mix(in srgb, var(--text-on-accent) 3%, transparent);
 }
 
-.enc-icon-btn {
+.enc-toolbar :deep(.enc-icon-btn) {
   position: relative;
   display: inline-grid;
   width: 36px;
@@ -128,53 +157,54 @@
   color: var(--text-2);
   cursor: pointer;
   transition: color 0.14s, background 0.14s, border-color 0.14s, transform 0.1s;
+  text-decoration: none;
 }
 
-.enc-icon-btn:hover:not(:disabled) {
+.enc-toolbar :deep(.enc-icon-btn:hover:not(:disabled)) {
   border-color: var(--border-strong);
   background: color-mix(in srgb, var(--text-on-accent) 9%, transparent);
   color: var(--text-1);
 }
 
-.enc-icon-btn:active:not(:disabled) { transform: scale(0.92); }
-.enc-icon-btn:disabled { cursor: not-allowed; opacity: 0.32; }
+.enc-toolbar :deep(.enc-icon-btn:active:not(:disabled)) { transform: scale(0.92); }
+.enc-toolbar :deep(.enc-icon-btn:disabled) { cursor: not-allowed; opacity: 0.32; }
 
-.enc-icon-btn--primary {
+.enc-toolbar :deep(.enc-icon-btn--primary) {
   border-color: color-mix(in srgb, var(--accent) 56%, transparent);
   background: var(--accent);
   color: var(--text-on-accent);
 }
 
-.enc-icon-btn--primary:hover:not(:disabled) {
+.enc-toolbar :deep(.enc-icon-btn--primary:hover:not(:disabled)) {
   border-color: var(--accent);
   background: color-mix(in srgb, var(--accent) 84%, var(--text-on-accent));
   color: var(--text-on-accent);
 }
 
-.enc-icon-btn--end,
-.enc-icon-btn--danger {
+.enc-toolbar :deep(.enc-icon-btn--end),
+.enc-toolbar :deep(.enc-icon-btn--danger) {
   border-color: color-mix(in srgb, var(--danger) 30%, transparent);
   background: color-mix(in srgb, var(--danger) 10%, transparent);
   color: var(--danger);
 }
 
-.enc-icon-btn--end:hover:not(:disabled),
-.enc-icon-btn--danger:hover:not(:disabled) {
+.enc-toolbar :deep(.enc-icon-btn--end:hover:not(:disabled)),
+.enc-toolbar :deep(.enc-icon-btn--danger:hover:not(:disabled)) {
   border-color: color-mix(in srgb, var(--danger) 58%, transparent);
   background: color-mix(in srgb, var(--danger) 19%, transparent);
   color: var(--danger);
 }
 
-.enc-icon-btn--next { color: var(--accent-soft); }
+.enc-toolbar :deep(.enc-icon-btn--next) { color: var(--accent-soft); }
 
-.enc-icon-btn--challenge-active {
+.enc-toolbar :deep(.enc-icon-btn--challenge-active) {
   border-color: color-mix(in srgb, var(--warning) 58%, transparent);
   background: color-mix(in srgb, var(--warning) 17%, transparent);
   color: var(--warning);
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--warning) 10%, transparent);
 }
 
-.enc-icon-btn--challenge-active:hover:not(:disabled) {
+.enc-toolbar :deep(.enc-icon-btn--challenge-active:hover:not(:disabled)) {
   border-color: var(--warning);
   background: color-mix(in srgb, var(--warning) 24%, transparent);
   color: var(--warning);
@@ -199,7 +229,7 @@
   line-height: 1;
 }
 
-.enc-icon-btn--danger .enc-icon-count { background: var(--danger); }
+.enc-toolbar :deep(.enc-icon-btn--danger) .enc-icon-count { background: var(--danger); }
 
 .enc-round-wrap {
   display: flex;
@@ -434,11 +464,13 @@
 
 @media (max-width: 760px) {
   .enc-wrap--workspace > .enc-toolbar { left: 0; }
+  .enc-toolbar-actions { flex-wrap: wrap; }
+  .enc-action-group-label { display: none; }
   .enc-add-row { flex-direction: column; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .enc-icon-btn,
+  .enc-toolbar :deep(.enc-icon-btn),
   .enc-section-icon-btn { transition: none; }
   .enc-combat-scene-enter-active,
   .enc-combat-scene-leave-active,

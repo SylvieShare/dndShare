@@ -1,0 +1,188 @@
+.initiative-track {
+  position: relative;
+  display: grid;
+  min-height: 0;
+  flex: 1;
+  grid-template-columns: repeat(auto-fit, minmax(clamp(132px, 10.5vw, 220px), 1fr));
+  align-content: stretch;
+  gap: clamp(10px, 1vw, 18px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.initiative-track::before {
+  position: absolute;
+  z-index: -1;
+  top: 32px;
+  right: 2%;
+  left: 2%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-strong) 7%, var(--border-strong) 93%, transparent);
+  content: '';
+}
+
+.initiative-card {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  box-sizing: border-box;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(8px, 1vh, 14px);
+  padding: clamp(11px, 1vw, 18px);
+  border: 1px solid var(--border-strong);
+  border-radius: clamp(14px, 1.2vw, 22px);
+  background: color-mix(in srgb, var(--surface) 94%, transparent);
+  box-shadow: 0 12px 30px color-mix(in srgb, var(--bg) 54%, transparent);
+  overflow: hidden;
+  transition: border-color 0.24s, background 0.24s, box-shadow 0.24s, transform 0.24s;
+}
+
+.initiative-card::after {
+  position: absolute;
+  right: 12%;
+  bottom: -1px;
+  left: 12%;
+  height: 2px;
+  background: var(--screen-combatant-color);
+  content: '';
+  opacity: 0.72;
+}
+
+.initiative-card--current {
+  border-color: color-mix(in srgb, var(--accent) 76%, var(--text-on-accent));
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 18%, var(--surface)), var(--surface));
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, var(--accent) 18%, transparent),
+    0 18px 42px color-mix(in srgb, var(--accent) 20%, transparent);
+  transform: translateY(-5px);
+}
+
+.initiative-card--down {
+  opacity: 0.55;
+  filter: grayscale(0.62);
+}
+
+.initiative-card__order {
+  width: 100%;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.initiative-card__order > span {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  background: var(--surface-raised);
+  color: var(--text-1);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.initiative-card__order small {
+  color: var(--text-muted);
+  font-size: clamp(9px, 0.62vw, 11px);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.initiative-card__portrait {
+  position: relative;
+  display: grid;
+  width: clamp(54px, 5.2vw, 92px);
+  height: clamp(54px, 5.2vw, 92px);
+  flex: none;
+  place-items: center;
+  border: 2px solid color-mix(in srgb, var(--screen-combatant-color) 68%, transparent);
+  border-radius: 28%;
+  background: color-mix(in srgb, var(--screen-combatant-color) 9%, var(--surface-raised));
+  color: color-mix(in srgb, var(--screen-combatant-color) 66%, var(--text-2));
+  overflow: visible;
+}
+
+.initiative-card__portrait img,
+.initiative-card__portrait > span {
+  border-radius: inherit;
+  overflow: hidden;
+}
+
+.initiative-card__marker {
+  position: absolute;
+  right: -7px;
+  bottom: -7px;
+  display: grid;
+  width: 25px;
+  height: 25px;
+  place-items: center;
+  border: 2px solid var(--surface);
+  border-radius: 50%;
+  background: var(--screen-combatant-color);
+  color: var(--text-on-accent);
+  font-size: 11px;
+  font-weight: 950;
+}
+
+.initiative-card__body {
+  display: flex;
+  min-width: 0;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.initiative-card__body > strong {
+  overflow: hidden;
+  width: 100%;
+  color: var(--text-1);
+  font-family: var(--font-display);
+  font-size: clamp(18px, 1.45vw, 28px);
+  font-weight: 650;
+  line-height: 1.05;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.initiative-card__body .encounter-health {
+  max-width: 100%;
+  white-space: nowrap;
+}
+
+.initiative-card__states {
+  display: flex;
+  max-height: 62px;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5px;
+  overflow: hidden;
+}
+
+.initiative-card__states .encounter-state {
+  min-height: 24px;
+  padding: 4px 8px;
+  font-size: clamp(9px, 0.62vw, 11px);
+}
+
+.initiative-card__current-label {
+  position: absolute;
+  right: 12px;
+  bottom: 10px;
+  left: 12px;
+  color: var(--accent-soft);
+  font-size: clamp(8px, 0.55vw, 10px);
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.initiative-card--current .initiative-card__body {
+  padding-bottom: 17px;
+}

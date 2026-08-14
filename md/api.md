@@ -113,6 +113,11 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
 - `POST /api/sessions/{uuid}/chapter-edges` and `PATCH|DELETE
   /api/sessions/{uuid}/chapter-edges/{edgeId}`;
 - read/write encounter and music state;
+- `GET /api/public/sessions/{uuid}/encounter` is the anonymous, no-store TV
+  projection of the current fight. It returns only the session name, round,
+  current turn and initiative-ordered combatants with presentation fields,
+  resolved conditions and a worded health band. It never returns character
+  sheets, exact HP, AC, notes or encounter challenge results;
 - `GET|POST /api/sessions/{uuid}/events` reads and appends the session timeline.
   The read endpoint accepts `after` and `limit`; the write endpoint accepts
   `{type,title,data,actorCharUuid?,visibility?,clientActionId?}`. The server

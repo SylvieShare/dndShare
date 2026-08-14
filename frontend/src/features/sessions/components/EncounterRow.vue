@@ -69,13 +69,16 @@
         />
         <span v-if="isNpc && combatant.note" class="enc-note" :title="combatant.note">{{ combatant.note }}</span>
       </div>
-      <EncounterHpBar class="enc-info-hp" :combatant="combatant" :section="section" />
-      <EncounterChallengeResult
-        v-if="challengeResult"
-        :challenge="enc.challenge"
-        :ability="challengeAbility"
-        :result="challengeResult"
-      />
+      <div class="enc-info-vitals">
+        <EncounterHpBar class="enc-info-hp" :combatant="combatant" :section="section" />
+        <EncounterChallengeResult
+          v-if="challengeResult"
+          class="enc-info-challenge"
+          :challenge="enc.challenge"
+          :ability="challengeAbility"
+          :result="challengeResult"
+        />
+      </div>
       <div v-if="subtitleText" class="enc-sub">{{ subtitleText }}</div>
     </div>
 
@@ -323,7 +326,24 @@ function commitNoteEdit() {
   gap: 4px;
 }
 
-.enc-info-hp { margin-top: 1px; }
+.enc-info-vitals {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 9px;
+  margin-top: 1px;
+}
+
+.enc-info-hp {
+  flex: 1 1 220px;
+  min-width: 110px;
+}
+
+.enc-info-challenge {
+  width: min(240px, 46%);
+  flex: 0 1 240px;
+  min-width: 0;
+}
 
 .enc-name-row {
   display: flex;

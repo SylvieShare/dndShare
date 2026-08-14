@@ -164,15 +164,25 @@ describe('ViewSession participant rail', () => {
   })
 
   it('rolls a configured challenge for every combatant and shows it below HP', () => {
-    expect(encounterSource).toContain('<EncounterChallengeMenu v-if="props.isDm && enc.encounter.active"')
+    expect(encounterSource).toContain('<EncounterChallengeMenu v-if="enc.encounter.active"')
     expect(encounterChallengeMenuSource).toContain('enc.runChallenge({ ...draft })')
     expect(encounterChallengeMenuSource).toContain("'enc-icon-btn--challenge-active': enc.challengeActive")
     expect(encounterChallengeMenuSource).toContain('enc.resetChallenge()')
     expect(encounterChallengeSource).toContain('for (const combatant of inCombat.value)')
     expect(encounterChallengeSource).toContain('npcSavingThrow(combatant, key)')
+    expect(encounterRowSource).toContain('<div class="enc-info-vitals">')
     expect(encounterRowSource.indexOf('<EncounterHpBar'))
       .toBeLessThan(encounterRowSource.indexOf('<EncounterChallengeResult'))
     expect(encounterChallengeResultSource).toContain("challenge.savingThrow ? 'спасбросок' : 'проверка'")
+  })
+
+  it('groups the growing combat toolbar and keeps nested actions visually consistent', () => {
+    expect(encounterSource).toContain('class="enc-action-group-label">Экран</span>')
+    expect(encounterSource).toContain('class="enc-action-group-label">Броски</span>')
+    expect(encounterSource).toContain('class="enc-action-group-label">Выбор</span>')
+    expect(encounterSource).toContain('class="enc-action-group-label">Погибшие</span>')
+    expect(encounterStylesSource).toContain('.enc-toolbar :deep(.enc-icon-btn)')
+    expect(encounterStylesSource).toContain('.enc-action-group-controls')
   })
 
   it('opens row actions from the tile and keeps concrete controls independent', () => {

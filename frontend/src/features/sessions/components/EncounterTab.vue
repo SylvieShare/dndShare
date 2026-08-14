@@ -48,44 +48,74 @@
       </div>
 
       <div class="enc-toolbar-actions">
-        <EncounterChallengeMenu v-if="props.isDm && enc.encounter.active" />
-        <button
-          v-if="props.isDm"
-          type="button"
-          class="enc-icon-btn"
-          :disabled="reserveMoveCount === 0"
-          title="Вернуть выбранных в запас"
-          aria-label="Вернуть выбранных в запас"
-          @click="enc.sendSelectedTo('reserve')"
-        >
-          <ArchiveRestore :size="18" />
-          <span v-if="reserveMoveCount" class="enc-icon-count">{{ reserveMoveCount }}</span>
-        </button>
-        <button
-          v-if="props.isDm"
-          type="button"
-          class="enc-icon-btn"
-          :disabled="enc.selectedRerollCount === 0"
-          title="Перебросить инициативу выбранным"
-          aria-label="Перебросить инициативу выбранным"
-          @click="enc.rerollSelectedInitiative"
-        >
-          <Dices :size="18" />
-          <span v-if="enc.selectedRerollCount" class="enc-icon-count">{{ enc.selectedRerollCount }}</span>
-        </button>
-        <button
-          v-if="props.isDm"
-          type="button"
-          class="enc-icon-btn enc-icon-btn--danger"
-          :disabled="enc.selectedNpcCount === 0"
-          title="Удалить выбранных существ"
-          aria-label="Удалить выбранных существ"
-          @click="enc.removeSelectedNpcs"
-        >
-          <Trash2 :size="18" />
-          <span v-if="enc.selectedNpcCount" class="enc-icon-count">{{ enc.selectedNpcCount }}</span>
-        </button>
-        <EncounterGraveyardMenu :is-dm="props.isDm" @view-participant="$emit('view-participant', $event)" />
+        <div v-if="props.isDm" class="enc-action-group" aria-label="Экран боя">
+          <span class="enc-action-group-label">Экран</span>
+          <div class="enc-action-group-controls">
+            <a
+              class="enc-icon-btn"
+              :href="publicScreenUrl"
+              target="_blank"
+              rel="noopener"
+              title="Открыть экран боя"
+              aria-label="Открыть публичный экран боя в новой вкладке"
+            >
+              <MonitorUp :size="18" />
+            </a>
+          </div>
+        </div>
+
+        <div v-if="props.isDm" class="enc-action-group" aria-label="Броски">
+          <span class="enc-action-group-label">Броски</span>
+          <div class="enc-action-group-controls">
+            <EncounterChallengeMenu v-if="enc.encounter.active" />
+            <button
+              type="button"
+              class="enc-icon-btn"
+              :disabled="enc.selectedRerollCount === 0"
+              title="Перебросить инициативу выбранным"
+              aria-label="Перебросить инициативу выбранным"
+              @click="enc.rerollSelectedInitiative"
+            >
+              <Dices :size="18" />
+              <span v-if="enc.selectedRerollCount" class="enc-icon-count">{{ enc.selectedRerollCount }}</span>
+            </button>
+          </div>
+        </div>
+
+        <div v-if="props.isDm" class="enc-action-group" aria-label="Действия с выбранными участниками">
+          <span class="enc-action-group-label">Выбор</span>
+          <div class="enc-action-group-controls">
+            <button
+              type="button"
+              class="enc-icon-btn"
+              :disabled="reserveMoveCount === 0"
+              title="Вернуть выбранных в запас"
+              aria-label="Вернуть выбранных в запас"
+              @click="enc.sendSelectedTo('reserve')"
+            >
+              <ArchiveRestore :size="18" />
+              <span v-if="reserveMoveCount" class="enc-icon-count">{{ reserveMoveCount }}</span>
+            </button>
+            <button
+              type="button"
+              class="enc-icon-btn enc-icon-btn--danger"
+              :disabled="enc.selectedNpcCount === 0"
+              title="Удалить выбранных существ"
+              aria-label="Удалить выбранных существ"
+              @click="enc.removeSelectedNpcs"
+            >
+              <Trash2 :size="18" />
+              <span v-if="enc.selectedNpcCount" class="enc-icon-count">{{ enc.selectedNpcCount }}</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="enc-action-group" aria-label="Погибшие участники">
+          <span class="enc-action-group-label">Погибшие</span>
+          <div class="enc-action-group-controls">
+            <EncounterGraveyardMenu :is-dm="props.isDm" @view-participant="$emit('view-participant', $event)" />
+          </div>
+        </div>
       </div>
     </BaseTile>
 
@@ -283,6 +313,7 @@ import {
   Dices,
   ListChecks,
   LogIn,
+  MonitorUp,
   Plus,
   Square,
   Swords,
@@ -314,6 +345,7 @@ const props = defineProps({
 defineEmits(['view-participant'])
 
 const enc = props.encounter
+const publicScreenUrl = computed(() => `/screen/${encodeURIComponent(props.sessionUuid)}`)
 const encounterRoot = ref(null)
 const {
   transitioning: combatTransitioning,

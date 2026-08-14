@@ -56,6 +56,10 @@ export function saveEncounter(uuid, data) {
   return fetchPut(`/sessions/${uuid}/encounter`, data)
 }
 
+export function getPublicEncounter(uuid) {
+  return fetchGet(`/public/sessions/${uuid}/encounter`)
+}
+
 export function getChapters(uuid) {
   return fetchGet(`/sessions/${uuid}/chapters`)
 }

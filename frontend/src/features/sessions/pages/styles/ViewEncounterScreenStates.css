@@ -1,0 +1,128 @@
+.initiative-card-move,
+.initiative-card-enter-active,
+.initiative-card-leave-active {
+  transition: all 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.initiative-card-enter-from,
+.initiative-card-leave-to {
+  opacity: 0;
+  transform: translateY(12px) scale(0.96);
+}
+
+.initiative-card-leave-active {
+  position: absolute;
+}
+
+.encounter-screen__empty,
+.encounter-screen__no-combatants {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  text-align: center;
+}
+
+.encounter-screen__empty {
+  gap: 7px;
+}
+
+.encounter-screen__empty h2 {
+  font-size: clamp(44px, 6vw, 96px);
+  line-height: 1;
+}
+
+.encounter-screen__empty > span,
+.encounter-screen__no-combatants {
+  color: var(--text-muted);
+  font-size: clamp(14px, 1.15vw, 22px);
+}
+
+.encounter-screen__sigil {
+  display: grid;
+  width: clamp(104px, 9vw, 154px);
+  height: clamp(104px, 9vw, 154px);
+  margin-bottom: 20px;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--accent) 48%, transparent);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--accent) 10%, var(--surface));
+  color: var(--accent-soft);
+  box-shadow: 0 0 60px color-mix(in srgb, var(--accent) 18%, transparent);
+}
+
+.encounter-screen__sigil--loading {
+  animation: encounter-screen-pulse 1.8s ease-in-out infinite;
+}
+
+.encounter-screen__sigil--error {
+  border-color: color-mix(in srgb, var(--danger) 48%, transparent);
+  background: color-mix(in srgb, var(--danger) 10%, var(--surface));
+  color: var(--danger);
+}
+
+@keyframes encounter-screen-pulse {
+  50% { transform: scale(1.05); box-shadow: 0 0 82px color-mix(in srgb, var(--accent) 28%, transparent); }
+}
+
+@media (max-aspect-ratio: 4 / 3) {
+  .encounter-screen--active {
+    overflow-y: auto;
+  }
+
+  .initiative-track {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .encounter-screen {
+    min-height: 100dvh;
+    gap: 20px;
+    overflow-y: auto;
+    padding: 20px 16px 28px;
+  }
+
+  .encounter-screen__header {
+    align-items: flex-start;
+  }
+
+  .encounter-screen__identity h1 {
+    max-width: 55vw;
+  }
+
+  .encounter-screen__round span,
+  .encounter-screen__connection {
+    font-size: 0;
+  }
+
+  .encounter-screen__round,
+  .encounter-screen__connection {
+    min-width: 42px;
+    min-height: 42px;
+    justify-content: center;
+    padding: 8px;
+  }
+
+  .encounter-screen__turn {
+    padding: 18px;
+  }
+
+  .encounter-screen__turn-portrait {
+    width: 88px;
+    height: 88px;
+  }
+
+  .initiative-track {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .encounter-screen__sigil--loading,
+  .initiative-card-move,
+  .initiative-card-enter-active,
+  .initiative-card-leave-active {
+    animation: none;
+    transition: none;
+  }
+}

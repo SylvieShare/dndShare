@@ -9,6 +9,7 @@ import ViewListCharacters from '@/features/character-list/pages/ViewListCharacte
 import ViewCharacter from '@/features/character-editor/pages/ViewCharacter'
 import ViewCharacterPrint from '@/features/character-editor/pages/ViewCharacterPrint'
 import ViewJoinSession from '@/features/sessions/pages/ViewJoinSession'
+import ViewEncounterScreen from '@/features/sessions/pages/ViewEncounterScreen.vue'
 import ViewSession from '@/features/sessions/pages/ViewSession'
 import ViewSessions from '@/features/sessions/pages/ViewSessions'
 import { fetchGet } from '@/shared/api/http'
@@ -110,6 +111,12 @@ const routes = [
         name: "Session",
         component: ViewSession,
         meta: { title: 'Сессия', section: 'sessions', depth: 1, mobileBackTo: { name: 'Sessions' } },
+    },
+    {
+        path: '/screen/:uuid',
+        name: "EncounterScreen",
+        component: ViewEncounterScreen,
+        meta: { title: 'Экран боя', section: 'sessions', depth: 2, standaloneView: true },
     },
     {
         path: '/join/:code',
