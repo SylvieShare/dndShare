@@ -81,6 +81,9 @@ the collection/search chrome; the common mobile-header back button and a deliber
 right swipe both return to the list through the same query-navigation path. The
 handbook has no duplicate back bar inside its content. Vertical scrolling
 and gestures started on interactive controls remain untouched.
+The outer handbook and centered page wrappers stay transparent so the shared
+application canvas dot pattern remains visible around the opaque navigation,
+list and detail surfaces.
 
 Details are specialized by type where useful (weapon, spell, enemy, potion,
 feat), otherwise the generic field renderer is used. Item detail modals use
