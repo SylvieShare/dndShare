@@ -114,8 +114,10 @@ describe('ViewSession participant rail', () => {
     expect(source).toContain('{ ...participant, color: color || null }')
     expect(encounterRowSource).toContain(':mark-color="playerColor"')
     expect(encounterRowSource).toContain('enc.participantColor(props.combatant.charId)')
-    expect(baseTileSource).toContain('clip-path: polygon(30% 0, 100% 0, 100% 100%, 0 100%);')
+    expect(baseTileSource).toContain('clip-path: polygon(70% 0, 100% 0, 30% 100%, 0 100%);')
+    expect(baseTileSource).toContain('top: 0;')
     expect(baseTileSource).not.toContain('transform: rotate(45deg);')
+    expect(baseTileSource).not.toContain('border-radius: 999px;')
   })
 
   it('asks for confirmation before kicking a participant', () => {

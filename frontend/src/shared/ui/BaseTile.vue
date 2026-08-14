@@ -96,12 +96,13 @@ const resolvedColor = computed(() => props.color || 'var(--accent)')
 .base-tile-mark {
   position: absolute;
   z-index: 3;
-  top: 8px;
+  top: 0;
   right: 0;
   width: 28px;
-  height: 8px;
+  height: 24px;
   background: var(--tile-mark-color);
-  clip-path: polygon(30% 0, 100% 0, 100% 100%, 0 100%);
+  /* A sharp / mark with a horizontal cut where it ends at the bottom. */
+  clip-path: polygon(70% 0, 100% 0, 30% 100%, 0 100%);
   pointer-events: none;
 }
 </style>
