@@ -165,10 +165,10 @@ watch(() => events.value.length, async () => {
 .sep-event::before { top: 0; height: 9px; }
 .sep-event::after { top: 9px; bottom: 0; }
 .sep-event:first-child::before, .sep-event:last-child::after { display: none; }
-.sep-marker { position: relative; z-index: 1; width: 18px; height: 18px; display: grid; place-items: center; border-radius: 5px; background: color-mix(in srgb, var(--accent) 14%, var(--surface)); color: var(--accent-soft); font-size: 10px; font-weight: 800; }
-.sep-event--rest_completed .sep-marker { color: var(--warning); background: color-mix(in srgb, var(--warning) 14%, var(--surface)); }
-.sep-event--item_spent .sep-marker, .sep-event--resource_used .sep-marker { color: var(--danger); background: color-mix(in srgb, var(--danger) 12%, var(--surface)); }
-.sep-content { min-width: 0; max-width: 100%; padding: 6px 8px; border: 1px solid color-mix(in srgb, var(--text-on-accent) 10%, var(--border)); border-radius: 7px; background: transparent; box-sizing: border-box; }
+.sep-marker { position: relative; z-index: 1; width: 18px; height: 18px; display: grid; place-items: center; border: 1px solid color-mix(in srgb, currentColor 55%, transparent); border-radius: 5px; background: transparent; box-sizing: border-box; color: var(--accent-soft); font-size: 10px; font-weight: 800; }
+.sep-event--rest_completed .sep-marker { color: var(--warning); }
+.sep-event--item_spent .sep-marker, .sep-event--resource_used .sep-marker { color: var(--danger); }
+.sep-content { min-width: 0; max-width: 100%; background: transparent; }
 .sep-event-title { color: var(--text-1); font-size: 11px; font-weight: 650; line-height: 1.35; overflow-wrap: anywhere; }
 .sep-details { margin-top: 2px; color: var(--text-muted); font-size: 10px; line-height: 1.3; overflow-wrap: anywhere; }
 .sep-roll { display: flex; flex-wrap: wrap; align-items: center; gap: 3px; max-width: 100%; margin-top: 5px; min-width: 0; }

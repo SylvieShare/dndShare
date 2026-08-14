@@ -17,7 +17,9 @@ describe('SessionEventsPanel timeline layout', () => {
     expect(source).not.toMatch(/\.sep-actor-events\s*\{[^}]*border-left:/s)
   })
 
-  it('uses transparent framed event cards', () => {
-    expect(source).toMatch(/\.sep-content\s*\{[^}]*border:\s*1px solid[^}]*background:\s*transparent;/s)
+  it('frames transparent event markers and leaves event content unframed', () => {
+    expect(source).toMatch(/\.sep-marker\s*\{[^}]*border:\s*1px solid[^}]*background:\s*transparent;/s)
+    expect(source).toMatch(/\.sep-content\s*\{[^}]*background:\s*transparent;/s)
+    expect(source).not.toMatch(/\.sep-content\s*\{[^}]*border:/s)
   })
 })
