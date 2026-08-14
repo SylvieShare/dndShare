@@ -171,7 +171,9 @@ rendered as a fixed ancestor card above the same canvas. The scenario graph has
 its own persisted viewport, coordinates and directed edges. Its illustrated
 nodes can be dragged and linked through the same right-side port pattern. The
 DM creates or edits both the scenario name and its required shared-catalogue
-image, or deletes the scenario.
+image, or deletes the scenario. A single click anywhere on a scenario card
+opens its edit/delete menu without a separate ellipsis trigger; double click
+still opens the scenario block canvas.
 
 Double-clicking a scenario switches the same physical canvas to the third graph.
 The scenario node first moves to the top immediately to the right of its chapter

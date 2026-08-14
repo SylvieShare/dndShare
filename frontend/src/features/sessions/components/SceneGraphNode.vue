@@ -12,12 +12,6 @@
     <div class="scene-graph-node-copy">
       <div class="scene-graph-node-heading">
         <span>СЦЕНАРИЙ</span>
-        <RowActionMenu v-if="isDm && !spotlight">
-          <template #default="{ close }">
-            <RowActionItem action="edit" @click="$emit('edit', scene); close()">Редактировать</RowActionItem>
-            <RowActionItem action="delete" tone="danger" @click="$emit('delete', scene); close()">Удалить</RowActionItem>
-          </template>
-        </RowActionMenu>
       </div>
       <strong>{{ scene.name }}</strong>
       <small>{{ spotlight ? 'Двойной клик — к сценариям' : 'Двойной клик — открыть холст' }}</small>
@@ -27,17 +21,13 @@
 
 <script setup>
 import { computed } from 'vue'
-import RowActionItem from '@/shared/ui/RowActionItem.vue'
-import RowActionMenu from '@/shared/ui/RowActionMenu.vue'
 import { sessionImagePresetUrl } from '@/features/sessions/lib/sessionImages'
 
 const props = defineProps({
   scene: { type: Object, required: true },
   index: { type: Number, default: 0 },
-  isDm: { type: Boolean, default: false },
   spotlight: { type: Boolean, default: false },
 })
-defineEmits(['edit', 'delete'])
 
 const imageUrl = computed(() => sessionImagePresetUrl(props.scene.imagePresetKey))
 </script>

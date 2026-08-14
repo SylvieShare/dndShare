@@ -49,10 +49,7 @@
           v-else-if="displayLevel === 'scenes'"
           :scene="node"
           :index="sceneIndex(node)"
-          :is-dm="isDm"
           :spotlight="spotlight"
-          @edit="openSceneRename"
-          @delete="requestSceneDelete"
         />
         <SceneBlockNode
           v-else
@@ -85,7 +82,6 @@
       <SceneGraphNode
         :scene="selectedScene"
         :index="sceneIndex(selectedScene)"
-        :is-dm="isDm"
         spotlight
       />
     </div>
@@ -102,6 +98,12 @@
       @copy="copyBlock"
       @delete="requestBlockDelete"
       @send-to-combat="sendBlockToCombat"
+    />
+
+    <SceneGraphMenus
+      ref="sceneMenus"
+      @edit="openSceneRename"
+      @delete="requestSceneDelete"
     />
 
     <div v-if="activeLoading" class="session-graph-state">{{ loadingLabel }}</div>
@@ -144,6 +146,7 @@ import SceneBlockEditorModal from '@/features/sessions/components/SceneBlockEdit
 import SceneBlockMenus from '@/features/sessions/components/SceneBlockMenus.vue'
 import SceneBlockNode from '@/features/sessions/components/SceneBlockNode.vue'
 import SceneEditorModal from '@/features/sessions/components/SceneEditorModal.vue'
+import SceneGraphMenus from '@/features/sessions/components/SceneGraphMenus.vue'
 import SceneGraphNode from '@/features/sessions/components/SceneGraphNode.vue'
 import { useSceneBlockGraph } from '@/features/sessions/composables/useSceneBlockGraph'
 import { useSceneGraph } from '@/features/sessions/composables/useSceneGraph'
@@ -166,6 +169,7 @@ const emit = defineEmits([
 
 const canvas = ref(null)
 const blockMenus = ref(null)
+const sceneMenus = ref(null)
 const displayLevel = ref('chapters')
 const selectedScene = ref(null)
 const transitionSpotlight = ref(null)
@@ -319,13 +323,17 @@ function sceneIndex(scene) {
 
 function handleNodeClick(node, anchor) {
   if (displayLevel.value === 'chapters') emit('node-click', node, anchor)
+  else if (displayLevel.value === 'scenes' && props.isDm) sceneMenus.value?.openFor(node, anchor)
   else if (displayLevel.value === 'blocks' && props.isDm) blockMenus.value?.openFor(node, anchor)
 }
 
 function handleNodeDoubleClick(node) {
   if (props.workspaceMode === 'combat') return
   if (displayLevel.value === 'chapters') emit('node-double-click', node)
-  else if (displayLevel.value === 'scenes') openBlocksLevel(node)
+  else if (displayLevel.value === 'scenes') {
+    sceneMenus.value?.close()
+    openBlocksLevel(node)
+  }
   else {
     blockMenus.value?.close()
     openBlockEdit(node)
@@ -395,6 +403,7 @@ function openSceneCreate() {
 }
 
 function openSceneRename(scene) {
+  sceneMenus.value?.close()
   editingScene.value = scene
   scenePromptOpen.value = true
 }
@@ -415,7 +424,10 @@ async function saveScene(payload) {
   } catch { actionError.value = 'Не удалось сохранить сценарий' } finally { saving.value = false }
 }
 
-function requestSceneDelete(scene) { pendingDelete.value = { kind: 'scene', scene } }
+function requestSceneDelete(scene) {
+  sceneMenus.value?.close()
+  pendingDelete.value = { kind: 'scene', scene }
+}
 
 function openBlockCreate(type) {
   editingBlock.value = null

@@ -8,6 +8,8 @@ const canvasSource = readFileSync(fileURLToPath(new URL('./NestedGraphCanvas.vue
 const dockSource = readFileSync(fileURLToPath(new URL('./CanvasActionDock.vue', import.meta.url)), 'utf8')
 const blockSource = readFileSync(fileURLToPath(new URL('./SceneBlockNode.vue', import.meta.url)), 'utf8')
 const blockMenuSource = readFileSync(fileURLToPath(new URL('./SceneBlockMenus.vue', import.meta.url)), 'utf8')
+const sceneSource = readFileSync(fileURLToPath(new URL('./SceneGraphNode.vue', import.meta.url)), 'utf8')
+const sceneMenuSource = readFileSync(fileURLToPath(new URL('./SceneGraphMenus.vue', import.meta.url)), 'utf8')
 const blockEditorSource = readFileSync(fileURLToPath(new URL('./SceneBlockEditorModal.vue', import.meta.url)), 'utf8')
 const combatEditorSource = readFileSync(fileURLToPath(new URL('./SceneCombatCreaturesEditor.vue', import.meta.url)), 'utf8')
 const sessionPageSource = readFileSync(fileURLToPath(new URL('../pages/ViewSession.vue', import.meta.url)), 'utf8')
@@ -73,6 +75,13 @@ describe('session graph canvas', () => {
     expect(source).toContain('blockMenus.value?.openFor(node, anchor)')
     expect(blockMenuSource).toContain('>Копировать</RowActionItem>')
     expect(blockEditorSource).not.toContain('ColorPresetPicker')
+  })
+
+  it('opens scenario actions from the whole card without an ellipsis trigger', () => {
+    expect(sceneSource).not.toContain('RowActionMenu')
+    expect(source).toContain('sceneMenus.value?.openFor(node, anchor)')
+    expect(sceneMenuSource).toContain('>Редактировать</RowActionItem>')
+    expect(sceneMenuSource).toContain('>Удалить</RowActionItem>')
   })
 
   it('measures content height and persists width dragged from the right edge', () => {
