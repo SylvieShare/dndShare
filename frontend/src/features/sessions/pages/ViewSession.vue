@@ -94,14 +94,14 @@
         <BaseTile class="side-tile workspace-tool-tile">
           <DicePanel />
         </BaseTile>
+        <BaseTile class="side-tile workspace-tool-tile">
+          <MusicPanel :is-dm="isDm" @open-library="musicLibraryOpen = true" />
+        </BaseTile>
         <BaseTile
           class="side-tile workspace-tool-tile workspace-events-tile"
           :class="{ 'workspace-events-tile--collapsed': eventsCollapsed }"
         >
           <SessionEventsPanel @collapsed="eventsCollapsed = $event" />
-        </BaseTile>
-        <BaseTile class="side-tile workspace-tool-tile">
-          <MusicPanel :is-dm="isDm" @open-library="musicLibraryOpen = true" />
         </BaseTile>
       </aside>
 

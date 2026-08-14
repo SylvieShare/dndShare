@@ -52,6 +52,11 @@ describe('ViewSession participant rail', () => {
     expect(musicPanelSource).toContain("aria-label=\"collapsed ? 'Развернуть музыку' : 'Свернуть музыку'\"")
   })
 
+  it('places the event log below the music panel', () => {
+    expect(source.indexOf('<MusicPanel'))
+      .toBeLessThan(source.indexOf('<SessionEventsPanel'))
+  })
+
   it('animates displayed rolls on every viewport and cleans up popup timers', () => {
     expect(DiceRollPopup).toBeTruthy()
     expect(dicePopupSource).not.toContain("'(max-width: 640px)'")
