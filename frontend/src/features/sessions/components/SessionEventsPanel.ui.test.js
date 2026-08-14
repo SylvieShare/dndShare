@@ -23,4 +23,12 @@ describe('SessionEventsPanel timeline layout', () => {
     expect(source).toMatch(/\.sep-content\s*\{[^}]*background:\s*transparent;/s)
     expect(source).not.toMatch(/\.sep-content\s*\{[^}]*border:/s)
   })
+
+  it('places the dice total in the event heading with a divider', () => {
+    expect(source).toContain("'sep-event-heading--roll': event.type === 'dice_roll'")
+    expect(source).toContain('class="sep-event-divider"')
+    expect(source).toMatch(/<strong v-if="event\.type === 'dice_roll'" class="sep-total">/)
+    expect(source).toMatch(/\.sep-event-divider\s*\{[^}]*flex:\s*1 1 12px;[^}]*height:\s*1px;/s)
+    expect(source).not.toMatch(/<div v-if="event\.type === 'dice_roll'" class="sep-roll">[\s\S]*?<strong class="sep-total">/)
+  })
 })

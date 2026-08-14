@@ -26,7 +26,11 @@
                   <article v-for="event in actorGroup.events" :key="event.id" class="sep-event" :class="`sep-event--${event.type}`">
                     <div class="sep-marker">{{ eventIcon(event.type) }}</div>
                     <div class="sep-content">
-                      <div class="sep-event-title">{{ eventTitle(event) }}</div>
+                      <div class="sep-event-heading" :class="{ 'sep-event-heading--roll': event.type === 'dice_roll' }">
+                        <div class="sep-event-title">{{ eventTitle(event) }}</div>
+                        <span v-if="event.type === 'dice_roll'" class="sep-event-divider" aria-hidden="true" />
+                        <strong v-if="event.type === 'dice_roll'" class="sep-total">{{ event.data?.result?.total }}</strong>
+                      </div>
 
                       <div v-if="event.type === 'dice_roll'" class="sep-roll">
                         <template v-for="(part, index) in event.data?.result?.parts || []" :key="index">
@@ -41,7 +45,6 @@
                           </template>
                           <span v-else class="sep-flat">{{ part.value }}</span>
                         </template>
-                        <strong class="sep-total">{{ event.data?.result?.total }}</strong>
                       </div>
 
                       <div v-else-if="event.type === 'spell_used'" class="sep-details">
@@ -167,11 +170,15 @@ watch(() => events.value.length, async () => {
 .sep-event--rest_completed .sep-marker { color: var(--warning); }
 .sep-event--item_spent .sep-marker, .sep-event--resource_used .sep-marker { color: var(--danger); }
 .sep-content { min-width: 0; max-width: 100%; background: transparent; }
+.sep-event-heading { min-width: 0; }
+.sep-event-heading--roll { display: flex; align-items: center; gap: 6px; }
 .sep-event-title { color: var(--text-1); font-size: 11px; font-weight: 650; line-height: 1.35; overflow-wrap: anywhere; }
+.sep-event-heading--roll .sep-event-title { min-width: 0; }
+.sep-event-divider { flex: 1 1 12px; min-width: 12px; height: 1px; background: color-mix(in srgb, var(--text-on-accent) 12%, var(--border)); }
+.sep-total { flex: 0 0 auto; color: var(--accent-soft); font-size: 16px; font-variant-numeric: tabular-nums; }
 .sep-details { margin-top: 2px; color: var(--text-muted); font-size: 10px; line-height: 1.3; overflow-wrap: anywhere; }
 .sep-roll { display: flex; flex-wrap: wrap; align-items: center; gap: 3px; max-width: 100%; margin-top: 5px; min-width: 0; }
 .sep-die-value { min-width: 23px; height: 23px; padding: 0 4px; box-sizing: border-box; display: inline-grid; place-items: center; border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--border)); border-radius: 6px; background: var(--surface-raised); color: var(--text-1); font-size: 11px; font-weight: 800; }
 .sep-die-value--dropped { opacity: .42; text-decoration: line-through; }
 .sep-sign, .sep-flat { color: var(--text-muted); font-size: 10px; }
-.sep-total { margin-left: auto; color: var(--accent-soft); font-size: 16px; font-variant-numeric: tabular-nums; }
 </style>
