@@ -7,6 +7,7 @@ import ViewSession from './ViewSession.vue'
 const source = readFileSync(fileURLToPath(new URL('./ViewSession.vue', import.meta.url)), 'utf8')
 const styles = readFileSync(fileURLToPath(new URL('./styles/ViewSession.css', import.meta.url)), 'utf8')
 const selectionSource = readFileSync(fileURLToPath(new URL('../composables/useSessionSelection.js', import.meta.url)), 'utf8')
+const workspaceSource = readFileSync(fileURLToPath(new URL('../composables/useSessionWorkspace.js', import.meta.url)), 'utf8')
 const dicePanelSource = readFileSync(fileURLToPath(new URL('../components/DicePanel.vue', import.meta.url)), 'utf8')
 const musicPanelSource = readFileSync(fileURLToPath(new URL('../components/MusicPanel.vue', import.meta.url)), 'utf8')
 const centerWorkspaceSource = readFileSync(fileURLToPath(new URL('../components/SessionCenterWorkspace.vue', import.meta.url)), 'utf8')
@@ -101,6 +102,15 @@ describe('ViewSession participant rail', () => {
     expect(encounterSource).toContain("'enc-wrap--workspace': workspace")
     expect(sceneSource).toContain("'scene-tab--workspace': workspace")
     expect(source).toContain('@scene-count="chapterGraph.setSceneCount"')
+  })
+
+  it('restores the open combat or chapter scenes workspace after a page reload', () => {
+    expect(source).toContain('useSessionWorkspace({ sessionUuid, chapterGraph })')
+    expect(source).toContain('await restoreWorkspace()')
+    expect(workspaceSource).toContain("const WORKSPACE_MODES = new Set(['combat', 'scenes'])")
+    expect(workspaceSource).toContain('localStorage.setItem(sessionWorkspaceKey(sessionUuid)')
+    expect(workspaceSource).toContain('async function restoreWorkspace()')
+    expect(workspaceSource).toContain('clearSavedWorkspace()')
   })
 
   it('reuses one encounter in the combat workspace and the expanding player rail', () => {

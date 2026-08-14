@@ -154,7 +154,7 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 import BaseTile from '@/shared/ui/BaseTile.vue'
@@ -178,6 +178,7 @@ import { useParticipantPolling } from '@/features/sessions/composables/usePartic
 import { useChapterGraph } from '@/features/sessions/composables/useChapterGraph'
 import { useEncounter } from '@/features/sessions/composables/useEncounter'
 import { useSessionSelection } from '@/features/sessions/composables/useSessionSelection'
+import { useSessionWorkspace } from '@/features/sessions/composables/useSessionWorkspace'
 import { useAccountStore } from '@/stores/account'
 import { useMusicStore } from '@/stores/music'
 import { useTemplateStore } from '@/stores/template'
@@ -269,14 +270,16 @@ watch(session, (value) => {
 }, { immediate: true })
 
 const chapterGraph = useChapterGraph({ sessionUuid, session })
-const arcs = computed(() => chapterGraph.arcs.value)
-const chapters = computed(() => chapterGraph.chapters.value)
-const workspaceMode = ref(null)
-const workspaceChapterId = ref(null)
-const workspaceClosing = ref(false)
-let workspaceCloseTimer = null
-const workspaceChapter = computed(() => chapters.value.find(chapter => chapter.id === workspaceChapterId.value) ?? null)
-const workspaceArcs = computed(() => arcs.value.filter(arc => arc.id === workspaceChapter.value?.arcId))
+const {
+  workspaceMode,
+  workspaceChapter,
+  workspaceArcs,
+  workspaceClosing,
+  openChapterScenes,
+  toggleCombatWorkspace,
+  restoreWorkspace,
+  closeWorkspace,
+} = useSessionWorkspace({ sessionUuid, chapterGraph })
 
 const { pollStatus, pollRunning, startPolling, forgetVersion } =
   useParticipantPolling({ participants })
@@ -341,46 +344,6 @@ async function createChar(payload) {
   }
 }
 
-async function openChapterScenes(chapter) {
-  if (!chapterGraph.loaded.value) await chapterGraph.load()
-  cancelWorkspaceClose()
-  workspaceChapterId.value = chapter.id
-  workspaceMode.value = 'scenes'
-  workspaceClosing.value = false
-}
-
-async function toggleCombatWorkspace() {
-  if (workspaceMode.value === 'combat' && !workspaceClosing.value) {
-    closeWorkspace()
-    return
-  }
-  if (!chapterGraph.loaded.value) await chapterGraph.load()
-  cancelWorkspaceClose()
-  const chapter = chapterGraph.focusCurrent()
-  await nextTick()
-  await nextTick()
-  workspaceChapterId.value = chapter?.id ?? null
-  workspaceMode.value = 'combat'
-  workspaceClosing.value = false
-}
-
-function cancelWorkspaceClose() {
-  if (workspaceCloseTimer != null) clearTimeout(workspaceCloseTimer)
-  workspaceCloseTimer = null
-}
-
-function closeWorkspace() {
-  if (!workspaceMode.value || workspaceClosing.value) return
-  workspaceClosing.value = true
-  cancelWorkspaceClose()
-  workspaceCloseTimer = setTimeout(() => {
-    workspaceMode.value = null
-    workspaceChapterId.value = null
-    workspaceClosing.value = false
-    workspaceCloseTimer = null
-  }, 190)
-}
-
 function openEdit() {
   editName.value = session.value?.name ?? ''
   editDesc.value = session.value?.description ?? ''
@@ -417,6 +380,7 @@ onMounted(() => {
       session.value = res?.session ?? null
       participants.value = res?.participants ?? []
       await chapterGraph.load()
+      await restoreWorkspace()
       startPolling()
       musicStore.setContext({ uuid: sessionUuid, dm: isDm.value })
       await sessionEventsStore.setContext({ uuid: sessionUuid, actorUuid: sheetUuid.value })
@@ -428,7 +392,6 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
-  cancelWorkspaceClose()
   uiStore.clearHeaderContext(headerOwner)
   musicStore.dispose()
   sessionEventsStore.clearContext(sessionUuid)

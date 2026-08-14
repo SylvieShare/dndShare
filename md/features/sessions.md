@@ -204,6 +204,12 @@ reveals view, restore and (for NPCs) delete actions. The same popover can move
 the current selection to the graveyard and delete all dead NPCs after a
 `ConfirmDialog` confirmation.
 
+`useSessionWorkspace.js` stores the open workspace per session in local
+storage. Reloading the session restores combat against the current chapter or
+the scenarios workspace against its previously opened chapter. Explicitly
+closing the workspace clears this preference before the closing animation, so
+a subsequent reload stays on the chapter graph.
+
 Canonical combatants:
 
 - player row references the session participant/character;
