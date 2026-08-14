@@ -48,26 +48,22 @@
       </div>
 
       <div class="enc-toolbar-actions">
-        <div v-if="props.isDm" class="enc-action-group" aria-label="Экран боя">
-          <span class="enc-action-group-label">Экран</span>
-          <div class="enc-action-group-controls">
-            <a
-              class="enc-icon-btn"
-              :href="publicScreenUrl"
-              target="_blank"
-              rel="noopener"
-              title="Открыть экран боя"
-              aria-label="Открыть публичный экран боя в новой вкладке"
-            >
-              <MonitorUp :size="18" />
-            </a>
-          </div>
-        </div>
+        <a
+          v-if="props.isDm"
+          class="enc-icon-btn"
+          :href="publicScreenUrl"
+          target="_blank"
+          rel="noopener"
+          title="Открыть экран боя"
+          aria-label="Открыть публичный экран боя в новой вкладке"
+        >
+          <MonitorUp :size="18" />
+        </a>
 
-        <div v-if="props.isDm" class="enc-action-group" aria-label="Броски">
+        <div v-if="props.isDm && enc.encounter.active" class="enc-action-group" aria-label="Броски">
           <span class="enc-action-group-label">Броски</span>
           <div class="enc-action-group-controls">
-            <EncounterChallengeMenu v-if="enc.encounter.active" />
+            <EncounterChallengeMenu />
             <button
               type="button"
               class="enc-icon-btn"
@@ -81,6 +77,18 @@
             </button>
           </div>
         </div>
+        <button
+          v-else-if="props.isDm"
+          type="button"
+          class="enc-icon-btn"
+          :disabled="enc.selectedRerollCount === 0"
+          title="Перебросить инициативу выбранным"
+          aria-label="Перебросить инициативу выбранным"
+          @click="enc.rerollSelectedInitiative"
+        >
+          <Dices :size="18" />
+          <span v-if="enc.selectedRerollCount" class="enc-icon-count">{{ enc.selectedRerollCount }}</span>
+        </button>
 
         <div v-if="props.isDm" class="enc-action-group" aria-label="Действия с выбранными участниками">
           <span class="enc-action-group-label">Выбор</span>
@@ -110,12 +118,7 @@
           </div>
         </div>
 
-        <div class="enc-action-group" aria-label="Погибшие участники">
-          <span class="enc-action-group-label">Погибшие</span>
-          <div class="enc-action-group-controls">
-            <EncounterGraveyardMenu :is-dm="props.isDm" @view-participant="$emit('view-participant', $event)" />
-          </div>
-        </div>
+        <EncounterGraveyardMenu :is-dm="props.isDm" @view-participant="$emit('view-participant', $event)" />
       </div>
     </BaseTile>
 

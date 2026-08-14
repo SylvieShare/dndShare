@@ -159,10 +159,11 @@ command bar and focuses the current chapter. Its standalone combat header sits
 to the right of that node; combatants remain independent tiles below it rather
 than being wrapped in one central card. The header groups compact icon actions
 for starting or ending combat and turn navigation. Its growing secondary action
-row is divided into labelled groups for the public screen, rolls, the current
-selection and dead combatants; nested action components use the same icon-button
-geometry and interaction states as direct toolbar buttons. Scene CRUD remains in
-`session_scenes.go`.
+row uses labelled groups only for categories that currently contain multiple
+actions; single public-screen, pre-combat roll and dead-combatant actions remain
+direct icon buttons without a group title or frame. Nested action components use
+the same icon-button geometry and interaction states as direct toolbar buttons.
+Scene CRUD remains in `session_scenes.go`.
 
 `SceneTab.vue` uses project standards:
 

@@ -164,7 +164,7 @@ describe('ViewSession participant rail', () => {
   })
 
   it('rolls a configured challenge for selected combatants in embedded row results', () => {
-    expect(encounterSource).toContain('<EncounterChallengeMenu v-if="enc.encounter.active"')
+    expect(encounterSource).toContain('<EncounterChallengeMenu />')
     expect(encounterChallengeMenuSource).toContain('enc.runChallenge({ ...draft })')
     expect(encounterChallengeMenuSource).toContain("'enc-icon-btn--challenge-active': enc.challengeActive")
     expect(encounterChallengeMenuSource).toContain('enc.resetChallenge()')
@@ -189,11 +189,13 @@ describe('ViewSession participant rail', () => {
     expect(encounterChallengeResultSource).not.toContain('expression')
   })
 
-  it('groups the growing combat toolbar and keeps nested actions visually consistent', () => {
-    expect(encounterSource).toContain('class="enc-action-group-label">Экран</span>')
+  it('groups only multi-action combat toolbar categories', () => {
+    expect(encounterSource).not.toContain('class="enc-action-group-label">Экран</span>')
     expect(encounterSource).toContain('class="enc-action-group-label">Броски</span>')
     expect(encounterSource).toContain('class="enc-action-group-label">Выбор</span>')
-    expect(encounterSource).toContain('class="enc-action-group-label">Погибшие</span>')
+    expect(encounterSource).not.toContain('class="enc-action-group-label">Погибшие</span>')
+    expect(encounterSource).toContain('v-if="props.isDm && enc.encounter.active" class="enc-action-group" aria-label="Броски"')
+    expect(encounterSource).toContain('v-else-if="props.isDm"')
     expect(encounterStylesSource).toContain('.enc-toolbar :deep(.enc-icon-btn)')
     expect(encounterStylesSource).toContain('.enc-action-group-controls')
   })
