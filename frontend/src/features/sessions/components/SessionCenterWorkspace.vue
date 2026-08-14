@@ -88,16 +88,17 @@ const workspaceStyle = computed(() => ({
   height: 36px;
   background: linear-gradient(
     180deg,
-    color-mix(in srgb, var(--app-canvas-bg) 92%, transparent) 0%,
-    color-mix(in srgb, var(--app-canvas-bg) 52%, transparent) 48%,
+    var(--app-canvas-bg) 0%,
+    color-mix(in srgb, var(--app-canvas-bg) 82%, transparent) 34%,
+    color-mix(in srgb, var(--app-canvas-bg) 48%, transparent) 66%,
     transparent 100%
   );
   content: '';
   pointer-events: none;
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  -webkit-mask-image: linear-gradient(180deg, var(--text-1) 0%, color-mix(in srgb, var(--text-1) 72%, transparent) 55%, transparent 100%);
-  mask-image: linear-gradient(180deg, var(--text-1) 0%, color-mix(in srgb, var(--text-1) 72%, transparent) 55%, transparent 100%);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  -webkit-mask-image: linear-gradient(180deg, var(--text-1) 0%, var(--text-1) 18%, color-mix(in srgb, var(--text-1) 70%, transparent) 62%, transparent 100%);
+  mask-image: linear-gradient(180deg, var(--text-1) 0%, var(--text-1) 18%, color-mix(in srgb, var(--text-1) 70%, transparent) 62%, transparent 100%);
 }
 
 .session-center-workspace--closing {

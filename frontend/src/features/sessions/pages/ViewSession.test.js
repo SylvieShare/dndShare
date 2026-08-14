@@ -12,6 +12,8 @@ const musicPanelSource = readFileSync(fileURLToPath(new URL('../components/Music
 const centerWorkspaceSource = readFileSync(fileURLToPath(new URL('../components/SessionCenterWorkspace.vue', import.meta.url)), 'utf8')
 const encounterSource = readFileSync(fileURLToPath(new URL('../components/EncounterTab.vue', import.meta.url)), 'utf8')
 const sceneSource = readFileSync(fileURLToPath(new URL('../components/SceneTab.vue', import.meta.url)), 'utf8')
+const encounterStylesSource = readFileSync(fileURLToPath(new URL('../components/styles/EncounterTab.css', import.meta.url)), 'utf8')
+const sceneStylesSource = readFileSync(fileURLToPath(new URL('../components/styles/SceneTab.css', import.meta.url)), 'utf8')
 const dicePopupSource = readFileSync(fileURLToPath(new URL('../../../shared/ui/DiceRollPopup.vue', import.meta.url)), 'utf8')
 
 describe('ViewSession participant rail', () => {
@@ -78,7 +80,10 @@ describe('ViewSession participant rail', () => {
     expect(centerWorkspaceSource).toContain("'--session-workspace-header-left': props.chapter ? '252px' : '0px'")
     expect(centerWorkspaceSource).toContain('bottom: 0;')
     expect(centerWorkspaceSource).toContain('.session-center-workspace::after')
-    expect(centerWorkspaceSource).toContain('backdrop-filter: blur(5px)')
+    expect(centerWorkspaceSource).toContain('backdrop-filter: blur(6px)')
+    expect(centerWorkspaceSource).toContain('var(--app-canvas-bg) 0%')
+    expect(encounterStylesSource).toContain('mask-image: linear-gradient(180deg, transparent 0%')
+    expect(sceneStylesSource).toContain('mask-image: linear-gradient(180deg, transparent 0%')
     expect(centerWorkspaceSource).not.toContain('<BaseTile')
     expect(encounterSource).toContain("'enc-wrap--workspace': workspace")
     expect(sceneSource).toContain("'scene-tab--workspace': workspace")
