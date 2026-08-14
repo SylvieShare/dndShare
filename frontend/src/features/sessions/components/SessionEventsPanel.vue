@@ -151,25 +151,27 @@ watch(() => events.value.length, async () => {
 .sep-body { display: grid; grid-template-rows: minmax(0, 1fr); min-height: 0; flex: 1; padding-top: 8px; transition: grid-template-rows .2s ease, padding-top .2s ease; }
 .sep-body--collapsed { grid-template-rows: 0fr; padding-top: 0; }
 .sep-body-inner { min-height: 0; overflow: hidden; }
-.sep-list { height: 100%; min-height: 120px; overflow-y: auto; overscroll-behavior: contain; padding-right: 3px; }
+.sep-list { height: 100%; min-height: 120px; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; padding-right: 3px; }
 .sep-empty { color: var(--text-muted); font-size: 12px; line-height: 1.4; padding: 8px 2px; }
 .sep-time-group { display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 8px; padding: 6px 0 10px; border-top: 1px solid color-mix(in srgb, var(--text-on-accent) 6%, transparent); }
 .sep-time-group:first-child { padding-top: 2px; border-top: none; }
 .sep-time { padding-top: 1px; color: var(--text-muted); font-size: 9px; font-weight: 650; font-variant-numeric: tabular-nums; letter-spacing: .02em; }
 .sep-time-content { min-width: 0; }
 .sep-actor-group + .sep-actor-group { margin-top: 9px; }
-.sep-actor-head { color: var(--text-2); font-size: 10px; font-weight: 750; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.sep-actor-events { position: relative; margin-top: 4px; margin-left: 3px; padding-left: 11px; border-left: 1px solid color-mix(in srgb, var(--accent) 34%, var(--border)); }
-.sep-event { position: relative; display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 6px; padding: 4px 0 7px; }
-.sep-event + .sep-event { padding-top: 7px; }
-.sep-marker { position: relative; width: 18px; height: 18px; display: grid; place-items: center; border-radius: 5px; background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent-soft); font-size: 10px; font-weight: 800; }
-.sep-marker::before { content: ''; position: absolute; top: 50%; left: -12px; width: 12px; height: 1px; background: color-mix(in srgb, var(--accent) 34%, var(--border)); }
-.sep-event--rest_completed .sep-marker { color: var(--warning); background: color-mix(in srgb, var(--warning) 12%, transparent); }
-.sep-event--item_spent .sep-marker, .sep-event--resource_used .sep-marker { color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, transparent); }
-.sep-content { min-width: 0; }
+.sep-actor-head { color: var(--text-2); font-size: 10px; font-weight: 750; line-height: 1.3; overflow-wrap: anywhere; white-space: normal; }
+.sep-actor-events { margin-top: 5px; min-width: 0; }
+.sep-event { position: relative; display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 7px; min-width: 0; padding: 0 0 8px; }
+.sep-event::before, .sep-event::after { content: ''; position: absolute; left: 9px; z-index: 0; width: 1px; background: color-mix(in srgb, var(--accent) 38%, var(--border)); }
+.sep-event::before { top: 0; height: 9px; }
+.sep-event::after { top: 9px; bottom: 0; }
+.sep-event:first-child::before, .sep-event:last-child::after { display: none; }
+.sep-marker { position: relative; z-index: 1; width: 18px; height: 18px; display: grid; place-items: center; border-radius: 5px; background: color-mix(in srgb, var(--accent) 14%, var(--surface)); color: var(--accent-soft); font-size: 10px; font-weight: 800; }
+.sep-event--rest_completed .sep-marker { color: var(--warning); background: color-mix(in srgb, var(--warning) 14%, var(--surface)); }
+.sep-event--item_spent .sep-marker, .sep-event--resource_used .sep-marker { color: var(--danger); background: color-mix(in srgb, var(--danger) 12%, var(--surface)); }
+.sep-content { min-width: 0; max-width: 100%; padding: 6px 8px; border: 1px solid color-mix(in srgb, var(--text-on-accent) 10%, var(--border)); border-radius: 7px; background: transparent; box-sizing: border-box; }
 .sep-event-title { color: var(--text-1); font-size: 11px; font-weight: 650; line-height: 1.35; overflow-wrap: anywhere; }
-.sep-details { margin-top: 2px; color: var(--text-muted); font-size: 10px; line-height: 1.3; }
-.sep-roll { display: flex; align-items: center; gap: 3px; margin-top: 5px; min-width: 0; }
+.sep-details { margin-top: 2px; color: var(--text-muted); font-size: 10px; line-height: 1.3; overflow-wrap: anywhere; }
+.sep-roll { display: flex; flex-wrap: wrap; align-items: center; gap: 3px; max-width: 100%; margin-top: 5px; min-width: 0; }
 .sep-die-value { min-width: 23px; height: 23px; padding: 0 4px; box-sizing: border-box; display: inline-grid; place-items: center; border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--border)); border-radius: 6px; background: var(--surface-raised); color: var(--text-1); font-size: 11px; font-weight: 800; }
 .sep-die-value--dropped { opacity: .42; text-decoration: line-through; }
 .sep-sign, .sep-flat { color: var(--text-muted); font-size: 10px; }
