@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { makeUid, nextTieBreak } from '@/features/sessions/lib/encounterHelpers'
+import { ensureCombatantLetters, makeUid, nextTieBreak } from '@/features/sessions/lib/encounterHelpers'
 import { parseDiceExpression } from '@/shared/lib/dice'
 
 function averageFromFormula(raw) {
@@ -60,10 +60,9 @@ export function useEncounterNpcs({ encounter, unselect, pruneToExisting, selecte
         tieBreak: tb++,
       })
     }
-    encounter.value = {
-      ...encounter.value,
-      combatants: [...encounter.value.combatants, ...additions],
-    }
+    const combatants = [...encounter.value.combatants, ...additions]
+    ensureCombatantLetters(combatants)
+    encounter.value = { ...encounter.value, combatants }
   }
 
   function addSimpleNpc(form) {
@@ -90,10 +89,9 @@ export function useEncounterNpcs({ encounter, unselect, pruneToExisting, selecte
       surprised: false,
       tieBreak: nextTieBreak(encounter.value.combatants),
     }
-    encounter.value = {
-      ...encounter.value,
-      combatants: [...encounter.value.combatants, combatant],
-    }
+    const combatants = [...encounter.value.combatants, combatant]
+    ensureCombatantLetters(combatants)
+    encounter.value = { ...encounter.value, combatants }
   }
 
   function cloneNpc(c, count = 1) {
@@ -114,10 +112,9 @@ export function useEncounterNpcs({ encounter, unselect, pruneToExisting, selecte
       }
       additions.push(copy)
     }
-    encounter.value = {
-      ...encounter.value,
-      combatants: [...encounter.value.combatants, ...additions],
-    }
+    const combatants = [...encounter.value.combatants, ...additions]
+    ensureCombatantLetters(combatants)
+    encounter.value = { ...encounter.value, combatants }
   }
 
   function removeNpc(c) {

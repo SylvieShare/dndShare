@@ -12,12 +12,13 @@
           interactive
           :mark-color="participant.color"
         >
-          <SessionParticipantCombatControls
+          <EncounterCombatControls
             v-if="combatMode"
             :combatant="combatant"
             :selected="combatSelected"
             :editable="combatEditable"
             :armor-class="armorClass"
+            :current="combatCurrent"
             @update:selected="$emit('update:combat-selected', $event)"
             @update:initiative="$emit('update:initiative', $event)"
           />
@@ -127,7 +128,7 @@ import ColorPresetPicker from '@/shared/ui/ColorPresetPicker.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionMenu from '@/shared/ui/RowActionMenu.vue'
 import RowActionSubmenu from '@/shared/ui/RowActionSubmenu.vue'
-import SessionParticipantCombatControls from '@/features/sessions/components/SessionParticipantCombatControls.vue'
+import EncounterCombatControls from '@/features/sessions/components/EncounterCombatControls.vue'
 import StatBar from '@/shared/ui/StatBar.vue'
 import { pvAc, pvAvatar, pvHp, pvName, pvSubtitle } from '@/features/sessions/lib/participantView'
 
@@ -266,6 +267,11 @@ const avatarColor = computed(() => {
   align-items: center;
   justify-content: center;
   overflow: hidden;
+}
+
+.p-card--combat .p-avatar {
+  width: 48px;
+  height: 48px;
 }
 
 .ava-img {

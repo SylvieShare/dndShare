@@ -188,10 +188,20 @@ widens the existing left participant rail; every player tile gains the
 encounter checkbox, initiative input and armor-class indicator, and the current
 turn is highlighted there. Players that enter combat also appear in the common
 initiative-ordered combat scene alongside NPCs while remaining visible in the
-left rail. Every combat-scene tile has a numbered marker on its left.
+left rail. The common scene rows reuse the same compact initiative and
+armor-class controls as the player rail. Player portraits are enlarged in both
+combat representations; NPC artwork occupies the full row height instead of
+falling back to a name initial. Every combat-scene tile has a numbered marker
+on its left.
 `ViewSession.vue` owns the single `useEncounter` instance shared by the rail and
 `EncounterTab`, so selection and initiative always address the same encounter
 record.
+
+Each NPC also receives the nearest free Latin marker from `A` through `Z`.
+The marker is separate from the NPC name and is persisted in `markerLetter`.
+Clicking it opens one popover with the full letter list and the marker color
+palette; choosing an occupied letter swaps the two NPC markers, preserving
+uniqueness.
 
 When the combat rail changes the canvas safe-left inset, `ChapterGraphCanvas`
 re-measures that inherited layout value after the parent DOM update. The
@@ -215,8 +225,8 @@ Canonical combatants:
 - player row references the session participant/character;
 - NPC row stores `itemId` for the bestiary item and optional `override` for
   encounter-local name/AC/max HP/other edits;
-- transient current HP, temp HP, initiative and state live in the combatant
-  encounter record.
+- transient current HP, temp HP, initiative, state and the NPC `markerLetter`
+  live in the combatant encounter record.
 
 The encounter never embeds `itemRaw` and does not read denormalized NPC fields.
 Startup SQL converts previous records to `itemId + override`; frontend only

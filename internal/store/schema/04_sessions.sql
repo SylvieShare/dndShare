@@ -262,6 +262,55 @@ SET data = jsonb_set(encounter.data, '{combatants}', normalized.combatants, true
 FROM normalized
 WHERE encounter.id = normalized.id;
 
+-- Existing encounters predate stable NPC letter markers. Assign A-Z by NPC
+-- order once; encounters that already contain marker letters are left intact.
+WITH combatant_rows AS (
+    SELECT encounter.id,
+           combatant,
+           ord,
+           count(*) FILTER (WHERE combatant ->> 'type' = 'npc') OVER (
+               PARTITION BY encounter.id ORDER BY ord
+           ) AS npc_ord
+    FROM dndshare.session_encounter encounter
+    CROSS JOIN LATERAL jsonb_array_elements(CASE
+        WHEN jsonb_typeof(encounter.data -> 'combatants') = 'array' THEN encounter.data -> 'combatants'
+        ELSE '[]'::jsonb
+    END) WITH ORDINALITY rows(combatant, ord)
+    WHERE encounter.data IS NOT NULL
+      AND EXISTS (
+          SELECT 1
+          FROM jsonb_array_elements(CASE
+              WHEN jsonb_typeof(encounter.data -> 'combatants') = 'array' THEN encounter.data -> 'combatants'
+              ELSE '[]'::jsonb
+          END) npc
+          WHERE npc ->> 'type' = 'npc'
+      )
+      AND NOT EXISTS (
+          SELECT 1
+          FROM jsonb_array_elements(CASE
+              WHEN jsonb_typeof(encounter.data -> 'combatants') = 'array' THEN encounter.data -> 'combatants'
+              ELSE '[]'::jsonb
+          END) npc
+          WHERE npc ->> 'type' = 'npc' AND npc ? 'markerLetter'
+      )
+), lettered AS (
+    SELECT id, jsonb_agg(
+        CASE
+            WHEN combatant ->> 'type' = 'npc' AND npc_ord <= 26
+                THEN combatant || jsonb_build_object('markerLetter', chr(64 + npc_ord::int))
+            ELSE combatant
+        END
+        ORDER BY ord
+    ) AS combatants
+    FROM combatant_rows
+    GROUP BY id
+)
+UPDATE dndshare.session_encounter encounter
+SET data = jsonb_set(encounter.data, '{combatants}', lettered.combatants, true),
+    changed_at = now()
+FROM lettered
+WHERE encounter.id = lettered.id;
+
 CREATE TABLE IF NOT EXISTS dndshare.session_event (
     id             bigserial NOT NULL,
     session_id     int8 NOT NULL REFERENCES dndshare."session"(id),

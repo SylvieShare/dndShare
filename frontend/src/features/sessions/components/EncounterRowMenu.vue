@@ -38,7 +38,7 @@
           </div>
         </template>
       </RowActionSubmenu>
-      <RowActionSubmenu :label="isNpc ? 'Цвет рамки' : 'Цвет плитки'">
+      <RowActionSubmenu v-if="!isNpc" label="Цвет плитки">
         <template #trigger="{ open }">
           <RowActionItem :icon="Palette" submenu :submenu-open="open">Изменить цвет</RowActionItem>
         </template>

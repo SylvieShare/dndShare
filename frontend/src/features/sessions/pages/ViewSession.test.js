@@ -14,6 +14,9 @@ const centerWorkspaceSource = readFileSync(fileURLToPath(new URL('../components/
 const encounterSource = readFileSync(fileURLToPath(new URL('../components/EncounterTab.vue', import.meta.url)), 'utf8')
 const graveyardSource = readFileSync(fileURLToPath(new URL('../components/EncounterGraveyardMenu.vue', import.meta.url)), 'utf8')
 const encounterRowSource = readFileSync(fileURLToPath(new URL('../components/EncounterRow.vue', import.meta.url)), 'utf8')
+const encounterAvatarSource = readFileSync(fileURLToPath(new URL('../components/EncounterAvatar.vue', import.meta.url)), 'utf8')
+const encounterControlsSource = readFileSync(fileURLToPath(new URL('../components/EncounterCombatControls.vue', import.meta.url)), 'utf8')
+const encounterMarkerSource = readFileSync(fileURLToPath(new URL('../components/EncounterMarkerMenu.vue', import.meta.url)), 'utf8')
 const encounterOrderSource = readFileSync(fileURLToPath(new URL('../components/EncounterOrderMarker.vue', import.meta.url)), 'utf8')
 const sceneSource = readFileSync(fileURLToPath(new URL('../components/SceneTab.vue', import.meta.url)), 'utf8')
 const encounterStylesSource = readFileSync(fileURLToPath(new URL('../components/styles/EncounterTab.css', import.meta.url)), 'utf8')
@@ -131,6 +134,18 @@ describe('ViewSession participant rail', () => {
     expect(encounterRowSource).toContain('<EncounterOrderMarker')
     expect(encounterOrderSource).toContain('class="enc-row-order"')
     expect(encounterOrderSource).toContain("String(props.order).padStart(2, '0')")
+  })
+
+  it('uses shared combat stats, larger portraits and editable NPC letter markers', () => {
+    expect(encounterRowSource).toContain('<EncounterCombatControls')
+    expect(encounterRowSource).toContain('<EncounterMarkerMenu v-if="isNpc"')
+    expect(encounterControlsSource).toContain('aria-label="Инициатива"')
+    expect(encounterControlsSource).toContain('<Shield')
+    expect(encounterAvatarSource).toContain("width: 62px;")
+    expect(encounterAvatarSource).toContain("width: 72px;")
+    expect(encounterAvatarSource).not.toContain('enc-avatar-letter')
+    expect(encounterMarkerSource).toContain('v-for="letter in enc.ENCOUNTER_LETTERS"')
+    expect(encounterMarkerSource).toContain('<ColorPresetPicker')
   })
 
   it('uses per-participant actions without bulk selection controls', () => {

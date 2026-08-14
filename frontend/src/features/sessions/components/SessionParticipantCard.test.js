@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest'
 import SessionParticipantCard from './SessionParticipantCard.vue'
 
 const source = readFileSync(fileURLToPath(new URL('./SessionParticipantCard.vue', import.meta.url)), 'utf8')
-const combatControlsSource = readFileSync(fileURLToPath(new URL('./SessionParticipantCombatControls.vue', import.meta.url)), 'utf8')
+const combatControlsSource = readFileSync(fileURLToPath(new URL('./EncounterCombatControls.vue', import.meta.url)), 'utf8')
 
 describe('SessionParticipantCard actions', () => {
   it('compiles the participant component', () => {
@@ -35,7 +35,7 @@ describe('SessionParticipantCard actions', () => {
 
   it('adds battle selection, initiative and armor class to the expanded player tile', () => {
     expect(source).toContain('v-if="combatMode"')
-    expect(source).toContain('<SessionParticipantCombatControls')
+    expect(source).toContain('<EncounterCombatControls')
     expect(combatControlsSource).toContain('<EncCheckbox')
     expect(combatControlsSource).toContain('aria-label="Инициатива"')
     expect(source).toContain("const armorClass = computed(() => pvAc(props.participant))")

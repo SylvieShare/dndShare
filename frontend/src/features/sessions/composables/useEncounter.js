@@ -9,6 +9,7 @@ import { useEncounterSelection } from '@/features/sessions/composables/useEncoun
 import { useEncounterStates } from '@/features/sessions/composables/useEncounterStates'
 import {
   ICON_COLOR_SWATCHES,
+  ENCOUNTER_LETTERS,
   SAVE_DEBOUNCE_MS,
   SIDE_COLOR,
   SIDE_LABEL,
@@ -289,6 +290,7 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers }) {
     sortable,
     SIDE_OPTIONS,
     ICON_COLOR_SWATCHES,
+    ENCOUNTER_LETTERS,
     // players
     playerDisplayName,
     getPlayerAva,
@@ -365,6 +367,7 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers }) {
     toggleSide:             flow.toggleSide,
     setSide:                flow.setSide,
     setIconColor:           flow.setIconColor,
+    setMarkerLetter:        flow.setMarkerLetter,
     rerollSelectedInitiative: flow.rerollSelectedInitiative,
     toggleCombat:           flow.toggleCombat,
     nextTurn:               flow.nextTurn,

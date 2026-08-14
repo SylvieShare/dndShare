@@ -67,6 +67,64 @@ export const ICON_COLOR_SWATCHES = [
   '#a8722e', '#8888aa', '#e8e8ef', '#404050',
 ]
 
+export const ENCOUNTER_LETTERS = [...'ABCDEFGHIJKLMNOPQRSTUVWXYZ']
+
+function normalizedEncounterLetter(value) {
+  const letter = String(value || '').trim().toUpperCase()
+  return ENCOUNTER_LETTERS.includes(letter) ? letter : null
+}
+
+export function ensureCombatantLetters(combatants) {
+  const npcs = combatants.filter(c => c.type === 'npc')
+  const reserved = new Set()
+  const preserved = new Set()
+
+  for (const c of npcs) {
+    const letter = normalizedEncounterLetter(c.markerLetter)
+    if (!letter || reserved.has(letter)) continue
+    reserved.add(letter)
+    preserved.add(c.uid)
+  }
+
+  let changed = false
+  for (const c of npcs) {
+    const current = normalizedEncounterLetter(c.markerLetter)
+    if (preserved.has(c.uid)) {
+      if (c.markerLetter !== current) {
+        c.markerLetter = current
+        changed = true
+      }
+      continue
+    }
+
+    const next = ENCOUNTER_LETTERS.find(letter => !reserved.has(letter)) || null
+    if (next) reserved.add(next)
+    if (c.markerLetter === next) continue
+    if (next) c.markerLetter = next
+    else delete c.markerLetter
+    changed = true
+  }
+  return changed
+}
+
+export function setCombatantLetter(combatants, uid, value) {
+  const target = combatants.find(c => c.uid === uid && c.type === 'npc')
+  const next = normalizedEncounterLetter(value)
+  if (!target || !next) return false
+
+  const current = normalizedEncounterLetter(target.markerLetter)
+  if (current === next) return false
+
+  const occupied = combatants.find(c => c.type === 'npc' && c.uid !== uid && normalizedEncounterLetter(c.markerLetter) === next)
+  target.markerLetter = next
+  if (occupied) {
+    if (current) occupied.markerLetter = current
+    else delete occupied.markerLetter
+  }
+  ensureCombatantLetters(combatants)
+  return true
+}
+
 export function sideOf(c) {
   return SIDE_COLOR[c.side] ? c.side : 'enemy'
 }

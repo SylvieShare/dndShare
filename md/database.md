@@ -157,7 +157,8 @@ Startup SQL создаёт существующим сессиям первую 
 координаты. Для новой сессии пустая первая арка создаётся в одной транзакции с
 самой сессией.
 
-Encounter combatant хранит ссылку `itemId` и пользовательский `override`.
+Encounter combatant хранит ссылку `itemId`, пользовательский `override` и
+уникальную для NPC латинскую метку `markerLetter` (`A`–`Z`).
 Старые embedded `itemRaw` и денормализованные name/ac/hp поля переносятся в
 startup migration и не обрабатываются во frontend.
 

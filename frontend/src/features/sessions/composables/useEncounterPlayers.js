@@ -1,4 +1,4 @@
-import { nextTieBreak, setDeep } from '@/features/sessions/lib/encounterHelpers'
+import { ensureCombatantLetters, nextTieBreak, setDeep } from '@/features/sessions/lib/encounterHelpers'
 import { pvAc, pvAvatar, pvHp, pvName, pvSubtitle } from '@/features/sessions/lib/participantView'
 
 export function useEncounterPlayers({ participants }) {
@@ -67,6 +67,7 @@ export function useEncounterPlayers({ participants }) {
         added++
       }
     }
+    ensureCombatantLetters(enc.combatants)
     return added
   }
 

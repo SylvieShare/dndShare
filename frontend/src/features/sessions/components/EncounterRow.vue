@@ -18,32 +18,19 @@
       strip
       @pointerdown="onRowPointerDown"
     >
-    <EncCheckbox
-      v-if="showCheckbox"
-      :model-value="enc.isSelected(combatant)"
-      @update:model-value="enc.toggleSelected(combatant)"
+    <EncounterCombatControls
+      :combatant="combatant"
+      :selected="enc.isSelected(combatant)"
+      :editable="showCheckbox"
+      :show-checkbox="showCheckbox"
+      :armor-class="enc.displayAc(combatant)"
+      :current="isCurrent"
+      @update:selected="enc.toggleSelected(combatant)"
+      @update:initiative="enc.setInitiative(combatant, $event)"
     />
 
-    <div class="enc-init-block" :class="{ 'enc-init-block--current': isCurrent }" @click.stop>
-      <span class="enc-init-label">иниц.</span>
-      <input
-        class="enc-init-input"
-        type="number"
-        :value="combatant.initiative"
-        placeholder="·"
-        @change="enc.setInitiative(combatant, $event.target.value)"
-        @click.stop
-      />
-    </div>
-
-    <div v-if="showAcChip" class="enc-ac-chip">
-      <svg width="12" height="12" viewBox="0 0 13 13" fill="none">
-        <path d="M6.5 1.5L2 3.5v3.5c0 2.5 2 4.5 4.5 5 2.5-.5 4.5-2.5 4.5-5V3.5L6.5 1.5z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
-      </svg>
-      {{ enc.displayAc(combatant) }}
-    </div>
-
     <EncounterAvatar :combatant="combatant" />
+    <EncounterMarkerMenu v-if="isNpc" :combatant="combatant" :editable="showCheckbox" />
 
     <div class="enc-info">
       <div class="enc-name-row">
@@ -152,13 +139,14 @@
 import { computed, inject, provide, reactive, ref } from 'vue'
 import BlockStates from '@/features/character-editor/blocks/generic/BlockStates'
 import EncounterAvatar from '@/features/sessions/components/EncounterAvatar.vue'
+import EncounterCombatControls from '@/features/sessions/components/EncounterCombatControls.vue'
 import EncounterHpBar from '@/features/sessions/components/EncounterHpBar.vue'
+import EncounterMarkerMenu from '@/features/sessions/components/EncounterMarkerMenu.vue'
 import EncounterOrderMarker from '@/features/sessions/components/EncounterOrderMarker.vue'
 import EncounterRowMenu from '@/features/sessions/components/EncounterRowMenu.vue'
 import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 import BasePopover from '@/shared/ui/BasePopover.vue'
 import BaseTile from '@/shared/ui/BaseTile.vue'
-import EncCheckbox from '@/shared/ui/EncCheckbox.vue'
 import FormActionButtons from '@/shared/ui/form/FormActionButtons'
 import FormTextarea from '@/shared/ui/form/FormTextarea'
 import SuggestMultiSelect from '@/shared/ui/SuggestMultiSelect'
@@ -186,11 +174,6 @@ const hasItem = computed(() => isNpc.value && props.combatant.itemId != null)
 
 const subtitleText = computed(() => enc.subtitle(props.combatant))
 
-const showAcChip = computed(() => {
-  if (isNpc.value && props.section === 'reserve-npc' && enc.npcAc(props.combatant) == null) return false
-  return true
-})
-
 const skippedInTurn = computed(() =>
   props.section === 'combat' && enc.encounter.active && !enc.isActiveInTurn(props.combatant)
 )
@@ -203,7 +186,7 @@ const rowClasses = computed(() => ({
 
 // The whole row is a drag handle now. Bail when the pointer lands on an
 // interactive control so clicks/typing still work there.
-const DRAG_IGNORE = 'input, textarea, button, a, [role="button"], .enc-init-block, .enc-hp-area, .enc-badge, .enc-surprised-toggle, .enc-states, .enc-name--clickable'
+const DRAG_IGNORE = 'input, textarea, button, a, [role="button"], .enc-combat-controls, .enc-hp-area, .enc-badge, .enc-surprised-toggle, .enc-states, .enc-name--clickable'
 function onRowPointerDown(e) {
   if (e.button !== undefined && e.button !== 0) return
   if (e.target.closest(DRAG_IGNORE)) return
@@ -324,65 +307,6 @@ function commitNoteEdit() {
 
 .enc-row--skipped { opacity: 0.5; }
 .enc-row--skipped.enc-row--current { opacity: 1; }
-
-.enc-init-block {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1px;
-  background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 3px 8px 5px;
-  flex-shrink: 0;
-  width: 64px;
-  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
-  cursor: text;
-}
-
-.enc-init-label {
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  line-height: 1;
-}
-.enc-init-block--current .enc-init-label { color: color-mix(in srgb, var(--accent-soft) 70%, transparent); }
-
-.enc-init-block:focus-within {
-  border-color: color-mix(in srgb, var(--text-on-accent) 18%, transparent);
-  background: var(--border);
-}
-
-.enc-init-block--current {
-  background: color-mix(in srgb, var(--accent) 15%, transparent);
-  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 10%, transparent);
-}
-
-.enc-init-block--current:focus-within { border-color: color-mix(in srgb, var(--accent) 70%, transparent); }
-
-.enc-init-input {
-  background: none;
-  border: none;
-  color: var(--text-1);
-  font: inherit;
-  font-size: 15px;
-  font-weight: 700;
-  width: 100%;
-  text-align: center;
-  outline: none;
-  padding: 0;
-  -moz-appearance: textfield;
-  line-height: 1;
-  letter-spacing: -0.02em;
-}
-.enc-init-input::-webkit-outer-spin-button,
-.enc-init-input::-webkit-inner-spin-button { -webkit-appearance: none; }
-.enc-init-input::placeholder { color: var(--text-muted); }
-
-.enc-init-block--current .enc-init-input { color: var(--accent-soft); }
 
 .enc-info {
   flex: 1;
@@ -534,19 +458,4 @@ function commitNoteEdit() {
 }
 .enc-hp-dice-btn:active { transform: scale(0.94); }
 
-.enc-ac-chip {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  background: color-mix(in srgb, var(--text-on-accent) 6%, transparent);
-  border: 1px solid color-mix(in srgb, var(--text-on-accent) 9%, transparent);
-  border-radius: 7px;
-  padding: 5px 10px;
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--text-2);
-  flex-shrink: 0;
-  min-width: 52px;
-  justify-content: center;
-}
 </style>

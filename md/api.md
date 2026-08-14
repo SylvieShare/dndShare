@@ -136,8 +136,8 @@ every arc exactly once; response order becomes the new automatic numbering.
 Точные routes находятся в `internal/web/sessions.go` и
 `internal/web/session_scenes.go`; graph validation is in
 `sessions_chapters.go` and `sessions_graph_actions.go`. Encounter принимает
-только canonical combatants (`itemId` + `override` для NPC); embedded item
-payload не является контрактом.
+только canonical combatants (`itemId` + `override` и уникальный
+`markerLetter` для NPC); embedded item payload не является контрактом.
 
 ## Music and storage
 

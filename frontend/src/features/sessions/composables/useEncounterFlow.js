@@ -1,4 +1,4 @@
-import { SIDE_COLOR, matchesGroup, nextTieBreak } from '@/features/sessions/lib/encounterHelpers'
+import { SIDE_COLOR, matchesGroup, nextTieBreak, setCombatantLetter } from '@/features/sessions/lib/encounterHelpers'
 
 export function useEncounterFlow({
   encounter,
@@ -47,6 +47,10 @@ export function useEncounterFlow({
       if (color) t.iconColor = color
       else delete t.iconColor
     })
+  }
+
+  function setMarkerLetter(c, letter) {
+    mutate(() => setCombatantLetter(encounter.value.combatants, c.uid, letter))
   }
 
   function rerollSelectedInitiative() {
@@ -234,6 +238,7 @@ export function useEncounterFlow({
     toggleSide,
     setSide,
     setIconColor,
+    setMarkerLetter,
     rerollSelectedInitiative,
     toggleCombat,
     nextTurn,
