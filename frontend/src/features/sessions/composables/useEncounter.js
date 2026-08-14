@@ -357,6 +357,7 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers }) {
     challengeAbilityMeta:    challenge.challengeAbilityMeta,
     challengeResult:         challenge.challengeResult,
     runChallenge:            challenge.runChallenge,
+    rerollChallenge:         challenge.rerollChallenge,
     resetChallenge:          challenge.resetChallenge,
     // states
     statesBlock:            states.statesBlock,

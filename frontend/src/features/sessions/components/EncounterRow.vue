@@ -79,6 +79,7 @@
       :challenge="enc.challenge"
       :ability="challengeAbility"
       :result="challengeResult"
+      @reroll="enc.rerollChallenge(combatant, $event)"
     />
 
     <EncounterRowMenu
@@ -289,7 +290,9 @@ function commitNoteEdit() {
 .enc-row {
   display: flex;
   flex: 1;
+  height: 92px;
   min-width: 0;
+  box-sizing: border-box;
   align-items: center;
   gap: 10px;
   padding: 10px 14px;
@@ -319,22 +322,26 @@ function commitNoteEdit() {
 
 .enc-info {
   flex: 1;
+  max-height: 72px;
   min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 4px;
+  justify-content: center;
+  overflow: hidden;
 }
 
 .enc-info-hp {
+  max-width: 300px;
   margin-top: 1px;
 }
 
 .enc-row-challenge {
   width: 248px;
+  height: 72px;
   min-height: 72px;
-  flex: 0 1 248px;
-  min-width: 0;
-  align-self: stretch;
+  flex: 0 0 248px;
+  align-self: center;
 }
 
 .enc-name-row {

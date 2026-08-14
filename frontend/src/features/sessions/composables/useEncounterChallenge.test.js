@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import { ref } from 'vue'
 import {
@@ -59,5 +59,50 @@ describe('encounter challenge bonuses', () => {
     expect(challenge.selectedChallengeCount.value).toBe(1)
     challenge.runChallenge({ ability: 'DEX', savingThrow: false })
     expect(Object.keys(encounter.value.challenge.results)).toEqual(['scene-npc'])
+  })
+
+  it('rolls one extra die and keeps it by advantage or disadvantage', () => {
+    setActivePinia(createPinia())
+    const sceneNpc = { uid: 'scene-npc', type: 'npc' }
+    const encounter = ref({
+      active: true,
+      combatants: [sceneNpc],
+      challenge: {
+        ability: 'DEX',
+        savingThrow: false,
+        results: { 'scene-npc': { roll: 10, bonus: 2, total: 12 } },
+      },
+    })
+    const challenge = useEncounterChallenge({
+      encounter,
+      inCombat: ref([sceneNpc]),
+      selectedUids: ref(new Set(['scene-npc'])),
+      findParticipant: () => null,
+      playerDisplayName: () => 'Игрок',
+      npcName: () => 'Гоблин',
+      npcAbilityScore: () => 14,
+      npcSavingThrow: () => null,
+    })
+    const random = vi.spyOn(Math, 'random')
+
+    random.mockReturnValueOnce(0.99)
+    challenge.rerollChallenge(sceneNpc, 'advantage')
+    expect(encounter.value.challenge.results['scene-npc']).toEqual({
+      roll: 20,
+      bonus: 2,
+      total: 22,
+      revision: 1,
+    })
+
+    random.mockReturnValueOnce(0)
+    challenge.rerollChallenge(sceneNpc, 'disadvantage')
+    expect(encounter.value.challenge.results['scene-npc']).toEqual({
+      roll: 1,
+      bonus: 2,
+      total: 3,
+      revision: 2,
+    })
+
+    random.mockRestore()
   })
 })

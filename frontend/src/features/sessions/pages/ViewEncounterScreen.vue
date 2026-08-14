@@ -1,7 +1,5 @@
 <template>
   <main class="encounter-screen" :class="{ 'encounter-screen--active': snapshot?.active }">
-    <div class="encounter-screen__glow" aria-hidden="true" />
-
     <header class="encounter-screen__header">
       <div class="encounter-screen__identity">
         <span class="encounter-screen__eyebrow">ЭКРАН БОЯ</span>
@@ -48,49 +46,6 @@
     </section>
 
     <template v-else>
-      <section class="encounter-screen__turn" aria-live="polite">
-        <div class="encounter-screen__turn-copy">
-          <span class="encounter-screen__turn-label">СЕЙЧАС ХОДИТ</span>
-          <template v-if="currentCombatant">
-            <div class="encounter-screen__turn-name-row">
-              <span
-                v-if="currentCombatant.markerLetter"
-                class="encounter-screen__turn-marker"
-                :style="accentStyle(currentCombatant)"
-              >{{ currentCombatant.markerLetter }}</span>
-              <h2>{{ currentCombatant.name }}</h2>
-            </div>
-            <div class="encounter-screen__turn-meta">
-              <span class="encounter-health" :class="healthClass(currentCombatant)">
-                <HeartPulse :size="18" aria-hidden="true" />
-                {{ currentCombatant.health.label }}
-              </span>
-              <span
-                v-for="state in currentCombatant.states"
-                :key="state.name"
-                class="encounter-state"
-                :style="stateStyle(state)"
-              >{{ state.name }}</span>
-              <span v-if="currentCombatant.surprised && snapshot.round === 0" class="encounter-state">
-                Врасплох
-              </span>
-            </div>
-          </template>
-          <h2 v-else>Нет доступного хода</h2>
-        </div>
-
-        <div
-          v-if="currentCombatant"
-          class="encounter-screen__turn-portrait"
-          :class="{ 'encounter-screen__turn-portrait--npc': currentCombatant.type === 'npc' }"
-          :style="accentStyle(currentCombatant)"
-        >
-          <img v-if="currentCombatant.avatarUrl" :src="currentCombatant.avatarUrl" alt="" />
-          <span v-else-if="currentCombatant.avatarSvg" v-html="currentCombatant.avatarSvg" />
-          <UserRound v-else :size="82" :stroke-width="1.1" aria-hidden="true" />
-        </div>
-      </section>
-
       <section class="encounter-screen__initiative" aria-label="Порядок инициативы">
         <div class="encounter-screen__initiative-heading">
           <div>
@@ -159,6 +114,49 @@
 
         <div v-else class="encounter-screen__no-combatants">
           Бой начался — участники скоро появятся.
+        </div>
+      </section>
+
+      <section class="encounter-screen__turn" aria-live="polite">
+        <div class="encounter-screen__turn-copy">
+          <span class="encounter-screen__turn-label">СЕЙЧАС ХОДИТ</span>
+          <template v-if="currentCombatant">
+            <div class="encounter-screen__turn-name-row">
+              <span
+                v-if="currentCombatant.markerLetter"
+                class="encounter-screen__turn-marker"
+                :style="accentStyle(currentCombatant)"
+              >{{ currentCombatant.markerLetter }}</span>
+              <h2>{{ currentCombatant.name }}</h2>
+            </div>
+            <div class="encounter-screen__turn-meta">
+              <span class="encounter-health" :class="healthClass(currentCombatant)">
+                <HeartPulse :size="18" aria-hidden="true" />
+                {{ currentCombatant.health.label }}
+              </span>
+              <span
+                v-for="state in currentCombatant.states"
+                :key="state.name"
+                class="encounter-state"
+                :style="stateStyle(state)"
+              >{{ state.name }}</span>
+              <span v-if="currentCombatant.surprised && snapshot.round === 0" class="encounter-state">
+                Врасплох
+              </span>
+            </div>
+          </template>
+          <h2 v-else>Нет доступного хода</h2>
+        </div>
+
+        <div
+          v-if="currentCombatant"
+          class="encounter-screen__turn-portrait"
+          :class="{ 'encounter-screen__turn-portrait--npc': currentCombatant.type === 'npc' }"
+          :style="accentStyle(currentCombatant)"
+        >
+          <img v-if="currentCombatant.avatarUrl" :src="currentCombatant.avatarUrl" alt="" />
+          <span v-else-if="currentCombatant.avatarSvg" v-html="currentCombatant.avatarSvg" />
+          <UserRound v-else :size="82" :stroke-width="1.1" aria-hidden="true" />
         </div>
       </section>
     </template>

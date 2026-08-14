@@ -135,6 +135,77 @@ export function useEncounterChallenge({
     }
   }
 
+  function rerollChallenge(combatant, mode) {
+    const currentChallenge = challenge.value
+    const currentResult = currentChallenge?.results?.[combatant.uid]
+    if (!currentResult || !['advantage', 'disadvantage'].includes(mode)) return
+
+    const keepHigh = mode === 'advantage'
+    const previous = Number(currentResult.roll) || 0
+    const extra = Math.floor(Math.random() * 20) + 1
+    const keepPrevious = keepHigh ? previous >= extra : previous <= extra
+    const kept = keepPrevious ? previous : extra
+    const droppedIdx = keepPrevious ? 1 : 0
+    const bonus = Number(currentResult.bonus) || 0
+    const total = kept + bonus
+    const meta = abilityMeta(currentChallenge.ability)
+    const kind = currentChallenge.savingThrow ? 'Спасбросок' : 'Проверка'
+    const modeLabel = keepHigh ? 'с преимуществом' : 'с помехой'
+    const parts = [{
+      sign: '+',
+      kind: 'dice',
+      n: 2,
+      sides: 20,
+      rolls: [previous, extra],
+      sum: kept,
+      dropped: [droppedIdx],
+      label: null,
+      color: null,
+    }]
+    if (bonus) {
+      parts.push({
+        sign: bonus < 0 ? '-' : '+',
+        kind: 'flat',
+        value: Math.abs(bonus),
+        sum: Math.abs(bonus),
+        label: null,
+        color: null,
+      })
+    }
+
+    useDiceStore().pushEntry({
+      title: `${displayName(combatant)} — ${kind} ${meta.label.toLowerCase()} ${modeLabel}`,
+      popup: false,
+      outcome: kept === 20
+        ? { kind: 'crit', sides: 20, value: kept }
+        : kept === 1
+          ? { kind: 'fumble', sides: 20, value: kept }
+          : null,
+      result: {
+        parts,
+        total,
+        byType: [{ label: null, color: null, value: total }],
+        expression: `2d20${keepHigh ? 'kh' : 'kl'}${bonus ? d20Expr(bonus).slice(3) : ''}`,
+      },
+    })
+
+    encounter.value = {
+      ...encounter.value,
+      challenge: {
+        ...currentChallenge,
+        results: {
+          ...currentChallenge.results,
+          [combatant.uid]: {
+            roll: kept,
+            bonus,
+            total,
+            revision: (Number(currentResult.revision) || 0) + 1,
+          },
+        },
+      },
+    }
+  }
+
   function resetChallenge() {
     const { challenge: _challenge, ...rest } = encounter.value
     encounter.value = rest
@@ -152,6 +223,7 @@ export function useEncounterChallenge({
     challengeAbilityMeta: abilityMeta,
     challengeResult,
     runChallenge,
+    rerollChallenge,
     resetChallenge,
   }
 }

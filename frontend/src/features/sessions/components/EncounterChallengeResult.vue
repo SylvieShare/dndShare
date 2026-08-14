@@ -10,7 +10,26 @@
   >
     <div class="ecr-event">
       <span class="ecr-title">{{ eventTitle }}</span>
-      <span class="ecr-caption">{{ resultCaption }}</span>
+      <div class="ecr-rerolls" aria-label="Докинуть кубик">
+        <button
+          class="ecr-reroll-btn ecr-reroll-btn--advantage"
+          type="button"
+          title="Докинуть с преимуществом"
+          aria-label="Докинуть с преимуществом"
+          @click.stop="$emit('reroll', 'advantage')"
+        >
+          <ArrowUp :size="13" :stroke-width="2.5" />
+        </button>
+        <button
+          class="ecr-reroll-btn ecr-reroll-btn--disadvantage"
+          type="button"
+          title="Докинуть с помехой"
+          aria-label="Докинуть с помехой"
+          @click.stop="$emit('reroll', 'disadvantage')"
+        >
+          <ArrowDown :size="13" :stroke-width="2.5" />
+        </button>
+      </div>
     </div>
 
     <div class="ecr-values">
@@ -36,6 +55,7 @@
 
 <script setup>
 import { computed, onBeforeUnmount, useId, watch } from 'vue'
+import { ArrowDown, ArrowUp } from '@lucide/vue'
 import { useDiceRollAnimation } from '@/shared/composables/useDiceRollAnimation'
 import SystemDie from '@/shared/ui/SystemDie.vue'
 
@@ -44,6 +64,8 @@ const props = defineProps({
   ability: { type: Object, required: true },
   result: { type: Object, required: true },
 })
+
+defineEmits(['reroll'])
 
 const SAVE_ABILITY_LABELS = {
   STR: 'силы',
@@ -102,13 +124,6 @@ const eventTitle = computed(() => {
     : `Проверка ${ability}`
 })
 
-const resultCaption = computed(() => {
-  if (isRolling(animationId)) return 'Бросок…'
-  if (props.result.roll === 20) return 'Натуральная 20'
-  if (props.result.roll === 1) return 'Натуральная 1'
-  return 'Результат испытания'
-})
-
 const resultColor = computed(() => {
   if (isRolling(animationId)) return 'var(--accent)'
   if (props.result.roll === 20) return 'var(--warning)'
@@ -121,7 +136,7 @@ const ariaLabel = computed(() =>
 )
 
 watch(
-  () => [props.result.roll, props.result.bonus, props.result.total],
+  () => [props.result.roll, props.result.bonus, props.result.total, props.result.revision],
   () => startEntryAnimation(rollEntry.value),
   { immediate: true },
 )
@@ -132,13 +147,14 @@ onBeforeUnmount(dispose)
 <style scoped>
 .ecr-result {
   display: flex;
+  height: 72px;
   min-height: 72px;
   box-sizing: border-box;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 10px;
   overflow: hidden;
-  padding: 9px 12px;
+  padding: 7px 10px;
   border: 1px solid color-mix(in srgb, var(--accent) 38%, var(--border));
   border-radius: 11px;
   background:
@@ -153,28 +169,52 @@ onBeforeUnmount(dispose)
   min-width: 0;
   flex: 1;
   flex-direction: column;
-  gap: 5px;
+  gap: 4px;
 }
 
 .ecr-title {
-  overflow: hidden;
   color: var(--text-1);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 850;
   letter-spacing: 0.045em;
   line-height: 1.15;
-  text-overflow: ellipsis;
   text-transform: uppercase;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
-.ecr-caption {
-  overflow: hidden;
+.ecr-rerolls {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.ecr-reroll-btn {
+  display: inline-grid;
+  width: 25px;
+  height: 22px;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--border));
+  border-radius: 7px;
+  place-items: center;
   color: var(--text-muted);
-  font-size: 10px;
-  line-height: 1.2;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  background: color-mix(in srgb, var(--surface) 76%, transparent);
+  cursor: pointer;
+  transition: color 0.14s, border-color 0.14s, background 0.14s, transform 0.14s;
+}
+
+.ecr-reroll-btn:hover {
+  color: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 62%, var(--border));
+  background: color-mix(in srgb, var(--accent) 14%, var(--surface));
+}
+
+.ecr-reroll-btn:active { transform: translateY(1px); }
+
+.ecr-reroll-btn--disadvantage:hover {
+  color: var(--danger);
+  border-color: color-mix(in srgb, var(--danger) 52%, var(--border));
+  background: color-mix(in srgb, var(--danger) 11%, var(--surface));
 }
 
 .ecr-values {

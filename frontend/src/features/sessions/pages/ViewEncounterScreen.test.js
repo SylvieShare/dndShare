@@ -20,3 +20,16 @@ describe('public encounter portraits', () => {
     expect(initiativeStyles).toContain('.initiative-card__portrait > span:not(.initiative-card__marker)')
   })
 })
+
+describe('public encounter composition', () => {
+  it('places initiative before the current-turn spotlight', () => {
+    expect(pageSource.indexOf('class="encounter-screen__initiative"'))
+      .toBeLessThan(pageSource.indexOf('class="encounter-screen__turn"'))
+  })
+
+  it('uses a flat canvas and no combatant color strip', () => {
+    expect(mainStyles).toContain('background: var(--app-canvas-bg);')
+    expect(mainStyles).not.toContain('.encounter-screen__glow')
+    expect(initiativeStyles).not.toContain('.initiative-card::after')
+  })
+})

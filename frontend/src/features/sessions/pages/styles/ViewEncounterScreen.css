@@ -9,10 +9,7 @@
   gap: clamp(22px, 3vh, 44px);
   overflow: hidden;
   padding: clamp(24px, 3.2vw, 64px);
-  background:
-    radial-gradient(circle at 12% 16%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 34%),
-    radial-gradient(circle at 88% 5%, color-mix(in srgb, var(--danger) 10%, transparent), transparent 30%),
-    var(--app-canvas-bg);
+  background: var(--app-canvas-bg);
   isolation: isolate;
 }
 
@@ -24,20 +21,6 @@
   background-size: var(--app-canvas-dot-size) var(--app-canvas-dot-size);
   content: '';
   opacity: 0.42;
-}
-
-.encounter-screen__glow {
-  position: absolute;
-  z-index: -1;
-  top: -32vh;
-  left: 50%;
-  width: 78vw;
-  height: 62vh;
-  border-radius: 50%;
-  background: color-mix(in srgb, var(--accent) 9%, transparent);
-  filter: blur(110px);
-  pointer-events: none;
-  transform: translateX(-50%);
 }
 
 .encounter-screen__header,
@@ -127,7 +110,7 @@
 }
 
 .encounter-screen--active {
-  grid-template-rows: auto auto minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, auto) minmax(0, 1fr);
 }
 
 .encounter-screen__turn {

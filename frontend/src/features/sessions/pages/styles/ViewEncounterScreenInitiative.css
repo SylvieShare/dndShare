@@ -40,17 +40,6 @@
   transition: border-color 0.24s, background 0.24s, box-shadow 0.24s, transform 0.24s;
 }
 
-.initiative-card::after {
-  position: absolute;
-  right: 12%;
-  bottom: -1px;
-  left: 12%;
-  height: 2px;
-  background: var(--screen-combatant-color);
-  content: '';
-  opacity: 0.72;
-}
-
 .initiative-card--current {
   border-color: color-mix(in srgb, var(--accent) 76%, var(--text-on-accent));
   background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 18%, var(--surface)), var(--surface));
