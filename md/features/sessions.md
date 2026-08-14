@@ -180,7 +180,9 @@ The scenario node first moves to the top immediately to the right of its chapter
 and its peers and edges fade out; then block nodes replace the graph payload.
 Text, list and combat blocks have independent coordinates, persisted widths,
 content-sized heights and directed links. Their accent color is derived from
-the type instead of being user-selected or stored. Clicking any non-interactive
+the type instead of being user-selected or stored. Block cards use the same
+dark `var(--surface)` backing and inset border as `BaseTile`, with only a quiet
+type-colored hover tint. Clicking any non-interactive
 part of a block opens its action menu; there is no separate ellipsis trigger.
 The menu provides edit, copy and delete, while a double click opens
 `SceneBlockEditorModal`. A combat block contains bestiary references and/or

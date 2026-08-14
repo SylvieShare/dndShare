@@ -70,6 +70,8 @@ describe('session graph canvas', () => {
 
   it('derives block presentation from type and opens actions from the whole card', () => {
     expect(blockSource).toContain('sceneBlockColor(block.type)')
+    expect(blockSource).toContain('background: var(--surface);')
+    expect(blockSource).not.toContain('background: var(--surface-raised);')
     expect(blockSource).not.toContain('RowActionMenu')
     expect(blockSource).not.toContain('Двойной клик')
     expect(source).toContain('blockMenus.value?.openFor(node, anchor)')

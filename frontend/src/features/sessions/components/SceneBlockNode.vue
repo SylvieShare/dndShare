@@ -55,14 +55,17 @@ function creatureKey(creature, index) {
   flex-direction: column;
   gap: 9px;
   padding: 15px 16px 14px 18px;
-  border: 1px solid var(--border-strong);
+  border: none;
   border-radius: 12px;
-  background: var(--surface-raised);
-  box-shadow: var(--shadow-lg);
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--border);
   user-select: none;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition: background 0.15s, box-shadow 0.15s;
 }
-.scene-block-node:hover { border-color: color-mix(in srgb, var(--block-color) 62%, var(--border)); }
+.scene-block-node:hover {
+  background: color-mix(in srgb, var(--block-color) 8%, var(--surface));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--block-color) 38%, var(--border));
+}
 .scene-block-node-strip { position: absolute; top: 0; bottom: 0; left: 0; width: 4px; background: var(--block-color); }
 .scene-block-node > strong {
   overflow-wrap: anywhere;
