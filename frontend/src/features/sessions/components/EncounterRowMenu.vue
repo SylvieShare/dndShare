@@ -1,12 +1,17 @@
 <template>
   <div class="enc-row-menu">
-  <RowActionMenu>
+  <RowActionMenu ref="menuRef">
     <template #default="{ close }">
       <RowActionItem
         v-if="statesBlock"
         :icon="Activity"
         @click="$emit('edit-states'); close()"
-      >Изменить статусы</RowActionItem>
+      >Состояния</RowActionItem>
+      <RowActionItem
+        v-if="canReserve"
+        :icon="Archive"
+        @click="enc.sendToReserve(combatant); close()"
+      >В запас</RowActionItem>
       <RowActionItem
         v-if="isNpc"
         action="note"
@@ -38,19 +43,6 @@
           </div>
         </template>
       </RowActionSubmenu>
-      <RowActionSubmenu v-if="!isNpc" label="Цвет плитки">
-        <template #trigger="{ open }">
-          <RowActionItem :icon="Palette" submenu :submenu-open="open">Изменить цвет</RowActionItem>
-        </template>
-        <template #default="{ close: closeColor }">
-          <ColorPresetPicker
-            inline
-            allow-clear
-            :model-value="combatant.iconColor || ''"
-            @update:model-value="color => setIconColor(color, closeColor)"
-          />
-        </template>
-      </RowActionSubmenu>
       <RowActionItem
         v-if="canRevive"
         action="revive"
@@ -69,8 +61,7 @@
 
 <script setup>
 import { computed, inject, ref } from 'vue'
-import { Activity, Copy, Palette } from '@lucide/vue'
-import ColorPresetPicker from '@/shared/ui/ColorPresetPicker'
+import { Activity, Archive, Copy } from '@lucide/vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionMenu from '@/shared/ui/RowActionMenu.vue'
 import RowActionSubmenu from '@/shared/ui/RowActionSubmenu.vue'
@@ -85,10 +76,12 @@ defineEmits(['edit-states', 'edit-note'])
 const enc = inject('encounter')
 
 const isNpc = computed(() => props.combatant.type === 'npc')
-const canDelete = computed(() => isNpc.value && (props.section === 'reserve-npc' || props.section === 'dead'))
+const canReserve = computed(() => props.section === 'combat')
+const canDelete = computed(() => isNpc.value)
 const canRevive = computed(() => props.section === 'dead')
 
 const cloneCount = ref(1)
+const menuRef = ref(null)
 
 function cloneNpc(closeSubmenu, closeMenu) {
   enc.cloneNpc(props.combatant, cloneCount.value)
@@ -96,10 +89,11 @@ function cloneNpc(closeSubmenu, closeMenu) {
   closeMenu()
 }
 
-function setIconColor(color, close) {
-  enc.setIconColor(props.combatant, color)
-  close()
+function toggle(event) {
+  menuRef.value?.toggle(event)
 }
+
+defineExpose({ toggle })
 </script>
 
 <style scoped>

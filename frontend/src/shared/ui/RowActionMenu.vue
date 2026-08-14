@@ -176,7 +176,7 @@ function onKey(event) {
 
 onBeforeUnmount(close)
 
-defineExpose({ close })
+defineExpose({ open, close, toggle })
 </script>
 
 <style scoped>

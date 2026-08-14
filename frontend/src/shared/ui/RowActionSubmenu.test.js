@@ -39,7 +39,8 @@ describe('RowActionSubmenu', () => {
   it('replaces every action-menu inline choice with the shared submenu', () => {
     expect(participantSource).toContain('<RowActionSubmenu v-if="isDm" label="Цвет игрока"')
     expect(sceneSource).toContain('<RowActionSubmenu label="Цвет плитки"')
-    expect(encounterSource.match(/<RowActionSubmenu/g)).toHaveLength(2)
+    expect(encounterSource.match(/<RowActionSubmenu/g)).toHaveLength(1)
+    expect(encounterSource).not.toContain('ColorPresetPicker')
     expect(spellSource).toContain('<RowActionSubmenu')
     expect(spellSource).not.toContain('choosingSlot')
     expect(chapterSource.match(/<RowActionSubmenu/g)).toHaveLength(2)

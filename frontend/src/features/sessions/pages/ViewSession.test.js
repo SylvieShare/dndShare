@@ -18,6 +18,8 @@ const encounterRowSource = readFileSync(fileURLToPath(new URL('../components/Enc
 const encounterAvatarSource = readFileSync(fileURLToPath(new URL('../components/EncounterAvatar.vue', import.meta.url)), 'utf8')
 const encounterControlsSource = readFileSync(fileURLToPath(new URL('../components/EncounterCombatControls.vue', import.meta.url)), 'utf8')
 const encounterMarkerSource = readFileSync(fileURLToPath(new URL('../components/EncounterMarkerMenu.vue', import.meta.url)), 'utf8')
+const encounterMenuSource = readFileSync(fileURLToPath(new URL('../components/EncounterRowMenu.vue', import.meta.url)), 'utf8')
+const encounterFlowSource = readFileSync(fileURLToPath(new URL('../composables/useEncounterFlow.js', import.meta.url)), 'utf8')
 const encounterOrderSource = readFileSync(fileURLToPath(new URL('../components/EncounterOrderMarker.vue', import.meta.url)), 'utf8')
 const sceneSource = readFileSync(fileURLToPath(new URL('../components/SceneTab.vue', import.meta.url)), 'utf8')
 const encounterStylesSource = readFileSync(fileURLToPath(new URL('../components/styles/EncounterTab.css', import.meta.url)), 'utf8')
@@ -150,6 +152,19 @@ describe('ViewSession participant rail', () => {
     expect(encounterAvatarSource).not.toContain('enc-avatar-letter')
     expect(encounterMarkerSource).toContain('v-for="letter in enc.ENCOUNTER_LETTERS"')
     expect(encounterMarkerSource).toContain('<ColorPresetPicker')
+  })
+
+  it('opens row actions from the tile and keeps concrete controls independent', () => {
+    expect(encounterRowSource).toContain('@click="onRowClick"')
+    expect(encounterRowSource).toContain('ref="rowMenuRef"')
+    expect(encounterRowSource).toContain('enc.sortable.shouldSuppressClick()')
+    expect(encounterRowSource).toContain('event.target?.closest?.(DRAG_IGNORE)')
+    expect(encounterMenuSource).toContain('defineExpose({ toggle })')
+    expect(encounterMenuSource).toContain('>Состояния</RowActionItem>')
+    expect(encounterMenuSource).toContain('>В запас</RowActionItem>')
+    expect(encounterMenuSource).toContain('const canDelete = computed(() => isNpc.value)')
+    expect(encounterMenuSource).not.toContain('ColorPresetPicker')
+    expect(encounterFlowSource).toContain('function sendToReserve(c)')
   })
 
   it('uses per-participant actions without bulk selection controls', () => {

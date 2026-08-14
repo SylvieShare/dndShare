@@ -38,6 +38,7 @@ export function useSortable(config) {
   let ghostOffsetX = 0
   let ghostOffsetY = 0
   let pendingStart = null
+  let suppressClickUntil = 0
 
   function startDrag(e, item, groupName, index) {
     if (e.button !== undefined && e.button !== 0) return
@@ -177,6 +178,7 @@ export function useSortable(config) {
   }
 
   function cleanup() {
+    const wasDragging = dragging.value
     document.removeEventListener('pointermove', onPointerMove)
     document.removeEventListener('pointerup', onPointerEnd)
     document.removeEventListener('pointercancel', onPointerEnd)
@@ -190,6 +192,11 @@ export function useSortable(config) {
     targetGroup.value = null
     targetIndex.value = -1
     pendingStart = null
+    if (wasDragging) suppressClickUntil = Date.now() + 250
+  }
+
+  function shouldSuppressClick() {
+    return Date.now() < suppressClickUntil
   }
 
   function isSource(item) {
@@ -222,6 +229,7 @@ export function useSortable(config) {
     targetGroup,
     targetIndex,
     startDrag,
+    shouldSuppressClick,
     isSource,
     displayItems,
   }

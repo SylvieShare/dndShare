@@ -147,6 +147,17 @@ export function useEncounterFlow({
     unselect(c.uid)
   }
 
+  function sendToReserve(c) {
+    mutate(() => {
+      const t = getCombatant(c.uid)
+      if (!t) return
+      t.position = 'reserve'
+      t.initiative = null
+      t.surprised = false
+    })
+    unselect(c.uid)
+  }
+
   function reviveCombatant(c) {
     mutate(() => {
       const t = getCombatant(c.uid)
@@ -246,6 +257,7 @@ export function useEncounterFlow({
     willMoveToGroup,
     selectedToMoveTo,
     sendSelectedTo,
+    sendToReserve,
     sendToGraveyard,
     reviveCombatant,
     performSortDrop,

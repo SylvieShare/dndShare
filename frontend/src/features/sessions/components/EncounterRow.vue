@@ -16,6 +16,7 @@
       :color="rowAccentColor || 'var(--section-color)'"
       :strip="!!rowAccentColor"
       @pointerdown="onRowPointerDown"
+      @click="onRowClick"
     >
     <EncounterCombatControls
       :combatant="combatant"
@@ -88,6 +89,7 @@
 
     <EncounterRowMenu
       v-if="rowMenuVisible"
+      ref="rowMenuRef"
       :combatant="combatant"
       :section="section"
       :states-block="statesBlock"
@@ -233,6 +235,13 @@ const statesAllItems = computed(() => {
 
 const canEdit = computed(() => !!enc.canEditPlayerHp())
 const rowMenuVisible = computed(() => canEdit.value)
+const rowMenuRef = ref(null)
+
+function onRowClick(event) {
+  if (!rowMenuVisible.value || enc.sortable.shouldSuppressClick()) return
+  if (event.target?.closest?.(DRAG_IGNORE)) return
+  rowMenuRef.value?.toggle(event)
+}
 
 const statesEditorOpen = ref(false)
 

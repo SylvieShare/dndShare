@@ -207,6 +207,12 @@ uniqueness. Creature artwork and the letter marker render directly on the row
 without separate backing surfaces; the compact letter remains the popover
 trigger.
 
+Clicking a non-interactive area of a combat or reserve row opens its action
+menu; initiative, HP, selection, marker and other dedicated controls keep their
+own click behavior. The shared menu can edit states for both players and NPCs,
+send a combatant to reserve, and delete NPCs. NPC color is not duplicated in
+the row action menu and remains part of the letter-marker popover.
+
 When the combat rail changes the canvas safe-left inset, `ChapterGraphCanvas`
 re-measures that inherited layout value after the parent DOM update. The
 spotlight chapter therefore animates to the new combat boundary instead of the

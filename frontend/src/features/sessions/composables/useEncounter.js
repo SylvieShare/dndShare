@@ -372,6 +372,7 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers }) {
     prevTurn:               flow.prevTurn,
     selectedToMoveTo:       flow.selectedToMoveTo,
     sendSelectedTo:         flow.sendSelectedTo,
+    sendToReserve:          flow.sendToReserve,
     sendToGraveyard:        flow.sendToGraveyard,
     reviveCombatant:        flow.reviveCombatant,
   }

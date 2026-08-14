@@ -21,4 +21,8 @@ describe('RowActionMenu motion', () => {
     expect(source).toContain('@media (prefers-reduced-motion: reduce)')
     expect(source).toContain('.ram-popover-enter-active, .ram-popover-leave-active { transition: none; }')
   })
+
+  it('exposes programmatic controls for full-row action triggers', () => {
+    expect(source).toContain('defineExpose({ open, close, toggle })')
+  })
 })
