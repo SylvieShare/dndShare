@@ -115,7 +115,7 @@ current.
 `ChapterGraphToolbar` is the one backed command bar in the workspace. It combines
 the editable session name/status, arc switcher and ordering, combat launcher,
 current-chapter focus and zoom. Creation is contextual and lives on the canvas
-in a center-right vertical action dock, immediately left of the right tools rail;
+in a top-right vertical action dock, immediately left of the right tools rail;
 there is no chapter/scenario/block creation button in the header. There is no
 second local tab switcher or session title bar. `SessionGraphCanvas` keeps one
 physical `NestedGraphCanvas` mounted for all narrative levels. It uses the

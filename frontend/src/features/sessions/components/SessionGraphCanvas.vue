@@ -19,6 +19,7 @@
       :empty-title="emptyCopy.title"
       :empty-description="emptyCopy.description"
       :show-empty-action="false"
+      :layout-key="workspaceMode"
       @node-click="handleNodeClick"
       @node-double-click="handleNodeDoubleClick"
       @edge-click="handleEdgeClick"

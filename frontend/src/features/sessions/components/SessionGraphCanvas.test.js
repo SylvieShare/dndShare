@@ -33,13 +33,20 @@ describe('session graph canvas', () => {
     expect(canvasSource).toContain('function prepareView(graphKey, initialTop)')
   })
 
-  it('places contextual creation actions on the center-right of the canvas', () => {
+  it('places contextual creation actions at the top-right of the canvas', () => {
     expect(source).toContain('<CanvasActionDock')
     expect(source).toContain("label: 'Новая глава'")
     expect(source).toContain("label: 'Новый сценарий'")
     expect(source).toContain("label: 'Текстовый блок'")
-    expect(dockSource).toContain('top: 50%;')
+    expect(dockSource).toContain('top: 16px;')
+    expect(dockSource).not.toContain('translateY(-50%)')
     expect(dockSource).toContain('right: calc(var(--chapter-safe-right, 0px) + 16px);')
+  })
+
+  it('recomputes the chapter anchor when the combat player rail widens', () => {
+    expect(source).toContain(':layout-key="workspaceMode"')
+    expect(canvasSource).toContain('watch(() => props.layoutKey, async () => {')
+    expect(canvasSource).toContain("{ flush: 'post' }")
   })
 
   it('supports server-backed positions and directed links at every level', () => {

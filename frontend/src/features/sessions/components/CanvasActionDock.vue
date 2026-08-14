@@ -37,13 +37,12 @@ defineEmits(['action'])
 .canvas-action-dock {
   position: absolute;
   z-index: 24;
-  top: 50%;
+  top: 16px;
   right: calc(var(--chapter-safe-right, 0px) + 16px);
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   gap: 10px;
-  transform: translateY(-50%);
   pointer-events: none;
 }
 .canvas-action {

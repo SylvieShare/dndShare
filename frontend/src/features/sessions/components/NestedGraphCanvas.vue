@@ -120,6 +120,7 @@ const props = defineProps({
   emptyDescription: { type: String, default: 'Создайте первую карточку и соединяйте карточки связями.' },
   createLabel: { type: String, default: 'Создать' },
   showEmptyAction: { type: Boolean, default: true },
+  layoutKey: { type: [String, Number, Boolean], default: null },
 })
 const emit = defineEmits([
   'node-click', 'node-double-click', 'edge-click', 'start-link', 'finish-link',
@@ -390,6 +391,10 @@ watch(() => props.graphKey, graphKey => {
   }
   nextTick(() => loadView(graphKey, props.initialTop))
 })
+watch(() => props.layoutKey, async () => {
+  await nextTick()
+  requestAnimationFrame(() => { viewportRevision.value += 1 })
+}, { flush: 'post' })
 watch(() => props.locked, locked => { if (locked) cancelGesture() })
 onMounted(() => {
   loadView()
