@@ -26,9 +26,13 @@ same accessors used by character cards and the sheet. Entry contract is
 `{templateId,data}`. If the setting is not registered, there is no path-map
 fallback.
 
-`ViewSession` and join pages ensure the template store before rendering. A new
-character created inside a join/session flow uses `CharacterCreateModal`, gets
-an explicit rules `sourceVersionId`, then is joined and opened.
+`ViewSession` and join pages ensure the template store before rendering. In the
+session workspace, `CharacterCreateWizardModal` presents the full D&D creation
+wizard as a fullscreen modal. Its result carries an explicit rules
+`sourceVersionId`, is attached to the current session and refreshes the
+participant rail; the modal then closes without opening the new sheet or
+changing the route. The invitation flow continues to use the compact
+`CharacterCreateModal` and opens the joined character after creation.
 
 The session participant rail has no shared backing surface: each participant is
 an individual interactive `BaseTile`. Clicking it opens `RowActionMenu` with an

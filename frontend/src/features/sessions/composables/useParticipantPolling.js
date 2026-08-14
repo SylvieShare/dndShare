@@ -12,14 +12,16 @@ export function useParticipantPolling({ participants }) {
   function startPolling() {
     if (!participants.value.length) return
     versions.value = Object.fromEntries(participants.value.map(p => [p.charId, p.version ?? 0]))
-    schedulePoll()
+    if (pollTimer == null && !pollRunning.value) schedulePoll()
   }
 
   function schedulePoll() {
+    if (pollTimer != null) return
     pollTimer = setTimeout(doPoll, POLL_INTERVAL)
   }
 
   async function doPoll() {
+    pollTimer = null
     if (!participants.value.length) { schedulePoll(); return }
     pollRunning.value = true
     const items = participants.value.map(p => ({ charId: p.charId, version: versions.value[p.charId] ?? 0 }))

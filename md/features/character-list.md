@@ -5,8 +5,10 @@
 - `features/character-list/pages/ViewListCharacters.vue` — grouped list.
 - `features/character-list/components/CharBox.vue` — card.
 - `features/character-list/pages/ViewCreateCharacter.vue` — full D&D wizard.
+- `features/character-list/components/CharacterCreateWizardModal.vue` — the
+  same full wizard in a fullscreen session modal.
 - `features/character-list/components/CharacterCreateModal.vue` — compact
-  embedded creation used from join/session flows and for systems with simple
+  embedded creation used from the invitation flow and for systems with simple
   creation.
 - `features/character-list/composables/useDndCreateWizard.js` — wizard state
   and orchestration.
@@ -33,10 +35,12 @@ render before the network response while preserving the same API-shaped data.
 
 ## Creation entry points
 
-From `/chars`, D&D opens the full `/chars/new` page. From a session/join screen,
-`CharacterCreateModal` uses `MorphSheet` and embeds the same D&D rules engine so
-the created character can immediately join the session. For VTM the modal calls
-the registered `createData(name)`.
+From `/chars`, D&D opens the full `/chars/new` page. The session workspace embeds
+that same full wizard in `CharacterCreateWizardModal`; successful creation
+attaches the character to the current session, refreshes its participant rail
+and closes the modal without opening the character sheet or changing the route.
+The invitation screen keeps the compact `CharacterCreateModal` based on
+`MorphSheet`. For VTM the compact modal calls the registered `createData(name)`.
 
 Both flows resolve `sourceVersionId` from `/api/sources` and send it explicitly
 to `POST /api/chars`. The server rejects a missing/unknown version; there is no

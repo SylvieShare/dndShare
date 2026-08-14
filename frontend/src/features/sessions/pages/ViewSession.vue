@@ -140,11 +140,12 @@
         @close="sheetUuid = null"
       />
 
-      <CharacterCreateModal
+      <CharacterCreateWizardModal
         v-if="createOpen"
-        :templates="templates"
+        ref="createModalRef"
         :creating="creating"
-        @close="createOpen = false"
+        :error="createError"
+        @close="closeCreate"
         @create="createChar"
       />
     </div>
@@ -161,7 +162,7 @@ import FormActionButtons from '@/shared/ui/form/FormActionButtons'
 import FormField from '@/shared/ui/form/FormField'
 import FormTextInput from '@/shared/ui/form/FormTextInput'
 import FormTextarea from '@/shared/ui/form/FormTextarea'
-import CharacterCreateModal from '@/features/character-list/components/CharacterCreateModal'
+import CharacterCreateWizardModal from '@/features/character-list/components/CharacterCreateWizardModal.vue'
 import CharacterSheetModal from '@/features/sessions/components/CharacterSheetModal.vue'
 import ChapterGraphTab from '@/features/sessions/components/ChapterGraphTab.vue'
 import DicePanel from '@/features/sessions/components/DicePanel.vue'
@@ -216,7 +217,9 @@ const eventsCollapsed = ref(false)
 const sheetUuid = ref(null)
 const createOpen = ref(false)
 const creating = ref(false)
-const templates = computed(() => templateStore.all)
+const createError = ref('')
+const createModalRef = ref(null)
+let pendingCreatedCharacter = null
 
 watch(sheetUuid, actorUuid => {
   sessionEventsStore.setActor(actorUuid, sessionUuid)
@@ -323,21 +326,39 @@ async function setParticipantColor(charId, color) {
 
 function openCreate() {
   templateStore.ensure()
+  createError.value = ''
   createOpen.value = true
+}
+
+function closeCreate() {
+  if (creating.value) return
+  createOpen.value = false
+  createError.value = ''
 }
 
 async function createChar(payload) {
   if (creating.value) return
   creating.value = true
+  createError.value = ''
   try {
-    const res = await fetchPost('/chars', payload)
-    if (res?.charId != null) {
-      await joinSession(sessionUuid, res.charId).catch(() => {})
-      const fresh = await getSession(sessionUuid).catch(() => null)
-      if (fresh?.participants) participants.value = fresh.participants
+    const res = pendingCreatedCharacter || await fetchPost('/chars', payload)
+    if (res?.charId == null) throw new Error('missing character id')
+    pendingCreatedCharacter = res
+
+    await joinSession(sessionUuid, res.charId)
+    const fresh = await getSession(sessionUuid).catch(() => null)
+    if (fresh?.participants) {
+      participants.value = fresh.participants
+      startPolling()
     }
+
+    createModalRef.value?.clearDraft()
+    pendingCreatedCharacter = null
     createOpen.value = false
-    if (res?.uuid) sheetUuid.value = res.uuid
+  } catch {
+    createError.value = pendingCreatedCharacter
+      ? 'Персонаж создан, но пока не добавлен в сессию. Нажмите «Создать персонажа», чтобы повторить.'
+      : 'Не удалось создать персонажа. Попробуйте ещё раз.'
   } finally {
     creating.value = false
   }

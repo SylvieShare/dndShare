@@ -1,5 +1,5 @@
 <template>
-  <div class="cc">
+  <div class="cc" :class="{ 'cc--embedded': embedded }">
     <header class="cc-head">
       <button class="cc-x" title="Закрыть" @click="exit">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
@@ -32,7 +32,8 @@
 
     <footer class="cc-foot">
       <button class="btn ghost" @click="back">{{ current === 0 ? 'Отмена' : 'Назад' }}</button>
-      <span v-if="blockReason && !isLast" class="cc-reason">{{ blockReason }}</span>
+      <span v-if="error" class="cc-error" role="alert">{{ error }}</span>
+      <span v-else-if="blockReason && !isLast" class="cc-reason">{{ blockReason }}</span>
       <div class="cc-actions">
         <button v-if="!isLast" class="btn soft" :disabled="creating" @click="createNow">Создать</button>
         <button v-if="!isLast" class="btn next" :disabled="!canNext" @click="next">Далее</button>
@@ -83,6 +84,12 @@ import { useTemplateStore } from '@/stores/template'
 
 const router = useRouter()
 const templateStore = useTemplateStore()
+const props = defineProps({
+  embedded: { type: Boolean, default: false },
+  creating: { type: Boolean, default: false },
+  error: { type: String, default: '' },
+})
+const emit = defineEmits(['cancel', 'create'])
 const wz = useDndCreateWizard()
 provide('createWizard', wz)
 
@@ -106,7 +113,8 @@ const STEP_COMPONENTS = {
   stats: StepStats, equipment: StepEquipment, persona: StepPersona, review: StepReview,
 }
 
-const creating = ref(false)
+const internalCreating = ref(false)
+const creating = computed(() => props.creating || internalCreating.value)
 const dndTemplateId = ref(null)
 const dndSource = ref(null)
 const sourceVersionId = computed(() => findSourceVersion(dndSource.value, state.version)?.id ?? null)
@@ -194,7 +202,10 @@ function back() {
   state.step--
 }
 function goTo(i) { if (i <= maxReachable.value) state.step = i }
-function exit() { router.push('/chars') }
+function exit() {
+  if (props.embedded) emit('cancel')
+  else router.push('/chars')
+}
 
 // "Создать" is available on every step (an empty character is allowed) — confirm
 // first when something's missing, then build with whatever's filled (blanks default).
@@ -207,18 +218,25 @@ function createNow() {
 async function submit() {
   confirmOpen.value = false
   if (creating.value || !dndTemplateId.value || !sourceVersionId.value) return
-  creating.value = true
+  const payload = {
+    templateId: dndTemplateId.value,
+    sourceVersionId: sourceVersionId.value,
+    ...buildPayload(),
+  }
+  if (props.embedded) {
+    emit('create', payload)
+    return
+  }
+  internalCreating.value = true
   try {
-    const res = await fetchPost('/chars', {
-      templateId: dndTemplateId.value,
-      sourceVersionId: sourceVersionId.value,
-      ...buildPayload(),
-    })
+    const res = await fetchPost('/chars', payload)
     if (res?.uuid) { clearPersist(); router.push('/char/' + res.uuid) }
   } finally {
-    creating.value = false
+    internalCreating.value = false
   }
 }
+
+defineExpose({ clearDraft: clearPersist })
 
 onMounted(async () => {
   useAccountStore().ensureAuth()
@@ -243,6 +261,13 @@ onMounted(async () => {
   background: var(--bg);
   color: var(--text-1);
   border-inline: 1px solid color-mix(in srgb, var(--border-strong) 55%, transparent);
+}
+
+.cc--embedded {
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  border-inline: none;
 }
 
 .cc-head {
@@ -302,6 +327,7 @@ onMounted(async () => {
   background: var(--bg);
 }
 .cc-reason { font-size: 12px; color: var(--text-muted); }
+.cc-error { max-width: 520px; color: var(--danger); font-size: 12px; }
 .cc-actions { margin-left: auto; display: flex; gap: 10px; }
 .btn { border: none; border-radius: 9px; padding: 10px 22px; font: inherit; font-weight: 600; cursor: pointer; }
 .btn.ghost { background: transparent; color: var(--text-2); box-shadow: inset 0 0 0 1px var(--border-strong); }
@@ -318,6 +344,7 @@ onMounted(async () => {
   .cc-body { grid-template-columns: minmax(0, 1fr); }
   .cc-rail, .cc-preview { display: none; }
   .cc { height: auto; min-height: calc(100vh - var(--header-h)); }
+  .cc.cc--embedded { height: 100%; min-height: 0; }
 }
 
 @media (max-width: 640px) {
@@ -334,9 +361,11 @@ onMounted(async () => {
     position: sticky;
     bottom: 0;
     z-index: 20;
+    flex-wrap: wrap;
     gap: 8px;
     padding: 12px 20px max(12px, env(safe-area-inset-bottom));
   }
+  .cc-error { order: -1; flex: 0 0 100%; max-width: none; }
   .cc-actions { gap: 6px; }
   .btn { padding: 10px 18px; }
   .btn.soft { padding-inline: 10px; }

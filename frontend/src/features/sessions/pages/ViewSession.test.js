@@ -28,6 +28,9 @@ const encounterChallengeResultSource = readFileSync(fileURLToPath(new URL('../co
 const encounterOrderSource = readFileSync(fileURLToPath(new URL('../components/EncounterOrderMarker.vue', import.meta.url)), 'utf8')
 const sessionGraphSource = readFileSync(fileURLToPath(new URL('../components/SessionGraphCanvas.vue', import.meta.url)), 'utf8')
 const nestedGraphSource = readFileSync(fileURLToPath(new URL('../components/NestedGraphCanvas.vue', import.meta.url)), 'utf8')
+const createModalSource = readFileSync(fileURLToPath(new URL('../../character-list/components/CharacterCreateWizardModal.vue', import.meta.url)), 'utf8')
+const createWizardSource = readFileSync(fileURLToPath(new URL('../../character-list/pages/ViewCreateCharacter.vue', import.meta.url)), 'utf8')
+const participantPollingSource = readFileSync(fileURLToPath(new URL('../composables/useParticipantPolling.js', import.meta.url)), 'utf8')
 const encounterStylesSource = readFileSync(fileURLToPath(new URL('../components/styles/EncounterTab.css', import.meta.url)), 'utf8')
 const dicePopupSource = readFileSync(fileURLToPath(new URL('../../../shared/ui/DiceRollPopup.vue', import.meta.url)), 'utf8')
 
@@ -44,6 +47,18 @@ describe('ViewSession participant rail', () => {
     expect(source).toContain('<RowActionItem action="copy"')
     expect(source).toContain('<RowActionItem action="copy-link"')
     expect(source).not.toContain('invite-section')
+  })
+
+  it('creates a character through the full modal wizard and attaches it without opening the sheet', () => {
+    expect(source).toContain('<CharacterCreateWizardModal')
+    expect(createModalSource).toContain('<AppModal fullscreen')
+    expect(createModalSource).toContain('<CharacterCreateWizardWorkspace')
+    expect(createWizardSource).toContain("if (props.embedded) {\n    emit('create', payload)")
+    expect(source).toContain('await joinSession(sessionUuid, res.charId)')
+    expect(source).toContain('participants.value = fresh.participants')
+    expect(source).toContain('createModalRef.value?.clearDraft()')
+    expect(source).not.toContain('if (res?.uuid) sheetUuid.value = res.uuid')
+    expect(participantPollingSource).toContain('if (pollTimer == null && !pollRunning.value) schedulePoll()')
   })
 
   it('uses the chapter canvas as the full workspace with tools floating above it', () => {
