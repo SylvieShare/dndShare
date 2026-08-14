@@ -25,7 +25,7 @@ const props = defineProps({
   framed: { type: Boolean, default: false },
   // Pointer cursor + hover tint.
   interactive: { type: Boolean, default: false },
-  // Small diagonal session-local marker in the top-right corner.
+  // Small vertical session-local marker on the right edge.
   markColor: { type: String, default: null },
 })
 
@@ -96,13 +96,11 @@ const resolvedColor = computed(() => props.color || 'var(--accent)')
 .base-tile-mark {
   position: absolute;
   z-index: 3;
-  top: 0;
-  right: var(--r-lg);
-  width: 28px;
+  top: var(--r-lg);
+  right: 0;
+  width: 3px;
   height: 24px;
   background: var(--tile-mark-color);
-  /* A sharp / mark with a horizontal cut where it ends at the bottom. */
-  clip-path: polygon(70% 0, 100% 0, 30% 100%, 0 100%);
   pointer-events: none;
 }
 </style>
