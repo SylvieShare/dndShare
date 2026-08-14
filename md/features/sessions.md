@@ -201,7 +201,9 @@ Each NPC also receives the nearest free Latin marker from `A` through `Z`.
 The marker is separate from the NPC name and is persisted in `markerLetter`.
 Clicking it opens one popover with the full letter list and the marker color
 palette; choosing an occupied letter swaps the two NPC markers, preserving
-uniqueness.
+uniqueness. Creature artwork and the letter marker render directly on the row
+without separate backing surfaces; the marker keeps a full-size invisible hit
+area for reliable interaction.
 
 When the combat rail changes the canvas safe-left inset, `ChapterGraphCanvas`
 re-measures that inherited layout value after the parent DOM update. The

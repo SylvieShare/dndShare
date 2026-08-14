@@ -83,9 +83,8 @@ function pickLetter(letter) {
   flex: 0 0 38px;
   place-items: center;
   padding: 0;
-  border: 1px solid color-mix(in srgb, var(--enc-marker-color) 58%, var(--border));
-  border-radius: 10px;
-  background: color-mix(in srgb, var(--enc-marker-color) 14%, var(--surface));
+  border: 0;
+  background: transparent;
   color: var(--enc-marker-color);
   font: inherit;
   font-size: 18px;
@@ -93,8 +92,8 @@ function pickLetter(letter) {
   line-height: 1;
 }
 
-.enc-marker--editable { cursor: pointer; transition: transform 0.12s, background 0.12s; }
-.enc-marker--editable:hover { transform: translateY(-1px); background: color-mix(in srgb, var(--enc-marker-color) 22%, var(--surface)); }
+.enc-marker--editable { cursor: pointer; transition: transform 0.12s, opacity 0.12s; }
+.enc-marker--editable:hover { transform: translateY(-1px) scale(1.06); opacity: 0.78; }
 
 .emm-panel { display: flex; flex-direction: column; gap: 9px; padding: 2px; }
 .emm-label {

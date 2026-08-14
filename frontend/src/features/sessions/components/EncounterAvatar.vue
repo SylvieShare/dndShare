@@ -54,7 +54,7 @@ const tintColor = computed(() => enc.avatarStyle(props.combatant)?.color || 'var
   justify-content: center;
   flex-shrink: 0;
   overflow: hidden;
-  background: color-mix(in srgb, currentColor 7%, var(--surface));
+  background: transparent;
 }
 
 .enc-avatar--player {
