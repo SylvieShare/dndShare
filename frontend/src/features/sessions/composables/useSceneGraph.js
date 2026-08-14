@@ -6,6 +6,7 @@ import {
   deleteSceneEdge as apiDeleteEdge,
   getSceneGraph,
   moveScenePosition,
+  updateSceneEdge as apiUpdateEdge,
   updateScene as apiUpdateScene,
 } from '@/shared/api/scenesApi'
 
@@ -79,12 +80,18 @@ export function useSceneGraph({ sessionUuid, chapterId }) {
     await moveScenePosition(sessionUuid, sceneId, x, y)
   }
 
-  async function createEdge(fromSceneId, toSceneId) {
+  async function createEdge(fromSceneId, toSceneId, label = null) {
     const edge = await apiCreateEdge(sessionUuid, {
-      chapterId: resolvedChapterId(), fromSceneId, toSceneId, label: null,
+      chapterId: resolvedChapterId(), fromSceneId, toSceneId, label,
     })
     edges.value = [...edges.value, edge]
     return edge
+  }
+
+  async function updateEdge(edgeId, label) {
+    const updated = await apiUpdateEdge(sessionUuid, edgeId, label)
+    edges.value = edges.value.map(edge => edge.id === edgeId ? updated : edge)
+    return updated
   }
 
   async function deleteEdge(edgeId) {
@@ -95,6 +102,6 @@ export function useSceneGraph({ sessionUuid, chapterId }) {
   return {
     scenes, edges, loading, loaded, error,
     load, reset, createScene, updateScene, deleteScene,
-    setLocalPosition, savePosition, createEdge, deleteEdge,
+    setLocalPosition, savePosition, createEdge, updateEdge, deleteEdge,
   }
 }

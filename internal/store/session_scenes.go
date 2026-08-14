@@ -295,6 +295,12 @@ func (s *Store) CreateSceneEdge(ctx context.Context, chapterID, fromID, toID int
 		 RETURNING id, chapter_id, from_scene_id, to_scene_id, label`, chapterID, fromID, toID, cleanOptional(label)))
 }
 
+func (s *Store) UpdateSceneEdgeLabel(ctx context.Context, id int64, label *string) (SessionSceneEdge, error) {
+	return scanSceneEdge(s.pool.QueryRow(ctx,
+		`UPDATE dndshare.session_scene_edge SET label = $2 WHERE id = $1
+		 RETURNING id, chapter_id, from_scene_id, to_scene_id, label`, id, cleanOptional(label)))
+}
+
 func (s *Store) DeleteSceneEdge(ctx context.Context, id int64) error {
 	_, err := s.pool.Exec(ctx, `DELETE FROM dndshare.session_scene_edge WHERE id = $1`, id)
 	return err
@@ -339,6 +345,12 @@ func (s *Store) CreateSceneItemEdge(ctx context.Context, sceneID, fromID, toID i
 		`INSERT INTO dndshare.session_scene_item_edge (scene_id, from_item_id, to_item_id, label)
 		 VALUES ($1, $2, $3, $4)
 		 RETURNING id, scene_id, from_item_id, to_item_id, label`, sceneID, fromID, toID, cleanOptional(label)))
+}
+
+func (s *Store) UpdateSceneItemEdgeLabel(ctx context.Context, id int64, label *string) (SessionSceneItemEdge, error) {
+	return scanSceneItemEdge(s.pool.QueryRow(ctx,
+		`UPDATE dndshare.session_scene_item_edge SET label = $2 WHERE id = $1
+		 RETURNING id, scene_id, from_item_id, to_item_id, label`, id, cleanOptional(label)))
 }
 
 func (s *Store) DeleteSceneItemEdge(ctx context.Context, id int64) error {

@@ -10,9 +10,11 @@ const blockSource = readFileSync(fileURLToPath(new URL('./SceneBlockNode.vue', i
 const blockMenuSource = readFileSync(fileURLToPath(new URL('./SceneBlockMenus.vue', import.meta.url)), 'utf8')
 const sceneSource = readFileSync(fileURLToPath(new URL('./SceneGraphNode.vue', import.meta.url)), 'utf8')
 const sceneMenuSource = readFileSync(fileURLToPath(new URL('./SceneGraphMenus.vue', import.meta.url)), 'utf8')
+const edgeMenuSource = readFileSync(fileURLToPath(new URL('./NestedEdgeMenus.vue', import.meta.url)), 'utf8')
 const blockEditorSource = readFileSync(fileURLToPath(new URL('./SceneBlockEditorModal.vue', import.meta.url)), 'utf8')
 const combatEditorSource = readFileSync(fileURLToPath(new URL('./SceneCombatCreaturesEditor.vue', import.meta.url)), 'utf8')
 const sessionPageSource = readFileSync(fileURLToPath(new URL('../pages/ViewSession.vue', import.meta.url)), 'utf8')
+const edgeEditorSource = readFileSync(fileURLToPath(new URL('../composables/useNestedEdgeEditor.js', import.meta.url)), 'utf8')
 const apiSource = readFileSync(fileURLToPath(new URL('../../../shared/api/scenesApi.js', import.meta.url)), 'utf8')
 
 describe('session graph canvas', () => {
@@ -66,6 +68,17 @@ describe('session graph canvas', () => {
     expect(apiSource).toContain('getSceneGraph')
     expect(apiSource).toContain('getSceneBlockGraph')
     expect(apiSource).toContain('createSceneBlockEdge')
+  })
+
+  it('creates and edits labels on scenario and block transitions', () => {
+    expect(source).toContain('<ChapterEdgeModal')
+    expect(source).toContain('beginNestedEdgeCreate(displayLevel.value, from, node)')
+    expect(edgeEditorSource).toContain('await graph.updateEdge(edge.id, label)')
+    expect(edgeEditorSource).toContain('await graph.createEdge(pending.from.id, pending.to.id, label)')
+    expect(edgeMenuSource).toContain('>Изменить подпись</RowActionItem>')
+    expect(edgeMenuSource).toContain('>Удалить переход</RowActionItem>')
+    expect(apiSource).toContain('updateSceneEdge')
+    expect(apiSource).toContain('updateSceneBlockEdge')
   })
 
   it('derives block presentation from type and opens actions from the whole card', () => {

@@ -106,6 +106,12 @@
       @delete="requestSceneDelete"
     />
 
+    <NestedEdgeMenus
+      ref="edgeMenus"
+      @edit="openNestedEdgeEdit"
+      @delete="requestNestedEdgeDelete"
+    />
+
     <div v-if="activeLoading" class="session-graph-state">{{ loadingLabel }}</div>
     <div v-if="activeError || actionError" class="session-graph-error" role="alert">{{ actionError || activeError }}</div>
 
@@ -124,6 +130,14 @@
       @close="closeBlockEditor"
       @save="saveBlock"
     />
+    <ChapterEdgeModal
+      v-if="nestedEdgeEditorOpen"
+      :edge="editingNestedEdge"
+      :title="nestedEdgeEditorTitle"
+      :saving="saving"
+      @close="closeNestedEdgeEditor"
+      @save="saveNestedEdge"
+    />
     <ConfirmDialog
       v-if="pendingDelete"
       :title="deleteCopy.title"
@@ -140,14 +154,17 @@
 import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import ConfirmDialog from '@/shared/ui/ConfirmDialog.vue'
 import CanvasActionDock from '@/features/sessions/components/CanvasActionDock.vue'
+import ChapterEdgeModal from '@/features/sessions/components/ChapterEdgeModal.vue'
 import ChapterGraphNode from '@/features/sessions/components/ChapterGraphNode.vue'
 import NestedGraphCanvas from '@/features/sessions/components/NestedGraphCanvas.vue'
+import NestedEdgeMenus from '@/features/sessions/components/NestedEdgeMenus.vue'
 import SceneBlockEditorModal from '@/features/sessions/components/SceneBlockEditorModal.vue'
 import SceneBlockMenus from '@/features/sessions/components/SceneBlockMenus.vue'
 import SceneBlockNode from '@/features/sessions/components/SceneBlockNode.vue'
 import SceneEditorModal from '@/features/sessions/components/SceneEditorModal.vue'
 import SceneGraphMenus from '@/features/sessions/components/SceneGraphMenus.vue'
 import SceneGraphNode from '@/features/sessions/components/SceneGraphNode.vue'
+import { useNestedEdgeEditor } from '@/features/sessions/composables/useNestedEdgeEditor'
 import { useSceneBlockGraph } from '@/features/sessions/composables/useSceneBlockGraph'
 import { useSceneGraph } from '@/features/sessions/composables/useSceneGraph'
 import { sceneBlockDefaultWidth } from '@/features/sessions/lib/sceneBlockTypes'
@@ -170,6 +187,7 @@ const emit = defineEmits([
 const canvas = ref(null)
 const blockMenus = ref(null)
 const sceneMenus = ref(null)
+const edgeMenus = ref(null)
 const displayLevel = ref('chapters')
 const selectedScene = ref(null)
 const transitionSpotlight = ref(null)
@@ -193,6 +211,15 @@ const activeChapter = computed(() => props.graph.chapters.value.find(chapter => 
 const activeSceneId = computed(() => selectedScene.value?.id ?? null)
 const sceneGraph = useSceneGraph({ sessionUuid: props.sessionUuid, chapterId: activeChapterId })
 const blockGraph = useSceneBlockGraph({ sessionUuid: props.sessionUuid, sceneId: activeSceneId })
+const {
+  editorOpen: nestedEdgeEditorOpen,
+  editingEdge: editingNestedEdge,
+  editorTitle: nestedEdgeEditorTitle,
+  beginCreate: beginNestedEdgeCreate,
+  beginEdit: beginNestedEdgeEdit,
+  closeEditor: closeNestedEdgeEditor,
+  saveEdge: saveNestedEdge,
+} = useNestedEdgeEditor({ sceneGraph, blockGraph, saving, actionError })
 
 const activeNodes = computed(() => displayLevel.value === 'chapters'
   ? props.graph.visibleChapters.value
@@ -342,7 +369,7 @@ function handleNodeDoubleClick(node) {
 
 function handleEdgeClick(edge, anchor) {
   if (displayLevel.value === 'chapters') emit('edge-click', edge, anchor)
-  else if (props.isDm) pendingDelete.value = { kind: 'edge', edge, level: displayLevel.value }
+  else if (props.isDm) edgeMenus.value?.openFor(edge, displayLevel.value, anchor)
 }
 
 function startLink(node) {
@@ -351,17 +378,23 @@ function startLink(node) {
   target.value = node?.id === target.value?.id ? null : node
 }
 
-async function finishLink(node) {
+function finishLink(node) {
   if (displayLevel.value === 'chapters') return emit('finish-link', node)
   const target = displayLevel.value === 'scenes' ? sceneLinkingFrom : blockLinkingFrom
   if (!target.value || target.value.id === node.id) return
   const from = target.value
   target.value = null
-  actionError.value = ''
-  try {
-    if (displayLevel.value === 'scenes') await sceneGraph.createEdge(from.id, node.id)
-    else await blockGraph.createEdge(from.id, node.id)
-  } catch { actionError.value = 'Не удалось создать связь — возможно, она уже существует' }
+  beginNestedEdgeCreate(displayLevel.value, from, node)
+}
+
+function openNestedEdgeEdit(edge, level) {
+  edgeMenus.value?.close()
+  beginNestedEdgeEdit(level, edge)
+}
+
+function requestNestedEdgeDelete(edge, level) {
+  edgeMenus.value?.close()
+  pendingDelete.value = { kind: 'edge', edge, level }
 }
 
 function previewPosition(id, x, y) {
@@ -534,35 +567,4 @@ defineExpose({
 })
 </script>
 
-<style scoped>
-.session-graph-canvas { position: absolute; inset: 0; overflow: hidden; }
-.session-graph-ancestor {
-  position: absolute;
-  z-index: 20;
-  top: 14px;
-  width: 236px;
-  height: 156px;
-  cursor: zoom-out;
-}
-.session-graph-ancestor--chapter { left: var(--chapter-safe-left, 0px); }
-.session-graph-ancestor--scene { left: calc(var(--chapter-safe-left, 0px) + 252px); }
-.session-graph-state,
-.session-graph-error {
-  position: absolute;
-  z-index: 30;
-  top: 188px;
-  left: calc(var(--chapter-safe-left, 0px) + (100% - var(--chapter-safe-left, 0px) - var(--chapter-safe-right, 0px)) / 2);
-  padding: 8px 12px;
-  border-radius: 7px;
-  background: var(--popover-bg);
-  font-size: 11px;
-  transform: translateX(-50%);
-  box-shadow: var(--shadow-lg);
-}
-.session-graph-state { color: var(--text-muted); }
-.session-graph-error { color: var(--danger); border: 1px solid color-mix(in srgb, var(--danger) 35%, transparent); }
-@media (max-width: 760px) {
-  .session-graph-ancestor--chapter { left: 8px; }
-  .session-graph-ancestor--scene { left: 260px; }
-}
-</style>
+<style scoped src="./styles/SessionGraphCanvas.css"></style>

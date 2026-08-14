@@ -1,0 +1,30 @@
+.session-graph-canvas { position: absolute; inset: 0; overflow: hidden; }
+.session-graph-ancestor {
+  position: absolute;
+  z-index: 20;
+  top: 14px;
+  width: 236px;
+  height: 156px;
+  cursor: zoom-out;
+}
+.session-graph-ancestor--chapter { left: var(--chapter-safe-left, 0px); }
+.session-graph-ancestor--scene { left: calc(var(--chapter-safe-left, 0px) + 252px); }
+.session-graph-state,
+.session-graph-error {
+  position: absolute;
+  z-index: 30;
+  top: 188px;
+  left: calc(var(--chapter-safe-left, 0px) + (100% - var(--chapter-safe-left, 0px) - var(--chapter-safe-right, 0px)) / 2);
+  padding: 8px 12px;
+  border-radius: 7px;
+  background: var(--popover-bg);
+  font-size: 11px;
+  transform: translateX(-50%);
+  box-shadow: var(--shadow-lg);
+}
+.session-graph-state { color: var(--text-muted); }
+.session-graph-error { color: var(--danger); border: 1px solid color-mix(in srgb, var(--danger) 35%, transparent); }
+@media (max-width: 760px) {
+  .session-graph-ancestor--chapter { left: 8px; }
+  .session-graph-ancestor--scene { left: 260px; }
+}

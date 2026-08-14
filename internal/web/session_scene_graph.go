@@ -14,9 +14,11 @@ func (s *Server) routesSessionSceneGraph(mux *http.ServeMux) {
 	mux.HandleFunc("GET /api/sessions/{uuid}/chapters/{chapterId}/scene-graph", s.handleGetSceneGraph)
 	mux.HandleFunc("PATCH /api/sessions/{uuid}/scenes/{sceneId}/position", s.handleMoveScenePosition)
 	mux.HandleFunc("POST /api/sessions/{uuid}/scene-edges", s.handleCreateSceneEdge)
+	mux.HandleFunc("PATCH /api/sessions/{uuid}/scene-edges/{edgeId}", s.handleUpdateSceneEdge)
 	mux.HandleFunc("DELETE /api/sessions/{uuid}/scene-edges/{edgeId}", s.handleDeleteSceneEdge)
 	mux.HandleFunc("GET /api/sessions/{uuid}/scenes/{sceneId}/block-graph", s.handleGetSceneBlockGraph)
 	mux.HandleFunc("POST /api/sessions/{uuid}/block-edges", s.handleCreateSceneBlockEdge)
+	mux.HandleFunc("PATCH /api/sessions/{uuid}/block-edges/{edgeId}", s.handleUpdateSceneBlockEdge)
 	mux.HandleFunc("DELETE /api/sessions/{uuid}/block-edges/{edgeId}", s.handleDeleteSceneBlockEdge)
 }
 
@@ -181,6 +183,46 @@ func (s *Server) handleDeleteSceneEdge(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusNoContent, nil)
 }
 
+func (s *Server) handleUpdateSceneEdge(w http.ResponseWriter, r *http.Request) {
+	userID, ok := mustUser(w, r)
+	if !ok {
+		return
+	}
+	sess, ok := s.requireSceneDm(w, r, userID)
+	if !ok {
+		return
+	}
+	edgeID, ok := sceneGraphPathInt64(w, r, "edgeId")
+	if !ok {
+		return
+	}
+	edge, err := s.store.GetSceneEdge(r.Context(), edgeID)
+	if errors.Is(err, store.ErrNotFound) {
+		notFound(w, "")
+		return
+	}
+	if err != nil {
+		serverError(w, err)
+		return
+	}
+	if !s.requireChapterInSession(w, r, edge.ChapterID, sess.ID) {
+		return
+	}
+	var req struct {
+		Label *string `json:"label"`
+	}
+	if err := decodeJSON(r, &req); err != nil {
+		badRequest(w, "bad body")
+		return
+	}
+	updated, err := s.store.UpdateSceneEdgeLabel(r.Context(), edgeID, cleanText(req.Label, 240))
+	if err != nil {
+		serverError(w, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, updated)
+}
+
 func (s *Server) handleGetSceneBlockGraph(w http.ResponseWriter, r *http.Request) {
 	sess, ok := s.requireSceneAccess(w, r)
 	if !ok {
@@ -294,4 +336,44 @@ func (s *Server) handleDeleteSceneBlockEdge(w http.ResponseWriter, r *http.Reque
 		return
 	}
 	writeJSON(w, http.StatusNoContent, nil)
+}
+
+func (s *Server) handleUpdateSceneBlockEdge(w http.ResponseWriter, r *http.Request) {
+	userID, ok := mustUser(w, r)
+	if !ok {
+		return
+	}
+	sess, ok := s.requireSceneDm(w, r, userID)
+	if !ok {
+		return
+	}
+	edgeID, ok := sceneGraphPathInt64(w, r, "edgeId")
+	if !ok {
+		return
+	}
+	edge, err := s.store.GetSceneItemEdge(r.Context(), edgeID)
+	if errors.Is(err, store.ErrNotFound) {
+		notFound(w, "")
+		return
+	}
+	if err != nil {
+		serverError(w, err)
+		return
+	}
+	if _, ok := s.requireSceneInSession(w, r, edge.SceneID, sess.ID); !ok {
+		return
+	}
+	var req struct {
+		Label *string `json:"label"`
+	}
+	if err := decodeJSON(r, &req); err != nil {
+		badRequest(w, "bad body")
+		return
+	}
+	updated, err := s.store.UpdateSceneItemEdgeLabel(r.Context(), edgeID, cleanText(req.Label, 240))
+	if err != nil {
+		serverError(w, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, updated)
 }

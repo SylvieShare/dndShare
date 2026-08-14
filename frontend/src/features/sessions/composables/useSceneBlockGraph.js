@@ -5,6 +5,7 @@ import {
   deleteSceneBlockEdge as apiDeleteEdge,
   deleteSceneItem as apiDeleteItem,
   getSceneBlockGraph,
+  updateSceneBlockEdge as apiUpdateEdge,
   updateSceneItem as apiUpdateItem,
 } from '@/shared/api/scenesApi'
 
@@ -95,12 +96,18 @@ export function useSceneBlockGraph({ sessionUuid, sceneId }) {
     items.value = items.value.map(item => item.id === itemId ? updated : item)
   }
 
-  async function createEdge(fromItemId, toItemId) {
+  async function createEdge(fromItemId, toItemId, label = null) {
     const edge = await apiCreateEdge(sessionUuid, {
-      sceneId: resolvedSceneId(), fromItemId, toItemId, label: null,
+      sceneId: resolvedSceneId(), fromItemId, toItemId, label,
     })
     edges.value = [...edges.value, edge]
     return edge
+  }
+
+  async function updateEdge(edgeId, label) {
+    const updated = await apiUpdateEdge(sessionUuid, edgeId, label)
+    edges.value = edges.value.map(edge => edge.id === edgeId ? updated : edge)
+    return updated
   }
 
   async function deleteEdge(edgeId) {
@@ -111,6 +118,6 @@ export function useSceneBlockGraph({ sessionUuid, sceneId }) {
   return {
     items, edges, loading, loaded, error,
     load, reset, createItem, updateItem, deleteItem,
-    setLocalPosition, savePosition, setLocalWidth, saveWidth, createEdge, deleteEdge,
+    setLocalPosition, savePosition, setLocalWidth, saveWidth, createEdge, updateEdge, deleteEdge,
   }
 }
