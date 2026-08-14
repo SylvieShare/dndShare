@@ -259,8 +259,8 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers }) {
   }
 
   function tileColor(c) {
-    if (c.type === 'player') return c.iconColor || null
-    return c.iconColor || SIDE_COLOR[sideOf(c)]
+    if (c.type === 'player') return participantColor(c.charId) || null
+    return c.iconColor || null
   }
 
   function badgeClass(c) {

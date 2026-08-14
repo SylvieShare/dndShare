@@ -13,8 +13,8 @@
     <BaseTile
       class="enc-row"
       :class="rowClasses"
-      color="var(--section-color)"
-      strip
+      :color="rowAccentColor || 'var(--section-color)'"
+      :strip="!!rowAccentColor"
       @pointerdown="onRowPointerDown"
     >
     <EncounterCombatControls
@@ -167,6 +167,7 @@ const enc = inject('encounter')
 const isPlayer = computed(() => props.combatant.type === 'player')
 const isNpc = computed(() => props.combatant.type === 'npc')
 const playerColor = computed(() => isPlayer.value ? enc.participantColor(props.combatant.charId) : null)
+const rowAccentColor = computed(() => enc.tileColor(props.combatant))
 
 const displayName = computed(() =>
   isPlayer.value ? enc.playerDisplayName(props.combatant) : enc.npcName(props.combatant)

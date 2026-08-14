@@ -22,6 +22,7 @@ defineProps({
   flex: 0 0 auto;
   gap: 6px;
   height: 16px;
+  margin-left: 3px;
   transform: translateY(-10px);
   pointer-events: none;
 }

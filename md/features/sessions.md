@@ -179,9 +179,9 @@ load/save, players, NPC item cache, HP, initiative, flow, states and dice.
 The encounter workspace has no shared backing surface. Its header and every NPC
 row are separate `BaseTile` surfaces. In the chapter canvas the header is fixed
 beside the focused chapter while only the rows area scrolls. Row strips use the
-current encounter section color (combat or NPC reserve), so moving a row also
-updates its spatial accent. Session dice pass the default accent color
-explicitly to every `SystemDie`.
+explicitly selected participant color for players or `iconColor` for NPCs; rows
+without an assigned color have no strip in either combat or the NPC reserve.
+Session dice pass the default accent color explicitly to every `SystemDie`.
 
 Players have no separate encounter reserve section. Opening combat smoothly
 widens the existing left participant rail; every player tile gains the
