@@ -97,7 +97,7 @@ const resolvedColor = computed(() => props.color || 'var(--accent)')
   position: absolute;
   z-index: 3;
   top: 0;
-  right: 0;
+  right: var(--r-lg);
   width: 28px;
   height: 24px;
   background: var(--tile-mark-color);

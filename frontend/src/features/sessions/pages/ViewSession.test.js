@@ -116,6 +116,7 @@ describe('ViewSession participant rail', () => {
     expect(encounterRowSource).toContain('enc.participantColor(props.combatant.charId)')
     expect(baseTileSource).toContain('clip-path: polygon(70% 0, 100% 0, 30% 100%, 0 100%);')
     expect(baseTileSource).toContain('top: 0;')
+    expect(baseTileSource).toContain('right: var(--r-lg);')
     expect(baseTileSource).not.toContain('transform: rotate(45deg);')
     expect(baseTileSource).not.toContain('border-radius: 999px;')
   })
