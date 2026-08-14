@@ -29,10 +29,10 @@
     />
 
     <EncounterAvatar :combatant="combatant" />
-    <EncounterMarkerMenu v-if="isNpc" :combatant="combatant" :editable="showCheckbox" />
 
     <div class="enc-info">
       <div class="enc-name-row">
+        <EncounterMarkerMenu v-if="isNpc" :combatant="combatant" :editable="showCheckbox" />
         <span
           class="enc-name"
           :class="{ 'enc-name--clickable': isNpc && hasItem }"
@@ -40,6 +40,7 @@
         >{{ displayName }}</span>
         <ParticipantColorTicks v-if="playerColor" :color="playerColor" />
         <span
+          v-if="isNpc"
           ref="badgeEl"
           class="enc-badge"
           :class="[enc.badgeClass(combatant), { 'enc-badge--clickable': isNpc }]"
@@ -96,7 +97,7 @@
     </BaseTile>
   </div>
 
-  <BasePopover v-model:open="sideMenuOpen" :anchor="badgeEl" :min-width="160">
+  <BasePopover v-if="isNpc" v-model:open="sideMenuOpen" :anchor="badgeEl" :min-width="160">
     <button
       v-for="opt in enc.SIDE_OPTIONS"
       :key="opt.value"
@@ -377,7 +378,6 @@ function commitNoteEdit() {
 .enc-badge--clickable { cursor: pointer; }
 .enc-badge--clickable:hover { opacity: 0.75; }
 
-.badge--pc      { color: var(--info); background: color-mix(in srgb, var(--info) 12%, transparent); border-color: color-mix(in srgb, var(--info) 25%, transparent); }
 .badge--enemy   { color: var(--side-enemy); background: color-mix(in srgb, var(--side-enemy) 12%, transparent); border-color: color-mix(in srgb, var(--side-enemy) 25%, transparent); }
 .badge--ally    { color: var(--success); background: color-mix(in srgb, var(--success) 12%, transparent); border-color: color-mix(in srgb, var(--success) 25%, transparent); }
 .badge--neutral { color: var(--side-neutral); background: color-mix(in srgb, var(--side-neutral) 12%, transparent); border-color: color-mix(in srgb, var(--side-neutral) 25%, transparent); }

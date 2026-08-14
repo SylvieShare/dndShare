@@ -78,9 +78,9 @@ function pickLetter(letter) {
 <style scoped>
 .enc-marker {
   display: grid;
-  width: 38px;
-  height: 42px;
-  flex: 0 0 38px;
+  width: 24px;
+  height: 20px;
+  flex: 0 0 24px;
   place-items: center;
   padding: 0;
   border: 0;

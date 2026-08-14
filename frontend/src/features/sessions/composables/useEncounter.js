@@ -264,12 +264,10 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers }) {
   }
 
   function badgeClass(c) {
-    if (c.type === 'player') return 'badge--pc'
     return 'badge--' + sideOf(c)
   }
 
   function badgeLabel(c) {
-    if (c.type === 'player') return 'РС'
     return SIDE_LABEL[sideOf(c)]
   }
 

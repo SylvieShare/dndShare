@@ -139,6 +139,9 @@ describe('ViewSession participant rail', () => {
   it('uses shared combat stats, larger portraits and editable NPC letter markers', () => {
     expect(encounterRowSource).toContain('<EncounterCombatControls')
     expect(encounterRowSource).toContain('<EncounterMarkerMenu v-if="isNpc"')
+    expect(encounterRowSource.indexOf('<EncounterMarkerMenu v-if="isNpc"')).toBeLessThan(encounterRowSource.indexOf('class="enc-name"'))
+    expect(encounterRowSource).toContain('v-if="isNpc"\n          ref="badgeEl"')
+    expect(encounterRowSource).not.toContain('.badge--pc')
     expect(encounterControlsSource).toContain('aria-label="Инициатива"')
     expect(encounterControlsSource).toContain('<Shield')
     expect(encounterAvatarSource).toContain("width: 62px;")
@@ -162,8 +165,8 @@ describe('ViewSession participant rail', () => {
     expect(encounterRowSource).toContain('<ParticipantColorTicks v-if="playerColor" :color="playerColor" />')
     expect(encounterRowSource).toContain('enc.participantColor(props.combatant.charId)')
     expect(colorTicksSource).toContain('class="participant-color-tick"')
-    expect(colorTicksSource).toContain('width: 3px;')
-    expect(colorTicksSource).toContain('height: 10px;')
+    expect(colorTicksSource).toContain('width: 5px;')
+    expect(colorTicksSource).toContain('height: 16px;')
     expect(colorTicksSource).toContain('transform: translateY(-10px);')
   })
 
