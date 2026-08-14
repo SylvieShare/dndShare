@@ -15,10 +15,12 @@ var chapterStatuses = map[string]bool{
 	"skipped": true, "cancelled": true,
 }
 
-var chapterImagePresets = map[string]bool{
+var sessionImagePresets = map[string]bool{
 	"city": true, "village": true, "camp": true, "road": true,
 	"forest": true, "cave": true, "ruins": true, "castle": true,
 	"tavern": true, "dungeon": true, "mountains": true, "coast": true,
+	"battle": true, "investigation": true, "negotiation": true,
+	"chase": true, "puzzle": true, "discovery": true,
 }
 
 type chaptersResponse struct {
@@ -101,7 +103,7 @@ func (s *Server) chapterMutation(w http.ResponseWriter, r *http.Request, userID,
 	}
 	if body.ImagePresetKey != nil {
 		preset := strings.TrimSpace(*body.ImagePresetKey)
-		if !chapterImagePresets[preset] {
+		if !sessionImagePresets[preset] {
 			badRequest(w, "Некорректный пресет изображения")
 			return store.ChapterMutation{}, false
 		}

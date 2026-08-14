@@ -10,6 +10,8 @@ func TestSessionScenesMigrateToTwoNestedGraphs(t *testing.T) {
 		"CREATE TABLE IF NOT EXISTS dndshare.session_scene_edge",
 		"CREATE TABLE IF NOT EXISTS dndshare.session_scene_item_edge",
 		"ALTER TABLE dndshare.session_scene ADD COLUMN IF NOT EXISTS position_x",
+		"ALTER TABLE dndshare.session_scene ADD COLUMN IF NOT EXISTS image_preset_key",
+		"ALTER TABLE dndshare.session_scene ALTER COLUMN image_preset_key SET NOT NULL",
 		"ALTER TABLE dndshare.session_scene_item ADD COLUMN IF NOT EXISTS position_x",
 		"ALTER TABLE dndshare.session_scene_item ADD COLUMN IF NOT EXISTS width",
 		"ALTER TABLE dndshare.session_scene_item DROP COLUMN IF EXISTS color",

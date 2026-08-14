@@ -1,8 +1,10 @@
 <template>
   <article class="scene-graph-node" :class="{ 'scene-graph-node--spotlight': spotlight }">
     <div class="scene-graph-node-visual">
+      <img v-if="imageUrl" :src="imageUrl" alt="" draggable="false" />
+      <span class="scene-graph-node-shade" />
       <span class="scene-graph-node-index">{{ String(index + 1).padStart(2, '0') }}</span>
-      <svg viewBox="0 0 236 94" preserveAspectRatio="none" aria-hidden="true">
+      <svg v-if="!imageUrl" viewBox="0 0 236 94" preserveAspectRatio="none" aria-hidden="true">
         <path d="M0 70 C42 28 82 88 128 43 C166 7 199 58 236 20 V94 H0Z" fill="currentColor" opacity=".13"/>
         <path d="M0 78 C52 42 86 92 138 53 C177 23 207 60 236 37" fill="none" stroke="currentColor" opacity=".34" stroke-width="2"/>
       </svg>
@@ -12,7 +14,7 @@
         <span>СЦЕНАРИЙ</span>
         <RowActionMenu v-if="isDm && !spotlight">
           <template #default="{ close }">
-            <RowActionItem action="edit" @click="$emit('edit', scene); close()">Переименовать</RowActionItem>
+            <RowActionItem action="edit" @click="$emit('edit', scene); close()">Редактировать</RowActionItem>
             <RowActionItem action="delete" tone="danger" @click="$emit('delete', scene); close()">Удалить</RowActionItem>
           </template>
         </RowActionMenu>
@@ -24,16 +26,20 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionMenu from '@/shared/ui/RowActionMenu.vue'
+import { sessionImagePresetUrl } from '@/features/sessions/lib/sessionImages'
 
-defineProps({
+const props = defineProps({
   scene: { type: Object, required: true },
   index: { type: Number, default: 0 },
   isDm: { type: Boolean, default: false },
   spotlight: { type: Boolean, default: false },
 })
 defineEmits(['edit', 'delete'])
+
+const imageUrl = computed(() => sessionImagePresetUrl(props.scene.imagePresetKey))
 </script>
 
 <style scoped>
@@ -59,9 +65,21 @@ defineEmits(['edit', 'delete'])
     radial-gradient(circle at 78% 15%, color-mix(in srgb, var(--accent) 25%, transparent), transparent 42%),
     linear-gradient(140deg, var(--surface-active), var(--surface-raised));
 }
+.scene-graph-node-visual img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+.scene-graph-node-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, color-mix(in srgb, var(--bg) 58%, transparent), transparent 68%);
+}
 .scene-graph-node-visual svg { position: absolute; inset: auto 0 0; width: 100%; height: 94px; }
 .scene-graph-node-index {
   position: absolute;
+  z-index: 1;
   top: 12px;
   left: 14px;
   color: color-mix(in srgb, var(--text-1) 82%, transparent);

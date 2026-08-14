@@ -14,7 +14,7 @@ func init() { registerRoutes((*Server).routesSessionScenes) }
 
 func (s *Server) routesSessionScenes(mux *http.ServeMux) {
 	mux.HandleFunc("POST /api/sessions/{uuid}/chapters/{chapterId}/scenes", s.handleCreateScene)
-	mux.HandleFunc("PATCH /api/sessions/{uuid}/scenes/{sceneId}", s.handleRenameScene)
+	mux.HandleFunc("PATCH /api/sessions/{uuid}/scenes/{sceneId}", s.handleUpdateScene)
 	mux.HandleFunc("DELETE /api/sessions/{uuid}/scenes/{sceneId}", s.handleDeleteScene)
 	mux.HandleFunc("POST /api/sessions/{uuid}/scenes/{sceneId}/items", s.handleCreateSceneItem)
 	mux.HandleFunc("PATCH /api/sessions/{uuid}/scenes/{sceneId}/items/{itemId}", s.handleUpdateSceneItem)
@@ -116,20 +116,26 @@ func (s *Server) handleCreateScene(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var req struct {
-		Name string  `json:"name"`
-		X    float64 `json:"x"`
-		Y    float64 `json:"y"`
+		Name           string  `json:"name"`
+		ImagePresetKey string  `json:"imagePresetKey"`
+		X              float64 `json:"x"`
+		Y              float64 `json:"y"`
 	}
 	if err := decodeJSON(r, &req); err != nil {
 		badRequest(w, "bad body")
 		return
 	}
 	name := strings.TrimSpace(req.Name)
-	if name == "" {
+	if name == "" || len([]rune(name)) > 160 {
 		badRequest(w, "")
 		return
 	}
-	scene, err := s.store.CreateScene(r.Context(), chapterID, name, req.X, req.Y)
+	imagePresetKey := strings.TrimSpace(req.ImagePresetKey)
+	if !sessionImagePresets[imagePresetKey] {
+		badRequest(w, "Некорректный пресет изображения")
+		return
+	}
+	scene, err := s.store.CreateScene(r.Context(), chapterID, name, imagePresetKey, req.X, req.Y)
 	if err != nil {
 		serverError(w, err)
 		return
@@ -137,7 +143,7 @@ func (s *Server) handleCreateScene(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, scene)
 }
 
-func (s *Server) handleRenameScene(w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleUpdateScene(w http.ResponseWriter, r *http.Request) {
 	userID, ok := mustUser(w, r)
 	if !ok {
 		return
@@ -155,18 +161,24 @@ func (s *Server) handleRenameScene(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var req struct {
-		Name string `json:"name"`
+		Name           string `json:"name"`
+		ImagePresetKey string `json:"imagePresetKey"`
 	}
 	if err := decodeJSON(r, &req); err != nil {
 		badRequest(w, "bad body")
 		return
 	}
 	name := strings.TrimSpace(req.Name)
-	if name == "" {
+	if name == "" || len([]rune(name)) > 160 {
 		badRequest(w, "")
 		return
 	}
-	if err := s.store.RenameScene(r.Context(), sceneID, name); err != nil {
+	imagePresetKey := strings.TrimSpace(req.ImagePresetKey)
+	if !sessionImagePresets[imagePresetKey] {
+		badRequest(w, "Некорректный пресет изображения")
+		return
+	}
+	if err := s.store.UpdateScene(r.Context(), sceneID, name, imagePresetKey); err != nil {
 		serverError(w, err)
 		return
 	}

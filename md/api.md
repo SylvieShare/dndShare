@@ -129,7 +129,10 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
   `potion`, `spell`, `feature` or `ability`) for additions to a character;
 - `GET /api/sessions/{uuid}/chapters/{chapterId}/scene-graph` returns
   `{scenes,edges}`; scenario CRUD uses `POST .../chapters/{chapterId}/scenes`,
-  `PATCH|DELETE .../scenes/{sceneId}` and `PATCH .../scenes/{sceneId}/position`;
+  `PATCH|DELETE .../scenes/{sceneId}` and `PATCH .../scenes/{sceneId}/position`.
+  Create/update bodies contain `{name,imagePresetKey}` (creation additionally
+  accepts `x/y`), and every scenario response carries the selected shared
+  built-in image key;
 - `POST /api/sessions/{uuid}/scene-edges` and
   `DELETE /api/sessions/{uuid}/scene-edges/{edgeId}` manage directed links
   inside one chapter;

@@ -185,13 +185,26 @@ CREATE TABLE IF NOT EXISTS dndshare.session_scene (
     id         bigserial NOT NULL,
     chapter_id int8 NOT NULL REFERENCES dndshare.session_chapter(id),
     "name"     varchar NOT NULL,
+    image_preset_key varchar DEFAULT 'discovery' NOT NULL,
     position_x float8 DEFAULT 0 NOT NULL,
     position_y float8 DEFAULT 0 NOT NULL,
     CONSTRAINT session_scene_pk PRIMARY KEY (id)
 );
 ALTER TABLE dndshare.session_scene ADD COLUMN IF NOT EXISTS position_x float8 NULL;
 ALTER TABLE dndshare.session_scene ADD COLUMN IF NOT EXISTS position_y float8 NULL;
+ALTER TABLE dndshare.session_scene ADD COLUMN IF NOT EXISTS image_preset_key varchar NULL;
 CREATE INDEX IF NOT EXISTS idx_session_scene_chapter_id ON dndshare.session_scene USING btree (chapter_id);
+
+UPDATE dndshare.session_scene
+SET image_preset_key = 'discovery'
+WHERE image_preset_key IS NULL
+   OR image_preset_key NOT IN (
+       'city', 'village', 'camp', 'road', 'forest', 'cave', 'ruins', 'castle',
+       'tavern', 'dungeon', 'mountains', 'coast', 'battle', 'investigation',
+       'negotiation', 'chase', 'puzzle', 'discovery'
+   );
+ALTER TABLE dndshare.session_scene ALTER COLUMN image_preset_key SET DEFAULT 'discovery';
+ALTER TABLE dndshare.session_scene ALTER COLUMN image_preset_key SET NOT NULL;
 
 -- Existing ordered scene lists become a readable first-pass graph. Coordinates
 -- are persisted afterwards and are never derived from ids at runtime.

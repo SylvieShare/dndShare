@@ -1,3 +1,5 @@
+import { SESSION_IMAGE_PRESETS, sessionImagePresetUrl, sessionImageUrl } from '@/features/sessions/lib/sessionImages'
+
 export const CHAPTER_STATUSES = [
   { key: 'draft', label: 'Черновик', tone: 'muted' },
   { key: 'planned', label: 'Запланирована', tone: 'info' },
@@ -11,20 +13,7 @@ export const CHAPTER_STATUSES = [
   { key: 'cancelled', label: 'Отменена', tone: 'danger' },
 ]
 
-export const CHAPTER_PRESETS = [
-  { key: 'city', label: 'Город' },
-  { key: 'village', label: 'Деревня' },
-  { key: 'camp', label: 'Лагерь' },
-  { key: 'road', label: 'Дорога' },
-  { key: 'forest', label: 'Лес' },
-  { key: 'cave', label: 'Пещера' },
-  { key: 'ruins', label: 'Руины' },
-  { key: 'castle', label: 'Замок' },
-  { key: 'tavern', label: 'Таверна' },
-  { key: 'dungeon', label: 'Подземелье' },
-  { key: 'mountains', label: 'Горы' },
-  { key: 'coast', label: 'Побережье' },
-]
+export const CHAPTER_PRESETS = SESSION_IMAGE_PRESETS
 
 export const CHAPTER_NODE_WIDTH = 236
 export const CHAPTER_NODE_HEIGHT = 156
@@ -34,11 +23,11 @@ export function chapterStatus(key) {
 }
 
 export function chapterPresetUrl(key) {
-  return key ? `/static/chapter-presets/${key}.jpg` : ''
+  return sessionImagePresetUrl(key)
 }
 
 export function chapterImageUrl(chapter) {
-  return chapter?.customImageUrl || chapterPresetUrl(chapter?.imagePresetKey)
+  return sessionImageUrl(chapter)
 }
 
 export function romanNumeral(value) {

@@ -154,11 +154,13 @@ optional label; clicking either the curve or label opens edit/reverse/delete
 actions. The graph API validates that both ends and the edge belong to the same
 arc and session.
 
-The built-in chapter image catalogue is served from
-`frontend/public/static/chapter-presets`: city, village, camp, road, forest,
-cave, ruins, castle, tavern, dungeon, mountains and coast. A DM may instead
-upload an image through the normal storage image endpoint and adjust its focal
-point. A chapter stores exactly one image source.
+The built-in image catalogue is shared by chapters and scenarios and served
+from `frontend/public/static/chapter-presets`. The picker first selects one of
+four categories — settlements, wilderness, adventure or story — and then an
+image inside it. Story adds battle, investigation, negotiation, chase, puzzle
+and discovery covers to the original location catalogue. A chapter may instead
+use an image uploaded through the normal storage endpoint and adjust its focal
+point; it still stores exactly one image source.
 
 Scenarios belong to chapters and form a second directed graph. A chapter action
 or double click keeps the same canvas engine mounted and swaps its chapter nodes
@@ -166,9 +168,10 @@ and edges for scenario nodes and edges. The selected chapter gets a temporary
 presentation transform to the safe top-left corner; normal coordinates stay
 unchanged and the other nodes and edges fade out. Once the swap completes it is
 rendered as a fixed ancestor card above the same canvas. The scenario graph has
-its own persisted viewport, coordinates and directed edges. Its nodes can be
-dragged, linked through the same right-side port pattern and created, renamed or
-deleted by the DM.
+its own persisted viewport, coordinates and directed edges. Its illustrated
+nodes can be dragged and linked through the same right-side port pattern. The
+DM creates or edits both the scenario name and its required shared-catalogue
+image, or deletes the scenario.
 
 Double-clicking a scenario switches the same physical canvas to the third graph.
 The scenario node first moves to the top immediately to the right of its chapter
@@ -191,7 +194,7 @@ level navigation and does not duplicate a breadcrumb bar or physical canvas.
 for all three levels. `useSceneGraph` and `useSceneBlockGraph` own their server
 state and optimistic position/width previews. Each graph key persists only its
 viewport in local storage; node positions and edges are server state.
-`TextPromptDialog` is used for scenario create/rename, `ConfirmDialog` for
+`SceneEditorModal` is used for scenario create/edit, `ConfirmDialog` for
 destructive actions, and `SceneBlockEditorModal` for block content. Scene and
 block CRUD remains in `session_scenes.go`; graph reads, positions and links are
 handled by `session_scene_graph.go`.

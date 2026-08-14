@@ -12,11 +12,12 @@ import (
 
 // SessionScene — строка dndshare.session_scene (порт model/SessionScene.kt).
 type SessionScene struct {
-	ID        int64   `json:"id"`
-	ChapterID int64   `json:"chapterId"`
-	Name      string  `json:"name"`
-	PositionX float64 `json:"positionX"`
-	PositionY float64 `json:"positionY"`
+	ID             int64   `json:"id"`
+	ChapterID      int64   `json:"chapterId"`
+	Name           string  `json:"name"`
+	ImagePresetKey string  `json:"imagePresetKey"`
+	PositionX      float64 `json:"positionX"`
+	PositionY      float64 `json:"positionY"`
 }
 
 type SessionSceneEdge struct {
@@ -85,7 +86,7 @@ func (s *Store) GetSessionChapter(ctx context.Context, id int64) (SceneChapter, 
 
 func scanScene(row pgx.Row) (SessionScene, error) {
 	var sc SessionScene
-	err := row.Scan(&sc.ID, &sc.ChapterID, &sc.Name, &sc.PositionX, &sc.PositionY)
+	err := row.Scan(&sc.ID, &sc.ChapterID, &sc.Name, &sc.ImagePresetKey, &sc.PositionX, &sc.PositionY)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return SessionScene{}, ErrNotFound
 	}
@@ -112,7 +113,7 @@ func scanItem(row pgx.Row) (SessionSceneItem, error) {
 // GetScenesByChapter — сцены главы, порядок по id (порт getByChapter).
 func (s *Store) GetScenesByChapter(ctx context.Context, chapterID int64) ([]SessionScene, error) {
 	rows, err := s.pool.Query(ctx,
-		`SELECT id, chapter_id, "name", position_x, position_y
+		`SELECT id, chapter_id, "name", image_preset_key, position_x, position_y
 		 FROM dndshare.session_scene WHERE chapter_id = $1 ORDER BY id`, chapterID,
 	)
 	if err != nil {
@@ -133,20 +134,20 @@ func (s *Store) GetScenesByChapter(ctx context.Context, chapterID int64) ([]Sess
 // GetSceneByID — сцена по id (порт getSceneById).
 func (s *Store) GetSceneByID(ctx context.Context, id int64) (SessionScene, error) {
 	return scanScene(s.pool.QueryRow(ctx,
-		`SELECT id, chapter_id, "name", position_x, position_y FROM dndshare.session_scene WHERE id = $1`, id))
+		`SELECT id, chapter_id, "name", image_preset_key, position_x, position_y FROM dndshare.session_scene WHERE id = $1`, id))
 }
 
 // CreateScene — новая сцена (порт createScene).
-func (s *Store) CreateScene(ctx context.Context, chapterID int64, name string, x, y float64) (SessionScene, error) {
+func (s *Store) CreateScene(ctx context.Context, chapterID int64, name, imagePresetKey string, x, y float64) (SessionScene, error) {
 	return scanScene(s.pool.QueryRow(ctx,
-		`INSERT INTO dndshare.session_scene (chapter_id, "name", position_x, position_y) VALUES ($1, $2, $3, $4)
-		 RETURNING id, chapter_id, "name", position_x, position_y`, chapterID, name, x, y))
+		`INSERT INTO dndshare.session_scene (chapter_id, "name", image_preset_key, position_x, position_y) VALUES ($1, $2, $3, $4, $5)
+		 RETURNING id, chapter_id, "name", image_preset_key, position_x, position_y`, chapterID, name, imagePresetKey, x, y))
 }
 
-// RenameScene — переименование сцены (порт renameScene).
-func (s *Store) RenameScene(ctx context.Context, id int64, name string) error {
+// UpdateScene updates the editable scenario card fields.
+func (s *Store) UpdateScene(ctx context.Context, id int64, name, imagePresetKey string) error {
 	_, err := s.pool.Exec(ctx,
-		`UPDATE dndshare.session_scene SET "name" = $1 WHERE id = $2`, name, id)
+		`UPDATE dndshare.session_scene SET "name" = $1, image_preset_key = $2 WHERE id = $3`, name, imagePresetKey, id)
 	return err
 }
 

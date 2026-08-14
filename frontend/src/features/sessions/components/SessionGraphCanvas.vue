@@ -107,15 +107,12 @@
     <div v-if="activeLoading" class="session-graph-state">{{ loadingLabel }}</div>
     <div v-if="activeError || actionError" class="session-graph-error" role="alert">{{ actionError || activeError }}</div>
 
-    <TextPromptDialog
+    <SceneEditorModal
       v-if="scenePromptOpen"
-      :title="editingScene ? 'Переименовать сценарий' : 'Новый сценарий'"
-      :value="editingScene?.name || ''"
-      placeholder="Название сценария"
-      :confirm-label="editingScene ? 'Сохранить' : 'Создать'"
-      :loading="saving"
-      @cancel="closeScenePrompt"
-      @confirm="saveScene"
+      :scene="editingScene"
+      :saving="saving"
+      @close="closeScenePrompt"
+      @save="saveScene"
     />
     <SceneBlockEditorModal
       v-if="blockEditorOpen"
@@ -140,13 +137,13 @@
 <script setup>
 import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import ConfirmDialog from '@/shared/ui/ConfirmDialog.vue'
-import TextPromptDialog from '@/shared/ui/TextPromptDialog.vue'
 import CanvasActionDock from '@/features/sessions/components/CanvasActionDock.vue'
 import ChapterGraphNode from '@/features/sessions/components/ChapterGraphNode.vue'
 import NestedGraphCanvas from '@/features/sessions/components/NestedGraphCanvas.vue'
 import SceneBlockEditorModal from '@/features/sessions/components/SceneBlockEditorModal.vue'
 import SceneBlockMenus from '@/features/sessions/components/SceneBlockMenus.vue'
 import SceneBlockNode from '@/features/sessions/components/SceneBlockNode.vue'
+import SceneEditorModal from '@/features/sessions/components/SceneEditorModal.vue'
 import SceneGraphNode from '@/features/sessions/components/SceneGraphNode.vue'
 import { useSceneBlockGraph } from '@/features/sessions/composables/useSceneBlockGraph'
 import { useSceneGraph } from '@/features/sessions/composables/useSceneGraph'
@@ -407,12 +404,12 @@ function closeScenePrompt() {
   editingScene.value = null
 }
 
-async function saveScene(name) {
+async function saveScene(payload) {
   saving.value = true
   actionError.value = ''
   try {
-    if (editingScene.value) await sceneGraph.renameScene(editingScene.value.id, name)
-    else await sceneGraph.createScene(name, sceneCreatePosition.value)
+    if (editingScene.value) await sceneGraph.updateScene(editingScene.value.id, payload)
+    else await sceneGraph.createScene(payload, sceneCreatePosition.value)
     emit('scene-count', activeChapterId.value, sceneGraph.scenes.value.length)
     closeScenePrompt()
   } catch { actionError.value = 'Не удалось сохранить сценарий' } finally { saving.value = false }

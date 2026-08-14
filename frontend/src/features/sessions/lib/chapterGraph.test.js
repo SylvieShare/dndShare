@@ -26,6 +26,7 @@ describe('chapter graph presentation helpers', () => {
     ]))
     expect(CHAPTER_PRESETS.map(item => item.key)).toEqual(expect.arrayContaining([
       'city', 'camp', 'road', 'village', 'cave', 'forest', 'ruins', 'castle', 'tavern', 'dungeon', 'mountains', 'coast',
+      'battle', 'investigation', 'negotiation', 'chase', 'puzzle', 'discovery',
     ]))
   })
 

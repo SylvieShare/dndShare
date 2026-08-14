@@ -1,8 +1,8 @@
 import { fetchDelete, fetchGet, fetchPatch, fetchPost } from '@/shared/api/http'
 
-export function createScene(uuid, chapterId, name, position = {}) {
+export function createScene(uuid, chapterId, data, position = {}) {
   return fetchPost(`/sessions/${uuid}/chapters/${chapterId}/scenes`, {
-    name,
+    ...data,
     x: position.x ?? 0,
     y: position.y ?? 0,
   })
@@ -24,8 +24,8 @@ export function deleteSceneEdge(uuid, edgeId) {
   return fetchDelete(`/sessions/${uuid}/scene-edges/${edgeId}`)
 }
 
-export function renameScene(uuid, sceneId, name) {
-  return fetchPatch(`/sessions/${uuid}/scenes/${sceneId}`, { name })
+export function updateScene(uuid, sceneId, data) {
+  return fetchPatch(`/sessions/${uuid}/scenes/${sceneId}`, data)
 }
 
 export function deleteScene(uuid, sceneId) {

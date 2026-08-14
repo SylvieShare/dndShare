@@ -6,7 +6,7 @@ import {
   deleteSceneEdge as apiDeleteEdge,
   getSceneGraph,
   moveScenePosition,
-  renameScene as apiRenameScene,
+  updateScene as apiUpdateScene,
 } from '@/shared/api/scenesApi'
 
 export function useSceneGraph({ sessionUuid, chapterId }) {
@@ -50,14 +50,14 @@ export function useSceneGraph({ sessionUuid, chapterId }) {
     }
   }
 
-  async function createScene(name, position) {
-    const scene = await apiCreateScene(sessionUuid, resolvedChapterId(), name, position)
+  async function createScene(data, position) {
+    const scene = await apiCreateScene(sessionUuid, resolvedChapterId(), data, position)
     scenes.value = [...scenes.value, scene]
     return scene
   }
 
-  async function renameScene(sceneId, name) {
-    const updated = await apiRenameScene(sessionUuid, sceneId, name)
+  async function updateScene(sceneId, data) {
+    const updated = await apiUpdateScene(sessionUuid, sceneId, data)
     scenes.value = scenes.value.map(scene => scene.id === sceneId ? updated : scene)
     return updated
   }
@@ -94,7 +94,7 @@ export function useSceneGraph({ sessionUuid, chapterId }) {
 
   return {
     scenes, edges, loading, loaded, error,
-    load, reset, createScene, renameScene, deleteScene,
+    load, reset, createScene, updateScene, deleteScene,
     setLocalPosition, savePosition, createEdge, deleteEdge,
   }
 }
