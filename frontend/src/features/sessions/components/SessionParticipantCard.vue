@@ -65,29 +65,33 @@
 
       <template #default="{ close }">
         <RowActionItem action="view" @click="viewParticipant(close)">Просмотреть</RowActionItem>
-        <RowActionItem
-          v-if="isDm"
-          :icon="Palette"
-          :disabled="colorPending"
-          @click="colorPickerOpen = !colorPickerOpen"
-        >
-          {{ colorPending ? 'Сохранение…' : 'Назначить цвет' }}
-          <template #suffix>
-            <span
-              class="participant-color-swatch"
-              :class="{ 'participant-color-swatch--empty': !participant.color }"
-              :style="participant.color ? { background: participant.color } : null"
+        <RowActionSubmenu v-if="isDm" label="Цвет игрока" :disabled="colorPending">
+          <template #trigger="{ open }">
+            <RowActionItem
+              :icon="Palette"
+              :disabled="colorPending"
+              submenu
+              :submenu-open="open"
+            >
+              {{ colorPending ? 'Сохранение…' : 'Назначить цвет' }}
+              <template #suffix>
+                <span
+                  class="participant-color-swatch"
+                  :class="{ 'participant-color-swatch--empty': !participant.color }"
+                  :style="participant.color ? { background: participant.color } : null"
+                />
+              </template>
+            </RowActionItem>
+          </template>
+          <template #default="{ close: closeColor }">
+            <ColorPresetPicker
+              inline
+              allow-clear
+              :model-value="participant.color || ''"
+              @update:model-value="color => assignColor(color, closeColor)"
             />
           </template>
-        </RowActionItem>
-        <div v-if="isDm && colorPickerOpen" class="ram-colors participant-color-picker">
-          <ColorPresetPicker
-            inline
-            allow-clear
-            :model-value="participant.color || ''"
-            @update:model-value="assignColor"
-          />
-        </div>
+        </RowActionSubmenu>
         <RowActionItem
           v-if="isDm"
           action="kick"
@@ -101,12 +105,13 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import { Palette } from '@lucide/vue'
 import BaseTile from '@/shared/ui/BaseTile.vue'
 import ColorPresetPicker from '@/shared/ui/ColorPresetPicker.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionMenu from '@/shared/ui/RowActionMenu.vue'
+import RowActionSubmenu from '@/shared/ui/RowActionSubmenu.vue'
 import StatBar from '@/shared/ui/StatBar.vue'
 import { pvAvatar, pvHp, pvName, pvSubtitle } from '@/features/sessions/lib/participantView'
 
@@ -120,8 +125,6 @@ const props = defineProps({
 })
 const emit = defineEmits(['view', 'kick', 'color'])
 
-const colorPickerOpen = ref(false)
-
 function viewParticipant(close) {
   close()
   emit('view', props.participant.charId)
@@ -133,9 +136,10 @@ function kickParticipant(close) {
   emit('kick', props.participant.charId)
 }
 
-function assignColor(color) {
+function assignColor(color, close) {
   if (props.colorPending) return
   emit('color', props.participant.charId, color)
+  close()
 }
 
 const displayName = computed(() => pvName(props.participant) || '(без имени)')
@@ -215,10 +219,6 @@ const avatarColor = computed(() => {
 .participant-color-swatch--empty {
   background: var(--bg);
   border-style: dashed;
-}
-
-.participant-color-picker {
-  margin-top: 2px;
 }
 
 .p-avatar {

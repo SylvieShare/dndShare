@@ -51,10 +51,19 @@
       <RowActionMenu v-if="isDm">
         <template #default="{ close }">
           <RowActionItem v-if="!editing" action="edit" @click="enterEdit(); close()">Редактировать</RowActionItem>
-          <div class="ram-label">Цвет</div>
-          <div class="ram-colors">
-            <ColorPresetPicker inline allow-clear :model-value="currentColor || ''" @update:model-value="setColor" />
-          </div>
+          <RowActionSubmenu label="Цвет плитки">
+            <template #trigger="{ open }">
+              <RowActionItem :icon="Palette" submenu :submenu-open="open">Изменить цвет</RowActionItem>
+            </template>
+            <template #default="{ close: closeColor }">
+              <ColorPresetPicker
+                inline
+                allow-clear
+                :model-value="currentColor || ''"
+                @update:model-value="color => setColorAndClose(color, closeColor)"
+              />
+            </template>
+          </RowActionSubmenu>
           <RowActionItem action="delete" tone="danger" @click="onDelete(); close()">Удалить плитку</RowActionItem>
         </template>
       </RowActionMenu>
@@ -110,11 +119,13 @@
 
 <script setup>
 import { computed, nextTick, onMounted, provide, reactive, ref, watch } from 'vue'
+import { Palette } from '@lucide/vue'
 import ColorPresetPicker from '@/shared/ui/ColorPresetPicker'
 import InputDescription from '@/shared/ui/InputDescription.vue'
 import RichContent from '@/shared/ui/RichContent'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionMenu from '@/shared/ui/RowActionMenu.vue'
+import RowActionSubmenu from '@/shared/ui/RowActionSubmenu.vue'
 
 const props = defineProps({
   item: { type: Object, required: true },
@@ -206,6 +217,11 @@ function setColor(color) {
     return
   }
   emit('update', { color, colorChanged: true })
+}
+
+function setColorAndClose(color, close) {
+  setColor(color)
+  close()
 }
 
 function onDelete() {

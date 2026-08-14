@@ -36,6 +36,7 @@
 <script setup>
 import { computed, nextTick, onBeforeUnmount, ref, shallowRef } from 'vue'
 import { computeRowActionPlacement, ROW_ACTION_MARGIN } from '@/shared/ui/rowActionPlacement'
+import { closeOpenRowActionSubmenu } from '@/shared/ui/rowActionSubmenuState'
 
 const props = defineProps({
   title: { type: String, default: 'Действия' },
@@ -130,6 +131,7 @@ function open(event) {
   openInstance.value = myId
   nextTick(schedulePlacement)
   document.addEventListener('pointerdown', onDocPointerDown, true)
+  document.addEventListener('keydown', onKey)
   window.addEventListener('resize', schedulePlacement)
   window.addEventListener('scroll', onWindowScroll, true)
   window.visualViewport?.addEventListener('resize', schedulePlacement)
@@ -141,6 +143,7 @@ function close() {
   if (placementFrame != null) cancelAnimationFrame(placementFrame)
   placementFrame = null
   document.removeEventListener('pointerdown', onDocPointerDown, true)
+  document.removeEventListener('keydown', onKey)
   window.removeEventListener('resize', schedulePlacement)
   window.removeEventListener('scroll', onWindowScroll, true)
   window.visualViewport?.removeEventListener('resize', schedulePlacement)
@@ -154,13 +157,20 @@ function toggle(event) {
 }
 
 function onDocPointerDown(e) {
-  if (e.target?.closest?.('.ram-popover')) return
+  if (e.target?.closest?.('.ram-popover, .row-action-submenu-popover')) return
   if (e.target === triggerEl.value || triggerEl.value?.contains?.(e.target)) return
   close()
 }
 
 function onWindowScroll(event) {
   if (event.target === popoverEl.value || popoverEl.value?.contains?.(event.target)) return
+  if (event.target?.closest?.('.row-action-submenu-popover')) return
+  close()
+}
+
+function onKey(event) {
+  if (event.key !== 'Escape') return
+  if (closeOpenRowActionSubmenu()) return
   close()
 }
 
@@ -243,42 +253,11 @@ defineExpose({ close })
 .ram-popover-leave-from { opacity: 1; transform: none; }
 
 .ram-label {
+  margin: 5px 5px 3px;
+  color: var(--text-muted);
   font-size: 10px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-muted);
-  margin: 5px 5px 3px;
-}
-
-.ram-colors {
-  display: grid;
-  grid-template-columns: repeat(6, 22px);
-  gap: 4px;
-  justify-content: start;
-  margin-bottom: 4px;
-  padding: 0 3px;
-}
-
-.ram-swatch {
-  width: 22px;
-  height: 22px;
-  border-radius: 6px;
-  border: 2px solid color-mix(in srgb, var(--text-on-accent) 10%, transparent);
-  cursor: pointer;
-  padding: 0;
-  transition: transform 0.1s, border-color 0.15s;
-}
-.ram-swatch:hover { transform: scale(1.08); }
-.ram-swatch.ram-swatch--active { border-color: var(--text-on-accent); box-shadow: 0 0 0 2px var(--accent); }
-.ram-swatch--reset {
-  background: transparent;
-  color: var(--text-muted);
-  font-size: 14px;
-  font-weight: 700;
-  line-height: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 @media (prefers-reduced-motion: reduce) {

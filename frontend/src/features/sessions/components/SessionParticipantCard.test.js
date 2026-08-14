@@ -25,8 +25,9 @@ describe('SessionParticipantCard actions', () => {
   it('offers view to everyone and DM-only color and kick actions', () => {
     expect(source).toContain('<RowActionItem action="view"')
     expect(source).toContain("{{ colorPending ? 'Сохранение…' : 'Назначить цвет' }}")
+    expect(source).toContain('<RowActionSubmenu v-if="isDm" label="Цвет игрока"')
     expect(source).toContain('<ColorPresetPicker')
-    expect(source).toContain('@update:model-value="assignColor"')
+    expect(source).toContain('@update:model-value="color => assignColor(color, closeColor)"')
     expect(source).toMatch(/v-if="isDm"[\s\S]*?action="kick"[\s\S]*?>\{\{ kickPending \? 'Исключение…' : 'Выгнать' \}\}<\/RowActionItem>/)
     expect(source).toContain("defineEmits(['view', 'kick', 'color'])")
   })

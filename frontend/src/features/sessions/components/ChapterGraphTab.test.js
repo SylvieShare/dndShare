@@ -36,6 +36,7 @@ describe('chapter graph workspace', () => {
     expect(toolbar).toContain("$emit('create-arc')")
     expect(tab).toContain('@node-click="openNodeMenu"')
     expect(menus).toContain('Изменить статус')
+    expect(menus.match(/<RowActionSubmenu/g)).toHaveLength(2)
     expect(menus).toContain('Создать переход отсюда')
     expect(canvas).toContain('marker-end="url(#chapter-edge-arrow)"')
     expect(canvas).toContain('class="chapter-edge-label"')

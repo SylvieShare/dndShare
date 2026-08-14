@@ -82,38 +82,44 @@
     </template>
 
     <template #default="{ close }">
-      <template v-if="!choosingSlot">
-        <RowActionItem action="view" @click="openDetails(close)">Открыть описание</RowActionItem>
-        <RowActionItem
-          v-if="ctx.charCtx.ownerMode"
-          action="use"
-          tone="accent"
-          :disabled="!canUse"
-          @click="beginUse(close)"
-        >
-          {{ canUse ? 'Использовать' : 'Нет доступных ячеек' }}
-        </RowActionItem>
-        <RowActionItem
-          v-if="ctx.charCtx.ownerMode"
-          action="delete"
-          tone="danger"
-          @click="removeSpell(close)"
-        >Удалить</RowActionItem>
-      </template>
-      <template v-else>
-        <span class="ram-label">Выберите ячейку</span>
-        <RowActionItem
-          v-for="levelOption in slotOptions"
-          :key="levelOption"
-          action="use"
-          tone="accent"
-          @click="useAtLevel(levelOption, close)"
-        >
-          {{ levelOption }} круг
-          <template #suffix>{{ ctx.slotRemaining(levelOption) }} доступно</template>
-        </RowActionItem>
-        <RowActionItem @click="choosingSlot = false">Назад</RowActionItem>
-      </template>
+      <RowActionItem action="view" @click="openDetails(close)">Открыть описание</RowActionItem>
+      <RowActionSubmenu
+        v-if="ctx.charCtx.ownerMode && canUse && hasHigherLevelChoice"
+        label="Выберите ячейку"
+      >
+        <template #trigger="{ open }">
+          <RowActionItem action="use" tone="accent" submenu :submenu-open="open">
+            Использовать
+          </RowActionItem>
+        </template>
+        <template #default="{ close: closeSlots }">
+          <RowActionItem
+            v-for="levelOption in slotOptions"
+            :key="levelOption"
+            action="use"
+            tone="accent"
+            @click="useAtLevel(levelOption, closeSlots, close)"
+          >
+            {{ levelOption }} круг
+            <template #suffix>{{ ctx.slotRemaining(levelOption) }} доступно</template>
+          </RowActionItem>
+        </template>
+      </RowActionSubmenu>
+      <RowActionItem
+        v-else-if="ctx.charCtx.ownerMode"
+        action="use"
+        tone="accent"
+        :disabled="!canUse"
+        @click="useWithoutChoice(close)"
+      >
+        {{ canUse ? 'Использовать' : 'Нет доступных ячеек' }}
+      </RowActionItem>
+      <RowActionItem
+        v-if="ctx.charCtx.ownerMode"
+        action="delete"
+        tone="danger"
+        @click="removeSpell(close)"
+      >Удалить</RowActionItem>
     </template>
   </RowActionMenu>
 </template>
@@ -125,6 +131,7 @@ import AttackDamage from '@/features/character-editor/blocks/dnd/components/Atta
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionMenu from '@/shared/ui/RowActionMenu.vue'
+import RowActionSubmenu from '@/shared/ui/RowActionSubmenu.vue'
 import { SAVE_ABBR } from '@/shared/lib/dndStats'
 
 const props = defineProps({
@@ -165,9 +172,11 @@ const saveTag = computed(() => {
   return (SAVE_ABBR[a] || String(a).toUpperCase()) + (dmg.value.save_effect === 'half' ? ' ½' : '')
 })
 const instances = computed(() => Number(dmg.value.instances) || 1)
-const choosingSlot = ref(false)
 const slotOptions = computed(() => ctx.availableSpellSlotLevels(props.entry))
 const canUse = computed(() => !!props.entry.item && (baseLvl.value === 0 || slotOptions.value.length > 0))
+const hasHigherLevelChoice = computed(() =>
+  slotOptions.value.some(level => level > baseLvl.value)
+)
 
 // Drag the whole row to reorder; the sortable's 4px threshold keeps a plain tap a click. A drag flips
 // `sortable.dragging` mid-gesture — we remember it so the trailing click doesn't open the spell modal.
@@ -185,25 +194,17 @@ function openDetails(close) {
   close()
 }
 
-function beginUse(close) {
+function useWithoutChoice(close) {
   if (!canUse.value) return
-  if (baseLvl.value === 0) {
-    ctx.useSpell(props.entry, 0)
-    close()
-    return
-  }
-  const hasHigherLevelChoice = slotOptions.value.some(level => level > baseLvl.value)
-  if (hasHigherLevelChoice) {
-    choosingSlot.value = true
-    return
-  }
-  useAtLevel(slotOptions.value[0], close)
+  const level = baseLvl.value === 0 ? 0 : slotOptions.value[0]
+  ctx.useSpell(props.entry, level)
+  close()
 }
 
-function useAtLevel(level, close) {
+function useAtLevel(level, closeSubmenu, closeMenu) {
   ctx.useSpell(props.entry, level)
-  choosingSlot.value = false
-  close()
+  closeSubmenu()
+  closeMenu()
 }
 
 function removeSpell(close) {

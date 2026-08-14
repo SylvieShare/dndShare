@@ -20,8 +20,10 @@ describe('character spell card icon', () => {
 
   it('opens semantic actions and moves deletion into the menu', () => {
     expect(source).toContain('<RowActionMenu')
+    expect(source).toContain('<RowActionSubmenu')
     expect(source).toContain("ctx.useSpell(props.entry, level)")
     expect(source).toContain('Выберите ячейку')
+    expect(source).not.toContain('choosingSlot')
     expect(source).toContain('action="delete"')
     expect(source).not.toContain('class="sp-del"')
   })

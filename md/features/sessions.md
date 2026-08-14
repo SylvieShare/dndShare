@@ -35,7 +35,9 @@ an individual interactive `BaseTile`. Clicking it opens `RowActionMenu` with an
 icon-labelled view action plus DM-only color and confirmed kick actions; bulk participant
 selection is not part of the rail. The color is stored on the participant's
 session membership and renders as the same diagonal `BaseTile` mark in the rail
-and on that player's encounter rows. Every participant trigger fills the rail width. A dashed `+` action
+and on that player's encounter rows. Color palettes, encounter cloning and the
+chapter status/arc choices use `RowActionSubmenu`: a separate adjacent popover
+on desktop and an inline section with a left accent boundary on mobile. Every participant trigger fills the rail width. A dashed `+` action
 beside the `ИГРОКИ` heading opens character creation and invite code/link copy
 actions; the rail has no separate invitation tile.
 

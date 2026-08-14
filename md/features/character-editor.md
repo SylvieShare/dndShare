@@ -201,8 +201,9 @@ inventory entry is edited through the row action menu. Clicking a spell row
 opens actions for description, use and delete; deletion no longer occupies the
 compact row. Using a cantrip records a slotless `spell_used` event. A leveled
 spell spends an available slot at or above the spell level; when an upcast is
-possible, the action menu switches to an explicit list of available slot levels
-and records the chosen level. A spell row renders its transparent raster
+possible, `RowActionSubmenu` shows the available slot levels beside the action
+menu on desktop or inside its bounded mobile section and records the chosen
+level. A spell row renders its transparent raster
 `item.iconImageUrl` when assigned; otherwise it retains the school SVG symbol.
 
 Diary sessions animate their disclosure body. Session create/edit forms use a

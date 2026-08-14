@@ -3,6 +3,8 @@
     type="button"
     class="ram-item"
     :class="tone !== 'default' ? `ram-item--${tone}` : null"
+    :aria-haspopup="submenu ? 'menu' : undefined"
+    :aria-expanded="submenu ? submenuOpen : undefined"
   >
     <span class="ram-item__icon" aria-hidden="true">
       <slot name="icon">
@@ -10,13 +12,23 @@
       </slot>
     </span>
     <span class="ram-item__content"><slot /></span>
-    <span v-if="$slots.suffix" class="ram-item__suffix"><slot name="suffix" /></span>
+    <span v-if="$slots.suffix || submenu" class="ram-item__suffix">
+      <slot name="suffix" />
+      <ChevronRight
+        v-if="submenu"
+        class="ram-item__submenu-chevron"
+        :class="{ 'ram-item__submenu-chevron--open': submenuOpen }"
+        :size="15"
+        :stroke-width="2"
+      />
+    </span>
   </button>
 </template>
 
 <script setup>
 import { computed } from 'vue'
 import {
+  ChevronRight,
   Copy,
   Ellipsis,
   Eye,
@@ -51,6 +63,8 @@ const ACTION_ICONS = {
 const props = defineProps({
   action: { type: String, default: '' },
   icon: { type: [Object, Function], default: null },
+  submenu: { type: Boolean, default: false },
+  submenuOpen: { type: Boolean, default: false },
   tone: {
     type: String,
     default: 'default',
@@ -97,11 +111,11 @@ const resolvedIcon = computed(() => props.icon || ACTION_ICONS[props.action] || 
   width: 18px;
   height: 18px;
   flex: 0 0 18px;
-  transform-origin: center;
   transition: transform 90ms cubic-bezier(0.2, 0.8, 0.3, 1);
 }
 .ram-item__content { flex: 1 1 auto; min-width: 0; }
-.ram-item__suffix { display: inline-flex; align-items: center; flex: 0 0 auto; }
+.ram-item__suffix { display: inline-flex; align-items: center; gap: 6px; flex: 0 0 auto; }
+.ram-item__submenu-chevron { color: var(--text-muted); transition: transform 120ms ease; }
 .ram-item--accent { color: var(--accent-soft); --ram-item-press-bg: color-mix(in srgb, var(--accent) 22%, transparent); }
 .ram-item--accent:not(:disabled):hover { background: color-mix(in srgb, var(--accent) 14%, transparent); }
 .ram-item--warning { color: var(--warning); --ram-item-press-bg: color-mix(in srgb, var(--warning) 20%, transparent); }
@@ -119,5 +133,9 @@ const resolvedIcon = computed(() => props.icon || ACTION_ICONS[props.action] || 
   .ram-item, .ram-item__icon { transition: none; }
   .ram-item:active:not(:disabled),
   .ram-item:active:not(:disabled) .ram-item__icon { transform: none; }
+}
+
+@media (max-width: 768px) {
+  .ram-item__submenu-chevron--open { transform: rotate(90deg); }
 }
 </style>

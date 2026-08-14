@@ -4,7 +4,7 @@
       <div
         v-if="open"
         ref="popoverEl"
-        class="app-dropdown base-popover"
+        :class="['app-dropdown', 'base-popover', popoverClass]"
         :style="positionStyle"
         @click.stop
         @pointerdown.stop
@@ -16,7 +16,8 @@
 </template>
 
 <script setup>
-import { onBeforeUnmount, ref, watch } from 'vue'
+import { nextTick, onBeforeUnmount, ref, watch } from 'vue'
+import { closeOpenRowActionSubmenu } from '@/shared/ui/rowActionSubmenuState'
 
 const props = defineProps({
   open:      { type: Boolean, default: false },
@@ -26,6 +27,7 @@ const props = defineProps({
   minWidth:  { type: Number, default: 160 },
   zIndex:    { type: Number, default: 0 },
   transition: { type: String, default: '' },
+  popoverClass: { type: [String, Array, Object], default: '' },
 })
 const emit = defineEmits(['update:open'])
 
@@ -44,8 +46,26 @@ function compute() {
   if (!el) return
   const rect = el.getBoundingClientRect()
   const style = { position: 'fixed', minWidth: props.minWidth + 'px' }
+  const viewportWidth = window.visualViewport?.width || window.innerWidth
+  const viewportHeight = window.visualViewport?.height || window.innerHeight
+  const popoverWidth = Math.max(props.minWidth, popoverEl.value?.offsetWidth || 0)
+  const popoverHeight = popoverEl.value?.offsetHeight || 0
   if (props.zIndex) style.zIndex = props.zIndex
   switch (props.placement) {
+    case 'right-start': {
+      const rightLeft = rect.right + props.offset
+      const leftLeft = rect.left - props.offset - popoverWidth
+      const fitsRight = rightLeft + popoverWidth <= viewportWidth - 8
+      const fitsLeft = leftLeft >= 8
+      const resolvedLeft = fitsRight
+        ? rightLeft
+        : fitsLeft
+          ? leftLeft
+          : Math.max(8, Math.min(rightLeft, viewportWidth - popoverWidth - 8))
+      style.left = resolvedLeft + 'px'
+      style.top = Math.max(8, Math.min(rect.top, viewportHeight - popoverHeight - 8)) + 'px'
+      break
+    }
     case 'bottom-end':
       style.top = (rect.bottom + props.offset) + 'px'
       style.right = (window.innerWidth - rect.right) + 'px'
@@ -65,6 +85,7 @@ function close() {
 
 function onDocPointerDown(e) {
   if (popoverEl.value?.contains(e.target)) return
+  if (e.target?.closest?.('.row-action-submenu-popover')) return
   if (anchorEl()?.contains(e.target)) return
   close()
 }
@@ -75,15 +96,23 @@ function onScroll(e) {
   // Keep that interaction inside the popover; only an outside/page scroll
   // invalidates the anchor position and should dismiss it.
   if (popoverEl.value?.contains(e.target)) return
+  if (e.target?.closest?.('.row-action-submenu-popover')) return
   close()
 }
 
 function onKey(e) {
-  if (e.key === 'Escape') close()
+  if (e.key !== 'Escape') return
+  if (closeOpenRowActionSubmenu()) return
+  const openPopovers = [...document.querySelectorAll('.base-popover')]
+  if (openPopovers.at(-1) !== popoverEl.value) return
+  close()
 }
 
-watch(() => props.open, (val) => {
+watch(() => props.open, async (val) => {
   if (val) {
+    compute()
+    await nextTick()
+    if (!props.open) return
     compute()
     document.addEventListener('pointerdown', onDocPointerDown, true)
     document.addEventListener('keydown', onKey)
@@ -95,7 +124,7 @@ watch(() => props.open, (val) => {
     window.removeEventListener('resize', close)
     window.removeEventListener('scroll', onScroll, true)
   }
-})
+}, { immediate: true })
 
 onBeforeUnmount(() => {
   document.removeEventListener('pointerdown', onDocPointerDown, true)

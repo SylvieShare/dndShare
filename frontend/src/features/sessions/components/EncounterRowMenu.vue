@@ -12,32 +12,45 @@
         action="note"
         @click="$emit('edit-note'); close()"
       >Изменить заметку</RowActionItem>
-      <div v-if="isNpc" class="ram-clone">
-        <Copy class="ram-clone-icon" :size="17" :stroke-width="1.9" aria-hidden="true" />
-        <span class="ram-clone-label">Копировать</span>
-        <input
-          v-model.number="cloneCount"
-          class="ram-clone-input"
-          type="number"
-          min="1"
-          max="20"
-          @click.stop
-        />
-        <button
-          type="button"
-          class="ram-clone-btn"
-          @click="enc.cloneNpc(combatant, cloneCount); close()"
-        >×{{ cloneCount || 1 }}</button>
-      </div>
-      <div class="ram-label">{{ isNpc ? 'Цвет рамки' : 'Цвет плитки' }}</div>
-      <div class="ram-colors">
-        <ColorPresetPicker
-          inline
-          allow-clear
-          :model-value="combatant.iconColor || ''"
-          @update:model-value="color => enc.setIconColor(combatant, color)"
-        />
-      </div>
+      <RowActionSubmenu v-if="isNpc" label="Количество копий" :min-width="220">
+        <template #trigger="{ open }">
+          <RowActionItem :icon="Copy" submenu :submenu-open="open">
+            Копировать
+            <template #suffix>×{{ cloneCount || 1 }}</template>
+          </RowActionItem>
+        </template>
+        <template #default="{ close: closeClone }">
+          <div class="ram-clone-form">
+            <input
+              v-model.number="cloneCount"
+              class="ram-clone-input"
+              type="number"
+              min="1"
+              max="20"
+              aria-label="Количество копий"
+              @click.stop
+            />
+            <button
+              type="button"
+              class="ram-clone-btn"
+              @click="cloneNpc(closeClone, close)"
+            >Создать ×{{ cloneCount || 1 }}</button>
+          </div>
+        </template>
+      </RowActionSubmenu>
+      <RowActionSubmenu :label="isNpc ? 'Цвет рамки' : 'Цвет плитки'">
+        <template #trigger="{ open }">
+          <RowActionItem :icon="Palette" submenu :submenu-open="open">Изменить цвет</RowActionItem>
+        </template>
+        <template #default="{ close: closeColor }">
+          <ColorPresetPicker
+            inline
+            allow-clear
+            :model-value="combatant.iconColor || ''"
+            @update:model-value="color => setIconColor(color, closeColor)"
+          />
+        </template>
+      </RowActionSubmenu>
       <RowActionItem
         v-if="canRevive"
         action="revive"
@@ -56,10 +69,11 @@
 
 <script setup>
 import { computed, inject, ref } from 'vue'
-import { Activity, Copy } from '@lucide/vue'
+import { Activity, Copy, Palette } from '@lucide/vue'
 import ColorPresetPicker from '@/shared/ui/ColorPresetPicker'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionMenu from '@/shared/ui/RowActionMenu.vue'
+import RowActionSubmenu from '@/shared/ui/RowActionSubmenu.vue'
 
 const props = defineProps({
   combatant:   { type: Object, required: true },
@@ -75,26 +89,30 @@ const canDelete = computed(() => isNpc.value && (props.section === 'reserve-npc'
 const canRevive = computed(() => props.section === 'dead')
 
 const cloneCount = ref(1)
+
+function cloneNpc(closeSubmenu, closeMenu) {
+  enc.cloneNpc(props.combatant, cloneCount.value)
+  closeSubmenu()
+  closeMenu()
+}
+
+function setIconColor(color, close) {
+  enc.setIconColor(props.combatant, color)
+  close()
+}
 </script>
 
 <style scoped>
 .enc-row-menu { flex-shrink: 0; }
 
-.ram-clone {
+.ram-clone-form {
   display: flex;
   align-items: center;
   gap: 6px;
-  min-height: 36px;
-  padding: 4px 8px;
-}
-.ram-clone-icon { flex: 0 0 18px; }
-.ram-clone-label {
-  font-size: 13px;
-  color: var(--text-2);
-  flex: 1;
+  padding: 2px;
 }
 .ram-clone-input {
-  width: 44px;
+  width: 54px;
   background: var(--surface-raised);
   border: 1px solid var(--border);
   border-radius: 5px;
@@ -109,6 +127,7 @@ const cloneCount = ref(1)
 .ram-clone-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .ram-clone-input:focus { border-color: var(--accent); }
 .ram-clone-btn {
+  flex: 1;
   background: color-mix(in srgb, var(--accent) 15%, transparent);
   border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
   border-radius: 5px;
