@@ -14,7 +14,7 @@ describe('SessionParticipantCard actions', () => {
   it('opens a shared row action menu from the participant BaseTile', () => {
     expect(source).toContain('<RowActionMenu>')
     expect(source).toContain('<template #trigger>')
-    expect(source).toContain(':mark-color="participant.color"')
+    expect(source).toContain('<ParticipantColorTicks v-if="participant.color" :color="participant.color" />')
   })
 
   it('makes the action trigger and participant tile span the whole rail', () => {

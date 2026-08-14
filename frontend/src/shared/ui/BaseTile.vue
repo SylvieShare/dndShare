@@ -2,11 +2,10 @@
   <div
     class="base-tile"
     :class="{ 'base-tile--interactive': interactive, 'base-tile--tint': tint, 'base-tile--framed': framed }"
-    :style="{ '--tile-color': resolvedColor, '--tile-mark-color': markColor }"
+    :style="{ '--tile-color': resolvedColor }"
     @click="$emit('click', $event)"
   >
     <span v-if="strip" class="base-tile-strip" />
-    <span v-if="markColor" class="base-tile-mark" aria-hidden="true" />
     <slot />
   </div>
 </template>
@@ -25,8 +24,6 @@ const props = defineProps({
   framed: { type: Boolean, default: false },
   // Pointer cursor + hover tint.
   interactive: { type: Boolean, default: false },
-  // Small vertical session-local marker on the right edge.
-  markColor: { type: String, default: null },
 })
 
 defineEmits(['click'])
@@ -93,14 +90,4 @@ const resolvedColor = computed(() => props.color || 'var(--accent)')
   background: var(--tile-color);
 }
 
-.base-tile-mark {
-  position: absolute;
-  z-index: 3;
-  top: var(--r-lg);
-  right: 0;
-  width: 3px;
-  height: 24px;
-  background: var(--tile-mark-color);
-  pointer-events: none;
-}
 </style>

@@ -22,7 +22,7 @@ const sceneSource = readFileSync(fileURLToPath(new URL('../components/SceneTab.v
 const encounterStylesSource = readFileSync(fileURLToPath(new URL('../components/styles/EncounterTab.css', import.meta.url)), 'utf8')
 const sceneStylesSource = readFileSync(fileURLToPath(new URL('../components/styles/SceneTab.css', import.meta.url)), 'utf8')
 const dicePopupSource = readFileSync(fileURLToPath(new URL('../../../shared/ui/DiceRollPopup.vue', import.meta.url)), 'utf8')
-const baseTileSource = readFileSync(fileURLToPath(new URL('../../../shared/ui/BaseTile.vue', import.meta.url)), 'utf8')
+const colorTicksSource = readFileSync(fileURLToPath(new URL('../components/ParticipantColorTicks.vue', import.meta.url)), 'utf8')
 
 describe('ViewSession participant rail', () => {
   it('compiles the page component', () => {
@@ -159,12 +159,10 @@ describe('ViewSession participant rail', () => {
   it('saves a session-local participant color and marks player tiles in both rails', () => {
     expect(source).toContain('await updateParticipantColor(sessionUuid, charId, color)')
     expect(source).toContain('{ ...participant, color: color || null }')
-    expect(encounterRowSource).toContain(':mark-color="playerColor"')
+    expect(encounterRowSource).toContain('<ParticipantColorTicks v-if="playerColor" :color="playerColor" />')
     expect(encounterRowSource).toContain('enc.participantColor(props.combatant.charId)')
-    expect(baseTileSource).toContain('top: var(--r-lg);')
-    expect(baseTileSource).toContain('right: 0;')
-    expect(baseTileSource).toContain('width: 3px;')
-    expect(baseTileSource).not.toContain('clip-path: polygon(70% 0')
+    expect(colorTicksSource).toContain('class="participant-color-tick"')
+    expect(colorTicksSource).toContain('transform: translateY(-10px);')
   })
 
   it('asks for confirmation before kicking a participant', () => {

@@ -14,7 +14,6 @@
       class="enc-row"
       :class="rowClasses"
       color="var(--section-color)"
-      :mark-color="playerColor"
       strip
       @pointerdown="onRowPointerDown"
     >
@@ -39,6 +38,7 @@
           :class="{ 'enc-name--clickable': isNpc && hasItem }"
           @click="isNpc && hasItem && enc.openNpcDetail(combatant)"
         >{{ displayName }}</span>
+        <ParticipantColorTicks v-if="playerColor" :color="playerColor" />
         <span
           ref="badgeEl"
           class="enc-badge"
@@ -144,6 +144,7 @@ import EncounterHpBar from '@/features/sessions/components/EncounterHpBar.vue'
 import EncounterMarkerMenu from '@/features/sessions/components/EncounterMarkerMenu.vue'
 import EncounterOrderMarker from '@/features/sessions/components/EncounterOrderMarker.vue'
 import EncounterRowMenu from '@/features/sessions/components/EncounterRowMenu.vue'
+import ParticipantColorTicks from '@/features/sessions/components/ParticipantColorTicks.vue'
 import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 import BasePopover from '@/shared/ui/BasePopover.vue'
 import BaseTile from '@/shared/ui/BaseTile.vue'
