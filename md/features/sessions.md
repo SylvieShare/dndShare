@@ -39,7 +39,10 @@ and on that player's encounter rows. Color palettes, encounter cloning and the
 chapter status/arc choices use `RowActionSubmenu`: a separate adjacent popover
 on desktop and an inline section with a left accent boundary on mobile. Every participant trigger fills the rail width. A dashed `+` action
 beside the `ИГРОКИ` heading opens character creation and invite code/link copy
-actions; the rail has no separate invitation tile.
+actions; the rail has no separate invitation tile. The left rail's hit area and
+height end with its rendered heading, players and error message (up to the
+viewport max-height), so the uncovered canvas below a short player list remains
+available for pan and node dragging.
 
 The session page is a campaign workspace rather than a stack of content tabs.
 The chapter canvas fills all available width below `AppHeader`; the participant
@@ -121,12 +124,15 @@ stores a viewport per graph in local storage; its 24px base grid repositions and
 scales with that viewport. Nodes can be dragged; during an active drag their
 transform transition is disabled so the node and every connected edge update in
 the same frame. Spotlight transitions remain animated outside dragging.
-A chapter scenarios or combat workspace uses one overlapping transition: the
-spotlight chapter starts moving to the workspace header immediately, while the
-central content fades in during the second half of that movement. On close, the
-short content fade and the chapter's return start together. In combat, the
-participant rail width uses the same duration and easing as the chapter
-movement, both on entry and exit. Reduced-motion users skip the reveal delay.
+Drilling into a narrative level waits for the 420ms spotlight movement to reach
+its ancestor position, then swaps the graph identity, payload and preloaded
+viewport in one render. DOM keys include the graph identity so equal numeric IDs
+from different entity tables cannot reuse a node. Returning prepares the parent
+viewport before its payload appears and keeps the returning node in the ancestor
+position for one painted frame before animating it to its saved coordinates.
+Combat still overlaps its content reveal with the chapter movement; the
+participant rail width uses the same duration and easing as that movement, both
+on entry and exit. Reduced-motion users skip the delay.
 A regular node click opens its action popover: open the chapter scenarios, make
 current, change status, edit, start a transition, move to another arc or delete.
 Double-clicking a chapter opens its scenario canvas directly.

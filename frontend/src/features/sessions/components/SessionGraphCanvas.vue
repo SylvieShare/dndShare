@@ -157,8 +157,7 @@ const emit = defineEmits([
 const canvas = ref(null)
 const displayLevel = ref('chapters')
 const selectedScene = ref(null)
-const transitionSpotlightId = ref(null)
-const spotlightOffsetX = ref(0)
+const transitionSpotlight = ref(null)
 const sceneLinkingFrom = ref(null)
 const blockLinkingFrom = ref(null)
 const actionError = ref('')
@@ -186,11 +185,7 @@ const activeNodes = computed(() => displayLevel.value === 'chapters'
 const activeEdges = computed(() => displayLevel.value === 'chapters'
   ? props.graph.visibleEdges.value
   : displayLevel.value === 'scenes' ? sceneGraph.edges.value : blockGraph.edges.value)
-const activeGraphKey = computed(() => displayLevel.value === 'chapters'
-  ? `chapters:${props.sessionUuid}:${props.graph.selectedArc.value?.id ?? 'none'}`
-  : displayLevel.value === 'scenes'
-    ? `scenes:${props.sessionUuid}:${activeChapterId.value ?? 'none'}`
-    : `blocks:${props.sessionUuid}:${activeSceneId.value ?? 'none'}`)
+const activeGraphKey = computed(() => graphKeyFor(displayLevel.value))
 const activeFromKey = computed(() => displayLevel.value === 'chapters' ? 'fromChapterId' : displayLevel.value === 'scenes' ? 'fromSceneId' : 'fromItemId')
 const activeToKey = computed(() => displayLevel.value === 'chapters' ? 'toChapterId' : displayLevel.value === 'scenes' ? 'toSceneId' : 'toItemId')
 const activeNodeWidth = computed(() => displayLevel.value === 'blocks' ? 276 : 236)
@@ -199,7 +194,12 @@ const activeInitialTop = computed(() => displayLevel.value === 'chapters' ? 80 :
 const activeLoading = computed(() => displayLevel.value === 'scenes' ? sceneGraph.loading.value : displayLevel.value === 'blocks' ? blockGraph.loading.value : false)
 const activeError = computed(() => displayLevel.value === 'scenes' ? sceneGraph.error.value : displayLevel.value === 'blocks' ? blockGraph.error.value : '')
 const activeLinkingFrom = computed(() => displayLevel.value === 'chapters' ? props.chapterLinkingFrom : displayLevel.value === 'scenes' ? sceneLinkingFrom.value : blockLinkingFrom.value)
-const activeSpotlightId = computed(() => transitionSpotlightId.value ?? (props.workspaceMode === 'combat' && displayLevel.value === 'chapters' ? activeChapterId.value : null))
+const activeSpotlightId = computed(() => transitionSpotlight.value?.level === displayLevel.value
+  ? transitionSpotlight.value.id
+  : props.workspaceMode === 'combat' && displayLevel.value === 'chapters' ? activeChapterId.value : null)
+const spotlightOffsetX = computed(() => transitionSpotlight.value?.level === displayLevel.value
+  ? transitionSpotlight.value.offset
+  : 0)
 const showChapterAncestor = computed(() => ['scenes', 'blocks'].includes(displayLevel.value) && !!activeChapter.value)
 const canvasActions = computed(() => displayLevel.value === 'chapters'
   ? [{ id: 'chapter', label: 'Новая глава', icon: 'chapter' }]
@@ -224,7 +224,22 @@ const deleteCopy = computed(() => {
 })
 
 function transitionDelay() {
-  return globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 0 : 210
+  return globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 0 : 420
+}
+
+function graphKeyFor(level) {
+  if (level === 'chapters') return `chapters:${props.sessionUuid}:${props.graph.selectedArc.value?.id ?? 'none'}`
+  if (level === 'scenes') return `scenes:${props.sessionUuid}:${activeChapterId.value ?? 'none'}`
+  return `blocks:${props.sessionUuid}:${activeSceneId.value ?? 'none'}`
+}
+
+function initialTopFor(level) {
+  return level === 'chapters' ? 80 : 210
+}
+
+function activateLevel(level) {
+  canvas.value?.prepareView(graphKeyFor(level), initialTopFor(level))
+  displayLevel.value = level
 }
 
 function scheduleTransition(callback) {
@@ -245,11 +260,10 @@ async function openScenesLevel(chapterId) {
   sceneGraph.load().then(() => {
     if (sceneGraph.loaded.value) emit('scene-count', chapterId, sceneGraph.scenes.value.length)
   })
-  transitionSpotlightId.value = chapterId
-  spotlightOffsetX.value = 0
+  transitionSpotlight.value = { level: 'chapters', id: chapterId, offset: 0 }
   scheduleTransition(() => {
-    displayLevel.value = 'scenes'
-    transitionSpotlightId.value = null
+    transitionSpotlight.value = null
+    activateLevel('scenes')
   })
 }
 
@@ -260,21 +274,21 @@ function openBlocksLevel(scene) {
   blockLinkingFrom.value = null
   blockGraph.reset()
   blockGraph.load()
-  transitionSpotlightId.value = scene.id
-  spotlightOffsetX.value = 252
+  transitionSpotlight.value = { level: 'scenes', id: scene.id, offset: 252 }
   scheduleTransition(() => {
-    displayLevel.value = 'blocks'
-    transitionSpotlightId.value = null
+    transitionSpotlight.value = null
+    activateLevel('blocks')
   })
 }
 
 async function animateBack(level, nodeId, offset) {
   if (transitionTimer != null) clearTimeout(transitionTimer)
-  displayLevel.value = level
-  transitionSpotlightId.value = nodeId
-  spotlightOffsetX.value = offset
+  transitionSpotlight.value = { level, id: nodeId, offset }
+  activateLevel(level)
   await nextTick()
-  requestAnimationFrame(() => { transitionSpotlightId.value = null })
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => { transitionSpotlight.value = null })
+  })
 }
 
 function returnToScenes() {
@@ -470,7 +484,6 @@ defineExpose({
   width: 236px;
   height: 156px;
   cursor: zoom-out;
-  animation: session-ancestor-in .2s ease both;
 }
 .session-graph-ancestor--chapter { left: var(--chapter-safe-left, 0px); }
 .session-graph-ancestor--scene { left: calc(var(--chapter-safe-left, 0px) + 252px); }
@@ -489,10 +502,8 @@ defineExpose({
 }
 .session-graph-state { color: var(--text-muted); }
 .session-graph-error { color: var(--danger); border: 1px solid color-mix(in srgb, var(--danger) 35%, transparent); }
-@keyframes session-ancestor-in { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
 @media (max-width: 760px) {
   .session-graph-ancestor--chapter { left: 8px; }
   .session-graph-ancestor--scene { left: 260px; }
 }
-@media (prefers-reduced-motion: reduce) { .session-graph-ancestor { animation: none; } }
 </style>

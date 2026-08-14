@@ -59,6 +59,10 @@ describe('ViewSession participant rail', () => {
     expect(source).not.toContain('<SessionTopBar')
   })
 
+  it('limits the left rail hit area to its player content', () => {
+    expect(styles).toMatch(/\.workspace-dock--left\s*\{[^}]*bottom:\s*auto;[^}]*max-height:\s*calc\(100% - 84px\);/s)
+  })
+
   it('keeps session dice purple and lets both right-dock tools collapse independently', () => {
     expect(dicePanelSource).toContain('color="var(--accent)"')
     expect(dicePanelSource).toContain("const collapsed = ref(false)")

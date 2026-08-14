@@ -17,11 +17,20 @@ describe('session graph canvas', () => {
   })
 
   it('drills through scenarios and blocks while keeping ancestors as cards', () => {
-    expect(source).toContain("displayLevel.value = 'scenes'")
-    expect(source).toContain("displayLevel.value = 'blocks'")
-    expect(source).toContain('spotlightOffsetX.value = 252')
+    expect(source).toContain("activateLevel('scenes')")
+    expect(source).toContain("activateLevel('blocks')")
+    expect(source).toContain("transitionSpotlight.value = { level: 'scenes', id: scene.id, offset: 252 }")
     expect(source).toContain('class="session-graph-ancestor session-graph-ancestor--chapter"')
     expect(source).toContain('class="session-graph-ancestor session-graph-ancestor--scene"')
+  })
+
+  it('switches graph identity and camera atomically without cross-level node reuse', () => {
+    expect(source).toContain("? 0 : 420")
+    expect(source).toContain('canvas.value?.prepareView(graphKeyFor(level), initialTopFor(level))')
+    expect(source).toContain('transitionSpotlight.value?.level === displayLevel.value')
+    expect(source).toContain('requestAnimationFrame(() => {\n    requestAnimationFrame(() =>')
+    expect(canvasSource).toContain(':key="`${graphKey}:${node.id}`"')
+    expect(canvasSource).toContain('function prepareView(graphKey, initialTop)')
   })
 
   it('places contextual creation actions on the center-right of the canvas', () => {

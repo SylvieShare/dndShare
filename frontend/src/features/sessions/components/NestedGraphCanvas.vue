@@ -22,7 +22,7 @@
             <path d="M 0 0 L 10 5 L 0 10 z" class="nested-graph-edge-arrow" />
           </marker>
         </defs>
-        <g v-for="edge in renderedEdges" :key="edge.id">
+        <g v-for="edge in renderedEdges" :key="`${graphKey}:${edge.id}`">
           <path class="nested-graph-edge-hit" :d="edge.path" @pointerdown.stop @click.stop="$emit('edge-click', edge.raw, $event.currentTarget)" />
           <path class="nested-graph-edge-line" :d="edge.path" :marker-end="`url(#${markerId})`" />
         </g>
@@ -36,7 +36,7 @@
 
       <button
         v-for="edge in labelledEdges"
-        :key="`label-${edge.id}`"
+        :key="`${graphKey}:label:${edge.id}`"
         type="button"
         class="nested-graph-edge-label"
         :disabled="locked"
@@ -47,7 +47,7 @@
 
       <div
         v-for="node in nodes"
-        :key="node.id"
+        :key="`${graphKey}:${node.id}`"
         class="nested-graph-node"
         :class="{
           'nested-graph-node--linking': node.id === linkingFrom?.id,
@@ -136,6 +136,7 @@ const gesture = ref(null)
 const viewportRevision = ref(0)
 let lastNodeClick = null
 let resizeObserver = null
+let preparedGraphKey = null
 
 const worldStyle = computed(() => ({ transform: `translate(${pan.value.x}px, ${pan.value.y}px) scale(${zoom.value})` }))
 const gridStyle = computed(() => ({
@@ -197,13 +198,13 @@ function nodeStyle(node) {
   }
 }
 
-function viewKey() {
-  return `nested-graph:view:${props.graphKey}`
+function viewKey(graphKey = props.graphKey) {
+  return `nested-graph:view:${graphKey}`
 }
 
-function loadView() {
+function loadView(graphKey = props.graphKey, initialTop = props.initialTop) {
   try {
-    const saved = JSON.parse(localStorage.getItem(viewKey()) || 'null')
+    const saved = JSON.parse(localStorage.getItem(viewKey(graphKey)) || 'null')
     if (saved && Number.isFinite(saved.x) && Number.isFinite(saved.y) && Number.isFinite(saved.zoom)) {
       pan.value = { x: saved.x, y: saved.y }
       zoom.value = Math.max(0.35, Math.min(1.8, saved.zoom))
@@ -211,9 +212,14 @@ function loadView() {
       return
     }
   } catch { /* ignore */ }
-  pan.value = { x: safeFrame().left + 48, y: props.initialTop }
+  pan.value = { x: safeFrame().left + 48, y: initialTop }
   zoom.value = 1
   announceView()
+}
+
+function prepareView(graphKey, initialTop) {
+  preparedGraphKey = graphKey
+  loadView(graphKey, initialTop)
 }
 
 function saveView() {
@@ -377,7 +383,13 @@ function onKey(event) {
   if (event.key === 'Escape' && props.linkingFrom) emit('start-link', null)
 }
 
-watch(() => props.graphKey, () => nextTick(loadView))
+watch(() => props.graphKey, graphKey => {
+  if (graphKey === preparedGraphKey) {
+    preparedGraphKey = null
+    return
+  }
+  nextTick(() => loadView(graphKey, props.initialTop))
+})
 watch(() => props.locked, locked => { if (locked) cancelGesture() })
 onMounted(() => {
   loadView()
@@ -390,7 +402,7 @@ onBeforeUnmount(() => {
   window.removeEventListener('keydown', onKey)
 })
 
-defineExpose({ zoomBy, viewportCenter, focusNode })
+defineExpose({ zoomBy, viewportCenter, focusNode, prepareView })
 </script>
 
 <style scoped src="./styles/NestedGraphCanvas.css"></style>

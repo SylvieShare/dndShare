@@ -38,7 +38,9 @@
 
 .workspace-dock--left {
   left: 14px;
+  bottom: auto;
   width: 246px;
+  max-height: calc(100% - 84px);
   transition: width 0.42s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
