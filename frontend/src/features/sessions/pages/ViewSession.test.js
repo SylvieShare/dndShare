@@ -21,6 +21,7 @@ const encounterMarkerSource = readFileSync(fileURLToPath(new URL('../components/
 const encounterMenuSource = readFileSync(fileURLToPath(new URL('../components/EncounterRowMenu.vue', import.meta.url)), 'utf8')
 const encounterFlowSource = readFileSync(fileURLToPath(new URL('../composables/useEncounterFlow.js', import.meta.url)), 'utf8')
 const encounterStatesSource = readFileSync(fileURLToPath(new URL('../composables/useEncounterStates.js', import.meta.url)), 'utf8')
+const encounterTransitionSource = readFileSync(fileURLToPath(new URL('../composables/useEncounterCombatTransition.js', import.meta.url)), 'utf8')
 const encounterOrderSource = readFileSync(fileURLToPath(new URL('../components/EncounterOrderMarker.vue', import.meta.url)), 'utf8')
 const sceneSource = readFileSync(fileURLToPath(new URL('../components/SceneTab.vue', import.meta.url)), 'utf8')
 const encounterStylesSource = readFileSync(fileURLToPath(new URL('../components/styles/EncounterTab.css', import.meta.url)), 'utf8')
@@ -176,6 +177,17 @@ describe('ViewSession participant rail', () => {
     expect(encounterStatesSource).toContain('valueId: b.content?.states_id')
     expect(encounterRowSource).toContain('title="Состояния"')
     expect(encounterRowSource).toContain('suggestStoreLocal.ensure(sid)')
+  })
+
+  it('moves combatant tiles between reserve and combat when combat starts or ends', () => {
+    expect(encounterSource).toContain('useEncounterCombatTransition(enc, encounterRoot)')
+    expect(encounterSource).toContain(':disabled="combatTransitioning ||')
+    expect(encounterRowSource).toContain(':data-encounter-uid="combatant.uid"')
+    expect(encounterTransitionSource).toContain("phase.value = starting ? 'starting' : 'ending'")
+    expect(encounterTransitionSource).toContain('cloneForFlight(source, from)')
+    expect(encounterTransitionSource).toContain('landingAnimation(pair.target, delayMs)')
+    expect(encounterTransitionSource).toContain('prefers-reduced-motion: reduce')
+    expect(encounterStylesSource).toContain('@keyframes enc-combat-title-in')
   })
 
   it('uses per-participant actions without bulk selection controls', () => {

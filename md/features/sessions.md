@@ -219,6 +219,12 @@ live-status chip is shown. The NPC-reserve select-all control follows the same
 left-aligned title placement. State editing uses the character setting's state
 value path and suggestion dictionary (the `states` part of the combined D&D
 status overview), so the same condition list is available for players and NPCs.
+Starting and ending combat captures the visible source and destination tiles,
+then flies non-interactive visual copies between their screen positions with a
+short stagger and landing transition. NPCs move between reserve and combat;
+players animate between the persistent participant rail and their combat-scene
+copies. The underlying encounter mutation remains immediate, controls are
+locked for the transition, and reduced-motion users get the direct state change.
 
 When the combat rail changes the canvas safe-left inset, `ChapterGraphCanvas`
 re-measures that inherited layout value after the parent DOM update. The

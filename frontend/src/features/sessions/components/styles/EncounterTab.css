@@ -230,6 +230,29 @@
 .enc-block--disabled .enc-add-dashed,
 .enc-block--disabled .enc-reserve-list { pointer-events: none; }
 
+.enc-wrap--combat-starting .enc-block--combat .enc-section-title-row {
+  animation: enc-combat-title-in 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.enc-wrap--combat-starting .enc-toolbar-main,
+.enc-wrap--combat-starting .enc-toolbar-actions {
+  animation: enc-combat-toolbar-settle 0.38s 0.12s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.enc-wrap--combat-ending .enc-block--npc .enc-section-title-row {
+  animation: enc-combat-title-in 0.36s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes enc-combat-title-in {
+  from { opacity: 0; transform: translateY(-7px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes enc-combat-toolbar-settle {
+  from { opacity: 0.35; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 .enc-section-title-row {
   display: flex;
   min-height: 30px;
@@ -377,4 +400,8 @@
 @media (prefers-reduced-motion: reduce) {
   .enc-icon-btn,
   .enc-section-icon-btn { transition: none; }
+  .enc-wrap--combat-starting .enc-block--combat .enc-section-title-row,
+  .enc-wrap--combat-starting .enc-toolbar-main,
+  .enc-wrap--combat-starting .enc-toolbar-actions,
+  .enc-wrap--combat-ending .enc-block--npc .enc-section-title-row { animation: none; }
 }

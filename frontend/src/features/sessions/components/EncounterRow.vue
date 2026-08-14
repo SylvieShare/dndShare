@@ -3,6 +3,8 @@
     class="enc-row-shell"
     :class="{ 'enc-row-shell--placeholder': enc.sortable.isSource(combatant) }"
     :data-sortable-key="combatant.uid"
+    :data-encounter-uid="combatant.uid"
+    :data-encounter-section="section"
   >
     <EncounterOrderMarker
       v-if="order != null"

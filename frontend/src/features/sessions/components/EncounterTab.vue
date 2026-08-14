@@ -1,5 +1,13 @@
 <template>
-  <div class="enc-wrap" :class="{ 'enc-wrap--workspace': workspace }">
+  <div
+    ref="encounterRoot"
+    class="enc-wrap"
+    :class="{
+      'enc-wrap--workspace': workspace,
+      'enc-wrap--combat-starting': combatTransitionPhase === 'starting',
+      'enc-wrap--combat-ending': combatTransitionPhase === 'ending',
+    }"
+  >
 
     <BaseTile class="enc-toolbar">
       <div v-if="workspace" class="enc-workspace-heading">
@@ -13,10 +21,10 @@
           type="button"
           class="enc-icon-btn enc-icon-btn--primary"
           :class="{ 'enc-icon-btn--end': enc.encounter.active }"
-          :disabled="!enc.encounter.active && startSelectionCount === 0"
+          :disabled="combatTransitioning || (!enc.encounter.active && startSelectionCount === 0)"
           :title="enc.encounter.active ? 'Закончить бой' : `Начать бой (${startSelectionCount})`"
           :aria-label="enc.encounter.active ? 'Закончить бой' : 'Начать бой'"
-          @click="enc.toggleCombat"
+          @click="toggleCombat"
         >
           <Square v-if="enc.encounter.active" :size="18" />
           <Swords v-else :size="19" />
@@ -261,7 +269,7 @@
 </template>
 
 <script setup>
-import { computed, provide, reactive } from 'vue'
+import { computed, provide, reactive, ref } from 'vue'
 import {
   ArchiveRestore,
   BookOpen,
@@ -280,6 +288,7 @@ import BaseTile from '@/shared/ui/BaseTile.vue'
 import DndHpCalcModal from '@/features/character-editor/blocks/dnd/DndHpCalcModal'
 import EncounterGraveyardMenu from '@/features/sessions/components/EncounterGraveyardMenu.vue'
 import EncounterRow from '@/features/sessions/components/EncounterRow'
+import { useEncounterCombatTransition } from '@/features/sessions/composables/useEncounterCombatTransition'
 import FormActionButtons from '@/shared/ui/form/FormActionButtons'
 import FormField from '@/shared/ui/form/FormField'
 import FormNumberInput from '@/shared/ui/form/FormNumberInput'
@@ -299,6 +308,12 @@ const props = defineProps({
 defineEmits(['view-participant'])
 
 const enc = props.encounter
+const encounterRoot = ref(null)
+const {
+  transitioning: combatTransitioning,
+  phase: combatTransitionPhase,
+  toggleCombat,
+} = useEncounterCombatTransition(enc, encounterRoot)
 
 provide('encounter', enc)
 
