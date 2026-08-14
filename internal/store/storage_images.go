@@ -11,7 +11,7 @@ import (
 type StorageImageRecord struct {
 	ID     int64
 	UserID *int64
-	Key    string
+	Key    *string
 	URL    string
 	Type   *string
 }
@@ -59,9 +59,10 @@ func (s *Store) GetActiveStorageImageByURL(ctx context.Context, url, typ string)
 }
 
 // MarkStorageImageDeletedIfUnreferenced marks an orphaned object as deleted
-// and returns its S3 key. A nil key means another record still references it.
+// and returns its S3 key. A nil key means the row stayed referenced or the
+// image is an external URL with no S3 object.
 func (s *Store) MarkStorageImageDeletedIfUnreferenced(ctx context.Context, id int64) (*string, error) {
-	var key string
+	var key *string
 	err := s.pool.QueryRow(ctx,
 		`UPDATE dndshare.storage_image img
 		    SET deleted = true
@@ -78,7 +79,7 @@ func (s *Store) MarkStorageImageDeletedIfUnreferenced(ctx context.Context, id in
 	if err != nil {
 		return nil, err
 	}
-	return &key, nil
+	return key, nil
 }
 
 func (s *Store) scanStorageImage(ctx context.Context, query string, args ...any) (StorageImageRecord, error) {

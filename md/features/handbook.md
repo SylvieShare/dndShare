@@ -26,6 +26,8 @@ Item icons are metadata outside rules JSON. `item.svg` is the API projection of
 `item.iconImageId/iconImageUrl` from `item.icon_image_id → storage_image/S3`.
 The database allows at most one format. All item reads, including paged lists
 and multi-type search, return the assigned projection.
+Bestiary artwork follows the same contract: imported CDN URLs are registered as
+system `storage_image` rows and are never stored in `item.data`.
 
 Saved user items are backfilled to that source during startup. Personal source
 ids are never stored or read in `item.data`, and item/suggest id reads expose

@@ -111,6 +111,7 @@ func jobBestiaryImport(s *Server, jc *JobContext) error {
 					jc.Increment(1, "Ошибка: "+slug)
 					return
 				}
+				imageURL := bestiaryImageURL(detail)
 
 				exists, err := b.s.store.BestiaryFindItemByNameEn(ctx, bestiaryItemTypeEnemy, nameEng)
 				if err != nil {
@@ -119,14 +120,14 @@ func jobBestiaryImport(s *Server, jc *JobContext) error {
 					return
 				}
 				if exists {
-					if err := b.s.store.BestiaryUpdateItem(ctx, nameEng, nameRus, mustMarshal(data), bestiaryItemTypeEnemy); err != nil {
+					if err := b.s.store.BestiaryUpdateItem(ctx, nameEng, nameRus, mustMarshal(data), imageURL, bestiaryItemTypeEnemy); err != nil {
 						errList = append(errList, fmt.Sprintf("%s: %s", slug, err.Error()))
 						jc.Increment(1, "Ошибка: "+slug)
 						return
 					}
 					updated++
 				} else {
-					if _, err := b.s.store.BestiaryCreateItem(ctx, nameRus, nameEng, mustMarshal(data), bestiaryItemTypeEnemy); err != nil {
+					if _, err := b.s.store.BestiaryCreateItem(ctx, nameRus, nameEng, mustMarshal(data), imageURL, bestiaryItemTypeEnemy); err != nil {
 						errList = append(errList, fmt.Sprintf("%s: %s", slug, err.Error()))
 						jc.Increment(1, "Ошибка: "+slug)
 						return
@@ -355,15 +356,6 @@ func (b *bestiaryImport) mapCreatureToData(ctx context.Context, d any, sizeIds [
 		data["description"] = description
 	}
 
-	if images, ok := asAnySlice(jPath(d, "images")); ok {
-		for _, img := range images {
-			if s := jStr(img, ""); strings.HasPrefix(s, ttgImagePrefix) {
-				data["image_url"] = s
-				break
-			}
-		}
-	}
-
 	if feats := buildBlocks(jPath(d, "feats")); len(feats) > 0 {
 		data["feats"] = feats
 	}
@@ -375,6 +367,19 @@ func (b *bestiaryImport) mapCreatureToData(ctx context.Context, d any, sizeIds [
 	}
 
 	return data, nil
+}
+
+func bestiaryImageURL(d any) string {
+	images, ok := asAnySlice(jPath(d, "images"))
+	if !ok {
+		return ""
+	}
+	for _, img := range images {
+		if value := jStr(img, ""); strings.HasPrefix(value, ttgImagePrefix) {
+			return value
+		}
+	}
+	return ""
 }
 
 func (b *bestiaryImport) getOrCreateSuggestByCode(ctx context.Context, typeID int64, value, code string) (int64, error) {

@@ -198,6 +198,55 @@ DO $$ BEGIN
     END IF;
 END $$;
 
+-- Creature artwork used to be the only item image kept inside rules JSON.
+-- Move it to the canonical raster icon relation before runtime reads begin.
+-- The imported URL points at the upstream bestiary CDN, so no S3 key exists.
+DO $$
+DECLARE
+    creature record;
+    saved_image_id int8;
+BEGIN
+    FOR creature IN
+        SELECT id, user_id, btrim(data ->> 'image_url') AS image_url
+        FROM dndshare.item
+        WHERE type_id = 6
+          AND jsonb_typeof(data -> 'image_url') = 'string'
+          AND btrim(data ->> 'image_url') <> ''
+        ORDER BY id
+    LOOP
+        IF NOT EXISTS (
+            SELECT 1 FROM dndshare.item
+            WHERE id = creature.id AND icon_image_id IS NOT NULL
+        ) THEN
+            INSERT INTO dndshare.storage_image (user_id, "key", url, "type")
+            VALUES (creature.user_id, NULL, creature.image_url, 'bestiary')
+            RETURNING id INTO saved_image_id;
+
+            UPDATE dndshare.item
+            SET icon_svg_id = NULL,
+                icon_image_id = saved_image_id
+            WHERE id = creature.id;
+        END IF;
+    END LOOP;
+END
+$$;
+
+UPDATE dndshare.item
+SET data = data - 'image_url'
+WHERE type_id = 6 AND data ? 'image_url';
+
+UPDATE dndshare.item_type
+SET fields = COALESCE((
+    SELECT jsonb_agg(field ORDER BY ord)
+    FROM jsonb_array_elements(fields) WITH ORDINALITY rows(field, ord)
+    WHERE field ->> 'key' <> 'image_url'
+), '[]'::jsonb)
+WHERE id = 6
+  AND EXISTS (
+      SELECT 1 FROM jsonb_array_elements(fields) field
+      WHERE field ->> 'key' = 'image_url'
+  );
+
 -- Existing saved custom items acquire their owner's default source. Runtime
 -- only reads the column after this startup migration; legacy JSON aliases are
 -- removed rather than supported as fallbacks.

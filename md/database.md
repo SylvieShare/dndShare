@@ -73,6 +73,8 @@ Startup data correction переводит прежние значения в э
 вариантов. `item_content_source` связывает item с публикациями. Иконка item
 задаётся не более чем одной из колонок: `icon_svg_id → svg_storage` или
 `icon_image_id → storage_image/S3`; обе ссылки не являются частью `item.data`.
+Импортированные изображения существ также используют `icon_image_id`; внешний
+URL хранится в системной строке `storage_image`, а не в `item.data`.
 Startup schema переименовывает прежний `item.svg_id` в `icon_svg_id` без
 runtime alias. Sections `schema/06_item_icons.sql` и
 `schema/07_feature_icons.sql` идемпотентно создают SVG для базового оружия,

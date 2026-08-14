@@ -172,11 +172,6 @@
     "type": "text"
   },
   {
-    "name": "Изображение",
-    "key": "image_url",
-    "type": "text"
-  },
-  {
     "name": "Особенности",
     "key": "feats",
     "type": "blocks"

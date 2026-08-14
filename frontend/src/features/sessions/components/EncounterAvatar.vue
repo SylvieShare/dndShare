@@ -25,9 +25,13 @@ const isNpc    = computed(() => props.combatant.type === 'npc')
 
 const playerAva = computed(() => isPlayer.value ? enc.getPlayerAva(props.combatant.charId) : null)
 
-// The bestiary item's `svg` field holds the creature artwork — an uploaded image
-// (URL) or inline <svg> markup. Resolve it for NPCs.
-const npcArt = computed(() => isNpc.value ? (enc.npcItem(props.combatant)?.svg || '') : '')
+// Raster creature artwork is projected from item.icon_image_id; an assigned
+// SVG remains the secondary supported icon format.
+const npcArt = computed(() => {
+  if (!isNpc.value) return ''
+  const item = enc.npcItem(props.combatant)
+  return item?.iconImageUrl || item?.svg || ''
+})
 const npcArtIsUrl = computed(() => /^(https?:|\/|data:image)/.test(npcArt.value))
 
 const imgSrc = computed(() => {
