@@ -46,16 +46,16 @@
         :session-uuid="sessionUuid"
         :is-dm="isDm"
         :locked="!!workspaceMode"
-        :spotlight-chapter-id="workspaceMotionMode ? (workspaceChapter?.id ?? null) : null"
+        :workspace-chapter-id="workspaceChapter?.id ?? null"
         :workspace-mode="workspaceMotionMode"
         @open-scenes="openChapterScenes"
         @open-combat="toggleCombatWorkspace"
         @edit-session="openEdit"
+        @close-workspace="closeWorkspace"
         @status-change="status => { session = { ...session, status } }"
       >
         <SessionCenterWorkspace
-          v-if="workspaceMode && (workspaceRevealed || workspaceClosing)"
-          :mode="workspaceMode"
+          v-if="workspaceMode === 'combat' && (workspaceRevealed || workspaceClosing)"
           :closing="workspaceClosing"
           :session-uuid="sessionUuid"
           :session="session"
@@ -65,7 +65,6 @@
           :chapter="workspaceChapter"
           @close="closeWorkspace"
           @view-participant="openParticipant"
-          @scene-count="chapterGraph.setSceneCount"
         />
       </ChapterGraphTab>
 

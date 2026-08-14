@@ -12,7 +12,7 @@
 .nested-graph-grid {
   position: absolute;
   inset: 0;
-  background-color: transparent;
+  background-color: var(--app-canvas-bg);
   background-image: radial-gradient(circle, var(--app-canvas-dot-color) 1px, transparent 1px);
 }
 .nested-graph-world {

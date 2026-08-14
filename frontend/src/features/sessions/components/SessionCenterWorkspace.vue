@@ -3,10 +3,9 @@
     class="session-center-workspace"
     :class="{ 'session-center-workspace--closing': closing, 'session-center-workspace--without-chapter': !chapter }"
     :style="{ '--session-workspace-header-left': chapter ? '252px' : '0px' }"
-    :aria-label="mode === 'combat' ? 'Бой' : 'Сценарии главы'"
+    aria-label="Бой"
   >
     <EncounterTab
-      v-if="mode === 'combat'"
       workspace
       :session-uuid="sessionUuid"
       :session="session"
@@ -15,19 +14,10 @@
       :encounter="encounter"
       @view-participant="$emit('view-participant', $event)"
     />
-    <SceneGraphWorkspace
-      v-else-if="chapter"
-      :session-uuid="sessionUuid"
-      :chapter="chapter"
-      :is-dm="isDm"
-      @exit="$emit('close')"
-      @scene-count="(...args) => $emit('scene-count', ...args)"
-    />
-
     <button
       type="button"
       class="session-center-workspace-close"
-      :aria-label="mode === 'combat' ? 'Закрыть бой' : 'Закрыть сценарии'"
+      aria-label="Закрыть бой"
       title="Закрыть"
       @click="$emit('close')"
     >
@@ -40,10 +30,8 @@
 
 <script setup>
 import EncounterTab from '@/features/sessions/components/EncounterTab'
-import SceneGraphWorkspace from '@/features/sessions/components/SceneGraphWorkspace.vue'
 
 defineProps({
-  mode: { type: String, required: true },
   closing: { type: Boolean, default: false },
   sessionUuid: { type: String, required: true },
   session: { type: Object, required: true },
@@ -52,7 +40,7 @@ defineProps({
   encounter: { type: Object, required: true },
   chapter: { type: Object, default: null },
 })
-defineEmits(['close', 'scene-count', 'view-participant'])
+defineEmits(['close', 'view-participant'])
 </script>
 
 <style scoped>
@@ -82,7 +70,6 @@ defineEmits(['close', 'scene-count', 'view-participant'])
 }
 
 .session-center-workspace :deep(.enc-wrap),
-.session-center-workspace :deep(.scene-graph-workspace),
 .session-center-workspace-close {
   pointer-events: auto;
 }

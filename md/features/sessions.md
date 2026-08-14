@@ -110,14 +110,17 @@ current promotes it to `in_progress`; only one chapter in the session is
 current.
 
 `ChapterGraphToolbar` is the one backed command bar in the workspace. It combines
-the editable session name/status, arc switcher and ordering, chapter creation,
-combat launcher, current-chapter focus and zoom. There is no second local tab
-switcher or session title bar. `ChapterGraphCanvas` uses the application-wide
-canvas background and dot-color tokens, supports pan/zoom and stores the
-viewport per arc in local storage; its 24px base grid repositions and scales
-with that viewport. Nodes can be dragged; during an active drag their transform
-transition is disabled so the node and every connected edge update in the same
-frame. Spotlight transitions remain animated outside dragging.
+the editable session name/status, arc switcher and ordering, combat launcher,
+current-chapter focus and zoom. Creation is contextual and lives on the canvas
+in a center-right vertical action dock, immediately left of the right tools rail;
+there is no chapter/scenario/block creation button in the header. There is no
+second local tab switcher or session title bar. `SessionGraphCanvas` keeps one
+physical `NestedGraphCanvas` mounted for all narrative levels. It uses the
+application-wide canvas background and dot-color tokens, supports pan/zoom and
+stores a viewport per graph in local storage; its 24px base grid repositions and
+scales with that viewport. Nodes can be dragged; during an active drag their
+transform transition is disabled so the node and every connected edge update in
+the same frame. Spotlight transitions remain animated outside dragging.
 A chapter scenarios or combat workspace uses one overlapping transition: the
 spotlight chapter starts moving to the workspace header immediately, while the
 central content fades in during the second half of that movement. On close, the
@@ -148,33 +151,33 @@ upload an image through the normal storage image endpoint and adjust its focal
 point. A chapter stores exactly one image source.
 
 Scenarios belong to chapters and form a second directed graph. A chapter action
-or double click opens `SceneGraphWorkspace` in the existing transparent
-`SessionCenterWorkspace`. The selected chapter gets a temporary presentation
-transform to the layer's top-left corner; normal coordinates stay unchanged and
-the other chapter nodes and edges fade out. The scenario canvas owns an
-independent viewport, persisted coordinates and directed edges. Its nodes can be
+or double click keeps the same canvas engine mounted and swaps its chapter nodes
+and edges for scenario nodes and edges. The selected chapter gets a temporary
+presentation transform to the safe top-left corner; normal coordinates stay
+unchanged and the other nodes and edges fade out. Once the swap completes it is
+rendered as a fixed ancestor card above the same canvas. The scenario graph has
+its own persisted viewport, coordinates and directed edges. Its nodes can be
 dragged, linked through the same right-side port pattern and created, renamed or
 deleted by the DM.
 
-Double-clicking a scenario opens the third graph. The scenario node moves to the
-workspace header immediately to the right of its chapter, its peers and edges
-fade out, and `SceneBlockGraphWorkspace` appears below the two ancestor cards.
+Double-clicking a scenario switches the same physical canvas to the third graph.
+The scenario node first moves to the top immediately to the right of its chapter
+and its peers and edges fade out; then block nodes replace the graph payload.
 Text and list blocks have independent coordinates, colors, content and directed
 links. A block double click opens `SceneBlockEditorModal`; the node action menu
-also provides edit and delete actions. Double-clicking the pinned scenario goes
-back to its scenario canvas. Double-clicking the pinned chapter at either nested
-level closes the nested workspace and returns to the chapter canvas. Thus the
-visible ancestor chain is also the level navigation and does not duplicate a
-breadcrumb bar.
+also provides edit and delete actions. Double-clicking the pinned scenario swaps
+the payload back to scenarios. Double-clicking the pinned chapter at either
+nested level returns to chapters. Thus the visible ancestor chain is also the
+level navigation and does not duplicate a breadcrumb bar or physical canvas.
 
-`NestedGraphCanvas` owns the shared pan, zoom, drag, link-port, edge and
-spotlight mechanics of both nested levels. `useSceneGraph` and
-`useSceneBlockGraph` own their server state and optimistic position previews.
-Each canvas persists only its viewport in local storage; node positions and
-edges are server state. `TextPromptDialog` is used for scenario create/rename,
-`ConfirmDialog` for destructive actions, and `SceneBlockEditorModal` for block
-content. Scene and block CRUD remains in `session_scenes.go`; graph reads,
-positions and links are handled by `session_scene_graph.go`.
+`NestedGraphCanvas` owns pan, zoom, drag, link-port, edge and spotlight mechanics
+for all three levels. `useSceneGraph` and `useSceneBlockGraph` own their server
+state and optimistic position previews. Each graph key persists only its
+viewport in local storage; node positions and edges are server state.
+`TextPromptDialog` is used for scenario create/rename, `ConfirmDialog` for
+destructive actions, and `SceneBlockEditorModal` for block content. Scene and
+block CRUD remains in `session_scenes.go`; graph reads, positions and links are
+handled by `session_scene_graph.go`.
 
 Combat still uses the same canvas layer from the command bar and focuses the
 current chapter. Its standalone combat header sits to the right of that node;
@@ -264,7 +267,7 @@ collapses the scene and softly reveals the returned NPC reserve. Player tiles do
 not move between rails. Controls stay locked for the short transition, while
 reduced-motion users get the direct state change.
 
-When the combat rail changes the canvas safe-left inset, `ChapterGraphCanvas`
+When the combat rail changes the canvas safe-left inset, `NestedGraphCanvas`
 re-measures that inherited layout value after the parent DOM update. The
 spotlight chapter therefore animates to the new combat boundary instead of the
 normal-width player-rail position.

@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, unref } from 'vue'
 import {
   createSceneBlockEdge as apiCreateEdge,
   createSceneItem as apiCreateItem,
@@ -14,31 +14,49 @@ export function useSceneBlockGraph({ sessionUuid, sceneId }) {
   const loading = ref(false)
   const loaded = ref(false)
   const error = ref('')
+  let loadToken = 0
+
+  function resolvedSceneId() {
+    return unref(sceneId)
+  }
+
+  function reset() {
+    loadToken += 1
+    items.value = []
+    edges.value = []
+    loading.value = false
+    loaded.value = false
+    error.value = ''
+  }
 
   async function load() {
-    if (loading.value || sceneId == null) return
+    const activeSceneId = resolvedSceneId()
+    if (loading.value || activeSceneId == null) return
+    const token = ++loadToken
     loading.value = true
     error.value = ''
     try {
-      const graph = await getSceneBlockGraph(sessionUuid, sceneId)
+      const graph = await getSceneBlockGraph(sessionUuid, activeSceneId)
+      if (token !== loadToken) return
       items.value = graph?.items ?? []
       edges.value = graph?.edges ?? []
       loaded.value = true
     } catch {
+      if (token !== loadToken) return
       error.value = 'Не удалось загрузить холст блоков'
     } finally {
-      loading.value = false
+      if (token === loadToken) loading.value = false
     }
   }
 
   async function createItem(payload, position) {
-    const item = await apiCreateItem(sessionUuid, sceneId, payload, position)
+    const item = await apiCreateItem(sessionUuid, resolvedSceneId(), payload, position)
     items.value = [...items.value, item]
     return item
   }
 
   async function updateItem(itemId, payload) {
-    const updated = await apiUpdateItem(sessionUuid, sceneId, itemId, {
+    const updated = await apiUpdateItem(sessionUuid, resolvedSceneId(), itemId, {
       title: payload.title,
       data: payload.data,
       dataChanged: true,
@@ -50,7 +68,7 @@ export function useSceneBlockGraph({ sessionUuid, sceneId }) {
   }
 
   async function deleteItem(itemId) {
-    await apiDeleteItem(sessionUuid, sceneId, itemId)
+    await apiDeleteItem(sessionUuid, resolvedSceneId(), itemId)
     items.value = items.value.filter(item => item.id !== itemId)
     edges.value = edges.value.filter(edge => edge.fromItemId !== itemId && edge.toItemId !== itemId)
   }
@@ -63,12 +81,14 @@ export function useSceneBlockGraph({ sessionUuid, sceneId }) {
 
   async function savePosition(itemId, x, y) {
     setLocalPosition(itemId, x, y)
-    const updated = await apiUpdateItem(sessionUuid, sceneId, itemId, { positionX: x, positionY: y })
+    const updated = await apiUpdateItem(sessionUuid, resolvedSceneId(), itemId, { positionX: x, positionY: y })
     items.value = items.value.map(item => item.id === itemId ? updated : item)
   }
 
   async function createEdge(fromItemId, toItemId) {
-    const edge = await apiCreateEdge(sessionUuid, { sceneId, fromItemId, toItemId, label: null })
+    const edge = await apiCreateEdge(sessionUuid, {
+      sceneId: resolvedSceneId(), fromItemId, toItemId, label: null,
+    })
     edges.value = [...edges.value, edge]
     return edge
   }
@@ -80,7 +100,7 @@ export function useSceneBlockGraph({ sessionUuid, sceneId }) {
 
   return {
     items, edges, loading, loaded, error,
-    load, createItem, updateItem, deleteItem,
+    load, reset, createItem, updateItem, deleteItem,
     setLocalPosition, savePosition, createEdge, deleteEdge,
   }
 }

@@ -10,13 +10,13 @@
       :is-dm="isDm"
       :zoom="zoom"
       :locked="locked"
+      :zoom-locked="workspaceMode === 'combat'"
       :combat-active="workspaceMode === 'combat'"
       @select-arc="selectArc"
       @create-arc="openArcCreate"
       @edit-arc="openArcEdit"
       @delete-arc="confirmArcDelete"
       @move-arc="moveArc"
-      @create-chapter="openChapterCreate"
       @focus-current="focusCurrent"
       @zoom="canvas?.zoomBy($event)"
       @edit-session="$emit('edit-session')"
@@ -27,18 +27,16 @@
     <div class="chapter-canvas-stage">
       <div v-if="actionError" class="chapter-action-error" role="alert">{{ actionError }}</div>
       <div v-if="graph.loading.value" class="chapter-graph-loading">Загружаем карту кампании…</div>
-      <ChapterGraphCanvas
+      <SessionGraphCanvas
         v-else
         ref="canvas"
-        :arc-id="graph.selectedArc.value?.id"
+        :graph="graph"
         :session-uuid="sessionUuid"
-        :chapters="graph.visibleChapters.value"
-        :edges="graph.visibleEdges.value"
+        :is-dm="isDm"
         :current-chapter-id="graph.currentChapter.value?.id"
-        :linking-from="linkingFrom"
-        :locked="locked"
-        :spotlight-chapter-id="spotlightChapterId"
-        :spotlight-layout-key="workspaceMode"
+        :workspace-mode="workspaceMode"
+        :workspace-chapter-id="workspaceChapterId"
+        :chapter-linking-from="linkingFrom"
         @node-click="openNodeMenu"
         @node-double-click="openScenes"
         @edge-click="openEdgeMenu"
@@ -46,7 +44,9 @@
         @finish-link="finishLink"
         @preview-position="graph.setLocalPosition"
         @save-position="savePosition"
-        @create-first="openChapterCreate"
+        @create-chapter="openChapterCreate"
+        @close-workspace="$emit('close-workspace')"
+        @scene-count="graph.setSceneCount"
         @view-change="zoom = $event.zoom"
       />
       <slot />
@@ -110,9 +110,9 @@ import { computed, nextTick, ref, watch } from 'vue'
 import ArcEditorModal from '@/features/sessions/components/ArcEditorModal.vue'
 import ChapterEdgeModal from '@/features/sessions/components/ChapterEdgeModal.vue'
 import ChapterEditorModal from '@/features/sessions/components/ChapterEditorModal.vue'
-import ChapterGraphCanvas from '@/features/sessions/components/ChapterGraphCanvas.vue'
 import ChapterGraphMenus from '@/features/sessions/components/ChapterGraphMenus.vue'
 import ChapterGraphToolbar from '@/features/sessions/components/ChapterGraphToolbar.vue'
+import SessionGraphCanvas from '@/features/sessions/components/SessionGraphCanvas.vue'
 import ConfirmDialog from '@/shared/ui/ConfirmDialog.vue'
 
 const props = defineProps({
@@ -121,10 +121,10 @@ const props = defineProps({
   session: { type: Object, default: null },
   isDm: { type: Boolean, default: false },
   locked: { type: Boolean, default: false },
-  spotlightChapterId: { type: [Number, String], default: null },
+  workspaceChapterId: { type: [Number, String], default: null },
   workspaceMode: { type: String, default: null },
 })
-const emit = defineEmits(['open-scenes', 'open-combat', 'edit-session', 'status-change'])
+const emit = defineEmits(['open-scenes', 'open-combat', 'edit-session', 'status-change', 'close-workspace'])
 
 const canvas = ref(null)
 const menus = ref(null)

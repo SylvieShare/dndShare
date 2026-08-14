@@ -32,6 +32,7 @@
       <span class="chapter-node-name">{{ chapter.name }}</span>
     </div>
     <button
+      v-if="showLinkPort"
       type="button"
       class="chapter-link-port"
       :disabled="spotlight || suppressed"
@@ -60,12 +61,15 @@ const props = defineProps({
   spotlight: { type: Boolean, default: false },
   suppressed: { type: Boolean, default: false },
   dragging: { type: Boolean, default: false },
+  embedded: { type: Boolean, default: false },
+  showLinkPort: { type: Boolean, default: true },
 })
 defineEmits(['pointerdown', 'start-link'])
 
 const status = computed(() => chapterStatus(props.chapter.status))
 const imageUrl = computed(() => chapterImageUrl(props.chapter))
 const nodeStyle = computed(() => {
+  if (props.embedded) return undefined
   const position = props.presentation ?? {
     x: props.chapter.positionX,
     y: props.chapter.positionY,

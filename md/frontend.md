@@ -142,19 +142,21 @@ fromIndex, toIndex)`. Для нескольких контейнеров исп�
 `useSortable`; DOM-контейнер помечается `data-sortable-container`.
 
 Свободная раскладка кампании использует отдельную pointer-модель, а не сортировку
-списка. `features/sessions/components/ChapterGraphCanvas.vue` владеет pan, zoom,
-перетаскиванием узлов и hit targets связей; `useChapterGraph.js` владеет
-серверным состоянием и optimistic preview координат. В local storage холст
-сохраняет только viewport. Позиции узлов, арки и переходы сохраняются через
-session graph API. Формы и разрушающие действия графа по-прежнему используют
-`AppModalFrame` и `ConfirmDialog`, обычный клик по узлу/связи — `BasePopover`.
+списка. `SessionGraphCanvas.vue` держит один постоянный экземпляр
+`NestedGraphCanvas.vue`, который владеет pan, zoom, перетаскиванием узлов и hit
+targets связей. При переходе глава → сценарии → блоки меняются только nodes,
+edges, размеры карточек и ключ сохраняемого viewport; второй физический холст не
+монтируется. `useChapterGraph.js`, `useSceneGraph.js` и
+`useSceneBlockGraph.js` раздельно владеют серверным состоянием уровней и
+optimistic preview координат. В local storage сохраняется только viewport,
+позиции и связи остаются серверным состоянием.
 
-Вложенные холсты сценариев и блоков используют общий
-`features/sessions/components/NestedGraphCanvas.vue`: он повторяет pointer,
-pan/zoom, link-port и spotlight-контракт без копирования server state главы.
-`useSceneGraph.js` и `useSceneBlockGraph.js` отдельно владеют данными каждого
-родительского холста. Их viewport также локален, а координаты и связи всегда
-сохраняются на сервере.
+Контекстные действия создания выводятся через `CanvasActionDock.vue` поверх
+холста по центру справа, перед правой панелью инструментов. Каждый action —
+отдельная стеклянная кнопка без общего tile-контейнера; глобальная командная
+строка содержит только session/arc/combat/focus/zoom controls. Формы и
+разрушающие действия графа используют `AppModalFrame` и `ConfirmDialog`, обычный
+клик по узлу/связи — `BasePopover`.
 
 ## Форматированные описания
 

@@ -23,7 +23,7 @@
           </marker>
         </defs>
         <g v-for="edge in renderedEdges" :key="edge.id">
-          <path class="nested-graph-edge-hit" :d="edge.path" @pointerdown.stop @click.stop="$emit('edge-click', edge.raw)" />
+          <path class="nested-graph-edge-hit" :d="edge.path" @pointerdown.stop @click.stop="$emit('edge-click', edge.raw, $event.currentTarget)" />
           <path class="nested-graph-edge-line" :d="edge.path" :marker-end="`url(#${markerId})`" />
         </g>
         <path
@@ -42,7 +42,7 @@
         :disabled="locked"
         :style="{ transform: `translate(${edge.mid.x}px, ${edge.mid.y}px) translate(-50%, -50%)` }"
         @pointerdown.stop
-        @click.stop="$emit('edge-click', edge.raw)"
+        @click.stop="$emit('edge-click', edge.raw, $event.currentTarget)"
       >{{ edge.label }}</button>
 
       <div
@@ -87,7 +87,7 @@
       <span>ПУСТОЙ ХОЛСТ</span>
       <strong>{{ emptyTitle }}</strong>
       <p>{{ emptyDescription }}</p>
-      <button v-if="canEdit" type="button" @click.stop="$emit('create-first')">{{ createLabel }}</button>
+      <button v-if="canEdit && showEmptyAction" type="button" @click.stop="$emit('create-first')">{{ createLabel }}</button>
     </div>
 
     <div v-if="linkingFrom" class="nested-graph-link-hint">
@@ -112,12 +112,14 @@ const props = defineProps({
   loading: { type: Boolean, default: false },
   canEdit: { type: Boolean, default: false },
   spotlightNodeId: { type: [Number, String], default: null },
-  spotlightX: { type: Number, default: 252 },
-  spotlightY: { type: Number, default: 0 },
+  spotlightX: { type: Number, default: null },
+  spotlightOffsetX: { type: Number, default: 0 },
+  spotlightY: { type: Number, default: 14 },
   initialTop: { type: Number, default: 210 },
   emptyTitle: { type: String, default: 'Здесь появятся карточки' },
   emptyDescription: { type: String, default: 'Создайте первую карточку и соединяйте карточки связями.' },
   createLabel: { type: String, default: 'Создать' },
+  showEmptyAction: { type: Boolean, default: true },
 })
 const emit = defineEmits([
   'node-click', 'node-double-click', 'edge-click', 'start-link', 'finish-link',
@@ -131,7 +133,9 @@ const pan = ref({ x: 48, y: props.initialTop })
 const zoom = ref(1)
 const cursorWorld = ref(null)
 const gesture = ref(null)
+const viewportRevision = ref(0)
 let lastNodeClick = null
+let resizeObserver = null
 
 const worldStyle = computed(() => ({ transform: `translate(${pan.value.x}px, ${pan.value.y}px) scale(${zoom.value})` }))
 const gridStyle = computed(() => ({
@@ -175,10 +179,13 @@ function edgeMidpoint(from, to) {
 }
 
 function nodeStyle(node) {
+  viewportRevision.value
   const spotlight = node.id === props.spotlightNodeId
+  const frame = safeFrame()
+  const spotlightX = props.spotlightX ?? (frame.left + props.spotlightOffsetX)
   const position = spotlight
     ? {
-        x: (props.spotlightX - pan.value.x) / zoom.value,
+        x: (spotlightX - pan.value.x) / zoom.value,
         y: (props.spotlightY - pan.value.y) / zoom.value,
         scale: 1 / zoom.value,
       }
@@ -204,7 +211,7 @@ function loadView() {
       return
     }
   } catch { /* ignore */ }
-  pan.value = { x: 48, y: props.initialTop }
+  pan.value = { x: safeFrame().left + 48, y: props.initialTop }
   zoom.value = 1
   announceView()
 }
@@ -224,6 +231,16 @@ function pointInWorld(event) {
     x: (event.clientX - rect.left - pan.value.x) / zoom.value,
     y: (event.clientY - rect.top - pan.value.y) / zoom.value,
   }
+}
+
+function safeFrame() {
+  const element = viewport.value
+  const rect = element?.getBoundingClientRect()
+  if (!element || !rect) return { left: 0, right: 0, width: 0, height: 0 }
+  const styles = getComputedStyle(element)
+  const left = Number.parseFloat(styles.getPropertyValue('--chapter-safe-left')) || 0
+  const right = Number.parseFloat(styles.getPropertyValue('--chapter-safe-right')) || 0
+  return { left, right, width: Math.max(0, rect.width - left - right), height: rect.height }
 }
 
 function onCanvasDown(event) {
@@ -258,6 +275,7 @@ function onNodeDown(event, node) {
     offsetX: point.x - node.positionX,
     offsetY: point.y - node.positionY,
     moved: false,
+    anchor: event.currentTarget,
   }
 }
 
@@ -288,7 +306,7 @@ function onPointerUp(event) {
     const node = props.nodes.find(item => item.id === active.node.id)
     if (node) emit('save-position', node.id, node.positionX, node.positionY)
   } else {
-    emit('node-click', active.node)
+    emit('node-click', active.node, active.anchor)
     const now = Date.now()
     if (lastNodeClick?.id === active.node.id && now - lastNodeClick.at < 500) {
       lastNodeClick = null
@@ -324,21 +342,35 @@ function onWheel(event) {
 function zoomBy(factor) {
   if (props.locked || !viewport.value) return
   const rect = viewport.value.getBoundingClientRect()
-  const center = { clientX: rect.left + rect.width / 2, clientY: rect.top + rect.height / 2 }
+  const frame = safeFrame()
+  const centerX = frame.left + frame.width / 2
+  const center = { clientX: rect.left + centerX, clientY: rect.top + rect.height / 2 }
   const before = pointInWorld(center)
   const next = Math.max(0.35, Math.min(1.8, zoom.value * factor))
   zoom.value = next
-  pan.value = { x: rect.width / 2 - before.x * next, y: rect.height / 2 - before.y * next }
+  pan.value = { x: centerX - before.x * next, y: rect.height / 2 - before.y * next }
   saveView()
 }
 
 function viewportCenter() {
   const rect = viewport.value?.getBoundingClientRect()
   if (!rect) return { x: 48, y: props.initialTop }
+  const frame = safeFrame()
   return {
-    x: (rect.width / 2 - pan.value.x) / zoom.value - props.nodeWidth / 2,
+    x: (frame.left + frame.width / 2 - pan.value.x) / zoom.value - props.nodeWidth / 2,
     y: (rect.height / 2 - pan.value.y) / zoom.value - props.nodeHeight / 2,
   }
+}
+
+function focusNode(node) {
+  if (!node || !viewport.value) return
+  const rect = viewport.value.getBoundingClientRect()
+  const frame = safeFrame()
+  pan.value = {
+    x: frame.left + frame.width / 2 - (node.positionX + props.nodeWidth / 2) * zoom.value,
+    y: rect.height / 2 - (node.positionY + props.nodeHeight / 2) * zoom.value,
+  }
+  saveView()
 }
 
 function onKey(event) {
@@ -349,11 +381,16 @@ watch(() => props.graphKey, () => nextTick(loadView))
 watch(() => props.locked, locked => { if (locked) cancelGesture() })
 onMounted(() => {
   loadView()
+  resizeObserver = new ResizeObserver(() => { viewportRevision.value += 1 })
+  resizeObserver.observe(viewport.value)
   window.addEventListener('keydown', onKey)
 })
-onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
+onBeforeUnmount(() => {
+  resizeObserver?.disconnect()
+  window.removeEventListener('keydown', onKey)
+})
 
-defineExpose({ zoomBy, viewportCenter })
+defineExpose({ zoomBy, viewportCenter, focusNode })
 </script>
 
 <style scoped src="./styles/NestedGraphCanvas.css"></style>

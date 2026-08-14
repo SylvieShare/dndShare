@@ -26,7 +26,7 @@ const encounterChallengeSource = readFileSync(fileURLToPath(new URL('../composab
 const encounterChallengeMenuSource = readFileSync(fileURLToPath(new URL('../components/EncounterChallengeMenu.vue', import.meta.url)), 'utf8')
 const encounterChallengeResultSource = readFileSync(fileURLToPath(new URL('../components/EncounterChallengeResult.vue', import.meta.url)), 'utf8')
 const encounterOrderSource = readFileSync(fileURLToPath(new URL('../components/EncounterOrderMarker.vue', import.meta.url)), 'utf8')
-const sceneGraphSource = readFileSync(fileURLToPath(new URL('../components/SceneGraphWorkspace.vue', import.meta.url)), 'utf8')
+const sessionGraphSource = readFileSync(fileURLToPath(new URL('../components/SessionGraphCanvas.vue', import.meta.url)), 'utf8')
 const nestedGraphSource = readFileSync(fileURLToPath(new URL('../components/NestedGraphCanvas.vue', import.meta.url)), 'utf8')
 const encounterStylesSource = readFileSync(fileURLToPath(new URL('../components/styles/EncounterTab.css', import.meta.url)), 'utf8')
 const dicePopupSource = readFileSync(fileURLToPath(new URL('../../../shared/ui/DiceRollPopup.vue', import.meta.url)), 'utf8')
@@ -97,17 +97,16 @@ describe('ViewSession participant rail', () => {
     expect(dicePopupSource).toMatch(/\.dice-pop-roll-wrap\s*\{[^}]*vertical-align:\s*middle;/s)
   })
 
-  it('opens combat and chapter scenes inside a locked transparent canvas workspace', () => {
+  it('keeps combat in the overlay and scenario levels inside one persistent canvas', () => {
     expect(source).toContain('<SessionCenterWorkspace')
-    expect(source).toContain('v-if="workspaceMode && (workspaceRevealed || workspaceClosing)"')
+    expect(source).toContain('v-if="workspaceMode === \'combat\' && (workspaceRevealed || workspaceClosing)"')
     expect(source).toContain(':locked="!!workspaceMode"')
-    expect(source).toContain(':spotlight-chapter-id="workspaceMotionMode ? (workspaceChapter?.id ?? null) : null"')
+    expect(source).toContain(':workspace-chapter-id="workspaceChapter?.id ?? null"')
     expect(source).not.toContain('v-if="combatOpen"')
     expect(source).not.toContain('v-if="sceneWorkspaceChapter"')
-    expect(centerWorkspaceSource).toContain('<SceneGraphWorkspace')
-    expect(sceneGraphSource).toContain('<NestedGraphCanvas')
-    expect(sceneGraphSource).toContain('<SceneBlockGraphWorkspace')
-    expect(sceneGraphSource).toContain(':spotlight-node-id="depth === \'blocks\' ? selectedScene?.id : null"')
+    expect(centerWorkspaceSource).not.toContain('<SceneGraphWorkspace')
+    expect(sessionGraphSource.match(/<NestedGraphCanvas/g)).toHaveLength(1)
+    expect(sessionGraphSource).toContain(':spotlight-node-id="activeSpotlightId"')
     expect(nestedGraphSource).toContain("emit('node-double-click', active.node)")
     expect(centerWorkspaceSource).toContain('bottom: 0;')
     expect(centerWorkspaceSource).not.toContain('.session-center-workspace::after')
@@ -116,7 +115,7 @@ describe('ViewSession participant rail', () => {
     expect(centerWorkspaceSource).not.toContain('<BaseTile')
     expect(encounterSource).toContain("'enc-wrap--workspace': workspace")
     expect(centerWorkspaceSource).not.toContain('<SceneTab')
-    expect(source).toContain('@scene-count="chapterGraph.setSceneCount"')
+    expect(sessionGraphSource).toContain("emit('scene-count', activeChapterId.value, sceneGraph.scenes.value.length)")
   })
 
   it('restores the open combat or chapter scenes workspace after a page reload', () => {

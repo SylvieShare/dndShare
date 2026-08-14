@@ -56,8 +56,6 @@
         </svg>
       </button>
 
-      <span class="chapter-toolbar-rule" />
-      <button type="button" class="chapter-tool-btn chapter-tool-btn--primary" :disabled="locked" @click="$emit('create-chapter')">+ Глава</button>
     </div>
 
     <div class="chapter-toolbar-view">
@@ -71,9 +69,9 @@
         {{ currentChapter ? `Глава ${currentChapter.number}` : 'Текущая глава' }}
       </button>
       <div class="chapter-zoom">
-        <button type="button" aria-label="Уменьшить" :disabled="locked" @click="$emit('zoom', 0.84)">−</button>
+        <button type="button" aria-label="Уменьшить" :disabled="zoomLocked" @click="$emit('zoom', 0.84)">−</button>
         <span>{{ Math.round(zoom * 100) }}%</span>
-        <button type="button" aria-label="Увеличить" :disabled="locked" @click="$emit('zoom', 1.19)">+</button>
+        <button type="button" aria-label="Увеличить" :disabled="zoomLocked" @click="$emit('zoom', 1.19)">+</button>
       </div>
     </div>
   </BaseTile>
@@ -96,11 +94,12 @@ const props = defineProps({
   isDm: { type: Boolean, default: false },
   zoom: { type: Number, default: 1 },
   locked: { type: Boolean, default: false },
+  zoomLocked: { type: Boolean, default: false },
   combatActive: { type: Boolean, default: false },
 })
 const emit = defineEmits([
   'select-arc', 'create-arc', 'edit-arc', 'delete-arc', 'move-arc',
-  'create-chapter', 'focus-current', 'zoom', 'edit-session', 'status-change', 'open-combat',
+  'focus-current', 'zoom', 'edit-session', 'status-change', 'open-combat',
 ])
 const arcTrigger = ref(null)
 const arcOpen = ref(false)
@@ -161,7 +160,6 @@ function pickArc(id) {
 .chapter-tool-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 .chapter-tool-btn--icon { width: 31px; height: 31px; justify-content: center; padding: 0; }
 .chapter-tool-btn--danger:hover { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 45%, transparent); }
-.chapter-tool-btn--primary { border-color: color-mix(in srgb, var(--accent) 45%, transparent); background: color-mix(in srgb, var(--accent) 17%, transparent); color: var(--accent-soft); font-weight: 700; }
 .chapter-tool-btn--combat { border-color: color-mix(in srgb, var(--danger) 38%, transparent); color: color-mix(in srgb, var(--danger) 84%, var(--text-1)); font-weight: 700; }
 .chapter-tool-btn--combat.chapter-tool-btn--active { background: color-mix(in srgb, var(--danger) 18%, transparent); border-color: color-mix(in srgb, var(--danger) 66%, transparent); color: var(--danger); }
 

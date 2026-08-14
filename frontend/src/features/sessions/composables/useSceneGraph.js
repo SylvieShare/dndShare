@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, unref } from 'vue'
 import {
   createScene as apiCreateScene,
   createSceneEdge as apiCreateEdge,
@@ -15,25 +15,43 @@ export function useSceneGraph({ sessionUuid, chapterId }) {
   const loading = ref(false)
   const loaded = ref(false)
   const error = ref('')
+  let loadToken = 0
+
+  function resolvedChapterId() {
+    return unref(chapterId)
+  }
+
+  function reset() {
+    loadToken += 1
+    scenes.value = []
+    edges.value = []
+    loading.value = false
+    loaded.value = false
+    error.value = ''
+  }
 
   async function load() {
-    if (loading.value || chapterId == null) return
+    const activeChapterId = resolvedChapterId()
+    if (loading.value || activeChapterId == null) return
+    const token = ++loadToken
     loading.value = true
     error.value = ''
     try {
-      const graph = await getSceneGraph(sessionUuid, chapterId)
+      const graph = await getSceneGraph(sessionUuid, activeChapterId)
+      if (token !== loadToken) return
       scenes.value = graph?.scenes ?? []
       edges.value = graph?.edges ?? []
       loaded.value = true
     } catch {
+      if (token !== loadToken) return
       error.value = 'Не удалось загрузить холст сценариев'
     } finally {
-      loading.value = false
+      if (token === loadToken) loading.value = false
     }
   }
 
   async function createScene(name, position) {
-    const scene = await apiCreateScene(sessionUuid, chapterId, name, position)
+    const scene = await apiCreateScene(sessionUuid, resolvedChapterId(), name, position)
     scenes.value = [...scenes.value, scene]
     return scene
   }
@@ -62,7 +80,9 @@ export function useSceneGraph({ sessionUuid, chapterId }) {
   }
 
   async function createEdge(fromSceneId, toSceneId) {
-    const edge = await apiCreateEdge(sessionUuid, { chapterId, fromSceneId, toSceneId, label: null })
+    const edge = await apiCreateEdge(sessionUuid, {
+      chapterId: resolvedChapterId(), fromSceneId, toSceneId, label: null,
+    })
     edges.value = [...edges.value, edge]
     return edge
   }
@@ -74,7 +94,7 @@ export function useSceneGraph({ sessionUuid, chapterId }) {
 
   return {
     scenes, edges, loading, loaded, error,
-    load, createScene, renameScene, deleteScene,
+    load, reset, createScene, renameScene, deleteScene,
     setLocalPosition, savePosition, createEdge, deleteEdge,
   }
 }
