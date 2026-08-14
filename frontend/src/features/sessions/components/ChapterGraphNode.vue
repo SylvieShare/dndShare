@@ -9,6 +9,7 @@
         'chapter-node--target': target,
         'chapter-node--spotlight': spotlight,
         'chapter-node--suppressed': suppressed,
+        'chapter-node--dragging': dragging,
       },
     ]"
     :style="nodeStyle"
@@ -58,6 +59,7 @@ const props = defineProps({
   presentation: { type: Object, default: null },
   spotlight: { type: Boolean, default: false },
   suppressed: { type: Boolean, default: false },
+  dragging: { type: Boolean, default: false },
 })
 defineEmits(['pointerdown', 'start-link'])
 
@@ -119,6 +121,10 @@ const sceneLabel = computed(() => {
 .chapter-node--linking { border-color: var(--warning); }
 .chapter-node--target { border-color: var(--success); cursor: crosshair; }
 .chapter-node--completed { filter: saturate(0.72); }
+.chapter-node--dragging {
+  transition-property: opacity, border-color, box-shadow, filter;
+  transition-duration: 0.24s, 0.15s, 0.15s, 0.24s;
+}
 .chapter-node--spotlight { z-index: 10; cursor: default; }
 .chapter-node--spotlight:active { cursor: default; }
 .chapter-node--suppressed {

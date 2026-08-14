@@ -62,4 +62,10 @@ describe('chapter graph workspace', () => {
     expect(canvas).toContain(':presentation="chapter.id === spotlightChapterId ? spotlightPresentation : null"')
     expect(node).toContain('props.presentation ??')
   })
+
+  it('disables transform easing while a node is being dragged', () => {
+    expect(canvas).toContain(":dragging=\"gesture?.type === 'node' && gesture.chapter.id === chapter.id\"")
+    expect(node).toContain("'chapter-node--dragging': dragging")
+    expect(node).toContain('transition-property: opacity, border-color, box-shadow, filter;')
+  })
 })

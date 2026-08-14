@@ -41,7 +41,8 @@ The session page is a campaign workspace rather than a stack of content tabs.
 The chapter canvas fills all available width below `AppHeader`; the participant
 rail floats above its left edge and the dice/music tiles float above its right
 edge. CSS safe-area variables keep focus, zoom and newly created nodes in the
-uncovered part of the canvas. The right rail disappears first on narrow screens,
+uncovered part of the canvas and leave a 28px gap between the central workspace
+and either floating rail. The right rail disappears first on narrow screens,
 then the participant rail.
 
 Панели кубиков и музыки в правом rail сворачиваются независимо, оставляя
@@ -68,7 +69,9 @@ combat launcher, current-chapter focus and zoom. There is no second local tab
 switcher or session title bar. `ChapterGraphCanvas` uses the application-wide
 canvas background and dot-color tokens, supports pan/zoom and stores the
 viewport per arc in local storage; its 24px base grid repositions and scales
-with that viewport. Nodes can be dragged.
+with that viewport. Nodes can be dragged; during an active drag their transform
+transition is disabled so the node and every connected edge update in the same
+frame. Spotlight transitions remain animated outside dragging.
 A regular node click opens its action popover: open the chapter scenarios, make
 current, change status, edit, start a transition, move to another arc or delete.
 Moving a node to another arc removes its old transitions after confirmation
@@ -99,7 +102,9 @@ other nodes and edges fade out. A separate scenarios header is aligned 16px to
 the right of the node; scene item tiles start 16px below both. The layer has no
 shared backed surface. While it is open, pan, zoom, node dragging, transitions,
 arc changes and chapter editing are locked. Closing fades the layer and returns
-the node to its saved graph position.
+the node to its saved graph position. The content viewport reaches the bottom
+edge of the canvas; its top edge uses a gradient backdrop blur so scrolled tiles
+fade beneath the fixed header instead of being clipped abruptly.
 
 In contextual mode `SceneTab.vue` hides redundant arc/chapter selectors and
 restores the last scene or opens the first scene on initial entry. The same

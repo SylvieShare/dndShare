@@ -14,8 +14,8 @@
 }
 
 .campaign-graph {
-  --chapter-safe-left: 276px;
-  --chapter-safe-right: 324px;
+  --chapter-safe-left: 288px;
+  --chapter-safe-right: 336px;
   width: 100%;
   height: 100%;
 }

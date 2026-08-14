@@ -52,6 +52,7 @@
         :presentation="chapter.id === spotlightChapterId ? spotlightPresentation : null"
         :spotlight="chapter.id === spotlightChapterId"
         :suppressed="spotlightChapterId != null && chapter.id !== spotlightChapterId"
+        :dragging="gesture?.type === 'node' && gesture.chapter.id === chapter.id"
         @pointerdown="onNodeDown"
         @start-link="$emit('start-link', $event)"
       />

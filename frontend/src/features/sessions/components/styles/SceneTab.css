@@ -57,12 +57,12 @@
 
 .scene-tab--workspace > .scene-content {
   position: absolute;
-  top: 172px;
+  top: var(--session-workspace-content-top, 172px);
   right: 0;
   bottom: 0;
   left: 0;
   overflow-y: auto;
-  padding: 0 2px 24px;
+  padding: 22px 2px 24px;
   scrollbar-gutter: stable;
 }
 

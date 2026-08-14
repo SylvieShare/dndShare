@@ -64,11 +64,12 @@ const workspaceStyle = computed(() => ({
 
 <style scoped>
 .session-center-workspace {
+  --session-workspace-content-top: 172px;
   position: absolute;
   z-index: 12;
   top: 14px;
   right: var(--chapter-safe-right, 0px);
-  bottom: 14px;
+  bottom: 0;
   left: var(--chapter-safe-left, 0px);
   overflow: hidden;
   opacity: 1;
@@ -76,6 +77,27 @@ const workspaceStyle = computed(() => ({
   transform: translateY(0);
   animation: session-workspace-in 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
   transition: opacity 0.18s ease, transform 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.session-center-workspace::after {
+  position: absolute;
+  z-index: 30;
+  top: var(--session-workspace-content-top);
+  right: 0;
+  left: 0;
+  height: 36px;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--app-canvas-bg) 92%, transparent) 0%,
+    color-mix(in srgb, var(--app-canvas-bg) 52%, transparent) 48%,
+    transparent 100%
+  );
+  content: '';
+  pointer-events: none;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  -webkit-mask-image: linear-gradient(180deg, var(--text-1) 0%, color-mix(in srgb, var(--text-1) 72%, transparent) 55%, transparent 100%);
+  mask-image: linear-gradient(180deg, var(--text-1) 0%, color-mix(in srgb, var(--text-1) 72%, transparent) 55%, transparent 100%);
 }
 
 .session-center-workspace--closing {
@@ -129,7 +151,7 @@ const workspaceStyle = computed(() => ({
   .session-center-workspace {
     top: 10px;
     right: 10px;
-    bottom: 10px;
+    bottom: 0;
     left: 10px;
   }
 }
