@@ -20,6 +20,7 @@ const encounterControlsSource = readFileSync(fileURLToPath(new URL('../component
 const encounterMarkerSource = readFileSync(fileURLToPath(new URL('../components/EncounterMarkerMenu.vue', import.meta.url)), 'utf8')
 const encounterMenuSource = readFileSync(fileURLToPath(new URL('../components/EncounterRowMenu.vue', import.meta.url)), 'utf8')
 const encounterFlowSource = readFileSync(fileURLToPath(new URL('../composables/useEncounterFlow.js', import.meta.url)), 'utf8')
+const encounterStatesSource = readFileSync(fileURLToPath(new URL('../composables/useEncounterStates.js', import.meta.url)), 'utf8')
 const encounterOrderSource = readFileSync(fileURLToPath(new URL('../components/EncounterOrderMarker.vue', import.meta.url)), 'utf8')
 const sceneSource = readFileSync(fileURLToPath(new URL('../components/SceneTab.vue', import.meta.url)), 'utf8')
 const encounterStylesSource = readFileSync(fileURLToPath(new URL('../components/styles/EncounterTab.css', import.meta.url)), 'utf8')
@@ -139,6 +140,7 @@ describe('ViewSession participant rail', () => {
     expect(encounterRowSource).toContain('<EncounterOrderMarker')
     expect(encounterOrderSource).toContain('class="enc-row-order"')
     expect(encounterOrderSource).toContain("String(props.order).padStart(2, '0')")
+    expect(encounterSource.match(/class="enc-section-title-group"/g)).toHaveLength(2)
   })
 
   it('uses shared combat stats, larger portraits and editable NPC letter markers', () => {
@@ -169,6 +171,11 @@ describe('ViewSession participant rail', () => {
     expect(encounterMenuSource).toContain('const canDelete = computed(() => isNpc.value)')
     expect(encounterMenuSource).not.toContain('ColorPresetPicker')
     expect(encounterFlowSource).toContain('function sendToReserve(c)')
+    expect(encounterStatesSource).toContain('settingRenderSchema(tpl)?.blocks')
+    expect(encounterStatesSource).toContain("b?.type === 'DND_STATUS_OVERVIEW'")
+    expect(encounterStatesSource).toContain('valueId: b.content?.states_id')
+    expect(encounterRowSource).toContain('title="Состояния"')
+    expect(encounterRowSource).toContain('suggestStoreLocal.ensure(sid)')
   })
 
   it('uses per-participant actions without bulk selection controls', () => {

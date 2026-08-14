@@ -144,10 +144,10 @@
     <!-- ── NPC reserve ── -->
     <div class="enc-block enc-block--npc" :class="{ 'enc-block--disabled': enc.npcReserveCollapsed }">
       <div class="enc-section-title-row">
-        <span class="enc-section-title">
-          <span class="enc-section-dot" />ЗАПАС НПС<span v-if="enc.npcReserveCollapsed" class="enc-section-disabled-hint"> · недоступно для игроков</span>
-        </span>
-        <div class="enc-section-actions">
+        <div class="enc-section-title-group">
+          <span class="enc-section-title">
+            <span class="enc-section-dot" />ЗАПАС НПС<span v-if="enc.npcReserveCollapsed" class="enc-section-disabled-hint"> · недоступно для игроков</span>
+          </span>
           <button
             type="button"
             class="enc-section-icon-btn"

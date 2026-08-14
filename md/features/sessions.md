@@ -215,7 +215,10 @@ send a combatant to reserve, reroll formula-based NPC HP, and delete NPCs. NPC
 color is not duplicated in the row action menu and remains part of the
 letter-marker popover. The combat-scene block is mounted only while combat is
 active; its select-all control sits beside the section title and no duplicate
-live-status chip is shown.
+live-status chip is shown. The NPC-reserve select-all control follows the same
+left-aligned title placement. State editing uses the character setting's state
+value path and suggestion dictionary (the `states` part of the combined D&D
+status overview), so the same condition list is available for players and NPCs.
 
 When the combat rail changes the canvas safe-left inset, `ChapterGraphCanvas`
 re-measures that inherited layout value after the parent DOM update. The

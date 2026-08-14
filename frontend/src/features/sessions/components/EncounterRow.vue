@@ -114,7 +114,7 @@
     :suggest-type-id="statesBlock.content.suggest_id"
     :items="statesAllItems"
     :active-ids="statesValue"
-    title="Статусы"
+    title="Состояния"
     @toggle="onStatesToggle"
     @close="statesEditorOpen = false"
     @created="onStatesCreated"
@@ -244,6 +244,8 @@ function onRowClick(event) {
 const statesEditorOpen = ref(false)
 
 function openStatesEditor() {
+  const sid = statesBlock.value?.content?.suggest_id
+  if (sid != null) suggestStoreLocal.ensure(sid)
   statesEditorOpen.value = true
 }
 
