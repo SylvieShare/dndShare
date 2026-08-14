@@ -208,7 +208,11 @@ level. A spell row renders its transparent raster
 
 Diary sessions animate their disclosure body. Session create/edit forms use a
 regular `AppModalFrame`; event create/edit retains the element-origin
-`MorphEditorShell` flow.
+`MorphEditorShell` flow. The event clone in that morph keeps the same left
+offset and vertical timeline rail through its marker as the expanded diary
+card. Counter morph editors update their text fields live and treat Enter as
+completion of the current field by removing its focus without closing the
+editor.
 
 Окна предметов восстанавливают фокус без прокрутки исходного листа. Общий
 `RowActionMenu` раскрывается короткой анимацией из точки trigger с учётом

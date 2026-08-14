@@ -47,6 +47,11 @@
     >
       <template #view>
         <div class="dd-event-face">
+          <span v-if="currentEvent.type !== 'newday'" class="dd-event-rail" aria-hidden="true">
+            <svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 5.5 6 1.5l4 4M6 2v8.5" />
+            </svg>
+          </span>
           <DndDiaryEventRow :event="currentEvent" />
         </div>
       </template>
@@ -268,7 +273,26 @@ function closeEditor() {
 }
 
 .dd-event-face {
+  position: relative;
   padding: 12px 16px;
   min-width: 0;
+}
+
+.dd-event-rail {
+  position: absolute;
+  left: 28px;
+  top: 0;
+  bottom: 12px;
+  width: 2px;
+  background: var(--border);
+  color: var(--text-muted);
+}
+.dd-event-rail svg {
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0 2px 3px;
+  background: var(--surface);
 }
 </style>

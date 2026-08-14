@@ -78,8 +78,8 @@ const expanded = ref(readExpandedState())
 
 const icons = {
   handbook: BookOpen,
-  sessions: Users,
-  characters: ScrollText,
+  sessions: ScrollText,
+  characters: Users,
   admin: Shield,
 }
 

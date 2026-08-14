@@ -5,6 +5,7 @@
         :value="counter.name"
         placeholder="Название"
         @update:value="v => $emit('update', { name: v })"
+        @enter="blurOnEnter"
       />
       <div class="dce-field">
         <span class="dce-lab">Подпись</span>
@@ -12,6 +13,7 @@
           :value="counter.unit"
           placeholder="дней, шт, факелов…"
           @update:value="v => $emit('update', { unit: v })"
+          @enter="blurOnEnter"
         />
       </div>
     </EditorSection>
@@ -90,6 +92,10 @@ const emit = defineEmits(['update', 'remove', 'close', 'save'])
 function onToggleMax(on) {
   // Enabling defaults the max to the current value (so the bar reads full), with a floor of 1.
   emit('update', { max: on ? Math.max(1, props.counter.value || 0) : null })
+}
+
+function blurOnEnter(event) {
+  event.target.blur()
 }
 </script>
 
