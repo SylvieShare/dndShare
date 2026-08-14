@@ -21,7 +21,10 @@
             <div class="sep-marker">{{ eventIcon(event.type) }}</div>
             <div class="sep-content">
               <div class="sep-meta">
-                <span class="sep-author">{{ actorName(event) }}</span>
+                <span class="sep-identity">
+                  <span v-if="characterName(event)" class="sep-character">{{ characterName(event) }}</span>
+                  <span class="sep-author">{{ authorLabel(event) }}</span>
+                </span>
                 <time>{{ eventTime(event.createdAt) }}</time>
               </div>
               <div class="sep-event-title">{{ eventTitle(event) }}</div>
@@ -66,7 +69,7 @@
 import { nextTick, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useSessionEventsStore } from '@/stores/sessionEvents'
-import { pvName } from '@/features/sessions/lib/participantView'
+import { sessionEventAuthorLabel, sessionEventCharacterName } from '@/features/sessions/lib/sessionEventView'
 
 const store = useSessionEventsStore()
 const emit = defineEmits(['collapsed'])
@@ -79,11 +82,12 @@ function toggleCollapsed() {
   emit('collapsed', collapsed.value)
 }
 
-function actorName(event) {
-  if (event.actorTemplateId && event.actorData) {
-    return pvName({ templateId: event.actorTemplateId, data: event.actorData }) || event.authorLogin
-  }
-  return 'Мастер'
+function characterName(event) {
+  return sessionEventCharacterName(event)
+}
+
+function authorLabel(event) {
+  return sessionEventAuthorLabel(event)
 }
 
 function eventIcon(type) {
@@ -150,9 +154,11 @@ watch(() => events.value.length, async () => {
 .sep-event--rest_completed .sep-marker { color: var(--warning); background: color-mix(in srgb, var(--warning) 12%, transparent); }
 .sep-event--item_spent .sep-marker, .sep-event--resource_used .sep-marker { color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, transparent); }
 .sep-content { min-width: 0; }
-.sep-meta { display: flex; align-items: baseline; gap: 6px; color: var(--text-muted); font-size: 9px; }
-.sep-author { color: var(--text-2); font-size: 10px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.sep-meta time { margin-left: auto; font-variant-numeric: tabular-nums; }
+.sep-meta { display: flex; align-items: flex-start; gap: 6px; color: var(--text-muted); font-size: 9px; }
+.sep-identity { display: flex; flex-direction: column; min-width: 0; }
+.sep-character { color: var(--text-1); font-size: 11px; font-weight: 750; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sep-author { color: var(--text-muted); font-size: 9px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sep-meta time { flex: none; margin-left: auto; padding-top: 1px; font-variant-numeric: tabular-nums; }
 .sep-event-title { margin-top: 2px; color: var(--text-1); font-size: 12px; font-weight: 650; line-height: 1.3; overflow-wrap: anywhere; }
 .sep-details { margin-top: 2px; color: var(--text-muted); font-size: 10px; line-height: 1.3; }
 .sep-roll { display: flex; align-items: center; gap: 3px; margin-top: 5px; min-width: 0; }

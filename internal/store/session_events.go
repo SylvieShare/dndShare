@@ -15,6 +15,7 @@ type SessionEvent struct {
 	SessionID       int64           `json:"-"`
 	AuthorUserID    int64           `json:"authorUserId"`
 	AuthorLogin     string          `json:"authorLogin"`
+	AuthorRole      string          `json:"authorRole"`
 	ActorCharID     *int64          `json:"actorCharId,omitempty"`
 	ActorCharUUID   *string         `json:"actorCharUuid,omitempty"`
 	ActorTemplateID *int64          `json:"actorTemplateId,omitempty"`
@@ -38,10 +39,12 @@ type CharacterSessionEvent struct {
 
 const sessionEventSelect = `
 	SELECT e.id, e.session_id, e.author_user_id, u.login,
+	       CASE WHEN event_session.owner_user_id = e.author_user_id THEN 'gm' ELSE 'player' END,
 	       e.actor_char_id, c.uuid::text, c.template_id, c.data,
 	       e.event_type, e.title, COALESCE(e.data, '{}'::jsonb), e.visibility, e.created_at
 	FROM dndshare.session_event e
 	JOIN dndshare.users u ON u.id = e.author_user_id
+	JOIN dndshare."session" event_session ON event_session.id = e.session_id
 	LEFT JOIN dndshare."char" c ON c.id = e.actor_char_id
 	WHERE e.deleted = false`
 
@@ -50,7 +53,7 @@ func scanSessionEvent(row pgx.Row) (SessionEvent, error) {
 	var actorData []byte
 	var data []byte
 	err := row.Scan(
-		&event.ID, &event.SessionID, &event.AuthorUserID, &event.AuthorLogin,
+		&event.ID, &event.SessionID, &event.AuthorUserID, &event.AuthorLogin, &event.AuthorRole,
 		&event.ActorCharID, &event.ActorCharUUID, &event.ActorTemplateID, &actorData,
 		&event.EventType, &event.Title, &data, &event.Visibility, &event.CreatedAt,
 	)
@@ -76,27 +79,32 @@ func (s *Store) UserCanAccessSession(ctx context.Context, sessionID, userID int6
 	return allowed, err
 }
 
-// ResolveSessionActor resolves an actor character only when it belongs to the author and session.
-// DMs intentionally publish without an actor: actions they perform on an opened sheet remain DM actions.
+// ResolveSessionActor resolves the character whose page produced an event.
+// Players may use only their own participant; the DM may use any participant in the session.
 func (s *Store) ResolveSessionActor(ctx context.Context, sessionID, userID int64, charUUID *string) (*int64, error) {
 	var ownerUserID int64
 	if err := s.pool.QueryRow(ctx, `SELECT owner_user_id FROM dndshare."session" WHERE id = $1`, sessionID).Scan(&ownerUserID); err != nil {
 		return nil, err
 	}
-	if ownerUserID == userID {
+	if charUUID == nil || *charUUID == "" {
+		if ownerUserID != userID {
+			return nil, ErrNotFound
+		}
 		return nil, nil
 	}
-	if charUUID == nil || *charUUID == "" {
-		return nil, ErrNotFound
-	}
 	var charID int64
-	err := s.pool.QueryRow(ctx, `
+	query := `
 		SELECT c.id
 		FROM dndshare."char" c
 		JOIN dndshare.session_participant participant
 		  ON participant.char_id = c.id AND participant.session_id = $1
-		WHERE c.uuid = $2::uuid AND c.user_id = $3 AND c.deleted = false`,
-		sessionID, *charUUID, userID).Scan(&charID)
+		WHERE c.uuid = $2::uuid AND c.deleted = false`
+	args := []any{sessionID, *charUUID}
+	if ownerUserID != userID {
+		query += ` AND c.user_id = $3 AND participant.user_id = $3`
+		args = append(args, userID)
+	}
+	err := s.pool.QueryRow(ctx, query, args...).Scan(&charID)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, ErrNotFound
 	}
@@ -195,24 +203,22 @@ func (s *Store) UpdateCharacterDataWithEvents(ctx context.Context, userID int64,
 			return err
 		}
 
-		var actorCharID *int64
-		if ownerUserID != userID {
-			var allowed bool
-			if err := tx.QueryRow(ctx, `
-				SELECT EXISTS(
-					SELECT 1 FROM dndshare.session_participant participant
-					WHERE participant.session_id = $1
-					  AND participant.char_id = $2
-					  AND participant.user_id = $3
-				)`, sessionID, character.ID, userID).Scan(&allowed); err != nil {
-				return err
-			}
-			if !allowed || character.UserID != userID || event.Visibility == "gm" {
-				return ErrNotFound
-			}
-			id := character.ID
-			actorCharID = &id
+		var participantUserID int64
+		err = tx.QueryRow(ctx, `
+			SELECT participant.user_id
+			FROM dndshare.session_participant participant
+			WHERE participant.session_id = $1 AND participant.char_id = $2`,
+			sessionID, character.ID).Scan(&participantUserID)
+		if errors.Is(err, pgx.ErrNoRows) {
+			return ErrNotFound
 		}
+		if err != nil {
+			return err
+		}
+		if ownerUserID != userID && (participantUserID != userID || character.UserID != userID || event.Visibility == "gm") {
+			return ErrNotFound
+		}
+		actorCharID := character.ID
 
 		if _, err := tx.Exec(ctx, `
 			INSERT INTO dndshare.session_event

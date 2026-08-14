@@ -43,7 +43,8 @@ Editor определяет schema по `templateName` через frontend setti
 `{sessionUuid,type,title,data,visibility,clientActionId}`; the character update
 and authorized timeline inserts commit in one database transaction. For a
 participant the route binds the actor to this owned session character; for a
-DM editing a participant sheet the event remains a DM action.
+DM editing a participant sheet it binds that character while retaining the DM
+as the event author.
 
 ## Sources and handbook
 
@@ -114,8 +115,9 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
   The read endpoint accepts `after` and `limit`; the write endpoint accepts
   `{type,title,data,actorCharUuid?,visibility?,clientActionId?}`. The server
   derives the author from authentication, validates DM/participant access and
-  resolves a player actor only when that character belongs to the author and
-  session. `clientActionId` makes retries idempotent;
+  resolves `actorCharUuid` to the participant whose page produced the action.
+  Event responses expose both `authorLogin`/`authorRole` and actor character
+  projection fields. `clientActionId` makes retries idempotent;
 - CRUD scenes and scene items, including explicit items-order endpoint.
 
 Arc, chapter and transition mutations are owner-only. Chapter `number` is a
