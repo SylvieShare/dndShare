@@ -28,7 +28,10 @@ describe('public encounter composition', () => {
   })
 
   it('uses a flat canvas and no combatant color strip', () => {
-    expect(mainStyles).toContain('background: var(--app-canvas-bg);')
+    expect(mainStyles).toContain('background-color: var(--app-canvas-bg);')
+    expect(mainStyles).toContain('background-image: var(--app-canvas-pattern);')
+    expect(mainStyles).toContain('background-size: var(--app-canvas-dot-size) var(--app-canvas-dot-size);')
+    expect(mainStyles).not.toContain('.encounter-screen::before')
     expect(mainStyles).not.toContain('.encounter-screen__glow')
     expect(initiativeStyles).not.toContain('.initiative-card::after')
   })
