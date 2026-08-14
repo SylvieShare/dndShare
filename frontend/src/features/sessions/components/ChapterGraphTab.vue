@@ -47,6 +47,7 @@
         @create-chapter="openChapterCreate"
         @close-workspace="$emit('close-workspace')"
         @scene-count="graph.setSceneCount"
+        @send-block-to-combat="$emit('send-block-to-combat', $event)"
         @view-change="zoom = $event.zoom"
       />
       <slot />
@@ -124,7 +125,7 @@ const props = defineProps({
   workspaceChapterId: { type: [Number, String], default: null },
   workspaceMode: { type: String, default: null },
 })
-const emit = defineEmits(['open-scenes', 'open-combat', 'edit-session', 'status-change', 'close-workspace'])
+const emit = defineEmits(['open-scenes', 'open-combat', 'edit-session', 'status-change', 'close-workspace', 'send-block-to-combat'])
 
 const canvas = ref(null)
 const menus = ref(null)

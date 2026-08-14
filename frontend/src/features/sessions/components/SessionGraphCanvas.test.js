@@ -6,6 +6,11 @@ import SessionGraphCanvas from './SessionGraphCanvas.vue'
 const source = readFileSync(fileURLToPath(new URL('./SessionGraphCanvas.vue', import.meta.url)), 'utf8')
 const canvasSource = readFileSync(fileURLToPath(new URL('./NestedGraphCanvas.vue', import.meta.url)), 'utf8')
 const dockSource = readFileSync(fileURLToPath(new URL('./CanvasActionDock.vue', import.meta.url)), 'utf8')
+const blockSource = readFileSync(fileURLToPath(new URL('./SceneBlockNode.vue', import.meta.url)), 'utf8')
+const blockMenuSource = readFileSync(fileURLToPath(new URL('./SceneBlockMenus.vue', import.meta.url)), 'utf8')
+const blockEditorSource = readFileSync(fileURLToPath(new URL('./SceneBlockEditorModal.vue', import.meta.url)), 'utf8')
+const combatEditorSource = readFileSync(fileURLToPath(new URL('./SceneCombatCreaturesEditor.vue', import.meta.url)), 'utf8')
+const sessionPageSource = readFileSync(fileURLToPath(new URL('../pages/ViewSession.vue', import.meta.url)), 'utf8')
 const apiSource = readFileSync(fileURLToPath(new URL('../../../shared/api/scenesApi.js', import.meta.url)), 'utf8')
 
 describe('session graph canvas', () => {
@@ -38,6 +43,7 @@ describe('session graph canvas', () => {
     expect(source).toContain("label: 'Новая глава'")
     expect(source).toContain("label: 'Новый сценарий'")
     expect(source).toContain("label: 'Текстовый блок'")
+    expect(source).toContain("label: 'Бой'")
     expect(dockSource).toContain('top: 16px;')
     expect(dockSource).not.toContain('translateY(-50%)')
     expect(dockSource).toContain('right: calc(var(--chapter-safe-right, 0px) + 16px);')
@@ -58,5 +64,33 @@ describe('session graph canvas', () => {
     expect(apiSource).toContain('getSceneGraph')
     expect(apiSource).toContain('getSceneBlockGraph')
     expect(apiSource).toContain('createSceneBlockEdge')
+  })
+
+  it('derives block presentation from type and opens actions from the whole card', () => {
+    expect(blockSource).toContain('sceneBlockColor(block.type)')
+    expect(blockSource).not.toContain('RowActionMenu')
+    expect(blockSource).not.toContain('Двойной клик')
+    expect(source).toContain('blockMenus.value?.openFor(node, anchor)')
+    expect(blockMenuSource).toContain('>Копировать</RowActionItem>')
+    expect(blockEditorSource).not.toContain('ColorPresetPicker')
+  })
+
+  it('measures content height and persists width dragged from the right edge', () => {
+    expect(source).toContain(':dynamic-node-height="displayLevel === \'blocks\'"')
+    expect(source).toContain(':resizable-nodes="displayLevel === \'blocks\'"')
+    expect(source).toContain('blockGraph.saveWidth')
+    expect(canvasSource).toContain('class="nested-graph-resize-handle"')
+    expect(canvasSource).toContain('new ResizeObserver(entries =>')
+  })
+
+  it('builds combat blocks from handbook and simplified creatures', () => {
+    expect(combatEditorSource).toContain(':item-type-ids="[6]"')
+    expect(combatEditorSource).toContain('Создать упрощённо')
+    expect(blockMenuSource).toContain('>В бой</RowActionItem>')
+    expect(source).toContain("emit('send-block-to-combat', block)")
+    expect(sessionPageSource).toContain('itemsApi.byIds(handbookIds)')
+    expect(sessionPageSource).toContain('encounter.addNpc(item, count)')
+    expect(sessionPageSource).toContain('encounter.addSimpleNpc(creature)')
+    expect(sessionPageSource).toContain('await toggleCombatWorkspace()')
   })
 })

@@ -34,9 +34,9 @@ type SessionSceneItem struct {
 	Type      string           `json:"type"`
 	Title     string           `json:"title"`
 	Data      *json.RawMessage `json:"data,omitempty"`
-	Color     *string          `json:"color,omitempty"`
 	PositionX float64          `json:"positionX"`
 	PositionY float64          `json:"positionY"`
+	Width     float64          `json:"width"`
 }
 
 type SessionSceneItemEdge struct {
@@ -95,8 +95,7 @@ func scanScene(row pgx.Row) (SessionScene, error) {
 func scanItem(row pgx.Row) (SessionSceneItem, error) {
 	var it SessionSceneItem
 	var data *[]byte
-	var color *string
-	err := row.Scan(&it.ID, &it.SceneID, &it.Type, &it.Title, &data, &color, &it.PositionX, &it.PositionY)
+	err := row.Scan(&it.ID, &it.SceneID, &it.Type, &it.Title, &data, &it.PositionX, &it.PositionY, &it.Width)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return SessionSceneItem{}, ErrNotFound
 	}
@@ -107,7 +106,6 @@ func scanItem(row pgx.Row) (SessionSceneItem, error) {
 		raw := json.RawMessage(*data)
 		it.Data = &raw
 	}
-	it.Color = color
 	return it, nil
 }
 
@@ -179,7 +177,7 @@ func (s *Store) DeleteScene(ctx context.Context, id int64) error {
 // GetSceneItems — блоки одного сценария.
 func (s *Store) GetSceneItems(ctx context.Context, sceneID int64) ([]SessionSceneItem, error) {
 	rows, err := s.pool.Query(ctx,
-		`SELECT id, scene_id, "type", title, "data", color, position_x, position_y
+		`SELECT id, scene_id, "type", title, "data", position_x, position_y, width
 		 FROM dndshare.session_scene_item WHERE scene_id = $1 ORDER BY id`, sceneID,
 	)
 	if err != nil {
@@ -200,21 +198,21 @@ func (s *Store) GetSceneItems(ctx context.Context, sceneID int64) ([]SessionScen
 // GetSceneItem — айтем по id (порт getItemById).
 func (s *Store) GetSceneItem(ctx context.Context, id int64) (SessionSceneItem, error) {
 	return scanItem(s.pool.QueryRow(ctx,
-		`SELECT id, scene_id, "type", title, "data", color, position_x, position_y
+		`SELECT id, scene_id, "type", title, "data", position_x, position_y, width
 		 FROM dndshare.session_scene_item WHERE id = $1`, id))
 }
 
 // CreateSceneItem — новый блок с координатами на холсте сценария.
-func (s *Store) CreateSceneItem(ctx context.Context, sceneID int64, typ, title string, data *string, color *string, x, y float64) (SessionSceneItem, error) {
+func (s *Store) CreateSceneItem(ctx context.Context, sceneID int64, typ, title string, data *string, x, y, width float64) (SessionSceneItem, error) {
 	return scanItem(s.pool.QueryRow(ctx,
-		`INSERT INTO dndshare.session_scene_item (scene_id, "type", title, "data", color, position_x, position_y)
+		`INSERT INTO dndshare.session_scene_item (scene_id, "type", title, "data", position_x, position_y, width)
 		 VALUES ($1, $2, $3, CAST($4 AS jsonb), $5, $6, $7)
-		 RETURNING id, scene_id, "type", title, "data", color, position_x, position_y`,
-		sceneID, typ, title, data, color, x, y))
+		 RETURNING id, scene_id, "type", title, "data", position_x, position_y, width`,
+		sceneID, typ, title, data, x, y, width))
 }
 
 // UpdateSceneItem — частичное обновление айтема (порт updateItem).
-func (s *Store) UpdateSceneItem(ctx context.Context, id int64, title *string, data *string, dataChanged bool, color *string, colorChanged bool, positionX, positionY *float64) error {
+func (s *Store) UpdateSceneItem(ctx context.Context, id int64, title *string, data *string, dataChanged bool, positionX, positionY, width *float64) error {
 	var sets []string
 	var args []any
 	n := 1
@@ -231,14 +229,14 @@ func (s *Store) UpdateSceneItem(ctx context.Context, id int64, title *string, da
 		args = append(args, data)
 		n++
 	}
-	if colorChanged {
-		add("color = $"+strconv.Itoa(n), color)
-	}
 	if positionX != nil {
 		add("position_x = $"+strconv.Itoa(n), *positionX)
 	}
 	if positionY != nil {
 		add("position_y = $"+strconv.Itoa(n), *positionY)
+	}
+	if width != nil {
+		add("width = $"+strconv.Itoa(n), *width)
 	}
 	if len(sets) == 0 {
 		return nil

@@ -173,16 +173,23 @@ deleted by the DM.
 Double-clicking a scenario switches the same physical canvas to the third graph.
 The scenario node first moves to the top immediately to the right of its chapter
 and its peers and edges fade out; then block nodes replace the graph payload.
-Text and list blocks have independent coordinates, colors, content and directed
-links. A block double click opens `SceneBlockEditorModal`; the node action menu
-also provides edit and delete actions. Double-clicking the pinned scenario swaps
+Text, list and combat blocks have independent coordinates, persisted widths,
+content-sized heights and directed links. Their accent color is derived from
+the type instead of being user-selected or stored. Clicking any non-interactive
+part of a block opens its action menu; there is no separate ellipsis trigger.
+The menu provides edit, copy and delete, while a double click opens
+`SceneBlockEditorModal`. A combat block contains bestiary references and/or
+simplified creature records with quantities. Its leading `В бой` action adds
+the whole list to the encounter NPC reserve and opens the combat workspace.
+Block edges are re-measured after content or width changes, and dragging the
+right edge persists a width in the `220..640px` range. Double-clicking the pinned scenario swaps
 the payload back to scenarios. Double-clicking the pinned chapter at either
 nested level returns to chapters. Thus the visible ancestor chain is also the
 level navigation and does not duplicate a breadcrumb bar or physical canvas.
 
 `NestedGraphCanvas` owns pan, zoom, drag, link-port, edge and spotlight mechanics
 for all three levels. `useSceneGraph` and `useSceneBlockGraph` own their server
-state and optimistic position previews. Each graph key persists only its
+state and optimistic position/width previews. Each graph key persists only its
 viewport in local storage; node positions and edges are server state.
 `TextPromptDialog` is used for scenario create/rename, `ConfirmDialog` for
 destructive actions, and `SceneBlockEditorModal` for block content. Scene and

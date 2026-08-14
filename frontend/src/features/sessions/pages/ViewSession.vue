@@ -50,6 +50,7 @@
         :workspace-mode="workspaceMotionMode"
         @open-scenes="openChapterScenes"
         @open-combat="toggleCombatWorkspace"
+        @send-block-to-combat="sendBlockToCombat"
         @edit-session="openEdit"
         @close-workspace="closeWorkspace"
         @status-change="status => { session = { ...session, status } }"
@@ -67,6 +68,8 @@
           @view-participant="openParticipant"
         />
       </ChapterGraphTab>
+
+      <div v-if="combatImportError" class="combat-import-error" role="alert">{{ combatImportError }}</div>
 
       <aside class="workspace-dock workspace-dock--left">
         <div class="col-section-title">
@@ -188,6 +191,7 @@ import { pvName } from '@/features/sessions/lib/participantView'
 import { createHeaderChip } from '@/shared/lib/appHeader'
 import { fetchPost } from '@/shared/api/http'
 import { getSession, joinSession, updateParticipantColor, updateSession } from '@/shared/api/sessionsApi'
+import { itemsApi } from '@/shared/api/itemsApi'
 
 const route = useRoute()
 const router = useRouter()
@@ -213,6 +217,7 @@ const sessionEventsStore = useSessionEventsStore()
 const templateStore = useTemplateStore()
 const musicLibraryOpen = ref(false)
 const eventsCollapsed = ref(false)
+const combatImportError = ref('')
 
 const sheetUuid = ref(null)
 const createOpen = ref(false)
@@ -260,6 +265,33 @@ function setEncounterPlayerSelected(charId, selected) {
 function setEncounterPlayerInitiative(charId, value) {
   const combatant = encounterPlayer(charId)
   if (combatant) encounter.setInitiative(combatant, value)
+}
+
+async function sendBlockToCombat(block) {
+  combatImportError.value = ''
+  const creatures = Array.isArray(block?.data?.creatures) ? block.data.creatures : []
+  const handbookIds = [...new Set(creatures
+    .filter(creature => creature?.kind === 'handbook' && creature.itemId != null)
+    .map(creature => creature.itemId))]
+  const response = handbookIds.length ? await itemsApi.byIds(handbookIds).catch(() => null) : { items: [] }
+  const handbookItems = new Map((response?.items || []).map(item => [String(item.id), item]))
+  const missingHandbookCount = handbookIds.filter(id => !handbookItems.has(String(id))).length
+  if (missingHandbookCount) {
+    combatImportError.value = `Не удалось добавить существ из бестиария: ${missingHandbookCount}`
+  }
+
+  for (const creature of creatures) {
+    const count = Math.max(1, Math.min(20, Math.floor(Number(creature?.count) || 1)))
+    if (creature?.kind === 'handbook') {
+      const item = handbookItems.get(String(creature.itemId))
+      if (item) encounter.addNpc(item, count)
+      continue
+    }
+    if (creature?.kind !== 'simple') continue
+    for (let index = 0; index < count; index += 1) encounter.addSimpleNpc(creature)
+  }
+
+  await toggleCombatWorkspace()
 }
 
 watch(session, (value) => {

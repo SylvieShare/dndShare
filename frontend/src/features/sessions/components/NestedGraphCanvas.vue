@@ -49,12 +49,14 @@
         v-for="node in nodes"
         :key="`${graphKey}:${node.id}`"
         class="nested-graph-node"
+        :data-graph-node-id="node.id"
         :class="{
           'nested-graph-node--linking': node.id === linkingFrom?.id,
           'nested-graph-node--target': !!linkingFrom && node.id !== linkingFrom.id,
           'nested-graph-node--spotlight': node.id === spotlightNodeId,
           'nested-graph-node--suppressed': spotlightNodeId != null && node.id !== spotlightNodeId,
-          'nested-graph-node--dragging': gesture?.type === 'node' && gesture.node.id === node.id,
+          'nested-graph-node--dragging': ['node', 'resize'].includes(gesture?.type) && gesture.node.id === node.id,
+          'nested-graph-node--dynamic-height': dynamicNodeHeight,
         }"
         :style="nodeStyle(node)"
         @pointerdown="onNodeDown($event, node)"
@@ -80,6 +82,14 @@
             <path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </button>
+        <button
+          v-if="resizableNodes && canEdit"
+          type="button"
+          class="nested-graph-resize-handle"
+          aria-label="Изменить ширину блока"
+          title="Тяните, чтобы изменить ширину"
+          @pointerdown.stop="onResizeDown($event, node)"
+        />
       </div>
     </div>
 
@@ -121,10 +131,15 @@ const props = defineProps({
   createLabel: { type: String, default: 'Создать' },
   showEmptyAction: { type: Boolean, default: true },
   layoutKey: { type: [String, Number, Boolean], default: null },
+  nodeWidthKey: { type: String, default: '' },
+  dynamicNodeHeight: { type: Boolean, default: false },
+  resizableNodes: { type: Boolean, default: false },
+  minNodeWidth: { type: Number, default: 220 },
+  maxNodeWidth: { type: Number, default: 640 },
 })
 const emit = defineEmits([
   'node-click', 'node-double-click', 'edge-click', 'start-link', 'finish-link',
-  'preview-position', 'save-position', 'create-first', 'view-change',
+  'preview-position', 'save-position', 'preview-size', 'save-size', 'create-first', 'view-change',
 ])
 
 const instanceId = getCurrentInstance()?.uid ?? Math.random().toString(36).slice(2)
@@ -135,8 +150,11 @@ const zoom = ref(1)
 const cursorWorld = ref(null)
 const gesture = ref(null)
 const viewportRevision = ref(0)
+const sizeRevision = ref(0)
+const measuredHeights = new Map()
 let lastNodeClick = null
-let resizeObserver = null
+let viewportResizeObserver = null
+let nodeResizeObserver = null
 let preparedGraphKey = null
 
 const worldStyle = computed(() => ({ transform: `translate(${pan.value.x}px, ${pan.value.y}px) scale(${zoom.value})` }))
@@ -155,28 +173,44 @@ const renderedEdges = computed(() => props.edges.map(edge => {
 const labelledEdges = computed(() => renderedEdges.value.filter(edge => edge.label))
 const temporaryPath = computed(() => {
   if (!props.linkingFrom || !cursorWorld.value) return ''
+  const dimensions = nodeDimensions(props.linkingFrom)
   return edgePath(props.linkingFrom, {
-    positionX: cursorWorld.value.x - props.nodeWidth / 2,
-    positionY: cursorWorld.value.y - props.nodeHeight / 2,
+    positionX: cursorWorld.value.x - dimensions.width / 2,
+    positionY: cursorWorld.value.y - dimensions.height / 2,
+    _graphWidth: dimensions.width,
+    _graphHeight: dimensions.height,
   })
 })
 
+function nodeDimensions(node) {
+  sizeRevision.value
+  const rawWidth = node?._graphWidth ?? (props.nodeWidthKey ? node?.[props.nodeWidthKey] : null)
+  const width = Number(rawWidth) || props.nodeWidth
+  const measured = measuredHeights.get(String(node?.id))
+  const height = Number(node?._graphHeight) || measured || props.nodeHeight
+  return { width, height }
+}
+
 function edgePath(from, to) {
-  const fromCenterX = from.positionX + props.nodeWidth / 2
-  const fromCenterY = from.positionY + props.nodeHeight / 2
-  const toCenterX = to.positionX + props.nodeWidth / 2
-  const toCenterY = to.positionY + props.nodeHeight / 2
+  const fromSize = nodeDimensions(from)
+  const toSize = nodeDimensions(to)
+  const fromCenterX = from.positionX + fromSize.width / 2
+  const fromCenterY = from.positionY + fromSize.height / 2
+  const toCenterX = to.positionX + toSize.width / 2
+  const toCenterY = to.positionY + toSize.height / 2
   const direction = toCenterX >= fromCenterX ? 1 : -1
-  const startX = fromCenterX + direction * props.nodeWidth / 2
-  const endX = toCenterX - direction * props.nodeWidth / 2
+  const startX = fromCenterX + direction * fromSize.width / 2
+  const endX = toCenterX - direction * toSize.width / 2
   const bend = Math.max(70, Math.abs(endX - startX) * 0.45)
   return `M ${startX} ${fromCenterY} C ${startX + direction * bend} ${fromCenterY}, ${endX - direction * bend} ${toCenterY}, ${endX} ${toCenterY}`
 }
 
 function edgeMidpoint(from, to) {
+  const fromSize = nodeDimensions(from)
+  const toSize = nodeDimensions(to)
   return {
-    x: (from.positionX + to.positionX) / 2 + props.nodeWidth / 2,
-    y: (from.positionY + to.positionY) / 2 + props.nodeHeight / 2,
+    x: (from.positionX + fromSize.width / 2 + to.positionX + toSize.width / 2) / 2,
+    y: (from.positionY + fromSize.height / 2 + to.positionY + toSize.height / 2) / 2,
   }
 }
 
@@ -185,6 +219,7 @@ function nodeStyle(node) {
   const spotlight = node.id === props.spotlightNodeId
   const frame = safeFrame()
   const spotlightX = props.spotlightX ?? (frame.left + props.spotlightOffsetX)
+  const dimensions = nodeDimensions(node)
   const position = spotlight
     ? {
         x: (spotlightX - pan.value.x) / zoom.value,
@@ -193,8 +228,10 @@ function nodeStyle(node) {
       }
     : { x: node.positionX, y: node.positionY, scale: 1 }
   return {
-    width: `${props.nodeWidth}px`,
-    height: `${props.nodeHeight}px`,
+    width: `${dimensions.width}px`,
+    ...(props.dynamicNodeHeight
+      ? { minHeight: `${props.nodeHeight}px` }
+      : { height: `${dimensions.height}px` }),
     transform: `translate(${position.x}px, ${position.y}px) scale(${position.scale})`,
   }
 }
@@ -286,6 +323,21 @@ function onNodeDown(event, node) {
   }
 }
 
+function onResizeDown(event, node) {
+  if (props.locked || event.button !== 0) return
+  event.stopPropagation()
+  viewport.value.setPointerCapture(event.pointerId)
+  gesture.value = {
+    type: 'resize',
+    pointerId: event.pointerId,
+    node,
+    startX: event.clientX,
+    startY: event.clientY,
+    startWidth: nodeDimensions(node).width,
+    moved: false,
+  }
+}
+
 function onPointerMove(event) {
   if (props.locked) return
   cursorWorld.value = pointInWorld(event)
@@ -299,6 +351,14 @@ function onPointerMove(event) {
     announceView()
     return
   }
+  if (active.type === 'resize') {
+    active.moved ||= Math.abs(event.clientX - active.startX) > 2
+    if (!active.moved) return
+    const delta = (event.clientX - active.startX) / zoom.value
+    const width = Math.max(props.minNodeWidth, Math.min(props.maxNodeWidth, active.startWidth + delta))
+    emit('preview-size', active.node.id, Math.round(width))
+    return
+  }
   const point = pointInWorld(event)
   active.moved ||= Math.hypot(event.clientX - active.startX, event.clientY - active.startY) > 4
   if (active.moved) emit('preview-position', active.node.id, point.x - active.offsetX, point.y - active.offsetY)
@@ -309,6 +369,11 @@ function onPointerUp(event) {
   if (!active || active.pointerId !== event.pointerId) return
   if (active.type === 'pan') {
     saveView()
+  } else if (active.type === 'resize') {
+    if (active.moved) {
+      const node = props.nodes.find(item => item.id === active.node.id)
+      if (node) emit('save-size', node.id, nodeDimensions(node).width)
+    }
   } else if (active.moved) {
     const node = props.nodes.find(item => item.id === active.node.id)
     if (node) emit('save-position', node.id, node.positionX, node.positionY)
@@ -359,13 +424,13 @@ function zoomBy(factor) {
   saveView()
 }
 
-function viewportCenter() {
+function viewportCenter(nodeWidth = props.nodeWidth, nodeHeight = props.nodeHeight) {
   const rect = viewport.value?.getBoundingClientRect()
   if (!rect) return { x: 48, y: props.initialTop }
   const frame = safeFrame()
   return {
-    x: (frame.left + frame.width / 2 - pan.value.x) / zoom.value - props.nodeWidth / 2,
-    y: (rect.height / 2 - pan.value.y) / zoom.value - props.nodeHeight / 2,
+    x: (frame.left + frame.width / 2 - pan.value.x) / zoom.value - nodeWidth / 2,
+    y: (rect.height / 2 - pan.value.y) / zoom.value - nodeHeight / 2,
   }
 }
 
@@ -373,9 +438,10 @@ function focusNode(node) {
   if (!node || !viewport.value) return
   const rect = viewport.value.getBoundingClientRect()
   const frame = safeFrame()
+  const dimensions = nodeDimensions(node)
   pan.value = {
-    x: frame.left + frame.width / 2 - (node.positionX + props.nodeWidth / 2) * zoom.value,
-    y: rect.height / 2 - (node.positionY + props.nodeHeight / 2) * zoom.value,
+    x: frame.left + frame.width / 2 - (node.positionX + dimensions.width / 2) * zoom.value,
+    y: rect.height / 2 - (node.positionY + dimensions.height / 2) * zoom.value,
   }
   saveView()
 }
@@ -384,13 +450,26 @@ function onKey(event) {
   if (event.key === 'Escape' && props.linkingFrom) emit('start-link', null)
 }
 
+function refreshNodeObservers() {
+  nodeResizeObserver?.disconnect()
+  if (!props.dynamicNodeHeight || !viewport.value) return
+  for (const element of viewport.value.querySelectorAll('.nested-graph-node')) nodeResizeObserver?.observe(element)
+}
+
 watch(() => props.graphKey, graphKey => {
+  measuredHeights.clear()
+  sizeRevision.value += 1
   if (graphKey === preparedGraphKey) {
     preparedGraphKey = null
+    nextTick(refreshNodeObservers)
     return
   }
-  nextTick(() => loadView(graphKey, props.initialTop))
+  nextTick(() => {
+    loadView(graphKey, props.initialTop)
+    refreshNodeObservers()
+  })
 })
+watch(() => [props.nodes.length, props.dynamicNodeHeight], () => nextTick(refreshNodeObservers), { flush: 'post' })
 watch(() => props.layoutKey, async () => {
   await nextTick()
   requestAnimationFrame(() => { viewportRevision.value += 1 })
@@ -398,12 +477,25 @@ watch(() => props.layoutKey, async () => {
 watch(() => props.locked, locked => { if (locked) cancelGesture() })
 onMounted(() => {
   loadView()
-  resizeObserver = new ResizeObserver(() => { viewportRevision.value += 1 })
-  resizeObserver.observe(viewport.value)
+  viewportResizeObserver = new ResizeObserver(() => { viewportRevision.value += 1 })
+  viewportResizeObserver.observe(viewport.value)
+  nodeResizeObserver = new ResizeObserver(entries => {
+    let changed = false
+    for (const entry of entries) {
+      const id = entry.target.dataset.graphNodeId
+      const height = entry.borderBoxSize?.[0]?.blockSize ?? entry.contentRect.height
+      if (!id || !Number.isFinite(height) || Math.abs((measuredHeights.get(id) || 0) - height) < 0.5) continue
+      measuredHeights.set(id, height)
+      changed = true
+    }
+    if (changed) sizeRevision.value += 1
+  })
+  nextTick(refreshNodeObservers)
   window.addEventListener('keydown', onKey)
 })
 onBeforeUnmount(() => {
-  resizeObserver?.disconnect()
+  viewportResizeObserver?.disconnect()
+  nodeResizeObserver?.disconnect()
   window.removeEventListener('keydown', onKey)
 })
 

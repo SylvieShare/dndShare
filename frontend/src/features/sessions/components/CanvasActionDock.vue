@@ -19,6 +19,9 @@
         <svg v-else-if="action.icon === 'list'" viewBox="0 0 24 24">
           <path d="M9 7h11M9 12h11M9 17h11"/><circle cx="5" cy="7" r="1"/><circle cx="5" cy="12" r="1"/><circle cx="5" cy="17" r="1"/>
         </svg>
+        <svg v-else-if="action.icon === 'combat'" viewBox="0 0 24 24">
+          <path d="m6 4 12 16M18 4 6 20M4.5 2.5 8 6M19.5 2.5 16 6M4 21h4M16 21h4"/>
+        </svg>
         <svg v-else viewBox="0 0 24 24">
           <path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5"/>
         </svg>

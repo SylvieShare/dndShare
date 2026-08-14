@@ -60,8 +60,6 @@ export function useSceneBlockGraph({ sessionUuid, sceneId }) {
       title: payload.title,
       data: payload.data,
       dataChanged: true,
-      color: payload.color,
-      colorChanged: true,
     })
     items.value = items.value.map(item => item.id === itemId ? updated : item)
     return updated
@@ -85,6 +83,18 @@ export function useSceneBlockGraph({ sessionUuid, sceneId }) {
     items.value = items.value.map(item => item.id === itemId ? updated : item)
   }
 
+  function setLocalWidth(itemId, width) {
+    items.value = items.value.map(item => item.id === itemId
+      ? { ...item, width }
+      : item)
+  }
+
+  async function saveWidth(itemId, width) {
+    setLocalWidth(itemId, width)
+    const updated = await apiUpdateItem(sessionUuid, resolvedSceneId(), itemId, { width })
+    items.value = items.value.map(item => item.id === itemId ? updated : item)
+  }
+
   async function createEdge(fromItemId, toItemId) {
     const edge = await apiCreateEdge(sessionUuid, {
       sceneId: resolvedSceneId(), fromItemId, toItemId, label: null,
@@ -101,6 +111,6 @@ export function useSceneBlockGraph({ sessionUuid, sceneId }) {
   return {
     items, edges, loading, loaded, error,
     load, reset, createItem, updateItem, deleteItem,
-    setLocalPosition, savePosition, createEdge, deleteEdge,
+    setLocalPosition, savePosition, setLocalWidth, saveWidth, createEdge, deleteEdge,
   }
 }

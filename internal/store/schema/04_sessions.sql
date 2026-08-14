@@ -228,13 +228,15 @@ CREATE TABLE IF NOT EXISTS dndshare.session_scene_item (
     "type"   text NOT NULL,
     title    varchar NOT NULL,
     "data"   jsonb NULL,
-    color    varchar NULL,
     position_x float8 DEFAULT 0 NOT NULL,
     position_y float8 DEFAULT 0 NOT NULL,
+    width float8 DEFAULT 300 NOT NULL,
     CONSTRAINT session_scene_item_session_pk PRIMARY KEY (id)
 );
 ALTER TABLE dndshare.session_scene_item ADD COLUMN IF NOT EXISTS position_x float8 NULL;
 ALTER TABLE dndshare.session_scene_item ADD COLUMN IF NOT EXISTS position_y float8 NULL;
+ALTER TABLE dndshare.session_scene_item ADD COLUMN IF NOT EXISTS width float8 NULL;
+ALTER TABLE dndshare.session_scene_item DROP COLUMN IF EXISTS color;
 CREATE INDEX IF NOT EXISTS idx_session_scene_item_scene_id ON dndshare.session_scene_item USING btree (scene_id);
 
 DO $$
@@ -274,6 +276,9 @@ ALTER TABLE dndshare.session_scene_item ALTER COLUMN position_x SET DEFAULT 0;
 ALTER TABLE dndshare.session_scene_item ALTER COLUMN position_y SET DEFAULT 0;
 ALTER TABLE dndshare.session_scene_item ALTER COLUMN position_x SET NOT NULL;
 ALTER TABLE dndshare.session_scene_item ALTER COLUMN position_y SET NOT NULL;
+UPDATE dndshare.session_scene_item SET width = 300 WHERE width IS NULL OR width < 220 OR width > 640;
+ALTER TABLE dndshare.session_scene_item ALTER COLUMN width SET DEFAULT 300;
+ALTER TABLE dndshare.session_scene_item ALTER COLUMN width SET NOT NULL;
 
 CREATE TABLE IF NOT EXISTS dndshare.session_scene_item_edge (
     id           bigserial NOT NULL,

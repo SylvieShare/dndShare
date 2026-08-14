@@ -223,15 +223,15 @@ func (s *Server) handleCreateSceneItem(w http.ResponseWriter, r *http.Request) {
 		Type  string          `json:"type"`
 		Title *string         `json:"title"`
 		Data  json.RawMessage `json:"data"`
-		Color *string         `json:"color"`
 		X     float64         `json:"x"`
 		Y     float64         `json:"y"`
+		Width float64         `json:"width"`
 	}
 	if err := decodeJSON(r, &req); err != nil {
 		badRequest(w, "bad body")
 		return
 	}
-	if req.Type != "text" && req.Type != "list" {
+	if req.Type != "text" && req.Type != "list" && req.Type != "combat" {
 		badRequest(w, "bad block type")
 		return
 	}
@@ -239,7 +239,7 @@ func (s *Server) handleCreateSceneItem(w http.ResponseWriter, r *http.Request) {
 	if req.Title != nil {
 		title = strings.TrimSpace(*req.Title)
 	}
-	item, err := s.store.CreateSceneItem(r.Context(), sceneID, req.Type, title, rawToStr(req.Data), req.Color, req.X, req.Y)
+	item, err := s.store.CreateSceneItem(r.Context(), sceneID, req.Type, title, rawToStr(req.Data), req.X, req.Y, sceneItemWidth(req.Width, req.Type))
 	if err != nil {
 		serverError(w, err)
 		return
@@ -283,19 +283,22 @@ func (s *Server) handleUpdateSceneItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var req struct {
-		Title        *string         `json:"title"`
-		Data         json.RawMessage `json:"data"`
-		DataChanged  bool            `json:"dataChanged"`
-		Color        *string         `json:"color"`
-		ColorChanged bool            `json:"colorChanged"`
-		PositionX    *float64        `json:"positionX"`
-		PositionY    *float64        `json:"positionY"`
+		Title       *string         `json:"title"`
+		Data        json.RawMessage `json:"data"`
+		DataChanged bool            `json:"dataChanged"`
+		PositionX   *float64        `json:"positionX"`
+		PositionY   *float64        `json:"positionY"`
+		Width       *float64        `json:"width"`
 	}
 	if err := decodeJSON(r, &req); err != nil {
 		badRequest(w, "bad body")
 		return
 	}
-	if err := s.store.UpdateSceneItem(r.Context(), itemID, req.Title, rawToStr(req.Data), req.DataChanged, req.Color, req.ColorChanged, req.PositionX, req.PositionY); err != nil {
+	if req.Width != nil {
+		width := sceneItemWidth(*req.Width, item.Type)
+		req.Width = &width
+	}
+	if err := s.store.UpdateSceneItem(r.Context(), itemID, req.Title, rawToStr(req.Data), req.DataChanged, req.PositionX, req.PositionY, req.Width); err != nil {
 		serverError(w, err)
 		return
 	}
@@ -305,6 +308,22 @@ func (s *Server) handleUpdateSceneItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	writeJSON(w, http.StatusOK, updated)
+}
+
+func sceneItemWidth(width float64, typ string) float64 {
+	if width == 0 {
+		if typ == "combat" {
+			return 360
+		}
+		return 300
+	}
+	if width < 220 {
+		return 220
+	}
+	if width > 640 {
+		return 640
+	}
+	return width
 }
 
 func (s *Server) handleDeleteSceneItem(w http.ResponseWriter, r *http.Request) {

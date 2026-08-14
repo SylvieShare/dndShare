@@ -135,8 +135,13 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
   inside one chapter;
 - `GET /api/sessions/{uuid}/scenes/{sceneId}/block-graph` returns
   `{scene,items,edges}`. Blocks use `POST .../scenes/{sceneId}/items` and
-  `PATCH|DELETE .../scenes/{sceneId}/items/{itemId}`; position is part of the
-  item PATCH contract;
+  `PATCH|DELETE .../scenes/{sceneId}/items/{itemId}`. A block has `type`
+  (`text`, `list` or `combat`), `title`, type-specific `data`, `positionX/Y`
+  and `width` (clamped to `220..640`); position and width are part of the item
+  PATCH contract. Block color is derived by the client from `type` and is not
+  an API field. Combat `data.creatures` contains quantity-bearing handbook
+  references `{kind:"handbook",itemId,name,count}` or simplified records
+  `{kind:"simple",id,name,ac,hp,hpMax,description,count}`;
 - `POST /api/sessions/{uuid}/block-edges` and
   `DELETE /api/sessions/{uuid}/block-edges/{edgeId}` manage directed links
   inside one scenario.

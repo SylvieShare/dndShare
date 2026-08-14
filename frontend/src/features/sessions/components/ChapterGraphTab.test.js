@@ -79,7 +79,7 @@ describe('chapter graph workspace', () => {
   })
 
   it('disables transform easing while a node is being dragged', () => {
-    expect(canvas).toContain("'nested-graph-node--dragging': gesture?.type === 'node'")
+    expect(canvas).toContain("'nested-graph-node--dragging': ['node', 'resize'].includes(gesture?.type)")
     expect(canvasStyles).toContain('.nested-graph-node--dragging')
   })
 })

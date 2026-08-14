@@ -11,6 +11,8 @@ func TestSessionScenesMigrateToTwoNestedGraphs(t *testing.T) {
 		"CREATE TABLE IF NOT EXISTS dndshare.session_scene_item_edge",
 		"ALTER TABLE dndshare.session_scene ADD COLUMN IF NOT EXISTS position_x",
 		"ALTER TABLE dndshare.session_scene_item ADD COLUMN IF NOT EXISTS position_x",
+		"ALTER TABLE dndshare.session_scene_item ADD COLUMN IF NOT EXISTS width",
+		"ALTER TABLE dndshare.session_scene_item DROP COLUMN IF EXISTS color",
 		`ALTER TABLE dndshare.session_scene_item DROP COLUMN "order"`,
 	} {
 		if !strings.Contains(schemaSessionsSQL, fragment) {
@@ -19,5 +21,8 @@ func TestSessionScenesMigrateToTwoNestedGraphs(t *testing.T) {
 	}
 	if strings.Contains(schemaSessionsSQL, `"order"  int8 NOT NULL`) {
 		t.Fatal("new scene-item schema must not recreate the legacy list order")
+	}
+	if strings.Contains(schemaSessionsSQL, `color    varchar NULL`) {
+		t.Fatal("scene-item color must be derived from the block type")
 	}
 }

@@ -9,6 +9,9 @@
       :to-key="activeToKey"
       :node-width="activeNodeWidth"
       :node-height="activeNodeHeight"
+      :node-width-key="displayLevel === 'blocks' ? 'width' : ''"
+      :dynamic-node-height="displayLevel === 'blocks'"
+      :resizable-nodes="displayLevel === 'blocks'"
       :linking-from="activeLinkingFrom"
       :locked="workspaceMode === 'combat'"
       :loading="activeLoading"
@@ -27,6 +30,8 @@
       @finish-link="finishLink"
       @preview-position="previewPosition"
       @save-position="savePosition"
+      @preview-size="previewSize"
+      @save-size="saveSize"
       @view-change="$emit('view-change', $event)"
     >
       <template #node="{ node, linking, target, spotlight }">
@@ -52,9 +57,6 @@
         <SceneBlockNode
           v-else
           :block="node"
-          :is-dm="isDm"
-          @edit="openBlockEdit"
-          @delete="requestBlockDelete"
         />
       </template>
     </NestedGraphCanvas>
@@ -92,6 +94,14 @@
       v-if="isDm && workspaceMode !== 'combat'"
       :actions="canvasActions"
       @action="runCanvasAction"
+    />
+
+    <SceneBlockMenus
+      ref="blockMenus"
+      @edit="openBlockEdit"
+      @copy="copyBlock"
+      @delete="requestBlockDelete"
+      @send-to-combat="sendBlockToCombat"
     />
 
     <div v-if="activeLoading" class="session-graph-state">{{ loadingLabel }}</div>
@@ -135,10 +145,12 @@ import CanvasActionDock from '@/features/sessions/components/CanvasActionDock.vu
 import ChapterGraphNode from '@/features/sessions/components/ChapterGraphNode.vue'
 import NestedGraphCanvas from '@/features/sessions/components/NestedGraphCanvas.vue'
 import SceneBlockEditorModal from '@/features/sessions/components/SceneBlockEditorModal.vue'
+import SceneBlockMenus from '@/features/sessions/components/SceneBlockMenus.vue'
 import SceneBlockNode from '@/features/sessions/components/SceneBlockNode.vue'
 import SceneGraphNode from '@/features/sessions/components/SceneGraphNode.vue'
 import { useSceneBlockGraph } from '@/features/sessions/composables/useSceneBlockGraph'
 import { useSceneGraph } from '@/features/sessions/composables/useSceneGraph'
+import { sceneBlockDefaultWidth } from '@/features/sessions/lib/sceneBlockTypes'
 
 const props = defineProps({
   graph: { type: Object, required: true },
@@ -152,10 +164,11 @@ const props = defineProps({
 const emit = defineEmits([
   'node-click', 'node-double-click', 'edge-click', 'start-link', 'finish-link',
   'preview-position', 'save-position', 'create-chapter', 'close-workspace',
-  'scene-count', 'view-change',
+  'scene-count', 'view-change', 'send-block-to-combat',
 ])
 
 const canvas = ref(null)
+const blockMenus = ref(null)
 const displayLevel = ref('chapters')
 const selectedScene = ref(null)
 const transitionSpotlight = ref(null)
@@ -189,8 +202,8 @@ const activeEdges = computed(() => displayLevel.value === 'chapters'
 const activeGraphKey = computed(() => graphKeyFor(displayLevel.value))
 const activeFromKey = computed(() => displayLevel.value === 'chapters' ? 'fromChapterId' : displayLevel.value === 'scenes' ? 'fromSceneId' : 'fromItemId')
 const activeToKey = computed(() => displayLevel.value === 'chapters' ? 'toChapterId' : displayLevel.value === 'scenes' ? 'toSceneId' : 'toItemId')
-const activeNodeWidth = computed(() => displayLevel.value === 'blocks' ? 276 : 236)
-const activeNodeHeight = computed(() => displayLevel.value === 'blocks' ? 180 : 156)
+const activeNodeWidth = computed(() => displayLevel.value === 'blocks' ? 300 : 236)
+const activeNodeHeight = computed(() => displayLevel.value === 'blocks' ? 96 : 156)
 const activeInitialTop = computed(() => displayLevel.value === 'chapters' ? 80 : 210)
 const activeLoading = computed(() => displayLevel.value === 'scenes' ? sceneGraph.loading.value : displayLevel.value === 'blocks' ? blockGraph.loading.value : false)
 const activeError = computed(() => displayLevel.value === 'scenes' ? sceneGraph.error.value : displayLevel.value === 'blocks' ? blockGraph.error.value : '')
@@ -209,6 +222,7 @@ const canvasActions = computed(() => displayLevel.value === 'chapters'
     : [
         { id: 'text', label: 'Текстовый блок', icon: 'text' },
         { id: 'list', label: 'Список', icon: 'list' },
+        { id: 'combat', label: 'Бой', icon: 'combat' },
       ])
 const emptyCopy = computed(() => displayLevel.value === 'chapters'
   ? { title: 'Здесь появятся главы', description: 'Создайте первую главу и соединяйте главы переходами.' }
@@ -308,13 +322,17 @@ function sceneIndex(scene) {
 
 function handleNodeClick(node, anchor) {
   if (displayLevel.value === 'chapters') emit('node-click', node, anchor)
+  else if (displayLevel.value === 'blocks' && props.isDm) blockMenus.value?.openFor(node, anchor)
 }
 
 function handleNodeDoubleClick(node) {
   if (props.workspaceMode === 'combat') return
   if (displayLevel.value === 'chapters') emit('node-double-click', node)
   else if (displayLevel.value === 'scenes') openBlocksLevel(node)
-  else openBlockEdit(node)
+  else {
+    blockMenus.value?.close()
+    openBlockEdit(node)
+  }
 }
 
 function handleEdgeClick(edge, anchor) {
@@ -355,6 +373,18 @@ async function savePosition(id, x, y) {
   } catch { actionError.value = 'Не удалось сохранить положение карточки' }
 }
 
+function previewSize(id, width) {
+  if (displayLevel.value === 'blocks') blockGraph.setLocalWidth(id, width)
+}
+
+async function saveSize(id, width) {
+  if (displayLevel.value !== 'blocks') return
+  actionError.value = ''
+  try {
+    await blockGraph.saveWidth(id, width)
+  } catch { actionError.value = 'Не удалось сохранить ширину блока' }
+}
+
 function runCanvasAction(action) {
   if (action === 'chapter') return emit('create-chapter')
   if (action === 'scene') return openSceneCreate()
@@ -393,15 +423,34 @@ function requestSceneDelete(scene) { pendingDelete.value = { kind: 'scene', scen
 function openBlockCreate(type) {
   editingBlock.value = null
   creatingBlockType.value = type
-  blockCreatePosition.value = canvas.value?.viewportCenter() ?? { x: 48, y: 210 }
+  blockCreatePosition.value = canvas.value?.viewportCenter(sceneBlockDefaultWidth(type), activeNodeHeight.value) ?? { x: 48, y: 210 }
   blockEditorOpen.value = true
 }
 
 function openBlockEdit(block) {
   if (!props.isDm) return
+  blockMenus.value?.close()
   editingBlock.value = block
   creatingBlockType.value = block.type
   blockEditorOpen.value = true
+}
+
+async function copyBlock(block) {
+  actionError.value = ''
+  try {
+    const data = block.data == null ? null : JSON.parse(JSON.stringify(block.data))
+    await blockGraph.createItem({
+      type: block.type,
+      title: `${block.title || 'Без названия'} · копия`,
+      data,
+      width: block.width || activeNodeWidth.value,
+    }, { x: block.positionX + 32, y: block.positionY + 32 })
+  } catch { actionError.value = 'Не удалось скопировать блок' }
+}
+
+function sendBlockToCombat(block) {
+  blockMenus.value?.close()
+  emit('send-block-to-combat', block)
 }
 
 function closeBlockEditor() {

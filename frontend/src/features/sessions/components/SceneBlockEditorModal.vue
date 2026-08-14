@@ -5,17 +5,6 @@
         <FormTextInput v-model:value="draft.title" :maxlength="200" autofocus />
       </FormField>
 
-      <FormField label="Цвет" vertical>
-        <ColorPresetPicker
-          inline
-          allow-custom
-          allow-clear
-          clear-value=""
-          :model-value="draft.color"
-          @update:model-value="value => draft.color = value || ''"
-        />
-      </FormField>
-
       <FormField v-if="blockType === 'text'" label="Содержимое" vertical>
         <InputDescription
           editable
@@ -23,6 +12,10 @@
           :value="draft.text"
           @update:value="(_, html) => draft.text = html"
         />
+      </FormField>
+
+      <FormField v-else-if="blockType === 'combat'" label="Существа" vertical>
+        <SceneCombatCreaturesEditor v-model="draft.creatures" />
       </FormField>
 
       <FormField v-else label="Строки" vertical>
@@ -51,8 +44,9 @@
 <script setup>
 import { computed, provide, reactive } from 'vue'
 import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
-import ColorPresetPicker from '@/shared/ui/ColorPresetPicker'
 import InputDescription from '@/shared/ui/InputDescription.vue'
+import SceneCombatCreaturesEditor from '@/features/sessions/components/SceneCombatCreaturesEditor.vue'
+import { sceneBlockDefaultWidth, sceneBlockType } from '@/features/sessions/lib/sceneBlockTypes'
 import FormActionButtons from '@/shared/ui/form/FormActionButtons'
 import FormField from '@/shared/ui/form/FormField'
 import FormTextInput from '@/shared/ui/form/FormTextInput'
@@ -65,14 +59,16 @@ const props = defineProps({
 const emit = defineEmits(['close', 'save'])
 
 const blockType = computed(() => props.block?.type || props.type)
-const typeLabel = computed(() => blockType.value === 'list' ? 'список' : 'текст')
+const typeLabel = computed(() => sceneBlockType(blockType.value).label.toLowerCase())
 const draft = reactive({
-  title: props.block?.title || (blockType.value === 'list' ? 'Новый список' : 'Новый текст'),
+  title: props.block?.title || `Новый ${blockType.value === 'list' ? 'список' : blockType.value === 'combat' ? 'бой' : 'текст'}`,
   text: props.block?.data?.text || '',
   rows: Array.isArray(props.block?.data?.rows)
     ? props.block.data.rows.map(row => ({ left: String(row?.left ?? ''), right: String(row?.right ?? '') }))
     : [{ left: '', right: '' }],
-  color: props.block?.color || '',
+  creatures: Array.isArray(props.block?.data?.creatures)
+    ? props.block.data.creatures.map(creature => ({ ...creature }))
+    : [],
 })
 const descriptionBlock = { id: 'scene-block-description', content: { placeholder: 'Текст блока' } }
 
@@ -82,10 +78,12 @@ function save() {
   emit('save', {
     type: blockType.value,
     title: draft.title.trim(),
-    color: draft.color || null,
+    width: props.block?.width || sceneBlockDefaultWidth(blockType.value),
     data: blockType.value === 'list'
       ? { rows: draft.rows.filter(row => row.left.trim() || row.right.trim()) }
-      : { text: draft.text },
+      : blockType.value === 'combat'
+        ? { creatures: draft.creatures.map(creature => ({ ...creature })) }
+        : { text: draft.text },
   })
 }
 </script>
