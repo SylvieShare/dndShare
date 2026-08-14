@@ -36,6 +36,7 @@ type SessionParticipantData struct {
 	TemplateName string         `json:"templateName"`
 	Data         map[string]any `json:"data"`
 	Role         string         `json:"role"`
+	Color        *string        `json:"color,omitempty"`
 }
 
 // ParticipantBrief — краткая инфа об участнике для списка сессий.
@@ -136,7 +137,7 @@ func (s *Store) GetGameSessionByInviteCode(ctx context.Context, code string) (Ga
 // GetSessionParticipants — участники сессии с полными данными персонажей (порт getParticipants).
 func (s *Store) GetSessionParticipants(ctx context.Context, sessionID int64) ([]SessionParticipantData, error) {
 	rows, err := s.pool.Query(ctx,
-		`SELECT sp.char_id, sp.role, c.uuid::text AS char_uuid, c.data AS char_data,
+		`SELECT sp.char_id, sp.role, sp.color, c.uuid::text AS char_uuid, c.data AS char_data,
 		        c.template_id, ct.name AS template_name
 		 FROM dndshare.session_participant sp
 		 JOIN dndshare."char" c ON c.id = sp.char_id AND c.deleted = false
@@ -153,7 +154,7 @@ func (s *Store) GetSessionParticipants(ctx context.Context, sessionID int64) ([]
 	for rows.Next() {
 		var p SessionParticipantData
 		var charData []byte
-		if err := rows.Scan(&p.CharID, &p.Role, &p.CharUUID, &charData, &p.TemplateID, &p.TemplateName); err != nil {
+		if err := rows.Scan(&p.CharID, &p.Role, &p.Color, &p.CharUUID, &charData, &p.TemplateID, &p.TemplateName); err != nil {
 			return nil, err
 		}
 		_ = json.Unmarshal(charData, &p.Data)
@@ -334,6 +335,17 @@ func (s *Store) RemoveSessionParticipantByCharID(ctx context.Context, sessionID,
 		sessionID, charID,
 	)
 	return err
+}
+
+// UpdateSessionParticipantColor assigns a session-local visual marker to a participant.
+// It returns false when the character is no longer attached to the session.
+func (s *Store) UpdateSessionParticipantColor(ctx context.Context, sessionID, charID int64, color *string) (bool, error) {
+	tag, err := s.pool.Exec(ctx,
+		`UPDATE dndshare.session_participant SET color = $3
+		 WHERE session_id = $1 AND char_id = $2`,
+		sessionID, charID, color,
+	)
+	return tag.RowsAffected() > 0, err
 }
 
 // GetEncounterData возвращает последний активный энкаунтер сессии как JSON-строку

@@ -300,9 +300,18 @@ CREATE TABLE IF NOT EXISTS dndshare.session_participant (
     char_id    int8 NOT NULL REFERENCES dndshare."char"(id),
     user_id    int8 NOT NULL REFERENCES dndshare.users(id),
     "role"     varchar(32) DEFAULT 'player'::character varying NOT NULL,
+    color      varchar(7) NULL,
     joined_at  timestamptz DEFAULT now() NOT NULL,
     CONSTRAINT session_participant_pkey PRIMARY KEY (id),
     CONSTRAINT session_participant_session_id_char_id_key UNIQUE (session_id, char_id)
 );
+ALTER TABLE dndshare.session_participant ADD COLUMN IF NOT EXISTS color varchar(7) NULL;
+DO $$ BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'session_participant_color_check') THEN
+        ALTER TABLE dndshare.session_participant ADD CONSTRAINT session_participant_color_check CHECK (
+            color IS NULL OR color ~ '^#[0-9a-fA-F]{6}$'
+        );
+    END IF;
+END $$;
 CREATE INDEX IF NOT EXISTS idx_session_participant_char_id ON dndshare.session_participant USING btree (char_id);
 CREATE INDEX IF NOT EXISTS idx_session_participant_user_id ON dndshare.session_participant USING btree (user_id);

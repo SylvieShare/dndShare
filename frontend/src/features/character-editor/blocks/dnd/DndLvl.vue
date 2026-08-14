@@ -26,16 +26,18 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, inject, ref } from 'vue'
 import BaseTile from '@/shared/ui/BaseTile'
 import DndLevelUpModal from '@/features/character-editor/blocks/dnd/components/DndLevelUpModal'
 import DndLvlEditor from '@/features/character-editor/blocks/dnd/components/DndLvlEditor'
 import DndLvlView from '@/features/character-editor/blocks/dnd/components/DndLvlView'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
 import { useMorphOrigin } from '@/features/character-editor/composables/useMorphOrigin'
+import { logSessionEntryAdded } from '@/features/character-editor/lib/sessionEntryEvents'
 
 const props = defineProps(['block', 'value', 'values'])
 const emit = defineEmits(['update:value'])
+const charCtx = inject('charCtx', () => ({ ownerMode: false }))
 const { editorOpen, originRect, originEl, open, close } = useMorphOrigin()
 
 const levelUpOpen = ref(false)
@@ -53,10 +55,11 @@ function openLevelUp() {
 
 // Окно повышения возвращает пачку изменений по разным блокам листа
 // (lvl / classes / hp / abilities_class / ...) — раскладываем по ключам.
-function applyLevelUp(updates) {
+function applyLevelUp(updates, additions = []) {
   for (const [id, value] of Object.entries(updates)) {
     emit('update:value', id === 'lvl' ? props.block.id : id, value)
   }
+  for (const addition of additions) logSessionEntryAdded(charCtx, addition)
   levelUpOpen.value = false
 }
 </script>

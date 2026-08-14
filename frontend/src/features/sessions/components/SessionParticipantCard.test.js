@@ -13,7 +13,7 @@ describe('SessionParticipantCard actions', () => {
   it('opens a shared row action menu from the participant BaseTile', () => {
     expect(source).toContain('<RowActionMenu>')
     expect(source).toContain('<template #trigger>')
-    expect(source).toContain('<BaseTile class="p-card" interactive>')
+    expect(source).toContain(':mark-color="participant.color"')
   })
 
   it('makes the action trigger and participant tile span the whole rail', () => {
@@ -22,9 +22,12 @@ describe('SessionParticipantCard actions', () => {
     expect(source).toContain('.p-card {\n  width: 100%;\n  box-sizing: border-box;')
   })
 
-  it('offers view to everyone and kick only to the DM', () => {
+  it('offers view to everyone and DM-only color and kick actions', () => {
     expect(source).toContain('<RowActionItem action="view"')
+    expect(source).toContain("{{ colorPending ? 'Сохранение…' : 'Назначить цвет' }}")
+    expect(source).toContain('<ColorPresetPicker')
+    expect(source).toContain('@update:model-value="assignColor"')
     expect(source).toMatch(/v-if="isDm"[\s\S]*?action="kick"[\s\S]*?>\{\{ kickPending \? 'Исключение…' : 'Выгнать' \}\}<\/RowActionItem>/)
-    expect(source).toContain("defineEmits(['view', 'kick'])")
+    expect(source).toContain("defineEmits(['view', 'kick', 'color'])")
   })
 })

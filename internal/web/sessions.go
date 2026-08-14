@@ -37,6 +37,7 @@ func (s *Server) routesSessions(mux *http.ServeMux) {
 	mux.HandleFunc("POST /api/sessions/{uuid}/join", s.handleJoinSession)
 	mux.HandleFunc("POST /api/sessions/{uuid}/events", s.handleCreateSessionEvent)
 	mux.HandleFunc("DELETE /api/sessions/{uuid}/participants/{charId}", s.handleKickParticipant)
+	mux.HandleFunc("PATCH /api/sessions/{uuid}/participants/{charId}/color", s.handleUpdateParticipantColor)
 	mux.HandleFunc("PATCH /api/sessions/{uuid}/status", s.handleUpdateSessionStatus)
 	mux.HandleFunc("PUT /api/sessions/{uuid}/encounter", s.handleSaveEncounter)
 	mux.HandleFunc("PUT /api/sessions/{uuid}/music", s.handleSaveMusicState)

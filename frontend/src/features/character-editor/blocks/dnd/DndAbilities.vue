@@ -126,6 +126,7 @@ import { featChoices, featEntry } from '@/features/items/lib/featRules'
 import { ensureItemNames, itemName } from '@/features/handbook/objects/lib/itemNames'
 import { useSuggestStore } from '@/stores/suggest'
 import { useMorphOrigin } from "@/features/character-editor/composables/useMorphOrigin"
+import { logSessionEntryAdded } from '@/features/character-editor/lib/sessionEntryEvents'
 
 const props = defineProps(['block', 'value'])
 const emit = defineEmits(['update:value'])
@@ -242,6 +243,14 @@ function onView(entry) {
   modalEntry.value = entry
 }
 
+function logAddedEntry(item) {
+  logSessionEntryAdded(charCtx, {
+    kind: Number(props.block.content.item_id) === 7 ? 'feature' : 'ability',
+    title: item?.name,
+    itemId: item?.id,
+  })
+}
+
 function addFromCatalog(item) {
   if (!catalog.value.find(c => c.id === item.id)) catalog.value.push(item)
   if (Number(props.block.content.item_id) === 7 && featChoices(item).length) {
@@ -251,6 +260,7 @@ function addFromCatalog(item) {
   }
   if (Number(props.block.content.item_id) === 7) {
     emitChange([...stored.value, featEntry(item)])
+    logAddedEntry(item)
     return
   }
   const manualSize = !!item.data?.manual_size
@@ -258,10 +268,13 @@ function addFromCatalog(item) {
   const entry = { id: item.id, count: maxUse ?? 0 }
   if (manualSize) entry.max_use = maxUse ?? 0
   emitChange([...stored.value, entry])
+  logAddedEntry(item)
 }
 
 function onFeatChoicesConfirm(choices) {
-  emitChange([...stored.value, featEntry(featConfigItem.value, choices)])
+  const item = featConfigItem.value
+  emitChange([...stored.value, featEntry(item, choices)])
+  logAddedEntry(item)
   featConfigItem.value = null
 }
 

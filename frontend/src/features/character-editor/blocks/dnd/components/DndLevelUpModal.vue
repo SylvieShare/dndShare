@@ -259,7 +259,9 @@ import { useLevelUpFeatureChoices } from './useLevelUpFeatureChoices'
 import { buildLevelUpUpdates } from './buildLevelUpUpdates'
 import { useLevelUpFeatSelection } from './useLevelUpFeatSelection'
 import { useLevelUpTarget } from './useLevelUpTarget'
+import { useGrantedSpellNames } from './useGrantedSpellNames'
 import { featSnippet, hitDieLabel as resolveHitDieLabel, monogram, multiclassPrerequisiteLabel } from './levelUpPresentation'
+import { levelUpSessionAdditions } from '@/features/character-editor/blocks/dnd/lib/levelUpSessionAdditions'
 
 const CLASS_TYPE = 9
 const CLASS_ABIL_TYPE = 4
@@ -357,16 +359,7 @@ const grantedNewIds = computed(() => {
   const have = new Set((props.values?.spells?.spells || []).map((s) => s.id))
   return [...new Set(grantedRows.value.map((r) => r.spellId))].filter((id) => !have.has(id))
 })
-const spellNames = ref({})
-watch(grantedNewIds, async (ids) => {
-  const missing = ids.filter((id) => !spellNames.value[id])
-  if (!missing.length) return
-  const res = await itemsApi.byIds(missing)
-  const next = { ...spellNames.value }
-  ;(res?.items || []).forEach((it) => { next[it.id] = it.name })
-  spellNames.value = next
-}, { immediate: true })
-const grantedSpellList = computed(() => grantedNewIds.value.map((id) => ({ id, name: spellNames.value[id] || `#${id}` })))
+const { spellNames, grantedSpellList } = useGrantedSpellNames(grantedNewIds)
 
 // ─── хиты ───────────────────────────────────────────────────────────────────
 const hitDieLabelOf = (item) => resolveHitDieLabel(item, dieLabel)
@@ -545,9 +538,9 @@ const canAccept = computed(() => {
 })
 
 // ─── применение ─────────────────────────────────────────────────────────────
-function accept() {
+async function accept() {
   if (!canAccept.value) return
-  emit('apply', buildLevelUpUpdates({
+  const updates = buildLevelUpUpdates({
     values: props.values || {},
     newTotal: newTotal.value,
     isPlain: isPlain.value,
@@ -570,7 +563,15 @@ function accept() {
     slotsAfter: slotsAfter.value,
     grantedNewIds: grantedNewIds.value,
     classItem: classItem.value,
-  }))
+  })
+  const catalogItems = [...abilityPool.value, ...Object.values(itemsById.value)]
+  if (featPick.value) catalogItems.push(featPick.value)
+  const additions = await levelUpSessionAdditions({
+    values: props.values, updates, catalogItems,
+    spellNames: spellNames.value,
+    loadItems: itemsApi.byIds,
+  })
+  emit('apply', updates, additions)
 }
 // ─── загрузка ───────────────────────────────────────────────────────────────
 onMounted(async () => {

@@ -36,6 +36,7 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers }) {
     getPlayerAc,
     getPlayerHp,
     participantSubtitle,
+    participantColor,
     mergeParticipants,
   } = players
 
@@ -283,6 +284,7 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers }) {
     // players
     playerDisplayName,
     getPlayerAva,
+    participantColor,
     subtitle,
     avatarStyle,
     tileColor,

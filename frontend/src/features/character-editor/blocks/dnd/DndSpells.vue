@@ -122,6 +122,7 @@ import { useSortable } from '@/shared/composables/useSortable'
 import { useDiceStore } from '@/stores/dice'
 import { useSuggestStore } from '@/stores/suggest'
 import { SYSTEM_DICE } from '@/shared/lib/systemDice'
+import { logSessionEntryAdded } from '@/features/character-editor/lib/sessionEntryEvents'
 
 const props = defineProps(['block', 'value', 'values'])
 const emit  = defineEmits(['update:value'])
@@ -335,6 +336,9 @@ function addSpell(item) {
     itemMap[item.id] = item
     spells.value.push({ id: item.id, prepared: false })
     emitChange()
+    logSessionEntryAdded(charCtx, {
+      kind: 'spell', title: item.name, itemId: item.id, level: item.data?.lvl,
+    })
   }
 }
 

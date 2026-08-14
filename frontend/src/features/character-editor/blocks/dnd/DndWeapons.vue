@@ -107,6 +107,7 @@ import { useSortable } from '@/shared/composables/useSortable'
 import { useDiceStore } from '@/stores/dice'
 import { useSuggestStore } from '@/stores/suggest'
 import { SYSTEM_DICE } from '@/shared/lib/systemDice'
+import { logSessionEntryAdded } from '@/features/character-editor/lib/sessionEntryEvents'
 
 const props = defineProps(['block', 'value', 'values', 'vars'])
 const emit  = defineEmits(['update:value'])
@@ -253,6 +254,9 @@ function addWeapon(it) {
   entries.value.push({ ...defaultEntry(), item_id: it.id, _key: nextKey() })
   addItem(it)
   emitChange()
+  logSessionEntryAdded(charCtx, {
+    kind: 'item', category: 'weapon', title: it.name, itemId: it.id,
+  })
 }
 
 function deleteWeapon(index) {

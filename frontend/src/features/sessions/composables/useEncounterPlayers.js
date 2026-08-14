@@ -39,6 +39,10 @@ export function useEncounterPlayers({ participants }) {
     return p ? pvSubtitle(p) : ''
   }
 
+  function participantColor(charId) {
+    return findParticipant(charId)?.color || null
+  }
+
   function participantToPlayer(p) {
     return {
       uid: 'p-' + p.charId,
@@ -71,6 +75,7 @@ export function useEncounterPlayers({ participants }) {
     getPlayerAc,
     getPlayerHp,
     participantSubtitle,
+    participantColor,
     mergeParticipants,
   }
 }

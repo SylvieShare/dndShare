@@ -32,8 +32,10 @@ an explicit rules `sourceVersionId`, then is joined and opened.
 
 The session participant rail has no shared backing surface: each participant is
 an individual interactive `BaseTile`. Clicking it opens `RowActionMenu` with an
-icon-labelled view action and a DM-only kick action; bulk participant selection
-is not part of the rail. Every participant trigger fills the rail width. A dashed `+` action
+icon-labelled view action plus DM-only color and kick actions; bulk participant
+selection is not part of the rail. The color is stored on the participant's
+session membership and renders as the same diagonal `BaseTile` mark in the rail
+and on that player's encounter rows. Every participant trigger fills the rail width. A dashed `+` action
 beside the `ИГРОКИ` heading opens character creation and invite code/link copy
 actions; the rail has no separate invitation tile.
 
@@ -47,9 +49,12 @@ then the participant rail.
 
 Панели кубиков, музыки и событий в правом rail сворачиваются независимо.
 `SessionEventsPanel` расположен под музыкой, занимает свободную высоту и
-прокручивает только собственную хронику. Подпись события — `Мастер` для действия
-из сессии, `Имя персонажа (мастер)` для действия мастера из листа или просто
-имя персонажа для игрока. Логин пользователя не показывается.
+прокручивает только собственную хронику. Новые записи находятся сверху и
+группируются сначала по минуте, затем по последовательному субъекту действия.
+Время показывается один раз слева, а заголовок субъекта и вертикальная линия
+объединяют его соседние события. `Мастер` в сессии и `Имя персонажа (мастер)` в
+листе — разные ключи группировки; для игрока используется имя персонажа. Логин
+пользователя не показывается.
 `stores/sessionEvents.js` загружает
 последние 50 записей, затем получает новые по cursor polling и устраняет
 дубликаты по серверному id. Когда на странице сессии открыт модальный лист,
@@ -61,8 +66,10 @@ then the participant rail.
 `session_event` stores semantic gameplay actions rather than arbitrary sheet
 JSON changes. The current producers are dice rolls, short/long rests, resource
 use, potion/inventory spending and replenishment, spell use, session status,
-current chapter and encounter start/finish. Regular editing, drag ordering,
-music controls and manual configuration do not create timeline noise.
+current chapter, encounter start/finish and `entry_added` for inventory items,
+weapons, potions, spells, feats and abilities. Direct picker/manual additions
+and level-up grants use the same event. Regular editing, drag ordering, music
+controls and manual configuration do not create timeline noise.
 
 The server authenticates every timeline read/write as either the session DM or
 a participant. An `actorCharUuid` identifies the character page that produced
@@ -181,6 +188,8 @@ batch-loads referenced handbook items through `/api/items/by-ids`.
 Player display and HP come through `participantView`. HP writes use the
 accessor's canonical `hpPath`; current/temp HP and death saves are patched back
 to the character only when the current user may perform the action.
+The player color marker is read from `session_participant`, not copied into the
+encounter combatant, so changing it is reflected across every encounter section.
 
 ## Music
 

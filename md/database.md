@@ -125,6 +125,9 @@ class ids, ключи черт и source metadata, затем удаляет и�
 `session`, `session_participant`, главы, сцены, encounters, events и состояние
 музыки находятся в одной схеме. Participant brief читает аватар по
 каноническому D&D пути; полей template path map нет.
+`session_participant.color` хранит необязательный `#RRGGBB`-цвет участника в
+рамках конкретной сессии; это UI-маркер и он не записывается в данные персонажа
+или encounter JSON.
 
 `session_event` — append-only хроника осмысленных игровых действий. Автор
 хранится в `author_user_id`, а `actor_char_id` отдельно указывает персонажа, из

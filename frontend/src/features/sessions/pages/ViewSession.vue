@@ -82,12 +82,16 @@
             :participant="p"
             :is-dm="isDm"
             :kick-pending="kickingIds.has(p.charId)"
+            :color-pending="coloringIds.has(p.charId)"
             @view="openParticipant"
+            @color="setParticipantColor"
             @kick="kickParticipant"
           />
         </div>
         <div v-else class="no-participants">Участников пока нет</div>
-        <div v-if="kickError" class="participant-action-error" role="alert">{{ kickError }}</div>
+        <div v-if="kickError || colorError" class="participant-action-error" role="alert">
+          {{ kickError || colorError }}
+        </div>
       </aside>
 
       <aside class="workspace-dock workspace-dock--right">
@@ -156,7 +160,7 @@ import { useUiStore } from '@/stores/ui'
 import { sessionStatusConfig } from '@/features/sessions/composables/useSessionStatus'
 import { createHeaderChip } from '@/shared/lib/appHeader'
 import { fetchPost } from '@/shared/api/http'
-import { getSession, joinSession, updateSession } from '@/shared/api/sessionsApi'
+import { getSession, joinSession, updateParticipantColor, updateSession } from '@/shared/api/sessionsApi'
 
 const route = useRoute()
 const router = useRouter()
@@ -171,6 +175,8 @@ const editOpen = ref(false)
 const editName = ref('')
 const editDesc = ref('')
 const editSaving = ref(false)
+const coloringIds = ref(new Set())
+const colorError = ref('')
 
 const accountStore = useAccountStore()
 const musicStore = useMusicStore()
@@ -221,6 +227,24 @@ const {
 function openParticipant(charId) {
   const p = participants.value.find(x => x.charId === charId)
   if (p) sheetUuid.value = p.charUuid
+}
+
+async function setParticipantColor(charId, color) {
+  if (coloringIds.value.has(charId)) return
+  colorError.value = ''
+  coloringIds.value = new Set([...coloringIds.value, charId])
+  try {
+    await updateParticipantColor(sessionUuid, charId, color)
+    participants.value = participants.value.map(participant =>
+      participant.charId === charId ? { ...participant, color: color || null } : participant
+    )
+  } catch {
+    colorError.value = 'Не удалось сохранить цвет участника'
+  } finally {
+    const next = new Set(coloringIds.value)
+    next.delete(charId)
+    coloringIds.value = next
+  }
 }
 
 function openCreate() {

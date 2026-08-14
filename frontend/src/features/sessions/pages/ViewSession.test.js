@@ -11,6 +11,7 @@ const dicePanelSource = readFileSync(fileURLToPath(new URL('../components/DicePa
 const musicPanelSource = readFileSync(fileURLToPath(new URL('../components/MusicPanel.vue', import.meta.url)), 'utf8')
 const centerWorkspaceSource = readFileSync(fileURLToPath(new URL('../components/SessionCenterWorkspace.vue', import.meta.url)), 'utf8')
 const encounterSource = readFileSync(fileURLToPath(new URL('../components/EncounterTab.vue', import.meta.url)), 'utf8')
+const encounterRowSource = readFileSync(fileURLToPath(new URL('../components/EncounterRow.vue', import.meta.url)), 'utf8')
 const sceneSource = readFileSync(fileURLToPath(new URL('../components/SceneTab.vue', import.meta.url)), 'utf8')
 const encounterStylesSource = readFileSync(fileURLToPath(new URL('../components/styles/EncounterTab.css', import.meta.url)), 'utf8')
 const sceneStylesSource = readFileSync(fileURLToPath(new URL('../components/styles/SceneTab.css', import.meta.url)), 'utf8')
@@ -101,9 +102,17 @@ describe('ViewSession participant rail', () => {
 
   it('uses per-participant actions without bulk selection controls', () => {
     expect(source).toContain('@view="openParticipant"')
+    expect(source).toContain('@color="setParticipantColor"')
     expect(source).toContain('@kick="kickParticipant"')
     expect(source).not.toContain('Выбрать игроков для действия')
     expect(source).not.toContain('selectionMode')
+  })
+
+  it('saves a session-local participant color and marks player tiles in both rails', () => {
+    expect(source).toContain('await updateParticipantColor(sessionUuid, charId, color)')
+    expect(source).toContain('{ ...participant, color: color || null }')
+    expect(encounterRowSource).toContain(':mark-color="playerColor"')
+    expect(encounterRowSource).toContain('enc.participantColor(props.combatant.charId)')
   })
 
   it('keeps a failed kick visible and only removes a participant after success', () => {

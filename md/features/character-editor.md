@@ -189,7 +189,10 @@ Clicking an inventory row opens the shared `RowActionMenu`: referenced items can
 open their description, while editable rows offer spend, add, change and delete.
 Spend/add changes the stack by one and publishes `item_spent`/`item_added` in an
 active session; editing metadata or deleting an entry does not claim a gameplay
-action. A multi-quantity picker creates one entry with that count. Potion tiles open the shared `RowActionMenu` with
+action. Creating a new inventory item or weapon publishes `entry_added`; the
+same event covers newly picked potions and spells, feats and class/racial
+abilities, including additions granted by level-up. A multi-quantity picker
+creates one entry with that count. Potion tiles open the shared `RowActionMenu` with
 icon-labelled, accent-colored use, success-colored replenish-by-one and
 info-colored view actions; use/replenish publish the same semantic item events,
 and use removes the entry at zero. Mobile status actions pass their domain icons for statuses, exhaustion

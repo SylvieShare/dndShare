@@ -100,6 +100,8 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
 
 - `GET|POST /api/sessions`, `GET|PATCH /api/sessions/{uuid}` and session delete;
 - join/leave/kick participant and update session status;
+- `PATCH /api/sessions/{uuid}/participants/{charId}/color` assigns or clears
+  (`{"color":null}`) the participant's session-local `#RRGGBB` marker; owner-only;
 - `GET /api/sessions/{uuid}/chapter-graph` returns `{arcs,chapters,edges}`;
 - `POST /api/sessions/{uuid}/arcs`, `PATCH|DELETE
   /api/sessions/{uuid}/arcs/{arcId}` and `PATCH
@@ -118,7 +120,8 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
   resolves `actorCharUuid` to the participant whose page produced the action.
   Event responses expose `authorRole` and actor character projection fields;
   user login is not part of the timeline response. `clientActionId` makes
-  retries idempotent;
+  retries idempotent. `entry_added` carries a typed `data.kind` (`item`,
+  `potion`, `spell`, `feature` or `ability`) for additions to a character;
 - CRUD scenes and scene items, including explicit items-order endpoint.
 
 Arc, chapter and transition mutations are owner-only. Chapter `number` is a

@@ -3,7 +3,9 @@ package web
 import (
 	"errors"
 	"net/http"
+	"regexp"
 	"strconv"
+	"strings"
 
 	"dndshare/internal/store"
 )
@@ -140,6 +142,63 @@ func (s *Server) handleKickParticipant(w http.ResponseWriter, r *http.Request) {
 	}
 	if err := s.store.RemoveSessionParticipantByCharID(r.Context(), session.ID, charID); err != nil {
 		serverError(w, err)
+		return
+	}
+	writeJSON(w, http.StatusNoContent, nil)
+}
+
+var participantColorPattern = regexp.MustCompile(`^#[0-9a-f]{6}$`)
+
+type updateParticipantColorRequest struct {
+	Color *string `json:"color"`
+}
+
+func normalizeParticipantColor(color *string) (*string, bool) {
+	if color == nil {
+		return nil, true
+	}
+	normalized := strings.ToLower(strings.TrimSpace(*color))
+	if !participantColorPattern.MatchString(normalized) {
+		return nil, false
+	}
+	return &normalized, true
+}
+
+func (s *Server) handleUpdateParticipantColor(w http.ResponseWriter, r *http.Request) {
+	userID, ok := mustUser(w, r)
+	if !ok {
+		return
+	}
+	session, err := s.lookupSession(w, r)
+	if err != nil {
+		return
+	}
+	if session.OwnerUserID != userID {
+		forbidden(w)
+		return
+	}
+	charID, err := strconv.ParseInt(r.PathValue("charId"), 10, 64)
+	if err != nil {
+		badRequest(w, "Некорректный запрос")
+		return
+	}
+	var body updateParticipantColorRequest
+	if err := decodeJSON(r, &body); err != nil {
+		badRequest(w, "Некорректный запрос")
+		return
+	}
+	color, valid := normalizeParticipantColor(body.Color)
+	if !valid {
+		badRequest(w, "Некорректный цвет")
+		return
+	}
+	updated, err := s.store.UpdateSessionParticipantColor(r.Context(), session.ID, charID, color)
+	if err != nil {
+		serverError(w, err)
+		return
+	}
+	if !updated {
+		notFound(w, "")
 		return
 	}
 	writeJSON(w, http.StatusNoContent, nil)

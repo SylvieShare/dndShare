@@ -38,6 +38,7 @@ import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
 import PotionShelf from '@/features/character-editor/blocks/dnd/components/PotionShelf'
 import { itemsApi } from '@/shared/api/itemsApi'
 import { makeEntryUid } from '@/features/character-editor/blocks/dnd/lib/itemSection'
+import { logSessionEntryAdded } from '@/features/character-editor/lib/sessionEntryEvents'
 
 const POTION_TYPE = 10
 
@@ -117,6 +118,7 @@ function onPick(item, qty = 1) {
   else next.push({ uid: makeEntryUid(), id: item.id, count: n, override: null })
   pickerOpen.value = false
   emit('update:value', props.block.id, next)
+  logSessionEntryAdded(charCtx, { kind: 'potion', title: item.name, itemId: item.id, count: n })
 }
 
 async function loadCatalog() {

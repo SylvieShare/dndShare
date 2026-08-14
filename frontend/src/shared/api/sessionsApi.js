@@ -44,6 +44,10 @@ export function kickParticipant(uuid, charId) {
   return fetchDelete(`/sessions/${uuid}/participants/${charId}`)
 }
 
+export function updateParticipantColor(uuid, charId, color) {
+  return fetchPatch(`/sessions/${uuid}/participants/${charId}/color`, { color })
+}
+
 export function getEncounter(uuid) {
   return fetchGet(`/sessions/${uuid}/encounter`)
 }

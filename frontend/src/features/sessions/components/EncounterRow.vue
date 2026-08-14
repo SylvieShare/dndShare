@@ -3,6 +3,7 @@
     class="enc-row"
     :class="rowClasses"
     color="var(--section-color)"
+    :mark-color="playerColor"
     strip
     :data-sortable-key="combatant.uid"
     @pointerdown="onRowPointerDown"
@@ -162,6 +163,7 @@ const enc = inject('encounter')
 
 const isPlayer = computed(() => props.combatant.type === 'player')
 const isNpc = computed(() => props.combatant.type === 'npc')
+const playerColor = computed(() => isPlayer.value ? enc.participantColor(props.combatant.charId) : null)
 
 const displayName = computed(() =>
   isPlayer.value ? enc.playerDisplayName(props.combatant) : enc.npcName(props.combatant)

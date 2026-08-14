@@ -2,7 +2,12 @@
   <div class="p-card-menu">
     <RowActionMenu>
       <template #trigger>
-        <BaseTile class="p-card" interactive>
+        <BaseTile
+          class="p-card"
+          :class="{ 'p-card--marked': participant.color }"
+          interactive
+          :mark-color="participant.color"
+        >
           <div class="p-avatar" :style="{ background: avatarColor }">
             <img v-if="avaUrl" :src="avaUrl" class="ava-img" alt="" />
             <span v-else class="ava-initial">{{ initial }}</span>
@@ -62,6 +67,29 @@
         <RowActionItem action="view" @click="viewParticipant(close)">Просмотреть</RowActionItem>
         <RowActionItem
           v-if="isDm"
+          :icon="Palette"
+          :disabled="colorPending"
+          @click="colorPickerOpen = !colorPickerOpen"
+        >
+          {{ colorPending ? 'Сохранение…' : 'Назначить цвет' }}
+          <template #suffix>
+            <span
+              class="participant-color-swatch"
+              :class="{ 'participant-color-swatch--empty': !participant.color }"
+              :style="participant.color ? { background: participant.color } : null"
+            />
+          </template>
+        </RowActionItem>
+        <div v-if="isDm && colorPickerOpen" class="ram-colors participant-color-picker">
+          <ColorPresetPicker
+            inline
+            allow-clear
+            :model-value="participant.color || ''"
+            @update:model-value="assignColor"
+          />
+        </div>
+        <RowActionItem
+          v-if="isDm"
           action="kick"
           tone="danger"
           :disabled="kickPending"
@@ -73,8 +101,10 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
+import { Palette } from '@lucide/vue'
 import BaseTile from '@/shared/ui/BaseTile.vue'
+import ColorPresetPicker from '@/shared/ui/ColorPresetPicker.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionMenu from '@/shared/ui/RowActionMenu.vue'
 import StatBar from '@/shared/ui/StatBar.vue'
@@ -86,8 +116,11 @@ const props = defineProps({
   participant: { type: Object, required: true },
   isDm: { type: Boolean, default: false },
   kickPending: { type: Boolean, default: false },
+  colorPending: { type: Boolean, default: false },
 })
-const emit = defineEmits(['view', 'kick'])
+const emit = defineEmits(['view', 'kick', 'color'])
+
+const colorPickerOpen = ref(false)
 
 function viewParticipant(close) {
   close()
@@ -98,6 +131,11 @@ function kickParticipant(close) {
   if (props.kickPending) return
   close()
   emit('kick', props.participant.charId)
+}
+
+function assignColor(color) {
+  if (props.colorPending) return
+  emit('color', props.participant.charId, color)
 }
 
 const displayName = computed(() => pvName(props.participant) || '(без имени)')
@@ -153,6 +191,10 @@ const avatarColor = computed(() => {
   user-select: none;
 }
 
+.p-card--marked {
+  padding-right: 38px;
+}
+
 .p-card-menu {
   width: 100%;
 }
@@ -160,6 +202,23 @@ const avatarColor = computed(() => {
 .p-card-menu :deep(.ram-custom-trigger) {
   display: flex;
   width: 100%;
+}
+
+.participant-color-swatch {
+  display: block;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--border-strong);
+  border-radius: 5px;
+}
+
+.participant-color-swatch--empty {
+  background: var(--bg);
+  border-style: dashed;
+}
+
+.participant-color-picker {
+  margin-top: 2px;
 }
 
 .p-avatar {

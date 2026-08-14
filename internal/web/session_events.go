@@ -17,6 +17,7 @@ var allowedSessionEventTypes = map[string]bool{
 	"spell_used":             true,
 	"item_spent":             true,
 	"item_added":             true,
+	"entry_added":            true,
 	"resource_used":          true,
 	"session_status_changed": true,
 	"chapter_started":        true,

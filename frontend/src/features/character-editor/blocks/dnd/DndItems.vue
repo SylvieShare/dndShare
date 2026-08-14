@@ -203,6 +203,7 @@ import RowActionMenu from '@/shared/ui/RowActionMenu.vue'
 import SectionLabel from '@/shared/ui/SectionLabel'
 import { itemsApi } from '@/shared/api/itemsApi'
 import { useSortable } from '@/shared/composables/useSortable'
+import { logSessionEntryAdded } from '@/features/character-editor/lib/sessionEntryEvents'
 import {
   EQUIPPED_ID,
   EQUIPPED_NAME,
@@ -415,6 +416,7 @@ function onPickerPick(item, qty = 1) {
   if (!list) return
   list.push({ uid: makeEntryUid(), id: item.id, count: n, override: null })
   emitModel(next)
+  logSessionEntryAdded(charCtx, { kind: 'item', title: item.name, itemId: item.id, count: n })
 }
 
 function openInlineForm(sectionId, entry) {
@@ -426,6 +428,7 @@ function onInlineFormSave(fields) {
   const next = cloneModel(model.value)
   const list = itemsRef(next, form.sectionId) || next.sections[0]?.items
   if (!list) return
+  const isNew = !form.entry
   if (form.entry) {
     const item = list.find(i => i.uid === form.entry.uid)
     if (item) {
@@ -447,6 +450,7 @@ function onInlineFormSave(fields) {
   }
   form.open = false
   emitModel(next)
+  if (isNew) logSessionEntryAdded(charCtx, { kind: 'item', title: fields.name })
 }
 
 function viewEntry(entry, close) {
