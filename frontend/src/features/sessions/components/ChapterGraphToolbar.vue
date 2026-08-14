@@ -20,7 +20,7 @@
 
     <div class="chapter-toolbar-main">
       <span class="chapter-toolbar-label">АРКА</span>
-      <button ref="arcTrigger" type="button" class="chapter-arc-trigger" @click="arcOpen = !arcOpen">
+      <button ref="arcTrigger" type="button" class="chapter-arc-trigger" :disabled="locked" @click="arcOpen = !arcOpen">
         <span class="chapter-arc-number">{{ romanNumeral(selectedArc?.order) }}</span>
         <span class="chapter-arc-name">{{ selectedArc?.name || 'Выберите арку' }}</span>
         <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
@@ -37,56 +37,56 @@
               <small v-if="arc.id === currentArc?.id">текущая глава здесь</small>
             </button>
             <div class="chapter-arc-order-actions">
-              <button type="button" title="Выше" :disabled="arc.order === 1" @click.stop="$emit('move-arc', arc.id, -1)">↑</button>
-              <button type="button" title="Ниже" :disabled="arc.order === arcs.length" @click.stop="$emit('move-arc', arc.id, 1)">↓</button>
+              <button type="button" title="Выше" :disabled="locked || arc.order === 1" @click.stop="$emit('move-arc', arc.id, -1)">↑</button>
+              <button type="button" title="Ниже" :disabled="locked || arc.order === arcs.length" @click.stop="$emit('move-arc', arc.id, 1)">↓</button>
             </div>
           </div>
-          <button type="button" class="chapter-arc-create" @click="arcOpen = false; $emit('create-arc')">+ Новая арка</button>
+          <button type="button" class="chapter-arc-create" :disabled="locked" @click="arcOpen = false; $emit('create-arc')">+ Новая арка</button>
         </div>
       </BasePopover>
 
-      <button type="button" class="chapter-tool-btn chapter-tool-btn--icon" title="Настройки арки" @click="$emit('edit-arc')">
+      <button type="button" class="chapter-tool-btn chapter-tool-btn--icon" title="Настройки арки" :disabled="locked" @click="$emit('edit-arc')">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
           <path d="M2 12L4 11.5L11.5 4L10 2.5L2.5 10L2 12Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
         </svg>
       </button>
-      <button type="button" class="chapter-tool-btn chapter-tool-btn--icon chapter-tool-btn--danger" title="Удалить пустую арку" @click="$emit('delete-arc')">
+      <button type="button" class="chapter-tool-btn chapter-tool-btn--icon chapter-tool-btn--danger" title="Удалить пустую арку" :disabled="locked" @click="$emit('delete-arc')">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
           <path d="M2.5 4h9M5.5 4V2.7c0-.4.3-.7.7-.7h1.6c.4 0 .7.3.7.7V4M4 4l.5 7.5c0 .4.3.7.7.7h3.6c.4 0 .7-.3.7-.7L10 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </button>
 
       <span class="chapter-toolbar-rule" />
-      <button type="button" class="chapter-tool-btn chapter-tool-btn--primary" @click="$emit('create-chapter')">+ Глава</button>
+      <button type="button" class="chapter-tool-btn chapter-tool-btn--primary" :disabled="locked" @click="$emit('create-chapter')">+ Глава</button>
     </div>
 
     <div class="chapter-toolbar-view">
-      <button type="button" class="chapter-tool-btn chapter-tool-btn--combat" @click="$emit('open-combat')">
+      <button type="button" class="chapter-tool-btn chapter-tool-btn--combat" :class="{ 'chapter-tool-btn--active': combatActive }" @click="$emit('open-combat')">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
           <path d="M3 2l7.5 7.5M11 2L3.5 9.5M2 11l1-1 1 1-1 1-1-1zm8-8 1-1 1 1-1 1-1-1z" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
         Бой
       </button>
-      <button type="button" class="chapter-tool-btn" :disabled="!currentArc" @click="$emit('focus-current')">
+      <button type="button" class="chapter-tool-btn" :disabled="locked || !currentArc" @click="$emit('focus-current')">
         {{ currentChapter ? `Глава ${currentChapter.number}` : 'Текущая глава' }}
       </button>
       <div class="chapter-zoom">
-        <button type="button" aria-label="Уменьшить" @click="$emit('zoom', 0.84)">−</button>
+        <button type="button" aria-label="Уменьшить" :disabled="locked" @click="$emit('zoom', 0.84)">−</button>
         <span>{{ Math.round(zoom * 100) }}%</span>
-        <button type="button" aria-label="Увеличить" @click="$emit('zoom', 1.19)">+</button>
+        <button type="button" aria-label="Увеличить" :disabled="locked" @click="$emit('zoom', 1.19)">+</button>
       </div>
     </div>
   </BaseTile>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import BasePopover from '@/shared/ui/BasePopover.vue'
 import BaseTile from '@/shared/ui/BaseTile.vue'
 import SessionStatusMenu from '@/features/sessions/components/SessionStatusMenu.vue'
 import { romanNumeral } from '@/features/sessions/lib/chapterGraph'
 
-defineProps({
+const props = defineProps({
   arcs: { type: Array, default: () => [] },
   selectedArc: { type: Object, default: null },
   currentArc: { type: Object, default: null },
@@ -95,6 +95,8 @@ defineProps({
   sessionUuid: { type: String, required: true },
   isDm: { type: Boolean, default: false },
   zoom: { type: Number, default: 1 },
+  locked: { type: Boolean, default: false },
+  combatActive: { type: Boolean, default: false },
 })
 const emit = defineEmits([
   'select-arc', 'create-arc', 'edit-arc', 'delete-arc', 'move-arc',
@@ -102,6 +104,10 @@ const emit = defineEmits([
 ])
 const arcTrigger = ref(null)
 const arcOpen = ref(false)
+
+watch(() => props.locked, locked => {
+  if (locked) arcOpen.value = false
+})
 
 function pickArc(id) {
   arcOpen.value = false
@@ -146,6 +152,7 @@ function pickArc(id) {
   font-size: 12px;
 }
 .chapter-arc-trigger { min-width: 230px; max-width: 330px; padding: 6px 9px; cursor: pointer; }
+.chapter-arc-trigger:disabled { opacity: 0.48; cursor: not-allowed; }
 .chapter-arc-number { display: grid; min-width: 24px; height: 21px; place-items: center; border-radius: 5px; background: var(--accent); color: var(--text-on-accent); font-weight: 800; }
 .chapter-arc-name { min-width: 0; flex: 1; overflow: hidden; color: var(--text-1); font-weight: 700; text-align: left; text-overflow: ellipsis; white-space: nowrap; }
 
@@ -156,10 +163,12 @@ function pickArc(id) {
 .chapter-tool-btn--danger:hover { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 45%, transparent); }
 .chapter-tool-btn--primary { border-color: color-mix(in srgb, var(--accent) 45%, transparent); background: color-mix(in srgb, var(--accent) 17%, transparent); color: var(--accent-soft); font-weight: 700; }
 .chapter-tool-btn--combat { border-color: color-mix(in srgb, var(--danger) 38%, transparent); color: color-mix(in srgb, var(--danger) 84%, var(--text-1)); font-weight: 700; }
+.chapter-tool-btn--combat.chapter-tool-btn--active { background: color-mix(in srgb, var(--danger) 18%, transparent); border-color: color-mix(in srgb, var(--danger) 66%, transparent); color: var(--danger); }
 
 .chapter-zoom { gap: 0; overflow: hidden; }
 .chapter-zoom button { width: 29px; height: 29px; border: 0; background: none; color: var(--text-2); cursor: pointer; }
 .chapter-zoom button:hover { background: var(--surface-raised); color: var(--text-1); }
+.chapter-zoom button:disabled { opacity: 0.3; cursor: not-allowed; }
 .chapter-zoom span { width: 43px; color: var(--text-muted); font-size: 10px; text-align: center; }
 
 .chapter-arc-list { display: flex; flex-direction: column; gap: 3px; padding: 5px; }

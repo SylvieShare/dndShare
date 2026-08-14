@@ -91,14 +91,24 @@ cave, ruins, castle, tavern, dungeon, mountains and coast. A DM may instead
 upload an image through the normal storage image endpoint and adjust its focal
 point. A chapter stores exactly one image source.
 
-Scenes belong to chapters and contain ordered scene items. They open as a
-fullscreen contextual workspace from the chapter action menu; in that mode
-`SceneTab.vue` hides redundant arc/chapter selectors and restores the last scene
-or opens the first scene on initial entry. The same component still
-supports the full arc-first/chapter-second selector contract when used outside
-that context. Combat likewise opens from the command bar in a fullscreen
-`AppModalFrame`, keeping the campaign canvas and its viewport intact underneath.
-Scene CRUD remains in `session_scenes.go`.
+Scenes belong to chapters and contain ordered scene items. A chapter action
+opens them in `SessionCenterWorkspace`, a transparent fixed layer inside the
+canvas safe area. The selected node gets a temporary presentation transform to
+the layer's top-left corner, its normal coordinates stay unchanged, and the
+other nodes and edges fade out. A separate scenarios header is aligned 16px to
+the right of the node; scene item tiles start 16px below both. The layer has no
+shared backed surface. While it is open, pan, zoom, node dragging, transitions,
+arc changes and chapter editing are locked. Closing fades the layer and returns
+the node to its saved graph position.
+
+In contextual mode `SceneTab.vue` hides redundant arc/chapter selectors and
+restores the last scene or opens the first scene on initial entry. The same
+component still supports the full arc-first/chapter-second selector contract
+when used outside that context. Combat uses the same canvas layer from the
+command bar and focuses the current chapter. Its standalone combat header sits
+to the right of that node; combatants remain independent tiles below it rather
+than being wrapped in one central card. Scene CRUD remains in
+`session_scenes.go`.
 
 `SceneTab.vue` uses project standards:
 
@@ -114,8 +124,9 @@ Encounter state is split into composables under `features/sessions/composables`:
 load/save, players, NPC item cache, HP, initiative, flow, states and dice.
 `useEncounter.js` composes them; row components remain presentation-only.
 
-The encounter workspace has no shared backing surface. Its sticky toolbar and
-every combatant row are separate `BaseTile` surfaces. Row strips use the current
+The encounter workspace has no shared backing surface. Its header and every
+combatant row are separate `BaseTile` surfaces. In the chapter canvas the header
+is fixed beside the focused chapter while only the rows area scrolls. Row strips use the current
 encounter section color (combat, NPC reserve, player reserve or graveyard), so
 moving a row also updates its spatial accent. Session dice pass the default
 accent color explicitly to every `SystemDie`.

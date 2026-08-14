@@ -9,6 +9,9 @@ const styles = readFileSync(fileURLToPath(new URL('./styles/ViewSession.css', im
 const selectionSource = readFileSync(fileURLToPath(new URL('../composables/useSessionSelection.js', import.meta.url)), 'utf8')
 const dicePanelSource = readFileSync(fileURLToPath(new URL('../components/DicePanel.vue', import.meta.url)), 'utf8')
 const musicPanelSource = readFileSync(fileURLToPath(new URL('../components/MusicPanel.vue', import.meta.url)), 'utf8')
+const centerWorkspaceSource = readFileSync(fileURLToPath(new URL('../components/SessionCenterWorkspace.vue', import.meta.url)), 'utf8')
+const encounterSource = readFileSync(fileURLToPath(new URL('../components/EncounterTab.vue', import.meta.url)), 'utf8')
+const sceneSource = readFileSync(fileURLToPath(new URL('../components/SceneTab.vue', import.meta.url)), 'utf8')
 const dicePopupSource = readFileSync(fileURLToPath(new URL('../../../shared/ui/DiceRollPopup.vue', import.meta.url)), 'utf8')
 
 describe('ViewSession participant rail', () => {
@@ -65,11 +68,16 @@ describe('ViewSession participant rail', () => {
     expect(dicePopupSource).toMatch(/\.dice-pop-roll-wrap\s*\{[^}]*vertical-align:\s*middle;/s)
   })
 
-  it('opens combat and chapter scenes as fullscreen contextual workspaces', () => {
-    expect(source).toContain('v-if="combatOpen"')
-    expect(source).toContain('v-if="sceneWorkspaceChapter"')
-    expect(source.match(/fullscreen/g)?.length).toBeGreaterThanOrEqual(2)
-    expect(source).toContain('<SceneTab\n          contextual')
+  it('opens combat and chapter scenes inside a locked transparent canvas workspace', () => {
+    expect(source).toContain('<SessionCenterWorkspace')
+    expect(source).toContain(':locked="!!workspaceMode"')
+    expect(source).toContain(':spotlight-chapter-id="workspaceChapter?.id ?? null"')
+    expect(source).not.toContain('v-if="combatOpen"')
+    expect(source).not.toContain('v-if="sceneWorkspaceChapter"')
+    expect(centerWorkspaceSource).toContain("'--session-workspace-header-left': props.chapter ? '252px' : '0px'")
+    expect(centerWorkspaceSource).not.toContain('<BaseTile')
+    expect(encounterSource).toContain("'enc-wrap--workspace': workspace")
+    expect(sceneSource).toContain("'scene-tab--workspace': workspace")
     expect(source).toContain('@scene-count="chapterGraph.setSceneCount"')
   })
 

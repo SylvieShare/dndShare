@@ -51,4 +51,15 @@ describe('chapter graph workspace', () => {
     expect(node).toContain('chapter.sceneCount')
     expect(menus).toContain('Сценарии главы')
   })
+
+  it('moves only the presentation of a focused node and locks graph editing', () => {
+    expect(tab).toContain(':locked="locked"')
+    expect(tab).toContain(':spotlight-chapter-id="spotlightChapterId"')
+    expect(tab).toContain('<slot />')
+    expect(canvas).toContain("'chapter-canvas--spotlight': spotlightChapterId != null")
+    expect(canvas).toContain('scale: 1 / zoom.value')
+    expect(canvas).toContain('if (props.locked) return')
+    expect(canvas).toContain(':presentation="chapter.id === spotlightChapterId ? spotlightPresentation : null"')
+    expect(node).toContain('props.presentation ??')
+  })
 })

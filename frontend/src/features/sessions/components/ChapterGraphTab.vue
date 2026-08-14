@@ -9,6 +9,8 @@
       :session-uuid="sessionUuid"
       :is-dm="isDm"
       :zoom="zoom"
+      :locked="locked"
+      :combat-active="workspaceMode === 'combat'"
       @select-arc="selectArc"
       @create-arc="openArcCreate"
       @edit-arc="openArcEdit"
@@ -22,26 +24,31 @@
       @open-combat="$emit('open-combat')"
     />
 
-    <div v-if="actionError" class="chapter-action-error" role="alert">{{ actionError }}</div>
-    <div v-if="graph.loading.value" class="chapter-graph-loading">Загружаем карту кампании…</div>
-    <ChapterGraphCanvas
-      v-else
-      ref="canvas"
-      :arc-id="graph.selectedArc.value?.id"
-      :session-uuid="sessionUuid"
-      :chapters="graph.visibleChapters.value"
-      :edges="graph.visibleEdges.value"
-      :current-chapter-id="graph.currentChapter.value?.id"
-      :linking-from="linkingFrom"
-      @node-click="openNodeMenu"
-      @edge-click="openEdgeMenu"
-      @start-link="startLink"
-      @finish-link="finishLink"
-      @preview-position="graph.setLocalPosition"
-      @save-position="savePosition"
-      @create-first="openChapterCreate"
-      @view-change="zoom = $event.zoom"
-    />
+    <div class="chapter-canvas-stage">
+      <div v-if="actionError" class="chapter-action-error" role="alert">{{ actionError }}</div>
+      <div v-if="graph.loading.value" class="chapter-graph-loading">Загружаем карту кампании…</div>
+      <ChapterGraphCanvas
+        v-else
+        ref="canvas"
+        :arc-id="graph.selectedArc.value?.id"
+        :session-uuid="sessionUuid"
+        :chapters="graph.visibleChapters.value"
+        :edges="graph.visibleEdges.value"
+        :current-chapter-id="graph.currentChapter.value?.id"
+        :linking-from="linkingFrom"
+        :locked="locked"
+        :spotlight-chapter-id="spotlightChapterId"
+        @node-click="openNodeMenu"
+        @edge-click="openEdgeMenu"
+        @start-link="startLink"
+        @finish-link="finishLink"
+        @preview-position="graph.setLocalPosition"
+        @save-position="savePosition"
+        @create-first="openChapterCreate"
+        @view-change="zoom = $event.zoom"
+      />
+      <slot />
+    </div>
 
     <ChapterGraphMenus
       ref="menus"
@@ -97,7 +104,7 @@
 </template>
 
 <script setup>
-import { computed, nextTick, ref } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import ArcEditorModal from '@/features/sessions/components/ArcEditorModal.vue'
 import ChapterEdgeModal from '@/features/sessions/components/ChapterEdgeModal.vue'
 import ChapterEditorModal from '@/features/sessions/components/ChapterEditorModal.vue'
@@ -111,6 +118,9 @@ const props = defineProps({
   sessionUuid: { type: String, required: true },
   session: { type: Object, default: null },
   isDm: { type: Boolean, default: false },
+  locked: { type: Boolean, default: false },
+  spotlightChapterId: { type: [Number, String], default: null },
+  workspaceMode: { type: String, default: null },
 })
 const emit = defineEmits(['open-scenes', 'open-combat', 'edit-session', 'status-change'])
 
@@ -146,10 +156,12 @@ function selectArc(id) {
 }
 
 function openNodeMenu(chapter, anchor) {
+  if (props.locked) return
   menus.value?.openNode(chapter, anchor)
 }
 
 function openEdgeMenu(edge, anchor) {
+  if (props.locked) return
   menus.value?.openEdge(edge, anchor)
 }
 
@@ -239,6 +251,7 @@ async function changeStatus(chapter, status) {
 }
 
 function startLink(chapter) {
+  if (props.locked) return
   closeMenus()
   linkingFrom.value = chapter?.id === linkingFrom.value?.id ? null : chapter
 }
@@ -346,6 +359,12 @@ async function focusCurrent() {
   canvas.value?.focusChapter(chapter)
 }
 
+watch(() => props.locked, locked => {
+  if (!locked) return
+  closeMenus()
+  linkingFrom.value = null
+})
+
 function chapterPayload(chapter, patch = {}) {
   return {
     arcId: chapter.arcId,
@@ -366,6 +385,7 @@ function chapterPayload(chapter, patch = {}) {
 
 <style scoped>
 .chapter-graph-tab { position: relative; display: flex; flex: 1; min-height: 0; flex-direction: column; overflow: hidden; }
+.chapter-canvas-stage { position: relative; display: flex; flex: 1; min-height: 0; overflow: hidden; }
 .chapter-graph-loading { display: grid; flex: 1; place-items: center; color: var(--text-muted); font-size: 13px; }
 .chapter-action-error { position: absolute; z-index: 30; top: 66px; left: 50%; max-width: 520px; padding: 7px 12px; border: 1px solid color-mix(in srgb, var(--danger) 40%, transparent); border-radius: 7px; background: var(--popover-bg); color: var(--danger); font-size: 11px; transform: translateX(-50%); box-shadow: var(--shadow-lg); }
 

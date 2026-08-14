@@ -3,10 +3,17 @@
     class="chapter-node"
     :class="[
       `chapter-node--${status.tone}`,
-      { 'chapter-node--current': current, 'chapter-node--linking': linking, 'chapter-node--target': target },
+      {
+        'chapter-node--current': current,
+        'chapter-node--linking': linking,
+        'chapter-node--target': target,
+        'chapter-node--spotlight': spotlight,
+        'chapter-node--suppressed': suppressed,
+      },
     ]"
     :style="nodeStyle"
     :data-chapter-id="chapter.id"
+    :aria-hidden="suppressed ? 'true' : undefined"
     @pointerdown="$emit('pointerdown', $event, chapter)"
   >
     <div class="chapter-node-image">
@@ -26,6 +33,8 @@
     <button
       type="button"
       class="chapter-link-port"
+      :disabled="spotlight || suppressed"
+      :tabindex="spotlight || suppressed ? -1 : 0"
       :title="linking ? 'Отменить создание перехода' : 'Создать переход отсюда'"
       @pointerdown.stop
       @click.stop="$emit('start-link', chapter)"
@@ -46,14 +55,24 @@ const props = defineProps({
   current: { type: Boolean, default: false },
   linking: { type: Boolean, default: false },
   target: { type: Boolean, default: false },
+  presentation: { type: Object, default: null },
+  spotlight: { type: Boolean, default: false },
+  suppressed: { type: Boolean, default: false },
 })
 defineEmits(['pointerdown', 'start-link'])
 
 const status = computed(() => chapterStatus(props.chapter.status))
 const imageUrl = computed(() => chapterImageUrl(props.chapter))
-const nodeStyle = computed(() => ({
-  transform: `translate(${props.chapter.positionX}px, ${props.chapter.positionY}px)`,
-}))
+const nodeStyle = computed(() => {
+  const position = props.presentation ?? {
+    x: props.chapter.positionX,
+    y: props.chapter.positionY,
+    scale: 1,
+  }
+  return {
+    transform: `translate(${position.x}px, ${position.y}px) scale(${position.scale ?? 1})`,
+  }
+})
 const imageStyle = computed(() => ({
   objectPosition: `${props.chapter.imageFocalX * 100}% ${props.chapter.imageFocalY * 100}%`,
 }))
@@ -82,7 +101,13 @@ const sceneLabel = computed(() => {
   cursor: grab;
   user-select: none;
   touch-action: none;
-  transition: border-color 0.15s, box-shadow 0.15s, filter 0.15s;
+  transform-origin: top left;
+  transition:
+    transform 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.24s ease,
+    border-color 0.15s,
+    box-shadow 0.15s,
+    filter 0.24s ease;
 }
 
 .chapter-node:active { cursor: grabbing; }
@@ -94,6 +119,15 @@ const sceneLabel = computed(() => {
 .chapter-node--linking { border-color: var(--warning); }
 .chapter-node--target { border-color: var(--success); cursor: crosshair; }
 .chapter-node--completed { filter: saturate(0.72); }
+.chapter-node--spotlight { z-index: 10; cursor: default; }
+.chapter-node--spotlight:active { cursor: default; }
+.chapter-node--suppressed {
+  opacity: 0;
+  filter: blur(8px) saturate(0.65);
+  pointer-events: none;
+}
+.chapter-node--spotlight .chapter-link-port,
+.chapter-node--suppressed .chapter-link-port { opacity: 0; pointer-events: none; }
 
 .chapter-node-image {
   position: absolute;
@@ -236,4 +270,9 @@ const sceneLabel = computed(() => {
 .chapter-node--linking .chapter-link-port,
 .chapter-node--target .chapter-link-port { opacity: 1; }
 .chapter-link-port:hover { color: var(--accent); border-color: var(--accent); }
+.chapter-link-port:disabled { cursor: default; }
+
+@media (prefers-reduced-motion: reduce) {
+  .chapter-node { transition-duration: 0.01ms; }
+}
 </style>

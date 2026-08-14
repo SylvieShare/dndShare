@@ -1,6 +1,10 @@
 <template>
-  <div class="scene-tab">
+  <div class="scene-tab" :class="{ 'scene-tab--workspace': workspace }">
     <div class="scene-head">
+      <div v-if="workspace" class="scene-workspace-heading">
+        <span>СЦЕНАРИИ</span>
+        <small>{{ scenesLoading ? 'Загрузка…' : `${scenes.length} ${sceneCountWord}` }}</small>
+      </div>
       <div v-if="!contextual && arcs.length" class="scene-arcs">
         <span class="scene-head-label">АРКА</span>
         <button
@@ -106,6 +110,7 @@
       </div>
     </div>
 
+    <div class="scene-content">
     <div v-if="currentScene" class="scene-body">
       <div class="scene-body-head">
         <input
@@ -154,6 +159,7 @@
       </div>
     </div>
     <div v-else-if="activeChapter" class="scene-empty-pick">Выберите или создайте сцену</div>
+    </div>
 
     <TextPromptDialog
       v-if="renameModalOpen"
@@ -218,6 +224,7 @@ const props = defineProps({
   requestedChapterId: { type: [Number, String], default: null },
   isDm: { type: Boolean, default: false },
   contextual: { type: Boolean, default: false },
+  workspace: { type: Boolean, default: false },
 })
 const emit = defineEmits(['scene-count'])
 
@@ -288,6 +295,14 @@ const currentSceneNumber = computed(() => {
   if (!currentScene.value) return ''
   const i = scenes.value.findIndex(s => s.id === currentScene.value.id)
   return i >= 0 ? i + 1 : ''
+})
+const sceneCountWord = computed(() => {
+  const count = scenes.value.length
+  const tail = count % 100
+  if (tail >= 11 && tail <= 14) return 'сцен'
+  if (count % 10 === 1) return 'сцена'
+  if (count % 10 >= 2 && count % 10 <= 4) return 'сцены'
+  return 'сцен'
 })
 
 function lastSceneKey(chapterId) {

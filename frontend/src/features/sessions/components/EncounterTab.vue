@@ -1,8 +1,12 @@
 <template>
-  <div class="enc-wrap">
+  <div class="enc-wrap" :class="{ 'enc-wrap--workspace': workspace }">
 
     <!-- ── Top toolbar ── -->
     <BaseTile class="enc-toolbar">
+      <div v-if="workspace" class="enc-workspace-heading">
+        <span>БОЙ</span>
+        <small>{{ enc.encounter.active ? `Раунд ${enc.encounter.round}` : 'Подготовка сцены' }}</small>
+      </div>
       <div class="enc-toolbar-left">
         <button
           class="enc-combat-btn"
@@ -55,6 +59,7 @@
       </div>
     </BaseTile>
 
+    <div class="enc-content">
     <!-- ── Combat ── -->
     <div class="enc-block enc-block--combat">
       <div class="enc-section-title-row">
@@ -232,6 +237,7 @@
         </div>
       </div>
     </div>
+    </div>
 
     <ItemPickerModal
       v-if="enc.showNpcPicker"
@@ -328,6 +334,7 @@ const props = defineProps({
   session: { type: Object, required: true },
   participants: { type: Array, default: () => [] },
   isDm: { type: Boolean, default: false },
+  workspace: { type: Boolean, default: false },
 })
 
 const enc = reactive(useEncounter({

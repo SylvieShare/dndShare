@@ -2,7 +2,12 @@
   <div
     ref="viewport"
     class="chapter-canvas"
-    :class="{ 'chapter-canvas--panning': gesture?.type === 'pan', 'chapter-canvas--linking': linkingFrom }"
+    :class="{
+      'chapter-canvas--panning': gesture?.type === 'pan',
+      'chapter-canvas--linking': linkingFrom,
+      'chapter-canvas--locked': locked,
+      'chapter-canvas--spotlight': spotlightChapterId != null,
+    }"
     @pointerdown="onCanvasDown"
     @pointermove="onPointerMove"
     @pointerup="onPointerUp"
@@ -29,6 +34,9 @@
         :key="`label-${edge.id}`"
         type="button"
         class="chapter-edge-label"
+        :disabled="locked"
+        :tabindex="locked ? -1 : 0"
+        :aria-hidden="spotlightChapterId != null ? 'true' : undefined"
         :style="{ transform: `translate(${edge.mid.x}px, ${edge.mid.y}px) translate(-50%, -50%)` }"
         @pointerdown.stop
         @click.stop="$emit('edge-click', edge.raw, $event.currentTarget)"
@@ -41,6 +49,9 @@
         :current="chapter.id === currentChapterId"
         :linking="chapter.id === linkingFrom?.id"
         :target="!!linkingFrom && chapter.id !== linkingFrom.id"
+        :presentation="chapter.id === spotlightChapterId ? spotlightPresentation : null"
+        :spotlight="chapter.id === spotlightChapterId"
+        :suppressed="spotlightChapterId != null && chapter.id !== spotlightChapterId"
         @pointerdown="onNodeDown"
         @start-link="$emit('start-link', $event)"
       />
@@ -50,7 +61,7 @@
       <span class="chapter-empty-kicker">ПУСТОЙ ХОЛСТ</span>
       <strong>Здесь появится карта этой арки</strong>
       <span>Создайте первую главу и соединяйте главы переходами.</span>
-      <button type="button" @click.stop="$emit('create-first')">Создать первую главу</button>
+      <button type="button" :disabled="locked" @click.stop="$emit('create-first')">Создать первую главу</button>
     </div>
 
     <div v-if="linkingFrom" class="chapter-link-hint">
@@ -74,8 +85,10 @@ const props = defineProps({
   sessionUuid: { type: String, required: true },
   chapters: { type: Array, default: () => [] },
   edges: { type: Array, default: () => [] },
-  currentChapterId: { type: [Number, null], default: null },
+  currentChapterId: { type: [Number, String], default: null },
   linkingFrom: { type: Object, default: null },
+  locked: { type: Boolean, default: false },
+  spotlightChapterId: { type: [Number, String], default: null },
 })
 const emit = defineEmits([
   'node-click', 'edge-click', 'start-link', 'finish-link', 'preview-position',
@@ -87,6 +100,8 @@ const pan = ref({ x: 80, y: 80 })
 const zoom = ref(1)
 const cursorWorld = ref(null)
 const gesture = ref(null)
+const viewportRevision = ref(0)
+let resizeObserver = null
 
 const worldStyle = computed(() => ({ transform: `translate(${pan.value.x}px, ${pan.value.y}px) scale(${zoom.value})` }))
 const gridStyle = computed(() => ({
@@ -108,6 +123,17 @@ const temporaryPath = computed(() => {
     positionY: cursorWorld.value.y - CHAPTER_NODE_HEIGHT / 2,
   }
   return edgePath(props.linkingFrom, target)
+})
+const spotlightPresentation = computed(() => {
+  viewportRevision.value
+  if (props.spotlightChapterId == null) return null
+  const frame = safeFrame()
+  if (!frame) return null
+  return {
+    x: (frame.left - pan.value.x) / zoom.value,
+    y: (14 - pan.value.y) / zoom.value,
+    scale: 1 / zoom.value,
+  }
 })
 
 function viewKey() {
@@ -158,6 +184,7 @@ function pointInWorld(event) {
 }
 
 function onCanvasDown(event) {
+  if (props.locked) return
   if (event.button !== 0 || event.target.closest('.chapter-node, .chapter-edge-label, .chapter-edge-hit')) return
   viewport.value.setPointerCapture(event.pointerId)
   gesture.value = {
@@ -168,6 +195,7 @@ function onCanvasDown(event) {
 }
 
 function onNodeDown(event, chapter) {
+  if (props.locked) return
   if (event.button !== 0) return
   event.stopPropagation()
   if (props.linkingFrom && props.linkingFrom.id !== chapter.id) {
@@ -187,6 +215,7 @@ function onNodeDown(event, chapter) {
 }
 
 function onPointerMove(event) {
+  if (props.locked) return
   cursorWorld.value = pointInWorld(event)
   const active = gesture.value
   if (!active || active.pointerId !== event.pointerId) return
@@ -223,6 +252,7 @@ function cancelGesture() {
 }
 
 function onWheel(event) {
+  if (props.locked) return
   const rect = viewport.value.getBoundingClientRect()
   const before = pointInWorld(event)
   const next = Math.max(0.35, Math.min(1.8, zoom.value * Math.exp(-event.deltaY * 0.0012)))
@@ -235,6 +265,7 @@ function onWheel(event) {
 }
 
 function zoomBy(factor) {
+  if (props.locked) return
   const frame = safeFrame()
   if (!frame) return
   const center = { clientX: frame.rect.left + frame.centerX, clientY: frame.rect.top + frame.centerY }
@@ -246,6 +277,7 @@ function zoomBy(factor) {
 }
 
 function focusChapter(chapter) {
+  if (props.locked) return
   const frame = safeFrame()
   if (!frame || !chapter) return
   pan.value = {
@@ -269,11 +301,21 @@ function onKey(event) {
 }
 
 watch(() => props.arcId, () => nextTick(loadView))
+watch(() => props.locked, locked => {
+  if (locked) cancelGesture()
+})
 onMounted(() => {
   loadView()
+  if (typeof ResizeObserver !== 'undefined' && viewport.value) {
+    resizeObserver = new ResizeObserver(() => { viewportRevision.value += 1 })
+    resizeObserver.observe(viewport.value)
+  }
   window.addEventListener('keydown', onKey)
 })
-onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
+onBeforeUnmount(() => {
+  resizeObserver?.disconnect()
+  window.removeEventListener('keydown', onKey)
+})
 
 defineExpose({ zoomBy, focusChapter, viewportCenter })
 </script>
@@ -289,6 +331,7 @@ defineExpose({ zoomBy, focusChapter, viewportCenter })
 }
 .chapter-canvas--panning { cursor: grabbing; }
 .chapter-canvas--linking { cursor: crosshair; }
+.chapter-canvas--locked { cursor: default; }
 
 .chapter-grid {
   position: absolute;
@@ -313,6 +356,7 @@ defineExpose({ zoomBy, focusChapter, viewportCenter })
   width: 1px;
   height: 1px;
   overflow: visible;
+  transition: opacity 0.24s ease, filter 0.24s ease;
 }
 
 .chapter-edge-line {
@@ -347,8 +391,15 @@ defineExpose({ zoomBy, focusChapter, viewportCenter })
   text-overflow: ellipsis;
   white-space: nowrap;
   cursor: pointer;
+  transition: opacity 0.24s ease, filter 0.24s ease, color 0.15s, border-color 0.15s;
 }
 .chapter-edge-label:hover { color: var(--text-1); border-color: var(--accent); }
+.chapter-canvas--spotlight .chapter-edges,
+.chapter-canvas--spotlight .chapter-edge-label {
+  opacity: 0;
+  filter: blur(6px);
+  pointer-events: none;
+}
 
 .chapter-canvas-empty {
   position: absolute;
