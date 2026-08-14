@@ -185,9 +185,42 @@ CREATE TABLE IF NOT EXISTS dndshare.session_scene (
     id         bigserial NOT NULL,
     chapter_id int8 NOT NULL REFERENCES dndshare.session_chapter(id),
     "name"     varchar NOT NULL,
+    position_x float8 DEFAULT 0 NOT NULL,
+    position_y float8 DEFAULT 0 NOT NULL,
     CONSTRAINT session_scene_pk PRIMARY KEY (id)
 );
+ALTER TABLE dndshare.session_scene ADD COLUMN IF NOT EXISTS position_x float8 NULL;
+ALTER TABLE dndshare.session_scene ADD COLUMN IF NOT EXISTS position_y float8 NULL;
 CREATE INDEX IF NOT EXISTS idx_session_scene_chapter_id ON dndshare.session_scene USING btree (chapter_id);
+
+-- Existing ordered scene lists become a readable first-pass graph. Coordinates
+-- are persisted afterwards and are never derived from ids at runtime.
+WITH scene_positions AS (
+    SELECT id, row_number() OVER (PARTITION BY chapter_id ORDER BY id) - 1 AS node_index
+    FROM dndshare.session_scene
+)
+UPDATE dndshare.session_scene scene
+SET position_x = (scene_positions.node_index % 3) * 292,
+    position_y = floor(scene_positions.node_index / 3.0) * 196
+FROM scene_positions
+WHERE scene.id = scene_positions.id
+  AND (scene.position_x IS NULL OR scene.position_y IS NULL);
+ALTER TABLE dndshare.session_scene ALTER COLUMN position_x SET DEFAULT 0;
+ALTER TABLE dndshare.session_scene ALTER COLUMN position_y SET DEFAULT 0;
+ALTER TABLE dndshare.session_scene ALTER COLUMN position_x SET NOT NULL;
+ALTER TABLE dndshare.session_scene ALTER COLUMN position_y SET NOT NULL;
+
+CREATE TABLE IF NOT EXISTS dndshare.session_scene_edge (
+    id            bigserial NOT NULL,
+    chapter_id    int8 NOT NULL REFERENCES dndshare.session_chapter(id) ON DELETE CASCADE,
+    from_scene_id int8 NOT NULL REFERENCES dndshare.session_scene(id) ON DELETE CASCADE,
+    to_scene_id   int8 NOT NULL REFERENCES dndshare.session_scene(id) ON DELETE CASCADE,
+    label         varchar NULL,
+    CONSTRAINT session_scene_edge_pk PRIMARY KEY (id),
+    CONSTRAINT session_scene_edge_pair_key UNIQUE (from_scene_id, to_scene_id),
+    CONSTRAINT session_scene_edge_not_self CHECK (from_scene_id <> to_scene_id)
+);
+CREATE INDEX IF NOT EXISTS idx_session_scene_edge_chapter_id ON dndshare.session_scene_edge USING btree (chapter_id);
 
 CREATE TABLE IF NOT EXISTS dndshare.session_scene_item (
     id       bigserial NOT NULL,
@@ -196,10 +229,63 @@ CREATE TABLE IF NOT EXISTS dndshare.session_scene_item (
     title    varchar NOT NULL,
     "data"   jsonb NULL,
     color    varchar NULL,
-    "order"  int8 NOT NULL,
+    position_x float8 DEFAULT 0 NOT NULL,
+    position_y float8 DEFAULT 0 NOT NULL,
     CONSTRAINT session_scene_item_session_pk PRIMARY KEY (id)
 );
+ALTER TABLE dndshare.session_scene_item ADD COLUMN IF NOT EXISTS position_x float8 NULL;
+ALTER TABLE dndshare.session_scene_item ADD COLUMN IF NOT EXISTS position_y float8 NULL;
 CREATE INDEX IF NOT EXISTS idx_session_scene_item_scene_id ON dndshare.session_scene_item USING btree (scene_id);
+
+DO $$
+BEGIN
+    IF EXISTS (
+        SELECT 1 FROM information_schema.columns
+        WHERE table_schema = 'dndshare'
+          AND table_name = 'session_scene_item'
+          AND column_name = 'order'
+    ) THEN
+        EXECUTE $migration$
+            WITH item_positions AS (
+                SELECT id, row_number() OVER (PARTITION BY scene_id ORDER BY "order", id) - 1 AS node_index
+                FROM dndshare.session_scene_item
+            )
+            UPDATE dndshare.session_scene_item item
+            SET position_x = (item_positions.node_index % 3) * 316,
+                position_y = floor(item_positions.node_index / 3.0) * 220
+            FROM item_positions
+            WHERE item.id = item_positions.id
+              AND (item.position_x IS NULL OR item.position_y IS NULL)
+        $migration$;
+        ALTER TABLE dndshare.session_scene_item DROP COLUMN "order";
+    END IF;
+END $$;
+WITH item_positions AS (
+    SELECT id, row_number() OVER (PARTITION BY scene_id ORDER BY id) - 1 AS node_index
+    FROM dndshare.session_scene_item
+)
+UPDATE dndshare.session_scene_item item
+SET position_x = (item_positions.node_index % 3) * 316,
+    position_y = floor(item_positions.node_index / 3.0) * 220
+FROM item_positions
+WHERE item.id = item_positions.id
+  AND (item.position_x IS NULL OR item.position_y IS NULL);
+ALTER TABLE dndshare.session_scene_item ALTER COLUMN position_x SET DEFAULT 0;
+ALTER TABLE dndshare.session_scene_item ALTER COLUMN position_y SET DEFAULT 0;
+ALTER TABLE dndshare.session_scene_item ALTER COLUMN position_x SET NOT NULL;
+ALTER TABLE dndshare.session_scene_item ALTER COLUMN position_y SET NOT NULL;
+
+CREATE TABLE IF NOT EXISTS dndshare.session_scene_item_edge (
+    id           bigserial NOT NULL,
+    scene_id     int8 NOT NULL REFERENCES dndshare.session_scene(id) ON DELETE CASCADE,
+    from_item_id int8 NOT NULL REFERENCES dndshare.session_scene_item(id) ON DELETE CASCADE,
+    to_item_id   int8 NOT NULL REFERENCES dndshare.session_scene_item(id) ON DELETE CASCADE,
+    label        varchar NULL,
+    CONSTRAINT session_scene_item_edge_pk PRIMARY KEY (id),
+    CONSTRAINT session_scene_item_edge_pair_key UNIQUE (from_item_id, to_item_id),
+    CONSTRAINT session_scene_item_edge_not_self CHECK (from_item_id <> to_item_id)
+);
+CREATE INDEX IF NOT EXISTS idx_session_scene_item_edge_scene_id ON dndshare.session_scene_item_edge USING btree (scene_id);
 
 CREATE SEQUENCE IF NOT EXISTS dndshare.encounter_id_seq;
 CREATE TABLE IF NOT EXISTS dndshare.session_encounter (

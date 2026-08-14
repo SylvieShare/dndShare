@@ -20,9 +20,6 @@ export function useSessionWorkspace({ sessionUuid, chapterGraph }) {
   const workspaceChapter = computed(() =>
     chapterGraph.chapters.value.find(chapter => chapter.id === workspaceChapterId.value) ?? null
   )
-  const workspaceArcs = computed(() =>
-    chapterGraph.arcs.value.filter(arc => arc.id === workspaceChapter.value?.arcId)
-  )
   const workspaceMotionMode = computed(() =>
     workspaceMotionActive.value ? workspaceMode.value : null
   )
@@ -138,7 +135,6 @@ export function useSessionWorkspace({ sessionUuid, chapterGraph }) {
   return {
     workspaceMode,
     workspaceChapter,
-    workspaceArcs,
     workspaceClosing,
     workspaceRevealed,
     workspaceMotionMode,

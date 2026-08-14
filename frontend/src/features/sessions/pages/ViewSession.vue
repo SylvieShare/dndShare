@@ -63,7 +63,6 @@
           :is-dm="isDm"
           :encounter="encounter"
           :chapter="workspaceChapter"
-          :arcs="workspaceArcs"
           @close="closeWorkspace"
           @view-participant="openParticipant"
           @scene-count="chapterGraph.setSceneCount"
@@ -273,7 +272,6 @@ const chapterGraph = useChapterGraph({ sessionUuid, session })
 const {
   workspaceMode,
   workspaceChapter,
-  workspaceArcs,
   workspaceClosing,
   workspaceRevealed,
   workspaceMotionMode,

@@ -16,7 +16,7 @@ import { computed } from 'vue'
 const props = defineProps({
   // Accent color for the tile (drives the optional strip and hover tint).
   color: { type: String, default: null },
-  // Show a colored vertical strip on the left edge (like SceneItemTile).
+  // Show a colored vertical strip on the left edge.
   strip: { type: Boolean, default: false },
   // Faint always-on background tint in the tile color (a light accent).
   tint: { type: Boolean, default: false },

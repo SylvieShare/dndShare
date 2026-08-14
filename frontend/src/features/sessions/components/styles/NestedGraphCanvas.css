@@ -1,0 +1,144 @@
+.nested-graph-canvas {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  cursor: grab;
+  touch-action: none;
+  pointer-events: auto;
+}
+.nested-graph-canvas--panning { cursor: grabbing; }
+.nested-graph-canvas--linking { cursor: crosshair; }
+.nested-graph-canvas--locked { cursor: default; }
+.nested-graph-grid {
+  position: absolute;
+  inset: 0;
+  background-color: transparent;
+  background-image: radial-gradient(circle, var(--app-canvas-dot-color) 1px, transparent 1px);
+}
+.nested-graph-world {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  transform-origin: 0 0;
+}
+.nested-graph-edges {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  overflow: visible;
+  transition: opacity 0.24s ease, filter 0.24s ease;
+}
+.nested-graph-edge-line {
+  fill: none;
+  stroke: color-mix(in srgb, var(--accent-soft) 62%, var(--text-muted));
+  stroke-width: 2;
+  pointer-events: none;
+}
+.nested-graph-edge-line--temporary { stroke-dasharray: 6 5; opacity: 0.72; }
+.nested-graph-edge-arrow { fill: var(--accent-soft); }
+.nested-graph-edge-hit { fill: none; stroke: transparent; stroke-width: 16; cursor: pointer; pointer-events: stroke; }
+.nested-graph-edge-hit:hover + .nested-graph-edge-line { stroke: var(--accent); stroke-width: 3; }
+.nested-graph-edge-label {
+  position: absolute;
+  max-width: 180px;
+  overflow: hidden;
+  padding: 4px 8px;
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--popover-bg) 92%, transparent);
+  color: var(--text-2);
+  font: inherit;
+  font-size: 10px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.nested-graph-node {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: visible;
+  cursor: grab;
+  transform-origin: top left;
+  transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.24s ease, filter 0.24s ease;
+}
+.nested-graph-node--dragging { transition-property: opacity, filter; }
+.nested-graph-node--target { cursor: crosshair; }
+.nested-graph-node--spotlight { z-index: 10; cursor: default; }
+.nested-graph-node--suppressed { opacity: 0; filter: blur(8px) saturate(0.65); pointer-events: none; }
+.nested-graph-canvas--spotlight .nested-graph-edges,
+.nested-graph-canvas--spotlight .nested-graph-edge-label { opacity: 0; filter: blur(6px); pointer-events: none; }
+.nested-graph-link-port {
+  position: absolute;
+  z-index: 8;
+  top: 50%;
+  right: -13px;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  background: var(--surface-raised);
+  color: var(--text-muted);
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition: color 0.15s, border-color 0.15s, background 0.15s, opacity 0.15s;
+}
+.nested-graph-link-port:hover { color: var(--accent); border-color: var(--accent); background: var(--surface-active); }
+.nested-graph-node--linking .nested-graph-link-port { color: var(--warning); border-color: var(--warning); }
+.nested-graph-node--spotlight .nested-graph-link-port,
+.nested-graph-node--suppressed .nested-graph-link-port { opacity: 0; pointer-events: none; }
+.nested-graph-empty {
+  position: absolute;
+  top: 58%;
+  left: 50%;
+  width: min(380px, calc(100% - 32px));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  text-align: center;
+  transform: translate(-50%, -50%);
+}
+.nested-graph-empty > span { color: var(--accent); font-size: 10px; font-weight: 850; letter-spacing: 0.1em; }
+.nested-graph-empty strong { color: var(--text-1); font-family: var(--font-display); font-size: 24px; }
+.nested-graph-empty p { margin: 0; font-size: 13px; line-height: 1.45; }
+.nested-graph-empty button {
+  margin-top: 8px;
+  padding: 8px 14px;
+  border: 0;
+  border-radius: 7px;
+  background: var(--accent);
+  color: var(--text-on-accent);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 750;
+  cursor: pointer;
+}
+.nested-graph-link-hint {
+  position: absolute;
+  z-index: 30;
+  bottom: 18px;
+  left: 50%;
+  padding: 7px 12px;
+  border: 1px solid color-mix(in srgb, var(--warning) 35%, transparent);
+  border-radius: 7px;
+  background: var(--popover-bg);
+  color: var(--warning);
+  font-size: 11px;
+  font-weight: 700;
+  transform: translateX(-50%);
+  box-shadow: var(--shadow-lg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .nested-graph-node,
+  .nested-graph-edges,
+  .nested-graph-edge-label { transition: none; }
+}

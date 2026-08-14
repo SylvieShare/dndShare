@@ -149,6 +149,13 @@ fromIndex, toIndex)`. Для нескольких контейнеров исп�
 session graph API. Формы и разрушающие действия графа по-прежнему используют
 `AppModalFrame` и `ConfirmDialog`, обычный клик по узлу/связи — `BasePopover`.
 
+Вложенные холсты сценариев и блоков используют общий
+`features/sessions/components/NestedGraphCanvas.vue`: он повторяет pointer,
+pan/zoom, link-port и spotlight-контракт без копирования server state главы.
+`useSceneGraph.js` и `useSceneBlockGraph.js` отдельно владеют данными каждого
+родительского холста. Их viewport также локален, а координаты и связи всегда
+сохраняются на сервере.
+
 ## Форматированные описания
 
 Пара `InputDescription` + `RichContent` является единым контрактом расширенного

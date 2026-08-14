@@ -40,6 +40,7 @@
         :spotlight-chapter-id="spotlightChapterId"
         :spotlight-layout-key="workspaceMode"
         @node-click="openNodeMenu"
+        @node-double-click="openScenes"
         @edge-click="openEdgeMenu"
         @start-link="startLink"
         @finish-link="finishLink"

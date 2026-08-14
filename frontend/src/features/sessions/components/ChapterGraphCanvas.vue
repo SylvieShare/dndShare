@@ -94,7 +94,7 @@ const props = defineProps({
 })
 const emit = defineEmits([
   'node-click', 'edge-click', 'start-link', 'finish-link', 'preview-position',
-  'save-position', 'create-first', 'view-change',
+  'save-position', 'create-first', 'view-change', 'node-double-click',
 ])
 
 const viewport = ref(null)
@@ -104,6 +104,7 @@ const cursorWorld = ref(null)
 const gesture = ref(null)
 const viewportRevision = ref(0)
 let resizeObserver = null
+let lastNodeClick = null
 
 const worldStyle = computed(() => ({ transform: `translate(${pan.value.x}px, ${pan.value.y}px) scale(${zoom.value})` }))
 const gridStyle = computed(() => ({
@@ -245,6 +246,13 @@ function onPointerUp(event) {
     if (chapter) emit('save-position', chapter.id, chapter.positionX, chapter.positionY)
   } else {
     emit('node-click', active.chapter, active.anchor)
+    const now = Date.now()
+    if (lastNodeClick?.id === active.chapter.id && now - lastNodeClick.at < 500) {
+      lastNodeClick = null
+      emit('node-double-click', active.chapter)
+    } else {
+      lastNodeClick = { id: active.chapter.id, at: now }
+    }
   }
   cancelGesture()
 }

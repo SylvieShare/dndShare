@@ -13,14 +13,11 @@ import (
 func init() { registerRoutes((*Server).routesSessionScenes) }
 
 func (s *Server) routesSessionScenes(mux *http.ServeMux) {
-	mux.HandleFunc("GET /api/sessions/{uuid}/chapters/{chapterId}/scenes", s.handleListScenes)
 	mux.HandleFunc("POST /api/sessions/{uuid}/chapters/{chapterId}/scenes", s.handleCreateScene)
-	mux.HandleFunc("GET /api/sessions/{uuid}/scenes/{sceneId}", s.handleGetScene)
 	mux.HandleFunc("PATCH /api/sessions/{uuid}/scenes/{sceneId}", s.handleRenameScene)
 	mux.HandleFunc("DELETE /api/sessions/{uuid}/scenes/{sceneId}", s.handleDeleteScene)
 	mux.HandleFunc("POST /api/sessions/{uuid}/scenes/{sceneId}/items", s.handleCreateSceneItem)
 	mux.HandleFunc("PATCH /api/sessions/{uuid}/scenes/{sceneId}/items/{itemId}", s.handleUpdateSceneItem)
-	mux.HandleFunc("PATCH /api/sessions/{uuid}/scenes/{sceneId}/items-order", s.handleReorderSceneItems)
 	mux.HandleFunc("DELETE /api/sessions/{uuid}/scenes/{sceneId}/items/{itemId}", s.handleDeleteSceneItem)
 }
 
@@ -101,32 +98,6 @@ func (s *Server) requireSceneInSession(w http.ResponseWriter, r *http.Request, s
 	return scene, true
 }
 
-func (s *Server) handleListScenes(w http.ResponseWriter, r *http.Request) {
-	userID, ok := mustUser(w, r)
-	if !ok {
-		return
-	}
-	_ = userID
-	sess, ok := s.requireSceneSession(w, r)
-	if !ok {
-		return
-	}
-	chapterID, err := strconv.ParseInt(r.PathValue("chapterId"), 10, 64)
-	if err != nil {
-		badRequest(w, "bad chapterId")
-		return
-	}
-	if !s.requireChapterInSession(w, r, chapterID, sess.ID) {
-		return
-	}
-	scenes, err := s.store.GetScenesByChapter(r.Context(), chapterID)
-	if err != nil {
-		serverError(w, err)
-		return
-	}
-	writeJSON(w, http.StatusOK, map[string]any{"scenes": nonNil(scenes)})
-}
-
 func (s *Server) handleCreateScene(w http.ResponseWriter, r *http.Request) {
 	userID, ok := mustUser(w, r)
 	if !ok {
@@ -145,7 +116,9 @@ func (s *Server) handleCreateScene(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var req struct {
-		Name string `json:"name"`
+		Name string  `json:"name"`
+		X    float64 `json:"x"`
+		Y    float64 `json:"y"`
 	}
 	if err := decodeJSON(r, &req); err != nil {
 		badRequest(w, "bad body")
@@ -156,39 +129,12 @@ func (s *Server) handleCreateScene(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "")
 		return
 	}
-	scene, err := s.store.CreateScene(r.Context(), chapterID, name)
+	scene, err := s.store.CreateScene(r.Context(), chapterID, name, req.X, req.Y)
 	if err != nil {
 		serverError(w, err)
 		return
 	}
 	writeJSON(w, http.StatusOK, scene)
-}
-
-func (s *Server) handleGetScene(w http.ResponseWriter, r *http.Request) {
-	userID, ok := mustUser(w, r)
-	if !ok {
-		return
-	}
-	_ = userID
-	sess, ok := s.requireSceneSession(w, r)
-	if !ok {
-		return
-	}
-	sceneID, err := strconv.ParseInt(r.PathValue("sceneId"), 10, 64)
-	if err != nil {
-		badRequest(w, "bad sceneId")
-		return
-	}
-	scene, ok := s.requireSceneInSession(w, r, sceneID, sess.ID)
-	if !ok {
-		return
-	}
-	items, err := s.store.GetSceneItems(r.Context(), sceneID)
-	if err != nil {
-		serverError(w, err)
-		return
-	}
-	writeJSON(w, http.StatusOK, map[string]any{"scene": scene, "items": nonNil(items)})
 }
 
 func (s *Server) handleRenameScene(w http.ResponseWriter, r *http.Request) {
@@ -278,16 +224,22 @@ func (s *Server) handleCreateSceneItem(w http.ResponseWriter, r *http.Request) {
 		Title *string         `json:"title"`
 		Data  json.RawMessage `json:"data"`
 		Color *string         `json:"color"`
+		X     float64         `json:"x"`
+		Y     float64         `json:"y"`
 	}
 	if err := decodeJSON(r, &req); err != nil {
 		badRequest(w, "bad body")
+		return
+	}
+	if req.Type != "text" && req.Type != "list" {
+		badRequest(w, "bad block type")
 		return
 	}
 	title := ""
 	if req.Title != nil {
 		title = strings.TrimSpace(*req.Title)
 	}
-	item, err := s.store.CreateSceneItem(r.Context(), sceneID, req.Type, title, rawToStr(req.Data), req.Color)
+	item, err := s.store.CreateSceneItem(r.Context(), sceneID, req.Type, title, rawToStr(req.Data), req.Color, req.X, req.Y)
 	if err != nil {
 		serverError(w, err)
 		return
@@ -336,13 +288,14 @@ func (s *Server) handleUpdateSceneItem(w http.ResponseWriter, r *http.Request) {
 		DataChanged  bool            `json:"dataChanged"`
 		Color        *string         `json:"color"`
 		ColorChanged bool            `json:"colorChanged"`
-		Order        *int64          `json:"order"`
+		PositionX    *float64        `json:"positionX"`
+		PositionY    *float64        `json:"positionY"`
 	}
 	if err := decodeJSON(r, &req); err != nil {
 		badRequest(w, "bad body")
 		return
 	}
-	if err := s.store.UpdateSceneItem(r.Context(), itemID, req.Title, rawToStr(req.Data), req.DataChanged, req.Color, req.ColorChanged, req.Order); err != nil {
+	if err := s.store.UpdateSceneItem(r.Context(), itemID, req.Title, rawToStr(req.Data), req.DataChanged, req.Color, req.ColorChanged, req.PositionX, req.PositionY); err != nil {
 		serverError(w, err)
 		return
 	}
@@ -352,51 +305,6 @@ func (s *Server) handleUpdateSceneItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	writeJSON(w, http.StatusOK, updated)
-}
-
-func (s *Server) handleReorderSceneItems(w http.ResponseWriter, r *http.Request) {
-	userID, ok := mustUser(w, r)
-	if !ok {
-		return
-	}
-	sess, ok := s.requireSceneDm(w, r, userID)
-	if !ok {
-		return
-	}
-	sceneID, err := strconv.ParseInt(r.PathValue("sceneId"), 10, 64)
-	if err != nil {
-		badRequest(w, "bad sceneId")
-		return
-	}
-	if _, ok := s.requireSceneInSession(w, r, sceneID, sess.ID); !ok {
-		return
-	}
-	var req struct {
-		IDs []int64 `json:"ids"`
-	}
-	if err := decodeJSON(r, &req); err != nil {
-		badRequest(w, "bad body")
-		return
-	}
-	for idx, id := range req.IDs {
-		item, err := s.store.GetSceneItem(r.Context(), id)
-		if err != nil {
-			if errors.Is(err, store.ErrNotFound) {
-				continue
-			}
-			serverError(w, err)
-			return
-		}
-		if item.SceneID != sceneID {
-			continue
-		}
-		order := int64(idx + 1)
-		if err := s.store.UpdateSceneItem(r.Context(), id, nil, nil, false, nil, false, &order); err != nil {
-			serverError(w, err)
-			return
-		}
-	}
-	writeJSON(w, http.StatusNoContent, nil)
 }
 
 func (s *Server) handleDeleteSceneItem(w http.ResponseWriter, r *http.Request) {

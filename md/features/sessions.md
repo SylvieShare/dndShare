@@ -94,7 +94,7 @@ version is not bumped when JSON data is unchanged. Dice rolls use the direct
 event endpoint because they do not mutate character state. Pending debounced
 character saves are flushed on page unmount instead of dropping their events.
 
-## Chapters and scenes
+## Chapters, scenarios and blocks
 
 Every session has at least one ordered arc. Arc order is the canonical campaign
 order; the UI renders it as a Roman number and rewrites `1..N` atomically after
@@ -126,6 +126,7 @@ participant rail width uses the same duration and easing as the chapter
 movement, both on entry and exit. Reduced-motion users skip the reveal delay.
 A regular node click opens its action popover: open the chapter scenarios, make
 current, change status, edit, start a transition, move to another arc or delete.
+Double-clicking a chapter opens its scenario canvas directly.
 Moving a node to another arc removes its old transitions after confirmation
 because a transition cannot cross arc boundaries.
 
@@ -146,38 +147,44 @@ cave, ruins, castle, tavern, dungeon, mountains and coast. A DM may instead
 upload an image through the normal storage image endpoint and adjust its focal
 point. A chapter stores exactly one image source.
 
-Scenes belong to chapters and contain ordered scene items. A chapter action
-opens them in `SessionCenterWorkspace`, a transparent fixed layer inside the
-canvas safe area. The selected node gets a temporary presentation transform to
-the layer's top-left corner, its normal coordinates stay unchanged, and the
-other nodes and edges fade out. A separate scenarios header is aligned 16px to
-the right of the node; scene item tiles start 16px below both. The layer has no
-shared backed surface. While it is open, pan, zoom, node dragging, transitions,
-arc changes and chapter editing are locked. Closing fades the layer and returns
-the node to its saved graph position. The content viewport reaches the bottom
-edge of the canvas and clips scrolled content at the fixed header boundary.
+Scenarios belong to chapters and form a second directed graph. A chapter action
+or double click opens `SceneGraphWorkspace` in the existing transparent
+`SessionCenterWorkspace`. The selected chapter gets a temporary presentation
+transform to the layer's top-left corner; normal coordinates stay unchanged and
+the other chapter nodes and edges fade out. The scenario canvas owns an
+independent viewport, persisted coordinates and directed edges. Its nodes can be
+dragged, linked through the same right-side port pattern and created, renamed or
+deleted by the DM.
 
-In contextual mode `SceneTab.vue` hides redundant arc/chapter selectors and
-restores the last scene or opens the first scene on initial entry. The same
-component still supports the full arc-first/chapter-second selector contract
-when used outside that context. Combat uses the same canvas layer from the
-command bar and focuses the current chapter. Its standalone combat header sits
-to the right of that node; combatants remain independent tiles below it rather
-than being wrapped in one central card. The header groups compact icon actions
-for starting or ending combat and turn navigation. Its growing secondary action
-row uses labelled groups only for categories that currently contain multiple
-actions; single public-screen, pre-combat roll and dead-combatant actions remain
-direct icon buttons without a group title or frame. Nested action components use
-the same icon-button geometry and interaction states as direct toolbar buttons.
-Scene CRUD remains in `session_scenes.go`.
+Double-clicking a scenario opens the third graph. The scenario node moves to the
+workspace header immediately to the right of its chapter, its peers and edges
+fade out, and `SceneBlockGraphWorkspace` appears below the two ancestor cards.
+Text and list blocks have independent coordinates, colors, content and directed
+links. A block double click opens `SceneBlockEditorModal`; the node action menu
+also provides edit and delete actions. Double-clicking the pinned scenario goes
+back to its scenario canvas. Double-clicking the pinned chapter at either nested
+level closes the nested workspace and returns to the chapter canvas. Thus the
+visible ancestor chain is also the level navigation and does not duplicate a
+breadcrumb bar.
 
-`SceneTab.vue` uses project standards:
+`NestedGraphCanvas` owns the shared pan, zoom, drag, link-port, edge and
+spotlight mechanics of both nested levels. `useSceneGraph` and
+`useSceneBlockGraph` own their server state and optimistic position previews.
+Each canvas persists only its viewport in local storage; node positions and
+edges are server state. `TextPromptDialog` is used for scenario create/rename,
+`ConfirmDialog` for destructive actions, and `SceneBlockEditorModal` for block
+content. Scene and block CRUD remains in `session_scenes.go`; graph reads,
+positions and links are handled by `session_scene_graph.go`.
 
-- `TextPromptDialog` for create/rename;
-- `ConfirmDialog` for deletion;
-- `useSortable/reorderByDrop` for ordering.
-
-It does not own local backdrop/modal or drag implementations.
+Combat still uses the same canvas layer from the command bar and focuses the
+current chapter. Its standalone combat header sits to the right of that node;
+combatants remain independent tiles below it rather than being wrapped in one
+central card. The header groups compact icon actions for starting or ending
+combat and turn navigation. Its growing secondary action row uses labelled
+groups only for categories that currently contain multiple actions; single
+public-screen, pre-combat roll and dead-combatant actions remain direct icon
+buttons without a group title or frame. Nested action components use the same
+icon-button geometry and interaction states as direct toolbar buttons.
 
 ## Encounter
 

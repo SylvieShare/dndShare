@@ -2,7 +2,7 @@
   <section
     class="session-center-workspace"
     :class="{ 'session-center-workspace--closing': closing, 'session-center-workspace--without-chapter': !chapter }"
-    :style="workspaceStyle"
+    :style="{ '--session-workspace-header-left': chapter ? '252px' : '0px' }"
     :aria-label="mode === 'combat' ? 'Бой' : 'Сценарии главы'"
   >
     <EncounterTab
@@ -15,16 +15,12 @@
       :encounter="encounter"
       @view-participant="$emit('view-participant', $event)"
     />
-    <SceneTab
+    <SceneGraphWorkspace
       v-else-if="chapter"
-      workspace
-      contextual
       :session-uuid="sessionUuid"
-      :arcs="arcs"
-      :chapters="[chapter]"
-      :current-chapter-id="session.currentChapterId"
-      :requested-chapter-id="chapter.id"
+      :chapter="chapter"
       :is-dm="isDm"
+      @exit="$emit('close')"
       @scene-count="(...args) => $emit('scene-count', ...args)"
     />
 
@@ -43,11 +39,10 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
 import EncounterTab from '@/features/sessions/components/EncounterTab'
-import SceneTab from '@/features/sessions/components/SceneTab.vue'
+import SceneGraphWorkspace from '@/features/sessions/components/SceneGraphWorkspace.vue'
 
-const props = defineProps({
+defineProps({
   mode: { type: String, required: true },
   closing: { type: Boolean, default: false },
   sessionUuid: { type: String, required: true },
@@ -56,13 +51,8 @@ const props = defineProps({
   isDm: { type: Boolean, default: false },
   encounter: { type: Object, required: true },
   chapter: { type: Object, default: null },
-  arcs: { type: Array, default: () => [] },
 })
 defineEmits(['close', 'scene-count', 'view-participant'])
-
-const workspaceStyle = computed(() => ({
-  '--session-workspace-header-left': props.chapter ? '252px' : '0px',
-}))
 </script>
 
 <style scoped>
@@ -92,7 +82,7 @@ const workspaceStyle = computed(() => ({
 }
 
 .session-center-workspace :deep(.enc-wrap),
-.session-center-workspace :deep(.scene-tab),
+.session-center-workspace :deep(.scene-graph-workspace),
 .session-center-workspace-close {
   pointer-events: auto;
 }
@@ -134,10 +124,10 @@ const workspaceStyle = computed(() => ({
 
 @media (max-width: 760px) {
   .session-center-workspace {
-    top: 10px;
-    right: 10px;
+    top: 14px;
+    right: 0;
     bottom: 0;
-    left: 10px;
+    left: 0;
   }
 }
 </style>

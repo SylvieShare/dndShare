@@ -7,7 +7,6 @@ const source = readFileSync(fileURLToPath(new URL('./RowActionSubmenu.vue', impo
 const menuSource = readFileSync(fileURLToPath(new URL('./RowActionMenu.vue', import.meta.url)), 'utf8')
 const popoverSource = readFileSync(fileURLToPath(new URL('./BasePopover.vue', import.meta.url)), 'utf8')
 const participantSource = readFileSync(fileURLToPath(new URL('../../features/sessions/components/SessionParticipantCard.vue', import.meta.url)), 'utf8')
-const sceneSource = readFileSync(fileURLToPath(new URL('../../features/sessions/components/SceneItemTile.vue', import.meta.url)), 'utf8')
 const encounterSource = readFileSync(fileURLToPath(new URL('../../features/sessions/components/EncounterRowMenu.vue', import.meta.url)), 'utf8')
 const spellSource = readFileSync(fileURLToPath(new URL('../../features/character-editor/blocks/dnd/components/SpellCard.vue', import.meta.url)), 'utf8')
 const chapterSource = readFileSync(fileURLToPath(new URL('../../features/sessions/components/ChapterGraphMenus.vue', import.meta.url)), 'utf8')
@@ -38,7 +37,6 @@ describe('RowActionSubmenu', () => {
 
   it('replaces every action-menu inline choice with the shared submenu', () => {
     expect(participantSource).toContain('<RowActionSubmenu v-if="isDm" label="Цвет игрока"')
-    expect(sceneSource).toContain('<RowActionSubmenu label="Цвет плитки"')
     expect(encounterSource.match(/<RowActionSubmenu/g)).toHaveLength(1)
     expect(encounterSource).not.toContain('ColorPresetPicker')
     expect(spellSource).toContain('<RowActionSubmenu')
@@ -46,6 +44,6 @@ describe('RowActionSubmenu', () => {
     expect(chapterSource.match(/<RowActionSubmenu/g)).toHaveLength(2)
     expect(chapterSource).not.toContain('statusOpen')
     expect(chapterSource).not.toContain('moveOpen')
-    expect([participantSource, sceneSource, encounterSource].join('\n')).not.toContain('ram-colors')
+    expect([participantSource, encounterSource].join('\n')).not.toContain('ram-colors')
   })
 })

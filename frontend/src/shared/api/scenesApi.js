@@ -1,15 +1,27 @@
 import { fetchDelete, fetchGet, fetchPatch, fetchPost } from '@/shared/api/http'
 
-export function listScenes(uuid, chapterId) {
-  return fetchGet(`/sessions/${uuid}/chapters/${chapterId}/scenes`)
+export function createScene(uuid, chapterId, name, position = {}) {
+  return fetchPost(`/sessions/${uuid}/chapters/${chapterId}/scenes`, {
+    name,
+    x: position.x ?? 0,
+    y: position.y ?? 0,
+  })
 }
 
-export function createScene(uuid, chapterId, name) {
-  return fetchPost(`/sessions/${uuid}/chapters/${chapterId}/scenes`, { name })
+export function getSceneGraph(uuid, chapterId) {
+  return fetchGet(`/sessions/${uuid}/chapters/${chapterId}/scene-graph`)
 }
 
-export function getScene(uuid, sceneId) {
-  return fetchGet(`/sessions/${uuid}/scenes/${sceneId}`)
+export function moveScenePosition(uuid, sceneId, x, y) {
+  return fetchPatch(`/sessions/${uuid}/scenes/${sceneId}/position`, { x, y })
+}
+
+export function createSceneEdge(uuid, payload) {
+  return fetchPost(`/sessions/${uuid}/scene-edges`, payload)
+}
+
+export function deleteSceneEdge(uuid, edgeId) {
+  return fetchDelete(`/sessions/${uuid}/scene-edges/${edgeId}`)
 }
 
 export function renameScene(uuid, sceneId, name) {
@@ -20,8 +32,24 @@ export function deleteScene(uuid, sceneId) {
   return fetchDelete(`/sessions/${uuid}/scenes/${sceneId}`)
 }
 
-export function createSceneItem(uuid, sceneId, payload) {
-  return fetchPost(`/sessions/${uuid}/scenes/${sceneId}/items`, payload)
+export function createSceneItem(uuid, sceneId, payload, position = {}) {
+  return fetchPost(`/sessions/${uuid}/scenes/${sceneId}/items`, {
+    ...payload,
+    x: position.x ?? 0,
+    y: position.y ?? 0,
+  })
+}
+
+export function getSceneBlockGraph(uuid, sceneId) {
+  return fetchGet(`/sessions/${uuid}/scenes/${sceneId}/block-graph`)
+}
+
+export function createSceneBlockEdge(uuid, payload) {
+  return fetchPost(`/sessions/${uuid}/block-edges`, payload)
+}
+
+export function deleteSceneBlockEdge(uuid, edgeId) {
+  return fetchDelete(`/sessions/${uuid}/block-edges/${edgeId}`)
 }
 
 export function updateSceneItem(uuid, sceneId, itemId, payload) {
@@ -30,8 +58,4 @@ export function updateSceneItem(uuid, sceneId, itemId, payload) {
 
 export function deleteSceneItem(uuid, sceneId, itemId) {
   return fetchDelete(`/sessions/${uuid}/scenes/${sceneId}/items/${itemId}`)
-}
-
-export function reorderSceneItems(uuid, sceneId, ids) {
-  return fetchPatch(`/sessions/${uuid}/scenes/${sceneId}/items-order`, { ids })
 }

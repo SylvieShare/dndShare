@@ -127,19 +127,34 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
   user login is not part of the timeline response. `clientActionId` makes
   retries idempotent. `entry_added` carries a typed `data.kind` (`item`,
   `potion`, `spell`, `feature` or `ability`) for additions to a character;
-- CRUD scenes and scene items, including explicit items-order endpoint.
+- `GET /api/sessions/{uuid}/chapters/{chapterId}/scene-graph` returns
+  `{scenes,edges}`; scenario CRUD uses `POST .../chapters/{chapterId}/scenes`,
+  `PATCH|DELETE .../scenes/{sceneId}` and `PATCH .../scenes/{sceneId}/position`;
+- `POST /api/sessions/{uuid}/scene-edges` and
+  `DELETE /api/sessions/{uuid}/scene-edges/{edgeId}` manage directed links
+  inside one chapter;
+- `GET /api/sessions/{uuid}/scenes/{sceneId}/block-graph` returns
+  `{scene,items,edges}`. Blocks use `POST .../scenes/{sceneId}/items` and
+  `PATCH|DELETE .../scenes/{sceneId}/items/{itemId}`; position is part of the
+  item PATCH contract;
+- `POST /api/sessions/{uuid}/block-edges` and
+  `DELETE /api/sessions/{uuid}/block-edges/{edgeId}` manage directed links
+  inside one scenario.
 
 Arc, chapter and transition mutations are owner-only. Chapter `number` is a
 string. A chapter mutation uses `{arcId,number,name,description,status,
 imagePresetKey,customImageId,imageFocalX,imageFocalY,positionX,positionY}`.
 Every chapter returned by graph/chapter reads also has the derived integer
 `sceneCount`; it is not accepted as mutation input.
-Transitions use `{arcId,fromChapterId,toChapterId,label}` and may only connect
-chapters from the same arc. Reordering arcs accepts `{ids:[...]}` containing
+Chapter transitions use `{arcId,fromChapterId,toChapterId,label}`, scenario
+transitions use `{chapterId,fromSceneId,toSceneId,label}`, and block transitions
+use `{sceneId,fromItemId,toItemId,label}`. Each transition may only connect
+nodes of one parent canvas. Reordering arcs accepts `{ids:[...]}` containing
 every arc exactly once; response order becomes the new automatic numbering.
 
 Точные routes находятся в `internal/web/sessions.go` и
-`internal/web/session_scenes.go`; graph validation is in
+`internal/web/session_scenes.go` and `internal/web/session_scene_graph.go`;
+graph validation is in
 `sessions_chapters.go` and `sessions_graph_actions.go`. Encounter принимает
 только canonical combatants (`itemId` + `override` и уникальный
 `markerLetter` для NPC); embedded item payload не является контрактом. Текущее

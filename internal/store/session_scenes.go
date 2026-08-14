@@ -12,20 +12,39 @@ import (
 
 // SessionScene — строка dndshare.session_scene (порт model/SessionScene.kt).
 type SessionScene struct {
-	ID        int64  `json:"id"`
-	ChapterID int64  `json:"chapterId"`
-	Name      string `json:"name"`
+	ID        int64   `json:"id"`
+	ChapterID int64   `json:"chapterId"`
+	Name      string  `json:"name"`
+	PositionX float64 `json:"positionX"`
+	PositionY float64 `json:"positionY"`
+}
+
+type SessionSceneEdge struct {
+	ID          int64   `json:"id"`
+	ChapterID   int64   `json:"chapterId"`
+	FromSceneID int64   `json:"fromSceneId"`
+	ToSceneID   int64   `json:"toSceneId"`
+	Label       *string `json:"label,omitempty"`
 }
 
 // SessionSceneItem — строка dndshare.session_scene_item (порт model/SessionScene.kt).
 type SessionSceneItem struct {
-	ID      int64            `json:"id"`
-	SceneID int64            `json:"sceneId"`
-	Type    string           `json:"type"`
-	Title   string           `json:"title"`
-	Data    *json.RawMessage `json:"data,omitempty"`
-	Color   *string          `json:"color,omitempty"`
-	Order   int64            `json:"order"`
+	ID        int64            `json:"id"`
+	SceneID   int64            `json:"sceneId"`
+	Type      string           `json:"type"`
+	Title     string           `json:"title"`
+	Data      *json.RawMessage `json:"data,omitempty"`
+	Color     *string          `json:"color,omitempty"`
+	PositionX float64          `json:"positionX"`
+	PositionY float64          `json:"positionY"`
+}
+
+type SessionSceneItemEdge struct {
+	ID         int64   `json:"id"`
+	SceneID    int64   `json:"sceneId"`
+	FromItemID int64   `json:"fromItemId"`
+	ToItemID   int64   `json:"toItemId"`
+	Label      *string `json:"label,omitempty"`
 }
 
 // SceneSession — минимум из dndshare."session", нужный контроллеру сцен (id + владелец).
@@ -66,7 +85,7 @@ func (s *Store) GetSessionChapter(ctx context.Context, id int64) (SceneChapter, 
 
 func scanScene(row pgx.Row) (SessionScene, error) {
 	var sc SessionScene
-	err := row.Scan(&sc.ID, &sc.ChapterID, &sc.Name)
+	err := row.Scan(&sc.ID, &sc.ChapterID, &sc.Name, &sc.PositionX, &sc.PositionY)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return SessionScene{}, ErrNotFound
 	}
@@ -77,7 +96,7 @@ func scanItem(row pgx.Row) (SessionSceneItem, error) {
 	var it SessionSceneItem
 	var data *[]byte
 	var color *string
-	err := row.Scan(&it.ID, &it.SceneID, &it.Type, &it.Title, &data, &color, &it.Order)
+	err := row.Scan(&it.ID, &it.SceneID, &it.Type, &it.Title, &data, &color, &it.PositionX, &it.PositionY)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return SessionSceneItem{}, ErrNotFound
 	}
@@ -95,7 +114,8 @@ func scanItem(row pgx.Row) (SessionSceneItem, error) {
 // GetScenesByChapter — сцены главы, порядок по id (порт getByChapter).
 func (s *Store) GetScenesByChapter(ctx context.Context, chapterID int64) ([]SessionScene, error) {
 	rows, err := s.pool.Query(ctx,
-		`SELECT id, chapter_id, "name" FROM dndshare.session_scene WHERE chapter_id = $1 ORDER BY id`, chapterID,
+		`SELECT id, chapter_id, "name", position_x, position_y
+		 FROM dndshare.session_scene WHERE chapter_id = $1 ORDER BY id`, chapterID,
 	)
 	if err != nil {
 		return nil, err
@@ -115,20 +135,26 @@ func (s *Store) GetScenesByChapter(ctx context.Context, chapterID int64) ([]Sess
 // GetSceneByID — сцена по id (порт getSceneById).
 func (s *Store) GetSceneByID(ctx context.Context, id int64) (SessionScene, error) {
 	return scanScene(s.pool.QueryRow(ctx,
-		`SELECT id, chapter_id, "name" FROM dndshare.session_scene WHERE id = $1`, id))
+		`SELECT id, chapter_id, "name", position_x, position_y FROM dndshare.session_scene WHERE id = $1`, id))
 }
 
 // CreateScene — новая сцена (порт createScene).
-func (s *Store) CreateScene(ctx context.Context, chapterID int64, name string) (SessionScene, error) {
+func (s *Store) CreateScene(ctx context.Context, chapterID int64, name string, x, y float64) (SessionScene, error) {
 	return scanScene(s.pool.QueryRow(ctx,
-		`INSERT INTO dndshare.session_scene (chapter_id, "name") VALUES ($1, $2)
-		 RETURNING id, chapter_id, "name"`, chapterID, name))
+		`INSERT INTO dndshare.session_scene (chapter_id, "name", position_x, position_y) VALUES ($1, $2, $3, $4)
+		 RETURNING id, chapter_id, "name", position_x, position_y`, chapterID, name, x, y))
 }
 
 // RenameScene — переименование сцены (порт renameScene).
 func (s *Store) RenameScene(ctx context.Context, id int64, name string) error {
 	_, err := s.pool.Exec(ctx,
 		`UPDATE dndshare.session_scene SET "name" = $1 WHERE id = $2`, name, id)
+	return err
+}
+
+func (s *Store) UpdateScenePosition(ctx context.Context, id int64, x, y float64) error {
+	_, err := s.pool.Exec(ctx,
+		`UPDATE dndshare.session_scene SET position_x = $2, position_y = $3 WHERE id = $1`, id, x, y)
 	return err
 }
 
@@ -150,11 +176,11 @@ func (s *Store) DeleteScene(ctx context.Context, id int64) error {
 	return tx.Commit(ctx)
 }
 
-// GetSceneItems — айтемы сцены, порядок по order,id (порт getItemsByScene).
+// GetSceneItems — блоки одного сценария.
 func (s *Store) GetSceneItems(ctx context.Context, sceneID int64) ([]SessionSceneItem, error) {
 	rows, err := s.pool.Query(ctx,
-		`SELECT id, scene_id, "type", title, "data", color, "order"
-		 FROM dndshare.session_scene_item WHERE scene_id = $1 ORDER BY "order", id`, sceneID,
+		`SELECT id, scene_id, "type", title, "data", color, position_x, position_y
+		 FROM dndshare.session_scene_item WHERE scene_id = $1 ORDER BY id`, sceneID,
 	)
 	if err != nil {
 		return nil, err
@@ -174,22 +200,21 @@ func (s *Store) GetSceneItems(ctx context.Context, sceneID int64) ([]SessionScen
 // GetSceneItem — айтем по id (порт getItemById).
 func (s *Store) GetSceneItem(ctx context.Context, id int64) (SessionSceneItem, error) {
 	return scanItem(s.pool.QueryRow(ctx,
-		`SELECT id, scene_id, "type", title, "data", color, "order"
+		`SELECT id, scene_id, "type", title, "data", color, position_x, position_y
 		 FROM dndshare.session_scene_item WHERE id = $1`, id))
 }
 
-// CreateSceneItem — новый айтем, order = max+1 (порт createItem).
-func (s *Store) CreateSceneItem(ctx context.Context, sceneID int64, typ, title string, data *string, color *string) (SessionSceneItem, error) {
+// CreateSceneItem — новый блок с координатами на холсте сценария.
+func (s *Store) CreateSceneItem(ctx context.Context, sceneID int64, typ, title string, data *string, color *string, x, y float64) (SessionSceneItem, error) {
 	return scanItem(s.pool.QueryRow(ctx,
-		`INSERT INTO dndshare.session_scene_item (scene_id, "type", title, "data", color, "order")
-		 VALUES ($1, $2, $3, CAST($4 AS jsonb), $5,
-		         (SELECT COALESCE(MAX("order"), 0) + 1 FROM dndshare.session_scene_item WHERE scene_id = $1))
-		 RETURNING id, scene_id, "type", title, "data", color, "order"`,
-		sceneID, typ, title, data, color))
+		`INSERT INTO dndshare.session_scene_item (scene_id, "type", title, "data", color, position_x, position_y)
+		 VALUES ($1, $2, $3, CAST($4 AS jsonb), $5, $6, $7)
+		 RETURNING id, scene_id, "type", title, "data", color, position_x, position_y`,
+		sceneID, typ, title, data, color, x, y))
 }
 
 // UpdateSceneItem — частичное обновление айтема (порт updateItem).
-func (s *Store) UpdateSceneItem(ctx context.Context, id int64, title *string, data *string, dataChanged bool, color *string, colorChanged bool, order *int64) error {
+func (s *Store) UpdateSceneItem(ctx context.Context, id int64, title *string, data *string, dataChanged bool, color *string, colorChanged bool, positionX, positionY *float64) error {
 	var sets []string
 	var args []any
 	n := 1
@@ -209,8 +234,11 @@ func (s *Store) UpdateSceneItem(ctx context.Context, id int64, title *string, da
 	if colorChanged {
 		add("color = $"+strconv.Itoa(n), color)
 	}
-	if order != nil {
-		add(`"order" = $`+strconv.Itoa(n), *order)
+	if positionX != nil {
+		add("position_x = $"+strconv.Itoa(n), *positionX)
+	}
+	if positionY != nil {
+		add("position_y = $"+strconv.Itoa(n), *positionY)
 	}
 	if len(sets) == 0 {
 		return nil
@@ -224,5 +252,97 @@ func (s *Store) UpdateSceneItem(ctx context.Context, id int64, title *string, da
 // DeleteSceneItem — удаление айтема (порт deleteItem).
 func (s *Store) DeleteSceneItem(ctx context.Context, id int64) error {
 	_, err := s.pool.Exec(ctx, `DELETE FROM dndshare.session_scene_item WHERE id = $1`, id)
+	return err
+}
+
+func scanSceneEdge(row pgx.Row) (SessionSceneEdge, error) {
+	var edge SessionSceneEdge
+	err := row.Scan(&edge.ID, &edge.ChapterID, &edge.FromSceneID, &edge.ToSceneID, &edge.Label)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return SessionSceneEdge{}, ErrNotFound
+	}
+	return edge, err
+}
+
+func (s *Store) GetSceneEdgesByChapter(ctx context.Context, chapterID int64) ([]SessionSceneEdge, error) {
+	rows, err := s.pool.Query(ctx,
+		`SELECT id, chapter_id, from_scene_id, to_scene_id, label
+		 FROM dndshare.session_scene_edge WHERE chapter_id = $1 ORDER BY id`, chapterID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var edges []SessionSceneEdge
+	for rows.Next() {
+		var edge SessionSceneEdge
+		if err := rows.Scan(&edge.ID, &edge.ChapterID, &edge.FromSceneID, &edge.ToSceneID, &edge.Label); err != nil {
+			return nil, err
+		}
+		edges = append(edges, edge)
+	}
+	return edges, rows.Err()
+}
+
+func (s *Store) GetSceneEdge(ctx context.Context, id int64) (SessionSceneEdge, error) {
+	return scanSceneEdge(s.pool.QueryRow(ctx,
+		`SELECT id, chapter_id, from_scene_id, to_scene_id, label
+		 FROM dndshare.session_scene_edge WHERE id = $1`, id))
+}
+
+func (s *Store) CreateSceneEdge(ctx context.Context, chapterID, fromID, toID int64, label *string) (SessionSceneEdge, error) {
+	return scanSceneEdge(s.pool.QueryRow(ctx,
+		`INSERT INTO dndshare.session_scene_edge (chapter_id, from_scene_id, to_scene_id, label)
+		 VALUES ($1, $2, $3, $4)
+		 RETURNING id, chapter_id, from_scene_id, to_scene_id, label`, chapterID, fromID, toID, cleanOptional(label)))
+}
+
+func (s *Store) DeleteSceneEdge(ctx context.Context, id int64) error {
+	_, err := s.pool.Exec(ctx, `DELETE FROM dndshare.session_scene_edge WHERE id = $1`, id)
+	return err
+}
+
+func scanSceneItemEdge(row pgx.Row) (SessionSceneItemEdge, error) {
+	var edge SessionSceneItemEdge
+	err := row.Scan(&edge.ID, &edge.SceneID, &edge.FromItemID, &edge.ToItemID, &edge.Label)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return SessionSceneItemEdge{}, ErrNotFound
+	}
+	return edge, err
+}
+
+func (s *Store) GetSceneItemEdges(ctx context.Context, sceneID int64) ([]SessionSceneItemEdge, error) {
+	rows, err := s.pool.Query(ctx,
+		`SELECT id, scene_id, from_item_id, to_item_id, label
+		 FROM dndshare.session_scene_item_edge WHERE scene_id = $1 ORDER BY id`, sceneID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var edges []SessionSceneItemEdge
+	for rows.Next() {
+		var edge SessionSceneItemEdge
+		if err := rows.Scan(&edge.ID, &edge.SceneID, &edge.FromItemID, &edge.ToItemID, &edge.Label); err != nil {
+			return nil, err
+		}
+		edges = append(edges, edge)
+	}
+	return edges, rows.Err()
+}
+
+func (s *Store) GetSceneItemEdge(ctx context.Context, id int64) (SessionSceneItemEdge, error) {
+	return scanSceneItemEdge(s.pool.QueryRow(ctx,
+		`SELECT id, scene_id, from_item_id, to_item_id, label
+		 FROM dndshare.session_scene_item_edge WHERE id = $1`, id))
+}
+
+func (s *Store) CreateSceneItemEdge(ctx context.Context, sceneID, fromID, toID int64, label *string) (SessionSceneItemEdge, error) {
+	return scanSceneItemEdge(s.pool.QueryRow(ctx,
+		`INSERT INTO dndshare.session_scene_item_edge (scene_id, from_item_id, to_item_id, label)
+		 VALUES ($1, $2, $3, $4)
+		 RETURNING id, scene_id, from_item_id, to_item_id, label`, sceneID, fromID, toID, cleanOptional(label)))
+}
+
+func (s *Store) DeleteSceneItemEdge(ctx context.Context, id int64) error {
+	_, err := s.pool.Exec(ctx, `DELETE FROM dndshare.session_scene_item_edge WHERE id = $1`, id)
 	return err
 }
