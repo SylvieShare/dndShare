@@ -145,8 +145,9 @@ every arc exactly once; response order becomes the new automatic numbering.
 `markerLetter` для NPC); embedded item payload не является контрактом. Текущее
 групповое испытание сохраняется в опциональном верхнеуровневом поле
 `challenge: {ability,savingThrow,results}`, где результаты индексируются по UID
-combatant и содержат `{roll,bonus,total,revision?}`. Опциональная `revision`
-нужна только для повторной UI-анимации дополнительного d20.
+combatant и содержат `{roll,bonus,total,rolls?,dropped?,revision?}`. Опциональные
+`rolls`/`dropped` описывают дополнительный d20, а `revision` нужна только для
+повторной UI-анимации.
 
 ## Music and storage
 

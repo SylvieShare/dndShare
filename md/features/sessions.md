@@ -197,12 +197,15 @@ result is a fixed-size column after the creature's complete identity/HP block;
 combat rows reserve its height before any roll, so results never resize tiles.
 It reuses `SystemDie` and the shared roll-settle animation to show the d20 face,
 numeric modifier and total without a textual formula. The full check/save event
-title wraps inside the embedded result. Its up/down controls roll one extra d20
-for that creature and keep the higher/lower natural value respectively. The
-full creature name, event and advantage mode are still written to the session
-timeline. Challenge rolls do not duplicate themselves in the global
-bottom-right popup stack. The same header action is highlighted while results
-exist and clears them on the next click.
+title wraps inside the embedded result. Its up/down controls keep the existing
+d20 visible and roll one extra d20 beside it, then keep the higher/lower natural
+value respectively. Only the new die animates; the unused die is crossed out
+after the animation settles. Advantage/disadvantage rolls in the global dice
+popup follow the same delayed crossed-out state. The full creature name, event
+and advantage mode are still written to the session timeline. Challenge rolls
+do not duplicate themselves in the global bottom-right popup stack. The same
+header action is highlighted while results exist and clears them on the next
+click.
 
 Players have no separate encounter reserve section. Opening combat smoothly
 widens the existing left participant rail; every player tile gains the
@@ -275,9 +278,10 @@ Canonical combatants:
 
 The optional encounter-level `challenge` object stores `{ability,
 savingThrow,results}`. `results` is keyed by combatant UID and each value is
-`{roll,bonus,total,revision?}`; `revision` restarts the embedded animation when
-an extra advantage/disadvantage die keeps the same value. Removing `challenge`
-clears the shared result display.
+`{roll,bonus,total,rolls?,dropped?,revision?}`. The optional roll pair and
+dropped index preserve an extra advantage/disadvantage die; `revision` restarts
+its embedded animation when the kept value does not change. Removing
+`challenge` clears the shared result display.
 
 The DM combat header links to the standalone public route `/screen/:uuid` for
 a television or projector. It has no application navigation or authenticated

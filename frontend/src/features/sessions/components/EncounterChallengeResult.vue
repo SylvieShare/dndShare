@@ -32,12 +32,20 @@
       </div>
     </div>
 
-    <div class="ecr-values">
-      <span class="ecr-die" :class="{ 'ecr-die--rolling': isRolling(animationId) }">
+    <div class="ecr-values" :class="{ 'ecr-values--double': hasExtraRoll }">
+      <span
+        v-for="(natural, rollIndex) in naturalRolls"
+        :key="rollIndex"
+        class="ecr-die"
+        :class="{
+          'ecr-die--rolling': isNaturalRolling(rollIndex),
+          'ecr-die--dropped': isNaturalDropped(rollIndex),
+        }"
+      >
         <SystemDie
           :sides="20"
-          :value="displayedNatural"
-          :size="48"
+          :value="displayedNatural(rollIndex, natural)"
+          :size="hasExtraRoll ? 34 : 48"
           :color="resultColor"
         />
       </span>
@@ -82,13 +90,24 @@ function shouldAnimate() {
 }
 
 const animationId = useId()
+const naturalRolls = computed(() => {
+  if (Array.isArray(props.result.rolls) && props.result.rolls.length === 2) {
+    return props.result.rolls.map(roll => Number(roll) || 0)
+  }
+  return [Number(props.result.roll) || 0]
+})
+const droppedRolls = computed(() =>
+  Array.isArray(props.result.dropped) ? props.result.dropped : []
+)
+const hasExtraRoll = computed(() => naturalRolls.value.length === 2)
 const rollEntry = computed(() => {
   const bonus = Number(props.result.bonus) || 0
   const parts = [{
     sign: '+',
     kind: 'dice',
     sides: 20,
-    rolls: [Number(props.result.roll) || 0],
+    rolls: naturalRolls.value,
+    dropped: droppedRolls.value,
   }]
   if (bonus) {
     parts.push({
@@ -112,10 +131,26 @@ const {
   dispose,
 } = useDiceRollAnimation({ shouldAnimate })
 
-const displayedNatural = computed(() =>
-  displayedRoll(rollEntry.value, 0, 0, Number(props.result.roll) || 0)
-)
-const displayedTotalValue = computed(() => displayedTotal(rollEntry.value))
+function displayedNatural(rollIndex, natural) {
+  if (hasExtraRoll.value && rollIndex === 0) return natural
+  return displayedRoll(rollEntry.value, 0, rollIndex, natural)
+}
+
+function isNaturalRolling(rollIndex) {
+  return isRolling(animationId) && (!hasExtraRoll.value || rollIndex === 1)
+}
+
+function isNaturalDropped(rollIndex) {
+  return !isRolling(animationId) && droppedRolls.value.includes(rollIndex)
+}
+
+const displayedTotalValue = computed(() => {
+  if (hasExtraRoll.value && isRolling(animationId)) {
+    const extra = naturalRolls.value[1]
+    return displayedNatural(1, extra) + (Number(props.result.bonus) || 0)
+  }
+  return displayedTotal(rollEntry.value)
+})
 
 const eventTitle = computed(() => {
   const ability = SAVE_ABILITY_LABELS[props.ability.value] || props.ability.label.toLowerCase()
@@ -131,9 +166,10 @@ const resultColor = computed(() => {
   return 'var(--accent)'
 })
 
-const ariaLabel = computed(() =>
-  `${eventTitle.value}: ${props.result.roll}, бонус ${props.result.bonus}, итог ${props.result.total}`
-)
+const ariaLabel = computed(() => {
+  const rolls = hasExtraRoll.value ? `броски ${naturalRolls.value.join(' и ')}, ` : ''
+  return `${eventTitle.value}: ${rolls}бонус ${props.result.bonus}, итог ${props.result.total}`
+})
 
 watch(
   () => [props.result.roll, props.result.bonus, props.result.total, props.result.revision],
@@ -226,8 +262,8 @@ onBeforeUnmount(dispose)
 }
 
 .ecr-die {
+  position: relative;
   display: inline-flex;
-  margin-right: 1px;
   transition: opacity 0.16s, filter 0.16s, transform 0.18s;
 }
 
@@ -236,6 +272,38 @@ onBeforeUnmount(dispose)
   filter: saturate(0.68);
   transform: scale(0.96);
 }
+
+.ecr-die--dropped {
+  opacity: 0.36;
+  filter: grayscale(0.82);
+}
+
+.ecr-die--dropped::after {
+  position: absolute;
+  top: 50%;
+  right: 1px;
+  left: 1px;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  content: '';
+  transform: rotate(-22deg);
+}
+
+.ecr-values--double { gap: 2px; }
+
+.ecr-values--double .ecr-total {
+  min-width: 29px;
+  font-size: 22px;
+}
+
+.ecr-values--double .ecr-bonus {
+  min-width: 10px;
+  font-size: 14px;
+}
+
+.ecr-values--double .ecr-operator,
+.ecr-values--double .ecr-equals { font-size: 12px; }
 
 .ecr-operator,
 .ecr-equals {

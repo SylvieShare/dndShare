@@ -197,6 +197,8 @@ export function useEncounterChallenge({
           ...currentChallenge.results,
           [combatant.uid]: {
             roll: kept,
+            rolls: [previous, extra],
+            dropped: [droppedIdx],
             bonus,
             total,
             revision: (Number(currentResult.revision) || 0) + 1,

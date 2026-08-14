@@ -29,7 +29,7 @@
                 <span
                   class="dice-pop-roll-wrap"
                   :class="{
-                    'dice-pop-roll--drop': p.dropped && p.dropped.includes(ri),
+                    'dice-pop-roll--drop': p.dropped && p.dropped.includes(ri) && !isRolling(entry.id),
                     'dice-pop-roll--rolling': isRolling(entry.id),
                   }"
                 >

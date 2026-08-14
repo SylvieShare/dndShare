@@ -89,6 +89,8 @@ describe('encounter challenge bonuses', () => {
     challenge.rerollChallenge(sceneNpc, 'advantage')
     expect(encounter.value.challenge.results['scene-npc']).toEqual({
       roll: 20,
+      rolls: [10, 20],
+      dropped: [0],
       bonus: 2,
       total: 22,
       revision: 1,
@@ -98,6 +100,8 @@ describe('encounter challenge bonuses', () => {
     challenge.rerollChallenge(sceneNpc, 'disadvantage')
     expect(encounter.value.challenge.results['scene-npc']).toEqual({
       roll: 1,
+      rolls: [20, 1],
+      dropped: [0],
       bonus: 2,
       total: 3,
       revision: 2,
