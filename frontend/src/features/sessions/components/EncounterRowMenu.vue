@@ -82,7 +82,9 @@ const enc = inject('encounter')
 
 const isNpc = computed(() => props.combatant.type === 'npc')
 const canReserve = computed(() => props.section === 'combat')
-const canRerollHp = computed(() => isNpc.value && !!enc.npcHpFormula(props.combatant))
+const canRerollHp = computed(() =>
+  isNpc.value && props.section !== 'combat' && !!enc.npcHpFormula(props.combatant)
+)
 const canDelete = computed(() => isNpc.value)
 const canRevive = computed(() => props.section === 'dead')
 

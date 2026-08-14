@@ -133,7 +133,8 @@ describe('ViewSession participant rail', () => {
   })
 
   it('keeps players in the combat scene and numbers every initiative row', () => {
-    expect(encounterSource).toContain('<div v-if="enc.encounter.active" class="enc-block enc-block--combat">')
+    expect(encounterSource).toContain('<div v-if="enc.encounter.active" class="enc-combat-scene">')
+    expect(encounterSource).toContain('<div class="enc-block enc-block--combat">')
     expect(encounterSource).toContain('class="enc-section-title-group"')
     expect(encounterSource).not.toContain('БОЙ ИДЁТ')
     expect(encounterSource).toContain("const combatItems = computed(() => enc.sortable.displayItems('combat'))")
@@ -169,6 +170,8 @@ describe('ViewSession participant rail', () => {
     expect(encounterMenuSource).toContain('>В запас</RowActionItem>')
     expect(encounterMenuSource).toContain('>Перебросить HP</RowActionItem>')
     expect(encounterMenuSource).toContain('enc.rollNpcHpFromFormula(combatant)')
+    expect(encounterMenuSource).toContain("props.section !== 'combat'")
+    expect(encounterRowSource).not.toContain('enc-hp-dice-btn')
     expect(encounterMenuSource).toContain('const canDelete = computed(() => isNpc.value)')
     expect(encounterMenuSource).not.toContain('ColorPresetPicker')
     expect(encounterFlowSource).toContain('function sendToReserve(c)')
@@ -179,15 +182,17 @@ describe('ViewSession participant rail', () => {
     expect(encounterRowSource).toContain('suggestStoreLocal.ensure(sid)')
   })
 
-  it('moves combatant tiles between reserve and combat when combat starts or ends', () => {
+  it('fades selected NPCs out before revealing the combat scene', () => {
     expect(encounterSource).toContain('useEncounterCombatTransition(enc, encounterRoot)')
     expect(encounterSource).toContain(':disabled="combatTransitioning ||')
+    expect(encounterSource).toContain('<Transition name="enc-combat-scene">')
     expect(encounterRowSource).toContain(':data-encounter-uid="combatant.uid"')
     expect(encounterTransitionSource).toContain("phase.value = starting ? 'starting' : 'ending'")
-    expect(encounterTransitionSource).toContain('cloneForFlight(source, from)')
-    expect(encounterTransitionSource).toContain('landingAnimation(pair.target, delayMs)')
+    expect(encounterTransitionSource).toContain('fadeReserveNpcsOut()')
+    expect(encounterTransitionSource).toContain("combatant.type === 'npc'")
+    expect(encounterTransitionSource).not.toContain('cloneForFlight')
     expect(encounterTransitionSource).toContain('prefers-reduced-motion: reduce')
-    expect(encounterStylesSource).toContain('@keyframes enc-combat-title-in')
+    expect(encounterStylesSource).toContain('.enc-combat-scene-enter-from')
   })
 
   it('uses per-participant actions without bulk selection controls', () => {

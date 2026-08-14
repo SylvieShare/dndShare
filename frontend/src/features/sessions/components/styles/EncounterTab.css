@@ -230,26 +230,53 @@
 .enc-block--disabled .enc-add-dashed,
 .enc-block--disabled .enc-reserve-list { pointer-events: none; }
 
-.enc-wrap--combat-starting .enc-block--combat .enc-section-title-row {
-  animation: enc-combat-title-in 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+.enc-combat-scene {
+  display: grid;
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transform: translateY(0);
+  transform-origin: top;
 }
 
-.enc-wrap--combat-starting .enc-toolbar-main,
-.enc-wrap--combat-starting .enc-toolbar-actions {
-  animation: enc-combat-toolbar-settle 0.38s 0.12s cubic-bezier(0.22, 1, 0.36, 1) both;
+.enc-combat-scene > .enc-block {
+  min-height: 0;
+  overflow: hidden;
 }
 
-.enc-wrap--combat-ending .enc-block--npc .enc-section-title-row {
-  animation: enc-combat-title-in 0.36s cubic-bezier(0.22, 1, 0.36, 1) both;
+.enc-combat-scene-enter-active,
+.enc-combat-scene-leave-active {
+  transition:
+    grid-template-rows 0.36s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.24s ease,
+    transform 0.36s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-@keyframes enc-combat-title-in {
-  from { opacity: 0; transform: translateY(-7px); }
-  to { opacity: 1; transform: translateY(0); }
+.enc-combat-scene-leave-active { pointer-events: none; }
+
+.enc-combat-scene-enter-from,
+.enc-combat-scene-leave-to {
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transform: translateY(-7px);
 }
 
-@keyframes enc-combat-toolbar-settle {
-  from { opacity: 0.35; transform: translateY(-5px); }
+.enc-wrap--combat-ending .enc-combat-scene {
+  grid-template-rows: 0fr;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-7px);
+  transition:
+    grid-template-rows 0.36s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.24s ease,
+    transform 0.36s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.enc-wrap--combat-ending .enc-reserve-list {
+  animation: enc-reserve-return 0.3s 0.08s ease-out both;
+}
+
+@keyframes enc-reserve-return {
+  from { opacity: 0; transform: translateY(5px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -400,8 +427,8 @@
 @media (prefers-reduced-motion: reduce) {
   .enc-icon-btn,
   .enc-section-icon-btn { transition: none; }
-  .enc-wrap--combat-starting .enc-block--combat .enc-section-title-row,
-  .enc-wrap--combat-starting .enc-toolbar-main,
-  .enc-wrap--combat-starting .enc-toolbar-actions,
-  .enc-wrap--combat-ending .enc-block--npc .enc-section-title-row { animation: none; }
+  .enc-combat-scene-enter-active,
+  .enc-combat-scene-leave-active,
+  .enc-wrap--combat-ending .enc-combat-scene { transition: none; }
+  .enc-wrap--combat-ending .enc-reserve-list { animation: none; }
 }

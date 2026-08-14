@@ -211,7 +211,9 @@ trigger.
 Clicking a non-interactive area of a combat or reserve row opens its action
 menu; initiative, HP, selection, marker and other dedicated controls keep their
 own click behavior. The shared menu can edit states for both players and NPCs,
-send a combatant to reserve, reroll formula-based NPC HP, and delete NPCs. NPC
+send a combatant to reserve, reroll formula-based NPC HP while it remains in
+reserve, and delete NPCs. There is no separate HP-reroll button on a row, and
+the action is hidden once that NPC is on the combat scene. NPC
 color is not duplicated in the row action menu and remains part of the
 letter-marker popover. The combat-scene block is mounted only while combat is
 active; its select-all control sits beside the section title and no duplicate
@@ -219,12 +221,11 @@ live-status chip is shown. The NPC-reserve select-all control follows the same
 left-aligned title placement. State editing uses the character setting's state
 value path and suggestion dictionary (the `states` part of the combined D&D
 status overview), so the same condition list is available for players and NPCs.
-Starting and ending combat captures the visible source and destination tiles,
-then flies non-interactive visual copies between their screen positions with a
-short stagger and landing transition. NPCs move between reserve and combat;
-players animate between the persistent participant rail and their combat-scene
-copies. The underlying encounter mutation remains immediate, controls are
-locked for the transition, and reduced-motion users get the direct state change.
+When combat starts, selected NPC reserve rows fade out with a short stagger and
+the combat-scene block then expands smoothly into the layout. Ending combat
+collapses the scene and softly reveals the returned NPC reserve. Player tiles do
+not move between rails. Controls stay locked for the short transition, while
+reduced-motion users get the direct state change.
 
 When the combat rail changes the canvas safe-left inset, `ChapterGraphCanvas`
 re-measures that inherited layout value after the parent DOM update. The

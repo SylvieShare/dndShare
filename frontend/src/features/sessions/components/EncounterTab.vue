@@ -90,64 +90,68 @@
 
     <div class="enc-content">
     <!-- ── Combat ── -->
-    <div v-if="enc.encounter.active" class="enc-block enc-block--combat">
-      <div class="enc-section-title-row">
-        <div class="enc-section-title-group">
-          <span class="enc-section-title">
-            <span class="enc-section-dot" />БОЕВАЯ СЦЕНА
-          </span>
-          <button
-            type="button"
-            class="enc-section-icon-btn"
-            :class="{ 'enc-section-icon-btn--active': allSelectedInCombat }"
-            :disabled="combatItems.length === 0"
-            :title="allSelectedInCombat ? 'Снять выбор с существ' : 'Выбрать всех существ'"
-            :aria-label="allSelectedInCombat ? 'Снять выбор с существ' : 'Выбрать всех существ'"
-            @click="toggleVisibleSelection(combatItems)"
-          ><ListChecks :size="17" /></button>
-        </div>
-        <div class="enc-section-actions">
-          <button
-            v-if="enc.encounter.active"
-            type="button"
-            class="enc-section-icon-btn enc-section-icon-btn--accent"
-            :disabled="combatMoveCount === 0 || !props.isDm"
-            title="Добавить выбранных на сцену"
-            aria-label="Добавить выбранных на сцену"
-            @click="enc.sendSelectedTo('combat')"
-          >
-            <LogIn :size="17" />
-            <span v-if="combatMoveCount">{{ combatMoveCount }}</span>
-          </button>
+    <Transition name="enc-combat-scene">
+      <div v-if="enc.encounter.active" class="enc-combat-scene">
+        <div class="enc-block enc-block--combat">
+          <div class="enc-section-title-row">
+            <div class="enc-section-title-group">
+              <span class="enc-section-title">
+                <span class="enc-section-dot" />БОЕВАЯ СЦЕНА
+              </span>
+              <button
+                type="button"
+                class="enc-section-icon-btn"
+                :class="{ 'enc-section-icon-btn--active': allSelectedInCombat }"
+                :disabled="combatItems.length === 0"
+                :title="allSelectedInCombat ? 'Снять выбор с существ' : 'Выбрать всех существ'"
+                :aria-label="allSelectedInCombat ? 'Снять выбор с существ' : 'Выбрать всех существ'"
+                @click="toggleVisibleSelection(combatItems)"
+              ><ListChecks :size="17" /></button>
+            </div>
+            <div class="enc-section-actions">
+              <button
+                v-if="enc.encounter.active"
+                type="button"
+                class="enc-section-icon-btn enc-section-icon-btn--accent"
+                :disabled="combatMoveCount === 0 || !props.isDm"
+                title="Добавить выбранных на сцену"
+                aria-label="Добавить выбранных на сцену"
+                @click="enc.sendSelectedTo('combat')"
+              >
+                <LogIn :size="17" />
+                <span v-if="combatMoveCount">{{ combatMoveCount }}</span>
+              </button>
+            </div>
+          </div>
+          <div class="enc-section">
+            <div
+              v-if="combatItems.length === 0"
+              class="enc-empty"
+              data-sortable-container="combat"
+            >
+              {{ enc.encounter.active
+                  ? 'На боевой сцене пока нет участников'
+                  : 'Выберите игроков и существ, затем начните бой' }}
+            </div>
+            <div
+              v-else
+              class="enc-rows"
+              data-sortable-container="combat"
+            >
+              <EncounterRow
+                v-for="(c, idx) in combatItems"
+                :key="c.uid"
+                :combatant="c"
+                section="combat"
+                :idx="idx"
+                :order="idx + 1"
+                :is-current="enc.encounter.active && c.uid === currentTurnUid"
+              />
+            </div>
+          </div>
         </div>
       </div>
-      <div class="enc-section">
-        <div
-          v-if="combatItems.length === 0"
-          class="enc-empty"
-          data-sortable-container="combat"
-        >
-          {{ enc.encounter.active
-              ? 'На боевой сцене пока нет участников'
-              : 'Выберите игроков и существ, затем начните бой' }}
-        </div>
-        <div
-          v-else
-          class="enc-rows"
-          data-sortable-container="combat"
-        >
-          <EncounterRow
-            v-for="(c, idx) in combatItems"
-            :key="c.uid"
-            :combatant="c"
-            section="combat"
-            :idx="idx"
-            :order="idx + 1"
-            :is-current="enc.encounter.active && c.uid === currentTurnUid"
-          />
-        </div>
-      </div>
-    </div>
+    </Transition>
 
     <!-- ── NPC reserve ── -->
     <div class="enc-block enc-block--npc" :class="{ 'enc-block--disabled': enc.npcReserveCollapsed }">

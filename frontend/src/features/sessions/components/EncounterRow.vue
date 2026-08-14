@@ -73,21 +73,6 @@
       <div v-if="subtitleText" class="enc-sub">{{ subtitleText }}</div>
     </div>
 
-    <button
-      v-if="canRollNpcHp"
-      type="button"
-      class="enc-hp-dice-btn"
-      :title="`Бросить хиты (${npcFormula})`"
-      @click.stop="enc.rollNpcHpFromFormula(combatant)"
-    >
-      <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
-        <path d="M8 1.2l5.6 3.2v7.2L8 14.8 2.4 11.6V4.4L8 1.2z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
-        <circle cx="8" cy="8" r="1.1" fill="currentColor"/>
-        <circle cx="5.4" cy="6.2" r="0.8" fill="currentColor"/>
-        <circle cx="10.6" cy="9.8" r="0.8" fill="currentColor"/>
-      </svg>
-    </button>
-
     <EncounterRowMenu
       v-if="rowMenuVisible"
       ref="rowMenuRef"
@@ -197,9 +182,6 @@ function onRowPointerDown(e) {
   if (e.target.closest(DRAG_IGNORE)) return
   enc.sortable.startDrag(e, props.combatant, props.section, props.idx)
 }
-
-const npcFormula = computed(() => isNpc.value ? enc.npcHpFormula(props.combatant) : '')
-const canRollNpcHp = computed(() => isNpc.value && props.section !== 'combat' && !!npcFormula.value)
 
 const showCheckbox = computed(() => !!enc.canEditPlayerHp())
 
@@ -448,27 +430,5 @@ function commitNoteEdit() {
   border-radius: 4px;
   padding: 2px 5px;
 }
-
-.enc-hp-dice-btn {
-  flex-shrink: 0;
-  width: 26px;
-  height: 26px;
-  padding: 0;
-  background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
-  border: 1px solid color-mix(in srgb, var(--text-on-accent) 8%, transparent);
-  border-radius: 7px;
-  color: var(--text-2);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: color 0.15s, background 0.12s, border-color 0.12s, transform 0.08s;
-}
-.enc-hp-dice-btn:hover {
-  color: var(--accent);
-  border-color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 10%, transparent);
-}
-.enc-hp-dice-btn:active { transform: scale(0.94); }
 
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="p-card-menu" :data-encounter-player-uid="combatant?.uid || null">
+  <div class="p-card-menu">
     <RowActionMenu>
       <template #trigger>
         <BaseTile
