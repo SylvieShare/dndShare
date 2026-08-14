@@ -21,7 +21,7 @@
             @update:initiative="$emit('update:initiative', $event)"
           />
 
-          <div class="p-avatar" :style="{ background: avatarColor }">
+          <div class="p-avatar" :style="avaUrl ? null : { background: avatarColor }">
             <img v-if="avaUrl" :src="avaUrl" class="ava-img" alt="" />
             <span v-else class="ava-initial">{{ initial }}</span>
           </div>
@@ -277,6 +277,8 @@ const avatarColor = computed(() => {
   height: 100%;
   object-fit: cover;
   object-position: top center;
+  -webkit-mask-image: radial-gradient(ellipse 82% 84% at 50% 44%, var(--text-on-accent) 54%, transparent 100%);
+  mask-image: radial-gradient(ellipse 82% 84% at 50% 44%, var(--text-on-accent) 54%, transparent 100%);
 }
 
 .ava-initial {

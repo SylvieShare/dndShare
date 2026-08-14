@@ -60,7 +60,7 @@ const tintColor = computed(() => enc.avatarStyle(props.combatant)?.color || 'var
 .enc-avatar--player {
   width: 62px;
   height: 62px;
-  border: 1px solid color-mix(in srgb, var(--info) 30%, var(--border));
+  border: 0;
   border-radius: 14px;
 }
 
@@ -83,6 +83,8 @@ const tintColor = computed(() => enc.avatarStyle(props.combatant)?.color || 'var
 .enc-avatar-img--photo {
   object-fit: cover;
   object-position: center 15%;
+  -webkit-mask-image: radial-gradient(ellipse 82% 84% at 50% 44%, var(--text-on-accent) 54%, transparent 100%);
+  mask-image: radial-gradient(ellipse 82% 84% at 50% 44%, var(--text-on-accent) 54%, transparent 100%);
 }
 
 .enc-avatar-svg {

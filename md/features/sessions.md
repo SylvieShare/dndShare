@@ -190,9 +190,10 @@ turn is highlighted there. Players that enter combat also appear in the common
 initiative-ordered combat scene alongside NPCs while remaining visible in the
 left rail. The common scene rows reuse the same compact initiative and
 armor-class controls as the player rail. Player portraits are enlarged in both
-combat representations; NPC artwork occupies the full row height instead of
-falling back to a name initial. Every combat-scene tile has a numbered marker
-on its left.
+combat representations and use a soft alpha fade around their edges instead of
+a visible frame; NPC artwork occupies the full row height instead of falling
+back to a name initial. Every combat-scene tile has a numbered marker on its
+left.
 `ViewSession.vue` owns the single `useEncounter` instance shared by the rail and
 `EncounterTab`, so selection and initiative always address the same encounter
 record.
