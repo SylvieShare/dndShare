@@ -79,7 +79,12 @@
           <h2 v-else>Нет доступного хода</h2>
         </div>
 
-        <div v-if="currentCombatant" class="encounter-screen__turn-portrait" :style="accentStyle(currentCombatant)">
+        <div
+          v-if="currentCombatant"
+          class="encounter-screen__turn-portrait"
+          :class="{ 'encounter-screen__turn-portrait--npc': currentCombatant.type === 'npc' }"
+          :style="accentStyle(currentCombatant)"
+        >
           <img v-if="currentCombatant.avatarUrl" :src="currentCombatant.avatarUrl" alt="" />
           <span v-else-if="currentCombatant.avatarSvg" v-html="currentCombatant.avatarSvg" />
           <UserRound v-else :size="82" :stroke-width="1.1" aria-hidden="true" />
@@ -117,7 +122,10 @@
               <small v-else>без броска</small>
             </div>
 
-            <div class="initiative-card__portrait">
+            <div
+              class="initiative-card__portrait"
+              :class="{ 'initiative-card__portrait--npc': combatant.type === 'npc' }"
+            >
               <img v-if="combatant.avatarUrl" :src="combatant.avatarUrl" alt="" />
               <span v-else-if="combatant.avatarSvg" v-html="combatant.avatarSvg" />
               <UserRound v-else :size="45" :stroke-width="1.15" aria-hidden="true" />

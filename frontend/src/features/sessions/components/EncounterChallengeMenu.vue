@@ -4,7 +4,7 @@
     type="button"
     class="enc-icon-btn"
     :class="{ 'enc-icon-btn--challenge-active': enc.challengeActive }"
-    :disabled="enc.inCombat.length === 0"
+    :disabled="!enc.challengeActive && enc.selectedChallengeCount === 0"
     :title="enc.challengeActive ? 'Сбросить результаты испытания' : 'Провести испытание'"
     :aria-label="enc.challengeActive ? 'Сбросить результаты испытания' : 'Провести испытание'"
     :aria-expanded="open"
@@ -21,8 +21,8 @@
   >
     <form class="ecm-panel" @submit.prevent="rollForEveryone">
       <div class="ecm-heading">
-        <strong>Испытание для всех</strong>
-        <span>{{ enc.inCombat.length }} {{ participantWord }}</span>
+        <strong>Испытание выбранным</strong>
+        <span>{{ enc.selectedChallengeCount }} {{ participantWord }}</span>
       </div>
 
       <FormField label="Характеристика" vertical>
@@ -39,7 +39,7 @@
 
       <button class="ecm-roll" type="submit">
         <Dices :size="17" />
-        Бросить всем
+        Бросить выбранным
       </button>
     </form>
   </BasePopover>
@@ -59,7 +59,7 @@ const open = ref(false)
 const draft = reactive({ ability: 'DEX', savingThrow: false })
 
 const participantWord = computed(() => {
-  const count = enc.inCombat.length
+  const count = enc.selectedChallengeCount
   const mod10 = count % 10
   const mod100 = count % 100
   if (mod10 === 1 && mod100 !== 11) return 'участник'

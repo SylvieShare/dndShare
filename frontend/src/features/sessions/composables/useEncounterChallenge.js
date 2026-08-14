@@ -56,6 +56,7 @@ export function npcChallengeBonus(score, explicitSave, savingThrow = false) {
 export function useEncounterChallenge({
   encounter,
   inCombat,
+  selectedUids,
   findParticipant,
   playerDisplayName,
   npcName,
@@ -70,6 +71,10 @@ export function useEncounterChallenge({
   })
 
   const challengeActive = computed(() => !!challenge.value)
+  const selectedChallengeCombatants = computed(() =>
+    inCombat.value.filter(combatant => selectedUids.value.has(combatant.uid))
+  )
+  const selectedChallengeCount = computed(() => selectedChallengeCombatants.value.length)
 
   function abilityMeta(ability = challenge.value?.ability) {
     const key = normalizedAbility(ability)
@@ -95,18 +100,20 @@ export function useEncounterChallenge({
   }
 
   function runChallenge({ ability, savingThrow = false }) {
+    const combatants = selectedChallengeCombatants.value
+    if (!combatants.length) return
     const key = normalizedAbility(ability)
     const meta = abilityMeta(key)
     const results = {}
     const diceStore = useDiceStore()
 
-    for (const combatant of inCombat.value) {
+    for (const combatant of combatants) {
       const bonus = bonusFor(combatant, key, savingThrow)
       const kind = savingThrow ? 'спасбросок' : 'проверка'
       const roll = diceStore.roll(
         `${displayName(combatant)} — ${meta.label.toLowerCase()}, ${kind}`,
         d20Expr(bonus),
-        { crit_mode: true },
+        { crit_mode: true, popup: false },
       )
       const natural = roll?.parts
         ?.find(part => part.kind === 'dice' && part.sides === 20)
@@ -140,6 +147,7 @@ export function useEncounterChallenge({
   return {
     challenge,
     challengeActive,
+    selectedChallengeCount,
     challengeAbilities: ENCOUNTER_CHALLENGE_ABILITIES,
     challengeAbilityMeta: abilityMeta,
     challengeResult,

@@ -197,11 +197,19 @@
   overflow: hidden;
 }
 
+.encounter-screen__turn-portrait--npc {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+}
+
 .encounter-screen__turn-portrait img,
 .encounter-screen__turn-portrait > span,
 .encounter-screen__turn-portrait :deep(svg),
 .initiative-card__portrait img,
-.initiative-card__portrait > span,
+.initiative-card__portrait > span:not(.initiative-card__marker),
 .initiative-card__portrait :deep(svg) {
   width: 100%;
   height: 100%;
@@ -213,13 +221,13 @@
 }
 
 .encounter-screen__turn-portrait > span,
-.initiative-card__portrait > span {
+.initiative-card__portrait > span:not(.initiative-card__marker) {
   display: grid;
   place-items: center;
 }
 
 .encounter-screen__turn-portrait > span :deep(svg),
-.initiative-card__portrait > span :deep(svg) {
+.initiative-card__portrait > span:not(.initiative-card__marker) :deep(svg) {
   object-fit: contain;
 }
 

@@ -106,8 +106,14 @@
   overflow: visible;
 }
 
+.initiative-card__portrait--npc {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
 .initiative-card__portrait img,
-.initiative-card__portrait > span {
+.initiative-card__portrait > span:not(.initiative-card__marker) {
   border-radius: inherit;
   overflow: hidden;
 }

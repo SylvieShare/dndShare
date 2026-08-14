@@ -2,20 +2,42 @@
   <div
     class="ecr-result"
     :class="{
-      'ecr-result--critical': result.roll === 20,
-      'ecr-result--fumble': result.roll === 1,
+      'ecr-result--critical': result.roll === 20 && !isRolling(animationId),
+      'ecr-result--fumble': result.roll === 1 && !isRolling(animationId),
+      'ecr-result--rolling': isRolling(animationId),
     }"
     :aria-label="ariaLabel"
   >
-    <span class="ecr-kind">{{ ability.short }} · {{ challenge.savingThrow ? 'спасбросок' : 'проверка' }}</span>
-    <span class="ecr-roll">{{ result.roll }} {{ formattedBonus }}</span>
-    <strong>{{ result.total }}</strong>
+    <div class="ecr-event">
+      <span class="ecr-title">{{ eventTitle }}</span>
+      <span class="ecr-caption">{{ resultCaption }}</span>
+    </div>
+
+    <div class="ecr-values">
+      <span class="ecr-die" :class="{ 'ecr-die--rolling': isRolling(animationId) }">
+        <SystemDie
+          :sides="20"
+          :value="displayedNatural"
+          :size="48"
+          :color="resultColor"
+        />
+      </span>
+      <template v-if="result.bonus">
+        <span class="ecr-operator">{{ result.bonus > 0 ? '+' : '−' }}</span>
+        <span class="ecr-bonus">{{ Math.abs(result.bonus) }}</span>
+      </template>
+      <span class="ecr-equals">=</span>
+      <strong class="ecr-total" :class="{ 'ecr-total--rolling': isTotalRolling(animationId) }">
+        {{ displayedTotalValue }}
+      </strong>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
-import { formatBonus } from '@/shared/lib/dnd'
+import { computed, onBeforeUnmount, useId, watch } from 'vue'
+import { useDiceRollAnimation } from '@/shared/composables/useDiceRollAnimation'
+import SystemDie from '@/shared/ui/SystemDie.vue'
 
 const props = defineProps({
   challenge: { type: Object, required: true },
@@ -23,63 +45,217 @@ const props = defineProps({
   result: { type: Object, required: true },
 })
 
-const formattedBonus = computed(() => formatBonus(props.result.bonus))
-const ariaLabel = computed(() => {
-  const kind = props.challenge.savingThrow ? 'спасбросок' : 'проверка'
-  return `${props.ability.label}, ${kind}: ${props.result.roll} ${formattedBonus.value}, итог ${props.result.total}`
+const SAVE_ABILITY_LABELS = {
+  STR: 'силы',
+  DEX: 'ловкости',
+  CON: 'телосложения',
+  INT: 'интеллекта',
+  WIS: 'мудрости',
+  CHA: 'харизмы',
+}
+
+function shouldAnimate() {
+  if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return false
+  return !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+}
+
+const animationId = useId()
+const rollEntry = computed(() => {
+  const bonus = Number(props.result.bonus) || 0
+  const parts = [{
+    sign: '+',
+    kind: 'dice',
+    sides: 20,
+    rolls: [Number(props.result.roll) || 0],
+  }]
+  if (bonus) {
+    parts.push({
+      sign: bonus < 0 ? '-' : '+',
+      kind: 'flat',
+      value: Math.abs(bonus),
+    })
+  }
+  return {
+    id: animationId,
+    result: { parts, total: Number(props.result.total) || 0 },
+  }
 })
+
+const {
+  displayedRoll,
+  displayedTotal,
+  startEntryAnimation,
+  isRolling,
+  isTotalRolling,
+  dispose,
+} = useDiceRollAnimation({ shouldAnimate })
+
+const displayedNatural = computed(() =>
+  displayedRoll(rollEntry.value, 0, 0, Number(props.result.roll) || 0)
+)
+const displayedTotalValue = computed(() => displayedTotal(rollEntry.value))
+
+const eventTitle = computed(() => {
+  const ability = SAVE_ABILITY_LABELS[props.ability.value] || props.ability.label.toLowerCase()
+  return props.challenge.savingThrow
+    ? `Спасбросок ${ability}`
+    : `Проверка ${ability}`
+})
+
+const resultCaption = computed(() => {
+  if (isRolling(animationId)) return 'Бросок…'
+  if (props.result.roll === 20) return 'Натуральная 20'
+  if (props.result.roll === 1) return 'Натуральная 1'
+  return 'Результат испытания'
+})
+
+const resultColor = computed(() => {
+  if (isRolling(animationId)) return 'var(--accent)'
+  if (props.result.roll === 20) return 'var(--warning)'
+  if (props.result.roll === 1) return 'var(--danger)'
+  return 'var(--accent)'
+})
+
+const ariaLabel = computed(() =>
+  `${eventTitle.value}: ${props.result.roll}, бонус ${props.result.bonus}, итог ${props.result.total}`
+)
+
+watch(
+  () => [props.result.roll, props.result.bonus, props.result.total],
+  () => startEntryAnimation(rollEntry.value),
+  { immediate: true },
+)
+
+onBeforeUnmount(dispose)
 </script>
 
 <style scoped>
 .ecr-result {
-  display: grid;
-  min-height: 28px;
+  display: flex;
+  min-height: 72px;
   box-sizing: border-box;
-  grid-template-columns: minmax(0, 1fr) auto auto;
   align-items: center;
-  gap: 10px;
-  padding: 4px 8px 4px 10px;
-  border: 1px solid color-mix(in srgb, var(--accent) 34%, var(--border));
-  border-radius: 7px;
-  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  justify-content: space-between;
+  gap: 12px;
+  overflow: hidden;
+  padding: 9px 12px;
+  border: 1px solid color-mix(in srgb, var(--accent) 38%, var(--border));
+  border-radius: 11px;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--accent) 13%, transparent), transparent 64%),
+    color-mix(in srgb, var(--text-on-accent) 3%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--text-on-accent) 7%, transparent);
+  transition: border-color 0.18s, background 0.18s, box-shadow 0.18s;
 }
 
-.ecr-kind {
+.ecr-event {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.ecr-title {
   overflow: hidden;
-  color: var(--text-2);
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.055em;
+  color: var(--text-1);
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0.045em;
+  line-height: 1.15;
   text-overflow: ellipsis;
   text-transform: uppercase;
   white-space: nowrap;
 }
 
-.ecr-roll {
+.ecr-caption {
+  overflow: hidden;
   color: var(--text-muted);
-  font-size: 11px;
+  font-size: 10px;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ecr-values {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 4px;
   font-variant-numeric: tabular-nums;
 }
 
-.ecr-result strong {
-  min-width: 30px;
+.ecr-die {
+  display: inline-flex;
+  margin-right: 1px;
+  transition: opacity 0.16s, filter 0.16s, transform 0.18s;
+}
+
+.ecr-die--rolling {
+  opacity: 0.72;
+  filter: saturate(0.68);
+  transform: scale(0.96);
+}
+
+.ecr-operator,
+.ecr-equals {
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.ecr-bonus {
+  min-width: 12px;
+  color: var(--text-2);
+  font-size: 15px;
+  font-weight: 750;
+  text-align: center;
+}
+
+.ecr-total {
+  min-width: 35px;
   color: var(--accent-soft);
-  font-size: 17px;
-  font-variant-numeric: tabular-nums;
+  font-size: 25px;
+  font-weight: 850;
+  letter-spacing: -0.025em;
+  line-height: 1;
   text-align: right;
+  transition: opacity 0.15s, filter 0.15s;
+}
+
+.ecr-total--rolling {
+  opacity: 0.58;
+  filter: saturate(0.55);
+}
+
+.ecr-result--rolling {
+  border-color: color-mix(in srgb, var(--accent) 72%, var(--border));
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--text-on-accent) 7%, transparent),
+    0 0 18px color-mix(in srgb, var(--accent) 18%, transparent);
 }
 
 .ecr-result--critical {
-  border-color: color-mix(in srgb, var(--success) 50%, var(--border));
-  background: color-mix(in srgb, var(--success) 10%, transparent);
+  border-color: color-mix(in srgb, var(--warning) 64%, var(--border));
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--warning) 16%, transparent), transparent 64%),
+    color-mix(in srgb, var(--text-on-accent) 3%, transparent);
 }
 
-.ecr-result--critical strong { color: var(--success); }
+.ecr-result--critical .ecr-total { color: var(--warning); }
 
 .ecr-result--fumble {
-  border-color: color-mix(in srgb, var(--danger) 48%, var(--border));
-  background: color-mix(in srgb, var(--danger) 9%, transparent);
+  border-color: color-mix(in srgb, var(--danger) 58%, var(--border));
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--danger) 14%, transparent), transparent 64%),
+    color-mix(in srgb, var(--text-on-accent) 3%, transparent);
 }
 
-.ecr-result--fumble strong { color: var(--danger); }
+.ecr-result--fumble .ecr-total { color: var(--danger); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ecr-result,
+  .ecr-die,
+  .ecr-total { transition: none; }
+}
 </style>

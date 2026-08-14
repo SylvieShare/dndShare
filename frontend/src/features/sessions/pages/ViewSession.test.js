@@ -163,17 +163,22 @@ describe('ViewSession participant rail', () => {
     expect(encounterMarkerSource).toContain('<ColorPresetPicker')
   })
 
-  it('rolls a configured challenge for every combatant and shows it below HP', () => {
+  it('rolls a configured challenge for selected combatants in embedded row results', () => {
     expect(encounterSource).toContain('<EncounterChallengeMenu v-if="enc.encounter.active"')
     expect(encounterChallengeMenuSource).toContain('enc.runChallenge({ ...draft })')
     expect(encounterChallengeMenuSource).toContain("'enc-icon-btn--challenge-active': enc.challengeActive")
     expect(encounterChallengeMenuSource).toContain('enc.resetChallenge()')
-    expect(encounterChallengeSource).toContain('for (const combatant of inCombat.value)')
+    expect(encounterChallengeSource).toContain('inCombat.value.filter(combatant => selectedUids.value.has(combatant.uid))')
+    expect(encounterChallengeSource).toContain('for (const combatant of combatants)')
+    expect(encounterChallengeSource).toContain('{ crit_mode: true, popup: false }')
+    expect(encounterChallengeMenuSource).toContain('enc.selectedChallengeCount')
+    expect(encounterChallengeMenuSource).toContain('Испытание выбранным')
     expect(encounterChallengeSource).toContain('npcSavingThrow(combatant, key)')
-    expect(encounterRowSource).toContain('<div class="enc-info-vitals">')
-    expect(encounterRowSource.indexOf('<EncounterHpBar'))
-      .toBeLessThan(encounterRowSource.indexOf('<EncounterChallengeResult'))
-    expect(encounterChallengeResultSource).toContain("challenge.savingThrow ? 'спасбросок' : 'проверка'")
+    expect(encounterRowSource).toContain('</div>\n\n    <EncounterChallengeResult')
+    expect(encounterRowSource).toContain('class="enc-row-challenge"')
+    expect(encounterChallengeResultSource).toContain('<SystemDie')
+    expect(encounterChallengeResultSource).toContain('useDiceRollAnimation')
+    expect(encounterChallengeResultSource).not.toContain('expression')
   })
 
   it('groups the growing combat toolbar and keeps nested actions visually consistent', () => {

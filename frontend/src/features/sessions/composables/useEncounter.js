@@ -173,6 +173,7 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers }) {
   const challenge = useEncounterChallenge({
     encounter,
     inCombat,
+    selectedUids: selection.selectedUids,
     findParticipant,
     playerDisplayName,
     npcName: npcData.npcName,
@@ -351,6 +352,7 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers }) {
     // challenge
     challenge:               challenge.challenge,
     challengeActive:         challenge.challengeActive,
+    selectedChallengeCount:  challenge.selectedChallengeCount,
     challengeAbilities:      challenge.challengeAbilities,
     challengeAbilityMeta:    challenge.challengeAbilityMeta,
     challengeResult:         challenge.challengeResult,

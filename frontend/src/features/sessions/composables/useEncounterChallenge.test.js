@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'vitest'
+import { createPinia, setActivePinia } from 'pinia'
+import { ref } from 'vue'
 import {
   npcChallengeBonus,
   playerChallengeBonus,
+  useEncounterChallenge,
 } from '@/features/sessions/composables/useEncounterChallenge'
 
 describe('encounter challenge bonuses', () => {
@@ -35,5 +38,26 @@ describe('encounter challenge bonuses', () => {
     expect(npcChallengeBonus(14, 5, true)).toBe(5)
     expect(npcChallengeBonus(14, 5, false)).toBe(2)
     expect(npcChallengeBonus(14, null, true)).toBe(2)
+  })
+
+  it('rolls only selected combatants that are currently on the scene', () => {
+    setActivePinia(createPinia())
+    const sceneNpc = { uid: 'scene-npc', type: 'npc' }
+    const otherSceneNpc = { uid: 'other-scene-npc', type: 'npc' }
+    const encounter = ref({ active: true, combatants: [sceneNpc, otherSceneNpc] })
+    const challenge = useEncounterChallenge({
+      encounter,
+      inCombat: ref([sceneNpc, otherSceneNpc]),
+      selectedUids: ref(new Set(['scene-npc', 'reserve-npc'])),
+      findParticipant: () => null,
+      playerDisplayName: () => 'Игрок',
+      npcName: combatant => combatant.uid,
+      npcAbilityScore: () => 10,
+      npcSavingThrow: () => null,
+    })
+
+    expect(challenge.selectedChallengeCount.value).toBe(1)
+    challenge.runChallenge({ ability: 'DEX', savingThrow: false })
+    expect(Object.keys(encounter.value.challenge.results)).toEqual(['scene-npc'])
   })
 })

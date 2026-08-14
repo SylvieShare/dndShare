@@ -187,13 +187,18 @@ Session dice pass the default accent color explicitly to every `SystemDie`.
 
 While combat is active, the DM header has a group-challenge action. It opens a
 compact setup popover with one of the six D&D abilities and a saving-throw
-toggle, then rolls a d20 for every combatant currently on the combat scene. A
+toggle, then rolls a d20 only for selected combatants currently on the combat
+scene. The action is disabled until at least one scene combatant is selected. A
 normal check uses that creature's ability modifier. A saving throw also uses a
 player's save proficiency and extra save bonuses, or the explicit bestiary save
 bonus for an NPC; an NPC without one falls back to its ability modifier. Each
-row reserves a compact result strip immediately to the right of HP with the
-natural roll, applied bonus and total. The same header action is highlighted
-while results exist and clears them on the next click.
+result is a separate tall column after the creature's complete identity/HP
+block. It reuses `SystemDie` and the shared roll-settle animation to show the
+d20 face, numeric modifier and total without a textual formula. The embedded
+title contains only the check/save event; the full creature name and event are
+still written to the session timeline. Challenge rolls do not duplicate
+themselves in the global bottom-right popup stack. The same header action is
+highlighted while results exist and clears them on the next click.
 
 Players have no separate encounter reserve section. Opening combat smoothly
 widens the existing left participant rail; every player tile gains the
