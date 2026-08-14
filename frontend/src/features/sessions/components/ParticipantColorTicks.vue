@@ -20,15 +20,15 @@ defineProps({
   display: inline-flex;
   align-self: flex-start;
   flex: 0 0 auto;
-  gap: 3px;
-  height: 7px;
+  gap: 4px;
+  height: 10px;
   transform: translateY(-10px);
   pointer-events: none;
 }
 
 .participant-color-tick {
-  width: 2px;
-  height: 7px;
+  width: 3px;
+  height: 10px;
   background: var(--participant-color);
 }
 </style>

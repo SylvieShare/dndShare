@@ -162,6 +162,8 @@ describe('ViewSession participant rail', () => {
     expect(encounterRowSource).toContain('<ParticipantColorTicks v-if="playerColor" :color="playerColor" />')
     expect(encounterRowSource).toContain('enc.participantColor(props.combatant.charId)')
     expect(colorTicksSource).toContain('class="participant-color-tick"')
+    expect(colorTicksSource).toContain('width: 3px;')
+    expect(colorTicksSource).toContain('height: 10px;')
     expect(colorTicksSource).toContain('transform: translateY(-10px);')
   })
 
