@@ -1,5 +1,16 @@
 <template>
   <div class="session-page">
+    <ConfirmDialog
+      v-if="pendingKick"
+      title="Выгнать игрока?"
+      :message="kickError || `${pendingKickName} больше не будет участвовать в этой сессии.`"
+      confirm-label="Выгнать"
+      loading-label="Исключение…"
+      :loading="kickingIds.has(pendingKick.charId)"
+      @confirm="confirmKickParticipant"
+      @cancel="pendingKick = null"
+    />
+
     <AppModalFrame v-if="editOpen" title="Редактировать сессию" @close="editOpen = false">
       <FormField label="Название" vertical>
         <FormTextInput v-model:value="editName" :maxlength="255" autofocus @enter="saveEdit" />
@@ -85,7 +96,7 @@
             :color-pending="coloringIds.has(p.charId)"
             @view="openParticipant"
             @color="setParticipantColor"
-            @kick="kickParticipant"
+            @kick="requestKickParticipant"
           />
         </div>
         <div v-else class="no-participants">Участников пока нет</div>
@@ -134,6 +145,7 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 import BaseTile from '@/shared/ui/BaseTile.vue'
+import ConfirmDialog from '@/shared/ui/ConfirmDialog.vue'
 import FormActionButtons from '@/shared/ui/form/FormActionButtons'
 import FormField from '@/shared/ui/form/FormField'
 import FormTextInput from '@/shared/ui/form/FormTextInput'
@@ -158,6 +170,7 @@ import { useTemplateStore } from '@/stores/template'
 import { useSessionEventsStore } from '@/stores/sessionEvents'
 import { useUiStore } from '@/stores/ui'
 import { sessionStatusConfig } from '@/features/sessions/composables/useSessionStatus'
+import { pvName } from '@/features/sessions/lib/participantView'
 import { createHeaderChip } from '@/shared/lib/appHeader'
 import { fetchPost } from '@/shared/api/http'
 import { getSession, joinSession, updateParticipantColor, updateSession } from '@/shared/api/sessionsApi'
@@ -177,6 +190,8 @@ const editDesc = ref('')
 const editSaving = ref(false)
 const coloringIds = ref(new Set())
 const colorError = ref('')
+const pendingKick = ref(null)
+const pendingKickName = computed(() => pvName(pendingKick.value) || 'Игрок')
 
 const accountStore = useAccountStore()
 const musicStore = useMusicStore()
@@ -227,6 +242,17 @@ const {
 function openParticipant(charId) {
   const p = participants.value.find(x => x.charId === charId)
   if (p) sheetUuid.value = p.charUuid
+}
+
+function requestKickParticipant(charId) {
+  kickError.value = ''
+  pendingKick.value = participants.value.find(participant => participant.charId === charId) ?? null
+}
+
+async function confirmKickParticipant() {
+  const charId = pendingKick.value?.charId
+  if (charId == null) return
+  if (await kickParticipant(charId)) pendingKick.value = null
 }
 
 async function setParticipantColor(charId, color) {

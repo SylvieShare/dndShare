@@ -96,15 +96,12 @@ const resolvedColor = computed(() => props.color || 'var(--accent)')
 .base-tile-mark {
   position: absolute;
   z-index: 3;
-  top: 9px;
-  right: 7px;
-  width: 22px;
-  height: 4px;
-  border-radius: 999px;
+  top: 8px;
+  right: 0;
+  width: 28px;
+  height: 8px;
   background: var(--tile-mark-color);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--tile-mark-color) 35%, transparent);
+  clip-path: polygon(30% 0, 100% 0, 100% 100%, 0 100%);
   pointer-events: none;
-  transform: rotate(45deg);
-  transform-origin: center;
 }
 </style>

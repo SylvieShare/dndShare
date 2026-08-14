@@ -32,7 +32,7 @@ an explicit rules `sourceVersionId`, then is joined and opened.
 
 The session participant rail has no shared backing surface: each participant is
 an individual interactive `BaseTile`. Clicking it opens `RowActionMenu` with an
-icon-labelled view action plus DM-only color and kick actions; bulk participant
+icon-labelled view action plus DM-only color and confirmed kick actions; bulk participant
 selection is not part of the rail. The color is stored on the participant's
 session membership and renders as the same diagonal `BaseTile` mark in the rail
 and on that player's encounter rows. Every participant trigger fills the rail width. A dashed `+` action
