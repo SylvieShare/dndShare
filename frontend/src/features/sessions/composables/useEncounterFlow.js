@@ -95,6 +95,7 @@ export function useEncounterFlow({
       return true
     }
     if (group === 'dead') return c.position !== 'dead'
+    if (group === 'reserve') return c.position !== 'reserve'
     if (group === 'reserve-npc') return c.type === 'npc' && c.position !== 'reserve'
     if (group === 'reserve-player') return c.type === 'player' && c.position !== 'reserve'
     return false

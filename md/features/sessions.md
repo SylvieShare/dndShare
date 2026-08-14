@@ -56,7 +56,8 @@ then the participant rail.
 группируются сначала по минуте, затем по последовательному субъекту действия.
 Время показывается один раз слева, а заголовок субъекта и вертикальная линия
 через маркеры объединяют его соседние события, не выходя за первое и последнее.
-Сами события имеют прозрачный фон и тонкую рамку. `Мастер` в сессии и
+Сами события не имеют фона и рамки; тонкая рамка без заливки окружает их
+иконки-маркеры. `Мастер` в сессии и
 `Имя персонажа (мастер)` в
 листе — разные ключи группировки; для игрока используется имя персонажа. Логин
 пользователя не показывается.
@@ -154,7 +155,9 @@ component still supports the full arc-first/chapter-second selector contract
 when used outside that context. Combat uses the same canvas layer from the
 command bar and focuses the current chapter. Its standalone combat header sits
 to the right of that node; combatants remain independent tiles below it rather
-than being wrapped in one central card. Scene CRUD remains in
+than being wrapped in one central card. The header groups compact icon actions
+for starting or ending combat, turn navigation, returning selected participants
+to reserve, initiative rerolls and NPC deletion. Scene CRUD remains in
 `session_scenes.go`.
 
 `SceneTab.vue` uses project standards:
@@ -171,12 +174,25 @@ Encounter state is split into composables under `features/sessions/composables`:
 load/save, players, NPC item cache, HP, initiative, flow, states and dice.
 `useEncounter.js` composes them; row components remain presentation-only.
 
-The encounter workspace has no shared backing surface. Its header and every
-combatant row are separate `BaseTile` surfaces. In the chapter canvas the header
-is fixed beside the focused chapter while only the rows area scrolls. Row strips use the current
-encounter section color (combat, NPC reserve, player reserve or graveyard), so
-moving a row also updates its spatial accent. Session dice pass the default
-accent color explicitly to every `SystemDie`.
+The encounter workspace has no shared backing surface. Its header and every NPC
+row are separate `BaseTile` surfaces. In the chapter canvas the header is fixed
+beside the focused chapter while only the rows area scrolls. Row strips use the
+current encounter section color (combat or NPC reserve), so moving a row also
+updates its spatial accent. Session dice pass the default accent color
+explicitly to every `SystemDie`.
+
+Players are not duplicated in an encounter reserve section or among the NPC
+rows. Opening combat smoothly widens the existing left participant rail; every
+player tile gains the encounter checkbox, initiative input and armor-class
+indicator, and the current turn is highlighted there. `ViewSession.vue` owns
+the single `useEncounter` instance shared by the rail and `EncounterTab`, so
+selection and initiative always address the same encounter record.
+
+The graveyard is not a separate workspace section. A skull action in the
+combat header opens a `BasePopover` with dead combatants. Selecting a combatant
+reveals view, restore and (for NPCs) delete actions. The same popover can move
+the current selection to the graveyard and delete all dead NPCs after a
+`ConfirmDialog` confirmation.
 
 Canonical combatants:
 

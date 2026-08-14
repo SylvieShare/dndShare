@@ -25,6 +25,7 @@ import { useSuggestStore } from '@/stores/suggest'
 
 export function useEncounter({ sessionUuid, participants, canEditPlayers }) {
   const encounter = ref({ active: false, round: 0, turnIndex: 0, combatants: [] })
+  const loaded = ref(false)
   let saveTimer = null
 
   const players = useEncounterPlayers({ participants })
@@ -54,6 +55,7 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers }) {
     mergeParticipants(enc)
     encounter.value = enc
     npcData.ensureNpcItems(enc.combatants)
+    loaded.value = true
   }
 
   function scheduleSave() {
@@ -64,6 +66,12 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers }) {
   }
 
   watch(encounter, scheduleSave, { deep: true })
+
+  watch(participants, () => {
+    if (!loaded.value) return
+    if (!mergeParticipants(encounter.value)) return
+    encounter.value = { ...encounter.value, combatants: [...encounter.value.combatants] }
+  })
 
   function getCombatant(uid) {
     return encounter.value.combatants.find(c => c.uid === uid)
@@ -350,6 +358,7 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers }) {
     cloneNpc:               npcs.cloneNpc,
     removeNpc:              npcs.removeNpc,
     removeSelectedNpcs:     npcs.removeSelectedNpcs,
+    removeAllDeadNpcs:      npcs.removeAllDeadNpcs,
     // flow
     setInitiative:          flow.setInitiative,
     toggleSurprised:        flow.toggleSurprised,

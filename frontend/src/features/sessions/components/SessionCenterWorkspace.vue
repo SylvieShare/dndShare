@@ -12,6 +12,8 @@
       :session="session"
       :participants="participants"
       :is-dm="isDm"
+      :encounter="encounter"
+      @view-participant="$emit('view-participant', $event)"
     />
     <SceneTab
       v-else-if="chapter"
@@ -52,10 +54,11 @@ const props = defineProps({
   session: { type: Object, required: true },
   participants: { type: Array, default: () => [] },
   isDm: { type: Boolean, default: false },
+  encounter: { type: Object, required: true },
   chapter: { type: Object, default: null },
   arcs: { type: Array, default: () => [] },
 })
-defineEmits(['close', 'scene-count'])
+defineEmits(['close', 'scene-count', 'view-participant'])
 
 const workspaceStyle = computed(() => ({
   '--session-workspace-header-left': props.chapter ? '252px' : '0px',

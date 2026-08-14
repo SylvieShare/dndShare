@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest'
 import SessionParticipantCard from './SessionParticipantCard.vue'
 
 const source = readFileSync(fileURLToPath(new URL('./SessionParticipantCard.vue', import.meta.url)), 'utf8')
+const combatControlsSource = readFileSync(fileURLToPath(new URL('./SessionParticipantCombatControls.vue', import.meta.url)), 'utf8')
 
 describe('SessionParticipantCard actions', () => {
   it('compiles the participant component', () => {
@@ -29,6 +30,15 @@ describe('SessionParticipantCard actions', () => {
     expect(source).toContain('<ColorPresetPicker')
     expect(source).toContain('@update:model-value="color => assignColor(color, closeColor)"')
     expect(source).toMatch(/v-if="isDm"[\s\S]*?action="kick"[\s\S]*?>\{\{ kickPending \? 'Исключение…' : 'Выгнать' \}\}<\/RowActionItem>/)
-    expect(source).toContain("defineEmits(['view', 'kick', 'color'])")
+    expect(source).toContain("defineEmits(['view', 'kick', 'color', 'update:combat-selected', 'update:initiative'])")
+  })
+
+  it('adds battle selection, initiative and armor class to the expanded player tile', () => {
+    expect(source).toContain('v-if="combatMode"')
+    expect(source).toContain('<SessionParticipantCombatControls')
+    expect(combatControlsSource).toContain('<EncCheckbox')
+    expect(combatControlsSource).toContain('aria-label="Инициатива"')
+    expect(source).toContain("const armorClass = computed(() => pvAc(props.participant))")
+    expect(source).toContain("'p-card--current': combatMode && combatCurrent")
   })
 })

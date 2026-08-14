@@ -138,6 +138,14 @@ export function useEncounterNpcs({ encounter, unselect, pruneToExisting, selecte
     pruneToExisting()
   }
 
+  function removeAllDeadNpcs() {
+    encounter.value = {
+      ...encounter.value,
+      combatants: encounter.value.combatants.filter(x => !(x.type === 'npc' && x.position === 'dead')),
+    }
+    pruneToExisting()
+  }
+
   return {
     showNpcPicker,
     showSimpleForm,
@@ -149,5 +157,6 @@ export function useEncounterNpcs({ encounter, unselect, pruneToExisting, selecte
     cloneNpc,
     removeNpc,
     removeSelectedNpcs,
+    removeAllDeadNpcs,
   }
 }

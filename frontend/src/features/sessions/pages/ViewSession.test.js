@@ -11,6 +11,7 @@ const dicePanelSource = readFileSync(fileURLToPath(new URL('../components/DicePa
 const musicPanelSource = readFileSync(fileURLToPath(new URL('../components/MusicPanel.vue', import.meta.url)), 'utf8')
 const centerWorkspaceSource = readFileSync(fileURLToPath(new URL('../components/SessionCenterWorkspace.vue', import.meta.url)), 'utf8')
 const encounterSource = readFileSync(fileURLToPath(new URL('../components/EncounterTab.vue', import.meta.url)), 'utf8')
+const graveyardSource = readFileSync(fileURLToPath(new URL('../components/EncounterGraveyardMenu.vue', import.meta.url)), 'utf8')
 const encounterRowSource = readFileSync(fileURLToPath(new URL('../components/EncounterRow.vue', import.meta.url)), 'utf8')
 const sceneSource = readFileSync(fileURLToPath(new URL('../components/SceneTab.vue', import.meta.url)), 'utf8')
 const encounterStylesSource = readFileSync(fileURLToPath(new URL('../components/styles/EncounterTab.css', import.meta.url)), 'utf8')
@@ -99,6 +100,18 @@ describe('ViewSession participant rail', () => {
     expect(encounterSource).toContain("'enc-wrap--workspace': workspace")
     expect(sceneSource).toContain("'scene-tab--workspace': workspace")
     expect(source).toContain('@scene-count="chapterGraph.setSceneCount"')
+  })
+
+  it('reuses one encounter in the combat workspace and the expanding player rail', () => {
+    expect(source).toContain('const encounter = reactive(useEncounter({')
+    expect(source).toContain(':encounter="encounter"')
+    expect(source).toContain(':combat-mode="workspaceMode === \'combat\'"')
+    expect(styles).toContain('.campaign-workspace--combat .workspace-dock--left')
+    expect(encounterSource).not.toContain('ЗАПАС ИГРОКОВ')
+    expect(encounterSource).not.toContain('КЛАДБИЩЕ')
+    expect(encounterSource).toContain('<EncounterGraveyardMenu')
+    expect(graveyardSource).toContain('aria-label="Погибшие существа"')
+    expect(graveyardSource).toContain('Удалить всех')
   })
 
   it('uses per-participant actions without bulk selection controls', () => {

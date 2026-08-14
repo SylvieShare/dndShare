@@ -1,61 +1,82 @@
 <template>
   <div class="enc-wrap" :class="{ 'enc-wrap--workspace': workspace }">
 
-    <!-- ── Top toolbar ── -->
     <BaseTile class="enc-toolbar">
       <div v-if="workspace" class="enc-workspace-heading">
         <span>БОЙ</span>
-        <small>{{ enc.encounter.active ? `Раунд ${enc.encounter.round}` : 'Подготовка сцены' }}</small>
+        <strong>{{ enc.encounter.active ? 'Сражение идёт' : 'Подготовка сцены' }}</strong>
+        <small>{{ encounterSummary }}</small>
       </div>
-      <div class="enc-toolbar-left">
+
+      <div class="enc-toolbar-main">
         <button
-          class="enc-combat-btn"
-          :class="enc.encounter.active ? 'enc-combat-btn--end' : 'enc-combat-btn--start'"
-          :disabled="!enc.encounter.active && totalSelected === 0"
+          type="button"
+          class="enc-icon-btn enc-icon-btn--primary"
+          :class="{ 'enc-icon-btn--end': enc.encounter.active }"
+          :disabled="!enc.encounter.active && startSelectionCount === 0"
+          :title="enc.encounter.active ? 'Закончить бой' : `Начать бой (${startSelectionCount})`"
+          :aria-label="enc.encounter.active ? 'Закончить бой' : 'Начать бой'"
           @click="enc.toggleCombat"
         >
-          <template v-if="enc.encounter.active">Закончить бой</template>
-          <template v-else>
-            Начать бой
-            <span class="enc-combat-btn-count">({{ totalSelected }})</span>
-          </template>
+          <Square v-if="enc.encounter.active" :size="18" />
+          <Swords v-else :size="19" />
+          <span v-if="!enc.encounter.active && startSelectionCount" class="enc-icon-count">{{ startSelectionCount }}</span>
         </button>
+
         <template v-if="enc.encounter.active">
-          <div class="enc-round-wrap">
+          <div class="enc-round-wrap" title="Текущий раунд">
             <span class="enc-round-label">Раунд</span>
             <span class="enc-round-num">{{ enc.encounter.round }}</span>
           </div>
-          <button class="enc-turn-btn" :disabled="enc.inCombat.length === 0" @click="enc.prevTurn">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-              <path d="M8 2L3 6l5 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            Пред
-          </button>
-          <button class="enc-turn-btn enc-turn-btn--next" :disabled="enc.inCombat.length === 0" @click="enc.nextTurn">
-            След
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-              <path d="M4 2l5 4-5 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
+          <div class="enc-turn-group">
+            <button class="enc-icon-btn" :disabled="enc.inCombat.length === 0" title="Предыдущий ход" aria-label="Предыдущий ход" @click="enc.prevTurn">
+              <ChevronLeft :size="18" />
+            </button>
+            <button class="enc-icon-btn enc-icon-btn--next" :disabled="enc.inCombat.length === 0" title="Следующий ход" aria-label="Следующий ход" @click="enc.nextTurn">
+              <ChevronRight :size="18" />
+            </button>
+          </div>
         </template>
       </div>
-      <div class="enc-toolbar-right">
+
+      <div class="enc-toolbar-actions">
         <button
           v-if="props.isDm"
           type="button"
-          class="enc-tool-btn"
+          class="enc-icon-btn"
+          :disabled="reserveMoveCount === 0"
+          title="Вернуть выбранных в запас"
+          aria-label="Вернуть выбранных в запас"
+          @click="enc.sendSelectedTo('reserve')"
+        >
+          <ArchiveRestore :size="18" />
+          <span v-if="reserveMoveCount" class="enc-icon-count">{{ reserveMoveCount }}</span>
+        </button>
+        <button
+          v-if="props.isDm"
+          type="button"
+          class="enc-icon-btn"
           :disabled="enc.selectedRerollCount === 0"
           title="Перебросить инициативу выбранным"
+          aria-label="Перебросить инициативу выбранным"
           @click="enc.rerollSelectedInitiative"
-        >Перебросить инициативу<span v-if="enc.selectedRerollCount > 0" class="enc-tool-btn-count">({{ enc.selectedRerollCount }})</span></button>
+        >
+          <Dices :size="18" />
+          <span v-if="enc.selectedRerollCount" class="enc-icon-count">{{ enc.selectedRerollCount }}</span>
+        </button>
         <button
           v-if="props.isDm"
           type="button"
-          class="enc-tool-btn enc-tool-btn--danger"
+          class="enc-icon-btn enc-icon-btn--danger"
           :disabled="enc.selectedNpcCount === 0"
-          title="Удалить выбранных НПС"
+          title="Удалить выбранных существ"
+          aria-label="Удалить выбранных существ"
           @click="enc.removeSelectedNpcs"
-        >Удалить НПС<span v-if="enc.selectedNpcCount > 0" class="enc-tool-btn-count">({{ enc.selectedNpcCount }})</span></button>
+        >
+          <Trash2 :size="18" />
+          <span v-if="enc.selectedNpcCount" class="enc-icon-count">{{ enc.selectedNpcCount }}</span>
+        </button>
+        <EncounterGraveyardMenu :is-dm="props.isDm" @view-participant="$emit('view-participant', $event)" />
       </div>
     </BaseTile>
 
@@ -68,21 +89,29 @@
           <span v-if="enc.encounter.active" class="enc-status enc-status--live">БОЙ ИДЁТ</span>
           <span v-else class="enc-status enc-status--idle">НЕ В БОЕ</span>
         </span>
-        <button
-          v-if="enc.encounter.active"
-          type="button"
-          class="enc-select-btn"
-          :disabled="combatItems.length === 0"
-          @click="enc.selectAllInGroup('combat')"
-        >{{ allSelectedInCombat ? 'Сбросить' : 'Выбрать всех' }}</button>
-        <button
-          v-if="enc.encounter.active"
-          type="button"
-          class="enc-send-btn"
-          :disabled="combatMoveCount === 0 || !props.isDm"
-          title="Отправить выбранных в сцену"
-          @click="enc.sendSelectedTo('combat')"
-        >На сцену ({{ combatMoveCount }})</button>
+        <div class="enc-section-actions">
+          <button
+            type="button"
+            class="enc-section-icon-btn"
+            :class="{ 'enc-section-icon-btn--active': allSelectedInCombat }"
+            :disabled="combatItems.length === 0"
+            :title="allSelectedInCombat ? 'Снять выбор с существ' : 'Выбрать всех существ'"
+            :aria-label="allSelectedInCombat ? 'Снять выбор с существ' : 'Выбрать всех существ'"
+            @click="toggleVisibleSelection(combatItems)"
+          ><ListChecks :size="17" /></button>
+          <button
+            v-if="enc.encounter.active"
+            type="button"
+            class="enc-section-icon-btn enc-section-icon-btn--accent"
+            :disabled="combatMoveCount === 0 || !props.isDm"
+            title="Добавить выбранных на сцену"
+            aria-label="Добавить выбранных на сцену"
+            @click="enc.sendSelectedTo('combat')"
+          >
+            <LogIn :size="17" />
+            <span v-if="combatMoveCount">{{ combatMoveCount }}</span>
+          </button>
+        </div>
       </div>
       <div class="enc-section">
         <div
@@ -91,8 +120,8 @@
           data-sortable-container="combat"
         >
           {{ enc.encounter.active
-              ? 'Переместите участников из запаса в бой'
-              : 'Боевая сцена пуста — выберите участников и нажмите «Начать бой»' }}
+              ? 'На сцене пока нет существ — игроки остаются в колонке слева'
+              : 'Выберите игроков и существ, затем начните бой' }}
         </div>
         <div
           v-else
@@ -117,19 +146,17 @@
         <span class="enc-section-title">
           <span class="enc-section-dot" />ЗАПАС НПС<span v-if="enc.npcReserveCollapsed" class="enc-section-disabled-hint"> · недоступно для игроков</span>
         </span>
-        <button
-          type="button"
-          class="enc-select-btn"
-          :disabled="npcItems.length === 0"
-          @click="enc.selectAllInGroup('reserve-npc')"
-        >{{ allSelectedInNpcs ? 'Сбросить' : 'Выбрать всех' }}</button>
-        <button
-          type="button"
-          class="enc-send-btn"
-          :disabled="npcMoveCount === 0 || !props.isDm"
-          title="Отправить выбранных НПС в запас"
-          @click="enc.sendSelectedTo('reserve-npc')"
-        >В запас ({{ npcMoveCount }})</button>
+        <div class="enc-section-actions">
+          <button
+            type="button"
+            class="enc-section-icon-btn"
+            :class="{ 'enc-section-icon-btn--active': allSelectedInNpcs }"
+            :disabled="npcItems.length === 0"
+            :title="allSelectedInNpcs ? 'Снять выбор' : 'Выбрать весь запас'"
+            :aria-label="allSelectedInNpcs ? 'Снять выбор' : 'Выбрать весь запас'"
+            @click="enc.selectAllInGroup('reserve-npc')"
+          ><ListChecks :size="17" /></button>
+        </div>
       </div>
       <div class="enc-section">
         <div
@@ -150,90 +177,8 @@
           data-sortable-container="reserve-npc"
         >Запас пуст</div>
         <div class="enc-add-row">
-          <button class="enc-add-dashed" @click="enc.showNpcPicker = true">+ Добавить из бестиария</button>
-          <button class="enc-add-dashed enc-add-dashed--simple" @click="enc.showSimpleForm = true">+ Создать упрощённо</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── Players reserve ── -->
-    <div class="enc-block enc-block--players">
-      <div class="enc-section-title-row">
-        <span class="enc-section-title">
-          <span class="enc-section-dot" />ЗАПАС ИГРОКОВ
-        </span>
-        <button
-          type="button"
-          class="enc-select-btn"
-          :disabled="playerItems.length === 0"
-          @click="enc.selectAllInGroup('reserve-player')"
-        >{{ allSelectedInPlayers ? 'Сбросить' : 'Выбрать всех' }}</button>
-        <button
-          type="button"
-          class="enc-send-btn"
-          :disabled="playerMoveCount === 0 || !props.isDm"
-          title="Отправить выбранных игроков в запас"
-          @click="enc.sendSelectedTo('reserve-player')"
-        >В запас ({{ playerMoveCount }})</button>
-      </div>
-      <div class="enc-section">
-        <div
-          v-if="playerItems.length === 0"
-          class="enc-reserve-empty"
-          data-sortable-container="reserve-player"
-        >Все игроки в бою</div>
-        <div
-          v-else
-          class="enc-reserve-list"
-          data-sortable-container="reserve-player"
-        >
-          <EncounterRow
-            v-for="c in playerItems"
-            :key="c.uid"
-            :combatant="c"
-            section="reserve-player"
-          />
-        </div>
-      </div>
-    </div>
-
-    <!-- ── Dead zone ── -->
-    <div class="enc-block enc-block--dead">
-      <div class="enc-section-title-row">
-        <span class="enc-section-title enc-section-title--dead">
-          <span class="enc-section-dot" />💀 КЛАДБИЩЕ
-        </span>
-        <button
-          type="button"
-          class="enc-select-btn"
-          :disabled="deadItems.length === 0"
-          @click="enc.selectAllInGroup('dead')"
-        >{{ allSelectedInDead ? 'Сбросить' : 'Выбрать всех' }}</button>
-        <button
-          type="button"
-          class="enc-send-btn"
-          :disabled="deadMoveCount === 0 || !props.isDm"
-          title="Отправить выбранных на кладбище"
-          @click="enc.sendSelectedTo('dead')"
-        >На кладбище ({{ deadMoveCount }})</button>
-      </div>
-      <div class="enc-section">
-        <div
-          v-if="deadItems.length === 0"
-          class="enc-reserve-empty"
-          data-sortable-container="dead"
-        >Никто не пал</div>
-        <div
-          v-else
-          class="enc-reserve-list"
-          data-sortable-container="dead"
-        >
-          <EncounterRow
-            v-for="c in deadItems"
-            :key="c.uid"
-            :combatant="c"
-            section="dead"
-          />
+          <button class="enc-add-dashed" @click="enc.showNpcPicker = true"><BookOpen :size="17" />Добавить из бестиария</button>
+          <button class="enc-add-dashed enc-add-dashed--simple" @click="enc.showSimpleForm = true"><Plus :size="17" />Создать упрощённо</button>
         </div>
       </div>
     </div>
@@ -315,10 +260,24 @@
 </template>
 
 <script setup>
-import { computed, provide, reactive, toRef } from 'vue'
+import { computed, provide, reactive } from 'vue'
+import {
+  ArchiveRestore,
+  BookOpen,
+  ChevronLeft,
+  ChevronRight,
+  Dices,
+  ListChecks,
+  LogIn,
+  Plus,
+  Square,
+  Swords,
+  Trash2,
+} from '@lucide/vue'
 import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 import BaseTile from '@/shared/ui/BaseTile.vue'
 import DndHpCalcModal from '@/features/character-editor/blocks/dnd/DndHpCalcModal'
+import EncounterGraveyardMenu from '@/features/sessions/components/EncounterGraveyardMenu.vue'
 import EncounterRow from '@/features/sessions/components/EncounterRow'
 import FormActionButtons from '@/shared/ui/form/FormActionButtons'
 import FormField from '@/shared/ui/form/FormField'
@@ -327,7 +286,6 @@ import FormTextInput from '@/shared/ui/form/FormTextInput'
 import FormTextarea from '@/shared/ui/form/FormTextarea'
 import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
-import { useEncounter } from '@/features/sessions/composables/useEncounter'
 
 const props = defineProps({
   sessionUuid: { type: String, required: true },
@@ -335,40 +293,41 @@ const props = defineProps({
   participants: { type: Array, default: () => [] },
   isDm: { type: Boolean, default: false },
   workspace: { type: Boolean, default: false },
+  encounter: { type: Object, required: true },
 })
+defineEmits(['view-participant'])
 
-const enc = reactive(useEncounter({
-  sessionUuid: props.sessionUuid,
-  participants: toRef(props, 'participants'),
-  canEditPlayers: toRef(props, 'isDm'),
-}))
+const enc = props.encounter
 
 provide('encounter', enc)
 
-const combatItems = computed(() => enc.sortable.displayItems('combat'))
+const combatItems = computed(() => enc.sortable.displayItems('combat').filter(combatant => combatant.type === 'npc'))
 const npcItems = computed(() => enc.sortable.displayItems('reserve-npc'))
-const playerItems = computed(() => enc.sortable.displayItems('reserve-player'))
-const deadItems = computed(() => enc.sortable.displayItems('dead'))
 
 const currentTurnUid = computed(() => enc.currentTurnUid)
 
-const totalSelected = computed(() => enc.selectedUids?.size ?? 0)
+const startSelectionCount = computed(() => enc.selectedRerollCount)
 const combatMoveCount = computed(() => enc.selectedToMoveTo('combat'))
-const npcMoveCount = computed(() => enc.selectedToMoveTo('reserve-npc'))
-const playerMoveCount = computed(() => enc.selectedToMoveTo('reserve-player'))
-const deadMoveCount = computed(() => enc.selectedToMoveTo('dead'))
+const reserveMoveCount = computed(() => enc.selectedToMoveTo('reserve'))
 const allSelectedInCombat = computed(() =>
-  combatItems.value.length > 0 && enc.selectedCountInGroup('combat') === combatItems.value.length
+  combatItems.value.length > 0 && combatItems.value.every(combatant => enc.isSelected(combatant))
 )
 const allSelectedInNpcs = computed(() =>
   npcItems.value.length > 0 && enc.selectedCountInGroup('reserve-npc') === npcItems.value.length
 )
-const allSelectedInPlayers = computed(() =>
-  playerItems.value.length > 0 && enc.selectedCountInGroup('reserve-player') === playerItems.value.length
-)
-const allSelectedInDead = computed(() =>
-  deadItems.value.length > 0 && enc.selectedCountInGroup('dead') === deadItems.value.length
-)
+
+const encounterSummary = computed(() => {
+  if (enc.encounter.active) return `Раунд ${enc.encounter.round} · ${enc.inCombat.length} участников`
+  if (startSelectionCount.value) return `Выбрано участников: ${startSelectionCount.value}`
+  return `${npcItems.value.length} существ в запасе`
+})
+
+function toggleVisibleSelection(items) {
+  const shouldSelect = !items.every(combatant => enc.isSelected(combatant))
+  for (const combatant of items) {
+    if (enc.isSelected(combatant) !== shouldSelect) enc.toggleSelected(combatant)
+  }
+}
 
 function onNpcGraveyard() {
   const c = enc.hpCalcNpc

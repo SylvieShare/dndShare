@@ -58,13 +58,16 @@ export function useEncounterPlayers({ participants }) {
 
   function mergeParticipants(enc) {
     const known = new Set(enc.combatants.map(c => c.uid))
+    let added = 0
     for (const p of participants.value) {
       if (!known.has('p-' + p.charId)) {
         const entry = participantToPlayer(p)
         entry.tieBreak = nextTieBreak(enc.combatants)
         enc.combatants.push(entry)
+        added++
       }
     }
+    return added
   }
 
   return {

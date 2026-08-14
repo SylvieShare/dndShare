@@ -34,7 +34,11 @@
       <div class="loading-placeholder" />
     </template>
 
-    <div v-else-if="session" class="campaign-workspace">
+    <div
+      v-else-if="session"
+      class="campaign-workspace"
+      :class="{ 'campaign-workspace--combat': workspaceMode === 'combat' }"
+    >
       <ChapterGraphTab
         class="campaign-graph"
         :graph="chapterGraph"
@@ -57,9 +61,11 @@
           :session="session"
           :participants="participants"
           :is-dm="isDm"
+          :encounter="encounter"
           :chapter="workspaceChapter"
           :arcs="workspaceArcs"
           @close="closeWorkspace"
+          @view-participant="openParticipant"
           @scene-count="chapterGraph.setSceneCount"
         />
       </ChapterGraphTab>
@@ -94,9 +100,16 @@
             :is-dm="isDm"
             :kick-pending="kickingIds.has(p.charId)"
             :color-pending="coloringIds.has(p.charId)"
+            :combat-mode="workspaceMode === 'combat'"
+            :combatant="encounterPlayer(p.charId)"
+            :combat-selected="isEncounterPlayerSelected(p.charId)"
+            :combat-current="isEncounterPlayerCurrent(p.charId)"
+            :combat-editable="isDm"
             @view="openParticipant"
             @color="setParticipantColor"
             @kick="requestKickParticipant"
+            @update:combat-selected="setEncounterPlayerSelected(p.charId, $event)"
+            @update:initiative="setEncounterPlayerInitiative(p.charId, $event)"
           />
         </div>
         <div v-else class="no-participants">Участников пока нет</div>
@@ -141,7 +154,7 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 import BaseTile from '@/shared/ui/BaseTile.vue'
@@ -163,6 +176,7 @@ import SessionCenterWorkspace from '@/features/sessions/components/SessionCenter
 import SessionParticipantCard from '@/features/sessions/components/SessionParticipantCard'
 import { useParticipantPolling } from '@/features/sessions/composables/useParticipantPolling'
 import { useChapterGraph } from '@/features/sessions/composables/useChapterGraph'
+import { useEncounter } from '@/features/sessions/composables/useEncounter'
 import { useSessionSelection } from '@/features/sessions/composables/useSessionSelection'
 import { useAccountStore } from '@/stores/account'
 import { useMusicStore } from '@/stores/music'
@@ -213,6 +227,38 @@ const isDm = computed(() => {
   const uid = accountStore.user?.id
   return !!(uid && session.value && session.value.ownerUserId === uid)
 })
+
+const encounter = reactive(useEncounter({
+  sessionUuid,
+  participants,
+  canEditPlayers: isDm,
+}))
+
+function encounterPlayer(charId) {
+  return encounter.encounter.combatants.find(combatant =>
+    combatant.type === 'player' && combatant.charId === charId
+  ) ?? null
+}
+
+function isEncounterPlayerSelected(charId) {
+  const combatant = encounterPlayer(charId)
+  return combatant ? encounter.isSelected(combatant) : false
+}
+
+function isEncounterPlayerCurrent(charId) {
+  return encounter.currentTurnUid === encounterPlayer(charId)?.uid
+}
+
+function setEncounterPlayerSelected(charId, selected) {
+  const combatant = encounterPlayer(charId)
+  if (!combatant || encounter.isSelected(combatant) === selected) return
+  encounter.toggleSelected(combatant)
+}
+
+function setEncounterPlayerInitiative(charId, value) {
+  const combatant = encounterPlayer(charId)
+  if (combatant) encounter.setInitiative(combatant, value)
+}
 
 watch(session, (value) => {
   const status = sessionStatusConfig(value?.status)

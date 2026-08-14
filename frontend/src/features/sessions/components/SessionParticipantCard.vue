@@ -4,10 +4,24 @@
       <template #trigger>
         <BaseTile
           class="p-card"
-          :class="{ 'p-card--marked': participant.color }"
+          :class="{
+            'p-card--marked': participant.color,
+            'p-card--combat': combatMode,
+            'p-card--current': combatMode && combatCurrent,
+          }"
           interactive
           :mark-color="participant.color"
         >
+          <SessionParticipantCombatControls
+            v-if="combatMode"
+            :combatant="combatant"
+            :selected="combatSelected"
+            :editable="combatEditable"
+            :armor-class="armorClass"
+            @update:selected="$emit('update:combat-selected', $event)"
+            @update:initiative="$emit('update:initiative', $event)"
+          />
+
           <div class="p-avatar" :style="{ background: avatarColor }">
             <img v-if="avaUrl" :src="avaUrl" class="ava-img" alt="" />
             <span v-else class="ava-initial">{{ initial }}</span>
@@ -60,6 +74,7 @@
               </template>
             </template>
           </div>
+
         </BaseTile>
       </template>
 
@@ -112,8 +127,9 @@ import ColorPresetPicker from '@/shared/ui/ColorPresetPicker.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionMenu from '@/shared/ui/RowActionMenu.vue'
 import RowActionSubmenu from '@/shared/ui/RowActionSubmenu.vue'
+import SessionParticipantCombatControls from '@/features/sessions/components/SessionParticipantCombatControls.vue'
 import StatBar from '@/shared/ui/StatBar.vue'
-import { pvAvatar, pvHp, pvName, pvSubtitle } from '@/features/sessions/lib/participantView'
+import { pvAc, pvAvatar, pvHp, pvName, pvSubtitle } from '@/features/sessions/lib/participantView'
 
 const AVATAR_COLORS = ['var(--accent)', 'var(--accent)', 'var(--info)', 'var(--danger)', 'var(--success)', 'var(--warning)', 'var(--danger)']
 
@@ -122,8 +138,13 @@ const props = defineProps({
   isDm: { type: Boolean, default: false },
   kickPending: { type: Boolean, default: false },
   colorPending: { type: Boolean, default: false },
+  combatMode: { type: Boolean, default: false },
+  combatant: { type: Object, default: null },
+  combatSelected: { type: Boolean, default: false },
+  combatCurrent: { type: Boolean, default: false },
+  combatEditable: { type: Boolean, default: false },
 })
-const emit = defineEmits(['view', 'kick', 'color'])
+const emit = defineEmits(['view', 'kick', 'color', 'update:combat-selected', 'update:initiative'])
 
 function viewParticipant(close) {
   close()
@@ -148,6 +169,7 @@ const initial = computed(() => displayName.value.charAt(0).toUpperCase())
 const avaUrl = computed(() => pvAvatar(props.participant))
 
 const who = computed(() => pvSubtitle(props.participant))
+const armorClass = computed(() => pvAc(props.participant))
 
 const hp = computed(() => {
   const v = pvHp(props.participant)
@@ -193,10 +215,24 @@ const avatarColor = computed(() => {
   gap: 10px;
   padding: 10px 12px;
   user-select: none;
+  transition: padding 0.28s cubic-bezier(0.22, 1, 0.36, 1), background 0.18s, border-color 0.18s;
 }
 
 .p-card--marked {
   padding-right: 38px;
+}
+
+.p-card--combat {
+  align-items: center;
+  gap: 9px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.p-card--current {
+  background: color-mix(in srgb, var(--accent) 11%, var(--surface));
+  border-color: color-mix(in srgb, var(--accent) 42%, var(--border));
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 10%, transparent);
 }
 
 .p-card-menu {
@@ -251,6 +287,10 @@ const avatarColor = computed(() => {
   display: flex;
   flex-direction: column;
   gap: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .p-card { transition: none; }
 }
 
 .p-name {

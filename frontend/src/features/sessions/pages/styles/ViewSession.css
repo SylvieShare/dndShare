@@ -20,6 +20,10 @@
   height: 100%;
 }
 
+.campaign-workspace--combat .campaign-graph {
+  --chapter-safe-left: 380px;
+}
+
 .workspace-dock {
   position: absolute;
   z-index: 15;
@@ -35,6 +39,11 @@
 .workspace-dock--left {
   left: 14px;
   width: 246px;
+  transition: width 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.campaign-workspace--combat .workspace-dock--left {
+  width: 338px;
 }
 
 .workspace-dock--right {
@@ -184,8 +193,13 @@
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .workspace-dock--left { transition: none; }
+}
+
 @media (max-width: 760px) {
-  .campaign-graph { --chapter-safe-left: 0px; }
+  .campaign-graph,
+  .campaign-workspace--combat .campaign-graph { --chapter-safe-left: 0px; }
 
   .workspace-dock--left {
     display: none;
