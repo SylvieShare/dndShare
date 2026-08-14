@@ -22,6 +22,9 @@ const encounterMenuSource = readFileSync(fileURLToPath(new URL('../components/En
 const encounterFlowSource = readFileSync(fileURLToPath(new URL('../composables/useEncounterFlow.js', import.meta.url)), 'utf8')
 const encounterStatesSource = readFileSync(fileURLToPath(new URL('../composables/useEncounterStates.js', import.meta.url)), 'utf8')
 const encounterTransitionSource = readFileSync(fileURLToPath(new URL('../composables/useEncounterCombatTransition.js', import.meta.url)), 'utf8')
+const encounterChallengeSource = readFileSync(fileURLToPath(new URL('../composables/useEncounterChallenge.js', import.meta.url)), 'utf8')
+const encounterChallengeMenuSource = readFileSync(fileURLToPath(new URL('../components/EncounterChallengeMenu.vue', import.meta.url)), 'utf8')
+const encounterChallengeResultSource = readFileSync(fileURLToPath(new URL('../components/EncounterChallengeResult.vue', import.meta.url)), 'utf8')
 const encounterOrderSource = readFileSync(fileURLToPath(new URL('../components/EncounterOrderMarker.vue', import.meta.url)), 'utf8')
 const sceneSource = readFileSync(fileURLToPath(new URL('../components/SceneTab.vue', import.meta.url)), 'utf8')
 const encounterStylesSource = readFileSync(fileURLToPath(new URL('../components/styles/EncounterTab.css', import.meta.url)), 'utf8')
@@ -158,6 +161,18 @@ describe('ViewSession participant rail', () => {
     expect(encounterAvatarSource).not.toContain('enc-avatar-letter')
     expect(encounterMarkerSource).toContain('v-for="letter in enc.ENCOUNTER_LETTERS"')
     expect(encounterMarkerSource).toContain('<ColorPresetPicker')
+  })
+
+  it('rolls a configured challenge for every combatant and shows it below HP', () => {
+    expect(encounterSource).toContain('<EncounterChallengeMenu v-if="props.isDm && enc.encounter.active"')
+    expect(encounterChallengeMenuSource).toContain('enc.runChallenge({ ...draft })')
+    expect(encounterChallengeMenuSource).toContain("'enc-icon-btn--challenge-active': enc.challengeActive")
+    expect(encounterChallengeMenuSource).toContain('enc.resetChallenge()')
+    expect(encounterChallengeSource).toContain('for (const combatant of inCombat.value)')
+    expect(encounterChallengeSource).toContain('npcSavingThrow(combatant, key)')
+    expect(encounterRowSource.indexOf('<EncounterHpBar'))
+      .toBeLessThan(encounterRowSource.indexOf('<EncounterChallengeResult'))
+    expect(encounterChallengeResultSource).toContain("challenge.savingThrow ? 'спасбросок' : 'проверка'")
   })
 
   it('opens row actions from the tile and keeps concrete controls independent', () => {

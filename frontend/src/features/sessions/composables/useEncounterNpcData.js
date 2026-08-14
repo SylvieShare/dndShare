@@ -60,6 +60,24 @@ export function useEncounterNpcData() {
     return Number.isFinite(v) ? v : null
   }
 
+  function npcAbilityScore(c, ability) {
+    const value = npcData(c)[String(ability || '').toLowerCase()]
+    if (value == null || value === '') return null
+    const score = Number(value)
+    return Number.isFinite(score) ? score : null
+  }
+
+  function npcSavingThrow(c, ability) {
+    const key = String(ability || '').toLowerCase()
+    const override = c?.override?.saving_throws
+    const value = override && typeof override === 'object' && !Array.isArray(override)
+      ? override[key]
+      : npcItem(c)?.data?.saving_throws?.[key]
+    if (value == null || value === '') return null
+    const bonus = Number(value)
+    return Number.isFinite(bonus) ? bonus : null
+  }
+
   function npcHpFormula(c) {
     return (npcData(c).hp_formula || '').toString()
   }
@@ -74,6 +92,8 @@ export function useEncounterNpcData() {
     npcAc,
     npcHpMax,
     npcDex,
+    npcAbilityScore,
+    npcSavingThrow,
     npcHpFormula,
   }
 }

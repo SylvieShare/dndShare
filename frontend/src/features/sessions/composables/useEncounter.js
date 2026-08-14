@@ -1,5 +1,6 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useEncounterFlow } from '@/features/sessions/composables/useEncounterFlow'
+import { useEncounterChallenge } from '@/features/sessions/composables/useEncounterChallenge'
 import { useEncounterHp } from '@/features/sessions/composables/useEncounterHp'
 import { useEncounterInitiative } from '@/features/sessions/composables/useEncounterInitiative'
 import { useEncounterNpcData } from '@/features/sessions/composables/useEncounterNpcData'
@@ -167,6 +168,16 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers }) {
     applyLocalPatches,
     getCombatant,
     mutate,
+  })
+
+  const challenge = useEncounterChallenge({
+    encounter,
+    inCombat,
+    findParticipant,
+    playerDisplayName,
+    npcName: npcData.npcName,
+    npcAbilityScore: npcData.npcAbilityScore,
+    npcSavingThrow: npcData.npcSavingThrow,
   })
 
   const npcs = useEncounterNpcs({
@@ -337,6 +348,14 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers }) {
     rollNpcHpFromFormula:   hp.rollNpcHpFromFormula,
     // initiative
     initiativeBonus,
+    // challenge
+    challenge:               challenge.challenge,
+    challengeActive:         challenge.challengeActive,
+    challengeAbilities:      challenge.challengeAbilities,
+    challengeAbilityMeta:    challenge.challengeAbilityMeta,
+    challengeResult:         challenge.challengeResult,
+    runChallenge:            challenge.runChallenge,
+    resetChallenge:          challenge.resetChallenge,
     // states
     statesBlock:            states.statesBlock,
     statesValue:            states.statesValue,

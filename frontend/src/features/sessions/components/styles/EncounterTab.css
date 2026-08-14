@@ -167,6 +167,19 @@
 
 .enc-icon-btn--next { color: var(--accent-soft); }
 
+.enc-icon-btn--challenge-active {
+  border-color: color-mix(in srgb, var(--warning) 58%, transparent);
+  background: color-mix(in srgb, var(--warning) 17%, transparent);
+  color: var(--warning);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--warning) 10%, transparent);
+}
+
+.enc-icon-btn--challenge-active:hover:not(:disabled) {
+  border-color: var(--warning);
+  background: color-mix(in srgb, var(--warning) 24%, transparent);
+  color: var(--warning);
+}
+
 .enc-icon-count {
   position: absolute;
   top: -5px;

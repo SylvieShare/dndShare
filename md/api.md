@@ -137,7 +137,10 @@ every arc exactly once; response order becomes the new automatic numbering.
 `internal/web/session_scenes.go`; graph validation is in
 `sessions_chapters.go` and `sessions_graph_actions.go`. Encounter принимает
 только canonical combatants (`itemId` + `override` и уникальный
-`markerLetter` для NPC); embedded item payload не является контрактом.
+`markerLetter` для NPC); embedded item payload не является контрактом. Текущее
+групповое испытание сохраняется в опциональном верхнеуровневом поле
+`challenge: {ability,savingThrow,results}`, где результаты индексируются по UID
+combatant и содержат `{roll,bonus,total}`.
 
 ## Music and storage
 

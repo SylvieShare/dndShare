@@ -70,6 +70,12 @@
         <span v-if="isNpc && combatant.note" class="enc-note" :title="combatant.note">{{ combatant.note }}</span>
       </div>
       <EncounterHpBar class="enc-info-hp" :combatant="combatant" :section="section" />
+      <EncounterChallengeResult
+        v-if="challengeResult"
+        :challenge="enc.challenge"
+        :ability="challengeAbility"
+        :result="challengeResult"
+      />
       <div v-if="subtitleText" class="enc-sub">{{ subtitleText }}</div>
     </div>
 
@@ -129,6 +135,7 @@ import { computed, inject, provide, reactive, ref } from 'vue'
 import BlockStates from '@/features/character-editor/blocks/generic/BlockStates'
 import EncounterAvatar from '@/features/sessions/components/EncounterAvatar.vue'
 import EncounterCombatControls from '@/features/sessions/components/EncounterCombatControls.vue'
+import EncounterChallengeResult from '@/features/sessions/components/EncounterChallengeResult.vue'
 import EncounterHpBar from '@/features/sessions/components/EncounterHpBar.vue'
 import EncounterMarkerMenu from '@/features/sessions/components/EncounterMarkerMenu.vue'
 import EncounterOrderMarker from '@/features/sessions/components/EncounterOrderMarker.vue'
@@ -163,6 +170,10 @@ const displayName = computed(() =>
 const hasItem = computed(() => isNpc.value && props.combatant.itemId != null)
 
 const subtitleText = computed(() => enc.subtitle(props.combatant))
+const challengeResult = computed(() =>
+  props.section === 'combat' ? enc.challengeResult(props.combatant) : null
+)
+const challengeAbility = computed(() => enc.challengeAbilityMeta(enc.challenge?.ability))
 
 const skippedInTurn = computed(() =>
   props.section === 'combat' && enc.encounter.active && !enc.isActiveInTurn(props.combatant)

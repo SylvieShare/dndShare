@@ -183,6 +183,16 @@ explicitly selected participant color for players or `iconColor` for NPCs; rows
 without an assigned color have no strip in either combat or the NPC reserve.
 Session dice pass the default accent color explicitly to every `SystemDie`.
 
+While combat is active, the DM header has a group-challenge action. It opens a
+compact setup popover with one of the six D&D abilities and a saving-throw
+toggle, then rolls a d20 for every combatant currently on the combat scene. A
+normal check uses that creature's ability modifier. A saving throw also uses a
+player's save proficiency and extra save bonuses, or the explicit bestiary save
+bonus for an NPC; an NPC without one falls back to its ability modifier. Each
+row reserves a result strip immediately below HP with the natural roll, applied
+bonus and total. The same header action is highlighted while results exist and
+clears them on the next click.
+
 Players have no separate encounter reserve section. Opening combat smoothly
 widens the existing left participant rail; every player tile gains the
 encounter checkbox, initiative input and armor-class indicator, and the current
@@ -251,6 +261,10 @@ Canonical combatants:
   encounter-local name/AC/max HP/other edits;
 - transient current HP, temp HP, initiative, state and the NPC `markerLetter`
   live in the combatant encounter record.
+
+The optional encounter-level `challenge` object stores `{ability,
+savingThrow,results}`. `results` is keyed by combatant UID and each value is
+`{roll,bonus,total}`; removing `challenge` clears the shared result display.
 
 The encounter never embeds `itemRaw` and does not read denormalized NPC fields.
 Startup SQL converts previous records to `itemId + override`; frontend only

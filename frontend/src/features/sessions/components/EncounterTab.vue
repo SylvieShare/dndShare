@@ -48,6 +48,7 @@
       </div>
 
       <div class="enc-toolbar-actions">
+        <EncounterChallengeMenu v-if="props.isDm && enc.encounter.active" />
         <button
           v-if="props.isDm"
           type="button"
@@ -290,6 +291,7 @@ import {
 import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 import BaseTile from '@/shared/ui/BaseTile.vue'
 import DndHpCalcModal from '@/features/character-editor/blocks/dnd/DndHpCalcModal'
+import EncounterChallengeMenu from '@/features/sessions/components/EncounterChallengeMenu.vue'
 import EncounterGraveyardMenu from '@/features/sessions/components/EncounterGraveyardMenu.vue'
 import EncounterRow from '@/features/sessions/components/EncounterRow'
 import { useEncounterCombatTransition } from '@/features/sessions/composables/useEncounterCombatTransition'

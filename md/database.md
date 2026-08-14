@@ -163,6 +163,9 @@ Encounter combatant хранит ссылку `itemId`, пользователь
 уникальную для NPC латинскую метку `markerLetter` (`A`–`Z`).
 Старые embedded `itemRaw` и денормализованные name/ac/hp поля переносятся в
 startup migration и не обрабатываются во frontend.
+Верхнеуровневый encounter JSON может содержать текущее групповое испытание
+`challenge: {ability,savingThrow,results}`; `results` сопоставляет UID участника
+с его `{roll,bonus,total}` и удаляется целиком при сбросе результатов.
 
 ### Музыка и storage
 
