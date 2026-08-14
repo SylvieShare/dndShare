@@ -38,6 +38,7 @@
         :linking-from="linkingFrom"
         :locked="locked"
         :spotlight-chapter-id="spotlightChapterId"
+        :spotlight-layout-key="workspaceMode"
         @node-click="openNodeMenu"
         @edge-click="openEdgeMenu"
         @start-link="startLink"

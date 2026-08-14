@@ -90,6 +90,7 @@ const props = defineProps({
   linkingFrom: { type: Object, default: null },
   locked: { type: Boolean, default: false },
   spotlightChapterId: { type: [Number, String], default: null },
+  spotlightLayoutKey: { type: String, default: null },
 })
 const emit = defineEmits([
   'node-click', 'edge-click', 'start-link', 'finish-link', 'preview-position',
@@ -302,6 +303,13 @@ function onKey(event) {
 }
 
 watch(() => props.arcId, () => nextTick(loadView))
+watch(() => [props.spotlightChapterId, props.spotlightLayoutKey], async () => {
+  // The combat workspace changes the inherited safe-left CSS variable in the
+  // same render that enables spotlight mode. Re-read it after the parent DOM
+  // update so the chapter flies to the widened player rail, not its old slot.
+  await nextTick()
+  viewportRevision.value += 1
+}, { flush: 'post' })
 watch(() => props.locked, locked => {
   if (locked) cancelGesture()
 })

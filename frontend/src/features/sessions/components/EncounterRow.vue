@@ -1,13 +1,23 @@
 <template>
-  <BaseTile
-    class="enc-row"
-    :class="rowClasses"
-    color="var(--section-color)"
-    :mark-color="playerColor"
-    strip
+  <div
+    class="enc-row-shell"
+    :class="{ 'enc-row-shell--placeholder': enc.sortable.isSource(combatant) }"
     :data-sortable-key="combatant.uid"
-    @pointerdown="onRowPointerDown"
   >
+    <EncounterOrderMarker
+      v-if="order != null"
+      :order="order"
+      :current="isCurrent"
+    />
+
+    <BaseTile
+      class="enc-row"
+      :class="rowClasses"
+      color="var(--section-color)"
+      :mark-color="playerColor"
+      strip
+      @pointerdown="onRowPointerDown"
+    >
     <EncCheckbox
       v-if="showCheckbox"
       :model-value="enc.isSelected(combatant)"
@@ -96,7 +106,8 @@
       @edit-states="openStatesEditor"
       @edit-note="openNoteEditor"
     />
-  </BaseTile>
+    </BaseTile>
+  </div>
 
   <BasePopover v-model:open="sideMenuOpen" :anchor="badgeEl" :min-width="160">
     <button
@@ -142,6 +153,7 @@ import { computed, inject, provide, reactive, ref } from 'vue'
 import BlockStates from '@/features/character-editor/blocks/generic/BlockStates'
 import EncounterAvatar from '@/features/sessions/components/EncounterAvatar.vue'
 import EncounterHpBar from '@/features/sessions/components/EncounterHpBar.vue'
+import EncounterOrderMarker from '@/features/sessions/components/EncounterOrderMarker.vue'
 import EncounterRowMenu from '@/features/sessions/components/EncounterRowMenu.vue'
 import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 import BasePopover from '@/shared/ui/BasePopover.vue'
@@ -156,6 +168,7 @@ const props = defineProps({
   combatant: { type: Object, required: true },
   section: { type: String, required: true },
   idx: { type: Number, default: -1 },
+  order: { type: Number, default: null },
   isCurrent: { type: Boolean, default: false },
 })
 
@@ -272,8 +285,19 @@ function commitNoteEdit() {
 </script>
 
 <style scoped>
+.enc-row-shell {
+  display: flex;
+  min-width: 0;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.enc-row-shell--placeholder :deep(.enc-row-order) { opacity: 0.25; }
+
 .enc-row {
   display: flex;
+  flex: 1;
+  min-width: 0;
   align-items: center;
   gap: 10px;
   padding: 10px 14px;

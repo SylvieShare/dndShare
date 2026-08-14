@@ -64,6 +64,14 @@ describe('chapter graph workspace', () => {
     expect(node).toContain('props.presentation ??')
   })
 
+  it('re-measures the spotlight target after the combat rail changes the safe inset', () => {
+    expect(tab).toContain(':spotlight-layout-key="workspaceMode"')
+    expect(canvas).toContain('watch(() => [props.spotlightChapterId, props.spotlightLayoutKey], async () => {')
+    expect(canvas).toContain('await nextTick()')
+    expect(canvas).toContain('viewportRevision.value += 1')
+    expect(canvas).toContain("{ flush: 'post' }")
+  })
+
   it('disables transform easing while a node is being dragged', () => {
     expect(canvas).toContain(":dragging=\"gesture?.type === 'node' && gesture.chapter.id === chapter.id\"")
     expect(node).toContain("'chapter-node--dragging': dragging")

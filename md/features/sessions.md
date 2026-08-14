@@ -181,12 +181,20 @@ current encounter section color (combat or NPC reserve), so moving a row also
 updates its spatial accent. Session dice pass the default accent color
 explicitly to every `SystemDie`.
 
-Players are not duplicated in an encounter reserve section or among the NPC
-rows. Opening combat smoothly widens the existing left participant rail; every
-player tile gains the encounter checkbox, initiative input and armor-class
-indicator, and the current turn is highlighted there. `ViewSession.vue` owns
-the single `useEncounter` instance shared by the rail and `EncounterTab`, so
-selection and initiative always address the same encounter record.
+Players have no separate encounter reserve section. Opening combat smoothly
+widens the existing left participant rail; every player tile gains the
+encounter checkbox, initiative input and armor-class indicator, and the current
+turn is highlighted there. Players that enter combat also appear in the common
+initiative-ordered combat scene alongside NPCs while remaining visible in the
+left rail. Every combat-scene tile has a numbered marker on its left.
+`ViewSession.vue` owns the single `useEncounter` instance shared by the rail and
+`EncounterTab`, so selection and initiative always address the same encounter
+record.
+
+When the combat rail changes the canvas safe-left inset, `ChapterGraphCanvas`
+re-measures that inherited layout value after the parent DOM update. The
+spotlight chapter therefore animates to the new combat boundary instead of the
+normal-width player-rail position.
 
 The graveyard is not a separate workspace section. A skull action in the
 combat header opens a `BasePopover` with dead combatants. Selecting a combatant

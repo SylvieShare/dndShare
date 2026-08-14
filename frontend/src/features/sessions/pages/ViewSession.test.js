@@ -13,6 +13,7 @@ const centerWorkspaceSource = readFileSync(fileURLToPath(new URL('../components/
 const encounterSource = readFileSync(fileURLToPath(new URL('../components/EncounterTab.vue', import.meta.url)), 'utf8')
 const graveyardSource = readFileSync(fileURLToPath(new URL('../components/EncounterGraveyardMenu.vue', import.meta.url)), 'utf8')
 const encounterRowSource = readFileSync(fileURLToPath(new URL('../components/EncounterRow.vue', import.meta.url)), 'utf8')
+const encounterOrderSource = readFileSync(fileURLToPath(new URL('../components/EncounterOrderMarker.vue', import.meta.url)), 'utf8')
 const sceneSource = readFileSync(fileURLToPath(new URL('../components/SceneTab.vue', import.meta.url)), 'utf8')
 const encounterStylesSource = readFileSync(fileURLToPath(new URL('../components/styles/EncounterTab.css', import.meta.url)), 'utf8')
 const sceneStylesSource = readFileSync(fileURLToPath(new URL('../components/styles/SceneTab.css', import.meta.url)), 'utf8')
@@ -112,6 +113,14 @@ describe('ViewSession participant rail', () => {
     expect(encounterSource).toContain('<EncounterGraveyardMenu')
     expect(graveyardSource).toContain('aria-label="Погибшие существа"')
     expect(graveyardSource).toContain('Удалить всех')
+  })
+
+  it('keeps players in the combat scene and numbers every initiative row', () => {
+    expect(encounterSource).toContain("const combatItems = computed(() => enc.sortable.displayItems('combat'))")
+    expect(encounterSource).toContain(':order="idx + 1"')
+    expect(encounterRowSource).toContain('<EncounterOrderMarker')
+    expect(encounterOrderSource).toContain('class="enc-row-order"')
+    expect(encounterOrderSource).toContain("String(props.order).padStart(2, '0')")
   })
 
   it('uses per-participant actions without bulk selection controls', () => {

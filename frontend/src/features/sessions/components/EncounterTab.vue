@@ -120,7 +120,7 @@
           data-sortable-container="combat"
         >
           {{ enc.encounter.active
-              ? 'На сцене пока нет существ — игроки остаются в колонке слева'
+              ? 'На боевой сцене пока нет участников'
               : 'Выберите игроков и существ, затем начните бой' }}
         </div>
         <div
@@ -134,6 +134,7 @@
             :combatant="c"
             section="combat"
             :idx="idx"
+            :order="idx + 1"
             :is-current="enc.encounter.active && c.uid === currentTurnUid"
           />
         </div>
@@ -301,7 +302,7 @@ const enc = props.encounter
 
 provide('encounter', enc)
 
-const combatItems = computed(() => enc.sortable.displayItems('combat').filter(combatant => combatant.type === 'npc'))
+const combatItems = computed(() => enc.sortable.displayItems('combat'))
 const npcItems = computed(() => enc.sortable.displayItems('reserve-npc'))
 
 const currentTurnUid = computed(() => enc.currentTurnUid)
