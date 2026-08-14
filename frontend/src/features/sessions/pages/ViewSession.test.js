@@ -25,7 +25,6 @@ const sceneSource = readFileSync(fileURLToPath(new URL('../components/SceneTab.v
 const encounterStylesSource = readFileSync(fileURLToPath(new URL('../components/styles/EncounterTab.css', import.meta.url)), 'utf8')
 const sceneStylesSource = readFileSync(fileURLToPath(new URL('../components/styles/SceneTab.css', import.meta.url)), 'utf8')
 const dicePopupSource = readFileSync(fileURLToPath(new URL('../../../shared/ui/DiceRollPopup.vue', import.meta.url)), 'utf8')
-const colorTicksSource = readFileSync(fileURLToPath(new URL('../components/ParticipantColorTicks.vue', import.meta.url)), 'utf8')
 
 describe('ViewSession participant rail', () => {
   it('compiles the page component', () => {
@@ -132,6 +131,9 @@ describe('ViewSession participant rail', () => {
   })
 
   it('keeps players in the combat scene and numbers every initiative row', () => {
+    expect(encounterSource).toContain('<div v-if="enc.encounter.active" class="enc-block enc-block--combat">')
+    expect(encounterSource).toContain('class="enc-section-title-group"')
+    expect(encounterSource).not.toContain('БОЙ ИДЁТ')
     expect(encounterSource).toContain("const combatItems = computed(() => enc.sortable.displayItems('combat'))")
     expect(encounterSource).toContain(':order="idx + 1"')
     expect(encounterRowSource).toContain('<EncounterOrderMarker')
@@ -162,6 +164,8 @@ describe('ViewSession participant rail', () => {
     expect(encounterMenuSource).toContain('defineExpose({ toggle })')
     expect(encounterMenuSource).toContain('>Состояния</RowActionItem>')
     expect(encounterMenuSource).toContain('>В запас</RowActionItem>')
+    expect(encounterMenuSource).toContain('>Перебросить HP</RowActionItem>')
+    expect(encounterMenuSource).toContain('enc.rollNpcHpFromFormula(combatant)')
     expect(encounterMenuSource).toContain('const canDelete = computed(() => isNpc.value)')
     expect(encounterMenuSource).not.toContain('ColorPresetPicker')
     expect(encounterFlowSource).toContain('function sendToReserve(c)')
@@ -178,17 +182,14 @@ describe('ViewSession participant rail', () => {
   it('saves a session-local participant color and marks player tiles in both rails', () => {
     expect(source).toContain('await updateParticipantColor(sessionUuid, charId, color)')
     expect(source).toContain('{ ...participant, color: color || null }')
-    expect(encounterRowSource).toContain('<ParticipantColorTicks v-if="playerColor" :color="playerColor" />')
+    expect(encounterRowSource).toContain('<EncounterAvatar :combatant="combatant" :player-color="playerColor" />')
     expect(encounterRowSource).toContain('enc.participantColor(props.combatant.charId)')
     expect(encounterRowSource).toContain(':strip="!!rowAccentColor"')
     expect(encounterRowSource).toContain(":color=\"rowAccentColor || 'var(--section-color)'\"")
     expect(encounterComposableSource).toContain("if (c.type === 'player') return participantColor(c.charId) || null")
     expect(encounterComposableSource).toContain('return c.iconColor || null')
-    expect(colorTicksSource).toContain('class="participant-color-tick"')
-    expect(colorTicksSource).toContain('width: 5px;')
-    expect(colorTicksSource).toContain('height: 16px;')
-    expect(colorTicksSource).toContain('margin-left: 3px;')
-    expect(colorTicksSource).toContain('transform: translateY(-10px);')
+    expect(encounterAvatarSource).toContain('border: 2px solid var(--enc-player-frame-color);')
+    expect(encounterAvatarSource).toContain('playerColor: { type: String, default: null }')
   })
 
   it('asks for confirmation before kicking a participant', () => {

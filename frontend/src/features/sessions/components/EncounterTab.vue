@@ -82,14 +82,12 @@
 
     <div class="enc-content">
     <!-- ── Combat ── -->
-    <div class="enc-block enc-block--combat">
+    <div v-if="enc.encounter.active" class="enc-block enc-block--combat">
       <div class="enc-section-title-row">
-        <span class="enc-section-title">
-          <span class="enc-section-dot" />БОЕВАЯ СЦЕНА
-          <span v-if="enc.encounter.active" class="enc-status enc-status--live">БОЙ ИДЁТ</span>
-          <span v-else class="enc-status enc-status--idle">НЕ В БОЕ</span>
-        </span>
-        <div class="enc-section-actions">
+        <div class="enc-section-title-group">
+          <span class="enc-section-title">
+            <span class="enc-section-dot" />БОЕВАЯ СЦЕНА
+          </span>
           <button
             type="button"
             class="enc-section-icon-btn"
@@ -99,6 +97,8 @@
             :aria-label="allSelectedInCombat ? 'Снять выбор с существ' : 'Выбрать всех существ'"
             @click="toggleVisibleSelection(combatItems)"
           ><ListChecks :size="17" /></button>
+        </div>
+        <div class="enc-section-actions">
           <button
             v-if="enc.encounter.active"
             type="button"

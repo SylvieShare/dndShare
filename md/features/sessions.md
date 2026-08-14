@@ -190,8 +190,9 @@ turn is highlighted there. Players that enter combat also appear in the common
 initiative-ordered combat scene alongside NPCs while remaining visible in the
 left rail. The common scene rows reuse the same compact initiative and
 armor-class controls as the player rail. Player portraits are enlarged in both
-combat representations and use a soft alpha fade around their edges instead of
-a visible frame; player rows do not repeat a `PC` type chip. NPC artwork occupies the full row height instead of falling
+combat representations and use a soft alpha fade around their edges. An
+assigned session color appears as the portrait frame in both representations;
+player rows do not repeat a `PC` type chip. NPC artwork occupies the full row height instead of falling
 back to a name initial. Every combat-scene tile has a numbered marker on its
 left.
 `ViewSession.vue` owns the single `useEncounter` instance shared by the rail and
@@ -210,8 +211,11 @@ trigger.
 Clicking a non-interactive area of a combat or reserve row opens its action
 menu; initiative, HP, selection, marker and other dedicated controls keep their
 own click behavior. The shared menu can edit states for both players and NPCs,
-send a combatant to reserve, and delete NPCs. NPC color is not duplicated in
-the row action menu and remains part of the letter-marker popover.
+send a combatant to reserve, reroll formula-based NPC HP, and delete NPCs. NPC
+color is not duplicated in the row action menu and remains part of the
+letter-marker popover. The combat-scene block is mounted only while combat is
+active; its select-all control sits beside the section title and no duplicate
+live-status chip is shown.
 
 When the combat rail changes the canvas safe-left inset, `ChapterGraphCanvas`
 re-measures that inherited layout value after the parent DOM update. The

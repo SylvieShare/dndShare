@@ -13,6 +13,11 @@
         @click="enc.sendToReserve(combatant); close()"
       >В запас</RowActionItem>
       <RowActionItem
+        v-if="canRerollHp"
+        :icon="Dices"
+        @click="enc.rollNpcHpFromFormula(combatant); close()"
+      >Перебросить HP</RowActionItem>
+      <RowActionItem
         v-if="isNpc"
         action="note"
         @click="$emit('edit-note'); close()"
@@ -61,7 +66,7 @@
 
 <script setup>
 import { computed, inject, ref } from 'vue'
-import { Activity, Archive, Copy } from '@lucide/vue'
+import { Activity, Archive, Copy, Dices } from '@lucide/vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionMenu from '@/shared/ui/RowActionMenu.vue'
 import RowActionSubmenu from '@/shared/ui/RowActionSubmenu.vue'
@@ -77,6 +82,7 @@ const enc = inject('encounter')
 
 const isNpc = computed(() => props.combatant.type === 'npc')
 const canReserve = computed(() => props.section === 'combat')
+const canRerollHp = computed(() => isNpc.value && !!enc.npcHpFormula(props.combatant))
 const canDelete = computed(() => isNpc.value)
 const canRevive = computed(() => props.section === 'dead')
 

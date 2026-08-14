@@ -21,16 +21,13 @@
             @update:initiative="$emit('update:initiative', $event)"
           />
 
-          <div class="p-avatar" :style="avaUrl ? null : { background: avatarColor }">
+          <div class="p-avatar" :style="participantAvatarStyle">
             <img v-if="avaUrl" :src="avaUrl" class="ava-img" alt="" />
             <span v-else class="ava-initial">{{ initial }}</span>
           </div>
 
           <div class="p-info">
-            <div class="p-name-row">
-              <span class="p-name">{{ displayName }}</span>
-              <ParticipantColorTicks v-if="participant.color" :color="participant.color" />
-            </div>
+            <div class="p-name">{{ displayName }}</div>
             <div v-if="who" class="p-who">{{ who }}</div>
 
             <template v-if="showHp">
@@ -130,7 +127,6 @@ import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionMenu from '@/shared/ui/RowActionMenu.vue'
 import RowActionSubmenu from '@/shared/ui/RowActionSubmenu.vue'
 import EncounterCombatControls from '@/features/sessions/components/EncounterCombatControls.vue'
-import ParticipantColorTicks from '@/features/sessions/components/ParticipantColorTicks.vue'
 import StatBar from '@/shared/ui/StatBar.vue'
 import { pvAc, pvAvatar, pvHp, pvName, pvSubtitle } from '@/features/sessions/lib/participantView'
 
@@ -207,6 +203,11 @@ const avatarColor = computed(() => {
   const code = initial.value.charCodeAt(0)
   return AVATAR_COLORS[code % AVATAR_COLORS.length]
 })
+
+const participantAvatarStyle = computed(() => ({
+  background: avaUrl.value ? 'transparent' : avatarColor.value,
+  borderColor: props.participant.color || 'transparent',
+}))
 </script>
 
 <style scoped>
@@ -265,6 +266,9 @@ const avatarColor = computed(() => {
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  box-sizing: border-box;
+  border: 2px solid transparent;
+  transition: border-color 0.15s ease;
 }
 
 .p-card--combat .p-avatar {
@@ -299,15 +303,7 @@ const avatarColor = computed(() => {
   .p-card { transition: none; }
 }
 
-.p-name-row {
-  display: flex;
-  align-items: flex-start;
-  min-width: 0;
-  gap: 5px;
-}
-
 .p-name {
-  min-width: 0;
   font-size: 13px;
   font-weight: 600;
   color: var(--text-1);
