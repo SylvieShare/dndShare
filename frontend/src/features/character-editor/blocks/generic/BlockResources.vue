@@ -70,11 +70,19 @@ function onManage() {
 
 function toggle(ri, p) {
   if (!ownerMode.value) return
+  const current = resources.value[ri]
+  const nextValue = p <= current.value ? p - 1 : p
   emitResources(resources.value.map((r, i) => {
     if (i !== ri) return r
-    const value = p <= r.value ? p - 1 : p
-    return { ...r, value }
+    return { ...r, value: nextValue }
   }))
+  if (nextValue < Number(current.value)) {
+    charCtx.logSessionEvent?.({
+      type: 'resource_used',
+      title: current.title || 'Ресурс',
+      data: { remaining: nextValue, total: Number(current.total) || 0 },
+    })
+  }
 }
 
 function setTotal(ri, total) {

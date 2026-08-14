@@ -43,7 +43,7 @@
               <router-link
                 v-for="s in sessions"
                 :key="s.uuid"
-                :to="'/sessions/' + s.uuid"
+                :to="sessionTarget(s)"
                 class="tb-session-option"
                 @click="sessionMenuOpen = false"
               >
@@ -203,6 +203,14 @@ function chapterLabel(s) {
   return currentChapterLabel(s, true)
 }
 function closeSessionMenu() { sessionMenuOpen.value = false }
+function sessionTarget(session) {
+  if (session.isGm) return '/sessions/' + session.uuid
+  return {
+    name: 'Character',
+    params: { uuid: router.currentRoute.value.params.uuid },
+    query: { ...router.currentRoute.value.query, session: session.uuid },
+  }
+}
 
 const saveLabel = computed(() => {
   switch (props.saveStatus) {

@@ -61,6 +61,7 @@ import CharEditorToolbar from '@/features/character-editor/components/CharEditor
 import TemplateBlockInner from '@/features/character-editor/components/TemplateBlockInner'
 import { useCharacterData } from '@/features/character-editor/composables/useCharacterData'
 import { useSaveDebounce } from '@/features/character-editor/composables/useSaveDebounce'
+import { useSessionEventsStore } from '@/stores/sessionEvents'
 
 const props = defineProps({
   uuid: { type: String, required: true },
@@ -68,6 +69,7 @@ const props = defineProps({
   zIndex: { type: Number, default: 3000 },
 })
 const emit = defineEmits(['close'])
+const sessionEventsStore = useSessionEventsStore()
 
 const isMobile = ref(false)
 
@@ -78,7 +80,19 @@ const {
   updateValue, updateVar, onPublicToggle,
 } = useCharacterData(props.uuid, isMobile)
 
-const { saveStatus, pendingSecondsLeft, scheduleSave } = useSaveDebounce(props.uuid, data)
+const pendingSessionEvents = []
+const { saveStatus, pendingSecondsLeft, scheduleSave } = useSaveDebounce(props.uuid, data, {
+  takeEvents: () => pendingSessionEvents.splice(0),
+  restoreEvents: events => pendingSessionEvents.unshift(...events),
+})
+
+charCtx.logSessionEvent = event => {
+  const pending = sessionEventsStore.pendingCharacterEvent(event)
+  if (pending) {
+    pendingSessionEvents.push(pending)
+    scheduleSave()
+  }
+}
 
 const canEdit = computed(() => isOwner.value || props.isDm)
 

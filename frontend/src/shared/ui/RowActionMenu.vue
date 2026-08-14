@@ -1,5 +1,5 @@
 <template>
-  <div v-if="$slots.trigger" ref="triggerEl" class="ram-custom-trigger" @click.stop="toggle">
+  <div v-if="$slots.trigger" ref="triggerEl" class="ram-custom-trigger" :class="{ 'ram-custom-trigger--block': block }" @click.stop="toggle">
     <slot name="trigger" :open="isOpen" />
   </div>
   <button
@@ -37,8 +37,10 @@
 import { computed, nextTick, onBeforeUnmount, ref, shallowRef } from 'vue'
 import { computeRowActionPlacement, ROW_ACTION_MARGIN } from '@/shared/ui/rowActionPlacement'
 
-defineProps({
+const props = defineProps({
   title: { type: String, default: 'Действия' },
+  disabled: { type: Boolean, default: false },
+  block: { type: Boolean, default: false },
 })
 
 const openInstance = (() => {
@@ -146,6 +148,7 @@ function close() {
 }
 
 function toggle(event) {
+  if (props.disabled) return
   if (isOpen.value) close()
   else open(event)
 }
@@ -172,6 +175,7 @@ defineExpose({ close })
   transform-origin: center;
   transition: transform 90ms cubic-bezier(0.2, 0.8, 0.3, 1);
 }
+.ram-custom-trigger--block { display: block; width: 100%; }
 .ram-custom-trigger:active { transform: scale(0.97); }
 
 .ram-trigger {

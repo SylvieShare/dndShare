@@ -1,15 +1,16 @@
 <template>
-  <div
-    class="spell-row"
-    :class="{
-      'spell-row-clickable': !!entry.item,
-      'spell-row-draggable': ctx.charCtx.ownerMode,
-      'sortable-placeholder': ctx.sortable.isSource(entry),
-    }"
-    :data-sortable-key="entry.ref.id"
-    @pointerdown="onRowDown"
-    @click="onRowClick"
-  >
+  <RowActionMenu block :disabled="draggedThisGesture">
+    <template #trigger>
+      <div
+        class="spell-row"
+        :class="{
+          'spell-row-clickable': !!entry.item,
+          'spell-row-draggable': ctx.charCtx.ownerMode,
+          'sortable-placeholder': ctx.sortable.isSource(entry),
+        }"
+        :data-sortable-key="entry.ref.id"
+        @pointerdown="onRowDown"
+      >
     <div class="sp-lead">
       <button
         v-if="ctx.preparation"
@@ -77,12 +78,44 @@
       />
     </div>
 
-    <button v-if="ctx.charCtx.ownerMode" class="sp-del" title="Удалить заклинание" @click.stop="ctx.removeSpell(entry.ref.id)">
-      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M4 7h16M10 11v6M14 11v6M5 7l1 13a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1l1-13M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3" />
-      </svg>
-    </button>
-  </div>
+      </div>
+    </template>
+
+    <template #default="{ close }">
+      <template v-if="!choosingSlot">
+        <RowActionItem action="view" @click="openDetails(close)">Открыть описание</RowActionItem>
+        <RowActionItem
+          v-if="ctx.charCtx.ownerMode"
+          action="use"
+          tone="accent"
+          :disabled="!canUse"
+          @click="beginUse(close)"
+        >
+          {{ canUse ? 'Использовать' : 'Нет доступных ячеек' }}
+        </RowActionItem>
+        <RowActionItem
+          v-if="ctx.charCtx.ownerMode"
+          action="delete"
+          tone="danger"
+          @click="removeSpell(close)"
+        >Удалить</RowActionItem>
+      </template>
+      <template v-else>
+        <span class="ram-label">Выберите ячейку</span>
+        <RowActionItem
+          v-for="levelOption in slotOptions"
+          :key="levelOption"
+          action="use"
+          tone="accent"
+          @click="useAtLevel(levelOption, close)"
+        >
+          {{ levelOption }} круг
+          <template #suffix>{{ ctx.slotRemaining(levelOption) }} доступно</template>
+        </RowActionItem>
+        <RowActionItem @click="choosingSlot = false">Назад</RowActionItem>
+      </template>
+    </template>
+  </RowActionMenu>
 </template>
 
 <script setup>
@@ -90,6 +123,8 @@ import { computed, inject, ref, watch } from 'vue'
 
 import AttackDamage from '@/features/character-editor/blocks/dnd/components/AttackDamage.vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
+import RowActionItem from '@/shared/ui/RowActionItem.vue'
+import RowActionMenu from '@/shared/ui/RowActionMenu.vue'
 import { SAVE_ABBR } from '@/shared/lib/dndStats'
 
 const props = defineProps({
@@ -130,20 +165,50 @@ const saveTag = computed(() => {
   return (SAVE_ABBR[a] || String(a).toUpperCase()) + (dmg.value.save_effect === 'half' ? ' ½' : '')
 })
 const instances = computed(() => Number(dmg.value.instances) || 1)
+const choosingSlot = ref(false)
+const slotOptions = computed(() => ctx.availableSpellSlotLevels(props.entry))
+const canUse = computed(() => !!props.entry.item && (baseLvl.value === 0 || slotOptions.value.length > 0))
 
 // Drag the whole row to reorder; the sortable's 4px threshold keeps a plain tap a click. A drag flips
 // `sortable.dragging` mid-gesture — we remember it so the trailing click doesn't open the spell modal.
-let draggedThisGesture = false
-watch(() => ctx.sortable.dragging, v => { if (v) draggedThisGesture = true })
+const draggedThisGesture = ref(false)
+watch(() => ctx.sortable.dragging, v => { if (v) draggedThisGesture.value = true })
 
 function onRowDown(e) {
   if (e.target.closest('button')) return
-  draggedThisGesture = false
+  draggedThisGesture.value = false
   ctx.onSpellDragStart(e, props.entry, props.level, props.idx)
 }
-function onRowClick() {
-  if (draggedThisGesture) { draggedThisGesture = false; return }
+
+function openDetails(close) {
   ctx.openSpell(props.entry)
+  close()
+}
+
+function beginUse(close) {
+  if (!canUse.value) return
+  if (baseLvl.value === 0) {
+    ctx.useSpell(props.entry, 0)
+    close()
+    return
+  }
+  const hasHigherLevelChoice = slotOptions.value.some(level => level > baseLvl.value)
+  if (hasHigherLevelChoice) {
+    choosingSlot.value = true
+    return
+  }
+  useAtLevel(slotOptions.value[0], close)
+}
+
+function useAtLevel(level, close) {
+  ctx.useSpell(props.entry, level)
+  choosingSlot.value = false
+  close()
+}
+
+function removeSpell(close) {
+  ctx.removeSpell(props.entry.ref.id)
+  close()
 }
 </script>
 
@@ -158,11 +223,6 @@ function onRowClick() {
   transition: background 0.12s;
   cursor: default;
 }
-
-.spell-row + .spell-row {
-  border-top: 1px solid color-mix(in srgb, var(--text-on-accent) 7%, transparent);
-}
-
 .spell-row-clickable { cursor: pointer; }
 .spell-row-draggable { cursor: grab; touch-action: pan-y; }
 .spell-row-draggable:active { cursor: grabbing; }

@@ -81,6 +81,10 @@ func (s *Server) handleCreateChar(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "Некорректный запрос")
 		return
 	}
+	if !json.Valid(req.Data) {
+		badRequest(w, "Некорректные данные персонажа")
+		return
+	}
 	_, err := s.store.GetTemplate(r.Context(), req.TemplateID)
 	if err != nil {
 		if errors.Is(err, store.ErrNotFound) {
@@ -219,13 +223,14 @@ func (s *Server) handleGetCharSessions(w http.ResponseWriter, r *http.Request) {
 // --- PUT /api/char/{uuid}/data ---
 
 type characterUpdateRequest struct {
-	Data json.RawMessage `json:"data"`
+	Data   json.RawMessage                `json:"data"`
+	Events []characterSessionEventRequest `json:"events"`
 }
 
 type characterUpdateResponse struct{}
 
 func (s *Server) handleUpdateDataChar(w http.ResponseWriter, r *http.Request) {
-	_, char, ok := s.loadCharWritable(w, r)
+	userID, char, ok := s.loadCharWritable(w, r)
 	if !ok {
 		return
 	}
@@ -234,7 +239,28 @@ func (s *Server) handleUpdateDataChar(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "Некорректный запрос")
 		return
 	}
-	if err := s.store.UpdateDataCharacter(r.Context(), char.UUID, req.Data); err != nil {
+	if !json.Valid(req.Data) {
+		badRequest(w, "Некорректные данные персонажа")
+		return
+	}
+	if len(req.Events) > 50 {
+		badRequest(w, "Слишком много событий персонажа")
+		return
+	}
+	events := make([]store.CharacterSessionEvent, 0, len(req.Events))
+	for _, event := range req.Events {
+		normalized, valid := normalizeCharacterSessionEvent(event)
+		if !valid {
+			badRequest(w, "Некорректное событие персонажа")
+			return
+		}
+		events = append(events, normalized)
+	}
+	if err := s.store.UpdateCharacterDataWithEvents(r.Context(), userID, char, req.Data, events); err != nil {
+		if errors.Is(err, store.ErrNotFound) {
+			forbidden(w)
+			return
+		}
 		serverError(w, err)
 		return
 	}

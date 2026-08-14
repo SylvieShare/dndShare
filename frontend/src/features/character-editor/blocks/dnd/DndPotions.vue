@@ -78,9 +78,15 @@ function onUse(uid) {
   const idx = next.findIndex(e => e.uid === uid)
   if (idx === -1) return
   const count = Math.max(1, Math.min(999, Math.floor(Number(next[idx].count) || 1)))
+  const display = potionEntries.value.find(potion => potion.uid === uid)
   if (count > 1) next[idx].count = count - 1
   else next.splice(idx, 1)
   emit('update:value', props.block.id, next)
+  charCtx.logSessionEvent?.({
+    type: 'item_spent',
+    title: display?.name || 'Зелье',
+    data: { itemId: display?.id || null, remaining: Math.max(0, count - 1) },
+  })
 }
 
 function onReplenish(uid) {
@@ -89,6 +95,12 @@ function onReplenish(uid) {
   if (!entry) return
   entry.count = Math.min(999, Math.max(1, Math.floor(Number(entry.count) || 1)) + 1)
   emit('update:value', props.block.id, next)
+  const display = potionEntries.value.find(potion => potion.uid === uid)
+  charCtx.logSessionEvent?.({
+    type: 'item_added',
+    title: display?.name || 'Зелье',
+    data: { itemId: display?.id || null, remaining: entry.count },
+  })
 }
 
 function onView(uid) {

@@ -99,9 +99,6 @@
         >
           {{ modalSpellRef.prepared ? 'Снять подготовку' : 'Подготовить' }}
         </button>
-        <button type="button" class="sp-modal-action sp-modal-delete" @click="removeViewedSpell">
-          Удалить
-        </button>
       </template>
     </ItemViewModal>
 
@@ -118,6 +115,7 @@ import BaseTile from '@/shared/ui/BaseTile'
 import { useSpellCalc } from '@/features/character-editor/blocks/dnd/composables/useSpellCalc'
 import { useSpellSlots } from '@/features/character-editor/blocks/dnd/composables/useSpellSlots'
 import { SPELL_LEVELS, formatBonus, groupTitle, spellSummary } from '@/features/character-editor/blocks/dnd/lib/spellEntry'
+import { availableSpellSlotLevels as availableSlotLevels } from '@/features/character-editor/blocks/dnd/lib/spellUse'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
 import { useSortable } from '@/shared/composables/useSortable'
@@ -294,12 +292,6 @@ function removeSpell(id) {
   if (idx !== -1) { spells.value.splice(idx, 1); emitChange() }
 }
 
-function removeViewedSpell() {
-  if (!modalSpellRef.value) return
-  removeSpell(modalSpellRef.value.id)
-  modalSpell.value = null
-}
-
 const spellGroups = Object.fromEntries(SPELL_LEVELS.map(lvl => {
   return ['level-' + lvl, {
     items: computed(() => spellsByLevel.value.find(g => g.level === lvl)?.items || []),
@@ -392,6 +384,35 @@ function rollSpellHeal(entry, castLevel) {
   if (expr) dice.roll(`Лечение: ${spellTitle(entry)}`, expr)
 }
 
+function availableSpellSlotLevels(entry) {
+  const level = Number(entry?.item?.data?.lvl) || 0
+  return availableSlotLevels(localSlots.value, level)
+}
+
+function slotRemaining(level) {
+  const slot = localSlots.value.find(entry => entry.level === level)
+  return slot ? Math.max(0, slot.total - slot.used) : 0
+}
+
+function useSpell(entry, slotLevel) {
+  if (!entry?.item) return
+  const spellLevel = Number(entry?.item?.data?.lvl) || 0
+  if (spellLevel > 0) {
+    const available = availableSpellSlotLevels(entry)
+    if (!available.includes(slotLevel)) return
+    adjustSlotUsed(slotLevel, 1)
+  }
+  charCtx.logSessionEvent?.({
+    type: 'spell_used',
+    title: spellTitle(entry),
+    data: {
+      spellId: entry?.item?.id || entry?.ref?.id || null,
+      spellLevel,
+      slotLevel: spellLevel === 0 ? 0 : slotLevel,
+    },
+  })
+}
+
 provide('spellsBlockCtx', reactive({
   charCtx,
   sortable,
@@ -414,6 +435,9 @@ provide('spellsBlockCtx', reactive({
   rollSpellAttack,
   rollSpellDamage,
   rollSpellHeal,
+  availableSpellSlotLevels,
+  slotRemaining,
+  useSpell,
 }))
 
 // ─── Lifecycle ─────────────────────────────────────

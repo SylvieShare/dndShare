@@ -43,6 +43,7 @@ import {
   spendHitDie,
   statMod,
 } from '@/features/character-editor/blocks/dnd/lib/rest'
+import { normalizeHitDice } from '@/features/character-editor/blocks/dnd/lib/hitDice'
 
 const SHORT_COLOR = 'var(--warning)'
 
@@ -53,6 +54,7 @@ const dice = useDiceStore()
 
 const shortOpen = ref(false)
 const longOpen = ref(false)
+const shortStart = ref(null)
 
 const ownerMode = computed(() => charCtx.ownerMode)
 
@@ -72,6 +74,10 @@ const conMod = computed(() => statMod(props.values?.[ids.value.con]))
 
 function onShort() {
   if (!ownerMode.value) return
+  shortStart.value = {
+    hp: Number(hp.value.current) || 0,
+    hitDice: normalizeHitDice(hp.value).map(pool => ({ die: pool.die, used: pool.used })),
+  }
   shortOpen.value = true
 }
 
@@ -89,12 +95,29 @@ function spendDie(die) {
 }
 
 function finishShort() {
-  emit('update:value', ids.value.resources, restResources(props.values?.[ids.value.resources], 'short'))
+  const previousResources = props.values?.[ids.value.resources]
+  const nextResources = restResources(previousResources, 'short')
+  emit('update:value', ids.value.resources, nextResources)
   const spells = props.values?.[ids.value.spells]
   if (spells && typeof spells === 'object') {
     const next = shortRestSpells(spells)
     if (next !== spells) emit('update:value', ids.value.spells, next)
   }
+  const currentPools = normalizeHitDice(hp.value)
+  const hitDiceSpent = (shortStart.value?.hitDice || []).map(before => {
+    const after = currentPools.find(pool => pool.die === before.die)
+    return { die: before.die, count: Math.max(0, (after?.used || 0) - before.used) }
+  }).filter(pool => pool.count > 0)
+  charCtx.logSessionEvent?.({
+    type: 'rest_completed',
+    title: 'Короткий отдых',
+    data: {
+      kind: 'short',
+      hpRecovered: Math.max(0, (Number(hp.value.current) || 0) - (shortStart.value?.hp || 0)),
+      hitDiceSpent,
+      resourcesRecovered: recoveredResourceNames(previousResources, nextResources),
+    },
+  })
   shortOpen.value = false
 }
 
@@ -106,7 +129,24 @@ function applyLong(recovery) {
   emit('update:value', i.resources, restResources(props.values?.[i.resources], 'long'))
   const ex = props.values?.[i.exhaustion]
   if (exhaustionLevel(ex) > 0) emit('update:value', i.exhaustion, longRestExhaustion(ex))
+  charCtx.logSessionEvent?.({
+    type: 'rest_completed',
+    title: 'Длинный отдых',
+    data: {
+      kind: 'long',
+      hpRecovered: Math.max(0, (Number(hp.value.max) || 0) - (Number(hp.value.current) || 0)),
+      hitDiceRecovered: recovery,
+      resourcesRecovered: recoveredResourceNames(props.values?.[i.resources], restResources(props.values?.[i.resources], 'long')),
+    },
+  })
   longOpen.value = false
+}
+
+function recoveredResourceNames(before, after) {
+  if (!Array.isArray(before) || !Array.isArray(after)) return []
+  return after
+    .filter((resource, index) => Number(resource.value) > Number(before[index]?.value))
+    .map(resource => resource.title || 'Ресурс')
 }
 </script>
 

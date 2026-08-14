@@ -1,0 +1,135 @@
+import { defineStore } from 'pinia'
+import { ref } from 'vue'
+import * as sessionEventsApi from '@/shared/api/sessionEventsApi'
+
+const POLL_INTERVAL_MS = 1500
+
+function actionId() {
+  if (globalThis.crypto?.randomUUID) return globalThis.crypto.randomUUID()
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, char => {
+    const random = Math.floor(Math.random() * 16)
+    const value = char === 'x' ? random : (random & 0x3) | 0x8
+    return value.toString(16)
+  })
+}
+
+export const useSessionEventsStore = defineStore('session-events', () => {
+  const sessionUuid = ref(null)
+  const actorCharUuid = ref(null)
+  const events = ref([])
+  const loading = ref(false)
+  const pollError = ref(false)
+  let pollTimer = null
+  let polling = false
+
+  function merge(incoming) {
+    if (!Array.isArray(incoming) || incoming.length === 0) return
+    const byId = new Map(events.value.map(event => [event.id, event]))
+    for (const event of incoming) byId.set(event.id, event)
+    events.value = [...byId.values()].sort((a, b) => a.id - b.id).slice(-200)
+  }
+
+  function latestId() {
+    return events.value.at(-1)?.id || 0
+  }
+
+  function schedulePoll() {
+    clearTimeout(pollTimer)
+    if (!sessionUuid.value) return
+    pollTimer = setTimeout(poll, POLL_INTERVAL_MS)
+  }
+
+  async function poll() {
+    if (!sessionUuid.value || polling) return
+    polling = true
+    const uuid = sessionUuid.value
+    try {
+      const response = await sessionEventsApi.getSessionEvents(uuid, { after: latestId(), limit: 100 })
+      if (sessionUuid.value === uuid) merge(response?.events)
+      pollError.value = false
+    } catch {
+      pollError.value = true
+    } finally {
+      polling = false
+      schedulePoll()
+    }
+  }
+
+  async function setContext({ uuid, actorUuid = null }) {
+    actorCharUuid.value = actorUuid || null
+    if (!uuid) {
+      clearContext()
+      return
+    }
+    if (sessionUuid.value === uuid) return
+    clearTimeout(pollTimer)
+    sessionUuid.value = uuid
+    events.value = []
+    loading.value = true
+    try {
+      const response = await sessionEventsApi.getSessionEvents(uuid, { limit: 50 })
+      if (sessionUuid.value === uuid) merge(response?.events)
+      pollError.value = false
+    } catch {
+      pollError.value = true
+    } finally {
+      loading.value = false
+      schedulePoll()
+    }
+  }
+
+  function clearContext(expectedUuid = null) {
+    if (expectedUuid && sessionUuid.value !== expectedUuid) return
+    clearTimeout(pollTimer)
+    pollTimer = null
+    sessionUuid.value = null
+    actorCharUuid.value = null
+    events.value = []
+    loading.value = false
+  }
+
+  async function publish({ type, title, data = {}, visibility = 'public' }) {
+    const uuid = sessionUuid.value
+    if (!uuid) return null
+    try {
+      const response = await sessionEventsApi.createSessionEvent(uuid, {
+        type,
+        title,
+        data,
+        visibility,
+        actorCharUuid: actorCharUuid.value,
+        clientActionId: actionId(),
+      })
+      if (sessionUuid.value === uuid && response?.event) merge([response.event])
+      return response?.event || null
+    } catch {
+      pollError.value = true
+      return null
+    }
+  }
+
+  function pendingCharacterEvent({ type, title, data = {}, visibility = 'public' }) {
+    if (!sessionUuid.value) return null
+    return {
+      sessionUuid: sessionUuid.value,
+      type,
+      title,
+      data,
+      visibility,
+      clientActionId: actionId(),
+    }
+  }
+
+  return {
+    sessionUuid,
+    actorCharUuid,
+    events,
+    loading,
+    pollError,
+    setContext,
+    clearContext,
+    publish,
+    pendingCharacterEvent,
+    poll,
+  }
+})

@@ -274,8 +274,16 @@ CREATE TABLE IF NOT EXISTS dndshare.session_event (
     deleted        bool DEFAULT false NOT NULL,
     CONSTRAINT session_event_pkey PRIMARY KEY (id)
 );
+ALTER TABLE dndshare.session_event
+    ADD COLUMN IF NOT EXISTS actor_char_id int8 NULL REFERENCES dndshare."char"(id),
+    ADD COLUMN IF NOT EXISTS visibility varchar(16) DEFAULT 'public' NOT NULL,
+    ADD COLUMN IF NOT EXISTS client_action_id uuid NULL;
 CREATE INDEX IF NOT EXISTS idx_session_event_session_id ON dndshare.session_event USING btree (session_id);
 CREATE INDEX IF NOT EXISTS idx_session_event_author_user_id ON dndshare.session_event USING btree (author_user_id);
+CREATE INDEX IF NOT EXISTS idx_session_event_session_cursor ON dndshare.session_event USING btree (session_id, id);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_session_event_client_action
+    ON dndshare.session_event USING btree (session_id, client_action_id)
+    WHERE client_action_id IS NOT NULL;
 
 CREATE TABLE IF NOT EXISTS dndshare.session_music_state (
     id         bigserial NOT NULL,

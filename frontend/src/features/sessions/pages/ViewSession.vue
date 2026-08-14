@@ -94,6 +94,12 @@
         <BaseTile class="side-tile workspace-tool-tile">
           <DicePanel />
         </BaseTile>
+        <BaseTile
+          class="side-tile workspace-tool-tile workspace-events-tile"
+          :class="{ 'workspace-events-tile--collapsed': eventsCollapsed }"
+        >
+          <SessionEventsPanel @collapsed="eventsCollapsed = $event" />
+        </BaseTile>
         <BaseTile class="side-tile workspace-tool-tile">
           <MusicPanel :is-dm="isDm" @open-library="musicLibraryOpen = true" />
         </BaseTile>
@@ -134,6 +140,7 @@ import ChapterGraphTab from '@/features/sessions/components/ChapterGraphTab.vue'
 import DicePanel from '@/features/sessions/components/DicePanel.vue'
 import MusicLibraryModal from '@/features/sessions/components/MusicLibraryModal.vue'
 import MusicPanel from '@/features/sessions/components/MusicPanel.vue'
+import SessionEventsPanel from '@/features/sessions/components/SessionEventsPanel.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionMenu from '@/shared/ui/RowActionMenu.vue'
 import SessionCenterWorkspace from '@/features/sessions/components/SessionCenterWorkspace.vue'
@@ -144,6 +151,7 @@ import { useSessionSelection } from '@/features/sessions/composables/useSessionS
 import { useAccountStore } from '@/stores/account'
 import { useMusicStore } from '@/stores/music'
 import { useTemplateStore } from '@/stores/template'
+import { useSessionEventsStore } from '@/stores/sessionEvents'
 import { useUiStore } from '@/stores/ui'
 import { sessionStatusConfig } from '@/features/sessions/composables/useSessionStatus'
 import { createHeaderChip } from '@/shared/lib/appHeader'
@@ -166,8 +174,10 @@ const editSaving = ref(false)
 
 const accountStore = useAccountStore()
 const musicStore = useMusicStore()
+const sessionEventsStore = useSessionEventsStore()
 const templateStore = useTemplateStore()
 const musicLibraryOpen = ref(false)
+const eventsCollapsed = ref(false)
 
 const sheetUuid = ref(null)
 const createOpen = ref(false)
@@ -309,6 +319,7 @@ onMounted(() => {
       await chapterGraph.load()
       startPolling()
       musicStore.setContext({ uuid: sessionUuid, dm: isDm.value })
+      await sessionEventsStore.setContext({ uuid: sessionUuid })
       await musicStore.ensureLibrary().catch(() => {})
       await musicStore.loadSessionState().catch(() => {})
     })
@@ -320,6 +331,7 @@ onBeforeUnmount(() => {
   cancelWorkspaceClose()
   uiStore.clearHeaderContext(headerOwner)
   musicStore.dispose()
+  sessionEventsStore.clearContext(sessionUuid)
 })
 </script>
 

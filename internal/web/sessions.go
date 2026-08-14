@@ -35,6 +35,7 @@ func (s *Server) routesSessions(mux *http.ServeMux) {
 	mux.HandleFunc("PATCH /api/sessions/{uuid}/chapter-edges/{edgeId}", s.handleUpdateChapterEdge)
 	mux.HandleFunc("DELETE /api/sessions/{uuid}/chapter-edges/{edgeId}", s.handleDeleteChapterEdge)
 	mux.HandleFunc("POST /api/sessions/{uuid}/join", s.handleJoinSession)
+	mux.HandleFunc("POST /api/sessions/{uuid}/events", s.handleCreateSessionEvent)
 	mux.HandleFunc("DELETE /api/sessions/{uuid}/participants/{charId}", s.handleKickParticipant)
 	mux.HandleFunc("PATCH /api/sessions/{uuid}/status", s.handleUpdateSessionStatus)
 	mux.HandleFunc("PUT /api/sessions/{uuid}/encounter", s.handleSaveEncounter)
@@ -65,6 +66,8 @@ func (s *Server) handleSessionTwoSegGET(w http.ResponseWriter, r *http.Request) 
 		s.handleGetEncounter(w, r)
 	case "music":
 		s.handleGetMusicState(w, r)
+	case "events":
+		s.handleGetSessionEvents(w, r)
 	default:
 		notFound(w, "")
 	}

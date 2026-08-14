@@ -39,14 +39,40 @@ actions; the rail has no separate invitation tile.
 
 The session page is a campaign workspace rather than a stack of content tabs.
 The chapter canvas fills all available width below `AppHeader`; the participant
-rail floats above its left edge and the dice/music tiles float above its right
+rail floats above its left edge and the dice/events/music tiles float above its right
 edge. CSS safe-area variables keep focus, zoom and newly created nodes in the
 uncovered part of the canvas and leave a 28px gap between the central workspace
 and either floating rail. The right rail disappears first on narrow screens,
 then the participant rail.
 
-Панели кубиков и музыки в правом rail сворачиваются независимо, оставляя
-компактный доступный заголовок и не меняя состояние бросков или playback.
+Панели кубиков, событий и музыки в правом rail сворачиваются независимо.
+`SessionEventsPanel` занимает свободную высоту между соседними инструментами и
+прокручивает только собственную хронику. `stores/sessionEvents.js` загружает
+последние 50 записей, затем получает новые по cursor polling и устраняет
+дубликаты по серверному id.
+
+## Session timeline
+
+`session_event` stores semantic gameplay actions rather than arbitrary sheet
+JSON changes. The current producers are dice rolls, short/long rests, resource
+use, potion/inventory spending and replenishment, spell use, session status,
+current chapter and encounter start/finish. Regular editing, drag ordering,
+music controls and manual configuration do not create timeline noise.
+
+The server authenticates every timeline read/write as either the session DM or
+a participant. An `actorCharUuid` is resolved only for a player who owns that
+session participant; DM actions stay attributed to the DM even when performed
+from an opened participant sheet. Character pages select their event context
+from the explicit `?session=<uuid>` query, falling back only to a live/active
+session. Player session cards open that character context instead of the DM
+workspace.
+
+State-changing character actions are queued by the sheet and sent in the next
+`PUT /char/{uuid}/data`; backend character data and its events commit in one
+transaction. A cantrip still schedules this semantic save, but the character
+version is not bumped when JSON data is unchanged. Dice rolls use the direct
+event endpoint because they do not mutate character state. Pending debounced
+character saves are flushed on page unmount instead of dropping their events.
 
 ## Chapters and scenes
 

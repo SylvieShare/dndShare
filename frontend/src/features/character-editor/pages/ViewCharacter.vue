@@ -17,7 +17,7 @@
       :sourceVersionId="sourceVersionId"
       :contentSources="contentSources"
       :sessions="sessions"
-      :topSession="topSession"
+      :topSession="activeSession"
       @update:publicVisible="onPublicToggle"
       @update:activeTab="onSetActiveTab"
       @update:value="onUpdateValue"
@@ -176,12 +176,14 @@ import { useTabSwipe } from '@/features/character-editor/composables/useTabSwipe
 import { useScrollHide } from '@/features/character-editor/composables/useScrollHide'
 import { useCharacterViewport } from '@/features/character-editor/composables/characterViewport'
 import { useUiStore } from '@/stores/ui'
+import { useSessionEventsStore } from '@/stores/sessionEvents'
 import { initialTabs, layoutNodeToBlock } from '@/features/character-editor/lib/templateSchema'
 import { defaultTabIndex, parseTabQuery, queryForTab } from '@/features/character-editor/lib/tabQuery'
 
 const route = useRoute()
 const router = useRouter()
 const uiStore = useUiStore()
+const sessionEventsStore = useSessionEventsStore()
 // Snapshot the uuid from the route. Guard against the rare race where setup runs
 // before route params settle (would otherwise fetch /char/undefined).
 const uuid = route.params.uuid || router.currentRoute.value.params.uuid
@@ -218,13 +220,23 @@ const mobileIdentityEditorBlock = computed(() =>
     ? layoutNodeToBlock({ kind: 'block', ref: 'char_identity' }, template.value)
     : null
 )
+const activeSession = computed(() => {
+  const requested = String(route.query.session || '')
+  return sessions.value.find(session => session.uuid === requested)
+    || sessions.value.find(session => session.status === 'live' || session.status === 'active')
+    || topSession.value
+})
 
 // Apply the list seed synchronously in setup so the expand overlay renders with
 // content in the same tick the View Transition snapshots it. onMounted then does
 // the full load (which short-circuits when the seed already populated state).
 loadSync()
 
-const { saveStatus, pendingSecondsLeft, scheduleSave } = useSaveDebounce(uuid, data)
+const pendingSessionEvents = []
+const { saveStatus, pendingSecondsLeft, scheduleSave } = useSaveDebounce(uuid, data, {
+  takeEvents: () => pendingSessionEvents.splice(0),
+  restoreEvents: events => pendingSessionEvents.unshift(...events),
+})
 
 // Expose menu/session state to in-sheet blocks (SettingsMenuTile, CampaignBadge) on desktop, where the
 // toolbar is gone. charCtx is reactive, so assigned refs auto-unwrap on read.
@@ -242,7 +254,14 @@ Object.assign(charCtx, {
     scheduleSave()
   },
   sessions,
-  topSession,
+  topSession: activeSession,
+  logSessionEvent: event => {
+    const pending = sessionEventsStore.pendingCharacterEvent(event)
+    if (pending) {
+      pendingSessionEvents.push(pending)
+      scheduleSave()
+    }
+  },
 })
 
 const {
@@ -281,6 +300,11 @@ watch(() => route.query.tab, tab => {
   resetSwipe()
   activeTab.value = nextTab
   nextTick(() => { syncingTabFromRoute = false })
+})
+
+watch(() => route.query.session, async requested => {
+  if (!ready) return
+  await syncEventSessionContext(requested)
 })
 
 watch([activeTab, isMobile], () => {
@@ -381,6 +405,23 @@ let syncingTabFromRoute = false
 const VERSION_POLL_MS = 5000
 let versionPollTimer = null
 let versionPollInFlight = false
+let activeEventSessionUuid = null
+
+async function syncEventSessionContext(requested = route.query.session) {
+  const requestedUuid = String(requested || '')
+  const selected = (requestedUuid && sessions.value.find(session => session.uuid === requestedUuid))
+    || (!requestedUuid && sessions.value.find(session => session.status === 'live' || session.status === 'active'))
+  if (!selected?.uuid) {
+    sessionEventsStore.clearContext(activeEventSessionUuid)
+    activeEventSessionUuid = null
+    return
+  }
+  if (activeEventSessionUuid && activeEventSessionUuid !== selected.uuid) {
+    sessionEventsStore.clearContext(activeEventSessionUuid)
+  }
+  await sessionEventsStore.setContext({ uuid: selected.uuid, actorUuid: uuid })
+  activeEventSessionUuid = selected.uuid
+}
 
 async function tickVersionPoll() {
   if (versionPollInFlight) return
@@ -452,7 +493,8 @@ onMounted(async () => {
     syncActiveScrollListener()
   })
 
-  loadSessions()
+  await loadSessions()
+  await syncEventSessionContext()
   startVersionPolling()
 })
 
@@ -465,6 +507,7 @@ onBeforeUnmount(() => {
   stopScrollListener()
   disconnectToolbar()
   uiStore.setHeaderTitle('')
+  sessionEventsStore.clearContext(activeEventSessionUuid)
 })
 </script>
 

@@ -2,9 +2,9 @@
   <div class="cb-wrap" v-click-outside="() => (open = false)">
     <component
       :is="tag"
-      :to="(top && top.isGm && !multiple) ? sessionLink(top) : undefined"
+      :to="(top && !multiple) ? sessionLink(top) : undefined"
       class="cb"
-      :class="{ 'cb-clickable': multiple || (top && top.isGm), open }"
+      :class="{ 'cb-clickable': multiple || !!top, open }"
       @click="multiple && (open = !open)"
     >
       <span class="cb-status" :style="{ background: top ? statusColor(top.status) : 'var(--text-muted)' }"></span>
@@ -20,13 +20,12 @@
     <transition name="cb-fade">
       <div v-if="open && multiple" class="cb-menu">
         <component
-          :is="s.isGm ? 'router-link' : 'div'"
+          :is="'router-link'"
           v-for="s in sessions"
           :key="s.uuid"
-          :to="s.isGm ? sessionLink(s) : undefined"
+          :to="sessionLink(s)"
           class="cb-option"
-          :class="{ 'cb-option--static': !s.isGm }"
-          @click="s.isGm && (open = false)"
+          @click="open = false"
         >
           <span class="cb-status" :style="{ background: statusColor(s.status) }"></span>
           <span class="cb-text"><span class="cb-name">{{ s.name }}</span></span>
@@ -38,19 +37,21 @@
 
 <script setup>
 import { computed, inject, ref } from 'vue'
+import { useRoute } from 'vue-router'
 import { sessionStatusColor } from '@/features/sessions/composables/useSessionStatus'
 import { currentChapterLabel } from '@/features/sessions/lib/chapterGraph'
 
 defineProps(['block'])
 const ctx = inject('charCtx', { sessions: [], topSession: null })
 const open = ref(false)
+const route = useRoute()
 
 const sessions = computed(() => ctx.sessions || [])
 const top = computed(() => ctx.topSession || sessions.value[0] || null)
 const multiple = computed(() => sessions.value.length > 1)
 const tag = computed(() => {
   if (multiple.value) return 'button'
-  if (top.value && top.value.isGm) return 'router-link'
+  if (top.value) return 'router-link'
   return 'div'
 })
 
@@ -58,7 +59,10 @@ const statusColor = sessionStatusColor
 function chapter(s) {
   return currentChapterLabel(s, true)
 }
-function sessionLink(s) { return '/sessions/' + s.uuid }
+function sessionLink(s) {
+  if (s.isGm) return '/sessions/' + s.uuid
+  return { name: 'Character', params: { uuid: route.params.uuid }, query: { ...route.query, session: s.uuid } }
+}
 </script>
 
 <style scoped>

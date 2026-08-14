@@ -130,15 +130,6 @@ func (s *Store) CreateCharacter(ctx context.Context, userID, templateID int64, s
 	return uuid, err
 }
 
-// UpdateDataCharacter полностью перезаписывает data (bump changed_at/version).
-func (s *Store) UpdateDataCharacter(ctx context.Context, uuid string, data json.RawMessage) error {
-	_, err := s.pool.Exec(ctx,
-		`UPDATE dndshare."char" SET data = CAST($2 AS jsonb), changed_at = now(), version = version + 1 WHERE uuid = $1::uuid`,
-		uuid, string(data),
-	)
-	return err
-}
-
 // UpdateDataByPaths точечно правит data через jsonb_set по каждому пути (порт updateDataByPaths).
 func (s *Store) UpdateDataByPaths(ctx context.Context, uuid string, updates []PathUpdate) error {
 	if len(updates) == 0 {

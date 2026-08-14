@@ -59,6 +59,14 @@ func (s *Server) handleSaveEncounter(w http.ResponseWriter, r *http.Request) {
 		Round  int  `json:"round"`
 	}
 	_ = json.Unmarshal(raw, &meta)
+	wasActive := false
+	if previous, previousErr := s.store.GetEncounterData(r.Context(), session.ID); previousErr == nil && previous != nil {
+		var previousMeta struct {
+			Active bool `json:"active"`
+		}
+		_ = json.Unmarshal([]byte(*previous), &previousMeta)
+		wasActive = previousMeta.Active
+	}
 	status := "pending"
 	if meta.Active {
 		status = "active"
@@ -66,6 +74,15 @@ func (s *Server) handleSaveEncounter(w http.ResponseWriter, r *http.Request) {
 	if err := s.store.SaveEncounterData(r.Context(), session.ID, status, meta.Round, string(raw)); err != nil {
 		serverError(w, err)
 		return
+	}
+	if meta.Active != wasActive {
+		eventType := "encounter_finished"
+		title := "Бой завершён"
+		if meta.Active {
+			eventType = "encounter_started"
+			title = "Бой начался"
+		}
+		s.appendSessionEvent(r.Context(), session.ID, userID, eventType, title, map[string]any{"round": meta.Round})
 	}
 	writeJSON(w, http.StatusNoContent, nil)
 }

@@ -66,6 +66,9 @@
   display: flex;
   flex-direction: column;
 }
+.sg-spells :deep(.ram-custom-trigger + .ram-custom-trigger .spell-row) {
+  border-top: 1px solid color-mix(in srgb, var(--text-on-accent) 7%, transparent);
+}
 
 /* Row removal: collapse height + fade + slide out. No `*-move` rule on purpose — live drag
    reordering (handled by useSortable) must not trigger FLIP moves that fight the drag ghost. */

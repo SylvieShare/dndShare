@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { rollDiceExpression } from '@/shared/lib/dice'
+import { useSessionEventsStore } from '@/stores/sessionEvents'
 
 const AUTO_DISMISS_MS = 6000
 const MAX_STACK = 5
@@ -57,6 +58,17 @@ export const useDiceStore = defineStore('dice', () => {
       if (t) { clearTimeout(t); timers.delete(removed.id) }
     }
     scheduleDismiss(id, duration)
+    if (entry.log !== false) {
+      useSessionEventsStore().publish({
+        type: 'dice_roll',
+        title: entry.title || 'Бросок',
+        data: {
+          result: entry.result,
+          outcome: entry.outcome || null,
+          color: entry.color || null,
+        },
+      })
+    }
     return entry.result
   }
 

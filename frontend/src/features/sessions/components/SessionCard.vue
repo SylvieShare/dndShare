@@ -88,10 +88,13 @@ const emit = defineEmits(['delete', 'leave'])
 
 const menuOpen = ref(false)
 const menuBtnEl = ref(null)
-const isReadonly = computed(() => props.session.myRole !== 'gm')
+const isReadonly = computed(() => false)
 
 function onCardClick() {
-  if (isReadonly.value) return
+  if (props.session.myRole === 'player' && props.session.myCharUuid) {
+    router.push({ path: '/char/' + props.session.myCharUuid, query: { session: props.session.uuid } })
+    return
+  }
   router.push('/sessions/' + props.session.uuid)
 }
 

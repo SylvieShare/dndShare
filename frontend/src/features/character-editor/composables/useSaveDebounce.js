@@ -3,7 +3,7 @@ import { fetchPut } from '@/shared/api/http'
 
 const SAVE_DELAY_MS = 2000
 
-export function useSaveDebounce(uuid, data) {
+export function useSaveDebounce(uuid, data, options = {}) {
   const saveStatus = ref('idle')
   const pendingSecondsLeft = ref(0)
 
@@ -33,15 +33,20 @@ export function useSaveDebounce(uuid, data) {
   async function save() {
     clearTimers()
     saveStatus.value = 'saving'
+    const events = options.takeEvents?.() || []
     try {
-      await fetchPut('/char/' + uuid + '/data', { data: data.value })
+      await fetchPut('/char/' + uuid + '/data', { data: data.value, events })
       saveStatus.value = 'idle'
     } catch {
+      options.restoreEvents?.(events)
       saveStatus.value = 'error'
     }
   }
 
-  onBeforeUnmount(clearTimers)
+  onBeforeUnmount(() => {
+    if (saveStatus.value === 'pending') void save()
+    else clearTimers()
+  })
 
   return { saveStatus, pendingSecondsLeft, scheduleSave }
 }

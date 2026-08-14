@@ -39,6 +39,11 @@ API реализован Go `net/http` в `internal/web`. Feature-файл ре�
 - `DELETE /api/char/{uuid}`
 
 Editor определяет schema по `templateName` через frontend setting registry.
+`PUT /api/char/{uuid}/data` accepts `{data,events?}`. Each optional event has
+`{sessionUuid,type,title,data,visibility,clientActionId}`; the character update
+and authorized timeline inserts commit in one database transaction. For a
+participant the route binds the actor to this owned session character; for a
+DM editing a participant sheet the event remains a DM action.
 
 ## Sources and handbook
 
@@ -105,6 +110,12 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
 - `POST /api/sessions/{uuid}/chapter-edges` and `PATCH|DELETE
   /api/sessions/{uuid}/chapter-edges/{edgeId}`;
 - read/write encounter and music state;
+- `GET|POST /api/sessions/{uuid}/events` reads and appends the session timeline.
+  The read endpoint accepts `after` and `limit`; the write endpoint accepts
+  `{type,title,data,actorCharUuid?,visibility?,clientActionId?}`. The server
+  derives the author from authentication, validates DM/participant access and
+  resolves a player actor only when that character belongs to the author and
+  session. `clientActionId` makes retries idempotent;
 - CRUD scenes and scene items, including explicit items-order endpoint.
 
 Arc, chapter and transition mutations are owner-only. Chapter `number` is a

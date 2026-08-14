@@ -160,6 +160,10 @@ Spellcasting ability is explicit handbook data (`spellcasting.ability` or
 `spellcasting_ability` for later half-caster levels); it is not inferred from a
 localized class name. Short/long rest update current spell slots, ability
 counters and hit-dice pools without scalar mirrors.
+Completing either rest publishes one `rest_completed` session event with its
+kind and recovery summary when the sheet has an active session context. Hit-die
+rolls remain normal `dice_roll` events; opening or cancelling a rest does not
+write history.
 
 Race abilities, class abilities and feats remain separate canonical arrays and
 use their corresponding handbook item types and independent editors. Desktop
@@ -180,18 +184,22 @@ item has one. Every row reserves the same icon slot, so names remain aligned
 when an icon is absent; simplified custom rows leave that slot empty instead of
 showing a placeholder. Inventory glyphs are neutral gray, frameless, have no
 background tile and use the available row height for a larger drawing.
-The list shows count as a badge; it has no ordinary
-increment/decrement controls. The item detail modal provides the shared number
-input with a minimum of one and a delete action; a multi-quantity picker creates
-one entry with that count. Potion tiles open the shared `RowActionMenu` with
+The list shows count as a badge and has no inline increment/decrement controls.
+Clicking an inventory row opens the shared `RowActionMenu`: referenced items can
+open their description, while editable rows offer spend, add, change and delete.
+Spend/add changes the stack by one and publishes `item_spent`/`item_added` in an
+active session; editing metadata or deleting an entry does not claim a gameplay
+action. A multi-quantity picker creates one entry with that count. Potion tiles open the shared `RowActionMenu` with
 icon-labelled, accent-colored use, success-colored replenish-by-one and
-info-colored view actions; use decrements the count and removes the entry at
-zero. Mobile status actions pass their domain icons for statuses, exhaustion
+info-colored view actions; use/replenish publish the same semantic item events,
+and use removes the entry at zero. Mobile status actions pass their domain icons for statuses, exhaustion
 and inspiration into the shared `RowActionItem`. A custom
-inventory entry is edited through its marked
-clickable name rather than a separate star button. Spell detail exposes prepare/unprepare
-when the spellbook uses preparation, plus delete; these actions update the same
-spell reference as the list row. A spell row renders its transparent raster
+inventory entry is edited through the row action menu. Clicking a spell row
+opens actions for description, use and delete; deletion no longer occupies the
+compact row. Using a cantrip records a slotless `spell_used` event. A leveled
+spell spends an available slot at or above the spell level; when an upcast is
+possible, the action menu switches to an explicit list of available slot levels
+and records the chosen level. A spell row renders its transparent raster
 `item.iconImageUrl` when assigned; otherwise it retains the school SVG symbol.
 
 Diary sessions animate their disclosure body. Session create/edit forms use a

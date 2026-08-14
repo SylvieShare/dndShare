@@ -151,6 +151,17 @@
   flex-shrink: 0;
 }
 
+.workspace-events-tile {
+  flex: 1 1 180px;
+  min-height: 150px;
+  overflow: hidden;
+}
+
+.workspace-events-tile--collapsed {
+  flex: 0 0 auto;
+  min-height: 0;
+}
+
 .loading-placeholder {
   flex: 1;
   margin: 24px;

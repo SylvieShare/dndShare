@@ -57,52 +57,66 @@
             class="di-rows"
             :data-sortable-container="sectionGroup(section.id)"
           >
-            <div
+            <RowActionMenu
               v-for="(entry, idx) in displaySectionItems(section.id)"
               :key="entry.uid"
-              class="di-row"
-              :class="{
-                'sortable-placeholder': sortable.isSource(entry),
-                'di-row-draggable': canDrag,
-              }"
-              :data-sortable-key="entry.uid"
-              @pointerdown="onRowDown($event, entry, section.id, idx)"
-              @mouseenter="e => showTooltip(e, entry)"
-              @mouseleave="hideTooltip"
+              block
+              :disabled="draggedThisGesture || (!canManage && entry.id == null)"
             >
-              <InventoryItemIcon :svg="entry.display.svg" />
-
-              <span
-                class="di-row-name"
-                :class="{ 'di-row-name-editable': entry.display.isCustom && canManage }"
-                :title="entry.display.isCustom && canManage ? 'Редактировать' : entry.display.name"
-                @click="onNameClick(entry)"
-              >
-                <span class="di-row-name-text">{{ entry.display.name }}</span>
-                <span v-if="entry.count > 1" class="di-count-badge">
-                  <span class="di-count-x">x</span>{{ entry.count }}
-                </span>
-              </span>
-
-              <div v-if="canManage" class="di-row-ctrls">
-                <button
-                  v-if="entry.display.consumable"
-                  class="di-use-btn"
-                  :title="`Использовать (осталось ${entry.count})`"
-                  @click.stop="decrement(section.id, entry.uid)"
+              <template #trigger>
+                <div
+                  class="di-row"
+                  :class="{
+                    'sortable-placeholder': sortable.isSource(entry),
+                    'di-row-draggable': canDrag,
+                  }"
+                  :data-sortable-key="entry.uid"
+                  @pointerdown="onRowDown($event, entry, section.id, idx)"
+                  @mouseenter="e => showTooltip(e, entry)"
+                  @mouseleave="hideTooltip"
                 >
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                    <path d="M8 2v9M4.5 7.5L8 11l3.5-3.5M3 13h10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </button>
+                  <InventoryItemIcon :svg="entry.display.svg" />
 
-                <button class="di-icon-btn di-del" title="Удалить" @click.stop="removeEntry(section.id, entry.uid)">
-                  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M4 7h16M10 11v6M14 11v6M5 7l1 13a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1l1-13M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3" />
-                  </svg>
-                </button>
-              </div>
-            </div>
+                  <span class="di-row-name" :title="entry.display.name">
+                    <span class="di-row-name-text">{{ entry.display.name }}</span>
+                    <span v-if="entry.count > 1" class="di-count-badge">
+                      <span class="di-count-x">x</span>{{ entry.count }}
+                    </span>
+                  </span>
+                </div>
+              </template>
+
+              <template #default="{ close }">
+                <RowActionItem
+                  v-if="entry.id != null"
+                  action="view"
+                  @click="viewEntry(entry, close)"
+                >Открыть описание</RowActionItem>
+                <RowActionItem
+                  v-if="canManage"
+                  action="use"
+                  tone="accent"
+                  @click="spendEntry(section.id, entry, close)"
+                >Потратить</RowActionItem>
+                <RowActionItem
+                  v-if="canManage"
+                  action="replenish"
+                  tone="success"
+                  @click="addEntry(section.id, entry, close)"
+                >Добавить</RowActionItem>
+                <RowActionItem
+                  v-if="canManage"
+                  action="edit"
+                  @click="editEntry(section.id, entry, close)"
+                >Изменить</RowActionItem>
+                <RowActionItem
+                  v-if="canManage"
+                  action="delete"
+                  tone="danger"
+                  @click="deleteEntry(section.id, entry, close)"
+                >Удалить</RowActionItem>
+              </template>
+            </RowActionMenu>
 
             <div v-if="!visibleItems(section).length" class="di-empty">пусто</div>
           </div>
@@ -142,20 +156,7 @@
       :item-id="modalItem.id"
       :item="modalItem"
       @close="modalSelection = null"
-    >
-      <template v-if="canManage && modalEntry" #actions>
-        <div class="di-modal-quantity">
-          <span class="di-modal-quantity-label">Количество</span>
-          <FormNumberInput
-            :value="modalEntry.count"
-            :min="1"
-            :max="999"
-            @change="setModalCount"
-          />
-        </div>
-        <button type="button" class="di-modal-delete" @click="removeModalEntry">Удалить</button>
-      </template>
-    </ItemViewModal>
+    />
 
     <ItemPickerModal
       v-if="pickerOpen && pickerTypeIds.length"
@@ -197,8 +198,9 @@ import ItemTooltip from '@/features/character-editor/components/ItemTooltip'
 import ItemTooltipDetails from '@/features/items/detail-components/ItemTooltipDetails'
 import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
 import ConfirmDialog from '@/shared/ui/ConfirmDialog'
+import RowActionItem from '@/shared/ui/RowActionItem.vue'
+import RowActionMenu from '@/shared/ui/RowActionMenu.vue'
 import SectionLabel from '@/shared/ui/SectionLabel'
-import FormNumberInput from '@/shared/ui/form/FormNumberInput.vue'
 import { itemsApi } from '@/shared/api/itemsApi'
 import { useSortable } from '@/shared/composables/useSortable'
 import {
@@ -258,11 +260,6 @@ const canManage = computed(() => !!charCtx.ownerMode)
 const canAdd = computed(() => !!charCtx.ownerMode)
 const canDrag = computed(() => !!charCtx.ownerMode)
 
-const modalEntry = computed(() => {
-  if (!modalSelection.value) return null
-  return itemsRef(model.value, modalSelection.value.sectionId)
-    ?.find(entry => entry.uid === modalSelection.value.uid) || null
-})
 const modalItem = computed(() => modalSelection.value?.id != null ? catalog[modalSelection.value.id] ?? null : null)
 const pickerTypeIds = computed(() => typeIdsList.value)
 
@@ -316,14 +313,14 @@ function displaySectionItems(sectionId) {
 }
 
 // Whole-row drag (like spells/weapons). The sortable's 4px threshold keeps a plain tap a click; a
-// drag flips `sortable.dragging` mid-gesture, which we remember so the trailing click on the name
-// doesn't open the item modal.
-let draggedThisGesture = false
-watch(() => sortable.dragging, v => { if (v) draggedThisGesture = true })
+// drag flips `sortable.dragging` mid-gesture, which we remember so the trailing click does not
+// open the row action menu.
+const draggedThisGesture = ref(false)
+watch(() => sortable.dragging, v => { if (v) draggedThisGesture.value = true })
 
 function onRowDown(e, entry, sectionId, idx) {
   if (e.target.closest('button') || e.target.closest('input')) return
-  draggedThisGesture = false
+  draggedThisGesture.value = false
   if (!canDrag.value) return
   sortable.startDrag(e, entry, sectionGroup(sectionId), idx)
 }
@@ -383,28 +380,22 @@ function decrement(sectionId, uid) {
   emitModel(next)
 }
 
+function increment(sectionId, uid) {
+  const next = cloneModel(model.value)
+  const list = itemsRef(next, sectionId)
+  const entry = list?.find(item => item.uid === uid)
+  if (!entry) return null
+  entry.count = Math.min(999, Math.max(1, Number(entry.count) || 1) + 1)
+  emitModel(next)
+  return entry.count
+}
+
 function removeEntry(sectionId, uid) {
   const next = cloneModel(model.value)
   const list = itemsRef(next, sectionId)
   if (!list) return
   setItems(next, sectionId, list.filter(i => i.uid !== uid))
   emitModel(next)
-}
-
-function setModalCount(value) {
-  if (!modalSelection.value) return
-  const next = cloneModel(model.value)
-  const list = itemsRef(next, modalSelection.value.sectionId)
-  const entry = list?.find(item => item.uid === modalSelection.value.uid)
-  if (!entry) return
-  entry.count = Math.max(1, Math.min(999, Math.floor(Number(value) || 1)))
-  emitModel(next)
-}
-
-function removeModalEntry() {
-  if (!modalSelection.value) return
-  removeEntry(modalSelection.value.sectionId, modalSelection.value.uid)
-  modalSelection.value = null
 }
 
 function openPicker(sectionId) {
@@ -458,19 +449,40 @@ function onInlineFormSave(fields) {
   emitModel(next)
 }
 
-function onNameClick(entry) {
-  if (draggedThisGesture) { draggedThisGesture = false; return }
-  if (entry.display.isCustom) {
-    if (canManage.value) openInlineForm(findSectionOfEntry(entry.uid), entry)
-    return
-  }
-  if (entry.id != null) {
-    modalSelection.value = {
-      sectionId: findSectionOfEntry(entry.uid),
-      uid: entry.uid,
-      id: entry.id,
-    }
-  }
+function viewEntry(entry, close) {
+  modalSelection.value = { sectionId: findSectionOfEntry(entry.uid), uid: entry.uid, id: entry.id }
+  close()
+}
+
+function spendEntry(sectionId, entry, close) {
+  const previous = Math.max(1, Number(entry.count) || 1)
+  decrement(sectionId, entry.uid)
+  charCtx.logSessionEvent?.({
+    type: 'item_spent',
+    title: entry.display.name,
+    data: { itemId: entry.id || null, remaining: Math.max(0, previous - 1) },
+  })
+  close()
+}
+
+function addEntry(sectionId, entry, close) {
+  const remaining = increment(sectionId, entry.uid)
+  charCtx.logSessionEvent?.({
+    type: 'item_added',
+    title: entry.display.name,
+    data: { itemId: entry.id || null, remaining },
+  })
+  close()
+}
+
+function editEntry(sectionId, entry, close) {
+  openInlineForm(sectionId, entry)
+  close()
+}
+
+function deleteEntry(sectionId, entry, close) {
+  removeEntry(sectionId, entry.uid)
+  close()
 }
 
 function findSectionOfEntry(uid) {

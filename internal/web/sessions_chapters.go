@@ -267,7 +267,7 @@ type setCurrentChapterRequest struct {
 }
 
 func (s *Server) handleSetCurrentChapter(w http.ResponseWriter, r *http.Request) {
-	_, session, ok := s.requireSessionOwner(w, r)
+	userID, session, ok := s.requireSessionOwner(w, r)
 	if !ok {
 		return
 	}
@@ -276,16 +276,25 @@ func (s *Server) handleSetCurrentChapter(w http.ResponseWriter, r *http.Request)
 		badRequest(w, "Некорректный запрос")
 		return
 	}
+	var selectedChapter *store.SessionChapter
 	if body.ChapterID != nil {
 		chapter, err := s.store.GetChapterByID(r.Context(), *body.ChapterID)
 		if err != nil || chapter.SessionID != session.ID {
 			badRequest(w, "Глава не принадлежит сессии")
 			return
 		}
+		selectedChapter = &chapter
 	}
 	if err := s.store.SetCurrentChapter(r.Context(), session.ID, body.ChapterID); err != nil {
 		serverError(w, err)
 		return
+	}
+	if selectedChapter != nil && (session.CurrentChapterID == nil || *session.CurrentChapterID != selectedChapter.ID) {
+		s.appendSessionEvent(r.Context(), session.ID, userID, "chapter_started", "Текущая глава изменена", map[string]any{
+			"chapterId": selectedChapter.ID,
+			"number":    selectedChapter.Number,
+			"name":      selectedChapter.Name,
+		})
 	}
 	writeJSON(w, http.StatusNoContent, nil)
 }

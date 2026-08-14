@@ -17,4 +17,12 @@ describe('character spell card icon', () => {
     expect(source).toContain('class="sp-school"')
     expect(source).toContain('v-if="school.svg"')
   })
+
+  it('opens semantic actions and moves deletion into the menu', () => {
+    expect(source).toContain('<RowActionMenu')
+    expect(source).toContain("ctx.useSpell(props.entry, level)")
+    expect(source).toContain('Выберите ячейку')
+    expect(source).toContain('action="delete"')
+    expect(source).not.toContain('class="sp-del"')
+  })
 })

@@ -171,5 +171,21 @@ func (s *Server) handleUpdateSessionStatus(w http.ResponseWriter, r *http.Reques
 		serverError(w, err)
 		return
 	}
+	if session.Status != body.Status {
+		title := map[string]string{
+			"active":    "Сессия началась",
+			"live":      "Сессия началась",
+			"paused":    "Сессия приостановлена",
+			"completed": "Сессия завершена",
+			"archived":  "Сессия перенесена в архив",
+		}[body.Status]
+		if title == "" {
+			title = "Статус сессии изменён"
+		}
+		s.appendSessionEvent(r.Context(), session.ID, userID, "session_status_changed", title, map[string]any{
+			"from": session.Status,
+			"to":   body.Status,
+		})
+	}
 	writeJSON(w, http.StatusNoContent, nil)
 }
