@@ -43,4 +43,20 @@ describe('session event timeline store', () => {
     expect(await store.publish({ type: 'dice_roll', title: 'd20' })).toBeNull()
     expect(api.createSessionEvent).not.toHaveBeenCalled()
   })
+
+  it('attributes modal-sheet rolls to its character and restores the session actor on close', async () => {
+    api.getSessionEvents.mockResolvedValue({ events: [] })
+    api.createSessionEvent.mockResolvedValue({ event: { id: 1, type: 'dice_roll' } })
+    const store = useSessionEventsStore()
+
+    await store.setContext({ uuid: 'session-uuid' })
+    store.setActor('char-uuid', 'session-uuid')
+    await store.publish({ type: 'dice_roll', title: 'd20' })
+    store.setActor(null, 'session-uuid')
+    await store.publish({ type: 'dice_roll', title: 'd20' })
+
+    expect(api.createSessionEvent.mock.calls[0][1].actorCharUuid).toBe('char-uuid')
+    expect(api.createSessionEvent.mock.calls[1][1].actorCharUuid).toBeNull()
+    store.clearContext()
+  })
 })

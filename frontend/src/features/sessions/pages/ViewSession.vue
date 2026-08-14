@@ -184,6 +184,10 @@ const createOpen = ref(false)
 const creating = ref(false)
 const templates = computed(() => templateStore.all)
 
+watch(sheetUuid, actorUuid => {
+  sessionEventsStore.setActor(actorUuid, sessionUuid)
+})
+
 const isDm = computed(() => {
   const uid = accountStore.user?.id
   return !!(uid && session.value && session.value.ownerUserId === uid)
@@ -319,7 +323,7 @@ onMounted(() => {
       await chapterGraph.load()
       startPolling()
       musicStore.setContext({ uuid: sessionUuid, dm: isDm.value })
-      await sessionEventsStore.setContext({ uuid: sessionUuid })
+      await sessionEventsStore.setContext({ uuid: sessionUuid, actorUuid: sheetUuid.value })
       await musicStore.ensureLibrary().catch(() => {})
       await musicStore.loadSessionState().catch(() => {})
     })

@@ -57,6 +57,11 @@ describe('ViewSession participant rail', () => {
       .toBeLessThan(source.indexOf('<SessionEventsPanel'))
   })
 
+  it('uses the opened character sheet as the actor for session dice rolls', () => {
+    expect(source).toContain('watch(sheetUuid, actorUuid => {')
+    expect(source).toContain('sessionEventsStore.setActor(actorUuid, sessionUuid)')
+  })
+
   it('animates displayed rolls on every viewport and cleans up popup timers', () => {
     expect(DiceRollPopup).toBeTruthy()
     expect(dicePopupSource).not.toContain("'(max-width: 640px)'")

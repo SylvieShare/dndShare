@@ -56,14 +56,17 @@ export const useSessionEventsStore = defineStore('session-events', () => {
   }
 
   async function setContext({ uuid, actorUuid = null }) {
-    actorCharUuid.value = actorUuid || null
     if (!uuid) {
       clearContext()
       return
     }
-    if (sessionUuid.value === uuid) return
+    if (sessionUuid.value === uuid) {
+      setActor(actorUuid, uuid)
+      return
+    }
     clearTimeout(pollTimer)
     sessionUuid.value = uuid
+    actorCharUuid.value = actorUuid || null
     events.value = []
     loading.value = true
     try {
@@ -76,6 +79,11 @@ export const useSessionEventsStore = defineStore('session-events', () => {
       loading.value = false
       schedulePoll()
     }
+  }
+
+  function setActor(actorUuid = null, expectedUuid = null) {
+    if (expectedUuid && sessionUuid.value !== expectedUuid) return
+    actorCharUuid.value = actorUuid || null
   }
 
   function clearContext(expectedUuid = null) {
@@ -127,6 +135,7 @@ export const useSessionEventsStore = defineStore('session-events', () => {
     loading,
     pollError,
     setContext,
+    setActor,
     clearContext,
     publish,
     pendingCharacterEvent,
