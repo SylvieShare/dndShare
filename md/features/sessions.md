@@ -118,6 +118,12 @@ viewport per arc in local storage; its 24px base grid repositions and scales
 with that viewport. Nodes can be dragged; during an active drag their transform
 transition is disabled so the node and every connected edge update in the same
 frame. Spotlight transitions remain animated outside dragging.
+A chapter scenarios or combat workspace opens in two phases: the spotlight
+chapter first moves to the workspace header, then the central content fades in.
+Closing uses the reverse order with a shorter content fade, followed by the
+chapter's return. In combat, the participant rail width uses the same duration
+and easing as the chapter movement, both on entry and exit. Reduced-motion
+users skip the inter-phase wait.
 A regular node click opens its action popover: open the chapter scenarios, make
 current, change status, edit, start a transition, move to another arc or delete.
 Moving a node to another arc removes its old transitions after confirmation

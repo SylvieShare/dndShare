@@ -99,6 +99,7 @@ describe('ViewSession participant rail', () => {
 
   it('opens combat and chapter scenes inside a locked transparent canvas workspace', () => {
     expect(source).toContain('<SessionCenterWorkspace')
+    expect(source).toContain('v-if="workspaceMode && (workspaceRevealed || workspaceClosing)"')
     expect(source).toContain(':locked="!!workspaceMode"')
     expect(source).toContain(':spotlight-chapter-id="workspaceChapter?.id ?? null"')
     expect(source).not.toContain('v-if="combatOpen"')
@@ -122,6 +123,15 @@ describe('ViewSession participant rail', () => {
     expect(workspaceSource).toContain('localStorage.setItem(sessionWorkspaceKey(sessionUuid)')
     expect(workspaceSource).toContain('async function restoreWorkspace()')
     expect(workspaceSource).toContain('clearSavedWorkspace()')
+    expect(source).toContain('await nextTick()\n  await restoreWorkspace()')
+  })
+
+  it('sequences the chapter and center-content animations in both directions', () => {
+    expect(workspaceSource).toContain('const CONTENT_REVEAL_DELAY_MS = 440')
+    expect(workspaceSource).toContain('const workspaceRevealed = ref(false)')
+    expect(workspaceSource).toContain('workspaceRevealed.value = true')
+    expect(workspaceSource).toContain('const delay = workspaceRevealed.value ? CLOSE_ANIMATION_MS : 0')
+    expect(styles).toContain('transition: width 0.42s cubic-bezier(0.22, 1, 0.36, 1);')
   })
 
   it('reuses one encounter in the combat workspace and the expanding player rail', () => {

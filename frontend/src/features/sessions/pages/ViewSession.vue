@@ -54,7 +54,7 @@
         @status-change="status => { session = { ...session, status } }"
       >
         <SessionCenterWorkspace
-          v-if="workspaceMode"
+          v-if="workspaceMode && (workspaceRevealed || workspaceClosing)"
           :mode="workspaceMode"
           :closing="workspaceClosing"
           :session-uuid="sessionUuid"
@@ -154,7 +154,7 @@
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 import BaseTile from '@/shared/ui/BaseTile.vue'
@@ -275,6 +275,7 @@ const {
   workspaceChapter,
   workspaceArcs,
   workspaceClosing,
+  workspaceRevealed,
   openChapterScenes,
   toggleCombatWorkspace,
   restoreWorkspace,
@@ -373,22 +374,29 @@ async function copyLink() {
   await navigator.clipboard.writeText(url).catch(() => {})
 }
 
-onMounted(() => {
+onMounted(async () => {
   templateStore.ensure()
-  getSession(sessionUuid)
-    .then(async res => {
-      session.value = res?.session ?? null
-      participants.value = res?.participants ?? []
-      await chapterGraph.load()
-      await restoreWorkspace()
-      startPolling()
-      musicStore.setContext({ uuid: sessionUuid, dm: isDm.value })
-      await sessionEventsStore.setContext({ uuid: sessionUuid, actorUuid: sheetUuid.value })
-      await musicStore.ensureLibrary().catch(() => {})
-      await musicStore.loadSessionState().catch(() => {})
-    })
-    .catch(() => router.replace('/sessions'))
-    .finally(() => { loading.value = false })
+  try {
+    const res = await getSession(sessionUuid)
+    session.value = res?.session ?? null
+    participants.value = res?.participants ?? []
+    await chapterGraph.load()
+    startPolling()
+    musicStore.setContext({ uuid: sessionUuid, dm: isDm.value })
+    await sessionEventsStore.setContext({ uuid: sessionUuid, actorUuid: sheetUuid.value })
+    await musicStore.ensureLibrary().catch(() => {})
+    await musicStore.loadSessionState().catch(() => {})
+  } catch {
+    router.replace('/sessions')
+    return
+  } finally {
+    loading.value = false
+  }
+
+  // Render the chapter canvas at its saved position before restoring the
+  // workspace, so the chapter has a real starting point for its entrance.
+  await nextTick()
+  await restoreWorkspace()
 })
 
 onBeforeUnmount(() => {

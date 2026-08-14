@@ -1,6 +1,7 @@
 import { computed, nextTick, onBeforeUnmount, ref } from 'vue'
 
 const WORKSPACE_MODES = new Set(['combat', 'scenes'])
+const CONTENT_REVEAL_DELAY_MS = 440
 const CLOSE_ANIMATION_MS = 190
 
 export function sessionWorkspaceKey(sessionUuid) {
@@ -11,6 +12,8 @@ export function useSessionWorkspace({ sessionUuid, chapterGraph }) {
   const workspaceMode = ref(null)
   const workspaceChapterId = ref(null)
   const workspaceClosing = ref(false)
+  const workspaceRevealed = ref(false)
+  let revealTimer = null
   let closeTimer = null
 
   const workspaceChapter = computed(() =>
@@ -39,17 +42,33 @@ export function useSessionWorkspace({ sessionUuid, chapterGraph }) {
     }
   }
 
-  function cancelClose() {
+  function cancelTimers() {
+    if (revealTimer != null) clearTimeout(revealTimer)
     if (closeTimer != null) clearTimeout(closeTimer)
+    revealTimer = null
     closeTimer = null
   }
 
+  function revealWorkspace() {
+    if (!workspaceMode.value || workspaceClosing.value || workspaceRevealed.value) return
+    if (revealTimer != null) clearTimeout(revealTimer)
+    const delay = globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+      ? 0
+      : CONTENT_REVEAL_DELAY_MS
+    revealTimer = setTimeout(() => {
+      workspaceRevealed.value = true
+      revealTimer = null
+    }, delay)
+  }
+
   function showWorkspace(mode, chapter) {
-    cancelClose()
+    cancelTimers()
     workspaceChapterId.value = chapter?.id ?? null
     workspaceMode.value = mode
     workspaceClosing.value = false
+    workspaceRevealed.value = false
     saveWorkspace(mode, chapter?.id)
+    revealWorkspace()
   }
 
   async function openChapterScenes(chapter) {
@@ -95,22 +114,26 @@ export function useSessionWorkspace({ sessionUuid, chapterGraph }) {
     if (!workspaceMode.value || workspaceClosing.value) return
     clearSavedWorkspace()
     workspaceClosing.value = true
-    cancelClose()
+    if (revealTimer != null) clearTimeout(revealTimer)
+    revealTimer = null
+    const delay = workspaceRevealed.value ? CLOSE_ANIMATION_MS : 0
     closeTimer = setTimeout(() => {
       workspaceMode.value = null
       workspaceChapterId.value = null
       workspaceClosing.value = false
+      workspaceRevealed.value = false
       closeTimer = null
-    }, CLOSE_ANIMATION_MS)
+    }, delay)
   }
 
-  onBeforeUnmount(cancelClose)
+  onBeforeUnmount(cancelTimers)
 
   return {
     workspaceMode,
     workspaceChapter,
     workspaceArcs,
     workspaceClosing,
+    workspaceRevealed,
     openChapterScenes,
     toggleCombatWorkspace,
     restoreWorkspace,

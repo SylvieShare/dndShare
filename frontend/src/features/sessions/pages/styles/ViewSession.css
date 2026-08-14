@@ -39,7 +39,7 @@
 .workspace-dock--left {
   left: 14px;
   width: 246px;
-  transition: width 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: width 0.42s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .campaign-workspace--combat .workspace-dock--left {
