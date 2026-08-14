@@ -129,8 +129,7 @@ the right of the node; scene item tiles start 16px below both. The layer has no
 shared backed surface. While it is open, pan, zoom, node dragging, transitions,
 arc changes and chapter editing are locked. Closing fades the layer and returns
 the node to its saved graph position. The content viewport reaches the bottom
-edge of the canvas; its top edge uses a gradient backdrop blur so scrolled tiles
-fade beneath the fixed header instead of being clipped abruptly.
+edge of the canvas and clips scrolled content at the fixed header boundary.
 
 In contextual mode `SceneTab.vue` hides redundant arc/chapter selectors and
 restores the last scene or opens the first scene on initial entry. The same
