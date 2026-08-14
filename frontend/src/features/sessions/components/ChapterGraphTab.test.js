@@ -19,6 +19,11 @@ describe('chapter graph workspace', () => {
     expect(canvas).not.toContain('<BaseTile')
   })
 
+  it('keeps the chapter toolbar square on desktop and mobile', () => {
+    expect(toolbar).toContain('.chapter-toolbar {\n  border-radius: 0;')
+    expect(toolbar).not.toContain('@media (max-width: 760px) {\n  .chapter-toolbar { border-radius:')
+  })
+
   it('uses one command bar for session, arc, chapter and combat actions', () => {
     expect(toolbar).toContain('class="chapter-session-title"')
     expect(toolbar).toContain('<SessionStatusMenu')

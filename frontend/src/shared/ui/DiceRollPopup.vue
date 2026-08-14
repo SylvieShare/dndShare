@@ -254,8 +254,14 @@ function rawExpression(entry) {
   word-break: break-word;
   overflow-wrap: anywhere;
 }
-.dice-pop-rolls-plus { color: color-mix(in srgb, var(--text-1) 55%, transparent); margin: 0 2px; }
-.dice-pop-roll-wrap  { display: inline-flex; white-space: nowrap; }
+.dice-pop-rolls-plus {
+  display: inline-flex;
+  align-items: center;
+  height: 38px;
+  margin: 0 2px;
+  color: color-mix(in srgb, var(--text-1) 55%, transparent);
+}
+.dice-pop-roll-wrap  { display: inline-flex; vertical-align: middle; white-space: nowrap; }
 .dice-pop-roll--rolling {
   opacity: 0.56;
   filter: saturate(0.45);

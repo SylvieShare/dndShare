@@ -60,6 +60,11 @@ describe('ViewSession participant rail', () => {
     expect(dicePopupSource).not.toContain('part.rolls[rollIndex] =')
   })
 
+  it('centers wrapped dice operators against the 38px dice', () => {
+    expect(dicePopupSource).toMatch(/\.dice-pop-rolls-plus\s*\{[^}]*display:\s*inline-flex;[^}]*align-items:\s*center;[^}]*height:\s*38px;/s)
+    expect(dicePopupSource).toMatch(/\.dice-pop-roll-wrap\s*\{[^}]*vertical-align:\s*middle;/s)
+  })
+
   it('opens combat and chapter scenes as fullscreen contextual workspaces', () => {
     expect(source).toContain('v-if="combatOpen"')
     expect(source).toContain('v-if="sceneWorkspaceChapter"')
