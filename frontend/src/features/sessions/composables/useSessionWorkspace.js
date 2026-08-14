@@ -1,7 +1,7 @@
 import { computed, nextTick, onBeforeUnmount, ref } from 'vue'
 
 const WORKSPACE_MODES = new Set(['combat', 'scenes'])
-const CONTENT_REVEAL_DELAY_MS = 440
+const CONTENT_REVEAL_DELAY_MS = 210
 const CLOSE_ANIMATION_MS = 190
 
 export function sessionWorkspaceKey(sessionUuid) {
@@ -13,6 +13,7 @@ export function useSessionWorkspace({ sessionUuid, chapterGraph }) {
   const workspaceChapterId = ref(null)
   const workspaceClosing = ref(false)
   const workspaceRevealed = ref(false)
+  const workspaceMotionActive = ref(false)
   let revealTimer = null
   let closeTimer = null
 
@@ -21,6 +22,9 @@ export function useSessionWorkspace({ sessionUuid, chapterGraph }) {
   )
   const workspaceArcs = computed(() =>
     chapterGraph.arcs.value.filter(arc => arc.id === workspaceChapter.value?.arcId)
+  )
+  const workspaceMotionMode = computed(() =>
+    workspaceMotionActive.value ? workspaceMode.value : null
   )
 
   function saveWorkspace(mode, chapterId) {
@@ -67,6 +71,7 @@ export function useSessionWorkspace({ sessionUuid, chapterGraph }) {
     workspaceMode.value = mode
     workspaceClosing.value = false
     workspaceRevealed.value = false
+    workspaceMotionActive.value = true
     saveWorkspace(mode, chapter?.id)
     revealWorkspace()
   }
@@ -114,6 +119,7 @@ export function useSessionWorkspace({ sessionUuid, chapterGraph }) {
     if (!workspaceMode.value || workspaceClosing.value) return
     clearSavedWorkspace()
     workspaceClosing.value = true
+    workspaceMotionActive.value = false
     if (revealTimer != null) clearTimeout(revealTimer)
     revealTimer = null
     const delay = workspaceRevealed.value ? CLOSE_ANIMATION_MS : 0
@@ -122,6 +128,7 @@ export function useSessionWorkspace({ sessionUuid, chapterGraph }) {
       workspaceChapterId.value = null
       workspaceClosing.value = false
       workspaceRevealed.value = false
+      workspaceMotionActive.value = false
       closeTimer = null
     }, delay)
   }
@@ -134,6 +141,7 @@ export function useSessionWorkspace({ sessionUuid, chapterGraph }) {
     workspaceArcs,
     workspaceClosing,
     workspaceRevealed,
+    workspaceMotionMode,
     openChapterScenes,
     toggleCombatWorkspace,
     restoreWorkspace,

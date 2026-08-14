@@ -101,7 +101,7 @@ describe('ViewSession participant rail', () => {
     expect(source).toContain('<SessionCenterWorkspace')
     expect(source).toContain('v-if="workspaceMode && (workspaceRevealed || workspaceClosing)"')
     expect(source).toContain(':locked="!!workspaceMode"')
-    expect(source).toContain(':spotlight-chapter-id="workspaceChapter?.id ?? null"')
+    expect(source).toContain(':spotlight-chapter-id="workspaceMotionMode ? (workspaceChapter?.id ?? null) : null"')
     expect(source).not.toContain('v-if="combatOpen"')
     expect(source).not.toContain('v-if="sceneWorkspaceChapter"')
     expect(centerWorkspaceSource).toContain("'--session-workspace-header-left': props.chapter ? '252px' : '0px'")
@@ -126,18 +126,22 @@ describe('ViewSession participant rail', () => {
     expect(source).toContain('await nextTick()\n  await restoreWorkspace()')
   })
 
-  it('sequences the chapter and center-content animations in both directions', () => {
-    expect(workspaceSource).toContain('const CONTENT_REVEAL_DELAY_MS = 440')
+  it('overlaps chapter movement with center content in its second half', () => {
+    expect(workspaceSource).toContain('const CONTENT_REVEAL_DELAY_MS = 210')
     expect(workspaceSource).toContain('const workspaceRevealed = ref(false)')
+    expect(workspaceSource).toContain('const workspaceMotionMode = computed(() =>')
     expect(workspaceSource).toContain('workspaceRevealed.value = true')
+    expect(workspaceSource).toContain('workspaceMotionActive.value = false')
     expect(workspaceSource).toContain('const delay = workspaceRevealed.value ? CLOSE_ANIMATION_MS : 0')
     expect(styles).toContain('transition: width 0.42s cubic-bezier(0.22, 1, 0.36, 1);')
+    expect(centerWorkspaceSource).toContain('animation: session-workspace-in 0.21s cubic-bezier(0.22, 1, 0.36, 1) both;')
+    expect(centerWorkspaceSource).toContain('left 0.42s cubic-bezier(0.22, 1, 0.36, 1);')
   })
 
   it('reuses one encounter in the combat workspace and the expanding player rail', () => {
     expect(source).toContain('const encounter = reactive(useEncounter({')
     expect(source).toContain(':encounter="encounter"')
-    expect(source).toContain(':combat-mode="workspaceMode === \'combat\'"')
+    expect(source).toContain(':combat-mode="workspaceMotionMode === \'combat\'"')
     expect(styles).toContain('.campaign-workspace--combat .workspace-dock--left')
     expect(encounterSource).not.toContain('ЗАПАС ИГРОКОВ')
     expect(encounterSource).not.toContain('КЛАДБИЩЕ')

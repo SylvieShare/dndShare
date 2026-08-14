@@ -37,7 +37,7 @@
     <div
       v-else-if="session"
       class="campaign-workspace"
-      :class="{ 'campaign-workspace--combat': workspaceMode === 'combat' }"
+      :class="{ 'campaign-workspace--combat': workspaceMotionMode === 'combat' }"
     >
       <ChapterGraphTab
         class="campaign-graph"
@@ -46,8 +46,8 @@
         :session-uuid="sessionUuid"
         :is-dm="isDm"
         :locked="!!workspaceMode"
-        :spotlight-chapter-id="workspaceChapter?.id ?? null"
-        :workspace-mode="workspaceMode"
+        :spotlight-chapter-id="workspaceMotionMode ? (workspaceChapter?.id ?? null) : null"
+        :workspace-mode="workspaceMotionMode"
         @open-scenes="openChapterScenes"
         @open-combat="toggleCombatWorkspace"
         @edit-session="openEdit"
@@ -100,7 +100,7 @@
             :is-dm="isDm"
             :kick-pending="kickingIds.has(p.charId)"
             :color-pending="coloringIds.has(p.charId)"
-            :combat-mode="workspaceMode === 'combat'"
+            :combat-mode="workspaceMotionMode === 'combat'"
             :combatant="encounterPlayer(p.charId)"
             :combat-selected="isEncounterPlayerSelected(p.charId)"
             :combat-current="isEncounterPlayerCurrent(p.charId)"
@@ -276,6 +276,7 @@ const {
   workspaceArcs,
   workspaceClosing,
   workspaceRevealed,
+  workspaceMotionMode,
   openChapterScenes,
   toggleCombatWorkspace,
   restoreWorkspace,

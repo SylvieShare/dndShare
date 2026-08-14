@@ -78,8 +78,11 @@ const workspaceStyle = computed(() => ({
   opacity: 1;
   pointer-events: none;
   transform: translateY(0);
-  animation: session-workspace-in 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
-  transition: opacity 0.18s ease, transform 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+  animation: session-workspace-in 0.21s cubic-bezier(0.22, 1, 0.36, 1) both;
+  transition:
+    opacity 0.18s ease,
+    transform 0.24s cubic-bezier(0.22, 1, 0.36, 1),
+    left 0.42s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .session-center-workspace--closing {
