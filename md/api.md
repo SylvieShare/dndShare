@@ -116,8 +116,9 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
   `{type,title,data,actorCharUuid?,visibility?,clientActionId?}`. The server
   derives the author from authentication, validates DM/participant access and
   resolves `actorCharUuid` to the participant whose page produced the action.
-  Event responses expose both `authorLogin`/`authorRole` and actor character
-  projection fields. `clientActionId` makes retries idempotent;
+  Event responses expose `authorRole` and actor character projection fields;
+  user login is not part of the timeline response. `clientActionId` makes
+  retries idempotent;
 - CRUD scenes and scene items, including explicit items-order endpoint.
 
 Arc, chapter and transition mutations are owner-only. Chapter `number` is a

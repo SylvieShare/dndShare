@@ -45,9 +45,12 @@ uncovered part of the canvas and leave a 28px gap between the central workspace
 and either floating rail. The right rail disappears first on narrow screens,
 then the participant rail.
 
-Панели кубиков, событий и музыки в правом rail сворачиваются независимо.
-`SessionEventsPanel` занимает свободную высоту между соседними инструментами и
-прокручивает только собственную хронику. `stores/sessionEvents.js` загружает
+Панели кубиков, музыки и событий в правом rail сворачиваются независимо.
+`SessionEventsPanel` расположен под музыкой, занимает свободную высоту и
+прокручивает только собственную хронику. Подпись события — `Мастер` для действия
+из сессии, `Имя персонажа (мастер)` для действия мастера из листа или просто
+имя персонажа для игрока. Логин пользователя не показывается.
+`stores/sessionEvents.js` загружает
 последние 50 записей, затем получает новые по cursor polling и устраняет
 дубликаты по серверному id.
 
@@ -60,12 +63,12 @@ current chapter and encounter start/finish. Regular editing, drag ordering,
 music controls and manual configuration do not create timeline noise.
 
 The server authenticates every timeline read/write as either the session DM or
-a participant. An `actorCharUuid` is resolved only for a player who owns that
-session participant; DM actions stay attributed to the DM even when performed
-from an opened participant sheet. Character pages select their event context
-from the explicit `?session=<uuid>` query, falling back only to a live/active
-session. Player session cards open that character context instead of the DM
-workspace.
+a participant. An `actorCharUuid` identifies the character page that produced
+the action: players can reference only their own participant, while the DM can
+reference any participant in the session. Character pages select their event
+context from the explicit `?session=<uuid>` query, falling back only to a
+live/active session. Player session cards open that character context instead
+of the DM workspace.
 
 State-changing character actions are queued by the sheet and sent in the next
 `PUT /char/{uuid}/data`; backend character data and its events commit in one

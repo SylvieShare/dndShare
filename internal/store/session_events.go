@@ -14,7 +14,6 @@ type SessionEvent struct {
 	ID              int64           `json:"id"`
 	SessionID       int64           `json:"-"`
 	AuthorUserID    int64           `json:"authorUserId"`
-	AuthorLogin     string          `json:"authorLogin"`
 	AuthorRole      string          `json:"authorRole"`
 	ActorCharID     *int64          `json:"actorCharId,omitempty"`
 	ActorCharUUID   *string         `json:"actorCharUuid,omitempty"`
@@ -38,12 +37,11 @@ type CharacterSessionEvent struct {
 }
 
 const sessionEventSelect = `
-	SELECT e.id, e.session_id, e.author_user_id, u.login,
+	SELECT e.id, e.session_id, e.author_user_id,
 	       CASE WHEN event_session.owner_user_id = e.author_user_id THEN 'gm' ELSE 'player' END,
 	       e.actor_char_id, c.uuid::text, c.template_id, c.data,
 	       e.event_type, e.title, COALESCE(e.data, '{}'::jsonb), e.visibility, e.created_at
 	FROM dndshare.session_event e
-	JOIN dndshare.users u ON u.id = e.author_user_id
 	JOIN dndshare."session" event_session ON event_session.id = e.session_id
 	LEFT JOIN dndshare."char" c ON c.id = e.actor_char_id
 	WHERE e.deleted = false`
@@ -53,7 +51,7 @@ func scanSessionEvent(row pgx.Row) (SessionEvent, error) {
 	var actorData []byte
 	var data []byte
 	err := row.Scan(
-		&event.ID, &event.SessionID, &event.AuthorUserID, &event.AuthorLogin, &event.AuthorRole,
+		&event.ID, &event.SessionID, &event.AuthorUserID, &event.AuthorRole,
 		&event.ActorCharID, &event.ActorCharUUID, &event.ActorTemplateID, &actorData,
 		&event.EventType, &event.Title, &data, &event.Visibility, &event.CreatedAt,
 	)

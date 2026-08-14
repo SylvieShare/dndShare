@@ -1,11 +1,10 @@
 import { pvName } from '@/features/sessions/lib/participantView'
 
-export function sessionEventCharacterName(event, resolveName = pvName) {
-  if (!event?.actorTemplateId || !event?.actorData) return ''
-  return resolveName({ templateId: event.actorTemplateId, data: event.actorData }) || ''
-}
-
-export function sessionEventAuthorLabel(event) {
-  const role = event?.authorRole === 'gm' ? 'Мастер' : 'Игрок'
-  return event?.authorLogin ? `${role}: ${event.authorLogin}` : role
+export function sessionEventActorLabel(event, resolveName = pvName) {
+  const isDm = event?.authorRole === 'gm'
+  const characterName = event?.actorTemplateId && event?.actorData
+    ? resolveName({ templateId: event.actorTemplateId, data: event.actorData }) || ''
+    : ''
+  if (characterName) return isDm ? `${characterName} (мастер)` : characterName
+  return isDm ? 'Мастер' : 'Игрок'
 }
