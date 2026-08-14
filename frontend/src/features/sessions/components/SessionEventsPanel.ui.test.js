@@ -11,9 +11,10 @@ describe('SessionEventsPanel timeline layout', () => {
     expect(source).toMatch(/\.sep-actor-head\s*\{[^}]*overflow-wrap:\s*anywhere;[^}]*white-space:\s*normal;/s)
   })
 
-  it('draws the connector through markers without lines outside the group', () => {
-    expect(source).toContain('.sep-event::before, .sep-event::after')
-    expect(source).toContain('.sep-event:first-child::before, .sep-event:last-child::after { display: none; }')
+  it('draws connector segments only between markers', () => {
+    expect(source).toMatch(/\.sep-event::after\s*\{[^}]*top:\s*18px;[^}]*bottom:\s*0;/s)
+    expect(source).toContain('.sep-event:last-child::after { display: none; }')
+    expect(source).not.toContain('.sep-event::before')
     expect(source).not.toMatch(/\.sep-actor-events\s*\{[^}]*border-left:/s)
   })
 

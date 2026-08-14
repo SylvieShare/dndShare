@@ -161,10 +161,8 @@ watch(() => events.value.length, async () => {
 .sep-actor-head { color: var(--text-2); font-size: 10px; font-weight: 750; line-height: 1.3; overflow-wrap: anywhere; white-space: normal; }
 .sep-actor-events { margin-top: 5px; min-width: 0; }
 .sep-event { position: relative; display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 7px; min-width: 0; padding: 0 0 8px; }
-.sep-event::before, .sep-event::after { content: ''; position: absolute; left: 9px; z-index: 0; width: 1px; background: color-mix(in srgb, var(--accent) 38%, var(--border)); }
-.sep-event::before { top: 0; height: 9px; }
-.sep-event::after { top: 9px; bottom: 0; }
-.sep-event:first-child::before, .sep-event:last-child::after { display: none; }
+.sep-event::after { content: ''; position: absolute; top: 18px; bottom: 0; left: 9px; z-index: 0; width: 1px; background: color-mix(in srgb, var(--accent) 38%, var(--border)); }
+.sep-event:last-child::after { display: none; }
 .sep-marker { position: relative; z-index: 1; width: 18px; height: 18px; display: grid; place-items: center; border: 1px solid color-mix(in srgb, currentColor 55%, transparent); border-radius: 5px; background: transparent; box-sizing: border-box; color: var(--accent-soft); font-size: 10px; font-weight: 800; }
 .sep-event--rest_completed .sep-marker { color: var(--warning); }
 .sep-event--item_spent .sep-marker, .sep-event--resource_used .sep-marker { color: var(--danger); }
