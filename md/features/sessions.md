@@ -120,9 +120,10 @@ set is `draft`, `planned`, `ready`, `available`, `in_progress`, `paused`,
 current promotes it to `in_progress`; only one chapter in the session is
 current.
 
-`ChapterGraphToolbar` is the one backed command bar in the workspace. It combines
-the editable session name/status, arc switcher and ordering, and an accessible
-icon-only combat launcher. Current-chapter focus and zoom are canvas interactions
+`ChapterGraphToolbar` is the semantic session header with its own background and
+bottom divider, not a `BaseTile`. It combines the editable session name/status,
+arc switcher and ordering, accessible icon-only combat launcher, and the dice,
+music and timeline panel toggles. Current-chapter focus and zoom are canvas interactions
 rather than toolbar controls. Creation is contextual and lives on the canvas
 in a top-right vertical action dock, immediately left of the right tools rail;
 there is no chapter/scenario/block creation button in the header. There is no
@@ -257,7 +258,10 @@ click.
 Players have no separate encounter reserve section. Opening combat smoothly
 widens the existing left participant rail; every player tile gains the
 encounter checkbox, initiative input and armor-class indicator, and the current
-turn is highlighted there. Players that enter combat also appear in the common
+turn is highlighted there. These controls remain mounted inside a fixed-height
+tile and slide in from behind its left edge together with the widening rail;
+closing combat sends them back left instead of mounting or unmounting them.
+Players that enter combat also appear in the common
 initiative-ordered combat scene alongside NPCs while remaining visible in the
 left rail. The common scene rows reuse the same compact initiative and
 armor-class controls as the player rail. Player portraits are enlarged in both

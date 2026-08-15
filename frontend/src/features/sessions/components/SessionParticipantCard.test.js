@@ -34,9 +34,14 @@ describe('SessionParticipantCard actions', () => {
     expect(source).toContain("defineEmits(['view', 'kick', 'color', 'update:combat-selected', 'update:initiative'])")
   })
 
-  it('adds battle selection, initiative and armor class to the expanded player tile', () => {
-    expect(source).toContain('v-if="combatMode"')
-    expect(source).toContain('<EncounterCombatControls')
+  it('slides persistent battle controls into the expanded player tile without changing its height', () => {
+    expect(source).toContain('<EncounterCombatControls\n            class="p-combat-controls"')
+    expect(source).not.toContain('v-if="combatMode"')
+    expect(source).toContain(':inert="!combatMode"')
+    expect(source).toContain('min-height: 72px;')
+    expect(source).toContain('margin-left: -121px;')
+    expect(source).toContain('.p-card--combat .p-combat-controls')
+    expect(source).toContain('clip-path: inset(0);')
     expect(combatControlsSource).toContain('<EncCheckbox')
     expect(combatControlsSource).toContain('aria-label="Инициатива"')
     expect(source).toContain("const armorClass = computed(() => pvAc(props.participant))")

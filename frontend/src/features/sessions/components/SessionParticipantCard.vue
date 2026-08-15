@@ -11,12 +11,14 @@
           interactive
         >
           <EncounterCombatControls
-            v-if="combatMode"
+            class="p-combat-controls"
             :combatant="combatant"
             :selected="combatSelected"
             :editable="combatEditable"
             :armor-class="armorClass"
             :current="combatCurrent"
+            :aria-hidden="!combatMode"
+            :inert="!combatMode"
             @update:selected="$emit('update:combat-selected', $event)"
             @update:initiative="$emit('update:initiative', $event)"
           />
@@ -217,9 +219,23 @@ const participantAvatarStyle = computed(() => ({
   display: flex;
   align-items: flex-start;
   gap: 10px;
+  min-height: 72px;
   padding: 10px 12px;
+  overflow: hidden;
   user-select: none;
   transition: padding 0.28s cubic-bezier(0.22, 1, 0.36, 1), background 0.18s, border-color 0.18s;
+}
+
+.p-combat-controls {
+  width: 112px;
+  flex: 0 0 112px;
+  margin-left: -121px;
+  clip-path: inset(0 0 0 100%);
+  pointer-events: none;
+  animation: none;
+  transition:
+    margin-left 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    clip-path 0.42s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .p-card--combat {
@@ -227,6 +243,12 @@ const participantAvatarStyle = computed(() => ({
   gap: 9px;
   padding-top: 12px;
   padding-bottom: 12px;
+}
+
+.p-card--combat .p-combat-controls {
+  margin-left: 0;
+  clip-path: inset(0);
+  pointer-events: auto;
 }
 
 .p-card--current {
@@ -268,7 +290,10 @@ const participantAvatarStyle = computed(() => ({
   overflow: hidden;
   box-sizing: border-box;
   border: 2px solid transparent;
-  transition: border-color 0.15s ease;
+  transition:
+    width 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    height 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.15s ease;
 }
 
 .p-card--combat .p-avatar {
@@ -300,7 +325,9 @@ const participantAvatarStyle = computed(() => ({
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .p-card { transition: none; }
+  .p-card,
+  .p-combat-controls,
+  .p-avatar { transition: none; }
 }
 
 .p-name {
