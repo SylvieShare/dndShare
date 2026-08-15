@@ -2,6 +2,8 @@
   <section class="session-graph-canvas" :data-level="displayLevel">
     <NestedGraphCanvas
       ref="canvas"
+      class="session-graph-canvas__nested"
+      :class="{ 'session-graph-canvas__nested--combat-hidden': workspaceMode === 'combat' && displayLevel !== 'chapters' }"
       :graph-key="activeGraphKey"
       :nodes="activeNodes"
       :edges="activeEdges"

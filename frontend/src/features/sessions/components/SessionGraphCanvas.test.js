@@ -73,6 +73,8 @@ describe('session graph canvas', () => {
     expect(source).toContain("const preservedNestedContext = previousMode === 'combat'")
     expect(source).toContain("if (previousMode !== 'scenes') displayLevel.value = 'chapters'")
     expect(source).not.toContain("if (mode === 'combat') {\n    rememberedChapterId = props.workspaceChapterId\n    displayLevel.value = 'chapters'")
+    expect(source).toContain("'session-graph-canvas__nested--combat-hidden': workspaceMode === 'combat' && displayLevel !== 'chapters'")
+    expect(stylesSource).toMatch(/\.session-graph-canvas__nested--combat-hidden\s*\{[^}]*opacity:\s*0;[^}]*pointer-events:\s*none;/s)
     expect(stylesSource).toContain('transition: left 0.42s cubic-bezier(0.22, 1, 0.36, 1);')
   })
 

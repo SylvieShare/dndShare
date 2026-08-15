@@ -1,4 +1,12 @@
 .session-graph-canvas { position: absolute; inset: 0; overflow: hidden; }
+.session-graph-canvas__nested {
+  opacity: 1;
+  transition: opacity 0.18s ease;
+}
+.session-graph-canvas__nested--combat-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
 .session-graph-ancestor {
   position: absolute;
   z-index: 20;
@@ -36,5 +44,6 @@
   .session-graph-ancestor--scene { left: 260px; }
 }
 @media (prefers-reduced-motion: reduce) {
+  .session-graph-canvas__nested,
   .session-graph-ancestor { transition: none; }
 }
