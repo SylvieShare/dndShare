@@ -27,6 +27,9 @@
           >
             {{ item.title }}
           </router-link>
+          <button type="button" class="brand-menu-item brand-menu-report" @click="openErrorReporter">
+            На странице ошибка
+          </button>
         </div>
       </div>
 
@@ -40,8 +43,6 @@
         {{ headerContext.chip.label }}
       </span>
 
-      <HeaderSearch class="header-search" />
-
       <div class="header-right">
         <UserBox />
       </div>
@@ -52,7 +53,6 @@
 <script setup>
 import { ref, computed, watch, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import HeaderSearch from '@/shared/ui/HeaderSearch'
 import MobileHeaderBack from '@/shared/ui/MobileHeaderBack.vue'
 import { resolveMobileBackTarget } from '@/shared/lib/mobileBack'
 import UserBox from "@/features/auth/components/UserBox"
@@ -64,6 +64,7 @@ import {
   resolveMobileHeaderMode,
 } from '@/shared/lib/mobileHeader'
 import { resolveAppNavigation } from '@/shared/lib/appNavigation'
+import { requestErrorReport } from '@/features/error-report/lib/errorReportLauncher'
 
 const route = useRoute()
 const router = useRouter()
@@ -116,6 +117,11 @@ function toggleBrandMenu() {
     return
   }
   menuOpen.value = !menuOpen.value
+}
+
+function openErrorReporter() {
+  menuOpen.value = false
+  requestErrorReport()
 }
 
 </script>
@@ -209,6 +215,16 @@ function toggleBrandMenu() {
   white-space: nowrap;
 }
 
+.brand-menu-report {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--danger);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
 .brand-menu-item:hover,
 .brand-menu-item.active {
   color: var(--text-1);
@@ -219,11 +235,6 @@ function toggleBrandMenu() {
   display: none;
 }
 
-
-.header-search {
-  margin-left: auto;
-  flex-shrink: 0;
-}
 
 .header-right {
   display: flex;
@@ -278,10 +289,6 @@ function toggleBrandMenu() {
 
   .brand-arrow {
     display: inline;
-  }
-
-  .header-search {
-    display: none;
   }
 
   .header-inner {

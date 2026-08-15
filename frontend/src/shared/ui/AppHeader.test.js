@@ -11,6 +11,9 @@ describe('mobile app header navigation', () => {
     expect(headerSource).toContain('<MobileHeaderBack v-if="mobileBackTarget"')
     expect(headerSource).toContain('<span>DnD Share</span>')
     expect(headerSource).toContain('class="brand-menu"')
+    expect(headerSource).toContain('class="brand-menu-item brand-menu-report"')
+    expect(headerSource).toContain('requestErrorReport()')
+    expect(headerSource).not.toContain('<HeaderSearch')
     expect(headerSource).not.toContain('header-title-inline')
   })
 

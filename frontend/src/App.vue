@@ -85,12 +85,10 @@ body {
 }
 
 @media (min-width: 641px) {
-  body:has(.app-sidebar:not(.app-sidebar--expanded)) .report-button,
   body:has(.app-sidebar:not(.app-sidebar--expanded)) .review-inbox {
     left: calc(var(--app-sidebar-w) + 16px);
   }
 
-  body:has(.app-sidebar--expanded) .report-button,
   body:has(.app-sidebar--expanded) .review-inbox {
     left: calc(var(--sidebar-expanded-w) + 16px);
   }

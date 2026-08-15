@@ -11,17 +11,7 @@
       <SidebarBrand :as="RouterLink" to="/" label="DnD Share" aria-label="DnD Share" :icon="Dices" />
     </template>
 
-    <SidebarNavItem
-      v-for="item in navigationItems"
-      :key="item.key"
-      :as="RouterLink"
-      :to="item.to"
-      :label="item.title"
-      :active="item.active"
-      :icon="icons[item.key]"
-    />
-
-    <template #tools="{ expanded, expand }">
+    <template #default="{ expanded, expand }">
       <SidebarNavItem
         v-if="!expanded"
         as="button"
@@ -31,6 +21,29 @@
         @click="expand"
       />
       <HeaderSearch v-else class="sidebar-search" />
+
+      <div class="sidebar-search-separator" />
+
+      <SidebarNavItem
+        v-for="item in navigationItems"
+        :key="item.key"
+        :as="RouterLink"
+        :to="item.to"
+        :label="item.title"
+        :active="item.active"
+        :icon="icons[item.key]"
+      />
+    </template>
+
+    <template #tools>
+      <SidebarNavItem
+        class="sidebar-error-action"
+        as="button"
+        label="На странице ошибка"
+        title="Сообщить об ошибке на странице (Alt+Shift+E)"
+        :icon="CircleAlert"
+        @click="requestErrorReport"
+      />
     </template>
 
     <template #account="{ expanded }">
@@ -42,12 +55,13 @@
 <script setup>
 import { computed } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
-import { BookOpen, Dices, ScrollText, Search, Shield, Users } from '@lucide/vue'
+import { BookOpen, CircleAlert, Dices, ScrollText, Search, Shield, Users } from '@lucide/vue'
 import { AppSidebar, SidebarBrand, SidebarNavItem } from '@sylvieshare/share-ui'
 import HeaderSearch from '@/shared/ui/HeaderSearch'
 import UserBox from '@/features/auth/components/UserBox'
 import { resolveAppNavigation } from '@/shared/lib/appNavigation'
 import { useAccountStore } from '@/stores/account'
+import { requestErrorReport } from '@/features/error-report/lib/errorReportLauncher'
 
 const route = useRoute()
 const accountStore = useAccountStore()
@@ -84,6 +98,16 @@ const navigationItems = computed(() => resolveAppNavigation({
 .desktop-sidebar :deep(.sidebar-search .hs-dropdown) {
   inset: auto auto 0 calc(100% + 12px);
 }
+
+.sidebar-search-separator {
+  height: 1px;
+  margin: 4px 2px 6px;
+  background: var(--border);
+}
+
+.desktop-sidebar :deep(.share-sidebar-tools .sidebar-error-action) { order: 1; }
+.desktop-sidebar :deep(.share-sidebar-tools .sidebar-toggle) { order: 2; }
+.desktop-sidebar :deep(.sidebar-error-action .sidebar-icon) { color: var(--danger); }
 
 .desktop-sidebar :deep(.share-sidebar-account .user-box) { width: 100%; }
 

@@ -1,20 +1,4 @@
 <template>
-  <teleport to="body">
-    <div class="error-reporter" data-error-report-ignore>
-      <button
-        v-if="!selecting && !formOpen"
-        class="report-button"
-        type="button"
-        title="Сообщить об ошибке на странице (Alt+Shift+E)"
-        aria-label="Сообщить об ошибке на странице"
-        @click="startSelection"
-      >
-        <span class="report-button-icon" aria-hidden="true">!</span>
-        <span class="report-button-label">На странице ошибка</span>
-      </button>
-    </div>
-  </teleport>
-
   <teleport v-if="selecting" to="body">
     <div
       v-show="highlight.visible"
@@ -117,6 +101,7 @@ import { createErrorReport } from '../api/errorReportApi'
 import { describeElement, screenshotContextsFor, selectorFor } from '../lib/errorReportElement'
 import { platformForViewport } from '../lib/errorReportContext'
 import { captureSelectedArea, withTimeout } from '../lib/errorReportScreenshot'
+import { ERROR_REPORT_REQUEST_EVENT } from '../lib/errorReportLauncher'
 
 const selecting = ref(false)
 const formOpen = ref(false)
@@ -399,12 +384,16 @@ function onGlobalKeydown(event) {
   }
 }
 
-onMounted(() => document.addEventListener('keydown', onGlobalKeydown))
+onMounted(() => {
+  document.addEventListener('keydown', onGlobalKeydown)
+  window.addEventListener(ERROR_REPORT_REQUEST_EVENT, startSelection)
+})
 
 onBeforeUnmount(() => {
   stopSelection()
   clearTimeout(toastTimer)
   document.removeEventListener('keydown', onGlobalKeydown)
+  window.removeEventListener(ERROR_REPORT_REQUEST_EVENT, startSelection)
 })
 </script>
 
