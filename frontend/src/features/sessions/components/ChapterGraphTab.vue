@@ -46,7 +46,8 @@
         @preview-position="graph.setLocalPosition"
         @save-position="savePosition"
         @create-chapter="openChapterCreate"
-        @close-workspace="$emit('close-workspace')"
+        @close-workspace="returnToChapters"
+        @chapter-ancestor-click="openChapterAncestorMenu"
         @scene-count="graph.setSceneCount"
         @send-block-to-combat="$emit('send-block-to-combat', $event)"
       />
@@ -63,15 +64,20 @@
       :aria-label="activeChapter ? `Действия с главой ${activeChapter.number}` : 'Действия с главой'"
     >
       <template v-if="activeChapter">
-        <RowActionItem action="view" tone="accent" @click="openScenes(activeChapter)">
-          Сценарии главы
-          <template #suffix>{{ activeChapter.sceneCount ?? 0 }}</template>
+        <RowActionItem v-if="nodeMenuContext === 'ancestor'" :icon="ArrowLeft" tone="accent" @click="returnToChapters">
+          Вернуться к главам
         </RowActionItem>
-        <RowActionItem
-          v-if="activeChapter.id !== graph.currentChapter.value?.id"
-          :icon="CircleDot"
-          @click="makeCurrent(activeChapter)"
-        >Сделать текущей</RowActionItem>
+        <template v-else>
+          <RowActionItem action="view" tone="accent" @click="openScenes(activeChapter)">
+            Сценарии главы
+            <template #suffix>{{ activeChapter.sceneCount ?? 0 }}</template>
+          </RowActionItem>
+          <RowActionItem
+            v-if="activeChapter.id !== graph.currentChapter.value?.id"
+            :icon="CircleDot"
+            @click="makeCurrent(activeChapter)"
+          >Сделать текущей</RowActionItem>
+        </template>
         <RowActionSubmenu label="Статус главы" :min-width="230">
           <template #trigger="{ open }">
             <RowActionItem :icon="ListChecks" submenu :submenu-open="open">Изменить статус</RowActionItem>
@@ -80,24 +86,26 @@
             v-for="status in CHAPTER_STATUSES"
             :key="status.key"
             :icon="activeChapter.status === status.key ? Check : Circle"
-            :tone="activeChapter.status === status.key ? 'accent' : 'default'"
+            :style="{ color: status.color }"
             @click="changeStatus(activeChapter, status.key)"
           >{{ status.label }}</RowActionItem>
         </RowActionSubmenu>
         <RowActionItem action="edit" @click="editChapter(activeChapter)">Редактировать</RowActionItem>
-        <RowActionItem :icon="GitBranchPlus" @click="startLink(activeChapter)">Создать переход отсюда</RowActionItem>
-        <RowActionSubmenu v-if="otherArcs.length" label="Переместить в арку" :min-width="220">
-          <template #trigger="{ open }">
-            <RowActionItem :icon="FolderInput" submenu :submenu-open="open">Переместить в арку</RowActionItem>
-          </template>
-          <RowActionItem
-            v-for="arc in otherArcs"
-            :key="arc.id"
-            :icon="FolderInput"
-            @click="prepareMove(activeChapter, arc)"
-          >{{ romanNumeral(arc.order) }} · {{ arc.name }}</RowActionItem>
-        </RowActionSubmenu>
-        <RowActionItem action="delete" tone="danger" @click="confirmChapterDelete(activeChapter)">Удалить главу</RowActionItem>
+        <template v-if="nodeMenuContext !== 'ancestor'">
+          <RowActionItem :icon="GitBranchPlus" @click="startLink(activeChapter)">Создать переход отсюда</RowActionItem>
+          <RowActionSubmenu v-if="otherArcs.length" label="Переместить в арку" :min-width="220">
+            <template #trigger="{ open }">
+              <RowActionItem :icon="FolderInput" submenu :submenu-open="open">Переместить в арку</RowActionItem>
+            </template>
+            <RowActionItem
+              v-for="arc in otherArcs"
+              :key="arc.id"
+              :icon="FolderInput"
+              @click="prepareMove(activeChapter, arc)"
+            >{{ romanNumeral(arc.order) }} · {{ arc.name }}</RowActionItem>
+          </RowActionSubmenu>
+          <RowActionItem action="delete" tone="danger" @click="confirmChapterDelete(activeChapter)">Удалить главу</RowActionItem>
+        </template>
       </template>
     </BasePopover>
 
@@ -155,7 +163,7 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue'
-import { ArrowLeftRight, Check, Circle, CircleDot, FolderInput, GitBranchPlus, ListChecks } from '@lucide/vue'
+import { ArrowLeft, ArrowLeftRight, Check, Circle, CircleDot, FolderInput, GitBranchPlus, ListChecks } from '@lucide/vue'
 import ArcEditorModal from '@/features/sessions/components/ArcEditorModal.vue'
 import ChapterEdgeModal from '@/features/sessions/components/ChapterEdgeModal.vue'
 import ChapterEditorModal from '@/features/sessions/components/ChapterEditorModal.vue'
@@ -189,6 +197,7 @@ const saving = ref(false)
 const nodeMenuOpen = ref(false)
 const nodeAnchor = ref(null)
 const activeChapter = ref(null)
+const nodeMenuContext = ref('node')
 const edgeMenuOpen = ref(false)
 const edgeAnchor = ref(null)
 const activeEdge = ref(null)
@@ -221,6 +230,15 @@ function selectArc(id) {
 
 function openNodeMenu(chapter, anchor) {
   if (props.locked) return
+  nodeMenuContext.value = 'node'
+  activeChapter.value = chapter
+  nodeAnchor.value = anchor
+  edgeMenuOpen.value = false
+  nodeMenuOpen.value = true
+}
+
+function openChapterAncestorMenu(chapter, anchor) {
+  nodeMenuContext.value = 'ancestor'
   activeChapter.value = chapter
   nodeAnchor.value = anchor
   edgeMenuOpen.value = false
@@ -368,6 +386,11 @@ async function reverseEdge(edge) {
 function openScenes(chapter) {
   closeMenus()
   emit('open-scenes', chapter)
+}
+
+function returnToChapters() {
+  closeMenus()
+  emit('close-workspace')
 }
 
 function prepareMove(chapter, arc) {

@@ -108,6 +108,7 @@
 
 <script setup>
 import { computed, getCurrentInstance, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { clampGraphPan, graphContentBounds } from '@/features/sessions/lib/graphViewport'
 
 const props = defineProps({
   graphKey: { type: String, required: true },
@@ -181,6 +182,7 @@ const temporaryPath = computed(() => {
     _graphHeight: dimensions.height,
   })
 })
+const contentBounds = computed(() => graphContentBounds(props.nodes, nodeDimensions))
 
 function nodeDimensions(node) {
   sizeRevision.value
@@ -240,27 +242,46 @@ function viewKey(graphKey = props.graphKey) {
   return `nested-graph:view:${graphKey}`
 }
 
-function loadView(graphKey = props.graphKey, initialTop = props.initialTop) {
+function constrainPan(candidate, candidateZoom = zoom.value) {
+  return clampGraphPan({
+    pan: candidate,
+    zoom: candidateZoom,
+    frame: safeFrame(),
+    bounds: contentBounds.value,
+  })
+}
+
+function clampCurrentPan() {
+  const next = constrainPan(pan.value)
+  if (Math.abs(next.x - pan.value.x) < 0.01 && Math.abs(next.y - pan.value.y) < 0.01) return false
+  pan.value = next
+  return true
+}
+
+function loadView(graphKey = props.graphKey, initialTop = props.initialTop, constrain = true) {
   try {
     const saved = JSON.parse(localStorage.getItem(viewKey(graphKey)) || 'null')
     if (saved && Number.isFinite(saved.x) && Number.isFinite(saved.y) && Number.isFinite(saved.zoom)) {
-      pan.value = { x: saved.x, y: saved.y }
       zoom.value = Math.max(0.35, Math.min(1.8, saved.zoom))
+      const savedPan = { x: saved.x, y: saved.y }
+      pan.value = constrain ? constrainPan(savedPan, zoom.value) : savedPan
       announceView()
       return
     }
   } catch { /* ignore */ }
-  pan.value = { x: safeFrame().left + 48, y: initialTop }
   zoom.value = 1
+  const initialPan = { x: safeFrame().left + 48, y: initialTop }
+  pan.value = constrain ? constrainPan(initialPan, zoom.value) : initialPan
   announceView()
 }
 
 function prepareView(graphKey, initialTop) {
   preparedGraphKey = graphKey
-  loadView(graphKey, initialTop)
+  loadView(graphKey, initialTop, false)
 }
 
 function saveView() {
+  clampCurrentPan()
   try { localStorage.setItem(viewKey(), JSON.stringify({ ...pan.value, zoom: zoom.value })) } catch { /* ignore */ }
   announceView()
 }
@@ -344,10 +365,10 @@ function onPointerMove(event) {
   const active = gesture.value
   if (!active || active.pointerId !== event.pointerId) return
   if (active.type === 'pan') {
-    pan.value = {
+    pan.value = constrainPan({
       x: active.panX + event.clientX - active.startX,
       y: active.panY + event.clientY - active.startY,
-    }
+    })
     announceView()
     return
   }
@@ -367,6 +388,7 @@ function onPointerMove(event) {
 function onPointerUp(event) {
   const active = gesture.value
   if (!active || active.pointerId !== event.pointerId) return
+  const contentMayHaveShrunk = active.moved && ['node', 'resize'].includes(active.type)
   if (active.type === 'pan') {
     saveView()
   } else if (active.type === 'resize') {
@@ -388,6 +410,7 @@ function onPointerUp(event) {
     }
   }
   cancelGesture()
+  if (contentMayHaveShrunk) nextTick(() => { if (clampCurrentPan()) saveView() })
 }
 
 function onNativeDoubleClick(node) {
@@ -404,10 +427,10 @@ function onWheel(event) {
   const before = pointInWorld(event)
   const next = Math.max(0.35, Math.min(1.8, zoom.value * Math.exp(-event.deltaY * 0.0012)))
   zoom.value = next
-  pan.value = {
+  pan.value = constrainPan({
     x: event.clientX - rect.left - before.x * next,
     y: event.clientY - rect.top - before.y * next,
-  }
+  }, next)
   saveView()
 }
 
@@ -420,7 +443,7 @@ function zoomBy(factor) {
   const before = pointInWorld(center)
   const next = Math.max(0.35, Math.min(1.8, zoom.value * factor))
   zoom.value = next
-  pan.value = { x: centerX - before.x * next, y: rect.height / 2 - before.y * next }
+  pan.value = constrainPan({ x: centerX - before.x * next, y: rect.height / 2 - before.y * next }, next)
   saveView()
 }
 
@@ -439,10 +462,10 @@ function focusNode(node) {
   const rect = viewport.value.getBoundingClientRect()
   const frame = safeFrame()
   const dimensions = nodeDimensions(node)
-  pan.value = {
+  pan.value = constrainPan({
     x: frame.left + frame.width / 2 - (node.positionX + dimensions.width / 2) * zoom.value,
     y: rect.height / 2 - (node.positionY + dimensions.height / 2) * zoom.value,
-  }
+  })
   saveView()
 }
 
@@ -461,7 +484,10 @@ watch(() => props.graphKey, graphKey => {
   sizeRevision.value += 1
   if (graphKey === preparedGraphKey) {
     preparedGraphKey = null
-    nextTick(refreshNodeObservers)
+    nextTick(() => {
+      refreshNodeObservers()
+      if (clampCurrentPan()) saveView()
+    })
     return
   }
   nextTick(() => {
@@ -470,14 +496,24 @@ watch(() => props.graphKey, graphKey => {
   })
 })
 watch(() => [props.nodes.length, props.dynamicNodeHeight], () => nextTick(refreshNodeObservers), { flush: 'post' })
+watch(contentBounds, () => {
+  if (['node', 'resize'].includes(gesture.value?.type)) return
+  nextTick(() => { if (clampCurrentPan()) saveView() })
+}, { flush: 'post' })
 watch(() => props.layoutKey, async () => {
   await nextTick()
-  requestAnimationFrame(() => { viewportRevision.value += 1 })
+  requestAnimationFrame(() => {
+    viewportRevision.value += 1
+    if (clampCurrentPan()) saveView()
+  })
 }, { flush: 'post' })
 watch(() => props.locked, locked => { if (locked) cancelGesture() })
 onMounted(() => {
   loadView()
-  viewportResizeObserver = new ResizeObserver(() => { viewportRevision.value += 1 })
+  viewportResizeObserver = new ResizeObserver(() => {
+    viewportRevision.value += 1
+    if (clampCurrentPan()) saveView()
+  })
   viewportResizeObserver.observe(viewport.value)
   nodeResizeObserver = new ResizeObserver(entries => {
     let changed = false

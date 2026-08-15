@@ -54,6 +54,7 @@ describe('chapter graph workspace', () => {
     expect(tab).toContain('@node-click="openNodeMenu"')
     expect(tab).not.toContain('<ChapterGraphMenus')
     expect(tab).toContain('Изменить статус')
+    expect(tab).toContain(':style="{ color: status.color }"')
     expect(tab.match(/<RowActionSubmenu/g)).toHaveLength(2)
     expect(tab).toContain('Создать переход отсюда')
     expect(tab).toContain('<RowActionItem action="delete" tone="danger"')
@@ -86,10 +87,16 @@ describe('chapter graph workspace', () => {
   it('re-measures the safe frame and pins the ancestor chain above the same canvas', () => {
     expect(canvas).toContain("styles.getPropertyValue('--chapter-safe-left')")
     expect(canvas).toContain('viewportRevision.value += 1')
+    expect(canvas).toContain('bounds: contentBounds.value')
+    expect(canvas).toContain('pan.value = constrainPan({')
     expect(sessionCanvas).toContain('session-graph-ancestor--chapter')
     expect(sessionCanvas).toContain('session-graph-ancestor--scene')
     expect(sessionCanvas).toContain('@dblclick.stop="returnToChapters"')
     expect(sessionCanvas).toContain('@dblclick.stop="returnToScenes"')
+    expect(sessionCanvas).toContain('@click.stop="openChapterAncestorMenu"')
+    expect(sessionCanvas).toContain("emit('chapter-ancestor-click', activeChapter.value, event.currentTarget)")
+    expect(tab).toContain('@chapter-ancestor-click="openChapterAncestorMenu"')
+    expect(tab).toContain('Вернуться к главам')
   })
 
   it('disables transform easing while a node is being dragged', () => {

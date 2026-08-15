@@ -1,16 +1,16 @@
 import { SESSION_IMAGE_PRESETS, sessionImagePresetUrl, sessionImageUrl } from '@/features/sessions/lib/sessionImages'
 
 export const CHAPTER_STATUSES = [
-  { key: 'draft', label: 'Черновик', tone: 'muted' },
-  { key: 'planned', label: 'Запланирована', tone: 'info' },
-  { key: 'ready', label: 'Подготовлена', tone: 'violet' },
-  { key: 'available', label: 'Доступна', tone: 'accent' },
-  { key: 'in_progress', label: 'В процессе', tone: 'warning' },
-  { key: 'paused', label: 'Приостановлена', tone: 'muted' },
-  { key: 'completed', label: 'Завершена', tone: 'success' },
-  { key: 'failed', label: 'Провалена', tone: 'danger' },
-  { key: 'skipped', label: 'Пропущена', tone: 'muted' },
-  { key: 'cancelled', label: 'Отменена', tone: 'danger' },
+  { key: 'draft', label: 'Черновик', tone: 'muted', color: 'var(--text-2)' },
+  { key: 'planned', label: 'Запланирована', tone: 'info', color: 'var(--info)' },
+  { key: 'ready', label: 'Подготовлена', tone: 'violet', color: 'var(--accent-hover)' },
+  { key: 'available', label: 'Доступна', tone: 'accent', color: 'var(--accent)' },
+  { key: 'in_progress', label: 'В процессе', tone: 'warning', color: 'var(--warning)' },
+  { key: 'paused', label: 'Приостановлена', tone: 'muted', color: 'var(--text-2)' },
+  { key: 'completed', label: 'Завершена', tone: 'success', color: 'var(--success)' },
+  { key: 'failed', label: 'Провалена', tone: 'danger', color: 'var(--danger)' },
+  { key: 'skipped', label: 'Пропущена', tone: 'muted', color: 'var(--text-2)' },
+  { key: 'cancelled', label: 'Отменена', tone: 'danger', color: 'var(--danger)' },
 ]
 
 export const CHAPTER_PRESETS = SESSION_IMAGE_PRESETS

@@ -33,6 +33,13 @@ describe('session graph canvas', () => {
     expect(source).toContain('class="session-graph-ancestor session-graph-ancestor--scene"')
   })
 
+  it('opens chapter actions from the pinned ancestor preview', () => {
+    expect(source).toContain('@click.stop="openChapterAncestorMenu"')
+    expect(source).toContain('@keydown.enter.stop.prevent="openChapterAncestorMenu"')
+    expect(source).toContain("emit('chapter-ancestor-click', activeChapter.value, event.currentTarget)")
+    expect(source).toContain("'chapter-ancestor-click', 'scene-count'")
+  })
+
   it('switches graph identity and camera atomically without cross-level node reuse', () => {
     expect(source).toContain("? 0 : 420")
     expect(source).toContain('canvas.value?.prepareView(graphKeyFor(level), initialTopFor(level))')

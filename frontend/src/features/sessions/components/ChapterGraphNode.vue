@@ -22,7 +22,7 @@
       <div v-else class="chapter-node-image-empty" />
       <div class="chapter-node-shade" />
       <span v-if="current" class="chapter-current-mark">Текущая</span>
-      <span class="chapter-status" :class="`chapter-status--${status.tone}`">{{ status.label }}</span>
+      <span class="chapter-status" :class="`chapter-status--${status.tone}`" :style="{ color: status.color }">{{ status.label }}</span>
     </div>
     <div class="chapter-node-copy">
       <div class="chapter-node-meta">
@@ -193,13 +193,6 @@ const sceneLabel = computed(() => {
   background: color-mix(in srgb, var(--bg) 72%, transparent);
   border: 1px solid color-mix(in srgb, var(--text-on-accent) 10%, transparent);
 }
-.chapter-status--success { color: var(--success); }
-.chapter-status--danger { color: var(--danger); }
-.chapter-status--warning { color: var(--warning); }
-.chapter-status--accent { color: var(--accent); }
-.chapter-status--info { color: var(--info); }
-.chapter-status--violet { color: var(--accent-hover); }
-
 .chapter-node-copy {
   position: absolute;
   z-index: 2;

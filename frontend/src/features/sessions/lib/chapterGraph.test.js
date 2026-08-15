@@ -24,6 +24,13 @@ describe('chapter graph presentation helpers', () => {
     expect(CHAPTER_STATUSES.map(item => item.key)).toEqual(expect.arrayContaining([
       'draft', 'ready', 'available', 'in_progress', 'paused', 'completed', 'failed', 'skipped', 'cancelled',
     ]))
+    expect(Object.fromEntries(CHAPTER_STATUSES.map(item => [item.key, item.color]))).toMatchObject({
+      planned: 'var(--info)',
+      ready: 'var(--accent-hover)',
+      in_progress: 'var(--warning)',
+      completed: 'var(--success)',
+      failed: 'var(--danger)',
+    })
     expect(CHAPTER_PRESETS.map(item => item.key)).toEqual(expect.arrayContaining([
       'city', 'camp', 'road', 'village', 'cave', 'forest', 'ruins', 'castle', 'tavern', 'dungeon', 'mountains', 'coast',
       'battle', 'investigation', 'negotiation', 'chase', 'puzzle', 'discovery',

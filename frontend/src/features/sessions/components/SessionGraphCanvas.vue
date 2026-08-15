@@ -61,8 +61,14 @@
     <div
       v-if="showChapterAncestor"
       class="session-graph-ancestor session-graph-ancestor--chapter"
-      title="Двойной клик — к холсту глав"
+      title="Действия с главой"
+      :role="isDm ? 'button' : undefined"
+      :tabindex="isDm ? 0 : -1"
+      :aria-label="activeChapter ? `Действия с главой ${activeChapter.number}` : 'Действия с главой'"
+      @click.stop="openChapterAncestorMenu"
       @dblclick.stop="returnToChapters"
+      @keydown.enter.stop.prevent="openChapterAncestorMenu"
+      @keydown.space.stop.prevent="openChapterAncestorMenu"
     >
       <ChapterGraphNode
         v-if="activeChapter"
@@ -181,7 +187,7 @@ const props = defineProps({
 const emit = defineEmits([
   'node-click', 'node-double-click', 'edge-click', 'start-link', 'finish-link',
   'preview-position', 'save-position', 'create-chapter', 'close-workspace',
-  'scene-count', 'view-change', 'send-block-to-combat',
+  'chapter-ancestor-click', 'scene-count', 'view-change', 'send-block-to-combat',
 ])
 
 const canvas = ref(null)
@@ -342,6 +348,14 @@ function returnToScenes() {
 
 function returnToChapters() {
   emit('close-workspace')
+}
+
+function openChapterAncestorMenu(event) {
+  if (!props.isDm || !activeChapter.value) return
+  sceneMenus.value?.close()
+  blockMenus.value?.close()
+  edgeMenus.value?.close()
+  emit('chapter-ancestor-click', activeChapter.value, event.currentTarget)
 }
 
 function sceneIndex(scene) {

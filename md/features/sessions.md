@@ -134,9 +134,14 @@ second local tab switcher or session title bar. `SessionGraphCanvas` keeps one
 physical `NestedGraphCanvas` mounted for all narrative levels. It uses the
 application-wide canvas background and dot-color tokens, supports pan/zoom and
 stores a viewport per graph in local storage; its 24px base grid repositions and
-scales with that viewport. Nodes can be dragged; during an active drag their
-transform transition is disabled so the node and every connected edge update in
-the same frame. Spotlight transitions remain animated outside dragging.
+scales with that viewport. Every graph constrains the camera center to the
+bounding box of its cards plus `320px` horizontal and `240px` vertical world
+space, using the safe frame between the side rails; saved legacy viewports,
+zooming and rail resizes are clamped by the same rule. Empty graphs remain
+unconstrained until their first card exists. Nodes can be dragged; during an
+active drag their transform transition is disabled so the node and every
+connected edge update in the same frame. Spotlight transitions remain animated
+outside dragging.
 Drilling into a narrative level waits for the 420ms spotlight movement to reach
 its ancestor position, then swaps the graph identity, payload and preloaded
 viewport in one render. DOM keys include the graph identity so equal numeric IDs
@@ -148,6 +153,10 @@ participant rail width uses the same duration and easing as that movement, both
 on entry and exit. Reduced-motion users skip the delay.
 A regular node click opens its action popover: open the chapter scenarios, make
 current, change status, edit, start a transition, move to another arc or delete.
+Status choices use the same configured semantic colors as the status badge on
+the chapter node. While scenarios or blocks are open, clicking the pinned
+chapter preview opens a reduced chapter menu with return-to-chapters, status
+change and edit actions; double click remains a direct return shortcut.
 Double-clicking a chapter opens its scenario canvas directly.
 Moving a node to another arc removes its old transitions after confirmation
 because a transition cannot cross arc boundaries.
