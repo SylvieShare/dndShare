@@ -296,6 +296,7 @@ describe('ViewSession participant rail', () => {
   it('reorders participants by drag and persists the complete order', () => {
     expect(source).toContain('data-sortable-container="participants"')
     expect(source).toContain(':data-sortable-key="p.charId"')
+    expect(source).toContain(':should-suppress-reorder-click="participantSortable.shouldSuppressClick"')
     expect(source).toContain('const participantSortable = useSortable({')
     expect(source).toContain('const reordered = reorderByDrop(participants.value, fromIndex, toIndex)')
     expect(source).toContain('await reorderParticipants(sessionUuid, reordered.map(participant => participant.charId))')

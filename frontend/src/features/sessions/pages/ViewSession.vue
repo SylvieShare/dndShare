@@ -110,6 +110,7 @@
             :color-pending="coloringIds.has(p.charId)"
             :reorder-enabled="isDm && participants.length > 1 && !participantOrderSaving"
             :reorder-placeholder="participantSortable.isSource(p)"
+            :should-suppress-reorder-click="participantSortable.shouldSuppressClick"
             :combat-mode="workspaceMotionMode === 'combat'"
             :combatant="encounterPlayer(p.charId)"
             :combat-selected="isEncounterPlayerSelected(p.charId)"

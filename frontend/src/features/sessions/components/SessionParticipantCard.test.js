@@ -36,10 +36,14 @@ describe('SessionParticipantCard actions', () => {
     expect(source).toContain("defineEmits(['view', 'kick', 'color', 'drag-start', 'update:combat-selected', 'update:initiative'])")
   })
 
-  it('provides a DM drag handle and a stable sortable placeholder', () => {
-    expect(source).toContain('class="p-drag-handle"')
-    expect(source).toContain('@pointerdown.stop="startReorder"')
+  it('uses the whole non-interactive card area as the drag handle', () => {
+    expect(source).toContain('@pointerdown="startReorder"')
+    expect(source).toContain('@click.capture="suppressReorderClick"')
+    expect(source).toContain("const REORDER_IGNORE = 'button, input, textarea, select, a")
     expect(source).toContain("emit('drag-start', event)")
+    expect(source).toContain("'p-card--reorderable': reorderEnabled")
+    expect(source).not.toContain('p-drag-handle')
+    expect(source).not.toContain('GripVertical')
     expect(source).toContain("'p-card-menu--placeholder': reorderPlaceholder")
     expect(source).toContain('.p-card-menu--placeholder :deep(.ram-custom-trigger)')
   })
