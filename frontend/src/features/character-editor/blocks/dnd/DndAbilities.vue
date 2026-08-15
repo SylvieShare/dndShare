@@ -112,7 +112,7 @@
 import { computed, inject, onMounted, reactive, ref } from 'vue'
 
 import { itemsApi } from '@/shared/api/itemsApi'
-import BaseTile from "@/shared/ui/BaseTile"
+import { BaseTile } from '@sylvieshare/share-ui'
 import DndAbilitiesEditor from "@/features/character-editor/blocks/dnd/components/DndAbilitiesEditor"
 import DndAbilitiesView from "@/features/character-editor/blocks/dnd/components/DndAbilitiesView"
 import FeatChoiceModal from '@/features/character-editor/components/FeatChoiceModal.vue'

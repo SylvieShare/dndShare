@@ -62,10 +62,10 @@ import AddButton from '@/shared/ui/AddButton'
 import ColorPresetPicker from '@/shared/ui/ColorPresetPicker'
 import EditorPanel from '@/features/character-editor/components/EditorPanel'
 import EditorSection from '@/features/character-editor/components/EditorSection'
-import FormNumberInput from '@/shared/ui/form/FormNumberInput'
+import { FormNumberInput } from '@sylvieshare/share-ui'
 import RemoveButton from '@/shared/ui/RemoveButton'
 import ToggleSwitch from '@/shared/ui/ToggleSwitch'
-import { reorderByDrop, useSortable } from '@/shared/composables/useSortable'
+import { reorderByDrop, useSortable } from '@sylvieshare/share-ui'
 
 const DEFAULT_COLOR = '#c084fc'
 

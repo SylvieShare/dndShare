@@ -94,7 +94,7 @@
 <script setup>
 import { computed, inject, onMounted, ref } from 'vue'
 import { Activity, BatteryLow, Sparkles } from '@lucide/vue'
-import BaseTile from '@/shared/ui/BaseTile'
+import { BaseTile } from '@sylvieshare/share-ui'
 import BlockStatesPickerEditor from '@/features/character-editor/blocks/generic/components/BlockStatesPickerEditor'
 import DndExhaustionEditor from '@/features/character-editor/blocks/dnd/components/DndExhaustionEditor'
 import DndInspirationEditor from '@/features/character-editor/blocks/dnd/components/DndInspirationEditor'

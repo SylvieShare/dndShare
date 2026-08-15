@@ -15,8 +15,8 @@ import { sumBonuses } from '@/shared/lib/dnd'
 import BonusList from '@/shared/ui/BonusList'
 import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 import EditorTotal from '@/features/character-editor/components/EditorTotal'
-import FormField from '@/shared/ui/form/FormField'
-import FormNumberInput from '@/shared/ui/form/FormNumberInput'
+import { FormField } from '@sylvieshare/share-ui'
+import { FormNumberInput } from '@sylvieshare/share-ui'
 
 const props = defineProps({
   data:  { type: Object, required: true },

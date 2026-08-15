@@ -50,8 +50,8 @@
 import { computed, ref } from 'vue'
 import CalcPad from '@/features/character-editor/components/CalcPad'
 import EditorPanel from '@/features/character-editor/components/EditorPanel'
-import FormField from '@/shared/ui/form/FormField'
-import FormNumberInput from '@/shared/ui/form/FormNumberInput'
+import { FormField } from '@sylvieshare/share-ui'
+import { FormNumberInput } from '@sylvieshare/share-ui'
 import SystemDie from '@/shared/ui/SystemDie.vue'
 import { HIT_DICE } from '@/shared/lib/systemDice'
 import {

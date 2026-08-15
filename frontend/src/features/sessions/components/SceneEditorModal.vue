@@ -25,9 +25,9 @@
 <script setup>
 import { reactive } from 'vue'
 import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
-import FormActionButtons from '@/shared/ui/form/FormActionButtons'
-import FormField from '@/shared/ui/form/FormField'
-import FormTextInput from '@/shared/ui/form/FormTextInput'
+import { FormActionButtons } from '@sylvieshare/share-ui'
+import { FormField } from '@sylvieshare/share-ui'
+import { FormTextInput } from '@sylvieshare/share-ui'
 import SessionImagePicker from '@/features/sessions/components/SessionImagePicker.vue'
 
 const props = defineProps({

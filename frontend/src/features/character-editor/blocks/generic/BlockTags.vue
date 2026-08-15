@@ -33,7 +33,7 @@
 
 <script setup>
 import { computed, inject, ref } from 'vue'
-import BaseTile from '@/shared/ui/BaseTile'
+import { BaseTile } from '@sylvieshare/share-ui'
 import BlockTagsEditor from '@/features/character-editor/blocks/generic/components/BlockTagsEditor'
 import BlockTagsView from '@/features/character-editor/blocks/generic/components/BlockTagsView'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'

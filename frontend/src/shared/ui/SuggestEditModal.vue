@@ -81,9 +81,9 @@
 import { computed, nextTick, onMounted, reactive, ref } from 'vue'
 import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 import ColorPresetPicker from '@/shared/ui/ColorPresetPicker'
-import FormActionButtons from '@/shared/ui/form/FormActionButtons'
-import FormField from '@/shared/ui/form/FormField'
-import FormTextInput from '@/shared/ui/form/FormTextInput'
+import { FormActionButtons } from '@sylvieshare/share-ui'
+import { FormField } from '@sylvieshare/share-ui'
+import { FormTextInput } from '@sylvieshare/share-ui'
 import InputDescription from '@/shared/ui/InputDescription'
 import { fetchPost, fetchPut } from '@/shared/api/http'
 

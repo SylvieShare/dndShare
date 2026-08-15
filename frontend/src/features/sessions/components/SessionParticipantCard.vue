@@ -121,7 +121,7 @@
 <script setup>
 import { computed } from 'vue'
 import { Palette } from '@lucide/vue'
-import BaseTile from '@/shared/ui/BaseTile.vue'
+import { BaseTile } from '@sylvieshare/share-ui'
 import ColorPresetPicker from '@/shared/ui/ColorPresetPicker.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionMenu from '@/shared/ui/RowActionMenu.vue'

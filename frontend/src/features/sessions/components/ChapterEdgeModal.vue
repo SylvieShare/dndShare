@@ -25,9 +25,9 @@
 <script setup>
 import { ref } from 'vue'
 import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
-import FormActionButtons from '@/shared/ui/form/FormActionButtons'
-import FormField from '@/shared/ui/form/FormField'
-import FormTextInput from '@/shared/ui/form/FormTextInput'
+import { FormActionButtons } from '@sylvieshare/share-ui'
+import { FormField } from '@sylvieshare/share-ui'
+import { FormTextInput } from '@sylvieshare/share-ui'
 
 const props = defineProps({
   edge: { type: Object, default: null },

@@ -90,7 +90,8 @@ Heroic inspiration is stored as the boolean `values.inspiration`.
 ## Shared UI requirements
 
 General-purpose labels, text, number, textarea and action rows use
-`shared/ui/form`; rule-specific calculators, stat controls and file inputs may
+the form primitives exported by `@sylvieshare/share-ui`; rule-specific
+calculators, stat controls and file inputs may
 own specialized controls. Regular windows use `AppModalFrame`, whose title,
 close button and mobile handle remain fixed while the body scrolls. Direct
 `AppModal` usage is reserved for specialized fullscreen workspaces. Confirm and one-line prompt use

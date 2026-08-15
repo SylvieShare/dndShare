@@ -9,8 +9,8 @@
 
 <script setup>
 import AddButton from '@/shared/ui/AddButton'
-import FormNumberInput from '@/shared/ui/form/FormNumberInput'
-import FormTextInput from '@/shared/ui/form/FormTextInput'
+import { FormNumberInput } from '@sylvieshare/share-ui'
+import { FormTextInput } from '@sylvieshare/share-ui'
 import RemoveButton from '@/shared/ui/RemoveButton'
 
 const props = defineProps({ bonuses: { type: Array, default: () => [] } })

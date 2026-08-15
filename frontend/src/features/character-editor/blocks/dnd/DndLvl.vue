@@ -27,7 +27,7 @@
 
 <script setup>
 import { computed, inject, ref } from 'vue'
-import BaseTile from '@/shared/ui/BaseTile'
+import { BaseTile } from '@sylvieshare/share-ui'
 import DndLevelUpModal from '@/features/character-editor/blocks/dnd/components/DndLevelUpModal'
 import DndLvlEditor from '@/features/character-editor/blocks/dnd/components/DndLvlEditor'
 import DndLvlView from '@/features/character-editor/blocks/dnd/components/DndLvlView'

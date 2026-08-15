@@ -51,7 +51,9 @@ frontend, PostgreSQL и S3-compatible object storage.
 - Vue 3 и Composition API;
 - Pinia;
 - vue-router;
-- Vite.
+- Vite;
+- `@sylvieshare/share-ui` — фиксируемая по Git release tag общая дизайн-система
+  DnD Share, HavenShare и TrenchShare.
 
 Приложение также предоставляет JSON-RPC MCP endpoint `/mcp`.
 

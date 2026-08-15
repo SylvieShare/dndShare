@@ -190,7 +190,7 @@
 <script setup>
 import { computed, inject, nextTick, onMounted, reactive, ref, watch } from 'vue'
 
-import BaseTile from '@/shared/ui/BaseTile'
+import { BaseTile } from '@sylvieshare/share-ui'
 import InventoryItemIcon from '@/features/character-editor/components/InventoryItemIcon.vue'
 import ItemInlineFormModal from '@/features/character-editor/components/ItemInlineFormModal'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
@@ -202,7 +202,7 @@ import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionMenu from '@/shared/ui/RowActionMenu.vue'
 import SectionLabel from '@/shared/ui/SectionLabel'
 import { itemsApi } from '@/shared/api/itemsApi'
-import { useSortable } from '@/shared/composables/useSortable'
+import { useSortable } from '@sylvieshare/share-ui'
 import { logSessionEntryAdded } from '@/features/character-editor/lib/sessionEntryEvents'
 import {
   EQUIPPED_ID,

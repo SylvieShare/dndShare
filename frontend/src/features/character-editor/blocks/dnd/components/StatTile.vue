@@ -44,7 +44,7 @@
 // Clicking the tile always opens the editor; `rollable` tiles show a dice button that emits `action`.
 // The colored strip appears only while `toggled` (AC with its shield up), so resting tiles have no strip.
 import { ref } from 'vue'
-import BaseTile from '@/shared/ui/BaseTile'
+import { BaseTile } from '@sylvieshare/share-ui'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
 import StatTileFace from '@/features/character-editor/blocks/dnd/components/StatTileFace'
 import { useMorphOrigin } from '@/features/character-editor/composables/useMorphOrigin'

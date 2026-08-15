@@ -48,7 +48,7 @@
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import BasePopover from '@/shared/ui/BasePopover.vue'
-import BaseTile from '@/shared/ui/BaseTile'
+import { BaseTile } from '@sylvieshare/share-ui'
 import ConfirmDialog from '@/shared/ui/ConfirmDialog'
 import { setCharSeed } from '@/shared/lib/charSeed'
 import { sessionStatusColor } from '@/features/sessions/composables/useSessionStatus'

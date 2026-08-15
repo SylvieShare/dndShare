@@ -63,7 +63,7 @@ import DndBattleCombatantsEditor from '@/features/character-editor/blocks/dnd/co
 import DndDialogueLinesEditor from '@/features/character-editor/blocks/dnd/components/DndDialogueLinesEditor.vue'
 import EditorPanel from '@/features/character-editor/components/EditorPanel'
 import EditorSection from '@/features/character-editor/components/EditorSection'
-import FormTextInput from '@/shared/ui/form/FormTextInput'
+import { FormTextInput } from '@sylvieshare/share-ui'
 import InputDescription from '@/shared/ui/InputDescription'
 import MultiToggle from '@/shared/ui/MultiToggle'
 import { EVENT_TYPES } from '@/features/character-editor/blocks/dnd/lib/diaryEntry'

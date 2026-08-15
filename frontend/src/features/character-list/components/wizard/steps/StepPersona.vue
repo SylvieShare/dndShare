@@ -43,9 +43,9 @@
 <script setup>
 import { inject } from 'vue'
 import InputDescription from '@/shared/ui/InputDescription'
-import FormField from '@/shared/ui/form/FormField'
-import FormSelect from '@/shared/ui/form/FormSelect'
-import FormTextInput from '@/shared/ui/form/FormTextInput'
+import { FormField } from '@sylvieshare/share-ui'
+import { FormSelect } from '@sylvieshare/share-ui'
+import { FormTextInput } from '@sylvieshare/share-ui'
 
 const { state } = inject('createWizard')
 const p = state.persona

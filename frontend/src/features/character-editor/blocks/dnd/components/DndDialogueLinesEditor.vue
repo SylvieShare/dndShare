@@ -25,8 +25,8 @@
 </template>
 
 <script setup>
-import FormTextInput from '@/shared/ui/form/FormTextInput'
-import FormTextarea from '@/shared/ui/form/FormTextarea'
+import { FormTextInput } from '@sylvieshare/share-ui'
+import { FormTextarea } from '@sylvieshare/share-ui'
 import { defaultDialogueLine } from '@/features/character-editor/blocks/dnd/lib/diaryEntry'
 
 const props = defineProps({

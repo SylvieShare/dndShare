@@ -79,7 +79,7 @@ import { ref } from 'vue'
 
 import DndSpellbookSettingsModal from '@/features/character-editor/blocks/dnd/DndSpellbookSettingsModal.vue'
 import SpellSlotSphere from '@/features/items/components/SpellSlotSphere.vue'
-import BaseTile from '@/shared/ui/BaseTile'
+import { BaseTile } from '@sylvieshare/share-ui'
 import SheetBlockTitle from '@/shared/ui/SheetBlockTitle'
 
 const editOpen = ref(false)

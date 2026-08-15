@@ -9,7 +9,7 @@
 // from `nav`. Swipe-back drives `nav.pos` live, so the detail pane is visible to the left and slides
 // in with the finger. Body height is synced to the active cell.
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import { useContainerMorph } from '@/shared/composables/useContainerMorph'
+import { useContainerMorph } from '@sylvieshare/share-ui'
 import { useIsMobile } from '@/shared/composables/useIsMobile'
 
 const props = defineProps({

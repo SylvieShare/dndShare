@@ -57,11 +57,11 @@
 <script setup>
 import { computed, onBeforeUnmount, reactive, ref } from 'vue'
 import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
-import FormActionButtons from '@/shared/ui/form/FormActionButtons'
-import FormField from '@/shared/ui/form/FormField'
-import FormSelect from '@/shared/ui/form/FormSelect'
-import FormTextInput from '@/shared/ui/form/FormTextInput'
-import FormTextarea from '@/shared/ui/form/FormTextarea'
+import { FormActionButtons } from '@sylvieshare/share-ui'
+import { FormField } from '@sylvieshare/share-ui'
+import { FormSelect } from '@sylvieshare/share-ui'
+import { FormTextInput } from '@sylvieshare/share-ui'
+import { FormTextarea } from '@sylvieshare/share-ui'
 import SessionImagePicker from '@/features/sessions/components/SessionImagePicker.vue'
 import { CHAPTER_STATUSES } from '@/features/sessions/lib/chapterGraph'
 

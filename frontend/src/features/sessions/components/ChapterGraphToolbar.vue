@@ -71,7 +71,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 import BasePopover from '@/shared/ui/BasePopover.vue'
-import BaseTile from '@/shared/ui/BaseTile.vue'
+import { BaseTile } from '@sylvieshare/share-ui'
 import SessionStatusMenu from '@/features/sessions/components/SessionStatusMenu.vue'
 import { romanNumeral } from '@/features/sessions/lib/chapterGraph'
 

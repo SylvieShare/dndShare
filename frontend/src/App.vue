@@ -4,7 +4,7 @@
   <!-- The character LIST is kept alive so returning from a character page restores
        its scroll position and avoids a refetch flash. -->
   <div
-    class="page-transition-stage"
+    class="page-transition-stage share-app-canvas"
     :class="{
       'page-transition-stage--print': isPrintRoute,
       'page-transition-stage--standalone': isStandaloneRoute,
@@ -64,13 +64,8 @@ html, body {
   margin: 0;
 }
 body {
-  background-color: var(--app-canvas-bg);
-  background-image: var(--app-canvas-pattern);
-  background-size: var(--app-canvas-dot-size) var(--app-canvas-dot-size);
-  color: var(--text-1);
   color-scheme: dark;
   overflow-x: clip;
-  font-family: var(--font-ui);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -105,9 +100,6 @@ body {
   min-height: calc(100vh - var(--header-h));
   min-height: calc(100dvh - var(--header-h));
   margin-left: var(--app-sidebar-w);
-  background-color: var(--app-canvas-bg);
-  background-image: var(--app-canvas-pattern);
-  background-size: var(--app-canvas-dot-size) var(--app-canvas-dot-size);
 }
 
 .page-transition-stage--print {

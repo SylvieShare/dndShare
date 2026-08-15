@@ -78,8 +78,8 @@
 import ColorPresetPicker from '@/shared/ui/ColorPresetPicker'
 import EditorPanel from '@/features/character-editor/components/EditorPanel'
 import EditorSection from '@/features/character-editor/components/EditorSection'
-import FormNumberInput from '@/shared/ui/form/FormNumberInput'
-import FormTextInput from '@/shared/ui/form/FormTextInput'
+import { FormNumberInput } from '@sylvieshare/share-ui'
+import { FormTextInput } from '@sylvieshare/share-ui'
 import IconPicker from '@/shared/ui/IconPicker'
 import ToggleSwitch from '@/shared/ui/ToggleSwitch'
 

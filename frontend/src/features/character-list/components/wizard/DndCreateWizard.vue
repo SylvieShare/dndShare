@@ -141,8 +141,8 @@
 <script setup>
 import { computed, onMounted } from 'vue'
 import DndStatAssign from './DndStatAssign.vue'
-import FormField from '@/shared/ui/form/FormField'
-import FormTextInput from '@/shared/ui/form/FormTextInput'
+import { FormField } from '@sylvieshare/share-ui'
+import { FormTextInput } from '@sylvieshare/share-ui'
 import { featuresForBinding } from '@/features/character-editor/settings/dnd/creation/progression'
 import { useDndCreateWizard } from '@/features/character-list/composables/useDndCreateWizard'
 import { dieLabel } from '@/shared/lib/systemDice'

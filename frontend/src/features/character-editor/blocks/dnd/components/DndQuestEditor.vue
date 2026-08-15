@@ -49,8 +49,8 @@
 <script setup>
 import EditorPanel from '@/features/character-editor/components/EditorPanel'
 import EditorSection from '@/features/character-editor/components/EditorSection'
-import FormTextInput from '@/shared/ui/form/FormTextInput'
-import FormTextarea from '@/shared/ui/form/FormTextarea'
+import { FormTextInput } from '@sylvieshare/share-ui'
+import { FormTextarea } from '@sylvieshare/share-ui'
 import MultiToggle from '@/shared/ui/MultiToggle'
 import { QUEST_STATUSES } from '@/features/character-editor/blocks/dnd/lib/questEntry'
 

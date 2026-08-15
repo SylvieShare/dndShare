@@ -30,7 +30,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import BaseTile from '@/shared/ui/BaseTile'
+import { BaseTile } from '@sylvieshare/share-ui'
 import DndExhaustionEditor from '@/features/character-editor/blocks/dnd/components/DndExhaustionEditor'
 import DndExhaustionView from '@/features/character-editor/blocks/dnd/components/DndExhaustionView'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'

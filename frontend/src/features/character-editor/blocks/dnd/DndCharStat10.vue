@@ -94,7 +94,7 @@
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
 import { abilityModifier, d20Expr, sumBonuses } from '@/shared/lib/dnd'
-import BaseTile from '@/shared/ui/BaseTile'
+import { BaseTile } from '@sylvieshare/share-ui'
 import DndStatEditor from '@/features/character-editor/blocks/dnd/components/DndStatEditor'
 import DndStatSkillEditor from '@/features/character-editor/blocks/dnd/components/DndStatSkillEditor'
 import DndStatView from '@/features/character-editor/blocks/dnd/components/DndStatView'

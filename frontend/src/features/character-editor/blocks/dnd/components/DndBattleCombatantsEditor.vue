@@ -87,9 +87,9 @@
 <script setup>
 import { ref } from 'vue'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
-import FormNumberInput from '@/shared/ui/form/FormNumberInput'
-import FormTextInput from '@/shared/ui/form/FormTextInput'
-import FormTextarea from '@/shared/ui/form/FormTextarea'
+import { FormNumberInput } from '@sylvieshare/share-ui'
+import { FormTextInput } from '@sylvieshare/share-ui'
+import { FormTextarea } from '@sylvieshare/share-ui'
 import MultiToggle from '@/shared/ui/MultiToggle'
 import { defaultCombatant } from '@/features/character-editor/blocks/dnd/lib/diaryEntry'
 

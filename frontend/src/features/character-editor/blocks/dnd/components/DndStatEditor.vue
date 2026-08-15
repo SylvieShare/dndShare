@@ -68,8 +68,8 @@ import AddButton from '@/shared/ui/AddButton'
 import BonusList from '@/shared/ui/BonusList'
 import EditorPanel from '@/features/character-editor/components/EditorPanel'
 import EditorSection from '@/features/character-editor/components/EditorSection'
-import FormField from '@/shared/ui/form/FormField'
-import FormNumberInput from '@/shared/ui/form/FormNumberInput'
+import { FormField } from '@sylvieshare/share-ui'
+import { FormNumberInput } from '@sylvieshare/share-ui'
 
 const props = defineProps({
   title: { type: String, default: '' },

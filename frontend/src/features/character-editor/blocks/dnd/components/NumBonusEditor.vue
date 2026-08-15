@@ -15,8 +15,8 @@ import { sumBonuses } from '@/shared/lib/dnd'
 import BonusList from '@/shared/ui/BonusList'
 import EditorPanel from '@/features/character-editor/components/EditorPanel'
 import EditorTotal from '@/features/character-editor/components/EditorTotal'
-import FormField from '@/shared/ui/form/FormField'
-import FormNumberInput from '@/shared/ui/form/FormNumberInput'
+import { FormField } from '@sylvieshare/share-ui'
+import { FormNumberInput } from '@sylvieshare/share-ui'
 
 // Right-column editor for simple "base value + bonuses" tiles (initiative, speed). Emits the full
 // data object (`{ base, bonuses, value }`) on every change.

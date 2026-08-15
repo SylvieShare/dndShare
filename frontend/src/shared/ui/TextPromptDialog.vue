@@ -26,8 +26,8 @@
 <script setup>
 import { ref, watch } from 'vue'
 import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
-import FormActionButtons from '@/shared/ui/form/FormActionButtons.vue'
-import FormTextInput from '@/shared/ui/form/FormTextInput.vue'
+import { FormActionButtons } from '@sylvieshare/share-ui'
+import { FormTextInput } from '@sylvieshare/share-ui'
 
 const props = defineProps({
   title: { type: String, required: true },

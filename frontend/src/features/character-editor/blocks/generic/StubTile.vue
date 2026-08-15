@@ -17,7 +17,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import BaseTile from '@/shared/ui/BaseTile'
+import { BaseTile } from '@sylvieshare/share-ui'
 import { svgColorFilter } from '@/shared/lib/svgColorFilter'
 
 const props = defineProps(['block'])

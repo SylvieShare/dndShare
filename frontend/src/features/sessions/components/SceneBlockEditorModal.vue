@@ -47,9 +47,9 @@ import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 import InputDescription from '@/shared/ui/InputDescription.vue'
 import SceneCombatCreaturesEditor from '@/features/sessions/components/SceneCombatCreaturesEditor.vue'
 import { sceneBlockDefaultWidth, sceneBlockType } from '@/features/sessions/lib/sceneBlockTypes'
-import FormActionButtons from '@/shared/ui/form/FormActionButtons'
-import FormField from '@/shared/ui/form/FormField'
-import FormTextInput from '@/shared/ui/form/FormTextInput'
+import { FormActionButtons } from '@sylvieshare/share-ui'
+import { FormField } from '@sylvieshare/share-ui'
+import { FormTextInput } from '@sylvieshare/share-ui'
 
 const props = defineProps({
   block: { type: Object, default: null },

@@ -54,7 +54,7 @@ import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 import MultiToggle from '@/shared/ui/MultiToggle'
 import ToggleSwitch from '@/shared/ui/ToggleSwitch'
 import ValueSelect from '@/shared/ui/ValueSelect'
-import FormNumberInput from '@/shared/ui/form/FormNumberInput'
+import { FormNumberInput } from '@sylvieshare/share-ui'
 
 const REST_OPTIONS = [
   { value: 'long_rest', label: 'Длинный отдых' },

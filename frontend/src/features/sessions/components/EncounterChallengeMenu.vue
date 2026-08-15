@@ -49,8 +49,8 @@
 import { computed, inject, reactive, ref } from 'vue'
 import { Dices, Target } from '@lucide/vue'
 import BasePopover from '@/shared/ui/BasePopover.vue'
-import FormField from '@/shared/ui/form/FormField.vue'
-import FormSelect from '@/shared/ui/form/FormSelect.vue'
+import { FormField } from '@sylvieshare/share-ui'
+import { FormSelect } from '@sylvieshare/share-ui'
 import ToggleSwitch from '@/shared/ui/ToggleSwitch.vue'
 
 const enc = inject('encounter')

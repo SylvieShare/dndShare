@@ -24,10 +24,13 @@ Vite работает на `:5173` и проксирует `/api` и `/mcp` в G
 - `src/app` — router, тема и корневая композиция.
 - `src/features/<feature>` — страницы, компоненты, composables и API конкретной
   предметной области.
+- `@sylvieshare/share-ui` — общие для DnD Share, HavenShare и TrenchShare
+  theme-токены, UI-примитивы и headless interactions. Пакет подключается одним
+  публичным import API без deep imports.
 - `src/shared/api` — общие HTTP-клиенты. `http.js` основан на `fetch`; любой
   non-2xx ответ является ошибкой.
-- `src/shared/ui` — обязательные переиспользуемые UI-примитивы.
-- `src/shared/ui/form` — единый набор элементов формы.
+- `src/shared/ui` — переиспользуемые компоненты уровня DnD Share. Компонент
+  остаётся здесь, если знает о router, Pinia, HTTP API или доменной модели.
 - `src/shared/composables` — поведение, не привязанное к одной фиче.
 - `src/stores` — Pinia-кэши и глобальное состояние.
 
@@ -46,16 +49,16 @@ Vite работает на `:5173` и проксирует `/api` и `/mcp` в G
 | Стандартное окно с шапкой | `shared/ui/AppModalFrame.vue` | Единая оболочка формы, просмотра или picker поверх `AppModal`: шапка `--surface`, тело и footer `--bg`, одинаковая рамка, увеличенный заголовок и закреплённые title/крестик/мобильный handle. Тело прокручивается отдельно, footer с действиями также может быть закреплён. |
 | Подтверждение | `shared/ui/ConfirmDialog.vue` | Удаление, отмена операции, сброс формы и любое решение «подтвердить/отменить». Поддерживает `loading`; не собирать собственный overlay. |
 | Ввод одного текста | `shared/ui/TextPromptDialog.vue` | Создать/переименовать альбом, сцену, сущность. Заменяет `window.prompt` и локальные формы из одного input. |
-| Морф-переход из элемента | `shared/ui/MorphSheet.vue` | Только когда окно должно анимированно раскрываться из конкретной плитки/кнопки. На desktop фон размывается, на mobile полноэкранный sheet оставляет фон без blur. Поля внутри не получают автофокус при открытии; фокус допустим после явного действия пользователя. Обычный диалог строится на `AppModalFrame`. |
-| Поле формы | `shared/ui/form/FormField.vue` | Label, hint и горизонтальная/вертикальная раскладка одного поля. |
+| Морф-переход из элемента | `shared/ui/MorphSheet.vue` + `share-ui/useContainerMorph` | Только когда окно должно анимированно раскрываться из конкретной плитки/кнопки. На desktop фон размывается, на mobile полноэкранный sheet оставляет фон без blur. Поля внутри не получают автофокус при открытии; фокус допустим после явного действия пользователя. Обычный диалог строится на `AppModalFrame`. |
+| Поле формы | `share-ui/FormField` | Label, hint и горизонтальная/вертикальная раскладка одного поля. |
 | Текст/число/select/многострочный текст | `FormTextInput`, `FormNumberInput`, `FormSelect`, `FormTextarea` | Любой универсальный ввод соответствующего типа. Не вводить новые локальные классы input/select без отдельной UX-причины. |
-| Кнопки формы | `shared/ui/form/FormActionButtons.vue` | Стандартная пара отмена/сохранение и loading/disabled состояния. |
+| Кнопки формы | `share-ui/FormActionButtons` | Стандартная пара отмена/сохранение и loading/disabled состояния. |
 | Выбор значения | `shared/ui/ValueSelect.vue`, `SuggestPicker`, `SuggestAdd`, `SuggestMultiSelect` | Обычный select либо одиночный/множественный выбор из серверного справочника; компоненты сами отвечают за desktop dropdown и mobile sheet. `ValueSelect` открывается вниз по умолчанию, а внутри ограниченного снизу scroll-контейнера может явно использовать `drop-up`. |
 | Расширенное описание | `shared/ui/InputDescription.vue` | Редактирование форматированного описания. |
 | Отображение описания | `shared/ui/RichContent.vue` | Безопасный и единообразный вывод HTML, созданного `InputDescription`. Не использовать собственный `v-html` для такого контента. |
-| Плитка/карточка контента | `shared/ui/BaseTile.vue` | Общая поверхность с фоном, скруглением и тихой рамкой. Поддерживает цветовой акцент, полосу, tint, framed- и interactive-состояния; не создавать локальный базовый класс плитки. |
+| Плитка/карточка контента | `share-ui/BaseTile` | Общая поверхность с фоном, скруглением и тихой рамкой. Поддерживает цветовой акцент, полосу, tint, framed- и interactive-состояния; не создавать локальный базовый класс плитки. |
 | Popover/контекстное меню | `shared/ui/BasePopover.vue`, `RowActionMenu.vue`, `RowActionSubmenu.vue`, `RowActionItem.vue` | Неблокирующий контент, привязанный к управляющему элементу. `RowActionMenu` поддерживает стандартный trigger с многоточием и feature-trigger через slot, `block` растягивает строку-trigger, а `disabled` подавляет открытие во время drag. Вложенный выбор или компактная настройка внутри action menu всегда строится через `RowActionSubmenu`: на desktop он открывает отдельный popover справа или слева от пункта, на mobile раскрывает содержимое внутри меню с акцентной полосой слева. Меню остаются внутри visual viewport; вложенный popover не закрывает родительский и Escape закрывает верхний уровень. `RowActionItem` даёт press-feedback, поддерживает `submenu/submenuOpen` и стандартные иконки через `action`; для окраски доступны `accent`, `warning`, `success`, `info`, `danger`. Пункты без иконки не допускаются. |
-| Перетаскивание | `shared/composables/useSortable.js` | Сортировка и перенос между группами. `useSortable` ведёт drag-состояние, `reorderByDrop` выполняет чистую перестановку массива. |
+| Перетаскивание | `share-ui/useSortable` | Сортировка и перенос между группами. `useSortable` ведёт drag-состояние, `reorderByDrop` выполняет чистую перестановку массива. |
 | Переключатели | `MultiToggle`, `ToggleSwitch`, `EncCheckbox` | Выбор режима, boolean и компактный checkbox соответственно. |
 
 Категории модальных окон:
@@ -132,7 +135,7 @@ Vue-компонента не является допустимым контра
 
 ## Drag-and-drop
 
-`useSortable` — единая механика списков сцен, музыки, инвентаря и других
+`useSortable` из `@sylvieshare/share-ui` — единая механика списков сцен, музыки, инвентаря и других
 сортируемых коллекций. Feature-компонент отвечает только за идентификатор
 группы, отображение placeholder и сохранение результата. Расчёт индексов,
 pointer lifecycle и перенос массива не копируются в компонент.
@@ -232,9 +235,27 @@ DOM update и прервать переход по timeout. Все служеб�
 
 ## CSS
 
-Цвета берутся из `src/app/theme.css`. `npm run check:colors` входит в production
-build и запрещает новые прямые hex/RGB/HSL значения. Подробности —
-`md/css-variables.md`.
+Общая палитра и canvas приходят из `@sylvieshare/share-ui/styles.css`, который
+импортируется один раз в `main.js`. `src/app/theme.css` задаёт DnD-акцент,
+layout и доменные цвета. `npm run check:colors` входит в production build и
+запрещает новые прямые hex/RGB/HSL значения. Подробности — `md/css-variables.md`.
+
+## Обновление share-ui
+
+DnD Share использует точный HTTPS-архив release tag; floating branch и локальная
+`file:` dependency не допускаются. Обновление выполняется после выпуска новой
+версии в `SylvieShare/share-ui`:
+
+```bash
+cd frontend
+npm install --save-exact \
+  "https://github.com/SylvieShare/share-ui/archive/refs/tags/vX.Y.Z.tar.gz"
+npm test -- --run
+npm run build
+```
+
+Изменения межпроектного примитива сначала делаются и документируются в
+`share-ui`, затем consumer обновляет tag. Файлы внутри `node_modules` не меняют.
 
 ## Политика изменений контракта
 

@@ -130,7 +130,7 @@
 
 <script setup>
 import { computed, inject, onMounted, ref } from 'vue'
-import BaseTile from '@/shared/ui/BaseTile'
+import { BaseTile } from '@sylvieshare/share-ui'
 import BlockStatesPickerEditor from '@/features/character-editor/blocks/generic/components/BlockStatesPickerEditor'
 import BlockStatesSummaryView from '@/features/character-editor/blocks/generic/components/BlockStatesSummaryView'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip'

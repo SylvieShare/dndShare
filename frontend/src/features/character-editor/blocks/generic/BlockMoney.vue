@@ -71,7 +71,7 @@
 <script setup>
 import { computed, inject, ref, watch } from 'vue'
 import BasePopover from '@/shared/ui/BasePopover'
-import BaseTile from '@/shared/ui/BaseTile'
+import { BaseTile } from '@sylvieshare/share-ui'
 import BlockMoneyView from '@/features/character-editor/blocks/generic/components/BlockMoneyView'
 import CalcPad from '@/features/character-editor/components/CalcPad'
 import EditorPanel from '@/features/character-editor/components/EditorPanel'

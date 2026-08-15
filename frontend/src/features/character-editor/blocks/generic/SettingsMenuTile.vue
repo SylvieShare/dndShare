@@ -51,7 +51,7 @@
 <script setup>
 import { computed, inject, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import BaseTile from '@/shared/ui/BaseTile'
+import { BaseTile } from '@sylvieshare/share-ui'
 import ToggleSwitch from '@/shared/ui/ToggleSwitch'
 import ContentSourcesModal from '@/features/character-editor/components/ContentSourcesModal.vue'
 import { normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'

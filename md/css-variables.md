@@ -1,6 +1,15 @@
 # CSS variables
 
-The application palette lives in `frontend/src/app/theme.css`. Component styles must use these tokens; `npm run check:colors` rejects direct hex/RGB/HSL colors and removed legacy tokens.
+The shared application palette lives in `@sylvieshare/share-ui/styles.css`.
+`frontend/src/app/theme.css` contains only DnD Share layout, its exact purple
+accent shades and domain colors. Component styles must use these tokens;
+`npm run check:colors` rejects direct hex/RGB/HSL colors and removed legacy
+tokens.
+
+The package defines `--accent-hover` and `--accent-soft` from `--accent`, so a
+consumer can normally select one product accent. DnD Share overrides all three
+to preserve its established palette. TrenchShare can set a green `--accent`,
+and HavenShare may set it at runtime on `document.documentElement`.
 
 ## Surface model
 

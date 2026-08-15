@@ -145,9 +145,9 @@ import EncounterOrderMarker from '@/features/sessions/components/EncounterOrderM
 import EncounterRowMenu from '@/features/sessions/components/EncounterRowMenu.vue'
 import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
 import BasePopover from '@/shared/ui/BasePopover.vue'
-import BaseTile from '@/shared/ui/BaseTile.vue'
-import FormActionButtons from '@/shared/ui/form/FormActionButtons'
-import FormTextarea from '@/shared/ui/form/FormTextarea'
+import { BaseTile } from '@sylvieshare/share-ui'
+import { FormActionButtons } from '@sylvieshare/share-ui'
+import { FormTextarea } from '@sylvieshare/share-ui'
 import SuggestMultiSelect from '@/shared/ui/SuggestMultiSelect'
 import { useSuggestStore } from '@/stores/suggest'
 

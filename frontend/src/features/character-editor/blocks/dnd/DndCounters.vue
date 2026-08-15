@@ -48,7 +48,7 @@ import DndCounterTile from '@/features/character-editor/blocks/dnd/components/Dn
 import DndCounterTileView from '@/features/character-editor/blocks/dnd/components/DndCounterTileView.vue'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
 import { useMorphOrigin } from '@/features/character-editor/composables/useMorphOrigin'
-import { useSortable, reorderByDrop } from '@/shared/composables/useSortable'
+import { useSortable, reorderByDrop } from '@sylvieshare/share-ui'
 import {
   defaultCounter,
   normalizeCounters,

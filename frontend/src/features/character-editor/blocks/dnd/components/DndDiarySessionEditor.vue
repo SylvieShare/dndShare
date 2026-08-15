@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-import FormTextInput from '@/shared/ui/form/FormTextInput'
+import { FormTextInput } from '@sylvieshare/share-ui'
 
 defineProps({
   session: { type: Object, required: true },

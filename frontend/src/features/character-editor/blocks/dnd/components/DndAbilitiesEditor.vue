@@ -57,7 +57,7 @@ import AddButton from '@/shared/ui/AddButton'
 import EditorPanel from '@/features/character-editor/components/EditorPanel'
 import EditorSection from '@/features/character-editor/components/EditorSection'
 import RemoveButton from '@/shared/ui/RemoveButton'
-import { reorderByDrop, useSortable } from '@/shared/composables/useSortable'
+import { reorderByDrop, useSortable } from '@sylvieshare/share-ui'
 
 const props = defineProps({
   entries: { type: Array, default: () => [] },

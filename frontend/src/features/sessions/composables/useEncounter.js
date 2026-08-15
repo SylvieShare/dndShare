@@ -22,7 +22,7 @@ import {
 } from '@/features/sessions/lib/encounterHelpers'
 import { getSuggestId } from '@/features/handbook/objects/lib/schemaFields'
 import { getEncounter, saveEncounter } from '@/shared/api/sessionsApi'
-import { useSortable } from '@/shared/composables/useSortable'
+import { useSortable } from '@sylvieshare/share-ui'
 import { useSuggestStore } from '@/stores/suggest'
 
 export function useEncounter({ sessionUuid, participants, canEditPlayers }) {

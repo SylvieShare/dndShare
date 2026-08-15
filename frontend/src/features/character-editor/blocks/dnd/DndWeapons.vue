@@ -87,7 +87,7 @@ function nextKey() { return ++keyCounter }
 <script setup>
 import { computed, inject, onMounted, provide, reactive, ref, watch } from 'vue'
 
-import BaseTile from '@/shared/ui/BaseTile'
+import { BaseTile } from '@sylvieshare/share-ui'
 import { useItemTypesStore } from '@/stores/itemTypes'
 import WeaponCard from '@/features/character-editor/blocks/dnd/components/WeaponCard.vue'
 import WeaponTableRow from '@/features/character-editor/blocks/dnd/components/WeaponTableRow.vue'
@@ -103,7 +103,7 @@ import {
 import ItemPickerModal from "@/features/handbook/components/ItemPickerModal.vue"
 import ItemTooltip from "@/features/character-editor/components/ItemTooltip"
 import ItemViewModal from "@/features/handbook/components/ItemViewModal.vue"
-import { useSortable } from '@/shared/composables/useSortable'
+import { useSortable } from '@sylvieshare/share-ui'
 import { useDiceStore } from '@/stores/dice'
 import { useSuggestStore } from '@/stores/suggest'
 import { SYSTEM_DICE } from '@/shared/lib/systemDice'
