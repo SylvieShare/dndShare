@@ -64,7 +64,9 @@ describe('session graph canvas', () => {
   })
 
   it('recomputes the chapter anchor when the combat player rail widens', () => {
-    expect(source).toContain(':layout-key="workspaceMode"')
+    expect(source).toContain(':layout-key="workspaceLayoutMode"')
+    expect(sessionPageSource).toContain(':workspace-mode="workspaceMode"')
+    expect(sessionPageSource).toContain(':workspace-layout-mode="workspaceMotionMode"')
     expect(canvasSource).toContain('watch(() => props.layoutKey, async () => {')
     expect(canvasSource).toContain("{ flush: 'post' }")
   })

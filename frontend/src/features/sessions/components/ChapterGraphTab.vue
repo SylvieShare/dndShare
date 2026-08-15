@@ -37,6 +37,7 @@
         :workspace-chapter-id="workspaceChapterId"
         :workspace-scene="workspaceScene"
         :workspace-level="workspaceLevel"
+        :workspace-layout-mode="workspaceLayoutMode"
         :chapter-linking-from="linkingFrom"
         @node-click="openNodeMenu"
         @node-double-click="openScenes"
@@ -188,6 +189,7 @@ const props = defineProps({
   workspaceMode: { type: String, default: null },
   workspaceScene: { type: Object, default: null },
   workspaceLevel: { type: String, default: 'chapters' },
+  workspaceLayoutMode: { type: String, default: null },
   diceOpen: { type: Boolean, default: true },
   musicOpen: { type: Boolean, default: true },
   eventsOpen: { type: Boolean, default: true },

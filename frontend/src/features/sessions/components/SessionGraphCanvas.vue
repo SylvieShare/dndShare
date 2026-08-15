@@ -24,7 +24,7 @@
       :empty-title="emptyCopy.title"
       :empty-description="emptyCopy.description"
       :show-empty-action="false"
-      :layout-key="workspaceMode"
+      :layout-key="workspaceLayoutMode"
       :status-options="displayLevel === 'chapters' ? CHAPTER_STATUSES : displayLevel === 'scenes' ? SCENE_STATUSES : []"
       @node-click="handleNodeClick"
       @node-double-click="handleNodeDoubleClick"
@@ -196,6 +196,7 @@ const props = defineProps({
   workspaceChapterId: { type: [Number, String], default: null },
   workspaceScene: { type: Object, default: null },
   workspaceLevel: { type: String, default: 'chapters' },
+  workspaceLayoutMode: { type: String, default: null },
   currentChapterId: { type: [Number, String], default: null },
   chapterLinkingFrom: { type: Object, default: null },
 })
