@@ -26,7 +26,7 @@
 
 <script setup>
 import { computed, inject, ref } from 'vue'
-import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
+import { AppModalFrame } from '@sylvieshare/share-ui'
 import { BaseTile } from '@sylvieshare/share-ui'
 import DndLongRestEditor from '@/features/character-editor/blocks/dnd/components/DndLongRestEditor'
 import DndRestView from '@/features/character-editor/blocks/dnd/components/DndRestView'

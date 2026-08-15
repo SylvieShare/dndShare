@@ -105,7 +105,7 @@
 
 <script setup>
 import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
-import ConfirmDialog from '@/shared/ui/ConfirmDialog.vue'
+import { ConfirmDialog } from '@sylvieshare/share-ui'
 import { cancelJob, getAvailableJobs, getJobRuns, startJob } from '../api/adminJobsApi'
 
 const available = ref([])

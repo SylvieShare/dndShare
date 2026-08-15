@@ -61,7 +61,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import BasePopover from '@/shared/ui/BasePopover.vue'
+import { BasePopover } from '@sylvieshare/share-ui'
 import { sessionStatusConfig } from '@/features/sessions/composables/useSessionStatus'
 import { currentChapterLabel } from '@/features/sessions/lib/chapterGraph'
 

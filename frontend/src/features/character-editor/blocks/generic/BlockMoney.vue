@@ -70,11 +70,11 @@
 
 <script setup>
 import { computed, inject, ref, watch } from 'vue'
-import BasePopover from '@/shared/ui/BasePopover'
+import { BasePopover } from '@sylvieshare/share-ui'
 import { BaseTile } from '@sylvieshare/share-ui'
 import BlockMoneyView from '@/features/character-editor/blocks/generic/components/BlockMoneyView'
 import CalcPad from '@/features/character-editor/components/CalcPad'
-import EditorPanel from '@/features/character-editor/components/EditorPanel'
+import { EditorPanel } from '@sylvieshare/share-ui'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
 import { useMorphOrigin } from '@/features/character-editor/composables/useMorphOrigin'
 import { useSuggestStore } from '@/stores/suggest'

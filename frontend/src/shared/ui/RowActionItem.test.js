@@ -6,7 +6,7 @@ import RowActionItem from './RowActionItem.vue'
 const source = readFileSync(fileURLToPath(new URL('./RowActionItem.vue', import.meta.url)), 'utf8')
 
 describe('RowActionItem', () => {
-  it('compiles the shared action item', () => {
+  it('compiles the DnD icon adapter', () => {
     expect(RowActionItem).toBeTruthy()
   })
 
@@ -16,23 +16,15 @@ describe('RowActionItem', () => {
     }
   })
 
-  it('accepts a custom icon and keeps every item icon-shaped', () => {
+  it('accepts a custom icon and delegates presentation to share-ui', () => {
     expect(source).toContain('icon: { type: [Object, Function]')
-    expect(source).toContain('<slot name="icon">')
+    expect(source).toContain('<slot name="icon" />')
     expect(source).toContain('props.icon || ACTION_ICONS[props.action] || Ellipsis')
-    expect(source).toContain('min-height: 36px;')
-    expect(source).toContain('font-size: 13px;')
+    expect(source).toContain("import { ActionMenuItem } from '@sylvieshare/share-ui'")
+    expect(source).toContain('<ActionMenuItem')
   })
 
-  it('supports the accent tone for primary game actions', () => {
+  it('keeps the public tone vocabulary', () => {
     expect(source).toContain("['default', 'accent', 'warning', 'success', 'info', 'danger']")
-    expect(source).toContain('.ram-item--accent { color: var(--accent-soft);')
-  })
-
-  it('gives enabled actions a quick press response', () => {
-    expect(source).toContain('.ram-item:active:not(:disabled)')
-    expect(source).toContain('transform: scale(0.975);')
-    expect(source).toContain('.ram-item:active:not(:disabled) .ram-item__icon')
-    expect(source).toContain('prefers-reduced-motion: reduce')
   })
 })

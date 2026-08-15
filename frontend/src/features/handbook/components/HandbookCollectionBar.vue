@@ -147,8 +147,8 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { getSuggestId, walkFieldsWithPath } from '@/features/handbook/objects/lib/schemaFields'
-import BasePopover from '@/shared/ui/BasePopover.vue'
-import MultiToggle from '@/shared/ui/MultiToggle.vue'
+import { BasePopover } from '@sylvieshare/share-ui'
+import { MultiToggle } from '@sylvieshare/share-ui'
 
 const boolFilterOptions = [
   { value: 'any', label: 'Не важно' },

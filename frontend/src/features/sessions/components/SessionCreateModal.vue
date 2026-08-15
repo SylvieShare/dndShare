@@ -51,7 +51,7 @@
 
 <script setup>
 import { onMounted, ref } from 'vue'
-import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
+import { AppModalFrame } from '@sylvieshare/share-ui'
 import { FormActionButtons } from '@sylvieshare/share-ui'
 import { FormField } from '@sylvieshare/share-ui'
 import { FormTextInput } from '@sylvieshare/share-ui'

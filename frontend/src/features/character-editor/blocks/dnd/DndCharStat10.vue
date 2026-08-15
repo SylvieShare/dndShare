@@ -101,7 +101,7 @@ import DndStatView from '@/features/character-editor/blocks/dnd/components/DndSt
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
 import { useDiceStore } from '@/stores/dice'
 import { useMorphOrigin } from '@/features/character-editor/composables/useMorphOrigin'
-import { useSheetSubpages } from '@/shared/composables/useSheetSubpages'
+import { useSheetSubpages } from '@sylvieshare/share-ui'
 import { useSuggestStore } from '@/stores/suggest'
 
 const props = defineProps(['block', 'value', 'values', 'vars'])

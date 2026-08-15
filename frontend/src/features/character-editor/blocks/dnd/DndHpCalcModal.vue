@@ -53,7 +53,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import CalcPad from '@/features/character-editor/components/CalcPad'
-import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
+import { AppModalFrame } from '@sylvieshare/share-ui'
 import SystemDie from '@/shared/ui/SystemDie.vue'
 import DndDeathSaves from './DndDeathSaves'
 import { normalizeHitDice, setHitDieUsed } from '@/features/character-editor/blocks/dnd/lib/hitDice'

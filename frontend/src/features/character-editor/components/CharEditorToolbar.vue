@@ -160,7 +160,7 @@
 import { computed, defineAsyncComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import ContentSourcesModal from '@/features/character-editor/components/ContentSourcesModal.vue'
-import ToggleSwitch from "@/shared/ui/ToggleSwitch"
+import { ToggleSwitch } from '@sylvieshare/share-ui'
 import { sessionStatusColor, sessionStatusLabel } from '@/features/sessions/composables/useSessionStatus'
 import { currentChapterLabel } from '@/features/sessions/lib/chapterGraph'
 import { normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'

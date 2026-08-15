@@ -152,7 +152,7 @@
 
 <script setup>
 import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
-import ConfirmDialog from '@/shared/ui/ConfirmDialog.vue'
+import { ConfirmDialog } from '@sylvieshare/share-ui'
 import CanvasActionDock from '@/features/sessions/components/CanvasActionDock.vue'
 import ChapterEdgeModal from '@/features/sessions/components/ChapterEdgeModal.vue'
 import ChapterGraphNode from '@/features/sessions/components/ChapterGraphNode.vue'

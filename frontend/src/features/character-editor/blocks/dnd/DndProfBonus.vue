@@ -52,13 +52,13 @@
 import { computed, watch } from 'vue'
 import { d20Expr, proficiencyBonus, sumBonuses } from '@/shared/lib/dnd'
 import BonusList from '@/shared/ui/BonusList'
-import EditorPanel from '@/features/character-editor/components/EditorPanel'
-import EditorSection from '@/features/character-editor/components/EditorSection'
-import EditorTotal from '@/features/character-editor/components/EditorTotal'
+import { EditorPanel } from '@sylvieshare/share-ui'
+import { EditorSection } from '@sylvieshare/share-ui'
+import { EditorTotal } from '@sylvieshare/share-ui'
 import { FormField } from '@sylvieshare/share-ui'
 import { FormNumberInput } from '@sylvieshare/share-ui'
 import StatTile from '@/features/character-editor/blocks/dnd/components/StatTile'
-import ToggleSwitch from '@/shared/ui/ToggleSwitch'
+import { ToggleSwitch } from '@sylvieshare/share-ui'
 import { useDiceStore } from '@/stores/dice'
 
 function levelToProf(level) {

@@ -27,7 +27,7 @@ import { computed } from 'vue'
 import { abilityModByPath, d20Expr, sumBonuses } from '@/shared/lib/dnd'
 import NumBonusEditor from '@/features/character-editor/blocks/dnd/components/NumBonusEditor'
 import StatTile from '@/features/character-editor/blocks/dnd/components/StatTile'
-import ToggleSwitch from '@/shared/ui/ToggleSwitch'
+import { ToggleSwitch } from '@sylvieshare/share-ui'
 import { useDiceStore } from '@/stores/dice'
 
 const props = defineProps(['block', 'value', 'values'])

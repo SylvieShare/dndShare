@@ -149,7 +149,7 @@
 
 <script setup>
 import { inject } from 'vue'
-import ColorPresetPicker from '@/shared/ui/ColorPresetPicker'
+import { ColorPresetPicker } from '@sylvieshare/share-ui'
 import InputDescription from '@/shared/ui/InputDescription'
 import ItemBlocksField from './ItemBlocksField.vue'
 import ItemObjectArrayField from './ItemObjectArrayField.vue'

@@ -110,9 +110,9 @@
 <script setup>
 import { computed, inject, ref } from 'vue'
 import { ChevronRight, Eye, RotateCcw, Skull, Trash2 } from '@lucide/vue'
-import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
-import BasePopover from '@/shared/ui/BasePopover.vue'
-import ConfirmDialog from '@/shared/ui/ConfirmDialog.vue'
+import { AppModalFrame } from '@sylvieshare/share-ui'
+import { BasePopover } from '@sylvieshare/share-ui'
+import { ConfirmDialog } from '@sylvieshare/share-ui'
 
 defineProps({
   isDm: { type: Boolean, default: false },

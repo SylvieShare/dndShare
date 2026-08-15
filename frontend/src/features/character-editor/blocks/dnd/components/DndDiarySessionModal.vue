@@ -19,7 +19,7 @@
 </template>
 
 <script setup>
-import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
+import { AppModalFrame } from '@sylvieshare/share-ui'
 import DndDiarySessionEditor from '@/features/character-editor/blocks/dnd/components/DndDiarySessionEditor.vue'
 
 defineProps({

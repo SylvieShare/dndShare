@@ -113,7 +113,7 @@ import SessionCard from '@/features/sessions/components/SessionCard'
 import SessionCreateModal from '@/features/sessions/components/SessionCreateModal'
 import SessionHero from '@/features/sessions/components/SessionHero'
 import SessionJoinModal from '@/features/sessions/components/SessionJoinModal'
-import ConfirmDialog from '@/shared/ui/ConfirmDialog'
+import { ConfirmDialog } from '@sylvieshare/share-ui'
 import { consumePrefetch } from '@/app/router'
 import { createSession, deleteSession, getSessionByCode, getSessions, leaveSession } from '@/shared/api/sessionsApi'
 

@@ -25,7 +25,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import MultiToggle from '@/shared/ui/MultiToggle.vue'
+import { MultiToggle } from '@sylvieshare/share-ui'
 import SystemDie from '@/shared/ui/SystemDie.vue'
 import { useDiceStore } from '@/stores/dice'
 import { SYSTEM_DICE } from '@/shared/lib/systemDice'

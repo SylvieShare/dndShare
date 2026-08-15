@@ -40,7 +40,7 @@
 
 <script setup>
 import { computed, reactive } from 'vue'
-import EditorSection from '@/features/character-editor/components/EditorSection'
+import { EditorSection } from '@sylvieshare/share-ui'
 import { normalizeHitDice } from '@/features/character-editor/blocks/dnd/lib/hitDice'
 
 const props = defineProps({

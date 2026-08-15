@@ -56,7 +56,7 @@
 
 <script setup>
 import { onMounted, ref } from 'vue'
-import ConfirmDialog from '@/shared/ui/ConfirmDialog.vue'
+import { ConfirmDialog } from '@sylvieshare/share-ui'
 import { deleteAllLogs, deleteLog, getLogs } from '../api/adminApi'
 
 const logs = ref([])

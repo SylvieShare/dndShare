@@ -122,12 +122,12 @@
 
 <script setup>
 import { computed, inject, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
-import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
+import { AppModalFrame } from '@sylvieshare/share-ui'
 import { FormActionButtons } from '@sylvieshare/share-ui'
 import { FormField } from '@sylvieshare/share-ui'
 import { FormNumberInput } from '@sylvieshare/share-ui'
 import { FormTextInput } from '@sylvieshare/share-ui'
-import ValueSelect from '@/shared/ui/ValueSelect'
+import { ValueSelect } from '@sylvieshare/share-ui'
 import { classEntriesOf, classesLabel } from '@/features/character-editor/blocks/dnd/lib/levelUp'
 import { fetchGet } from '@/shared/api/http'
 import { contentScopeQuery } from '@/shared/api/contentSourcesApi'

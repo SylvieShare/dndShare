@@ -25,7 +25,7 @@
 <script setup>
 import { computed, nextTick, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import SlidingTabs from '@/shared/ui/SlidingTabs'
+import { SlidingTabs } from '@sylvieshare/share-ui'
 import TemplateBlockInner from '@/features/character-editor/components/TemplateBlockInner'
 import {
   innerTabQueryKey,

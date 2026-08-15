@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import RichContent from '@/shared/ui/RichContent'
+import { RichContent } from '@sylvieshare/share-ui'
 
 defineProps({ feature: { type: Object, required: true } })
 </script>

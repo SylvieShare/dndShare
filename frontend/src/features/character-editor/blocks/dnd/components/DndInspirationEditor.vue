@@ -19,7 +19,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import EditorPanel from '@/features/character-editor/components/EditorPanel'
+import { EditorPanel } from '@sylvieshare/share-ui'
 import { isInspirationActive } from '@/features/character-editor/blocks/dnd/lib/mobileStatus'
 
 const props = defineProps({

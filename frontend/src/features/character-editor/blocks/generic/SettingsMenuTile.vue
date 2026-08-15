@@ -52,7 +52,7 @@
 import { computed, inject, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { BaseTile } from '@sylvieshare/share-ui'
-import ToggleSwitch from '@/shared/ui/ToggleSwitch'
+import { ToggleSwitch } from '@sylvieshare/share-ui'
 import ContentSourcesModal from '@/features/character-editor/components/ContentSourcesModal.vue'
 import { normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'
 import { svgColorFilter } from '@/shared/lib/svgColorFilter'

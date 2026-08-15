@@ -181,7 +181,7 @@ export default { name: 'TemplateBlockInner' }
 
 <script setup>
 import { BaseTile } from '@sylvieshare/share-ui'
-import SectionLabel from '@/shared/ui/SectionLabel'
+import { SectionLabel } from '@sylvieshare/share-ui'
 import { computed, inject, nextTick, onBeforeUnmount, onMounted, provide, ref, watch } from 'vue'
 import { BLOCK_REGISTRY } from '@/features/character-editor/blocks/blockRegistry'
 

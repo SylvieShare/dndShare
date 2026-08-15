@@ -193,7 +193,7 @@
 
 <script setup>
 import { computed, onMounted, reactive, ref } from 'vue'
-import ConfirmDialog from '@/shared/ui/ConfirmDialog.vue'
+import { ConfirmDialog } from '@sylvieshare/share-ui'
 import { answerErrorReport, approveSeriousErrorReportChange, deleteErrorReport, getErrorReports, reopenErrorReport, setErrorReportApproval } from '../api/adminApi'
 import { errorReportDisplayTitle } from '@/features/error-report/lib/errorReportPresentation'
 

@@ -235,12 +235,12 @@
 
 <script setup>
 import { computed, inject, onMounted, ref, watch } from 'vue'
-import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
+import { AppModalFrame } from '@sylvieshare/share-ui'
 import FeatChoiceModal from '@/features/character-editor/components/FeatChoiceModal.vue'
 import { FormNumberInput } from '@sylvieshare/share-ui'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
-import MultiToggle from '@/shared/ui/MultiToggle.vue'
+import { MultiToggle } from '@sylvieshare/share-ui'
 import { abilityModifier, proficiencyBonus, resolveNumValue } from '@/shared/lib/dnd'
 import { STAT_KEYS, STAT_SHORT } from '@/shared/lib/dndStats'
 import {

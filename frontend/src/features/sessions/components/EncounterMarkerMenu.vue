@@ -44,8 +44,8 @@
 
 <script setup>
 import { computed, inject, ref } from 'vue'
-import BasePopover from '@/shared/ui/BasePopover.vue'
-import ColorPresetPicker from '@/shared/ui/ColorPresetPicker.vue'
+import { BasePopover } from '@sylvieshare/share-ui'
+import { ColorPresetPicker } from '@sylvieshare/share-ui'
 
 const props = defineProps({
   combatant: { type: Object, required: true },

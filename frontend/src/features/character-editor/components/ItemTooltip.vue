@@ -19,7 +19,7 @@
 
 <script setup>
 import { computed, onMounted, onUnmounted, ref } from 'vue'
-import RichContent from '@/shared/ui/RichContent'
+import { RichContent } from '@sylvieshare/share-ui'
 import { isTouchActiveOrRecent } from '@/shared/lib/touchGuard'
 
 function truncateHtml(html, max) {

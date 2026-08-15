@@ -49,7 +49,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import CalcPad from '@/features/character-editor/components/CalcPad'
-import EditorPanel from '@/features/character-editor/components/EditorPanel'
+import { EditorPanel } from '@sylvieshare/share-ui'
 import { FormField } from '@sylvieshare/share-ui'
 import { FormNumberInput } from '@sylvieshare/share-ui'
 import SystemDie from '@/shared/ui/SystemDie.vue'

@@ -29,7 +29,7 @@ import { computed } from 'vue'
 
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import PotionVial from '@/features/items/components/PotionVial'
-import RichContent from '@/shared/ui/RichContent'
+import { RichContent } from '@sylvieshare/share-ui'
 import { rarityOf } from '@/features/items/lib/potionRarity'
 import { useCostFormatter } from '@/features/items/lib/useCostFormatter'
 

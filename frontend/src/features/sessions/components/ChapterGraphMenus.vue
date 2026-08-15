@@ -66,8 +66,8 @@
 
 <script setup>
 import { computed, ref } from 'vue'
-import BasePopover from '@/shared/ui/BasePopover.vue'
-import RowActionSubmenu from '@/shared/ui/RowActionSubmenu.vue'
+import { BasePopover } from '@sylvieshare/share-ui'
+import { RowActionSubmenu } from '@sylvieshare/share-ui'
 import { CHAPTER_STATUSES, romanNumeral } from '@/features/sessions/lib/chapterGraph'
 
 const props = defineProps({

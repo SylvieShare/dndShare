@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-import SectionLabel from '@/shared/ui/SectionLabel'
+import { SectionLabel } from '@sylvieshare/share-ui'
 
 defineProps(['block'])
 </script>

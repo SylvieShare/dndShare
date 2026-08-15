@@ -75,13 +75,13 @@
 </template>
 
 <script setup>
-import ColorPresetPicker from '@/shared/ui/ColorPresetPicker'
-import EditorPanel from '@/features/character-editor/components/EditorPanel'
-import EditorSection from '@/features/character-editor/components/EditorSection'
+import { ColorPresetPicker } from '@sylvieshare/share-ui'
+import { EditorPanel } from '@sylvieshare/share-ui'
+import { EditorSection } from '@sylvieshare/share-ui'
 import { FormNumberInput } from '@sylvieshare/share-ui'
 import { FormTextInput } from '@sylvieshare/share-ui'
 import IconPicker from '@/shared/ui/IconPicker'
-import ToggleSwitch from '@/shared/ui/ToggleSwitch'
+import { ToggleSwitch } from '@sylvieshare/share-ui'
 
 const props = defineProps({
   counter: { type: Object, required: true },

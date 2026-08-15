@@ -58,7 +58,7 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
-import RichContent from '@/shared/ui/RichContent'
+import { RichContent } from '@sylvieshare/share-ui'
 import { useSchemaSuggests } from '@/features/handbook/objects/lib/useSchemaSuggests'
 import { itemsApi } from '@/shared/api/itemsApi'
 

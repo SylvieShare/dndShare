@@ -90,7 +90,7 @@
 <script setup>
 import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
-import AppSlider from '@/shared/ui/AppSlider.vue'
+import { AppSlider } from '@sylvieshare/share-ui'
 import { useMusicStore } from '@/stores/music'
 
 const props = defineProps({

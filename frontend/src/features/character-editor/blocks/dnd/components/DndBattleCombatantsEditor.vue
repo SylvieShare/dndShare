@@ -90,7 +90,7 @@ import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import { FormNumberInput } from '@sylvieshare/share-ui'
 import { FormTextInput } from '@sylvieshare/share-ui'
 import { FormTextarea } from '@sylvieshare/share-ui'
-import MultiToggle from '@/shared/ui/MultiToggle'
+import { MultiToggle } from '@sylvieshare/share-ui'
 import { defaultCombatant } from '@/features/character-editor/blocks/dnd/lib/diaryEntry'
 
 const props = defineProps({

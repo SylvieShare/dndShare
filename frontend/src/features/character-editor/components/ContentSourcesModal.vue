@@ -13,7 +13,7 @@
 
 <script setup>
 import ContentSourceSelector from '@/features/character-editor/components/ContentSourceSelector.vue'
-import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
+import { AppModalFrame } from '@sylvieshare/share-ui'
 
 defineProps({
   sourceVersionId: { type: [Number, String], default: null },

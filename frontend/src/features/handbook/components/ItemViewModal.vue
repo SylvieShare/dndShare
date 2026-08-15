@@ -30,7 +30,7 @@ import { computed, ref, watch } from 'vue'
 import { itemsApi } from '@/shared/api/itemsApi'
 import { useItemTypesStore } from '@/stores/itemTypes'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
-import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
+import { AppModalFrame } from '@sylvieshare/share-ui'
 import HandbookItemDetail from '@/features/handbook/components/HandbookItemDetail'
 
 const itemCache = new Map()

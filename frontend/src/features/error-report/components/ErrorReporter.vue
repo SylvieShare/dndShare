@@ -112,7 +112,7 @@
 
 <script setup>
 import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
-import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
+import { AppModalFrame } from '@sylvieshare/share-ui'
 import { createErrorReport } from '../api/errorReportApi'
 import { describeElement, screenshotContextsFor, selectorFor } from '../lib/errorReportElement'
 import { platformForViewport } from '../lib/errorReportContext'

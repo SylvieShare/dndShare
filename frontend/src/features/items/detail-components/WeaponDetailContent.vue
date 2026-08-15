@@ -110,7 +110,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
-import RichContent from '@/shared/ui/RichContent'
+import { RichContent } from '@sylvieshare/share-ui'
 import { useCostFormatter } from '@/features/items/lib/useCostFormatter'
 import { useSchemaSuggests } from '@/features/handbook/objects/lib/useSchemaSuggests'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip'

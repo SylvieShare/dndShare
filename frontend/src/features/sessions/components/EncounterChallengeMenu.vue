@@ -48,10 +48,10 @@
 <script setup>
 import { computed, inject, reactive, ref } from 'vue'
 import { Dices, Target } from '@lucide/vue'
-import BasePopover from '@/shared/ui/BasePopover.vue'
+import { BasePopover } from '@sylvieshare/share-ui'
 import { FormField } from '@sylvieshare/share-ui'
 import { FormSelect } from '@sylvieshare/share-ui'
-import ToggleSwitch from '@/shared/ui/ToggleSwitch.vue'
+import { ToggleSwitch } from '@sylvieshare/share-ui'
 
 const enc = inject('encounter')
 const anchorEl = ref(null)

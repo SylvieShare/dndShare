@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { computeRowActionPlacement } from './rowActionPlacement'
+import { computeRowActionPlacement } from '@sylvieshare/share-ui'
 
 const viewport = { viewportWidth: 360, viewportHeight: 640 }
 

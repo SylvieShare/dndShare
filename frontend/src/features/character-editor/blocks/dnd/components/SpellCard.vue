@@ -130,8 +130,8 @@ import { computed, inject, ref, watch } from 'vue'
 import AttackDamage from '@/features/character-editor/blocks/dnd/components/AttackDamage.vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
-import RowActionMenu from '@/shared/ui/RowActionMenu.vue'
-import RowActionSubmenu from '@/shared/ui/RowActionSubmenu.vue'
+import { RowActionMenu } from '@sylvieshare/share-ui'
+import { RowActionSubmenu } from '@sylvieshare/share-ui'
 import { SAVE_ABBR } from '@/shared/lib/dndStats'
 
 const props = defineProps({

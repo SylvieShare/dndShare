@@ -176,7 +176,7 @@
 
 <script setup>
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
-import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
+import { AppModalFrame } from '@sylvieshare/share-ui'
 import { useAccountStore } from '@/stores/account'
 import {
   errorReportStatusKey,

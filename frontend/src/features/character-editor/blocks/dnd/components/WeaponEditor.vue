@@ -78,15 +78,15 @@
 
 <script setup>
 import { inject } from 'vue'
-import AddButton from '@/shared/ui/AddButton'
-import EditorPanel from '@/features/character-editor/components/EditorPanel'
-import EditorSection from '@/features/character-editor/components/EditorSection'
+import { AddButton } from '@sylvieshare/share-ui'
+import { EditorPanel } from '@sylvieshare/share-ui'
+import { EditorSection } from '@sylvieshare/share-ui'
 import { FormField } from '@sylvieshare/share-ui'
 import InputDescription from '@/shared/ui/InputDescription'
-import MultiToggle from '@/shared/ui/MultiToggle'
-import RemoveButton from '@/shared/ui/RemoveButton'
-import ToggleSwitch from '@/shared/ui/ToggleSwitch'
-import ValueSelect from '@/shared/ui/ValueSelect'
+import { MultiToggle } from '@sylvieshare/share-ui'
+import { RemoveButton } from '@sylvieshare/share-ui'
+import { ToggleSwitch } from '@sylvieshare/share-ui'
+import { ValueSelect } from '@sylvieshare/share-ui'
 
 const props = defineProps({
   entry: { type: Object, required: true },

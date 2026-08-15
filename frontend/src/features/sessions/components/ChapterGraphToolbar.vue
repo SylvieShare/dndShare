@@ -84,7 +84,7 @@
 
 <script setup>
 import { ref, watch } from 'vue'
-import BasePopover from '@/shared/ui/BasePopover.vue'
+import { BasePopover } from '@sylvieshare/share-ui'
 import SessionStatusMenu from '@/features/sessions/components/SessionStatusMenu.vue'
 import { romanNumeral } from '@/features/sessions/lib/chapterGraph'
 

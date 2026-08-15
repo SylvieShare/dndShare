@@ -79,8 +79,8 @@
 
 <script setup>
 import { computed, nextTick, onMounted, reactive, ref } from 'vue'
-import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
-import ColorPresetPicker from '@/shared/ui/ColorPresetPicker'
+import { AppModalFrame } from '@sylvieshare/share-ui'
+import { ColorPresetPicker } from '@sylvieshare/share-ui'
 import { FormActionButtons } from '@sylvieshare/share-ui'
 import { FormField } from '@sylvieshare/share-ui'
 import { FormTextInput } from '@sylvieshare/share-ui'

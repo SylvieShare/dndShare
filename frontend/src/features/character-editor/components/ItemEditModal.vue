@@ -91,7 +91,7 @@
 
 <script setup>
 import { computed, nextTick, onBeforeUnmount, onMounted, provide, reactive, ref } from 'vue'
-import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
+import { AppModalFrame } from '@sylvieshare/share-ui'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import ItemSchemaField from './ItemSchemaField.vue'
 import { FormField } from '@sylvieshare/share-ui'

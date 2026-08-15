@@ -43,7 +43,7 @@
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
 import { contentSourcesApi, normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'
-import ToggleSwitch from '@/shared/ui/ToggleSwitch'
+import { ToggleSwitch } from '@sylvieshare/share-ui'
 
 const props = defineProps({
   sourceVersionId: { type: [Number, String], default: null },

@@ -81,7 +81,7 @@
 <script setup>
 import { computed, onMounted, reactive, watch } from 'vue'
 
-import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
+import { AppModalFrame } from '@sylvieshare/share-ui'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import { choiceSelectionsComplete, featChoices } from '@/features/items/lib/featRules'
 import { useSuggestStore } from '@/stores/suggest'

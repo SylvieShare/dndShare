@@ -53,8 +53,8 @@
 
 <script setup>
 import { ref } from 'vue'
-import EditorPanel from '@/features/character-editor/components/EditorPanel'
-import EditorSection from '@/features/character-editor/components/EditorSection'
+import { EditorPanel } from '@sylvieshare/share-ui'
+import { EditorSection } from '@sylvieshare/share-ui'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip'
 import SuggestEditModal from '@/shared/ui/SuggestEditModal'
 import SvgIcon from '@/shared/ui/SvgIcon'

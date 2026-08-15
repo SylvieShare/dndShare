@@ -322,7 +322,7 @@ import {
   Swords,
   Trash2,
 } from '@lucide/vue'
-import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
+import { AppModalFrame } from '@sylvieshare/share-ui'
 import { BaseTile } from '@sylvieshare/share-ui'
 import DndHpCalcModal from '@/features/character-editor/blocks/dnd/DndHpCalcModal'
 import EncounterChallengeMenu from '@/features/sessions/components/EncounterChallengeMenu.vue'

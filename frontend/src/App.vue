@@ -39,7 +39,7 @@ import ErrorReportInbox from '@/features/error-report/components/ErrorReportInbo
 import ConsoleErrorInbox from '@/features/console-errors/components/ConsoleErrorInbox.vue'
 import { pageTransitionName } from '@/app/router'
 import { mobilePageTransitionActive } from '@/app/mobilePageTransition'
-import { useIsMobile } from '@/shared/composables/useIsMobile'
+import { useIsMobile } from '@sylvieshare/share-ui'
 import { useAccountStore } from '@/stores/account'
 import { useTextStore } from '@/stores/text'
 
@@ -345,19 +345,6 @@ body {
   text-transform: uppercase;
 }
 
-/* Anchored dropdown menu base — extend with own .position + .min-width */
-.app-dropdown {
-  position: absolute;
-  background: var(--popover-bg);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--r-md);
-  box-shadow: var(--shadow-lg);
-  z-index: 200;
-  padding: 6px;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
 /* ─── Кастомный скроллбар ──────────────────────── */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }

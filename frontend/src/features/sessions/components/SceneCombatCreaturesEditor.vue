@@ -72,7 +72,7 @@
 <script setup>
 import { computed, reactive, ref } from 'vue'
 import { BookOpen, Plus, Sparkles, Trash2 } from '@lucide/vue'
-import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
+import { AppModalFrame } from '@sylvieshare/share-ui'
 import { FormActionButtons } from '@sylvieshare/share-ui'
 import { FormField } from '@sylvieshare/share-ui'
 import { FormNumberInput } from '@sylvieshare/share-ui'

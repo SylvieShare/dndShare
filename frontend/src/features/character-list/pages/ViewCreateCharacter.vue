@@ -74,7 +74,7 @@ import StepRace from '@/features/character-list/components/wizard/steps/StepRace
 import StepReview from '@/features/character-list/components/wizard/steps/StepReview.vue'
 import StepStats from '@/features/character-list/components/wizard/steps/StepStats.vue'
 import StepVersion from '@/features/character-list/components/wizard/steps/StepVersion.vue'
-import ConfirmDialog from '@/shared/ui/ConfirmDialog'
+import { ConfirmDialog } from '@sylvieshare/share-ui'
 import { fetchGet, fetchPost } from '@/shared/api/http'
 import { findSourceVersion } from '@/shared/lib/sourceVersions'
 import { resolveSetting } from '@/features/character-editor/settings'

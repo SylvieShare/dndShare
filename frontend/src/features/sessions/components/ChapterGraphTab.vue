@@ -114,7 +114,7 @@ import ChapterEditorModal from '@/features/sessions/components/ChapterEditorModa
 import ChapterGraphMenus from '@/features/sessions/components/ChapterGraphMenus.vue'
 import ChapterGraphToolbar from '@/features/sessions/components/ChapterGraphToolbar.vue'
 import SessionGraphCanvas from '@/features/sessions/components/SessionGraphCanvas.vue'
-import ConfirmDialog from '@/shared/ui/ConfirmDialog.vue'
+import { ConfirmDialog } from '@sylvieshare/share-ui'
 
 const props = defineProps({
   graph: { type: Object, required: true },

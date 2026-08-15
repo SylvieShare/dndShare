@@ -9,7 +9,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import BasePopover from '@/shared/ui/BasePopover.vue'
+import { BasePopover } from '@sylvieshare/share-ui'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 
 const emit = defineEmits(['edit', 'delete'])

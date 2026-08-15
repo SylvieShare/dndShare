@@ -28,7 +28,7 @@
 
 <script setup>
 import { Shield } from '@lucide/vue'
-import EncCheckbox from '@/shared/ui/EncCheckbox.vue'
+import { CompactCheckbox as EncCheckbox } from '@sylvieshare/share-ui'
 
 defineProps({
   combatant: { type: Object, default: null },

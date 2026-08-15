@@ -47,11 +47,11 @@
 </template>
 
 <script setup>
-import EditorPanel from '@/features/character-editor/components/EditorPanel'
-import EditorSection from '@/features/character-editor/components/EditorSection'
+import { EditorPanel } from '@sylvieshare/share-ui'
+import { EditorSection } from '@sylvieshare/share-ui'
 import { FormTextInput } from '@sylvieshare/share-ui'
 import { FormTextarea } from '@sylvieshare/share-ui'
-import MultiToggle from '@/shared/ui/MultiToggle'
+import { MultiToggle } from '@sylvieshare/share-ui'
 import { QUEST_STATUSES } from '@/features/character-editor/blocks/dnd/lib/questEntry'
 
 defineProps({

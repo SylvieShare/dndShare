@@ -14,7 +14,7 @@
 <script setup>
 import { ref } from 'vue'
 import CharacterCreateWizardWorkspace from '@/features/character-list/pages/ViewCreateCharacter.vue'
-import AppModal from '@/shared/ui/AppModal.vue'
+import { AppModal } from '@sylvieshare/share-ui'
 
 const props = defineProps({
   creating: { type: Boolean, default: false },

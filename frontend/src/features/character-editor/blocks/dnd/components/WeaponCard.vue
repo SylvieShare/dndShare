@@ -42,7 +42,7 @@
 <script setup>
 import { inject, ref, watch } from 'vue'
 import { BaseTile } from '@sylvieshare/share-ui'
-import RichContent from '@/shared/ui/RichContent'
+import { RichContent } from '@sylvieshare/share-ui'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
 import WeaponCardView from '@/features/character-editor/blocks/dnd/components/WeaponCardView.vue'
 import WeaponEditor from '@/features/character-editor/blocks/dnd/components/WeaponEditor.vue'

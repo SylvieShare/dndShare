@@ -61,11 +61,11 @@
 <script setup>
 import DndBattleCombatantsEditor from '@/features/character-editor/blocks/dnd/components/DndBattleCombatantsEditor.vue'
 import DndDialogueLinesEditor from '@/features/character-editor/blocks/dnd/components/DndDialogueLinesEditor.vue'
-import EditorPanel from '@/features/character-editor/components/EditorPanel'
-import EditorSection from '@/features/character-editor/components/EditorSection'
+import { EditorPanel } from '@sylvieshare/share-ui'
+import { EditorSection } from '@sylvieshare/share-ui'
 import { FormTextInput } from '@sylvieshare/share-ui'
 import InputDescription from '@/shared/ui/InputDescription'
-import MultiToggle from '@/shared/ui/MultiToggle'
+import { MultiToggle } from '@sylvieshare/share-ui'
 import { EVENT_TYPES } from '@/features/character-editor/blocks/dnd/lib/diaryEntry'
 
 const props = defineProps({

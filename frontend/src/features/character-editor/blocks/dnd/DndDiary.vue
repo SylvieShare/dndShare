@@ -80,7 +80,7 @@
 
 <script setup>
 import { computed, inject, ref } from 'vue'
-import ConfirmDialog from '@/shared/ui/ConfirmDialog'
+import { ConfirmDialog } from '@sylvieshare/share-ui'
 import DndDiaryEventEditor from '@/features/character-editor/blocks/dnd/components/DndDiaryEventEditor.vue'
 import DndDiaryEventRow from '@/features/character-editor/blocks/dnd/components/DndDiaryEventRow.vue'
 import DndDiarySessionCard from '@/features/character-editor/blocks/dnd/components/DndDiarySessionCard.vue'

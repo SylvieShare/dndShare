@@ -33,7 +33,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
-import RowActionMenu from '@/shared/ui/RowActionMenu.vue'
+import { RowActionMenu } from '@sylvieshare/share-ui'
 import { STATUS_CFG, STATUS_OPTIONS, useSessionStatus } from '@/features/sessions/composables/useSessionStatus'
 
 const props = defineProps({

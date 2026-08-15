@@ -208,9 +208,9 @@
 <script setup>
 import { computed, inject, ref } from 'vue'
 import InputDescription from '@/shared/ui/InputDescription'
-import RichContent from '@/shared/ui/RichContent'
+import { RichContent } from '@sylvieshare/share-ui'
 import SystemDie from '@/shared/ui/SystemDie.vue'
-import ValueSelect from '@/shared/ui/ValueSelect'
+import { ValueSelect } from '@sylvieshare/share-ui'
 
 defineProps({
   entry: { type: Object, required: true },

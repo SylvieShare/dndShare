@@ -82,7 +82,7 @@
 import { computed } from 'vue'
 
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
-import RichContent from '@/shared/ui/RichContent'
+import { RichContent } from '@sylvieshare/share-ui'
 import { featChoices, featDescription, featPrereq } from '@/features/items/lib/featRules'
 import { useSuggestStore } from '@/stores/suggest'
 import { STAT_FULL, SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'

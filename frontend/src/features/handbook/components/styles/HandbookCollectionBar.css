@@ -219,7 +219,7 @@
   text-align: center;
 }
 
-/* Filter panel body (shell provided by BasePopover .app-dropdown) */
+/* Filter panel body; the surface shell is provided by share-ui BasePopover. */
 .col-filter-body {
   width: min(300px, calc(100vw - 32px));
   max-height: min(420px, calc(100vh - 180px));

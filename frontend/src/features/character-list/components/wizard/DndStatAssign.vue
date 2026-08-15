@@ -40,7 +40,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import MultiToggle from '@/shared/ui/MultiToggle.vue'
+import { MultiToggle } from '@sylvieshare/share-ui'
 import { POINT_BUY_BUDGET, STANDARD_ARRAY, pointCost } from '@/features/character-list/composables/useDndCreateWizard'
 
 const props = defineProps({

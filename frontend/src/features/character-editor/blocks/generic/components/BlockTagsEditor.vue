@@ -38,10 +38,10 @@
 
 <script setup>
 import { computed, nextTick, ref } from 'vue'
-import AddButton from '@/shared/ui/AddButton'
-import EditorPanel from '@/features/character-editor/components/EditorPanel'
-import EditorSection from '@/features/character-editor/components/EditorSection'
-import RemoveButton from '@/shared/ui/RemoveButton'
+import { AddButton } from '@sylvieshare/share-ui'
+import { EditorPanel } from '@sylvieshare/share-ui'
+import { EditorSection } from '@sylvieshare/share-ui'
+import { RemoveButton } from '@sylvieshare/share-ui'
 import SuggestAdd from '@/shared/ui/SuggestAdd'
 
 const props = defineProps({

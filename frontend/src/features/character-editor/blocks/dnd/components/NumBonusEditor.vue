@@ -13,8 +13,8 @@
 import { computed } from 'vue'
 import { sumBonuses } from '@/shared/lib/dnd'
 import BonusList from '@/shared/ui/BonusList'
-import EditorPanel from '@/features/character-editor/components/EditorPanel'
-import EditorTotal from '@/features/character-editor/components/EditorTotal'
+import { EditorPanel } from '@sylvieshare/share-ui'
+import { EditorTotal } from '@sylvieshare/share-ui'
 import { FormField } from '@sylvieshare/share-ui'
 import { FormNumberInput } from '@sylvieshare/share-ui'
 

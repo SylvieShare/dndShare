@@ -64,10 +64,10 @@
 <script setup>
 import { nextTick, ref } from 'vue'
 import { signedOrZero as signed } from '@/shared/lib/dnd'
-import AddButton from '@/shared/ui/AddButton'
+import { AddButton } from '@sylvieshare/share-ui'
 import BonusList from '@/shared/ui/BonusList'
-import EditorPanel from '@/features/character-editor/components/EditorPanel'
-import EditorSection from '@/features/character-editor/components/EditorSection'
+import { EditorPanel } from '@sylvieshare/share-ui'
+import { EditorSection } from '@sylvieshare/share-ui'
 import { FormField } from '@sylvieshare/share-ui'
 import { FormNumberInput } from '@sylvieshare/share-ui'
 

@@ -25,7 +25,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import RichContent from '@/shared/ui/RichContent'
+import { RichContent } from '@sylvieshare/share-ui'
 import { sceneBlockColor, sceneBlockType } from '@/features/sessions/lib/sceneBlockTypes'
 
 const props = defineProps({

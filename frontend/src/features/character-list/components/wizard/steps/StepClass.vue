@@ -49,7 +49,7 @@
 
 <script setup>
 import { computed, inject, ref } from 'vue'
-import RichContent from '@/shared/ui/RichContent'
+import { RichContent } from '@sylvieshare/share-ui'
 import SelectTile from '@/features/character-list/components/wizard/SelectTile.vue'
 import StepChoices from '@/features/character-list/components/wizard/steps/StepChoices.vue'
 import StepClassEquipment from '@/features/character-list/components/wizard/steps/StepClassEquipment.vue'

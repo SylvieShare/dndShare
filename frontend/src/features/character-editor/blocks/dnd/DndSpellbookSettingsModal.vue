@@ -49,11 +49,11 @@
 </template>
 
 <script setup>
-import EditorSection from '@/features/character-editor/components/EditorSection'
-import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
-import MultiToggle from '@/shared/ui/MultiToggle'
-import ToggleSwitch from '@/shared/ui/ToggleSwitch'
-import ValueSelect from '@/shared/ui/ValueSelect'
+import { EditorSection } from '@sylvieshare/share-ui'
+import { AppModalFrame } from '@sylvieshare/share-ui'
+import { MultiToggle } from '@sylvieshare/share-ui'
+import { ToggleSwitch } from '@sylvieshare/share-ui'
+import { ValueSelect } from '@sylvieshare/share-ui'
 import { FormNumberInput } from '@sylvieshare/share-ui'
 
 const REST_OPTIONS = [

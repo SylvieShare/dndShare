@@ -5,7 +5,7 @@
 //   right = `editor` slot (the form), behind a divider, which fades in/out over the morph.
 // Optional `nav` (useSheetSubpages) enables a `sub` slot (e.g. per-skill editing).
 import { computed } from 'vue'
-import MorphSheet from '@/shared/ui/MorphSheet'
+import { MorphSheet } from '@sylvieshare/share-ui'
 
 const props = defineProps({
   originRect: { type: Object, default: null },

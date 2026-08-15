@@ -8,10 +8,10 @@
 </template>
 
 <script setup>
-import AddButton from '@/shared/ui/AddButton'
+import { AddButton } from '@sylvieshare/share-ui'
 import { FormNumberInput } from '@sylvieshare/share-ui'
 import { FormTextInput } from '@sylvieshare/share-ui'
-import RemoveButton from '@/shared/ui/RemoveButton'
+import { RemoveButton } from '@sylvieshare/share-ui'
 
 const props = defineProps({ bonuses: { type: Array, default: () => [] } })
 const emit = defineEmits(['update:bonuses'])

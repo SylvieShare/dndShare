@@ -56,7 +56,7 @@
 
 <script setup>
 import { computed, onMounted, ref } from 'vue'
-import AppModal from '@/shared/ui/AppModal'
+import { AppModal } from '@sylvieshare/share-ui'
 import CharEditorToolbar from '@/features/character-editor/components/CharEditorToolbar'
 import TemplateBlockInner from '@/features/character-editor/components/TemplateBlockInner'
 import { useCharacterData } from '@/features/character-editor/composables/useCharacterData'

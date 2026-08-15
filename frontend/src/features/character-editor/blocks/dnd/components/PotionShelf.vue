@@ -37,7 +37,7 @@
 <script setup>
 import PotionVial from '@/features/items/components/PotionVial'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
-import RowActionMenu from '@/shared/ui/RowActionMenu.vue'
+import { RowActionMenu } from '@sylvieshare/share-ui'
 
 const props = defineProps({
   potions: { type: Array, default: () => [] },

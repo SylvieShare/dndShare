@@ -133,7 +133,7 @@ import HandbookItemDetail from '@/features/handbook/components/HandbookItemDetai
 import SvgIcon from '@/shared/ui/SvgIcon'
 import HandbookItemList from '@/features/handbook/components/HandbookItemList'
 import ItemEditModal from '@/features/character-editor/components/ItemEditModal'
-import AppModalFrame from '@/shared/ui/AppModalFrame.vue'
+import { AppModalFrame } from '@sylvieshare/share-ui'
 import { collectSuggestIds } from '@/features/handbook/objects/lib/schemaFields'
 import { useItemTypesStore } from '@/stores/itemTypes'
 import { useSuggestStore } from '@/stores/suggest'

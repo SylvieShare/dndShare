@@ -43,7 +43,7 @@
 
 <script setup>
 import { computed, ref } from 'vue'
-import EditorPanel from '@/features/character-editor/components/EditorPanel'
+import { EditorPanel } from '@sylvieshare/share-ui'
 import { FormNumberInput } from '@sylvieshare/share-ui'
 import { FormTextInput } from '@sylvieshare/share-ui'
 import { normalizeExhaustion } from '@/features/character-editor/blocks/dnd/lib/exhaustion'

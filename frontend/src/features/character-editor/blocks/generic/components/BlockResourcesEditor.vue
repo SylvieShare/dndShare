@@ -32,7 +32,7 @@
             @input="$emit('rename', row._id, $event.target.value)"
           />
           <FormNumberInput :value="row.total" :min="0" @change="v => $emit('set-total', row._id, v)" />
-          <RemoveButton @click="$emit('remove', row._id)" />
+          <RemoveButton label="Удалить ресурс" @click="$emit('remove', row._id)" />
         </div>
 
         <div class="bre-rest">
@@ -58,13 +58,13 @@
 
 <script setup>
 import { computed } from 'vue'
-import AddButton from '@/shared/ui/AddButton'
-import ColorPresetPicker from '@/shared/ui/ColorPresetPicker'
-import EditorPanel from '@/features/character-editor/components/EditorPanel'
-import EditorSection from '@/features/character-editor/components/EditorSection'
+import { AddButton } from '@sylvieshare/share-ui'
+import { ColorPresetPicker } from '@sylvieshare/share-ui'
+import { EditorPanel } from '@sylvieshare/share-ui'
+import { EditorSection } from '@sylvieshare/share-ui'
 import { FormNumberInput } from '@sylvieshare/share-ui'
-import RemoveButton from '@/shared/ui/RemoveButton'
-import ToggleSwitch from '@/shared/ui/ToggleSwitch'
+import { RemoveButton } from '@sylvieshare/share-ui'
+import { ToggleSwitch } from '@sylvieshare/share-ui'
 import { reorderByDrop, useSortable } from '@sylvieshare/share-ui'
 
 const DEFAULT_COLOR = '#c084fc'

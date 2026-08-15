@@ -53,4 +53,9 @@ To wire a new caller: `useDiceStore().roll(title, expression, opts)` for parsed 
 
 ## MultiToggle
 
-`shared/ui/MultiToggle.vue` is a generic segmented control. Props: `options: [{ value, label }]`, `modelValue` (v-model), `block` to stretch full-width. Renders a purple pill that animates `transform` + `width` to match the active button. Measurement uses each button's `offsetLeft/offsetWidth` and re-runs on `modelValue` change and via `ResizeObserver` on the root.
+`MultiToggle` from `@sylvieshare/share-ui` is the shared segmented control.
+Props: `options: [{ value, label }]`, `modelValue` (`v-model`) and `block` to
+stretch full-width. It renders an accent-colored pill that animates `transform`
+and `width` to match the active button. Measurement uses each button's
+`offsetLeft/offsetWidth` and re-runs on `modelValue` change and through a
+`ResizeObserver` on the root.

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 
-import { restoreFocus } from './AppModal.vue'
+import { restoreFocus } from '@sylvieshare/share-ui'
 
 describe('AppModal focus restoration', () => {
   it('restores focus without scrolling the page or a nested container', () => {
