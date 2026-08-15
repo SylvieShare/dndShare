@@ -21,6 +21,7 @@ describe('EncounterAvatar', () => {
     expect(npcRule).not.toMatch(/\\bheight\s*:/)
     expect(playerRule).toContain('width: 62px;')
     expect(playerRule).toContain('height: 62px;')
+    expect(playerRule).toContain('border-radius: 50%;')
     expect(source).toContain('object-fit: cover;')
   })
 })

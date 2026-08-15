@@ -217,13 +217,13 @@ const participantAvatarStyle = computed(() => ({
   width: 100%;
   box-sizing: border-box;
   display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  min-height: 72px;
-  padding: 10px 12px;
+  align-items: center;
+  gap: 9px;
+  height: 72px;
+  padding: 12px;
   overflow: hidden;
   user-select: none;
-  transition: padding 0.28s cubic-bezier(0.22, 1, 0.36, 1), background 0.18s, border-color 0.18s;
+  transition: background 0.18s, border-color 0.18s;
 }
 
 .p-combat-controls {
@@ -238,16 +238,9 @@ const participantAvatarStyle = computed(() => ({
     clip-path 0.42s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.p-card--combat {
-  align-items: center;
-  gap: 9px;
-  padding-top: 12px;
-  padding-bottom: 12px;
-}
-
 .p-card--combat .p-combat-controls {
   margin-left: 0;
-  clip-path: inset(0);
+  clip-path: inset(-12px);
   pointer-events: auto;
 }
 
@@ -290,15 +283,7 @@ const participantAvatarStyle = computed(() => ({
   overflow: hidden;
   box-sizing: border-box;
   border: 2px solid transparent;
-  transition:
-    width 0.28s cubic-bezier(0.22, 1, 0.36, 1),
-    height 0.28s cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 0.15s ease;
-}
-
-.p-card--combat .p-avatar {
-  width: 48px;
-  height: 48px;
+  transition: border-color 0.15s ease;
 }
 
 .ava-img {
@@ -326,8 +311,7 @@ const participantAvatarStyle = computed(() => ({
 
 @media (prefers-reduced-motion: reduce) {
   .p-card,
-  .p-combat-controls,
-  .p-avatar { transition: none; }
+  .p-combat-controls { transition: none; }
 }
 
 .p-name {

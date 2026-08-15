@@ -173,6 +173,8 @@ describe('ViewSession participant rail', () => {
     expect(source).toContain(':encounter="encounter"')
     expect(source).toContain(':combat-mode="workspaceMotionMode === \'combat\'"')
     expect(styles).toContain('.campaign-workspace--combat .workspace-dock--left')
+    expect(styles).toContain('width: 360px;')
+    expect(styles).toContain('--chapter-safe-left: 402px;')
     expect(encounterSource).not.toContain('ЗАПАС ИГРОКОВ')
     expect(encounterSource).not.toContain('КЛАДБИЩЕ')
     expect(encounterSource).toContain('<EncounterGraveyardMenu')

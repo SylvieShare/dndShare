@@ -256,7 +256,7 @@ header action is highlighted while results exist and clears them on the next
 click.
 
 Players have no separate encounter reserve section. Opening combat smoothly
-widens the existing left participant rail; every player tile gains the
+widens the existing left participant rail from 246px to 360px; every player tile gains the
 encounter checkbox, initiative input and armor-class indicator, and the current
 turn is highlighted there. These controls remain mounted inside a fixed-height
 tile and slide in from behind its left edge together with the widening rail;
@@ -264,8 +264,9 @@ closing combat sends them back left instead of mounting or unmounting them.
 Players that enter combat also appear in the common
 initiative-ordered combat scene alongside NPCs while remaining visible in the
 left rail. The common scene rows reuse the same compact initiative and
-armor-class controls as the player rail. Player portraits are enlarged in both
-combat representations and use a soft alpha fade around their edges. An
+armor-class controls as the player rail. The left-rail tile and portrait keep
+the same height and circular geometry in and out of combat; the larger combat-scene
+portrait is circular too. Player photos use a soft alpha fade around their edges. An
 assigned session color appears as the portrait frame in both representations;
 player rows do not repeat a `PC` type chip. NPC artwork occupies the full row height instead of falling
 back to a name initial. Every combat-scene tile has a numbered marker on its

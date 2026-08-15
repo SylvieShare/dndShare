@@ -63,7 +63,7 @@ const tintColor = computed(() => enc.avatarStyle(props.combatant)?.color || 'var
   height: 62px;
   box-sizing: border-box;
   border: 2px solid var(--enc-player-frame-color);
-  border-radius: 14px;
+  border-radius: 50%;
   transition: border-color 0.15s ease;
 }
 
