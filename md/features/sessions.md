@@ -141,10 +141,12 @@ there is no chapter/scenario/block creation button in the header. There is no
 second local tab switcher or session title bar. `SessionGraphCanvas` keeps one
 physical `NestedGraphCanvas` mounted for all narrative levels. The session name is
 the largest text in the command bar. The unframed arc trigger reads
-`АРКА <Roman number> <name>` in one text style, gains a quiet background only
-on hover/open, and opens the complete arc list. A DM drags any non-interactive
+`АРКА <Roman number> <name>` with the original muted uppercase label and a
+typographic accent-colored Roman number, gains a quiet background only on
+hover/open, and opens the complete arc list with the shared action-menu motion.
+A DM drags any non-interactive
 part of a row to reorder arcs; arrow controls are not used. Each row has a
-pencil that opens `ArcEditorModal`, whose edit mode also owns the confirmed
+pencil but no dedicated drag-handle dots; it opens `ArcEditorModal`, whose edit mode also owns the confirmed
 delete action. `SessionGraphCanvas` uses the
 application-wide canvas background and dot-color tokens, supports pan/zoom and
 stores a viewport per graph in local storage; its 24px base grid repositions and

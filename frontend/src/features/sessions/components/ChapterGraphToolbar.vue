@@ -22,7 +22,7 @@
         </svg>
       </button>
 
-      <BasePopover v-model:open="arcOpen" :anchor="arcTrigger" :min-width="300">
+      <BasePopover v-model:open="arcOpen" :anchor="arcTrigger" :min-width="300" transition-preset="action-menu">
         <div class="chapter-arc-list" data-sortable-container="arcs">
           <div
             v-for="(arc, index) in displayedArcs"
@@ -36,7 +36,6 @@
             :data-sortable-key="arc.id"
             @pointerdown="startArcDrag($event, arc, index)"
           >
-            <GripVertical v-if="canReorderArcs" class="chapter-arc-grip" :size="14" aria-hidden="true" />
             <button type="button" class="chapter-arc-pick" @click="pickArc(arc.id)">
               <span>{{ romanNumeral(index + 1) }}</span>
               <strong>{{ arc.name }}</strong>
@@ -82,7 +81,7 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue'
-import { GripVertical, Pencil, Swords } from '@lucide/vue'
+import { Pencil, Swords } from '@lucide/vue'
 import { BasePopover, reorderByDrop, useSortable } from '@sylvieshare/share-ui'
 import { romanNumeral } from '@/features/sessions/lib/chapterGraph'
 
@@ -181,8 +180,8 @@ function createArc() {
 .chapter-arc-trigger { min-width: 260px; max-width: 410px; display: inline-flex; align-items: center; gap: 7px; padding: 7px 9px; border: 0; border-radius: 7px; background: transparent; color: var(--text-1); font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; transition: background 0.15s, color 0.15s; }
 .chapter-arc-trigger:hover:not(:disabled), .chapter-arc-trigger[aria-expanded="true"] { background: color-mix(in srgb, var(--text-on-accent) 7%, transparent); }
 .chapter-arc-trigger:disabled { opacity: 0.48; cursor: not-allowed; }
-.chapter-arc-prefix { flex: none; }
-.chapter-arc-number { display: grid; min-width: 24px; height: 21px; place-items: center; border-radius: 5px; background: var(--accent); color: var(--text-on-accent); font-weight: 800; }
+.chapter-arc-prefix { flex: none; color: var(--text-muted); font-size: 10px; font-weight: 800; letter-spacing: 0.1em; }
+.chapter-arc-number { display: inline-flex; min-width: 24px; align-items: center; justify-content: center; color: var(--accent-soft); font-family: var(--font-display); font-size: 17px; font-weight: 700; letter-spacing: 0.04em; line-height: 1; }
 .chapter-arc-name { min-width: 0; flex: 1; overflow: hidden; text-align: left; text-overflow: ellipsis; white-space: nowrap; }
 .chapter-arc-chevron { flex: none; transition: transform 0.15s; }
 .chapter-arc-trigger[aria-expanded="true"] .chapter-arc-chevron { transform: rotate(180deg); }
@@ -201,9 +200,8 @@ function createArc() {
 .chapter-arc-row--sortable:active { cursor: grabbing; }
 .chapter-arc-row--placeholder { opacity: 0.38; }
 .chapter-arc-row.active { background: color-mix(in srgb, var(--accent) 12%, transparent); }
-.chapter-arc-grip { flex: none; margin-left: 5px; color: var(--text-muted); }
-.chapter-arc-pick { min-width: 0; flex: 1; display: grid; grid-template-columns: 28px minmax(0, 1fr); align-items: center; gap: 6px; padding: 8px; border: 0; background: none; color: var(--text-2); font: inherit; text-align: left; cursor: pointer; }
-.chapter-arc-pick > span { color: var(--accent); font-weight: 800; }
+.chapter-arc-pick { min-width: 0; flex: 1; display: grid; grid-template-columns: 32px minmax(0, 1fr); align-items: center; gap: 6px; padding: 8px; border: 0; background: none; color: var(--text-2); font: inherit; text-align: left; cursor: pointer; }
+.chapter-arc-pick > span { color: var(--accent-soft); font-family: var(--font-display); font-size: 15px; font-weight: 700; letter-spacing: 0.04em; text-align: center; }
 .chapter-arc-pick strong { overflow: hidden; color: var(--text-1); font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
 .chapter-arc-pick small { grid-column: 2; color: var(--text-muted); font-size: 9px; }
 .chapter-arc-edit { width: 28px; height: 28px; display: grid; flex: none; margin-right: 4px; place-items: center; border: 0; border-radius: 6px; background: none; color: var(--text-muted); cursor: pointer; }
