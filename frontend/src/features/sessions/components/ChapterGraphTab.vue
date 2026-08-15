@@ -58,6 +58,7 @@
       :anchor="nodeAnchor"
       :min-width="230"
       placement="bottom-start"
+      transition="ram-popover"
       role="menu"
       :aria-label="activeChapter ? `Действия с главой ${activeChapter.number}` : 'Действия с главой'"
     >
@@ -104,6 +105,7 @@
       v-model:open="edgeMenuOpen"
       :anchor="edgeAnchor"
       :min-width="210"
+      transition="ram-popover"
       role="menu"
       aria-label="Действия с переходом"
     >
