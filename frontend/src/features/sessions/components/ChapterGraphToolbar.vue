@@ -128,6 +128,8 @@ function pickArc(id) {
   gap: 12px;
   flex: none;
   padding: 11px 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
 }
 .chapter-toolbar-main,
 .chapter-toolbar-view { display: flex; align-items: center; gap: 7px; min-width: 0; }
