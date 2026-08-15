@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { clampGraphPan, graphContentBounds } from './graphViewport'
+import { clampGraphPan, graphContentBounds, translateGraphPositions } from './graphViewport'
 
 describe('graph viewport boundaries', () => {
   const frame = { left: 200, width: 800, height: 600 }
@@ -38,5 +38,17 @@ describe('graph viewport boundaries', () => {
       frame: { left: 0, width: 0, height: 0 },
       bounds,
     })).toEqual({ x: -5000, y: 2000 })
+  })
+})
+
+describe('group graph movement', () => {
+  it('keeps the relative distance between selected nodes', () => {
+    expect(translateGraphPositions([
+      { id: 1, positionX: 100, positionY: 80 },
+      { id: 2, positionX: 460, positionY: 240 },
+    ], 35, -20)).toEqual([
+      { id: 1, x: 135, y: 60 },
+      { id: 2, x: 495, y: 220 },
+    ])
   })
 })

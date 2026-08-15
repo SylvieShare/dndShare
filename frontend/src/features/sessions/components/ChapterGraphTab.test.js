@@ -7,6 +7,7 @@ const tab = readFileSync(fileURLToPath(new URL('./ChapterGraphTab.vue', import.m
 const canvas = readFileSync(fileURLToPath(new URL('./NestedGraphCanvas.vue', import.meta.url)), 'utf8')
 const canvasStyles = readFileSync(fileURLToPath(new URL('./styles/NestedGraphCanvas.css', import.meta.url)), 'utf8')
 const sessionCanvas = readFileSync(fileURLToPath(new URL('./SessionGraphCanvas.vue', import.meta.url)), 'utf8')
+const selectionBar = readFileSync(fileURLToPath(new URL('./GraphSelectionBar.vue', import.meta.url)), 'utf8')
 const actionDock = readFileSync(fileURLToPath(new URL('./CanvasActionDock.vue', import.meta.url)), 'utf8')
 const toolbar = readFileSync(fileURLToPath(new URL('./ChapterGraphToolbar.vue', import.meta.url)), 'utf8')
 const node = readFileSync(fileURLToPath(new URL('./ChapterGraphNode.vue', import.meta.url)), 'utf8')
@@ -64,6 +65,8 @@ describe('chapter graph workspace', () => {
 
   it('renders the explicit chapter prefix on every graph node', () => {
     expect(node).toContain('Глава {{ chapter.number }}')
+    expect(node).toContain('>Сейчас здесь</span>')
+    expect(tab).toContain('Отметить «Сейчас здесь»')
   })
 
   it('uses a full-node image with a blurred text overlay and scene count', () => {
@@ -100,7 +103,21 @@ describe('chapter graph workspace', () => {
   })
 
   it('disables transform easing while a node is being dragged', () => {
-    expect(canvas).toContain("'nested-graph-node--dragging': ['node', 'resize'].includes(gesture?.type)")
+    expect(canvas).toContain("'nested-graph-node--dragging': isDraggedNode(node)")
     expect(canvasStyles).toContain('.nested-graph-node--dragging')
+  })
+
+  it('supports modifier selection, group dragging and a safe-frame bulk action bar', () => {
+    expect(canvas).toContain('event.ctrlKey || event.metaKey')
+    expect(canvas).toContain("'nested-graph-node--selected': isSelected(node)")
+    expect(canvas).toContain("emit('preview-positions', translateGraphPositions")
+    expect(canvas).toContain('<GraphSelectionBar')
+    expect(selectionBar).toContain('class="graph-selection-bar"')
+    expect(selectionBar).toContain('Выбрано: {{ count }}')
+    expect(canvas).toContain("emit('delete-selection', selectedNodes.value.map(node => node.id))")
+    expect(canvasStyles).toContain('.nested-graph-node--selected::after')
+    expect(selectionBar).toContain('.graph-selection-bar')
+    expect(tab).toContain('@delete-nodes="confirmChaptersDelete"')
+    expect(tab).toContain('graph.deleteChapters(state.ids)')
   })
 })

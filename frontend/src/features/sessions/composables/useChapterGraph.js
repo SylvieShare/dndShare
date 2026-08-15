@@ -3,12 +3,14 @@ import {
   createArc as apiCreateArc,
   createChapter as apiCreateChapter,
   createChapterEdge as apiCreateEdge,
+  deleteGraphNodes as apiDeleteGraphNodes,
   deleteArc as apiDeleteArc,
   deleteChapter as apiDeleteChapter,
   deleteChapterEdge as apiDeleteEdge,
   getChapterGraph,
   moveChapterPosition as apiMovePosition,
   moveChapterToArc as apiMoveToArc,
+  moveGraphNodePositions as apiMovePositions,
   reorderArcs as apiReorderArcs,
   setCurrentChapter as apiSetCurrentChapter,
   updateArc as apiUpdateArc,
@@ -123,6 +125,14 @@ export function useChapterGraph({ sessionUuid, session }) {
       : chapter)
   }
 
+  function setLocalPositions(positions) {
+    const byId = new Map(positions.map(position => [String(position.id), position]))
+    chapters.value = chapters.value.map(chapter => {
+      const position = byId.get(String(chapter.id))
+      return position ? { ...chapter, positionX: position.x, positionY: position.y } : chapter
+    })
+  }
+
   function setSceneCount(chapterId, count) {
     chapters.value = chapters.value.map(chapter => chapter.id === chapterId
       ? { ...chapter, sceneCount: count }
@@ -132,6 +142,11 @@ export function useChapterGraph({ sessionUuid, session }) {
   async function savePosition(chapterId, x, y) {
     setLocalPosition(chapterId, x, y)
     await apiMovePosition(sessionUuid, chapterId, x, y)
+  }
+
+  async function savePositions(positions) {
+    setLocalPositions(positions)
+    await apiMovePositions(sessionUuid, 'chapters', positions)
   }
 
   async function moveChapterToArc(chapterId, arcId, x, y) {
@@ -146,6 +161,17 @@ export function useChapterGraph({ sessionUuid, session }) {
     chapters.value = chapters.value.filter(chapter => chapter.id !== chapterId)
     edges.value = edges.value.filter(edge => edge.fromChapterId !== chapterId && edge.toChapterId !== chapterId)
     if (session.value?.currentChapterId === chapterId) {
+      session.value = { ...session.value, currentChapterId: null }
+    }
+  }
+
+  async function deleteChapters(ids) {
+    await apiDeleteGraphNodes(sessionUuid, 'chapters', ids)
+    const keys = new Set(ids.map(String))
+    chapters.value = chapters.value.filter(chapter => !keys.has(String(chapter.id)))
+    edges.value = edges.value.filter(edge =>
+      !keys.has(String(edge.fromChapterId)) && !keys.has(String(edge.toChapterId)))
+    if (keys.has(String(session.value?.currentChapterId))) {
       session.value = { ...session.value, currentChapterId: null }
     }
   }
@@ -186,7 +212,7 @@ export function useChapterGraph({ sessionUuid, session }) {
     arcs, chapters, edges, loading, loaded, error, selectedArcId,
     selectedArc, currentArc, currentChapter, visibleChapters, visibleEdges,
     load, selectArc, createArc, updateArc, reorderArcs, deleteArc,
-    createChapter, updateChapter, setLocalPosition, setSceneCount, savePosition, moveChapterToArc,
-    deleteChapter, makeCurrent, createEdge, updateEdge, deleteEdge, focusCurrent,
+    createChapter, updateChapter, setLocalPosition, setLocalPositions, setSceneCount, savePosition, savePositions, moveChapterToArc,
+    deleteChapter, deleteChapters, makeCurrent, createEdge, updateEdge, deleteEdge, focusCurrent,
   }
 }

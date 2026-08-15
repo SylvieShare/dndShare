@@ -28,10 +28,12 @@
       @edge-click="handleEdgeClick"
       @start-link="startLink"
       @finish-link="finishLink"
-      @preview-position="previewPosition"
-      @save-position="savePosition"
+      @preview-positions="previewPositions"
+      @save-positions="savePositions"
       @preview-size="previewSize"
       @save-size="saveSize"
+      @selection-change="handleSelectionChange"
+      @delete-selection="requestSelectionDelete"
       @view-change="$emit('view-change', $event)"
     >
       <template #node="{ node, linking, target, spotlight }">
@@ -144,11 +146,9 @@
       @close="closeNestedEdgeEditor"
       @save="saveNestedEdge"
     />
-    <ConfirmDialog
+    <GraphDeleteDialog
       v-if="pendingDelete"
-      :title="deleteCopy.title"
-      :message="deleteCopy.message"
-      confirm-label="Удалить"
+      :request="pendingDelete"
       :loading="saving"
       @cancel="pendingDelete = null"
       @confirm="performDelete"
@@ -158,10 +158,10 @@
 
 <script setup>
 import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
-import { ConfirmDialog } from '@sylvieshare/share-ui'
 import CanvasActionDock from '@/features/sessions/components/CanvasActionDock.vue'
 import ChapterEdgeModal from '@/features/sessions/components/ChapterEdgeModal.vue'
 import ChapterGraphNode from '@/features/sessions/components/ChapterGraphNode.vue'
+import GraphDeleteDialog from '@/features/sessions/components/GraphDeleteDialog.vue'
 import NestedGraphCanvas from '@/features/sessions/components/NestedGraphCanvas.vue'
 import NestedEdgeMenus from '@/features/sessions/components/NestedEdgeMenus.vue'
 import SceneBlockEditorModal from '@/features/sessions/components/SceneBlockEditorModal.vue'
@@ -186,7 +186,7 @@ const props = defineProps({
 })
 const emit = defineEmits([
   'node-click', 'node-double-click', 'edge-click', 'start-link', 'finish-link',
-  'preview-position', 'save-position', 'create-chapter', 'close-workspace',
+  'preview-positions', 'save-positions', 'delete-nodes', 'selection-change', 'create-chapter', 'close-workspace',
   'chapter-ancestor-click', 'scene-count', 'view-change', 'send-block-to-combat',
 ])
 
@@ -264,14 +264,6 @@ const emptyCopy = computed(() => displayLevel.value === 'chapters'
     ? { title: 'Здесь появится карта сценариев', description: 'Создавайте сценарии и соединяйте их переходами.' }
     : { title: 'Здесь появится режиссёрская схема', description: 'Добавляйте блоки сценария и соединяйте их переходами.' })
 const loadingLabel = computed(() => displayLevel.value === 'blocks' ? 'Загружаем блоки сценария…' : 'Загружаем сценарии…')
-const deleteCopy = computed(() => {
-  const value = pendingDelete.value
-  if (!value) return { title: '', message: '' }
-  if (value.kind === 'edge') return { title: 'Удалить связь?', message: 'Связь между карточками будет удалена.' }
-  if (value.kind === 'scene') return { title: 'Удалить сценарий?', message: `«${value.scene.name}» и все его блоки будут удалены.` }
-  return { title: 'Удалить блок?', message: `«${value.block.title || 'Без названия'}» — действие нельзя отменить.` }
-})
-
 function transitionDelay() {
   return globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 0 : 420
 }
@@ -386,6 +378,17 @@ function handleEdgeClick(edge, anchor) {
   else if (props.isDm) edgeMenus.value?.openFor(edge, displayLevel.value, anchor)
 }
 
+function closeGraphMenus() {
+  sceneMenus.value?.close()
+  blockMenus.value?.close()
+  edgeMenus.value?.close()
+}
+
+function handleSelectionChange(ids) {
+  closeGraphMenus()
+  emit('selection-change', ids)
+}
+
 function startLink(node) {
   if (displayLevel.value === 'chapters') return emit('start-link', node)
   const target = displayLevel.value === 'scenes' ? sceneLinkingFrom : blockLinkingFrom
@@ -411,18 +414,24 @@ function requestNestedEdgeDelete(edge, level) {
   pendingDelete.value = { kind: 'edge', edge, level }
 }
 
-function previewPosition(id, x, y) {
-  if (displayLevel.value === 'chapters') emit('preview-position', id, x, y)
-  else if (displayLevel.value === 'scenes') sceneGraph.setLocalPosition(id, x, y)
-  else blockGraph.setLocalPosition(id, x, y)
+function previewPositions(positions) {
+  if (displayLevel.value === 'chapters') emit('preview-positions', positions)
+  else if (displayLevel.value === 'scenes') sceneGraph.setLocalPositions(positions)
+  else blockGraph.setLocalPositions(positions)
 }
 
-async function savePosition(id, x, y) {
-  if (displayLevel.value === 'chapters') return emit('save-position', id, x, y)
+async function savePositions(positions) {
+  if (displayLevel.value === 'chapters') return emit('save-positions', positions)
   try {
-    if (displayLevel.value === 'scenes') await sceneGraph.savePosition(id, x, y)
-    else await blockGraph.savePosition(id, x, y)
-  } catch { actionError.value = 'Не удалось сохранить положение карточки' }
+    if (displayLevel.value === 'scenes') await sceneGraph.savePositions(positions)
+    else await blockGraph.savePositions(positions)
+  } catch { actionError.value = 'Не удалось сохранить положение выбранных карточек' }
+}
+
+function requestSelectionDelete(ids) {
+  closeGraphMenus()
+  if (displayLevel.value === 'chapters') return emit('delete-nodes', ids)
+  pendingDelete.value = { kind: 'selection', level: displayLevel.value, ids }
 }
 
 function previewSize(id, width) {
@@ -535,6 +544,12 @@ async function performDelete() {
     if (value.kind === 'edge') {
       if (value.level === 'scenes') await sceneGraph.deleteEdge(value.edge.id)
       else await blockGraph.deleteEdge(value.edge.id)
+    } else if (value.kind === 'selection') {
+      if (value.level === 'scenes') {
+        await sceneGraph.deleteScenes(value.ids)
+        emit('scene-count', activeChapterId.value, sceneGraph.scenes.value.length)
+      } else await blockGraph.deleteItems(value.ids)
+      canvas.value?.clearSelection()
     } else if (value.kind === 'scene') {
       await sceneGraph.deleteScene(value.scene.id)
       emit('scene-count', activeChapterId.value, sceneGraph.scenes.value.length)

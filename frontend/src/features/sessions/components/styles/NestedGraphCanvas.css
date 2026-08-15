@@ -67,6 +67,16 @@
   transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.24s ease, filter 0.24s ease;
 }
 .nested-graph-node--dragging { transition-property: opacity, filter; }
+.nested-graph-node--selected::after {
+  position: absolute;
+  z-index: 20;
+  inset: -5px;
+  border: 2px solid var(--accent);
+  border-radius: 17px;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent);
+  content: '';
+  pointer-events: none;
+}
 .nested-graph-node--dynamic-height { height: auto; }
 .nested-graph-node--target { cursor: crosshair; }
 .nested-graph-node--spotlight { z-index: 10; cursor: default; }

@@ -34,7 +34,7 @@
             <button type="button" class="chapter-arc-pick" @click="pickArc(arc.id)">
               <span>{{ romanNumeral(arc.order) }}</span>
               <strong>{{ arc.name }}</strong>
-              <small v-if="arc.id === currentArc?.id">текущая глава здесь</small>
+              <small v-if="arc.id === currentArc?.id">сейчас здесь</small>
             </button>
             <div class="chapter-arc-order-actions">
               <button type="button" title="Выше" :disabled="locked || arc.order === 1" @click.stop="$emit('move-arc', arc.id, -1)">↑</button>

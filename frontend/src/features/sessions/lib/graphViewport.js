@@ -1,5 +1,13 @@
 export const GRAPH_CAMERA_MARGIN = Object.freeze({ x: 320, y: 240 })
 
+export function translateGraphPositions(nodes, deltaX, deltaY) {
+  return nodes.map(node => ({
+    id: node.id,
+    x: node.positionX + deltaX,
+    y: node.positionY + deltaY,
+  }))
+}
+
 export function graphContentBounds(nodes, dimensionsFor) {
   if (!Array.isArray(nodes) || nodes.length === 0) return null
   let minX = Infinity

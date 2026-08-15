@@ -16,6 +16,7 @@ const combatEditorSource = readFileSync(fileURLToPath(new URL('./SceneCombatCrea
 const sessionPageSource = readFileSync(fileURLToPath(new URL('../pages/ViewSession.vue', import.meta.url)), 'utf8')
 const edgeEditorSource = readFileSync(fileURLToPath(new URL('../composables/useNestedEdgeEditor.js', import.meta.url)), 'utf8')
 const apiSource = readFileSync(fileURLToPath(new URL('../../../shared/api/scenesApi.js', import.meta.url)), 'utf8')
+const sessionsApiSource = readFileSync(fileURLToPath(new URL('../../../shared/api/sessionsApi.js', import.meta.url)), 'utf8')
 
 describe('session graph canvas', () => {
   it('compiles one persistent canvas host', () => {
@@ -68,13 +69,24 @@ describe('session graph canvas', () => {
 
   it('supports server-backed positions and directed links at every level', () => {
     expect(source).toContain("? 'fromChapterId' : displayLevel.value === 'scenes' ? 'fromSceneId' : 'fromItemId'")
-    expect(source).toContain('sceneGraph.setLocalPosition')
-    expect(source).toContain('blockGraph.setLocalPosition')
+    expect(source).toContain('sceneGraph.setLocalPositions')
+    expect(source).toContain('blockGraph.setLocalPositions')
     expect(canvasSource).toContain('class="nested-graph-edge-line"')
     expect(canvasSource).toContain('class="nested-graph-link-port"')
     expect(apiSource).toContain('getSceneGraph')
     expect(apiSource).toContain('getSceneBlockGraph')
     expect(apiSource).toContain('createSceneBlockEdge')
+  })
+
+  it('persists and deletes selected nodes atomically at every graph level', () => {
+    expect(source).toContain('@preview-positions="previewPositions"')
+    expect(source).toContain('@save-positions="savePositions"')
+    expect(source).toContain('@delete-selection="requestSelectionDelete"')
+    expect(source).toContain("emit('delete-nodes', ids)")
+    expect(source).toContain('sceneGraph.deleteScenes(value.ids)')
+    expect(source).toContain('blockGraph.deleteItems(value.ids)')
+    expect(sessionsApiSource).toContain('/graph-nodes/positions')
+    expect(sessionsApiSource).toContain('/graph-nodes/delete')
   })
 
   it('creates and edits labels on scenario and block transitions', () => {

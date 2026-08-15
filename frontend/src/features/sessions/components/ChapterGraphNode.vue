@@ -21,7 +21,7 @@
       <img v-if="imageUrl" :src="imageUrl" alt="" draggable="false" :style="imageStyle" />
       <div v-else class="chapter-node-image-empty" />
       <div class="chapter-node-shade" />
-      <span v-if="current" class="chapter-current-mark">Текущая</span>
+      <span v-if="current" class="chapter-current-mark">Сейчас здесь</span>
       <span class="chapter-status" :class="`chapter-status--${status.tone}`" :style="{ color: status.color }">{{ status.label }}</span>
     </div>
     <div class="chapter-node-copy">

@@ -8,6 +8,7 @@ import {
   updateSceneBlockEdge as apiUpdateEdge,
   updateSceneItem as apiUpdateItem,
 } from '@/shared/api/scenesApi'
+import { deleteGraphNodes as apiDeleteGraphNodes, moveGraphNodePositions as apiMovePositions } from '@/shared/api/sessionsApi'
 
 export function useSceneBlockGraph({ sessionUuid, sceneId }) {
   const items = ref([])
@@ -72,16 +73,37 @@ export function useSceneBlockGraph({ sessionUuid, sceneId }) {
     edges.value = edges.value.filter(edge => edge.fromItemId !== itemId && edge.toItemId !== itemId)
   }
 
+  async function deleteItems(ids) {
+    await apiDeleteGraphNodes(sessionUuid, 'blocks', ids)
+    const keys = new Set(ids.map(String))
+    items.value = items.value.filter(item => !keys.has(String(item.id)))
+    edges.value = edges.value.filter(edge =>
+      !keys.has(String(edge.fromItemId)) && !keys.has(String(edge.toItemId)))
+  }
+
   function setLocalPosition(itemId, x, y) {
     items.value = items.value.map(item => item.id === itemId
       ? { ...item, positionX: x, positionY: y }
       : item)
   }
 
+  function setLocalPositions(positions) {
+    const byId = new Map(positions.map(position => [String(position.id), position]))
+    items.value = items.value.map(item => {
+      const position = byId.get(String(item.id))
+      return position ? { ...item, positionX: position.x, positionY: position.y } : item
+    })
+  }
+
   async function savePosition(itemId, x, y) {
     setLocalPosition(itemId, x, y)
     const updated = await apiUpdateItem(sessionUuid, resolvedSceneId(), itemId, { positionX: x, positionY: y })
     items.value = items.value.map(item => item.id === itemId ? updated : item)
+  }
+
+  async function savePositions(positions) {
+    setLocalPositions(positions)
+    await apiMovePositions(sessionUuid, 'blocks', positions)
   }
 
   function setLocalWidth(itemId, width) {
@@ -117,7 +139,7 @@ export function useSceneBlockGraph({ sessionUuid, sceneId }) {
 
   return {
     items, edges, loading, loaded, error,
-    load, reset, createItem, updateItem, deleteItem,
-    setLocalPosition, savePosition, setLocalWidth, saveWidth, createEdge, updateEdge, deleteEdge,
+    load, reset, createItem, updateItem, deleteItem, deleteItems,
+    setLocalPosition, setLocalPositions, savePosition, savePositions, setLocalWidth, saveWidth, createEdge, updateEdge, deleteEdge,
   }
 }

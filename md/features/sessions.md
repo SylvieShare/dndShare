@@ -119,9 +119,10 @@ Chapters are graph nodes. A chapter has a free display number (`1`, `3A`,
 `Пролог`), name, optional description, status, image and canvas coordinates.
 Numbers are unique inside an arc, not across the campaign. The supported status
 set is `draft`, `planned`, `ready`, `available`, `in_progress`, `paused`,
-`completed`, `failed`, `skipped`, `cancelled`. Making a preparatory chapter
-current promotes it to `in_progress`; only one chapter in the session is
-current.
+`completed`, `failed`, `skipped`, `cancelled`. The session-level chapter pointer
+is shown to users as `Сейчас здесь`: assigning it to a preparatory chapter
+promotes that chapter to `in_progress`, and only one chapter in the session can
+carry the pointer.
 
 `ChapterGraphToolbar` is the semantic session header with its own background and
 bottom divider, not a `BaseTile`. It combines the editable session name/status,
@@ -141,7 +142,14 @@ zooming and rail resizes are clamped by the same rule. Empty graphs remain
 unconstrained until their first card exists. Nodes can be dragged; during an
 active drag their transform transition is disabled so the node and every
 connected edge update in the same frame. Spotlight transitions remain animated
-outside dragging.
+outside dragging. `Ctrl`/`Cmd` click toggles node selection within the active
+graph. Dragging any selected node moves the whole selection without changing
+relative offsets. Plain node clicks retain their action menus; clicking empty
+canvas space or pressing `Esc` clears selection, and changing graph levels also
+resets it. Two or more selected nodes show a bottom-center action bar inside the
+safe frame with the selected count, atomic bulk deletion and clear-selection.
+Bulk chapter deletion fails as a whole when any selected chapter still contains
+scenarios; bulk scenario deletion also removes its blocks.
 Drilling into a narrative level waits for the 420ms spotlight movement to reach
 its ancestor position, then swaps the graph identity, payload and preloaded
 viewport in one render. DOM keys include the graph identity so equal numeric IDs
@@ -151,8 +159,9 @@ position for one painted frame before animating it to its saved coordinates.
 Combat still overlaps its content reveal with the chapter movement; the
 participant rail width uses the same duration and easing as that movement, both
 on entry and exit. Reduced-motion users skip the delay.
-A regular node click opens its action popover: open the chapter scenarios, make
-current, change status, edit, start a transition, move to another arc or delete.
+A regular node click opens its action popover: open the chapter scenarios, mark
+it as `Сейчас здесь`, change status, edit, start a transition, move to another
+arc or delete.
 Status choices use the same configured semantic colors as the status badge on
 the chapter node. While scenarios or blocks are open, clicking the pinned
 chapter preview opens a reduced chapter menu with return-to-chapters, status
@@ -163,9 +172,9 @@ because a transition cannot cross arc boundaries.
 
 The chapter illustration covers the complete node. Number, title and optional
 scene count sit on a blurred translucent overlay above the image; lifecycle and
-current markers remain at the top. `sceneCount` is derived by the graph read API,
-not stored on `session_chapter`, and is updated optimistically when contextual
-scene CRUD changes the count.
+`Сейчас здесь` markers remain at the top. `sceneCount` is derived by the graph
+read API, not stored on `session_chapter`, and is updated optimistically when
+contextual scene CRUD changes the count.
 
 Chapter transitions are directed edges inside one arc. They may have a short
 optional label; clicking either the curve or label opens edit/reverse/delete

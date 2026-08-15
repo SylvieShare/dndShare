@@ -112,6 +112,12 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
   /api/sessions/{uuid}/chapters/{chapterId}`, plus `/position` and `/arc`
   PATCH actions;
 - `PATCH /api/sessions/{uuid}/current-chapter`;
+- `PATCH /api/sessions/{uuid}/graph-nodes/positions` atomically persists a
+  group movement as `{level,positions:[{id,x,y}]}`; `POST
+  /api/sessions/{uuid}/graph-nodes/delete` atomically deletes selected nodes as
+  `{level,ids}`. `level` is `chapters`, `scenes` or `blocks`; both owner-only
+  operations accept at most 200 distinct nodes. Chapter deletion rejects the
+  complete request if any selected chapter still has scenarios;
 - `POST /api/sessions/{uuid}/chapter-edges` and `PATCH|DELETE
   /api/sessions/{uuid}/chapter-edges/{edgeId}`;
 - read/write encounter and music state;
@@ -162,9 +168,9 @@ use `{sceneId,fromItemId,toItemId,label}`. Each transition may only connect
 nodes of one parent canvas. Reordering arcs accepts `{ids:[...]}` containing
 every arc exactly once; response order becomes the new automatic numbering.
 
-Точные routes находятся в `internal/web/sessions.go` и
-`internal/web/session_scenes.go` and `internal/web/session_scene_graph.go`;
-graph validation is in
+Точные routes находятся в `internal/web/sessions.go`,
+`internal/web/session_scenes.go`, `internal/web/session_scene_graph.go` и
+`internal/web/session_graph_bulk.go`; graph validation is in
 `sessions_chapters.go` and `sessions_graph_actions.go`. Encounter принимает
 только canonical combatants (`itemId` + `override` и уникальный
 `markerLetter` для NPC); embedded item payload не является контрактом. Текущее

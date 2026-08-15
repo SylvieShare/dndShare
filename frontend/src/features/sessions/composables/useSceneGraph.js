@@ -9,6 +9,7 @@ import {
   updateSceneEdge as apiUpdateEdge,
   updateScene as apiUpdateScene,
 } from '@/shared/api/scenesApi'
+import { deleteGraphNodes as apiDeleteGraphNodes, moveGraphNodePositions as apiMovePositions } from '@/shared/api/sessionsApi'
 
 export function useSceneGraph({ sessionUuid, chapterId }) {
   const scenes = ref([])
@@ -69,15 +70,36 @@ export function useSceneGraph({ sessionUuid, chapterId }) {
     edges.value = edges.value.filter(edge => edge.fromSceneId !== sceneId && edge.toSceneId !== sceneId)
   }
 
+  async function deleteScenes(ids) {
+    await apiDeleteGraphNodes(sessionUuid, 'scenes', ids)
+    const keys = new Set(ids.map(String))
+    scenes.value = scenes.value.filter(scene => !keys.has(String(scene.id)))
+    edges.value = edges.value.filter(edge =>
+      !keys.has(String(edge.fromSceneId)) && !keys.has(String(edge.toSceneId)))
+  }
+
   function setLocalPosition(sceneId, x, y) {
     scenes.value = scenes.value.map(scene => scene.id === sceneId
       ? { ...scene, positionX: x, positionY: y }
       : scene)
   }
 
+  function setLocalPositions(positions) {
+    const byId = new Map(positions.map(position => [String(position.id), position]))
+    scenes.value = scenes.value.map(scene => {
+      const position = byId.get(String(scene.id))
+      return position ? { ...scene, positionX: position.x, positionY: position.y } : scene
+    })
+  }
+
   async function savePosition(sceneId, x, y) {
     setLocalPosition(sceneId, x, y)
     await moveScenePosition(sessionUuid, sceneId, x, y)
+  }
+
+  async function savePositions(positions) {
+    setLocalPositions(positions)
+    await apiMovePositions(sessionUuid, 'scenes', positions)
   }
 
   async function createEdge(fromSceneId, toSceneId, label = null) {
@@ -101,7 +123,7 @@ export function useSceneGraph({ sessionUuid, chapterId }) {
 
   return {
     scenes, edges, loading, loaded, error,
-    load, reset, createScene, updateScene, deleteScene,
-    setLocalPosition, savePosition, createEdge, updateEdge, deleteEdge,
+    load, reset, createScene, updateScene, deleteScene, deleteScenes,
+    setLocalPosition, setLocalPositions, savePosition, savePositions, createEdge, updateEdge, deleteEdge,
   }
 }

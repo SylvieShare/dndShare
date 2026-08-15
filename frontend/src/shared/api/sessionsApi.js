@@ -104,6 +104,14 @@ export function moveChapterPosition(uuid, chapterId, x, y) {
   return fetchPatch(`/sessions/${uuid}/chapters/${chapterId}/position`, { x, y })
 }
 
+export function moveGraphNodePositions(uuid, level, positions) {
+  return fetchPatch(`/sessions/${uuid}/graph-nodes/positions`, { level, positions })
+}
+
+export function deleteGraphNodes(uuid, level, ids) {
+  return fetchPost(`/sessions/${uuid}/graph-nodes/delete`, { level, ids })
+}
+
 export function moveChapterToArc(uuid, chapterId, arcId, x, y) {
   return fetchPatch(`/sessions/${uuid}/chapters/${chapterId}/arc`, { arcId, x, y })
 }

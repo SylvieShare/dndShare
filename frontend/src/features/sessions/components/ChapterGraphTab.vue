@@ -43,8 +43,10 @@
         @edge-click="openEdgeMenu"
         @start-link="startLink"
         @finish-link="finishLink"
-        @preview-position="graph.setLocalPosition"
-        @save-position="savePosition"
+        @preview-positions="graph.setLocalPositions"
+        @save-positions="savePositions"
+        @selection-change="closeMenus"
+        @delete-nodes="confirmChaptersDelete"
         @create-chapter="openChapterCreate"
         @close-workspace="returnToChapters"
         @chapter-ancestor-click="openChapterAncestorMenu"
@@ -76,7 +78,7 @@
             v-if="activeChapter.id !== graph.currentChapter.value?.id"
             :icon="CircleDot"
             @click="makeCurrent(activeChapter)"
-          >Сделать текущей</RowActionItem>
+          >Отметить «Сейчас здесь»</RowActionItem>
         </template>
         <RowActionSubmenu label="Статус главы" :min-width="230">
           <template #trigger="{ open }">
@@ -324,13 +326,13 @@ async function saveChapter(data) {
   } catch { /* message is shown */ }
 }
 
-async function savePosition(id, x, y) {
-  try { await graph.savePosition(id, x, y) } catch { actionError.value = 'Не удалось сохранить положение главы' }
+async function savePositions(positions) {
+  try { await graph.savePositions(positions) } catch { actionError.value = 'Не удалось сохранить положение выбранных глав' }
 }
 
 async function makeCurrent(chapter) {
   closeMenus()
-  try { await perform(() => graph.makeCurrent(chapter.id), 'Не удалось изменить текущую главу') } catch { /* shown */ }
+  try { await perform(() => graph.makeCurrent(chapter.id), 'Не удалось отметить, где сейчас группа') } catch { /* shown */ }
 }
 
 async function changeStatus(chapter, status) {
@@ -417,6 +419,17 @@ function confirmChapterDelete(chapter) {
   confirmState.value = { kind: 'chapter', chapter, title: 'Удалить главу?', message: `Глава «${chapter.name}» и её переходы будут удалены. Главу со сценами удалить нельзя.`, confirmLabel: 'Удалить' }
 }
 
+function confirmChaptersDelete(ids) {
+  closeMenus()
+  confirmState.value = {
+    kind: 'chapters',
+    ids,
+    title: `Удалить главы: ${ids.length}?`,
+    message: 'Выбранные главы и связанные переходы будут удалены. Если хотя бы в одной главе есть сценарии, ничего не удалится.',
+    confirmLabel: 'Удалить',
+  }
+}
+
 function confirmEdgeDelete(edge) {
   closeMenus()
   confirmState.value = { kind: 'edge', edge, title: 'Удалить переход?', message: edge.label ? `Удалить переход «${edge.label}»?` : 'Удалить этот переход?', confirmLabel: 'Удалить' }
@@ -428,6 +441,7 @@ async function runConfirmedAction() {
   try {
     if (state.kind === 'arc') await perform(() => graph.deleteArc(state.arc.id), 'Удалить можно только пустую арку')
     if (state.kind === 'chapter') await perform(() => graph.deleteChapter(state.chapter.id), 'Не удалось удалить главу. Возможно, к ней привязаны сцены.')
+    if (state.kind === 'chapters') await perform(() => graph.deleteChapters(state.ids), 'Не удалось удалить главы. Возможно, к одной из них привязаны сценарии.')
     if (state.kind === 'edge') await perform(() => graph.deleteEdge(state.edge.id), 'Не удалось удалить переход')
     if (state.kind === 'move') {
       await perform(() => graph.moveChapterToArc(state.chapter.id, state.arc.id, 80, 80), 'Не удалось переместить главу')
