@@ -219,6 +219,15 @@ HTTP-обслуживания; компоненты не содержат read-t
 `/handbook/dictionary`, `/handbook/objects`, `/admin`. Неизвестный клиентский
 маршрут перенаправляется на `/`.
 
+В `/admin?tab=ui-kit` через отдельный `@sylvieshare/share-ui/gallery`
+подключается `ComponentGallery`. Это единая интерактивная витрина библиотеки:
+она использует DnD-тему и accent приложения. На уровне исходников компонент
+запрашивается через `defineAsyncComponent`; production-конфигурация dndShare
+намеренно сводит весь JavaScript в один стабильный файл, чтобы открытая вкладка
+не получала 404 после deploy, поэтому отдельного runtime chunk здесь нет. Новый
+публичный визуальный компонент `share-ui` обязан появиться на этой доске —
+полноту проверяет тест самой библиотеки.
+
 `/screen/:uuid` uses `meta.standaloneView`: like print mode, it removes the
 global sidebar, header and diagnostic overlays, but retains the dark application
 theme for a public read-only encounter display.

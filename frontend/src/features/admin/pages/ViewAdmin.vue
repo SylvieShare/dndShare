@@ -33,12 +33,13 @@
       <AdminLogs v-else-if="activeTab === 'logs'" />
       <AdminErrorReports v-else-if="activeTab === 'error-reports'" />
       <AdminJobs v-else-if="activeTab === 'jobs'" />
+      <ComponentGallery v-else-if="activeTab === 'ui-kit'" />
     </main>
   </div>
 </template>
 
 <script setup>
-import { computed, nextTick, ref } from 'vue'
+import { computed, defineAsyncComponent, nextTick, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import AdminJobs from '../components/AdminJobs.vue'
 import AdminLogs from '../components/AdminLogs.vue'
@@ -46,12 +47,17 @@ import AdminErrorReports from '../components/AdminErrorReports.vue'
 import AdminStats from '../components/AdminStats.vue'
 import AdminUsers from '../components/AdminUsers.vue'
 
+const ComponentGallery = defineAsyncComponent(() => (
+  import('@sylvieshare/share-ui/gallery').then(module => module.ComponentGallery)
+))
+
 const tabs = [
   { id: 'stats', label: 'Статистика' },
   { id: 'users', label: 'Пользователи' },
   { id: 'logs', label: 'Логи' },
   { id: 'error-reports', label: 'Ошибки страниц' },
   { id: 'jobs', label: 'Задачи' },
+  { id: 'ui-kit', label: 'UI-кит' },
 ]
 
 const route = useRoute()

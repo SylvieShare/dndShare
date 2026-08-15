@@ -16,4 +16,11 @@ describe('admin navigation shell', () => {
     expect(source).toContain('overflow-x: auto;')
     expect(source).toContain('width: 100%;')
   })
+
+  it('loads the shared component gallery only for the UI-kit tab', () => {
+    expect(source).toContain("{ id: 'ui-kit', label: 'UI-кит' }")
+    expect(source).toContain("import('@sylvieshare/share-ui/gallery')")
+    expect(source).toContain("activeTab === 'ui-kit'")
+    expect(source).toContain('<ComponentGallery')
+  })
 })
