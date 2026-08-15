@@ -36,6 +36,7 @@ func (s *Server) routesSessions(mux *http.ServeMux) {
 	mux.HandleFunc("DELETE /api/sessions/{uuid}/chapter-edges/{edgeId}", s.handleDeleteChapterEdge)
 	mux.HandleFunc("POST /api/sessions/{uuid}/join", s.handleJoinSession)
 	mux.HandleFunc("POST /api/sessions/{uuid}/events", s.handleCreateSessionEvent)
+	mux.HandleFunc("PATCH /api/sessions/{uuid}/participants-order", s.handleReorderParticipants)
 	mux.HandleFunc("DELETE /api/sessions/{uuid}/participants/{charId}", s.handleKickParticipant)
 	mux.HandleFunc("PATCH /api/sessions/{uuid}/participants/{charId}/color", s.handleUpdateParticipantColor)
 	mux.HandleFunc("PATCH /api/sessions/{uuid}/status", s.handleUpdateSessionStatus)

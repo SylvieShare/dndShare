@@ -102,6 +102,8 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
 - join/leave/kick participant and update session status;
 - `PATCH /api/sessions/{uuid}/participants/{charId}/color` assigns or clears
   (`{"color":null}`) the participant's session-local `#RRGGBB` marker; owner-only;
+- `PATCH /api/sessions/{uuid}/participants-order` accepts the complete ordered
+  participant character-id list as `{"ids":[...]}`; owner-only;
 - `GET /api/sessions/{uuid}/chapter-graph` returns `{arcs,chapters,edges}`;
 - `POST /api/sessions/{uuid}/arcs`, `PATCH|DELETE
   /api/sessions/{uuid}/arcs/{arcId}` and `PATCH

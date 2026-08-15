@@ -1,5 +1,5 @@
 <template>
-  <div class="p-card-menu">
+  <div class="p-card-menu" :class="{ 'p-card-menu--placeholder': reorderPlaceholder }">
     <RowActionMenu>
       <template #trigger>
         <BaseTile
@@ -22,6 +22,19 @@
             @update:selected="$emit('update:combat-selected', $event)"
             @update:initiative="$emit('update:initiative', $event)"
           />
+
+          <button
+            v-if="isDm"
+            type="button"
+            class="p-drag-handle"
+            :disabled="!reorderEnabled"
+            title="Изменить порядок игрока"
+            aria-label="Перетащить игрока"
+            @pointerdown.stop="startReorder"
+            @click.stop
+          >
+            <GripVertical :size="16" aria-hidden="true" />
+          </button>
 
           <div class="p-avatar" :style="participantAvatarStyle">
             <img v-if="avaUrl" :src="avaUrl" class="ava-img" alt="" />
@@ -80,7 +93,7 @@
       </template>
 
       <template #default="{ close }">
-        <RowActionItem action="view" @click="viewParticipant(close)">Просмотреть</RowActionItem>
+        <RowActionItem action="view" @click="viewParticipant(close)">Открыть лист</RowActionItem>
         <RowActionSubmenu v-if="isDm" label="Цвет игрока" :disabled="colorPending">
           <template #trigger="{ open }">
             <RowActionItem
@@ -122,7 +135,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { Palette } from '@lucide/vue'
+import { GripVertical, Palette } from '@lucide/vue'
 import { BaseTile } from '@sylvieshare/share-ui'
 import { ColorPresetPicker } from '@sylvieshare/share-ui'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
@@ -139,13 +152,20 @@ const props = defineProps({
   isDm: { type: Boolean, default: false },
   kickPending: { type: Boolean, default: false },
   colorPending: { type: Boolean, default: false },
+  reorderEnabled: { type: Boolean, default: false },
+  reorderPlaceholder: { type: Boolean, default: false },
   combatMode: { type: Boolean, default: false },
   combatant: { type: Object, default: null },
   combatSelected: { type: Boolean, default: false },
   combatCurrent: { type: Boolean, default: false },
   combatEditable: { type: Boolean, default: false },
 })
-const emit = defineEmits(['view', 'kick', 'color', 'update:combat-selected', 'update:initiative'])
+const emit = defineEmits(['view', 'kick', 'color', 'drag-start', 'update:combat-selected', 'update:initiative'])
+
+function startReorder(event) {
+  if (!props.reorderEnabled) return
+  emit('drag-start', event)
+}
 
 function viewParticipant(close) {
   close()
@@ -258,6 +278,34 @@ const participantAvatarStyle = computed(() => ({
   display: flex;
   width: 100%;
 }
+
+.p-card-menu--placeholder :deep(.ram-custom-trigger) {
+  visibility: hidden;
+}
+
+.p-drag-handle {
+  width: 18px;
+  height: 30px;
+  flex: 0 0 18px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 5px;
+  background: none;
+  color: var(--text-muted);
+  cursor: grab;
+  touch-action: none;
+  transition: color 0.15s, background 0.15s;
+}
+
+.p-drag-handle:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--text-on-accent) 6%, transparent);
+  color: var(--text-1);
+}
+
+.p-drag-handle:active:not(:disabled) { cursor: grabbing; }
+.p-drag-handle:disabled { cursor: default; opacity: 0.3; }
 
 .participant-color-swatch {
   display: block;

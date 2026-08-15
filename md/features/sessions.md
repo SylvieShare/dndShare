@@ -36,8 +36,11 @@ changing the route. The invitation flow continues to use the compact
 
 The session participant rail has no shared backing surface: each participant is
 an individual interactive `BaseTile`. Clicking it opens `RowActionMenu` with an
-icon-labelled view action plus DM-only color and confirmed kick actions; bulk participant
-selection is not part of the rail. The color is stored on the participant's
+icon-labelled `Открыть лист` action plus DM-only color and confirmed kick
+actions; bulk participant selection is not part of the rail. A DM-only grip
+reorders players through the shared `useSortable` interaction and persists the
+complete order in `session_participant.sort_order`; a failed save restores the
+previous order. The color is stored on the participant's
 session membership and renders as the same diagonal `BaseTile` mark in the rail
 and on that player's encounter rows. Color palettes, encounter cloning and the
 chapter status/arc choices use `RowActionSubmenu`: a separate adjacent popover

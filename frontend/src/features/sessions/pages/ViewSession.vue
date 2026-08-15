@@ -99,14 +99,17 @@
           </div>
         </div>
 
-        <div v-if="participants.length" class="participants-list">
+        <div v-if="participants.length" class="participants-list" data-sortable-container="participants">
           <SessionParticipantCard
-            v-for="p in participants"
+            v-for="(p, participantIndex) in displayedParticipants"
             :key="p.charId"
+            :data-sortable-key="p.charId"
             :participant="p"
             :is-dm="isDm"
             :kick-pending="kickingIds.has(p.charId)"
             :color-pending="coloringIds.has(p.charId)"
+            :reorder-enabled="isDm && participants.length > 1 && !participantOrderSaving"
+            :reorder-placeholder="participantSortable.isSource(p)"
             :combat-mode="workspaceMotionMode === 'combat'"
             :combatant="encounterPlayer(p.charId)"
             :combat-selected="isEncounterPlayerSelected(p.charId)"
@@ -115,13 +118,14 @@
             @view="openParticipant"
             @color="setParticipantColor"
             @kick="requestKickParticipant"
+            @drag-start="startParticipantDrag($event, p, participantIndex)"
             @update:combat-selected="setEncounterPlayerSelected(p.charId, $event)"
             @update:initiative="setEncounterPlayerInitiative(p.charId, $event)"
           />
         </div>
         <div v-else class="no-participants">Участников пока нет</div>
-        <div v-if="kickError || colorError" class="participant-action-error" role="alert">
-          {{ kickError || colorError }}
+        <div v-if="kickError || colorError || participantOrderError" class="participant-action-error" role="alert">
+          {{ kickError || colorError || participantOrderError }}
         </div>
       </aside>
 
@@ -168,6 +172,7 @@ import { FormActionButtons } from '@sylvieshare/share-ui'
 import { FormField } from '@sylvieshare/share-ui'
 import { FormTextInput } from '@sylvieshare/share-ui'
 import { FormTextarea } from '@sylvieshare/share-ui'
+import { reorderByDrop, useSortable } from '@sylvieshare/share-ui'
 import CharacterCreateWizardModal from '@/features/character-list/components/CharacterCreateWizardModal.vue'
 import CharacterSheetModal from '@/features/sessions/components/CharacterSheetModal.vue'
 import ChapterGraphTab from '@/features/sessions/components/ChapterGraphTab.vue'
@@ -193,7 +198,7 @@ import { sessionStatusConfig } from '@/features/sessions/composables/useSessionS
 import { pvName } from '@/features/sessions/lib/participantView'
 import { createHeaderChip } from '@/shared/lib/appHeader'
 import { fetchPost } from '@/shared/api/http'
-import { getSession, joinSession, updateParticipantColor, updateSession } from '@/shared/api/sessionsApi'
+import { getSession, joinSession, reorderParticipants, updateParticipantColor, updateSession } from '@/shared/api/sessionsApi'
 import { itemsApi } from '@/shared/api/itemsApi'
 
 const route = useRoute()
@@ -211,6 +216,8 @@ const editDesc = ref('')
 const editSaving = ref(false)
 const coloringIds = ref(new Set())
 const colorError = ref('')
+const participantOrderSaving = ref(false)
+const participantOrderError = ref('')
 const pendingKick = ref(null)
 const pendingKickName = computed(() => pvName(pendingKick.value) || 'Игрок')
 
@@ -239,6 +246,41 @@ const isDm = computed(() => {
   const uid = accountStore.user?.id
   return !!(uid && session.value && session.value.ownerUserId === uid)
 })
+
+const participantSortable = useSortable({
+  groups: {
+    participants: { items: participants },
+  },
+  getKey: participant => participant.charId,
+  onDrop: async ({ fromIndex, toIndex }) => {
+    if (fromIndex === toIndex || participantOrderSaving.value) return
+    const previousIds = participants.value.map(participant => participant.charId)
+    const reordered = reorderByDrop(participants.value, fromIndex, toIndex)
+    participants.value = reordered
+    participantOrderError.value = ''
+    participantOrderSaving.value = true
+    try {
+      await reorderParticipants(sessionUuid, reordered.map(participant => participant.charId))
+    } catch {
+      const currentById = new Map(participants.value.map(participant => [participant.charId, participant]))
+      const previousSet = new Set(previousIds)
+      participants.value = [
+        ...previousIds.map(charId => currentById.get(charId)).filter(Boolean),
+        ...participants.value.filter(participant => !previousSet.has(participant.charId)),
+      ]
+      participantOrderError.value = 'Не удалось сохранить порядок игроков'
+    } finally {
+      participantOrderSaving.value = false
+    }
+  },
+})
+
+const displayedParticipants = computed(() => participantSortable.displayItems('participants'))
+
+function startParticipantDrag(event, participant, index) {
+  if (!isDm.value || participants.value.length < 2 || participantOrderSaving.value) return
+  participantSortable.startDrag(event, participant, 'participants', index)
+}
 
 const encounter = reactive(useEncounter({
   sessionUuid,

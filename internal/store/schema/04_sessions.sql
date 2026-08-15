@@ -614,16 +614,34 @@ CREATE TABLE IF NOT EXISTS dndshare.session_participant (
     user_id    int8 NOT NULL REFERENCES dndshare.users(id),
     "role"     varchar(32) DEFAULT 'player'::character varying NOT NULL,
     color      varchar(7) NULL,
+    sort_order int4 NOT NULL,
     joined_at  timestamptz DEFAULT now() NOT NULL,
     CONSTRAINT session_participant_pkey PRIMARY KEY (id),
-    CONSTRAINT session_participant_session_id_char_id_key UNIQUE (session_id, char_id)
+    CONSTRAINT session_participant_session_id_char_id_key UNIQUE (session_id, char_id),
+    CONSTRAINT session_participant_session_id_sort_order_key UNIQUE (session_id, sort_order)
 );
 ALTER TABLE dndshare.session_participant ADD COLUMN IF NOT EXISTS color varchar(7) NULL;
+ALTER TABLE dndshare.session_participant ADD COLUMN IF NOT EXISTS sort_order int4 NULL;
+WITH participant_order AS (
+    SELECT id, (row_number() OVER (PARTITION BY session_id ORDER BY joined_at, id))::int AS sort_order
+    FROM dndshare.session_participant
+)
+UPDATE dndshare.session_participant participant
+SET sort_order = participant_order.sort_order
+FROM participant_order
+WHERE participant.id = participant_order.id AND participant.sort_order IS NULL;
+ALTER TABLE dndshare.session_participant ALTER COLUMN sort_order SET NOT NULL;
 DO $$ BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'session_participant_color_check') THEN
         ALTER TABLE dndshare.session_participant ADD CONSTRAINT session_participant_color_check CHECK (
             color IS NULL OR color ~ '^#[0-9a-fA-F]{6}$'
         );
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'session_participant_sort_order_check') THEN
+        ALTER TABLE dndshare.session_participant ADD CONSTRAINT session_participant_sort_order_check CHECK (sort_order > 0);
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'session_participant_session_id_sort_order_key') THEN
+        ALTER TABLE dndshare.session_participant ADD CONSTRAINT session_participant_session_id_sort_order_key UNIQUE (session_id, sort_order);
     END IF;
 END $$;
 CREATE INDEX IF NOT EXISTS idx_session_participant_char_id ON dndshare.session_participant USING btree (char_id);

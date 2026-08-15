@@ -26,12 +26,22 @@ describe('SessionParticipantCard actions', () => {
 
   it('offers view to everyone and DM-only color and kick actions', () => {
     expect(source).toContain('<RowActionItem action="view"')
+    expect(source).toContain('>Открыть лист</RowActionItem>')
+    expect(source).not.toContain('>Просмотреть</RowActionItem>')
     expect(source).toContain("{{ colorPending ? 'Сохранение…' : 'Назначить цвет' }}")
     expect(source).toContain('<RowActionSubmenu v-if="isDm" label="Цвет игрока"')
     expect(source).toContain('<ColorPresetPicker')
     expect(source).toContain('@update:model-value="color => assignColor(color, closeColor)"')
     expect(source).toMatch(/v-if="isDm"[\s\S]*?action="kick"[\s\S]*?>\{\{ kickPending \? 'Исключение…' : 'Выгнать' \}\}<\/RowActionItem>/)
-    expect(source).toContain("defineEmits(['view', 'kick', 'color', 'update:combat-selected', 'update:initiative'])")
+    expect(source).toContain("defineEmits(['view', 'kick', 'color', 'drag-start', 'update:combat-selected', 'update:initiative'])")
+  })
+
+  it('provides a DM drag handle and a stable sortable placeholder', () => {
+    expect(source).toContain('class="p-drag-handle"')
+    expect(source).toContain('@pointerdown.stop="startReorder"')
+    expect(source).toContain("emit('drag-start', event)")
+    expect(source).toContain("'p-card-menu--placeholder': reorderPlaceholder")
+    expect(source).toContain('.p-card-menu--placeholder :deep(.ram-custom-trigger)')
   })
 
   it('slides persistent battle controls into the expanded player tile without changing its height', () => {

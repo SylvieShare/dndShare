@@ -293,6 +293,15 @@ describe('ViewSession participant rail', () => {
     expect(source).not.toContain('selectionMode')
   })
 
+  it('reorders participants by drag and persists the complete order', () => {
+    expect(source).toContain('data-sortable-container="participants"')
+    expect(source).toContain(':data-sortable-key="p.charId"')
+    expect(source).toContain('const participantSortable = useSortable({')
+    expect(source).toContain('const reordered = reorderByDrop(participants.value, fromIndex, toIndex)')
+    expect(source).toContain('await reorderParticipants(sessionUuid, reordered.map(participant => participant.charId))')
+    expect(source).toContain("participantOrderError.value = 'Не удалось сохранить порядок игроков'")
+  })
+
   it('saves a session-local participant color and marks player tiles in both rails', () => {
     expect(source).toContain('await updateParticipantColor(sessionUuid, charId, color)')
     expect(source).toContain('{ ...participant, color: color || null }')

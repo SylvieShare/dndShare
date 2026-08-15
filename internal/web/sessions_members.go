@@ -147,6 +147,31 @@ func (s *Server) handleKickParticipant(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusNoContent, nil)
 }
 
+type reorderParticipantsRequest struct {
+	IDs []int64 `json:"ids"`
+}
+
+func (s *Server) handleReorderParticipants(w http.ResponseWriter, r *http.Request) {
+	_, session, ok := s.requireSessionOwner(w, r)
+	if !ok {
+		return
+	}
+	var body reorderParticipantsRequest
+	if err := decodeJSON(r, &body); err != nil || len(body.IDs) == 0 {
+		badRequest(w, "Некорректный порядок игроков")
+		return
+	}
+	if err := s.store.ReorderSessionParticipants(r.Context(), session.ID, body.IDs); err != nil {
+		if errors.Is(err, store.ErrNotFound) {
+			badRequest(w, "Некорректный порядок игроков")
+		} else {
+			serverError(w, err)
+		}
+		return
+	}
+	writeJSON(w, http.StatusNoContent, nil)
+}
+
 var participantColorPattern = regexp.MustCompile(`^#[0-9a-f]{6}$`)
 
 type updateParticipantColorRequest struct {

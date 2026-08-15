@@ -48,6 +48,10 @@ export function updateParticipantColor(uuid, charId, color) {
   return fetchPatch(`/sessions/${uuid}/participants/${charId}/color`, { color })
 }
 
+export function reorderParticipants(uuid, ids) {
+  return fetchPatch(`/sessions/${uuid}/participants-order`, { ids })
+}
+
 export function getEncounter(uuid) {
   return fetchGet(`/sessions/${uuid}/encounter`)
 }

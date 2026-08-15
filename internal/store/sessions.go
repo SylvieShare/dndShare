@@ -143,7 +143,7 @@ func (s *Store) GetSessionParticipants(ctx context.Context, sessionID int64) ([]
 		 JOIN dndshare."char" c ON c.id = sp.char_id AND c.deleted = false
 		 JOIN dndshare.char_template ct ON ct.id = c.template_id
 		 WHERE sp.session_id = $1
-		 ORDER BY sp.joined_at`,
+		 ORDER BY sp.sort_order, sp.id`,
 		sessionID,
 	)
 	if err != nil {
@@ -174,7 +174,7 @@ func (s *Store) GetSessionParticipantsBrief(ctx context.Context, sessionIDs []in
 		 FROM dndshare.session_participant sp
 		 JOIN dndshare."char" c ON c.id = sp.char_id AND c.deleted = false
 		 WHERE sp.session_id = ANY($1)
-		 ORDER BY sp.joined_at`,
+		 ORDER BY sp.session_id, sp.sort_order, sp.id`,
 		sessionIDs,
 	)
 	if err != nil {
@@ -310,13 +310,26 @@ func (s *Store) DeleteGameSession(ctx context.Context, id int64) error {
 
 // AddSessionParticipant добавляет персонажа в сессию (порт addParticipant).
 func (s *Store) AddSessionParticipant(ctx context.Context, sessionID, charID, userID int64) error {
-	_, err := s.pool.Exec(ctx,
-		`INSERT INTO dndshare.session_participant (session_id, char_id, user_id)
-		 VALUES ($1, $2, $3)
+	tx, err := s.pool.Begin(ctx)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback(ctx)
+	var lockedSessionID int64
+	if err := tx.QueryRow(ctx,
+		`SELECT id FROM dndshare."session" WHERE id = $1 FOR UPDATE`, sessionID,
+	).Scan(&lockedSessionID); err != nil {
+		return err
+	}
+	if _, err := tx.Exec(ctx,
+		`INSERT INTO dndshare.session_participant (session_id, char_id, user_id, sort_order)
+		 VALUES ($1, $2, $3, (SELECT COALESCE(MAX(sort_order), 0) + 1 FROM dndshare.session_participant WHERE session_id = $1))
 		 ON CONFLICT (session_id, char_id) DO NOTHING`,
 		sessionID, charID, userID,
-	)
-	return err
+	); err != nil {
+		return err
+	}
+	return tx.Commit(ctx)
 }
 
 // RemoveSessionParticipant убирает участника по пользователю (порт removeParticipant).
@@ -346,6 +359,50 @@ func (s *Store) UpdateSessionParticipantColor(ctx context.Context, sessionID, ch
 		sessionID, charID, color,
 	)
 	return tag.RowsAffected() > 0, err
+}
+
+// ReorderSessionParticipants atomically rewrites the complete player order.
+func (s *Store) ReorderSessionParticipants(ctx context.Context, sessionID int64, charIDs []int64) error {
+	tx, err := s.pool.Begin(ctx)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback(ctx)
+	var lockedSessionID int64
+	if err := tx.QueryRow(ctx,
+		`SELECT id FROM dndshare."session" WHERE id = $1 FOR UPDATE`, sessionID,
+	).Scan(&lockedSessionID); err != nil {
+		return err
+	}
+	var matched, total, maxOrder int
+	if err := tx.QueryRow(ctx,
+		`SELECT count(*) FROM dndshare.session_participant WHERE session_id = $1 AND char_id = ANY($2)`,
+		sessionID, charIDs,
+	).Scan(&matched); err != nil {
+		return err
+	}
+	if err := tx.QueryRow(ctx,
+		`SELECT count(*), COALESCE(MAX(sort_order), 0) FROM dndshare.session_participant WHERE session_id = $1`,
+		sessionID,
+	).Scan(&total, &maxOrder); err != nil {
+		return err
+	}
+	if matched != len(charIDs) || total != len(charIDs) {
+		return ErrNotFound
+	}
+	if _, err := tx.Exec(ctx,
+		`UPDATE dndshare.session_participant SET sort_order = sort_order + $2
+		 WHERE session_id = $1`, sessionID, maxOrder+1); err != nil {
+		return err
+	}
+	for index, charID := range charIDs {
+		if _, err := tx.Exec(ctx,
+			`UPDATE dndshare.session_participant SET sort_order = $3
+			 WHERE session_id = $1 AND char_id = $2`, sessionID, charID, index+1); err != nil {
+			return err
+		}
+	}
+	return tx.Commit(ctx)
 }
 
 // GetEncounterData возвращает последний активный энкаунтер сессии как JSON-строку

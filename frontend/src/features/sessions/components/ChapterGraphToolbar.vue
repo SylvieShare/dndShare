@@ -60,9 +60,7 @@
 
     <div class="chapter-toolbar-view">
       <button type="button" class="chapter-tool-btn chapter-tool-btn--icon chapter-tool-btn--combat" :class="{ 'chapter-tool-btn--active': combatActive }" title="Бой" aria-label="Бой" @click="$emit('open-combat')">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-          <path d="M3 2l7.5 7.5M11 2L3.5 9.5M2 11l1-1 1 1-1 1-1-1zm8-8 1-1 1 1-1 1-1-1z" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+        <Swords :size="19" />
       </button>
 
       <span class="chapter-toolbar-rule" />
@@ -84,6 +82,7 @@
 
 <script setup>
 import { ref, watch } from 'vue'
+import { Swords } from '@lucide/vue'
 import { BasePopover } from '@sylvieshare/share-ui'
 import SessionStatusMenu from '@/features/sessions/components/SessionStatusMenu.vue'
 import { romanNumeral } from '@/features/sessions/lib/chapterGraph'
