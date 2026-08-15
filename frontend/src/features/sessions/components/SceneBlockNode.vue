@@ -1,13 +1,21 @@
 <template>
   <article class="scene-block-node" :style="{ '--block-color': sceneBlockColor(block.type) }">
-    <span class="scene-block-node-strip" />
     <strong>{{ block.title || fallbackTitle }}</strong>
     <div class="scene-block-node-preview">
       <template v-if="block.type === 'list'">
-        <div v-for="(row, index) in previewRows" :key="index" class="scene-block-node-row">
-          <b>{{ row.left }}</b><span>{{ row.right }}</span>
+        <div
+          v-for="(row, index) in previewRows"
+          :key="index"
+          class="scene-block-node-dialogue"
+          :style="{ '--dialogue-color': row.color }"
+        >
+          <div class="scene-block-node-speaker">
+            <span aria-hidden="true" />
+            <b>{{ row.left || 'Реплика' }}</b>
+          </div>
+          <p>{{ row.right }}</p>
         </div>
-        <span v-if="!previewRows.length" class="scene-block-node-empty">Пустой список</span>
+        <span v-if="!previewRows.length" class="scene-block-node-empty">Диалог пуст</span>
       </template>
       <template v-else-if="block.type === 'combat'">
         <div v-for="(creature, index) in creatures" :key="creatureKey(creature, index)" class="scene-block-node-creature">
@@ -26,6 +34,7 @@
 <script setup>
 import { computed } from 'vue'
 import { RichContent } from '@sylvieshare/share-ui'
+import { hydrateDialogueRows } from '@/features/sessions/lib/dialogueRows'
 import { sceneBlockColor, sceneBlockType } from '@/features/sessions/lib/sceneBlockTypes'
 
 const props = defineProps({
@@ -35,7 +44,7 @@ const props = defineProps({
 const fallbackTitle = computed(() => sceneBlockType(props.block.type).label)
 const previewRows = computed(() => {
   const rows = Array.isArray(props.block.data?.rows) ? props.block.data.rows : []
-  return rows.filter(row => row?.left || row?.right)
+  return hydrateDialogueRows(rows.filter(row => row?.left || row?.right))
 })
 const creatures = computed(() => Array.isArray(props.block.data?.creatures) ? props.block.data.creatures : [])
 
@@ -54,7 +63,7 @@ function creatureKey(creature, index) {
   display: flex;
   flex-direction: column;
   gap: 9px;
-  padding: 15px 16px 14px 18px;
+  padding: 15px 16px 14px;
   border: none;
   border-radius: 12px;
   background: var(--surface);
@@ -66,7 +75,6 @@ function creatureKey(creature, index) {
   background: color-mix(in srgb, var(--block-color) 8%, var(--surface));
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--block-color) 38%, var(--border));
 }
-.scene-block-node-strip { position: absolute; top: 0; bottom: 0; left: 0; width: 4px; background: var(--block-color); }
 .scene-block-node > strong {
   overflow-wrap: anywhere;
   color: var(--text-1);
@@ -75,10 +83,12 @@ function creatureKey(creature, index) {
   line-height: 1.24;
 }
 .scene-block-node-preview { color: var(--text-2); font-size: 11px; line-height: 1.42; overflow-wrap: anywhere; }
-.scene-block-node-row { display: grid; grid-template-columns: minmax(52px, .7fr) 1.3fr; gap: 8px; padding: 4px 0; border-bottom: 1px solid var(--border); }
-.scene-block-node-row:last-child { border-bottom: 0; }
-.scene-block-node-row b { min-width: 0; color: var(--block-color); overflow-wrap: anywhere; }
-.scene-block-node-row span { min-width: 0; overflow-wrap: anywhere; }
+.scene-block-node-dialogue { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; padding: 5px 0; }
+.scene-block-node-dialogue + .scene-block-node-dialogue { border-top: 1px solid var(--border); }
+.scene-block-node-speaker { display: flex; align-items: center; gap: 6px; min-width: 0; color: var(--dialogue-color); }
+.scene-block-node-speaker > span { width: 7px; height: 7px; flex: none; border-radius: 50%; background: currentColor; }
+.scene-block-node-speaker b { min-width: 0; overflow-wrap: anywhere; }
+.scene-block-node-dialogue p { margin: 0 0 0 13px; padding: 5px 8px; border-radius: 3px 9px 9px 9px; background: color-mix(in srgb, var(--dialogue-color) 9%, transparent); color: var(--text-2); white-space: pre-wrap; }
 .scene-block-node-text :deep(:first-child) { margin-top: 0; }
 .scene-block-node-text :deep(:last-child) { margin-bottom: 0; }
 .scene-block-node-creature { display: grid; grid-template-columns: 14px minmax(0, 1fr) auto; align-items: center; gap: 6px; padding: 4px 0; border-bottom: 1px solid var(--border); }

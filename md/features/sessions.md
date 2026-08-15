@@ -238,11 +238,14 @@ still opens the scenario block canvas.
 Double-clicking a scenario switches the same physical canvas to the third graph.
 The scenario node first moves to the top immediately to the right of its chapter
 and its peers and edges fade out; then block nodes replace the graph payload.
-Text, list and combat blocks have independent coordinates, persisted widths,
+Text, dialogue and combat blocks have independent coordinates, persisted widths,
 content-sized heights and directed links. Their accent color is derived from
 the type instead of being user-selected or stored. Block cards use the same
 dark `var(--surface)` backing and inset border as `BaseTile`, with only a quiet
-type-colored hover tint. Clicking any non-interactive
+type-colored hover tint and no leading color strip. Dialogue blocks store
+speaker/reply rows: speaker inputs autocomplete from the unique names already
+used in that dialogue, and every speaker receives one consistent distinct
+color from the shared palette. Clicking any non-interactive
 part of a block opens its action menu; there is no separate ellipsis trigger.
 The menu provides edit, copy and delete, while a double click opens
 `SceneBlockEditorModal`. A combat block contains bestiary references and/or
@@ -258,6 +261,9 @@ level navigation and does not duplicate a breadcrumb bar or physical canvas.
 for all three levels. `useSceneGraph` and `useSceneBlockGraph` own their server
 state and optimistic position/width previews. Each graph key persists only its
 viewport in local storage; node positions and edges are server state.
+Completing a link gesture creates an unlabelled directed edge immediately at
+every level; the edge action menu remains the explicit place to add or edit a
+label later.
 `SceneEditorModal` is used for scenario create/edit, `ConfirmDialog` for
 destructive actions, and `SceneBlockEditorModal` for block content. Scene and
 block CRUD remains in `session_scenes.go`; graph reads, positions and links are

@@ -96,11 +96,12 @@ describe('session graph canvas', () => {
     expect(sessionsApiSource).toContain('/graph-nodes/status')
   })
 
-  it('creates and edits labels on scenario and block transitions', () => {
+  it('creates scenario and block transitions directly while keeping label editing available', () => {
     expect(source).toContain('<ChapterEdgeModal')
-    expect(source).toContain('beginNestedEdgeCreate(displayLevel.value, from, node)')
+    expect(source).toContain('await createNestedEdge(displayLevel.value, from, node)')
+    expect(edgeEditorSource).toContain('await graph.createEdge(from.id, to.id, null)')
     expect(edgeEditorSource).toContain('await graph.updateEdge(edge.id, label)')
-    expect(edgeEditorSource).toContain('await graph.createEdge(pending.from.id, pending.to.id, label)')
+    expect(edgeEditorSource).not.toContain('pendingEdge')
     expect(edgeMenuSource).toContain('>Изменить подпись</RowActionItem>')
     expect(edgeMenuSource).toContain('>Удалить переход</RowActionItem>')
     expect(apiSource).toContain('updateSceneEdge')
@@ -116,6 +117,12 @@ describe('session graph canvas', () => {
     expect(source).toContain('blockMenus.value?.openFor(node, anchor)')
     expect(blockMenuSource).toContain('>Копировать</RowActionItem>')
     expect(blockEditorSource).not.toContain('ColorPresetPicker')
+    expect(blockSource).not.toContain('scene-block-node-strip')
+    expect(blockSource).toContain('scene-block-node-dialogue')
+    expect(blockEditorSource).toContain('placeholder="Участник"')
+    expect(blockEditorSource).toContain(':list="dialogueKeysListId"')
+    expect(narrativeCanvasSource).toContain("{ id: 'list', label: 'Диалог', icon: 'dialogue' }")
+    expect(dockSource).toContain("action.icon === 'dialogue'")
   })
 
   it('opens scenario actions from the whole card without an ellipsis trigger', () => {

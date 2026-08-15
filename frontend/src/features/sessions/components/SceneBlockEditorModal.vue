@@ -18,14 +18,23 @@
         <SceneCombatCreaturesEditor v-model="draft.creatures" />
       </FormField>
 
-      <FormField v-else label="Строки" vertical>
+      <FormField v-else label="Реплики" vertical>
         <div class="scene-block-editor-rows">
+          <datalist :id="dialogueKeysListId">
+            <option v-for="name in dialogueSuggestions" :key="name" :value="name" />
+          </datalist>
           <div v-for="(row, index) in draft.rows" :key="index" class="scene-block-editor-row">
-            <input v-model="row.left" placeholder="Ключ" />
-            <input v-model="row.right" placeholder="Значение" />
+            <span class="scene-block-editor-speaker-color" :style="{ background: row.color || 'var(--border-strong)' }" />
+            <input
+              v-model="row.left"
+              :list="dialogueKeysListId"
+              placeholder="Участник"
+              @input="syncDialogueColor(row)"
+            />
+            <input v-model="row.right" placeholder="Реплика" />
             <button type="button" aria-label="Удалить строку" @click="draft.rows.splice(index, 1)">×</button>
           </div>
-          <button type="button" class="scene-block-editor-add" @click="draft.rows.push({ left: '', right: '' })">+ Добавить строку</button>
+          <button type="button" class="scene-block-editor-add" @click="addDialogueRow">+ Добавить реплику</button>
         </div>
       </FormField>
     </div>
@@ -42,10 +51,11 @@
 </template>
 
 <script setup>
-import { computed, provide, reactive } from 'vue'
+import { computed, getCurrentInstance, provide, reactive } from 'vue'
 import { AppModalFrame } from '@sylvieshare/share-ui'
 import InputDescription from '@/shared/ui/InputDescription.vue'
 import SceneCombatCreaturesEditor from '@/features/sessions/components/SceneCombatCreaturesEditor.vue'
+import { dialogueKeySuggestions, hydrateDialogueRows, normalizeDialogueKey, pickDialogueColor } from '@/features/sessions/lib/dialogueRows'
 import { sceneBlockDefaultWidth, sceneBlockType } from '@/features/sessions/lib/sceneBlockTypes'
 import { FormActionButtons } from '@sylvieshare/share-ui'
 import { FormField } from '@sylvieshare/share-ui'
@@ -60,19 +70,42 @@ const emit = defineEmits(['close', 'save'])
 
 const blockType = computed(() => props.block?.type || props.type)
 const typeLabel = computed(() => sceneBlockType(blockType.value).label.toLowerCase())
+const dialogueKeysListId = `scene-dialogue-keys-${getCurrentInstance()?.uid ?? 'editor'}`
+const initialDialogueRows = hydrateDialogueRows(props.block?.data?.rows?.length
+  ? props.block.data.rows
+  : [{ left: '', right: '' }])
 const draft = reactive({
-  title: props.block?.title || `Новый ${blockType.value === 'list' ? 'список' : blockType.value === 'combat' ? 'бой' : 'текст'}`,
+  title: props.block?.title || `Новый ${blockType.value === 'list' ? 'диалог' : blockType.value === 'combat' ? 'бой' : 'текст'}`,
   text: props.block?.data?.text || '',
-  rows: Array.isArray(props.block?.data?.rows)
-    ? props.block.data.rows.map(row => ({ left: String(row?.left ?? ''), right: String(row?.right ?? '') }))
-    : [{ left: '', right: '' }],
+  rows: initialDialogueRows.map(row => ({ ...row, colorKey: normalizeDialogueKey(row.left) })),
   creatures: Array.isArray(props.block?.data?.creatures)
     ? props.block.data.creatures.map(creature => ({ ...creature }))
     : [],
 })
 const descriptionBlock = { id: 'scene-block-description', content: { placeholder: 'Текст блока' } }
+const dialogueSuggestions = computed(() => dialogueKeySuggestions(draft.rows))
 
 provide('charCtx', { ownerMode: false, dictionaries: {}, var: {} })
+
+function syncDialogueColor(row) {
+  const nextKey = normalizeDialogueKey(row.left)
+  if (!nextKey) {
+    row.color = ''
+    row.colorKey = ''
+    return
+  }
+  const matchingRow = draft.rows.find(candidate => candidate !== row && normalizeDialogueKey(candidate.left) === nextKey)
+  const colorUsedByAnotherKey = draft.rows.some(candidate => candidate !== row
+    && candidate.color === row.color
+    && normalizeDialogueKey(candidate.left) !== nextKey)
+  if (matchingRow?.color) row.color = matchingRow.color
+  else if (!row.color || colorUsedByAnotherKey) row.color = pickDialogueColor(draft.rows, row)
+  row.colorKey = nextKey
+}
+
+function addDialogueRow() {
+  draft.rows.push({ left: '', right: '', color: '', colorKey: '' })
+}
 
 function save() {
   emit('save', {
@@ -80,7 +113,9 @@ function save() {
     title: draft.title.trim(),
     width: props.block?.width || sceneBlockDefaultWidth(blockType.value),
     data: blockType.value === 'list'
-      ? { rows: draft.rows.filter(row => row.left.trim() || row.right.trim()) }
+      ? { rows: draft.rows
+        .filter(row => row.left.trim() || row.right.trim())
+        .map(row => ({ left: row.left.trim(), right: row.right.trim(), color: row.color || pickDialogueColor(draft.rows, row) })) }
       : blockType.value === 'combat'
         ? { creatures: draft.creatures.map(creature => ({ ...creature })) }
         : { text: draft.text },
@@ -91,7 +126,8 @@ function save() {
 <style scoped>
 .scene-block-editor { display: flex; flex-direction: column; gap: 18px; }
 .scene-block-editor-rows { display: flex; flex-direction: column; gap: 8px; }
-.scene-block-editor-row { display: grid; grid-template-columns: minmax(100px, .8fr) minmax(160px, 1.4fr) 32px; gap: 8px; }
+.scene-block-editor-row { display: grid; grid-template-columns: 12px minmax(110px, .8fr) minmax(160px, 1.4fr) 32px; align-items: center; gap: 8px; }
+.scene-block-editor-speaker-color { width: 9px; height: 9px; border-radius: 50%; box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 8%, transparent); }
 .scene-block-editor-row input {
   min-width: 0;
   padding: 9px 10px;

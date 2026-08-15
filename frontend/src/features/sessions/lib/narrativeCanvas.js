@@ -3,7 +3,7 @@ export function narrativeCanvasActions(level) {
   if (level === 'scenes') return [{ id: 'scene', label: 'Новый сценарий', icon: 'scene' }]
   return [
     { id: 'text', label: 'Текстовый блок', icon: 'text' },
-    { id: 'list', label: 'Список', icon: 'list' },
+    { id: 'list', label: 'Диалог', icon: 'dialogue' },
     { id: 'combat', label: 'Бой', icon: 'combat' },
   ]
 }

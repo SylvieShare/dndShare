@@ -143,9 +143,9 @@
       @save="saveChapter"
     />
     <ChapterEdgeModal
-      v-if="edgeEditorOpen"
+      v-if="edgeEditorOpen && editingEdge"
       :edge="editingEdge"
-      :title="edgeEditorTitle"
+      title="Изменить переход"
       :saving="saving"
       @close="closeEditors"
       @save="saveEdge"
@@ -211,18 +211,11 @@ const editingChapter = ref(null)
 const newChapterPosition = ref({ x: 80, y: 80 })
 const edgeEditorOpen = ref(false)
 const editingEdge = ref(null)
-const pendingEdge = ref(null)
 const linkingFrom = ref(null)
 const confirmState = ref(null)
 
 const graph = props.graph
 const otherArcs = computed(() => graph.arcs.value.filter(arc => arc.id !== activeChapter.value?.arcId))
-const edgeEditorTitle = computed(() => {
-  if (editingEdge.value) return 'Изменить переход'
-  const from = pendingEdge.value?.from
-  const to = pendingEdge.value?.to
-  return from && to ? `${from.name} → ${to.name}` : 'Новый переход'
-})
 
 function selectArc(id) {
   closeMenus()
@@ -289,7 +282,6 @@ function closeEditors() {
   editingArc.value = null
   editingChapter.value = null
   editingEdge.value = null
-  pendingEdge.value = null
 }
 
 async function perform(action, fallback) {
@@ -353,12 +345,14 @@ function startLink(chapter) {
   linkingFrom.value = chapter?.id === linkingFrom.value?.id ? null : chapter
 }
 
-function finishLink(chapter) {
+async function finishLink(chapter) {
   if (!linkingFrom.value || chapter.id === linkingFrom.value.id) return
-  pendingEdge.value = { from: linkingFrom.value, to: chapter }
+  const from = linkingFrom.value
   linkingFrom.value = null
-  editingEdge.value = null
-  edgeEditorOpen.value = true
+  const data = { arcId: from.arcId, fromChapterId: from.id, toChapterId: chapter.id, label: null }
+  try {
+    await perform(() => graph.createEdge(data), 'Не удалось создать переход — возможно, он уже существует')
+  } catch { /* shown */ }
 }
 
 function editEdge(edge) {
@@ -369,12 +363,12 @@ function editEdge(edge) {
 
 async function saveEdge(label) {
   const edge = editingEdge.value
-  const from = edge ? graph.chapters.value.find(chapter => chapter.id === edge.fromChapterId) : pendingEdge.value?.from
-  const to = edge ? graph.chapters.value.find(chapter => chapter.id === edge.toChapterId) : pendingEdge.value?.to
+  const from = graph.chapters.value.find(chapter => chapter.id === edge?.fromChapterId)
+  const to = graph.chapters.value.find(chapter => chapter.id === edge?.toChapterId)
   if (!from || !to) return
   const data = { arcId: from.arcId, fromChapterId: from.id, toChapterId: to.id, label }
   try {
-    await perform(() => edge ? graph.updateEdge(edge.id, data) : graph.createEdge(data), 'Не удалось сохранить переход')
+    await perform(() => graph.updateEdge(edge.id, data), 'Не удалось сохранить переход')
     closeEditors()
   } catch { /* shown */ }
 }

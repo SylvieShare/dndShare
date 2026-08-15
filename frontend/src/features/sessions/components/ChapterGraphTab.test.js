@@ -78,6 +78,8 @@ describe('chapter graph workspace', () => {
     expect(tab).toContain('<RowActionItem action="delete" tone="danger"')
     expect(canvas).toContain(':marker-end="`url(#${markerId})`"')
     expect(canvas).toContain('class="nested-graph-edge-label"')
+    expect(tab).toContain('await perform(() => graph.createEdge(data)')
+    expect(tab).not.toContain('pendingEdge')
   })
 
   it('renders the explicit chapter prefix on every graph node', () => {

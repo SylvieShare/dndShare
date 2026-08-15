@@ -5,7 +5,7 @@ export const SCENE_BLOCK_TYPES = {
     defaultWidth: 300,
   },
   list: {
-    label: 'Список',
+    label: 'Диалог',
     color: 'var(--accent)',
     defaultWidth: 300,
   },

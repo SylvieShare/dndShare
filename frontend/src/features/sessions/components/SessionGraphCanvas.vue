@@ -143,9 +143,9 @@
       @save="saveBlock"
     />
     <ChapterEdgeModal
-      v-if="nestedEdgeEditorOpen"
+      v-if="nestedEdgeEditorOpen && editingNestedEdge"
       :edge="editingNestedEdge"
-      :title="nestedEdgeEditorTitle"
+      title="Изменить переход"
       :saving="saving"
       @close="closeNestedEdgeEditor"
       @save="saveNestedEdge"
@@ -227,8 +227,7 @@ const blockGraph = useSceneBlockGraph({ sessionUuid: props.sessionUuid, sceneId:
 const {
   editorOpen: nestedEdgeEditorOpen,
   editingEdge: editingNestedEdge,
-  editorTitle: nestedEdgeEditorTitle,
-  beginCreate: beginNestedEdgeCreate,
+  createEdge: createNestedEdge,
   beginEdit: beginNestedEdgeEdit,
   closeEditor: closeNestedEdgeEditor,
   saveEdge: saveNestedEdge,
@@ -390,13 +389,13 @@ function startLink(node) {
   target.value = node?.id === target.value?.id ? null : node
 }
 
-function finishLink(node) {
+async function finishLink(node) {
   if (displayLevel.value === 'chapters') return emit('finish-link', node)
   const target = displayLevel.value === 'scenes' ? sceneLinkingFrom : blockLinkingFrom
   if (!target.value || target.value.id === node.id) return
   const from = target.value
   target.value = null
-  beginNestedEdgeCreate(displayLevel.value, from, node)
+  await createNestedEdge(displayLevel.value, from, node)
 }
 
 function openNestedEdgeEdit(edge, level) {

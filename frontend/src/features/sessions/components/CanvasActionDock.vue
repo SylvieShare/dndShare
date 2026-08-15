@@ -16,8 +16,8 @@
         <svg v-else-if="action.icon === 'scene'" viewBox="0 0 24 24">
           <path d="M4 7.5h16v11H4zM4 7.5l3-4 3 4 3-4 3 4 3-4"/>
         </svg>
-        <svg v-else-if="action.icon === 'list'" viewBox="0 0 24 24">
-          <path d="M9 7h11M9 12h11M9 17h11"/><circle cx="5" cy="7" r="1"/><circle cx="5" cy="12" r="1"/><circle cx="5" cy="17" r="1"/>
+        <svg v-else-if="action.icon === 'dialogue'" viewBox="0 0 24 24">
+          <path d="M4 5.5h11v8H9l-3.5 3v-3H4z"/><path d="M12 13.5v3h3l3.5 3v-3H20v-8h-5"/>
         </svg>
         <svg v-else-if="action.icon === 'combat'" viewBox="0 0 24 24">
           <path d="m6 4 12 16M18 4 6 20M4.5 2.5 8 6M19.5 2.5 16 6M4 21h4M16 21h4"/>
