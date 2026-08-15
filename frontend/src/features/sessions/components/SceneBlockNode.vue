@@ -22,11 +22,25 @@
       </template>
       <template v-else-if="block.type === 'combat'">
         <div v-for="(creature, index) in creatures" :key="creatureKey(creature, index)" class="scene-block-node-creature">
-          <span class="scene-block-node-creature-mark" aria-hidden="true">{{ creature.kind === 'handbook' ? '◆' : '◇' }}</span>
-          <b>{{ creature.name || 'Существо' }}</b>
+          <ItemIcon
+            v-if="creature.kind === 'handbook'"
+            :item="itemById(creature.itemId)"
+            :size="32"
+            placeholder
+          />
+          <span v-else class="scene-block-node-creature-placeholder" aria-hidden="true"><Sparkles :size="16" /></span>
+          <b>{{ itemById(creature.itemId)?.name || creature.name || 'Существо' }}</b>
           <span v-if="creature.count > 1">×{{ creature.count }}</span>
         </div>
         <span v-if="!creatures.length" class="scene-block-node-empty">Существа не добавлены</span>
+      </template>
+      <template v-else-if="block.type === 'reward'">
+        <div v-for="(item, index) in rewardItems" :key="`${item.itemId}:${index}`" class="scene-block-node-reward">
+          <ItemIcon :item="itemById(item.itemId)" :size="28" placeholder />
+          <b>{{ itemById(item.itemId)?.name || item.name || `Предмет #${item.itemId}` }}</b>
+          <span v-if="item.count > 1">×{{ item.count }}</span>
+        </div>
+        <span v-if="!rewardItems.length" class="scene-block-node-empty">Награда не добавлена</span>
       </template>
       <RichContent v-else-if="block.data?.text" class="scene-block-node-text" :html="block.data.text" />
       <span v-else class="scene-block-node-empty">Пустой текст</span>
@@ -36,12 +50,15 @@
 
 <script setup>
 import { computed } from 'vue'
+import { Sparkles } from '@lucide/vue'
 import { RichContent } from '@sylvieshare/share-ui'
+import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import { hydrateDialogueRows } from '@/features/sessions/lib/dialogueRows'
 import { sceneBlockColor, sceneBlockType } from '@/features/sessions/lib/sceneBlockTypes'
 
 const props = defineProps({
   block: { type: Object, required: true },
+  itemsById: { type: Map, default: () => new Map() },
 })
 
 const fallbackTitle = computed(() => sceneBlockType(props.block.type).label)
@@ -50,6 +67,11 @@ const previewRows = computed(() => {
   return hydrateDialogueRows(rows.filter(row => row?.left || row?.right))
 })
 const creatures = computed(() => Array.isArray(props.block.data?.creatures) ? props.block.data.creatures : [])
+const rewardItems = computed(() => Array.isArray(props.block.data?.items) ? props.block.data.items : [])
+
+function itemById(id) {
+  return props.itemsById.get(String(id)) ?? null
+}
 
 function creatureKey(creature, index) {
   return creature.id || `${creature.kind}:${creature.itemId ?? creature.name}:${index}`
@@ -111,10 +133,14 @@ function creatureKey(creature, index) {
 .scene-block-node-dialogue p { margin: 0 0 0 13px; padding: 5px 8px; border-radius: 3px 9px 9px 9px; background: color-mix(in srgb, var(--dialogue-color) 9%, transparent); color: var(--text-2); white-space: pre-wrap; }
 .scene-block-node-text :deep(:first-child) { margin-top: 0; }
 .scene-block-node-text :deep(:last-child) { margin-bottom: 0; }
-.scene-block-node-creature { display: grid; grid-template-columns: 14px minmax(0, 1fr) auto; align-items: center; gap: 6px; padding: 4px 0; border-bottom: 1px solid var(--border); }
+.scene-block-node-creature,
+.scene-block-node-reward { display: grid; grid-template-columns: 32px minmax(0, 1fr) auto; align-items: center; gap: 8px; padding: 5px 0; border-bottom: 1px solid var(--border); }
 .scene-block-node-creature:last-child { border-bottom: 0; }
-.scene-block-node-creature-mark { color: var(--block-color); font-size: 9px; }
-.scene-block-node-creature b { min-width: 0; overflow-wrap: anywhere; }
-.scene-block-node-creature > span:last-child { color: var(--block-color); font-weight: 800; }
+.scene-block-node-reward:last-child { border-bottom: 0; }
+.scene-block-node-creature-placeholder { width: 32px; height: 32px; display: grid; place-items: center; border-radius: 8px; background: color-mix(in srgb, var(--block-color) 11%, var(--surface-raised)); color: var(--block-color); }
+.scene-block-node-creature b,
+.scene-block-node-reward b { min-width: 0; overflow-wrap: anywhere; }
+.scene-block-node-creature > span:last-child,
+.scene-block-node-reward > span:last-child { color: var(--block-color); font-weight: 800; }
 .scene-block-node-empty { color: var(--text-muted); font-style: italic; }
 </style>

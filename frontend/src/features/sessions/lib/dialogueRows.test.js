@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { dialogueKeySuggestions, hydrateDialogueRows, pickDialogueColor } from './dialogueRows'
+import { applyDialogueKeyColor, dialogueKeySuggestions, hydrateDialogueRows, pickDialogueColor } from './dialogueRows'
 
 describe('dialogue rows', () => {
   it('keeps one color per participant and gives different participants distinct colors', () => {
@@ -25,5 +25,15 @@ describe('dialogue rows', () => {
     const active = { left: 'Торв', color: '' }
     rows.push(active)
     expect(pickDialogueColor(rows, active, () => 0)).not.toBe(rows[0].color)
+  })
+
+  it('changes the color of every row with the same normalized key', () => {
+    const rows = hydrateDialogueRows([
+      { left: 'Мира', right: 'Первая' },
+      { left: 'Торв', right: 'Вторая' },
+      { left: ' мира ', right: 'Третья' },
+    ])
+    applyDialogueKeyColor(rows, 'МИРА', '#123456')
+    expect(rows.map(row => row.color)).toEqual(['#123456', rows[1].color, '#123456'])
   })
 })

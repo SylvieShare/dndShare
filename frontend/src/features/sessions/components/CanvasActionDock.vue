@@ -22,6 +22,9 @@
         <svg v-else-if="action.icon === 'combat'" viewBox="0 0 24 24">
           <path d="m6 4 12 16M18 4 6 20M4.5 2.5 8 6M19.5 2.5 16 6M4 21h4M16 21h4"/>
         </svg>
+        <svg v-else-if="action.icon === 'reward'" viewBox="0 0 24 24">
+          <path d="M4 10h16v10H4zM3 7h18v3H3zM12 7v13M12 7H8.5a2.5 2.5 0 1 1 2.5-2.5L12 7Zm0 0h3.5A2.5 2.5 0 1 0 13 4.5L12 7Z"/>
+        </svg>
         <svg v-else viewBox="0 0 24 24">
           <path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5"/>
         </svg>

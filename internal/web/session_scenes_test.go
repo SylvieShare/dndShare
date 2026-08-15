@@ -2,6 +2,17 @@ package web
 
 import "testing"
 
+func TestValidSceneItemType(t *testing.T) {
+	for _, typ := range []string{"text", "list", "combat", "reward"} {
+		if !validSceneItemType(typ) {
+			t.Fatalf("validSceneItemType(%q) = false", typ)
+		}
+	}
+	if validSceneItemType("unknown") {
+		t.Fatal("validSceneItemType accepts an unknown type")
+	}
+}
+
 func TestSceneItemWidth(t *testing.T) {
 	tests := []struct {
 		name  string
@@ -11,6 +22,7 @@ func TestSceneItemWidth(t *testing.T) {
 	}{
 		{name: "text default", typ: "text", want: 300},
 		{name: "combat default", typ: "combat", want: 360},
+		{name: "reward default", typ: "reward", want: 320},
 		{name: "minimum", width: 100, typ: "text", want: 220},
 		{name: "maximum", width: 900, typ: "combat", want: 640},
 		{name: "custom", width: 412, typ: "list", want: 412},

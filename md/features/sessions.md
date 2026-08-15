@@ -243,7 +243,7 @@ still opens the scenario block canvas.
 Double-clicking a scenario switches the same physical canvas to the third graph.
 The scenario node first moves to the top immediately to the right of its chapter
 and its peers and edges fade out; then block nodes replace the graph payload.
-Text, dialogue and combat blocks have independent coordinates, persisted widths,
+Text, dialogue, combat and reward blocks have independent coordinates, persisted widths,
 content-sized heights and directed links. Their accent color is derived from
 the type instead of being user-selected or stored. Block cards use the same
 dark `var(--surface)` backing and inset border as `BaseTile`, with only a quiet
@@ -252,13 +252,19 @@ separated heading group: a small type-colored block kind above a larger display
 title, so the title remains the primary landmark over variable content. Dialogue blocks store
 speaker/reply rows: speaker inputs autocomplete from the unique names already
 used in that dialogue, and every speaker receives one consistent distinct
-color from the shared palette. Clicking any non-interactive
+color from the shared palette. Clicking the color circle beside a speaker opens
+that palette; choosing a color updates every row with the same normalized
+speaker key. Clicking any non-interactive
 part of a block opens its action menu; there is no separate ellipsis trigger.
 The menu provides edit, copy and delete, while a double click opens
 `SceneBlockEditorModal`. A combat block contains bestiary references and/or
 simplified creature records with quantities. Its leading `В бой` action adds
 the whole list to the encounter NPC reserve and opens the combat workspace with
-that block's chapter and scenario as its visible context.
+that block's chapter and scenario as its visible context. Bestiary creatures
+show their current handbook image or SVG in the card and editor; simplified
+creatures use a stable placeholder. A reward block stores quantity-bearing
+references to things, weapons and equipment and renders their current handbook
+icons and names.
 Block edges are re-measured after content or width changes, and dragging the
 right edge persists a width in the `220..640px` range. Double-clicking the pinned scenario swaps
 the payload back to scenarios. Double-clicking the pinned chapter at either
@@ -267,8 +273,13 @@ level navigation and does not duplicate a breadcrumb bar or physical canvas.
 
 `NestedGraphCanvas` owns pan, zoom, drag, link-port, edge and spotlight mechanics
 for all three levels. `useSceneGraph` and `useSceneBlockGraph` own their server
-state and optimistic position/width previews. Each graph key persists only its
-viewport in local storage; node positions and edges are server state.
+state and optimistic position/width previews. `useSessionGraphNavigation` owns
+the current level and selected scenario id, while `useSessionWorkspace` keeps a
+single explicit `idle/opening/open/closing` phase instead of parallel boolean
+flags. Drag previews are emitted at most once per animation frame, layout reads
+for the safe frame occur only for the spotlight node, and viewport persistence
+is debounced. Each graph key persists only its viewport in local storage; node
+positions and edges are server state.
 Completing a link gesture creates an unlabelled directed edge immediately at
 every level; the edge action menu remains the explicit place to add or edit a
 label later.
@@ -402,8 +413,20 @@ the current selection to the graveyard and delete all dead NPCs after a
 `useSessionWorkspace.js` stores the open workspace per session in local
 storage. Reloading the session restores combat against the current chapter or
 the scenarios workspace against its previously opened chapter. Explicitly
-closing the workspace clears this preference before the closing animation, so
-a subsequent reload stays on the chapter graph.
+closing a top-level workspace clears this preference before the closing
+animation. Closing combat opened from a nested canvas immediately persists that
+return context, so even a reload during the exit animation restores the scenario
+or block canvas instead of combat.
+
+Encounter hydration and saving are fail-safe: a failed initial GET never turns
+into an empty PUT, writes are snapshotted and serialized after the debounce, a
+failed latest write is retried, and a pending snapshot is flushed on unmount.
+The same flush starts when the tab becomes hidden or receives `pagehide`, which
+keeps the debounce window from dropping the latest change during navigation.
+The participant list is periodically refreshed while the page is visible;
+joining players are added to the encounter reserve and players removed from the
+session are removed from encounter state. Polling pauses in hidden tabs and an
+in-flight request cannot restart it after unmount.
 
 Canonical combatants:
 

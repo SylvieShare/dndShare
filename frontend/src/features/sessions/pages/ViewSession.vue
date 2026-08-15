@@ -83,7 +83,7 @@
         />
       </ChapterGraphTab>
 
-      <div v-if="combatImportError" class="combat-import-error" role="alert">{{ combatImportError }}</div>
+      <div v-if="combatWorkspaceError" class="combat-import-error" role="alert">{{ combatWorkspaceError }}</div>
 
       <aside class="workspace-dock workspace-dock--left">
         <div class="col-section-title">
@@ -316,6 +316,7 @@ const encounter = reactive(useEncounter({
   participants,
   canEditPlayers: isDm,
 }))
+const combatWorkspaceError = computed(() => combatImportError.value || encounter.loadError || encounter.saveError)
 
 function encounterPlayer(charId) {
   return encounter.encounter.combatants.find(combatant =>
@@ -393,8 +394,24 @@ const {
   closeWorkspace,
 } = useSessionWorkspace({ sessionUuid, chapterGraph })
 
+async function refreshParticipants() {
+  const fresh = await getSession(sessionUuid)
+  if (!Array.isArray(fresh?.participants)) return
+  const localById = new Map(participants.value.map(participant => [String(participant.charId), participant]))
+  const serverById = new Map(fresh.participants.map(participant => [String(participant.charId), participant]))
+  const withPendingColor = participant => coloringIds.value.has(participant.charId)
+    ? { ...participant, color: localById.get(String(participant.charId))?.color ?? null }
+    : participant
+  participants.value = participantOrderSaving.value
+    ? [
+        ...participants.value.map(participant => serverById.get(String(participant.charId))).filter(Boolean),
+        ...fresh.participants.filter(participant => !localById.has(String(participant.charId))),
+      ].map(withPendingColor)
+    : fresh.participants.map(withPendingColor)
+}
+
 const { pollStatus, pollRunning, startPolling, forgetVersion } =
-  useParticipantPolling({ participants })
+  useParticipantPolling({ participants, refreshParticipants })
 
 const {
   kickingIds, kickError, kickParticipant,

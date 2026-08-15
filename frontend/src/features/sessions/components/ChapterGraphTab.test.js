@@ -15,6 +15,7 @@ const arcEditor = readFileSync(fileURLToPath(new URL('./ArcEditorModal.vue', imp
 const node = readFileSync(fileURLToPath(new URL('./ChapterGraphNode.vue', import.meta.url)), 'utf8')
 const hotkeyHints = readFileSync(fileURLToPath(new URL('./CanvasHotkeyHints.vue', import.meta.url)), 'utf8')
 const hotkeys = readFileSync(fileURLToPath(new URL('../composables/useGraphHotkeys.js', import.meta.url)), 'utf8')
+const navigation = readFileSync(fileURLToPath(new URL('../composables/useSessionGraphNavigation.js', import.meta.url)), 'utf8')
 
 describe('chapter graph workspace', () => {
   it('compiles the graph tab', () => {
@@ -101,9 +102,9 @@ describe('chapter graph workspace', () => {
     expect(tab).toContain('<SessionGraphCanvas')
     expect(tab).toContain('<slot />')
     expect(sessionCanvas.match(/<NestedGraphCanvas/g)).toHaveLength(1)
-    expect(sessionCanvas).toContain("const displayLevel = ref('chapters')")
-    expect(sessionCanvas).toContain("activateLevel('scenes')")
-    expect(sessionCanvas).toContain("activateLevel('blocks')")
+    expect(navigation).toContain("const displayLevel = ref('chapters')")
+    expect(navigation).toContain("activateLevel('scenes')")
+    expect(navigation).toContain("activateLevel('blocks')")
     expect(canvas).toContain('scale: 1 / zoom.value')
     expect(node).toContain('if (props.embedded) return undefined')
   })
@@ -133,7 +134,8 @@ describe('chapter graph workspace', () => {
     expect(canvas).toContain('beginFrameSelection(event, null')
     expect(canvas).toContain('class="nested-graph-selection-frame"')
     expect(canvas).toContain("'nested-graph-node--selected': isSelected(node)")
-    expect(canvas).toContain("emit('preview-positions', translateGraphPositions")
+    expect(canvas).toContain('emitPositionPreview(translateGraphPositions')
+    expect(canvas).toContain('requestAnimationFrame(() =>')
     expect(canvas).toContain('<GraphSelectionBar')
     expect(selectionBar).toContain('class="graph-selection-bar"')
     expect(selectionBar).toContain('Выбрано: {{ count }}')

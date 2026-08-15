@@ -56,19 +56,27 @@ export function useEncounterPlayers({ participants }) {
     }
   }
 
-  function mergeParticipants(enc) {
-    const known = new Set(enc.combatants.map(c => c.uid))
+  function reconcileParticipants(enc) {
+    const participantIds = new Set(participants.value.map(participant => String(participant.charId)))
+    const beforeLength = enc.combatants.length
+    enc.combatants = enc.combatants.filter(combatant =>
+      combatant.type !== 'player' || participantIds.has(String(combatant.charId))
+    )
+    const known = new Set(enc.combatants
+      .filter(combatant => combatant.type === 'player')
+      .map(combatant => String(combatant.charId)))
     let added = 0
     for (const p of participants.value) {
-      if (!known.has('p-' + p.charId)) {
+      if (!known.has(String(p.charId))) {
         const entry = participantToPlayer(p)
         entry.tieBreak = nextTieBreak(enc.combatants)
         enc.combatants.push(entry)
+        known.add(String(p.charId))
         added++
       }
     }
     ensureCombatantLetters(enc.combatants)
-    return added
+    return added > 0 || enc.combatants.length !== beforeLength
   }
 
   return {
@@ -80,6 +88,6 @@ export function useEncounterPlayers({ participants }) {
     getPlayerHp,
     participantSubtitle,
     participantColor,
-    mergeParticipants,
+    reconcileParticipants,
   }
 }

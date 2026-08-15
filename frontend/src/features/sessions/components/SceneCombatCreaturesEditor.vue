@@ -3,8 +3,8 @@
     <div v-if="creatures.length" class="scene-combat-editor-list">
       <div v-for="(creature, index) in creatures" :key="creatureKey(creature, index)" class="scene-combat-editor-row">
         <span class="scene-combat-editor-kind" :title="creature.kind === 'handbook' ? 'Из бестиария' : 'Упрощённое существо'">
-          <BookOpen v-if="creature.kind === 'handbook'" :size="16" />
-          <Sparkles v-else :size="16" />
+          <ItemIcon v-if="creature.kind === 'handbook'" :item="itemById(creature.itemId)" :size="30" placeholder />
+          <span v-else class="scene-combat-editor-placeholder"><Sparkles :size="15" /></span>
         </span>
         <div class="scene-combat-editor-copy">
           <strong>{{ creature.name || 'Существо' }}</strong>
@@ -79,6 +79,8 @@ import { FormNumberInput } from '@sylvieshare/share-ui'
 import { FormTextInput } from '@sylvieshare/share-ui'
 import { FormTextarea } from '@sylvieshare/share-ui'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
+import ItemIcon from '@/features/items/components/ItemIcon.vue'
+import { useItemReferenceMap } from '@/features/sessions/composables/useItemReferenceMap'
 
 const props = defineProps({
   modelValue: { type: Array, default: () => [] },
@@ -89,6 +91,10 @@ const simpleOpen = ref(false)
 const simpleDraft = reactive({ name: '', ac: 0, hp: 0, hpMax: 0, description: '', count: 1 })
 
 const creatures = computed(() => props.modelValue)
+const itemIds = computed(() => props.modelValue
+  .filter(creature => creature.kind === 'handbook')
+  .map(creature => creature.itemId))
+const { itemById } = useItemReferenceMap(itemIds)
 
 function normalizedCount(value) {
   return Math.max(1, Math.min(20, Math.floor(Number(value) || 1)))
@@ -168,7 +174,8 @@ function saveSimple() {
   border-radius: 9px;
   background: var(--surface-raised);
 }
-.scene-combat-editor-kind { display: grid; place-items: center; color: var(--danger); }
+.scene-combat-editor-kind { width: 30px; height: 30px; display: grid; place-items: center; color: var(--danger); }
+.scene-combat-editor-placeholder { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 7px; background: color-mix(in srgb, var(--danger) 10%, var(--surface)); color: var(--danger); }
 .scene-combat-editor-copy { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
 .scene-combat-editor-copy strong { overflow: hidden; color: var(--text-1); font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
 .scene-combat-editor-copy small { color: var(--text-muted); font-size: 10px; }

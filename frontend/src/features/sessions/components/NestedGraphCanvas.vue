@@ -122,8 +122,10 @@
 <script setup>
 import { computed, getCurrentInstance, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import GraphSelectionBar from '@/features/sessions/components/GraphSelectionBar.vue'
+import { useGraphViewPersistence } from '@/features/sessions/composables/useGraphViewPersistence'
 import { useGraphHotkeys } from '@/features/sessions/composables/useGraphHotkeys'
 import { graphNodeKey, useGraphSelection } from '@/features/sessions/composables/useGraphSelection'
+import { useRafLatest } from '@/features/sessions/composables/useRafLatest'
 import { graphEdgeMidpoint, graphEdgePath } from '@/features/sessions/lib/graphGeometry'
 import { clampGraphPan, graphContentBounds, translateGraphPositions } from '@/features/sessions/lib/graphViewport'
 
@@ -158,7 +160,7 @@ const props = defineProps({
 })
 const emit = defineEmits([
   'node-click', 'node-double-click', 'edge-click', 'start-link', 'finish-link',
-  'preview-positions', 'save-positions', 'preview-size', 'save-size', 'create-first', 'view-change',
+  'preview-positions', 'save-positions', 'preview-size', 'save-size', 'create-first',
   'selection-change', 'delete-selection', 'change-selection-status',
 ])
 
@@ -220,6 +222,15 @@ const temporaryPath = computed(() => {
   }, nodeDimensions)
 })
 const contentBounds = computed(() => graphContentBounds(props.nodes, nodeDimensions))
+const { schedule: emitPositionPreview, cancel: clearPositionPreviewFrame } = useRafLatest(
+  positions => emit('preview-positions', positions),
+)
+const { read: readView, save: saveView } = useGraphViewPersistence({
+  pan,
+  zoom,
+  getKey: viewKey,
+  clamp: clampCurrentPan,
+})
 
 function isDraggedNode(node) {
   if (gesture.value?.type === 'resize') return gesture.value.node.id === node.id
@@ -238,16 +249,17 @@ function nodeDimensions(node) {
 function nodeStyle(node) {
   viewportRevision.value
   const spotlight = node.id === props.spotlightNodeId
-  const frame = safeFrame()
-  const spotlightX = props.spotlightX ?? (frame.left + props.spotlightOffsetX)
   const dimensions = nodeDimensions(node)
-  const position = spotlight
-    ? {
+  let position = { x: node.positionX, y: node.positionY, scale: 1 }
+  if (spotlight) {
+    const frame = safeFrame()
+    const spotlightX = props.spotlightX ?? (frame.left + props.spotlightOffsetX)
+    position = {
         x: (spotlightX - pan.value.x) / zoom.value,
         y: (props.spotlightY - pan.value.y) / zoom.value,
         scale: 1 / zoom.value,
       }
-    : { x: node.positionX, y: node.positionY, scale: 1 }
+  }
   return {
     width: `${dimensions.width}px`,
     ...(props.dynamicNodeHeight
@@ -278,35 +290,21 @@ function clampCurrentPan() {
 }
 
 function loadView(graphKey = props.graphKey, initialTop = props.initialTop, constrain = true) {
-  try {
-    const saved = JSON.parse(localStorage.getItem(viewKey(graphKey)) || 'null')
-    if (saved && Number.isFinite(saved.x) && Number.isFinite(saved.y) && Number.isFinite(saved.zoom)) {
-      zoom.value = Math.max(0.35, Math.min(1.8, saved.zoom))
-      const savedPan = { x: saved.x, y: saved.y }
-      pan.value = constrain ? constrainPan(savedPan, zoom.value) : savedPan
-      announceView()
-      return
-    }
-  } catch { /* ignore */ }
+  const saved = readView(graphKey)
+  if (saved && Number.isFinite(saved.x) && Number.isFinite(saved.y) && Number.isFinite(saved.zoom)) {
+    zoom.value = Math.max(0.35, Math.min(1.8, saved.zoom))
+    const savedPan = { x: saved.x, y: saved.y }
+    pan.value = constrain ? constrainPan(savedPan, zoom.value) : savedPan
+    return
+  }
   zoom.value = 1
   const initialPan = { x: safeFrame().left + 48, y: initialTop }
   pan.value = constrain ? constrainPan(initialPan, zoom.value) : initialPan
-  announceView()
 }
 
 function prepareView(graphKey, initialTop) {
   preparedGraphKey = graphKey
   loadView(graphKey, initialTop, false)
-}
-
-function saveView() {
-  clampCurrentPan()
-  try { localStorage.setItem(viewKey(), JSON.stringify({ ...pan.value, zoom: zoom.value })) } catch { /* ignore */ }
-  announceView()
-}
-
-function announceView() {
-  emit('view-change', { pan: pan.value, zoom: zoom.value })
 }
 
 function pointInWorld(event) {
@@ -407,7 +405,6 @@ function onPointerMove(event) {
       x: active.panX + event.clientX - active.startX,
       y: active.panY + event.clientY - active.startY,
     })
-    announceView()
     return
   }
   if (active.type === 'resize') {
@@ -427,7 +424,7 @@ function onPointerMove(event) {
   if (active.moved) {
     const deltaX = point.x - active.startWorldX
     const deltaY = point.y - active.startWorldY
-    emit('preview-positions', translateGraphPositions(active.nodes, deltaX, deltaY))
+    emitPositionPreview(translateGraphPositions(active.nodes, deltaX, deltaY))
   }
 }
 
@@ -437,7 +434,7 @@ function onPointerUp(event) {
   if (active.type === 'selection') {
     if (!active.moved && active.node) lastNodeClick = null
     finishFrameSelection(active)
-    cancelGesture()
+    cancelGesture(false)
     return
   }
   const contentMayHaveShrunk = active.moved && ['node', 'resize'].includes(active.type)
@@ -453,6 +450,7 @@ function onPointerUp(event) {
     const deltaX = point.x - active.startWorldX
     const deltaY = point.y - active.startWorldY
     const positions = translateGraphPositions(active.nodes, deltaX, deltaY)
+    clearPositionPreviewFrame()
     emit('preview-positions', positions)
     emit('save-positions', positions)
   } else {
@@ -466,7 +464,7 @@ function onPointerUp(event) {
       lastNodeClick = { id: active.node.id, at: now }
     }
   }
-  cancelGesture()
+  cancelGesture(false)
   if (contentMayHaveShrunk) nextTick(() => { if (clampCurrentPan()) saveView() })
 }
 
@@ -474,7 +472,11 @@ function onNativeDoubleClick(node) {
   if (props.locked) emit('node-double-click', node)
 }
 
-function cancelGesture() {
+function cancelGesture(rollback = true) {
+  const active = gesture.value
+  clearPositionPreviewFrame()
+  if (rollback && active?.moved && active.type === 'node') emit('preview-positions', active.nodes)
+  if (rollback && active?.moved && active.type === 'resize') emit('preview-size', active.node.id, active.startWidth)
   cancelFrameSelection()
   gesture.value = null
 }

@@ -36,6 +36,15 @@ export function dialogueKeySuggestions(rows) {
   return [...names.values()]
 }
 
+export function applyDialogueKeyColor(rows, keyValue, color) {
+  const key = normalizeDialogueKey(keyValue)
+  if (!key) return rows
+  for (const row of rows || []) {
+    if (normalizeDialogueKey(row?.left) === key) row.color = color
+  }
+  return rows
+}
+
 export function pickDialogueColor(rows, activeRow, random = Math.random) {
   const key = normalizeDialogueKey(activeRow?.left)
   if (!key) return ''

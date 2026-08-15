@@ -14,6 +14,11 @@ export const SCENE_BLOCK_TYPES = {
     color: 'var(--danger)',
     defaultWidth: 360,
   },
+  reward: {
+    label: 'Награда',
+    color: 'var(--warning)',
+    defaultWidth: 320,
+  },
 }
 
 export function sceneBlockType(type) {

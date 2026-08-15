@@ -5,6 +5,7 @@ export function narrativeCanvasActions(level) {
     { id: 'text', label: 'Текстовый блок', icon: 'text' },
     { id: 'list', label: 'Диалог', icon: 'dialogue' },
     { id: 'combat', label: 'Бой', icon: 'combat' },
+    { id: 'reward', label: 'Награда', icon: 'reward' },
   ]
 }
 

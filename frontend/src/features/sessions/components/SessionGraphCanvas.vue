@@ -38,7 +38,6 @@
       @selection-change="handleSelectionChange"
       @delete-selection="requestSelectionDelete"
       @change-selection-status="changeSelectionStatus"
-      @view-change="$emit('view-change', $event)"
     >
       <template #node="{ node, linking, target, spotlight }">
         <ChapterGraphNode
@@ -60,6 +59,7 @@
         <SceneBlockNode
           v-else
           :block="node"
+          :items-by-id="blockItemsById"
         />
       </template>
     </NestedGraphCanvas>
@@ -167,7 +167,7 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import CanvasActionDock from '@/features/sessions/components/CanvasActionDock.vue'
 import CanvasHotkeyHints from '@/features/sessions/components/CanvasHotkeyHints.vue'
 import ChapterEdgeModal from '@/features/sessions/components/ChapterEdgeModal.vue'
@@ -182,8 +182,7 @@ import SceneEditorModal from '@/features/sessions/components/SceneEditorModal.vu
 import SceneGraphMenus from '@/features/sessions/components/SceneGraphMenus.vue'
 import SceneGraphNode from '@/features/sessions/components/SceneGraphNode.vue'
 import { useNestedEdgeEditor } from '@/features/sessions/composables/useNestedEdgeEditor'
-import { useSceneBlockGraph } from '@/features/sessions/composables/useSceneBlockGraph'
-import { useSceneGraph } from '@/features/sessions/composables/useSceneGraph'
+import { useSessionGraphNavigation } from '@/features/sessions/composables/useSessionGraphNavigation'
 import { CHAPTER_STATUSES, SCENE_STATUSES } from '@/features/sessions/lib/chapterGraph'
 import { narrativeCanvasActions, narrativeCanvasEmptyCopy, narrativeCanvasLoadingLabel } from '@/features/sessions/lib/narrativeCanvas'
 import { sceneBlockDefaultWidth } from '@/features/sessions/lib/sceneBlockTypes'
@@ -203,7 +202,7 @@ const props = defineProps({
 const emit = defineEmits([
   'node-click', 'node-double-click', 'edge-click', 'start-link', 'finish-link',
   'preview-positions', 'save-positions', 'delete-nodes', 'selection-change', 'create-chapter', 'close-workspace',
-  'chapter-ancestor-click', 'scene-count', 'view-change', 'send-block-to-combat', 'change-nodes-status',
+  'chapter-ancestor-click', 'scene-count', 'send-block-to-combat', 'change-nodes-status',
   'workspace-context-change',
 ])
 
@@ -211,9 +210,6 @@ const canvas = ref(null)
 const blockMenus = ref(null)
 const sceneMenus = ref(null)
 const edgeMenus = ref(null)
-const displayLevel = ref('chapters')
-const selectedScene = ref(null)
-const transitionSpotlight = ref(null)
 const sceneLinkingFrom = ref(null)
 const blockLinkingFrom = ref(null)
 const actionError = ref('')
@@ -226,15 +222,22 @@ const editingBlock = ref(null)
 const creatingBlockType = ref('text')
 const blockCreatePosition = ref({ x: 48, y: 210 })
 const pendingDelete = ref(null)
-let transitionTimer = null
-let rememberedChapterId = null
-let contextSyncSuspended = false
-
-const activeChapterId = computed(() => props.workspaceChapterId ?? rememberedChapterId)
-const activeChapter = computed(() => props.graph.chapters.value.find(chapter => chapter.id === activeChapterId.value) ?? null)
-const activeSceneId = computed(() => selectedScene.value?.id ?? null)
-const sceneGraph = useSceneGraph({ sessionUuid: props.sessionUuid, chapterId: activeChapterId })
-const blockGraph = useSceneBlockGraph({ sessionUuid: props.sessionUuid, sceneId: activeSceneId })
+const {
+  displayLevel,
+  selectedScene,
+  transitionSpotlight,
+  activeChapterId,
+  activeChapter,
+  sceneGraph,
+  blockGraph,
+  blockItemsById,
+  graphKeyFor,
+  openBlocksLevel,
+  returnToScenes,
+  returnToChapters,
+  sceneIndex,
+  combatSceneContext,
+} = useSessionGraphNavigation({ props, emit, canvas })
 const {
   editorOpen: nestedEdgeEditorOpen,
   editingEdge: editingNestedEdge,
@@ -269,98 +272,6 @@ const showChapterAncestor = computed(() => ['scenes', 'blocks'].includes(display
 const canvasActions = computed(() => narrativeCanvasActions(displayLevel.value))
 const emptyCopy = computed(() => narrativeCanvasEmptyCopy(displayLevel.value))
 const loadingLabel = computed(() => narrativeCanvasLoadingLabel(displayLevel.value))
-function transitionDelay() {
-  return globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 0 : 420
-}
-
-function graphKeyFor(level) {
-  if (level === 'chapters') return `chapters:${props.sessionUuid}:${props.graph.selectedArc.value?.id ?? 'none'}`
-  if (level === 'scenes') return `scenes:${props.sessionUuid}:${activeChapterId.value ?? 'none'}`
-  return `blocks:${props.sessionUuid}:${activeSceneId.value ?? 'none'}`
-}
-
-function initialTopFor(level) {
-  return level === 'chapters' ? 80 : 210
-}
-
-function activateLevel(level) {
-  canvas.value?.prepareView(graphKeyFor(level), initialTopFor(level))
-  displayLevel.value = level
-}
-
-function scheduleTransition(callback) {
-  if (transitionTimer != null) clearTimeout(transitionTimer)
-  transitionTimer = setTimeout(() => {
-    transitionTimer = null
-    callback()
-  }, transitionDelay())
-}
-
-async function openScenesLevel(chapterId) {
-  contextSyncSuspended = true
-  const restoredScene = props.workspaceScene
-  const restoredLevel = props.workspaceLevel
-  rememberedChapterId = chapterId
-  selectedScene.value = null
-  sceneLinkingFrom.value = null
-  blockLinkingFrom.value = null
-  sceneGraph.reset()
-  blockGraph.reset()
-  sceneGraph.load().then(() => {
-    if (sceneGraph.loaded.value) emit('scene-count', chapterId, sceneGraph.scenes.value.length)
-  })
-  transitionSpotlight.value = { level: 'chapters', id: chapterId, offset: 0 }
-  scheduleTransition(() => {
-    transitionSpotlight.value = null
-    if (restoredLevel === 'blocks' && restoredScene) {
-      selectedScene.value = restoredScene
-      blockGraph.reset()
-      blockGraph.load()
-      activateLevel('blocks')
-    } else {
-      selectedScene.value = restoredScene
-      activateLevel('scenes')
-    }
-    nextTick(() => {
-      contextSyncSuspended = false
-      notifyWorkspaceContext()
-    })
-  })
-}
-
-function openBlocksLevel(scene) {
-  if (displayLevel.value !== 'scenes') return
-  selectedScene.value = scene
-  sceneLinkingFrom.value = null
-  blockLinkingFrom.value = null
-  blockGraph.reset()
-  blockGraph.load()
-  transitionSpotlight.value = { level: 'scenes', id: scene.id, offset: 252 }
-  scheduleTransition(() => {
-    transitionSpotlight.value = null
-    activateLevel('blocks')
-  })
-}
-
-async function animateBack(level, nodeId, offset) {
-  if (transitionTimer != null) clearTimeout(transitionTimer)
-  transitionSpotlight.value = { level, id: nodeId, offset }
-  activateLevel(level)
-  await nextTick()
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => { transitionSpotlight.value = null })
-  })
-}
-
-function returnToScenes() {
-  if (!selectedScene.value || props.workspaceMode === 'combat') return
-  blockLinkingFrom.value = null
-  animateBack('scenes', selectedScene.value.id, 252)
-}
-
-function returnToChapters() {
-  emit('close-workspace')
-}
 
 function openChapterAncestorMenu(event) {
   if (!props.isDm || !activeChapter.value) return
@@ -368,10 +279,6 @@ function openChapterAncestorMenu(event) {
   blockMenus.value?.close()
   edgeMenus.value?.close()
   emit('chapter-ancestor-click', activeChapter.value, event.currentTarget)
-}
-
-function sceneIndex(scene) {
-  return sceneGraph.scenes.value.findIndex(item => item.id === scene.id)
 }
 
 function handleNodeClick(node, anchor) {
@@ -562,19 +469,6 @@ function sendBlockToCombat(block) {
   })
 }
 
-function combatSceneContext() {
-  if (!selectedScene.value) return null
-  return { ...selectedScene.value, contextIndex: sceneIndex(selectedScene.value) }
-}
-
-function notifyWorkspaceContext() {
-  if (contextSyncSuspended || props.workspaceMode !== 'scenes') return
-  emit('workspace-context-change', {
-    level: displayLevel.value,
-    scene: selectedScene.value ? combatSceneContext() : null,
-  })
-}
-
 function closeBlockEditor() {
   blockEditorOpen.value = false
   editingBlock.value = null
@@ -615,49 +509,10 @@ async function performDelete() {
   } catch { actionError.value = 'Не удалось удалить элемент' } finally { saving.value = false }
 }
 
-watch(() => props.workspaceMode, (mode, previousMode) => {
-  if (mode === 'scenes' && props.workspaceChapterId != null) {
-    const preservedNestedContext = previousMode === 'combat'
-      && rememberedChapterId === props.workspaceChapterId
-      && displayLevel.value === props.workspaceLevel
-      && (props.workspaceLevel !== 'blocks' || selectedScene.value?.id === props.workspaceScene?.id)
-    if (preservedNestedContext) {
-      selectedScene.value = props.workspaceScene
-      nextTick(notifyWorkspaceContext)
-    } else if (previousMode !== 'scenes' || rememberedChapterId !== props.workspaceChapterId) {
-      openScenesLevel(props.workspaceChapterId)
-    }
-    return
-  }
-  if (mode === 'combat') {
-    rememberedChapterId = props.workspaceChapterId
-    selectedScene.value = props.workspaceScene
-    if (previousMode !== 'scenes') displayLevel.value = 'chapters'
-    return
-  }
-  if (previousMode === 'scenes') {
-    const chapterId = rememberedChapterId
-    animateBack('chapters', chapterId, 0)
-    scheduleTransition(() => {
-      sceneGraph.reset()
-      blockGraph.reset()
-      selectedScene.value = null
-      rememberedChapterId = null
-    })
-  }
-}, { immediate: true })
-
-watch(() => props.workspaceChapterId, chapterId => {
-  if (props.workspaceMode === 'scenes' && chapterId != null && chapterId !== rememberedChapterId) openScenesLevel(chapterId)
+watch(displayLevel, () => {
+  sceneLinkingFrom.value = null
+  blockLinkingFrom.value = null
 })
-
-watch(() => props.workspaceScene, scene => {
-  if (props.workspaceMode === 'combat') selectedScene.value = scene
-})
-
-watch([displayLevel, selectedScene], notifyWorkspaceContext, { flush: 'post' })
-
-onBeforeUnmount(() => { if (transitionTimer != null) clearTimeout(transitionTimer) })
 
 defineExpose({
   zoomBy: factor => canvas.value?.zoomBy(factor),

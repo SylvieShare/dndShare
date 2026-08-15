@@ -59,6 +59,9 @@ describe('ViewSession participant rail', () => {
     expect(source).toContain('createModalRef.value?.clearDraft()')
     expect(source).not.toContain('if (res?.uuid) sheetUuid.value = res.uuid')
     expect(participantPollingSource).toContain('if (pollTimer == null && !pollRunning.value) schedulePoll()')
+    expect(participantPollingSource).toContain('MEMBERSHIP_POLL_INTERVAL')
+    expect(participantPollingSource).toContain("document.addEventListener('visibilitychange', onVisibilityChange)")
+    expect(participantPollingSource).toContain('if (stopped || documentHidden()) return')
   })
 
   it('uses the chapter canvas as the full workspace with tools floating above it', () => {
@@ -177,7 +180,7 @@ describe('ViewSession participant rail', () => {
     expect(workspaceSource).toContain('level,')
     expect(workspaceSource).toContain('await getSceneGraph(sessionUuid, chapter.id)')
     expect(workspaceSource).toContain("saved.level === 'blocks' && scene ? 'blocks' : 'scenes'")
-    expect(workspaceSource).toContain('const returnToNested = workspaceMode.value === \'combat\'')
+    expect(workspaceSource).toContain("const returnToNested = state.mode === 'combat'")
     expect(source).toContain('@workspace-context-change="updateWorkspaceContext"')
     expect(workspaceSource).toContain('clearSavedWorkspace()')
     expect(source).toContain('await nextTick()\n  await restoreWorkspace()')
@@ -185,11 +188,11 @@ describe('ViewSession participant rail', () => {
 
   it('overlaps chapter movement with center content in its second half', () => {
     expect(workspaceSource).toContain('const CONTENT_REVEAL_DELAY_MS = 210')
-    expect(workspaceSource).toContain('const workspaceRevealed = ref(false)')
+    expect(workspaceSource).toContain("const workspaceRevealed = computed(() => state.phase === 'open')")
     expect(workspaceSource).toContain('const workspaceMotionMode = computed(() =>')
-    expect(workspaceSource).toContain('workspaceRevealed.value = true')
-    expect(workspaceSource).toContain('workspaceMotionActive.value = false')
-    expect(workspaceSource).toContain('const delay = workspaceRevealed.value ? CLOSE_ANIMATION_MS : 0')
+    expect(workspaceSource).toContain("if (state.phase === 'opening') state.phase = 'open'")
+    expect(workspaceSource).toContain("state.phase = 'closing'")
+    expect(workspaceSource).toContain('const delay = wasRevealed ? CLOSE_ANIMATION_MS : 0')
     expect(styles).toContain('transition: width 0.42s cubic-bezier(0.22, 1, 0.36, 1);')
     expect(centerWorkspaceSource).toContain('animation: session-workspace-in 0.21s cubic-bezier(0.22, 1, 0.36, 1) both;')
     expect(centerWorkspaceSource).toContain('left 0.42s cubic-bezier(0.22, 1, 0.36, 1);')

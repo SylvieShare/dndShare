@@ -1,7 +1,8 @@
-import { computed, nextTick, onBeforeUnmount, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, reactive } from 'vue'
 import { getSceneGraph } from '@/shared/api/scenesApi'
 
 const WORKSPACE_MODES = new Set(['combat', 'scenes'])
+const WORKSPACE_LEVELS = new Set(['chapters', 'scenes', 'blocks'])
 const CONTENT_REVEAL_DELAY_MS = 210
 const CLOSE_ANIMATION_MS = 190
 
@@ -10,21 +11,27 @@ export function sessionWorkspaceKey(sessionUuid) {
 }
 
 export function useSessionWorkspace({ sessionUuid, chapterGraph }) {
-  const workspaceMode = ref(null)
-  const workspaceChapterId = ref(null)
-  const workspaceScene = ref(null)
-  const workspaceLevel = ref('chapters')
-  const workspaceClosing = ref(false)
-  const workspaceRevealed = ref(false)
-  const workspaceMotionActive = ref(false)
+  const state = reactive({
+    mode: null,
+    chapterId: null,
+    scene: null,
+    level: 'chapters',
+    phase: 'idle',
+  })
   let revealTimer = null
   let closeTimer = null
 
+  const workspaceMode = computed(() => state.mode)
+  const workspaceChapterId = computed(() => state.chapterId)
+  const workspaceScene = computed(() => state.scene)
+  const workspaceLevel = computed(() => state.level)
+  const workspaceClosing = computed(() => state.phase === 'closing')
+  const workspaceRevealed = computed(() => state.phase === 'open')
   const workspaceChapter = computed(() =>
-    chapterGraph.chapters.value.find(chapter => chapter.id === workspaceChapterId.value) ?? null
+    chapterGraph.chapters.value.find(chapter => chapter.id === state.chapterId) ?? null
   )
   const workspaceMotionMode = computed(() =>
-    workspaceMotionActive.value ? workspaceMode.value : null
+    ['opening', 'open'].includes(state.phase) ? state.mode : null
   )
 
   function saveWorkspace(mode, chapterId, sceneId = null, level = 'chapters') {
@@ -45,7 +52,11 @@ export function useSessionWorkspace({ sessionUuid, chapterGraph }) {
   function readSavedWorkspace() {
     try {
       const saved = JSON.parse(localStorage.getItem(sessionWorkspaceKey(sessionUuid)) || 'null')
-      return saved && WORKSPACE_MODES.has(saved.mode) ? saved : null
+      if (!saved || !WORKSPACE_MODES.has(saved.mode)) return null
+      return {
+        ...saved,
+        level: WORKSPACE_LEVELS.has(saved.level) ? saved.level : 'chapters',
+      }
     } catch {
       return null
     }
@@ -59,27 +70,27 @@ export function useSessionWorkspace({ sessionUuid, chapterGraph }) {
   }
 
   function revealWorkspace() {
-    if (!workspaceMode.value || workspaceClosing.value || workspaceRevealed.value) return
+    if (!state.mode || state.phase !== 'opening') return
     if (revealTimer != null) clearTimeout(revealTimer)
     const delay = globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches
       ? 0
       : CONTENT_REVEAL_DELAY_MS
     revealTimer = setTimeout(() => {
-      workspaceRevealed.value = true
+      if (state.phase === 'opening') state.phase = 'open'
       revealTimer = null
     }, delay)
   }
 
   function showWorkspace(mode, chapter, scene = null, level = mode === 'scenes' ? 'scenes' : 'chapters') {
     cancelTimers()
-    workspaceChapterId.value = chapter?.id ?? null
-    workspaceScene.value = scene
-    workspaceLevel.value = level
-    workspaceMode.value = mode
-    workspaceClosing.value = false
-    workspaceRevealed.value = false
-    workspaceMotionActive.value = true
-    saveWorkspace(mode, chapter?.id, workspaceScene.value?.id, workspaceLevel.value)
+    Object.assign(state, {
+      mode,
+      chapterId: chapter?.id ?? null,
+      scene,
+      level: WORKSPACE_LEVELS.has(level) ? level : 'chapters',
+      phase: 'opening',
+    })
+    saveWorkspace(mode, state.chapterId, state.scene?.id, state.level)
     revealWorkspace()
   }
 
@@ -90,7 +101,7 @@ export function useSessionWorkspace({ sessionUuid, chapterGraph }) {
   }
 
   async function toggleCombatWorkspace(context = {}) {
-    if (workspaceMode.value === 'combat' && !workspaceClosing.value) {
+    if (state.mode === 'combat' && state.phase !== 'closing') {
       closeWorkspace()
       return
     }
@@ -142,41 +153,39 @@ export function useSessionWorkspace({ sessionUuid, chapterGraph }) {
   }
 
   function updateWorkspaceContext({ level, scene } = {}) {
-    if (workspaceMode.value !== 'scenes') return
-    workspaceLevel.value = level === 'blocks' ? 'blocks' : 'scenes'
-    workspaceScene.value = scene ?? null
-    saveWorkspace('scenes', workspaceChapterId.value, workspaceScene.value?.id, workspaceLevel.value)
+    if (state.mode !== 'scenes') return
+    state.level = level === 'blocks' ? 'blocks' : 'scenes'
+    state.scene = scene ?? null
+    saveWorkspace('scenes', state.chapterId, state.scene?.id, state.level)
   }
 
   function closeWorkspace() {
-    if (!workspaceMode.value || workspaceClosing.value) return
-    const returnToNested = workspaceMode.value === 'combat'
-      && ['scenes', 'blocks'].includes(workspaceLevel.value)
-      && workspaceChapterId.value != null
-    if (!returnToNested) clearSavedWorkspace()
-    workspaceClosing.value = true
-    workspaceMotionActive.value = false
+    if (!state.mode || state.phase === 'closing') return
+    const returnToNested = state.mode === 'combat'
+      && ['scenes', 'blocks'].includes(state.level)
+      && state.chapterId != null
+    if (returnToNested) saveWorkspace('scenes', state.chapterId, state.scene?.id, state.level)
+    else clearSavedWorkspace()
+    const wasRevealed = state.phase === 'open'
+    state.phase = 'closing'
     if (revealTimer != null) clearTimeout(revealTimer)
     revealTimer = null
-    const delay = workspaceRevealed.value ? CLOSE_ANIMATION_MS : 0
+    const delay = wasRevealed ? CLOSE_ANIMATION_MS : 0
     closeTimer = setTimeout(() => {
       if (returnToNested) {
-        workspaceMode.value = 'scenes'
-        workspaceClosing.value = false
-        workspaceRevealed.value = false
-        workspaceMotionActive.value = true
-        saveWorkspace('scenes', workspaceChapterId.value, workspaceScene.value?.id, workspaceLevel.value)
+        state.mode = 'scenes'
+        state.phase = 'opening'
         revealWorkspace()
         closeTimer = null
         return
       }
-      workspaceMode.value = null
-      workspaceChapterId.value = null
-      workspaceScene.value = null
-      workspaceLevel.value = 'chapters'
-      workspaceClosing.value = false
-      workspaceRevealed.value = false
-      workspaceMotionActive.value = false
+      Object.assign(state, {
+        mode: null,
+        chapterId: null,
+        scene: null,
+        level: 'chapters',
+        phase: 'idle',
+      })
       closeTimer = null
     }, delay)
   }

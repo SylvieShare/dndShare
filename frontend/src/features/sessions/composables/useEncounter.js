@@ -6,6 +6,7 @@ import { useEncounterInitiative } from '@/features/sessions/composables/useEncou
 import { useEncounterNpcData } from '@/features/sessions/composables/useEncounterNpcData'
 import { useEncounterNpcs } from '@/features/sessions/composables/useEncounterNpcs'
 import { useEncounterPlayers } from '@/features/sessions/composables/useEncounterPlayers'
+import { useEncounterPersistence } from '@/features/sessions/composables/useEncounterPersistence'
 import { useEncounterSelection } from '@/features/sessions/composables/useEncounterSelection'
 import { useEncounterStates } from '@/features/sessions/composables/useEncounterStates'
 import {
@@ -28,7 +29,12 @@ import { useSuggestStore } from '@/stores/suggest'
 export function useEncounter({ sessionUuid, participants, canEditPlayers }) {
   const encounter = ref({ active: false, round: 0, turnIndex: 0, combatants: [] })
   const loaded = ref(false)
-  let saveTimer = null
+  const persistence = useEncounterPersistence({
+    source: encounter,
+    debounceMs: SAVE_DEBOUNCE_MS,
+    save: data => saveEncounter(sessionUuid, data),
+  })
+  let disposed = false
 
   const players = useEncounterPlayers({ participants })
   const {
@@ -40,13 +46,21 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers }) {
     getPlayerHp,
     participantSubtitle,
     participantColor,
-    mergeParticipants,
+    reconcileParticipants,
   } = players
 
   const npcData = useEncounterNpcData()
 
   async function load() {
-    const raw = await getEncounter(sessionUuid).catch(() => null)
+    let raw
+    try {
+      raw = await getEncounter(sessionUuid)
+    } catch {
+      if (disposed) return
+      persistence.markLoadFailed()
+      return
+    }
+    if (disposed) return
     const enc = (raw && typeof raw === 'object' && !Array.isArray(raw))
       ? raw
       : { active: false, round: 0, turnIndex: 0, combatants: [] }
@@ -54,25 +68,21 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers }) {
     if (enc.active == null) enc.active = false
     if (enc.round == null) enc.round = 0
     if (enc.turnIndex == null) enc.turnIndex = 0
-    mergeParticipants(enc)
+    const participantsChanged = reconcileParticipants(enc)
     encounter.value = enc
     npcData.ensureNpcItems(enc.combatants)
     loaded.value = true
+    persistence.markReady()
+    if (participantsChanged) persistence.scheduleSave()
   }
 
-  function scheduleSave() {
-    clearTimeout(saveTimer)
-    saveTimer = setTimeout(() => {
-      saveEncounter(sessionUuid, encounter.value).catch(() => {})
-    }, SAVE_DEBOUNCE_MS)
-  }
-
-  watch(encounter, scheduleSave, { deep: true })
+  watch(encounter, persistence.scheduleSave, { deep: true, flush: 'sync' })
 
   watch(participants, () => {
     if (!loaded.value) return
-    if (!mergeParticipants(encounter.value)) return
+    if (!reconcileParticipants(encounter.value)) return
     encounter.value = { ...encounter.value, combatants: [...encounter.value.combatants] }
+    selection.pruneToExisting()
   })
 
   function getCombatant(uid) {
@@ -283,11 +293,26 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers }) {
     return SIDE_LABEL[sideOf(c)]
   }
 
-  onMounted(load)
-  onBeforeUnmount(() => clearTimeout(saveTimer))
+  function flushWhenBackgrounded() {
+    if (document.visibilityState === 'hidden') persistence.flushSave()
+  }
+
+  onMounted(() => {
+    load()
+    document.addEventListener('visibilitychange', flushWhenBackgrounded)
+    window.addEventListener('pagehide', persistence.flushSave)
+  })
+  onBeforeUnmount(() => {
+    disposed = true
+    document.removeEventListener('visibilitychange', flushWhenBackgrounded)
+    window.removeEventListener('pagehide', persistence.flushSave)
+    persistence.stop()
+  })
 
   return {
     encounter,
+    loadError: persistence.loadError,
+    saveError: persistence.saveError,
     inCombat,
     turnOrder,
     currentTurnIdx,

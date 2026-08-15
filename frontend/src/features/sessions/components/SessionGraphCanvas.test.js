@@ -18,6 +18,7 @@ const edgeEditorSource = readFileSync(fileURLToPath(new URL('../composables/useN
 const apiSource = readFileSync(fileURLToPath(new URL('../../../shared/api/scenesApi.js', import.meta.url)), 'utf8')
 const sessionsApiSource = readFileSync(fileURLToPath(new URL('../../../shared/api/sessionsApi.js', import.meta.url)), 'utf8')
 const narrativeCanvasSource = readFileSync(fileURLToPath(new URL('../lib/narrativeCanvas.js', import.meta.url)), 'utf8')
+const navigationSource = readFileSync(fileURLToPath(new URL('../composables/useSessionGraphNavigation.js', import.meta.url)), 'utf8')
 const stylesSource = readFileSync(fileURLToPath(new URL('./styles/SessionGraphCanvas.css', import.meta.url)), 'utf8')
 
 describe('session graph canvas', () => {
@@ -29,9 +30,9 @@ describe('session graph canvas', () => {
   })
 
   it('drills through scenarios and blocks while keeping ancestors as cards', () => {
-    expect(source).toContain("activateLevel('scenes')")
-    expect(source).toContain("activateLevel('blocks')")
-    expect(source).toContain("transitionSpotlight.value = { level: 'scenes', id: scene.id, offset: 252 }")
+    expect(navigationSource).toContain("activateLevel('scenes')")
+    expect(navigationSource).toContain("activateLevel('blocks')")
+    expect(navigationSource).toContain("transitionSpotlight.value = { level: 'scenes', id: scene.id, offset: 252 }")
     expect(source).toContain('class="session-graph-ancestor session-graph-ancestor--chapter"')
     expect(source).toContain('class="session-graph-ancestor session-graph-ancestor--scene"')
   })
@@ -44,10 +45,10 @@ describe('session graph canvas', () => {
   })
 
   it('switches graph identity and camera atomically without cross-level node reuse', () => {
-    expect(source).toContain("? 0 : 420")
-    expect(source).toContain('canvas.value?.prepareView(graphKeyFor(level), initialTopFor(level))')
+    expect(navigationSource).toContain("? 0 : 420")
+    expect(navigationSource).toContain("canvas.value?.prepareView(graphKeyFor(level), level === 'chapters' ? 80 : 210)")
     expect(source).toContain('transitionSpotlight.value?.level === displayLevel.value')
-    expect(source).toContain('requestAnimationFrame(() => {\n    requestAnimationFrame(() =>')
+    expect(navigationSource).toContain('requestAnimationFrame(() => {\n      requestAnimationFrame(() =>')
     expect(canvasSource).toContain(':key="`${graphKey}:${node.id}`"')
     expect(canvasSource).toContain('function prepareView(graphKey, initialTop)')
   })
@@ -72,9 +73,9 @@ describe('session graph canvas', () => {
   })
 
   it('keeps the selected chapter and scenario mounted across combat mode', () => {
-    expect(source).toContain("const preservedNestedContext = previousMode === 'combat'")
-    expect(source).toContain("if (previousMode !== 'scenes') displayLevel.value = 'chapters'")
-    expect(source).not.toContain("if (mode === 'combat') {\n    rememberedChapterId = props.workspaceChapterId\n    displayLevel.value = 'chapters'")
+    expect(navigationSource).toContain("const preservedNestedContext = previousMode === 'combat'")
+    expect(navigationSource).toContain("if (previousMode !== 'scenes') displayLevel.value = 'chapters'")
+    expect(navigationSource).not.toContain("if (mode === 'combat') {\n      rememberedChapterId = props.workspaceChapterId\n      displayLevel.value = 'chapters'")
     expect(source).toContain("'session-graph-canvas__nested--combat-hidden': workspaceMode === 'combat' && displayLevel !== 'chapters'")
     expect(stylesSource).toMatch(/\.session-graph-canvas__nested--combat-hidden\s*\{[^}]*opacity:\s*0;[^}]*pointer-events:\s*none;/s)
     expect(stylesSource).toContain('transition: left 0.42s cubic-bezier(0.22, 1, 0.36, 1);')
@@ -129,7 +130,9 @@ describe('session graph canvas', () => {
     expect(blockSource).not.toContain('Двойной клик')
     expect(source).toContain('blockMenus.value?.openFor(node, anchor)')
     expect(blockMenuSource).toContain('>Копировать</RowActionItem>')
-    expect(blockEditorSource).not.toContain('ColorPresetPicker')
+    expect(blockEditorSource).toContain('<ColorPresetPicker')
+    expect(blockEditorSource).toContain('setDialogueColor(row, color)')
+    expect(blockEditorSource).toContain('<SceneRewardItemsEditor v-model="draft.items"')
     expect(blockSource).not.toContain('scene-block-node-strip')
     expect(blockSource).toContain('scene-block-node-dialogue')
     expect(blockSource).toContain('scene-block-node-heading')
@@ -137,7 +140,11 @@ describe('session graph canvas', () => {
     expect(blockEditorSource).toContain('placeholder="Участник"')
     expect(blockEditorSource).toContain(':list="dialogueKeysListId"')
     expect(narrativeCanvasSource).toContain("{ id: 'list', label: 'Диалог', icon: 'dialogue' }")
+    expect(narrativeCanvasSource).toContain("{ id: 'reward', label: 'Награда', icon: 'reward' }")
     expect(dockSource).toContain("action.icon === 'dialogue'")
+    expect(dockSource).toContain("action.icon === 'reward'")
+    expect(blockSource).toContain(':item="itemById(creature.itemId)"')
+    expect(blockSource).toContain("block.type === 'reward'")
   })
 
   it('opens scenario actions from the whole card without an ellipsis trigger', () => {

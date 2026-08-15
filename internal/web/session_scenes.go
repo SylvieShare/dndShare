@@ -253,7 +253,7 @@ func (s *Server) handleCreateSceneItem(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "bad body")
 		return
 	}
-	if req.Type != "text" && req.Type != "list" && req.Type != "combat" {
+	if !validSceneItemType(req.Type) {
 		badRequest(w, "bad block type")
 		return
 	}
@@ -332,10 +332,22 @@ func (s *Server) handleUpdateSceneItem(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, updated)
 }
 
+func validSceneItemType(typ string) bool {
+	switch typ {
+	case "text", "list", "combat", "reward":
+		return true
+	default:
+		return false
+	}
+}
+
 func sceneItemWidth(width float64, typ string) float64 {
 	if width == 0 {
 		if typ == "combat" {
 			return 360
+		}
+		if typ == "reward" {
+			return 320
 		}
 		return 300
 	}
