@@ -143,6 +143,8 @@ describe('ViewSession participant rail', () => {
     expect(source).toContain('v-if="workspaceMode === \'combat\' && (workspaceRevealed || workspaceClosing)"')
     expect(source).toContain(':locked="!!workspaceMode"')
     expect(source).toContain(':workspace-chapter-id="workspaceChapter?.id ?? null"')
+    expect(source).toContain(':workspace-scene="workspaceScene"')
+    expect(source).toContain(':scene="workspaceScene"')
     expect(source).not.toContain('v-if="combatOpen"')
     expect(source).not.toContain('v-if="sceneWorkspaceChapter"')
     expect(centerWorkspaceSource).not.toContain('<SceneGraphWorkspace')
@@ -157,6 +159,9 @@ describe('ViewSession participant rail', () => {
     expect(encounterSource).toContain("'enc-wrap--workspace': workspace")
     expect(centerWorkspaceSource).not.toContain('<SceneTab')
     expect(sessionGraphSource).toContain("emit('scene-count', activeChapterId.value, sceneGraph.scenes.value.length)")
+    expect(sessionGraphSource).toContain("scene: displayLevel.value === 'blocks' ? combatSceneContext() : null")
+    expect(sessionGraphSource).toContain("workspaceMode === 'combat') && selectedScene")
+    expect(centerWorkspaceSource).toContain("scene ? '504px' : chapter ? '252px' : '0px'")
   })
 
   it('restores the open combat or chapter scenes workspace after a page reload', () => {
@@ -165,6 +170,8 @@ describe('ViewSession participant rail', () => {
     expect(workspaceSource).toContain("const WORKSPACE_MODES = new Set(['combat', 'scenes'])")
     expect(workspaceSource).toContain('localStorage.setItem(sessionWorkspaceKey(sessionUuid)')
     expect(workspaceSource).toContain('async function restoreWorkspace()')
+    expect(workspaceSource).toContain('sceneId: sceneId ?? null')
+    expect(workspaceSource).toContain('await getSceneGraph(sessionUuid, chapter.id)')
     expect(workspaceSource).toContain('clearSavedWorkspace()')
     expect(source).toContain('await nextTick()\n  await restoreWorkspace()')
   })

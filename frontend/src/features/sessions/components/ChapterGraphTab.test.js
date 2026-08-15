@@ -45,6 +45,8 @@ describe('chapter graph workspace', () => {
     expect(toolbar).toContain("$emit('open-combat')")
     expect(toolbar).toContain('aria-label="Бой"')
     expect(toolbar).toContain('<Swords :size="19" />')
+    expect(tab).toContain('@open-combat="openCombat"')
+    expect(tab).toContain("canvas.value?.combatContext?.() ?? {}")
     expect(toolbar).not.toContain('Текущая глава')
     expect(toolbar).not.toContain('chapter-zoom')
     expect(toolbar).not.toContain("'focus-current'")

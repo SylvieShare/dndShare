@@ -51,6 +51,7 @@
         :is-dm="isDm"
         :locked="!!workspaceMode"
         :workspace-chapter-id="workspaceChapter?.id ?? null"
+        :workspace-scene="workspaceScene"
         :workspace-mode="workspaceMotionMode"
         :dice-open="diceOpen"
         :music-open="musicOpen"
@@ -73,6 +74,7 @@
           :is-dm="isDm"
           :encounter="encounter"
           :chapter="workspaceChapter"
+          :scene="workspaceScene"
           @close="closeWorkspace"
           @view-participant="openParticipant"
         />
@@ -338,7 +340,7 @@ function setEncounterPlayerInitiative(charId, value) {
   if (combatant) encounter.setInitiative(combatant, value)
 }
 
-async function sendBlockToCombat(block) {
+async function sendBlockToCombat({ block, chapter, scene }) {
   combatImportError.value = ''
   const creatures = Array.isArray(block?.data?.creatures) ? block.data.creatures : []
   const handbookIds = [...new Set(creatures
@@ -362,7 +364,7 @@ async function sendBlockToCombat(block) {
     for (let index = 0; index < count; index += 1) encounter.addSimpleNpc(creature)
   }
 
-  await toggleCombatWorkspace()
+  await toggleCombatWorkspace({ chapter, scene })
 }
 
 watch(session, (value) => {
@@ -376,6 +378,7 @@ const chapterGraph = useChapterGraph({ sessionUuid, session })
 const {
   workspaceMode,
   workspaceChapter,
+  workspaceScene,
   workspaceClosing,
   workspaceRevealed,
   workspaceMotionMode,

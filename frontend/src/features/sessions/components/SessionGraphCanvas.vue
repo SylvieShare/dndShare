@@ -84,14 +84,16 @@
       />
     </div>
     <div
-      v-if="displayLevel === 'blocks' && selectedScene"
+      v-if="(displayLevel === 'blocks' || workspaceMode === 'combat') && selectedScene"
       class="session-graph-ancestor session-graph-ancestor--scene"
-      title="Двойной клик — к холсту сценариев"
+      :class="{ 'session-graph-ancestor--context': workspaceMode === 'combat' }"
+      :title="workspaceMode === 'combat' ? 'Сценарий боя' : 'Двойной клик — к холсту сценариев'"
       @dblclick.stop="returnToScenes"
     >
       <SceneGraphNode
         :scene="selectedScene"
-        :index="sceneIndex(selectedScene)"
+        :index="selectedScene.contextIndex ?? sceneIndex(selectedScene)"
+        :context="workspaceMode === 'combat'"
         spotlight
       />
     </div>
@@ -188,6 +190,7 @@ const props = defineProps({
   isDm: { type: Boolean, default: false },
   workspaceMode: { type: String, default: null },
   workspaceChapterId: { type: [Number, String], default: null },
+  workspaceScene: { type: Object, default: null },
   currentChapterId: { type: [Number, String], default: null },
   chapterLinkingFrom: { type: Object, default: null },
 })
@@ -327,7 +330,7 @@ async function animateBack(level, nodeId, offset) {
 }
 
 function returnToScenes() {
-  if (!selectedScene.value) return
+  if (!selectedScene.value || props.workspaceMode === 'combat') return
   blockLinkingFrom.value = null
   animateBack('scenes', selectedScene.value.id, 252)
 }
@@ -509,7 +512,16 @@ async function copyBlock(block) {
 
 function sendBlockToCombat(block) {
   blockMenus.value?.close()
-  emit('send-block-to-combat', block)
+  emit('send-block-to-combat', {
+    block,
+    chapter: activeChapter.value,
+    scene: combatSceneContext(),
+  })
+}
+
+function combatSceneContext() {
+  if (!selectedScene.value) return null
+  return { ...selectedScene.value, contextIndex: sceneIndex(selectedScene.value) }
 }
 
 function closeBlockEditor() {
@@ -560,7 +572,7 @@ watch(() => props.workspaceMode, (mode, previousMode) => {
   if (mode === 'combat') {
     rememberedChapterId = props.workspaceChapterId
     displayLevel.value = 'chapters'
-    selectedScene.value = null
+    selectedScene.value = props.workspaceScene
     return
   }
   if (previousMode === 'scenes') {
@@ -579,11 +591,19 @@ watch(() => props.workspaceChapterId, chapterId => {
   if (props.workspaceMode === 'scenes' && chapterId != null && chapterId !== rememberedChapterId) openScenesLevel(chapterId)
 })
 
+watch(() => props.workspaceScene, scene => {
+  if (props.workspaceMode === 'combat') selectedScene.value = scene
+})
+
 onBeforeUnmount(() => { if (transitionTimer != null) clearTimeout(transitionTimer) })
 
 defineExpose({
   zoomBy: factor => canvas.value?.zoomBy(factor),
   viewportCenter: () => canvas.value?.viewportCenter(),
+  combatContext: () => ({
+    chapter: activeChapter.value,
+    scene: displayLevel.value === 'blocks' ? combatSceneContext() : null,
+  }),
   focusChapter: chapter => {
     if (displayLevel.value === 'chapters') canvas.value?.focusNode(chapter)
   },

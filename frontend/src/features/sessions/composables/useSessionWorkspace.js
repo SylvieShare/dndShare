@@ -1,4 +1,5 @@
 import { computed, nextTick, onBeforeUnmount, ref } from 'vue'
+import { getSceneGraph } from '@/shared/api/scenesApi'
 
 const WORKSPACE_MODES = new Set(['combat', 'scenes'])
 const CONTENT_REVEAL_DELAY_MS = 210
@@ -11,6 +12,7 @@ export function sessionWorkspaceKey(sessionUuid) {
 export function useSessionWorkspace({ sessionUuid, chapterGraph }) {
   const workspaceMode = ref(null)
   const workspaceChapterId = ref(null)
+  const workspaceScene = ref(null)
   const workspaceClosing = ref(false)
   const workspaceRevealed = ref(false)
   const workspaceMotionActive = ref(false)
@@ -24,9 +26,13 @@ export function useSessionWorkspace({ sessionUuid, chapterGraph }) {
     workspaceMotionActive.value ? workspaceMode.value : null
   )
 
-  function saveWorkspace(mode, chapterId) {
+  function saveWorkspace(mode, chapterId, sceneId = null) {
     try {
-      localStorage.setItem(sessionWorkspaceKey(sessionUuid), JSON.stringify({ mode, chapterId: chapterId ?? null }))
+      localStorage.setItem(sessionWorkspaceKey(sessionUuid), JSON.stringify({
+        mode,
+        chapterId: chapterId ?? null,
+        sceneId: sceneId ?? null,
+      }))
     } catch { /* ignore unavailable storage */ }
   }
 
@@ -62,14 +68,15 @@ export function useSessionWorkspace({ sessionUuid, chapterGraph }) {
     }, delay)
   }
 
-  function showWorkspace(mode, chapter) {
+  function showWorkspace(mode, chapter, scene = null) {
     cancelTimers()
     workspaceChapterId.value = chapter?.id ?? null
+    workspaceScene.value = mode === 'combat' ? scene : null
     workspaceMode.value = mode
     workspaceClosing.value = false
     workspaceRevealed.value = false
     workspaceMotionActive.value = true
-    saveWorkspace(mode, chapter?.id)
+    saveWorkspace(mode, chapter?.id, workspaceScene.value?.id)
     revealWorkspace()
   }
 
@@ -79,16 +86,18 @@ export function useSessionWorkspace({ sessionUuid, chapterGraph }) {
     showWorkspace('scenes', chapter)
   }
 
-  async function toggleCombatWorkspace() {
+  async function toggleCombatWorkspace(context = {}) {
     if (workspaceMode.value === 'combat' && !workspaceClosing.value) {
       closeWorkspace()
       return
     }
     if (!chapterGraph.loaded.value) await chapterGraph.load()
-    const chapter = chapterGraph.focusCurrent()
+    const contextualChapter = chapterGraph.chapters.value.find(item => item.id === context.chapter?.id)
+    const chapter = contextualChapter || chapterGraph.focusCurrent()
+    if (contextualChapter) chapterGraph.selectArc(contextualChapter.arcId)
     await nextTick()
     await nextTick()
-    showWorkspace('combat', chapter)
+    showWorkspace('combat', chapter, contextualChapter ? context.scene : null)
   }
 
   async function restoreWorkspace() {
@@ -97,8 +106,16 @@ export function useSessionWorkspace({ sessionUuid, chapterGraph }) {
     if (!chapterGraph.loaded.value) await chapterGraph.load()
 
     if (saved.mode === 'combat') {
-      const chapter = chapterGraph.focusCurrent()
-      showWorkspace('combat', chapter)
+      const chapter = chapterGraph.chapters.value.find(item => item.id === saved.chapterId) || chapterGraph.focusCurrent()
+      if (chapter) chapterGraph.selectArc(chapter.arcId)
+      let scene = null
+      if (chapter && saved.sceneId != null) {
+        const graph = await getSceneGraph(sessionUuid, chapter.id).catch(() => null)
+        const contextIndex = graph?.scenes?.findIndex(item => item.id === saved.sceneId) ?? -1
+        const restoredScene = contextIndex >= 0 ? graph.scenes[contextIndex] : null
+        scene = restoredScene ? { ...restoredScene, contextIndex } : null
+      }
+      showWorkspace('combat', chapter, scene)
       return true
     }
 
@@ -123,6 +140,7 @@ export function useSessionWorkspace({ sessionUuid, chapterGraph }) {
     closeTimer = setTimeout(() => {
       workspaceMode.value = null
       workspaceChapterId.value = null
+      workspaceScene.value = null
       workspaceClosing.value = false
       workspaceRevealed.value = false
       workspaceMotionActive.value = false
@@ -135,6 +153,7 @@ export function useSessionWorkspace({ sessionUuid, chapterGraph }) {
   return {
     workspaceMode,
     workspaceChapter,
+    workspaceScene,
     workspaceClosing,
     workspaceRevealed,
     workspaceMotionMode,

@@ -242,7 +242,9 @@ Text, dialogue and combat blocks have independent coordinates, persisted widths,
 content-sized heights and directed links. Their accent color is derived from
 the type instead of being user-selected or stored. Block cards use the same
 dark `var(--surface)` backing and inset border as `BaseTile`, with only a quiet
-type-colored hover tint and no leading color strip. Dialogue blocks store
+type-colored hover tint and no leading color strip. Every card starts with a
+separated heading group: a small type-colored block kind above a larger display
+title, so the title remains the primary landmark over variable content. Dialogue blocks store
 speaker/reply rows: speaker inputs autocomplete from the unique names already
 used in that dialogue, and every speaker receives one consistent distinct
 color from the shared palette. Clicking any non-interactive
@@ -250,7 +252,8 @@ part of a block opens its action menu; there is no separate ellipsis trigger.
 The menu provides edit, copy and delete, while a double click opens
 `SceneBlockEditorModal`. A combat block contains bestiary references and/or
 simplified creature records with quantities. Its leading `В бой` action adds
-the whole list to the encounter NPC reserve and opens the combat workspace.
+the whole list to the encounter NPC reserve and opens the combat workspace with
+that block's chapter and scenario as its visible context.
 Block edges are re-measured after content or width changes, and dragging the
 right edge persists a width in the `220..640px` range. Double-clicking the pinned scenario swaps
 the payload back to scenarios. Double-clicking the pinned chapter at either
@@ -269,8 +272,13 @@ destructive actions, and `SceneBlockEditorModal` for block content. Scene and
 block CRUD remains in `session_scenes.go`; graph reads, positions and links are
 handled by `session_scene_graph.go`.
 
-Combat still uses the same canvas layer from the command bar and focuses the
-current chapter. Its standalone combat header sits to the right of that node;
+Combat still uses the same canvas layer from the command bar. Entering it from
+an open block canvas preserves the visible chapter and scenario as two pinned
+context cards; the standalone combat header sits to their right. The command-bar
+combat action reads the same currently displayed canvas context, while a chapter-only
+canvas falls back to the current chapter. Chapter and scenario ids are saved with
+the workspace state and restored after reload. Without a scenario context the
+combat header sits immediately to the right of the focused chapter;
 combatants remain independent tiles below it rather than being wrapped in one
 central card. The header groups compact icon actions for starting or ending
 combat and turn navigation. Its growing secondary action row uses labelled

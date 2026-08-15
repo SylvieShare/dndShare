@@ -1,6 +1,9 @@
 <template>
   <article class="scene-block-node" :style="{ '--block-color': sceneBlockColor(block.type) }">
-    <strong>{{ block.title || fallbackTitle }}</strong>
+    <header class="scene-block-node-heading">
+      <span>{{ fallbackTitle }}</span>
+      <strong>{{ block.title || fallbackTitle }}</strong>
+    </header>
     <div class="scene-block-node-preview">
       <template v-if="block.type === 'list'">
         <div
@@ -75,12 +78,29 @@ function creatureKey(creature, index) {
   background: color-mix(in srgb, var(--block-color) 8%, var(--surface));
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--block-color) 38%, var(--border));
 }
-.scene-block-node > strong {
+.scene-block-node-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid color-mix(in srgb, var(--block-color) 32%, var(--border));
+}
+.scene-block-node-heading > span {
+  color: var(--block-color);
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: 0.11em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+.scene-block-node-heading > strong {
   overflow-wrap: anywhere;
   color: var(--text-1);
   font-family: var(--font-display);
-  font-size: 16px;
-  line-height: 1.24;
+  font-size: 18px;
+  font-weight: 760;
+  line-height: 1.18;
+  text-shadow: 0 1px 12px color-mix(in srgb, var(--block-color) 16%, transparent);
 }
 .scene-block-node-preview { color: var(--text-2); font-size: 11px; line-height: 1.42; overflow-wrap: anywhere; }
 .scene-block-node-dialogue { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; padding: 5px 0; }

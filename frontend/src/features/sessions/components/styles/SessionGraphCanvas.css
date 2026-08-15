@@ -9,6 +9,7 @@
 }
 .session-graph-ancestor--chapter { left: var(--chapter-safe-left, 0px); }
 .session-graph-ancestor--scene { left: calc(var(--chapter-safe-left, 0px) + 252px); }
+.session-graph-ancestor--context { cursor: default; }
 .session-graph-ancestor--chapter:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;

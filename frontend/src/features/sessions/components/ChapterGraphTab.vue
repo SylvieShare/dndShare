@@ -17,7 +17,7 @@
       @edit-arc="openArcEdit"
       @reorder-arcs="reorderArcs"
       @edit-session="$emit('edit-session')"
-      @open-combat="$emit('open-combat')"
+      @open-combat="openCombat"
       @toggle-dice="$emit('toggle-dice')"
       @toggle-music="$emit('toggle-music')"
       @toggle-events="$emit('toggle-events')"
@@ -35,6 +35,7 @@
         :current-chapter-id="graph.currentChapter.value?.id"
         :workspace-mode="workspaceMode"
         :workspace-chapter-id="workspaceChapterId"
+        :workspace-scene="workspaceScene"
         :chapter-linking-from="linkingFrom"
         @node-click="openNodeMenu"
         @node-double-click="openScenes"
@@ -183,6 +184,7 @@ const props = defineProps({
   locked: { type: Boolean, default: false },
   workspaceChapterId: { type: [Number, String], default: null },
   workspaceMode: { type: String, default: null },
+  workspaceScene: { type: Object, default: null },
   diceOpen: { type: Boolean, default: true },
   musicOpen: { type: Boolean, default: true },
   eventsOpen: { type: Boolean, default: true },
@@ -388,6 +390,10 @@ async function reverseEdge(edge) {
 function openScenes(chapter) {
   closeMenus()
   emit('open-scenes', chapter)
+}
+
+function openCombat() {
+  emit('open-combat', canvas.value?.combatContext?.() ?? {})
 }
 
 function returnToChapters() {
