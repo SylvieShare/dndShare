@@ -1,126 +1,32 @@
 <template>
-  <div class="user-info" v-click-outside="closeMenu">
-    <button class="user-trigger" :class="{ open: menuOpen }" @click="menuOpen = !menuOpen">
-      <div class="user-avatar">{{ initial }}</div>
-      <span class="user-name">{{ username }}</span>
-      <span class="trigger-arrow">▾</span>
-    </button>
-    <div v-if="menuOpen" class="user-menu">
-      <button class="user-menu-item logout" @click="logout">Выйти</button>
-    </div>
-  </div>
+  <AccountMenu
+    :expanded="expanded"
+    :label="username"
+    :avatar-text="initial"
+    title="Действия аккаунта"
+  >
+    <template #default="{ close }">
+      <ActionMenuItem :icon="LogOut" tone="danger" @click="logout(close)">
+        Выйти
+      </ActionMenuItem>
+    </template>
+  </AccountMenu>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
+import { LogOut } from '@lucide/vue'
+import { AccountMenu, ActionMenuItem } from '@sylvieshare/share-ui'
 import { useAccountStore } from '@/stores/account'
 
-const menuOpen = ref(false)
+defineProps({ expanded: { type: Boolean, default: true } })
 
-const username = computed(() => useAccountStore().user.login)
+const accountStore = useAccountStore()
+const username = computed(() => accountStore.user.login)
 const initial = computed(() => (username.value?.[0] ?? '?').toUpperCase())
 
-function logout() {
-  menuOpen.value = false
-  useAccountStore().logout()
-}
-
-function closeMenu() {
-  menuOpen.value = false
+function logout(closeMenu) {
+  closeMenu()
+  accountStore.logout()
 }
 </script>
-
-<style scoped>
-.user-info {
-  position: relative;
-}
-
-.user-trigger {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: none;
-  border: none;
-  border-radius: 7px;
-  padding: 3px 6px 3px 3px;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-.user-trigger:hover,
-.user-trigger.open {
-  background: var(--surface-raised);
-}
-
-.user-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: var(--accent);
-  color: var(--text-on-accent);
-  font-size: 14px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  user-select: none;
-}
-
-.user-name {
-  font-size: 14px;
-  color: var(--text-1);
-  white-space: nowrap;
-}
-
-.trigger-arrow {
-  color: var(--text-muted);
-  font-size: 11px;
-  transition: transform 0.15s ease;
-  line-height: 1;
-}
-
-.user-trigger.open .trigger-arrow {
-  transform: rotate(180deg);
-}
-
-.user-menu {
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
-  z-index: 150;
-  min-width: 140px;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  padding: 6px;
-  border: 1px solid var(--border-strong);
-  border-radius: 10px;
-  background: var(--popover-bg);
-  box-shadow: var(--shadow-lg);
-}
-
-.user-menu-item {
-  background: none;
-  border: none;
-  font: inherit;
-  font-size: 13px;
-  text-align: left;
-  border-radius: 7px;
-  padding: 8px 10px;
-  cursor: pointer;
-  color: var(--text-2);
-  transition: color 0.15s, background 0.15s;
-}
-
-.user-menu-item.logout:hover {
-  color: var(--danger);
-  background: var(--bg);
-}
-
-@media (max-width: 640px) {
-  .user-name {
-    display: none;
-  }
-}
-</style>

@@ -60,7 +60,7 @@ Vite работает на `:5173` и проксирует `/api` и `/mcp` в G
 | Popover/контекстное меню | `share-ui/BasePopover`, `ActionMenu`, `ActionMenuItem`, `ActionMenuSubmenu` | Неблокирующий контент, привязанный к управляющему элементу. Меню поддерживает стандартный trigger и feature-trigger через slot; вложенное меню остаётся внутри visual viewport, не закрывает родителя и корректно работает на mobile. Локальный `RowActionItem.vue` только сопоставляет DnD action names с Lucide-иконками. |
 | Перетаскивание | `share-ui/useSortable` | Сортировка и перенос между группами. `useSortable` ведёт drag-состояние, `reorderByDrop` выполняет чистую перестановку массива. |
 | Переключатели | `share-ui/MultiToggle`, `share-ui/ToggleSwitch`, `share-ui/CompactCheckbox` | Выбор режима, boolean и компактный checkbox соответственно. |
-| Каркас и левое меню | `share-ui/AppShell`, `share-ui/AppSidebar`, `share-ui/Sidebar*` | Единая геометрия приложения и DnD-стиль rail. Router, права, поиск, профиль и пункты меню передаёт локальный adapter. |
+| Каркас и левое меню | `share-ui/AppShell`, `share-ui/AppSidebar`, `share-ui/Sidebar*`, `share-ui/AccountMenu` | Единая геометрия приложения, DnD-стиль rail и trigger аккаунта с выпадающими действиями. Router, права, поиск, данные профиля и сами account-actions передаёт локальный adapter. |
 
 Категории модальных окон:
 

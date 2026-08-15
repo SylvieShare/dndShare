@@ -33,8 +33,8 @@
       <HeaderSearch v-else class="sidebar-search" />
     </template>
 
-    <template #account>
-      <UserBox />
+    <template #account="{ expanded }">
+      <UserBox :expanded="expanded" />
     </template>
   </AppSidebar>
 </template>
@@ -85,15 +85,8 @@ const navigationItems = computed(() => resolveAppNavigation({
   inset: auto auto 0 calc(100% + 12px);
 }
 
-.desktop-sidebar :deep(.share-sidebar-account .user-box),
-.desktop-sidebar :deep(.share-sidebar-account .user-info),
-.desktop-sidebar :deep(.share-sidebar-account .user-trigger) { width: 100%; }
+.desktop-sidebar :deep(.share-sidebar-account .user-box) { width: 100%; }
 
-.desktop-sidebar :deep(.share-sidebar-account .user-trigger) { box-sizing: border-box; }
-.desktop-sidebar :deep(.share-sidebar-account .user-menu) { inset: auto auto 0 calc(100% + 12px); }
-
-.desktop-sidebar:not(.app-sidebar--expanded) :deep(.share-sidebar-account .user-name),
-.desktop-sidebar:not(.app-sidebar--expanded) :deep(.share-sidebar-account .trigger-arrow),
 .desktop-sidebar:not(.app-sidebar--expanded) :deep(.share-sidebar-account .reg-link) { display: none; }
 
 .desktop-sidebar:not(.app-sidebar--expanded) :deep(.share-sidebar-account .auth-btn) {

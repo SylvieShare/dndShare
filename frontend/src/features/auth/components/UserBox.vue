@@ -2,7 +2,7 @@
   <div class="user-box">
     <transition name="fade" mode="out-in">
       <UserBoxFormAuth v-if="authStatus === 'none' || authStatus === 'process'" key="auth" />
-      <UserBoxInfo v-else-if="authStatus === 'success'" key="info" />
+      <UserBoxInfo v-else-if="authStatus === 'success'" key="info" :expanded="expanded" />
     </transition>
   </div>
 </template>
@@ -12,6 +12,8 @@ import { computed } from 'vue'
 import UserBoxFormAuth from "@/features/auth/components/UserBoxFormAuth"
 import UserBoxInfo from "@/features/auth/components/UserBoxInfo"
 import { useAccountStore } from '@/stores/account'
+
+defineProps({ expanded: { type: Boolean, default: true } })
 
 const authStatus = computed(() => useAccountStore().authStatus)
 </script>
