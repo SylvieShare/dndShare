@@ -63,12 +63,17 @@ The chapter canvas fills all available width below `AppHeader`; the participant
 rail floats above its left edge and the dice/events/music tiles float above its right
 edge. CSS safe-area variables keep focus, zoom and newly created nodes in the
 uncovered part of the canvas and leave a 28px gap between the central workspace
-and either floating rail. The right rail disappears first on narrow screens,
-then the participant rail.
+and either floating rail. Only the rendered right-side tiles receive pointer
+events: transparent space below a shorter stack remains available for canvas pan,
+selection and node dragging. When all three tiles are hidden, the right safe area
+collapses and canvas create actions move to the viewport edge. The right rail
+disappears first on narrow screens, then the participant rail.
 
-Постоянные icon-кнопки в начале правого rail независимо открывают и закрывают
-целые панели кубиков, музыки и событий; состояние самих смонтированных панелей
-при временном скрытии сохраняется. Внутренних кнопок сворачивания у панелей нет.
+Постоянные icon-кнопки в командной шапке независимо открывают и закрывают
+целые панели кубиков, музыки и событий. Выбранная видимость сохраняется в
+`localStorage` и восстанавливается при следующем открытии страницы; состояние
+самих смонтированных панелей при временном скрытии также сохраняется. Внутренних
+кнопок сворачивания у панелей нет.
 Заголовок music panel не дублирует название выбранного альбома; текущий трек
 остаётся в основном playback-блоке.
 `SessionEventsPanel` расположен под музыкой, занимает свободную высоту и

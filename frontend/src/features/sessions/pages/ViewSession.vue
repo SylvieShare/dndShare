@@ -40,6 +40,7 @@
       :class="{
         'campaign-workspace--combat': workspaceMotionMode === 'combat',
         'campaign-workspace--hotkeys': isDm && workspaceMotionMode !== 'combat',
+        'campaign-workspace--right-dock': rightDockOpen,
       }"
     >
       <ChapterGraphTab
@@ -227,10 +228,32 @@ const musicStore = useMusicStore()
 const sessionEventsStore = useSessionEventsStore()
 const templateStore = useTemplateStore()
 const musicLibraryOpen = ref(false)
-const diceOpen = ref(true)
-const musicOpen = ref(true)
-const eventsOpen = ref(true)
+const SESSION_TOOL_PANELS_STORAGE_KEY = 'dnd-share:session-tool-panels:v1'
+const savedToolPanels = readToolPanelVisibility()
+const diceOpen = ref(savedToolPanels.dice)
+const musicOpen = ref(savedToolPanels.music)
+const eventsOpen = ref(savedToolPanels.events)
+const rightDockOpen = computed(() => diceOpen.value || musicOpen.value || eventsOpen.value)
 const combatImportError = ref('')
+
+watch([diceOpen, musicOpen, eventsOpen], ([dice, music, events]) => {
+  try {
+    localStorage.setItem(SESSION_TOOL_PANELS_STORAGE_KEY, JSON.stringify({ dice, music, events }))
+  } catch { /* localStorage can be unavailable in private mode */ }
+})
+
+function readToolPanelVisibility() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(SESSION_TOOL_PANELS_STORAGE_KEY) || 'null')
+    return {
+      dice: saved?.dice !== false,
+      music: saved?.music !== false,
+      events: saved?.events !== false,
+    }
+  } catch {
+    return { dice: true, music: true, events: true }
+  }
+}
 
 const sheetUuid = ref(null)
 const createOpen = ref(false)

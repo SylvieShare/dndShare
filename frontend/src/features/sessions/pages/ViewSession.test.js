@@ -69,6 +69,7 @@ describe('ViewSession participant rail', () => {
     expect(styles).toContain('.campaign-workspace {')
     expect(styles).toContain('position: absolute;')
     expect(styles).toContain('--chapter-safe-left: 288px;')
+    expect(styles).toContain('.campaign-workspace--right-dock .campaign-graph')
     expect(styles).toContain('--chapter-safe-right: 336px;')
     expect(source).toContain("'campaign-workspace--hotkeys': isDm && workspaceMotionMode !== 'combat'")
     expect(styles).toContain('.campaign-workspace--hotkeys .workspace-dock--left')
@@ -84,9 +85,9 @@ describe('ViewSession participant rail', () => {
   it('keeps session dice purple and controls all right-dock panels from the header', () => {
     expect(dicePanelSource).toContain('color="var(--accent)"')
     expect(source).not.toContain('class="workspace-tool-toggles"')
-    expect(source).toContain('const diceOpen = ref(true)')
-    expect(source).toContain('const musicOpen = ref(true)')
-    expect(source).toContain('const eventsOpen = ref(true)')
+    expect(source).toContain("const SESSION_TOOL_PANELS_STORAGE_KEY = 'dnd-share:session-tool-panels:v1'")
+    expect(source).toContain('localStorage.getItem(SESSION_TOOL_PANELS_STORAGE_KEY)')
+    expect(source).toContain('localStorage.setItem(SESSION_TOOL_PANELS_STORAGE_KEY')
     expect(source).toContain('@toggle-dice="diceOpen = !diceOpen"')
     expect(source).toContain('@toggle-music="musicOpen = !musicOpen"')
     expect(source).toContain('@toggle-events="eventsOpen = !eventsOpen"')
@@ -96,6 +97,15 @@ describe('ViewSession participant rail', () => {
     expect(dicePanelSource).not.toContain('dice-panel-collapse')
     expect(musicPanelSource).not.toContain('music-panel-collapse')
     expect(musicPanelSource).not.toContain('music-panel-album')
+  })
+
+  it('lets the canvas use the empty part of the right rail and moves actions right when every panel is closed', () => {
+    expect(source).toContain("'campaign-workspace--right-dock': rightDockOpen")
+    expect(source).toContain('<aside class="workspace-dock workspace-dock--right">')
+    expect(source).toContain('const rightDockOpen = computed(() => diceOpen.value || musicOpen.value || eventsOpen.value)')
+    expect(styles).toMatch(/\.workspace-dock--right\s*\{[^}]*pointer-events:\s*none;/s)
+    expect(styles).toMatch(/\.workspace-dock--right > \.workspace-tool-tile\s*\{[^}]*pointer-events:\s*auto;/s)
+    expect(styles).toMatch(/\.campaign-graph\s*\{[^}]*--chapter-safe-right:\s*0px;/s)
   })
 
   it('places the event log below the music panel', () => {
