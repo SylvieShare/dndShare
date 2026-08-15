@@ -614,13 +614,22 @@ async function performDelete() {
 
 watch(() => props.workspaceMode, (mode, previousMode) => {
   if (mode === 'scenes' && props.workspaceChapterId != null) {
-    if (previousMode !== 'scenes' || rememberedChapterId !== props.workspaceChapterId) openScenesLevel(props.workspaceChapterId)
+    const preservedNestedContext = previousMode === 'combat'
+      && rememberedChapterId === props.workspaceChapterId
+      && displayLevel.value === props.workspaceLevel
+      && (props.workspaceLevel !== 'blocks' || selectedScene.value?.id === props.workspaceScene?.id)
+    if (preservedNestedContext) {
+      selectedScene.value = props.workspaceScene
+      nextTick(notifyWorkspaceContext)
+    } else if (previousMode !== 'scenes' || rememberedChapterId !== props.workspaceChapterId) {
+      openScenesLevel(props.workspaceChapterId)
+    }
     return
   }
   if (mode === 'combat') {
     rememberedChapterId = props.workspaceChapterId
-    displayLevel.value = 'chapters'
     selectedScene.value = props.workspaceScene
+    if (previousMode !== 'scenes') displayLevel.value = 'chapters'
     return
   }
   if (previousMode === 'scenes') {

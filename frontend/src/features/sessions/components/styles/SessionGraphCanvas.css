@@ -6,6 +6,7 @@
   width: 236px;
   height: 156px;
   cursor: zoom-out;
+  transition: left 0.42s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .session-graph-ancestor--chapter { left: var(--chapter-safe-left, 0px); }
 .session-graph-ancestor--scene { left: calc(var(--chapter-safe-left, 0px) + 252px); }
@@ -33,4 +34,7 @@
 @media (max-width: 760px) {
   .session-graph-ancestor--chapter { left: 8px; }
   .session-graph-ancestor--scene { left: 260px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .session-graph-ancestor { transition: none; }
 }

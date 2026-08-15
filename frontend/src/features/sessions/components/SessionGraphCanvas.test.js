@@ -18,6 +18,7 @@ const edgeEditorSource = readFileSync(fileURLToPath(new URL('../composables/useN
 const apiSource = readFileSync(fileURLToPath(new URL('../../../shared/api/scenesApi.js', import.meta.url)), 'utf8')
 const sessionsApiSource = readFileSync(fileURLToPath(new URL('../../../shared/api/sessionsApi.js', import.meta.url)), 'utf8')
 const narrativeCanvasSource = readFileSync(fileURLToPath(new URL('../lib/narrativeCanvas.js', import.meta.url)), 'utf8')
+const stylesSource = readFileSync(fileURLToPath(new URL('./styles/SessionGraphCanvas.css', import.meta.url)), 'utf8')
 
 describe('session graph canvas', () => {
   it('compiles one persistent canvas host', () => {
@@ -66,6 +67,13 @@ describe('session graph canvas', () => {
     expect(source).toContain(':layout-key="workspaceMode"')
     expect(canvasSource).toContain('watch(() => props.layoutKey, async () => {')
     expect(canvasSource).toContain("{ flush: 'post' }")
+  })
+
+  it('keeps the selected chapter and scenario mounted across combat mode', () => {
+    expect(source).toContain("const preservedNestedContext = previousMode === 'combat'")
+    expect(source).toContain("if (previousMode !== 'scenes') displayLevel.value = 'chapters'")
+    expect(source).not.toContain("if (mode === 'combat') {\n    rememberedChapterId = props.workspaceChapterId\n    displayLevel.value = 'chapters'")
+    expect(stylesSource).toContain('transition: left 0.42s cubic-bezier(0.22, 1, 0.36, 1);')
   })
 
   it('supports server-backed positions and directed links at every level', () => {
