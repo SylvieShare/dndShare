@@ -53,7 +53,7 @@ func mcpToolDefs() []map[string]any {
 				"limit": intP("Max rows, 1..100 (default 20)"),
 			}, "q")),
 		tool("error_reports_list",
-			"List actionable open admin-approved page error reports, newest first. Finished/unapproved reports, unanswered AI questions, and serious changes awaiting ADMIN approval are not exposed. A report becomes visible again after an answer or serious-change approval. Use summaryOnly=true with limit=1 for the pre-lock empty-queue probe. Scheduled automation should use compact=true for the post-lock batch; it preserves diagnostic evidence while omitting fixed queue/workflow fields.",
+			"List actionable open admin-approved page error reports, newest first. Finished/unapproved reports, unanswered AI questions, and serious changes awaiting ADMIN approval are not exposed. A report becomes visible again after an answer or serious-change approval. Use summaryOnly=true with limit=1 for the pre-lock empty-queue probe. Scheduled automation should use compact=true for the post-lock batch; it returns {ids: number[], reports: [...]}, preserving diagnostic evidence while omitting fixed queue/workflow fields.",
 			schema(map[string]any{
 				"limit":       intP("Max rows, 1..500 (default 100)"),
 				"offset":      intP("Offset for pagination (default 0)"),

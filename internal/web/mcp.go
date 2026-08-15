@@ -305,7 +305,7 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 			return nil, err
 		}
 		if compact {
-			return compactErrorReports(reports), nil
+			return newCompactErrorReportList(reports), nil
 		}
 		return reports, nil
 

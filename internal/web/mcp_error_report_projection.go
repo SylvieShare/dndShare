@@ -25,10 +25,19 @@ type compactErrorReport struct {
 	CreatedAt               time.Time                  `json:"createdAt"`
 }
 
-func compactErrorReports(reports []store.ErrorReport) []compactErrorReport {
-	result := make([]compactErrorReport, 0, len(reports))
+type compactErrorReportList struct {
+	IDs     []int64              `json:"ids"`
+	Reports []compactErrorReport `json:"reports"`
+}
+
+func newCompactErrorReportList(reports []store.ErrorReport) compactErrorReportList {
+	result := compactErrorReportList{
+		IDs:     make([]int64, 0, len(reports)),
+		Reports: make([]compactErrorReport, 0, len(reports)),
+	}
 	for _, report := range reports {
-		result = append(result, compactErrorReport{
+		result.IDs = append(result.IDs, report.ID)
+		result.Reports = append(result.Reports, compactErrorReport{
 			ID:                      report.ID,
 			Title:                   report.Title,
 			Description:             report.Description,

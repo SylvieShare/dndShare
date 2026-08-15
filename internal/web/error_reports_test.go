@@ -92,14 +92,14 @@ func TestCompactErrorReportsPreserveEvidenceAndOmitWorkflowFields(t *testing.T) 
 		Messages:              []store.ErrorReportMessage{},
 		CreatedAt:             time.Unix(1, 0).UTC(),
 	}}
-	reports := compactErrorReports(source)
+	compact := newCompactErrorReportList(source)
 
-	raw, err := json.Marshal(reports)
+	raw, err := json.Marshal(compact)
 	if err != nil {
 		t.Fatalf("marshal compact reports: %v", err)
 	}
 	value := string(raw)
-	for _, expected := range []string{`"id":84`, `"title":"Не виден акцент"`, `"description":"Кубик выглядит серым"`, `"pageUrl":"/character/1"`, `"element":{"selector":".dice"}`, `"userLogin":"tester"`, `"hasScreenshot":true`, `"messages":[]`} {
+	for _, expected := range []string{`"ids":[84]`, `"reports":[{`, `"id":84`, `"title":"Не виден акцент"`, `"description":"Кубик выглядит серым"`, `"pageUrl":"/character/1"`, `"element":{"selector":".dice"}`, `"userLogin":"tester"`, `"hasScreenshot":true`, `"messages":[]`} {
 		if !strings.Contains(value, expected) {
 			t.Fatalf("compact evidence %s missing from %s", expected, value)
 		}
@@ -115,6 +115,17 @@ func TestCompactErrorReportsPreserveEvidenceAndOmitWorkflowFields(t *testing.T) 
 	}
 	if len(raw) >= len(full) {
 		t.Fatalf("compact payload must be smaller: compact=%d full=%d", len(raw), len(full))
+	}
+}
+
+func TestCompactErrorReportListUsesNumericIDsAndEmptyArrays(t *testing.T) {
+	compact := newCompactErrorReportList(nil)
+	raw, err := json.Marshal(compact)
+	if err != nil {
+		t.Fatalf("marshal empty compact list: %v", err)
+	}
+	if string(raw) != `{"ids":[],"reports":[]}` {
+		t.Fatalf("unexpected empty compact list: %s", raw)
 	}
 }
 
