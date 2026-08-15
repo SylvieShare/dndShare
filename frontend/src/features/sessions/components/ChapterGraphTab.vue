@@ -9,6 +9,9 @@
       :is-dm="isDm"
       :locked="locked"
       :combat-active="workspaceMode === 'combat'"
+      :dice-open="diceOpen"
+      :music-open="musicOpen"
+      :events-open="eventsOpen"
       @select-arc="selectArc"
       @create-arc="openArcCreate"
       @edit-arc="openArcEdit"
@@ -17,6 +20,9 @@
       @edit-session="$emit('edit-session')"
       @status-change="$emit('status-change', $event)"
       @open-combat="$emit('open-combat')"
+      @toggle-dice="$emit('toggle-dice')"
+      @toggle-music="$emit('toggle-music')"
+      @toggle-events="$emit('toggle-events')"
     />
 
     <div class="chapter-canvas-stage">
@@ -118,8 +124,14 @@ const props = defineProps({
   locked: { type: Boolean, default: false },
   workspaceChapterId: { type: [Number, String], default: null },
   workspaceMode: { type: String, default: null },
+  diceOpen: { type: Boolean, default: true },
+  musicOpen: { type: Boolean, default: true },
+  eventsOpen: { type: Boolean, default: true },
 })
-const emit = defineEmits(['open-scenes', 'open-combat', 'edit-session', 'status-change', 'close-workspace', 'send-block-to-combat'])
+const emit = defineEmits([
+  'open-scenes', 'open-combat', 'edit-session', 'status-change', 'close-workspace',
+  'send-block-to-combat', 'toggle-dice', 'toggle-music', 'toggle-events',
+])
 
 const canvas = ref(null)
 const menus = ref(null)

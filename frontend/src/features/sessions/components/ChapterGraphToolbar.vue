@@ -1,5 +1,5 @@
 <template>
-  <BaseTile class="chapter-toolbar">
+  <header class="chapter-toolbar">
     <div v-if="session" class="chapter-session">
       <button
         type="button"
@@ -64,14 +64,27 @@
           <path d="M3 2l7.5 7.5M11 2L3.5 9.5M2 11l1-1 1 1-1 1-1-1zm8-8 1-1 1 1-1 1-1-1z" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </button>
+
+      <span class="chapter-toolbar-rule" />
+
+      <div class="chapter-panel-tools" aria-label="Панели сессии">
+        <button type="button" class="chapter-tool-btn chapter-tool-btn--icon" :class="{ 'chapter-tool-btn--active': diceOpen }" title="Кубики" aria-label="Кубики" :aria-pressed="diceOpen" @click="$emit('toggle-dice')">
+          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.8l5.3 3v6.4L8 14.2l-5.3-3V4.8L8 1.8zM2.9 4.9L8 8l5.1-3.1M8 8v6" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+        </button>
+        <button type="button" class="chapter-tool-btn chapter-tool-btn--icon" :class="{ 'chapter-tool-btn--active': musicOpen }" title="Музыка" aria-label="Музыка" :aria-pressed="musicOpen" @click="$emit('toggle-music')">
+          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 12.5V3.8l6-1.3v8.2M6 12.5a1.8 1.8 0 1 1-1.8-1.8A1.8 1.8 0 0 1 6 12.5zm6-1.8a1.8 1.8 0 1 1-1.8-1.8A1.8 1.8 0 0 1 12 10.7z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button type="button" class="chapter-tool-btn chapter-tool-btn--icon" :class="{ 'chapter-tool-btn--active': eventsOpen }" title="Лог сессии" aria-label="Лог сессии" :aria-pressed="eventsOpen" @click="$emit('toggle-events')">
+          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 2.5h10v11H3zM5.5 5.5h5M5.5 8h5M5.5 10.5h3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        </button>
+      </div>
     </div>
-  </BaseTile>
+  </header>
 </template>
 
 <script setup>
 import { ref, watch } from 'vue'
 import BasePopover from '@/shared/ui/BasePopover.vue'
-import { BaseTile } from '@sylvieshare/share-ui'
 import SessionStatusMenu from '@/features/sessions/components/SessionStatusMenu.vue'
 import { romanNumeral } from '@/features/sessions/lib/chapterGraph'
 
@@ -84,10 +97,14 @@ const props = defineProps({
   isDm: { type: Boolean, default: false },
   locked: { type: Boolean, default: false },
   combatActive: { type: Boolean, default: false },
+  diceOpen: { type: Boolean, default: true },
+  musicOpen: { type: Boolean, default: true },
+  eventsOpen: { type: Boolean, default: true },
 })
 const emit = defineEmits([
   'select-arc', 'create-arc', 'edit-arc', 'delete-arc', 'move-arc',
   'edit-session', 'status-change', 'open-combat',
+  'toggle-dice', 'toggle-music', 'toggle-events',
 ])
 const arcTrigger = ref(null)
 const arcOpen = ref(false)
@@ -104,7 +121,6 @@ function pickArc(id) {
 
 <style scoped>
 .chapter-toolbar {
-  border-radius: 0;
   position: relative;
   z-index: 20;
   display: flex;
@@ -116,6 +132,7 @@ function pickArc(id) {
 .chapter-toolbar-main,
 .chapter-toolbar-view { display: flex; align-items: center; gap: 7px; min-width: 0; }
 .chapter-toolbar-view { margin-left: auto; }
+.chapter-panel-tools { display: flex; align-items: center; gap: 7px; }
 .chapter-session { min-width: 0; max-width: 240px; display: flex; align-items: center; gap: 4px; }
 .chapter-session-title { min-width: 0; overflow: hidden; padding: 4px 6px; border: 0; border-radius: 6px; background: none; color: var(--text-1); font: inherit; font-family: var(--font-display); font-size: 18px; font-weight: 650; text-align: left; text-overflow: ellipsis; white-space: nowrap; }
 .chapter-session-title:not(:disabled) { cursor: pointer; }
@@ -149,6 +166,7 @@ function pickArc(id) {
 .chapter-tool-btn--danger:hover { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 45%, transparent); }
 .chapter-tool-btn--combat { border-color: color-mix(in srgb, var(--danger) 38%, transparent); color: color-mix(in srgb, var(--danger) 84%, var(--text-1)); font-weight: 700; }
 .chapter-tool-btn--combat.chapter-tool-btn--active { background: color-mix(in srgb, var(--danger) 18%, transparent); border-color: color-mix(in srgb, var(--danger) 66%, transparent); color: var(--danger); }
+.chapter-tool-btn--active:not(.chapter-tool-btn--combat) { background: color-mix(in srgb, var(--accent) 16%, transparent); border-color: color-mix(in srgb, var(--accent) 55%, var(--border)); color: var(--text-1); }
 
 .chapter-arc-list { display: flex; flex-direction: column; gap: 3px; padding: 5px; }
 .chapter-arc-row { display: flex; align-items: center; gap: 4px; border-radius: 7px; }

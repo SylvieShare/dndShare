@@ -17,14 +17,19 @@ describe('chapter graph workspace', () => {
     expect(ChapterGraphTab).toBeTruthy()
   })
 
-  it('keeps the canvas transparent and gives only the toolbar a tile surface', () => {
-    expect(toolbar).toContain('<BaseTile class="chapter-toolbar">')
+  it('keeps the canvas and its frameless semantic header transparent', () => {
+    expect(toolbar).toContain('<header class="chapter-toolbar">')
+    expect(toolbar).not.toContain('<BaseTile')
     expect(canvas).not.toContain('<BaseTile')
   })
 
-  it('keeps the chapter toolbar square on desktop and mobile', () => {
-    expect(toolbar).toContain('.chapter-toolbar {\n  border-radius: 0;')
-    expect(toolbar).not.toContain('@media (max-width: 760px) {\n  .chapter-toolbar { border-radius:')
+  it('keeps dice, music and session log toggles in the header', () => {
+    expect(toolbar).toContain('aria-label="Кубики"')
+    expect(toolbar).toContain('aria-label="Музыка"')
+    expect(toolbar).toContain('aria-label="Лог сессии"')
+    expect(toolbar).toContain("$emit('toggle-dice')")
+    expect(toolbar).toContain("$emit('toggle-music')")
+    expect(toolbar).toContain("$emit('toggle-events')")
   })
 
   it('keeps global controls in the command bar and creation on the canvas', () => {

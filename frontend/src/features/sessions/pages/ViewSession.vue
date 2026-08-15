@@ -48,8 +48,14 @@
         :locked="!!workspaceMode"
         :workspace-chapter-id="workspaceChapter?.id ?? null"
         :workspace-mode="workspaceMotionMode"
+        :dice-open="diceOpen"
+        :music-open="musicOpen"
+        :events-open="eventsOpen"
         @open-scenes="openChapterScenes"
         @open-combat="toggleCombatWorkspace"
+        @toggle-dice="diceOpen = !diceOpen"
+        @toggle-music="musicOpen = !musicOpen"
+        @toggle-events="eventsOpen = !eventsOpen"
         @send-block-to-combat="sendBlockToCombat"
         @edit-session="openEdit"
         @close-workspace="closeWorkspace"
@@ -120,17 +126,6 @@
       </aside>
 
       <aside class="workspace-dock workspace-dock--right">
-        <div class="workspace-tool-toggles" aria-label="Панели сессии">
-          <button type="button" class="workspace-tool-toggle" :class="{ 'workspace-tool-toggle--active': diceOpen }" title="Кубики" aria-label="Кубики" :aria-pressed="diceOpen" @click="diceOpen = !diceOpen">
-            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.8l5.3 3v6.4L8 14.2l-5.3-3V4.8L8 1.8zM2.9 4.9L8 8l5.1-3.1M8 8v6" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
-          </button>
-          <button type="button" class="workspace-tool-toggle" :class="{ 'workspace-tool-toggle--active': musicOpen }" title="Музыка" aria-label="Музыка" :aria-pressed="musicOpen" @click="musicOpen = !musicOpen">
-            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 12.5V3.8l6-1.3v8.2M6 12.5a1.8 1.8 0 1 1-1.8-1.8A1.8 1.8 0 0 1 6 12.5zm6-1.8a1.8 1.8 0 1 1-1.8-1.8A1.8 1.8 0 0 1 12 10.7z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </button>
-          <button type="button" class="workspace-tool-toggle" :class="{ 'workspace-tool-toggle--active': eventsOpen }" title="События" aria-label="События" :aria-pressed="eventsOpen" @click="eventsOpen = !eventsOpen">
-            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 2.5h10v11H3zM5.5 5.5h5M5.5 8h5M5.5 10.5h3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-          </button>
-        </div>
         <BaseTile v-show="diceOpen" class="side-tile workspace-tool-tile">
           <DicePanel />
         </BaseTile>

@@ -78,15 +78,15 @@ describe('ViewSession participant rail', () => {
     expect(styles).toMatch(/\.workspace-dock--left\s*\{[^}]*bottom:\s*auto;[^}]*max-height:\s*calc\(100% - 84px\);/s)
   })
 
-  it('keeps session dice purple and controls all right-dock panels from persistent icon buttons', () => {
+  it('keeps session dice purple and controls all right-dock panels from the header', () => {
     expect(dicePanelSource).toContain('color="var(--accent)"')
-    expect(source).toContain('class="workspace-tool-toggles"')
+    expect(source).not.toContain('class="workspace-tool-toggles"')
     expect(source).toContain('const diceOpen = ref(true)')
     expect(source).toContain('const musicOpen = ref(true)')
     expect(source).toContain('const eventsOpen = ref(true)')
-    expect(source).toContain(':aria-pressed="diceOpen"')
-    expect(source).toContain(':aria-pressed="musicOpen"')
-    expect(source).toContain(':aria-pressed="eventsOpen"')
+    expect(source).toContain('@toggle-dice="diceOpen = !diceOpen"')
+    expect(source).toContain('@toggle-music="musicOpen = !musicOpen"')
+    expect(source).toContain('@toggle-events="eventsOpen = !eventsOpen"')
     expect(source).toContain('<BaseTile v-show="diceOpen"')
     expect(source).toContain('<BaseTile v-show="musicOpen"')
     expect(source).toContain('<BaseTile v-show="eventsOpen"')
