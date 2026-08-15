@@ -5,9 +5,9 @@
       :selected-arc="graph.selectedArc.value"
       :current-arc="graph.currentArc.value"
       :session="session"
-      :session-uuid="sessionUuid"
       :is-dm="isDm"
       :locked="locked"
+      :reorder-pending="saving"
       :combat-active="workspaceMode === 'combat'"
       :dice-open="diceOpen"
       :music-open="musicOpen"
@@ -15,8 +15,7 @@
       @select-arc="selectArc"
       @create-arc="openArcCreate"
       @edit-arc="openArcEdit"
-      @delete-arc="confirmArcDelete"
-      @move-arc="moveArc"
+      @reorder-arcs="reorderArcs"
       @edit-session="$emit('edit-session')"
       @open-combat="$emit('open-combat')"
       @toggle-dice="$emit('toggle-dice')"
@@ -132,6 +131,7 @@
       :saving="saving"
       @close="closeEditors"
       @save="saveArc"
+      @delete="requestArcDelete"
     />
     <ChapterEditorModal
       v-if="chapterEditorOpen && graph.selectedArc.value"
@@ -265,8 +265,8 @@ function openArcCreate() {
   arcEditorOpen.value = true
 }
 
-function openArcEdit() {
-  editingArc.value = graph.selectedArc.value
+function openArcEdit(arc) {
+  editingArc.value = arc ?? graph.selectedArc.value
   if (editingArc.value) arcEditorOpen.value = true
 }
 
@@ -414,8 +414,12 @@ function prepareMove(chapter, arc) {
   }
 }
 
-function confirmArcDelete() {
-  const arc = graph.selectedArc.value
+function requestArcDelete(arc) {
+  closeEditors()
+  confirmArcDelete(arc)
+}
+
+function confirmArcDelete(arc = graph.selectedArc.value) {
   if (!arc) return
   confirmState.value = { kind: 'arc', arc, title: 'Удалить арку?', message: `Удалить пустую арку «${arc.name}»?`, confirmLabel: 'Удалить' }
 }
@@ -457,12 +461,7 @@ async function runConfirmedAction() {
   } catch { /* shown */ }
 }
 
-async function moveArc(id, delta) {
-  const ids = graph.arcs.value.map(arc => arc.id)
-  const from = ids.indexOf(id)
-  const to = from + delta
-  if (from < 0 || to < 0 || to >= ids.length) return
-  ids.splice(to, 0, ids.splice(from, 1)[0])
+async function reorderArcs(ids) {
   try { await perform(() => graph.reorderArcs(ids), 'Не удалось изменить порядок арок') } catch { /* shown */ }
 }
 
