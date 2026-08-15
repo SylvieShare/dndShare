@@ -28,10 +28,10 @@ func TestGraphBulkValidation(t *testing.T) {
 	if validGraphPositions([]store.GraphNodePosition{{ID: 1, X: math.Inf(1), Y: 0}}) {
 		t.Fatal("infinite graph coordinate must be rejected")
 	}
-	if !validGraphStatus("chapters", "in_progress") {
-		t.Fatal("chapter status must be accepted")
+	if !validGraphStatus("chapters", "none") || !validGraphStatus("scenes", "in_progress") {
+		t.Fatal("canonical chapter and scene statuses must be accepted")
 	}
-	if validGraphStatus("scenes", "in_progress") || validGraphStatus("chapters", "unknown") {
-		t.Fatal("status must be limited to canonical chapter values")
+	if validGraphStatus("blocks", "in_progress") || validGraphStatus("chapters", "unknown") {
+		t.Fatal("status must be limited to canonical narrative values")
 	}
 }

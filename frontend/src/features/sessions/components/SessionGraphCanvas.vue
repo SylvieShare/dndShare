@@ -23,7 +23,7 @@
       :empty-description="emptyCopy.description"
       :show-empty-action="false"
       :layout-key="workspaceMode"
-      :status-options="displayLevel === 'chapters' ? CHAPTER_STATUSES : []"
+      :status-options="displayLevel === 'chapters' ? CHAPTER_STATUSES : displayLevel === 'scenes' ? SCENE_STATUSES : []"
       @node-click="handleNodeClick"
       @node-double-click="handleNodeDoubleClick"
       @edge-click="handleEdgeClick"
@@ -35,7 +35,7 @@
       @save-size="saveSize"
       @selection-change="handleSelectionChange"
       @delete-selection="requestSelectionDelete"
-      @change-selection-status="(status, ids) => $emit('change-nodes-status', status, ids)"
+      @change-selection-status="changeSelectionStatus"
       @view-change="$emit('view-change', $event)"
     >
       <template #node="{ node, linking, target, spotlight }">
@@ -116,6 +116,8 @@
 
     <SceneGraphMenus
       ref="sceneMenus"
+      @open-scene="openBlocksLevel"
+      @status="changeSceneStatus"
       @edit="openSceneRename"
       @delete="requestSceneDelete"
     />
@@ -180,7 +182,7 @@ import SceneGraphNode from '@/features/sessions/components/SceneGraphNode.vue'
 import { useNestedEdgeEditor } from '@/features/sessions/composables/useNestedEdgeEditor'
 import { useSceneBlockGraph } from '@/features/sessions/composables/useSceneBlockGraph'
 import { useSceneGraph } from '@/features/sessions/composables/useSceneGraph'
-import { CHAPTER_STATUSES } from '@/features/sessions/lib/chapterGraph'
+import { CHAPTER_STATUSES, SCENE_STATUSES } from '@/features/sessions/lib/chapterGraph'
 import { narrativeCanvasActions, narrativeCanvasEmptyCopy, narrativeCanvasLoadingLabel } from '@/features/sessions/lib/narrativeCanvas'
 import { sceneBlockDefaultWidth } from '@/features/sessions/lib/sceneBlockTypes'
 
@@ -191,6 +193,7 @@ const props = defineProps({
   workspaceMode: { type: String, default: null },
   workspaceChapterId: { type: [Number, String], default: null },
   workspaceScene: { type: Object, default: null },
+  workspaceLevel: { type: String, default: 'chapters' },
   currentChapterId: { type: [Number, String], default: null },
   chapterLinkingFrom: { type: Object, default: null },
 })
@@ -198,6 +201,7 @@ const emit = defineEmits([
   'node-click', 'node-double-click', 'edge-click', 'start-link', 'finish-link',
   'preview-positions', 'save-positions', 'delete-nodes', 'selection-change', 'create-chapter', 'close-workspace',
   'chapter-ancestor-click', 'scene-count', 'view-change', 'send-block-to-combat', 'change-nodes-status',
+  'workspace-context-change',
 ])
 
 const canvas = ref(null)
@@ -221,6 +225,7 @@ const blockCreatePosition = ref({ x: 48, y: 210 })
 const pendingDelete = ref(null)
 let transitionTimer = null
 let rememberedChapterId = null
+let contextSyncSuspended = false
 
 const activeChapterId = computed(() => props.workspaceChapterId ?? rememberedChapterId)
 const activeChapter = computed(() => props.graph.chapters.value.find(chapter => chapter.id === activeChapterId.value) ?? null)
@@ -289,6 +294,9 @@ function scheduleTransition(callback) {
 }
 
 async function openScenesLevel(chapterId) {
+  contextSyncSuspended = true
+  const restoredScene = props.workspaceScene
+  const restoredLevel = props.workspaceLevel
   rememberedChapterId = chapterId
   selectedScene.value = null
   sceneLinkingFrom.value = null
@@ -301,7 +309,19 @@ async function openScenesLevel(chapterId) {
   transitionSpotlight.value = { level: 'chapters', id: chapterId, offset: 0 }
   scheduleTransition(() => {
     transitionSpotlight.value = null
-    activateLevel('scenes')
+    if (restoredLevel === 'blocks' && restoredScene) {
+      selectedScene.value = restoredScene
+      blockGraph.reset()
+      blockGraph.load()
+      activateLevel('blocks')
+    } else {
+      selectedScene.value = restoredScene
+      activateLevel('scenes')
+    }
+    nextTick(() => {
+      contextSyncSuspended = false
+      notifyWorkspaceContext()
+    })
   })
 }
 
@@ -431,6 +451,13 @@ function requestSelectionDelete(ids) {
   pendingDelete.value = { kind: 'selection', level: displayLevel.value, ids }
 }
 
+async function changeSelectionStatus(status, ids) {
+  if (displayLevel.value === 'chapters') return emit('change-nodes-status', status, ids)
+  if (displayLevel.value !== 'scenes') return
+  actionError.value = ''
+  try { await sceneGraph.updateSceneStatuses(ids, status) } catch { actionError.value = 'Не удалось изменить статус выбранных сценариев' }
+}
+
 function previewSize(id, width) {
   if (displayLevel.value === 'blocks') blockGraph.setLocalWidth(id, width)
 }
@@ -459,6 +486,18 @@ function openSceneRename(scene) {
   sceneMenus.value?.close()
   editingScene.value = scene
   scenePromptOpen.value = true
+}
+
+async function changeSceneStatus(scene, status) {
+  sceneMenus.value?.close()
+  actionError.value = ''
+  try {
+    await sceneGraph.updateScene(scene.id, {
+      name: scene.name,
+      status,
+      imagePresetKey: scene.imagePresetKey,
+    })
+  } catch { actionError.value = 'Не удалось изменить статус сценария' }
 }
 
 function closeScenePrompt() {
@@ -516,12 +555,21 @@ function sendBlockToCombat(block) {
     block,
     chapter: activeChapter.value,
     scene: combatSceneContext(),
+    level: 'blocks',
   })
 }
 
 function combatSceneContext() {
   if (!selectedScene.value) return null
   return { ...selectedScene.value, contextIndex: sceneIndex(selectedScene.value) }
+}
+
+function notifyWorkspaceContext() {
+  if (contextSyncSuspended || props.workspaceMode !== 'scenes') return
+  emit('workspace-context-change', {
+    level: displayLevel.value,
+    scene: selectedScene.value ? combatSceneContext() : null,
+  })
 }
 
 function closeBlockEditor() {
@@ -595,6 +643,8 @@ watch(() => props.workspaceScene, scene => {
   if (props.workspaceMode === 'combat') selectedScene.value = scene
 })
 
+watch([displayLevel, selectedScene], notifyWorkspaceContext, { flush: 'post' })
+
 onBeforeUnmount(() => { if (transitionTimer != null) clearTimeout(transitionTimer) })
 
 defineExpose({
@@ -603,6 +653,7 @@ defineExpose({
   combatContext: () => ({
     chapter: activeChapter.value,
     scene: displayLevel.value === 'blocks' ? combatSceneContext() : null,
+    level: displayLevel.value,
   }),
   focusChapter: chapter => {
     if (displayLevel.value === 'chapters') canvas.value?.focusNode(chapter)

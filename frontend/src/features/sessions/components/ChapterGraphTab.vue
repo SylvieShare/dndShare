@@ -36,6 +36,7 @@
         :workspace-mode="workspaceMode"
         :workspace-chapter-id="workspaceChapterId"
         :workspace-scene="workspaceScene"
+        :workspace-level="workspaceLevel"
         :chapter-linking-from="linkingFrom"
         @node-click="openNodeMenu"
         @node-double-click="openScenes"
@@ -52,6 +53,7 @@
         @chapter-ancestor-click="openChapterAncestorMenu"
         @scene-count="graph.setSceneCount"
         @send-block-to-combat="$emit('send-block-to-combat', $event)"
+        @workspace-context-change="$emit('workspace-context-change', $event)"
       />
       <slot />
     </div>
@@ -71,7 +73,7 @@
         </RowActionItem>
         <template v-else>
           <RowActionItem action="view" tone="accent" @click="openScenes(activeChapter)">
-            Сценарии главы
+            Открыть сценарии
             <template #suffix>{{ activeChapter.sceneCount ?? 0 }}</template>
           </RowActionItem>
           <RowActionItem
@@ -185,13 +187,14 @@ const props = defineProps({
   workspaceChapterId: { type: [Number, String], default: null },
   workspaceMode: { type: String, default: null },
   workspaceScene: { type: Object, default: null },
+  workspaceLevel: { type: String, default: 'chapters' },
   diceOpen: { type: Boolean, default: true },
   musicOpen: { type: Boolean, default: true },
   eventsOpen: { type: Boolean, default: true },
 })
 const emit = defineEmits([
   'open-scenes', 'open-combat', 'edit-session', 'close-workspace',
-  'send-block-to-combat', 'toggle-dice', 'toggle-music', 'toggle-events',
+  'send-block-to-combat', 'workspace-context-change', 'toggle-dice', 'toggle-music', 'toggle-events',
 ])
 
 const canvas = ref(null)

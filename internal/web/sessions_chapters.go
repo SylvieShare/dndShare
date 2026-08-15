@@ -10,6 +10,7 @@ import (
 )
 
 var chapterStatuses = map[string]bool{
+	"none":  true,
 	"draft": true, "planned": true, "ready": true, "available": true,
 	"in_progress": true, "paused": true, "completed": true, "failed": true,
 	"skipped": true, "cancelled": true,

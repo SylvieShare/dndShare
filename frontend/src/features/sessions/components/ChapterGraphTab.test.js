@@ -94,7 +94,7 @@ describe('chapter graph workspace', () => {
     expect(node).toContain('position: absolute;\n  inset: 0;')
     expect(node).toContain('backdrop-filter: blur(12px)')
     expect(node).toContain('chapter.sceneCount')
-    expect(tab).toContain('Сценарии главы')
+    expect(tab).toContain('Открыть сценарии')
   })
 
   it('uses one physical canvas and swaps only its graph payload', () => {
@@ -153,6 +153,7 @@ describe('chapter graph workspace', () => {
     expect(hotkeyHints).toContain('left: 14px;')
     expect(hotkeyHints).toContain('{{ modifier }} + клик')
     expect(hotkeyHints).toContain('{{ modifier }} + A')
+    expect(hotkeyHints).toContain('<kbd>Двойной клик</kbd><span>открыть вложенный холст</span>')
     expect(hotkeyHints).toContain('<kbd>+ / −</kbd>')
     expect(hotkeyHints).toContain('(pointer: coarse)')
     expect(hotkeys).toContain("event.code === 'KeyA'")

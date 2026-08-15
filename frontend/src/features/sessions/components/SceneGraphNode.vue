@@ -12,6 +12,7 @@
     <div class="scene-graph-node-copy">
       <div class="scene-graph-node-heading">
         <span>СЦЕНАРИЙ</span>
+        <small :style="{ color: status.color }">{{ status.label }}</small>
       </div>
       <strong>{{ scene.name }}</strong>
       <small>{{ context ? 'В контексте боя' : spotlight ? 'Двойной клик — к сценариям' : 'Двойной клик — открыть холст' }}</small>
@@ -22,6 +23,7 @@
 <script setup>
 import { computed } from 'vue'
 import { sessionImagePresetUrl } from '@/features/sessions/lib/sessionImages'
+import { sceneStatus } from '@/features/sessions/lib/chapterGraph'
 
 const props = defineProps({
   scene: { type: Object, required: true },
@@ -31,6 +33,7 @@ const props = defineProps({
 })
 
 const imageUrl = computed(() => sessionImagePresetUrl(props.scene.imagePresetKey))
+const status = computed(() => sceneStatus(props.scene.status))
 </script>
 
 <style scoped>
@@ -98,6 +101,7 @@ const imageUrl = computed(() => sessionImagePresetUrl(props.scene.imagePresetKey
 }
 .scene-graph-node-heading { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
 .scene-graph-node-heading > span { color: var(--accent-soft); font-size: 9px; font-weight: 850; letter-spacing: 0.09em; }
+.scene-graph-node-heading > small { font-size: 9px; font-weight: 750; }
 .scene-graph-node-copy strong {
   overflow: hidden;
   color: var(--text-1);

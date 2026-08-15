@@ -9,7 +9,11 @@ import {
   updateSceneEdge as apiUpdateEdge,
   updateScene as apiUpdateScene,
 } from '@/shared/api/scenesApi'
-import { deleteGraphNodes as apiDeleteGraphNodes, moveGraphNodePositions as apiMovePositions } from '@/shared/api/sessionsApi'
+import {
+  deleteGraphNodes as apiDeleteGraphNodes,
+  moveGraphNodePositions as apiMovePositions,
+  updateGraphNodeStatuses as apiUpdateGraphNodeStatuses,
+} from '@/shared/api/sessionsApi'
 
 export function useSceneGraph({ sessionUuid, chapterId }) {
   const scenes = ref([])
@@ -78,6 +82,12 @@ export function useSceneGraph({ sessionUuid, chapterId }) {
       !keys.has(String(edge.fromSceneId)) && !keys.has(String(edge.toSceneId)))
   }
 
+  async function updateSceneStatuses(ids, status) {
+    await apiUpdateGraphNodeStatuses(sessionUuid, 'scenes', ids, status)
+    const keys = new Set(ids.map(String))
+    scenes.value = scenes.value.map(scene => keys.has(String(scene.id)) ? { ...scene, status } : scene)
+  }
+
   function setLocalPosition(sceneId, x, y) {
     scenes.value = scenes.value.map(scene => scene.id === sceneId
       ? { ...scene, positionX: x, positionY: y }
@@ -123,7 +133,7 @@ export function useSceneGraph({ sessionUuid, chapterId }) {
 
   return {
     scenes, edges, loading, loaded, error,
-    load, reset, createScene, updateScene, deleteScene, deleteScenes,
+    load, reset, createScene, updateScene, deleteScene, deleteScenes, updateSceneStatuses,
     setLocalPosition, setLocalPositions, savePosition, savePositions, createEdge, updateEdge, deleteEdge,
   }
 }

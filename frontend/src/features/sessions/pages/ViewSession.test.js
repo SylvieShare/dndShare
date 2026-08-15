@@ -106,6 +106,7 @@ describe('ViewSession participant rail', () => {
     expect(styles).toMatch(/\.workspace-dock--right\s*\{[^}]*pointer-events:\s*none;/s)
     expect(styles).toMatch(/\.workspace-dock--right > \.workspace-tool-tile\s*\{[^}]*pointer-events:\s*auto;/s)
     expect(styles).toMatch(/\.campaign-graph\s*\{[^}]*--chapter-safe-right:\s*0px;/s)
+    expect(styles).toMatch(/\.campaign-workspace--combat \.campaign-graph\s*\{[^}]*--chapter-safe-right:\s*336px;/s)
   })
 
   it('places the event log below the music panel', () => {
@@ -171,7 +172,11 @@ describe('ViewSession participant rail', () => {
     expect(workspaceSource).toContain('localStorage.setItem(sessionWorkspaceKey(sessionUuid)')
     expect(workspaceSource).toContain('async function restoreWorkspace()')
     expect(workspaceSource).toContain('sceneId: sceneId ?? null')
+    expect(workspaceSource).toContain('level,')
     expect(workspaceSource).toContain('await getSceneGraph(sessionUuid, chapter.id)')
+    expect(workspaceSource).toContain("saved.level === 'blocks' && scene ? 'blocks' : 'scenes'")
+    expect(workspaceSource).toContain('const returnToNested = workspaceMode.value === \'combat\'')
+    expect(source).toContain('@workspace-context-change="updateWorkspaceContext"')
     expect(workspaceSource).toContain('clearSavedWorkspace()')
     expect(source).toContain('await nextTick()\n  await restoreWorkspace()')
   })

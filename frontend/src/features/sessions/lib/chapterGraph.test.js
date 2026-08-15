@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import {
   CHAPTER_PRESETS,
   CHAPTER_STATUSES,
+  SCENE_STATUSES,
   currentChapterLabel,
   edgeMidpoint,
   edgePath,
@@ -22,8 +23,10 @@ describe('chapter graph presentation helpers', () => {
 
   it('exposes the complete status and image preset catalogues', () => {
     expect(CHAPTER_STATUSES.map(item => item.key)).toEqual(expect.arrayContaining([
-      'draft', 'ready', 'available', 'in_progress', 'paused', 'completed', 'failed', 'skipped', 'cancelled',
+      'none', 'draft', 'ready', 'available', 'in_progress', 'paused', 'completed', 'failed', 'skipped', 'cancelled',
     ]))
+    expect(SCENE_STATUSES.find(item => item.key === 'none')?.label).toBe('Без статуса')
+    expect(SCENE_STATUSES.find(item => item.key === 'completed')?.label).toBe('Завершён')
     expect(Object.fromEntries(CHAPTER_STATUSES.map(item => [item.key, item.color]))).toMatchObject({
       planned: 'var(--info)',
       ready: 'var(--accent-hover)',

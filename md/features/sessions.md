@@ -172,8 +172,10 @@ pressing `Esc` clears selection, and changing graph levels also resets it. Two
 or more selected nodes show a bottom-center action bar inside the safe frame
 with the selected count, atomic bulk deletion and clear-selection. On the
 chapter canvas the bar also provides the canonical color-coded status choices
-and applies the chosen status atomically to every selected chapter; scenarios
-and blocks have no status field, so that action is not shown on their canvases.
+and applies the chosen status atomically to every selected chapter. The scenario
+canvas exposes the equivalent action with scenario-specific labels; blocks have
+no status field. Both catalogues begin with the neutral `none` / `Без статуса`
+value, which is the default for newly created chapters and scenarios.
 Bulk chapter deletion fails as a whole when any selected chapter still contains
 scenarios; bulk scenario deletion also removes its blocks.
 Editable desktop canvases show a frameless, text-only hotkey legend at the
@@ -181,7 +183,8 @@ bottom-left below the participant rail. It reflects the active behavior:
 `Ctrl`/`Cmd` + click toggles a node, modifier-drag adds nodes through a frame,
 `Ctrl`/`Cmd` + `A` selects every node in the active graph, `Delete`/`Backspace`
 opens the existing confirmed bulk deletion, `Esc` cancels the active link or
-selection, and `+`/`-` changes canvas zoom. The legend is hidden on touch and
+selection, `+`/`-` changes canvas zoom, and double click opens the nested
+canvas. The legend is hidden on touch and
 mobile layouts.
 Drilling into a narrative level waits for the 420ms spotlight movement to reach
 its ancestor position, then swaps the graph identity, payload and preloaded
@@ -192,7 +195,7 @@ position for one painted frame before animating it to its saved coordinates.
 Combat still overlaps its content reveal with the chapter movement; the
 participant rail width uses the same duration and easing as that movement, both
 on entry and exit. Reduced-motion users skip the delay.
-A regular node click opens its action popover: open the chapter scenarios, mark
+A regular node click opens its action popover: its first action explicitly opens the chapter scenarios, then it can mark
 it as `Сейчас здесь`, change status, edit, start a transition, move to another
 arc or delete.
 Status choices use the same configured semantic colors as the status badge on
@@ -230,9 +233,11 @@ unchanged and the other nodes and edges fade out. Once the swap completes it is
 rendered as a fixed ancestor card above the same canvas. The scenario graph has
 its own persisted viewport, coordinates and directed edges. Its illustrated
 nodes can be dragged and linked through the same right-side port pattern. The
-DM creates or edits both the scenario name and its required shared-catalogue
-image, or deletes the scenario. A single click anywhere on a scenario card
-opens its edit/delete menu without a separate ellipsis trigger; double click
+DM creates or edits the scenario name, lifecycle status and required shared-catalogue
+image, or deletes the scenario. Its status badge uses the same semantic color
+as the menu and bulk action. A single click anywhere on a scenario card
+opens a menu whose first action is `Открыть элементы`, followed by status,
+edit and delete actions, without a separate ellipsis trigger; double click
 still opens the scenario block canvas.
 
 Double-clicking a scenario switches the same physical canvas to the third graph.
@@ -277,10 +282,14 @@ an open block canvas preserves the visible chapter and scenario as two pinned
 context cards; the standalone combat header sits to their right. The command-bar
 combat action reads the same currently displayed canvas context, while a chapter-only
 canvas falls back to the current chapter. Chapter and scenario ids are saved with
-the workspace state and restored after reload. Without a scenario context the
+the active narrative level in workspace state and restored after reload. Closing
+combat returns to that saved scenario or block canvas instead of resetting the
+user to chapters. Without a scenario context the
 combat header sits immediately to the right of the focused chapter;
 combatants remain independent tiles below it rather than being wrapped in one
-central card. The header groups compact icon actions for starting or ending
+central card. On desktop the combat workspace retains the same reserved right
+boundary whether the tool rail is open or empty, so hiding all right-side tools
+does not stretch the central combat column. The header groups compact icon actions for starting or ending
 combat and turn navigation. Its growing secondary action row uses labelled
 groups only for categories that currently contain multiple actions; single
 public-screen, pre-combat roll and dead-combatant actions remain direct icon

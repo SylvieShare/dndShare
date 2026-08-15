@@ -90,9 +90,10 @@ describe('session graph canvas', () => {
     expect(sessionsApiSource).toContain('/graph-nodes/delete')
   })
 
-  it('offers canonical bulk statuses only for chapter nodes', () => {
-    expect(source).toContain(":status-options=\"displayLevel === 'chapters' ? CHAPTER_STATUSES : []\"")
-    expect(source).toContain("$emit('change-nodes-status', status, ids)")
+  it('offers canonical bulk statuses for chapter and scenario nodes', () => {
+    expect(source).toContain("displayLevel === 'scenes' ? SCENE_STATUSES : []")
+    expect(source).toContain("emit('change-nodes-status', status, ids)")
+    expect(source).toContain('sceneGraph.updateSceneStatuses(ids, status)')
     expect(sessionsApiSource).toContain('/graph-nodes/status')
   })
 
@@ -131,6 +132,8 @@ describe('session graph canvas', () => {
     expect(sceneSource).not.toContain('RowActionMenu')
     expect(source).toContain('sceneMenus.value?.openFor(node, anchor)')
     expect(sceneMenuSource).toContain('>Редактировать</RowActionItem>')
+    expect(sceneMenuSource).toContain('>Открыть элементы</RowActionItem>')
+    expect(sceneMenuSource).toContain('Изменить статус')
     expect(sceneMenuSource).toContain('>Удалить</RowActionItem>')
   })
 
@@ -152,6 +155,6 @@ describe('session graph canvas', () => {
     expect(sessionPageSource).toContain('itemsApi.byIds(handbookIds)')
     expect(sessionPageSource).toContain('encounter.addNpc(item, count)')
     expect(sessionPageSource).toContain('encounter.addSimpleNpc(creature)')
-    expect(sessionPageSource).toContain('await toggleCombatWorkspace({ chapter, scene })')
+    expect(sessionPageSource).toContain('await toggleCombatWorkspace({ chapter, scene, level })')
   })
 })

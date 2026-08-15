@@ -35,7 +35,7 @@ func (s *Server) routesSessionGraphBulk(mux *http.ServeMux) {
 }
 
 func validGraphStatus(level, status string) bool {
-	return level == "chapters" && chapterStatuses[status]
+	return (level == "chapters" || level == "scenes") && chapterStatuses[status]
 }
 
 func validGraphLevel(level string) bool {

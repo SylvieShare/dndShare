@@ -13,6 +13,7 @@ export function useSessionWorkspace({ sessionUuid, chapterGraph }) {
   const workspaceMode = ref(null)
   const workspaceChapterId = ref(null)
   const workspaceScene = ref(null)
+  const workspaceLevel = ref('chapters')
   const workspaceClosing = ref(false)
   const workspaceRevealed = ref(false)
   const workspaceMotionActive = ref(false)
@@ -26,12 +27,13 @@ export function useSessionWorkspace({ sessionUuid, chapterGraph }) {
     workspaceMotionActive.value ? workspaceMode.value : null
   )
 
-  function saveWorkspace(mode, chapterId, sceneId = null) {
+  function saveWorkspace(mode, chapterId, sceneId = null, level = 'chapters') {
     try {
       localStorage.setItem(sessionWorkspaceKey(sessionUuid), JSON.stringify({
         mode,
         chapterId: chapterId ?? null,
         sceneId: sceneId ?? null,
+        level,
       }))
     } catch { /* ignore unavailable storage */ }
   }
@@ -68,22 +70,23 @@ export function useSessionWorkspace({ sessionUuid, chapterGraph }) {
     }, delay)
   }
 
-  function showWorkspace(mode, chapter, scene = null) {
+  function showWorkspace(mode, chapter, scene = null, level = mode === 'scenes' ? 'scenes' : 'chapters') {
     cancelTimers()
     workspaceChapterId.value = chapter?.id ?? null
-    workspaceScene.value = mode === 'combat' ? scene : null
+    workspaceScene.value = scene
+    workspaceLevel.value = level
     workspaceMode.value = mode
     workspaceClosing.value = false
     workspaceRevealed.value = false
     workspaceMotionActive.value = true
-    saveWorkspace(mode, chapter?.id, workspaceScene.value?.id)
+    saveWorkspace(mode, chapter?.id, workspaceScene.value?.id, workspaceLevel.value)
     revealWorkspace()
   }
 
   async function openChapterScenes(chapter) {
     if (!chapterGraph.loaded.value) await chapterGraph.load()
     chapterGraph.selectArc(chapter.arcId)
-    showWorkspace('scenes', chapter)
+    showWorkspace('scenes', chapter, null, 'scenes')
   }
 
   async function toggleCombatWorkspace(context = {}) {
@@ -97,7 +100,9 @@ export function useSessionWorkspace({ sessionUuid, chapterGraph }) {
     if (contextualChapter) chapterGraph.selectArc(contextualChapter.arcId)
     await nextTick()
     await nextTick()
-    showWorkspace('combat', chapter, contextualChapter ? context.scene : null)
+    const scene = contextualChapter ? context.scene : null
+    const level = scene && context.level === 'blocks' ? 'blocks' : contextualChapter ? 'scenes' : 'chapters'
+    showWorkspace('combat', chapter, scene, level)
   }
 
   async function restoreWorkspace() {
@@ -115,7 +120,7 @@ export function useSessionWorkspace({ sessionUuid, chapterGraph }) {
         const restoredScene = contextIndex >= 0 ? graph.scenes[contextIndex] : null
         scene = restoredScene ? { ...restoredScene, contextIndex } : null
       }
-      showWorkspace('combat', chapter, scene)
+      showWorkspace('combat', chapter, scene, saved.level || (scene ? 'blocks' : 'chapters'))
       return true
     }
 
@@ -125,22 +130,50 @@ export function useSessionWorkspace({ sessionUuid, chapterGraph }) {
       return false
     }
     chapterGraph.selectArc(chapter.arcId)
-    showWorkspace('scenes', chapter)
+    let scene = null
+    if (saved.sceneId != null) {
+      const graph = await getSceneGraph(sessionUuid, chapter.id).catch(() => null)
+      const contextIndex = graph?.scenes?.findIndex(item => item.id === saved.sceneId) ?? -1
+      const restoredScene = contextIndex >= 0 ? graph.scenes[contextIndex] : null
+      scene = restoredScene ? { ...restoredScene, contextIndex } : null
+    }
+    showWorkspace('scenes', chapter, scene, saved.level === 'blocks' && scene ? 'blocks' : 'scenes')
     return true
+  }
+
+  function updateWorkspaceContext({ level, scene } = {}) {
+    if (workspaceMode.value !== 'scenes') return
+    workspaceLevel.value = level === 'blocks' ? 'blocks' : 'scenes'
+    workspaceScene.value = scene ?? null
+    saveWorkspace('scenes', workspaceChapterId.value, workspaceScene.value?.id, workspaceLevel.value)
   }
 
   function closeWorkspace() {
     if (!workspaceMode.value || workspaceClosing.value) return
-    clearSavedWorkspace()
+    const returnToNested = workspaceMode.value === 'combat'
+      && ['scenes', 'blocks'].includes(workspaceLevel.value)
+      && workspaceChapterId.value != null
+    if (!returnToNested) clearSavedWorkspace()
     workspaceClosing.value = true
     workspaceMotionActive.value = false
     if (revealTimer != null) clearTimeout(revealTimer)
     revealTimer = null
     const delay = workspaceRevealed.value ? CLOSE_ANIMATION_MS : 0
     closeTimer = setTimeout(() => {
+      if (returnToNested) {
+        workspaceMode.value = 'scenes'
+        workspaceClosing.value = false
+        workspaceRevealed.value = false
+        workspaceMotionActive.value = true
+        saveWorkspace('scenes', workspaceChapterId.value, workspaceScene.value?.id, workspaceLevel.value)
+        revealWorkspace()
+        closeTimer = null
+        return
+      }
       workspaceMode.value = null
       workspaceChapterId.value = null
       workspaceScene.value = null
+      workspaceLevel.value = 'chapters'
       workspaceClosing.value = false
       workspaceRevealed.value = false
       workspaceMotionActive.value = false
@@ -154,12 +187,14 @@ export function useSessionWorkspace({ sessionUuid, chapterGraph }) {
     workspaceMode,
     workspaceChapter,
     workspaceScene,
+    workspaceLevel,
     workspaceClosing,
     workspaceRevealed,
     workspaceMotionMode,
     openChapterScenes,
     toggleCombatWorkspace,
     restoreWorkspace,
+    updateWorkspaceContext,
     closeWorkspace,
   }
 }

@@ -1,6 +1,7 @@
 import { SESSION_IMAGE_PRESETS, sessionImagePresetUrl, sessionImageUrl } from '@/features/sessions/lib/sessionImages'
 
 export const CHAPTER_STATUSES = [
+  { key: 'none', label: 'Без статуса', tone: 'muted', color: 'var(--text-muted)' },
   { key: 'draft', label: 'Черновик', tone: 'muted', color: 'var(--text-2)' },
   { key: 'planned', label: 'Запланирована', tone: 'info', color: 'var(--info)' },
   { key: 'ready', label: 'Подготовлена', tone: 'violet', color: 'var(--accent-hover)' },
@@ -13,13 +14,32 @@ export const CHAPTER_STATUSES = [
   { key: 'cancelled', label: 'Отменена', tone: 'danger', color: 'var(--danger)' },
 ]
 
+export const SCENE_STATUSES = CHAPTER_STATUSES.map(status => ({
+  ...status,
+  label: ({
+    planned: 'Запланирован',
+    ready: 'Подготовлен',
+    available: 'Доступен',
+    in_progress: 'В процессе',
+    paused: 'Приостановлен',
+    completed: 'Завершён',
+    failed: 'Провален',
+    skipped: 'Пропущен',
+    cancelled: 'Отменён',
+  })[status.key] || status.label,
+}))
+
 export const CHAPTER_PRESETS = SESSION_IMAGE_PRESETS
 
 export const CHAPTER_NODE_WIDTH = 236
 export const CHAPTER_NODE_HEIGHT = 156
 
 export function chapterStatus(key) {
-  return CHAPTER_STATUSES.find(item => item.key === key) ?? CHAPTER_STATUSES[1]
+  return CHAPTER_STATUSES.find(item => item.key === key) ?? CHAPTER_STATUSES[0]
+}
+
+export function sceneStatus(key) {
+  return SCENE_STATUSES.find(item => item.key === key) ?? SCENE_STATUSES[0]
 }
 
 export function chapterPresetUrl(key) {

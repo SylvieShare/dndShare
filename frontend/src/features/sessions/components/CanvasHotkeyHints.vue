@@ -4,6 +4,7 @@
     <kbd>{{ modifier }} + клик</kbd><span>выбрать узел</span>
     <kbd>{{ modifier }} + протянуть</kbd><span>выделить рамкой</span>
     <kbd>{{ modifier }} + A</kbd><span>выбрать всё</span>
+    <kbd>Двойной клик</kbd><span>открыть вложенный холст</span>
     <kbd>{{ deleteKey }}</kbd><span>удалить выбранное</span>
     <kbd>Esc</kbd><span>снять выделение</span>
     <kbd>+ / −</kbd><span>изменить масштаб</span>

@@ -266,7 +266,7 @@ CREATE TABLE IF NOT EXISTS dndshare.session_chapter (
     "number"           text NOT NULL,
     "name"             text NOT NULL,
     description        text NULL,
-    status             varchar(32) DEFAULT 'planned' NOT NULL,
+    status             varchar(32) DEFAULT 'none' NOT NULL,
     image_preset_key   varchar(32) NULL,
     custom_image_id    int8 NULL REFERENCES dndshare.storage_image(id),
     image_focal_x      float8 DEFAULT 0.5 NOT NULL,
@@ -278,7 +278,8 @@ CREATE TABLE IF NOT EXISTS dndshare.session_chapter (
 
 ALTER TABLE dndshare.session_chapter ADD COLUMN IF NOT EXISTS arc_id int8 NULL;
 ALTER TABLE dndshare.session_chapter ADD COLUMN IF NOT EXISTS description text NULL;
-ALTER TABLE dndshare.session_chapter ADD COLUMN IF NOT EXISTS status varchar(32) DEFAULT 'planned' NOT NULL;
+ALTER TABLE dndshare.session_chapter ADD COLUMN IF NOT EXISTS status varchar(32) DEFAULT 'none' NOT NULL;
+ALTER TABLE dndshare.session_chapter ALTER COLUMN status SET DEFAULT 'none';
 ALTER TABLE dndshare.session_chapter ADD COLUMN IF NOT EXISTS image_preset_key varchar(32) NULL;
 ALTER TABLE dndshare.session_chapter ADD COLUMN IF NOT EXISTS custom_image_id int8 NULL REFERENCES dndshare.storage_image(id);
 ALTER TABLE dndshare.session_chapter ADD COLUMN IF NOT EXISTS image_focal_x float8 DEFAULT 0.5 NOT NULL;
@@ -307,12 +308,11 @@ DO $$ BEGIN
         ALTER TABLE dndshare.session_chapter
             ADD CONSTRAINT session_chapter_arc_number_key UNIQUE (arc_id, "number");
     END IF;
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'session_chapter_status_check') THEN
-        ALTER TABLE dndshare.session_chapter ADD CONSTRAINT session_chapter_status_check CHECK (
-            status IN ('draft', 'planned', 'ready', 'available', 'in_progress',
-                       'paused', 'completed', 'failed', 'skipped', 'cancelled')
-        );
-    END IF;
+    ALTER TABLE dndshare.session_chapter DROP CONSTRAINT IF EXISTS session_chapter_status_check;
+    ALTER TABLE dndshare.session_chapter ADD CONSTRAINT session_chapter_status_check CHECK (
+        status IN ('none', 'draft', 'planned', 'ready', 'available', 'in_progress',
+                   'paused', 'completed', 'failed', 'skipped', 'cancelled')
+    );
     IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'session_chapter_image_source_check') THEN
         ALTER TABLE dndshare.session_chapter ADD CONSTRAINT session_chapter_image_source_check CHECK (
             NOT (image_preset_key IS NOT NULL AND custom_image_id IS NOT NULL)
@@ -345,6 +345,7 @@ CREATE TABLE IF NOT EXISTS dndshare.session_scene (
     id         bigserial NOT NULL,
     chapter_id int8 NOT NULL REFERENCES dndshare.session_chapter(id),
     "name"     varchar NOT NULL,
+    status     varchar(32) DEFAULT 'none' NOT NULL,
     image_preset_key varchar DEFAULT 'discovery' NOT NULL,
     position_x float8 DEFAULT 0 NOT NULL,
     position_y float8 DEFAULT 0 NOT NULL,
@@ -352,7 +353,14 @@ CREATE TABLE IF NOT EXISTS dndshare.session_scene (
 );
 ALTER TABLE dndshare.session_scene ADD COLUMN IF NOT EXISTS position_x float8 NULL;
 ALTER TABLE dndshare.session_scene ADD COLUMN IF NOT EXISTS position_y float8 NULL;
+ALTER TABLE dndshare.session_scene ADD COLUMN IF NOT EXISTS status varchar(32) DEFAULT 'none' NOT NULL;
+ALTER TABLE dndshare.session_scene ALTER COLUMN status SET DEFAULT 'none';
 ALTER TABLE dndshare.session_scene ADD COLUMN IF NOT EXISTS image_preset_key varchar NULL;
+ALTER TABLE dndshare.session_scene DROP CONSTRAINT IF EXISTS session_scene_status_check;
+ALTER TABLE dndshare.session_scene ADD CONSTRAINT session_scene_status_check CHECK (
+    status IN ('none', 'draft', 'planned', 'ready', 'available', 'in_progress',
+               'paused', 'completed', 'failed', 'skipped', 'cancelled')
+);
 CREATE INDEX IF NOT EXISTS idx_session_scene_chapter_id ON dndshare.session_scene USING btree (chapter_id);
 
 UPDATE dndshare.session_scene

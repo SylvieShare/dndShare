@@ -1,6 +1,19 @@
 <template>
   <BasePopover v-model:open="open" :anchor="anchor" :min-width="210" placement="bottom-start">
     <div v-if="scene" class="scene-graph-menu">
+      <RowActionItem action="view" tone="accent" @click="run('open-scene', scene)">Открыть элементы</RowActionItem>
+      <RowActionSubmenu label="Статус сценария" :min-width="230">
+        <template #trigger="{ open: submenuOpen }">
+          <RowActionItem :icon="ListChecks" submenu :submenu-open="submenuOpen">Изменить статус</RowActionItem>
+        </template>
+        <RowActionItem
+          v-for="status in SCENE_STATUSES"
+          :key="status.key"
+          :icon="scene.status === status.key ? Check : Circle"
+          :style="{ color: status.color }"
+          @click="changeStatus(status.key)"
+        >{{ status.label }}</RowActionItem>
+      </RowActionSubmenu>
       <RowActionItem action="edit" @click="run('edit', scene)">Редактировать</RowActionItem>
       <RowActionItem action="delete" tone="danger" @click="run('delete', scene)">Удалить</RowActionItem>
     </div>
@@ -9,10 +22,12 @@
 
 <script setup>
 import { ref } from 'vue'
-import { BasePopover } from '@sylvieshare/share-ui'
+import { Check, Circle, ListChecks } from '@lucide/vue'
+import { BasePopover, RowActionSubmenu } from '@sylvieshare/share-ui'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
+import { SCENE_STATUSES } from '@/features/sessions/lib/chapterGraph'
 
-const emit = defineEmits(['edit', 'delete'])
+const emit = defineEmits(['open-scene', 'status', 'edit', 'delete'])
 const open = ref(false)
 const anchor = ref(null)
 const scene = ref(null)
@@ -30,6 +45,12 @@ function close() {
 function run(event, value) {
   close()
   emit(event, value)
+}
+
+function changeStatus(status) {
+  const activeScene = scene.value
+  close()
+  emit('status', activeScene, status)
 }
 
 defineExpose({ openFor, close })

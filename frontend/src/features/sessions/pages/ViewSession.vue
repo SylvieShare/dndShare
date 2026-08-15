@@ -52,6 +52,7 @@
         :locked="!!workspaceMode"
         :workspace-chapter-id="workspaceChapter?.id ?? null"
         :workspace-scene="workspaceScene"
+        :workspace-level="workspaceLevel"
         :workspace-mode="workspaceMotionMode"
         :dice-open="diceOpen"
         :music-open="musicOpen"
@@ -62,6 +63,7 @@
         @toggle-music="musicOpen = !musicOpen"
         @toggle-events="eventsOpen = !eventsOpen"
         @send-block-to-combat="sendBlockToCombat"
+        @workspace-context-change="updateWorkspaceContext"
         @edit-session="openEdit"
         @close-workspace="closeWorkspace"
       >
@@ -340,7 +342,7 @@ function setEncounterPlayerInitiative(charId, value) {
   if (combatant) encounter.setInitiative(combatant, value)
 }
 
-async function sendBlockToCombat({ block, chapter, scene }) {
+async function sendBlockToCombat({ block, chapter, scene, level }) {
   combatImportError.value = ''
   const creatures = Array.isArray(block?.data?.creatures) ? block.data.creatures : []
   const handbookIds = [...new Set(creatures
@@ -364,7 +366,7 @@ async function sendBlockToCombat({ block, chapter, scene }) {
     for (let index = 0; index < count; index += 1) encounter.addSimpleNpc(creature)
   }
 
-  await toggleCombatWorkspace({ chapter, scene })
+  await toggleCombatWorkspace({ chapter, scene, level })
 }
 
 watch(session, (value) => {
@@ -379,12 +381,14 @@ const {
   workspaceMode,
   workspaceChapter,
   workspaceScene,
+  workspaceLevel,
   workspaceClosing,
   workspaceRevealed,
   workspaceMotionMode,
   openChapterScenes,
   toggleCombatWorkspace,
   restoreWorkspace,
+  updateWorkspaceContext,
   closeWorkspace,
 } = useSessionWorkspace({ sessionUuid, chapterGraph })
 

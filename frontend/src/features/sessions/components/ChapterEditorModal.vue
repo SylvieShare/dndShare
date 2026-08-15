@@ -77,7 +77,7 @@ const draft = reactive({
   number: props.chapter?.number ?? '',
   name: props.chapter?.name ?? '',
   description: props.chapter?.description ?? '',
-  status: props.chapter?.status ?? 'planned',
+  status: props.chapter?.status ?? 'none',
   imagePresetKey: props.chapter?.imagePresetKey ?? 'city',
   customImageId: props.chapter?.customImageId ?? null,
   imageFocalX: props.chapter?.imageFocalX ?? 0.5,

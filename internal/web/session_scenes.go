@@ -117,6 +117,7 @@ func (s *Server) handleCreateScene(w http.ResponseWriter, r *http.Request) {
 	}
 	var req struct {
 		Name           string  `json:"name"`
+		Status         string  `json:"status"`
 		ImagePresetKey string  `json:"imagePresetKey"`
 		X              float64 `json:"x"`
 		Y              float64 `json:"y"`
@@ -130,12 +131,16 @@ func (s *Server) handleCreateScene(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "")
 		return
 	}
+	if !chapterStatuses[req.Status] {
+		badRequest(w, "Некорректный статус сценария")
+		return
+	}
 	imagePresetKey := strings.TrimSpace(req.ImagePresetKey)
 	if !sessionImagePresets[imagePresetKey] {
 		badRequest(w, "Некорректный пресет изображения")
 		return
 	}
-	scene, err := s.store.CreateScene(r.Context(), chapterID, name, imagePresetKey, req.X, req.Y)
+	scene, err := s.store.CreateScene(r.Context(), chapterID, name, req.Status, imagePresetKey, req.X, req.Y)
 	if err != nil {
 		serverError(w, err)
 		return
@@ -162,6 +167,7 @@ func (s *Server) handleUpdateScene(w http.ResponseWriter, r *http.Request) {
 	}
 	var req struct {
 		Name           string `json:"name"`
+		Status         string `json:"status"`
 		ImagePresetKey string `json:"imagePresetKey"`
 	}
 	if err := decodeJSON(r, &req); err != nil {
@@ -173,12 +179,16 @@ func (s *Server) handleUpdateScene(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "")
 		return
 	}
+	if !chapterStatuses[req.Status] {
+		badRequest(w, "Некорректный статус сценария")
+		return
+	}
 	imagePresetKey := strings.TrimSpace(req.ImagePresetKey)
 	if !sessionImagePresets[imagePresetKey] {
 		badRequest(w, "Некорректный пресет изображения")
 		return
 	}
-	if err := s.store.UpdateScene(r.Context(), sceneID, name, imagePresetKey); err != nil {
+	if err := s.store.UpdateScene(r.Context(), sceneID, name, req.Status, imagePresetKey); err != nil {
 		serverError(w, err)
 		return
 	}

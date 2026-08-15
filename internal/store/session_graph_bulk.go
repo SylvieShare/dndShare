@@ -67,10 +67,10 @@ func (s *Store) UpdateGraphNodePositions(ctx context.Context, sessionID int64, l
 	return tx.Commit(ctx)
 }
 
-// UpdateGraphNodeStatus atomically updates chapter nodes after validating that
+// UpdateGraphNodeStatus atomically updates chapter or scene nodes after validating that
 // every requested node belongs to the session.
 func (s *Store) UpdateGraphNodeStatus(ctx context.Context, sessionID int64, level string, ids []int64, status string) error {
-	if level != "chapters" {
+	if level != "chapters" && level != "scenes" {
 		return ErrNotFound
 	}
 	tx, err := s.pool.Begin(ctx)
@@ -78,9 +78,14 @@ func (s *Store) UpdateGraphNodeStatus(ctx context.Context, sessionID int64, leve
 		return err
 	}
 	defer tx.Rollback(ctx)
-	result, err := tx.Exec(ctx,
-		`UPDATE dndshare.session_chapter SET status = $3
-		 WHERE session_id = $1 AND id = ANY($2)`, sessionID, ids, status)
+	query := `UPDATE dndshare.session_chapter SET status = $3
+		 WHERE session_id = $1 AND id = ANY($2)`
+	if level == "scenes" {
+		query = `UPDATE dndshare.session_scene scene SET status = $3
+			 FROM dndshare.session_chapter chapter
+			 WHERE scene.chapter_id = chapter.id AND chapter.session_id = $1 AND scene.id = ANY($2)`
+	}
+	result, err := tx.Exec(ctx, query, sessionID, ids, status)
 	if err != nil {
 		return err
 	}
