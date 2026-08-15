@@ -53,21 +53,66 @@
       <slot />
     </div>
 
-    <ChapterGraphMenus
-      ref="menus"
-      :arcs="graph.arcs.value"
-      :current-chapter-id="graph.currentChapter.value?.id"
-      @open-scenes="openScenes"
-      @make-current="makeCurrent"
-      @change-status="changeStatus"
-      @edit-chapter="editChapter"
-      @start-link="startLink"
-      @move-chapter="prepareMove"
-      @delete-chapter="confirmChapterDelete"
-      @edit-edge="editEdge"
-      @reverse-edge="reverseEdge"
-      @delete-edge="confirmEdgeDelete"
-    />
+    <BasePopover
+      v-model:open="nodeMenuOpen"
+      :anchor="nodeAnchor"
+      :min-width="230"
+      placement="bottom-start"
+      role="menu"
+      :aria-label="activeChapter ? `Действия с главой ${activeChapter.number}` : 'Действия с главой'"
+    >
+      <template v-if="activeChapter">
+        <RowActionItem action="view" tone="accent" @click="openScenes(activeChapter)">
+          Сценарии главы
+          <template #suffix>{{ activeChapter.sceneCount ?? 0 }}</template>
+        </RowActionItem>
+        <RowActionItem
+          v-if="activeChapter.id !== graph.currentChapter.value?.id"
+          :icon="CircleDot"
+          @click="makeCurrent(activeChapter)"
+        >Сделать текущей</RowActionItem>
+        <RowActionSubmenu label="Статус главы" :min-width="230">
+          <template #trigger="{ open }">
+            <RowActionItem :icon="ListChecks" submenu :submenu-open="open">Изменить статус</RowActionItem>
+          </template>
+          <RowActionItem
+            v-for="status in CHAPTER_STATUSES"
+            :key="status.key"
+            :icon="activeChapter.status === status.key ? Check : Circle"
+            :tone="activeChapter.status === status.key ? 'accent' : 'default'"
+            @click="changeStatus(activeChapter, status.key)"
+          >{{ status.label }}</RowActionItem>
+        </RowActionSubmenu>
+        <RowActionItem action="edit" @click="editChapter(activeChapter)">Редактировать</RowActionItem>
+        <RowActionItem :icon="GitBranchPlus" @click="startLink(activeChapter)">Создать переход отсюда</RowActionItem>
+        <RowActionSubmenu v-if="otherArcs.length" label="Переместить в арку" :min-width="220">
+          <template #trigger="{ open }">
+            <RowActionItem :icon="FolderInput" submenu :submenu-open="open">Переместить в арку</RowActionItem>
+          </template>
+          <RowActionItem
+            v-for="arc in otherArcs"
+            :key="arc.id"
+            :icon="FolderInput"
+            @click="prepareMove(activeChapter, arc)"
+          >{{ romanNumeral(arc.order) }} · {{ arc.name }}</RowActionItem>
+        </RowActionSubmenu>
+        <RowActionItem action="delete" tone="danger" @click="confirmChapterDelete(activeChapter)">Удалить главу</RowActionItem>
+      </template>
+    </BasePopover>
+
+    <BasePopover
+      v-model:open="edgeMenuOpen"
+      :anchor="edgeAnchor"
+      :min-width="210"
+      role="menu"
+      aria-label="Действия с переходом"
+    >
+      <template v-if="activeEdge">
+        <RowActionItem action="edit" @click="editEdge(activeEdge)">Изменить подпись</RowActionItem>
+        <RowActionItem :icon="ArrowLeftRight" @click="reverseEdge(activeEdge)">Поменять направление</RowActionItem>
+        <RowActionItem action="delete" tone="danger" @click="confirmEdgeDelete(activeEdge)">Удалить переход</RowActionItem>
+      </template>
+    </BasePopover>
 
     <ArcEditorModal
       v-if="arcEditorOpen"
@@ -108,13 +153,15 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue'
+import { ArrowLeftRight, Check, Circle, CircleDot, FolderInput, GitBranchPlus, ListChecks } from '@lucide/vue'
 import ArcEditorModal from '@/features/sessions/components/ArcEditorModal.vue'
 import ChapterEdgeModal from '@/features/sessions/components/ChapterEdgeModal.vue'
 import ChapterEditorModal from '@/features/sessions/components/ChapterEditorModal.vue'
-import ChapterGraphMenus from '@/features/sessions/components/ChapterGraphMenus.vue'
 import ChapterGraphToolbar from '@/features/sessions/components/ChapterGraphToolbar.vue'
 import SessionGraphCanvas from '@/features/sessions/components/SessionGraphCanvas.vue'
-import { ConfirmDialog } from '@sylvieshare/share-ui'
+import RowActionItem from '@/shared/ui/RowActionItem.vue'
+import { BasePopover, ConfirmDialog, RowActionSubmenu } from '@sylvieshare/share-ui'
+import { CHAPTER_STATUSES, romanNumeral } from '@/features/sessions/lib/chapterGraph'
 
 const props = defineProps({
   graph: { type: Object, required: true },
@@ -134,9 +181,15 @@ const emit = defineEmits([
 ])
 
 const canvas = ref(null)
-const menus = ref(null)
 const actionError = ref('')
 const saving = ref(false)
+
+const nodeMenuOpen = ref(false)
+const nodeAnchor = ref(null)
+const activeChapter = ref(null)
+const edgeMenuOpen = ref(false)
+const edgeAnchor = ref(null)
+const activeEdge = ref(null)
 
 const arcEditorOpen = ref(false)
 const editingArc = ref(null)
@@ -150,6 +203,7 @@ const linkingFrom = ref(null)
 const confirmState = ref(null)
 
 const graph = props.graph
+const otherArcs = computed(() => graph.arcs.value.filter(arc => arc.id !== activeChapter.value?.arcId))
 const edgeEditorTitle = computed(() => {
   if (editingEdge.value) return 'Изменить переход'
   const from = pendingEdge.value?.from
@@ -165,16 +219,23 @@ function selectArc(id) {
 
 function openNodeMenu(chapter, anchor) {
   if (props.locked) return
-  menus.value?.openNode(chapter, anchor)
+  activeChapter.value = chapter
+  nodeAnchor.value = anchor
+  edgeMenuOpen.value = false
+  nodeMenuOpen.value = true
 }
 
 function openEdgeMenu(edge, anchor) {
   if (props.locked) return
-  menus.value?.openEdge(edge, anchor)
+  activeEdge.value = edge
+  edgeAnchor.value = anchor
+  nodeMenuOpen.value = false
+  edgeMenuOpen.value = true
 }
 
 function closeMenus() {
-  menus.value?.close()
+  nodeMenuOpen.value = false
+  edgeMenuOpen.value = false
 }
 
 function openArcCreate() {

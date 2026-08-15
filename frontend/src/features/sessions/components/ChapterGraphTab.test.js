@@ -10,7 +10,6 @@ const sessionCanvas = readFileSync(fileURLToPath(new URL('./SessionGraphCanvas.v
 const actionDock = readFileSync(fileURLToPath(new URL('./CanvasActionDock.vue', import.meta.url)), 'utf8')
 const toolbar = readFileSync(fileURLToPath(new URL('./ChapterGraphToolbar.vue', import.meta.url)), 'utf8')
 const node = readFileSync(fileURLToPath(new URL('./ChapterGraphNode.vue', import.meta.url)), 'utf8')
-const menus = readFileSync(fileURLToPath(new URL('./ChapterGraphMenus.vue', import.meta.url)), 'utf8')
 
 describe('chapter graph workspace', () => {
   it('compiles the graph tab', () => {
@@ -52,9 +51,11 @@ describe('chapter graph workspace', () => {
     expect(toolbar).toContain("$emit('move-arc', arc.id, -1)")
     expect(toolbar).toContain("$emit('create-arc')")
     expect(tab).toContain('@node-click="openNodeMenu"')
-    expect(menus).toContain('Изменить статус')
-    expect(menus.match(/<RowActionSubmenu/g)).toHaveLength(2)
-    expect(menus).toContain('Создать переход отсюда')
+    expect(tab).not.toContain('<ChapterGraphMenus')
+    expect(tab).toContain('Изменить статус')
+    expect(tab.match(/<RowActionSubmenu/g)).toHaveLength(2)
+    expect(tab).toContain('Создать переход отсюда')
+    expect(tab).toContain('<RowActionItem action="delete" tone="danger"')
     expect(canvas).toContain(':marker-end="`url(#${markerId})`"')
     expect(canvas).toContain('class="nested-graph-edge-label"')
   })
@@ -67,7 +68,7 @@ describe('chapter graph workspace', () => {
     expect(node).toContain('position: absolute;\n  inset: 0;')
     expect(node).toContain('backdrop-filter: blur(12px)')
     expect(node).toContain('chapter.sceneCount')
-    expect(menus).toContain('Сценарии главы')
+    expect(tab).toContain('Сценарии главы')
   })
 
   it('uses one physical canvas and swaps only its graph payload', () => {

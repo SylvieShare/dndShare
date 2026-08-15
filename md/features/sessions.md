@@ -284,6 +284,11 @@ uniqueness. Creature artwork and the letter marker render directly on the row
 without separate backing surfaces; the compact letter remains the popover
 trigger.
 
+Clicking a chapter or its transition opens an anchored shared action surface:
+`BasePopover` provides positioning while every command, including status and
+arc submenus, uses `RowActionItem` and `RowActionSubmenu`. There is no separate
+feature-specific chapter-menu component or locally styled action button.
+
 Clicking a non-interactive area of a combat or reserve row opens its action
 menu; initiative, HP, selection, marker and other dedicated controls keep their
 own click behavior. The shared menu can edit states for both players and NPCs,

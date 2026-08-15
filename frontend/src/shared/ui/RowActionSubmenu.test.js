@@ -5,7 +5,7 @@ import { RowActionSubmenu } from '@sylvieshare/share-ui'
 const participantSource = readFileSync(fileURLToPath(new URL('../../features/sessions/components/SessionParticipantCard.vue', import.meta.url)), 'utf8')
 const encounterSource = readFileSync(fileURLToPath(new URL('../../features/sessions/components/EncounterRowMenu.vue', import.meta.url)), 'utf8')
 const spellSource = readFileSync(fileURLToPath(new URL('../../features/character-editor/blocks/dnd/components/SpellCard.vue', import.meta.url)), 'utf8')
-const chapterSource = readFileSync(fileURLToPath(new URL('../../features/sessions/components/ChapterGraphMenus.vue', import.meta.url)), 'utf8')
+const chapterSource = readFileSync(fileURLToPath(new URL('../../features/sessions/components/ChapterGraphTab.vue', import.meta.url)), 'utf8')
 
 describe('RowActionSubmenu', () => {
   it('compiles the shared nested action component', () => {
