@@ -102,6 +102,8 @@
       @action="runCanvasAction"
     />
 
+    <CanvasHotkeyHints v-if="isDm && workspaceMode !== 'combat'" />
+
     <SceneBlockMenus
       ref="blockMenus"
       @edit="openBlockEdit"
@@ -161,6 +163,7 @@
 <script setup>
 import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import CanvasActionDock from '@/features/sessions/components/CanvasActionDock.vue'
+import CanvasHotkeyHints from '@/features/sessions/components/CanvasHotkeyHints.vue'
 import ChapterEdgeModal from '@/features/sessions/components/ChapterEdgeModal.vue'
 import ChapterGraphNode from '@/features/sessions/components/ChapterGraphNode.vue'
 import GraphDeleteDialog from '@/features/sessions/components/GraphDeleteDialog.vue'

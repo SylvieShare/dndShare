@@ -158,6 +158,13 @@ and applies the chosen status atomically to every selected chapter; scenarios
 and blocks have no status field, so that action is not shown on their canvases.
 Bulk chapter deletion fails as a whole when any selected chapter still contains
 scenarios; bulk scenario deletion also removes its blocks.
+Editable desktop canvases show a frameless, text-only hotkey legend at the
+bottom-left below the participant rail. It reflects the active behavior:
+`Ctrl`/`Cmd` + click toggles a node, modifier-drag adds nodes through a frame,
+`Ctrl`/`Cmd` + `A` selects every node in the active graph, `Delete`/`Backspace`
+opens the existing confirmed bulk deletion, `Esc` cancels the active link or
+selection, and `+`/`-` changes canvas zoom. The legend is hidden on touch and
+mobile layouts.
 Drilling into a narrative level waits for the 420ms spotlight movement to reach
 its ancestor position, then swaps the graph identity, payload and preloaded
 viewport in one render. DOM keys include the graph identity so equal numeric IDs

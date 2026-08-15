@@ -88,13 +88,17 @@ export function useGraphSelection(nodes, onChange) {
     updateSelection([])
   }
 
+  function selectAll() {
+    updateSelection(toValue(nodes).map(graphNodeKey))
+  }
+
   watch(() => toValue(nodes).map(graphNodeKey).join('|'), () => {
     const available = new Set(toValue(nodes).map(graphNodeKey))
     updateSelection([...selectedKeys.value].filter(key => available.has(key)))
   })
 
   return {
-    selectedNodes, isSelected, toggleSelection, clearSelection,
+    selectedNodes, isSelected, toggleSelection, clearSelection, selectAll,
     selectionFrameStyle, beginFrameSelection, updateFrameSelection, finishFrameSelection, cancelFrameSelection,
   }
 }

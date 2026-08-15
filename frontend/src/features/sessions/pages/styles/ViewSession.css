@@ -60,6 +60,10 @@
   transition: width 0.42s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+.campaign-workspace--hotkeys .workspace-dock--left {
+  max-height: calc(100% - 190px);
+}
+
 .campaign-workspace--combat .workspace-dock--left {
   width: 360px;
 }

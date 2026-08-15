@@ -122,6 +122,7 @@
 <script setup>
 import { computed, getCurrentInstance, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import GraphSelectionBar from '@/features/sessions/components/GraphSelectionBar.vue'
+import { useGraphHotkeys } from '@/features/sessions/composables/useGraphHotkeys'
 import { graphNodeKey, useGraphSelection } from '@/features/sessions/composables/useGraphSelection'
 import { graphEdgeMidpoint, graphEdgePath } from '@/features/sessions/lib/graphGeometry'
 import { clampGraphPan, graphContentBounds, translateGraphPositions } from '@/features/sessions/lib/graphViewport'
@@ -183,7 +184,7 @@ const gridStyle = computed(() => ({
 }))
 const nodeMap = computed(() => new Map(props.nodes.map(node => [node.id, node])))
 const {
-  selectedNodes, isSelected, clearSelection, selectionFrameStyle,
+  selectedNodes, isSelected, clearSelection, selectAll, selectionFrameStyle,
   beginFrameSelection, updateFrameSelection, finishFrameSelection, cancelFrameSelection,
 } = useGraphSelection(
   () => props.nodes,
@@ -191,6 +192,15 @@ const {
 )
 const bulkSelectionOpen = computed(() => props.canEdit && !props.locked
   && !props.linkingFrom && props.spotlightNodeId == null && selectedNodes.value.length > 1)
+useGraphHotkeys({
+  enabled: () => props.canEdit && !props.locked && props.spotlightNodeId == null,
+  selectedNodes,
+  selectAll,
+  clearSelection,
+  cancelGesture: () => { if (props.linkingFrom) emit('start-link', null); cancelGesture() },
+  deleteSelection: ids => emit('delete-selection', ids),
+  zoomBy,
+})
 const renderedEdges = computed(() => props.edges.map(edge => {
   const from = nodeMap.value.get(edge[props.fromKey])
   const to = nodeMap.value.get(edge[props.toKey])
@@ -517,13 +527,6 @@ function focusNode(node) {
   saveView()
 }
 
-function onKey(event) {
-  if (event.key !== 'Escape') return
-  if (props.linkingFrom) emit('start-link', null)
-  cancelGesture()
-  clearSelection()
-}
-
 function refreshNodeObservers() {
   nodeResizeObserver?.disconnect()
   if (!props.dynamicNodeHeight || !viewport.value) return
@@ -583,12 +586,10 @@ onMounted(() => {
     if (changed) sizeRevision.value += 1
   })
   nextTick(refreshNodeObservers)
-  window.addEventListener('keydown', onKey)
 })
 onBeforeUnmount(() => {
   viewportResizeObserver?.disconnect()
   nodeResizeObserver?.disconnect()
-  window.removeEventListener('keydown', onKey)
 })
 
 defineExpose({ zoomBy, viewportCenter, focusNode, prepareView, clearSelection })

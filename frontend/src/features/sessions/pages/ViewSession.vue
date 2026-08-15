@@ -37,7 +37,10 @@
     <div
       v-else-if="session"
       class="campaign-workspace"
-      :class="{ 'campaign-workspace--combat': workspaceMotionMode === 'combat' }"
+      :class="{
+        'campaign-workspace--combat': workspaceMotionMode === 'combat',
+        'campaign-workspace--hotkeys': isDm && workspaceMotionMode !== 'combat',
+      }"
     >
       <ChapterGraphTab
         class="campaign-graph"

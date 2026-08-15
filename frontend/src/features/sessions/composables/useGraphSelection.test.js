@@ -16,6 +16,9 @@ describe('graph selection', () => {
     selection.clearSelection()
     expect(selection.selectedNodes.value).toEqual([])
     expect(onChange).toHaveBeenLastCalledWith([])
+
+    selection.selectAll()
+    expect(selection.selectedNodes.value.map(node => node.id)).toEqual([1, 2, 3])
   })
 
   it('forgets selected nodes removed from the active graph', async () => {

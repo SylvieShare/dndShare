@@ -12,6 +12,8 @@ const actionDock = readFileSync(fileURLToPath(new URL('./CanvasActionDock.vue', 
 const narrativeCanvas = readFileSync(fileURLToPath(new URL('../lib/narrativeCanvas.js', import.meta.url)), 'utf8')
 const toolbar = readFileSync(fileURLToPath(new URL('./ChapterGraphToolbar.vue', import.meta.url)), 'utf8')
 const node = readFileSync(fileURLToPath(new URL('./ChapterGraphNode.vue', import.meta.url)), 'utf8')
+const hotkeyHints = readFileSync(fileURLToPath(new URL('./CanvasHotkeyHints.vue', import.meta.url)), 'utf8')
+const hotkeys = readFileSync(fileURLToPath(new URL('../composables/useGraphHotkeys.js', import.meta.url)), 'utf8')
 
 describe('chapter graph workspace', () => {
   it('compiles the graph tab', () => {
@@ -125,5 +127,18 @@ describe('chapter graph workspace', () => {
     expect(tab).toContain('@delete-nodes="confirmChaptersDelete"')
     expect(tab).toContain('graph.deleteChapters(state.ids)')
     expect(tab).toContain('graph.updateChapterStatuses(ids, status)')
+  })
+
+  it('shows and implements a frameless desktop hotkey legend below the player rail', () => {
+    expect(sessionCanvas).toContain('<CanvasHotkeyHints')
+    expect(hotkeyHints).toContain('bottom: 14px;')
+    expect(hotkeyHints).toContain('left: 14px;')
+    expect(hotkeyHints).toContain('{{ modifier }} + клик')
+    expect(hotkeyHints).toContain('{{ modifier }} + A')
+    expect(hotkeyHints).toContain('<kbd>+ / −</kbd>')
+    expect(hotkeyHints).toContain('(pointer: coarse)')
+    expect(hotkeys).toContain("event.code === 'KeyA'")
+    expect(hotkeys).toContain("deleteSelection(selectedNodes.value.map(node => node.id))")
+    expect(hotkeys).toContain('zoomBy(1.15)')
   })
 })
