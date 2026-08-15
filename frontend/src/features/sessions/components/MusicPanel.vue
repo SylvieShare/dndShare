@@ -2,22 +2,11 @@
   <div class="music-panel">
     <div class="music-panel-head">
       <span class="music-panel-title">МУЗЫКА</span>
-      <span v-if="currentAlbum" class="music-panel-album">«{{ currentAlbum.name }}»</span>
       <button class="music-panel-library" @click="onOpenLibrary">библиотека ↗</button>
-      <button
-        type="button"
-        class="music-panel-collapse"
-        :title="collapsed ? 'Развернуть музыку' : 'Свернуть музыку'"
-        :aria-label="collapsed ? 'Развернуть музыку' : 'Свернуть музыку'"
-        :aria-expanded="!collapsed"
-        @click="collapsed = !collapsed"
-      >
-        <span aria-hidden="true">{{ collapsed ? '⌄' : '⌃' }}</span>
-      </button>
     </div>
 
-    <div class="music-panel-body" :class="{ 'music-panel-body--collapsed': collapsed }">
-      <div class="music-panel-body-inner" :aria-hidden="collapsed" :inert="collapsed">
+    <div class="music-panel-body">
+      <div class="music-panel-body-inner">
         <div class="now" :class="{ 'now--empty': !current }">
           <div class="now-row">
             <button class="now-play-btn" :disabled="!current" @click="togglePlay">
@@ -99,7 +88,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import AppSlider from '@/shared/ui/AppSlider.vue'
 import { useMusicStore } from '@/stores/music'
@@ -114,9 +103,6 @@ const { state, currentTrack, nextTrack } = storeToRefs(musicStore)
 
 const current = currentTrack
 const next = nextTrack
-const collapsed = ref(false)
-
-const currentAlbum = computed(() => state.value.albumId ? musicStore.albumById(state.value.albumId) : null)
 const progressPct = computed(() => {
   if (!state.value.durationSec) return 0
   return Math.min(100, (state.value.positionSec / state.value.durationSec) * 100)
@@ -176,20 +162,6 @@ function fmtTime(sec) {
   padding: 0 2px;
 }
 .music-panel-title { color: var(--text-muted); }
-.music-panel-album {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  color: var(--text-2);
-  text-transform: none;
-  font-weight: 600;
-  letter-spacing: 0;
-  font-size: 11px;
-  background: color-mix(in srgb, var(--text-on-accent) 5%, transparent);
-  border-radius: 6px;
-  padding: 2px 7px;
-}
 .music-panel-library {
   margin-left: auto;
   background: none;
@@ -205,35 +177,10 @@ function fmtTime(sec) {
   border-radius: 4px;
 }
 .music-panel-library:hover { background: color-mix(in srgb, var(--accent) 10%, transparent); }
-.music-panel-collapse {
-  width: 24px;
-  height: 22px;
-  flex: 0 0 auto;
-  padding: 0;
-  border: 1px solid transparent;
-  border-radius: 6px;
-  background: none;
-  color: var(--text-muted);
-  font: inherit;
-  font-size: 16px;
-  line-height: 1;
-  cursor: pointer;
-}
-.music-panel-collapse:hover {
-  border-color: var(--border);
-  color: var(--text-1);
-  background: color-mix(in srgb, var(--accent) 8%, transparent);
-}
-
 .music-panel-body {
   display: grid;
   grid-template-rows: 1fr;
   padding-top: 10px;
-  transition: grid-template-rows 0.2s ease, padding-top 0.2s ease;
-}
-.music-panel-body--collapsed {
-  grid-template-rows: 0fr;
-  padding-top: 0;
 }
 .music-panel-body-inner {
   min-height: 0;

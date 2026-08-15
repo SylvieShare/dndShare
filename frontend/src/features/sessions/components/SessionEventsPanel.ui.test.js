@@ -5,6 +5,12 @@ import { describe, expect, it } from 'vitest'
 const source = readFileSync(fileURLToPath(new URL('./SessionEventsPanel.vue', import.meta.url)), 'utf8')
 
 describe('SessionEventsPanel timeline layout', () => {
+  it('leaves its visibility to the persistent session dock control', () => {
+    expect(source).not.toContain('sep-collapse')
+    expect(source).not.toContain('defineEmits')
+    expect(source).not.toContain('collapsed')
+  })
+
   it('wraps content instead of exposing horizontal scrolling', () => {
     expect(source).toMatch(/\.sep-list\s*\{[^}]*overflow-x:\s*hidden;/s)
     expect(source).toMatch(/\.sep-roll\s*\{[^}]*flex-wrap:\s*wrap;/s)

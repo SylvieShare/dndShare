@@ -4,21 +4,16 @@
       :arcs="graph.arcs.value"
       :selected-arc="graph.selectedArc.value"
       :current-arc="graph.currentArc.value"
-      :current-chapter="graph.currentChapter.value"
       :session="session"
       :session-uuid="sessionUuid"
       :is-dm="isDm"
-      :zoom="zoom"
       :locked="locked"
-      :zoom-locked="workspaceMode === 'combat'"
       :combat-active="workspaceMode === 'combat'"
       @select-arc="selectArc"
       @create-arc="openArcCreate"
       @edit-arc="openArcEdit"
       @delete-arc="confirmArcDelete"
       @move-arc="moveArc"
-      @focus-current="focusCurrent"
-      @zoom="canvas?.zoomBy($event)"
       @edit-session="$emit('edit-session')"
       @status-change="$emit('status-change', $event)"
       @open-combat="$emit('open-combat')"
@@ -48,7 +43,6 @@
         @close-workspace="$emit('close-workspace')"
         @scene-count="graph.setSceneCount"
         @send-block-to-combat="$emit('send-block-to-combat', $event)"
-        @view-change="zoom = $event.zoom"
       />
       <slot />
     </div>
@@ -107,7 +101,7 @@
 </template>
 
 <script setup>
-import { computed, nextTick, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import ArcEditorModal from '@/features/sessions/components/ArcEditorModal.vue'
 import ChapterEdgeModal from '@/features/sessions/components/ChapterEdgeModal.vue'
 import ChapterEditorModal from '@/features/sessions/components/ChapterEditorModal.vue'
@@ -129,7 +123,6 @@ const emit = defineEmits(['open-scenes', 'open-combat', 'edit-session', 'status-
 
 const canvas = ref(null)
 const menus = ref(null)
-const zoom = ref(1)
 const actionError = ref('')
 const saving = ref(false)
 
@@ -353,13 +346,6 @@ async function moveArc(id, delta) {
   if (from < 0 || to < 0 || to >= ids.length) return
   ids.splice(to, 0, ids.splice(from, 1)[0])
   try { await perform(() => graph.reorderArcs(ids), 'Не удалось изменить порядок арок') } catch { /* shown */ }
-}
-
-async function focusCurrent() {
-  const chapter = graph.focusCurrent()
-  if (!chapter) return
-  await nextTick()
-  canvas.value?.focusChapter(chapter)
 }
 
 watch(() => props.locked, locked => {

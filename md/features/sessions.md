@@ -56,7 +56,11 @@ uncovered part of the canvas and leave a 28px gap between the central workspace
 and either floating rail. The right rail disappears first on narrow screens,
 then the participant rail.
 
-Панели кубиков, музыки и событий в правом rail сворачиваются независимо.
+Постоянные icon-кнопки в начале правого rail независимо открывают и закрывают
+целые панели кубиков, музыки и событий; состояние самих смонтированных панелей
+при временном скрытии сохраняется. Внутренних кнопок сворачивания у панелей нет.
+Заголовок music panel не дублирует название выбранного альбома; текущий трек
+остаётся в основном playback-блоке.
 `SessionEventsPanel` расположен под музыкой, занимает свободную высоту и
 прокручивает только собственную хронику по вертикали; длинные имена, описания и
 результаты бросков переносятся без горизонтального скролла. Новые записи находятся сверху и
@@ -117,8 +121,9 @@ current promotes it to `in_progress`; only one chapter in the session is
 current.
 
 `ChapterGraphToolbar` is the one backed command bar in the workspace. It combines
-the editable session name/status, arc switcher and ordering, combat launcher,
-current-chapter focus and zoom. Creation is contextual and lives on the canvas
+the editable session name/status, arc switcher and ordering, and an accessible
+icon-only combat launcher. Current-chapter focus and zoom are canvas interactions
+rather than toolbar controls. Creation is contextual and lives on the canvas
 in a top-right vertical action dock, immediately left of the right tools rail;
 there is no chapter/scenario/block creation button in the header. There is no
 second local tab switcher or session title bar. `SessionGraphCanvas` keeps one
@@ -224,7 +229,9 @@ row are separate `BaseTile` surfaces. In the chapter canvas the header is fixed
 beside the focused chapter while only the rows area scrolls. Row strips use the
 explicitly selected participant color for players or `iconColor` for NPCs; rows
 without an assigned color have no strip in either combat or the NPC reserve.
-Session dice pass the default accent color explicitly to every `SystemDie`.
+NPC artwork stretches through the full 92px tile height while player portraits
+retain their compact framed crop. Session dice pass the default accent color
+explicitly to every `SystemDie`.
 
 While combat is active, the DM header has a group-challenge action. It opens a
 compact setup popover with one of the six D&D abilities and a saving-throw

@@ -10,6 +10,10 @@
         'dice-pop--fumble': hasSettledOutcome(entry, 'fumble'),
         'dice-pop--rolling': isRolling(entry.id),
       }"
+      @pointerdown="onSwipeStart($event, entry.id)"
+      @pointermove="onSwipeMove"
+      @pointerup="onSwipeEnd"
+      @pointercancel="onSwipeCancel"
     >
       <button class="dice-pop-close" @click="store.dismiss(entry.id)" aria-label="Закрыть">×</button>
 
@@ -97,9 +101,17 @@
 import { onBeforeUnmount, watch } from 'vue'
 import { useDiceStore } from '@/stores/dice'
 import { useDiceRollAnimation } from '@/shared/composables/useDiceRollAnimation'
+import { useSwipeDismiss } from '@/shared/composables/useSwipeDismiss'
 import SystemDie from '@/shared/ui/SystemDie.vue'
 
 const store = useDiceStore()
+const {
+  onPointerDown: onSwipeStart,
+  onPointerMove: onSwipeMove,
+  onPointerUp: onSwipeEnd,
+  onPointerCancel: onSwipeCancel,
+  dispose: disposeSwipeDismiss,
+} = useSwipeDismiss({ onDismiss: id => store.dismiss(id) })
 
 function shouldAnimateRolls() {
   if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return false
@@ -131,6 +143,7 @@ watch(
 
 onBeforeUnmount(() => {
   disposeRollAnimation()
+  disposeSwipeDismiss()
 })
 
 function hasMultipleTypes(entry) {
@@ -174,7 +187,13 @@ function rawExpression(entry) {
   color: var(--text-1);
   font-size: 13px;
   overflow: hidden;
+  touch-action: pan-y;
+  transform: translateX(var(--dice-swipe-x, 0px));
+  opacity: var(--dice-swipe-opacity, 1);
+  transition: transform 0.18s ease, opacity 0.18s ease;
 }
+.dice-pop--swiping { user-select: none; transition: none; }
+.dice-pop--swipe-dismiss { transition: transform 0.16s ease-out, opacity 0.16s ease-out; }
 
 .dice-pop--crit {
   border-color: var(--warning);

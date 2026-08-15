@@ -69,7 +69,6 @@ const tintColor = computed(() => enc.avatarStyle(props.combatant)?.color || 'var
 
 .enc-avatar--npc {
   width: 72px;
-  height: 72px;
   margin-block: -10px;
   align-self: stretch;
   border-radius: 10px;

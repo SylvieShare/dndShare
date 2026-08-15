@@ -59,20 +59,11 @@
     </div>
 
     <div class="chapter-toolbar-view">
-      <button type="button" class="chapter-tool-btn chapter-tool-btn--combat" :class="{ 'chapter-tool-btn--active': combatActive }" @click="$emit('open-combat')">
+      <button type="button" class="chapter-tool-btn chapter-tool-btn--icon chapter-tool-btn--combat" :class="{ 'chapter-tool-btn--active': combatActive }" title="Бой" aria-label="Бой" @click="$emit('open-combat')">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
           <path d="M3 2l7.5 7.5M11 2L3.5 9.5M2 11l1-1 1 1-1 1-1-1zm8-8 1-1 1 1-1 1-1-1z" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        Бой
       </button>
-      <button type="button" class="chapter-tool-btn" :disabled="locked || !currentArc" @click="$emit('focus-current')">
-        {{ currentChapter ? `Глава ${currentChapter.number}` : 'Текущая глава' }}
-      </button>
-      <div class="chapter-zoom">
-        <button type="button" aria-label="Уменьшить" :disabled="zoomLocked" @click="$emit('zoom', 0.84)">−</button>
-        <span>{{ Math.round(zoom * 100) }}%</span>
-        <button type="button" aria-label="Увеличить" :disabled="zoomLocked" @click="$emit('zoom', 1.19)">+</button>
-      </div>
     </div>
   </BaseTile>
 </template>
@@ -88,18 +79,15 @@ const props = defineProps({
   arcs: { type: Array, default: () => [] },
   selectedArc: { type: Object, default: null },
   currentArc: { type: Object, default: null },
-  currentChapter: { type: Object, default: null },
   session: { type: Object, default: null },
   sessionUuid: { type: String, required: true },
   isDm: { type: Boolean, default: false },
-  zoom: { type: Number, default: 1 },
   locked: { type: Boolean, default: false },
-  zoomLocked: { type: Boolean, default: false },
   combatActive: { type: Boolean, default: false },
 })
 const emit = defineEmits([
   'select-arc', 'create-arc', 'edit-arc', 'delete-arc', 'move-arc',
-  'focus-current', 'zoom', 'edit-session', 'status-change', 'open-combat',
+  'edit-session', 'status-change', 'open-combat',
 ])
 const arcTrigger = ref(null)
 const arcOpen = ref(false)
@@ -138,8 +126,7 @@ function pickArc(id) {
 .chapter-toolbar-rule { width: 1px; height: 22px; margin: 0 3px; background: var(--border-strong); }
 
 .chapter-arc-trigger,
-.chapter-tool-btn,
-.chapter-zoom {
+.chapter-tool-btn {
   display: inline-flex;
   align-items: center;
   gap: 7px;
@@ -162,12 +149,6 @@ function pickArc(id) {
 .chapter-tool-btn--danger:hover { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 45%, transparent); }
 .chapter-tool-btn--combat { border-color: color-mix(in srgb, var(--danger) 38%, transparent); color: color-mix(in srgb, var(--danger) 84%, var(--text-1)); font-weight: 700; }
 .chapter-tool-btn--combat.chapter-tool-btn--active { background: color-mix(in srgb, var(--danger) 18%, transparent); border-color: color-mix(in srgb, var(--danger) 66%, transparent); color: var(--danger); }
-
-.chapter-zoom { gap: 0; overflow: hidden; }
-.chapter-zoom button { width: 29px; height: 29px; border: 0; background: none; color: var(--text-2); cursor: pointer; }
-.chapter-zoom button:hover { background: var(--surface-raised); color: var(--text-1); }
-.chapter-zoom button:disabled { opacity: 0.3; cursor: not-allowed; }
-.chapter-zoom span { width: 43px; color: var(--text-muted); font-size: 10px; text-align: center; }
 
 .chapter-arc-list { display: flex; flex-direction: column; gap: 3px; padding: 5px; }
 .chapter-arc-row { display: flex; align-items: center; gap: 4px; border-radius: 7px; }

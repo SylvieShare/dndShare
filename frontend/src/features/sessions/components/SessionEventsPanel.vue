@@ -3,17 +3,10 @@
     <div class="sep-head">
       <span class="sep-title">СОБЫТИЯ</span>
       <span class="sep-live" :class="{ 'sep-live--error': store.pollError }" :title="store.pollError ? 'Нет связи с журналом' : 'Журнал синхронизирован'" />
-      <button
-        type="button"
-        class="sep-collapse"
-        :title="collapsed ? 'Развернуть события' : 'Свернуть события'"
-        :aria-expanded="!collapsed"
-        @click="toggleCollapsed"
-      >{{ collapsed ? '⌄' : '⌃' }}</button>
     </div>
 
-    <div class="sep-body" :class="{ 'sep-body--collapsed': collapsed }">
-      <div class="sep-body-inner" :aria-hidden="collapsed" :inert="collapsed">
+    <div class="sep-body">
+      <div class="sep-body-inner">
         <div v-if="store.loading" class="sep-empty">Загружаем хронику…</div>
         <div v-else-if="!store.events.length" class="sep-empty">Здесь появятся игровые события</div>
         <div v-else ref="listEl" class="sep-list">
@@ -81,16 +74,9 @@ import { useSessionEventsStore } from '@/stores/sessionEvents'
 import { groupSessionEvents } from '@/features/sessions/lib/sessionEventView'
 
 const store = useSessionEventsStore()
-const emit = defineEmits(['collapsed'])
 const { events } = storeToRefs(store)
-const collapsed = ref(false)
 const listEl = ref(null)
 const timelineGroups = computed(() => groupSessionEvents(events.value))
-
-function toggleCollapsed() {
-  collapsed.value = !collapsed.value
-  emit('collapsed', collapsed.value)
-}
 
 function eventIcon(type) {
   return {
@@ -149,10 +135,7 @@ watch(() => events.value.length, async () => {
 .sep-title { color: var(--text-muted); font-size: 11px; font-weight: 700; letter-spacing: 0.1em; }
 .sep-live { width: 6px; height: 6px; border-radius: 50%; background: var(--success); box-shadow: 0 0 7px color-mix(in srgb, var(--success) 65%, transparent); }
 .sep-live--error { background: var(--danger); box-shadow: 0 0 7px color-mix(in srgb, var(--danger) 65%, transparent); }
-.sep-collapse { margin-left: auto; width: 24px; height: 22px; padding: 0; border: 1px solid transparent; border-radius: 6px; background: none; color: var(--text-muted); font: inherit; font-size: 16px; cursor: pointer; }
-.sep-collapse:hover { border-color: var(--border); color: var(--text-1); background: color-mix(in srgb, var(--accent) 8%, transparent); }
-.sep-body { display: grid; grid-template-rows: minmax(0, 1fr); min-height: 0; flex: 1; padding-top: 8px; transition: grid-template-rows .2s ease, padding-top .2s ease; }
-.sep-body--collapsed { grid-template-rows: 0fr; padding-top: 0; }
+.sep-body { display: grid; grid-template-rows: minmax(0, 1fr); min-height: 0; flex: 1; padding-top: 8px; }
 .sep-body-inner { min-height: 0; overflow: hidden; }
 .sep-list { height: 100%; min-height: 120px; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; padding-right: 3px; }
 .sep-empty { color: var(--text-muted); font-size: 12px; line-height: 1.4; padding: 8px 2px; }

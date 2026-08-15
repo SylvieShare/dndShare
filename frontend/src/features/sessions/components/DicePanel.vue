@@ -2,19 +2,9 @@
   <div class="dice-panel">
     <div class="dice-panel-head">
       <span class="dice-panel-title">Кубики</span>
-      <button
-        type="button"
-        class="dice-panel-collapse"
-        :title="collapsed ? 'Развернуть кубики' : 'Свернуть кубики'"
-        :aria-label="collapsed ? 'Развернуть кубики' : 'Свернуть кубики'"
-        :aria-expanded="!collapsed"
-        @click="collapsed = !collapsed"
-      >
-        <span aria-hidden="true">{{ collapsed ? '⌄' : '⌃' }}</span>
-      </button>
     </div>
-    <div class="dice-panel-body" :class="{ 'dice-panel-body--collapsed': collapsed }">
-      <div class="dice-panel-body-inner" :aria-hidden="collapsed" :inert="collapsed">
+    <div class="dice-panel-body">
+      <div class="dice-panel-body-inner">
         <MultiToggle v-model="mode" :options="modeOptions" :neutral-value="'normal'" block />
         <div class="dice-panel-grid">
           <button
@@ -47,7 +37,6 @@ const modeOptions = [
 ]
 
 const mode = ref('normal')
-const collapsed = ref(false)
 const diceStore = useDiceStore()
 
 function rollOne(sides) {
@@ -110,34 +99,10 @@ function rollDie(sides) {
   color: var(--text-muted);
 }
 
-.dice-panel-collapse {
-  width: 24px;
-  height: 22px;
-  padding: 0;
-  border: 1px solid transparent;
-  border-radius: 6px;
-  background: none;
-  color: var(--text-muted);
-  font: inherit;
-  font-size: 16px;
-  line-height: 1;
-  cursor: pointer;
-}
-.dice-panel-collapse:hover {
-  border-color: var(--border);
-  color: var(--text-1);
-  background: color-mix(in srgb, var(--accent) 8%, transparent);
-}
-
 .dice-panel-body {
   display: grid;
   grid-template-rows: 1fr;
   padding-top: 10px;
-  transition: grid-template-rows 0.2s ease, padding-top 0.2s ease;
-}
-.dice-panel-body--collapsed {
-  grid-template-rows: 0fr;
-  padding-top: 0;
 }
 .dice-panel-body-inner {
   min-height: 0;

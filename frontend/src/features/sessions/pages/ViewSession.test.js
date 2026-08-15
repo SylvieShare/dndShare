@@ -78,12 +78,21 @@ describe('ViewSession participant rail', () => {
     expect(styles).toMatch(/\.workspace-dock--left\s*\{[^}]*bottom:\s*auto;[^}]*max-height:\s*calc\(100% - 84px\);/s)
   })
 
-  it('keeps session dice purple and lets both right-dock tools collapse independently', () => {
+  it('keeps session dice purple and controls all right-dock panels from persistent icon buttons', () => {
     expect(dicePanelSource).toContain('color="var(--accent)"')
-    expect(dicePanelSource).toContain("const collapsed = ref(false)")
-    expect(dicePanelSource).toContain("aria-label=\"collapsed ? 'Развернуть кубики' : 'Свернуть кубики'\"")
-    expect(musicPanelSource).toContain("const collapsed = ref(false)")
-    expect(musicPanelSource).toContain("aria-label=\"collapsed ? 'Развернуть музыку' : 'Свернуть музыку'\"")
+    expect(source).toContain('class="workspace-tool-toggles"')
+    expect(source).toContain('const diceOpen = ref(true)')
+    expect(source).toContain('const musicOpen = ref(true)')
+    expect(source).toContain('const eventsOpen = ref(true)')
+    expect(source).toContain(':aria-pressed="diceOpen"')
+    expect(source).toContain(':aria-pressed="musicOpen"')
+    expect(source).toContain(':aria-pressed="eventsOpen"')
+    expect(source).toContain('<BaseTile v-show="diceOpen"')
+    expect(source).toContain('<BaseTile v-show="musicOpen"')
+    expect(source).toContain('<BaseTile v-show="eventsOpen"')
+    expect(dicePanelSource).not.toContain('dice-panel-collapse')
+    expect(musicPanelSource).not.toContain('music-panel-collapse')
+    expect(musicPanelSource).not.toContain('music-panel-album')
   })
 
   it('places the event log below the music panel', () => {

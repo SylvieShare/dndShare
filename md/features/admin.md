@@ -16,6 +16,11 @@
 `ERROR_REPORT_AUTO_APPROVE`, `ERROR_REPORT_REVIEWER`. Роли управления
 шаблонами нет: character settings находятся в frontend code registry.
 
+`ViewAdmin` сохраняет выбранный раздел в query-параметре. На desktop разделы
+находятся в отдельной вертикальной navigation surface; на viewport до 760px
+она превращается в sticky горизонтальный tab rail с прокруткой, а содержимое
+занимает всю ширину. Tablist поддерживает стрелки, Home/End и roving focus.
+
 ## Users and logs
 
 `internal/web/admin.go` регистрирует endpoints управления ролями, сброса
