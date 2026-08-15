@@ -145,11 +145,17 @@ unconstrained until their first card exists. Nodes can be dragged; during an
 active drag their transform transition is disabled so the node and every
 connected edge update in the same frame. Spotlight transitions remain animated
 outside dragging. `Ctrl`/`Cmd` click toggles node selection within the active
-graph. Dragging any selected node moves the whole selection without changing
-relative offsets. Plain node clicks retain their action menus; clicking empty
-canvas space or pressing `Esc` clears selection, and changing graph levels also
-resets it. Two or more selected nodes show a bottom-center action bar inside the
-safe frame with the selected count, atomic bulk deletion and clear-selection.
+graph; dragging with the modifier held, from either a node or empty space,
+draws a frame and adds every intersecting node to the selection instead of
+moving cards or the camera. Dragging any selected node without the modifier
+moves the whole selection without changing relative offsets. Plain node clicks
+retain their action menus; clicking empty canvas space without the modifier or
+pressing `Esc` clears selection, and changing graph levels also resets it. Two
+or more selected nodes show a bottom-center action bar inside the safe frame
+with the selected count, atomic bulk deletion and clear-selection. On the
+chapter canvas the bar also provides the canonical color-coded status choices
+and applies the chosen status atomically to every selected chapter; scenarios
+and blocks have no status field, so that action is not shown on their canvases.
 Bulk chapter deletion fails as a whole when any selected chapter still contains
 scenarios; bulk scenario deletion also removes its blocks.
 Drilling into a narrative level waits for the 420ms spotlight movement to reach

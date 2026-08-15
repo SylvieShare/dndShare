@@ -20,11 +20,22 @@ type graphDeleteRequest struct {
 	IDs   []int64 `json:"ids"`
 }
 
+type graphStatusRequest struct {
+	Level  string  `json:"level"`
+	IDs    []int64 `json:"ids"`
+	Status string  `json:"status"`
+}
+
 func init() { registerRoutes((*Server).routesSessionGraphBulk) }
 
 func (s *Server) routesSessionGraphBulk(mux *http.ServeMux) {
 	mux.HandleFunc("PATCH /api/sessions/{uuid}/graph-nodes/positions", s.handleMoveGraphNodes)
+	mux.HandleFunc("PATCH /api/sessions/{uuid}/graph-nodes/status", s.handleUpdateGraphNodeStatus)
 	mux.HandleFunc("POST /api/sessions/{uuid}/graph-nodes/delete", s.handleDeleteGraphNodes)
+}
+
+func validGraphStatus(level, status string) bool {
+	return level == "chapters" && chapterStatuses[status]
 }
 
 func validGraphLevel(level string) bool {
@@ -102,6 +113,27 @@ func (s *Server) handleDeleteGraphNodes(w http.ResponseWriter, r *http.Request) 
 	}
 	if !deleted {
 		conflict(w, "Сначала удалите или перенесите сценарии выбранных глав")
+		return
+	}
+	writeJSON(w, http.StatusNoContent, nil)
+}
+
+func (s *Server) handleUpdateGraphNodeStatus(w http.ResponseWriter, r *http.Request) {
+	_, session, ok := s.requireSessionOwner(w, r)
+	if !ok {
+		return
+	}
+	var req graphStatusRequest
+	if err := decodeJSON(r, &req); err != nil || !validGraphNodeIDs(req.IDs) || !validGraphStatus(req.Level, req.Status) {
+		badRequest(w, "Некорректный статус выбранных карточек")
+		return
+	}
+	if err := s.store.UpdateGraphNodeStatus(r.Context(), session.ID, req.Level, req.IDs, req.Status); err != nil {
+		if errors.Is(err, store.ErrNotFound) {
+			badRequest(w, "Карточки не принадлежат сессии")
+			return
+		}
+		serverError(w, err)
 		return
 	}
 	writeJSON(w, http.StatusNoContent, nil)

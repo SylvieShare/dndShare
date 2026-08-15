@@ -9,6 +9,7 @@ const canvasStyles = readFileSync(fileURLToPath(new URL('./styles/NestedGraphCan
 const sessionCanvas = readFileSync(fileURLToPath(new URL('./SessionGraphCanvas.vue', import.meta.url)), 'utf8')
 const selectionBar = readFileSync(fileURLToPath(new URL('./GraphSelectionBar.vue', import.meta.url)), 'utf8')
 const actionDock = readFileSync(fileURLToPath(new URL('./CanvasActionDock.vue', import.meta.url)), 'utf8')
+const narrativeCanvas = readFileSync(fileURLToPath(new URL('../lib/narrativeCanvas.js', import.meta.url)), 'utf8')
 const toolbar = readFileSync(fileURLToPath(new URL('./ChapterGraphToolbar.vue', import.meta.url)), 'utf8')
 const node = readFileSync(fileURLToPath(new URL('./ChapterGraphNode.vue', import.meta.url)), 'utf8')
 
@@ -45,7 +46,7 @@ describe('chapter graph workspace', () => {
     expect(toolbar).not.toContain('chapter-zoom')
     expect(toolbar).not.toContain("'focus-current'")
     expect(toolbar).not.toContain("'zoom'")
-    expect(sessionCanvas).toContain("{ id: 'chapter', label: 'Новая глава', icon: 'chapter' }")
+    expect(narrativeCanvas).toContain("{ id: 'chapter', label: 'Новая глава', icon: 'chapter' }")
     expect(actionDock).toContain('right: calc(var(--chapter-safe-right, 0px) + 16px);')
   })
 
@@ -109,15 +110,20 @@ describe('chapter graph workspace', () => {
 
   it('supports modifier selection, group dragging and a safe-frame bulk action bar', () => {
     expect(canvas).toContain('event.ctrlKey || event.metaKey')
+    expect(canvas).toContain('beginFrameSelection(event, null')
+    expect(canvas).toContain('class="nested-graph-selection-frame"')
     expect(canvas).toContain("'nested-graph-node--selected': isSelected(node)")
     expect(canvas).toContain("emit('preview-positions', translateGraphPositions")
     expect(canvas).toContain('<GraphSelectionBar')
     expect(selectionBar).toContain('class="graph-selection-bar"')
     expect(selectionBar).toContain('Выбрано: {{ count }}')
-    expect(canvas).toContain("emit('delete-selection', selectedNodes.value.map(node => node.id))")
+    expect(selectionBar).toContain('Статус')
+    expect(selectionBar).toContain(':style="{ color: status.color }"')
+    expect(canvas).toContain("$emit('delete-selection', selectedNodes.map(node => node.id))")
     expect(canvasStyles).toContain('.nested-graph-node--selected::after')
     expect(selectionBar).toContain('.graph-selection-bar')
     expect(tab).toContain('@delete-nodes="confirmChaptersDelete"')
     expect(tab).toContain('graph.deleteChapters(state.ids)')
+    expect(tab).toContain('graph.updateChapterStatuses(ids, status)')
   })
 })

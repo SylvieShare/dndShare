@@ -17,6 +17,7 @@ const sessionPageSource = readFileSync(fileURLToPath(new URL('../pages/ViewSessi
 const edgeEditorSource = readFileSync(fileURLToPath(new URL('../composables/useNestedEdgeEditor.js', import.meta.url)), 'utf8')
 const apiSource = readFileSync(fileURLToPath(new URL('../../../shared/api/scenesApi.js', import.meta.url)), 'utf8')
 const sessionsApiSource = readFileSync(fileURLToPath(new URL('../../../shared/api/sessionsApi.js', import.meta.url)), 'utf8')
+const narrativeCanvasSource = readFileSync(fileURLToPath(new URL('../lib/narrativeCanvas.js', import.meta.url)), 'utf8')
 
 describe('session graph canvas', () => {
   it('compiles one persistent canvas host', () => {
@@ -52,10 +53,10 @@ describe('session graph canvas', () => {
 
   it('places contextual creation actions at the top-right of the canvas', () => {
     expect(source).toContain('<CanvasActionDock')
-    expect(source).toContain("label: 'Новая глава'")
-    expect(source).toContain("label: 'Новый сценарий'")
-    expect(source).toContain("label: 'Текстовый блок'")
-    expect(source).toContain("label: 'Бой'")
+    expect(narrativeCanvasSource).toContain("label: 'Новая глава'")
+    expect(narrativeCanvasSource).toContain("label: 'Новый сценарий'")
+    expect(narrativeCanvasSource).toContain("label: 'Текстовый блок'")
+    expect(narrativeCanvasSource).toContain("label: 'Бой'")
     expect(dockSource).toContain('top: 16px;')
     expect(dockSource).not.toContain('translateY(-50%)')
     expect(dockSource).toContain('right: calc(var(--chapter-safe-right, 0px) + 16px);')
@@ -87,6 +88,12 @@ describe('session graph canvas', () => {
     expect(source).toContain('blockGraph.deleteItems(value.ids)')
     expect(sessionsApiSource).toContain('/graph-nodes/positions')
     expect(sessionsApiSource).toContain('/graph-nodes/delete')
+  })
+
+  it('offers canonical bulk statuses only for chapter nodes', () => {
+    expect(source).toContain(":status-options=\"displayLevel === 'chapters' ? CHAPTER_STATUSES : []\"")
+    expect(source).toContain("$emit('change-nodes-status', status, ids)")
+    expect(sessionsApiSource).toContain('/graph-nodes/status')
   })
 
   it('creates and edits labels on scenario and block transitions', () => {

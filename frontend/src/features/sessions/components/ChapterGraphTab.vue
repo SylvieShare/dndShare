@@ -47,6 +47,7 @@
         @save-positions="savePositions"
         @selection-change="closeMenus"
         @delete-nodes="confirmChaptersDelete"
+        @change-nodes-status="changeSelectionStatus"
         @create-chapter="openChapterCreate"
         @close-workspace="returnToChapters"
         @chapter-ancestor-click="openChapterAncestorMenu"
@@ -339,6 +340,12 @@ async function changeStatus(chapter, status) {
   const data = chapterPayload(chapter, { status })
   closeMenus()
   try { await perform(() => graph.updateChapter(chapter.id, data), 'Не удалось изменить статус') } catch { /* shown */ }
+}
+
+async function changeSelectionStatus(status, ids) {
+  try {
+    await perform(() => graph.updateChapterStatuses(ids, status), 'Не удалось изменить статус выбранных глав')
+  } catch { /* shown */ }
 }
 
 function startLink(chapter) {

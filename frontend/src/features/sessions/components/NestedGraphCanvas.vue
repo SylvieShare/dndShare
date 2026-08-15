@@ -4,6 +4,7 @@
     class="nested-graph-canvas"
     :class="{
       'nested-graph-canvas--panning': gesture?.type === 'pan',
+      'nested-graph-canvas--selecting': gesture?.type === 'selection',
       'nested-graph-canvas--linking': linkingFrom,
       'nested-graph-canvas--locked': locked,
       'nested-graph-canvas--spotlight': spotlightNodeId != null,
@@ -15,6 +16,7 @@
     @wheel.prevent="onWheel"
   >
     <div class="nested-graph-grid" :style="gridStyle" />
+    <div v-if="selectionFrameStyle" class="nested-graph-selection-frame" :style="selectionFrameStyle" />
     <div class="nested-graph-world" :style="worldStyle">
       <svg class="nested-graph-edges" aria-hidden="true">
         <defs>
@@ -109,7 +111,9 @@
     <GraphSelectionBar
       v-if="bulkSelectionOpen"
       :count="selectedNodes.length"
-      @delete="requestSelectionDelete"
+      :status-options="statusOptions"
+      @status="$emit('change-selection-status', $event, selectedNodes.map(node => node.id))"
+      @delete="$emit('delete-selection', selectedNodes.map(node => node.id))"
       @clear="clearSelection"
     />
   </div>
@@ -149,11 +153,12 @@ const props = defineProps({
   resizableNodes: { type: Boolean, default: false },
   minNodeWidth: { type: Number, default: 220 },
   maxNodeWidth: { type: Number, default: 640 },
+  statusOptions: { type: Array, default: () => [] },
 })
 const emit = defineEmits([
   'node-click', 'node-double-click', 'edge-click', 'start-link', 'finish-link',
   'preview-positions', 'save-positions', 'preview-size', 'save-size', 'create-first', 'view-change',
-  'selection-change', 'delete-selection',
+  'selection-change', 'delete-selection', 'change-selection-status',
 ])
 
 const instanceId = getCurrentInstance()?.uid ?? Math.random().toString(36).slice(2)
@@ -177,7 +182,10 @@ const gridStyle = computed(() => ({
   backgroundSize: `${24 * zoom.value}px ${24 * zoom.value}px`,
 }))
 const nodeMap = computed(() => new Map(props.nodes.map(node => [node.id, node])))
-const { selectedNodes, isSelected, toggleSelection, clearSelection } = useGraphSelection(
+const {
+  selectedNodes, isSelected, clearSelection, selectionFrameStyle,
+  beginFrameSelection, updateFrameSelection, finishFrameSelection, cancelFrameSelection,
+} = useGraphSelection(
   () => props.nodes,
   ids => emit('selection-change', ids),
 )
@@ -206,10 +214,6 @@ const contentBounds = computed(() => graphContentBounds(props.nodes, nodeDimensi
 function isDraggedNode(node) {
   if (gesture.value?.type === 'resize') return gesture.value.node.id === node.id
   return gesture.value?.type === 'node' && gesture.value.nodeKeys.has(graphNodeKey(node))
-}
-
-function requestSelectionDelete() {
-  emit('delete-selection', selectedNodes.value.map(node => node.id))
 }
 
 function nodeDimensions(node) {
@@ -316,6 +320,11 @@ function safeFrame() {
 function onCanvasDown(event) {
   if (props.locked || event.button !== 0) return
   if (event.target.closest('.nested-graph-node, .nested-graph-edge-label, .nested-graph-edge-hit')) return
+  if (props.canEdit && (event.ctrlKey || event.metaKey)) {
+    viewport.value.setPointerCapture(event.pointerId)
+    gesture.value = beginFrameSelection(event, null, pointInWorld, viewport.value.getBoundingClientRect())
+    return
+  }
   clearSelection()
   viewport.value.setPointerCapture(event.pointerId)
   gesture.value = {
@@ -337,14 +346,7 @@ function onNodeDown(event, node) {
   }
   viewport.value.setPointerCapture(event.pointerId)
   if (props.canEdit && (event.ctrlKey || event.metaKey)) {
-    gesture.value = {
-      type: 'selection',
-      pointerId: event.pointerId,
-      node,
-      startX: event.clientX,
-      startY: event.clientY,
-      moved: false,
-    }
+    gesture.value = beginFrameSelection(event, node, pointInWorld, viewport.value.getBoundingClientRect())
     return
   }
   const draggingSelection = isSelected(node)
@@ -407,7 +409,7 @@ function onPointerMove(event) {
     return
   }
   if (active.type === 'selection') {
-    active.moved ||= Math.hypot(event.clientX - active.startX, event.clientY - active.startY) > 4
+    updateFrameSelection(active, event, pointInWorld, nodeDimensions)
     return
   }
   const point = pointInWorld(event)
@@ -423,10 +425,8 @@ function onPointerUp(event) {
   const active = gesture.value
   if (!active || active.pointerId !== event.pointerId) return
   if (active.type === 'selection') {
-    if (!active.moved) {
-      lastNodeClick = null
-      toggleSelection(active.node)
-    }
+    if (!active.moved && active.node) lastNodeClick = null
+    finishFrameSelection(active)
     cancelGesture()
     return
   }
@@ -465,6 +465,7 @@ function onNativeDoubleClick(node) {
 }
 
 function cancelGesture() {
+  cancelFrameSelection()
   gesture.value = null
 }
 
@@ -519,6 +520,7 @@ function focusNode(node) {
 function onKey(event) {
   if (event.key !== 'Escape') return
   if (props.linkingFrom) emit('start-link', null)
+  cancelGesture()
   clearSelection()
 }
 

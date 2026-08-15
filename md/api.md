@@ -162,6 +162,12 @@ string. A chapter mutation uses `{arcId,number,name,description,status,
 imagePresetKey,customImageId,imageFocalX,imageFocalY,positionX,positionY}`.
 Every chapter returned by graph/chapter reads also has the derived integer
 `sceneCount`; it is not accepted as mutation input.
+Bulk graph mutations use `PATCH .../graph-nodes/positions` with
+`{level,positions:[{id,x,y}]}`, `POST .../graph-nodes/delete` with `{level,ids}`
+and `PATCH .../graph-nodes/status` with `{level:"chapters",ids,status}`. Each
+request accepts at most 200 distinct positive node IDs and validates ownership
+as one operation; bulk status values are the same canonical chapter statuses as
+single-chapter mutations.
 Chapter transitions use `{arcId,fromChapterId,toChapterId,label}`, scenario
 transitions use `{chapterId,fromSceneId,toSceneId,label}`, and block transitions
 use `{sceneId,fromItemId,toItemId,label}`. Each transition may only connect

@@ -112,6 +112,10 @@ export function deleteGraphNodes(uuid, level, ids) {
   return fetchPost(`/sessions/${uuid}/graph-nodes/delete`, { level, ids })
 }
 
+export function updateGraphNodeStatuses(uuid, level, ids, status) {
+  return fetchPatch(`/sessions/${uuid}/graph-nodes/status`, { level, ids, status })
+}
+
 export function moveChapterToArc(uuid, chapterId, arcId, x, y) {
   return fetchPatch(`/sessions/${uuid}/chapters/${chapterId}/arc`, { arcId, x, y })
 }

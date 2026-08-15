@@ -23,6 +23,7 @@
       :empty-description="emptyCopy.description"
       :show-empty-action="false"
       :layout-key="workspaceMode"
+      :status-options="displayLevel === 'chapters' ? CHAPTER_STATUSES : []"
       @node-click="handleNodeClick"
       @node-double-click="handleNodeDoubleClick"
       @edge-click="handleEdgeClick"
@@ -34,6 +35,7 @@
       @save-size="saveSize"
       @selection-change="handleSelectionChange"
       @delete-selection="requestSelectionDelete"
+      @change-selection-status="(status, ids) => $emit('change-nodes-status', status, ids)"
       @view-change="$emit('view-change', $event)"
     >
       <template #node="{ node, linking, target, spotlight }">
@@ -173,6 +175,8 @@ import SceneGraphNode from '@/features/sessions/components/SceneGraphNode.vue'
 import { useNestedEdgeEditor } from '@/features/sessions/composables/useNestedEdgeEditor'
 import { useSceneBlockGraph } from '@/features/sessions/composables/useSceneBlockGraph'
 import { useSceneGraph } from '@/features/sessions/composables/useSceneGraph'
+import { CHAPTER_STATUSES } from '@/features/sessions/lib/chapterGraph'
+import { narrativeCanvasActions, narrativeCanvasEmptyCopy, narrativeCanvasLoadingLabel } from '@/features/sessions/lib/narrativeCanvas'
 import { sceneBlockDefaultWidth } from '@/features/sessions/lib/sceneBlockTypes'
 
 const props = defineProps({
@@ -187,7 +191,7 @@ const props = defineProps({
 const emit = defineEmits([
   'node-click', 'node-double-click', 'edge-click', 'start-link', 'finish-link',
   'preview-positions', 'save-positions', 'delete-nodes', 'selection-change', 'create-chapter', 'close-workspace',
-  'chapter-ancestor-click', 'scene-count', 'view-change', 'send-block-to-combat',
+  'chapter-ancestor-click', 'scene-count', 'view-change', 'send-block-to-combat', 'change-nodes-status',
 ])
 
 const canvas = ref(null)
@@ -249,21 +253,9 @@ const spotlightOffsetX = computed(() => transitionSpotlight.value?.level === dis
   ? transitionSpotlight.value.offset
   : 0)
 const showChapterAncestor = computed(() => ['scenes', 'blocks'].includes(displayLevel.value) && !!activeChapter.value)
-const canvasActions = computed(() => displayLevel.value === 'chapters'
-  ? [{ id: 'chapter', label: 'Новая глава', icon: 'chapter' }]
-  : displayLevel.value === 'scenes'
-    ? [{ id: 'scene', label: 'Новый сценарий', icon: 'scene' }]
-    : [
-        { id: 'text', label: 'Текстовый блок', icon: 'text' },
-        { id: 'list', label: 'Список', icon: 'list' },
-        { id: 'combat', label: 'Бой', icon: 'combat' },
-      ])
-const emptyCopy = computed(() => displayLevel.value === 'chapters'
-  ? { title: 'Здесь появятся главы', description: 'Создайте первую главу и соединяйте главы переходами.' }
-  : displayLevel.value === 'scenes'
-    ? { title: 'Здесь появится карта сценариев', description: 'Создавайте сценарии и соединяйте их переходами.' }
-    : { title: 'Здесь появится режиссёрская схема', description: 'Добавляйте блоки сценария и соединяйте их переходами.' })
-const loadingLabel = computed(() => displayLevel.value === 'blocks' ? 'Загружаем блоки сценария…' : 'Загружаем сценарии…')
+const canvasActions = computed(() => narrativeCanvasActions(displayLevel.value))
+const emptyCopy = computed(() => narrativeCanvasEmptyCopy(displayLevel.value))
+const loadingLabel = computed(() => narrativeCanvasLoadingLabel(displayLevel.value))
 function transitionDelay() {
   return globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 0 : 420
 }

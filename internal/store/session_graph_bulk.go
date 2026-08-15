@@ -67,6 +67,29 @@ func (s *Store) UpdateGraphNodePositions(ctx context.Context, sessionID int64, l
 	return tx.Commit(ctx)
 }
 
+// UpdateGraphNodeStatus atomically updates chapter nodes after validating that
+// every requested node belongs to the session.
+func (s *Store) UpdateGraphNodeStatus(ctx context.Context, sessionID int64, level string, ids []int64, status string) error {
+	if level != "chapters" {
+		return ErrNotFound
+	}
+	tx, err := s.pool.Begin(ctx)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback(ctx)
+	result, err := tx.Exec(ctx,
+		`UPDATE dndshare.session_chapter SET status = $3
+		 WHERE session_id = $1 AND id = ANY($2)`, sessionID, ids, status)
+	if err != nil {
+		return err
+	}
+	if result.RowsAffected() != int64(len(ids)) {
+		return ErrNotFound
+	}
+	return tx.Commit(ctx)
+}
+
 // DeleteGraphNodes atomically deletes selected nodes. Chapters with scenes are
 // intentionally rejected as a whole, matching single-chapter deletion.
 func (s *Store) DeleteGraphNodes(ctx context.Context, sessionID int64, level string, ids []int64) (bool, error) {

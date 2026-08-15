@@ -16,6 +16,7 @@ import {
   updateArc as apiUpdateArc,
   updateChapter as apiUpdateChapter,
   updateChapterEdge as apiUpdateEdge,
+  updateGraphNodeStatuses as apiUpdateGraphNodeStatuses,
 } from '@/shared/api/sessionsApi'
 
 export function useChapterGraph({ sessionUuid, session }) {
@@ -176,6 +177,14 @@ export function useChapterGraph({ sessionUuid, session }) {
     }
   }
 
+  async function updateChapterStatuses(ids, status) {
+    await apiUpdateGraphNodeStatuses(sessionUuid, 'chapters', ids, status)
+    const keys = new Set(ids.map(String))
+    chapters.value = chapters.value.map(chapter => keys.has(String(chapter.id))
+      ? { ...chapter, status }
+      : chapter)
+  }
+
   async function makeCurrent(chapterId) {
     await apiSetCurrentChapter(sessionUuid, chapterId)
     session.value = { ...session.value, currentChapterId: chapterId }
@@ -213,6 +222,6 @@ export function useChapterGraph({ sessionUuid, session }) {
     selectedArc, currentArc, currentChapter, visibleChapters, visibleEdges,
     load, selectArc, createArc, updateArc, reorderArcs, deleteArc,
     createChapter, updateChapter, setLocalPosition, setLocalPositions, setSceneCount, savePosition, savePositions, moveChapterToArc,
-    deleteChapter, deleteChapters, makeCurrent, createEdge, updateEdge, deleteEdge, focusCurrent,
+    deleteChapter, deleteChapters, updateChapterStatuses, makeCurrent, createEdge, updateEdge, deleteEdge, focusCurrent,
   }
 }
