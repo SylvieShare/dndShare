@@ -87,7 +87,6 @@ function eventIcon(type) {
     item_added: '+',
     entry_added: '+',
     resource_used: '◌',
-    session_status_changed: '◆',
     chapter_started: '→',
     encounter_started: '⚔',
     encounter_finished: '✓',

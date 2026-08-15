@@ -18,3 +18,17 @@ func TestSessionParticipantOrderMigration(t *testing.T) {
 		}
 	}
 }
+
+func TestSessionParticipantBelongsToOneSession(t *testing.T) {
+	for _, fragment := range []string{
+		"session_participant_char_id_key UNIQUE (char_id)",
+		"linked_session.deleted = true",
+		"DELETE FROM dndshare.session_participant older",
+		"older.char_id = newer.char_id",
+		"ALTER TABLE dndshare.\"session\" DROP COLUMN IF EXISTS status",
+	} {
+		if !strings.Contains(schemaSessionsSQL, fragment) {
+			t.Fatalf("session schema must contain %q", fragment)
+		}
+	}
+}

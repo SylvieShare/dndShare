@@ -62,7 +62,6 @@
         @send-block-to-combat="sendBlockToCombat"
         @edit-session="openEdit"
         @close-workspace="closeWorkspace"
-        @status-change="status => { session = { ...session, status } }"
       >
         <SessionCenterWorkspace
           v-if="workspaceMode === 'combat' && (workspaceRevealed || workspaceClosing)"
@@ -198,9 +197,7 @@ import { useMusicStore } from '@/stores/music'
 import { useTemplateStore } from '@/stores/template'
 import { useSessionEventsStore } from '@/stores/sessionEvents'
 import { useUiStore } from '@/stores/ui'
-import { sessionStatusConfig } from '@/features/sessions/composables/useSessionStatus'
 import { pvName } from '@/features/sessions/lib/participantView'
-import { createHeaderChip } from '@/shared/lib/appHeader'
 import { fetchPost } from '@/shared/api/http'
 import { getSession, joinSession, reorderParticipants, updateParticipantColor, updateSession } from '@/shared/api/sessionsApi'
 import { itemsApi } from '@/shared/api/itemsApi'
@@ -346,10 +343,9 @@ async function sendBlockToCombat(block) {
 }
 
 watch(session, (value) => {
-  const status = sessionStatusConfig(value?.status)
   uiStore.setHeaderContext({
     title: value?.name || route.meta?.title || 'Сессия',
-    chip: value ? createHeaderChip(status.label, status.color) : null,
+    chip: null,
   }, headerOwner)
 }, { immediate: true })
 

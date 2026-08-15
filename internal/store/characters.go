@@ -53,7 +53,6 @@ type PollResult struct {
 type CharSessionBrief struct {
 	UUID          string  `json:"uuid"`
 	Name          string  `json:"name"`
-	Status        string  `json:"status"`
 	ChapterNumber *string `json:"chapterNumber,omitempty"`
 	ChapterName   *string `json:"chapterName,omitempty"`
 	ArcOrder      *int    `json:"arcOrder,omitempty"`
@@ -259,7 +258,7 @@ func (s *Store) GetTemplates(ctx context.Context) ([]CharacterTemplate, error) {
 
 func scanCharSession(row pgx.Row, extra ...any) (CharSessionBrief, error) {
 	var b CharSessionBrief
-	dst := append(extra, &b.UUID, &b.Name, &b.Status, &b.ChapterNumber, &b.ChapterName, &b.ArcOrder, &b.ArcName, &b.IsGm)
+	dst := append(extra, &b.UUID, &b.Name, &b.ChapterNumber, &b.ChapterName, &b.ArcOrder, &b.ArcName, &b.IsGm)
 	if err := row.Scan(dst...); err != nil {
 		return CharSessionBrief{}, err
 	}
@@ -269,7 +268,7 @@ func scanCharSession(row pgx.Row, extra ...any) (CharSessionBrief, error) {
 // SessionsByCharUUID — сессии, где участвует персонаж (порт getSessionsByCharUuid).
 func (s *Store) SessionsByCharUUID(ctx context.Context, charUUID string, userID int64) ([]CharSessionBrief, error) {
 	rows, err := s.pool.Query(ctx,
-		`SELECT s.uuid::text, s.name, s.status, ch.number AS chapter_number, ch.name AS chapter_name,
+		`SELECT s.uuid::text, s.name, ch.number AS chapter_number, ch.name AS chapter_name,
 		        arc."order" AS arc_order, arc.name AS arc_name,
 		        (s.owner_user_id = $2) AS is_gm
 		 FROM dndshare."session" s
@@ -301,7 +300,7 @@ func (s *Store) SessionsByCharUUIDs(ctx context.Context, charUUIDs []string, use
 		return result, nil
 	}
 	rows, err := s.pool.Query(ctx,
-		`SELECT c.uuid::text AS char_uuid, s.uuid::text, s.name, s.status, ch.number AS chapter_number, ch.name AS chapter_name,
+		`SELECT c.uuid::text AS char_uuid, s.uuid::text, s.name, ch.number AS chapter_number, ch.name AS chapter_name,
 		        arc."order" AS arc_order, arc.name AS arc_name,
 		        (s.owner_user_id = $2) AS is_gm
 		 FROM dndshare."session" s

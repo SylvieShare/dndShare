@@ -18,7 +18,6 @@
       @delete-arc="confirmArcDelete"
       @move-arc="moveArc"
       @edit-session="$emit('edit-session')"
-      @status-change="$emit('status-change', $event)"
       @open-combat="$emit('open-combat')"
       @toggle-dice="$emit('toggle-dice')"
       @toggle-music="$emit('toggle-music')"
@@ -189,7 +188,7 @@ const props = defineProps({
   eventsOpen: { type: Boolean, default: true },
 })
 const emit = defineEmits([
-  'open-scenes', 'open-combat', 'edit-session', 'status-change', 'close-workspace',
+  'open-scenes', 'open-combat', 'edit-session', 'close-workspace',
   'send-block-to-combat', 'toggle-dice', 'toggle-music', 'toggle-events',
 ])
 

@@ -18,7 +18,6 @@
       </div>
 
       <div v-if="session" class="char-session">
-        <span class="session-dot" :style="{ background: statusColor(session.status) }" />
         <span class="session-name">{{ session.name }}</span>
         <span v-if="chapterLabel" class="session-chapter">{{ chapterLabel }}</span>
       </div>
@@ -51,7 +50,6 @@ import { BasePopover } from '@sylvieshare/share-ui'
 import { BaseTile } from '@sylvieshare/share-ui'
 import { ConfirmDialog } from '@sylvieshare/share-ui'
 import { setCharSeed } from '@/shared/lib/charSeed'
-import { sessionStatusColor } from '@/features/sessions/composables/useSessionStatus'
 import { currentChapterLabel } from '@/features/sessions/lib/chapterGraph'
 
 const props = defineProps({
@@ -88,8 +86,6 @@ const lvl = computed(() => {
 const chapterLabel = computed(() => {
   return currentChapterLabel(props.session, true)
 })
-
-const statusColor = sessionStatusColor
 
 const relativeDate = computed(() => {
   if (!props.changedAt) return ''
@@ -265,13 +261,6 @@ function doDelete() {
   min-width: 0;
   padding-top: 8px;
   border-top: 1px solid var(--border);
-}
-
-.session-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
 }
 
 .session-name {

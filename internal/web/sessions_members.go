@@ -14,7 +14,6 @@ type sessionByCodeResponse struct {
 	UUID          string  `json:"uuid"`
 	Name          string  `json:"name"`
 	Description   *string `json:"description,omitempty"`
-	Status        string  `json:"status"`
 	SystemName    *string `json:"systemName,omitempty"`
 	ChapterNumber *string `json:"chapterNumber,omitempty"`
 	ChapterName   *string `json:"chapterName,omitempty"`
@@ -40,7 +39,6 @@ func (s *Server) handleGetSessionByCode(w http.ResponseWriter, r *http.Request) 
 		UUID:        session.UUID,
 		Name:        session.Name,
 		Description: session.Description,
-		Status:      session.Status,
 		SystemName:  session.SystemName,
 	}
 	if session.CurrentChapterID != nil {
@@ -59,7 +57,8 @@ func (s *Server) handleGetSessionByCode(w http.ResponseWriter, r *http.Request) 
 }
 
 type joinSessionRequest struct {
-	CharID int64 `json:"charId"`
+	CharID          int64 `json:"charId"`
+	ReplaceExisting bool  `json:"replaceExisting"`
 }
 
 func (s *Server) handleJoinSession(w http.ResponseWriter, r *http.Request) {
@@ -85,7 +84,11 @@ func (s *Server) handleJoinSession(w http.ResponseWriter, r *http.Request) {
 		forbidden(w)
 		return
 	}
-	if err := s.store.AddSessionParticipant(r.Context(), session.ID, body.CharID, userID); err != nil {
+	if err := s.store.AddSessionParticipant(r.Context(), session.ID, body.CharID, userID, body.ReplaceExisting); err != nil {
+		if errors.Is(err, store.ErrCharacterAlreadyInSession) {
+			conflict(w, "Персонаж уже привязан к другой сессии")
+			return
+		}
 		serverError(w, err)
 		return
 	}
@@ -225,51 +228,6 @@ func (s *Server) handleUpdateParticipantColor(w http.ResponseWriter, r *http.Req
 	if !updated {
 		notFound(w, "")
 		return
-	}
-	writeJSON(w, http.StatusNoContent, nil)
-}
-
-type updateStatusRequest struct {
-	Status string `json:"status"`
-}
-
-func (s *Server) handleUpdateSessionStatus(w http.ResponseWriter, r *http.Request) {
-	userID, ok := mustUser(w, r)
-	if !ok {
-		return
-	}
-	session, err := s.lookupSession(w, r)
-	if err != nil {
-		return
-	}
-	if session.OwnerUserID != userID {
-		forbidden(w)
-		return
-	}
-	var body updateStatusRequest
-	if err := decodeJSON(r, &body); err != nil {
-		badRequest(w, "Некорректный запрос")
-		return
-	}
-	if err := s.store.UpdateSessionStatus(r.Context(), session.UUID, body.Status); err != nil {
-		serverError(w, err)
-		return
-	}
-	if session.Status != body.Status {
-		title := map[string]string{
-			"active":    "Сессия началась",
-			"live":      "Сессия началась",
-			"paused":    "Сессия приостановлена",
-			"completed": "Сессия завершена",
-			"archived":  "Сессия перенесена в архив",
-		}[body.Status]
-		if title == "" {
-			title = "Статус сессии изменён"
-		}
-		s.appendSessionEvent(r.Context(), session.ID, userID, "session_status_changed", title, map[string]any{
-			"from": session.Status,
-			"to":   body.Status,
-		})
 	}
 	writeJSON(w, http.StatusNoContent, nil)
 }

@@ -116,13 +116,6 @@
   border-color: color-mix(in srgb, var(--accent) 38%, var(--border-strong));
 }
 
-.tb-session-status {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
 .tb-session-text {
   display: flex;
   flex-direction: column;
@@ -148,55 +141,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 180px;
-}
-
-.tb-session-chevron {
-  color: var(--text-muted);
-  flex-shrink: 0;
-  transition: transform 0.15s;
-}
-.tb-session.open .tb-session-chevron { transform: rotate(180deg); }
-
-.tb-session-dropdown {
-  position: absolute;
-  top: calc(100% + 6px);
-  left: 0;
-  z-index: 130;
-  min-width: 260px;
-  max-width: 360px;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  padding: 6px;
-  background: var(--popover-bg);
-  border: 1px solid var(--border-strong);
-  border-radius: 10px;
-  box-shadow: var(--shadow-lg);
-}
-
-.tb-session-option {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 7px 9px;
-  border-radius: 7px;
-  color: inherit;
-  text-decoration: none;
-  transition: background 0.1s;
-}
-.tb-session-option:hover { background: var(--surface-raised); }
-
-.tb-session-meta {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 10px;
-  color: var(--text-muted);
-}
-.tb-session-status-label {
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
 }
 
 /* ── Center: tabs ── */

@@ -39,7 +39,7 @@ describe('chapter graph workspace', () => {
 
   it('keeps global controls in the command bar and creation on the canvas', () => {
     expect(toolbar).toContain('class="chapter-session-title"')
-    expect(toolbar).toContain('<SessionStatusMenu')
+    expect(toolbar).not.toContain('SessionStatusMenu')
     expect(toolbar).not.toContain("$emit('create-chapter')")
     expect(toolbar).toContain("$emit('open-combat')")
     expect(toolbar).toContain('aria-label="Бой"')

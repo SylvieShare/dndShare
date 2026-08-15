@@ -24,12 +24,8 @@ export function getSessionByCode(code) {
   return fetchGet(`/sessions/by-code/${encodeURIComponent(code)}`)
 }
 
-export function joinSession(uuid, charId) {
-  return fetchPost(`/sessions/${uuid}/join`, { charId })
-}
-
-export function updateSessionStatus(uuid, status) {
-  return fetchPatch(`/sessions/${uuid}/status`, { status })
+export function joinSession(uuid, charId, replaceExisting = false) {
+  return fetchPost(`/sessions/${uuid}/join`, { charId, replaceExisting })
 }
 
 export function leaveSession(uuid) {

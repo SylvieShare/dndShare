@@ -10,7 +10,7 @@ files.
 - `/sessions/:uuid` — session workspace.
 - `/join/:code` — invitation flow.
 
-A session has DM/participant permissions, status, current chapter, participants,
+A session has DM/participant permissions, current chapter, participants,
 encounter and synchronized music state. Owner-only actions are checked on the
 server, not only hidden in UI.
 
@@ -32,7 +32,12 @@ wizard as a fullscreen modal. Its result carries an explicit rules
 `sourceVersionId`, is attached to the current session and refreshes the
 participant rail; the modal then closes without opening the new sheet or
 changing the route. The invitation flow continues to use the compact
-`CharacterCreateModal` and opens the joined character after creation.
+`CharacterCreateModal` and opens the joined character after creation. One
+character can belong to at most one session. Both invitation entry points show
+a confirmation naming the previous session before a transfer; confirmation
+sends an explicit replacement flag, and the backend atomically removes the old
+membership before creating the new one. A database unique constraint on
+`session_participant.char_id` enforces the rule for every caller.
 
 The session participant rail has no shared backing surface: each participant is
 an individual interactive `BaseTile`. Clicking it opens `RowActionMenu` with an
@@ -89,7 +94,7 @@ then the participant rail.
 
 `session_event` stores semantic gameplay actions rather than arbitrary sheet
 JSON changes. The current producers are dice rolls, short/long rests, resource
-use, potion/inventory spending and replenishment, spell use, session status,
+use, potion/inventory spending and replenishment, spell use,
 current chapter, encounter start/finish and `entry_added` for inventory items,
 weapons, potions, spells, feats and abilities. Direct picker/manual additions
 and level-up grants use the same event. Regular editing, drag ordering, music
@@ -99,8 +104,8 @@ The server authenticates every timeline read/write as either the session DM or
 a participant. An `actorCharUuid` identifies the character page that produced
 the action: players can reference only their own participant, while the DM can
 reference any participant in the session. Character pages select their event
-context from the explicit `?session=<uuid>` query, falling back only to a
-live/active session. Player session cards open that character context instead
+context from the explicit `?session=<uuid>` query, falling back to the
+character's attached session. Player session cards open that character context instead
 of the DM workspace.
 
 State-changing character actions are queued by the sheet and sent in the next
@@ -127,7 +132,7 @@ promotes that chapter to `in_progress`, and only one chapter in the session can
 carry the pointer.
 
 `ChapterGraphToolbar` is the semantic session header with its own background and
-bottom divider, not a `BaseTile`. It combines the editable session name/status,
+bottom divider, not a `BaseTile`. It combines the editable session name,
 arc switcher and ordering, accessible icon-only combat launcher, and the dice,
 music and timeline panel toggles. Current-chapter focus and zoom are canvas interactions
 rather than toolbar controls. Creation is contextual and lives on the canvas

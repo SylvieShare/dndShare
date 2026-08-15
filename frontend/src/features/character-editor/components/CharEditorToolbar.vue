@@ -19,47 +19,20 @@
           <span v-if="charSub" class="tb-sub">{{ charSub }}</span>
         </div>
 
-        <div v-if="topSession && !modal" class="tb-session-wrap" v-click-outside="closeSessionMenu">
+        <div v-if="topSession && !modal" class="tb-session-wrap">
           <div class="tb-divider"></div>
-          <button
+          <router-link
+            :to="sessionTarget(topSession)"
             class="tb-session"
-            :class="{ 'tb-session-clickable': sessions.length > 1, open: sessionMenuOpen }"
-            :disabled="sessions.length <= 1"
-            @click="sessions.length > 1 && (sessionMenuOpen = !sessionMenuOpen)"
+            :class="{ 'tb-session-clickable': true }"
           >
-            <span class="tb-session-status" :style="{ background: statusColor(topSession.status) }" :title="statusLabel(topSession.status)"></span>
             <span class="tb-session-text">
               <span class="tb-session-name">{{ topSession.name }}</span>
               <span v-if="topSession.chapterName || topSession.chapterNumber != null" class="tb-session-chapter">
                 {{ chapterLabel(topSession) }}
               </span>
             </span>
-            <svg v-if="sessions.length > 1" class="tb-session-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none">
-              <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
-          <transition name="dropdown">
-            <div v-if="sessionMenuOpen" class="tb-session-dropdown">
-              <router-link
-                v-for="s in sessions"
-                :key="s.uuid"
-                :to="sessionTarget(s)"
-                class="tb-session-option"
-                @click="sessionMenuOpen = false"
-              >
-                <span class="tb-session-status" :style="{ background: statusColor(s.status) }" :title="statusLabel(s.status)"></span>
-                <span class="tb-session-text">
-                  <span class="tb-session-name">{{ s.name }}</span>
-                  <span class="tb-session-meta">
-                    <span class="tb-session-status-label" :style="{ color: statusColor(s.status) }">{{ statusLabel(s.status) }}</span>
-                    <span v-if="s.chapterName || s.chapterNumber != null" class="tb-session-chapter">
-                      · {{ chapterLabel(s) }}
-                    </span>
-                  </span>
-                </span>
-              </router-link>
-            </div>
-          </transition>
+          </router-link>
         </div>
       </div>
 
@@ -161,7 +134,6 @@ import { computed, defineAsyncComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import ContentSourcesModal from '@/features/character-editor/components/ContentSourcesModal.vue'
 import { ToggleSwitch } from '@sylvieshare/share-ui'
-import { sessionStatusColor, sessionStatusLabel } from '@/features/sessions/composables/useSessionStatus'
 import { currentChapterLabel } from '@/features/sessions/lib/chapterGraph'
 import { normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'
 
@@ -183,7 +155,6 @@ const props = defineProps({
   charSub: { type: String, default: '' },
   sourceVersionId: { type: [Number, String], default: null },
   contentSources: { type: [Object, Array], default: null },
-  sessions: { type: Array, default: () => [] },
   topSession: { type: Object, default: null },
 })
 const emit = defineEmits(['update:publicVisible', 'update:activeTab', 'update:value', 'update:var', 'update:contentSources', 'close'])
@@ -191,18 +162,14 @@ const emit = defineEmits(['update:publicVisible', 'update:activeTab', 'update:va
 const router = useRouter()
 const toolbarRootEl = ref(null)
 const menuOpen = ref(false)
-const sessionMenuOpen = ref(false)
 const sourcesOpen = ref(false)
 const sourceDraft = ref(normalizeContentSourceSettings(null))
 
 defineExpose({ rootElement: () => toolbarRootEl.value })
 
-const statusColor = sessionStatusColor
-const statusLabel = sessionStatusLabel
 function chapterLabel(s) {
   return currentChapterLabel(s, true)
 }
-function closeSessionMenu() { sessionMenuOpen.value = false }
 function sessionTarget(session) {
   if (session.isGm) return '/sessions/' + session.uuid
   return {

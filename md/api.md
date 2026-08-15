@@ -99,7 +99,10 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
 ## Sessions and scenes
 
 - `GET|POST /api/sessions`, `GET|PATCH /api/sessions/{uuid}` and session delete;
-- join/leave/kick participant and update session status;
+- join/leave/kick participant. `POST /api/sessions/{uuid}/join` accepts
+  `{charId,replaceExisting}`; without explicit replacement it returns `409` when
+  the character belongs to another session, while confirmed replacement moves
+  the character atomically;
 - `PATCH /api/sessions/{uuid}/participants/{charId}/color` assigns or clears
   (`{"color":null}`) the participant's session-local `#RRGGBB` marker; owner-only;
 - `PATCH /api/sessions/{uuid}/participants-order` accepts the complete ordered

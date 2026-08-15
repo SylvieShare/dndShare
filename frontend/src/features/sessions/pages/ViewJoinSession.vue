@@ -29,9 +29,6 @@
         <div class="hero-inner">
           <div class="hero-meta">
             <span class="hero-eyebrow">Приглашение в приключение</span>
-            <span class="hero-status" :style="{ '--status-color': sessionStatusColor(session.status) }">
-              {{ sessionStatusLabel(session.status) }}
-            </span>
           </div>
           <h1 class="hero-title">{{ session.name }}</h1>
           <div v-if="session.chapterNumber != null || session.systemName" class="hero-pills">
@@ -103,6 +100,16 @@
       @close="createOpen = false"
       @create="createChar"
     />
+
+    <ConfirmDialog
+      v-if="pendingTransfer"
+      title="Перенести персонажа?"
+      :message="transferMessage"
+      confirm-label="Перенести"
+      variant="warning"
+      @confirm="confirmTransfer"
+      @cancel="pendingTransfer = null"
+    />
   </div>
 </template>
 
@@ -110,13 +117,13 @@
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import CharacterCreateModal from '@/features/character-list/components/CharacterCreateModal'
+import { ConfirmDialog } from '@sylvieshare/share-ui'
 import { fetchGet, fetchPost } from '@/shared/api/http'
 import { getSessionByCode, joinSession } from '@/shared/api/sessionsApi'
 import { useAccountStore } from '@/stores/account'
 import { pvAvatar, pvLevel, pvName, pvSubtitle } from '@/features/sessions/lib/participantView'
 import { romanNumeral } from '@/features/sessions/lib/chapterGraph'
 import { useTemplateStore } from '@/stores/template'
-import { sessionStatusColor, sessionStatusLabel } from '@/features/sessions/composables/useSessionStatus'
 
 const route = useRoute()
 const router = useRouter()
@@ -130,11 +137,20 @@ const loadingChars = ref(false)
 const error = ref(null)
 const session = ref(null)
 const chars = ref([])
+const sessionsByChar = ref({})
 const joiningId = ref(null)
+const pendingTransfer = ref(null)
 
 const createOpen = ref(false)
 const creating = ref(false)
 const templates = computed(() => templateStore.all)
+const transferMessage = computed(() => {
+  const pending = pendingTransfer.value
+  if (!pending) return ''
+  const oldName = pending.currentSession?.name
+  const from = oldName ? `сейчас привязан к сессии «${oldName}»` : 'уже привязан к другой сессии'
+  return `${displayName(pending.char)} ${from}. Старая связь будет удалена.`
+})
 
 function templateName(templateId) {
   return templateStore.all.find(t => t.id === templateId)?.name ?? ''
@@ -158,20 +174,42 @@ async function loadChars() {
   try {
     const [res] = await Promise.all([fetchGet('/chars'), templateStore.ensure()])
     chars.value = res?.chars ?? []
+    sessionsByChar.value = res?.sessionsByChar ?? {}
   } finally {
     loadingChars.value = false
   }
 }
 
-async function selectChar(char) {
+async function joinChar(char, replaceExisting = false) {
   if (joiningId.value) return
   joiningId.value = char.id
   try {
-    await joinSession(session.value.uuid, char.id)
+    await joinSession(session.value.uuid, char.id, replaceExisting)
     router.push('/char/' + char.uuid)
+  } catch (error) {
+    if (error?.status === 409 && !replaceExisting) {
+      pendingTransfer.value = { char, currentSession: sessionsByChar.value[char.uuid]?.[0] ?? null }
+      return
+    }
+    throw error
   } finally {
     joiningId.value = null
   }
+}
+
+function selectChar(char) {
+  const currentSession = sessionsByChar.value[char.uuid]?.[0]
+  if (currentSession && currentSession.uuid !== session.value.uuid) {
+    pendingTransfer.value = { char, currentSession }
+    return
+  }
+  return joinChar(char)
+}
+
+function confirmTransfer() {
+  const char = pendingTransfer.value?.char
+  pendingTransfer.value = null
+  if (char) return joinChar(char, true)
 }
 
 function openCreate() {
@@ -292,18 +330,6 @@ onMounted(async () => {
   font-weight: 800;
   letter-spacing: 0.18em;
   color: var(--text-muted);
-  text-transform: uppercase;
-}
-.hero-status {
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  border: 1px solid;
-  border-color: color-mix(in srgb, var(--status-color) 34%, transparent);
-  background: color-mix(in srgb, var(--status-color) 13%, transparent);
-  color: var(--status-color);
-  border-radius: 5px;
-  padding: 3px 8px;
   text-transform: uppercase;
 }
 .hero-title {

@@ -12,7 +12,10 @@ import (
 )
 
 // ErrNotFound — строки нет (аналог возврата null / Optional.empty у репозиториев).
-var ErrNotFound = errors.New("not found")
+var (
+	ErrNotFound                  = errors.New("not found")
+	ErrCharacterAlreadyInSession = errors.New("character already belongs to another session")
+)
 
 // Store — доступ к Postgres поверх пула pgx. Методы по фичам разложены по отдельным
 // файлам этого пакета (users.go, characters.go, handbook.go, ...).

@@ -22,7 +22,6 @@ type GameSession struct {
 	SystemID         *int64    `json:"systemId,omitempty"`
 	SystemName       *string   `json:"systemName,omitempty"`
 	InviteCode       string    `json:"inviteCode"`
-	Status           string    `json:"status"`
 	CurrentChapterID *int64    `json:"currentChapterId,omitempty"`
 	CreatedAt        time.Time `json:"createdAt"`
 	ChangedAt        time.Time `json:"changedAt"`
@@ -56,7 +55,7 @@ type ChapterBrief struct {
 // sessionSelect — общий SELECT сессии с именем системы (LEFT JOIN source).
 const sessionSelect = `
 	SELECT s.id, s.uuid::text, s.owner_user_id, s.name, s.description, s.system_id,
-	       src.name AS source_name, s.invite_code, s.status, s.current_chapter_id,
+	       src.name AS source_name, s.invite_code, s.current_chapter_id,
 	       s.created_at, s.changed_at
 	FROM dndshare."session" s
 	LEFT JOIN dndshare."source" src ON src.id = s.system_id`
@@ -64,7 +63,7 @@ const sessionSelect = `
 func scanGameSession(row pgx.Row) (GameSession, error) {
 	var g GameSession
 	err := row.Scan(&g.ID, &g.UUID, &g.OwnerUserID, &g.Name, &g.Description, &g.SystemID,
-		&g.SystemName, &g.InviteCode, &g.Status, &g.CurrentChapterID, &g.CreatedAt, &g.ChangedAt)
+		&g.SystemName, &g.InviteCode, &g.CurrentChapterID, &g.CreatedAt, &g.ChangedAt)
 	return g, err
 }
 
@@ -261,8 +260,8 @@ func (s *Store) CreateSessionWithFirstArc(ctx context.Context, userID int64, nam
 	var id int64
 	var uuid string
 	if err := tx.QueryRow(ctx,
-		`INSERT INTO dndshare."session" (owner_user_id, name, description, system_id, invite_code, status)
-		 VALUES ($1, $2, $3, $4, $5, 'draft') RETURNING id, uuid::text`,
+		`INSERT INTO dndshare."session" (owner_user_id, name, description, system_id, invite_code)
+		 VALUES ($1, $2, $3, $4, $5) RETURNING id, uuid::text`,
 		userID, name, description, systemID, generateInviteCode(),
 	).Scan(&id, &uuid); err != nil {
 		return 0, "", err
@@ -291,25 +290,29 @@ func (s *Store) UpdateSession(ctx context.Context, uuid, name string, descriptio
 	return err
 }
 
-// UpdateSessionStatus меняет статус сессии (порт updateSessionStatus).
-func (s *Store) UpdateSessionStatus(ctx context.Context, uuid, status string) error {
-	_, err := s.pool.Exec(ctx,
-		`UPDATE dndshare."session" SET status = $2, changed_at = now()
-		 WHERE uuid = $1::uuid AND deleted = false`,
-		uuid, status,
-	)
-	return err
-}
-
 // DeleteGameSession помечает сессию удалённой (порт deleteSession).
 func (s *Store) DeleteGameSession(ctx context.Context, id int64) error {
-	_, err := s.pool.Exec(ctx,
-		`UPDATE dndshare."session" SET deleted = true WHERE id = $1`, id)
-	return err
+	tx, err := s.pool.Begin(ctx)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback(ctx)
+	if _, err := tx.Exec(ctx,
+		`UPDATE dndshare."session" SET deleted = true WHERE id = $1`, id,
+	); err != nil {
+		return err
+	}
+	if _, err := tx.Exec(ctx,
+		`DELETE FROM dndshare.session_participant WHERE session_id = $1`, id,
+	); err != nil {
+		return err
+	}
+	return tx.Commit(ctx)
 }
 
-// AddSessionParticipant добавляет персонажа в сессию (порт addParticipant).
-func (s *Store) AddSessionParticipant(ctx context.Context, sessionID, charID, userID int64) error {
+// AddSessionParticipant attaches a character to one session. Replacing an
+// existing attachment requires explicit confirmation from the caller.
+func (s *Store) AddSessionParticipant(ctx context.Context, sessionID, charID, userID int64, replaceExisting bool) error {
 	tx, err := s.pool.Begin(ctx)
 	if err != nil {
 		return err
@@ -317,14 +320,39 @@ func (s *Store) AddSessionParticipant(ctx context.Context, sessionID, charID, us
 	defer tx.Rollback(ctx)
 	var lockedSessionID int64
 	if err := tx.QueryRow(ctx,
-		`SELECT id FROM dndshare."session" WHERE id = $1 FOR UPDATE`, sessionID,
+		`SELECT id FROM dndshare."session" WHERE id = $1 AND deleted = false FOR UPDATE`, sessionID,
 	).Scan(&lockedSessionID); err != nil {
 		return err
 	}
+	var lockedCharID int64
+	if err := tx.QueryRow(ctx,
+		`SELECT id FROM dndshare."char" WHERE id = $1 AND deleted = false FOR UPDATE`, charID,
+	).Scan(&lockedCharID); err != nil {
+		return err
+	}
+	var existingSessionID int64
+	err = tx.QueryRow(ctx,
+		`SELECT session_id FROM dndshare.session_participant WHERE char_id = $1`, charID,
+	).Scan(&existingSessionID)
+	if err != nil && !errors.Is(err, pgx.ErrNoRows) {
+		return err
+	}
+	if err == nil {
+		if existingSessionID == sessionID {
+			return tx.Commit(ctx)
+		}
+		if !replaceExisting {
+			return ErrCharacterAlreadyInSession
+		}
+		if _, err := tx.Exec(ctx,
+			`DELETE FROM dndshare.session_participant WHERE char_id = $1`, charID,
+		); err != nil {
+			return err
+		}
+	}
 	if _, err := tx.Exec(ctx,
 		`INSERT INTO dndshare.session_participant (session_id, char_id, user_id, sort_order)
-		 VALUES ($1, $2, $3, (SELECT COALESCE(MAX(sort_order), 0) + 1 FROM dndshare.session_participant WHERE session_id = $1))
-		 ON CONFLICT (session_id, char_id) DO NOTHING`,
+		 VALUES ($1, $2, $3, (SELECT COALESCE(MAX(sort_order), 0) + 1 FROM dndshare.session_participant WHERE session_id = $1))`,
 		sessionID, charID, userID,
 	); err != nil {
 		return err

@@ -38,19 +38,16 @@
     </div>
 
     <template v-if="loading">
-      <div v-for="n in 2" :key="n" class="hero-skeleton" />
+      <div class="cards-grid">
+        <div v-for="n in 4" :key="n" class="card-skeleton" />
+      </div>
     </template>
 
     <template v-else-if="hasAnything">
       <template v-if="showGm && gmSessions.length">
         <div v-if="showPlayer && playerSessions.length" class="section-title">Я веду</div>
-        <SessionHero
-          v-for="s in activeGm"
-          :key="s.id"
-          :session="s"
-        />
-        <div v-if="inactiveGm.length" class="cards-grid">
-          <SessionCard v-for="s in inactiveGm" :key="s.id" :session="s" @delete="confirmDelete" />
+        <div class="cards-grid">
+          <SessionCard v-for="s in gmSessions" :key="s.id" :session="s" @delete="confirmDelete" />
         </div>
       </template>
 
@@ -111,21 +108,15 @@ import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import SessionCard from '@/features/sessions/components/SessionCard'
 import SessionCreateModal from '@/features/sessions/components/SessionCreateModal'
-import SessionHero from '@/features/sessions/components/SessionHero'
 import SessionJoinModal from '@/features/sessions/components/SessionJoinModal'
 import { ConfirmDialog } from '@sylvieshare/share-ui'
 import { consumePrefetch } from '@/app/router'
 import { createSession, deleteSession, getSessionByCode, getSessions, leaveSession } from '@/shared/api/sessionsApi'
 
-const ACTIVE_STATUSES  = ['live', 'active']
-const ARCHIVE_STATUSES = ['completed', 'archived']
-
 const FILTERS = [
   { key: 'all',     label: 'Все' },
-  { key: 'active',  label: 'Активные' },
   { key: 'gm',      label: 'Я веду' },
   { key: 'player',  label: 'Я играю' },
-  { key: 'archive', label: 'Архив' },
 ]
 
 const router = useRouter()
@@ -204,20 +195,11 @@ async function handleCreate(payload) {
 const allGm     = computed(() => sessions.value.filter(s => s.myRole === 'gm'))
 const allPlayer = computed(() => sessions.value.filter(s => s.myRole === 'player'))
 
-function applyFilter(list) {
-  if (filter.value === 'active')  return list.filter(s => ACTIVE_STATUSES.includes(s.status))
-  if (filter.value === 'archive') return list.filter(s => ARCHIVE_STATUSES.includes(s.status))
-  return list
-}
-
-const gmSessions     = computed(() => applyFilter(allGm.value))
-const playerSessions = computed(() => applyFilter(allPlayer.value))
+const gmSessions     = computed(() => allGm.value)
+const playerSessions = computed(() => allPlayer.value)
 
 const showGm     = computed(() => filter.value !== 'player')
 const showPlayer = computed(() => filter.value !== 'gm')
-
-const activeGm       = computed(() => gmSessions.value.filter(s => ACTIVE_STATUSES.includes(s.status)))
-const inactiveGm     = computed(() => gmSessions.value.filter(s => !ACTIVE_STATUSES.includes(s.status)))
 
 const hasAnything = computed(() =>
   (showGm.value && gmSessions.value.length) ||
@@ -226,10 +208,8 @@ const hasAnything = computed(() =>
 
 function filterCount(key) {
   if (key === 'all')     return sessions.value.length
-  if (key === 'active')  return sessions.value.filter(s => ACTIVE_STATUSES.includes(s.status)).length
   if (key === 'gm')      return allGm.value.length
   if (key === 'player')  return allPlayer.value.length
-  if (key === 'archive') return sessions.value.filter(s => ARCHIVE_STATUSES.includes(s.status)).length
   return 0
 }
 
@@ -432,14 +412,14 @@ onMounted(() => loadSessions(consumePrefetch(route.fullPath)))
   gap: 12px;
 }
 
-.hero-skeleton {
-  height: 180px;
-  border-radius: 16px;
+.card-skeleton {
+  height: 140px;
+  border-radius: var(--r-lg);
   background: var(--bg);
   animation: sk-pulse 1.4s ease-in-out infinite;
 }
 
-.hero-skeleton:nth-child(3) {
+.card-skeleton:nth-child(even) {
   animation-delay: 0.2s;
 }
 

@@ -30,12 +30,22 @@
 
     <div v-else class="no-chars">Нет доступных персонажей</div>
   </AppModalFrame>
+
+  <ConfirmDialog
+    v-if="pendingTransfer"
+    title="Перенести персонажа?"
+    :message="transferMessage"
+    confirm-label="Перенести"
+    variant="warning"
+    @confirm="confirmTransfer"
+    @cancel="pendingTransfer = null"
+  />
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { AppModalFrame } from '@sylvieshare/share-ui'
+import { AppModalFrame, ConfirmDialog } from '@sylvieshare/share-ui'
 import { fetchGet } from '@/shared/api/http'
 import { joinSession } from '@/shared/api/sessionsApi'
 import { pvAvatar, pvLevel, pvName, pvSubtitle } from '@/features/sessions/lib/participantView'
@@ -50,8 +60,18 @@ defineEmits(['close'])
 const router = useRouter()
 const templateStore = useTemplateStore()
 const chars = ref([])
+const sessionsByChar = ref({})
 const loadingChars = ref(true)
 const joiningId = ref(null)
+const pendingTransfer = ref(null)
+
+const transferMessage = computed(() => {
+  const pending = pendingTransfer.value
+  if (!pending) return ''
+  const oldName = pending.currentSession?.name
+  const from = oldName ? `сейчас привязан к сессии «${oldName}»` : 'уже привязан к другой сессии'
+  return `${displayName(pending.char)} ${from}. Старая связь будет удалена.`
+})
 
 function templateName(templateId) {
   return templateStore.all.find(t => t.id === templateId)?.name ?? ''
@@ -73,21 +93,43 @@ function lvl(char) {
   return pvLevel(char)
 }
 
-async function selectChar(char) {
+async function joinChar(char, replaceExisting = false) {
   if (joiningId.value) return
   joiningId.value = char.id
   try {
-    await joinSession(props.sessionUuid, char.id)
+    await joinSession(props.sessionUuid, char.id, replaceExisting)
     router.push('/char/' + char.uuid)
+  } catch (error) {
+    if (error?.status === 409 && !replaceExisting) {
+      pendingTransfer.value = { char, currentSession: sessionsByChar.value[char.uuid]?.[0] ?? null }
+      return
+    }
+    throw error
   } finally {
     joiningId.value = null
   }
+}
+
+function selectChar(char) {
+  const currentSession = sessionsByChar.value[char.uuid]?.[0]
+  if (currentSession && currentSession.uuid !== props.sessionUuid) {
+    pendingTransfer.value = { char, currentSession }
+    return
+  }
+  return joinChar(char)
+}
+
+function confirmTransfer() {
+  const char = pendingTransfer.value?.char
+  pendingTransfer.value = null
+  if (char) return joinChar(char, true)
 }
 
 onMounted(async () => {
   try {
     const [res] = await Promise.all([fetchGet('/chars'), templateStore.ensure()])
     chars.value = res?.chars ?? []
+    sessionsByChar.value = res?.sessionsByChar ?? {}
   } finally {
     loadingChars.value = false
   }

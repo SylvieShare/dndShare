@@ -226,7 +226,6 @@ CREATE TABLE IF NOT EXISTS dndshare."session" (
     description        text NULL,
     system_id          int8 NULL REFERENCES dndshare."source"(id),
     invite_code        varchar(16) NOT NULL,
-    status             varchar(32) DEFAULT 'active'::character varying NOT NULL,
     created_at         timestamptz DEFAULT now() NOT NULL,
     changed_at         timestamptz DEFAULT now() NOT NULL,
     deleted            bool DEFAULT false NOT NULL,
@@ -236,6 +235,7 @@ CREATE TABLE IF NOT EXISTS dndshare."session" (
     CONSTRAINT session_pkey PRIMARY KEY (id),
     CONSTRAINT session_uuid_key UNIQUE (uuid)
 );
+ALTER TABLE dndshare."session" DROP COLUMN IF EXISTS status;
 CREATE INDEX IF NOT EXISTS idx_session_owner_user_id ON dndshare."session" USING btree (owner_user_id);
 CREATE INDEX IF NOT EXISTS idx_session_system_id ON dndshare."session" USING btree (system_id);
 CREATE INDEX IF NOT EXISTS idx_session_current_chapter_id ON dndshare."session" USING btree (current_chapter_id);
@@ -617,11 +617,21 @@ CREATE TABLE IF NOT EXISTS dndshare.session_participant (
     sort_order int4 NOT NULL,
     joined_at  timestamptz DEFAULT now() NOT NULL,
     CONSTRAINT session_participant_pkey PRIMARY KEY (id),
+    CONSTRAINT session_participant_char_id_key UNIQUE (char_id),
     CONSTRAINT session_participant_session_id_char_id_key UNIQUE (session_id, char_id),
     CONSTRAINT session_participant_session_id_sort_order_key UNIQUE (session_id, sort_order)
 );
 ALTER TABLE dndshare.session_participant ADD COLUMN IF NOT EXISTS color varchar(7) NULL;
 ALTER TABLE dndshare.session_participant ADD COLUMN IF NOT EXISTS sort_order int4 NULL;
+-- A character belongs to at most one session. Keep its newest attachment when
+-- upgrading databases that previously allowed the same character in several sessions.
+DELETE FROM dndshare.session_participant participant
+USING dndshare."session" linked_session
+WHERE participant.session_id = linked_session.id AND linked_session.deleted = true;
+DELETE FROM dndshare.session_participant older
+USING dndshare.session_participant newer
+WHERE older.char_id = newer.char_id
+  AND (older.joined_at, older.id) < (newer.joined_at, newer.id);
 WITH participant_order AS (
     SELECT id, (row_number() OVER (PARTITION BY session_id ORDER BY joined_at, id))::int AS sort_order
     FROM dndshare.session_participant
@@ -642,6 +652,9 @@ DO $$ BEGIN
     END IF;
     IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'session_participant_session_id_sort_order_key') THEN
         ALTER TABLE dndshare.session_participant ADD CONSTRAINT session_participant_session_id_sort_order_key UNIQUE (session_id, sort_order);
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'session_participant_char_id_key') THEN
+        ALTER TABLE dndshare.session_participant ADD CONSTRAINT session_participant_char_id_key UNIQUE (char_id);
     END IF;
 END $$;
 CREATE INDEX IF NOT EXISTS idx_session_participant_char_id ON dndshare.session_participant USING btree (char_id);

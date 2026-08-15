@@ -6,7 +6,13 @@ async function apiRequest(url, { method = 'GET', body, response = 'json' } = {})
         headers: JSON_HEADERS,
         body: body == null ? null : JSON.stringify(body),
     })
-    if (!res.ok) throw new Error(String(res.status))
+    if (!res.ok) {
+        const payload = await res.json().catch(() => ({}))
+        const error = new Error(payload?.desc || String(res.status))
+        error.status = res.status
+        error.type = payload?.type || ''
+        throw error
+    }
     if (response === 'raw') return res
     if (res.status === 204) return {}
     const contentType = res.headers.get('content-type') || ''

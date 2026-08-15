@@ -1,9 +1,6 @@
 <template>
   <div class="s-card" :class="{ 's-card--readonly': isReadonly }" @click="onCardClick">
     <div class="card-top">
-      <span class="status-badge" :style="{ '--sc': statusCfg.color }">
-        <span class="status-dot" />{{ statusCfg.label }}
-      </span>
       <div class="card-top-right">
         <span class="role-label">{{ session.myRole === 'gm' ? 'DM' : 'ИГРОК' }}</span>
         <div class="menu-wrap" @click.stop>
@@ -62,7 +59,6 @@
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { BasePopover } from '@sylvieshare/share-ui'
-import { sessionStatusConfig } from '@/features/sessions/composables/useSessionStatus'
 import { currentChapterLabel } from '@/features/sessions/lib/chapterGraph'
 
 const AVATAR_COLORS = ['var(--accent)', 'var(--accent)', 'var(--info)', 'var(--danger)', 'var(--success)', 'var(--warning)', 'var(--danger)']
@@ -104,7 +100,6 @@ function menuAction(type) {
   else emit('leave', props.session)
 }
 
-const statusCfg = computed(() => sessionStatusConfig(props.session.status))
 const participants = computed(() => props.session.participants ?? [])
 
 const chapterLabel = computed(() => {
@@ -180,24 +175,7 @@ const relativeDate = computed(() => {
   display: flex;
   align-items: center;
   gap: 6px;
-}
-
-.status-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  color: var(--sc);
-}
-
-.status-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--sc);
-  flex-shrink: 0;
+  margin-left: auto;
 }
 
 .role-label {

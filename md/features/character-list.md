@@ -41,6 +41,9 @@ attaches the character to the current session, refreshes its participant rail
 and closes the modal without opening the character sheet or changing the route.
 The invitation screen keeps the compact `CharacterCreateModal` based on
 `MorphSheet`. For VTM the compact modal calls the registered `createData(name)`.
+Each character card can show at most one attached session. Joining another
+session requires a warning and confirmed transfer; the previous membership is
+then removed by the server.
 
 Both flows resolve `sourceVersionId` from `/api/sources` and send it explicitly
 to `POST /api/chars`. The server rejects a missing/unknown version; there is no

@@ -162,7 +162,7 @@ Spellcasting ability is explicit handbook data (`spellcasting.ability` or
 localized class name. Short/long rest update current spell slots, ability
 counters and hit-dice pools without scalar mirrors.
 Completing either rest publishes one `rest_completed` session event with its
-kind and recovery summary when the sheet has an active session context. Hit-die
+kind and recovery summary when the sheet has an attached session context. Hit-die
 rolls remain normal `dice_roll` events; opening or cancelling a rest does not
 write history.
 
@@ -189,7 +189,7 @@ The list shows count as a badge and has no inline increment/decrement controls.
 Clicking an inventory row opens the shared `RowActionMenu`: referenced items can
 open their description, while editable rows offer spend, add, change and delete.
 Spend/add changes the stack by one and publishes `item_spent`/`item_added` in an
-active session; editing metadata or deleting an entry does not claim a gameplay
+attached session; editing metadata or deleting an entry does not claim a gameplay
 action. Creating a new inventory item or weapon publishes `entry_added`; the
 same event covers newly picked potions and spells, feats and class/racial
 abilities, including additions granted by level-up. A multi-quantity picker

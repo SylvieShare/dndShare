@@ -29,9 +29,9 @@ describe('app header context resolution', () => {
     })).toEqual({ title: 'Сессии', chip: null })
   })
 
-  it('keeps a session status as a compact colored chip', () => {
-    expect(normalizeHeaderChip(createHeaderChip('Активна', 'var(--success)'))).toEqual({
-      label: 'Активна',
+  it('keeps a colored header chip', () => {
+    expect(normalizeHeaderChip(createHeaderChip('42', 'var(--success)'))).toEqual({
+      label: '42',
       color: 'var(--success)',
     })
   })

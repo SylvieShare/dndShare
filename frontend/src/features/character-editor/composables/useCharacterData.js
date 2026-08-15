@@ -12,9 +12,6 @@ import {
   profileTabs,
 } from '@/features/character-editor/lib/templateSchema'
 
-const STATUS_PRIORITY = { live: 5, active: 4, planned: 3, paused: 2, draft: 1, completed: 0, archived: -1 }
-const ACTIVE_STATUSES = new Set(['live', 'active'])
-
 export function useCharacterData(uuid, isMobile) {
   const loading = ref(true)
   const template = ref(null)
@@ -194,18 +191,12 @@ export function useCharacterData(uuid, isMobile) {
     if (!isOwner.value) { sessions.value = []; return }
     try {
       const res = await fetchGet('/char/' + uuid + '/sessions')
-      sessions.value = (res?.sessions || []).slice().sort((a, b) => {
-        const pa = STATUS_PRIORITY[a.status] ?? -2
-        const pb = STATUS_PRIORITY[b.status] ?? -2
-        return pb - pa
-      })
+      sessions.value = (res?.sessions || []).slice(0, 1)
     } catch { /* ignore */ }
   }
 
   const topSession = computed(() => sessions.value[0] || null)
-  const hasActiveSession = computed(() =>
-    sessions.value.some(s => ACTIVE_STATUSES.has(s.status))
-  )
+  const hasSessionContext = computed(() => sessions.value.length > 0)
 
   async function pollVersion() {
     try {
@@ -243,7 +234,7 @@ export function useCharacterData(uuid, isMobile) {
     version,
     sessions,
     topSession,
-    hasActiveSession,
+    hasSessionContext,
     loadSessions,
     pollVersion,
     refreshFromServer,

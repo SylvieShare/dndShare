@@ -8,12 +8,6 @@
         :title="isDm ? 'Редактировать сессию' : session.name"
         @click="$emit('edit-session')"
       >{{ session.name }}</button>
-      <SessionStatusMenu
-        v-if="isDm"
-        :session="session"
-        :session-uuid="sessionUuid"
-        @status-change="$emit('status-change', $event)"
-      />
     </div>
 
     <span v-if="session" class="chapter-toolbar-rule chapter-toolbar-rule--session" />
@@ -84,7 +78,6 @@
 import { ref, watch } from 'vue'
 import { Swords } from '@lucide/vue'
 import { BasePopover } from '@sylvieshare/share-ui'
-import SessionStatusMenu from '@/features/sessions/components/SessionStatusMenu.vue'
 import { romanNumeral } from '@/features/sessions/lib/chapterGraph'
 
 const props = defineProps({
@@ -102,7 +95,7 @@ const props = defineProps({
 })
 const emit = defineEmits([
   'select-arc', 'create-arc', 'edit-arc', 'delete-arc', 'move-arc',
-  'edit-session', 'status-change', 'open-combat',
+  'edit-session', 'open-combat',
   'toggle-dice', 'toggle-music', 'toggle-events',
 ])
 const arcTrigger = ref(null)
@@ -139,7 +132,6 @@ function pickArc(id) {
 .chapter-session-title:not(:disabled) { cursor: pointer; }
 .chapter-session-title:not(:disabled):hover { background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); }
 .chapter-session-title:disabled { opacity: 1; }
-.chapter-session :deep(.session-status-menu) { margin-left: 0; }
 .chapter-toolbar-label { color: var(--text-muted); font-size: 10px; font-weight: 800; letter-spacing: 0.1em; }
 .chapter-toolbar-rule { width: 1px; height: 22px; margin: 0 3px; background: var(--border-strong); }
 

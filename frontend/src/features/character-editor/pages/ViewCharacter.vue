@@ -16,7 +16,6 @@
       :charSub="charSub"
       :sourceVersionId="sourceVersionId"
       :contentSources="contentSources"
-      :sessions="sessions"
       :topSession="activeSession"
       @update:publicVisible="onPublicToggle"
       @update:activeTab="onSetActiveTab"
@@ -207,7 +206,7 @@ const TabPane = CharacterTabPane
 
 const {
   loading, template, data, charCtx, isOwner, publicVisible,
-  version, sourceVersionId, contentSources, sessions, topSession, hasActiveSession,
+  version, sourceVersionId, contentSources, sessions, topSession, hasSessionContext,
   loadSessions, pollVersion, refreshFromServer,
   activeTabs, toolbarTabs, mobileTabs,
   headerTitle, charName, charSub, toolbarBlocksList, commonMobileBlockNode, commonMobileScrollHide,
@@ -223,7 +222,6 @@ const mobileIdentityEditorBlock = computed(() =>
 const activeSession = computed(() => {
   const requested = String(route.query.session || '')
   return sessions.value.find(session => session.uuid === requested)
-    || sessions.value.find(session => session.status === 'live' || session.status === 'active')
     || topSession.value
 })
 
@@ -410,7 +408,7 @@ let activeEventSessionUuid = null
 async function syncEventSessionContext(requested = route.query.session) {
   const requestedUuid = String(requested || '')
   const selected = (requestedUuid && sessions.value.find(session => session.uuid === requestedUuid))
-    || (!requestedUuid && sessions.value.find(session => session.status === 'live' || session.status === 'active'))
+    || (!requestedUuid && topSession.value)
   if (!selected?.uuid) {
     sessionEventsStore.clearContext(activeEventSessionUuid)
     activeEventSessionUuid = null
@@ -426,7 +424,7 @@ async function syncEventSessionContext(requested = route.query.session) {
 async function tickVersionPoll() {
   if (versionPollInFlight) return
   if (saveStatus.value !== 'idle') return
-  if (!hasActiveSession.value) return
+  if (!hasSessionContext.value) return
   versionPollInFlight = true
   try {
     const remote = await pollVersion()
