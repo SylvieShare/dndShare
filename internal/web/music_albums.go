@@ -10,7 +10,7 @@ func (s *Server) handleListAlbums(w http.ResponseWriter, r *http.Request) {
 	if !ok {
 		return
 	}
-	albums, err := s.store.GetMusicAlbumsByOwner(r.Context(), uid)
+	albums, err := s.store.GetMusicAlbumsForUser(r.Context(), uid)
 	if err != nil {
 		serverError(w, err)
 		return
@@ -113,7 +113,7 @@ func (s *Server) handleListAlbumTracks(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "bad id")
 		return
 	}
-	if _, ok := s.requireOwnedAlbum(w, r, id, uid); !ok {
+	if _, ok := s.requireAccessibleAlbum(w, r, id, uid); !ok {
 		return
 	}
 	tracks, err := s.store.GetTracksInAlbum(r.Context(), id)

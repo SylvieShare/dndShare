@@ -6,6 +6,7 @@
       'music-row--queued': isQueued,
       'music-row--current': isCurrent && !isPlaying,
       'music-row--placeholder': isPlaceholder,
+      'music-row--readonly': readOnly,
     }"
     :data-sortable-key="track.id"
   >
@@ -32,6 +33,9 @@
 
     <div class="music-row-main">
       <span class="music-row-title" :title="track.name">{{ track.name }}</span>
+      <span v-if="readOnly" class="music-row-system" title="Системный трек доступен всем и защищён от изменений">
+        системный
+      </span>
       <span v-if="isPlaying" class="music-row-state music-row-state--playing">ИГРАЕТ</span>
       <span v-else-if="isQueued" class="music-row-state music-row-state--queued">СЛЕДУЮЩИЙ</span>
     </div>
@@ -52,7 +56,7 @@
       {{ isQueued ? 'в очереди' : 'след.' }}
     </button>
 
-    <div class="music-row-menu-wrap" ref="menuWrap">
+    <div v-if="!readOnly" class="music-row-menu-wrap" ref="menuWrap">
       <button class="music-row-menu" @click="menuOpen = !menuOpen">…</button>
       <div v-if="menuOpen" class="music-row-menu-pop">
         <button class="music-row-menu-item" @click="onChangeAlbums">Изменить альбом</button>
@@ -73,6 +77,7 @@ const props = defineProps({
   isCurrent: { type: Boolean, default: false },
   isQueued: { type: Boolean, default: false },
   isPlaceholder: { type: Boolean, default: false },
+  readOnly: { type: Boolean, default: false },
   draggable: { type: Boolean, default: false },
   onDragStart: { type: Function, default: null },
 })
@@ -183,6 +188,16 @@ function fmtTime(sec) {
 }
 .music-row-state--playing { color: var(--accent); background: color-mix(in srgb, var(--accent) 18%, transparent); }
 .music-row-state--queued { color: var(--text-2); border: 1px dashed var(--surface-active); padding: 1px 6px; }
+.music-row-system {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
 
 .music-row-tags { display: flex; gap: 6px; flex-wrap: wrap; flex-shrink: 0; max-width: 240px; }
 .music-row-tag {

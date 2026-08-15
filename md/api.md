@@ -174,8 +174,10 @@ combatant и содержат `{roll,bonus,total,rolls?,dropped?,revision?}`. О
 
 ## Music and storage
 
-`/api/music` предоставляет CRUD tracks/albums/tags, track-to-album/tag links,
-album order и signed playback URLs. Image upload: `POST
+`/api/music` возвращает личные и общие `isSystem` tracks/albums, предоставляет
+CRUD tracks/albums/tags, track-to-album/tag links и album order только для
+личных сущностей. Личное и системное аудио получает signed S3 playback URL.
+Image upload: `POST
 /api/storage/images`; item icons используют item-специфичный маршрут выше.
 SVG read: `GET /api/svg/{id}`.
 

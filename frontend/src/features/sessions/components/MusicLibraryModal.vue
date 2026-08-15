@@ -4,7 +4,7 @@
         <header class="music-lib-head">
           <h2 class="music-lib-title">Музыкальная библиотека</h2>
           <span class="music-lib-count">{{ musicStore.tracks.length }} треков</span>
-          <span class="music-lib-sub">· ваша коллекция</span>
+          <span class="music-lib-sub">· личная и системная коллекция</span>
           <div class="music-lib-head-actions">
             <button class="music-lib-close" @click="onClose">×</button>
           </div>
@@ -38,10 +38,11 @@
             >
               <span class="sb-album-dot" :style="{ background: album.color || 'var(--accent)' }" />
               <span class="sb-album-name">{{ album.name }}</span>
+              <span v-if="album.isSystem" class="sb-album-system" title="Доступен всем, редактирование отключено">системный</span>
               <span class="sb-album-count">{{ album.trackCount }}</span>
             </button>
 
-            <button class="music-lib-dropzone" :class="{ active: dropActive }"
+            <button v-if="!selectedAlbum?.isSystem" class="music-lib-dropzone" :class="{ active: dropActive }"
                  type="button"
                  @click="openFilePicker"
                  @dragenter.prevent="onDragEnter"
@@ -52,6 +53,10 @@
               <div>Перетащите файлы<br>или нажмите</div>
               <div class="music-lib-dropzone-sub">.mp3 / .ogg / .flac · до 50 МБ</div>
             </button>
+            <div v-else class="music-lib-system-note">
+              <span class="music-lib-system-note-title">Системный альбом</span>
+              Доступен всем пользователям и защищён от изменений.
+            </div>
           </aside>
 
           <div class="music-lib-main-col">
@@ -60,7 +65,28 @@
               <span class="ml-main-color-dot" :style="{ background: selectedAlbum?.color || 'var(--text-muted)' }" />
               <h3 class="ml-main-title">{{ selectedAlbum ? selectedAlbum.name : 'Все треки' }}</h3>
               <span class="ml-main-sub">{{ filteredTracks.length }} треков</span>
-              <div class="ml-main-actions" v-if="selectedAlbum">
+              <span
+                v-if="selectedAlbum?.isSystem"
+                class="ml-main-license"
+                :title="`${selectedAlbum.licenseName || 'CC0'} · ${selectedAlbum.author || 'автор указан в источнике'}`"
+              >
+                <a
+                  v-if="selectedAlbum.licenseUrl"
+                  :href="selectedAlbum.licenseUrl"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >{{ selectedAlbum.licenseName || 'CC0' }}</a>
+                <span v-else>{{ selectedAlbum.licenseName || 'CC0' }}</span>
+                <span> · </span>
+                <a
+                  v-if="selectedAlbum.sourceUrl"
+                  :href="selectedAlbum.sourceUrl"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >{{ selectedAlbum.author || 'источник' }} ↗</a>
+                <span v-else>{{ selectedAlbum.author }}</span>
+              </span>
+              <div class="ml-main-actions" v-if="selectedAlbum && !selectedAlbum.isSystem">
                 <button class="ml-main-action" @click="onRenameAlbum">переименовать</button>
                 <button class="ml-main-action ml-main-action--danger" @click="onDeleteAlbum">удалить альбом</button>
               </div>
@@ -101,6 +127,7 @@
                 :is-current="state.trackId === t.id"
                 :is-queued="isQueued(t.id)"
                 :is-placeholder="sortable.isSource(t)"
+                :read-only="t.isSystem"
                 :draggable="canSort"
                 :on-drag-start="canSort ? startDragHandler : null"
                 @play="onPlay"
@@ -271,7 +298,7 @@
         >
           <div class="album-picker">
             <div class="album-picker-list">
-              <label v-for="album in musicStore.albums" :key="album.id" class="album-picker-row">
+              <label v-for="album in editableAlbums" :key="album.id" class="album-picker-row">
                 <input
                   type="checkbox"
                   :checked="(albumPickerTrack.albumIds || []).includes(album.id)"
@@ -280,7 +307,7 @@
                 <span class="album-picker-dot" :style="{ background: album.color || 'var(--accent)' }" />
                 <span class="album-picker-name">{{ album.name }}</span>
               </label>
-              <div v-if="!musicStore.albums.length" class="album-picker-empty">Создайте альбом в сайдбаре</div>
+              <div v-if="!editableAlbums.length" class="album-picker-empty">Создайте альбом в сайдбаре</div>
             </div>
           </div>
           <template #footer>
@@ -391,6 +418,7 @@ function onClearNext() {
 onMounted(() => musicStore.ensureLibrary())
 
 const selectedAlbum = computed(() => selectedAlbumId.value ? musicStore.albumById(selectedAlbumId.value) : null)
+const editableAlbums = computed(() => musicStore.albums.filter(album => !album.isSystem))
 
 const filteredTracks = computed(() => {
   const q = searchQuery.value.trim().toLowerCase()
@@ -425,7 +453,10 @@ const displayedTracks = computed(() => {
   return ordered
 })
 
-const canSort = computed(() => !!selectedAlbumId.value && !searchQuery.value.trim() && !activeTagIds.value.length)
+const canSort = computed(() => !!selectedAlbumId.value
+  && !selectedAlbum.value?.isSystem
+  && !searchQuery.value.trim()
+  && !activeTagIds.value.length)
 
 const sortable = useSortable({
   groups: {
@@ -471,13 +502,16 @@ function onQueueToggle(track) {
   else musicStore.setNext(track.id)
 }
 function onRenameTrack(track) {
+  if (track.isSystem) return
   textPrompt.value = { kind: 'track', target: track, title: 'Новое название трека', value: track.name }
 }
 function onDeleteTrack(track) {
+  if (track.isSystem) return
   deleteTarget.value = { kind: 'track', target: track, title: 'Удалить трек?', message: `«${track.name}»` }
 }
 
 function onChangeAlbums(track) {
+  if (track.isSystem) return
   albumPickerTrack.value = track
 }
 async function onToggleTrackAlbum(album, checked) {
@@ -490,6 +524,7 @@ async function onToggleTrackAlbum(album, checked) {
 }
 
 function onChangeTags(track) {
+  if (track.isSystem) return
   tagPickerTrack.value = track
 }
 async function onToggleTrackTag(tag, checked) {
@@ -547,11 +582,11 @@ function onCreateAlbum() {
   textPrompt.value = { kind: 'album-create', title: 'Название альбома', value: '' }
 }
 function onRenameAlbum() {
-  if (!selectedAlbum.value) return
+  if (!selectedAlbum.value || selectedAlbum.value.isSystem) return
   textPrompt.value = { kind: 'album-rename', target: selectedAlbum.value, title: 'Новое название альбома', value: selectedAlbum.value.name }
 }
 function onDeleteAlbum() {
-  if (!selectedAlbum.value) return
+  if (!selectedAlbum.value || selectedAlbum.value.isSystem) return
   deleteTarget.value = {
     kind: 'album', target: selectedAlbum.value, title: 'Удалить альбом?',
     message: `«${selectedAlbum.value.name}». Треки останутся в библиотеке.`,

@@ -362,6 +362,11 @@ The library contains albums, tags, queue/current track, volume, loop and
 crossfade controls. File upload validation is part of the upload composable/API;
 browser prompt/confirm is not used.
 
+Every authenticated library also includes read-only system albums. Their tracks
+can be played and queued in a session, but the UI and API reject renaming,
+deletion, tagging, membership changes, and reordering. System album headers show
+the source and CC0 metadata; system audio is served through signed S3 URLs.
+
 ## Data changes
 
 Runtime accepts only current session/encounter JSON. If the encounter model

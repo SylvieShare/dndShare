@@ -437,16 +437,16 @@ func (s *Store) IsCharOwnedBy(ctx context.Context, charID, userID int64) (bool, 
 	return exists, err
 }
 
-// GetMusicTrackFileKey возвращает file_key и владельца трека (для выдачи ссылки на трек
-// сессии, порт части MusicLibraryRepository.getTrackById). ErrNotFound, если трека нет.
-func (s *Store) GetMusicTrackFileKey(ctx context.Context, trackID int64) (fileKey string, ownerUserID int64, err error) {
+// GetMusicTrackFileKey возвращает storage metadata трека для выдачи playback URL.
+// У системного трека ownerUserID равен 0. ErrNotFound, еси трека нет.
+func (s *Store) GetMusicTrackFileKey(ctx context.Context, trackID int64) (fileKey string, ownerUserID int64, isSystem bool, err error) {
 	err = s.pool.QueryRow(ctx,
-		`SELECT file_key, owner_user_id FROM dndshare.music_track WHERE id = $1`, trackID,
-	).Scan(&fileKey, &ownerUserID)
+		`SELECT file_key, COALESCE(owner_user_id, 0), is_system FROM dndshare.music_track WHERE id = $1`, trackID,
+	).Scan(&fileKey, &ownerUserID, &isSystem)
 	if errors.Is(err, pgx.ErrNoRows) {
-		return "", 0, ErrNotFound
+		return "", 0, false, ErrNotFound
 	}
-	return fileKey, ownerUserID, err
+	return fileKey, ownerUserID, isSystem, err
 }
 
 func generateInviteCode() string {

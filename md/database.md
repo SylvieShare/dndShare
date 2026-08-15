@@ -184,8 +184,13 @@ startup migration и не обрабатываются во frontend.
 ### Музыка и storage
 
 `music_track`, `music_album`, `music_tag` и link tables хранят metadata и
-порядок; аудио лежит в object storage. Изображения справочника и персонажей
-используют `storage_image`/S3, SVG справочника — `svg_storage`.
+порядок. Личные альбомы/треки имеют `owner_user_id`; у системных
+`is_system=true`, владелец отсутствует, а `system_key` обеспечивает
+идемпотентный startup seed. CHECK constraints не дают совмещать
+системный признак с владельцем. Личное и системное аудио лежит в object
+storage; системные объекты используют стабильный префикс `system-music/v1/`.
+Изображения справочника и персонажей используют `storage_image`/S3, SVG
+справочника — `svg_storage`.
 
 ### Error reports and jobs
 

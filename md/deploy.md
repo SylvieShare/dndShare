@@ -67,6 +67,12 @@ VM под systemd; Docker, JAR и Maven в production path не использу
 секрета обновить payload и перезапустить unit: wrapper всегда получает свежую
 версию.
 
+Системная музыка загружается отдельно командой
+`go run ./cmd/system-music-upload -source-dir /path/to/tracks`. Команда сверяет
+размер и SHA-256 каждого файла с `internal/systemmusic`, после чего записывает
+объекты под стабильными ключами `system-music/v1/`. В Git и Go-бинарь аудио не
+включается; startup-схема хранит эти ключи в `music_track`.
+
 ## Local run
 
 ```bash

@@ -56,7 +56,25 @@ func (s *Server) requireOwnedTrack(w http.ResponseWriter, r *http.Request, id, u
 		serverError(w, err)
 		return store.MusicTrack{}, false
 	}
-	if t.OwnerUserID != userID {
+	if !musicTrackOwnedByUser(t, userID) {
+		unauthorized(w)
+		return store.MusicTrack{}, false
+	}
+	return t, true
+}
+
+// requireAccessibleTrack разрешает чтение личного трека или общего системного трека.
+func (s *Server) requireAccessibleTrack(w http.ResponseWriter, r *http.Request, id, userID int64) (store.MusicTrack, bool) {
+	t, err := s.store.GetMusicTrackByID(r.Context(), id)
+	if err != nil {
+		if errors.Is(err, store.ErrNotFound) {
+			notFound(w, "")
+			return store.MusicTrack{}, false
+		}
+		serverError(w, err)
+		return store.MusicTrack{}, false
+	}
+	if !musicTrackAccessibleToUser(t, userID) {
 		unauthorized(w)
 		return store.MusicTrack{}, false
 	}
@@ -74,11 +92,45 @@ func (s *Server) requireOwnedAlbum(w http.ResponseWriter, r *http.Request, id, u
 		serverError(w, err)
 		return store.MusicAlbum{}, false
 	}
-	if a.OwnerUserID != userID {
+	if !musicAlbumOwnedByUser(a, userID) {
 		unauthorized(w)
 		return store.MusicAlbum{}, false
 	}
 	return a, true
+}
+
+// requireAccessibleAlbum разрешает чтение личного или общего системного альбома.
+func (s *Server) requireAccessibleAlbum(w http.ResponseWriter, r *http.Request, id, userID int64) (store.MusicAlbum, bool) {
+	a, err := s.store.GetMusicAlbumByID(r.Context(), id)
+	if err != nil {
+		if errors.Is(err, store.ErrNotFound) {
+			notFound(w, "")
+			return store.MusicAlbum{}, false
+		}
+		serverError(w, err)
+		return store.MusicAlbum{}, false
+	}
+	if !musicAlbumAccessibleToUser(a, userID) {
+		unauthorized(w)
+		return store.MusicAlbum{}, false
+	}
+	return a, true
+}
+
+func musicTrackOwnedByUser(track store.MusicTrack, userID int64) bool {
+	return !track.IsSystem && track.OwnerUserID == userID
+}
+
+func musicTrackAccessibleToUser(track store.MusicTrack, userID int64) bool {
+	return track.IsSystem || track.OwnerUserID == userID
+}
+
+func musicAlbumOwnedByUser(album store.MusicAlbum, userID int64) bool {
+	return !album.IsSystem && album.OwnerUserID == userID
+}
+
+func musicAlbumAccessibleToUser(album store.MusicAlbum, userID int64) bool {
+	return album.IsSystem || album.OwnerUserID == userID
 }
 
 func musicID(r *http.Request, name string) (int64, bool) {
@@ -96,7 +148,7 @@ func (s *Server) handleListTracks(w http.ResponseWriter, r *http.Request) {
 	if !ok {
 		return
 	}
-	tracks, err := s.store.GetMusicTracksByOwner(r.Context(), uid)
+	tracks, err := s.store.GetMusicTracksForUser(r.Context(), uid)
 	if err != nil {
 		serverError(w, err)
 		return
@@ -266,7 +318,7 @@ func (s *Server) handleGetTrackURL(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "bad id")
 		return
 	}
-	t, ok := s.requireOwnedTrack(w, r, id, uid)
+	t, ok := s.requireAccessibleTrack(w, r, id, uid)
 	if !ok {
 		return
 	}
@@ -283,7 +335,7 @@ func (s *Server) handleSearchTracks(w http.ResponseWriter, r *http.Request) {
 	if !ok {
 		return
 	}
-	all, err := s.store.GetMusicTracksByOwner(r.Context(), uid)
+	all, err := s.store.GetMusicTracksForUser(r.Context(), uid)
 	if err != nil {
 		serverError(w, err)
 		return

@@ -55,6 +55,17 @@ func (s *Service) UploadAudio(ctx context.Context, body io.Reader, size int64, f
 	return s.put(ctx, body, size, s.buildKey(filename, folder), contentType)
 }
 
+// UploadSystemAudio stores a catalog track under its stable, versioned object key.
+func (s *Service) UploadSystemAudio(ctx context.Context, body io.Reader, size int64, key, contentType string) (StoredObject, error) {
+	if !strings.HasPrefix(key, "system-music/") || strings.Contains(key, "..") {
+		return StoredObject{}, fmt.Errorf("invalid system music object key %q", key)
+	}
+	if !strings.HasPrefix(contentType, "audio/") {
+		return StoredObject{}, fmt.Errorf("invalid system music content type %q", contentType)
+	}
+	return s.put(ctx, body, size, key, contentType)
+}
+
 // UploadImage загружает изображение; contentType, не начинающийся с image/, заменяется на octet-stream.
 func (s *Service) UploadImage(ctx context.Context, body io.Reader, size int64, filename, contentType, folder string) (StoredObject, error) {
 	if !strings.HasPrefix(contentType, "image/") {
@@ -81,6 +92,18 @@ func (s *Service) PresignGet(ctx context.Context, key string, ttl time.Duration)
 	return req.URL, nil
 }
 
+// ObjectSize returns the current S3 object size for deployment verification.
+func (s *Service) ObjectSize(ctx context.Context, key string) (int64, error) {
+	result, err := s.client.HeadObject(ctx, &s3.HeadObjectInput{
+		Bucket: aws.String(s.cfg.Bucket),
+		Key:    aws.String(key),
+	})
+	if err != nil {
+		return 0, err
+	}
+	return aws.ToInt64(result.ContentLength), nil
+}
+
 // DeleteObject удаляет объект по ключу.
 func (s *Service) DeleteObject(ctx context.Context, key string) error {
 	_, err := s.client.DeleteObject(ctx, &s3.DeleteObjectInput{
@@ -95,6 +118,9 @@ func (s *Service) put(ctx context.Context, body io.Reader, size int64, key, cont
 	data, err := io.ReadAll(body)
 	if err != nil {
 		return StoredObject{}, err
+	}
+	if int64(len(data)) != size {
+		return StoredObject{}, fmt.Errorf("object %q size changed while reading: got %d, want %d", key, len(data), size)
 	}
 	_, err = s.client.PutObject(ctx, &s3.PutObjectInput{
 		Bucket:        aws.String(s.cfg.Bucket),

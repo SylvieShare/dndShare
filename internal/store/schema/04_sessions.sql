@@ -4,29 +4,80 @@
 -- ---------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS dndshare.music_album (
     id            bigserial NOT NULL,
-    owner_user_id int8 NOT NULL REFERENCES dndshare.users(id),
+    owner_user_id int8 NULL REFERENCES dndshare.users(id),
     "name"        varchar(255) NOT NULL,
     color         varchar(16) NULL,
+    is_system     bool DEFAULT false NOT NULL,
+    system_key    varchar(128) NULL,
+    author        varchar(255) NULL,
+    source_url    varchar(1024) NULL,
+    license_name  varchar(64) NULL,
+    license_url   varchar(1024) NULL,
     created_at    timestamptz DEFAULT now() NOT NULL,
-    CONSTRAINT music_album_pkey PRIMARY KEY (id)
+    CONSTRAINT music_album_pkey PRIMARY KEY (id),
+    CONSTRAINT music_album_system_key_key UNIQUE (system_key),
+    CONSTRAINT music_album_owner_or_system_check CHECK (
+        (is_system AND owner_user_id IS NULL AND system_key IS NOT NULL)
+        OR (NOT is_system AND owner_user_id IS NOT NULL AND system_key IS NULL)
+    )
 );
 CREATE INDEX IF NOT EXISTS music_album_owner_idx ON dndshare.music_album USING btree (owner_user_id);
+
+ALTER TABLE dndshare.music_album ALTER COLUMN owner_user_id DROP NOT NULL;
+ALTER TABLE dndshare.music_album ADD COLUMN IF NOT EXISTS is_system bool DEFAULT false NOT NULL;
+ALTER TABLE dndshare.music_album ADD COLUMN IF NOT EXISTS system_key varchar(128) NULL;
+ALTER TABLE dndshare.music_album ADD COLUMN IF NOT EXISTS author varchar(255) NULL;
+ALTER TABLE dndshare.music_album ADD COLUMN IF NOT EXISTS source_url varchar(1024) NULL;
+ALTER TABLE dndshare.music_album ADD COLUMN IF NOT EXISTS license_name varchar(64) NULL;
+ALTER TABLE dndshare.music_album ADD COLUMN IF NOT EXISTS license_url varchar(1024) NULL;
 
 CREATE TABLE IF NOT EXISTS dndshare.music_track (
     id            bigserial NOT NULL,
     "uuid"        uuid DEFAULT gen_random_uuid() NOT NULL,
-    owner_user_id int8 NOT NULL REFERENCES dndshare.users(id),
+    owner_user_id int8 NULL REFERENCES dndshare.users(id),
     "name"        varchar(255) NOT NULL,
     file_key      varchar(512) NOT NULL,
     file_name     varchar(255) NOT NULL,
     duration_sec  int4 NULL,
     file_size     int8 NOT NULL,
     mime_type     varchar(64) NOT NULL,
+    is_system     bool DEFAULT false NOT NULL,
+    system_key    varchar(128) NULL,
     created_at    timestamptz DEFAULT now() NOT NULL,
     CONSTRAINT music_track_pkey PRIMARY KEY (id),
-    CONSTRAINT music_track_uuid_key UNIQUE (uuid)
+    CONSTRAINT music_track_uuid_key UNIQUE (uuid),
+    CONSTRAINT music_track_system_key_key UNIQUE (system_key),
+    CONSTRAINT music_track_owner_or_system_check CHECK (
+        (is_system AND owner_user_id IS NULL AND system_key IS NOT NULL)
+        OR (NOT is_system AND owner_user_id IS NOT NULL AND system_key IS NULL)
+    )
 );
 CREATE INDEX IF NOT EXISTS music_track_owner_idx ON dndshare.music_track USING btree (owner_user_id);
+
+ALTER TABLE dndshare.music_track ALTER COLUMN owner_user_id DROP NOT NULL;
+ALTER TABLE dndshare.music_track ADD COLUMN IF NOT EXISTS is_system bool DEFAULT false NOT NULL;
+ALTER TABLE dndshare.music_track ADD COLUMN IF NOT EXISTS system_key varchar(128) NULL;
+
+DO $$ BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'music_album_system_key_key') THEN
+        ALTER TABLE dndshare.music_album ADD CONSTRAINT music_album_system_key_key UNIQUE (system_key);
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'music_album_owner_or_system_check') THEN
+        ALTER TABLE dndshare.music_album ADD CONSTRAINT music_album_owner_or_system_check CHECK (
+            (is_system AND owner_user_id IS NULL AND system_key IS NOT NULL)
+            OR (NOT is_system AND owner_user_id IS NOT NULL AND system_key IS NULL)
+        );
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'music_track_system_key_key') THEN
+        ALTER TABLE dndshare.music_track ADD CONSTRAINT music_track_system_key_key UNIQUE (system_key);
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'music_track_owner_or_system_check') THEN
+        ALTER TABLE dndshare.music_track ADD CONSTRAINT music_track_owner_or_system_check CHECK (
+            (is_system AND owner_user_id IS NULL AND system_key IS NOT NULL)
+            OR (NOT is_system AND owner_user_id IS NOT NULL AND system_key IS NULL)
+        );
+    END IF;
+END $$;
 
 CREATE TABLE IF NOT EXISTS dndshare.music_tag (
     id            bigserial NOT NULL,
@@ -53,6 +104,115 @@ CREATE TABLE IF NOT EXISTS dndshare.music_track_tag (
     CONSTRAINT music_track_tag_pkey PRIMARY KEY (track_id, tag_id)
 );
 CREATE INDEX IF NOT EXISTS music_track_tag_tag_idx ON dndshare.music_track_tag USING btree (tag_id);
+
+-- Built-in CC0 albums. Stable file_key values address versioned objects in S3;
+-- source provenance and checksums live in internal/systemmusic.
+INSERT INTO dndshare.music_album (
+    owner_user_id, name, color, is_system, system_key, author,
+    source_url, license_name, license_url
+) VALUES
+    (
+        NULL, 'Фэнтези: странствия', '#5cb5e8', true,
+        'fantasy-song-pack-v1', 'troubadour',
+        'https://opengameart.org/content/fantasy-song-pack-volume-1',
+        'CC0 1.0', 'https://creativecommons.org/publicdomain/zero/1.0/'
+    ),
+    (
+        NULL, 'Таверны и города', '#e89c3c', true,
+        'taverns-towns', 'Разные авторы OpenGameArt',
+        'https://opengameart.org/',
+        'CC0 1.0', 'https://creativecommons.org/publicdomain/zero/1.0/'
+    ),
+    (
+        NULL, 'Подземелья и атмосфера', '#7c5ce2', true,
+        'dungeons-atmosphere', 'Разные авторы OpenGameArt',
+        'https://opengameart.org/',
+        'CC0 1.0', 'https://creativecommons.org/publicdomain/zero/1.0/'
+    ),
+    (
+        NULL, 'Бои', '#e85c5c', true,
+        'battles', 'Разные авторы OpenGameArt',
+        'https://opengameart.org/',
+        'CC0 1.0', 'https://creativecommons.org/publicdomain/zero/1.0/'
+    )
+ON CONFLICT (system_key) DO UPDATE SET
+    owner_user_id = NULL,
+    name = EXCLUDED.name,
+    color = EXCLUDED.color,
+    is_system = true,
+    author = EXCLUDED.author,
+    source_url = EXCLUDED.source_url,
+    license_name = EXCLUDED.license_name,
+    license_url = EXCLUDED.license_url;
+
+INSERT INTO dndshare.music_track (
+    owner_user_id, name, file_key, file_name, duration_sec, file_size,
+    mime_type, is_system, system_key
+)
+SELECT
+    NULL, seed.name, seed.file_key, seed.file_name, seed.duration_sec,
+    seed.file_size, seed.mime_type, true, seed.system_key
+FROM (VALUES
+    ('Back to Nature',             'system-music/v1/back_to_nature.mp3',      'back_to_nature.mp3',      168, 4113223::int8, 'audio/mpeg', 'fantasy-song-pack-v1/back-to-nature'),
+    ('Bells of Winter',            'system-music/v1/bells_of_winter.mp3',     'bells_of_winter.mp3',     151, 2829923::int8, 'audio/mpeg', 'fantasy-song-pack-v1/bells-of-winter'),
+    ('Fairy Lights',               'system-music/v1/fairy_lights.mp3',        'fairy_lights.mp3',        160, 3800642::int8, 'audio/mpeg', 'fantasy-song-pack-v1/fairy-lights'),
+    ('Homestead',                  'system-music/v1/homestead.mp3',           'homestead.mp3',           147, 3293101::int8, 'audio/mpeg', 'fantasy-song-pack-v1/homestead'),
+    ('Jaunt',                      'system-music/v1/jaunt.mp3',               'jaunt.mp3',               144, 3049408::int8, 'audio/mpeg', 'fantasy-song-pack-v1/jaunt'),
+    ('Snow Day',                   'system-music/v1/snow_day.mp3',            'snow_day.mp3',            147, 3219005::int8, 'audio/mpeg', 'fantasy-song-pack-v1/snow-day'),
+    ('Springly Sprigs',            'system-music/v1/springly_sprigs.mp3',     'springly_sprigs.mp3',     142, 3340593::int8, 'audio/mpeg', 'fantasy-song-pack-v1/springly-sprigs'),
+    ('Wandering Woodlands',        'system-music/v1/wandering_woodlands.mp3', 'wandering_woodlands.mp3', 168, 3803448::int8, 'audio/mpeg', 'fantasy-song-pack-v1/wandering-woodlands'),
+    ('Tavern',                     'system-music/v1/tavern.ogg',               'tavern.ogg',                62, 1034582::int8, 'audio/ogg',  'taverns-towns/tavern'),
+    ('The Old Tower Inn',          'system-music/v1/old_tower_inn.mp3',       'old_tower_inn.mp3',        105, 2535801::int8, 'audio/mpeg', 'taverns-towns/old-tower-inn'),
+    ('Town',                       'system-music/v1/town.mp3',                'town.mp3',                  64, 1537924::int8, 'audio/mpeg', 'taverns-towns/town'),
+    ('Magic Town',                 'system-music/v1/magic_town.mp3',          'magic_town.mp3',            56, 1338809::int8, 'audio/mpeg', 'taverns-towns/magic-town'),
+    ('Dungeon Ambience',           'system-music/v1/dungeon_ambience.ogg',    'dungeon_ambience.ogg',     206, 1202848::int8, 'audio/ogg',  'dungeons-atmosphere/dungeon-ambience'),
+    ('Forest Ambience',            'system-music/v1/forest_ambience.mp3',     'forest_ambience.mp3',       45, 716670::int8,  'audio/mpeg', 'dungeons-atmosphere/forest-ambience'),
+    ('Forgotten Tomb Ambience',    'system-music/v1/forgotten_tombs.mp3',     'forgotten_tombs.mp3',      214, 5140968::int8, 'audio/mpeg', 'dungeons-atmosphere/forgotten-tomb'),
+    ('Mystical Place',             'system-music/v1/mystical_place.mp3',      'mystical_place.mp3',        62, 2482804::int8, 'audio/mpeg', 'dungeons-atmosphere/mystical-place'),
+    ('Contemplation',              'system-music/v1/contemplation.mp3',       'contemplation.mp3',        120, 2405271::int8, 'audio/mpeg', 'dungeons-atmosphere/contemplation'),
+    ('Battle Theme',               'system-music/v1/battle_theme.mp3',        'battle_theme.mp3',         116, 4646747::int8, 'audio/mpeg', 'battles/battle-theme'),
+    ('Boss Fight',                 'system-music/v1/boss_fight.mp3',          'boss_fight.mp3',           129, 2068550::int8, 'audio/mpeg', 'battles/boss-fight'),
+    ('JRPG Epic Rock Battle',      'system-music/v1/jrpg_battle.mp3',         'jrpg_battle.mp3',          115, 2929387::int8, 'audio/mpeg', 'battles/jrpg-battle'),
+    ('Random Battle',              'system-music/v1/random_battle.mp3',       'random_battle.mp3',         37, 879890::int8,  'audio/mpeg', 'battles/random-battle')
+) AS seed(name, file_key, file_name, duration_sec, file_size, mime_type, system_key)
+ON CONFLICT (system_key) DO UPDATE SET
+    owner_user_id = NULL,
+    name = EXCLUDED.name,
+    file_key = EXCLUDED.file_key,
+    file_name = EXCLUDED.file_name,
+    duration_sec = EXCLUDED.duration_sec,
+    file_size = EXCLUDED.file_size,
+    mime_type = EXCLUDED.mime_type,
+    is_system = true;
+
+INSERT INTO dndshare.music_album_track (album_id, track_id, position)
+SELECT album.id, track.id, seed.position
+FROM (VALUES
+    ('fantasy-song-pack-v1', 'fantasy-song-pack-v1/back-to-nature', 1),
+    ('fantasy-song-pack-v1', 'fantasy-song-pack-v1/bells-of-winter', 2),
+    ('fantasy-song-pack-v1', 'fantasy-song-pack-v1/fairy-lights', 3),
+    ('fantasy-song-pack-v1', 'fantasy-song-pack-v1/homestead', 4),
+    ('fantasy-song-pack-v1', 'fantasy-song-pack-v1/jaunt', 5),
+    ('fantasy-song-pack-v1', 'fantasy-song-pack-v1/snow-day', 6),
+    ('fantasy-song-pack-v1', 'fantasy-song-pack-v1/springly-sprigs', 7),
+    ('fantasy-song-pack-v1', 'fantasy-song-pack-v1/wandering-woodlands', 8),
+    ('taverns-towns', 'taverns-towns/tavern', 1),
+    ('taverns-towns', 'taverns-towns/old-tower-inn', 2),
+    ('taverns-towns', 'taverns-towns/town', 3),
+    ('taverns-towns', 'taverns-towns/magic-town', 4),
+    ('dungeons-atmosphere', 'dungeons-atmosphere/dungeon-ambience', 1),
+    ('dungeons-atmosphere', 'dungeons-atmosphere/forest-ambience', 2),
+    ('dungeons-atmosphere', 'dungeons-atmosphere/forgotten-tomb', 3),
+    ('dungeons-atmosphere', 'dungeons-atmosphere/mystical-place', 4),
+    ('dungeons-atmosphere', 'dungeons-atmosphere/contemplation', 5),
+    ('battles', 'battles/battle-theme', 1),
+    ('battles', 'battles/boss-fight', 2),
+    ('battles', 'battles/jrpg-battle', 3),
+    ('battles', 'battles/random-battle', 4)
+) AS seed(album_key, track_key, position)
+JOIN dndshare.music_album album ON album.system_key = seed.album_key
+JOIN dndshare.music_track track ON track.system_key = seed.track_key
+ON CONFLICT (album_id, track_id) DO UPDATE SET position = EXCLUDED.position;
 
 -- ---------------------------------------------------------------------------
 -- Sessions (session <-> session_chapter form a cyclic FK: the chapter one is

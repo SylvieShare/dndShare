@@ -160,7 +160,7 @@ func (s *Server) handleGetSessionTrackURL(w http.ResponseWriter, r *http.Request
 		badRequest(w, "Некорректный запрос")
 		return
 	}
-	fileKey, ownerUserID, err := s.store.GetMusicTrackFileKey(r.Context(), trackID)
+	fileKey, ownerUserID, isSystem, err := s.store.GetMusicTrackFileKey(r.Context(), trackID)
 	if err != nil {
 		if errors.Is(err, store.ErrNotFound) {
 			notFound(w, "")
@@ -169,7 +169,7 @@ func (s *Server) handleGetSessionTrackURL(w http.ResponseWriter, r *http.Request
 		serverError(w, err)
 		return
 	}
-	if ownerUserID != session.OwnerUserID {
+	if !isSystem && ownerUserID != session.OwnerUserID {
 		forbidden(w)
 		return
 	}

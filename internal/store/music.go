@@ -12,7 +12,8 @@ import (
 type MusicTrack struct {
 	ID          int64      `json:"id"`
 	UUID        string     `json:"uuid"`
-	OwnerUserID int64      `json:"ownerUserId"`
+	OwnerUserID int64      `json:"ownerUserId,omitempty"`
+	IsSystem    bool       `json:"isSystem"`
 	Name        string     `json:"name"`
 	FileKey     string     `json:"fileKey"`
 	FileName    string     `json:"fileName"`
@@ -27,9 +28,14 @@ type MusicTrack struct {
 // MusicAlbum — строка dndshare.music_album с числом треков (порт model.MusicAlbum).
 type MusicAlbum struct {
 	ID          int64     `json:"id"`
-	OwnerUserID int64     `json:"ownerUserId"`
+	OwnerUserID int64     `json:"ownerUserId,omitempty"`
+	IsSystem    bool      `json:"isSystem"`
 	Name        string    `json:"name"`
 	Color       *string   `json:"color,omitempty"`
+	Author      *string   `json:"author,omitempty"`
+	SourceURL   *string   `json:"sourceUrl,omitempty"`
+	LicenseName *string   `json:"licenseName,omitempty"`
+	LicenseURL  *string   `json:"licenseUrl,omitempty"`
 	TrackCount  int       `json:"trackCount"`
 	CreatedAt   time.Time `json:"createdAt"`
 }
@@ -41,20 +47,22 @@ type MusicTag struct {
 	Name        string `json:"name"`
 }
 
-const musicTrackColumns = `id, uuid::text, owner_user_id, name, file_key, file_name, duration_sec, file_size, mime_type, created_at`
+const musicTrackColumns = `id, uuid::text, COALESCE(owner_user_id, 0), is_system, name, file_key, file_name, duration_sec, file_size, mime_type, created_at`
 
 func scanMusicTrack(row pgx.Row) (MusicTrack, error) {
 	var t MusicTrack
-	err := row.Scan(&t.ID, &t.UUID, &t.OwnerUserID, &t.Name, &t.FileKey, &t.FileName, &t.DurationSec, &t.FileSize, &t.MimeType, &t.CreatedAt)
+	err := row.Scan(&t.ID, &t.UUID, &t.OwnerUserID, &t.IsSystem, &t.Name, &t.FileKey, &t.FileName, &t.DurationSec, &t.FileSize, &t.MimeType, &t.CreatedAt)
 	return t, err
 }
 
 // ---- tracks ----
 
-// GetMusicTracksByOwner отдаёт треки владельца с подтянутыми albumIds/tags.
-func (s *Store) GetMusicTracksByOwner(ctx context.Context, ownerUserID int64) ([]MusicTrack, error) {
+// GetMusicTracksForUser отдаёт личные треки пользователя и общие системные треки.
+func (s *Store) GetMusicTracksForUser(ctx context.Context, ownerUserID int64) ([]MusicTrack, error) {
 	rows, err := s.pool.Query(ctx,
-		`SELECT `+musicTrackColumns+` FROM dndshare.music_track WHERE owner_user_id = $1 ORDER BY lower(name), id`,
+		`SELECT `+musicTrackColumns+` FROM dndshare.music_track
+		 WHERE owner_user_id = $1 OR is_system = true
+		 ORDER BY is_system DESC, lower(name), id`,
 		ownerUserID,
 	)
 	if err != nil {
@@ -112,20 +120,27 @@ func (s *Store) DeleteMusicTrack(ctx context.Context, id int64) error {
 
 // ---- albums ----
 
-const musicAlbumSelect = `SELECT a.id, a.owner_user_id, a.name, a.color,
+const musicAlbumSelect = `SELECT a.id, COALESCE(a.owner_user_id, 0), a.is_system, a.name, a.color,
+	a.author, a.source_url, a.license_name, a.license_url,
 	(SELECT COUNT(*) FROM dndshare.music_album_track at WHERE at.album_id = a.id) AS track_count,
 	a.created_at
 	FROM dndshare.music_album a`
 
 func scanMusicAlbum(row pgx.Row) (MusicAlbum, error) {
 	var a MusicAlbum
-	err := row.Scan(&a.ID, &a.OwnerUserID, &a.Name, &a.Color, &a.TrackCount, &a.CreatedAt)
+	err := row.Scan(
+		&a.ID, &a.OwnerUserID, &a.IsSystem, &a.Name, &a.Color,
+		&a.Author, &a.SourceURL, &a.LicenseName, &a.LicenseURL,
+		&a.TrackCount, &a.CreatedAt,
+	)
 	return a, err
 }
 
-// GetMusicAlbumsByOwner отдаёт альбомы владельца с числом треков.
-func (s *Store) GetMusicAlbumsByOwner(ctx context.Context, ownerUserID int64) ([]MusicAlbum, error) {
-	rows, err := s.pool.Query(ctx, musicAlbumSelect+` WHERE a.owner_user_id = $1 ORDER BY lower(a.name), a.id`, ownerUserID)
+// GetMusicAlbumsForUser отдаёт личные альбомы пользователя и общие системные альбомы.
+func (s *Store) GetMusicAlbumsForUser(ctx context.Context, ownerUserID int64) ([]MusicAlbum, error) {
+	rows, err := s.pool.Query(ctx, musicAlbumSelect+`
+		WHERE a.owner_user_id = $1 OR a.is_system = true
+		ORDER BY a.is_system DESC, lower(a.name), a.id`, ownerUserID)
 	if err != nil {
 		return nil, err
 	}
@@ -326,7 +341,7 @@ func (s *Store) RemoveTagFromTrack(ctx context.Context, trackID, tagID int64) er
 // ---- helpers ----
 
 func prefixColumns(alias string) string {
-	return alias + ".id, " + alias + ".uuid::text, " + alias + ".owner_user_id, " + alias + ".name, " +
+	return alias + ".id, " + alias + ".uuid::text, COALESCE(" + alias + ".owner_user_id, 0), " + alias + ".is_system, " + alias + ".name, " +
 		alias + ".file_key, " + alias + ".file_name, " + alias + ".duration_sec, " + alias + ".file_size, " +
 		alias + ".mime_type, " + alias + ".created_at"
 }

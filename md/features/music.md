@@ -2,23 +2,42 @@
 
 Frontend music UI/store is under `features/sessions` and `stores/music`.
 Backend routes are in `internal/web/music.go`, persistence in
-`internal/store/music.go`, files in S3-compatible object storage.
+`internal/store/music.go`. Personal and system files are in S3-compatible
+object storage; the system catalog manifest and provenance are under
+`internal/systemmusic`.
 
 ## Model
 
-Tracks belong to the uploading user and can be linked to albums and tags.
+Personal tracks belong to the uploading user and can be linked to that user's
+albums and tags. Albums and tracks with `isSystem=true` have no owner, are
+available to every authenticated user, and are read-only through the API.
+Stable internal `system_key` values make their startup seed idempotent. System album
+metadata includes the author, source page, and public-domain dedication.
 Album-track links store explicit order. Session music state stores current/next
 track, playback position, playing flag, volume, loop and crossfade settings.
 
+The bundled CC0 catalog contains 21 tracks in four albums:
+
+- `Фэнтези: странствия` — 8 tracks;
+- `Таверны и города` — 4 tracks;
+- `Подземелья и атмосфера` — 5 tracks;
+- `Бои` — 4 tracks.
+
+Per-file authors, source pages, download dates, object keys, and SHA-256 hashes
+are recorded under `internal/systemmusic`.
+
 ## API
 
-`/api/music/tracks` provides list/upload/search/rename/delete and signed URL
-access. `/api/music/albums` provides CRUD, track links and ordering.
+`/api/music/tracks` lists the user's own tracks plus system tracks and provides
+upload/search/rename/delete and playback URL access. Personal and system
+playback both use signed S3 URLs. `/api/music/albums` lists personal plus system
+albums and provides CRUD, track links and ordering only for personal albums.
 `/api/music/tags` provides CRUD and track links. Session-authorized playback URL
 and synchronized state are exposed under `/api/sessions/{uuid}/music...`.
 
-Audio is not streamed through PostgreSQL. Metadata is relational; object keys
-point to storage and playback uses short-lived URLs.
+Audio is not streamed through PostgreSQL or the Go server. Metadata is
+relational and all object keys point to S3; system objects use the versioned
+`system-music/v1/` prefix. Playback URLs use a one-hour lifetime.
 
 ## UI standards
 
@@ -33,6 +52,10 @@ point to storage and playback uses short-lived URLs.
 No local modal backdrop, browser prompt/confirm or separate drag engine should
 be added. Tag/album pickers are nested content inside the library and obey the
 shared modal stack's Escape ordering.
+
+System albums show their CC0/source metadata. Their upload dropzone, album
+actions, sorting, and track menus are absent. These UI guards complement the
+server authorization checks; they are not the security boundary.
 
 ## Upload limits
 
