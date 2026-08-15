@@ -177,12 +177,12 @@ function createArc() {
   font: inherit;
   font-size: 12px;
 }
-.chapter-arc-trigger { min-width: 260px; max-width: 410px; display: inline-flex; align-items: center; gap: 7px; padding: 7px 9px; border: 0; border-radius: 7px; background: transparent; color: var(--text-1); font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; transition: background 0.15s, color 0.15s; }
+.chapter-arc-trigger { min-width: 0; max-width: 410px; display: inline-flex; align-items: center; gap: 7px; padding: 7px 9px; border: 0; border-radius: 7px; background: transparent; color: var(--text-1); font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; transition: background 0.15s, color 0.15s; }
 .chapter-arc-trigger:hover:not(:disabled), .chapter-arc-trigger[aria-expanded="true"] { background: color-mix(in srgb, var(--text-on-accent) 7%, transparent); }
 .chapter-arc-trigger:disabled { opacity: 0.48; cursor: not-allowed; }
 .chapter-arc-prefix { flex: none; color: var(--text-muted); font-size: 10px; font-weight: 800; letter-spacing: 0.1em; }
 .chapter-arc-number { display: inline-flex; min-width: 24px; align-items: center; justify-content: center; color: var(--accent-soft); font-family: var(--font-display); font-size: 17px; font-weight: 700; letter-spacing: 0.04em; line-height: 1; }
-.chapter-arc-name { min-width: 0; flex: 1; overflow: hidden; text-align: left; text-overflow: ellipsis; white-space: nowrap; }
+.chapter-arc-name { min-width: 0; flex: 0 1 auto; margin-left: -3px; overflow: hidden; text-align: left; text-overflow: ellipsis; white-space: nowrap; }
 .chapter-arc-chevron { flex: none; transition: transform 0.15s; }
 .chapter-arc-trigger[aria-expanded="true"] .chapter-arc-chevron { transform: rotate(180deg); }
 
@@ -212,7 +212,7 @@ function createArc() {
 @media (max-width: 760px) {
   .chapter-toolbar { align-items: stretch; flex-direction: column; }
   .chapter-toolbar-view { width: 100%; margin-left: 0; }
-  .chapter-arc-trigger { min-width: 0; flex: 1; }
+  .chapter-arc-trigger { min-width: 0; }
   .chapter-session { max-width: none; }
   .chapter-toolbar-rule { display: none; }
 }

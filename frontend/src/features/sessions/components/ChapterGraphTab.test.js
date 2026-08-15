@@ -60,6 +60,8 @@ describe('chapter graph workspace', () => {
     expect(toolbar).toContain('arcSortable.shouldSuppressClick()')
     expect(toolbar).toContain('transition-preset="action-menu"')
     expect(toolbar).not.toContain('GripVertical')
+    expect(toolbar).toContain('.chapter-arc-trigger { min-width: 0;')
+    expect(toolbar).toContain('margin-left: -3px;')
     expect(toolbar).not.toContain('title="Выше"')
     expect(toolbar).not.toContain('title="Ниже"')
     expect(toolbar).toContain('aria-label="Редактировать арку"')
