@@ -7,6 +7,7 @@
       :session="session"
       :is-dm="isDm"
       :locked="locked"
+      :primary-view="primaryView"
       :reorder-pending="saving"
       :combat-active="workspaceMode === 'combat'"
       :dice-open="diceOpen"
@@ -16,6 +17,7 @@
       @create-arc="openArcCreate"
       @edit-arc="openArcEdit"
       @reorder-arcs="reorderArcs"
+      @select-view="$emit('select-view', $event)"
       @edit-session="$emit('edit-session')"
       @open-combat="openCombat"
       @toggle-dice="$emit('toggle-dice')"
@@ -25,9 +27,10 @@
 
     <div class="chapter-canvas-stage">
       <div v-if="actionError" class="chapter-action-error" role="alert">{{ actionError }}</div>
-      <div v-if="graph.loading.value" class="chapter-graph-loading">Загружаем карту кампании…</div>
+      <div v-if="primaryView === 'story' && graph.loading.value" class="chapter-graph-loading">Загружаем карту кампании…</div>
       <SessionGraphCanvas
-        v-else
+        v-else-if="!graph.loading.value"
+        v-show="primaryView === 'story'"
         ref="canvas"
         :graph="graph"
         :session-uuid="sessionUuid"
@@ -56,6 +59,7 @@
         @send-block-to-combat="$emit('send-block-to-combat', $event)"
         @workspace-context-change="$emit('workspace-context-change', $event)"
       />
+      <slot v-if="primaryView !== 'story'" name="primary-workspace" />
       <slot />
     </div>
 
@@ -185,6 +189,7 @@ const props = defineProps({
   session: { type: Object, default: null },
   isDm: { type: Boolean, default: false },
   locked: { type: Boolean, default: false },
+  primaryView: { type: String, default: 'story' },
   workspaceChapterId: { type: [Number, String], default: null },
   workspaceMode: { type: String, default: null },
   workspaceScene: { type: Object, default: null },
@@ -196,6 +201,7 @@ const props = defineProps({
 })
 const emit = defineEmits([
   'open-scenes', 'open-combat', 'edit-session', 'close-workspace',
+  'select-view',
   'send-block-to-combat', 'workspace-context-change', 'toggle-dice', 'toggle-music', 'toggle-events',
 ])
 
@@ -398,7 +404,7 @@ function openScenes(chapter) {
 }
 
 function openCombat() {
-  emit('open-combat', canvas.value?.combatContext?.() ?? {})
+  emit('open-combat', props.primaryView === 'story' ? canvas.value?.combatContext?.() ?? {} : {})
 }
 
 function returnToChapters() {

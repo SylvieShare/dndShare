@@ -42,3 +42,7 @@ export function fetchPatch(url, body) {
 export function fetchDelete(url) {
     return apiRequest(url, { method: 'DELETE', response: 'raw' })
 }
+
+export function fetchDeleteJson(url) {
+    return apiRequest(url, { method: 'DELETE' })
+}

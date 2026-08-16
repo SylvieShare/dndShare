@@ -12,7 +12,25 @@
 
     <span v-if="session" class="chapter-toolbar-rule chapter-toolbar-rule--session" />
 
-    <div class="chapter-toolbar-main">
+    <nav class="chapter-primary-nav" aria-label="Раздел сессии">
+      <button
+        v-for="view in visiblePrimaryViews"
+        :key="view.key"
+        type="button"
+        class="chapter-primary-tab"
+        :class="{ 'chapter-primary-tab--active': primaryView === view.key }"
+        :aria-current="primaryView === view.key ? 'page' : undefined"
+        :disabled="locked"
+        @click="$emit('select-view', view.key)"
+      >
+        <component :is="view.icon" :size="14" />
+        <span>{{ view.label }}</span>
+      </button>
+    </nav>
+
+    <span class="chapter-toolbar-rule chapter-toolbar-rule--view" />
+
+    <div v-if="primaryView === 'story'" class="chapter-toolbar-main">
       <button ref="arcTrigger" type="button" class="chapter-arc-trigger" :disabled="locked" :aria-expanded="arcOpen" @click="arcOpen = !arcOpen">
         <span class="chapter-arc-prefix">АРКА</span>
         <span class="chapter-arc-number">{{ romanNumeral(selectedArc?.order) }}</span>
@@ -81,7 +99,7 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue'
-import { Pencil, Swords } from '@lucide/vue'
+import { BookOpenText, Map, Pencil, Swords, UsersRound } from '@lucide/vue'
 import { BasePopover, reorderByDrop, useSortable } from '@sylvieshare/share-ui'
 import { romanNumeral } from '@/features/sessions/lib/chapterGraph'
 
@@ -92,6 +110,7 @@ const props = defineProps({
   session: { type: Object, default: null },
   isDm: { type: Boolean, default: false },
   locked: { type: Boolean, default: false },
+  primaryView: { type: String, default: 'story' },
   reorderPending: { type: Boolean, default: false },
   combatActive: { type: Boolean, default: false },
   diceOpen: { type: Boolean, default: true },
@@ -100,9 +119,16 @@ const props = defineProps({
 })
 const emit = defineEmits([
   'select-arc', 'create-arc', 'edit-arc', 'reorder-arcs',
+  'select-view',
   'edit-session', 'open-combat',
   'toggle-dice', 'toggle-music', 'toggle-events',
 ])
+const primaryViews = [
+  { key: 'story', label: 'Сюжет', icon: BookOpenText },
+  { key: 'locations', label: 'Локации', icon: Map },
+  { key: 'npcs', label: 'NPC', icon: UsersRound },
+]
+const visiblePrimaryViews = computed(() => props.isDm ? primaryViews : primaryViews.slice(0, 1))
 const arcTrigger = ref(null)
 const arcOpen = ref(false)
 const arcItems = computed(() => props.arcs)
@@ -158,6 +184,41 @@ function createArc() {
 .chapter-toolbar-main,
 .chapter-toolbar-view { display: flex; align-items: center; gap: 7px; min-width: 0; }
 .chapter-toolbar-view { margin-left: auto; }
+.chapter-primary-nav { display: flex; align-items: center; gap: 2px; }
+.chapter-primary-tab {
+  position: relative;
+  display: inline-flex;
+  min-height: 31px;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 9px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.chapter-primary-tab::after {
+  position: absolute;
+  right: 9px;
+  bottom: 2px;
+  left: 9px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--accent);
+  content: '';
+  opacity: 0;
+  transform: scaleX(0.45);
+  transition: opacity 0.15s, transform 0.15s;
+}
+.chapter-primary-tab:hover:not(:disabled) { background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); color: var(--text-1); }
+.chapter-primary-tab--active { color: var(--text-1); }
+.chapter-primary-tab--active::after { opacity: 1; transform: scaleX(1); }
+.chapter-primary-tab:disabled { cursor: not-allowed; opacity: 0.45; }
 .chapter-panel-tools { display: flex; align-items: center; gap: 7px; }
 .chapter-session { min-width: 0; max-width: 300px; display: flex; align-items: center; gap: 4px; }
 .chapter-session-title { min-width: 0; overflow: hidden; padding: 4px 6px; border: 0; border-radius: 6px; background: none; color: var(--text-1); font: inherit; font-family: var(--font-display); font-size: 21px; font-weight: 680; text-align: left; text-overflow: ellipsis; white-space: nowrap; }
@@ -215,5 +276,6 @@ function createArc() {
   .chapter-arc-trigger { min-width: 0; }
   .chapter-session { max-width: none; }
   .chapter-toolbar-rule { display: none; }
+  .chapter-primary-nav { width: 100%; overflow-x: auto; }
 }
 </style>

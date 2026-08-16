@@ -1,4 +1,4 @@
-import { fetchDelete, fetchGet, fetchPatch, fetchPost, fetchPut } from '@/shared/api/http'
+import { fetchDelete, fetchDeleteJson, fetchGet, fetchPatch, fetchPost, fetchPut } from '@/shared/api/http'
 
 export function pollChars(items) {
   return fetchPost('/chars/poll', items)
@@ -66,6 +66,38 @@ export function getChapters(uuid) {
 
 export function getChapterGraph(uuid) {
   return fetchGet(`/sessions/${uuid}/chapter-graph`)
+}
+
+export function getSessionWorld(uuid) {
+  return fetchGet(`/sessions/${uuid}/world`)
+}
+
+export function createSessionLocation(uuid, data) {
+  return fetchPost(`/sessions/${uuid}/locations`, data)
+}
+
+export function updateSessionLocation(uuid, locationId, data) {
+  return fetchPatch(`/sessions/${uuid}/locations/${locationId}`, data)
+}
+
+export function moveSessionLocation(uuid, locationId, data) {
+  return fetchPatch(`/sessions/${uuid}/locations/${locationId}/move`, data)
+}
+
+export function deleteSessionLocation(uuid, locationId) {
+  return fetchDeleteJson(`/sessions/${uuid}/locations/${locationId}`)
+}
+
+export function createSessionNpc(uuid, data) {
+  return fetchPost(`/sessions/${uuid}/npcs`, data)
+}
+
+export function updateSessionNpc(uuid, npcId, data) {
+  return fetchPatch(`/sessions/${uuid}/npcs/${npcId}`, data)
+}
+
+export function deleteSessionNpc(uuid, npcId) {
+  return fetchDeleteJson(`/sessions/${uuid}/npcs/${npcId}`)
 }
 
 export function createArc(uuid, data) {

@@ -1,8 +1,8 @@
 # Sessions
 
 Frontend: `frontend/src/features/sessions`. Backend:
-`internal/web/sessions.go`, `session_scenes.go`, `music.go` and matching store
-files.
+`internal/web/sessions.go`, `session_scenes.go`, `session_world.go`, `music.go`
+and matching store files.
 
 ## Pages and access
 
@@ -58,16 +58,19 @@ height end with its rendered heading, players and error message (up to the
 viewport max-height), so the uncovered canvas below a short player list remains
 available for pan and node dragging.
 
-The session page is a campaign workspace rather than a stack of content tabs.
-The chapter canvas fills all available width below `AppHeader`; the participant
-rail floats above its left edge and the dice/events/music tiles float above its right
-edge. CSS safe-area variables keep focus, zoom and newly created nodes in the
-uncovered part of the canvas and leave a 28px gap between the central workspace
-and either floating rail. Only the rendered right-side tiles receive pointer
-events: transparent space below a shorter stack remains available for canvas pan,
-selection and node dragging. When all three tiles are hidden, the right safe area
-collapses and canvas create actions move to the viewport edge. The right rail
-disappears first on narrow screens, then the participant rail.
+The session page is a campaign workspace rather than a stack of independent
+content pages. Its semantic header switches the central area between `Сюжет`,
+`Локации` and `NPC`; the participant rail remains on the left and the
+dice/events/music tools remain on the right. In `Сюжет` the chapter canvas fills
+all available width below `AppHeader`. CSS safe-area variables keep focus, zoom
+and newly created nodes in the uncovered part of the canvas and leave a 28px gap
+between the central workspace and either floating rail. Only rendered right-side
+tiles receive pointer events: transparent space below a shorter stack remains
+available for canvas pan, selection and node dragging. When all three tiles are
+hidden, the right safe area collapses and canvas create actions move to the
+viewport edge. At widths up to `1360px` the right tool rail is hidden so the
+split location/NPC workspaces retain a useful detail width; the participant rail
+disappears only on mobile.
 
 Постоянные icon-кнопки в командной шапке независимо открывают и закрывают
 целые панели кубиков, музыки и событий. Выбранная видимость сохраняется в
@@ -120,6 +123,40 @@ version is not bumped when JSON data is unchanged. Dice rolls use the direct
 event endpoint because they do not mutate character state. Pending debounced
 character saves are flushed on page unmount instead of dropping their events.
 
+## Locations and prepared NPCs
+
+`Локации` and `NPC` are DM-only primary central workspaces, not extra permanent
+side panels. The selected mode is stored per session in local storage; `view`,
+`location` and `npc` query parameters preserve a shareable selection. Combat is
+still a temporary overlay. Opening it from either world workspace keeps that
+workspace mounted underneath and closing combat returns to the same mode and
+selected entity.
+
+Locations deliberately use a hierarchy instead of another graph canvas. The
+left part of the central workspace is a searchable tree, while the selected
+location owns the detail area with its image, breadcrumb, description, children,
+NPCs and scenarios. Expanded tree rows are stored per session in local storage.
+The DM drags the whole row: dropping into the upper or lower part places it
+before or after a sibling, while dropping into the middle makes it a child of
+the target. The server validates session ownership and rejects self/descendant
+cycles. Root dropping returns a location to the top level. There are no
+location-to-location graph edges or geographic canvas state.
+
+A location stores a semantic kind, shared-catalogue image, description, parent
+and sibling order. It may be linked to any number of session scenarios. The
+editor excludes the location itself and all descendants from its parent picker,
+and deletion is blocked until direct children are moved or deleted.
+
+Prepared NPCs live in one searchable session catalogue. A record has a name,
+optional role and description, and a chosen color used consistently by its
+initial-based portrait. One NPC can be attached to multiple locations and
+multiple scenarios through the same editor; location and NPC detail views show
+the reverse associations without duplicating the NPC record. Editors use the
+shared `ColorPresetPicker`, `SessionImagePicker`, form controls and modal frame.
+World data is loaded lazily as one aggregate through `useSessionWorld`, then a
+successful mutation replaces that aggregate so every reverse association stays
+consistent.
+
 ## Chapters, scenarios and blocks
 
 Every session has at least one ordered arc. Arc order is the canonical campaign
@@ -137,13 +174,14 @@ promotes that chapter to `in_progress`, and only one chapter in the session can
 carry the pointer.
 
 `ChapterGraphToolbar` is the semantic session header with its own background and
-bottom divider, not a `BaseTile`. It combines the editable session name,
-arc switcher and ordering, accessible icon-only combat launcher, and the dice,
+bottom divider, not a `BaseTile`. It combines the editable session name, the
+three primary workspace choices, story-only arc switcher and ordering,
+accessible icon-only combat launcher, and the dice,
 music and timeline panel toggles. Current-chapter focus and zoom are canvas interactions
 rather than toolbar controls. Creation is contextual and lives on the canvas
 in a top-right vertical action dock, immediately left of the right tools rail;
 there is no chapter/scenario/block creation button in the header. There is no
-second local tab switcher or session title bar. `SessionGraphCanvas` keeps one
+second nested switcher or session title bar. `SessionGraphCanvas` keeps one
 physical `NestedGraphCanvas` mounted for all narrative levels. The session name is
 the largest text in the command bar. The unframed arc trigger reads
 `АРКА <Roman number> <name>` with the original muted uppercase label and a

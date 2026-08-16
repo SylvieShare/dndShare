@@ -139,6 +139,20 @@ class ids, ключи черт и source metadata, затем удаляет и�
 самая поздняя связь по `joined_at`, а подтверждённый перенос выполняется одной
 транзакцией.
 
+Мир сессии хранится отдельно от сюжетных графов:
+
+- `session_location` образует дерево через nullable `parent_location_id` и
+  хранит `kind`, описание, preset изображения и `sort_order` внутри группы
+  соседей. Self-parent запрещён constraint-ом, а runtime также запрещает
+  перенос под любого потомка. `ON DELETE RESTRICT` не даёт неявно удалить
+  вложенные места;
+- `session_npc` — единый каталог заготовленных NPC с именем, ролью, описанием,
+  цветом и стабильным порядком;
+- `session_scene_location`, `session_npc_location` и `session_npc_scene` —
+  явные many-to-many связи. Все link rows удаляются каскадно вместе с любой
+  стороной. Отдельной таблицы рёбер между локациями нет: география выражается
+  только деревом.
+
 `session_event` — append-only хроника осмысленных игровых действий. Автор
 хранится в `author_user_id`, а `actor_char_id` отдельно указывает персонажа, из
 листа которого выполнено действие. Игрок может указывать только своего
@@ -216,7 +230,8 @@ startup schema, а не job registry.
 ## Как менять схему
 
 1. Добавить финальное DDL в логический файл `internal/store/schema/*.sql`:
-   foundation, handbook, characters, sessions, seed, item-icons или feature-icons. Порядок файлов задаёт
+   foundation, handbook, characters, sessions, seed, item-icons, feature-icons
+   или session-world. Порядок файлов задаёт
    зависимости и не должен меняться неявно.
 2. Если есть старые данные, перед удалением старого поля выполнить
    идемпотентный `UPDATE`/временную функцию.

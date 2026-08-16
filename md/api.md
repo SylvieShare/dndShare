@@ -107,6 +107,24 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
   (`{"color":null}`) the participant's session-local `#RRGGBB` marker; owner-only;
 - `PATCH /api/sessions/{uuid}/participants-order` accepts the complete ordered
   participant character-id list as `{"ids":[...]}`; owner-only;
+- `GET /api/sessions/{uuid}/world` returns one aggregate
+  `{locations,npcs,scenes}`. Locations and NPCs include their association id
+  arrays; compact scenarios include arc/chapter context plus reverse location
+  and NPC ids. The aggregate is owner-only because NPC descriptions may contain
+  master notes and secrets;
+- `POST /api/sessions/{uuid}/locations`, `PATCH|DELETE
+  /api/sessions/{uuid}/locations/{locationId}` create, replace or remove a
+  location. The full mutation payload contains
+  `{parentLocationId,name,kind,description,imagePresetKey,sceneIds}`;
+- `PATCH /api/sessions/{uuid}/locations/{locationId}/move` accepts
+  `{parentLocationId,beforeLocationId}`. A null `beforeLocationId` appends to
+  the target sibling group; invalid cross-session references and descendant
+  cycles are rejected;
+- `POST /api/sessions/{uuid}/npcs`, `PATCH|DELETE
+  /api/sessions/{uuid}/npcs/{npcId}` manage prepared NPCs with
+  `{name,role,description,color,locationIds,sceneIds}`. World mutations are
+  owner-only and return `{world,id}` so clients can replace every reverse
+  association together;
 - `GET /api/sessions/{uuid}/chapter-graph` returns `{arcs,chapters,edges}`;
 - `POST /api/sessions/{uuid}/arcs`, `PATCH|DELETE
   /api/sessions/{uuid}/arcs/{arcId}` and `PATCH
@@ -183,7 +201,8 @@ nodes of one parent canvas. Reordering arcs accepts `{ids:[...]}` containing
 every arc exactly once; response order becomes the new automatic numbering.
 
 Точные routes находятся в `internal/web/sessions.go`,
-`internal/web/session_scenes.go`, `internal/web/session_scene_graph.go` и
+`internal/web/session_scenes.go`, `internal/web/session_scene_graph.go`,
+`internal/web/session_world.go` и
 `internal/web/session_graph_bulk.go`; graph validation is in
 `sessions_chapters.go` and `sessions_graph_actions.go`. Encounter принимает
 только canonical combatants (`itemId` + `override` и уникальный

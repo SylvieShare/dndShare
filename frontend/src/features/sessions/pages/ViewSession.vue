@@ -11,24 +11,13 @@
       @cancel="pendingKick = null"
     />
 
-    <AppModalFrame v-if="editOpen" title="Редактировать сессию" @close="editOpen = false">
-      <FormField label="Название" vertical>
-        <FormTextInput v-model:value="editName" :maxlength="255" autofocus @enter="saveEdit" />
-      </FormField>
-      <FormField label="Описание" vertical>
-        <FormTextarea v-model:value="editDesc" :rows="3" :maxlength="1000" />
-      </FormField>
-      <template #footer>
-        <FormActionButtons
-          submit-text="Сохранить"
-          loading-text="Сохранение..."
-          :loading="editSaving"
-          :can-submit="!!editName.trim()"
-          @cancel="editOpen = false"
-          @submit="saveEdit"
-        />
-      </template>
-    </AppModalFrame>
+    <SessionEditModal
+      v-if="editOpen && session"
+      :session="session"
+      :session-uuid="sessionUuid"
+      @close="editOpen = false"
+      @saved="applySessionEdit"
+    />
 
     <template v-if="loading">
       <div class="loading-placeholder" />
@@ -39,7 +28,7 @@
       class="campaign-workspace"
       :class="{
         'campaign-workspace--combat': workspaceMotionMode === 'combat',
-        'campaign-workspace--hotkeys': isDm && workspaceMotionMode !== 'combat',
+        'campaign-workspace--hotkeys': isDm && primaryView === 'story' && workspaceMotionMode !== 'combat',
         'campaign-workspace--right-dock': rightDockOpen,
       }"
     >
@@ -50,6 +39,7 @@
         :session-uuid="sessionUuid"
         :is-dm="isDm"
         :locked="!!workspaceMode"
+        :primary-view="primaryView"
         :workspace-chapter-id="workspaceChapter?.id ?? null"
         :workspace-scene="workspaceScene"
         :workspace-level="workspaceLevel"
@@ -59,6 +49,7 @@
         :music-open="musicOpen"
         :events-open="eventsOpen"
         @open-scenes="openChapterScenes"
+        @select-view="selectPrimaryView"
         @open-combat="toggleCombatWorkspace"
         @toggle-dice="diceOpen = !diceOpen"
         @toggle-music="musicOpen = !musicOpen"
@@ -68,6 +59,17 @@
         @edit-session="openEdit"
         @close-workspace="closeWorkspace"
       >
+        <template #primary-workspace>
+          <SessionWorldLayer
+            :session-uuid="sessionUuid"
+            :active-view="primaryView"
+            :is-dm="isDm"
+            :selected-location-id="selectedLocationId"
+            :selected-npc-id="selectedNpcId"
+            @select-location="selectLocation"
+            @select-npc="selectNpc"
+          />
+        </template>
         <SessionCenterWorkspace
           v-if="workspaceMode === 'combat' && (workspaceRevealed || workspaceClosing)"
           :closing="workspaceClosing"
@@ -174,13 +176,8 @@
 <script setup>
 import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { AppModalFrame } from '@sylvieshare/share-ui'
 import { BaseTile } from '@sylvieshare/share-ui'
 import { ConfirmDialog } from '@sylvieshare/share-ui'
-import { FormActionButtons } from '@sylvieshare/share-ui'
-import { FormField } from '@sylvieshare/share-ui'
-import { FormTextInput } from '@sylvieshare/share-ui'
-import { FormTextarea } from '@sylvieshare/share-ui'
 import { reorderByDrop, useSortable } from '@sylvieshare/share-ui'
 import CharacterCreateWizardModal from '@/features/character-list/components/CharacterCreateWizardModal.vue'
 import CharacterSheetModal from '@/features/sessions/components/CharacterSheetModal.vue'
@@ -189,15 +186,18 @@ import DicePanel from '@/features/sessions/components/DicePanel.vue'
 import MusicLibraryModal from '@/features/sessions/components/MusicLibraryModal.vue'
 import MusicPanel from '@/features/sessions/components/MusicPanel.vue'
 import SessionEventsPanel from '@/features/sessions/components/SessionEventsPanel.vue'
+import SessionEditModal from '@/features/sessions/components/SessionEditModal.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 import SessionCenterWorkspace from '@/features/sessions/components/SessionCenterWorkspace.vue'
 import SessionParticipantCard from '@/features/sessions/components/SessionParticipantCard'
+import SessionWorldLayer from '@/features/sessions/components/SessionWorldLayer.vue'
 import { useParticipantPolling } from '@/features/sessions/composables/useParticipantPolling'
 import { useChapterGraph } from '@/features/sessions/composables/useChapterGraph'
 import { useEncounter } from '@/features/sessions/composables/useEncounter'
 import { useSessionSelection } from '@/features/sessions/composables/useSessionSelection'
 import { useSessionWorkspace } from '@/features/sessions/composables/useSessionWorkspace'
+import { useSessionPrimaryView } from '@/features/sessions/composables/useSessionPrimaryView'
 import { useAccountStore } from '@/stores/account'
 import { useMusicStore } from '@/stores/music'
 import { useTemplateStore } from '@/stores/template'
@@ -205,7 +205,7 @@ import { useSessionEventsStore } from '@/stores/sessionEvents'
 import { useUiStore } from '@/stores/ui'
 import { pvName } from '@/features/sessions/lib/participantView'
 import { fetchPost } from '@/shared/api/http'
-import { getSession, joinSession, reorderParticipants, updateParticipantColor, updateSession } from '@/shared/api/sessionsApi'
+import { getSession, joinSession, reorderParticipants, updateParticipantColor } from '@/shared/api/sessionsApi'
 import { itemsApi } from '@/shared/api/itemsApi'
 
 const route = useRoute()
@@ -213,14 +213,19 @@ const router = useRouter()
 const sessionUuid = route.params.uuid
 const headerOwner = String(route.name)
 const uiStore = useUiStore()
+const {
+  activeView: primaryView,
+  selectedLocationId,
+  selectedNpcId,
+  selectView: selectPrimaryView,
+  selectLocation,
+  selectNpc,
+} = useSessionPrimaryView({ sessionUuid, route, router })
 
 const session = ref(null)
 const participants = ref([])
 const loading = ref(true)
 const editOpen = ref(false)
-const editName = ref('')
-const editDesc = ref('')
-const editSaving = ref(false)
 const coloringIds = ref(new Set())
 const colorError = ref('')
 const participantOrderSaving = ref(false)
@@ -274,6 +279,10 @@ watch(sheetUuid, actorUuid => {
 const isDm = computed(() => {
   const uid = accountStore.user?.id
   return !!(uid && session.value && session.value.ownerUserId === uid)
+})
+
+watch([() => accountStore.status, isDm, session], ([status, dm, currentSession]) => {
+  if (status === 'success' && currentSession && !dm && primaryView.value !== 'story') selectPrimaryView('story')
 })
 
 const participantSortable = useSortable({
@@ -492,21 +501,12 @@ async function createChar(payload) {
 }
 
 function openEdit() {
-  editName.value = session.value?.name ?? ''
-  editDesc.value = session.value?.description ?? ''
   editOpen.value = true
 }
 
-async function saveEdit() {
-  if (!editName.value.trim() || editSaving.value) return
-  editSaving.value = true
-  try {
-    await updateSession(sessionUuid, { name: editName.value.trim(), description: editDesc.value.trim() || null })
-    session.value = { ...session.value, name: editName.value.trim(), description: editDesc.value.trim() || null }
-    editOpen.value = false
-  } finally {
-    editSaving.value = false
-  }
+function applySessionEdit(data) {
+  session.value = { ...session.value, ...data }
+  editOpen.value = false
 }
 
 async function copyCode() {

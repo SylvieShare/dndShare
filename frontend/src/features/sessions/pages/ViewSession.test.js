@@ -74,7 +74,7 @@ describe('ViewSession participant rail', () => {
     expect(styles).toContain('--chapter-safe-left: 288px;')
     expect(styles).toContain('.campaign-workspace--right-dock .campaign-graph')
     expect(styles).toContain('--chapter-safe-right: 336px;')
-    expect(source).toContain("'campaign-workspace--hotkeys': isDm && workspaceMotionMode !== 'combat'")
+    expect(source).toContain("'campaign-workspace--hotkeys': isDm && primaryView === 'story' && workspaceMotionMode !== 'combat'")
     expect(styles).toContain('.campaign-workspace--hotkeys .workspace-dock--left')
     expect(styles).toContain('max-height: calc(100% - 190px);')
     expect(source).not.toContain('<SlidingTabs')
