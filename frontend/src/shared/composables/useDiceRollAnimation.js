@@ -22,31 +22,18 @@ export function useDiceRollAnimation({
     return displayedRolls.get(rollKey(entry.id, partIndex, rollIndex)) ?? actual
   }
 
-  function randomNearbyFace(actual, sides, maxDistance, minDistance = 1) {
+  function randomSpinningFace(actual, sides, previous) {
     const candidates = []
     for (let value = 1; value <= sides; value += 1) {
-      const distance = Math.abs(value - actual)
-      if (distance >= minDistance && distance <= maxDistance) candidates.push(value)
+      if (value !== actual && value !== previous) candidates.push(value)
     }
     if (!candidates.length) return actual
     return candidates[Math.floor(random() * candidates.length)]
   }
 
-  function nextDisplayedFace(actual, sides, previous, progress) {
-    const scheduledDistance = Math.max(1, Math.ceil((sides - 1) * ((1 - progress) ** 1.4)))
-    const previousDistance = Math.abs(previous - actual)
-    const maxDistance = Math.min(
-      scheduledDistance,
-      previousDistance > 1 ? previousDistance - 1 : 1,
-    )
-    const minDistance = Math.max(1, Math.ceil(maxDistance * 0.45))
-    return randomNearbyFace(actual, sides, maxDistance, minDistance)
-  }
-
   function setDisplayedRolls(entry, step = 0) {
     const settled = step >= DICE_ROLL_ANIMATION_DELAYS.length
     const preFinal = step === DICE_ROLL_ANIMATION_DELAYS.length - 1
-    const progress = step / DICE_ROLL_ANIMATION_DELAYS.length
     entry.result.parts.forEach((part, partIndex) => {
       if (part.kind !== 'dice') return
       part.rolls.forEach((actual, rollIndex) => {
@@ -54,14 +41,7 @@ export function useDiceRollAnimation({
         const previous = displayedRolls.get(key)
         const value = settled || (preFinal && random() < DICE_ROLL_PREFINAL_SETTLE_CHANCE)
           ? actual
-          : previous == null
-            ? randomNearbyFace(
-                actual,
-                part.sides,
-                part.sides - 1,
-                Math.max(1, Math.ceil((part.sides - 1) * 0.35)),
-              )
-            : nextDisplayedFace(actual, part.sides, previous, progress)
+          : randomSpinningFace(actual, part.sides, previous)
         displayedRolls.set(key, value)
       })
     })

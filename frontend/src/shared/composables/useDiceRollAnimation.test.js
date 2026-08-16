@@ -15,28 +15,55 @@ beforeEach(() => vi.useFakeTimers())
 afterEach(() => vi.useRealTimers())
 
 describe('dice roll presentation animation', () => {
-  it('narrows changing faces toward the stored result and settles quickly', () => {
-    const animation = useDiceRollAnimation({ shouldAnimate: () => true, random: () => 0 })
+  it('keeps every temporary face moving before it settles quickly', () => {
+    const animation = useDiceRollAnimation({ shouldAnimate: () => true, random: () => 0.999 })
 
     animation.startEntryAnimation(entry)
     expect(animation.isRolling(entry.id)).toBe(true)
-    const distances = [Math.abs(animation.displayedRoll(entry, 0, 0, 17) - 17)]
+    const shownFaces = [animation.displayedRoll(entry, 0, 0, 17)]
 
     let elapsed = 0
     for (const delay of DICE_ROLL_ANIMATION_DELAYS) {
       vi.advanceTimersByTime(delay - elapsed)
       elapsed = delay
-      distances.push(Math.abs(animation.displayedRoll(entry, 0, 0, 17) - 17))
+      shownFaces.push(animation.displayedRoll(entry, 0, 0, 17))
     }
 
     expect(animation.isRolling(entry.id)).toBe(false)
     expect(animation.displayedRoll(entry, 0, 0, 17)).toBe(17)
-    expect(distances[0]).toBeGreaterThan(0)
-    expect(distances.at(-1)).toBe(0)
-    distances.slice(1).forEach((distance, index) => {
-      expect(distance).toBeLessThanOrEqual(distances[index])
+    shownFaces.slice(0, -1).forEach((face, index) => {
+      expect(face).not.toBe(17)
+      if (index > 0) expect(face).not.toBe(shownFaces[index - 1])
     })
     expect(DICE_ROLL_ANIMATION_DELAYS.at(-1)).toBeLessThan(700)
+  })
+
+  it.each([
+    ['a low-sided die', 4],
+    ['a low result', 20],
+  ])('does not stall for %s', (_, sides) => {
+    const lowEntry = {
+      id: sides,
+      result: { parts: [{ kind: 'dice', sides, rolls: [1] }] },
+    }
+    const animation = useDiceRollAnimation({ shouldAnimate: () => true, random: () => 0.999 })
+
+    animation.startEntryAnimation(lowEntry)
+    const shownFaces = [animation.displayedRoll(lowEntry, 0, 0, 1)]
+    let elapsed = 0
+    for (const delay of DICE_ROLL_ANIMATION_DELAYS.slice(0, -1)) {
+      vi.advanceTimersByTime(delay - elapsed)
+      elapsed = delay
+      shownFaces.push(animation.displayedRoll(lowEntry, 0, 0, 1))
+    }
+
+    expect(shownFaces).not.toContain(1)
+    shownFaces.slice(1).forEach((face, index) => {
+      expect(face).not.toBe(shownFaces[index])
+    })
+
+    vi.advanceTimersByTime(DICE_ROLL_ANIMATION_DELAYS.at(-1) - elapsed)
+    expect(animation.displayedRoll(lowEntry, 0, 0, 1)).toBe(1)
   })
 
   it('jumps the displayed total with the visible kept dice before settling', () => {

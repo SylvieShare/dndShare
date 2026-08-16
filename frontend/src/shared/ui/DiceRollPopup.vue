@@ -284,6 +284,8 @@ function rawExpression(entry) {
 .dice-pop-roll--rolling {
   opacity: 0.56;
   filter: saturate(0.45);
+  transform-origin: center;
+  animation: dice-pop-roll-tumble 0.56s cubic-bezier(0.22, 0.78, 0.2, 1) both;
 }
 .dice-pop-roll--drop {
   position: relative;
@@ -422,6 +424,15 @@ function rawExpression(entry) {
   to   { transform: scaleX(0); }
 }
 
+@keyframes dice-pop-roll-tumble {
+  0%   { transform: translateY(0) rotate(0deg) scale(0.9); }
+  18%  { transform: translateY(-5px) rotate(-14deg) scale(1.06); }
+  38%  { transform: translateY(2px) rotate(11deg) scale(0.96); }
+  58%  { transform: translateY(-3px) rotate(-8deg) scale(1.03); }
+  78%  { transform: translateY(1px) rotate(5deg) scale(0.99); }
+  100% { transform: translateY(0) rotate(0deg) scale(1); }
+}
+
 .dice-stack-enter-active {
   transition: transform 0.22s ease, opacity 0.22s ease;
 }
@@ -460,6 +471,7 @@ function rawExpression(entry) {
 @media (prefers-reduced-motion: reduce) {
   .dice-pop--crit,
   .dice-pop--fumble,
+  .dice-pop-roll--rolling,
   .dice-result-enter-active,
   .dice-result-leave-active {
     animation: none;
