@@ -26,7 +26,7 @@ import { getEncounter, saveEncounter } from '@/shared/api/sessionsApi'
 import { useSortable } from '@sylvieshare/share-ui'
 import { useSuggestStore } from '@/stores/suggest'
 
-export function useEncounter({ sessionUuid, participants, canEditPlayers }) {
+export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRollNpcHp }) {
   const encounter = ref({ active: false, round: 0, turnIndex: 0, combatants: [] })
   const loaded = ref(false)
   const persistence = useEncounterPersistence({
@@ -197,6 +197,7 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers }) {
     pruneToExisting: selection.pruneToExisting,
     selectedUids: selection.selectedUids,
     cacheItem: npcData.cacheItem,
+    autoRollHp: autoRollNpcHp,
   })
 
   const flow = useEncounterFlow({

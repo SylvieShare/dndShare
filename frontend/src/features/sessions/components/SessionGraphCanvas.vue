@@ -89,8 +89,13 @@
       v-if="(displayLevel === 'blocks' || workspaceMode === 'combat') && selectedScene"
       class="session-graph-ancestor session-graph-ancestor--scene"
       :class="{ 'session-graph-ancestor--context': workspaceMode === 'combat' }"
-      :title="workspaceMode === 'combat' ? 'Сценарий боя' : 'Двойной клик — к холсту сценариев'"
-      @dblclick.stop="returnToScenes"
+      :title="workspaceMode === 'combat' ? 'Сценарий боя' : 'Действия со сценарием'"
+      :role="isDm && workspaceMode !== 'combat' ? 'button' : undefined"
+      :tabindex="isDm && workspaceMode !== 'combat' ? 0 : -1"
+      @click.stop="openSceneAncestorMenu"
+      @dblclick.stop="returnFromSceneAncestor"
+      @keydown.enter.stop.prevent="openSceneAncestorMenu"
+      @keydown.space.stop.prevent="openSceneAncestorMenu"
     >
       <SceneGraphNode
         :scene="selectedScene"
@@ -106,7 +111,7 @@
       @action="runCanvasAction"
     />
 
-    <CanvasHotkeyHints v-if="isDm && workspaceMode !== 'combat'" />
+    <CanvasHotkeyHints v-if="isDm && workspaceMode !== 'combat' && showHotkeyLegend" />
 
     <SceneBlockMenus
       ref="blockMenus"
@@ -124,6 +129,7 @@
       @edit="openSceneRename"
       @delete="requestSceneDelete"
       @present="presentScene"
+      @return-scenes="returnFromSceneMenu"
     />
 
     <NestedEdgeMenus
@@ -203,6 +209,7 @@ const props = defineProps({
   workspaceLayoutMode: { type: String, default: null },
   currentChapterId: { type: [Number, String], default: null },
   chapterLinkingFrom: { type: Object, default: null },
+  showHotkeyLegend: { type: Boolean, default: true },
 })
 const emit = defineEmits([
   'node-click', 'node-double-click', 'edge-click', 'start-link', 'finish-link',
@@ -286,6 +293,24 @@ function openChapterAncestorMenu(event) {
   blockMenus.value?.close()
   edgeMenus.value?.close()
   emit('chapter-ancestor-click', activeChapter.value, event.currentTarget)
+}
+
+function openSceneAncestorMenu(event) {
+  if (!props.isDm || props.workspaceMode === 'combat' || !selectedScene.value) return
+  blockMenus.value?.close()
+  edgeMenus.value?.close()
+  sceneMenus.value?.openFor(selectedScene.value, event.currentTarget, 'ancestor')
+}
+
+function returnFromSceneAncestor() {
+  if (props.workspaceMode === 'combat') return
+  sceneMenus.value?.close()
+  returnToScenes()
+}
+
+function returnFromSceneMenu() {
+  sceneMenus.value?.close()
+  returnToScenes()
 }
 
 function handleNodeClick(node, anchor) {

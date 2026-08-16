@@ -22,13 +22,26 @@
         <SceneRewardItemsEditor v-model="draft.items" />
       </FormField>
 
-      <FormField v-else-if="blockType === 'image'" label="Материал для показа" vertical>
-        <div v-if="availableMaterials.length" class="scene-block-materials">
-          <button v-for="material in availableMaterials" :key="material.id" type="button" :class="{ active: draft.materialId === material.id }" @click="draft.materialId = material.id">
-            <img :src="material.assetUrl" alt="" /><span><strong>{{ material.name }}</strong><small>{{ material.caption || 'Без подписи' }}</small></span>
-          </button>
+      <FormField v-else-if="isMaterialBlock" :label="blockType === 'image' ? 'Изображение для показа' : 'Материал'" vertical>
+        <div v-if="selectedMaterial" class="scene-block-material-selected">
+          <img v-if="['image', 'map'].includes(selectedMaterial.kind)" :src="selectedMaterial.assetUrl" alt="" />
+          <span v-else class="scene-block-material-icon"><component :is="materialType(selectedMaterial.kind).icon" :size="23" /></span>
+          <span><strong>{{ selectedMaterial.name }}</strong><small>{{ materialType(selectedMaterial.kind).label }}<template v-if="selectedMaterial.caption"> · {{ selectedMaterial.caption }}</template></small></span>
+          <button type="button" @click="materialPickerOpen = true">Сменить</button>
         </div>
-        <div v-else class="scene-block-materials-empty">Сначала добавьте изображение во вкладке «Материалы».</div>
+        <button v-else type="button" class="scene-block-material-pick" :disabled="!availableMaterials.length" @click="materialPickerOpen = true">
+          {{ availableMaterials.length ? 'Выбрать материал' : blockType === 'image' ? 'Нет доступных изображений' : 'Нет доступных материалов' }}
+        </button>
+        <small class="scene-block-material-hint">Поиск идёт по материалам, доступным в текущей главе и сценарии.</small>
+        <WorldRelationPickerModal
+          v-if="materialPickerOpen"
+          :title="blockType === 'image' ? 'Выбрать изображение' : 'Выбрать материал'"
+          :items="materialOptions"
+          placeholder="Поиск по материалам…"
+          empty-text="Подходящих материалов пока нет"
+          @close="materialPickerOpen = false"
+          @select="selectMaterial"
+        />
       </FormField>
 
       <FormField v-else label="Реплики" vertical>
@@ -73,7 +86,7 @@
     <template #footer>
       <FormActionButtons
         :loading="saving"
-        :can-submit="!!draft.title.trim() && (blockType !== 'image' || !!draft.materialId)"
+        :can-submit="!!draft.title.trim() && (!isMaterialBlock || !!draft.materialId)"
         @cancel="$emit('close')"
         @submit="save"
       />
@@ -82,13 +95,15 @@
 </template>
 
 <script setup>
-import { computed, getCurrentInstance, inject, provide, reactive } from 'vue'
+import { computed, getCurrentInstance, inject, provide, reactive, ref } from 'vue'
 import { AppModalFrame, ColorPresetPicker } from '@sylvieshare/share-ui'
 import InputDescription from '@/shared/ui/InputDescription.vue'
 import SceneCombatCreaturesEditor from '@/features/sessions/components/SceneCombatCreaturesEditor.vue'
 import SceneRewardItemsEditor from '@/features/sessions/components/SceneRewardItemsEditor.vue'
+import WorldRelationPickerModal from '@/features/sessions/components/WorldRelationPickerModal.vue'
 import { DIALOGUE_COLOR_POOL, applyDialogueKeyColor, dialogueKeySuggestions, hydrateDialogueRows, normalizeDialogueKey, pickDialogueColor } from '@/features/sessions/lib/dialogueRows'
 import { sceneBlockDefaultWidth, sceneBlockType } from '@/features/sessions/lib/sceneBlockTypes'
+import { materialType } from '@/features/sessions/lib/sessionMaterials'
 import { FormActionButtons } from '@sylvieshare/share-ui'
 import { FormField } from '@sylvieshare/share-ui'
 import { FormTextInput } from '@sylvieshare/share-ui'
@@ -104,9 +119,21 @@ const emit = defineEmits(['close', 'save'])
 
 const blockType = computed(() => props.block?.type || props.type)
 const typeLabel = computed(() => sceneBlockType(blockType.value).label.toLowerCase())
-const defaultTitles = { text: 'Новое описание', list: 'Новый диалог', combat: 'Новый бой', reward: 'Новая награда', image: 'Новое изображение' }
+const defaultTitles = { text: 'Новое описание', list: 'Новый диалог', combat: 'Новый бой', reward: 'Новая награда', image: 'Новое изображение', material: 'Новый материал' }
 const sessionMaterials = inject('sessionMaterials', null)
-const availableMaterials = computed(() => (sessionMaterials?.availableFor(props.chapterId, props.sceneId) || []).filter(material => material.kind === 'image' || material.kind === 'map'))
+const isMaterialBlock = computed(() => blockType.value === 'image' || blockType.value === 'material')
+const availableMaterials = computed(() => (sessionMaterials?.availableFor(props.chapterId, props.sceneId) || [])
+  .filter(material => blockType.value === 'material' || material.kind === 'image' || material.kind === 'map'))
+const selectedMaterial = computed(() => availableMaterials.value.find(material => String(material.id) === String(draft.materialId)) || null)
+const materialOptions = computed(() => availableMaterials.value.map(material => ({
+  id: material.id,
+  title: material.name,
+  subtitle: [materialType(material.kind).label, material.caption].filter(Boolean).join(' · '),
+  image: ['image', 'map'].includes(material.kind) ? material.assetUrl : '',
+  initial: materialType(material.kind).label.slice(0, 1),
+  color: 'var(--accent)',
+})))
+const materialPickerOpen = ref(false)
 const dialogueKeysListId = `scene-dialogue-keys-${getCurrentInstance()?.uid ?? 'editor'}`
 const initialDialogueRows = hydrateDialogueRows(props.block?.data?.rows?.length
   ? props.block.data.rows
@@ -152,14 +179,19 @@ function setDialogueColor(row, color) {
   applyDialogueKeyColor(draft.rows, row.left, color)
 }
 
+function selectMaterial(materialId) {
+  draft.materialId = Number(materialId)
+  materialPickerOpen.value = false
+}
+
 function save() {
-  if (blockType.value === 'image' && !draft.materialId) return
+  if (isMaterialBlock.value && !draft.materialId) return
   emit('save', {
     type: blockType.value,
     title: draft.title.trim(),
     width: props.block?.width || sceneBlockDefaultWidth(blockType.value),
-    materialId: blockType.value === 'image' ? draft.materialId : null,
-    materialChanged: blockType.value === 'image',
+    materialId: isMaterialBlock.value ? draft.materialId : null,
+    materialChanged: isMaterialBlock.value,
     data: blockType.value === 'list'
       ? { rows: draft.rows
         .filter(row => row.left.trim() || row.right.trim())
@@ -168,7 +200,7 @@ function save() {
         ? { creatures: draft.creatures.map(creature => ({ ...creature })) }
         : blockType.value === 'reward'
           ? { items: draft.items.map(item => ({ ...item })) }
-        : blockType.value === 'image' ? {} : { text: draft.text },
+        : isMaterialBlock.value ? {} : { text: draft.text },
   })
 }
 </script>
@@ -204,5 +236,5 @@ function save() {
 .scene-block-editor-row > button:hover { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 45%, var(--border)); }
 .scene-block-editor-add { align-self: flex-start; padding: 7px 11px; font-size: 12px; }
 .scene-block-editor-add:hover { color: var(--accent); border-color: var(--accent); }
-.scene-block-materials { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }.scene-block-materials button { min-width: 0; overflow: hidden; padding: 0; border: 1px solid var(--border); border-radius: 8px; background: var(--surface-raised); color: var(--text-2); cursor: pointer; text-align: left; }.scene-block-materials button.active { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }.scene-block-materials img { width: 100%; height: 92px; display: block; object-fit: cover; }.scene-block-materials span { display: flex; flex-direction: column; gap: 2px; padding: 7px; }.scene-block-materials strong, .scene-block-materials small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }.scene-block-materials strong { color: var(--text-1); font-size: 11px; }.scene-block-materials small, .scene-block-materials-empty { color: var(--text-muted); font-size: 10px; }
+.scene-block-material-selected { display: grid; grid-template-columns: 52px minmax(0, 1fr) auto; align-items: center; gap: 11px; padding: 8px; border: 1px solid color-mix(in srgb, var(--accent) 42%, var(--border)); border-radius: 10px; background: var(--surface-raised); }.scene-block-material-selected > img, .scene-block-material-icon { width: 52px; height: 52px; display: grid; place-items: center; border-radius: 8px; object-fit: cover; background: color-mix(in srgb, var(--accent) 12%, var(--surface)); color: var(--accent-soft); }.scene-block-material-selected > span:nth-child(2) { min-width: 0; display: flex; flex-direction: column; gap: 3px; }.scene-block-material-selected strong, .scene-block-material-selected small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }.scene-block-material-selected strong { color: var(--text-1); font-size: 13px; }.scene-block-material-selected small, .scene-block-material-hint { color: var(--text-muted); font-size: 10px; }.scene-block-material-selected button, .scene-block-material-pick { padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--text-2); font: inherit; font-size: 11px; font-weight: 700; cursor: pointer; }.scene-block-material-selected button:hover, .scene-block-material-pick:hover:not(:disabled) { border-color: var(--accent); color: var(--accent-soft); }.scene-block-material-pick { align-self: flex-start; }.scene-block-material-pick:disabled { cursor: default; opacity: .55; }
 </style>

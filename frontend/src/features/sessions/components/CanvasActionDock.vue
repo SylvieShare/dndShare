@@ -28,6 +28,9 @@
         <svg v-else-if="action.icon === 'image'" viewBox="0 0 24 24">
           <path d="M4 5h16v14H4zM7 15l3-3 2.5 2.5 2.5-3 3 3.5M8.5 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"/>
         </svg>
+        <svg v-else-if="action.icon === 'material'" viewBox="0 0 24 24">
+          <path d="M5 4h11l3 3v13H5zM16 4v4h3M8 11h8M8 15h6"/>
+        </svg>
         <svg v-else viewBox="0 0 24 24">
           <path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5"/>
         </svg>
@@ -47,7 +50,7 @@ defineEmits(['action'])
   position: absolute;
   z-index: 24;
   top: 16px;
-  right: calc(var(--chapter-safe-right, 0px) + 16px);
+  right: calc(var(--chapter-safe-right, 0px) + 8px);
   display: flex;
   flex-direction: column;
   align-items: flex-end;

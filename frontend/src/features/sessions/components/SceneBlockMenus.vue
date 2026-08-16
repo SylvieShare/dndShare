@@ -7,7 +7,7 @@
         tone="danger"
         @click="run('send-to-combat', block)"
       >В бой</RowActionItem>
-      <RowActionItem v-if="block.type === 'image'" :icon="Cast" tone="accent" @click="run('broadcast', block)">Транслировать</RowActionItem>
+      <RowActionItem v-if="block.type === 'image' || block.type === 'material'" :icon="Cast" tone="accent" @click="run('broadcast', block)">Транслировать</RowActionItem>
       <span v-if="block.type === 'combat'" class="scene-block-menu-rule" />
       <RowActionItem action="edit" @click="run('edit', block)">Редактировать</RowActionItem>
       <RowActionItem action="copy" @click="run('copy', block)">Копировать</RowActionItem>

@@ -288,8 +288,18 @@ func (s *Server) handleCreateSceneItem(w http.ResponseWriter, r *http.Request) {
 	if req.Title != nil {
 		title = strings.TrimSpace(*req.Title)
 	}
-	if req.Type == "image" {
-		if req.MaterialID == nil || !s.validateMaterialForScene(w, r, sess.ID, sceneID, *req.MaterialID) {
+	if req.Type == "image" || req.Type == "material" {
+		validMaterial := func() bool {
+			if req.MaterialID == nil {
+				return false
+			}
+			if req.Type == "image" {
+				return s.validateMaterialForScene(w, r, sess.ID, sceneID, *req.MaterialID)
+			}
+			_, ok := s.materialForScene(w, r, sess.ID, sceneID, *req.MaterialID)
+			return ok
+		}
+		if !validMaterial() {
 			if req.MaterialID == nil {
 				badRequest(w, "Выберите материал")
 			}
@@ -360,13 +370,17 @@ func (s *Server) handleUpdateSceneItem(w http.ResponseWriter, r *http.Request) {
 		req.Width = &width
 	}
 	if req.MaterialChanged {
-		if item.Type != "image" {
+		if item.Type != "image" && item.Type != "material" {
 			req.MaterialID = nil
-		} else if req.MaterialID == nil || !s.validateMaterialForScene(w, r, sess.ID, sceneID, *req.MaterialID) {
-			if req.MaterialID == nil {
-				badRequest(w, "Выберите материал")
-			}
+		} else if req.MaterialID == nil {
+			badRequest(w, "Выберите материал")
 			return
+		} else if item.Type == "image" && !s.validateMaterialForScene(w, r, sess.ID, sceneID, *req.MaterialID) {
+			return
+		} else if item.Type == "material" {
+			if _, ok := s.materialForScene(w, r, sess.ID, sceneID, *req.MaterialID); !ok {
+				return
+			}
 		}
 	}
 	if err := s.store.UpdateSceneItem(r.Context(), itemID, req.Title, rawToStr(req.Data), req.DataChanged, req.MaterialID, req.MaterialChanged, req.PositionX, req.PositionY, req.Width); err != nil {
@@ -383,7 +397,7 @@ func (s *Server) handleUpdateSceneItem(w http.ResponseWriter, r *http.Request) {
 
 func validSceneItemType(typ string) bool {
 	switch typ {
-	case "text", "list", "combat", "reward", "image":
+	case "text", "list", "combat", "reward", "image", "material":
 		return true
 	default:
 		return false
@@ -398,7 +412,7 @@ func sceneItemWidth(width float64, typ string) float64 {
 		if typ == "reward" {
 			return 320
 		}
-		if typ == "image" {
+		if typ == "image" || typ == "material" {
 			return 360
 		}
 		return 300

@@ -7,6 +7,7 @@ export function narrativeCanvasActions(level) {
     { id: 'combat', label: 'Бой', icon: 'combat' },
     { id: 'reward', label: 'Награда', icon: 'reward' },
     { id: 'image', label: 'Изображение', icon: 'image' },
+    { id: 'material', label: 'Материал', icon: 'material' },
   ]
 }
 

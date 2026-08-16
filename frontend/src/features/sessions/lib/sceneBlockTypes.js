@@ -24,6 +24,11 @@ export const SCENE_BLOCK_TYPES = {
     color: 'var(--success)',
     defaultWidth: 360,
   },
+  material: {
+    label: 'Материал',
+    color: 'var(--accent-hover)',
+    defaultWidth: 360,
+  },
 }
 
 export function sceneBlockType(type) {

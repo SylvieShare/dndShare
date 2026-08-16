@@ -102,6 +102,12 @@
           <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 2.5h10v11H3zM5.5 5.5h5M5.5 8h5M5.5 10.5h3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
         </button>
       </div>
+      <SessionSettingsControl
+        v-if="isDm"
+        :hide-canvas-legend="settings.hideCanvasLegend"
+        :auto-roll-npc-hp="settings.autoRollNpcHp"
+        @update-setting="(...args) => $emit('update-setting', ...args)"
+      />
     </div>
   </header>
 </template>
@@ -112,6 +118,7 @@ import { BookOpenText, Images, Map, Pencil, Swords, UsersRound } from '@lucide/v
 import { BasePopover, reorderByDrop, useSortable } from '@sylvieshare/share-ui'
 import { romanNumeral } from '@/features/sessions/lib/chapterGraph'
 import SessionPresentationControl from '@/features/sessions/components/SessionPresentationControl.vue'
+import SessionSettingsControl from '@/features/sessions/components/SessionSettingsControl.vue'
 
 const props = defineProps({
   arcs: { type: Array, default: () => [] },
@@ -131,12 +138,14 @@ const props = defineProps({
   materials: { type: Object, default: null },
   workspaceChapterId: { type: [Number, String], default: null },
   workspaceScene: { type: Object, default: null },
+  settings: { type: Object, default: () => ({ hideCanvasLegend: false, autoRollNpcHp: false }) },
 })
 const emit = defineEmits([
   'select-arc', 'create-arc', 'edit-arc', 'reorder-arcs',
   'select-view',
   'edit-session', 'open-combat',
   'toggle-dice', 'toggle-music', 'toggle-events',
+  'update-setting',
 ])
 const primaryViews = [
   { key: 'story', label: 'Сюжет', icon: BookOpenText },

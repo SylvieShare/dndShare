@@ -288,8 +288,9 @@ bottom-left below the participant rail. It reflects the active behavior:
 `Ctrl`/`Cmd` + `A` selects every node in the active graph, `Delete`/`Backspace`
 opens the existing confirmed bulk deletion, `Esc` cancels the active link or
 selection, `+`/`-` changes canvas zoom, and double click opens the nested
-canvas. The legend is hidden on touch and
-mobile layouts.
+canvas. The legend is hidden on touch and mobile layouts; the DM may also hide
+it on desktop from the session settings in the header. This preference and the
+automatic bestiary HP-roll preference are stored per session in local storage.
 Drilling into a narrative level waits for the 420ms spotlight movement to reach
 its ancestor position, then swaps the graph identity, payload and preloaded
 viewport in one render. DOM keys include the graph identity so equal numeric IDs
@@ -312,7 +313,8 @@ because a transition cannot cross arc boundaries.
 
 The chapter illustration covers the complete node. Number, title and optional
 scene count sit on a blurred translucent overlay above the image; lifecycle and
-`Сейчас здесь` markers remain at the top. `sceneCount` is derived by the graph
+`Сейчас здесь` markers remain at the top. The neutral `none` lifecycle marker
+is omitted. `sceneCount` is derived by the graph
 read API, not stored on `session_chapter`, and is updated optimistically when
 contextual scene CRUD changes the count.
 
@@ -339,16 +341,17 @@ rendered as a fixed ancestor card above the same canvas. The scenario graph has
 its own persisted viewport, coordinates and directed edges. Its illustrated
 nodes can be dragged and linked through the same right-side port pattern. The
 DM creates or edits the scenario name, lifecycle status and required shared-catalogue
-image, or deletes the scenario. Its status badge uses the same semantic color
-as the menu and bulk action. A single click anywhere on a scenario card
-opens a menu whose first action is `Открыть элементы`, followed by status,
-edit and delete actions, without a separate ellipsis trigger; double click
-still opens the scenario block canvas.
+image, or deletes the scenario. Its optional top status chip uses the same
+semantic color as the menu and bulk action and is omitted for `none`; the lower
+title surface uses the same translucent treatment as a chapter and has no
+redundant `Сценарий` label. A single click anywhere on a scenario card opens
+its launch, open-elements, status, edit and delete actions without a separate
+ellipsis trigger; double click still opens the scenario block canvas.
 
 Double-clicking a scenario switches the same physical canvas to the third graph.
 The scenario node first moves to the top immediately to the right of its chapter
 and its peers and edges fade out; then block nodes replace the graph payload.
-Description, dialogue, combat and reward blocks have independent coordinates, persisted widths,
+Description, dialogue, combat, reward, image and material blocks have independent coordinates, persisted widths,
 content-sized heights and directed links. Their accent color is derived from
 the type instead of being user-selected or stored. Block cards use the same
 dark `var(--surface)` backing and inset border as `BaseTile`, with only a quiet
@@ -373,10 +376,14 @@ that block's chapter and scenario as its visible context. Bestiary creatures
 show their current handbook image or SVG in the card and editor; simplified
 creatures use a stable placeholder. A reward block stores quantity-bearing
 references to things, weapons and equipment and renders their current handbook
-icons and names.
+icons and names. An image block references only an image/map material. The
+separate material block opens the shared searchable picker over every material
+kind available in the current chapter/scenario, renders a type-aware preview
+and exposes the same direct broadcast action.
 Block edges are re-measured after content or width changes, and dragging the
-right edge persists a width in the `220..640px` range. Double-clicking the pinned scenario swaps
-the payload back to scenarios. Double-clicking the pinned chapter at either
+right edge persists a width in the `220..640px` range. Clicking the pinned
+scenario opens a reduced menu with return-to-scenarios, status and edit actions;
+double click remains the direct return shortcut. Double-clicking the pinned chapter at either
 nested level returns to chapters. Thus the visible ancestor chain is also the
 level navigation and does not duplicate a breadcrumb bar or physical canvas.
 
@@ -412,7 +419,7 @@ boundary whether the tool rail is open or empty, so hiding all right-side tools
 does not stretch the central combat column. The header groups compact icon actions for starting or ending
 combat and turn navigation. Its growing secondary action row uses labelled
 groups only for categories that currently contain multiple actions; single
-public-screen, pre-combat roll and dead-combatant actions remain direct icon
+pre-combat roll and dead-combatant actions remain direct icon
 buttons without a group title or frame. Nested action components use the same
 icon-button geometry and interaction states as direct toolbar buttons.
 
@@ -471,6 +478,12 @@ left.
 `ViewSession.vue` owns the single `useEncounter` instance shared by the rail and
 `EncounterTab`, so selection and initiative always address the same encounter
 record.
+
+The DM-only session settings button in the command bar stores browser-local
+preferences under the session UUID. When automatic handbook HP rolling is on,
+adding a bestiary creature rolls its `hp_formula` separately for every created
+copy and stores the result as an encounter override. When it is off, the
+handbook average remains the starting maximum and current HP.
 
 Each NPC also receives the nearest free Latin marker from `A` through `Z`.
 The marker sits immediately to the left of the NPC name above the HP bar and is

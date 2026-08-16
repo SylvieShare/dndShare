@@ -16,6 +16,7 @@
       :session-uuid="sessionUuid"
       :presentation="presentation"
       :materials="materials"
+      :settings="settings"
       :workspace-chapter-id="workspaceChapterId || graph.currentChapter.value?.id"
       :workspace-scene="workspaceScene"
       @select-arc="selectArc"
@@ -28,6 +29,7 @@
       @toggle-dice="$emit('toggle-dice')"
       @toggle-music="$emit('toggle-music')"
       @toggle-events="$emit('toggle-events')"
+      @update-setting="(...args) => $emit('update-setting', ...args)"
     />
 
     <div class="chapter-canvas-stage">
@@ -47,6 +49,7 @@
         :workspace-level="workspaceLevel"
         :workspace-layout-mode="workspaceLayoutMode"
         :chapter-linking-from="linkingFrom"
+        :show-hotkey-legend="!settings.hideCanvasLegend"
         @node-click="openNodeMenu"
         @node-double-click="openScenes"
         @edge-click="openEdgeMenu"
@@ -205,11 +208,13 @@ const props = defineProps({
   eventsOpen: { type: Boolean, default: true },
   presentation: { type: Object, default: null },
   materials: { type: Object, default: null },
+  settings: { type: Object, default: () => ({ hideCanvasLegend: false, autoRollNpcHp: false }) },
 })
 const emit = defineEmits([
   'open-scenes', 'open-combat', 'edit-session', 'close-workspace',
   'select-view',
   'send-block-to-combat', 'workspace-context-change', 'toggle-dice', 'toggle-music', 'toggle-events',
+  'update-setting',
 ])
 
 const canvas = ref(null)

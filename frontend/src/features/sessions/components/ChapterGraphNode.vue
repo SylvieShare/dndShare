@@ -22,7 +22,7 @@
       <div v-else class="chapter-node-image-empty" />
       <div class="chapter-node-shade" />
       <span v-if="current" class="chapter-current-mark">Сейчас здесь</span>
-      <span class="chapter-status" :class="`chapter-status--${status.tone}`" :style="{ color: status.color }">{{ status.label }}</span>
+      <span v-if="chapter.status && chapter.status !== 'none'" class="chapter-status" :class="`chapter-status--${status.tone}`" :style="{ color: status.color }">{{ status.label }}</span>
     </div>
     <div class="chapter-node-copy">
       <div class="chapter-node-meta">

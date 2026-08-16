@@ -51,12 +51,14 @@
         :events-open="eventsOpen"
         :materials="sessionMaterials"
         :presentation="presentation"
+        :settings="sessionSettings"
         @open-scenes="openChapterScenes"
         @select-view="selectPrimaryView"
         @open-combat="toggleCombatWorkspace"
         @toggle-dice="diceOpen = !diceOpen"
         @toggle-music="musicOpen = !musicOpen"
         @toggle-events="eventsOpen = !eventsOpen"
+        @update-setting="updateSessionSetting"
         @send-block-to-combat="sendBlockToCombat"
         @workspace-context-change="updateWorkspaceContext"
         @edit-session="openEdit"
@@ -223,6 +225,7 @@ import { useSessionPrimaryView } from '@/features/sessions/composables/useSessio
 import { useSessionParticipantRail } from '@/features/sessions/composables/useSessionParticipantRail'
 import { useSessionMaterials } from '@/features/sessions/composables/useSessionMaterials'
 import { useSessionPresentation } from '@/features/sessions/composables/useSessionPresentation'
+import { useSessionSettings } from '@/features/sessions/composables/useSessionSettings'
 import { useAccountStore } from '@/stores/account'
 import { useMusicStore } from '@/stores/music'
 import { useTemplateStore } from '@/stores/template'
@@ -262,6 +265,7 @@ const accountStore = useAccountStore()
 const musicStore = useMusicStore()
 const sessionMaterials = useSessionMaterials({ sessionUuid })
 const presentation = useSessionPresentation({ sessionUuid, materials: sessionMaterials, musicStore })
+const { settings: sessionSettings, update: updateSessionSetting } = useSessionSettings({ sessionUuid })
 provide('sessionMaterials', sessionMaterials)
 provide('sessionPresentation', presentation)
 const sessionEventsStore = useSessionEventsStore()
@@ -353,6 +357,7 @@ const encounter = reactive(useEncounter({
   sessionUuid,
   participants,
   canEditPlayers: isDm,
+  autoRollNpcHp: computed(() => sessionSettings.autoRollNpcHp),
 }))
 watch(() => encounter.encounter.active, (active, previous) => {
   if (previous !== undefined && active !== previous && isDm.value) window.setTimeout(() => presentation.load(), 750)

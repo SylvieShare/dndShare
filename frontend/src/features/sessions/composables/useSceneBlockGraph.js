@@ -63,7 +63,7 @@ export function useSceneBlockGraph({ sessionUuid, sceneId }) {
       data: payload.data,
       dataChanged: true,
       materialId: payload.materialId ?? null,
-      materialChanged: payload.materialChanged ?? payload.type === 'image',
+      materialChanged: payload.materialChanged ?? ['image', 'material'].includes(payload.type),
     })
     items.value = items.value.map(item => item.id === itemId ? updated : item)
     return updated

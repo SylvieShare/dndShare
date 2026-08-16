@@ -40,7 +40,7 @@ func normalizePresentationStyle(effect, transition string) (string, string) {
 	return effect, transition
 }
 
-func (s *Server) validateMaterialForScene(w http.ResponseWriter, r *http.Request, sessionID, sceneID, materialID int64) bool {
+func (s *Server) materialForScene(w http.ResponseWriter, r *http.Request, sessionID, sceneID, materialID int64) (store.SessionMaterial, bool) {
 	material, err := s.store.GetSessionMaterial(r.Context(), materialID)
 	if err != nil {
 		if errors.Is(err, store.ErrNotFound) {
@@ -48,23 +48,31 @@ func (s *Server) validateMaterialForScene(w http.ResponseWriter, r *http.Request
 		} else {
 			serverError(w, err)
 		}
-		return false
+		return store.SessionMaterial{}, false
 	}
 	if material.SessionID != sessionID {
 		forbidden(w)
-		return false
-	}
-	if material.Kind != "image" && material.Kind != "map" {
-		badRequest(w, "Для блока изображения выберите картинку или карту")
-		return false
+		return store.SessionMaterial{}, false
 	}
 	scene, err := s.store.GetSceneByID(r.Context(), sceneID)
 	if err != nil {
 		serverError(w, err)
-		return false
+		return store.SessionMaterial{}, false
 	}
 	if !materialAvailableFor(material, scene.ChapterID, sceneID) {
 		badRequest(w, "Материал не связан с этим сценарием")
+		return store.SessionMaterial{}, false
+	}
+	return material, true
+}
+
+func (s *Server) validateMaterialForScene(w http.ResponseWriter, r *http.Request, sessionID, sceneID, materialID int64) bool {
+	material, ok := s.materialForScene(w, r, sessionID, sceneID, materialID)
+	if !ok {
+		return false
+	}
+	if material.Kind != "image" && material.Kind != "map" {
+		badRequest(w, "Для блока изображения выберите картинку или карту")
 		return false
 	}
 	return true

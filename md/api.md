@@ -217,7 +217,7 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
 - `GET /api/sessions/{uuid}/scenes/{sceneId}/block-graph` returns
   `{scene,items,edges}`. Blocks use `POST .../scenes/{sceneId}/items` and
   `PATCH|DELETE .../scenes/{sceneId}/items/{itemId}`. A block has `type`
-  (`text`, `list`, `combat`, `reward` or `image`), `title`, type-specific `data`, `positionX/Y`
+  (`text`, `list`, `combat`, `reward`, `image` or `material`), `title`, type-specific `data`, `positionX/Y`
   and `width` (clamped to `220..640`); position and width are part of the item
   PATCH contract. Block color is derived by the client from `type` and is not
   an API field. Combat `data.creatures` contains quantity-bearing handbook
@@ -225,8 +225,9 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
   `{kind:"simple",id,name,ac,hp,hpMax,description,count}`. Reward
   `data.items` contains handbook references `{itemId,name,count}` to things,
   weapons and equipment;
-  image blocks carry `materialId` and reference a material available in their
-  session/chapter/scenario context;
+  image and material blocks carry `materialId` and reference a material
+  available in their session/chapter/scenario context. Image blocks accept
+  only `image`/`map`; material blocks accept every material kind;
 - `POST /api/sessions/{uuid}/block-edges` and
   `DELETE /api/sessions/{uuid}/block-edges/{edgeId}` manage directed links
   inside one scenario.

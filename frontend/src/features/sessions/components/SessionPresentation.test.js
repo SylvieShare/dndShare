@@ -34,10 +34,13 @@ describe('session presentation workspace', () => {
     expect(sceneEditor).toContain('presentationTransition')
   })
 
-  it('adds image blocks that broadcast an existing material', () => {
+  it('adds image and material blocks that broadcast existing materials', () => {
     expect(blockEditor).toContain("blockType === 'image'")
     expect(blockEditor).toContain('draft.materialId')
     expect(blockMenu).toContain("block.type === 'image'")
+    expect(blockEditor).toContain("blockType.value === 'material'")
+    expect(blockEditor).toContain('<WorldRelationPickerModal')
+    expect(blockMenu).toContain("block.type === 'image' || block.type === 'material'")
     expect(blockMenu).toContain('Транслировать')
   })
 

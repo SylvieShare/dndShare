@@ -1,6 +1,6 @@
-import { ref } from 'vue'
+import { ref, unref } from 'vue'
 import { ensureCombatantLetters, makeUid, nextTieBreak } from '@/features/sessions/lib/encounterHelpers'
-import { parseDiceExpression } from '@/shared/lib/dice'
+import { parseDiceExpression, rollDiceExpression } from '@/shared/lib/dice'
 
 function averageFromFormula(raw) {
   const formula = String(raw || '').replace(/[()]/g, '')
@@ -15,16 +15,21 @@ function averageFromFormula(raw) {
   return Math.max(0, total)
 }
 
-function resolveStartHp(item) {
+export function resolveStartHp(item, autoRoll = false) {
   const combat = item?.data?.combat || {}
+  const formula = combat.hp_formula ?? item?.data?.hp_formula
+  if (autoRoll && formula) {
+    const rolled = Math.floor(rollDiceExpression(String(formula).replace(/[()]/g, '')).total)
+    if (Number.isFinite(rolled)) return { hp: Math.max(1, rolled), fromFormula: true }
+  }
   const raw = Number(combat.hp ?? item?.data?.hp)
   if (Number.isFinite(raw) && raw > 0) return { hp: raw, fromFormula: false }
-  const avg = averageFromFormula(combat.hp_formula ?? item?.data?.hp_formula)
+  const avg = averageFromFormula(formula)
   if (avg > 0) return { hp: avg, fromFormula: true }
   return { hp: 1, fromFormula: true }
 }
 
-export function useEncounterNpcs({ encounter, unselect, pruneToExisting, selectedUids, cacheItem }) {
+export function useEncounterNpcs({ encounter, unselect, pruneToExisting, selectedUids, cacheItem, autoRollHp }) {
   const showNpcPicker = ref(false)
   const showSimpleForm = ref(false)
   const detailNpc = ref(null)
@@ -40,10 +45,10 @@ export function useEncounterNpcs({ encounter, unselect, pruneToExisting, selecte
   function addNpc(item, count = 1) {
     const n = Math.max(1, Math.min(20, Math.floor(Number(count) || 1)))
     cacheItem?.(item)
-    const { hp: hpVal, fromFormula } = resolveStartHp(item)
     let tb = nextTieBreak(encounter.value.combatants)
     const additions = []
     for (let i = 0; i < n; i++) {
+      const { hp: hpVal, fromFormula } = resolveStartHp(item, unref(autoRollHp) === true)
       additions.push({
         uid: makeUid(),
         type: 'npc',

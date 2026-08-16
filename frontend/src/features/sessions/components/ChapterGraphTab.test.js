@@ -53,7 +53,7 @@ describe('chapter graph workspace', () => {
     expect(toolbar).not.toContain("'focus-current'")
     expect(toolbar).not.toContain("'zoom'")
     expect(narrativeCanvas).toContain("{ id: 'chapter', label: 'Новая глава', icon: 'chapter' }")
-    expect(actionDock).toContain('right: calc(var(--chapter-safe-right, 0px) + 16px);')
+    expect(actionDock).toContain('right: calc(var(--chapter-safe-right, 0px) + 8px);')
   })
 
   it('supports arcs, node action menus and labelled directed transitions', () => {
@@ -124,11 +124,12 @@ describe('chapter graph workspace', () => {
     expect(sessionCanvas).toContain('session-graph-ancestor--chapter')
     expect(sessionCanvas).toContain('session-graph-ancestor--scene')
     expect(sessionCanvas).toContain('@dblclick.stop="returnToChapters"')
-    expect(sessionCanvas).toContain('@dblclick.stop="returnToScenes"')
+    expect(sessionCanvas).toContain('@dblclick.stop="returnFromSceneAncestor"')
     expect(sessionCanvas).toContain('@click.stop="openChapterAncestorMenu"')
     expect(sessionCanvas).toContain("emit('chapter-ancestor-click', activeChapter.value, event.currentTarget)")
     expect(tab).toContain('@chapter-ancestor-click="openChapterAncestorMenu"')
     expect(tab).toContain('Вернуться к главам')
+    expect(sessionCanvas).toContain('@click.stop="openSceneAncestorMenu"')
   })
 
   it('disables transform easing while a node is being dragged', () => {

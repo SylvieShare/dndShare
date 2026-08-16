@@ -32,6 +32,9 @@ const createModalSource = readFileSync(fileURLToPath(new URL('../../character-li
 const createWizardSource = readFileSync(fileURLToPath(new URL('../../character-list/pages/ViewCreateCharacter.vue', import.meta.url)), 'utf8')
 const participantPollingSource = readFileSync(fileURLToPath(new URL('../composables/useParticipantPolling.js', import.meta.url)), 'utf8')
 const participantRailSource = readFileSync(fileURLToPath(new URL('../composables/useSessionParticipantRail.js', import.meta.url)), 'utf8')
+const sessionSettingsSource = readFileSync(fileURLToPath(new URL('../composables/useSessionSettings.js', import.meta.url)), 'utf8')
+const sessionSettingsControlSource = readFileSync(fileURLToPath(new URL('../components/SessionSettingsControl.vue', import.meta.url)), 'utf8')
+const encounterNpcsSource = readFileSync(fileURLToPath(new URL('../composables/useEncounterNpcs.js', import.meta.url)), 'utf8')
 const encounterStylesSource = readFileSync(fileURLToPath(new URL('../components/styles/EncounterTab.css', import.meta.url)), 'utf8')
 const dicePopupSource = readFileSync(fileURLToPath(new URL('../../../shared/ui/DiceRollPopup.vue', import.meta.url)), 'utf8')
 
@@ -74,7 +77,7 @@ describe('ViewSession participant rail', () => {
     expect(styles).toContain('position: absolute;')
     expect(styles).toContain('--chapter-safe-left: 288px;')
     expect(styles).toContain('.campaign-workspace--right-dock .campaign-graph')
-    expect(styles).toContain('--chapter-safe-right: 336px;')
+    expect(styles).toContain('--chapter-safe-right: 316px;')
     expect(source).toContain("'campaign-workspace--hotkeys': isDm && primaryView === 'story' && workspaceMotionMode !== 'combat'")
     expect(styles).toContain('.campaign-workspace--hotkeys .workspace-dock--left')
     expect(styles).toContain('max-height: calc(100% - 190px);')
@@ -121,6 +124,17 @@ describe('ViewSession participant rail', () => {
     expect(musicPanelSource).not.toContain('music-panel-album')
   })
 
+  it('keeps canvas legend and handbook HP rolling in session-local header settings', () => {
+    expect(source).toContain('useSessionSettings({ sessionUuid })')
+    expect(source).toContain('autoRollNpcHp: computed(() => sessionSettings.autoRollNpcHp)')
+    expect(sessionSettingsSource).toContain('dnd-share:session-settings:v1:')
+    expect(sessionSettingsControlSource).toContain('Спрятать легенду на холсте')
+    expect(sessionSettingsControlSource).toContain('Автоматически бросать HP существ')
+    expect(sessionGraphSource).toContain('workspaceMode !== \'combat\' && showHotkeyLegend')
+    expect(encounterNpcsSource).toContain('resolveStartHp(item, unref(autoRollHp) === true)')
+    expect(encounterNpcsSource).toContain('rollDiceExpression')
+  })
+
   it('lets the canvas use the empty part of the right rail and moves actions right when every panel is closed', () => {
     expect(source).toContain("'campaign-workspace--right-dock': rightDockOpen")
     expect(source).toContain('<aside class="workspace-dock workspace-dock--right">')
@@ -128,7 +142,7 @@ describe('ViewSession participant rail', () => {
     expect(styles).toMatch(/\.workspace-dock--right\s*\{[^}]*pointer-events:\s*none;/s)
     expect(styles).toMatch(/\.workspace-dock--right > \.workspace-tool-tile\s*\{[^}]*pointer-events:\s*auto;/s)
     expect(styles).toMatch(/\.campaign-graph\s*\{[^}]*--chapter-safe-right:\s*0px;/s)
-    expect(styles).toMatch(/\.campaign-workspace--combat \.campaign-graph\s*\{[^}]*--chapter-safe-right:\s*336px;/s)
+    expect(styles).toMatch(/\.campaign-workspace--combat \.campaign-graph\s*\{[^}]*--chapter-safe-right:\s*316px;/s)
   })
 
   it('places the event log below the music panel', () => {

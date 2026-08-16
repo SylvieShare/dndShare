@@ -61,7 +61,7 @@ describe('session graph canvas', () => {
     expect(narrativeCanvasSource).toContain("label: 'Бой'")
     expect(dockSource).toContain('top: 16px;')
     expect(dockSource).not.toContain('translateY(-50%)')
-    expect(dockSource).toContain('right: calc(var(--chapter-safe-right, 0px) + 16px);')
+    expect(dockSource).toContain('right: calc(var(--chapter-safe-right, 0px) + 8px);')
   })
 
   it('recomputes the chapter anchor when the combat player rail widens', () => {
@@ -149,6 +149,11 @@ describe('session graph canvas', () => {
     expect(dockSource).toContain("action.icon === 'reward'")
     expect(blockSource).toContain(':item="itemById(creature.itemId)"')
     expect(blockSource).toContain("block.type === 'reward'")
+    expect(narrativeCanvasSource).toContain("{ id: 'material', label: 'Материал', icon: 'material' }")
+    expect(blockEditorSource).toContain('<WorldRelationPickerModal')
+    expect(blockEditorSource).toContain("blockType.value === 'material'")
+    expect(blockSource).toContain("block.type === 'material'")
+    expect(blockMenuSource).toContain("block.type === 'image' || block.type === 'material'")
   })
 
   it('opens scenario actions from the whole card without an ellipsis trigger', () => {
@@ -158,6 +163,10 @@ describe('session graph canvas', () => {
     expect(sceneMenuSource).toContain('>Открыть элементы</RowActionItem>')
     expect(sceneMenuSource).toContain('Изменить статус')
     expect(sceneMenuSource).toContain('>Удалить</RowActionItem>')
+    expect(source).toContain("sceneMenus.value?.openFor(selectedScene.value, event.currentTarget, 'ancestor')")
+    expect(sceneMenuSource).toContain('>Вернуться к сценариям</RowActionItem>')
+    expect(sceneSource).not.toContain('<span>СЦЕНАРИЙ</span>')
+    expect(sceneSource).toContain("scene.status !== 'none'")
   })
 
   it('measures content height and persists width dragged from the right edge', () => {
