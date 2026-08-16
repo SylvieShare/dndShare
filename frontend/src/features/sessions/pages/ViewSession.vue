@@ -106,6 +106,19 @@
       <aside class="workspace-dock workspace-dock--left">
         <div class="col-section-title">
           <span class="players-heading-label">ИГРОКИ</span>
+          <button
+            v-if="playersRailMode === 'combat'"
+            type="button"
+            class="players-select-all"
+            :class="{ 'players-select-all--active': allEncounterPlayersSelected }"
+            :disabled="encounterPlayers.length === 0"
+            :title="allEncounterPlayersSelected ? 'Снять выбор со всех игроков' : 'Выбрать всех игроков'"
+            :aria-label="allEncounterPlayersSelected ? 'Снять выбор со всех игроков' : 'Выбрать всех игроков'"
+            @click="toggleAllEncounterPlayers"
+          >
+            <ListChecks :size="14" />
+            <span>{{ allEncounterPlayersSelected ? 'Снять выбор' : 'Выбрать всех' }}</span>
+          </button>
           <span class="poll-indicator" :class="pollStatus">
             <span class="poll-bar" :class="{ running: pollRunning }" />
           </span>
@@ -205,7 +218,7 @@
 
 <script setup>
 import { computed, nextTick, onBeforeUnmount, onMounted, provide, reactive, ref, watch } from 'vue'
-import { PanelLeftClose, PanelLeftOpen } from '@lucide/vue'
+import { ListChecks, PanelLeftClose, PanelLeftOpen } from '@lucide/vue'
 import { useRoute, useRouter } from 'vue-router'
 import { BaseTile } from '@sylvieshare/share-ui'
 import { ConfirmDialog } from '@sylvieshare/share-ui'
@@ -408,6 +421,21 @@ function encounterPlayer(charId) {
   return encounter.encounter.combatants.find(combatant =>
     combatant.type === 'player' && combatant.charId === charId
   ) ?? null
+}
+
+const encounterPlayers = computed(() => participants.value
+  .map(participant => encounterPlayer(participant.charId))
+  .filter(Boolean))
+const allEncounterPlayersSelected = computed(() =>
+  encounterPlayers.value.length > 0
+  && encounterPlayers.value.every(combatant => encounter.isSelected(combatant))
+)
+
+function toggleAllEncounterPlayers() {
+  const shouldSelect = !allEncounterPlayersSelected.value
+  for (const combatant of encounterPlayers.value) {
+    if (encounter.isSelected(combatant) !== shouldSelect) encounter.toggleSelected(combatant)
+  }
 }
 
 function isEncounterPlayerSelected(charId) {

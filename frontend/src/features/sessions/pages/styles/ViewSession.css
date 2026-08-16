@@ -108,9 +108,39 @@
 }
 
 .players-heading-label,
+.players-select-all,
 .players-actions {
   transition: opacity 0.18s ease, transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
 }
+
+.players-select-all {
+  min-height: 22px;
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 7px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--surface-raised) 86%, transparent);
+  color: var(--text-muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0;
+  white-space: nowrap;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+
+.players-select-all:hover:not(:disabled),
+.players-select-all--active {
+  border-color: color-mix(in srgb, var(--accent) 64%, var(--border));
+  background: color-mix(in srgb, var(--accent) 10%, var(--surface-raised));
+  color: var(--accent-soft);
+}
+
+.players-select-all:disabled { cursor: default; opacity: 0.45; }
 
 .poll-indicator {
   flex: 1;
@@ -201,6 +231,7 @@
 
 .campaign-workspace--players-collapsed .col-section-title { justify-content: center; padding-inline: 0; }
 .campaign-workspace--players-collapsed .players-heading-label,
+.campaign-workspace--players-collapsed .players-select-all,
 .campaign-workspace--players-collapsed .poll-indicator,
 .campaign-workspace--players-collapsed .players-actions {
   position: absolute;
@@ -270,6 +301,7 @@
 @media (prefers-reduced-motion: reduce) {
   .workspace-dock--left,
   .players-heading-label,
+  .players-select-all,
   .poll-indicator,
   .players-actions { transition: none; }
 }

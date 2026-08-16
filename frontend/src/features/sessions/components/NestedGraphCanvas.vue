@@ -63,6 +63,7 @@
         }"
         :style="nodeStyle(node)"
         @pointerdown="onNodeDown($event, node)"
+        @click.stop="onLockedNodeClick($event, node)"
         @dblclick.stop="onNativeDoubleClick(node)"
       >
         <slot
@@ -472,6 +473,10 @@ function onPointerUp(event) {
 
 function onNativeDoubleClick(node) {
   if (props.locked) emit('node-double-click', node)
+}
+
+function onLockedNodeClick(event, node) {
+  if (props.locked) emit('node-click', node, event.currentTarget)
 }
 
 function cancelGesture(rollback = true) {

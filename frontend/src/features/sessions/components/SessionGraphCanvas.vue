@@ -89,10 +89,9 @@
     <div
       v-if="(displayLevel === 'blocks' || workspaceMode === 'combat') && selectedScene"
       class="session-graph-ancestor session-graph-ancestor--scene"
-      :class="{ 'session-graph-ancestor--context': workspaceMode === 'combat' }"
-      :title="workspaceMode === 'combat' ? 'Сценарий боя' : 'Действия со сценарием'"
-      :role="isDm && workspaceMode !== 'combat' ? 'button' : undefined"
-      :tabindex="isDm && workspaceMode !== 'combat' ? 0 : -1"
+      title="Действия со сценарием"
+      :role="isDm ? 'button' : undefined"
+      :tabindex="isDm ? 0 : -1"
       @click.stop="openSceneAncestorMenu"
       @dblclick.stop="returnFromSceneAncestor"
       @keydown.enter.stop.prevent="openSceneAncestorMenu"
@@ -324,7 +323,7 @@ function openChapterAncestorMenu(event) {
 }
 
 function openSceneAncestorMenu(event) {
-  if (!props.isDm || props.workspaceMode === 'combat' || !selectedScene.value) return
+  if (!props.isDm || !selectedScene.value) return
   blockMenus.value?.close()
   edgeMenus.value?.close()
   sceneMenus.value?.openFor(selectedScene.value, event.currentTarget, 'ancestor')

@@ -262,6 +262,15 @@ describe('ViewSession participant rail', () => {
     expect(graveyardSource).toContain('Удалить всех')
   })
 
+  it('selects or clears every player from the combat rail heading', () => {
+    expect(source).toContain("v-if=\"playersRailMode === 'combat'\"")
+    expect(source).toContain("allEncounterPlayersSelected ? 'Снять выбор' : 'Выбрать всех'")
+    expect(source).toContain('@click="toggleAllEncounterPlayers"')
+    expect(source).toContain('const encounterPlayers = computed(() => participants.value')
+    expect(source).toContain('encounterPlayers.value.every(combatant => encounter.isSelected(combatant))')
+    expect(source).toContain('encounter.toggleSelected(combatant)')
+  })
+
   it('keeps players in the combat scene and numbers every initiative row', () => {
     expect(encounterSource).toContain('<div v-if="enc.encounter.active" class="enc-combat-scene">')
     expect(encounterSource).toContain('<div class="enc-block enc-block--combat">')
@@ -365,7 +374,7 @@ describe('ViewSession participant rail', () => {
     expect(encounterStylesSource).toContain('.enc-combat-scene-enter-from')
   })
 
-  it('uses per-participant actions without bulk selection controls', () => {
+  it('keeps per-participant actions alongside the combat-only bulk selection control', () => {
     expect(source).toContain('@view="openParticipant"')
     expect(source).toContain('@color="setParticipantColor"')
     expect(source).toContain('@kick="requestKickParticipant"')

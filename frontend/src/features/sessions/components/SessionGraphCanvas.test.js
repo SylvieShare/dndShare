@@ -46,6 +46,14 @@ describe('session graph canvas', () => {
     expect(source).toContain("'chapter-ancestor-click', 'scene-count'")
   })
 
+  it('keeps chapter and scenario action menus available during combat', () => {
+    expect(source).toContain(':role="isDm ? \'button\' : undefined"')
+    expect(source).toContain('if (!props.isDm || !selectedScene.value) return')
+    expect(source).not.toContain("props.workspaceMode === 'combat' || !selectedScene.value")
+    expect(canvasSource).toContain('@click.stop="onLockedNodeClick($event, node)"')
+    expect(canvasSource).toContain("if (props.locked) emit('node-click', node, event.currentTarget)")
+  })
+
   it('switches graph identity and camera atomically without cross-level node reuse', () => {
     expect(navigationSource).toContain("? 0 : 420")
     expect(navigationSource).toContain("canvas.value?.prepareView(graphKeyFor(level), level === 'chapters' ? 80 : 210)")

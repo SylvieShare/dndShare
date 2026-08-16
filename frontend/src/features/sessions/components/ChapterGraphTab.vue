@@ -252,7 +252,7 @@ function selectArc(id) {
 }
 
 function openNodeMenu(chapter, anchor) {
-  if (props.locked) return
+  if (props.locked && props.workspaceMode !== 'combat') return
   nodeMenuContext.value = 'node'
   activeChapter.value = chapter
   nodeAnchor.value = anchor
