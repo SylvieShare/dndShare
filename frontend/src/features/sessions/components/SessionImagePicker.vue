@@ -119,8 +119,8 @@ function requestUpload() { pickerOpen.value = false; emit('upload') }
 .session-image-divider { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; color: var(--text-2); font-size: 11px; font-weight: 750; text-transform: uppercase; letter-spacing: .08em; }
 .session-image-divider::after { content: ''; height: 1px; flex: 1; background: var(--border); }
 .session-image-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
-.session-image-option { position: relative; min-width: 0; height: 112px; overflow: hidden; padding: 0; border: 1px solid var(--border); border-radius: 9px; background: var(--surface-raised); color: var(--text-on-accent); cursor: pointer; }
-.session-image-option img { width: 100%; height: 100%; display: block; object-fit: cover; }
+.session-image-option { position: relative; min-width: 0; height: auto; align-self: start; overflow: hidden; padding: 0; border: 1px solid var(--border); border-radius: 9px; background: var(--surface-raised); color: var(--text-on-accent); cursor: pointer; }
+.session-image-option img { width: 100%; height: auto; display: block; }
 .session-image-option::after { content: ''; position: absolute; inset: 45% 0 0; background: linear-gradient(transparent, color-mix(in srgb, var(--bg) 88%, transparent)); }
 .session-image-option span { position: absolute; z-index: 1; right: 8px; bottom: 6px; left: 8px; overflow: hidden; font-size: 11px; font-weight: 700; text-align: left; text-overflow: ellipsis; text-shadow: 0 1px 3px var(--bg); white-space: nowrap; }
 .session-image-option.active { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent), 0 0 0 2px color-mix(in srgb, var(--accent) 18%, transparent); }

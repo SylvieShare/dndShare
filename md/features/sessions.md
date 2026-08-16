@@ -177,7 +177,11 @@ shared `ColorPresetPicker`, `SessionImagePicker`, form controls and modal frame.
 `SessionImagePicker` keeps only the current image and `Сменить` in the parent
 editor. Its modal renders every preset in one grouped scroll, with category
 shortcuts that jump to section dividers; upload, when supported, is an action in
-that modal.
+that modal. Picker tiles preserve each source image's aspect ratio: their width
+follows the responsive grid while the complete image determines the tile height,
+without centre-cropping. The NPC catalogue includes balanced female and male
+portraits for villagers, city trades, guards, travellers and cultists, including
+weathered everyday characters rather than only idealized adventurers.
 World data is loaded lazily as one aggregate through `useSessionWorld`, then a
 successful mutation replaces that aggregate so every reverse association stays
 consistent.

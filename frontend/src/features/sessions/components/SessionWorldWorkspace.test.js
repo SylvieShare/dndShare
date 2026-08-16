@@ -89,6 +89,8 @@ describe('session world workspaces', () => {
     expect(imagePicker).toContain('Сменить')
     expect(imagePicker).toContain('v-for="category in categories"')
     expect(imagePicker).toContain('scrollIntoView')
+    expect(imagePicker).toContain('.session-image-option img { width: 100%; height: auto;')
+    expect(imagePicker).not.toContain('height: 112px')
     expect(imagePicker).not.toContain('role="tablist"')
     expect(npcEditor).toContain('catalog="npc"')
   })

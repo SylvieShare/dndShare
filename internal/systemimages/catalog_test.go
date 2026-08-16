@@ -8,8 +8,8 @@ import (
 )
 
 func TestCatalogAssets(t *testing.T) {
-	if len(Catalog) != 24 {
-		t.Fatalf("catalog size = %d, want 24", len(Catalog))
+	if len(Catalog) != 34 {
+		t.Fatalf("catalog size = %d, want 34", len(Catalog))
 	}
 	keys := make(map[string]bool, len(Catalog))
 	objects := make(map[string]bool, len(Catalog))

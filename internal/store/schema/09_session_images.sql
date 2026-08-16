@@ -32,7 +32,17 @@ WITH system_images(catalog_key, object_key) AS (
       ('npc-ranger', 'system-session-images/v1/npc/npc-ranger.jpg'),
       ('npc-mercenary', 'system-session-images/v1/npc/npc-mercenary.jpg'),
       ('npc-mystic', 'system-session-images/v1/npc/npc-mystic.jpg'),
-      ('npc-noble', 'system-session-images/v1/npc/npc-noble.jpg')
+      ('npc-noble', 'system-session-images/v1/npc/npc-noble.jpg'),
+      ('npc-villager-woman', 'system-session-images/v1/npc/npc-villager-woman.jpg'),
+      ('npc-villager-man', 'system-session-images/v1/npc/npc-villager-man.jpg'),
+      ('npc-guard-woman', 'system-session-images/v1/npc/npc-guard-woman.jpg'),
+      ('npc-guard-man', 'system-session-images/v1/npc/npc-guard-man.jpg'),
+      ('npc-cultist-woman', 'system-session-images/v1/npc/npc-cultist-woman.jpg'),
+      ('npc-cultist-man', 'system-session-images/v1/npc/npc-cultist-man.jpg'),
+      ('npc-innkeeper-woman', 'system-session-images/v1/npc/npc-innkeeper-woman.jpg'),
+      ('npc-healer-man', 'system-session-images/v1/npc/npc-healer-man.jpg'),
+      ('npc-sailor-woman', 'system-session-images/v1/npc/npc-sailor-woman.jpg'),
+      ('npc-merchant-man', 'system-session-images/v1/npc/npc-merchant-man.jpg')
 )
 INSERT INTO dndshare.storage_image (user_id, "key", url, "type", deleted)
 SELECT NULL, image.object_key,
@@ -75,12 +85,22 @@ WITH catalog(catalog_key, object_key, scope, category_key, category_label, label
       ('chase', 'system-session-images/v1/story/chase.jpg', 'story', 'story', 'Сюжет', 'Погоня', 340),
       ('puzzle', 'system-session-images/v1/story/puzzle.jpg', 'story', 'story', 'Сюжет', 'Загадка', 350),
       ('discovery', 'system-session-images/v1/story/discovery.jpg', 'story', 'story', 'Сюжет', 'Открытие', 360),
-      ('npc-scholar', 'system-session-images/v1/npc/npc-scholar.jpg', 'npc', 'civil', 'Горожане', 'Учёный', 10),
-      ('npc-artisan', 'system-session-images/v1/npc/npc-artisan.jpg', 'npc', 'civil', 'Горожане', 'Ремесленник', 20),
-      ('npc-ranger', 'system-session-images/v1/npc/npc-ranger.jpg', 'npc', 'adventurers', 'Искатели приключений', 'Следопыт', 110),
-      ('npc-mercenary', 'system-session-images/v1/npc/npc-mercenary.jpg', 'npc', 'adventurers', 'Искатели приключений', 'Наёмник', 120),
-      ('npc-mystic', 'system-session-images/v1/npc/npc-mystic.jpg', 'npc', 'intrigue', 'Мистика и интриги', 'Мистик', 210),
-      ('npc-noble', 'system-session-images/v1/npc/npc-noble.jpg', 'npc', 'intrigue', 'Мистика и интриги', 'Знать', 220)
+      ('npc-villager-woman', 'system-session-images/v1/npc/npc-villager-woman.jpg', 'npc', 'villagers', 'Сельские жители', 'Сельчанка', 10),
+      ('npc-villager-man', 'system-session-images/v1/npc/npc-villager-man.jpg', 'npc', 'villagers', 'Сельские жители', 'Сельчанин', 20),
+      ('npc-scholar', 'system-session-images/v1/npc/npc-scholar.jpg', 'npc', 'civil', 'Горожане и ремесло', 'Учёный', 110),
+      ('npc-artisan', 'system-session-images/v1/npc/npc-artisan.jpg', 'npc', 'civil', 'Горожане и ремесло', 'Ремесленник', 120),
+      ('npc-innkeeper-woman', 'system-session-images/v1/npc/npc-innkeeper-woman.jpg', 'npc', 'civil', 'Горожане и ремесло', 'Трактирщица', 130),
+      ('npc-healer-man', 'system-session-images/v1/npc/npc-healer-man.jpg', 'npc', 'civil', 'Горожане и ремесло', 'Лекарь', 140),
+      ('npc-merchant-man', 'system-session-images/v1/npc/npc-merchant-man.jpg', 'npc', 'civil', 'Горожане и ремесло', 'Торговец', 150),
+      ('npc-guard-woman', 'system-session-images/v1/npc/npc-guard-woman.jpg', 'npc', 'watch', 'Стража', 'Стражница', 210),
+      ('npc-guard-man', 'system-session-images/v1/npc/npc-guard-man.jpg', 'npc', 'watch', 'Стража', 'Стражник', 220),
+      ('npc-ranger', 'system-session-images/v1/npc/npc-ranger.jpg', 'npc', 'travellers', 'Путники', 'Следопыт', 310),
+      ('npc-mercenary', 'system-session-images/v1/npc/npc-mercenary.jpg', 'npc', 'travellers', 'Путники', 'Наёмник', 320),
+      ('npc-sailor-woman', 'system-session-images/v1/npc/npc-sailor-woman.jpg', 'npc', 'travellers', 'Путники', 'Морячка', 330),
+      ('npc-mystic', 'system-session-images/v1/npc/npc-mystic.jpg', 'npc', 'intrigue', 'Мистика и интриги', 'Мистик', 410),
+      ('npc-noble', 'system-session-images/v1/npc/npc-noble.jpg', 'npc', 'intrigue', 'Мистика и интриги', 'Знать', 420),
+      ('npc-cultist-woman', 'system-session-images/v1/npc/npc-cultist-woman.jpg', 'npc', 'intrigue', 'Мистика и интриги', 'Культистка', 430),
+      ('npc-cultist-man', 'system-session-images/v1/npc/npc-cultist-man.jpg', 'npc', 'intrigue', 'Мистика и интриги', 'Культист', 440)
 )
 INSERT INTO dndshare.session_image_catalog (
     image_id, catalog_key, scope, category_key, category_label, label, sort_order
