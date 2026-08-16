@@ -39,13 +39,14 @@ describe('chapter graph workspace', () => {
     expect(toolbar).toContain("$emit('toggle-events')")
   })
 
-  it('keeps global controls in the command bar and creation on the canvas', () => {
+  it('keeps combat in the central tabs and creation on the canvas', () => {
     expect(toolbar).toContain('class="chapter-session-title"')
     expect(toolbar).not.toContain('SessionStatusMenu')
     expect(toolbar).not.toContain("$emit('create-chapter')")
     expect(toolbar).toContain("$emit('open-combat')")
     expect(toolbar).toContain(':aria-label="combatButtonLabel"')
-    expect(toolbar).toContain('<Swords :size="19" />')
+    expect(toolbar).toContain('class="chapter-primary-tab chapter-primary-tab--combat"')
+    expect(toolbar).toContain('<Swords :size="14" />')
     expect(tab).toContain('@open-combat="openCombat"')
     expect(tab).toContain("canvas.value?.combatContext?.() ?? {}")
     expect(toolbar).not.toContain('Текущая глава')
@@ -58,14 +59,22 @@ describe('chapter graph workspace', () => {
 
   it('shows workspace visibility and running encounter as independent combat button states', () => {
     expect(tab).toContain(':encounter-active="encounterActive"')
-    expect(toolbar).toContain("'chapter-tool-btn--combat-open': combatActive")
-    expect(toolbar).toContain("'chapter-tool-btn--encounter-active': encounterActive")
+    expect(tab).toContain(':combat-active="workspaceLayoutMode === \'combat\'"')
+    expect(toolbar).toContain("'chapter-primary-tab--active': combatActive")
+    expect(toolbar).toContain("'chapter-primary-tab--encounter-active': encounterActive")
     expect(toolbar).toContain(':data-combat-state="combatButtonState"')
     expect(toolbar).toContain("'open' : 'closed'")
     expect(toolbar).toContain("'running' : 'stopped'")
     expect(toolbar).toContain('chapter-combat-running-indicator')
-    expect(toolbar).toContain('chapter-combat-open-indicator')
-    expect(toolbar).toContain('.chapter-tool-btn--combat-open.chapter-tool-btn--encounter-active')
+    expect(toolbar).toContain('.chapter-primary-tab--combat.chapter-primary-tab--active.chapter-primary-tab--encounter-active')
+  })
+
+  it('separates story and combat tabs from the world catalogues', () => {
+    expect(toolbar).toContain('<span>Бой</span>')
+    expect(toolbar).toContain('class="chapter-primary-divider"')
+    expect(toolbar).toContain('v-for="view in visibleLibraryViews"')
+    expect(toolbar).toContain('const storyView = primaryViews[0]')
+    expect(toolbar).toContain('primaryViews.slice(1)')
   })
 
   it('supports arcs, node action menus and labelled directed transitions', () => {

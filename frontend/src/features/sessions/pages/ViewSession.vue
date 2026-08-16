@@ -55,8 +55,8 @@
         :settings="sessionSettings"
         :show-shortcut-hints="showShortcutHints"
         @open-scenes="openChapterScenes"
-        @select-view="selectPrimaryView"
-        @open-combat="toggleCombatWorkspace"
+        @select-view="selectSessionView"
+        @open-combat="openCombatTab"
         @toggle-dice="diceOpen = !diceOpen"
         @toggle-music="musicOpen = !musicOpen"
         @toggle-events="eventsOpen = !eventsOpen"
@@ -513,11 +513,40 @@ const {
   closeWorkspace,
 } = useSessionWorkspace({ sessionUuid, chapterGraph })
 
-function toggleCombatWorkspaceFromHotkey() {
+async function openCombatTab(context = {}) {
+  if (workspaceMode.value === 'combat' && !workspaceClosing.value) {
+    if (primaryView.value !== 'story') selectPrimaryView('story')
+    return
+  }
+  if (primaryView.value !== 'story') {
+    selectPrimaryView('story')
+    await nextTick()
+  }
+  await toggleCombatWorkspace(context)
+}
+
+async function selectSessionView(view) {
+  if (workspaceMode.value === 'combat') {
+    if (view === 'story') {
+      selectPrimaryView('story')
+      await nextTick()
+      closeWorkspace()
+      return
+    }
+    closeWorkspace({ forceChapters: true })
+  }
+  selectPrimaryView(view)
+}
+
+async function toggleCombatWorkspaceFromHotkey() {
   const context = primaryView.value === 'story'
     ? chapterGraphTab.value?.combatContext?.() ?? {}
     : {}
-  toggleCombatWorkspace(context)
+  if (primaryView.value !== 'story') {
+    selectPrimaryView('story')
+    await nextTick()
+  }
+  await toggleCombatWorkspace(context)
 }
 
 function toggleEncounterFromHotkey() {
@@ -529,7 +558,7 @@ useSessionHotkeys({
   enabled: computed(() => !!session.value),
   canSwitchView: isDm,
   showHints: showShortcutHints,
-  selectView: selectPrimaryView,
+  selectView: selectSessionView,
   togglePanel: toggleToolPanel,
   rollDie: sides => dicePanel.value?.rollDie(sides),
   listMode: computed(() => ['locations', 'npcs', 'quests', 'materials'].includes(primaryView.value)),
@@ -706,7 +735,10 @@ onMounted(async () => {
   // Render the chapter canvas at its saved position before restoring the
   // workspace, so the chapter has a real starting point for its entrance.
   await nextTick()
-  await restoreWorkspace()
+  const restoredWorkspace = await restoreWorkspace()
+  if (restoredWorkspace && workspaceMode.value === 'combat' && primaryView.value !== 'story') {
+    selectPrimaryView('story')
+  }
 })
 
 onBeforeUnmount(() => {

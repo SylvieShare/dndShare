@@ -157,6 +157,10 @@ describe('ViewSession participant rail', () => {
     expect(source).toContain('ref="combatWorkspace"')
     expect(source).toContain(':encounter-active="encounter.encounter.active"')
     expect(source).toContain('toggleCombatWorkspace: toggleCombatWorkspaceFromHotkey')
+    expect(source).toContain('@open-combat="openCombatTab"')
+    expect(source).toContain('@select-view="selectSessionView"')
+    expect(source).toContain("if (workspaceMode.value === 'combat' && !workspaceClosing.value) {")
+    expect(source).toContain('selectView: selectSessionView')
     expect(source).toContain("combatMode: computed(() => workspaceMode.value === 'combat')")
     expect(source).toContain('canControlCombat: isDm')
     expect(source).toContain('combatWorkspace.value?.toggleCombat()')
@@ -243,7 +247,7 @@ describe('ViewSession participant rail', () => {
 
   it('restores the open combat or chapter scenes workspace after a page reload', () => {
     expect(source).toContain('useSessionWorkspace({ sessionUuid, chapterGraph })')
-    expect(source).toContain('await restoreWorkspace()')
+    expect(source).toContain('const restoredWorkspace = await restoreWorkspace()')
     expect(workspaceSource).toContain("const WORKSPACE_MODES = new Set(['combat', 'scenes'])")
     expect(workspaceSource).toContain('localStorage.setItem(sessionWorkspaceKey(sessionUuid)')
     expect(workspaceSource).toContain('async function restoreWorkspace()')
@@ -256,7 +260,7 @@ describe('ViewSession participant rail', () => {
     expect(source).toContain('@open-chapters="openChapters"')
     expect(source).toContain('@workspace-context-change="updateWorkspaceContext"')
     expect(workspaceSource).toContain('clearSavedWorkspace()')
-    expect(source).toContain('await nextTick()\n  await restoreWorkspace()')
+    expect(source).toContain("restoredWorkspace && workspaceMode.value === 'combat'")
   })
 
   it('overlaps chapter movement with center content in its second half', () => {

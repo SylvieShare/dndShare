@@ -73,8 +73,10 @@ viewport max-height), so the uncovered canvas below a short player list remains
 available for pan and node dragging.
 
 The session page is a campaign workspace rather than a stack of independent
-content pages. Its semantic header centers the switch between `Сюжет`,
-`Локации`, `NPC`, `Задания` and `Материалы` independently of the title/arc and tool groups; the
+content pages. Its semantic header centers the switch between `Сюжет`, `Бой`,
+`Локации`, `NPC`, `Задания` and `Материалы` independently of the title/arc and tool groups. `Сюжет` and `Бой`
+form the first navigation group and a vertical divider separates them from the
+four world catalogues; the
 participant rail remains on the left and the
 dice/events/music tools remain in a 328px right rail, wide enough for the full
 three-option dice mode switch without label clipping. In `Сюжет` the chapter canvas fills
@@ -90,9 +92,13 @@ viewport edge. At widths up to `1360px` the right tool rail is hidden so the
 split location/NPC workspaces retain a useful detail width; the participant rail
 disappears only on mobile.
 
-The primary switch remains active at every story depth and while combat is
-open. Opening a catalogue hides, but does not reset or unmount, the current
-story/combat workspace. Each catalogue selection stays in its own query key, so
+The primary switch remains active at every story depth. Combat is represented
+as a real tab next to Story rather than a tool icon: selecting `Бой` opens the
+existing animated workspace, and selecting `Сюжет` runs the same closing
+transition back to the preserved chapter/scenario context. Selecting a world
+catalogue closes the combat workspace without stopping an active encounter;
+its red live marker therefore remains visible on the inactive `Бой` tab. Each
+catalogue selection stays in its own query key, so
 returning to a catalogue restores the previously selected location, NPC, quest
 or material. The settings control is visually separated from the dice, music
 and log group by its own vertical divider.
@@ -362,9 +368,9 @@ search field, where the keys navigate the currently filtered rows.
 
 Combat uses the same contextual shortcut system. `Shift+B` opens or closes the
 combat workspace for any participant and preserves the chapter/scenario context
-of the visible story canvas. Its session-header button represents workspace
-visibility and encounter activity independently: an accent underline and fill
-mean the combat workspace is open, while a red live dot and danger contour mean
+of the visible story canvas. Its session-header tab represents workspace
+visibility and encounter activity independently: the standard active-tab
+underline means the combat workspace is open, while a red live dot and tint mean
 the encounter itself is running. Those two signals produce four visibly
 distinct combinations, including a running encounter whose workspace is
 closed; the accessible label names both states. While that workspace is open,

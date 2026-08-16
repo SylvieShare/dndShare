@@ -9,7 +9,7 @@
       :locked="locked"
       :primary-view="primaryView"
       :reorder-pending="saving"
-      :combat-active="workspaceMode === 'combat'"
+      :combat-active="workspaceLayoutMode === 'combat'"
       :encounter-active="encounterActive"
       :dice-open="diceOpen"
       :music-open="musicOpen"
