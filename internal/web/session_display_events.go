@@ -63,6 +63,25 @@ func (h *displayEventHub) publish(sessionID int64) {
 	h.mu.Unlock()
 }
 
+func (h *displayEventHub) count(sessionID int64) int {
+	h.mu.Lock()
+	defer h.mu.Unlock()
+	return len(h.subscribers[sessionID])
+}
+
+func (s *Server) handleGetPresentationConnections(w http.ResponseWriter, r *http.Request) {
+	userID, ok := mustUser(w, r)
+	if !ok {
+		return
+	}
+	session, ok := s.requireSceneDm(w, r, userID)
+	if !ok {
+		return
+	}
+	w.Header().Set("Cache-Control", "no-store")
+	writeJSON(w, http.StatusOK, map[string]int{"connectedScreens": s.displayEvents.count(session.ID)})
+}
+
 func (s *Server) handlePublicDisplayEvents(w http.ResponseWriter, r *http.Request) {
 	uuid := r.PathValue("uuid")
 	if !isUUID(uuid) {

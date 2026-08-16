@@ -339,6 +339,11 @@ const isDm = computed(() => {
   return !!(uid && session.value && session.value.ownerUserId === uid)
 })
 
+watch(isDm, dm => {
+  if (dm) presentation.startConnectionPolling()
+  else presentation.stopConnectionPolling()
+}, { immediate: true })
+
 useSessionHotkeys({
   enabled: computed(() => !!session.value),
   canSwitchView: isDm,

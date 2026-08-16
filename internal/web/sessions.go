@@ -73,6 +73,8 @@ func (s *Server) handleSessionTwoSegGET(w http.ResponseWriter, r *http.Request) 
 		s.handleGetSessionMaterials(w, r)
 	case "presentation":
 		s.handleGetSessionPresentation(w, r)
+	case "presentation-connections":
+		s.handleGetPresentationConnections(w, r)
 	default:
 		notFound(w, "")
 	}

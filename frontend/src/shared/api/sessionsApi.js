@@ -84,6 +84,10 @@ export function getSessionPresentation(uuid) {
   return fetchGet(`/sessions/${uuid}/presentation`)
 }
 
+export function getSessionPresentationConnections(uuid) {
+  return fetchGet(`/sessions/${uuid}/presentation-connections`)
+}
+
 export function saveSessionPresentation(uuid, data) {
   return fetchPut(`/sessions/${uuid}/presentation`, data)
 }

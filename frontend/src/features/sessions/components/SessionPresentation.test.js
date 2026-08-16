@@ -18,6 +18,8 @@ const libraryShell = read('./SessionLibraryWorkspace.vue')
 const presentationState = read('../composables/useSessionPresentation.js')
 const displayMusic = read('../composables/useDisplayMusic.js')
 const musicPanel = read('./MusicPanel.vue')
+const sessionPage = read('../pages/ViewSession.vue')
+const sessionsApi = read('../../../shared/api/sessionsApi.js')
 
 describe('session presentation workspace', () => {
   it('keeps materials as a primary DM workspace and a contextual header control', () => {
@@ -70,6 +72,18 @@ describe('session presentation workspace', () => {
     expect(displayMusic).toContain('blocked.value = true')
     expect(publicScreen).toContain('Включить звук')
     expect(musicPanel).toContain('НА ЭКРАНЕ')
+  })
+
+  it('shows the live number of connected display screens to the DM', () => {
+    expect(control).toContain("'chapter-tool-btn--connected': hasConnectedScreens")
+    expect(control).toContain('presentation.connectedScreens.value')
+    expect(control).toContain('Нет подключённых экранов')
+    expect(control).toContain('Получают обновления в реальном времени')
+    expect(presentationState).toContain('CONNECTION_POLL_INTERVAL_MS = 5_000')
+    expect(presentationState).toContain('globalThis.document?.visibilityState')
+    expect(presentationState).toContain('getSessionPresentationConnections')
+    expect(sessionPage).toContain('presentation.startConnectionPolling()')
+    expect(sessionsApi).toContain('/presentation-connections')
   })
 
   it('supports typed materials and styled notes on the shared library layout', () => {

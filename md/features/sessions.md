@@ -500,7 +500,11 @@ combat action reads the same currently displayed canvas context, while a chapter
 canvas falls back to the current chapter. Chapter and scenario ids are saved with
 the active narrative level in workspace state and restored after reload. Closing
 combat returns to that saved scenario or block canvas instead of resetting the
-user to chapters. Without a scenario context the
+user to chapters. The pinned chapter and scenario keep their regular action
+menus in combat, including keyboard activation, so the DM can update their
+status or edit them without closing the encounter. The player rail adds a
+combat-only “select all” action above its cards; it selects or clears every
+player combatant while preserving any NPC selection. Without a scenario context the
 combat header sits immediately to the right of the focused chapter;
 combatants remain independent tiles below it rather than being wrapped in one
 central card. On desktop the combat workspace retains the same reserved right
@@ -666,6 +670,16 @@ part of the public DTO or UI: health is presented as `Здоров` above 50%,
 `Ранен` above 25%, `Критически ранен` at 25% or below, and `Без сознания`
 (player) / `Повержен` (NPC) at zero. A failed refresh keeps the last successful
 snapshot visible and marks the connection as interrupted.
+
+The DM header control also displays the live number of public screens connected
+to that session. Its button uses a green connected treatment whenever at least
+one SSE subscriber exists; the popover shows the exact connection count and
+refreshes it immediately when opened. The session page checks the lightweight
+owner-only counter every five seconds while the tab is visible and once when it
+returns to the foreground. Each public browser tab counts as one screen. This
+counter comes from the in-process SSE hub rather than the database, so it
+reflects current connectivity and naturally resets during a server restart;
+screens reconnect automatically and reappear in the counter.
 
 The public endpoint builds a dedicated projection on the server rather than
 returning raw encounter or character JSON. It may resolve the session owner's

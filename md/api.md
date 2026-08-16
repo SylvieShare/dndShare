@@ -200,6 +200,9 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
   `fog`, `embers`, `snow`, `storm`; transitions are `cut` or `fade`. An explicit
   `idle,visible:true` is the cleared dotted canvas, while `visible:false` is the
   intentional blackout;
+- `GET /api/sessions/{uuid}/presentation-connections` is an owner-only,
+  no-store runtime counter `{connectedScreens}` of active public SSE display
+  subscriptions. It is deliberately not persisted in the database;
 - `GET /api/public/sessions/{uuid}/presentation` is the anonymous no-store safe
   projection used by `/screen/:uuid`; its material projection exposes only
   `{id,kind,name,caption,content,noteStyle,assetUrl}` required for playback;
