@@ -1,6 +1,6 @@
 export const SCENE_BLOCK_TYPES = {
   text: {
-    label: 'Текст',
+    label: 'Описание',
     color: 'var(--info)',
     defaultWidth: 300,
   },

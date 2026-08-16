@@ -2,7 +2,7 @@ export function narrativeCanvasActions(level) {
   if (level === 'chapters') return [{ id: 'chapter', label: 'Новая глава', icon: 'chapter' }]
   if (level === 'scenes') return [{ id: 'scene', label: 'Новый сценарий', icon: 'scene' }]
   return [
-    { id: 'text', label: 'Текстовый блок', icon: 'text' },
+    { id: 'text', label: 'Описание', icon: 'text' },
     { id: 'list', label: 'Диалог', icon: 'dialogue' },
     { id: 'combat', label: 'Бой', icon: 'combat' },
     { id: 'reward', label: 'Награда', icon: 'reward' },

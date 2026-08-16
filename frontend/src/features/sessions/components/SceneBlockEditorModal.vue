@@ -5,7 +5,7 @@
         <FormTextInput v-model:value="draft.title" :maxlength="200" autofocus />
       </FormField>
 
-      <FormField v-if="blockType === 'text'" label="Содержимое" vertical>
+      <FormField v-if="blockType === 'text'" label="Описание" vertical>
         <InputDescription
           editable
           :block="descriptionBlock"
@@ -93,7 +93,7 @@ const emit = defineEmits(['close', 'save'])
 
 const blockType = computed(() => props.block?.type || props.type)
 const typeLabel = computed(() => sceneBlockType(blockType.value).label.toLowerCase())
-const defaultTitles = { text: 'Новый текст', list: 'Новый диалог', combat: 'Новый бой', reward: 'Новая награда' }
+const defaultTitles = { text: 'Новое описание', list: 'Новый диалог', combat: 'Новый бой', reward: 'Новая награда' }
 const dialogueKeysListId = `scene-dialogue-keys-${getCurrentInstance()?.uid ?? 'editor'}`
 const initialDialogueRows = hydrateDialogueRows(props.block?.data?.rows?.length
   ? props.block.data.rows
@@ -109,7 +109,7 @@ const draft = reactive({
     ? props.block.data.items.map(item => ({ ...item }))
     : [],
 })
-const descriptionBlock = { id: 'scene-block-description', content: { placeholder: 'Текст блока' } }
+const descriptionBlock = { id: 'scene-block-description', content: { placeholder: 'Текст описания' } }
 const dialogueSuggestions = computed(() => dialogueKeySuggestions(draft.rows))
 
 provide('charCtx', { ownerMode: false, dictionaries: {}, var: {} })

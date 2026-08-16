@@ -12,10 +12,8 @@
           class="scene-block-node-dialogue"
           :style="{ '--dialogue-color': row.color }"
         >
-          <div class="scene-block-node-speaker">
-            <span aria-hidden="true" />
-            <b>{{ row.left || 'Реплика' }}</b>
-          </div>
+          <b class="scene-block-node-speaker">{{ row.left || 'Реплика' }}</b>
+          <span class="scene-block-node-dialogue-line" aria-hidden="true" />
           <p>{{ row.right }}</p>
         </div>
         <span v-if="!previewRows.length" class="scene-block-node-empty">Диалог пуст</span>
@@ -43,7 +41,7 @@
         <span v-if="!rewardItems.length" class="scene-block-node-empty">Награда не добавлена</span>
       </template>
       <RichContent v-else-if="block.data?.text" class="scene-block-node-text" :html="block.data.text" />
-      <span v-else class="scene-block-node-empty">Пустой текст</span>
+      <span v-else class="scene-block-node-empty">Описание пусто</span>
     </div>
   </article>
 </template>
@@ -92,13 +90,13 @@ function creatureKey(creature, index) {
   border: none;
   border-radius: 12px;
   background: var(--surface);
-  box-shadow: inset 0 0 0 1px var(--border);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--block-color) 52%, var(--border));
   user-select: none;
   transition: background 0.15s, box-shadow 0.15s;
 }
 .scene-block-node:hover {
   background: color-mix(in srgb, var(--block-color) 8%, var(--surface));
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--block-color) 38%, var(--border));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--block-color) 82%, var(--border));
 }
 .scene-block-node-heading {
   display: flex;
@@ -125,12 +123,11 @@ function creatureKey(creature, index) {
   text-shadow: 0 1px 12px color-mix(in srgb, var(--block-color) 16%, transparent);
 }
 .scene-block-node-preview { color: var(--text-2); font-size: 11px; line-height: 1.42; overflow-wrap: anywhere; }
-.scene-block-node-dialogue { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; padding: 5px 0; }
+.scene-block-node-dialogue { display: grid; grid-template-columns: minmax(58px, .42fr) 2px minmax(0, 1fr); align-items: stretch; gap: 9px; padding: 7px 0; }
 .scene-block-node-dialogue + .scene-block-node-dialogue { border-top: 1px solid var(--border); }
-.scene-block-node-speaker { display: flex; align-items: center; gap: 6px; min-width: 0; color: var(--dialogue-color); }
-.scene-block-node-speaker > span { width: 7px; height: 7px; flex: none; border-radius: 50%; background: currentColor; }
-.scene-block-node-speaker b { min-width: 0; overflow-wrap: anywhere; }
-.scene-block-node-dialogue p { margin: 0 0 0 13px; padding: 5px 8px; border-radius: 3px 9px 9px 9px; background: color-mix(in srgb, var(--dialogue-color) 9%, transparent); color: var(--text-2); white-space: pre-wrap; }
+.scene-block-node-speaker { min-width: 0; align-self: start; overflow-wrap: anywhere; color: var(--dialogue-color); text-align: right; }
+.scene-block-node-dialogue-line { min-height: 24px; border-radius: 2px; background: var(--dialogue-color); }
+.scene-block-node-dialogue p { min-width: 0; margin: 0; color: var(--text-2); white-space: pre-wrap; }
 .scene-block-node-text :deep(:first-child) { margin-top: 0; }
 .scene-block-node-text :deep(:last-child) { margin-bottom: 0; }
 .scene-block-node-creature,

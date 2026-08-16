@@ -243,7 +243,7 @@ still opens the scenario block canvas.
 Double-clicking a scenario switches the same physical canvas to the third graph.
 The scenario node first moves to the top immediately to the right of its chapter
 and its peers and edges fade out; then block nodes replace the graph payload.
-Text, dialogue, combat and reward blocks have independent coordinates, persisted widths,
+Description, dialogue, combat and reward blocks have independent coordinates, persisted widths,
 content-sized heights and directed links. Their accent color is derived from
 the type instead of being user-selected or stored. Block cards use the same
 dark `var(--surface)` backing and inset border as `BaseTile`, with only a quiet
@@ -254,7 +254,11 @@ speaker/reply rows: speaker inputs autocomplete from the unique names already
 used in that dialogue, and every speaker receives one consistent distinct
 color from the shared palette. Clicking the color circle beside a speaker opens
 that palette; choosing a color updates every row with the same normalized
-speaker key. Clicking any non-interactive
+speaker key. On the canvas each row places the right-aligned speaker name,
+a vertical speaker-colored divider and the unframed reply in three columns.
+Every block card keeps a visible border mixed from its semantic type color;
+hover strengthens the same border instead of introducing another accent.
+Clicking any non-interactive
 part of a block opens its action menu; there is no separate ellipsis trigger.
 The menu provides edit, copy and delete, while a double click opens
 `SceneBlockEditorModal`. A combat block contains bestiary references and/or
