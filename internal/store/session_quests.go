@@ -10,9 +10,12 @@ import (
 func (s *Store) GetSessionQuest(ctx context.Context, id int64) (SessionQuest, error) {
 	quest := SessionQuest{Relations: []SessionEntityRelation{}}
 	err := s.pool.QueryRow(ctx, `
-		SELECT id, session_id, name, status, description, sort_order
+		SELECT id, session_id, name, status, goal, condition_text, reward, consequences, notes, sort_order
 		FROM dndshare.session_quest WHERE id = $1`, id,
-	).Scan(&quest.ID, &quest.SessionID, &quest.Name, &quest.Status, &quest.Description, &quest.SortOrder)
+	).Scan(
+		&quest.ID, &quest.SessionID, &quest.Name, &quest.Status,
+		&quest.Goal, &quest.Condition, &quest.Reward, &quest.Consequences, &quest.Notes, &quest.SortOrder,
+	)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return SessionQuest{}, ErrNotFound
 	}
@@ -30,10 +33,13 @@ func (s *Store) CreateSessionQuest(ctx context.Context, sessionID int64, mutatio
 	}
 	var id int64
 	err = tx.QueryRow(ctx, `
-		INSERT INTO dndshare.session_quest (session_id, name, status, description, sort_order)
-		VALUES ($1, $2, $3, $4,
+		INSERT INTO dndshare.session_quest (
+		  session_id, name, status, goal, condition_text, reward, consequences, notes, sort_order
+		)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8,
 		  (SELECT COALESCE(MAX(sort_order), -1) + 1 FROM dndshare.session_quest WHERE session_id = $1))
-		RETURNING id`, sessionID, mutation.Name, mutation.Status, mutation.Description).Scan(&id)
+		RETURNING id`, sessionID, mutation.Name, mutation.Status, mutation.Goal, mutation.Condition,
+		mutation.Reward, mutation.Consequences, mutation.Notes).Scan(&id)
 	if err != nil {
 		return 0, err
 	}
@@ -57,8 +63,10 @@ func (s *Store) UpdateSessionQuest(ctx context.Context, sessionID, questID int64
 	}
 	result, err := tx.Exec(ctx, `
 		UPDATE dndshare.session_quest
-		SET name = $3, status = $4, description = $5, changed_at = now()
-		WHERE id = $1 AND session_id = $2`, questID, sessionID, mutation.Name, mutation.Status, mutation.Description)
+		SET name = $3, status = $4, goal = $5, condition_text = $6,
+		    reward = $7, consequences = $8, notes = $9, changed_at = now()
+		WHERE id = $1 AND session_id = $2`, questID, sessionID, mutation.Name, mutation.Status,
+		mutation.Goal, mutation.Condition, mutation.Reward, mutation.Consequences, mutation.Notes)
 	if err != nil {
 		return err
 	}

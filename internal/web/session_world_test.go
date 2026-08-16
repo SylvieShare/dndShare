@@ -78,3 +78,29 @@ func TestNpcMutationNormalizesColorAndText(t *testing.T) {
 		t.Fatal("non-positive race item id accepted")
 	}
 }
+
+func TestQuestMutationNormalizesStructuredDetails(t *testing.T) {
+	goal := "  Найти пропавший караван  "
+	condition := "  До наступления ночи  "
+	reward := "  200 золотых  "
+	consequences := "  Гильдия закроет тракт  "
+	notes := "  Засада у старого моста  "
+	recorder := httptest.NewRecorder()
+	mutation, ok := questMutation(recorder, questMutationRequest{
+		Name: "  Следы на тракте  ", Goal: &goal, Condition: &condition,
+		Reward: &reward, Consequences: &consequences, Notes: &notes,
+	})
+	if !ok {
+		t.Fatalf("valid quest rejected: %s", recorder.Body.String())
+	}
+	if mutation.Name != "Следы на тракте" || mutation.Status != "planned" {
+		t.Fatalf("unexpected quest identity: %+v", mutation)
+	}
+	if mutation.Goal == nil || *mutation.Goal != "Найти пропавший караван" ||
+		mutation.Condition == nil || *mutation.Condition != "До наступления ночи" ||
+		mutation.Reward == nil || *mutation.Reward != "200 золотых" ||
+		mutation.Consequences == nil || *mutation.Consequences != "Гильдия закроет тракт" ||
+		mutation.Notes == nil || *mutation.Notes != "Засада у старого моста" {
+		t.Fatalf("quest details were not normalized: %+v", mutation)
+	}
+}

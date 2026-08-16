@@ -153,8 +153,10 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
   association together;
 - `POST /api/sessions/{uuid}/quests`, `PATCH|DELETE
   /api/sessions/{uuid}/quests/{questId}` manage quests with
-  `{name,status,description,relations}`. Status is `planned`, `active`,
-  `completed` or `failed`; mutations return the refreshed world aggregate;
+  `{name,status,goal,condition,reward,consequences,notes,relations}`. The five
+  quest detail fields are independent nullable strings up to 5000 characters.
+  Status is `planned`, `active`, `completed` or `failed`; mutations return the
+  refreshed world aggregate;
 - `GET /api/sessions/{uuid}/chapter-graph` returns `{arcs,chapters,edges}`;
 - `GET /api/session-images?scope=story|npc` returns the authorized system image
   catalogue as `{images:[{id,key,scope,categoryKey,categoryLabel,label,sortOrder,url}]}`;

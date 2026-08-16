@@ -189,9 +189,11 @@ successful mutation replaces that aggregate so every reverse association stays
 consistent.
 
 The quest workspace is a searchable journal built on the same library shell.
-A quest stores a name, description, status (`Запланировано`, `В процессе`,
-`Выполнено`, `Провалено`) and universal relations. Its selected id is deep-linked
-through `quest` just like locations and NPCs.
+A quest stores a name, separate goal, condition, reward, consequences and
+master notes, status (`Запланировано`, `В процессе`, `Выполнено`, `Провалено`)
+and universal relations. The detail view emphasizes the goal and shows the
+remaining filled sections as compact cards; search covers every field. Its
+selected id is deep-linked through `quest` just like locations and NPCs.
 
 ## Chapters, scenarios and blocks
 

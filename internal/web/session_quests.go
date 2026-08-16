@@ -8,10 +8,14 @@ import (
 )
 
 type questMutationRequest struct {
-	Name        string                        `json:"name"`
-	Status      string                        `json:"status"`
-	Description *string                       `json:"description"`
-	Relations   []store.SessionEntityRelation `json:"relations"`
+	Name         string                        `json:"name"`
+	Status       string                        `json:"status"`
+	Goal         *string                       `json:"goal"`
+	Condition    *string                       `json:"condition"`
+	Reward       *string                       `json:"reward"`
+	Consequences *string                       `json:"consequences"`
+	Notes        *string                       `json:"notes"`
+	Relations    []store.SessionEntityRelation `json:"relations"`
 }
 
 func questMutation(w http.ResponseWriter, req questMutationRequest) (store.SessionQuestMutation, bool) {
@@ -32,7 +36,10 @@ func questMutation(w http.ResponseWriter, req questMutationRequest) (store.Sessi
 		return store.SessionQuestMutation{}, false
 	}
 	return store.SessionQuestMutation{
-		Name: name, Status: req.Status, Description: cleanText(req.Description, 5000), Relations: cleanEntityRelations(req.Relations),
+		Name: name, Status: req.Status,
+		Goal: cleanText(req.Goal, 5000), Condition: cleanText(req.Condition, 5000),
+		Reward: cleanText(req.Reward, 5000), Consequences: cleanText(req.Consequences, 5000),
+		Notes: cleanText(req.Notes, 5000), Relations: cleanEntityRelations(req.Relations),
 	}, true
 }
 

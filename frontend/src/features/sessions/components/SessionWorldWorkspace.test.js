@@ -21,6 +21,7 @@ const relationPicker = read('./WorldRelationPickerModal.vue')
 const universalEditor = read('./UniversalRelationEditor.vue')
 const universalPicker = read('./UniversalRelationPickerModal.vue')
 const quests = read('./SessionQuestsWorkspace.vue')
+const questEditor = read('./QuestEditorModal.vue')
 const imagePicker = read('./SessionImagePicker.vue')
 const primaryView = read('../composables/useSessionPrimaryView.js')
 const worldState = read('../composables/useSessionWorld.js')
@@ -93,6 +94,17 @@ describe('session world workspaces', () => {
 	expect(universalPicker).toContain("{ key: 'all', label: 'Все' }")
 	expect(universalPicker).toContain('Искать по всем объектам')
 	expect(quests).toContain('Связи')
+  })
+
+  it('keeps quest goal, condition, reward, consequences and notes separate', () => {
+    for (const field of ['draft.goal', 'draft.condition', 'draft.reward', 'draft.consequences', 'draft.notes']) {
+      expect(questEditor).toContain(field)
+    }
+    for (const label of ['Цель', 'Условие', 'Награда', 'Последствия', 'Заметки']) {
+      expect(quests).toContain(label)
+    }
+    expect(quests).toContain("[item.name,item.goal,item.condition,item.reward,item.consequences,item.notes]")
+    expect(questEditor).not.toContain('draft.description')
   })
 
   it('opens one grouped image catalogue from the current image preview', () => {

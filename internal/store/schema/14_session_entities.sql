@@ -8,7 +8,11 @@ CREATE TABLE IF NOT EXISTS dndshare.session_quest (
     session_id  int8 NOT NULL REFERENCES dndshare."session"(id) ON DELETE CASCADE,
     "name"      varchar(160) NOT NULL,
     status      varchar(24) DEFAULT 'planned' NOT NULL,
-    description text NULL,
+    goal        text NULL,
+    condition_text text NULL,
+    reward      text NULL,
+    consequences text NULL,
+    notes       text NULL,
     sort_order  int4 DEFAULT 0 NOT NULL,
     created_at  timestamptz DEFAULT now() NOT NULL,
     changed_at  timestamptz DEFAULT now() NOT NULL,
@@ -17,6 +21,26 @@ CREATE TABLE IF NOT EXISTS dndshare.session_quest (
         status IN ('planned', 'active', 'completed', 'failed')
     )
 );
+ALTER TABLE dndshare.session_quest ADD COLUMN IF NOT EXISTS goal text NULL;
+ALTER TABLE dndshare.session_quest ADD COLUMN IF NOT EXISTS condition_text text NULL;
+ALTER TABLE dndshare.session_quest ADD COLUMN IF NOT EXISTS reward text NULL;
+ALTER TABLE dndshare.session_quest ADD COLUMN IF NOT EXISTS consequences text NULL;
+ALTER TABLE dndshare.session_quest ADD COLUMN IF NOT EXISTS notes text NULL;
+
+-- The former catch-all description becomes master notes, preserving existing
+-- quest text while moving the current schema to explicit semantic fields.
+DO $$ BEGIN
+    IF EXISTS (
+        SELECT 1 FROM information_schema.columns
+        WHERE table_schema = 'dndshare'
+          AND table_name = 'session_quest'
+          AND column_name = 'description'
+    ) THEN
+        EXECUTE 'UPDATE dndshare.session_quest SET notes = description WHERE notes IS NULL AND description IS NOT NULL';
+    END IF;
+END $$;
+ALTER TABLE dndshare.session_quest DROP COLUMN IF EXISTS description;
+
 CREATE INDEX IF NOT EXISTS idx_session_quest_session_order
     ON dndshare.session_quest USING btree (session_id, sort_order, id);
 

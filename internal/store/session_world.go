@@ -54,13 +54,17 @@ type SessionEntityRelation struct {
 }
 
 type SessionQuest struct {
-	ID          int64                   `json:"id"`
-	SessionID   int64                   `json:"sessionId"`
-	Name        string                  `json:"name"`
-	Status      string                  `json:"status"`
-	Description *string                 `json:"description,omitempty"`
-	SortOrder   int                     `json:"sortOrder"`
-	Relations   []SessionEntityRelation `json:"relations"`
+	ID           int64                   `json:"id"`
+	SessionID    int64                   `json:"sessionId"`
+	Name         string                  `json:"name"`
+	Status       string                  `json:"status"`
+	Goal         *string                 `json:"goal,omitempty"`
+	Condition    *string                 `json:"condition,omitempty"`
+	Reward       *string                 `json:"reward,omitempty"`
+	Consequences *string                 `json:"consequences,omitempty"`
+	Notes        *string                 `json:"notes,omitempty"`
+	SortOrder    int                     `json:"sortOrder"`
+	Relations    []SessionEntityRelation `json:"relations"`
 }
 
 type SessionNPCSceneLink struct {
@@ -114,10 +118,14 @@ type SessionNPCMutation struct {
 }
 
 type SessionQuestMutation struct {
-	Name        string
-	Status      string
-	Description *string
-	Relations   []SessionEntityRelation
+	Name         string
+	Status       string
+	Goal         *string
+	Condition    *string
+	Reward       *string
+	Consequences *string
+	Notes        *string
+	Relations    []SessionEntityRelation
 }
 
 func scanSessionLocation(row pgx.Row) (SessionLocation, error) {
@@ -231,7 +239,7 @@ func (s *Store) GetSessionWorld(ctx context.Context, sessionID int64) (SessionWo
 	npcRows.Close()
 
 	questRows, err := s.pool.Query(ctx, `
-		SELECT id, session_id, name, status, description, sort_order
+		SELECT id, session_id, name, status, goal, condition_text, reward, consequences, notes, sort_order
 		FROM dndshare.session_quest
 		WHERE session_id = $1
 		ORDER BY sort_order, id`, sessionID)
@@ -241,7 +249,8 @@ func (s *Store) GetSessionWorld(ctx context.Context, sessionID int64) (SessionWo
 	for questRows.Next() {
 		quest := SessionQuest{Relations: []SessionEntityRelation{}}
 		if err := questRows.Scan(
-			&quest.ID, &quest.SessionID, &quest.Name, &quest.Status, &quest.Description, &quest.SortOrder,
+			&quest.ID, &quest.SessionID, &quest.Name, &quest.Status,
+			&quest.Goal, &quest.Condition, &quest.Reward, &quest.Consequences, &quest.Notes, &quest.SortOrder,
 		); err != nil {
 			questRows.Close()
 			return SessionWorld{}, err

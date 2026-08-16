@@ -41,7 +41,19 @@ func TestSessionWorldSchemaRunsAfterSessionTables(t *testing.T) {
 }
 
 func TestSessionEntitiesSchemaAddsQuestsAndUniversalRelations(t *testing.T) {
-	for _, fragment := range []string{"CREATE TABLE IF NOT EXISTS dndshare.session_quest", "CREATE TABLE IF NOT EXISTS dndshare.session_entity_relation", "'location', 'npc', 'material', 'quest'", "session_entity_relation_order_check"} {
+	for _, fragment := range []string{
+		"CREATE TABLE IF NOT EXISTS dndshare.session_quest",
+		"ADD COLUMN IF NOT EXISTS goal text NULL",
+		"ADD COLUMN IF NOT EXISTS condition_text text NULL",
+		"ADD COLUMN IF NOT EXISTS reward text NULL",
+		"ADD COLUMN IF NOT EXISTS consequences text NULL",
+		"ADD COLUMN IF NOT EXISTS notes text NULL",
+		"SET notes = description",
+		"DROP COLUMN IF EXISTS description",
+		"CREATE TABLE IF NOT EXISTS dndshare.session_entity_relation",
+		"'location', 'npc', 'material', 'quest'",
+		"session_entity_relation_order_check",
+	} {
 		if !strings.Contains(schemaSessionEntitiesSQL, fragment) {
 			t.Fatalf("session entity schema must contain %q", fragment)
 		}
