@@ -236,6 +236,15 @@ storage; системные объекты используют стабильн
 локации и NPC хранят только единый `image_id`. Системные JPEG загружаются под
 стабильными ключами `system-session-images/v1/{story|npc}/`.
 
+Личные `storage_image` хранят `user_id`, `file_size`, `file_name` и `mime_type`;
+такие же upload metadata есть у пользовательских `svg_storage`, а музыка
+использует эквивалентный `owner_user_id` и `file_size`. Встроенные и системные
+объекты имеют `NULL`-владельца и не входят в личную статистику. Startup schema
+backfill-ит размер старых DB-backed bytes/SVG; размер старых S3-объектов без
+локальных bytes лениво уточняет account API и сохраняет обратно. Частичные
+индексы по владельцу и времени обеспечивают список последних загрузок без
+сканирования системного каталога.
+
 ### Error reports and jobs
 
 `error_report` хранит lifecycle `OPEN → IN_PROGRESS → RESOLVED → ARCHIVED`,

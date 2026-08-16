@@ -74,7 +74,10 @@ func (s *Server) handleUploadItemIconImage(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	imageID, replaced, err := s.store.SetItemIconImage(r.Context(), itemID, uid, isAdmin, stored.Key, stored.URL)
+	imageID, replaced, err := s.store.SetItemIconImage(
+		r.Context(), itemID, uid, isAdmin, stored.Key, stored.URL,
+		safeUploadFileName(header.Filename), contentType, header.Size,
+	)
 	if err != nil {
 		if deleteErr := s.s3.DeleteObject(r.Context(), stored.Key); deleteErr != nil {
 			log.Printf("delete unattached item icon %q: %v", stored.Key, deleteErr)

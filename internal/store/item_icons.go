@@ -31,7 +31,7 @@ func (s *Store) CanEditItemIcon(ctx context.Context, itemID, actorUserID int64, 
 // SetItemIconImage registers an uploaded S3 object and makes it the item's
 // only icon. Base handbook items own system images (user_id NULL); custom items
 // keep their owner's user_id even when an administrator performs the upload.
-func (s *Store) SetItemIconImage(ctx context.Context, itemID, actorUserID int64, isAdmin bool, key, url string) (int64, ItemIconRefs, error) {
+func (s *Store) SetItemIconImage(ctx context.Context, itemID, actorUserID int64, isAdmin bool, key, url, fileName, mimeType string, fileSize int64) (int64, ItemIconRefs, error) {
 	tx, err := s.pool.Begin(ctx)
 	if err != nil {
 		return 0, ItemIconRefs{}, err
@@ -55,10 +55,10 @@ func (s *Store) SetItemIconImage(ctx context.Context, itemID, actorUserID int64,
 
 	var imageID int64
 	err = tx.QueryRow(ctx,
-		`INSERT INTO dndshare.storage_image (user_id, "key", url, "type")
-		 VALUES ($1, $2, $3, 'item_icon')
+		`INSERT INTO dndshare.storage_image (user_id, "key", url, "type", file_name, mime_type, file_size)
+		 VALUES ($1, $2, $3, 'item_icon', NULLIF($4, ''), NULLIF($5, ''), $6)
 		 RETURNING id`,
-		ownerUserID, key, url,
+		ownerUserID, key, url, fileName, mimeType, fileSize,
 	).Scan(&imageID)
 	if err != nil {
 		return 0, ItemIconRefs{}, err

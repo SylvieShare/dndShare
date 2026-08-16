@@ -20,6 +20,20 @@ API реализован Go `net/http` в `internal/web`. Feature-файл ре�
 - `GET /api/user/logout`
 - `POST /api/user/registration`
 
+## Player account
+
+- `PUT /api/account/password` принимает
+  `{currentPassword,newPassword}`, проверяет текущий пароль и заменяет его
+  PBKDF2-хэшем; ответ без тела — `204`.
+- `GET /api/account/storage` возвращает личное использование пространства:
+  `{usedBytes,fileCount,unknownFileCount,breakdown,files}`. Breakdown содержит
+  `kind`, локализованную `label`, `bytes` и `count`; файл содержит
+  `source,id,kind,name,fileSize?,mimeType?,url?,createdAt`.
+
+Для старых S3-объектов без сохранённого размера endpoint выполняет `HEAD` с
+ограниченным параллелизмом и записывает найденный byte-size в БД. Неизвестный
+размер не считается нулевым и отдельно отражается в `unknownFileCount`.
+
 ## Characters and templates
 
 - `GET /api/templates` → `{templates:[{id,name}]}`. Template schema/create
@@ -79,6 +93,11 @@ Item reads проецируют иконку как `iconSvgId` + `svg` либо
 его с item и заменяет прежний формат; clear удаляет любую иконку. Системная
 иконка имеет `storage_image.user_id = NULL`, пользовательская принадлежит
 владельцу item.
+
+Любая новая пользовательская загрузка сохраняет владельца, фактический размер,
+исходное имя и MIME: это относится к общим изображениям/видео, item icon,
+музыкальным трекам и SVG подсказок. Системные объекты остаются без владельца и
+не включаются в статистику аккаунта.
 
 Item list/search поддерживает publication scope через `contentSourceIds`,
 `sourceVersionId` и `allowLegacy`. Здесь Legacy — статус контента конкретной
@@ -250,7 +269,9 @@ CRUD tracks/albums/tags, track-to-album/tag links и album order только д
 личных сущностей. Личное и системное аудио получает signed S3 playback URL.
 Image upload: `POST
 /api/storage/images`; item icons используют item-специфичный маршрут выше.
-SVG read: `GET /api/svg/{id}`.
+Video upload: `POST /api/storage/videos`. SVG read: `GET /api/svg/{id}`.
+Uploads пишут byte-size, исходное имя, MIME и id владельца в соответствующий
+registry; эти же metadata используются `GET /api/account/storage`.
 
 ## Admin and error reports
 

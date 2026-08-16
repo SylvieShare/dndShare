@@ -311,6 +311,11 @@ func (s *Store) SaveSuggestSvg(ctx context.Context, data string) (int64, error) 
 	return s.SaveSvg(ctx, data)
 }
 
+// SaveOwnedSuggestSvg records metadata for an SVG uploaded through the player UI.
+func (s *Store) SaveOwnedSuggestSvg(ctx context.Context, userID int64, data, fileName, mimeType string, fileSize int64) (int64, error) {
+	return s.SaveOwnedSvg(ctx, userID, data, fileName, mimeType, fileSize)
+}
+
 // GetSuggestSvgData возвращает svg-разметку по id (ErrNotFound, если нет).
 func (s *Store) GetSuggestSvgData(ctx context.Context, id int64) (string, error) {
 	return s.GetSvg(ctx, id)

@@ -9,6 +9,7 @@ import ViewListCharacters from '@/features/character-list/pages/ViewListCharacte
 import ViewCharacter from '@/features/character-editor/pages/ViewCharacter'
 import ViewCharacterPrint from '@/features/character-editor/pages/ViewCharacterPrint'
 import ViewJoinSession from '@/features/sessions/pages/ViewJoinSession'
+import ViewAccount from '@/features/account/pages/ViewAccount.vue'
 import ViewEncounterScreen from '@/features/sessions/pages/ViewEncounterScreen.vue'
 import ViewSession from '@/features/sessions/pages/ViewSession'
 import ViewSessions from '@/features/sessions/pages/ViewSessions'
@@ -88,6 +89,12 @@ const routes = [
         name: "Home",
         component: PageMain,
         meta: { title: 'Главная', section: 'home', depth: 0 },
+    },
+    {
+        path: '/account',
+        name: "Account",
+        component: ViewAccount,
+        meta: { title: 'Аккаунт', section: 'home', depth: 1, mobileBackTo: { name: 'Home' } },
     },
     {
         path: '/admin',

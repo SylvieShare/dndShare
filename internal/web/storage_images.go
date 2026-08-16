@@ -28,6 +28,15 @@ type imageUploadResponse struct {
 	Key      string `json:"key"`
 }
 
+func safeUploadFileName(name string) string {
+	name = strings.TrimSpace(name)
+	runes := []rune(name)
+	if len(runes) > 255 {
+		name = string(runes[:255])
+	}
+	return name
+}
+
 // handleUploadImage загружает изображение в S3 и регистрирует его в storage_image
 // (порт StorageImageController.uploadImage).
 func (s *Server) handleUploadImage(w http.ResponseWriter, r *http.Request) {
@@ -51,13 +60,20 @@ func (s *Server) handleUploadImage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	stored, err := s.s3.UploadImage(r.Context(), file, header.Size, header.Filename, header.Header.Get("Content-Type"), "")
+	mime := header.Header.Get("Content-Type")
+	if mime == "" {
+		mime = "application/octet-stream"
+	}
+	stored, err := s.s3.UploadImage(r.Context(), file, header.Size, header.Filename, mime, "")
 	if err != nil {
 		serverError(w, err)
 		return
 	}
-	id, err := s.store.SaveStorageImage(r.Context(), uid, stored.Key, stored.URL, "image")
+	id, err := s.store.SaveStorageImage(r.Context(), uid, stored.Key, stored.URL, "image", safeUploadFileName(header.Filename), mime, header.Size)
 	if err != nil {
+		if deleteErr := s.s3.DeleteObject(r.Context(), stored.Key); deleteErr != nil {
+			log.Printf("delete unattached image %q: %v", stored.Key, deleteErr)
+		}
 		serverError(w, err)
 		return
 	}
@@ -97,9 +113,11 @@ func (s *Server) handleUploadVideo(w http.ResponseWriter, r *http.Request) {
 		serverError(w, err)
 		return
 	}
-	id, err := s.store.SaveStorageImage(r.Context(), uid, stored.Key, stored.URL, "video")
+	id, err := s.store.SaveStorageImage(r.Context(), uid, stored.Key, stored.URL, "video", safeUploadFileName(header.Filename), mime, header.Size)
 	if err != nil {
-		_ = s.s3.DeleteObject(r.Context(), stored.Key)
+		if deleteErr := s.s3.DeleteObject(r.Context(), stored.Key); deleteErr != nil {
+			log.Printf("delete unattached video %q: %v", stored.Key, deleteErr)
+		}
 		serverError(w, err)
 		return
 	}

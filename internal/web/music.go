@@ -197,7 +197,7 @@ func (s *Server) handleUploadTrack(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	originalName := header.Filename
+	originalName := safeUploadFileName(header.Filename)
 	if i := strings.LastIndex(originalName, "."); i >= 0 {
 		originalName = originalName[:i]
 	}
@@ -208,7 +208,7 @@ func (s *Server) handleUploadTrack(w http.ResponseWriter, r *http.Request) {
 	if n := strings.TrimSpace(r.FormValue("name")); n != "" {
 		displayName = n
 	}
-	fileName := header.Filename
+	fileName := safeUploadFileName(header.Filename)
 	if fileName == "" {
 		fileName = displayName
 	}
@@ -220,6 +220,9 @@ func (s *Server) handleUploadTrack(w http.ResponseWriter, r *http.Request) {
 
 	track, err := s.store.CreateMusicTrack(r.Context(), uid, displayName, stored.Key, fileName, durationSec, header.Size, mime)
 	if err != nil {
+		if deleteErr := s.s3.DeleteObject(r.Context(), stored.Key); deleteErr != nil {
+			log.Printf("delete unattached music track %q: %v", stored.Key, deleteErr)
+		}
 		serverError(w, err)
 		return
 	}

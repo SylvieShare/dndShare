@@ -278,7 +278,9 @@ func (s *Server) handleSuggestUploadSvg(w http.ResponseWriter, r *http.Request) 
 		serverError(w, err)
 		return
 	}
-	svgID, err := s.store.SaveSuggestSvg(r.Context(), string(data))
+	svgID, err := s.store.SaveOwnedSuggestSvg(
+		r.Context(), uid, string(data), safeUploadFileName(header.Filename), "image/svg+xml", int64(len(data)),
+	)
 	if err != nil {
 		serverError(w, err)
 		return

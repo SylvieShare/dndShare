@@ -60,6 +60,7 @@ Vite работает на `:5173` и проксирует `/api` и `/mcp` в G
 | Popover/контекстное меню | `share-ui/BasePopover`, `ActionMenu`, `ActionMenuItem`, `ActionMenuSubmenu` | Неблокирующий контент, привязанный к управляющему элементу. Меню поддерживает стандартный trigger и feature-trigger через slot; программно привязанный action popover выбирает `transitionPreset="action-menu"`; вложенное меню остаётся внутри visual viewport, не закрывает родителя и корректно работает на mobile. Локальный `RowActionItem.vue` только сопоставляет DnD action names с Lucide-иконками. |
 | Перетаскивание | `share-ui/useSortable` | Сортировка и перенос между группами. `useSortable` ведёт drag-состояние, `reorderByDrop` выполняет чистую перестановку массива. |
 | Переключатели | `share-ui/MultiToggle`, `share-ui/ToggleSwitch`, `share-ui/CompactCheckbox` | Выбор режима, boolean и компактный checkbox соответственно. |
+| Кольцевая разбивка | `share-ui/SegmentDonutChart` | Нейтральный donut с легендой, форматтером значений и центральным slot. Доменные категории, цвета и данные остаются в приложении. |
 | Каркас и левое меню | `share-ui/AppShell`, `share-ui/AppSidebar`, `share-ui/Sidebar*`, `share-ui/AccountMenu` | Единая геометрия приложения, DnD-стиль rail и trigger аккаунта с выпадающими действиями. Router, права, поиск, данные профиля и сами account-actions передаёт локальный adapter. |
 | Каталог страницы сессии | `features/sessions/components/SessionLibraryWorkspace.vue` | Общий dotted workspace, safe-area от игроков и геометрия sidebar/detail для локаций, NPC и материалов. Предметные компоненты передают внутрь собственные список, detail и окна. |
 
@@ -107,6 +108,14 @@ local storage внутри общего компонента. Локальный
 
 На ширине до 640 px desktop rail скрыт, а сверху используется
 `AppHeader`.
+
+Действие **«Аккаунт»** находится в меню профиля непосредственно над выходом и
+ведёт на `/account`. Страница имеет две доступные keyboard-вкладки: смена пароля
+и использование пространства. Вторая вкладка загружает статистику только при
+первом открытии, показывает общую `SegmentDonutChart`, счётчики неизвестных
+размеров и подробный список личных изображений, SVG, видео и музыки. HTTP и
+авторизация остаются в feature-коде; в `share-ui` вынесена только механика
+нейтрального графика.
 
 По умолчанию маршрут использует режим `flow`: `AppHeader` находится в обычном
 потоке документа и естественно уезжает вместе со страницей без JS-наблюдения за

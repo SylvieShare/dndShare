@@ -111,7 +111,7 @@ func (s *Service) PresignGet(ctx context.Context, key string, ttl time.Duration)
 	return req.URL, nil
 }
 
-// ObjectSize returns the current S3 object size for deployment verification.
+// ObjectSize returns the current S3 object size without downloading its body.
 func (s *Service) ObjectSize(ctx context.Context, key string) (int64, error) {
 	result, err := s.client.HeadObject(ctx, &s3.HeadObjectInput{
 		Bucket: aws.String(s.cfg.Bucket),

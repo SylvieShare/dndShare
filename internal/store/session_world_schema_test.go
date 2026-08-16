@@ -35,8 +35,8 @@ func TestSessionWorldSchemaUsesTreeAndExplicitAssociations(t *testing.T) {
 }
 
 func TestSessionWorldSchemaRunsAfterSessionTables(t *testing.T) {
-	if schemaParts[len(schemaParts)-1].name != "session-material-types" {
-		t.Fatalf("last schema part = %q, want session-material-types", schemaParts[len(schemaParts)-1].name)
+	if schemaParts[len(schemaParts)-1].name != "user-storage" {
+		t.Fatalf("last schema part = %q, want user-storage", schemaParts[len(schemaParts)-1].name)
 	}
 }
 

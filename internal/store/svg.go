@@ -28,6 +28,18 @@ func (s *Store) SaveSvg(ctx context.Context, data string) (int64, error) {
 	return id, err
 }
 
+// SaveOwnedSvg stores an SVG uploaded by a user together with the metadata
+// required for personal storage accounting. System-generated SVGs use SaveSvg.
+func (s *Store) SaveOwnedSvg(ctx context.Context, userID int64, data, fileName, mimeType string, fileSize int64) (int64, error) {
+	var id int64
+	err := s.pool.QueryRow(ctx,
+		`INSERT INTO dndshare.svg_storage ("data", user_id, file_name, mime_type, file_size)
+		 VALUES ($1, $2, NULLIF($3, ''), NULLIF($4, ''), $5)
+		 RETURNING id`, data, userID, fileName, mimeType, fileSize,
+	).Scan(&id)
+	return id, err
+}
+
 // DeleteSvg удаляет разметку SVG по id (порт SvgStorageRepository.delete).
 func (s *Store) DeleteSvg(ctx context.Context, id int64) error {
 	_, err := s.pool.Exec(ctx,
