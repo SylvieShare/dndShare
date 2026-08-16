@@ -67,7 +67,6 @@
         class="chapter-primary-tab"
         :class="{ 'chapter-primary-tab--active': primaryView === view.key }"
         :aria-current="primaryView === view.key ? 'page' : undefined"
-        :disabled="locked"
         @click="$emit('select-view', view.key)"
       >
         <component :is="view.icon" :size="14" />
@@ -101,6 +100,7 @@
           <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 2.5h10v11H3zM5.5 5.5h5M5.5 8h5M5.5 10.5h3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
         </button>
       </div>
+      <span v-if="isDm" class="chapter-toolbar-rule chapter-toolbar-rule--settings" />
       <SessionSettingsControl
         v-if="isDm"
         :hide-canvas-legend="settings.hideCanvasLegend"

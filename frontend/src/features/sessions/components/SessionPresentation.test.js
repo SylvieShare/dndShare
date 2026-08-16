@@ -36,7 +36,7 @@ describe('session presentation workspace', () => {
   })
 
   it('adds image and material blocks that broadcast existing materials', () => {
-    expect(blockEditor).toContain("blockType === 'image'")
+    expect(blockEditor).toContain("blockType.value === 'image'")
     expect(blockEditor).toContain('draft.materialId')
     expect(blockMenu).toContain("block.type === 'image'")
     expect(blockEditor).toContain("blockType.value === 'material'")

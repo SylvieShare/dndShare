@@ -13,6 +13,7 @@ const sceneSource = readFileSync(fileURLToPath(new URL('./SceneGraphNode.vue', i
 const sceneMenuSource = readFileSync(fileURLToPath(new URL('./SceneGraphMenus.vue', import.meta.url)), 'utf8')
 const edgeMenuSource = readFileSync(fileURLToPath(new URL('./NestedEdgeMenus.vue', import.meta.url)), 'utf8')
 const blockEditorSource = readFileSync(fileURLToPath(new URL('./SceneBlockEditorModal.vue', import.meta.url)), 'utf8')
+const referenceCreateSource = readFileSync(fileURLToPath(new URL('./SceneReferenceCreateModal.vue', import.meta.url)), 'utf8')
 const combatEditorSource = readFileSync(fileURLToPath(new URL('./SceneCombatCreaturesEditor.vue', import.meta.url)), 'utf8')
 const sessionPageSource = readFileSync(fileURLToPath(new URL('../pages/ViewSession.vue', import.meta.url)), 'utf8')
 const edgeEditorSource = readFileSync(fileURLToPath(new URL('../composables/useNestedEdgeEditor.js', import.meta.url)), 'utf8')
@@ -172,6 +173,21 @@ describe('session graph canvas', () => {
       expect(entityBlockSource).toContain(field)
     }
     expect(entityBlockSource).toContain('resolvedRelations')
+    expect(entityBlockSource).toContain('Заметка в сценарии')
+  })
+
+  it('selects or creates catalogue references before placing them on the canvas', () => {
+    expect(source).toContain('referenceBlockTypes.has(type)')
+    expect(source).toContain(':fixed-type="creatingBlockType"')
+    expect(source).toContain('@select="createReferenceBlock"')
+    expect(source).toContain('<SceneReferenceCreateModal')
+    expect(referenceCreateSource).toContain('<LocationEditorModal')
+    expect(referenceCreateSource).toContain('<NpcEditorModal')
+    expect(referenceCreateSource).toContain('<QuestEditorModal')
+    expect(referenceCreateSource).toContain('<MaterialEditorModal')
+    expect(blockEditorSource).toContain('v-if="!isReferenceBlock" label="Название"')
+    expect(blockEditorSource).toContain('label="Заметка на холсте"')
+    expect(blockSource).toContain('referenceEntity.value?.name')
   })
 
   it('opens scenario actions from the whole card without an ellipsis trigger', () => {

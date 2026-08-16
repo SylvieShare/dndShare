@@ -91,7 +91,7 @@ describe('ViewSession participant rail', () => {
 
   it('moves the player rail through compact, normal and combat states without losing the saved preference', () => {
     expect(source).toContain("'campaign-workspace--players-collapsed': playersRailMode === 'compact'")
-    expect(source).toContain('useSessionParticipantRail({ sessionUuid, workspaceMotionMode })')
+    expect(source).toContain('useSessionParticipantRail({ sessionUuid, workspaceMotionMode: visibleWorkspaceMotionMode })')
     expect(participantRailSource).toContain('dnd-share:session-players-rail:v1:')
     expect(participantRailSource).toContain("localStorage.setItem(storageKey, value ? 'collapsed' : 'normal')")
     expect(participantRailSource).toContain("const mode = computed(() => workspaceMotionMode.value === 'combat'")
@@ -99,7 +99,7 @@ describe('ViewSession participant rail', () => {
     expect(participantRailSource).toContain("if (mode.value === 'combat') return")
     expect(source).toContain(':compact="playersRailMode === \'compact\'"')
     expect(source).toContain('<PanelLeftOpen v-if="playersRailMode === \'compact\'"')
-    expect(source).toContain(':disabled="workspaceMotionMode === \'combat\'"')
+    expect(source).toContain(':disabled="playersRailMode === \'combat\'"')
     expect(source).toContain('@click="togglePlayersRail"')
     expect(source).toContain("'players-rail-toggle--error': kickError || colorError || participantOrderError")
     expect(styles).toMatch(/\.campaign-workspace--players-collapsed \.campaign-graph\s*\{[^}]*--chapter-safe-left:\s*94px;/s)
@@ -234,7 +234,7 @@ describe('ViewSession participant rail', () => {
   it('reuses one encounter in the combat workspace and the expanding player rail', () => {
     expect(source).toContain('const encounter = reactive(useEncounter({')
     expect(source).toContain(':encounter="encounter"')
-    expect(source).toContain(':combat-mode="workspaceMotionMode === \'combat\'"')
+    expect(source).toContain(':combat-mode="playersRailMode === \'combat\'"')
     expect(styles).toContain('.campaign-workspace--combat .workspace-dock--left')
     expect(styles).toContain('width: 360px;')
     expect(styles).toContain('--chapter-safe-left: 402px;')

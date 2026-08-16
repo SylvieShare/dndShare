@@ -82,6 +82,13 @@ viewport edge. At widths up to `1360px` the right tool rail is hidden so the
 split location/NPC workspaces retain a useful detail width; the participant rail
 disappears only on mobile.
 
+The primary switch remains active at every story depth and while combat is
+open. Opening a catalogue hides, but does not reset or unmount, the current
+story/combat workspace. Each catalogue selection stays in its own query key, so
+returning to a catalogue restores the previously selected location, NPC, quest
+or material. The settings control is visually separated from the dice, music
+and log group by its own vertical divider.
+
 Постоянные icon-кнопки в командной шапке независимо открывают и закрывают
 целые панели кубиков, музыки и событий. Выбранная видимость сохраняется в
 `localStorage` и восстанавливается при следующем открытии страницы; состояние
@@ -402,8 +409,15 @@ actual image or written content. Every reference card also resolves and renders
 the current universal links, so edits to a catalogue object appear on the
 scenario canvas without copying its data into the block.
 Location, NPC, quest and material create actions are visually separated into an
-`Объекты сессии` group. The first three store a validated entity reference and
-render live catalogue data rather than copying it into the block.
+`Объекты сессии` group. Each action first opens the universal picker locked to
+that entity type; choosing a row creates the block immediately. The type header
+also has a transparent dashed create action, which opens the canonical entity
+editor and places the newly created object on the canvas after save. Reference
+blocks have no independent title: the heading and full preview always resolve
+the current catalogue name. Their editor only changes the reference and an
+optional scenario-local note, which is rendered below the live preview. The
+first three types store a validated entity reference and render live catalogue
+data rather than copying it into the block.
 Block edges are re-measured after content or width changes, and dragging the
 right edge persists a width in the `220..640px` range. Clicking the pinned
 scenario opens a reduced menu with return-to-scenarios, status and edit actions;

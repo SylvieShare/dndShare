@@ -68,6 +68,10 @@
         </span>
       </div>
     </footer>
+    <section v-if="note" class="scene-entity-canvas-note">
+      <strong>Заметка в сценарии</strong>
+      <p>{{ note }}</p>
+    </section>
   </div>
   <span v-else class="scene-entity-empty">Объект не найден</span>
 </template>
@@ -83,6 +87,7 @@ import { npcImageUrl, sessionImageUrl } from '@/features/sessions/lib/sessionIma
 const props = defineProps({
   type: { type: String, required: true },
   referenceId: { type: [Number, String], default: null },
+  note: { type: String, default: '' },
 })
 
 const sessionMaterials = inject('sessionMaterials', null)
@@ -175,5 +180,6 @@ const materialMeta = computed(() => materialType(entity.value?.kind))
 .scene-entity-relations > div { display: flex; flex-wrap: wrap; gap: 4px; }
 .scene-entity-relations > div > span { display: inline-flex; align-items: center; gap: 5px; padding: 3px 6px; border-radius: 6px; background: color-mix(in srgb, var(--relation-color) 8%, var(--surface-raised)); color: var(--text-2); font-size: 8px; }
 .scene-entity-relations i { width: 5px; height: 5px; flex: none; border-radius: 50%; background: var(--relation-color); }
+.scene-entity-canvas-note { padding: 9px 10px; border: 1px dashed color-mix(in srgb, var(--block-color) 38%, var(--border)); border-radius: 8px; background: color-mix(in srgb, var(--block-color) 6%, transparent); }.scene-entity-canvas-note strong { display: block; margin-bottom: 4px; color: var(--block-color); font-size: 8px; letter-spacing: .08em; text-transform: uppercase; }.scene-entity-canvas-note p { margin: 0; color: var(--text-2); font-size: 10px; line-height: 1.5; white-space: pre-wrap; }
 .scene-entity-empty { color: var(--text-muted); font-size: 10px; font-style: italic; }
 </style>

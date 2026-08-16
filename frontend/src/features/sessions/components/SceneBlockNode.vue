@@ -2,7 +2,7 @@
   <article class="scene-block-node" :style="{ '--block-color': sceneBlockColor(block.type) }">
     <header class="scene-block-node-heading">
       <span>{{ fallbackTitle }}</span>
-      <strong>{{ block.title || fallbackTitle }}</strong>
+      <strong>{{ displayTitle }}</strong>
     </header>
     <div class="scene-block-node-preview">
       <template v-if="block.type === 'list'">
@@ -48,6 +48,7 @@
         v-else-if="['location', 'npc', 'quest', 'material'].includes(block.type)"
         :type="block.type"
         :reference-id="block.type === 'material' ? block.materialId : block.data?.referenceId"
+        :note="block.data?.note"
       />
       <RichContent v-else-if="block.data?.text" class="scene-block-node-text" :html="block.data.text" />
       <span v-else class="scene-block-node-empty">Описание пусто</span>
@@ -77,7 +78,18 @@ const previewRows = computed(() => {
 const creatures = computed(() => Array.isArray(props.block.data?.creatures) ? props.block.data.creatures : [])
 const rewardItems = computed(() => Array.isArray(props.block.data?.items) ? props.block.data.items : [])
 const sessionMaterials = inject('sessionMaterials', null)
+const sessionWorld = inject('sessionWorld', null)
 const material = computed(() => sessionMaterials?.byId(props.block.materialId) || null)
+const referenceEntity = computed(() => {
+  const id = Number(props.block.type === 'material' ? props.block.materialId : props.block.data?.referenceId)
+  if (!id) return null
+  if (props.block.type === 'material') return sessionMaterials?.byId(id) || null
+  if (props.block.type === 'location') return sessionWorld?.locationsById.value.get(id) || null
+  if (props.block.type === 'npc') return sessionWorld?.npcsById.value.get(id) || null
+  if (props.block.type === 'quest') return sessionWorld?.questsById.value.get(id) || null
+  return null
+})
+const displayTitle = computed(() => referenceEntity.value?.name || props.block.title || fallbackTitle.value)
 
 function itemById(id) {
   return props.itemsById.get(String(id)) ?? null

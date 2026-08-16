@@ -27,7 +27,7 @@
       v-else-if="session"
       class="campaign-workspace"
       :class="{
-        'campaign-workspace--combat': workspaceMotionMode === 'combat',
+        'campaign-workspace--combat': primaryView === 'story' && workspaceMotionMode === 'combat',
         'campaign-workspace--players-collapsed': playersRailMode === 'compact',
         'campaign-workspace--hotkeys': isDm && primaryView === 'story' && workspaceMotionMode !== 'combat',
         'campaign-workspace--right-dock': rightDockOpen,
@@ -85,6 +85,7 @@
         </template>
         <SessionCenterWorkspace
           v-if="workspaceMode === 'combat' && (workspaceRevealed || workspaceClosing)"
+          v-show="primaryView === 'story'"
           :closing="workspaceClosing"
           :session-uuid="sessionUuid"
           :session="session"
@@ -127,7 +128,7 @@
             :title="playersRailMode === 'compact' ? 'Развернуть игроков' : 'Свернуть игроков'"
             :aria-label="playersRailMode === 'compact' ? 'Развернуть игроков' : 'Свернуть игроков'"
             :aria-expanded="playersRailMode !== 'compact'"
-            :disabled="workspaceMotionMode === 'combat'"
+            :disabled="playersRailMode === 'combat'"
             @click="togglePlayersRail"
           >
             <PanelLeftOpen v-if="playersRailMode === 'compact'" :size="15" />
@@ -148,7 +149,7 @@
             :reorder-placeholder="participantSortable.isSource(p)"
             :should-suppress-reorder-click="participantSortable.shouldSuppressClick"
             :compact="playersRailMode === 'compact'"
-            :combat-mode="workspaceMotionMode === 'combat'"
+            :combat-mode="playersRailMode === 'combat'"
             :combatant="encounterPlayer(p.charId)"
             :combat-selected="isEncounterPlayerSelected(p.charId)"
             :combat-current="isEncounterPlayerCurrent(p.charId)"
@@ -460,10 +461,11 @@ async function openRelatedScene(sceneId) {
 	await nextTick()
 	await openSceneWorkspace(scene)
 }
+const visibleWorkspaceMotionMode = computed(() => primaryView.value === 'story' ? workspaceMotionMode.value : null)
 const {
   mode: playersRailMode,
   toggle: togglePlayersRail,
-} = useSessionParticipantRail({ sessionUuid, workspaceMotionMode })
+} = useSessionParticipantRail({ sessionUuid, workspaceMotionMode: visibleWorkspaceMotionMode })
 
 async function refreshParticipants() {
   const fresh = await getSession(sessionUuid)

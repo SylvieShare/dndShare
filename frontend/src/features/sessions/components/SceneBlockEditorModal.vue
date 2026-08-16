@@ -1,7 +1,7 @@
 <template>
   <AppModalFrame :title="block ? 'Редактировать блок' : `Новый блок · ${typeLabel}`" wide @close="$emit('close')">
     <div class="scene-block-editor">
-      <FormField label="Название" vertical>
+      <FormField v-if="!isReferenceBlock" label="Название" vertical>
         <FormTextInput v-model:value="draft.title" :maxlength="200" autofocus />
       </FormField>
 
@@ -22,18 +22,18 @@
         <SceneRewardItemsEditor v-model="draft.items" />
       </FormField>
 
-	  <FormField v-else-if="isEntityBlock" :label="`Выберите: ${typeLabel}`" vertical>
-		<div v-if="selectedEntity" class="scene-block-material-selected">
-		  <img v-if="selectedEntity.image" :src="selectedEntity.image" alt="" />
-		  <span v-else class="scene-block-material-icon" :style="{ color: selectedEntity.color || selectedEntity.typeMeta.color }">{{ selectedEntity.title.slice(0, 1) }}</span>
-		  <span><strong>{{ selectedEntity.title }}</strong><small>{{ selectedEntity.subtitle || selectedEntity.typeMeta.singular }}</small></span>
-		  <button type="button" @click="entityPickerOpen = true">Сменить</button>
+	  <FormField v-else-if="isReferenceBlock" :label="`Выбрано: ${typeLabel}`" vertical>
+		<div v-if="selectedReference" class="scene-block-material-selected">
+		  <img v-if="selectedReference.image" :src="selectedReference.image" alt="" />
+		  <span v-else class="scene-block-material-icon" :style="{ color: selectedReference.color || selectedReference.typeMeta.color }">{{ selectedReference.title.slice(0, 1) }}</span>
+		  <span><strong>{{ selectedReference.title }}</strong><small>{{ selectedReference.subtitle || selectedReference.typeMeta.singular }}</small></span>
+		  <button type="button" @click="referencePickerOpen = true">Сменить</button>
 		</div>
-		<button v-else type="button" class="scene-block-material-pick" :disabled="!entityOptions.length" @click="entityPickerOpen = true">{{ entityOptions.length ? `Выбрать ${typeLabel}` : 'Нет доступных объектов' }}</button>
-		<UniversalRelationPickerModal v-if="entityPickerOpen" :items="entityOptions" @close="entityPickerOpen = false" @select="selectEntity" />
+		<button v-else type="button" class="scene-block-material-pick" :disabled="!referenceOptions.length" @click="referencePickerOpen = true">{{ referenceOptions.length ? `Выбрать ${typeLabel}` : 'Нет доступных объектов' }}</button>
+		<UniversalRelationPickerModal v-if="referencePickerOpen" :items="referenceOptions" :fixed-type="blockType" @close="referencePickerOpen = false" @select="selectReference" />
 	  </FormField>
 
-      <FormField v-else-if="isMaterialBlock" :label="blockType === 'image' ? 'Изображение для показа' : 'Материал'" vertical>
+      <FormField v-else-if="isImageBlock" label="Изображение для показа" vertical>
         <div v-if="selectedMaterial" class="scene-block-material-selected">
           <img v-if="['image', 'map'].includes(selectedMaterial.kind)" :src="selectedMaterial.assetUrl" alt="" />
           <span v-else class="scene-block-material-icon"><component :is="materialType(selectedMaterial.kind).icon" :size="23" /></span>
@@ -41,12 +41,12 @@
           <button type="button" @click="materialPickerOpen = true">Сменить</button>
         </div>
         <button v-else type="button" class="scene-block-material-pick" :disabled="!availableMaterials.length" @click="materialPickerOpen = true">
-          {{ availableMaterials.length ? 'Выбрать материал' : blockType === 'image' ? 'Нет доступных изображений' : 'Нет доступных материалов' }}
+          {{ availableMaterials.length ? 'Выбрать материал' : 'Нет доступных изображений' }}
         </button>
         <small class="scene-block-material-hint">Поиск идёт по материалам, доступным в текущей главе и сценарии.</small>
         <WorldRelationPickerModal
           v-if="materialPickerOpen"
-          :title="blockType === 'image' ? 'Выбрать изображение' : 'Выбрать материал'"
+          title="Выбрать изображение"
           :items="materialOptions"
           placeholder="Поиск по материалам…"
           empty-text="Подходящих материалов пока нет"
@@ -92,12 +92,21 @@
           <button type="button" class="scene-block-editor-add" @click="addDialogueRow">+ Добавить реплику</button>
         </div>
       </FormField>
+
+      <FormField v-if="block && isReferenceBlock" label="Заметка на холсте" vertical>
+        <FormTextarea
+          v-model:value="draft.note"
+          :rows="4"
+          :maxlength="2000"
+          placeholder="Контекст этого объекта в текущем сценарии…"
+        />
+      </FormField>
     </div>
 
     <template #footer>
       <FormActionButtons
         :loading="saving"
-		:can-submit="!!draft.title.trim() && (!isMaterialBlock || !!draft.materialId) && (!isEntityBlock || !!draft.referenceId)"
+		:can-submit="(isReferenceBlock || !!draft.title.trim()) && (!isImageBlock || !!draft.materialId) && (!isReferenceBlock || !!selectedReference)"
         @cancel="$emit('close')"
         @submit="save"
       />
@@ -107,7 +116,7 @@
 
 <script setup>
 import { computed, getCurrentInstance, inject, provide, reactive, ref } from 'vue'
-import { AppModalFrame, ColorPresetPicker } from '@sylvieshare/share-ui'
+import { AppModalFrame, ColorPresetPicker, FormTextarea } from '@sylvieshare/share-ui'
 import InputDescription from '@/shared/ui/InputDescription.vue'
 import SceneCombatCreaturesEditor from '@/features/sessions/components/SceneCombatCreaturesEditor.vue'
 import SceneRewardItemsEditor from '@/features/sessions/components/SceneRewardItemsEditor.vue'
@@ -134,12 +143,17 @@ const typeLabel = computed(() => sceneBlockType(blockType.value).label.toLowerCa
 const defaultTitles = { text: 'Новое описание', list: 'Новый диалог', combat: 'Новый бой', reward: 'Новая награда', image: 'Новое изображение', material: 'Новый материал', location: 'Локация', npc: 'NPC', quest: 'Задание' }
 const sessionMaterials = inject('sessionMaterials', null)
 const sessionWorld = inject('sessionWorld', null)
-const isMaterialBlock = computed(() => blockType.value === 'image' || blockType.value === 'material')
-const isEntityBlock = computed(() => ['location', 'npc', 'quest'].includes(blockType.value))
+const isImageBlock = computed(() => blockType.value === 'image')
+const isReferenceBlock = computed(() => ['location', 'npc', 'quest', 'material'].includes(blockType.value))
 const entityCatalog = computed(() => buildSessionEntityCatalog(sessionWorld, sessionMaterials))
-const entityOptions = computed(() => entityCatalog.value.filter(item => item.type === blockType.value))
-const availableMaterials = computed(() => (sessionMaterials?.availableFor(props.sceneId) || [])
-  .filter(material => blockType.value === 'material' || material.kind === 'image' || material.kind === 'map'))
+const referenceOptions = computed(() => entityCatalog.value.filter(item => {
+  if (item.type !== blockType.value) return false
+  if (item.type !== 'material') return true
+  return sceneMaterials.value.some(material => String(material.id) === String(item.id))
+}))
+const sceneMaterials = computed(() => sessionMaterials?.availableFor(props.sceneId) || [])
+const availableMaterials = computed(() => sceneMaterials.value
+	.filter(material => material.kind === 'image' || material.kind === 'map'))
 const selectedMaterial = computed(() => availableMaterials.value.find(material => String(material.id) === String(draft.materialId)) || null)
 const materialOptions = computed(() => availableMaterials.value.map(material => ({
   id: material.id,
@@ -150,7 +164,7 @@ const materialOptions = computed(() => availableMaterials.value.map(material => 
   color: 'var(--accent)',
 })))
 const materialPickerOpen = ref(false)
-const entityPickerOpen = ref(false)
+const referencePickerOpen = ref(false)
 const dialogueKeysListId = `scene-dialogue-keys-${getCurrentInstance()?.uid ?? 'editor'}`
 const initialDialogueRows = hydrateDialogueRows(props.block?.data?.rows?.length
   ? props.block.data.rows
@@ -165,10 +179,13 @@ const draft = reactive({
   items: Array.isArray(props.block?.data?.items)
     ? props.block.data.items.map(item => ({ ...item }))
     : [],
-  materialId: props.block?.materialId || null,
+	materialId: props.block?.materialId || null,
 	referenceId: props.block?.data?.referenceId || null,
+	note: props.block?.data?.note || '',
 })
-const selectedEntity = computed(() => entityOptions.value.find(item => String(item.id) === String(draft.referenceId)) || null)
+const selectedReference = computed(() => referenceOptions.value.find(item => String(item.id) === String(
+  blockType.value === 'material' ? draft.materialId : draft.referenceId,
+)) || null)
 const descriptionBlock = { id: 'scene-block-description', content: { placeholder: 'Текст описания' } }
 const dialogueSuggestions = computed(() => dialogueKeySuggestions(draft.rows))
 
@@ -203,17 +220,21 @@ function selectMaterial(materialId) {
   materialPickerOpen.value = false
 }
 
-function selectEntity(item) { draft.referenceId = Number(item.id); entityPickerOpen.value = false }
+function selectReference(item) {
+  if (blockType.value === 'material') draft.materialId = Number(item.id)
+  else draft.referenceId = Number(item.id)
+  referencePickerOpen.value = false
+}
 
 function save() {
-  if (isMaterialBlock.value && !draft.materialId) return
-	if (isEntityBlock.value && !draft.referenceId) return
+  if (isImageBlock.value && !draft.materialId) return
+	if (isReferenceBlock.value && !selectedReference.value) return
   emit('save', {
     type: blockType.value,
-    title: draft.title.trim(),
+    title: isReferenceBlock.value ? selectedReference.value.title : draft.title.trim(),
     width: props.block?.width || sceneBlockDefaultWidth(blockType.value),
-    materialId: isMaterialBlock.value ? draft.materialId : null,
-    materialChanged: isMaterialBlock.value,
+    materialId: isImageBlock.value || blockType.value === 'material' ? draft.materialId : null,
+    materialChanged: isImageBlock.value || blockType.value === 'material',
     data: blockType.value === 'list'
       ? { rows: draft.rows
         .filter(row => row.left.trim() || row.right.trim())
@@ -222,8 +243,9 @@ function save() {
         ? { creatures: draft.creatures.map(creature => ({ ...creature })) }
         : blockType.value === 'reward'
           ? { items: draft.items.map(item => ({ ...item })) }
-		: isMaterialBlock.value ? {}
-		  : isEntityBlock.value ? { referenceId: draft.referenceId }
+		: isImageBlock.value ? {}
+		  : blockType.value === 'material' ? { note: draft.note.trim() || null }
+		  : isReferenceBlock.value ? { referenceId: draft.referenceId, note: draft.note.trim() || null }
 		  : { text: draft.text },
   })
 }

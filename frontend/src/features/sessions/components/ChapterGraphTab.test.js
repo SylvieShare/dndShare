@@ -90,6 +90,8 @@ describe('chapter graph workspace', () => {
     expect(toolbar).toContain('.chapter-toolbar-left { min-width: 0; display: flex;')
     expect(toolbar).toContain('.chapter-primary-nav { display: flex; align-items: center; justify-self: center;')
     expect(toolbar).toContain('.chapter-toolbar-view { justify-self: end; }')
+    expect(toolbar).toContain('class="chapter-toolbar-rule chapter-toolbar-rule--settings"')
+    expect(toolbar).not.toContain(':disabled="locked"\n        @click="$emit(\'select-view\', view.key)"')
   })
 
   it('renders the explicit chapter prefix on every graph node', () => {

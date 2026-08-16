@@ -157,6 +157,22 @@
       @close="closeBlockEditor"
       @save="saveBlock"
     />
+    <UniversalRelationPickerModal
+      v-if="referencePickerOpen"
+      :items="referencePickerItems"
+      :fixed-type="creatingBlockType"
+      :creatable-types="[creatingBlockType]"
+      @close="closeReferencePicker"
+      @select="createReferenceBlock"
+      @create="openReferenceCreate"
+    />
+    <SceneReferenceCreateModal
+      v-if="referenceCreateOpen"
+      :type="creatingBlockType"
+      @close="referenceCreateOpen = false"
+      @saved="createReferenceBlock"
+      @error="actionError = 'Не удалось создать объект сессии'"
+    />
     <ChapterEdgeModal
       v-if="nestedEdgeEditorOpen && editingNestedEdge"
       :edge="editingNestedEdge"
@@ -190,11 +206,14 @@ import SceneBlockNode from '@/features/sessions/components/SceneBlockNode.vue'
 import SceneEditorModal from '@/features/sessions/components/SceneEditorModal.vue'
 import SceneGraphMenus from '@/features/sessions/components/SceneGraphMenus.vue'
 import SceneGraphNode from '@/features/sessions/components/SceneGraphNode.vue'
+import SceneReferenceCreateModal from '@/features/sessions/components/SceneReferenceCreateModal.vue'
+import UniversalRelationPickerModal from '@/features/sessions/components/UniversalRelationPickerModal.vue'
 import { useNestedEdgeEditor } from '@/features/sessions/composables/useNestedEdgeEditor'
 import { useSessionGraphNavigation } from '@/features/sessions/composables/useSessionGraphNavigation'
 import { CHAPTER_STATUSES, SCENE_STATUSES } from '@/features/sessions/lib/chapterGraph'
 import { narrativeCanvasActions, narrativeCanvasEmptyCopy, narrativeCanvasLoadingLabel } from '@/features/sessions/lib/narrativeCanvas'
 import { sceneBlockDefaultWidth } from '@/features/sessions/lib/sceneBlockTypes'
+import { buildSessionEntityCatalog } from '@/features/sessions/lib/sessionEntityRelations'
 
 const props = defineProps({
   graph: { type: Object, required: true },
@@ -234,6 +253,9 @@ const blockEditorOpen = ref(false)
 const editingBlock = ref(null)
 const creatingBlockType = ref('text')
 const blockCreatePosition = ref({ x: 48, y: 210 })
+const referencePickerOpen = ref(false)
+const referenceCreateOpen = ref(false)
+const referenceBlockTypes = new Set(['location', 'npc', 'quest', 'material'])
 const pendingDelete = ref(null)
 const {
   displayLevel,
@@ -285,6 +307,12 @@ const showChapterAncestor = computed(() => ['scenes', 'blocks'].includes(display
 const canvasActions = computed(() => narrativeCanvasActions(displayLevel.value))
 const emptyCopy = computed(() => narrativeCanvasEmptyCopy(displayLevel.value))
 const loadingLabel = computed(() => narrativeCanvasLoadingLabel(displayLevel.value))
+const referencePickerItems = computed(() => {
+  const catalog = buildSessionEntityCatalog(sessionWorld, sessionMaterials)
+  if (creatingBlockType.value !== 'material') return catalog
+  const availableIds = new Set((sessionMaterials?.availableFor(selectedScene.value?.id) || []).map(item => String(item.id)))
+  return catalog.filter(item => item.type !== 'material' || availableIds.has(String(item.id)))
+})
 
 function openChapterAncestorMenu(event) {
   if (!props.isDm || !activeChapter.value) return
@@ -477,7 +505,38 @@ function openBlockCreate(type) {
   editingBlock.value = null
   creatingBlockType.value = type
   blockCreatePosition.value = canvas.value?.viewportCenter(sceneBlockDefaultWidth(type), activeNodeHeight.value) ?? { x: 48, y: 210 }
+  if (referenceBlockTypes.has(type)) {
+    referencePickerOpen.value = true
+    return
+  }
   blockEditorOpen.value = true
+}
+
+function closeReferencePicker() {
+  referencePickerOpen.value = false
+}
+
+function openReferenceCreate() {
+  referencePickerOpen.value = false
+  referenceCreateOpen.value = true
+}
+
+async function createReferenceBlock(item) {
+  if (!item || item.type !== creatingBlockType.value || saving.value) return
+  saving.value = true
+  actionError.value = ''
+  try {
+    const material = item.type === 'material'
+    await blockGraph.createItem({
+      type: item.type,
+      title: item.title,
+      width: sceneBlockDefaultWidth(item.type),
+      materialId: material ? Number(item.id) : null,
+      data: material ? {} : { referenceId: Number(item.id) },
+    }, blockCreatePosition.value)
+    referencePickerOpen.value = false
+    referenceCreateOpen.value = false
+  } catch { actionError.value = 'Не удалось добавить объект на холст' } finally { saving.value = false }
 }
 
 function openBlockEdit(block) {
