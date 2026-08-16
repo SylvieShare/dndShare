@@ -179,6 +179,8 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
 - `POST /api/sessions/{uuid}/chapter-edges` and `PATCH|DELETE
   /api/sessions/{uuid}/chapter-edges/{edgeId}`;
 - read/write encounter and music state;
+  authenticated music reads additionally include `syncedAt` and `serverTime`
+  millisecond timestamps so a reloaded remote controller can restore its clock;
 - `GET /api/sessions/{uuid}/materials` returns the owner-only material library.
   `POST /materials` and
   `PATCH|DELETE /materials/{materialId}` manage `{name,kind,caption,content,
@@ -192,7 +194,8 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
   100 MB, stores it in S3 and returns the same `{upload_id,url,key}` shape as
   image upload;
 - `GET|PUT /api/sessions/{uuid}/presentation` reads or replaces the owner-only
-  live player-display state `{mode,visible,materialId,effect,transition}`.
+  live player-display state
+  `{mode,visible,materialId,broadcastMusic,effect,transition}`.
   Modes are `idle`, `material`, `combat`; effects are `none`, `rain`,
   `fog`, `embers`, `snow`, `storm`; transitions are `cut` or `fade`. An explicit
   `idle,visible:true` is the cleared dotted canvas, while `visible:false` is the
@@ -200,6 +203,14 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
 - `GET /api/public/sessions/{uuid}/presentation` is the anonymous no-store safe
   projection used by `/screen/:uuid`; its material projection exposes only
   `{id,kind,name,caption,content,noteStyle,assetUrl}` required for playback;
+- `GET /api/public/sessions/{uuid}/presentation/events` is the anonymous SSE
+  invalidation stream. Events contain no session data: each `refresh` tells the
+  display to reload its safe projections. Heartbeats prevent proxy buffering
+  and idle disconnects;
+- `GET /api/public/sessions/{uuid}/presentation/music` returns the no-store
+  playback projection only while `broadcastMusic` is enabled: play/pause,
+  current position, volume, crossfade, loop mode and short-lived signed current
+  and queued track IDs/URLs. Personal tracks are checked against the session owner;
 - `GET /api/public/sessions/{uuid}/encounter` is the anonymous, no-store TV
   projection of the current fight. It returns only the session name, round,
   current turn and initiative-ordered combatants with presentation fields,

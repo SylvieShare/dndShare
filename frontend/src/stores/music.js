@@ -159,9 +159,11 @@ export const useMusicStore = defineStore('music', () => {
 
   const sessionUuid = ref(null)
   const isDm = ref(false)
+  const remotePlayback = ref(false)
   let saveTimer = null
   let positionTimer = null
   let crossfadeRaf = null
+  let persistedPlaying = false
   let urlCache = new Map() // trackId -> { url, expiresAt }
 
   function setContext({ uuid, dm }) {
@@ -180,9 +182,28 @@ export const useMusicStore = defineStore('music', () => {
     return res.url
   }
 
+  function outputVolume() {
+    return remotePlayback.value ? 0 : state.volume
+  }
+
+  function setRemotePlayback(enabled) {
+    remotePlayback.value = !!enabled
+    if (!activeEl || !idleEl) return
+    audioA.muted = remotePlayback.value
+    audioB.muted = remotePlayback.value
+    if (remotePlayback.value) {
+      activeEl.volume = 0
+      idleEl.volume = 0
+      if (persistedPlaying && !state.playing && state.trackId) resume().catch(() => {})
+    } else if (!state.crossfading) {
+      activeEl.volume = state.volume
+      idleEl.volume = 0
+    }
+  }
+
   function setVolume(v) {
     state.volume = Math.max(0, Math.min(1, v))
-    if (!state.crossfading && activeEl) activeEl.volume = state.volume
+    if (!state.crossfading && activeEl) activeEl.volume = outputVolume()
     schedulePersist()
   }
 
@@ -202,9 +223,10 @@ export const useMusicStore = defineStore('music', () => {
 
     if (immediate || state.crossfadeDurSec <= 0 || activeEl.paused) {
       activeEl.src = url
-      activeEl.volume = state.volume
+      activeEl.volume = outputVolume()
       await activeEl.play().catch(() => {})
       state.playing = true
+      persistedPlaying = true
       schedulePersist(true)
       return
     }
@@ -213,19 +235,22 @@ export const useMusicStore = defineStore('music', () => {
     idleEl.volume = 0
     await idleEl.play().catch(() => {})
     runCrossfade()
+    state.playing = true
+    persistedPlaying = true
+    schedulePersist(true)
   }
 
   function runCrossfade() {
     state.crossfading = true
     const dur = state.crossfadeDurSec * 1000
-    const startVol = state.volume
     const t0 = performance.now()
     const fromEl = activeEl
     const toEl = idleEl
     const tick = () => {
       const t = Math.min(1, (performance.now() - t0) / dur)
-      if (fromEl) fromEl.volume = startVol * (1 - t)
-      if (toEl) toEl.volume = startVol * t
+      const targetVolume = outputVolume()
+      if (fromEl) fromEl.volume = targetVolume * (1 - t)
+      if (toEl) toEl.volume = targetVolume * t
       if (t < 1) {
         crossfadeRaf = requestAnimationFrame(tick)
       } else {
@@ -245,6 +270,7 @@ export const useMusicStore = defineStore('music', () => {
     if (!activeEl) return
     activeEl.pause()
     state.playing = false
+    persistedPlaying = false
     schedulePersist(true)
   }
 
@@ -254,11 +280,18 @@ export const useMusicStore = defineStore('music', () => {
     if (!activeEl.src) {
       const url = await getPlayableUrl(state.trackId)
       activeEl.src = url
-      activeEl.currentTime = state.positionSec || 0
+      try {
+        activeEl.currentTime = state.positionSec || 0
+      } catch {
+        activeEl.addEventListener('loadedmetadata', () => {
+          try { activeEl.currentTime = state.positionSec || 0 } catch { /* unavailable media */ }
+        }, { once: true })
+      }
     }
-    activeEl.volume = state.volume
+    activeEl.volume = outputVolume()
     await activeEl.play().catch(() => {})
     state.playing = true
+    persistedPlaying = true
     schedulePersist(true)
   }
 
@@ -310,9 +343,10 @@ export const useMusicStore = defineStore('music', () => {
       } else if (state.loopMode === 'album') {
         const nextId = nextAlbumTrackId()
         if (nextId) playTrack(nextId, { albumId: state.albumId, immediate: true })
-        else { state.playing = false; schedulePersist(true) }
+        else { state.playing = false; persistedPlaying = false; schedulePersist(true) }
       } else {
         state.playing = false
+        persistedPlaying = false
         schedulePersist(true)
       }
     }
@@ -324,7 +358,8 @@ export const useMusicStore = defineStore('music', () => {
   function startPositionTimer() {
     stopPositionTimer()
     positionTimer = setInterval(() => {
-      if (activeEl && state.playing) state.positionSec = activeEl.currentTime
+      const timelineEl = state.crossfading ? idleEl : activeEl
+      if (timelineEl && state.playing) state.positionSec = timelineEl.currentTime
     }, 500)
   }
   function stopPositionTimer() {
@@ -361,14 +396,24 @@ export const useMusicStore = defineStore('music', () => {
       if (data && typeof data === 'object') {
         state.trackId = data.trackId ?? null
         state.albumId = data.albumId ?? null
-        state.positionSec = data.positionSec ?? 0
+        const elapsedSec = data.playing && data.syncedAt && data.serverTime
+          ? Math.max(0, (data.serverTime - data.syncedAt) / 1000)
+          : 0
+        state.positionSec = Math.max(0, (data.positionSec ?? 0) + elapsedSec)
         state.volume = data.volume ?? DEFAULT_VOLUME
         state.crossfadeDurSec = data.crossfadeDurSec ?? DEFAULT_CROSSFADE_SEC
         state.nextTrackId = data.nextTrackId ?? null
         state.loopMode = data.loopMode === 'track' ? 'track' : 'album'
+        persistedPlaying = !!data.playing
         state.playing = false
         const t = state.trackId ? trackById(state.trackId) : null
         state.durationSec = t?.durationSec || 0
+        if (state.durationSec > 0) {
+          state.positionSec = state.loopMode === 'track'
+            ? state.positionSec % state.durationSec
+            : Math.min(state.positionSec, Math.max(0, state.durationSec - 0.05))
+        }
+        if (remotePlayback.value && persistedPlaying && state.trackId) resume().catch(() => {})
       }
     } catch { /* ignore */ }
   }
@@ -379,6 +424,8 @@ export const useMusicStore = defineStore('music', () => {
     if (saveTimer) clearTimeout(saveTimer)
     try { audioA?.pause(); audioB?.pause() } catch { /* ignore */ }
     state.playing = false
+    persistedPlaying = false
+    remotePlayback.value = false
   }
 
   const currentTrack = computed(() => state.trackId ? trackById(state.trackId) : null)
@@ -395,10 +442,10 @@ export const useMusicStore = defineStore('music', () => {
     addTrackTag, attachTrackTag, removeTrackTag,
     createTag, renameTag, deleteTag,
     // player state
-    state, currentTrack, nextTrack,
+    state, currentTrack, nextTrack, remotePlayback,
     setContext, loadSessionState,
     playTrack, pause, resume, seek,
-    setVolume, setCrossfade,
+    setVolume, setCrossfade, setRemotePlayback,
     setNext, clearNext, playNextFromQueue, toggleLoopMode,
     dispose,
   }

@@ -1,10 +1,11 @@
 const JSON_HEADERS = { 'Content-Type': 'application/json;charset=utf-8' }
 
-async function apiRequest(url, { method = 'GET', body, response = 'json' } = {}) {
+async function apiRequest(url, { method = 'GET', body, response = 'json', signal } = {}) {
     const res = await fetch('/api' + url, {
         method,
         headers: JSON_HEADERS,
         body: body == null ? null : JSON.stringify(body),
+        signal,
     })
     if (!res.ok) {
         const payload = await res.json().catch(() => ({}))
@@ -23,8 +24,8 @@ export function fetchGetEmpty(url) {
     return apiRequest(url, { response: 'raw' })
 }
 
-export function fetchGet(url) {
-    return apiRequest(url)
+export function fetchGet(url, options = {}) {
+    return apiRequest(url, options)
 }
 
 export function fetchPost(url, body) {

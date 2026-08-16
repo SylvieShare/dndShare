@@ -16,6 +16,8 @@ const materialEditor = read('./MaterialEditorModal.vue')
 const encounter = read('./EncounterTab.vue')
 const libraryShell = read('./SessionLibraryWorkspace.vue')
 const presentationState = read('../composables/useSessionPresentation.js')
+const displayMusic = read('../composables/useDisplayMusic.js')
+const musicPanel = read('./MusicPanel.vue')
 
 describe('session presentation workspace', () => {
   it('keeps materials as a primary DM workspace and a contextual header control', () => {
@@ -55,6 +57,19 @@ describe('session presentation workspace', () => {
     expect(publicStyles).toContain('object-fit: contain')
     expect(publicStyles).toContain('.presentation-effect')
     expect(presentationState).toContain("const clear = () => save({ mode: 'idle', visible: true")
+  })
+
+  it('uses SSE with resilient polling fallback and remote music playback', () => {
+    expect(control).toContain('Транслировать музыку')
+    expect(control).toContain('setBroadcastMusic')
+    expect(publicScreen).toContain('new EventSource')
+    expect(publicScreen).toContain('scheduleFallback')
+    expect(publicScreen).toContain('CONTROL_SYNC_INTERVAL_MS')
+    expect(publicScreen).toContain('getPublicDisplayMusic')
+    expect(displayMusic).toContain('runCrossfade')
+    expect(displayMusic).toContain('blocked.value = true')
+    expect(publicScreen).toContain('Включить звук')
+    expect(musicPanel).toContain('НА ЭКРАНЕ')
   })
 
   it('supports typed materials and styled notes on the shared library layout', () => {

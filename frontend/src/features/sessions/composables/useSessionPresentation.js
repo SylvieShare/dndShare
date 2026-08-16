@@ -2,7 +2,7 @@ import { computed, ref } from 'vue'
 import { getSessionPresentation, saveSessionPresentation } from '@/shared/api/sessionsApi'
 
 export function useSessionPresentation({ sessionUuid, materials }) {
-  const state = ref({ mode: 'idle', visible: false, effect: 'none', transition: 'fade', revision: 0 })
+  const state = ref({ mode: 'idle', visible: false, broadcastMusic: false, effect: 'none', transition: 'fade', revision: 0 })
   const loading = ref(false)
   const saving = ref(false)
   const error = ref('')
@@ -30,7 +30,10 @@ export function useSessionPresentation({ sessionUuid, materials }) {
     saving.value = true
     error.value = ''
     try {
-      state.value = await saveSessionPresentation(sessionUuid, payload)
+      state.value = await saveSessionPresentation(sessionUuid, {
+        ...payload,
+        broadcastMusic: payload.broadcastMusic ?? state.value.broadcastMusic ?? false,
+      })
       return state.value
     } catch {
       error.value = 'Не удалось обновить экран показа'
@@ -51,6 +54,7 @@ export function useSessionPresentation({ sessionUuid, materials }) {
     : save({ ...state.value, visible: true, materialId: state.value.materialId || null })
   const clear = () => save({ mode: 'idle', visible: true, effect: 'none', transition: 'fade' })
   const setEffect = effect => save({ ...state.value, effect, materialId: state.value.materialId || null })
+  const setBroadcastMusic = enabled => save({ ...state.value, broadcastMusic: !!enabled, materialId: state.value.materialId || null })
 
-  return { state, loading, saving, error, activeLabel, load, save, showMaterial, showCombat, blackout, reveal, clear, setEffect, materialById: materials?.byId }
+  return { state, loading, saving, error, activeLabel, load, save, showMaterial, showCombat, blackout, reveal, clear, setEffect, setBroadcastMusic, materialById: materials?.byId }
 }

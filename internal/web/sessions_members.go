@@ -122,6 +122,7 @@ func (s *Server) handleUpdateSession(w http.ResponseWriter, r *http.Request) {
 		serverError(w, err)
 		return
 	}
+	s.displayEvents.publish(session.ID)
 	writeJSON(w, http.StatusNoContent, nil)
 }
 
@@ -147,6 +148,7 @@ func (s *Server) handleKickParticipant(w http.ResponseWriter, r *http.Request) {
 		serverError(w, err)
 		return
 	}
+	s.displayEvents.publish(session.ID)
 	writeJSON(w, http.StatusNoContent, nil)
 }
 
@@ -229,5 +231,6 @@ func (s *Server) handleUpdateParticipantColor(w http.ResponseWriter, r *http.Req
 		notFound(w, "")
 		return
 	}
+	s.displayEvents.publish(session.ID)
 	writeJSON(w, http.StatusNoContent, nil)
 }

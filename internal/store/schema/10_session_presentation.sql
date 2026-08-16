@@ -45,6 +45,7 @@ CREATE TABLE IF NOT EXISTS dndshare.session_presentation_state (
     mode       varchar(16) DEFAULT 'idle' NOT NULL,
     visible    bool DEFAULT false NOT NULL,
     material_id int8 NULL REFERENCES dndshare.session_material(id) ON DELETE SET NULL,
+    broadcast_music bool DEFAULT false NOT NULL,
     effect     varchar(24) DEFAULT 'none' NOT NULL,
     transition varchar(16) DEFAULT 'fade' NOT NULL,
     revision   int8 DEFAULT 0 NOT NULL,
@@ -54,6 +55,8 @@ CREATE TABLE IF NOT EXISTS dndshare.session_presentation_state (
     CONSTRAINT session_presentation_effect_check CHECK (effect IN ('none', 'rain', 'fog', 'embers', 'snow', 'storm')),
     CONSTRAINT session_presentation_transition_check CHECK (transition IN ('cut', 'fade'))
 );
+ALTER TABLE dndshare.session_presentation_state
+    ADD COLUMN IF NOT EXISTS broadcast_music bool DEFAULT false NOT NULL;
 
 UPDATE dndshare.session_presentation_state
 SET mode = 'idle', visible = true, material_id = NULL,

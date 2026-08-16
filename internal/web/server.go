@@ -11,10 +11,11 @@ import (
 
 // Server держит зависимости и собирает HTTP-обработчик.
 type Server struct {
-	cfg   config.Config
-	store *store.Store
-	s3    *storage.Service
-	jobs  *jobRunner
+	cfg           config.Config
+	store         *store.Store
+	s3            *storage.Service
+	jobs          *jobRunner
+	displayEvents *displayEventHub
 }
 
 // routeRegistrars — реестр функций регистрации маршрутов. Каждый файл-фича добавляет
@@ -26,7 +27,7 @@ func registerRoutes(f func(*Server, *http.ServeMux)) {
 }
 
 func New(cfg config.Config, st *store.Store, s3 *storage.Service) *Server {
-	s := &Server{cfg: cfg, store: st, s3: s3}
+	s := &Server{cfg: cfg, store: st, s3: s3, displayEvents: newDisplayEventHub()}
 	s.jobs = newJobRunner(s)
 	return s
 }

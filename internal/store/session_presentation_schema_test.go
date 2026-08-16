@@ -13,6 +13,7 @@ func TestSessionPresentationSchemaKeepsMaterialsAndOneLiveState(t *testing.T) {
 		"DROP COLUMN IF EXISTS presentation_crossfade_sec",
 		"ADD COLUMN IF NOT EXISTS material_id",
 		"CREATE TABLE IF NOT EXISTS dndshare.session_presentation_state",
+		"ADD COLUMN IF NOT EXISTS broadcast_music",
 		"mode IN ('idle', 'material', 'combat')",
 		"WHERE mode = 'scene'",
 		"DROP COLUMN IF EXISTS scene_id",

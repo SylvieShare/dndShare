@@ -22,7 +22,7 @@
             <div class="now-text">
               <div v-if="current" class="now-status">
                 <span class="now-status-dot" />
-                <span class="now-status-label">{{ state.playing ? 'ИГРАЕТ' : 'ПАУЗА' }}</span>
+                <span class="now-status-label">{{ state.playing ? (remotePlayback ? 'НА ЭКРАНЕ' : 'ИГРАЕТ') : 'ПАУЗА' }}</span>
               </div>
               <div v-else class="now-status now-status--dim">
                 <span class="now-status-label">НИЧЕГО НЕ ИГРАЕТ</span>
@@ -99,7 +99,7 @@ const props = defineProps({
 const emit = defineEmits(['open-library'])
 
 const musicStore = useMusicStore()
-const { state, currentTrack, nextTrack } = storeToRefs(musicStore)
+const { state, currentTrack, nextTrack, remotePlayback } = storeToRefs(musicStore)
 
 const current = currentTrack
 const next = nextTrack

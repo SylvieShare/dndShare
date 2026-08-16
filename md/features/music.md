@@ -34,6 +34,9 @@ playback both use signed S3 URLs. `/api/music/albums` lists personal plus system
 albums and provides CRUD, track links and ordering only for personal albums.
 `/api/music/tags` provides CRUD and track links. Session-authorized playback URL
 and synchronized state are exposed under `/api/sessions/{uuid}/music...`.
+When the display flag is enabled, the anonymous presentation projection exposes
+only validated playback fields and signed URLs for tracks owned by the session
+owner or the system catalog; it never exposes the owner's music library.
 
 Audio is not streamed through PostgreSQL or the Go server. Metadata is
 relational and all object keys point to S3; system objects use the versioned
@@ -65,7 +68,13 @@ large enough for the configured maximum. Upload errors are shown in UI state.
 
 ## Synchronization
 
-DM actions update server music state; participants poll/receive the same state
-and resolve playable URLs with session authorization. Track metadata cache is
+DM actions persist server music state and publish an SSE screen invalidation.
+With display playback disabled the DM's two-audio-element engine is audible.
+With it enabled the same engine runs silently as the authoritative controller
+while the public display mirrors play/pause, seek, volume, loop and crossfade
+from a safe projection. The display derives the current position from the
+persisted position plus server timestamps, corrects drift on control sync, and
+falls back to polling when SSE is unavailable. Browser autoplay rejection is a
+visible recoverable state rather than a silent failure. Track metadata cache is
 owned by the music store. A newly uploaded track absent from a saved order is
 appended as current product behavior, not treated as an old data format.

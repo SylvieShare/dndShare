@@ -500,18 +500,21 @@ func (s *Store) SaveEncounterData(ctx context.Context, sessionID int64, status s
 	return tx.Commit(ctx)
 }
 
-// GetMusicStateData возвращает состояние плеера сессии как JSON-строку или nil
-// (порт SessionMusicStateRepository.getStateData).
-func (s *Store) GetMusicStateData(ctx context.Context, sessionID int64) (*string, error) {
-	var data *string
+type SessionMusicStateSnapshot struct {
+	Data      string
+	ChangedAt time.Time
+}
+
+func (s *Store) GetMusicStateSnapshot(ctx context.Context, sessionID int64) (*SessionMusicStateSnapshot, error) {
+	var snapshot SessionMusicStateSnapshot
 	err := s.pool.QueryRow(ctx,
-		`SELECT data::text FROM dndshare.session_music_state WHERE session_id = $1`,
+		`SELECT data::text, changed_at FROM dndshare.session_music_state WHERE session_id = $1`,
 		sessionID,
-	).Scan(&data)
+	).Scan(&snapshot.Data, &snapshot.ChangedAt)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, nil
 	}
-	return data, err
+	return &snapshot, err
 }
 
 // SaveMusicStateData сохраняет состояние плеера (upsert по session_id, порт saveStateData).

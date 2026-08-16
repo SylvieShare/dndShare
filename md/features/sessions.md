@@ -228,7 +228,11 @@ the display to a visible idle state with the same dotted canvas background;
 The screen title and session name are rendered only for that idle state. During
 material playback the asset occupies the whole viewport without a card frame or
 metadata column; images, maps and video use contain scaling. The connection chip
-is hidden while polling is healthy and appears only after an update failure.
+is hidden while synchronization is healthy and appears only after an update
+failure. The screen opens an SSE invalidation stream for immediate updates,
+performs a control sync every 45 seconds and temporarily falls back to jittered
+polling with exponential backoff while SSE is disconnected. Each event reloads
+the latest database snapshot, so coalesced or missed events cannot lose state.
 
 `Материалы` is a central DM library over the same dotted workspace background.
 It uses the same `SessionLibraryWorkspace` shell, safe areas, sidebar surface
@@ -244,6 +248,13 @@ editable universal relation list and searchable picker as locations, NPCs and
 quests. The session-header display control
 shows live state, opens the standalone display and provides contextual
 materials, blackout/reveal/clear actions and the player-only effect selector.
+Its `Транслировать музыку` checkbox moves audible playback from the DM page to
+the standalone display without changing the controller, queue or timeline. The
+DM audio engine remains muted while it advances the clock and album queue; this
+allows turning the checkbox off to restore local sound at the current position.
+The display owns a two-element audio engine for volume, pause/seek, looping and
+crossfade, and shows `Включить звук` only when browser autoplay policy requires
+a user gesture.
 The combat toolbar does not duplicate the standalone-screen launch action.
 
 A scenario participates in universal relations and edits them in its main
@@ -622,15 +633,17 @@ dropped index preserve an extra advantage/disadvantage die; `revision` restarts
 its embedded animation when the kept value does not change. Removing
 `challenge` clears the shared result display.
 
-The DM combat header links to the standalone public route `/screen/:uuid` for
-a television or projector. It has no application navigation or authenticated
-controls and polls `GET /api/public/sessions/:uuid/encounter` every 1.5 seconds,
-with an immediate refresh when the tab becomes visible again. The screen shows
+The session display control links to the standalone public route `/screen/:uuid`
+for a television or projector. It has no application navigation or authenticated
+controls. Its SSE stream refreshes the presentation and, in combat mode, the
+public encounter projection immediately; fallback polling and a control sync
+cover reconnects, server restarts and missed in-memory signals. Returning to a
+visible browser tab also requests a fresh snapshot. The screen shows
 the session name, round, current turn and the complete initiative order with
 portraits, markers and resolved condition names. Exact HP is intentionally not
 part of the public DTO or UI: health is presented as `Здоров` above 50%,
 `Ранен` above 25%, `Критически ранен` at 25% or below, and `Без сознания`
-(player) / `Повержен` (NPC) at zero. A lost poll keeps the last successful
+(player) / `Повержен` (NPC) at zero. A failed refresh keeps the last successful
 snapshot visible and marks the connection as interrupted.
 
 The public endpoint builds a dedicated projection on the server rather than

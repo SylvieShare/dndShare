@@ -88,6 +88,7 @@ func (s *Server) handleSaveEncounter(w http.ResponseWriter, r *http.Request) {
 		}
 		s.appendSessionEvent(r.Context(), session.ID, userID, eventType, title, map[string]any{"round": meta.Round})
 	}
+	s.displayEvents.publish(session.ID)
 	writeJSON(w, http.StatusNoContent, nil)
 }
 
@@ -104,12 +105,23 @@ func (s *Server) handleGetMusicState(w http.ResponseWriter, r *http.Request) {
 		forbidden(w)
 		return
 	}
-	data, err := s.store.GetMusicStateData(r.Context(), session.ID)
+	snapshot, err := s.store.GetMusicStateSnapshot(r.Context(), session.ID)
 	if err != nil {
 		serverError(w, err)
 		return
 	}
-	writeRawJSON(w, data)
+	if snapshot == nil {
+		writeJSON(w, http.StatusOK, map[string]any{})
+		return
+	}
+	var data map[string]any
+	if json.Unmarshal([]byte(snapshot.Data), &data) != nil || data == nil {
+		serverError(w, errors.New("invalid session music state"))
+		return
+	}
+	data["syncedAt"] = snapshot.ChangedAt.UnixMilli()
+	data["serverTime"] = time.Now().UnixMilli()
+	writeJSON(w, http.StatusOK, data)
 }
 
 func (s *Server) handleSaveMusicState(w http.ResponseWriter, r *http.Request) {
@@ -130,7 +142,8 @@ func (s *Server) handleSaveMusicState(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "Некорректный запрос")
 		return
 	}
-	if !json.Valid(raw) {
+	var state map[string]json.RawMessage
+	if json.Unmarshal(raw, &state) != nil || state == nil {
 		badRequest(w, "Некорректный запрос")
 		return
 	}
@@ -138,6 +151,7 @@ func (s *Server) handleSaveMusicState(w http.ResponseWriter, r *http.Request) {
 		serverError(w, err)
 		return
 	}
+	s.displayEvents.publish(session.ID)
 	writeJSON(w, http.StatusNoContent, nil)
 }
 

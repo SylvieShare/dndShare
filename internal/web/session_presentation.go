@@ -17,6 +17,8 @@ func (s *Server) routesSessionPresentation(mux *http.ServeMux) {
 	mux.HandleFunc("DELETE /api/sessions/{uuid}/materials/{materialId}", s.handleDeleteSessionMaterial)
 	mux.HandleFunc("PUT /api/sessions/{uuid}/presentation", s.handleSaveSessionPresentation)
 	mux.HandleFunc("GET /api/public/sessions/{uuid}/presentation", s.handleGetPublicPresentation)
+	mux.HandleFunc("GET /api/public/sessions/{uuid}/presentation/events", s.handlePublicDisplayEvents)
+	mux.HandleFunc("GET /api/public/sessions/{uuid}/presentation/music", s.handleGetPublicDisplayMusic)
 }
 
 type sessionMaterialsResponse struct {
@@ -220,6 +222,7 @@ func (s *Server) handleUpdateSessionMaterial(w http.ResponseWriter, r *http.Requ
 		serverError(w, err)
 		return
 	}
+	s.displayEvents.publish(session.ID)
 	writeJSON(w, http.StatusOK, updated)
 }
 
@@ -247,6 +250,7 @@ func (s *Server) handleDeleteSessionMaterial(w http.ResponseWriter, r *http.Requ
 	if material.AssetID != nil {
 		s.deleteOldImage(r, userID, *material.AssetID)
 	}
+	s.displayEvents.publish(session.ID)
 	writeJSON(w, http.StatusNoContent, nil)
 }
 
@@ -268,11 +272,12 @@ func (s *Server) handleGetSessionPresentation(w http.ResponseWriter, r *http.Req
 }
 
 type sessionPresentationRequest struct {
-	Mode       string `json:"mode"`
-	Visible    *bool  `json:"visible"`
-	MaterialID *int64 `json:"materialId"`
-	Effect     string `json:"effect"`
-	Transition string `json:"transition"`
+	Mode           string `json:"mode"`
+	Visible        *bool  `json:"visible"`
+	MaterialID     *int64 `json:"materialId"`
+	BroadcastMusic bool   `json:"broadcastMusic"`
+	Effect         string `json:"effect"`
+	Transition     string `json:"transition"`
 }
 
 func sessionPresentationVisible(mode string, requested *bool) bool {
@@ -324,22 +329,24 @@ func (s *Server) handleSaveSessionPresentation(w http.ResponseWriter, r *http.Re
 		badRequest(w, "Некорректный эффект показа")
 		return
 	}
-	state, err := s.store.SaveSessionPresentation(r.Context(), session.ID, req.Mode, visible, req.MaterialID, req.Effect, req.Transition)
+	state, err := s.store.SaveSessionPresentation(r.Context(), session.ID, req.Mode, visible, req.MaterialID, req.BroadcastMusic, req.Effect, req.Transition)
 	if err != nil {
 		serverError(w, err)
 		return
 	}
+	s.displayEvents.publish(session.ID)
 	writeJSON(w, http.StatusOK, state)
 }
 
 type publicPresentationResponse struct {
-	SessionName string                      `json:"sessionName"`
-	Mode        string                      `json:"mode"`
-	Visible     bool                        `json:"visible"`
-	Material    *publicPresentationMaterial `json:"material,omitempty"`
-	Effect      string                      `json:"effect"`
-	Transition  string                      `json:"transition"`
-	Revision    int64                       `json:"revision"`
+	SessionName    string                      `json:"sessionName"`
+	Mode           string                      `json:"mode"`
+	Visible        bool                        `json:"visible"`
+	Material       *publicPresentationMaterial `json:"material,omitempty"`
+	BroadcastMusic bool                        `json:"broadcastMusic"`
+	Effect         string                      `json:"effect"`
+	Transition     string                      `json:"transition"`
+	Revision       int64                       `json:"revision"`
 }
 
 type publicPresentationMaterial struct {
@@ -374,7 +381,7 @@ func (s *Server) handleGetPublicPresentation(w http.ResponseWriter, r *http.Requ
 	}
 	response := publicPresentationResponse{
 		SessionName: session.Name, Mode: state.Mode, Visible: state.Visible,
-		Effect: state.Effect, Transition: state.Transition, Revision: state.Revision,
+		BroadcastMusic: state.BroadcastMusic, Effect: state.Effect, Transition: state.Transition, Revision: state.Revision,
 	}
 	if state.Material != nil {
 		response.Material = &publicPresentationMaterial{

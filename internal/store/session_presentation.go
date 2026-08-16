@@ -24,15 +24,16 @@ type SessionMaterial struct {
 }
 
 type SessionPresentationState struct {
-	SessionID  int64            `json:"sessionId"`
-	Mode       string           `json:"mode"`
-	Visible    bool             `json:"visible"`
-	MaterialID *int64           `json:"materialId,omitempty"`
-	Material   *SessionMaterial `json:"material,omitempty"`
-	Effect     string           `json:"effect"`
-	Transition string           `json:"transition"`
-	Revision   int64            `json:"revision"`
-	ChangedAt  time.Time        `json:"changedAt"`
+	SessionID      int64            `json:"sessionId"`
+	Mode           string           `json:"mode"`
+	Visible        bool             `json:"visible"`
+	MaterialID     *int64           `json:"materialId,omitempty"`
+	Material       *SessionMaterial `json:"material,omitempty"`
+	BroadcastMusic bool             `json:"broadcastMusic"`
+	Effect         string           `json:"effect"`
+	Transition     string           `json:"transition"`
+	Revision       int64            `json:"revision"`
+	ChangedAt      time.Time        `json:"changedAt"`
 }
 
 func scanSessionMaterial(row pgx.Row) (SessionMaterial, error) {
@@ -223,9 +224,9 @@ func (s *Store) DeleteSessionMaterial(ctx context.Context, sessionID, id int64) 
 func (s *Store) GetSessionPresentation(ctx context.Context, sessionID int64) (SessionPresentationState, error) {
 	state := SessionPresentationState{SessionID: sessionID, Mode: "idle", Effect: "none", Transition: "fade"}
 	err := s.pool.QueryRow(ctx, `
-		SELECT mode, visible, material_id, effect, transition, revision, changed_at
+		SELECT mode, visible, material_id, broadcast_music, effect, transition, revision, changed_at
 		FROM dndshare.session_presentation_state WHERE session_id = $1`, sessionID,
-	).Scan(&state.Mode, &state.Visible, &state.MaterialID, &state.Effect, &state.Transition, &state.Revision, &state.ChangedAt)
+	).Scan(&state.Mode, &state.Visible, &state.MaterialID, &state.BroadcastMusic, &state.Effect, &state.Transition, &state.Revision, &state.ChangedAt)
 	if errors.Is(err, pgx.ErrNoRows) {
 		state.ChangedAt = time.Now()
 	} else if err != nil {
@@ -248,18 +249,19 @@ func (s *Store) SaveSessionPresentation(
 	mode string,
 	visible bool,
 	materialID *int64,
+	broadcastMusic bool,
 	effect, transition string,
 ) (SessionPresentationState, error) {
 	_, err := s.pool.Exec(ctx, `
 		INSERT INTO dndshare.session_presentation_state
-		    (session_id, mode, visible, material_id, effect, transition, revision)
-		VALUES ($1, $2, $3, $4, $5, $6, 1)
+		    (session_id, mode, visible, material_id, broadcast_music, effect, transition, revision)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, 1)
 		ON CONFLICT (session_id) DO UPDATE SET
 		    mode = EXCLUDED.mode, visible = EXCLUDED.visible,
-		    material_id = EXCLUDED.material_id,
+		    material_id = EXCLUDED.material_id, broadcast_music = EXCLUDED.broadcast_music,
 		    effect = EXCLUDED.effect, transition = EXCLUDED.transition,
 		    revision = dndshare.session_presentation_state.revision + 1,
-		    changed_at = now()`, sessionID, mode, visible, materialID, effect, transition)
+		    changed_at = now()`, sessionID, mode, visible, materialID, broadcastMusic, effect, transition)
 	if err != nil {
 		return SessionPresentationState{}, err
 	}

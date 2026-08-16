@@ -18,6 +18,11 @@
       </span>
     </aside>
 
+    <button v-if="displayMusic.blocked.value" type="button" class="encounter-screen__sound-unlock" @click="displayMusic.unlock">
+      <Volume2 :size="19" />
+      Включить звук
+    </button>
+
     <section v-if="loading" class="encounter-screen__empty" aria-live="polite">
       <div class="encounter-screen__sigil encounter-screen__sigil--loading">
         <Swords :size="54" aria-hidden="true" />
@@ -187,10 +192,14 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { HeartPulse, Images, Swords, UserRound, WifiOff } from '@lucide/vue'
-import { getPublicEncounter, getPublicPresentation } from '@/shared/api/sessionsApi'
+import { HeartPulse, Images, Swords, UserRound, Volume2, WifiOff } from '@lucide/vue'
+import { getPublicDisplayMusic, getPublicEncounter, getPublicPresentation } from '@/shared/api/sessionsApi'
+import { useDisplayMusic } from '@/features/sessions/composables/useDisplayMusic'
 
-const POLL_INTERVAL_MS = 1500
+const CONTROL_SYNC_INTERVAL_MS = 45_000
+const REQUEST_TIMEOUT_MS = 8_000
+const FALLBACK_INITIAL_MS = 1_500
+const FALLBACK_MAX_MS = 15_000
 
 const route = useRoute()
 const snapshot = ref(null)
@@ -198,8 +207,15 @@ const presentation = ref(null)
 const loading = ref(true)
 const fatalError = ref(false)
 const pollFailed = ref(false)
-let pollTimer = null
-let polling = false
+const displayMusic = useDisplayMusic()
+let eventSource = null
+let fallbackTimer = null
+let controlTimer = null
+let requestController = null
+let syncing = false
+let syncPending = false
+let fallbackDelay = FALLBACK_INITIAL_MS
+let fallbackRunning = false
 
 const combatants = computed(() => snapshot.value?.combatants || [])
 const currentCombatant = computed(() =>
@@ -245,22 +261,77 @@ function healthClass(combatant) {
   return `encounter-health--${combatant?.health?.kind || 'unknown'}`
 }
 
-async function poll() {
-  if (polling) return
-  polling = true
+async function syncScreen() {
+  if (syncing) {
+    syncPending = true
+    return
+  }
+  syncing = true
+  requestController?.abort()
+  requestController = new AbortController()
+  const timeout = window.setTimeout(() => requestController?.abort(), REQUEST_TIMEOUT_MS)
   try {
-    const nextPresentation = await getPublicPresentation(route.params.uuid)
+    const options = { signal: requestController.signal }
+    const nextPresentation = await getPublicPresentation(route.params.uuid, options)
+    const [nextSnapshot, nextMusic] = await Promise.all([
+      nextPresentation.mode === 'combat' ? getPublicEncounter(route.params.uuid, options) : Promise.resolve(snapshot.value),
+      nextPresentation.broadcastMusic ? getPublicDisplayMusic(route.params.uuid, options) : Promise.resolve(null),
+    ])
     presentation.value = nextPresentation
-    if (nextPresentation.mode === 'combat') snapshot.value = await getPublicEncounter(route.params.uuid)
+    if (nextPresentation.mode === 'combat') snapshot.value = nextSnapshot
+    if (nextPresentation.broadcastMusic) await displayMusic.sync(nextMusic)
+    else displayMusic.stop()
     fatalError.value = false
     pollFailed.value = false
   } catch {
     if (!presentation.value && !snapshot.value) fatalError.value = true
     else pollFailed.value = true
   } finally {
+    window.clearTimeout(timeout)
     loading.value = false
-    polling = false
+    syncing = false
+    requestController = null
+    if (syncPending) {
+      syncPending = false
+      queueMicrotask(syncScreen)
+    }
   }
+}
+
+function fallbackJitter(delay) {
+  return Math.round(delay * (0.85 + Math.random() * 0.3))
+}
+
+function scheduleFallback(immediate = false) {
+  if (fallbackTimer != null || fallbackRunning) return
+  fallbackTimer = window.setTimeout(async () => {
+    fallbackTimer = null
+    fallbackRunning = true
+    await syncScreen()
+    fallbackRunning = false
+    if (eventSource?.readyState !== EventSource.OPEN) {
+      fallbackDelay = Math.min(FALLBACK_MAX_MS, fallbackDelay * 1.8)
+      scheduleFallback()
+    }
+  }, immediate ? 0 : fallbackJitter(fallbackDelay))
+}
+
+function stopFallback() {
+  if (fallbackTimer != null) window.clearTimeout(fallbackTimer)
+  fallbackTimer = null
+  fallbackDelay = FALLBACK_INITIAL_MS
+}
+
+function connectEvents() {
+  eventSource?.close()
+  const uuid = encodeURIComponent(route.params.uuid)
+  eventSource = new EventSource(`/api/public/sessions/${uuid}/presentation/events`)
+  eventSource.onopen = () => {
+    stopFallback()
+    syncScreen()
+  }
+  eventSource.onmessage = () => syncScreen()
+  eventSource.onerror = () => scheduleFallback(true)
 }
 
 function effectParticleStyle(index) {
@@ -273,17 +344,22 @@ function effectParticleStyle(index) {
 }
 
 function pollWhenVisible() {
-  if (document.visibilityState === 'visible') poll()
+  if (document.visibilityState === 'visible') syncScreen()
 }
 
 onMounted(() => {
-  poll()
-  pollTimer = window.setInterval(poll, POLL_INTERVAL_MS)
+  syncScreen()
+  connectEvents()
+  controlTimer = window.setInterval(syncScreen, CONTROL_SYNC_INTERVAL_MS)
   document.addEventListener('visibilitychange', pollWhenVisible)
 })
 
 onBeforeUnmount(() => {
-  window.clearInterval(pollTimer)
+  eventSource?.close()
+  stopFallback()
+  window.clearInterval(controlTimer)
+  requestController?.abort()
+  displayMusic.dispose()
   document.removeEventListener('visibilitychange', pollWhenVisible)
 })
 </script>
