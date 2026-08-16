@@ -3,7 +3,7 @@
     <div class="npc-editor-layout">
       <div class="npc-editor-form">
         <div class="npc-editor-identity">
-          <div class="npc-editor-avatar" :style="{ '--npc-color': draft.color }">{{ npcInitial(draft.name) }}</div>
+          <img class="npc-editor-avatar" :src="portraitPreview" alt="" :style="previewPosition" />
           <div class="npc-editor-name-fields">
             <FormField label="Имя" vertical>
               <div class="npc-editor-name-row">
@@ -27,6 +27,21 @@
             </div>
           </div>
         </div>
+
+        <FormField label="Портрет" vertical>
+          <SessionImagePicker
+            catalog="npc"
+            allow-upload
+            :model-value="draft.imagePresetKey"
+            :custom-selected="source === 'custom'"
+            :custom-preview="customPreview"
+            :custom-preview-style="previewPosition"
+            @select="pickPreset"
+            @upload="fileInput?.click()"
+          />
+          <input ref="fileInput" type="file" accept="image/*" hidden @change="onFile" />
+          <small v-if="uploadError" class="npc-editor-field-error">{{ uploadError }}</small>
+        </FormField>
 
         <FormField label="Цвет карточки" vertical>
           <ColorPresetPicker
@@ -53,11 +68,15 @@
             <span>Локации</span>
             <small>Где его можно встретить</small>
           </div>
-          <WorldRelationChecklist
-            v-model="draft.locationIds"
+          <WorldRelationEditor
+            v-model="draft.locationLinks"
             :items="locationOptions"
-            placeholder="Найти локацию…"
-            empty-text="Сначала создайте локации"
+            link-key="locationId"
+            add-label="Добавить локацию"
+            picker-title="Где встретить NPC"
+            search-placeholder="Найти локацию…"
+            empty-text="Места встречи не указаны"
+            picker-empty-text="Сначала создайте локации"
           />
         </section>
         <section>
@@ -65,11 +84,31 @@
             <span>Сценарии</span>
             <small>Где он участвует</small>
           </div>
-          <WorldRelationChecklist
-            v-model="draft.sceneIds"
+          <WorldRelationEditor
+            v-model="draft.sceneLinks"
             :items="sceneOptions"
-            placeholder="Найти сценарий…"
-            empty-text="Сначала создайте сценарии в сюжете"
+            link-key="sceneId"
+            add-label="Добавить сценарий"
+            picker-title="Участие в сюжете"
+            search-placeholder="Найти сценарий…"
+            empty-text="Участие в сюжете не указано"
+            picker-empty-text="Сначала создайте сценарии в сюжете"
+          />
+        </section>
+        <section>
+          <div class="npc-editor-section-title">
+            <span>Связи с NPC</span>
+            <small>Союзники, враги и знакомые</small>
+          </div>
+          <WorldRelationEditor
+            v-model="draft.npcLinks"
+            :items="npcOptions"
+            link-key="npcId"
+            add-label="Добавить NPC"
+            picker-title="Связать с NPC"
+            search-placeholder="Найти NPC…"
+            empty-text="Связей с NPC пока нет"
+            picker-empty-text="Нет других NPC"
           />
         </section>
       </div>
@@ -83,7 +122,7 @@
         <FormActionButtons
           :submit-text="npc ? 'Сохранить' : 'Создать NPC'"
           loading-text="Сохранение…"
-          :loading="saving"
+          :loading="saving || uploading"
           :can-submit="!!draft.name.trim()"
           @cancel="$emit('close')"
           @submit="submit"
@@ -94,7 +133,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, reactive, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
 import { Dices } from '@lucide/vue'
 import {
   AppModalFrame,
@@ -105,14 +144,15 @@ import {
   FormTextInput,
   FormTextarea,
 } from '@sylvieshare/share-ui'
-import WorldRelationChecklist from '@/features/sessions/components/WorldRelationChecklist.vue'
+import SessionImagePicker from '@/features/sessions/components/SessionImagePicker.vue'
+import WorldRelationEditor from '@/features/sessions/components/WorldRelationEditor.vue'
 import {
   locationBreadcrumb,
   locationKind,
   npcInitial,
   sceneContextLabel,
 } from '@/features/sessions/lib/sessionWorld'
-import { sessionImagePresetUrl } from '@/features/sessions/lib/sessionImages'
+import { npcImageUrl, npcImagePresetUrl, sessionImagePresetUrl } from '@/features/sessions/lib/sessionImages'
 import { itemsApi } from '@/shared/api/itemsApi'
 import { randomDndName } from '@/shared/lib/dndNames'
 
@@ -121,6 +161,7 @@ const props = defineProps({
   locations: { type: Array, default: () => [] },
   locationsById: { type: Map, default: () => new Map() },
   scenes: { type: Array, default: () => [] },
+  npcs: { type: Array, default: () => [] },
   defaultLocationId: { type: [Number, String], default: null },
   saving: { type: Boolean, default: false },
 })
@@ -128,6 +169,13 @@ const emit = defineEmits(['close', 'save', 'delete'])
 const races = ref([])
 const racesLoading = ref(false)
 const racesError = ref('')
+const fileInput = ref(null)
+const selectedFile = ref(null)
+const objectUrl = ref('')
+const uploading = ref(false)
+const uploadError = ref('')
+const source = ref(props.npc?.customImageUrl ? 'custom' : 'preset')
+const customPreview = ref(props.npc?.customImageUrl || '')
 
 const draft = reactive({
   name: props.npc?.name ?? '',
@@ -135,9 +183,20 @@ const draft = reactive({
   role: props.npc?.role ?? '',
   description: props.npc?.description ?? '',
   color: props.npc?.color ?? '#7c5cff',
-  locationIds: props.npc ? [...(props.npc.locationIds || [])] : props.defaultLocationId ? [Number(props.defaultLocationId)] : [],
-  sceneIds: [...(props.npc?.sceneIds || [])],
+  imagePresetKey: props.npc?.imagePresetKey ?? 'npc-scholar',
+  customImageId: props.npc?.customImageId ?? null,
+  imageFocalX: props.npc?.imageFocalX ?? 0.5,
+  imageFocalY: props.npc?.imageFocalY ?? 0.5,
+  locationLinks: props.npc
+    ? (props.npc.locationLinks || []).map(link => ({ ...link }))
+    : props.defaultLocationId ? [{ locationId: Number(props.defaultLocationId), note: null }] : [],
+  sceneLinks: (props.npc?.sceneLinks || []).map(link => ({ ...link })),
+  npcLinks: (props.npc?.npcLinks || []).map(link => ({ ...link })),
 })
+const previewPosition = computed(() => ({ objectPosition: `${draft.imageFocalX * 100}% ${draft.imageFocalY * 100}%` }))
+const portraitPreview = computed(() => source.value === 'custom'
+  ? customPreview.value
+  : npcImagePresetUrl(draft.imagePresetKey))
 
 const raceOptions = computed(() => {
   const byId = new Map(races.value.map(race => [race.id, race]))
@@ -166,6 +225,14 @@ const sceneOptions = computed(() => props.scenes.map(scene => ({
   subtitle: sceneContextLabel(scene),
   image: sessionImagePresetUrl(scene.imagePresetKey),
 })))
+const npcOptions = computed(() => props.npcs.filter(npc => npc.id !== props.npc?.id).map(npc => ({
+  id: npc.id,
+  title: npc.name,
+  subtitle: [npc.raceName, npc.role].filter(Boolean).join(' · ') || 'Роль не указана',
+  image: npcImageUrl(npc),
+  color: npc.color,
+  initial: npcInitial(npc.name),
+})))
 
 onMounted(async () => {
   racesLoading.value = true
@@ -182,25 +249,61 @@ function randomizeName() {
   draft.name = randomDndName(selectedRace.value, Math.random, draft.name)
 }
 
-function submit() {
-  if (!draft.name.trim() || props.saving) return
-  emit('save', {
-    name: draft.name.trim(),
-    raceItemId: Number(draft.raceItemId) || null,
-    role: draft.role.trim() || null,
-    description: draft.description.trim() || null,
-    color: draft.color || '#7c5cff',
-    locationIds: draft.locationIds,
-    sceneIds: draft.sceneIds,
-  })
+function pickPreset(key) { source.value = 'preset'; draft.imagePresetKey = key }
+function onFile(event) {
+  const file = event.target.files?.[0]
+  event.target.value = ''
+  if (!file) return
+  if (!file.type.startsWith('image/')) { uploadError.value = 'Выберите файл изображения'; return }
+  if (file.size > 15 * 1024 * 1024) { uploadError.value = 'Файл слишком большой — максимум 15 МБ'; return }
+  if (objectUrl.value) URL.revokeObjectURL(objectUrl.value)
+  objectUrl.value = URL.createObjectURL(file)
+  selectedFile.value = file
+  customPreview.value = objectUrl.value
+  source.value = 'custom'
+  uploadError.value = ''
 }
+async function uploadSelected() {
+  if (!selectedFile.value) return { upload_id: draft.customImageId }
+  uploading.value = true
+  try {
+    const form = new FormData()
+    form.append('file', selectedFile.value)
+    const response = await fetch('/api/storage/images', { method: 'POST', body: form })
+    if (!response.ok) throw new Error(String(response.status))
+    return await response.json()
+  } finally { uploading.value = false }
+}
+
+async function submit() {
+  if (!draft.name.trim() || props.saving || uploading.value) return
+  uploadError.value = ''
+  try {
+    const uploaded = source.value === 'custom' ? await uploadSelected() : { upload_id: null }
+    emit('save', {
+      name: draft.name.trim(),
+      raceItemId: Number(draft.raceItemId) || null,
+      role: draft.role.trim() || null,
+      description: draft.description.trim() || null,
+      color: draft.color || '#7c5cff',
+      imagePresetKey: source.value === 'preset' ? draft.imagePresetKey : null,
+      customImageId: source.value === 'custom' ? uploaded.upload_id : null,
+      imageFocalX: draft.imageFocalX,
+      imageFocalY: draft.imageFocalY,
+      locationLinks: draft.locationLinks,
+      sceneLinks: draft.sceneLinks,
+      npcLinks: draft.npcLinks,
+    })
+  } catch { uploadError.value = 'Не удалось загрузить изображение' }
+}
+onBeforeUnmount(() => { if (objectUrl.value) URL.revokeObjectURL(objectUrl.value) })
 </script>
 
 <style scoped>
 .npc-editor-layout { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr); gap: 24px; }
 .npc-editor-form, .npc-editor-relations, .npc-editor-relations section { min-width: 0; display: flex; flex-direction: column; gap: 14px; }
 .npc-editor-identity { display: grid; grid-template-columns: 78px minmax(0, 1fr); align-items: start; gap: 14px; }
-.npc-editor-avatar { width: 78px; height: 78px; display: grid; margin-top: 22px; place-items: center; border: 1px solid color-mix(in srgb, var(--npc-color) 58%, var(--border)); border-radius: 18px; background: radial-gradient(circle at 35% 28%, color-mix(in srgb, var(--npc-color) 40%, var(--surface-raised)), color-mix(in srgb, var(--npc-color) 10%, var(--surface))); color: color-mix(in srgb, var(--npc-color) 75%, var(--text-1)); font-family: var(--font-display); font-size: 31px; font-weight: 800; }
+.npc-editor-avatar { width: 78px; height: 78px; display: block; margin-top: 22px; border: 1px solid var(--border); border-radius: 18px; object-fit: cover; }
 .npc-editor-name-fields { display: flex; flex-direction: column; gap: 12px; }
 .npc-editor-name-row { display: grid; grid-template-columns: minmax(0, 1fr) 38px; gap: 8px; }
 .npc-editor-random-name { width: 38px; height: 38px; display: grid; place-items: center; padding: 0; border: 1px solid color-mix(in srgb, var(--accent) 42%, var(--border)); border-radius: 9px; background: color-mix(in srgb, var(--accent) 10%, transparent); color: var(--accent-soft); cursor: pointer; transition: background 0.15s, color 0.15s, transform 0.15s; }

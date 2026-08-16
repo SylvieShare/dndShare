@@ -108,8 +108,9 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
 - `PATCH /api/sessions/{uuid}/participants-order` accepts the complete ordered
   participant character-id list as `{"ids":[...]}`; owner-only;
 - `GET /api/sessions/{uuid}/world` returns one aggregate
-  `{locations,npcs,scenes}`. Locations and NPCs include their association id
-  arrays; compact scenarios include arc/chapter context plus reverse location
+  `{locations,npcs,scenes}`. NPCs expose `locationLinks`, `sceneLinks` and
+  symmetric `npcLinks` with the target id and nullable `note`; compact scenarios
+  and locations keep reverse NPC id arrays and scenarios include arc/chapter context plus reverse location
   and NPC ids. The aggregate is owner-only because NPC descriptions may contain
   master notes and secrets;
 - `POST /api/sessions/{uuid}/locations`, `PATCH|DELETE
@@ -122,7 +123,11 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
   cycles are rejected;
 - `POST /api/sessions/{uuid}/npcs`, `PATCH|DELETE
   /api/sessions/{uuid}/npcs/{npcId}` manage prepared NPCs with
-  `{name,raceItemId,role,description,color,locationIds,sceneIds}`. `raceItemId`
+  `{name,raceItemId,role,description,color,imagePresetKey,customImageId,
+  imageFocalX,imageFocalY,locationLinks,sceneLinks,npcLinks}`. Each link object
+  contains its typed target id and nullable note (up to 500 characters).
+  Exactly one portrait source is allowed; preset keys belong to the independent
+  NPC catalogue and uploaded images must belong to the current user. `raceItemId`
   is nullable and must reference an accessible handbook race item (type `8`);
   aggregate NPC records also expose its current `raceName`. World mutations are
   owner-only and return `{world,id}` so clients can replace every reverse

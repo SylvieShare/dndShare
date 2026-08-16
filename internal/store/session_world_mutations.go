@@ -151,39 +151,6 @@ func replaceLocationScenesTx(ctx context.Context, tx pgx.Tx, locationID int64, s
 	return err
 }
 
-func replaceNPCLinksTx(
-	ctx context.Context,
-	tx pgx.Tx,
-	npcID int64,
-	locationIDs, sceneIDs []int64,
-) error {
-	if _, err := tx.Exec(ctx, `DELETE FROM dndshare.session_npc_location WHERE npc_id = $1`, npcID); err != nil {
-		return err
-	}
-	if _, err := tx.Exec(ctx, `DELETE FROM dndshare.session_npc_scene WHERE npc_id = $1`, npcID); err != nil {
-		return err
-	}
-	locationIDs = uniqueWorldIDs(locationIDs)
-	if len(locationIDs) > 0 {
-		if _, err := tx.Exec(ctx, `
-			INSERT INTO dndshare.session_npc_location (npc_id, location_id)
-			SELECT $1, selected.id FROM unnest($2::bigint[]) AS selected(id)`, npcID, locationIDs,
-		); err != nil {
-			return err
-		}
-	}
-	sceneIDs = uniqueWorldIDs(sceneIDs)
-	if len(sceneIDs) > 0 {
-		if _, err := tx.Exec(ctx, `
-			INSERT INTO dndshare.session_npc_scene (npc_id, scene_id)
-			SELECT $1, selected.id FROM unnest($2::bigint[]) AS selected(id)`, npcID, sceneIDs,
-		); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
 func (s *Store) CreateSessionLocation(
 	ctx context.Context,
 	sessionID int64,
@@ -399,10 +366,7 @@ func (s *Store) CreateSessionNPC(
 		return 0, err
 	}
 	defer tx.Rollback(ctx)
-	if err := validateWorldLocationIDsTx(ctx, tx, sessionID, mutation.LocationIDs); err != nil {
-		return 0, err
-	}
-	if err := validateWorldSceneIDsTx(ctx, tx, sessionID, mutation.SceneIDs); err != nil {
+	if err := validateNPCMutationLinksTx(ctx, tx, sessionID, 0, mutation); err != nil {
 		return 0, err
 	}
 	if err := validateNPCRaceItemTx(ctx, tx, sessionID, mutation.RaceItemID); err != nil {
@@ -410,15 +374,19 @@ func (s *Store) CreateSessionNPC(
 	}
 	var id int64
 	err = tx.QueryRow(ctx, `
-		INSERT INTO dndshare.session_npc (session_id, name, race_item_id, role, description, color, sort_order)
-		VALUES ($1, $2, $3, $4, $5, $6,
+		INSERT INTO dndshare.session_npc (
+			session_id, name, race_item_id, role, description, color,
+			image_preset_key, custom_image_id, image_focal_x, image_focal_y, sort_order
+		)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
 			(SELECT COALESCE(MAX(sort_order), -1) + 1 FROM dndshare.session_npc WHERE session_id = $1))
 		RETURNING id`, sessionID, mutation.Name, mutation.RaceItemID, mutation.Role, mutation.Description, mutation.Color,
+		mutation.ImagePresetKey, mutation.CustomImageID, mutation.ImageFocalX, mutation.ImageFocalY,
 	).Scan(&id)
 	if err != nil {
 		return 0, err
 	}
-	if err := replaceNPCLinksTx(ctx, tx, id, mutation.LocationIDs, mutation.SceneIDs); err != nil {
+	if err := replaceNPCLinksTx(ctx, tx, id, mutation); err != nil {
 		return 0, err
 	}
 	if err := tx.Commit(ctx); err != nil {
@@ -437,10 +405,7 @@ func (s *Store) UpdateSessionNPC(
 		return err
 	}
 	defer tx.Rollback(ctx)
-	if err := validateWorldLocationIDsTx(ctx, tx, sessionID, mutation.LocationIDs); err != nil {
-		return err
-	}
-	if err := validateWorldSceneIDsTx(ctx, tx, sessionID, mutation.SceneIDs); err != nil {
+	if err := validateNPCMutationLinksTx(ctx, tx, sessionID, npcID, mutation); err != nil {
 		return err
 	}
 	if err := validateNPCRaceItemTx(ctx, tx, sessionID, mutation.RaceItemID); err != nil {
@@ -448,16 +413,19 @@ func (s *Store) UpdateSessionNPC(
 	}
 	result, err := tx.Exec(ctx, `
 		UPDATE dndshare.session_npc
-		SET name = $3, race_item_id = $4, role = $5, description = $6, color = $7, changed_at = now()
+		SET name = $3, race_item_id = $4, role = $5, description = $6, color = $7,
+		    image_preset_key = $8, custom_image_id = $9, image_focal_x = $10, image_focal_y = $11,
+		    changed_at = now()
 		WHERE id = $1 AND session_id = $2`,
-		npcID, sessionID, mutation.Name, mutation.RaceItemID, mutation.Role, mutation.Description, mutation.Color)
+		npcID, sessionID, mutation.Name, mutation.RaceItemID, mutation.Role, mutation.Description, mutation.Color,
+		mutation.ImagePresetKey, mutation.CustomImageID, mutation.ImageFocalX, mutation.ImageFocalY)
 	if err != nil {
 		return err
 	}
 	if result.RowsAffected() == 0 {
 		return ErrNotFound
 	}
-	if err := replaceNPCLinksTx(ctx, tx, npcID, mutation.LocationIDs, mutation.SceneIDs); err != nil {
+	if err := replaceNPCLinksTx(ctx, tx, npcID, mutation); err != nil {
 		return err
 	}
 	return tx.Commit(ctx)

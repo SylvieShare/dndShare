@@ -17,6 +17,10 @@ func TestSessionWorldSchemaUsesTreeAndExplicitAssociations(t *testing.T) {
 		"CREATE TABLE IF NOT EXISTS dndshare.session_scene_location",
 		"CREATE TABLE IF NOT EXISTS dndshare.session_npc_location",
 		"CREATE TABLE IF NOT EXISTS dndshare.session_npc_scene",
+		"CREATE TABLE IF NOT EXISTS dndshare.session_npc_relation",
+		"session_npc_relation_order_check",
+		"custom_image_id int8 NULL REFERENCES dndshare.storage_image(id) ON DELETE SET NULL",
+		"ADD COLUMN IF NOT EXISTS note text NULL",
 		"ON DELETE CASCADE",
 	} {
 		if !strings.Contains(schemaSessionWorldSQL, fragment) {

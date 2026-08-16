@@ -27,13 +27,13 @@
           :style="{ '--entity-color': npc.color }"
           @click="$emit('select-npc', npc.id)"
         >
-          <span class="session-world-avatar">{{ npcInitial(npc.name) }}</span>
+          <img class="session-world-avatar" :src="npcImageUrl(npc)" alt="" />
           <span class="npc-catalog-copy">
             <strong>{{ npc.name }}</strong>
             <small>{{ [npc.raceName, npc.role].filter(Boolean).join(' · ') || npcPlaceSummary(npc) }}</small>
           </span>
-          <span v-if="npc.locationIds?.length || npc.sceneIds?.length" class="npc-catalog-relations">
-            {{ (npc.locationIds?.length || 0) + (npc.sceneIds?.length || 0) }}
+          <span v-if="relationCount(npc)" class="npc-catalog-relations">
+            {{ relationCount(npc) }}
           </span>
         </button>
       </div>
@@ -48,7 +48,7 @@
 
     <main v-if="selectedNpc" class="session-world-detail">
       <div class="npc-detail-hero" :style="{ '--entity-color': selectedNpc.color }">
-        <div class="npc-detail-avatar">{{ npcInitial(selectedNpc.name) }}</div>
+        <img class="npc-detail-avatar" :src="npcImageUrl(selectedNpc)" alt="" :style="npcPortraitPosition(selectedNpc)" />
         <div class="npc-detail-heading">
           <span>NPC · {{ [selectedNpc.raceName, selectedNpc.role].filter(Boolean).join(' · ') || 'раса и роль не указаны' }}</span>
           <h2>{{ selectedNpc.name }}</h2>
@@ -74,7 +74,7 @@
             <div v-if="attachedLocations.length" class="session-world-compact-list">
               <button v-for="location in attachedLocations" :key="location.id" type="button" @click="$emit('open-location', location.id)">
                 <span class="session-world-scene-image" :style="{ backgroundImage: `url(${sessionImagePresetUrl(location.imagePresetKey)})` }" />
-                <span><strong>{{ location.name }}</strong><small>{{ locationPath(location) }}</small></span>
+                <span><strong>{{ location.name }}</strong><small>{{ location.relationNote || locationPath(location) }}</small></span>
                 <ChevronRight :size="14" />
               </button>
             </div>
@@ -87,13 +87,26 @@
             <div v-if="attachedScenes.length" class="session-world-compact-list">
               <div v-for="scene in attachedScenes" :key="scene.id" class="session-world-scene-row">
                 <span class="session-world-scene-image" :style="{ backgroundImage: `url(${sessionImagePresetUrl(scene.imagePresetKey)})` }" />
-                <span><strong>{{ scene.name }}</strong><small>{{ sceneContextLabel(scene) }}</small></span>
+                <span><strong>{{ scene.name }}</strong><small>{{ scene.relationNote || sceneContextLabel(scene) }}</small></span>
               </div>
             </div>
             <button v-else-if="isDm" type="button" class="session-world-inline-empty" @click="openEdit(selectedNpc)">Привязать сценарий</button>
             <p v-else class="session-world-muted">Сценарии не привязаны.</p>
           </section>
         </div>
+
+        <section class="session-world-section">
+          <div class="session-world-section-title"><span>Связи с NPC</span><small>{{ attachedNpcs.length }}</small></div>
+          <div v-if="attachedNpcs.length" class="session-world-compact-list">
+            <button v-for="npc in attachedNpcs" :key="npc.id" type="button" @click="$emit('select-npc', npc.id)">
+              <img class="session-world-avatar" :src="npcImageUrl(npc)" alt="" />
+              <span><strong>{{ npc.name }}</strong><small>{{ npc.relationNote || npc.role || 'Связанный персонаж' }}</small></span>
+              <ChevronRight :size="14" />
+            </button>
+          </div>
+          <button v-else-if="isDm" type="button" class="session-world-inline-empty" @click="openEdit(selectedNpc)">Добавить связь с NPC</button>
+          <p v-else class="session-world-muted">Связей с другими NPC пока нет.</p>
+        </section>
       </div>
     </main>
 
@@ -111,6 +124,7 @@
       :locations="locations"
       :locations-by-id="world.locationsById.value"
       :scenes="scenes"
+      :npcs="npcs"
       :saving="world.saving.value"
       @close="closeEditor"
       @save="saveNpc"
@@ -135,8 +149,8 @@ import {
 } from '@lucide/vue'
 import { ConfirmDialog } from '@sylvieshare/share-ui'
 import NpcEditorModal from '@/features/sessions/components/NpcEditorModal.vue'
-import { locationBreadcrumb, locationKind, npcInitial, ruPlural, sceneContextLabel } from '@/features/sessions/lib/sessionWorld'
-import { sessionImagePresetUrl } from '@/features/sessions/lib/sessionImages'
+import { locationBreadcrumb, locationKind, ruPlural, sceneContextLabel } from '@/features/sessions/lib/sessionWorld'
+import { npcImageUrl, sessionImagePresetUrl } from '@/features/sessions/lib/sessionImages'
 
 const props = defineProps({
   world: { type: Object, required: true },
@@ -157,17 +171,29 @@ const filteredNpcs = computed(() => {
   if (!needle) return npcs.value
   return npcs.value.filter(npc => `${npc.name} ${npc.raceName || ''} ${npc.role || ''} ${npc.description || ''}`.toLocaleLowerCase('ru').includes(needle))
 })
-const attachedLocations = computed(() => (selectedNpc.value?.locationIds || []).map(id => props.world.locationsById.value.get(id)).filter(Boolean))
-const attachedScenes = computed(() => (selectedNpc.value?.sceneIds || []).map(id => props.world.scenesById.value.get(id)).filter(Boolean))
+const attachedLocations = computed(() => (selectedNpc.value?.locationLinks || []).map(link => {
+  const item = props.world.locationsById.value.get(link.locationId)
+  return item ? { ...item, relationNote: link.note } : null
+}).filter(Boolean))
+const attachedScenes = computed(() => (selectedNpc.value?.sceneLinks || []).map(link => {
+  const item = props.world.scenesById.value.get(link.sceneId)
+  return item ? { ...item, relationNote: link.note } : null
+}).filter(Boolean))
+const attachedNpcs = computed(() => (selectedNpc.value?.npcLinks || []).map(link => {
+  const item = props.world.npcsById.value.get(link.npcId)
+  return item ? { ...item, relationNote: link.note } : null
+}).filter(Boolean))
 
 function locationPath(location) {
   const ancestors = locationBreadcrumb(location, props.world.locationsById.value).slice(0, -1)
   return ancestors.map(item => item.name).join(' · ') || locationKind(location.kind).shortLabel
 }
 function npcPlaceSummary(npc) {
-  const first = props.world.locationsById.value.get(npc.locationIds?.[0])
+  const first = props.world.locationsById.value.get(npc.locationLinks?.[0]?.locationId)
   return first ? first.name : 'Без привязок'
 }
+function relationCount(npc) { return (npc.locationLinks?.length || 0) + (npc.sceneLinks?.length || 0) + (npc.npcLinks?.length || 0) }
+function npcPortraitPosition(npc) { return { objectPosition: `${(npc.imageFocalX ?? .5) * 100}% ${(npc.imageFocalY ?? .5) * 100}%` } }
 function openCreate() { editingNpc.value = null; editorOpen.value = true }
 function openEdit(npc) { editingNpc.value = npc; editorOpen.value = true }
 function closeEditor() { editorOpen.value = false; editingNpc.value = null }

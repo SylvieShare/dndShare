@@ -12,6 +12,11 @@ import (
 
 var sessionWorldColor = regexp.MustCompile(`^#[0-9a-fA-F]{6}$`)
 
+var npcImagePresets = map[string]bool{
+	"npc-scholar": true, "npc-ranger": true, "npc-artisan": true,
+	"npc-mystic": true, "npc-mercenary": true, "npc-noble": true,
+}
+
 var sessionLocationKinds = map[string]bool{
 	"region": true, "settlement": true, "district": true, "building": true,
 	"room": true, "wilderness": true, "dungeon": true, "other": true,
@@ -40,13 +45,18 @@ type locationMutationRequest struct {
 }
 
 type npcMutationRequest struct {
-	Name        string  `json:"name"`
-	RaceItemID  *int64  `json:"raceItemId"`
-	Role        *string `json:"role"`
-	Description *string `json:"description"`
-	Color       string  `json:"color"`
-	LocationIDs []int64 `json:"locationIds"`
-	SceneIDs    []int64 `json:"sceneIds"`
+	Name           string                         `json:"name"`
+	RaceItemID     *int64                         `json:"raceItemId"`
+	Role           *string                        `json:"role"`
+	Description    *string                        `json:"description"`
+	Color          string                         `json:"color"`
+	ImagePresetKey *string                        `json:"imagePresetKey"`
+	CustomImageID  *int64                         `json:"customImageId"`
+	ImageFocalX    float64                        `json:"imageFocalX"`
+	ImageFocalY    float64                        `json:"imageFocalY"`
+	LocationLinks  []store.SessionNPCLocationLink `json:"locationLinks"`
+	SceneLinks     []store.SessionNPCSceneLink    `json:"sceneLinks"`
+	NPCLinks       []store.SessionNPCNPCLink      `json:"npcLinks"`
 }
 
 type sessionWorldMutationResponse struct {
@@ -128,20 +138,66 @@ func npcMutation(w http.ResponseWriter, req npcMutationRequest) (store.SessionNP
 		badRequest(w, "Некорректный цвет NPC")
 		return store.SessionNPCMutation{}, false
 	}
-	if len(req.LocationIDs) > 500 || len(req.SceneIDs) > 500 ||
-		!validSessionWorldIDs(req.LocationIDs) || !validSessionWorldIDs(req.SceneIDs) {
+	if req.ImagePresetKey == nil && req.CustomImageID == nil {
+		preset := "npc-scholar"
+		req.ImagePresetKey = &preset
+	}
+	if req.ImagePresetKey != nil {
+		preset := strings.TrimSpace(*req.ImagePresetKey)
+		if !npcImagePresets[preset] {
+			badRequest(w, "Некорректное изображение NPC")
+			return store.SessionNPCMutation{}, false
+		}
+		req.ImagePresetKey = &preset
+	}
+	if req.ImagePresetKey != nil && req.CustomImageID != nil {
+		badRequest(w, "Выберите один источник изображения")
+		return store.SessionNPCMutation{}, false
+	}
+	if len(req.LocationLinks) > 500 || len(req.SceneLinks) > 500 || len(req.NPCLinks) > 500 ||
+		!validNPCLinks(req.LocationLinks, req.SceneLinks, req.NPCLinks) {
 		badRequest(w, "Слишком много привязок")
 		return store.SessionNPCMutation{}, false
 	}
+	cleanNPCLinkNotes(req.LocationLinks, req.SceneLinks, req.NPCLinks)
 	return store.SessionNPCMutation{
-		Name:        name,
-		RaceItemID:  req.RaceItemID,
-		Role:        cleanText(req.Role, 160),
-		Description: cleanText(req.Description, 5000),
-		Color:       strings.ToLower(req.Color),
-		LocationIDs: req.LocationIDs,
-		SceneIDs:    req.SceneIDs,
+		Name: name, RaceItemID: req.RaceItemID, Role: cleanText(req.Role, 160),
+		Description: cleanText(req.Description, 5000), Color: strings.ToLower(req.Color),
+		ImagePresetKey: req.ImagePresetKey, CustomImageID: req.CustomImageID,
+		ImageFocalX: clamp01(req.ImageFocalX), ImageFocalY: clamp01(req.ImageFocalY),
+		LocationLinks: req.LocationLinks, SceneLinks: req.SceneLinks, NPCLinks: req.NPCLinks,
 	}, true
+}
+
+func validNPCLinks(locations []store.SessionNPCLocationLink, scenes []store.SessionNPCSceneLink, npcs []store.SessionNPCNPCLink) bool {
+	for _, link := range locations {
+		if link.LocationID <= 0 {
+			return false
+		}
+	}
+	for _, link := range scenes {
+		if link.SceneID <= 0 {
+			return false
+		}
+	}
+	for _, link := range npcs {
+		if link.NPCID <= 0 {
+			return false
+		}
+	}
+	return true
+}
+
+func cleanNPCLinkNotes(locations []store.SessionNPCLocationLink, scenes []store.SessionNPCSceneLink, npcs []store.SessionNPCNPCLink) {
+	for index := range locations {
+		locations[index].Note = cleanText(locations[index].Note, 500)
+	}
+	for index := range scenes {
+		scenes[index].Note = cleanText(scenes[index].Note, 500)
+	}
+	for index := range npcs {
+		npcs[index].Note = cleanText(npcs[index].Note, 500)
+	}
 }
 
 func (s *Server) writeSessionWorldMutation(
@@ -273,7 +329,7 @@ func (s *Server) handleDeleteSessionLocation(w http.ResponseWriter, r *http.Requ
 }
 
 func (s *Server) handleCreateSessionNPC(w http.ResponseWriter, r *http.Request) {
-	_, session, ok := s.requireSessionOwner(w, r)
+	userID, session, ok := s.requireSessionOwner(w, r)
 	if !ok {
 		return
 	}
@@ -286,6 +342,12 @@ func (s *Server) handleCreateSessionNPC(w http.ResponseWriter, r *http.Request) 
 	if !ok {
 		return
 	}
+	if mutation.CustomImageID != nil {
+		if _, err := s.store.GetActiveUserStorageImage(r.Context(), *mutation.CustomImageID, userID); err != nil {
+			badRequest(w, "Загруженное изображение недоступно")
+			return
+		}
+	}
 	id, err := s.store.CreateSessionNPC(r.Context(), session.ID, mutation)
 	if err != nil {
 		writeSessionWorldStoreError(w, err)
@@ -295,7 +357,7 @@ func (s *Server) handleCreateSessionNPC(w http.ResponseWriter, r *http.Request) 
 }
 
 func (s *Server) handleUpdateSessionNPC(w http.ResponseWriter, r *http.Request) {
-	_, session, ok := s.requireSessionOwner(w, r)
+	userID, session, ok := s.requireSessionOwner(w, r)
 	if !ok {
 		return
 	}
@@ -311,6 +373,12 @@ func (s *Server) handleUpdateSessionNPC(w http.ResponseWriter, r *http.Request) 
 	mutation, ok := npcMutation(w, req)
 	if !ok {
 		return
+	}
+	if mutation.CustomImageID != nil {
+		if _, err := s.store.GetActiveUserStorageImage(r.Context(), *mutation.CustomImageID, userID); err != nil {
+			badRequest(w, "Загруженное изображение недоступно")
+			return
+		}
 	}
 	if err := s.store.UpdateSessionNPC(r.Context(), session.ID, id, mutation); err != nil {
 		writeSessionWorldStoreError(w, err)

@@ -4,6 +4,8 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"dndshare/internal/store"
 )
 
 func TestLocationMutationValidatesKindAndPreset(t *testing.T) {
@@ -44,16 +46,21 @@ func TestLocationMutationValidatesKindAndPreset(t *testing.T) {
 
 func TestNpcMutationNormalizesColorAndText(t *testing.T) {
 	role := "  Проводник  "
+	note := "  Старый долг  "
 	raceItemID := int64(42)
 	recorder := httptest.NewRecorder()
 	mutation, ok := npcMutation(recorder, npcMutationRequest{
 		Name: "  Мира  ", RaceItemID: &raceItemID, Role: &role, Color: "#A06CE8",
+		NPCLinks: []store.SessionNPCNPCLink{{NPCID: 7, Note: &note}},
 	})
 	if !ok {
 		t.Fatalf("valid npc rejected: %s", recorder.Body.String())
 	}
 	if mutation.Name != "Мира" || mutation.RaceItemID == nil || *mutation.RaceItemID != 42 || mutation.Role == nil || *mutation.Role != "Проводник" || mutation.Color != "#a06ce8" {
 		t.Fatalf("unexpected mutation: %+v", mutation)
+	}
+	if mutation.ImagePresetKey == nil || *mutation.ImagePresetKey != "npc-scholar" || mutation.NPCLinks[0].Note == nil || *mutation.NPCLinks[0].Note != "Старый долг" {
+		t.Fatalf("unexpected image or NPC link mutation: %+v", mutation)
 	}
 
 	recorder = httptest.NewRecorder()

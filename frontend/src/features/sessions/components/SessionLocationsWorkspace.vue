@@ -107,7 +107,7 @@
             <div class="session-world-section-title"><span>NPC</span><small>{{ attachedNpcs.length }}</small></div>
             <div v-if="attachedNpcs.length" class="session-world-compact-list">
               <button v-for="npc in attachedNpcs" :key="npc.id" type="button" @click="$emit('open-npc', npc.id)">
-                <span class="session-world-avatar" :style="{ '--entity-color': npc.color }">{{ npcInitial(npc.name) }}</span>
+                <img class="session-world-avatar" :src="npcImageUrl(npc)" alt="" />
                 <span><strong>{{ npc.name }}</strong><small>{{ npc.role || 'Роль не указана' }}</small></span>
                 <ChevronRight :size="14" />
               </button>
@@ -144,6 +144,7 @@
       :location="editingLocation"
       :locations="locations"
       :scenes="scenes"
+      :npcs="npcs"
       :default-parent-id="defaultParentId"
       :saving="world.saving.value"
       @close="closeEditors"
@@ -184,9 +185,9 @@ import LocationTreeRow from '@/features/sessions/components/LocationTreeRow.vue'
 import NpcEditorModal from '@/features/sessions/components/NpcEditorModal.vue'
 import {
   buildLocationForest, locationBreadcrumb, locationDescendantIds, locationKind,
-  locationSearchMatches, npcInitial, ruPlural, sceneContextLabel,
+  locationSearchMatches, ruPlural, sceneContextLabel,
 } from '@/features/sessions/lib/sessionWorld'
-import { sessionImagePresetUrl } from '@/features/sessions/lib/sessionImages'
+import { npcImageUrl, sessionImagePresetUrl } from '@/features/sessions/lib/sessionImages'
 
 const props = defineProps({
   sessionUuid: { type: String, required: true },
@@ -197,6 +198,7 @@ const props = defineProps({
 const emit = defineEmits(['select-location', 'open-npc'])
 const locations = computed(() => props.world.locations.value)
 const scenes = computed(() => props.world.scenes.value)
+const npcs = computed(() => props.world.npcs.value)
 const selectedLocation = computed(() => props.world.locationsById.value.get(Number(props.selectedLocationId)) || null)
 const query = ref('')
 const expandedIds = ref(readExpanded())

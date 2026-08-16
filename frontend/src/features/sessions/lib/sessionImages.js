@@ -45,6 +45,29 @@ export const SESSION_IMAGE_CATEGORIES = [
 
 export const SESSION_IMAGE_PRESETS = SESSION_IMAGE_CATEGORIES.flatMap(category => category.presets)
 
+export const NPC_IMAGE_CATEGORIES = [
+  {
+    key: 'civil', label: 'Горожане', presets: [
+      { key: 'npc-scholar', label: 'Учёный' },
+      { key: 'npc-artisan', label: 'Ремесленник' },
+    ],
+  },
+  {
+    key: 'adventurers', label: 'Искатели приключений', presets: [
+      { key: 'npc-ranger', label: 'Следопыт' },
+      { key: 'npc-mercenary', label: 'Наёмник' },
+    ],
+  },
+  {
+    key: 'intrigue', label: 'Мистика и интриги', presets: [
+      { key: 'npc-mystic', label: 'Мистик' },
+      { key: 'npc-noble', label: 'Знать' },
+    ],
+  },
+]
+
+export const NPC_IMAGE_PRESETS = NPC_IMAGE_CATEGORIES.flatMap(category => category.presets)
+
 export function sessionImageCategory(key) {
   return SESSION_IMAGE_CATEGORIES.find(category => category.presets.some(preset => preset.key === key))
     ?? SESSION_IMAGE_CATEGORIES[0]
@@ -56,4 +79,12 @@ export function sessionImagePresetUrl(key) {
 
 export function sessionImageUrl(entity) {
   return entity?.customImageUrl || sessionImagePresetUrl(entity?.imagePresetKey)
+}
+
+export function npcImagePresetUrl(key) {
+  return key ? `/static/npc-presets/${key}.jpg` : ''
+}
+
+export function npcImageUrl(entity) {
+  return entity?.customImageUrl || npcImagePresetUrl(entity?.imagePresetKey || 'npc-scholar')
 }

@@ -26,17 +26,38 @@ type SessionLocation struct {
 }
 
 type SessionNPC struct {
-	ID          int64   `json:"id"`
-	SessionID   int64   `json:"sessionId"`
-	Name        string  `json:"name"`
-	RaceItemID  *int64  `json:"raceItemId,omitempty"`
-	RaceName    *string `json:"raceName,omitempty"`
-	Role        *string `json:"role,omitempty"`
-	Description *string `json:"description,omitempty"`
-	Color       string  `json:"color"`
-	SortOrder   int     `json:"sortOrder"`
-	LocationIDs []int64 `json:"locationIds"`
-	SceneIDs    []int64 `json:"sceneIds"`
+	ID             int64                    `json:"id"`
+	SessionID      int64                    `json:"sessionId"`
+	Name           string                   `json:"name"`
+	RaceItemID     *int64                   `json:"raceItemId,omitempty"`
+	RaceName       *string                  `json:"raceName,omitempty"`
+	Role           *string                  `json:"role,omitempty"`
+	Description    *string                  `json:"description,omitempty"`
+	Color          string                   `json:"color"`
+	ImagePresetKey *string                  `json:"imagePresetKey,omitempty"`
+	CustomImageID  *int64                   `json:"customImageId,omitempty"`
+	CustomImageURL *string                  `json:"customImageUrl,omitempty"`
+	ImageFocalX    float64                  `json:"imageFocalX"`
+	ImageFocalY    float64                  `json:"imageFocalY"`
+	SortOrder      int                      `json:"sortOrder"`
+	LocationLinks  []SessionNPCLocationLink `json:"locationLinks"`
+	SceneLinks     []SessionNPCSceneLink    `json:"sceneLinks"`
+	NPCLinks       []SessionNPCNPCLink      `json:"npcLinks"`
+}
+
+type SessionNPCLocationLink struct {
+	LocationID int64   `json:"locationId"`
+	Note       *string `json:"note,omitempty"`
+}
+
+type SessionNPCSceneLink struct {
+	SceneID int64   `json:"sceneId"`
+	Note    *string `json:"note,omitempty"`
+}
+
+type SessionNPCNPCLink struct {
+	NPCID int64   `json:"npcId"`
+	Note  *string `json:"note,omitempty"`
 }
 
 type SessionWorldScene struct {
@@ -68,13 +89,18 @@ type SessionLocationMutation struct {
 }
 
 type SessionNPCMutation struct {
-	Name        string
-	RaceItemID  *int64
-	Role        *string
-	Description *string
-	Color       string
-	LocationIDs []int64
-	SceneIDs    []int64
+	Name           string
+	RaceItemID     *int64
+	Role           *string
+	Description    *string
+	Color          string
+	ImagePresetKey *string
+	CustomImageID  *int64
+	ImageFocalX    float64
+	ImageFocalY    float64
+	LocationLinks  []SessionNPCLocationLink
+	SceneLinks     []SessionNPCSceneLink
+	NPCLinks       []SessionNPCNPCLink
 }
 
 func scanSessionLocation(row pgx.Row) (SessionLocation, error) {
@@ -91,10 +117,13 @@ func scanSessionLocation(row pgx.Row) (SessionLocation, error) {
 }
 
 func scanSessionNPC(row pgx.Row) (SessionNPC, error) {
-	npc := SessionNPC{LocationIDs: []int64{}, SceneIDs: []int64{}}
+	npc := SessionNPC{
+		LocationLinks: []SessionNPCLocationLink{}, SceneLinks: []SessionNPCSceneLink{}, NPCLinks: []SessionNPCNPCLink{},
+	}
 	err := row.Scan(
 		&npc.ID, &npc.SessionID, &npc.Name, &npc.RaceItemID,
 		&npc.Role, &npc.Description, &npc.Color, &npc.SortOrder, &npc.RaceName,
+		&npc.ImagePresetKey, &npc.CustomImageID, &npc.CustomImageURL, &npc.ImageFocalX, &npc.ImageFocalY,
 	)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return SessionNPC{}, ErrNotFound
@@ -111,9 +140,11 @@ func (s *Store) GetSessionLocation(ctx context.Context, id int64) (SessionLocati
 func (s *Store) GetSessionNPC(ctx context.Context, id int64) (SessionNPC, error) {
 	return scanSessionNPC(s.pool.QueryRow(ctx, `
 		SELECT npc.id, npc.session_id, npc.name, npc.race_item_id, npc.role,
-		       npc.description, npc.color, npc.sort_order, race.name
+		       npc.description, npc.color, npc.sort_order, race.name,
+		       npc.image_preset_key, npc.custom_image_id, image.url, npc.image_focal_x, npc.image_focal_y
 		FROM dndshare.session_npc npc
 		LEFT JOIN dndshare.item race ON race.id = npc.race_item_id
+		LEFT JOIN dndshare.storage_image image ON image.id = npc.custom_image_id AND image.deleted = false
 		WHERE npc.id = $1`, id))
 }
 
@@ -148,9 +179,11 @@ func (s *Store) GetSessionWorld(ctx context.Context, sessionID int64) (SessionWo
 
 	npcRows, err := s.pool.Query(ctx, `
 		SELECT npc.id, npc.session_id, npc.name, npc.race_item_id, npc.role,
-		       npc.description, npc.color, npc.sort_order, race.name
+		       npc.description, npc.color, npc.sort_order, race.name,
+		       npc.image_preset_key, npc.custom_image_id, image.url, npc.image_focal_x, npc.image_focal_y
 		FROM dndshare.session_npc npc
 		LEFT JOIN dndshare.item race ON race.id = npc.race_item_id
+		LEFT JOIN dndshare.storage_image image ON image.id = npc.custom_image_id AND image.deleted = false
 		WHERE npc.session_id = $1
 		ORDER BY npc.sort_order, npc.id`, sessionID)
 	if err != nil {
@@ -246,7 +279,7 @@ func (s *Store) fillSessionWorldLinks(ctx context.Context, sessionID int64, worl
 	rows.Close()
 
 	rows, err = s.pool.Query(ctx, `
-		SELECT link.npc_id, link.location_id
+		SELECT link.npc_id, link.location_id, link.note
 		FROM dndshare.session_npc_location link
 		JOIN dndshare.session_npc npc ON npc.id = link.npc_id
 		WHERE npc.session_id = $1`, sessionID)
@@ -255,12 +288,13 @@ func (s *Store) fillSessionWorldLinks(ctx context.Context, sessionID int64, worl
 	}
 	for rows.Next() {
 		var npcID, locationID int64
-		if err := rows.Scan(&npcID, &locationID); err != nil {
+		var note *string
+		if err := rows.Scan(&npcID, &locationID, &note); err != nil {
 			rows.Close()
 			return err
 		}
 		if index, ok := npcIndex[npcID]; ok {
-			world.NPCs[index].LocationIDs = append(world.NPCs[index].LocationIDs, locationID)
+			world.NPCs[index].LocationLinks = append(world.NPCs[index].LocationLinks, SessionNPCLocationLink{LocationID: locationID, Note: note})
 		}
 		if index, ok := locationIndex[locationID]; ok {
 			world.Locations[index].NPCIDs = append(world.Locations[index].NPCIDs, npcID)
@@ -273,24 +307,53 @@ func (s *Store) fillSessionWorldLinks(ctx context.Context, sessionID int64, worl
 	rows.Close()
 
 	rows, err = s.pool.Query(ctx, `
-		SELECT link.npc_id, link.scene_id
+		SELECT link.npc_id, link.scene_id, link.note
 		FROM dndshare.session_npc_scene link
 		JOIN dndshare.session_npc npc ON npc.id = link.npc_id
 		WHERE npc.session_id = $1`, sessionID)
 	if err != nil {
 		return err
 	}
-	defer rows.Close()
 	for rows.Next() {
 		var npcID, sceneID int64
-		if err := rows.Scan(&npcID, &sceneID); err != nil {
+		var note *string
+		if err := rows.Scan(&npcID, &sceneID, &note); err != nil {
+			rows.Close()
 			return err
 		}
 		if index, ok := npcIndex[npcID]; ok {
-			world.NPCs[index].SceneIDs = append(world.NPCs[index].SceneIDs, sceneID)
+			world.NPCs[index].SceneLinks = append(world.NPCs[index].SceneLinks, SessionNPCSceneLink{SceneID: sceneID, Note: note})
 		}
 		if index, ok := sceneIndex[sceneID]; ok {
 			world.Scenes[index].NPCIDs = append(world.Scenes[index].NPCIDs, npcID)
+		}
+	}
+	if err := rows.Err(); err != nil {
+		rows.Close()
+		return err
+	}
+	rows.Close()
+
+	rows, err = s.pool.Query(ctx, `
+		SELECT relation.left_npc_id, relation.right_npc_id, relation.note
+		FROM dndshare.session_npc_relation relation
+		JOIN dndshare.session_npc npc ON npc.id = relation.left_npc_id
+		WHERE npc.session_id = $1`, sessionID)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var leftID, rightID int64
+		var note *string
+		if err := rows.Scan(&leftID, &rightID, &note); err != nil {
+			return err
+		}
+		if index, ok := npcIndex[leftID]; ok {
+			world.NPCs[index].NPCLinks = append(world.NPCs[index].NPCLinks, SessionNPCNPCLink{NPCID: rightID, Note: note})
+		}
+		if index, ok := npcIndex[rightID]; ok {
+			world.NPCs[index].NPCLinks = append(world.NPCs[index].NPCLinks, SessionNPCNPCLink{NPCID: leftID, Note: note})
 		}
 	}
 	return rows.Err()

@@ -157,16 +157,24 @@ editor excludes the location itself and all descendants from its parent picker,
 and deletion is blocked until direct children are moved or deleted.
 
 Prepared NPCs live in one searchable session catalogue. A record has a name,
-an optional race item, optional role and description, and a chosen color used
-consistently by its initial-based portrait. The race picker reads type `8`
+an optional race item, optional role and description, card color and a portrait.
+The portrait may come from an independent NPC preset catalogue or an uploaded
+storage image; it is not mixed with chapter/location backgrounds. The race picker reads type `8`
 handbook items, including subraces; the stored nullable FK is cleared if that
 item is removed. The name field has an explicit dice action backed by the same
 race-aware generator as the D&D character wizard. Standard race profiles combine
 at least 80 given-name/family-name variants each, while an unknown custom race
-uses a broad fantasy fallback. One NPC can be attached to multiple locations and
-multiple scenarios through the same editor; location and NPC detail views show
-the reverse associations without duplicating the NPC record. Editors use the
+uses a broad fantasy fallback. One NPC can be attached to multiple locations,
+multiple scenarios and other NPCs. Each association carries an optional private
+note. The editor shows only current associations with remove actions; `Добавить`
+opens a dedicated searchable picker instead of rendering every candidate as a
+checkbox. Location and NPC detail views show reverse associations without
+duplicating the NPC record. Editors use the
 shared `ColorPresetPicker`, `SessionImagePicker`, form controls and modal frame.
+`SessionImagePicker` keeps only the current image and `Сменить` in the parent
+editor. Its modal renders every preset in one grouped scroll, with category
+shortcuts that jump to section dividers; upload, when supported, is an action in
+that modal.
 World data is loaded lazily as one aggregate through `useSessionWorld`, then a
 successful mutation replaces that aggregate so every reverse association stays
 consistent.
