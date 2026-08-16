@@ -114,42 +114,50 @@
 }
 
 .players-select-all {
-  min-height: 22px;
-  display: flex;
+  position: relative;
+  min-width: 30px;
+  height: 30px;
+  display: inline-flex;
   flex: none;
   align-items: center;
-  gap: 5px;
-  padding: 3px 7px;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  background: color-mix(in srgb, var(--surface-raised) 86%, transparent);
-  color: var(--text-muted);
+  justify-content: center;
+  padding: 0 7px;
+  border: 1px solid color-mix(in srgb, var(--accent) 32%, transparent);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  color: color-mix(in srgb, var(--accent) 76%, var(--text-1));
   cursor: pointer;
   font: inherit;
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0;
-  white-space: nowrap;
-  transition: border-color 0.15s, background 0.15s, color 0.15s;
+  transition: background 0.12s, border-color 0.12s, color 0.12s, transform 0.1s;
 }
 
 .players-select-all:hover:not(:disabled),
 .players-select-all--active {
-  border-color: color-mix(in srgb, var(--accent) 64%, var(--border));
-  background: color-mix(in srgb, var(--accent) 10%, var(--surface-raised));
-  color: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 62%, transparent);
+  background: color-mix(in srgb, var(--accent) 17%, transparent);
+  color: var(--text-1);
 }
 
 .players-select-all:disabled { cursor: default; opacity: 0.45; }
+.players-select-all:active:not(:disabled) { transform: scale(0.92); }
 
 .players-select-all-shortcut {
-  padding: 0;
-  border: 0;
-  background: none;
-  color: currentColor;
+  position: absolute;
+  z-index: 3;
+  right: -6px;
+  bottom: -9px;
+  padding: 2px 4px;
+  border: 1px solid color-mix(in srgb, var(--accent) 42%, var(--border));
+  border-radius: 4px;
+  background: var(--popover-bg);
+  color: var(--accent-soft);
+  box-shadow: var(--shadow-sm);
   font: 750 8px/1 var(--font-ui);
-  opacity: 0.78;
+  white-space: nowrap;
+  pointer-events: none;
 }
+
+.campaign-workspace--combat .col-section-title { overflow: visible; }
 
 .poll-indicator {
   flex: 1;

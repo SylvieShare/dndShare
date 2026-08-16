@@ -120,8 +120,7 @@
             aria-keyshortcuts="Shift+P"
             @click="toggleAllEncounterPlayers"
           >
-            <ListChecks :size="14" />
-            <span>{{ allEncounterPlayersSelected ? 'Снять выбор' : 'Выбрать всех' }}</span>
+            <ListChecks :size="17" />
             <kbd v-if="showShortcutHints" class="players-select-all-shortcut">{{ shortcutLabels.panel }}+P</kbd>
           </button>
           <span class="poll-indicator" :class="pollStatus">
@@ -539,6 +538,7 @@ useSessionHotkeys({
   toggleNpcSelection: () => encounter.selectAllInGroup('reserve-npc'),
   toggleSceneSelection: () => encounter.selectAllInGroup('combat'),
   rerollInitiative: () => encounter.rerollSelectedInitiative(),
+  removeSelectedNpcs: () => encounter.removeSelectedNpcs(),
 })
 
 async function openRelatedScene(sceneId) {

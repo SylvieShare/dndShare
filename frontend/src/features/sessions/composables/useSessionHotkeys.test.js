@@ -27,8 +27,9 @@ describe('session hotkeys', () => {
     expect(sessionHotkeyCommand(key('KeyN', { shiftKey: true }))).toEqual({ type: 'toggle-npc-selection' })
     expect(sessionHotkeyCommand(key('KeyA', { shiftKey: true }))).toEqual({ type: 'toggle-scene-selection' })
     expect(sessionHotkeyCommand(key('KeyR', { shiftKey: true }))).toEqual({ type: 'reroll-initiative' })
-    expect(sessionHotkeyCommand(key('BracketLeft', { key: '[' }))).toEqual({ type: 'previous-turn' })
-    expect(sessionHotkeyCommand(key('BracketRight', { key: ']' }))).toEqual({ type: 'next-turn' })
+    expect(sessionHotkeyCommand(key('ArrowLeft', { key: 'ArrowLeft' }))).toEqual({ type: 'previous-turn' })
+    expect(sessionHotkeyCommand(key('ArrowRight', { key: 'ArrowRight' }))).toEqual({ type: 'next-turn' })
+    expect(sessionHotkeyCommand(key('Backspace', { key: 'Backspace' }))).toEqual({ type: 'remove-selected-npcs' })
   })
 
   it('toggles contextual help and ignores incomplete combinations', () => {

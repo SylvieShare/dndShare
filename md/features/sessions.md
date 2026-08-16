@@ -350,10 +350,12 @@ and popovers.
 Combat uses the same contextual shortcut system. `Shift+B` opens or closes the
 combat workspace for any participant and preserves the chapter/scenario context
 of the visible story canvas. While that workspace is open, DM-only commands are
-`Shift+Enter` to start or end the encounter, `[` / `]` to move to the previous
+`Shift+Enter` to start or end the encounter, `←` / `→` to move to the previous
 or next turn, `Shift+P` to toggle all players, `Shift+N` to toggle the NPC
 reserve, `Shift+A` to toggle every combatant on the battle scene, and `Shift+R`
-to reroll initiative for the current selection. The start/end shortcut calls the
+to reroll initiative for the current selection. `Backspace` removes only the
+selected NPCs, matching the existing toolbar action and never removing selected
+players. The start/end shortcut calls the
 same transition controller as the toolbar button and remains unavailable until
 at least one participant is selected. When contextual help is enabled, each
 combination appears beside its corresponding combat control. `Shift+Enter`
@@ -523,7 +525,8 @@ transitions as outside combat: the pinned scenario returns to its scenario
 canvas, the pinned chapter returns to chapters, and a spotlight chapter opens
 its scenarios. These transitions leave the encounter state intact. The player rail adds a
 combat-only “select all” action above its cards; it selects or clears every
-player combatant while preserving any NPC selection. Without a scenario context the
+player combatant while preserving any NPC selection. The action is the same
+compact icon-only control used above the battle scene and NPC reserve. Without a scenario context the
 combat header sits immediately to the right of the focused chapter;
 combatants remain independent tiles below it rather than being wrapped in one
 central card. On desktop the combat workspace retains the same reserved right

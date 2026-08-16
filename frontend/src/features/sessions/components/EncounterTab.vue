@@ -39,13 +39,13 @@
             <span class="enc-round-num">{{ enc.encounter.round }}</span>
           </div>
           <div class="enc-turn-group">
-            <button class="enc-icon-btn" :disabled="enc.inCombat.length === 0" title="Предыдущий ход" aria-label="Предыдущий ход" aria-keyshortcuts="[" @click="enc.prevTurn">
+            <button class="enc-icon-btn" :disabled="enc.inCombat.length === 0" title="Предыдущий ход" aria-label="Предыдущий ход" aria-keyshortcuts="ArrowLeft" @click="enc.prevTurn">
               <ChevronLeft :size="18" />
-              <kbd v-if="showShortcutHints" class="enc-shortcut-hint" aria-hidden="true">[</kbd>
+              <kbd v-if="showShortcutHints" class="enc-shortcut-hint" aria-hidden="true">←</kbd>
             </button>
-            <button class="enc-icon-btn enc-icon-btn--next" :disabled="enc.inCombat.length === 0" title="Следующий ход" aria-label="Следующий ход" aria-keyshortcuts="]" @click="enc.nextTurn">
+            <button class="enc-icon-btn enc-icon-btn--next" :disabled="enc.inCombat.length === 0" title="Следующий ход" aria-label="Следующий ход" aria-keyshortcuts="ArrowRight" @click="enc.nextTurn">
               <ChevronRight :size="18" />
-              <kbd v-if="showShortcutHints" class="enc-shortcut-hint" aria-hidden="true">]</kbd>
+              <kbd v-if="showShortcutHints" class="enc-shortcut-hint" aria-hidden="true">→</kbd>
             </button>
           </div>
         </template>
@@ -106,10 +106,12 @@
               :disabled="enc.selectedNpcCount === 0"
               title="Удалить выбранных существ"
               aria-label="Удалить выбранных существ"
+              aria-keyshortcuts="Backspace"
               @click="enc.removeSelectedNpcs"
             >
               <Trash2 :size="18" />
               <span v-if="enc.selectedNpcCount" class="enc-icon-count">{{ enc.selectedNpcCount }}</span>
+              <kbd v-if="showShortcutHints" class="enc-shortcut-hint" aria-hidden="true">⌫</kbd>
             </button>
           </div>
         </div>

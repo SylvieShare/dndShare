@@ -32,8 +32,9 @@ export const SESSION_COMBAT_SHIFT_SHORTCUTS = Object.freeze({
 })
 
 export const SESSION_COMBAT_TURN_SHORTCUTS = Object.freeze({
-  BracketLeft: 'previous-turn',
-  BracketRight: 'next-turn',
+  ArrowLeft: 'previous-turn',
+  ArrowRight: 'next-turn',
+  Backspace: 'remove-selected-npcs',
 })
 
 export function sessionShortcutLabels(platform = globalThis.navigator?.platform || '') {

@@ -57,6 +57,7 @@ export function useSessionHotkeys({
   toggleNpcSelection,
   toggleSceneSelection,
   rerollInitiative,
+  removeSelectedNpcs,
 }) {
   function onKey(event) {
     if (!toValue(enabled) || event.repeat || event.target?.closest?.(EDITABLE_TARGET)) return
@@ -102,6 +103,7 @@ export function useSessionHotkeys({
       'toggle-npc-selection': toggleNpcSelection,
       'toggle-scene-selection': toggleSceneSelection,
       'reroll-initiative': rerollInitiative,
+      'remove-selected-npcs': removeSelectedNpcs,
     }
     const combatAction = combatActions[command.type]
     if (combatAction) {

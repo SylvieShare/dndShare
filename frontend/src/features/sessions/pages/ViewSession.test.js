@@ -162,11 +162,13 @@ describe('ViewSession participant rail', () => {
     expect(centerWorkspaceSource).toContain('defineExpose({ toggleCombat: () => encounterTab.value?.toggleCombat() })')
     expect(encounterSource).toContain('defineExpose({ toggleCombat })')
     expect(encounterSource).toContain('aria-keyshortcuts="Shift+Enter"')
-    expect(encounterSource).toContain('aria-keyshortcuts="["')
-    expect(encounterSource).toContain('aria-keyshortcuts="]"')
+    expect(encounterSource).toContain('aria-keyshortcuts="ArrowLeft"')
+    expect(encounterSource).toContain('aria-keyshortcuts="ArrowRight"')
+    expect(encounterSource).toContain('aria-keyshortcuts="Backspace"')
     expect(encounterSource).toContain('aria-keyshortcuts="Shift+A"')
     expect(encounterSource).toContain('aria-keyshortcuts="Shift+N"')
     expect(source).toContain('aria-keyshortcuts="Shift+P"')
+    expect(source).toContain('removeSelectedNpcs: () => encounter.removeSelectedNpcs()')
     expect(sessionHotkeysSource).toContain("command.type === 'toggle-encounter' && event.target?.closest?.(NATIVE_ACTIVATION_TARGET)")
   })
 
@@ -284,7 +286,8 @@ describe('ViewSession participant rail', () => {
 
   it('selects or clears every player from the combat rail heading', () => {
     expect(source).toContain("v-if=\"playersRailMode === 'combat'\"")
-    expect(source).toContain("allEncounterPlayersSelected ? 'Снять выбор' : 'Выбрать всех'")
+    expect(source).toContain('<ListChecks :size="17" />')
+    expect(source).not.toContain("<span>{{ allEncounterPlayersSelected ? 'Снять выбор' : 'Выбрать всех' }}</span>")
     expect(source).toContain('@click="toggleAllEncounterPlayers"')
     expect(source).toContain('const encounterPlayers = computed(() => participants.value')
     expect(source).toContain('encounterPlayers.value.every(combatant => encounter.isSelected(combatant))')
