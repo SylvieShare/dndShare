@@ -1,5 +1,6 @@
 import { formatBonus } from '@/shared/lib/dnd'
 import { normalizeAddAttacks } from '@/features/character-editor/blocks/dnd/lib/weaponEntry'
+import { weaponAbilityModifier } from '@/features/character-editor/blocks/dnd/lib/weaponAbility'
 
 export function useWeaponCalc({
   statsVar,
@@ -8,11 +9,13 @@ export function useWeaponCalc({
   diceDetailsMap,
   damageTypeMap,
   damageTypeDetailsMap,
+  item,
+  propertyItems,
   itemBaseAttacks,
   itemTwoHandedAttacks,
 }) {
   function statMod(entry) {
-    return Number(statsVar.value?.[String(entry.stat_suggest_id)] ?? 0)
+    return weaponAbilityModifier(entry, item(entry), propertyItems(entry), statsVar.value)
   }
 
   function magicBonus(entry) {

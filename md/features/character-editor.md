@@ -223,6 +223,11 @@ editor.
 Weapon handbook attacks use canonical `{dice_id,type,count}`. Character-added
 attack rows use `{count,dice_id,type_suggest_id}` and are explicitly adapted at
 the calculation boundary; this is not a fallback between stored formats.
+An empty weapon `stat_suggest_id` is the explicit **Auto** mode: melee weapons
+use Strength, ranged weapons use Dexterity, and finesse weapons use the larger
+of the current Strength and Dexterity modifiers. The calculation is live, so a
+later ability-score change updates attack and damage without rewriting the
+weapon entry. A manually selected ability overrides Auto.
 All `dice_id` values are fixed system strings (`"d4"`…`"d100"`); die visuals
 use `SystemDie` and never load suggest type 11. Spell
 handbook dice use only `dice_id/type`. Spell class ownership uses item-id

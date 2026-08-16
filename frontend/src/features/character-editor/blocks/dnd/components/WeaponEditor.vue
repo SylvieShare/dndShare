@@ -6,7 +6,7 @@
         <ValueSelect
           :model-value="entry.stat_suggest_id"
           :options="ctx.statOptions"
-          placeholder="Стата"
+          placeholder="Авто"
           searchable
           search-placeholder="Поиск статы..."
           @update:model-value="ctx.setField(index, 'stat_suggest_id', $event)"

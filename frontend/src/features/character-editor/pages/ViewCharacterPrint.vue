@@ -178,6 +178,7 @@ import { SAVE_ABBR, STAT_FULL, STAT_KEYS, STAT_SHORT, SUGGEST16_TO_STAT } from '
 import { normalizeValue } from '@/features/character-editor/blocks/dnd/lib/itemSection'
 import { normalizeCounters } from '@/features/character-editor/blocks/dnd/lib/counterEntry'
 import { formatHitDice, normalizeHitDice } from '@/features/character-editor/blocks/dnd/lib/hitDice'
+import { abilityModifiersBySuggest, weaponAbilityModifier } from '@/features/character-editor/blocks/dnd/lib/weaponAbility'
 import { dieLabel } from '@/shared/lib/systemDice'
 import { useSuggestStore } from '@/stores/suggest'
 
@@ -201,7 +202,6 @@ const response = ref(null)
 const catalog = ref({})
 const suggest = useSuggestStore()
 const values = computed(() => response.value?.data?.values || {})
-const vars = computed(() => response.value?.data?.var || {})
 
 function text(value) {
   if (value == null) return ''
@@ -247,22 +247,26 @@ const passivePerception = computed(() => 10 + (skills.value.find(skill => skill.
 function itemById(id) { return catalog.value[String(id)] || catalog.value[id] || null }
 function diceLabel(id) { return dieLabel(id) }
 function damageType(id) { return suggest.items(12).find(item => String(item.id) === String(id))?.value || '' }
-function weaponProperties(item) {
+function weaponPropertyLabels(item) {
   return (Array.isArray(item?.data?.tags) ? item.data.tags : []).map(tag => {
     if (tag && typeof tag === 'object') return text(tag)
     return suggest.items(14).find(entry => String(entry.id) === String(tag))?.value || String(tag ?? '')
-  }).filter(Boolean).join(' · ')
+  }).filter(Boolean)
+}
+function weaponProperties(item) { return weaponPropertyLabels(item).join(' · ') }
+function weaponStatMod(entry, item) {
+  return weaponAbilityModifier(entry, item, weaponPropertyLabels(item), abilityModifiersBySuggest(values.value))
 }
 function attackParts(entry, item) {
   const baseParts = (item?.data?.attacks || []).map(part => ({ ...part, diceKey: part.dice_id, typeKey: part.type }))
   const extraParts = (entry.add_attacks || []).map(part => ({ ...part, diceKey: part.dice_id, typeKey: part.type_suggest_id }))
   const result = [...baseParts, ...extraParts].map(part => [diceLabel(part.diceKey) ? `${Number(part.count) || 1}${diceLabel(part.diceKey)}` : '', damageType(part.typeKey)].filter(Boolean).join(' ')).filter(Boolean)
-  const statKey = SUGGEST16_TO_STAT[Number(entry.stat_suggest_id)]; const flat = (statKey ? abilityModifier(abilityScore(statKey)) : 0) + (Number(entry.magic_up) || 0)
+  const flat = weaponStatMod(entry, item) + (Number(entry.magic_up) || 0)
   if (flat && result.length) result[0] += ` ${signed(flat)}`
   return result.join(' + ')
 }
 const attacks = computed(() => (Array.isArray(values.value.weapon) ? values.value.weapon : []).slice(0, 8).map((entry, index) => {
-  const item = itemById(entry.item_id); const statKey = SUGGEST16_TO_STAT[Number(entry.stat_suggest_id)]; const statMod = statKey ? abilityModifier(abilityScore(statKey)) : Number(vars.value.stats?.[String(entry.stat_suggest_id)]) || 0
+  const item = itemById(entry.item_id); const statMod = weaponStatMod(entry, item)
   return { key: `${entry.item_id}-${index}`, name: item?.name || `Оружие #${entry.item_id || '—'}`, bonus: statMod + (Number(entry.magic_up) || 0) + (entry.proficient ? profBonus.value : 0), damage: attackParts(entry, item), properties: weaponProperties(item), description: entry.desc || '' }
 }))
 const attackBlankRows = computed(() => Math.max(0, 5 - attacks.value.length))

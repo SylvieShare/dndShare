@@ -108,6 +108,7 @@ import { useDiceStore } from '@/stores/dice'
 import { useSuggestStore } from '@/stores/suggest'
 import { SYSTEM_DICE } from '@/shared/lib/systemDice'
 import { logSessionEntryAdded } from '@/features/character-editor/lib/sessionEntryEvents'
+import { abilityModifiersBySuggest } from '@/features/character-editor/blocks/dnd/lib/weaponAbility'
 
 const props = defineProps(['block', 'value', 'values', 'vars'])
 const emit  = defineEmits(['update:value'])
@@ -132,7 +133,10 @@ const statSuggests        = computed(() => suggestItems(props.block.content.stat
 const damageTypeSuggests  = computed(() => suggestItems(props.block.content.type_attack_suggest_type_id))
 const tagSuggests         = computed(() => suggestItems(tagSuggestTypeId.value))
 
-const statOptions        = computed(() => statSuggests.value.map(s => ({ value: s.id, label: s.value })))
+const statOptions        = computed(() => [
+  { value: null, label: 'Авто' },
+  ...statSuggests.value.map(s => ({ value: s.id, label: s.value })),
+])
 const damageTypeOptions  = computed(() => damageTypeSuggests.value.map(s => ({ value: s.id, label: s.value })))
 const diceOptions        = SYSTEM_DICE.map(die => ({ value: die.id, label: die.value }))
 const diceMap            = computed(() => Object.fromEntries(SYSTEM_DICE.map(die => [die.id, die.value])))
@@ -142,7 +146,7 @@ const damageTypeDetailsMap = computed(() => Object.fromEntries(damageTypeSuggest
 const tagMap             = computed(() => Object.fromEntries(tagSuggests.value.map(s => [s.id, s.value])))
 const tagDetailsMap      = computed(() => Object.fromEntries(tagSuggests.value.map(s => [s.id, s])))
 
-const statsVar    = computed(() => props.vars?.stats || charCtx.var?.stats || {})
+const statsVar    = computed(() => abilityModifiersBySuggest(props.values))
 const profBonus   = computed(() => {
   const path = props.block.content.bonus_path
   if (!path) return 0
@@ -179,6 +183,8 @@ const {
   diceDetailsMap,
   damageTypeMap,
   damageTypeDetailsMap,
+  item,
+  propertyItems,
   itemBaseAttacks,
   itemTwoHandedAttacks,
 })
