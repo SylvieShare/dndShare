@@ -61,7 +61,7 @@
 
 <script setup>
 import { computed, inject } from 'vue'
-import { ScrollText, Sparkles } from '@lucide/vue'
+import { FileText, Gift, Image as ImageIcon, MapPin, MessagesSquare, ScrollText, Sparkles, Swords, UserRound } from '@lucide/vue'
 import { RichContent } from '@sylvieshare/share-ui'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import SceneEntityBlockPreview from '@/features/sessions/components/SceneEntityBlockPreview.vue'
@@ -95,11 +95,19 @@ const referenceEntity = computed(() => {
 })
 const displayTitle = computed(() => referenceEntity.value?.name || props.block.title || fallbackTitle.value)
 const materialMeta = computed(() => materialType(referenceEntity.value?.kind))
-const headingIcon = computed(() => {
-  if (props.block.type === 'quest') return ScrollText
-  if (props.block.type === 'material') return materialMeta.value.icon
-  return null
-})
+const headingIcons = {
+  text: FileText,
+  list: MessagesSquare,
+  combat: Swords,
+  reward: Gift,
+  image: ImageIcon,
+  location: MapPin,
+  npc: UserRound,
+  quest: ScrollText,
+}
+const headingIcon = computed(() => props.block.type === 'material'
+  ? materialMeta.value.icon
+  : headingIcons[props.block.type] || FileText)
 const displayTypeTitle = computed(() => props.block.type === 'material' && referenceEntity.value
   ? `${fallbackTitle.value} · ${materialMeta.value.label}`
   : fallbackTitle.value)

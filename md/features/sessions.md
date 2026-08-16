@@ -380,7 +380,9 @@ the type instead of being user-selected or stored. Block cards use the same
 dark `var(--surface)` backing and inset border as `BaseTile`, with only a quiet
 type-colored hover tint and no leading color strip. Every card starts with a
 separated heading group: a small type-colored block kind above a larger display
-title, so the title remains the primary landmark over variable content. Dialogue blocks store
+title, so the title remains the primary landmark over variable content. Every
+block type also has a stable semantic icon to the left of this pair; material
+blocks use the icon of their concrete material kind. Dialogue blocks store
 speaker/reply rows: speaker inputs autocomplete from the unique names already
 used in that dialogue, and every speaker receives one consistent distinct
 color from the shared palette. Clicking the color circle beside a speaker opens
@@ -389,8 +391,7 @@ speaker key. On the canvas each row places the right-aligned speaker name,
 a vertical speaker-colored divider and the unframed reply in three columns.
 Every block card keeps a visible border mixed from its semantic type color;
 hover strengthens the same border instead of introducing another accent.
-Quest and material blocks place their type icon in this shared heading, to the
-left of the type/name pair. Their full previews start directly with useful
+Quest and material full previews start directly with useful
 content and do not repeat another icon, entity name or material-kind header.
 Clicking any non-interactive
 part of a block opens its action menu; there is no separate ellipsis trigger.

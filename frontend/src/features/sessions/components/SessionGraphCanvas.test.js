@@ -143,6 +143,11 @@ describe('session graph canvas', () => {
     expect(blockSource).not.toContain('background: color-mix(in srgb, var(--dialogue-color) 9%')
     expect(blockSource).toContain('var(--block-color) 52%')
     expect(blockSource).toContain('scene-block-node-heading')
+    for (const type of ['text', 'list', 'combat', 'reward', 'image', 'location', 'npc', 'quest']) {
+      expect(blockSource).toContain(`${type}:`)
+    }
+    expect(blockSource).toContain("props.block.type === 'material'")
+    expect(blockSource).toContain('materialMeta.value.icon')
     expect(blockSource).toContain('font-size: 18px;')
     expect(blockEditorSource).toContain('placeholder="Участник"')
     expect(blockEditorSource).toContain(':list="dialogueKeysListId"')
@@ -174,8 +179,6 @@ describe('session graph canvas', () => {
     }
     expect(entityBlockSource).toContain('resolvedRelations')
     expect(entityBlockSource).toContain('Заметка в сценарии')
-    expect(blockSource).toContain("props.block.type === 'quest'")
-    expect(blockSource).toContain("props.block.type === 'material'")
     expect(blockSource).toContain('scene-block-node-heading-icon')
     expect(entityBlockSource).not.toContain('scene-entity-quest-head')
     expect(entityBlockSource).not.toContain('scene-entity-material-head')
