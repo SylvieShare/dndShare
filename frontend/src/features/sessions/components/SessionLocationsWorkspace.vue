@@ -64,7 +64,6 @@
           <div class="session-world-cover-meta">
             <span>{{ childLocations.length }} {{ ruPlural(childLocations.length, 'вложенное место', 'вложенных места', 'вложенных мест') }}</span>
 			<span>{{ selectedLocation.relations?.length || 0 }} связей</span>
-            <span>{{ attachedScenes.length }} {{ ruPlural(attachedScenes.length, 'сценарий', 'сценария', 'сценариев') }}</span>
           </div>
         </div>
         <div v-if="isDm" class="session-world-cover-actions">
@@ -102,24 +101,10 @@
           </div>
         </section>
 
-        <div class="session-world-section-columns">
-		  <section class="session-world-section">
+        <section class="session-world-section">
 			<div class="session-world-section-title"><span>Связи</span><small>{{ selectedLocation.relations?.length || 0 }}</small></div>
 			<UniversalRelationList :relations="selectedLocation.relations" :items="relationItems" @open="openRelated" />
-		  </section>
-
-          <section class="session-world-section">
-            <div class="session-world-section-title"><span>Сценарии</span><small>{{ attachedScenes.length }}</small></div>
-            <div v-if="attachedScenes.length" class="session-world-compact-list">
-              <div v-for="scene in attachedScenes" :key="scene.id" class="session-world-scene-row">
-                <span class="session-world-scene-image" :style="{ backgroundImage: `url(${sessionImageUrl(scene)})` }" />
-                <span><strong>{{ scene.name }}</strong><small>{{ sceneContextLabel(scene) }}</small></span>
-              </div>
-            </div>
-            <button v-else-if="isDm" type="button" class="session-world-inline-empty" @click="openEdit(selectedLocation)">Привязать сценарий</button>
-            <p v-else class="session-world-muted">Сценарии не привязаны.</p>
-          </section>
-        </div>
+		</section>
       </div>
     </main>
 
@@ -135,7 +120,6 @@
       v-if="locationEditorOpen"
       :location="editingLocation"
       :locations="locations"
-      :scenes="scenes"
       :npcs="npcs"
       :default-parent-id="defaultParentId"
       :saving="world.saving.value"
@@ -148,7 +132,6 @@
       v-if="npcEditorOpen"
       :locations="locations"
       :locations-by-id="world.locationsById.value"
-      :scenes="scenes"
       :default-location-id="selectedLocation?.id"
       :saving="world.saving.value"
 	  :relation-items="relationItems"
@@ -181,7 +164,7 @@ import SessionLibraryWorkspace from '@/features/sessions/components/SessionLibra
 import UniversalRelationList from '@/features/sessions/components/UniversalRelationList.vue'
 import {
   buildLocationForest, locationBreadcrumb, locationDescendantIds, locationKind,
-  locationSearchMatches, ruPlural, sceneContextLabel,
+  locationSearchMatches, ruPlural,
 } from '@/features/sessions/lib/sessionWorld'
 import { sessionImageUrl } from '@/features/sessions/lib/sessionImages'
 
@@ -194,7 +177,6 @@ const props = defineProps({
 })
 const emit = defineEmits(['select-location', 'open-npc', 'open-entity'])
 const locations = computed(() => props.world.locations.value)
-const scenes = computed(() => props.world.scenes.value)
 const npcs = computed(() => props.world.npcs.value)
 const selectedLocation = computed(() => props.world.locationsById.value.get(Number(props.selectedLocationId)) || null)
 const query = ref('')
@@ -218,7 +200,6 @@ const filteredForest = computed(() => {
 })
 const breadcrumbs = computed(() => locationBreadcrumb(selectedLocation.value, props.world.locationsById.value))
 const childLocations = computed(() => locations.value.filter(location => location.parentLocationId === selectedLocation.value?.id).sort((a, b) => a.sortOrder - b.sortOrder))
-const attachedScenes = computed(() => (selectedLocation.value?.sceneIds || []).map(id => props.world.scenesById.value.get(id)).filter(Boolean))
 
 function expandedKey() { return `dnd-share:session-location-tree:v1:${props.sessionUuid}` }
 function readExpanded() {

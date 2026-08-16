@@ -20,9 +20,7 @@ func (s *Server) routesSessionPresentation(mux *http.ServeMux) {
 }
 
 type sessionMaterialsResponse struct {
-	Materials []store.SessionMaterial        `json:"materials"`
-	Chapters  []store.SessionMaterialChapter `json:"chapters"`
-	Scenes    []store.SessionMaterialScene   `json:"scenes"`
+	Materials []store.SessionMaterial `json:"materials"`
 }
 
 func (s *Server) handleGetSessionMaterials(w http.ResponseWriter, r *http.Request) {
@@ -39,26 +37,17 @@ func (s *Server) handleGetSessionMaterials(w http.ResponseWriter, r *http.Reques
 		serverError(w, err)
 		return
 	}
-	contexts, err := s.store.GetSessionMaterialContexts(r.Context(), session.ID)
-	if err != nil {
-		serverError(w, err)
-		return
-	}
-	writeJSON(w, http.StatusOK, sessionMaterialsResponse{
-		Materials: materials, Chapters: contexts.Chapters, Scenes: contexts.Scenes,
-	})
+	writeJSON(w, http.StatusOK, sessionMaterialsResponse{Materials: materials})
 }
 
 type sessionMaterialRequest struct {
-	Kind         string                             `json:"kind"`
-	Name         string                             `json:"name"`
-	Caption      *string                            `json:"caption"`
-	Content      *string                            `json:"content"`
-	NoteStyle    *string                            `json:"noteStyle"`
-	AssetID      *int64                             `json:"assetId"`
-	ChapterLinks []store.SessionMaterialChapterLink `json:"chapterLinks"`
-	SceneLinks   []store.SessionMaterialSceneLink   `json:"sceneLinks"`
-	Relations    []store.SessionEntityRelation      `json:"relations"`
+	Kind      string                        `json:"kind"`
+	Name      string                        `json:"name"`
+	Caption   *string                       `json:"caption"`
+	Content   *string                       `json:"content"`
+	NoteStyle *string                       `json:"noteStyle"`
+	AssetID   *int64                        `json:"assetId"`
+	Relations []store.SessionEntityRelation `json:"relations"`
 }
 
 var materialKinds = map[string]bool{"image": true, "video": true, "text": true, "note": true, "map": true}
@@ -124,46 +113,6 @@ func (s *Server) validateMaterialRequest(w http.ResponseWriter, r *http.Request,
 		}
 		req.AssetID = nil
 	}
-	if len(req.ChapterLinks) > 100 || len(req.SceneLinks) > 100 {
-		badRequest(w, "Слишком много связей материала")
-		return false
-	}
-	chapterIDs := make(map[int64]bool, len(req.ChapterLinks))
-	for index := range req.ChapterLinks {
-		link := &req.ChapterLinks[index]
-		if link.ChapterID <= 0 || chapterIDs[link.ChapterID] {
-			badRequest(w, "Некорректная связь с главой")
-			return false
-		}
-		chapterIDs[link.ChapterID] = true
-		note, ok := normalizeOptionalText(link.Note, 500)
-		if !ok {
-			badRequest(w, "Заметка к связи слишком длинная")
-			return false
-		}
-		link.Note = note
-		if !s.requireChapterInSession(w, r, link.ChapterID, session.ID) {
-			return false
-		}
-	}
-	sceneIDs := make(map[int64]bool, len(req.SceneLinks))
-	for index := range req.SceneLinks {
-		link := &req.SceneLinks[index]
-		if link.SceneID <= 0 || sceneIDs[link.SceneID] {
-			badRequest(w, "Некорректная связь со сценарием")
-			return false
-		}
-		sceneIDs[link.SceneID] = true
-		note, ok := normalizeOptionalText(link.Note, 500)
-		if !ok {
-			badRequest(w, "Заметка к связи слишком длинная")
-			return false
-		}
-		link.Note = note
-		if _, ok := s.requireSceneInSession(w, r, link.SceneID, session.ID); !ok {
-			return false
-		}
-	}
 	if !validEntityRelations(req.Relations) {
 		badRequest(w, "Некорректные связи материала")
 		return false
@@ -205,8 +154,7 @@ func (s *Server) handleCreateSessionMaterial(w http.ResponseWriter, r *http.Requ
 	}
 	material, err := s.store.CreateSessionMaterial(
 		r.Context(), session.ID, req.Kind, req.Name, req.Caption, req.Content, req.NoteStyle,
-		req.AssetID, req.ChapterLinks, req.SceneLinks,
-		req.Relations,
+		req.AssetID, req.Relations,
 	)
 	if err != nil {
 		serverError(w, err)
@@ -259,7 +207,7 @@ func (s *Server) handleUpdateSessionMaterial(w http.ResponseWriter, r *http.Requ
 	}
 	if err := s.store.UpdateSessionMaterial(
 		r.Context(), session.ID, previous.ID, req.Kind, req.Name, req.Caption, req.Content, req.NoteStyle,
-		req.AssetID, req.ChapterLinks, req.SceneLinks, req.Relations,
+		req.AssetID, req.Relations,
 	); err != nil {
 		serverError(w, err)
 		return

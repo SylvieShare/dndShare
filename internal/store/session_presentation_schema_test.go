@@ -23,19 +23,23 @@ func TestSessionPresentationSchemaKeepsMaterialsAndOneLiveState(t *testing.T) {
 	}
 }
 
-func TestSessionMaterialLinksSchemaMigratesLegacyScopes(t *testing.T) {
+func TestSessionMaterialLinksMoveToUniversalScenarioRelations(t *testing.T) {
 	for _, fragment := range []string{
-		"CREATE TABLE IF NOT EXISTS dndshare.session_material_chapter",
-		"CREATE TABLE IF NOT EXISTS dndshare.session_material_scene",
-		"WHERE scope = 'chapter'",
+		"to_regclass('dndshare.session_material_scene')",
+		"'material', link.material_id, 'scene'",
 		"WHERE scope = 'scene'",
+		"DROP TABLE IF EXISTS dndshare.session_material_chapter",
+		"DROP TABLE IF EXISTS dndshare.session_material_scene",
 		"DROP COLUMN IF EXISTS scope",
 		"DROP COLUMN IF EXISTS chapter_id",
 		"DROP COLUMN IF EXISTS scene_id",
 	} {
-		if !strings.Contains(schemaMaterialLinksSQL, fragment) {
-			t.Fatalf("material links schema must contain %q", fragment)
+		if !strings.Contains(schemaSessionEntitiesSQL, fragment) {
+			t.Fatalf("session entity schema must contain %q", fragment)
 		}
+	}
+	if strings.Contains(schemaMaterialLinksSQL, "CREATE TABLE") {
+		t.Fatal("material context tables must not be recreated")
 	}
 }
 

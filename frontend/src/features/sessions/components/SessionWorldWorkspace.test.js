@@ -16,7 +16,6 @@ const treeRow = read('./LocationTreeRow.vue')
 const locationEditor = read('./LocationEditorModal.vue')
 const npcs = read('./SessionNpcsWorkspace.vue')
 const npcEditor = read('./NpcEditorModal.vue')
-const relationEditor = read('./WorldRelationEditor.vue')
 const relationPicker = read('./WorldRelationPickerModal.vue')
 const universalEditor = read('./UniversalRelationEditor.vue')
 const universalPicker = read('./UniversalRelationPickerModal.vue')
@@ -26,6 +25,8 @@ const imagePicker = read('./SessionImagePicker.vue')
 const primaryView = read('../composables/useSessionPrimaryView.js')
 const worldState = read('../composables/useSessionWorld.js')
 const api = read('../../../shared/api/sessionsApi.js')
+const sessionView = read('../pages/ViewSession.vue')
+const sessionWorkspace = read('../composables/useSessionWorkspace.js')
 
 describe('session world workspaces', () => {
   it('compiles all central world modes', () => {
@@ -76,24 +77,25 @@ describe('session world workspaces', () => {
   })
 
 	it('edits story context and universal entity relationships from focused editors', () => {
-    expect(locationEditor).toContain('Сценарии в этой локации')
-    expect(locationEditor).toContain('<WorldRelationEditor')
-    expect(locationEditor).toContain(':show-notes="false"')
-    expect(locationEditor).toContain('sceneIds: draft.sceneLinks.map')
 	expect(locationEditor).toContain('<UniversalRelationEditor')
 	expect(npcEditor).toContain('<UniversalRelationEditor')
-    expect(npcEditor).toContain('sceneLinks: draft.sceneLinks')
 	expect(npcEditor).toContain('relations: draft.relations')
 	expect(npcs).toContain('<UniversalRelationList')
-    expect(npcs).toContain('Участие в сюжете')
-    expect(relationEditor).toContain('Удалить связь')
-    expect(relationEditor).toContain('Заметка к связи')
-    expect(relationEditor).toContain('v-if="showNotes"')
     expect(relationPicker).toContain('type="search"')
 	expect(universalEditor).toContain('groupResolvedRelations')
 	expect(universalPicker).toContain("{ key: 'all', label: 'Все' }")
 	expect(universalPicker).toContain('Искать по всем объектам')
+	expect(universalPicker).toContain('SESSION_ENTITY_TYPES')
+	expect(read('../lib/sessionEntityRelations.js')).toContain("{ key: 'scene', label: 'Сценарии'")
 	expect(quests).toContain('Связи')
+  })
+
+  it('opens a related scenario on its block canvas', () => {
+    expect(layer).toContain("item.type === 'scene'")
+    expect(layer).toContain("emit('open-scene', item.id)")
+    expect(sessionView).toContain('@open-scene="openRelatedScene"')
+    expect(sessionWorkspace).toContain('async function openSceneWorkspace')
+    expect(sessionWorkspace).toContain("showWorkspace('scenes', chapter, { ...graph.scenes[contextIndex], contextIndex }, 'blocks')")
   })
 
   it('keeps quest goal, condition, reward, consequences and notes separate', () => {

@@ -68,25 +68,9 @@
 
       <div class="npc-editor-relations">
 		<section>
-		  <div class="npc-editor-section-title"><span>Связи</span><small>Любые объекты сессии</small></div>
+		  <div class="npc-editor-section-title"><span>Связи</span><small>Все объекты сессии и сценарии</small></div>
 		  <UniversalRelationEditor v-model="draft.relations" :items="relationItems" source-type="npc" :source-id="npc?.id" />
 		</section>
-        <section>
-          <div class="npc-editor-section-title">
-            <span>Сценарии</span>
-            <small>Где он участвует</small>
-          </div>
-          <WorldRelationEditor
-            v-model="draft.sceneLinks"
-            :items="sceneOptions"
-            link-key="sceneId"
-            add-label="Добавить сценарий"
-            picker-title="Участие в сюжете"
-            search-placeholder="Найти сценарий…"
-            empty-text="Участие в сюжете не указано"
-            picker-empty-text="Сначала создайте сценарии в сюжете"
-          />
-        </section>
       </div>
     </div>
 
@@ -121,10 +105,7 @@ import {
   FormTextarea,
 } from '@sylvieshare/share-ui'
 import SessionImagePicker from '@/features/sessions/components/SessionImagePicker.vue'
-import WorldRelationEditor from '@/features/sessions/components/WorldRelationEditor.vue'
 import UniversalRelationEditor from '@/features/sessions/components/UniversalRelationEditor.vue'
-import { sceneContextLabel } from '@/features/sessions/lib/sessionWorld'
-import { sessionImageUrl } from '@/features/sessions/lib/sessionImages'
 import { itemsApi } from '@/shared/api/itemsApi'
 import { randomDndName } from '@/shared/lib/dndNames'
 
@@ -132,7 +113,6 @@ const props = defineProps({
   npc: { type: Object, default: null },
   locations: { type: Array, default: () => [] },
   locationsById: { type: Map, default: () => new Map() },
-  scenes: { type: Array, default: () => [] },
   npcs: { type: Array, default: () => [] },
   defaultLocationId: { type: [Number, String], default: null },
   saving: { type: Boolean, default: false },
@@ -159,7 +139,6 @@ const draft = reactive({
   imageId: props.npc?.imageId ?? 0,
   imageFocalX: props.npc?.imageFocalX ?? 0.5,
   imageFocalY: props.npc?.imageFocalY ?? 0.5,
-  sceneLinks: (props.npc?.sceneLinks || []).map(link => ({ ...link })),
 	relations: props.npc
 		? (props.npc.relations || []).map(link => ({ ...link }))
 		: props.defaultLocationId ? [{ type: 'location', id: Number(props.defaultLocationId), note: null }] : [],
@@ -181,13 +160,6 @@ const selectedRace = computed(() => races.value.find(race => String(race.id) ===
 const randomNameTitle = computed(() => selectedRace.value
   ? `Случайное имя: ${selectedRace.value.name}`
   : 'Случайное фэнтезийное имя')
-
-const sceneOptions = computed(() => props.scenes.map(scene => ({
-  id: scene.id,
-  title: scene.name,
-  subtitle: sceneContextLabel(scene),
-  image: sessionImageUrl(scene),
-})))
 
 onMounted(async () => {
   racesLoading.value = true
@@ -248,7 +220,6 @@ async function submit() {
       imageId: selected.upload_id,
       imageFocalX: draft.imageFocalX,
       imageFocalY: draft.imageFocalY,
-      sceneLinks: draft.sceneLinks,
 		relations: draft.relations,
     })
   } catch { uploadError.value = 'Не удалось загрузить изображение' }

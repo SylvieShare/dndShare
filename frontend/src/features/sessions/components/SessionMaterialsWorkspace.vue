@@ -61,7 +61,7 @@
       <span>Материал можно подготовить один раз и использовать в сценах или отправлять на экран вручную.</span>
     </main>
 
-	<MaterialEditorModal v-if="editing !== false" :material="editing || null" :chapters="materials.chapters.value" :scenes="materials.scenes.value" :relation-items="relationItems" :default-chapter-id="chapterId" :default-scene-id="sceneId" :saving="saving" @close="editing = false" @save="saveMaterial" />
+	<MaterialEditorModal v-if="editing !== false" :material="editing || null" :relation-items="relationItems" :saving="saving" @close="editing = false" @save="saveMaterial" />
   </SessionLibraryWorkspace>
 </template>
 
@@ -75,7 +75,7 @@ import { MATERIAL_TYPES, materialType } from '@/features/sessions/lib/sessionMat
 
 const props = defineProps({
   materials: { type: Object, required: true }, presentation: { type: Object, required: true },
-  isDm: { type: Boolean, default: false }, chapterId: { type: [Number, String], default: null }, sceneId: { type: [Number, String], default: null },
+	isDm: { type: Boolean, default: false },
 	world: { type: Object, required: true }, relationItems: { type: Array, default: () => [] }, selectedMaterialId: { type: [Number, String], default: null },
 })
 const emit = defineEmits(['open-entity', 'select-material'])
@@ -86,8 +86,6 @@ const actionError = ref('')
 const query = ref('')
 const allMaterials = computed(() => props.materials.materials.value)
 const selected = computed(() => props.materials.byId(selectedId.value))
-const chaptersById = computed(() => new Map(props.materials.chapters.value.map(chapter => [Number(chapter.id), chapter])))
-const scenesById = computed(() => new Map(props.materials.scenes.value.map(scene => [Number(scene.id), scene])))
 const matches = material => `${material.name} ${material.caption || ''} ${material.content || ''}`.toLocaleLowerCase('ru').includes(query.value.trim().toLocaleLowerCase('ru'))
 const groups = computed(() => MATERIAL_TYPES.map(type => ({
   key: type.key,
@@ -101,15 +99,12 @@ watch([allMaterials, () => props.selectedMaterialId], ([list, routeId]) => {
 	if (candidate) selectedId.value = candidate.id
 }, { immediate: true })
 function contextLabel(material) {
-  const chapterLinks = material.chapterLinks || []
-  const sceneLinks = material.sceneLinks || []
-  const count = chapterLinks.length + sceneLinks.length
+	const sceneLinks = (material.relations || []).filter(relation => relation.type === 'scene')
+	const count = sceneLinks.length
   if (!count) return 'Вся сессия'
-  if (count === 1 && chapterLinks.length) return chaptersById.value.get(Number(chapterLinks[0].chapterId))?.name || 'Глава'
   if (count === 1) {
-    const scene = scenesById.value.get(Number(sceneLinks[0].sceneId))
-    const chapter = scene ? chaptersById.value.get(Number(scene.chapterId)) : null
-    return [chapter?.name, scene?.name].filter(Boolean).join(' · ') || 'Сценарий'
+		const scene = props.world.scenesById.value.get(Number(sceneLinks[0].id))
+		return [scene?.chapterName, scene?.name].filter(Boolean).join(' · ') || 'Сценарий'
   }
   const word = count % 10 >= 2 && count % 10 <= 4 && (count % 100 < 10 || count % 100 >= 20) ? 'связи' : 'связей'
   return `${count} ${word}`
@@ -122,8 +117,9 @@ function openRelated(item) {
 }
 async function saveMaterial(payload) {
   saving.value = true; actionError.value = ''
-  try {
+	try {
     const saved = editing.value ? await props.materials.update(editing.value.id, payload) : await props.materials.create(payload)
+		await props.world.load(true).catch(() => {})
     selectedId.value = saved.id; editing.value = false
   } catch { actionError.value = 'Не удалось сохранить материал' } finally { saving.value = false }
 }

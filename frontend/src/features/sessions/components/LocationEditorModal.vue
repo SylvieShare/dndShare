@@ -33,23 +33,8 @@
       </div>
 
       <section class="location-editor-scenes">
-		<div class="location-editor-section-title"><span>Связи</span><small>Локации, NPC, материалы и задания</small></div>
+		<div class="location-editor-section-title"><span>Связи</span><small>Все объекты сессии и сценарии</small></div>
 		<UniversalRelationEditor v-model="draft.relations" :items="relationItems" source-type="location" :source-id="location?.id" />
-		<div class="location-editor-section-title location-editor-section-title--separated">
-          <span>Сценарии в этой локации</span>
-          <small>Необязательно</small>
-        </div>
-        <WorldRelationEditor
-          v-model="draft.sceneLinks"
-          :items="sceneOptions"
-          link-key="sceneId"
-          :show-notes="false"
-          add-label="Добавить сценарий"
-          picker-title="Сценарии в этой локации"
-          search-placeholder="Найти сценарий…"
-          empty-text="Сценарии не привязаны"
-          picker-empty-text="Сначала создайте сценарии в сюжете"
-        />
       </section>
     </div>
 
@@ -90,20 +75,16 @@ import {
   FormTextarea,
 } from '@sylvieshare/share-ui'
 import SessionImagePicker from '@/features/sessions/components/SessionImagePicker.vue'
-import WorldRelationEditor from '@/features/sessions/components/WorldRelationEditor.vue'
 import UniversalRelationEditor from '@/features/sessions/components/UniversalRelationEditor.vue'
 import {
   buildLocationForest,
   locationDescendantIds,
   LOCATION_KINDS,
-  sceneContextLabel,
 } from '@/features/sessions/lib/sessionWorld'
-import { sessionImageUrl } from '@/features/sessions/lib/sessionImages'
 
 const props = defineProps({
   location: { type: Object, default: null },
   locations: { type: Array, default: () => [] },
-  scenes: { type: Array, default: () => [] },
   defaultParentId: { type: [Number, String], default: null },
   saving: { type: Boolean, default: false },
 	relationItems: { type: Array, default: () => [] },
@@ -116,7 +97,6 @@ const draft = reactive({
   parentLocationId: String(props.location?.parentLocationId ?? props.defaultParentId ?? ''),
   description: props.location?.description ?? '',
   imageId: props.location?.imageId ?? 0,
-  sceneLinks: (props.location?.sceneIds || []).map(sceneId => ({ sceneId })),
 	relations: (props.location?.relations || []).map(relation => ({ ...relation })),
 })
 
@@ -135,13 +115,6 @@ const parentOptions = computed(() => {
   visit(buildLocationForest(props.locations), 0)
   return result
 })
-const sceneOptions = computed(() => props.scenes.map(scene => ({
-  id: scene.id,
-  title: scene.name,
-  subtitle: sceneContextLabel(scene),
-  image: sessionImageUrl(scene),
-})))
-
 function submit() {
   if (!draft.name.trim() || !draft.imageId || props.saving) return
   const parentValue = Number(draft.parentLocationId)
@@ -151,7 +124,6 @@ function submit() {
     kind: draft.kind,
     description: draft.description.trim() || null,
     imageId: draft.imageId,
-    sceneIds: draft.sceneLinks.map(link => link.sceneId),
 		relations: draft.relations,
   })
 }
@@ -166,7 +138,6 @@ function submit() {
 .location-editor-image { padding-top: 18px; border-top: 1px solid var(--border); }
 .location-editor-section-title { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; color: var(--text-1); font-size: 12px; font-weight: 700; }
 .location-editor-section-title small { color: var(--text-muted); font-size: 10px; font-weight: 500; }
-.location-editor-section-title--separated { margin-top: 10px; padding-top: 14px; border-top: 1px solid var(--border); }
 .location-editor-footer { width: 100%; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
 .location-editor-delete { margin-top: 4px; padding: 9px 0; border: 0; background: none; color: var(--danger); font: inherit; font-size: 13px; cursor: pointer; }
 .location-editor-delete:hover:not(:disabled) { text-decoration: underline; }

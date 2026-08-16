@@ -52,6 +52,14 @@
       </div>
     </section>
 
+		<section class="scene-relations-section">
+			<div class="scene-presentation-heading">
+				<span>СВЯЗИ СЦЕНАРИЯ</span>
+				<strong>Объекты, которые участвуют в этом эпизоде</strong>
+			</div>
+			<UniversalRelationEditor v-model="draft.relations" :items="relationItems" source-type="scene" :source-id="scene?.id" />
+		</section>
+
     <template #footer>
       <FormActionButtons
         :submit-text="scene ? 'Сохранить' : 'Создать сценарий'"
@@ -73,18 +81,20 @@ import { FormField } from '@sylvieshare/share-ui'
 import { FormSelect } from '@sylvieshare/share-ui'
 import { FormTextInput } from '@sylvieshare/share-ui'
 import SessionImagePicker from '@/features/sessions/components/SessionImagePicker.vue'
+import UniversalRelationEditor from '@/features/sessions/components/UniversalRelationEditor.vue'
 import { SCENE_STATUSES } from '@/features/sessions/lib/chapterGraph'
+import { buildSessionEntityCatalog } from '@/features/sessions/lib/sessionEntityRelations'
 import { useMusicStore } from '@/stores/music'
 
 const props = defineProps({
   scene: { type: Object, default: null },
   saving: { type: Boolean, default: false },
-  chapterId: { type: [Number, String], default: null },
 })
 const emit = defineEmits(['close', 'save'])
 const sessionMaterials = inject('sessionMaterials', null)
+const sessionWorld = inject('sessionWorld', null)
 const musicStore = useMusicStore()
-const availableMaterials = computed(() => sessionMaterials?.availableFor(props.chapterId, props.scene?.id) || [])
+const relationItems = computed(() => buildSessionEntityCatalog(sessionWorld, sessionMaterials))
 
 const draft = reactive({
   name: props.scene?.name ?? '',
@@ -96,6 +106,14 @@ const draft = reactive({
   presentationCrossfadeSec: props.scene?.presentationCrossfadeSec ?? 2.5,
   presentationEffect: props.scene?.presentationEffect ?? 'none',
   presentationTransition: props.scene?.presentationTransition ?? 'fade',
+	relations: (props.scene?.relations || []).map(relation => ({ ...relation })),
+})
+const availableMaterials = computed(() => {
+	const linkedMaterialIds = new Set(draft.relations.filter(relation => relation.type === 'material').map(relation => Number(relation.id)))
+	return (sessionMaterials?.materials.value || []).filter(material => {
+		if (linkedMaterialIds.has(Number(material.id))) return true
+		return !(material.relations || []).some(relation => relation.type === 'scene' && Number(relation.id) !== Number(props.scene?.id))
+	})
 })
 
 function submit() {
@@ -108,6 +126,7 @@ function submit() {
     presentationCrossfadeSec: draft.presentationTrackId ? draft.presentationCrossfadeSec : null,
     presentationEffect: draft.presentationEffect,
     presentationTransition: draft.presentationTransition,
+		relations: draft.relations,
   })
 }
 </script>
@@ -117,5 +136,6 @@ function submit() {
 .scene-image-section { display: flex; flex-direction: column; gap: 10px; }
 .scene-image-title { color: var(--text-2); font-size: 13px; font-weight: 600; }
 .scene-presentation-section { display: flex; flex-direction: column; gap: 12px; padding: 14px; border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--border)); border-radius: 12px; background: color-mix(in srgb, var(--accent) 5%, var(--surface-raised)); }.scene-presentation-heading { display: flex; flex-direction: column; gap: 2px; }.scene-presentation-heading span { color: var(--accent-soft); font-size: 9px; font-weight: 850; letter-spacing: .12em; }.scene-presentation-heading strong { color: var(--text-1); font-size: 13px; }.scene-presentation-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 11px 14px; }.scene-presentation-range { width: 100%; accent-color: var(--accent); }.scene-presentation-number { min-height: 36px; box-sizing: border-box; padding: 7px 9px; border: 1px solid var(--border); border-radius: 7px; background: var(--surface); color: var(--text-1); }
+.scene-relations-section { display: flex; flex-direction: column; gap: 12px; padding-top: 16px; border-top: 1px solid var(--border); }
 @media (max-width: 640px) { .scene-editor-main-grid { grid-template-columns: 1fr; } }
 </style>

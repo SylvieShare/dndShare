@@ -127,15 +127,15 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
 - `PATCH /api/sessions/{uuid}/participants-order` accepts the complete ordered
   participant character-id list as `{"ids":[...]}`; owner-only;
 - `GET /api/sessions/{uuid}/world` returns one aggregate
-  `{locations,npcs,quests,scenes}`. Locations, NPCs and quests expose symmetric
-  `relations:[{type,id,note}]`; types are `location`, `npc`, `material` and
-  `quest`. NPCs retain separate `sceneLinks`, locations retain `sceneIds`, and
-  compact scenarios include arc/chapter context plus reverse story links. The aggregate is owner-only because descriptions may contain
-  master notes and secrets;
+  `{locations,npcs,quests,scenes}`. Every entity exposes symmetric
+  `relations:[{type,id,note}]`; types are `location`, `npc`, `material`, `quest`
+  and `scene`. Compact scenarios also include their arc/chapter context. The
+  aggregate is owner-only because descriptions and relation notes may contain
+  master secrets;
 - `POST /api/sessions/{uuid}/locations`, `PATCH|DELETE
   /api/sessions/{uuid}/locations/{locationId}` create, replace or remove a
   location. The full mutation payload contains
-  `{parentLocationId,name,kind,description,imageId,sceneIds,relations}`;
+  `{parentLocationId,name,kind,description,imageId,relations}`;
 - `PATCH /api/sessions/{uuid}/locations/{locationId}/move` accepts
   `{parentLocationId,beforeLocationId}`. A null `beforeLocationId` appends to
   the target sibling group; invalid cross-session references and descendant
@@ -143,7 +143,7 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
 - `POST /api/sessions/{uuid}/npcs`, `PATCH|DELETE
   /api/sessions/{uuid}/npcs/{npcId}` manage prepared NPCs with
   `{name,raceItemId,role,description,color,imageId,
-  imageFocalX,imageFocalY,sceneLinks,relations}`. Each relation contains a target
+  imageFocalX,imageFocalY,relations}`. Each relation contains a target
   `type`, `id` and nullable note (up to 500 characters).
   `imageId` points either to the independent NPC system catalogue or to an
   uploaded image owned by the current user. `raceItemId`
@@ -166,6 +166,9 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
 - `GET|POST /api/sessions/{uuid}/chapters`, `PATCH|DELETE
   /api/sessions/{uuid}/chapters/{chapterId}`, plus `/position` and `/arc`
   PATCH actions;
+- `POST /api/sessions/{uuid}/chapters/{chapterId}/scenes` and `PATCH
+  /api/sessions/{uuid}/scenes/{sceneId}` accept scenario card, presentation
+  preset and universal `relations`; deleting a scenario clears those relations;
 - `PATCH /api/sessions/{uuid}/current-chapter`;
 - `PATCH /api/sessions/{uuid}/graph-nodes/positions` atomically persists a
   group movement as `{level,positions:[{id,x,y}]}`; `POST
@@ -176,12 +179,12 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
 - `POST /api/sessions/{uuid}/chapter-edges` and `PATCH|DELETE
   /api/sessions/{uuid}/chapter-edges/{edgeId}`;
 - read/write encounter and music state;
-- `GET /api/sessions/{uuid}/materials` returns the owner-only material library
-  with chapter/scenario picker contexts. `POST /materials` and
+- `GET /api/sessions/{uuid}/materials` returns the owner-only material library.
+  `POST /materials` and
   `PATCH|DELETE /materials/{materialId}` manage `{name,kind,caption,content,
-  noteStyle,assetId,chapterLinks,sceneLinks}`. Link arrays contain
-  `{chapterId,note?}` or `{sceneId,note?}`, accept several targets and may be
-  empty; an unlinked material is available throughout the session. `kind` is
+  noteStyle,assetId,relations}`. Scenario relations restrict the material to
+  those scenarios; without them it is available throughout the session. Other
+  relation types provide navigation without restricting availability. `kind` is
   `image`, `video`, `text`, `note` or `map`; asset kinds require `assetId`,
   written kinds require `content`, and notes also require one of `parchment`,
   `letter`, `dossier` or `arcane`;

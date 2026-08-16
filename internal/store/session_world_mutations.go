@@ -7,22 +7,6 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-func uniqueWorldIDs(ids []int64) []int64 {
-	result := make([]int64, 0, len(ids))
-	seen := make(map[int64]struct{}, len(ids))
-	for _, id := range ids {
-		if id <= 0 {
-			continue
-		}
-		if _, exists := seen[id]; exists {
-			continue
-		}
-		seen[id] = struct{}{}
-		result = append(result, id)
-	}
-	return result
-}
-
 func sameWorldParent(left, right *int64) bool {
 	if left == nil || right == nil {
 		return left == nil && right == nil
@@ -71,46 +55,6 @@ func validateLocationParentTx(
 	return nil
 }
 
-func validateWorldSceneIDsTx(ctx context.Context, tx pgx.Tx, sessionID int64, ids []int64) error {
-	ids = uniqueWorldIDs(ids)
-	if len(ids) == 0 {
-		return nil
-	}
-	var count int
-	err := tx.QueryRow(ctx, `
-		SELECT count(*)
-		FROM dndshare.session_scene scene
-		JOIN dndshare.session_chapter chapter ON chapter.id = scene.chapter_id
-		WHERE chapter.session_id = $1 AND scene.id = ANY($2::bigint[])`, sessionID, ids,
-	).Scan(&count)
-	if err != nil {
-		return err
-	}
-	if count != len(ids) {
-		return ErrInvalidWorldReference
-	}
-	return nil
-}
-
-func validateWorldLocationIDsTx(ctx context.Context, tx pgx.Tx, sessionID int64, ids []int64) error {
-	ids = uniqueWorldIDs(ids)
-	if len(ids) == 0 {
-		return nil
-	}
-	var count int
-	err := tx.QueryRow(ctx, `
-		SELECT count(*) FROM dndshare.session_location
-		WHERE session_id = $1 AND id = ANY($2::bigint[])`, sessionID, ids,
-	).Scan(&count)
-	if err != nil {
-		return err
-	}
-	if count != len(ids) {
-		return ErrInvalidWorldReference
-	}
-	return nil
-}
-
 func validateNPCRaceItemTx(ctx context.Context, tx pgx.Tx, sessionID int64, raceItemID *int64) error {
 	if raceItemID == nil {
 		return nil
@@ -134,23 +78,6 @@ func validateNPCRaceItemTx(ctx context.Context, tx pgx.Tx, sessionID int64, race
 	return nil
 }
 
-func replaceLocationScenesTx(ctx context.Context, tx pgx.Tx, locationID int64, sceneIDs []int64) error {
-	if _, err := tx.Exec(ctx,
-		`DELETE FROM dndshare.session_scene_location WHERE location_id = $1`, locationID,
-	); err != nil {
-		return err
-	}
-	sceneIDs = uniqueWorldIDs(sceneIDs)
-	if len(sceneIDs) == 0 {
-		return nil
-	}
-	_, err := tx.Exec(ctx, `
-		INSERT INTO dndshare.session_scene_location (scene_id, location_id)
-		SELECT selected.id, $1
-		FROM unnest($2::bigint[]) AS selected(id)`, locationID, sceneIDs)
-	return err
-}
-
 func (s *Store) CreateSessionLocation(
 	ctx context.Context,
 	sessionID int64,
@@ -162,9 +89,6 @@ func (s *Store) CreateSessionLocation(
 	}
 	defer tx.Rollback(ctx)
 	if err := validateLocationParentTx(ctx, tx, sessionID, 0, mutation.ParentLocationID); err != nil {
-		return 0, err
-	}
-	if err := validateWorldSceneIDsTx(ctx, tx, sessionID, mutation.SceneIDs); err != nil {
 		return 0, err
 	}
 	if err := validateSessionEntityRelationsTx(ctx, tx, sessionID, SessionEntityLocation, 0, mutation.Relations); err != nil {
@@ -184,9 +108,6 @@ func (s *Store) CreateSessionLocation(
 		mutation.Description, mutation.ImageID,
 	).Scan(&id)
 	if err != nil {
-		return 0, err
-	}
-	if err := replaceLocationScenesTx(ctx, tx, id, mutation.SceneIDs); err != nil {
 		return 0, err
 	}
 	if err := replaceSessionEntityRelationsTx(ctx, tx, sessionID, SessionEntityLocation, id, mutation.Relations); err != nil {
@@ -222,9 +143,6 @@ func (s *Store) UpdateSessionLocation(
 	if err := validateLocationParentTx(ctx, tx, sessionID, locationID, mutation.ParentLocationID); err != nil {
 		return err
 	}
-	if err := validateWorldSceneIDsTx(ctx, tx, sessionID, mutation.SceneIDs); err != nil {
-		return err
-	}
 	if err := validateSessionEntityRelationsTx(ctx, tx, sessionID, SessionEntityLocation, locationID, mutation.Relations); err != nil {
 		return err
 	}
@@ -239,9 +157,6 @@ func (s *Store) UpdateSessionLocation(
 		WHERE id = $1 AND session_id = $2`,
 		locationID, sessionID, mutation.Name, mutation.Kind, mutation.Description, mutation.ImageID,
 	); err != nil {
-		return err
-	}
-	if err := replaceLocationScenesTx(ctx, tx, locationID, mutation.SceneIDs); err != nil {
 		return err
 	}
 	if err := replaceSessionEntityRelationsTx(ctx, tx, sessionID, SessionEntityLocation, locationID, mutation.Relations); err != nil {
@@ -384,7 +299,7 @@ func (s *Store) CreateSessionNPC(
 		return 0, err
 	}
 	defer tx.Rollback(ctx)
-	if err := validateNPCMutationLinksTx(ctx, tx, sessionID, 0, mutation); err != nil {
+	if err := validateSessionEntityRelationsTx(ctx, tx, sessionID, SessionEntityNPC, 0, mutation.Relations); err != nil {
 		return 0, err
 	}
 	if err := validateNPCRaceItemTx(ctx, tx, sessionID, mutation.RaceItemID); err != nil {
@@ -404,7 +319,7 @@ func (s *Store) CreateSessionNPC(
 	if err != nil {
 		return 0, err
 	}
-	if err := replaceNPCLinksTx(ctx, tx, sessionID, id, mutation); err != nil {
+	if err := replaceSessionEntityRelationsTx(ctx, tx, sessionID, SessionEntityNPC, id, mutation.Relations); err != nil {
 		return 0, err
 	}
 	if err := tx.Commit(ctx); err != nil {
@@ -423,7 +338,7 @@ func (s *Store) UpdateSessionNPC(
 		return err
 	}
 	defer tx.Rollback(ctx)
-	if err := validateNPCMutationLinksTx(ctx, tx, sessionID, npcID, mutation); err != nil {
+	if err := validateSessionEntityRelationsTx(ctx, tx, sessionID, SessionEntityNPC, npcID, mutation.Relations); err != nil {
 		return err
 	}
 	if err := validateNPCRaceItemTx(ctx, tx, sessionID, mutation.RaceItemID); err != nil {
@@ -443,7 +358,7 @@ func (s *Store) UpdateSessionNPC(
 	if result.RowsAffected() == 0 {
 		return ErrNotFound
 	}
-	if err := replaceNPCLinksTx(ctx, tx, sessionID, npcID, mutation); err != nil {
+	if err := replaceSessionEntityRelationsTx(ctx, tx, sessionID, SessionEntityNPC, npcID, mutation.Relations); err != nil {
 		return err
 	}
 	return tx.Commit(ctx)

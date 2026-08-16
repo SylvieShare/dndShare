@@ -42,17 +42,41 @@ func TestMaterialRequestRejectsMismatchedPayload(t *testing.T) {
 
 func TestMaterialAvailableForExplicitLinks(t *testing.T) {
 	global := store.SessionMaterial{}
-	if !materialAvailableFor(global, 10, 20) {
+	if !materialAvailableFor(global, 20) {
 		t.Fatal("unlinked material must remain session-wide")
 	}
 	linked := store.SessionMaterial{
-		ChapterLinks: []store.SessionMaterialChapterLink{{ChapterID: 10}},
-		SceneLinks:   []store.SessionMaterialSceneLink{{SceneID: 30}},
+		Relations: []store.SessionEntityRelation{
+			{Type: store.SessionEntityNPC, ID: 10},
+			{Type: store.SessionEntityScene, ID: 30},
+		},
 	}
-	if !materialAvailableFor(linked, 10, 20) || !materialAvailableFor(linked, 11, 30) {
-		t.Fatal("material must be available through either matching relation")
+	if !materialAvailableFor(linked, 30) {
+		t.Fatal("material must be available in its linked scenario")
 	}
-	if materialAvailableFor(linked, 11, 20) {
+	if materialAvailableFor(linked, 20) {
 		t.Fatal("material leaked into an unrelated context")
+	}
+}
+
+func TestMaterialAvailableWhileEditingSceneRelations(t *testing.T) {
+	material := store.SessionMaterial{
+		ID: 40,
+		Relations: []store.SessionEntityRelation{
+			{Type: store.SessionEntityScene, ID: 30},
+		},
+	}
+	if !materialAvailableForSceneMutation(material, 20, []store.SessionEntityRelation{
+		{Type: store.SessionEntityMaterial, ID: 40},
+	}) {
+		t.Fatal("material linked in the same mutation must be available as a preset")
+	}
+	if materialAvailableForSceneMutation(material, 20, nil) {
+		t.Fatal("material linked to another scenario must remain unavailable")
+	}
+
+	material.Relations[0].ID = 20
+	if !materialAvailableForSceneMutation(material, 20, nil) {
+		t.Fatal("removing the only scenario relation must make material session-wide")
 	}
 }

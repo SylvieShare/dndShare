@@ -145,7 +145,6 @@
       v-if="scenePromptOpen"
       :scene="editingScene"
       :saving="saving"
-      :chapter-id="activeChapterId"
       @close="closeScenePrompt"
       @save="saveScene"
     />
@@ -154,7 +153,6 @@
       :block="editingBlock"
       :type="creatingBlockType"
       :saving="saving"
-      :chapter-id="activeChapterId"
       :scene-id="selectedScene?.id"
       @close="closeBlockEditor"
       @save="saveBlock"
@@ -227,6 +225,7 @@ const blockLinkingFrom = ref(null)
 const actionError = ref('')
 const saving = ref(false)
 const sessionMaterials = inject('sessionMaterials', null)
+const sessionWorld = inject('sessionWorld', null)
 const sessionPresentation = inject('sessionPresentation', null)
 const scenePromptOpen = ref(false)
 const editingScene = ref(null)
@@ -444,6 +443,7 @@ async function changeSceneStatus(scene, status) {
       presentationCrossfadeSec: scene.presentationCrossfadeSec ?? null,
       presentationEffect: scene.presentationEffect || 'none',
       presentationTransition: scene.presentationTransition || 'fade',
+		relations: scene.relations || [],
     })
   } catch { actionError.value = 'Не удалось изменить статус сценария' }
 }
@@ -457,8 +457,12 @@ async function saveScene(payload) {
   saving.value = true
   actionError.value = ''
   try {
-    if (editingScene.value) await sceneGraph.updateScene(editingScene.value.id, payload)
-    else await sceneGraph.createScene(payload, sceneCreatePosition.value)
+		if (editingScene.value) await sceneGraph.updateScene(editingScene.value.id, payload)
+		else await sceneGraph.createScene(payload, sceneCreatePosition.value)
+		await Promise.all([
+			sessionWorld ? sessionWorld.load(true).catch(() => {}) : Promise.resolve(),
+			sessionMaterials ? sessionMaterials.load(true).catch(() => {}) : Promise.resolve(),
+		])
     emit('scene-count', activeChapterId.value, sceneGraph.scenes.value.length)
     closeScenePrompt()
   } catch { actionError.value = 'Не удалось сохранить сценарий' } finally { saving.value = false }

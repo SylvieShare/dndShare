@@ -8,8 +8,6 @@ import {
 
 export function useSessionMaterials({ sessionUuid }) {
   const materials = ref([])
-  const chapters = ref([])
-  const scenes = ref([])
   const loading = ref(false)
   const loaded = ref(false)
   const error = ref('')
@@ -21,8 +19,6 @@ export function useSessionMaterials({ sessionUuid }) {
     try {
       const result = await getSessionMaterials(sessionUuid)
       materials.value = result?.materials || []
-      chapters.value = result?.chapters || []
-      scenes.value = result?.scenes || []
       loaded.value = true
     } catch {
       error.value = 'Не удалось загрузить материалы'
@@ -53,15 +49,13 @@ export function useSessionMaterials({ sessionUuid }) {
     return materials.value.find(item => String(item.id) === String(materialId)) || null
   }
 
-  function availableFor(chapterId, sceneId = null) {
+	function availableFor(sceneId = null) {
     return materials.value.filter(material => {
-      const chapterLinks = material.chapterLinks || []
-      const sceneLinks = material.sceneLinks || []
-      if (!chapterLinks.length && !sceneLinks.length) return true
-      if (chapterLinks.some(link => String(link.chapterId) === String(chapterId))) return true
-      return sceneId != null && sceneLinks.some(link => String(link.sceneId) === String(sceneId))
+			const sceneRelations = (material.relations || []).filter(relation => relation.type === 'scene')
+			if (!sceneRelations.length) return true
+			return sceneId != null && sceneRelations.some(relation => String(relation.id) === String(sceneId))
     })
   }
 
-  return { materials, chapters, scenes, loading, loaded, error, load, create, update, remove, byId, availableFor }
+	return { materials, loading, loaded, error, load, create, update, remove, byId, availableFor }
 }

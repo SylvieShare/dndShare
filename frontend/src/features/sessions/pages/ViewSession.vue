@@ -76,12 +76,11 @@
 			:world="sessionWorld"
             :materials="sessionMaterials"
             :presentation="presentation"
-            :chapter-id="workspaceChapter?.id ?? chapterGraph.currentChapter.value?.id ?? null"
-            :scene-id="workspaceScene?.id ?? null"
             @select-location="selectLocation"
             @select-npc="selectNpc"
             @select-quest="selectQuest"
 			@select-material="selectMaterial"
+			@open-scene="openRelatedScene"
           />
         </template>
         <SessionCenterWorkspace
@@ -447,11 +446,20 @@ const {
   workspaceRevealed,
   workspaceMotionMode,
   openChapterScenes,
+	openSceneWorkspace,
   toggleCombatWorkspace,
   restoreWorkspace,
   updateWorkspaceContext,
   closeWorkspace,
 } = useSessionWorkspace({ sessionUuid, chapterGraph })
+
+async function openRelatedScene(sceneId) {
+	const scene = sessionWorld.scenesById.value.get(Number(sceneId))
+	if (!scene) return
+	selectPrimaryView('story')
+	await nextTick()
+	await openSceneWorkspace(scene)
+}
 const {
   mode: playersRailMode,
   toggle: togglePlayersRail,

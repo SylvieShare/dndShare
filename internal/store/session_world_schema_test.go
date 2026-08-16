@@ -16,10 +16,7 @@ func TestSessionWorldSchemaUsesTreeAndExplicitAssociations(t *testing.T) {
 		"CREATE TABLE IF NOT EXISTS dndshare.session_npc",
 		"race_item_id int8 NULL REFERENCES dndshare.item(id) ON DELETE SET NULL",
 		"ADD COLUMN IF NOT EXISTS race_item_id",
-		"CREATE TABLE IF NOT EXISTS dndshare.session_scene_location",
-		"CREATE TABLE IF NOT EXISTS dndshare.session_npc_scene",
 		"custom_image_id int8 NULL REFERENCES dndshare.storage_image(id) ON DELETE SET NULL",
-		"ADD COLUMN IF NOT EXISTS note text NULL",
 		"ON DELETE CASCADE",
 	} {
 		if !strings.Contains(schemaSessionWorldSQL, fragment) {
@@ -31,6 +28,9 @@ func TestSessionWorldSchemaUsesTreeAndExplicitAssociations(t *testing.T) {
 	}
 	if strings.Contains(schemaSessionWorldSQL, "session_npc_location") || strings.Contains(schemaSessionWorldSQL, "session_npc_relation") {
 		t.Fatal("legacy NPC relation tables must not be recreated")
+	}
+	if strings.Contains(schemaSessionWorldSQL, "session_scene_location") || strings.Contains(schemaSessionWorldSQL, "session_npc_scene") {
+		t.Fatal("scenario associations must use universal relations")
 	}
 }
 
@@ -51,7 +51,11 @@ func TestSessionEntitiesSchemaAddsQuestsAndUniversalRelations(t *testing.T) {
 		"SET notes = description",
 		"DROP COLUMN IF EXISTS description",
 		"CREATE TABLE IF NOT EXISTS dndshare.session_entity_relation",
-		"'location', 'npc', 'material', 'quest'",
+		"'location', 'npc', 'material', 'quest', 'scene'",
+		"to_regclass('dndshare.session_scene_location')",
+		"to_regclass('dndshare.session_npc_scene')",
+		"DROP TABLE IF EXISTS dndshare.session_scene_location",
+		"DROP TABLE IF EXISTS dndshare.session_npc_scene",
 		"session_entity_relation_order_check",
 	} {
 		if !strings.Contains(schemaSessionEntitiesSQL, fragment) {
@@ -79,19 +83,6 @@ func TestSessionImagesSchemaUnifiesEntityReferences(t *testing.T) {
 		}
 		if !strings.Contains(schemaSessionImagesSQL, "'"+image.ObjectKey+"'") {
 			t.Fatalf("session image schema must contain object key %q", image.ObjectKey)
-		}
-	}
-}
-
-func TestUniqueWorldIDsDropsInvalidAndDuplicateValues(t *testing.T) {
-	got := uniqueWorldIDs([]int64{4, 0, 4, -1, 9, 9, 2})
-	want := []int64{4, 9, 2}
-	if len(got) != len(want) {
-		t.Fatalf("uniqueWorldIDs() = %v, want %v", got, want)
-	}
-	for index := range want {
-		if got[index] != want[index] {
-			t.Fatalf("uniqueWorldIDs() = %v, want %v", got, want)
 		}
 	}
 }

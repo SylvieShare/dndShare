@@ -66,6 +66,11 @@ func (s *Server) handleGetSceneGraph(w http.ResponseWriter, r *http.Request) {
 		serverError(w, err)
 		return
 	}
+	if userID, authenticated := optionalUser(r); !authenticated || userID != sess.OwnerUserID {
+		for index := range scenes {
+			scenes[index].Relations = nil
+		}
+	}
 	edges, err := s.store.GetSceneEdgesByChapter(r.Context(), chapterID)
 	if err != nil {
 		serverError(w, err)

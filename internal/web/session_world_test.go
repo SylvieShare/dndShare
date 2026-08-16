@@ -11,7 +11,7 @@ import (
 func TestLocationMutationValidatesKindAndImage(t *testing.T) {
 	valid := locationMutationRequest{
 		Name: "  Старый город  ", Kind: "settlement", ImageID: 12,
-		SceneIDs: []int64{1, 2},
+		Relations: []store.SessionEntityRelation{{Type: store.SessionEntityScene, ID: 2}},
 	}
 	recorder := httptest.NewRecorder()
 	mutation, ok := locationMutation(recorder, valid)
@@ -36,12 +36,6 @@ func TestLocationMutationValidatesKindAndImage(t *testing.T) {
 		t.Fatal("non-positive image id accepted")
 	}
 
-	invalid = valid
-	invalid.SceneIDs = []int64{1, 0}
-	recorder = httptest.NewRecorder()
-	if _, ok := locationMutation(recorder, invalid); ok {
-		t.Fatal("non-positive scenario id accepted")
-	}
 }
 
 func TestNpcMutationNormalizesColorAndText(t *testing.T) {

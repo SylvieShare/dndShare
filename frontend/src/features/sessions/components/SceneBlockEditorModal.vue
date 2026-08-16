@@ -125,7 +125,6 @@ const props = defineProps({
   block: { type: Object, default: null },
   type: { type: String, default: 'text' },
   saving: { type: Boolean, default: false },
-  chapterId: { type: [Number, String], default: null },
   sceneId: { type: [Number, String], default: null },
 })
 const emit = defineEmits(['close', 'save'])
@@ -139,7 +138,7 @@ const isMaterialBlock = computed(() => blockType.value === 'image' || blockType.
 const isEntityBlock = computed(() => ['location', 'npc', 'quest'].includes(blockType.value))
 const entityCatalog = computed(() => buildSessionEntityCatalog(sessionWorld, sessionMaterials))
 const entityOptions = computed(() => entityCatalog.value.filter(item => item.type === blockType.value))
-const availableMaterials = computed(() => (sessionMaterials?.availableFor(props.chapterId, props.sceneId) || [])
+const availableMaterials = computed(() => (sessionMaterials?.availableFor(props.sceneId) || [])
   .filter(material => blockType.value === 'material' || material.kind === 'image' || material.kind === 'map'))
 const selectedMaterial = computed(() => availableMaterials.value.find(material => String(material.id) === String(draft.materialId)) || null)
 const materialOptions = computed(() => availableMaterials.value.map(material => ({

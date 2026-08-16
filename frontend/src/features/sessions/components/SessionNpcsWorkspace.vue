@@ -54,7 +54,6 @@
           <h2>{{ selectedNpc.name }}</h2>
           <div class="npc-detail-meta">
 			<span><MapPin :size="12" />{{ selectedNpc.relations?.length || 0 }} связей</span>
-            <span><BookOpenText :size="12" />{{ attachedScenes.length }} {{ ruPlural(attachedScenes.length, 'сценарий', 'сценария', 'сценариев') }}</span>
           </div>
         </div>
         <button v-if="isDm" type="button" class="session-world-edit-action" @click="openEdit(selectedNpc)"><Pencil :size="15" />Редактировать</button>
@@ -68,24 +67,10 @@
           <p v-else class="session-world-muted">Описание пока не добавлено.</p>
         </section>
 
-        <div class="session-world-section-columns">
-		  <section class="session-world-section">
+        <section class="session-world-section">
 			<div class="session-world-section-title"><span>Связи</span><small>{{ selectedNpc.relations?.length || 0 }}</small></div>
 			<UniversalRelationList :relations="selectedNpc.relations" :items="relationItems" @open="openRelated" />
-		  </section>
-
-          <section class="session-world-section">
-            <div class="session-world-section-title"><span>Участие в сюжете</span><small>{{ attachedScenes.length }}</small></div>
-            <div v-if="attachedScenes.length" class="session-world-compact-list">
-              <div v-for="scene in attachedScenes" :key="scene.id" class="session-world-scene-row">
-                <span class="session-world-scene-image" :style="{ backgroundImage: `url(${sessionImageUrl(scene)})` }" />
-                <span><strong>{{ scene.name }}</strong><small>{{ scene.relationNote || sceneContextLabel(scene) }}</small></span>
-              </div>
-            </div>
-            <button v-else-if="isDm" type="button" class="session-world-inline-empty" @click="openEdit(selectedNpc)">Привязать сценарий</button>
-            <p v-else class="session-world-muted">Сценарии не привязаны.</p>
-          </section>
-        </div>
+		</section>
 
       </div>
     </main>
@@ -103,7 +88,6 @@
       :npc="editingNpc"
       :locations="locations"
       :locations-by-id="world.locationsById.value"
-      :scenes="scenes"
       :npcs="npcs"
       :saving="world.saving.value"
 	  :relation-items="relationItems"
@@ -126,14 +110,13 @@
 <script setup>
 import { computed, ref } from 'vue'
 import {
-	BookOpenText, ContactRound, MapPin, Pencil, Search, UserPlus, UsersRound,
+	ContactRound, MapPin, Pencil, Search, UserPlus, UsersRound,
 } from '@lucide/vue'
 import { ConfirmDialog } from '@sylvieshare/share-ui'
 import NpcEditorModal from '@/features/sessions/components/NpcEditorModal.vue'
 import SessionLibraryWorkspace from '@/features/sessions/components/SessionLibraryWorkspace.vue'
 import UniversalRelationList from '@/features/sessions/components/UniversalRelationList.vue'
-import { ruPlural, sceneContextLabel } from '@/features/sessions/lib/sessionWorld'
-import { npcImageUrl, sessionImageUrl } from '@/features/sessions/lib/sessionImages'
+import { npcImageUrl } from '@/features/sessions/lib/sessionImages'
 
 const props = defineProps({
   world: { type: Object, required: true },
@@ -148,24 +131,19 @@ const editingNpc = ref(null)
 const pendingDelete = ref(null)
 const npcs = computed(() => props.world.npcs.value)
 const locations = computed(() => props.world.locations.value)
-const scenes = computed(() => props.world.scenes.value)
 const selectedNpc = computed(() => props.world.npcsById.value.get(Number(props.selectedNpcId)) || null)
 const filteredNpcs = computed(() => {
   const needle = query.value.trim().toLocaleLowerCase('ru')
   if (!needle) return npcs.value
   return npcs.value.filter(npc => `${npc.name} ${npc.raceName || ''} ${npc.role || ''} ${npc.description || ''}`.toLocaleLowerCase('ru').includes(needle))
 })
-const attachedScenes = computed(() => (selectedNpc.value?.sceneLinks || []).map(link => {
-  const item = props.world.scenesById.value.get(link.sceneId)
-  return item ? { ...item, relationNote: link.note } : null
-}).filter(Boolean))
 
 function npcPlaceSummary(npc) {
 	const locationLink = npc.relations?.find(relation => relation.type === 'location')
 	const first = props.world.locationsById.value.get(locationLink?.id)
   return first ? first.name : 'Без привязок'
 }
-function relationCount(npc) { return (npc.relations?.length || 0) + (npc.sceneLinks?.length || 0) }
+function relationCount(npc) { return npc.relations?.length || 0 }
 function openRelated(item) {
 	if (item.type === 'location') emit('open-location', item.id)
 	else if (item.type === 'npc') emit('select-npc', item.id)

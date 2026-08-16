@@ -39,7 +39,6 @@ type locationMutationRequest struct {
 	Kind             string                        `json:"kind"`
 	Description      *string                       `json:"description"`
 	ImageID          int64                         `json:"imageId"`
-	SceneIDs         []int64                       `json:"sceneIds"`
 	Relations        []store.SessionEntityRelation `json:"relations"`
 }
 
@@ -52,7 +51,6 @@ type npcMutationRequest struct {
 	ImageID     int64                         `json:"imageId"`
 	ImageFocalX float64                       `json:"imageFocalX"`
 	ImageFocalY float64                       `json:"imageFocalY"`
-	SceneLinks  []store.SessionNPCSceneLink   `json:"sceneLinks"`
 	Relations   []store.SessionEntityRelation `json:"relations"`
 }
 
@@ -100,8 +98,8 @@ func locationMutation(
 		badRequest(w, "Выберите изображение локации")
 		return store.SessionLocationMutation{}, false
 	}
-	if len(req.SceneIDs) > 500 || !validSessionWorldIDs(req.SceneIDs) || !validEntityRelations(req.Relations) {
-		badRequest(w, "Слишком много привязанных сценариев")
+	if !validEntityRelations(req.Relations) {
+		badRequest(w, "Слишком много связей")
 		return store.SessionLocationMutation{}, false
 	}
 	return store.SessionLocationMutation{
@@ -110,7 +108,6 @@ func locationMutation(
 		Kind:             req.Kind,
 		Description:      cleanText(req.Description, 5000),
 		ImageID:          req.ImageID,
-		SceneIDs:         req.SceneIDs,
 		Relations:        cleanEntityRelations(req.Relations),
 	}, true
 }
@@ -136,33 +133,17 @@ func npcMutation(w http.ResponseWriter, req npcMutationRequest) (store.SessionNP
 		badRequest(w, "Выберите изображение NPC")
 		return store.SessionNPCMutation{}, false
 	}
-	if len(req.SceneLinks) > 500 || !validNPCLinks(req.SceneLinks) || !validEntityRelations(req.Relations) {
+	if !validEntityRelations(req.Relations) {
 		badRequest(w, "Слишком много привязок")
 		return store.SessionNPCMutation{}, false
 	}
-	cleanNPCLinkNotes(req.SceneLinks)
 	return store.SessionNPCMutation{
 		Name: name, RaceItemID: req.RaceItemID, Role: cleanText(req.Role, 160),
 		Description: cleanText(req.Description, 5000), Color: strings.ToLower(req.Color),
 		ImageID:     req.ImageID,
 		ImageFocalX: clamp01(req.ImageFocalX), ImageFocalY: clamp01(req.ImageFocalY),
-		SceneLinks: req.SceneLinks, Relations: cleanEntityRelations(req.Relations),
+		Relations: cleanEntityRelations(req.Relations),
 	}, true
-}
-
-func validNPCLinks(scenes []store.SessionNPCSceneLink) bool {
-	for _, link := range scenes {
-		if link.SceneID <= 0 {
-			return false
-		}
-	}
-	return true
-}
-
-func cleanNPCLinkNotes(scenes []store.SessionNPCSceneLink) {
-	for index := range scenes {
-		scenes[index].Note = cleanText(scenes[index].Note, 500)
-	}
 }
 
 func (s *Server) writeSessionWorldMutation(

@@ -47,7 +47,7 @@ import { materialType } from '@/features/sessions/lib/sessionMaterials'
 const props = defineProps({
   sessionUuid: { type: String, required: true }, isDm: { type: Boolean, default: false },
   presentation: { type: Object, required: true }, materials: { type: Object, required: true },
-  chapterId: { type: [Number, String], default: null }, scene: { type: Object, default: null },
+	scene: { type: Object, default: null },
 })
 const trigger = ref(null)
 const open = ref(false)
@@ -56,12 +56,12 @@ const effects = [
   { key: 'fog', label: 'Туман' }, { key: 'embers', label: 'Искры' },
   { key: 'snow', label: 'Снег' }, { key: 'storm', label: 'Гроза' },
 ]
-const contextMaterials = computed(() => props.materials.availableFor(props.chapterId, props.scene?.id))
+const contextMaterials = computed(() => props.materials.availableFor(props.scene?.id))
 async function run(action, close = true) { await action().catch(() => {}); if (close) open.value = false }
 function runScene() { run(() => props.presentation.startScene(props.scene)) }
 function showMaterial(material) { run(() => props.presentation.showMaterial(material)) }
 function relationLabel(material) {
-  const count = (material.chapterLinks?.length || 0) + (material.sceneLinks?.length || 0)
+  const count = (material.relations || []).filter(relation => relation.type === 'scene').length
   if (!count) return 'Вся сессия'
   return count === 1 ? '1 связь' : `${count} связей`
 }

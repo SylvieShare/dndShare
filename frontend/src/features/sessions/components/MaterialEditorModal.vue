@@ -44,38 +44,12 @@
       <aside class="material-editor-relations">
         <div class="material-editor-relations-head">
           <strong>Связи материала</strong>
-          <small>Без связей материал доступен из любого контекста сессии.</small>
+          <small>Сценарии задают контекст показа, остальные связи помогают держать материалы рядом с объектами кампании.</small>
         </div>
 		<section>
 		  <div class="material-editor-section-title"><span>Объекты сессии</span><small>Все типы в одном списке</small></div>
 		  <UniversalRelationEditor v-model="draft.relations" :items="relationItems" source-type="material" :source-id="material?.id" />
 		</section>
-		<section>
-          <div class="material-editor-section-title"><span>Главы</span><small>Все сценарии главы</small></div>
-          <WorldRelationEditor
-            v-model="draft.chapterLinks"
-            :items="chapterOptions"
-            link-key="chapterId"
-            add-label="Добавить главу"
-            picker-title="Связать материал с главой"
-            search-placeholder="Найти главу…"
-            empty-text="Связей с главами нет"
-            picker-empty-text="Сначала создайте главы"
-          />
-        </section>
-        <section>
-          <div class="material-editor-section-title"><span>Сценарии</span><small>Точечное использование</small></div>
-          <WorldRelationEditor
-            v-model="draft.sceneLinks"
-            :items="sceneOptions"
-            link-key="sceneId"
-            add-label="Добавить сценарий"
-            picker-title="Связать материал со сценарием"
-            search-placeholder="Найти сценарий…"
-            empty-text="Связей со сценариями нет"
-            picker-empty-text="Сначала создайте сценарии"
-          />
-        </section>
       </aside>
     </div>
 
@@ -90,40 +64,19 @@
 import { computed, onBeforeUnmount, reactive, ref, watch } from 'vue'
 import { AppModalFrame, FormActionButtons, FormField, FormTextInput, FormTextarea } from '@sylvieshare/share-ui'
 import SessionImagePicker from '@/features/sessions/components/SessionImagePicker.vue'
-import WorldRelationEditor from '@/features/sessions/components/WorldRelationEditor.vue'
 import UniversalRelationEditor from '@/features/sessions/components/UniversalRelationEditor.vue'
 import { MATERIAL_TYPES, NOTE_STYLES } from '@/features/sessions/lib/sessionMaterials'
 
 const props = defineProps({
-  material: { type: Object, default: null }, chapters: { type: Array, default: () => [] }, scenes: { type: Array, default: () => [] },
-  defaultChapterId: { type: [Number, String], default: null }, defaultSceneId: { type: [Number, String], default: null }, saving: { type: Boolean, default: false },
+	material: { type: Object, default: null }, saving: { type: Boolean, default: false },
 	relationItems: { type: Array, default: () => [] },
 })
 const emit = defineEmits(['close', 'save'])
 const draft = reactive({
   kind: props.material?.kind || 'image', name: props.material?.name || '', caption: props.material?.caption || '', content: props.material?.content || '', noteStyle: props.material?.noteStyle || 'parchment',
   assetId: props.material?.assetId || 0,
-  chapterLinks: props.material
-    ? (props.material.chapterLinks || []).map(link => ({ ...link }))
-    : props.defaultChapterId && !props.defaultSceneId ? [{ chapterId: Number(props.defaultChapterId), note: null }] : [],
-  sceneLinks: props.material
-    ? (props.material.sceneLinks || []).map(link => ({ ...link }))
-    : props.defaultSceneId ? [{ sceneId: Number(props.defaultSceneId), note: null }] : [],
 	relations: (props.material?.relations || []).map(link => ({ ...link })),
 })
-const chaptersById = computed(() => new Map(props.chapters.map(chapter => [Number(chapter.id), chapter])))
-const chapterOptions = computed(() => props.chapters.map(chapter => ({
-  id: chapter.id,
-  title: `${chapter.number} · ${chapter.name}`,
-  subtitle: 'Глава сюжета',
-  image: chapter.imageUrl,
-})))
-const sceneOptions = computed(() => props.scenes.map(scene => ({
-  id: scene.id,
-  title: scene.name,
-  subtitle: chaptersById.value.get(Number(scene.chapterId))?.name || 'Сценарий',
-  image: scene.imageUrl,
-})))
 const source = ref(props.material ? 'custom' : 'catalog')
 const preview = ref(props.material?.assetUrl || '')
 const imageInput = ref(null)
@@ -184,8 +137,6 @@ async function submit() {
       kind: draft.kind, name: draft.name.trim(), caption: needsAsset ? (draft.caption.trim() || null) : null,
       content: needsAsset ? null : draft.content.trim(), noteStyle: draft.kind === 'note' ? draft.noteStyle : null,
       assetId: needsAsset ? await uploadAsset() : null,
-      chapterLinks: draft.chapterLinks,
-      sceneLinks: draft.sceneLinks,
 		relations: draft.relations,
     })
   } catch { error.value = draft.kind === 'video' ? 'Не удалось загрузить видео' : 'Не удалось загрузить изображение' }

@@ -24,7 +24,6 @@ type SessionLocation struct {
 	ImageURL         string                  `json:"imageUrl"`
 	ImageCatalogKey  *string                 `json:"imageCatalogKey,omitempty"`
 	SortOrder        int                     `json:"sortOrder"`
-	SceneIDs         []int64                 `json:"sceneIds"`
 	Relations        []SessionEntityRelation `json:"relations"`
 }
 
@@ -43,7 +42,6 @@ type SessionNPC struct {
 	ImageFocalX     float64                 `json:"imageFocalX"`
 	ImageFocalY     float64                 `json:"imageFocalY"`
 	SortOrder       int                     `json:"sortOrder"`
-	SceneLinks      []SessionNPCSceneLink   `json:"sceneLinks"`
 	Relations       []SessionEntityRelation `json:"relations"`
 }
 
@@ -67,24 +65,18 @@ type SessionQuest struct {
 	Relations    []SessionEntityRelation `json:"relations"`
 }
 
-type SessionNPCSceneLink struct {
-	SceneID int64   `json:"sceneId"`
-	Note    *string `json:"note,omitempty"`
-}
-
 type SessionWorldScene struct {
-	ID              int64   `json:"id"`
-	ChapterID       int64   `json:"chapterId"`
-	Name            string  `json:"name"`
-	ImageID         int64   `json:"imageId"`
-	ImageURL        string  `json:"imageUrl"`
-	ImageCatalogKey *string `json:"imageCatalogKey,omitempty"`
-	ArcOrder        int     `json:"arcOrder"`
-	ArcName         string  `json:"arcName"`
-	ChapterNumber   string  `json:"chapterNumber"`
-	ChapterName     string  `json:"chapterName"`
-	LocationIDs     []int64 `json:"locationIds"`
-	NPCIDs          []int64 `json:"npcIds"`
+	ID              int64                   `json:"id"`
+	ChapterID       int64                   `json:"chapterId"`
+	Name            string                  `json:"name"`
+	ImageID         int64                   `json:"imageId"`
+	ImageURL        string                  `json:"imageUrl"`
+	ImageCatalogKey *string                 `json:"imageCatalogKey,omitempty"`
+	ArcOrder        int                     `json:"arcOrder"`
+	ArcName         string                  `json:"arcName"`
+	ChapterNumber   string                  `json:"chapterNumber"`
+	ChapterName     string                  `json:"chapterName"`
+	Relations       []SessionEntityRelation `json:"relations"`
 }
 
 type SessionWorld struct {
@@ -100,7 +92,6 @@ type SessionLocationMutation struct {
 	Kind             string
 	Description      *string
 	ImageID          int64
-	SceneIDs         []int64
 	Relations        []SessionEntityRelation
 }
 
@@ -113,7 +104,6 @@ type SessionNPCMutation struct {
 	ImageID     int64
 	ImageFocalX float64
 	ImageFocalY float64
-	SceneLinks  []SessionNPCSceneLink
 	Relations   []SessionEntityRelation
 }
 
@@ -129,7 +119,7 @@ type SessionQuestMutation struct {
 }
 
 func scanSessionLocation(row pgx.Row) (SessionLocation, error) {
-	location := SessionLocation{SceneIDs: []int64{}, Relations: []SessionEntityRelation{}}
+	location := SessionLocation{Relations: []SessionEntityRelation{}}
 	err := row.Scan(
 		&location.ID, &location.SessionID, &location.ParentLocationID,
 		&location.Name, &location.Kind, &location.Description,
@@ -142,7 +132,7 @@ func scanSessionLocation(row pgx.Row) (SessionLocation, error) {
 }
 
 func scanSessionNPC(row pgx.Row) (SessionNPC, error) {
-	npc := SessionNPC{SceneLinks: []SessionNPCSceneLink{}, Relations: []SessionEntityRelation{}}
+	npc := SessionNPC{Relations: []SessionEntityRelation{}}
 	err := row.Scan(
 		&npc.ID, &npc.SessionID, &npc.Name, &npc.RaceItemID,
 		&npc.Role, &npc.Description, &npc.Color, &npc.SortOrder, &npc.RaceName,
@@ -277,7 +267,7 @@ func (s *Store) GetSessionWorld(ctx context.Context, sessionID int64) (SessionWo
 		return SessionWorld{}, err
 	}
 	for sceneRows.Next() {
-		scene := SessionWorldScene{LocationIDs: []int64{}, NPCIDs: []int64{}}
+		scene := SessionWorldScene{Relations: []SessionEntityRelation{}}
 		if err := sceneRows.Scan(
 			&scene.ID, &scene.ChapterID, &scene.Name, &scene.ImageID, &scene.ImageURL, &scene.ImageCatalogKey,
 			&scene.ArcOrder, &scene.ArcName, &scene.ChapterNumber, &scene.ChapterName,

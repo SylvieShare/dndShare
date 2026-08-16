@@ -100,6 +100,18 @@ export function useSessionWorkspace({ sessionUuid, chapterGraph }) {
     showWorkspace('scenes', chapter, null, 'scenes')
   }
 
+  async function openSceneWorkspace(sceneReference) {
+    if (!chapterGraph.loaded.value) await chapterGraph.load()
+    const chapter = chapterGraph.chapters.value.find(item => item.id === sceneReference?.chapterId)
+    if (!chapter) return false
+    const graph = await getSceneGraph(sessionUuid, chapter.id).catch(() => null)
+    const contextIndex = graph?.scenes?.findIndex(item => item.id === sceneReference.id) ?? -1
+    if (contextIndex < 0) return false
+    chapterGraph.selectArc(chapter.arcId)
+    showWorkspace('scenes', chapter, { ...graph.scenes[contextIndex], contextIndex }, 'blocks')
+    return true
+  }
+
   async function toggleCombatWorkspace(context = {}) {
     if (state.mode === 'combat' && state.phase !== 'closing') {
       closeWorkspace()
@@ -201,6 +213,7 @@ export function useSessionWorkspace({ sessionUuid, chapterGraph }) {
     workspaceRevealed,
     workspaceMotionMode,
     openChapterScenes,
+		openSceneWorkspace,
     toggleCombatWorkspace,
     restoreWorkspace,
     updateWorkspaceContext,

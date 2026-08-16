@@ -65,9 +65,11 @@ describe('session presentation workspace', () => {
   })
 
   it('uses reusable relation editing for material contexts and keeps screen launch in the header control', () => {
-    expect(materialEditor).toContain('<WorldRelationEditor')
-    expect(materialEditor).toContain('draft.chapterLinks')
-    expect(materialEditor).toContain('draft.sceneLinks')
+		expect(materialEditor).toContain('<UniversalRelationEditor')
+		expect(materialEditor).toContain('source-type="material"')
+		expect(materialEditor).not.toContain('draft.chapterLinks')
+		expect(materialEditor).not.toContain('draft.sceneLinks')
+		expect(sceneEditor).toContain('source-type="scene"')
     expect(materialEditor).not.toContain('label="Доступен"')
     expect(encounter).not.toContain('Открыть экран показа')
     expect(control).toContain('Открыть экран показа')
@@ -78,12 +80,11 @@ describe('material visibility', () => {
   it('inherits global and linked resources into a scenario without leaking sibling resources', () => {
     const library = useSessionMaterials({ sessionUuid: 'session' })
     library.materials.value = [
-      { id: 1, chapterLinks: [], sceneLinks: [] },
-      { id: 2, chapterLinks: [{ chapterId: 10 }], sceneLinks: [] },
-      { id: 3, chapterLinks: [{ chapterId: 11 }], sceneLinks: [] },
-      { id: 4, chapterLinks: [], sceneLinks: [{ sceneId: 20 }] },
-      { id: 5, chapterLinks: [], sceneLinks: [{ sceneId: 21 }] },
+			{ id: 1, relations: [] },
+			{ id: 2, relations: [{ type: 'npc', id: 7 }] },
+			{ id: 3, relations: [{ type: 'scene', id: 20 }] },
+			{ id: 4, relations: [{ type: 'scene', id: 21 }] },
     ]
-    expect(library.availableFor(10, 20).map(item => item.id)).toEqual([1, 2, 4])
+		expect(library.availableFor(20).map(item => item.id)).toEqual([1, 2, 3])
   })
 })

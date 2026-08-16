@@ -12,21 +12,22 @@ import (
 
 // SessionScene — строка dndshare.session_scene (порт model/SessionScene.kt).
 type SessionScene struct {
-	ID                       int64    `json:"id"`
-	ChapterID                int64    `json:"chapterId"`
-	Name                     string   `json:"name"`
-	Status                   string   `json:"status"`
-	ImageID                  int64    `json:"imageId"`
-	ImageURL                 string   `json:"imageUrl"`
-	ImageCatalogKey          *string  `json:"imageCatalogKey,omitempty"`
-	PositionX                float64  `json:"positionX"`
-	PositionY                float64  `json:"positionY"`
-	PresentationMaterialID   *int64   `json:"presentationMaterialId,omitempty"`
-	PresentationTrackID      *int64   `json:"presentationTrackId,omitempty"`
-	PresentationVolume       *float64 `json:"presentationVolume,omitempty"`
-	PresentationCrossfadeSec *float64 `json:"presentationCrossfadeSec,omitempty"`
-	PresentationEffect       string   `json:"presentationEffect"`
-	PresentationTransition   string   `json:"presentationTransition"`
+	ID                       int64                   `json:"id"`
+	ChapterID                int64                   `json:"chapterId"`
+	Name                     string                  `json:"name"`
+	Status                   string                  `json:"status"`
+	ImageID                  int64                   `json:"imageId"`
+	ImageURL                 string                  `json:"imageUrl"`
+	ImageCatalogKey          *string                 `json:"imageCatalogKey,omitempty"`
+	PositionX                float64                 `json:"positionX"`
+	PositionY                float64                 `json:"positionY"`
+	PresentationMaterialID   *int64                  `json:"presentationMaterialId,omitempty"`
+	PresentationTrackID      *int64                  `json:"presentationTrackId,omitempty"`
+	PresentationVolume       *float64                `json:"presentationVolume,omitempty"`
+	PresentationCrossfadeSec *float64                `json:"presentationCrossfadeSec,omitempty"`
+	PresentationEffect       string                  `json:"presentationEffect"`
+	PresentationTransition   string                  `json:"presentationTransition"`
+	Relations                []SessionEntityRelation `json:"relations,omitempty"`
 }
 
 type ScenePresentationSettings struct {
@@ -104,7 +105,7 @@ func (s *Store) GetSessionChapter(ctx context.Context, id int64) (SceneChapter, 
 }
 
 func scanScene(row pgx.Row) (SessionScene, error) {
-	var sc SessionScene
+	sc := SessionScene{Relations: []SessionEntityRelation{}}
 	err := row.Scan(
 		&sc.ID, &sc.ChapterID, &sc.Name, &sc.Status,
 		&sc.ImageID, &sc.ImageURL, &sc.ImageCatalogKey, &sc.PositionX, &sc.PositionY,
@@ -160,12 +161,19 @@ func (s *Store) GetScenesByChapter(ctx context.Context, chapterID int64) ([]Sess
 		}
 		out = append(out, sc)
 	}
-	return out, rows.Err()
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	rows.Close()
+	if err := s.loadSessionSceneRelations(ctx, out); err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 // GetSceneByID — сцена по id (порт getSceneById).
 func (s *Store) GetSceneByID(ctx context.Context, id int64) (SessionScene, error) {
-	return scanScene(s.pool.QueryRow(ctx,
+	scene, err := scanScene(s.pool.QueryRow(ctx,
 		`SELECT scene.id, scene.chapter_id, scene."name", scene.status,
 		        scene.image_id, COALESCE(image.url, ''), catalog.catalog_key,
 		        scene.position_x, scene.position_y,
@@ -176,12 +184,70 @@ func (s *Store) GetSceneByID(ctx context.Context, id int64) (SessionScene, error
 		 JOIN dndshare.storage_image image ON image.id = scene.image_id AND image.deleted = false
 		 LEFT JOIN dndshare.session_image_catalog catalog ON catalog.image_id = scene.image_id
 		 WHERE scene.id = $1`, id))
+	if err != nil {
+		return SessionScene{}, err
+	}
+	scenes := []SessionScene{scene}
+	if err := s.loadSessionSceneRelations(ctx, scenes); err != nil {
+		return SessionScene{}, err
+	}
+	return scenes[0], nil
+}
+
+func (s *Store) loadSessionSceneRelations(ctx context.Context, scenes []SessionScene) error {
+	if len(scenes) == 0 {
+		return nil
+	}
+	byID := make(map[int64]*SessionScene, len(scenes))
+	ids := make([]int64, 0, len(scenes))
+	for index := range scenes {
+		scenes[index].Relations = []SessionEntityRelation{}
+		byID[scenes[index].ID] = &scenes[index]
+		ids = append(ids, scenes[index].ID)
+	}
+	rows, err := s.pool.Query(ctx, `
+		SELECT left_type, left_id, right_type, right_id, note
+		FROM dndshare.session_entity_relation
+		WHERE (left_type = 'scene' AND left_id = ANY($1::bigint[]))
+		   OR (right_type = 'scene' AND right_id = ANY($1::bigint[]))
+		ORDER BY left_type, left_id, right_type, right_id`, ids)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var leftType, rightType string
+		var leftID, rightID int64
+		var note *string
+		if err := rows.Scan(&leftType, &leftID, &rightType, &rightID, &note); err != nil {
+			return err
+		}
+		if leftType == SessionEntityScene {
+			if scene := byID[leftID]; scene != nil {
+				scene.Relations = append(scene.Relations, SessionEntityRelation{Type: rightType, ID: rightID, Note: note})
+			}
+		}
+		if rightType == SessionEntityScene {
+			if scene := byID[rightID]; scene != nil {
+				scene.Relations = append(scene.Relations, SessionEntityRelation{Type: leftType, ID: leftID, Note: note})
+			}
+		}
+	}
+	return rows.Err()
 }
 
 // CreateScene — новая сцена (порт createScene).
-func (s *Store) CreateScene(ctx context.Context, chapterID int64, name, status string, imageID int64, x, y float64, preset ScenePresentationSettings) (SessionScene, error) {
+func (s *Store) CreateScene(ctx context.Context, sessionID, chapterID int64, name, status string, imageID int64, x, y float64, preset ScenePresentationSettings, relations []SessionEntityRelation) (SessionScene, error) {
+	tx, err := s.pool.Begin(ctx)
+	if err != nil {
+		return SessionScene{}, err
+	}
+	defer tx.Rollback(ctx)
+	if err := validateSessionEntityRelationsTx(ctx, tx, sessionID, SessionEntityScene, 0, relations); err != nil {
+		return SessionScene{}, err
+	}
 	var id int64
-	err := s.pool.QueryRow(ctx,
+	err = tx.QueryRow(ctx,
 		`INSERT INTO dndshare.session_scene
 		    (chapter_id, "name", status, image_id, position_x, position_y,
 		     presentation_material_id, presentation_track_id, presentation_volume,
@@ -193,12 +259,26 @@ func (s *Store) CreateScene(ctx context.Context, chapterID int64, name, status s
 	if err != nil {
 		return SessionScene{}, err
 	}
+	if err := replaceSessionEntityRelationsTx(ctx, tx, sessionID, SessionEntityScene, id, relations); err != nil {
+		return SessionScene{}, err
+	}
+	if err := tx.Commit(ctx); err != nil {
+		return SessionScene{}, err
+	}
 	return s.GetSceneByID(ctx, id)
 }
 
 // UpdateScene updates the editable scenario card fields.
-func (s *Store) UpdateScene(ctx context.Context, id int64, name, status string, imageID int64, preset ScenePresentationSettings) error {
-	_, err := s.pool.Exec(ctx,
+func (s *Store) UpdateScene(ctx context.Context, sessionID, id int64, name, status string, imageID int64, preset ScenePresentationSettings, relations []SessionEntityRelation) error {
+	tx, err := s.pool.Begin(ctx)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback(ctx)
+	if err := validateSessionEntityRelationsTx(ctx, tx, sessionID, SessionEntityScene, id, relations); err != nil {
+		return err
+	}
+	result, err := tx.Exec(ctx,
 		`UPDATE dndshare.session_scene
 		 SET "name" = $1, status = $2, image_id = $3,
 		     presentation_material_id = $4, presentation_track_id = $5,
@@ -206,7 +286,16 @@ func (s *Store) UpdateScene(ctx context.Context, id int64, name, status string, 
 		     presentation_effect = $8, presentation_transition = $9
 		 WHERE id = $10`, name, status, imageID, preset.MaterialID, preset.TrackID,
 		preset.Volume, preset.CrossfadeSec, preset.Effect, preset.Transition, id)
-	return err
+	if err != nil {
+		return err
+	}
+	if result.RowsAffected() == 0 {
+		return ErrNotFound
+	}
+	if err := replaceSessionEntityRelationsTx(ctx, tx, sessionID, SessionEntityScene, id, relations); err != nil {
+		return err
+	}
+	return tx.Commit(ctx)
 }
 
 func (s *Store) UpdateScenePosition(ctx context.Context, id int64, x, y float64) error {
@@ -217,12 +306,15 @@ func (s *Store) UpdateScenePosition(ctx context.Context, id int64, x, y float64)
 
 // DeleteScene — удаление сцены вместе с её айтемами (порт deleteScene). В одной транзакции,
 // чтобы сбой между двумя DELETE не оставил сцену без айтемов (или наоборот).
-func (s *Store) DeleteScene(ctx context.Context, id int64) error {
+func (s *Store) DeleteScene(ctx context.Context, sessionID, id int64) error {
 	tx, err := s.pool.Begin(ctx)
 	if err != nil {
 		return err
 	}
 	defer tx.Rollback(ctx)
+	if err := deleteSessionEntityRelationsTx(ctx, tx, sessionID, SessionEntityScene, id); err != nil {
+		return err
+	}
 	if _, err := tx.Exec(ctx,
 		`DELETE FROM dndshare.session_scene_item WHERE scene_id = $1`, id); err != nil {
 		return err

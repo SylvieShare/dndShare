@@ -35,8 +35,6 @@
     :materials="materials"
     :presentation="presentation"
     :is-dm="isDm"
-    :chapter-id="chapterId"
-    :scene-id="sceneId"
 	:world="world"
 	:relation-items="relationItems"
 	:selected-material-id="selectedMaterialId"
@@ -73,11 +71,9 @@ const props = defineProps({
   isDm: { type: Boolean, default: false },
   materials: { type: Object, default: null },
   presentation: { type: Object, default: null },
-  chapterId: { type: [Number, String], default: null },
-  sceneId: { type: [Number, String], default: null },
 	world: { type: Object, required: true },
 })
-const emit = defineEmits(['select-location', 'select-npc', 'select-quest', 'select-material'])
+const emit = defineEmits(['select-location', 'select-npc', 'select-quest', 'select-material', 'open-scene'])
 const world = props.world
 const relationItems = computed(() => buildSessionEntityCatalog(world, props.materials))
 
@@ -110,6 +106,7 @@ function openEntity(item) {
 	if (item.type === 'npc') emit('select-npc', item.id)
 	if (item.type === 'quest') emit('select-quest', item.id)
 	if (item.type === 'material') emit('select-material', item.id)
+	if (item.type === 'scene') emit('open-scene', item.id)
 }
 </script>
 

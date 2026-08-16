@@ -154,10 +154,9 @@ cycles. Root dropping returns a location to the top level. There are no
 location-to-location graph edges or geographic canvas state.
 
 A location stores a semantic kind, shared-catalogue image, description, parent
-and sibling order. It may be linked to any number of session scenarios. The
-editor shows current scenarios as removable relation cards and opens the same
-searchable add modal as the NPC editor instead of an always-visible checkbox
-list. It excludes the location itself and all descendants from its parent picker,
+and sibling order. Scenarios use the same universal relation picker as every
+other session object rather than a second story-context field. The location
+editor excludes itself and all descendants from its parent picker,
 and deletion is blocked until direct children are moved or deleted.
 
 Prepared NPCs live in one searchable session catalogue. A record has a name,
@@ -168,8 +167,8 @@ handbook items, including subraces; the stored nullable FK is cleared if that
 item is removed. The name field has an explicit dice action backed by the same
 race-aware generator as the D&D character wizard. Standard race profiles combine
 at least 80 given-name/family-name variants each, while an unknown custom race
-uses a broad fantasy fallback. Locations, NPCs, materials and quests use one
-symmetric relation model. Every entity can link to any entity of those four
+uses a broad fantasy fallback. Locations, NPCs, materials, quests and scenarios use one
+symmetric relation model. Every entity can link to any entity of those five
 types, including another entity of its own type, with an optional private note.
 `Добавить связь` opens one picker: the DM can search across the complete
 catalogue or filter a type. Editors show only current links with remove actions,
@@ -214,16 +213,18 @@ types: image, video, plain text, styled note or map. Notes can use parchment,
 letter, dossier or arcane presentation. A map currently renders as an image but
 already owns its type and reserved `map_data`, so later layers and markers do
 not require redefining ordinary images. Each material is stored once and may
-have several chapter and scenario links with an optional note on every link.
-With no links it remains available throughout the session; a chapter link makes
-it available to every scenario in that chapter, while unrelated contexts do not
-see it in their picker. The editor reuses the same `WorldRelationEditor` cards
-and searchable picker as locations and NPCs. The session-header display control
+have several universal links with an optional note. Scenario links define where
+it is contextual; with no scenario links it remains available throughout the
+session. Chapter attachment is not part of the model. The editor uses the same
+editable universal relation list and searchable picker as locations, NPCs and
+quests. The session-header display control
 shows live state, opens the standalone display and provides contextual
 materials, blackout/reveal/clear actions and the player-only effect selector.
 The combat toolbar does not duplicate the standalone-screen launch action.
 
-A scenario has an optional presentation preset: material, music track, volume,
+A scenario participates in universal relations and edits them in its main
+editor. Opening a scenario relation navigates directly to its block canvas. A
+scenario also has an optional presentation preset: material, music track, volume,
 crossfade duration, visual effect and transition. `Запустить сцену` applies the
 display and DM-side music controls together. The third-level `image` block
 references an existing contextual image or map material rather than duplicating its asset;

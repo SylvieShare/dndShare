@@ -13,21 +13,32 @@ var presentationEffects = map[string]bool{
 
 var presentationTransitions = map[string]bool{"cut": true, "fade": true}
 
-func materialAvailableFor(material store.SessionMaterial, chapterID, sceneID int64) bool {
-	if len(material.ChapterLinks) == 0 && len(material.SceneLinks) == 0 {
-		return true
-	}
-	for _, link := range material.ChapterLinks {
-		if link.ChapterID == chapterID {
+func materialAvailableFor(material store.SessionMaterial, sceneID int64) bool {
+	hasSceneRelation := false
+	for _, relation := range material.Relations {
+		if relation.Type != store.SessionEntityScene {
+			continue
+		}
+		hasSceneRelation = true
+		if relation.ID == sceneID {
 			return true
 		}
 	}
-	for _, link := range material.SceneLinks {
-		if link.SceneID == sceneID {
+	return !hasSceneRelation
+}
+
+func materialAvailableForSceneMutation(material store.SessionMaterial, sceneID int64, relations []store.SessionEntityRelation) bool {
+	for _, relation := range relations {
+		if relation.Type == store.SessionEntityMaterial && relation.ID == material.ID {
 			return true
 		}
 	}
-	return false
+	for _, relation := range material.Relations {
+		if relation.Type == store.SessionEntityScene && relation.ID != sceneID {
+			return false
+		}
+	}
+	return true
 }
 
 func normalizePresentationStyle(effect, transition string) (string, string) {
@@ -59,7 +70,12 @@ func (s *Server) materialForScene(w http.ResponseWriter, r *http.Request, sessio
 		serverError(w, err)
 		return store.SessionMaterial{}, false
 	}
-	if !materialAvailableFor(material, scene.ChapterID, sceneID) {
+	chapter, err := s.store.GetSessionChapter(r.Context(), scene.ChapterID)
+	if err != nil || chapter.SessionID != sessionID {
+		forbidden(w)
+		return store.SessionMaterial{}, false
+	}
+	if !materialAvailableFor(material, sceneID) {
 		badRequest(w, "Материал не связан с этим сценарием")
 		return store.SessionMaterial{}, false
 	}
@@ -86,6 +102,7 @@ func (s *Server) validateScenePresentation(
 	materialID, trackID *int64,
 	volume, crossfade *float64,
 	effect, transition string,
+	relations []store.SessionEntityRelation,
 ) (store.ScenePresentationSettings, bool) {
 	effect, transition = normalizePresentationStyle(effect, transition)
 	preset := store.ScenePresentationSettings{
@@ -110,7 +127,7 @@ func (s *Server) validateScenePresentation(
 			badRequest(w, "Материал не найден")
 			return preset, false
 		}
-		if material.SessionID != session.ID || !materialAvailableFor(material, chapterID, sceneID) {
+		if material.SessionID != session.ID || !materialAvailableForSceneMutation(material, sceneID, relations) {
 			badRequest(w, "Материал недоступен в этом сценарии")
 			return preset, false
 		}

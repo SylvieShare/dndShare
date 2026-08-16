@@ -54,12 +54,22 @@ CREATE TABLE IF NOT EXISTS dndshare.session_entity_relation (
     CONSTRAINT session_entity_relation_pkey
         PRIMARY KEY (session_id, left_type, left_id, right_type, right_id),
     CONSTRAINT session_entity_relation_left_type_check
-        CHECK (left_type IN ('location', 'npc', 'material', 'quest')),
+        CHECK (left_type IN ('location', 'npc', 'material', 'quest', 'scene')),
     CONSTRAINT session_entity_relation_right_type_check
-        CHECK (right_type IN ('location', 'npc', 'material', 'quest')),
+        CHECK (right_type IN ('location', 'npc', 'material', 'quest', 'scene')),
     CONSTRAINT session_entity_relation_order_check
         CHECK (ROW(left_type, left_id) < ROW(right_type, right_id))
 );
+ALTER TABLE dndshare.session_entity_relation
+    DROP CONSTRAINT IF EXISTS session_entity_relation_left_type_check;
+ALTER TABLE dndshare.session_entity_relation
+    DROP CONSTRAINT IF EXISTS session_entity_relation_right_type_check;
+ALTER TABLE dndshare.session_entity_relation
+    ADD CONSTRAINT session_entity_relation_left_type_check
+        CHECK (left_type IN ('location', 'npc', 'material', 'quest', 'scene'));
+ALTER TABLE dndshare.session_entity_relation
+    ADD CONSTRAINT session_entity_relation_right_type_check
+        CHECK (right_type IN ('location', 'npc', 'material', 'quest', 'scene'));
 CREATE INDEX IF NOT EXISTS idx_session_entity_relation_right
     ON dndshare.session_entity_relation USING btree (session_id, right_type, right_id);
 
@@ -88,8 +98,79 @@ DO $$ BEGIN
     END IF;
 END $$;
 
+-- Move every former scenario association into the universal model. Dynamic
+-- SQL keeps this startup migration safe after the legacy tables are dropped.
+DO $$ BEGIN
+    IF to_regclass('dndshare.session_scene_location') IS NOT NULL THEN
+        EXECUTE $migration$
+            INSERT INTO dndshare.session_entity_relation
+                (session_id, left_type, left_id, right_type, right_id, note)
+            SELECT location.session_id, 'location', link.location_id, 'scene', link.scene_id, NULL
+            FROM dndshare.session_scene_location link
+            JOIN dndshare.session_location location ON location.id = link.location_id
+            ON CONFLICT DO NOTHING
+        $migration$;
+    END IF;
+END $$;
+
+DO $$ BEGIN
+    IF to_regclass('dndshare.session_npc_scene') IS NOT NULL THEN
+        EXECUTE $migration$
+            INSERT INTO dndshare.session_entity_relation
+                (session_id, left_type, left_id, right_type, right_id, note)
+            SELECT npc.session_id, 'npc', link.npc_id, 'scene', link.scene_id, left(link.note, 500)
+            FROM dndshare.session_npc_scene link
+            JOIN dndshare.session_npc npc ON npc.id = link.npc_id
+            ON CONFLICT DO NOTHING
+        $migration$;
+    END IF;
+END $$;
+
+DO $$ BEGIN
+    IF to_regclass('dndshare.session_material_scene') IS NOT NULL THEN
+        EXECUTE $migration$
+            INSERT INTO dndshare.session_entity_relation
+                (session_id, left_type, left_id, right_type, right_id, note)
+            SELECT material.session_id, 'material', link.material_id, 'scene', link.scene_id, left(link.note, 500)
+            FROM dndshare.session_material_scene link
+            JOIN dndshare.session_material material ON material.id = link.material_id
+            ON CONFLICT DO NOTHING
+        $migration$;
+    END IF;
+END $$;
+
+-- Very old material rows may still store their context directly.
+DO $$ BEGIN
+    IF (
+        SELECT count(*) = 2 FROM information_schema.columns
+        WHERE table_schema = 'dndshare'
+          AND table_name = 'session_material'
+          AND column_name IN ('scope', 'scene_id')
+    ) THEN
+        EXECUTE $migration$
+            INSERT INTO dndshare.session_entity_relation
+                (session_id, left_type, left_id, right_type, right_id, note)
+            SELECT session_id, 'material', id, 'scene', scene_id, NULL
+            FROM dndshare.session_material
+            WHERE scope = 'scene' AND scene_id IS NOT NULL
+            ON CONFLICT DO NOTHING
+        $migration$;
+    END IF;
+END $$;
+
 -- The universal table is now authoritative. Dropping the legacy tables also
 -- prevents the startup migration above from restoring a relation that the DM
 -- removed after the first successful migration.
 DROP TABLE IF EXISTS dndshare.session_npc_location;
 DROP TABLE IF EXISTS dndshare.session_npc_relation;
+DROP TABLE IF EXISTS dndshare.session_scene_location;
+DROP TABLE IF EXISTS dndshare.session_npc_scene;
+DROP TABLE IF EXISTS dndshare.session_material_scene;
+DROP TABLE IF EXISTS dndshare.session_material_chapter;
+
+ALTER TABLE dndshare.session_material DROP CONSTRAINT IF EXISTS session_material_context_check;
+ALTER TABLE dndshare.session_material DROP CONSTRAINT IF EXISTS session_material_scope_check;
+ALTER TABLE dndshare.session_material
+    DROP COLUMN IF EXISTS scope,
+    DROP COLUMN IF EXISTS chapter_id,
+    DROP COLUMN IF EXISTS scene_id;

@@ -9,49 +9,18 @@ import (
 )
 
 type SessionMaterial struct {
-	ID           int64                        `json:"id"`
-	SessionID    int64                        `json:"sessionId"`
-	Kind         string                       `json:"kind"`
-	Name         string                       `json:"name"`
-	Caption      *string                      `json:"caption,omitempty"`
-	Content      *string                      `json:"content,omitempty"`
-	NoteStyle    *string                      `json:"noteStyle,omitempty"`
-	AssetID      *int64                       `json:"assetId,omitempty"`
-	AssetURL     string                       `json:"assetUrl,omitempty"`
-	ChapterLinks []SessionMaterialChapterLink `json:"chapterLinks"`
-	SceneLinks   []SessionMaterialSceneLink   `json:"sceneLinks"`
-	Relations    []SessionEntityRelation      `json:"relations"`
-	CreatedAt    time.Time                    `json:"createdAt"`
-	ChangedAt    time.Time                    `json:"changedAt"`
-}
-
-type SessionMaterialChapterLink struct {
-	ChapterID int64   `json:"chapterId"`
-	Note      *string `json:"note,omitempty"`
-}
-
-type SessionMaterialSceneLink struct {
-	SceneID int64   `json:"sceneId"`
-	Note    *string `json:"note,omitempty"`
-}
-
-type SessionMaterialContext struct {
-	Chapters []SessionMaterialChapter `json:"chapters"`
-	Scenes   []SessionMaterialScene   `json:"scenes"`
-}
-
-type SessionMaterialChapter struct {
-	ID       int64  `json:"id"`
-	Number   string `json:"number"`
-	Name     string `json:"name"`
-	ImageURL string `json:"imageUrl,omitempty"`
-}
-
-type SessionMaterialScene struct {
-	ID        int64  `json:"id"`
-	ChapterID int64  `json:"chapterId"`
-	Name      string `json:"name"`
-	ImageURL  string `json:"imageUrl,omitempty"`
+	ID        int64                   `json:"id"`
+	SessionID int64                   `json:"sessionId"`
+	Kind      string                  `json:"kind"`
+	Name      string                  `json:"name"`
+	Caption   *string                 `json:"caption,omitempty"`
+	Content   *string                 `json:"content,omitempty"`
+	NoteStyle *string                 `json:"noteStyle,omitempty"`
+	AssetID   *int64                  `json:"assetId,omitempty"`
+	AssetURL  string                  `json:"assetUrl,omitempty"`
+	Relations []SessionEntityRelation `json:"relations"`
+	CreatedAt time.Time               `json:"createdAt"`
+	ChangedAt time.Time               `json:"changedAt"`
 }
 
 type SessionPresentationState struct {
@@ -107,7 +76,7 @@ func (s *Store) ListSessionMaterials(ctx context.Context, sessionID int64) ([]Se
 		return nil, err
 	}
 	rows.Close()
-	if err := s.loadSessionMaterialLinks(ctx, sessionID, materials); err != nil {
+	if err := s.loadSessionMaterialRelations(ctx, sessionID, materials); err != nil {
 		return nil, err
 	}
 	return materials, nil
@@ -119,79 +88,21 @@ func (s *Store) GetSessionMaterial(ctx context.Context, id int64) (SessionMateri
 		return material, err
 	}
 	items := []SessionMaterial{material}
-	if err := s.loadSessionMaterialLinks(ctx, material.SessionID, items); err != nil {
+	if err := s.loadSessionMaterialRelations(ctx, material.SessionID, items); err != nil {
 		return SessionMaterial{}, err
 	}
 	return items[0], nil
 }
 
-func (s *Store) loadSessionMaterialLinks(ctx context.Context, sessionID int64, materials []SessionMaterial) error {
+func (s *Store) loadSessionMaterialRelations(ctx context.Context, sessionID int64, materials []SessionMaterial) error {
 	if len(materials) == 0 {
 		return nil
 	}
 	byID := make(map[int64]*SessionMaterial, len(materials))
 	for index := range materials {
-		materials[index].ChapterLinks = []SessionMaterialChapterLink{}
-		materials[index].SceneLinks = []SessionMaterialSceneLink{}
 		materials[index].Relations = []SessionEntityRelation{}
 		byID[materials[index].ID] = &materials[index]
 	}
-	whereSQL := "material.session_id = $1"
-	whereArg := sessionID
-	if len(materials) == 1 {
-		whereSQL = "link.material_id = $1"
-		whereArg = materials[0].ID
-	}
-	chapterRows, err := s.pool.Query(ctx, `
-		SELECT link.material_id, link.chapter_id, link.note
-		FROM dndshare.session_material_chapter link
-		JOIN dndshare.session_material material ON material.id = link.material_id
-		WHERE `+whereSQL+`
-		ORDER BY link.material_id, link.chapter_id`, whereArg)
-	if err != nil {
-		return err
-	}
-	for chapterRows.Next() {
-		var materialID int64
-		var link SessionMaterialChapterLink
-		if err := chapterRows.Scan(&materialID, &link.ChapterID, &link.Note); err != nil {
-			chapterRows.Close()
-			return err
-		}
-		if material := byID[materialID]; material != nil {
-			material.ChapterLinks = append(material.ChapterLinks, link)
-		}
-	}
-	if err := chapterRows.Err(); err != nil {
-		chapterRows.Close()
-		return err
-	}
-	chapterRows.Close()
-
-	sceneRows, err := s.pool.Query(ctx, `
-		SELECT link.material_id, link.scene_id, link.note
-		FROM dndshare.session_material_scene link
-		JOIN dndshare.session_material material ON material.id = link.material_id
-		WHERE `+whereSQL+`
-		ORDER BY link.material_id, link.scene_id`, whereArg)
-	if err != nil {
-		return err
-	}
-	for sceneRows.Next() {
-		var materialID int64
-		var link SessionMaterialSceneLink
-		if err := sceneRows.Scan(&materialID, &link.SceneID, &link.Note); err != nil {
-			return err
-		}
-		if material := byID[materialID]; material != nil {
-			material.SceneLinks = append(material.SceneLinks, link)
-		}
-	}
-	if err := sceneRows.Err(); err != nil {
-		sceneRows.Close()
-		return err
-	}
-	sceneRows.Close()
 	return s.loadSessionMaterialEntityRelations(ctx, sessionID, materials, byID)
 }
 
@@ -243,8 +154,6 @@ func (s *Store) CreateSessionMaterial(
 	kind, name string,
 	caption, content, noteStyle *string,
 	assetID *int64,
-	chapterLinks []SessionMaterialChapterLink,
-	sceneLinks []SessionMaterialSceneLink,
 	relations []SessionEntityRelation,
 ) (SessionMaterial, error) {
 	tx, err := s.pool.Begin(ctx)
@@ -262,9 +171,6 @@ func (s *Store) CreateSessionMaterial(
 	if err != nil {
 		return SessionMaterial{}, err
 	}
-	if err := replaceSessionMaterialLinks(ctx, tx, id, chapterLinks, sceneLinks); err != nil {
-		return SessionMaterial{}, err
-	}
 	if err := replaceSessionEntityRelationsTx(ctx, tx, sessionID, SessionEntityMaterial, id, relations); err != nil {
 		return SessionMaterial{}, err
 	}
@@ -280,8 +186,6 @@ func (s *Store) UpdateSessionMaterial(
 	kind, name string,
 	caption, content, noteStyle *string,
 	assetID *int64,
-	chapterLinks []SessionMaterialChapterLink,
-	sceneLinks []SessionMaterialSceneLink,
 	relations []SessionEntityRelation,
 ) error {
 	tx, err := s.pool.Begin(ctx)
@@ -297,43 +201,10 @@ func (s *Store) UpdateSessionMaterial(
 		WHERE id = $1`, id, kind, name, caption, content, noteStyle, assetID); err != nil {
 		return err
 	}
-	if err := replaceSessionMaterialLinks(ctx, tx, id, chapterLinks, sceneLinks); err != nil {
-		return err
-	}
 	if err := replaceSessionEntityRelationsTx(ctx, tx, sessionID, SessionEntityMaterial, id, relations); err != nil {
 		return err
 	}
 	return tx.Commit(ctx)
-}
-
-func replaceSessionMaterialLinks(
-	ctx context.Context,
-	tx pgx.Tx,
-	materialID int64,
-	chapterLinks []SessionMaterialChapterLink,
-	sceneLinks []SessionMaterialSceneLink,
-) error {
-	if _, err := tx.Exec(ctx, `DELETE FROM dndshare.session_material_chapter WHERE material_id = $1`, materialID); err != nil {
-		return err
-	}
-	if _, err := tx.Exec(ctx, `DELETE FROM dndshare.session_material_scene WHERE material_id = $1`, materialID); err != nil {
-		return err
-	}
-	for _, link := range chapterLinks {
-		if _, err := tx.Exec(ctx, `
-			INSERT INTO dndshare.session_material_chapter (material_id, chapter_id, note)
-			VALUES ($1, $2, $3)`, materialID, link.ChapterID, link.Note); err != nil {
-			return err
-		}
-	}
-	for _, link := range sceneLinks {
-		if _, err := tx.Exec(ctx, `
-			INSERT INTO dndshare.session_material_scene (material_id, scene_id, note)
-			VALUES ($1, $2, $3)`, materialID, link.SceneID, link.Note); err != nil {
-			return err
-		}
-	}
-	return nil
 }
 
 func (s *Store) DeleteSessionMaterial(ctx context.Context, sessionID, id int64) error {
@@ -349,54 +220,6 @@ func (s *Store) DeleteSessionMaterial(ctx context.Context, sessionID, id int64) 
 		return err
 	}
 	return tx.Commit(ctx)
-}
-
-func (s *Store) GetSessionMaterialContexts(ctx context.Context, sessionID int64) (SessionMaterialContext, error) {
-	result := SessionMaterialContext{Chapters: []SessionMaterialChapter{}, Scenes: []SessionMaterialScene{}}
-	chapterRows, err := s.pool.Query(ctx, `
-		SELECT chapter.id, chapter.number, chapter."name", COALESCE(image.url, '')
-		FROM dndshare.session_chapter chapter
-		JOIN dndshare.session_arc arc ON arc.id = chapter.arc_id
-		LEFT JOIN dndshare.storage_image image ON image.id = chapter.image_id AND image.deleted = false
-		WHERE chapter.session_id = $1
-		ORDER BY arc."order", chapter.number, chapter.id`, sessionID)
-	if err != nil {
-		return result, err
-	}
-	for chapterRows.Next() {
-		var chapter SessionMaterialChapter
-		if err := chapterRows.Scan(&chapter.ID, &chapter.Number, &chapter.Name, &chapter.ImageURL); err != nil {
-			chapterRows.Close()
-			return result, err
-		}
-		result.Chapters = append(result.Chapters, chapter)
-	}
-	if err := chapterRows.Err(); err != nil {
-		chapterRows.Close()
-		return result, err
-	}
-	chapterRows.Close()
-
-	sceneRows, err := s.pool.Query(ctx, `
-		SELECT scene.id, scene.chapter_id, scene."name", COALESCE(image.url, '')
-		FROM dndshare.session_scene scene
-		JOIN dndshare.session_chapter chapter ON chapter.id = scene.chapter_id
-		JOIN dndshare.session_arc arc ON arc.id = chapter.arc_id
-		LEFT JOIN dndshare.storage_image image ON image.id = scene.image_id AND image.deleted = false
-		WHERE chapter.session_id = $1
-		ORDER BY arc."order", chapter.number, scene.id`, sessionID)
-	if err != nil {
-		return result, err
-	}
-	defer sceneRows.Close()
-	for sceneRows.Next() {
-		var scene SessionMaterialScene
-		if err := sceneRows.Scan(&scene.ID, &scene.ChapterID, &scene.Name, &scene.ImageURL); err != nil {
-			return result, err
-		}
-		result.Scenes = append(result.Scenes, scene)
-	}
-	return result, sceneRows.Err()
 }
 
 func (s *Store) GetSessionPresentation(ctx context.Context, sessionID int64) (SessionPresentationState, error) {

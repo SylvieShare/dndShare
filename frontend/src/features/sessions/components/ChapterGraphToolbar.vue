@@ -82,7 +82,6 @@
         :is-dm="isDm"
         :presentation="presentation"
         :materials="materials"
-        :chapter-id="workspaceChapterId"
         :scene="workspaceScene"
       />
       <button type="button" class="chapter-tool-btn chapter-tool-btn--icon chapter-tool-btn--combat" :class="{ 'chapter-tool-btn--active': combatActive }" title="Бой" aria-label="Бой" @click="$emit('open-combat')">
