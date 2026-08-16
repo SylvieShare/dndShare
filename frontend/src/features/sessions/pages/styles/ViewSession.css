@@ -37,7 +37,7 @@
 }
 
 .campaign-workspace--right-dock .campaign-graph {
-  --chapter-safe-right: 316px;
+  --chapter-safe-right: 350px;
 }
 
 .campaign-workspace--players-collapsed .campaign-graph {
@@ -46,7 +46,7 @@
 
 .campaign-workspace--combat .campaign-graph {
   --chapter-safe-left: 402px;
-  --chapter-safe-right: 316px;
+  --chapter-safe-right: 350px;
 }
 
 .workspace-dock {
@@ -79,7 +79,7 @@
 
 .workspace-dock--right {
   right: 14px;
-  width: 294px;
+  width: 328px;
   gap: 16px;
   pointer-events: none;
 }

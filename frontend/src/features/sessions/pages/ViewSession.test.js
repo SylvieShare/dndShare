@@ -79,7 +79,7 @@ describe('ViewSession participant rail', () => {
     expect(styles).toContain('position: absolute;')
     expect(styles).toContain('--chapter-safe-left: 288px;')
     expect(styles).toContain('.campaign-workspace--right-dock .campaign-graph')
-    expect(styles).toContain('--chapter-safe-right: 316px;')
+    expect(styles).toContain('--chapter-safe-right: 350px;')
     expect(source).not.toContain('campaign-workspace--hotkeys')
     expect(styles).not.toContain('.campaign-workspace--hotkeys .workspace-dock--left')
     expect(source).not.toContain('<SlidingTabs')
@@ -110,6 +110,7 @@ describe('ViewSession participant rail', () => {
 
   it('keeps session dice purple and controls all right-dock panels from the header', () => {
     expect(dicePanelSource).toContain('color="var(--accent)"')
+    expect(styles).toMatch(/\.workspace-dock--right\s*\{[^}]*width:\s*328px;/s)
     expect(source).not.toContain('class="workspace-tool-toggles"')
     expect(source).toContain("const SESSION_TOOL_PANELS_STORAGE_KEY = 'dnd-share:session-tool-panels:v1'")
     expect(source).toContain('localStorage.getItem(SESSION_TOOL_PANELS_STORAGE_KEY)')
@@ -158,7 +159,7 @@ describe('ViewSession participant rail', () => {
     expect(styles).toMatch(/\.workspace-dock--right\s*\{[^}]*pointer-events:\s*none;/s)
     expect(styles).toMatch(/\.workspace-dock--right > \.workspace-tool-tile\s*\{[^}]*pointer-events:\s*auto;/s)
     expect(styles).toMatch(/\.campaign-graph\s*\{[^}]*--chapter-safe-right:\s*0px;/s)
-    expect(styles).toMatch(/\.campaign-workspace--combat \.campaign-graph\s*\{[^}]*--chapter-safe-right:\s*316px;/s)
+    expect(styles).toMatch(/\.campaign-workspace--combat \.campaign-graph\s*\{[^}]*--chapter-safe-right:\s*350px;/s)
   })
 
   it('places the event log below the music panel', () => {

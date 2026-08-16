@@ -76,7 +76,8 @@ The session page is a campaign workspace rather than a stack of independent
 content pages. Its semantic header centers the switch between `Сюжет`,
 `Локации`, `NPC`, `Задания` and `Материалы` independently of the title/arc and tool groups; the
 participant rail remains on the left and the
-dice/events/music tools remain on the right. In `Сюжет` the chapter canvas fills
+dice/events/music tools remain in a 328px right rail, wide enough for the full
+three-option dice mode switch without label clipping. In `Сюжет` the chapter canvas fills
 all available width below `AppHeader`. CSS safe-area variables keep focus, zoom
 and newly created nodes in the uncovered part of the canvas. The catalogue
 workspaces start 8px after the visible participant rail and use an 8px internal gap,
