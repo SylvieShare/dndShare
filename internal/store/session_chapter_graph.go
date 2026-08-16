@@ -19,23 +19,23 @@ type SessionArc struct {
 
 // SessionChapter is a graph node. Number is display text so branches can use 3A/3B.
 type SessionChapter struct {
-	ID             int64   `json:"id"`
-	SessionID      int64   `json:"sessionId"`
-	ArcID          int64   `json:"arcId"`
-	ArcOrder       int     `json:"arcOrder"`
-	ArcName        string  `json:"arcName"`
-	Number         string  `json:"number"`
-	Name           string  `json:"name"`
-	Description    *string `json:"description,omitempty"`
-	Status         string  `json:"status"`
-	ImagePresetKey *string `json:"imagePresetKey,omitempty"`
-	CustomImageID  *int64  `json:"customImageId,omitempty"`
-	CustomImageURL *string `json:"customImageUrl,omitempty"`
-	ImageFocalX    float64 `json:"imageFocalX"`
-	ImageFocalY    float64 `json:"imageFocalY"`
-	PositionX      float64 `json:"positionX"`
-	PositionY      float64 `json:"positionY"`
-	SceneCount     int64   `json:"sceneCount"`
+	ID              int64   `json:"id"`
+	SessionID       int64   `json:"sessionId"`
+	ArcID           int64   `json:"arcId"`
+	ArcOrder        int     `json:"arcOrder"`
+	ArcName         string  `json:"arcName"`
+	Number          string  `json:"number"`
+	Name            string  `json:"name"`
+	Description     *string `json:"description,omitempty"`
+	Status          string  `json:"status"`
+	ImageID         int64   `json:"imageId"`
+	ImageURL        string  `json:"imageUrl"`
+	ImageCatalogKey *string `json:"imageCatalogKey,omitempty"`
+	ImageFocalX     float64 `json:"imageFocalX"`
+	ImageFocalY     float64 `json:"imageFocalY"`
+	PositionX       float64 `json:"positionX"`
+	PositionY       float64 `json:"positionY"`
+	SceneCount      int64   `json:"sceneCount"`
 }
 
 type SessionChapterEdge struct {
@@ -53,35 +53,35 @@ type SessionChapterGraph struct {
 }
 
 type ChapterMutation struct {
-	ArcID          int64
-	Number         string
-	Name           string
-	Description    *string
-	Status         string
-	ImagePresetKey *string
-	CustomImageID  *int64
-	ImageFocalX    float64
-	ImageFocalY    float64
-	PositionX      float64
-	PositionY      float64
+	ArcID       int64
+	Number      string
+	Name        string
+	Description *string
+	Status      string
+	ImageID     int64
+	ImageFocalX float64
+	ImageFocalY float64
+	PositionX   float64
+	PositionY   float64
 }
 
 const chapterSelect = `
 	SELECT ch.id, ch.session_id, ch.arc_id, arc."order", arc.name,
-	       ch.number, ch.name, ch.description, ch.status, ch.image_preset_key,
-	       ch.custom_image_id, img.url, ch.image_focal_x, ch.image_focal_y,
+	       ch.number, ch.name, ch.description, ch.status, ch.image_id,
+	       COALESCE(img.url, ''), catalog.catalog_key, ch.image_focal_x, ch.image_focal_y,
 	       ch.position_x, ch.position_y,
 	       (SELECT count(*) FROM dndshare.session_scene scene WHERE scene.chapter_id = ch.id)
 	FROM dndshare.session_chapter ch
 	JOIN dndshare.session_arc arc ON arc.id = ch.arc_id
-	LEFT JOIN dndshare.storage_image img ON img.id = ch.custom_image_id AND img.deleted = false`
+	JOIN dndshare.storage_image img ON img.id = ch.image_id AND img.deleted = false
+	LEFT JOIN dndshare.session_image_catalog catalog ON catalog.image_id = ch.image_id`
 
 func scanChapter(row pgx.Row) (SessionChapter, error) {
 	var chapter SessionChapter
 	err := row.Scan(
 		&chapter.ID, &chapter.SessionID, &chapter.ArcID, &chapter.ArcOrder, &chapter.ArcName,
 		&chapter.Number, &chapter.Name, &chapter.Description, &chapter.Status,
-		&chapter.ImagePresetKey, &chapter.CustomImageID, &chapter.CustomImageURL,
+		&chapter.ImageID, &chapter.ImageURL, &chapter.ImageCatalogKey,
 		&chapter.ImageFocalX, &chapter.ImageFocalY, &chapter.PositionX, &chapter.PositionY,
 		&chapter.SceneCount,
 	)
@@ -245,12 +245,12 @@ func (s *Store) CreateChapter(ctx context.Context, sessionID int64, input Chapte
 	var id int64
 	err := s.pool.QueryRow(ctx,
 		`INSERT INTO dndshare.session_chapter (
-			session_id, arc_id, number, name, description, status, image_preset_key,
-			custom_image_id, image_focal_x, image_focal_y, position_x, position_y
-		 ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+			session_id, arc_id, number, name, description, status, image_id,
+			image_focal_x, image_focal_y, position_x, position_y
+		 ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
 		 RETURNING id`,
 		sessionID, input.ArcID, input.Number, input.Name, input.Description, input.Status,
-		input.ImagePresetKey, input.CustomImageID, input.ImageFocalX, input.ImageFocalY,
+		input.ImageID, input.ImageFocalX, input.ImageFocalY,
 		input.PositionX, input.PositionY,
 	).Scan(&id)
 	if err != nil {
@@ -263,11 +263,11 @@ func (s *Store) UpdateChapter(ctx context.Context, id int64, input ChapterMutati
 	_, err := s.pool.Exec(ctx,
 		`UPDATE dndshare.session_chapter SET
 			arc_id = $2, number = $3, name = $4, description = $5, status = $6,
-			image_preset_key = $7, custom_image_id = $8, image_focal_x = $9,
-			image_focal_y = $10, position_x = $11, position_y = $12
+			image_id = $7, image_focal_x = $8,
+			image_focal_y = $9, position_x = $10, position_y = $11
 		 WHERE id = $1`,
 		id, input.ArcID, input.Number, input.Name, input.Description, input.Status,
-		input.ImagePresetKey, input.CustomImageID, input.ImageFocalX, input.ImageFocalY,
+		input.ImageID, input.ImageFocalX, input.ImageFocalY,
 		input.PositionX, input.PositionY)
 	return err
 }

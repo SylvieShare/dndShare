@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest'
 import {
-  CHAPTER_PRESETS,
   CHAPTER_STATUSES,
   SCENE_STATUSES,
   currentChapterLabel,
@@ -21,7 +20,7 @@ describe('chapter graph presentation helpers', () => {
       .toBe('Арка II · Глава 3А · Развилка')
   })
 
-  it('exposes the complete status and image preset catalogues', () => {
+  it('exposes the complete status catalogue', () => {
     expect(CHAPTER_STATUSES.map(item => item.key)).toEqual(expect.arrayContaining([
       'none', 'draft', 'ready', 'available', 'in_progress', 'paused', 'completed', 'failed', 'skipped', 'cancelled',
     ]))
@@ -34,10 +33,6 @@ describe('chapter graph presentation helpers', () => {
       completed: 'var(--success)',
       failed: 'var(--danger)',
     })
-    expect(CHAPTER_PRESETS.map(item => item.key)).toEqual(expect.arrayContaining([
-      'city', 'camp', 'road', 'village', 'cave', 'forest', 'ruins', 'castle', 'tavern', 'dungeon', 'mountains', 'coast',
-      'battle', 'investigation', 'negotiation', 'chase', 'puzzle', 'discovery',
-    ]))
   })
 
   it('builds a directed curve and a label anchor between nodes', () => {

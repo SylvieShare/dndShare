@@ -142,13 +142,13 @@ class ids, ключи черт и source metadata, затем удаляет и�
 Мир сессии хранится отдельно от сюжетных графов:
 
 - `session_location` образует дерево через nullable `parent_location_id` и
-  хранит `kind`, описание, preset изображения и `sort_order` внутри группы
+  хранит `kind`, описание, `image_id` и `sort_order` внутри группы
   соседей. Self-parent запрещён constraint-ом, а runtime также запрещает
   перенос под любого потомка. `ON DELETE RESTRICT` не даёт неявно удалить
   вложенные места;
 - `session_npc` — единый каталог заготовленных NPC с именем, ролью, описанием,
-  цветом, стабильным порядком и одним источником портрета: независимым preset
-  или `custom_image_id` из `storage_image`. Nullable `race_item_id` ссылается на
+  цветом, стабильным порядком и `image_id` портрета из независимого системного
+  каталога или пользовательских `storage_image`. Nullable `race_item_id` ссылается на
   доступный item расы (type `8`) и использует `ON DELETE SET NULL`;
 - `session_scene_location`, `session_npc_location` и `session_npc_scene` —
   явные many-to-many связи; NPC-связи с локацией и сценарием также хранят
@@ -174,14 +174,14 @@ class ids, ключи черт и source metadata, затем удаляет и�
 - `session_chapter` — узел, принадлежащий сессии и арке. Текстовый `number`
   уникален внутри арки. Здесь же хранятся описание, lifecycle-статус (по
   умолчанию `none` / «Без статуса»), один
-  источник картинки (preset key или `storage_image`), точка фокуса и
+  `image_id → storage_image`, точка фокуса и
   `position_x/y`;
 - `session_chapter_edge` — направленный переход с необязательной подписью.
   Runtime проверяет принадлежность перехода и обоих узлов одной арке;
 - `session.current_chapter_id` — единственный текущий узел всей кампании. Сцены
   ссылаются на главу;
 - `session_scene` — узел второго уровня с собственными `position_x/y` и
-  обязательным `image_preset_key` из общего каталога глав и сценариев,
+  обязательным `image_id → storage_image`,
   lifecycle-статусом (также `none` по умолчанию), принадлежащий одной главе;
   `session_scene_edge` соединяет только сценарии
   этой главы. Старые строки получают нейтральную обложку `discovery`;
@@ -217,8 +217,11 @@ startup migration и не обрабатываются во frontend.
 идемпотентный startup seed. CHECK constraints не дают совмещать
 системный признак с владельцем. Личное и системное аудио лежит в object
 storage; системные объекты используют стабильный префикс `system-music/v1/`.
-Изображения справочника и персонажей используют `storage_image`/S3, SVG
-справочника — `svg_storage`.
+Изображения справочника, персонажей и сессий используют `storage_image`/S3, SVG
+справочника — `svg_storage`. `session_image_catalog` описывает категории и
+порядок системных обложек отдельно для `story` и `npc`; главы, сценарии,
+локации и NPC хранят только единый `image_id`. Системные JPEG загружаются под
+стабильными ключами `system-session-images/v1/{story|npc}/`.
 
 ### Error reports and jobs
 
@@ -235,7 +238,7 @@ startup schema, а не job registry.
 
 1. Добавить финальное DDL в логический файл `internal/store/schema/*.sql`:
    foundation, handbook, characters, sessions, seed, item-icons, feature-icons
-   или session-world. Порядок файлов задаёт
+   session-world или session-images. Порядок файлов задаёт
    зависимости и не должен меняться неявно.
 2. Если есть старые данные, перед удалением старого поля выполнить
    идемпотентный `UPDATE`/временную функцию.

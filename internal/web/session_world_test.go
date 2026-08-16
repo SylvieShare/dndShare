@@ -8,9 +8,9 @@ import (
 	"dndshare/internal/store"
 )
 
-func TestLocationMutationValidatesKindAndPreset(t *testing.T) {
+func TestLocationMutationValidatesKindAndImage(t *testing.T) {
 	valid := locationMutationRequest{
-		Name: "  Старый город  ", Kind: "settlement", ImagePresetKey: stringPointer("city"),
+		Name: "  Старый город  ", Kind: "settlement", ImageID: 12,
 		SceneIDs: []int64{1, 2},
 	}
 	recorder := httptest.NewRecorder()
@@ -30,10 +30,10 @@ func TestLocationMutationValidatesKindAndPreset(t *testing.T) {
 	}
 
 	invalid = valid
-	invalid.ImagePresetKey = stringPointer("remote-url")
+	invalid.ImageID = 0
 	recorder = httptest.NewRecorder()
 	if _, ok := locationMutation(recorder, invalid); ok {
-		t.Fatal("unknown image preset accepted")
+		t.Fatal("non-positive image id accepted")
 	}
 
 	invalid = valid
@@ -51,6 +51,7 @@ func TestNpcMutationNormalizesColorAndText(t *testing.T) {
 	recorder := httptest.NewRecorder()
 	mutation, ok := npcMutation(recorder, npcMutationRequest{
 		Name: "  Мира  ", RaceItemID: &raceItemID, Role: &role, Color: "#A06CE8",
+		ImageID:  25,
 		NPCLinks: []store.SessionNPCNPCLink{{NPCID: 7, Note: &note}},
 	})
 	if !ok {
@@ -59,12 +60,12 @@ func TestNpcMutationNormalizesColorAndText(t *testing.T) {
 	if mutation.Name != "Мира" || mutation.RaceItemID == nil || *mutation.RaceItemID != 42 || mutation.Role == nil || *mutation.Role != "Проводник" || mutation.Color != "#a06ce8" {
 		t.Fatalf("unexpected mutation: %+v", mutation)
 	}
-	if mutation.ImagePresetKey == nil || *mutation.ImagePresetKey != "npc-scholar" || mutation.NPCLinks[0].Note == nil || *mutation.NPCLinks[0].Note != "Старый долг" {
+	if mutation.ImageID != 25 || mutation.NPCLinks[0].Note == nil || *mutation.NPCLinks[0].Note != "Старый долг" {
 		t.Fatalf("unexpected image or NPC link mutation: %+v", mutation)
 	}
 
 	recorder = httptest.NewRecorder()
-	if _, ok := npcMutation(recorder, npcMutationRequest{Name: "Мира", Color: "red"}); ok {
+	if _, ok := npcMutation(recorder, npcMutationRequest{Name: "Мира", Color: "red", ImageID: 25}); ok {
 		t.Fatal("non-hex npc color accepted")
 	}
 	if !strings.Contains(recorder.Body.String(), "цвет") {
@@ -73,9 +74,7 @@ func TestNpcMutationNormalizesColorAndText(t *testing.T) {
 
 	invalidRaceID := int64(0)
 	recorder = httptest.NewRecorder()
-	if _, ok := npcMutation(recorder, npcMutationRequest{Name: "Мира", RaceItemID: &invalidRaceID}); ok {
+	if _, ok := npcMutation(recorder, npcMutationRequest{Name: "Мира", RaceItemID: &invalidRaceID, ImageID: 25}); ok {
 		t.Fatal("non-positive race item id accepted")
 	}
 }
-
-func stringPointer(value string) *string { return &value }

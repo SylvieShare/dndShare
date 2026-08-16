@@ -12,6 +12,10 @@ export function getSession(uuid) {
   return fetchGet(`/sessions/${uuid}`)
 }
 
+export function getSessionImages(scope) {
+  return fetchGet(`/session-images?scope=${encodeURIComponent(scope)}`)
+}
+
 export function createSession(data) {
   return fetchPost('/sessions', data)
 }

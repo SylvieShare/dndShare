@@ -13,7 +13,7 @@
 
     <div class="scene-image-section">
       <div class="scene-image-title">Изображение</div>
-      <SessionImagePicker :model-value="draft.imagePresetKey" @select="draft.imagePresetKey = $event" />
+      <SessionImagePicker :model-value="draft.imageId" default-key="discovery" :current-url="scene?.imageUrl || ''" @select="draft.imageId = $event.id" />
     </div>
 
     <template #footer>
@@ -21,7 +21,7 @@
         :submit-text="scene ? 'Сохранить' : 'Создать сценарий'"
         loading-text="Сохранение…"
         :loading="saving"
-        :can-submit="!!draft.name.trim() && !!draft.imagePresetKey"
+        :can-submit="!!draft.name.trim() && !!draft.imageId"
         @cancel="$emit('close')"
         @submit="submit"
       />
@@ -48,12 +48,12 @@ const emit = defineEmits(['close', 'save'])
 const draft = reactive({
   name: props.scene?.name ?? '',
   status: props.scene?.status ?? 'none',
-  imagePresetKey: props.scene?.imagePresetKey ?? 'discovery',
+  imageId: props.scene?.imageId ?? 0,
 })
 
 function submit() {
-  if (!draft.name.trim() || !draft.imagePresetKey || props.saving) return
-  emit('save', { name: draft.name.trim(), status: draft.status, imagePresetKey: draft.imagePresetKey })
+  if (!draft.name.trim() || !draft.imageId || props.saving) return
+  emit('save', { name: draft.name.trim(), status: draft.status, imageId: draft.imageId })
 }
 </script>
 

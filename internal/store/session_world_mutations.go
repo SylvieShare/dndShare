@@ -170,7 +170,7 @@ func (s *Store) CreateSessionLocation(
 	var id int64
 	err = tx.QueryRow(ctx, `
 		INSERT INTO dndshare.session_location (
-			session_id, parent_location_id, name, kind, description, image_preset_key, sort_order
+			session_id, parent_location_id, name, kind, description, image_id, sort_order
 		) VALUES (
 			$1, $2, $3, $4, $5, $6,
 			(SELECT COALESCE(MAX(sort_order), -1) + 1
@@ -178,7 +178,7 @@ func (s *Store) CreateSessionLocation(
 			 WHERE session_id = $1 AND parent_location_id IS NOT DISTINCT FROM $2)
 		) RETURNING id`,
 		sessionID, mutation.ParentLocationID, mutation.Name, mutation.Kind,
-		mutation.Description, mutation.ImagePresetKey,
+		mutation.Description, mutation.ImageID,
 	).Scan(&id)
 	if err != nil {
 		return 0, err
@@ -226,9 +226,9 @@ func (s *Store) UpdateSessionLocation(
 	}
 	if _, err := tx.Exec(ctx, `
 		UPDATE dndshare.session_location
-		SET name = $3, kind = $4, description = $5, image_preset_key = $6, changed_at = now()
+		SET name = $3, kind = $4, description = $5, image_id = $6, changed_at = now()
 		WHERE id = $1 AND session_id = $2`,
-		locationID, sessionID, mutation.Name, mutation.Kind, mutation.Description, mutation.ImagePresetKey,
+		locationID, sessionID, mutation.Name, mutation.Kind, mutation.Description, mutation.ImageID,
 	); err != nil {
 		return err
 	}
@@ -376,12 +376,12 @@ func (s *Store) CreateSessionNPC(
 	err = tx.QueryRow(ctx, `
 		INSERT INTO dndshare.session_npc (
 			session_id, name, race_item_id, role, description, color,
-			image_preset_key, custom_image_id, image_focal_x, image_focal_y, sort_order
+			image_id, image_focal_x, image_focal_y, sort_order
 		)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9,
 			(SELECT COALESCE(MAX(sort_order), -1) + 1 FROM dndshare.session_npc WHERE session_id = $1))
 		RETURNING id`, sessionID, mutation.Name, mutation.RaceItemID, mutation.Role, mutation.Description, mutation.Color,
-		mutation.ImagePresetKey, mutation.CustomImageID, mutation.ImageFocalX, mutation.ImageFocalY,
+		mutation.ImageID, mutation.ImageFocalX, mutation.ImageFocalY,
 	).Scan(&id)
 	if err != nil {
 		return 0, err
@@ -414,11 +414,11 @@ func (s *Store) UpdateSessionNPC(
 	result, err := tx.Exec(ctx, `
 		UPDATE dndshare.session_npc
 		SET name = $3, race_item_id = $4, role = $5, description = $6, color = $7,
-		    image_preset_key = $8, custom_image_id = $9, image_focal_x = $10, image_focal_y = $11,
+		    image_id = $8, image_focal_x = $9, image_focal_y = $10,
 		    changed_at = now()
 		WHERE id = $1 AND session_id = $2`,
 		npcID, sessionID, mutation.Name, mutation.RaceItemID, mutation.Role, mutation.Description, mutation.Color,
-		mutation.ImagePresetKey, mutation.CustomImageID, mutation.ImageFocalX, mutation.ImageFocalY)
+		mutation.ImageID, mutation.ImageFocalX, mutation.ImageFocalY)
 	if err != nil {
 		return err
 	}

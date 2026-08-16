@@ -69,8 +69,11 @@ func (s *Store) MarkStorageImageDeletedIfUnreferenced(ctx context.Context, id in
 		  WHERE img.id = $1
 		    AND img.deleted = false
 		    AND NOT EXISTS (SELECT 1 FROM dndshare.item i WHERE i.icon_image_id = img.id)
-		    AND NOT EXISTS (SELECT 1 FROM dndshare.session_chapter ch WHERE ch.custom_image_id = img.id)
-		    AND NOT EXISTS (SELECT 1 FROM dndshare.session_npc npc WHERE npc.custom_image_id = img.id)
+		    AND NOT EXISTS (SELECT 1 FROM dndshare.session_image_catalog catalog WHERE catalog.image_id = img.id)
+		    AND NOT EXISTS (SELECT 1 FROM dndshare.session_chapter chapter WHERE chapter.image_id = img.id)
+		    AND NOT EXISTS (SELECT 1 FROM dndshare.session_scene scene WHERE scene.image_id = img.id)
+		    AND NOT EXISTS (SELECT 1 FROM dndshare.session_location location WHERE location.image_id = img.id)
+		    AND NOT EXISTS (SELECT 1 FROM dndshare.session_npc npc WHERE npc.image_id = img.id)
 		  RETURNING img."key"`,
 		id,
 	).Scan(&key)

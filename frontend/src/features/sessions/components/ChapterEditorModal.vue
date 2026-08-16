@@ -21,12 +21,14 @@
     <div class="chapter-image-section">
       <div class="chapter-image-title">Изображение</div>
       <SessionImagePicker
-        :model-value="draft.imagePresetKey"
+        :model-value="draft.imageId"
+        default-key="city"
+        :current-url="customPreview"
         allow-upload
         :custom-selected="source === 'custom'"
         :custom-preview="customPreview"
         :custom-preview-style="previewPosition"
-        @select="pickPreset"
+        @select="pickCatalogImage"
         @upload="fileInput?.click()"
       />
       <input ref="fileInput" type="file" accept="image/*" hidden @change="onFile" />
@@ -46,7 +48,7 @@
         :submit-text="chapter ? 'Сохранить' : 'Создать главу'"
         loading-text="Сохранение…"
         :loading="saving || uploading"
-        :can-submit="!!draft.number.trim() && !!draft.name.trim()"
+        :can-submit="!!draft.number.trim() && !!draft.name.trim() && (!!draft.imageId || !!selectedFile)"
         @cancel="$emit('close')"
         @submit="submit"
       />
@@ -78,23 +80,23 @@ const draft = reactive({
   name: props.chapter?.name ?? '',
   description: props.chapter?.description ?? '',
   status: props.chapter?.status ?? 'none',
-  imagePresetKey: props.chapter?.imagePresetKey ?? 'city',
-  customImageId: props.chapter?.customImageId ?? null,
+  imageId: props.chapter?.imageId ?? 0,
   imageFocalX: props.chapter?.imageFocalX ?? 0.5,
   imageFocalY: props.chapter?.imageFocalY ?? 0.5,
 })
-const source = ref(props.chapter?.customImageUrl ? 'custom' : 'preset')
+const source = ref(props.chapter?.imageId && !props.chapter?.imageCatalogKey ? 'custom' : 'catalog')
 const fileInput = ref(null)
 const selectedFile = ref(null)
-const customPreview = ref(props.chapter?.customImageUrl ?? '')
+const customPreview = ref(props.chapter?.imageUrl ?? '')
 const objectUrl = ref('')
 const uploading = ref(false)
 const uploadError = ref('')
 const previewPosition = computed(() => ({ objectPosition: `${draft.imageFocalX * 100}% ${draft.imageFocalY * 100}%` }))
 
-function pickPreset(key) {
-  source.value = 'preset'
-  draft.imagePresetKey = key
+function pickCatalogImage(image) {
+  source.value = 'catalog'
+  draft.imageId = image.id
+  customPreview.value = image.url
 }
 
 function onFile(event) {
@@ -118,7 +120,7 @@ function onFile(event) {
 }
 
 async function uploadSelected() {
-  if (!selectedFile.value) return { id: draft.customImageId }
+  if (!selectedFile.value) return { id: draft.imageId }
   uploading.value = true
   try {
     const form = new FormData()
@@ -133,18 +135,17 @@ async function uploadSelected() {
 }
 
 async function submit() {
-  if (!draft.number.trim() || !draft.name.trim() || props.saving || uploading.value) return
+  if (!draft.number.trim() || !draft.name.trim() || (!draft.imageId && !selectedFile.value) || props.saving || uploading.value) return
   uploadError.value = ''
   try {
-    const custom = source.value === 'custom' ? await uploadSelected() : { id: null }
+    const selected = source.value === 'custom' ? await uploadSelected() : { id: draft.imageId }
     emit('save', {
       arcId: props.arcId,
       number: draft.number.trim(),
       name: draft.name.trim(),
       description: draft.description.trim() || null,
       status: draft.status,
-      imagePresetKey: source.value === 'preset' ? draft.imagePresetKey : null,
-      customImageId: source.value === 'custom' ? custom.id : null,
+      imageId: selected.id,
       imageFocalX: draft.imageFocalX,
       imageFocalY: draft.imageFocalY,
       positionX: props.chapter?.positionX ?? props.position.x,

@@ -116,23 +116,25 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
 - `POST /api/sessions/{uuid}/locations`, `PATCH|DELETE
   /api/sessions/{uuid}/locations/{locationId}` create, replace or remove a
   location. The full mutation payload contains
-  `{parentLocationId,name,kind,description,imagePresetKey,sceneIds}`;
+  `{parentLocationId,name,kind,description,imageId,sceneIds}`;
 - `PATCH /api/sessions/{uuid}/locations/{locationId}/move` accepts
   `{parentLocationId,beforeLocationId}`. A null `beforeLocationId` appends to
   the target sibling group; invalid cross-session references and descendant
   cycles are rejected;
 - `POST /api/sessions/{uuid}/npcs`, `PATCH|DELETE
   /api/sessions/{uuid}/npcs/{npcId}` manage prepared NPCs with
-  `{name,raceItemId,role,description,color,imagePresetKey,customImageId,
+  `{name,raceItemId,role,description,color,imageId,
   imageFocalX,imageFocalY,locationLinks,sceneLinks,npcLinks}`. Each link object
   contains its typed target id and nullable note (up to 500 characters).
-  Exactly one portrait source is allowed; preset keys belong to the independent
-  NPC catalogue and uploaded images must belong to the current user. `raceItemId`
+  `imageId` points either to the independent NPC system catalogue or to an
+  uploaded image owned by the current user. `raceItemId`
   is nullable and must reference an accessible handbook race item (type `8`);
   aggregate NPC records also expose its current `raceName`. World mutations are
   owner-only and return `{world,id}` so clients can replace every reverse
   association together;
 - `GET /api/sessions/{uuid}/chapter-graph` returns `{arcs,chapters,edges}`;
+- `GET /api/session-images?scope=story|npc` returns the authorized system image
+  catalogue as `{images:[{id,key,scope,categoryKey,categoryLabel,label,sortOrder,url}]}`;
 - `POST /api/sessions/{uuid}/arcs`, `PATCH|DELETE
   /api/sessions/{uuid}/arcs/{arcId}` and `PATCH
   /api/sessions/{uuid}/arcs-order`;
@@ -166,9 +168,9 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
 - `GET /api/sessions/{uuid}/chapters/{chapterId}/scene-graph` returns
   `{scenes,edges}`; scenario CRUD uses `POST .../chapters/{chapterId}/scenes`,
   `PATCH|DELETE .../scenes/{sceneId}` and `PATCH .../scenes/{sceneId}/position`.
-  Create/update bodies contain `{name,imagePresetKey}` (creation additionally
-  accepts `x/y`), and every scenario response carries the selected shared
-  built-in image key;
+  Create/update bodies contain `{name,status,imageId}` (creation additionally
+  accepts `x/y`), and every scenario response carries `imageId`, resolved
+  `imageUrl` and optional `imageCatalogKey`;
 - `POST /api/sessions/{uuid}/scene-edges` and
   `DELETE /api/sessions/{uuid}/scene-edges/{edgeId}` manage directed links
   inside one chapter;
@@ -189,8 +191,8 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
 
 Arc, chapter and transition mutations are owner-only. Chapter `number` is a
 string. A chapter mutation uses `{arcId,number,name,description,status,
-imagePresetKey,customImageId,imageFocalX,imageFocalY,positionX,positionY}`.
-Scenario create/update mutations use `{name,status,imagePresetKey}` plus
+imageId,imageFocalX,imageFocalY,positionX,positionY}`.
+Scenario create/update mutations use `{name,status,imageId}` plus
 creation coordinates; chapter and scenario status catalogues share canonical
 keys and default to `none` (`Без статуса`).
 Every chapter returned by graph/chapter reads also has the derived integer

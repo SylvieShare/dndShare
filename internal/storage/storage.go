@@ -66,6 +66,17 @@ func (s *Service) UploadSystemAudio(ctx context.Context, body io.Reader, size in
 	return s.put(ctx, body, size, key, contentType)
 }
 
+// UploadSystemImage stores a catalogue image under its stable, versioned object key.
+func (s *Service) UploadSystemImage(ctx context.Context, body io.Reader, size int64, key, contentType string) (StoredObject, error) {
+	if !strings.HasPrefix(key, "system-session-images/") || strings.Contains(key, "..") {
+		return StoredObject{}, fmt.Errorf("invalid system session image object key %q", key)
+	}
+	if !strings.HasPrefix(contentType, "image/") {
+		return StoredObject{}, fmt.Errorf("invalid system session image content type %q", contentType)
+	}
+	return s.put(ctx, body, size, key, contentType)
+}
+
 // UploadImage загружает изображение; contentType, не начинающийся с image/, заменяется на octet-stream.
 func (s *Service) UploadImage(ctx context.Context, body io.Reader, size int64, filename, contentType, folder string) (StoredObject, error) {
 	if !strings.HasPrefix(contentType, "image/") {

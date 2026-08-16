@@ -16,14 +16,6 @@ var chapterStatuses = map[string]bool{
 	"skipped": true, "cancelled": true,
 }
 
-var sessionImagePresets = map[string]bool{
-	"city": true, "village": true, "camp": true, "road": true,
-	"forest": true, "cave": true, "ruins": true, "castle": true,
-	"tavern": true, "dungeon": true, "mountains": true, "coast": true,
-	"battle": true, "investigation": true, "negotiation": true,
-	"chase": true, "puzzle": true, "discovery": true,
-}
-
 type chaptersResponse struct {
 	Chapters []store.SessionChapter `json:"chapters"`
 }
@@ -69,17 +61,16 @@ func (s *Server) handleGetChapters(w http.ResponseWriter, r *http.Request) {
 }
 
 type chapterMutationRequest struct {
-	ArcID          int64   `json:"arcId"`
-	Number         string  `json:"number"`
-	Name           string  `json:"name"`
-	Description    *string `json:"description"`
-	Status         string  `json:"status"`
-	ImagePresetKey *string `json:"imagePresetKey"`
-	CustomImageID  *int64  `json:"customImageId"`
-	ImageFocalX    float64 `json:"imageFocalX"`
-	ImageFocalY    float64 `json:"imageFocalY"`
-	PositionX      float64 `json:"positionX"`
-	PositionY      float64 `json:"positionY"`
+	ArcID       int64   `json:"arcId"`
+	Number      string  `json:"number"`
+	Name        string  `json:"name"`
+	Description *string `json:"description"`
+	Status      string  `json:"status"`
+	ImageID     int64   `json:"imageId"`
+	ImageFocalX float64 `json:"imageFocalX"`
+	ImageFocalY float64 `json:"imageFocalY"`
+	PositionX   float64 `json:"positionX"`
+	PositionY   float64 `json:"positionY"`
 }
 
 func (s *Server) chapterMutation(w http.ResponseWriter, r *http.Request, userID, sessionID int64, body chapterMutationRequest) (store.ChapterMutation, bool) {
@@ -102,23 +93,8 @@ func (s *Server) chapterMutation(w http.ResponseWriter, r *http.Request, userID,
 		badRequest(w, "Некорректный статус главы")
 		return store.ChapterMutation{}, false
 	}
-	if body.ImagePresetKey != nil {
-		preset := strings.TrimSpace(*body.ImagePresetKey)
-		if !sessionImagePresets[preset] {
-			badRequest(w, "Некорректный пресет изображения")
-			return store.ChapterMutation{}, false
-		}
-		body.ImagePresetKey = &preset
-	}
-	if body.ImagePresetKey != nil && body.CustomImageID != nil {
-		badRequest(w, "Выберите один источник изображения")
+	if !s.validateSessionImage(w, r, userID, body.ImageID, "story") {
 		return store.ChapterMutation{}, false
-	}
-	if body.CustomImageID != nil {
-		if _, err := s.store.GetActiveUserStorageImage(r.Context(), *body.CustomImageID, userID); err != nil {
-			badRequest(w, "Загруженное изображение недоступно")
-			return store.ChapterMutation{}, false
-		}
 	}
 	if !finite(body.PositionX) || !finite(body.PositionY) {
 		badRequest(w, "Некорректная позиция главы")
@@ -127,7 +103,7 @@ func (s *Server) chapterMutation(w http.ResponseWriter, r *http.Request, userID,
 	description := cleanText(body.Description, 2000)
 	return store.ChapterMutation{
 		ArcID: body.ArcID, Number: number, Name: name, Description: description,
-		Status: body.Status, ImagePresetKey: body.ImagePresetKey, CustomImageID: body.CustomImageID,
+		Status: body.Status, ImageID: body.ImageID,
 		ImageFocalX: clamp01(body.ImageFocalX), ImageFocalY: clamp01(body.ImageFocalY),
 		PositionX: body.PositionX, PositionY: body.PositionY,
 	}, true
@@ -184,6 +160,9 @@ func (s *Server) handleUpdateChapter(w http.ResponseWriter, r *http.Request) {
 		}
 		serverError(w, err)
 		return
+	}
+	if chapter.ImageID != mutation.ImageID {
+		s.deleteOldImage(r, userID, chapter.ImageID)
 	}
 	updated, err := s.store.GetChapterByID(r.Context(), chapter.ID)
 	if err != nil {
@@ -249,7 +228,7 @@ func (s *Server) handleMoveChapterArc(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) handleDeleteChapter(w http.ResponseWriter, r *http.Request) {
-	_, session, chapter, ok := s.requireOwnedChapter(w, r)
+	userID, session, chapter, ok := s.requireOwnedChapter(w, r)
 	if !ok {
 		return
 	}
@@ -262,6 +241,7 @@ func (s *Server) handleDeleteChapter(w http.ResponseWriter, r *http.Request) {
 		conflict(w, "Сначала удалите или перенесите сцены этой главы")
 		return
 	}
+	s.deleteOldImage(r, userID, chapter.ImageID)
 	writeJSON(w, http.StatusNoContent, nil)
 }
 

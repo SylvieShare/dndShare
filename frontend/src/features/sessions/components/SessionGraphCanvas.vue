@@ -405,7 +405,7 @@ async function changeSceneStatus(scene, status) {
     await sceneGraph.updateScene(scene.id, {
       name: scene.name,
       status,
-      imagePresetKey: scene.imagePresetKey,
+      imageId: scene.imageId,
     })
   } catch { actionError.value = 'Не удалось изменить статус сценария' }
 }

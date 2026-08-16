@@ -22,7 +22,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { sessionImagePresetUrl } from '@/features/sessions/lib/sessionImages'
+import { sessionImageUrl } from '@/features/sessions/lib/sessionImages'
 import { sceneStatus } from '@/features/sessions/lib/chapterGraph'
 
 const props = defineProps({
@@ -32,7 +32,7 @@ const props = defineProps({
   context: { type: Boolean, default: false },
 })
 
-const imageUrl = computed(() => sessionImagePresetUrl(props.scene.imagePresetKey))
+const imageUrl = computed(() => sessionImageUrl(props.scene))
 const status = computed(() => sceneStatus(props.scene.status))
 </script>
 

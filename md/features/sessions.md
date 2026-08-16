@@ -277,13 +277,14 @@ optional label; clicking either the curve or label opens edit/reverse/delete
 actions. The graph API validates that both ends and the edge belong to the same
 arc and session.
 
-The built-in image catalogue is shared by chapters and scenarios and served
-from `frontend/public/static/chapter-presets`. The picker first selects one of
+The built-in story image catalogue is shared by chapters, scenarios and locations
+and served by `GET /api/session-images?scope=story`. The picker first selects one of
 four categories — settlements, wilderness, adventure or story — and then an
 image inside it. Story adds battle, investigation, negotiation, chase, puzzle
 and discovery covers to the original location catalogue. A chapter may instead
 use an image uploaded through the normal storage endpoint and adjust its focal
-point; it still stores exactly one image source.
+point. Every entity stores the same `imageId` contract, and both catalogue and
+custom files resolve through `storage_image` in S3.
 
 Scenarios belong to chapters and form a second directed graph. A chapter action
 or double click keeps the same canvas engine mounted and swaps its chapter nodes

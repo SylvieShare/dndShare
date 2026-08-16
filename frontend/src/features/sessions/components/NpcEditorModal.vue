@@ -31,12 +31,14 @@
         <FormField label="Портрет" vertical>
           <SessionImagePicker
             catalog="npc"
+            default-key="npc-scholar"
             allow-upload
-            :model-value="draft.imagePresetKey"
+            :model-value="draft.imageId"
+            :current-url="customPreview"
             :custom-selected="source === 'custom'"
             :custom-preview="customPreview"
             :custom-preview-style="previewPosition"
-            @select="pickPreset"
+            @select="pickCatalogImage"
             @upload="fileInput?.click()"
           />
           <input ref="fileInput" type="file" accept="image/*" hidden @change="onFile" />
@@ -123,7 +125,7 @@
           :submit-text="npc ? 'Сохранить' : 'Создать NPC'"
           loading-text="Сохранение…"
           :loading="saving || uploading"
-          :can-submit="!!draft.name.trim()"
+          :can-submit="!!draft.name.trim() && (!!draft.imageId || !!selectedFile)"
           @cancel="$emit('close')"
           @submit="submit"
         />
@@ -152,7 +154,7 @@ import {
   npcInitial,
   sceneContextLabel,
 } from '@/features/sessions/lib/sessionWorld'
-import { npcImageUrl, npcImagePresetUrl, sessionImagePresetUrl } from '@/features/sessions/lib/sessionImages'
+import { npcImageUrl, sessionImageUrl } from '@/features/sessions/lib/sessionImages'
 import { itemsApi } from '@/shared/api/itemsApi'
 import { randomDndName } from '@/shared/lib/dndNames'
 
@@ -174,8 +176,8 @@ const selectedFile = ref(null)
 const objectUrl = ref('')
 const uploading = ref(false)
 const uploadError = ref('')
-const source = ref(props.npc?.customImageUrl ? 'custom' : 'preset')
-const customPreview = ref(props.npc?.customImageUrl || '')
+const source = ref(props.npc?.imageId && !props.npc?.imageCatalogKey ? 'custom' : 'catalog')
+const customPreview = ref(props.npc?.imageUrl || '')
 
 const draft = reactive({
   name: props.npc?.name ?? '',
@@ -183,8 +185,7 @@ const draft = reactive({
   role: props.npc?.role ?? '',
   description: props.npc?.description ?? '',
   color: props.npc?.color ?? '#7c5cff',
-  imagePresetKey: props.npc?.imagePresetKey ?? 'npc-scholar',
-  customImageId: props.npc?.customImageId ?? null,
+  imageId: props.npc?.imageId ?? 0,
   imageFocalX: props.npc?.imageFocalX ?? 0.5,
   imageFocalY: props.npc?.imageFocalY ?? 0.5,
   locationLinks: props.npc
@@ -194,9 +195,7 @@ const draft = reactive({
   npcLinks: (props.npc?.npcLinks || []).map(link => ({ ...link })),
 })
 const previewPosition = computed(() => ({ objectPosition: `${draft.imageFocalX * 100}% ${draft.imageFocalY * 100}%` }))
-const portraitPreview = computed(() => source.value === 'custom'
-  ? customPreview.value
-  : npcImagePresetUrl(draft.imagePresetKey))
+const portraitPreview = computed(() => customPreview.value)
 
 const raceOptions = computed(() => {
   const byId = new Map(races.value.map(race => [race.id, race]))
@@ -217,13 +216,13 @@ const locationOptions = computed(() => props.locations.map(location => ({
   id: location.id,
   title: location.name,
   subtitle: locationBreadcrumb(location, props.locationsById).slice(0, -1).map(item => item.name).join(' · ') || locationKind(location.kind).shortLabel,
-  image: sessionImagePresetUrl(location.imagePresetKey),
+  image: sessionImageUrl(location),
 })))
 const sceneOptions = computed(() => props.scenes.map(scene => ({
   id: scene.id,
   title: scene.name,
   subtitle: sceneContextLabel(scene),
-  image: sessionImagePresetUrl(scene.imagePresetKey),
+  image: sessionImageUrl(scene),
 })))
 const npcOptions = computed(() => props.npcs.filter(npc => npc.id !== props.npc?.id).map(npc => ({
   id: npc.id,
@@ -249,7 +248,11 @@ function randomizeName() {
   draft.name = randomDndName(selectedRace.value, Math.random, draft.name)
 }
 
-function pickPreset(key) { source.value = 'preset'; draft.imagePresetKey = key }
+function pickCatalogImage(image) {
+  source.value = 'catalog'
+  draft.imageId = image.id
+  customPreview.value = image.url
+}
 function onFile(event) {
   const file = event.target.files?.[0]
   event.target.value = ''
@@ -264,7 +267,7 @@ function onFile(event) {
   uploadError.value = ''
 }
 async function uploadSelected() {
-  if (!selectedFile.value) return { upload_id: draft.customImageId }
+  if (!selectedFile.value) return { upload_id: draft.imageId }
   uploading.value = true
   try {
     const form = new FormData()
@@ -276,18 +279,17 @@ async function uploadSelected() {
 }
 
 async function submit() {
-  if (!draft.name.trim() || props.saving || uploading.value) return
+  if (!draft.name.trim() || (!draft.imageId && !selectedFile.value) || props.saving || uploading.value) return
   uploadError.value = ''
   try {
-    const uploaded = source.value === 'custom' ? await uploadSelected() : { upload_id: null }
+    const selected = source.value === 'custom' ? await uploadSelected() : { upload_id: draft.imageId }
     emit('save', {
       name: draft.name.trim(),
       raceItemId: Number(draft.raceItemId) || null,
       role: draft.role.trim() || null,
       description: draft.description.trim() || null,
       color: draft.color || '#7c5cff',
-      imagePresetKey: source.value === 'preset' ? draft.imagePresetKey : null,
-      customImageId: source.value === 'custom' ? uploaded.upload_id : null,
+      imageId: selected.upload_id,
       imageFocalX: draft.imageFocalX,
       imageFocalY: draft.imageFocalY,
       locationLinks: draft.locationLinks,

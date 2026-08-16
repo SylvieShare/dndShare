@@ -48,7 +48,7 @@
     <main v-if="selectedLocation" class="session-world-detail">
       <div
         class="session-world-cover"
-        :style="{ '--world-cover': `url(${sessionImagePresetUrl(selectedLocation.imagePresetKey)})`, '--entity-color': selectedKind.color }"
+        :style="{ '--world-cover': `url(${sessionImageUrl(selectedLocation)})`, '--entity-color': selectedKind.color }"
       >
         <div class="session-world-cover-copy">
           <div class="session-world-breadcrumbs">
@@ -92,7 +92,7 @@
               :key="location.id"
               type="button"
               class="session-world-link-card session-world-link-card--image"
-              :style="{ '--card-image': `url(${sessionImagePresetUrl(location.imagePresetKey)})`, '--entity-color': locationKind(location.kind).color }"
+              :style="{ '--card-image': `url(${sessionImageUrl(location)})`, '--entity-color': locationKind(location.kind).color }"
               @click="$emit('select-location', location.id)"
             >
               <span>{{ locationKind(location.kind).shortLabel }}</span>
@@ -120,7 +120,7 @@
             <div class="session-world-section-title"><span>Сценарии</span><small>{{ attachedScenes.length }}</small></div>
             <div v-if="attachedScenes.length" class="session-world-compact-list">
               <div v-for="scene in attachedScenes" :key="scene.id" class="session-world-scene-row">
-                <span class="session-world-scene-image" :style="{ backgroundImage: `url(${sessionImagePresetUrl(scene.imagePresetKey)})` }" />
+                <span class="session-world-scene-image" :style="{ backgroundImage: `url(${sessionImageUrl(scene)})` }" />
                 <span><strong>{{ scene.name }}</strong><small>{{ sceneContextLabel(scene) }}</small></span>
               </div>
             </div>
@@ -187,7 +187,7 @@ import {
   buildLocationForest, locationBreadcrumb, locationDescendantIds, locationKind,
   locationSearchMatches, ruPlural, sceneContextLabel,
 } from '@/features/sessions/lib/sessionWorld'
-import { npcImageUrl, sessionImagePresetUrl } from '@/features/sessions/lib/sessionImages'
+import { npcImageUrl, sessionImageUrl } from '@/features/sessions/lib/sessionImages'
 
 const props = defineProps({
   sessionUuid: { type: String, required: true },

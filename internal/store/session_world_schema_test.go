@@ -3,6 +3,8 @@ package store
 import (
 	"strings"
 	"testing"
+
+	"dndshare/internal/systemimages"
 )
 
 func TestSessionWorldSchemaUsesTreeAndExplicitAssociations(t *testing.T) {
@@ -33,8 +35,31 @@ func TestSessionWorldSchemaUsesTreeAndExplicitAssociations(t *testing.T) {
 }
 
 func TestSessionWorldSchemaRunsAfterSessionTables(t *testing.T) {
-	if schemaParts[len(schemaParts)-1].name != "session-world" {
-		t.Fatalf("last schema part = %q, want session-world", schemaParts[len(schemaParts)-1].name)
+	if schemaParts[len(schemaParts)-1].name != "session-images" {
+		t.Fatalf("last schema part = %q, want session-images", schemaParts[len(schemaParts)-1].name)
+	}
+}
+
+func TestSessionImagesSchemaUnifiesEntityReferences(t *testing.T) {
+	for _, fragment := range []string{
+		"CREATE TABLE IF NOT EXISTS dndshare.session_image_catalog",
+		"ALTER TABLE dndshare.session_chapter ADD COLUMN IF NOT EXISTS image_id",
+		"ALTER TABLE dndshare.session_scene ADD COLUMN IF NOT EXISTS image_id",
+		"ALTER TABLE dndshare.session_location ADD COLUMN IF NOT EXISTS image_id",
+		"ALTER TABLE dndshare.session_npc ADD COLUMN IF NOT EXISTS image_id",
+		"FOREIGN KEY (image_id) REFERENCES dndshare.storage_image(id) ON DELETE RESTRICT",
+	} {
+		if !strings.Contains(schemaSessionImagesSQL, fragment) {
+			t.Fatalf("session image schema must contain %q", fragment)
+		}
+	}
+	for _, image := range systemimages.Catalog {
+		if !strings.Contains(schemaSessionImagesSQL, "'"+image.CatalogKey+"'") {
+			t.Fatalf("session image schema must contain catalog key %q", image.CatalogKey)
+		}
+		if !strings.Contains(schemaSessionImagesSQL, "'"+image.ObjectKey+"'") {
+			t.Fatalf("session image schema must contain object key %q", image.ObjectKey)
+		}
 	}
 }
 

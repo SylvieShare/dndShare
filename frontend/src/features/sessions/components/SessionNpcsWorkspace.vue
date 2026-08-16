@@ -73,7 +73,7 @@
             <div class="session-world-section-title"><span>Где встретить</span><small>{{ attachedLocations.length }}</small></div>
             <div v-if="attachedLocations.length" class="session-world-compact-list">
               <button v-for="location in attachedLocations" :key="location.id" type="button" @click="$emit('open-location', location.id)">
-                <span class="session-world-scene-image" :style="{ backgroundImage: `url(${sessionImagePresetUrl(location.imagePresetKey)})` }" />
+                <span class="session-world-scene-image" :style="{ backgroundImage: `url(${sessionImageUrl(location)})` }" />
                 <span><strong>{{ location.name }}</strong><small>{{ location.relationNote || locationPath(location) }}</small></span>
                 <ChevronRight :size="14" />
               </button>
@@ -86,7 +86,7 @@
             <div class="session-world-section-title"><span>Участие в сюжете</span><small>{{ attachedScenes.length }}</small></div>
             <div v-if="attachedScenes.length" class="session-world-compact-list">
               <div v-for="scene in attachedScenes" :key="scene.id" class="session-world-scene-row">
-                <span class="session-world-scene-image" :style="{ backgroundImage: `url(${sessionImagePresetUrl(scene.imagePresetKey)})` }" />
+                <span class="session-world-scene-image" :style="{ backgroundImage: `url(${sessionImageUrl(scene)})` }" />
                 <span><strong>{{ scene.name }}</strong><small>{{ scene.relationNote || sceneContextLabel(scene) }}</small></span>
               </div>
             </div>
@@ -150,7 +150,7 @@ import {
 import { ConfirmDialog } from '@sylvieshare/share-ui'
 import NpcEditorModal from '@/features/sessions/components/NpcEditorModal.vue'
 import { locationBreadcrumb, locationKind, ruPlural, sceneContextLabel } from '@/features/sessions/lib/sessionWorld'
-import { npcImageUrl, sessionImagePresetUrl } from '@/features/sessions/lib/sessionImages'
+import { npcImageUrl, sessionImageUrl } from '@/features/sessions/lib/sessionImages'
 
 const props = defineProps({
   world: { type: Object, required: true },

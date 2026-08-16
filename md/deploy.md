@@ -25,10 +25,11 @@ VM под systemd; Docker, JAR и Maven в production path не использу
 2. запускает `npm run build` в `frontend/`;
 3. копирует `frontend/target/dist` в `internal/assets/dist`;
 4. собирает статический `linux/amd64` бинарь с текущим Git SHA в
-   `internal/web.BuildCommit`;
-5. копирует бинарь, `deploy/dndshare.service` и
+   `internal/web.BuildCommit` и отдельный `session-image-sync`;
+5. копирует бинарники, `deploy/dndshare.service` и
    `deploy/dndshare-run.sh` на VM;
-6. атомарно заменяет бинарь и перезапускает systemd unit;
+6. проверяет и загружает системные JPEG под стабильными S3-ключами, регистрирует
+   их в БД, затем атомарно заменяет основной бинарь и перезапускает systemd unit;
 7. до 30 секунд опрашивает `GET /api/health`;
 8. считает deploy успешным только если ответ содержит `status=ok` и точный
    `commitSha` выкатываемого commit;
@@ -72,6 +73,12 @@ VM под systemd; Docker, JAR и Maven в production path не использу
 размер и SHA-256 каждого файла с `internal/systemmusic`, после чего записывает
 объекты под стабильными ключами `system-music/v1/`. В Git и Go-бинарь аудио не
 включается; startup-схема хранит эти ключи в `music_track`.
+
+Системные изображения сессий, напротив, входят только в служебный бинарь
+`cmd/system-image-sync`. Deploy сверяет их размер и SHA-256 с манифестом
+`internal/systemimages`, загружает в `system-session-images/v1/` и обновляет
+URL строк `storage_image` до запуска новой версии приложения. Основной бинарь
+и frontend эти JPEG не содержат.
 
 ## Local run
 

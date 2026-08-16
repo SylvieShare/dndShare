@@ -8,7 +8,7 @@
 
         <div class="location-editor-row">
           <FormField label="Тип" vertical>
-            <FormSelect v-model:value="draft.kind" @change="applyKindPreset">
+            <FormSelect v-model:value="draft.kind">
               <option v-for="kind in LOCATION_KINDS" :key="kind.key" :value="kind.key">{{ kind.label }}</option>
             </FormSelect>
           </FormField>
@@ -51,7 +51,7 @@
         <span>Визуальный ориентир</span>
         <small>Будет показан в карточке локации</small>
       </div>
-      <SessionImagePicker :model-value="draft.imagePresetKey" @select="draft.imagePresetKey = $event" />
+      <SessionImagePicker :model-value="draft.imageId" default-key="city" :current-url="location?.imageUrl || ''" @select="draft.imageId = $event.id" />
     </section>
 
     <template #footer>
@@ -63,7 +63,7 @@
           :submit-text="location ? 'Сохранить' : 'Создать локацию'"
           loading-text="Сохранение…"
           :loading="saving"
-          :can-submit="!!draft.name.trim() && !!draft.imagePresetKey"
+          :can-submit="!!draft.name.trim() && !!draft.imageId"
           @cancel="$emit('close')"
           @submit="submit"
         />
@@ -87,11 +87,10 @@ import WorldRelationChecklist from '@/features/sessions/components/WorldRelation
 import {
   buildLocationForest,
   locationDescendantIds,
-  locationKind,
   LOCATION_KINDS,
   sceneContextLabel,
 } from '@/features/sessions/lib/sessionWorld'
-import { sessionImagePresetUrl } from '@/features/sessions/lib/sessionImages'
+import { sessionImageUrl } from '@/features/sessions/lib/sessionImages'
 
 const props = defineProps({
   location: { type: Object, default: null },
@@ -107,7 +106,7 @@ const draft = reactive({
   kind: props.location?.kind ?? 'settlement',
   parentLocationId: String(props.location?.parentLocationId ?? props.defaultParentId ?? ''),
   description: props.location?.description ?? '',
-  imagePresetKey: props.location?.imagePresetKey ?? locationKind(props.location?.kind || 'settlement').preset,
+  imageId: props.location?.imageId ?? 0,
   sceneIds: [...(props.location?.sceneIds || [])],
 })
 
@@ -130,22 +129,18 @@ const sceneOptions = computed(() => props.scenes.map(scene => ({
   id: scene.id,
   title: scene.name,
   subtitle: sceneContextLabel(scene),
-  image: sessionImagePresetUrl(scene.imagePresetKey),
+  image: sessionImageUrl(scene),
 })))
 
-function applyKindPreset() {
-  if (!props.location) draft.imagePresetKey = locationKind(draft.kind).preset
-}
-
 function submit() {
-  if (!draft.name.trim() || !draft.imagePresetKey || props.saving) return
+  if (!draft.name.trim() || !draft.imageId || props.saving) return
   const parentValue = Number(draft.parentLocationId)
   emit('save', {
     parentLocationId: Number.isInteger(parentValue) && parentValue > 0 ? parentValue : null,
     name: draft.name.trim(),
     kind: draft.kind,
     description: draft.description.trim() || null,
-    imagePresetKey: draft.imagePresetKey,
+    imageId: draft.imageId,
     sceneIds: draft.sceneIds,
   })
 }

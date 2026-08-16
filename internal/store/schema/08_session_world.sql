@@ -24,6 +24,7 @@ CREATE INDEX IF NOT EXISTS idx_session_location_session_order
     ON dndshare.session_location USING btree (session_id, parent_location_id, sort_order, id);
 CREATE INDEX IF NOT EXISTS idx_session_location_parent
     ON dndshare.session_location USING btree (parent_location_id);
+ALTER TABLE dndshare.session_location ADD COLUMN IF NOT EXISTS image_preset_key varchar(64) NULL;
 
 CREATE TABLE IF NOT EXISTS dndshare.session_npc (
     id          bigserial NOT NULL,

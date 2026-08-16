@@ -43,11 +43,16 @@ BUILD_COMMIT="$(git rev-parse HEAD)"
 CGO_ENABLED=0 GOOS=linux GOARCH=amd64 "$GO" build -trimpath \
   -ldflags="-s -w -X dndshare/internal/web.BuildCommit=$BUILD_COMMIT" \
   -o build/dndshare .
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 "$GO" build -trimpath \
+  -ldflags="-s -w" \
+  -o build/session-image-sync ./cmd/system-image-sync
 ls -lh build/dndshare | awk '{print "    бинарь:", $5}'
+ls -lh build/session-image-sync | awk '{print "    синхронизация изображений:", $5}'
 
 echo "==> Копирование бинаря + unit + run.sh на $VM_HOST"
 # .new + mv на VM — чтобы не ловить 'text file busy' при перезаписи работающего бинаря.
 scp -i "$SSH_KEY" build/dndshare            "$VM_USER@$VM_HOST:~/dndshare.new"
+scp -i "$SSH_KEY" build/session-image-sync  "$VM_USER@$VM_HOST:~/session-image-sync.new"
 scp -i "$SSH_KEY" deploy/dndshare.service   "$VM_USER@$VM_HOST:~/dndshare.service"
 scp -i "$SSH_KEY" deploy/dndshare-run.sh    "$VM_USER@$VM_HOST:~/dndshare-run.sh"
 
@@ -55,7 +60,14 @@ echo "==> Обновление unit + перезапуск сервиса (се�
 ssh -i "$SSH_KEY" "$VM_USER@$VM_HOST" "bash -s -- '$BUILD_COMMIT'" <<'REMOTE'
   set -e
   expected_commit="$1"
-  chmod +x ~/dndshare.new ~/dndshare-run.sh ~/fetch-secrets.sh
+  chmod +x ~/dndshare.new ~/session-image-sync.new ~/dndshare-run.sh ~/fetch-secrets.sh
+  ~/fetch-secrets.sh dndshare-secrets ~/dndshare.env
+  set -a
+  source ~/dndshare.env
+  set +a
+  sudo systemctl stop dndshare || true
+  ~/session-image-sync.new
+  mv ~/session-image-sync.new ~/session-image-sync
   mv ~/dndshare.new ~/dndshare
   sudo install -m 644 ~/dndshare.service /etc/systemd/system/dndshare.service
   sudo systemctl daemon-reload

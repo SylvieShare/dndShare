@@ -116,11 +116,11 @@ func (s *Server) handleCreateScene(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var req struct {
-		Name           string  `json:"name"`
-		Status         string  `json:"status"`
-		ImagePresetKey string  `json:"imagePresetKey"`
-		X              float64 `json:"x"`
-		Y              float64 `json:"y"`
+		Name    string  `json:"name"`
+		Status  string  `json:"status"`
+		ImageID int64   `json:"imageId"`
+		X       float64 `json:"x"`
+		Y       float64 `json:"y"`
 	}
 	if err := decodeJSON(r, &req); err != nil {
 		badRequest(w, "bad body")
@@ -135,12 +135,10 @@ func (s *Server) handleCreateScene(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "Некорректный статус сценария")
 		return
 	}
-	imagePresetKey := strings.TrimSpace(req.ImagePresetKey)
-	if !sessionImagePresets[imagePresetKey] {
-		badRequest(w, "Некорректный пресет изображения")
+	if !s.validateSessionImage(w, r, userID, req.ImageID, "story") {
 		return
 	}
-	scene, err := s.store.CreateScene(r.Context(), chapterID, name, req.Status, imagePresetKey, req.X, req.Y)
+	scene, err := s.store.CreateScene(r.Context(), chapterID, name, req.Status, req.ImageID, req.X, req.Y)
 	if err != nil {
 		serverError(w, err)
 		return
@@ -162,13 +160,14 @@ func (s *Server) handleUpdateScene(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "bad sceneId")
 		return
 	}
-	if _, ok := s.requireSceneInSession(w, r, sceneID, sess.ID); !ok {
+	previous, ok := s.requireSceneInSession(w, r, sceneID, sess.ID)
+	if !ok {
 		return
 	}
 	var req struct {
-		Name           string `json:"name"`
-		Status         string `json:"status"`
-		ImagePresetKey string `json:"imagePresetKey"`
+		Name    string `json:"name"`
+		Status  string `json:"status"`
+		ImageID int64  `json:"imageId"`
 	}
 	if err := decodeJSON(r, &req); err != nil {
 		badRequest(w, "bad body")
@@ -183,14 +182,15 @@ func (s *Server) handleUpdateScene(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "Некорректный статус сценария")
 		return
 	}
-	imagePresetKey := strings.TrimSpace(req.ImagePresetKey)
-	if !sessionImagePresets[imagePresetKey] {
-		badRequest(w, "Некорректный пресет изображения")
+	if !s.validateSessionImage(w, r, userID, req.ImageID, "story") {
 		return
 	}
-	if err := s.store.UpdateScene(r.Context(), sceneID, name, req.Status, imagePresetKey); err != nil {
+	if err := s.store.UpdateScene(r.Context(), sceneID, name, req.Status, req.ImageID); err != nil {
 		serverError(w, err)
 		return
+	}
+	if previous.ImageID != req.ImageID {
+		s.deleteOldImage(r, userID, previous.ImageID)
 	}
 	scene, err := s.store.GetSceneByID(r.Context(), sceneID)
 	if err != nil {
@@ -214,13 +214,15 @@ func (s *Server) handleDeleteScene(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "bad sceneId")
 		return
 	}
-	if _, ok := s.requireSceneInSession(w, r, sceneID, sess.ID); !ok {
+	scene, ok := s.requireSceneInSession(w, r, sceneID, sess.ID)
+	if !ok {
 		return
 	}
 	if err := s.store.DeleteScene(r.Context(), sceneID); err != nil {
 		serverError(w, err)
 		return
 	}
+	s.deleteOldImage(r, userID, scene.ImageID)
 	writeJSON(w, http.StatusNoContent, nil)
 }
 

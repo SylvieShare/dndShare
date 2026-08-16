@@ -12,13 +12,15 @@ import (
 
 // SessionScene — строка dndshare.session_scene (порт model/SessionScene.kt).
 type SessionScene struct {
-	ID             int64   `json:"id"`
-	ChapterID      int64   `json:"chapterId"`
-	Name           string  `json:"name"`
-	Status         string  `json:"status"`
-	ImagePresetKey string  `json:"imagePresetKey"`
-	PositionX      float64 `json:"positionX"`
-	PositionY      float64 `json:"positionY"`
+	ID              int64   `json:"id"`
+	ChapterID       int64   `json:"chapterId"`
+	Name            string  `json:"name"`
+	Status          string  `json:"status"`
+	ImageID         int64   `json:"imageId"`
+	ImageURL        string  `json:"imageUrl"`
+	ImageCatalogKey *string `json:"imageCatalogKey,omitempty"`
+	PositionX       float64 `json:"positionX"`
+	PositionY       float64 `json:"positionY"`
 }
 
 type SessionSceneEdge struct {
@@ -87,7 +89,10 @@ func (s *Store) GetSessionChapter(ctx context.Context, id int64) (SceneChapter, 
 
 func scanScene(row pgx.Row) (SessionScene, error) {
 	var sc SessionScene
-	err := row.Scan(&sc.ID, &sc.ChapterID, &sc.Name, &sc.Status, &sc.ImagePresetKey, &sc.PositionX, &sc.PositionY)
+	err := row.Scan(
+		&sc.ID, &sc.ChapterID, &sc.Name, &sc.Status,
+		&sc.ImageID, &sc.ImageURL, &sc.ImageCatalogKey, &sc.PositionX, &sc.PositionY,
+	)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return SessionScene{}, ErrNotFound
 	}
@@ -114,8 +119,13 @@ func scanItem(row pgx.Row) (SessionSceneItem, error) {
 // GetScenesByChapter — сцены главы, порядок по id (порт getByChapter).
 func (s *Store) GetScenesByChapter(ctx context.Context, chapterID int64) ([]SessionScene, error) {
 	rows, err := s.pool.Query(ctx,
-		`SELECT id, chapter_id, "name", status, image_preset_key, position_x, position_y
-		 FROM dndshare.session_scene WHERE chapter_id = $1 ORDER BY id`, chapterID,
+		`SELECT scene.id, scene.chapter_id, scene."name", scene.status,
+		        scene.image_id, COALESCE(image.url, ''), catalog.catalog_key,
+		        scene.position_x, scene.position_y
+		 FROM dndshare.session_scene scene
+		 JOIN dndshare.storage_image image ON image.id = scene.image_id AND image.deleted = false
+		 LEFT JOIN dndshare.session_image_catalog catalog ON catalog.image_id = scene.image_id
+		 WHERE scene.chapter_id = $1 ORDER BY scene.id`, chapterID,
 	)
 	if err != nil {
 		return nil, err
@@ -135,20 +145,32 @@ func (s *Store) GetScenesByChapter(ctx context.Context, chapterID int64) ([]Sess
 // GetSceneByID — сцена по id (порт getSceneById).
 func (s *Store) GetSceneByID(ctx context.Context, id int64) (SessionScene, error) {
 	return scanScene(s.pool.QueryRow(ctx,
-		`SELECT id, chapter_id, "name", status, image_preset_key, position_x, position_y FROM dndshare.session_scene WHERE id = $1`, id))
+		`SELECT scene.id, scene.chapter_id, scene."name", scene.status,
+		        scene.image_id, COALESCE(image.url, ''), catalog.catalog_key,
+		        scene.position_x, scene.position_y
+		 FROM dndshare.session_scene scene
+		 JOIN dndshare.storage_image image ON image.id = scene.image_id AND image.deleted = false
+		 LEFT JOIN dndshare.session_image_catalog catalog ON catalog.image_id = scene.image_id
+		 WHERE scene.id = $1`, id))
 }
 
 // CreateScene — новая сцена (порт createScene).
-func (s *Store) CreateScene(ctx context.Context, chapterID int64, name, status, imagePresetKey string, x, y float64) (SessionScene, error) {
-	return scanScene(s.pool.QueryRow(ctx,
-		`INSERT INTO dndshare.session_scene (chapter_id, "name", status, image_preset_key, position_x, position_y) VALUES ($1, $2, $3, $4, $5, $6)
-		 RETURNING id, chapter_id, "name", status, image_preset_key, position_x, position_y`, chapterID, name, status, imagePresetKey, x, y))
+func (s *Store) CreateScene(ctx context.Context, chapterID int64, name, status string, imageID int64, x, y float64) (SessionScene, error) {
+	var id int64
+	err := s.pool.QueryRow(ctx,
+		`INSERT INTO dndshare.session_scene (chapter_id, "name", status, image_id, position_x, position_y)
+		 VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`, chapterID, name, status, imageID, x, y,
+	).Scan(&id)
+	if err != nil {
+		return SessionScene{}, err
+	}
+	return s.GetSceneByID(ctx, id)
 }
 
 // UpdateScene updates the editable scenario card fields.
-func (s *Store) UpdateScene(ctx context.Context, id int64, name, status, imagePresetKey string) error {
+func (s *Store) UpdateScene(ctx context.Context, id int64, name, status string, imageID int64) error {
 	_, err := s.pool.Exec(ctx,
-		`UPDATE dndshare.session_scene SET "name" = $1, status = $2, image_preset_key = $3 WHERE id = $4`, name, status, imagePresetKey, id)
+		`UPDATE dndshare.session_scene SET "name" = $1, status = $2, image_id = $3 WHERE id = $4`, name, status, imageID, id)
 	return err
 }
 

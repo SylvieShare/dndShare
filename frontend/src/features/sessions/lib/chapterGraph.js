@@ -1,4 +1,4 @@
-import { SESSION_IMAGE_PRESETS, sessionImagePresetUrl, sessionImageUrl } from '@/features/sessions/lib/sessionImages'
+import { sessionImageUrl } from '@/features/sessions/lib/sessionImages'
 
 export const CHAPTER_STATUSES = [
   { key: 'none', label: 'Без статуса', tone: 'muted', color: 'var(--text-muted)' },
@@ -29,8 +29,6 @@ export const SCENE_STATUSES = CHAPTER_STATUSES.map(status => ({
   })[status.key] || status.label,
 }))
 
-export const CHAPTER_PRESETS = SESSION_IMAGE_PRESETS
-
 export const CHAPTER_NODE_WIDTH = 236
 export const CHAPTER_NODE_HEIGHT = 156
 
@@ -40,10 +38,6 @@ export function chapterStatus(key) {
 
 export function sceneStatus(key) {
   return SCENE_STATUSES.find(item => item.key === key) ?? SCENE_STATUSES[0]
-}
-
-export function chapterPresetUrl(key) {
-  return sessionImagePresetUrl(key)
 }
 
 export function chapterImageUrl(chapter) {
