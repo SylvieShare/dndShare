@@ -18,6 +18,7 @@ const npcs = read('./SessionNpcsWorkspace.vue')
 const npcEditor = read('./NpcEditorModal.vue')
 const relationPicker = read('./WorldRelationPickerModal.vue')
 const universalEditor = read('./UniversalRelationEditor.vue')
+const universalList = read('./UniversalRelationList.vue')
 const universalPicker = read('./UniversalRelationPickerModal.vue')
 const quests = read('./SessionQuestsWorkspace.vue')
 const questEditor = read('./QuestEditorModal.vue')
@@ -147,6 +148,11 @@ describe('session world workspaces', () => {
     expect(sessionView).toContain('@open-scene="openRelatedScene"')
     expect(sessionWorkspace).toContain('async function openSceneWorkspace')
     expect(sessionWorkspace).toContain("showWorkspace('scenes', chapter, { ...graph.scenes[contextIndex], contextIndex }, 'blocks')")
+  })
+
+  it('keeps relation cards compact on wide detail views', () => {
+    expect(universalList).toContain('max-width: 520px')
+    expect(universalList).toContain('width: 100%')
   })
 
   it('keeps quest goal, condition, reward, consequences and notes separate', () => {
