@@ -47,6 +47,8 @@ relational and all object keys point to S3; system objects use the versioned
 `SessionMusicWorkspace.vue` is the central content of the DM-only
 `Музыка` session tab. It uses the same participant/right-tool safe areas as the
 other central workspaces and replaces the previous fullscreen library modal.
+Albums and tracks are rendered as two sibling workspace panels on the common
+session canvas, without an enclosing library-window frame.
 It uses:
 
 - `AppModalFrame` for nested tag/album dialogs;

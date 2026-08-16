@@ -1,334 +1,337 @@
 <template>
   <section class="session-music-workspace" aria-label="Музыкальная библиотека">
-    <div class="music-lib">
-        <header class="music-lib-head">
-          <h2 class="music-lib-title">Музыкальная библиотека</h2>
-          <span class="music-lib-count">{{ musicStore.tracks.length }} треков</span>
-          <span class="music-lib-sub">· личная и системная коллекция</span>
-        </header>
+    <aside class="music-lib-sidebar">
+      <header class="music-lib-head">
+        <span class="music-lib-eyebrow">БИБЛИОТЕКА</span>
+        <div class="music-lib-title-row">
+          <h2 class="music-lib-title">Музыка</h2>
+          <span class="music-lib-count">{{ musicStore.tracks.length }}</span>
+        </div>
+        <span class="music-lib-sub">Личная и системная коллекция</span>
+      </header>
 
-        <input ref="fileInputEl" type="file" accept="audio/*" multiple hidden @change="onFiles" />
+      <input ref="fileInputEl" type="file" accept="audio/*" multiple hidden @change="onFiles" />
 
-        <div class="music-lib-body">
-          <aside class="music-lib-sidebar">
-            <div class="sb-section-title">
-              АЛЬБОМЫ
-              <button class="sb-add" @click="onCreateAlbum">+</button>
-            </div>
+      <div class="sb-section-title">
+        АЛЬБОМЫ
+        <button class="sb-add" @click="onCreateAlbum">+</button>
+      </div>
 
-            <button
-              class="sb-album"
-              :class="{ active: !selectedAlbumId }"
-              @click="selectedAlbumId = null"
-            >
-              <span class="sb-album-dot" :style="{ background: 'var(--text-muted)' }" />
-              <span class="sb-album-name">Все треки</span>
-              <span class="sb-album-count">{{ musicStore.tracks.length }}</span>
-            </button>
+      <button
+        class="sb-album"
+        :class="{ active: !selectedAlbumId }"
+        @click="selectedAlbumId = null"
+      >
+        <span class="sb-album-dot" :style="{ background: 'var(--text-muted)' }" />
+        <span class="sb-album-name">Все треки</span>
+        <span class="sb-album-count">{{ musicStore.tracks.length }}</span>
+      </button>
 
-            <button
-              v-for="album in musicStore.albums"
-              :key="album.id"
-              class="sb-album"
-              :class="{ active: selectedAlbumId === album.id }"
-              @click="selectedAlbumId = album.id"
-            >
-              <span class="sb-album-dot" :style="{ background: album.color || 'var(--accent)' }" />
-              <span class="sb-album-name">{{ album.name }}</span>
-              <span v-if="album.isSystem" class="sb-album-system" title="Доступен всем, редактирование отключено">системный</span>
-              <span class="sb-album-count">{{ album.trackCount }}</span>
-            </button>
+      <button
+        v-for="album in musicStore.albums"
+        :key="album.id"
+        class="sb-album"
+        :class="{ active: selectedAlbumId === album.id }"
+        @click="selectedAlbumId = album.id"
+      >
+        <span class="sb-album-dot" :style="{ background: album.color || 'var(--accent)' }" />
+        <span class="sb-album-name">{{ album.name }}</span>
+        <span v-if="album.isSystem" class="sb-album-system" title="Доступен всем, редактирование отключено">системный</span>
+        <span class="sb-album-count">{{ album.trackCount }}</span>
+      </button>
 
-            <button v-if="!selectedAlbum?.isSystem" class="music-lib-dropzone" :class="{ active: dropActive }"
-                 type="button"
-                 @click="openFilePicker"
-                 @dragenter.prevent="onDragEnter"
-                 @dragleave.prevent="onDragLeave"
-                 @dragover.prevent
-                 @drop.prevent="onDrop">
-              <div class="music-lib-dropzone-icon">＋</div>
-              <div>Перетащите файлы<br>или нажмите</div>
-              <div class="music-lib-dropzone-sub">.mp3 / .ogg / .flac · до 50 МБ</div>
-            </button>
-            <div v-else class="music-lib-system-note">
-              <span class="music-lib-system-note-title">Системный альбом</span>
-              Доступен всем пользователям и защищён от изменений.
-            </div>
-          </aside>
+      <button
+        v-if="!selectedAlbum?.isSystem"
+        type="button"
+        class="music-lib-dropzone"
+        :class="{ active: dropActive }"
+        @click="openFilePicker"
+        @dragenter.prevent="onDragEnter"
+        @dragleave.prevent="onDragLeave"
+        @dragover.prevent
+        @drop.prevent="onDrop"
+      >
+        <div class="music-lib-dropzone-icon">＋</div>
+        <div>Перетащите файлы<br>или нажмите</div>
+        <div class="music-lib-dropzone-sub">.mp3 / .ogg / .flac · до 50 МБ</div>
+      </button>
+      <div v-else class="music-lib-system-note">
+        <span class="music-lib-system-note-title">Системный альбом</span>
+        Доступен всем пользователям и защищён от изменений.
+      </div>
+    </aside>
 
-          <div class="music-lib-main-col">
-          <section class="music-lib-main">
-            <div class="ml-main-head">
-              <span class="ml-main-color-dot" :style="{ background: selectedAlbum?.color || 'var(--text-muted)' }" />
-              <h3 class="ml-main-title">{{ selectedAlbum ? selectedAlbum.name : 'Все треки' }}</h3>
-              <span class="ml-main-sub">{{ filteredTracks.length }} треков</span>
-              <span
-                v-if="selectedAlbum?.isSystem"
-                class="ml-main-license"
-                :title="`${selectedAlbum.licenseName || 'CC0'} · ${selectedAlbum.author || 'автор указан в источнике'}`"
-              >
-                <a
-                  v-if="selectedAlbum.licenseUrl"
-                  :href="selectedAlbum.licenseUrl"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >{{ selectedAlbum.licenseName || 'CC0' }}</a>
-                <span v-else>{{ selectedAlbum.licenseName || 'CC0' }}</span>
-                <span> · </span>
-                <a
-                  v-if="selectedAlbum.sourceUrl"
-                  :href="selectedAlbum.sourceUrl"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >{{ selectedAlbum.author || 'источник' }} ↗</a>
-                <span v-else>{{ selectedAlbum.author }}</span>
-              </span>
-              <div class="ml-main-actions" v-if="selectedAlbum && !selectedAlbum.isSystem">
-                <button class="ml-main-action" @click="onRenameAlbum">переименовать</button>
-                <button class="ml-main-action ml-main-action--danger" @click="onDeleteAlbum">удалить альбом</button>
-              </div>
-            </div>
-
-            <div class="ml-search-row">
-              <input
-                v-model="searchQuery"
-                class="ml-search"
-                type="text"
-                placeholder="Поиск по названию или тегу..."
-              />
-            </div>
-
-            <div class="ml-tags">
-              <span class="ml-tags-label">ТЕГИ</span>
-              <button
-                v-for="tag in musicStore.tags"
-                :key="tag.id"
-                class="ml-tag"
-                :class="{ active: activeTagIds.includes(tag.id) }"
-                @click="toggleTagFilter(tag.id)"
-              >
-                {{ tag.name }}
-                <span v-if="activeTagIds.includes(tag.id)" class="ml-tag-x">×</span>
-              </button>
-              <button class="ml-tags-edit" @click="tagManagerOpen = true">
-                изменить теги
-              </button>
-            </div>
-
-            <div class="ml-tracks" data-sortable-container="tracks">
-              <MusicTrackRow
-                v-for="t in sortable.displayItems('tracks')"
-                :key="t.id"
-                :track="t"
-                :is-playing="state.playing && state.trackId === t.id"
-                :is-current="state.trackId === t.id"
-                :is-queued="isQueued(t.id)"
-                :is-placeholder="sortable.isSource(t)"
-                :read-only="t.isSystem"
-                :draggable="canSort"
-                :on-drag-start="canSort ? startDragHandler : null"
-                @play="onPlay"
-                @queue-toggle="onQueueToggle"
-                @rename="onRenameTrack"
-                @delete="onDeleteTrack"
-                @change-albums="onChangeAlbums"
-                @change-tags="onChangeTags"
-              />
-              <div v-if="!displayedTracks.length" class="ml-empty">
-                Нет треков
-              </div>
-            </div>
-          </section>
-
-          <footer v-if="current" class="music-lib-foot">
-          <div class="foot-current">
-            <button class="foot-play-btn" @click="onFootPlayPause">
-              <svg v-if="!state.playing" width="14" height="14" viewBox="0 0 14 14">
-                <path d="M3.5 2.5v9l8-4.5-8-4.5z" fill="currentColor"/>
-              </svg>
-              <svg v-else width="14" height="14" viewBox="0 0 14 14">
-                <rect x="3.5" y="2.5" width="2.6" height="9" fill="currentColor"/>
-                <rect x="7.9" y="2.5" width="2.6" height="9" fill="currentColor"/>
-              </svg>
-            </button>
-            <button
-              class="foot-loop-btn"
-              :class="{ active: state.loopMode === 'track' }"
-              :title="state.loopMode === 'track' ? 'Повтор одного трека' : 'Повтор альбома'"
-              @click="onToggleLoop"
-            >
-              <svg v-if="state.loopMode === 'track'" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path d="M3 5h7l-1.5-1.5M13 11H6l1.5 1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M3 5v3a3 3 0 0 0 3 3M13 11V8a3 3 0 0 0-3-3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-                <text x="8" y="9.5" text-anchor="middle" font-size="5" font-weight="700" fill="currentColor">1</text>
-              </svg>
-              <svg v-else width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path d="M3 5h7l-1.5-1.5M13 11H6l1.5 1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M3 5v3a3 3 0 0 0 3 3M13 11V8a3 3 0 0 0-3-3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-              </svg>
-            </button>
-            <div class="foot-text">
-              <div class="foot-status"><span class="foot-status-dot" />{{ state.playing ? 'ИГРАЕТ' : 'ПАУЗА' }}</div>
-              <div class="foot-title" :title="current.name">{{ current.name }}</div>
-              <div class="foot-progress" :class="{ 'foot-progress--clickable': isDm }" @click="onFootSeek">
-                <div class="foot-progress-bar" :style="{ width: progressPct + '%' }" />
-              </div>
-              <div class="foot-time">{{ fmtTime(state.positionSec) }} / {{ fmtTime(state.durationSec) }}</div>
-            </div>
-          </div>
-
-          <div class="foot-cross">
-            <button class="foot-cross-btn" :disabled="!next" @click="onFootPlayNext">
-              <svg width="13" height="13" viewBox="0 0 14 14">
-                <path d="M2 2l5 5-5 5M7 2l5 5-5 5" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              Переключить сейчас
-            </button>
-            <div class="foot-cross-fade">
-              <span class="foot-cross-fade-label">фейд</span>
-              <AppSlider :model-value="state.crossfadeDurSec" :min="0" :max="15" :step="0.5" @update:model-value="musicStore.setCrossfade" />
-              <span class="foot-cross-fade-value">{{ state.crossfadeDurSec.toFixed(1) }}с</span>
-            </div>
-            <div class="foot-cross-fade">
-              <span class="foot-cross-fade-label">громкость</span>
-              <AppSlider :model-value="state.volume" :min="0" :max="1" :step="0.01" @update:model-value="musicStore.setVolume" />
-              <span class="foot-cross-fade-value">{{ Math.round(state.volume * 100) }}%</span>
-            </div>
-          </div>
-
-          <div class="foot-next">
-            <div class="foot-next-head">
-              <span class="foot-next-label">СЛЕДУЮЩИЙ</span>
-              <button v-if="next" class="foot-next-clear" @click="onClearNext" title="Убрать">× убрать</button>
-            </div>
-            <div v-if="next" class="foot-next-title" :title="next.name">{{ next.name }}</div>
-            <div v-else class="foot-next-empty">не выбран</div>
-            <div v-if="next" class="foot-next-meta">{{ fmtTime(next.durationSec) }}<template v-if="nextAlbum"> · из «{{ nextAlbum.name }}»</template></div>
-          </div>
-          </footer>
+    <div class="music-lib-main-col">
+      <section class="music-lib-main">
+        <div class="ml-main-head">
+          <span class="ml-main-color-dot" :style="{ background: selectedAlbum?.color || 'var(--text-muted)' }" />
+          <h3 class="ml-main-title">{{ selectedAlbum ? selectedAlbum.name : 'Все треки' }}</h3>
+          <span class="ml-main-sub">{{ filteredTracks.length }} треков</span>
+          <span
+            v-if="selectedAlbum?.isSystem"
+            class="ml-main-license"
+            :title="`${selectedAlbum.licenseName || 'CC0'} · ${selectedAlbum.author || 'автор указан в источнике'}`"
+          >
+            <a
+              v-if="selectedAlbum.licenseUrl"
+              :href="selectedAlbum.licenseUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+            >{{ selectedAlbum.licenseName || 'CC0' }}</a>
+            <span v-else>{{ selectedAlbum.licenseName || 'CC0' }}</span>
+            <span> · </span>
+            <a
+              v-if="selectedAlbum.sourceUrl"
+              :href="selectedAlbum.sourceUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+            >{{ selectedAlbum.author || 'источник' }} ↗</a>
+            <span v-else>{{ selectedAlbum.author }}</span>
+          </span>
+          <div class="ml-main-actions" v-if="selectedAlbum && !selectedAlbum.isSystem">
+            <button class="ml-main-action" @click="onRenameAlbum">переименовать</button>
+            <button class="ml-main-action ml-main-action--danger" @click="onDeleteAlbum">удалить альбом</button>
           </div>
         </div>
 
-        <div v-if="uploadStatus" class="music-lib-toast">
-          {{ uploadStatus }}
+        <div class="ml-search-row">
+          <input
+            v-model="searchQuery"
+            class="ml-search"
+            type="text"
+            placeholder="Поиск по названию или тегу..."
+          />
         </div>
 
-        <AppModalFrame
-          v-if="tagPickerTrack"
-          :title="`Теги для «${tagPickerTrack.name}»`"
-          :z-index="2300"
-          @close="tagPickerTrack = null"
-        >
-          <div class="album-picker">
-            <div class="album-picker-list">
-              <label v-for="tag in musicStore.tags" :key="tag.id" class="album-picker-row">
-                <input
-                  type="checkbox"
-                  :checked="(tagPickerTrack.tags || []).some(t => t.id === tag.id)"
-                  @change="onToggleTrackTag(tag, $event.target.checked)"
-                />
-                <span class="album-picker-name">{{ tag.name }}</span>
-              </label>
-              <div v-if="!musicStore.tags.length" class="album-picker-empty">Создайте теги в окне «изменить теги»</div>
-            </div>
-          </div>
-          <template #footer>
-            <button class="album-picker-close" @click="tagPickerTrack = null">Готово</button>
-          </template>
-        </AppModalFrame>
+        <div class="ml-tags">
+          <span class="ml-tags-label">ТЕГИ</span>
+          <button
+            v-for="tag in musicStore.tags"
+            :key="tag.id"
+            class="ml-tag"
+            :class="{ active: activeTagIds.includes(tag.id) }"
+            @click="toggleTagFilter(tag.id)"
+          >
+            {{ tag.name }}
+            <span v-if="activeTagIds.includes(tag.id)" class="ml-tag-x">×</span>
+          </button>
+          <button class="ml-tags-edit" @click="tagManagerOpen = true">
+            изменить теги
+          </button>
+        </div>
 
-        <AppModalFrame v-if="tagManagerOpen" title="Теги" :z-index="2300" @close="tagManagerOpen = false">
-          <div class="album-picker">
-            <div class="tag-manager-list">
-              <div v-for="tag in musicStore.tags" :key="tag.id" class="tag-manager-row">
-                <template v-if="editingTagId === tag.id">
-                  <input
-                    ref="tagEditInput"
-                    v-model="editingTagName"
-                    class="tag-manager-input"
-                    type="text"
-                    maxlength="64"
-                    @keydown.enter="commitTagEdit"
-                    @keydown.escape="cancelTagEdit"
-                    @keydown.stop
-                  />
-                  <button class="tag-manager-btn" @click="commitTagEdit">✓</button>
-                  <button class="tag-manager-btn" @click="cancelTagEdit">×</button>
-                </template>
-                <template v-else>
-                  <span class="tag-manager-name">{{ tag.name }}</span>
-                  <button class="tag-manager-btn" title="Переименовать" @click="startTagEdit(tag)">
-                    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-                      <path d="M2 12L4 11.5L11.5 4L10 2.5L2.5 10L2 12Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
-                    </svg>
-                  </button>
-                  <button class="tag-manager-btn tag-manager-btn--danger" title="Удалить" @click="onDeleteTag(tag)">×</button>
-                </template>
-              </div>
-              <div v-if="!musicStore.tags.length" class="album-picker-empty">Тегов пока нет</div>
+        <div class="ml-tracks" data-sortable-container="tracks">
+          <MusicTrackRow
+            v-for="t in sortable.displayItems('tracks')"
+            :key="t.id"
+            :track="t"
+            :is-playing="state.playing && state.trackId === t.id"
+            :is-current="state.trackId === t.id"
+            :is-queued="isQueued(t.id)"
+            :is-placeholder="sortable.isSource(t)"
+            :read-only="t.isSystem"
+            :draggable="canSort"
+            :on-drag-start="canSort ? startDragHandler : null"
+            @play="onPlay"
+            @queue-toggle="onQueueToggle"
+            @rename="onRenameTrack"
+            @delete="onDeleteTrack"
+            @change-albums="onChangeAlbums"
+            @change-tags="onChangeTags"
+          />
+          <div v-if="!displayedTracks.length" class="ml-empty">
+            Нет треков
+          </div>
+        </div>
+      </section>
+
+      <footer v-if="current" class="music-lib-foot">
+        <div class="foot-current">
+          <button class="foot-play-btn" @click="onFootPlayPause">
+            <svg v-if="!state.playing" width="14" height="14" viewBox="0 0 14 14">
+              <path d="M3.5 2.5v9l8-4.5-8-4.5z" fill="currentColor"/>
+            </svg>
+            <svg v-else width="14" height="14" viewBox="0 0 14 14">
+              <rect x="3.5" y="2.5" width="2.6" height="9" fill="currentColor"/>
+              <rect x="7.9" y="2.5" width="2.6" height="9" fill="currentColor"/>
+            </svg>
+          </button>
+          <button
+            class="foot-loop-btn"
+            :class="{ active: state.loopMode === 'track' }"
+            :title="state.loopMode === 'track' ? 'Повтор одного трека' : 'Повтор альбома'"
+            @click="onToggleLoop"
+          >
+            <svg v-if="state.loopMode === 'track'" width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M3 5h7l-1.5-1.5M13 11H6l1.5 1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M3 5v3a3 3 0 0 0 3 3M13 11V8a3 3 0 0 0-3-3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+              <text x="8" y="9.5" text-anchor="middle" font-size="5" font-weight="700" fill="currentColor">1</text>
+            </svg>
+            <svg v-else width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M3 5h7l-1.5-1.5M13 11H6l1.5 1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M3 5v3a3 3 0 0 0 3 3M13 11V8a3 3 0 0 0-3-3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            </svg>
+          </button>
+          <div class="foot-text">
+            <div class="foot-status"><span class="foot-status-dot" />{{ state.playing ? 'ИГРАЕТ' : 'ПАУЗА' }}</div>
+            <div class="foot-title" :title="current.name">{{ current.name }}</div>
+            <div class="foot-progress" :class="{ 'foot-progress--clickable': isDm }" @click="onFootSeek">
+              <div class="foot-progress-bar" :style="{ width: progressPct + '%' }" />
             </div>
-            <div class="tag-manager-new">
+            <div class="foot-time">{{ fmtTime(state.positionSec) }} / {{ fmtTime(state.durationSec) }}</div>
+          </div>
+        </div>
+
+        <div class="foot-cross">
+          <button class="foot-cross-btn" :disabled="!next" @click="onFootPlayNext">
+            <svg width="13" height="13" viewBox="0 0 14 14">
+              <path d="M2 2l5 5-5 5M7 2l5 5-5 5" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Переключить сейчас
+          </button>
+          <div class="foot-cross-fade">
+            <span class="foot-cross-fade-label">фейд</span>
+            <AppSlider :model-value="state.crossfadeDurSec" :min="0" :max="15" :step="0.5" @update:model-value="musicStore.setCrossfade" />
+            <span class="foot-cross-fade-value">{{ state.crossfadeDurSec.toFixed(1) }}с</span>
+          </div>
+          <div class="foot-cross-fade">
+            <span class="foot-cross-fade-label">громкость</span>
+            <AppSlider :model-value="state.volume" :min="0" :max="1" :step="0.01" @update:model-value="musicStore.setVolume" />
+            <span class="foot-cross-fade-value">{{ Math.round(state.volume * 100) }}%</span>
+          </div>
+        </div>
+
+        <div class="foot-next">
+          <div class="foot-next-head">
+            <span class="foot-next-label">СЛЕДУЮЩИЙ</span>
+            <button v-if="next" class="foot-next-clear" @click="onClearNext" title="Убрать">× убрать</button>
+          </div>
+          <div v-if="next" class="foot-next-title" :title="next.name">{{ next.name }}</div>
+          <div v-else class="foot-next-empty">не выбран</div>
+          <div v-if="next" class="foot-next-meta">{{ fmtTime(next.durationSec) }}<template v-if="nextAlbum"> · из «{{ nextAlbum.name }}»</template></div>
+        </div>
+      </footer>
+    </div>
+
+    <div v-if="uploadStatus" class="music-lib-toast">
+      {{ uploadStatus }}
+    </div>
+
+    <AppModalFrame
+      v-if="tagPickerTrack"
+      :title="`Теги для «${tagPickerTrack.name}»`"
+      :z-index="2300"
+      @close="tagPickerTrack = null"
+    >
+      <div class="album-picker">
+        <div class="album-picker-list">
+          <label v-for="tag in musicStore.tags" :key="tag.id" class="album-picker-row">
+            <input
+              type="checkbox"
+              :checked="(tagPickerTrack.tags || []).some(t => t.id === tag.id)"
+              @change="onToggleTrackTag(tag, $event.target.checked)"
+            />
+            <span class="album-picker-name">{{ tag.name }}</span>
+          </label>
+          <div v-if="!musicStore.tags.length" class="album-picker-empty">Создайте теги в окне «изменить теги»</div>
+        </div>
+      </div>
+      <template #footer>
+        <button class="album-picker-close" @click="tagPickerTrack = null">Готово</button>
+      </template>
+    </AppModalFrame>
+
+    <AppModalFrame v-if="tagManagerOpen" title="Теги" :z-index="2300" @close="tagManagerOpen = false">
+      <div class="album-picker">
+        <div class="tag-manager-list">
+          <div v-for="tag in musicStore.tags" :key="tag.id" class="tag-manager-row">
+            <template v-if="editingTagId === tag.id">
               <input
-                v-model="newTagName"
+                ref="tagEditInput"
+                v-model="editingTagName"
                 class="tag-manager-input"
                 type="text"
-                placeholder="новый тег"
                 maxlength="64"
-                @keydown.enter="onCreateTag"
+                @keydown.enter="commitTagEdit"
+                @keydown.escape="cancelTagEdit"
                 @keydown.stop
               />
-              <button class="album-picker-close" :disabled="!newTagName.trim() || creatingTag" @click="onCreateTag">
-                + добавить
+              <button class="tag-manager-btn" @click="commitTagEdit">✓</button>
+              <button class="tag-manager-btn" @click="cancelTagEdit">×</button>
+            </template>
+            <template v-else>
+              <span class="tag-manager-name">{{ tag.name }}</span>
+              <button class="tag-manager-btn" title="Переименовать" @click="startTagEdit(tag)">
+                <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
+                  <path d="M2 12L4 11.5L11.5 4L10 2.5L2.5 10L2 12Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+                </svg>
               </button>
-            </div>
+              <button class="tag-manager-btn tag-manager-btn--danger" title="Удалить" @click="onDeleteTag(tag)">×</button>
+            </template>
           </div>
-          <template #footer>
-            <button class="album-picker-close" @click="tagManagerOpen = false">Готово</button>
-          </template>
-        </AppModalFrame>
+          <div v-if="!musicStore.tags.length" class="album-picker-empty">Тегов пока нет</div>
+        </div>
+        <div class="tag-manager-new">
+          <input
+            v-model="newTagName"
+            class="tag-manager-input"
+            type="text"
+            placeholder="новый тег"
+            maxlength="64"
+            @keydown.enter="onCreateTag"
+            @keydown.stop
+          />
+          <button class="album-picker-close" :disabled="!newTagName.trim() || creatingTag" @click="onCreateTag">
+            + добавить
+          </button>
+        </div>
+      </div>
+      <template #footer>
+        <button class="album-picker-close" @click="tagManagerOpen = false">Готово</button>
+      </template>
+    </AppModalFrame>
 
-        <AppModalFrame
-          v-if="albumPickerTrack"
-          :title="`Альбомы для «${albumPickerTrack.name}»`"
-          :z-index="2300"
-          @close="albumPickerTrack = null"
-        >
-          <div class="album-picker">
-            <div class="album-picker-list">
-              <label v-for="album in editableAlbums" :key="album.id" class="album-picker-row">
-                <input
-                  type="checkbox"
-                  :checked="(albumPickerTrack.albumIds || []).includes(album.id)"
-                  @change="onToggleTrackAlbum(album, $event.target.checked)"
-                />
-                <span class="album-picker-dot" :style="{ background: album.color || 'var(--accent)' }" />
-                <span class="album-picker-name">{{ album.name }}</span>
-              </label>
-              <div v-if="!editableAlbums.length" class="album-picker-empty">Создайте альбом в сайдбаре</div>
-            </div>
-          </div>
-          <template #footer>
-            <button class="album-picker-close" @click="albumPickerTrack = null">Готово</button>
-          </template>
-        </AppModalFrame>
-      <TextPromptDialog
-        v-if="textPrompt"
-        :title="textPrompt.title"
-        :value="textPrompt.value"
-        :loading="dialogLoading"
-        @cancel="textPrompt = null"
-        @confirm="confirmTextPrompt"
-      />
-      <ConfirmDialog
-        v-if="deleteTarget"
-        :title="deleteTarget.title"
-        :message="deleteTarget.message"
-        confirm-label="Удалить"
-        :loading="dialogLoading"
-        @cancel="deleteTarget = null"
-        @confirm="confirmDelete"
-      />
-    </div>
+    <AppModalFrame
+      v-if="albumPickerTrack"
+      :title="`Альбомы для «${albumPickerTrack.name}»`"
+      :z-index="2300"
+      @close="albumPickerTrack = null"
+    >
+      <div class="album-picker">
+        <div class="album-picker-list">
+          <label v-for="album in editableAlbums" :key="album.id" class="album-picker-row">
+            <input
+              type="checkbox"
+              :checked="(albumPickerTrack.albumIds || []).includes(album.id)"
+              @change="onToggleTrackAlbum(album, $event.target.checked)"
+            />
+            <span class="album-picker-dot" :style="{ background: album.color || 'var(--accent)' }" />
+            <span class="album-picker-name">{{ album.name }}</span>
+          </label>
+          <div v-if="!editableAlbums.length" class="album-picker-empty">Создайте альбом в сайдбаре</div>
+        </div>
+      </div>
+      <template #footer>
+        <button class="album-picker-close" @click="albumPickerTrack = null">Готово</button>
+      </template>
+    </AppModalFrame>
+    <TextPromptDialog
+      v-if="textPrompt"
+      :title="textPrompt.title"
+      :value="textPrompt.value"
+      :loading="dialogLoading"
+      @cancel="textPrompt = null"
+      @confirm="confirmTextPrompt"
+    />
+    <ConfirmDialog
+      v-if="deleteTarget"
+      :title="deleteTarget.title"
+      :message="deleteTarget.message"
+      confirm-label="Удалить"
+      :loading="dialogLoading"
+      @cancel="deleteTarget = null"
+      @confirm="confirmDelete"
+    />
   </section>
 </template>
 
