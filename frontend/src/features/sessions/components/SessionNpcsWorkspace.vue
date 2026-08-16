@@ -46,34 +46,30 @@
       </div>
     </aside>
 
-    <main v-if="selectedNpc" class="session-world-detail">
-      <div class="npc-detail-hero" :style="{ '--entity-color': selectedNpc.color }">
-        <img class="npc-detail-avatar" :src="npcImageUrl(selectedNpc)" alt="" :style="npcPortraitPosition(selectedNpc)" />
-        <div class="npc-detail-heading">
-          <span>NPC · {{ [selectedNpc.raceName, selectedNpc.role].filter(Boolean).join(' · ') || 'раса и роль не указаны' }}</span>
-          <h2>{{ selectedNpc.name }}</h2>
-          <div class="npc-detail-meta">
-			<span><MapPin :size="12" />{{ selectedNpc.relations?.length || 0 }} связей</span>
-          </div>
-        </div>
-        <button v-if="isDm" type="button" class="session-world-edit-action" @click="openEdit(selectedNpc)"><Pencil :size="15" />Редактировать</button>
-      </div>
+    <SessionEntityDetail
+      v-if="selectedNpc"
+      :title="selectedNpc.name"
+      :eyebrow="`NPC · ${[selectedNpc.raceName, selectedNpc.role].filter(Boolean).join(' · ') || 'раса и роль не указаны'}`"
+      :accent="selectedNpc.color"
+      :editable="isDm"
+      edit-aria-label="Редактировать NPC"
+      @edit="openEdit(selectedNpc)"
+    >
+      <template #visual><img :src="npcImageUrl(selectedNpc)" alt="" :style="npcPortraitPosition(selectedNpc)" /></template>
+      <template #meta><span><MapPin :size="12" />{{ selectedNpc.relations?.length || 0 }} связей</span></template>
 
-      <div class="session-world-detail-scroll">
-        <section class="session-world-section session-world-description">
-          <div class="session-world-section-title"><span>О персонаже</span></div>
-          <p v-if="selectedNpc.description">{{ selectedNpc.description }}</p>
-          <button v-else-if="isDm" type="button" class="session-world-inline-empty" @click="openEdit(selectedNpc)">Добавить характер, мотивацию и заметки</button>
-          <p v-else class="session-world-muted">Описание пока не добавлено.</p>
-        </section>
+      <section class="session-world-section session-world-description">
+        <div class="session-world-section-title"><span>О персонаже</span></div>
+        <p v-if="selectedNpc.description">{{ selectedNpc.description }}</p>
+        <button v-else-if="isDm" type="button" class="session-world-inline-empty" @click="openEdit(selectedNpc)">Добавить характер, мотивацию и заметки</button>
+        <p v-else class="session-world-muted">Описание пока не добавлено.</p>
+      </section>
 
-        <section class="session-world-section">
-			<div class="session-world-section-title"><span>Связи</span><small>{{ selectedNpc.relations?.length || 0 }}</small></div>
-			<UniversalRelationList :relations="selectedNpc.relations" :items="relationItems" @open="openRelated" />
-		</section>
-
-      </div>
-    </main>
+      <section class="session-world-section">
+        <div class="session-world-section-title"><span>Связи</span><small>{{ selectedNpc.relations?.length || 0 }}</small></div>
+        <UniversalRelationList :relations="selectedNpc.relations" :items="relationItems" @open="openRelated" />
+      </section>
+    </SessionEntityDetail>
 
     <main v-else class="session-world-detail session-world-detail--empty">
       <ContactRound :size="44" />
@@ -110,10 +106,11 @@
 <script setup>
 import { computed, ref } from 'vue'
 import {
-	ContactRound, MapPin, Pencil, Search, UserPlus, UsersRound,
+	ContactRound, MapPin, Search, UserPlus, UsersRound,
 } from '@lucide/vue'
 import { ConfirmDialog } from '@sylvieshare/share-ui'
 import NpcEditorModal from '@/features/sessions/components/NpcEditorModal.vue'
+import SessionEntityDetail from '@/features/sessions/components/SessionEntityDetail.vue'
 import SessionLibraryWorkspace from '@/features/sessions/components/SessionLibraryWorkspace.vue'
 import UniversalRelationList from '@/features/sessions/components/UniversalRelationList.vue'
 import { npcImageUrl } from '@/features/sessions/lib/sessionImages'

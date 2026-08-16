@@ -67,7 +67,7 @@ available for pan and node dragging.
 
 The session page is a campaign workspace rather than a stack of independent
 content pages. Its semantic header centers the switch between `Сюжет`,
-`Локации`, `NPC`, `Материалы` and `Задания` independently of the title/arc and tool groups; the
+`Локации`, `NPC`, `Задания` and `Материалы` independently of the title/arc and tool groups; the
 participant rail remains on the left and the
 dice/events/music tools remain on the right. In `Сюжет` the chapter canvas fills
 all available width below `AppHeader`. CSS safe-area variables keep focus, zoom
@@ -135,13 +135,17 @@ character saves are flushed on page unmount instead of dropping their events.
 
 ## Locations and prepared NPCs
 
-`Локации`, `NPC`, `Материалы` and `Задания` are DM-only primary central workspaces, not extra permanent
+`Локации`, `NPC`, `Задания` and `Материалы` are DM-only primary central workspaces, not extra permanent
 side panels. Their surfaces sit over the same tokenized dot field as the story
 canvas. The selected mode is stored per session in local storage; `view`,
 `location`, `npc`, `material` and `quest` query parameters preserve a shareable selection. Combat is
 still a temporary overlay. Opening it from either world workspace keeps that
 workspace mounted underneath and closing combat returns to the same mode and
-selected entity.
+selected entity. All four catalogues render the selected record through one
+`SessionEntityDetail` header and body shell. It owns the shared title,
+visual/accent, metadata, action layout and labelled `Редактировать` button;
+each catalogue supplies only its domain-specific visual, secondary actions and
+content sections.
 
 Locations deliberately use a hierarchy instead of another graph canvas. The
 left part of the central workspace is a searchable tree, while the selected

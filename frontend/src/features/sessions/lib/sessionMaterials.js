@@ -1,11 +1,11 @@
 import { FileText, Image, Map, ScrollText, Video } from '@lucide/vue'
 
 export const MATERIAL_TYPES = [
-  { key: 'image', label: 'Картинка', icon: Image, hint: 'Иллюстрация или раздаточный материал' },
-  { key: 'video', label: 'Видео', icon: Video, hint: 'Ролик для экрана игроков' },
-  { key: 'text', label: 'Текст', icon: FileText, hint: 'Чистый текст без оформления' },
-  { key: 'note', label: 'Записка', icon: ScrollText, hint: 'Стилизованное письмо или документ' },
-  { key: 'map', label: 'Карта', icon: Map, hint: 'Пока изображение; позже — слои и метки' },
+  { key: 'image', label: 'Картинка', icon: Image, color: '#d7a84e', hint: 'Иллюстрация или раздаточный материал' },
+  { key: 'video', label: 'Видео', icon: Video, color: '#9b78e8', hint: 'Ролик для экрана игроков' },
+  { key: 'text', label: 'Текст', icon: FileText, color: '#4b8fd5', hint: 'Чистый текст без оформления' },
+  { key: 'note', label: 'Записка', icon: ScrollText, color: '#c47b57', hint: 'Стилизованное письмо или документ' },
+  { key: 'map', label: 'Карта', icon: Map, color: '#4ea58b', hint: 'Пока изображение; позже — слои и метки' },
 ]
 
 export const NOTE_STYLES = [

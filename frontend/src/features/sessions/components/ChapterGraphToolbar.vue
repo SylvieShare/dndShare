@@ -150,8 +150,8 @@ const primaryViews = [
   { key: 'story', label: 'Сюжет', icon: BookOpenText },
   { key: 'locations', label: 'Локации', icon: Map },
   { key: 'npcs', label: 'NPC', icon: UsersRound },
+  { key: 'quests', label: 'Задания', icon: ScrollText },
   { key: 'materials', label: 'Материалы', icon: Images },
-	{ key: 'quests', label: 'Задания', icon: ScrollText },
 ]
 const visiblePrimaryViews = computed(() => props.isDm ? primaryViews : primaryViews.slice(0, 1))
 const arcTrigger = ref(null)

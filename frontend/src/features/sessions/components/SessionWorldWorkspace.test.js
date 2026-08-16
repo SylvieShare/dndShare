@@ -21,6 +21,8 @@ const universalEditor = read('./UniversalRelationEditor.vue')
 const universalPicker = read('./UniversalRelationPickerModal.vue')
 const quests = read('./SessionQuestsWorkspace.vue')
 const questEditor = read('./QuestEditorModal.vue')
+const materials = read('./SessionMaterialsWorkspace.vue')
+const entityDetail = read('./SessionEntityDetail.vue')
 const imagePicker = read('./SessionImagePicker.vue')
 const primaryView = read('../composables/useSessionPrimaryView.js')
 const worldState = read('../composables/useSessionWorld.js')
@@ -47,6 +49,16 @@ describe('session world workspaces', () => {
     expect(layer).toContain("activeView === 'locations'")
     expect(layer).toContain("activeView === 'npcs'")
 	expect(layer).toContain("activeView === 'quests'")
+    expect(toolbar.indexOf("{ key: 'quests', label: 'Задания'")).toBeLessThan(toolbar.indexOf("{ key: 'materials', label: 'Материалы'"))
+  })
+
+  it('uses one detail header and edit action for all session catalogues', () => {
+    for (const workspace of [locations, npcs, quests, materials]) {
+      expect(workspace).toContain('<SessionEntityDetail')
+    }
+    expect(entityDetail).toContain('session-entity-detail-head')
+    expect(entityDetail).toContain('<Pencil :size="15" />Редактировать')
+    expect(materials).toContain('<div class="session-world-section-title"><span>Просмотр</span></div>')
   })
 
   it('keeps the shared canvas dot field behind location, NPC and loading states', () => {

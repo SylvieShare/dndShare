@@ -45,12 +45,17 @@
       </div>
     </aside>
 
-    <main v-if="selectedLocation" class="session-world-detail">
-      <div
-        class="session-world-cover"
-        :style="{ '--world-cover': `url(${sessionImageUrl(selectedLocation)})`, '--entity-color': selectedKind.color }"
-      >
-        <div class="session-world-cover-copy">
+    <SessionEntityDetail
+      v-if="selectedLocation"
+      :title="selectedLocation.name"
+      :accent="selectedKind.color"
+      :cover-url="sessionImageUrl(selectedLocation)"
+      :editable="isDm"
+      edit-aria-label="Редактировать локацию"
+      @edit="openEdit(selectedLocation)"
+    >
+      <template #visual><img :src="sessionImageUrl(selectedLocation)" alt="" /></template>
+      <template #context>
           <div class="session-world-breadcrumbs">
             <button
               v-for="item in breadcrumbs.slice(0, -1)"
@@ -59,54 +64,49 @@
               @click="$emit('select-location', item.id)"
             >{{ item.name }}</button>
           </div>
-          <span class="session-world-kind"><component :is="selectedKindIcon" :size="14" />{{ selectedKind.label }}</span>
-          <h2>{{ selectedLocation.name }}</h2>
-          <div class="session-world-cover-meta">
-            <span>{{ childLocations.length }} {{ ruPlural(childLocations.length, 'вложенное место', 'вложенных места', 'вложенных мест') }}</span>
-			<span>{{ selectedLocation.relations?.length || 0 }} связей</span>
-          </div>
-        </div>
-        <div v-if="isDm" class="session-world-cover-actions">
+      </template>
+      <template #eyebrow><component :is="selectedKindIcon" :size="14" />{{ selectedKind.label }}</template>
+      <template #meta>
+        <span>{{ childLocations.length }} {{ ruPlural(childLocations.length, 'вложенное место', 'вложенных места', 'вложенных мест') }}</span>
+        <span>{{ selectedLocation.relations?.length || 0 }} связей</span>
+      </template>
+      <template v-if="isDm" #actions-before>
           <button type="button" @click="openCreate(selectedLocation.id)"><FolderPlus :size="15" />Вложить место</button>
           <button type="button" @click="openNpcCreate"><UserPlus :size="15" />Добавить NPC</button>
-          <button type="button" class="session-world-icon-action" title="Редактировать" aria-label="Редактировать локацию" @click="openEdit(selectedLocation)"><Pencil :size="15" /></button>
-        </div>
-      </div>
+      </template>
 
-      <div class="session-world-detail-scroll">
-        <section class="session-world-section session-world-description">
-          <div class="session-world-section-title"><span>О месте</span></div>
-          <p v-if="selectedLocation.description">{{ selectedLocation.description }}</p>
-          <button v-else-if="isDm" type="button" class="session-world-inline-empty" @click="openEdit(selectedLocation)">
-            Добавить описание и атмосферу
+      <section class="session-world-section session-world-description">
+        <div class="session-world-section-title"><span>О месте</span></div>
+        <p v-if="selectedLocation.description">{{ selectedLocation.description }}</p>
+        <button v-else-if="isDm" type="button" class="session-world-inline-empty" @click="openEdit(selectedLocation)">
+          Добавить описание и атмосферу
+        </button>
+        <p v-else class="session-world-muted">Описание пока не добавлено.</p>
+      </section>
+
+      <section v-if="childLocations.length" class="session-world-section">
+        <div class="session-world-section-title"><span>Внутри</span><small>{{ childLocations.length }}</small></div>
+        <div class="session-world-card-grid">
+          <button
+            v-for="location in childLocations"
+            :key="location.id"
+            type="button"
+            class="session-world-link-card session-world-link-card--image"
+            :style="{ '--card-image': `url(${sessionImageUrl(location)})`, '--entity-color': locationKind(location.kind).color }"
+            @click="$emit('select-location', location.id)"
+          >
+            <span>{{ locationKind(location.kind).shortLabel }}</span>
+            <strong>{{ location.name }}</strong>
+            <ChevronRight :size="15" />
           </button>
-          <p v-else class="session-world-muted">Описание пока не добавлено.</p>
-        </section>
+        </div>
+      </section>
 
-        <section v-if="childLocations.length" class="session-world-section">
-          <div class="session-world-section-title"><span>Внутри</span><small>{{ childLocations.length }}</small></div>
-          <div class="session-world-card-grid">
-            <button
-              v-for="location in childLocations"
-              :key="location.id"
-              type="button"
-              class="session-world-link-card session-world-link-card--image"
-              :style="{ '--card-image': `url(${sessionImageUrl(location)})`, '--entity-color': locationKind(location.kind).color }"
-              @click="$emit('select-location', location.id)"
-            >
-              <span>{{ locationKind(location.kind).shortLabel }}</span>
-              <strong>{{ location.name }}</strong>
-              <ChevronRight :size="15" />
-            </button>
-          </div>
-        </section>
-
-        <section class="session-world-section">
-			<div class="session-world-section-title"><span>Связи</span><small>{{ selectedLocation.relations?.length || 0 }}</small></div>
-			<UniversalRelationList :relations="selectedLocation.relations" :items="relationItems" @open="openRelated" />
-		</section>
-      </div>
-    </main>
+      <section class="session-world-section">
+        <div class="session-world-section-title"><span>Связи</span><small>{{ selectedLocation.relations?.length || 0 }}</small></div>
+        <UniversalRelationList :relations="selectedLocation.relations" :items="relationItems" @open="openRelated" />
+      </section>
+    </SessionEntityDetail>
 
     <main v-else class="session-world-detail session-world-detail--empty">
       <MapPinned :size="44" />
@@ -154,12 +154,13 @@
 import { computed, ref, watch } from 'vue'
 import {
   Blocks, ChevronRight, Compass, DoorOpen, FolderPlus, House, Landmark,
-  Map, MapPin, MapPinned, Pencil, Plus, Route, Search, Trees, UserPlus,
+  Map, MapPin, MapPinned, Plus, Route, Search, Trees, UserPlus,
 } from '@lucide/vue'
 import { ConfirmDialog } from '@sylvieshare/share-ui'
 import LocationEditorModal from '@/features/sessions/components/LocationEditorModal.vue'
 import LocationTreeRow from '@/features/sessions/components/LocationTreeRow.vue'
 import NpcEditorModal from '@/features/sessions/components/NpcEditorModal.vue'
+import SessionEntityDetail from '@/features/sessions/components/SessionEntityDetail.vue'
 import SessionLibraryWorkspace from '@/features/sessions/components/SessionLibraryWorkspace.vue'
 import UniversalRelationList from '@/features/sessions/components/UniversalRelationList.vue'
 import {
