@@ -32,6 +32,11 @@ describe('session hotkeys', () => {
     expect(sessionHotkeyCommand(key('Backspace', { key: 'Backspace' }))).toEqual({ type: 'remove-selected-npcs' })
   })
 
+  it('maps vertical arrows to list navigation', () => {
+    expect(sessionHotkeyCommand(key('ArrowUp', { key: 'ArrowUp' }))).toEqual({ type: 'previous-list-item' })
+    expect(sessionHotkeyCommand(key('ArrowDown', { key: 'ArrowDown' }))).toEqual({ type: 'next-list-item' })
+  })
+
   it('toggles contextual help and ignores incomplete combinations', () => {
     expect(sessionHotkeyCommand(key('Slash', { key: '?', shiftKey: true }))).toEqual({ type: 'toggle-hints' })
     expect(sessionHotkeyCommand(key('Digit7', { key: '?', shiftKey: true }))).toEqual({ type: 'toggle-hints' })

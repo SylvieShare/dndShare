@@ -2,6 +2,7 @@
   <div class="location-tree-branch">
     <div
       class="location-tree-row"
+	  :data-session-list-id="node.id"
       :class="{
         'location-tree-row--selected': selectedId === node.id,
         [`location-tree-row--drop-${dropMode}`]: !!dropMode,

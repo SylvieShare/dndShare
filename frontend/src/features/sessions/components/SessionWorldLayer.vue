@@ -11,49 +11,57 @@
   </div>
   <SessionLocationsWorkspace
     v-else-if="activeView === 'locations'"
+	ref="activeWorkspace"
     :session-uuid="sessionUuid"
     :world="world"
     :selected-location-id="selectedLocationId"
     :is-dm="isDm"
 	:relation-items="relationItems"
+	:show-shortcut-hints="showShortcutHints"
     @select-location="$emit('select-location', $event)"
     @open-npc="$emit('select-npc', $event)"
 	@open-entity="openEntity"
   />
   <SessionNpcsWorkspace
     v-else-if="activeView === 'npcs'"
+	ref="activeWorkspace"
     :world="world"
     :selected-npc-id="selectedNpcId"
     :is-dm="isDm"
 	:relation-items="relationItems"
+	:show-shortcut-hints="showShortcutHints"
     @select-npc="$emit('select-npc', $event)"
     @open-location="$emit('select-location', $event)"
 	@open-entity="openEntity"
   />
   <SessionMaterialsWorkspace
     v-else-if="activeView === 'materials'"
+	ref="activeWorkspace"
     :materials="materials"
     :presentation="presentation"
     :is-dm="isDm"
 	:world="world"
 	:relation-items="relationItems"
 	:selected-material-id="selectedMaterialId"
+	:show-shortcut-hints="showShortcutHints"
 	@open-entity="openEntity"
 	@select-material="$emit('select-material', $event)"
   />
 	<SessionQuestsWorkspace
 		v-else-if="activeView === 'quests'"
+		ref="activeWorkspace"
 		:world="world"
 		:selected-quest-id="selectedQuestId"
 		:is-dm="isDm"
 		:relation-items="relationItems"
+		:show-shortcut-hints="showShortcutHints"
 		@select-quest="$emit('select-quest', $event)"
 		@open-entity="openEntity"
 	/>
 </template>
 
 <script setup>
-import { computed, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { AlertCircle, Map } from '@lucide/vue'
 import SessionLocationsWorkspace from '@/features/sessions/components/SessionLocationsWorkspace.vue'
 import SessionNpcsWorkspace from '@/features/sessions/components/SessionNpcsWorkspace.vue'
@@ -70,11 +78,13 @@ const props = defineProps({
 	selectedMaterialId: { type: [Number, String], default: null },
   isDm: { type: Boolean, default: false },
   materials: { type: Object, default: null },
-  presentation: { type: Object, default: null },
+	presentation: { type: Object, default: null },
+	showShortcutHints: { type: Boolean, default: false },
 	world: { type: Object, required: true },
 })
 const emit = defineEmits(['select-location', 'select-npc', 'select-quest', 'select-material', 'open-scene'])
 const world = props.world
+const activeWorkspace = ref(null)
 const relationItems = computed(() => buildSessionEntityCatalog(world, props.materials))
 
 watch(() => props.activeView, view => {
@@ -108,6 +118,10 @@ function openEntity(item) {
 	if (item.type === 'material') emit('select-material', item.id)
 	if (item.type === 'scene') emit('open-scene', item.id)
 }
+
+defineExpose({
+	moveSelection: direction => activeWorkspace.value?.moveSelection(direction),
+})
 </script>
 
 <style scoped>

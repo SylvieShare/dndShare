@@ -37,6 +37,11 @@ export const SESSION_COMBAT_TURN_SHORTCUTS = Object.freeze({
   Backspace: 'remove-selected-npcs',
 })
 
+export const SESSION_LIST_SHORTCUTS = Object.freeze({
+  ArrowUp: 'previous-list-item',
+  ArrowDown: 'next-list-item',
+})
+
 export function sessionShortcutLabels(platform = globalThis.navigator?.platform || '') {
   const mac = /Mac|iPhone|iPad/.test(platform)
   return {

@@ -14,10 +14,11 @@
       <label class="session-world-search">
         <Search :size="14" />
         <input v-model="query" type="search" placeholder="Найти место…" />
-        <kbd v-if="!query">⌘ K</kbd>
+        <kbd v-if="showShortcutHints" class="session-world-list-navigation-hint">↑ ↓</kbd>
+        <kbd v-else-if="!query">⌘ K</kbd>
       </label>
 
-      <div v-if="locations.length" class="location-tree" @dragover.prevent @drop="dropAtRoot">
+      <div v-if="locations.length" ref="listElement" class="location-tree" @dragover.prevent @drop="dropAtRoot">
         <LocationTreeRow
           v-for="node in filteredForest"
           :key="node.id"
@@ -168,6 +169,7 @@ import {
   locationSearchMatches, ruPlural,
 } from '@/features/sessions/lib/sessionWorld'
 import { sessionImageUrl } from '@/features/sessions/lib/sessionImages'
+import { adjacentSessionListItemId, scrollSessionListItemIntoView } from '@/features/sessions/lib/sessionListNavigation'
 
 const props = defineProps({
   sessionUuid: { type: String, required: true },
@@ -175,6 +177,7 @@ const props = defineProps({
   selectedLocationId: { type: [Number, String], default: null },
   isDm: { type: Boolean, default: false },
 	relationItems: { type: Array, default: () => [] },
+	showShortcutHints: { type: Boolean, default: false },
 })
 const emit = defineEmits(['select-location', 'open-npc', 'open-entity'])
 const locations = computed(() => props.world.locations.value)
@@ -187,6 +190,7 @@ const editingLocation = ref(null)
 const defaultParentId = ref(null)
 const npcEditorOpen = ref(false)
 const pendingDelete = ref(null)
+const listElement = ref(null)
 
 const icons = { compass: Compass, landmark: Landmark, blocks: Blocks, house: House, door: DoorOpen, trees: Trees, route: Route, 'map-pin': MapPin }
 const selectedKind = computed(() => locationKind(selectedLocation.value?.kind))
@@ -198,6 +202,16 @@ const filteredForest = computed(() => {
     return locationSearchMatches(node, query.value.trim()) || children.length ? [{ ...node, children }] : []
   })
   return query.value.trim() ? filter(forest.value) : forest.value
+})
+const visibleLocations = computed(() => {
+	const result = []
+	const forceExpanded = !!query.value.trim()
+	const visit = nodes => nodes.forEach(node => {
+		result.push(node)
+		if (forceExpanded || expandedIds.value.has(node.id)) visit(node.children)
+	})
+	visit(filteredForest.value)
+	return result
 })
 const breadcrumbs = computed(() => locationBreadcrumb(selectedLocation.value, props.world.locationsById.value))
 const childLocations = computed(() => locations.value.filter(location => location.parentLocationId === selectedLocation.value?.id).sort((a, b) => a.sortOrder - b.sortOrder))
@@ -298,5 +312,14 @@ async function dropAtRoot(event) {
   try { await props.world.moveLocation(sourceId, { parentLocationId: null, beforeLocationId: null }); emit('select-location', sourceId) } catch { /* rendered */ }
 }
 
+function moveSelection(direction) {
+	const id = adjacentSessionListItemId(visibleLocations.value, props.selectedLocationId, direction)
+	if (id == null) return
+	if (String(id) !== String(props.selectedLocationId)) emit('select-location', id)
+	scrollSessionListItemIntoView(listElement.value, id)
+}
+
 watch(selectedLocation, location => { if (location) expandAncestors(location) })
+
+defineExpose({ moveSelection })
 </script>

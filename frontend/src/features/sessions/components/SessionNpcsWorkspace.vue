@@ -14,15 +14,17 @@
       <label class="session-world-search">
         <Search :size="14" />
         <input v-model="query" type="search" placeholder="Найти по имени, расе или роли…" />
+        <kbd v-if="showShortcutHints" class="session-world-list-navigation-hint">↑ ↓</kbd>
         <span v-if="npcs.length">{{ filteredNpcs.length }}</span>
       </label>
 
-      <div v-if="filteredNpcs.length" class="npc-catalog">
+      <div v-if="filteredNpcs.length" ref="listElement" class="npc-catalog">
         <button
           v-for="npc in filteredNpcs"
           :key="npc.id"
           type="button"
           class="npc-catalog-row"
+		  :data-session-list-id="npc.id"
           :class="{ 'npc-catalog-row--selected': npc.id === Number(selectedNpcId) }"
           :style="{ '--entity-color': npc.color }"
           @click="$emit('select-npc', npc.id)"
@@ -114,18 +116,21 @@ import SessionEntityDetail from '@/features/sessions/components/SessionEntityDet
 import SessionLibraryWorkspace from '@/features/sessions/components/SessionLibraryWorkspace.vue'
 import UniversalRelationList from '@/features/sessions/components/UniversalRelationList.vue'
 import { npcImageUrl } from '@/features/sessions/lib/sessionImages'
+import { adjacentSessionListItemId, scrollSessionListItemIntoView } from '@/features/sessions/lib/sessionListNavigation'
 
 const props = defineProps({
   world: { type: Object, required: true },
   selectedNpcId: { type: [Number, String], default: null },
   isDm: { type: Boolean, default: false },
 	relationItems: { type: Array, default: () => [] },
+	showShortcutHints: { type: Boolean, default: false },
 })
 const emit = defineEmits(['select-npc', 'open-location', 'open-entity'])
 const query = ref('')
 const editorOpen = ref(false)
 const editingNpc = ref(null)
 const pendingDelete = ref(null)
+const listElement = ref(null)
 const npcs = computed(() => props.world.npcs.value)
 const locations = computed(() => props.world.locations.value)
 const selectedNpc = computed(() => props.world.npcsById.value.get(Number(props.selectedNpcId)) || null)
@@ -168,4 +173,13 @@ async function deleteNpc() {
     emit('select-npc', npcs.value[0]?.id || null)
   } catch { /* error is rendered */ }
 }
+
+function moveSelection(direction) {
+	const id = adjacentSessionListItemId(filteredNpcs.value, props.selectedNpcId, direction)
+	if (id == null) return
+	if (String(id) !== String(props.selectedNpcId)) emit('select-npc', id)
+	scrollSessionListItemIntoView(listElement.value, id)
+}
+
+defineExpose({ moveSelection })
 </script>

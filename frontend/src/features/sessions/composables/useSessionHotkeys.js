@@ -3,11 +3,13 @@ import {
   SESSION_COMBAT_SHIFT_SHORTCUTS,
   SESSION_COMBAT_TURN_SHORTCUTS,
   SESSION_DICE_SHORTCUTS,
+  SESSION_LIST_SHORTCUTS,
   SESSION_PANEL_SHORTCUTS,
   SESSION_VIEW_SHORTCUTS,
 } from '@/features/sessions/lib/sessionShortcuts'
 
 const EDITABLE_TARGET = 'input, textarea, select, [contenteditable="true"]'
+const LIST_SEARCH_TARGET = '.session-world-search input[type="search"]'
 const FLOATING_UI = '.share-popover, [role="dialog"]'
 const NATIVE_ACTIVATION_TARGET = 'button, a[href], [role="button"]'
 
@@ -34,6 +36,8 @@ export function sessionHotkeyCommand(event) {
     if (die) return { type: 'roll-die', value: die.sides }
   }
   if (!event.altKey && !event.shiftKey && !event.ctrlKey && !event.metaKey) {
+    const listCommand = SESSION_LIST_SHORTCUTS[event.code]
+    if (listCommand) return { type: listCommand }
     const combatCommand = SESSION_COMBAT_TURN_SHORTCUTS[event.code]
     if (combatCommand) return { type: combatCommand }
   }
@@ -47,6 +51,9 @@ export function useSessionHotkeys({
   selectView,
   togglePanel,
   rollDie,
+  listMode,
+  previousListItem,
+  nextListItem,
   combatMode,
   canControlCombat,
   toggleCombatWorkspace,
@@ -60,10 +67,15 @@ export function useSessionHotkeys({
   removeSelectedNpcs,
 }) {
   function onKey(event) {
-    if (!toValue(enabled) || event.repeat || event.target?.closest?.(EDITABLE_TARGET)) return
+    if (!toValue(enabled) || event.repeat) return
 
     const command = sessionHotkeyCommand(event)
     if (!command) return
+    const listNavigation = command.type === 'previous-list-item' || command.type === 'next-list-item'
+    const navigatesSearchResults = listNavigation
+      && toValue(listMode)
+      && event.target?.matches?.(LIST_SEARCH_TARGET)
+    if (event.target?.closest?.(EDITABLE_TARGET) && !navigatesSearchResults) return
     if (document.querySelector(FLOATING_UI)) return
     if (command.type === 'toggle-encounter' && event.target?.closest?.(NATIVE_ACTIVATION_TARGET)) return
     if (command.type === 'toggle-hints') {
@@ -86,6 +98,16 @@ export function useSessionHotkeys({
     if (command.type === 'roll-die') {
       event.preventDefault()
       rollDie(command.value)
+      return
+    }
+    if (toValue(listMode) && command.type === 'previous-list-item') {
+      event.preventDefault()
+      previousListItem()
+      return
+    }
+    if (toValue(listMode) && command.type === 'next-list-item') {
+      event.preventDefault()
+      nextListItem()
       return
     }
     if (command.type === 'toggle-combat-workspace') {

@@ -38,6 +38,7 @@
 .session-world-search:focus-within { border-color: color-mix(in srgb, var(--accent) 62%, var(--border)); box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 11%, transparent); }
 .session-world-search input { min-width: 0; flex: 1; border: 0; outline: 0; background: transparent; color: var(--text-1); font: inherit; font-size: 11px; }
 .session-world-search kbd { padding: 2px 5px; border: 1px solid var(--border); border-radius: 5px; color: var(--text-muted); font: inherit; font-size: 8px; }
+.session-world-list-navigation-hint { white-space: nowrap; }
 .session-world-search > span { min-width: 22px; color: var(--text-muted); font-size: 9px; text-align: right; }
 
 .location-tree,

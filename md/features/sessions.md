@@ -162,6 +162,14 @@ visual/accent, metadata, action layout and labelled `Редактировать`
 each catalogue supplies only its domain-specific visual, secondary actions and
 content sections.
 
+The four catalogue sidebars share keyboard navigation: `↑` and `↓` select the
+previous or next currently visible row and keep it inside the scroll viewport.
+Navigation follows the filtered result order; the location tree additionally
+skips descendants hidden by collapsed parents. At either edge the selection
+stops instead of wrapping. The arrows also navigate search results while the
+catalogue search field is focused, and the compact mapping is shown there when
+contextual shortcut hints are enabled.
+
 Locations deliberately use a hierarchy instead of another graph canvas. The
 left part of the central workspace is a searchable tree, while the selected
 location owns the detail area with its image, breadcrumb, description, children,
@@ -345,7 +353,8 @@ mode. Dice rolling works while the dice panel is closed because its controller
 remains mounted. Section switching is DM-only, matching the visible navigation;
 panel and dice shortcuts are available to every session participant. Global
 shortcuts ignore key repeats, text inputs, content-editable fields, open dialogs
-and popovers.
+and popovers. The only text-input exception is `↑` / `↓` in a session catalogue
+search field, where the keys navigate the currently filtered rows.
 
 Combat uses the same contextual shortcut system. `Shift+B` opens or closes the
 combat workspace for any participant and preserves the chapter/scenario context

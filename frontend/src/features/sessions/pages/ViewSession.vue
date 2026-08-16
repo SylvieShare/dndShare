@@ -67,6 +67,7 @@
       >
         <template #primary-workspace>
           <SessionWorldLayer
+			ref="worldLayer"
             :session-uuid="sessionUuid"
             :active-view="primaryView"
             :is-dm="isDm"
@@ -77,6 +78,7 @@
 			:world="sessionWorld"
             :materials="sessionMaterials"
             :presentation="presentation"
+			:show-shortcut-hints="showShortcutHints"
             @select-location="selectLocation"
             @select-npc="selectNpc"
             @select-quest="selectQuest"
@@ -316,6 +318,7 @@ const showShortcutHints = ref(false)
 const shortcutLabels = sessionShortcutLabels()
 const chapterGraphTab = ref(null)
 const combatWorkspace = ref(null)
+const worldLayer = ref(null)
 const rightDockOpen = computed(() => diceOpen.value || musicOpen.value || eventsOpen.value)
 const combatImportError = ref('')
 
@@ -528,6 +531,9 @@ useSessionHotkeys({
   selectView: selectPrimaryView,
   togglePanel: toggleToolPanel,
   rollDie: sides => dicePanel.value?.rollDie(sides),
+  listMode: computed(() => ['locations', 'npcs', 'quests', 'materials'].includes(primaryView.value)),
+  previousListItem: () => worldLayer.value?.moveSelection(-1),
+  nextListItem: () => worldLayer.value?.moveSelection(1),
   combatMode: computed(() => workspaceMode.value === 'combat'),
   canControlCombat: isDm,
   toggleCombatWorkspace: toggleCombatWorkspaceFromHotkey,

@@ -65,6 +65,19 @@ describe('session world workspaces', () => {
     expect(materials).toContain('<div class="session-world-section-title"><span>Просмотр</span></div>')
   })
 
+  it('navigates every visible catalogue with vertical arrows', () => {
+    for (const workspace of [locations, npcs, quests, materials]) {
+      expect(workspace).toContain('defineExpose({ moveSelection })')
+      expect(workspace).toContain('session-world-list-navigation-hint')
+      expect(workspace).toContain('scrollSessionListItemIntoView')
+    }
+    expect(layer).toContain('moveSelection: direction => activeWorkspace.value?.moveSelection(direction)')
+    expect(sessionView).toContain('previousListItem: () => worldLayer.value?.moveSelection(-1)')
+    expect(sessionView).toContain('nextListItem: () => worldLayer.value?.moveSelection(1)')
+    expect(locations).toContain('visibleLocations')
+    expect(treeRow).toContain(':data-session-list-id="node.id"')
+  })
+
   it('keeps the shared canvas dot field behind location, NPC and loading states', () => {
     expect(workspaceStyles).toContain('background-image: var(--app-canvas-pattern);')
     expect(workspaceStyles).toContain('background-size: var(--app-canvas-dot-size) var(--app-canvas-dot-size);')

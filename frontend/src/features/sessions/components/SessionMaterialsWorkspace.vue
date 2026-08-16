@@ -8,6 +8,7 @@
       <label class="session-world-search">
         <Search :size="14" />
         <input v-model="query" type="search" placeholder="Найти материал…" />
+        <kbd v-if="showShortcutHints" class="session-world-list-navigation-hint">↑ ↓</kbd>
         <span v-if="allMaterials.length">{{ filteredCount }}</span>
       </label>
       <div v-if="materials.loading.value" class="materials-state">Загружаем материалы…</div>
@@ -17,10 +18,10 @@
         <span>Картинки, видео, тексты, записки и карты можно показывать игрокам одним действием.</span>
         <button v-if="isDm" type="button" @click="openCreate">Добавить первый материал</button>
       </div>
-      <div v-else class="materials-groups">
+      <div v-else ref="listElement" class="materials-groups">
         <section v-for="group in groups" :key="group.key" v-show="group.items.length">
           <h3>{{ group.label }}</h3>
-		  <button v-for="material in group.items" :key="material.id" type="button" :class="{ active: selected?.id === material.id }" @click="pickMaterial(material.id)">
+		  <button v-for="material in group.items" :key="material.id" type="button" :data-session-list-id="material.id" :class="{ active: selected?.id === material.id }" @click="pickMaterial(material.id)">
             <span class="material-list-thumb" :class="`material-list-thumb--${material.kind}`">
               <img v-if="material.kind === 'image' || material.kind === 'map'" :src="material.assetUrl" alt="" />
               <component :is="materialType(material.kind).icon" v-else :size="19" />
@@ -78,11 +79,13 @@ import SessionEntityDetail from '@/features/sessions/components/SessionEntityDet
 import SessionLibraryWorkspace from '@/features/sessions/components/SessionLibraryWorkspace.vue'
 import UniversalRelationList from '@/features/sessions/components/UniversalRelationList.vue'
 import { MATERIAL_TYPES, materialType } from '@/features/sessions/lib/sessionMaterials'
+import { adjacentSessionListItemId, scrollSessionListItemIntoView } from '@/features/sessions/lib/sessionListNavigation'
 
 const props = defineProps({
   materials: { type: Object, required: true }, presentation: { type: Object, required: true },
 	isDm: { type: Boolean, default: false },
 	world: { type: Object, required: true }, relationItems: { type: Array, default: () => [] }, selectedMaterialId: { type: [Number, String], default: null },
+	showShortcutHints: { type: Boolean, default: false },
 })
 const emit = defineEmits(['open-entity', 'select-material'])
 const selectedId = ref(null)
@@ -90,6 +93,7 @@ const editing = ref(false)
 const saving = ref(false)
 const actionError = ref('')
 const query = ref('')
+const listElement = ref(null)
 const allMaterials = computed(() => props.materials.materials.value)
 const selected = computed(() => props.materials.byId(selectedId.value))
 const matches = material => `${material.name} ${material.caption || ''} ${material.content || ''}`.toLocaleLowerCase('ru').includes(query.value.trim().toLocaleLowerCase('ru'))
@@ -99,6 +103,7 @@ const groups = computed(() => MATERIAL_TYPES.map(type => ({
   items: allMaterials.value.filter(material => material.kind === type.key && matches(material)),
 })))
 const filteredCount = computed(() => groups.value.reduce((sum, group) => sum + group.items.length, 0))
+const filteredMaterials = computed(() => groups.value.flatMap(group => group.items))
 
 watch([allMaterials, () => props.selectedMaterialId], ([list, routeId]) => {
 	const candidate = list.find(item => item.id === Number(routeId)) || list[0]
@@ -117,6 +122,12 @@ function contextLabel(material) {
 }
 function openCreate() { editing.value = null }
 function pickMaterial(id) { selectedId.value = id; emit('select-material', id) }
+function moveSelection(direction) {
+	const id = adjacentSessionListItemId(filteredMaterials.value, selectedId.value, direction)
+	if (id == null) return
+	if (String(id) !== String(selectedId.value)) pickMaterial(id)
+	scrollSessionListItemIntoView(listElement.value, id)
+}
 function openRelated(item) {
 	if (item.type === 'material') pickMaterial(item.id)
 	else emit('open-entity', item)
@@ -134,6 +145,8 @@ async function removeSelected() {
   actionError.value = ''
   try { await props.materials.remove(selected.value.id) } catch { actionError.value = 'Материал используется в сценарии и пока не может быть удалён' }
 }
+
+defineExpose({ moveSelection })
 </script>
 
 <style scoped>
