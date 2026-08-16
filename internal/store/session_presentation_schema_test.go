@@ -8,18 +8,23 @@ import (
 func TestSessionPresentationSchemaKeepsMaterialsAndOneLiveState(t *testing.T) {
 	for _, fragment := range []string{
 		"CREATE TABLE IF NOT EXISTS dndshare.session_material",
-		"presentation_material_id",
-		"presentation_track_id",
-		"presentation_crossfade_sec",
+		"DROP COLUMN IF EXISTS presentation_material_id",
+		"DROP COLUMN IF EXISTS presentation_track_id",
+		"DROP COLUMN IF EXISTS presentation_crossfade_sec",
 		"ADD COLUMN IF NOT EXISTS material_id",
 		"CREATE TABLE IF NOT EXISTS dndshare.session_presentation_state",
-		"mode IN ('idle', 'material', 'scene', 'combat')",
+		"mode IN ('idle', 'material', 'combat')",
+		"WHERE mode = 'scene'",
+		"DROP COLUMN IF EXISTS scene_id",
 		"effect IN ('none', 'rain', 'fog', 'embers', 'snow', 'storm')",
 		"transition IN ('cut', 'fade')",
 	} {
 		if !strings.Contains(schemaSessionPresentationSQL, fragment) {
 			t.Fatalf("session presentation schema must contain %q", fragment)
 		}
+	}
+	if strings.Contains(schemaSessionPresentationSQL, "mode IN ('idle', 'material', 'scene', 'combat')") {
+		t.Fatal("scene must not remain an available presentation mode")
 	}
 }
 

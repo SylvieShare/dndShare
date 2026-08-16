@@ -3,7 +3,6 @@
     <div v-if="scene" class="scene-graph-menu">
       <RowActionItem v-if="context === 'ancestor'" :icon="ArrowLeft" tone="accent" @click="run('return-scenes', scene)">Вернуться к сценариям</RowActionItem>
       <template v-else>
-        <RowActionItem :icon="MonitorPlay" tone="accent" @click="run('present', scene)">Запустить сцену</RowActionItem>
         <RowActionItem action="view" tone="accent" @click="run('open-scene', scene)">Открыть элементы</RowActionItem>
       </template>
       <RowActionSubmenu label="Статус сценария" :min-width="230">
@@ -26,12 +25,12 @@
 
 <script setup>
 import { ref } from 'vue'
-import { ArrowLeft, Check, Circle, ListChecks, MonitorPlay } from '@lucide/vue'
+import { ArrowLeft, Check, Circle, ListChecks } from '@lucide/vue'
 import { BasePopover, RowActionSubmenu } from '@sylvieshare/share-ui'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import { SCENE_STATUSES } from '@/features/sessions/lib/chapterGraph'
 
-const emit = defineEmits(['open-scene', 'status', 'edit', 'delete', 'present', 'return-scenes'])
+const emit = defineEmits(['open-scene', 'status', 'edit', 'delete', 'return-scenes'])
 const open = ref(false)
 const anchor = ref(null)
 const scene = ref(null)

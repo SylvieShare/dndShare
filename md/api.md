@@ -167,8 +167,8 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
   /api/sessions/{uuid}/chapters/{chapterId}`, plus `/position` and `/arc`
   PATCH actions;
 - `POST /api/sessions/{uuid}/chapters/{chapterId}/scenes` and `PATCH
-  /api/sessions/{uuid}/scenes/{sceneId}` accept scenario card, presentation
-  preset and universal `relations`; deleting a scenario clears those relations;
+  /api/sessions/{uuid}/scenes/{sceneId}` accept a scenario card and universal
+  `relations`; deleting a scenario clears those relations;
 - `PATCH /api/sessions/{uuid}/current-chapter`;
 - `PATCH /api/sessions/{uuid}/graph-nodes/positions` atomically persists a
   group movement as `{level,positions:[{id,x,y}]}`; `POST
@@ -192,8 +192,8 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
   100 MB, stores it in S3 and returns the same `{upload_id,url,key}` shape as
   image upload;
 - `GET|PUT /api/sessions/{uuid}/presentation` reads or replaces the owner-only
-  live player-display state `{mode,visible,materialId,sceneId,effect,transition}`.
-  Modes are `idle`, `material`, `scene`, `combat`; effects are `none`, `rain`,
+  live player-display state `{mode,visible,materialId,effect,transition}`.
+  Modes are `idle`, `material`, `combat`; effects are `none`, `rain`,
   `fog`, `embers`, `snow`, `storm`; transitions are `cut` or `fade`. An explicit
   `idle,visible:true` is the cleared dotted canvas, while `visible:false` is the
   intentional blackout;
@@ -217,10 +217,8 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
 - `GET /api/sessions/{uuid}/chapters/{chapterId}/scene-graph` returns
   `{scenes,edges}`; scenario CRUD uses `POST .../chapters/{chapterId}/scenes`,
   `PATCH|DELETE .../scenes/{sceneId}` and `PATCH .../scenes/{sceneId}/position`.
-  Create/update bodies contain `{name,status,imageId,presentationMaterialId,
-  presentationTrackId,presentationVolume,presentationCrossfadeSec,
-  presentationEffect,presentationTransition}` (creation additionally accepts
-  `x/y`), and every scenario response carries `imageId`, resolved
+  Create/update bodies contain `{name,status,imageId,relations}` (creation
+  additionally accepts `x/y`), and every scenario response carries `imageId`, resolved
   `imageUrl` and optional `imageCatalogKey`;
 - `POST /api/sessions/{uuid}/scene-edges` and
   `DELETE /api/sessions/{uuid}/scene-edges/{edgeId}` manage directed links

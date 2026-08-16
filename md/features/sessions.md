@@ -210,14 +210,18 @@ selected id is deep-linked through `quest` just like locations and NPCs.
 ### Materials and the player screen
 
 The previous fight-only TV page is now the session's anonymous player display
-at `/screen/:uuid`. Its live state is one of `idle`, `material`, `scene` or
-`combat` and is kept separately from encounter JSON. Starting and finishing
+at `/screen/:uuid`. Its live state is one of `idle`, `material` or `combat` and
+is kept separately from encounter JSON. Starting and finishing
 combat switches this state automatically. A blackout hides current content
 without discarding it, so the header control can reveal it again; `cut` and
 `fade` are the deliberately small transition set. Rain, fog, embers, snow and
 storm are visual layers rendered only by the player display. `Очистить` returns
 the display to a visible idle state with the same dotted canvas background;
 `Затемнить` remains the explicit action that covers the player screen in black.
+The screen title and session name are rendered only for that idle state. During
+material playback the asset occupies the whole viewport without a card frame or
+metadata column; images, maps and video use contain scaling. The connection chip
+is hidden while polling is healthy and appears only after an update failure.
 
 `Материалы` is a central DM library over the same dotted workspace background.
 It uses the same `SessionLibraryWorkspace` shell, safe areas, sidebar surface
@@ -236,10 +240,9 @@ materials, blackout/reveal/clear actions and the player-only effect selector.
 The combat toolbar does not duplicate the standalone-screen launch action.
 
 A scenario participates in universal relations and edits them in its main
-editor. Opening a scenario relation navigates directly to its block canvas. A
-scenario also has an optional presentation preset: material, music track, volume,
-crossfade duration, visual effect and transition. `Запустить сцену` applies the
-display and DM-side music controls together. The third-level `image` block
+editor. Opening a scenario relation navigates directly to its block canvas.
+Scenarios themselves are not a player-display mode: the master broadcasts a
+specific material from the header library or a scenario block. The third-level `image` block
 references an existing contextual image or map material rather than duplicating its asset;
 its leading action broadcasts that material immediately. All uploaded material
 assets continue to use the ownership-aware `storage_image` registry and S3 URLs;

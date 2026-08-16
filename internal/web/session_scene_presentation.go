@@ -27,20 +27,6 @@ func materialAvailableFor(material store.SessionMaterial, sceneID int64) bool {
 	return !hasSceneRelation
 }
 
-func materialAvailableForSceneMutation(material store.SessionMaterial, sceneID int64, relations []store.SessionEntityRelation) bool {
-	for _, relation := range relations {
-		if relation.Type == store.SessionEntityMaterial && relation.ID == material.ID {
-			return true
-		}
-	}
-	for _, relation := range material.Relations {
-		if relation.Type == store.SessionEntityScene && relation.ID != sceneID {
-			return false
-		}
-	}
-	return true
-}
-
 func normalizePresentationStyle(effect, transition string) (string, string) {
 	if effect == "" {
 		effect = "none"
@@ -92,52 +78,4 @@ func (s *Server) validateMaterialForScene(w http.ResponseWriter, r *http.Request
 		return false
 	}
 	return true
-}
-
-func (s *Server) validateScenePresentation(
-	w http.ResponseWriter,
-	r *http.Request,
-	session store.SceneSession,
-	userID, chapterID, sceneID int64,
-	materialID, trackID *int64,
-	volume, crossfade *float64,
-	effect, transition string,
-	relations []store.SessionEntityRelation,
-) (store.ScenePresentationSettings, bool) {
-	effect, transition = normalizePresentationStyle(effect, transition)
-	preset := store.ScenePresentationSettings{
-		MaterialID: materialID, TrackID: trackID, Volume: volume, CrossfadeSec: crossfade,
-		Effect: effect, Transition: transition,
-	}
-	if !presentationEffects[effect] || !presentationTransitions[transition] {
-		badRequest(w, "Некорректные настройки показа")
-		return preset, false
-	}
-	if volume != nil && (*volume < 0 || *volume > 1) {
-		badRequest(w, "Громкость должна быть от 0 до 1")
-		return preset, false
-	}
-	if crossfade != nil && (*crossfade < 0 || *crossfade > 15) {
-		badRequest(w, "Плавный переход должен быть от 0 до 15 секунд")
-		return preset, false
-	}
-	if materialID != nil {
-		material, err := s.store.GetSessionMaterial(r.Context(), *materialID)
-		if err != nil {
-			badRequest(w, "Материал не найден")
-			return preset, false
-		}
-		if material.SessionID != session.ID || !materialAvailableForSceneMutation(material, sceneID, relations) {
-			badRequest(w, "Материал недоступен в этом сценарии")
-			return preset, false
-		}
-	}
-	if trackID != nil {
-		track, err := s.store.GetMusicTrackByID(r.Context(), *trackID)
-		if err != nil || (!track.IsSystem && track.OwnerUserID != userID) {
-			badRequest(w, "Музыкальный трек недоступен")
-			return preset, false
-		}
-	}
-	return preset, true
 }

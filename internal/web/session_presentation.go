@@ -271,7 +271,6 @@ type sessionPresentationRequest struct {
 	Mode       string `json:"mode"`
 	Visible    *bool  `json:"visible"`
 	MaterialID *int64 `json:"materialId"`
-	SceneID    *int64 `json:"sceneId"`
 	Effect     string `json:"effect"`
 	Transition string `json:"transition"`
 }
@@ -301,33 +300,14 @@ func (s *Server) handleSaveSessionPresentation(w http.ResponseWriter, r *http.Re
 	visible := sessionPresentationVisible(req.Mode, req.Visible)
 	switch req.Mode {
 	case "idle":
-		req.MaterialID, req.SceneID = nil, nil
+		req.MaterialID = nil
 	case "material":
 		if req.MaterialID == nil {
 			badRequest(w, "Выберите материал")
 			return
 		}
-		req.SceneID = nil
-	case "scene":
-		if req.SceneID == nil {
-			badRequest(w, "Выберите сценарий")
-			return
-		}
-		scene, ok := s.requireSceneInSession(w, r, *req.SceneID, session.ID)
-		if !ok {
-			return
-		}
-		if req.MaterialID == nil {
-			req.MaterialID = scene.PresentationMaterialID
-		}
-		if req.Effect == "" {
-			req.Effect = scene.PresentationEffect
-		}
-		if req.Transition == "" {
-			req.Transition = scene.PresentationTransition
-		}
 	case "combat":
-		req.MaterialID, req.SceneID = nil, nil
+		req.MaterialID = nil
 	default:
 		badRequest(w, "Некорректный режим показа")
 		return
@@ -344,7 +324,7 @@ func (s *Server) handleSaveSessionPresentation(w http.ResponseWriter, r *http.Re
 		badRequest(w, "Некорректный эффект показа")
 		return
 	}
-	state, err := s.store.SaveSessionPresentation(r.Context(), session.ID, req.Mode, visible, req.MaterialID, req.SceneID, req.Effect, req.Transition)
+	state, err := s.store.SaveSessionPresentation(r.Context(), session.ID, req.Mode, visible, req.MaterialID, req.Effect, req.Transition)
 	if err != nil {
 		serverError(w, err)
 		return
@@ -357,7 +337,6 @@ type publicPresentationResponse struct {
 	Mode        string                      `json:"mode"`
 	Visible     bool                        `json:"visible"`
 	Material    *publicPresentationMaterial `json:"material,omitempty"`
-	Scene       *publicPresentationScene    `json:"scene,omitempty"`
 	Effect      string                      `json:"effect"`
 	Transition  string                      `json:"transition"`
 	Revision    int64                       `json:"revision"`
@@ -371,12 +350,6 @@ type publicPresentationMaterial struct {
 	Content   *string `json:"content,omitempty"`
 	NoteStyle *string `json:"noteStyle,omitempty"`
 	AssetURL  string  `json:"assetUrl,omitempty"`
-}
-
-type publicPresentationScene struct {
-	ID       int64  `json:"id"`
-	Name     string `json:"name"`
-	ImageURL string `json:"imageUrl"`
 }
 
 func (s *Server) handleGetPublicPresentation(w http.ResponseWriter, r *http.Request) {
@@ -409,9 +382,6 @@ func (s *Server) handleGetPublicPresentation(w http.ResponseWriter, r *http.Requ
 			Caption: state.Material.Caption, Content: state.Material.Content,
 			NoteStyle: state.Material.NoteStyle, AssetURL: state.Material.AssetURL,
 		}
-	}
-	if state.Scene != nil {
-		response.Scene = &publicPresentationScene{ID: state.Scene.ID, Name: state.Scene.Name, ImageURL: state.Scene.ImageURL}
 	}
 	w.Header().Set("Cache-Control", "no-store")
 	writeJSON(w, http.StatusOK, response)

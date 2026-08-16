@@ -16,40 +16,19 @@ CREATE TABLE IF NOT EXISTS dndshare.session_material (
 CREATE INDEX IF NOT EXISTS idx_session_material_session_id
     ON dndshare.session_material USING btree (session_id);
 
-ALTER TABLE dndshare.session_scene
-    ADD COLUMN IF NOT EXISTS presentation_material_id int8 NULL,
-    ADD COLUMN IF NOT EXISTS presentation_track_id int8 NULL,
-    ADD COLUMN IF NOT EXISTS presentation_volume float8 NULL,
-    ADD COLUMN IF NOT EXISTS presentation_crossfade_sec float8 NULL,
-    ADD COLUMN IF NOT EXISTS presentation_effect varchar(24) DEFAULT 'none' NOT NULL,
-    ADD COLUMN IF NOT EXISTS presentation_transition varchar(16) DEFAULT 'fade' NOT NULL;
-
-DO $$ BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'session_scene_presentation_material_fk') THEN
-        ALTER TABLE dndshare.session_scene ADD CONSTRAINT session_scene_presentation_material_fk
-            FOREIGN KEY (presentation_material_id) REFERENCES dndshare.session_material(id) ON DELETE SET NULL;
-    END IF;
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'session_scene_presentation_track_fk') THEN
-        ALTER TABLE dndshare.session_scene ADD CONSTRAINT session_scene_presentation_track_fk
-            FOREIGN KEY (presentation_track_id) REFERENCES dndshare.music_track(id) ON DELETE SET NULL;
-    END IF;
-END $$;
 ALTER TABLE dndshare.session_scene DROP CONSTRAINT IF EXISTS session_scene_presentation_effect_check;
-ALTER TABLE dndshare.session_scene ADD CONSTRAINT session_scene_presentation_effect_check CHECK (
-    presentation_effect IN ('none', 'rain', 'fog', 'embers', 'snow', 'storm')
-);
 ALTER TABLE dndshare.session_scene DROP CONSTRAINT IF EXISTS session_scene_presentation_transition_check;
-ALTER TABLE dndshare.session_scene ADD CONSTRAINT session_scene_presentation_transition_check CHECK (
-    presentation_transition IN ('cut', 'fade')
-);
 ALTER TABLE dndshare.session_scene DROP CONSTRAINT IF EXISTS session_scene_presentation_volume_check;
-ALTER TABLE dndshare.session_scene ADD CONSTRAINT session_scene_presentation_volume_check CHECK (
-    presentation_volume IS NULL OR (presentation_volume >= 0 AND presentation_volume <= 1)
-);
 ALTER TABLE dndshare.session_scene DROP CONSTRAINT IF EXISTS session_scene_presentation_crossfade_check;
-ALTER TABLE dndshare.session_scene ADD CONSTRAINT session_scene_presentation_crossfade_check CHECK (
-    presentation_crossfade_sec IS NULL OR (presentation_crossfade_sec >= 0 AND presentation_crossfade_sec <= 15)
-);
+ALTER TABLE dndshare.session_scene DROP CONSTRAINT IF EXISTS session_scene_presentation_material_fk;
+ALTER TABLE dndshare.session_scene DROP CONSTRAINT IF EXISTS session_scene_presentation_track_fk;
+ALTER TABLE dndshare.session_scene
+    DROP COLUMN IF EXISTS presentation_material_id,
+    DROP COLUMN IF EXISTS presentation_track_id,
+    DROP COLUMN IF EXISTS presentation_volume,
+    DROP COLUMN IF EXISTS presentation_crossfade_sec,
+    DROP COLUMN IF EXISTS presentation_effect,
+    DROP COLUMN IF EXISTS presentation_transition;
 
 ALTER TABLE dndshare.session_scene_item ADD COLUMN IF NOT EXISTS material_id int8 NULL;
 DO $$ BEGIN
@@ -66,16 +45,24 @@ CREATE TABLE IF NOT EXISTS dndshare.session_presentation_state (
     mode       varchar(16) DEFAULT 'idle' NOT NULL,
     visible    bool DEFAULT false NOT NULL,
     material_id int8 NULL REFERENCES dndshare.session_material(id) ON DELETE SET NULL,
-    scene_id   int8 NULL REFERENCES dndshare.session_scene(id) ON DELETE SET NULL,
     effect     varchar(24) DEFAULT 'none' NOT NULL,
     transition varchar(16) DEFAULT 'fade' NOT NULL,
     revision   int8 DEFAULT 0 NOT NULL,
     changed_at timestamptz DEFAULT now() NOT NULL,
     CONSTRAINT session_presentation_state_pk PRIMARY KEY (session_id),
-    CONSTRAINT session_presentation_mode_check CHECK (mode IN ('idle', 'material', 'scene', 'combat')),
+    CONSTRAINT session_presentation_mode_check CHECK (mode IN ('idle', 'material', 'combat')),
     CONSTRAINT session_presentation_effect_check CHECK (effect IN ('none', 'rain', 'fog', 'embers', 'snow', 'storm')),
     CONSTRAINT session_presentation_transition_check CHECK (transition IN ('cut', 'fade'))
 );
+
+UPDATE dndshare.session_presentation_state
+SET mode = 'idle', visible = true, material_id = NULL,
+    effect = 'none', transition = 'fade', revision = revision + 1, changed_at = now()
+WHERE mode = 'scene';
+ALTER TABLE dndshare.session_presentation_state DROP CONSTRAINT IF EXISTS session_presentation_mode_check;
+ALTER TABLE dndshare.session_presentation_state ADD CONSTRAINT session_presentation_mode_check
+    CHECK (mode IN ('idle', 'material', 'combat'));
+ALTER TABLE dndshare.session_presentation_state DROP COLUMN IF EXISTS scene_id;
 
 INSERT INTO dndshare.session_presentation_state (session_id)
 SELECT id FROM dndshare."session" WHERE deleted = false

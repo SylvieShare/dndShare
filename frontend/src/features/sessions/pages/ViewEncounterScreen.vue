@@ -1,23 +1,22 @@
 <template>
   <main class="encounter-screen" :class="screenClasses">
-    <header v-if="presentation?.visible" class="encounter-screen__header">
+    <header v-if="presentation?.visible && presentation.mode === 'idle'" class="encounter-screen__header">
       <div class="encounter-screen__identity">
         <span class="encounter-screen__eyebrow">ЭКРАН ПОКАЗА</span>
         <h1>{{ presentation?.sessionName || snapshot?.sessionName || 'Экран игроков' }}</h1>
       </div>
-
-      <div class="encounter-screen__status">
-        <span v-if="presentation?.mode === 'combat' && snapshot?.active" class="encounter-screen__round">
-          <span>Раунд</span>
-          <strong>{{ snapshot.round }}</strong>
-        </span>
-        <span class="encounter-screen__connection" :class="{ 'is-offline': pollFailed }">
-          <WifiOff v-if="pollFailed" :size="17" aria-hidden="true" />
-          <Wifi v-else :size="17" aria-hidden="true" />
-          {{ pollFailed ? 'Связь потеряна' : 'Обновляется' }}
-        </span>
-      </div>
     </header>
+
+    <aside v-if="pollFailed || (presentation?.mode === 'combat' && snapshot?.active)" class="encounter-screen__status" aria-live="polite">
+      <span v-if="presentation?.mode === 'combat' && snapshot?.active" class="encounter-screen__round">
+        <span>Раунд</span>
+        <strong>{{ snapshot.round }}</strong>
+      </span>
+      <span v-if="pollFailed" class="encounter-screen__connection is-offline">
+        <WifiOff :size="17" aria-hidden="true" />
+        Связь потеряна
+      </span>
+    </aside>
 
     <section v-if="loading" class="encounter-screen__empty" aria-live="polite">
       <div class="encounter-screen__sigil encounter-screen__sigil--loading">
@@ -42,20 +41,15 @@
 
     <Transition :name="presentation?.transition === 'cut' ? '' : 'presentation-fade'" mode="out-in">
       <section
-        v-if="presentation?.visible && (presentation.mode === 'material' || presentation.mode === 'scene')"
+        v-if="presentation?.visible && presentation.mode === 'material'"
         :key="presentation.revision"
         class="presentation-frame"
       >
-        <div class="presentation-frame__image" :class="materialFrameClasses">
+        <div class="presentation-frame__content" :class="materialFrameClasses">
           <img v-if="presentationImage" :src="presentationImage" :alt="presentationTitle" />
           <video v-else-if="presentationMaterial?.kind === 'video'" :src="presentationMaterial.assetUrl" controls autoplay playsinline />
           <article v-else-if="presentationMaterial?.kind === 'text' || presentationMaterial?.kind === 'note'">{{ presentationMaterial.content }}</article>
           <Images v-else :size="72" aria-hidden="true" />
-        </div>
-        <div class="presentation-frame__caption">
-          <span>{{ presentation.mode === 'scene' ? 'СЦЕНА' : 'МАТЕРИАЛ' }}</span>
-          <h2>{{ presentationTitle }}</h2>
-          <p v-if="presentation.material?.caption">{{ presentation.material.caption }}</p>
         </div>
       </section>
     </Transition>
@@ -193,7 +187,7 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { HeartPulse, Images, Swords, UserRound, Wifi, WifiOff } from '@lucide/vue'
+import { HeartPulse, Images, Swords, UserRound, WifiOff } from '@lucide/vue'
 import { getPublicEncounter, getPublicPresentation } from '@/shared/api/sessionsApi'
 
 const POLL_INTERVAL_MS = 1500
@@ -215,15 +209,16 @@ const presentationMaterial = computed(() => presentation.value?.material || null
 const presentationImage = computed(() => {
   const material = presentationMaterial.value
   if (material?.kind === 'image' || material?.kind === 'map') return material.assetUrl || ''
-  return material ? '' : presentation.value?.scene?.imageUrl || ''
+  return ''
 })
-const presentationTitle = computed(() => presentation.value?.material?.name || presentation.value?.scene?.name || 'Без названия')
+const presentationTitle = computed(() => presentation.value?.material?.name || 'Материал')
 const materialFrameClasses = computed(() => {
   const material = presentationMaterial.value
-  return material ? [`presentation-frame__image--${material.kind}`, material.kind === 'note' ? `presentation-note--${material.noteStyle}` : ''] : []
+  return material ? [`presentation-frame__content--${material.kind}`, material.kind === 'note' ? `presentation-note--${material.noteStyle}` : ''] : []
 })
 const screenClasses = computed(() => ({
   'encounter-screen--active': presentation.value?.mode === 'combat' && snapshot.value?.active,
+  'encounter-screen--material': presentation.value?.visible && presentation.value?.mode === 'material',
   'encounter-screen--blackout': presentation.value && !presentation.value.visible,
   [`encounter-screen--effect-${presentation.value?.effect}`]: presentation.value?.visible && presentation.value?.effect !== 'none',
 }))
@@ -260,7 +255,7 @@ async function poll() {
     fatalError.value = false
     pollFailed.value = false
   } catch {
-    if (!snapshot.value) fatalError.value = true
+    if (!presentation.value && !snapshot.value) fatalError.value = true
     else pollFailed.value = true
   } finally {
     loading.value = false

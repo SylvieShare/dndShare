@@ -10,7 +10,6 @@
           <a :href="`/screen/${sessionUuid}`" target="_blank" rel="noopener" title="Открыть экран показа"><ExternalLink :size="15" /></a>
         </header>
         <div class="presentation-menu-actions">
-          <button v-if="scene" type="button" class="primary" @click="runScene"><Play :size="15" />Запустить сцену</button>
           <button v-if="presentation.state.value.visible" type="button" @click="run(presentation.blackout)"><Moon :size="15" />Затемнить</button>
           <button v-else-if="presentation.state.value.mode !== 'idle'" type="button" @click="run(presentation.reveal)"><Sun :size="15" />Вернуть показ</button>
           <button type="button" @click="run(presentation.clear)"><Square :size="14" />Очистить</button>
@@ -40,7 +39,7 @@
 
 <script setup>
 import { computed, ref } from 'vue'
-import { Cast, ExternalLink, MonitorUp, Moon, Play, Square, Sun } from '@lucide/vue'
+import { Cast, ExternalLink, MonitorUp, Moon, Square, Sun } from '@lucide/vue'
 import { BasePopover } from '@sylvieshare/share-ui'
 import { materialType } from '@/features/sessions/lib/sessionMaterials'
 
@@ -58,7 +57,6 @@ const effects = [
 ]
 const contextMaterials = computed(() => props.materials.availableFor(props.scene?.id))
 async function run(action, close = true) { await action().catch(() => {}); if (close) open.value = false }
-function runScene() { run(() => props.presentation.startScene(props.scene)) }
 function showMaterial(material) { run(() => props.presentation.showMaterial(material)) }
 function relationLabel(material) {
   const count = (material.relations || []).filter(relation => relation.type === 'scene').length

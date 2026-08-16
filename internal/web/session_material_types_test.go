@@ -58,25 +58,3 @@ func TestMaterialAvailableForExplicitLinks(t *testing.T) {
 		t.Fatal("material leaked into an unrelated context")
 	}
 }
-
-func TestMaterialAvailableWhileEditingSceneRelations(t *testing.T) {
-	material := store.SessionMaterial{
-		ID: 40,
-		Relations: []store.SessionEntityRelation{
-			{Type: store.SessionEntityScene, ID: 30},
-		},
-	}
-	if !materialAvailableForSceneMutation(material, 20, []store.SessionEntityRelation{
-		{Type: store.SessionEntityMaterial, ID: 40},
-	}) {
-		t.Fatal("material linked in the same mutation must be available as a preset")
-	}
-	if materialAvailableForSceneMutation(material, 20, nil) {
-		t.Fatal("material linked to another scenario must remain unavailable")
-	}
-
-	material.Relations[0].ID = 20
-	if !materialAvailableForSceneMutation(material, 20, nil) {
-		t.Fatal("removing the only scenario relation must make material session-wide")
-	}
-}

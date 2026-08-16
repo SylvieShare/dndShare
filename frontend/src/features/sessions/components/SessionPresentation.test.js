@@ -27,12 +27,11 @@ describe('session presentation workspace', () => {
     expect(workspace).toContain('Транслировать')
   })
 
-  it('stores a complete reusable scene preset', () => {
-    expect(sceneEditor).toContain('presentationMaterialId')
-    expect(sceneEditor).toContain('presentationTrackId')
-    expect(sceneEditor).toContain('presentationCrossfadeSec')
-    expect(sceneEditor).toContain('presentationEffect')
-    expect(sceneEditor).toContain('presentationTransition')
+  it('keeps scenario editing independent from the player display', () => {
+    expect(sceneEditor).not.toContain('СЦЕНА ПОКАЗА')
+    expect(sceneEditor).not.toContain('presentationMaterialId')
+    expect(control).not.toContain('Запустить сцену')
+    expect(presentationState).not.toContain('startScene')
   })
 
   it('adds image and material blocks that broadcast existing materials', () => {
@@ -45,12 +44,15 @@ describe('session presentation workspace', () => {
     expect(blockMenu).toContain('Транслировать')
   })
 
-  it('uses one public screen for blackout, materials, scenes and combat', () => {
+  it('uses one public screen for blackout, full-screen materials and combat', () => {
     expect(publicScreen).toContain('ЭКРАН ПОКАЗА')
     expect(publicScreen).toContain("presentation.mode === 'material'")
-    expect(publicScreen).toContain("presentation.mode === 'scene'")
+    expect(publicScreen).not.toContain("presentation.mode === 'scene'")
     expect(publicScreen).toContain("presentation.mode === 'combat'")
+    expect(publicScreen).not.toContain('Обновляется')
     expect(publicStyles).toContain('.encounter-screen__blackout')
+    expect(publicStyles).toContain('.encounter-screen--material')
+    expect(publicStyles).toContain('object-fit: contain')
     expect(publicStyles).toContain('.presentation-effect')
     expect(presentationState).toContain("const clear = () => save({ mode: 'idle', visible: true")
   })

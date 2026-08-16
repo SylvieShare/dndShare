@@ -116,18 +116,12 @@ func (s *Server) handleCreateScene(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var req struct {
-		Name                     string                        `json:"name"`
-		Status                   string                        `json:"status"`
-		ImageID                  int64                         `json:"imageId"`
-		X                        float64                       `json:"x"`
-		Y                        float64                       `json:"y"`
-		PresentationMaterialID   *int64                        `json:"presentationMaterialId"`
-		PresentationTrackID      *int64                        `json:"presentationTrackId"`
-		PresentationVolume       *float64                      `json:"presentationVolume"`
-		PresentationCrossfadeSec *float64                      `json:"presentationCrossfadeSec"`
-		PresentationEffect       string                        `json:"presentationEffect"`
-		PresentationTransition   string                        `json:"presentationTransition"`
-		Relations                []store.SessionEntityRelation `json:"relations"`
+		Name      string                        `json:"name"`
+		Status    string                        `json:"status"`
+		ImageID   int64                         `json:"imageId"`
+		X         float64                       `json:"x"`
+		Y         float64                       `json:"y"`
+		Relations []store.SessionEntityRelation `json:"relations"`
 	}
 	if err := decodeJSON(r, &req); err != nil {
 		badRequest(w, "bad body")
@@ -149,14 +143,8 @@ func (s *Server) handleCreateScene(w http.ResponseWriter, r *http.Request) {
 	if !s.validateSessionImage(w, r, userID, req.ImageID, "story") {
 		return
 	}
-	preset, ok := s.validateScenePresentation(w, r, sess, userID, chapterID, 0,
-		req.PresentationMaterialID, req.PresentationTrackID, req.PresentationVolume,
-		req.PresentationCrossfadeSec, req.PresentationEffect, req.PresentationTransition, req.Relations)
-	if !ok {
-		return
-	}
 	scene, err := s.store.CreateScene(
-		r.Context(), sess.ID, chapterID, name, req.Status, req.ImageID, req.X, req.Y, preset,
+		r.Context(), sess.ID, chapterID, name, req.Status, req.ImageID, req.X, req.Y,
 		cleanEntityRelations(req.Relations),
 	)
 	if err != nil {
@@ -185,16 +173,10 @@ func (s *Server) handleUpdateScene(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var req struct {
-		Name                     string                        `json:"name"`
-		Status                   string                        `json:"status"`
-		ImageID                  int64                         `json:"imageId"`
-		PresentationMaterialID   *int64                        `json:"presentationMaterialId"`
-		PresentationTrackID      *int64                        `json:"presentationTrackId"`
-		PresentationVolume       *float64                      `json:"presentationVolume"`
-		PresentationCrossfadeSec *float64                      `json:"presentationCrossfadeSec"`
-		PresentationEffect       string                        `json:"presentationEffect"`
-		PresentationTransition   string                        `json:"presentationTransition"`
-		Relations                []store.SessionEntityRelation `json:"relations"`
+		Name      string                        `json:"name"`
+		Status    string                        `json:"status"`
+		ImageID   int64                         `json:"imageId"`
+		Relations []store.SessionEntityRelation `json:"relations"`
 	}
 	if err := decodeJSON(r, &req); err != nil {
 		badRequest(w, "bad body")
@@ -216,14 +198,8 @@ func (s *Server) handleUpdateScene(w http.ResponseWriter, r *http.Request) {
 	if !s.validateSessionImage(w, r, userID, req.ImageID, "story") {
 		return
 	}
-	preset, ok := s.validateScenePresentation(w, r, sess, userID, previous.ChapterID, sceneID,
-		req.PresentationMaterialID, req.PresentationTrackID, req.PresentationVolume,
-		req.PresentationCrossfadeSec, req.PresentationEffect, req.PresentationTransition, req.Relations)
-	if !ok {
-		return
-	}
 	if err := s.store.UpdateScene(
-		r.Context(), sess.ID, sceneID, name, req.Status, req.ImageID, preset,
+		r.Context(), sess.ID, sceneID, name, req.Status, req.ImageID,
 		cleanEntityRelations(req.Relations),
 	); err != nil {
 		serverError(w, err)

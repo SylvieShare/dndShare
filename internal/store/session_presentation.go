@@ -29,8 +29,6 @@ type SessionPresentationState struct {
 	Visible    bool             `json:"visible"`
 	MaterialID *int64           `json:"materialId,omitempty"`
 	Material   *SessionMaterial `json:"material,omitempty"`
-	SceneID    *int64           `json:"sceneId,omitempty"`
-	Scene      *SessionScene    `json:"scene,omitempty"`
 	Effect     string           `json:"effect"`
 	Transition string           `json:"transition"`
 	Revision   int64            `json:"revision"`
@@ -225,9 +223,9 @@ func (s *Store) DeleteSessionMaterial(ctx context.Context, sessionID, id int64) 
 func (s *Store) GetSessionPresentation(ctx context.Context, sessionID int64) (SessionPresentationState, error) {
 	state := SessionPresentationState{SessionID: sessionID, Mode: "idle", Effect: "none", Transition: "fade"}
 	err := s.pool.QueryRow(ctx, `
-		SELECT mode, visible, material_id, scene_id, effect, transition, revision, changed_at
+		SELECT mode, visible, material_id, effect, transition, revision, changed_at
 		FROM dndshare.session_presentation_state WHERE session_id = $1`, sessionID,
-	).Scan(&state.Mode, &state.Visible, &state.MaterialID, &state.SceneID, &state.Effect, &state.Transition, &state.Revision, &state.ChangedAt)
+	).Scan(&state.Mode, &state.Visible, &state.MaterialID, &state.Effect, &state.Transition, &state.Revision, &state.ChangedAt)
 	if errors.Is(err, pgx.ErrNoRows) {
 		state.ChangedAt = time.Now()
 	} else if err != nil {
@@ -241,14 +239,6 @@ func (s *Store) GetSessionPresentation(ctx context.Context, sessionID int64) (Se
 			return state, lookupErr
 		}
 	}
-	if state.SceneID != nil {
-		scene, lookupErr := s.GetSceneByID(ctx, *state.SceneID)
-		if lookupErr == nil {
-			state.Scene = &scene
-		} else if !errors.Is(lookupErr, ErrNotFound) {
-			return state, lookupErr
-		}
-	}
 	return state, nil
 }
 
@@ -257,19 +247,19 @@ func (s *Store) SaveSessionPresentation(
 	sessionID int64,
 	mode string,
 	visible bool,
-	materialID, sceneID *int64,
+	materialID *int64,
 	effect, transition string,
 ) (SessionPresentationState, error) {
 	_, err := s.pool.Exec(ctx, `
 		INSERT INTO dndshare.session_presentation_state
-		    (session_id, mode, visible, material_id, scene_id, effect, transition, revision)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, 1)
+		    (session_id, mode, visible, material_id, effect, transition, revision)
+		VALUES ($1, $2, $3, $4, $5, $6, 1)
 		ON CONFLICT (session_id) DO UPDATE SET
 		    mode = EXCLUDED.mode, visible = EXCLUDED.visible,
-		    material_id = EXCLUDED.material_id, scene_id = EXCLUDED.scene_id,
+		    material_id = EXCLUDED.material_id,
 		    effect = EXCLUDED.effect, transition = EXCLUDED.transition,
 		    revision = dndshare.session_presentation_state.revision + 1,
-		    changed_at = now()`, sessionID, mode, visible, materialID, sceneID, effect, transition)
+		    changed_at = now()`, sessionID, mode, visible, materialID, effect, transition)
 	if err != nil {
 		return SessionPresentationState{}, err
 	}
@@ -283,7 +273,7 @@ func (s *Store) SetCombatPresentationActive(ctx context.Context, sessionID int64
 			    (session_id, mode, visible, effect, transition, revision)
 			VALUES ($1, 'combat', true, 'none', 'fade', 1)
 			ON CONFLICT (session_id) DO UPDATE SET
-			    mode = 'combat', visible = true, material_id = NULL, scene_id = NULL,
+			    mode = 'combat', visible = true, material_id = NULL,
 			    effect = 'none', transition = 'fade',
 			    revision = dndshare.session_presentation_state.revision + 1,
 			    changed_at = now()`, sessionID)

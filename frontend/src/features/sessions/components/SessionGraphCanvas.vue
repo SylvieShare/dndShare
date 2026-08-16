@@ -129,7 +129,6 @@
       @status="changeSceneStatus"
       @edit="openSceneRename"
       @delete="requestSceneDelete"
-      @present="presentScene"
       @return-scenes="returnFromSceneMenu"
     />
 
@@ -472,12 +471,6 @@ async function changeSceneStatus(scene, status) {
       name: scene.name,
       status,
       imageId: scene.imageId,
-      presentationMaterialId: scene.presentationMaterialId || null,
-      presentationTrackId: scene.presentationTrackId || null,
-      presentationVolume: scene.presentationVolume ?? null,
-      presentationCrossfadeSec: scene.presentationCrossfadeSec ?? null,
-      presentationEffect: scene.presentationEffect || 'none',
-      presentationTransition: scene.presentationTransition || 'fade',
 		relations: scene.relations || [],
     })
   } catch { actionError.value = 'Не удалось изменить статус сценария' }
@@ -572,11 +565,6 @@ function broadcastBlock(block) {
   blockMenus.value?.close()
   const material = sessionMaterials?.byId(block.materialId)
   if (material) sessionPresentation?.showMaterial(material).catch(() => { actionError.value = 'Не удалось запустить показ' })
-}
-
-function presentScene(scene) {
-  sceneMenus.value?.close()
-  sessionPresentation?.startScene(scene).catch(() => { actionError.value = 'Не удалось запустить сцену' })
 }
 
 function sendBlockToCombat(block) {
