@@ -20,7 +20,7 @@
       <div v-else class="materials-groups">
         <section v-for="group in groups" :key="group.key" v-show="group.items.length">
           <h3>{{ group.label }}</h3>
-          <button v-for="material in group.items" :key="material.id" type="button" :class="{ active: selected?.id === material.id }" @click="selectedId = material.id">
+		  <button v-for="material in group.items" :key="material.id" type="button" :class="{ active: selected?.id === material.id }" @click="pickMaterial(material.id)">
             <span class="material-list-thumb" :class="`material-list-thumb--${material.kind}`">
               <img v-if="material.kind === 'image' || material.kind === 'map'" :src="material.assetUrl" alt="" />
               <component :is="materialType(material.kind).icon" v-else :size="19" />
@@ -50,6 +50,10 @@
           <button v-if="isDm" type="button" class="danger" title="Удалить" aria-label="Удалить материал" @click="removeSelected"><Trash2 :size="15" /></button>
         </div>
       </div>
+	  <section class="material-preview-relations">
+		<div class="session-world-section-title"><span>Связи</span><small>{{ selected.relations?.length || 0 }}</small></div>
+		<UniversalRelationList :relations="selected.relations" :items="relationItems" @open="openRelated" />
+	  </section>
       <span v-if="actionError" class="material-action-error">{{ actionError }}</span>
     </main>
     <main v-else class="session-world-detail session-world-detail--empty">
@@ -57,7 +61,7 @@
       <span>Материал можно подготовить один раз и использовать в сценах или отправлять на экран вручную.</span>
     </main>
 
-    <MaterialEditorModal v-if="editing !== false" :material="editing || null" :chapters="materials.chapters.value" :scenes="materials.scenes.value" :default-chapter-id="chapterId" :default-scene-id="sceneId" :saving="saving" @close="editing = false" @save="saveMaterial" />
+	<MaterialEditorModal v-if="editing !== false" :material="editing || null" :chapters="materials.chapters.value" :scenes="materials.scenes.value" :relation-items="relationItems" :default-chapter-id="chapterId" :default-scene-id="sceneId" :saving="saving" @close="editing = false" @save="saveMaterial" />
   </SessionLibraryWorkspace>
 </template>
 
@@ -66,12 +70,15 @@ import { computed, ref, watch } from 'vue'
 import { Cast, LibraryBig, Pencil, Plus, Search, Trash2 } from '@lucide/vue'
 import MaterialEditorModal from '@/features/sessions/components/MaterialEditorModal.vue'
 import SessionLibraryWorkspace from '@/features/sessions/components/SessionLibraryWorkspace.vue'
+import UniversalRelationList from '@/features/sessions/components/UniversalRelationList.vue'
 import { MATERIAL_TYPES, materialType } from '@/features/sessions/lib/sessionMaterials'
 
 const props = defineProps({
   materials: { type: Object, required: true }, presentation: { type: Object, required: true },
   isDm: { type: Boolean, default: false }, chapterId: { type: [Number, String], default: null }, sceneId: { type: [Number, String], default: null },
+	world: { type: Object, required: true }, relationItems: { type: Array, default: () => [] }, selectedMaterialId: { type: [Number, String], default: null },
 })
+const emit = defineEmits(['open-entity', 'select-material'])
 const selectedId = ref(null)
 const editing = ref(false)
 const saving = ref(false)
@@ -89,7 +96,10 @@ const groups = computed(() => MATERIAL_TYPES.map(type => ({
 })))
 const filteredCount = computed(() => groups.value.reduce((sum, group) => sum + group.items.length, 0))
 
-watch(allMaterials, list => { if (!selected.value && list[0]) selectedId.value = list[0].id }, { immediate: true })
+watch([allMaterials, () => props.selectedMaterialId], ([list, routeId]) => {
+	const candidate = list.find(item => item.id === Number(routeId)) || list[0]
+	if (candidate) selectedId.value = candidate.id
+}, { immediate: true })
 function contextLabel(material) {
   const chapterLinks = material.chapterLinks || []
   const sceneLinks = material.sceneLinks || []
@@ -105,6 +115,11 @@ function contextLabel(material) {
   return `${count} ${word}`
 }
 function openCreate() { editing.value = null }
+function pickMaterial(id) { selectedId.value = id; emit('select-material', id) }
+function openRelated(item) {
+	if (item.type === 'material') pickMaterial(item.id)
+	else emit('open-entity', item)
+}
 async function saveMaterial(payload) {
   saving.value = true; actionError.value = ''
   try {
@@ -124,5 +139,6 @@ async function removeSelected() {
 .material-list-thumb { width: 48px; height: 40px; display: grid; flex: none; place-items: center; overflow: hidden; border: 1px solid var(--border); border-radius: 8px; background: var(--surface-raised); color: var(--accent-soft); }.material-list-thumb img { width: 100%; height: 100%; object-fit: cover; }.material-list-copy { min-width: 0; display: flex; flex: 1; flex-direction: column; gap: 2px; }.material-list-copy strong, .material-list-copy small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }.material-list-copy strong { color: var(--text-1); font-size: 12px; }.material-list-copy small { color: var(--text-muted); font-size: 9px; }
 .material-preview { align-items: center; justify-content: center; gap: 16px; padding: 28px; overflow-y: auto; }.material-preview-stage { width: min(900px, 92%); max-height: 66vh; display: grid; place-items: center; overflow: auto; border: 1px solid var(--border); border-radius: 14px; background: var(--bg); box-shadow: 0 18px 55px color-mix(in srgb, var(--bg) 55%, transparent); }.material-preview-stage img, .material-preview-stage video { max-width: 100%; max-height: 66vh; display: block; object-fit: contain; }.material-preview-stage video { width: 100%; }.material-copy-content { box-sizing: border-box; width: 100%; min-height: 280px; padding: clamp(28px, 5vw, 72px); color: var(--text-1); font-family: var(--font-display); font-size: clamp(19px, 2vw, 31px); line-height: 1.65; white-space: pre-wrap; }.material-preview-stage--note { max-width: 720px; border-radius: 5px; }.material-note--parchment { background: var(--material-note-parchment-bg); color: var(--material-note-parchment-text); }.material-note--letter { background: var(--material-note-letter-bg); color: var(--material-note-letter-text); }.material-note--dossier { background: var(--material-note-dossier-bg); color: var(--material-note-dossier-text); box-shadow: inset 0 0 0 8px var(--material-note-dossier-border), var(--shadow-lg); }.material-note--arcane { border-color: color-mix(in srgb, var(--accent) 65%, var(--border)); background: radial-gradient(circle at 50% 20%, var(--material-note-arcane-glow), var(--material-note-arcane-bg) 72%); color: var(--material-note-arcane-text); }.material-note--parchment .material-copy-content, .material-note--letter .material-copy-content, .material-note--dossier .material-copy-content, .material-note--arcane .material-copy-content { color: inherit; }
 .material-preview-copy { width: min(900px, 92%); display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }.material-preview-copy > div:first-child { min-width: 0; }.material-preview-copy span { color: var(--accent-soft); font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; }.material-preview-copy h2 { margin: 3px 0 0; color: var(--text-1); font-size: 22px; }.material-preview-copy p { max-width: 600px; margin: 6px 0 0; color: var(--text-2); font-size: 12px; }.material-preview-actions { display: flex; flex: none; gap: 7px; }.material-preview-actions button { min-height: 36px; display: flex; align-items: center; gap: 7px; padding: 8px 11px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface-raised); color: var(--text-2); cursor: pointer; font: inherit; font-size: 11px; white-space: nowrap; }.material-preview-actions button.primary { border-color: var(--accent); background: var(--accent); color: var(--text-on-accent); }.material-preview-actions button.danger, .materials-state--error, .material-action-error { color: var(--danger); }.materials-state { margin: auto; max-width: 260px; padding: 24px; color: var(--text-muted); font-size: 11px; text-align: center; }.material-action-error { font-size: 11px; }
+.material-preview-relations { width: min(900px, 92%); display: flex; flex-direction: column; gap: 9px; padding-top: 14px; border-top: 1px solid var(--border); }
 @media (max-width: 840px) { .material-preview { padding: 18px; }.material-preview-copy { align-items: stretch; flex-direction: column; }.material-preview-actions { flex-wrap: wrap; } }
 </style>

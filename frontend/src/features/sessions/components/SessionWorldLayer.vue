@@ -15,16 +15,20 @@
     :world="world"
     :selected-location-id="selectedLocationId"
     :is-dm="isDm"
+	:relation-items="relationItems"
     @select-location="$emit('select-location', $event)"
     @open-npc="$emit('select-npc', $event)"
+	@open-entity="openEntity"
   />
   <SessionNpcsWorkspace
     v-else-if="activeView === 'npcs'"
     :world="world"
     :selected-npc-id="selectedNpcId"
     :is-dm="isDm"
+	:relation-items="relationItems"
     @select-npc="$emit('select-npc', $event)"
     @open-location="$emit('select-location', $event)"
+	@open-entity="openEntity"
   />
   <SessionMaterialsWorkspace
     v-else-if="activeView === 'materials'"
@@ -33,39 +37,60 @@
     :is-dm="isDm"
     :chapter-id="chapterId"
     :scene-id="sceneId"
+	:world="world"
+	:relation-items="relationItems"
+	:selected-material-id="selectedMaterialId"
+	@open-entity="openEntity"
+	@select-material="$emit('select-material', $event)"
   />
+	<SessionQuestsWorkspace
+		v-else-if="activeView === 'quests'"
+		:world="world"
+		:selected-quest-id="selectedQuestId"
+		:is-dm="isDm"
+		:relation-items="relationItems"
+		@select-quest="$emit('select-quest', $event)"
+		@open-entity="openEntity"
+	/>
 </template>
 
 <script setup>
-import { watch } from 'vue'
+import { computed, watch } from 'vue'
 import { AlertCircle, Map } from '@lucide/vue'
 import SessionLocationsWorkspace from '@/features/sessions/components/SessionLocationsWorkspace.vue'
 import SessionNpcsWorkspace from '@/features/sessions/components/SessionNpcsWorkspace.vue'
 import SessionMaterialsWorkspace from '@/features/sessions/components/SessionMaterialsWorkspace.vue'
-import { useSessionWorld } from '@/features/sessions/composables/useSessionWorld'
+import SessionQuestsWorkspace from '@/features/sessions/components/SessionQuestsWorkspace.vue'
+import { buildSessionEntityCatalog } from '@/features/sessions/lib/sessionEntityRelations'
 
 const props = defineProps({
   sessionUuid: { type: String, required: true },
   activeView: { type: String, required: true },
   selectedLocationId: { type: [Number, String], default: null },
   selectedNpcId: { type: [Number, String], default: null },
+	selectedQuestId: { type: [Number, String], default: null },
+	selectedMaterialId: { type: [Number, String], default: null },
   isDm: { type: Boolean, default: false },
   materials: { type: Object, default: null },
   presentation: { type: Object, default: null },
   chapterId: { type: [Number, String], default: null },
   sceneId: { type: [Number, String], default: null },
+	world: { type: Object, required: true },
 })
-const emit = defineEmits(['select-location', 'select-npc'])
-const world = useSessionWorld(props.sessionUuid)
+const emit = defineEmits(['select-location', 'select-npc', 'select-quest', 'select-material'])
+const world = props.world
+const relationItems = computed(() => buildSessionEntityCatalog(world, props.materials))
 
 watch(() => props.activeView, view => {
-  if (view === 'locations' || view === 'npcs') world.load().catch(() => {})
-  if (view === 'materials') props.materials?.load().catch(() => {})
+	if (view !== 'story') {
+		world.load(view !== 'materials').catch(() => {})
+		props.materials?.load(view === 'materials').catch(() => {})
+	}
 }, { immediate: true })
 
 watch(
-  [world.loaded, () => props.activeView, world.locations, world.npcs, () => props.selectedLocationId, () => props.selectedNpcId],
-  ([loaded, view, locations, npcs, locationId, npcId]) => {
+	[world.loaded, () => props.activeView, world.locations, world.npcs, world.quests, () => props.selectedLocationId, () => props.selectedNpcId, () => props.selectedQuestId],
+	([loaded, view, locations, npcs, quests, locationId, npcId, questId]) => {
     if (!loaded) return
     if (view === 'locations' && locations.length && !locations.some(location => location.id === Number(locationId))) {
       emit('select-location', locations[0].id)
@@ -73,9 +98,19 @@ watch(
     if (view === 'npcs' && npcs.length && !npcs.some(npc => npc.id === Number(npcId))) {
       emit('select-npc', npcs[0].id)
     }
+		if (view === 'quests' && quests.length && !quests.some(quest => quest.id === Number(questId))) {
+			emit('select-quest', quests[0].id)
+		}
   },
   { immediate: true },
 )
+
+function openEntity(item) {
+	if (item.type === 'location') emit('select-location', item.id)
+	if (item.type === 'npc') emit('select-npc', item.id)
+	if (item.type === 'quest') emit('select-quest', item.id)
+	if (item.type === 'material') emit('select-material', item.id)
+}
 </script>
 
 <style scoped>

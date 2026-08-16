@@ -52,6 +52,14 @@
         </div>
         <span v-else class="scene-block-node-empty">Материал не выбран</span>
       </template>
+	  <template v-else-if="['location', 'npc', 'quest'].includes(block.type)">
+		<div v-if="referencedEntity" class="scene-block-node-material">
+		  <img v-if="referencedEntity.image" :src="referencedEntity.image" :alt="referencedEntity.title" />
+		  <span v-else :style="{ color: referencedEntity.color || referencedEntity.typeMeta.color }">{{ referencedEntity.title.slice(0, 1) }}</span>
+		  <div><b>{{ referencedEntity.title }}</b><small>{{ referencedEntity.subtitle || referencedEntity.typeMeta.singular }}</small></div>
+		</div>
+		<span v-else class="scene-block-node-empty">Объект не выбран</span>
+	  </template>
       <RichContent v-else-if="block.data?.text" class="scene-block-node-text" :html="block.data.text" />
       <span v-else class="scene-block-node-empty">Описание пусто</span>
     </div>
@@ -66,6 +74,7 @@ import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import { hydrateDialogueRows } from '@/features/sessions/lib/dialogueRows'
 import { sceneBlockColor, sceneBlockType } from '@/features/sessions/lib/sceneBlockTypes'
 import { materialType } from '@/features/sessions/lib/sessionMaterials'
+import { buildSessionEntityCatalog } from '@/features/sessions/lib/sessionEntityRelations'
 
 const props = defineProps({
   block: { type: Object, required: true },
@@ -80,7 +89,10 @@ const previewRows = computed(() => {
 const creatures = computed(() => Array.isArray(props.block.data?.creatures) ? props.block.data.creatures : [])
 const rewardItems = computed(() => Array.isArray(props.block.data?.items) ? props.block.data.items : [])
 const sessionMaterials = inject('sessionMaterials', null)
+const sessionWorld = inject('sessionWorld', null)
 const material = computed(() => sessionMaterials?.byId(props.block.materialId) || null)
+const referencedEntity = computed(() => buildSessionEntityCatalog(sessionWorld, sessionMaterials)
+	.find(item => item.type === props.block.type && String(item.id) === String(props.block.data?.referenceId)) || null)
 
 function itemById(id) {
   return props.itemsById.get(String(id)) ?? null

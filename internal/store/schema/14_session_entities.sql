@@ -1,0 +1,71 @@
+-- ---------------------------------------------------------------------------
+-- Quests and universal relations between reusable session entities.
+-- Relation endpoints are stored in a canonical order, so every relation is
+-- undirected and can be edited from either side without creating duplicates.
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS dndshare.session_quest (
+    id          bigserial NOT NULL,
+    session_id  int8 NOT NULL REFERENCES dndshare."session"(id) ON DELETE CASCADE,
+    "name"      varchar(160) NOT NULL,
+    status      varchar(24) DEFAULT 'planned' NOT NULL,
+    description text NULL,
+    sort_order  int4 DEFAULT 0 NOT NULL,
+    created_at  timestamptz DEFAULT now() NOT NULL,
+    changed_at  timestamptz DEFAULT now() NOT NULL,
+    CONSTRAINT session_quest_pkey PRIMARY KEY (id),
+    CONSTRAINT session_quest_status_check CHECK (
+        status IN ('planned', 'active', 'completed', 'failed')
+    )
+);
+CREATE INDEX IF NOT EXISTS idx_session_quest_session_order
+    ON dndshare.session_quest USING btree (session_id, sort_order, id);
+
+CREATE TABLE IF NOT EXISTS dndshare.session_entity_relation (
+    session_id int8 NOT NULL REFERENCES dndshare."session"(id) ON DELETE CASCADE,
+    left_type  varchar(16) NOT NULL,
+    left_id    int8 NOT NULL,
+    right_type varchar(16) NOT NULL,
+    right_id   int8 NOT NULL,
+    note       varchar(500) NULL,
+    CONSTRAINT session_entity_relation_pkey
+        PRIMARY KEY (session_id, left_type, left_id, right_type, right_id),
+    CONSTRAINT session_entity_relation_left_type_check
+        CHECK (left_type IN ('location', 'npc', 'material', 'quest')),
+    CONSTRAINT session_entity_relation_right_type_check
+        CHECK (right_type IN ('location', 'npc', 'material', 'quest')),
+    CONSTRAINT session_entity_relation_order_check
+        CHECK (ROW(left_type, left_id) < ROW(right_type, right_id))
+);
+CREATE INDEX IF NOT EXISTS idx_session_entity_relation_right
+    ON dndshare.session_entity_relation USING btree (session_id, right_type, right_id);
+
+-- Preserve existing NPC/location and NPC/NPC relations.
+DO $$ BEGIN
+    IF to_regclass('dndshare.session_npc_location') IS NOT NULL THEN
+        INSERT INTO dndshare.session_entity_relation (
+            session_id, left_type, left_id, right_type, right_id, note
+        )
+        SELECT npc.session_id, 'location', link.location_id, 'npc', npc.id, left(link.note, 500)
+        FROM dndshare.session_npc_location link
+        JOIN dndshare.session_npc npc ON npc.id = link.npc_id
+        ON CONFLICT DO NOTHING;
+    END IF;
+END $$;
+
+DO $$ BEGIN
+    IF to_regclass('dndshare.session_npc_relation') IS NOT NULL THEN
+        INSERT INTO dndshare.session_entity_relation (
+            session_id, left_type, left_id, right_type, right_id, note
+        )
+        SELECT npc.session_id, 'npc', relation.left_npc_id, 'npc', relation.right_npc_id, left(relation.note, 500)
+        FROM dndshare.session_npc_relation relation
+        JOIN dndshare.session_npc npc ON npc.id = relation.left_npc_id
+        ON CONFLICT DO NOTHING;
+    END IF;
+END $$;
+
+-- The universal table is now authoritative. Dropping the legacy tables also
+-- prevents the startup migration above from restoring a relation that the DM
+-- removed after the first successful migration.
+DROP TABLE IF EXISTS dndshare.session_npc_location;
+DROP TABLE IF EXISTS dndshare.session_npc_relation;

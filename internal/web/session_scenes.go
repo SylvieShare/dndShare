@@ -308,6 +308,9 @@ func (s *Server) handleCreateSceneItem(w http.ResponseWriter, r *http.Request) {
 	} else {
 		req.MaterialID = nil
 	}
+	if isSceneEntityReferenceType(req.Type) && !s.validateSceneEntityReference(w, r, sess.ID, req.Type, req.Data) {
+		return
+	}
 	item, err := s.store.CreateSceneItem(r.Context(), sceneID, req.Type, title, rawToStr(req.Data), req.MaterialID, req.X, req.Y, sceneItemWidth(req.Width, req.Type))
 	if err != nil {
 		serverError(w, err)
@@ -383,6 +386,9 @@ func (s *Server) handleUpdateSceneItem(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}
+	if req.DataChanged && isSceneEntityReferenceType(item.Type) && !s.validateSceneEntityReference(w, r, sess.ID, item.Type, req.Data) {
+		return
+	}
 	if err := s.store.UpdateSceneItem(r.Context(), itemID, req.Title, rawToStr(req.Data), req.DataChanged, req.MaterialID, req.MaterialChanged, req.PositionX, req.PositionY, req.Width); err != nil {
 		serverError(w, err)
 		return
@@ -397,11 +403,46 @@ func (s *Server) handleUpdateSceneItem(w http.ResponseWriter, r *http.Request) {
 
 func validSceneItemType(typ string) bool {
 	switch typ {
-	case "text", "list", "combat", "reward", "image", "material":
+	case "text", "list", "combat", "reward", "image", "material", "location", "npc", "quest":
 		return true
 	default:
 		return false
 	}
+}
+
+func isSceneEntityReferenceType(typ string) bool {
+	return typ == "location" || typ == "npc" || typ == "quest"
+}
+
+func (s *Server) validateSceneEntityReference(w http.ResponseWriter, r *http.Request, sessionID int64, typ string, data json.RawMessage) bool {
+	var payload struct {
+		ReferenceID int64 `json:"referenceId"`
+	}
+	if len(data) == 0 || json.Unmarshal(data, &payload) != nil || payload.ReferenceID <= 0 {
+		badRequest(w, "Выберите объект сессии")
+		return false
+	}
+	var ownerSessionID int64
+	var err error
+	switch typ {
+	case "location":
+		var entity store.SessionLocation
+		entity, err = s.store.GetSessionLocation(r.Context(), payload.ReferenceID)
+		ownerSessionID = entity.SessionID
+	case "npc":
+		var entity store.SessionNPC
+		entity, err = s.store.GetSessionNPC(r.Context(), payload.ReferenceID)
+		ownerSessionID = entity.SessionID
+	case "quest":
+		var entity store.SessionQuest
+		entity, err = s.store.GetSessionQuest(r.Context(), payload.ReferenceID)
+		ownerSessionID = entity.SessionID
+	}
+	if err != nil || ownerSessionID != sessionID {
+		badRequest(w, "Объект недоступен в этой сессии")
+		return false
+	}
+	return true
 }
 
 func sceneItemWidth(width float64, typ string) float64 {
@@ -414,6 +455,9 @@ func sceneItemWidth(width float64, typ string) float64 {
 		}
 		if typ == "image" || typ == "material" {
 			return 360
+		}
+		if isSceneEntityReferenceType(typ) {
+			return 340
 		}
 		return 300
 	}

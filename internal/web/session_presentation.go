@@ -58,6 +58,7 @@ type sessionMaterialRequest struct {
 	AssetID      *int64                             `json:"assetId"`
 	ChapterLinks []store.SessionMaterialChapterLink `json:"chapterLinks"`
 	SceneLinks   []store.SessionMaterialSceneLink   `json:"sceneLinks"`
+	Relations    []store.SessionEntityRelation      `json:"relations"`
 }
 
 var materialKinds = map[string]bool{"image": true, "video": true, "text": true, "note": true, "map": true}
@@ -163,6 +164,11 @@ func (s *Server) validateMaterialRequest(w http.ResponseWriter, r *http.Request,
 			return false
 		}
 	}
+	if !validEntityRelations(req.Relations) {
+		badRequest(w, "Некорректные связи материала")
+		return false
+	}
+	req.Relations = cleanEntityRelations(req.Relations)
 	return true
 }
 
@@ -200,6 +206,7 @@ func (s *Server) handleCreateSessionMaterial(w http.ResponseWriter, r *http.Requ
 	material, err := s.store.CreateSessionMaterial(
 		r.Context(), session.ID, req.Kind, req.Name, req.Caption, req.Content, req.NoteStyle,
 		req.AssetID, req.ChapterLinks, req.SceneLinks,
+		req.Relations,
 	)
 	if err != nil {
 		serverError(w, err)
@@ -251,8 +258,8 @@ func (s *Server) handleUpdateSessionMaterial(w http.ResponseWriter, r *http.Requ
 		return
 	}
 	if err := s.store.UpdateSessionMaterial(
-		r.Context(), previous.ID, req.Kind, req.Name, req.Caption, req.Content, req.NoteStyle,
-		req.AssetID, req.ChapterLinks, req.SceneLinks,
+		r.Context(), session.ID, previous.ID, req.Kind, req.Name, req.Caption, req.Content, req.NoteStyle,
+		req.AssetID, req.ChapterLinks, req.SceneLinks, req.Relations,
 	); err != nil {
 		serverError(w, err)
 		return
@@ -281,7 +288,7 @@ func (s *Server) handleDeleteSessionMaterial(w http.ResponseWriter, r *http.Requ
 	if !ok {
 		return
 	}
-	if err := s.store.DeleteSessionMaterial(r.Context(), material.ID); err != nil {
+	if err := s.store.DeleteSessionMaterial(r.Context(), session.ID, material.ID); err != nil {
 		if store.IsForeignKeyViolation(err) {
 			conflict(w, "Материал используется в сценарии")
 		} else {

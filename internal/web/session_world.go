@@ -28,29 +28,32 @@ func (s *Server) routesSessionWorld(mux *http.ServeMux) {
 	mux.HandleFunc("POST /api/sessions/{uuid}/npcs", s.handleCreateSessionNPC)
 	mux.HandleFunc("PATCH /api/sessions/{uuid}/npcs/{npcId}", s.handleUpdateSessionNPC)
 	mux.HandleFunc("DELETE /api/sessions/{uuid}/npcs/{npcId}", s.handleDeleteSessionNPC)
+	mux.HandleFunc("POST /api/sessions/{uuid}/quests", s.handleCreateSessionQuest)
+	mux.HandleFunc("PATCH /api/sessions/{uuid}/quests/{questId}", s.handleUpdateSessionQuest)
+	mux.HandleFunc("DELETE /api/sessions/{uuid}/quests/{questId}", s.handleDeleteSessionQuest)
 }
 
 type locationMutationRequest struct {
-	ParentLocationID *int64  `json:"parentLocationId"`
-	Name             string  `json:"name"`
-	Kind             string  `json:"kind"`
-	Description      *string `json:"description"`
-	ImageID          int64   `json:"imageId"`
-	SceneIDs         []int64 `json:"sceneIds"`
+	ParentLocationID *int64                        `json:"parentLocationId"`
+	Name             string                        `json:"name"`
+	Kind             string                        `json:"kind"`
+	Description      *string                       `json:"description"`
+	ImageID          int64                         `json:"imageId"`
+	SceneIDs         []int64                       `json:"sceneIds"`
+	Relations        []store.SessionEntityRelation `json:"relations"`
 }
 
 type npcMutationRequest struct {
-	Name          string                         `json:"name"`
-	RaceItemID    *int64                         `json:"raceItemId"`
-	Role          *string                        `json:"role"`
-	Description   *string                        `json:"description"`
-	Color         string                         `json:"color"`
-	ImageID       int64                          `json:"imageId"`
-	ImageFocalX   float64                        `json:"imageFocalX"`
-	ImageFocalY   float64                        `json:"imageFocalY"`
-	LocationLinks []store.SessionNPCLocationLink `json:"locationLinks"`
-	SceneLinks    []store.SessionNPCSceneLink    `json:"sceneLinks"`
-	NPCLinks      []store.SessionNPCNPCLink      `json:"npcLinks"`
+	Name        string                        `json:"name"`
+	RaceItemID  *int64                        `json:"raceItemId"`
+	Role        *string                       `json:"role"`
+	Description *string                       `json:"description"`
+	Color       string                        `json:"color"`
+	ImageID     int64                         `json:"imageId"`
+	ImageFocalX float64                       `json:"imageFocalX"`
+	ImageFocalY float64                       `json:"imageFocalY"`
+	SceneLinks  []store.SessionNPCSceneLink   `json:"sceneLinks"`
+	Relations   []store.SessionEntityRelation `json:"relations"`
 }
 
 type sessionWorldMutationResponse struct {
@@ -97,7 +100,7 @@ func locationMutation(
 		badRequest(w, "Выберите изображение локации")
 		return store.SessionLocationMutation{}, false
 	}
-	if len(req.SceneIDs) > 500 || !validSessionWorldIDs(req.SceneIDs) {
+	if len(req.SceneIDs) > 500 || !validSessionWorldIDs(req.SceneIDs) || !validEntityRelations(req.Relations) {
 		badRequest(w, "Слишком много привязанных сценариев")
 		return store.SessionLocationMutation{}, false
 	}
@@ -108,6 +111,7 @@ func locationMutation(
 		Description:      cleanText(req.Description, 5000),
 		ImageID:          req.ImageID,
 		SceneIDs:         req.SceneIDs,
+		Relations:        cleanEntityRelations(req.Relations),
 	}, true
 }
 
@@ -132,49 +136,32 @@ func npcMutation(w http.ResponseWriter, req npcMutationRequest) (store.SessionNP
 		badRequest(w, "Выберите изображение NPC")
 		return store.SessionNPCMutation{}, false
 	}
-	if len(req.LocationLinks) > 500 || len(req.SceneLinks) > 500 || len(req.NPCLinks) > 500 ||
-		!validNPCLinks(req.LocationLinks, req.SceneLinks, req.NPCLinks) {
+	if len(req.SceneLinks) > 500 || !validNPCLinks(req.SceneLinks) || !validEntityRelations(req.Relations) {
 		badRequest(w, "Слишком много привязок")
 		return store.SessionNPCMutation{}, false
 	}
-	cleanNPCLinkNotes(req.LocationLinks, req.SceneLinks, req.NPCLinks)
+	cleanNPCLinkNotes(req.SceneLinks)
 	return store.SessionNPCMutation{
 		Name: name, RaceItemID: req.RaceItemID, Role: cleanText(req.Role, 160),
 		Description: cleanText(req.Description, 5000), Color: strings.ToLower(req.Color),
 		ImageID:     req.ImageID,
 		ImageFocalX: clamp01(req.ImageFocalX), ImageFocalY: clamp01(req.ImageFocalY),
-		LocationLinks: req.LocationLinks, SceneLinks: req.SceneLinks, NPCLinks: req.NPCLinks,
+		SceneLinks: req.SceneLinks, Relations: cleanEntityRelations(req.Relations),
 	}, true
 }
 
-func validNPCLinks(locations []store.SessionNPCLocationLink, scenes []store.SessionNPCSceneLink, npcs []store.SessionNPCNPCLink) bool {
-	for _, link := range locations {
-		if link.LocationID <= 0 {
-			return false
-		}
-	}
+func validNPCLinks(scenes []store.SessionNPCSceneLink) bool {
 	for _, link := range scenes {
 		if link.SceneID <= 0 {
-			return false
-		}
-	}
-	for _, link := range npcs {
-		if link.NPCID <= 0 {
 			return false
 		}
 	}
 	return true
 }
 
-func cleanNPCLinkNotes(locations []store.SessionNPCLocationLink, scenes []store.SessionNPCSceneLink, npcs []store.SessionNPCNPCLink) {
-	for index := range locations {
-		locations[index].Note = cleanText(locations[index].Note, 500)
-	}
+func cleanNPCLinkNotes(scenes []store.SessionNPCSceneLink) {
 	for index := range scenes {
 		scenes[index].Note = cleanText(scenes[index].Note, 500)
-	}
-	for index := range npcs {
-		npcs[index].Note = cleanText(npcs[index].Note, 500)
 	}
 }
 
@@ -197,8 +184,10 @@ func writeSessionWorldStoreError(w http.ResponseWriter, err error) {
 		notFound(w, "")
 	case errors.Is(err, store.ErrLocationHasChildren):
 		conflict(w, "Сначала переместите или удалите вложенные локации")
+	case errors.Is(err, store.ErrWorldEntityInUse):
+		conflict(w, "Объект используется в элементе сценария. Сначала удалите этот элемент")
 	case errors.Is(err, store.ErrInvalidWorldReference):
-		badRequest(w, "Локация, сценарий или раса недоступны в этой сессии")
+		badRequest(w, "Один из выбранных объектов недоступен в этой сессии")
 	default:
 		serverError(w, err)
 	}

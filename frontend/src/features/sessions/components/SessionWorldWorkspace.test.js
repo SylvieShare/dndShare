@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest'
 import SessionLocationsWorkspace from './SessionLocationsWorkspace.vue'
 import SessionNpcsWorkspace from './SessionNpcsWorkspace.vue'
 import SessionWorldLayer from './SessionWorldLayer.vue'
+import SessionQuestsWorkspace from './SessionQuestsWorkspace.vue'
 
 const read = path => readFileSync(fileURLToPath(new URL(path, import.meta.url)), 'utf8')
 const toolbar = read('./ChapterGraphToolbar.vue')
@@ -17,6 +18,9 @@ const npcs = read('./SessionNpcsWorkspace.vue')
 const npcEditor = read('./NpcEditorModal.vue')
 const relationEditor = read('./WorldRelationEditor.vue')
 const relationPicker = read('./WorldRelationPickerModal.vue')
+const universalEditor = read('./UniversalRelationEditor.vue')
+const universalPicker = read('./UniversalRelationPickerModal.vue')
+const quests = read('./SessionQuestsWorkspace.vue')
 const imagePicker = read('./SessionImagePicker.vue')
 const primaryView = read('../composables/useSessionPrimaryView.js')
 const worldState = read('../composables/useSessionWorld.js')
@@ -27,6 +31,7 @@ describe('session world workspaces', () => {
     expect(SessionWorldLayer).toBeTruthy()
     expect(SessionLocationsWorkspace).toBeTruthy()
     expect(SessionNpcsWorkspace).toBeTruthy()
+	expect(SessionQuestsWorkspace).toBeTruthy()
   })
 
   it('switches the central workspace from the semantic session header', () => {
@@ -34,10 +39,12 @@ describe('session world workspaces', () => {
     expect(toolbar).toContain("{ key: 'story', label: 'Сюжет'")
     expect(toolbar).toContain("{ key: 'locations', label: 'Локации'")
     expect(toolbar).toContain("{ key: 'npcs', label: 'NPC'")
+	expect(toolbar).toContain("{ key: 'quests', label: 'Задания'")
     expect(graphTab).toContain('v-show="primaryView === \'story\'"')
     expect(graphTab).toContain('<slot v-if="primaryView !== \'story\'" name="primary-workspace" />')
     expect(layer).toContain("activeView === 'locations'")
     expect(layer).toContain("activeView === 'npcs'")
+	expect(layer).toContain("activeView === 'quests'")
   })
 
   it('keeps the shared canvas dot field behind location, NPC and loading states', () => {
@@ -51,8 +58,9 @@ describe('session world workspaces', () => {
     expect(primaryView).toContain('dnd-share:session-primary-view:v1:')
     expect(primaryView).toContain('route.query.location')
     expect(primaryView).toContain('route.query.npc')
-    expect(primaryView).toContain("replaceQuery({ view: 'locations', location: id || null, npc: null })")
-    expect(primaryView).toContain("replaceQuery({ view: 'npcs', npc: id || null, location: null })")
+	expect(primaryView).toContain('route.query.quest')
+	expect(primaryView).toContain("replaceQuery({ view: 'locations', location: id || null, npc: null, quest: null, material: null })")
+	expect(primaryView).toContain("replaceQuery({ view: 'npcs', npc: id || null, location: null, quest: null, material: null })")
   })
 
   it('uses a draggable nested tree without geographic graph edges', () => {
@@ -66,22 +74,25 @@ describe('session world workspaces', () => {
     expect(locations).not.toContain('location-edge')
   })
 
-  it('edits scenario-location and NPC relationships from focused editors', () => {
+	it('edits story context and universal entity relationships from focused editors', () => {
     expect(locationEditor).toContain('Сценарии в этой локации')
     expect(locationEditor).toContain('<WorldRelationEditor')
     expect(locationEditor).toContain(':show-notes="false"')
     expect(locationEditor).toContain('sceneIds: draft.sceneLinks.map')
-    expect(npcEditor).toContain('Где его можно встретить')
-    expect(npcEditor).toContain('locationLinks: draft.locationLinks')
+	expect(locationEditor).toContain('<UniversalRelationEditor')
+	expect(npcEditor).toContain('<UniversalRelationEditor')
     expect(npcEditor).toContain('sceneLinks: draft.sceneLinks')
-    expect(npcEditor).toContain('npcLinks: draft.npcLinks')
-    expect(npcs).toContain('Где встретить')
+	expect(npcEditor).toContain('relations: draft.relations')
+	expect(npcs).toContain('<UniversalRelationList')
     expect(npcs).toContain('Участие в сюжете')
     expect(relationEditor).toContain('Удалить связь')
     expect(relationEditor).toContain('Заметка к связи')
     expect(relationEditor).toContain('v-if="showNotes"')
     expect(relationPicker).toContain('type="search"')
-    expect(npcEditor).toContain('Связи с NPC')
+	expect(universalEditor).toContain('groupResolvedRelations')
+	expect(universalPicker).toContain("{ key: 'all', label: 'Все' }")
+	expect(universalPicker).toContain('Искать по всем объектам')
+	expect(quests).toContain('Связи')
   })
 
   it('opens one grouped image catalogue from the current image preview', () => {
@@ -111,5 +122,6 @@ describe('session world workspaces', () => {
     expect(api).toContain('getSessionWorld')
     expect(api).toContain('/locations/${locationId}/move')
     expect(api).toContain('/npcs/${npcId}')
+	expect(api).toContain('/quests/${questId}')
   })
 })

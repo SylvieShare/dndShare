@@ -62,8 +62,8 @@ Vite работает на `:5173` и проксирует `/api` и `/mcp` в G
 | Переключатели | `share-ui/MultiToggle`, `share-ui/ToggleSwitch`, `share-ui/CompactCheckbox` | Выбор режима, boolean и компактный checkbox соответственно. |
 | Кольцевая разбивка | `share-ui/SegmentDonutChart` | Нейтральный donut с легендой, форматтером значений и центральным slot. Доменные категории, цвета и данные остаются в приложении. |
 | Каркас и левое меню | `share-ui/AppShell`, `share-ui/AppSidebar`, `share-ui/Sidebar*`, `share-ui/AccountMenu` | Единая геометрия приложения, DnD-стиль rail и trigger аккаунта с выпадающими действиями. Router, права, поиск, данные профиля и сами account-actions передаёт локальный adapter. |
-| Каталог страницы сессии | `features/sessions/components/SessionLibraryWorkspace.vue` | Общий dotted workspace, safe-area от игроков и геометрия sidebar/detail для локаций, NPC и материалов. Предметные компоненты передают внутрь собственные список, detail и окна. |
-| Связи сущностей сессии | `features/sessions/components/WorldRelationEditor.vue` | Общий список карточек связи с удалением, заметкой и отдельным поисковым picker. Используется редакторами локаций, NPC и материалов; consumer задаёт `items` и `linkKey`. |
+| Каталог страницы сессии | `features/sessions/components/SessionLibraryWorkspace.vue` | Общий dotted workspace, safe-area от игроков и геометрия sidebar/detail для локаций, NPC, материалов и заданий. Предметные компоненты передают внутрь собственные список, detail и окна. |
+| Универсальные связи сущностей сессии | `features/sessions/components/UniversalRelationEditor.vue`, `UniversalRelationPickerModal.vue`, `UniversalRelationList.vue` | Один типизированный каталог для локаций, NPC, материалов и заданий. Picker поддерживает общий поиск и фильтр типа, editor — заметки/удаление, display-list сортирует и группирует по типу. `WorldRelationEditor` остаётся для сюжетного контекста глав и сценариев. |
 
 Категории модальных окон:
 

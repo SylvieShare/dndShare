@@ -70,16 +70,6 @@ CREATE TABLE IF NOT EXISTS dndshare.session_scene_location (
 CREATE INDEX IF NOT EXISTS idx_session_scene_location_location
     ON dndshare.session_scene_location USING btree (location_id);
 
-CREATE TABLE IF NOT EXISTS dndshare.session_npc_location (
-    npc_id      int8 NOT NULL REFERENCES dndshare.session_npc(id) ON DELETE CASCADE,
-    location_id int8 NOT NULL REFERENCES dndshare.session_location(id) ON DELETE CASCADE,
-    note        text NULL,
-    CONSTRAINT session_npc_location_pkey PRIMARY KEY (npc_id, location_id)
-);
-ALTER TABLE dndshare.session_npc_location ADD COLUMN IF NOT EXISTS note text NULL;
-CREATE INDEX IF NOT EXISTS idx_session_npc_location_location
-    ON dndshare.session_npc_location USING btree (location_id);
-
 CREATE TABLE IF NOT EXISTS dndshare.session_npc_scene (
     npc_id   int8 NOT NULL REFERENCES dndshare.session_npc(id) ON DELETE CASCADE,
     scene_id int8 NOT NULL REFERENCES dndshare.session_scene(id) ON DELETE CASCADE,
@@ -89,13 +79,3 @@ CREATE TABLE IF NOT EXISTS dndshare.session_npc_scene (
 ALTER TABLE dndshare.session_npc_scene ADD COLUMN IF NOT EXISTS note text NULL;
 CREATE INDEX IF NOT EXISTS idx_session_npc_scene_scene
     ON dndshare.session_npc_scene USING btree (scene_id);
-
-CREATE TABLE IF NOT EXISTS dndshare.session_npc_relation (
-    left_npc_id  int8 NOT NULL REFERENCES dndshare.session_npc(id) ON DELETE CASCADE,
-    right_npc_id int8 NOT NULL REFERENCES dndshare.session_npc(id) ON DELETE CASCADE,
-    note         text NULL,
-    CONSTRAINT session_npc_relation_pkey PRIMARY KEY (left_npc_id, right_npc_id),
-    CONSTRAINT session_npc_relation_order_check CHECK (left_npc_id < right_npc_id)
-);
-CREATE INDEX IF NOT EXISTS idx_session_npc_relation_right
-    ON dndshare.session_npc_relation USING btree (right_npc_id);

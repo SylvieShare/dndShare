@@ -63,7 +63,7 @@
           <h2>{{ selectedLocation.name }}</h2>
           <div class="session-world-cover-meta">
             <span>{{ childLocations.length }} {{ ruPlural(childLocations.length, 'вложенное место', 'вложенных места', 'вложенных мест') }}</span>
-            <span>{{ attachedNpcs.length }} NPC</span>
+			<span>{{ selectedLocation.relations?.length || 0 }} связей</span>
             <span>{{ attachedScenes.length }} {{ ruPlural(attachedScenes.length, 'сценарий', 'сценария', 'сценариев') }}</span>
           </div>
         </div>
@@ -103,18 +103,10 @@
         </section>
 
         <div class="session-world-section-columns">
-          <section class="session-world-section">
-            <div class="session-world-section-title"><span>NPC</span><small>{{ attachedNpcs.length }}</small></div>
-            <div v-if="attachedNpcs.length" class="session-world-compact-list">
-              <button v-for="npc in attachedNpcs" :key="npc.id" type="button" @click="$emit('open-npc', npc.id)">
-                <img class="session-world-avatar" :src="npcImageUrl(npc)" alt="" />
-                <span><strong>{{ npc.name }}</strong><small>{{ npc.role || 'Роль не указана' }}</small></span>
-                <ChevronRight :size="14" />
-              </button>
-            </div>
-            <button v-else-if="isDm" type="button" class="session-world-inline-empty" @click="openNpcCreate">Добавить первого NPC</button>
-            <p v-else class="session-world-muted">Никто не привязан.</p>
-          </section>
+		  <section class="session-world-section">
+			<div class="session-world-section-title"><span>Связи</span><small>{{ selectedLocation.relations?.length || 0 }}</small></div>
+			<UniversalRelationList :relations="selectedLocation.relations" :items="relationItems" @open="openRelated" />
+		  </section>
 
           <section class="session-world-section">
             <div class="session-world-section-title"><span>Сценарии</span><small>{{ attachedScenes.length }}</small></div>
@@ -147,6 +139,7 @@
       :npcs="npcs"
       :default-parent-id="defaultParentId"
       :saving="world.saving.value"
+	  :relation-items="relationItems"
       @close="closeEditors"
       @save="saveLocation"
       @delete="requestLocationDelete"
@@ -158,6 +151,7 @@
       :scenes="scenes"
       :default-location-id="selectedLocation?.id"
       :saving="world.saving.value"
+	  :relation-items="relationItems"
       @close="closeEditors"
       @save="saveNpc"
     />
@@ -184,19 +178,21 @@ import LocationEditorModal from '@/features/sessions/components/LocationEditorMo
 import LocationTreeRow from '@/features/sessions/components/LocationTreeRow.vue'
 import NpcEditorModal from '@/features/sessions/components/NpcEditorModal.vue'
 import SessionLibraryWorkspace from '@/features/sessions/components/SessionLibraryWorkspace.vue'
+import UniversalRelationList from '@/features/sessions/components/UniversalRelationList.vue'
 import {
   buildLocationForest, locationBreadcrumb, locationDescendantIds, locationKind,
   locationSearchMatches, ruPlural, sceneContextLabel,
 } from '@/features/sessions/lib/sessionWorld'
-import { npcImageUrl, sessionImageUrl } from '@/features/sessions/lib/sessionImages'
+import { sessionImageUrl } from '@/features/sessions/lib/sessionImages'
 
 const props = defineProps({
   sessionUuid: { type: String, required: true },
   world: { type: Object, required: true },
   selectedLocationId: { type: [Number, String], default: null },
   isDm: { type: Boolean, default: false },
+	relationItems: { type: Array, default: () => [] },
 })
-const emit = defineEmits(['select-location', 'open-npc'])
+const emit = defineEmits(['select-location', 'open-npc', 'open-entity'])
 const locations = computed(() => props.world.locations.value)
 const scenes = computed(() => props.world.scenes.value)
 const npcs = computed(() => props.world.npcs.value)
@@ -222,7 +218,6 @@ const filteredForest = computed(() => {
 })
 const breadcrumbs = computed(() => locationBreadcrumb(selectedLocation.value, props.world.locationsById.value))
 const childLocations = computed(() => locations.value.filter(location => location.parentLocationId === selectedLocation.value?.id).sort((a, b) => a.sortOrder - b.sortOrder))
-const attachedNpcs = computed(() => (selectedLocation.value?.npcIds || []).map(id => props.world.npcsById.value.get(id)).filter(Boolean))
 const attachedScenes = computed(() => (selectedLocation.value?.sceneIds || []).map(id => props.world.scenesById.value.get(id)).filter(Boolean))
 
 function expandedKey() { return `dnd-share:session-location-tree:v1:${props.sessionUuid}` }
@@ -257,6 +252,11 @@ function openEdit(location) {
   locationEditorOpen.value = true
 }
 function openNpcCreate() { npcEditorOpen.value = true }
+function openRelated(item) {
+	if (item.type === 'location') emit('select-location', item.id)
+	else if (item.type === 'npc') emit('open-npc', item.id)
+	else emit('open-entity', item)
+}
 function closeEditors() {
   locationEditorOpen.value = false
   npcEditorOpen.value = false

@@ -20,6 +20,7 @@ type SessionMaterial struct {
 	AssetURL     string                       `json:"assetUrl,omitempty"`
 	ChapterLinks []SessionMaterialChapterLink `json:"chapterLinks"`
 	SceneLinks   []SessionMaterialSceneLink   `json:"sceneLinks"`
+	Relations    []SessionEntityRelation      `json:"relations"`
 	CreatedAt    time.Time                    `json:"createdAt"`
 	ChangedAt    time.Time                    `json:"changedAt"`
 }
@@ -132,6 +133,7 @@ func (s *Store) loadSessionMaterialLinks(ctx context.Context, sessionID int64, m
 	for index := range materials {
 		materials[index].ChapterLinks = []SessionMaterialChapterLink{}
 		materials[index].SceneLinks = []SessionMaterialSceneLink{}
+		materials[index].Relations = []SessionEntityRelation{}
 		byID[materials[index].ID] = &materials[index]
 	}
 	whereSQL := "material.session_id = $1"
@@ -175,7 +177,6 @@ func (s *Store) loadSessionMaterialLinks(ctx context.Context, sessionID int64, m
 	if err != nil {
 		return err
 	}
-	defer sceneRows.Close()
 	for sceneRows.Next() {
 		var materialID int64
 		var link SessionMaterialSceneLink
@@ -186,7 +187,54 @@ func (s *Store) loadSessionMaterialLinks(ctx context.Context, sessionID int64, m
 			material.SceneLinks = append(material.SceneLinks, link)
 		}
 	}
-	return sceneRows.Err()
+	if err := sceneRows.Err(); err != nil {
+		sceneRows.Close()
+		return err
+	}
+	sceneRows.Close()
+	return s.loadSessionMaterialEntityRelations(ctx, sessionID, materials, byID)
+}
+
+func (s *Store) loadSessionMaterialEntityRelations(
+	ctx context.Context,
+	sessionID int64,
+	materials []SessionMaterial,
+	byID map[int64]*SessionMaterial,
+) error {
+	ids := make([]int64, 0, len(materials))
+	for _, material := range materials {
+		ids = append(ids, material.ID)
+	}
+	rows, err := s.pool.Query(ctx, `
+		SELECT left_type, left_id, right_type, right_id, note
+		FROM dndshare.session_entity_relation
+		WHERE session_id = $1
+		  AND ((left_type = 'material' AND left_id = ANY($2::bigint[]))
+		    OR (right_type = 'material' AND right_id = ANY($2::bigint[])))
+		ORDER BY left_type, left_id, right_type, right_id`, sessionID, ids)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var leftType, rightType string
+		var leftID, rightID int64
+		var note *string
+		if err := rows.Scan(&leftType, &leftID, &rightType, &rightID, &note); err != nil {
+			return err
+		}
+		if leftType == SessionEntityMaterial {
+			if material := byID[leftID]; material != nil {
+				material.Relations = append(material.Relations, SessionEntityRelation{Type: rightType, ID: rightID, Note: note})
+			}
+		}
+		if rightType == SessionEntityMaterial {
+			if material := byID[rightID]; material != nil {
+				material.Relations = append(material.Relations, SessionEntityRelation{Type: leftType, ID: leftID, Note: note})
+			}
+		}
+	}
+	return rows.Err()
 }
 
 func (s *Store) CreateSessionMaterial(
@@ -197,6 +245,7 @@ func (s *Store) CreateSessionMaterial(
 	assetID *int64,
 	chapterLinks []SessionMaterialChapterLink,
 	sceneLinks []SessionMaterialSceneLink,
+	relations []SessionEntityRelation,
 ) (SessionMaterial, error) {
 	tx, err := s.pool.Begin(ctx)
 	if err != nil {
@@ -216,6 +265,9 @@ func (s *Store) CreateSessionMaterial(
 	if err := replaceSessionMaterialLinks(ctx, tx, id, chapterLinks, sceneLinks); err != nil {
 		return SessionMaterial{}, err
 	}
+	if err := replaceSessionEntityRelationsTx(ctx, tx, sessionID, SessionEntityMaterial, id, relations); err != nil {
+		return SessionMaterial{}, err
+	}
 	if err := tx.Commit(ctx); err != nil {
 		return SessionMaterial{}, err
 	}
@@ -224,12 +276,13 @@ func (s *Store) CreateSessionMaterial(
 
 func (s *Store) UpdateSessionMaterial(
 	ctx context.Context,
-	id int64,
+	sessionID, id int64,
 	kind, name string,
 	caption, content, noteStyle *string,
 	assetID *int64,
 	chapterLinks []SessionMaterialChapterLink,
 	sceneLinks []SessionMaterialSceneLink,
+	relations []SessionEntityRelation,
 ) error {
 	tx, err := s.pool.Begin(ctx)
 	if err != nil {
@@ -245,6 +298,9 @@ func (s *Store) UpdateSessionMaterial(
 		return err
 	}
 	if err := replaceSessionMaterialLinks(ctx, tx, id, chapterLinks, sceneLinks); err != nil {
+		return err
+	}
+	if err := replaceSessionEntityRelationsTx(ctx, tx, sessionID, SessionEntityMaterial, id, relations); err != nil {
 		return err
 	}
 	return tx.Commit(ctx)
@@ -280,9 +336,19 @@ func replaceSessionMaterialLinks(
 	return nil
 }
 
-func (s *Store) DeleteSessionMaterial(ctx context.Context, id int64) error {
-	_, err := s.pool.Exec(ctx, `DELETE FROM dndshare.session_material WHERE id = $1`, id)
-	return err
+func (s *Store) DeleteSessionMaterial(ctx context.Context, sessionID, id int64) error {
+	tx, err := s.pool.Begin(ctx)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback(ctx)
+	if err := deleteSessionEntityRelationsTx(ctx, tx, sessionID, SessionEntityMaterial, id); err != nil {
+		return err
+	}
+	if _, err := tx.Exec(ctx, `DELETE FROM dndshare.session_material WHERE id = $1 AND session_id = $2`, id, sessionID); err != nil {
+		return err
+	}
+	return tx.Commit(ctx)
 }
 
 func (s *Store) GetSessionMaterialContexts(ctx context.Context, sessionID int64) (SessionMaterialContext, error) {

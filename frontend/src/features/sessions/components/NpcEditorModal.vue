@@ -67,22 +67,10 @@
       </div>
 
       <div class="npc-editor-relations">
-        <section>
-          <div class="npc-editor-section-title">
-            <span>Локации</span>
-            <small>Где его можно встретить</small>
-          </div>
-          <WorldRelationEditor
-            v-model="draft.locationLinks"
-            :items="locationOptions"
-            link-key="locationId"
-            add-label="Добавить локацию"
-            picker-title="Где встретить NPC"
-            search-placeholder="Найти локацию…"
-            empty-text="Места встречи не указаны"
-            picker-empty-text="Сначала создайте локации"
-          />
-        </section>
+		<section>
+		  <div class="npc-editor-section-title"><span>Связи</span><small>Любые объекты сессии</small></div>
+		  <UniversalRelationEditor v-model="draft.relations" :items="relationItems" source-type="npc" :source-id="npc?.id" />
+		</section>
         <section>
           <div class="npc-editor-section-title">
             <span>Сценарии</span>
@@ -97,22 +85,6 @@
             search-placeholder="Найти сценарий…"
             empty-text="Участие в сюжете не указано"
             picker-empty-text="Сначала создайте сценарии в сюжете"
-          />
-        </section>
-        <section>
-          <div class="npc-editor-section-title">
-            <span>Связи с NPC</span>
-            <small>Союзники, враги и знакомые</small>
-          </div>
-          <WorldRelationEditor
-            v-model="draft.npcLinks"
-            :items="npcOptions"
-            link-key="npcId"
-            add-label="Добавить NPC"
-            picker-title="Связать с NPC"
-            search-placeholder="Найти NPC…"
-            empty-text="Связей с NPC пока нет"
-            picker-empty-text="Нет других NPC"
           />
         </section>
       </div>
@@ -150,13 +122,9 @@ import {
 } from '@sylvieshare/share-ui'
 import SessionImagePicker from '@/features/sessions/components/SessionImagePicker.vue'
 import WorldRelationEditor from '@/features/sessions/components/WorldRelationEditor.vue'
-import {
-  locationBreadcrumb,
-  locationKind,
-  npcInitial,
-  sceneContextLabel,
-} from '@/features/sessions/lib/sessionWorld'
-import { npcImageUrl, sessionImageUrl } from '@/features/sessions/lib/sessionImages'
+import UniversalRelationEditor from '@/features/sessions/components/UniversalRelationEditor.vue'
+import { sceneContextLabel } from '@/features/sessions/lib/sessionWorld'
+import { sessionImageUrl } from '@/features/sessions/lib/sessionImages'
 import { itemsApi } from '@/shared/api/itemsApi'
 import { randomDndName } from '@/shared/lib/dndNames'
 
@@ -168,6 +136,7 @@ const props = defineProps({
   npcs: { type: Array, default: () => [] },
   defaultLocationId: { type: [Number, String], default: null },
   saving: { type: Boolean, default: false },
+	relationItems: { type: Array, default: () => [] },
 })
 const emit = defineEmits(['close', 'save', 'delete'])
 const races = ref([])
@@ -190,11 +159,10 @@ const draft = reactive({
   imageId: props.npc?.imageId ?? 0,
   imageFocalX: props.npc?.imageFocalX ?? 0.5,
   imageFocalY: props.npc?.imageFocalY ?? 0.5,
-  locationLinks: props.npc
-    ? (props.npc.locationLinks || []).map(link => ({ ...link }))
-    : props.defaultLocationId ? [{ locationId: Number(props.defaultLocationId), note: null }] : [],
   sceneLinks: (props.npc?.sceneLinks || []).map(link => ({ ...link })),
-  npcLinks: (props.npc?.npcLinks || []).map(link => ({ ...link })),
+	relations: props.npc
+		? (props.npc.relations || []).map(link => ({ ...link }))
+		: props.defaultLocationId ? [{ type: 'location', id: Number(props.defaultLocationId), note: null }] : [],
 })
 const previewPosition = computed(() => ({ objectPosition: `${draft.imageFocalX * 100}% ${draft.imageFocalY * 100}%` }))
 const portraitPreview = computed(() => customPreview.value)
@@ -214,25 +182,11 @@ const randomNameTitle = computed(() => selectedRace.value
   ? `Случайное имя: ${selectedRace.value.name}`
   : 'Случайное фэнтезийное имя')
 
-const locationOptions = computed(() => props.locations.map(location => ({
-  id: location.id,
-  title: location.name,
-  subtitle: locationBreadcrumb(location, props.locationsById).slice(0, -1).map(item => item.name).join(' · ') || locationKind(location.kind).shortLabel,
-  image: sessionImageUrl(location),
-})))
 const sceneOptions = computed(() => props.scenes.map(scene => ({
   id: scene.id,
   title: scene.name,
   subtitle: sceneContextLabel(scene),
   image: sessionImageUrl(scene),
-})))
-const npcOptions = computed(() => props.npcs.filter(npc => npc.id !== props.npc?.id).map(npc => ({
-  id: npc.id,
-  title: npc.name,
-  subtitle: [npc.raceName, npc.role].filter(Boolean).join(' · ') || 'Роль не указана',
-  image: npcImageUrl(npc),
-  color: npc.color,
-  initial: npcInitial(npc.name),
 })))
 
 onMounted(async () => {
@@ -294,9 +248,8 @@ async function submit() {
       imageId: selected.upload_id,
       imageFocalX: draft.imageFocalX,
       imageFocalY: draft.imageFocalY,
-      locationLinks: draft.locationLinks,
       sceneLinks: draft.sceneLinks,
-      npcLinks: draft.npcLinks,
+		relations: draft.relations,
     })
   } catch { uploadError.value = 'Не удалось загрузить изображение' }
 }

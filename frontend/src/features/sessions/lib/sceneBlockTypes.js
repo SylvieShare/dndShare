@@ -29,6 +29,9 @@ export const SCENE_BLOCK_TYPES = {
     color: 'var(--accent-hover)',
     defaultWidth: 360,
   },
+	location: { label: 'Локация', color: '#4ea58b', defaultWidth: 340 },
+	npc: { label: 'NPC', color: '#9b78e8', defaultWidth: 340 },
+	quest: { label: 'Задание', color: '#4b8fd5', defaultWidth: 340 },
 }
 
 export function sceneBlockType(type) {

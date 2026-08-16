@@ -127,15 +127,15 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
 - `PATCH /api/sessions/{uuid}/participants-order` accepts the complete ordered
   participant character-id list as `{"ids":[...]}`; owner-only;
 - `GET /api/sessions/{uuid}/world` returns one aggregate
-  `{locations,npcs,scenes}`. NPCs expose `locationLinks`, `sceneLinks` and
-  symmetric `npcLinks` with the target id and nullable `note`; compact scenarios
-  and locations keep reverse NPC id arrays and scenarios include arc/chapter context plus reverse location
-  and NPC ids. The aggregate is owner-only because NPC descriptions may contain
+  `{locations,npcs,quests,scenes}`. Locations, NPCs and quests expose symmetric
+  `relations:[{type,id,note}]`; types are `location`, `npc`, `material` and
+  `quest`. NPCs retain separate `sceneLinks`, locations retain `sceneIds`, and
+  compact scenarios include arc/chapter context plus reverse story links. The aggregate is owner-only because descriptions may contain
   master notes and secrets;
 - `POST /api/sessions/{uuid}/locations`, `PATCH|DELETE
   /api/sessions/{uuid}/locations/{locationId}` create, replace or remove a
   location. The full mutation payload contains
-  `{parentLocationId,name,kind,description,imageId,sceneIds}`;
+  `{parentLocationId,name,kind,description,imageId,sceneIds,relations}`;
 - `PATCH /api/sessions/{uuid}/locations/{locationId}/move` accepts
   `{parentLocationId,beforeLocationId}`. A null `beforeLocationId` appends to
   the target sibling group; invalid cross-session references and descendant
@@ -143,14 +143,18 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
 - `POST /api/sessions/{uuid}/npcs`, `PATCH|DELETE
   /api/sessions/{uuid}/npcs/{npcId}` manage prepared NPCs with
   `{name,raceItemId,role,description,color,imageId,
-  imageFocalX,imageFocalY,locationLinks,sceneLinks,npcLinks}`. Each link object
-  contains its typed target id and nullable note (up to 500 characters).
+  imageFocalX,imageFocalY,sceneLinks,relations}`. Each relation contains a target
+  `type`, `id` and nullable note (up to 500 characters).
   `imageId` points either to the independent NPC system catalogue or to an
   uploaded image owned by the current user. `raceItemId`
   is nullable and must reference an accessible handbook race item (type `8`);
   aggregate NPC records also expose its current `raceName`. World mutations are
   owner-only and return `{world,id}` so clients can replace every reverse
   association together;
+- `POST /api/sessions/{uuid}/quests`, `PATCH|DELETE
+  /api/sessions/{uuid}/quests/{questId}` manage quests with
+  `{name,status,description,relations}`. Status is `planned`, `active`,
+  `completed` or `failed`; mutations return the refreshed world aggregate;
 - `GET /api/sessions/{uuid}/chapter-graph` returns `{arcs,chapters,edges}`;
 - `GET /api/session-images?scope=story|npc` returns the authorized system image
   catalogue as `{images:[{id,key,scope,categoryKey,categoryLabel,label,sortOrder,url}]}`;

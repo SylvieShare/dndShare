@@ -167,6 +167,9 @@ func (s *Store) CreateSessionLocation(
 	if err := validateWorldSceneIDsTx(ctx, tx, sessionID, mutation.SceneIDs); err != nil {
 		return 0, err
 	}
+	if err := validateSessionEntityRelationsTx(ctx, tx, sessionID, SessionEntityLocation, 0, mutation.Relations); err != nil {
+		return 0, err
+	}
 	var id int64
 	err = tx.QueryRow(ctx, `
 		INSERT INTO dndshare.session_location (
@@ -184,6 +187,9 @@ func (s *Store) CreateSessionLocation(
 		return 0, err
 	}
 	if err := replaceLocationScenesTx(ctx, tx, id, mutation.SceneIDs); err != nil {
+		return 0, err
+	}
+	if err := replaceSessionEntityRelationsTx(ctx, tx, sessionID, SessionEntityLocation, id, mutation.Relations); err != nil {
 		return 0, err
 	}
 	if err := tx.Commit(ctx); err != nil {
@@ -219,6 +225,9 @@ func (s *Store) UpdateSessionLocation(
 	if err := validateWorldSceneIDsTx(ctx, tx, sessionID, mutation.SceneIDs); err != nil {
 		return err
 	}
+	if err := validateSessionEntityRelationsTx(ctx, tx, sessionID, SessionEntityLocation, locationID, mutation.Relations); err != nil {
+		return err
+	}
 	if !sameWorldParent(currentParent, mutation.ParentLocationID) {
 		if err := moveSessionLocationTx(ctx, tx, sessionID, locationID, mutation.ParentLocationID, nil); err != nil {
 			return err
@@ -233,6 +242,9 @@ func (s *Store) UpdateSessionLocation(
 		return err
 	}
 	if err := replaceLocationScenesTx(ctx, tx, locationID, mutation.SceneIDs); err != nil {
+		return err
+	}
+	if err := replaceSessionEntityRelationsTx(ctx, tx, sessionID, SessionEntityLocation, locationID, mutation.Relations); err != nil {
 		return err
 	}
 	return tx.Commit(ctx)
@@ -345,6 +357,12 @@ func (s *Store) DeleteSessionLocation(ctx context.Context, sessionID, locationID
 	if childCount > 0 {
 		return ErrLocationHasChildren
 	}
+	if err := ensureSessionEntityNotUsedBySceneTx(ctx, tx, sessionID, SessionEntityLocation, locationID); err != nil {
+		return err
+	}
+	if err := deleteSessionEntityRelationsTx(ctx, tx, sessionID, SessionEntityLocation, locationID); err != nil {
+		return err
+	}
 	result, err := tx.Exec(ctx,
 		`DELETE FROM dndshare.session_location WHERE id = $1 AND session_id = $2`, locationID, sessionID)
 	if err != nil {
@@ -386,7 +404,7 @@ func (s *Store) CreateSessionNPC(
 	if err != nil {
 		return 0, err
 	}
-	if err := replaceNPCLinksTx(ctx, tx, id, mutation); err != nil {
+	if err := replaceNPCLinksTx(ctx, tx, sessionID, id, mutation); err != nil {
 		return 0, err
 	}
 	if err := tx.Commit(ctx); err != nil {
@@ -425,20 +443,30 @@ func (s *Store) UpdateSessionNPC(
 	if result.RowsAffected() == 0 {
 		return ErrNotFound
 	}
-	if err := replaceNPCLinksTx(ctx, tx, npcID, mutation); err != nil {
+	if err := replaceNPCLinksTx(ctx, tx, sessionID, npcID, mutation); err != nil {
 		return err
 	}
 	return tx.Commit(ctx)
 }
 
 func (s *Store) DeleteSessionNPC(ctx context.Context, sessionID, npcID int64) error {
-	result, err := s.pool.Exec(ctx,
-		`DELETE FROM dndshare.session_npc WHERE id = $1 AND session_id = $2`, npcID, sessionID)
+	tx, err := s.pool.Begin(ctx)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback(ctx)
+	if err := ensureSessionEntityNotUsedBySceneTx(ctx, tx, sessionID, SessionEntityNPC, npcID); err != nil {
+		return err
+	}
+	if err := deleteSessionEntityRelationsTx(ctx, tx, sessionID, SessionEntityNPC, npcID); err != nil {
+		return err
+	}
+	result, err := tx.Exec(ctx, `DELETE FROM dndshare.session_npc WHERE id = $1 AND session_id = $2`, npcID, sessionID)
 	if err != nil {
 		return err
 	}
 	if result.RowsAffected() == 0 {
 		return ErrNotFound
 	}
-	return nil
+	return tx.Commit(ctx)
 }

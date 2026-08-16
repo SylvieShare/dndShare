@@ -2,15 +2,18 @@ import { computed, ref } from 'vue'
 import {
   createSessionLocation,
   createSessionNpc,
+	createSessionQuest,
   deleteSessionLocation,
   deleteSessionNpc,
+	deleteSessionQuest,
   getSessionWorld,
   moveSessionLocation,
   updateSessionLocation,
   updateSessionNpc,
+	updateSessionQuest,
 } from '@/shared/api/sessionsApi'
 
-const EMPTY_WORLD = Object.freeze({ locations: [], npcs: [], scenes: [] })
+const EMPTY_WORLD = Object.freeze({ locations: [], npcs: [], quests: [], scenes: [] })
 
 export function useSessionWorld(sessionUuid) {
   const world = ref(EMPTY_WORLD)
@@ -22,9 +25,11 @@ export function useSessionWorld(sessionUuid) {
 
   const locations = computed(() => world.value.locations || [])
   const npcs = computed(() => world.value.npcs || [])
+	const quests = computed(() => world.value.quests || [])
   const scenes = computed(() => world.value.scenes || [])
   const locationsById = computed(() => new Map(locations.value.map(location => [location.id, location])))
   const npcsById = computed(() => new Map(npcs.value.map(npc => [npc.id, npc])))
+	const questsById = computed(() => new Map(quests.value.map(quest => [quest.id, quest])))
   const scenesById = computed(() => new Map(scenes.value.map(scene => [scene.id, scene])))
 
   function applyResponse(response) {
@@ -89,10 +94,20 @@ export function useSessionWorld(sessionUuid) {
     () => deleteSessionNpc(sessionUuid, npcId),
     'Не удалось удалить NPC',
   )
+	const saveQuest = (quest, data) => mutate(
+		() => quest
+			? updateSessionQuest(sessionUuid, quest.id, data)
+			: createSessionQuest(sessionUuid, data),
+		'Не удалось сохранить задание',
+	)
+	const removeQuest = questId => mutate(
+		() => deleteSessionQuest(sessionUuid, questId),
+		'Не удалось удалить задание',
+	)
 
   return {
-    world, locations, npcs, scenes, locationsById, npcsById, scenesById,
+    world, locations, npcs, quests, scenes, locationsById, npcsById, questsById, scenesById,
     loading, loaded, saving, error,
-    load, saveLocation, moveLocation, removeLocation, saveNpc, removeNpc,
+    load, saveLocation, moveLocation, removeLocation, saveNpc, removeNpc, saveQuest, removeQuest,
   }
 }

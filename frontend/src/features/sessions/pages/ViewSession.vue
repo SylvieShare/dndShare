@@ -71,12 +71,17 @@
             :is-dm="isDm"
             :selected-location-id="selectedLocationId"
             :selected-npc-id="selectedNpcId"
+			:selected-quest-id="selectedQuestId"
+			:selected-material-id="selectedMaterialId"
+			:world="sessionWorld"
             :materials="sessionMaterials"
             :presentation="presentation"
             :chapter-id="workspaceChapter?.id ?? chapterGraph.currentChapter.value?.id ?? null"
             :scene-id="workspaceScene?.id ?? null"
             @select-location="selectLocation"
             @select-npc="selectNpc"
+            @select-quest="selectQuest"
+			@select-material="selectMaterial"
           />
         </template>
         <SessionCenterWorkspace
@@ -222,6 +227,7 @@ import { useEncounter } from '@/features/sessions/composables/useEncounter'
 import { useSessionSelection } from '@/features/sessions/composables/useSessionSelection'
 import { useSessionWorkspace } from '@/features/sessions/composables/useSessionWorkspace'
 import { useSessionPrimaryView } from '@/features/sessions/composables/useSessionPrimaryView'
+import { useSessionWorld } from '@/features/sessions/composables/useSessionWorld'
 import { useSessionParticipantRail } from '@/features/sessions/composables/useSessionParticipantRail'
 import { useSessionMaterials } from '@/features/sessions/composables/useSessionMaterials'
 import { useSessionPresentation } from '@/features/sessions/composables/useSessionPresentation'
@@ -245,9 +251,13 @@ const {
   activeView: primaryView,
   selectedLocationId,
   selectedNpcId,
+	selectedQuestId,
+	selectedMaterialId,
   selectView: selectPrimaryView,
   selectLocation,
   selectNpc,
+	selectQuest,
+	selectMaterial,
 } = useSessionPrimaryView({ sessionUuid, route, router })
 
 const session = ref(null)
@@ -264,9 +274,11 @@ const pendingKickName = computed(() => pvName(pendingKick.value) || 'Игрок'
 const accountStore = useAccountStore()
 const musicStore = useMusicStore()
 const sessionMaterials = useSessionMaterials({ sessionUuid })
+const sessionWorld = useSessionWorld(sessionUuid)
 const presentation = useSessionPresentation({ sessionUuid, materials: sessionMaterials, musicStore })
 const { settings: sessionSettings, update: updateSessionSetting } = useSessionSettings({ sessionUuid })
 provide('sessionMaterials', sessionMaterials)
+provide('sessionWorld', sessionWorld)
 provide('sessionPresentation', presentation)
 const sessionEventsStore = useSessionEventsStore()
 const templateStore = useTemplateStore()
@@ -316,6 +328,7 @@ const isDm = computed(() => {
 
 watch([() => accountStore.status, isDm, session], ([status, dm, currentSession]) => {
   if (status === 'success' && currentSession && !dm && primaryView.value !== 'story') selectPrimaryView('story')
+	if (status === 'success' && currentSession && dm) sessionWorld.load().catch(() => {})
 })
 
 const participantSortable = useSortable({

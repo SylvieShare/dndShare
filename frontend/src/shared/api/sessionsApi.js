@@ -132,6 +132,18 @@ export function deleteSessionNpc(uuid, npcId) {
   return fetchDeleteJson(`/sessions/${uuid}/npcs/${npcId}`)
 }
 
+export function createSessionQuest(uuid, data) {
+  return fetchPost(`/sessions/${uuid}/quests`, data)
+}
+
+export function updateSessionQuest(uuid, questId, data) {
+  return fetchPatch(`/sessions/${uuid}/quests/${questId}`, data)
+}
+
+export function deleteSessionQuest(uuid, questId) {
+  return fetchDeleteJson(`/sessions/${uuid}/quests/${questId}`)
+}
+
 export function createArc(uuid, data) {
   return fetchPost(`/sessions/${uuid}/arcs`, data)
 }

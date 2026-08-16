@@ -1,8 +1,10 @@
 <template>
   <nav v-if="actions.length" class="canvas-action-dock" aria-label="Действия холста">
-    <button
-      v-for="action in actions"
-      :key="action.id"
+	<div v-for="group in actionGroups" :key="group.key" class="canvas-action-group" :class="{ 'canvas-action-group--reference': group.key === 'reference' }">
+	  <span v-if="group.label" class="canvas-action-group-label">{{ group.label }}</span>
+	  <button
+	  v-for="action in group.actions"
+	  :key="action.id"
       type="button"
       class="canvas-action"
       :title="action.label"
@@ -31,18 +33,33 @@
         <svg v-else-if="action.icon === 'material'" viewBox="0 0 24 24">
           <path d="M5 4h11l3 3v13H5zM16 4v4h3M8 11h8M8 15h6"/>
         </svg>
+		<svg v-else-if="action.icon === 'location'" viewBox="0 0 24 24"><path d="M12 21s6-5.2 6-11a6 6 0 1 0-12 0c0 5.8 6 11 6 11Z"/><circle cx="12" cy="10" r="2"/></svg>
+		<svg v-else-if="action.icon === 'npc'" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3"/><path d="M6 20c.5-4 2.5-6 6-6s5.5 2 6 6"/></svg>
+		<svg v-else-if="action.icon === 'quest'" viewBox="0 0 24 24"><path d="M6 4h12v16H6zM9 8h6M9 12h6M9 16h4"/></svg>
         <svg v-else viewBox="0 0 24 24">
           <path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5"/>
         </svg>
         <span class="canvas-action-plus">+</span>
       </span>
-    </button>
+	  </button>
+	</div>
   </nav>
 </template>
 
 <script setup>
-defineProps({ actions: { type: Array, default: () => [] } })
+import { computed } from 'vue'
+const props = defineProps({ actions: { type: Array, default: () => [] } })
 defineEmits(['action'])
+const actionGroups = computed(() => {
+	const groups = []
+	for (const action of props.actions) {
+		const key = action.group || 'default'
+		let group = groups.find(item => item.key === key)
+		if (!group) { group = { key, label: action.groupLabel || '', actions: [] }; groups.push(group) }
+		group.actions.push(action)
+	}
+	return groups
+})
 </script>
 
 <style scoped>
@@ -75,6 +92,9 @@ defineEmits(['action'])
   pointer-events: auto;
   transition: transform .16s ease, border-color .16s ease, background .16s ease, box-shadow .16s ease;
 }
+.canvas-action-group { position: relative; display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+.canvas-action-group--reference { margin-top: 4px; padding-top: 13px; border-top: 1px solid color-mix(in srgb, var(--accent) 28%, var(--border)); }
+.canvas-action-group-label { position: absolute; right: 56px; top: -3px; color: var(--text-muted); font-size: 8px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; }
 .canvas-action:hover,
 .canvas-action:focus-visible {
   border-color: var(--accent);

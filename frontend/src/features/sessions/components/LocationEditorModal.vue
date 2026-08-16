@@ -33,7 +33,9 @@
       </div>
 
       <section class="location-editor-scenes">
-        <div class="location-editor-section-title">
+		<div class="location-editor-section-title"><span>Связи</span><small>Локации, NPC, материалы и задания</small></div>
+		<UniversalRelationEditor v-model="draft.relations" :items="relationItems" source-type="location" :source-id="location?.id" />
+		<div class="location-editor-section-title location-editor-section-title--separated">
           <span>Сценарии в этой локации</span>
           <small>Необязательно</small>
         </div>
@@ -89,6 +91,7 @@ import {
 } from '@sylvieshare/share-ui'
 import SessionImagePicker from '@/features/sessions/components/SessionImagePicker.vue'
 import WorldRelationEditor from '@/features/sessions/components/WorldRelationEditor.vue'
+import UniversalRelationEditor from '@/features/sessions/components/UniversalRelationEditor.vue'
 import {
   buildLocationForest,
   locationDescendantIds,
@@ -103,6 +106,7 @@ const props = defineProps({
   scenes: { type: Array, default: () => [] },
   defaultParentId: { type: [Number, String], default: null },
   saving: { type: Boolean, default: false },
+	relationItems: { type: Array, default: () => [] },
 })
 const emit = defineEmits(['close', 'save', 'delete'])
 
@@ -113,6 +117,7 @@ const draft = reactive({
   description: props.location?.description ?? '',
   imageId: props.location?.imageId ?? 0,
   sceneLinks: (props.location?.sceneIds || []).map(sceneId => ({ sceneId })),
+	relations: (props.location?.relations || []).map(relation => ({ ...relation })),
 })
 
 const excludedParentIds = computed(() => {
@@ -147,6 +152,7 @@ function submit() {
     description: draft.description.trim() || null,
     imageId: draft.imageId,
     sceneIds: draft.sceneLinks.map(link => link.sceneId),
+		relations: draft.relations,
   })
 }
 </script>
@@ -160,6 +166,7 @@ function submit() {
 .location-editor-image { padding-top: 18px; border-top: 1px solid var(--border); }
 .location-editor-section-title { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; color: var(--text-1); font-size: 12px; font-weight: 700; }
 .location-editor-section-title small { color: var(--text-muted); font-size: 10px; font-weight: 500; }
+.location-editor-section-title--separated { margin-top: 10px; padding-top: 14px; border-top: 1px solid var(--border); }
 .location-editor-footer { width: 100%; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
 .location-editor-delete { margin-top: 4px; padding: 9px 0; border: 0; background: none; color: var(--danger); font: inherit; font-size: 13px; cursor: pointer; }
 .location-editor-delete:hover:not(:disabled) { text-decoration: underline; }

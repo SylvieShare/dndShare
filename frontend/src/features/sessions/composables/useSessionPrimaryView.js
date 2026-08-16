@@ -1,6 +1,6 @@
 import { computed, ref, watch } from 'vue'
 
-export const SESSION_PRIMARY_VIEWS = new Set(['story', 'locations', 'npcs', 'materials'])
+export const SESSION_PRIMARY_VIEWS = new Set(['story', 'locations', 'npcs', 'materials', 'quests'])
 
 export function sessionPrimaryViewKey(sessionUuid) {
   return `dnd-share:session-primary-view:v1:${sessionUuid}`
@@ -31,6 +31,14 @@ export function useSessionPrimaryView({ sessionUuid, route, router }) {
     const value = Number(route.query.npc)
     return Number.isInteger(value) && value > 0 ? value : null
   })
+	const selectedQuestId = computed(() => {
+		const value = Number(route.query.quest)
+		return Number.isInteger(value) && value > 0 ? value : null
+	})
+	const selectedMaterialId = computed(() => {
+		const value = Number(route.query.material)
+		return Number.isInteger(value) && value > 0 ? value : null
+	})
 
   function replaceQuery(patch) {
     const query = { ...route.query, ...patch }
@@ -48,20 +56,34 @@ export function useSessionPrimaryView({ sessionUuid, route, router }) {
       view: view === 'story' ? null : view,
       location: view === 'locations' ? route.query.location : null,
       npc: view === 'npcs' ? route.query.npc : null,
+		quest: view === 'quests' ? route.query.quest : null,
+		material: view === 'materials' ? route.query.material : null,
     })
   }
 
   function selectLocation(id) {
     activeView.value = 'locations'
     persistView('locations')
-    replaceQuery({ view: 'locations', location: id || null, npc: null })
+	replaceQuery({ view: 'locations', location: id || null, npc: null, quest: null, material: null })
   }
 
   function selectNpc(id) {
     activeView.value = 'npcs'
     persistView('npcs')
-    replaceQuery({ view: 'npcs', npc: id || null, location: null })
+	replaceQuery({ view: 'npcs', npc: id || null, location: null, quest: null, material: null })
   }
+
+	function selectQuest(id) {
+		activeView.value = 'quests'
+		persistView('quests')
+		replaceQuery({ view: 'quests', quest: id || null, location: null, npc: null, material: null })
+	}
+
+	function selectMaterial(id) {
+		activeView.value = 'materials'
+		persistView('materials')
+		replaceQuery({ view: 'materials', material: id || null, location: null, npc: null, quest: null })
+	}
 
   function persistView(view) {
     try { localStorage.setItem(sessionPrimaryViewKey(sessionUuid), view) } catch { /* ignore */ }
@@ -73,5 +95,5 @@ export function useSessionPrimaryView({ sessionUuid, route, router }) {
     if (SESSION_PRIMARY_VIEWS.has(view)) persistView(view)
   })
 
-  return { activeView, selectedLocationId, selectedNpcId, selectView, selectLocation, selectNpc }
+	return { activeView, selectedLocationId, selectedNpcId, selectedQuestId, selectedMaterialId, selectView, selectLocation, selectNpc, selectQuest, selectMaterial }
 }

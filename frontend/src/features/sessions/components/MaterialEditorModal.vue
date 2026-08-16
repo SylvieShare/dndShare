@@ -46,7 +46,11 @@
           <strong>Связи материала</strong>
           <small>Без связей материал доступен из любого контекста сессии.</small>
         </div>
-        <section>
+		<section>
+		  <div class="material-editor-section-title"><span>Объекты сессии</span><small>Все типы в одном списке</small></div>
+		  <UniversalRelationEditor v-model="draft.relations" :items="relationItems" source-type="material" :source-id="material?.id" />
+		</section>
+		<section>
           <div class="material-editor-section-title"><span>Главы</span><small>Все сценарии главы</small></div>
           <WorldRelationEditor
             v-model="draft.chapterLinks"
@@ -87,11 +91,13 @@ import { computed, onBeforeUnmount, reactive, ref, watch } from 'vue'
 import { AppModalFrame, FormActionButtons, FormField, FormTextInput, FormTextarea } from '@sylvieshare/share-ui'
 import SessionImagePicker from '@/features/sessions/components/SessionImagePicker.vue'
 import WorldRelationEditor from '@/features/sessions/components/WorldRelationEditor.vue'
+import UniversalRelationEditor from '@/features/sessions/components/UniversalRelationEditor.vue'
 import { MATERIAL_TYPES, NOTE_STYLES } from '@/features/sessions/lib/sessionMaterials'
 
 const props = defineProps({
   material: { type: Object, default: null }, chapters: { type: Array, default: () => [] }, scenes: { type: Array, default: () => [] },
   defaultChapterId: { type: [Number, String], default: null }, defaultSceneId: { type: [Number, String], default: null }, saving: { type: Boolean, default: false },
+	relationItems: { type: Array, default: () => [] },
 })
 const emit = defineEmits(['close', 'save'])
 const draft = reactive({
@@ -103,6 +109,7 @@ const draft = reactive({
   sceneLinks: props.material
     ? (props.material.sceneLinks || []).map(link => ({ ...link }))
     : props.defaultSceneId ? [{ sceneId: Number(props.defaultSceneId), note: null }] : [],
+	relations: (props.material?.relations || []).map(link => ({ ...link })),
 })
 const chaptersById = computed(() => new Map(props.chapters.map(chapter => [Number(chapter.id), chapter])))
 const chapterOptions = computed(() => props.chapters.map(chapter => ({
@@ -179,6 +186,7 @@ async function submit() {
       assetId: needsAsset ? await uploadAsset() : null,
       chapterLinks: draft.chapterLinks,
       sceneLinks: draft.sceneLinks,
+		relations: draft.relations,
     })
   } catch { error.value = draft.kind === 'video' ? 'Не удалось загрузить видео' : 'Не удалось загрузить изображение' }
 }

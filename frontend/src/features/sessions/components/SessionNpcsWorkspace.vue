@@ -53,7 +53,7 @@
           <span>NPC · {{ [selectedNpc.raceName, selectedNpc.role].filter(Boolean).join(' · ') || 'раса и роль не указаны' }}</span>
           <h2>{{ selectedNpc.name }}</h2>
           <div class="npc-detail-meta">
-            <span><MapPin :size="12" />{{ attachedLocations.length }} {{ ruPlural(attachedLocations.length, 'локация', 'локации', 'локаций') }}</span>
+			<span><MapPin :size="12" />{{ selectedNpc.relations?.length || 0 }} связей</span>
             <span><BookOpenText :size="12" />{{ attachedScenes.length }} {{ ruPlural(attachedScenes.length, 'сценарий', 'сценария', 'сценариев') }}</span>
           </div>
         </div>
@@ -69,18 +69,10 @@
         </section>
 
         <div class="session-world-section-columns">
-          <section class="session-world-section">
-            <div class="session-world-section-title"><span>Где встретить</span><small>{{ attachedLocations.length }}</small></div>
-            <div v-if="attachedLocations.length" class="session-world-compact-list">
-              <button v-for="location in attachedLocations" :key="location.id" type="button" @click="$emit('open-location', location.id)">
-                <span class="session-world-scene-image" :style="{ backgroundImage: `url(${sessionImageUrl(location)})` }" />
-                <span><strong>{{ location.name }}</strong><small>{{ location.relationNote || locationPath(location) }}</small></span>
-                <ChevronRight :size="14" />
-              </button>
-            </div>
-            <button v-else-if="isDm" type="button" class="session-world-inline-empty" @click="openEdit(selectedNpc)">Привязать локацию</button>
-            <p v-else class="session-world-muted">Локации не привязаны.</p>
-          </section>
+		  <section class="session-world-section">
+			<div class="session-world-section-title"><span>Связи</span><small>{{ selectedNpc.relations?.length || 0 }}</small></div>
+			<UniversalRelationList :relations="selectedNpc.relations" :items="relationItems" @open="openRelated" />
+		  </section>
 
           <section class="session-world-section">
             <div class="session-world-section-title"><span>Участие в сюжете</span><small>{{ attachedScenes.length }}</small></div>
@@ -95,18 +87,6 @@
           </section>
         </div>
 
-        <section class="session-world-section">
-          <div class="session-world-section-title"><span>Связи с NPC</span><small>{{ attachedNpcs.length }}</small></div>
-          <div v-if="attachedNpcs.length" class="session-world-compact-list">
-            <button v-for="npc in attachedNpcs" :key="npc.id" type="button" @click="$emit('select-npc', npc.id)">
-              <img class="session-world-avatar" :src="npcImageUrl(npc)" alt="" />
-              <span><strong>{{ npc.name }}</strong><small>{{ npc.relationNote || npc.role || 'Связанный персонаж' }}</small></span>
-              <ChevronRight :size="14" />
-            </button>
-          </div>
-          <button v-else-if="isDm" type="button" class="session-world-inline-empty" @click="openEdit(selectedNpc)">Добавить связь с NPC</button>
-          <p v-else class="session-world-muted">Связей с другими NPC пока нет.</p>
-        </section>
       </div>
     </main>
 
@@ -126,6 +106,7 @@
       :scenes="scenes"
       :npcs="npcs"
       :saving="world.saving.value"
+	  :relation-items="relationItems"
       @close="closeEditor"
       @save="saveNpc"
       @delete="requestDelete"
@@ -145,20 +126,22 @@
 <script setup>
 import { computed, ref } from 'vue'
 import {
-  BookOpenText, ChevronRight, ContactRound, MapPin, Pencil, Search, UserPlus, UsersRound,
+	BookOpenText, ContactRound, MapPin, Pencil, Search, UserPlus, UsersRound,
 } from '@lucide/vue'
 import { ConfirmDialog } from '@sylvieshare/share-ui'
 import NpcEditorModal from '@/features/sessions/components/NpcEditorModal.vue'
 import SessionLibraryWorkspace from '@/features/sessions/components/SessionLibraryWorkspace.vue'
-import { locationBreadcrumb, locationKind, ruPlural, sceneContextLabel } from '@/features/sessions/lib/sessionWorld'
+import UniversalRelationList from '@/features/sessions/components/UniversalRelationList.vue'
+import { ruPlural, sceneContextLabel } from '@/features/sessions/lib/sessionWorld'
 import { npcImageUrl, sessionImageUrl } from '@/features/sessions/lib/sessionImages'
 
 const props = defineProps({
   world: { type: Object, required: true },
   selectedNpcId: { type: [Number, String], default: null },
   isDm: { type: Boolean, default: false },
+	relationItems: { type: Array, default: () => [] },
 })
-const emit = defineEmits(['select-npc', 'open-location'])
+const emit = defineEmits(['select-npc', 'open-location', 'open-entity'])
 const query = ref('')
 const editorOpen = ref(false)
 const editingNpc = ref(null)
@@ -172,28 +155,22 @@ const filteredNpcs = computed(() => {
   if (!needle) return npcs.value
   return npcs.value.filter(npc => `${npc.name} ${npc.raceName || ''} ${npc.role || ''} ${npc.description || ''}`.toLocaleLowerCase('ru').includes(needle))
 })
-const attachedLocations = computed(() => (selectedNpc.value?.locationLinks || []).map(link => {
-  const item = props.world.locationsById.value.get(link.locationId)
-  return item ? { ...item, relationNote: link.note } : null
-}).filter(Boolean))
 const attachedScenes = computed(() => (selectedNpc.value?.sceneLinks || []).map(link => {
   const item = props.world.scenesById.value.get(link.sceneId)
   return item ? { ...item, relationNote: link.note } : null
 }).filter(Boolean))
-const attachedNpcs = computed(() => (selectedNpc.value?.npcLinks || []).map(link => {
-  const item = props.world.npcsById.value.get(link.npcId)
-  return item ? { ...item, relationNote: link.note } : null
-}).filter(Boolean))
 
-function locationPath(location) {
-  const ancestors = locationBreadcrumb(location, props.world.locationsById.value).slice(0, -1)
-  return ancestors.map(item => item.name).join(' · ') || locationKind(location.kind).shortLabel
-}
 function npcPlaceSummary(npc) {
-  const first = props.world.locationsById.value.get(npc.locationLinks?.[0]?.locationId)
+	const locationLink = npc.relations?.find(relation => relation.type === 'location')
+	const first = props.world.locationsById.value.get(locationLink?.id)
   return first ? first.name : 'Без привязок'
 }
-function relationCount(npc) { return (npc.locationLinks?.length || 0) + (npc.sceneLinks?.length || 0) + (npc.npcLinks?.length || 0) }
+function relationCount(npc) { return (npc.relations?.length || 0) + (npc.sceneLinks?.length || 0) }
+function openRelated(item) {
+	if (item.type === 'location') emit('open-location', item.id)
+	else if (item.type === 'npc') emit('select-npc', item.id)
+	else emit('open-entity', item)
+}
 function npcPortraitPosition(npc) { return { objectPosition: `${(npc.imageFocalX ?? .5) * 100}% ${(npc.imageFocalY ?? .5) * 100}%` } }
 function openCreate() { editingNpc.value = null; editorOpen.value = true }
 function openEdit(npc) { editingNpc.value = npc; editorOpen.value = true }

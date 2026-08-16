@@ -51,8 +51,8 @@ func TestNpcMutationNormalizesColorAndText(t *testing.T) {
 	recorder := httptest.NewRecorder()
 	mutation, ok := npcMutation(recorder, npcMutationRequest{
 		Name: "  Мира  ", RaceItemID: &raceItemID, Role: &role, Color: "#A06CE8",
-		ImageID:  25,
-		NPCLinks: []store.SessionNPCNPCLink{{NPCID: 7, Note: &note}},
+		ImageID:   25,
+		Relations: []store.SessionEntityRelation{{Type: "npc", ID: 7, Note: &note}},
 	})
 	if !ok {
 		t.Fatalf("valid npc rejected: %s", recorder.Body.String())
@@ -60,7 +60,7 @@ func TestNpcMutationNormalizesColorAndText(t *testing.T) {
 	if mutation.Name != "Мира" || mutation.RaceItemID == nil || *mutation.RaceItemID != 42 || mutation.Role == nil || *mutation.Role != "Проводник" || mutation.Color != "#a06ce8" {
 		t.Fatalf("unexpected mutation: %+v", mutation)
 	}
-	if mutation.ImageID != 25 || mutation.NPCLinks[0].Note == nil || *mutation.NPCLinks[0].Note != "Старый долг" {
+	if mutation.ImageID != 25 || mutation.Relations[0].Note == nil || *mutation.Relations[0].Note != "Старый долг" {
 		t.Fatalf("unexpected image or NPC link mutation: %+v", mutation)
 	}
 

@@ -17,10 +17,7 @@ func TestSessionWorldSchemaUsesTreeAndExplicitAssociations(t *testing.T) {
 		"race_item_id int8 NULL REFERENCES dndshare.item(id) ON DELETE SET NULL",
 		"ADD COLUMN IF NOT EXISTS race_item_id",
 		"CREATE TABLE IF NOT EXISTS dndshare.session_scene_location",
-		"CREATE TABLE IF NOT EXISTS dndshare.session_npc_location",
 		"CREATE TABLE IF NOT EXISTS dndshare.session_npc_scene",
-		"CREATE TABLE IF NOT EXISTS dndshare.session_npc_relation",
-		"session_npc_relation_order_check",
 		"custom_image_id int8 NULL REFERENCES dndshare.storage_image(id) ON DELETE SET NULL",
 		"ADD COLUMN IF NOT EXISTS note text NULL",
 		"ON DELETE CASCADE",
@@ -32,11 +29,22 @@ func TestSessionWorldSchemaUsesTreeAndExplicitAssociations(t *testing.T) {
 	if strings.Contains(schemaSessionWorldSQL, "session_location_edge") {
 		t.Fatal("locations must remain a tree without graph edges")
 	}
+	if strings.Contains(schemaSessionWorldSQL, "session_npc_location") || strings.Contains(schemaSessionWorldSQL, "session_npc_relation") {
+		t.Fatal("legacy NPC relation tables must not be recreated")
+	}
 }
 
 func TestSessionWorldSchemaRunsAfterSessionTables(t *testing.T) {
-	if schemaParts[len(schemaParts)-1].name != "material-links" {
-		t.Fatalf("last schema part = %q, want material-links", schemaParts[len(schemaParts)-1].name)
+	if schemaParts[len(schemaParts)-1].name != "session-entities" {
+		t.Fatalf("last schema part = %q, want session-entities", schemaParts[len(schemaParts)-1].name)
+	}
+}
+
+func TestSessionEntitiesSchemaAddsQuestsAndUniversalRelations(t *testing.T) {
+	for _, fragment := range []string{"CREATE TABLE IF NOT EXISTS dndshare.session_quest", "CREATE TABLE IF NOT EXISTS dndshare.session_entity_relation", "'location', 'npc', 'material', 'quest'", "session_entity_relation_order_check"} {
+		if !strings.Contains(schemaSessionEntitiesSQL, fragment) {
+			t.Fatalf("session entity schema must contain %q", fragment)
+		}
 	}
 }
 

@@ -67,7 +67,7 @@ available for pan and node dragging.
 
 The session page is a campaign workspace rather than a stack of independent
 content pages. Its semantic header centers the switch between `Сюжет`,
-`Локации`, `NPC` and `Материалы` independently of the title/arc and tool groups; the
+`Локации`, `NPC`, `Материалы` and `Задания` independently of the title/arc and tool groups; the
 participant rail remains on the left and the
 dice/events/music tools remain on the right. In `Сюжет` the chapter canvas fills
 all available width below `AppHeader`. CSS safe-area variables keep focus, zoom
@@ -135,10 +135,10 @@ character saves are flushed on page unmount instead of dropping their events.
 
 ## Locations and prepared NPCs
 
-`Локации`, `NPC` and `Материалы` are DM-only primary central workspaces, not extra permanent
+`Локации`, `NPC`, `Материалы` and `Задания` are DM-only primary central workspaces, not extra permanent
 side panels. Their surfaces sit over the same tokenized dot field as the story
 canvas. The selected mode is stored per session in local storage; `view`,
-`location` and `npc` query parameters preserve a shareable selection. Combat is
+`location`, `npc`, `material` and `quest` query parameters preserve a shareable selection. Combat is
 still a temporary overlay. Opening it from either world workspace keeps that
 workspace mounted underneath and closing combat returns to the same mode and
 selected entity.
@@ -168,12 +168,12 @@ handbook items, including subraces; the stored nullable FK is cleared if that
 item is removed. The name field has an explicit dice action backed by the same
 race-aware generator as the D&D character wizard. Standard race profiles combine
 at least 80 given-name/family-name variants each, while an unknown custom race
-uses a broad fantasy fallback. One NPC can be attached to multiple locations,
-multiple scenarios and other NPCs. Each association carries an optional private
-note. The editor shows only current associations with remove actions; `Добавить`
-opens a dedicated searchable picker instead of rendering every candidate as a
-checkbox. Location and NPC detail views show reverse associations without
-duplicating the NPC record; their relation rows use readable 44–48 px previews
+uses a broad fantasy fallback. Locations, NPCs, materials and quests use one
+symmetric relation model. Every entity can link to any entity of those four
+types, including another entity of its own type, with an optional private note.
+`Добавить связь` opens one picker: the DM can search across the complete
+catalogue or filter a type. Editors show only current links with remove actions,
+while detail views sort them and split them into type sections with readable 44–48 px previews
 and full-size primary/secondary text. Editors use the
 shared `ColorPresetPicker`, `SessionImagePicker`, form controls and modal frame.
 `SessionImagePicker` keeps only the current image and `Сменить` in the parent
@@ -187,6 +187,11 @@ weathered everyday characters rather than only idealized adventurers.
 World data is loaded lazily as one aggregate through `useSessionWorld`, then a
 successful mutation replaces that aggregate so every reverse association stays
 consistent.
+
+The quest workspace is a searchable journal built on the same library shell.
+A quest stores a name, description, status (`Запланировано`, `В процессе`,
+`Выполнено`, `Провалено`) and universal relations. Its selected id is deep-linked
+through `quest` just like locations and NPCs.
 
 ## Chapters, scenarios and blocks
 
@@ -351,7 +356,7 @@ ellipsis trigger; double click still opens the scenario block canvas.
 Double-clicking a scenario switches the same physical canvas to the third graph.
 The scenario node first moves to the top immediately to the right of its chapter
 and its peers and edges fade out; then block nodes replace the graph payload.
-Description, dialogue, combat, reward, image and material blocks have independent coordinates, persisted widths,
+Description, dialogue, combat, reward, image, material, location, NPC and quest blocks have independent coordinates, persisted widths,
 content-sized heights and directed links. Their accent color is derived from
 the type instead of being user-selected or stored. Block cards use the same
 dark `var(--surface)` backing and inset border as `BaseTile`, with only a quiet
@@ -380,6 +385,9 @@ icons and names. An image block references only an image/map material. The
 separate material block opens the shared searchable picker over every material
 kind available in the current chapter/scenario, renders a type-aware preview
 and exposes the same direct broadcast action.
+Location, NPC, quest and material create actions are visually separated into an
+`Объекты сессии` group. The first three store a validated entity reference and
+render its current image/name/status data rather than copying it into the block.
 Block edges are re-measured after content or width changes, and dragging the
 right edge persists a width in the `220..640px` range. Clicking the pinned
 scenario opens a reduced menu with return-to-scenarios, status and edit actions;

@@ -22,6 +22,17 @@
         <SceneRewardItemsEditor v-model="draft.items" />
       </FormField>
 
+	  <FormField v-else-if="isEntityBlock" :label="`Выберите: ${typeLabel}`" vertical>
+		<div v-if="selectedEntity" class="scene-block-material-selected">
+		  <img v-if="selectedEntity.image" :src="selectedEntity.image" alt="" />
+		  <span v-else class="scene-block-material-icon" :style="{ color: selectedEntity.color || selectedEntity.typeMeta.color }">{{ selectedEntity.title.slice(0, 1) }}</span>
+		  <span><strong>{{ selectedEntity.title }}</strong><small>{{ selectedEntity.subtitle || selectedEntity.typeMeta.singular }}</small></span>
+		  <button type="button" @click="entityPickerOpen = true">Сменить</button>
+		</div>
+		<button v-else type="button" class="scene-block-material-pick" :disabled="!entityOptions.length" @click="entityPickerOpen = true">{{ entityOptions.length ? `Выбрать ${typeLabel}` : 'Нет доступных объектов' }}</button>
+		<UniversalRelationPickerModal v-if="entityPickerOpen" :items="entityOptions" @close="entityPickerOpen = false" @select="selectEntity" />
+	  </FormField>
+
       <FormField v-else-if="isMaterialBlock" :label="blockType === 'image' ? 'Изображение для показа' : 'Материал'" vertical>
         <div v-if="selectedMaterial" class="scene-block-material-selected">
           <img v-if="['image', 'map'].includes(selectedMaterial.kind)" :src="selectedMaterial.assetUrl" alt="" />
@@ -86,7 +97,7 @@
     <template #footer>
       <FormActionButtons
         :loading="saving"
-        :can-submit="!!draft.title.trim() && (!isMaterialBlock || !!draft.materialId)"
+		:can-submit="!!draft.title.trim() && (!isMaterialBlock || !!draft.materialId) && (!isEntityBlock || !!draft.referenceId)"
         @cancel="$emit('close')"
         @submit="save"
       />
@@ -101,9 +112,11 @@ import InputDescription from '@/shared/ui/InputDescription.vue'
 import SceneCombatCreaturesEditor from '@/features/sessions/components/SceneCombatCreaturesEditor.vue'
 import SceneRewardItemsEditor from '@/features/sessions/components/SceneRewardItemsEditor.vue'
 import WorldRelationPickerModal from '@/features/sessions/components/WorldRelationPickerModal.vue'
+import UniversalRelationPickerModal from '@/features/sessions/components/UniversalRelationPickerModal.vue'
 import { DIALOGUE_COLOR_POOL, applyDialogueKeyColor, dialogueKeySuggestions, hydrateDialogueRows, normalizeDialogueKey, pickDialogueColor } from '@/features/sessions/lib/dialogueRows'
 import { sceneBlockDefaultWidth, sceneBlockType } from '@/features/sessions/lib/sceneBlockTypes'
 import { materialType } from '@/features/sessions/lib/sessionMaterials'
+import { buildSessionEntityCatalog } from '@/features/sessions/lib/sessionEntityRelations'
 import { FormActionButtons } from '@sylvieshare/share-ui'
 import { FormField } from '@sylvieshare/share-ui'
 import { FormTextInput } from '@sylvieshare/share-ui'
@@ -119,9 +132,13 @@ const emit = defineEmits(['close', 'save'])
 
 const blockType = computed(() => props.block?.type || props.type)
 const typeLabel = computed(() => sceneBlockType(blockType.value).label.toLowerCase())
-const defaultTitles = { text: 'Новое описание', list: 'Новый диалог', combat: 'Новый бой', reward: 'Новая награда', image: 'Новое изображение', material: 'Новый материал' }
+const defaultTitles = { text: 'Новое описание', list: 'Новый диалог', combat: 'Новый бой', reward: 'Новая награда', image: 'Новое изображение', material: 'Новый материал', location: 'Локация', npc: 'NPC', quest: 'Задание' }
 const sessionMaterials = inject('sessionMaterials', null)
+const sessionWorld = inject('sessionWorld', null)
 const isMaterialBlock = computed(() => blockType.value === 'image' || blockType.value === 'material')
+const isEntityBlock = computed(() => ['location', 'npc', 'quest'].includes(blockType.value))
+const entityCatalog = computed(() => buildSessionEntityCatalog(sessionWorld, sessionMaterials))
+const entityOptions = computed(() => entityCatalog.value.filter(item => item.type === blockType.value))
 const availableMaterials = computed(() => (sessionMaterials?.availableFor(props.chapterId, props.sceneId) || [])
   .filter(material => blockType.value === 'material' || material.kind === 'image' || material.kind === 'map'))
 const selectedMaterial = computed(() => availableMaterials.value.find(material => String(material.id) === String(draft.materialId)) || null)
@@ -134,6 +151,7 @@ const materialOptions = computed(() => availableMaterials.value.map(material => 
   color: 'var(--accent)',
 })))
 const materialPickerOpen = ref(false)
+const entityPickerOpen = ref(false)
 const dialogueKeysListId = `scene-dialogue-keys-${getCurrentInstance()?.uid ?? 'editor'}`
 const initialDialogueRows = hydrateDialogueRows(props.block?.data?.rows?.length
   ? props.block.data.rows
@@ -149,7 +167,9 @@ const draft = reactive({
     ? props.block.data.items.map(item => ({ ...item }))
     : [],
   materialId: props.block?.materialId || null,
+	referenceId: props.block?.data?.referenceId || null,
 })
+const selectedEntity = computed(() => entityOptions.value.find(item => String(item.id) === String(draft.referenceId)) || null)
 const descriptionBlock = { id: 'scene-block-description', content: { placeholder: 'Текст описания' } }
 const dialogueSuggestions = computed(() => dialogueKeySuggestions(draft.rows))
 
@@ -184,8 +204,11 @@ function selectMaterial(materialId) {
   materialPickerOpen.value = false
 }
 
+function selectEntity(item) { draft.referenceId = Number(item.id); entityPickerOpen.value = false }
+
 function save() {
   if (isMaterialBlock.value && !draft.materialId) return
+	if (isEntityBlock.value && !draft.referenceId) return
   emit('save', {
     type: blockType.value,
     title: draft.title.trim(),
@@ -200,7 +223,9 @@ function save() {
         ? { creatures: draft.creatures.map(creature => ({ ...creature })) }
         : blockType.value === 'reward'
           ? { items: draft.items.map(item => ({ ...item })) }
-        : isMaterialBlock.value ? {} : { text: draft.text },
+		: isMaterialBlock.value ? {}
+		  : isEntityBlock.value ? { referenceId: draft.referenceId }
+		  : { text: draft.text },
   })
 }
 </script>

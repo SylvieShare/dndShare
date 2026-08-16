@@ -114,7 +114,7 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue'
-import { BookOpenText, Images, Map, Pencil, Swords, UsersRound } from '@lucide/vue'
+import { BookOpenText, Images, Map, Pencil, ScrollText, Swords, UsersRound } from '@lucide/vue'
 import { BasePopover, reorderByDrop, useSortable } from '@sylvieshare/share-ui'
 import { romanNumeral } from '@/features/sessions/lib/chapterGraph'
 import SessionPresentationControl from '@/features/sessions/components/SessionPresentationControl.vue'
@@ -152,6 +152,7 @@ const primaryViews = [
   { key: 'locations', label: 'Локации', icon: Map },
   { key: 'npcs', label: 'NPC', icon: UsersRound },
   { key: 'materials', label: 'Материалы', icon: Images },
+	{ key: 'quests', label: 'Задания', icon: ScrollText },
 ]
 const visiblePrimaryViews = computed(() => props.isDm ? primaryViews : primaryViews.slice(0, 1))
 const arcTrigger = ref(null)

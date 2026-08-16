@@ -29,8 +29,8 @@
         <strong>{{ node.name }}</strong>
         <small>{{ kind.shortLabel }}</small>
       </span>
-      <span v-if="node.npcIds?.length" class="location-tree-count" title="NPC в локации">
-        <UsersRound :size="11" />{{ node.npcIds.length }}
+	  <span v-if="linkedNpcCount" class="location-tree-count" title="Связанные NPC">
+		<UsersRound :size="11" />{{ linkedNpcCount }}
       </span>
       <button
         v-if="editable"
@@ -88,6 +88,7 @@ const props = defineProps({
   editable: { type: Boolean, default: false },
   forceExpanded: { type: Boolean, default: false },
 })
+const linkedNpcCount = computed(() => (props.node.relations || []).filter(relation => relation.type === 'npc').length)
 const emit = defineEmits(['select', 'toggle', 'edit', 'drop-location'])
 const dropMode = ref('')
 const kind = computed(() => locationKind(props.node.kind))
