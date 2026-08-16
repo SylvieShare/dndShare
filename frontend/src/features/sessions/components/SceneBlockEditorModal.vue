@@ -43,7 +43,7 @@
         <button v-else type="button" class="scene-block-material-pick" :disabled="!availableMaterials.length" @click="materialPickerOpen = true">
           {{ availableMaterials.length ? 'Выбрать материал' : 'Нет доступных изображений' }}
         </button>
-        <small class="scene-block-material-hint">Поиск идёт по материалам, доступным в текущей главе и сценарии.</small>
+        <small class="scene-block-material-hint">Поиск идёт по всем материалам сессии.</small>
         <WorldRelationPickerModal
           v-if="materialPickerOpen"
           title="Выбрать изображение"

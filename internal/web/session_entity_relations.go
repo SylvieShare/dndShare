@@ -7,7 +7,7 @@ func validEntityRelations(relations []store.SessionEntityRelation) bool {
 		return false
 	}
 	for _, relation := range relations {
-		if relation.ID <= 0 || (relation.Type != store.SessionEntityLocation && relation.Type != store.SessionEntityNPC && relation.Type != store.SessionEntityMaterial && relation.Type != store.SessionEntityQuest && relation.Type != store.SessionEntityScene) {
+		if relation.ID <= 0 || (relation.Type != store.SessionEntityLocation && relation.Type != store.SessionEntityNPC && relation.Type != store.SessionEntityMaterial && relation.Type != store.SessionEntityQuest) {
 			return false
 		}
 	}

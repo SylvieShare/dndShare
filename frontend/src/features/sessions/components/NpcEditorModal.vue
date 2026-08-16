@@ -68,7 +68,7 @@
 
       <div class="npc-editor-relations">
 		<section>
-		  <div class="npc-editor-section-title"><span>Связи</span><small>Все объекты сессии и сценарии</small></div>
+		  <div class="npc-editor-section-title"><span>Связи</span><small>Локации, NPC, задания и материалы</small></div>
 		  <UniversalRelationEditor v-model="draft.relations" :items="relationItems" source-type="npc" :source-id="npc?.id" />
 		</section>
       </div>

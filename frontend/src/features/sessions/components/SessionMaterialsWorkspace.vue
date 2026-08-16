@@ -60,6 +60,10 @@
         <div class="session-world-section-title"><span>Связи</span><small>{{ selected.relations?.length || 0 }}</small></div>
         <UniversalRelationList :relations="selected.relations" :items="relationItems" @open="openRelated" />
       </section>
+      <section class="session-world-section">
+        <div class="session-world-section-title"><span>На холстах сценариев</span><small>{{ selected.scenarioUsages?.length || 0 }}</small></div>
+        <ScenarioUsageList :usages="selected.scenarioUsages" :scenes="world.scenes.value" @open="openScenario" />
+      </section>
       <span v-if="actionError" class="material-action-error">{{ actionError }}</span>
     </SessionEntityDetail>
     <main v-else class="session-world-detail session-world-detail--empty">
@@ -77,6 +81,7 @@ import { Cast, LibraryBig, Plus, Search, Trash2 } from '@lucide/vue'
 import MaterialEditorModal from '@/features/sessions/components/MaterialEditorModal.vue'
 import SessionEntityDetail from '@/features/sessions/components/SessionEntityDetail.vue'
 import SessionLibraryWorkspace from '@/features/sessions/components/SessionLibraryWorkspace.vue'
+import ScenarioUsageList from '@/features/sessions/components/ScenarioUsageList.vue'
 import UniversalRelationList from '@/features/sessions/components/UniversalRelationList.vue'
 import { MATERIAL_TYPES, materialType } from '@/features/sessions/lib/sessionMaterials'
 import { adjacentSessionListItemId, scrollSessionListItemIntoView } from '@/features/sessions/lib/sessionListNavigation'
@@ -110,15 +115,15 @@ watch([allMaterials, () => props.selectedMaterialId], ([list, routeId]) => {
 	if (candidate) selectedId.value = candidate.id
 }, { immediate: true })
 function contextLabel(material) {
-	const sceneLinks = (material.relations || []).filter(relation => relation.type === 'scene')
-	const count = sceneLinks.length
-  if (!count) return 'Вся сессия'
+	const usages = material.scenarioUsages || []
+	const count = usages.length
+  if (!count) return 'Не используется'
   if (count === 1) {
-		const scene = props.world.scenesById.value.get(Number(sceneLinks[0].id))
+		const scene = props.world.scenesById.value.get(Number(usages[0].sceneId))
 		return [scene?.chapterName, scene?.name].filter(Boolean).join(' · ') || 'Сценарий'
   }
-  const word = count % 10 >= 2 && count % 10 <= 4 && (count % 100 < 10 || count % 100 >= 20) ? 'связи' : 'связей'
-  return `${count} ${word}`
+	const word = count % 10 === 1 && count % 100 !== 11 ? 'сценарии' : 'сценариях'
+	return `В ${count} ${word}`
 }
 function openCreate() { editing.value = null }
 function pickMaterial(id) { selectedId.value = id; emit('select-material', id) }
@@ -132,6 +137,7 @@ function openRelated(item) {
 	if (item.type === 'material') pickMaterial(item.id)
 	else emit('open-entity', item)
 }
+function openScenario(id) { emit('open-entity', { type: 'scene', id }) }
 async function saveMaterial(payload) {
   saving.value = true; actionError.value = ''
 	try {

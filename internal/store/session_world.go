@@ -25,6 +25,7 @@ type SessionLocation struct {
 	ImageCatalogKey  *string                 `json:"imageCatalogKey,omitempty"`
 	SortOrder        int                     `json:"sortOrder"`
 	Relations        []SessionEntityRelation `json:"relations"`
+	ScenarioUsages   []SessionScenarioUsage  `json:"scenarioUsages"`
 }
 
 type SessionNPC struct {
@@ -43,6 +44,7 @@ type SessionNPC struct {
 	ImageFocalY     float64                 `json:"imageFocalY"`
 	SortOrder       int                     `json:"sortOrder"`
 	Relations       []SessionEntityRelation `json:"relations"`
+	ScenarioUsages  []SessionScenarioUsage  `json:"scenarioUsages"`
 }
 
 type SessionEntityRelation struct {
@@ -51,32 +53,37 @@ type SessionEntityRelation struct {
 	Note *string `json:"note,omitempty"`
 }
 
+type SessionScenarioUsage struct {
+	SceneID    int64 `json:"sceneId"`
+	BlockCount int   `json:"blockCount"`
+}
+
 type SessionQuest struct {
-	ID           int64                   `json:"id"`
-	SessionID    int64                   `json:"sessionId"`
-	Name         string                  `json:"name"`
-	Status       string                  `json:"status"`
-	Goal         *string                 `json:"goal,omitempty"`
-	Condition    *string                 `json:"condition,omitempty"`
-	Reward       *string                 `json:"reward,omitempty"`
-	Consequences *string                 `json:"consequences,omitempty"`
-	Notes        *string                 `json:"notes,omitempty"`
-	SortOrder    int                     `json:"sortOrder"`
-	Relations    []SessionEntityRelation `json:"relations"`
+	ID             int64                   `json:"id"`
+	SessionID      int64                   `json:"sessionId"`
+	Name           string                  `json:"name"`
+	Status         string                  `json:"status"`
+	Goal           *string                 `json:"goal,omitempty"`
+	Condition      *string                 `json:"condition,omitempty"`
+	Reward         *string                 `json:"reward,omitempty"`
+	Consequences   *string                 `json:"consequences,omitempty"`
+	Notes          *string                 `json:"notes,omitempty"`
+	SortOrder      int                     `json:"sortOrder"`
+	Relations      []SessionEntityRelation `json:"relations"`
+	ScenarioUsages []SessionScenarioUsage  `json:"scenarioUsages"`
 }
 
 type SessionWorldScene struct {
-	ID              int64                   `json:"id"`
-	ChapterID       int64                   `json:"chapterId"`
-	Name            string                  `json:"name"`
-	ImageID         int64                   `json:"imageId"`
-	ImageURL        string                  `json:"imageUrl"`
-	ImageCatalogKey *string                 `json:"imageCatalogKey,omitempty"`
-	ArcOrder        int                     `json:"arcOrder"`
-	ArcName         string                  `json:"arcName"`
-	ChapterNumber   string                  `json:"chapterNumber"`
-	ChapterName     string                  `json:"chapterName"`
-	Relations       []SessionEntityRelation `json:"relations"`
+	ID              int64   `json:"id"`
+	ChapterID       int64   `json:"chapterId"`
+	Name            string  `json:"name"`
+	ImageID         int64   `json:"imageId"`
+	ImageURL        string  `json:"imageUrl"`
+	ImageCatalogKey *string `json:"imageCatalogKey,omitempty"`
+	ArcOrder        int     `json:"arcOrder"`
+	ArcName         string  `json:"arcName"`
+	ChapterNumber   string  `json:"chapterNumber"`
+	ChapterName     string  `json:"chapterName"`
 }
 
 type SessionWorld struct {
@@ -267,7 +274,7 @@ func (s *Store) GetSessionWorld(ctx context.Context, sessionID int64) (SessionWo
 		return SessionWorld{}, err
 	}
 	for sceneRows.Next() {
-		scene := SessionWorldScene{Relations: []SessionEntityRelation{}}
+		scene := SessionWorldScene{}
 		if err := sceneRows.Scan(
 			&scene.ID, &scene.ChapterID, &scene.Name, &scene.ImageID, &scene.ImageURL, &scene.ImageCatalogKey,
 			&scene.ArcOrder, &scene.ArcName, &scene.ChapterNumber, &scene.ChapterName,
@@ -284,6 +291,9 @@ func (s *Store) GetSessionWorld(ctx context.Context, sessionID int64) (SessionWo
 	sceneRows.Close()
 
 	if err := s.fillSessionWorldLinks(ctx, sessionID, &world); err != nil {
+		return SessionWorld{}, err
+	}
+	if err := s.fillSessionWorldScenarioUsages(ctx, sessionID, &world); err != nil {
 		return SessionWorld{}, err
 	}
 	return world, nil

@@ -40,21 +40,16 @@ func TestMaterialRequestRejectsMismatchedPayload(t *testing.T) {
 	}
 }
 
-func TestMaterialAvailableForExplicitLinks(t *testing.T) {
-	global := store.SessionMaterial{}
-	if !materialAvailableFor(global, 20) {
-		t.Fatal("unlinked material must remain session-wide")
+func TestMaterialRequestRejectsScenarioRelation(t *testing.T) {
+	content := "Тайна"
+	style := "letter"
+	req := sessionMaterialRequest{
+		Kind: "note", Name: "Записка", Content: &content, NoteStyle: &style,
+		Relations: []store.SessionEntityRelation{{Type: "scene", ID: 30}},
 	}
-	linked := store.SessionMaterial{
-		Relations: []store.SessionEntityRelation{
-			{Type: store.SessionEntityNPC, ID: 10},
-			{Type: store.SessionEntityScene, ID: 30},
-		},
-	}
-	if !materialAvailableFor(linked, 30) {
-		t.Fatal("material must be available in its linked scenario")
-	}
-	if materialAvailableFor(linked, 20) {
-		t.Fatal("material leaked into an unrelated context")
+	recorder := httptest.NewRecorder()
+	request := httptest.NewRequest("POST", "/", nil)
+	if ok := (&Server{}).validateMaterialRequest(recorder, request, store.SceneSession{}, &req); ok {
+		t.Fatal("scenario accepted as a material relation")
 	}
 }

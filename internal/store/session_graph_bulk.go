@@ -139,13 +139,6 @@ func (s *Store) DeleteGraphNodes(ctx context.Context, sessionID int64, level str
 		}
 		resultCount = result.RowsAffected()
 	case "scenes":
-		if _, err := tx.Exec(ctx, `
-			DELETE FROM dndshare.session_entity_relation
-			WHERE session_id = $1
-			  AND ((left_type = 'scene' AND left_id = ANY($2))
-			    OR (right_type = 'scene' AND right_id = ANY($2)))`, sessionID, ids); err != nil {
-			return false, err
-		}
 		if _, err := tx.Exec(ctx,
 			`DELETE FROM dndshare.session_scene_item WHERE scene_id = ANY($1)`, ids); err != nil {
 			return false, err

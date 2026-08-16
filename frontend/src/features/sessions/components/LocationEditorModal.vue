@@ -33,7 +33,7 @@
       </div>
 
       <section class="location-editor-scenes">
-		<div class="location-editor-section-title"><span>Связи</span><small>Все объекты сессии и сценарии</small></div>
+		<div class="location-editor-section-title"><span>Связи</span><small>Локации, NPC, задания и материалы</small></div>
 		<UniversalRelationEditor v-model="draft.relations" :items="relationItems" source-type="location" :source-id="location?.id" />
       </section>
     </div>

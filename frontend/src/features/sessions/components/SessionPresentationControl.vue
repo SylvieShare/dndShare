@@ -39,13 +39,13 @@
           <span><strong>Транслировать музыку</strong><small>Звук воспроизводится на экране показа</small></span>
         </label>
         <section v-if="contextMaterials.length">
-          <h3>Материалы в контексте</h3>
+          <h3>Материалы сессии</h3>
           <button v-for="material in contextMaterials" :key="material.id" type="button" class="presentation-material" @click="showMaterial(material)">
             <span class="presentation-material-thumb">
               <img v-if="material.kind === 'image' || material.kind === 'map'" :src="material.assetUrl" alt="" />
               <component :is="materialType(material.kind).icon" v-else :size="17" />
             </span>
-            <span><strong>{{ material.name }}</strong><small>{{ materialType(material.kind).label }} · {{ relationLabel(material) }}</small></span>
+            <span><strong>{{ material.name }}</strong><small>{{ materialType(material.kind).label }} · {{ usageLabel(material) }}</small></span>
             <Cast :size="14" />
           </button>
         </section>
@@ -101,10 +101,10 @@ watch(open, value => { if (value) props.presentation.loadConnections() })
 async function run(action, close = true) { await action().catch(() => {}); if (close) open.value = false }
 function showMaterial(material) { run(() => props.presentation.showMaterial(material)) }
 function toggleMusic(event) { run(() => props.presentation.setBroadcastMusic(event.target.checked), false) }
-function relationLabel(material) {
-  const count = (material.relations || []).filter(relation => relation.type === 'scene').length
-  if (!count) return 'Вся сессия'
-  return count === 1 ? '1 связь' : `${count} связей`
+function usageLabel(material) {
+  const count = material.scenarioUsages?.length || 0
+  if (!count) return 'Не на холсте'
+  return count === 1 ? 'В 1 сценарии' : `В ${count} сценариях`
 }
 </script>
 

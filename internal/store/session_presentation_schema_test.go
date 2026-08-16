@@ -29,7 +29,7 @@ func TestSessionPresentationSchemaKeepsMaterialsAndOneLiveState(t *testing.T) {
 	}
 }
 
-func TestSessionMaterialLinksMoveToUniversalScenarioRelations(t *testing.T) {
+func TestLegacyMaterialScenarioLinksAreRemovedAfterNoteMigration(t *testing.T) {
 	for _, fragment := range []string{
 		"to_regclass('dndshare.session_material_scene')",
 		"'material', link.material_id, 'scene'",
@@ -39,6 +39,8 @@ func TestSessionMaterialLinksMoveToUniversalScenarioRelations(t *testing.T) {
 		"DROP COLUMN IF EXISTS scope",
 		"DROP COLUMN IF EXISTS chapter_id",
 		"DROP COLUMN IF EXISTS scene_id",
+		"item.type = 'material'",
+		"DELETE FROM dndshare.session_entity_relation",
 	} {
 		if !strings.Contains(schemaSessionEntitiesSQL, fragment) {
 			t.Fatalf("session entity schema must contain %q", fragment)

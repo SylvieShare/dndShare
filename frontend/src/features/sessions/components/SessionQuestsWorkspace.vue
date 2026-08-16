@@ -23,6 +23,7 @@
 
       <section class="session-world-section"><div class="session-world-section-title"><span>Задание</span></div><div v-if="hasDetails" class="quest-detail-grid"><article v-if="selected.goal" class="quest-detail-field quest-detail-field--goal"><strong>Цель</strong><p>{{ selected.goal }}</p></article><article v-if="selected.condition" class="quest-detail-field"><strong>Условие</strong><p>{{ selected.condition }}</p></article><article v-if="selected.reward" class="quest-detail-field"><strong>Награда</strong><p>{{ selected.reward }}</p></article><article v-if="selected.consequences" class="quest-detail-field"><strong>Последствия</strong><p>{{ selected.consequences }}</p></article><article v-if="selected.notes" class="quest-detail-field quest-detail-field--notes"><strong>Заметки</strong><p>{{ selected.notes }}</p></article></div><button v-else-if="isDm" type="button" class="session-world-inline-empty" @click="openEdit(selected)">Добавить цель, условие и награду</button><p v-else class="session-world-muted">Детали задания пока не добавлены.</p></section>
       <section class="session-world-section"><div class="session-world-section-title"><span>Связи</span><small>{{ selected.relations?.length || 0 }}</small></div><UniversalRelationList :relations="selected.relations" :items="relationItems" @open="$emit('open-entity', $event)" /></section>
+      <section class="session-world-section"><div class="session-world-section-title"><span>На холстах сценариев</span><small>{{ selected.scenarioUsages?.length || 0 }}</small></div><ScenarioUsageList :usages="selected.scenarioUsages" :scenes="world.scenes.value" @open="$emit('open-entity', { type: 'scene', id: $event })" /></section>
     </SessionEntityDetail>
     <main v-else class="session-world-detail session-world-detail--empty"><ListTodo :size="44" /><strong>{{ quests.length ? 'Выберите задание' : 'Здесь появится журнал заданий' }}</strong><span>Отслеживайте цели и держите связанные сущности рядом.</span></main>
     <QuestEditorModal v-if="editorOpen" :quest="editing" :relation-items="relationItems" :saving="world.saving.value" @close="close" @save="save" @delete="requestDelete" />
@@ -36,6 +37,7 @@ import { ConfirmDialog } from '@sylvieshare/share-ui'
 import QuestEditorModal from '@/features/sessions/components/QuestEditorModal.vue'
 import SessionEntityDetail from '@/features/sessions/components/SessionEntityDetail.vue'
 import SessionLibraryWorkspace from '@/features/sessions/components/SessionLibraryWorkspace.vue'
+import ScenarioUsageList from '@/features/sessions/components/ScenarioUsageList.vue'
 import UniversalRelationList from '@/features/sessions/components/UniversalRelationList.vue'
 import { questStatus } from '@/features/sessions/lib/sessionEntityRelations'
 import { adjacentSessionListItemId, scrollSessionListItemIntoView } from '@/features/sessions/lib/sessionListNavigation'

@@ -116,12 +116,11 @@ func (s *Server) handleCreateScene(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var req struct {
-		Name      string                        `json:"name"`
-		Status    string                        `json:"status"`
-		ImageID   int64                         `json:"imageId"`
-		X         float64                       `json:"x"`
-		Y         float64                       `json:"y"`
-		Relations []store.SessionEntityRelation `json:"relations"`
+		Name    string  `json:"name"`
+		Status  string  `json:"status"`
+		ImageID int64   `json:"imageId"`
+		X       float64 `json:"x"`
+		Y       float64 `json:"y"`
 	}
 	if err := decodeJSON(r, &req); err != nil {
 		badRequest(w, "bad body")
@@ -136,16 +135,11 @@ func (s *Server) handleCreateScene(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "Некорректный статус сценария")
 		return
 	}
-	if !validEntityRelations(req.Relations) {
-		badRequest(w, "Некорректные связи сценария")
-		return
-	}
 	if !s.validateSessionImage(w, r, userID, req.ImageID, "story") {
 		return
 	}
 	scene, err := s.store.CreateScene(
-		r.Context(), sess.ID, chapterID, name, req.Status, req.ImageID, req.X, req.Y,
-		cleanEntityRelations(req.Relations),
+		r.Context(), chapterID, name, req.Status, req.ImageID, req.X, req.Y,
 	)
 	if err != nil {
 		serverError(w, err)
@@ -173,10 +167,9 @@ func (s *Server) handleUpdateScene(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var req struct {
-		Name      string                        `json:"name"`
-		Status    string                        `json:"status"`
-		ImageID   int64                         `json:"imageId"`
-		Relations []store.SessionEntityRelation `json:"relations"`
+		Name    string `json:"name"`
+		Status  string `json:"status"`
+		ImageID int64  `json:"imageId"`
 	}
 	if err := decodeJSON(r, &req); err != nil {
 		badRequest(w, "bad body")
@@ -191,16 +184,11 @@ func (s *Server) handleUpdateScene(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "Некорректный статус сценария")
 		return
 	}
-	if !validEntityRelations(req.Relations) {
-		badRequest(w, "Некорректные связи сценария")
-		return
-	}
 	if !s.validateSessionImage(w, r, userID, req.ImageID, "story") {
 		return
 	}
 	if err := s.store.UpdateScene(
-		r.Context(), sess.ID, sceneID, name, req.Status, req.ImageID,
-		cleanEntityRelations(req.Relations),
+		r.Context(), sceneID, name, req.Status, req.ImageID,
 	); err != nil {
 		serverError(w, err)
 		return
@@ -234,7 +222,7 @@ func (s *Server) handleDeleteScene(w http.ResponseWriter, r *http.Request) {
 	if !ok {
 		return
 	}
-	if err := s.store.DeleteScene(r.Context(), sess.ID, sceneID); err != nil {
+	if err := s.store.DeleteScene(r.Context(), sceneID); err != nil {
 		serverError(w, err)
 		return
 	}

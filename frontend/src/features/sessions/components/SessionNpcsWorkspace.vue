@@ -43,7 +43,7 @@
       <div v-else class="session-world-sidebar-empty">
         <UsersRound :size="28" />
         <strong>Заготовьте важных NPC</strong>
-        <span>Их можно привязать к нескольким локациям и сценариям, не создавая дубликаты.</span>
+        <span>Связывайте их с объектами мира и добавляйте на холсты нужных сценариев.</span>
         <button v-if="isDm" type="button" @click="openCreate">Создать первого NPC</button>
       </div>
     </aside>
@@ -71,6 +71,10 @@
         <div class="session-world-section-title"><span>Связи</span><small>{{ selectedNpc.relations?.length || 0 }}</small></div>
         <UniversalRelationList :relations="selectedNpc.relations" :items="relationItems" @open="openRelated" />
       </section>
+      <section class="session-world-section">
+        <div class="session-world-section-title"><span>На холстах сценариев</span><small>{{ selectedNpc.scenarioUsages?.length || 0 }}</small></div>
+        <ScenarioUsageList :usages="selectedNpc.scenarioUsages" :scenes="world.scenes.value" @open="openScenario" />
+      </section>
     </SessionEntityDetail>
 
     <main v-else class="session-world-detail session-world-detail--empty">
@@ -96,7 +100,7 @@
     <ConfirmDialog
       v-if="pendingDelete"
       title="Удалить NPC?"
-      :message="`«${pendingDelete.name}» будет удалён из каталога и отвязан от всех локаций и сценариев.`"
+      :message="`«${pendingDelete.name}» будет удалён из каталога вместе со своими связями. Если NPC используется на холсте, сначала удалите его блок.`"
       confirm-label="Удалить"
       :loading="world.saving.value"
       @cancel="pendingDelete = null"
@@ -114,6 +118,7 @@ import { ConfirmDialog } from '@sylvieshare/share-ui'
 import NpcEditorModal from '@/features/sessions/components/NpcEditorModal.vue'
 import SessionEntityDetail from '@/features/sessions/components/SessionEntityDetail.vue'
 import SessionLibraryWorkspace from '@/features/sessions/components/SessionLibraryWorkspace.vue'
+import ScenarioUsageList from '@/features/sessions/components/ScenarioUsageList.vue'
 import UniversalRelationList from '@/features/sessions/components/UniversalRelationList.vue'
 import { npcImageUrl } from '@/features/sessions/lib/sessionImages'
 import { adjacentSessionListItemId, scrollSessionListItemIntoView } from '@/features/sessions/lib/sessionListNavigation'
@@ -151,6 +156,7 @@ function openRelated(item) {
 	else if (item.type === 'npc') emit('select-npc', item.id)
 	else emit('open-entity', item)
 }
+function openScenario(id) { emit('open-entity', { type: 'scene', id }) }
 function npcPortraitPosition(npc) { return { objectPosition: `${(npc.imageFocalX ?? .5) * 100}% ${(npc.imageFocalY ?? .5) * 100}%` } }
 function openCreate() { editingNpc.value = null; editorOpen.value = true }
 function openEdit(npc) { editingNpc.value = npc; editorOpen.value = true }

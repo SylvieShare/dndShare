@@ -13,12 +13,11 @@ const (
 	SessionEntityNPC      = "npc"
 	SessionEntityMaterial = "material"
 	SessionEntityQuest    = "quest"
-	SessionEntityScene    = "scene"
 )
 
 func validSessionEntityType(entityType string) bool {
 	switch entityType {
-	case SessionEntityLocation, SessionEntityNPC, SessionEntityMaterial, SessionEntityQuest, SessionEntityScene:
+	case SessionEntityLocation, SessionEntityNPC, SessionEntityMaterial, SessionEntityQuest:
 		return true
 	default:
 		return false
@@ -28,16 +27,6 @@ func validSessionEntityType(entityType string) bool {
 func sessionEntityExistsTx(ctx context.Context, tx pgx.Tx, sessionID int64, entityType string, id int64) (bool, error) {
 	if id <= 0 || !validSessionEntityType(entityType) {
 		return false, nil
-	}
-	if entityType == SessionEntityScene {
-		var exists bool
-		err := tx.QueryRow(ctx, `
-			SELECT EXISTS (
-				SELECT 1 FROM dndshare.session_scene scene
-				JOIN dndshare.session_chapter chapter ON chapter.id = scene.chapter_id
-				WHERE chapter.session_id = $1 AND scene.id = $2
-			)`, sessionID, id).Scan(&exists)
-		return exists, err
 	}
 	var table string
 	switch entityType {

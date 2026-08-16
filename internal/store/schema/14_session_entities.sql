@@ -66,10 +66,10 @@ ALTER TABLE dndshare.session_entity_relation
     DROP CONSTRAINT IF EXISTS session_entity_relation_right_type_check;
 ALTER TABLE dndshare.session_entity_relation
     ADD CONSTRAINT session_entity_relation_left_type_check
-        CHECK (left_type IN ('location', 'npc', 'material', 'quest', 'scene'));
+		CHECK (left_type IN ('location', 'npc', 'material', 'quest', 'scene'));
 ALTER TABLE dndshare.session_entity_relation
     ADD CONSTRAINT session_entity_relation_right_type_check
-        CHECK (right_type IN ('location', 'npc', 'material', 'quest', 'scene'));
+		CHECK (right_type IN ('location', 'npc', 'material', 'quest', 'scene'));
 CREATE INDEX IF NOT EXISTS idx_session_entity_relation_right
     ON dndshare.session_entity_relation USING btree (session_id, right_type, right_id);
 
@@ -174,3 +174,56 @@ ALTER TABLE dndshare.session_material
     DROP COLUMN IF EXISTS scope,
     DROP COLUMN IF EXISTS chapter_id,
     DROP COLUMN IF EXISTS scene_id;
+
+-- Scenario membership is derived only from actual canvas blocks. Preserve a
+-- useful legacy relation note when its target already has a matching block;
+-- relation-only associations deliberately do not create new canvas content.
+UPDATE dndshare.session_scene_item item
+SET data = jsonb_set(COALESCE(item.data, '{}'::jsonb), '{note}', to_jsonb(relation.note), true)
+FROM dndshare.session_entity_relation relation
+WHERE relation.note IS NOT NULL
+  AND NULLIF(item.data ->> 'note', '') IS NULL
+  AND item.type IN ('location', 'npc', 'quest')
+  AND (
+      (relation.left_type = item.type
+       AND relation.left_id::text = item.data ->> 'referenceId'
+       AND relation.right_type = 'scene'
+       AND relation.right_id = item.scene_id)
+      OR
+      (relation.right_type = item.type
+       AND relation.right_id::text = item.data ->> 'referenceId'
+       AND relation.left_type = 'scene'
+       AND relation.left_id = item.scene_id)
+  );
+
+UPDATE dndshare.session_scene_item item
+SET data = jsonb_set(COALESCE(item.data, '{}'::jsonb), '{note}', to_jsonb(relation.note), true)
+FROM dndshare.session_entity_relation relation
+WHERE relation.note IS NOT NULL
+  AND NULLIF(item.data ->> 'note', '') IS NULL
+  AND item.type = 'material'
+  AND (
+      (relation.left_type = 'material'
+       AND relation.left_id = item.material_id
+       AND relation.right_type = 'scene'
+       AND relation.right_id = item.scene_id)
+      OR
+      (relation.right_type = 'material'
+       AND relation.right_id = item.material_id
+       AND relation.left_type = 'scene'
+       AND relation.left_id = item.scene_id)
+  );
+
+DELETE FROM dndshare.session_entity_relation
+WHERE left_type = 'scene' OR right_type = 'scene';
+
+ALTER TABLE dndshare.session_entity_relation
+    DROP CONSTRAINT IF EXISTS session_entity_relation_left_type_check;
+ALTER TABLE dndshare.session_entity_relation
+    DROP CONSTRAINT IF EXISTS session_entity_relation_right_type_check;
+ALTER TABLE dndshare.session_entity_relation
+    ADD CONSTRAINT session_entity_relation_left_type_check
+        CHECK (left_type IN ('location', 'npc', 'material', 'quest'));
+ALTER TABLE dndshare.session_entity_relation
+    ADD CONSTRAINT session_entity_relation_right_type_check
+        CHECK (right_type IN ('location', 'npc', 'material', 'quest'));

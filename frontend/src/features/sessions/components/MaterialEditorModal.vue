@@ -44,7 +44,7 @@
       <aside class="material-editor-relations">
         <div class="material-editor-relations-head">
           <strong>Связи материала</strong>
-          <small>Сценарии задают контекст показа, остальные связи помогают держать материалы рядом с объектами кампании.</small>
+          <small>Связи помогают держать материал рядом с объектами кампании. Использование в сценариях определяется блоками холста.</small>
         </div>
 		<section>
 		  <div class="material-editor-section-title"><span>Объекты сессии</span><small>Все типы в одном списке</small></div>

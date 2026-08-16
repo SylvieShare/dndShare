@@ -23,6 +23,7 @@ const quests = read('./SessionQuestsWorkspace.vue')
 const questEditor = read('./QuestEditorModal.vue')
 const materials = read('./SessionMaterialsWorkspace.vue')
 const entityDetail = read('./SessionEntityDetail.vue')
+const scenarioUsages = read('./ScenarioUsageList.vue')
 const imagePicker = read('./SessionImagePicker.vue')
 const primaryView = read('../composables/useSessionPrimaryView.js')
 const worldState = read('../composables/useSessionWorld.js')
@@ -107,7 +108,7 @@ describe('session world workspaces', () => {
     expect(locations).not.toContain('location-edge')
   })
 
-	it('edits story context and universal entity relationships from focused editors', () => {
+	it('edits universal entity relationships without scenarios', () => {
 	expect(locationEditor).toContain('<UniversalRelationEditor')
 	expect(npcEditor).toContain('<UniversalRelationEditor')
 	expect(npcEditor).toContain('relations: draft.relations')
@@ -119,11 +120,17 @@ describe('session world workspaces', () => {
 	expect(universalPicker).toContain('SESSION_ENTITY_TYPES')
 	expect(universalPicker).toContain('creatableTypes')
 	expect(universalPicker).toContain('class="entity-picker-create"')
-	expect(read('../lib/sessionEntityRelations.js')).toContain("{ key: 'scene', label: 'Сценарии'")
+	expect(read('../lib/sessionEntityRelations.js')).not.toContain("{ key: 'scene', label: 'Сценарии'")
 	expect(quests).toContain('Связи')
   })
 
-  it('opens a related scenario on its block canvas', () => {
+	it('shows canvas-derived scenario usage and opens its block canvas', () => {
+	for (const workspace of [locations, npcs, quests, materials]) {
+		expect(workspace).toContain('<ScenarioUsageList')
+		expect(workspace).toContain('scenarioUsages')
+	}
+	expect(scenarioUsages).toContain('blockCount')
+	expect(scenarioUsages).toContain('на холст сценария')
     expect(layer).toContain("item.type === 'scene'")
     expect(layer).toContain("emit('open-scene', item.id)")
     expect(sessionView).toContain('@open-scene="openRelatedScene"')

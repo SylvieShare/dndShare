@@ -208,10 +208,10 @@ import SceneGraphNode from '@/features/sessions/components/SceneGraphNode.vue'
 import SceneReferenceCreateModal from '@/features/sessions/components/SceneReferenceCreateModal.vue'
 import UniversalRelationPickerModal from '@/features/sessions/components/UniversalRelationPickerModal.vue'
 import { useNestedEdgeEditor } from '@/features/sessions/composables/useNestedEdgeEditor'
+import { scenarioUsageBlockTypes, useSessionGraphBlockEditor } from '@/features/sessions/composables/useSessionGraphBlockEditor'
 import { useSessionGraphNavigation } from '@/features/sessions/composables/useSessionGraphNavigation'
 import { CHAPTER_STATUSES, SCENE_STATUSES } from '@/features/sessions/lib/chapterGraph'
 import { narrativeCanvasActions, narrativeCanvasEmptyCopy, narrativeCanvasLoadingLabel } from '@/features/sessions/lib/narrativeCanvas'
-import { sceneBlockDefaultWidth } from '@/features/sessions/lib/sceneBlockTypes'
 import { buildSessionEntityCatalog } from '@/features/sessions/lib/sessionEntityRelations'
 
 const props = defineProps({
@@ -249,13 +249,6 @@ const sessionPresentation = inject('sessionPresentation', null)
 const scenePromptOpen = ref(false)
 const editingScene = ref(null)
 const sceneCreatePosition = ref({ x: 48, y: 210 })
-const blockEditorOpen = ref(false)
-const editingBlock = ref(null)
-const creatingBlockType = ref('text')
-const blockCreatePosition = ref({ x: 48, y: 210 })
-const referencePickerOpen = ref(false)
-const referenceCreateOpen = ref(false)
-const referenceBlockTypes = new Set(['location', 'npc', 'quest', 'material'])
 const pendingDelete = ref(null)
 const {
   displayLevel,
@@ -307,11 +300,41 @@ const showChapterAncestor = computed(() => ['scenes', 'blocks'].includes(display
 const canvasActions = computed(() => narrativeCanvasActions(displayLevel.value))
 const emptyCopy = computed(() => narrativeCanvasEmptyCopy(displayLevel.value))
 const loadingLabel = computed(() => narrativeCanvasLoadingLabel(displayLevel.value))
+const {
+  blockEditorOpen,
+  editingBlock,
+  creatingBlockType,
+  referencePickerOpen,
+  referenceCreateOpen,
+  openBlockCreate,
+  closeReferencePicker,
+  openReferenceCreate,
+  createReferenceBlock,
+  openBlockEdit,
+  copyBlock,
+  broadcastBlock,
+  sendBlockToCombat,
+  closeBlockEditor,
+  saveBlock,
+  refreshScenarioUsages,
+} = useSessionGraphBlockEditor({
+  props,
+  emit,
+  canvas,
+  blockMenus,
+  actionError,
+  saving,
+  sessionMaterials,
+  sessionWorld,
+  sessionPresentation,
+  activeNodeHeight,
+  activeNodeWidth,
+  blockGraph,
+  activeChapter,
+  combatSceneContext,
+})
 const referencePickerItems = computed(() => {
-  const catalog = buildSessionEntityCatalog(sessionWorld, sessionMaterials)
-  if (creatingBlockType.value !== 'material') return catalog
-  const availableIds = new Set((sessionMaterials?.availableFor(selectedScene.value?.id) || []).map(item => String(item.id)))
-  return catalog.filter(item => item.type !== 'material' || availableIds.has(String(item.id)))
+  return buildSessionEntityCatalog(sessionWorld, sessionMaterials)
 })
 
 function openChapterAncestorMenu(event) {
@@ -468,7 +491,6 @@ async function changeSceneStatus(scene, status) {
       name: scene.name,
       status,
       imageId: scene.imageId,
-		relations: scene.relations || [],
     })
     syncWorkspaceScene(updated)
   } catch { actionError.value = 'Не удалось изменить статус сценария' }
@@ -487,10 +509,7 @@ async function saveScene(payload) {
       const updated = await sceneGraph.updateScene(editingScene.value.id, payload)
       syncWorkspaceScene(updated)
     } else await sceneGraph.createScene(payload, sceneCreatePosition.value)
-		await Promise.all([
-			sessionWorld ? sessionWorld.load(true).catch(() => {}) : Promise.resolve(),
-			sessionMaterials ? sessionMaterials.load(true).catch(() => {}) : Promise.resolve(),
-		])
+    await refreshScenarioUsages()
     emit('scene-count', activeChapterId.value, sceneGraph.scenes.value.length)
     closeScenePrompt()
   } catch { actionError.value = 'Не удалось сохранить сценарий' } finally { saving.value = false }
@@ -513,97 +532,6 @@ function requestSceneDelete(scene) {
   pendingDelete.value = { kind: 'scene', scene }
 }
 
-function openBlockCreate(type) {
-  editingBlock.value = null
-  creatingBlockType.value = type
-  blockCreatePosition.value = canvas.value?.viewportCenter(sceneBlockDefaultWidth(type), activeNodeHeight.value) ?? { x: 48, y: 210 }
-  if (referenceBlockTypes.has(type)) {
-    referencePickerOpen.value = true
-    return
-  }
-  blockEditorOpen.value = true
-}
-
-function closeReferencePicker() {
-  referencePickerOpen.value = false
-}
-
-function openReferenceCreate() {
-  referencePickerOpen.value = false
-  referenceCreateOpen.value = true
-}
-
-async function createReferenceBlock(item) {
-  if (!item || item.type !== creatingBlockType.value || saving.value) return
-  saving.value = true
-  actionError.value = ''
-  try {
-    const material = item.type === 'material'
-    await blockGraph.createItem({
-      type: item.type,
-      title: item.title,
-      width: sceneBlockDefaultWidth(item.type),
-      materialId: material ? Number(item.id) : null,
-      data: material ? {} : { referenceId: Number(item.id) },
-    }, blockCreatePosition.value)
-    referencePickerOpen.value = false
-    referenceCreateOpen.value = false
-  } catch { actionError.value = 'Не удалось добавить объект на холст' } finally { saving.value = false }
-}
-
-function openBlockEdit(block) {
-  if (!props.isDm) return
-  blockMenus.value?.close()
-  editingBlock.value = block
-  creatingBlockType.value = block.type
-  blockEditorOpen.value = true
-}
-
-async function copyBlock(block) {
-  actionError.value = ''
-  try {
-    const data = block.data == null ? null : JSON.parse(JSON.stringify(block.data))
-    await blockGraph.createItem({
-      type: block.type,
-      title: `${block.title || 'Без названия'} · копия`,
-      data,
-      width: block.width || activeNodeWidth.value,
-      materialId: block.materialId || null,
-    }, { x: block.positionX + 32, y: block.positionY + 32 })
-  } catch { actionError.value = 'Не удалось скопировать блок' }
-}
-
-function broadcastBlock(block) {
-  blockMenus.value?.close()
-  const material = sessionMaterials?.byId(block.materialId)
-  if (material) sessionPresentation?.showMaterial(material).catch(() => { actionError.value = 'Не удалось запустить показ' })
-}
-
-function sendBlockToCombat(block) {
-  blockMenus.value?.close()
-  emit('send-block-to-combat', {
-    block,
-    chapter: activeChapter.value,
-    scene: combatSceneContext(),
-    level: 'blocks',
-  })
-}
-
-function closeBlockEditor() {
-  blockEditorOpen.value = false
-  editingBlock.value = null
-}
-
-async function saveBlock(payload) {
-  saving.value = true
-  actionError.value = ''
-  try {
-    if (editingBlock.value) await blockGraph.updateItem(editingBlock.value.id, payload)
-    else await blockGraph.createItem(payload, blockCreatePosition.value)
-    closeBlockEditor()
-  } catch { actionError.value = 'Не удалось сохранить блок' } finally { saving.value = false }
-}
-
 function requestBlockDelete(block) { pendingDelete.value = { kind: 'block', block } }
 
 async function performDelete() {
@@ -619,12 +547,21 @@ async function performDelete() {
       if (value.level === 'scenes') {
         await sceneGraph.deleteScenes(value.ids)
         emit('scene-count', activeChapterId.value, sceneGraph.scenes.value.length)
-      } else await blockGraph.deleteItems(value.ids)
+        await refreshScenarioUsages()
+      } else {
+        const usageChanged = blockGraph.items.value.some(item => value.ids.some(id => String(id) === String(item.id)) && scenarioUsageBlockTypes.has(item.type))
+        await blockGraph.deleteItems(value.ids)
+        if (usageChanged) await refreshScenarioUsages()
+      }
       canvas.value?.clearSelection()
     } else if (value.kind === 'scene') {
       await sceneGraph.deleteScene(value.scene.id)
       emit('scene-count', activeChapterId.value, sceneGraph.scenes.value.length)
-    } else await blockGraph.deleteItem(value.block.id)
+      await refreshScenarioUsages()
+    } else {
+      await blockGraph.deleteItem(value.block.id)
+      if (scenarioUsageBlockTypes.has(value.block.type)) await refreshScenarioUsages()
+    }
     pendingDelete.value = null
   } catch { actionError.value = 'Не удалось удалить элемент' } finally { saving.value = false }
 }

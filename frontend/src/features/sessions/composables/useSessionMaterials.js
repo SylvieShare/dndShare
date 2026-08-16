@@ -49,13 +49,9 @@ export function useSessionMaterials({ sessionUuid }) {
     return materials.value.find(item => String(item.id) === String(materialId)) || null
   }
 
-	function availableFor(sceneId = null) {
-    return materials.value.filter(material => {
-			const sceneRelations = (material.relations || []).filter(relation => relation.type === 'scene')
-			if (!sceneRelations.length) return true
-			return sceneId != null && sceneRelations.some(relation => String(relation.id) === String(sceneId))
-    })
+  function availableFor() {
+    return materials.value
   }
 
-	return { materials, loading, loaded, error, load, create, update, remove, byId, availableFor }
+  return { materials, loading, loaded, error, load, create, update, remove, byId, availableFor }
 }

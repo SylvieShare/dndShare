@@ -9,18 +9,19 @@ import (
 )
 
 type SessionMaterial struct {
-	ID        int64                   `json:"id"`
-	SessionID int64                   `json:"sessionId"`
-	Kind      string                  `json:"kind"`
-	Name      string                  `json:"name"`
-	Caption   *string                 `json:"caption,omitempty"`
-	Content   *string                 `json:"content,omitempty"`
-	NoteStyle *string                 `json:"noteStyle,omitempty"`
-	AssetID   *int64                  `json:"assetId,omitempty"`
-	AssetURL  string                  `json:"assetUrl,omitempty"`
-	Relations []SessionEntityRelation `json:"relations"`
-	CreatedAt time.Time               `json:"createdAt"`
-	ChangedAt time.Time               `json:"changedAt"`
+	ID             int64                   `json:"id"`
+	SessionID      int64                   `json:"sessionId"`
+	Kind           string                  `json:"kind"`
+	Name           string                  `json:"name"`
+	Caption        *string                 `json:"caption,omitempty"`
+	Content        *string                 `json:"content,omitempty"`
+	NoteStyle      *string                 `json:"noteStyle,omitempty"`
+	AssetID        *int64                  `json:"assetId,omitempty"`
+	AssetURL       string                  `json:"assetUrl,omitempty"`
+	Relations      []SessionEntityRelation `json:"relations"`
+	ScenarioUsages []SessionScenarioUsage  `json:"scenarioUsages"`
+	CreatedAt      time.Time               `json:"createdAt"`
+	ChangedAt      time.Time               `json:"changedAt"`
 }
 
 type SessionPresentationState struct {
@@ -78,6 +79,9 @@ func (s *Store) ListSessionMaterials(ctx context.Context, sessionID int64) ([]Se
 	if err := s.loadSessionMaterialRelations(ctx, sessionID, materials); err != nil {
 		return nil, err
 	}
+	if err := s.loadSessionMaterialScenarioUsages(ctx, sessionID, materials); err != nil {
+		return nil, err
+	}
 	return materials, nil
 }
 
@@ -88,6 +92,9 @@ func (s *Store) GetSessionMaterial(ctx context.Context, id int64) (SessionMateri
 	}
 	items := []SessionMaterial{material}
 	if err := s.loadSessionMaterialRelations(ctx, material.SessionID, items); err != nil {
+		return SessionMaterial{}, err
+	}
+	if err := s.loadSessionMaterialScenarioUsages(ctx, material.SessionID, items); err != nil {
 		return SessionMaterial{}, err
 	}
 	return items[0], nil

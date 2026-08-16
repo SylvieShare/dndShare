@@ -21,6 +21,7 @@ const apiSource = readFileSync(fileURLToPath(new URL('../../../shared/api/scenes
 const sessionsApiSource = readFileSync(fileURLToPath(new URL('../../../shared/api/sessionsApi.js', import.meta.url)), 'utf8')
 const narrativeCanvasSource = readFileSync(fileURLToPath(new URL('../lib/narrativeCanvas.js', import.meta.url)), 'utf8')
 const navigationSource = readFileSync(fileURLToPath(new URL('../composables/useSessionGraphNavigation.js', import.meta.url)), 'utf8')
+const blockWorkflowSource = readFileSync(fileURLToPath(new URL('../composables/useSessionGraphBlockEditor.js', import.meta.url)), 'utf8')
 const stylesSource = readFileSync(fileURLToPath(new URL('./styles/SessionGraphCanvas.css', import.meta.url)), 'utf8')
 
 describe('session graph canvas', () => {
@@ -198,7 +199,7 @@ describe('session graph canvas', () => {
   })
 
   it('selects or creates catalogue references before placing them on the canvas', () => {
-    expect(source).toContain('referenceBlockTypes.has(type)')
+    expect(blockWorkflowSource).toContain('referenceBlockTypes.has(type)')
     expect(source).toContain(':fixed-type="creatingBlockType"')
     expect(source).toContain('@select="createReferenceBlock"')
     expect(source).toContain('<SceneReferenceCreateModal')
@@ -209,6 +210,9 @@ describe('session graph canvas', () => {
     expect(blockEditorSource).toContain('v-if="!isReferenceBlock" label="Название"')
     expect(blockEditorSource).toContain('label="Заметка на холсте"')
     expect(blockSource).toContain('referenceEntity.value?.name')
+	expect(blockWorkflowSource).toContain('refreshScenarioUsages')
+	expect(blockWorkflowSource).toContain('sessionWorld?.load(true)')
+	expect(blockWorkflowSource).toContain('sessionMaterials?.load(true)')
   })
 
   it('opens scenario actions from the whole card without an ellipsis trigger', () => {
@@ -244,9 +248,9 @@ describe('session graph canvas', () => {
     expect(combatEditorSource).toContain(':item-type-ids="[6]"')
     expect(combatEditorSource).toContain('Создать упрощённо')
     expect(blockMenuSource).toContain('>В бой</RowActionItem>')
-    expect(source).toContain("emit('send-block-to-combat', {")
-    expect(source).toContain('chapter: activeChapter.value')
-    expect(source).toContain('scene: combatSceneContext()')
+    expect(blockWorkflowSource).toContain("emit('send-block-to-combat', {")
+    expect(blockWorkflowSource).toContain('chapter: activeChapter.value')
+    expect(blockWorkflowSource).toContain('scene: combatSceneContext()')
     expect(sessionPageSource).toContain('itemsApi.byIds(handbookIds)')
     expect(sessionPageSource).toContain('encounter.addNpc(item, count)')
     expect(sessionPageSource).toContain('encounter.addSimpleNpc(creature)')

@@ -6,7 +6,6 @@ func (s *Store) fillSessionWorldLinks(ctx context.Context, sessionID int64, worl
 	locationIndex := make(map[int64]int, len(world.Locations))
 	npcIndex := make(map[int64]int, len(world.NPCs))
 	questIndex := make(map[int64]int, len(world.Quests))
-	sceneIndex := make(map[int64]int, len(world.Scenes))
 	for index, location := range world.Locations {
 		locationIndex[location.ID] = index
 	}
@@ -15,9 +14,6 @@ func (s *Store) fillSessionWorldLinks(ctx context.Context, sessionID int64, worl
 	}
 	for index, quest := range world.Quests {
 		questIndex[quest.ID] = index
-	}
-	for index, scene := range world.Scenes {
-		sceneIndex[scene.ID] = index
 	}
 
 	rows, err := s.pool.Query(ctx, `
@@ -36,13 +32,13 @@ func (s *Store) fillSessionWorldLinks(ctx context.Context, sessionID int64, worl
 		if err := rows.Scan(&leftType, &leftID, &rightType, &rightID, &note); err != nil {
 			return err
 		}
-		appendSessionWorldRelation(world, locationIndex, npcIndex, questIndex, sceneIndex, leftType, leftID, SessionEntityRelation{Type: rightType, ID: rightID, Note: note})
-		appendSessionWorldRelation(world, locationIndex, npcIndex, questIndex, sceneIndex, rightType, rightID, SessionEntityRelation{Type: leftType, ID: leftID, Note: note})
+		appendSessionWorldRelation(world, locationIndex, npcIndex, questIndex, leftType, leftID, SessionEntityRelation{Type: rightType, ID: rightID, Note: note})
+		appendSessionWorldRelation(world, locationIndex, npcIndex, questIndex, rightType, rightID, SessionEntityRelation{Type: leftType, ID: leftID, Note: note})
 	}
 	return rows.Err()
 }
 
-func appendSessionWorldRelation(world *SessionWorld, locationIndex, npcIndex, questIndex, sceneIndex map[int64]int, entityType string, entityID int64, relation SessionEntityRelation) {
+func appendSessionWorldRelation(world *SessionWorld, locationIndex, npcIndex, questIndex map[int64]int, entityType string, entityID int64, relation SessionEntityRelation) {
 	switch entityType {
 	case SessionEntityLocation:
 		if index, ok := locationIndex[entityID]; ok {
@@ -55,10 +51,6 @@ func appendSessionWorldRelation(world *SessionWorld, locationIndex, npcIndex, qu
 	case SessionEntityQuest:
 		if index, ok := questIndex[entityID]; ok {
 			world.Quests[index].Relations = append(world.Quests[index].Relations, relation)
-		}
-	case SessionEntityScene:
-		if index, ok := sceneIndex[entityID]; ok {
-			world.Scenes[index].Relations = append(world.Scenes[index].Relations, relation)
 		}
 	}
 }

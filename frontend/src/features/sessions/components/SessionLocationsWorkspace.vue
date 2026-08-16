@@ -107,6 +107,10 @@
         <div class="session-world-section-title"><span>Связи</span><small>{{ selectedLocation.relations?.length || 0 }}</small></div>
         <UniversalRelationList :relations="selectedLocation.relations" :items="relationItems" @open="openRelated" />
       </section>
+      <section class="session-world-section">
+        <div class="session-world-section-title"><span>На холстах сценариев</span><small>{{ selectedLocation.scenarioUsages?.length || 0 }}</small></div>
+        <ScenarioUsageList :usages="selectedLocation.scenarioUsages" :scenes="world.scenes.value" @open="openScenario" />
+      </section>
     </SessionEntityDetail>
 
     <main v-else class="session-world-detail session-world-detail--empty">
@@ -163,6 +167,7 @@ import LocationTreeRow from '@/features/sessions/components/LocationTreeRow.vue'
 import NpcEditorModal from '@/features/sessions/components/NpcEditorModal.vue'
 import SessionEntityDetail from '@/features/sessions/components/SessionEntityDetail.vue'
 import SessionLibraryWorkspace from '@/features/sessions/components/SessionLibraryWorkspace.vue'
+import ScenarioUsageList from '@/features/sessions/components/ScenarioUsageList.vue'
 import UniversalRelationList from '@/features/sessions/components/UniversalRelationList.vue'
 import {
   buildLocationForest, locationBreadcrumb, locationDescendantIds, locationKind,
@@ -253,6 +258,7 @@ function openRelated(item) {
 	else if (item.type === 'npc') emit('open-npc', item.id)
 	else emit('open-entity', item)
 }
+function openScenario(id) { emit('open-entity', { type: 'scene', id }) }
 function closeEditors() {
   locationEditorOpen.value = false
   npcEditorOpen.value = false

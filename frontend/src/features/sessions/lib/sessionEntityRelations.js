@@ -1,7 +1,6 @@
 export const SESSION_ENTITY_TYPES = [
   { key: 'location', label: 'Локации', singular: 'Локация', color: '#4ea58b' },
   { key: 'npc', label: 'NPC', singular: 'NPC', color: '#9b78e8' },
-  { key: 'scene', label: 'Сценарии', singular: 'Сценарий', color: '#d06f96' },
   { key: 'material', label: 'Материалы', singular: 'Материал', color: '#d7a84e' },
   { key: 'quest', label: 'Задания', singular: 'Задание', color: '#4b8fd5' },
 ]
@@ -16,7 +15,6 @@ export function buildSessionEntityCatalog(world, materials) {
   const entries = [
     ...(world?.locations?.value || []).map(item => ({ type: 'location', id: item.id, title: item.name, subtitle: item.kind, image: item.imageUrl })),
     ...(world?.npcs?.value || []).map(item => ({ type: 'npc', id: item.id, title: item.name, subtitle: [item.raceName, item.role].filter(Boolean).join(' · '), image: item.imageUrl, color: item.color })),
-		...(world?.scenes?.value || []).map(item => ({ type: 'scene', id: item.id, title: item.name, subtitle: [item.chapterNumber, item.chapterName].filter(Boolean).join(' · '), image: item.imageUrl })),
     ...(materials?.materials?.value || []).map(item => ({ type: 'material', id: item.id, title: item.name, subtitle: item.kind, image: ['image', 'map'].includes(item.kind) ? item.assetUrl : '' })),
     ...(world?.quests?.value || []).map(item => ({ type: 'quest', id: item.id, title: item.name, subtitle: questStatus(item.status).label, color: questStatus(item.status).color })),
   ]

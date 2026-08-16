@@ -7,7 +7,7 @@ import (
 	"dndshare/internal/systemimages"
 )
 
-func TestSessionWorldSchemaUsesTreeAndExplicitAssociations(t *testing.T) {
+func TestSessionWorldSchemaUsesTreeAndCanvasDerivedScenarioUsage(t *testing.T) {
 	for _, fragment := range []string{
 		"CREATE TABLE IF NOT EXISTS dndshare.session_location",
 		"parent_location_id int8 NULL REFERENCES dndshare.session_location(id) ON DELETE RESTRICT",
@@ -30,7 +30,7 @@ func TestSessionWorldSchemaUsesTreeAndExplicitAssociations(t *testing.T) {
 		t.Fatal("legacy NPC relation tables must not be recreated")
 	}
 	if strings.Contains(schemaSessionWorldSQL, "session_scene_location") || strings.Contains(schemaSessionWorldSQL, "session_npc_scene") {
-		t.Fatal("scenario associations must use universal relations")
+		t.Fatal("legacy scenario association tables must not return")
 	}
 }
 
@@ -51,12 +51,15 @@ func TestSessionEntitiesSchemaAddsQuestsAndUniversalRelations(t *testing.T) {
 		"SET notes = description",
 		"DROP COLUMN IF EXISTS description",
 		"CREATE TABLE IF NOT EXISTS dndshare.session_entity_relation",
-		"'location', 'npc', 'material', 'quest', 'scene'",
+		"CHECK (left_type IN ('location', 'npc', 'material', 'quest'))",
+		"CHECK (right_type IN ('location', 'npc', 'material', 'quest'))",
 		"to_regclass('dndshare.session_scene_location')",
 		"to_regclass('dndshare.session_npc_scene')",
 		"DROP TABLE IF EXISTS dndshare.session_scene_location",
 		"DROP TABLE IF EXISTS dndshare.session_npc_scene",
 		"session_entity_relation_order_check",
+		"DELETE FROM dndshare.session_entity_relation",
+		"left_type = 'scene' OR right_type = 'scene'",
 	} {
 		if !strings.Contains(schemaSessionEntitiesSQL, fragment) {
 			t.Fatalf("session entity schema must contain %q", fragment)

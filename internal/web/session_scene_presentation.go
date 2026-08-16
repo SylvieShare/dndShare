@@ -13,20 +13,6 @@ var presentationEffects = map[string]bool{
 
 var presentationTransitions = map[string]bool{"cut": true, "fade": true}
 
-func materialAvailableFor(material store.SessionMaterial, sceneID int64) bool {
-	hasSceneRelation := false
-	for _, relation := range material.Relations {
-		if relation.Type != store.SessionEntityScene {
-			continue
-		}
-		hasSceneRelation = true
-		if relation.ID == sceneID {
-			return true
-		}
-	}
-	return !hasSceneRelation
-}
-
 func normalizePresentationStyle(effect, transition string) (string, string) {
 	if effect == "" {
 		effect = "none"
@@ -59,10 +45,6 @@ func (s *Server) materialForScene(w http.ResponseWriter, r *http.Request, sessio
 	chapter, err := s.store.GetSessionChapter(r.Context(), scene.ChapterID)
 	if err != nil || chapter.SessionID != sessionID {
 		forbidden(w)
-		return store.SessionMaterial{}, false
-	}
-	if !materialAvailableFor(material, sceneID) {
-		badRequest(w, "Материал не связан с этим сценарием")
 		return store.SessionMaterial{}, false
 	}
 	return material, true

@@ -173,7 +173,7 @@ contextual shortcut hints are enabled.
 Locations deliberately use a hierarchy instead of another graph canvas. The
 left part of the central workspace is a searchable tree, while the selected
 location owns the detail area with its image, breadcrumb, description, children,
-NPCs and scenarios. Expanded tree rows are stored per session in local storage.
+relations and read-only canvas usage. Expanded tree rows are stored per session in local storage.
 The DM drags the whole row: dropping into the upper or lower part places it
 before or after a sibling, while dropping into the middle makes it a child of
 the target. The server validates session ownership and rejects self/descendant
@@ -181,8 +181,7 @@ cycles. Root dropping returns a location to the top level. There are no
 location-to-location graph edges or geographic canvas state.
 
 A location stores a semantic kind, shared-catalogue image, description, parent
-and sibling order. Scenarios use the same universal relation picker as every
-other session object rather than a second story-context field. The location
+and sibling order. Scenarios are not universal relation targets. The location
 editor excludes itself and all descendants from its parent picker,
 and deletion is blocked until direct children are moved or deleted.
 
@@ -194,14 +193,19 @@ handbook items, including subraces; the stored nullable FK is cleared if that
 item is removed. The name field has an explicit dice action backed by the same
 race-aware generator as the D&D character wizard. Standard race profiles combine
 at least 80 given-name/family-name variants each, while an unknown custom race
-uses a broad fantasy fallback. Locations, NPCs, materials, quests and scenarios use one
-symmetric relation model. Every entity can link to any entity of those five
+uses a broad fantasy fallback. Locations, NPCs, materials and quests use one
+symmetric relation model. Every entity can link to any entity of those four
 types, including another entity of its own type, with an optional private note.
 `Добавить связь` opens one picker: the DM can search across the complete
 catalogue or filter a type. Editors show only current links with remove actions,
 while detail views sort them and split them into type sections with readable 44–48 px previews
 and full-size primary/secondary text. Editors use the
 shared `ColorPresetPicker`, `SessionImagePicker`, form controls and modal frame.
+Each detail view has a separate read-only `На холстах сценариев` section. It is
+derived from actual reference/material blocks, deduplicates scenarios, shows a
+block count and opens the selected scenario. It cannot be edited from an entity
+editor. Materials remain available from every scenario; placing one on a canvas
+updates this derived usage instead of creating a relation.
 `SessionImagePicker` keeps only the current image and `Сменить` in the parent
 editor. Its modal renders every preset in one grouped scroll, with category
 shortcuts that jump to section dividers; upload, when supported, is an action in

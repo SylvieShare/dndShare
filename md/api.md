@@ -127,9 +127,12 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
 - `PATCH /api/sessions/{uuid}/participants-order` accepts the complete ordered
   participant character-id list as `{"ids":[...]}`; owner-only;
 - `GET /api/sessions/{uuid}/world` returns one aggregate
-  `{locations,npcs,quests,scenes}`. Every entity exposes symmetric
-  `relations:[{type,id,note}]`; types are `location`, `npc`, `material`, `quest`
-  and `scene`. Compact scenarios also include their arc/chapter context. The
+  `{locations,npcs,quests,scenes}`. Locations, NPCs and quests expose symmetric
+  `relations:[{type,id,note}]`; relation types are `location`, `npc`, `material`
+  and `quest`. They also expose derived
+  `scenarioUsages:[{sceneId,blockCount}]`, aggregated from actual canvas blocks.
+  Compact scenarios include their arc/chapter context and are not relation
+  targets. The
   aggregate is owner-only because descriptions and relation notes may contain
   master secrets;
 - `POST /api/sessions/{uuid}/locations`, `PATCH|DELETE
@@ -167,8 +170,8 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
   /api/sessions/{uuid}/chapters/{chapterId}`, plus `/position` and `/arc`
   PATCH actions;
 - `POST /api/sessions/{uuid}/chapters/{chapterId}/scenes` and `PATCH
-  /api/sessions/{uuid}/scenes/{sceneId}` accept a scenario card and universal
-  `relations`; deleting a scenario clears those relations;
+  /api/sessions/{uuid}/scenes/{sceneId}` accept a scenario card. Scenarios do
+  not accept or return universal relations;
 - `PATCH /api/sessions/{uuid}/current-chapter`;
 - `PATCH /api/sessions/{uuid}/graph-nodes/positions` atomically persists a
   group movement as `{level,positions:[{id,x,y}]}`; `POST
@@ -184,9 +187,10 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
 - `GET /api/sessions/{uuid}/materials` returns the owner-only material library.
   `POST /materials` and
   `PATCH|DELETE /materials/{materialId}` manage `{name,kind,caption,content,
-  noteStyle,assetId,relations}`. Scenario relations restrict the material to
-  those scenarios; without them it is available throughout the session. Other
-  relation types provide navigation without restricting availability. `kind` is
+  noteStyle,assetId,relations}`. Every response also contains derived
+  `scenarioUsages:[{sceneId,blockCount}]`. All materials are available in every
+  scenario; relations provide navigation between reusable entities and never
+  restrict availability. `kind` is
   `image`, `video`, `text`, `note` or `map`; asset kinds require `assetId`,
   written kinds require `content`, and notes also require one of `parchment`,
   `letter`, `dossier` or `arcane`;
@@ -231,7 +235,7 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
 - `GET /api/sessions/{uuid}/chapters/{chapterId}/scene-graph` returns
   `{scenes,edges}`; scenario CRUD uses `POST .../chapters/{chapterId}/scenes`,
   `PATCH|DELETE .../scenes/{sceneId}` and `PATCH .../scenes/{sceneId}/position`.
-  Create/update bodies contain `{name,status,imageId,relations}` (creation
+  Create/update bodies contain `{name,status,imageId}` (creation
   additionally accepts `x/y`), and every scenario response carries `imageId`, resolved
   `imageUrl` and optional `imageCatalogKey`;
 - `POST /api/sessions/{uuid}/scene-edges` and
@@ -240,7 +244,7 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
 - `GET /api/sessions/{uuid}/scenes/{sceneId}/block-graph` returns
   `{scene,items,edges}`. Blocks use `POST .../scenes/{sceneId}/items` and
   `PATCH|DELETE .../scenes/{sceneId}/items/{itemId}`. A block has `type`
-  (`text`, `list`, `combat`, `reward`, `image` or `material`), `title`, type-specific `data`, `positionX/Y`
+  (`text`, `list`, `combat`, `reward`, `image`, `material`, `location`, `npc` or `quest`), `title`, type-specific `data`, `positionX/Y`
   and `width` (clamped to `220..640`); position and width are part of the item
   PATCH contract. Block color is derived by the client from `type` and is not
   an API field. Combat `data.creatures` contains quantity-bearing handbook
@@ -248,8 +252,8 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
   `{kind:"simple",id,name,ac,hp,hpMax,description,count}`. Reward
   `data.items` contains handbook references `{itemId,name,count}` to things,
   weapons and equipment;
-  image and material blocks carry `materialId` and reference a material
-  available in their session/chapter/scenario context. Image blocks accept
+  image and material blocks carry `materialId` and reference any material
+  from the same session. Image blocks accept
   only `image`/`map`; material blocks accept every material kind;
 - `POST /api/sessions/{uuid}/block-edges` and
   `DELETE /api/sessions/{uuid}/block-edges/{edgeId}` manage directed links
