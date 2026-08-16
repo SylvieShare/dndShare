@@ -76,6 +76,10 @@ func (s *Server) handleSaveEncounter(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if meta.Active != wasActive {
+		if err := s.store.SetCombatPresentationActive(r.Context(), session.ID, meta.Active); err != nil {
+			serverError(w, err)
+			return
+		}
 		eventType := "encounter_finished"
 		title := "Бой завершён"
 		if meta.Active {

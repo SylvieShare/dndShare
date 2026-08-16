@@ -151,6 +151,16 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
 - `POST /api/sessions/{uuid}/chapter-edges` and `PATCH|DELETE
   /api/sessions/{uuid}/chapter-edges/{edgeId}`;
 - read/write encounter and music state;
+- `GET /api/sessions/{uuid}/materials` returns the owner-only material library
+  with chapter/scenario picker contexts. `POST /materials` and
+  `PATCH|DELETE /materials/{materialId}` manage `{scope,chapterId,sceneId,name,
+  caption,imageId}`;
+- `GET|PUT /api/sessions/{uuid}/presentation` reads or replaces the owner-only
+  live player-display state `{mode,visible,materialId,sceneId,effect,transition}`.
+  Modes are `idle`, `material`, `scene`, `combat`; effects are `none`, `rain`,
+  `fog`, `embers`, `snow`, `storm`; transitions are `cut` or `fade`;
+- `GET /api/public/sessions/{uuid}/presentation` is the anonymous no-store safe
+  projection used by `/screen/:uuid`;
 - `GET /api/public/sessions/{uuid}/encounter` is the anonymous, no-store TV
   projection of the current fight. It returns only the session name, round,
   current turn and initiative-ordered combatants with presentation fields,
@@ -168,8 +178,10 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
 - `GET /api/sessions/{uuid}/chapters/{chapterId}/scene-graph` returns
   `{scenes,edges}`; scenario CRUD uses `POST .../chapters/{chapterId}/scenes`,
   `PATCH|DELETE .../scenes/{sceneId}` and `PATCH .../scenes/{sceneId}/position`.
-  Create/update bodies contain `{name,status,imageId}` (creation additionally
-  accepts `x/y`), and every scenario response carries `imageId`, resolved
+  Create/update bodies contain `{name,status,imageId,presentationMaterialId,
+  presentationTrackId,presentationVolume,presentationCrossfadeSec,
+  presentationEffect,presentationTransition}` (creation additionally accepts
+  `x/y`), and every scenario response carries `imageId`, resolved
   `imageUrl` and optional `imageCatalogKey`;
 - `POST /api/sessions/{uuid}/scene-edges` and
   `DELETE /api/sessions/{uuid}/scene-edges/{edgeId}` manage directed links
@@ -177,7 +189,7 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
 - `GET /api/sessions/{uuid}/scenes/{sceneId}/block-graph` returns
   `{scene,items,edges}`. Blocks use `POST .../scenes/{sceneId}/items` and
   `PATCH|DELETE .../scenes/{sceneId}/items/{itemId}`. A block has `type`
-  (`text`, `list`, `combat` or `reward`), `title`, type-specific `data`, `positionX/Y`
+  (`text`, `list`, `combat`, `reward` or `image`), `title`, type-specific `data`, `positionX/Y`
   and `width` (clamped to `220..640`); position and width are part of the item
   PATCH contract. Block color is derived by the client from `type` and is not
   an API field. Combat `data.creatures` contains quantity-bearing handbook
@@ -185,6 +197,8 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
   `{kind:"simple",id,name,ac,hp,hpMax,description,count}`. Reward
   `data.items` contains handbook references `{itemId,name,count}` to things,
   weapons and equipment;
+  image blocks carry `materialId` and reference a material available in their
+  session/chapter/scenario context;
 - `POST /api/sessions/{uuid}/block-edges` and
   `DELETE /api/sessions/{uuid}/block-edges/{edgeId}` manage directed links
   inside one scenario.
@@ -211,7 +225,7 @@ every arc exactly once; response order becomes the new automatic numbering.
 
 Точные routes находятся в `internal/web/sessions.go`,
 `internal/web/session_scenes.go`, `internal/web/session_scene_graph.go`,
-`internal/web/session_world.go` и
+`internal/web/session_world.go`, `internal/web/session_presentation.go` и
 `internal/web/session_graph_bulk.go`; graph validation is in
 `sessions_chapters.go` and `sessions_graph_actions.go`. Encounter принимает
 только canonical combatants (`itemId` + `override` и уникальный

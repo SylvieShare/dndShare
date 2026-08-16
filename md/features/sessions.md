@@ -67,7 +67,7 @@ available for pan and node dragging.
 
 The session page is a campaign workspace rather than a stack of independent
 content pages. Its semantic header centers the switch between `Сюжет`,
-`Локации` and `NPC` independently of the title/arc and tool groups; the
+`Локации`, `NPC` and `Материалы` independently of the title/arc and tool groups; the
 participant rail remains on the left and the
 dice/events/music tools remain on the right. In `Сюжет` the chapter canvas fills
 all available width below `AppHeader`. CSS safe-area variables keep focus, zoom
@@ -133,7 +133,7 @@ character saves are flushed on page unmount instead of dropping their events.
 
 ## Locations and prepared NPCs
 
-`Локации` and `NPC` are DM-only primary central workspaces, not extra permanent
+`Локации`, `NPC` and `Материалы` are DM-only primary central workspaces, not extra permanent
 side panels. Their surfaces sit over the same tokenized dot field as the story
 canvas. The selected mode is stored per session in local storage; `view`,
 `location` and `npc` query parameters preserve a shareable selection. Combat is
@@ -188,6 +188,30 @@ consistent.
 
 ## Chapters, scenarios and blocks
 
+### Materials and the player screen
+
+The previous fight-only TV page is now the session's anonymous player display
+at `/screen/:uuid`. Its live state is one of `idle`, `material`, `scene` or
+`combat` and is kept separately from encounter JSON. Starting and finishing
+combat switches this state automatically. A blackout hides current content
+without discarding it, so the header control can reveal it again; `cut` and
+`fade` are the deliberately small transition set. Rain, fog, embers, snow and
+storm are visual layers rendered only by the player display.
+
+`Материалы` is a central DM library over the same dotted workspace background.
+An image material is stored once and scoped to the whole session, one chapter
+or one scenario. Scenario context inherits session and chapter materials, while
+sibling resources do not leak into its picker. The session-header display
+control shows live state, opens the standalone display and provides contextual
+materials, blackout/reveal/clear actions and the player-only effect selector.
+
+A scenario has an optional presentation preset: material, music track, volume,
+crossfade duration, visual effect and transition. `Запустить сцену` applies the
+display and DM-side music controls together. The third-level `image` block
+references an existing contextual material rather than duplicating its image;
+its leading action broadcasts that material immediately. All uploaded material
+files continue to use `storage_image` and S3 URLs.
+
 Every session has at least one ordered arc. Arc order is the canonical campaign
 order; the UI renders it as a Roman number and rewrites `1..N` atomically after
 reordering. Arcs do not have a status. Each arc owns an independent chapter
@@ -204,7 +228,7 @@ carry the pointer.
 
 `ChapterGraphToolbar` is the semantic session header with its own background and
 bottom divider, not a `BaseTile`. It combines the editable session name, the
-three primary workspace choices, story-only arc switcher and ordering,
+four primary workspace choices, story-only arc switcher and ordering,
 accessible icon-only combat launcher, and the dice,
 music and timeline panel toggles. Current-chapter focus and zoom are canvas interactions
 rather than toolbar controls. Creation is contextual and lives on the canvas

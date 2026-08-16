@@ -1,13 +1,13 @@
 <template>
-  <main class="encounter-screen" :class="{ 'encounter-screen--active': snapshot?.active }">
-    <header class="encounter-screen__header">
+  <main class="encounter-screen" :class="screenClasses">
+    <header v-if="presentation?.visible" class="encounter-screen__header">
       <div class="encounter-screen__identity">
-        <span class="encounter-screen__eyebrow">ЭКРАН БОЯ</span>
-        <h1>{{ snapshot?.sessionName || 'Инициатива' }}</h1>
+        <span class="encounter-screen__eyebrow">ЭКРАН ПОКАЗА</span>
+        <h1>{{ presentation?.sessionName || snapshot?.sessionName || 'Экран игроков' }}</h1>
       </div>
 
       <div class="encounter-screen__status">
-        <span v-if="snapshot?.active" class="encounter-screen__round">
+        <span v-if="presentation?.mode === 'combat' && snapshot?.active" class="encounter-screen__round">
           <span>Раунд</span>
           <strong>{{ snapshot.round }}</strong>
         </span>
@@ -23,8 +23,8 @@
       <div class="encounter-screen__sigil encounter-screen__sigil--loading">
         <Swords :size="54" aria-hidden="true" />
       </div>
-      <p class="encounter-screen__empty-label">Подключаемся к бою</p>
-      <h2>Готовим экран инициативы…</h2>
+      <p class="encounter-screen__empty-label">Подключаемся к сессии</p>
+      <h2>Готовим экран игроков…</h2>
     </section>
 
     <section v-else-if="fatalError" class="encounter-screen__empty" role="alert">
@@ -32,11 +32,33 @@
         <WifiOff :size="50" aria-hidden="true" />
       </div>
       <p class="encounter-screen__empty-label">Экран недоступен</p>
-      <h2>Не удалось найти этот бой</h2>
+      <h2>Не удалось найти эту сессию</h2>
       <span>Проверьте ссылку на экране мастера.</span>
     </section>
 
-    <section v-else-if="!snapshot.active" class="encounter-screen__empty" aria-live="polite">
+    <section v-else-if="!presentation?.visible" class="encounter-screen__blackout" aria-live="polite">
+      <span class="sr-only">Экран временно затемнён мастером</span>
+    </section>
+
+    <Transition :name="presentation?.transition === 'cut' ? '' : 'presentation-fade'" mode="out-in">
+      <section
+        v-if="presentation?.visible && (presentation.mode === 'material' || presentation.mode === 'scene')"
+        :key="presentation.revision"
+        class="presentation-frame"
+      >
+        <div class="presentation-frame__image">
+          <img v-if="presentationImage" :src="presentationImage" :alt="presentationTitle" />
+          <Images v-else :size="72" aria-hidden="true" />
+        </div>
+        <div class="presentation-frame__caption">
+          <span>{{ presentation.mode === 'scene' ? 'СЦЕНА' : 'МАТЕРИАЛ' }}</span>
+          <h2>{{ presentationTitle }}</h2>
+          <p v-if="presentation.material?.caption">{{ presentation.material.caption }}</p>
+        </div>
+      </section>
+    </Transition>
+
+    <section v-if="presentation?.visible && presentation.mode === 'combat' && !snapshot?.active" class="encounter-screen__empty" aria-live="polite">
       <div class="encounter-screen__sigil">
         <Swords :size="58" aria-hidden="true" />
       </div>
@@ -45,7 +67,7 @@
       <span>Инициатива появится здесь автоматически.</span>
     </section>
 
-    <template v-else>
+    <template v-else-if="presentation?.visible && presentation.mode === 'combat' && snapshot?.active">
       <section class="encounter-screen__initiative" aria-label="Порядок инициативы">
         <div class="encounter-screen__initiative-heading">
           <div>
@@ -160,19 +182,23 @@
         </div>
       </section>
     </template>
+    <div v-if="presentation?.visible && presentation.effect !== 'none'" class="presentation-effect" aria-hidden="true">
+      <i v-for="index in 22" :key="index" :style="effectParticleStyle(index)" />
+    </div>
   </main>
 </template>
 
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { HeartPulse, Swords, UserRound, Wifi, WifiOff } from '@lucide/vue'
-import { getPublicEncounter } from '@/shared/api/sessionsApi'
+import { HeartPulse, Images, Swords, UserRound, Wifi, WifiOff } from '@lucide/vue'
+import { getPublicEncounter, getPublicPresentation } from '@/shared/api/sessionsApi'
 
 const POLL_INTERVAL_MS = 1500
 
 const route = useRoute()
 const snapshot = ref(null)
+const presentation = ref(null)
 const loading = ref(true)
 const fatalError = ref(false)
 const pollFailed = ref(false)
@@ -183,6 +209,13 @@ const combatants = computed(() => snapshot.value?.combatants || [])
 const currentCombatant = computed(() =>
   combatants.value.find(combatant => combatant.uid === snapshot.value?.currentUid) || null
 )
+const presentationImage = computed(() => presentation.value?.material?.imageUrl || presentation.value?.scene?.imageUrl || '')
+const presentationTitle = computed(() => presentation.value?.material?.name || presentation.value?.scene?.name || 'Без названия')
+const screenClasses = computed(() => ({
+  'encounter-screen--active': presentation.value?.mode === 'combat' && snapshot.value?.active,
+  'encounter-screen--blackout': presentation.value && !presentation.value.visible,
+  [`encounter-screen--effect-${presentation.value?.effect}`]: presentation.value?.visible && presentation.value?.effect !== 'none',
+}))
 
 const combatantCountLabel = computed(() => {
   const count = combatants.value.length
@@ -210,8 +243,9 @@ async function poll() {
   if (polling) return
   polling = true
   try {
-    const data = await getPublicEncounter(route.params.uuid)
-    snapshot.value = data
+    const nextPresentation = await getPublicPresentation(route.params.uuid)
+    presentation.value = nextPresentation
+    if (nextPresentation.mode === 'combat') snapshot.value = await getPublicEncounter(route.params.uuid)
     fatalError.value = false
     pollFailed.value = false
   } catch {
@@ -220,6 +254,15 @@ async function poll() {
   } finally {
     loading.value = false
     polling = false
+  }
+}
+
+function effectParticleStyle(index) {
+  return {
+    '--particle-x': `${(index * 37) % 101}%`,
+    '--particle-delay': `${-((index * 0.43) % 5)}s`,
+    '--particle-duration': `${2.2 + (index % 7) * 0.38}s`,
+    '--particle-size': `${2 + (index % 4) * 2}px`,
   }
 }
 

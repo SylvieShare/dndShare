@@ -114,6 +114,7 @@
       @copy="copyBlock"
       @delete="requestBlockDelete"
       @send-to-combat="sendBlockToCombat"
+      @broadcast="broadcastBlock"
     />
 
     <SceneGraphMenus
@@ -122,6 +123,7 @@
       @status="changeSceneStatus"
       @edit="openSceneRename"
       @delete="requestSceneDelete"
+      @present="presentScene"
     />
 
     <NestedEdgeMenus
@@ -137,6 +139,7 @@
       v-if="scenePromptOpen"
       :scene="editingScene"
       :saving="saving"
+      :chapter-id="activeChapterId"
       @close="closeScenePrompt"
       @save="saveScene"
     />
@@ -145,6 +148,8 @@
       :block="editingBlock"
       :type="creatingBlockType"
       :saving="saving"
+      :chapter-id="activeChapterId"
+      :scene-id="selectedScene?.id"
       @close="closeBlockEditor"
       @save="saveBlock"
     />
@@ -167,7 +172,7 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 import CanvasActionDock from '@/features/sessions/components/CanvasActionDock.vue'
 import CanvasHotkeyHints from '@/features/sessions/components/CanvasHotkeyHints.vue'
 import ChapterEdgeModal from '@/features/sessions/components/ChapterEdgeModal.vue'
@@ -214,6 +219,8 @@ const sceneLinkingFrom = ref(null)
 const blockLinkingFrom = ref(null)
 const actionError = ref('')
 const saving = ref(false)
+const sessionMaterials = inject('sessionMaterials', null)
+const sessionPresentation = inject('sessionPresentation', null)
 const scenePromptOpen = ref(false)
 const editingScene = ref(null)
 const sceneCreatePosition = ref({ x: 48, y: 210 })
@@ -406,6 +413,12 @@ async function changeSceneStatus(scene, status) {
       name: scene.name,
       status,
       imageId: scene.imageId,
+      presentationMaterialId: scene.presentationMaterialId || null,
+      presentationTrackId: scene.presentationTrackId || null,
+      presentationVolume: scene.presentationVolume ?? null,
+      presentationCrossfadeSec: scene.presentationCrossfadeSec ?? null,
+      presentationEffect: scene.presentationEffect || 'none',
+      presentationTransition: scene.presentationTransition || 'fade',
     })
   } catch { actionError.value = 'Не удалось изменить статус сценария' }
 }
@@ -455,8 +468,20 @@ async function copyBlock(block) {
       title: `${block.title || 'Без названия'} · копия`,
       data,
       width: block.width || activeNodeWidth.value,
+      materialId: block.materialId || null,
     }, { x: block.positionX + 32, y: block.positionY + 32 })
   } catch { actionError.value = 'Не удалось скопировать блок' }
+}
+
+function broadcastBlock(block) {
+  blockMenus.value?.close()
+  const material = sessionMaterials?.byId(block.materialId)
+  if (material) sessionPresentation?.showMaterial(material).catch(() => { actionError.value = 'Не удалось запустить показ' })
+}
+
+function presentScene(scene) {
+  sceneMenus.value?.close()
+  sessionPresentation?.startScene(scene).catch(() => { actionError.value = 'Не удалось запустить сцену' })
 }
 
 function sendBlockToCombat(block) {

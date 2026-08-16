@@ -116,7 +116,7 @@ const routes = [
         path: '/screen/:uuid',
         name: "EncounterScreen",
         component: ViewEncounterScreen,
-        meta: { title: 'Экран боя', section: 'sessions', depth: 2, standaloneView: true },
+        meta: { title: 'Экран показа', section: 'sessions', depth: 2, standaloneView: true },
     },
     {
         path: '/join/:code',

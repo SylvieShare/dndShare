@@ -63,3 +63,9 @@ func IsUniqueViolation(err error) bool {
 	var pgErr *pgconn.PgError
 	return errors.As(err, &pgErr) && pgErr.Code == "23505"
 }
+
+// IsForeignKeyViolation reports that a referenced entity is still in use.
+func IsForeignKeyViolation(err error) bool {
+	var pgErr *pgconn.PgError
+	return errors.As(err, &pgErr) && pgErr.Code == "23503"
+}

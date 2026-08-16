@@ -35,8 +35,8 @@ func TestSessionWorldSchemaUsesTreeAndExplicitAssociations(t *testing.T) {
 }
 
 func TestSessionWorldSchemaRunsAfterSessionTables(t *testing.T) {
-	if schemaParts[len(schemaParts)-1].name != "session-images" {
-		t.Fatalf("last schema part = %q, want session-images", schemaParts[len(schemaParts)-1].name)
+	if schemaParts[len(schemaParts)-1].name != "session-presentation" {
+		t.Fatalf("last schema part = %q, want session-presentation", schemaParts[len(schemaParts)-1].name)
 	}
 }
 

@@ -116,11 +116,17 @@ func (s *Server) handleCreateScene(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var req struct {
-		Name    string  `json:"name"`
-		Status  string  `json:"status"`
-		ImageID int64   `json:"imageId"`
-		X       float64 `json:"x"`
-		Y       float64 `json:"y"`
+		Name                     string   `json:"name"`
+		Status                   string   `json:"status"`
+		ImageID                  int64    `json:"imageId"`
+		X                        float64  `json:"x"`
+		Y                        float64  `json:"y"`
+		PresentationMaterialID   *int64   `json:"presentationMaterialId"`
+		PresentationTrackID      *int64   `json:"presentationTrackId"`
+		PresentationVolume       *float64 `json:"presentationVolume"`
+		PresentationCrossfadeSec *float64 `json:"presentationCrossfadeSec"`
+		PresentationEffect       string   `json:"presentationEffect"`
+		PresentationTransition   string   `json:"presentationTransition"`
 	}
 	if err := decodeJSON(r, &req); err != nil {
 		badRequest(w, "bad body")
@@ -138,7 +144,13 @@ func (s *Server) handleCreateScene(w http.ResponseWriter, r *http.Request) {
 	if !s.validateSessionImage(w, r, userID, req.ImageID, "story") {
 		return
 	}
-	scene, err := s.store.CreateScene(r.Context(), chapterID, name, req.Status, req.ImageID, req.X, req.Y)
+	preset, ok := s.validateScenePresentation(w, r, sess, userID, chapterID, 0,
+		req.PresentationMaterialID, req.PresentationTrackID, req.PresentationVolume,
+		req.PresentationCrossfadeSec, req.PresentationEffect, req.PresentationTransition)
+	if !ok {
+		return
+	}
+	scene, err := s.store.CreateScene(r.Context(), chapterID, name, req.Status, req.ImageID, req.X, req.Y, preset)
 	if err != nil {
 		serverError(w, err)
 		return
@@ -165,9 +177,15 @@ func (s *Server) handleUpdateScene(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var req struct {
-		Name    string `json:"name"`
-		Status  string `json:"status"`
-		ImageID int64  `json:"imageId"`
+		Name                     string   `json:"name"`
+		Status                   string   `json:"status"`
+		ImageID                  int64    `json:"imageId"`
+		PresentationMaterialID   *int64   `json:"presentationMaterialId"`
+		PresentationTrackID      *int64   `json:"presentationTrackId"`
+		PresentationVolume       *float64 `json:"presentationVolume"`
+		PresentationCrossfadeSec *float64 `json:"presentationCrossfadeSec"`
+		PresentationEffect       string   `json:"presentationEffect"`
+		PresentationTransition   string   `json:"presentationTransition"`
 	}
 	if err := decodeJSON(r, &req); err != nil {
 		badRequest(w, "bad body")
@@ -185,7 +203,13 @@ func (s *Server) handleUpdateScene(w http.ResponseWriter, r *http.Request) {
 	if !s.validateSessionImage(w, r, userID, req.ImageID, "story") {
 		return
 	}
-	if err := s.store.UpdateScene(r.Context(), sceneID, name, req.Status, req.ImageID); err != nil {
+	preset, ok := s.validateScenePresentation(w, r, sess, userID, previous.ChapterID, sceneID,
+		req.PresentationMaterialID, req.PresentationTrackID, req.PresentationVolume,
+		req.PresentationCrossfadeSec, req.PresentationEffect, req.PresentationTransition)
+	if !ok {
+		return
+	}
+	if err := s.store.UpdateScene(r.Context(), sceneID, name, req.Status, req.ImageID, preset); err != nil {
 		serverError(w, err)
 		return
 	}
@@ -244,12 +268,13 @@ func (s *Server) handleCreateSceneItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var req struct {
-		Type  string          `json:"type"`
-		Title *string         `json:"title"`
-		Data  json.RawMessage `json:"data"`
-		X     float64         `json:"x"`
-		Y     float64         `json:"y"`
-		Width float64         `json:"width"`
+		Type       string          `json:"type"`
+		Title      *string         `json:"title"`
+		Data       json.RawMessage `json:"data"`
+		MaterialID *int64          `json:"materialId"`
+		X          float64         `json:"x"`
+		Y          float64         `json:"y"`
+		Width      float64         `json:"width"`
 	}
 	if err := decodeJSON(r, &req); err != nil {
 		badRequest(w, "bad body")
@@ -263,7 +288,17 @@ func (s *Server) handleCreateSceneItem(w http.ResponseWriter, r *http.Request) {
 	if req.Title != nil {
 		title = strings.TrimSpace(*req.Title)
 	}
-	item, err := s.store.CreateSceneItem(r.Context(), sceneID, req.Type, title, rawToStr(req.Data), req.X, req.Y, sceneItemWidth(req.Width, req.Type))
+	if req.Type == "image" {
+		if req.MaterialID == nil || !s.validateMaterialForScene(w, r, sess.ID, sceneID, *req.MaterialID) {
+			if req.MaterialID == nil {
+				badRequest(w, "Выберите материал")
+			}
+			return
+		}
+	} else {
+		req.MaterialID = nil
+	}
+	item, err := s.store.CreateSceneItem(r.Context(), sceneID, req.Type, title, rawToStr(req.Data), req.MaterialID, req.X, req.Y, sceneItemWidth(req.Width, req.Type))
 	if err != nil {
 		serverError(w, err)
 		return
@@ -307,12 +342,14 @@ func (s *Server) handleUpdateSceneItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var req struct {
-		Title       *string         `json:"title"`
-		Data        json.RawMessage `json:"data"`
-		DataChanged bool            `json:"dataChanged"`
-		PositionX   *float64        `json:"positionX"`
-		PositionY   *float64        `json:"positionY"`
-		Width       *float64        `json:"width"`
+		Title           *string         `json:"title"`
+		Data            json.RawMessage `json:"data"`
+		DataChanged     bool            `json:"dataChanged"`
+		MaterialID      *int64          `json:"materialId"`
+		MaterialChanged bool            `json:"materialChanged"`
+		PositionX       *float64        `json:"positionX"`
+		PositionY       *float64        `json:"positionY"`
+		Width           *float64        `json:"width"`
 	}
 	if err := decodeJSON(r, &req); err != nil {
 		badRequest(w, "bad body")
@@ -322,7 +359,17 @@ func (s *Server) handleUpdateSceneItem(w http.ResponseWriter, r *http.Request) {
 		width := sceneItemWidth(*req.Width, item.Type)
 		req.Width = &width
 	}
-	if err := s.store.UpdateSceneItem(r.Context(), itemID, req.Title, rawToStr(req.Data), req.DataChanged, req.PositionX, req.PositionY, req.Width); err != nil {
+	if req.MaterialChanged {
+		if item.Type != "image" {
+			req.MaterialID = nil
+		} else if req.MaterialID == nil || !s.validateMaterialForScene(w, r, sess.ID, sceneID, *req.MaterialID) {
+			if req.MaterialID == nil {
+				badRequest(w, "Выберите материал")
+			}
+			return
+		}
+	}
+	if err := s.store.UpdateSceneItem(r.Context(), itemID, req.Title, rawToStr(req.Data), req.DataChanged, req.MaterialID, req.MaterialChanged, req.PositionX, req.PositionY, req.Width); err != nil {
 		serverError(w, err)
 		return
 	}
@@ -336,7 +383,7 @@ func (s *Server) handleUpdateSceneItem(w http.ResponseWriter, r *http.Request) {
 
 func validSceneItemType(typ string) bool {
 	switch typ {
-	case "text", "list", "combat", "reward":
+	case "text", "list", "combat", "reward", "image":
 		return true
 	default:
 		return false
@@ -350,6 +397,9 @@ func sceneItemWidth(width float64, typ string) float64 {
 		}
 		if typ == "reward" {
 			return 320
+		}
+		if typ == "image" {
+			return 360
 		}
 		return 300
 	}

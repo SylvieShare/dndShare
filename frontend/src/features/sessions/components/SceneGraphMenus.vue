@@ -1,6 +1,7 @@
 <template>
   <BasePopover v-model:open="open" :anchor="anchor" :min-width="210" placement="bottom-start">
     <div v-if="scene" class="scene-graph-menu">
+      <RowActionItem :icon="MonitorPlay" tone="accent" @click="run('present', scene)">Запустить сцену</RowActionItem>
       <RowActionItem action="view" tone="accent" @click="run('open-scene', scene)">Открыть элементы</RowActionItem>
       <RowActionSubmenu label="Статус сценария" :min-width="230">
         <template #trigger="{ open: submenuOpen }">
@@ -22,12 +23,12 @@
 
 <script setup>
 import { ref } from 'vue'
-import { Check, Circle, ListChecks } from '@lucide/vue'
+import { Check, Circle, ListChecks, MonitorPlay } from '@lucide/vue'
 import { BasePopover, RowActionSubmenu } from '@sylvieshare/share-ui'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import { SCENE_STATUSES } from '@/features/sessions/lib/chapterGraph'
 
-const emit = defineEmits(['open-scene', 'status', 'edit', 'delete'])
+const emit = defineEmits(['open-scene', 'status', 'edit', 'delete', 'present'])
 const open = ref(false)
 const anchor = ref(null)
 const scene = ref(null)

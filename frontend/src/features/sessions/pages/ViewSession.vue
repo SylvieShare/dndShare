@@ -49,6 +49,8 @@
         :dice-open="diceOpen"
         :music-open="musicOpen"
         :events-open="eventsOpen"
+        :materials="sessionMaterials"
+        :presentation="presentation"
         @open-scenes="openChapterScenes"
         @select-view="selectPrimaryView"
         @open-combat="toggleCombatWorkspace"
@@ -67,6 +69,10 @@
             :is-dm="isDm"
             :selected-location-id="selectedLocationId"
             :selected-npc-id="selectedNpcId"
+            :materials="sessionMaterials"
+            :presentation="presentation"
+            :chapter-id="workspaceChapter?.id ?? chapterGraph.currentChapter.value?.id ?? null"
+            :scene-id="workspaceScene?.id ?? null"
             @select-location="selectLocation"
             @select-npc="selectNpc"
           />
@@ -189,7 +195,7 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, provide, reactive, ref, watch } from 'vue'
 import { PanelLeftClose, PanelLeftOpen } from '@lucide/vue'
 import { useRoute, useRouter } from 'vue-router'
 import { BaseTile } from '@sylvieshare/share-ui'
@@ -215,6 +221,8 @@ import { useSessionSelection } from '@/features/sessions/composables/useSessionS
 import { useSessionWorkspace } from '@/features/sessions/composables/useSessionWorkspace'
 import { useSessionPrimaryView } from '@/features/sessions/composables/useSessionPrimaryView'
 import { useSessionParticipantRail } from '@/features/sessions/composables/useSessionParticipantRail'
+import { useSessionMaterials } from '@/features/sessions/composables/useSessionMaterials'
+import { useSessionPresentation } from '@/features/sessions/composables/useSessionPresentation'
 import { useAccountStore } from '@/stores/account'
 import { useMusicStore } from '@/stores/music'
 import { useTemplateStore } from '@/stores/template'
@@ -252,6 +260,10 @@ const pendingKickName = computed(() => pvName(pendingKick.value) || 'Игрок'
 
 const accountStore = useAccountStore()
 const musicStore = useMusicStore()
+const sessionMaterials = useSessionMaterials({ sessionUuid })
+const presentation = useSessionPresentation({ sessionUuid, materials: sessionMaterials, musicStore })
+provide('sessionMaterials', sessionMaterials)
+provide('sessionPresentation', presentation)
 const sessionEventsStore = useSessionEventsStore()
 const templateStore = useTemplateStore()
 const musicLibraryOpen = ref(false)
@@ -342,6 +354,9 @@ const encounter = reactive(useEncounter({
   participants,
   canEditPlayers: isDm,
 }))
+watch(() => encounter.encounter.active, (active, previous) => {
+  if (previous !== undefined && active !== previous && isDm.value) window.setTimeout(() => presentation.load(), 750)
+})
 const combatWorkspaceError = computed(() => combatImportError.value || encounter.loadError || encounter.saveError)
 
 function encounterPlayer(charId) {
@@ -553,6 +568,12 @@ onMounted(async () => {
     await sessionEventsStore.setContext({ uuid: sessionUuid, actorUuid: sheetUuid.value })
     await musicStore.ensureLibrary().catch(() => {})
     await musicStore.loadSessionState().catch(() => {})
+    if (isDm.value) {
+      await Promise.all([
+        sessionMaterials.load().catch(() => {}),
+        presentation.load().catch(() => {}),
+      ])
+    }
   } catch {
     router.replace('/sessions')
     return

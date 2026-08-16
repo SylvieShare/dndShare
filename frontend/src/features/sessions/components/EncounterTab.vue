@@ -54,8 +54,8 @@
           :href="publicScreenUrl"
           target="_blank"
           rel="noopener"
-          title="Открыть экран боя"
-          aria-label="Открыть публичный экран боя в новой вкладке"
+          title="Открыть экран показа"
+          aria-label="Открыть экран показа для игроков в новой вкладке"
         >
           <MonitorUp :size="18" />
         </a>

@@ -22,6 +22,15 @@
         <SceneRewardItemsEditor v-model="draft.items" />
       </FormField>
 
+      <FormField v-else-if="blockType === 'image'" label="Материал для показа" vertical>
+        <div v-if="availableMaterials.length" class="scene-block-materials">
+          <button v-for="material in availableMaterials" :key="material.id" type="button" :class="{ active: draft.materialId === material.id }" @click="draft.materialId = material.id">
+            <img :src="material.imageUrl" alt="" /><span><strong>{{ material.name }}</strong><small>{{ material.caption || 'Без подписи' }}</small></span>
+          </button>
+        </div>
+        <div v-else class="scene-block-materials-empty">Сначала добавьте изображение во вкладке «Материалы».</div>
+      </FormField>
+
       <FormField v-else label="Реплики" vertical>
         <div class="scene-block-editor-rows">
           <datalist :id="dialogueKeysListId">
@@ -64,7 +73,7 @@
     <template #footer>
       <FormActionButtons
         :loading="saving"
-        :can-submit="!!draft.title.trim()"
+        :can-submit="!!draft.title.trim() && (blockType !== 'image' || !!draft.materialId)"
         @cancel="$emit('close')"
         @submit="save"
       />
@@ -73,7 +82,7 @@
 </template>
 
 <script setup>
-import { computed, getCurrentInstance, provide, reactive } from 'vue'
+import { computed, getCurrentInstance, inject, provide, reactive } from 'vue'
 import { AppModalFrame, ColorPresetPicker } from '@sylvieshare/share-ui'
 import InputDescription from '@/shared/ui/InputDescription.vue'
 import SceneCombatCreaturesEditor from '@/features/sessions/components/SceneCombatCreaturesEditor.vue'
@@ -88,12 +97,16 @@ const props = defineProps({
   block: { type: Object, default: null },
   type: { type: String, default: 'text' },
   saving: { type: Boolean, default: false },
+  chapterId: { type: [Number, String], default: null },
+  sceneId: { type: [Number, String], default: null },
 })
 const emit = defineEmits(['close', 'save'])
 
 const blockType = computed(() => props.block?.type || props.type)
 const typeLabel = computed(() => sceneBlockType(blockType.value).label.toLowerCase())
-const defaultTitles = { text: 'Новое описание', list: 'Новый диалог', combat: 'Новый бой', reward: 'Новая награда' }
+const defaultTitles = { text: 'Новое описание', list: 'Новый диалог', combat: 'Новый бой', reward: 'Новая награда', image: 'Новое изображение' }
+const sessionMaterials = inject('sessionMaterials', null)
+const availableMaterials = computed(() => sessionMaterials?.availableFor(props.chapterId, props.sceneId) || [])
 const dialogueKeysListId = `scene-dialogue-keys-${getCurrentInstance()?.uid ?? 'editor'}`
 const initialDialogueRows = hydrateDialogueRows(props.block?.data?.rows?.length
   ? props.block.data.rows
@@ -108,6 +121,7 @@ const draft = reactive({
   items: Array.isArray(props.block?.data?.items)
     ? props.block.data.items.map(item => ({ ...item }))
     : [],
+  materialId: props.block?.materialId || null,
 })
 const descriptionBlock = { id: 'scene-block-description', content: { placeholder: 'Текст описания' } }
 const dialogueSuggestions = computed(() => dialogueKeySuggestions(draft.rows))
@@ -139,10 +153,13 @@ function setDialogueColor(row, color) {
 }
 
 function save() {
+  if (blockType.value === 'image' && !draft.materialId) return
   emit('save', {
     type: blockType.value,
     title: draft.title.trim(),
     width: props.block?.width || sceneBlockDefaultWidth(blockType.value),
+    materialId: blockType.value === 'image' ? draft.materialId : null,
+    materialChanged: blockType.value === 'image',
     data: blockType.value === 'list'
       ? { rows: draft.rows
         .filter(row => row.left.trim() || row.right.trim())
@@ -151,7 +168,7 @@ function save() {
         ? { creatures: draft.creatures.map(creature => ({ ...creature })) }
         : blockType.value === 'reward'
           ? { items: draft.items.map(item => ({ ...item })) }
-        : { text: draft.text },
+        : blockType.value === 'image' ? {} : { text: draft.text },
   })
 }
 </script>
@@ -187,4 +204,5 @@ function save() {
 .scene-block-editor-row > button:hover { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 45%, var(--border)); }
 .scene-block-editor-add { align-self: flex-start; padding: 7px 11px; font-size: 12px; }
 .scene-block-editor-add:hover { color: var(--accent); border-color: var(--accent); }
+.scene-block-materials { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }.scene-block-materials button { min-width: 0; overflow: hidden; padding: 0; border: 1px solid var(--border); border-radius: 8px; background: var(--surface-raised); color: var(--text-2); cursor: pointer; text-align: left; }.scene-block-materials button.active { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }.scene-block-materials img { width: 100%; height: 92px; display: block; object-fit: cover; }.scene-block-materials span { display: flex; flex-direction: column; gap: 2px; padding: 7px; }.scene-block-materials strong, .scene-block-materials small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }.scene-block-materials strong { color: var(--text-1); font-size: 11px; }.scene-block-materials small, .scene-block-materials-empty { color: var(--text-muted); font-size: 10px; }
 </style>

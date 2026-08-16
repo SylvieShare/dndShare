@@ -12,15 +12,30 @@ import (
 
 // SessionScene — строка dndshare.session_scene (порт model/SessionScene.kt).
 type SessionScene struct {
-	ID              int64   `json:"id"`
-	ChapterID       int64   `json:"chapterId"`
-	Name            string  `json:"name"`
-	Status          string  `json:"status"`
-	ImageID         int64   `json:"imageId"`
-	ImageURL        string  `json:"imageUrl"`
-	ImageCatalogKey *string `json:"imageCatalogKey,omitempty"`
-	PositionX       float64 `json:"positionX"`
-	PositionY       float64 `json:"positionY"`
+	ID                       int64    `json:"id"`
+	ChapterID                int64    `json:"chapterId"`
+	Name                     string   `json:"name"`
+	Status                   string   `json:"status"`
+	ImageID                  int64    `json:"imageId"`
+	ImageURL                 string   `json:"imageUrl"`
+	ImageCatalogKey          *string  `json:"imageCatalogKey,omitempty"`
+	PositionX                float64  `json:"positionX"`
+	PositionY                float64  `json:"positionY"`
+	PresentationMaterialID   *int64   `json:"presentationMaterialId,omitempty"`
+	PresentationTrackID      *int64   `json:"presentationTrackId,omitempty"`
+	PresentationVolume       *float64 `json:"presentationVolume,omitempty"`
+	PresentationCrossfadeSec *float64 `json:"presentationCrossfadeSec,omitempty"`
+	PresentationEffect       string   `json:"presentationEffect"`
+	PresentationTransition   string   `json:"presentationTransition"`
+}
+
+type ScenePresentationSettings struct {
+	MaterialID   *int64
+	TrackID      *int64
+	Volume       *float64
+	CrossfadeSec *float64
+	Effect       string
+	Transition   string
 }
 
 type SessionSceneEdge struct {
@@ -33,14 +48,15 @@ type SessionSceneEdge struct {
 
 // SessionSceneItem — строка dndshare.session_scene_item (порт model/SessionScene.kt).
 type SessionSceneItem struct {
-	ID        int64            `json:"id"`
-	SceneID   int64            `json:"sceneId"`
-	Type      string           `json:"type"`
-	Title     string           `json:"title"`
-	Data      *json.RawMessage `json:"data,omitempty"`
-	PositionX float64          `json:"positionX"`
-	PositionY float64          `json:"positionY"`
-	Width     float64          `json:"width"`
+	ID         int64            `json:"id"`
+	SceneID    int64            `json:"sceneId"`
+	Type       string           `json:"type"`
+	Title      string           `json:"title"`
+	Data       *json.RawMessage `json:"data,omitempty"`
+	PositionX  float64          `json:"positionX"`
+	PositionY  float64          `json:"positionY"`
+	Width      float64          `json:"width"`
+	MaterialID *int64           `json:"materialId,omitempty"`
 }
 
 type SessionSceneItemEdge struct {
@@ -92,6 +108,8 @@ func scanScene(row pgx.Row) (SessionScene, error) {
 	err := row.Scan(
 		&sc.ID, &sc.ChapterID, &sc.Name, &sc.Status,
 		&sc.ImageID, &sc.ImageURL, &sc.ImageCatalogKey, &sc.PositionX, &sc.PositionY,
+		&sc.PresentationMaterialID, &sc.PresentationTrackID, &sc.PresentationVolume,
+		&sc.PresentationCrossfadeSec, &sc.PresentationEffect, &sc.PresentationTransition,
 	)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return SessionScene{}, ErrNotFound
@@ -102,7 +120,7 @@ func scanScene(row pgx.Row) (SessionScene, error) {
 func scanItem(row pgx.Row) (SessionSceneItem, error) {
 	var it SessionSceneItem
 	var data *[]byte
-	err := row.Scan(&it.ID, &it.SceneID, &it.Type, &it.Title, &data, &it.PositionX, &it.PositionY, &it.Width)
+	err := row.Scan(&it.ID, &it.SceneID, &it.Type, &it.Title, &data, &it.PositionX, &it.PositionY, &it.Width, &it.MaterialID)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return SessionSceneItem{}, ErrNotFound
 	}
@@ -121,7 +139,10 @@ func (s *Store) GetScenesByChapter(ctx context.Context, chapterID int64) ([]Sess
 	rows, err := s.pool.Query(ctx,
 		`SELECT scene.id, scene.chapter_id, scene."name", scene.status,
 		        scene.image_id, COALESCE(image.url, ''), catalog.catalog_key,
-		        scene.position_x, scene.position_y
+		        scene.position_x, scene.position_y,
+		        scene.presentation_material_id, scene.presentation_track_id,
+		        scene.presentation_volume, scene.presentation_crossfade_sec,
+		        scene.presentation_effect, scene.presentation_transition
 		 FROM dndshare.session_scene scene
 		 JOIN dndshare.storage_image image ON image.id = scene.image_id AND image.deleted = false
 		 LEFT JOIN dndshare.session_image_catalog catalog ON catalog.image_id = scene.image_id
@@ -147,7 +168,10 @@ func (s *Store) GetSceneByID(ctx context.Context, id int64) (SessionScene, error
 	return scanScene(s.pool.QueryRow(ctx,
 		`SELECT scene.id, scene.chapter_id, scene."name", scene.status,
 		        scene.image_id, COALESCE(image.url, ''), catalog.catalog_key,
-		        scene.position_x, scene.position_y
+		        scene.position_x, scene.position_y,
+		        scene.presentation_material_id, scene.presentation_track_id,
+		        scene.presentation_volume, scene.presentation_crossfade_sec,
+		        scene.presentation_effect, scene.presentation_transition
 		 FROM dndshare.session_scene scene
 		 JOIN dndshare.storage_image image ON image.id = scene.image_id AND image.deleted = false
 		 LEFT JOIN dndshare.session_image_catalog catalog ON catalog.image_id = scene.image_id
@@ -155,11 +179,16 @@ func (s *Store) GetSceneByID(ctx context.Context, id int64) (SessionScene, error
 }
 
 // CreateScene — новая сцена (порт createScene).
-func (s *Store) CreateScene(ctx context.Context, chapterID int64, name, status string, imageID int64, x, y float64) (SessionScene, error) {
+func (s *Store) CreateScene(ctx context.Context, chapterID int64, name, status string, imageID int64, x, y float64, preset ScenePresentationSettings) (SessionScene, error) {
 	var id int64
 	err := s.pool.QueryRow(ctx,
-		`INSERT INTO dndshare.session_scene (chapter_id, "name", status, image_id, position_x, position_y)
-		 VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`, chapterID, name, status, imageID, x, y,
+		`INSERT INTO dndshare.session_scene
+		    (chapter_id, "name", status, image_id, position_x, position_y,
+		     presentation_material_id, presentation_track_id, presentation_volume,
+		     presentation_crossfade_sec, presentation_effect, presentation_transition)
+		 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING id`,
+		chapterID, name, status, imageID, x, y, preset.MaterialID, preset.TrackID,
+		preset.Volume, preset.CrossfadeSec, preset.Effect, preset.Transition,
 	).Scan(&id)
 	if err != nil {
 		return SessionScene{}, err
@@ -168,9 +197,15 @@ func (s *Store) CreateScene(ctx context.Context, chapterID int64, name, status s
 }
 
 // UpdateScene updates the editable scenario card fields.
-func (s *Store) UpdateScene(ctx context.Context, id int64, name, status string, imageID int64) error {
+func (s *Store) UpdateScene(ctx context.Context, id int64, name, status string, imageID int64, preset ScenePresentationSettings) error {
 	_, err := s.pool.Exec(ctx,
-		`UPDATE dndshare.session_scene SET "name" = $1, status = $2, image_id = $3 WHERE id = $4`, name, status, imageID, id)
+		`UPDATE dndshare.session_scene
+		 SET "name" = $1, status = $2, image_id = $3,
+		     presentation_material_id = $4, presentation_track_id = $5,
+		     presentation_volume = $6, presentation_crossfade_sec = $7,
+		     presentation_effect = $8, presentation_transition = $9
+		 WHERE id = $10`, name, status, imageID, preset.MaterialID, preset.TrackID,
+		preset.Volume, preset.CrossfadeSec, preset.Effect, preset.Transition, id)
 	return err
 }
 
@@ -201,7 +236,7 @@ func (s *Store) DeleteScene(ctx context.Context, id int64) error {
 // GetSceneItems — блоки одного сценария.
 func (s *Store) GetSceneItems(ctx context.Context, sceneID int64) ([]SessionSceneItem, error) {
 	rows, err := s.pool.Query(ctx,
-		`SELECT id, scene_id, "type", title, "data", position_x, position_y, width
+		`SELECT id, scene_id, "type", title, "data", position_x, position_y, width, material_id
 		 FROM dndshare.session_scene_item WHERE scene_id = $1 ORDER BY id`, sceneID,
 	)
 	if err != nil {
@@ -222,21 +257,21 @@ func (s *Store) GetSceneItems(ctx context.Context, sceneID int64) ([]SessionScen
 // GetSceneItem — айтем по id (порт getItemById).
 func (s *Store) GetSceneItem(ctx context.Context, id int64) (SessionSceneItem, error) {
 	return scanItem(s.pool.QueryRow(ctx,
-		`SELECT id, scene_id, "type", title, "data", position_x, position_y, width
+		`SELECT id, scene_id, "type", title, "data", position_x, position_y, width, material_id
 		 FROM dndshare.session_scene_item WHERE id = $1`, id))
 }
 
 // CreateSceneItem — новый блок с координатами на холсте сценария.
-func (s *Store) CreateSceneItem(ctx context.Context, sceneID int64, typ, title string, data *string, x, y, width float64) (SessionSceneItem, error) {
+func (s *Store) CreateSceneItem(ctx context.Context, sceneID int64, typ, title string, data *string, materialID *int64, x, y, width float64) (SessionSceneItem, error) {
 	return scanItem(s.pool.QueryRow(ctx,
-		`INSERT INTO dndshare.session_scene_item (scene_id, "type", title, "data", position_x, position_y, width)
-		 VALUES ($1, $2, $3, CAST($4 AS jsonb), $5, $6, $7)
-		 RETURNING id, scene_id, "type", title, "data", position_x, position_y, width`,
-		sceneID, typ, title, data, x, y, width))
+		`INSERT INTO dndshare.session_scene_item (scene_id, "type", title, "data", material_id, position_x, position_y, width)
+		 VALUES ($1, $2, $3, CAST($4 AS jsonb), $5, $6, $7, $8)
+		 RETURNING id, scene_id, "type", title, "data", position_x, position_y, width, material_id`,
+		sceneID, typ, title, data, materialID, x, y, width))
 }
 
 // UpdateSceneItem — частичное обновление айтема (порт updateItem).
-func (s *Store) UpdateSceneItem(ctx context.Context, id int64, title *string, data *string, dataChanged bool, positionX, positionY, width *float64) error {
+func (s *Store) UpdateSceneItem(ctx context.Context, id int64, title *string, data *string, dataChanged bool, materialID *int64, materialChanged bool, positionX, positionY, width *float64) error {
 	var sets []string
 	var args []any
 	n := 1
@@ -252,6 +287,9 @@ func (s *Store) UpdateSceneItem(ctx context.Context, id int64, title *string, da
 		sets = append(sets, `"data" = CAST($`+strconv.Itoa(n)+` AS jsonb)`)
 		args = append(args, data)
 		n++
+	}
+	if materialChanged {
+		add("material_id = $"+strconv.Itoa(n), materialID)
 	}
 	if positionX != nil {
 		add("position_x = $"+strconv.Itoa(n), *positionX)

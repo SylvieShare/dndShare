@@ -76,6 +76,15 @@
     </nav>
 
     <div class="chapter-toolbar-view">
+      <SessionPresentationControl
+        v-if="isDm && presentation && materials"
+        :session-uuid="sessionUuid"
+        :is-dm="isDm"
+        :presentation="presentation"
+        :materials="materials"
+        :chapter-id="workspaceChapterId"
+        :scene="workspaceScene"
+      />
       <button type="button" class="chapter-tool-btn chapter-tool-btn--icon chapter-tool-btn--combat" :class="{ 'chapter-tool-btn--active': combatActive }" title="Бой" aria-label="Бой" @click="$emit('open-combat')">
         <Swords :size="19" />
       </button>
@@ -99,9 +108,10 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue'
-import { BookOpenText, Map, Pencil, Swords, UsersRound } from '@lucide/vue'
+import { BookOpenText, Images, Map, Pencil, Swords, UsersRound } from '@lucide/vue'
 import { BasePopover, reorderByDrop, useSortable } from '@sylvieshare/share-ui'
 import { romanNumeral } from '@/features/sessions/lib/chapterGraph'
+import SessionPresentationControl from '@/features/sessions/components/SessionPresentationControl.vue'
 
 const props = defineProps({
   arcs: { type: Array, default: () => [] },
@@ -116,6 +126,11 @@ const props = defineProps({
   diceOpen: { type: Boolean, default: true },
   musicOpen: { type: Boolean, default: true },
   eventsOpen: { type: Boolean, default: true },
+  sessionUuid: { type: String, required: true },
+  presentation: { type: Object, default: null },
+  materials: { type: Object, default: null },
+  workspaceChapterId: { type: [Number, String], default: null },
+  workspaceScene: { type: Object, default: null },
 })
 const emit = defineEmits([
   'select-arc', 'create-arc', 'edit-arc', 'reorder-arcs',
@@ -127,6 +142,7 @@ const primaryViews = [
   { key: 'story', label: 'Сюжет', icon: BookOpenText },
   { key: 'locations', label: 'Локации', icon: Map },
   { key: 'npcs', label: 'NPC', icon: UsersRound },
+  { key: 'materials', label: 'Материалы', icon: Images },
 ]
 const visiblePrimaryViews = computed(() => props.isDm ? primaryViews : primaryViews.slice(0, 1))
 const arcTrigger = ref(null)

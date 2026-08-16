@@ -13,6 +13,11 @@
       :dice-open="diceOpen"
       :music-open="musicOpen"
       :events-open="eventsOpen"
+      :session-uuid="sessionUuid"
+      :presentation="presentation"
+      :materials="materials"
+      :workspace-chapter-id="workspaceChapterId || graph.currentChapter.value?.id"
+      :workspace-scene="workspaceScene"
       @select-arc="selectArc"
       @create-arc="openArcCreate"
       @edit-arc="openArcEdit"
@@ -198,6 +203,8 @@ const props = defineProps({
   diceOpen: { type: Boolean, default: true },
   musicOpen: { type: Boolean, default: true },
   eventsOpen: { type: Boolean, default: true },
+  presentation: { type: Object, default: null },
+  materials: { type: Object, default: null },
 })
 const emit = defineEmits([
   'open-scenes', 'open-combat', 'edit-session', 'close-workspace',

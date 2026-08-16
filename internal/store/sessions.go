@@ -273,6 +273,11 @@ func (s *Store) CreateSessionWithFirstArc(ctx context.Context, userID int64, nam
 	); err != nil {
 		return 0, "", err
 	}
+	if _, err := tx.Exec(ctx,
+		`INSERT INTO dndshare.session_presentation_state (session_id) VALUES ($1)`, id,
+	); err != nil {
+		return 0, "", err
+	}
 
 	if err := tx.Commit(ctx); err != nil {
 		return 0, "", err

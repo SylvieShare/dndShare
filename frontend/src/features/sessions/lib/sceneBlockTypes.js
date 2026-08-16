@@ -19,6 +19,11 @@ export const SCENE_BLOCK_TYPES = {
     color: 'var(--warning)',
     defaultWidth: 320,
   },
+  image: {
+    label: 'Изображение',
+    color: 'var(--success)',
+    defaultWidth: 360,
+  },
 }
 
 export function sceneBlockType(type) {

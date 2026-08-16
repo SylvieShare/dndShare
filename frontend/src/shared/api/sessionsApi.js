@@ -64,6 +64,34 @@ export function getPublicEncounter(uuid) {
   return fetchGet(`/public/sessions/${uuid}/encounter`)
 }
 
+export function getSessionMaterials(uuid) {
+  return fetchGet(`/sessions/${uuid}/materials`)
+}
+
+export function createSessionMaterial(uuid, data) {
+  return fetchPost(`/sessions/${uuid}/materials`, data)
+}
+
+export function updateSessionMaterial(uuid, materialId, data) {
+  return fetchPatch(`/sessions/${uuid}/materials/${materialId}`, data)
+}
+
+export function deleteSessionMaterial(uuid, materialId) {
+  return fetchDelete(`/sessions/${uuid}/materials/${materialId}`)
+}
+
+export function getSessionPresentation(uuid) {
+  return fetchGet(`/sessions/${uuid}/presentation`)
+}
+
+export function saveSessionPresentation(uuid, data) {
+  return fetchPut(`/sessions/${uuid}/presentation`, data)
+}
+
+export function getPublicPresentation(uuid) {
+  return fetchGet(`/public/sessions/${uuid}/presentation`)
+}
+
 export function getChapters(uuid) {
   return fetchGet(`/sessions/${uuid}/chapters`)
 }

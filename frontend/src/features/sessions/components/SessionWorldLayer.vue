@@ -26,6 +26,14 @@
     @select-npc="$emit('select-npc', $event)"
     @open-location="$emit('select-location', $event)"
   />
+  <SessionMaterialsWorkspace
+    v-else-if="activeView === 'materials'"
+    :materials="materials"
+    :presentation="presentation"
+    :is-dm="isDm"
+    :chapter-id="chapterId"
+    :scene-id="sceneId"
+  />
 </template>
 
 <script setup>
@@ -33,6 +41,7 @@ import { watch } from 'vue'
 import { AlertCircle, Map } from '@lucide/vue'
 import SessionLocationsWorkspace from '@/features/sessions/components/SessionLocationsWorkspace.vue'
 import SessionNpcsWorkspace from '@/features/sessions/components/SessionNpcsWorkspace.vue'
+import SessionMaterialsWorkspace from '@/features/sessions/components/SessionMaterialsWorkspace.vue'
 import { useSessionWorld } from '@/features/sessions/composables/useSessionWorld'
 
 const props = defineProps({
@@ -41,12 +50,17 @@ const props = defineProps({
   selectedLocationId: { type: [Number, String], default: null },
   selectedNpcId: { type: [Number, String], default: null },
   isDm: { type: Boolean, default: false },
+  materials: { type: Object, default: null },
+  presentation: { type: Object, default: null },
+  chapterId: { type: [Number, String], default: null },
+  sceneId: { type: [Number, String], default: null },
 })
 const emit = defineEmits(['select-location', 'select-npc'])
 const world = useSessionWorld(props.sessionUuid)
 
 watch(() => props.activeView, view => {
   if (view === 'locations' || view === 'npcs') world.load().catch(() => {})
+  if (view === 'materials') props.materials?.load().catch(() => {})
 }, { immediate: true })
 
 watch(

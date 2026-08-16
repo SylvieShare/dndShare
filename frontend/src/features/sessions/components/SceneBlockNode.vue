@@ -40,6 +40,10 @@
         </div>
         <span v-if="!rewardItems.length" class="scene-block-node-empty">Награда не добавлена</span>
       </template>
+      <template v-else-if="block.type === 'image'">
+        <img v-if="material" class="scene-block-node-image" :src="material.imageUrl" :alt="material.name" />
+        <span v-else class="scene-block-node-empty">Материал не выбран</span>
+      </template>
       <RichContent v-else-if="block.data?.text" class="scene-block-node-text" :html="block.data.text" />
       <span v-else class="scene-block-node-empty">Описание пусто</span>
     </div>
@@ -47,7 +51,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
 import { Sparkles } from '@lucide/vue'
 import { RichContent } from '@sylvieshare/share-ui'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
@@ -66,6 +70,8 @@ const previewRows = computed(() => {
 })
 const creatures = computed(() => Array.isArray(props.block.data?.creatures) ? props.block.data.creatures : [])
 const rewardItems = computed(() => Array.isArray(props.block.data?.items) ? props.block.data.items : [])
+const sessionMaterials = inject('sessionMaterials', null)
+const material = computed(() => sessionMaterials?.byId(props.block.materialId) || null)
 
 function itemById(id) {
   return props.itemsById.get(String(id)) ?? null
@@ -140,4 +146,5 @@ function creatureKey(creature, index) {
 .scene-block-node-creature > span:last-child,
 .scene-block-node-reward > span:last-child { color: var(--block-color); font-weight: 800; }
 .scene-block-node-empty { color: var(--text-muted); font-style: italic; }
+.scene-block-node-image { width: 100%; max-height: 220px; display: block; border-radius: 7px; object-fit: cover; }
 </style>
