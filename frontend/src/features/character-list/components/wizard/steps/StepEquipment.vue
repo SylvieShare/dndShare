@@ -1,7 +1,7 @@
 <template>
   <div class="step">
     <div class="sheet-section-title">Снаряжение</div>
-    <p class="hint">Снаряжение класса и предыстории добавится в инвентарь автоматически. Стартовые монеты из предыстории попадут в кошелёк. Здесь можно проверить набор и добавить другие предметы.</p>
+    <p class="hint">Снаряжение класса и предыстории добавится автоматически. Оружие, выбранное из справочника, попадёт на вкладку «Оружие», остальное — в инвентарь. Стартовые монеты из предыстории попадут в кошелёк.</p>
 
     <div v-if="classEquipment.length || backgroundStart.items.length || moneyLabel" class="refs">
       <div v-if="classEquipment.length" class="ref">
@@ -34,7 +34,7 @@
 
     <button class="add" @click="pickerOpen = true">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14" /></svg>
-      Добавить предмет
+      Добавить предмет или оружие
     </button>
 
     <ItemPickerModal

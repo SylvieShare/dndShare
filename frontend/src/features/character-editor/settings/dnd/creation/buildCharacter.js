@@ -14,6 +14,7 @@ import { STAT_KEYS, SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
 import { computeSlots } from '../../../blocks/dnd/lib/levelUp.js'
 import { defaultSlots } from '../../../blocks/dnd/lib/spellEntry.js'
 import { featAbilityBonuses, featEntry, featGrantedSpellIds, featGrants } from '@/features/items/lib/featRules'
+import { defaultEntry as defaultWeaponEntry } from '../../../blocks/dnd/lib/weaponEntry.js'
 import { blankValues } from '../newCharacter.js'
 import { addStartingCoins, backgroundStartingEquipment } from './backgroundEquipment.js'
 import { applyGrants, extractGrants } from './grants.js'
@@ -219,16 +220,28 @@ export function buildCharacterData(input) {
     values.money = addStartingCoins(values.money, backgroundStart.coins)
   }
 
-  // Class choices, background possessions and optional additions share one bag.
+  // Catalogue weapons added on the equipment step belong to the dedicated
+  // weapon block. That block has no quantity field, so multiple copies become
+  // separate entries. Text-only PHB rows cannot become functional weapon cards
+  // without a handbook id and therefore stay in the inventory with other gear.
   // Coin fragments from the background are intentionally kept in `values.money`.
   const startingEquipment = mergeEquipment(equipment, backgroundStart.items)
-  if (startingEquipment.length) {
+  const isCatalogueWeapon = (entry) => Number(entry.typeId) === 1 && entry.id != null
+  const weapons = startingEquipment.filter(isCatalogueWeapon)
+  const inventory = startingEquipment.filter((entry) => !isCatalogueWeapon(entry))
+  if (weapons.length) {
+    values.weapon = weapons.flatMap((entry) => Array.from(
+      { length: Math.max(1, Number(entry.count) || 1) },
+      () => ({ ...defaultWeaponEntry(), item_id: entry.id }),
+    ))
+  }
+  if (inventory.length) {
     values.items = {
       equipped: [],
       sections: [{
         id: 'bag',
         name: 'Снаряжение',
-        items: startingEquipment.map((e, i) => ({
+        items: inventory.map((e, i) => ({
           uid: `eq_${i}`,
           id: e.id ?? null,
           count: Math.max(1, Number(e.count) || 1),

@@ -248,7 +248,9 @@ technical revision is unrelated to character level or rules edition.
 
 The dedicated D&D wizard and compact session creation both call the pure engine
 under `settings/dnd/creation`. `blankValues`, grants, progression, equipment and
-`buildCharacterData` are the only producers of new D&D documents. See
+`buildCharacterData` are the only producers of new D&D documents. Catalogue
+weapons added during creation are emitted into `values.weapon`; inventory keeps
+the other catalogue additions and text-only starting-equipment rows. See
 `md/features/character-list.md` for the UI flow.
 
 ## Tests

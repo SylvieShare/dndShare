@@ -64,7 +64,9 @@ Key rules:
 - all binding fields are arrays of item ids;
 - content publication scope is carried through every catalogue query;
 - choices granted by a race or class are completed on that source step;
-- equipment uses the same canonical inventory model as the sheet;
+- handbook weapons added on the equipment step are written to the dedicated
+  weapon block; other additions and text-only starting rows use the canonical
+  sectioned inventory model;
 - descriptions are edited/rendered through the shared rich-description pair;
 - feat and item selection uses the handbook `ItemPickerModal`;
 - the preview's dice action uses the shared race-aware name generator, preferring
@@ -80,8 +82,8 @@ Point-buy подчёркивает остаток бюджета и цену с�
 
 `buildCharacterData` is the only assembler. It produces current D&D data:
 `classes` (without `class/subclass` mirrors), object stats, object speed,
-`hp.hitDice`, object spells, sectioned inventory and object money. Creation does
-not emit historical variants for older readers.
+`hp.hitDice`, object spells, weapon entries, sectioned inventory and object
+money. Creation does not emit historical variants for older readers.
 
 ## Navigation and destructive actions
 

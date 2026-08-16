@@ -46,6 +46,38 @@ describe('buildCharacterData hit dice', () => {
 })
 
 describe('buildCharacterData starting equipment', () => {
+  it('puts handbook weapons into the dedicated weapon block instead of inventory', () => {
+    const result = buildCharacterData({
+      race: selection(1, 'Человек'),
+      charClass: selection(2, 'Плут'),
+      equipment: [
+        { id: 101, name: 'Кинжал', count: 2, typeId: 1 },
+        { id: 202, name: 'Верёвка', count: 1, typeId: 2 },
+      ],
+      suggestValue: () => '',
+    })
+
+    expect(result.data.values.weapon).toEqual([
+      { item_id: 101, magic_up: 0, stat_suggest_id: null, proficient: false, add_attacks: [], desc: '' },
+      { item_id: 101, magic_up: 0, stat_suggest_id: null, proficient: false, add_attacks: [], desc: '' },
+    ])
+    expect(result.data.values.items.sections[0].items).toEqual([
+      { uid: 'eq_0', id: 202, count: 1, override: null },
+    ])
+  })
+
+  it('does not create an empty inventory when only handbook weapons were added', () => {
+    const result = buildCharacterData({
+      race: selection(1, 'Человек'),
+      charClass: selection(2, 'Воин'),
+      equipment: [{ id: 101, name: 'Длинный меч', count: 1, typeId: 1 }],
+      suggestValue: () => '',
+    })
+
+    expect(result.data.values.weapon).toHaveLength(1)
+    expect(result.data.values.items).toBeUndefined()
+  })
+
   it('stores PHB rows without catalog ids as editable custom inventory items', () => {
     const result = buildCharacterData({
       race: selection(1, 'Человек'),
