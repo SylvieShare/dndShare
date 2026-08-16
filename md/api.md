@@ -194,7 +194,9 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
 - `GET|PUT /api/sessions/{uuid}/presentation` reads or replaces the owner-only
   live player-display state `{mode,visible,materialId,sceneId,effect,transition}`.
   Modes are `idle`, `material`, `scene`, `combat`; effects are `none`, `rain`,
-  `fog`, `embers`, `snow`, `storm`; transitions are `cut` or `fade`;
+  `fog`, `embers`, `snow`, `storm`; transitions are `cut` or `fade`. An explicit
+  `idle,visible:true` is the cleared dotted canvas, while `visible:false` is the
+  intentional blackout;
 - `GET /api/public/sessions/{uuid}/presentation` is the anonymous no-store safe
   projection used by `/screen/:uuid`; its material projection exposes only
   `{id,kind,name,caption,content,noteStyle,assetUrl}` required for playback;

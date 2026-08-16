@@ -64,9 +64,9 @@ export function useSessionPresentation({ sessionUuid, materials, musicStore }) {
   const showCombat = () => save({ mode: 'combat', visible: true, effect: 'none', transition: 'fade' })
   const blackout = () => save({ ...state.value, visible: false, materialId: state.value.materialId || null, sceneId: state.value.sceneId || null })
   const reveal = () => state.value.mode === 'idle'
-    ? save({ mode: 'idle', visible: false, effect: 'none', transition: 'fade' })
+    ? save({ mode: 'idle', visible: true, effect: 'none', transition: 'fade' })
     : save({ ...state.value, visible: true, materialId: state.value.materialId || null, sceneId: state.value.sceneId || null })
-  const clear = () => save({ mode: 'idle', visible: false, effect: 'none', transition: 'fade' })
+  const clear = () => save({ mode: 'idle', visible: true, effect: 'none', transition: 'fade' })
   const setEffect = effect => save({ ...state.value, effect, materialId: state.value.materialId || null, sceneId: state.value.sceneId || null })
 
   return { state, loading, saving, error, activeLabel, load, save, showMaterial, startScene, showCombat, blackout, reveal, clear, setEffect, materialById: materials?.byId }

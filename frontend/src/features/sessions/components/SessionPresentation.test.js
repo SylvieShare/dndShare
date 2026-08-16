@@ -15,6 +15,7 @@ const publicStyles = read('../pages/styles/ViewEncounterScreen.css')
 const materialEditor = read('./MaterialEditorModal.vue')
 const encounter = read('./EncounterTab.vue')
 const libraryShell = read('./SessionLibraryWorkspace.vue')
+const presentationState = read('../composables/useSessionPresentation.js')
 
 describe('session presentation workspace', () => {
   it('keeps materials as a primary DM workspace and a contextual header control', () => {
@@ -51,6 +52,7 @@ describe('session presentation workspace', () => {
     expect(publicScreen).toContain("presentation.mode === 'combat'")
     expect(publicStyles).toContain('.encounter-screen__blackout')
     expect(publicStyles).toContain('.presentation-effect')
+    expect(presentationState).toContain("const clear = () => save({ mode: 'idle', visible: true")
   })
 
   it('supports typed materials and styled notes on the shared library layout', () => {
@@ -62,6 +64,8 @@ describe('session presentation workspace', () => {
     expect(publicScreen).toContain("presentationMaterial?.kind === 'video'")
     expect(publicScreen).toContain("presentationMaterial?.kind === 'note'")
     expect(publicStyles).toContain('.presentation-note--parchment')
+    expect(workspace).not.toContain(':cover-url="[\'image\', \'map\'].includes(selected.kind)')
+    expect(workspace).toContain('<template #visual><component :is="materialType(selected.kind).icon"')
   })
 
   it('uses reusable relation editing for material contexts and keeps screen launch in the header control', () => {

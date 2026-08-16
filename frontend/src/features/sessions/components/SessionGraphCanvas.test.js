@@ -7,6 +7,7 @@ const source = readFileSync(fileURLToPath(new URL('./SessionGraphCanvas.vue', im
 const canvasSource = readFileSync(fileURLToPath(new URL('./NestedGraphCanvas.vue', import.meta.url)), 'utf8')
 const dockSource = readFileSync(fileURLToPath(new URL('./CanvasActionDock.vue', import.meta.url)), 'utf8')
 const blockSource = readFileSync(fileURLToPath(new URL('./SceneBlockNode.vue', import.meta.url)), 'utf8')
+const entityBlockSource = readFileSync(fileURLToPath(new URL('./SceneEntityBlockPreview.vue', import.meta.url)), 'utf8')
 const blockMenuSource = readFileSync(fileURLToPath(new URL('./SceneBlockMenus.vue', import.meta.url)), 'utf8')
 const sceneSource = readFileSync(fileURLToPath(new URL('./SceneGraphNode.vue', import.meta.url)), 'utf8')
 const sceneMenuSource = readFileSync(fileURLToPath(new URL('./SceneGraphMenus.vue', import.meta.url)), 'utf8')
@@ -158,6 +159,19 @@ describe('session graph canvas', () => {
     expect(blockEditorSource).toContain("blockType.value === 'material'")
     expect(blockSource).toContain("block.type === 'material'")
     expect(blockMenuSource).toContain("block.type === 'image' || block.type === 'material'")
+  })
+
+  it('renders complete domain-specific previews for referenced session objects', () => {
+    expect(blockSource).toContain('<SceneEntityBlockPreview')
+    expect(blockSource).toContain("['location', 'npc', 'quest', 'material'].includes(block.type)")
+    expect(entityBlockSource).toContain("type === 'location'")
+    expect(entityBlockSource).toContain("type === 'npc'")
+    expect(entityBlockSource).toContain("type === 'quest'")
+    expect(entityBlockSource).toContain("type === 'material'")
+    for (const field of ['Цель', 'Условие', 'Награда', 'Последствия', 'Заметки']) {
+      expect(entityBlockSource).toContain(field)
+    }
+    expect(entityBlockSource).toContain('resolvedRelations')
   })
 
   it('opens scenario actions from the whole card without an ellipsis trigger', () => {

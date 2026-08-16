@@ -276,6 +276,14 @@ type sessionPresentationRequest struct {
 	Transition string `json:"transition"`
 }
 
+func sessionPresentationVisible(mode string, requested *bool) bool {
+	visible := mode != "idle"
+	if requested != nil {
+		visible = *requested
+	}
+	return visible
+}
+
 func (s *Server) handleSaveSessionPresentation(w http.ResponseWriter, r *http.Request) {
 	userID, ok := mustUser(w, r)
 	if !ok {
@@ -290,13 +298,10 @@ func (s *Server) handleSaveSessionPresentation(w http.ResponseWriter, r *http.Re
 		badRequest(w, "Некорректный запрос")
 		return
 	}
-	visible := req.Mode != "idle"
-	if req.Visible != nil {
-		visible = *req.Visible
-	}
+	visible := sessionPresentationVisible(req.Mode, req.Visible)
 	switch req.Mode {
 	case "idle":
-		req.MaterialID, req.SceneID, visible = nil, nil, false
+		req.MaterialID, req.SceneID = nil, nil
 	case "material":
 		if req.MaterialID == nil {
 			badRequest(w, "Выберите материал")

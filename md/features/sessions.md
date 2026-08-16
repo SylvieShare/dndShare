@@ -208,7 +208,9 @@ at `/screen/:uuid`. Its live state is one of `idle`, `material`, `scene` or
 combat switches this state automatically. A blackout hides current content
 without discarding it, so the header control can reveal it again; `cut` and
 `fade` are the deliberately small transition set. Rain, fog, embers, snow and
-storm are visual layers rendered only by the player display.
+storm are visual layers rendered only by the player display. `Очистить` returns
+the display to a visible idle state with the same dotted canvas background;
+`Затемнить` remains the explicit action that covers the player screen in black.
 
 `Материалы` is a central DM library over the same dotted workspace background.
 It uses the same `SessionLibraryWorkspace` shell, safe areas, sidebar surface
@@ -391,10 +393,17 @@ references to things, weapons and equipment and renders their current handbook
 icons and names. An image block references only an image/map material. The
 separate material block opens the shared searchable picker over every material
 kind available in the current chapter/scenario, renders a type-aware preview
-and exposes the same direct broadcast action.
+and exposes the same direct broadcast action. Reference blocks use
+`SceneEntityBlockPreview` instead of a generic image/name row. Locations show
+their kind, hierarchy, description and nesting; NPCs show portrait, race, role,
+description and meeting places; quests show status and every filled goal,
+condition, reward, consequence and note; materials show their type, caption and
+actual image or written content. Every reference card also resolves and renders
+the current universal links, so edits to a catalogue object appear on the
+scenario canvas without copying its data into the block.
 Location, NPC, quest and material create actions are visually separated into an
 `Объекты сессии` group. The first three store a validated entity reference and
-render its current image/name/status data rather than copying it into the block.
+render live catalogue data rather than copying it into the block.
 Block edges are re-measured after content or width changes, and dragging the
 right edge persists a width in the `220..640px` range. Clicking the pinned
 scenario opens a reduced menu with return-to-scenarios, status and edit actions;

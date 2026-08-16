@@ -37,15 +37,11 @@
       :title="selected.name"
       :eyebrow="materialType(selected.kind).label"
       :accent="materialType(selected.kind).color"
-      :cover-url="['image', 'map'].includes(selected.kind) ? selected.assetUrl : ''"
       :editable="isDm"
       edit-aria-label="Редактировать материал"
       @edit="editing = selected"
     >
-      <template #visual>
-        <img v-if="selected.kind === 'image' || selected.kind === 'map'" :src="selected.assetUrl" alt="" />
-        <component :is="materialType(selected.kind).icon" v-else :size="32" />
-      </template>
+      <template #visual><component :is="materialType(selected.kind).icon" :size="32" /></template>
       <template v-if="selected.caption" #summary>{{ selected.caption }}</template>
       <template #meta><span>{{ contextLabel(selected) }}</span><span>{{ selected.relations?.length || 0 }} связей</span></template>
       <template #actions-before><button type="button" class="primary" @click="presentation.showMaterial(selected)"><Cast :size="16" />Транслировать</button></template>

@@ -44,22 +44,11 @@
         <img v-if="material" class="scene-block-node-image" :src="material.assetUrl" :alt="material.name" />
         <span v-else class="scene-block-node-empty">Материал не выбран</span>
       </template>
-      <template v-else-if="block.type === 'material'">
-        <div v-if="material" class="scene-block-node-material">
-          <img v-if="['image', 'map'].includes(material.kind)" :src="material.assetUrl" :alt="material.name" />
-          <span v-else><component :is="materialType(material.kind).icon" :size="24" /></span>
-          <div><b>{{ material.name }}</b><small>{{ materialType(material.kind).label }}<template v-if="material.caption"> · {{ material.caption }}</template></small></div>
-        </div>
-        <span v-else class="scene-block-node-empty">Материал не выбран</span>
-      </template>
-	  <template v-else-if="['location', 'npc', 'quest'].includes(block.type)">
-		<div v-if="referencedEntity" class="scene-block-node-material">
-		  <img v-if="referencedEntity.image" :src="referencedEntity.image" :alt="referencedEntity.title" />
-		  <span v-else :style="{ color: referencedEntity.color || referencedEntity.typeMeta.color }">{{ referencedEntity.title.slice(0, 1) }}</span>
-		  <div><b>{{ referencedEntity.title }}</b><small>{{ referencedEntity.subtitle || referencedEntity.typeMeta.singular }}</small></div>
-		</div>
-		<span v-else class="scene-block-node-empty">Объект не выбран</span>
-	  </template>
+      <SceneEntityBlockPreview
+        v-else-if="['location', 'npc', 'quest', 'material'].includes(block.type)"
+        :type="block.type"
+        :reference-id="block.type === 'material' ? block.materialId : block.data?.referenceId"
+      />
       <RichContent v-else-if="block.data?.text" class="scene-block-node-text" :html="block.data.text" />
       <span v-else class="scene-block-node-empty">Описание пусто</span>
     </div>
@@ -71,10 +60,9 @@ import { computed, inject } from 'vue'
 import { Sparkles } from '@lucide/vue'
 import { RichContent } from '@sylvieshare/share-ui'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
+import SceneEntityBlockPreview from '@/features/sessions/components/SceneEntityBlockPreview.vue'
 import { hydrateDialogueRows } from '@/features/sessions/lib/dialogueRows'
 import { sceneBlockColor, sceneBlockType } from '@/features/sessions/lib/sceneBlockTypes'
-import { materialType } from '@/features/sessions/lib/sessionMaterials'
-import { buildSessionEntityCatalog } from '@/features/sessions/lib/sessionEntityRelations'
 
 const props = defineProps({
   block: { type: Object, required: true },
@@ -89,10 +77,7 @@ const previewRows = computed(() => {
 const creatures = computed(() => Array.isArray(props.block.data?.creatures) ? props.block.data.creatures : [])
 const rewardItems = computed(() => Array.isArray(props.block.data?.items) ? props.block.data.items : [])
 const sessionMaterials = inject('sessionMaterials', null)
-const sessionWorld = inject('sessionWorld', null)
 const material = computed(() => sessionMaterials?.byId(props.block.materialId) || null)
-const referencedEntity = computed(() => buildSessionEntityCatalog(sessionWorld, sessionMaterials)
-	.find(item => item.type === props.block.type && String(item.id) === String(props.block.data?.referenceId)) || null)
 
 function itemById(id) {
   return props.itemsById.get(String(id)) ?? null
@@ -168,5 +153,4 @@ function creatureKey(creature, index) {
 .scene-block-node-reward > span:last-child { color: var(--block-color); font-weight: 800; }
 .scene-block-node-empty { color: var(--text-muted); font-style: italic; }
 .scene-block-node-image { width: 100%; max-height: 220px; display: block; border-radius: 7px; object-fit: cover; }
-.scene-block-node-material { display: grid; grid-template-columns: 46px minmax(0, 1fr); align-items: center; gap: 10px; }.scene-block-node-material > img, .scene-block-node-material > span { width: 46px; height: 46px; display: grid; place-items: center; border-radius: 8px; object-fit: cover; background: color-mix(in srgb, var(--block-color) 12%, var(--surface-raised)); color: var(--block-color); }.scene-block-node-material > div { min-width: 0; display: flex; flex-direction: column; gap: 3px; }.scene-block-node-material b, .scene-block-node-material small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }.scene-block-node-material b { color: var(--text-1); font-size: 13px; }.scene-block-node-material small { color: var(--text-muted); font-size: 10px; }
 </style>
