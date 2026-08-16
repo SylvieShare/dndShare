@@ -1,11 +1,12 @@
 const JSON_HEADERS = { 'Content-Type': 'application/json;charset=utf-8' }
 
-async function apiRequest(url, { method = 'GET', body, response = 'json', signal } = {}) {
+async function apiRequest(url, { method = 'GET', body, response = 'json', signal, cache } = {}) {
     const res = await fetch('/api' + url, {
         method,
         headers: JSON_HEADERS,
         body: body == null ? null : JSON.stringify(body),
         signal,
+        cache,
     })
     if (!res.ok) {
         const payload = await res.json().catch(() => ({}))

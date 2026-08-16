@@ -65,7 +65,7 @@ export function getPublicEncounter(uuid, options) {
 }
 
 export function getSessionMaterials(uuid) {
-  return fetchGet(`/sessions/${uuid}/materials`)
+  return fetchGet(`/sessions/${uuid}/materials`, { cache: 'no-store' })
 }
 
 export function createSessionMaterial(uuid, data) {
@@ -109,7 +109,7 @@ export function getChapterGraph(uuid) {
 }
 
 export function getSessionWorld(uuid) {
-  return fetchGet(`/sessions/${uuid}/world`)
+  return fetchGet(`/sessions/${uuid}/world`, { cache: 'no-store' })
 }
 
 export function createSessionLocation(uuid, data) {

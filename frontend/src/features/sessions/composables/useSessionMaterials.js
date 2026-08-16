@@ -11,21 +11,34 @@ export function useSessionMaterials({ sessionUuid }) {
   const loading = ref(false)
   const loaded = ref(false)
   const error = ref('')
+  let loadPromise = null
 
   async function load(force = false) {
-    if ((loaded.value && !force) || loading.value) return
+    if (loaded.value && !force) return materials.value
+    if (loadPromise) {
+      if (!force) return loadPromise
+      try {
+        await loadPromise
+      } catch { /* forced refresh below gets its own result */ }
+      return load(true)
+    }
     loading.value = true
     error.value = ''
-    try {
-      const result = await getSessionMaterials(sessionUuid)
-      materials.value = result?.materials || []
-      loaded.value = true
-    } catch {
-      error.value = 'Не удалось загрузить материалы'
-      throw new Error(error.value)
-    } finally {
-      loading.value = false
-    }
+    loadPromise = getSessionMaterials(sessionUuid)
+      .then(result => {
+        materials.value = result?.materials || []
+        loaded.value = true
+        return materials.value
+      })
+      .catch(() => {
+        error.value = 'Не удалось загрузить материалы'
+        throw new Error(error.value)
+      })
+      .finally(() => {
+        loading.value = false
+        loadPromise = null
+      })
+    return loadPromise
   }
 
   async function create(payload) {

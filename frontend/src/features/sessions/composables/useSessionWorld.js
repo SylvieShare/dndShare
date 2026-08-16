@@ -40,7 +40,13 @@ export function useSessionWorld(sessionUuid) {
 
   async function load(force = false) {
     if (loaded.value && !force) return world.value
-    if (loadPromise) return loadPromise
+    if (loadPromise) {
+      if (!force) return loadPromise
+      try {
+        await loadPromise
+      } catch { /* forced refresh below gets its own result */ }
+      return load(true)
+    }
     loading.value = true
     error.value = ''
     loadPromise = getSessionWorld(sessionUuid)
