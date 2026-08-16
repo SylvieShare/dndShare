@@ -46,6 +46,7 @@
         :workspace-level="workspaceLevel"
         :workspace-mode="workspaceMode"
         :workspace-layout-mode="workspaceMotionMode"
+        :encounter-active="encounter.encounter.active"
         :dice-open="diceOpen"
         :music-open="musicOpen"
         :events-open="eventsOpen"

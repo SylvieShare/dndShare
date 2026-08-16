@@ -155,6 +155,7 @@ describe('ViewSession participant rail', () => {
   it('provides contextual combat hotkeys without bypassing combat transitions', () => {
     expect(source).toContain('ref="chapterGraphTab"')
     expect(source).toContain('ref="combatWorkspace"')
+    expect(source).toContain(':encounter-active="encounter.encounter.active"')
     expect(source).toContain('toggleCombatWorkspace: toggleCombatWorkspaceFromHotkey')
     expect(source).toContain("combatMode: computed(() => workspaceMode.value === 'combat')")
     expect(source).toContain('canControlCombat: isDm')

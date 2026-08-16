@@ -10,6 +10,7 @@
       :primary-view="primaryView"
       :reorder-pending="saving"
       :combat-active="workspaceMode === 'combat'"
+      :encounter-active="encounterActive"
       :dice-open="diceOpen"
       :music-open="musicOpen"
       :events-open="eventsOpen"
@@ -206,6 +207,7 @@ const props = defineProps({
   workspaceScene: { type: Object, default: null },
   workspaceLevel: { type: String, default: 'chapters' },
   workspaceLayoutMode: { type: String, default: null },
+  encounterActive: { type: Boolean, default: false },
   diceOpen: { type: Boolean, default: true },
   musicOpen: { type: Boolean, default: true },
   eventsOpen: { type: Boolean, default: true },

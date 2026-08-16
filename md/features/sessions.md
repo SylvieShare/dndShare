@@ -358,7 +358,13 @@ search field, where the keys navigate the currently filtered rows.
 
 Combat uses the same contextual shortcut system. `Shift+B` opens or closes the
 combat workspace for any participant and preserves the chapter/scenario context
-of the visible story canvas. While that workspace is open, DM-only commands are
+of the visible story canvas. Its session-header button represents workspace
+visibility and encounter activity independently: an accent underline and fill
+mean the combat workspace is open, while a red live dot and danger contour mean
+the encounter itself is running. Those two signals produce four visibly
+distinct combinations, including a running encounter whose workspace is
+closed; the accessible label names both states. While that workspace is open,
+DM-only commands are
 `Shift+Enter` to start or end the encounter, `←` / `→` to move to the previous
 or next turn, `Shift+P` to toggle all players, `Shift+N` to toggle the NPC
 reserve, `Shift+A` to toggle every combatant on the battle scene, and `Shift+R`

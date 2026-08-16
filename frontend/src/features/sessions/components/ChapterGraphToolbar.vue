@@ -85,8 +85,23 @@
         :materials="materials"
         :scene="workspaceScene"
       />
-      <button type="button" class="chapter-tool-btn chapter-tool-btn--icon chapter-tool-btn--combat" :class="{ 'chapter-tool-btn--active': combatActive }" title="Бой" aria-label="Бой" aria-keyshortcuts="Shift+B" @click="$emit('open-combat')">
+      <button
+        type="button"
+        class="chapter-tool-btn chapter-tool-btn--icon chapter-tool-btn--combat"
+        :class="{
+          'chapter-tool-btn--combat-open': combatActive,
+          'chapter-tool-btn--encounter-active': encounterActive,
+        }"
+        :data-combat-state="combatButtonState"
+        :title="combatButtonLabel"
+        :aria-label="combatButtonLabel"
+        :aria-pressed="combatActive"
+        aria-keyshortcuts="Shift+B"
+        @click="$emit('open-combat')"
+      >
         <Swords :size="19" />
+        <span class="chapter-combat-running-indicator" aria-hidden="true" />
+        <span class="chapter-combat-open-indicator" aria-hidden="true" />
         <kbd v-if="showShortcutHints" class="chapter-shortcut-hint" aria-hidden="true">{{ shortcutLabels.panel }}+B</kbd>
       </button>
 
@@ -136,6 +151,7 @@ const props = defineProps({
   primaryView: { type: String, default: 'story' },
   reorderPending: { type: Boolean, default: false },
   combatActive: { type: Boolean, default: false },
+  encounterActive: { type: Boolean, default: false },
   diceOpen: { type: Boolean, default: true },
   musicOpen: { type: Boolean, default: true },
   eventsOpen: { type: Boolean, default: true },
@@ -162,6 +178,8 @@ const primaryViews = [
   { key: 'materials', label: 'Материалы', icon: Images, shortcut: '5' },
 ]
 const shortcutLabels = sessionShortcutLabels()
+const combatButtonState = computed(() => `${props.combatActive ? 'open' : 'closed'}-${props.encounterActive ? 'running' : 'stopped'}`)
+const combatButtonLabel = computed(() => `${props.combatActive ? 'Закрыть' : 'Открыть'} режим боя · бой ${props.encounterActive ? 'идёт' : 'не запущен'}`)
 const visiblePrimaryViews = computed(() => props.isDm ? primaryViews : primaryViews.slice(0, 1))
 const arcTrigger = ref(null)
 const arcOpen = ref(false)
@@ -309,8 +327,15 @@ function createArc() {
 .chapter-tool-btn:hover:not(:disabled) { background: color-mix(in srgb, var(--text-on-accent) 9%, transparent); color: var(--text-1); }
 .chapter-tool-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 .chapter-tool-btn--icon { width: 31px; height: 31px; justify-content: center; padding: 0; }
-.chapter-tool-btn--combat { border-color: color-mix(in srgb, var(--danger) 38%, transparent); color: color-mix(in srgb, var(--danger) 84%, var(--text-1)); font-weight: 700; }
-.chapter-tool-btn--combat.chapter-tool-btn--active { background: color-mix(in srgb, var(--danger) 18%, transparent); border-color: color-mix(in srgb, var(--danger) 66%, transparent); color: var(--danger); }
+.chapter-tool-btn--combat { overflow: visible; border-color: color-mix(in srgb, var(--danger) 38%, transparent); color: color-mix(in srgb, var(--danger) 68%, var(--text-2)); font-weight: 700; }
+.chapter-tool-btn--combat-open { background: color-mix(in srgb, var(--accent) 15%, transparent); border-color: color-mix(in srgb, var(--accent) 62%, var(--border)); color: var(--text-1); }
+.chapter-tool-btn--encounter-active { background: color-mix(in srgb, var(--danger) 9%, transparent); border-color: color-mix(in srgb, var(--danger) 72%, var(--border)); color: var(--danger); }
+.chapter-tool-btn--combat-open.chapter-tool-btn--encounter-active { background: color-mix(in srgb, var(--danger) 14%, color-mix(in srgb, var(--accent) 15%, var(--surface))); border-color: color-mix(in srgb, var(--danger) 78%, var(--border)); color: var(--danger); }
+.chapter-combat-running-indicator { position: absolute; top: 3px; right: 3px; width: 6px; height: 6px; border: 1px solid var(--bg); border-radius: 50%; background: var(--danger); opacity: 0; transform: scale(0.55); transition: opacity .15s, transform .15s; }
+.chapter-tool-btn--encounter-active .chapter-combat-running-indicator { opacity: 1; transform: scale(1); animation: chapter-combat-live 1.8s ease-in-out infinite; }
+.chapter-combat-open-indicator { position: absolute; right: 7px; bottom: 2px; left: 7px; height: 2px; border-radius: 2px; background: var(--accent); opacity: 0; transform: scaleX(.4); transition: opacity .15s, transform .15s; }
+.chapter-tool-btn--combat-open .chapter-combat-open-indicator { opacity: 1; transform: scaleX(1); }
+@keyframes chapter-combat-live { 50% { box-shadow: 0 0 0 3px color-mix(in srgb, var(--danger) 18%, transparent); } }
 .chapter-tool-btn--active:not(.chapter-tool-btn--combat) { background: color-mix(in srgb, var(--accent) 16%, transparent); border-color: color-mix(in srgb, var(--accent) 55%, var(--border)); color: var(--text-1); }
 
 .chapter-arc-list { display: flex; flex-direction: column; gap: 3px; padding: 5px; }
@@ -339,5 +364,6 @@ function createArc() {
 }
 @media (prefers-reduced-motion: reduce) {
   .chapter-shortcut-hint { animation: none; }
+  .chapter-tool-btn--encounter-active .chapter-combat-running-indicator { animation: none; }
 }
 </style>

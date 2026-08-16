@@ -44,7 +44,7 @@ describe('chapter graph workspace', () => {
     expect(toolbar).not.toContain('SessionStatusMenu')
     expect(toolbar).not.toContain("$emit('create-chapter')")
     expect(toolbar).toContain("$emit('open-combat')")
-    expect(toolbar).toContain('aria-label="Бой"')
+    expect(toolbar).toContain(':aria-label="combatButtonLabel"')
     expect(toolbar).toContain('<Swords :size="19" />')
     expect(tab).toContain('@open-combat="openCombat"')
     expect(tab).toContain("canvas.value?.combatContext?.() ?? {}")
@@ -54,6 +54,18 @@ describe('chapter graph workspace', () => {
     expect(toolbar).not.toContain("'zoom'")
     expect(narrativeCanvas).toContain("{ id: 'chapter', label: 'Новая глава', icon: 'chapter' }")
     expect(actionDock).toContain('right: calc(var(--chapter-safe-right, 0px) + 8px);')
+  })
+
+  it('shows workspace visibility and running encounter as independent combat button states', () => {
+    expect(tab).toContain(':encounter-active="encounterActive"')
+    expect(toolbar).toContain("'chapter-tool-btn--combat-open': combatActive")
+    expect(toolbar).toContain("'chapter-tool-btn--encounter-active': encounterActive")
+    expect(toolbar).toContain(':data-combat-state="combatButtonState"')
+    expect(toolbar).toContain("'open' : 'closed'")
+    expect(toolbar).toContain("'running' : 'stopped'")
+    expect(toolbar).toContain('chapter-combat-running-indicator')
+    expect(toolbar).toContain('chapter-combat-open-indicator')
+    expect(toolbar).toContain('.chapter-tool-btn--combat-open.chapter-tool-btn--encounter-active')
   })
 
   it('supports arcs, node action menus and labelled directed transitions', () => {
