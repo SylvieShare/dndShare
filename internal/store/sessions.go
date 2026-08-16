@@ -46,10 +46,13 @@ type ParticipantBrief struct {
 
 // ChapterBrief — краткая инфа о текущей главе для списка сессий.
 type ChapterBrief struct {
-	Number   string `json:"number"`
-	Name     string `json:"name"`
-	ArcOrder int    `json:"arcOrder"`
-	ArcName  string `json:"arcName"`
+	Number      string  `json:"number"`
+	Name        string  `json:"name"`
+	ArcOrder    int     `json:"arcOrder"`
+	ArcName     string  `json:"arcName"`
+	ImageURL    string  `json:"imageUrl"`
+	ImageFocalX float64 `json:"imageFocalX"`
+	ImageFocalY float64 `json:"imageFocalY"`
 }
 
 // sessionSelect — общий SELECT сессии с именем системы (LEFT JOIN source).
@@ -227,10 +230,12 @@ func (s *Store) GetCurrentChapters(ctx context.Context, sessionIDs []int64) (map
 		return result, nil
 	}
 	rows, err := s.pool.Query(ctx,
-		`SELECT s.id, ch.number, ch.name, arc."order", arc.name
+		`SELECT s.id, ch.number, ch.name, arc."order", arc.name,
+		        image.url, ch.image_focal_x, ch.image_focal_y
 		 FROM dndshare."session" s
 		 JOIN dndshare.session_chapter ch ON ch.id = s.current_chapter_id
 		 JOIN dndshare.session_arc arc ON arc.id = ch.arc_id
+		 JOIN dndshare.storage_image image ON image.id = ch.image_id AND image.deleted = false
 		 WHERE s.id = ANY($1)`,
 		sessionIDs,
 	)
@@ -241,7 +246,10 @@ func (s *Store) GetCurrentChapters(ctx context.Context, sessionIDs []int64) (map
 	for rows.Next() {
 		var sid int64
 		var cb ChapterBrief
-		if err := rows.Scan(&sid, &cb.Number, &cb.Name, &cb.ArcOrder, &cb.ArcName); err != nil {
+		if err := rows.Scan(
+			&sid, &cb.Number, &cb.Name, &cb.ArcOrder, &cb.ArcName,
+			&cb.ImageURL, &cb.ImageFocalX, &cb.ImageFocalY,
+		); err != nil {
 			return nil, err
 		}
 		result[sid] = cb

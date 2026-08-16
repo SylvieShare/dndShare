@@ -15,8 +15,13 @@ encounter and synchronized music state. Owner-only actions are checked on the
 server, not only hidden in UI.
 
 `GET /api/sessions` returns session cards with participant briefs and current
-chapter. Participant avatar for the list is read from the canonical character
-data; `char_template.path_values_for_list` does not exist.
+chapter, including that chapter's image URL and focal point. The list renders
+each campaign as a full-width tile: the current chapter image and label form the
+cover, while the campaign name, description, system, user role, participants
+and last-change time stay in the content area. Without a selected chapter the
+cover uses the campaign initial; on narrow screens it moves above the content.
+Participant avatar for the list is read from the canonical character data;
+`char_template.path_values_for_list` does not exist.
 
 ## Participant display
 

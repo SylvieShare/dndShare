@@ -38,7 +38,7 @@
     </div>
 
     <template v-if="loading">
-      <div class="cards-grid">
+      <div class="cards-list">
         <div v-for="n in 4" :key="n" class="card-skeleton" />
       </div>
     </template>
@@ -46,14 +46,14 @@
     <template v-else-if="hasAnything">
       <template v-if="showGm && gmSessions.length">
         <div v-if="showPlayer && playerSessions.length" class="section-title">Я веду</div>
-        <div class="cards-grid">
+        <div class="cards-list">
           <SessionCard v-for="s in gmSessions" :key="s.id" :session="s" @delete="confirmDelete" />
         </div>
       </template>
 
       <template v-if="showPlayer && playerSessions.length">
         <div class="section-title">Я играю</div>
-        <div class="cards-grid">
+        <div class="cards-list">
           <SessionCard v-for="s in playerSessions" :key="s.id" :session="s" @leave="confirmLeave" />
         </div>
       </template>
@@ -406,14 +406,14 @@ onMounted(() => loadSessions(consumePrefetch(route.fullPath)))
   padding-top: 4px;
 }
 
-.cards-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+.cards-list {
+  display: flex;
+  flex-direction: column;
   gap: 12px;
 }
 
 .card-skeleton {
-  height: 140px;
+  height: 188px;
   border-radius: var(--r-lg);
   background: var(--bg);
   animation: sk-pulse 1.4s ease-in-out infinite;
@@ -468,8 +468,6 @@ onMounted(() => loadSessions(consumePrefetch(route.fullPath)))
     display: none;
   }
 
-  .cards-grid {
-    grid-template-columns: 1fr 1fr;
-  }
+  .card-skeleton { height: 278px; }
 }
 </style>
