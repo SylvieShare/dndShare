@@ -32,6 +32,9 @@
           <span class="role-label" :class="`role-label--${session.myRole}`">
             {{ session.myRole === 'gm' ? 'Я веду' : 'Я играю' }}
           </span>
+          <span v-if="session.myRole === 'player' && session.ownerLogin" class="card-dm">
+            Ведёт {{ session.ownerLogin }}
+          </span>
           <span v-if="session.systemName" class="card-system">{{ session.systemName }}</span>
           <span v-if="relativeDate" class="card-date">{{ relativeDate }}</span>
         </div>
@@ -343,6 +346,12 @@ const relativeDate = computed(() => {
   color: var(--info);
   background: color-mix(in srgb, var(--info) 10%, transparent);
   border-color: color-mix(in srgb, var(--info) 24%, transparent);
+}
+
+.card-dm {
+  color: var(--text-2);
+  font-size: 11px;
+  font-weight: 600;
 }
 
 .menu-wrap { position: relative; }

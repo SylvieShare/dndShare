@@ -39,6 +39,31 @@ func (s *Store) FindUserByID(ctx context.Context, id int64) (User, error) {
 	return u, err
 }
 
+// GetUserLogins returns display logins for a set of user IDs.
+func (s *Store) GetUserLogins(ctx context.Context, ids []int64) (map[int64]string, error) {
+	result := make(map[int64]string)
+	if len(ids) == 0 {
+		return result, nil
+	}
+	rows, err := s.pool.Query(ctx,
+		`SELECT id, login FROM dndshare.users WHERE id = ANY($1)`,
+		ids,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var id int64
+		var login string
+		if err := rows.Scan(&id, &login); err != nil {
+			return nil, err
+		}
+		result[id] = login
+	}
+	return result, rows.Err()
+}
+
 // ExistsByLogin — есть ли пользователь с таким логином.
 func (s *Store) ExistsByLogin(ctx context.Context, login string) (bool, error) {
 	var exists bool

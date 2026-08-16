@@ -84,6 +84,7 @@ type sessionListItem struct {
 	Participants   []store.ParticipantBrief `json:"participants"`
 	MyRole         string                   `json:"myRole"`
 	MyCharUUID     *string                  `json:"myCharUuid,omitempty"`
+	OwnerLogin     string                   `json:"ownerLogin,omitempty"`
 	CurrentChapter *store.ChapterBrief      `json:"currentChapter,omitempty"`
 }
 
@@ -112,9 +113,11 @@ func (s *Server) handleGetSessions(w http.ResponseWriter, r *http.Request) {
 		allIDs = append(allIDs, g.ID)
 	}
 	playerIDs := make([]int64, 0, len(playerSessions))
+	playerOwnerIDs := make([]int64, 0, len(playerSessions))
 	for _, g := range playerSessions {
 		allIDs = append(allIDs, g.ID)
 		playerIDs = append(playerIDs, g.ID)
+		playerOwnerIDs = append(playerOwnerIDs, g.OwnerUserID)
 	}
 	participants, err := s.store.GetSessionParticipantsBrief(ctx, allIDs)
 	if err != nil {
@@ -131,26 +134,32 @@ func (s *Server) handleGetSessions(w http.ResponseWriter, r *http.Request) {
 		serverError(w, err)
 		return
 	}
+	ownerLogins, err := s.store.GetUserLogins(ctx, playerOwnerIDs)
+	if err != nil {
+		serverError(w, err)
+		return
+	}
 	items := make([]sessionListItem, 0, len(gmSessions)+len(playerSessions))
 	for _, g := range gmSessions {
-		items = append(items, buildListItem(g, participants[g.ID], "gm", nil, chapters))
+		items = append(items, buildListItem(g, participants[g.ID], "gm", nil, "", chapters))
 	}
 	for _, g := range playerSessions {
 		var myUUID *string
 		if u, ok := myCharUuids[g.ID]; ok {
 			myUUID = &u
 		}
-		items = append(items, buildListItem(g, participants[g.ID], "player", myUUID, chapters))
+		items = append(items, buildListItem(g, participants[g.ID], "player", myUUID, ownerLogins[g.OwnerUserID], chapters))
 	}
 	writeJSON(w, http.StatusOK, sessionsResponse{Sessions: items})
 }
 
-func buildListItem(g store.GameSession, parts []store.ParticipantBrief, role string, myUUID *string, chapters map[int64]store.ChapterBrief) sessionListItem {
+func buildListItem(g store.GameSession, parts []store.ParticipantBrief, role string, myUUID *string, ownerLogin string, chapters map[int64]store.ChapterBrief) sessionListItem {
 	item := sessionListItem{
 		Session:      g,
 		Participants: nonNil(parts),
 		MyRole:       role,
 		MyCharUUID:   myUUID,
+		OwnerLogin:   ownerLogin,
 	}
 	if ch, ok := chapters[g.ID]; ok {
 		cp := ch

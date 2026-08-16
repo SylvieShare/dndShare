@@ -138,6 +138,7 @@ function applySessionsResponse(res) {
     participants: item.participants ?? [],
     myRole: item.myRole,
     myCharUuid: item.myCharUuid ?? null,
+    ownerLogin: item.ownerLogin ?? null,
     currentChapter: item.currentChapter ?? null,
   }))
 }

@@ -20,6 +20,8 @@ each campaign as a full-width tile: the current chapter image and label form the
 cover, while the campaign name, description, system, user role, participants
 and last-change time stay in the content area. Without a selected chapter the
 cover uses the campaign initial; on narrow screens it moves above the content.
+For sessions where the current user is a participant, the response also
+includes the owner's login and the tile shows it as the DM name.
 Participant avatar for the list is read from the canonical character data;
 `char_template.path_values_for_list` does not exist.
 
