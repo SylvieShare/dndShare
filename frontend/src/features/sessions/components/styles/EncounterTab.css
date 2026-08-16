@@ -160,6 +160,24 @@
   text-decoration: none;
 }
 
+.enc-shortcut-hint {
+  position: absolute;
+  z-index: 3;
+  right: -6px;
+  bottom: -9px;
+  padding: 2px 4px;
+  border: 1px solid color-mix(in srgb, var(--accent) 42%, var(--border));
+  border-radius: 4px;
+  background: var(--popover-bg);
+  color: var(--accent-soft);
+  box-shadow: var(--shadow-sm);
+  font: 750 8px/1 var(--font-ui);
+  letter-spacing: 0;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: enc-shortcut-hint-in .16s cubic-bezier(.22, 1, .36, 1) both;
+}
+
 .enc-toolbar :deep(.enc-icon-btn:hover:not(:disabled)) {
   border-color: var(--border-strong);
   background: color-mix(in srgb, var(--text-on-accent) 9%, transparent);
@@ -376,6 +394,7 @@
 }
 
 .enc-section-icon-btn {
+  position: relative;
   display: inline-flex;
   min-width: 30px;
   height: 30px;
@@ -476,4 +495,9 @@
   .enc-combat-scene-leave-active,
   .enc-wrap--combat-ending .enc-combat-scene { transition: none; }
   .enc-wrap--combat-ending .enc-reserve-list { animation: none; }
+  .enc-shortcut-hint { animation: none; }
+}
+
+@keyframes enc-shortcut-hint-in {
+  from { opacity: 0; transform: translateY(-2px); }
 }

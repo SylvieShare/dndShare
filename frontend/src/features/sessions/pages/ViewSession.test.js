@@ -152,6 +152,24 @@ describe('ViewSession participant rail', () => {
     expect(sessionHotkeysSource).toContain('document.querySelector(FLOATING_UI)')
   })
 
+  it('provides contextual combat hotkeys without bypassing combat transitions', () => {
+    expect(source).toContain('ref="chapterGraphTab"')
+    expect(source).toContain('ref="combatWorkspace"')
+    expect(source).toContain('toggleCombatWorkspace: toggleCombatWorkspaceFromHotkey')
+    expect(source).toContain("combatMode: computed(() => workspaceMode.value === 'combat')")
+    expect(source).toContain('canControlCombat: isDm')
+    expect(source).toContain('combatWorkspace.value?.toggleCombat()')
+    expect(centerWorkspaceSource).toContain('defineExpose({ toggleCombat: () => encounterTab.value?.toggleCombat() })')
+    expect(encounterSource).toContain('defineExpose({ toggleCombat })')
+    expect(encounterSource).toContain('aria-keyshortcuts="Shift+Enter"')
+    expect(encounterSource).toContain('aria-keyshortcuts="["')
+    expect(encounterSource).toContain('aria-keyshortcuts="]"')
+    expect(encounterSource).toContain('aria-keyshortcuts="Shift+A"')
+    expect(encounterSource).toContain('aria-keyshortcuts="Shift+N"')
+    expect(source).toContain('aria-keyshortcuts="Shift+P"')
+    expect(sessionHotkeysSource).toContain("command.type === 'toggle-encounter' && event.target?.closest?.(NATIVE_ACTIVATION_TARGET)")
+  })
+
   it('lets the canvas use the empty part of the right rail and moves actions right when every panel is closed', () => {
     expect(source).toContain("'campaign-workspace--right-dock': rightDockOpen")
     expect(source).toContain('<aside class="workspace-dock workspace-dock--right">')

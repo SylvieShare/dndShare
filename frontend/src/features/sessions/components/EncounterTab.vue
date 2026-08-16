@@ -24,11 +24,13 @@
           :disabled="combatTransitioning || (!enc.encounter.active && startSelectionCount === 0)"
           :title="enc.encounter.active ? 'Закончить бой' : `Начать бой (${startSelectionCount})`"
           :aria-label="enc.encounter.active ? 'Закончить бой' : 'Начать бой'"
+          aria-keyshortcuts="Shift+Enter"
           @click="toggleCombat"
         >
           <Square v-if="enc.encounter.active" :size="18" />
           <Swords v-else :size="19" />
           <span v-if="!enc.encounter.active && startSelectionCount" class="enc-icon-count">{{ startSelectionCount }}</span>
+          <kbd v-if="showShortcutHints" class="enc-shortcut-hint" aria-hidden="true">{{ shortcutLabels.panel }}+Enter</kbd>
         </button>
 
         <template v-if="enc.encounter.active">
@@ -37,11 +39,13 @@
             <span class="enc-round-num">{{ enc.encounter.round }}</span>
           </div>
           <div class="enc-turn-group">
-            <button class="enc-icon-btn" :disabled="enc.inCombat.length === 0" title="Предыдущий ход" aria-label="Предыдущий ход" @click="enc.prevTurn">
+            <button class="enc-icon-btn" :disabled="enc.inCombat.length === 0" title="Предыдущий ход" aria-label="Предыдущий ход" aria-keyshortcuts="[" @click="enc.prevTurn">
               <ChevronLeft :size="18" />
+              <kbd v-if="showShortcutHints" class="enc-shortcut-hint" aria-hidden="true">[</kbd>
             </button>
-            <button class="enc-icon-btn enc-icon-btn--next" :disabled="enc.inCombat.length === 0" title="Следующий ход" aria-label="Следующий ход" @click="enc.nextTurn">
+            <button class="enc-icon-btn enc-icon-btn--next" :disabled="enc.inCombat.length === 0" title="Следующий ход" aria-label="Следующий ход" aria-keyshortcuts="]" @click="enc.nextTurn">
               <ChevronRight :size="18" />
+              <kbd v-if="showShortcutHints" class="enc-shortcut-hint" aria-hidden="true">]</kbd>
             </button>
           </div>
         </template>
@@ -58,10 +62,12 @@
               :disabled="enc.selectedRerollCount === 0"
               title="Перебросить инициативу выбранным"
               aria-label="Перебросить инициативу выбранным"
+              aria-keyshortcuts="Shift+R"
               @click="enc.rerollSelectedInitiative"
             >
               <Dices :size="18" />
               <span v-if="enc.selectedRerollCount" class="enc-icon-count">{{ enc.selectedRerollCount }}</span>
+              <kbd v-if="showShortcutHints" class="enc-shortcut-hint" aria-hidden="true">{{ shortcutLabels.panel }}+R</kbd>
             </button>
           </div>
         </div>
@@ -72,10 +78,12 @@
           :disabled="enc.selectedRerollCount === 0"
           title="Перебросить инициативу выбранным"
           aria-label="Перебросить инициативу выбранным"
+          aria-keyshortcuts="Shift+R"
           @click="enc.rerollSelectedInitiative"
         >
           <Dices :size="18" />
           <span v-if="enc.selectedRerollCount" class="enc-icon-count">{{ enc.selectedRerollCount }}</span>
+          <kbd v-if="showShortcutHints" class="enc-shortcut-hint" aria-hidden="true">{{ shortcutLabels.panel }}+R</kbd>
         </button>
 
         <div v-if="props.isDm" class="enc-action-group" aria-label="Действия с выбранными участниками">
@@ -127,8 +135,12 @@
                 :disabled="combatItems.length === 0"
                 :title="allSelectedInCombat ? 'Снять выбор с существ' : 'Выбрать всех существ'"
                 :aria-label="allSelectedInCombat ? 'Снять выбор с существ' : 'Выбрать всех существ'"
+                aria-keyshortcuts="Shift+A"
                 @click="toggleVisibleSelection(combatItems)"
-              ><ListChecks :size="17" /></button>
+              >
+                <ListChecks :size="17" />
+                <kbd v-if="showShortcutHints" class="enc-shortcut-hint" aria-hidden="true">{{ shortcutLabels.panel }}+A</kbd>
+              </button>
             </div>
             <div class="enc-section-actions">
               <button
@@ -189,8 +201,12 @@
             :disabled="npcItems.length === 0"
             :title="allSelectedInNpcs ? 'Снять выбор' : 'Выбрать весь запас'"
             :aria-label="allSelectedInNpcs ? 'Снять выбор' : 'Выбрать весь запас'"
+            aria-keyshortcuts="Shift+N"
             @click="enc.selectAllInGroup('reserve-npc')"
-          ><ListChecks :size="17" /></button>
+          >
+            <ListChecks :size="17" />
+            <kbd v-if="showShortcutHints" class="enc-shortcut-hint" aria-hidden="true">{{ shortcutLabels.panel }}+N</kbd>
+          </button>
         </div>
       </div>
       <div class="enc-section">
@@ -316,6 +332,7 @@ import EncounterChallengeMenu from '@/features/sessions/components/EncounterChal
 import EncounterGraveyardMenu from '@/features/sessions/components/EncounterGraveyardMenu.vue'
 import EncounterRow from '@/features/sessions/components/EncounterRow'
 import { useEncounterCombatTransition } from '@/features/sessions/composables/useEncounterCombatTransition'
+import { sessionShortcutLabels } from '@/features/sessions/lib/sessionShortcuts'
 import { FormActionButtons } from '@sylvieshare/share-ui'
 import { FormField } from '@sylvieshare/share-ui'
 import { FormNumberInput } from '@sylvieshare/share-ui'
@@ -331,10 +348,12 @@ const props = defineProps({
   isDm: { type: Boolean, default: false },
   workspace: { type: Boolean, default: false },
   encounter: { type: Object, required: true },
+  showShortcutHints: { type: Boolean, default: false },
 })
 defineEmits(['view-participant'])
 
 const enc = props.encounter
+const shortcutLabels = sessionShortcutLabels()
 const encounterRoot = ref(null)
 const {
   transitioning: combatTransitioning,
@@ -396,6 +415,8 @@ function submitSimple() {
   simpleForm.hpMax = 0
   simpleForm.description = ''
 }
+
+defineExpose({ toggleCombat })
 </script>
 
 <style scoped src="./styles/EncounterTab.css"></style>

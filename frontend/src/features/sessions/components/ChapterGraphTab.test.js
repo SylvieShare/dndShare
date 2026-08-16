@@ -176,5 +176,7 @@ describe('chapter graph workspace', () => {
     expect(toolbar).toContain('v-if="showShortcutHints" class="chapter-shortcut-hint"')
     expect(toolbar).toContain('{{ shortcutLabels.alt }}+{{ view.shortcut }}')
     expect(toolbar).toContain('showShortcutHints && !diceOpen')
+    expect(toolbar).toContain('aria-keyshortcuts="Shift+B"')
+    expect(toolbar).toContain('{{ shortcutLabels.panel }}+B')
   })
 })

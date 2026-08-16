@@ -347,6 +347,19 @@ panel and dice shortcuts are available to every session participant. Global
 shortcuts ignore key repeats, text inputs, content-editable fields, open dialogs
 and popovers.
 
+Combat uses the same contextual shortcut system. `Shift+B` opens or closes the
+combat workspace for any participant and preserves the chapter/scenario context
+of the visible story canvas. While that workspace is open, DM-only commands are
+`Shift+Enter` to start or end the encounter, `[` / `]` to move to the previous
+or next turn, `Shift+P` to toggle all players, `Shift+N` to toggle the NPC
+reserve, `Shift+A` to toggle every combatant on the battle scene, and `Shift+R`
+to reroll initiative for the current selection. The start/end shortcut calls the
+same transition controller as the toolbar button and remains unavailable until
+at least one participant is selected. When contextual help is enabled, each
+combination appears beside its corresponding combat control. `Shift+Enter`
+defers to the browser's native activation when focus is already on a button or
+link, preventing one keypress from invoking two actions.
+
 When contextual canvas hints are visible, they reflect the active behavior:
 `Ctrl`/`Cmd` + click toggles a node, modifier-drag adds nodes through a frame,
 `Ctrl`/`Cmd` + `A` selects every node in the active graph, `Delete`/`Backspace`

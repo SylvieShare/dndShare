@@ -33,6 +33,7 @@
       }"
     >
       <ChapterGraphTab
+        ref="chapterGraphTab"
         class="campaign-graph"
         :graph="chapterGraph"
         :session="session"
@@ -86,6 +87,7 @@
         <SessionCenterWorkspace
           v-if="workspaceMode === 'combat' && (workspaceRevealed || workspaceClosing)"
           v-show="primaryView === 'story'"
+          ref="combatWorkspace"
           :closing="workspaceClosing"
           :session-uuid="sessionUuid"
           :session="session"
@@ -94,6 +96,7 @@
           :encounter="encounter"
           :chapter="workspaceChapter"
           :scene="workspaceScene"
+          :show-shortcut-hints="showShortcutHints"
           @close="closeWorkspace"
           @view-participant="openParticipant"
         />
@@ -114,10 +117,12 @@
             :disabled="encounterPlayers.length === 0"
             :title="allEncounterPlayersSelected ? 'Снять выбор со всех игроков' : 'Выбрать всех игроков'"
             :aria-label="allEncounterPlayersSelected ? 'Снять выбор со всех игроков' : 'Выбрать всех игроков'"
+            aria-keyshortcuts="Shift+P"
             @click="toggleAllEncounterPlayers"
           >
             <ListChecks :size="14" />
             <span>{{ allEncounterPlayersSelected ? 'Снять выбор' : 'Выбрать всех' }}</span>
+            <kbd v-if="showShortcutHints" class="players-select-all-shortcut">{{ shortcutLabels.panel }}+P</kbd>
           </button>
           <span class="poll-indicator" :class="pollStatus">
             <span class="poll-bar" :class="{ running: pollRunning }" />
@@ -249,6 +254,7 @@ import { useSessionMaterials } from '@/features/sessions/composables/useSessionM
 import { useSessionPresentation } from '@/features/sessions/composables/useSessionPresentation'
 import { useSessionSettings } from '@/features/sessions/composables/useSessionSettings'
 import { useSessionHotkeys } from '@/features/sessions/composables/useSessionHotkeys'
+import { sessionShortcutLabels } from '@/features/sessions/lib/sessionShortcuts'
 import { useAccountStore } from '@/stores/account'
 import { useMusicStore } from '@/stores/music'
 import { useTemplateStore } from '@/stores/template'
@@ -308,6 +314,9 @@ const musicOpen = ref(savedToolPanels.music)
 const eventsOpen = ref(savedToolPanels.events)
 const dicePanel = ref(null)
 const showShortcutHints = ref(false)
+const shortcutLabels = sessionShortcutLabels()
+const chapterGraphTab = ref(null)
+const combatWorkspace = ref(null)
 const rightDockOpen = computed(() => diceOpen.value || musicOpen.value || eventsOpen.value)
 const combatImportError = ref('')
 
@@ -356,15 +365,6 @@ watch(isDm, dm => {
   if (dm) presentation.startConnectionPolling()
   else presentation.stopConnectionPolling()
 }, { immediate: true })
-
-useSessionHotkeys({
-  enabled: computed(() => !!session.value),
-  canSwitchView: isDm,
-  showHints: showShortcutHints,
-  selectView: selectPrimaryView,
-  togglePanel: toggleToolPanel,
-  rollDie: sides => dicePanel.value?.rollDie(sides),
-})
 
 watch([() => accountStore.status, isDm, session], ([status, dm, currentSession]) => {
   if (status === 'success' && currentSession && !dm && primaryView.value !== 'story') selectPrimaryView('story')
@@ -508,6 +508,37 @@ const {
   updateWorkspaceContext,
   closeWorkspace,
 } = useSessionWorkspace({ sessionUuid, chapterGraph })
+
+function toggleCombatWorkspaceFromHotkey() {
+  const context = primaryView.value === 'story'
+    ? chapterGraphTab.value?.combatContext?.() ?? {}
+    : {}
+  toggleCombatWorkspace(context)
+}
+
+function toggleEncounterFromHotkey() {
+  if (!encounter.encounter.active && encounter.selectedRerollCount === 0) return
+  combatWorkspace.value?.toggleCombat()
+}
+
+useSessionHotkeys({
+  enabled: computed(() => !!session.value),
+  canSwitchView: isDm,
+  showHints: showShortcutHints,
+  selectView: selectPrimaryView,
+  togglePanel: toggleToolPanel,
+  rollDie: sides => dicePanel.value?.rollDie(sides),
+  combatMode: computed(() => workspaceMode.value === 'combat'),
+  canControlCombat: isDm,
+  toggleCombatWorkspace: toggleCombatWorkspaceFromHotkey,
+  toggleEncounter: toggleEncounterFromHotkey,
+  previousTurn: () => { if (encounter.encounter.active) encounter.prevTurn() },
+  nextTurn: () => { if (encounter.encounter.active) encounter.nextTurn() },
+  togglePlayerSelection: toggleAllEncounterPlayers,
+  toggleNpcSelection: () => encounter.selectAllInGroup('reserve-npc'),
+  toggleSceneSelection: () => encounter.selectAllInGroup('combat'),
+  rerollInitiative: () => encounter.rerollSelectedInitiative(),
+})
 
 async function openRelatedScene(sceneId) {
 	const scene = sessionWorld.scenesById.value.get(Number(sceneId))

@@ -22,6 +22,20 @@ export const SESSION_DICE_SHORTCUTS = Object.freeze([
   { code: 'Digit7', sides: 100 },
 ])
 
+export const SESSION_COMBAT_SHIFT_SHORTCUTS = Object.freeze({
+  KeyB: 'toggle-combat-workspace',
+  Enter: 'toggle-encounter',
+  KeyP: 'toggle-player-selection',
+  KeyN: 'toggle-npc-selection',
+  KeyA: 'toggle-scene-selection',
+  KeyR: 'reroll-initiative',
+})
+
+export const SESSION_COMBAT_TURN_SHORTCUTS = Object.freeze({
+  BracketLeft: 'previous-turn',
+  BracketRight: 'next-turn',
+})
+
 export function sessionShortcutLabels(platform = globalThis.navigator?.platform || '') {
   const mac = /Mac|iPhone|iPad/.test(platform)
   return {

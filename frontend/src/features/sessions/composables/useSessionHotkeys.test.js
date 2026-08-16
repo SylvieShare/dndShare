@@ -20,6 +20,17 @@ describe('session hotkeys', () => {
     )).toEqual([4, 6, 8, 10, 12, 20, 100])
   })
 
+  it('maps combat workspace, encounter, selection and turn shortcuts', () => {
+    expect(sessionHotkeyCommand(key('KeyB', { shiftKey: true }))).toEqual({ type: 'toggle-combat-workspace' })
+    expect(sessionHotkeyCommand(key('Enter', { shiftKey: true }))).toEqual({ type: 'toggle-encounter' })
+    expect(sessionHotkeyCommand(key('KeyP', { shiftKey: true }))).toEqual({ type: 'toggle-player-selection' })
+    expect(sessionHotkeyCommand(key('KeyN', { shiftKey: true }))).toEqual({ type: 'toggle-npc-selection' })
+    expect(sessionHotkeyCommand(key('KeyA', { shiftKey: true }))).toEqual({ type: 'toggle-scene-selection' })
+    expect(sessionHotkeyCommand(key('KeyR', { shiftKey: true }))).toEqual({ type: 'reroll-initiative' })
+    expect(sessionHotkeyCommand(key('BracketLeft', { key: '[' }))).toEqual({ type: 'previous-turn' })
+    expect(sessionHotkeyCommand(key('BracketRight', { key: ']' }))).toEqual({ type: 'next-turn' })
+  })
+
   it('toggles contextual help and ignores incomplete combinations', () => {
     expect(sessionHotkeyCommand(key('Slash', { key: '?', shiftKey: true }))).toEqual({ type: 'toggle-hints' })
     expect(sessionHotkeyCommand(key('Digit7', { key: '?', shiftKey: true }))).toEqual({ type: 'toggle-hints' })

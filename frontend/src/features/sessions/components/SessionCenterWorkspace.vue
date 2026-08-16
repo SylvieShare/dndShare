@@ -6,12 +6,14 @@
     aria-label="Бой"
   >
     <EncounterTab
+      ref="encounterTab"
       workspace
       :session-uuid="sessionUuid"
       :session="session"
       :participants="participants"
       :is-dm="isDm"
       :encounter="encounter"
+      :show-shortcut-hints="showShortcutHints"
       @view-participant="$emit('view-participant', $event)"
     />
     <button
@@ -29,6 +31,7 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import EncounterTab from '@/features/sessions/components/EncounterTab'
 
 defineProps({
@@ -38,10 +41,14 @@ defineProps({
   participants: { type: Array, default: () => [] },
   isDm: { type: Boolean, default: false },
   encounter: { type: Object, required: true },
+  showShortcutHints: { type: Boolean, default: false },
   chapter: { type: Object, default: null },
   scene: { type: Object, default: null },
 })
 defineEmits(['close', 'view-participant'])
+
+const encounterTab = ref(null)
+defineExpose({ toggleCombat: () => encounterTab.value?.toggleCombat() })
 </script>
 
 <style scoped>

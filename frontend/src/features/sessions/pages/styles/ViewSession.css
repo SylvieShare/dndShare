@@ -142,6 +142,15 @@
 
 .players-select-all:disabled { cursor: default; opacity: 0.45; }
 
+.players-select-all-shortcut {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: currentColor;
+  font: 750 8px/1 var(--font-ui);
+  opacity: 0.78;
+}
+
 .poll-indicator {
   flex: 1;
   height: 2px;

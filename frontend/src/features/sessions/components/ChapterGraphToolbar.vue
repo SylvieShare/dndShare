@@ -85,8 +85,9 @@
         :materials="materials"
         :scene="workspaceScene"
       />
-      <button type="button" class="chapter-tool-btn chapter-tool-btn--icon chapter-tool-btn--combat" :class="{ 'chapter-tool-btn--active': combatActive }" title="Бой" aria-label="Бой" @click="$emit('open-combat')">
+      <button type="button" class="chapter-tool-btn chapter-tool-btn--icon chapter-tool-btn--combat" :class="{ 'chapter-tool-btn--active': combatActive }" title="Бой" aria-label="Бой" aria-keyshortcuts="Shift+B" @click="$emit('open-combat')">
         <Swords :size="19" />
+        <kbd v-if="showShortcutHints" class="chapter-shortcut-hint" aria-hidden="true">{{ shortcutLabels.panel }}+B</kbd>
       </button>
 
       <span class="chapter-toolbar-rule" />

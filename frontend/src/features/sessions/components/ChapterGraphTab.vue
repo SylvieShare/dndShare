@@ -422,6 +422,10 @@ function openCombat() {
   emit('open-combat', props.primaryView === 'story' ? canvas.value?.combatContext?.() ?? {} : {})
 }
 
+defineExpose({
+  combatContext: () => props.primaryView === 'story' ? canvas.value?.combatContext?.() ?? {} : {},
+})
+
 function returnToChapters() {
   closeMenus()
   emit('close-workspace')

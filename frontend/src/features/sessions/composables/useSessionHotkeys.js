@@ -1,5 +1,7 @@
 import { onBeforeUnmount, onMounted, toValue } from 'vue'
 import {
+  SESSION_COMBAT_SHIFT_SHORTCUTS,
+  SESSION_COMBAT_TURN_SHORTCUTS,
   SESSION_DICE_SHORTCUTS,
   SESSION_PANEL_SHORTCUTS,
   SESSION_VIEW_SHORTCUTS,
@@ -7,6 +9,7 @@ import {
 
 const EDITABLE_TARGET = 'input, textarea, select, [contenteditable="true"]'
 const FLOATING_UI = '.share-popover, [role="dialog"]'
+const NATIVE_ACTIVATION_TARGET = 'button, a[href], [role="button"]'
 
 export function sessionHotkeyCommand(event) {
   const helpKey = event.key === '?' || (event.code === 'Slash' && event.shiftKey)
@@ -22,11 +25,17 @@ export function sessionHotkeyCommand(event) {
   if (!event.altKey && event.shiftKey && !event.ctrlKey && !event.metaKey) {
     const panel = Object.entries(SESSION_PANEL_SHORTCUTS).find(([, code]) => code === event.code)?.[0]
     if (panel) return { type: 'toggle-panel', value: panel }
+    const combatCommand = SESSION_COMBAT_SHIFT_SHORTCUTS[event.code]
+    if (combatCommand) return { type: combatCommand }
   }
 
   if (event.altKey && event.shiftKey && !event.ctrlKey && !event.metaKey) {
     const die = SESSION_DICE_SHORTCUTS.find(shortcut => shortcut.code === event.code)
     if (die) return { type: 'roll-die', value: die.sides }
+  }
+  if (!event.altKey && !event.shiftKey && !event.ctrlKey && !event.metaKey) {
+    const combatCommand = SESSION_COMBAT_TURN_SHORTCUTS[event.code]
+    if (combatCommand) return { type: combatCommand }
   }
   return null
 }
@@ -38,6 +47,16 @@ export function useSessionHotkeys({
   selectView,
   togglePanel,
   rollDie,
+  combatMode,
+  canControlCombat,
+  toggleCombatWorkspace,
+  toggleEncounter,
+  previousTurn,
+  nextTurn,
+  togglePlayerSelection,
+  toggleNpcSelection,
+  toggleSceneSelection,
+  rerollInitiative,
 }) {
   function onKey(event) {
     if (!toValue(enabled) || event.repeat || event.target?.closest?.(EDITABLE_TARGET)) return
@@ -45,6 +64,7 @@ export function useSessionHotkeys({
     const command = sessionHotkeyCommand(event)
     if (!command) return
     if (document.querySelector(FLOATING_UI)) return
+    if (command.type === 'toggle-encounter' && event.target?.closest?.(NATIVE_ACTIVATION_TARGET)) return
     if (command.type === 'toggle-hints') {
       event.preventDefault()
       showHints.value = !showHints.value
@@ -65,6 +85,28 @@ export function useSessionHotkeys({
     if (command.type === 'roll-die') {
       event.preventDefault()
       rollDie(command.value)
+      return
+    }
+    if (command.type === 'toggle-combat-workspace') {
+      event.preventDefault()
+      toggleCombatWorkspace()
+      return
+    }
+    if (!toValue(combatMode) || !toValue(canControlCombat)) return
+
+    const combatActions = {
+      'toggle-encounter': toggleEncounter,
+      'previous-turn': previousTurn,
+      'next-turn': nextTurn,
+      'toggle-player-selection': togglePlayerSelection,
+      'toggle-npc-selection': toggleNpcSelection,
+      'toggle-scene-selection': toggleSceneSelection,
+      'reroll-initiative': rerollInitiative,
+    }
+    const combatAction = combatActions[command.type]
+    if (combatAction) {
+      event.preventDefault()
+      combatAction()
     }
   }
 
