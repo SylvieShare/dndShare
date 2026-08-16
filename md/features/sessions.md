@@ -367,7 +367,9 @@ semantic color as the menu and bulk action and is omitted for `none`; the lower
 title surface uses the same translucent treatment as a chapter and has no
 redundant `Сценарий` label. A single click anywhere on a scenario card opens
 its launch, open-elements, status, edit and delete actions without a separate
-ellipsis trigger; double click still opens the scenario block canvas.
+ellipsis trigger; double click still opens the scenario block canvas. The scene
+image continues beneath the translucent lower copy surface just as it does on a
+chapter card, rather than ending above an opaque footer.
 
 Double-clicking a scenario switches the same physical canvas to the third graph.
 The scenario node first moves to the top immediately to the right of its chapter
@@ -387,6 +389,9 @@ speaker key. On the canvas each row places the right-aligned speaker name,
 a vertical speaker-colored divider and the unframed reply in three columns.
 Every block card keeps a visible border mixed from its semantic type color;
 hover strengthens the same border instead of introducing another accent.
+Quest and material blocks place their type icon in this shared heading, to the
+left of the type/name pair. Their full previews start directly with useful
+content and do not repeat another icon, entity name or material-kind header.
 Clicking any non-interactive
 part of a block opens its action menu; there is no separate ellipsis trigger.
 The menu provides edit, copy and delete, while a double click opens
@@ -434,6 +439,9 @@ flags. Drag previews are emitted at most once per animation frame, layout reads
 for the safe frame occur only for the spotlight node, and viewport persistence
 is debounced. Each graph key persists only its viewport in local storage; node
 positions and edges are server state.
+When a node drag crosses the movement threshold, the canvas emits one
+`drag-start` signal and closes any chapter, scenario, block or edge action
+popover before position previews begin.
 Completing a link gesture creates an unlabelled directed edge immediately at
 every level; the edge action menu remains the explicit place to add or edit a
 label later.

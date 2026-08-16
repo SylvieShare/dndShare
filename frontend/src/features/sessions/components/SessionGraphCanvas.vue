@@ -36,6 +36,7 @@
       @preview-size="previewSize"
       @save-size="saveSize"
       @selection-change="handleSelectionChange"
+      @drag-start="handleDragStart"
       @delete-selection="requestSelectionDelete"
       @change-selection-status="changeSelectionStatus"
     >
@@ -233,6 +234,7 @@ const emit = defineEmits([
   'preview-positions', 'save-positions', 'delete-nodes', 'selection-change', 'create-chapter', 'close-workspace',
   'chapter-ancestor-click', 'scene-count', 'send-block-to-combat', 'change-nodes-status',
   'workspace-context-change',
+  'drag-start',
 ])
 
 const canvas = ref(null)
@@ -373,6 +375,11 @@ function closeGraphMenus() {
 function handleSelectionChange(ids) {
   closeGraphMenus()
   emit('selection-change', ids)
+}
+
+function handleDragStart() {
+  closeGraphMenus()
+  emit('drag-start')
 }
 
 function startLink(node) {

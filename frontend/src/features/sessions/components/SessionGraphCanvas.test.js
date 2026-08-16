@@ -174,6 +174,11 @@ describe('session graph canvas', () => {
     }
     expect(entityBlockSource).toContain('resolvedRelations')
     expect(entityBlockSource).toContain('Заметка в сценарии')
+    expect(blockSource).toContain("props.block.type === 'quest'")
+    expect(blockSource).toContain("props.block.type === 'material'")
+    expect(blockSource).toContain('scene-block-node-heading-icon')
+    expect(entityBlockSource).not.toContain('scene-entity-quest-head')
+    expect(entityBlockSource).not.toContain('scene-entity-material-head')
   })
 
   it('selects or creates catalogue references before placing them on the canvas', () => {
@@ -201,6 +206,14 @@ describe('session graph canvas', () => {
     expect(sceneMenuSource).toContain('>Вернуться к сценариям</RowActionItem>')
     expect(sceneSource).not.toContain('<span>СЦЕНАРИЙ</span>')
     expect(sceneSource).toContain("scene.status !== 'none'")
+    expect(sceneSource).toContain('.scene-graph-node-visual {\n  position: absolute;\n  inset: 0;')
+  })
+
+  it('closes node action menus when a drag crosses the movement threshold', () => {
+    expect(canvasSource).toContain("'change-selection-status', 'drag-start'")
+    expect(canvasSource).toContain("if (active.moved && !wasMoved) emit('drag-start', active.node)")
+    expect(source).toContain('@drag-start="handleDragStart"')
+    expect(source).toContain("closeGraphMenus()\n  emit('drag-start')")
   })
 
   it('measures content height and persists width dragged from the right edge', () => {

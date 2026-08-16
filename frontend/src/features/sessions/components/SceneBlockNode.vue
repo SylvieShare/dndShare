@@ -1,8 +1,11 @@
 <template>
   <article class="scene-block-node" :style="{ '--block-color': sceneBlockColor(block.type) }">
-    <header class="scene-block-node-heading">
-      <span>{{ fallbackTitle }}</span>
-      <strong>{{ displayTitle }}</strong>
+    <header class="scene-block-node-heading" :class="{ 'scene-block-node-heading--icon': headingIcon }">
+      <span v-if="headingIcon" class="scene-block-node-heading-icon"><component :is="headingIcon" :size="21" /></span>
+      <div class="scene-block-node-heading-copy">
+        <span>{{ displayTypeTitle }}</span>
+        <strong>{{ displayTitle }}</strong>
+      </div>
     </header>
     <div class="scene-block-node-preview">
       <template v-if="block.type === 'list'">
@@ -58,12 +61,13 @@
 
 <script setup>
 import { computed, inject } from 'vue'
-import { Sparkles } from '@lucide/vue'
+import { ScrollText, Sparkles } from '@lucide/vue'
 import { RichContent } from '@sylvieshare/share-ui'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import SceneEntityBlockPreview from '@/features/sessions/components/SceneEntityBlockPreview.vue'
 import { hydrateDialogueRows } from '@/features/sessions/lib/dialogueRows'
 import { sceneBlockColor, sceneBlockType } from '@/features/sessions/lib/sceneBlockTypes'
+import { materialType } from '@/features/sessions/lib/sessionMaterials'
 
 const props = defineProps({
   block: { type: Object, required: true },
@@ -90,6 +94,15 @@ const referenceEntity = computed(() => {
   return null
 })
 const displayTitle = computed(() => referenceEntity.value?.name || props.block.title || fallbackTitle.value)
+const materialMeta = computed(() => materialType(referenceEntity.value?.kind))
+const headingIcon = computed(() => {
+  if (props.block.type === 'quest') return ScrollText
+  if (props.block.type === 'material') return materialMeta.value.icon
+  return null
+})
+const displayTypeTitle = computed(() => props.block.type === 'material' && referenceEntity.value
+  ? `${fallbackTitle.value} · ${materialMeta.value.label}`
+  : fallbackTitle.value)
 
 function itemById(id) {
   return props.itemsById.get(String(id)) ?? null
@@ -129,7 +142,10 @@ function creatureKey(creature, index) {
   padding-bottom: 10px;
   border-bottom: 1px solid color-mix(in srgb, var(--block-color) 32%, var(--border));
 }
-.scene-block-node-heading > span {
+.scene-block-node-heading--icon { display: grid; grid-template-columns: 34px minmax(0, 1fr); align-items: center; gap: 9px; }
+.scene-block-node-heading-icon { width: 34px; height: 34px; display: grid; place-items: center; border: 1px solid color-mix(in srgb, var(--block-color) 42%, var(--border)); border-radius: 9px; background: color-mix(in srgb, var(--block-color) 10%, var(--surface-raised)); color: var(--block-color); }
+.scene-block-node-heading-copy { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.scene-block-node-heading-copy > span {
   color: var(--block-color);
   font-size: 9px;
   font-weight: 850;
@@ -137,7 +153,7 @@ function creatureKey(creature, index) {
   line-height: 1;
   text-transform: uppercase;
 }
-.scene-block-node-heading > strong {
+.scene-block-node-heading-copy > strong {
   overflow-wrap: anywhere;
   color: var(--text-1);
   font-family: var(--font-display);

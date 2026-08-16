@@ -30,10 +30,6 @@
     </template>
 
     <template v-else-if="type === 'quest'">
-      <div class="scene-entity-quest-head" :style="{ '--quest-color': questMeta.color }">
-        <span class="scene-entity-quest-icon"><ScrollText :size="23" /></span>
-        <div><small>{{ questMeta.label }}</small><strong>{{ entity.name }}</strong></div>
-      </div>
       <div v-if="questFields.length" class="scene-entity-quest-fields">
         <section v-for="field in questFields" :key="field.key" :class="{ primary: field.key === 'goal' }">
           <strong>{{ field.label }}</strong>
@@ -41,17 +37,12 @@
         </section>
       </div>
       <span v-else class="scene-entity-empty">Детали задания не заполнены</span>
-      <div class="scene-entity-facts"><span>{{ relationCountLabel }}</span></div>
+      <div class="scene-entity-facts"><span :style="{ color: questMeta.color }">{{ questMeta.label }}</span><span>{{ relationCountLabel }}</span></div>
     </template>
 
     <template v-else-if="type === 'material'">
       <div v-if="['image', 'map'].includes(entity.kind)" class="scene-entity-material-image">
         <img :src="entity.assetUrl" :alt="entity.name" />
-        <span>{{ materialMeta.label }}</span>
-      </div>
-      <div class="scene-entity-material-head" :style="{ '--material-color': materialMeta.color }">
-        <span><component :is="materialMeta.icon" :size="22" /></span>
-        <div><small>{{ materialMeta.label }}</small><strong>{{ entity.name }}</strong></div>
       </div>
       <p v-if="entity.caption" class="scene-entity-description scene-entity-description--caption">{{ entity.caption }}</p>
       <div v-if="entity.content" class="scene-entity-material-content" :class="entity.kind === 'note' ? `material-note--${entity.noteStyle}` : ''">
@@ -78,9 +69,8 @@
 
 <script setup>
 import { computed, inject } from 'vue'
-import { MapPin, ScrollText } from '@lucide/vue'
+import { MapPin } from '@lucide/vue'
 import { locationBreadcrumb, locationKind, ruPlural } from '@/features/sessions/lib/sessionWorld'
-import { materialType } from '@/features/sessions/lib/sessionMaterials'
 import { buildSessionEntityCatalog, questStatus, sessionEntityKey } from '@/features/sessions/lib/sessionEntityRelations'
 import { npcImageUrl, sessionImageUrl } from '@/features/sessions/lib/sessionImages'
 
@@ -139,7 +129,6 @@ const questFields = computed(() => [
   { key: 'notes', label: 'Заметки', value: entity.value?.notes },
 ].filter(field => field.value))
 
-const materialMeta = computed(() => materialType(entity.value?.kind))
 </script>
 
 <style scoped>
@@ -154,25 +143,18 @@ const materialMeta = computed(() => materialType(entity.value?.kind))
 .scene-entity-facts > span { min-height: 23px; display: inline-flex; align-items: center; gap: 4px; padding: 3px 7px; border: 1px solid color-mix(in srgb, var(--block-color) 24%, var(--border)); border-radius: 999px; background: color-mix(in srgb, var(--block-color) 6%, transparent); color: var(--text-muted); font-size: 9px; }
 .scene-entity-npc-head { display: grid; grid-template-columns: 76px minmax(0, 1fr); align-items: center; gap: 12px; padding: 10px; border-radius: 10px; background: linear-gradient(120deg, color-mix(in srgb, var(--npc-color) 15%, var(--surface-raised)), var(--surface-raised)); }
 .scene-entity-npc-head img { width: 76px; height: 76px; display: block; border: 1px solid color-mix(in srgb, var(--npc-color) 52%, var(--border)); border-radius: 18px; object-fit: cover; }
-.scene-entity-npc-head > div, .scene-entity-quest-head > div, .scene-entity-material-head > div { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
-.scene-entity-npc-head span, .scene-entity-quest-head small, .scene-entity-material-head small { color: var(--block-color); font-size: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; }
-.scene-entity-npc-head strong, .scene-entity-quest-head strong, .scene-entity-material-head strong { overflow-wrap: anywhere; color: var(--text-1); font-family: var(--font-display); font-size: 17px; line-height: 1.1; }
+.scene-entity-npc-head > div { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.scene-entity-npc-head span { color: var(--block-color); font-size: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; }
+.scene-entity-npc-head strong { overflow-wrap: anywhere; color: var(--text-1); font-family: var(--font-display); font-size: 17px; line-height: 1.1; }
 .scene-entity-npc-head small { color: var(--text-muted); font-size: 9px; line-height: 1.35; }
-.scene-entity-quest-head { display: grid; grid-template-columns: 48px minmax(0, 1fr); align-items: center; gap: 10px; }
-.scene-entity-quest-icon { width: 48px; height: 48px; display: grid; place-items: center; border: 1px solid color-mix(in srgb, var(--quest-color) 44%, var(--border)); border-radius: 12px; background: color-mix(in srgb, var(--quest-color) 11%, var(--surface-raised)); color: var(--quest-color); }
-.scene-entity-quest-head small { color: var(--quest-color); }
 .scene-entity-quest-fields { display: flex; flex-direction: column; gap: 6px; }
 .scene-entity-quest-fields section { padding: 8px 9px; border: 1px solid var(--border); border-radius: 8px; background: color-mix(in srgb, var(--surface-raised) 75%, transparent); }
-.scene-entity-quest-fields section.primary { border-color: color-mix(in srgb, var(--quest-color) 34%, var(--border)); background: color-mix(in srgb, var(--quest-color) 6%, var(--surface-raised)); }
+.scene-entity-quest-fields section.primary { border-color: color-mix(in srgb, var(--block-color) 34%, var(--border)); background: color-mix(in srgb, var(--block-color) 6%, var(--surface-raised)); }
 .scene-entity-quest-fields strong { display: block; margin-bottom: 3px; color: var(--text-muted); font-size: 8px; text-transform: uppercase; letter-spacing: .08em; }
-.scene-entity-quest-fields section.primary strong { color: var(--quest-color); }
+.scene-entity-quest-fields section.primary strong { color: var(--block-color); }
 .scene-entity-quest-fields p { margin: 0; color: var(--text-2); font-size: 10px; line-height: 1.45; white-space: pre-wrap; }
 .scene-entity-material-image { position: relative; overflow: hidden; border-radius: 9px; background: var(--bg); }
 .scene-entity-material-image img { width: 100%; max-height: 230px; display: block; object-fit: contain; }
-.scene-entity-material-image span { position: absolute; left: 8px; bottom: 8px; padding: 4px 7px; border-radius: 999px; background: color-mix(in srgb, var(--bg) 78%, transparent); color: var(--text-on-accent); font-size: 8px; font-weight: 800; text-transform: uppercase; backdrop-filter: blur(8px); }
-.scene-entity-material-head { display: grid; grid-template-columns: 44px minmax(0, 1fr); align-items: center; gap: 9px; }
-.scene-entity-material-head > span { width: 44px; height: 44px; display: grid; place-items: center; border: 1px solid color-mix(in srgb, var(--material-color) 42%, var(--border)); border-radius: 10px; background: color-mix(in srgb, var(--material-color) 10%, var(--surface-raised)); color: var(--material-color); }
-.scene-entity-material-head small { color: var(--material-color); }
 .scene-entity-material-content { max-height: 260px; overflow: auto; padding: 13px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface-raised); color: var(--text-2); font-size: 10px; line-height: 1.55; white-space: pre-wrap; user-select: text; }
 .scene-entity-material-content.material-note--parchment { background: var(--material-note-parchment-bg); color: var(--material-note-parchment-text); }.scene-entity-material-content.material-note--letter { background: var(--material-note-letter-bg); color: var(--material-note-letter-text); }.scene-entity-material-content.material-note--dossier { border-color: var(--material-note-dossier-border); background: var(--material-note-dossier-bg); color: var(--material-note-dossier-text); }.scene-entity-material-content.material-note--arcane { background: var(--material-note-arcane-bg); color: var(--material-note-arcane-text); }
 .scene-entity-relations { display: flex; flex-direction: column; gap: 5px; padding-top: 8px; border-top: 1px solid var(--border); }

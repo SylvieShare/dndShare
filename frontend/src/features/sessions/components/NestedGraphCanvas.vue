@@ -161,7 +161,7 @@ const props = defineProps({
 const emit = defineEmits([
   'node-click', 'node-double-click', 'edge-click', 'start-link', 'finish-link',
   'preview-positions', 'save-positions', 'preview-size', 'save-size', 'create-first',
-  'selection-change', 'delete-selection', 'change-selection-status',
+  'selection-change', 'delete-selection', 'change-selection-status', 'drag-start',
 ])
 
 const instanceId = getCurrentInstance()?.uid ?? Math.random().toString(36).slice(2)
@@ -420,7 +420,9 @@ function onPointerMove(event) {
     return
   }
   const point = pointInWorld(event)
+  const wasMoved = active.moved
   active.moved ||= Math.hypot(event.clientX - active.startClientX, event.clientY - active.startClientY) > 4
+  if (active.moved && !wasMoved) emit('drag-start', active.node)
   if (active.moved) {
     const deltaX = point.x - active.startWorldX
     const deltaY = point.y - active.startWorldY

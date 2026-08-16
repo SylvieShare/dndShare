@@ -58,6 +58,7 @@
         @preview-positions="graph.setLocalPositions"
         @save-positions="savePositions"
         @selection-change="closeMenus"
+        @drag-start="closeMenus"
         @delete-nodes="confirmChaptersDelete"
         @change-nodes-status="changeSelectionStatus"
         @create-chapter="openChapterCreate"

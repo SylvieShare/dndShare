@@ -50,7 +50,7 @@ const status = computed(() => sceneStatus(props.scene.status))
 .scene-graph-node--spotlight { border-color: color-mix(in srgb, var(--accent) 68%, var(--border)); }
 .scene-graph-node-visual {
   position: absolute;
-  inset: 0 0 62px;
+  inset: 0;
   overflow: hidden;
   background:
     radial-gradient(circle at 78% 15%, color-mix(in srgb, var(--accent) 25%, transparent), transparent 42%),

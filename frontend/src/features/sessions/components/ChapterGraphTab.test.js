@@ -137,6 +137,7 @@ describe('chapter graph workspace', () => {
   it('disables transform easing while a node is being dragged', () => {
     expect(canvas).toContain("'nested-graph-node--dragging': isDraggedNode(node)")
     expect(canvasStyles).toContain('.nested-graph-node--dragging')
+    expect(tab).toContain('@drag-start="closeMenus"')
   })
 
   it('supports modifier selection, group dragging and a safe-frame bulk action bar', () => {
