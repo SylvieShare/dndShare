@@ -1,13 +1,10 @@
 <template>
-  <AppModal fullscreen :z-index="2200" @close="onClose">
+  <section class="session-music-workspace" aria-label="Музыкальная библиотека">
     <div class="music-lib">
         <header class="music-lib-head">
           <h2 class="music-lib-title">Музыкальная библиотека</h2>
           <span class="music-lib-count">{{ musicStore.tracks.length }} треков</span>
           <span class="music-lib-sub">· личная и системная коллекция</span>
-          <div class="music-lib-head-actions">
-            <button class="music-lib-close" @click="onClose">×</button>
-          </div>
         </header>
 
         <input ref="fileInputEl" type="file" accept="audio/*" multiple hidden @change="onFiles" />
@@ -332,7 +329,7 @@
         @confirm="confirmDelete"
       />
     </div>
-  </AppModal>
+  </section>
 </template>
 
 <script setup>
@@ -342,7 +339,6 @@ import MusicTrackRow from '@/features/sessions/components/MusicTrackRow.vue'
 import { useTrackUpload } from '@/features/sessions/composables/useTrackUpload'
 import { fmtTime } from '@/features/sessions/lib/musicLibrary'
 import { reorderByDrop, useSortable } from '@sylvieshare/share-ui'
-import { AppModal } from '@sylvieshare/share-ui'
 import { AppModalFrame } from '@sylvieshare/share-ui'
 import { AppSlider } from '@sylvieshare/share-ui'
 import { ConfirmDialog } from '@sylvieshare/share-ui'
@@ -352,7 +348,6 @@ import { useMusicStore } from '@/stores/music'
 const props = defineProps({
   isDm: { type: Boolean, default: false },
 })
-const emit = defineEmits(['close'])
 
 const musicStore = useMusicStore()
 const { state, currentTrack, nextTrack } = storeToRefs(musicStore)
@@ -635,9 +630,6 @@ function pickColor() {
   return ALBUM_COLORS[musicStore.albums.length % ALBUM_COLORS.length]
 }
 
-function onClose() {
-  emit('close')
-}
 </script>
 
-<style scoped src="./styles/MusicLibraryModal.css"></style>
+<style scoped src="./styles/SessionMusicWorkspace.css"></style>

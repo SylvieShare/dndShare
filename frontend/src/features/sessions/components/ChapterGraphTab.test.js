@@ -75,6 +75,8 @@ describe('chapter graph workspace', () => {
     expect(toolbar).toContain('v-for="view in visibleLibraryViews"')
     expect(toolbar).toContain('const storyView = primaryViews[0]')
     expect(toolbar).toContain('primaryViews.slice(1)')
+    expect(toolbar).toContain("const musicView = { key: 'music', label: 'Музыка'")
+    expect(toolbar.match(/class="chapter-primary-divider"/g)).toHaveLength(2)
   })
 
   it('supports arcs, node action menus and labelled directed transitions', () => {

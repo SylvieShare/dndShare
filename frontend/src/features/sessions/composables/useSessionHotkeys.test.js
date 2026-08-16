@@ -9,6 +9,7 @@ describe('session hotkeys', () => {
   it('maps language-independent section and panel shortcuts', () => {
     expect(sessionHotkeyCommand(key('Digit1', { altKey: true }))).toEqual({ type: 'select-view', value: 'story' })
     expect(sessionHotkeyCommand(key('Digit5', { altKey: true }))).toEqual({ type: 'select-view', value: 'materials' })
+    expect(sessionHotkeyCommand(key('Digit6', { altKey: true }))).toEqual({ type: 'select-view', value: 'music' })
     expect(sessionHotkeyCommand(key('KeyD', { shiftKey: true }))).toEqual({ type: 'toggle-panel', value: 'dice' })
     expect(sessionHotkeyCommand(key('KeyM', { shiftKey: true }))).toEqual({ type: 'toggle-panel', value: 'music' })
     expect(sessionHotkeyCommand(key('KeyL', { shiftKey: true }))).toEqual({ type: 'toggle-panel', value: 'events' })

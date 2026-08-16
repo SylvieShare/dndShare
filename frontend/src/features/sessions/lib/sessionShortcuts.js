@@ -4,6 +4,7 @@ export const SESSION_VIEW_SHORTCUTS = Object.freeze({
   npcs: 'Digit3',
   quests: 'Digit4',
   materials: 'Digit5',
+  music: 'Digit6',
 })
 
 export const SESSION_PANEL_SHORTCUTS = Object.freeze({

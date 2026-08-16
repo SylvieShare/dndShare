@@ -109,6 +109,22 @@
         <span>{{ view.label }}</span>
         <kbd v-if="showShortcutHints" class="chapter-shortcut-hint" aria-hidden="true">{{ shortcutLabels.alt }}+{{ view.shortcut }}</kbd>
       </button>
+
+      <span v-if="isDm" class="chapter-primary-divider" role="separator" aria-orientation="vertical" />
+
+      <button
+        v-if="isDm"
+        type="button"
+        class="chapter-primary-tab"
+        :class="{ 'chapter-primary-tab--active': primaryView === musicView.key }"
+        :aria-current="primaryView === musicView.key ? 'page' : undefined"
+        :aria-keyshortcuts="`Alt+${musicView.shortcut}`"
+        @click="$emit('select-view', musicView.key)"
+      >
+        <component :is="musicView.icon" :size="14" />
+        <span>{{ musicView.label }}</span>
+        <kbd v-if="showShortcutHints" class="chapter-shortcut-hint" aria-hidden="true">{{ shortcutLabels.alt }}+{{ musicView.shortcut }}</kbd>
+      </button>
     </nav>
 
     <div class="chapter-toolbar-view">
@@ -149,7 +165,7 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue'
-import { BookOpenText, Images, Map, Pencil, ScrollText, Swords, UsersRound } from '@lucide/vue'
+import { BookOpenText, Images, Map, Music2, Pencil, ScrollText, Swords, UsersRound } from '@lucide/vue'
 import { BasePopover, reorderByDrop, useSortable } from '@sylvieshare/share-ui'
 import { romanNumeral } from '@/features/sessions/lib/chapterGraph'
 import SessionPresentationControl from '@/features/sessions/components/SessionPresentationControl.vue'
@@ -194,6 +210,7 @@ const primaryViews = [
 ]
 const shortcutLabels = sessionShortcutLabels()
 const storyView = primaryViews[0]
+const musicView = { key: 'music', label: 'Музыка', icon: Music2, shortcut: '6' }
 const combatButtonState = computed(() => `${props.combatActive ? 'open' : 'closed'}-${props.encounterActive ? 'running' : 'stopped'}`)
 const combatButtonLabel = computed(() => `${props.combatActive ? 'Бой открыт' : 'Открыть бой'} · бой ${props.encounterActive ? 'идёт' : 'не запущен'}`)
 const visibleLibraryViews = computed(() => props.isDm ? primaryViews.slice(1) : [])

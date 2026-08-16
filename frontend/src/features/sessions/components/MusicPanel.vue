@@ -2,7 +2,6 @@
   <div class="music-panel">
     <div class="music-panel-head">
       <span class="music-panel-title">МУЗЫКА</span>
-      <button class="music-panel-library" @click="onOpenLibrary">библиотека ↗</button>
     </div>
 
     <div class="music-panel-body">
@@ -96,8 +95,6 @@ import { useMusicStore } from '@/stores/music'
 const props = defineProps({
   isDm: { type: Boolean, default: false },
 })
-const emit = defineEmits(['open-library'])
-
 const musicStore = useMusicStore()
 const { state, currentTrack, nextTrack, remotePlayback } = storeToRefs(musicStore)
 
@@ -132,10 +129,6 @@ function onToggleLoop() {
   if (!props.isDm) return
   musicStore.toggleLoopMode()
 }
-function onOpenLibrary() {
-  emit('open-library')
-}
-
 function fmtTime(sec) {
   const s = Math.max(0, Math.floor(sec || 0))
   const m = Math.floor(s / 60)
@@ -162,21 +155,6 @@ function fmtTime(sec) {
   padding: 0 2px;
 }
 .music-panel-title { color: var(--text-muted); }
-.music-panel-library {
-  margin-left: auto;
-  background: none;
-  border: none;
-  color: var(--accent);
-  font: inherit;
-  font-size: 11px;
-  font-weight: 600;
-  cursor: pointer;
-  text-transform: lowercase;
-  letter-spacing: 0;
-  padding: 2px 4px;
-  border-radius: 4px;
-}
-.music-panel-library:hover { background: color-mix(in srgb, var(--accent) 10%, transparent); }
 .music-panel-body {
   display: grid;
   grid-template-rows: 1fr;

@@ -67,8 +67,10 @@
         @open-chapters="openChapters"
       >
         <template #primary-workspace>
+          <SessionMusicWorkspace v-if="primaryView === 'music'" :is-dm="isDm" />
           <SessionWorldLayer
-			ref="worldLayer"
+            v-else
+            ref="worldLayer"
             :session-uuid="sessionUuid"
             :active-view="primaryView"
             :is-dm="isDm"
@@ -195,14 +197,12 @@
           <DicePanel ref="dicePanel" :show-shortcut-hints="showShortcutHints" />
         </BaseTile>
         <BaseTile v-show="musicOpen" class="side-tile workspace-tool-tile">
-          <MusicPanel :is-dm="isDm" @open-library="musicLibraryOpen = true" />
+          <MusicPanel :is-dm="isDm" />
         </BaseTile>
         <BaseTile v-show="eventsOpen" class="side-tile workspace-tool-tile workspace-events-tile">
           <SessionEventsPanel />
         </BaseTile>
       </aside>
-
-      <MusicLibraryModal v-if="musicLibraryOpen" :is-dm="isDm" @close="musicLibraryOpen = false" />
 
       <CharacterSheetModal
         v-if="sheetUuid"
@@ -234,7 +234,6 @@ import CharacterCreateWizardModal from '@/features/character-list/components/Cha
 import CharacterSheetModal from '@/features/sessions/components/CharacterSheetModal.vue'
 import ChapterGraphTab from '@/features/sessions/components/ChapterGraphTab.vue'
 import DicePanel from '@/features/sessions/components/DicePanel.vue'
-import MusicLibraryModal from '@/features/sessions/components/MusicLibraryModal.vue'
 import MusicPanel from '@/features/sessions/components/MusicPanel.vue'
 import SessionEventsPanel from '@/features/sessions/components/SessionEventsPanel.vue'
 import SessionEditModal from '@/features/sessions/components/SessionEditModal.vue'
@@ -243,6 +242,7 @@ import { RowActionMenu } from '@sylvieshare/share-ui'
 import SessionCenterWorkspace from '@/features/sessions/components/SessionCenterWorkspace.vue'
 import SessionParticipantCard from '@/features/sessions/components/SessionParticipantCard'
 import SessionShortcutHelp from '@/features/sessions/components/SessionShortcutHelp.vue'
+import SessionMusicWorkspace from '@/features/sessions/components/SessionMusicWorkspace.vue'
 import SessionWorldLayer from '@/features/sessions/components/SessionWorldLayer.vue'
 import { useParticipantPolling } from '@/features/sessions/composables/useParticipantPolling'
 import { useChapterGraph } from '@/features/sessions/composables/useChapterGraph'
@@ -308,7 +308,6 @@ provide('sessionWorld', sessionWorld)
 provide('sessionPresentation', presentation)
 const sessionEventsStore = useSessionEventsStore()
 const templateStore = useTemplateStore()
-const musicLibraryOpen = ref(false)
 const SESSION_TOOL_PANELS_STORAGE_KEY = 'dnd-share:session-tool-panels:v1'
 const savedToolPanels = readToolPanelVisibility()
 const diceOpen = ref(savedToolPanels.dice)

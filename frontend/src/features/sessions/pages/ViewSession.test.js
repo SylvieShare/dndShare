@@ -10,6 +10,7 @@ const selectionSource = readFileSync(fileURLToPath(new URL('../composables/useSe
 const workspaceSource = readFileSync(fileURLToPath(new URL('../composables/useSessionWorkspace.js', import.meta.url)), 'utf8')
 const dicePanelSource = readFileSync(fileURLToPath(new URL('../components/DicePanel.vue', import.meta.url)), 'utf8')
 const musicPanelSource = readFileSync(fileURLToPath(new URL('../components/MusicPanel.vue', import.meta.url)), 'utf8')
+const musicWorkspaceSource = readFileSync(fileURLToPath(new URL('../components/SessionMusicWorkspace.vue', import.meta.url)), 'utf8')
 const centerWorkspaceSource = readFileSync(fileURLToPath(new URL('../components/SessionCenterWorkspace.vue', import.meta.url)), 'utf8')
 const encounterSource = readFileSync(fileURLToPath(new URL('../components/EncounterTab.vue', import.meta.url)), 'utf8')
 const encounterComposableSource = readFileSync(fileURLToPath(new URL('../composables/useEncounter.js', import.meta.url)), 'utf8')
@@ -124,6 +125,11 @@ describe('ViewSession participant rail', () => {
     expect(dicePanelSource).not.toContain('dice-panel-collapse')
     expect(musicPanelSource).not.toContain('music-panel-collapse')
     expect(musicPanelSource).not.toContain('music-panel-album')
+    expect(musicPanelSource).not.toContain('open-library')
+    expect(source).toContain('<SessionMusicWorkspace v-if="primaryView === \'music\'"')
+    expect(source).not.toContain('MusicLibraryModal')
+    expect(source).not.toContain('musicLibraryOpen')
+    expect(musicWorkspaceSource).toContain('musicStore.ensureLibrary()')
   })
 
   it('moves hotkey help out of settings and keeps handbook HP rolling as the local preference', () => {

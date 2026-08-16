@@ -74,9 +74,9 @@ available for pan and node dragging.
 
 The session page is a campaign workspace rather than a stack of independent
 content pages. Its semantic header centers the switch between `Сюжет`, `Бой`,
-`Локации`, `NPC`, `Задания` and `Материалы` independently of the title/arc and tool groups. `Сюжет` and `Бой`
+`Локации`, `NPC`, `Задания`, `Материалы` and `Музыка` independently of the title/arc and tool groups. `Сюжет` and `Бой`
 form the first navigation group and a vertical divider separates them from the
-four world catalogues; the
+four world catalogues; a second divider separates the final music-library tab. The
 participant rail remains on the left and the
 dice/events/music tools remain in a 328px right rail, wide enough for the full
 three-option dice mode switch without label clipping. In `Сюжет` the chapter canvas fills
@@ -92,7 +92,10 @@ viewport edge. At widths up to `1360px` the right tool rail is hidden so the
 split location/NPC workspaces retain a useful detail width; the participant rail
 disappears only on mobile.
 
-The primary switch remains active at every story depth. Combat is represented
+The primary switch remains active at every story depth. `Музыка` opens the
+central session library while the compact right-rail music tile remains the
+current-track player. There is no fullscreen library modal or local open/close
+state. Combat is represented
 as a real tab next to Story rather than a tool icon: selecting `Бой` opens the
 existing animated workspace, and selecting `Сюжет` runs the same closing
 transition back to the preserved chapter/scenario context. Selecting a world
@@ -354,8 +357,8 @@ existing canvas action. The contextual help is hidden on touch and mobile
 layouts.
 
 Session-wide shortcuts use physical key codes and therefore do not depend on
-the current keyboard language. `Alt`/`Option` + `1…5` opens Story, Locations,
-NPCs, Quests and Materials; `Shift` + `D`, `M` or `L` toggles the dice,
+the current keyboard language. `Alt`/`Option` + `1…6` opens Story, Locations,
+NPCs, Quests, Materials and Music; `Shift` + `D`, `M` or `L` toggles the dice,
 music or session-log panel without conflicting with browser address-bar
 shortcuts. `Alt`/`Option` + `Shift` + `1…7` rolls d4, d6, d8,
 d10, d12, d20 or d100 using the currently selected normal/advantage/disadvantage
@@ -746,8 +749,9 @@ encounter combatant, so changing it is reflected across every encounter section.
 
 ## Music
 
-`MusicLibraryModal.vue` is a specialized fullscreen `AppModal`; its nested tag
-and album dialogs use `AppModalFrame`. Album/track/tag CRUD uses shared
+`SessionMusicWorkspace.vue` is the central content of the `Музыка` tab; the
+previous fullscreen library modal and the player-panel launch action do not
+exist. Its nested tag and album dialogs use `AppModalFrame`. Album/track/tag CRUD uses shared
 prompt/confirm dialogs; track ordering uses `useSortable`. Playback state
 is synchronized through the session music endpoint, while track files and
 signed URLs are served by `/api/music`.

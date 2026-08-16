@@ -44,7 +44,10 @@ relational and all object keys point to S3; system objects use the versioned
 
 ## UI standards
 
-`MusicLibraryModal.vue` is a fullscreen `AppModal`. It uses:
+`SessionMusicWorkspace.vue` is the central content of the DM-only
+`Музыка` session tab. It uses the same participant/right-tool safe areas as the
+other central workspaces and replaces the previous fullscreen library modal.
+It uses:
 
 - `AppModalFrame` for nested tag/album dialogs;
 - `TextPromptDialog` for create/rename;
@@ -53,8 +56,9 @@ relational and all object keys point to S3; system objects use the versioned
 - `AppSlider` for volume/crossfade.
 
 No local modal backdrop, browser prompt/confirm or separate drag engine should
-be added. Tag/album pickers are nested content inside the library and obey the
-shared modal stack's Escape ordering.
+be added. Tag/album pickers remain nested dialogs inside the workspace and obey
+the shared modal stack's Escape ordering. The compact right-rail `MusicPanel`
+is only the current-track player; it no longer opens a library window.
 
 System albums show their CC0/source metadata. Their upload dropzone, album
 actions, sorting, and track menus are absent. These UI guards complement the
