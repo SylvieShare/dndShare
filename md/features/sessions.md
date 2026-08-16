@@ -53,14 +53,22 @@ and on that player's encounter rows. Color palettes, encounter cloning and the
 chapter status/arc choices use `RowActionSubmenu`: a separate adjacent popover
 on desktop and an inline section with a left accent boundary on mobile. Every participant trigger fills the rail width. A dashed `+` action
 beside the `ИГРОКИ` heading opens character creation and invite code/link copy
-actions; the rail has no separate invitation tile. The left rail's hit area and
-height end with its rendered heading, players and error message (up to the
+actions; the rail has no separate invitation tile. A separate header control
+switches the rail between its normal width and a compact avatar-only mode. The
+choice is stored per session in `localStorage`. Combat is the third visual
+state: it temporarily expands the same rail for initiative and selection
+controls, then returns to the user's saved normal or compact state when combat
+closes. Width, tile height and text visibility use one coordinated transition;
+compact avatars retain the participant menu, tooltip and hold-to-reorder input.
+The left rail's hit area and height end with its rendered heading, players and
+error message (up to the
 viewport max-height), so the uncovered canvas below a short player list remains
 available for pan and node dragging.
 
 The session page is a campaign workspace rather than a stack of independent
-content pages. Its semantic header switches the central area between `Сюжет`,
-`Локации` and `NPC`; the participant rail remains on the left and the
+content pages. Its semantic header centers the switch between `Сюжет`,
+`Локации` and `NPC` independently of the title/arc and tool groups; the
+participant rail remains on the left and the
 dice/events/music tools remain on the right. In `Сюжет` the chapter canvas fills
 all available width below `AppHeader`. CSS safe-area variables keep focus, zoom
 and newly created nodes in the uncovered part of the canvas and leave a 28px gap
@@ -126,7 +134,8 @@ character saves are flushed on page unmount instead of dropping their events.
 ## Locations and prepared NPCs
 
 `Локации` and `NPC` are DM-only primary central workspaces, not extra permanent
-side panels. The selected mode is stored per session in local storage; `view`,
+side panels. Their surfaces sit over the same tokenized dot field as the story
+canvas. The selected mode is stored per session in local storage; `view`,
 `location` and `npc` query parameters preserve a shareable selection. Combat is
 still a temporary overlay. Opening it from either world workspace keeps that
 workspace mounted underneath and closing combat returns to the same mode and

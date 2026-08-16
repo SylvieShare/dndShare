@@ -24,6 +24,15 @@ describe('SessionParticipantCard actions', () => {
     expect(source).toContain('.p-card {\n  width: 100%;\n  box-sizing: border-box;')
   })
 
+  it('reduces a participant to a titled avatar while the player rail is compact', () => {
+    expect(source).toContain("'p-card--compact': compact")
+    expect(source).toContain(':title="compact ? displayName : undefined"')
+    expect(source).toContain('compact: { type: Boolean, default: false }')
+    expect(source).toContain('.p-card--compact { height: 48px; gap: 0; padding: 6px; justify-content: center; }')
+    expect(source).toContain('.p-card--compact .p-combat-controls { margin-left: -112px; }')
+    expect(source).toContain('.p-card--compact .p-info { flex: 0 0 0; overflow: hidden; opacity: 0;')
+  })
+
   it('offers view to everyone and DM-only color and kick actions', () => {
     expect(source).toContain('<RowActionItem action="view"')
     expect(source).toContain('>Открыть лист</RowActionItem>')

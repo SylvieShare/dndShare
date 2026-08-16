@@ -9,6 +9,7 @@ const read = path => readFileSync(fileURLToPath(new URL(path, import.meta.url)),
 const toolbar = read('./ChapterGraphToolbar.vue')
 const graphTab = read('./ChapterGraphTab.vue')
 const layer = read('./SessionWorldLayer.vue')
+const workspaceStyles = read('./styles/SessionWorldWorkspace.css')
 const locations = read('./SessionLocationsWorkspace.vue')
 const treeRow = read('./LocationTreeRow.vue')
 const locationEditor = read('./LocationEditorModal.vue')
@@ -34,6 +35,13 @@ describe('session world workspaces', () => {
     expect(graphTab).toContain('<slot v-if="primaryView !== \'story\'" name="primary-workspace" />')
     expect(layer).toContain("activeView === 'locations'")
     expect(layer).toContain("activeView === 'npcs'")
+  })
+
+  it('keeps the shared canvas dot field behind location, NPC and loading states', () => {
+    expect(workspaceStyles).toContain('background-image: var(--app-canvas-pattern);')
+    expect(workspaceStyles).toContain('background-size: var(--app-canvas-dot-size) var(--app-canvas-dot-size);')
+    expect(layer).toContain('background-image: var(--app-canvas-pattern);')
+    expect(layer).toContain('background-size: var(--app-canvas-dot-size) var(--app-canvas-dot-size);')
   })
 
   it('persists the primary mode and exposes deep-linked selections', () => {

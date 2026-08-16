@@ -31,6 +31,7 @@ const nestedGraphSource = readFileSync(fileURLToPath(new URL('../components/Nest
 const createModalSource = readFileSync(fileURLToPath(new URL('../../character-list/components/CharacterCreateWizardModal.vue', import.meta.url)), 'utf8')
 const createWizardSource = readFileSync(fileURLToPath(new URL('../../character-list/pages/ViewCreateCharacter.vue', import.meta.url)), 'utf8')
 const participantPollingSource = readFileSync(fileURLToPath(new URL('../composables/useParticipantPolling.js', import.meta.url)), 'utf8')
+const participantRailSource = readFileSync(fileURLToPath(new URL('../composables/useSessionParticipantRail.js', import.meta.url)), 'utf8')
 const encounterStylesSource = readFileSync(fileURLToPath(new URL('../components/styles/EncounterTab.css', import.meta.url)), 'utf8')
 const dicePopupSource = readFileSync(fileURLToPath(new URL('../../../shared/ui/DiceRollPopup.vue', import.meta.url)), 'utf8')
 
@@ -83,6 +84,24 @@ describe('ViewSession participant rail', () => {
 
   it('limits the left rail hit area to its player content', () => {
     expect(styles).toMatch(/\.workspace-dock--left\s*\{[^}]*bottom:\s*auto;[^}]*max-height:\s*calc\(100% - 84px\);/s)
+  })
+
+  it('moves the player rail through compact, normal and combat states without losing the saved preference', () => {
+    expect(source).toContain("'campaign-workspace--players-collapsed': playersRailMode === 'compact'")
+    expect(source).toContain('useSessionParticipantRail({ sessionUuid, workspaceMotionMode })')
+    expect(participantRailSource).toContain('dnd-share:session-players-rail:v1:')
+    expect(participantRailSource).toContain("localStorage.setItem(storageKey, value ? 'collapsed' : 'normal')")
+    expect(participantRailSource).toContain("const mode = computed(() => workspaceMotionMode.value === 'combat'")
+    expect(participantRailSource).toContain("? 'combat'\n    : collapsed.value ? 'compact' : 'normal'")
+    expect(participantRailSource).toContain("if (mode.value === 'combat') return")
+    expect(source).toContain(':compact="playersRailMode === \'compact\'"')
+    expect(source).toContain('<PanelLeftOpen v-if="playersRailMode === \'compact\'"')
+    expect(source).toContain(':disabled="workspaceMotionMode === \'combat\'"')
+    expect(source).toContain('@click="togglePlayersRail"')
+    expect(source).toContain("'players-rail-toggle--error': kickError || colorError || participantOrderError")
+    expect(styles).toMatch(/\.campaign-workspace--players-collapsed \.campaign-graph\s*\{[^}]*--chapter-safe-left:\s*94px;/s)
+    expect(styles).toMatch(/\.campaign-workspace--players-collapsed \.workspace-dock--left\s*\{[^}]*width:\s*52px;/s)
+    expect(styles).toMatch(/\.campaign-workspace--combat \.workspace-dock--left\s*\{[^}]*width:\s*360px;/s)
   })
 
   it('keeps session dice purple and controls all right-dock panels from the header', () => {

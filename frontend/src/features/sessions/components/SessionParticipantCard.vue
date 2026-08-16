@@ -11,9 +11,11 @@
           class="p-card"
           :class="{
             'p-card--combat': combatMode,
+            'p-card--compact': compact,
             'p-card--current': combatMode && combatCurrent,
             'p-card--reorderable': reorderEnabled,
           }"
+          :title="compact ? displayName : undefined"
           interactive
         >
           <EncounterCombatControls
@@ -147,6 +149,7 @@ const props = defineProps({
   colorPending: { type: Boolean, default: false },
   reorderEnabled: { type: Boolean, default: false },
   reorderPlaceholder: { type: Boolean, default: false },
+  compact: { type: Boolean, default: false },
   shouldSuppressReorderClick: { type: Function, default: null },
   combatMode: { type: Boolean, default: false },
   combatant: { type: Object, default: null },
@@ -247,8 +250,11 @@ const participantAvatarStyle = computed(() => ({
   padding: 12px;
   overflow: hidden;
   user-select: none;
-  transition: background 0.18s, border-color 0.18s;
+  transition: height 0.42s cubic-bezier(0.22, 1, 0.36, 1), gap 0.42s cubic-bezier(0.22, 1, 0.36, 1), padding 0.42s cubic-bezier(0.22, 1, 0.36, 1), background 0.18s, border-color 0.18s;
 }
+
+.p-card--compact { height: 48px; gap: 0; padding: 6px; justify-content: center; }
+.p-card--compact .p-combat-controls { margin-left: -112px; }
 
 .p-card.p-card--reorderable { cursor: grab; touch-action: none; }
 .p-card.p-card--reorderable:active { cursor: grabbing; }
@@ -338,11 +344,17 @@ const participantAvatarStyle = computed(() => ({
   display: flex;
   flex-direction: column;
   gap: 2px;
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 0.2s ease, transform 0.42s cubic-bezier(0.22, 1, 0.36, 1);
 }
+
+.p-card--compact .p-info { flex: 0 0 0; overflow: hidden; opacity: 0; transform: translateX(-7px); }
 
 @media (prefers-reduced-motion: reduce) {
   .p-card,
-  .p-combat-controls { transition: none; }
+  .p-combat-controls,
+  .p-info { transition: none; }
 }
 
 .p-name {

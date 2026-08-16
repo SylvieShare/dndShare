@@ -28,6 +28,7 @@
       class="campaign-workspace"
       :class="{
         'campaign-workspace--combat': workspaceMotionMode === 'combat',
+        'campaign-workspace--players-collapsed': playersRailMode === 'compact',
         'campaign-workspace--hotkeys': isDm && primaryView === 'story' && workspaceMotionMode !== 'combat',
         'campaign-workspace--right-dock': rightDockOpen,
       }"
@@ -89,7 +90,7 @@
 
       <aside class="workspace-dock workspace-dock--left">
         <div class="col-section-title">
-          <span>ИГРОКИ</span>
+          <span class="players-heading-label">ИГРОКИ</span>
           <span class="poll-indicator" :class="pollStatus">
             <span class="poll-bar" :class="{ running: pollRunning }" />
           </span>
@@ -107,6 +108,19 @@
               </template>
             </RowActionMenu>
           </div>
+          <button
+            type="button"
+            class="players-rail-toggle"
+            :class="{ 'players-rail-toggle--error': kickError || colorError || participantOrderError }"
+            :title="playersRailMode === 'compact' ? 'Развернуть игроков' : 'Свернуть игроков'"
+            :aria-label="playersRailMode === 'compact' ? 'Развернуть игроков' : 'Свернуть игроков'"
+            :aria-expanded="playersRailMode !== 'compact'"
+            :disabled="workspaceMotionMode === 'combat'"
+            @click="togglePlayersRail"
+          >
+            <PanelLeftOpen v-if="playersRailMode === 'compact'" :size="15" />
+            <PanelLeftClose v-else :size="15" />
+          </button>
         </div>
 
         <div v-if="participants.length" class="participants-list" data-sortable-container="participants">
@@ -121,6 +135,7 @@
             :reorder-enabled="isDm && participants.length > 1 && !participantOrderSaving"
             :reorder-placeholder="participantSortable.isSource(p)"
             :should-suppress-reorder-click="participantSortable.shouldSuppressClick"
+            :compact="playersRailMode === 'compact'"
             :combat-mode="workspaceMotionMode === 'combat'"
             :combatant="encounterPlayer(p.charId)"
             :combat-selected="isEncounterPlayerSelected(p.charId)"
@@ -175,6 +190,7 @@
 
 <script setup>
 import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
+import { PanelLeftClose, PanelLeftOpen } from '@lucide/vue'
 import { useRoute, useRouter } from 'vue-router'
 import { BaseTile } from '@sylvieshare/share-ui'
 import { ConfirmDialog } from '@sylvieshare/share-ui'
@@ -198,6 +214,7 @@ import { useEncounter } from '@/features/sessions/composables/useEncounter'
 import { useSessionSelection } from '@/features/sessions/composables/useSessionSelection'
 import { useSessionWorkspace } from '@/features/sessions/composables/useSessionWorkspace'
 import { useSessionPrimaryView } from '@/features/sessions/composables/useSessionPrimaryView'
+import { useSessionParticipantRail } from '@/features/sessions/composables/useSessionParticipantRail'
 import { useAccountStore } from '@/stores/account'
 import { useMusicStore } from '@/stores/music'
 import { useTemplateStore } from '@/stores/template'
@@ -402,6 +419,10 @@ const {
   updateWorkspaceContext,
   closeWorkspace,
 } = useSessionWorkspace({ sessionUuid, chapterGraph })
+const {
+  mode: playersRailMode,
+  toggle: togglePlayersRail,
+} = useSessionParticipantRail({ sessionUuid, workspaceMotionMode })
 
 async function refreshParticipants() {
   const fresh = await getSession(sessionUuid)

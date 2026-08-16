@@ -64,7 +64,7 @@ describe('chapter graph workspace', () => {
     expect(toolbar).toContain('transition-preset="action-menu"')
     expect(toolbar).not.toContain('GripVertical')
     expect(toolbar).toContain('.chapter-arc-trigger { min-width: 0;')
-    expect(toolbar).toContain('margin-left: -3px;')
+    expect(toolbar).toContain('margin-left: -6px;')
     expect(toolbar).not.toContain('title="Выше"')
     expect(toolbar).not.toContain('title="Ниже"')
     expect(toolbar).toContain('aria-label="Редактировать арку"')
@@ -83,6 +83,13 @@ describe('chapter graph workspace', () => {
     expect(canvas).toContain('class="nested-graph-edge-label"')
     expect(tab).toContain('await perform(() => graph.createEdge(data)')
     expect(tab).not.toContain('pendingEdge')
+  })
+
+  it('centers the primary workspace switch independently from both toolbar sides', () => {
+    expect(toolbar).toContain('grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);')
+    expect(toolbar).toContain('.chapter-toolbar-left { min-width: 0; display: flex;')
+    expect(toolbar).toContain('.chapter-primary-nav { display: flex; align-items: center; justify-self: center;')
+    expect(toolbar).toContain('.chapter-toolbar-view { justify-self: end; }')
   })
 
   it('renders the explicit chapter prefix on every graph node', () => {

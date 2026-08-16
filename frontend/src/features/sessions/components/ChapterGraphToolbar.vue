@@ -1,16 +1,63 @@
 <template>
   <header class="chapter-toolbar">
-    <div v-if="session" class="chapter-session">
-      <button
-        type="button"
-        class="chapter-session-title"
-        :disabled="!isDm"
-        :title="isDm ? 'Редактировать сессию' : session.name"
-        @click="$emit('edit-session')"
-      >{{ session.name }}</button>
-    </div>
+    <div class="chapter-toolbar-left">
+      <div v-if="session" class="chapter-session">
+        <button
+          type="button"
+          class="chapter-session-title"
+          :disabled="!isDm"
+          :title="isDm ? 'Редактировать сессию' : session.name"
+          @click="$emit('edit-session')"
+        >{{ session.name }}</button>
+      </div>
 
-    <span v-if="session" class="chapter-toolbar-rule chapter-toolbar-rule--session" />
+      <span v-if="session && primaryView === 'story'" class="chapter-toolbar-rule chapter-toolbar-rule--session" />
+
+      <div v-if="primaryView === 'story'" class="chapter-toolbar-main">
+        <button ref="arcTrigger" type="button" class="chapter-arc-trigger" :disabled="locked" :aria-expanded="arcOpen" @click="arcOpen = !arcOpen">
+          <span class="chapter-arc-prefix">АРКА</span>
+          <span class="chapter-arc-number">{{ romanNumeral(selectedArc?.order) }}</span>
+          <span class="chapter-arc-name">{{ selectedArc?.name || 'Выберите арку' }}</span>
+          <svg class="chapter-arc-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none">
+            <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <BasePopover v-model:open="arcOpen" :anchor="arcTrigger" :min-width="300" transition-preset="action-menu">
+          <div class="chapter-arc-list" data-sortable-container="arcs">
+            <div
+              v-for="(arc, index) in displayedArcs"
+              :key="arc.id"
+              class="chapter-arc-row"
+              :class="{
+                active: arc.id === selectedArc?.id,
+                'chapter-arc-row--sortable': canReorderArcs,
+                'chapter-arc-row--placeholder': arcSortable.isSource(arc),
+              }"
+              :data-sortable-key="arc.id"
+              @pointerdown="startArcDrag($event, arc, index)"
+            >
+              <button type="button" class="chapter-arc-pick" @click="pickArc(arc.id)">
+                <span>{{ romanNumeral(index + 1) }}</span>
+                <strong>{{ arc.name }}</strong>
+                <small v-if="arc.id === currentArc?.id">сейчас здесь</small>
+              </button>
+              <button
+                v-if="isDm"
+                type="button"
+                class="chapter-arc-edit"
+                title="Редактировать арку"
+                aria-label="Редактировать арку"
+                :disabled="locked"
+                @pointerdown.stop
+                @click.stop="editArc(arc)"
+              ><Pencil :size="14" /></button>
+            </div>
+            <button v-if="isDm" type="button" class="chapter-arc-create" :disabled="locked" @click="createArc">+ Новая арка</button>
+          </div>
+        </BasePopover>
+      </div>
+    </div>
 
     <nav class="chapter-primary-nav" aria-label="Раздел сессии">
       <button
@@ -27,53 +74,6 @@
         <span>{{ view.label }}</span>
       </button>
     </nav>
-
-    <span class="chapter-toolbar-rule chapter-toolbar-rule--view" />
-
-    <div v-if="primaryView === 'story'" class="chapter-toolbar-main">
-      <button ref="arcTrigger" type="button" class="chapter-arc-trigger" :disabled="locked" :aria-expanded="arcOpen" @click="arcOpen = !arcOpen">
-        <span class="chapter-arc-prefix">АРКА</span>
-        <span class="chapter-arc-number">{{ romanNumeral(selectedArc?.order) }}</span>
-        <span class="chapter-arc-name">{{ selectedArc?.name || 'Выберите арку' }}</span>
-        <svg class="chapter-arc-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none">
-          <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
-
-      <BasePopover v-model:open="arcOpen" :anchor="arcTrigger" :min-width="300" transition-preset="action-menu">
-        <div class="chapter-arc-list" data-sortable-container="arcs">
-          <div
-            v-for="(arc, index) in displayedArcs"
-            :key="arc.id"
-            class="chapter-arc-row"
-            :class="{
-              active: arc.id === selectedArc?.id,
-              'chapter-arc-row--sortable': canReorderArcs,
-              'chapter-arc-row--placeholder': arcSortable.isSource(arc),
-            }"
-            :data-sortable-key="arc.id"
-            @pointerdown="startArcDrag($event, arc, index)"
-          >
-            <button type="button" class="chapter-arc-pick" @click="pickArc(arc.id)">
-              <span>{{ romanNumeral(index + 1) }}</span>
-              <strong>{{ arc.name }}</strong>
-              <small v-if="arc.id === currentArc?.id">сейчас здесь</small>
-            </button>
-            <button
-              v-if="isDm"
-              type="button"
-              class="chapter-arc-edit"
-              title="Редактировать арку"
-              aria-label="Редактировать арку"
-              :disabled="locked"
-              @pointerdown.stop
-              @click.stop="editArc(arc)"
-            ><Pencil :size="14" /></button>
-          </div>
-          <button v-if="isDm" type="button" class="chapter-arc-create" :disabled="locked" @click="createArc">+ Новая арка</button>
-        </div>
-      </BasePopover>
-    </div>
 
     <div class="chapter-toolbar-view">
       <button type="button" class="chapter-tool-btn chapter-tool-btn--icon chapter-tool-btn--combat" :class="{ 'chapter-tool-btn--active': combatActive }" title="Бой" aria-label="Бой" @click="$emit('open-combat')">
@@ -173,7 +173,8 @@ function createArc() {
 .chapter-toolbar {
   position: relative;
   z-index: 20;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
   gap: 12px;
   flex: none;
@@ -181,10 +182,11 @@ function createArc() {
   border-bottom: 1px solid var(--border);
   background: var(--bg);
 }
+.chapter-toolbar-left { min-width: 0; display: flex; align-items: center; gap: 12px; }
 .chapter-toolbar-main,
 .chapter-toolbar-view { display: flex; align-items: center; gap: 7px; min-width: 0; }
-.chapter-toolbar-view { margin-left: auto; }
-.chapter-primary-nav { display: flex; align-items: center; gap: 2px; }
+.chapter-toolbar-view { justify-self: end; }
+.chapter-primary-nav { display: flex; align-items: center; justify-self: center; gap: 2px; }
 .chapter-primary-tab {
   position: relative;
   display: inline-flex;
@@ -242,8 +244,8 @@ function createArc() {
 .chapter-arc-trigger:hover:not(:disabled), .chapter-arc-trigger[aria-expanded="true"] { background: color-mix(in srgb, var(--text-on-accent) 7%, transparent); }
 .chapter-arc-trigger:disabled { opacity: 0.48; cursor: not-allowed; }
 .chapter-arc-prefix { flex: none; color: var(--text-muted); font-size: 10px; font-weight: 800; letter-spacing: 0.1em; }
-.chapter-arc-number { display: inline-flex; min-width: 24px; align-items: center; justify-content: center; color: var(--accent-soft); font-family: var(--font-display); font-size: 17px; font-weight: 700; letter-spacing: 0.04em; line-height: 1; }
-.chapter-arc-name { min-width: 0; flex: 0 1 auto; margin-left: -3px; overflow: hidden; text-align: left; text-overflow: ellipsis; white-space: nowrap; }
+.chapter-arc-number { display: inline-flex; min-width: 20px; align-items: center; justify-content: center; color: var(--accent-soft); font-family: var(--font-display); font-size: 17px; font-weight: 700; letter-spacing: 0.04em; line-height: 1; }
+.chapter-arc-name { min-width: 0; flex: 0 1 auto; margin-left: -6px; overflow: hidden; text-align: left; text-overflow: ellipsis; white-space: nowrap; }
 .chapter-arc-chevron { flex: none; transition: transform 0.15s; }
 .chapter-arc-trigger[aria-expanded="true"] .chapter-arc-chevron { transform: rotate(180deg); }
 
@@ -271,11 +273,12 @@ function createArc() {
 .chapter-arc-create { margin-top: 3px; padding: 9px; border: 1px dashed color-mix(in srgb, var(--accent) 42%, transparent); border-radius: 7px; background: none; color: var(--accent-soft); font: inherit; font-size: 12px; font-weight: 700; cursor: pointer; }
 
 @media (max-width: 760px) {
-  .chapter-toolbar { align-items: stretch; flex-direction: column; }
-  .chapter-toolbar-view { width: 100%; margin-left: 0; }
+  .chapter-toolbar { grid-template-columns: 1fr; align-items: stretch; }
+  .chapter-toolbar-left { flex-wrap: wrap; }
+  .chapter-toolbar-view { width: 100%; justify-self: stretch; }
   .chapter-arc-trigger { min-width: 0; }
   .chapter-session { max-width: none; }
   .chapter-toolbar-rule { display: none; }
-  .chapter-primary-nav { width: 100%; overflow-x: auto; }
+  .chapter-primary-nav { width: 100%; justify-self: stretch; overflow-x: auto; }
 }
 </style>

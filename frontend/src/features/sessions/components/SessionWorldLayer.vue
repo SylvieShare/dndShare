@@ -65,7 +65,7 @@ watch(
 </script>
 
 <style scoped>
-.session-world-loading { position: absolute; z-index: 5; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 9px; background-color: var(--app-canvas-bg); background-image: var(--app-canvas-pattern); color: var(--text-muted); font-size: 11px; }
+.session-world-loading { position: absolute; z-index: 5; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 9px; background-color: var(--app-canvas-bg); background-image: var(--app-canvas-pattern); background-size: var(--app-canvas-dot-size) var(--app-canvas-dot-size); color: var(--text-muted); font-size: 11px; }
 .session-world-loading-mark { width: 54px; height: 54px; display: grid; place-items: center; border: 1px solid color-mix(in srgb, var(--accent) 38%, var(--border)); border-radius: 16px; background: color-mix(in srgb, var(--accent) 10%, var(--surface)); color: var(--accent-soft); animation: session-world-pulse 1.4s ease-in-out infinite; }
 .session-world-loading--error > svg { color: var(--danger); }
 .session-world-loading--error strong { color: var(--text-1); font-size: 13px; }

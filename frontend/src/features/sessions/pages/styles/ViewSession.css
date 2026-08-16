@@ -40,6 +40,10 @@
   --chapter-safe-right: 336px;
 }
 
+.campaign-workspace--players-collapsed .campaign-graph {
+  --chapter-safe-left: 94px;
+}
+
 .campaign-workspace--combat .campaign-graph {
   --chapter-safe-left: 402px;
   --chapter-safe-right: 336px;
@@ -63,6 +67,10 @@
   width: 246px;
   max-height: calc(100% - 84px);
   transition: width 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.campaign-workspace--players-collapsed .workspace-dock--left {
+  width: 52px;
 }
 
 .campaign-workspace--hotkeys .workspace-dock--left {
@@ -99,6 +107,13 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.players-heading-label,
+.players-actions {
+  transition: opacity 0.18s ease, transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .poll-indicator {
@@ -107,7 +122,7 @@
   background: var(--popover-bg);
   border-radius: 2px;
   overflow: hidden;
-  transition: box-shadow 0.3s;
+  transition: box-shadow 0.3s, opacity 0.18s ease, transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .poll-indicator.changed {
@@ -164,6 +179,41 @@
   color: var(--text-1);
   background: color-mix(in srgb, var(--accent-hover) 8%, transparent);
 }
+
+.players-rail-toggle {
+  width: 26px;
+  height: 22px;
+  display: grid;
+  flex: none;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.players-rail-toggle:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--text-on-accent) 7%, transparent);
+  color: var(--text-1);
+}
+
+.players-rail-toggle:disabled { cursor: default; opacity: 0.45; }
+.players-rail-toggle--error { color: var(--danger); }
+
+.campaign-workspace--players-collapsed .col-section-title { justify-content: center; padding-inline: 0; }
+.campaign-workspace--players-collapsed .players-heading-label,
+.campaign-workspace--players-collapsed .poll-indicator,
+.campaign-workspace--players-collapsed .players-actions {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-8px);
+}
+.campaign-workspace--players-collapsed .no-participants,
+.campaign-workspace--players-collapsed .participant-action-error { display: none; }
 
 @keyframes poll-sweep {
   from { width: 0% }
@@ -222,7 +272,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .workspace-dock--left { transition: none; }
+  .workspace-dock--left,
+  .players-heading-label,
+  .poll-indicator,
+  .players-actions { transition: none; }
 }
 
 @media (max-width: 760px) {
