@@ -105,12 +105,16 @@ export function useSessionGraphNavigation({ props, emit, canvas }) {
   }
 
   function returnToScenes() {
-    if (!selectedScene.value || props.workspaceMode === 'combat') return
+    if (!selectedScene.value) return
+    if (props.workspaceMode === 'combat') {
+      emit('open-scenes', activeChapter.value)
+      return
+    }
     animateBack('scenes', selectedScene.value.id, 252)
   }
 
   function returnToChapters() {
-    emit('close-workspace')
+    emit('open-chapters')
   }
 
   function sceneIndex(scene) {
@@ -152,6 +156,17 @@ export function useSessionGraphNavigation({ props, emit, canvas }) {
       return
     }
     if (previousMode === 'scenes') {
+      const chapterId = rememberedChapterId
+      animateBack('chapters', chapterId, 0)
+      scheduleTransition(() => {
+        sceneGraph.reset()
+        blockGraph.reset()
+        selectedSceneId.value = null
+        rememberedChapterId = null
+      })
+      return
+    }
+    if (previousMode === 'combat' && mode == null) {
       const chapterId = rememberedChapterId
       animateBack('chapters', chapterId, 0)
       scheduleTransition(() => {

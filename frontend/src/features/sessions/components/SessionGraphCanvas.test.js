@@ -52,6 +52,11 @@ describe('session graph canvas', () => {
     expect(source).not.toContain("props.workspaceMode === 'combat' || !selectedScene.value")
     expect(canvasSource).toContain('@click.stop="onLockedNodeClick($event, node)"')
     expect(canvasSource).toContain("if (props.locked) emit('node-click', node, event.currentTarget)")
+    expect(source).not.toContain("if (props.workspaceMode === 'combat') return")
+    expect(navigationSource).toContain("emit('open-scenes', activeChapter.value)")
+    expect(navigationSource).toContain("emit('open-chapters')")
+    expect(source).toContain('syncWorkspaceScene(updated)')
+    expect(source).toContain("level: props.workspaceMode === 'combat' ? props.workspaceLevel : displayLevel.value")
   })
 
   it('switches graph identity and camera atomically without cross-level node reuse', () => {

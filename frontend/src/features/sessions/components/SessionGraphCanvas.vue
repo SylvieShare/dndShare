@@ -229,7 +229,7 @@ const props = defineProps({
 })
 const emit = defineEmits([
   'node-click', 'node-double-click', 'edge-click', 'start-link', 'finish-link',
-  'preview-positions', 'save-positions', 'delete-nodes', 'selection-change', 'create-chapter', 'close-workspace',
+  'preview-positions', 'save-positions', 'delete-nodes', 'selection-change', 'create-chapter', 'open-chapters', 'open-scenes',
   'chapter-ancestor-click', 'scene-count', 'send-block-to-combat', 'change-nodes-status',
   'workspace-context-change',
   'drag-start',
@@ -330,7 +330,6 @@ function openSceneAncestorMenu(event) {
 }
 
 function returnFromSceneAncestor() {
-  if (props.workspaceMode === 'combat') return
   sceneMenus.value?.close()
   returnToScenes()
 }
@@ -347,7 +346,6 @@ function handleNodeClick(node, anchor) {
 }
 
 function handleNodeDoubleClick(node) {
-  if (props.workspaceMode === 'combat') return
   if (displayLevel.value === 'chapters') emit('node-double-click', node)
   else if (displayLevel.value === 'scenes') {
     sceneMenus.value?.close()
@@ -466,12 +464,13 @@ async function changeSceneStatus(scene, status) {
   sceneMenus.value?.close()
   actionError.value = ''
   try {
-    await sceneGraph.updateScene(scene.id, {
+    const updated = await sceneGraph.updateScene(scene.id, {
       name: scene.name,
       status,
       imageId: scene.imageId,
 		relations: scene.relations || [],
     })
+    syncWorkspaceScene(updated)
   } catch { actionError.value = 'Не удалось изменить статус сценария' }
 }
 
@@ -484,8 +483,10 @@ async function saveScene(payload) {
   saving.value = true
   actionError.value = ''
   try {
-		if (editingScene.value) await sceneGraph.updateScene(editingScene.value.id, payload)
-		else await sceneGraph.createScene(payload, sceneCreatePosition.value)
+    if (editingScene.value) {
+      const updated = await sceneGraph.updateScene(editingScene.value.id, payload)
+      syncWorkspaceScene(updated)
+    } else await sceneGraph.createScene(payload, sceneCreatePosition.value)
 		await Promise.all([
 			sessionWorld ? sessionWorld.load(true).catch(() => {}) : Promise.resolve(),
 			sessionMaterials ? sessionMaterials.load(true).catch(() => {}) : Promise.resolve(),
@@ -493,6 +494,18 @@ async function saveScene(payload) {
     emit('scene-count', activeChapterId.value, sceneGraph.scenes.value.length)
     closeScenePrompt()
   } catch { actionError.value = 'Не удалось сохранить сценарий' } finally { saving.value = false }
+}
+
+function syncWorkspaceScene(scene) {
+  if (!scene || !props.workspaceMode) return
+  const current = selectedScene.value
+  emit('workspace-context-change', {
+    level: props.workspaceMode === 'combat' ? props.workspaceLevel : displayLevel.value,
+    scene: {
+      ...scene,
+      contextIndex: current?.contextIndex ?? sceneIndex(scene),
+    },
+  })
 }
 
 function requestSceneDelete(scene) {

@@ -515,7 +515,13 @@ the active narrative level in workspace state and restored after reload. Closing
 combat returns to that saved scenario or block canvas instead of resetting the
 user to chapters. The pinned chapter and scenario keep their regular action
 menus in combat, including keyboard activation, so the DM can update their
-status or edit them without closing the encounter. The player rail adds a
+status or edit them without closing the encounter. Successful scenario edits
+and status changes immediately replace the scene stored in combat workspace
+state, including on the first entry after reload, rather than waiting for the
+scene graph to be reopened. Menu navigation and double click use the same level
+transitions as outside combat: the pinned scenario returns to its scenario
+canvas, the pinned chapter returns to chapters, and a spotlight chapter opens
+its scenarios. These transitions leave the encounter state intact. The player rail adds a
 combat-only “select all” action above its cards; it selects or clears every
 player combatant while preserving any NPC selection. Without a scenario context the
 combat header sits immediately to the right of the focused chapter;

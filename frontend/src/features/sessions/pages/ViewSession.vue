@@ -63,7 +63,7 @@
         @send-block-to-combat="sendBlockToCombat"
         @workspace-context-change="updateWorkspaceContext"
         @edit-session="openEdit"
-        @close-workspace="closeWorkspace"
+        @open-chapters="openChapters"
       >
         <template #primary-workspace>
           <SessionWorldLayer
@@ -506,6 +506,7 @@ const {
   toggleCombatWorkspace,
   restoreWorkspace,
   updateWorkspaceContext,
+  openChapters,
   closeWorkspace,
 } = useSessionWorkspace({ sessionUuid, chapterGraph })
 

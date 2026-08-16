@@ -165,15 +165,20 @@ export function useSessionWorkspace({ sessionUuid, chapterGraph }) {
   }
 
   function updateWorkspaceContext({ level, scene } = {}) {
-    if (state.mode !== 'scenes') return
+    if (!WORKSPACE_MODES.has(state.mode)) return
     state.level = level === 'blocks' ? 'blocks' : 'scenes'
     state.scene = scene ?? null
-    saveWorkspace('scenes', state.chapterId, state.scene?.id, state.level)
+    saveWorkspace(state.mode, state.chapterId, state.scene?.id, state.level)
   }
 
-  function closeWorkspace() {
+  function openChapters() {
+    closeWorkspace({ forceChapters: true })
+  }
+
+  function closeWorkspace({ forceChapters = false } = {}) {
     if (!state.mode || state.phase === 'closing') return
-    const returnToNested = state.mode === 'combat'
+    const returnToNested = !forceChapters
+      && state.mode === 'combat'
       && ['scenes', 'blocks'].includes(state.level)
       && state.chapterId != null
     if (returnToNested) saveWorkspace('scenes', state.chapterId, state.scene?.id, state.level)
@@ -217,6 +222,7 @@ export function useSessionWorkspace({ sessionUuid, chapterGraph }) {
     toggleCombatWorkspace,
     restoreWorkspace,
     updateWorkspaceContext,
+    openChapters,
     closeWorkspace,
   }
 }

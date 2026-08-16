@@ -63,7 +63,8 @@
         @delete-nodes="confirmChaptersDelete"
         @change-nodes-status="changeSelectionStatus"
         @create-chapter="openChapterCreate"
-        @close-workspace="returnToChapters"
+        @open-chapters="returnToChapters"
+        @open-scenes="openScenes"
         @chapter-ancestor-click="openChapterAncestorMenu"
         @scene-count="graph.setSceneCount"
         @send-block-to-combat="$emit('send-block-to-combat', $event)"
@@ -214,7 +215,7 @@ const props = defineProps({
   showShortcutHints: { type: Boolean, default: false },
 })
 const emit = defineEmits([
-  'open-scenes', 'open-combat', 'edit-session', 'close-workspace',
+  'open-scenes', 'open-combat', 'edit-session', 'open-chapters',
   'select-view',
   'send-block-to-combat', 'workspace-context-change', 'toggle-dice', 'toggle-music', 'toggle-events',
   'update-setting',
@@ -428,7 +429,7 @@ defineExpose({
 
 function returnToChapters() {
   closeMenus()
-  emit('close-workspace')
+  emit('open-chapters')
 }
 
 function prepareMove(chapter, arc) {
