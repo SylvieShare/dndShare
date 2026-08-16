@@ -61,6 +61,11 @@ ssh -i "$SSH_KEY" "$VM_USER@$VM_HOST" "bash -s -- '$BUILD_COMMIT'" <<'REMOTE'
   set -e
   expected_commit="$1"
   chmod +x ~/dndshare.new ~/session-image-sync.new ~/dndshare-run.sh ~/fetch-secrets.sh
+  while IFS= read -r unit_line; do
+    case "$unit_line" in
+      Environment=*) export "${unit_line#Environment=}" ;;
+    esac
+  done < ~/dndshare.service
   ~/fetch-secrets.sh dndshare-secrets ~/dndshare.env
   set -a
   source ~/dndshare.env
