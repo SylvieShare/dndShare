@@ -37,11 +37,16 @@
           <span>Сценарии в этой локации</span>
           <small>Необязательно</small>
         </div>
-        <WorldRelationChecklist
-          v-model="draft.sceneIds"
+        <WorldRelationEditor
+          v-model="draft.sceneLinks"
           :items="sceneOptions"
-          placeholder="Найти сценарий…"
-          empty-text="Сначала создайте сценарии в сюжете"
+          link-key="sceneId"
+          :show-notes="false"
+          add-label="Добавить сценарий"
+          picker-title="Сценарии в этой локации"
+          search-placeholder="Найти сценарий…"
+          empty-text="Сценарии не привязаны"
+          picker-empty-text="Сначала создайте сценарии в сюжете"
         />
       </section>
     </div>
@@ -83,7 +88,7 @@ import {
   FormTextarea,
 } from '@sylvieshare/share-ui'
 import SessionImagePicker from '@/features/sessions/components/SessionImagePicker.vue'
-import WorldRelationChecklist from '@/features/sessions/components/WorldRelationChecklist.vue'
+import WorldRelationEditor from '@/features/sessions/components/WorldRelationEditor.vue'
 import {
   buildLocationForest,
   locationDescendantIds,
@@ -107,7 +112,7 @@ const draft = reactive({
   parentLocationId: String(props.location?.parentLocationId ?? props.defaultParentId ?? ''),
   description: props.location?.description ?? '',
   imageId: props.location?.imageId ?? 0,
-  sceneIds: [...(props.location?.sceneIds || [])],
+  sceneLinks: (props.location?.sceneIds || []).map(sceneId => ({ sceneId })),
 })
 
 const excludedParentIds = computed(() => {
@@ -141,7 +146,7 @@ function submit() {
     kind: draft.kind,
     description: draft.description.trim() || null,
     imageId: draft.imageId,
-    sceneIds: draft.sceneIds,
+    sceneIds: draft.sceneLinks.map(link => link.sceneId),
   })
 }
 </script>

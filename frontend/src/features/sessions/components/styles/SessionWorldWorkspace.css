@@ -86,16 +86,17 @@
 .session-world-link-card svg { grid-column: 2; grid-row: 1 / span 2; align-self: end; }
 .session-world-link-card:hover { border-color: color-mix(in srgb, var(--entity-color) 58%, var(--border)); transform: translateY(-1px); }
 
-.session-world-compact-list { display: flex; flex-direction: column; gap: 4px; }
-.session-world-compact-list > button, .session-world-scene-row { min-width: 0; display: flex; min-height: 46px; align-items: center; gap: 9px; padding: 6px; border: 0; border-radius: 8px; background: transparent; color: var(--text-2); font: inherit; text-align: left; }
+.session-world-compact-list { display: flex; flex-direction: column; gap: 5px; }
+.session-world-compact-list > button, .session-world-scene-row { min-width: 0; display: flex; min-height: 60px; align-items: center; gap: 12px; padding: 8px; border: 0; border-radius: 9px; background: transparent; color: var(--text-2); font: inherit; text-align: left; }
 .session-world-compact-list > button { cursor: pointer; }
 .session-world-compact-list > button:hover { background: var(--surface-raised); color: var(--text-1); }
 .session-world-compact-list > button > span:nth-child(2), .session-world-scene-row > span:nth-child(2) { min-width: 0; display: flex; flex: 1; flex-direction: column; gap: 2px; }
 .session-world-compact-list strong, .session-world-compact-list small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.session-world-compact-list strong { color: var(--text-1); font-size: 11px; font-weight: 650; }
-.session-world-compact-list small { color: var(--text-muted); font-size: 9px; }
+.session-world-compact-list strong { color: var(--text-1); font-size: 13px; font-weight: 650; }
+.session-world-compact-list small { color: var(--text-muted); font-size: 11px; }
 .session-world-avatar { width: 32px; height: 32px; display: grid; flex: none; place-items: center; border: 1px solid color-mix(in srgb, var(--entity-color) 48%, var(--border)); border-radius: 9px; background: color-mix(in srgb, var(--entity-color) 14%, transparent); color: color-mix(in srgb, var(--entity-color) 75%, var(--text-1)); font-family: var(--font-display); font-size: 14px; font-weight: 800; object-fit: cover; }
-.session-world-scene-image { width: 36px; height: 32px; flex: none; border-radius: 7px; background-position: center; background-size: cover; }
+.session-world-compact-list .session-world-avatar { width: 44px; height: 44px; border-radius: 10px; font-size: 16px; }
+.session-world-scene-image { width: 48px; height: 44px; flex: none; border-radius: 9px; background-position: center; background-size: cover; }
 
 .session-world-detail--empty { align-items: center; justify-content: center; gap: 10px; padding: 32px; color: var(--text-muted); text-align: center; }
 .session-world-detail--empty svg { color: var(--accent-soft); opacity: 0.55; }

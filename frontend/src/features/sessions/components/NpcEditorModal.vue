@@ -46,12 +46,14 @@
         </FormField>
 
         <FormField label="Цвет карточки" vertical>
-          <ColorPresetPicker
-            inline
-            allow-custom
-            :model-value="draft.color"
-            @update:model-value="draft.color = $event || '#7c5cff'"
-          />
+          <div class="npc-editor-color-picker">
+            <ColorPresetPicker
+              inline
+              allow-custom
+              :model-value="draft.color"
+              @update:model-value="draft.color = $event || '#7c5cff'"
+            />
+          </div>
         </FormField>
 
         <FormField label="Описание и заметки" vertical>
@@ -312,6 +314,8 @@ onBeforeUnmount(() => { if (objectUrl.value) URL.revokeObjectURL(objectUrl.value
 .npc-editor-random-name:hover { background: color-mix(in srgb, var(--accent) 18%, transparent); color: var(--text-1); transform: translateY(-1px); }
 .npc-editor-attribute-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; }
 .npc-editor-field-error { color: var(--danger); font-size: 10px; }
+.npc-editor-color-picker { width: max-content; max-width: 100%; }
+.npc-editor-color-picker :deep(.cpp-grid) { grid-template-columns: repeat(var(--cpp-columns, 6), 24px); }
 .npc-editor-relations { padding-left: 22px; border-left: 1px solid var(--border); }
 .npc-editor-relations section + section { padding-top: 14px; border-top: 1px solid var(--border); }
 .npc-editor-section-title { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; color: var(--text-1); font-size: 12px; font-weight: 700; }

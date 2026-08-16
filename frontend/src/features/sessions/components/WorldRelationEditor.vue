@@ -11,6 +11,7 @@
           <X :size="15" />
         </button>
         <input
+          v-if="showNotes"
           :value="entry.link.note || ''"
           type="text"
           maxlength="500"
@@ -49,6 +50,7 @@ const props = defineProps({
   searchPlaceholder: { type: String, default: 'Найти…' },
   emptyText: { type: String, default: 'Связей пока нет' },
   pickerEmptyText: { type: String, default: 'Нет доступных вариантов' },
+  showNotes: { type: Boolean, default: true },
 })
 const emit = defineEmits(['update:modelValue'])
 const pickerOpen = ref(false)
@@ -70,10 +72,10 @@ function updateNote(id, value) {
 <style scoped>
 .relation-editor { min-width: 0; display: flex; flex-direction: column; gap: 8px; }
 .relation-editor-list { display: flex; flex-direction: column; gap: 7px; }
-.relation-editor-row { display: grid; grid-template-columns: 34px minmax(0, 1fr) 30px; align-items: center; gap: 8px; padding: 7px; border: 1px solid var(--border); border-radius: 9px; background: var(--surface-raised); }
-.relation-editor-row > img, .relation-editor-avatar { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 7px; object-fit: cover; }
-.relation-editor-avatar { background: color-mix(in srgb, var(--relation-color) 18%, var(--surface)); color: var(--relation-color); font-size: 13px; font-weight: 800; }
-.relation-editor-copy { min-width: 0; display: flex; flex-direction: column; gap: 1px; }.relation-editor-copy strong, .relation-editor-copy small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }.relation-editor-copy strong { color: var(--text-1); font-size: 12px; }.relation-editor-copy small { color: var(--text-muted); font-size: 9px; }
+.relation-editor-row { display: grid; grid-template-columns: 42px minmax(0, 1fr) 32px; align-items: center; gap: 10px; padding: 8px; border: 1px solid var(--border); border-radius: 9px; background: var(--surface-raised); }
+.relation-editor-row > img, .relation-editor-avatar { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 8px; object-fit: cover; }
+.relation-editor-avatar { background: color-mix(in srgb, var(--relation-color) 18%, var(--surface)); color: var(--relation-color); font-size: 15px; font-weight: 800; }
+.relation-editor-copy { min-width: 0; display: flex; flex-direction: column; gap: 2px; }.relation-editor-copy strong, .relation-editor-copy small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }.relation-editor-copy strong { color: var(--text-1); font-size: 13px; }.relation-editor-copy small { color: var(--text-muted); font-size: 10px; }
 .relation-editor-remove { width: 30px; height: 30px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 7px; background: transparent; color: var(--text-muted); cursor: pointer; }.relation-editor-remove:hover { background: color-mix(in srgb, var(--danger) 12%, transparent); color: var(--danger); }
 .relation-editor-note { grid-column: 1 / -1; min-width: 0; height: 32px; padding: 0 9px; border: 1px solid var(--border); border-radius: 7px; outline: 0; background: var(--surface); color: var(--text-1); font: inherit; font-size: 11px; }.relation-editor-note:focus { border-color: var(--accent); }
 .relation-editor-empty { margin: 0; padding: 9px 10px; border: 1px dashed var(--border); border-radius: 8px; color: var(--text-muted); font-size: 11px; }

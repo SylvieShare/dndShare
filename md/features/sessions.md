@@ -153,7 +153,9 @@ location-to-location graph edges or geographic canvas state.
 
 A location stores a semantic kind, shared-catalogue image, description, parent
 and sibling order. It may be linked to any number of session scenarios. The
-editor excludes the location itself and all descendants from its parent picker,
+editor shows current scenarios as removable relation cards and opens the same
+searchable add modal as the NPC editor instead of an always-visible checkbox
+list. It excludes the location itself and all descendants from its parent picker,
 and deletion is blocked until direct children are moved or deleted.
 
 Prepared NPCs live in one searchable session catalogue. A record has a name,
@@ -169,7 +171,8 @@ multiple scenarios and other NPCs. Each association carries an optional private
 note. The editor shows only current associations with remove actions; `Добавить`
 opens a dedicated searchable picker instead of rendering every candidate as a
 checkbox. Location and NPC detail views show reverse associations without
-duplicating the NPC record. Editors use the
+duplicating the NPC record; their relation rows use readable 44–48 px previews
+and full-size primary/secondary text. Editors use the
 shared `ColorPresetPicker`, `SessionImagePicker`, form controls and modal frame.
 `SessionImagePicker` keeps only the current image and `Сменить` in the parent
 editor. Its modal renders every preset in one grouped scroll, with category

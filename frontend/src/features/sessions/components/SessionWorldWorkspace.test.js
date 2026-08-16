@@ -68,7 +68,9 @@ describe('session world workspaces', () => {
 
   it('edits scenario-location and NPC relationships from focused editors', () => {
     expect(locationEditor).toContain('Сценарии в этой локации')
-    expect(locationEditor).toContain('sceneIds: draft.sceneIds')
+    expect(locationEditor).toContain('<WorldRelationEditor')
+    expect(locationEditor).toContain(':show-notes="false"')
+    expect(locationEditor).toContain('sceneIds: draft.sceneLinks.map')
     expect(npcEditor).toContain('Где его можно встретить')
     expect(npcEditor).toContain('locationLinks: draft.locationLinks')
     expect(npcEditor).toContain('sceneLinks: draft.sceneLinks')
@@ -77,6 +79,7 @@ describe('session world workspaces', () => {
     expect(npcs).toContain('Участие в сюжете')
     expect(relationEditor).toContain('Удалить связь')
     expect(relationEditor).toContain('Заметка к связи')
+    expect(relationEditor).toContain('v-if="showNotes"')
     expect(relationPicker).toContain('type="search"')
     expect(npcEditor).toContain('Связи с NPC')
   })
