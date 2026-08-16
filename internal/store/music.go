@@ -72,7 +72,7 @@ func (s *Store) GetMusicTracksForUser(ctx context.Context, ownerUserID int64) ([
 	if err != nil {
 		return nil, err
 	}
-	return s.enrichMusicTracks(ctx, tracks)
+	return s.enrichMusicTracks(ctx, tracks, ownerUserID)
 }
 
 // GetMusicTrackByID отдаёт трек по id (ErrNotFound, если нет) с albumIds/tags.
@@ -86,6 +86,23 @@ func (s *Store) GetMusicTrackByID(ctx context.Context, id int64) (MusicTrack, er
 		return MusicTrack{}, err
 	}
 	enriched, err := s.enrichMusicTracks(ctx, []MusicTrack{t})
+	if err != nil {
+		return MusicTrack{}, err
+	}
+	return enriched[0], nil
+}
+
+// GetMusicTrackByIDForUser отдаёт трек с альбомами и тегами, видимыми конкретному пользователю.
+func (s *Store) GetMusicTrackByIDForUser(ctx context.Context, id, ownerUserID int64) (MusicTrack, error) {
+	t, err := scanMusicTrack(s.pool.QueryRow(ctx,
+		`SELECT `+musicTrackColumns+` FROM dndshare.music_track WHERE id = $1`, id))
+	if errors.Is(err, pgx.ErrNoRows) {
+		return MusicTrack{}, ErrNotFound
+	}
+	if err != nil {
+		return MusicTrack{}, err
+	}
+	enriched, err := s.enrichMusicTracks(ctx, []MusicTrack{t}, ownerUserID)
 	if err != nil {
 		return MusicTrack{}, err
 	}
@@ -239,8 +256,8 @@ func (s *Store) RemoveTrackFromAlbum(ctx context.Context, albumID, trackID int64
 	return err
 }
 
-// GetTracksInAlbum отдаёт треки альбома по порядку с albumIds/tags.
-func (s *Store) GetTracksInAlbum(ctx context.Context, albumID int64) ([]MusicTrack, error) {
+// GetTracksInAlbum отдаёт треки альбома по порядку с доступными пользователю albumIds/tags.
+func (s *Store) GetTracksInAlbum(ctx context.Context, albumID, ownerUserID int64) ([]MusicTrack, error) {
 	rows, err := s.pool.Query(ctx,
 		`SELECT `+prefixColumns("t")+` FROM dndshare.music_track t
 		 JOIN dndshare.music_album_track at ON at.track_id = t.id
@@ -255,7 +272,7 @@ func (s *Store) GetTracksInAlbum(ctx context.Context, albumID int64) ([]MusicTra
 	if err != nil {
 		return nil, err
 	}
-	return s.enrichMusicTracks(ctx, tracks)
+	return s.enrichMusicTracks(ctx, tracks, ownerUserID)
 }
 
 // ---- tags ----
@@ -370,79 +387,4 @@ func collectMusicTags(rows pgx.Rows) ([]MusicTag, error) {
 		out = append(out, t)
 	}
 	return out, rows.Err()
-}
-
-// enrichMusicTracks заполняет albumIds/tags для набора треков (аналог getAlbumIdsByTracks/getTagsByTracks).
-func (s *Store) enrichMusicTracks(ctx context.Context, tracks []MusicTrack) ([]MusicTrack, error) {
-	if len(tracks) == 0 {
-		return tracks, nil
-	}
-	ids := make([]int64, len(tracks))
-	for i, t := range tracks {
-		ids[i] = t.ID
-	}
-	albumIDs, err := s.albumIDsByTracks(ctx, ids)
-	if err != nil {
-		return nil, err
-	}
-	tags, err := s.tagsByTracks(ctx, ids)
-	if err != nil {
-		return nil, err
-	}
-	for i := range tracks {
-		if v := albumIDs[tracks[i].ID]; v != nil {
-			tracks[i].AlbumIds = v
-		} else {
-			tracks[i].AlbumIds = []int64{}
-		}
-		if v := tags[tracks[i].ID]; v != nil {
-			tracks[i].Tags = v
-		} else {
-			tracks[i].Tags = []MusicTag{}
-		}
-	}
-	return tracks, nil
-}
-
-func (s *Store) albumIDsByTracks(ctx context.Context, trackIDs []int64) (map[int64][]int64, error) {
-	rows, err := s.pool.Query(ctx,
-		`SELECT track_id, album_id FROM dndshare.music_album_track WHERE track_id = ANY($1)`, trackIDs)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	result := map[int64][]int64{}
-	for rows.Next() {
-		var trackID, albumID int64
-		if err := rows.Scan(&trackID, &albumID); err != nil {
-			return nil, err
-		}
-		result[trackID] = append(result[trackID], albumID)
-	}
-	return result, rows.Err()
-}
-
-func (s *Store) tagsByTracks(ctx context.Context, trackIDs []int64) (map[int64][]MusicTag, error) {
-	rows, err := s.pool.Query(ctx,
-		`SELECT tt.track_id, t.id, t.owner_user_id, t.name
-		 FROM dndshare.music_track_tag tt
-		 JOIN dndshare.music_tag t ON t.id = tt.tag_id
-		 WHERE tt.track_id = ANY($1)
-		 ORDER BY lower(t.name)`,
-		trackIDs,
-	)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	result := map[int64][]MusicTag{}
-	for rows.Next() {
-		var trackID int64
-		var t MusicTag
-		if err := rows.Scan(&trackID, &t.ID, &t.OwnerUserID, &t.Name); err != nil {
-			return nil, err
-		}
-		result[trackID] = append(result[trackID], t)
-	}
-	return result, rows.Err()
 }

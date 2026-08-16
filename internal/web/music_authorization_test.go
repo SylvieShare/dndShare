@@ -12,7 +12,7 @@ func TestSystemMusicIsAccessibleButNeverOwned(t *testing.T) {
 	systemAlbum := store.MusicAlbum{OwnerUserID: 0, IsSystem: true}
 
 	if !musicTrackAccessibleToUser(systemTrack, userID) || musicTrackOwnedByUser(systemTrack, userID) {
-		t.Fatal("system track must be readable but not editable")
+		t.Fatal("system track must be accessible without making its file metadata user-owned")
 	}
 	if !musicAlbumAccessibleToUser(systemAlbum, userID) || musicAlbumOwnedByUser(systemAlbum, userID) {
 		t.Fatal("system album must be readable but not editable")

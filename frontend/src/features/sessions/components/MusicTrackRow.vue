@@ -6,70 +6,52 @@
       'music-row--queued': isQueued,
       'music-row--current': isCurrent && !isPlaying,
       'music-row--placeholder': isPlaceholder,
-      'music-row--readonly': readOnly,
+      'music-row--selected': selected,
+      'music-row--draggable': draggable,
     }"
     :data-sortable-key="track.id"
+    @pointerdown="onPointerDown"
+    @pointerup="onSelect"
   >
-    <div
-      v-if="draggable"
-      class="music-row-drag"
-      title="Перетащить"
-      @pointerdown="onDragHandle"
-    >
-      <span class="dot" /><span class="dot" />
-      <span class="dot" /><span class="dot" />
-      <span class="dot" /><span class="dot" />
-    </div>
-
-    <button class="music-row-play" :title="isPlaying ? 'Пауза' : 'Играть'" @click="onPlay">
-      <svg v-if="!isPlaying" width="12" height="12" viewBox="0 0 12 12">
-        <path d="M3 1.5v9l7-4.5-7-4.5z" fill="currentColor"/>
-      </svg>
-      <svg v-else width="12" height="12" viewBox="0 0 12 12">
-        <rect x="3" y="2" width="2.2" height="8" fill="currentColor"/>
-        <rect x="6.8" y="2" width="2.2" height="8" fill="currentColor"/>
-      </svg>
+    <button class="music-row-play" :title="isPlaying ? 'Пауза' : 'Играть'" @click.stop="onPlay" @pointerdown.stop>
+      <svg v-if="!isPlaying" width="12" height="12" viewBox="0 0 12 12"><path d="M3 1.5v9l7-4.5-7-4.5z" fill="currentColor"/></svg>
+      <svg v-else width="12" height="12" viewBox="0 0 12 12"><rect x="3" y="2" width="2.2" height="8" fill="currentColor"/><rect x="6.8" y="2" width="2.2" height="8" fill="currentColor"/></svg>
     </button>
-
     <div class="music-row-main">
       <span class="music-row-title" :title="track.name">{{ track.name }}</span>
-      <span v-if="readOnly" class="music-row-system" title="Системный трек доступен всем и защищён от изменений">
-        системный
-      </span>
+      <span v-if="system" class="music-row-system" title="Системный файл защищён, но личные альбомы и теги доступны">системный</span>
       <span v-if="isPlaying" class="music-row-state music-row-state--playing">ИГРАЕТ</span>
       <span v-else-if="isQueued" class="music-row-state music-row-state--queued">СЛЕДУЮЩИЙ</span>
     </div>
-
     <div class="music-row-tags">
-      <span v-for="t in track.tags" :key="t.id" class="music-row-tag">{{ t.name }}</span>
+      <span v-for="tag in track.tags" :key="tag.id" class="music-row-tag">{{ tag.name }}</span>
     </div>
-
     <span class="music-row-time">{{ fmtTime(track.durationSec) }}</span>
-
     <button
       class="music-row-queue"
       :class="{ active: isQueued }"
       :disabled="isCurrent"
       :title="isCurrent ? 'Уже играет' : (isQueued ? 'В очереди' : 'В очередь')"
-      @click="onQueue"
-    >
-      {{ isQueued ? 'в очереди' : 'след.' }}
-    </button>
-
-    <div v-if="!readOnly" class="music-row-menu-wrap" ref="menuWrap">
-      <button class="music-row-menu" @click="menuOpen = !menuOpen">…</button>
-      <div v-if="menuOpen" class="music-row-menu-pop">
-        <button class="music-row-menu-item" @click="onChangeAlbums">Изменить альбом</button>
-        <button class="music-row-menu-item" @click="onChangeTags">Теги</button>
-        <button class="music-row-menu-item" @click="onRename">Переименовать</button>
-        <button class="music-row-menu-item music-row-menu-item--danger" @click="onDelete">Удалить</button>
-      </div>
+      @click.stop="onQueue"
+      @pointerdown.stop
+    >{{ isQueued ? 'в очереди' : 'след.' }}</button>
+    <div class="music-row-actions" @click.stop @pointerdown.stop>
+      <RowActionMenu title="Действия с треком">
+        <template #default="{ close }">
+          <RowActionItem :icon="ListMusic" @click="run('change-albums', close)">Изменить альбомы</RowActionItem>
+          <RowActionItem :icon="Tags" @click="run('change-tags', close)">Теги</RowActionItem>
+          <RowActionItem v-if="!system" action="edit" @click="run('rename', close)">Переименовать</RowActionItem>
+          <RowActionItem v-if="!system" action="delete" tone="danger" @click="run('delete', close)">Удалить</RowActionItem>
+        </template>
+      </RowActionMenu>
     </div>
   </div>
 </template>
 
 <script setup>
-import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { ListMusic, Tags } from '@lucide/vue'
+import { RowActionMenu } from '@sylvieshare/share-ui'
+import RowActionItem from '@/shared/ui/RowActionItem.vue'
 
 const props = defineProps({
   track: { type: Object, required: true },
@@ -77,190 +59,55 @@ const props = defineProps({
   isCurrent: { type: Boolean, default: false },
   isQueued: { type: Boolean, default: false },
   isPlaceholder: { type: Boolean, default: false },
-  readOnly: { type: Boolean, default: false },
+  system: { type: Boolean, default: false },
+  selected: { type: Boolean, default: false },
   draggable: { type: Boolean, default: false },
   onDragStart: { type: Function, default: null },
 })
-const emit = defineEmits(['play', 'queue-toggle', 'rename', 'delete', 'change-albums', 'change-tags'])
+const emit = defineEmits(['select', 'play', 'queue-toggle', 'rename', 'delete', 'change-albums', 'change-tags'])
 
-const menuOpen = ref(false)
-const menuWrap = ref(null)
-
+function onSelect(event) {
+  if (event.target.closest('button, a, input, label, [role="menuitem"]')) return
+  emit('select', event, props.track)
+}
 function onPlay() { emit('play', props.track) }
-function onQueue() {
-  if (props.isCurrent) return
-  emit('queue-toggle', props.track)
+function onQueue() { if (!props.isCurrent) emit('queue-toggle', props.track) }
+function run(name, close) { close(); emit(name, props.track) }
+function onPointerDown(event) {
+  if (!props.draggable || !props.onDragStart) return
+  if (event.target.closest('button, a, input, label, [role="menuitem"]')) return
+  props.onDragStart(event, props.track)
 }
-function onChangeAlbums() { menuOpen.value = false; emit('change-albums', props.track) }
-function onChangeTags() { menuOpen.value = false; emit('change-tags', props.track) }
-function onRename() { menuOpen.value = false; emit('rename', props.track) }
-function onDelete() { menuOpen.value = false; emit('delete', props.track) }
-
-function onDragHandle(e) {
-  if (props.onDragStart) props.onDragStart(e, props.track)
-}
-
-function onDocClick(e) {
-  if (menuWrap.value && !menuWrap.value.contains(e.target)) menuOpen.value = false
-}
-onMounted(() => document.addEventListener('click', onDocClick))
-onBeforeUnmount(() => document.removeEventListener('click', onDocClick))
-
 function fmtTime(sec) {
-  const s = Math.max(0, Math.floor(sec || 0))
-  const m = Math.floor(s / 60)
-  const r = s % 60
-  return `${String(m).padStart(2, '0')}:${String(r).padStart(2, '0')}`
+  const total = Math.max(0, Math.floor(sec || 0))
+  return `${String(Math.floor(total / 60)).padStart(2, '0')}:${String(total % 60).padStart(2, '0')}`
 }
 </script>
 
 <style scoped>
-.music-row {
-  display: flex; align-items: center; gap: 12px;
-  padding: 10px 14px;
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: 10px;
-  transition: border-color 0.15s, background 0.15s;
-}
+.music-row { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border: 1px solid transparent; border-radius: 10px; background: transparent; transition: border-color 0.15s, background 0.15s; user-select: none; }
 .music-row:hover { border-color: var(--popover-bg); }
-.music-row--playing {
-  background: color-mix(in srgb, var(--accent) 7%, transparent);
-  border-color: var(--accent);
-}
+.music-row--draggable { cursor: grab; }
+.music-row--playing { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 7%, transparent); }
 .music-row--current { border-color: var(--border-strong); }
-.music-row--placeholder {
-  background: transparent !important;
-  border: 1px dashed var(--accent) !important;
-}
+.music-row--selected { border-color: color-mix(in srgb, var(--accent) 68%, var(--border)); background: color-mix(in srgb, var(--accent) 13%, transparent); }
+.music-row--placeholder { border: 1px dashed var(--accent) !important; background: transparent !important; }
 .music-row--placeholder > * { visibility: hidden; }
-
-.music-row-drag {
-  flex-shrink: 0;
-  width: 12px;
-  height: 18px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr;
-  gap: 2px;
-  cursor: grab;
-  align-content: center;
-  color: var(--text-muted);
-  padding: 0 2px;
-  margin-right: -6px;
-}
-.music-row-drag:hover { color: var(--text-2); }
-.music-row-drag:active { cursor: grabbing; }
-.music-row-drag .dot {
-  width: 3px; height: 3px;
-  border-radius: 50%;
-  background: currentColor;
-}
-
-.music-row-play {
-  width: 28px; height: 28px; flex-shrink: 0;
-  border-radius: 50%;
-  border: 1px solid var(--surface-active);
-  background: none;
-  color: var(--text-2);
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
-}
-.music-row--playing .music-row-play {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: var(--text-on-accent);
-}
-.music-row-play:hover { color: var(--accent); border-color: var(--accent); }
-.music-row--playing .music-row-play:hover { color: var(--text-on-accent); }
-
-.music-row-main { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; }
-.music-row-title {
-  font-size: 14px; color: var(--text-1);
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-  min-width: 0;
-}
-.music-row-state {
-  font-size: 9px; letter-spacing: 0.1em; font-weight: 700;
-  padding: 2px 7px;
-  border-radius: 4px;
-  flex-shrink: 0;
-}
-.music-row-state--playing { color: var(--accent); background: color-mix(in srgb, var(--accent) 18%, transparent); }
-.music-row-state--queued { color: var(--text-2); border: 1px dashed var(--surface-active); padding: 1px 6px; }
-.music-row-system {
-  flex-shrink: 0;
-  color: var(--text-muted);
-  border: 1px solid var(--border-strong);
-  border-radius: 4px;
-  padding: 1px 6px;
-  font-size: 9px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.music-row-tags { display: flex; gap: 6px; flex-wrap: wrap; flex-shrink: 0; max-width: 240px; }
-.music-row-tag {
-  font-size: 11px;
-  color: var(--text-2);
-  background: color-mix(in srgb, var(--accent) 12%, transparent);
-  border-radius: 4px;
-  padding: 2px 7px;
-}
-
-.music-row-time {
-  font-size: 12px; color: var(--text-2);
-  font-variant-numeric: tabular-nums;
-  min-width: 42px; text-align: right;
-}
-
-.music-row-queue {
-  font-size: 10px;
-  color: var(--text-2);
-  background: none;
-  border: 1px solid var(--surface-active);
-  border-radius: 6px;
-  padding: 4px 10px;
-  cursor: pointer;
-  font-family: inherit;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  transition: border-color 0.15s, background 0.15s, color 0.15s;
-}
+.music-row-play { width: 28px; height: 28px; display: flex; flex-shrink: 0; align-items: center; justify-content: center; border: 1px solid var(--surface-active); border-radius: 50%; background: none; color: var(--text-2); cursor: pointer; }
+.music-row--playing .music-row-play { border-color: var(--accent); background: var(--accent); color: var(--text-on-accent); }
+.music-row-play:hover { border-color: var(--accent); color: var(--accent); }
+.music-row-main { min-width: 0; display: flex; flex: 1; align-items: center; gap: 10px; }
+.music-row-title { min-width: 0; overflow: hidden; color: var(--text-1); font-size: 14px; text-overflow: ellipsis; white-space: nowrap; }
+.music-row-state { flex-shrink: 0; padding: 2px 7px; border-radius: 4px; font-size: 9px; font-weight: 700; letter-spacing: 0.1em; }
+.music-row-state--playing { background: color-mix(in srgb, var(--accent) 18%, transparent); color: var(--accent); }
+.music-row-state--queued { padding: 1px 6px; border: 1px dashed var(--surface-active); color: var(--text-2); }
+.music-row-system { flex-shrink: 0; padding: 1px 6px; border: 1px solid var(--border-strong); border-radius: 4px; color: var(--text-muted); font-size: 9px; letter-spacing: 0.06em; text-transform: uppercase; }
+.music-row-tags { max-width: 240px; display: flex; flex-shrink: 0; flex-wrap: wrap; gap: 6px; }
+.music-row-tag { padding: 2px 7px; border-radius: 4px; background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--text-2); font-size: 11px; }
+.music-row-time { min-width: 42px; color: var(--text-2); font-size: 12px; text-align: right; font-variant-numeric: tabular-nums; }
+.music-row-queue { padding: 4px 10px; border: 1px solid var(--surface-active); border-radius: 6px; background: none; color: var(--text-2); font-family: inherit; font-size: 10px; letter-spacing: 0.05em; text-transform: uppercase; cursor: pointer; }
 .music-row-queue:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
-.music-row-queue.active { background: var(--accent); color: var(--text-on-accent); border-color: var(--accent); }
-.music-row-queue:disabled { opacity: 0.3; cursor: not-allowed; }
-
-.music-row-menu-wrap { position: relative; }
-.music-row-menu {
-  background: none; border: none; color: var(--text-muted); font-size: 16px;
-  cursor: pointer; padding: 2px 6px;
-  line-height: 1;
-}
-.music-row-menu:hover { color: var(--text-2); }
-.music-row-menu-pop {
-  position: absolute; right: 0; top: calc(100% + 4px);
-  background: var(--popover-bg);
-  border: 1px solid var(--border-strong);
-  border-radius: 8px;
-  z-index: 50;
-  min-width: 180px;
-  padding: 4px;
-  box-shadow: 0 6px 24px var(--scrim);
-}
-.music-row-menu-item {
-  display: block;
-  width: 100%;
-  text-align: left;
-  background: none;
-  border: none;
-  color: var(--text-2);
-  font: inherit; font-size: 13px;
-  padding: 7px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-.music-row-menu-item:hover { background: var(--surface-raised); }
-.music-row-menu-item--danger { color: var(--danger); }
-.music-row-menu-item--danger:hover { background: color-mix(in srgb, var(--danger) 10%, transparent); }
+.music-row-queue.active { border-color: var(--accent); background: var(--accent); color: var(--text-on-accent); }
+.music-row-queue:disabled { cursor: not-allowed; opacity: 0.3; }
+.music-row-actions { flex-shrink: 0; }
 </style>

@@ -3,37 +3,54 @@ import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import SessionMusicWorkspace from './SessionMusicWorkspace.vue'
 
-const workspaceSource = readFileSync(fileURLToPath(new URL('./SessionMusicWorkspace.vue', import.meta.url)), 'utf8')
-const workspaceStyles = readFileSync(fileURLToPath(new URL('./styles/SessionMusicWorkspace.css', import.meta.url)), 'utf8')
-const rowSource = readFileSync(fileURLToPath(new URL('./MusicTrackRow.vue', import.meta.url)), 'utf8')
+function source(relativePath) {
+  return readFileSync(fileURLToPath(new URL(relativePath, import.meta.url)), 'utf8')
+}
+
+const workspaceSource = source('./SessionMusicWorkspace.vue')
+const workspaceStyles = source('./styles/SessionMusicWorkspace.css')
+const sidebarSource = source('./MusicLibrarySidebar.vue')
+const rowSource = source('./MusicTrackRow.vue')
+const organizerSource = source('../composables/useMusicTrackOrganizer.js')
 
 describe('session music workspace', () => {
-  it('compiles the library as a central workspace with system albums', () => {
+  it('keeps personal and system catalogues separate', () => {
     expect(SessionMusicWorkspace).toBeTruthy()
-    expect(workspaceSource).toContain('class="session-music-workspace"')
-    expect(workspaceSource).not.toContain('<AppModal fullscreen')
-    expect(workspaceSource).not.toContain('music-lib-close')
-    expect(workspaceSource).toContain('Личная и системная коллекция')
+    expect(workspaceSource).toContain('musicStore.tracks.filter(track => !track.isSystem)')
+    expect(workspaceSource).toContain('musicStore.albums.filter(album => album.isSystem)')
+    expect(workspaceSource).toContain('const base = selectedAlbumId.value ? musicStore.tracks : personalTracks.value')
+    expect(sidebarSource).toContain('МОЯ МУЗЫКА')
+    expect(sidebarSource).toContain('СИСТЕМНЫЕ АЛЬБОМЫ')
     expect(workspaceSource).toContain('selectedAlbum.sourceUrl')
-    expect(workspaceSource).toContain('selectedAlbum.licenseName')
     expect(workspaceSource).toContain('selectedAlbum.licenseUrl')
   })
 
-  it('uses the same split-panel canvas treatment as the session catalogues', () => {
-    expect(workspaceSource).not.toContain('class="music-lib"')
-    expect(workspaceSource).toContain('<aside class="music-lib-sidebar">')
+  it('uses the split-panel canvas treatment without an embedded library window', () => {
+    expect(workspaceSource).toContain('class="session-music-workspace"')
+    expect(workspaceSource).toContain('<MusicLibrarySidebar')
     expect(workspaceSource).toContain('<div class="music-lib-main-col">')
+    expect(workspaceSource).not.toContain('<AppModal fullscreen')
     expect(workspaceStyles).toContain('grid-template-columns: 310px minmax(0, 1fr)')
-    expect(workspaceStyles).toContain('background: color-mix(in srgb, var(--surface) 92%, transparent)')
   })
 
-  it('keeps system albums and tracks read-only in every editing entry point', () => {
-    expect(workspaceSource).toContain('selectedAlbum && !selectedAlbum.isSystem')
-    expect(workspaceSource).toContain(':read-only="t.isSystem"')
-    expect(workspaceSource).toContain('musicStore.albums.filter(album => !album.isSystem)')
-    expect(workspaceSource).toContain('!selectedAlbum.value?.isSystem')
-    expect(workspaceSource.match(/if \(track\.isSystem\) return/g)).toHaveLength(4)
-    expect(rowSource).toContain('v-if="!readOnly" class="music-row-menu-wrap"')
-    expect(rowSource).toContain('Системный трек доступен всем и защищён от изменений')
+  it('supports range selection, bulk actions, and whole-row album drag', () => {
+    expect(workspaceSource).toContain('organizer.selectedTracks.value.length')
+    expect(workspaceSource).toContain('openBulkAlbums')
+    expect(workspaceSource).toContain('openBulkTags')
+    expect(rowSource).toContain('@pointerdown="onPointerDown"')
+    expect(rowSource).toContain('@pointerup="onSelect"')
+    expect(rowSource).not.toContain('music-row-drag')
+    expect(organizerSource).toContain('event.shiftKey')
+    expect(sidebarSource).toContain(':data-sortable-container="musicAlbumDropGroup(album.id)"')
+  })
+
+  it('allows user organization of system tracks while protecting their files', () => {
+    expect(workspaceSource).toContain('function onChangeAlbums(track)')
+    expect(workspaceSource).toContain('function onChangeTags(track)')
+    expect(rowSource).toContain('<RowActionMenu')
+    expect(rowSource).toContain('Изменить альбомы')
+    expect(rowSource).toContain('v-if="!system" action="edit"')
+    expect(rowSource).toContain('v-if="!system" action="delete"')
+    expect(rowSource).not.toContain('music-row-menu-pop')
   })
 })

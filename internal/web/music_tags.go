@@ -145,7 +145,7 @@ func (s *Server) handleAttachTagToTrack(w http.ResponseWriter, r *http.Request) 
 		badRequest(w, "bad id")
 		return
 	}
-	if _, ok := s.requireOwnedTrack(w, r, id, uid); !ok {
+	if _, ok := s.requireAccessibleTrack(w, r, id, uid); !ok {
 		return
 	}
 	tag, err := s.store.GetMusicTagByID(r.Context(), tagID)
@@ -165,7 +165,7 @@ func (s *Server) handleAttachTagToTrack(w http.ResponseWriter, r *http.Request) 
 		serverError(w, err)
 		return
 	}
-	track, err := s.store.GetMusicTrackByID(r.Context(), id)
+	track, err := s.store.GetMusicTrackByIDForUser(r.Context(), id, uid)
 	if err != nil {
 		serverError(w, err)
 		return
@@ -183,7 +183,7 @@ func (s *Server) handleAddTrackTag(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "bad id")
 		return
 	}
-	if _, ok := s.requireOwnedTrack(w, r, id, uid); !ok {
+	if _, ok := s.requireAccessibleTrack(w, r, id, uid); !ok {
 		return
 	}
 	var req struct {
@@ -214,7 +214,7 @@ func (s *Server) handleAddTrackTag(w http.ResponseWriter, r *http.Request) {
 		serverError(w, err)
 		return
 	}
-	track, err := s.store.GetMusicTrackByID(r.Context(), id)
+	track, err := s.store.GetMusicTrackByIDForUser(r.Context(), id, uid)
 	if err != nil {
 		serverError(w, err)
 		return
@@ -237,7 +237,20 @@ func (s *Server) handleRemoveTrackTag(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "bad id")
 		return
 	}
-	if _, ok := s.requireOwnedTrack(w, r, id, uid); !ok {
+	if _, ok := s.requireAccessibleTrack(w, r, id, uid); !ok {
+		return
+	}
+	tag, err := s.store.GetMusicTagByID(r.Context(), tagID)
+	if err != nil {
+		if errors.Is(err, store.ErrNotFound) {
+			notFound(w, "")
+			return
+		}
+		serverError(w, err)
+		return
+	}
+	if tag.OwnerUserID != uid {
+		unauthorized(w)
 		return
 	}
 	if err := s.store.RemoveTagFromTrack(r.Context(), id, tagID); err != nil {

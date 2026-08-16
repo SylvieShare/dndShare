@@ -47,8 +47,13 @@ export const useMusicStore = defineStore('music', () => {
     tracks.value = tracks.value.map(x => x.id === id ? t : x)
   }
   async function deleteTrack(id) {
-    await musicApi.deleteTrack(id)
-    tracks.value = tracks.value.filter(x => x.id !== id)
+    await deleteTracks([id])
+  }
+  async function deleteTracks(trackIds) {
+    const ids = [...new Set(trackIds)]
+    await Promise.all(ids.map(id => musicApi.deleteTrack(id)))
+    const deleted = new Set(ids)
+    tracks.value = tracks.value.filter(x => !deleted.has(x.id))
     await refreshAlbums()
   }
   async function createAlbum(data) {
@@ -66,18 +71,29 @@ export const useMusicStore = defineStore('music', () => {
     tracks.value = tracks.value.map(t => ({ ...t, albumIds: (t.albumIds || []).filter(aid => aid !== id) }))
   }
   async function addTrackToAlbum(albumId, trackId) {
-    await musicApi.addTrackToAlbum(albumId, trackId)
-    const t = trackById(trackId)
-    if (t && !(t.albumIds || []).includes(albumId)) {
-      tracks.value = tracks.value.map(x => x.id === trackId ? { ...x, albumIds: [...(x.albumIds || []), albumId] } : x)
-    }
+    await addTracksToAlbum(albumId, [trackId])
+  }
+  async function addTracksToAlbum(albumId, trackIds) {
+    const ids = [...new Set(trackIds)]
+    await Promise.all(ids.map(trackId => musicApi.addTrackToAlbum(albumId, trackId)))
+    const added = new Set(ids)
+    tracks.value = tracks.value.map(track => added.has(track.id) && !(track.albumIds || []).includes(albumId)
+      ? { ...track, albumIds: [...(track.albumIds || []), albumId] }
+      : track)
     await refreshAlbums()
     await loadAlbumTracks(albumId)
   }
   async function removeTrackFromAlbum(albumId, trackId) {
-    await musicApi.removeTrackFromAlbum(albumId, trackId)
-    tracks.value = tracks.value.map(x => x.id === trackId ? { ...x, albumIds: (x.albumIds || []).filter(a => a !== albumId) } : x)
-    albumOrder.value = { ...albumOrder.value, [albumId]: (albumOrder.value[albumId] || []).filter(id => id !== trackId) }
+    await removeTracksFromAlbum(albumId, [trackId])
+  }
+  async function removeTracksFromAlbum(albumId, trackIds) {
+    const ids = [...new Set(trackIds)]
+    await Promise.all(ids.map(trackId => musicApi.removeTrackFromAlbum(albumId, trackId)))
+    const removed = new Set(ids)
+    tracks.value = tracks.value.map(track => removed.has(track.id)
+      ? { ...track, albumIds: (track.albumIds || []).filter(id => id !== albumId) }
+      : track)
+    albumOrder.value = { ...albumOrder.value, [albumId]: (albumOrder.value[albumId] || []).filter(id => !removed.has(id)) }
     await refreshAlbums()
   }
   // albumId -> ordered list of track ids
@@ -100,14 +116,23 @@ export const useMusicStore = defineStore('music', () => {
     }
   }
   async function attachTrackTag(trackId, tagId) {
-    const t = await musicApi.attachTrackTag(trackId, tagId)
-    tracks.value = tracks.value.map(x => x.id === trackId ? t : x)
+    await attachTracksTag([trackId], tagId)
+  }
+  async function attachTracksTag(trackIds, tagId) {
+    const updated = await Promise.all([...new Set(trackIds)].map(trackId => musicApi.attachTrackTag(trackId, tagId)))
+    const byId = new Map(updated.map(track => [track.id, track]))
+    tracks.value = tracks.value.map(track => byId.get(track.id) || track)
   }
   async function removeTrackTag(trackId, tagId) {
-    await musicApi.removeTrackTag(trackId, tagId)
-    tracks.value = tracks.value.map(x => x.id === trackId
-      ? { ...x, tags: (x.tags || []).filter(t => t.id !== tagId) }
-      : x)
+    await removeTracksTag([trackId], tagId)
+  }
+  async function removeTracksTag(trackIds, tagId) {
+    const ids = [...new Set(trackIds)]
+    await Promise.all(ids.map(trackId => musicApi.removeTrackTag(trackId, tagId)))
+    const changed = new Set(ids)
+    tracks.value = tracks.value.map(track => changed.has(track.id)
+      ? { ...track, tags: (track.tags || []).filter(tag => tag.id !== tagId) }
+      : track)
   }
   async function createTag(name) {
     const tag = await musicApi.createTag(name)
@@ -435,11 +460,11 @@ export const useMusicStore = defineStore('music', () => {
     // library state
     tracks, albums, tags, libraryLoaded, libraryLoading, albumOrder,
     ensureLibrary, trackById, albumById,
-    uploadTrack, renameTrack, deleteTrack,
+    uploadTrack, renameTrack, deleteTrack, deleteTracks,
     createAlbum, updateAlbum, deleteAlbum,
-    addTrackToAlbum, removeTrackFromAlbum,
+    addTrackToAlbum, addTracksToAlbum, removeTrackFromAlbum, removeTracksFromAlbum,
     loadAlbumTracks, reorderAlbum,
-    addTrackTag, attachTrackTag, removeTrackTag,
+    addTrackTag, attachTrackTag, attachTracksTag, removeTrackTag, removeTracksTag,
     createTag, renameTag, deleteTag,
     // player state
     state, currentTrack, nextTrack, remotePlayback,

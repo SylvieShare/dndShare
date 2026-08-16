@@ -9,8 +9,10 @@ object storage; the system catalog manifest and provenance are under
 ## Model
 
 Personal tracks belong to the uploading user and can be linked to that user's
-albums and tags. Albums and tracks with `isSystem=true` have no owner, are
-available to every authenticated user, and are read-only through the API.
+albums and tags. Albums and tracks with `isSystem=true` have no owner and are
+available to every authenticated user. Their files and metadata are read-only,
+but every user may link a system track to their own albums and tags. Those
+links are returned only to their owner.
 Stable internal `system_key` values make their startup seed idempotent. System album
 metadata includes the author, source page, and public-domain dedication.
 Album-track links store explicit order. Session music state stores current/next
@@ -31,8 +33,9 @@ are recorded under `internal/systemmusic`.
 `/api/music/tracks` lists the user's own tracks plus system tracks and provides
 upload/search/rename/delete and playback URL access. Personal and system
 playback both use signed S3 URLs. `/api/music/albums` lists personal plus system
-albums and provides CRUD, track links and ordering only for personal albums.
-`/api/music/tags` provides CRUD and track links. Session-authorized playback URL
+albums and provides CRUD and ordering only for personal albums; personal albums
+may contain both owned and system tracks. `/api/music/tags` provides personal
+tag CRUD and links for owned or system tracks. Session-authorized playback URL
 and synchronized state are exposed under `/api/sessions/{uuid}/music...`.
 When the display flag is enabled, the anonymous presentation projection exposes
 only validated playback fields and signed URLs for tracks owned by the session
@@ -54,7 +57,8 @@ It uses:
 - `AppModalFrame` for nested tag/album dialogs;
 - `TextPromptDialog` for create/rename;
 - `ConfirmDialog` for destructive actions;
-- `useSortable/reorderByDrop` for track order;
+- `useSortable/reorderByDrop` for track order and dropping tracks on albums;
+- `RowActionMenu` for track actions;
 - `AppSlider` for volume/crossfade.
 
 No local modal backdrop, browser prompt/confirm or separate drag engine should
@@ -62,9 +66,14 @@ be added. Tag/album pickers remain nested dialogs inside the workspace and obey
 the shared modal stack's Escape ordering. The compact right-rail `MusicPanel`
 is only the current-track player; it no longer opens a library window.
 
-System albums show their CC0/source metadata. Their upload dropzone, album
-actions, sorting, and track menus are absent. These UI guards complement the
-server authorization checks; they are not the security boundary.
+System albums are shown in a separate sidebar section and show their CC0/source
+metadata. `Все треки` contains only personal tracks. Clicking a track selects
+it, Shift-click selects a range, and the selection bar exposes bulk album/tag
+operations. Selected tracks can be dragged by any non-interactive part of a row
+onto a personal album. System tracks expose personal album and tag actions, but
+not rename/delete; system albums still disable upload, album actions and sorting.
+These UI guards complement the server authorization checks; they are not the
+security boundary.
 
 ## Upload limits
 

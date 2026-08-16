@@ -237,7 +237,7 @@ func (s *Server) handleUploadTrack(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	full, err := s.store.GetMusicTrackByID(r.Context(), track.ID)
+	full, err := s.store.GetMusicTrackByIDForUser(r.Context(), track.ID, uid)
 	if err != nil {
 		serverError(w, err)
 		return
@@ -274,7 +274,7 @@ func (s *Server) handleRenameTrack(w http.ResponseWriter, r *http.Request) {
 		serverError(w, err)
 		return
 	}
-	track, err := s.store.GetMusicTrackByID(r.Context(), id)
+	track, err := s.store.GetMusicTrackByIDForUser(r.Context(), id, uid)
 	if err != nil {
 		serverError(w, err)
 		return

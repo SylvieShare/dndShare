@@ -305,7 +305,9 @@ combatant и содержат `{roll,bonus,total,rolls?,dropped?,revision?}`. О
 
 `/api/music` возвращает личные и общие `isSystem` tracks/albums, предоставляет
 CRUD tracks/albums/tags, track-to-album/tag links и album order только для
-личных сущностей. Личное и системное аудио получает signed S3 playback URL.
+личных сущностей. Файл и metadata системного трека неизменяемы, но его можно
+связать с личным альбомом или тегом. В `albumIds`/`tags` ответа такие связи
+фильтруются по текущему пользователю. Личное и системное аудио получает signed S3 playback URL.
 Image upload: `POST
 /api/storage/images`; item icons используют item-специфичный маршрут выше.
 Video upload: `POST /api/storage/videos`. SVG read: `GET /api/svg/{id}`.

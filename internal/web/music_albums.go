@@ -116,7 +116,7 @@ func (s *Server) handleListAlbumTracks(w http.ResponseWriter, r *http.Request) {
 	if _, ok := s.requireAccessibleAlbum(w, r, id, uid); !ok {
 		return
 	}
-	tracks, err := s.store.GetTracksInAlbum(r.Context(), id)
+	tracks, err := s.store.GetTracksInAlbum(r.Context(), id, uid)
 	if err != nil {
 		serverError(w, err)
 		return
@@ -144,7 +144,7 @@ func (s *Server) handleAddTrackToAlbum(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "bad body")
 		return
 	}
-	if _, ok := s.requireOwnedTrack(w, r, req.TrackID, uid); !ok {
+	if _, ok := s.requireAccessibleTrack(w, r, req.TrackID, uid); !ok {
 		return
 	}
 	if err := s.store.AddTrackToAlbum(r.Context(), id, req.TrackID); err != nil {

@@ -1,65 +1,21 @@
 <template>
   <section class="session-music-workspace" aria-label="Музыкальная библиотека">
-    <aside class="music-lib-sidebar">
-      <header class="music-lib-head">
-        <span class="music-lib-eyebrow">БИБЛИОТЕКА</span>
-        <div class="music-lib-title-row">
-          <h2 class="music-lib-title">Музыка</h2>
-          <span class="music-lib-count">{{ musicStore.tracks.length }}</span>
-        </div>
-        <span class="music-lib-sub">Личная и системная коллекция</span>
-      </header>
-
-      <input ref="fileInputEl" type="file" accept="audio/*" multiple hidden @change="onFiles" />
-
-      <div class="sb-section-title">
-        АЛЬБОМЫ
-        <button class="sb-add" @click="onCreateAlbum">+</button>
-      </div>
-
-      <button
-        class="sb-album"
-        :class="{ active: !selectedAlbumId }"
-        @click="selectedAlbumId = null"
-      >
-        <span class="sb-album-dot" :style="{ background: 'var(--text-muted)' }" />
-        <span class="sb-album-name">Все треки</span>
-        <span class="sb-album-count">{{ musicStore.tracks.length }}</span>
-      </button>
-
-      <button
-        v-for="album in musicStore.albums"
-        :key="album.id"
-        class="sb-album"
-        :class="{ active: selectedAlbumId === album.id }"
-        @click="selectedAlbumId = album.id"
-      >
-        <span class="sb-album-dot" :style="{ background: album.color || 'var(--accent)' }" />
-        <span class="sb-album-name">{{ album.name }}</span>
-        <span v-if="album.isSystem" class="sb-album-system" title="Доступен всем, редактирование отключено">системный</span>
-        <span class="sb-album-count">{{ album.trackCount }}</span>
-      </button>
-
-      <button
-        v-if="!selectedAlbum?.isSystem"
-        type="button"
-        class="music-lib-dropzone"
-        :class="{ active: dropActive }"
-        @click="openFilePicker"
-        @dragenter.prevent="onDragEnter"
-        @dragleave.prevent="onDragLeave"
-        @dragover.prevent
-        @drop.prevent="onDrop"
-      >
-        <div class="music-lib-dropzone-icon">＋</div>
-        <div>Перетащите файлы<br>или нажмите</div>
-        <div class="music-lib-dropzone-sub">.mp3 / .ogg / .flac · до 50 МБ</div>
-      </button>
-      <div v-else class="music-lib-system-note">
-        <span class="music-lib-system-note-title">Системный альбом</span>
-        Доступен всем пользователям и защищён от изменений.
-      </div>
-    </aside>
+    <MusicLibrarySidebar
+      :personal-track-count="personalTracks.length"
+      :personal-albums="personalAlbums"
+      :system-albums="systemAlbums"
+      :selected-album-id="selectedAlbumId"
+      :selected-album-is-system="!!selectedAlbum?.isSystem"
+      :drop-active="dropActive"
+      :drag-target-album-id="organizer.dragTargetAlbumId.value"
+      @select-album="selectedAlbumId = $event"
+      @create-album="onCreateAlbum"
+      @open-files="openFilePicker"
+      @drag-enter="onDragEnter"
+      @drag-leave="onDragLeave"
+      @file-drop="onDrop"
+    />
+    <input ref="fileInputEl" type="file" accept="audio/*" multiple hidden @change="onFiles" />
 
     <div class="music-lib-main-col">
       <section class="music-lib-main">
@@ -72,37 +28,21 @@
             class="ml-main-license"
             :title="`${selectedAlbum.licenseName || 'CC0'} · ${selectedAlbum.author || 'автор указан в источнике'}`"
           >
-            <a
-              v-if="selectedAlbum.licenseUrl"
-              :href="selectedAlbum.licenseUrl"
-              target="_blank"
-              rel="noopener noreferrer"
-            >{{ selectedAlbum.licenseName || 'CC0' }}</a>
+            <a v-if="selectedAlbum.licenseUrl" :href="selectedAlbum.licenseUrl" target="_blank" rel="noopener noreferrer">{{ selectedAlbum.licenseName || 'CC0' }}</a>
             <span v-else>{{ selectedAlbum.licenseName || 'CC0' }}</span>
             <span> · </span>
-            <a
-              v-if="selectedAlbum.sourceUrl"
-              :href="selectedAlbum.sourceUrl"
-              target="_blank"
-              rel="noopener noreferrer"
-            >{{ selectedAlbum.author || 'источник' }} ↗</a>
+            <a v-if="selectedAlbum.sourceUrl" :href="selectedAlbum.sourceUrl" target="_blank" rel="noopener noreferrer">{{ selectedAlbum.author || 'источник' }} ↗</a>
             <span v-else>{{ selectedAlbum.author }}</span>
           </span>
-          <div class="ml-main-actions" v-if="selectedAlbum && !selectedAlbum.isSystem">
+          <div v-if="selectedAlbum && !selectedAlbum.isSystem" class="ml-main-actions">
             <button class="ml-main-action" @click="onRenameAlbum">переименовать</button>
             <button class="ml-main-action ml-main-action--danger" @click="onDeleteAlbum">удалить альбом</button>
           </div>
         </div>
 
         <div class="ml-search-row">
-          <input
-            v-model="searchQuery"
-            class="ml-search"
-            type="text"
-            placeholder="Поиск по названию или тегу..."
-          />
+          <input v-model="searchQuery" class="ml-search" type="text" placeholder="Поиск по названию или тегу..." />
         </div>
-
         <div class="ml-tags">
           <span class="ml-tags-label">ТЕГИ</span>
           <button
@@ -112,26 +52,34 @@
             :class="{ active: activeTagIds.includes(tag.id) }"
             @click="toggleTagFilter(tag.id)"
           >
-            {{ tag.name }}
-            <span v-if="activeTagIds.includes(tag.id)" class="ml-tag-x">×</span>
+            {{ tag.name }} <span v-if="activeTagIds.includes(tag.id)" class="ml-tag-x">×</span>
           </button>
-          <button class="ml-tags-edit" @click="tagManagerOpen = true">
-            изменить теги
-          </button>
+          <button class="ml-tags-edit" @click="tagManagerOpen = true">изменить теги</button>
+        </div>
+
+        <div v-if="organizer.selectedTracks.value.length" class="ml-selection-bar">
+          <span class="ml-selection-count">Выбрано: {{ organizer.selectedTracks.value.length }}</span>
+          <button @click="openBulkAlbums">В альбомы…</button>
+          <button @click="openBulkTags">Теги…</button>
+          <button v-if="selectedAlbum && !selectedAlbum.isSystem" @click="removeSelectedFromAlbum">Убрать из альбома</button>
+          <button v-if="selectedOnlyPersonal" class="danger" @click="deleteSelected">Удалить</button>
+          <button class="clear" @click="organizer.clearSelection">Снять выделение</button>
         </div>
 
         <div class="ml-tracks" data-sortable-container="tracks">
           <MusicTrackRow
-            v-for="t in sortable.displayItems('tracks')"
-            :key="t.id"
-            :track="t"
-            :is-playing="state.playing && state.trackId === t.id"
-            :is-current="state.trackId === t.id"
-            :is-queued="isQueued(t.id)"
-            :is-placeholder="sortable.isSource(t)"
-            :read-only="t.isSystem"
-            :draggable="canSort"
-            :on-drag-start="canSort ? startDragHandler : null"
+            v-for="track in organizer.sortable.displayItems('tracks')"
+            :key="track.id"
+            :track="track"
+            :is-playing="state.playing && state.trackId === track.id"
+            :is-current="state.trackId === track.id"
+            :is-queued="isQueued(track.id)"
+            :is-placeholder="organizer.sortable.isSource(track)"
+            :system="track.isSystem"
+            :selected="organizer.selectedTrackIds.value.includes(track.id)"
+            :draggable="organizer.canDragTrack(track)"
+            :on-drag-start="organizer.startDrag"
+            @select="organizer.selectTrack"
             @play="onPlay"
             @queue-toggle="onQueueToggle"
             @rename="onRenameTrack"
@@ -139,106 +87,25 @@
             @change-albums="onChangeAlbums"
             @change-tags="onChangeTags"
           />
-          <div v-if="!displayedTracks.length" class="ml-empty">
-            Нет треков
-          </div>
+          <div v-if="!displayedTracks.length" class="ml-empty">Нет треков</div>
         </div>
       </section>
-
-      <footer v-if="current" class="music-lib-foot">
-        <div class="foot-current">
-          <button class="foot-play-btn" @click="onFootPlayPause">
-            <svg v-if="!state.playing" width="14" height="14" viewBox="0 0 14 14">
-              <path d="M3.5 2.5v9l8-4.5-8-4.5z" fill="currentColor"/>
-            </svg>
-            <svg v-else width="14" height="14" viewBox="0 0 14 14">
-              <rect x="3.5" y="2.5" width="2.6" height="9" fill="currentColor"/>
-              <rect x="7.9" y="2.5" width="2.6" height="9" fill="currentColor"/>
-            </svg>
-          </button>
-          <button
-            class="foot-loop-btn"
-            :class="{ active: state.loopMode === 'track' }"
-            :title="state.loopMode === 'track' ? 'Повтор одного трека' : 'Повтор альбома'"
-            @click="onToggleLoop"
-          >
-            <svg v-if="state.loopMode === 'track'" width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M3 5h7l-1.5-1.5M13 11H6l1.5 1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M3 5v3a3 3 0 0 0 3 3M13 11V8a3 3 0 0 0-3-3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-              <text x="8" y="9.5" text-anchor="middle" font-size="5" font-weight="700" fill="currentColor">1</text>
-            </svg>
-            <svg v-else width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M3 5h7l-1.5-1.5M13 11H6l1.5 1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M3 5v3a3 3 0 0 0 3 3M13 11V8a3 3 0 0 0-3-3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-            </svg>
-          </button>
-          <div class="foot-text">
-            <div class="foot-status"><span class="foot-status-dot" />{{ state.playing ? 'ИГРАЕТ' : 'ПАУЗА' }}</div>
-            <div class="foot-title" :title="current.name">{{ current.name }}</div>
-            <div class="foot-progress" :class="{ 'foot-progress--clickable': isDm }" @click="onFootSeek">
-              <div class="foot-progress-bar" :style="{ width: progressPct + '%' }" />
-            </div>
-            <div class="foot-time">{{ fmtTime(state.positionSec) }} / {{ fmtTime(state.durationSec) }}</div>
-          </div>
-        </div>
-
-        <div class="foot-cross">
-          <button class="foot-cross-btn" :disabled="!next" @click="onFootPlayNext">
-            <svg width="13" height="13" viewBox="0 0 14 14">
-              <path d="M2 2l5 5-5 5M7 2l5 5-5 5" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            Переключить сейчас
-          </button>
-          <div class="foot-cross-fade">
-            <span class="foot-cross-fade-label">фейд</span>
-            <AppSlider :model-value="state.crossfadeDurSec" :min="0" :max="15" :step="0.5" @update:model-value="musicStore.setCrossfade" />
-            <span class="foot-cross-fade-value">{{ state.crossfadeDurSec.toFixed(1) }}с</span>
-          </div>
-          <div class="foot-cross-fade">
-            <span class="foot-cross-fade-label">громкость</span>
-            <AppSlider :model-value="state.volume" :min="0" :max="1" :step="0.01" @update:model-value="musicStore.setVolume" />
-            <span class="foot-cross-fade-value">{{ Math.round(state.volume * 100) }}%</span>
-          </div>
-        </div>
-
-        <div class="foot-next">
-          <div class="foot-next-head">
-            <span class="foot-next-label">СЛЕДУЮЩИЙ</span>
-            <button v-if="next" class="foot-next-clear" @click="onClearNext" title="Убрать">× убрать</button>
-          </div>
-          <div v-if="next" class="foot-next-title" :title="next.name">{{ next.name }}</div>
-          <div v-else class="foot-next-empty">не выбран</div>
-          <div v-if="next" class="foot-next-meta">{{ fmtTime(next.durationSec) }}<template v-if="nextAlbum"> · из «{{ nextAlbum.name }}»</template></div>
-        </div>
-      </footer>
+      <MusicLibraryPlayerFooter :is-dm="isDm" />
     </div>
 
-    <div v-if="uploadStatus" class="music-lib-toast">
-      {{ uploadStatus }}
-    </div>
+    <div v-if="visibleStatus" class="music-lib-toast">{{ visibleStatus }}</div>
 
-    <AppModalFrame
-      v-if="tagPickerTrack"
-      :title="`Теги для «${tagPickerTrack.name}»`"
-      :z-index="2300"
-      @close="tagPickerTrack = null"
-    >
+    <AppModalFrame v-if="tagPickerTrackIds.length" :title="tagPickerTitle" :z-index="2300" @close="tagPickerTrackIds = []">
       <div class="album-picker">
         <div class="album-picker-list">
           <label v-for="tag in musicStore.tags" :key="tag.id" class="album-picker-row">
-            <input
-              type="checkbox"
-              :checked="(tagPickerTrack.tags || []).some(t => t.id === tag.id)"
-              @change="onToggleTrackTag(tag, $event.target.checked)"
-            />
+            <input type="checkbox" :checked="pickerTracksHaveTag(tag.id)" @change="onToggleTrackTag(tag, $event.target.checked)" />
             <span class="album-picker-name">{{ tag.name }}</span>
           </label>
           <div v-if="!musicStore.tags.length" class="album-picker-empty">Создайте теги в окне «изменить теги»</div>
         </div>
       </div>
-      <template #footer>
-        <button class="album-picker-close" @click="tagPickerTrack = null">Готово</button>
-      </template>
+      <template #footer><button class="album-picker-close" @click="tagPickerTrackIds = []">Готово</button></template>
     </AppModalFrame>
 
     <AppModalFrame v-if="tagManagerOpen" title="Теги" :z-index="2300" @close="tagManagerOpen = false">
@@ -246,120 +113,64 @@
         <div class="tag-manager-list">
           <div v-for="tag in musicStore.tags" :key="tag.id" class="tag-manager-row">
             <template v-if="editingTagId === tag.id">
-              <input
-                ref="tagEditInput"
-                v-model="editingTagName"
-                class="tag-manager-input"
-                type="text"
-                maxlength="64"
-                @keydown.enter="commitTagEdit"
-                @keydown.escape="cancelTagEdit"
-                @keydown.stop
-              />
+              <input ref="tagEditInput" v-model="editingTagName" class="tag-manager-input" type="text" maxlength="64" @keydown.enter="commitTagEdit" @keydown.escape="cancelTagEdit" @keydown.stop />
               <button class="tag-manager-btn" @click="commitTagEdit">✓</button>
               <button class="tag-manager-btn" @click="cancelTagEdit">×</button>
             </template>
             <template v-else>
               <span class="tag-manager-name">{{ tag.name }}</span>
-              <button class="tag-manager-btn" title="Переименовать" @click="startTagEdit(tag)">
-                <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-                  <path d="M2 12L4 11.5L11.5 4L10 2.5L2.5 10L2 12Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
-                </svg>
-              </button>
+              <button class="tag-manager-btn" title="Переименовать" @click="startTagEdit(tag)">✎</button>
               <button class="tag-manager-btn tag-manager-btn--danger" title="Удалить" @click="onDeleteTag(tag)">×</button>
             </template>
           </div>
           <div v-if="!musicStore.tags.length" class="album-picker-empty">Тегов пока нет</div>
         </div>
         <div class="tag-manager-new">
-          <input
-            v-model="newTagName"
-            class="tag-manager-input"
-            type="text"
-            placeholder="новый тег"
-            maxlength="64"
-            @keydown.enter="onCreateTag"
-            @keydown.stop
-          />
-          <button class="album-picker-close" :disabled="!newTagName.trim() || creatingTag" @click="onCreateTag">
-            + добавить
-          </button>
+          <input v-model="newTagName" class="tag-manager-input" type="text" placeholder="новый тег" maxlength="64" @keydown.enter="onCreateTag" @keydown.stop />
+          <button class="album-picker-close" :disabled="!newTagName.trim() || creatingTag" @click="onCreateTag">+ добавить</button>
         </div>
       </div>
-      <template #footer>
-        <button class="album-picker-close" @click="tagManagerOpen = false">Готово</button>
-      </template>
+      <template #footer><button class="album-picker-close" @click="tagManagerOpen = false">Готово</button></template>
     </AppModalFrame>
 
-    <AppModalFrame
-      v-if="albumPickerTrack"
-      :title="`Альбомы для «${albumPickerTrack.name}»`"
-      :z-index="2300"
-      @close="albumPickerTrack = null"
-    >
+    <AppModalFrame v-if="albumPickerTrackIds.length" :title="albumPickerTitle" :z-index="2300" @close="albumPickerTrackIds = []">
       <div class="album-picker">
         <div class="album-picker-list">
-          <label v-for="album in editableAlbums" :key="album.id" class="album-picker-row">
-            <input
-              type="checkbox"
-              :checked="(albumPickerTrack.albumIds || []).includes(album.id)"
-              @change="onToggleTrackAlbum(album, $event.target.checked)"
-            />
+          <label v-for="album in personalAlbums" :key="album.id" class="album-picker-row">
+            <input type="checkbox" :checked="pickerTracksInAlbum(album.id)" @change="onToggleTrackAlbum(album, $event.target.checked)" />
             <span class="album-picker-dot" :style="{ background: album.color || 'var(--accent)' }" />
             <span class="album-picker-name">{{ album.name }}</span>
           </label>
-          <div v-if="!editableAlbums.length" class="album-picker-empty">Создайте альбом в сайдбаре</div>
+          <div v-if="!personalAlbums.length" class="album-picker-empty">Создайте альбом в сайдбаре</div>
         </div>
       </div>
-      <template #footer>
-        <button class="album-picker-close" @click="albumPickerTrack = null">Готово</button>
-      </template>
+      <template #footer><button class="album-picker-close" @click="albumPickerTrackIds = []">Готово</button></template>
     </AppModalFrame>
-    <TextPromptDialog
-      v-if="textPrompt"
-      :title="textPrompt.title"
-      :value="textPrompt.value"
-      :loading="dialogLoading"
-      @cancel="textPrompt = null"
-      @confirm="confirmTextPrompt"
-    />
-    <ConfirmDialog
-      v-if="deleteTarget"
-      :title="deleteTarget.title"
-      :message="deleteTarget.message"
-      confirm-label="Удалить"
-      :loading="dialogLoading"
-      @cancel="deleteTarget = null"
-      @confirm="confirmDelete"
-    />
+
+    <TextPromptDialog v-if="textPrompt" :title="textPrompt.title" :value="textPrompt.value" :loading="dialogLoading" @cancel="textPrompt = null" @confirm="confirmTextPrompt" />
+    <ConfirmDialog v-if="deleteTarget" :title="deleteTarget.title" :message="deleteTarget.message" confirm-label="Удалить" :loading="dialogLoading" @cancel="deleteTarget = null" @confirm="confirmDelete" />
   </section>
 </template>
 
 <script setup>
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
+import { AppModalFrame, ConfirmDialog, TextPromptDialog } from '@sylvieshare/share-ui'
+import MusicLibraryPlayerFooter from '@/features/sessions/components/MusicLibraryPlayerFooter.vue'
+import MusicLibrarySidebar from '@/features/sessions/components/MusicLibrarySidebar.vue'
 import MusicTrackRow from '@/features/sessions/components/MusicTrackRow.vue'
+import { useMusicTrackOrganizer } from '@/features/sessions/composables/useMusicTrackOrganizer'
 import { useTrackUpload } from '@/features/sessions/composables/useTrackUpload'
-import { fmtTime } from '@/features/sessions/lib/musicLibrary'
-import { reorderByDrop, useSortable } from '@sylvieshare/share-ui'
-import { AppModalFrame } from '@sylvieshare/share-ui'
-import { AppSlider } from '@sylvieshare/share-ui'
-import { ConfirmDialog } from '@sylvieshare/share-ui'
-import { TextPromptDialog } from '@sylvieshare/share-ui'
 import { useMusicStore } from '@/stores/music'
 
-const props = defineProps({
-  isDm: { type: Boolean, default: false },
-})
-
+const props = defineProps({ isDm: { type: Boolean, default: false } })
 const musicStore = useMusicStore()
-const { state, currentTrack, nextTrack } = storeToRefs(musicStore)
-
+const { state } = storeToRefs(musicStore)
 const selectedAlbumId = ref(null)
 const searchQuery = ref('')
 const activeTagIds = ref([])
-const albumPickerTrack = ref(null)
-const tagPickerTrack = ref(null)
+const albumPickerTrackIds = ref([])
+const tagPickerTrackIds = ref([])
 const tagManagerOpen = ref(false)
 const editingTagId = ref(null)
 const editingTagName = ref('')
@@ -369,228 +180,134 @@ const tagEditInput = ref(null)
 const textPrompt = ref(null)
 const deleteTarget = ref(null)
 const dialogLoading = ref(false)
+const organizerStatus = ref('')
+let statusTimer = null
 
-const {
-  dropActive,
-  uploadStatus,
-  fileInputEl,
-  openFilePicker,
-  onDragEnter,
-  onDragLeave,
-  onFiles,
-  onDrop,
-} = useTrackUpload({ musicStore, currentAlbumId: selectedAlbumId })
+const personalTracks = computed(() => musicStore.tracks.filter(track => !track.isSystem))
+const personalAlbums = computed(() => musicStore.albums.filter(album => !album.isSystem))
+const systemAlbums = computed(() => musicStore.albums.filter(album => album.isSystem))
+const selectedAlbum = computed(() => selectedAlbumId.value ? musicStore.albumById(selectedAlbumId.value) : null)
 
-watch(selectedAlbumId, async (id) => {
-  if (id) await musicStore.loadAlbumTracks(id).catch(() => {})
-})
+const { dropActive, uploadStatus, fileInputEl, openFilePicker, onDragEnter, onDragLeave, onFiles, onDrop } =
+  useTrackUpload({ musicStore, currentAlbumId: selectedAlbumId })
+const visibleStatus = computed(() => uploadStatus.value || organizerStatus.value)
 
-const current = currentTrack
-const next = nextTrack
-const nextAlbum = computed(() => state.value.albumId ? musicStore.albumById(state.value.albumId) : null)
-const progressPct = computed(() => {
-  if (!state.value.durationSec) return 0
-  return Math.min(100, (state.value.positionSec / state.value.durationSec) * 100)
-})
-
-
-function onFootPlayPause() {
-  if (!props.isDm || !current.value) return
-  if (state.value.playing) musicStore.pause()
-  else musicStore.resume()
-}
-function onFootSeek(e) {
-  if (!props.isDm || !current.value || !state.value.durationSec) return
-  const rect = e.currentTarget.getBoundingClientRect()
-  const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width))
-  musicStore.seek(ratio * state.value.durationSec)
-}
-function onFootPlayNext() {
-  if (!props.isDm) return
-  musicStore.playNextFromQueue()
-}
-function onClearNext() {
-  if (!props.isDm) return
-  musicStore.clearNext()
-}
+watch(selectedAlbumId, async id => { if (id) await musicStore.loadAlbumTracks(id).catch(() => {}) })
 onMounted(() => musicStore.ensureLibrary())
 
-const selectedAlbum = computed(() => selectedAlbumId.value ? musicStore.albumById(selectedAlbumId.value) : null)
-const editableAlbums = computed(() => musicStore.albums.filter(album => !album.isSystem))
-
 const filteredTracks = computed(() => {
-  const q = searchQuery.value.trim().toLowerCase()
-  return musicStore.tracks.filter(t => {
-    if (selectedAlbumId.value && !(t.albumIds || []).includes(selectedAlbumId.value)) return false
-    if (q) {
-      const inName = t.name.toLowerCase().includes(q)
-      const inTags = (t.tags || []).some(tag => tag.name.toLowerCase().includes(q))
-      if (!inName && !inTags) return false
-    }
-    if (activeTagIds.value.length) {
-      const ids = (t.tags || []).map(g => g.id)
-      if (!activeTagIds.value.every(id => ids.includes(id))) return false
-    }
-    return true
+  const query = searchQuery.value.trim().toLowerCase()
+  const base = selectedAlbumId.value ? musicStore.tracks : personalTracks.value
+  return base.filter(track => {
+    if (selectedAlbumId.value && !(track.albumIds || []).includes(selectedAlbumId.value)) return false
+    if (query && !track.name.toLowerCase().includes(query)
+      && !(track.tags || []).some(tag => tag.name.toLowerCase().includes(query))) return false
+    const ids = (track.tags || []).map(tag => tag.id)
+    return activeTagIds.value.every(id => ids.includes(id))
   })
 })
-
-// When viewing an album, order by saved positions (no client-side search/tag changes the order).
 const displayedTracks = computed(() => {
-  const aid = selectedAlbumId.value
-  if (!aid) return filteredTracks.value
-  const order = musicStore.albumOrder[aid] || []
+  const order = selectedAlbumId.value ? (musicStore.albumOrder[selectedAlbumId.value] || []) : []
   if (!order.length) return filteredTracks.value
-  const byId = new Map(filteredTracks.value.map(t => [t.id, t]))
-  const ordered = []
-  for (const id of order) {
-    if (byId.has(id)) { ordered.push(byId.get(id)); byId.delete(id) }
-  }
-  // append any tracks not in saved order (newly added, fallback)
-  for (const t of filteredTracks.value) if (byId.has(t.id)) ordered.push(t)
-  return ordered
+  const byId = new Map(filteredTracks.value.map(track => [track.id, track]))
+  const result = order.flatMap(id => byId.has(id) ? [byId.get(id)] : [])
+  for (const track of result) byId.delete(track.id)
+  return [...result, ...byId.values()]
 })
-
-const canSort = computed(() => !!selectedAlbumId.value
-  && !selectedAlbum.value?.isSystem
-  && !searchQuery.value.trim()
-  && !activeTagIds.value.length)
-
-const sortable = useSortable({
-  groups: {
-    tracks: { items: displayedTracks },
-  },
-  getKey: (t) => t.id,
-  onDrop: async ({ fromIndex, toIndex }) => {
-    if (!selectedAlbumId.value) return
-    if (fromIndex === toIndex) return
-    const ids = reorderByDrop(displayedTracks.value.map(t => t.id), fromIndex, toIndex)
-    await musicStore.reorderAlbum(selectedAlbumId.value, ids).catch(() => {})
-  },
+const canSort = computed(() => !!selectedAlbumId.value && !selectedAlbum.value?.isSystem
+  && !searchQuery.value.trim() && !activeTagIds.value.length)
+const organizer = useMusicTrackOrganizer({
+  displayedTracks, selectedAlbumId, personalAlbums, canSort, musicStore, setStatus,
 })
+const selectedOnlyPersonal = computed(() => organizer.selectedTracks.value.every(track => !track.isSystem))
+const albumPickerTitle = computed(() => pickerTitle('Альбомы', albumPickerTrackIds.value))
+const tagPickerTitle = computed(() => pickerTitle('Теги', tagPickerTrackIds.value))
 
-function startDragHandler(e, track) {
-  const idx = displayedTracks.value.findIndex(t => t.id === track.id)
-  if (idx === -1) return
-  sortable.startDrag(e, track, 'tracks', idx)
+function setStatus(message) {
+  organizerStatus.value = message
+  clearTimeout(statusTimer)
+  statusTimer = setTimeout(() => { organizerStatus.value = '' }, 2500)
 }
-
+function pickerTitle(label, ids) {
+  if (ids.length > 1) return `${label} для выбранных треков (${ids.length})`
+  return `${label} для «${musicStore.trackById(ids[0])?.name || 'трек'}»`
+}
 function toggleTagFilter(id) {
   activeTagIds.value = activeTagIds.value.includes(id)
-    ? activeTagIds.value.filter(x => x !== id)
+    ? activeTagIds.value.filter(value => value !== id)
     : [...activeTagIds.value, id]
 }
-
-function isQueued(trackId) {
-  return state.value.nextTrackId === trackId
-}
-
+function isQueued(id) { return state.value.nextTrackId === id }
 function onPlay(track) {
   if (!props.isDm) return
-  if (state.value.trackId === track.id) {
-    if (state.value.playing) musicStore.pause()
-    else musicStore.resume()
-  } else {
-    musicStore.playTrack(track.id, { albumId: selectedAlbumId.value })
-  }
+  if (state.value.trackId === track.id) state.value.playing ? musicStore.pause() : musicStore.resume()
+  else musicStore.playTrack(track.id, { albumId: selectedAlbumId.value })
 }
 function onQueueToggle(track) {
   if (!props.isDm) return
-  if (isQueued(track.id)) musicStore.clearNext()
-  else musicStore.setNext(track.id)
+  isQueued(track.id) ? musicStore.clearNext() : musicStore.setNext(track.id)
 }
 function onRenameTrack(track) {
-  if (track.isSystem) return
-  textPrompt.value = { kind: 'track', target: track, title: 'Новое название трека', value: track.name }
+  if (!track.isSystem) textPrompt.value = { kind: 'track', target: track, title: 'Новое название трека', value: track.name }
 }
 function onDeleteTrack(track) {
-  if (track.isSystem) return
-  deleteTarget.value = { kind: 'track', target: track, title: 'Удалить трек?', message: `«${track.name}»` }
+  if (!track.isSystem) deleteTarget.value = { kind: 'tracks', ids: [track.id], title: 'Удалить трек?', message: `«${track.name}»` }
 }
-
-function onChangeAlbums(track) {
-  if (track.isSystem) return
-  albumPickerTrack.value = track
+function onChangeAlbums(track) { albumPickerTrackIds.value = [track.id] }
+function onChangeTags(track) { tagPickerTrackIds.value = [track.id] }
+function openBulkAlbums() { albumPickerTrackIds.value = organizer.selectedTrackIds.value.slice() }
+function openBulkTags() { tagPickerTrackIds.value = organizer.selectedTrackIds.value.slice() }
+function pickerTracksInAlbum(albumId) {
+  return albumPickerTrackIds.value.every(id => (musicStore.trackById(id)?.albumIds || []).includes(albumId))
+}
+function pickerTracksHaveTag(tagId) {
+  return tagPickerTrackIds.value.every(id => (musicStore.trackById(id)?.tags || []).some(tag => tag.id === tagId))
 }
 async function onToggleTrackAlbum(album, checked) {
-  if (!albumPickerTrack.value) return
-  const trackId = albumPickerTrack.value.id
-  if (checked) await musicStore.addTrackToAlbum(album.id, trackId)
-  else await musicStore.removeTrackFromAlbum(album.id, trackId)
-  const updated = musicStore.trackById(trackId)
-  if (updated) albumPickerTrack.value = updated
-}
-
-function onChangeTags(track) {
-  if (track.isSystem) return
-  tagPickerTrack.value = track
+  const ids = albumPickerTrackIds.value.slice()
+  if (checked) await musicStore.addTracksToAlbum(album.id, ids)
+  else await musicStore.removeTracksFromAlbum(album.id, ids)
 }
 async function onToggleTrackTag(tag, checked) {
-  if (!tagPickerTrack.value) return
-  const trackId = tagPickerTrack.value.id
-  if (checked) await musicStore.attachTrackTag(trackId, tag.id)
-  else await musicStore.removeTrackTag(trackId, tag.id)
-  const updated = musicStore.trackById(trackId)
-  if (updated) tagPickerTrack.value = updated
+  const ids = tagPickerTrackIds.value.slice()
+  if (checked) await musicStore.attachTracksTag(ids, tag.id)
+  else await musicStore.removeTracksTag(ids, tag.id)
 }
-
+async function removeSelectedFromAlbum() {
+  if (!selectedAlbumId.value) return
+  await musicStore.removeTracksFromAlbum(selectedAlbumId.value, organizer.selectedTrackIds.value)
+  organizer.clearSelection()
+}
+function deleteSelected() {
+  const ids = organizer.selectedTrackIds.value.slice()
+  deleteTarget.value = { kind: 'tracks', ids, title: 'Удалить выбранные треки?', message: `Будет удалено треков: ${ids.length}` }
+}
 function startTagEdit(tag) {
-  editingTagId.value = tag.id
-  editingTagName.value = tag.name
-  nextTick(() => {
-    const el = Array.isArray(tagEditInput.value) ? tagEditInput.value[0] : tagEditInput.value
-    el?.focus?.(); el?.select?.()
-  })
+  editingTagId.value = tag.id; editingTagName.value = tag.name
+  nextTick(() => { const input = Array.isArray(tagEditInput.value) ? tagEditInput.value[0] : tagEditInput.value; input?.focus?.(); input?.select?.() })
 }
-function cancelTagEdit() {
-  editingTagId.value = null
-  editingTagName.value = ''
-}
+function cancelTagEdit() { editingTagId.value = null; editingTagName.value = '' }
 async function commitTagEdit() {
-  const id = editingTagId.value
-  const name = editingTagName.value.trim()
-  if (!id || !name) { cancelTagEdit(); return }
-  await musicStore.renameTag(id, name).catch(() => {})
+  const id = editingTagId.value; const name = editingTagName.value.trim()
+  if (id && name) await musicStore.renameTag(id, name).catch(() => {})
   cancelTagEdit()
 }
 function onDeleteTag(tag) {
-  deleteTarget.value = {
-    kind: 'tag', target: tag, title: 'Удалить тег?',
-    message: `«${tag.name}» будет снят со всех треков.`,
-  }
+  deleteTarget.value = { kind: 'tag', target: tag, title: 'Удалить тег?', message: `«${tag.name}» будет снят со всех треков.` }
 }
 async function onCreateTag() {
   const name = newTagName.value.trim()
   if (!name || creatingTag.value) return
   creatingTag.value = true
-  try {
-    await musicStore.createTag(name)
-    newTagName.value = ''
-  } finally {
-    creatingTag.value = false
-  }
+  try { await musicStore.createTag(name); newTagName.value = '' } finally { creatingTag.value = false }
 }
-
-function onToggleLoop() {
-  if (!props.isDm) return
-  musicStore.toggleLoopMode()
-}
-
-function onCreateAlbum() {
-  textPrompt.value = { kind: 'album-create', title: 'Название альбома', value: '' }
-}
+function onCreateAlbum() { textPrompt.value = { kind: 'album-create', title: 'Название альбома', value: '' } }
 function onRenameAlbum() {
-  if (!selectedAlbum.value || selectedAlbum.value.isSystem) return
-  textPrompt.value = { kind: 'album-rename', target: selectedAlbum.value, title: 'Новое название альбома', value: selectedAlbum.value.name }
+  if (selectedAlbum.value && !selectedAlbum.value.isSystem) textPrompt.value = { kind: 'album-rename', target: selectedAlbum.value, title: 'Новое название альбома', value: selectedAlbum.value.name }
 }
 function onDeleteAlbum() {
-  if (!selectedAlbum.value || selectedAlbum.value.isSystem) return
-  deleteTarget.value = {
-    kind: 'album', target: selectedAlbum.value, title: 'Удалить альбом?',
-    message: `«${selectedAlbum.value.name}». Треки останутся в библиотеке.`,
-  }
+  if (selectedAlbum.value && !selectedAlbum.value.isSystem) deleteTarget.value = { kind: 'album', target: selectedAlbum.value, title: 'Удалить альбом?', message: `«${selectedAlbum.value.name}». Треки останутся в библиотеке.` }
 }
-
 async function confirmTextPrompt(name) {
   const action = textPrompt.value
   if (!action || dialogLoading.value || name === action.value) return
@@ -603,36 +320,21 @@ async function confirmTextPrompt(name) {
       selectedAlbumId.value = album.id
     }
     textPrompt.value = null
-  } finally {
-    dialogLoading.value = false
-  }
+  } finally { dialogLoading.value = false }
 }
-
 async function confirmDelete() {
   const action = deleteTarget.value
   if (!action || dialogLoading.value) return
   dialogLoading.value = true
   try {
-    if (action.kind === 'track') await musicStore.deleteTrack(action.target.id)
-    if (action.kind === 'tag') {
-      await musicStore.deleteTag(action.target.id)
-      activeTagIds.value = activeTagIds.value.filter(id => id !== action.target.id)
-    }
-    if (action.kind === 'album') {
-      selectedAlbumId.value = null
-      await musicStore.deleteAlbum(action.target.id)
-    }
+    if (action.kind === 'tracks') { await musicStore.deleteTracks(action.ids); organizer.clearSelection() }
+    if (action.kind === 'tag') { await musicStore.deleteTag(action.target.id); activeTagIds.value = activeTagIds.value.filter(id => id !== action.target.id) }
+    if (action.kind === 'album') { selectedAlbumId.value = null; await musicStore.deleteAlbum(action.target.id) }
     deleteTarget.value = null
-  } finally {
-    dialogLoading.value = false
-  }
+  } finally { dialogLoading.value = false }
 }
-
 const ALBUM_COLORS = ['#7c5ce2', '#5ce87c', '#e89c3c', '#e85c5c', '#5cb5e8', '#e85cc6']
-function pickColor() {
-  return ALBUM_COLORS[musicStore.albums.length % ALBUM_COLORS.length]
-}
-
+function pickColor() { return ALBUM_COLORS[personalAlbums.value.length % ALBUM_COLORS.length] }
 </script>
 
 <style scoped src="./styles/SessionMusicWorkspace.css"></style>
