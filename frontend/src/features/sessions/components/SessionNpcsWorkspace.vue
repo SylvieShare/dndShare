@@ -13,7 +13,7 @@
 
       <label class="session-world-search">
         <Search :size="14" />
-        <input v-model="query" type="search" placeholder="Найти по имени или роли…" />
+        <input v-model="query" type="search" placeholder="Найти по имени, расе или роли…" />
         <span v-if="npcs.length">{{ filteredNpcs.length }}</span>
       </label>
 
@@ -30,7 +30,7 @@
           <span class="session-world-avatar">{{ npcInitial(npc.name) }}</span>
           <span class="npc-catalog-copy">
             <strong>{{ npc.name }}</strong>
-            <small>{{ npc.role || npcPlaceSummary(npc) }}</small>
+            <small>{{ [npc.raceName, npc.role].filter(Boolean).join(' · ') || npcPlaceSummary(npc) }}</small>
           </span>
           <span v-if="npc.locationIds?.length || npc.sceneIds?.length" class="npc-catalog-relations">
             {{ (npc.locationIds?.length || 0) + (npc.sceneIds?.length || 0) }}
@@ -50,7 +50,7 @@
       <div class="npc-detail-hero" :style="{ '--entity-color': selectedNpc.color }">
         <div class="npc-detail-avatar">{{ npcInitial(selectedNpc.name) }}</div>
         <div class="npc-detail-heading">
-          <span>NPC · {{ selectedNpc.role || 'роль не указана' }}</span>
+          <span>NPC · {{ [selectedNpc.raceName, selectedNpc.role].filter(Boolean).join(' · ') || 'раса и роль не указаны' }}</span>
           <h2>{{ selectedNpc.name }}</h2>
           <div class="npc-detail-meta">
             <span><MapPin :size="12" />{{ attachedLocations.length }} {{ ruPlural(attachedLocations.length, 'локация', 'локации', 'локаций') }}</span>
@@ -155,7 +155,7 @@ const selectedNpc = computed(() => props.world.npcsById.value.get(Number(props.s
 const filteredNpcs = computed(() => {
   const needle = query.value.trim().toLocaleLowerCase('ru')
   if (!needle) return npcs.value
-  return npcs.value.filter(npc => `${npc.name} ${npc.role || ''} ${npc.description || ''}`.toLocaleLowerCase('ru').includes(needle))
+  return npcs.value.filter(npc => `${npc.name} ${npc.raceName || ''} ${npc.role || ''} ${npc.description || ''}`.toLocaleLowerCase('ru').includes(needle))
 })
 const attachedLocations = computed(() => (selectedNpc.value?.locationIds || []).map(id => props.world.locationsById.value.get(id)).filter(Boolean))
 const attachedScenes = computed(() => (selectedNpc.value?.sceneIds || []).map(id => props.world.scenesById.value.get(id)).filter(Boolean))

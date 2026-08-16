@@ -12,6 +12,8 @@ func TestSessionWorldSchemaUsesTreeAndExplicitAssociations(t *testing.T) {
 		"session_location_not_own_parent",
 		"idx_session_location_session_order",
 		"CREATE TABLE IF NOT EXISTS dndshare.session_npc",
+		"race_item_id int8 NULL REFERENCES dndshare.item(id) ON DELETE SET NULL",
+		"ADD COLUMN IF NOT EXISTS race_item_id",
 		"CREATE TABLE IF NOT EXISTS dndshare.session_scene_location",
 		"CREATE TABLE IF NOT EXISTS dndshare.session_npc_location",
 		"CREATE TABLE IF NOT EXISTS dndshare.session_npc_scene",

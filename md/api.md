@@ -122,7 +122,9 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
   cycles are rejected;
 - `POST /api/sessions/{uuid}/npcs`, `PATCH|DELETE
   /api/sessions/{uuid}/npcs/{npcId}` manage prepared NPCs with
-  `{name,role,description,color,locationIds,sceneIds}`. World mutations are
+  `{name,raceItemId,role,description,color,locationIds,sceneIds}`. `raceItemId`
+  is nullable and must reference an accessible handbook race item (type `8`);
+  aggregate NPC records also expose its current `raceName`. World mutations are
   owner-only and return `{world,id}` so clients can replace every reverse
   association together;
 - `GET /api/sessions/{uuid}/chapter-graph` returns `{arcs,chapters,edges}`;

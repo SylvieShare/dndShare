@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS dndshare.session_npc (
     id          bigserial NOT NULL,
     session_id  int8 NOT NULL REFERENCES dndshare."session"(id) ON DELETE CASCADE,
     "name"      varchar(160) NOT NULL,
+    race_item_id int8 NULL REFERENCES dndshare.item(id) ON DELETE SET NULL,
     role        varchar(160) NULL,
     description text NULL,
     color       varchar(7) DEFAULT '#7c5cff' NOT NULL,
@@ -37,6 +38,8 @@ CREATE TABLE IF NOT EXISTS dndshare.session_npc (
     changed_at  timestamptz DEFAULT now() NOT NULL,
     CONSTRAINT session_npc_pkey PRIMARY KEY (id)
 );
+ALTER TABLE dndshare.session_npc
+    ADD COLUMN IF NOT EXISTS race_item_id int8 NULL REFERENCES dndshare.item(id) ON DELETE SET NULL;
 CREATE INDEX IF NOT EXISTS idx_session_npc_session_order
     ON dndshare.session_npc USING btree (session_id, sort_order, id);
 

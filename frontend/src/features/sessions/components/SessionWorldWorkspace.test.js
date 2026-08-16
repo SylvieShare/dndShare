@@ -73,6 +73,16 @@ describe('session world workspaces', () => {
     expect(npcs).toContain('Участие в сюжете')
   })
 
+  it('selects an NPC race from handbook items and randomizes a race-aware name', () => {
+    expect(npcEditor).toContain('<FormSelect v-model:value="draft.raceItemId"')
+    expect(npcEditor).toContain('itemsApi.list(8, 500)')
+    expect(npcEditor).toContain('randomDndName(selectedRace.value, Math.random, draft.name)')
+    expect(npcEditor).toContain('raceItemId: Number(draft.raceItemId) || null')
+    expect(npcEditor).toContain('aria-label="Случайное имя"')
+    expect(npcs).toContain('[npc.raceName, npc.role]')
+    expect(npcs).toContain('[selectedNpc.raceName, selectedNpc.role]')
+  })
+
   it('keeps one aggregate world state behind typed API mutations', () => {
     expect(worldState).toContain('getSessionWorld(sessionUuid)')
     expect(worldState).toContain('response?.world || response')

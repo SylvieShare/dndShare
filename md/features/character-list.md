@@ -67,6 +67,8 @@ Key rules:
 - equipment uses the same canonical inventory model as the sheet;
 - descriptions are edited/rendered through the shared rich-description pair;
 - feat and item selection uses the handbook `ItemPickerModal`;
+- the preview's dice action uses the shared race-aware name generator, preferring
+  the selected subrace and avoiding an unchanged consecutive result;
 - resets and incomplete-create decisions use shared `ConfirmDialog`;
 - the draft persists in `localStorage` and is cleared after successful create.
 

@@ -44,14 +44,15 @@ func TestLocationMutationValidatesKindAndPreset(t *testing.T) {
 
 func TestNpcMutationNormalizesColorAndText(t *testing.T) {
 	role := "  Проводник  "
+	raceItemID := int64(42)
 	recorder := httptest.NewRecorder()
 	mutation, ok := npcMutation(recorder, npcMutationRequest{
-		Name: "  Мира  ", Role: &role, Color: "#A06CE8",
+		Name: "  Мира  ", RaceItemID: &raceItemID, Role: &role, Color: "#A06CE8",
 	})
 	if !ok {
 		t.Fatalf("valid npc rejected: %s", recorder.Body.String())
 	}
-	if mutation.Name != "Мира" || mutation.Role == nil || *mutation.Role != "Проводник" || mutation.Color != "#a06ce8" {
+	if mutation.Name != "Мира" || mutation.RaceItemID == nil || *mutation.RaceItemID != 42 || mutation.Role == nil || *mutation.Role != "Проводник" || mutation.Color != "#a06ce8" {
 		t.Fatalf("unexpected mutation: %+v", mutation)
 	}
 
@@ -61,6 +62,12 @@ func TestNpcMutationNormalizesColorAndText(t *testing.T) {
 	}
 	if !strings.Contains(recorder.Body.String(), "цвет") {
 		t.Fatalf("unexpected error: %s", recorder.Body.String())
+	}
+
+	invalidRaceID := int64(0)
+	recorder = httptest.NewRecorder()
+	if _, ok := npcMutation(recorder, npcMutationRequest{Name: "Мира", RaceItemID: &invalidRaceID}); ok {
+		t.Fatal("non-positive race item id accepted")
 	}
 }
 

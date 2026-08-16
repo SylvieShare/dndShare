@@ -16,6 +16,7 @@ import {
 import { useSuggestStore } from '@/stores/suggest'
 import { contentScopeQuery, normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'
 import { dieSides } from '@/shared/lib/systemDice'
+import { randomDndName } from '@/shared/lib/dndNames'
 import { buildDndCharacterPayload } from './dndCreateWizardPayload'
 import {
   createDndWizardState,
@@ -41,7 +42,6 @@ const LANG_SUGGEST = 6
 // the full type-6 dict is polluted with monster/telepathy entries, so we curate.
 const STANDARD_LANG_IDS = [21, 19, 39, 55, 52, 20, 40, 25, 31, 23, 33, 30, 34, 35, 60]
 const STAT_BY_SUGGEST16 = SUGGEST16_TO_STAT
-const NAME_POOL = ['Талион', 'Мираэль', 'Гром', 'Лиа', 'Кадан', 'Сельена', 'Дорн', 'Аэлита', 'Вэйлин', 'Мирра', 'Торин', 'Ниала', 'Ксандер', 'Элара', 'Роган', 'Сафира']
 
 /** Wizard state + data loading + payload assembly for D&D character creation. */
 export function useDndCreateWizard() {
@@ -501,7 +501,9 @@ export function useDndCreateWizard() {
   const grantedSpellList = computed(() => grantedSpellIds.value.map((id) => ({ id, name: grantedSpellNames.value[id] || `#${id}` })))
 
   // ─── Convenience actions ───────────────────────────────────────────────────
-  function randomName() { state.name = NAME_POOL[Math.floor(Math.random() * NAME_POOL.length)] }
+  function randomName() {
+    state.name = randomDndName(state.subrace || state.race, Math.random, state.name)
+  }
   function quickBuild() {
     setMethod('array')
     const order = [...primaryAbilities.value]

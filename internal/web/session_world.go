@@ -41,6 +41,7 @@ type locationMutationRequest struct {
 
 type npcMutationRequest struct {
 	Name        string  `json:"name"`
+	RaceItemID  *int64  `json:"raceItemId"`
 	Role        *string `json:"role"`
 	Description *string `json:"description"`
 	Color       string  `json:"color"`
@@ -119,6 +120,10 @@ func npcMutation(w http.ResponseWriter, req npcMutationRequest) (store.SessionNP
 	if req.Color == "" {
 		req.Color = "#7c5cff"
 	}
+	if req.RaceItemID != nil && *req.RaceItemID <= 0 {
+		badRequest(w, "Некорректная раса NPC")
+		return store.SessionNPCMutation{}, false
+	}
 	if !sessionWorldColor.MatchString(req.Color) {
 		badRequest(w, "Некорректный цвет NPC")
 		return store.SessionNPCMutation{}, false
@@ -130,6 +135,7 @@ func npcMutation(w http.ResponseWriter, req npcMutationRequest) (store.SessionNP
 	}
 	return store.SessionNPCMutation{
 		Name:        name,
+		RaceItemID:  req.RaceItemID,
 		Role:        cleanText(req.Role, 160),
 		Description: cleanText(req.Description, 5000),
 		Color:       strings.ToLower(req.Color),
@@ -158,7 +164,7 @@ func writeSessionWorldStoreError(w http.ResponseWriter, err error) {
 	case errors.Is(err, store.ErrLocationHasChildren):
 		conflict(w, "Сначала переместите или удалите вложенные локации")
 	case errors.Is(err, store.ErrInvalidWorldReference):
-		badRequest(w, "Локация или сценарий не принадлежит этой сессии")
+		badRequest(w, "Локация, сценарий или раса недоступны в этой сессии")
 	default:
 		serverError(w, err)
 	}

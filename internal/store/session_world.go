@@ -29,6 +29,8 @@ type SessionNPC struct {
 	ID          int64   `json:"id"`
 	SessionID   int64   `json:"sessionId"`
 	Name        string  `json:"name"`
+	RaceItemID  *int64  `json:"raceItemId,omitempty"`
+	RaceName    *string `json:"raceName,omitempty"`
 	Role        *string `json:"role,omitempty"`
 	Description *string `json:"description,omitempty"`
 	Color       string  `json:"color"`
@@ -67,6 +69,7 @@ type SessionLocationMutation struct {
 
 type SessionNPCMutation struct {
 	Name        string
+	RaceItemID  *int64
 	Role        *string
 	Description *string
 	Color       string
@@ -90,8 +93,8 @@ func scanSessionLocation(row pgx.Row) (SessionLocation, error) {
 func scanSessionNPC(row pgx.Row) (SessionNPC, error) {
 	npc := SessionNPC{LocationIDs: []int64{}, SceneIDs: []int64{}}
 	err := row.Scan(
-		&npc.ID, &npc.SessionID, &npc.Name, &npc.Role,
-		&npc.Description, &npc.Color, &npc.SortOrder,
+		&npc.ID, &npc.SessionID, &npc.Name, &npc.RaceItemID,
+		&npc.Role, &npc.Description, &npc.Color, &npc.SortOrder, &npc.RaceName,
 	)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return SessionNPC{}, ErrNotFound
@@ -107,8 +110,11 @@ func (s *Store) GetSessionLocation(ctx context.Context, id int64) (SessionLocati
 
 func (s *Store) GetSessionNPC(ctx context.Context, id int64) (SessionNPC, error) {
 	return scanSessionNPC(s.pool.QueryRow(ctx, `
-		SELECT id, session_id, name, role, description, color, sort_order
-		FROM dndshare.session_npc WHERE id = $1`, id))
+		SELECT npc.id, npc.session_id, npc.name, npc.race_item_id, npc.role,
+		       npc.description, npc.color, npc.sort_order, race.name
+		FROM dndshare.session_npc npc
+		LEFT JOIN dndshare.item race ON race.id = npc.race_item_id
+		WHERE npc.id = $1`, id))
 }
 
 func (s *Store) GetSessionWorld(ctx context.Context, sessionID int64) (SessionWorld, error) {
@@ -141,10 +147,12 @@ func (s *Store) GetSessionWorld(ctx context.Context, sessionID int64) (SessionWo
 	locationRows.Close()
 
 	npcRows, err := s.pool.Query(ctx, `
-		SELECT id, session_id, name, role, description, color, sort_order
-		FROM dndshare.session_npc
-		WHERE session_id = $1
-		ORDER BY sort_order, id`, sessionID)
+		SELECT npc.id, npc.session_id, npc.name, npc.race_item_id, npc.role,
+		       npc.description, npc.color, npc.sort_order, race.name
+		FROM dndshare.session_npc npc
+		LEFT JOIN dndshare.item race ON race.id = npc.race_item_id
+		WHERE npc.session_id = $1
+		ORDER BY npc.sort_order, npc.id`, sessionID)
 	if err != nil {
 		return SessionWorld{}, err
 	}

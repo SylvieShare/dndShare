@@ -157,8 +157,13 @@ editor excludes the location itself and all descendants from its parent picker,
 and deletion is blocked until direct children are moved or deleted.
 
 Prepared NPCs live in one searchable session catalogue. A record has a name,
-optional role and description, and a chosen color used consistently by its
-initial-based portrait. One NPC can be attached to multiple locations and
+an optional race item, optional role and description, and a chosen color used
+consistently by its initial-based portrait. The race picker reads type `8`
+handbook items, including subraces; the stored nullable FK is cleared if that
+item is removed. The name field has an explicit dice action backed by the same
+race-aware generator as the D&D character wizard. Standard race profiles combine
+at least 80 given-name/family-name variants each, while an unknown custom race
+uses a broad fantasy fallback. One NPC can be attached to multiple locations and
 multiple scenarios through the same editor; location and NPC detail views show
 the reverse associations without duplicating the NPC record. Editors use the
 shared `ColorPresetPicker`, `SessionImagePicker`, form controls and modal frame.

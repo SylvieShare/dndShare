@@ -6,11 +6,25 @@
           <div class="npc-editor-avatar" :style="{ '--npc-color': draft.color }">{{ npcInitial(draft.name) }}</div>
           <div class="npc-editor-name-fields">
             <FormField label="Имя" vertical>
-              <FormTextInput v-model:value="draft.name" :maxlength="160" autofocus placeholder="Имя или прозвище" @enter="submit" />
+              <div class="npc-editor-name-row">
+                <FormTextInput v-model:value="draft.name" :maxlength="160" autofocus placeholder="Имя или прозвище" @enter="submit" />
+                <button type="button" class="npc-editor-random-name" :title="randomNameTitle" aria-label="Случайное имя" @click="randomizeName">
+                  <Dices :size="17" />
+                </button>
+              </div>
             </FormField>
-            <FormField label="Роль" vertical>
-              <FormTextInput v-model:value="draft.role" :maxlength="160" placeholder="Трактирщик, проводник, антагонист…" @enter="submit" />
-            </FormField>
+            <div class="npc-editor-attribute-row">
+              <FormField label="Раса" vertical>
+                <FormSelect v-model:value="draft.raceItemId" :disabled="racesLoading">
+                  <option value="">{{ racesLoading ? 'Загрузка рас…' : 'Не выбрана' }}</option>
+                  <option v-for="race in raceOptions" :key="race.id" :value="String(race.id)">{{ race.label }}</option>
+                </FormSelect>
+                <small v-if="racesError" class="npc-editor-field-error">{{ racesError }}</small>
+              </FormField>
+              <FormField label="Роль" vertical>
+                <FormTextInput v-model:value="draft.role" :maxlength="160" placeholder="Трактирщик, проводник…" @enter="submit" />
+              </FormField>
+            </div>
           </div>
         </div>
 
@@ -80,12 +94,14 @@
 </template>
 
 <script setup>
-import { computed, reactive } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
+import { Dices } from '@lucide/vue'
 import {
   AppModalFrame,
   ColorPresetPicker,
   FormActionButtons,
   FormField,
+  FormSelect,
   FormTextInput,
   FormTextarea,
 } from '@sylvieshare/share-ui'
@@ -97,6 +113,8 @@ import {
   sceneContextLabel,
 } from '@/features/sessions/lib/sessionWorld'
 import { sessionImagePresetUrl } from '@/features/sessions/lib/sessionImages'
+import { itemsApi } from '@/shared/api/itemsApi'
+import { randomDndName } from '@/shared/lib/dndNames'
 
 const props = defineProps({
   npc: { type: Object, default: null },
@@ -107,15 +125,34 @@ const props = defineProps({
   saving: { type: Boolean, default: false },
 })
 const emit = defineEmits(['close', 'save', 'delete'])
+const races = ref([])
+const racesLoading = ref(false)
+const racesError = ref('')
 
 const draft = reactive({
   name: props.npc?.name ?? '',
+  raceItemId: String(props.npc?.raceItemId ?? ''),
   role: props.npc?.role ?? '',
   description: props.npc?.description ?? '',
   color: props.npc?.color ?? '#7c5cff',
   locationIds: props.npc ? [...(props.npc.locationIds || [])] : props.defaultLocationId ? [Number(props.defaultLocationId)] : [],
   sceneIds: [...(props.npc?.sceneIds || [])],
 })
+
+const raceOptions = computed(() => {
+  const byId = new Map(races.value.map(race => [race.id, race]))
+  return races.value.map(race => ({
+    ...race,
+    label: race.parentId && byId.get(race.parentId)
+      ? `${byId.get(race.parentId).name} — ${race.name}`
+      : race.name,
+  })).sort((left, right) => left.label.localeCompare(right.label, 'ru'))
+})
+const selectedRace = computed(() => races.value.find(race => String(race.id) === draft.raceItemId)
+  || (props.npc?.raceName ? { name: props.npc.raceName } : null))
+const randomNameTitle = computed(() => selectedRace.value
+  ? `Случайное имя: ${selectedRace.value.name}`
+  : 'Случайное фэнтезийное имя')
 
 const locationOptions = computed(() => props.locations.map(location => ({
   id: location.id,
@@ -130,10 +167,26 @@ const sceneOptions = computed(() => props.scenes.map(scene => ({
   image: sessionImagePresetUrl(scene.imagePresetKey),
 })))
 
+onMounted(async () => {
+  racesLoading.value = true
+  try {
+    races.value = (await itemsApi.list(8, 500))?.items || []
+  } catch {
+    racesError.value = 'Не удалось загрузить расы'
+  } finally {
+    racesLoading.value = false
+  }
+})
+
+function randomizeName() {
+  draft.name = randomDndName(selectedRace.value, Math.random, draft.name)
+}
+
 function submit() {
   if (!draft.name.trim() || props.saving) return
   emit('save', {
     name: draft.name.trim(),
+    raceItemId: Number(draft.raceItemId) || null,
     role: draft.role.trim() || null,
     description: draft.description.trim() || null,
     color: draft.color || '#7c5cff',
@@ -149,6 +202,11 @@ function submit() {
 .npc-editor-identity { display: grid; grid-template-columns: 78px minmax(0, 1fr); align-items: start; gap: 14px; }
 .npc-editor-avatar { width: 78px; height: 78px; display: grid; margin-top: 22px; place-items: center; border: 1px solid color-mix(in srgb, var(--npc-color) 58%, var(--border)); border-radius: 18px; background: radial-gradient(circle at 35% 28%, color-mix(in srgb, var(--npc-color) 40%, var(--surface-raised)), color-mix(in srgb, var(--npc-color) 10%, var(--surface))); color: color-mix(in srgb, var(--npc-color) 75%, var(--text-1)); font-family: var(--font-display); font-size: 31px; font-weight: 800; }
 .npc-editor-name-fields { display: flex; flex-direction: column; gap: 12px; }
+.npc-editor-name-row { display: grid; grid-template-columns: minmax(0, 1fr) 38px; gap: 8px; }
+.npc-editor-random-name { width: 38px; height: 38px; display: grid; place-items: center; padding: 0; border: 1px solid color-mix(in srgb, var(--accent) 42%, var(--border)); border-radius: 9px; background: color-mix(in srgb, var(--accent) 10%, transparent); color: var(--accent-soft); cursor: pointer; transition: background 0.15s, color 0.15s, transform 0.15s; }
+.npc-editor-random-name:hover { background: color-mix(in srgb, var(--accent) 18%, transparent); color: var(--text-1); transform: translateY(-1px); }
+.npc-editor-attribute-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; }
+.npc-editor-field-error { color: var(--danger); font-size: 10px; }
 .npc-editor-relations { padding-left: 22px; border-left: 1px solid var(--border); }
 .npc-editor-relations section + section { padding-top: 14px; border-top: 1px solid var(--border); }
 .npc-editor-section-title { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; color: var(--text-1); font-size: 12px; font-weight: 700; }
@@ -158,6 +216,8 @@ function submit() {
 .npc-editor-delete:hover:not(:disabled) { text-decoration: underline; }
 @media (max-width: 760px) {
   .npc-editor-layout { grid-template-columns: 1fr; }
+  .npc-editor-attribute-row { grid-template-columns: 1fr; }
   .npc-editor-relations { padding: 16px 0 0; border-top: 1px solid var(--border); border-left: 0; }
 }
+@media (prefers-reduced-motion: reduce) { .npc-editor-random-name { transition: none; } }
 </style>

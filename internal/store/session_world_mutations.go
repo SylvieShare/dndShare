@@ -111,6 +111,29 @@ func validateWorldLocationIDsTx(ctx context.Context, tx pgx.Tx, sessionID int64,
 	return nil
 }
 
+func validateNPCRaceItemTx(ctx context.Context, tx pgx.Tx, sessionID int64, raceItemID *int64) error {
+	if raceItemID == nil {
+		return nil
+	}
+	var valid bool
+	err := tx.QueryRow(ctx, `
+		SELECT EXISTS (
+			SELECT 1
+			FROM dndshare.item race
+			JOIN dndshare."session" session ON session.id = $1
+			WHERE race.id = $2 AND race.type_id = 8
+			  AND (race.user_id IS NULL OR race.user_id = session.owner_user_id)
+		)`, sessionID, *raceItemID,
+	).Scan(&valid)
+	if err != nil {
+		return err
+	}
+	if !valid {
+		return ErrInvalidWorldReference
+	}
+	return nil
+}
+
 func replaceLocationScenesTx(ctx context.Context, tx pgx.Tx, locationID int64, sceneIDs []int64) error {
 	if _, err := tx.Exec(ctx,
 		`DELETE FROM dndshare.session_scene_location WHERE location_id = $1`, locationID,
@@ -382,12 +405,15 @@ func (s *Store) CreateSessionNPC(
 	if err := validateWorldSceneIDsTx(ctx, tx, sessionID, mutation.SceneIDs); err != nil {
 		return 0, err
 	}
+	if err := validateNPCRaceItemTx(ctx, tx, sessionID, mutation.RaceItemID); err != nil {
+		return 0, err
+	}
 	var id int64
 	err = tx.QueryRow(ctx, `
-		INSERT INTO dndshare.session_npc (session_id, name, role, description, color, sort_order)
-		VALUES ($1, $2, $3, $4, $5,
+		INSERT INTO dndshare.session_npc (session_id, name, race_item_id, role, description, color, sort_order)
+		VALUES ($1, $2, $3, $4, $5, $6,
 			(SELECT COALESCE(MAX(sort_order), -1) + 1 FROM dndshare.session_npc WHERE session_id = $1))
-		RETURNING id`, sessionID, mutation.Name, mutation.Role, mutation.Description, mutation.Color,
+		RETURNING id`, sessionID, mutation.Name, mutation.RaceItemID, mutation.Role, mutation.Description, mutation.Color,
 	).Scan(&id)
 	if err != nil {
 		return 0, err
@@ -417,11 +443,14 @@ func (s *Store) UpdateSessionNPC(
 	if err := validateWorldSceneIDsTx(ctx, tx, sessionID, mutation.SceneIDs); err != nil {
 		return err
 	}
+	if err := validateNPCRaceItemTx(ctx, tx, sessionID, mutation.RaceItemID); err != nil {
+		return err
+	}
 	result, err := tx.Exec(ctx, `
 		UPDATE dndshare.session_npc
-		SET name = $3, role = $4, description = $5, color = $6, changed_at = now()
+		SET name = $3, race_item_id = $4, role = $5, description = $6, color = $7, changed_at = now()
 		WHERE id = $1 AND session_id = $2`,
-		npcID, sessionID, mutation.Name, mutation.Role, mutation.Description, mutation.Color)
+		npcID, sessionID, mutation.Name, mutation.RaceItemID, mutation.Role, mutation.Description, mutation.Color)
 	if err != nil {
 		return err
 	}
