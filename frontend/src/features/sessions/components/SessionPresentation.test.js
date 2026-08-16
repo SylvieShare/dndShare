@@ -12,6 +12,8 @@ const blockEditor = read('./SceneBlockEditorModal.vue')
 const blockMenu = read('./SceneBlockMenus.vue')
 const publicScreen = read('../pages/ViewEncounterScreen.vue')
 const publicStyles = read('../pages/styles/ViewEncounterScreen.css')
+const materialEditor = read('./MaterialEditorModal.vue')
+const libraryShell = read('./SessionLibraryWorkspace.vue')
 
 describe('session presentation workspace', () => {
   it('keeps materials as a primary DM workspace and a contextual header control', () => {
@@ -45,6 +47,17 @@ describe('session presentation workspace', () => {
     expect(publicScreen).toContain("presentation.mode === 'combat'")
     expect(publicStyles).toContain('.encounter-screen__blackout')
     expect(publicStyles).toContain('.presentation-effect')
+  })
+
+  it('supports typed materials and styled notes on the shared library layout', () => {
+    expect(materialEditor).toContain('MATERIAL_TYPES')
+    expect(materialEditor).toContain('NOTE_STYLES')
+    expect(materialEditor).toContain('/api/storage/videos')
+    expect(workspace).toContain('SessionLibraryWorkspace')
+    expect(libraryShell).toContain('session-world-workspace')
+    expect(publicScreen).toContain("presentationMaterial?.kind === 'video'")
+    expect(publicScreen).toContain("presentationMaterial?.kind === 'note'")
+    expect(publicStyles).toContain('.presentation-note--parchment')
   })
 })
 

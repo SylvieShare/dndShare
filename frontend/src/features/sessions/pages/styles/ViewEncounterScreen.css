@@ -57,6 +57,32 @@
   object-fit: contain;
 }
 
+.presentation-frame__image video {
+  width: 100%;
+  max-height: calc(100dvh - 180px);
+  display: block;
+  object-fit: contain;
+}
+
+.presentation-frame__image article {
+  box-sizing: border-box;
+  width: 100%;
+  max-height: calc(100dvh - 180px);
+  overflow: auto;
+  padding: clamp(38px, 6vw, 110px);
+  color: var(--text-1);
+  font-family: var(--font-display);
+  font-size: clamp(24px, 2.4vw, 46px);
+  line-height: 1.62;
+  white-space: pre-wrap;
+}
+
+.presentation-frame__image--note { max-width: 62vw; justify-self: center; border-radius: 6px; }
+.presentation-note--parchment { border-color: var(--material-note-parchment-border); background: var(--material-note-parchment-bg); }.presentation-note--parchment article { color: var(--material-note-parchment-text); }
+.presentation-note--letter { border-color: var(--material-note-letter-border); background: var(--material-note-letter-bg); }.presentation-note--letter article { color: var(--material-note-letter-text); }
+.presentation-note--dossier { border-color: var(--material-note-dossier-border); background: var(--material-note-dossier-bg); box-shadow: inset 0 0 0 12px var(--material-note-dossier-border), var(--shadow-lg); }.presentation-note--dossier article { color: var(--material-note-dossier-text); }
+.presentation-note--arcane { border-color: color-mix(in srgb, var(--accent) 65%, var(--border)); background: radial-gradient(circle at 50% 20%, var(--material-note-arcane-glow), var(--material-note-arcane-bg) 72%); }.presentation-note--arcane article { color: var(--material-note-arcane-text); }
+
 .presentation-frame__caption > span {
   color: var(--accent-soft);
   font-size: clamp(10px, .72vw, 14px);

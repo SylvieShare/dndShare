@@ -42,6 +42,9 @@ var schemaSessionImagesSQL string
 //go:embed schema/10_session_presentation.sql
 var schemaSessionPresentationSQL string
 
+//go:embed schema/11_session_material_types.sql
+var schemaSessionMaterialTypesSQL string
+
 var schemaParts = []struct {
 	name string
 	sql  string
@@ -56,6 +59,7 @@ var schemaParts = []struct {
 	{"session-world", schemaSessionWorldSQL},
 	{"session-images", schemaSessionImagesSQL},
 	{"session-presentation", schemaSessionPresentationSQL},
+	{"session-material-types", schemaSessionMaterialTypesSQL},
 }
 
 func applySchema(ctx context.Context, pool *pgxpool.Pool) error {

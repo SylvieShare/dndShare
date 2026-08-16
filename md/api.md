@@ -154,13 +154,20 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
 - `GET /api/sessions/{uuid}/materials` returns the owner-only material library
   with chapter/scenario picker contexts. `POST /materials` and
   `PATCH|DELETE /materials/{materialId}` manage `{scope,chapterId,sceneId,name,
-  caption,imageId}`;
+  kind,caption,content,noteStyle,assetId}`. `kind` is `image`, `video`, `text`,
+  `note` or `map`; asset kinds require `assetId`, written kinds require
+  `content`, and notes also require one of `parchment`, `letter`, `dossier` or
+  `arcane`;
+- `POST /api/storage/videos` accepts an authenticated multipart `file` up to
+  100 MB, stores it in S3 and returns the same `{upload_id,url,key}` shape as
+  image upload;
 - `GET|PUT /api/sessions/{uuid}/presentation` reads or replaces the owner-only
   live player-display state `{mode,visible,materialId,sceneId,effect,transition}`.
   Modes are `idle`, `material`, `scene`, `combat`; effects are `none`, `rain`,
   `fog`, `embers`, `snow`, `storm`; transitions are `cut` or `fade`;
 - `GET /api/public/sessions/{uuid}/presentation` is the anonymous no-store safe
-  projection used by `/screen/:uuid`;
+  projection used by `/screen/:uuid`; its material projection exposes only
+  `{id,kind,name,caption,content,noteStyle,assetUrl}` required for playback;
 - `GET /api/public/sessions/{uuid}/encounter` is the anonymous, no-store TV
   projection of the current fight. It returns only the session name, round,
   current turn and initiative-ordered combatants with presentation fields,

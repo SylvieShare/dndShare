@@ -46,8 +46,10 @@
         :key="presentation.revision"
         class="presentation-frame"
       >
-        <div class="presentation-frame__image">
+        <div class="presentation-frame__image" :class="materialFrameClasses">
           <img v-if="presentationImage" :src="presentationImage" :alt="presentationTitle" />
+          <video v-else-if="presentationMaterial?.kind === 'video'" :src="presentationMaterial.assetUrl" controls autoplay playsinline />
+          <article v-else-if="presentationMaterial?.kind === 'text' || presentationMaterial?.kind === 'note'">{{ presentationMaterial.content }}</article>
           <Images v-else :size="72" aria-hidden="true" />
         </div>
         <div class="presentation-frame__caption">
@@ -209,8 +211,17 @@ const combatants = computed(() => snapshot.value?.combatants || [])
 const currentCombatant = computed(() =>
   combatants.value.find(combatant => combatant.uid === snapshot.value?.currentUid) || null
 )
-const presentationImage = computed(() => presentation.value?.material?.imageUrl || presentation.value?.scene?.imageUrl || '')
+const presentationMaterial = computed(() => presentation.value?.material || null)
+const presentationImage = computed(() => {
+  const material = presentationMaterial.value
+  if (material?.kind === 'image' || material?.kind === 'map') return material.assetUrl || ''
+  return material ? '' : presentation.value?.scene?.imageUrl || ''
+})
 const presentationTitle = computed(() => presentation.value?.material?.name || presentation.value?.scene?.name || 'Без названия')
+const materialFrameClasses = computed(() => {
+  const material = presentationMaterial.value
+  return material ? [`presentation-frame__image--${material.kind}`, material.kind === 'note' ? `presentation-note--${material.noteStyle}` : ''] : []
+})
 const screenClasses = computed(() => ({
   'encounter-screen--active': presentation.value?.mode === 'combat' && snapshot.value?.active,
   'encounter-screen--blackout': presentation.value && !presentation.value.visible,

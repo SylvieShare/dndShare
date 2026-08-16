@@ -61,6 +61,7 @@ Vite работает на `:5173` и проксирует `/api` и `/mcp` в G
 | Перетаскивание | `share-ui/useSortable` | Сортировка и перенос между группами. `useSortable` ведёт drag-состояние, `reorderByDrop` выполняет чистую перестановку массива. |
 | Переключатели | `share-ui/MultiToggle`, `share-ui/ToggleSwitch`, `share-ui/CompactCheckbox` | Выбор режима, boolean и компактный checkbox соответственно. |
 | Каркас и левое меню | `share-ui/AppShell`, `share-ui/AppSidebar`, `share-ui/Sidebar*`, `share-ui/AccountMenu` | Единая геометрия приложения, DnD-стиль rail и trigger аккаунта с выпадающими действиями. Router, права, поиск, данные профиля и сами account-actions передаёт локальный adapter. |
+| Каталог страницы сессии | `features/sessions/components/SessionLibraryWorkspace.vue` | Общий dotted workspace, safe-area от игроков и геометрия sidebar/detail для локаций, NPC и материалов. Предметные компоненты передают внутрь собственные список, detail и окна. |
 
 Категории модальных окон:
 

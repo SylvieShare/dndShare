@@ -15,6 +15,20 @@
   --side-enemy: #e85c8a;
   --side-neutral: #8888aa;
   --side-minion: #a06ce8;
+
+  /* Player handout surfaces are content palettes, not application chrome. */
+  --material-note-parchment-bg: #d8c394;
+  --material-note-parchment-text: #382b1d;
+  --material-note-parchment-border: #b49a66;
+  --material-note-letter-bg: #eee7d7;
+  --material-note-letter-text: #2c2924;
+  --material-note-letter-border: #cfc3a9;
+  --material-note-dossier-bg: #c9c2ad;
+  --material-note-dossier-text: #24251f;
+  --material-note-dossier-border: #3d4038;
+  --material-note-arcane-bg: #100e18;
+  --material-note-arcane-glow: #352852;
+  --material-note-arcane-text: #ded4ff;
 }
 
 @media (max-width: 640px) {

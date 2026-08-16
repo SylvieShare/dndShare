@@ -14,9 +14,11 @@ func init() { registerRoutes((*Server).routesStorageImages) }
 
 // maxImageBytes — предел размера загружаемого изображения (защита от заливки гигабайтов в S3).
 const maxImageBytes int64 = 15 << 20
+const maxVideoBytes int64 = 100 << 20
 
 func (s *Server) routesStorageImages(mux *http.ServeMux) {
 	mux.HandleFunc("POST /api/storage/images", s.handleUploadImage)
+	mux.HandleFunc("POST /api/storage/videos", s.handleUploadVideo)
 }
 
 // imageUploadResponse — порт StorageImageController.ImageUploadResponse.
@@ -63,6 +65,43 @@ func (s *Server) handleUploadImage(w http.ResponseWriter, r *http.Request) {
 		if oldID, perr := strconv.ParseInt(raw, 10, 64); perr == nil {
 			s.deleteOldImage(r, uid, oldID)
 		}
+	}
+	writeJSON(w, http.StatusOK, imageUploadResponse{UploadID: id, URL: stored.URL, Key: stored.Key})
+}
+
+// handleUploadVideo stores a browser-playable presentation video in the same
+// ownership-aware object registry used by images.
+func (s *Server) handleUploadVideo(w http.ResponseWriter, r *http.Request) {
+	uid, ok := mustUser(w, r)
+	if !ok {
+		return
+	}
+	r.Body = http.MaxBytesReader(w, r.Body, maxVideoBytes+1<<20)
+	file, header, err := r.FormFile("file")
+	if err != nil {
+		badRequest(w, "file is required")
+		return
+	}
+	defer file.Close()
+	if header.Size > maxVideoBytes {
+		badRequest(w, "file too large")
+		return
+	}
+	mime := header.Header.Get("Content-Type")
+	if mime == "" || !strings.HasPrefix(mime, "video/") {
+		badRequest(w, "not a video")
+		return
+	}
+	stored, err := s.s3.UploadVideo(r.Context(), file, header.Size, header.Filename, mime, "session-videos")
+	if err != nil {
+		serverError(w, err)
+		return
+	}
+	id, err := s.store.SaveStorageImage(r.Context(), uid, stored.Key, stored.URL, "video")
+	if err != nil {
+		_ = s.s3.DeleteObject(r.Context(), stored.Key)
+		serverError(w, err)
+		return
 	}
 	writeJSON(w, http.StatusOK, imageUploadResponse{UploadID: id, URL: stored.URL, Key: stored.Key})
 }

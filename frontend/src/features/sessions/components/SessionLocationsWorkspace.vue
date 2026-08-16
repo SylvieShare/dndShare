@@ -1,5 +1,5 @@
 <template>
-  <section class="session-world-workspace session-world-workspace--locations">
+  <SessionLibraryWorkspace variant="locations">
     <aside class="session-world-sidebar">
       <div class="session-world-sidebar-head">
         <div>
@@ -170,7 +170,7 @@
       @cancel="pendingDelete = null"
       @confirm="deleteLocation"
     />
-  </section>
+  </SessionLibraryWorkspace>
 </template>
 
 <script setup>
@@ -183,6 +183,7 @@ import { ConfirmDialog } from '@sylvieshare/share-ui'
 import LocationEditorModal from '@/features/sessions/components/LocationEditorModal.vue'
 import LocationTreeRow from '@/features/sessions/components/LocationTreeRow.vue'
 import NpcEditorModal from '@/features/sessions/components/NpcEditorModal.vue'
+import SessionLibraryWorkspace from '@/features/sessions/components/SessionLibraryWorkspace.vue'
 import {
   buildLocationForest, locationBreadcrumb, locationDescendantIds, locationKind,
   locationSearchMatches, ruPlural, sceneContextLabel,
@@ -317,5 +318,3 @@ async function dropAtRoot(event) {
 
 watch(selectedLocation, location => { if (location) expandAncestors(location) })
 </script>
-
-<style src="./styles/SessionWorldWorkspace.css"></style>

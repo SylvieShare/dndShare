@@ -6,8 +6,8 @@
   min-width: 0;
   min-height: 0;
   grid-template-columns: 310px minmax(0, 1fr);
-  gap: 12px;
-  padding: 14px calc(var(--chapter-safe-right, 0px) + 14px) 14px calc(var(--chapter-safe-left, 0px) + 14px);
+  gap: 8px;
+  padding: 10px calc(var(--chapter-safe-right, 0px) + 10px) 10px max(8px, calc(var(--chapter-safe-left, 28px) - 20px));
   background-color: var(--app-canvas-bg);
   background-image: var(--app-canvas-pattern);
   background-size: var(--app-canvas-dot-size) var(--app-canvas-dot-size);
@@ -125,7 +125,7 @@
 .session-world-edit-action { position: relative; z-index: 1; align-self: flex-start; background: color-mix(in srgb, var(--surface-raised) 75%, transparent); color: var(--text-1); }
 
 @media (max-width: 1360px) {
-  .session-world-workspace { padding-right: 14px; }
+  .session-world-workspace { padding-right: 10px; }
   .session-world-cover { padding: 20px; }
   .session-world-cover-actions button:not(.session-world-icon-action) span { display: none; }
 }

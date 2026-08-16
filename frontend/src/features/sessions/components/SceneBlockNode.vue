@@ -41,7 +41,7 @@
         <span v-if="!rewardItems.length" class="scene-block-node-empty">Награда не добавлена</span>
       </template>
       <template v-else-if="block.type === 'image'">
-        <img v-if="material" class="scene-block-node-image" :src="material.imageUrl" :alt="material.name" />
+        <img v-if="material" class="scene-block-node-image" :src="material.assetUrl" :alt="material.name" />
         <span v-else class="scene-block-node-empty">Материал не выбран</span>
       </template>
       <RichContent v-else-if="block.data?.text" class="scene-block-node-text" :html="block.data.text" />

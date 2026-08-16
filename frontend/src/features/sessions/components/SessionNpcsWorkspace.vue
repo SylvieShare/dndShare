@@ -1,5 +1,5 @@
 <template>
-  <section class="session-world-workspace session-world-workspace--npcs">
+  <SessionLibraryWorkspace variant="npcs">
     <aside class="session-world-sidebar">
       <div class="session-world-sidebar-head">
         <div>
@@ -139,7 +139,7 @@
       @cancel="pendingDelete = null"
       @confirm="deleteNpc"
     />
-  </section>
+  </SessionLibraryWorkspace>
 </template>
 
 <script setup>
@@ -149,6 +149,7 @@ import {
 } from '@lucide/vue'
 import { ConfirmDialog } from '@sylvieshare/share-ui'
 import NpcEditorModal from '@/features/sessions/components/NpcEditorModal.vue'
+import SessionLibraryWorkspace from '@/features/sessions/components/SessionLibraryWorkspace.vue'
 import { locationBreadcrumb, locationKind, ruPlural, sceneContextLabel } from '@/features/sessions/lib/sessionWorld'
 import { npcImageUrl, sessionImageUrl } from '@/features/sessions/lib/sessionImages'
 
@@ -216,5 +217,3 @@ async function deleteNpc() {
   } catch { /* error is rendered */ }
 }
 </script>
-
-<style src="./styles/SessionWorldWorkspace.css"></style>

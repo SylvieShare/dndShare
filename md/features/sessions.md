@@ -71,8 +71,10 @@ content pages. Its semantic header centers the switch between `Сюжет`,
 participant rail remains on the left and the
 dice/events/music tools remain on the right. In `Сюжет` the chapter canvas fills
 all available width below `AppHeader`. CSS safe-area variables keep focus, zoom
-and newly created nodes in the uncovered part of the canvas and leave a 28px gap
-between the central workspace and either floating rail. Only rendered right-side
+and newly created nodes in the uncovered part of the canvas. The catalogue
+workspaces start 8px after the visible participant rail and use an 8px internal gap,
+so their list column remains visually attached without sliding underneath the
+players. Only rendered right-side
 tiles receive pointer events: transparent space below a shorter stack remains
 available for canvas pan, selection and node dragging. When all three tiles are
 hidden, the right safe area collapses and canvas create actions move to the
@@ -199,18 +201,25 @@ without discarding it, so the header control can reveal it again; `cut` and
 storm are visual layers rendered only by the player display.
 
 `Материалы` is a central DM library over the same dotted workspace background.
-An image material is stored once and scoped to the whole session, one chapter
-or one scenario. Scenario context inherits session and chapter materials, while
-sibling resources do not leak into its picker. The session-header display
+It uses the same `SessionLibraryWorkspace` shell, safe areas, sidebar surface
+and detail geometry as locations and NPCs. A material has one of five explicit
+types: image, video, plain text, styled note or map. Notes can use parchment,
+letter, dossier or arcane presentation. A map currently renders as an image but
+already owns its type and reserved `map_data`, so later layers and markers do
+not require redefining ordinary images. Each material is stored once and scoped
+to the whole session, one chapter or one scenario. Scenario context inherits
+session and chapter materials, while sibling resources do not leak into its picker. The session-header display
 control shows live state, opens the standalone display and provides contextual
 materials, blackout/reveal/clear actions and the player-only effect selector.
 
 A scenario has an optional presentation preset: material, music track, volume,
 crossfade duration, visual effect and transition. `Запустить сцену` applies the
 display and DM-side music controls together. The third-level `image` block
-references an existing contextual material rather than duplicating its image;
+references an existing contextual image or map material rather than duplicating its asset;
 its leading action broadcasts that material immediately. All uploaded material
-files continue to use `storage_image` and S3 URLs.
+assets continue to use the ownership-aware `storage_image` registry and S3 URLs;
+video uploads are limited to 100 MB, while text and note bodies remain database
+content.
 
 Every session has at least one ordered arc. Arc order is the canonical campaign
 order; the UI renders it as a Roman number and rewrites `1..N` atomically after

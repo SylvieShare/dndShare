@@ -19,8 +19,10 @@ type SessionMaterial struct {
 	Kind        string    `json:"kind"`
 	Name        string    `json:"name"`
 	Caption     *string   `json:"caption,omitempty"`
-	ImageID     int64     `json:"imageId"`
-	ImageURL    string    `json:"imageUrl"`
+	Content     *string   `json:"content,omitempty"`
+	NoteStyle   *string   `json:"noteStyle,omitempty"`
+	AssetID     *int64    `json:"assetId,omitempty"`
+	AssetURL    string    `json:"assetUrl,omitempty"`
 	CreatedAt   time.Time `json:"createdAt"`
 	ChangedAt   time.Time `json:"changedAt"`
 }
@@ -61,8 +63,8 @@ func scanSessionMaterial(row pgx.Row) (SessionMaterial, error) {
 	err := row.Scan(
 		&material.ID, &material.SessionID, &material.Scope,
 		&material.ChapterID, &material.ChapterName, &material.SceneID, &material.SceneName,
-		&material.Kind, &material.Name, &material.Caption,
-		&material.ImageID, &material.ImageURL, &material.CreatedAt, &material.ChangedAt,
+		&material.Kind, &material.Name, &material.Caption, &material.Content, &material.NoteStyle,
+		&material.AssetID, &material.AssetURL, &material.CreatedAt, &material.ChangedAt,
 	)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return SessionMaterial{}, ErrNotFound
@@ -73,10 +75,10 @@ func scanSessionMaterial(row pgx.Row) (SessionMaterial, error) {
 const sessionMaterialSelect = `
 	SELECT material.id, material.session_id, material.scope,
 	       material.chapter_id, chapter."name", material.scene_id, scene."name",
-	       material.kind, material."name", material.caption,
-	       material.image_id, COALESCE(image.url, ''), material.created_at, material.changed_at
+	       material.kind, material."name", material.caption, material.content, material.note_style,
+	       material.asset_id, COALESCE(asset.url, ''), material.created_at, material.changed_at
 	FROM dndshare.session_material material
-	JOIN dndshare.storage_image image ON image.id = material.image_id AND image.deleted = false
+	LEFT JOIN dndshare.storage_image asset ON asset.id = material.asset_id AND asset.deleted = false
 	LEFT JOIN dndshare.session_chapter chapter ON chapter.id = material.chapter_id
 	LEFT JOIN dndshare.session_scene scene ON scene.id = material.scene_id`
 
@@ -109,16 +111,17 @@ func (s *Store) CreateSessionMaterial(
 	sessionID int64,
 	scope string,
 	chapterID, sceneID *int64,
-	name string,
-	caption *string,
-	imageID int64,
+	kind, name string,
+	caption, content, noteStyle *string,
+	assetID *int64,
 ) (SessionMaterial, error) {
 	var id int64
 	err := s.pool.QueryRow(ctx, `
 		INSERT INTO dndshare.session_material
-		    (session_id, scope, chapter_id, scene_id, kind, "name", caption, image_id)
-		VALUES ($1, $2, $3, $4, 'image', $5, $6, $7)
-		RETURNING id`, sessionID, scope, chapterID, sceneID, name, caption, imageID).Scan(&id)
+		    (session_id, scope, chapter_id, scene_id, kind, "name", caption, content, note_style, asset_id, map_data)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
+		        CASE WHEN $5 = 'map' THEN '{}'::jsonb ELSE NULL END)
+		RETURNING id`, sessionID, scope, chapterID, sceneID, kind, name, caption, content, noteStyle, assetID).Scan(&id)
 	if err != nil {
 		return SessionMaterial{}, err
 	}
@@ -130,15 +133,17 @@ func (s *Store) UpdateSessionMaterial(
 	id int64,
 	scope string,
 	chapterID, sceneID *int64,
-	name string,
-	caption *string,
-	imageID int64,
+	kind, name string,
+	caption, content, noteStyle *string,
+	assetID *int64,
 ) error {
 	_, err := s.pool.Exec(ctx, `
 		UPDATE dndshare.session_material
-		SET scope = $2, chapter_id = $3, scene_id = $4, "name" = $5,
-		    caption = $6, image_id = $7, changed_at = now()
-		WHERE id = $1`, id, scope, chapterID, sceneID, name, caption, imageID)
+		SET scope = $2, chapter_id = $3, scene_id = $4, kind = $5, "name" = $6,
+		    caption = $7, content = $8, note_style = $9, asset_id = $10,
+		    map_data = CASE WHEN $5 = 'map' THEN COALESCE(map_data, '{}'::jsonb) ELSE NULL END,
+		    changed_at = now()
+		WHERE id = $1`, id, scope, chapterID, sceneID, kind, name, caption, content, noteStyle, assetID)
 	return err
 }
 

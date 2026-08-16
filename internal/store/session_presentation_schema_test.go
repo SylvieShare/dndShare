@@ -24,3 +24,19 @@ func TestSessionPresentationSchemaKeepsScopedMaterialsAndOneLiveState(t *testing
 		}
 	}
 }
+
+func TestSessionMaterialTypesSchemaSeparatesAssetsAndWrittenContent(t *testing.T) {
+	for _, fragment := range []string{
+		"RENAME COLUMN image_id TO asset_id",
+		"kind IN ('image', 'video', 'text', 'note', 'map')",
+		"ADD COLUMN IF NOT EXISTS content text",
+		"ADD COLUMN IF NOT EXISTS note_style",
+		"ADD COLUMN IF NOT EXISTS map_data jsonb",
+		"session_material_payload_check",
+		"'parchment', 'letter', 'dossier', 'arcane'",
+	} {
+		if !strings.Contains(schemaSessionMaterialTypesSQL, fragment) {
+			t.Fatalf("typed material schema must contain %q", fragment)
+		}
+	}
+}

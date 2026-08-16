@@ -2,7 +2,7 @@
 
 The shared application palette lives in `@sylvieshare/share-ui/styles.css`.
 `frontend/src/app/theme.css` contains only DnD Share layout, its exact purple
-accent shades and domain colors. Component styles must use these tokens;
+accent shades, domain colors and the player-handout paper palettes. Component styles must use these tokens;
 `npm run check:colors` rejects direct hex/RGB/HSL colors and removed legacy
 tokens.
 
@@ -78,6 +78,10 @@ Use `color-mix()` for translucent states instead of adding another color:
 ```
 
 `--side-enemy`, `--side-neutral` and `--side-minion` are the only extra UI colors. They encode encounter sides, not generic states. Ally and player reuse `--success` and `--info`.
+
+Styled player notes use paired `--material-note-*-bg/text/border` content
+tokens for parchment, letter, dossier and arcane designs. They describe the
+transmitted artifact itself and must not be reused for application chrome.
 
 ## Shape, effects and typography
 

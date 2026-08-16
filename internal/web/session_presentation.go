@@ -53,10 +53,16 @@ type sessionMaterialRequest struct {
 	Scope     string  `json:"scope"`
 	ChapterID *int64  `json:"chapterId"`
 	SceneID   *int64  `json:"sceneId"`
+	Kind      string  `json:"kind"`
 	Name      string  `json:"name"`
 	Caption   *string `json:"caption"`
-	ImageID   int64   `json:"imageId"`
+	Content   *string `json:"content"`
+	NoteStyle *string `json:"noteStyle"`
+	AssetID   *int64  `json:"assetId"`
 }
+
+var materialKinds = map[string]bool{"image": true, "video": true, "text": true, "note": true, "map": true}
+var materialNoteStyles = map[string]bool{"parchment": true, "letter": true, "dossier": true, "arcane": true}
 
 func normalizeOptionalText(value *string, max int) (*string, bool) {
 	if value == nil {
@@ -84,6 +90,40 @@ func (s *Server) validateMaterialRequest(w http.ResponseWriter, r *http.Request,
 		return false
 	}
 	req.Caption = caption
+	if !materialKinds[req.Kind] {
+		badRequest(w, "Некорректный тип материала")
+		return false
+	}
+	content, contentOK := normalizeOptionalText(req.Content, 20000)
+	if !contentOK {
+		badRequest(w, "Содержимое материала слишком длинное")
+		return false
+	}
+	req.Content = content
+	switch req.Kind {
+	case "image", "video", "map":
+		if req.AssetID == nil || *req.AssetID <= 0 {
+			badRequest(w, "Выберите файл материала")
+			return false
+		}
+		req.Content, req.NoteStyle = nil, nil
+	case "text":
+		if req.Content == nil {
+			badRequest(w, "Добавьте текст материала")
+			return false
+		}
+		req.AssetID, req.NoteStyle = nil, nil
+	case "note":
+		if req.Content == nil {
+			badRequest(w, "Добавьте текст записки")
+			return false
+		}
+		if req.NoteStyle == nil || !materialNoteStyles[*req.NoteStyle] {
+			badRequest(w, "Выберите оформление записки")
+			return false
+		}
+		req.AssetID = nil
+	}
 	switch req.Scope {
 	case "session":
 		req.ChapterID, req.SceneID = nil, nil
@@ -115,6 +155,21 @@ func (s *Server) validateMaterialRequest(w http.ResponseWriter, r *http.Request,
 	return true
 }
 
+func (s *Server) validateMaterialAsset(w http.ResponseWriter, r *http.Request, userID int64, req sessionMaterialRequest) bool {
+	if req.AssetID == nil {
+		return true
+	}
+	if req.Kind == "image" || req.Kind == "map" {
+		return s.validateSessionImage(w, r, userID, *req.AssetID, "story")
+	}
+	asset, err := s.store.GetActiveUserStorageImage(r.Context(), *req.AssetID, userID)
+	if err != nil || asset.Type == nil || *asset.Type != "video" {
+		badRequest(w, "Видео недоступно")
+		return false
+	}
+	return true
+}
+
 func (s *Server) handleCreateSessionMaterial(w http.ResponseWriter, r *http.Request) {
 	userID, ok := mustUser(w, r)
 	if !ok {
@@ -128,10 +183,10 @@ func (s *Server) handleCreateSessionMaterial(w http.ResponseWriter, r *http.Requ
 	if decodeJSON(r, &req) != nil || !s.validateMaterialRequest(w, r, session, &req) {
 		return
 	}
-	if !s.validateSessionImage(w, r, userID, req.ImageID, "story") {
+	if !s.validateMaterialAsset(w, r, userID, req) {
 		return
 	}
-	material, err := s.store.CreateSessionMaterial(r.Context(), session.ID, req.Scope, req.ChapterID, req.SceneID, req.Name, req.Caption, req.ImageID)
+	material, err := s.store.CreateSessionMaterial(r.Context(), session.ID, req.Scope, req.ChapterID, req.SceneID, req.Kind, req.Name, req.Caption, req.Content, req.NoteStyle, req.AssetID)
 	if err != nil {
 		serverError(w, err)
 		return
@@ -178,15 +233,15 @@ func (s *Server) handleUpdateSessionMaterial(w http.ResponseWriter, r *http.Requ
 	if decodeJSON(r, &req) != nil || !s.validateMaterialRequest(w, r, session, &req) {
 		return
 	}
-	if !s.validateSessionImage(w, r, userID, req.ImageID, "story") {
+	if !s.validateMaterialAsset(w, r, userID, req) {
 		return
 	}
-	if err := s.store.UpdateSessionMaterial(r.Context(), previous.ID, req.Scope, req.ChapterID, req.SceneID, req.Name, req.Caption, req.ImageID); err != nil {
+	if err := s.store.UpdateSessionMaterial(r.Context(), previous.ID, req.Scope, req.ChapterID, req.SceneID, req.Kind, req.Name, req.Caption, req.Content, req.NoteStyle, req.AssetID); err != nil {
 		serverError(w, err)
 		return
 	}
-	if previous.ImageID != req.ImageID {
-		s.deleteOldImage(r, userID, previous.ImageID)
+	if previous.AssetID != nil && (req.AssetID == nil || *previous.AssetID != *req.AssetID) {
+		s.deleteOldImage(r, userID, *previous.AssetID)
 	}
 	updated, err := s.store.GetSessionMaterial(r.Context(), previous.ID)
 	if err != nil {
@@ -217,7 +272,9 @@ func (s *Server) handleDeleteSessionMaterial(w http.ResponseWriter, r *http.Requ
 		}
 		return
 	}
-	s.deleteOldImage(r, userID, material.ImageID)
+	if material.AssetID != nil {
+		s.deleteOldImage(r, userID, *material.AssetID)
+	}
 	writeJSON(w, http.StatusNoContent, nil)
 }
 
@@ -330,10 +387,13 @@ type publicPresentationResponse struct {
 }
 
 type publicPresentationMaterial struct {
-	ID       int64   `json:"id"`
-	Name     string  `json:"name"`
-	Caption  *string `json:"caption,omitempty"`
-	ImageURL string  `json:"imageUrl"`
+	ID        int64   `json:"id"`
+	Kind      string  `json:"kind"`
+	Name      string  `json:"name"`
+	Caption   *string `json:"caption,omitempty"`
+	Content   *string `json:"content,omitempty"`
+	NoteStyle *string `json:"noteStyle,omitempty"`
+	AssetURL  string  `json:"assetUrl,omitempty"`
 }
 
 type publicPresentationScene struct {
@@ -368,7 +428,9 @@ func (s *Server) handleGetPublicPresentation(w http.ResponseWriter, r *http.Requ
 	}
 	if state.Material != nil {
 		response.Material = &publicPresentationMaterial{
-			ID: state.Material.ID, Name: state.Material.Name, Caption: state.Material.Caption, ImageURL: state.Material.ImageURL,
+			ID: state.Material.ID, Kind: state.Material.Kind, Name: state.Material.Name,
+			Caption: state.Material.Caption, Content: state.Material.Content,
+			NoteStyle: state.Material.NoteStyle, AssetURL: state.Material.AssetURL,
 		}
 	}
 	if state.Scene != nil {

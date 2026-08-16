@@ -37,6 +37,10 @@ func (s *Server) validateMaterialForScene(w http.ResponseWriter, r *http.Request
 		forbidden(w)
 		return false
 	}
+	if material.Kind != "image" && material.Kind != "map" {
+		badRequest(w, "Для блока изображения выберите картинку или карту")
+		return false
+	}
 	if material.Scope == "scene" && (material.SceneID == nil || *material.SceneID != sceneID) {
 		badRequest(w, "Материал относится к другому сценарию")
 		return false

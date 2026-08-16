@@ -25,7 +25,7 @@
       <FormField v-else-if="blockType === 'image'" label="Материал для показа" vertical>
         <div v-if="availableMaterials.length" class="scene-block-materials">
           <button v-for="material in availableMaterials" :key="material.id" type="button" :class="{ active: draft.materialId === material.id }" @click="draft.materialId = material.id">
-            <img :src="material.imageUrl" alt="" /><span><strong>{{ material.name }}</strong><small>{{ material.caption || 'Без подписи' }}</small></span>
+            <img :src="material.assetUrl" alt="" /><span><strong>{{ material.name }}</strong><small>{{ material.caption || 'Без подписи' }}</small></span>
           </button>
         </div>
         <div v-else class="scene-block-materials-empty">Сначала добавьте изображение во вкладке «Материалы».</div>
@@ -106,7 +106,7 @@ const blockType = computed(() => props.block?.type || props.type)
 const typeLabel = computed(() => sceneBlockType(blockType.value).label.toLowerCase())
 const defaultTitles = { text: 'Новое описание', list: 'Новый диалог', combat: 'Новый бой', reward: 'Новая награда', image: 'Новое изображение' }
 const sessionMaterials = inject('sessionMaterials', null)
-const availableMaterials = computed(() => sessionMaterials?.availableFor(props.chapterId, props.sceneId) || [])
+const availableMaterials = computed(() => (sessionMaterials?.availableFor(props.chapterId, props.sceneId) || []).filter(material => material.kind === 'image' || material.kind === 'map'))
 const dialogueKeysListId = `scene-dialogue-keys-${getCurrentInstance()?.uid ?? 'editor'}`
 const initialDialogueRows = hydrateDialogueRows(props.block?.data?.rows?.length
   ? props.block.data.rows

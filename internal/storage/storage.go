@@ -85,6 +85,14 @@ func (s *Service) UploadImage(ctx context.Context, body io.Reader, size int64, f
 	return s.put(ctx, body, size, s.buildKey(filename, folder), contentType)
 }
 
+// UploadVideo uploads a video object while retaining its browser media type.
+func (s *Service) UploadVideo(ctx context.Context, body io.Reader, size int64, filename, contentType, folder string) (StoredObject, error) {
+	if !strings.HasPrefix(contentType, "video/") {
+		contentType = "application/octet-stream"
+	}
+	return s.put(ctx, body, size, s.buildKey(filename, folder), contentType)
+}
+
 // UploadSVGBytes загружает SVG-разметку как image/svg+xml.
 func (s *Service) UploadSVGBytes(ctx context.Context, data []byte, folder string) (StoredObject, error) {
 	key := strings.TrimRight(folder, "/") + "/" + newUUID() + ".svg"
