@@ -159,7 +159,7 @@
 
 .campaign-workspace--combat .col-section-title { overflow: visible; }
 
-.poll-indicator {
+.live-indicator {
   flex: 1;
   height: 2px;
   background: var(--popover-bg);
@@ -168,15 +168,15 @@
   transition: box-shadow 0.3s, opacity 0.18s ease, transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.poll-indicator.changed {
+.live-indicator.changed {
   box-shadow: 0 0 6px var(--success);
 }
 
-.poll-indicator.error {
+.live-indicator.error {
   box-shadow: 0 0 6px var(--danger);
 }
 
-.poll-bar {
+.live-bar {
   height: 100%;
   width: 0%;
   border-radius: 2px;
@@ -184,18 +184,18 @@
   transition: background 0.3s;
 }
 
-.poll-indicator.changed .poll-bar {
+.live-indicator.changed .live-bar {
   width: 100%;
   background: var(--success);
 }
 
-.poll-indicator.error .poll-bar {
+.live-indicator.error .live-bar {
   width: 100%;
   background: var(--danger);
 }
 
-.poll-bar.running {
-  animation: poll-sweep 2s linear forwards;
+.live-bar.running {
+  animation: live-sweep 1.2s linear forwards;
 }
 
 .players-actions :deep(.ram-custom-trigger) {
@@ -249,7 +249,7 @@
 .campaign-workspace--players-collapsed .col-section-title { justify-content: center; padding-inline: 0; }
 .campaign-workspace--players-collapsed .players-heading-label,
 .campaign-workspace--players-collapsed .players-select-all,
-.campaign-workspace--players-collapsed .poll-indicator,
+.campaign-workspace--players-collapsed .live-indicator,
 .campaign-workspace--players-collapsed .players-actions {
   position: absolute;
   opacity: 0;
@@ -259,7 +259,7 @@
 .campaign-workspace--players-collapsed .no-participants,
 .campaign-workspace--players-collapsed .participant-action-error { display: none; }
 
-@keyframes poll-sweep {
+@keyframes live-sweep {
   from { width: 0% }
   to   { width: 100% }
 }
@@ -319,7 +319,7 @@
   .workspace-dock--left,
   .players-heading-label,
   .players-select-all,
-  .poll-indicator,
+  .live-indicator,
   .players-actions { transition: none; }
 }
 

@@ -32,6 +32,7 @@ func TestHandlerRegistersAllRoutesWithoutConflict(t *testing.T) {
 		{"GET", "/api/public/sessions/not-a-uuid/presentation/events", 404},
 		{"GET", "/api/public/sessions/not-a-uuid/presentation/music", 404},
 		{"GET", "/api/sessions/00000000-0000-0000-0000-000000000000/presentation-connections", 401},
+		{"GET", "/api/sessions/00000000-0000-0000-0000-000000000000/live", 401},
 	}
 	for _, c := range cases {
 		rec := httptest.NewRecorder()

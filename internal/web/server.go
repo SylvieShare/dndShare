@@ -16,6 +16,7 @@ type Server struct {
 	s3            *storage.Service
 	jobs          *jobRunner
 	displayEvents *displayEventHub
+	sessionLive   *sessionLiveHub
 }
 
 // routeRegistrars — реестр функций регистрации маршрутов. Каждый файл-фича добавляет
@@ -27,7 +28,11 @@ func registerRoutes(f func(*Server, *http.ServeMux)) {
 }
 
 func New(cfg config.Config, st *store.Store, s3 *storage.Service) *Server {
-	s := &Server{cfg: cfg, store: st, s3: s3, displayEvents: newDisplayEventHub()}
+	s := &Server{
+		cfg: cfg, store: st, s3: s3,
+		displayEvents: newDisplayEventHub(),
+		sessionLive:   newSessionLiveHub(),
+	}
 	s.jobs = newJobRunner(s)
 	return s
 }

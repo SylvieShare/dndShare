@@ -75,6 +75,8 @@ func (s *Server) handleSessionTwoSegGET(w http.ResponseWriter, r *http.Request) 
 		s.handleGetSessionPresentation(w, r)
 	case "presentation-connections":
 		s.handleGetPresentationConnections(w, r)
+	case "live":
+		s.handleSessionLive(w, r)
 	default:
 		notFound(w, "")
 	}
@@ -212,6 +214,7 @@ func (s *Server) handleLeaveSession(w http.ResponseWriter, r *http.Request) {
 		serverError(w, err)
 		return
 	}
+	s.publishSessionParticipants(session.ID)
 	writeJSON(w, http.StatusNoContent, nil)
 }
 

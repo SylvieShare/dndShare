@@ -264,6 +264,17 @@ func (s *Server) handleUpdateDataChar(w http.ResponseWriter, r *http.Request) {
 		serverError(w, err)
 		return
 	}
+	s.publishCharacterChange(r.Context(), char.ID)
+	publishedSessions := make(map[int64]struct{}, len(events))
+	for _, event := range events {
+		session, err := s.store.GetGameSessionByUUID(r.Context(), event.SessionUUID)
+		if err == nil {
+			publishedSessions[session.ID] = struct{}{}
+		}
+	}
+	for sessionID := range publishedSessions {
+		s.publishSessionJournal(sessionID)
+	}
 	writeJSON(w, http.StatusOK, characterUpdateResponse{})
 }
 
@@ -300,6 +311,7 @@ func (s *Server) handlePatchCharData(w http.ResponseWriter, r *http.Request) {
 		serverError(w, err)
 		return
 	}
+	s.publishCharacterChange(r.Context(), char.ID)
 	w.WriteHeader(http.StatusNoContent)
 }
 

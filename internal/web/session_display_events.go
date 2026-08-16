@@ -104,7 +104,11 @@ func (s *Server) handlePublicDisplayEvents(w http.ResponseWriter, r *http.Reques
 	}
 
 	updates, unsubscribe := s.displayEvents.subscribe(session.ID)
-	defer unsubscribe()
+	s.publishConnectedScreens(session.ID)
+	defer func() {
+		unsubscribe()
+		s.publishConnectedScreens(session.ID)
+	}()
 
 	w.Header().Set("Content-Type", "text/event-stream")
 	w.Header().Set("Cache-Control", "no-cache, no-transform")

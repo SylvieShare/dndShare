@@ -55,7 +55,9 @@ func (s *Server) appendSessionEvent(ctx context.Context, sessionID, userID int64
 	if err != nil {
 		return
 	}
-	_, _ = s.store.CreateSessionEvent(ctx, sessionID, userID, nil, eventType, &title, raw, "public", nil)
+	if _, err := s.store.CreateSessionEvent(ctx, sessionID, userID, nil, eventType, &title, raw, "public", nil); err == nil {
+		s.publishSessionJournal(sessionID)
+	}
 }
 
 func normalizeCharacterSessionEvent(req characterSessionEventRequest) (store.CharacterSessionEvent, bool) {
@@ -182,5 +184,6 @@ func (s *Server) handleCreateSessionEvent(w http.ResponseWriter, r *http.Request
 		serverError(w, err)
 		return
 	}
+	s.publishSessionJournal(session.ID)
 	writeJSON(w, http.StatusCreated, sessionEventResponse{Event: event})
 }

@@ -2,8 +2,6 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import * as sessionEventsApi from '@/shared/api/sessionEventsApi'
 
-const POLL_INTERVAL_MS = 1500
-
 function actionId() {
   if (globalThis.crypto?.randomUUID) return globalThis.crypto.randomUUID()
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, char => {
@@ -18,9 +16,9 @@ export const useSessionEventsStore = defineStore('session-events', () => {
   const actorCharUuid = ref(null)
   const events = ref([])
   const loading = ref(false)
-  const pollError = ref(false)
-  let pollTimer = null
-  let polling = false
+  const syncError = ref(false)
+  let refreshPending = false
+  let refreshPromise = null
 
   function merge(incoming) {
     if (!Array.isArray(incoming) || incoming.length === 0) return
@@ -33,26 +31,27 @@ export const useSessionEventsStore = defineStore('session-events', () => {
     return events.value.at(-1)?.id || 0
   }
 
-  function schedulePoll() {
-    clearTimeout(pollTimer)
-    if (!sessionUuid.value) return
-    pollTimer = setTimeout(poll, POLL_INTERVAL_MS)
-  }
-
-  async function poll() {
-    if (!sessionUuid.value || polling) return
-    polling = true
-    const uuid = sessionUuid.value
-    try {
-      const response = await sessionEventsApi.getSessionEvents(uuid, { after: latestId(), limit: 100 })
-      if (sessionUuid.value === uuid) merge(response?.events)
-      pollError.value = false
-    } catch {
-      pollError.value = true
-    } finally {
-      polling = false
-      schedulePoll()
-    }
+  function refresh() {
+    if (!sessionUuid.value) return Promise.resolve()
+    refreshPending = true
+    if (refreshPromise) return refreshPromise
+    refreshPromise = (async () => {
+      try {
+        while (refreshPending && sessionUuid.value) {
+          refreshPending = false
+          const uuid = sessionUuid.value
+          const response = await sessionEventsApi.getSessionEvents(uuid, { after: latestId(), limit: 100 })
+          if (sessionUuid.value === uuid) merge(response?.events)
+        }
+        syncError.value = false
+      } catch {
+        syncError.value = true
+      } finally {
+        refreshPromise = null
+        if (refreshPending) refresh()
+      }
+    })()
+    return refreshPromise
   }
 
   async function setContext({ uuid, actorUuid = null }) {
@@ -64,7 +63,6 @@ export const useSessionEventsStore = defineStore('session-events', () => {
       setActor(actorUuid, uuid)
       return
     }
-    clearTimeout(pollTimer)
     sessionUuid.value = uuid
     actorCharUuid.value = actorUuid || null
     events.value = []
@@ -72,12 +70,11 @@ export const useSessionEventsStore = defineStore('session-events', () => {
     try {
       const response = await sessionEventsApi.getSessionEvents(uuid, { limit: 50 })
       if (sessionUuid.value === uuid) merge(response?.events)
-      pollError.value = false
+      syncError.value = false
     } catch {
-      pollError.value = true
+      syncError.value = true
     } finally {
       loading.value = false
-      schedulePoll()
     }
   }
 
@@ -88,8 +85,6 @@ export const useSessionEventsStore = defineStore('session-events', () => {
 
   function clearContext(expectedUuid = null) {
     if (expectedUuid && sessionUuid.value !== expectedUuid) return
-    clearTimeout(pollTimer)
-    pollTimer = null
     sessionUuid.value = null
     actorCharUuid.value = null
     events.value = []
@@ -111,7 +106,7 @@ export const useSessionEventsStore = defineStore('session-events', () => {
       if (sessionUuid.value === uuid && response?.event) merge([response.event])
       return response?.event || null
     } catch {
-      pollError.value = true
+      syncError.value = true
       return null
     }
   }
@@ -133,12 +128,12 @@ export const useSessionEventsStore = defineStore('session-events', () => {
     actorCharUuid,
     events,
     loading,
-    pollError,
+    syncError,
     setContext,
     setActor,
     clearContext,
     publish,
     pendingCharacterEvent,
-    poll,
+    refresh,
   }
 })

@@ -84,6 +84,11 @@ func (s *Server) handleJoinSession(w http.ResponseWriter, r *http.Request) {
 		forbidden(w)
 		return
 	}
+	previousSessionID, previouslyAttached, err := s.store.SessionIDForCharacter(r.Context(), body.CharID)
+	if err != nil {
+		serverError(w, err)
+		return
+	}
 	if err := s.store.AddSessionParticipant(r.Context(), session.ID, body.CharID, userID, body.ReplaceExisting); err != nil {
 		if errors.Is(err, store.ErrCharacterAlreadyInSession) {
 			conflict(w, "Персонаж уже привязан к другой сессии")
@@ -92,6 +97,10 @@ func (s *Server) handleJoinSession(w http.ResponseWriter, r *http.Request) {
 		serverError(w, err)
 		return
 	}
+	if previouslyAttached && previousSessionID != session.ID {
+		s.publishSessionParticipants(previousSessionID)
+	}
+	s.publishSessionParticipants(session.ID)
 	writeJSON(w, http.StatusNoContent, nil)
 }
 
@@ -149,6 +158,7 @@ func (s *Server) handleKickParticipant(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	s.displayEvents.publish(session.ID)
+	s.publishSessionParticipants(session.ID)
 	writeJSON(w, http.StatusNoContent, nil)
 }
 
@@ -174,6 +184,7 @@ func (s *Server) handleReorderParticipants(w http.ResponseWriter, r *http.Reques
 		}
 		return
 	}
+	s.publishSessionParticipants(session.ID)
 	writeJSON(w, http.StatusNoContent, nil)
 }
 
@@ -232,5 +243,6 @@ func (s *Server) handleUpdateParticipantColor(w http.ResponseWriter, r *http.Req
 		return
 	}
 	s.displayEvents.publish(session.ID)
+	s.publishSessionParticipants(session.ID)
 	writeJSON(w, http.StatusNoContent, nil)
 }

@@ -31,6 +31,7 @@ type GameSession struct {
 type SessionParticipantData struct {
 	CharID       int64          `json:"charId"`
 	CharUUID     string         `json:"charUuid"`
+	Version      int64          `json:"version"`
 	TemplateID   int64          `json:"templateId"`
 	TemplateName string         `json:"templateName"`
 	Data         map[string]any `json:"data"`
@@ -139,7 +140,7 @@ func (s *Store) GetGameSessionByInviteCode(ctx context.Context, code string) (Ga
 // GetSessionParticipants — участники сессии с полными данными персонажей (порт getParticipants).
 func (s *Store) GetSessionParticipants(ctx context.Context, sessionID int64) ([]SessionParticipantData, error) {
 	rows, err := s.pool.Query(ctx,
-		`SELECT sp.char_id, sp.role, sp.color, c.uuid::text AS char_uuid, c.data AS char_data,
+		`SELECT sp.char_id, sp.role, sp.color, c.uuid::text AS char_uuid, c.version, c.data AS char_data,
 		        c.template_id, ct.name AS template_name
 		 FROM dndshare.session_participant sp
 		 JOIN dndshare."char" c ON c.id = sp.char_id AND c.deleted = false
@@ -156,13 +157,28 @@ func (s *Store) GetSessionParticipants(ctx context.Context, sessionID int64) ([]
 	for rows.Next() {
 		var p SessionParticipantData
 		var charData []byte
-		if err := rows.Scan(&p.CharID, &p.Role, &p.Color, &p.CharUUID, &charData, &p.TemplateID, &p.TemplateName); err != nil {
+		if err := rows.Scan(&p.CharID, &p.Role, &p.Color, &p.CharUUID, &p.Version, &charData, &p.TemplateID, &p.TemplateName); err != nil {
 			return nil, err
 		}
 		_ = json.Unmarshal(charData, &p.Data)
 		out = append(out, p)
 	}
 	return out, rows.Err()
+}
+
+// SessionIDForCharacter returns the active session currently containing a
+// character. The schema guarantees at most one such attachment.
+func (s *Store) SessionIDForCharacter(ctx context.Context, charID int64) (int64, bool, error) {
+	var sessionID int64
+	err := s.pool.QueryRow(ctx, `
+		SELECT participant.session_id
+		FROM dndshare.session_participant participant
+		JOIN dndshare."session" session ON session.id = participant.session_id
+		WHERE participant.char_id = $1 AND session.deleted = false`, charID).Scan(&sessionID)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return 0, false, nil
+	}
+	return sessionID, err == nil, err
 }
 
 // GetSessionParticipantsBrief — краткая инфа об участниках для списка (порт getParticipantsBrief).

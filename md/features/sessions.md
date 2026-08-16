@@ -126,9 +126,11 @@ and log group by its own vertical divider.
 `Имя персонажа (мастер)` в
 листе — разные ключи группировки; для игрока используется имя персонажа. Логин
 пользователя не показывается.
-`stores/sessionEvents.js` загружает
-последние 50 записей, затем получает новые по cursor polling и устраняет
-дубликаты по серверному id. Когда на странице сессии открыт модальный лист,
+`stores/sessionEvents.js` загружает последние 50 записей, затем получает новые
+по cursor только после invalidation из общего SSE-потока страницы сессии и
+устраняет дубликаты по серверному id. При восстановлении потока выполняется
+catch-up запрос, поэтому coalescing, разрыв соединения или рестарт процесса не
+теряют записи. Когда на странице сессии открыт модальный лист,
 контекст бросков временно получает uuid этого персонажа; закрытие листа
 возвращает общий контекст мастера.
 
@@ -721,13 +723,25 @@ part of the public DTO or UI: health is presented as `Здоров` above 50%,
 (player) / `Повержен` (NPC) at zero. A failed refresh keeps the last successful
 snapshot visible and marks the connection as interrupted.
 
+The authenticated session page owns one typed SSE invalidation stream for the
+participant list, character versions, timeline and public-screen presence.
+Writes remain REST mutations and the stream contains no character or timeline
+payloads; it only identifies the projections that need refreshing. Bursts are
+coalesced by domain and character id. On reconnect the page reloads membership,
+timeline cursor and screen presence, while ordinary idle time produces no API
+requests. While SSE is disconnected, a bounded exponential fallback performs
+the same catch-up reads until the browser reconnects. Character refresh still
+uses the version-aware batch endpoint, but
+only for ids named by an invalidation. Membership snapshots include each
+character's technical version.
+
 The DM header control also displays the live number of public screens connected
 to that session. Its button uses a green connected treatment whenever at least
 one SSE subscriber exists; the popover shows the exact connection count and
-refreshes it immediately when opened. The session page checks the lightweight
-owner-only counter every five seconds while the tab is visible and once when it
-returns to the foreground. Each public browser tab counts as one screen. This
-counter comes from the in-process SSE hub rather than the database, so it
+updates from the authenticated session stream whenever a public display
+subscribes or disconnects; reconnect catch-up reads the owner-only counter once.
+Each public browser tab counts as one screen. This counter comes from the
+in-process SSE hub rather than the database, so it
 reflects current connectivity and naturally resets during a server restart;
 screens reconnect automatically and reappear in the counter.
 

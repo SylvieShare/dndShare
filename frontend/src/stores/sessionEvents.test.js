@@ -44,6 +44,19 @@ describe('session event timeline store', () => {
     expect(api.createSessionEvent).not.toHaveBeenCalled()
   })
 
+  it('refreshes only events after the current journal cursor', async () => {
+    api.getSessionEvents
+      .mockResolvedValueOnce({ events: [{ id: 4, type: 'rest_completed' }] })
+      .mockResolvedValueOnce({ events: [{ id: 5, type: 'spell_used' }] })
+    const store = useSessionEventsStore()
+
+    await store.setContext({ uuid: 'session-uuid' })
+    await store.refresh()
+
+    expect(api.getSessionEvents).toHaveBeenLastCalledWith('session-uuid', { after: 4, limit: 100 })
+    expect(store.events.map(event => event.id)).toEqual([4, 5])
+  })
+
   it('attributes modal-sheet rolls to its character and restores the session actor on close', async () => {
     api.getSessionEvents.mockResolvedValue({ events: [] })
     api.createSessionEvent.mockResolvedValue({ event: { id: 1, type: 'dice_roll' } })

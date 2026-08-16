@@ -128,8 +128,8 @@
             <ListChecks :size="17" />
             <kbd v-if="showShortcutHints" class="players-select-all-shortcut">{{ shortcutLabels.panel }}+P</kbd>
           </button>
-          <span class="poll-indicator" :class="pollStatus">
-            <span class="poll-bar" :class="{ running: pollRunning }" />
+          <span class="live-indicator" :class="[liveStatus, syncStatus]" :title="liveStatus === 'connected' ? 'Сессия синхронизирована' : 'Восстанавливаем связь с сессией'">
+            <span class="live-bar" :class="{ running: syncRunning || liveCatchingUp }" />
           </span>
           <div class="players-actions">
             <RowActionMenu>
@@ -200,7 +200,7 @@
           <MusicPanel :is-dm="isDm" />
         </BaseTile>
         <BaseTile v-show="eventsOpen" class="side-tile workspace-tool-tile workspace-events-tile">
-          <SessionEventsPanel />
+          <SessionEventsPanel :live-status="liveStatus" />
         </BaseTile>
       </aside>
 
@@ -244,7 +244,7 @@ import SessionParticipantCard from '@/features/sessions/components/SessionPartic
 import SessionShortcutHelp from '@/features/sessions/components/SessionShortcutHelp.vue'
 import SessionMusicWorkspace from '@/features/sessions/components/SessionMusicWorkspace.vue'
 import SessionWorldLayer from '@/features/sessions/components/SessionWorldLayer.vue'
-import { useParticipantPolling } from '@/features/sessions/composables/useParticipantPolling'
+import { useParticipantSync } from '@/features/sessions/composables/useParticipantSync'
 import { useChapterGraph } from '@/features/sessions/composables/useChapterGraph'
 import { useEncounter } from '@/features/sessions/composables/useEncounter'
 import { useSessionSelection } from '@/features/sessions/composables/useSessionSelection'
@@ -256,6 +256,7 @@ import { useSessionMaterials } from '@/features/sessions/composables/useSessionM
 import { useSessionPresentation } from '@/features/sessions/composables/useSessionPresentation'
 import { useSessionSettings } from '@/features/sessions/composables/useSessionSettings'
 import { useSessionHotkeys } from '@/features/sessions/composables/useSessionHotkeys'
+import { useSessionLive } from '@/features/sessions/composables/useSessionLive'
 import { sessionShortcutLabels } from '@/features/sessions/lib/sessionShortcuts'
 import { useAccountStore } from '@/stores/account'
 import { useMusicStore } from '@/stores/music'
@@ -362,11 +363,6 @@ const isDm = computed(() => {
   const uid = accountStore.user?.id
   return !!(uid && session.value && session.value.ownerUserId === uid)
 })
-
-watch(isDm, dm => {
-  if (dm) presentation.startConnectionPolling()
-  else presentation.stopConnectionPolling()
-}, { immediate: true })
 
 watch([() => accountStore.status, isDm, session], ([status, dm, currentSession]) => {
   if (status === 'success' && currentSession && !dm && primaryView.value !== 'story') selectPrimaryView('story')
@@ -605,8 +601,37 @@ async function refreshParticipants() {
     : fresh.participants.map(withPendingColor)
 }
 
-const { pollStatus, pollRunning, startPolling, forgetVersion } =
-  useParticipantPolling({ participants, refreshParticipants })
+const {
+  syncStatus, syncRunning, syncVersions,
+  requestParticipants, requestCharacters, forgetVersion,
+} = useParticipantSync({ participants, refreshParticipants })
+
+const {
+  status: liveStatus,
+  catchingUp: liveCatchingUp,
+  start: startSessionLive,
+} = useSessionLive({
+  sessionUuid,
+  onUpdate(update) {
+    const tasks = []
+    if (update?.participants) tasks.push(requestParticipants())
+    else if (Array.isArray(update?.characterIds) && update.characterIds.length) {
+      tasks.push(requestCharacters(update.characterIds))
+    }
+    if (update?.journal) tasks.push(sessionEventsStore.refresh())
+    if (update?.connectedScreens != null && isDm.value) {
+      presentation.setConnectedScreens(update.connectedScreens)
+    }
+    return Promise.all(tasks)
+  },
+  onCatchUp() {
+    return Promise.all([
+      requestParticipants(),
+      sessionEventsStore.refresh(),
+      isDm.value ? presentation.loadConnections() : Promise.resolve(),
+    ])
+  },
+})
 
 const {
   kickingIds, kickError, kickParticipant,
@@ -671,7 +696,7 @@ async function createChar(payload) {
     const fresh = await getSession(sessionUuid).catch(() => null)
     if (fresh?.participants) {
       participants.value = fresh.participants
-      startPolling()
+      syncVersions()
     }
 
     createModalRef.value?.clearDraft()
@@ -712,8 +737,8 @@ onMounted(async () => {
     const res = await getSession(sessionUuid)
     session.value = res?.session ?? null
     participants.value = res?.participants ?? []
+    syncVersions()
     await chapterGraph.load()
-    startPolling()
     musicStore.setContext({ uuid: sessionUuid, dm: isDm.value })
     await sessionEventsStore.setContext({ uuid: sessionUuid, actorUuid: sheetUuid.value })
     await musicStore.ensureLibrary().catch(() => {})
@@ -724,6 +749,7 @@ onMounted(async () => {
         presentation.load().catch(() => {}),
       ])
     }
+    startSessionLive()
   } catch {
     router.replace('/sessions')
     return

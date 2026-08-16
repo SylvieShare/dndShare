@@ -2,7 +2,7 @@
   <div class="session-events-panel">
     <div class="sep-head">
       <span class="sep-title">СОБЫТИЯ</span>
-      <span class="sep-live" :class="{ 'sep-live--error': store.pollError }" :title="store.pollError ? 'Нет связи с журналом' : 'Журнал синхронизирован'" />
+      <span class="sep-live" :class="{ 'sep-live--error': props.liveStatus === 'error' || store.syncError }" :title="props.liveStatus === 'connected' && !store.syncError ? 'Журнал синхронизирован' : 'Восстанавливаем связь с журналом'" />
     </div>
 
     <div class="sep-body">
@@ -72,6 +72,10 @@ import { computed, nextTick, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useSessionEventsStore } from '@/stores/sessionEvents'
 import { groupSessionEvents } from '@/features/sessions/lib/sessionEventView'
+
+const props = defineProps({
+  liveStatus: { type: String, default: 'idle' },
+})
 
 const store = useSessionEventsStore()
 const { events } = storeToRefs(store)
