@@ -1,6 +1,5 @@
 <template>
   <aside class="canvas-hotkeys" aria-label="Горячие клавиши холста">
-    <span class="canvas-hotkeys-title">Горячие клавиши</span>
     <kbd>{{ modifier }} + клик</kbd><span>выбрать узел</span>
     <kbd>{{ modifier }} + протянуть</kbd><span>выделить рамкой</span>
     <kbd>{{ modifier }} + A</kbd><span>выбрать всё</span>
@@ -21,8 +20,8 @@ const deleteKey = mac ? '⌫' : 'Del'
 .canvas-hotkeys {
   position: absolute;
   z-index: 12;
-  bottom: 14px;
-  left: 14px;
+  bottom: 42px;
+  left: calc(var(--chapter-safe-left, 0px) + 8px);
   display: grid;
   grid-template-columns: max-content 1fr;
   gap: 3px 11px;
@@ -33,15 +32,7 @@ const deleteKey = mac ? '⌫' : 'Del'
   pointer-events: none;
   user-select: none;
   text-shadow: 0 1px 8px var(--app-canvas-bg), 0 0 18px var(--app-canvas-bg);
-}
-.canvas-hotkeys-title {
-  grid-column: 1 / -1;
-  margin-bottom: 2px;
-  color: color-mix(in srgb, var(--text-muted) 78%, transparent);
-  font-size: 9px;
-  font-weight: 750;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  animation: canvas-hotkeys-in .16s cubic-bezier(.22, 1, .36, 1) both;
 }
 .canvas-hotkeys kbd {
   padding: 0;
@@ -53,5 +44,11 @@ const deleteKey = mac ? '⌫' : 'Del'
 }
 @media (max-width: 760px), (pointer: coarse) {
   .canvas-hotkeys { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .canvas-hotkeys { animation: none; }
+}
+@keyframes canvas-hotkeys-in {
+  from { opacity: 0; transform: translateY(3px); }
 }
 </style>

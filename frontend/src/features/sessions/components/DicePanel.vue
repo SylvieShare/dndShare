@@ -13,9 +13,11 @@
             type="button"
             class="dice-panel-die"
             :title="`Бросить ${die.value}`"
+            :aria-keyshortcuts="`Alt+Shift+${diceShortcutNumber(die.sides)}`"
             @click="rollDie(die.sides)"
           >
             <SystemDie :sides="die.sides" :size="44" color="var(--accent)" />
+            <kbd v-if="showShortcutHints" class="dice-panel-shortcut">{{ diceShortcut(die.sides) }}</kbd>
           </button>
         </div>
       </div>
@@ -29,6 +31,9 @@ import { MultiToggle } from '@sylvieshare/share-ui'
 import SystemDie from '@/shared/ui/SystemDie.vue'
 import { useDiceStore } from '@/stores/dice'
 import { SYSTEM_DICE } from '@/shared/lib/systemDice'
+import { SESSION_DICE_SHORTCUTS, sessionShortcutLabels } from '@/features/sessions/lib/sessionShortcuts'
+
+defineProps({ showShortcutHints: { type: Boolean, default: false } })
 
 const modeOptions = [
   { value: 'disadvantage', label: 'Помеха' },
@@ -38,6 +43,17 @@ const modeOptions = [
 
 const mode = ref('normal')
 const diceStore = useDiceStore()
+const shortcutLabels = sessionShortcutLabels()
+
+function diceShortcut(sides) {
+  const number = diceShortcutNumber(sides)
+  return number ? `${shortcutLabels.dice}+${number}` : ''
+}
+
+function diceShortcutNumber(sides) {
+  const index = SESSION_DICE_SHORTCUTS.findIndex(shortcut => shortcut.sides === sides)
+  return index < 0 ? '' : index + 1
+}
 
 function rollOne(sides) {
   return Math.floor(Math.random() * sides) + 1
@@ -75,6 +91,8 @@ function rollDie(sides) {
     },
   })
 }
+
+defineExpose({ rollDie })
 </script>
 
 <style scoped>
@@ -119,6 +137,7 @@ function rollDie(sides) {
 }
 
 .dice-panel-die {
+  position: relative;
   background: var(--surface-raised);
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -134,10 +153,30 @@ function rollDie(sides) {
   align-items: center;
   justify-content: center;
 }
+.dice-panel-shortcut {
+  position: absolute;
+  top: 3px;
+  right: 4px;
+  padding: 1px 3px;
+  border: 0;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--popover-bg) 86%, transparent);
+  color: var(--accent-soft);
+  font: 750 8px/1.25 var(--font-ui);
+  pointer-events: none;
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--scrim) 38%, transparent);
+  animation: dice-shortcut-hint-in .16s cubic-bezier(.22, 1, .36, 1) both;
+}
+@keyframes dice-shortcut-hint-in {
+  from { opacity: 0; transform: translateY(-2px); }
+}
 .dice-panel-die:hover {
   border-color: var(--accent);
   color: var(--text-on-accent);
   background: var(--surface-active);
 }
 .dice-panel-die:active { transform: scale(0.96); }
+@media (prefers-reduced-motion: reduce) {
+  .dice-panel-shortcut { animation: none; }
+}
 </style>

@@ -73,10 +73,6 @@
   width: 52px;
 }
 
-.campaign-workspace--hotkeys .workspace-dock--left {
-  max-height: calc(100% - 190px);
-}
-
 .campaign-workspace--combat .workspace-dock--left {
   width: 360px;
 }

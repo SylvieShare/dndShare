@@ -37,6 +37,8 @@ const sessionSettingsControlSource = readFileSync(fileURLToPath(new URL('../comp
 const encounterNpcsSource = readFileSync(fileURLToPath(new URL('../composables/useEncounterNpcs.js', import.meta.url)), 'utf8')
 const encounterStylesSource = readFileSync(fileURLToPath(new URL('../components/styles/EncounterTab.css', import.meta.url)), 'utf8')
 const dicePopupSource = readFileSync(fileURLToPath(new URL('../../../shared/ui/DiceRollPopup.vue', import.meta.url)), 'utf8')
+const sessionHotkeysSource = readFileSync(fileURLToPath(new URL('../composables/useSessionHotkeys.js', import.meta.url)), 'utf8')
+const shortcutHelpSource = readFileSync(fileURLToPath(new URL('../components/SessionShortcutHelp.vue', import.meta.url)), 'utf8')
 
 describe('ViewSession participant rail', () => {
   it('compiles the page component', () => {
@@ -78,9 +80,8 @@ describe('ViewSession participant rail', () => {
     expect(styles).toContain('--chapter-safe-left: 288px;')
     expect(styles).toContain('.campaign-workspace--right-dock .campaign-graph')
     expect(styles).toContain('--chapter-safe-right: 316px;')
-    expect(source).toContain("'campaign-workspace--hotkeys': isDm && primaryView === 'story' && workspaceMotionMode !== 'combat'")
-    expect(styles).toContain('.campaign-workspace--hotkeys .workspace-dock--left')
-    expect(styles).toContain('max-height: calc(100% - 190px);')
+    expect(source).not.toContain('campaign-workspace--hotkeys')
+    expect(styles).not.toContain('.campaign-workspace--hotkeys .workspace-dock--left')
     expect(source).not.toContain('<SlidingTabs')
     expect(source).not.toContain('<SessionTopBar')
   })
@@ -124,15 +125,30 @@ describe('ViewSession participant rail', () => {
     expect(musicPanelSource).not.toContain('music-panel-album')
   })
 
-  it('keeps canvas legend and handbook HP rolling in session-local header settings', () => {
+  it('moves hotkey help out of settings and keeps handbook HP rolling as the local preference', () => {
     expect(source).toContain('useSessionSettings({ sessionUuid })')
     expect(source).toContain('autoRollNpcHp: computed(() => sessionSettings.autoRollNpcHp)')
     expect(sessionSettingsSource).toContain('dnd-share:session-settings:v1:')
-    expect(sessionSettingsControlSource).toContain('Спрятать легенду на холсте')
+    expect(sessionSettingsControlSource).not.toContain('Спрятать легенду на холсте')
     expect(sessionSettingsControlSource).toContain('Автоматически бросать HP существ')
-    expect(sessionGraphSource).toContain('workspaceMode !== \'combat\' && showHotkeyLegend')
+    expect(source).toContain('<SessionShortcutHelp :active="showShortcutHints"')
+    expect(shortcutHelpSource).toContain('<kbd>?</kbd>')
+    expect(sessionGraphSource).toContain("workspaceMode !== 'combat' && showHotkeyLegend")
     expect(encounterNpcsSource).toContain('resolveStartHp(item, unref(autoRollHp) === true)')
     expect(encounterNpcsSource).toContain('rollDiceExpression')
+  })
+
+  it('switches session sections and tool panels and rolls dice while their panel is closed', () => {
+    expect(source).toContain('useSessionHotkeys({')
+    expect(source).toContain('rollDie: sides => dicePanel.value?.rollDie(sides)')
+    expect(source).toContain('<DicePanel ref="dicePanel"')
+    expect(dicePanelSource).toContain('defineExpose({ rollDie })')
+    expect(dicePanelSource).toContain('class="dice-panel-shortcut"')
+    expect(sessionHotkeysSource).toContain("command.type === 'select-view'")
+    expect(sessionHotkeysSource).toContain("command.type === 'toggle-panel'")
+    expect(sessionHotkeysSource).toContain("command.type === 'roll-die'")
+    expect(sessionHotkeysSource).toContain('event.target?.closest?.(EDITABLE_TARGET)')
+    expect(sessionHotkeysSource).toContain('document.querySelector(FLOATING_UI)')
   })
 
   it('lets the canvas use the empty part of the right rail and moves actions right when every panel is closed', () => {

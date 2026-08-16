@@ -17,6 +17,7 @@
       :presentation="presentation"
       :materials="materials"
       :settings="settings"
+      :show-shortcut-hints="showShortcutHints"
       :workspace-chapter-id="workspaceChapterId || graph.currentChapter.value?.id"
       :workspace-scene="workspaceScene"
       @select-arc="selectArc"
@@ -49,7 +50,7 @@
         :workspace-level="workspaceLevel"
         :workspace-layout-mode="workspaceLayoutMode"
         :chapter-linking-from="linkingFrom"
-        :show-hotkey-legend="!settings.hideCanvasLegend"
+        :show-hotkey-legend="showShortcutHints"
         @node-click="openNodeMenu"
         @node-double-click="openScenes"
         @edge-click="openEdgeMenu"
@@ -209,7 +210,8 @@ const props = defineProps({
   eventsOpen: { type: Boolean, default: true },
   presentation: { type: Object, default: null },
   materials: { type: Object, default: null },
-  settings: { type: Object, default: () => ({ hideCanvasLegend: false, autoRollNpcHp: false }) },
+  settings: { type: Object, default: () => ({ autoRollNpcHp: false }) },
+  showShortcutHints: { type: Boolean, default: false },
 })
 const emit = defineEmits([
   'open-scenes', 'open-combat', 'edit-session', 'close-workspace',

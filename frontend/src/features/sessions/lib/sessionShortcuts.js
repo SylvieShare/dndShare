@@ -1,0 +1,32 @@
+export const SESSION_VIEW_SHORTCUTS = Object.freeze({
+  story: 'Digit1',
+  locations: 'Digit2',
+  npcs: 'Digit3',
+  quests: 'Digit4',
+  materials: 'Digit5',
+})
+
+export const SESSION_PANEL_SHORTCUTS = Object.freeze({
+  dice: 'KeyD',
+  music: 'KeyM',
+  events: 'KeyL',
+})
+
+export const SESSION_DICE_SHORTCUTS = Object.freeze([
+  { code: 'Digit1', sides: 4 },
+  { code: 'Digit2', sides: 6 },
+  { code: 'Digit3', sides: 8 },
+  { code: 'Digit4', sides: 10 },
+  { code: 'Digit5', sides: 12 },
+  { code: 'Digit6', sides: 20 },
+  { code: 'Digit7', sides: 100 },
+])
+
+export function sessionShortcutLabels(platform = globalThis.navigator?.platform || '') {
+  const mac = /Mac|iPhone|iPad/.test(platform)
+  return {
+    alt: mac ? '⌥' : 'Alt',
+    dice: mac ? '⌥⇧' : 'Alt+Shift',
+    panel: mac ? '⇧' : 'Shift',
+  }
+}

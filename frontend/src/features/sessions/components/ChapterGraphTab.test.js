@@ -160,10 +160,11 @@ describe('chapter graph workspace', () => {
     expect(tab).toContain('graph.updateChapterStatuses(ids, status)')
   })
 
-  it('shows and implements a frameless desktop hotkey legend below the player rail', () => {
+  it('shows contextual desktop canvas shortcuts only while session help is active', () => {
     expect(sessionCanvas).toContain('<CanvasHotkeyHints')
-    expect(hotkeyHints).toContain('bottom: 14px;')
-    expect(hotkeyHints).toContain('left: 14px;')
+    expect(sessionCanvas).toContain("workspaceMode !== 'combat' && showHotkeyLegend")
+    expect(hotkeyHints).toContain('bottom: 42px;')
+    expect(hotkeyHints).toContain('left: calc(var(--chapter-safe-left, 0px) + 8px);')
     expect(hotkeyHints).toContain('{{ modifier }} + клик')
     expect(hotkeyHints).toContain('{{ modifier }} + A')
     expect(hotkeyHints).toContain('<kbd>Двойной клик</kbd><span>открыть вложенный холст</span>')
@@ -172,5 +173,8 @@ describe('chapter graph workspace', () => {
     expect(hotkeys).toContain("event.code === 'KeyA'")
     expect(hotkeys).toContain("deleteSelection(selectedNodes.value.map(node => node.id))")
     expect(hotkeys).toContain('zoomBy(1.15)')
+    expect(toolbar).toContain('v-if="showShortcutHints" class="chapter-shortcut-hint"')
+    expect(toolbar).toContain('{{ shortcutLabels.alt }}+{{ view.shortcut }}')
+    expect(toolbar).toContain('showShortcutHints && !diceOpen')
   })
 })

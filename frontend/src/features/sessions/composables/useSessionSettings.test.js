@@ -14,12 +14,12 @@ describe('session settings', () => {
     vi.stubGlobal('localStorage', storage)
 
     const { settings, update } = useSessionSettings({ sessionUuid: 'abc' })
-    expect(settings).toMatchObject({ hideCanvasLegend: true, autoRollNpcHp: false })
+    expect(settings).toMatchObject({ autoRollNpcHp: false })
+    expect(settings).not.toHaveProperty('hideCanvasLegend')
     update('autoRollNpcHp', true)
     await nextTick()
 
     expect(JSON.parse(values.get(sessionSettingsKey('abc')))).toEqual({
-      hideCanvasLegend: true,
       autoRollNpcHp: true,
     })
   })

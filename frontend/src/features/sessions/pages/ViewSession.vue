@@ -29,7 +29,6 @@
       :class="{
         'campaign-workspace--combat': primaryView === 'story' && workspaceMotionMode === 'combat',
         'campaign-workspace--players-collapsed': playersRailMode === 'compact',
-        'campaign-workspace--hotkeys': isDm && primaryView === 'story' && workspaceMotionMode !== 'combat',
         'campaign-workspace--right-dock': rightDockOpen,
       }"
     >
@@ -52,6 +51,7 @@
         :materials="sessionMaterials"
         :presentation="presentation"
         :settings="sessionSettings"
+        :show-shortcut-hints="showShortcutHints"
         @open-scenes="openChapterScenes"
         @select-view="selectPrimaryView"
         @open-combat="toggleCombatWorkspace"
@@ -100,6 +100,8 @@
       </ChapterGraphTab>
 
       <div v-if="combatWorkspaceError" class="combat-import-error" role="alert">{{ combatWorkspaceError }}</div>
+
+      <SessionShortcutHelp :active="showShortcutHints" @toggle="showShortcutHints = !showShortcutHints" />
 
       <aside class="workspace-dock workspace-dock--left">
         <div class="col-section-title">
@@ -170,7 +172,7 @@
 
       <aside class="workspace-dock workspace-dock--right">
         <BaseTile v-show="diceOpen" class="side-tile workspace-tool-tile">
-          <DicePanel />
+          <DicePanel ref="dicePanel" :show-shortcut-hints="showShortcutHints" />
         </BaseTile>
         <BaseTile v-show="musicOpen" class="side-tile workspace-tool-tile">
           <MusicPanel :is-dm="isDm" @open-library="musicLibraryOpen = true" />
@@ -220,6 +222,7 @@ import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 import SessionCenterWorkspace from '@/features/sessions/components/SessionCenterWorkspace.vue'
 import SessionParticipantCard from '@/features/sessions/components/SessionParticipantCard'
+import SessionShortcutHelp from '@/features/sessions/components/SessionShortcutHelp.vue'
 import SessionWorldLayer from '@/features/sessions/components/SessionWorldLayer.vue'
 import { useParticipantPolling } from '@/features/sessions/composables/useParticipantPolling'
 import { useChapterGraph } from '@/features/sessions/composables/useChapterGraph'
@@ -232,6 +235,7 @@ import { useSessionParticipantRail } from '@/features/sessions/composables/useSe
 import { useSessionMaterials } from '@/features/sessions/composables/useSessionMaterials'
 import { useSessionPresentation } from '@/features/sessions/composables/useSessionPresentation'
 import { useSessionSettings } from '@/features/sessions/composables/useSessionSettings'
+import { useSessionHotkeys } from '@/features/sessions/composables/useSessionHotkeys'
 import { useAccountStore } from '@/stores/account'
 import { useMusicStore } from '@/stores/music'
 import { useTemplateStore } from '@/stores/template'
@@ -289,6 +293,8 @@ const savedToolPanels = readToolPanelVisibility()
 const diceOpen = ref(savedToolPanels.dice)
 const musicOpen = ref(savedToolPanels.music)
 const eventsOpen = ref(savedToolPanels.events)
+const dicePanel = ref(null)
+const showShortcutHints = ref(false)
 const rightDockOpen = computed(() => diceOpen.value || musicOpen.value || eventsOpen.value)
 const combatImportError = ref('')
 
@@ -311,6 +317,12 @@ function readToolPanelVisibility() {
   }
 }
 
+function toggleToolPanel(panel) {
+  if (panel === 'dice') diceOpen.value = !diceOpen.value
+  if (panel === 'music') musicOpen.value = !musicOpen.value
+  if (panel === 'events') eventsOpen.value = !eventsOpen.value
+}
+
 const sheetUuid = ref(null)
 const createOpen = ref(false)
 const creating = ref(false)
@@ -325,6 +337,15 @@ watch(sheetUuid, actorUuid => {
 const isDm = computed(() => {
   const uid = accountStore.user?.id
   return !!(uid && session.value && session.value.ownerUserId === uid)
+})
+
+useSessionHotkeys({
+  enabled: computed(() => !!session.value),
+  canSwitchView: isDm,
+  showHints: showShortcutHints,
+  selectView: selectPrimaryView,
+  togglePanel: toggleToolPanel,
+  rollDie: sides => dicePanel.value?.rollDie(sides),
 })
 
 watch([() => accountStore.status, isDm, session], ([status, dm, currentSession]) => {

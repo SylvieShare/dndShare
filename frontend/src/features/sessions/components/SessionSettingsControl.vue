@@ -17,11 +17,6 @@
         <small>Сохраняются в этом браузере</small>
       </header>
       <label class="session-settings-option">
-        <span><strong>Спрятать легенду на холсте</strong><small>Не показывать подсказки горячих клавиш слева снизу</small></span>
-        <input type="checkbox" :checked="hideCanvasLegend" @change="$emit('update-setting', 'hideCanvasLegend', $event.target.checked)" />
-        <i aria-hidden="true" />
-      </label>
-      <label class="session-settings-option">
         <span><strong>Автоматически бросать HP существ</strong><small>При добавлении из справочника бросать формулу отдельно для каждого существа</small></span>
         <input type="checkbox" :checked="autoRollNpcHp" @change="$emit('update-setting', 'autoRollNpcHp', $event.target.checked)" />
         <i aria-hidden="true" />
@@ -36,7 +31,6 @@ import { Settings } from '@lucide/vue'
 import { BasePopover } from '@sylvieshare/share-ui'
 
 defineProps({
-  hideCanvasLegend: { type: Boolean, default: false },
   autoRollNpcHp: { type: Boolean, default: false },
 })
 defineEmits(['update-setting'])

@@ -324,15 +324,35 @@ no status field. Both catalogues begin with the neutral `none` / `Без ста�
 value, which is the default for newly created chapters and scenarios.
 Bulk chapter deletion fails as a whole when any selected chapter still contains
 scenarios; bulk scenario deletion also removes its blocks.
-Editable desktop canvases show a frameless, text-only hotkey legend at the
-bottom-left below the participant rail. It reflects the active behavior:
+Desktop session pages keep only the frameless `? · Горячие клавиши` affordance
+at the bottom-left. Pressing `?` or clicking it toggles contextual shortcut
+hints without reserving space or moving the participant rail: section hints sit
+under their header tabs, panel hints under the dice/music/log buttons, dice-roll
+hints inside the corresponding dice, and canvas-only hints remain over the
+bottom-left of the canvas safe area, beside the participant rail. If the dice panel is closed, its header button
+temporarily shows the compact `1…7 · d4…d100` mapping instead. `Esc` hides the hints while preserving its
+existing canvas action. The contextual help is hidden on touch and mobile
+layouts.
+
+Session-wide shortcuts use physical key codes and therefore do not depend on
+the current keyboard language. `Alt`/`Option` + `1…5` opens Story, Locations,
+NPCs, Quests and Materials; `Shift` + `D`, `M` or `L` toggles the dice,
+music or session-log panel without conflicting with browser address-bar
+shortcuts. `Alt`/`Option` + `Shift` + `1…7` rolls d4, d6, d8,
+d10, d12, d20 or d100 using the currently selected normal/advantage/disadvantage
+mode. Dice rolling works while the dice panel is closed because its controller
+remains mounted. Section switching is DM-only, matching the visible navigation;
+panel and dice shortcuts are available to every session participant. Global
+shortcuts ignore key repeats, text inputs, content-editable fields, open dialogs
+and popovers.
+
+When contextual canvas hints are visible, they reflect the active behavior:
 `Ctrl`/`Cmd` + click toggles a node, modifier-drag adds nodes through a frame,
 `Ctrl`/`Cmd` + `A` selects every node in the active graph, `Delete`/`Backspace`
 opens the existing confirmed bulk deletion, `Esc` cancels the active link or
 selection, `+`/`-` changes canvas zoom, and double click opens the nested
-canvas. The legend is hidden on touch and mobile layouts; the DM may also hide
-it on desktop from the session settings in the header. This preference and the
-automatic bestiary HP-roll preference are stored per session in local storage.
+canvas. The only session-local setting in the header is automatic bestiary HP
+rolling; it is stored per session in local storage.
 Drilling into a narrative level waits for the 420ms spotlight movement to reach
 its ancestor position, then swaps the graph identity, payload and preloaded
 viewport in one render. DOM keys include the graph identity so equal numeric IDs

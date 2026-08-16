@@ -67,10 +67,12 @@
         class="chapter-primary-tab"
         :class="{ 'chapter-primary-tab--active': primaryView === view.key }"
         :aria-current="primaryView === view.key ? 'page' : undefined"
+        :aria-keyshortcuts="`Alt+${view.shortcut}`"
         @click="$emit('select-view', view.key)"
       >
         <component :is="view.icon" :size="14" />
         <span>{{ view.label }}</span>
+        <kbd v-if="showShortcutHints" class="chapter-shortcut-hint" aria-hidden="true">{{ shortcutLabels.alt }}+{{ view.shortcut }}</kbd>
       </button>
     </nav>
 
@@ -90,20 +92,23 @@
       <span class="chapter-toolbar-rule" />
 
       <div class="chapter-panel-tools" aria-label="Панели сессии">
-        <button type="button" class="chapter-tool-btn chapter-tool-btn--icon" :class="{ 'chapter-tool-btn--active': diceOpen }" title="Кубики" aria-label="Кубики" :aria-pressed="diceOpen" @click="$emit('toggle-dice')">
+        <button type="button" class="chapter-tool-btn chapter-tool-btn--icon" :class="{ 'chapter-tool-btn--active': diceOpen }" title="Кубики" aria-label="Кубики" aria-keyshortcuts="Shift+D" :aria-pressed="diceOpen" @click="$emit('toggle-dice')">
           <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.8l5.3 3v6.4L8 14.2l-5.3-3V4.8L8 1.8zM2.9 4.9L8 8l5.1-3.1M8 8v6" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+          <kbd v-if="showShortcutHints" class="chapter-shortcut-hint" aria-hidden="true">{{ shortcutLabels.panel }}+D</kbd>
+          <kbd v-if="showShortcutHints && !diceOpen" class="chapter-shortcut-hint chapter-shortcut-hint--dice-rolls" aria-hidden="true">{{ shortcutLabels.dice }}+1…7 · d4…d100</kbd>
         </button>
-        <button type="button" class="chapter-tool-btn chapter-tool-btn--icon" :class="{ 'chapter-tool-btn--active': musicOpen }" title="Музыка" aria-label="Музыка" :aria-pressed="musicOpen" @click="$emit('toggle-music')">
+        <button type="button" class="chapter-tool-btn chapter-tool-btn--icon" :class="{ 'chapter-tool-btn--active': musicOpen }" title="Музыка" aria-label="Музыка" aria-keyshortcuts="Shift+M" :aria-pressed="musicOpen" @click="$emit('toggle-music')">
           <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 12.5V3.8l6-1.3v8.2M6 12.5a1.8 1.8 0 1 1-1.8-1.8A1.8 1.8 0 0 1 6 12.5zm6-1.8a1.8 1.8 0 1 1-1.8-1.8A1.8 1.8 0 0 1 12 10.7z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <kbd v-if="showShortcutHints" class="chapter-shortcut-hint" aria-hidden="true">{{ shortcutLabels.panel }}+M</kbd>
         </button>
-        <button type="button" class="chapter-tool-btn chapter-tool-btn--icon" :class="{ 'chapter-tool-btn--active': eventsOpen }" title="Лог сессии" aria-label="Лог сессии" :aria-pressed="eventsOpen" @click="$emit('toggle-events')">
+        <button type="button" class="chapter-tool-btn chapter-tool-btn--icon" :class="{ 'chapter-tool-btn--active': eventsOpen }" title="Лог сессии" aria-label="Лог сессии" aria-keyshortcuts="Shift+L" :aria-pressed="eventsOpen" @click="$emit('toggle-events')">
           <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 2.5h10v11H3zM5.5 5.5h5M5.5 8h5M5.5 10.5h3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          <kbd v-if="showShortcutHints" class="chapter-shortcut-hint" aria-hidden="true">{{ shortcutLabels.panel }}+L</kbd>
         </button>
       </div>
       <span v-if="isDm" class="chapter-toolbar-rule chapter-toolbar-rule--settings" />
       <SessionSettingsControl
         v-if="isDm"
-        :hide-canvas-legend="settings.hideCanvasLegend"
         :auto-roll-npc-hp="settings.autoRollNpcHp"
         @update-setting="(...args) => $emit('update-setting', ...args)"
       />
@@ -118,6 +123,7 @@ import { BasePopover, reorderByDrop, useSortable } from '@sylvieshare/share-ui'
 import { romanNumeral } from '@/features/sessions/lib/chapterGraph'
 import SessionPresentationControl from '@/features/sessions/components/SessionPresentationControl.vue'
 import SessionSettingsControl from '@/features/sessions/components/SessionSettingsControl.vue'
+import { sessionShortcutLabels } from '@/features/sessions/lib/sessionShortcuts'
 
 const props = defineProps({
   arcs: { type: Array, default: () => [] },
@@ -137,7 +143,8 @@ const props = defineProps({
   materials: { type: Object, default: null },
   workspaceChapterId: { type: [Number, String], default: null },
   workspaceScene: { type: Object, default: null },
-  settings: { type: Object, default: () => ({ hideCanvasLegend: false, autoRollNpcHp: false }) },
+  settings: { type: Object, default: () => ({ autoRollNpcHp: false }) },
+  showShortcutHints: { type: Boolean, default: false },
 })
 const emit = defineEmits([
   'select-arc', 'create-arc', 'edit-arc', 'reorder-arcs',
@@ -147,12 +154,13 @@ const emit = defineEmits([
   'update-setting',
 ])
 const primaryViews = [
-  { key: 'story', label: 'Сюжет', icon: BookOpenText },
-  { key: 'locations', label: 'Локации', icon: Map },
-  { key: 'npcs', label: 'NPC', icon: UsersRound },
-  { key: 'quests', label: 'Задания', icon: ScrollText },
-  { key: 'materials', label: 'Материалы', icon: Images },
+  { key: 'story', label: 'Сюжет', icon: BookOpenText, shortcut: '1' },
+  { key: 'locations', label: 'Локации', icon: Map, shortcut: '2' },
+  { key: 'npcs', label: 'NPC', icon: UsersRound, shortcut: '3' },
+  { key: 'quests', label: 'Задания', icon: ScrollText, shortcut: '4' },
+  { key: 'materials', label: 'Материалы', icon: Images, shortcut: '5' },
 ]
+const shortcutLabels = sessionShortcutLabels()
 const visiblePrimaryViews = computed(() => props.isDm ? primaryViews : primaryViews.slice(0, 1))
 const arcTrigger = ref(null)
 const arcOpen = ref(false)
@@ -229,6 +237,27 @@ function createArc() {
   cursor: pointer;
   transition: background 0.15s, color 0.15s;
 }
+.chapter-shortcut-hint {
+  position: absolute;
+  z-index: 24;
+  top: calc(100% + 5px);
+  left: 50%;
+  padding: 2px 5px;
+  border: 1px solid color-mix(in srgb, var(--accent) 32%, var(--border));
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--popover-bg) 94%, transparent);
+  color: var(--text-1);
+  font: 750 9px/1.25 var(--font-ui);
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--scrim) 46%, transparent);
+  transform: translateX(-50%);
+  animation: chapter-shortcut-hint-in .16s cubic-bezier(.22, 1, .36, 1) both;
+}
+.chapter-shortcut-hint--dice-rolls { top: calc(100% + 27px); }
+@keyframes chapter-shortcut-hint-in {
+  from { opacity: 0; transform: translate(-50%, -3px); }
+}
 .chapter-primary-tab::after {
   position: absolute;
   right: 9px;
@@ -255,6 +284,7 @@ function createArc() {
 .chapter-toolbar-rule { width: 1px; height: 22px; margin: 0 3px; background: var(--border-strong); }
 
 .chapter-tool-btn {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 7px;
@@ -305,5 +335,8 @@ function createArc() {
   .chapter-session { max-width: none; }
   .chapter-toolbar-rule { display: none; }
   .chapter-primary-nav { width: 100%; justify-self: stretch; overflow-x: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chapter-shortcut-hint { animation: none; }
 }
 </style>
