@@ -1,4 +1,4 @@
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import {
   createSessionMaterial,
   deleteSessionMaterial,
@@ -55,17 +55,13 @@ export function useSessionMaterials({ sessionUuid }) {
 
   function availableFor(chapterId, sceneId = null) {
     return materials.value.filter(material => {
-      if (material.scope === 'session') return true
-      if (material.scope === 'chapter') return String(material.chapterId) === String(chapterId)
-      return sceneId != null && String(material.sceneId) === String(sceneId)
+      const chapterLinks = material.chapterLinks || []
+      const sceneLinks = material.sceneLinks || []
+      if (!chapterLinks.length && !sceneLinks.length) return true
+      if (chapterLinks.some(link => String(link.chapterId) === String(chapterId))) return true
+      return sceneId != null && sceneLinks.some(link => String(link.sceneId) === String(sceneId))
     })
   }
 
-  const grouped = computed(() => ({
-    session: materials.value.filter(item => item.scope === 'session'),
-    chapter: materials.value.filter(item => item.scope === 'chapter'),
-    scene: materials.value.filter(item => item.scope === 'scene'),
-  }))
-
-  return { materials, chapters, scenes, grouped, loading, loaded, error, load, create, update, remove, byId, availableFor }
+  return { materials, chapters, scenes, loading, loaded, error, load, create, update, remove, byId, availableFor }
 }

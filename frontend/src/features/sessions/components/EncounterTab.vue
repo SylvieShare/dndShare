@@ -48,18 +48,6 @@
       </div>
 
       <div class="enc-toolbar-actions">
-        <a
-          v-if="props.isDm"
-          class="enc-icon-btn"
-          :href="publicScreenUrl"
-          target="_blank"
-          rel="noopener"
-          title="Открыть экран показа"
-          aria-label="Открыть экран показа для игроков в новой вкладке"
-        >
-          <MonitorUp :size="18" />
-        </a>
-
         <div v-if="props.isDm && enc.encounter.active" class="enc-action-group" aria-label="Броски">
           <span class="enc-action-group-label">Броски</span>
           <div class="enc-action-group-controls">
@@ -316,7 +304,6 @@ import {
   Dices,
   ListChecks,
   LogIn,
-  MonitorUp,
   Plus,
   Square,
   Swords,
@@ -348,7 +335,6 @@ const props = defineProps({
 defineEmits(['view-participant'])
 
 const enc = props.encounter
-const publicScreenUrl = computed(() => `/screen/${encodeURIComponent(props.sessionUuid)}`)
 const encounterRoot = ref(null)
 const {
   transitioning: combatTransitioning,

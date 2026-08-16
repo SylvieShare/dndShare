@@ -13,6 +13,23 @@ var presentationEffects = map[string]bool{
 
 var presentationTransitions = map[string]bool{"cut": true, "fade": true}
 
+func materialAvailableFor(material store.SessionMaterial, chapterID, sceneID int64) bool {
+	if len(material.ChapterLinks) == 0 && len(material.SceneLinks) == 0 {
+		return true
+	}
+	for _, link := range material.ChapterLinks {
+		if link.ChapterID == chapterID {
+			return true
+		}
+	}
+	for _, link := range material.SceneLinks {
+		if link.SceneID == sceneID {
+			return true
+		}
+	}
+	return false
+}
+
 func normalizePresentationStyle(effect, transition string) (string, string) {
 	if effect == "" {
 		effect = "none"
@@ -41,20 +58,14 @@ func (s *Server) validateMaterialForScene(w http.ResponseWriter, r *http.Request
 		badRequest(w, "Для блока изображения выберите картинку или карту")
 		return false
 	}
-	if material.Scope == "scene" && (material.SceneID == nil || *material.SceneID != sceneID) {
-		badRequest(w, "Материал относится к другому сценарию")
+	scene, err := s.store.GetSceneByID(r.Context(), sceneID)
+	if err != nil {
+		serverError(w, err)
 		return false
 	}
-	if material.Scope == "chapter" {
-		scene, err := s.store.GetSceneByID(r.Context(), sceneID)
-		if err != nil {
-			serverError(w, err)
-			return false
-		}
-		if material.ChapterID == nil || *material.ChapterID != scene.ChapterID {
-			badRequest(w, "Материал относится к другой главе")
-			return false
-		}
+	if !materialAvailableFor(material, scene.ChapterID, sceneID) {
+		badRequest(w, "Материал не связан с этим сценарием")
+		return false
 	}
 	return true
 }
@@ -91,8 +102,7 @@ func (s *Server) validateScenePresentation(
 			badRequest(w, "Материал не найден")
 			return preset, false
 		}
-		if material.SessionID != session.ID || (material.Scope == "chapter" && (material.ChapterID == nil || *material.ChapterID != chapterID)) ||
-			(material.Scope == "scene" && (sceneID == 0 || material.SceneID == nil || *material.SceneID != sceneID)) {
+		if material.SessionID != session.ID || !materialAvailableFor(material, chapterID, sceneID) {
 			badRequest(w, "Материал недоступен в этом сценарии")
 			return preset, false
 		}

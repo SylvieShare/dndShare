@@ -4,9 +4,6 @@
 CREATE TABLE IF NOT EXISTS dndshare.session_material (
     id         bigserial NOT NULL,
     session_id int8 NOT NULL REFERENCES dndshare."session"(id) ON DELETE CASCADE,
-    scope      varchar(16) DEFAULT 'session' NOT NULL,
-    chapter_id int8 NULL REFERENCES dndshare.session_chapter(id) ON DELETE CASCADE,
-    scene_id   int8 NULL REFERENCES dndshare.session_scene(id) ON DELETE CASCADE,
     kind       varchar(16) DEFAULT 'image' NOT NULL,
     "name"     varchar(160) NOT NULL,
     caption    text NULL,
@@ -14,20 +11,10 @@ CREATE TABLE IF NOT EXISTS dndshare.session_material (
     created_at timestamptz DEFAULT now() NOT NULL,
     changed_at timestamptz DEFAULT now() NOT NULL,
     CONSTRAINT session_material_pk PRIMARY KEY (id),
-    CONSTRAINT session_material_scope_check CHECK (scope IN ('session', 'chapter', 'scene')),
-    CONSTRAINT session_material_kind_check CHECK (kind IN ('image')),
-    CONSTRAINT session_material_context_check CHECK (
-        (scope = 'session' AND chapter_id IS NULL AND scene_id IS NULL)
-        OR (scope = 'chapter' AND chapter_id IS NOT NULL AND scene_id IS NULL)
-        OR (scope = 'scene' AND chapter_id IS NOT NULL AND scene_id IS NOT NULL)
-    )
+    CONSTRAINT session_material_kind_check CHECK (kind IN ('image'))
 );
 CREATE INDEX IF NOT EXISTS idx_session_material_session_id
     ON dndshare.session_material USING btree (session_id);
-CREATE INDEX IF NOT EXISTS idx_session_material_chapter_id
-    ON dndshare.session_material USING btree (chapter_id) WHERE chapter_id IS NOT NULL;
-CREATE INDEX IF NOT EXISTS idx_session_material_scene_id
-    ON dndshare.session_material USING btree (scene_id) WHERE scene_id IS NOT NULL;
 
 ALTER TABLE dndshare.session_scene
     ADD COLUMN IF NOT EXISTS presentation_material_id int8 NULL,

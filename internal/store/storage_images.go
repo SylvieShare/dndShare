@@ -112,30 +112,32 @@ type AccountStorageFile struct {
 	CreatedAt time.Time `json:"createdAt"`
 }
 
+const accountStorageFilesQuery = `
+	SELECT source, id, kind, name, file_size, mime_type, url, object_key, created_at
+	FROM (
+		SELECT 'asset'::text AS source, image.id,
+		       CASE WHEN image."type" = 'video' THEN 'video' ELSE 'image' END AS kind,
+		       COALESCE(NULLIF(image.file_name, ''), CASE WHEN image."type" = 'video' THEN 'Видео' ELSE 'Изображение' END) AS name,
+		       image.file_size, COALESCE(image.mime_type, '') AS mime_type, image.url, image."key" AS object_key, image.created_at
+		FROM dndshare.storage_image image
+		WHERE image.user_id = $1 AND image.deleted = false
+		UNION ALL
+		SELECT 'svg'::text, svg.id, 'image'::text,
+		       COALESCE(NULLIF(svg.file_name, ''), 'SVG-изображение'), svg.file_size,
+		       COALESCE(svg.mime_type, 'image/svg+xml'), NULL::varchar, NULL::varchar, svg.created_at
+		FROM dndshare.svg_storage svg
+		WHERE svg.user_id = $1
+		UNION ALL
+		SELECT 'music'::text, track.id, 'music'::text,
+		       COALESCE(NULLIF(track.file_name, ''), track.name), track.file_size,
+		       track.mime_type, NULL::varchar, track.file_key, track.created_at
+		FROM dndshare.music_track track
+		WHERE track.owner_user_id = $1 AND track.is_system = false
+	) files
+	ORDER BY created_at DESC, source, id DESC`
+
 func (s *Store) ListAccountStorageFiles(ctx context.Context, userID int64) ([]AccountStorageFile, error) {
-	rows, err := s.pool.Query(ctx, `
-		SELECT source, id, kind, name, file_size, mime_type, url, object_key, created_at
-		FROM (
-			SELECT 'asset'::text AS source, image.id,
-			       CASE WHEN image."type" = 'video' THEN 'video' ELSE 'image' END AS kind,
-			       COALESCE(NULLIF(image.file_name, ''), CASE WHEN image."type" = 'video' THEN 'Видео' ELSE 'Изображение' END) AS name,
-			       image.file_size, COALESCE(image.mime_type, ''), image.url, image."key" AS object_key, image.created_at
-			FROM dndshare.storage_image image
-			WHERE image.user_id = $1 AND image.deleted = false
-			UNION ALL
-			SELECT 'svg'::text, svg.id, 'image'::text,
-			       COALESCE(NULLIF(svg.file_name, ''), 'SVG-изображение'), svg.file_size,
-			       COALESCE(svg.mime_type, 'image/svg+xml'), NULL::varchar, NULL::varchar, svg.created_at
-			FROM dndshare.svg_storage svg
-			WHERE svg.user_id = $1
-			UNION ALL
-			SELECT 'music'::text, track.id, 'music'::text,
-			       COALESCE(NULLIF(track.file_name, ''), track.name), track.file_size,
-			       track.mime_type, NULL::varchar, track.file_key, track.created_at
-			FROM dndshare.music_track track
-			WHERE track.owner_user_id = $1 AND track.is_system = false
-		) files
-		ORDER BY created_at DESC, source, id DESC`, userID)
+	rows, err := s.pool.Query(ctx, accountStorageFilesQuery, userID)
 	if err != nil {
 		return nil, err
 	}

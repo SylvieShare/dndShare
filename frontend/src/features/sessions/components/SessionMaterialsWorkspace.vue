@@ -66,7 +66,7 @@ import { computed, ref, watch } from 'vue'
 import { Cast, LibraryBig, Pencil, Plus, Search, Trash2 } from '@lucide/vue'
 import MaterialEditorModal from '@/features/sessions/components/MaterialEditorModal.vue'
 import SessionLibraryWorkspace from '@/features/sessions/components/SessionLibraryWorkspace.vue'
-import { materialType } from '@/features/sessions/lib/sessionMaterials'
+import { MATERIAL_TYPES, materialType } from '@/features/sessions/lib/sessionMaterials'
 
 const props = defineProps({
   materials: { type: Object, required: true }, presentation: { type: Object, required: true },
@@ -79,19 +79,30 @@ const actionError = ref('')
 const query = ref('')
 const allMaterials = computed(() => props.materials.materials.value)
 const selected = computed(() => props.materials.byId(selectedId.value))
+const chaptersById = computed(() => new Map(props.materials.chapters.value.map(chapter => [Number(chapter.id), chapter])))
+const scenesById = computed(() => new Map(props.materials.scenes.value.map(scene => [Number(scene.id), scene])))
 const matches = material => `${material.name} ${material.caption || ''} ${material.content || ''}`.toLocaleLowerCase('ru').includes(query.value.trim().toLocaleLowerCase('ru'))
-const groups = computed(() => [
-  { key: 'session', label: 'Сессия', items: props.materials.grouped.value.session.filter(matches) },
-  { key: 'chapter', label: 'Главы', items: props.materials.grouped.value.chapter.filter(matches) },
-  { key: 'scene', label: 'Сценарии', items: props.materials.grouped.value.scene.filter(matches) },
-])
+const groups = computed(() => MATERIAL_TYPES.map(type => ({
+  key: type.key,
+  label: type.label,
+  items: allMaterials.value.filter(material => material.kind === type.key && matches(material)),
+})))
 const filteredCount = computed(() => groups.value.reduce((sum, group) => sum + group.items.length, 0))
 
 watch(allMaterials, list => { if (!selected.value && list[0]) selectedId.value = list[0].id }, { immediate: true })
 function contextLabel(material) {
-  if (material.scope === 'chapter') return material.chapterName || 'Глава'
-  if (material.scope === 'scene') return [material.chapterName, material.sceneName].filter(Boolean).join(' · ')
-  return 'Вся сессия'
+  const chapterLinks = material.chapterLinks || []
+  const sceneLinks = material.sceneLinks || []
+  const count = chapterLinks.length + sceneLinks.length
+  if (!count) return 'Вся сессия'
+  if (count === 1 && chapterLinks.length) return chaptersById.value.get(Number(chapterLinks[0].chapterId))?.name || 'Глава'
+  if (count === 1) {
+    const scene = scenesById.value.get(Number(sceneLinks[0].sceneId))
+    const chapter = scene ? chaptersById.value.get(Number(scene.chapterId)) : null
+    return [chapter?.name, scene?.name].filter(Boolean).join(' · ') || 'Сценарий'
+  }
+  const word = count % 10 >= 2 && count % 10 <= 4 && (count % 100 < 10 || count % 100 >= 20) ? 'связи' : 'связей'
+  return `${count} ${word}`
 }
 function openCreate() { editing.value = null }
 async function saveMaterial(payload) {

@@ -5,11 +5,9 @@ import (
 	"testing"
 )
 
-func TestSessionPresentationSchemaKeepsScopedMaterialsAndOneLiveState(t *testing.T) {
+func TestSessionPresentationSchemaKeepsMaterialsAndOneLiveState(t *testing.T) {
 	for _, fragment := range []string{
 		"CREATE TABLE IF NOT EXISTS dndshare.session_material",
-		"scope IN ('session', 'chapter', 'scene')",
-		"session_material_context_check",
 		"presentation_material_id",
 		"presentation_track_id",
 		"presentation_crossfade_sec",
@@ -21,6 +19,22 @@ func TestSessionPresentationSchemaKeepsScopedMaterialsAndOneLiveState(t *testing
 	} {
 		if !strings.Contains(schemaSessionPresentationSQL, fragment) {
 			t.Fatalf("session presentation schema must contain %q", fragment)
+		}
+	}
+}
+
+func TestSessionMaterialLinksSchemaMigratesLegacyScopes(t *testing.T) {
+	for _, fragment := range []string{
+		"CREATE TABLE IF NOT EXISTS dndshare.session_material_chapter",
+		"CREATE TABLE IF NOT EXISTS dndshare.session_material_scene",
+		"WHERE scope = 'chapter'",
+		"WHERE scope = 'scene'",
+		"DROP COLUMN IF EXISTS scope",
+		"DROP COLUMN IF EXISTS chapter_id",
+		"DROP COLUMN IF EXISTS scene_id",
+	} {
+		if !strings.Contains(schemaMaterialLinksSQL, fragment) {
+			t.Fatalf("material links schema must contain %q", fragment)
 		}
 	}
 }

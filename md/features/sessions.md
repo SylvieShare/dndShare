@@ -206,11 +206,15 @@ and detail geometry as locations and NPCs. A material has one of five explicit
 types: image, video, plain text, styled note or map. Notes can use parchment,
 letter, dossier or arcane presentation. A map currently renders as an image but
 already owns its type and reserved `map_data`, so later layers and markers do
-not require redefining ordinary images. Each material is stored once and scoped
-to the whole session, one chapter or one scenario. Scenario context inherits
-session and chapter materials, while sibling resources do not leak into its picker. The session-header display
-control shows live state, opens the standalone display and provides contextual
+not require redefining ordinary images. Each material is stored once and may
+have several chapter and scenario links with an optional note on every link.
+With no links it remains available throughout the session; a chapter link makes
+it available to every scenario in that chapter, while unrelated contexts do not
+see it in their picker. The editor reuses the same `WorldRelationEditor` cards
+and searchable picker as locations and NPCs. The session-header display control
+shows live state, opens the standalone display and provides contextual
 materials, blackout/reveal/clear actions and the player-only effect selector.
+The combat toolbar does not duplicate the standalone-screen launch action.
 
 A scenario has an optional presentation preset: material, music track, volume,
 crossfade duration, visual effect and transition. `Запустить сцену` applies the

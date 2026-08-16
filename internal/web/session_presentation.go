@@ -50,15 +50,14 @@ func (s *Server) handleGetSessionMaterials(w http.ResponseWriter, r *http.Reques
 }
 
 type sessionMaterialRequest struct {
-	Scope     string  `json:"scope"`
-	ChapterID *int64  `json:"chapterId"`
-	SceneID   *int64  `json:"sceneId"`
-	Kind      string  `json:"kind"`
-	Name      string  `json:"name"`
-	Caption   *string `json:"caption"`
-	Content   *string `json:"content"`
-	NoteStyle *string `json:"noteStyle"`
-	AssetID   *int64  `json:"assetId"`
+	Kind         string                             `json:"kind"`
+	Name         string                             `json:"name"`
+	Caption      *string                            `json:"caption"`
+	Content      *string                            `json:"content"`
+	NoteStyle    *string                            `json:"noteStyle"`
+	AssetID      *int64                             `json:"assetId"`
+	ChapterLinks []store.SessionMaterialChapterLink `json:"chapterLinks"`
+	SceneLinks   []store.SessionMaterialSceneLink   `json:"sceneLinks"`
 }
 
 var materialKinds = map[string]bool{"image": true, "video": true, "text": true, "note": true, "map": true}
@@ -124,33 +123,45 @@ func (s *Server) validateMaterialRequest(w http.ResponseWriter, r *http.Request,
 		}
 		req.AssetID = nil
 	}
-	switch req.Scope {
-	case "session":
-		req.ChapterID, req.SceneID = nil, nil
-	case "chapter":
-		if req.ChapterID == nil || !s.requireChapterInSession(w, r, *req.ChapterID, session.ID) {
-			if req.ChapterID == nil {
-				badRequest(w, "Выберите главу")
-			}
-			return false
-		}
-		req.SceneID = nil
-	case "scene":
-		if req.ChapterID == nil || req.SceneID == nil {
-			badRequest(w, "Выберите сценарий")
-			return false
-		}
-		scene, ok := s.requireSceneInSession(w, r, *req.SceneID, session.ID)
-		if !ok {
-			return false
-		}
-		if scene.ChapterID != *req.ChapterID {
-			badRequest(w, "Сценарий не относится к выбранной главе")
-			return false
-		}
-	default:
-		badRequest(w, "Некорректная область материала")
+	if len(req.ChapterLinks) > 100 || len(req.SceneLinks) > 100 {
+		badRequest(w, "Слишком много связей материала")
 		return false
+	}
+	chapterIDs := make(map[int64]bool, len(req.ChapterLinks))
+	for index := range req.ChapterLinks {
+		link := &req.ChapterLinks[index]
+		if link.ChapterID <= 0 || chapterIDs[link.ChapterID] {
+			badRequest(w, "Некорректная связь с главой")
+			return false
+		}
+		chapterIDs[link.ChapterID] = true
+		note, ok := normalizeOptionalText(link.Note, 500)
+		if !ok {
+			badRequest(w, "Заметка к связи слишком длинная")
+			return false
+		}
+		link.Note = note
+		if !s.requireChapterInSession(w, r, link.ChapterID, session.ID) {
+			return false
+		}
+	}
+	sceneIDs := make(map[int64]bool, len(req.SceneLinks))
+	for index := range req.SceneLinks {
+		link := &req.SceneLinks[index]
+		if link.SceneID <= 0 || sceneIDs[link.SceneID] {
+			badRequest(w, "Некорректная связь со сценарием")
+			return false
+		}
+		sceneIDs[link.SceneID] = true
+		note, ok := normalizeOptionalText(link.Note, 500)
+		if !ok {
+			badRequest(w, "Заметка к связи слишком длинная")
+			return false
+		}
+		link.Note = note
+		if _, ok := s.requireSceneInSession(w, r, link.SceneID, session.ID); !ok {
+			return false
+		}
 	}
 	return true
 }
@@ -186,7 +197,10 @@ func (s *Server) handleCreateSessionMaterial(w http.ResponseWriter, r *http.Requ
 	if !s.validateMaterialAsset(w, r, userID, req) {
 		return
 	}
-	material, err := s.store.CreateSessionMaterial(r.Context(), session.ID, req.Scope, req.ChapterID, req.SceneID, req.Kind, req.Name, req.Caption, req.Content, req.NoteStyle, req.AssetID)
+	material, err := s.store.CreateSessionMaterial(
+		r.Context(), session.ID, req.Kind, req.Name, req.Caption, req.Content, req.NoteStyle,
+		req.AssetID, req.ChapterLinks, req.SceneLinks,
+	)
 	if err != nil {
 		serverError(w, err)
 		return
@@ -236,7 +250,10 @@ func (s *Server) handleUpdateSessionMaterial(w http.ResponseWriter, r *http.Requ
 	if !s.validateMaterialAsset(w, r, userID, req) {
 		return
 	}
-	if err := s.store.UpdateSessionMaterial(r.Context(), previous.ID, req.Scope, req.ChapterID, req.SceneID, req.Kind, req.Name, req.Caption, req.Content, req.NoteStyle, req.AssetID); err != nil {
+	if err := s.store.UpdateSessionMaterial(
+		r.Context(), previous.ID, req.Kind, req.Name, req.Caption, req.Content, req.NoteStyle,
+		req.AssetID, req.ChapterLinks, req.SceneLinks,
+	); err != nil {
 		serverError(w, err)
 		return
 	}

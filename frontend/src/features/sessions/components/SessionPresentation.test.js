@@ -13,6 +13,7 @@ const blockMenu = read('./SceneBlockMenus.vue')
 const publicScreen = read('../pages/ViewEncounterScreen.vue')
 const publicStyles = read('../pages/styles/ViewEncounterScreen.css')
 const materialEditor = read('./MaterialEditorModal.vue')
+const encounter = read('./EncounterTab.vue')
 const libraryShell = read('./SessionLibraryWorkspace.vue')
 
 describe('session presentation workspace', () => {
@@ -59,17 +60,26 @@ describe('session presentation workspace', () => {
     expect(publicScreen).toContain("presentationMaterial?.kind === 'note'")
     expect(publicStyles).toContain('.presentation-note--parchment')
   })
+
+  it('uses reusable relation editing for material contexts and keeps screen launch in the header control', () => {
+    expect(materialEditor).toContain('<WorldRelationEditor')
+    expect(materialEditor).toContain('draft.chapterLinks')
+    expect(materialEditor).toContain('draft.sceneLinks')
+    expect(materialEditor).not.toContain('label="Доступен"')
+    expect(encounter).not.toContain('Открыть экран показа')
+    expect(control).toContain('Открыть экран показа')
+  })
 })
 
 describe('material visibility', () => {
-  it('inherits session and chapter resources into a scenario without leaking sibling resources', () => {
+  it('inherits global and linked resources into a scenario without leaking sibling resources', () => {
     const library = useSessionMaterials({ sessionUuid: 'session' })
     library.materials.value = [
-      { id: 1, scope: 'session' },
-      { id: 2, scope: 'chapter', chapterId: 10 },
-      { id: 3, scope: 'chapter', chapterId: 11 },
-      { id: 4, scope: 'scene', chapterId: 10, sceneId: 20 },
-      { id: 5, scope: 'scene', chapterId: 10, sceneId: 21 },
+      { id: 1, chapterLinks: [], sceneLinks: [] },
+      { id: 2, chapterLinks: [{ chapterId: 10 }], sceneLinks: [] },
+      { id: 3, chapterLinks: [{ chapterId: 11 }], sceneLinks: [] },
+      { id: 4, chapterLinks: [], sceneLinks: [{ sceneId: 20 }] },
+      { id: 5, chapterLinks: [], sceneLinks: [{ sceneId: 21 }] },
     ]
     expect(library.availableFor(10, 20).map(item => item.id)).toEqual([1, 2, 4])
   })

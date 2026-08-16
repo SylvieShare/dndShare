@@ -172,11 +172,13 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
 - read/write encounter and music state;
 - `GET /api/sessions/{uuid}/materials` returns the owner-only material library
   with chapter/scenario picker contexts. `POST /materials` and
-  `PATCH|DELETE /materials/{materialId}` manage `{scope,chapterId,sceneId,name,
-  kind,caption,content,noteStyle,assetId}`. `kind` is `image`, `video`, `text`,
-  `note` or `map`; asset kinds require `assetId`, written kinds require
-  `content`, and notes also require one of `parchment`, `letter`, `dossier` or
-  `arcane`;
+  `PATCH|DELETE /materials/{materialId}` manage `{name,kind,caption,content,
+  noteStyle,assetId,chapterLinks,sceneLinks}`. Link arrays contain
+  `{chapterId,note?}` or `{sceneId,note?}`, accept several targets and may be
+  empty; an unlinked material is available throughout the session. `kind` is
+  `image`, `video`, `text`, `note` or `map`; asset kinds require `assetId`,
+  written kinds require `content`, and notes also require one of `parchment`,
+  `letter`, `dossier` or `arcane`;
 - `POST /api/storage/videos` accepts an authenticated multipart `file` up to
   100 MB, stores it in S3 and returns the same `{upload_id,url,key}` shape as
   image upload;

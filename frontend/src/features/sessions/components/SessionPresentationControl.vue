@@ -22,7 +22,7 @@
               <img v-if="material.kind === 'image' || material.kind === 'map'" :src="material.assetUrl" alt="" />
               <component :is="materialType(material.kind).icon" v-else :size="17" />
             </span>
-            <span><strong>{{ material.name }}</strong><small>{{ materialType(material.kind).label }} · {{ material.scope === 'scene' ? 'Сценарий' : material.scope === 'chapter' ? 'Глава' : 'Сессия' }}</small></span>
+            <span><strong>{{ material.name }}</strong><small>{{ materialType(material.kind).label }} · {{ relationLabel(material) }}</small></span>
             <Cast :size="14" />
           </button>
         </section>
@@ -60,6 +60,11 @@ const contextMaterials = computed(() => props.materials.availableFor(props.chapt
 async function run(action, close = true) { await action().catch(() => {}); if (close) open.value = false }
 function runScene() { run(() => props.presentation.startScene(props.scene)) }
 function showMaterial(material) { run(() => props.presentation.showMaterial(material)) }
+function relationLabel(material) {
+  const count = (material.chapterLinks?.length || 0) + (material.sceneLinks?.length || 0)
+  if (!count) return 'Вся сессия'
+  return count === 1 ? '1 связь' : `${count} связей`
+}
 </script>
 
 <style scoped>
