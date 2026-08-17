@@ -43,4 +43,19 @@ describe('SessionEventsPanel timeline layout', () => {
     expect(source).toContain('{{ event.action }}')
     expect(source).not.toContain('function eventTitle')
   })
+
+  it('puts filtering controls and active state in the timeline header', () => {
+    expect(source).toContain('class="sep-filter-trigger"')
+    expect(source).toContain('<BasePopover v-model:open="filterOpen"')
+    expect(source).toContain('<MultiToggle v-model="authorFilter"')
+    expect(source).toContain('v-model:value="actorFilter"')
+    expect(source).toContain('v-for="category in eventCategories"')
+    expect(source).toContain('class="sep-active-filters"')
+    expect(source).toContain('По выбранным фильтрам событий нет')
+  })
+
+  it('marks actor groups authored by the session owner', () => {
+    expect(source).toContain('v-if="actorGroup.authorIsSessionOwner"')
+    expect(source).toContain('>ВЛАДЕЛЕЦ</small>')
+  })
 })

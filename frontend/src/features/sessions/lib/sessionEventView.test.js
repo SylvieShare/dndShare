@@ -9,13 +9,13 @@ describe('session event identity', () => {
 
   it('leaves session-level events without an actor label', () => {
     expect(sessionEventActorLabel({ authorIsSessionOwner: true })).toBe('')
-    expect(sessionEventActorKey({ authorIsSessionOwner: true })).toBe('system')
+    expect(sessionEventActorKey({ authorIsSessionOwner: true })).toBe('owner:system')
   })
 
   it('prefers character identity and otherwise groups named creatures', () => {
     expect(sessionEventActorKey({ actorCharUuid: 'char-1', actorName: 'Лиора' }))
-      .toBe('character:char-1')
-    expect(sessionEventActorKey({ actorName: 'Кобольд' })).toBe('name:кобольд')
+      .toBe('player:character:char-1')
+    expect(sessionEventActorKey({ actorName: 'Кобольд', authorIsSessionOwner: true })).toBe('owner:name:кобольд')
   })
 
   it('groups newest events by minute and consecutive actor', () => {

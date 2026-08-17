@@ -2,11 +2,16 @@ export function sessionEventActorLabel(event) {
   return String(event?.actorName || '').trim()
 }
 
-export function sessionEventActorKey(event) {
+export function sessionEventActorIdentityKey(event) {
   const character = event?.actorCharUuid || event?.actorCharId
   if (character) return `character:${character}`
   const actorName = sessionEventActorLabel(event)
   return actorName ? `name:${actorName.toLocaleLowerCase('ru-RU')}` : 'system'
+}
+
+export function sessionEventActorKey(event) {
+  const author = event?.authorIsSessionOwner ? 'owner' : 'player'
+  return `${author}:${sessionEventActorIdentityKey(event)}`
 }
 
 export function groupSessionEvents(events) {
@@ -35,6 +40,7 @@ export function groupSessionEvents(events) {
         key: `${actorKey}:${event.id}`,
         actorKey,
         label: sessionEventActorLabel(event),
+        authorIsSessionOwner: !!event.authorIsSessionOwner,
         events: [],
       }
       timeGroup.actors.push(actorGroup)
