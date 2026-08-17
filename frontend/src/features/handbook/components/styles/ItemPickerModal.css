@@ -313,3 +313,24 @@
     margin-left: auto;
   }
 }
+
+@media (max-width: 520px) {
+  /* HandbookItemList normally lets the page own scrolling at this width.
+     The picker has a fixed, overflow-hidden body, so it must keep its own
+     scroll container for native touch scrolling and sheet gesture arbitration. */
+  .picker-list {
+    flex: 1 1 auto;
+    min-height: 0;
+    max-height: none;
+    overflow: hidden;
+    border-bottom: none;
+  }
+
+  :deep(.picker-list .list-body) {
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
+  }
+}

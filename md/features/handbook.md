@@ -75,6 +75,8 @@ has an id. `components/ItemPickerModal.vue`
 is the standard server-backed picker used by the character wizard/editor;
 `components/ItemViewModal.vue` is the standard detail window. Both belong to
 the handbook feature because they compose handbook API, stores and renderers.
+On phones the picker keeps the result list as its own vertical scroll container,
+so list swipes are handled before the surrounding dismissible sheet gesture.
 On phone layouts the collection search occupies its own full-width toolbar row,
 so grouping and filter controls cannot compress the input. An open item replaces
 the collection/search chrome; the common mobile-header back button and a deliberate
