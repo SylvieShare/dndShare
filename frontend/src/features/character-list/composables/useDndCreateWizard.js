@@ -455,7 +455,7 @@ export function useDndCreateWizard() {
   const choicesComplete = computed(() => featureChoices.value
     .every((fc) => (state.choices[fc.id] || []).length === (Number(fc.choice.count) || 1)))
 
-  // ─── Derived level-1 stats (live preview) ──────────────────────────────────
+  // ─── Derived level-1 stats for step details and the final review ───────────
   const PROF_BONUS = proficiencyBonus(1)
   const mods = computed(() => Object.fromEntries(STATS.map((s) => {
     const base = Number(state.scores[s] ?? 0)

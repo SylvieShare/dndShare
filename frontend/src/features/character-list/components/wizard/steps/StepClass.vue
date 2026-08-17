@@ -42,6 +42,7 @@
         <StepSkills v-if="skillOptions.length" class="cls-sub" />
         <StepChoices v-if="classFeatureChoices.length" scope="class" class="cls-sub" />
         <StepSpells v-if="isCaster" class="cls-sub" />
+        <ChoiceResult source="class" />
       </div>
     </Transition>
   </div>
@@ -50,6 +51,7 @@
 <script setup>
 import { computed, inject, ref } from 'vue'
 import RichContent from '@/shared/ui/DndRichContent.vue'
+import ChoiceResult from '@/features/character-list/components/wizard/ChoiceResult.vue'
 import SelectTile from '@/features/character-list/components/wizard/SelectTile.vue'
 import StepChoices from '@/features/character-list/components/wizard/steps/StepChoices.vue'
 import StepClassEquipment from '@/features/character-list/components/wizard/steps/StepClassEquipment.vue'

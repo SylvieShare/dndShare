@@ -115,6 +115,8 @@
 
           <StepChoices v-if="raceFeatureChoices.length" scope="race" />
         </template>
+
+        <ChoiceResult source="race" />
       </div>
     </Transition>
 
@@ -144,6 +146,7 @@ import FeatChoiceModal from '@/features/character-editor/components/FeatChoiceMo
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import { featChoices } from '@/features/items/lib/featRules'
 import MultiSearchSelect from '@/features/character-list/components/wizard/MultiSearchSelect.vue'
+import ChoiceResult from '@/features/character-list/components/wizard/ChoiceResult.vue'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 import SelectTile from '@/features/character-list/components/wizard/SelectTile.vue'
 import StepChoices from '@/features/character-list/components/wizard/steps/StepChoices.vue'

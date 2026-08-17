@@ -64,9 +64,16 @@ items and suggests must load without a session.
 ## Full D&D wizard
 
 The fixed steps are: Версия → Раса → Класс → Предыстория → Характеристики →
-Снаряжение → Личность → Обзор. The desktop layout has step rail, central content
-and live preview; on narrow screens it becomes one column, while the navigation
-footer stays pinned to the visible bottom edge. The wizard owns an opaque
+Снаряжение → Личность → Обзор. The desktop layout has a compact central content
+column and a separate step rail in its left gutter; there is no permanent right
+preview. The rail shows the primary current value for each step (for example,
+the chosen race, class/subclass or background) without repeating its mechanical
+details. Race and class steps instead end with a live «Результат выбора» block:
+it attributes grants, selected features, equipment and spells to that source and
+shows what will be written to the character sheet. Ability descriptions remain
+available there as inline disclosures. On narrow screens the workspace becomes
+one column, while the navigation footer stays pinned to the visible bottom edge.
+The wizard owns an opaque
 `--bg` canvas across its header, work area and footer so the global page grid
 does not show through the creation workspace.
 
@@ -83,8 +90,8 @@ Key rules:
   sheet's structured AC rule, including a medium-armor Dexterity cap;
 - descriptions are edited/rendered through the shared rich-description pair;
 - feat and item selection uses the handbook `ItemPickerModal`;
-- the preview's dice action uses the shared race-aware name generator, preferring
-  the selected subrace and avoiding an unchanged consecutive result;
+- the Personality step's dice action uses the shared race-aware name generator,
+  preferring the selected subrace and avoiding an unchanged consecutive result;
 - resets and incomplete-create decisions use shared `ConfirmDialog`;
 - the draft persists in `localStorage` and is cleared after successful create.
 

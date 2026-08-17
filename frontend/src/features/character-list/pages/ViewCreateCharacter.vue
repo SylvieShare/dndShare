@@ -26,8 +26,6 @@
           <component :is="stepComponent" :key="stepKey" />
         </transition>
       </main>
-
-      <CreatePreview class="cc-preview" />
     </div>
 
     <footer class="cc-foot">
@@ -63,7 +61,6 @@
 <script setup>
 import { computed, onMounted, provide, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import CreatePreview from '@/features/character-list/components/wizard/CreatePreview.vue'
 import CreateStepRail from '@/features/character-list/components/wizard/CreateStepRail.vue'
 import StepBackground from '@/features/character-list/components/wizard/steps/StepBackground.vue'
 import StepClass from '@/features/character-list/components/wizard/steps/StepClass.vue'
@@ -96,6 +93,7 @@ provide('createWizard', wz)
 
 const {
   state, load, buildPayload, restore, clearPersist, reset, setSourceVersionId,
+  allEquipment,
   requiresSubrace, requiresSubclass,
   scoresComplete, pointsLeft, skillLimit, spellsComplete,
   asiChoiceComplete, raceVariantsComplete,
@@ -126,15 +124,30 @@ watch(sourceVersionId, (id) => setSourceVersionId(id), { immediate: true })
 // Race/class choices are made inline on their own steps (skills, feature choices
 // and spells are folded into the Class step; race choices into Race). Снаряжение
 // и Личность — необязательные шаги.
+const statMethodLabel = computed(() => ({
+  array: 'Стандартный набор',
+  pointbuy: 'Покупка очков',
+  roll: 'Бросок кубиков',
+})[state.statMethod] || '')
+const equipmentCount = computed(() => allEquipment.value.reduce((sum, entry) => sum + (Number(entry.count) || 1), 0))
+const equipmentLabel = computed(() => {
+  const count = equipmentCount.value
+  if (!count) return ''
+  const mod100 = count % 100
+  const mod10 = count % 10
+  const noun = mod100 >= 11 && mod100 <= 14 ? 'предметов' : mod10 === 1 ? 'предмет' : mod10 >= 2 && mod10 <= 4 ? 'предмета' : 'предметов'
+  return `${count} ${noun}`
+})
+
 const steps = computed(() => [
-  { key: 'version', title: 'Версия' },
-  { key: 'race', title: 'Раса' },
-  { key: 'class', title: 'Класс' },
-  { key: 'background', title: 'Предыстория' },
-  { key: 'stats', title: 'Характеристики' },
-  { key: 'equipment', title: 'Снаряжение' },
-  { key: 'persona', title: 'Личность' },
-  { key: 'review', title: 'Обзор' },
+  { key: 'version', title: 'Версия', summary: state.version ? `D&D 5e · ${state.version}` : '' },
+  { key: 'race', title: 'Раса', summary: [state.race?.name, state.subrace?.name].filter(Boolean).join(' · ') },
+  { key: 'class', title: 'Класс', summary: [state.charClass?.name, state.subclass?.name].filter(Boolean).join(' · ') },
+  { key: 'background', title: 'Предыстория', summary: state.background?.name || '' },
+  { key: 'stats', title: 'Характеристики', summary: statMethodLabel.value },
+  { key: 'equipment', title: 'Снаряжение', summary: equipmentLabel.value },
+  { key: 'persona', title: 'Личность', summary: state.name.trim() || state.persona.alignment || '' },
+  { key: 'review', title: 'Обзор', summary: isComplete.value ? 'Можно создавать' : '' },
 ])
 const current = computed(() => state.step)
 const stepKey = computed(() => steps.value[current.value]?.key)
@@ -289,7 +302,7 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   height: calc(100vh - var(--header-h));
-  max-width: 1180px;
+  max-width: 1320px;
   margin: 0 auto;
   box-sizing: border-box;
   background: var(--bg);
@@ -333,21 +346,17 @@ onMounted(async () => {
   flex: 1;
   min-height: 0;
   display: grid;
-  grid-template-columns: 184px minmax(0, 1fr) 240px;
-  gap: 20px;
+  grid-template-columns: minmax(176px, 1fr) minmax(0, 720px) minmax(0, 1fr);
+  gap: 24px;
   padding: 4px 24px 16px;
 }
-.cc-rail,
-.cc-preview {
+.cc-rail {
   box-sizing: border-box;
-  background: var(--surface);
-  border: 1px solid color-mix(in srgb, var(--border-strong) 68%, transparent);
-  border-radius: 12px;
-  padding: 10px;
+  width: min(220px, 100%);
+  justify-self: end;
 }
 .cc-rail { position: sticky; top: 0; align-self: start; }
-.cc-main { min-width: 0; overflow-x: clip; overflow-y: auto; padding: 4px 2px; }
-.cc-preview { overflow-y: auto; }
+.cc-main { grid-column: 2; min-width: 0; overflow-x: clip; overflow-y: auto; padding: 4px 2px; }
 
 .cc-fade-enter-active, .cc-fade-leave-active { transition: opacity 0.16s ease; }
 .cc-fade-enter-from, .cc-fade-leave-to { opacity: 0; }
@@ -379,7 +388,8 @@ onMounted(async () => {
 
 @media (max-width: 920px) {
   .cc-body { grid-template-columns: minmax(0, 1fr); }
-  .cc-rail, .cc-preview { display: none; }
+  .cc-rail { display: none; }
+  .cc-main { grid-column: 1; }
   .cc { height: auto; min-height: calc(100vh - var(--header-h)); }
   .cc.cc--embedded { height: 100%; min-height: 0; }
 }
