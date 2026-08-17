@@ -7,6 +7,8 @@ const inputSource = readFileSync(fileURLToPath(new URL('./InputDescription.vue',
 const inlineSource = readFileSync(fileURLToPath(new URL('./DndRichInlineNode.vue', import.meta.url)), 'utf8')
 const contentSource = readFileSync(fileURLToPath(new URL('./DndRichContent.vue', import.meta.url)), 'utf8')
 const enemySource = readFileSync(fileURLToPath(new URL('../../features/items/detail-components/EnemyDetailContent.vue', import.meta.url)), 'utf8')
+const itemModalSource = readFileSync(fileURLToPath(new URL('../../features/handbook/components/ItemViewModal.vue', import.meta.url)), 'utf8')
+const itemDetailSource = readFileSync(fileURLToPath(new URL('../../features/handbook/components/HandbookItemDetail.vue', import.meta.url)), 'utf8')
 const migrationSource = readFileSync(fileURLToPath(new URL('../../../../internal/store/schema/15_rich_content.sql', import.meta.url)), 'utf8')
 
 describe('DnD rich content integration', () => {
@@ -37,9 +39,12 @@ describe('DnD rich content integration', () => {
   })
 
   it('passes a creature name into embedded dice rolls', () => {
-    expect(enemySource).toContain(':actor-name="item.name"')
+    expect(enemySource).toContain(':actor-name="actorName || item.name"')
     expect(contentSource).toContain(':actor-name="actorName"')
     expect(inlineSource).toContain("actor: props.actorName ? { name: props.actorName, charUuid: null } : undefined")
+    expect(inlineSource).toContain(':actor-name="actorName"')
+    expect(itemModalSource).toContain(':actor-name="actorName"')
+    expect(itemDetailSource).toContain(':actor-name="actorName"')
   })
 
   it('migrates only the approved kobold example', () => {

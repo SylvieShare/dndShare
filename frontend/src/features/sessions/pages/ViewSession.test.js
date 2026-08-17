@@ -385,6 +385,8 @@ describe('ViewSession participant rail', () => {
     expect(encounterMenuSource).toContain('defineExpose({ toggle })')
     expect(encounterMenuSource).toContain('>Открыть карточку</RowActionItem>')
     expect(encounterMenuSource).toContain('enc.openNpcDetail(combatant); close()')
+    expect(encounterSource).toContain(':actor-name="enc.npcActorName(enc.detailNpc)"')
+    expect(encounterComposableSource).toContain('npcActorName:           npcData.npcActorName')
     expect(encounterMenuSource).toContain('isNpc.value && props.combatant.itemId != null')
     expect(encounterMenuSource).toContain('>Состояния</RowActionItem>')
     expect(encounterMenuSource).toContain('>В запас</RowActionItem>')

@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import { itemsApi } from '@/shared/api/itemsApi'
+import { normalizedEncounterLetter } from '@/features/sessions/lib/encounterHelpers'
 
 export function useEncounterNpcData() {
   const npcItemCache = ref({})
@@ -46,6 +47,12 @@ export function useEncounterNpcData() {
     return npcItem(c)?.name || 'Существо'
   }
 
+  function npcActorName(c) {
+    const name = String(npcName(c)).trim()
+    const letter = normalizedEncounterLetter(c?.markerLetter)
+    return letter ? `${name} ${letter}` : name
+  }
+
   function npcAc(c) {
     const v = npcData(c).ac
     return v == null || v === '' ? null : v
@@ -89,6 +96,7 @@ export function useEncounterNpcData() {
     npcItem,
     npcData,
     npcName,
+    npcActorName,
     npcAc,
     npcHpMax,
     npcDex,

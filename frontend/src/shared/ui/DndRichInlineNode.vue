@@ -62,6 +62,7 @@
     :item="item"
     :item-id="item.id"
     :item-type-id="item.typeId"
+    :actor-name="actorName"
     @close="itemModalOpen = false"
   />
 

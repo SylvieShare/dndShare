@@ -163,7 +163,9 @@ version is not bumped when JSON data is unchanged. Dice rolls use the direct
 event endpoint because they do not mutate character state. Pending debounced
 character saves are flushed on page unmount instead of dropping their events.
 Encounter initiative, HP and challenge rolls pass an explicit actor override,
-so they are not attributed to an unrelated sheet left open by the DM.
+so they are not attributed to an unrelated sheet left open by the DM. NPC actor
+names include their encounter marker (`Кобольд A`), including rolls made from a
+creature card opened from the encounter.
 
 ## Locations and prepared NPCs
 

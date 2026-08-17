@@ -27,6 +27,7 @@
         :item="item"
         :type="type"
         :show-title="showTitle"
+        :actor-name="actorName"
       />
 
       <!-- Generic schema-based view -->
@@ -35,7 +36,7 @@
           <div class="field-label">{{ field.name }}</div>
 
           <template v-if="field.type === 'description'">
-            <RichContent v-if="item.data[field.key]" class="field-desc" :html="item.data[field.key]" />
+            <RichContent v-if="item.data[field.key]" class="field-desc" :html="item.data[field.key]" :actor-name="actorName" />
             <div v-else class="field-empty">—</div>
           </template>
 
@@ -135,6 +136,7 @@ const props = defineProps({
   type: { type: Object, default: null },
   canEdit: { type: Boolean, default: false },
   showTitle: { type: Boolean, default: true },
+  actorName: { type: String, default: '' },
 })
 
 defineEmits(['edit'])

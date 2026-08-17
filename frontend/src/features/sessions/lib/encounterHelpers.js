@@ -69,7 +69,7 @@ export const ICON_COLOR_SWATCHES = [
 
 export const ENCOUNTER_LETTERS = [...'ABCDEFGHIJKLMNOPQRSTUVWXYZ']
 
-function normalizedEncounterLetter(value) {
+export function normalizedEncounterLetter(value) {
   const letter = String(value || '').trim().toUpperCase()
   return ENCOUNTER_LETTERS.includes(letter) ? letter : null
 }

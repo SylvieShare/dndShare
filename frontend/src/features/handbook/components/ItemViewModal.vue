@@ -17,7 +17,7 @@
     </template>
 
     <div v-if="loading" class="iv-loading">Загрузка…</div>
-    <HandbookItemDetail v-else :item="item" :type="type" :can-edit="false" :show-title="false" />
+    <HandbookItemDetail v-else :item="item" :type="type" :can-edit="false" :show-title="false" :actor-name="actorName" />
 
     <template v-if="item && $slots.actions" #footer>
       <slot name="actions" :item="item" :type="type" />
@@ -53,6 +53,7 @@ const props = defineProps({
   itemTypeId: { type: Number, required: true },
   itemId: { type: Number, default: null },
   item: { type: Object, default: null },
+  actorName: { type: String, default: '' },
 })
 
 defineEmits(['close'])

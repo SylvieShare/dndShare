@@ -159,7 +159,7 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
     applyLocalPatches,
     getPlayerHp,
     getPlayerAc,
-    npcName:       npcData.npcName,
+    npcName:       npcData.npcActorName,
     npcAc:         npcData.npcAc,
     npcHpMax:      npcData.npcHpMax,
     npcHpFormula:  npcData.npcHpFormula,
@@ -169,7 +169,7 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
     findParticipant,
     playerDisplayName,
     npcDex:  npcData.npcDex,
-    npcName: npcData.npcName,
+    npcName: npcData.npcActorName,
   })
 
   const states = useEncounterStates({
@@ -186,7 +186,7 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
     selectedUids: selection.selectedUids,
     findParticipant,
     playerDisplayName,
-    npcName: npcData.npcName,
+    npcName: npcData.npcActorName,
     npcAbilityScore: npcData.npcAbilityScore,
     npcSavingThrow: npcData.npcSavingThrow,
   })
@@ -393,6 +393,7 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
     // npc data resolvers
     npcItem:                npcData.npcItem,
     npcName:                npcData.npcName,
+    npcActorName:           npcData.npcActorName,
     npcAc:                  npcData.npcAc,
     npcHpMax:               npcData.npcHpMax,
     // npcs
