@@ -214,7 +214,8 @@ onBeforeUnmount(() => {
 .dict-outer {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 54px);
+  height: calc(100vh - var(--header-h));
+  height: calc(100dvh - var(--header-h));
   overflow: hidden;
 }
 
@@ -245,7 +246,8 @@ onBeforeUnmount(() => {
 @media (max-width: 760px) {
   .dict-outer {
     height: auto;
-    min-height: calc(100vh - 54px);
+    min-height: calc(100vh - var(--header-h));
+    min-height: calc(100dvh - var(--header-h));
     overflow: visible;
   }
   .dict-page {

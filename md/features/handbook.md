@@ -83,7 +83,9 @@ handbook has no duplicate back bar inside its content. Vertical scrolling
 and gestures started on interactive controls remain untouched.
 The outer handbook and centered page wrappers stay transparent so the shared
 application canvas dot pattern remains visible around the opaque navigation,
-list and detail surfaces.
+list and detail surfaces. Handbook workspaces fill the available viewport below
+the mobile application header; on desktop they extend to the bottom because the
+application header is replaced by the sidebar.
 
 Details are specialized by type where useful (weapon, spell, enemy, potion,
 feat), otherwise the generic field renderer is used. Item detail modals use
