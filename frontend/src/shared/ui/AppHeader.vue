@@ -33,6 +33,8 @@
         </div>
       </div>
 
+      <GameContextSelector compact />
+
       <span
         v-if="headerContext.chip"
         class="header-chip"
@@ -54,10 +56,12 @@
 import { ref, computed, watch, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import MobileHeaderBack from '@/shared/ui/MobileHeaderBack.vue'
+import GameContextSelector from '@/shared/ui/GameContextSelector.vue'
 import { resolveMobileBackTarget } from '@/shared/lib/mobileBack'
 import UserBox from "@/features/auth/components/UserBox"
 import { useUiStore } from '@/stores/ui'
 import { useAccountStore } from '@/stores/account'
+import { useGameContextStore } from '@/stores/gameContext'
 import {
   MOBILE_HEADER_COLLAPSIBLE,
   MOBILE_HEADER_HIDDEN,
@@ -69,6 +73,7 @@ import { requestErrorReport } from '@/features/error-report/lib/errorReportLaunc
 const route = useRoute()
 const router = useRouter()
 const uiStore = useUiStore()
+const gameContextStore = useGameContextStore()
 
 const menuOpen = ref(false)
 const collapsing = ref(false)
@@ -92,6 +97,7 @@ const visibleItems = computed(() => {
     authenticated: isAuth.value,
     admin: isAdmin.value,
     path: route.path,
+    rulesTo: gameContextStore.rulesPath,
   })
 })
 

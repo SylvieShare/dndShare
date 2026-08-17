@@ -48,6 +48,8 @@ rules-edition content status; it is unrelated to old application data/API.
 
 `GET /api/sources` exposes only `versions[]`; `GET /api/content-sources`
 evaluates native/compatible/legacy/blocked status for a target edition.
+Глобальный multi-type поиск также передаёт `sourceVersionId`, поэтому исключает
+публикации, заблокированные для выбранной редакции.
 
 ## Current field contracts
 
@@ -73,6 +75,10 @@ button for every collection, is passed as `contentSourceIds`, and its selected
 ids persist in browser local storage. The landing and collection workspace use
 an opaque `--bg` canvas so the global page grid does not show through; list
 rows use the opaque `--surface` level with distinct active and selected states.
+При первом открытии landing выбирает систему и редакцию из глобального игрового
+контекста. Переключение на landing локально для справочника: оно сохраняется при
+переходе в коллекцию и обратно, передаётся как `sourceVersionId`, но не изменяет
+профиль игрока и ссылку «Правила».
 Schema filter groups without available
 options are not shown. `ItemEditModal` is schema-driven and uses shared form primitives; its
 create title uses the current item type name. The spell form also accepts a
@@ -118,21 +124,14 @@ source chip when no specialized publication label exists.
 Feature-specific mutations are passed into the fixed footer through the
 `actions` slot. Descriptions use the shared rich renderer.
 
-### Player rules
+### Related player rules
 
-For D&D 5e 2014 the handbook landing shows a separate **Правила игры** entry.
-`/handbook/rules` is a public task-oriented guide with eight articles covering
-the game loop, character sheet, d20 rolls, combat turns, attacks, health,
-spellcasting and conditions. The articles use structured frontend content and
-interactive HTML/Vue diagrams with mocked character data; they do not duplicate
-the item catalogue. Article and section headings plus conversational keywords
-are also part of the global header search; heading matches navigate directly to
-the matching anchor inside an article.
-
-Short reusable combat actions are the exception: base rows live in suggest type
-24 and the rules view filters that dictionary to system-owned canonical codes.
-See `md/features/player-rules.md` for the content, search, licensing and visual
-contracts.
+The public task-oriented player guide is a separate top-level section at
+`/rules`, not a handbook child. The two features share only deliberate domain
+data: short reusable combat actions live in suggest type 24, and the rules view
+filters that dictionary to system-owned canonical codes. See
+`md/features/player-rules.md` for the content, search, routing, licensing and
+visual contracts.
 
 ## Schemas
 

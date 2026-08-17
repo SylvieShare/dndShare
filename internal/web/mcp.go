@@ -274,7 +274,7 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 		if err != nil {
 			return nil, err
 		}
-		return s.store.SearchSuggestsByName(ctx, q, nil, coerceIn(limit, 1, 100))
+		return s.store.SearchSuggestsByName(ctx, q, nil, coerceIn(limit, 1, 100), nil)
 
 	case "error_reports_list":
 		summaryOnly, err := argBoolDefault(args, "summaryOnly", false)

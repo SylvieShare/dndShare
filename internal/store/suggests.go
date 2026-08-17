@@ -59,20 +59,24 @@ func collectSuggests(rows pgx.Rows) ([]Suggest, error) {
 
 // SearchSuggestsByName ищет подсказки по подстроке value (ILIKE). При userId != nil видны
 // базовые (user_id IS NULL) и собственные; иначе — только базовые.
-func (s *Store) SearchSuggestsByName(ctx context.Context, q string, userID *int64, limit int) ([]Suggest, error) {
+func (s *Store) SearchSuggestsByName(ctx context.Context, q string, userID *int64, limit int, sourceID *int64) ([]Suggest, error) {
 	pattern := "%" + q + "%"
+	args := []any{pattern}
+	where := []string{"s.value ILIKE $1"}
 	if userID != nil {
-		rows, err := s.pool.Query(ctx,
-			suggestSelect+` WHERE s.value ILIKE $1 AND (s.user_id IS NULL OR s.user_id = $2) ORDER BY lower(s.value), s.id LIMIT $3`,
-			pattern, *userID, limit)
-		if err != nil {
-			return nil, err
-		}
-		return collectSuggests(rows)
+		args = append(args, *userID)
+		where = append(where, fmt.Sprintf("(s.user_id IS NULL OR s.user_id = $%d)", len(args)))
+	} else {
+		where = append(where, "s.user_id IS NULL")
 	}
-	rows, err := s.pool.Query(ctx,
-		suggestSelect+` WHERE s.value ILIKE $1 AND s.user_id IS NULL ORDER BY lower(s.value), s.id LIMIT $2`,
-		pattern, limit)
+	if sourceID != nil {
+		args = append(args, *sourceID)
+		where = append(where, fmt.Sprintf("st.source_id = $%d", len(args)))
+	}
+	args = append(args, limit)
+	query := suggestSelect + ` JOIN dndshare.suggest_type st ON st.id = s.type_id WHERE ` +
+		strings.Join(where, " AND ") + fmt.Sprintf(" ORDER BY lower(s.value), s.id LIMIT $%d", len(args))
+	rows, err := s.pool.Query(ctx, query, args...)
 	if err != nil {
 		return nil, err
 	}

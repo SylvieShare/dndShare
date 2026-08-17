@@ -4,12 +4,12 @@
 
     <!-- ── Left: back + identity ── -->
     <div class="col-bar-left">
-      <button class="col-back-btn" @click="$emit('back')">
+      <RouterLink class="col-back-btn" to="/handbook">
         <svg viewBox="0 0 16 16" fill="none" width="14" height="14">
           <path d="M10 13L5 8L10 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
         К коллекциям
-      </button>
+      </RouterLink>
       <span class="col-sep" aria-hidden="true"></span>
 <span class="col-type-name">{{ type.name }}</span>
       <span v-if="filtered" class="col-type-count">{{ resultCount }}{{ hasMore ? '+' : '' }} из {{ type.count }}</span>
@@ -134,6 +134,7 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue'
+import { RouterLink } from 'vue-router'
 import { getSuggestId } from '@/features/handbook/objects/lib/schemaFields'
 import { fetchGet } from '@/shared/api/http'
 import { BasePopover } from '@sylvieshare/share-ui'
@@ -160,7 +161,7 @@ const props = defineProps({
   filtered: { type: Boolean, default: false },
 })
 
-const emit = defineEmits(['back', 'add', 'update:search', 'update:group-by', 'update:filters', 'update:content-source-ids'])
+const emit = defineEmits(['add', 'update:search', 'update:group-by', 'update:filters', 'update:content-source-ids'])
 
 const filterOpen = ref(false)
 const filterBtnRef = ref(null)

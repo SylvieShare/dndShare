@@ -1,6 +1,7 @@
-export function resolveAppNavigation({ authenticated = false, admin = false, path = '/' } = {}) {
+export function resolveAppNavigation({ authenticated = false, admin = false, path = '/', rulesTo = '/rules' } = {}) {
   const items = [
     { key: 'handbook', group: 'common', title: 'Справочник', to: '/handbook', active: path.startsWith('/handbook') },
+    { key: 'rules', group: 'common', title: 'Правила', to: rulesTo, active: path.startsWith('/rules') },
   ]
 
   if (authenticated) {

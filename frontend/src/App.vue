@@ -42,6 +42,7 @@ import { mobilePageTransitionActive } from '@/app/mobilePageTransition'
 import { useIsMobile } from '@sylvieshare/share-ui'
 import { useAccountStore } from '@/stores/account'
 import { useTextStore } from '@/stores/text'
+import { useGameContextStore } from '@/stores/gameContext'
 
 const route = useRoute()
 const isMobile = useIsMobile()
@@ -54,7 +55,7 @@ const pageTransitionMode = computed(() => (isMobile.value ? undefined : 'out-in'
 onMounted(() => {
   if (isStandaloneRoute.value) return
   useTextStore().downloadText()
-  accountStore.checkAuth()
+  useGameContextStore().ensure().catch(() => null)
 })
 </script>
 

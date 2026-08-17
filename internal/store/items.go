@@ -364,7 +364,7 @@ func (s *Store) GetByIds(ctx context.Context, ids []int64, userID *int64) ([]Ite
 }
 
 // SearchByTypesAndName — поиск сразу по нескольким типам (для search-multi).
-func (s *Store) SearchByTypesAndName(ctx context.Context, typeIDs []int64, q string, userID *int64) ([]Item, error) {
+func (s *Store) SearchByTypesAndName(ctx context.Context, typeIDs []int64, q string, userID *int64, scope ContentScope) ([]Item, error) {
 	if len(typeIDs) == 0 {
 		return []Item{}, nil
 	}
@@ -378,15 +378,18 @@ func (s *Store) SearchByTypesAndName(ctx context.Context, typeIDs []int64, q str
 		ph[i] = add(id)
 	}
 	like := add("%" + q + "%")
-	var sql string
-	if userID != nil {
-		sql = "SELECT " + itemSelectColumns("i") + " FROM dndshare.item i " + itemIconJoins("i") + " WHERE i.type_id IN (" + strings.Join(ph, ", ") +
-			") AND i.name ILIKE " + like + " AND (i.user_id IS NULL OR i.user_id = " + add(*userID) +
-			") ORDER BY i.user_id NULLS LAST, i.id LIMIT 30"
-	} else {
-		sql = "SELECT " + itemSelectColumns("i") + " FROM dndshare.item i " + itemIconJoins("i") + " WHERE i.type_id IN (" + strings.Join(ph, ", ") +
-			") AND i.name ILIKE " + like + " AND i.user_id IS NULL ORDER BY i.id LIMIT 30"
+	where := []string{
+		"i.type_id IN (" + strings.Join(ph, ", ") + ")",
+		"i.name ILIKE " + like,
 	}
+	if userID != nil {
+		where = append(where, "(i.user_id IS NULL OR i.user_id = "+add(*userID)+")")
+	} else {
+		where = append(where, "i.user_id IS NULL")
+	}
+	where = appendContentScopeSQL(where, &args, scope)
+	sql := "SELECT " + itemSelectColumns("i") + " FROM dndshare.item i " + itemIconJoins("i") +
+		" WHERE " + strings.Join(where, " AND ") + " ORDER BY i.user_id NULLS LAST, i.id LIMIT 30"
 	rows, err := s.pool.Query(ctx, sql, args...)
 	if err != nil {
 		return nil, err

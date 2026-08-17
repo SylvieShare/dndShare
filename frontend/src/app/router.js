@@ -4,7 +4,10 @@ import PageMain from '@/views/PageMain'
 import ViewAdmin from '@/features/admin/pages/ViewAdmin'
 import ViewHandbook from '@/features/handbook/pages/ViewHandbook'
 import ViewDictionary from '@/features/handbook/dictionary/ViewDictionary'
-import ViewPlayerRules from '@/features/handbook/rules/pages/ViewPlayerRules'
+import ViewDnd5e2014Rules from '@/features/handbook/rules/pages/ViewDnd5e2014Rules.vue'
+import ViewRulesEditionFallback from '@/features/handbook/rules/pages/ViewRulesEditionFallback.vue'
+import ViewRulesEntry from '@/features/handbook/rules/pages/ViewRulesEntry.vue'
+import ViewVtmV20Rules from '@/features/handbook/rules/pages/ViewVtmV20Rules.vue'
 import ViewCreateCharacter from '@/features/character-list/pages/ViewCreateCharacter'
 import ViewListCharacters from '@/features/character-list/pages/ViewListCharacters'
 import ViewCharacter from '@/features/character-editor/pages/ViewCharacter'
@@ -34,9 +37,10 @@ const PREFETCH_TTL_MS = 30_000
 const sectionOrder = {
     home: -1,
     handbook: 0,
-    sessions: 1,
-    characters: 2,
-    admin: 3,
+    rules: 1,
+    sessions: 2,
+    characters: 3,
+    admin: 4,
 }
 
 export const pageTransitionName = ref('page-forward')
@@ -202,16 +206,46 @@ const routes = [
         meta: { title: 'Справочник - Коллекции', section: 'handbook', depth: 1, pageOrder: 1, mobileBackTo: { name: 'Handbook' } },
     },
     {
-        path: '/handbook/rules',
+        path: '/rules',
+        name: 'RulesEntry',
+        component: ViewRulesEntry,
+        meta: { title: 'Правила', section: 'rules', depth: 0 },
+    },
+    {
+        path: '/rules/dnd5e/2014',
         name: 'PlayerRules',
-        component: ViewPlayerRules,
-        meta: { title: 'Как играть', section: 'handbook', depth: 1, pageOrder: 0, mobileBackTo: { name: 'Handbook' } },
+        component: ViewDnd5e2014Rules,
+        meta: { title: 'Правила D&D 5e 2014', section: 'rules', depth: 0 },
+    },
+    {
+        path: '/rules/dnd5e/2014/:articleSlug',
+        name: 'PlayerRuleArticle',
+        component: ViewDnd5e2014Rules,
+        meta: { title: 'Правила', section: 'rules', depth: 1, mobileBackTo: { name: 'PlayerRules' } },
+    },
+    {
+        path: '/rules/vampire-tm/v20',
+        name: 'VtmV20Rules',
+        component: ViewVtmV20Rules,
+        meta: { title: 'Правила Vampire V20', section: 'rules', depth: 0 },
+    },
+    {
+        path: '/rules/:systemSlug/:versionSlug',
+        name: 'RulesEditionFallback',
+        component: ViewRulesEditionFallback,
+        meta: { title: 'Правила', section: 'rules', depth: 0 },
+    },
+    {
+        path: '/rules/:articleSlug',
+        redirect: to => ({ name: 'PlayerRuleArticle', params: { articleSlug: to.params.articleSlug }, query: to.query, hash: to.hash }),
+    },
+    {
+        path: '/handbook/rules',
+        redirect: to => ({ name: 'PlayerRules', query: to.query, hash: to.hash }),
     },
     {
         path: '/handbook/rules/:articleSlug',
-        name: 'PlayerRuleArticle',
-        component: ViewPlayerRules,
-        meta: { title: 'Правила', section: 'handbook', depth: 2, pageOrder: 0, mobileBackTo: { name: 'PlayerRules' } },
+        redirect: to => ({ name: 'PlayerRuleArticle', params: { articleSlug: to.params.articleSlug }, hash: to.hash }),
     },
     {
         path: '/:pathMatch(.*)*',

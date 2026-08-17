@@ -23,4 +23,19 @@ describe('mobile app header navigation', () => {
     expect(backSource).not.toContain('window.history')
     expect(routerSource).toContain("mobileBackTo: { name: 'Sessions' }")
   })
+
+  it('keeps rules top-level while articles return to the rules hub', () => {
+    expect(routerSource).toContain("path: '/rules'")
+    expect(routerSource).toContain("path: '/rules/dnd5e/2014'")
+    expect(routerSource).toContain("path: '/rules/vampire-tm/v20'")
+    expect(routerSource).toContain("path: '/rules/dnd5e/2014/:articleSlug'")
+    expect(routerSource).toContain("section: 'rules'")
+    expect(routerSource).toContain("mobileBackTo: { name: 'PlayerRules' }")
+    expect(routerSource).toContain("path: '/handbook/rules'")
+  })
+
+  it('places the game context selector in the mobile header', () => {
+    expect(headerSource).toContain('<GameContextSelector compact />')
+    expect(headerSource).toContain('rulesTo: gameContextStore.rulesPath')
+  })
 })

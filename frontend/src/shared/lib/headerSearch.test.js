@@ -37,6 +37,14 @@ describe('header search results', () => {
     expect(searchSource).toContain("name: 'PlayerRuleArticle'")
     expect(searchSource).toContain("hash: `#${section.id}`")
     expect(searchSource).toContain('results.value = [...ruleResults, ...itemResults, ...suggestResults]')
+    expect(searchSource).toContain('isDnd5e2014(gameContextStore.context)')
+  })
+
+  it('scopes catalogue results to the selected system and edition', () => {
+    expect(searchSource).toContain('Number(type.sourceId) === Number(context?.sourceId)')
+    expect(searchSource).toContain('&sourceVersionId=${context.sourceVersionId}')
+    expect(searchSource).toContain('&sourceId=${context.sourceId}')
+    expect(searchSource).toContain('sourceVersionId: context?.sourceVersionId')
   })
 
   it('animates the dropdown, groups and changing result rows', () => {

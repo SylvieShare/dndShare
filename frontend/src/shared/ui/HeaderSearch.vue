@@ -80,17 +80,20 @@
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, ref } from 'vue'
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { BookOpenCheck } from '@lucide/vue'
 import { searchPlayerRuleEntries } from '@/features/handbook/rules/lib/playerRules'
 import { fetchGet } from '@/shared/api/http'
 import { groupHeaderSearchResults } from '@/shared/lib/headerSearch'
+import { isDnd5e2014 } from '@/shared/lib/gameSystems'
 import { useItemTypesStore } from '@/stores/itemTypes'
+import { useGameContextStore } from '@/stores/gameContext'
 
 const NO_ICON_TYPE_IDS = new Set([5, 6])
 
 const router = useRouter()
+const gameContextStore = useGameContextStore()
 const inputEl = ref(null)
 const query = ref('')
 const open = ref(false)
@@ -135,6 +138,7 @@ function onInput() {
 }
 
 function ruleResultsFor(value) {
+  if (!isDnd5e2014(gameContextStore.context)) return []
   return searchPlayerRuleEntries(value).slice(0, 4).map(({ article, section }) => ({
     key: `rule-${article.slug}${section ? `-${section.id}` : ''}`,
     kind: 'rule',
@@ -155,21 +159,26 @@ async function doSearch() {
   if (q.length < 2) return
   loading.value = true
   const currentSeq = ++seq
-  const ruleResults = ruleResultsFor(q)
+  let ruleResults = ruleResultsFor(q)
   results.value = ruleResults
 
   try {
-    await ensureItemTypes()
+    await Promise.all([ensureItemTypes(), gameContextStore.ensure()])
+    ruleResults = ruleResultsFor(q)
 
-    const typeIds = itemTypes.map(t => t.id).join(',')
+    const context = gameContextStore.context
+    const scopedTypes = itemTypes.filter(type => Number(type.sourceId) === Number(context?.sourceId))
+    const typeIds = scopedTypes.map(t => t.id).join(',')
+    const sourceVersionQuery = context?.sourceVersionId ? `&sourceVersionId=${context.sourceVersionId}` : ''
+    const sourceQuery = context?.sourceId ? `&sourceId=${context.sourceId}` : ''
     const [itemsRes, suggestRes] = await Promise.all([
-      fetchGet(`/items/search-multi?typeIds=${typeIds}&q=${encodeURIComponent(q)}`),
-      fetchGet(`/suggest/search?q=${encodeURIComponent(q)}&limit=12`),
+      fetchGet(`/items/search-multi?typeIds=${typeIds}&q=${encodeURIComponent(q)}${sourceVersionQuery}`),
+      fetchGet(`/suggest/search?q=${encodeURIComponent(q)}&limit=12${sourceQuery}`),
     ])
 
     if (currentSeq !== seq) return
 
-    const typeById = Object.fromEntries(itemTypes.map(t => [t.id, t]))
+    const typeById = Object.fromEntries(scopedTypes.map(t => [t.id, t]))
     const suggestTypeById = Object.fromEntries((suggestRes?.types || []).map(t => [t.id, t]))
 
     const itemResults = (itemsRes?.items || []).slice(0, 8).map(item => {
@@ -183,7 +192,7 @@ async function doSearch() {
         iconImageUrl: item.iconImageUrl || null,
         icon: item.svg || ((type && !NO_ICON_TYPE_IDS.has(item.typeId)) ? type.svg : null),
         source: type?.sourceName || type?.name || null,
-        url: { path: '/handbook', query: { type: item.typeId, item: item.id } },
+        url: { path: '/handbook', query: { type: item.typeId, item: item.id, sourceVersionId: context?.sourceVersionId } },
       }
     })
 
@@ -208,6 +217,10 @@ async function doSearch() {
     if (currentSeq === seq) loading.value = false
   }
 }
+
+watch(() => gameContextStore.sourceVersionId, () => {
+  if (query.value.trim().length >= 2) doSearch()
+})
 
 function navigate(r) {
   router.push(r.url)

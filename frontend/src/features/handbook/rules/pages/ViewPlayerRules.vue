@@ -2,7 +2,7 @@
   <div class="player-rules" :style="article ? { '--rule-accent': article.accent } : {}">
     <div class="rules-layout">
       <aside class="rules-toc" aria-label="Разделы правил">
-        <RouterLink class="rules-toc-home" to="/handbook/rules">
+        <RouterLink class="rules-toc-home" :to="{ name: 'PlayerRules' }">
           <BookOpenCheck aria-hidden="true" />
           <span>Как играть</span>
           <span class="rules-version">2014</span>
@@ -21,7 +21,7 @@
         </nav>
 
         <RouterLink class="rules-toc-handbook" to="/handbook">
-          <Library aria-hidden="true" /> Вернуться в справочник
+          <Library aria-hidden="true" /> Открыть справочник
         </RouterLink>
       </aside>
 

@@ -10,6 +10,7 @@ describe('desktop sidebar icons', () => {
   it('uses a document for sessions and people for characters', () => {
     expect(sidebarSource).toMatch(/sessions:\s*ScrollText/)
     expect(sidebarSource).toMatch(/characters:\s*Users/)
+    expect(sidebarSource).toMatch(/rules:\s*BookOpenCheck/)
   })
 
   it('keeps the common navigation item unlabeled', () => {
@@ -18,6 +19,8 @@ describe('desktop sidebar icons', () => {
   })
 
   it('puts search below the brand and error reporting above the collapse toggle', () => {
+    expect(sidebarSource.indexOf('<GameContextSelector :compact="!expanded" />'))
+      .toBeLessThan(sidebarSource.indexOf('<HeaderSearch v-else ref="searchRef" class="sidebar-search"'))
     expect(sidebarSource.indexOf('<HeaderSearch v-else ref="searchRef" class="sidebar-search"'))
       .toBeLessThan(sidebarSource.indexOf('v-for="item in navigationItems"'))
     expect(sidebarSource).toContain('label="На странице ошибка"')
@@ -26,6 +29,10 @@ describe('desktop sidebar icons', () => {
     expect(reporterSource).not.toContain('class="report-button"')
     expect(reporterSource).toContain('window.addEventListener(ERROR_REPORT_REQUEST_EVENT, startSelection)')
     expect(launcherSource).toContain('window.dispatchEvent(new Event(ERROR_REPORT_REQUEST_EVENT))')
+  })
+
+  it('uses the selected edition for the rules navigation target', () => {
+    expect(sidebarSource).toContain('rulesTo: gameContextStore.rulesPath')
   })
 
   it('expands the collapsed sidebar and focuses search from its search action', () => {

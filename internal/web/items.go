@@ -151,7 +151,7 @@ func (s *Server) handleSearchItemsMulti(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 	ids := parseIDList(q.Get("typeIds"))
-	items, err := s.store.SearchByTypesAndName(r.Context(), ids, q.Get("q"), optionalUserPtr(r))
+	items, err := s.store.SearchByTypesAndName(r.Context(), ids, q.Get("q"), optionalUserPtr(r), parseContentScope(q))
 	if err != nil {
 		serverError(w, err)
 		return

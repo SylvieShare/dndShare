@@ -18,6 +18,17 @@ func TestValidateAccountPasswordRequest(t *testing.T) {
 	}
 }
 
+func TestValidateAccountGameContextRequest(t *testing.T) {
+	recorder := httptest.NewRecorder()
+	if !validateAccountGameContextRequest(recorder, accountGameContextRequest{SourceVersionID: 12}) {
+		t.Fatalf("valid source version rejected: %s", recorder.Body.String())
+	}
+	recorder = httptest.NewRecorder()
+	if validateAccountGameContextRequest(recorder, accountGameContextRequest{}) {
+		t.Fatal("empty source version accepted")
+	}
+}
+
 func TestAccountStorageSummaryGroupsKnownAndUnknownFiles(t *testing.T) {
 	imageSize := int64(120)
 	musicSize := int64(380)

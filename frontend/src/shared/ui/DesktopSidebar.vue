@@ -12,6 +12,9 @@
     </template>
 
     <template #default="{ expanded, toggle }">
+      <GameContextSelector :compact="!expanded" />
+      <div class="sidebar-context-separator" />
+
       <SidebarNavItem
         v-if="!expanded"
         as="button"
@@ -57,20 +60,24 @@
 <script setup>
 import { computed, nextTick, ref } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
-import { BookOpen, CircleAlert, Dices, ScrollText, Search, Shield, UserRoundPlus, Users } from '@lucide/vue'
+import { BookOpen, BookOpenCheck, CircleAlert, Dices, ScrollText, Search, Shield, UserRoundPlus, Users } from '@lucide/vue'
 import { AppSidebar, SidebarBrand, SidebarNavItem } from '@sylvieshare/share-ui'
 import HeaderSearch from '@/shared/ui/HeaderSearch'
+import GameContextSelector from '@/shared/ui/GameContextSelector.vue'
 import UserBox from '@/features/auth/components/UserBox'
 import { resolveAppNavigation } from '@/shared/lib/appNavigation'
 import { useAccountStore } from '@/stores/account'
+import { useGameContextStore } from '@/stores/gameContext'
 import { requestErrorReport } from '@/features/error-report/lib/errorReportLauncher'
 
 const route = useRoute()
 const accountStore = useAccountStore()
+const gameContextStore = useGameContextStore()
 const searchRef = ref(null)
 
 const icons = {
   handbook: BookOpen,
+  rules: BookOpenCheck,
   sessions: ScrollText,
   characters: Users,
   'create-character': UserRoundPlus,
@@ -81,6 +88,7 @@ const navigationItems = computed(() => resolveAppNavigation({
   authenticated: accountStore.authStatus === 'success',
   admin: accountStore.hasRole('ADMIN'),
   path: route.path,
+  rulesTo: gameContextStore.rulesPath,
 }))
 const isAuthenticated = computed(() => accountStore.authStatus === 'success')
 
@@ -125,6 +133,16 @@ async function openSearch(toggle) {
   height: 1px;
   margin: 4px 2px 6px;
   background: var(--border);
+}
+
+.sidebar-context-separator {
+  height: 1px;
+  margin: 6px 2px 4px;
+  background: var(--border);
+}
+
+.desktop-sidebar :deep(.share-sidebar-nav:has(.game-context-panel--popover)) {
+  overflow: visible;
 }
 
 .sidebar-group-label {

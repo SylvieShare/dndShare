@@ -17,7 +17,6 @@
       :has-more="hasMore"
       :filtered="isFiltered"
       class="handbook-col-bar"
-      @back="goToLanding"
       @add="openAddModal"
       @update:content-source-ids="contentSourceIds = $event"
     />
@@ -29,7 +28,9 @@
       <HandbookLanding
         v-if="!selectedType"
         class="handbook-landing"
+        :source-version-id="sourceVersionId"
         @select-type="selectType"
+        @update:source-version-id="sourceVersionId = $event"
       />
 
       <template v-else>
@@ -108,6 +109,7 @@ import { useAccountStore } from '@/stores/account'
 import { useItemTypesStore } from '@/stores/itemTypes'
 import { useUiStore } from '@/stores/ui'
 import { useSuggestStore } from '@/stores/suggest'
+import { useGameContextStore } from '@/stores/gameContext'
 import { createHeaderChip } from '@/shared/lib/appHeader'
 import { collectSuggestIds, getSuggestId, walkFieldsWithPath } from '@/features/handbook/objects/lib/schemaFields'
 import { useHandbookSwipeBack } from '@/features/handbook/composables/useHandbookSwipeBack'
@@ -127,6 +129,7 @@ const accountStore = useAccountStore()
 const itemTypesStore = useItemTypesStore()
 const suggestStore = useSuggestStore()
 const uiStore = useUiStore()
+const gameContextStore = useGameContextStore()
 
 // ── State ────────────────────────────────────────────────────────────────────
 const types = ref([])
@@ -144,6 +147,7 @@ const searchQ = ref('')
 const handbookContentSourcesStorageKey = 'dndshare.handbook.contentSourceIds'
 const filters = ref({})
 const contentSources = ref([])
+const sourceVersionId = ref(null)
 const contentSourceIds = ref(readStoredContentSourceIds())
 const groupBy = ref(null)
 const skipSearchWatch = ref(false)
@@ -167,7 +171,7 @@ const mobilePanel = computed(() => {
 function goToLanding() {
   selectedType.value = null
   selectedItem.value = null
-  router.replace({ query: {} })
+  router.replace('/handbook')
 }
 
 function goBack() {
@@ -236,19 +240,30 @@ function currentQuery() {
   if (groupBy.value) q.group = groupBy.value
   if (Object.keys(filters.value).length) q.filters = JSON.stringify(filters.value)
   if (selectedItem.value) q.item = selectedItem.value.id
+  if (sourceVersionId.value) q.sourceVersionId = sourceVersionId.value
   return q
 }
 
 // ── Data loading ─────────────────────────────────────────────────────────────
 async function fetchTypes() {
-  await itemTypesStore.ensureAll()
+  await Promise.all([itemTypesStore.ensureAll(), gameContextStore.ensure()])
   types.value = itemTypesStore.allTypes
+}
+
+function versionForType(type, requestedID = null) {
+  const source = gameContextStore.sources.find(item => Number(item.id) === Number(type?.sourceId))
+  const versions = source?.versions || []
+  const requested = versions.find(version => Number(version.id) === Number(requestedID))
+  if (requested) return requested.id
+  const global = versions.find(version => Number(version.id) === Number(gameContextStore.sourceVersionId))
+  return (global || versions[0])?.id || null
 }
 
 function filtersQuery() {
   const params = new URLSearchParams()
   if (Object.keys(filters.value).length) params.set('filters', JSON.stringify(filters.value))
   if (contentSourceIds.value.length) params.set('contentSourceIds', contentSourceIds.value.join(','))
+  if (sourceVersionId.value) params.set('sourceVersionId', String(sourceVersionId.value))
   const query = params.toString()
   return query ? `&${query}` : ''
 }
@@ -259,7 +274,9 @@ async function fetchContentSources(type) {
     return
   }
   const typeId = type.id
-  const res = await contentSourcesApi.listForSystem(type.sourceId)
+  const res = sourceVersionId.value
+    ? await contentSourcesApi.listForVersion(sourceVersionId.value)
+    : await contentSourcesApi.listForSystem(type.sourceId)
   if (selectedType.value?.id === typeId) contentSources.value = res?.sources || []
 }
 
@@ -334,8 +351,9 @@ async function resolveItem(itemId) {
 }
 
 // ── Type / item selection ────────────────────────────────────────────────────
-function selectType(type) {
+function selectType(type, requestedSourceVersionID = null) {
   selectedType.value = type
+  sourceVersionId.value = versionForType(type, requestedSourceVersionID)
   selectedItem.value = null
   skipFiltersWatch.value = true
   filters.value = {}
@@ -345,7 +363,7 @@ function selectType(type) {
   searchQ.value = ''
   clearTimeout(searchTimer)
   for (const id of collectSuggestIds(type.fields)) suggestStore.ensure(id)
-  router.push({ query: { type: type.id } })
+  router.push({ query: currentQuery() })
   fetchItems('')
 }
 
@@ -427,14 +445,14 @@ watch(
   { immediate: true },
 )
 
-watch(selectedType, (type) => {
+watch([selectedType, sourceVersionId], ([type]) => {
   fetchContentSources(type)
 }, { immediate: true })
 
 // Sync from URL on initial load and back-navigation
 watch(
-  () => [route.query.type, route.query.item, route.query.q, route.query.group, route.query.filters],
-  async ([rawType, rawItem, rawQ, rawGroup, rawFilters]) => {
+  () => [route.query.type, route.query.item, route.query.q, route.query.group, route.query.filters, route.query.sourceVersionId],
+  async ([rawType, rawItem, rawQ, rawGroup, rawFilters, rawSourceVersionID]) => {
     const typeId = rawType ? Number(rawType) : null
     const itemId = rawItem ? Number(rawItem) : null
     const q = rawQ || ''
@@ -448,10 +466,12 @@ watch(
       return
     }
 
-    if (selectedType.value?.id !== typeId) {
-      const type = types.value.find(t => t.id === typeId)
-      if (!type) return
+    const type = types.value.find(t => t.id === typeId)
+    if (!type) return
+    const nextSourceVersionID = versionForType(type, rawSourceVersionID)
+    if (selectedType.value?.id !== typeId || Number(sourceVersionId.value) !== Number(nextSourceVersionID)) {
       selectedType.value = type
+      sourceVersionId.value = nextSourceVersionID
       selectedItem.value = null
       const nextFilters = parseFilters(rawFilters)
       if (JSON.stringify(nextFilters) !== JSON.stringify(filters.value)) {
@@ -483,6 +503,7 @@ async function init() {
   if (!type) return
 
   selectedType.value = type
+  sourceVersionId.value = versionForType(type, route.query.sourceVersionId)
   for (const id of collectSuggestIds(type.fields)) suggestStore.ensure(id)
   if (q) { skipSearchWatch.value = true; searchQ.value = q }
   const initGroup = route.query.group || null

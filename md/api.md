@@ -20,11 +20,18 @@ API реализован Go `net/http` в `internal/web`. Feature-файл ре�
 - `GET /api/user/logout`
 - `POST /api/user/registration`
 
+Успешные `POST /api/user/auth` и `GET /api/user/checkAuth` возвращают в `user`
+`gameContext:{sourceId,sourceName,sourceVersionId,version}` вместе с id, login и
+roles.
+
 ## Player account
 
 - `PUT /api/account/password` принимает
   `{currentPassword,newPassword}`, проверяет текущий пароль и заменяет его
   PBKDF2-хэшем; ответ без тела — `204`.
+- `PUT /api/account/game-context` принимает `{sourceVersionId}`, проверяет
+  существование редакции, сохраняет выбор текущему игроку и возвращает
+  `{gameContext:{sourceId,sourceName,sourceVersionId,version}}`.
 - `GET /api/account/storage` возвращает личное использование пространства:
   `{usedBytes,fileCount,unknownFileCount,breakdown,files}`. Breakdown содержит
   `kind`, локализованную `label`, `bytes` и `count`; файл содержит
@@ -69,7 +76,8 @@ as the event author.
 - `GET /api/items`
 - `GET /api/items/by-ids?ids=`
 - `GET /api/items/children?parentId=`
-- `GET /api/items/search`, `GET /api/items/search-multi`
+- `GET /api/items/search`, `GET /api/items/search-multi`; оба принимают
+  publication scope, включая `sourceVersionId`.
 - `POST /api/items`, `PUT /api/items/{id}`
 - `POST /api/items/{id}/make-base`
 - `POST /api/items/{id}/icon-image` (multipart PNG/WebP, максимум 5 МБ)
@@ -105,7 +113,8 @@ Item list/search поддерживает publication scope через `contentS
 
 Suggest API:
 
-- `GET /api/suggest/types`, `/search`, `/batch`;
+- `GET /api/suggest/types`, `/search`, `/batch`; `types` и `search` принимают
+  `sourceId` для ограничения одной игровой системой;
 - `GET /api/suggest/{typeId}` и `/{typeId}/items`;
 - create/update/delete, make-base и SVG upload routes под
   `/api/suggest/{typeId}/...`.

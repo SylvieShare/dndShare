@@ -1,6 +1,7 @@
 package web
 
 import (
+	"context"
 	"errors"
 	"net/http"
 	"strings"
@@ -21,15 +22,33 @@ func (s *Server) routesAuth(mux *http.ServeMux) {
 
 // userBase — публичная инфа о пользователе (порт UserController.UserBase).
 type userBase struct {
-	ID    int64    `json:"id"`
-	Login string   `json:"login"`
-	Roles []string `json:"roles"`
+	ID          int64                 `json:"id"`
+	Login       string                `json:"login"`
+	Roles       []string              `json:"roles"`
+	GameContext store.UserGameContext `json:"gameContext"`
 }
 
 // checkAuthResponse — порт UserController.CheckAuthResponse (NON_NULL: user опускается, если null).
 type checkAuthResponse struct {
 	Auth bool      `json:"auth"`
 	User *userBase `json:"user,omitempty"`
+}
+
+func (s *Server) buildUserBase(ctx context.Context, user store.User) (*userBase, error) {
+	roles, err := s.store.RolesByUser(ctx, user.ID)
+	if err != nil {
+		return nil, err
+	}
+	gameContext, err := s.store.GetUserGameContext(ctx, user.ID)
+	if err != nil {
+		return nil, err
+	}
+	return &userBase{
+		ID:          user.ID,
+		Login:       user.Login,
+		Roles:       nonNil(roles),
+		GameContext: gameContext,
+	}, nil
 }
 
 func (s *Server) handleAuth(w http.ResponseWriter, r *http.Request) {
@@ -58,14 +77,14 @@ func (s *Server) handleAuth(w http.ResponseWriter, r *http.Request) {
 		serverError(w, err)
 		return
 	}
-	roles, err := s.store.RolesByUser(r.Context(), user.ID)
+	publicUser, err := s.buildUserBase(r.Context(), user)
 	if err != nil {
 		serverError(w, err)
 		return
 	}
 	writeJSON(w, http.StatusOK, checkAuthResponse{
 		Auth: true,
-		User: &userBase{ID: user.ID, Login: user.Login, Roles: nonNil(roles)},
+		User: publicUser,
 	})
 }
 
@@ -80,14 +99,14 @@ func (s *Server) handleCheckAuth(w http.ResponseWriter, r *http.Request) {
 		writeJSON(w, http.StatusOK, checkAuthResponse{Auth: false})
 		return
 	}
-	roles, err := s.store.RolesByUser(r.Context(), uid)
+	publicUser, err := s.buildUserBase(r.Context(), user)
 	if err != nil {
 		serverError(w, err)
 		return
 	}
 	writeJSON(w, http.StatusOK, checkAuthResponse{
 		Auth: true,
-		User: &userBase{ID: user.ID, Login: user.Login, Roles: nonNil(roles)},
+		User: publicUser,
 	})
 }
 

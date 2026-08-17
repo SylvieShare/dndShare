@@ -12,7 +12,46 @@ func init() { registerRoutes((*Server).routesAccount) }
 
 func (s *Server) routesAccount(mux *http.ServeMux) {
 	mux.HandleFunc("PUT /api/account/password", s.handleChangeAccountPassword)
+	mux.HandleFunc("PUT /api/account/game-context", s.handleUpdateAccountGameContext)
 	mux.HandleFunc("GET /api/account/storage", s.handleGetAccountStorage)
+}
+
+type accountGameContextRequest struct {
+	SourceVersionID int64 `json:"sourceVersionId"`
+}
+
+func validateAccountGameContextRequest(w http.ResponseWriter, req accountGameContextRequest) bool {
+	if req.SourceVersionID <= 0 {
+		badRequest(w, "Выберите редакцию игровой системы")
+		return false
+	}
+	return true
+}
+
+func (s *Server) handleUpdateAccountGameContext(w http.ResponseWriter, r *http.Request) {
+	userID, ok := mustUser(w, r)
+	if !ok {
+		return
+	}
+	var req accountGameContextRequest
+	if decodeJSON(r, &req) != nil || !validateAccountGameContextRequest(w, req) {
+		return
+	}
+	exists, err := s.store.SourceVersionExists(r.Context(), req.SourceVersionID)
+	if err != nil {
+		serverError(w, err)
+		return
+	}
+	if !exists {
+		badRequest(w, "Такой редакции игровой системы не существует")
+		return
+	}
+	gameContext, err := s.store.UpdateUserGameContext(r.Context(), userID, req.SourceVersionID)
+	if err != nil {
+		serverError(w, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]any{"gameContext": gameContext})
 }
 
 type accountPasswordRequest struct {

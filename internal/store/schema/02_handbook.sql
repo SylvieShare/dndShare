@@ -32,6 +32,43 @@ FROM (VALUES ('DND5e', '2014'), ('Vampire: TM', 'V20')) AS seed(source_name, ver
 JOIN dndshare."source" src ON lower(src.name) = lower(seed.source_name)
 ON CONFLICT (source_id, "version") DO NOTHING;
 
+-- One selected rules edition is the player's global application context. The
+-- source is deliberately not duplicated on users: source_version already owns
+-- that relation. Existing and future accounts start with D&D 5e 2014.
+ALTER TABLE dndshare.users
+    ADD COLUMN IF NOT EXISTS source_version_id int8 NULL REFERENCES dndshare.source_version(id);
+UPDATE dndshare.users u
+SET source_version_id = selected.id
+FROM dndshare.source_version selected
+JOIN dndshare."source" src ON src.id = selected.source_id
+WHERE u.source_version_id IS NULL
+  AND lower(src.name) = lower('DND5e')
+  AND selected.version = '2014';
+ALTER TABLE dndshare.users ALTER COLUMN source_version_id SET NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_users_source_version_id
+    ON dndshare.users USING btree (source_version_id);
+
+CREATE OR REPLACE FUNCTION dndshare.set_default_user_source_version()
+RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    IF NEW.source_version_id IS NULL THEN
+        SELECT sv.id INTO NEW.source_version_id
+        FROM dndshare.source_version sv
+        JOIN dndshare."source" src ON src.id = sv.source_id
+        WHERE lower(src.name) = lower('DND5e') AND sv.version = '2014'
+        ORDER BY sv.id
+        LIMIT 1;
+    END IF;
+    RETURN NEW;
+END;
+$$;
+DROP TRIGGER IF EXISTS users_default_source_version ON dndshare.users;
+CREATE TRIGGER users_default_source_version
+BEFORE INSERT ON dndshare.users
+FOR EACH ROW EXECUTE FUNCTION dndshare.set_default_user_source_version();
+
 -- One-time normalization from the old one-version-per-source model.
 ALTER TABLE dndshare."source" ADD COLUMN IF NOT EXISTS "version" varchar NULL;
 INSERT INTO dndshare.source_version (source_id, "version")

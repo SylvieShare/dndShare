@@ -9,16 +9,27 @@
         <span class="hb-sidebar-label hb-sidebar-label--badge">Source</span>
       </div>
       <div class="hb-source-list">
-        <button
-          v-for="src in sources"
-          :key="src.id"
-          class="hb-source-item"
-          :class="{ active: src.id === selectedSourceId }"
-          @click="selectedSourceId = src.id"
-        >
-          <span class="hb-source-name">{{ src.name }}</span>
-          <span v-if="sourceVersionLabel(src)" class="hb-source-version">{{ sourceVersionLabel(src) }}</span>
-        </button>
+        <div v-for="src in sources" :key="src.id" class="hb-source-group">
+          <button
+            class="hb-source-item"
+            :class="{ active: src.id === selectedSourceId }"
+            @click="selectSource(src)"
+          >
+            <span class="hb-source-name">{{ src.name }}</span>
+            <span class="hb-source-version">{{ activeVersionLabel(src) }}</span>
+          </button>
+          <div v-if="src.id === selectedSourceId" class="hb-version-list" aria-label="Редакция правил">
+            <button
+              v-for="version in src.versions"
+              :key="version.id"
+              type="button"
+              :class="{ active: version.id === selectedSourceVersionId }"
+              @click="selectVersion(version.id)"
+            >
+              {{ version.version }}
+            </button>
+          </div>
+        </div>
       </div>
     </aside>
 
@@ -31,41 +42,17 @@
           <h1 class="hb-title">Справочник</h1>
           <p class="hb-subtitle">
             {{ selectedSource.name }}
-            <template v-if="sourceVersionLabel(selectedSource)">· {{ sourceVersionLabel(selectedSource) }}</template>
+            <template v-if="selectedVersion">· {{ selectedVersion.version }}</template>
             · {{ itemTypes.length }} коллекций
             · {{ selectedSource.countItems.toLocaleString('ru') }} записей
           </p>
         </div>
 
-        <section v-if="playerRulesAvailable" class="hb-rules-section" aria-labelledby="hb-rules-title">
-          <div class="hb-section-header">
-            <span id="hb-rules-title" class="hb-section-title">Правила игры</span>
-            <span class="hb-section-count">8</span>
-            <span class="hb-section-meta">· быстрый помощник игрока · редакция 2014</span>
-          </div>
-          <router-link class="hb-rules-link" to="/handbook/rules">
-            <BaseTile class="hb-rules-card" color="var(--accent)" interactive framed>
-              <div class="hb-rules-copy">
-                <span class="hb-rules-kicker"><BookOpenCheck aria-hidden="true" /> Начать с основ</span>
-                <strong>Как играть в D&amp;D</strong>
-                <p>Броски, лист персонажа, ход в бою, атаки, хиты, заклинания и состояния — с примерами и интерактивными схемами.</p>
-                <span class="hb-rules-open">Открыть правила <ArrowRight aria-hidden="true" /></span>
-              </div>
-              <div class="hb-rules-map" aria-hidden="true">
-                <span><Dices /><small>d20</small></span>
-                <span><Swords /><small>бой</small></span>
-                <span><HeartPulse /><small>хиты</small></span>
-                <span><Sparkles /><small>магия</small></span>
-              </div>
-            </BaseTile>
-          </router-link>
-        </section>
-
         <!-- Collections section -->
         <div class="hb-section-header">
           <span class="hb-section-title">Коллекции</span>
           <span class="hb-section-count">{{ itemTypes.length }}</span>
-          <span class="hb-section-meta">· ядро {{ selectedSource.name }}<template v-if="sourceVersionLabel(selectedSource)"> ({{ sourceVersionLabel(selectedSource) }})</template> · только чтение</span>
+          <span class="hb-section-meta">· ядро {{ selectedSource.name }}<template v-if="selectedVersion"> ({{ selectedVersion.version }})</template> · только чтение</span>
         </div>
 
         <div v-if="loadingTypes" class="hb-loading">Загрузка…</div>
@@ -76,7 +63,7 @@
             class="hb-collection-card"
             :class="{ 'hb-collection-card--wide': type.important }"
             :style="cardStyle(type)"
-            @click="$emit('select-type', type)"
+            @click="emit('select-type', type, selectedSourceVersionId)"
           >
             <div class="hb-card-top">
               <span class="hb-card-name">{{ type.name }}</span>
@@ -141,41 +128,56 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue'
-import { ArrowRight, BookOpenCheck, Dices, HeartPulse, Sparkles, Swords } from '@lucide/vue'
-import { BaseTile } from '@sylvieshare/share-ui'
 import { fetchGet } from '@/shared/api/http'
-import { sourceVersionLabel } from '@/shared/lib/sourceVersions'
 import { useItemTypesStore } from '@/stores/itemTypes'
+import { useGameContextStore } from '@/stores/gameContext'
 
 const itemTypesStore = useItemTypesStore()
+const gameContextStore = useGameContextStore()
 
-defineEmits(['select-type'])
+const props = defineProps({ sourceVersionId: { type: [Number, String], default: null } })
+const emit = defineEmits(['select-type', 'update:source-version-id'])
 
 const sources = ref([])
 const selectedSourceId = ref(null)
+const selectedSourceVersionId = ref(null)
 const itemTypes = ref([])
 const suggestTypes = ref([])
 const loadingTypes = ref(false)
 const loadingDicts = ref(false)
 
 const selectedSource = computed(() => sources.value.find(s => s.id === selectedSourceId.value) || null)
-const playerRulesAvailable = computed(() => {
-  const source = selectedSource.value
-  const dndSource = String(source?.name || '').toLowerCase().replace(/[^a-z0-9]/g, '') === 'dnd5e'
-  return dndSource && (source?.versions || []).some(version => String(version?.version) === '2014')
-})
+const selectedVersion = computed(() => selectedSource.value?.versions?.find(
+  version => Number(version.id) === Number(selectedSourceVersionId.value),
+) || null)
 
+function activeVersionLabel(source) {
+  if (source.id === selectedSourceId.value && selectedVersion.value) return selectedVersion.value.version
+  return source.versions?.[0]?.version || '—'
+}
+
+function selectSource(source) {
+  selectedSourceId.value = source.id
+  const preferredID = props.sourceVersionId || gameContextStore.sourceVersionId
+  const preferred = source.versions?.find(version => Number(version.id) === Number(preferredID))
+  selectVersion((preferred || source.versions?.[0])?.id || null)
+}
+
+function selectVersion(versionID) {
+  selectedSourceVersionId.value = versionID
+  emit('update:source-version-id', versionID)
+}
 function cardStyle(type) {
   if (!type.color) return {}
   return { '--card-color': type.color }
 }
 
 async function fetchSources() {
-  const res = await fetchGet('/sources')
-  sources.value = res?.sources || []
-  if (sources.value.length && !selectedSourceId.value) {
-    selectedSourceId.value = sources.value[0].id
-  }
+  await gameContextStore.ensure()
+  sources.value = gameContextStore.sources
+  const preferredID = props.sourceVersionId || gameContextStore.sourceVersionId
+  const source = sources.value.find(item => item.versions?.some(version => Number(version.id) === Number(preferredID))) || sources.value[0]
+  if (source) selectSource(source)
 }
 
 async function fetchTypesForSource(sourceId) {

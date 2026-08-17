@@ -56,7 +56,8 @@ func (s *Server) handleSuggestSearch(w http.ResponseWriter, r *http.Request) {
 		limit = 100
 	}
 	userID := optionalUserPtr(r)
-	items, err := s.store.SearchSuggestsByName(r.Context(), q, userID, limit)
+	sourceID := optionalInt64Query(r, "sourceId")
+	items, err := s.store.SearchSuggestsByName(r.Context(), q, userID, limit, sourceID)
 	if err != nil {
 		serverError(w, err)
 		return
@@ -65,7 +66,7 @@ func (s *Server) handleSuggestSearch(w http.ResponseWriter, r *http.Request) {
 	for _, it := range items {
 		typeIDs[it.TypeID] = true
 	}
-	allTypes, err := s.store.GetAllSuggestTypes(r.Context(), nil)
+	allTypes, err := s.store.GetAllSuggestTypes(r.Context(), sourceID)
 	if err != nil {
 		serverError(w, err)
 		return

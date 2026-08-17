@@ -31,7 +31,10 @@ HTTP-сервиса. Liquibase и отдельного Kotlin backend в про�
 `users`, `role`, `users_role`, `users_session`. Актуальные роли:
 `ADMIN`, `HANDBOOK_ADMIN`, `ERROR_REPORT_AUTO_APPROVE`,
 `ERROR_REPORT_REVIEWER`. Роли редактора шаблонов нет, потому что шаблоны
-находятся в коде.
+находятся в коде. `users.source_version_id` — обязательный FK глобально
+выбранной игроком редакции. Система определяется через `source_version → source`
+и не дублируется в `users`. Startup migration и trigger назначают DND5e 2014
+существующим и новым аккаунтам до первого пользовательского выбора.
 
 ### Персонажи
 

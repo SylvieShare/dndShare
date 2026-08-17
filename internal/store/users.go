@@ -15,6 +15,45 @@ type User struct {
 	CreatedAt string
 }
 
+// UserGameContext is the player's selected game system and concrete edition.
+type UserGameContext struct {
+	SourceID        int64  `json:"sourceId"`
+	SourceName      string `json:"sourceName"`
+	SourceVersionID int64  `json:"sourceVersionId"`
+	Version         string `json:"version"`
+}
+
+const userGameContextQuery = `SELECT src.id, src.name, sv.id, sv.version
+	FROM dndshare.users u
+	JOIN dndshare.source_version sv ON sv.id = u.source_version_id
+	JOIN dndshare.source src ON src.id = sv.source_id`
+
+// GetUserGameContext returns the rules edition selected by one player.
+func (s *Store) GetUserGameContext(ctx context.Context, userID int64) (UserGameContext, error) {
+	var result UserGameContext
+	err := s.pool.QueryRow(ctx, userGameContextQuery+` WHERE u.id = $1`, userID).
+		Scan(&result.SourceID, &result.SourceName, &result.SourceVersionID, &result.Version)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return UserGameContext{}, ErrNotFound
+	}
+	return result, err
+}
+
+// UpdateUserGameContext changes the selected edition and returns its full context.
+func (s *Store) UpdateUserGameContext(ctx context.Context, userID, sourceVersionID int64) (UserGameContext, error) {
+	result, err := s.pool.Exec(ctx,
+		`UPDATE dndshare.users SET source_version_id = $2 WHERE id = $1`,
+		userID, sourceVersionID,
+	)
+	if err != nil {
+		return UserGameContext{}, err
+	}
+	if result.RowsAffected() == 0 {
+		return UserGameContext{}, ErrNotFound
+	}
+	return s.GetUserGameContext(ctx, userID)
+}
+
 // FindUserByLogin возвращает пользователя по логину (nil-ошибка ErrNotFound, если нет).
 func (s *Store) FindUserByLogin(ctx context.Context, login string) (User, error) {
 	var u User
