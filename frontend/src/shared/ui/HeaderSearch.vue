@@ -181,6 +181,12 @@ function onKeydown(e) {
     inputEl.value?.blur()
   }
 }
+
+function focus() {
+  inputEl.value?.focus()
+}
+
+defineExpose({ focus })
 </script>
 
 <style scoped>

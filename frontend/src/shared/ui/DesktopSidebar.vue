@@ -11,16 +11,16 @@
       <SidebarBrand :as="RouterLink" to="/" label="DnD Share" aria-label="DnD Share" :icon="Dices" />
     </template>
 
-    <template #default="{ expanded, expand }">
+    <template #default="{ expanded, toggle }">
       <SidebarNavItem
         v-if="!expanded"
         as="button"
         label="Поиск"
         title="Открыть поиск"
         :icon="Search"
-        @click="expand"
+        @click="openSearch(toggle)"
       />
-      <HeaderSearch v-else class="sidebar-search" />
+      <HeaderSearch v-else ref="searchRef" class="sidebar-search" />
 
       <div class="sidebar-search-separator" />
 
@@ -53,7 +53,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, nextTick, ref } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 import { BookOpen, CircleAlert, Dices, ScrollText, Search, Shield, Users } from '@lucide/vue'
 import { AppSidebar, SidebarBrand, SidebarNavItem } from '@sylvieshare/share-ui'
@@ -65,6 +65,7 @@ import { requestErrorReport } from '@/features/error-report/lib/errorReportLaunc
 
 const route = useRoute()
 const accountStore = useAccountStore()
+const searchRef = ref(null)
 
 const icons = {
   handbook: BookOpen,
@@ -78,6 +79,12 @@ const navigationItems = computed(() => resolveAppNavigation({
   admin: accountStore.hasRole('ADMIN'),
   path: route.path,
 }))
+
+async function openSearch(toggle) {
+  toggle()
+  await nextTick()
+  searchRef.value?.focus()
+}
 </script>
 
 <style scoped>

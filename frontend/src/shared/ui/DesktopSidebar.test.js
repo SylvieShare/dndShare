@@ -13,7 +13,7 @@ describe('desktop sidebar icons', () => {
   })
 
   it('puts search below the brand and error reporting above the collapse toggle', () => {
-    expect(sidebarSource.indexOf('<HeaderSearch v-else class="sidebar-search"'))
+    expect(sidebarSource.indexOf('<HeaderSearch v-else ref="searchRef" class="sidebar-search"'))
       .toBeLessThan(sidebarSource.indexOf('v-for="item in navigationItems"'))
     expect(sidebarSource).toContain('label="На странице ошибка"')
     expect(sidebarSource).toContain('.share-sidebar-tools .sidebar-error-action) { order: 1; }')
@@ -21,5 +21,11 @@ describe('desktop sidebar icons', () => {
     expect(reporterSource).not.toContain('class="report-button"')
     expect(reporterSource).toContain('window.addEventListener(ERROR_REPORT_REQUEST_EVENT, startSelection)')
     expect(launcherSource).toContain('window.dispatchEvent(new Event(ERROR_REPORT_REQUEST_EVENT))')
+  })
+
+  it('expands the collapsed sidebar and focuses search from its search action', () => {
+    expect(sidebarSource).toContain('<template #default="{ expanded, toggle }">')
+    expect(sidebarSource).toContain('@click="openSearch(toggle)"')
+    expect(sidebarSource).toContain('searchRef.value?.focus()')
   })
 })
