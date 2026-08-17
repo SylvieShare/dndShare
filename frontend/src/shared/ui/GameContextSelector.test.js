@@ -12,4 +12,12 @@ describe('game context selector', () => {
     expect(source).toContain('store.selectSource(sourceID)')
     expect(source).toContain('store.selectVersion(sourceVersionID)')
   })
+
+  it('keeps the current context compact and opens detailed selectors on demand', () => {
+    expect(source).toContain('class="game-context-trigger-current"')
+    expect(source).toContain('class="game-context-trigger-edition"')
+    expect(source).toContain('<div v-if="open" class="game-context-panel game-context-panel--popover"')
+    expect(source).not.toContain('v-if="!compact || open"')
+    expect(source).toMatch(/\.game-context-trigger-edition \{[\s\S]*color: var\(--text-muted\);/)
+  })
 })

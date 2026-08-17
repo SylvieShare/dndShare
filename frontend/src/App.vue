@@ -92,6 +92,10 @@ body {
     left: calc(var(--app-sidebar-w) + 16px);
   }
 
+  body:has(.app-sidebar--expanded) .page-transition-stage {
+    margin-left: var(--sidebar-expanded-w);
+  }
+
   body:has(.app-sidebar--expanded) .review-inbox {
     left: calc(var(--sidebar-expanded-w) + 16px);
   }
@@ -101,6 +105,7 @@ body {
   min-height: calc(100vh - var(--header-h));
   min-height: calc(100dvh - var(--header-h));
   margin-left: var(--app-sidebar-w);
+  transition: margin-left 0.28s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .page-transition-stage--print {
@@ -271,6 +276,10 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .page-transition-stage {
+    transition: none;
+  }
+
   .page-forward-enter-active,
   .page-forward-leave-active,
   .page-backward-enter-active,

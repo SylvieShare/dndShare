@@ -28,7 +28,13 @@
       <div class="sidebar-search-separator" />
 
       <template v-for="item in navigationItems" :key="item.key">
-        <div v-if="expanded && startsGroup(item) && groupLabel(item.group)" class="sidebar-group-label">{{ groupLabel(item.group) }}</div>
+        <div
+          v-if="startsGroup(item) && groupLabel(item.group)"
+          class="sidebar-group-marker"
+          :class="{ 'sidebar-group-marker--collapsed': !expanded }"
+        >
+          <span>{{ groupLabel(item.group) }}</span>
+        </div>
         <SidebarNavItem
           :as="RouterLink"
           :to="item.to"
@@ -145,13 +151,44 @@ async function openSearch(toggle) {
   overflow: visible;
 }
 
-.sidebar-group-label {
-  padding: 9px 10px 3px;
+.sidebar-group-marker {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  box-sizing: border-box;
+  height: 25px;
+  padding: 7px 10px 3px;
+  flex: 0 0 25px;
   color: var(--text-muted);
   font-size: 9px;
   font-weight: 750;
   letter-spacing: .1em;
   text-transform: uppercase;
+}
+
+.sidebar-group-marker--collapsed {
+  align-items: center;
+  justify-content: center;
+  padding: 0 7px;
+}
+
+.sidebar-group-marker--collapsed::before {
+  width: 28px;
+  height: 1px;
+  background: var(--border);
+  content: '';
+}
+
+.sidebar-group-marker--collapsed > span {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .desktop-sidebar :deep(.share-sidebar-tools .sidebar-error-action) { order: 1; }

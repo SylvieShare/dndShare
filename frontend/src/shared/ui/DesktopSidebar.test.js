@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 
 const sidebarSource = readFileSync(fileURLToPath(new URL('./DesktopSidebar.vue', import.meta.url)), 'utf8')
+const appSource = readFileSync(fileURLToPath(new URL('../../App.vue', import.meta.url)), 'utf8')
 const reporterSource = readFileSync(fileURLToPath(new URL('../../features/error-report/components/ErrorReporter.vue', import.meta.url)), 'utf8')
 const launcherSource = readFileSync(fileURLToPath(new URL('../../features/error-report/lib/errorReportLauncher.js', import.meta.url)), 'utf8')
 
@@ -16,6 +17,18 @@ describe('desktop sidebar icons', () => {
   it('keeps the common navigation item unlabeled', () => {
     expect(sidebarSource).not.toContain("common: 'Общее'")
     expect(sidebarSource).toContain('startsGroup(item) && groupLabel(item.group)')
+  })
+
+  it('keeps group markers in the collapsed rail so following icons do not jump', () => {
+    expect(sidebarSource).not.toContain('expanded && startsGroup(item)')
+    expect(sidebarSource).toContain("'sidebar-group-marker--collapsed': !expanded")
+    expect(sidebarSource).toMatch(/\.sidebar-group-marker \{[\s\S]*height: 25px;[\s\S]*flex: 0 0 25px;/)
+    expect(sidebarSource).toMatch(/\.sidebar-group-marker--collapsed::before \{[\s\S]*height: 1px;/)
+  })
+
+  it('reserves the full physical width of the expanded sidebar in the page layout', () => {
+    expect(appSource).toMatch(/body:has\(\.app-sidebar--expanded\) \.page-transition-stage \{\s*margin-left: var\(--sidebar-expanded-w\);/)
+    expect(appSource).toMatch(/\.page-transition-stage \{[\s\S]*transition: margin-left 0\.28s cubic-bezier\(0\.22, 1, 0\.36, 1\);/)
   })
 
   it('puts search below the brand and error reporting above the collapse toggle', () => {

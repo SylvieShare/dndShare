@@ -1,8 +1,8 @@
 <template>
   <div class="game-context" :class="{ 'game-context--compact': compact }" v-click-outside="close">
     <button
-      v-if="compact"
       class="game-context-trigger"
+      :class="{ 'game-context-trigger--compact': compact }"
       type="button"
       :title="contextLabel"
       :aria-label="`Игровая система: ${contextLabel}`"
@@ -10,48 +10,55 @@
       @click="open = !open"
     >
       <BookMarked aria-hidden="true" />
-      <span class="game-context-trigger-version">{{ selectedVersion?.version || '—' }}</span>
+      <span v-if="compact" class="game-context-trigger-version">{{ selectedVersion?.version || '—' }}</span>
+      <span v-else class="game-context-trigger-current">
+        <span class="game-context-trigger-system">{{ selectedSource?.name || 'Игровой контекст' }}</span>
+        <span class="game-context-trigger-edition">{{ selectedVersion?.version || '—' }}</span>
+      </span>
+      <ChevronDown v-if="!compact" class="game-context-trigger-chevron" aria-hidden="true" />
     </button>
 
-    <div v-if="!compact || open" class="game-context-panel" :class="{ 'game-context-panel--popover': compact }">
-      <div class="game-context-heading">
-        <span>Игровой контекст</span>
-        <LoaderCircle v-if="store.loading || store.saving" class="game-context-spinner" aria-label="Сохранение" />
-        <Check v-else-if="store.ready" class="game-context-saved" aria-label="Выбор сохранён" />
+    <Transition name="game-context-popover">
+      <div v-if="open" class="game-context-panel game-context-panel--popover" aria-label="Выбор игрового контекста">
+        <div class="game-context-heading">
+          <span>Игровой контекст</span>
+          <LoaderCircle v-if="store.loading || store.saving" class="game-context-spinner" aria-label="Сохранение" />
+          <Check v-else-if="store.ready" class="game-context-saved" aria-label="Выбор сохранён" />
+        </div>
+
+        <label class="game-context-field">
+          <span>Система</span>
+          <ValueSelect
+            :model-value="selectedSource?.id"
+            :options="sourceOptions"
+            placeholder="Выберите систему"
+            aria-label="Игровая система"
+            :disabled="store.loading || store.saving"
+            @update:model-value="selectSource"
+          />
+        </label>
+
+        <label class="game-context-field game-context-field--edition">
+          <span>Редакция</span>
+          <ValueSelect
+            :model-value="selectedVersion?.id"
+            :options="versionOptions"
+            placeholder="Выберите редакцию"
+            aria-label="Редакция правил"
+            :disabled="!selectedSource || store.loading || store.saving"
+            @update:model-value="selectVersion"
+          />
+        </label>
+
+        <p v-if="store.error" class="game-context-error" role="status">{{ store.error }}</p>
       </div>
-
-      <label class="game-context-field">
-        <span>Система</span>
-        <ValueSelect
-          :model-value="selectedSource?.id"
-          :options="sourceOptions"
-          placeholder="Выберите систему"
-          aria-label="Игровая система"
-          :disabled="store.loading || store.saving"
-          @update:model-value="selectSource"
-        />
-      </label>
-
-      <label class="game-context-field">
-        <span>Редакция</span>
-        <ValueSelect
-          :model-value="selectedVersion?.id"
-          :options="versionOptions"
-          placeholder="Выберите редакцию"
-          aria-label="Редакция правил"
-          :disabled="!selectedSource || store.loading || store.saving"
-          @update:model-value="selectVersion"
-        />
-      </label>
-
-      <p v-if="store.error" class="game-context-error" role="status">{{ store.error }}</p>
-    </div>
+    </Transition>
   </div>
 </template>
 
 <script setup>
 import { computed, onMounted, ref } from 'vue'
-import { BookMarked, Check, LoaderCircle } from '@lucide/vue'
+import { BookMarked, Check, ChevronDown, LoaderCircle } from '@lucide/vue'
 import { ValueSelect } from '@sylvieshare/share-ui'
 import { useGameContextStore } from '@/stores/gameContext'
 
@@ -105,13 +112,19 @@ onMounted(() => store.ensure().catch(() => null))
 
 .game-context-panel--popover {
   position: absolute;
-  top: 0;
-  left: calc(100% + 10px);
+  top: calc(100% + 6px);
+  left: 0;
   z-index: 180;
-  width: 230px;
+  width: 100%;
   border-color: var(--border-strong);
   background: var(--popover-bg);
   box-shadow: var(--shadow-lg);
+}
+
+.game-context--compact .game-context-panel--popover {
+  top: 0;
+  left: calc(100% + 10px);
+  width: 230px;
 }
 
 .game-context-heading {
@@ -147,6 +160,8 @@ onMounted(() => store.ensure().catch(() => null))
   font-size: 10px;
 }
 
+.game-context-field--edition > span { color: var(--text-muted); }
+
 .game-context-field :deep(.vs-button) {
   min-height: 31px;
   padding: 5px 8px;
@@ -160,10 +175,13 @@ onMounted(() => store.ensure().catch(() => null))
 
 .game-context-trigger {
   position: relative;
-  width: 42px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
   height: 42px;
-  display: grid;
-  place-items: center;
+  padding: 0 8px;
+  overflow: hidden;
   border: 0;
   border-radius: 9px;
   background: transparent;
@@ -179,6 +197,49 @@ onMounted(() => store.ensure().catch(() => null))
 
 .game-context-trigger svg { width: 20px; height: 20px; }
 
+.game-context-trigger--compact {
+  display: grid;
+  width: 42px;
+  padding: 0;
+  place-items: center;
+}
+
+.game-context-trigger-current {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  min-width: 0;
+  flex: 1;
+  text-align: left;
+}
+
+.game-context-trigger-system {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--text-1);
+  font-size: 13px;
+  font-weight: 650;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.game-context-trigger-edition {
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 550;
+  flex-shrink: 0;
+}
+
+.game-context-trigger-chevron {
+  width: 14px !important;
+  height: 14px !important;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  transition: transform .16s ease;
+}
+
+.game-context-trigger[aria-expanded='true'] .game-context-trigger-chevron { transform: rotate(180deg); }
+
 .game-context-trigger-version {
   position: absolute;
   right: 1px;
@@ -186,12 +247,12 @@ onMounted(() => store.ensure().catch(() => null))
   max-width: 28px;
   padding: 1px 3px;
   overflow: hidden;
-  border: 1px solid var(--border-strong);
+  border: 1px solid color-mix(in srgb, var(--border) 72%, transparent);
   border-radius: 4px;
-  background: var(--surface);
-  color: var(--text-1);
+  background: color-mix(in srgb, var(--surface) 68%, transparent);
+  color: var(--text-muted);
   font-size: 7px;
-  font-weight: 800;
+  font-weight: 650;
   line-height: 1;
   text-overflow: ellipsis;
 }
@@ -202,11 +263,23 @@ onMounted(() => store.ensure().catch(() => null))
   font-size: 10px;
 }
 
+.game-context-popover-enter-active,
+.game-context-popover-leave-active {
+  transition: opacity .14s ease, transform .16s ease;
+  transform-origin: top left;
+}
+
+.game-context-popover-enter-from,
+.game-context-popover-leave-to {
+  opacity: 0;
+  transform: translateY(-4px) scale(.985);
+}
+
 @keyframes game-context-spin { to { transform: rotate(360deg); } }
 
 @media (max-width: 640px) {
   .game-context--compact { width: 34px; flex-shrink: 0; }
-  .game-context-trigger { width: 34px; height: 34px; }
+  .game-context-trigger--compact { width: 34px; height: 34px; }
   .game-context-trigger svg { width: 18px; height: 18px; }
   .game-context-panel--popover {
     top: calc(100% + 8px);
@@ -217,5 +290,8 @@ onMounted(() => store.ensure().catch(() => null))
 
 @media (prefers-reduced-motion: reduce) {
   .game-context-spinner { animation-duration: 1.8s; }
+  .game-context-trigger-chevron,
+  .game-context-popover-enter-active,
+  .game-context-popover-leave-active { transition: none; }
 }
 </style>
