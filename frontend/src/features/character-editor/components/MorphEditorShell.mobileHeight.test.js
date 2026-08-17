@@ -10,6 +10,11 @@ const morphEditorSources = [
 ].map(path => readFileSync(fileURLToPath(new URL(path, import.meta.url)), 'utf8'))
 
 describe('MorphEditorShell mobile layout', () => {
+  it('opens above the fullscreen character sheet modal', () => {
+    expect(source).toContain("zIndex: { type: Number, default: 3100 }")
+    expect(source).toContain(':z-index="zIndex"')
+  })
+
   it('keeps vertical editors full-height with a surface preview and form backing', () => {
     expect(source).toMatch(/\.mes-split \{ flex-direction: column; min-height: 100%; background: var\(--surface\); \}/)
     expect(source).toMatch(/\.mes-rest \{[\s\S]*?background: var\(--bg\);/)

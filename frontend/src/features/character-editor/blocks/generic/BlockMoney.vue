@@ -48,7 +48,7 @@
     :open="coinPickerOpen"
     :anchor="coinTriggerEl"
     placement="bottom-end"
-    :z-index="1100"
+    :z-index="3200"
     @update:open="coinPickerOpen = $event"
   >
     <template #default="{ close: closePicker }">

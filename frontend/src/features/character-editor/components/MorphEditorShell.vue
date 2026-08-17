@@ -19,6 +19,7 @@ const props = defineProps({
   strip: { type: Boolean, default: true },
   frame: { type: String, default: '' },                 // gradient + colored border on the panel (block "unfolds" into the window)
   nav: { type: Object, default: null },
+  zIndex: { type: Number, default: 3100 },               // above the fullscreen character sheet modal (3000)
 })
 defineEmits(['close'])
 
@@ -46,6 +47,7 @@ const showBack = computed(() => !!props.nav && props.nav.view.value !== 'detail'
     :nav="nav"
     :show-back="showBack"
     :frame-color="frame"
+    :z-index="zIndex"
     @close="$emit('close')"
   >
     <template #detail="{ revealed }">
