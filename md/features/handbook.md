@@ -30,6 +30,8 @@ Bestiary artwork follows the same contract: the import job downloads the
 upstream file, writes it under the stable `bestiary/v1/<slug>` key in our S3 and
 registers that key/URL in a system `storage_image` row. External CDN URLs are
 never served as item icons and artwork is never stored in `item.data`.
+Deploy also runs the idempotent `cmd/bestiary-image-sync` migration: only legacy
+bestiary rows without an object key are copied, so later deploys are no-ops.
 
 Saved user items are backfilled to that source during startup. Personal source
 ids are never stored or read in `item.data`, and item/suggest id reads expose
