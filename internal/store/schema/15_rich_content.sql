@@ -41,3 +41,30 @@ WHERE id = 1635
   AND jsonb_typeof(data -> 'actions') = 'array'
   AND jsonb_array_length(data -> 'feats') > 0
   AND jsonb_array_length(data -> 'actions') > 1;
+
+-- The kobold damage average belongs to the roll node itself. Remove the
+-- imported external "4 (formula)" layout and persist the manually editable
+-- average in the node payload for both attacks.
+UPDATE dndshare.item
+SET data = jsonb_set(
+    jsonb_set(
+        data,
+        '{actions,0,value}',
+        to_jsonb(replace(
+            data #>> '{actions,0,value}',
+            '<em>Попадание:</em>&nbsp;4&nbsp;(<span data-rich-node="dice" data-rich-payload="%7B%22formula%22%3A%221%D0%BA4%20%2B%202%22%2C%22label%22%3A%22%D0%A3%D1%80%D0%BE%D0%BD%22%7D" contenteditable="false">Урон: 1к4 + 2</span>)',
+            '<em>Попадание:</em> <span data-rich-node="dice" data-rich-payload="%7B%22formula%22%3A%221%D0%BA4%20%2B%202%22%2C%22label%22%3A%22%D0%A3%D1%80%D0%BE%D0%BD%22%2C%22average%22%3A4%7D" contenteditable="false">Урон: 4 · 1к4 + 2</span>'
+        )),
+        false
+    ),
+    '{actions,1,value}',
+    to_jsonb(replace(
+        data #>> '{actions,1,value}',
+        '<em>Попадание:</em>&nbsp;4&nbsp;(<span data-rich-node="dice" data-rich-payload="%7B%22formula%22%3A%221%D0%BA4%20%2B%202%22%2C%22label%22%3A%22%D0%A3%D1%80%D0%BE%D0%BD%22%7D" contenteditable="false">Урон: 1к4 + 2</span>)',
+        '<em>Попадание:</em> <span data-rich-node="dice" data-rich-payload="%7B%22formula%22%3A%221%D0%BA4%20%2B%202%22%2C%22label%22%3A%22%D0%A3%D1%80%D0%BE%D0%BD%22%2C%22average%22%3A4%7D" contenteditable="false">Урон: 4 · 1к4 + 2</span>'
+    )),
+    false
+)
+WHERE id = 1635
+  AND jsonb_typeof(data -> 'actions') = 'array'
+  AND jsonb_array_length(data -> 'actions') > 1;

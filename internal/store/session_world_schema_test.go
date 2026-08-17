@@ -52,6 +52,8 @@ func TestRichContentSchemaMigratesOnlyApprovedKobold(t *testing.T) {
 		"WHERE id = 1635",
 		`data-rich-node="dice"`,
 		`data-rich-node="suggest"`,
+		`%22average%22%3A4`,
+		`<em>Попадание:</em> <span data-rich-node="dice"`,
 		`<dice-roller label="Атака"`,
 		`<detail-tooltip type="screen">`,
 	} {

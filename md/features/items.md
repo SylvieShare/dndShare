@@ -50,7 +50,9 @@ entries and selected choices.
 
 ## Visual conventions
 
-- descriptions render through `RichContent`;
+- descriptions render through `RichContent`; embedded `dice` nodes may store an
+  optional manually entered numeric `average`, rendered inside the roll chip
+  before the formula and retained when the node is edited;
 - base PHB weapons, ordinary equipment, feats and race/class abilities receive
   idempotent `item.svg` icons from startup schema; related class mechanics may
   share semantic artwork, while every item still has an explicit

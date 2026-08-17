@@ -3,9 +3,11 @@
     v-if="node.kind === 'dice'"
     type="button"
     class="rich-node rich-node--dice"
-    :title="`Бросить ${formula}`"
+    :title="average == null ? `Бросить ${formula}` : `Бросить ${formula} · среднее ${average}`"
     @click="roll"
   >
+    <span v-if="average != null" class="rich-node-average">{{ average }}</span>
+    <span v-if="average != null" class="rich-node-divider" aria-hidden="true" />
     <template v-for="(part, index) in diceParts" :key="index">
       <span v-if="index" class="rich-node-sign">{{ part.sign }}</span>
       <span v-if="part.kind === 'dice'" class="rich-node-die">
@@ -106,6 +108,12 @@ const suggestStore = useSuggestStore()
 const diceStore = useDiceStore()
 
 const formula = computed(() => String(props.node.payload?.formula || ''))
+const average = computed(() => {
+  const raw = props.node.payload?.average
+  if (raw == null || raw === '') return null
+  const value = Number(raw)
+  return Number.isFinite(value) ? value : null
+})
 const diceParts = computed(() => parseDiceExpression(formula.value))
 const suggest = computed(() => suggestStore.items(Number(props.node.payload?.typeId))
   ?.find(entry => Number(entry.id) === Number(props.node.payload?.id)) || null)
@@ -199,6 +207,8 @@ button.rich-node:active { transform: scale(.97); }
   vertical-align: middle;
 }
 .rich-node-die { display: inline-flex; align-items: center; gap: 1px; }
+.rich-node-average { color: var(--text-1); font-size: 1.08em; font-weight: 800; }
+.rich-node-divider { align-self: stretch; width: 1px; margin: 2px 1px; background: color-mix(in srgb, var(--accent) 38%, var(--border)); }
 .rich-node-sign { color: var(--text-muted); }
 .rich-node--unknown { color: var(--text-muted); }
 .rich-suggest-popover { display: flex; flex-direction: column; gap: 6px; max-width: 340px; color: var(--text-2); font-size: 12px; }

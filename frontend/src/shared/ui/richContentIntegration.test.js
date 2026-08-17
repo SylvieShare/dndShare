@@ -9,9 +9,9 @@ const migrationSource = readFileSync(fileURLToPath(new URL('../../../../internal
 
 describe('DnD rich content integration', () => {
   it('uses an application-owned payload instead of legacy custom elements', () => {
-    const html = createRichNodeHtml('dice', { formula: '2к6 + 3', label: 'Урон' }, 'Урон: 2к6 + 3')
+    const html = createRichNodeHtml('dice', { formula: '2к6 + 3', label: 'Урон', average: 10 }, 'Урон: 10 · 2к6 + 3')
     const encoded = html.match(/data-rich-payload="([^"]+)"/)?.[1]
-    expect(decodeRichNodePayload(encoded)).toEqual({ formula: '2к6 + 3', label: 'Урон' })
+    expect(decodeRichNodePayload(encoded)).toEqual({ formula: '2к6 + 3', label: 'Урон', average: 10 })
     expect(html).not.toContain('dice-roller')
   })
 
@@ -28,6 +28,7 @@ describe('DnD rich content integration', () => {
     expect(inlineSource).toContain('diceStore.roll')
     expect(inlineSource).toContain(':size="27"')
     expect(inlineSource).toContain('vertical-align: middle')
+    expect(inlineSource).toContain('rich-node-average')
     expect(inlineSource).toContain('<ItemTooltip')
     expect(inlineSource).toContain('<ItemViewModal')
     expect(inlineSource).toContain('<BasePopover')

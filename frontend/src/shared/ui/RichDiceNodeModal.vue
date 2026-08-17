@@ -7,8 +7,13 @@
       <FormField label="Подпись" hint="будет заголовком результата" vertical>
         <FormTextInput v-model:value="label" placeholder="Атака, урон, лечение…" @enter="save" />
       </FormField>
-      <div class="rdm-preview" :class="{ 'rdm-preview--invalid': formula && !valid }">
+      <FormField label="Среднее значение" hint="необязательно, показывается внутри блока" vertical>
+        <FormTextInput v-model:value="average" type="number" inputmode="decimal" placeholder="4" @enter="save" />
+      </FormField>
+      <div class="rdm-preview" :class="{ 'rdm-preview--invalid': (formula && !valid) || !validAverage }">
         <template v-if="valid">
+          <b v-if="averageValue != null" class="rdm-average">{{ averageValue }}</b>
+          <span v-if="averageValue != null" class="rdm-divider" aria-hidden="true" />
           <template v-for="(part, index) in parts" :key="index">
             <span v-if="index">{{ part.sign }}</span>
             <span v-if="part.kind === 'dice'" class="rdm-die"><b v-if="part.n > 1">{{ part.n }}×</b><SystemDie :sides="part.sides" :size="30" /></span>
@@ -23,7 +28,7 @@
       <div class="rdm-actions">
         <button v-if="editing" type="button" class="rdm-remove" @click="$emit('remove')">Удалить из текста</button>
         <button type="button" class="rdm-cancel" @click="$emit('close')">Отмена</button>
-        <button type="button" class="rdm-save" :disabled="!valid" @click="save">{{ editing ? 'Сохранить' : 'Вставить' }}</button>
+        <button type="button" class="rdm-save" :disabled="!valid || !validAverage" @click="save">{{ editing ? 'Сохранить' : 'Вставить' }}</button>
       </div>
     </template>
   </AppModalFrame>
@@ -40,18 +45,32 @@ const emit = defineEmits(['close', 'save', 'remove'])
 const formulaInput = ref(null)
 const formula = ref(String(props.node?.payload?.formula || ''))
 const label = ref(String(props.node?.payload?.label || ''))
+const average = ref(props.node?.payload?.average == null ? '' : String(props.node.payload.average))
 const parts = computed(() => parseDiceExpression(formula.value))
 const valid = computed(() => parts.value.some(part => part.kind === 'dice'))
+const averageValue = computed(() => {
+  const source = String(average.value ?? '').trim().replace(',', '.')
+  if (!source) return null
+  const value = Number(source)
+  return Number.isFinite(value) ? value : null
+})
+const validAverage = computed(() => !String(average.value ?? '').trim() || averageValue.value != null)
 const editing = computed(() => Boolean(props.node))
 
 function save() {
-  if (!valid.value) return
+  if (!valid.value || !validAverage.value) return
   const cleanFormula = formula.value.trim()
   const cleanLabel = label.value.trim()
+  const cleanAverage = averageValue.value
+  const displayFormula = cleanAverage == null ? cleanFormula : `${cleanAverage} · ${cleanFormula}`
   emit('save', {
     kind: 'dice',
-    payload: { formula: cleanFormula, ...(cleanLabel ? { label: cleanLabel } : {}) },
-    label: cleanLabel ? `${cleanLabel}: ${cleanFormula}` : cleanFormula,
+    payload: {
+      formula: cleanFormula,
+      ...(cleanLabel ? { label: cleanLabel } : {}),
+      ...(cleanAverage == null ? {} : { average: cleanAverage }),
+    },
+    label: cleanLabel ? `${cleanLabel}: ${displayFormula}` : displayFormula,
   })
 }
 
@@ -62,6 +81,8 @@ onMounted(() => nextTick(() => formulaInput.value?.focus?.()))
 .rdm-form { display: flex; flex-direction: column; gap: 14px; }
 .rdm-preview { display: flex; align-items: center; gap: 5px; min-height: 48px; padding: 8px 12px; border: 1px solid var(--border); border-radius: var(--r-md); background: var(--surface-raised); color: var(--text-muted); }
 .rdm-preview--invalid { border-color: color-mix(in srgb, var(--danger) 45%, var(--border)); color: var(--danger); }
+.rdm-average { color: var(--text-1); font-size: 16px; }
+.rdm-divider { align-self: stretch; width: 1px; margin: 2px 3px; background: var(--border-strong); }
 .rdm-die { display: inline-flex; align-items: center; gap: 2px; color: var(--accent-soft); }
 .rdm-actions { display: flex; align-items: center; justify-content: flex-end; gap: 8px; width: 100%; }
 .rdm-actions button { padding: 7px 12px; border: 0; border-radius: var(--r-sm); font: inherit; font-size: 12px; cursor: pointer; }
