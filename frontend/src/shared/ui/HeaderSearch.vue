@@ -10,7 +10,7 @@
         v-model="query"
         class="hs-input"
         type="text"
-        placeholder="Поиск по справочнику..."
+        placeholder="Поиск по справочнику и правилам..."
         autocomplete="off"
         spellcheck="false"
         @focus="onFocus"
@@ -64,7 +64,8 @@
                 @mouseenter="activeIdx = result.displayIndex"
               >
                 <span class="hs-row-icon">
-                  <img v-if="result.iconImageUrl" class="hs-icon-image" :src="result.iconImageUrl" alt="" />
+                  <BookOpenCheck v-if="result.kind === 'rule'" class="hs-icon-rule" aria-hidden="true" />
+                  <img v-else-if="result.iconImageUrl" class="hs-icon-image" :src="result.iconImageUrl" alt="" />
                   <span v-else-if="result.icon" class="hs-icon-svg" v-html="result.icon" />
                 </span>
                 <span class="hs-row-name">{{ result.label }}</span>
@@ -81,6 +82,8 @@
 <script setup>
 import { computed, onBeforeUnmount, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { BookOpenCheck } from '@lucide/vue'
+import { searchPlayerRuleEntries } from '@/features/handbook/rules/lib/playerRules'
 import { fetchGet } from '@/shared/api/http'
 import { groupHeaderSearchResults } from '@/shared/lib/headerSearch'
 import { useItemTypesStore } from '@/stores/itemTypes'
@@ -126,8 +129,25 @@ function onInput() {
     loading.value = false
     return
   }
+  results.value = ruleResultsFor(query.value)
   loading.value = true
   debounceTimer = setTimeout(doSearch, 270)
+}
+
+function ruleResultsFor(value) {
+  return searchPlayerRuleEntries(value).slice(0, 4).map(({ article, section }) => ({
+    key: `rule-${article.slug}${section ? `-${section.id}` : ''}`,
+    kind: 'rule',
+    typeId: 'player-rules',
+    typeLabel: 'Правила',
+    label: section?.title || article.title,
+    source: section ? `${article.shortTitle} · 2014` : 'D&D 5e · 2014',
+    url: {
+      name: 'PlayerRuleArticle',
+      params: { articleSlug: article.slug },
+      ...(section ? { hash: `#${section.id}` } : {}),
+    },
+  }))
 }
 
 async function doSearch() {
@@ -135,6 +155,8 @@ async function doSearch() {
   if (q.length < 2) return
   loading.value = true
   const currentSeq = ++seq
+  const ruleResults = ruleResultsFor(q)
+  results.value = ruleResults
 
   try {
     await ensureItemTypes()
@@ -179,9 +201,9 @@ async function doSearch() {
       }
     })
 
-    results.value = [...itemResults, ...suggestResults]
+    results.value = [...ruleResults, ...itemResults, ...suggestResults]
   } catch {
-    if (currentSeq === seq) results.value = []
+    if (currentSeq === seq) results.value = ruleResults
   } finally {
     if (currentSeq === seq) loading.value = false
   }
@@ -447,6 +469,11 @@ onBeforeUnmount(() => {
   width: 20px;
   height: 20px;
   color: var(--text-2, var(--text-muted));
+}
+.hs-icon-rule {
+  width: 18px;
+  height: 18px;
+  color: var(--accent-soft);
 }
 .hs-icon-image {
   display: block;

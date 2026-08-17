@@ -118,6 +118,22 @@ source chip when no specialized publication label exists.
 Feature-specific mutations are passed into the fixed footer through the
 `actions` slot. Descriptions use the shared rich renderer.
 
+### Player rules
+
+For D&D 5e 2014 the handbook landing shows a separate **Правила игры** entry.
+`/handbook/rules` is a public task-oriented guide with eight articles covering
+the game loop, character sheet, d20 rolls, combat turns, attacks, health,
+spellcasting and conditions. The articles use structured frontend content and
+interactive HTML/Vue diagrams with mocked character data; they do not duplicate
+the item catalogue. Article and section headings plus conversational keywords
+are also part of the global header search; heading matches navigate directly to
+the matching anchor inside an article.
+
+Short reusable combat actions are the exception: base rows live in suggest type
+24 and the rules view filters that dictionary to system-owned canonical codes.
+See `md/features/player-rules.md` for the content, search, licensing and visual
+contracts.
+
 ## Schemas
 
 Human-readable item-type schemas live in `resources/items/item_N_shema.json`.

@@ -180,6 +180,98 @@
   color: var(--text-muted);
 }
 
+/* Player rules entry */
+.hb-rules-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.hb-rules-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.hb-rules-card {
+  min-height: 190px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(260px, .55fr);
+  align-items: center;
+  gap: 28px;
+  padding: 24px 28px;
+  overflow: hidden;
+}
+
+.hb-rules-copy {
+  position: relative;
+  z-index: 1;
+}
+
+.hb-rules-kicker {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--accent-soft);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.hb-rules-kicker svg { width: 15px; height: 15px; }
+
+.hb-rules-copy > strong {
+  display: block;
+  margin-top: 8px;
+  color: var(--text-1);
+  font-family: var(--font-display);
+  font-size: 32px;
+  line-height: 1.05;
+}
+
+.hb-rules-copy p {
+  max-width: 620px;
+  margin: 9px 0 0;
+  color: var(--text-2);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.hb-rules-open {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  width: fit-content;
+  margin-top: 18px;
+  color: var(--accent-soft);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.hb-rules-open svg { width: 14px; height: 14px; }
+
+.hb-rules-map {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  transform: rotate(-2deg);
+}
+
+.hb-rules-map > span {
+  min-height: 66px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 4px;
+  border-radius: 10px;
+  color: var(--accent-soft);
+  background: color-mix(in srgb, var(--accent) 11%, var(--surface));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 22%, var(--border));
+}
+
+.hb-rules-map svg { width: 22px; height: 22px; }
+.hb-rules-map small { color: var(--text-muted); font-size: 8px; letter-spacing: .07em; text-transform: uppercase; }
+
 /* Collections grid */
 .hb-collections-grid {
   display: grid;
@@ -431,6 +523,16 @@
   .hb-dicts-grid {
     grid-template-columns: repeat(3, 1fr);
   }
+}
+
+@media (max-width: 760px) {
+  .hb-rules-card { grid-template-columns: 1fr; padding: 20px; }
+  .hb-rules-map { grid-template-columns: repeat(4, 1fr); transform: none; }
+  .hb-rules-map > span { min-height: 54px; }
+}
+
+@media (max-width: 440px) {
+  .hb-rules-map { grid-template-columns: 1fr 1fr; }
 }
 
 @media (max-width: 760px) {

@@ -37,6 +37,30 @@
           </p>
         </div>
 
+        <section v-if="playerRulesAvailable" class="hb-rules-section" aria-labelledby="hb-rules-title">
+          <div class="hb-section-header">
+            <span id="hb-rules-title" class="hb-section-title">Правила игры</span>
+            <span class="hb-section-count">8</span>
+            <span class="hb-section-meta">· быстрый помощник игрока · редакция 2014</span>
+          </div>
+          <router-link class="hb-rules-link" to="/handbook/rules">
+            <BaseTile class="hb-rules-card" color="var(--accent)" interactive framed>
+              <div class="hb-rules-copy">
+                <span class="hb-rules-kicker"><BookOpenCheck aria-hidden="true" /> Начать с основ</span>
+                <strong>Как играть в D&amp;D</strong>
+                <p>Броски, лист персонажа, ход в бою, атаки, хиты, заклинания и состояния — с примерами и интерактивными схемами.</p>
+                <span class="hb-rules-open">Открыть правила <ArrowRight aria-hidden="true" /></span>
+              </div>
+              <div class="hb-rules-map" aria-hidden="true">
+                <span><Dices /><small>d20</small></span>
+                <span><Swords /><small>бой</small></span>
+                <span><HeartPulse /><small>хиты</small></span>
+                <span><Sparkles /><small>магия</small></span>
+              </div>
+            </BaseTile>
+          </router-link>
+        </section>
+
         <!-- Collections section -->
         <div class="hb-section-header">
           <span class="hb-section-title">Коллекции</span>
@@ -117,6 +141,8 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue'
+import { ArrowRight, BookOpenCheck, Dices, HeartPulse, Sparkles, Swords } from '@lucide/vue'
+import { BaseTile } from '@sylvieshare/share-ui'
 import { fetchGet } from '@/shared/api/http'
 import { sourceVersionLabel } from '@/shared/lib/sourceVersions'
 import { useItemTypesStore } from '@/stores/itemTypes'
@@ -133,6 +159,11 @@ const loadingTypes = ref(false)
 const loadingDicts = ref(false)
 
 const selectedSource = computed(() => sources.value.find(s => s.id === selectedSourceId.value) || null)
+const playerRulesAvailable = computed(() => {
+  const source = selectedSource.value
+  const dndSource = String(source?.name || '').toLowerCase().replace(/[^a-z0-9]/g, '') === 'dnd5e'
+  return dndSource && (source?.versions || []).some(version => String(version?.version) === '2014')
+})
 
 function cardStyle(type) {
   if (!type.color) return {}

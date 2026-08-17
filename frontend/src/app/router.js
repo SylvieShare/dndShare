@@ -4,6 +4,7 @@ import PageMain from '@/views/PageMain'
 import ViewAdmin from '@/features/admin/pages/ViewAdmin'
 import ViewHandbook from '@/features/handbook/pages/ViewHandbook'
 import ViewDictionary from '@/features/handbook/dictionary/ViewDictionary'
+import ViewPlayerRules from '@/features/handbook/rules/pages/ViewPlayerRules'
 import ViewCreateCharacter from '@/features/character-list/pages/ViewCreateCharacter'
 import ViewListCharacters from '@/features/character-list/pages/ViewListCharacters'
 import ViewCharacter from '@/features/character-editor/pages/ViewCharacter'
@@ -199,6 +200,18 @@ const routes = [
         name: "HandbookObjects",
         component: ViewHandbook,
         meta: { title: 'Справочник - Коллекции', section: 'handbook', depth: 1, pageOrder: 1, mobileBackTo: { name: 'Handbook' } },
+    },
+    {
+        path: '/handbook/rules',
+        name: 'PlayerRules',
+        component: ViewPlayerRules,
+        meta: { title: 'Как играть', section: 'handbook', depth: 1, pageOrder: 0, mobileBackTo: { name: 'Handbook' } },
+    },
+    {
+        path: '/handbook/rules/:articleSlug',
+        name: 'PlayerRuleArticle',
+        component: ViewPlayerRules,
+        meta: { title: 'Правила', section: 'handbook', depth: 2, pageOrder: 0, mobileBackTo: { name: 'PlayerRules' } },
     },
     {
         path: '/:pathMatch(.*)*',

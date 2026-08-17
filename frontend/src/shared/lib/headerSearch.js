@@ -2,7 +2,7 @@ export function groupHeaderSearchResults(results = []) {
   const groups = new Map()
 
   for (const result of results) {
-    const kind = result.kind === 'suggest' ? 'suggest' : 'item'
+    const kind = ['suggest', 'rule'].includes(result.kind) ? result.kind : 'item'
     const typeId = result.typeId ?? 'unknown'
     const key = `${kind}:${typeId}`
 
@@ -10,7 +10,7 @@ export function groupHeaderSearchResults(results = []) {
       groups.set(key, {
         key,
         kind,
-        label: result.typeLabel || (kind === 'suggest' ? 'Подсказки' : 'Предметы'),
+        label: result.typeLabel || (kind === 'suggest' ? 'Подсказки' : kind === 'rule' ? 'Правила' : 'Предметы'),
         results: [],
       })
     }
