@@ -25,7 +25,7 @@
       <div class="sidebar-search-separator" />
 
       <template v-for="item in navigationItems" :key="item.key">
-        <div v-if="expanded && startsGroup(item)" class="sidebar-group-label">{{ groupLabel(item.group) }}</div>
+        <div v-if="expanded && startsGroup(item) && groupLabel(item.group)" class="sidebar-group-label">{{ groupLabel(item.group) }}</div>
         <SidebarNavItem
           :as="RouterLink"
           :to="item.to"
@@ -84,7 +84,7 @@ const navigationItems = computed(() => resolveAppNavigation({
 }))
 const isAuthenticated = computed(() => accountStore.authStatus === 'success')
 
-const GROUP_LABELS = { common: 'Общее', master: 'Для мастера', player: 'Для игрока', service: 'Служебное' }
+const GROUP_LABELS = { master: 'Для мастера', player: 'Для игрока', service: 'Служебное' }
 function groupLabel(group) { return GROUP_LABELS[group] || '' }
 function startsGroup(item) {
   const index = navigationItems.value.findIndex(entry => entry.key === item.key)

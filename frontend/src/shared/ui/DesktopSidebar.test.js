@@ -12,6 +12,11 @@ describe('desktop sidebar icons', () => {
     expect(sidebarSource).toMatch(/characters:\s*Users/)
   })
 
+  it('keeps the common navigation item unlabeled', () => {
+    expect(sidebarSource).not.toContain("common: 'Общее'")
+    expect(sidebarSource).toContain('startsGroup(item) && groupLabel(item.group)')
+  })
+
   it('puts search below the brand and error reporting above the collapse toggle', () => {
     expect(sidebarSource.indexOf('<HeaderSearch v-else ref="searchRef" class="sidebar-search"'))
       .toBeLessThan(sidebarSource.indexOf('v-for="item in navigationItems"'))
