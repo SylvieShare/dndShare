@@ -18,6 +18,8 @@ func richMigrationTestResolver() *legacyRichResolver {
 		[]legacyRichSuggestRef{
 			{ID: 10, TypeID: 15, Value: "Внимание"},
 			{ID: 4, TypeID: 9, Value: "Захват"},
+			{ID: 5, TypeID: 9, Value: "Испуг"},
+			{ID: 6, TypeID: 9, Value: "Без сознания"},
 		},
 	)
 }
@@ -140,5 +142,21 @@ func TestConvertLegacyRichHTMLNormalizesKnownFormulaTypo(t *testing.T) {
 	payload := decodeMigratedPayload(t, converted, "dice")
 	if payload["formula"] != "1к6 + 3 + 1к8" {
 		t.Fatalf("formula typo remains: %#v", payload)
+	}
+}
+
+func TestConvertLegacyRichHTMLMigratesConditionRoutes(t *testing.T) {
+	source := `<p><a href="/conditions/Frightened">испуган</a> и ` +
+		`<a href="conditions/unconscious">без сознания</a></p>`
+	conversion := legacyRichConversion{}
+	converted, changed, err := convertLegacyRichHTML(source, richMigrationTestResolver(), &conversion)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !changed || conversion.SuggestNodes != 2 {
+		t.Fatalf("condition links were not migrated: changed=%v stats=%#v html=%s", changed, conversion, converted)
+	}
+	if strings.Contains(converted, "<a ") || strings.Count(converted, `data-rich-node="suggest"`) != 2 {
+		t.Fatalf("condition anchors remain: %s", converted)
 	}
 }

@@ -27,7 +27,9 @@ type legacyRichConversion struct {
 }
 
 func migrateLegacyRichContent(ctx context.Context, tx pgx.Tx) (legacyRichMigrationStats, error) {
-	const migrationCode = "legacy-rich-content-v1"
+	// v2 additionally recognizes imported /condition(s)/... links. A new marker
+	// makes the narrow idempotent pass run on databases that already applied v1.
+	const migrationCode = "legacy-rich-content-v2"
 	var applied bool
 	if err := tx.QueryRow(ctx, `SELECT EXISTS (
 		SELECT 1 FROM dndshare.schema_data_migration WHERE code = $1

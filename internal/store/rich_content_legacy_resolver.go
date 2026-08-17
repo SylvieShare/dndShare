@@ -185,6 +185,7 @@ func legacyHrefParts(href string) (route, slug string) {
 	}
 	known := map[string]bool{
 		"screen": true, "screens": true, "spell": true, "spells": true,
+		"condition": true, "conditions": true,
 		"bestiary": true, "creatures": true, "items": true, "weapons": true,
 		"armors": true, "traits": true, "races": true, "classes": true,
 	}
@@ -250,7 +251,7 @@ func (resolver *legacyRichResolver) resolveItem(tooltipType, href, label string)
 
 func (resolver *legacyRichResolver) resolveSuggest(href string) (legacyRichSuggestRef, bool) {
 	route, slug := legacyHrefParts(href)
-	if route != "screen" && route != "screens" && route != "" {
+	if route != "screen" && route != "screens" && route != "condition" && route != "conditions" && route != "" {
 		return legacyRichSuggestRef{}, false
 	}
 	target, ok := legacyScreenSuggests[slug]
