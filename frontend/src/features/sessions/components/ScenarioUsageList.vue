@@ -43,7 +43,7 @@ function blockLabel(count) {
 </script>
 
 <style scoped>
-.scenario-usage-list { display: flex; flex-direction: column; gap: 5px; }
+.scenario-usage-list { width: 100%; max-width: 520px; display: flex; flex-direction: column; gap: 5px; }
 .scenario-usage-list button { display: grid; grid-template-columns: 56px minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 7px; border: 1px solid var(--border); border-radius: 10px; background: color-mix(in srgb, var(--surface-raised) 78%, transparent); color: var(--text-2); cursor: pointer; text-align: left; }
 .scenario-usage-list button:hover { border-color: var(--accent); }
 .scenario-usage-list img { width: 56px; height: 42px; border-radius: 8px; object-fit: cover; }
