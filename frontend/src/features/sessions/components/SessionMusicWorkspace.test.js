@@ -35,6 +35,7 @@ describe('session music workspace', () => {
 
   it('supports range selection, bulk actions, and whole-row album drag', () => {
     expect(workspaceSource).toContain('organizer.selectedTracks.value.length')
+    expect(workspaceSource).toContain('class="music-lib-main-pane"')
     expect(workspaceSource).toContain('openBulkAlbums')
     expect(workspaceSource).toContain('openBulkTags')
     expect(rowSource).toContain('@pointerdown="onPointerDown"')
@@ -42,6 +43,8 @@ describe('session music workspace', () => {
     expect(rowSource).not.toContain('music-row-drag')
     expect(organizerSource).toContain('event.shiftKey')
     expect(sidebarSource).toContain(':data-sortable-container="musicAlbumDropGroup(album.id)"')
+    expect(workspaceStyles).toContain('.ml-selection-bar { position: absolute;')
+    expect(workspaceStyles).toContain('bottom: 14px')
   })
 
   it('allows user organization of system tracks while protecting their files', () => {

@@ -68,10 +68,11 @@ is only the current-track player; it no longer opens a library window.
 
 System albums are shown in a separate sidebar section and show their CC0/source
 metadata. `Все треки` contains only personal tracks. Clicking a track selects
-it, Shift-click selects a range, and the selection bar exposes bulk album/tag
-operations. Selected tracks can be dragged by any non-interactive part of a row
-onto a personal album. System tracks expose personal album and tag actions, but
-not rename/delete; system albums still disable upload, album actions and sorting.
+it, Shift-click selects a range, and a bottom overlay bar exposes bulk album/tag
+operations without shifting the track list. Selected tracks can be dragged by
+any non-interactive part of a row onto a personal album. System tracks expose
+personal album and tag actions, but not rename/delete; system albums still
+disable upload, album actions and sorting.
 These UI guards complement the server authorization checks; they are not the
 security boundary.
 

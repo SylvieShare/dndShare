@@ -31,11 +31,18 @@
   position: relative;
 }
 
-.music-lib-main {
+.music-lib-main-pane {
+  position: relative;
   flex: 1;
+  min-width: 0;
+  min-height: 0;
+}
+
+.music-lib-main {
+  height: 100%;
   display: flex; flex-direction: column;
   min-width: 0; min-height: 0;
-  padding: 20px 24px;
+  padding: 20px 24px 82px;
   gap: 14px;
   overflow-y: auto;
   background: transparent;
@@ -101,12 +108,14 @@
 
 .ml-tracks { display: flex; flex-direction: column; gap: 4px; }
 .ml-empty { padding: 32px; text-align: center; color: var(--text-muted); font-size: 13px; }
-.ml-selection-bar { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 1px solid color-mix(in srgb, var(--accent) 42%, var(--border)); border-radius: 9px; background: color-mix(in srgb, var(--accent) 9%, transparent); }
+.ml-selection-bar { position: absolute; z-index: 4; right: 24px; bottom: 14px; left: 24px; display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 1px solid color-mix(in srgb, var(--accent) 42%, var(--border)); border-radius: 9px; background: color-mix(in srgb, var(--popover-bg) 94%, var(--accent) 6%); box-shadow: 0 10px 28px color-mix(in srgb, var(--bg) 48%, transparent); backdrop-filter: blur(14px); }
 .ml-selection-count { margin-right: 4px; color: var(--accent-soft); font-size: 12px; font-weight: 700; }
 .ml-selection-bar button { padding: 5px 9px; border: 1px solid var(--border-strong); border-radius: 6px; background: var(--surface-raised); color: var(--text-2); font: inherit; font-size: 11px; cursor: pointer; }
 .ml-selection-bar button:hover { border-color: var(--accent); color: var(--accent); }
 .ml-selection-bar button.danger:hover { border-color: var(--danger); color: var(--danger); }
 .ml-selection-bar button.clear { margin-left: auto; border-color: transparent; background: none; color: var(--text-muted); }
+.music-selection-bar-enter-active, .music-selection-bar-leave-active { transition: opacity 0.15s ease, transform 0.15s ease; }
+.music-selection-bar-enter-from, .music-selection-bar-leave-to { opacity: 0; transform: translateY(8px); }
 
 .music-lib-toast {
   position: absolute;
@@ -207,6 +216,7 @@
 
 @media (max-width: 760px) {
   .session-music-workspace { grid-template-columns: 1fr; grid-template-rows: minmax(210px, 38%) minmax(0, 1fr); padding: 8px; }
-  .ml-selection-bar { flex-wrap: wrap; }
+  .music-lib-main { padding-bottom: 112px; }
+  .ml-selection-bar { right: 12px; bottom: 10px; left: 12px; flex-wrap: wrap; }
   .ml-selection-bar button.clear { margin-left: 0; }
 }

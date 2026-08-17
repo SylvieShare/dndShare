@@ -18,7 +18,8 @@
     <input ref="fileInputEl" type="file" accept="audio/*" multiple hidden @change="onFiles" />
 
     <div class="music-lib-main-col">
-      <section class="music-lib-main">
+      <div class="music-lib-main-pane">
+        <section class="music-lib-main">
         <div class="ml-main-head">
           <span class="ml-main-color-dot" :style="{ background: selectedAlbum?.color || 'var(--text-muted)' }" />
           <h3 class="ml-main-title">{{ selectedAlbum ? selectedAlbum.name : 'Все треки' }}</h3>
@@ -57,15 +58,6 @@
           <button class="ml-tags-edit" @click="tagManagerOpen = true">изменить теги</button>
         </div>
 
-        <div v-if="organizer.selectedTracks.value.length" class="ml-selection-bar">
-          <span class="ml-selection-count">Выбрано: {{ organizer.selectedTracks.value.length }}</span>
-          <button @click="openBulkAlbums">В альбомы…</button>
-          <button @click="openBulkTags">Теги…</button>
-          <button v-if="selectedAlbum && !selectedAlbum.isSystem" @click="removeSelectedFromAlbum">Убрать из альбома</button>
-          <button v-if="selectedOnlyPersonal" class="danger" @click="deleteSelected">Удалить</button>
-          <button class="clear" @click="organizer.clearSelection">Снять выделение</button>
-        </div>
-
         <div class="ml-tracks" data-sortable-container="tracks">
           <MusicTrackRow
             v-for="track in organizer.sortable.displayItems('tracks')"
@@ -89,7 +81,19 @@
           />
           <div v-if="!displayedTracks.length" class="ml-empty">Нет треков</div>
         </div>
-      </section>
+        </section>
+
+        <Transition name="music-selection-bar">
+          <div v-if="organizer.selectedTracks.value.length" class="ml-selection-bar">
+            <span class="ml-selection-count">Выбрано: {{ organizer.selectedTracks.value.length }}</span>
+            <button @click="openBulkAlbums">В альбомы…</button>
+            <button @click="openBulkTags">Теги…</button>
+            <button v-if="selectedAlbum && !selectedAlbum.isSystem" @click="removeSelectedFromAlbum">Убрать из альбома</button>
+            <button v-if="selectedOnlyPersonal" class="danger" @click="deleteSelected">Удалить</button>
+            <button class="clear" @click="organizer.clearSelection">Снять выделение</button>
+          </div>
+        </Transition>
+      </div>
       <MusicLibraryPlayerFooter :is-dm="isDm" />
     </div>
 
