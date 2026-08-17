@@ -334,6 +334,11 @@ onMounted(async () => {
   padding: 16px 16px 12px;
   background: var(--bg);
 }
+.cc-head-main,
+.cc-main,
+.cc-foot-main {
+  border-inline: 1px solid color-mix(in srgb, var(--border-strong) 62%, transparent);
+}
 .cc-x {
   width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
   background: none; border: none; color: var(--text-muted); cursor: pointer; border-radius: 8px;
@@ -412,6 +417,7 @@ onMounted(async () => {
 
 @media (max-width: 640px) {
   .cc { border-inline: none; }
+  .cc-head-main, .cc-main, .cc-foot-main { border-inline: none; }
   .cc-head-main { gap: 8px; padding: 14px 14px 10px; }
   .cc-x { width: 28px; height: 28px; }
   .cc-title { gap: 7px; font-size: 20px; white-space: nowrap; }

@@ -77,8 +77,9 @@ shows what will be written to the character sheet. Ability descriptions remain
 available there as inline disclosures. On narrow screens the workspace becomes
 one column, while the navigation footer stays pinned to the visible bottom edge.
 Only the capped central column owns an opaque `--bg` surface across its header,
-work area and footer. The floating step rail and the space outside that column
-remain on the global dotted application canvas.
+work area and footer, with continuous side borders framing it on desktop. The
+floating step rail and the space outside that column remain on the global dotted
+application canvas.
 
 Key rules:
 
