@@ -21,12 +21,9 @@
       <div v-if="state.charClass" :key="state.charClass.id" ref="classDetails" class="selection-details">
         <RichContent v-if="classDesc" class="step-desc" :html="classDesc" />
 
-        <template v-if="subclasses.length">
-          <div class="sheet-section-title step-gap">
-            Архетип
-            <span v-if="!subclassAtCreation" class="step-note">— выбирается на {{ state.charClass.data?.subclass_level }} уровне</span>
-          </div>
-          <div v-if="subclassAtCreation" class="grid">
+        <template v-if="subclasses.length && subclassAtCreation">
+          <div class="sheet-section-title step-gap">Архетип</div>
+          <div class="grid">
             <SelectTile
               v-for="s in subclasses"
               :key="s.id"
@@ -38,8 +35,7 @@
               @select="state.subclass = s"
             />
           </div>
-          <p v-else class="step-muted">Пока архетип не нужен — выберешь его позже, при повышении уровня.</p>
-          <RichContent v-if="subclassAtCreation && subclassDesc" class="step-desc" :html="subclassDesc" />
+          <RichContent v-if="subclassDesc" class="step-desc" :html="subclassDesc" />
         </template>
 
         <StepClassEquipment class="cls-sub" />
@@ -89,7 +85,6 @@ function afterClassDetailsEnter() {
 .step { display: flex; flex-direction: column; gap: 12px; }
 .selection-details { display: flex; flex-direction: column; gap: 12px; scroll-margin-top: 12px; }
 .step-gap { margin-top: 8px; }
-.step-note { font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--text-muted); }
 .step-muted { font-size: 13px; color: var(--text-muted); margin: 0; }
 .step-desc {
   font-size: 13px; color: var(--text-2); line-height: 1.5;

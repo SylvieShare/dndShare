@@ -88,6 +88,9 @@ rows omit the school label. Character name belongs to the Personality step;
 age/height/weight fields show race-aware recommendations and the larger
 background fields keep enough vertical room for prose. Pressing an unavailable
 Next action scrolls to and pulses the first incomplete field.
+Subclass UI is present during creation only for classes that actually choose a
+subclass at level 1. Later-level archetypes are deliberately not announced or
+previewed in the creation wizard; they appear in the level-up flow when needed.
 
 На шаге характеристик смена метода всегда очищает прежнее распределение.
 Point-buy подчёркивает остаток бюджета и цену следующего повышения каждой
