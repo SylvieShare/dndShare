@@ -3,6 +3,11 @@
   <RowActionMenu ref="menuRef">
     <template #default="{ close }">
       <RowActionItem
+        v-if="canOpenCard"
+        :icon="BookOpen"
+        @click="enc.openNpcDetail(combatant); close()"
+      >Открыть карточку</RowActionItem>
+      <RowActionItem
         v-if="statesBlock"
         :icon="Activity"
         @click="$emit('edit-states'); close()"
@@ -66,7 +71,7 @@
 
 <script setup>
 import { computed, inject, ref } from 'vue'
-import { Activity, Archive, Copy, Dices } from '@lucide/vue'
+import { Activity, Archive, BookOpen, Copy, Dices } from '@lucide/vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 import { RowActionSubmenu } from '@sylvieshare/share-ui'
@@ -81,6 +86,7 @@ defineEmits(['edit-states', 'edit-note'])
 const enc = inject('encounter')
 
 const isNpc = computed(() => props.combatant.type === 'npc')
+const canOpenCard = computed(() => isNpc.value && props.combatant.itemId != null)
 const canReserve = computed(() => props.section === 'combat')
 const canRerollHp = computed(() =>
   isNpc.value && props.section !== 'combat' && !!enc.npcHpFormula(props.combatant)

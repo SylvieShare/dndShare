@@ -651,7 +651,9 @@ Clicking a non-interactive area of a combat or reserve row opens its action
 menu; initiative, HP, selection, marker and other dedicated controls keep their
 own click behavior. The shared menu can edit states for both players and NPCs,
 send a combatant to reserve, reroll formula-based NPC HP while it remains in
-reserve, and delete NPCs. There is no separate HP-reroll button on a row, and
+reserve, and delete NPCs. Bestiary NPCs also expose `Открыть карточку`, which
+opens the standard handbook `ItemViewModal`; simplified creatures omit that
+action because they have no handbook record. There is no separate HP-reroll button on a row, and
 the action is hidden once that NPC is on the combat scene. NPC
 color is not duplicated in the row action menu and remains part of the
 letter-marker popover. The combat-scene block is mounted only while combat is
