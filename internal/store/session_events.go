@@ -12,20 +12,20 @@ import (
 
 // SessionEvent is an append-only, user-facing event in a game session timeline.
 type SessionEvent struct {
-	ID              int64           `json:"id"`
-	SessionID       int64           `json:"-"`
-	AuthorUserID    int64           `json:"authorUserId"`
-	AuthorRole      string          `json:"authorRole"`
-	ActorCharID     *int64          `json:"actorCharId,omitempty"`
-	ActorCharUUID   *string         `json:"actorCharUuid,omitempty"`
-	ActorTemplateID *int64          `json:"actorTemplateId,omitempty"`
-	ActorData       json.RawMessage `json:"actorData,omitempty"`
-	ActorName       *string         `json:"actorName,omitempty"`
-	EventType       string          `json:"type"`
-	Action          string          `json:"action"`
-	Data            json.RawMessage `json:"data"`
-	Visibility      string          `json:"visibility"`
-	CreatedAt       time.Time       `json:"createdAt"`
+	ID                   int64           `json:"id"`
+	SessionID            int64           `json:"-"`
+	AuthorUserID         int64           `json:"authorUserId"`
+	AuthorIsSessionOwner bool            `json:"authorIsSessionOwner"`
+	ActorCharID          *int64          `json:"actorCharId,omitempty"`
+	ActorCharUUID        *string         `json:"actorCharUuid,omitempty"`
+	ActorTemplateID      *int64          `json:"actorTemplateId,omitempty"`
+	ActorData            json.RawMessage `json:"actorData,omitempty"`
+	ActorName            *string         `json:"actorName,omitempty"`
+	EventType            string          `json:"type"`
+	Action               string          `json:"action"`
+	Data                 json.RawMessage `json:"data"`
+	Visibility           string          `json:"visibility"`
+	CreatedAt            time.Time       `json:"createdAt"`
 }
 
 // CharacterSessionEvent is written atomically with a character data update.
@@ -40,7 +40,7 @@ type CharacterSessionEvent struct {
 
 const sessionEventSelect = `
 	SELECT e.id, e.session_id, e.author_user_id,
-	       CASE WHEN event_session.owner_user_id = e.author_user_id THEN 'gm' ELSE 'player' END,
+	       event_session.owner_user_id = e.author_user_id,
 	       e.actor_char_id, c.uuid::text, c.template_id, c.data,
 	       e.actor_name, e.event_type, e.action, COALESCE(e.data, '{}'::jsonb), e.visibility, e.created_at
 	FROM dndshare.session_event e
@@ -53,7 +53,7 @@ func scanSessionEvent(row pgx.Row) (SessionEvent, error) {
 	var actorData []byte
 	var data []byte
 	err := row.Scan(
-		&event.ID, &event.SessionID, &event.AuthorUserID, &event.AuthorRole,
+		&event.ID, &event.SessionID, &event.AuthorUserID, &event.AuthorIsSessionOwner,
 		&event.ActorCharID, &event.ActorCharUUID, &event.ActorTemplateID, &actorData,
 		&event.ActorName, &event.EventType, &event.Action, &data, &event.Visibility, &event.CreatedAt,
 	)

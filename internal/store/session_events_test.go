@@ -6,6 +6,16 @@ import (
 	"testing"
 )
 
+func TestSessionEventAlwaysExposesOwnerFlag(t *testing.T) {
+	data, err := json.Marshal(SessionEvent{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(string(data), `"authorIsSessionOwner":false`) {
+		t.Fatalf("owner flag must be present in every event: %s", data)
+	}
+}
+
 func TestCharacterName(t *testing.T) {
 	tests := []struct {
 		name string

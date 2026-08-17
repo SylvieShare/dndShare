@@ -3,13 +3,13 @@ import { groupSessionEvents, sessionEventActorKey, sessionEventActorLabel } from
 
 describe('session event identity', () => {
   it('uses the immutable actor name stored with the event', () => {
-    expect(sessionEventActorLabel({ actorName: 'Лиора', authorRole: 'player' })).toBe('Лиора')
-    expect(sessionEventActorLabel({ actorName: 'Кобольд', authorRole: 'gm' })).toBe('Кобольд')
+    expect(sessionEventActorLabel({ actorName: 'Лиора', authorIsSessionOwner: false })).toBe('Лиора')
+    expect(sessionEventActorLabel({ actorName: 'Кобольд', authorIsSessionOwner: true })).toBe('Кобольд')
   })
 
   it('leaves session-level events without an actor label', () => {
-    expect(sessionEventActorLabel({ authorRole: 'gm' })).toBe('')
-    expect(sessionEventActorKey({ authorRole: 'gm' })).toBe('system')
+    expect(sessionEventActorLabel({ authorIsSessionOwner: true })).toBe('')
+    expect(sessionEventActorKey({ authorIsSessionOwner: true })).toBe('system')
   })
 
   it('prefers character identity and otherwise groups named creatures', () => {
