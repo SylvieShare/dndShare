@@ -79,7 +79,7 @@ function toggle(ri, p) {
   if (nextValue < Number(current.value)) {
     charCtx.logSessionEvent?.({
       type: 'resource_used',
-      title: current.title || 'Ресурс',
+      action: `Использовано: ${current.title || 'Ресурс'}`,
       data: { remaining: nextValue, total: Number(current.total) || 0 },
     })
   }

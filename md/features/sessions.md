@@ -122,10 +122,10 @@ and log group by its own vertical divider.
 Время показывается один раз слева, а заголовок субъекта и вертикальная линия
 через маркеры объединяют его соседние события, не выходя за первое и последнее.
 Сами события не имеют фона и рамки; тонкая рамка без заливки окружает их
-иконки-маркеры. `Мастер` в сессии и
-`Имя персонажа (мастер)` в
-листе — разные ключи группировки; для игрока используется имя персонажа. Логин
-пользователя не показывается.
+иконки-маркеры. Имя субъекта берётся из сохранённого `actorName`: для игрока это
+имя его персонажа, для мастера — персонаж или существо, от которого выполнено
+действие. Системные записи вроде начала боя не имеют субъекта и выводятся без
+пустого заголовка. Логин и роль автора в визуальной хронике не показываются.
 `stores/sessionEvents.js` загружает последние 50 записей, затем получает новые
 по cursor только после invalidation из общего SSE-потока страницы сессии и
 устраняет дубликаты по серверному id. При восстановлении потока выполняется
@@ -144,10 +144,14 @@ weapons, potions, spells, feats and abilities. Direct picker/manual additions
 and level-up grants use the same event. Regular editing, drag ordering, music
 controls and manual configuration do not create timeline noise.
 
+Each event stores `actorName` and `action` independently. `actorName` is a
+snapshot, so renaming a character does not rewrite history; `actorCharUuid`
+keeps the optional structural link used for permissions and character context.
 The server authenticates every timeline read/write as either the session DM or
-a participant. An `actorCharUuid` identifies the character page that produced
-the action: players can reference only their own participant, while the DM can
-reference any participant in the session. Character pages select their event
+a participant. Players can reference only their own participant and the server
+derives that character's name. The DM can reference any participant or supply a
+standalone creature name when no character UUID exists. Events that describe
+the session itself have neither actor field. Character pages select their event
 context from the explicit `?session=<uuid>` query, falling back to the
 character's attached session. Player session cards open that character context instead
 of the DM workspace.
@@ -158,6 +162,8 @@ transaction. A cantrip still schedules this semantic save, but the character
 version is not bumped when JSON data is unchanged. Dice rolls use the direct
 event endpoint because they do not mutate character state. Pending debounced
 character saves are flushed on page unmount instead of dropping their events.
+Encounter initiative, HP and challenge rolls pass an explicit actor override,
+so they are not attributed to an unrelated sheet left open by the DM.
 
 ## Locations and prepared NPCs
 

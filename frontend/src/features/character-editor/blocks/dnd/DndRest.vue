@@ -110,7 +110,7 @@ function finishShort() {
   }).filter(pool => pool.count > 0)
   charCtx.logSessionEvent?.({
     type: 'rest_completed',
-    title: 'Короткий отдых',
+    action: 'Короткий отдых',
     data: {
       kind: 'short',
       hpRecovered: Math.max(0, (Number(hp.value.current) || 0) - (shortStart.value?.hp || 0)),
@@ -131,7 +131,7 @@ function applyLong(recovery) {
   if (exhaustionLevel(ex) > 0) emit('update:value', i.exhaustion, longRestExhaustion(ex))
   charCtx.logSessionEvent?.({
     type: 'rest_completed',
-    title: 'Длинный отдых',
+    action: 'Длинный отдых',
     data: {
       kind: 'long',
       hpRecovered: Math.max(0, (Number(hp.value.max) || 0) - (Number(hp.value.current) || 0)),

@@ -14,13 +14,13 @@
             <time class="sep-time">{{ timeGroup.time }}</time>
             <div class="sep-time-content">
               <section v-for="actorGroup in timeGroup.actors" :key="actorGroup.key" class="sep-actor-group">
-                <div class="sep-actor-head">{{ actorGroup.label }}</div>
+                <div v-if="actorGroup.label" class="sep-actor-head">{{ actorGroup.label }}</div>
                 <div class="sep-actor-events">
                   <article v-for="event in actorGroup.events" :key="event.id" class="sep-event" :class="`sep-event--${event.type}`">
                     <div class="sep-marker">{{ eventIcon(event.type) }}</div>
                     <div class="sep-content">
                       <div class="sep-event-heading" :class="{ 'sep-event-heading--roll': event.type === 'dice_roll' }">
-                        <div class="sep-event-title">{{ eventTitle(event) }}</div>
+                        <div class="sep-event-title">{{ event.action }}</div>
                         <span v-if="event.type === 'dice_roll'" class="sep-event-divider" aria-hidden="true" />
                         <strong v-if="event.type === 'dice_roll'" class="sep-total">{{ event.data?.result?.total }}</strong>
                       </div>
@@ -97,24 +97,6 @@ function eventIcon(type) {
   }[type] || '·'
 }
 
-function eventTitle(event) {
-  if (event.type === 'dice_roll') return event.title || 'Бросок'
-  if (event.type === 'spell_used') return `Использовано: ${event.title}`
-  if (event.type === 'item_spent') return `Потрачено: ${event.title}`
-  if (event.type === 'item_added') return `Добавлено: ${event.title}`
-  if (event.type === 'entry_added') {
-    const prefix = {
-      potion: 'Добавлено зелье',
-      spell: 'Добавлено заклинание',
-      feature: 'Добавлена черта',
-      ability: 'Добавлена способность',
-    }[event.data?.kind] || (event.data?.category === 'weapon' ? 'Добавлено оружие' : 'Добавлен предмет')
-    return `${prefix}: ${event.title}`
-  }
-  if (event.type === 'resource_used') return `Использовано: ${event.title}`
-  return event.title || 'Событие'
-}
-
 function spellDetails(data) {
   const level = Number(data?.slotLevel)
   if (!level) return 'Заговор · без ячейки'
@@ -148,7 +130,8 @@ watch(() => events.value.length, async () => {
 .sep-time-content { min-width: 0; }
 .sep-actor-group + .sep-actor-group { margin-top: 9px; }
 .sep-actor-head { color: var(--text-2); font-size: 10px; font-weight: 750; line-height: 1.3; overflow-wrap: anywhere; white-space: normal; }
-.sep-actor-events { margin-top: 5px; min-width: 0; }
+.sep-actor-events { min-width: 0; }
+.sep-actor-head + .sep-actor-events { margin-top: 5px; }
 .sep-event { position: relative; display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 7px; min-width: 0; padding: 0 0 8px; }
 .sep-event::after { content: ''; position: absolute; top: 18px; bottom: 0; left: 9px; z-index: 0; width: 1px; background: color-mix(in srgb, var(--accent) 38%, var(--border)); }
 .sep-event:last-child::after { display: none; }

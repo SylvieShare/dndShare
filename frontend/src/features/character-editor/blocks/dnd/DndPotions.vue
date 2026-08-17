@@ -85,7 +85,7 @@ function onUse(uid) {
   emit('update:value', props.block.id, next)
   charCtx.logSessionEvent?.({
     type: 'item_spent',
-    title: display?.name || 'Зелье',
+    action: `Потрачено: ${display?.name || 'Зелье'}`,
     data: { itemId: display?.id || null, remaining: Math.max(0, count - 1) },
   })
 }
@@ -99,7 +99,7 @@ function onReplenish(uid) {
   const display = potionEntries.value.find(potion => potion.uid === uid)
   charCtx.logSessionEvent?.({
     type: 'item_added',
-    title: display?.name || 'Зелье',
+    action: `Добавлено: ${display?.name || 'Зелье'}`,
     data: { itemId: display?.id || null, remaining: entry.count },
   })
 }

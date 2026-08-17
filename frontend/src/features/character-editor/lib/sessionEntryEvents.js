@@ -10,9 +10,15 @@ export function logSessionEntryAdded(charCtx, {
 } = {}) {
   const normalizedTitle = String(title || '').trim()
   if (!ENTRY_KINDS.has(kind) || !normalizedTitle) return
+  const prefix = {
+    potion: 'Добавлено зелье',
+    spell: 'Добавлено заклинание',
+    feature: 'Добавлена черта',
+    ability: 'Добавлена способность',
+  }[kind] || (category === 'weapon' ? 'Добавлено оружие' : 'Добавлен предмет')
   charCtx?.logSessionEvent?.({
     type: 'entry_added',
-    title: normalizedTitle,
+    action: `${prefix}: ${normalizedTitle}`,
     data: {
       kind,
       itemId,

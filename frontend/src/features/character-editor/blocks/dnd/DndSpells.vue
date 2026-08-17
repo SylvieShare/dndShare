@@ -408,7 +408,7 @@ function useSpell(entry, slotLevel) {
   }
   charCtx.logSessionEvent?.({
     type: 'spell_used',
-    title: spellTitle(entry),
+    action: `Использовано: ${spellTitle(entry)}`,
     data: {
       spellId: entry?.item?.id || entry?.ref?.id || null,
       spellLevel,

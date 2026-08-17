@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"strings"
 	"time"
 
 	"github.com/jackc/pgx/v5"
@@ -19,8 +20,9 @@ type SessionEvent struct {
 	ActorCharUUID   *string         `json:"actorCharUuid,omitempty"`
 	ActorTemplateID *int64          `json:"actorTemplateId,omitempty"`
 	ActorData       json.RawMessage `json:"actorData,omitempty"`
+	ActorName       *string         `json:"actorName,omitempty"`
 	EventType       string          `json:"type"`
-	Title           *string         `json:"title,omitempty"`
+	Action          string          `json:"action"`
 	Data            json.RawMessage `json:"data"`
 	Visibility      string          `json:"visibility"`
 	CreatedAt       time.Time       `json:"createdAt"`
@@ -30,7 +32,7 @@ type SessionEvent struct {
 type CharacterSessionEvent struct {
 	SessionUUID    string
 	EventType      string
-	Title          string
+	Action         string
 	Data           json.RawMessage
 	Visibility     string
 	ClientActionID string
@@ -40,7 +42,7 @@ const sessionEventSelect = `
 	SELECT e.id, e.session_id, e.author_user_id,
 	       CASE WHEN event_session.owner_user_id = e.author_user_id THEN 'gm' ELSE 'player' END,
 	       e.actor_char_id, c.uuid::text, c.template_id, c.data,
-	       e.event_type, e.title, COALESCE(e.data, '{}'::jsonb), e.visibility, e.created_at
+	       e.actor_name, e.event_type, e.action, COALESCE(e.data, '{}'::jsonb), e.visibility, e.created_at
 	FROM dndshare.session_event e
 	JOIN dndshare."session" event_session ON event_session.id = e.session_id
 	LEFT JOIN dndshare."char" c ON c.id = e.actor_char_id
@@ -53,7 +55,7 @@ func scanSessionEvent(row pgx.Row) (SessionEvent, error) {
 	err := row.Scan(
 		&event.ID, &event.SessionID, &event.AuthorUserID, &event.AuthorRole,
 		&event.ActorCharID, &event.ActorCharUUID, &event.ActorTemplateID, &actorData,
-		&event.EventType, &event.Title, &data, &event.Visibility, &event.CreatedAt,
+		&event.ActorName, &event.EventType, &event.Action, &data, &event.Visibility, &event.CreatedAt,
 	)
 	if len(actorData) > 0 {
 		event.ActorData = json.RawMessage(actorData)
@@ -79,20 +81,25 @@ func (s *Store) UserCanAccessSession(ctx context.Context, sessionID, userID int6
 
 // ResolveSessionActor resolves the character whose page produced an event.
 // Players may use only their own participant; the DM may use any participant in the session.
-func (s *Store) ResolveSessionActor(ctx context.Context, sessionID, userID int64, charUUID *string) (*int64, error) {
+func (s *Store) ResolveSessionActor(ctx context.Context, sessionID, userID int64, charUUID *string) (*int64, *string, error) {
 	var ownerUserID int64
 	if err := s.pool.QueryRow(ctx, `SELECT owner_user_id FROM dndshare."session" WHERE id = $1`, sessionID).Scan(&ownerUserID); err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	if charUUID == nil || *charUUID == "" {
 		if ownerUserID != userID {
-			return nil, ErrNotFound
+			return nil, nil, ErrNotFound
 		}
-		return nil, nil
+		return nil, nil, nil
 	}
 	var charID int64
+	var actorName string
 	query := `
-		SELECT c.id
+		SELECT c.id, left(COALESCE(
+			NULLIF(btrim(c.data #>> '{values,name}'), ''),
+			NULLIF(btrim(c.data #>> '{values,char_name}'), ''),
+			'(без имени)'
+		), 160)
 		FROM dndshare."char" c
 		JOIN dndshare.session_participant participant
 		  ON participant.char_id = c.id AND participant.session_id = $1
@@ -102,29 +109,29 @@ func (s *Store) ResolveSessionActor(ctx context.Context, sessionID, userID int64
 		query += ` AND c.user_id = $3 AND participant.user_id = $3`
 		args = append(args, userID)
 	}
-	err := s.pool.QueryRow(ctx, query, args...).Scan(&charID)
+	err := s.pool.QueryRow(ctx, query, args...).Scan(&charID, &actorName)
 	if errors.Is(err, pgx.ErrNoRows) {
-		return nil, ErrNotFound
+		return nil, nil, ErrNotFound
 	}
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	return &charID, nil
+	return &charID, &actorName, nil
 }
 
 // CreateSessionEvent appends an event and returns its complete projection.
-func (s *Store) CreateSessionEvent(ctx context.Context, sessionID, userID int64, actorCharID *int64, eventType string, title *string, data json.RawMessage, visibility string, clientActionID *string) (SessionEvent, error) {
+func (s *Store) CreateSessionEvent(ctx context.Context, sessionID, userID int64, actorCharID *int64, actorName *string, eventType, action string, data json.RawMessage, visibility string, clientActionID *string) (SessionEvent, error) {
 	if len(data) == 0 {
 		data = json.RawMessage("{}")
 	}
 	var id int64
 	err := s.pool.QueryRow(ctx, `
 		INSERT INTO dndshare.session_event
-		  (session_id, author_user_id, actor_char_id, event_type, title, data, visibility, client_action_id)
-		VALUES ($1, $2, $3, $4, $5, CAST($6 AS jsonb), $7, $8::uuid)
+		  (session_id, author_user_id, actor_char_id, actor_name, event_type, action, data, visibility, client_action_id)
+		VALUES ($1, $2, $3, $4, $5, $6, CAST($7 AS jsonb), $8, $9::uuid)
 		ON CONFLICT (session_id, client_action_id) WHERE client_action_id IS NOT NULL
 		DO UPDATE SET client_action_id = EXCLUDED.client_action_id
-		RETURNING id`, sessionID, userID, actorCharID, eventType, title, string(data), visibility, clientActionID).Scan(&id)
+		RETURNING id`, sessionID, userID, actorCharID, actorName, eventType, action, string(data), visibility, clientActionID).Scan(&id)
 	if err != nil {
 		return SessionEvent{}, err
 	}
@@ -217,17 +224,44 @@ func (s *Store) UpdateCharacterDataWithEvents(ctx context.Context, userID int64,
 			return ErrNotFound
 		}
 		actorCharID := character.ID
+		actorName := characterName(data)
 
 		if _, err := tx.Exec(ctx, `
 			INSERT INTO dndshare.session_event
-			  (session_id, author_user_id, actor_char_id, event_type, title, data, visibility, client_action_id)
-			VALUES ($1, $2, $3, $4, $5, CAST($6 AS jsonb), $7, $8::uuid)
+			  (session_id, author_user_id, actor_char_id, actor_name, event_type, action, data, visibility, client_action_id)
+			VALUES ($1, $2, $3, $4, $5, $6, CAST($7 AS jsonb), $8, $9::uuid)
 			ON CONFLICT (session_id, client_action_id) WHERE client_action_id IS NOT NULL
-			DO NOTHING`, sessionID, userID, actorCharID, event.EventType, event.Title,
+			DO NOTHING`, sessionID, userID, actorCharID, actorName, event.EventType, event.Action,
 			string(event.Data), event.Visibility, event.ClientActionID); err != nil {
 			return err
 		}
 	}
 
 	return tx.Commit(ctx)
+}
+
+func characterName(data json.RawMessage) string {
+	var character struct {
+		Values struct {
+			Name     string `json:"name"`
+			CharName string `json:"char_name"`
+		} `json:"values"`
+	}
+	if json.Unmarshal(data, &character) == nil {
+		if name := strings.TrimSpace(character.Values.Name); name != "" {
+			return truncateRunes(name, 160)
+		}
+		if name := strings.TrimSpace(character.Values.CharName); name != "" {
+			return truncateRunes(name, 160)
+		}
+	}
+	return "(без имени)"
+}
+
+func truncateRunes(value string, limit int) string {
+	runes := []rune(value)
+	if len(runes) <= limit {
+		return value
+	}
+	return string(runes[:limit])
 }

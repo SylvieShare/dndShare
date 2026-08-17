@@ -91,7 +91,10 @@ import ItemTooltip from '@/features/character-editor/components/ItemTooltip.vue'
 import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
 
 const itemCache = new Map()
-const props = defineProps({ node: { type: Object, required: true } })
+const props = defineProps({
+  node: { type: Object, required: true },
+  actorName: { type: String, default: '' },
+})
 
 const anchorEl = ref(null)
 const item = ref(null)
@@ -147,7 +150,9 @@ async function loadReference() {
 
 function roll() {
   if (!diceParts.value.length) return
-  diceStore.roll(props.node.payload?.label || props.node.label || formula.value, formula.value)
+  diceStore.roll(props.node.payload?.label || props.node.label || formula.value, formula.value, {
+    actor: props.actorName ? { name: props.actorName, charUuid: null } : undefined,
+  })
 }
 
 function showItemTooltip() {

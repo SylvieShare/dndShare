@@ -26,16 +26,18 @@ describe('dice roll presentation metadata', () => {
   it('can log an embedded roll without adding a global popup', () => {
     const store = useDiceStore()
     const publish = vi.spyOn(useSessionEventsStore(), 'publish').mockResolvedValue(null)
-    const result = store.roll('Гоблин — спасбросок ловкости', 'd20+2', {
+    const result = store.roll('Спасбросок ловкости', 'd20+2', {
       crit_mode: true,
       popup: false,
+      actor: { name: 'Гоблин', charUuid: null },
     })
 
     expect(result.expression).toBe('d20+2')
     expect(store.stack).toHaveLength(0)
     expect(publish).toHaveBeenCalledWith(expect.objectContaining({
       type: 'dice_roll',
-      title: 'Гоблин — спасбросок ловкости',
+      action: 'Спасбросок ловкости',
+      actor: { name: 'Гоблин', charUuid: null },
     }))
   })
 })

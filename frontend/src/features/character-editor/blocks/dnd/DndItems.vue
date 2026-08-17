@@ -463,7 +463,7 @@ function spendEntry(sectionId, entry, close) {
   decrement(sectionId, entry.uid)
   charCtx.logSessionEvent?.({
     type: 'item_spent',
-    title: entry.display.name,
+    action: `Потрачено: ${entry.display.name}`,
     data: { itemId: entry.id || null, remaining: Math.max(0, previous - 1) },
   })
   close()
@@ -473,7 +473,7 @@ function addEntry(sectionId, entry, close) {
   const remaining = increment(sectionId, entry.uid)
   charCtx.logSessionEvent?.({
     type: 'item_added',
-    title: entry.display.name,
+    action: `Добавлено: ${entry.display.name}`,
     data: { itemId: entry.id || null, remaining },
   })
   close()

@@ -42,12 +42,14 @@ export const useDiceStore = defineStore('dice', () => {
 
   function pushEntry(entry) {
     const duration = entry.duration || AUTO_DISMISS_MS
+    const action = entry.action || 'Бросок'
+    const actorName = String(entry.actor?.name || '').trim()
     if (entry.popup !== false) {
       seq += 1
       const id = seq
       stack.value.push({
         id,
-        title: entry.title || '',
+        title: actorName ? `${actorName} — ${action}` : action,
         result: entry.result,
         outcome: entry.outcome || null,
         color: entry.color || null,
@@ -63,7 +65,8 @@ export const useDiceStore = defineStore('dice', () => {
     if (entry.log !== false) {
       useSessionEventsStore().publish({
         type: 'dice_roll',
-        title: entry.title || 'Бросок',
+        action,
+        actor: entry.actor,
         data: {
           result: entry.result,
           outcome: entry.outcome || null,
@@ -74,10 +77,19 @@ export const useDiceStore = defineStore('dice', () => {
     return entry.result
   }
 
-  function roll(title, expression, opts = {}) {
+  function roll(action, expression, opts = {}) {
     const result = rollDiceExpression(expression)
     const outcome = opts.crit_mode ? detectOutcome(result) : null
-    return pushEntry({ title, result, outcome, color: opts.color, popup: opts.popup })
+    return pushEntry({
+      action,
+      actor: opts.actor,
+      result,
+      outcome,
+      color: opts.color,
+      popup: opts.popup,
+      log: opts.log,
+      duration: opts.duration,
+    })
   }
 
   function clear() {

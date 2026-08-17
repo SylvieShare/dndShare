@@ -37,4 +37,10 @@ describe('SessionEventsPanel timeline layout', () => {
     expect(source).toMatch(/\.sep-event-divider\s*\{[^}]*flex:\s*1 1 12px;[^}]*height:\s*1px;/s)
     expect(source).not.toMatch(/<div v-if="event\.type === 'dice_roll'" class="sep-roll">[\s\S]*?<strong class="sep-total">/)
   })
+
+  it('renders the stored actor and action independently', () => {
+    expect(source).toContain('v-if="actorGroup.label"')
+    expect(source).toContain('{{ event.action }}')
+    expect(source).not.toContain('function eventTitle')
+  })
 })

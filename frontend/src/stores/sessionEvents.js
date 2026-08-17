@@ -91,16 +91,20 @@ export const useSessionEventsStore = defineStore('session-events', () => {
     loading.value = false
   }
 
-  async function publish({ type, title, data = {}, visibility = 'public' }) {
+  async function publish({ type, action, data = {}, visibility = 'public', actor = undefined }) {
     const uuid = sessionUuid.value
     if (!uuid) return null
     try {
+      const eventActor = actor === undefined
+        ? { charUuid: actorCharUuid.value, name: null }
+        : { charUuid: actor?.charUuid || null, name: String(actor?.name || '').trim() || null }
       const response = await sessionEventsApi.createSessionEvent(uuid, {
         type,
-        title,
+        action,
         data,
         visibility,
-        actorCharUuid: actorCharUuid.value,
+        actorCharUuid: eventActor.charUuid,
+        actorName: eventActor.name,
         clientActionId: actionId(),
       })
       if (sessionUuid.value === uuid && response?.event) merge([response.event])
@@ -111,12 +115,12 @@ export const useSessionEventsStore = defineStore('session-events', () => {
     }
   }
 
-  function pendingCharacterEvent({ type, title, data = {}, visibility = 'public' }) {
+  function pendingCharacterEvent({ type, action, data = {}, visibility = 'public' }) {
     if (!sessionUuid.value) return null
     return {
       sessionUuid: sessionUuid.value,
       type,
-      title,
+      action,
       data,
       visibility,
       clientActionId: actionId(),

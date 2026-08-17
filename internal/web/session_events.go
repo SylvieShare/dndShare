@@ -26,9 +26,10 @@ var allowedSessionEventTypes = map[string]bool{
 
 type createSessionEventRequest struct {
 	Type           string          `json:"type"`
-	Title          string          `json:"title"`
+	Action         string          `json:"action"`
 	Data           json.RawMessage `json:"data"`
 	ActorCharUUID  *string         `json:"actorCharUuid"`
+	ActorName      *string         `json:"actorName"`
 	Visibility     string          `json:"visibility"`
 	ClientActionID *string         `json:"clientActionId"`
 }
@@ -36,7 +37,7 @@ type createSessionEventRequest struct {
 type characterSessionEventRequest struct {
 	SessionUUID    string          `json:"sessionUuid"`
 	Type           string          `json:"type"`
-	Title          string          `json:"title"`
+	Action         string          `json:"action"`
 	Data           json.RawMessage `json:"data"`
 	Visibility     string          `json:"visibility"`
 	ClientActionID string          `json:"clientActionId"`
@@ -50,20 +51,20 @@ type sessionEventsResponse struct {
 	Events []store.SessionEvent `json:"events"`
 }
 
-func (s *Server) appendSessionEvent(ctx context.Context, sessionID, userID int64, eventType, title string, data any) {
+func (s *Server) appendSessionEvent(ctx context.Context, sessionID, userID int64, eventType, action string, data any) {
 	raw, err := json.Marshal(data)
 	if err != nil {
 		return
 	}
-	if _, err := s.store.CreateSessionEvent(ctx, sessionID, userID, nil, eventType, &title, raw, "public", nil); err == nil {
+	if _, err := s.store.CreateSessionEvent(ctx, sessionID, userID, nil, nil, eventType, action, raw, "public", nil); err == nil {
 		s.publishSessionJournal(sessionID)
 	}
 }
 
 func normalizeCharacterSessionEvent(req characterSessionEventRequest) (store.CharacterSessionEvent, bool) {
 	req.Type = strings.TrimSpace(req.Type)
-	req.Title = strings.TrimSpace(req.Title)
-	if !isUUID(req.SessionUUID) || !allowedSessionEventTypes[req.Type] || req.Title == "" || len([]rune(req.Title)) > 255 {
+	req.Action = strings.TrimSpace(req.Action)
+	if !isUUID(req.SessionUUID) || !allowedSessionEventTypes[req.Type] || req.Action == "" || len([]rune(req.Action)) > 255 {
 		return store.CharacterSessionEvent{}, false
 	}
 	if req.ClientActionID == "" || !isUUID(req.ClientActionID) {
@@ -82,7 +83,7 @@ func normalizeCharacterSessionEvent(req characterSessionEventRequest) (store.Cha
 		return store.CharacterSessionEvent{}, false
 	}
 	return store.CharacterSessionEvent{
-		SessionUUID: req.SessionUUID, EventType: req.Type, Title: req.Title,
+		SessionUUID: req.SessionUUID, EventType: req.Type, Action: req.Action,
 		Data: req.Data, Visibility: req.Visibility, ClientActionID: req.ClientActionID,
 	}, true
 }
@@ -134,8 +135,8 @@ func (s *Server) handleCreateSessionEvent(w http.ResponseWriter, r *http.Request
 		return
 	}
 	req.Type = strings.TrimSpace(req.Type)
-	req.Title = strings.TrimSpace(req.Title)
-	if !allowedSessionEventTypes[req.Type] || req.Title == "" || len([]rune(req.Title)) > 255 {
+	req.Action = strings.TrimSpace(req.Action)
+	if !allowedSessionEventTypes[req.Type] || req.Action == "" || len([]rune(req.Action)) > 255 {
 		badRequest(w, "Некорректное событие")
 		return
 	}
@@ -166,7 +167,18 @@ func (s *Server) handleCreateSessionEvent(w http.ResponseWriter, r *http.Request
 		badRequest(w, "Некорректный персонаж события")
 		return
 	}
-	actorCharID, err := s.store.ResolveSessionActor(r.Context(), session.ID, userID, req.ActorCharUUID)
+	var requestedActorName *string
+	if req.ActorName != nil {
+		name := strings.TrimSpace(*req.ActorName)
+		if len([]rune(name)) > 160 {
+			badRequest(w, "Некорректное имя участника события")
+			return
+		}
+		if name != "" {
+			requestedActorName = &name
+		}
+	}
+	actorCharID, characterName, err := s.store.ResolveSessionActor(r.Context(), session.ID, userID, req.ActorCharUUID)
 	if err != nil {
 		if errors.Is(err, store.ErrNotFound) {
 			forbidden(w)
@@ -175,9 +187,12 @@ func (s *Server) handleCreateSessionEvent(w http.ResponseWriter, r *http.Request
 		}
 		return
 	}
-	title := req.Title
+	actorName := characterName
+	if actorCharID == nil && session.OwnerUserID == userID {
+		actorName = requestedActorName
+	}
 	event, err := s.store.CreateSessionEvent(
-		r.Context(), session.ID, userID, actorCharID, req.Type, &title,
+		r.Context(), session.ID, userID, actorCharID, actorName, req.Type, req.Action,
 		req.Data, visibility, req.ClientActionID,
 	)
 	if err != nil {

@@ -106,7 +106,7 @@
       <div class="enemy-blocks">
         <div v-for="b in item.data.feats" :key="b.name" class="enemy-block-tile">
           <div class="block-name">{{ b.name }}</div>
-          <RichContent class="block-text" :html="b.value" />
+          <RichContent class="block-text" :html="b.value" :actor-name="item.name" />
         </div>
       </div>
     </DetailSection>
@@ -116,7 +116,7 @@
       <div class="enemy-blocks">
         <div v-for="b in item.data.actions" :key="b.name" class="enemy-block-tile">
           <div class="block-name">{{ b.name }}</div>
-          <RichContent class="block-text" :html="b.value" />
+          <RichContent class="block-text" :html="b.value" :actor-name="item.name" />
         </div>
       </div>
     </DetailSection>
@@ -126,7 +126,7 @@
       <div class="enemy-blocks">
         <div v-for="b in item.data.reactions" :key="b.name" class="enemy-block-tile">
           <div class="block-name">{{ b.name }}</div>
-          <RichContent class="block-text" :html="b.value" />
+          <RichContent class="block-text" :html="b.value" :actor-name="item.name" />
         </div>
       </div>
     </DetailSection>
@@ -138,7 +138,7 @@
       collapsible
       :default-open="false"
     >
-      <RichContent class="enemy-desc" :html="item.data.description" />
+      <RichContent class="enemy-desc" :html="item.data.description" :actor-name="item.name" />
     </DetailSection>
 
     <!-- Tags as accordion (at the very bottom) -->
@@ -156,7 +156,7 @@
               <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </button>
-          <RichContent v-if="s.desc && expandedTag === s.id" class="enemy-tag-body" :html="s.desc" />
+          <RichContent v-if="s.desc && expandedTag === s.id" class="enemy-tag-body" :html="s.desc" :actor-name="item.name" />
         </div>
       </div>
     </DetailSection>

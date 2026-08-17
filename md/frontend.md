@@ -241,7 +241,9 @@ HTML-контрактом и selection API, а `DndRichContent` — значен
 один документированный ключ.
 
 `dice` хранит `{formula,label?}` и показывает состав формулы через `SystemDie`;
-клик отправляет выражение в общий dice store. `item` хранит `{id,typeId}`,
+клик отправляет выражение в общий dice store. DnD-адаптер принимает необязательное
+имя субъекта: в карточке существа оно передаётся в бросок отдельно от действия и
+попадает в `actorName` журнала. `item` хранит `{id,typeId}`,
 показывает короткий hover-preview и открывает `ItemViewModal` по клику. `suggest`
 хранит `{id,typeId}` и раскрывает описание в `BasePopover`. Legacy custom tags
 не являются runtime-контрактом; startup migration переводит согласованный

@@ -72,7 +72,7 @@ function rollDie(sides) {
   const winner = winnerIdx === 0 ? a : b
   const title = keepHigh ? `d${sides} с преимуществом` : `d${sides} с помехой`
   diceStore.pushEntry({
-    title,
+    action: title,
     result: {
       parts: [{
         sign: '+',

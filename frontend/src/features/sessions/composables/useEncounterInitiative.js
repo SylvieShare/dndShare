@@ -45,9 +45,12 @@ export function useEncounterInitiative({ findParticipant, playerDisplayName, npc
 
   function rollInitiativeFor(c) {
     const name = c.type === 'player' ? playerDisplayName(c) : (npcName ? npcName(c) : 'Бросок')
+    const participant = c.type === 'player' ? findParticipant(c.charId) : null
     const bonus = initiativeBonus(c)
     const expr = d20Expr(bonus)
-    const result = useDiceStore().roll(`${name} — инициатива`, expr)
+    const result = useDiceStore().roll('Инициатива', expr, {
+      actor: { name, charUuid: participant?.charUuid || null },
+    })
     return Number(result?.total) || 0
   }
 

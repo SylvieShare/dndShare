@@ -110,10 +110,15 @@ export function useEncounterChallenge({
     for (const combatant of combatants) {
       const bonus = bonusFor(combatant, key, savingThrow)
       const kind = savingThrow ? 'спасбросок' : 'проверка'
+      const participant = combatant.type === 'player' ? findParticipant(combatant.charId) : null
       const roll = diceStore.roll(
-        `${displayName(combatant)} — ${meta.label.toLowerCase()}, ${kind}`,
+        `${meta.label}, ${kind}`,
         d20Expr(bonus),
-        { crit_mode: true, popup: false },
+        {
+          crit_mode: true,
+          popup: false,
+          actor: { name: displayName(combatant), charUuid: participant?.charUuid || null },
+        },
       )
       const natural = roll?.parts
         ?.find(part => part.kind === 'dice' && part.sides === 20)
@@ -174,7 +179,11 @@ export function useEncounterChallenge({
     }
 
     useDiceStore().pushEntry({
-      title: `${displayName(combatant)} — ${kind} ${meta.label.toLowerCase()} ${modeLabel}`,
+      action: `${kind} ${meta.label.toLowerCase()} ${modeLabel}`,
+      actor: {
+        name: displayName(combatant),
+        charUuid: combatant.type === 'player' ? findParticipant(combatant.charId)?.charUuid || null : null,
+      },
       popup: false,
       outcome: kept === 20
         ? { kind: 'crit', sides: 20, value: kept }

@@ -210,7 +210,9 @@ export function useEncounterHp({
     const raw = npcHpFormula(c)
     if (!raw) return
     const norm = raw.replace(/[()]/g, '')
-    const result = useDiceStore().roll(`${npcName ? npcName(c) : 'НПС'} — хиты`, norm)
+    const result = useDiceStore().roll('Хиты', norm, {
+      actor: { name: npcName ? npcName(c) : 'НПС', charUuid: null },
+    })
     if (!result || !result.parts.length) return
     const val = Math.max(1, result.total)
     mutate(() => {

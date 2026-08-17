@@ -588,8 +588,8 @@ CREATE TABLE IF NOT EXISTS dndshare.session_event (
     session_id     int8 NOT NULL REFERENCES dndshare."session"(id),
     author_user_id int8 NOT NULL REFERENCES dndshare.users(id),
     event_type     varchar(32) NOT NULL,
-    title          varchar(255) NULL,
-    "content"      text NULL,
+    actor_name     varchar(160) NULL,
+    action         varchar(255) NOT NULL,
     "data"         jsonb NULL,
     created_at     timestamptz DEFAULT now() NOT NULL,
     deleted        bool DEFAULT false NOT NULL,
@@ -597,8 +597,63 @@ CREATE TABLE IF NOT EXISTS dndshare.session_event (
 );
 ALTER TABLE dndshare.session_event
     ADD COLUMN IF NOT EXISTS actor_char_id int8 NULL REFERENCES dndshare."char"(id),
+    ADD COLUMN IF NOT EXISTS actor_name varchar(160) NULL,
+    ADD COLUMN IF NOT EXISTS action varchar(255) NULL,
     ADD COLUMN IF NOT EXISTS visibility varchar(16) DEFAULT 'public' NOT NULL,
     ADD COLUMN IF NOT EXISTS client_action_id uuid NULL;
+-- Replace the former presentation-oriented `title` with an explicit action.
+-- Dynamic SQL lets subsequent startups run against the current schema without
+-- recreating or reading the removed legacy column.
+DO $migration$ BEGIN
+    IF EXISTS (
+        SELECT 1 FROM information_schema.columns
+        WHERE table_schema = 'dndshare' AND table_name = 'session_event' AND column_name = 'title'
+    ) THEN
+        EXECUTE $dice_migration$
+            UPDATE dndshare.session_event
+            SET actor_name = left(btrim(split_part(title, ' — ', 1)), 160),
+                action = left(btrim(substr(title, strpos(title, ' — ') + 3)), 255)
+            WHERE event_type = 'dice_roll'
+              AND actor_char_id IS NULL
+              AND (actor_name IS NULL OR btrim(actor_name) = '')
+              AND (action IS NULL OR btrim(action) = '')
+              AND title LIKE '% — %'
+        $dice_migration$;
+        EXECUTE $action_migration$
+            UPDATE dndshare.session_event
+            SET action = left(CASE event_type
+                WHEN 'spell_used' THEN 'Использовано: ' || COALESCE(title, 'Заклинание')
+                WHEN 'item_spent' THEN 'Потрачено: ' || COALESCE(title, 'Предмет')
+                WHEN 'item_added' THEN 'Добавлено: ' || COALESCE(title, 'Предмет')
+                WHEN 'resource_used' THEN 'Использовано: ' || COALESCE(title, 'Ресурс')
+                WHEN 'entry_added' THEN
+                    CASE
+                        WHEN data ->> 'kind' = 'potion' THEN 'Добавлено зелье: '
+                        WHEN data ->> 'kind' = 'spell' THEN 'Добавлено заклинание: '
+                        WHEN data ->> 'kind' = 'feature' THEN 'Добавлена черта: '
+                        WHEN data ->> 'kind' = 'ability' THEN 'Добавлена способность: '
+                        WHEN data ->> 'category' = 'weapon' THEN 'Добавлено оружие: '
+                        ELSE 'Добавлен предмет: '
+                    END || COALESCE(title, 'Без названия')
+                ELSE COALESCE(title, 'Событие')
+            END, 255)
+            WHERE action IS NULL OR btrim(action) = ''
+        $action_migration$;
+    END IF;
+END $migration$;
+UPDATE dndshare.session_event SET action = 'Событие' WHERE action IS NULL OR btrim(action) = '';
+UPDATE dndshare.session_event event
+SET actor_name = left(COALESCE(
+    NULLIF(btrim(character.data #>> '{values,name}'), ''),
+    NULLIF(btrim(character.data #>> '{values,char_name}'), ''),
+    '(без имени)'
+), 160)
+FROM dndshare."char" character
+WHERE event.actor_char_id = character.id
+  AND (event.actor_name IS NULL OR btrim(event.actor_name) = '');
+ALTER TABLE dndshare.session_event ALTER COLUMN action SET NOT NULL;
+ALTER TABLE dndshare.session_event DROP COLUMN IF EXISTS title;
+ALTER TABLE dndshare.session_event DROP COLUMN IF EXISTS "content";
 CREATE INDEX IF NOT EXISTS idx_session_event_session_id ON dndshare.session_event USING btree (session_id);
 CREATE INDEX IF NOT EXISTS idx_session_event_author_user_id ON dndshare.session_event USING btree (author_user_id);
 CREATE INDEX IF NOT EXISTS idx_session_event_session_cursor ON dndshare.session_event USING btree (session_id, id);
