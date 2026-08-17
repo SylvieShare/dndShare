@@ -122,13 +122,14 @@ import ItemTooltip from "@/features/character-editor/components/ItemTooltip"
 import MorphEditorShell from "@/features/character-editor/components/MorphEditorShell"
 import AbilityTooltipDetails from "@/features/items/detail-components/AbilityTooltipDetails"
 import ItemViewModal from "@/features/handbook/components/ItemViewModal.vue"
-import { featChoices, featEntry } from '@/features/items/lib/featRules'
+import { featAbilityBonuses, featChoices, featEntry } from '@/features/items/lib/featRules'
+import { resolveNumValue } from '@/shared/lib/dnd'
 import { ensureItemNames, itemName } from '@/features/handbook/objects/lib/itemNames'
 import { useSuggestStore } from '@/stores/suggest'
 import { useMorphOrigin } from "@/features/character-editor/composables/useMorphOrigin"
 import { logSessionEntryAdded } from '@/features/character-editor/lib/sessionEntryEvents'
 
-const props = defineProps(['block', 'value'])
+const props = defineProps(['block', 'value', 'values'])
 const emit = defineEmits(['update:value'])
 const charCtx = inject('charCtx', { ownerMode: false })
 const suggestStore = useSuggestStore()
@@ -234,6 +235,47 @@ function emitChange(newStored) {
   emit('update:value', props.block.id, newStored)
 }
 
+function featSourceKey(item, entry) {
+  return `feat:${entry.uid || item.id}`
+}
+
+function applyFeatStatBonuses(item, entry) {
+  const sourceFeatKey = featSourceKey(item, entry)
+  for (const bonus of featAbilityBonuses(item, entry.choices || {})) {
+    const block = { ...(props.values?.[bonus.stat] || {}) }
+    const oldValue = block.value
+    const base = oldValue && typeof oldValue === 'object'
+      ? (Number(oldValue.base) || 0)
+      : (oldValue == null ? 10 : Number(oldValue) || 0)
+    const bonuses = oldValue && typeof oldValue === 'object' && Array.isArray(oldValue.bonuses) ? oldValue.bonuses : []
+    const applied = Math.max(0, Math.min(Number(bonus.bonus) || 0, 20 - resolveNumValue(oldValue)))
+    if (!applied) continue
+    emit('update:value', bonus.stat, {
+      ...block,
+      value: {
+        base,
+        bonuses: [...bonuses, {
+          name: item.name || 'Черта',
+          title: item.name || 'Черта',
+          value: applied,
+          readonly: true,
+          sourceFeatKey,
+        }],
+      },
+    })
+  }
+}
+
+function removeFeatStatBonuses(item, entry) {
+  const sourceFeatKey = featSourceKey(item, entry)
+  for (const bonus of featAbilityBonuses(item, entry.choices || {})) {
+    const block = { ...(props.values?.[bonus.stat] || {}) }
+    if (!block.value || typeof block.value !== 'object') continue
+    const bonuses = (block.value.bonuses || []).filter((row) => row.sourceFeatKey !== sourceFeatKey)
+    emit('update:value', bonus.stat, { ...block, value: { ...block.value, bonuses } })
+  }
+}
+
 function onManage() {
   hideTooltip()
   openFrom(root.value)
@@ -259,7 +301,9 @@ function addFromCatalog(item) {
     return
   }
   if (Number(props.block.content.item_id) === 7) {
-    emitChange([...stored.value, featEntry(item)])
+    const entry = featEntry(item)
+    emitChange([...stored.value, entry])
+    applyFeatStatBonuses(item, entry)
     logAddedEntry(item)
     return
   }
@@ -273,13 +317,20 @@ function addFromCatalog(item) {
 
 function onFeatChoicesConfirm(choices) {
   const item = featConfigItem.value
-  emitChange([...stored.value, featEntry(item, choices)])
+  const entry = featEntry(item, choices)
+  emitChange([...stored.value, entry])
+  applyFeatStatBonuses(item, entry)
   logAddedEntry(item)
   featConfigItem.value = null
 }
 
 function removeAbility(key) {
   hideTooltip()
+  if (Number(props.block.content.item_id) === 7) {
+    const entry = stored.value.find(s => (s.uid || String(s.id)) === key)
+    const item = entry && catalog.value.find(candidate => candidate.id === entry.id)
+    if (entry && item) removeFeatStatBonuses(item, entry)
+  }
   emitChange(stored.value.filter(s => (s.uid || String(s.id)) !== key))
 }
 

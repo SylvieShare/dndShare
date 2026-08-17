@@ -49,6 +49,9 @@ Each additive term may carry a typed tag `{label|#color}` (color optional). Tags
 - `features/sessions/components/DicePanel.vue` — right-column session panel: animated d4/d6/d8/d10/d12/d20/d100 buttons + advantage/normal/disadvantage `MultiToggle`. Advantage/disadvantage rolls two dice and marks the unused one as `dropped` so the popup dims and strikes it through; uses `pushEntry` for the prebuilt result. All panel dice use the shared `var(--accent)` color instead of catalogue colors; visibility is controlled by the session workspace tool switcher.
 - `features/sessions/components/EncounterChallengeResult.vue` — embedded group-challenge result in a combatant row. The roll is limited to selected scene combatants, uses `opts.popup: false`, and reuses `SystemDie` plus `useDiceRollAnimation`; only the event is shown inside the tile, while the complete creature/event title remains in the session timeline.
 - `features/character-editor/blocks/dnd/DndCharStat10.vue` — the stat modifier, save chip, and skill chips roll `d20+<value>` with `crit_mode: true` and the owning characteristic's suggest color as `opts.color`, via `DndStatView`'s `@roll-stat`/`@roll-save`/`@roll-skill` emits → `rollD20Plus`. No edit-mode gating (the view/edit toggle was removed).
+- `features/character-list/components/wizard/steps/StepStats.vue` — each 4d6
+  ability roll preserves all four faces, renders them with `SystemDie` and marks
+  the discarded minimum. Duplicate totals stay distinct assignments.
 
 To wire a new caller: `useDiceStore().roll(action, expression, opts)` for parsed expressions, or `useDiceStore().pushEntry({ action, actor?, result, outcome?, color?, duration?, log? })` for prebuilt results. No props/events — the popup is mounted once in `App.vue` and reads store state. Session attribution normally comes from the session-events context; callers that act as another combatant pass the explicit actor override.
 

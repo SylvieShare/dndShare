@@ -229,7 +229,12 @@ const abilities = computed(() => STAT_KEYS.map(key => {
 }))
 
 const hp = computed(() => ({ current: 0, max: 0, temp: 0, ds_success: 0, ds_failure: 0, ...(values.value.hp || {}) }))
-const armorClass = computed(() => { const armor = values.value.armor || {}; return (Number(armor.ac) || 0) + (armor.shield ? Number(armor.shield_bonus) || 0 : 0) + sumBonuses(armor.bonuses) })
+const armorClass = computed(() => {
+  const armor = values.value.armor || {}
+  const rawDex = armor.use_dex ? abilityModifier(abilityScore('DEX')) : 0
+  const dex = armor.dex_cap == null ? rawDex : Math.min(rawDex, Number(armor.dex_cap))
+  return (Number(armor.ac) || 0) + dex + (armor.shield ? Number(armor.shield_bonus) || 0 : 0) + sumBonuses(armor.bonuses)
+})
 const initiative = computed(() => {
   const data = values.value.initiative || {}
   return (Number(data.base) || 0) + sumBonuses(data.bonuses) + (data.use_dex === false ? 0 : abilityModifier(abilityScore('DEX')))
@@ -379,7 +384,7 @@ const hasPersonality = computed(() => avatar.value || appearanceFields.value.som
 const featureCards = computed(() => [
   { group: 'Расовые особенности', value: values.value.abilities_race }, { group: 'Классовые особенности', value: values.value.abilities_class }, { group: 'Черты', value: values.value.abilities_feats },
 ].flatMap(group => (Array.isArray(group.value) ? group.value : []).map((entry, index) => {
-  const item = itemById(entry.id); const description = item?.data?.description || ''; const length = plainLength(description)
+  const item = itemById(entry.id); const description = item?.data?.description || item?.data?.desc || ''; const length = plainLength(description)
   return { key: entry.uid || `${group.group}-${entry.id}-${index}`, group: group.group, name: item?.name || entry.name || `Особенность #${entry.id || '—'}`, description, countText: entry.max_use != null ? `${entry.count ?? entry.max_use} / ${entry.max_use}` : '', span: length > 700 ? 2 : 1, textLength: length }
 })))
 const featurePages = computed(() => featureCards.value.length ? paginateGrid(featureCards.value, 2, 230, 230) : [])

@@ -123,6 +123,7 @@ function finishShort() {
 
 function applyLong(recovery) {
   const i = ids.value
+  const recoveredCount = longRestRecoveryCount(hp.value)
   emit('update:value', i.hp, longRestHp(hp.value, recovery))
   const spells = props.values?.[i.spells]
   if (spells && typeof spells === 'object') emit('update:value', i.spells, longRestSpells(spells))
@@ -135,7 +136,7 @@ function applyLong(recovery) {
     data: {
       kind: 'long',
       hpRecovered: Math.max(0, (Number(hp.value.max) || 0) - (Number(hp.value.current) || 0)),
-      hitDiceRecovered: recovery,
+      hitDiceRecovered: recoveredCount,
       resourcesRecovered: recoveredResourceNames(props.values?.[i.resources], restResources(props.values?.[i.resources], 'long')),
     },
   })

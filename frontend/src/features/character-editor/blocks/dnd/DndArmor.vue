@@ -36,7 +36,7 @@
           <ToggleSwitch
             v-if="dexMod !== null"
             :modelValue="armorData.use_dex || false"
-            :label="`Учитывать ловкость (${dexMod >= 0 ? '+' : ''}${dexMod})`"
+            :label="`Учитывать ловкость (${appliedDex >= 0 ? '+' : ''}${appliedDex}${armorData.dex_cap != null ? `, максимум +${armorData.dex_cap}` : ''})`"
             @update:modelValue="setUseDex"
           />
         </EditorSection>
@@ -45,7 +45,12 @@
         </EditorSection>
         <EditorSection title="Щит">
           <ToggleSwitch :modelValue="!!armorData.shield" label="Использовать щит" @update:modelValue="setShield" />
-          <FormField label="Бонус щита">
+          <div v-if="armorData.shield_readonly" class="armor-rule-source">
+            <span>{{ armorData.shield_source || 'Экипированный щит' }}</span>
+            <strong>+{{ armorData.shield_bonus ?? 2 }}</strong>
+            <small>из экипировки</small>
+          </div>
+          <FormField v-else label="Бонус щита">
             <FormNumberInput :value="armorData.shield_bonus ?? 2" :min="0" :max="20" @change="setShieldBonus" />
           </FormField>
         </EditorSection>
@@ -78,10 +83,14 @@ const armorData = computed(() => {
   return { ac: parseInt(props.value) || 10, shield_bonus: 2, shield: false }
 })
 const dexMod = computed(() => abilityModByPath(props.values, props.block.content?.dex_mod_path))
+const appliedDex = computed(() => {
+  const value = dexMod.value ?? 0
+  return armorData.value.dex_cap == null ? value : Math.min(value, Number(armorData.value.dex_cap))
+})
 const baseTotal = computed(() => {
   const d = armorData.value
   const bonuses = sumBonuses(d.bonuses)
-  const dex = d.use_dex && dexMod.value !== null ? dexMod.value : 0
+  const dex = d.use_dex && dexMod.value !== null ? appliedDex.value : 0
   return (d.ac || 0) + dex + bonuses
 })
 const displayAC = computed(() => {
@@ -166,5 +175,8 @@ function setShieldBonus(v) { patch({ shield_bonus: v }) }
   pointer-events: none;
   transition: color 0.2s, text-shadow 0.2s;
 }
+.armor-rule-source { display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; align-items: center; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); }
+.armor-rule-source strong { color: var(--accent); }
+.armor-rule-source small { grid-column: 1 / -1; color: var(--text-muted); font-size: 9px; text-transform: uppercase; letter-spacing: .06em; }
 .armor-toggled .armor-num { color: var(--text-on-accent); text-shadow: 0 0 10px color-mix(in srgb, var(--text-on-accent) 50%, transparent); }
 </style>

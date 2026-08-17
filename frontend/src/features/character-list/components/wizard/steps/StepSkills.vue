@@ -13,6 +13,8 @@
         :key="opt.id"
         class="skill"
         :class="{ on: selected.includes(opt.id), off: !selected.includes(opt.id) && atLimit }"
+        @mouseenter="showSkillTooltip($event, opt)"
+        @mouseleave="tooltip.visible = false"
         @click="toggle(opt.id)"
       >
         <span class="box">
@@ -23,12 +25,21 @@
         <span class="sk-mod" :class="modClass(skillMod(opt.id))">{{ formatMod(skillMod(opt.id)) }}</span>
       </div>
     </div>
+    <ItemTooltip
+      v-if="tooltip.visible"
+      :title="tooltip.title"
+      :desc="tooltip.desc"
+      :x="tooltip.x"
+      :top="tooltip.top"
+      :bottom="tooltip.bottom"
+    />
   </div>
 </template>
 
 <script setup>
-import { computed, inject } from 'vue'
+import { computed, inject, reactive } from 'vue'
 import { STAT_SHORT, formatMod } from '@/features/character-list/components/wizard/labels'
+import ItemTooltip from '@/features/character-editor/components/ItemTooltip.vue'
 
 const props = defineProps({ source: { type: String, default: 'class' } })
 const { state, skillOptions, skillLimit, toggleSkill, raceSkillOptions, raceSkillLimit, toggleRaceSkill, skillStat, skillMod } = inject('createWizard')
@@ -38,6 +49,20 @@ const selected = computed(() => props.source === 'race' ? state.raceSkillIds : s
 const toggle = (id) => (props.source === 'race' ? toggleRaceSkill(id) : toggleSkill(id))
 const atLimit = computed(() => limit.value > 0 && selected.value.length >= limit.value)
 function modClass(m) { return m > 0 ? 'pos' : m < 0 ? 'neg' : '' }
+const tooltip = reactive({ visible: false, title: '', desc: '', x: 0, top: null, bottom: null })
+function showSkillTooltip(event, option) {
+  if (!option.desc) return
+  const rect = event.currentTarget.getBoundingClientRect()
+  const above = window.innerHeight - rect.bottom < 220 && rect.top > 220
+  Object.assign(tooltip, {
+    visible: true,
+    title: option.name,
+    desc: option.desc,
+    x: Math.min(rect.left, window.innerWidth - 360),
+    top: above ? null : rect.bottom + 7,
+    bottom: above ? window.innerHeight - rect.top + 7 : null,
+  })
+}
 </script>
 
 <style scoped>

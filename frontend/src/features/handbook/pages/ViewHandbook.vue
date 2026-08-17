@@ -64,6 +64,7 @@
             class="handbook-list"
             @select="selectItem"
             @load-more="loadMore"
+            @update:group-by="groupBy = $event"
           />
 
           <HandbookItemDetail
@@ -136,6 +137,7 @@ const loading = ref(false)
 const loadingMore = ref(false)
 const hasMore = ref(false)
 const itemPageSize = 30
+const groupedPageSize = 500
 let itemOffset = 0
 let itemsRequestSeq = 0
 const searchQ = ref('')
@@ -187,7 +189,7 @@ function getSuggests(suggestId) { return suggestStore.items(suggestId) || [] }
 const filterFields = computed(() =>
   walkFieldsWithPath(selectedType.value?.fields || [])
     .filter(({ field }) => field.filter && field.type !== 'item')
-    .map(({ field, path }) => ({ ...field, path }))
+    .map(({ field, path }) => ({ ...field, path: field.filter_path || path }))
 )
 const filterSuggests = computed(() => {
   const map = {}
@@ -276,13 +278,33 @@ async function fetchItems(q, append = false) {
 
   try {
     const fq = filtersQuery()
-    const lq = `&limit=${itemPageSize}&offset=${offset}`
-    const url = q.trim()
-      ? `/items/search?typeId=${selectedType.value.id}&q=${encodeURIComponent(q)}${lq}${fq}`
-      : `/items?typeId=${selectedType.value.id}${lq}${fq}`
-    const res = await fetchGet(url)
+    const pageSize = groupBy.value ? groupedPageSize : itemPageSize
+    const fetchPage = async (pageOffset) => {
+      const lq = `&limit=${pageSize}&offset=${pageOffset}`
+      const url = q.trim()
+        ? `/items/search?typeId=${selectedType.value.id}&q=${encodeURIComponent(q)}${lq}${fq}`
+        : `/items?typeId=${selectedType.value.id}${lq}${fq}`
+      return fetchGet(url)
+    }
+    const res = await fetchPage(offset)
     if (requestId !== itemsRequestSeq) return
-    const next = res.items || []
+    let next = res.items || []
+
+    // A grouped catalogue must be complete: otherwise a group can silently
+    // omit entries that happen to live beyond the first API page (the original
+    // cause of missing kobolds in CR grouping). The API caps pages at 500, so
+    // collect every page before calculating groups in the client.
+    if (groupBy.value && !append) {
+      let nextOffset = offset + next.length
+      let lastPageSize = next.length
+      while (lastPageSize === pageSize) {
+        const page = (await fetchPage(nextOffset)).items || []
+        if (requestId !== itemsRequestSeq) return
+        next = [...next, ...page]
+        nextOffset += page.length
+        lastPageSize = page.length
+      }
+    }
     if (append) {
       const ids = new Set(items.value.map(i => i.id))
       items.value = [...items.value, ...next.filter(i => !ids.has(i.id))]
@@ -290,7 +312,7 @@ async function fetchItems(q, append = false) {
       items.value = next
     }
     itemOffset = offset + next.length
-    hasMore.value = next.length === itemPageSize
+    hasMore.value = !groupBy.value && next.length === pageSize
   } finally {
     if (requestId === itemsRequestSeq) {
       loading.value = false
@@ -382,6 +404,7 @@ watch(contentSourceIds, (ids) => {
 
 watch(groupBy, () => {
   if (skipGroupWatch.value) { skipGroupWatch.value = false; return }
+  fetchItems(searchQ.value)
   router.replace({ query: currentQuery() })
 })
 

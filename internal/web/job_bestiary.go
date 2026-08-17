@@ -7,9 +7,13 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"path"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
+
+	"dndshare/internal/storage"
 )
 
 const (
@@ -22,7 +26,10 @@ const (
 	ttgImagePrefix                = "https://img.ttg.club/creatures/"
 	bestiaryPageSize              = 160
 	tagNamedNPC                   = "Именованные НИП"
+	maxBestiaryImageBytes         = 15 << 20
 )
+
+var bestiarySlugCleaner = regexp.MustCompile(`[^a-zA-Z0-9_-]+`)
 
 var bestiaryTagsSkip = map[string]struct{}{
 	"Именованные НИП": {},
@@ -111,7 +118,17 @@ func jobBestiaryImport(s *Server, jc *JobContext) error {
 					jc.Increment(1, "Ошибка: "+slug)
 					return
 				}
-				imageURL := bestiaryImageURL(detail)
+				imageKey := ""
+				imageURL := ""
+				if upstreamImageURL := bestiaryImageURL(detail); upstreamImageURL != "" {
+					stored, err := b.storeImage(ctx, upstreamImageURL, slug)
+					if err != nil {
+						errList = append(errList, fmt.Sprintf("%s image: %s", slug, err.Error()))
+						jc.Increment(1, "Ошибка изображения: "+slug)
+						return
+					}
+					imageKey, imageURL = stored.Key, stored.URL
+				}
 
 				exists, err := b.s.store.BestiaryFindItemByNameEn(ctx, bestiaryItemTypeEnemy, nameEng)
 				if err != nil {
@@ -120,14 +137,14 @@ func jobBestiaryImport(s *Server, jc *JobContext) error {
 					return
 				}
 				if exists {
-					if err := b.s.store.BestiaryUpdateItem(ctx, nameEng, nameRus, mustMarshal(data), imageURL, bestiaryItemTypeEnemy); err != nil {
+					if err := b.s.store.BestiaryUpdateItem(ctx, nameEng, nameRus, mustMarshal(data), imageKey, imageURL, bestiaryItemTypeEnemy); err != nil {
 						errList = append(errList, fmt.Sprintf("%s: %s", slug, err.Error()))
 						jc.Increment(1, "Ошибка: "+slug)
 						return
 					}
 					updated++
 				} else {
-					if _, err := b.s.store.BestiaryCreateItem(ctx, nameRus, nameEng, mustMarshal(data), imageURL, bestiaryItemTypeEnemy); err != nil {
+					if _, err := b.s.store.BestiaryCreateItem(ctx, nameRus, nameEng, mustMarshal(data), imageKey, imageURL, bestiaryItemTypeEnemy); err != nil {
 						errList = append(errList, fmt.Sprintf("%s: %s", slug, err.Error()))
 						jc.Increment(1, "Ошибка: "+slug)
 						return
@@ -380,6 +397,42 @@ func bestiaryImageURL(d any) string {
 		}
 	}
 	return ""
+}
+
+func (b *bestiaryImport) storeImage(ctx context.Context, sourceURL, slug string) (storage.StoredObject, error) {
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, sourceURL, nil)
+	if err != nil {
+		return storage.StoredObject{}, err
+	}
+	res, err := b.client.Do(req)
+	if err != nil {
+		return storage.StoredObject{}, err
+	}
+	defer res.Body.Close()
+	if res.StatusCode < 200 || res.StatusCode >= 300 {
+		return storage.StoredObject{}, fmt.Errorf("download returned HTTP %d", res.StatusCode)
+	}
+	contentType := strings.TrimSpace(strings.Split(res.Header.Get("Content-Type"), ";")[0])
+	if !strings.HasPrefix(contentType, "image/") {
+		return storage.StoredObject{}, fmt.Errorf("download returned %q instead of an image", contentType)
+	}
+	data, err := io.ReadAll(io.LimitReader(res.Body, maxBestiaryImageBytes+1))
+	if err != nil {
+		return storage.StoredObject{}, err
+	}
+	if len(data) > maxBestiaryImageBytes {
+		return storage.StoredObject{}, fmt.Errorf("image exceeds %d MiB", maxBestiaryImageBytes>>20)
+	}
+	ext := path.Ext(req.URL.Path)
+	if len(ext) < 2 || len(ext) > 6 {
+		ext = ".img"
+	}
+	cleanSlug := strings.Trim(bestiarySlugCleaner.ReplaceAllString(slug, "-"), "-")
+	if cleanSlug == "" {
+		return storage.StoredObject{}, fmt.Errorf("empty image slug")
+	}
+	key := "bestiary/v1/" + cleanSlug + strings.ToLower(ext)
+	return b.s.s3.UploadBestiaryImage(ctx, bytes.NewReader(data), int64(len(data)), key, contentType)
 }
 
 func (b *bestiaryImport) getOrCreateSuggestByCode(ctx context.Context, typeID int64, value, code string) (int64, error) {

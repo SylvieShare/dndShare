@@ -1,8 +1,14 @@
 <template>
   <div v-for="(bonus, i) in bonuses" :key="i" class="bl-row">
-    <FormTextInput class="bl-name" :value="bonus.name" placeholder="Название" @update:value="v => set(i, 'name', v)" />
-    <FormNumberInput :value="bonus.value" @change="v => set(i, 'value', v)" />
-    <RemoveButton label="Удалить бонус" @click="remove(i)" />
+    <template v-if="bonus.readonly">
+      <div class="bl-readonly-name"><span>{{ bonus.name || bonus.title || 'Бонус' }}</span><small>из правил</small></div>
+      <strong class="bl-readonly-value">{{ Number(bonus.value) >= 0 ? '+' : '' }}{{ bonus.value }}</strong>
+    </template>
+    <template v-else>
+      <FormTextInput class="bl-name" :value="bonus.name || bonus.title" placeholder="Название" @update:value="v => set(i, 'name', v)" />
+      <FormNumberInput :value="bonus.value" @change="v => set(i, 'value', v)" />
+      <RemoveButton label="Удалить бонус" @click="remove(i)" />
+    </template>
   </div>
   <AddButton block @click="add">Добавить бонус</AddButton>
 </template>
@@ -41,4 +47,7 @@ function add() {
   flex: 1;
   min-width: 0;
 }
+.bl-readonly-name { flex: 1; min-width: 0; display: flex; flex-direction: column; padding: 7px 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--text-1); font-size: 13px; }
+.bl-readonly-name small { color: var(--text-muted); font-size: 9px; text-transform: uppercase; letter-spacing: .06em; }
+.bl-readonly-value { min-width: 52px; padding: 7px 10px; border-radius: 8px; background: color-mix(in srgb, var(--accent) 10%, var(--surface)); color: var(--accent); text-align: center; }
 </style>

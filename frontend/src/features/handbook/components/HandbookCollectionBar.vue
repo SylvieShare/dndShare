@@ -28,21 +28,9 @@
         <input
           :value="search"
           class="col-search"
-          placeholder="Поиск..."
+          :placeholder="`Поиск в коллекции «${type.name}»...`"
           @input="$emit('update:search', $event.target.value)"
         />
-      </div>
-
-      <div v-if="groupFields.length" class="col-group">
-        <span class="col-group-label">ГРУППИРОВКА</span>
-        <span class="col-group-sep" aria-hidden="true"></span>
-        <button
-          v-for="f in groupFields"
-          :key="f.path"
-          class="col-group-btn"
-          :class="{ active: groupBy === f.path }"
-          @click="$emit('update:group-by', groupBy === f.path ? null : f.path)"
-        >{{ f.nameShort || f.name }}</button>
       </div>
 
       <div v-if="visibleFilterFields.length" class="col-filter-wrap">
@@ -145,8 +133,9 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
-import { getSuggestId, walkFieldsWithPath } from '@/features/handbook/objects/lib/schemaFields'
+import { computed, ref, watch } from 'vue'
+import { getSuggestId } from '@/features/handbook/objects/lib/schemaFields'
+import { fetchGet } from '@/shared/api/http'
 import { BasePopover } from '@sylvieshare/share-ui'
 import { MultiToggle } from '@sylvieshare/share-ui'
 
@@ -177,12 +166,16 @@ const filterOpen = ref(false)
 const filterBtnRef = ref(null)
 const contentSourceFilterOpen = ref(false)
 const contentSourceBtnRef = ref(null)
+const itemFilterOptions = ref({})
 
-const groupFields = computed(() =>
-  walkFieldsWithPath(props.type?.fields || [])
-    .filter(({ field }) => field.group)
-    .map(({ field, path }) => ({ ...field, path }))
-)
+watch(() => props.filterFields, async fields => {
+  const next = {}
+  await Promise.all((fields || []).filter(field => field.filter_item_type).map(async field => {
+    const response = await fetchGet(`/items?typeId=${field.filter_item_type}&limit=500`).catch(() => null)
+    next[field.path] = (response?.items || []).filter(item => !item.parentId).map(item => ({ value: item.id, label: item.name }))
+  }))
+  itemFilterOptions.value = next
+}, { immediate: true })
 
 const activeFilterCount = computed(() =>
   Object.values(props.filters).reduce((sum, val) => {
@@ -199,11 +192,12 @@ function isBoolField(f) { return f?.type === 'bool' || f?.type === 'boolean' }
 function hasFilterValues(f) { return Array.isArray(f?.filter_values) && f.filter_values.length > 0 }
 function suggestOptions(f) { return props.filterSuggests[getSuggestId(f)] || [] }
 function hasAvailableOptions(f) {
-  return isBoolField(f) || hasFilterValues(f) ||
+  return isBoolField(f) || hasFilterValues(f) || itemFilterOptions.value[f.path]?.length > 0 ||
     ((f?.type === 'suggest' || f?.type === 'suggest_array') && suggestOptions(f).length > 0)
 }
 
 function filterValueOptions(f) {
+  if (itemFilterOptions.value[f.path]?.length) return itemFilterOptions.value[f.path]
   const labels = f.filter_labels || {}
   return (f.filter_values || []).map(v => ({
     value: v,

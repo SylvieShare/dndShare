@@ -6,7 +6,11 @@
     @click="$emit('select')"
   >
     <span v-if="selected" class="sel-strip" />
-    <span class="sel-mono">{{ monogram }}</span>
+    <span class="sel-mono">
+      <img v-if="imageUrl" :src="imageUrl" alt="" />
+      <span v-else-if="svg" class="sel-svg" v-html="svg" />
+      <template v-else>{{ monogram }}</template>
+    </span>
     <div class="sel-body">
       <div class="sel-title">{{ title }}</div>
       <div v-if="subtitle" class="sel-sub">{{ subtitle }}</div>
@@ -21,6 +25,8 @@ defineProps({
   subtitle: { type: String, default: '' },
   // First letter / short monogram shown in the medallion.
   monogram: { type: String, default: '' },
+  imageUrl: { type: String, default: '' },
+  svg: { type: String, default: '' },
   selected: { type: Boolean, default: false },
   // Accent color driving tint, strip and check. Defaults to the app accent.
   color: { type: String, default: 'var(--accent)' },
@@ -72,6 +78,9 @@ defineEmits(['select'])
   color: var(--sel);
   background: color-mix(in srgb, var(--sel) 18%, transparent);
 }
+.sel-mono img { width: 100%; height: 100%; border-radius: inherit; object-fit: cover; }
+.sel-svg { display: grid; place-items: center; width: 22px; height: 22px; }
+.sel-svg :deep(svg) { width: 22px; height: 22px; }
 
 .sel-body {
   min-width: 0;

@@ -13,12 +13,12 @@
           <span class="sp-tval sp-tval-stat">{{ statLabel || '—' }}</span>
           <span class="sp-tline"></span>
         </div>
-        <div class="sp-tile sp-tile--dc">
+        <div class="sp-tile sp-tile--dc" :title="saveFormula">
           <span class="sp-tlabel">СЛ спасброска</span>
           <span class="sp-tval">{{ saveDC }}</span>
           <span class="sp-tline"></span>
         </div>
-        <div class="sp-tile sp-tile--atk">
+        <div class="sp-tile sp-tile--atk" :title="attackFormula">
           <span class="sp-tlabel">Атака закл.</span>
           <span class="sp-tval sp-tval-atk">{{ attackBonus >= 0 ? '+' + attackBonus : attackBonus }}</span>
           <span class="sp-tline"></span>
@@ -75,7 +75,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 import DndSpellbookSettingsModal from '@/features/character-editor/blocks/dnd/DndSpellbookSettingsModal.vue'
 import SpellSlotSphere from '@/features/items/components/SpellSlotSphere.vue'
@@ -84,7 +84,7 @@ import SheetBlockTitle from '@/shared/ui/SheetBlockTitle'
 
 const editOpen = ref(false)
 
-defineProps({
+const props = defineProps({
   hasStatConfig:   { type: Boolean, default: false },
   canInteract:     { type: Boolean, default: false },
   statPath:        { default: '' },
@@ -104,6 +104,9 @@ defineEmits(['set-stat-path', 'set-total', 'set-save-bonus', 'set-attack-bonus',
 function orbOrder(total) {
   return Array.from({ length: total }, (_, k) => total - k)
 }
+const signedPart = value => Number(value) >= 0 ? `+ ${Number(value)}` : `− ${Math.abs(Number(value))}`
+const saveFormula = computed(() => `8 + бонус мастерства + модификатор ${props.statLabel || 'базовой характеристики'} ${signedPart(props.saveBonusExtra)} = ${props.saveDC}`)
+const attackFormula = computed(() => `Бонус мастерства + модификатор ${props.statLabel || 'базовой характеристики'} ${signedPart(props.attackBonusExtra)} = ${props.attackBonus >= 0 ? '+' : ''}${props.attackBonus}`)
 </script>
 
 <style scoped>

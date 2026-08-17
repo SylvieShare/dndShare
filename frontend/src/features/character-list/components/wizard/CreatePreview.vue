@@ -1,12 +1,5 @@
 <template>
   <aside class="pv">
-    <div class="pv-name">
-      <input v-model="state.name" type="text" placeholder="Имя персонажа" />
-      <button class="dice" title="Случайное имя" @click="randomName">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3" /><circle cx="8.5" cy="8.5" r="1.3" fill="currentColor" /><circle cx="15.5" cy="15.5" r="1.3" fill="currentColor" /><circle cx="15.5" cy="8.5" r="1.3" fill="currentColor" /><circle cx="8.5" cy="15.5" r="1.3" fill="currentColor" /></svg>
-      </button>
-    </div>
-
     <div class="pv-hero">
       <div class="pv-mono">{{ mono }}</div>
       <div class="pv-id">
@@ -90,7 +83,7 @@ import { dieLabel } from '@/shared/lib/systemDice'
 const wz = inject('createWizard')
 const {
   STATS, state, grants, mods, finalScores, maxHp, unarmoredAc, initiativeMod, spellDc,
-  suggestValue, raceAbilities, classAbilities, featPool, spellPool, randomName, racialBonus,
+  suggestValue, raceAbilities, classAbilities, featPool, spellPool, racialBonus,
   allEquipment,
 } = wz
 
@@ -228,17 +221,6 @@ const isEmpty = computed(() => !showStats.value && !sections.value.length)
 
 <style scoped>
 .pv { display: flex; flex-direction: column; gap: 14px; }
-.pv-name { position: relative; display: flex; align-items: center; }
-.pv-name input {
-  width: 100%; box-sizing: border-box; background: var(--surface-raised); border: 1px solid var(--border-strong);
-  border-radius: 9px; color: var(--text-1); font: inherit; font-family: var(--font-display); font-size: 18px;
-  padding: 8px 38px 8px 12px; outline: none;
-}
-.pv-name input:focus { border-color: var(--accent); }
-.dice { position: absolute; right: 6px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; background: none; border: none; color: var(--text-muted); cursor: pointer; }
-.dice:hover { color: var(--accent); }
-.dice svg { width: 17px; height: 17px; }
-
 .pv-hero { display: flex; align-items: center; gap: 12px; }
 .pv-mono {
   flex-shrink: 0; width: 56px; height: 56px; border-radius: 14px;

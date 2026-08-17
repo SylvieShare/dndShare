@@ -29,7 +29,7 @@
 
         <select v-else class="sa-select" :value="state.scores[stat] ?? ''" @change="assign(stat, $event.target.value)">
           <option value="">—</option>
-          <option v-for="(v, i) in pool" :key="i" :value="v" :disabled="isUsed(v, stat)">{{ v }}</option>
+          <option v-for="(v, i) in availablePool(stat)" :key="`${v}-${i}`" :value="v">{{ v }}</option>
         </select>
 
         <span class="sa-final">→ {{ finalScores[stat] }}<span v-if="asiFor(stat)" class="sa-asi"> (+{{ asiFor(stat) }})</span></span>
@@ -71,8 +71,23 @@ function asiFor(stat) {
 }
 
 // pool methods: each value assignable once.
-function isUsed(value, stat) {
-  return props.stats.some((s) => s !== stat && Number(props.state.scores[s]) === Number(value))
+function availablePool(stat) {
+  const used = new Map()
+  for (const key of props.stats) {
+    if (key === stat || props.state.scores[key] == null) continue
+    const value = Number(props.state.scores[key])
+    used.set(value, (used.get(value) || 0) + 1)
+  }
+  const available = []
+  for (const raw of pool.value) {
+    const value = Number(raw)
+    const count = used.get(value) || 0
+    if (count > 0) used.set(value, count - 1)
+    else available.push(value)
+  }
+  const current = props.state.scores[stat]
+  if (current != null && !available.includes(Number(current))) available.unshift(Number(current))
+  return available
 }
 function assign(stat, raw) {
   props.state.scores[stat] = raw === '' ? null : Number(raw)

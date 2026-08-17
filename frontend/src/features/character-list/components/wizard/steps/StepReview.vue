@@ -3,7 +3,7 @@
     <div class="rv-hero">
       <div class="rv-mono">{{ mono }}</div>
       <div class="rv-idcol">
-        <input class="rv-name" v-model="state.name" placeholder="Безымянный герой" />
+        <div class="rv-name">{{ state.name || 'Безымянный герой' }}</div>
         <div class="rv-sub">{{ [subraceOrRace, klass].filter(Boolean).join(' · ') || '—' }} · Уровень 1</div>
       </div>
     </div>
@@ -87,8 +87,7 @@ const summary = computed(() => {
   background: color-mix(in srgb, var(--accent) 16%, transparent);
 }
 .rv-idcol { min-width: 0; }
-.rv-name { width: 100%; background: none; border: none; font-family: var(--font-display); font-size: 26px; font-weight: 600; color: var(--warning); line-height: 1.1; padding: 0; outline: none; }
-.rv-name::placeholder { color: color-mix(in srgb, var(--warning) 45%, transparent); }
+.rv-name { width: 100%; font-family: var(--font-display); font-size: 26px; font-weight: 600; color: var(--warning); line-height: 1.1; }
 .rv-sub { font-size: 13px; color: var(--text-2); margin-top: 2px; }
 
 .rv-stats { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }

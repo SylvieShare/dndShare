@@ -49,6 +49,11 @@ Both flows resolve `sourceVersionId` from `/api/sources` and send it explicitly
 to `POST /api/chars`. The server rejects a missing/unknown version; there is no
 default-version fallback.
 
+`/chars/new` is public. An anonymous visitor can complete every wizard step;
+authentication is requested only by the final create action, after which the
+draft remains in place. Successful creation seeds the character-sheet route
+with the returned document so the first render does not wait for a second GET.
+
 ## Full D&D wizard
 
 The fixed steps are: Версия → Раса → Класс → Предыстория → Характеристики →
@@ -67,6 +72,8 @@ Key rules:
 - handbook weapons added on the equipment step are written to the dedicated
   weapon block; other additions and text-only starting rows use the canonical
   sectioned inventory model;
+- starting armor and shields are written to `items.equipped` and initialize the
+  sheet's structured AC rule, including a medium-armor Dexterity cap;
 - descriptions are edited/rendered through the shared rich-description pair;
 - feat and item selection uses the handbook `ItemPickerModal`;
 - the preview's dice action uses the shared race-aware name generator, preferring
@@ -74,10 +81,20 @@ Key rules:
 - resets and incomplete-create decisions use shared `ConfirmDialog`;
 - the draft persists in `localStorage` and is cleared after successful create.
 
+Race/class tiles include visual artwork and the current step repeats the
+selected option's benefits below the choices. Handbook equipment rows can open
+their full item card. Skill choices use description tooltips and spell choice
+rows omit the school label. Character name belongs to the Personality step;
+age/height/weight fields show race-aware recommendations and the larger
+background fields keep enough vertical room for prose. Pressing an unavailable
+Next action scrolls to and pulses the first incomplete field.
+
 На шаге характеристик смена метода всегда очищает прежнее распределение.
 Point-buy подчёркивает остаток бюджета и цену следующего повышения каждой
 характеристики; режим броска постоянно показывает пул результатов и кнопку
-переброса. **Быстрая сборка** доступна на mobile и раскладывает стандартный
+переброса. Each 4d6 series shows all dice and strikes through its discarded
+lowest die. Equal totals remain separate pool entries; assigned values disappear
+from other selectors instead of staying disabled. **Быстрая сборка** доступна на mobile и раскладывает стандартный
 набор по приоритетам выбранного класса.
 
 `buildCharacterData` is the only assembler. It produces current D&D data:

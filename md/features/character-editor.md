@@ -114,6 +114,8 @@ The current shape under `data.values` is:
   [{id,name,level,subclass}]`, `ava {url,upload_id?}`;
 - level: `lvl {level,exp}`;
 - ability: `STR..CHA {value:{base,bonuses},save_up,save_bonuses,skills}`;
+- armor: `{ac,use_dex,dex_cap?,bonuses,shield,shield_bonus}`; rule-derived
+  bonuses carry `readonly` and a source key;
 - numeric tile with bonuses: `speed {base,bonuses}` and `initiative
   {base,bonuses,use_dex}`;
 - HP: `{current,max,temp,ds_success,ds_failure,hitDice:[{die,total,used}]}`;
@@ -175,6 +177,11 @@ instead of falling back to the former circle-with-dot marker. Entry names use
 the primary text color so they remain visually stronger than muted section
 headings.
 
+Feat ability-score bonuses are represented as readonly named bonus rows. The
+creation assembler, level-up flow and manual feat editor use the same rule: add
+the row when the feat is gained and remove its source-keyed row when that feat
+entry is deleted.
+
 ## Items, weapons and spells
 
 `DndItems` uses `lib/itemSection.js` and the handbook item picker. Equipped items
@@ -206,6 +213,15 @@ possible, `RowActionSubmenu` shows the available slot levels beside the action
 menu on desktop or inside its bounded mobile section and records the chosen
 level. A spell row renders its transparent raster
 `item.iconImageUrl` when assigned; otherwise it retains the school SVG symbol.
+
+Starting armor is placed directly in the equipped array. Its handbook
+`data.armor` rule initializes AC as readonly equipment-derived bonuses; light
+and medium armor include Dexterity and medium armor applies `dex_cap`. The
+semantic accessor, visible tile and printable sheet all use the same formula.
+Long rest restores half the total hit-dice pool automatically and does not ask
+the player to allocate recovery manually. Spell save DC and spell attack tiles
+expose their formulas as hover titles, and every spell-slot sphere has the same
+subtle hover enlargement regardless of spent/read-only state.
 
 Diary sessions animate their disclosure body. Session create/edit forms use a
 regular `AppModalFrame`; event create/edit retains the element-origin

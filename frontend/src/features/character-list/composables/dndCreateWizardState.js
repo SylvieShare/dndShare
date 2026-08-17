@@ -5,7 +5,7 @@ export const DND_WIZARD_STORAGE_KEY = 'dnd-create-wizard-v1'
 
 const PERSISTED_KEYS = [
   'step', 'version', 'contentSources', 'name', 'race', 'subrace', 'charClass',
-  'subclass', 'raceVariant', 'statMethod', 'scores', 'rollPool', 'asiChoice',
+  'subclass', 'raceVariant', 'statMethod', 'scores', 'rollPool', 'rollSeries', 'asiChoice',
   'raceSkillIds', 'raceLangIds', 'featIds', 'featSelections', 'skillIds',
   'spellIds', 'choices', 'background', 'bgLangIds', 'classEquipmentChoices',
   'equipment', 'persona',
@@ -25,6 +25,7 @@ export function createDndWizardState() {
     statMethod: 'array',
     scores: emptyScores(),
     rollPool: [],
+    rollSeries: [],
     asiChoice: [],
     raceSkillIds: [],
     raceLangIds: [],

@@ -1,26 +1,22 @@
 <template>
   <div class="pdc">
-    <div class="pdc-hero">
-      <ItemIcon v-if="item.iconImageUrl || item.svg" :item="item" :fallback-to-type="false" :size="56" />
-      <PotionVial v-else :color="data.color" :rarity="rarity" size="lg" />
-      <div class="pdc-hero-info">
-        <div v-if="showTitle" class="pdc-name">{{ item.name }}</div>
-        <span class="pdc-rarity" :style="{ color: preset.color, borderColor: preset.color }">{{ preset.label }}</span>
-      </div>
+    <div class="pdc-tags">
+      <span class="pdc-rarity" :style="{ color: preset.color, borderColor: preset.color }">{{ preset.label }}</span>
+      <span v-if="data.weight != null" class="pdc-badge">{{ data.weight }} фунт.</span>
+      <span v-if="costLabel" class="pdc-badge pdc-cost">{{ costLabel }}</span>
     </div>
 
-    <div class="pdc-divider"></div>
-
-    <RichContent v-if="data.desc" class="pdc-desc" :html="data.desc" />
-    <div v-else class="pdc-no-desc">Описание отсутствует</div>
-
-    <template v-if="hasMeta">
-      <div class="pdc-divider"></div>
-      <div class="pdc-meta">
-        <span v-if="data.weight != null" class="pdc-badge">{{ data.weight }} фунт.</span>
-        <span v-if="costLabel" class="pdc-badge pdc-cost">{{ costLabel }}</span>
+    <div class="pdc-hero">
+      <div class="pdc-visual">
+        <ItemIcon v-if="item.iconImageUrl || item.svg" :item="item" :fallback-to-type="false" :size="76" />
+        <PotionVial v-else :color="data.color" :rarity="rarity" size="lg" />
       </div>
-    </template>
+      <div class="pdc-copy">
+        <div v-if="showTitle" class="pdc-name">{{ item.name }}</div>
+        <RichContent v-if="data.desc" class="pdc-desc" :html="data.desc" />
+        <div v-else class="pdc-no-desc">Описание отсутствует</div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -44,7 +40,6 @@ const rarity = computed(() => Number(data.value.rarity) || 0)
 const preset = computed(() => rarityOf(rarity.value))
 const { format: formatCost } = useCostFormatter()
 const costLabel = computed(() => formatCost(data.value.cost))
-const hasMeta = computed(() => data.value.weight != null || !!costLabel.value)
 </script>
 
 <style scoped>
@@ -56,15 +51,16 @@ const hasMeta = computed(() => data.value.weight != null || !!costLabel.value)
 
 .pdc-hero {
   display: flex;
-  align-items: center;
-  gap: 18px;
+  align-items: flex-start;
+  gap: 22px;
 }
-
-.pdc-hero-info {
+.pdc-visual { flex: 0 0 84px; display: flex; justify-content: center; padding-top: 4px; }
+.pdc-copy {
+  flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  min-width: 0;
+  gap: 10px;
 }
 
 .pdc-name {
@@ -86,8 +82,6 @@ const hasMeta = computed(() => data.value.weight != null || !!costLabel.value)
   border-radius: var(--r-pill);
 }
 
-.pdc-divider { height: 1px; background: var(--border); }
-
 .pdc-desc {
   font-size: 13px;
   color: var(--text-muted);
@@ -96,7 +90,7 @@ const hasMeta = computed(() => data.value.weight != null || !!costLabel.value)
 
 .pdc-no-desc { font-size: 13px; color: var(--text-muted); font-style: italic; }
 
-.pdc-meta { display: flex; flex-wrap: wrap; gap: 6px; }
+.pdc-tags { display: flex; flex-wrap: wrap; gap: 6px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
 
 .pdc-badge {
   font-size: 11px;
@@ -107,4 +101,5 @@ const hasMeta = computed(() => data.value.weight != null || !!costLabel.value)
   color: var(--text-muted);
 }
 .pdc-cost { background: color-mix(in srgb, var(--warning) 13%, transparent); color: var(--warning); }
+@media (max-width: 520px) { .pdc-hero { gap: 14px; } .pdc-visual { flex-basis: 68px; } }
 </style>

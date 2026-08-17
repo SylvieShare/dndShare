@@ -11,7 +11,7 @@ func init() {
 	registerJob("recount", "Пересчёт количеств в справочниках",
 		"Обновляет count_items для item_type, source и suggest_type.", jobRecount)
 	registerJob("bestiary-import", "Импорт бестиария",
-		"Импортирует существ с ttg.club в справочник врагов.", jobBestiaryImport)
+		"Импортирует существ с ttg.club, копирует изображения в наш S3 и обновляет справочник врагов.", jobBestiaryImport)
 }
 
 // --- shared json helpers (порт обращений к Map/JsonNode) ---

@@ -10,6 +10,8 @@
         :title="c.name"
         :subtitle="classSummary(c, suggestValue)"
         :monogram="monogramOf(c.name)"
+        :image-url="c.iconImageUrl || ''"
+        :svg="c.svg || ''"
         :selected="state.charClass?.id === c.id"
         @select="selectClass(c)"
       />
@@ -30,6 +32,8 @@
               :key="s.id"
               :title="s.name"
               :monogram="monogramOf(s.name)"
+              :image-url="s.iconImageUrl || ''"
+              :svg="s.svg || ''"
               :selected="state.subclass?.id === s.id"
               @select="state.subclass = s"
             />

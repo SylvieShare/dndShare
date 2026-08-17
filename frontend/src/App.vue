@@ -23,7 +23,7 @@
     </router-view>
   </div>
   <DiceRollPopup v-if="!isStandaloneRoute"/>
-  <ErrorReporter v-if="!isStandaloneRoute"/>
+  <ErrorReporter v-if="!isStandaloneRoute && isAuthenticated"/>
   <ErrorReportInbox v-if="!isStandaloneRoute"/>
   <ConsoleErrorInbox v-if="!isStandaloneRoute"/>
 </template>
@@ -47,12 +47,14 @@ const route = useRoute()
 const isMobile = useIsMobile()
 const isPrintRoute = computed(() => !!route.meta?.printView)
 const isStandaloneRoute = computed(() => isPrintRoute.value || !!route.meta?.standaloneView)
+const accountStore = useAccountStore()
+const isAuthenticated = computed(() => accountStore.authStatus === 'success')
 const pageTransitionMode = computed(() => (isMobile.value ? undefined : 'out-in'))
 
 onMounted(() => {
   if (isStandaloneRoute.value) return
   useTextStore().downloadText()
-  useAccountStore().checkAuth()
+  accountStore.checkAuth()
 })
 </script>
 

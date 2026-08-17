@@ -57,7 +57,7 @@ export const BLOCK_REGISTRY = {
   BLOCK_TAGS:       { component: BlockTags },
   CAMPAIGN_BADGE:   { component: CampaignBadge, noValue: true },
   BLOCK_LVL:        { component: DndLvl, passValues: true },
-  DND_ABILITIES:    { component: DndAbilities },
+  DND_ABILITIES:    { component: DndAbilities, passValuesOnly: true },
   DND_ARMOR:        { component: DndArmor, passValues: true },
   DND_CHAR_IDENTITY:{ component: DndCharIdentity, passValues: true },
   DND_CHAR_STAT_10: { component: DndCharStat10, passValues: true },

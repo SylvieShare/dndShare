@@ -6,7 +6,8 @@ import { SKILL_BY_STAT } from '@/features/character-editor/settings/dnd/creation
 import { SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
 import { extractGrants } from '@/features/character-editor/settings/dnd/creation/grants'
 import { featuresForBinding } from '@/features/character-editor/settings/dnd/creation/progression'
-import { evaluateFeatEligibility } from '@/features/items/lib/featRules'
+import { evaluateFeatEligibility, featAbilityBonuses } from '@/features/items/lib/featRules'
+import { armorRuleByName } from '@/features/character-editor/settings/dnd/creation/armorRules'
 import {
   mergeEquipment,
   selectedStartingEquipment,
@@ -24,7 +25,7 @@ import {
   serializeDndWizardState,
 } from './dndCreateWizardState'
 import {
-  emptyScores, POINT_BUY_BUDGET, pointCost, roll4d6DropLowest, STANDARD_ARRAY, STATS,
+  emptyScores, POINT_BUY_BUDGET, pointCost, roll4d6Series, STANDARD_ARRAY, STATS,
 } from './dndCreateWizardStats'
 
 export { POINT_BUY_BUDGET, pointCost, STANDARD_ARRAY } from './dndCreateWizardStats'
@@ -160,6 +161,7 @@ export function useDndCreateWizard() {
   const skillOptions = computed(() => (grants.value.skillChoice?.from || []).map((id) => ({
     id,
     name: suggestValue(15, id) || `#${id}`,
+    desc: suggestStore.items(SKILL_SUGGEST).find(item => String(item.id) === String(id))?.desc || '',
   })))
   const skillLimit = computed(() => grants.value.skillChoice?.count || 0)
 
@@ -170,8 +172,17 @@ export function useDndCreateWizard() {
   }
 
   // Final ability scores = chosen base + racial ASI (fixed + floating choice).
+  const featBonuses = computed(() => {
+    const totals = Object.fromEntries(STATS.map(stat => [stat, 0]))
+    for (const id of state.featIds) {
+      const item = featPool.value.find(feat => String(feat.id) === String(id))
+      if (!item) continue
+      for (const bonus of featAbilityBonuses(item, state.featSelections?.[id] || {})) totals[bonus.stat] += bonus.bonus
+    }
+    return totals
+  })
   const finalScores = computed(() => Object.fromEntries(
-    STATS.map((s) => [s, Number(state.scores[s] ?? 0) + racialBonus(s)]),
+    STATS.map((s) => [s, Number(state.scores[s] ?? 0) + racialBonus(s) + featBonuses.value[s]]),
   ))
 
   // Floating racial ASI ("choose N abilities, +V each" — Variant Human, Half-Elf).
@@ -201,7 +212,11 @@ export function useDndCreateWizard() {
     const c = grants.value.raceSkillChoice
     if (!c) return []
     const ids = c.from?.length ? c.from : suggestStore.items(SKILL_SUGGEST).map((s) => s.id)
-    return ids.map((id) => ({ id, name: suggestValue(SKILL_SUGGEST, id) || `#${id}` }))
+    return ids.map((id) => ({
+      id,
+      name: suggestValue(SKILL_SUGGEST, id) || `#${id}`,
+      desc: suggestStore.items(SKILL_SUGGEST).find(item => String(item.id) === String(id))?.desc || '',
+    }))
   })
   const raceSkillLimit = computed(() => grants.value.raceSkillChoice?.count || 0)
   function toggleRaceSkill(id) { toggleFromList(state.raceSkillIds, id, raceSkillLimit.value) }
@@ -306,7 +321,13 @@ export function useDndCreateWizard() {
     const n = Math.max(1, Math.floor(Number(qty) || 1))
     const existing = state.equipment.find((e) => e.id === item.id)
     if (existing) existing.count += n
-    else state.equipment.push({ id: item.id, name: item.name, count: n, typeId: item.typeId })
+    else state.equipment.push({
+      id: item.id,
+      name: item.name,
+      count: n,
+      typeId: item.typeId,
+      armor: item.data?.armor || armorRuleByName(item.name),
+    })
   }
   function removeEquipment(id) {
     const i = state.equipment.findIndex((e) => e.id === id)
@@ -325,11 +346,13 @@ export function useDndCreateWizard() {
     state.statMethod = method
     state.scores = emptyScores()
     state.rollPool = []
+    state.rollSeries = []
     if (method === 'pointbuy') STATS.forEach((s) => { state.scores[s] = 8 })
   }
 
   function rollStats() {
-    state.rollPool = Array.from({ length: 6 }, () => roll4d6DropLowest()).sort((a, b) => b - a)
+    state.rollSeries = Array.from({ length: 6 }, () => roll4d6Series()).sort((a, b) => b.total - a.total)
+    state.rollPool = state.rollSeries.map(series => series.total)
     state.scores = emptyScores()
   }
 
@@ -436,7 +459,7 @@ export function useDndCreateWizard() {
   const PROF_BONUS = proficiencyBonus(1)
   const mods = computed(() => Object.fromEntries(STATS.map((s) => {
     const base = Number(state.scores[s] ?? 0)
-    return [s, abilityModifier((base > 0 ? base : 10) + racialBonus(s))]
+    return [s, abilityModifier((base > 0 ? base : 10) + racialBonus(s) + featBonuses.value[s])]
   })))
   const hitDieFace = computed(() => dieSides(grants.value.hitDieId))
   const maxHp = computed(() => (hitDieFace.value ? hitDieFace.value + mods.value.CON : null))
@@ -564,7 +587,7 @@ export function useDndCreateWizard() {
     state, sourceVersionId, setSourceVersionId,
     races, classes, subraces, subclasses, spellPool, featPool, bgPool, loading,
     raceAbilities, classAbilities,
-    grants, isCaster, skillOptions, skillLimit, finalScores, racialBonus,
+    grants, isCaster, skillOptions, skillLimit, finalScores, racialBonus, featBonuses,
     pointsSpent, pointsLeft,
     featureChoices, raceFeatureChoices, classFeatureChoices,
     choiceOptionList, choiceSelected, toggleChoice, choicesComplete,

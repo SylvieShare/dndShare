@@ -35,17 +35,22 @@
 
     <div v-if="hasComponents" class="sdc-comp-row">
       <span class="sdc-comp-lbl">Компоненты:</span>
-      <span v-if="data.components?.v" class="sdc-comp">В</span>
-      <span v-if="data.components?.s" class="sdc-comp">С</span>
-      <span v-if="data.components?.m" class="sdc-comp">М</span>
+      <span v-if="data.components?.v" class="sdc-comp" tabindex="0" title="Вербальный компонент: заклинатель произносит магические слова">В</span>
+      <span v-if="data.components?.s" class="sdc-comp" tabindex="0" title="Соматический компонент: заклинатель выполняет жесты свободной рукой">С</span>
+      <span v-if="data.components?.m" class="sdc-comp" tabindex="0" title="Материальный компонент: нужен указанный предмет или магическая фокусировка">М</span>
       <span v-if="data.components?.m && typeof data.components.m === 'string'" class="sdc-comp-m">
         ({{ data.components.m }})
       </span>
     </div>
 
-    <div v-if="source || classes.length" class="sdc-refs">
-      <span v-if="source" class="sdc-source">{{ source }}</span>
-      <span v-if="classes.length" class="sdc-classes">{{ classes.join(', ') }}</span>
+    <div v-if="classes.length" class="sdc-refs">
+      <span class="sdc-ref-label">Доступно классам</span>
+      <span class="sdc-classes">{{ classes.join(', ') }}</span>
+    </div>
+
+    <div v-if="source" class="sdc-source-row">
+      <span class="sdc-ref-label">Источник</span>
+      <span class="sdc-source">{{ source }}</span>
     </div>
 
     <div class="sdc-divider"></div>
@@ -219,9 +224,12 @@ function colorAlpha(color, alpha) {
   border-radius: 4px;
   padding: 2px 7px;
 }
+.sdc-comp:hover, .sdc-comp:focus-visible { color: var(--text-1); background: color-mix(in srgb, var(--accent) 18%, transparent); }
 .sdc-comp-m { font-size: 11px; color: var(--text-muted); font-style: italic; }
 
 .sdc-refs { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.sdc-source-row { display: flex; align-items: center; gap: 10px; padding-top: 9px; border-top: 1px solid var(--border); }
+.sdc-ref-label { flex: 0 0 auto; color: var(--text-muted); font-size: 9px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
 .sdc-source {
   font-size: 11px;
   color: var(--text-muted);

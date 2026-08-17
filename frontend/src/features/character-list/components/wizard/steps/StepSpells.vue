@@ -33,7 +33,6 @@
               <svg v-if="state.spellIds.includes(sp.id)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6" /></svg>
             </span>
             <span class="sp-name">{{ sp.name }}</span>
-            <span v-if="school(sp)" class="sp-school">{{ school(sp) }}</span>
             <button class="sp-view" title="Посмотреть заклинание" @click.stop="viewId = sp.id">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12z" /><circle cx="12" cy="12" r="3" /></svg>
             </button>
@@ -59,7 +58,7 @@ import { computed, inject, ref } from 'vue'
 import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
 
 const {
-  state, grants, suggestValue,
+  state, grants,
   cantripPool, spell1Pool, cantripLimit, spell1Limit, cantripChosen, spell1Chosen, toggleSpell,
   grantedSpellList,
 } = inject('createWizard')
@@ -82,7 +81,6 @@ function filtered(pool) {
   const q = query.value.trim().toLowerCase()
   return q ? pool.filter((sp) => String(sp.name).toLowerCase().includes(q)) : pool
 }
-function school(sp) { return suggestValue(7, sp.data?.schoolId) || '' }
 </script>
 
 <style scoped>
@@ -118,7 +116,6 @@ function school(sp) { return suggestValue(7, sp.data?.schoolId) || '' }
 .spell.on .box { background: var(--accent); }
 .box svg { width: 12px; height: 12px; color: var(--text-on-accent); }
 .sp-name { flex: 1; font-size: 13px; color: var(--text-1); }
-.sp-school { font-size: 10px; color: var(--text-muted); white-space: nowrap; }
 .sp-view {
   flex-shrink: 0; display: flex; align-items: center; justify-content: center;
   width: 24px; height: 24px; border: none; border-radius: 6px;

@@ -21,6 +21,7 @@
     <div v-if="state.equipment.length" class="items">
       <div v-for="e in state.equipment" :key="e.id" class="row">
         <span class="row-name">{{ e.name }}</span>
+        <button class="row-view" title="Открыть карточку предмета" @click="viewItem = e">⌕</button>
         <div class="qty">
           <button class="q-btn" @click="bumpEquipment(e.id, -1)">−</button>
           <span class="q-val">{{ e.count }}</span>
@@ -46,17 +47,25 @@
       @pick="onPick"
       @close="pickerOpen = false"
     />
+    <ItemViewModal
+      v-if="viewItem"
+      :item-id="viewItem.id"
+      :item-type-id="viewItem.typeId"
+      @close="viewItem = null"
+    />
   </div>
 </template>
 
 <script setup>
 import { computed, inject, ref } from 'vue'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
+import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
 import { backgroundStartingEquipment, formatStartingCoins } from '@/features/character-editor/settings/dnd/creation/backgroundEquipment'
 
 const { state, classEquipment, addEquipment, removeEquipment, bumpEquipment } = inject('createWizard')
 
 const pickerOpen = ref(false)
+const viewItem = ref(null)
 function onPick(item, qty = 1) { addEquipment(item, qty) }
 const backgroundStart = computed(() => backgroundStartingEquipment(state.background))
 const moneyLabel = computed(() => formatStartingCoins(backgroundStart.value.coins))
@@ -80,6 +89,8 @@ function equipmentLabel(items) {
 }
 .row + .row { border-top: 1px solid color-mix(in srgb, var(--text-on-accent) 7%, transparent); }
 .row-name { flex: 1; font-size: 13px; color: var(--text-1); }
+.row-view { width: 26px; height: 26px; border: none; border-radius: 6px; background: var(--surface-raised); color: var(--text-2); cursor: pointer; }
+.row-view:hover { color: var(--accent); }
 .qty { display: flex; align-items: center; gap: 5px; }
 .q-btn {
   width: 24px; height: 24px; border-radius: 6px; border: 1px solid var(--border-strong);

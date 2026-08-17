@@ -9,3 +9,8 @@ Components live in:
 - `features/auth/components/UserBoxInfo.vue`
 
 Auth state is managed by the Pinia `account` store in `frontend/src/stores/account.js`.
+
+The global error-report launcher and inbox are mounted only for authenticated
+users. The public character wizard dispatches `dndshare:request-auth` only from
+its final create action; `UserBoxFormAuth` opens the regular login modal in
+response.

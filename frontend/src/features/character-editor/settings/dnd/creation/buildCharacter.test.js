@@ -93,6 +93,32 @@ describe('buildCharacterData starting equipment', () => {
     })
   })
 
+  it('equips starting armor and derives readonly AC rules from it', () => {
+    const result = buildCharacterData({
+      race: selection(1, 'Человек'),
+      charClass: selection(2, 'Воин'),
+      scores: { DEX: 18 },
+      equipment: [
+        { id: null, name: 'Чешуйчатый доспех', count: 1 },
+        { id: null, name: 'Щит', count: 1 },
+      ],
+      suggestValue: () => '',
+    })
+
+    expect(result.data.values.items.equipped).toHaveLength(2)
+    expect(result.data.values.armor).toMatchObject({
+      ac: 10,
+      use_dex: true,
+      dex_cap: 2,
+      shield: true,
+      shield_bonus: 2,
+      shield_readonly: true,
+    })
+    expect(result.data.values.armor.bonuses).toEqual([
+      expect.objectContaining({ name: 'Экипировано: Чешуйчатый доспех', value: 4, readonly: true }),
+    ])
+  })
+
   it('adds background possessions to inventory and its gold to the wallet', () => {
     const result = buildCharacterData({
       race: selection(1, 'Человек'),
@@ -153,7 +179,7 @@ describe('buildCharacterData feats', () => {
       suggestValue: (typeId, id) => labels[`${typeId}:${id}`] || '',
     })
 
-    expect(result.data.values.CON.value).toEqual({ base: 15, bonuses: [{ title: 'Стойкий ученик', value: 1 }] })
+    expect(result.data.values.CON.value).toEqual({ base: 15, bonuses: [{ name: 'Стойкий ученик', title: 'Стойкий ученик', value: 1, readonly: true, sourceFeatKey: 'feat:70' }] })
     expect(result.data.values.hp.max).toBe(13)
     expect(result.data.values.proficiencies['Доспехи']).toContain('Средние доспехи')
     expect(result.data.values.DEX.skills['2'].up).toBe(1)

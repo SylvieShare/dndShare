@@ -77,6 +77,18 @@ func (s *Service) UploadSystemImage(ctx context.Context, body io.Reader, size in
 	return s.put(ctx, body, size, key, contentType)
 }
 
+// UploadBestiaryImage stores imported creature artwork under a stable key so a
+// repeated catalogue import overwrites the object instead of leaking new ones.
+func (s *Service) UploadBestiaryImage(ctx context.Context, body io.Reader, size int64, key, contentType string) (StoredObject, error) {
+	if !strings.HasPrefix(key, "bestiary/") || strings.Contains(key, "..") {
+		return StoredObject{}, fmt.Errorf("invalid bestiary image object key %q", key)
+	}
+	if !strings.HasPrefix(contentType, "image/") {
+		return StoredObject{}, fmt.Errorf("invalid bestiary image content type %q", contentType)
+	}
+	return s.put(ctx, body, size, key, contentType)
+}
+
 // UploadImage загружает изображение; contentType, не начинающийся с image/, заменяется на octet-stream.
 func (s *Service) UploadImage(ctx context.Context, body io.Reader, size int64, filename, contentType, folder string) (StoredObject, error) {
 	if !strings.HasPrefix(contentType, "image/") {

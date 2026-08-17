@@ -72,7 +72,9 @@ export const dndAccessors = {
     if (!armor || typeof armor !== 'object') return null
     const base = Number(armor.ac) || 0
     const shield = armor.shield ? (Number(armor.shield_bonus) || 0) : 0
-    return base + shield + sumBonuses(armor.bonuses)
+    const dexMod = armor.use_dex ? (abilityModByPath(data?.values, 'values.DEX.mod') || 0) : 0
+    const dex = armor.dex_cap == null ? dexMod : Math.min(dexMod, Number(armor.dex_cap))
+    return base + shield + dex + sumBonuses(armor.bonuses)
   },
 
   initiativeBonus(data) {

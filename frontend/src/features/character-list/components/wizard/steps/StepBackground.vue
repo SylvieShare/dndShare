@@ -10,6 +10,8 @@
         :title="b.name"
         :subtitle="skillsOf(b)"
         :monogram="monogramOf(b.name)"
+        :image-url="b.iconImageUrl || ''"
+        :svg="b.svg || ''"
         :selected="state.background?.id === b.id"
         @select="state.background = b"
       />

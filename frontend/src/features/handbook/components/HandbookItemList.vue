@@ -4,6 +4,19 @@
       <div class="empty-hint">Выберите коллекцию</div>
     </template>
     <template v-else>
+      <div v-if="groupFields.length" class="list-group-toolbar">
+        <span class="list-group-label">Группировать список</span>
+        <div class="list-group-actions">
+          <button
+            v-for="field in groupFields"
+            :key="field.path"
+            type="button"
+            class="list-group-button"
+            :class="{ active: groupBy === field.path }"
+            @click="$emit('update:group-by', groupBy === field.path ? null : field.path)"
+          >{{ field.nameShort || field.name }}</button>
+        </div>
+      </div>
       <div class="list-body" @scroll="onScroll">
         <div v-if="loading" class="empty-hint">Загрузка...</div>
         <div v-else-if="items.length === 0" class="empty-hint">Нет объектов</div>
@@ -85,8 +98,8 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
-import { findFieldByPath, getByPath, getSuggestId } from '@/features/handbook/objects/lib/schemaFields'
+import { computed, ref, watch } from 'vue'
+import { findFieldByPath, getByPath, getSuggestId, walkFieldsWithPath } from '@/features/handbook/objects/lib/schemaFields'
 import { useSuggestStore } from '@/stores/suggest'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import EnemyListItem from '@/features/items/list-components/EnemyListItem'
@@ -107,7 +120,7 @@ const props = defineProps({
   groupBy: { type: String, default: null },
 })
 
-const emit = defineEmits(['select', 'load-more'])
+const emit = defineEmits(['select', 'load-more', 'update:group-by'])
 
 const suggestStore = useSuggestStore()
 
@@ -119,6 +132,9 @@ function toggleGroup(label) {
 }
 
 const hasRichRenderer = computed(() => [1, 2, 5, 6, 7, 10].includes(props.type?.id))
+const groupFields = computed(() => walkFieldsWithPath(props.type?.fields || [])
+  .filter(({ field }) => field.group)
+  .map(({ field, path }) => ({ ...field, path })))
 
 function crToNum(cr) {
   if (!cr || cr === '—') return Infinity
@@ -147,7 +163,9 @@ const groupedItems = computed(() => {
     } else if (isSuggest && rawVal != null) {
       label = suggests.find(s => s.id === rawVal)?.value ?? String(rawVal)
     } else {
-      label = rawVal != null && rawVal !== '' ? String(rawVal) : '—'
+      label = rawVal != null && rawVal !== ''
+        ? String(rawVal)
+        : (props.groupBy.endsWith('environment') ? 'Среда не указана' : 'Не указано')
     }
     if (!map.has(label)) map.set(label, [])
     map.get(label).push(item)
@@ -161,6 +179,10 @@ const groupedItems = computed(() => {
   }
   return entries
 })
+
+watch([() => props.groupBy, groupedItems], ([group]) => {
+  collapsedGroups.value = group ? new Set(groupedItems.value.map(entry => entry.label)) : new Set()
+}, { immediate: true })
 
 function onScroll(e) {
   if (!props.hasMore || props.loading || props.loadingMore) return
@@ -186,6 +208,31 @@ function onScroll(e) {
   padding: 40px 0;
   text-align: center;
 }
+
+.list-group-toolbar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+.list-group-label { color: var(--text-muted); font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+.list-group-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 5px; }
+.list-group-button {
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--surface-raised);
+  color: var(--text-2);
+  padding: 5px 9px;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 650;
+  cursor: pointer;
+}
+.list-group-button.active { border-color: var(--accent); background: var(--accent); color: var(--text-on-accent); }
 
 /* ── List body ── */
 .list-body {

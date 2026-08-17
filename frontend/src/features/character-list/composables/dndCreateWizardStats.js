@@ -15,7 +15,14 @@ export function emptyScores() {
 }
 
 export function roll4d6DropLowest() {
-  const dice = Array.from({ length: 4 }, () => 1 + Math.floor(Math.random() * 6))
-  dice.sort((a, b) => a - b)
-  return dice[1] + dice[2] + dice[3]
+  return roll4d6Series().total
+}
+
+export function roll4d6Series(random = Math.random) {
+  const dice = Array.from({ length: 4 }, (_, index) => ({ id: index, value: 1 + Math.floor(random() * 6) }))
+  const droppedId = [...dice].sort((a, b) => a.value - b.value || a.id - b.id)[0].id
+  return {
+    dice: dice.map(die => ({ ...die, dropped: die.id === droppedId })),
+    total: dice.filter(die => die.id !== droppedId).reduce((sum, die) => sum + die.value, 0),
+  }
 }

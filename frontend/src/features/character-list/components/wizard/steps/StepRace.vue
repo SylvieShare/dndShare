@@ -10,6 +10,8 @@
         :title="r.name"
         :subtitle="asiSummary(r)"
         :monogram="monogramOf(r.name)"
+        :image-url="r.iconImageUrl || ''"
+        :svg="r.svg || ''"
         :selected="state.race?.id === r.id"
         @select="selectRace(r)"
       />
@@ -28,6 +30,8 @@
               :title="s.name"
               :subtitle="asiSummary(s)"
               :monogram="monogramOf(s.name)"
+              :image-url="s.iconImageUrl || ''"
+              :svg="s.svg || ''"
               :selected="state.subrace?.id === s.id"
               @select="state.subrace = s"
             />

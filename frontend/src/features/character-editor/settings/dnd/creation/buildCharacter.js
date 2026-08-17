@@ -20,6 +20,7 @@ import { addStartingCoins, backgroundStartingEquipment } from './backgroundEquip
 import { applyGrants, extractGrants } from './grants.js'
 import { featureIdsForBinding } from './progression.js'
 import { mergeEquipment } from './startingEquipment.js'
+import { armorRuleForEquipment, isArmorEquipment } from './armorRules.js'
 
 const STATS = STAT_KEYS
 
@@ -99,6 +100,7 @@ export function buildCharacterData(input) {
     raceVariant, background: background?.item,
   })
   const backgroundStart = backgroundStartingEquipment(background)
+  const featEntries = feats.map(({ item, choices }) => featEntry(item, choices || {}))
 
   const raceBinding = { raceId: race?.id, subraceId: subrace?.id }
   const classBinding = { classId: charClass?.id, subclassId: subclass?.id }
@@ -115,20 +117,21 @@ export function buildCharacterData(input) {
     const fixed = (grants.asi || []).filter((a) => a.stat === stat).reduce((s, a) => s + a.bonus, 0)
     const floating = asiChoice.includes(stat) ? floatBonus : 0
     const racial = fixed + floating
-    const bonuses = racial ? [{ title: ref(race)?.name || 'Раса', value: racial }] : []
+    const bonuses = racial ? [{ name: ref(race)?.name || 'Раса', title: ref(race)?.name || 'Раса', value: racial, readonly: true }] : []
     values[stat] = { ...(values[stat] || {}), value: { base, bonuses } }
     finalScore[stat] = base + racial
   }
 
   // Feat ability bonuses are part of the starting score and therefore affect
   // derived level-1 values such as HP. Each bonus row remains named and auditable.
-  for (const { item, choices: featChoices = {} } of feats) {
+  for (const [featIndex, { item, choices: featChoices = {} }] of feats.entries()) {
+    const sourceFeatKey = `feat:${featEntries[featIndex]?.uid || item.id}`
     for (const bonus of featAbilityBonuses(item, featChoices)) {
       const block = { ...(values[bonus.stat] || {}) }
       const score = block.value && typeof block.value === 'object' ? block.value : { base: Number(block.value) || 10, bonuses: [] }
       const applied = Math.max(0, Math.min(bonus.bonus, 20 - (finalScore[bonus.stat] || 0)))
       if (!applied) continue
-      block.value = { ...score, bonuses: [...(score.bonuses || []), { title: item.name || 'Черта', value: applied }] }
+      block.value = { ...score, bonuses: [...(score.bonuses || []), { name: item.name || 'Черта', title: item.name || 'Черта', value: applied, readonly: true, sourceFeatKey }] }
       values[bonus.stat] = block
       finalScore[bonus.stat] = (finalScore[bonus.stat] || 0) + applied
     }
@@ -152,7 +155,7 @@ export function buildCharacterData(input) {
   // Chosen feats (handbook type 7) → the sheet's Черты block (`abilities_feats`)
   // plus simple static proficiencies that can be applied without a combat rules engine.
   if (feats.length) {
-    values.abilities_feats = feats.map(({ item, choices }) => featEntry(item, choices || {}))
+    values.abilities_feats = featEntries
     for (const { item, choices: featChoices = {} } of feats) {
       const featGrant = featGrants(item, featChoices)
       addProficiencies(values, 'Доспехи', (featGrant.armor_prof || []).map((id) => suggestValue?.(3, id)).filter(Boolean))
@@ -228,27 +231,55 @@ export function buildCharacterData(input) {
   const startingEquipment = mergeEquipment(equipment, backgroundStart.items)
   const isCatalogueWeapon = (entry) => Number(entry.typeId) === 1 && entry.id != null
   const weapons = startingEquipment.filter(isCatalogueWeapon)
-  const inventory = startingEquipment.filter((entry) => !isCatalogueWeapon(entry))
+  const equippedArmor = startingEquipment.filter((entry) => !isCatalogueWeapon(entry) && isArmorEquipment(entry))
+  const inventory = startingEquipment.filter((entry) => !isCatalogueWeapon(entry) && !isArmorEquipment(entry))
   if (weapons.length) {
     values.weapon = weapons.flatMap((entry) => Array.from(
       { length: Math.max(1, Number(entry.count) || 1) },
       () => ({ ...defaultWeaponEntry(), item_id: entry.id }),
     ))
   }
-  if (inventory.length) {
+  if (inventory.length || equippedArmor.length) {
+    const inventoryEntry = (e, i, prefix) => ({
+      uid: `${prefix}_${i}`,
+      id: e.id ?? null,
+      count: Math.max(1, Number(e.count) || 1),
+      override: e.id == null ? { name: e.name || 'Предмет' } : null,
+    })
     values.items = {
-      equipped: [],
-      sections: [{
+      equipped: equippedArmor.map((entry, i) => inventoryEntry(entry, i, 'worn')),
+      sections: inventory.length ? [{
         id: 'bag',
         name: 'Снаряжение',
-        items: inventory.map((e, i) => ({
-          uid: `eq_${i}`,
-          id: e.id ?? null,
-          count: Math.max(1, Number(e.count) || 1),
-          override: e.id == null ? { name: e.name || 'Предмет' } : null,
-        })),
-      }],
+        items: inventory.map((entry, i) => inventoryEntry(entry, i, 'eq')),
+      }] : [],
     }
+  }
+
+  if (equippedArmor.length) {
+    const rules = equippedArmor.map((entry) => ({ entry, rule: armorRuleForEquipment(entry) }))
+    const body = rules.find(({ rule }) => rule && !rule.shield)
+    const shield = rules.find(({ rule }) => rule?.shield)
+    const armor = { ...(values.armor || {}), bonuses: [] }
+    if (body) {
+      armor.ac = 10
+      armor.use_dex = body.rule.use_dex !== false
+      if (body.rule.dex_cap != null) armor.dex_cap = Number(body.rule.dex_cap)
+      else delete armor.dex_cap
+      armor.bonuses.push({
+        name: `Экипировано: ${body.entry.name}`,
+        title: body.entry.name,
+        value: Math.max(0, Number(body.rule.ac) - 10),
+        readonly: true,
+      })
+    }
+    if (shield) {
+      armor.shield = true
+      armor.shield_bonus = Number(shield.rule.shield_bonus) || 2
+      armor.shield_source = shield.entry.name
+      armor.shield_readonly = true
+    }
+    values.armor = armor
   }
 
   // Personality / description → the person_* sheet blocks. Rich-text fields are

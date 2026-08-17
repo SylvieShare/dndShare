@@ -11,6 +11,7 @@
         "key": "creature_type",
         "type": "suggest_array",
         "suggestTypeId": 19,
+        "filter": true,
         "tag": true,
         "group": "true"
       },
@@ -19,12 +20,19 @@
         "key": "size",
         "type": "suggest_array",
         "suggestTypeId": 18,
+        "filter": true,
         "tag": true
       },
       {
         "name": "Мировоззрение",
         "key": "alignment",
         "type": "text",
+        "filter": true,
+        "filter_values": [
+          "Законно-добрый", "Нейтрально-добрый", "Хаотично-добрый",
+          "Законно-нейтральный", "Нейтральный", "Хаотично-нейтральный",
+          "Законно-злой", "Нейтрально-злой", "Хаотично-злой", "Без мировоззрения"
+        ],
         "tag": true
       },
       {
@@ -49,6 +57,7 @@
         "key": "environment",
         "type": "suggest_array",
         "suggestTypeId": 21,
+        "filter": true,
         "group": "true"
       }
     ]

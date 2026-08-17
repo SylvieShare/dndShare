@@ -24,19 +24,21 @@
 
       <div class="sidebar-search-separator" />
 
-      <SidebarNavItem
-        v-for="item in navigationItems"
-        :key="item.key"
-        :as="RouterLink"
-        :to="item.to"
-        :label="item.title"
-        :active="item.active"
-        :icon="icons[item.key]"
-      />
+      <template v-for="item in navigationItems" :key="item.key">
+        <div v-if="expanded && startsGroup(item)" class="sidebar-group-label">{{ groupLabel(item.group) }}</div>
+        <SidebarNavItem
+          :as="RouterLink"
+          :to="item.to"
+          :label="item.title"
+          :active="item.active"
+          :icon="icons[item.key]"
+        />
+      </template>
     </template>
 
     <template #tools>
       <SidebarNavItem
+        v-if="isAuthenticated"
         class="sidebar-error-action"
         as="button"
         label="На странице ошибка"
@@ -55,7 +57,7 @@
 <script setup>
 import { computed, nextTick, ref } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
-import { BookOpen, CircleAlert, Dices, ScrollText, Search, Shield, Users } from '@lucide/vue'
+import { BookOpen, CircleAlert, Dices, ScrollText, Search, Shield, UserRoundPlus, Users } from '@lucide/vue'
 import { AppSidebar, SidebarBrand, SidebarNavItem } from '@sylvieshare/share-ui'
 import HeaderSearch from '@/shared/ui/HeaderSearch'
 import UserBox from '@/features/auth/components/UserBox'
@@ -71,6 +73,7 @@ const icons = {
   handbook: BookOpen,
   sessions: ScrollText,
   characters: Users,
+  'create-character': UserRoundPlus,
   admin: Shield,
 }
 
@@ -79,6 +82,14 @@ const navigationItems = computed(() => resolveAppNavigation({
   admin: accountStore.hasRole('ADMIN'),
   path: route.path,
 }))
+const isAuthenticated = computed(() => accountStore.authStatus === 'success')
+
+const GROUP_LABELS = { common: 'Общее', master: 'Для мастера', player: 'Для игрока', service: 'Служебное' }
+function groupLabel(group) { return GROUP_LABELS[group] || '' }
+function startsGroup(item) {
+  const index = navigationItems.value.findIndex(entry => entry.key === item.key)
+  return index === 0 || navigationItems.value[index - 1]?.group !== item.group
+}
 
 async function openSearch(toggle) {
   toggle()
@@ -114,6 +125,15 @@ async function openSearch(toggle) {
   height: 1px;
   margin: 4px 2px 6px;
   background: var(--border);
+}
+
+.sidebar-group-label {
+  padding: 9px 10px 3px;
+  color: var(--text-muted);
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: .1em;
+  text-transform: uppercase;
 }
 
 .desktop-sidebar :deep(.share-sidebar-tools .sidebar-error-action) { order: 1; }

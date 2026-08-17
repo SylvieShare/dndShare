@@ -16,7 +16,16 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3" /><circle cx="8" cy="8" r="1.4" fill="currentColor" /><circle cx="16" cy="16" r="1.4" fill="currentColor" /><circle cx="16" cy="8" r="1.4" fill="currentColor" /><circle cx="8" cy="16" r="1.4" fill="currentColor" /></svg>
         {{ state.rollPool.length ? 'Перебросить 4d6 ×6' : 'Бросить 4d6 ×6' }}
       </button>
-      <span v-if="state.rollPool.length" class="roll-pool">Выпало: {{ state.rollPool.join(' · ') }}</span>
+      <div v-if="state.rollSeries.length" class="roll-series" aria-label="Результаты бросков характеристик">
+        <div v-for="(series, seriesIndex) in state.rollSeries" :key="seriesIndex" class="roll-series-item">
+          <strong>{{ series.total }}</strong>
+          <span class="roll-dice">
+            <span v-for="die in series.dice" :key="die.id" :class="{ dropped: die.dropped }" :title="die.dropped ? 'Младший результат не учитывается' : `${die.value}`">
+              <SystemDie :sides="6" :size="22" /><i>{{ die.value }}</i>
+            </span>
+          </span>
+        </div>
+      </div>
     </div>
 
     <div class="grid">
@@ -41,7 +50,7 @@
           </template>
           <select v-else class="pool-select" :value="state.scores[s] ?? ''" @change="assign(s, $event.target.value)">
             <option value="">—</option>
-            <option v-for="(v, i) in pool" :key="i" :value="v" :disabled="isUsed(v, s)">{{ v }}</option>
+            <option v-for="(v, i) in availablePool(s)" :key="`${v}-${i}`" :value="v">{{ v }}</option>
           </select>
         </div>
       </div>
@@ -52,6 +61,7 @@
 <script setup>
 import { computed, inject } from 'vue'
 import { MultiToggle } from '@sylvieshare/share-ui'
+import SystemDie from '@/shared/ui/SystemDie.vue'
 import { POINT_BUY_BUDGET, STANDARD_ARRAY, pointCost } from '@/features/character-list/composables/useDndCreateWizard'
 import { STAT_FULL, formatMod } from '@/features/character-list/components/wizard/labels'
 
@@ -75,7 +85,24 @@ function assigned(s) { return state.scores[s] != null }
 function asiFor(s) { return (grants.value.asi || []).filter((a) => a.stat === s).reduce((sum, a) => sum + a.bonus, 0) }
 function modClass(m) { return m > 0 ? 'pos' : m < 0 ? 'neg' : '' }
 
-function isUsed(v, stat) { return STATS.some((s) => s !== stat && Number(state.scores[s]) === Number(v)) }
+function availablePool(stat) {
+  const used = new Map()
+  for (const key of STATS) {
+    if (key === stat || state.scores[key] == null) continue
+    const value = Number(state.scores[key])
+    used.set(value, (used.get(value) || 0) + 1)
+  }
+  const available = []
+  for (const raw of pool.value) {
+    const value = Number(raw)
+    const count = used.get(value) || 0
+    if (count > 0) used.set(value, count - 1)
+    else available.push(value)
+  }
+  const current = state.scores[stat]
+  if (current != null && !available.some(value => value === Number(current))) available.unshift(Number(current))
+  return available
+}
 function assign(stat, raw) { state.scores[stat] = raw === '' ? null : Number(raw) }
 function costStep(stat) {
   const cur = state.scores[stat] ?? 8
@@ -106,7 +133,14 @@ function bump(stat, dir) {
   padding: 10px 18px; font: inherit; font-weight: 600; cursor: pointer;
 }
 .roll-btn svg { width: 17px; height: 17px; }
-.roll-pool { font-size: 13px; font-weight: 700; color: var(--text-1); font-variant-numeric: tabular-nums; }
+.roll-series { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; width: 100%; }
+.roll-series-item { display: flex; align-items: center; gap: 8px; min-width: 0; padding: 6px 8px; border-radius: 8px; background: var(--surface); }
+.roll-series-item > strong { min-width: 20px; color: var(--text-1); font-size: 15px; text-align: center; }
+.roll-dice { display: flex; align-items: center; gap: 2px; }
+.roll-dice > span { position: relative; display: inline-flex; }
+.roll-dice i { position: absolute; inset: 0; display: grid; place-items: center; color: var(--text-on-accent); font-size: 8px; font-style: normal; font-weight: 800; pointer-events: none; }
+.roll-dice .dropped { opacity: .36; filter: grayscale(1); }
+.roll-dice .dropped::after { position: absolute; left: 1px; right: 1px; top: 50%; height: 1px; background: var(--danger); content: ''; transform: rotate(-25deg); }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 11px; }
 .stat { position: relative;
   background: var(--surface);
@@ -137,5 +171,5 @@ function bump(stat, dir) {
 .step-val { min-width: 26px; text-align: center; font-weight: 700; color: var(--text-1); font-variant-numeric: tabular-nums; }
 .next-step { display: inline-flex; align-items: center; gap: 4px; }
 .next-step small { color: var(--text-muted); font-size: 10px; font-weight: 650; white-space: nowrap; }
-@media (max-width: 640px) { .stats-bar { display: grid; grid-template-columns: 1fr auto; gap: 8px; } .stats-bar :deep(.mt-toggle) { grid-column: 1 / -1; width: 100%; } .qb { justify-content: center; min-height: 36px; } .budget { margin-left: 0; justify-self: end; } .roll-cta { align-items: stretch; } .roll-btn { width: 100%; justify-content: center; } .roll-pool { width: 100%; text-align: center; } }
+@media (max-width: 640px) { .stats-bar { display: grid; grid-template-columns: 1fr auto; gap: 8px; } .stats-bar :deep(.mt-toggle) { grid-column: 1 / -1; width: 100%; } .qb { justify-content: center; min-height: 36px; } .budget { margin-left: 0; justify-self: end; } .roll-cta { align-items: stretch; } .roll-btn { width: 100%; justify-content: center; } .roll-series { grid-template-columns: 1fr; } }
 </style>

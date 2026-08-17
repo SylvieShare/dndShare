@@ -49,7 +49,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onBeforeUnmount, onMounted } from 'vue'
 import { watch } from 'vue'
 import { AppModalFrame } from '@sylvieshare/share-ui'
 import { FormActionButtons } from '@sylvieshare/share-ui'
@@ -67,6 +67,9 @@ const regOpen = ref(false)
 const mobileOpen = ref(false)
 const reg = ref({ login: '', password: '', password2: '', busy: false, error: '' })
 let showErrorTimeout = null
+function openRequestedAuth() { mobileOpen.value = true }
+onMounted(() => window.addEventListener('dndshare:request-auth', openRequestedAuth))
+onBeforeUnmount(() => window.removeEventListener('dndshare:request-auth', openRequestedAuth))
 
 const canSubmitReg = computed(() => {
   const { login: l, password: p, password2 } = reg.value

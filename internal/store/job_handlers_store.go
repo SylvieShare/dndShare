@@ -52,8 +52,8 @@ func (s *Store) BestiaryFindItemByNameEn(ctx context.Context, typeID int64, name
 	return exists, err
 }
 
-// BestiaryUpdateItem обновляет базовый предмет и его внешнее изображение.
-func (s *Store) BestiaryUpdateItem(ctx context.Context, nameEn, name string, data json.RawMessage, imageURL string, typeID int64) error {
+// BestiaryUpdateItem обновляет базовый предмет и его S3-изображение.
+func (s *Store) BestiaryUpdateItem(ctx context.Context, nameEn, name string, data json.RawMessage, imageKey, imageURL string, typeID int64) error {
 	tx, err := s.pool.Begin(ctx)
 	if err != nil {
 		return err
@@ -70,14 +70,14 @@ func (s *Store) BestiaryUpdateItem(ctx context.Context, nameEn, name string, dat
 	if err != nil {
 		return err
 	}
-	if err := setBestiaryItemImage(ctx, tx, itemID, imageURL); err != nil {
+	if err := setBestiaryItemImage(ctx, tx, itemID, imageKey, imageURL); err != nil {
 		return err
 	}
 	return tx.Commit(ctx)
 }
 
 // BestiaryCreateItem создаёт базовый предмет (user_id NULL) и возвращает id.
-func (s *Store) BestiaryCreateItem(ctx context.Context, name, nameEn string, data json.RawMessage, imageURL string, typeID int64) (int64, error) {
+func (s *Store) BestiaryCreateItem(ctx context.Context, name, nameEn string, data json.RawMessage, imageKey, imageURL string, typeID int64) (int64, error) {
 	tx, err := s.pool.Begin(ctx)
 	if err != nil {
 		return 0, err
@@ -93,7 +93,7 @@ func (s *Store) BestiaryCreateItem(ctx context.Context, name, nameEn string, dat
 	if err != nil {
 		return 0, err
 	}
-	if err := setBestiaryItemImage(ctx, tx, id, imageURL); err != nil {
+	if err := setBestiaryItemImage(ctx, tx, id, imageKey, imageURL); err != nil {
 		return 0, err
 	}
 	if err := tx.Commit(ctx); err != nil {
@@ -105,7 +105,7 @@ func (s *Store) BestiaryCreateItem(ctx context.Context, name, nameEn string, dat
 // setBestiaryItemImage keeps imported artwork outside rules JSON. A manually
 // assigned raster icon wins over the importer; importer-owned rows are updated
 // in place so repeated jobs do not accumulate storage_image records.
-func setBestiaryItemImage(ctx context.Context, tx pgx.Tx, itemID int64, imageURL string) error {
+func setBestiaryItemImage(ctx context.Context, tx pgx.Tx, itemID int64, imageKey, imageURL string) error {
 	var imageID *int64
 	var imageType *string
 	if err := tx.QueryRow(ctx,
@@ -120,6 +120,7 @@ func setBestiaryItemImage(ctx context.Context, tx pgx.Tx, itemID int64, imageURL
 	}
 
 	imageURL = strings.TrimSpace(imageURL)
+	imageKey = strings.TrimSpace(imageKey)
 	if imageID != nil && imageType != nil && *imageType == "bestiary" {
 		if imageURL == "" {
 			if _, err := tx.Exec(ctx, `UPDATE dndshare.item SET icon_image_id = NULL WHERE id = $1`, itemID); err != nil {
@@ -129,8 +130,8 @@ func setBestiaryItemImage(ctx context.Context, tx pgx.Tx, itemID int64, imageURL
 			return err
 		}
 		_, err := tx.Exec(ctx,
-			`UPDATE dndshare.storage_image SET url = $1, deleted = false WHERE id = $2`,
-			imageURL, *imageID,
+			`UPDATE dndshare.storage_image SET "key" = $1, url = $2, deleted = false WHERE id = $3`,
+			imageKey, imageURL, *imageID,
 		)
 		return err
 	}
@@ -141,9 +142,9 @@ func setBestiaryItemImage(ctx context.Context, tx pgx.Tx, itemID int64, imageURL
 	var savedImageID int64
 	if err := tx.QueryRow(ctx,
 		`INSERT INTO dndshare.storage_image (user_id, "key", url, "type")
-		 VALUES (NULL, NULL, $1, 'bestiary')
+		 VALUES (NULL, $1, $2, 'bestiary')
 		 RETURNING id`,
-		imageURL,
+		imageKey, imageURL,
 	).Scan(&savedImageID); err != nil {
 		return err
 	}

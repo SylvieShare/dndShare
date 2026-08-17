@@ -221,6 +221,19 @@ func (s *Store) searchItems(ctx context.Context, typeID int64, q *string, userID
 		}
 		textExtract := strings.Replace(textExtractSqlForPath(path), "data", "i.data", 1)
 
+		// Object-array item references use paths such as classes.id. JSON text
+		// extraction cannot traverse every array member, so filter them explicitly.
+		if len(path) == 2 && path[1] == "id" {
+			inParts := []string{}
+			for _, value := range filter.Values {
+				inParts = append(inParts, add(fmt.Sprint(value)))
+			}
+			if len(inParts) > 0 {
+				where = append(where, "EXISTS (SELECT 1 FROM jsonb_array_elements(CASE WHEN jsonb_typeof(i.data -> '"+path[0]+"') = 'array' THEN i.data -> '"+path[0]+"' ELSE '[]'::jsonb END) entry WHERE entry ->> 'id' IN ("+strings.Join(inParts, ", ")+"))")
+			}
+			continue
+		}
+
 		switch filter.Type {
 		case "suggest_array":
 			parts := []string{}

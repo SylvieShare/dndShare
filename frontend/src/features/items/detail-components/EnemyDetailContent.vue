@@ -37,22 +37,24 @@
         <div class="enemy-stats-block">
           <div class="enemy-stats-row">
             <div class="enemy-stat-card enemy-stat-cr">
-              <div class="stat-label">CR</div>
+              <div class="stat-label" title="Уровень опасности помогает мастеру подобрать существо подходящей сложности для группы.">
+                <Gauge class="stat-icon" aria-hidden="true" /> Уровень опасности
+              </div>
               <div class="stat-value">{{ combat.cr ?? '—' }}</div>
-              <div v-if="combat.xp != null" class="stat-note">{{ formatXp(combat.xp) }} XP</div>
+              <div v-if="combat.xp != null" class="stat-note">{{ formatXp(combat.xp) }} опыта</div>
             </div>
             <div class="enemy-stat-card">
-              <div class="stat-label">КД</div>
+              <div class="stat-label" title="Класс доспеха — сложность попадания по существу"><Shield class="stat-icon" aria-hidden="true" /> Класс доспеха</div>
               <div class="stat-value">{{ combat.ac ?? '—' }}</div>
               <div v-if="combat.ac_note" class="stat-note">{{ combat.ac_note }}</div>
             </div>
             <div class="enemy-stat-card">
-              <div class="stat-label">ХИТ</div>
+              <div class="stat-label" title="Хиты — запас здоровья существа"><Heart class="stat-icon" aria-hidden="true" /> Хиты</div>
               <div class="stat-value">{{ combat.hp ?? '—' }}</div>
               <div v-if="combat.hp_formula" class="stat-note">{{ combat.hp_formula }}</div>
             </div>
             <div v-if="combat.proficiencyBonus != null" class="enemy-stat-card">
-              <div class="stat-label">БМ</div>
+              <div class="stat-label" title="Бонус мастерства"><Sparkles class="stat-icon" aria-hidden="true" /> Бонус мастерства</div>
               <div class="stat-value">{{ formatBonus(combat.proficiencyBonus) }}</div>
             </div>
           </div>
@@ -60,13 +62,13 @@
           <div class="enemy-speed-row">
             <template v-if="combat.speed_opt?.length">
               <div v-for="s in combat.speed_opt" :key="s.name || '__base'" class="enemy-stat-card enemy-stat-speed">
-                <div class="stat-label">{{ speedLabel(s.name) }}</div>
+                <div class="stat-label"><component :is="speedIcon(s.name)" class="stat-icon" aria-hidden="true" /> {{ speedLabel(s.name) }}</div>
                 <div class="stat-value speed-value">{{ s.value }}</div>
                 <div class="stat-note">фт.</div>
               </div>
             </template>
             <div v-else-if="combat.speed" class="enemy-stat-card enemy-stat-speed">
-              <div class="stat-label">СКР</div>
+              <div class="stat-label"><Footprints class="stat-icon" aria-hidden="true" /> Пешком</div>
               <div class="stat-value speed-value">{{ combat.speed }}</div>
             </div>
           </div>
@@ -166,6 +168,7 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue'
+import { Bird, Footprints, Gauge, Heart, Mountain, Shield, Sparkles, Waves } from '@lucide/vue'
 import { abilityModifier, formatBonus as signedBonus } from '@/shared/lib/dnd'
 import { SAVE_ABBR } from '@/shared/lib/dndStats'
 import { findField, getSuggestId } from '@/features/handbook/objects/lib/schemaFields'
@@ -297,9 +300,18 @@ function formatBonus(n) {
 }
 
 function speedLabel(name) {
-  if (!name) return 'ХОД'
-  const map = { 'летая': 'ЛЁТА', 'плавая': 'ПЛАВ', 'лазая': 'ЛАЗА', 'роя': 'РОЙ' }
-  return map[name.toLowerCase()] ?? name.slice(0, 4).toUpperCase()
+  if (!name) return 'Пешком'
+  const map = { 'летая': 'Полёт', 'плавая': 'Плавание', 'лазая': 'Лазание', 'роя': 'Роющий ход' }
+  return map[name.toLowerCase()] ?? name
+}
+
+function speedIcon(name) {
+  const value = String(name || '').toLowerCase()
+  if (value.includes('лет')) return Bird
+  if (value.includes('плав')) return Waves
+  if (value.includes('лаз')) return Mountain
+  if (value.includes('ро')) return Mountain
+  return Footprints
 }
 
 function abilityMod(score) {

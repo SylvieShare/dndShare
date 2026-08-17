@@ -85,7 +85,7 @@ export function buildLevelUpUpdates({
           ? oldValue.bonuses
           : []
         const applied = Math.max(0, Math.min(Number(bonus) || 0, 20 - resolveNumValue(oldValue)))
-        if (applied) updates[stat] = { ...block, value: { base, bonuses: [...bonuses, { title, value: applied }] } }
+        if (applied) updates[stat] = { ...block, value: { base, bonuses: [...bonuses, { name: title, title, value: applied, readonly: true, sourceFeatKey: `feat:${featPick.id}` }] } }
       }
       for (const bonus of featAbilityBonuses(featPick, featPick.selectedChoices || {})) {
         writeStatBonus(bonus.stat, featPick.name, bonus.bonus)

@@ -5,6 +5,18 @@
     "type": "description"
   },
   {
+    "key": "armor",
+    "name": "Доспех",
+    "type": "object",
+    "fields": [
+      { "key": "ac", "name": "Базовый КД", "type": "int" },
+      { "key": "use_dex", "name": "Добавлять Ловкость", "type": "bool" },
+      { "key": "dex_cap", "name": "Максимум бонуса Ловкости", "type": "int" },
+      { "key": "shield", "name": "Это щит", "type": "bool" },
+      { "key": "shield_bonus", "name": "Бонус щита", "type": "int" }
+    ]
+  },
+  {
     "key": "cost",
     "name": "Стоимость",
     "type": "int_by_suggest",

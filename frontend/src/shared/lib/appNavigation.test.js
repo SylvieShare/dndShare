@@ -2,10 +2,10 @@ import { describe, expect, it } from 'vitest'
 import { resolveAppNavigation } from './appNavigation'
 
 describe('app navigation', () => {
-  it('keeps public navigation limited to the handbook', () => {
-    expect(resolveAppNavigation({ path: '/handbook/objects' })).toEqual([
-      expect.objectContaining({ key: 'handbook', active: true }),
-    ])
+  it('keeps the handbook and character wizard public', () => {
+    const items = resolveAppNavigation({ path: '/handbook/objects' })
+    expect(items.map(item => item.key)).toEqual(['handbook', 'create-character'])
+    expect(items[0]).toEqual(expect.objectContaining({ key: 'handbook', active: true }))
   })
 
   it('adds authenticated and admin sections with route-aware active states', () => {

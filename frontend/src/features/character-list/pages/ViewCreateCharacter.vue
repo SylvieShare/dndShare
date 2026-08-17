@@ -21,7 +21,7 @@
     <div class="cc-body">
       <CreateStepRail class="cc-rail" :steps="steps" :current="current" :reachable="maxReachable" @go="goTo" />
 
-      <main class="cc-main">
+      <main ref="mainRef" class="cc-main" :class="{ 'cc-main--invalid': invalidPulse }">
         <transition name="cc-fade" mode="out-in">
           <component :is="stepComponent" :key="stepKey" />
         </transition>
@@ -35,8 +35,7 @@
       <span v-if="error" class="cc-error" role="alert">{{ error }}</span>
       <span v-else-if="blockReason && !isLast" class="cc-reason">{{ blockReason }}</span>
       <div class="cc-actions">
-        <button v-if="!isLast" class="btn soft" :disabled="creating" @click="createNow">Создать</button>
-        <button v-if="!isLast" class="btn next" :disabled="!canNext" @click="next">Далее</button>
+        <button v-if="!isLast" class="btn next" :class="{ disabled: !canNext }" :aria-disabled="!canNext" @click="next">Далее</button>
         <button v-else class="btn create" :disabled="creating" @click="createNow">{{ creating ? 'Создание…' : 'Создать персонажа' }}</button>
       </div>
     </footer>
@@ -81,6 +80,7 @@ import { resolveSetting } from '@/features/character-editor/settings'
 import { useAccountStore } from '@/stores/account'
 import { useDndCreateWizard } from '@/features/character-list/composables/useDndCreateWizard'
 import { useTemplateStore } from '@/stores/template'
+import { setCharSeed } from '@/shared/lib/charSeed'
 
 const router = useRouter()
 const templateStore = useTemplateStore()
@@ -91,6 +91,7 @@ const props = defineProps({
 })
 const emit = defineEmits(['cancel', 'create'])
 const wz = useDndCreateWizard()
+const accountStore = useAccountStore()
 provide('createWizard', wz)
 
 const {
@@ -104,6 +105,8 @@ const {
 
 const confirmOpen = ref(false)
 const resetOpen = ref(false)
+const mainRef = ref(null)
+const invalidPulse = ref(false)
 function doReset() { resetOpen.value = false; reset() }
 const isComplete = computed(() =>
   state.version === '2014' && !!state.race && !!state.charClass && classEquipmentComplete.value && !!state.background && !!state.name.trim() && scoresComplete.value)
@@ -171,6 +174,9 @@ function validateStep(key) {
       if (!scoresComplete.value) return { ok: false, reason: 'Заполни все характеристики' }
       if (pointsLeft.value < 0) return { ok: false, reason: 'Превышен бюджет очков' }
       return { ok: true }
+    case 'persona':
+      if (!state.name.trim()) return { ok: false, reason: 'Впиши имя персонажа' }
+      return { ok: true }
     case 'review':
       if (!state.name.trim()) return { ok: false, reason: 'Впиши имя' }
       return { ok: true }
@@ -194,8 +200,21 @@ const maxReachable = computed(() => {
 })
 
 function next() {
-  if (!canNext.value) return
+  if (!canNext.value) { focusInvalidChoice(); return }
   state.step++
+}
+
+function focusInvalidChoice() {
+  const root = mainRef.value
+  if (!root) return
+  let target = null
+  if (stepKey.value === 'stats') target = [...root.querySelectorAll('.stat')].find(node => node.querySelector('select')?.value === '')
+  else if (stepKey.value === 'persona') target = root.querySelector('input')
+  else target = root.querySelector('.off, .pick, .opts, .selection-details, .grid, input, select')
+  target?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  target?.querySelector?.('input, select, button')?.focus?.({ preventScroll: true })
+  invalidPulse.value = false
+  requestAnimationFrame(() => { invalidPulse.value = true; setTimeout(() => { invalidPulse.value = false }, 650) })
 }
 function back() {
   if (current.value === 0) { exit(); return }
@@ -211,6 +230,10 @@ function exit() {
 // first when something's missing, then build with whatever's filled (blanks default).
 function createNow() {
   if (creating.value) return
+  if (accountStore.authStatus !== 'success') {
+    window.dispatchEvent(new CustomEvent('dndshare:request-auth'))
+    return
+  }
   if (isComplete.value) submit()
   else confirmOpen.value = true
 }
@@ -230,7 +253,18 @@ async function submit() {
   internalCreating.value = true
   try {
     const res = await fetchPost('/chars', payload)
-    if (res?.uuid) { clearPersist(); router.push('/char/' + res.uuid) }
+    if (res?.uuid) {
+      setCharSeed(res.uuid, {
+        data: payload.data,
+        version: 0,
+        userId: accountStore.user?.id,
+        publicVisible: false,
+        templateId: dndTemplateId.value,
+        sourceVersionId: sourceVersionId.value,
+      })
+      clearPersist()
+      router.push('/char/' + res.uuid)
+    }
   } finally {
     internalCreating.value = false
   }
@@ -239,7 +273,7 @@ async function submit() {
 defineExpose({ clearDraft: clearPersist })
 
 onMounted(async () => {
-  useAccountStore().ensureAuth()
+  accountStore.ensureAuth()
   const [, sourcesRes] = await Promise.all([templateStore.ensure(), fetchGet('/sources')])
   dndTemplateId.value = templateStore.all.find((t) => resolveSetting(t)?.system === 'dnd5e')?.id ?? null
   dndSource.value = (sourcesRes?.sources || []).find((source) => source.name.toLowerCase() === 'dnd5e') || null
@@ -330,6 +364,9 @@ onMounted(async () => {
 .cc-error { max-width: 520px; color: var(--danger); font-size: 12px; }
 .cc-actions { margin-left: auto; display: flex; gap: 10px; }
 .btn { border: none; border-radius: 9px; padding: 10px 22px; font: inherit; font-weight: 600; cursor: pointer; }
+.btn.disabled { opacity: .48; cursor: pointer; }
+.cc-main--invalid { animation: cc-invalid .6s ease; }
+@keyframes cc-invalid { 0%, 100% { box-shadow: none; } 35% { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--danger) 72%, transparent); } }
 .btn.ghost { background: transparent; color: var(--text-2); box-shadow: inset 0 0 0 1px var(--border-strong); }
 .btn.ghost:hover { color: var(--text-1); }
 .btn.soft { background: transparent; color: var(--text-muted); padding-inline: 14px; font-size: 13px; }

@@ -20,17 +20,12 @@
     "type": "text"
   },
   {
-    "name": "Классы",
-    "key": "classIds",
-    "type": "suggest_array",
-    "suggest_id": 2,
-    "filter": true
-  },
-  {
     "name": "Классы (предметы)",
     "key": "classes",
     "type": "object_array",
     "filter": true,
+    "filter_path": "classes.id",
+    "filter_item_type": 9,
     "fields": [
       {
         "name": "Класс",

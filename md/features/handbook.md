@@ -26,8 +26,10 @@ Item icons are metadata outside rules JSON. `item.svg` is the API projection of
 `item.iconImageId/iconImageUrl` from `item.icon_image_id → storage_image/S3`.
 The database allows at most one format. All item reads, including paged lists
 and multi-type search, return the assigned projection.
-Bestiary artwork follows the same contract: imported CDN URLs are registered as
-system `storage_image` rows and are never stored in `item.data`.
+Bestiary artwork follows the same contract: the import job downloads the
+upstream file, writes it under the stable `bestiary/v1/<slug>` key in our S3 and
+registers that key/URL in a system `storage_image` row. External CDN URLs are
+never served as item icons and artwork is never stored in `item.data`.
 
 Saved user items are backfilled to that source during startup. Personal source
 ids are never stored or read in `item.data`, and item/suggest id reads expose
@@ -89,6 +91,15 @@ list and detail surfaces. Handbook workspaces fill the available viewport below
 the mobile application header; on desktop they extend to the bottom because the
 application header is replaced by the sidebar.
 
+Collection search is explicitly labelled as handbook search. Grouping controls
+live immediately above the result list, not beside the search field. Enabling a
+group loads every server page before grouping so no item disappears at a page
+boundary; every group starts collapsed. Missing environment values use the
+explicit `Среда не указана` group. Bestiary filters include creature type,
+size, alignment and environment; spells can be filtered by class item id.
+Creature UI calls CR `Уровень опасности`, explains it for new players and uses
+semantic icons for AC, HP, proficiency and each movement type.
+
 Details are specialized by type where useful (weapon, spell, enemy, potion,
 feat), otherwise the generic field renderer is used. Item detail modals use
 `ItemViewModal` and fixed-chrome `AppModalFrame`; the standalone detail renderer
@@ -113,6 +124,9 @@ migrate stored `item.data` before deleting the old key.
 Important types include weapons (1), items (2), race/class abilities (3/4),
 spells (5), bestiary (6), feats (7), races/classes (8/9), potions (10) and
 backgrounds (11).
+
+Generic item type 2 may contain `armor {ac,use_dex,dex_cap,shield,shield_bonus}`.
+The startup migration backfills the core PHB armor and shield rows by name.
 
 ## MCP
 
