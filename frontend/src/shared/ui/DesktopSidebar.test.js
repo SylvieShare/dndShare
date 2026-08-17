@@ -28,4 +28,9 @@ describe('desktop sidebar icons', () => {
     expect(sidebarSource).toContain('@click="openSearch(toggle)"')
     expect(sidebarSource).toContain('searchRef.value?.focus()')
   })
+
+  it('shows search results beside the expanded sidebar without clipping them', () => {
+    expect(sidebarSource).toMatch(/\.sidebar-search \.hs-dropdown\) \{\s*inset: 0 auto auto calc\(100% \+ 12px\);/)
+    expect(sidebarSource).toMatch(/\.share-sidebar-nav:has\(\.sidebar-search \.hs-dropdown\)\) \{\s*overflow: visible;/)
+  })
 })

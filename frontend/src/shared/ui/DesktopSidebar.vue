@@ -103,7 +103,11 @@ async function openSearch(toggle) {
 }
 
 .desktop-sidebar :deep(.sidebar-search .hs-dropdown) {
-  inset: auto auto 0 calc(100% + 12px);
+  inset: 0 auto auto calc(100% + 12px);
+}
+
+.desktop-sidebar :deep(.share-sidebar-nav:has(.sidebar-search .hs-dropdown)) {
+  overflow: visible;
 }
 
 .sidebar-search-separator {
