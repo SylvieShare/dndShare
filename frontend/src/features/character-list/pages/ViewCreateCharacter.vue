@@ -342,10 +342,12 @@ onMounted(async () => {
 .cc-progress-short { display: none; }
 
 .cc-body {
+  --cc-main-max: 920px;
   flex: 1;
   min-height: 0;
   display: grid;
-  grid-template-columns: 220px minmax(0, 1fr);
+  grid-template-columns: 220px minmax(0, var(--cc-main-max));
+  justify-content: center;
   gap: 24px;
   padding: 4px 24px 16px;
 }
