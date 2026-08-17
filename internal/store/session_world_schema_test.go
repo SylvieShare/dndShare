@@ -47,7 +47,7 @@ func TestSessionWorldSchemaRunsAfterSessionTables(t *testing.T) {
 	}
 }
 
-func TestRichContentSchemaMigratesOnlyApprovedKobold(t *testing.T) {
+func TestRichContentSchemaKeepsApprovedKoboldBootstrap(t *testing.T) {
 	for _, fragment := range []string{
 		"WHERE id = 1635",
 		`data-rich-node="dice"`,

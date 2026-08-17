@@ -4,6 +4,7 @@ import (
 	"context"
 	_ "embed"
 	"fmt"
+	"log"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -89,6 +90,21 @@ func applySchema(ctx context.Context, pool *pgxpool.Pool) error {
 		if _, err := tx.Exec(ctx, part.sql); err != nil {
 			return fmt.Errorf("apply schema part %s: %w", part.name, err)
 		}
+	}
+	richStats, err := migrateLegacyRichContent(ctx, tx)
+	if err != nil {
+		return fmt.Errorf("migrate legacy rich content: %w", err)
+	}
+	if richStats.Items > 0 {
+		log.Printf(
+			"migrated legacy rich content: items=%d dice=%d averages=%d item_links=%d suggest_links=%d native_links=%d",
+			richStats.Items,
+			richStats.DiceNodes,
+			richStats.DiceAverages,
+			richStats.ItemNodes,
+			richStats.SuggestNodes,
+			richStats.NativeLinks,
+		)
 	}
 	if err := tx.Commit(ctx); err != nil {
 		return fmt.Errorf("commit schema: %w", err)

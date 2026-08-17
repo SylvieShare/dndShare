@@ -1,4 +1,4 @@
-const TOKEN_RE = /([+-])((?:\d*)d\d+|\d+)(?:\{([^|}]*)(?:\|([^}]*))?\})?/g
+const TOKEN_RE = /([+\-*])((?:\d*)d\d+|\d+)(?:\{([^|}]*)(?:\|([^}]*))?\})?/g
 
 const DASH_RE = new RegExp('[\\u2010-\\u2015\\u2212\\uFE63\\uFF0D]', 'g')
 const WS_RE = new RegExp('[\\s\\u00A0\\u1680\\u2000-\\u200B\\u202F\\u205F\\u3000\\uFEFF]+', 'g')
@@ -9,6 +9,7 @@ function normalizeOutside(s) {
     .replace(DASH_RE, '-')
     .replace(WS_RE, '')
     .replace(D_ALIAS_RE, 'd')
+    .replace(/[×xX]/g, '*')
 }
 
 function normalize(expr) {
@@ -34,7 +35,8 @@ export function parseDiceExpression(expr) {
   let m
   TOKEN_RE.lastIndex = 0
   while ((m = TOKEN_RE.exec(s)) !== null) {
-    const [, sign, body, label, color] = m
+    const [, operator, body, label, color] = m
+    const sign = operator === '*' ? '×' : operator
     const tag = label ? label.trim() : null
     const col = color ? color.trim() : null
     if (body.includes('d')) {
@@ -42,14 +44,31 @@ export function parseDiceExpression(expr) {
       const n = nStr === '' ? 1 : parseInt(nStr, 10)
       const sides = parseInt(mStr, 10)
       if (!n || !sides) continue
-      tokens.push({ sign, kind: 'dice', n, sides, label: tag, color: col })
+      tokens.push({ sign, operator, kind: 'dice', n, sides, label: tag, color: col })
     } else {
       const value = parseInt(body, 10)
       if (Number.isNaN(value)) continue
-      tokens.push({ sign, kind: 'flat', value, label: tag, color: col })
+      tokens.push({ sign, operator, kind: 'flat', value, label: tag, color: col })
     }
   }
   return tokens
+}
+
+export function evaluateDiceParts(parts, valueOf = part => part.sum ?? part.value ?? 0) {
+  let total = 0
+  let product = 0
+  for (const [index, part] of parts.entries()) {
+    const value = valueOf(part, index)
+    const operator = part.operator || (part.sign === '×' ? '*' : part.sign) || '+'
+    if (operator === '*') {
+      product *= value
+      continue
+    }
+    total += product
+    product = operator === '-' ? -value : value
+  }
+  total += product
+  return { total, hasMultiplication: parts.some(part => part.operator === '*' || part.sign === '×') }
 }
 
 function rollDie(sides) {
@@ -67,12 +86,11 @@ export function rollDiceExpression(expr) {
     return { ...t, sum: t.value }
   })
 
-  let total = 0
+  const { total, hasMultiplication } = evaluateDiceParts(parts)
   const typeOrder = []
   const typeMap = new Map()
   for (const p of parts) {
     const signed = p.sign === '-' ? -p.sum : p.sum
-    total += signed
     const key = p.label || '__base__'
     if (!typeMap.has(key)) {
       typeMap.set(key, { label: p.label, color: p.color, value: 0 })
@@ -82,7 +100,9 @@ export function rollDiceExpression(expr) {
     entry.value += signed
     if (!entry.color && p.color) entry.color = p.color
   }
-  const byType = typeOrder.map(k => typeMap.get(k))
+  const byType = hasMultiplication
+    ? [{ label: null, color: null, value: total }]
+    : typeOrder.map(k => typeMap.get(k))
 
   return { parts, total, byType, expression: expr }
 }

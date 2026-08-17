@@ -1,4 +1,5 @@
 import { reactive } from 'vue'
+import { evaluateDiceParts } from '@/shared/lib/dice'
 
 export const DICE_ROLL_ANIMATION_DELAYS = [40, 85, 145, 220, 310, 420, 560]
 export const DICE_ROLL_PREFINAL_SETTLE_CHANCE = 0.5
@@ -49,7 +50,7 @@ export function useDiceRollAnimation({
 
   function displayedTotal(entry) {
     if (!isTotalRolling(entry.id)) return entry.result.total
-    return entry.result.parts.reduce((total, part, partIndex) => {
+    return evaluateDiceParts(entry.result.parts, (part, partIndex) => {
       let value = part.value
       if (part.kind === 'dice') {
         value = part.rolls.reduce((sum, actual, rollIndex) => {
@@ -57,8 +58,8 @@ export function useDiceRollAnimation({
           return sum + displayedRoll(entry, partIndex, rollIndex, actual)
         }, 0)
       }
-      return total + (part.sign === '-' ? -value : value)
-    }, 0)
+      return value
+    }).total
   }
 
   function clearEntryAnimation(entryId) {
