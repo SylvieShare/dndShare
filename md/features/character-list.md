@@ -64,9 +64,10 @@ items and suggests must load without a session.
 ## Full D&D wizard
 
 The fixed steps are: Версия → Раса → Класс → Предыстория → Характеристики →
-Снаряжение → Личность → Обзор. The desktop layout has a compact central content
-column and a separate step rail in its left gutter; there is no permanent right
-preview. The rail shows the primary current value for each step (for example,
+Снаряжение → Личность → Обзор. The desktop layout uses a separate step rail at
+the left edge of the creation workspace; the main step content fills all of the
+remaining width and there is no permanent right preview or empty balancing
+column. The rail shows the primary current value for each step (for example,
 the chosen race, class/subclass or background) without repeating its mechanical
 details. Race and class steps instead end with a live «Результат выбора» block:
 it attributes grants, selected features, equipment and spells to that source and

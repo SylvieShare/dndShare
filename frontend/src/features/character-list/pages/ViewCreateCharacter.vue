@@ -301,13 +301,12 @@ onMounted(async () => {
 .cc {
   display: flex;
   flex-direction: column;
+  width: 100%;
   height: calc(100vh - var(--header-h));
-  max-width: 1320px;
-  margin: 0 auto;
+  max-width: none;
   box-sizing: border-box;
   background: var(--bg);
   color: var(--text-1);
-  border-inline: 1px solid color-mix(in srgb, var(--border-strong) 55%, transparent);
 }
 
 .cc--embedded {
@@ -346,14 +345,13 @@ onMounted(async () => {
   flex: 1;
   min-height: 0;
   display: grid;
-  grid-template-columns: minmax(176px, 1fr) minmax(0, 720px) minmax(0, 1fr);
+  grid-template-columns: 220px minmax(0, 1fr);
   gap: 24px;
   padding: 4px 24px 16px;
 }
 .cc-rail {
   box-sizing: border-box;
-  width: min(220px, 100%);
-  justify-self: end;
+  width: 100%;
 }
 .cc-rail { position: sticky; top: 0; align-self: start; }
 .cc-main { grid-column: 2; min-width: 0; overflow-x: clip; overflow-y: auto; padding: 4px 2px; }
