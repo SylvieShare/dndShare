@@ -69,14 +69,16 @@ a responsive column capped at 920px. A separate 220px step rail floats directly
 to that column's left; there is no permanent right preview. The rail shows the
 primary current value for each step (for example,
 the chosen race, class/subclass or background) without repeating its mechanical
-details. Race and class steps instead end with a live «Результат выбора» block:
+details. The header contains only the workspace title; reset lives in the
+central footer beside navigation, and there is no duplicate numeric step counter.
+Race and class steps instead end with a live «Результат выбора» block:
 it attributes grants, selected features, equipment and spells to that source and
 shows what will be written to the character sheet. Ability descriptions remain
 available there as inline disclosures. On narrow screens the workspace becomes
 one column, while the navigation footer stays pinned to the visible bottom edge.
-The wizard owns an opaque
-`--bg` canvas across its header, work area and footer so the global page grid
-does not show through the creation workspace.
+Only the capped central column owns an opaque `--bg` surface across its header,
+work area and footer. The floating step rail and the space outside that column
+remain on the global dotted application canvas.
 
 Key rules:
 
