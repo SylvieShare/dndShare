@@ -26,6 +26,8 @@ describe('DnD rich content integration', () => {
 
   it('connects nodes to dice, item preview/modal and suggest description behaviour', () => {
     expect(inlineSource).toContain('diceStore.roll')
+    expect(inlineSource).toContain(':size="27"')
+    expect(inlineSource).toContain('vertical-align: middle')
     expect(inlineSource).toContain('<ItemTooltip')
     expect(inlineSource).toContain('<ItemViewModal')
     expect(inlineSource).toContain('<BasePopover')

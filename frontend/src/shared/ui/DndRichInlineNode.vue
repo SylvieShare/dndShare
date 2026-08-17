@@ -9,7 +9,7 @@
     <template v-for="(part, index) in diceParts" :key="index">
       <span v-if="index" class="rich-node-sign">{{ part.sign }}</span>
       <span v-if="part.kind === 'dice'" class="rich-node-die">
-        <span v-if="part.n > 1">{{ part.n }}×</span><SystemDie :sides="part.sides" :size="18" />
+        <span v-if="part.n > 1">{{ part.n }}×</span><SystemDie :sides="part.sides" :size="27" />
       </span>
       <span v-else>{{ part.value }}</span>
     </template>
@@ -183,7 +183,16 @@ watch(() => [props.node.kind, props.node.payload?.id, props.node.payload?.typeId
 button.rich-node { cursor: pointer; transition: background .12s, border-color .12s, transform .08s; }
 button.rich-node:hover { border-color: var(--rich-node-color, var(--accent)); background: color-mix(in srgb, var(--rich-node-color, var(--accent)) 17%, var(--surface-raised)); }
 button.rich-node:active { transform: scale(.97); }
-.rich-node--dice { color: var(--accent-soft); font-weight: 700; }
+.rich-node--dice {
+  gap: 5px;
+  padding: 2px 7px;
+  border-radius: 8px;
+  color: var(--accent-soft);
+  font-size: 1.05em;
+  font-weight: 700;
+  line-height: 1;
+  vertical-align: middle;
+}
 .rich-node-die { display: inline-flex; align-items: center; gap: 1px; }
 .rich-node-sign { color: var(--text-muted); }
 .rich-node--unknown { color: var(--text-muted); }
