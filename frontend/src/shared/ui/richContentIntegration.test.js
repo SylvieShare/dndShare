@@ -33,6 +33,8 @@ describe('DnD rich content integration', () => {
     expect(inlineSource).toContain(':size="27"')
     expect(inlineSource).toContain('vertical-align: middle')
     expect(inlineSource).toContain('rich-node-average')
+    expect(inlineSource).toContain('class="rich-node-or"')
+    expect(inlineSource.indexOf('v-for="(part, index) in diceParts"')).toBeLessThan(inlineSource.indexOf('class="rich-node-average"'))
     expect(inlineSource).toContain('<ItemTooltip')
     expect(inlineSource).toContain('<ItemViewModal')
     expect(inlineSource).toContain('<BasePopover')

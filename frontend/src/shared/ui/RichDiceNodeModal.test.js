@@ -10,5 +10,7 @@ describe('RichDiceNodeModal', () => {
     expect(modalSource).toContain("props.node?.payload?.average")
     expect(modalSource).toContain("{ average: cleanAverage }")
     expect(modalSource).toContain('cleanAverage == null ? cleanFormula')
+    expect(modalSource).toContain('`${cleanFormula} или ${cleanAverage}`')
+    expect(modalSource).toContain('class="rdm-or"')
   })
 })

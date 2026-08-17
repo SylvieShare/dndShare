@@ -12,13 +12,13 @@
       </FormField>
       <div class="rdm-preview" :class="{ 'rdm-preview--invalid': (formula && !valid) || !validAverage }">
         <template v-if="valid">
-          <b v-if="averageValue != null" class="rdm-average">{{ averageValue }}</b>
-          <span v-if="averageValue != null" class="rdm-divider" aria-hidden="true" />
           <template v-for="(part, index) in parts" :key="index">
             <span v-if="index">{{ part.sign }}</span>
             <span v-if="part.kind === 'dice'" class="rdm-die"><b v-if="part.n > 1">{{ part.n }}×</b><SystemDie :sides="part.sides" :size="30" /></span>
             <b v-else>{{ part.value }}</b>
           </template>
+          <span v-if="averageValue != null" class="rdm-or" aria-hidden="true">или</span>
+          <b v-if="averageValue != null" class="rdm-average">{{ averageValue }}</b>
         </template>
         <span v-else>{{ formula ? 'В формуле должен быть хотя бы один кубик' : 'Введите формулу броска' }}</span>
       </div>
@@ -62,7 +62,7 @@ function save() {
   const cleanFormula = formula.value.trim()
   const cleanLabel = label.value.trim()
   const cleanAverage = averageValue.value
-  const displayFormula = cleanAverage == null ? cleanFormula : `${cleanAverage} · ${cleanFormula}`
+  const displayFormula = cleanAverage == null ? cleanFormula : `${cleanFormula} или ${cleanAverage}`
   emit('save', {
     kind: 'dice',
     payload: {
@@ -82,7 +82,7 @@ onMounted(() => nextTick(() => formulaInput.value?.focus?.()))
 .rdm-preview { display: flex; align-items: center; gap: 5px; min-height: 48px; padding: 8px 12px; border: 1px solid var(--border); border-radius: var(--r-md); background: var(--surface-raised); color: var(--text-muted); }
 .rdm-preview--invalid { border-color: color-mix(in srgb, var(--danger) 45%, var(--border)); color: var(--danger); }
 .rdm-average { color: var(--text-1); font-size: 16px; }
-.rdm-divider { align-self: stretch; width: 1px; margin: 2px 3px; background: var(--border-strong); }
+.rdm-or { margin: 0 3px; color: var(--text-muted); font-family: var(--font-display, Georgia, serif); font-style: italic; font-weight: 600; letter-spacing: .025em; }
 .rdm-die { display: inline-flex; align-items: center; gap: 2px; color: var(--accent-soft); }
 .rdm-actions { display: flex; align-items: center; justify-content: flex-end; gap: 8px; width: 100%; }
 .rdm-actions button { padding: 7px 12px; border: 0; border-radius: var(--r-sm); font: inherit; font-size: 12px; cursor: pointer; }

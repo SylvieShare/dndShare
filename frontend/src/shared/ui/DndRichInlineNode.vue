@@ -6,8 +6,6 @@
     :title="average == null ? `Бросить ${formula}` : `Бросить ${formula} · среднее ${average}`"
     @click="roll"
   >
-    <span v-if="average != null" class="rich-node-average">{{ average }}</span>
-    <span v-if="average != null" class="rich-node-divider" aria-hidden="true" />
     <template v-for="(part, index) in diceParts" :key="index">
       <span v-if="index" class="rich-node-sign">{{ part.sign }}</span>
       <span v-if="part.kind === 'dice'" class="rich-node-die">
@@ -16,6 +14,8 @@
       <span v-else>{{ part.value }}</span>
     </template>
     <span v-if="!diceParts.length">{{ node.label }}</span>
+    <span v-if="average != null" class="rich-node-or" aria-hidden="true">или</span>
+    <span v-if="average != null" class="rich-node-average">{{ average }}</span>
   </button>
 
   <button
@@ -209,7 +209,7 @@ button.rich-node:active { transform: scale(.97); }
 }
 .rich-node-die { display: inline-flex; align-items: center; gap: 1px; }
 .rich-node-average { color: var(--text-1); font-size: 1.08em; font-weight: 800; }
-.rich-node-divider { align-self: stretch; width: 1px; margin: 2px 1px; background: color-mix(in srgb, var(--accent) 38%, var(--border)); }
+.rich-node-or { margin: 0 2px; color: var(--text-muted); font-family: var(--font-display, Georgia, serif); font-size: .95em; font-style: italic; font-weight: 600; letter-spacing: .025em; }
 .rich-node-sign { color: var(--text-muted); }
 .rich-node--unknown { color: var(--text-muted); }
 .rich-suggest-popover { display: flex; flex-direction: column; gap: 6px; max-width: 340px; color: var(--text-2); font-size: 12px; }
