@@ -170,7 +170,7 @@ import { abilityModifier, formatBonus as signedBonus } from '@/shared/lib/dnd'
 import { SAVE_ABBR } from '@/shared/lib/dndStats'
 import { findField, getSuggestId } from '@/features/handbook/objects/lib/schemaFields'
 import DetailSection from '@/shared/ui/DetailSection.vue'
-import { RichContent } from '@sylvieshare/share-ui'
+import RichContent from '@/shared/ui/DndRichContent.vue'
 import SvgIcon from '@/shared/ui/SvgIcon'
 import { useSuggestStore } from '@/stores/suggest'
 

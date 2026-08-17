@@ -51,8 +51,8 @@ evaluates native/compatible/legacy/blocked status for a target edition.
 - feats use `description`, `prerequisite_groups`, `choices`, repeatable/grant
   metadata;
 - `int_by_suggest` stores `{value,suggest_id}`;
-- rich descriptions use their single schema key and render through
-  `RichContent`;
+- rich descriptions use their single schema key and render through the DnD
+  `RichContent` adapter, which resolves dice/item/suggest inline nodes;
 - parent/child identity uses item ids, not suggest ids.
 
 Startup SQL converts former single bindings, spell suggest ids, alternate feat

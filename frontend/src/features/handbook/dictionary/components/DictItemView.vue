@@ -57,7 +57,7 @@
 <script setup>
 import { ref } from 'vue'
 import { fetchPost } from '@/shared/api/http'
-import { RichContent } from '@sylvieshare/share-ui'
+import RichContent from '@/shared/ui/DndRichContent.vue'
 import SvgIcon from '@/shared/ui/SvgIcon'
 
 const props = defineProps({

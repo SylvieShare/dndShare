@@ -38,7 +38,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { RichContent } from '@sylvieshare/share-ui'
+import RichContent from '@/shared/ui/DndRichContent.vue'
 
 const props = defineProps({ spell: { type: Object, required: true } })
 

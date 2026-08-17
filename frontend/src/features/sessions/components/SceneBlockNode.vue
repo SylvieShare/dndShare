@@ -62,7 +62,7 @@
 <script setup>
 import { computed, inject } from 'vue'
 import { FileText, Gift, Image as ImageIcon, MapPin, MessagesSquare, ScrollText, Sparkles, Swords, UserRound } from '@lucide/vue'
-import { RichContent } from '@sylvieshare/share-ui'
+import RichContent from '@/shared/ui/DndRichContent.vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import SceneEntityBlockPreview from '@/features/sessions/components/SceneEntityBlockPreview.vue'
 import { hydrateDialogueRows } from '@/features/sessions/lib/dialogueRows'

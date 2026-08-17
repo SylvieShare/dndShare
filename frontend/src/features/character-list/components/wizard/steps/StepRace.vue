@@ -140,7 +140,7 @@ import FeatChoiceModal from '@/features/character-editor/components/FeatChoiceMo
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import { featChoices } from '@/features/items/lib/featRules'
 import MultiSearchSelect from '@/features/character-list/components/wizard/MultiSearchSelect.vue'
-import { RichContent } from '@sylvieshare/share-ui'
+import RichContent from '@/shared/ui/DndRichContent.vue'
 import SelectTile from '@/features/character-list/components/wizard/SelectTile.vue'
 import StepChoices from '@/features/character-list/components/wizard/steps/StepChoices.vue'
 import StepSkills from '@/features/character-list/components/wizard/steps/StepSkills.vue'

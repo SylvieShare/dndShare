@@ -35,8 +35,29 @@ func TestSessionWorldSchemaUsesTreeAndCanvasDerivedScenarioUsage(t *testing.T) {
 }
 
 func TestSessionWorldSchemaRunsAfterSessionTables(t *testing.T) {
-	if schemaParts[len(schemaParts)-1].name != "session-entities" {
-		t.Fatalf("last schema part = %q, want session-entities", schemaParts[len(schemaParts)-1].name)
+	positions := map[string]int{}
+	for index, part := range schemaParts {
+		positions[part.name] = index
+	}
+	if positions["session-world"] <= positions["sessions"] {
+		t.Fatal("session-world schema must run after session tables")
+	}
+	if positions["session-entities"] <= positions["session-world"] {
+		t.Fatal("session-entities schema must run after session-world")
+	}
+}
+
+func TestRichContentSchemaMigratesOnlyApprovedKobold(t *testing.T) {
+	for _, fragment := range []string{
+		"WHERE id = 1635",
+		`data-rich-node="dice"`,
+		`data-rich-node="suggest"`,
+		`<dice-roller label="Атака"`,
+		`<detail-tooltip type="screen">`,
+	} {
+		if !strings.Contains(schemaRichContentSQL, fragment) {
+			t.Fatalf("rich content schema must contain %q", fragment)
+		}
 	}
 }
 

@@ -25,7 +25,7 @@
 <script setup>
 import { computed } from 'vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
-import { RichContent } from '@sylvieshare/share-ui'
+import RichContent from '@/shared/ui/DndRichContent.vue'
 import { useCostFormatter } from '@/features/items/lib/useCostFormatter'
 
 const props = defineProps({

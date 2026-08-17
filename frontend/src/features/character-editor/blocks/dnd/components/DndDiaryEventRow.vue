@@ -45,7 +45,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { RichContent } from '@sylvieshare/share-ui'
+import RichContent from '@/shared/ui/DndRichContent.vue'
 import { eventTypeMeta } from '@/features/character-editor/blocks/dnd/lib/diaryEntry'
 
 const props = defineProps({

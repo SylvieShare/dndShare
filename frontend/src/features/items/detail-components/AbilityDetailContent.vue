@@ -24,7 +24,7 @@
 <script setup>
 import { computed } from 'vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
-import { RichContent } from '@sylvieshare/share-ui'
+import RichContent from '@/shared/ui/DndRichContent.vue'
 
 const props = defineProps({
   item: { type: Object, required: true },

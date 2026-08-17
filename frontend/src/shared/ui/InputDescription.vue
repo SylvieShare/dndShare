@@ -18,19 +18,74 @@
 
     <div :class="{ 'desc-body--owner': showToggle && !editing }" @click="showToggle && !editing && (editOn = true)">
       <RichTextEditor
+        ref="editorRef"
         :model-value="value"
         :editable="editing"
         :placeholder="block.content?.placeholder ?? 'Текст...'"
         :labels="RUSSIAN_LABELS"
         @update:model-value="$emit('update:value', block.id, $event)"
-      />
+        @node-select="selectNode"
+      >
+        <template #toolbar>
+          <button type="button" class="rich-tool-btn" title="Вставить формулу броска" @mousedown.prevent="openCreate('dice')">◇</button>
+          <button type="button" class="rich-tool-btn" title="Вставить ссылку на предмет" @mousedown.prevent="openCreate('item')">◫</button>
+          <button type="button" class="rich-tool-btn" title="Вставить ссылку на справочник" @mousedown.prevent="openCreate('suggest')">◆</button>
+        </template>
+        <template #node="{ node }"><DndRichInlineNode :node="node" /></template>
+      </RichTextEditor>
     </div>
+
+    <BasePopover
+      :open="Boolean(selectedNode)"
+      :anchor="selectedNode?.element"
+      :min-width="210"
+      :z-index="4550"
+      @update:open="value => { if (!value) selectedNode = null }"
+    >
+      <div v-if="selectedNode" class="rich-node-menu">
+        <span class="rich-node-menu-label">{{ nodeTypeLabel(selectedNode.node.kind) }}</span>
+        <strong>{{ selectedNode.node.label }}</strong>
+        <div class="rich-node-menu-actions">
+          <button type="button" @click="editSelectedNode">{{ selectedNode.node.kind === 'item' ? 'Заменить' : 'Изменить' }}</button>
+          <button type="button" class="danger" @click="removeSelectedNode">Удалить</button>
+        </div>
+      </div>
+    </BasePopover>
+
+    <RichDiceNodeModal
+      v-if="activeEditor === 'dice'"
+      :node="editingTarget?.node || null"
+      @close="closeNodeEditor"
+      @save="saveNode"
+      @remove="removeEditingNode"
+    />
+    <RichSuggestNodeModal
+      v-if="activeEditor === 'suggest'"
+      :node="editingTarget?.node || null"
+      @close="closeNodeEditor"
+      @save="saveNode"
+      @remove="removeEditingNode"
+    />
+    <ItemPickerModal
+      v-if="activeEditor === 'item' && itemTypeIds.length"
+      :item-type-ids="itemTypeIds"
+      title="Ссылка на предмет"
+      search-placeholder="Найти предмет…"
+      :z-index="4600"
+      @close="closeNodeEditor"
+      @pick="pickItem"
+    />
   </div>
 </template>
 
 <script setup>
 import { computed, inject, ref } from 'vue'
-import { RichTextEditor } from '@sylvieshare/share-ui'
+import { BasePopover, RichTextEditor } from '@sylvieshare/share-ui'
+import { useItemTypesStore } from '@/stores/itemTypes'
+import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
+import RichDiceNodeModal from '@/shared/ui/RichDiceNodeModal.vue'
+import RichSuggestNodeModal from '@/shared/ui/RichSuggestNodeModal.vue'
+import DndRichInlineNode from '@/shared/ui/DndRichInlineNode.vue'
 
 const RUSSIAN_LABELS = {
   toolbar: 'Форматирование текста',
@@ -46,6 +101,14 @@ const RUSSIAN_LABELS = {
   color: 'Цвет текста',
   colorShort: 'А',
   clearColor: 'Сбросить цвет',
+  link: 'Вставить ссылку',
+  linkText: 'Текст ссылки',
+  linkTextPlaceholder: 'Как ссылка выглядит в тексте',
+  linkUrl: 'Адрес',
+  linkInvalid: 'Введите безопасный адрес ссылки',
+  saveLink: 'Применить',
+  removeLink: 'Убрать ссылку',
+  cancel: 'Отмена',
 }
 
 const props = defineProps({
@@ -60,6 +123,78 @@ const owner = computed(() => Boolean(charCtx.ownerMode))
 const showToggle = computed(() => owner.value && !props.editable)
 const editOn = ref(false)
 const editing = computed(() => props.editable || (owner.value && editOn.value))
+const editorRef = ref(null)
+const selectedNode = ref(null)
+const editingTarget = ref(null)
+const activeEditor = ref('')
+const itemTypeIds = ref([])
+
+function nodeTypeLabel(kind) {
+  return ({ dice: 'Формула броска', item: 'Ссылка на предмет', suggest: 'Ссылка на справочник' })[kind] || 'Встроенный элемент'
+}
+
+function selectNode(selection) {
+  if (!editing.value || !selection?.node) return
+  selectedNode.value = selection
+}
+
+async function openCreate(kind) {
+  editorRef.value?.rememberSelection?.()
+  editingTarget.value = null
+  selectedNode.value = null
+  activeEditor.value = kind
+  if (kind === 'item' && !itemTypeIds.value.length) {
+    const types = await useItemTypesStore().ensureAll().catch(() => [])
+    itemTypeIds.value = types.map(type => type.id)
+  }
+}
+
+async function editSelectedNode() {
+  if (!selectedNode.value) return
+  editingTarget.value = selectedNode.value
+  activeEditor.value = selectedNode.value.node.kind
+  selectedNode.value = null
+  if (activeEditor.value === 'item' && !itemTypeIds.value.length) {
+    const types = await useItemTypesStore().ensureAll().catch(() => [])
+    itemTypeIds.value = types.map(type => type.id)
+  }
+  if (activeEditor.value === 'item') {
+    const currentTypeId = Number(editingTarget.value.node.payload?.typeId)
+    itemTypeIds.value = [currentTypeId, ...itemTypeIds.value.filter(id => Number(id) !== currentTypeId)]
+      .filter(Number.isFinite)
+  }
+}
+
+function closeNodeEditor() {
+  activeEditor.value = ''
+  editingTarget.value = null
+}
+
+function saveNode(node) {
+  if (editingTarget.value) editorRef.value?.updateRichNode?.(editingTarget.value.element, node)
+  else editorRef.value?.insertRichNode?.(node)
+  closeNodeEditor()
+}
+
+function pickItem(item) {
+  saveNode({
+    kind: 'item',
+    payload: { id: Number(item.id), typeId: Number(item.typeId) },
+    label: item.name,
+  })
+}
+
+function removeSelectedNode() {
+  if (!selectedNode.value) return
+  editorRef.value?.removeRichNode?.(selectedNode.value.element)
+  selectedNode.value = null
+}
+
+function removeEditingNode() {
+  if (editingTarget.value) editorRef.value?.removeRichNode?.(editingTarget.value.element)
+  closeNodeEditor()
+}
+
 </script>
 
 <style scoped>
@@ -117,4 +252,26 @@ const editing = computed(() => props.editable || (owner.value && editOn.value))
 
 .desc-done-btn:hover { background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); }
 .desc-body--owner { cursor: text; }
+
+.rich-tool-btn {
+  display: grid;
+  min-width: 26px;
+  height: 26px;
+  padding: 0 5px;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: none;
+  color: var(--text-muted);
+  font: 700 13px/1 var(--font-ui);
+  cursor: pointer;
+  place-items: center;
+}
+.rich-tool-btn:hover { background: var(--surface-raised); color: var(--accent-soft); }
+.rich-node-menu { display: flex; flex-direction: column; gap: 5px; max-width: 280px; }
+.rich-node-menu-label { color: var(--text-muted); font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+.rich-node-menu strong { overflow: hidden; color: var(--text-1); font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+.rich-node-menu-actions { display: flex; gap: 6px; margin-top: 3px; }
+.rich-node-menu-actions button { padding: 5px 8px; border: 0; border-radius: var(--r-sm); background: var(--surface-raised); color: var(--text-2); font: inherit; font-size: 11px; cursor: pointer; }
+.rich-node-menu-actions button:hover { color: var(--text-1); }
+.rich-node-menu-actions button.danger { margin-left: auto; color: var(--danger); }
 </style>

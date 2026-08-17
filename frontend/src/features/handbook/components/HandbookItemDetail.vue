@@ -115,7 +115,7 @@ import ItemDetailContent from '@/features/items/detail-components/ItemDetailCont
 import PotionDetailContent from '@/features/items/detail-components/PotionDetailContent'
 import SpellDetailContent from '@/features/items/detail-components/SpellDetailContent'
 import WeaponDetailContent from '@/features/items/detail-components/WeaponDetailContent'
-import { RichContent } from '@sylvieshare/share-ui'
+import RichContent from '@/shared/ui/DndRichContent.vue'
 import SystemDie from '@/shared/ui/SystemDie.vue'
 import { dieLabel } from '@/shared/lib/systemDice'
 

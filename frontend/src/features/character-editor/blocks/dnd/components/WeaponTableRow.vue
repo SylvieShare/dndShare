@@ -208,7 +208,7 @@
 <script setup>
 import { computed, inject, ref } from 'vue'
 import InputDescription from '@/shared/ui/InputDescription'
-import { RichContent } from '@sylvieshare/share-ui'
+import RichContent from '@/shared/ui/DndRichContent.vue'
 import SystemDie from '@/shared/ui/SystemDie.vue'
 import { ValueSelect } from '@sylvieshare/share-ui'
 

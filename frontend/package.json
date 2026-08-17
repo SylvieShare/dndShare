@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@lucide/vue": "^1.21.0",
-    "@sylvieshare/share-ui": "https://github.com/SylvieShare/share-ui/archive/refs/tags/v0.11.0.tar.gz",
+    "@sylvieshare/share-ui": "https://github.com/SylvieShare/share-ui/archive/refs/tags/v0.12.0.tar.gz",
     "html-to-image": "1.11.13",
     "pinia": "^3.0.4",
     "vue": "^3.5.34",

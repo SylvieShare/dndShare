@@ -239,8 +239,10 @@ duration text.
 ## Rich text
 
 Character notes/personality fields that are descriptions store the HTML emitted
-by `InputDescription` and render through `RichContent`. A field has one schema
-key; components do not try `desc` and then `description`.
+by `InputDescription` and render through the DnD adapter over `RichContent`.
+The toolbar inserts ordinary links plus atomic dice/item/suggest references;
+selecting an existing reference offers change/delete actions. A field has one
+schema key; components do not try `desc` and then `description`.
 
 ## Saving and synchronization
 

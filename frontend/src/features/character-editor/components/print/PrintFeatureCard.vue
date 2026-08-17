@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import { RichContent } from '@sylvieshare/share-ui'
+import RichContent from '@/shared/ui/DndRichContent.vue'
 
 defineProps({ feature: { type: Object, required: true } })
 </script>
