@@ -24,34 +24,65 @@
       </button>
     </div>
 
-    <div v-if="open" class="hs-dropdown">
-      <div v-if="loading && results.length === 0" class="hs-status">Поиск...</div>
-      <div v-else-if="!loading && query.length >= 2 && results.length === 0" class="hs-status">Ничего не найдено</div>
-      <div v-else-if="query.length < 2 && results.length === 0" class="hs-status">Начните ввод...</div>
+    <Transition name="hs-dropdown">
+      <div v-if="open" class="hs-dropdown">
+        <Transition name="hs-status" mode="out-in">
+          <div v-if="searchStatus" :key="searchStatus.key" class="hs-status">
+            {{ searchStatus.text }}
+          </div>
+        </Transition>
 
-      <div
-        v-for="(r, i) in results"
-        :key="r.key"
-        class="hs-row"
-        :class="{ 'hs-row-active': activeIdx === i }"
-        @mousedown.prevent="navigate(r)"
-        @mouseenter="activeIdx = i"
-      >
-        <span class="hs-row-icon">
-          <img v-if="r.iconImageUrl" class="hs-icon-image" :src="r.iconImageUrl" alt="" />
-          <span v-else-if="r.icon" class="hs-icon-svg" v-html="r.icon" />
-        </span>
-        <span class="hs-row-name">{{ r.label }}</span>
-        <span v-if="r.source" class="hs-row-source">{{ r.source }}</span>
+        <TransitionGroup
+          v-if="!searchStatus"
+          name="hs-groups"
+          tag="div"
+          class="hs-groups"
+          role="listbox"
+          aria-label="Результаты поиска"
+        >
+          <section
+            v-for="group in searchGroups"
+            :key="group.key"
+            class="hs-group"
+            role="group"
+            :aria-label="group.label"
+          >
+            <header class="hs-group-header">
+              <span>{{ group.label }}</span>
+              <span class="hs-group-count">{{ group.results.length }}</span>
+            </header>
+
+            <TransitionGroup name="hs-results" tag="div" class="hs-group-list">
+              <div
+                v-for="result in group.results"
+                :key="result.key"
+                class="hs-row"
+                :class="{ 'hs-row-active': activeIdx === result.displayIndex }"
+                role="option"
+                :aria-selected="activeIdx === result.displayIndex"
+                @mousedown.prevent="navigate(result)"
+                @mouseenter="activeIdx = result.displayIndex"
+              >
+                <span class="hs-row-icon">
+                  <img v-if="result.iconImageUrl" class="hs-icon-image" :src="result.iconImageUrl" alt="" />
+                  <span v-else-if="result.icon" class="hs-icon-svg" v-html="result.icon" />
+                </span>
+                <span class="hs-row-name">{{ result.label }}</span>
+                <span v-if="result.source" class="hs-row-source">{{ result.source }}</span>
+              </div>
+            </TransitionGroup>
+          </section>
+        </TransitionGroup>
       </div>
-    </div>
+    </Transition>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { computed, onBeforeUnmount, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { fetchGet } from '@/shared/api/http'
+import { groupHeaderSearchResults } from '@/shared/lib/headerSearch'
 import { useItemTypesStore } from '@/stores/itemTypes'
 
 const NO_ICON_TYPE_IDS = new Set([5, 6])
@@ -63,6 +94,14 @@ const open = ref(false)
 const loading = ref(false)
 const results = ref([])
 const activeIdx = ref(-1)
+const searchGroups = computed(() => groupHeaderSearchResults(results.value))
+const displayResults = computed(() => searchGroups.value.flatMap(group => group.results))
+const searchStatus = computed(() => {
+  if (results.value.length > 0) return null
+  if (loading.value) return { key: 'loading', text: 'Поиск...' }
+  if (query.value.trim().length >= 2) return { key: 'empty', text: 'Ничего не найдено' }
+  return { key: 'hint', text: 'Начните ввод...' }
+})
 
 let itemTypes = null
 let debounceTimer = null
@@ -81,7 +120,8 @@ function onFocus() {
 function onInput() {
   activeIdx.value = -1
   clearTimeout(debounceTimer)
-  if (query.value.length < 2) {
+  seq += 1
+  if (query.value.trim().length < 2) {
     results.value = []
     loading.value = false
     return
@@ -114,6 +154,9 @@ async function doSearch() {
       const type = typeById[item.typeId]
       return {
         key: 'item-' + item.id,
+        kind: 'item',
+        typeId: item.typeId,
+        typeLabel: type?.name || 'Предметы',
         label: item.name,
         iconImageUrl: item.iconImageUrl || null,
         icon: item.svg || ((type && !NO_ICON_TYPE_IDS.has(item.typeId)) ? type.svg : null),
@@ -126,6 +169,9 @@ async function doSearch() {
       const type = suggestTypeById[sug.typeId]
       return {
         key: 'sug-' + sug.typeId + '-' + sug.id,
+        kind: 'suggest',
+        typeId: sug.typeId,
+        typeLabel: type?.name || 'Подсказки',
         label: sug.value,
         icon: type?.svg || sug.svg || null,
         source: type?.sourceName || type?.name || null,
@@ -152,6 +198,8 @@ function close() {
 }
 
 function clear() {
+  clearTimeout(debounceTimer)
+  seq += 1
   query.value = ''
   results.value = []
   loading.value = false
@@ -164,13 +212,13 @@ function onKeydown(e) {
   if (!open.value) return
   if (e.key === 'ArrowDown') {
     e.preventDefault()
-    activeIdx.value = Math.min(activeIdx.value + 1, results.value.length - 1)
+    activeIdx.value = Math.min(activeIdx.value + 1, displayResults.value.length - 1)
   } else if (e.key === 'ArrowUp') {
     e.preventDefault()
     activeIdx.value = Math.max(activeIdx.value - 1, 0)
   } else if (e.key === 'Enter') {
     e.preventDefault()
-    const r = results.value[activeIdx.value]
+    const r = displayResults.value[activeIdx.value]
     if (r) navigate(r)
     else if (query.value.trim()) {
       router.push({ path: '/handbook', query: { q: query.value.trim() } })
@@ -187,6 +235,11 @@ function focus() {
 }
 
 defineExpose({ focus })
+
+onBeforeUnmount(() => {
+  clearTimeout(debounceTimer)
+  seq += 1
+})
 </script>
 
 <style scoped>
@@ -264,7 +317,24 @@ defineExpose({ focus })
   border-radius: 10px;
   box-shadow: var(--shadow-lg);
   z-index: 200;
+  box-sizing: border-box;
   padding: 4px;
+  transform-origin: top left;
+}
+
+.hs-dropdown-enter-active,
+.hs-dropdown-leave-active {
+  transition:
+    opacity 0.16s ease,
+    transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hs-dropdown-leave-active { pointer-events: none; }
+
+.hs-dropdown-enter-from,
+.hs-dropdown-leave-to {
+  opacity: 0;
+  transform: translateX(-8px) scale(0.985);
 }
 
 .hs-status {
@@ -272,6 +342,77 @@ defineExpose({ focus })
   font-size: 13px;
   color: var(--text-muted);
   text-align: center;
+}
+
+.hs-status-enter-active,
+.hs-status-leave-active {
+  transition: opacity 0.14s ease, transform 0.16s ease;
+}
+
+.hs-status-enter-from { opacity: 0; transform: translateY(4px); }
+.hs-status-leave-to { opacity: 0; transform: translateY(-4px); }
+
+.hs-groups,
+.hs-group-list {
+  position: relative;
+}
+
+.hs-group + .hs-group {
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+}
+
+.hs-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 24px;
+  padding: 2px 10px;
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.hs-group-count {
+  min-width: 16px;
+  color: var(--text-2);
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.hs-groups-move,
+.hs-groups-enter-active,
+.hs-groups-leave-active,
+.hs-results-move,
+.hs-results-enter-active,
+.hs-results-leave-active {
+  transition:
+    opacity 0.18s ease,
+    transform 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hs-groups-enter-from,
+.hs-results-enter-from {
+  opacity: 0;
+  transform: translateY(7px) scale(0.985);
+}
+
+.hs-groups-leave-to,
+.hs-results-leave-to {
+  opacity: 0;
+  transform: translateY(-5px) scale(0.985);
+}
+
+.hs-groups-leave-active,
+.hs-results-leave-active {
+  position: absolute;
+  inset-inline: 0;
+  pointer-events: none;
 }
 
 .hs-row {
@@ -346,4 +487,19 @@ defineExpose({ focus })
 }
 .hs-dropdown::-webkit-scrollbar-track { background: transparent; }
 .hs-dropdown::-webkit-scrollbar-thumb { background: var(--surface-active); border-radius: 4px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hs-dropdown-enter-active,
+  .hs-dropdown-leave-active,
+  .hs-status-enter-active,
+  .hs-status-leave-active,
+  .hs-groups-move,
+  .hs-groups-enter-active,
+  .hs-groups-leave-active,
+  .hs-results-move,
+  .hs-results-enter-active,
+  .hs-results-leave-active {
+    transition: none;
+  }
+}
 </style>
