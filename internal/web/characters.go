@@ -127,9 +127,6 @@ type templatesResponse struct {
 }
 
 func (s *Server) handleGetTemplates(w http.ResponseWriter, r *http.Request) {
-	if _, ok := mustUser(w, r); !ok {
-		return
-	}
 	templates, err := s.store.GetTemplates(r.Context())
 	if err != nil {
 		serverError(w, err)

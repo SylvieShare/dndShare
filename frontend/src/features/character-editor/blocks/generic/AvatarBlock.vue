@@ -12,7 +12,12 @@
     @dragover.prevent="canUpload && (isDragging = true)"
     @dragleave.prevent="isDragging = false"
     @drop.prevent="onDrop"
-    @click="canUpload && fileInput.click()"
+    @click="openActions"
+    @keydown.enter.prevent="openActions"
+    @keydown.space.prevent="openActions"
+    :role="canUpload ? 'button' : undefined"
+    :tabindex="canUpload ? 0 : undefined"
+    :aria-label="canUpload ? 'Действия с портретом' : undefined"
   >
     <!-- Картинка -->
     <img v-if="imageUrl" :src="imageUrl" class="avatar-img" alt="avatar" />
@@ -31,12 +36,9 @@
       <span class="avatar-hint">{{ isDragging ? 'Отпустите' : 'Фото' }}</span>
     </div>
 
-    <!-- Оверлей «изменить» при наведении поверх картинки -->
+    <!-- Оверлей действий при наведении поверх картинки -->
     <div v-if="imageUrl && charCtx.ownerMode" class="avatar-change-overlay">
-      <svg class="avatar-upload-icon" viewBox="0 0 24 24" fill="none">
-        <path d="M12 16V8M12 8L9 11M12 8L15 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M6 20H18M3 14v2a3 3 0 003 3h12a3 3 0 003-3v-2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-      </svg>
+      <span>Изменить</span>
     </div>
 
     <input
@@ -48,10 +50,29 @@
     />
     <span v-if="uploadError" class="avatar-error">{{ uploadError }}</span>
   </div>
+
+  <BasePopover v-model:open="actionsOpen" :anchor="avatarEl" placement="bottom-start" :min-width="180">
+    <div class="avatar-actions" role="menu" aria-label="Действия с портретом">
+      <button type="button" role="menuitem" @click="chooseFile">Загрузить изображение</button>
+      <button v-if="imageUrl" type="button" role="menuitem" @click="cropCurrent">Кадрировать</button>
+      <div v-if="imageUrl" class="avatar-actions-separator" />
+      <button v-if="imageUrl" type="button" role="menuitem" class="avatar-action-danger" @click="clearImage">Очистить</button>
+    </div>
+  </BasePopover>
+
+  <AvatarCropModal
+    v-if="cropSource"
+    :src="cropSource"
+    :aspect="cropAspect"
+    @close="closeCrop"
+    @crop="uploadCrop"
+  />
 </template>
 
 <script setup>
-import { computed, inject, onMounted, ref, watch } from 'vue'
+import { computed, inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { BasePopover } from '@sylvieshare/share-ui'
+import AvatarCropModal from '@/features/character-editor/components/AvatarCropModal.vue'
 
 const props = defineProps(['block', 'value'])
 const emit = defineEmits(['update:value'])
@@ -62,6 +83,11 @@ const imageUrl = ref(null)
 const fileInput = ref(null)
 const avatarEl = ref(null)
 const uploadError = ref('')
+const actionsOpen = ref(false)
+const cropSource = ref('')
+const cropFileName = ref('portrait.webp')
+const cropAspect = ref(1)
+let cropObjectUrl = ''
 
 // `fill` → stretch to the container's full height (corners clipped by the container's overflow)
 const isFill = computed(() => props.block.props?.fill === true || props.block.props?.fill === 'true')
@@ -91,13 +117,80 @@ function onDrop(e) {
   isDragging.value = false
   if (!canUpload.value) return
   const file = e.dataTransfer.files[0]
-  if (file && file.type.startsWith('image/')) upload(file)
+  if (file && file.type.startsWith('image/')) openFileCrop(file)
 }
 
 function onFileChange(e) {
   const file = e.target.files[0]
-  if (file) upload(file)
+  if (file) openFileCrop(file)
   e.target.value = ''
+}
+
+function openActions() {
+  if (!canUpload.value || uploading.value) return
+  actionsOpen.value = !actionsOpen.value
+}
+
+function chooseFile() {
+  actionsOpen.value = false
+  fileInput.value?.click()
+}
+
+function clearCropObjectUrl() {
+  if (cropObjectUrl) URL.revokeObjectURL(cropObjectUrl)
+  cropObjectUrl = ''
+}
+
+function setCropSource(blob, fileName = 'portrait.webp') {
+  clearCropObjectUrl()
+  cropObjectUrl = URL.createObjectURL(blob)
+  cropSource.value = cropObjectUrl
+  cropFileName.value = fileName.replace(/\.[^.]+$/, '') + '.webp'
+  const rect = avatarEl.value?.getBoundingClientRect()
+  cropAspect.value = rect?.width && rect?.height ? rect.width / rect.height : 1
+}
+
+function openFileCrop(file) {
+  actionsOpen.value = false
+  uploadError.value = ''
+  if (file.size > 8 * 1024 * 1024) {
+    uploadError.value = 'Файл слишком большой (максимум 8 МБ)'
+    return
+  }
+  setCropSource(file, file.name || 'portrait.webp')
+}
+
+async function cropCurrent() {
+  actionsOpen.value = false
+  uploadError.value = ''
+  try {
+    const source = props.value?.upload_id
+      ? `/api/storage/images/${props.value.upload_id}`
+      : imageUrl.value
+    const response = await fetch(source)
+    if (!response.ok) throw new Error(String(response.status))
+    setCropSource(await response.blob(), 'portrait.webp')
+  } catch {
+    uploadError.value = 'Не удалось открыть изображение для кадрирования'
+  }
+}
+
+function closeCrop() {
+  cropSource.value = ''
+  clearCropObjectUrl()
+}
+
+function uploadCrop(blob) {
+  const file = new File([blob], cropFileName.value, { type: blob.type || 'image/webp' })
+  closeCrop()
+  upload(file)
+}
+
+function clearImage() {
+  actionsOpen.value = false
+  imageUrl.value = null
+  uploadError.value = ''
+  emit('update:value', props.block.id, null)
 }
 
 async function upload(file) {
@@ -124,6 +217,8 @@ async function upload(file) {
     uploading.value = false
   }
 }
+
+onBeforeUnmount(clearCropObjectUrl)
 </script>
 
 <style scoped>
@@ -210,6 +305,8 @@ async function upload(file) {
   border-radius: 16px;
 }
 
+.avatar-change-overlay span { font-size: 12px; font-weight: 650; }
+
 .avatar-has-image.avatar-editable:hover .avatar-change-overlay {
   opacity: 1;
 }
@@ -227,4 +324,21 @@ async function upload(file) {
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+.avatar-actions { display: flex; flex-direction: column; gap: 2px; padding: 5px; }
+.avatar-actions button {
+  width: 100%;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--text-2);
+  font: inherit;
+  font-size: 12px;
+  text-align: left;
+  cursor: pointer;
+}
+.avatar-actions button:hover { background: var(--surface-raised); color: var(--text-1); }
+.avatar-actions .avatar-action-danger { color: var(--danger); }
+.avatar-actions-separator { height: 1px; margin: 3px 5px; background: var(--border); }
 </style>

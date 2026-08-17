@@ -151,6 +151,13 @@ and level. `classEntriesOf` reads this list, `classesLabel` renders it. For a
 single class, `lvl.level` controls the effective level; for multiclass the
 per-class sum updates `lvl.level`.
 
+Clicking the editable portrait opens actions for upload, crop and clear.
+Cropping produces and uploads a new WebP object, so the same framing is visible
+in the sheet, character list and session UI. Drag-and-drop enters the same crop
+flow instead of bypassing it. Non-text sheet actions keep a bounded document
+history; `Ctrl+Z`/`Cmd+Z` restores the previous snapshot and schedules the
+normal debounced save. Focused native text editors retain browser undo.
+
 ## Level up and rests
 
 `DndLevelUpModal` computes the target class, gained features, subclass choice,

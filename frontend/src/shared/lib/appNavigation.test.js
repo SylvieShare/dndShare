@@ -24,8 +24,15 @@ describe('app navigation', () => {
   it('adds authenticated and admin sections with route-aware active states', () => {
     const items = resolveAppNavigation({ authenticated: true, admin: true, path: '/char/example' })
 
-    expect(items.map(item => item.key)).toEqual(['handbook', 'rules', 'characters', 'sessions', 'admin'])
+    expect(items.map(item => item.key)).toEqual(['handbook', 'rules', 'characters', 'create-character', 'sessions', 'admin'])
     expect(items.find(item => item.key === 'characters')?.active).toBe(true)
     expect(items.filter(item => item.active)).toHaveLength(1)
+  })
+
+  it('keeps character creation under Characters for authenticated users', () => {
+    const items = resolveAppNavigation({ authenticated: true, path: '/chars/new' })
+    expect(items.map(item => item.key)).toEqual(['handbook', 'rules', 'characters', 'create-character', 'sessions'])
+    expect(items.find(item => item.key === 'characters')?.active).toBe(false)
+    expect(items.find(item => item.key === 'create-character')?.active).toBe(true)
   })
 })

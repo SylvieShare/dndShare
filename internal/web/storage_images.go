@@ -2,6 +2,7 @@ package web
 
 import (
 	"errors"
+	"io"
 	"log"
 	"net/http"
 	"strconv"
@@ -18,6 +19,7 @@ const maxVideoBytes int64 = 100 << 20
 
 func (s *Server) routesStorageImages(mux *http.ServeMux) {
 	mux.HandleFunc("POST /api/storage/images", s.handleUploadImage)
+	mux.HandleFunc("GET /api/storage/images/{id}", s.handleGetUserImage)
 	mux.HandleFunc("POST /api/storage/videos", s.handleUploadVideo)
 }
 
@@ -26,6 +28,53 @@ type imageUploadResponse struct {
 	UploadID int64  `json:"upload_id"`
 	URL      string `json:"url"`
 	Key      string `json:"key"`
+}
+
+// handleGetUserImage streams an owned image through the application origin so
+// browser canvas can crop it without relying on the bucket's CORS policy.
+func (s *Server) handleGetUserImage(w http.ResponseWriter, r *http.Request) {
+	uid, ok := mustUser(w, r)
+	if !ok {
+		return
+	}
+	id, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
+	if err != nil {
+		badRequest(w, "bad image id")
+		return
+	}
+	record, err := s.store.GetActiveUserStorageImage(r.Context(), id, uid)
+	if err != nil {
+		if errors.Is(err, store.ErrNotFound) {
+			notFound(w, "")
+			return
+		}
+		serverError(w, err)
+		return
+	}
+	if record.Key == nil || record.Type == nil || *record.Type != "image" {
+		notFound(w, "")
+		return
+	}
+	object, err := s.s3.GetObject(r.Context(), *record.Key)
+	if err != nil {
+		serverError(w, err)
+		return
+	}
+	defer object.Body.Close()
+	contentType := object.ContentType
+	if contentType == "" && record.MimeType != nil {
+		contentType = *record.MimeType
+	}
+	if contentType != "" {
+		w.Header().Set("Content-Type", contentType)
+	}
+	if object.ContentLength > 0 {
+		w.Header().Set("Content-Length", strconv.FormatInt(object.ContentLength, 10))
+	}
+	w.Header().Set("Cache-Control", "private, max-age=60")
+	if _, err := io.Copy(w, object.Body); err != nil {
+		log.Printf("stream storage image %d: %v", id, err)
+	}
 }
 
 func safeUploadFileName(name string) string {

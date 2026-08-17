@@ -64,7 +64,7 @@ export default { name: 'ViewListCharacters' }
 </script>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, onActivated, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import CharBox from "@/features/character-list/components/CharBox"
 import CharacterCreateModal from "@/features/character-list/components/CharacterCreateModal"
@@ -175,6 +175,14 @@ async function deleteChar(uuid) {
 onMounted(() => {
   loadChars(consumePrefetch(route.fullPath))
   templateStore.ensure()
+})
+
+let activationCount = 0
+onActivated(() => {
+  // The list is kept alive for its scroll position and transition snapshot.
+  // Refresh on every return so a character created on the wizard route appears
+  // immediately without a full page reload.
+  if (activationCount++ > 0) loadChars(consumePrefetch(route.fullPath))
 })
 </script>
 

@@ -31,6 +31,14 @@ type StoredObject struct {
 	URL string `json:"url"`
 }
 
+// ObjectBody is a streamed object response used by authenticated same-origin
+// previews that must be readable by browser canvas APIs.
+type ObjectBody struct {
+	Body          io.ReadCloser
+	ContentType   string
+	ContentLength int64
+}
+
 // New собирает S3-клиент со статическими креденшлами и path-style доступом.
 func New(cfg config.StorageConfig) *Service {
 	client := s3.New(s3.Options{
@@ -121,6 +129,22 @@ func (s *Service) PresignGet(ctx context.Context, key string, ttl time.Duration)
 		return "", err
 	}
 	return req.URL, nil
+}
+
+// GetObject opens an object for streaming through an authenticated HTTP route.
+func (s *Service) GetObject(ctx context.Context, key string) (ObjectBody, error) {
+	result, err := s.client.GetObject(ctx, &s3.GetObjectInput{
+		Bucket: aws.String(s.cfg.Bucket),
+		Key:    aws.String(key),
+	})
+	if err != nil {
+		return ObjectBody{}, err
+	}
+	return ObjectBody{
+		Body:          result.Body,
+		ContentType:   aws.ToString(result.ContentType),
+		ContentLength: aws.ToInt64(result.ContentLength),
+	}, nil
 }
 
 // ObjectSize returns the current S3 object size without downloading its body.

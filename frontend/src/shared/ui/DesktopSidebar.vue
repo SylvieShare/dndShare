@@ -2,6 +2,7 @@
   <AppSidebar
     class="desktop-sidebar"
     storage-key="dndshare-desktop-sidebar-expanded"
+    :default-expanded="true"
     :mobile-breakpoint="640"
     aria-label="Основная навигация"
     expand-label="Раскрыть панель"

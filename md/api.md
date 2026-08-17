@@ -43,8 +43,9 @@ roles.
 
 ## Characters and templates
 
-- `GET /api/templates` → `{templates:[{id,name}]}`. Template schema/create
-  form/path maps не возвращаются.
+- Public `GET /api/templates` → `{templates:[{id,name}]}`. Он используется
+  гостевым wizard до запроса авторизации; template schema/create form/path maps
+  не возвращаются.
 - `GET /api/chars` → `{chars,sessionsByChar}`.
 - `POST /api/chars` принимает `{templateId,sourceVersionId,data}`.
   `sourceVersionId` обязателен и должен существовать.
@@ -58,6 +59,10 @@ roles.
 - `PUT /api/char/{uuid}/public`
 - `POST /api/char/{uuid}/clone`
 - `DELETE /api/char/{uuid}`
+
+Owned storage images can be read through authenticated
+`GET /api/storage/images/{id}`. The same-origin stream exists for browser image
+editing/canvas use and does not expose another user's object.
 
 Editor определяет schema по `templateName` через frontend setting registry.
 `PUT /api/char/{uuid}/data` accepts `{data,events?}`. Each optional event has

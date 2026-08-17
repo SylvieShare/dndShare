@@ -8,6 +8,11 @@ const reporterSource = readFileSync(fileURLToPath(new URL('../../features/error-
 const launcherSource = readFileSync(fileURLToPath(new URL('../../features/error-report/lib/errorReportLauncher.js', import.meta.url)), 'utf8')
 
 describe('desktop sidebar icons', () => {
+  it('starts expanded until the user saves another preference', () => {
+    expect(sidebarSource).toContain(':default-expanded="true"')
+    expect(sidebarSource).toContain('storage-key="dndshare-desktop-sidebar-expanded"')
+  })
+
   it('uses a document for sessions and people for characters', () => {
     expect(sidebarSource).toMatch(/sessions:\s*ScrollText/)
     expect(sidebarSource).toMatch(/characters:\s*Users/)

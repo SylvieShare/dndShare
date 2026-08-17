@@ -22,9 +22,10 @@
       <div class="dciw-body">
         <FormField label="Аватар" vertical>
           <div
+            ref="avaEl"
             class="dciw-ava"
             :class="{ 'dciw-ava--drag': avaDragging, 'dciw-ava--empty': !avaUrl }"
-            @click="avaInput?.click()"
+            @click="avaMenuOpen = !avaMenuOpen"
             @dragover.prevent="avaDragging = true"
             @dragleave.prevent="avaDragging = false"
             @drop.prevent="onAvaDrop"
@@ -35,6 +36,14 @@
             <div v-if="avaUrl" class="dciw-ava-overlay">Изменить</div>
             <input ref="avaInput" type="file" accept="image/*" style="display:none" @change="onAvaChange" />
           </div>
+          <BasePopover v-model:open="avaMenuOpen" :anchor="avaEl" placement="bottom-start" :min-width="180">
+            <div class="dciw-ava-actions" role="menu" aria-label="Действия с портретом">
+              <button type="button" role="menuitem" @click="chooseAvaFile">Загрузить изображение</button>
+              <button v-if="avaUrl" type="button" role="menuitem" @click="cropCurrentAva">Кадрировать</button>
+              <div v-if="avaUrl" class="dciw-ava-separator" />
+              <button v-if="avaUrl" type="button" role="menuitem" class="dciw-ava-danger" @click="clearAva">Очистить</button>
+            </div>
+          </BasePopover>
           <span v-if="avaError" class="dciw-error">{{ avaError }}</span>
         </FormField>
 
@@ -117,12 +126,20 @@
         <FormActionButtons submit-text="Сохранить" @cancel="close" @submit="save" />
       </template>
     </AppModalFrame>
+
+    <AvatarCropModal
+      v-if="avaCropSource"
+      :src="avaCropSource"
+      :aspect="1"
+      @close="closeAvaCrop"
+      @crop="uploadAvaCrop"
+    />
   </div>
 </template>
 
 <script setup>
 import { computed, inject, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
-import { AppModalFrame } from '@sylvieshare/share-ui'
+import { AppModalFrame, BasePopover } from '@sylvieshare/share-ui'
 import { FormActionButtons } from '@sylvieshare/share-ui'
 import { FormField } from '@sylvieshare/share-ui'
 import { FormNumberInput } from '@sylvieshare/share-ui'
@@ -131,6 +148,7 @@ import { ValueSelect } from '@sylvieshare/share-ui'
 import { classEntriesOf, classesLabel } from '@/features/character-editor/blocks/dnd/lib/levelUp'
 import { fetchGet } from '@/shared/api/http'
 import { contentScopeQuery } from '@/shared/api/contentSourcesApi'
+import AvatarCropModal from '@/features/character-editor/components/AvatarCropModal.vue'
 
 const RACE_TYPE = 8
 const CLASS_TYPE = 9
@@ -154,10 +172,14 @@ const subraces = ref([])
 
 // ─── avatar (own block, edited here too) ───────────────────────────────────
 const avaInput = ref(null)
+const avaEl = ref(null)
 const avaDragging = ref(false)
 const avaUploading = ref(false)
 const avaValue = ref(null)
 const avaError = ref('')
+const avaMenuOpen = ref(false)
+const avaCropSource = ref('')
+let avaCropObjectUrl = ''
 const avaUrl = computed(() => {
   const v = avaValue.value
   if (!v) return null
@@ -259,7 +281,10 @@ function onIdentityEditRequest() {
 }
 
 onMounted(() => window.addEventListener('dndshare:edit-character-identity', onIdentityEditRequest))
-onBeforeUnmount(() => window.removeEventListener('dndshare:edit-character-identity', onIdentityEditRequest))
+onBeforeUnmount(() => {
+  window.removeEventListener('dndshare:edit-character-identity', onIdentityEditRequest)
+  clearAvaCropObjectUrl()
+})
 
 watch(windowOpen, async (open) => {
   if (!open) return
@@ -289,12 +314,61 @@ watch(windowOpen, async (open) => {
 function onAvaDrop(e) {
   avaDragging.value = false
   const file = e.dataTransfer.files[0]
-  if (file && file.type.startsWith('image/')) uploadAva(file)
+  if (file && file.type.startsWith('image/')) openAvaFileCrop(file)
 }
 function onAvaChange(e) {
   const file = e.target.files[0]
-  if (file) uploadAva(file)
+  if (file) openAvaFileCrop(file)
   e.target.value = ''
+}
+function chooseAvaFile() {
+  avaMenuOpen.value = false
+  avaInput.value?.click()
+}
+function clearAvaCropObjectUrl() {
+  if (avaCropObjectUrl) URL.revokeObjectURL(avaCropObjectUrl)
+  avaCropObjectUrl = ''
+}
+function setAvaCropSource(blob) {
+  clearAvaCropObjectUrl()
+  avaCropObjectUrl = URL.createObjectURL(blob)
+  avaCropSource.value = avaCropObjectUrl
+}
+function openAvaFileCrop(file) {
+  avaMenuOpen.value = false
+  avaError.value = ''
+  if (file.size > 8 * 1024 * 1024) {
+    avaError.value = 'Файл слишком большой (максимум 8 МБ)'
+    return
+  }
+  setAvaCropSource(file)
+}
+async function cropCurrentAva() {
+  avaMenuOpen.value = false
+  avaError.value = ''
+  try {
+    const source = avaValue.value?.upload_id
+      ? `/api/storage/images/${avaValue.value.upload_id}`
+      : avaUrl.value
+    const response = await fetch(source)
+    if (!response.ok) throw new Error(String(response.status))
+    setAvaCropSource(await response.blob())
+  } catch {
+    avaError.value = 'Не удалось открыть изображение для кадрирования'
+  }
+}
+function closeAvaCrop() {
+  avaCropSource.value = ''
+  clearAvaCropObjectUrl()
+}
+function uploadAvaCrop(blob) {
+  closeAvaCrop()
+  uploadAva(new File([blob], 'portrait.webp', { type: blob.type || 'image/webp' }))
+}
+function clearAva() {
+  avaMenuOpen.value = false
+  avaValue.value = null
+  avaError.value = ''
 }
 async function uploadAva(file) {
   avaError.value = ''
@@ -488,5 +562,14 @@ function close() {
   border-radius: 50%;
   animation: dciw-spin 0.8s linear infinite;
 }
+.dciw-ava-actions { display: flex; flex-direction: column; gap: 2px; padding: 5px; }
+.dciw-ava-actions button {
+  width: 100%; padding: 8px 10px; border: 0; border-radius: 7px;
+  background: transparent; color: var(--text-2); font: inherit; font-size: 12px;
+  text-align: left; cursor: pointer;
+}
+.dciw-ava-actions button:hover { background: var(--surface-raised); color: var(--text-1); }
+.dciw-ava-actions .dciw-ava-danger { color: var(--danger); }
+.dciw-ava-separator { height: 1px; margin: 3px 5px; background: var(--border); }
 @keyframes dciw-spin { to { transform: rotate(360deg); } }
 </style>

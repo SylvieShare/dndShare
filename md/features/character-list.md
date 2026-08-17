@@ -23,6 +23,11 @@
 by `sourceId/sourceName`, show the concrete rules edition and the most recently
 changed session.
 
+The list route remains cached for scroll/transition continuity, but every
+reactivation consumes the fresh router prefetch (or refetches directly). A
+character created on `/chars/new` therefore appears on return without reloading
+the browser.
+
 Card display data comes only from per-setting accessors in
 `features/character-editor/settings/index.js`. `CharBox` receives
 `displayName/avatar/subtitle/level/abilities`; it does not know JSON paths and
@@ -53,6 +58,8 @@ default-version fallback.
 authentication is requested only by the final create action, after which the
 draft remains in place. Successful creation seeds the character-sheet route
 with the returned document so the first render does not wait for a second GET.
+The wizard boot data is public as well: `GET /api/templates`, sources, handbook
+items and suggests must load without a session.
 
 ## Full D&D wizard
 
@@ -84,7 +91,8 @@ Key rules:
 Race/class tiles include visual artwork and the current step repeats the
 selected option's benefits below the choices. Handbook equipment rows can open
 their full item card. Skill choices use description tooltips and spell choice
-rows omit the school label. Character name belongs to the Personality step;
+rows omit the school label; their detail action uses a question-mark help icon.
+Character name belongs to the Personality step;
 age/height/weight fields show race-aware recommendations and the larger
 background fields keep enough vertical room for prose. Pressing an unavailable
 Next action scrolls to and pulses the first incomplete field.

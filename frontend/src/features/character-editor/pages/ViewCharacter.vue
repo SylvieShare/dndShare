@@ -174,6 +174,7 @@ import { useSaveDebounce } from '@/features/character-editor/composables/useSave
 import { useTabSwipe } from '@/features/character-editor/composables/useTabSwipe'
 import { useScrollHide } from '@/features/character-editor/composables/useScrollHide'
 import { useCharacterViewport } from '@/features/character-editor/composables/characterViewport'
+import { createCharacterUndoHistory } from '@/features/character-editor/composables/useCharacterUndo'
 import { useUiStore } from '@/stores/ui'
 import { useSessionEventsStore } from '@/stores/sessionEvents'
 import { initialTabs, layoutNodeToBlock } from '@/features/character-editor/lib/templateSchema'
@@ -211,7 +212,7 @@ const {
   activeTabs, toolbarTabs, mobileTabs,
   headerTitle, charName, charSub, toolbarBlocksList, commonMobileBlockNode, commonMobileScrollHide,
   load, loadSync, blocksForTab, containerWidthForTab, getInitialTabs,
-  updateValue, updateVar, updateContentSources, onPublicToggle, invalidateTabCache,
+  updateValue, updateVar, updateContentSources, replaceData, onPublicToggle, invalidateTabCache,
 } = useCharacterData(uuid, isMobile)
 
 const mobileIdentityEditorBlock = computed(() =>
@@ -231,6 +232,8 @@ const activeSession = computed(() => {
 loadSync()
 
 const pendingSessionEvents = []
+const undoHistory = createCharacterUndoHistory()
+let undoCaptureOpen = true
 const { saveStatus, pendingSecondsLeft, scheduleSave } = useSaveDebounce(uuid, data, {
   takeEvents: () => pendingSessionEvents.splice(0),
   restoreEvents: events => pendingSessionEvents.unshift(...events),
@@ -248,8 +251,7 @@ Object.assign(charCtx, {
   sourceVersionId,
   contentSources,
   setContentSources: value => {
-    updateContentSources(value)
-    scheduleSave()
+    onUpdateContentSources(value)
   },
   sessions,
   topSession: activeSession,
@@ -319,18 +321,43 @@ watch([activeTab, isMobile], () => {
 // ── Event handlers (bridge composable calls + side-effects) ──────────
 
 function onUpdateValue(event) {
+  captureUndoSnapshot()
   updateValue(event)
   nextTick(() => uiStore.setHeaderTitle(headerTitle.value))
   scheduleSave()
 }
 
 function onUpdateVar(patch) {
+  captureUndoSnapshot()
   updateVar(patch)
   scheduleSave()
 }
 
 function onUpdateContentSources(value) {
+  captureUndoSnapshot()
   updateContentSources(value)
+  scheduleSave()
+}
+
+function captureUndoSnapshot() {
+  if (!isOwner.value || !undoCaptureOpen) return
+  undoHistory.record(data.value)
+  undoCaptureOpen = false
+  queueMicrotask(() => { undoCaptureOpen = true })
+}
+
+function isNativeUndoTarget(target) {
+  return target instanceof Element && !!target.closest('input, textarea, [contenteditable="true"]')
+}
+
+function onUndoKeydown(event) {
+  if (!(event.ctrlKey || event.metaKey) || event.altKey || event.shiftKey || event.key.toLowerCase() !== 'z') return
+  if (!isOwner.value || isNativeUndoTarget(event.target)) return
+  const previous = undoHistory.undo()
+  if (!previous) return
+  event.preventDefault()
+  replaceData(previous)
+  nextTick(() => uiStore.setHeaderTitle(headerTitle.value))
   scheduleSave()
 }
 
@@ -479,6 +506,7 @@ onMounted(async () => {
   uiStore.setHeaderTitle(headerTitle.value)
 
   window.addEventListener('resize', onResize)
+  window.addEventListener('keydown', onUndoKeydown)
 
   await nextTick()
 
@@ -502,6 +530,7 @@ onBeforeUnmount(() => {
   stopViewportHeightSync()
   mediaQuery?.removeEventListener('change', onMediaQueryChange)
   window.removeEventListener('resize', onResize)
+  window.removeEventListener('keydown', onUndoKeydown)
   stopScrollListener()
   disconnectToolbar()
   uiStore.setHeaderTitle('')
