@@ -43,3 +43,27 @@ func (s *Store) UpdateBestiaryImageStorage(ctx context.Context, imageID int64, k
 	)
 	return err
 }
+
+// RemoveUnavailableBestiaryImage removes a dead upstream URL from both the
+// item projection and storage metadata. The item falls back to its type icon.
+func (s *Store) RemoveUnavailableBestiaryImage(ctx context.Context, imageID int64) error {
+	tx, err := s.pool.Begin(ctx)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback(ctx)
+	if _, err := tx.Exec(ctx,
+		`UPDATE dndshare.item SET icon_image_id = NULL WHERE icon_image_id = $1`,
+		imageID,
+	); err != nil {
+		return err
+	}
+	if _, err := tx.Exec(ctx,
+		`UPDATE dndshare.storage_image SET "key" = NULL, url = NULL, deleted = true
+		 WHERE id = $1 AND "type" = 'bestiary'`,
+		imageID,
+	); err != nil {
+		return err
+	}
+	return tx.Commit(ctx)
+}

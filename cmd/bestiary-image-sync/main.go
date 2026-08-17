@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net/http"
 	"os/signal"
@@ -37,20 +36,21 @@ func main() {
 	}
 	objects := storage.New(cfg.Storage)
 	client := &http.Client{Timeout: 30 * time.Second}
-	failures := 0
+	unavailable := 0
 	for index, image := range images {
 		stored, err := bestiaryimages.Upload(ctx, client, objects, image.URL, image.Slug)
-		if err == nil {
-			err = database.UpdateBestiaryImageStorage(ctx, image.ID, stored.Key, stored.URL)
-		}
 		if err != nil {
-			failures++
-			log.Printf("image %d (%s): %v", image.ID, image.Slug, err)
+			if removeErr := database.RemoveUnavailableBestiaryImage(ctx, image.ID); removeErr != nil {
+				log.Fatalf("image %d (%s): upload: %v; remove dead URL: %v", image.ID, image.Slug, err, removeErr)
+			}
+			unavailable++
+			log.Printf("removed unavailable %d/%d: %s (%v)", index+1, len(images), image.Slug, err)
 			continue
+		}
+		if err := database.UpdateBestiaryImageStorage(ctx, image.ID, stored.Key, stored.URL); err != nil {
+			log.Fatalf("register image %d (%s): %v", image.ID, image.Slug, err)
 		}
 		log.Printf("synced %d/%d: %s", index+1, len(images), image.Slug)
 	}
-	if failures > 0 {
-		log.Fatal(fmt.Errorf("%d of %d bestiary images failed", failures, len(images)))
-	}
+	log.Printf("complete: %d uploaded, %d unavailable URLs removed", len(images)-unavailable, unavailable)
 }

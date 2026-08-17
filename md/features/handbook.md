@@ -31,7 +31,9 @@ upstream file, writes it under the stable `bestiary/v1/<slug>` key in our S3 and
 registers that key/URL in a system `storage_image` row. External CDN URLs are
 never served as item icons and artwork is never stored in `item.data`.
 Deploy also runs the idempotent `cmd/bestiary-image-sync` migration: only legacy
-bestiary rows without an object key are copied, so later deploys are no-ops.
+bestiary rows without an object key are copied, so later deploys are no-ops. If
+an upstream file is already unavailable, its dead URL and item association are
+removed and the item falls back to the type icon.
 
 Saved user items are backfilled to that source during startup. Personal source
 ids are never stored or read in `item.data`, and item/suggest id reads expose
