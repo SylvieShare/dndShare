@@ -3,22 +3,35 @@
     <div class="sheet-section-title">Раса</div>
     <p v-if="loading && !races.length" class="hint">Загрузка справочника…</p>
     <p v-else-if="!races.length" class="hint">В справочнике пока нет рас.</p>
-    <div v-else class="grid">
-      <SelectTile
-        v-for="r in races"
-        :key="r.id"
-        :title="r.name"
-        :subtitle="asiSummary(r)"
-        :monogram="monogramOf(r.name)"
-        :image-url="r.iconImageUrl || ''"
-        :svg="r.svg || ''"
-        :selected="state.race?.id === r.id"
-        @select="selectRace(r)"
-      />
-    </div>
+    <template v-else>
+      <Transition name="race-hero" mode="out-in">
+        <div v-if="state.race" :key="state.race.id" ref="raceHero" class="race-hero">
+          <RaceSelectCard
+            :title="state.race.name"
+            :subtitle="asiSummary(state.race)"
+            :monogram="monogramOf(state.race.name)"
+            :image-url="raceImageFor(state.race)"
+            selected
+            @select="selectRace(state.race)"
+          />
+        </div>
+      </Transition>
+
+      <div v-if="!state.race" class="race-grid">
+        <RaceSelectCard
+          v-for="r in races"
+          :key="r.id"
+          :title="r.name"
+          :subtitle="asiSummary(r)"
+          :monogram="monogramOf(r.name)"
+          :image-url="raceImageFor(r)"
+          @select="selectRace(r)"
+        />
+      </div>
+    </template>
 
     <Transition name="choice-panel" mode="out-in" @after-enter="afterRaceDetailsEnter">
-      <div v-if="state.race" :key="state.race.id" ref="raceDetails" class="selection-details">
+      <div v-if="state.race" :key="state.race.id" class="selection-details">
         <RichContent v-if="raceDesc" class="step-desc" :html="raceDesc" />
 
         <template v-if="subraces.length">
@@ -120,6 +133,26 @@
       </div>
     </Transition>
 
+    <section v-if="state.race && otherRaces.length" class="other-races">
+      <div class="other-races-head">
+        <div>
+          <div class="sheet-section-title">Сменить расу</div>
+          <p class="hint">Выборы текущей расы будут сброшены</p>
+        </div>
+      </div>
+      <div class="race-grid">
+        <RaceSelectCard
+          v-for="r in otherRaces"
+          :key="r.id"
+          :title="r.name"
+          :subtitle="asiSummary(r)"
+          :monogram="monogramOf(r.name)"
+          :image-url="raceImageFor(r)"
+          @select="selectRace(r)"
+        />
+      </div>
+    </section>
+
     <ItemPickerModal
       v-if="pickerOpen"
       :item-type-ids="[7]"
@@ -147,8 +180,10 @@ import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import { featChoices } from '@/features/items/lib/featRules'
 import MultiSearchSelect from '@/features/character-list/components/wizard/MultiSearchSelect.vue'
 import ChoiceResult from '@/features/character-list/components/wizard/ChoiceResult.vue'
+import RaceSelectCard from '@/features/character-list/components/wizard/RaceSelectCard.vue'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 import SelectTile from '@/features/character-list/components/wizard/SelectTile.vue'
+import { raceImageFor } from '@/features/character-list/components/wizard/raceVisuals'
 import StepChoices from '@/features/character-list/components/wizard/steps/StepChoices.vue'
 import StepSkills from '@/features/character-list/components/wizard/steps/StepSkills.vue'
 import { STAT_SHORT, asiSummary, monogramOf } from '@/features/character-list/components/wizard/labels'
@@ -160,6 +195,7 @@ const {
 } = inject('createWizard')
 const raceDesc = computed(() => state.race?.data?.description || '')
 const subraceDesc = computed(() => state.subrace?.data?.description || '')
+const otherRaces = computed(() => races.value.filter((race) => race.id !== state.race?.id))
 const atAsiLimit = computed(() => grants.value.asiChoice && state.asiChoice.length >= grants.value.asiChoice.count)
 const hasRaceChoices = computed(() => {
   const g = grants.value
@@ -168,7 +204,7 @@ const hasRaceChoices = computed(() => {
 
 const pickerOpen = ref(false)
 const featConfigItem = ref(null)
-const raceDetails = ref(null)
+const raceHero = ref(null)
 let scrollPending = false
 
 function selectRace(race) {
@@ -179,7 +215,7 @@ function selectRace(race) {
 function afterRaceDetailsEnter() {
   if (!scrollPending) return
   scrollPending = false
-  requestAnimationFrame(() => raceDetails.value?.scrollIntoView({
+  requestAnimationFrame(() => raceHero.value?.scrollIntoView({
     behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
     block: 'start',
   }))
@@ -211,6 +247,11 @@ function onFeatChoicesConfirm(choices) {
 .count { font-size: 12px; font-weight: 600; color: var(--text-muted); }
 .count.done { color: var(--success); }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
+.race-hero { width: 100%; scroll-margin-top: 4px; }
+.race-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.other-races { display: flex; flex-direction: column; gap: 11px; margin-top: 12px; }
+.other-races-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
+.other-races-head .hint { margin-top: 3px; }
 
 .opts { display: flex; flex-wrap: wrap; gap: 8px; }
 .opt {
@@ -269,8 +310,17 @@ function onFeatChoicesConfirm(choices) {
 .choice-panel-leave-active { transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.14s ease; }
 .choice-panel-enter-from { opacity: 0; transform: translateX(16px); }
 .choice-panel-leave-to { opacity: 0; transform: translateX(-12px); }
+.race-hero-enter-active,
+.race-hero-leave-active { transition: transform .24s cubic-bezier(.22, 1, .36, 1), opacity .16s ease; }
+.race-hero-enter-from { opacity: 0; transform: scale(.97); }
+.race-hero-leave-to { opacity: 0; transform: scale(.985); }
 
 @media (prefers-reduced-motion: reduce) {
-  .choice-panel-enter-active, .choice-panel-leave-active { transition: none; }
+  .choice-panel-enter-active, .choice-panel-leave-active,
+  .race-hero-enter-active, .race-hero-leave-active { transition: none; }
+}
+
+@media (max-width: 640px) {
+  .race-grid { grid-template-columns: 1fr; }
 }
 </style>

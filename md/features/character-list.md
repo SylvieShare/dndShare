@@ -81,6 +81,13 @@ work area and footer, with continuous side borders framing it on desktop. The
 floating step rail and the space outside that column remain on the global dotted
 application canvas.
 
+The race step uses large illustrated cards in a two-column desktop grid. Each
+built-in race has a consistent landscape portrait of a male and female character.
+After selection, that card becomes a full-width hero above the race description,
+subrace choices and the result block; the remaining cards move below the details
+under “Сменить расу”. On narrow screens both the hero and the race list stack into
+one column. Custom races fall back to their handbook image or a monogram.
+
 Key rules:
 
 - race/class/subrace/subclass are handbook item references;
