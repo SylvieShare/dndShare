@@ -153,8 +153,10 @@ describe('session world workspaces', () => {
   it('keeps relation cards compact on wide detail views', () => {
     expect(universalList).toContain('max-width: 520px')
     expect(universalList).toContain('width: 100%')
+    expect(universalList).toContain('repeat(auto-fit')
     expect(scenarioUsages).toContain('max-width: 520px')
     expect(scenarioUsages).toContain('width: 100%')
+    expect(scenarioUsages).toContain('repeat(auto-fit')
   })
 
   it('keeps quest goal, condition, reward, consequences and notes separate', () => {
