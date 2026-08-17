@@ -206,6 +206,14 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
 - `POST /api/storage/videos` accepts an authenticated multipart `file` up to
   100 MB, stores it in S3 and returns the same `{upload_id,url,key}` shape as
   image upload;
+- `GET|POST /api/sessions/{uuid}/timers` lists owner-only session timers or
+  starts one from `{description,durationMs}`. Every list response includes
+  `serverTime`; timer projections contain `{id,description,durationMs,
+  remainingMs,endsAt?,paused,completed}`. `PATCH
+  /api/sessions/{uuid}/timers/{timerId}` accepts `{action:"pause"|"resume"}`
+  or `{action:"add",amountMs}`; `DELETE` on the same route removes a timer.
+  Timers are DM workspace tools and are not included in anonymous player-screen
+  projections;
 - `GET|PUT /api/sessions/{uuid}/presentation` reads or replaces the owner-only
   live player-display state
   `{mode,visible,materialId,broadcastMusic,effect,transition}`.
@@ -293,7 +301,8 @@ every arc exactly once; response order becomes the new automatic numbering.
 
 Точные routes находятся в `internal/web/sessions.go`,
 `internal/web/session_scenes.go`, `internal/web/session_scene_graph.go`,
-`internal/web/session_world.go`, `internal/web/session_presentation.go` и
+`internal/web/session_world.go`, `internal/web/session_presentation.go`,
+`internal/web/session_timers.go` и
 `internal/web/session_graph_bulk.go`; graph validation is in
 `sessions_chapters.go` and `sessions_graph_actions.go`. Encounter принимает
 только canonical combatants (`itemId` + `override` и уникальный

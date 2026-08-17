@@ -75,6 +75,8 @@ func (s *Server) handleSessionTwoSegGET(w http.ResponseWriter, r *http.Request) 
 		s.handleGetSessionPresentation(w, r)
 	case "presentation-connections":
 		s.handleGetPresentationConnections(w, r)
+	case "timers":
+		s.handleGetSessionTimers(w, r)
 	case "live":
 		s.handleSessionLive(w, r)
 	default:

@@ -52,6 +52,7 @@
         :events-open="eventsOpen"
         :materials="sessionMaterials"
         :presentation="presentation"
+        :timers="sessionTimers"
         :settings="sessionSettings"
         :show-shortcut-hints="showShortcutHints"
         @open-scenes="openChapterScenes"
@@ -106,6 +107,8 @@
           @view-participant="openParticipant"
         />
       </ChapterGraphTab>
+
+      <SessionTimerStack v-if="isDm" :timers="sessionTimers" />
 
       <div v-if="combatWorkspaceError" class="combat-import-error" role="alert">{{ combatWorkspaceError }}</div>
 
@@ -242,6 +245,7 @@ import { RowActionMenu } from '@sylvieshare/share-ui'
 import SessionCenterWorkspace from '@/features/sessions/components/SessionCenterWorkspace.vue'
 import SessionParticipantCard from '@/features/sessions/components/SessionParticipantCard'
 import SessionShortcutHelp from '@/features/sessions/components/SessionShortcutHelp.vue'
+import SessionTimerStack from '@/features/sessions/components/SessionTimerStack.vue'
 import SessionMusicWorkspace from '@/features/sessions/components/SessionMusicWorkspace.vue'
 import SessionWorldLayer from '@/features/sessions/components/SessionWorldLayer.vue'
 import { useParticipantSync } from '@/features/sessions/composables/useParticipantSync'
@@ -254,6 +258,7 @@ import { useSessionWorld } from '@/features/sessions/composables/useSessionWorld
 import { useSessionParticipantRail } from '@/features/sessions/composables/useSessionParticipantRail'
 import { useSessionMaterials } from '@/features/sessions/composables/useSessionMaterials'
 import { useSessionPresentation } from '@/features/sessions/composables/useSessionPresentation'
+import { useSessionTimers } from '@/features/sessions/composables/useSessionTimers'
 import { useSessionSettings } from '@/features/sessions/composables/useSessionSettings'
 import { useSessionHotkeys } from '@/features/sessions/composables/useSessionHotkeys'
 import { useSessionLive } from '@/features/sessions/composables/useSessionLive'
@@ -302,6 +307,7 @@ const musicStore = useMusicStore()
 const sessionMaterials = useSessionMaterials({ sessionUuid })
 const sessionWorld = useSessionWorld(sessionUuid)
 const presentation = useSessionPresentation({ sessionUuid, materials: sessionMaterials })
+const sessionTimers = useSessionTimers({ sessionUuid })
 watch(() => presentation.state.value.broadcastMusic, enabled => musicStore.setRemotePlayback(enabled), { immediate: true })
 const { settings: sessionSettings, update: updateSessionSetting } = useSessionSettings({ sessionUuid })
 provide('sessionMaterials', sessionMaterials)
@@ -747,6 +753,7 @@ onMounted(async () => {
       await Promise.all([
         sessionMaterials.load().catch(() => {}),
         presentation.load().catch(() => {}),
+        sessionTimers.load().catch(() => {}),
       ])
     }
     startSessionLive()
@@ -770,6 +777,7 @@ onBeforeUnmount(() => {
   uiStore.clearHeaderContext(headerOwner)
   musicStore.dispose()
   sessionEventsStore.clearContext(sessionUuid)
+  sessionTimers.dispose()
 })
 </script>
 

@@ -88,6 +88,22 @@ export function getSessionPresentationConnections(uuid) {
   return fetchGet(`/sessions/${uuid}/presentation-connections`)
 }
 
+export function getSessionTimers(uuid) {
+  return fetchGet(`/sessions/${uuid}/timers`, { cache: 'no-store' })
+}
+
+export function createSessionTimer(uuid, data) {
+  return fetchPost(`/sessions/${uuid}/timers`, data)
+}
+
+export function updateSessionTimer(uuid, timerId, data) {
+  return fetchPatch(`/sessions/${uuid}/timers/${timerId}`, data)
+}
+
+export function deleteSessionTimer(uuid, timerId) {
+  return fetchDelete(`/sessions/${uuid}/timers/${timerId}`)
+}
+
 export function saveSessionPresentation(uuid, data) {
   return fetchPut(`/sessions/${uuid}/presentation`, data)
 }

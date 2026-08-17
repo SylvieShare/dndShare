@@ -16,6 +16,7 @@
       :events-open="eventsOpen"
       :session-uuid="sessionUuid"
       :presentation="presentation"
+      :timers="timers"
       :materials="materials"
       :settings="settings"
       :show-shortcut-hints="showShortcutHints"
@@ -212,6 +213,7 @@ const props = defineProps({
   musicOpen: { type: Boolean, default: true },
   eventsOpen: { type: Boolean, default: true },
   presentation: { type: Object, default: null },
+  timers: { type: Object, default: null },
   materials: { type: Object, default: null },
   settings: { type: Object, default: () => ({ autoRollNpcHp: false }) },
   showShortcutHints: { type: Boolean, default: false },

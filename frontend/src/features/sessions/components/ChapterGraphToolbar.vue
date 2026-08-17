@@ -136,7 +136,8 @@
         :materials="materials"
         :scene="workspaceScene"
       />
-      <span v-if="isDm && presentation && materials" class="chapter-toolbar-rule" />
+      <SessionTimerControl v-if="isDm && timers" :timers="timers" />
+      <span v-if="isDm && ((presentation && materials) || timers)" class="chapter-toolbar-rule" />
 
       <div class="chapter-panel-tools" aria-label="Панели сессии">
         <button type="button" class="chapter-tool-btn chapter-tool-btn--icon" :class="{ 'chapter-tool-btn--active': diceOpen }" title="Кубики" aria-label="Кубики" aria-keyshortcuts="Shift+D" :aria-pressed="diceOpen" @click="$emit('toggle-dice')">
@@ -170,6 +171,7 @@ import { BasePopover, reorderByDrop, useSortable } from '@sylvieshare/share-ui'
 import { romanNumeral } from '@/features/sessions/lib/chapterGraph'
 import SessionPresentationControl from '@/features/sessions/components/SessionPresentationControl.vue'
 import SessionSettingsControl from '@/features/sessions/components/SessionSettingsControl.vue'
+import SessionTimerControl from '@/features/sessions/components/SessionTimerControl.vue'
 import { sessionShortcutLabels } from '@/features/sessions/lib/sessionShortcuts'
 
 const props = defineProps({
@@ -188,6 +190,7 @@ const props = defineProps({
   eventsOpen: { type: Boolean, default: true },
   sessionUuid: { type: String, required: true },
   presentation: { type: Object, default: null },
+  timers: { type: Object, default: null },
   materials: { type: Object, default: null },
   workspaceChapterId: { type: [Number, String], default: null },
   workspaceScene: { type: Object, default: null },

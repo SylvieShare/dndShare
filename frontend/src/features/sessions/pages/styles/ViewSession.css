@@ -40,6 +40,10 @@
   --chapter-safe-right: 350px;
 }
 
+.campaign-workspace--right-dock .session-timer-stack {
+  right: 356px;
+}
+
 .campaign-workspace--players-collapsed .campaign-graph {
   --chapter-safe-left: 94px;
 }
@@ -312,6 +316,10 @@
 
   .workspace-dock--right {
     display: none;
+  }
+
+  .campaign-workspace--right-dock .session-timer-stack {
+    right: 14px;
   }
 }
 
