@@ -198,19 +198,4 @@ async function openSearch(toggle) {
 
 .desktop-sidebar :deep(.share-sidebar-account .user-box) { width: 100%; }
 
-.desktop-sidebar:not(.app-sidebar--expanded) :deep(.share-sidebar-account .reg-link) { display: none; }
-
-.desktop-sidebar:not(.app-sidebar--expanded) :deep(.share-sidebar-account .auth-btn) {
-  width: 42px;
-  padding: 0;
-  overflow: hidden;
-  color: transparent;
-  font-size: 0;
-}
-
-.desktop-sidebar:not(.app-sidebar--expanded) :deep(.share-sidebar-account .auth-btn)::before {
-  color: var(--text-on-accent);
-  font-size: 18px;
-  content: '↪';
-}
 </style>

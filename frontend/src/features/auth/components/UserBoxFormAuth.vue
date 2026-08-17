@@ -2,8 +2,18 @@
   <div class="auth-wrap">
     <!-- Header triggers (form lives in the modal) -->
     <div class="auth-actions">
-      <button class="auth-btn" type="button" @click="mobileOpen = true">Войти</button>
-      <button class="reg-link" type="button" @click="openReg">Регистрация</button>
+      <button
+        class="auth-btn"
+        :class="{ 'auth-btn--compact': !expanded }"
+        type="button"
+        :title="expanded ? undefined : 'Войти'"
+        aria-label="Войти"
+        @click="mobileOpen = true"
+      >
+        <LogIn v-if="!expanded" :size="18" aria-hidden="true" />
+        <span v-else>Войти</span>
+      </button>
+      <button v-if="expanded" class="reg-link" type="button" @click="openReg">Регистрация</button>
     </div>
 
     <!-- Модальное окно входа -->
@@ -51,12 +61,15 @@
 <script setup>
 import { ref, computed, onBeforeUnmount, onMounted } from 'vue'
 import { watch } from 'vue'
+import { LogIn } from '@lucide/vue'
 import { AppModalFrame } from '@sylvieshare/share-ui'
 import { FormActionButtons } from '@sylvieshare/share-ui'
 import { FormField } from '@sylvieshare/share-ui'
 import { FormTextInput } from '@sylvieshare/share-ui'
 import { fetchPost } from "@/shared/api/http"
 import { useAccountStore } from '@/stores/account'
+
+defineProps({ expanded: { type: Boolean, default: true } })
 
 const login = ref("")
 const password = ref("")
@@ -158,6 +171,13 @@ async function submitReg() {
 }
 .auth-btn:hover:not(:disabled) { background: var(--accent-hover); }
 .auth-btn:disabled { opacity: 0.6; cursor: default; }
+
+.auth-btn--compact {
+  display: grid;
+  width: 42px;
+  padding: 0;
+  place-items: center;
+}
 
 .reg-link {
   background: none;

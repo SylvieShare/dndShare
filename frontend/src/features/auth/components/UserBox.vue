@@ -1,7 +1,7 @@
 <template>
   <div class="user-box">
     <transition name="fade" mode="out-in">
-      <UserBoxFormAuth v-if="authStatus === 'none' || authStatus === 'process'" key="auth" />
+      <UserBoxFormAuth v-if="authStatus === 'none' || authStatus === 'process'" key="auth" :expanded="expanded" />
       <UserBoxInfo v-else-if="authStatus === 'success'" key="info" :expanded="expanded" />
     </transition>
   </div>
