@@ -223,6 +223,7 @@ async function createChar(payload) {
   try {
     const res = await fetchPost('/chars', payload)
     if (res?.charId != null) {
+      accountStore.setHasCharacters(true)
       await joinSession(session.value.uuid, res.charId).catch(() => {})
       createOpen.value = false
       router.push('/char/' + res.uuid)

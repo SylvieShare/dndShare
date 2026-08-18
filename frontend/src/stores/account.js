@@ -4,7 +4,7 @@ import { fetchGet, fetchPost, fetchGetEmpty } from '@/shared/api/http'
 export const useAccountStore = defineStore('account', {
   state: () => ({
     status: 'check',
-    user: { id: 0, login: '', roles: [], gameContext: null },
+    user: { id: 0, login: '', roles: [], gameContext: null, hasCharacters: false },
     _authPromise: null,
   }),
   getters: {
@@ -48,6 +48,9 @@ export const useAccountStore = defineStore('account', {
       if (this.status === 'success' || this.status === 'none') return this.user?.id ? this.user : null
       if (this._authPromise) return this._authPromise
       return this.checkAuth()
+    },
+    setHasCharacters(value) {
+      this.user.hasCharacters = !!value
     },
     async logout() {
       await fetchGetEmpty('/user/logout')

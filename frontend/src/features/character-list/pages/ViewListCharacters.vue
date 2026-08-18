@@ -71,10 +71,12 @@ import CharacterCreateModal from "@/features/character-list/components/Character
 import { consumePrefetch } from '@/app/router'
 import { fetchGet, fetchPost, fetchDelete } from '@/shared/api/http'
 import { resolveSetting, settingAccessors } from '@/features/character-editor/settings'
+import { useAccountStore } from '@/stores/account'
 import { useTemplateStore } from '@/stores/template'
 
 const router = useRouter()
 const route = useRoute()
+const accountStore = useAccountStore()
 const templateStore = useTemplateStore()
 const chars = ref([])
 const sessionsByChar = ref({})
@@ -110,6 +112,7 @@ function loadChars(preFetched) {
   const promise = preFetched || fetchGet('/chars')
   promise.then(res => {
     chars.value = res?.chars || []
+    accountStore.setHasCharacters(chars.value.length > 0)
     sessionsByChar.value = res?.sessionsByChar || {}
     loading.value = false
   })
@@ -155,6 +158,7 @@ async function createChar(payload) {
   creating.value = true
   try {
     const res = await fetchPost('/chars', payload)
+    accountStore.setHasCharacters(true)
     showModal.value = false
     router.push('/char/' + res.uuid)
   } finally {
@@ -170,6 +174,7 @@ async function cloneChar(uuid) {
 async function deleteChar(uuid) {
   await fetchDelete('/char/' + uuid)
   chars.value = chars.value.filter(c => c.uuid !== uuid)
+  accountStore.setHasCharacters(chars.value.length > 0)
 }
 
 onMounted(() => {

@@ -22,7 +22,8 @@ API реализован Go `net/http` в `internal/web`. Feature-файл ре�
 
 Успешные `POST /api/user/auth` и `GET /api/user/checkAuth` возвращают в `user`
 `gameContext:{sourceId,sourceName,sourceVersionId,version}` вместе с id, login и
-roles.
+roles, а также `hasCharacters` — признак наличия хотя бы одного неудалённого
+персонажа у пользователя.
 
 ## Player account
 

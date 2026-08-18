@@ -74,6 +74,7 @@ const route = useRoute()
 const router = useRouter()
 const uiStore = useUiStore()
 const gameContextStore = useGameContextStore()
+const accountStore = useAccountStore()
 
 const menuOpen = ref(false)
 const collapsing = ref(false)
@@ -84,9 +85,9 @@ const headerMode = computed(() => resolveMobileHeaderMode(route.meta))
 const headerCollapsible = computed(() => headerMode.value === MOBILE_HEADER_COLLAPSIBLE)
 const mobileHeaderHidden = computed(() => headerMode.value === MOBILE_HEADER_HIDDEN)
 const effectiveHeaderHidden = computed(() => headerCollapsible.value && headerHidden.value)
-const isAuth = computed(() => useAccountStore().authStatus === 'success')
+const isAuth = computed(() => accountStore.authStatus === 'success')
 const mobileBackTarget = computed(() => resolveMobileBackTarget(route))
-const isAdmin = computed(() => useAccountStore().hasRole('ADMIN'))
+const isAdmin = computed(() => accountStore.hasRole('ADMIN'))
 const headerContext = computed(() => uiStore.resolveHeader(
   route.name,
   route.meta?.title,
@@ -95,6 +96,7 @@ const headerContext = computed(() => uiStore.resolveHeader(
 const visibleItems = computed(() => {
   return resolveAppNavigation({
     authenticated: isAuth.value,
+    hasCharacters: accountStore.user.hasCharacters,
     admin: isAdmin.value,
     path: route.path,
     rulesTo: gameContextStore.rulesPath,

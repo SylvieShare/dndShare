@@ -267,6 +267,7 @@ async function submit() {
   try {
     const res = await fetchPost('/chars', payload)
     if (res?.uuid) {
+      accountStore.setHasCharacters(true)
       setCharSeed(res.uuid, {
         data: payload.data,
         version: 0,

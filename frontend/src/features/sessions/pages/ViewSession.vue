@@ -696,6 +696,7 @@ async function createChar(payload) {
   try {
     const res = pendingCreatedCharacter || await fetchPost('/chars', payload)
     if (res?.charId == null) throw new Error('missing character id')
+    accountStore.setHasCharacters(true)
     pendingCreatedCharacter = res
 
     await joinSession(sessionUuid, res.charId)

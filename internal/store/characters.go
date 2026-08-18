@@ -115,6 +115,17 @@ func (s *Store) GetCharacters(ctx context.Context, userID int64) ([]CharacterIte
 	return out, rows.Err()
 }
 
+// HasCharacters reports whether the user owns at least one active character.
+func (s *Store) HasCharacters(ctx context.Context, userID int64) (bool, error) {
+	var exists bool
+	err := s.pool.QueryRow(ctx,
+		`SELECT EXISTS(
+		 SELECT 1 FROM dndshare."char"
+		 WHERE user_id = $1 AND deleted = false)`, userID,
+	).Scan(&exists)
+	return exists, err
+}
+
 // CreateCharacter вставляет нового персонажа и возвращает его uuid.
 func (s *Store) CreateCharacter(ctx context.Context, userID, templateID int64, sourceVersionID *int64, data json.RawMessage) (string, error) {
 	if len(data) == 0 {

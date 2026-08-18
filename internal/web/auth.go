@@ -22,10 +22,11 @@ func (s *Server) routesAuth(mux *http.ServeMux) {
 
 // userBase — публичная инфа о пользователе (порт UserController.UserBase).
 type userBase struct {
-	ID          int64                 `json:"id"`
-	Login       string                `json:"login"`
-	Roles       []string              `json:"roles"`
-	GameContext store.UserGameContext `json:"gameContext"`
+	ID            int64                 `json:"id"`
+	Login         string                `json:"login"`
+	Roles         []string              `json:"roles"`
+	GameContext   store.UserGameContext `json:"gameContext"`
+	HasCharacters bool                  `json:"hasCharacters"`
 }
 
 // checkAuthResponse — порт UserController.CheckAuthResponse (NON_NULL: user опускается, если null).
@@ -43,11 +44,16 @@ func (s *Server) buildUserBase(ctx context.Context, user store.User) (*userBase,
 	if err != nil {
 		return nil, err
 	}
+	hasCharacters, err := s.store.HasCharacters(ctx, user.ID)
+	if err != nil {
+		return nil, err
+	}
 	return &userBase{
-		ID:          user.ID,
-		Login:       user.Login,
-		Roles:       nonNil(roles),
-		GameContext: gameContext,
+		ID:            user.ID,
+		Login:         user.Login,
+		Roles:         nonNil(roles),
+		GameContext:   gameContext,
+		HasCharacters: hasCharacters,
 	}, nil
 }
 

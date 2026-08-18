@@ -93,6 +93,7 @@ const icons = {
 
 const navigationItems = computed(() => resolveAppNavigation({
   authenticated: accountStore.authStatus === 'success',
+  hasCharacters: accountStore.user.hasCharacters,
   admin: accountStore.hasRole('ADMIN'),
   path: route.path,
   rulesTo: gameContextStore.rulesPath,

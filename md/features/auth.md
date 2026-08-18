@@ -9,6 +9,9 @@ Components live in:
 - `features/auth/components/UserBoxInfo.vue`
 
 Auth state is managed by the Pinia `account` store in `frontend/src/stores/account.js`.
+Its authenticated user projection includes `hasCharacters`, which comes from
+the auth API and is updated immediately after character creation or deletion so
+global navigation can switch between `Создать персонажа` and `Персонажи`.
 
 The global error-report launcher and inbox are mounted only for authenticated
 users. The public character wizard dispatches `dndshare:request-auth` only from
