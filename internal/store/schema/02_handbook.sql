@@ -774,3 +774,87 @@ CREATE TABLE IF NOT EXISTS dndshare.dictionary_text (
     "key"  text NOT NULL,
     value  text NOT NULL
 );
+
+-- The bestiary importer historically kept the upstream publication code only
+-- in identity.source. Catalogue filtering uses item_content_source, so project
+-- every existing imported creature into the relational publication model.
+-- Unknown/new upstream codes remain usable and are displayed as their code;
+-- the importer supplies the human-readable name for all future inserts.
+WITH source_names(code, name) AS (
+    VALUES
+        ('BAM', 'Астральный зверинец Бу'),
+        ('BGDIA', 'Врата Балдура: Нисхождение в Авернус'),
+        ('BGG', 'Бигби представляет: Триумф великанов'),
+        ('BMT', 'Книга многих вещей'),
+        ('COS', 'Проклятье Страда'),
+        ('DMG', 'Руководство мастера'),
+        ('EGTW', 'Путеводитель исследователя по Дикогорью'),
+        ('ERLW', 'Эберрон. Из пепла Последней войны'),
+        ('FTD', 'Сокровищница драконов Фицбана'),
+        ('GGR', 'Справочник гильдмастера по Равнике'),
+        ('GOS', 'Призраки Солтмарша'),
+        ('IDROTF', 'Долина Ледяного Ветра: Иней Морозной девы'),
+        ('MM', 'Бестиарий'),
+        ('MOT', 'Мифические одиссеи Тероса'),
+        ('MPMM', 'Морденкайнен представляет: Монстры Мультивселенной'),
+        ('MTF', 'Том Морденкайнена о врагах'),
+        ('SCC', 'Стриксхейвен: Учебная программа хаоса'),
+        ('TCE', 'Котёл Таши со всякой всячиной'),
+        ('TOA', 'Гробница Аннигиляции'),
+        ('VGM', 'Справочник Воло по монстрам'),
+        ('VRGR', 'Руководство ван Рихтена по Равенлофту'),
+        ('WBtW', 'Чащоба за Ведьминым светом'),
+        ('WDH', 'Глубоководье: Драконий куш'),
+        ('WDMM', 'Глубоководье: Подземелье безумного мага'),
+        ('XGE', 'Руководство Занатара обо всём')
+), bestiary_codes AS (
+    SELECT DISTINCT upper(btrim(i.data #>> '{identity,source}')) AS code
+    FROM dndshare.item i
+    WHERE i.type_id = 6
+      AND i.user_id IS NULL
+      AND NULLIF(btrim(i.data #>> '{identity,source}'), '') IS NOT NULL
+), source_context AS (
+    SELECT src.id AS source_id, sv.id AS source_version_id
+    FROM dndshare.item_type it
+    JOIN dndshare."source" src ON src.id = it.source_id
+    JOIN dndshare.source_version sv ON sv.source_id = src.id
+    WHERE it.id = 6
+    ORDER BY (lower(sv.version) = '2014') DESC, sv.id
+    LIMIT 1
+)
+INSERT INTO dndshare.content_source (
+    source_id, native_source_version_id, name, code, kind, is_default, sort_order
+)
+SELECT sc.source_id, sc.source_version_id, COALESCE(sn.name, bc.code), bc.code,
+       'addon', false, 100
+FROM bestiary_codes bc
+CROSS JOIN source_context sc
+LEFT JOIN source_names sn ON upper(sn.code) = bc.code
+ON CONFLICT DO NOTHING;
+
+INSERT INTO dndshare.content_source_compatibility (content_source_id, source_version_id, status)
+SELECT cs.id, cs.native_source_version_id, 'native'
+FROM dndshare.content_source cs
+WHERE cs.native_source_version_id IS NOT NULL
+  AND EXISTS (
+      SELECT 1
+      FROM dndshare.item i
+      WHERE i.type_id = 6
+        AND i.user_id IS NULL
+        AND upper(btrim(i.data #>> '{identity,source}')) = upper(cs.code)
+  )
+ON CONFLICT (content_source_id, source_version_id) DO NOTHING;
+
+INSERT INTO dndshare.item_content_source (item_id, content_source_id, primary_source)
+SELECT i.id, cs.id, true
+FROM dndshare.item i
+JOIN dndshare.item_type it ON it.id = i.type_id
+JOIN dndshare.content_source cs
+  ON cs.source_id = it.source_id
+ AND upper(cs.code) = upper(btrim(i.data #>> '{identity,source}'))
+LEFT JOIN dndshare.source_version sv ON sv.id = cs.native_source_version_id
+WHERE i.type_id = 6
+  AND i.user_id IS NULL
+  AND NULLIF(btrim(i.data #>> '{identity,source}'), '') IS NOT NULL
+  AND (sv.id IS NULL OR lower(sv.version) = '2014')
+ON CONFLICT (item_id, content_source_id) DO NOTHING;

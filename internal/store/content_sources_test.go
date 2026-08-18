@@ -42,3 +42,16 @@ func TestAppendContentScopeSQLAllCompatibleSources(t *testing.T) {
 		t.Fatalf("legacy filter must be disabled: %s", where[0])
 	}
 }
+
+func TestHandbookSchemaBackfillsBestiaryContentSources(t *testing.T) {
+	for _, fragment := range []string{
+		"i.data #>> '{identity,source}'",
+		"INSERT INTO dndshare.content_source",
+		"INSERT INTO dndshare.item_content_source",
+		"WHERE i.type_id = 6",
+	} {
+		if !strings.Contains(schemaHandbookSQL, fragment) {
+			t.Fatalf("bestiary source migration is missing %q", fragment)
+		}
+	}
+}

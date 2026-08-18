@@ -29,3 +29,26 @@ func TestBestiaryImageURLReturnsEmptyWithoutSupportedImage(t *testing.T) {
 		}
 	}
 }
+
+func TestBestiarySourceReadsPublicationMetadata(t *testing.T) {
+	detail := map[string]any{
+		"source": map[string]any{
+			"shortName": "MM",
+			"name":      "Бестиарий",
+		},
+	}
+
+	code, name := bestiarySource(detail)
+	if code != "MM" || name != "Бестиарий" {
+		t.Fatalf("bestiarySource() = (%q, %q), want (%q, %q)", code, name, "MM", "Бестиарий")
+	}
+}
+
+func TestBestiarySourceFallsBackToCode(t *testing.T) {
+	code, name := bestiarySource(map[string]any{
+		"source": map[string]any{"shortName": "VGM"},
+	})
+	if code != "VGM" || name != "VGM" {
+		t.Fatalf("bestiarySource() = (%q, %q), want code fallback", code, name)
+	}
+}

@@ -53,7 +53,7 @@ func (s *Store) BestiaryFindItemByNameEn(ctx context.Context, typeID int64, name
 }
 
 // BestiaryUpdateItem обновляет базовый предмет и его S3-изображение.
-func (s *Store) BestiaryUpdateItem(ctx context.Context, nameEn, name string, data json.RawMessage, imageKey, imageURL string, typeID int64) error {
+func (s *Store) BestiaryUpdateItem(ctx context.Context, nameEn, name string, data json.RawMessage, imageKey, imageURL, sourceCode, sourceName string, typeID int64) error {
 	tx, err := s.pool.Begin(ctx)
 	if err != nil {
 		return err
@@ -73,11 +73,14 @@ func (s *Store) BestiaryUpdateItem(ctx context.Context, nameEn, name string, dat
 	if err := setBestiaryItemImage(ctx, tx, itemID, imageKey, imageURL); err != nil {
 		return err
 	}
+	if err := setBestiaryItemContentSource(ctx, tx, itemID, typeID, sourceCode, sourceName); err != nil {
+		return err
+	}
 	return tx.Commit(ctx)
 }
 
 // BestiaryCreateItem создаёт базовый предмет (user_id NULL) и возвращает id.
-func (s *Store) BestiaryCreateItem(ctx context.Context, name, nameEn string, data json.RawMessage, imageKey, imageURL string, typeID int64) (int64, error) {
+func (s *Store) BestiaryCreateItem(ctx context.Context, name, nameEn string, data json.RawMessage, imageKey, imageURL, sourceCode, sourceName string, typeID int64) (int64, error) {
 	tx, err := s.pool.Begin(ctx)
 	if err != nil {
 		return 0, err
@@ -96,10 +99,73 @@ func (s *Store) BestiaryCreateItem(ctx context.Context, name, nameEn string, dat
 	if err := setBestiaryItemImage(ctx, tx, id, imageKey, imageURL); err != nil {
 		return 0, err
 	}
+	if err := setBestiaryItemContentSource(ctx, tx, id, typeID, sourceCode, sourceName); err != nil {
+		return 0, err
+	}
 	if err := tx.Commit(ctx); err != nil {
 		return 0, err
 	}
 	return id, nil
+}
+
+// setBestiaryItemContentSource projects the upstream publication metadata into
+// the relational source model used by catalogue filtering. Imported creatures
+// have exactly one authoritative publication; a repeated import replaces a
+// stale link if the upstream catalogue corrects it.
+func setBestiaryItemContentSource(ctx context.Context, tx pgx.Tx, itemID, typeID int64, sourceCode, sourceName string) error {
+	sourceCode = strings.ToUpper(strings.TrimSpace(sourceCode))
+	sourceName = strings.TrimSpace(sourceName)
+	if sourceName == "" {
+		sourceName = sourceCode
+	}
+	if sourceCode == "" {
+		_, err := tx.Exec(ctx, `DELETE FROM dndshare.item_content_source WHERE item_id = $1`, itemID)
+		return err
+	}
+
+	var contentSourceID, sourceVersionID int64
+	err := tx.QueryRow(ctx, `
+		WITH source_context AS (
+			SELECT it.source_id, sv.id AS source_version_id
+			FROM dndshare.item_type it
+			JOIN dndshare.source_version sv ON sv.source_id = it.source_id
+			WHERE it.id = $1
+			ORDER BY (lower(sv.version) = '2014') DESC, sv.id
+			LIMIT 1
+		), inserted AS (
+			INSERT INTO dndshare.content_source (
+				source_id, native_source_version_id, name, code, kind, is_default, sort_order
+			)
+			SELECT source_id, source_version_id, $3, $2, 'addon', false, 100
+			FROM source_context
+			ON CONFLICT DO NOTHING
+			RETURNING id, native_source_version_id
+		)
+		SELECT id, native_source_version_id FROM inserted
+		UNION ALL
+		SELECT cs.id, cs.native_source_version_id
+		FROM dndshare.content_source cs
+		JOIN source_context sc
+		  ON sc.source_id = cs.source_id
+		 AND sc.source_version_id = cs.native_source_version_id
+		WHERE upper(cs.code) = $2
+		LIMIT 1`, typeID, sourceCode, sourceName).Scan(&contentSourceID, &sourceVersionID)
+	if err != nil {
+		return err
+	}
+	if _, err := tx.Exec(ctx, `
+		INSERT INTO dndshare.content_source_compatibility (content_source_id, source_version_id, status)
+		VALUES ($1, $2, 'native')
+		ON CONFLICT (content_source_id, source_version_id) DO NOTHING`, contentSourceID, sourceVersionID); err != nil {
+		return err
+	}
+	if _, err := tx.Exec(ctx, `DELETE FROM dndshare.item_content_source WHERE item_id = $1`, itemID); err != nil {
+		return err
+	}
+	_, err = tx.Exec(ctx, `
+		INSERT INTO dndshare.item_content_source (item_id, content_source_id, primary_source)
+		VALUES ($1, $2, true)`, itemID, contentSourceID)
+	return err
 }
 
 // setBestiaryItemImage keeps imported artwork outside rules JSON. A manually

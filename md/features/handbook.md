@@ -30,6 +30,10 @@ Bestiary artwork follows the same contract: the import job downloads the
 upstream file, writes it under the stable `bestiary/v1/<slug>` key in our S3 and
 registers that key/URL in a system `storage_image` row. External CDN URLs are
 never served as item icons and artwork is never stored in `item.data`.
+The importer also resolves the upstream book code/name to `content_source` and
+replaces the creature's `item_content_source` link on every import. Startup SQL
+backfills the same relation for creatures imported before this contract, so the
+handbook publication filter is server-backed for bestiary entries as well.
 Deploy also runs the idempotent `cmd/bestiary-image-sync` migration: only legacy
 bestiary rows without an object key are copied, so later deploys are no-ops. If
 an upstream file is already unavailable, its dead URL and item association are

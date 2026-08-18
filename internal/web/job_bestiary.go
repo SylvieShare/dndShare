@@ -113,6 +113,7 @@ func jobBestiaryImport(s *Server, jc *JobContext) error {
 					jc.Increment(1, "Ошибка: "+slug)
 					return
 				}
+				sourceCode, sourceName := bestiarySource(detail)
 				imageKey := ""
 				imageURL := ""
 				if upstreamImageURL := bestiaryImageURL(detail); upstreamImageURL != "" {
@@ -132,14 +133,14 @@ func jobBestiaryImport(s *Server, jc *JobContext) error {
 					return
 				}
 				if exists {
-					if err := b.s.store.BestiaryUpdateItem(ctx, nameEng, nameRus, mustMarshal(data), imageKey, imageURL, bestiaryItemTypeEnemy); err != nil {
+					if err := b.s.store.BestiaryUpdateItem(ctx, nameEng, nameRus, mustMarshal(data), imageKey, imageURL, sourceCode, sourceName, bestiaryItemTypeEnemy); err != nil {
 						errList = append(errList, fmt.Sprintf("%s: %s", slug, err.Error()))
 						jc.Increment(1, "Ошибка: "+slug)
 						return
 					}
 					updated++
 				} else {
-					if _, err := b.s.store.BestiaryCreateItem(ctx, nameRus, nameEng, mustMarshal(data), imageKey, imageURL, bestiaryItemTypeEnemy); err != nil {
+					if _, err := b.s.store.BestiaryCreateItem(ctx, nameRus, nameEng, mustMarshal(data), imageKey, imageURL, sourceCode, sourceName, bestiaryItemTypeEnemy); err != nil {
 						errList = append(errList, fmt.Sprintf("%s: %s", slug, err.Error()))
 						jc.Increment(1, "Ошибка: "+slug)
 						return
@@ -163,6 +164,15 @@ func jobBestiaryImport(s *Server, jc *JobContext) error {
 		MultipleSizes: multipleSizes,
 	})
 	return nil
+}
+
+func bestiarySource(detail any) (string, string) {
+	code := strings.TrimSpace(jStr(jPath(detail, "source", "shortName"), ""))
+	name := strings.TrimSpace(jStr(jPath(detail, "source", "name"), ""))
+	if name == "" {
+		name = code
+	}
+	return code, name
 }
 
 func (b *bestiaryImport) resolveSizeIds(ctx context.Context, d any, multipleSizes *[]string, nameEng string) ([]int64, error) {
