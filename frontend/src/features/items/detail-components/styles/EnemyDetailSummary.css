@@ -23,10 +23,12 @@
   padding: 2px 7px;
   border: 1px solid color-mix(in srgb, var(--text-on-accent) 28%, transparent);
   border-radius: 4px;
+  background: color-mix(in srgb, var(--surface) 68%, transparent);
   color: color-mix(in srgb, var(--text-on-accent) 80%, transparent);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: .1em;
+  backdrop-filter: blur(4px);
 }
 
 .enemy-tag-named {
@@ -36,10 +38,15 @@
 }
 
 .enemy-source {
+  padding: 2px 7px;
+  border: 1px solid color-mix(in srgb, var(--text-on-accent) 18%, transparent);
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--surface) 68%, transparent);
   color: color-mix(in srgb, var(--text-on-accent) 62%, transparent);
   font-size: 11px;
   letter-spacing: .05em;
   text-shadow: 0 1px 7px var(--scrim);
+  backdrop-filter: blur(4px);
 }
 
 .enemy-stats-block {

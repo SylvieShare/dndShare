@@ -79,12 +79,14 @@ entries and selected choices.
   `coverImageUrl` as full-bleed artwork behind the identity block and actions;
   without a usable cover it keeps the same structure as a compact neutral
   header and never stretches the square icon into a banner. Cover height is a
-  per-handbook-type presentation profile: the shared default remains compact,
-  while a type may opt into a taller composition without branching the header;
+  per-handbook-type presentation profile without a shared maximum: the default
+  follows the asset's intrinsic ratio, while a type may opt into a minimum
+  height without branching the header;
 - bestiary details use a `440px` minimum cover profile. Their identity, source,
   tags, CR/AC/HP/proficiency, speeds and all six ability modifiers are rendered
-  in the header summary slot on one translucent cover overlay. Skills and all
-  later sections remain in the scrolling detail content below the artwork;
+  in the header summary slot. The cover itself is not dimmed: the title uses a
+  compact content-sized scrim and each metadata/stat group owns its translucent
+  block. Skills and all later sections remain below the artwork;
 - field labels and errors use shared form components;
 - direct color literals are rejected by `npm run check:colors`.
 
@@ -281,14 +283,14 @@ compact creature icon and from legacy artwork imported from external sources.
   and a controlled jewel-tone palette. Add enough environmental context to
   communicate habitat, but avoid photorealism, painterly noise and micro-detail.
 - Preserve meaningful vertical space above and below the creature. Keep the
-  lower portion dark and calm because the translucent identity, combat-stat,
-  speed and ability-modifier overlay occupies the cover.
+  areas behind the compact title scrim and translucent combat-stat blocks calm
+  enough for readable UI without globally darkening the artwork.
 - Do not bake in text, letters, numbers, readable runes, UI, frames, badges,
   logos or watermarks. Avoid gore and keep important anatomy away from every
   edge.
 - Inspect at the desktop `440px` minimum header and at a `390px` mobile
   viewport. The mobile layout may crop the outer sides, but the subject and all
-  defining features must remain readable behind the overlay.
+  defining features must remain readable between and behind the local blocks.
 
 New generated covers are installed through MCP
 `handbook_item_set_system_image(slot="cover", preservePrevious=true)`, which
@@ -313,14 +315,13 @@ space. Bestiary covers are the explicit 3:2 exception defined above.
 - Reserve a calmer, darker lower band for the title and controls. Do not bake
   in text, letters, numbers, logos, watermarks, borders, badges or UI frames.
 - Inspect the final asset at 4:1 on desktop and mobile. The default header
-  honors an older cover's intrinsic ratio up to its `min(320px, 42dvh)` height
-  limit; taller legacy artwork is top-aligned and continues downward behind a
-  translucent dark identity strip. Cover height is configured per handbook
-  type rather than imposed globally. The bestiary profile has a `440px`
-  minimum and may grow to fit its combat summary through the ability-modifier
-  row; that whole summary sits on a translucent overlay over the art. Detail
-  content remains reachable in the vertically scrollable panel. Decorative
-  covers use empty alt text because the item name already labels the header.
+  follows the asset's intrinsic ratio without a shared maximum height. Cover
+  minimum height is configured per handbook type rather than imposed globally.
+  The bestiary profile has a `440px` minimum and may grow to fit its combat
+  summary through the ability-modifier row; its art remains undimmed while the
+  title and summary use local translucent blocks. Detail content remains
+  reachable in the vertically scrollable panel. Decorative covers use empty
+  alt text because the item name already labels the header.
 
 The initial spell covers are **Fireball**, **Bless** and **Aura of Vitality**.
 The manual legacy/bootstrap `cmd/item-cover-sync` verifies the embedded

@@ -1,10 +1,8 @@
 <template>
   <header
-    ref="headerElement"
     class="item-detail-header"
     :class="{
       'item-detail-header-covered': hasCover,
-      'item-detail-header-tall-cover': coverHeightLimited,
       'item-detail-header-summary': $slots.summary,
     }"
     :data-item-type-id="type?.id || undefined"
@@ -49,7 +47,7 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 
 const props = defineProps({
@@ -60,15 +58,11 @@ const props = defineProps({
 const TYPE_COVER_STYLES = {
   6: {
     '--cover-min-height': '440px',
-    '--cover-max-height': 'none',
   },
 }
 
 const coverFailed = ref(false)
 const coverAspectRatio = ref('4 / 1')
-const coverHeightLimited = ref(false)
-const coverNaturalSize = ref(null)
-const headerElement = ref(null)
 const hasCover = computed(() => Boolean(props.item.coverImageUrl) && !coverFailed.value)
 const coverStyle = computed(() => ({
   ...(TYPE_COVER_STYLES[props.type?.id] || {}),
@@ -81,8 +75,6 @@ const formattedNameEn = computed(() => String(props.item.nameEn || '')
 watch(() => props.item.coverImageUrl, () => {
   coverFailed.value = false
   coverAspectRatio.value = '4 / 1'
-  coverHeightLimited.value = false
-  coverNaturalSize.value = null
 })
 
 function onCoverLoad(event) {
@@ -90,39 +82,12 @@ function onCoverLoad(event) {
   const height = event.currentTarget?.naturalHeight
   if (width > 0 && height > 0) {
     coverAspectRatio.value = `${width} / ${height}`
-    coverNaturalSize.value = { width, height }
-    nextTick(updateCoverLayout)
   }
 }
 
 function onCoverError() {
   coverFailed.value = true
-  coverHeightLimited.value = false
-  coverNaturalSize.value = null
 }
-
-function updateCoverLayout() {
-  const header = headerElement.value
-  const size = coverNaturalSize.value
-  if (!header || !size || !hasCover.value) {
-    coverHeightLimited.value = false
-    return
-  }
-  const intrinsicHeight = header.clientWidth * size.height / size.width
-  coverHeightLimited.value = intrinsicHeight > header.clientHeight + 1
-}
-
-let resizeObserver
-onMounted(() => {
-  resizeObserver = new ResizeObserver(updateCoverLayout)
-  if (headerElement.value) resizeObserver.observe(headerElement.value)
-  window.visualViewport?.addEventListener('resize', updateCoverLayout)
-})
-
-onBeforeUnmount(() => {
-  resizeObserver?.disconnect()
-  window.visualViewport?.removeEventListener('resize', updateCoverLayout)
-})
 </script>
 
 <style scoped>
@@ -144,7 +109,6 @@ onBeforeUnmount(() => {
 
 .item-detail-header-covered {
   aspect-ratio: var(--cover-aspect-ratio, 4 / 1);
-  max-height: min(320px, 42dvh);
   min-height: 0;
 }
 
@@ -156,7 +120,6 @@ onBeforeUnmount(() => {
 .item-detail-header-covered.item-detail-header-summary {
   aspect-ratio: auto;
   min-height: var(--cover-min-height, 440px);
-  max-height: var(--cover-max-height, none);
 }
 
 .item-detail-header-covered .item-detail-title h1 {
@@ -182,15 +145,6 @@ onBeforeUnmount(() => {
   object-position: center;
 }
 
-.item-detail-header-tall-cover .item-detail-cover {
-  object-position: center top;
-}
-
-.item-detail-header-tall-cover:not(.item-detail-header-summary) .item-detail-content {
-  background: color-mix(in srgb, var(--scrim) 62%, transparent);
-  backdrop-filter: blur(2px);
-}
-
 .item-detail-shade {
   z-index: -1;
   background:
@@ -200,6 +154,10 @@ onBeforeUnmount(() => {
 
 .item-detail-header:not(.item-detail-header-covered) .item-detail-shade {
   opacity: .25;
+}
+
+.item-detail-header-covered.item-detail-header-summary .item-detail-shade {
+  display: none;
 }
 
 .item-detail-overlay {
@@ -212,13 +170,6 @@ onBeforeUnmount(() => {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-}
-
-.item-detail-header-covered.item-detail-header-summary .item-detail-overlay {
-  background:
-    linear-gradient(90deg, color-mix(in srgb, var(--scrim) 72%, transparent), color-mix(in srgb, var(--scrim) 36%, transparent) 68%, color-mix(in srgb, var(--scrim) 18%, transparent)),
-    linear-gradient(0deg, color-mix(in srgb, var(--scrim) 76%, transparent), color-mix(in srgb, var(--scrim) 8%, transparent) 92%);
-  backdrop-filter: blur(1.5px);
 }
 
 .item-detail-content {
@@ -246,6 +197,17 @@ onBeforeUnmount(() => {
 
 .item-detail-title {
   min-width: 0;
+}
+
+.item-detail-header-covered.item-detail-header-summary .item-detail-title {
+  width: fit-content;
+  max-width: 100%;
+  padding: 7px 10px;
+  border: 1px solid color-mix(in srgb, var(--text-on-accent) 14%, transparent);
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--scrim) 68%, transparent);
+  backdrop-filter: blur(4px);
+  box-sizing: border-box;
 }
 
 .item-detail-title h1 {
@@ -316,6 +278,10 @@ onBeforeUnmount(() => {
 
   .item-detail-title {
     flex: 1;
+  }
+
+  .item-detail-header-summary .item-detail-title {
+    flex: 0 1 auto;
   }
 
   .item-detail-actions {
