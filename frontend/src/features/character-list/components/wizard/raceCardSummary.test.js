@@ -38,7 +38,7 @@ describe('race card summary', () => {
       raceAbilities: [{
         id: 10,
         name: 'Тёмное зрение',
-        data: { level: 1, race_ids: [{ id: 4 }], description: '<p>Видит в темноте.</p>' },
+        data: { level: 1, race_ids: [{ id: 4 }], desc: '<p>Видит в темноте.</p>' },
       }],
     })
 
