@@ -200,6 +200,37 @@ objects and their active `storage_image` rows are intentionally retained for
 rollback or a future selectable style; they are not bundled into the main
 application binary.
 
+### Class cover art direction
+
+Class covers use the same `3:2` paired-character format and flat-cartoon visual
+language as race covers, while class identity comes from equipment, posture and
+one controlled magical effect rather than ancestry.
+
+- Store an opaque `1536×1024` JPEG at quality 88. Keep exactly two adult class
+  representatives in the central 55–65% of the canvas, with breathing room and
+  a calm dark lower band for the shared header overlay.
+- Preserve the broad composition and defining equipment of the corresponding
+  legacy class portrait, but simplify them into strong silhouettes: a bard's
+  instruments, a fighter's shield and polearm, a wizard's book and staff or an
+  artificer's device and gauntlet. Avoid dense collections of tiny props.
+- Match the race-cover rendering: thick deep-plum contours, broad graphic
+  shapes, expressive stylized faces, restrained two-step shading and a dark
+  plum/navy atmospheric background. Use a distinct muted jewel-tone palette
+  for each class.
+- Magic, spirits and energy are secondary framing shapes. They may establish a
+  class motif, but must not obscure faces, replace the character silhouette or
+  fill the canvas with particles.
+- Do not include text, readable runes, letters, numbers, frames, badges, logos,
+  watermarks, photorealistic skin, painterly noise, gore or busy scenery.
+
+The production set covers all fifteen base classes. It is installed through
+MCP `handbook_item_set_system_image(slot="cover", preservePrevious=true)` and
+uses content-addressed `system-item-media/v1/` objects. Existing realistic
+`system-class-images/v1/` rows remain assigned to `item.icon_image_id` for
+compact identity surfaces; installing a class cover does not replace or delete
+those icons. Subclasses keep the cover-only fallback contract and show a
+monogram until a dedicated cover is assigned.
+
 ### Item cover art direction
 
 Item covers are atmospheric wide illustrations for the shared detail header,
