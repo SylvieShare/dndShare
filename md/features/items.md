@@ -237,11 +237,43 @@ compact identity surfaces; installing a class cover does not replace or delete
 those icons. Subclasses keep the cover-only fallback contract and show a
 monogram until a dedicated cover is assigned.
 
+### Bestiary cover art direction
+
+Bestiary covers use a taller **3:2** composition because the shared header also
+contains the creature's complete combat summary. They are independent from the
+compact creature icon and from legacy artwork imported from external sources.
+
+- Store an opaque `1536×1024` JPEG at quality 88, normally no more than 500 KB.
+  Do not use alpha for the full-bleed scene.
+- Show one main creature unless plurality is essential to the stat block. Keep
+  its recognizable silhouette, face and defining anatomy inside the central
+  40–50% safe zone; the outer sides must remain expendable for narrow-screen
+  `object-fit: cover` crops.
+- Use the same polished flat-cartoon fantasy language as the creature icon:
+  thick deep-plum contours, broad graphic shapes, restrained two-step shading
+  and a controlled jewel-tone palette. Add enough environmental context to
+  communicate habitat, but avoid photorealism, painterly noise and micro-detail.
+- Preserve meaningful vertical space above and below the creature. Keep the
+  lower portion dark and calm because the translucent identity, combat-stat,
+  speed and ability-modifier overlay occupies the cover.
+- Do not bake in text, letters, numbers, readable runes, UI, frames, badges,
+  logos or watermarks. Avoid gore and keep important anatomy away from every
+  edge.
+- Inspect at the desktop `440px` minimum header and at a `390px` mobile
+  viewport. The mobile layout may crop the outer sides, but the subject and all
+  defining features must remain readable behind the overlay.
+
+New generated covers are installed through MCP
+`handbook_item_set_system_image(slot="cover", preservePrevious=true)`, which
+keeps the previous imported/generated asset available for rollback. **Kobold**
+is the first production cover using this `1536×1024` contract.
+
 ### Item cover art direction
 
-Item covers are atmospheric wide illustrations for the shared detail header,
-not enlarged icons. The icon remains the compact identity mark; a cover adds
-setting, energy and color while preserving readable UI overlay space.
+General item and spell covers are atmospheric wide illustrations for the shared
+detail header, not enlarged icons. The icon remains the compact identity mark;
+a cover adds setting, energy and color while preserving readable UI overlay
+space. Bestiary covers are the explicit 3:2 exception defined above.
 
 - Store an opaque lossy WebP at exactly `1536×384` (4:1), normally no more
   than 350 KB. Do not use alpha for a full-bleed scene.
