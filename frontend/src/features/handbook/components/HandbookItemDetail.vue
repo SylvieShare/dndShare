@@ -93,6 +93,10 @@
         <button class="btn-edit" @click="$emit('edit', item)">Редактировать</button>
       </div>
 
+      <div v-if="showTitle" class="detail-technical-meta">
+        <span>ID {{ item.id }}</span>
+      </div>
+
     </template>
     <div v-else class="empty-hint">Выберите объект</div>
   </div>
@@ -220,6 +224,16 @@ function formatSubValue(sub, value) {
 .detail-sources span { border-radius: 999px; background: color-mix(in srgb, var(--accent) 12%, var(--surface)); color: var(--accent); padding: 3px 8px; font-size: 9px; font-weight: 700; letter-spacing: .04em; }
 
 .detail-id { font-size: 11px; color: var(--text-muted); }
+
+.detail-technical-meta {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: auto;
+  padding-top: 24px;
+  color: var(--text-muted);
+  font-size: 10px;
+  letter-spacing: .04em;
+}
 
 .btn-edit {
   background: none;

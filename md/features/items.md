@@ -78,10 +78,12 @@ entries and selected choices.
 - every item detail uses `ItemDetailHeader.vue`. It renders a panoramic
   `coverImageUrl` as full-bleed artwork behind the identity block and actions;
   without a usable cover it keeps the same structure as a compact neutral
-  header and never stretches the square icon into a banner. Cover height is a
-  per-handbook-type presentation profile without a shared maximum: the default
-  follows the asset's intrinsic ratio, while a type may opt into a minimum
-  height without branching the header;
+  header and uses the compact icon as its image fallback. A loaded cover hides
+  the icon instead of duplicating two identity images. The technical item ID is
+  rendered as muted metadata at the bottom of the detail content, never on the
+  artwork. Cover height is a per-handbook-type presentation profile without a
+  shared maximum: the default follows the asset's intrinsic ratio, while a type
+  may opt into a minimum height without branching the header;
 - bestiary details use a `440px` minimum cover profile. Their identity, source,
   tags, CR/AC/HP/proficiency, speeds and all six ability modifiers are rendered
   in the header summary slot. The cover itself is not dimmed: the title uses a

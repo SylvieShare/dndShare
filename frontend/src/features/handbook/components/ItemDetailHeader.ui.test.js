@@ -43,6 +43,14 @@ describe('handbook item detail cover', () => {
     expect(enemyContentSource).not.toContain('class="enemy-top"')
   })
 
+  it('uses the icon only as a missing-cover fallback and moves the id below the content', () => {
+    expect(headerSource).toContain('v-if="!hasCover && (item.iconImageUrl || item.svg)"')
+    expect(headerSource).not.toContain('class="item-detail-id"')
+    expect(detailSource).toContain('v-if="showTitle" class="detail-technical-meta"')
+    expect(detailSource).toContain('<span>ID {{ item.id }}</span>')
+    expect(detailSource).toContain('margin-top: auto;')
+  })
+
   it('keeps overflowing detail content scrollable on every viewport', () => {
     expect(detailSource).toContain('min-height: 0;')
     expect(detailSource).toContain('overflow-y: auto;')

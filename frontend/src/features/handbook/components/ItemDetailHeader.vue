@@ -22,7 +22,7 @@
     <div class="item-detail-overlay">
       <div class="item-detail-content">
         <ItemIcon
-          v-if="item.iconImageUrl || item.svg"
+          v-if="!hasCover && (item.iconImageUrl || item.svg)"
           class="item-detail-icon"
           :item="item"
           :fallback-to-type="false"
@@ -34,7 +34,6 @@
         </div>
         <span v-if="item.userId != null" class="item-detail-custom">✦ ваше</span>
         <div class="item-detail-actions">
-          <span class="item-detail-id">ID {{ item.id }}</span>
           <slot name="actions" />
         </div>
       </div>
@@ -126,8 +125,7 @@ function onCoverError() {
   color: var(--text-on-accent);
 }
 
-.item-detail-header-covered .item-detail-title span,
-.item-detail-header-covered .item-detail-id {
+.item-detail-header-covered .item-detail-title span {
   color: color-mix(in srgb, var(--text-on-accent) 72%, transparent);
 }
 
@@ -240,12 +238,6 @@ function onCoverError() {
   display: flex;
   align-items: center;
   gap: 10px;
-}
-
-.item-detail-id {
-  color: color-mix(in srgb, var(--text-1) 62%, transparent);
-  font-size: 11px;
-  text-shadow: 0 1px 6px var(--scrim);
 }
 
 @media (max-width: 760px) {
