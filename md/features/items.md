@@ -141,7 +141,7 @@ Item covers are atmospheric wide illustrations for the shared detail header,
 not enlarged icons. The icon remains the compact identity mark; a cover adds
 setting, energy and color while preserving readable UI overlay space.
 
-- Store an opaque lossy WebP at exactly `1536×512` (3:1), normally no more
+- Store an opaque lossy WebP at exactly `1536×384` (4:1), normally no more
   than 350 KB. Do not use alpha for a full-bleed scene.
 - Keep the dominant motif inside the central 50–60% safe zone. Both outer
   edges must be expendable so responsive `object-fit: cover; object-position:
@@ -151,8 +151,10 @@ setting, energy and color while preserving readable UI overlay space.
   while sharing its palette and semantic motif; avoid photorealism.
 - Reserve a calmer, darker lower band for the title and controls. Do not bake
   in text, letters, numbers, logos, watermarks, borders, badges or UI frames.
-- Inspect the final asset at desktop 3:1 and mobile 2:1 crops. Decorative
-  covers use empty alt text because the item name already labels the header.
+- Inspect the final asset at 4:1 on desktop and mobile. During migration the
+  header honors an older cover's intrinsic ratio, so existing 3:1 artwork is
+  shown whole until it is regenerated. Decorative covers use empty alt text
+  because the item name already labels the header.
 
 The initial spell covers are **Fireball**, **Bless** and **Aura of Vitality**.
 `cmd/item-cover-sync` verifies the embedded manifest, uploads them to stable

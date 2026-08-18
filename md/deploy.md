@@ -102,7 +102,7 @@ deploy загружает их в `system-class-images/v1/`, обновляет 
 эти WebP не содержат.
 
 Панорамные обложки предметов входят только в `cmd/item-cover-sync`. Манифест
-`internal/itemcovers` фиксирует размер и SHA-256 непрозрачных WebP 1536×512;
+`internal/itemcovers` фиксирует размер и SHA-256 непрозрачных WebP 1536×384;
 deploy загружает их под стабильными ключами `system-item-covers/v1/`, создаёт
 `storage_image(type='item_cover')` и назначает совпавшим системным item через
 `item.cover_image_id`. Заменённые непривязанные обложки помечаются удалёнными,

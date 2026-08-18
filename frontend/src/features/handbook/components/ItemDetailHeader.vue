@@ -1,11 +1,16 @@
 <template>
-  <header class="item-detail-header" :class="{ 'item-detail-header-covered': hasCover }">
+  <header
+    class="item-detail-header"
+    :class="{ 'item-detail-header-covered': hasCover }"
+    :style="coverStyle"
+  >
     <img
       v-if="hasCover"
       class="item-detail-cover"
       :src="item.coverImageUrl"
       alt=""
       aria-hidden="true"
+      @load="onCoverLoad"
       @error="coverFailed = true"
     />
     <div class="item-detail-shade" aria-hidden="true"></div>
@@ -40,12 +45,25 @@ const props = defineProps({
 })
 
 const coverFailed = ref(false)
+const coverAspectRatio = ref('4 / 1')
 const hasCover = computed(() => Boolean(props.item.coverImageUrl) && !coverFailed.value)
+const coverStyle = computed(() => hasCover.value
+  ? { '--cover-aspect-ratio': coverAspectRatio.value }
+  : {})
 const formattedNameEn = computed(() => String(props.item.nameEn || '')
   .replace(/_/g, ' ')
   .replace(/\b[a-z]/g, char => char.toUpperCase()))
 
-watch(() => props.item.coverImageUrl, () => { coverFailed.value = false })
+watch(() => props.item.coverImageUrl, () => {
+  coverFailed.value = false
+  coverAspectRatio.value = '4 / 1'
+})
+
+function onCoverLoad(event) {
+  const width = event.currentTarget?.naturalWidth
+  const height = event.currentTarget?.naturalHeight
+  if (width > 0 && height > 0) coverAspectRatio.value = `${width} / ${height}`
+}
 </script>
 
 <style scoped>
@@ -65,7 +83,7 @@ watch(() => props.item.coverImageUrl, () => { coverFailed.value = false })
 }
 
 .item-detail-header-covered {
-  aspect-ratio: 3 / 1;
+  aspect-ratio: var(--cover-aspect-ratio, 4 / 1);
   min-height: 0;
 }
 
