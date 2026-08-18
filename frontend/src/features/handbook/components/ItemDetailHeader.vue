@@ -5,7 +5,9 @@
     :class="{
       'item-detail-header-covered': hasCover,
       'item-detail-header-tall-cover': coverHeightLimited,
+      'item-detail-header-summary': $slots.summary,
     }"
+    :data-item-type-id="type?.id || undefined"
     :style="coverStyle"
   >
     <img
@@ -19,22 +21,28 @@
     />
     <div class="item-detail-shade" aria-hidden="true"></div>
 
-    <div class="item-detail-content">
-      <ItemIcon
-        v-if="item.iconImageUrl || item.svg"
-        class="item-detail-icon"
-        :item="item"
-        :fallback-to-type="false"
-        :size="42"
-      />
-      <div class="item-detail-title">
-        <h1>{{ item.name }}</h1>
-        <span v-if="formattedNameEn">{{ formattedNameEn }}</span>
+    <div class="item-detail-overlay">
+      <div class="item-detail-content">
+        <ItemIcon
+          v-if="item.iconImageUrl || item.svg"
+          class="item-detail-icon"
+          :item="item"
+          :fallback-to-type="false"
+          :size="42"
+        />
+        <div class="item-detail-title">
+          <h1>{{ item.name }}</h1>
+          <span v-if="formattedNameEn">{{ formattedNameEn }}</span>
+        </div>
+        <span v-if="item.userId != null" class="item-detail-custom">✦ ваше</span>
+        <div class="item-detail-actions">
+          <span class="item-detail-id">ID {{ item.id }}</span>
+          <slot name="actions" />
+        </div>
       </div>
-      <span v-if="item.userId != null" class="item-detail-custom">✦ ваше</span>
-      <div class="item-detail-actions">
-        <span class="item-detail-id">ID {{ item.id }}</span>
-        <slot name="actions" />
+
+      <div v-if="$slots.summary" class="item-detail-summary">
+        <slot name="summary" />
       </div>
     </div>
   </header>
@@ -46,7 +54,15 @@ import ItemIcon from '@/features/items/components/ItemIcon.vue'
 
 const props = defineProps({
   item: { type: Object, required: true },
+  type: { type: Object, default: null },
 })
+
+const TYPE_COVER_STYLES = {
+  6: {
+    '--cover-min-height': '440px',
+    '--cover-max-height': 'none',
+  },
+}
 
 const coverFailed = ref(false)
 const coverAspectRatio = ref('4 / 1')
@@ -54,9 +70,10 @@ const coverHeightLimited = ref(false)
 const coverNaturalSize = ref(null)
 const headerElement = ref(null)
 const hasCover = computed(() => Boolean(props.item.coverImageUrl) && !coverFailed.value)
-const coverStyle = computed(() => hasCover.value
-  ? { '--cover-aspect-ratio': coverAspectRatio.value }
-  : {})
+const coverStyle = computed(() => ({
+  ...(TYPE_COVER_STYLES[props.type?.id] || {}),
+  ...(hasCover.value ? { '--cover-aspect-ratio': coverAspectRatio.value } : {}),
+}))
 const formattedNameEn = computed(() => String(props.item.nameEn || '')
   .replace(/_/g, ' ')
   .replace(/\b[a-z]/g, char => char.toUpperCase()))
@@ -131,6 +148,17 @@ onBeforeUnmount(() => {
   min-height: 0;
 }
 
+.item-detail-header-summary {
+  min-height: var(--cover-min-height, 0);
+  align-items: stretch;
+}
+
+.item-detail-header-covered.item-detail-header-summary {
+  aspect-ratio: auto;
+  min-height: var(--cover-min-height, 440px);
+  max-height: var(--cover-max-height, none);
+}
+
 .item-detail-header-covered .item-detail-title h1 {
   color: var(--text-on-accent);
 }
@@ -158,7 +186,7 @@ onBeforeUnmount(() => {
   object-position: center top;
 }
 
-.item-detail-header-tall-cover .item-detail-content {
+.item-detail-header-tall-cover:not(.item-detail-header-summary) .item-detail-content {
   background: color-mix(in srgb, var(--scrim) 62%, transparent);
   backdrop-filter: blur(2px);
 }
@@ -174,6 +202,25 @@ onBeforeUnmount(() => {
   opacity: .25;
 }
 
+.item-detail-overlay {
+  width: 100%;
+  min-width: 0;
+}
+
+.item-detail-header-summary .item-detail-overlay {
+  min-height: inherit;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.item-detail-header-covered.item-detail-header-summary .item-detail-overlay {
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--scrim) 72%, transparent), color-mix(in srgb, var(--scrim) 36%, transparent) 68%, color-mix(in srgb, var(--scrim) 18%, transparent)),
+    linear-gradient(0deg, color-mix(in srgb, var(--scrim) 76%, transparent), color-mix(in srgb, var(--scrim) 8%, transparent) 92%);
+  backdrop-filter: blur(1.5px);
+}
+
 .item-detail-content {
   width: 100%;
   min-width: 0;
@@ -182,6 +229,14 @@ onBeforeUnmount(() => {
   align-items: center;
   gap: 11px;
   padding: 18px 20px;
+}
+
+.item-detail-header-summary .item-detail-content {
+  padding-bottom: 10px;
+}
+
+.item-detail-summary {
+  padding: 0 20px 24px;
 }
 
 .item-detail-icon {
@@ -235,6 +290,11 @@ onBeforeUnmount(() => {
   .item-detail-header {
     margin: -14px -16px 14px;
   }
+
+  .item-detail-summary {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
 }
 
 @media (max-width: 520px) {
@@ -246,6 +306,12 @@ onBeforeUnmount(() => {
     align-items: flex-end;
     flex-wrap: wrap;
     padding: 16px 14px;
+  }
+
+  .item-detail-summary {
+    padding-right: 14px;
+    padding-bottom: 18px;
+    padding-left: 14px;
   }
 
   .item-detail-title {

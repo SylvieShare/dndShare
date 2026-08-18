@@ -2,7 +2,10 @@
   <div class="detail-panel">
     <template v-if="item">
 
-      <ItemDetailHeader v-if="showTitle" :item="item">
+      <ItemDetailHeader v-if="showTitle" :item="item" :type="type">
+        <template v-if="isEnemy" #summary>
+          <EnemyDetailSummary :item="item" :type="type" />
+        </template>
         <template #actions>
           <button v-if="canEdit" class="btn-edit" @click="$emit('edit', item)">Редактировать</button>
         </template>
@@ -103,6 +106,7 @@ import { ensureItemNames, itemName } from '@/features/handbook/objects/lib/itemN
 import { getSuggestId, isFieldVisible } from '@/features/handbook/objects/lib/schemaFields'
 import AbilityDetailContent from '@/features/items/detail-components/AbilityDetailContent'
 import EnemyDetailContent from '@/features/items/detail-components/EnemyDetailContent'
+import EnemyDetailSummary from '@/features/items/detail-components/EnemyDetailSummary.vue'
 import FeatDetailContent from '@/features/items/detail-components/FeatDetailContent'
 import ItemDetailContent from '@/features/items/detail-components/ItemDetailContent'
 import PotionDetailContent from '@/features/items/detail-components/PotionDetailContent'
@@ -134,6 +138,7 @@ const props = defineProps({
 defineEmits(['edit'])
 
 const customRenderer = computed(() => CUSTOM_RENDERERS[props.type?.id] || null)
+const isEnemy = computed(() => props.type?.id === 6)
 
 const typeFields = computed(() => props.type?.fields || [])
 

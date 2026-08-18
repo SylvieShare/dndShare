@@ -78,7 +78,13 @@ entries and selected choices.
 - every item detail uses `ItemDetailHeader.vue`. It renders a panoramic
   `coverImageUrl` as full-bleed artwork behind the identity block and actions;
   without a usable cover it keeps the same structure as a compact neutral
-  header and never stretches the square icon into a banner;
+  header and never stretches the square icon into a banner. Cover height is a
+  per-handbook-type presentation profile: the shared default remains compact,
+  while a type may opt into a taller composition without branching the header;
+- bestiary details use a `440px` minimum cover profile. Their identity, source,
+  tags, CR/AC/HP/proficiency, speeds and all six ability modifiers are rendered
+  in the header summary slot on one translucent cover overlay. Skills and all
+  later sections remain in the scrolling detail content below the artwork;
 - field labels and errors use shared form components;
 - direct color literals are rejected by `npm run check:colors`.
 
@@ -247,12 +253,15 @@ setting, energy and color while preserving readable UI overlay space.
   while sharing its palette and semantic motif; avoid photorealism.
 - Reserve a calmer, darker lower band for the title and controls. Do not bake
   in text, letters, numbers, logos, watermarks, borders, badges or UI frames.
-- Inspect the final asset at 4:1 on desktop and mobile. The header honors an
-  older cover's intrinsic ratio up to its shared `min(320px, 42dvh)` height
+- Inspect the final asset at 4:1 on desktop and mobile. The default header
+  honors an older cover's intrinsic ratio up to its `min(320px, 42dvh)` height
   limit; taller legacy artwork is top-aligned and continues downward behind a
-  translucent dark identity strip, while detail content remains reachable in
-  the vertically scrollable panel. Decorative covers use empty alt text because
-  the item name already labels the header.
+  translucent dark identity strip. Cover height is configured per handbook
+  type rather than imposed globally. The bestiary profile has a `440px`
+  minimum and may grow to fit its combat summary through the ability-modifier
+  row; that whole summary sits on a translucent overlay over the art. Detail
+  content remains reachable in the vertically scrollable panel. Decorative
+  covers use empty alt text because the item name already labels the header.
 
 The initial spell covers are **Fireball**, **Bless** and **Aura of Vitality**.
 The manual legacy/bootstrap `cmd/item-cover-sync` verifies the embedded
