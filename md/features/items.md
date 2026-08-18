@@ -66,6 +66,9 @@ entries and selected choices.
   through `storage_image` and stored in S3;
   Handbook lists/pickers, the global header search, detail presentations and
   modal titles use the same rule instead of inferring art from localized names;
+- spell tiles in the handbook reserve a 64 px inner height for rune artwork;
+  a raster rune fills that height on desktop and mobile, while the existing
+  compact SVG/type fallback stays centered when no raster image is available;
 - details open through the handbook `ItemViewModal`/modal stack; `ItemViewModal`
   forwards an optional action slot into the fixed `AppModalFrame` footer, so
   character-specific mutations do not leak into handbook detail renderers;

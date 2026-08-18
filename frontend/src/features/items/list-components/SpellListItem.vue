@@ -1,7 +1,14 @@
 <template>
   <ObjectListItem :item="item" :name-en="item.nameEn || ''" :custom="item.userId != null" :subtitle="subtitle">
     <template #leading>
-      <ItemIcon class="sli-type-icon" :item="item" :type="type" />
+      <ItemIcon
+        v-if="item.iconImageUrl"
+        class="sli-rune"
+        :item="item"
+        :fallback-to-type="false"
+        :size="64"
+      />
+      <ItemIcon v-else class="sli-type-icon" :item="item" :type="type" />
       <span
         class="sli-lvl"
         :class="{ 'sli-lvl-zero': data.lvl === 0 }"

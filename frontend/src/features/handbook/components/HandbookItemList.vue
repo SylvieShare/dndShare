@@ -42,7 +42,10 @@
                   v-for="item in group.items"
                   :key="item.id"
                   class="list-row list-row-rich"
-                  :class="{ selected: selectedItem && selectedItem.id === item.id }"
+                  :class="{
+                    selected: selectedItem && selectedItem.id === item.id,
+                    'list-row-spell': type.id === 5,
+                  }"
                   @click="$emit('select', item)"
                 >
                   <EnemyListItem v-if="type.id === 6" :item="item" :type="type" />
@@ -67,7 +70,11 @@
               v-for="item in items"
               :key="item.id"
               class="list-row"
-              :class="{ selected: selectedItem && selectedItem.id === item.id, 'list-row-rich': hasRichRenderer }"
+              :class="{
+                selected: selectedItem && selectedItem.id === item.id,
+                'list-row-rich': hasRichRenderer,
+                'list-row-spell': type.id === 5,
+              }"
               @click="$emit('select', item)"
             >
               <EnemyListItem v-if="type.id === 6" :item="item" :type="type" />
@@ -308,6 +315,12 @@ function onScroll(e) {
 }
 .list-row-rich:hover { background: var(--surface-active); border-color: var(--border-strong); }
 .list-row-rich.selected { background: color-mix(in srgb, var(--accent) 20%, var(--surface-active)); border-color: var(--accent); }
+
+.list-row-rich.list-row-spell {
+  min-height: 66px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
 
 .item-name {
   font-size: 13px;
