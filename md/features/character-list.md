@@ -115,8 +115,10 @@ frontend static assets: deploy uploads them to stable S3 keys, registers system
 wizard reads the resulting `iconImageUrl` from the ordinary handbook item response.
 The nine built-in subraces have matching original paired portraits. Their choice
 cards use a 3:2 media treatment in an exact two-column desktop grid, collapsing to
-one column on narrow phones; selecting one keeps both cards visible and highlights
-the chosen origin without expanding it to full width.
+one column on narrow phones. Each card contains its own description below the name
+and ability bonus; there is no detached selected-subrace description under the
+grid. Selecting one keeps all cards visible and highlights the chosen origin
+without expanding it to full width.
 Selection retains the regular card surface; only its border, status and shadow
 signal selection, so nested fact and subrace chips keep sufficient contrast.
 The concise “Раса” label is presented as a display-font page heading with a short

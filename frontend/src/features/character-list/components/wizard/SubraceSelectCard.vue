@@ -15,21 +15,36 @@
       </span>
     </span>
     <span class="subrace-card-copy">
-      <strong>{{ title }}</strong>
-      <span v-if="subtitle">{{ subtitle }}</span>
+      <span class="subrace-card-heading">
+        <strong>{{ title }}</strong>
+        <span v-if="subtitle">{{ subtitle }}</span>
+      </span>
+      <span v-if="plainDescription" class="subrace-card-description">{{ plainDescription }}</span>
     </span>
   </button>
 </template>
 
 <script setup>
-defineProps({
+import { computed } from 'vue'
+
+const props = defineProps({
   title: { type: String, default: '' },
   subtitle: { type: String, default: '' },
+  description: { type: String, default: '' },
   monogram: { type: String, default: '' },
   imageUrl: { type: String, default: '' },
   selected: { type: Boolean, default: false },
 })
 defineEmits(['select'])
+
+const plainDescription = computed(() => String(props.description || '')
+  .replace(/<[^>]*>/g, ' ')
+  .replace(/&nbsp;/gi, ' ')
+  .replace(/&amp;/gi, '&')
+  .replace(/&quot;/gi, '"')
+  .replace(/&#39;/gi, "'")
+  .replace(/\s+/g, ' ')
+  .trim())
 </script>
 
 <style scoped>
@@ -97,8 +112,9 @@ defineEmits(['select'])
   font-weight: 700;
 }
 .subrace-card-status svg { width: 12px; height: 12px; color: var(--accent); }
-.subrace-card-copy { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding: 12px 14px 13px; }
-.subrace-card-copy strong {
+.subrace-card-copy { flex: 1; display: flex; flex-direction: column; gap: 7px; padding: 12px 14px 14px; }
+.subrace-card-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.subrace-card-heading strong {
   min-width: 0;
   overflow: hidden;
   color: var(--text-1);
@@ -109,5 +125,6 @@ defineEmits(['select'])
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.subrace-card-copy > span { flex: 0 0 auto; color: var(--accent); font-size: 11px; font-weight: 700; }
+.subrace-card-heading > span { flex: 0 0 auto; color: var(--accent); font-size: 11px; font-weight: 700; }
+.subrace-card-description { color: var(--text-2); font-size: 12px; line-height: 1.45; }
 </style>

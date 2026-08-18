@@ -48,13 +48,13 @@
               :key="s.id"
               :title="s.name"
               :subtitle="asiSummary(s)"
+              :description="s.data?.description || ''"
               :monogram="monogramOf(s.name)"
               :image-url="s.iconImageUrl || ''"
               :selected="state.subrace?.id === s.id"
               @select="state.subrace = s"
             />
           </div>
-          <RichContent v-if="subraceDesc" class="step-desc" :html="subraceDesc" />
         </template>
 
         <section v-if="hasRaceChoices" class="race-choices">
@@ -188,7 +188,6 @@ const {
   featPool, featLimit, toggleFeat, setFeatSelection, featEligibility, featComplete, raceFeatureChoices,
 } = inject('createWizard')
 const raceDesc = computed(() => state.race?.data?.description || '')
-const subraceDesc = computed(() => state.subrace?.data?.description || '')
 const visibleRaces = computed(() => state.race ? [state.race] : races.value)
 const atAsiLimit = computed(() => grants.value.asiChoice && state.asiChoice.length >= grants.value.asiChoice.count)
 const hasRaceChoices = computed(() => {

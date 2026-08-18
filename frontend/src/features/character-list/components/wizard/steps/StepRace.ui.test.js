@@ -20,6 +20,8 @@ describe('race step hierarchy', () => {
   it('shows illustrated subraces in a two-column grid', () => {
     expect(source).toContain('<SubraceSelectCard')
     expect(source).toContain(':image-url="s.iconImageUrl || \'\'"')
+    expect(source).toContain(':description="s.data?.description || \'\'"')
+    expect(source).not.toContain('<RichContent v-if="subraceDesc"')
     expect(source).toContain('.subrace-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr))')
   })
 })

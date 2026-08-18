@@ -10,4 +10,9 @@ describe('subrace select card presentation', () => {
     expect(source).toContain(':aria-pressed="selected"')
     expect(source).toContain('aspect-ratio: 3 / 2')
   })
+
+  it('keeps the subrace description inside the card', () => {
+    expect(source).toContain('class="subrace-card-description"')
+    expect(source).toContain('{{ plainDescription }}')
+  })
 })
