@@ -16,4 +16,10 @@ describe('race step hierarchy', () => {
     expect(source).toContain('class="choice-count"')
     expect(source).toContain('grid-template-columns: repeat(6, minmax(0, 1fr))')
   })
+
+  it('shows illustrated subraces in a two-column grid', () => {
+    expect(source).toContain('<SubraceSelectCard')
+    expect(source).toContain(':image-url="s.iconImageUrl || \'\'"')
+    expect(source).toContain('.subrace-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr))')
+  })
 })

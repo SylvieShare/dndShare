@@ -42,15 +42,14 @@
 
         <template v-if="subraces.length">
           <div class="sheet-section-title step-gap">Происхождение</div>
-          <div class="grid">
-            <SelectTile
+          <div class="subrace-grid">
+            <SubraceSelectCard
               v-for="s in subraces"
               :key="s.id"
               :title="s.name"
               :subtitle="asiSummary(s)"
               :monogram="monogramOf(s.name)"
               :image-url="s.iconImageUrl || ''"
-              :svg="s.svg || ''"
               :selected="state.subrace?.id === s.id"
               @select="state.subrace = s"
             />
@@ -176,7 +175,7 @@ import MultiSearchSelect from '@/features/character-list/components/wizard/Multi
 import RaceSelectCard from '@/features/character-list/components/wizard/RaceSelectCard.vue'
 import { raceCardSummary } from '@/features/character-list/components/wizard/raceCardSummary'
 import RichContent from '@/shared/ui/DndRichContent.vue'
-import SelectTile from '@/features/character-list/components/wizard/SelectTile.vue'
+import SubraceSelectCard from '@/features/character-list/components/wizard/SubraceSelectCard.vue'
 import { raceImageFor } from '@/features/character-list/components/wizard/raceVisuals'
 import StepChoices from '@/features/character-list/components/wizard/steps/StepChoices.vue'
 import StepSkills from '@/features/character-list/components/wizard/steps/StepSkills.vue'
@@ -287,7 +286,7 @@ function onFeatChoicesConfirm(choices) {
 .hint { font-size: 12px; color: var(--text-muted); margin: 0; display: flex; align-items: center; gap: 8px; }
 .count { font-size: 12px; font-weight: 600; color: var(--text-muted); }
 .count.done { color: var(--success); }
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
+.subrace-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 .race-grid { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; overflow-anchor: none; }
 .race-back {
   position: absolute;
@@ -462,6 +461,7 @@ function onFeatChoicesConfirm(choices) {
 @media (max-width: 430px) {
   .choice-block { padding: 14px; }
   .asi-chips { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .subrace-grid { grid-template-columns: minmax(0, 1fr); }
 }
 
 .race-list-move { transition: transform .52s cubic-bezier(.22, 1, .36, 1); }

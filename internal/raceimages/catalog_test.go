@@ -8,11 +8,12 @@ import (
 )
 
 func TestCatalogAssetsMatchManifest(t *testing.T) {
-	if len(Catalog) != 9 {
-		t.Fatalf("got %d race images, want 9", len(Catalog))
+	if len(Catalog) != 18 {
+		t.Fatalf("got %d race images, want 18", len(Catalog))
 	}
 	keys := map[string]bool{}
 	objects := map[string]bool{}
+	subraces := 0
 	for _, image := range Catalog {
 		if keys[image.Key] {
 			t.Fatalf("duplicate race key %q", image.Key)
@@ -22,6 +23,12 @@ func TestCatalogAssetsMatchManifest(t *testing.T) {
 		}
 		keys[image.Key] = true
 		objects[image.ObjectKey] = true
+		if image.Subrace {
+			subraces++
+			if !strings.Contains(image.ObjectKey, "/subraces/") {
+				t.Fatalf("subrace %q must use the subrace object namespace", image.Key)
+			}
+		}
 		if !strings.HasPrefix(image.ObjectKey, "system-race-images/v1/") {
 			t.Fatalf("unstable object key %q", image.ObjectKey)
 		}
@@ -39,5 +46,8 @@ func TestCatalogAssetsMatchManifest(t *testing.T) {
 		if actual := hex.EncodeToString(digest[:]); actual != image.SHA256 {
 			t.Fatalf("%s SHA-256 %s, want %s", image.FileName, actual, image.SHA256)
 		}
+	}
+	if subraces != 9 {
+		t.Fatalf("got %d subrace images, want 9", subraces)
 	}
 }

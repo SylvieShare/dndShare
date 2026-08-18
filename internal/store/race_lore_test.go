@@ -20,12 +20,17 @@ func TestRaceLoreSeedsShortAndLongDescriptions(t *testing.T) {
 			t.Fatalf("race lore schema must contain %q", fragment)
 		}
 	}
+	baseRaces := 0
 	for _, image := range raceimages.Catalog {
+		if image.Subrace {
+			continue
+		}
+		baseRaces++
 		if !strings.Contains(schemaRaceLoreSQL, "'"+image.Aliases[0]+"'") {
 			t.Fatalf("race lore schema does not cover %q", image.Key)
 		}
 	}
-	if paragraphs := strings.Count(schemaRaceLoreSQL, "<p>"); paragraphs != len(raceimages.Catalog)*3 {
-		t.Fatalf("got %d lore paragraphs, want %d", paragraphs, len(raceimages.Catalog)*3)
+	if paragraphs := strings.Count(schemaRaceLoreSQL, "<p>"); paragraphs != baseRaces*3 {
+		t.Fatalf("got %d lore paragraphs, want %d", paragraphs, baseRaces*3)
 	}
 }

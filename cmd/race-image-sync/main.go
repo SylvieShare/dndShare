@@ -35,12 +35,12 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		linked, err := database.UpsertSystemRaceImage(ctx, image.ObjectKey, stored.URL, image.FileName, image.MimeType, image.Size, image.Aliases)
+		linked, err := database.UpsertSystemRaceImage(ctx, image.ObjectKey, stored.URL, image.FileName, image.MimeType, image.Size, image.Aliases, image.Subrace)
 		if err != nil {
 			log.Fatalf("register %s: %v", image.Key, err)
 		}
 		if linked == 0 {
-			log.Fatalf("register %s: no base race item matched aliases %v", image.Key, image.Aliases)
+			log.Fatalf("register %s: no race item matched aliases %v", image.Key, image.Aliases)
 		}
 		log.Printf("synced %d/%d: %s, linked items: %d", index+1, len(raceimages.Catalog), image.Key, linked)
 	}

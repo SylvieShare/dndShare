@@ -67,6 +67,9 @@ var schemaRaceImagesSQL string
 //go:embed schema/18_race_lore.sql
 var schemaRaceLoreSQL string
 
+//go:embed schema/19_subrace_images.sql
+var schemaSubraceImagesSQL string
+
 var schemaParts = []struct {
 	name string
 	sql  string
@@ -89,6 +92,7 @@ var schemaParts = []struct {
 	{"session-timers", schemaSessionTimersSQL},
 	{"race-images", schemaRaceImagesSQL},
 	{"race-lore", schemaRaceLoreSQL},
+	{"subrace-images", schemaSubraceImagesSQL},
 }
 
 func applySchema(ctx context.Context, pool *pgxpool.Pool) error {

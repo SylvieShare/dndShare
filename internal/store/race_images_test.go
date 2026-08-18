@@ -20,8 +20,26 @@ func TestRaceImageSchemaUsesItemStorageContract(t *testing.T) {
 		}
 	}
 	for _, image := range raceimages.Catalog {
-		if !strings.Contains(schemaRaceImagesSQL, image.ObjectKey) {
+		schema := schemaRaceImagesSQL
+		if image.Subrace {
+			schema = schemaSubraceImagesSQL
+		}
+		if !strings.Contains(schema, image.ObjectKey) {
 			t.Fatalf("race image schema does not seed %q", image.ObjectKey)
+		}
+	}
+}
+
+func TestSubraceImageSchemaOnlyLinksChildRaceItems(t *testing.T) {
+	for _, fragment := range []string{
+		`"type" = 'item_icon'`,
+		"icon_svg_id = NULL, icon_image_id = image.id",
+		"subrace.user_id IS NULL",
+		"subrace.parent_id IS NOT NULL",
+		"subrace.type_id = 8",
+	} {
+		if !strings.Contains(schemaSubraceImagesSQL, fragment) {
+			t.Fatalf("subrace image schema must contain %q", fragment)
 		}
 	}
 }

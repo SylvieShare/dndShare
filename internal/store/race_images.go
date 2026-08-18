@@ -8,8 +8,8 @@ import (
 )
 
 // UpsertSystemRaceImage registers a stable S3 object in storage_image and
-// attaches it to every matching built-in base-race item.
-func (s *Store) UpsertSystemRaceImage(ctx context.Context, key, url, fileName, mimeType string, fileSize int64, aliases []string) (int64, error) {
+// attaches it to every matching built-in base-race or subrace item.
+func (s *Store) UpsertSystemRaceImage(ctx context.Context, key, url, fileName, mimeType string, fileSize int64, aliases []string, subrace bool) (int64, error) {
 	tx, err := s.pool.Begin(ctx)
 	if err != nil {
 		return 0, err
@@ -45,12 +45,12 @@ func (s *Store) UpsertSystemRaceImage(ctx context.Context, key, url, fileName, m
 		UPDATE dndshare.item
 		SET icon_svg_id = NULL, icon_image_id = $1
 		WHERE user_id IS NULL
-		  AND parent_id IS NULL
 		  AND type_id = 8
+		  AND (($3::boolean AND parent_id IS NOT NULL) OR (NOT $3::boolean AND parent_id IS NULL))
 		  AND (
 			regexp_replace(replace(lower(COALESCE(name_en, '')), 'ё', 'е'), '[^a-zа-я0-9]+', '', 'g') = ANY($2)
 			OR regexp_replace(replace(lower(name), 'ё', 'е'), '[^a-zа-я0-9]+', '', 'g') = ANY($2)
-		  )`, imageID, aliases)
+		  )`, imageID, aliases, subrace)
 	if err != nil {
 		return 0, err
 	}
