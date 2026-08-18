@@ -65,7 +65,8 @@ items and suggests must load without a session.
 
 The fixed steps are: Версия → Раса → Класс → Предыстория → Характеристики →
 Снаряжение → Личность → Обзор. The desktop layout keeps the main step content in
-a responsive column capped at 920px. A separate 220px step rail floats directly
+a responsive column capped at 1120px, giving race and class covers a wider media
+area. A separate 220px step rail floats directly
 to that column's left; there is no permanent right preview. The rail shows the
 primary current value for each step (for example,
 the chosen race, class/subclass or background) without repeating its mechanical

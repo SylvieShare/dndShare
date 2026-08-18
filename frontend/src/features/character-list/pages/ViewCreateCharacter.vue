@@ -320,7 +320,7 @@ onMounted(async () => {
 .cc-head,
 .cc-body,
 .cc-foot {
-  --cc-main-max: 920px;
+  --cc-main-max: 1120px;
   display: grid;
   grid-template-columns: 220px minmax(0, var(--cc-main-max));
   justify-content: center;
