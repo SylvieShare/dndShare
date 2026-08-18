@@ -25,7 +25,8 @@ VM под systemd; Docker, JAR и Maven в production path не использу
 2. запускает `npm run build` в `frontend/`;
 3. копирует `frontend/target/dist` в `internal/assets/dist`;
 4. собирает статический `linux/amd64` бинарь с текущим Git SHA в
-   `internal/web.BuildCommit`, `session-image-sync` и `race-image-sync`;
+   `internal/web.BuildCommit`, `session-image-sync`, `race-image-sync` и
+   `class-image-sync`;
 5. копирует бинарники, `deploy/dndshare.service` и
    `deploy/dndshare-run.sh` на VM;
 6. проверяет и загружает системные JPEG под стабильными S3-ключами, регистрирует
@@ -86,6 +87,12 @@ URL строк `storage_image` до запуска новой версии пр�
 `system-race-images/v1/`, обновляет системные строки `storage_image` и назначает
 их через `item.icon_image_id` всем соответствующим базовым race item. Основной
 бинарь и frontend эти JPEG не содержат.
+
+Иллюстрации базовых классов входят только в `cmd/class-image-sync`. Манифест
+`internal/classimages` фиксирует размер и SHA-256 для всех пятнадцати JPEG;
+deploy загружает их в `system-class-images/v1/`, обновляет системные строки
+`storage_image` и назначает через `item.icon_image_id` только базовым class item.
+Основной бинарь и frontend эти JPEG не содержат.
 
 Deploy также запускает `cmd/bestiary-image-sync`. Команда выбирает только
 старые системные картинки бестиария без S3 object key, копирует их по стабильным

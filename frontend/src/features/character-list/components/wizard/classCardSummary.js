@@ -1,0 +1,74 @@
+import { featuresForBinding } from '@/features/character-editor/settings/dnd/creation/progression'
+import { STAT_FULL, SUGGEST16_TO_STAT } from '@/features/character-list/components/wizard/labels'
+import { dieLabel } from '@/shared/lib/systemDice'
+
+function cleanText(value) {
+  return String(value || '')
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&amp;/gi, '&')
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;/gi, "'")
+    .replace(/\s+/g, ' ')
+    .replace(/\s+([,.!?;:])/g, '$1')
+    .trim()
+}
+
+function resolved(ids, typeId, suggestValue) {
+  return [...new Set((ids || []).map((id) => suggestValue(typeId, id)).filter(Boolean))]
+}
+
+function statNames(ids) {
+  return [...new Set((ids || []).map((id) => STAT_FULL[SUGGEST16_TO_STAT[Number(id)]]).filter(Boolean))]
+}
+
+function pushFact(facts, label, value, wide = false, entries = []) {
+  if (value) facts.push({ label, value, wide, entries })
+}
+
+export function shortClassDescription(charClass, limit = 220) {
+  const source = charClass?.data?.short_description || charClass?.data?.summary || charClass?.data?.description || ''
+  const text = cleanText(source)
+  if (text.length <= limit) return text
+  return `${text.slice(0, limit).replace(/\s+\S*$/, '')}…`
+}
+
+export function classCardSummary({ charClass, classAbilities = [], suggestValue = () => '', subclasses = [] }) {
+  const data = charClass?.data || {}
+  const facts = []
+  pushFact(facts, 'Кость хитов', dieLabel(data.hit_die))
+  pushFact(facts, 'Ключевые характеристики', statNames(data.primary_abilities).join(', '))
+  pushFact(facts, 'Спасброски', statNames(data.saves).join(', '))
+
+  const armor = resolved(data.armor_prof, 3, suggestValue)
+  const weapons = resolved(data.weapon_prof, 4, suggestValue)
+  const tools = resolved(data.tool_prof, 5, suggestValue)
+  const proficiencies = [
+    armor.length ? `доспехи: ${armor.join(', ')}` : '',
+    weapons.length ? `оружие: ${weapons.join(', ')}` : '',
+    tools.length ? `инструменты: ${tools.join(', ')}` : '',
+  ].filter(Boolean)
+  pushFact(facts, 'Владения', proficiencies.join(' · '), true)
+
+  const classFeatures = featuresForBinding(classAbilities, { classId: charClass?.id }, 1)
+  const abilities = classFeatures
+    .filter((ability) => ability.name)
+    .map((ability) => ({ name: ability.name, description: ability.data?.desc || ability.data?.description || '' }))
+  pushFact(facts, 'Способности 1 уровня', abilities.map((ability) => ability.name).join(', '), true, abilities)
+
+  const choices = []
+  if (data.starting_equipment || data.startingEquipment) choices.push('снаряжение')
+  if (data.skill_choice?.count) choices.push(`${data.skill_choice.count} навыка`)
+  if (classFeatures.some((ability) => ability?.data?.choice)) choices.push('особенности')
+  const spellcasting = data.spellcasting
+  if (spellcasting && (Number(spellcasting.cantrips_known) > 0 || Number(spellcasting.spells_known) > 0)) choices.push('заклинания')
+  if (Number(data.subclass_level) === 1 && subclasses.length) choices.push('архетип')
+
+  return {
+    description: shortClassDescription(charClass),
+    facts,
+    choices,
+    subclasses: [...new Set(subclasses.filter(Boolean))],
+    subclassLevel: Number(data.subclass_level) || null,
+  }
+}

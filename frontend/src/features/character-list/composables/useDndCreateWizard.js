@@ -53,6 +53,7 @@ export function useDndCreateWizard() {
   const races = ref([])
   const raceSubracesByParent = ref(new Map())
   const classes = ref([])
+  const classSubclassesByParent = ref(new Map())
   const subraces = ref([])
   const subclasses = ref([])
   const raceAbilities = ref([])
@@ -97,7 +98,14 @@ export function useDndCreateWizard() {
         subraceMap.set(key, [...(subraceMap.get(key) || []), item.name].filter(Boolean))
       })
       raceSubracesByParent.value = subraceMap
-      classes.value = (c?.items || []).filter((i) => !i.parentId)
+      const classItems = c?.items || []
+      classes.value = classItems.filter((i) => !i.parentId)
+      const subclassMap = new Map()
+      classItems.filter((item) => item.parentId && item.typeId === CLASS_TYPE).forEach((item) => {
+        const key = String(item.parentId)
+        subclassMap.set(key, [...(subclassMap.get(key) || []), item.name].filter(Boolean))
+      })
+      classSubclassesByParent.value = subclassMap
       raceAbilities.value = ra?.items || []
       classAbilities.value = ca?.items || []
       featPool.value = ft?.items || []
@@ -153,6 +161,7 @@ export function useDndCreateWizard() {
     return it?.value || ''
   }
   function raceSubraceNames(raceId) { return raceSubracesByParent.value.get(String(raceId)) || [] }
+  function classSubclassNames(classId) { return classSubclassesByParent.value.get(String(classId)) || [] }
 
   // Changing background clears its chosen languages.
   watch(() => state.background?.id, () => { if (!hydrating) state.bgLangIds = [] })
@@ -607,7 +616,7 @@ export function useDndCreateWizard() {
     state, sourceVersionId, setSourceVersionId,
     races, classes, subraces, subclasses, spellPool, featPool, bgPool, loading,
     raceSubraceNames,
-    raceAbilities, classAbilities,
+    raceAbilities, classAbilities, classSubclassNames,
     grants, isCaster, skillOptions, skillLimit, finalScores, racialBonus, featBonuses,
     pointsSpent, pointsLeft,
     featureChoices, raceFeatureChoices, classFeatureChoices,

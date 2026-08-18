@@ -51,10 +51,14 @@ CGO_ENABLED=0 GOOS=linux GOARCH=amd64 "$GO" build -trimpath \
   -o build/race-image-sync ./cmd/race-image-sync
 CGO_ENABLED=0 GOOS=linux GOARCH=amd64 "$GO" build -trimpath \
   -ldflags="-s -w" \
+  -o build/class-image-sync ./cmd/class-image-sync
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 "$GO" build -trimpath \
+  -ldflags="-s -w" \
   -o build/bestiary-image-sync ./cmd/bestiary-image-sync
 ls -lh build/dndshare | awk '{print "    бинарь:", $5}'
 ls -lh build/session-image-sync | awk '{print "    синхронизация изображений:", $5}'
 ls -lh build/race-image-sync | awk '{print "    изображения рас:", $5}'
+ls -lh build/class-image-sync | awk '{print "    изображения классов:", $5}'
 ls -lh build/bestiary-image-sync | awk '{print "    миграция изображений бестиария:", $5}'
 
 echo "==> Копирование бинаря + unit + run.sh на $VM_HOST"
@@ -62,6 +66,7 @@ echo "==> Копирование бинаря + unit + run.sh на $VM_HOST"
 scp -i "$SSH_KEY" build/dndshare            "$VM_USER@$VM_HOST:~/dndshare.new"
 scp -i "$SSH_KEY" build/session-image-sync  "$VM_USER@$VM_HOST:~/session-image-sync.new"
 scp -i "$SSH_KEY" build/race-image-sync     "$VM_USER@$VM_HOST:~/race-image-sync.new"
+scp -i "$SSH_KEY" build/class-image-sync    "$VM_USER@$VM_HOST:~/class-image-sync.new"
 scp -i "$SSH_KEY" build/bestiary-image-sync "$VM_USER@$VM_HOST:~/bestiary-image-sync.new"
 scp -i "$SSH_KEY" deploy/dndshare.service   "$VM_USER@$VM_HOST:~/dndshare.service"
 scp -i "$SSH_KEY" deploy/dndshare-run.sh    "$VM_USER@$VM_HOST:~/dndshare-run.sh"
@@ -70,7 +75,7 @@ echo "==> Обновление unit + перезапуск сервиса (се�
 ssh -i "$SSH_KEY" "$VM_USER@$VM_HOST" "bash -s -- '$BUILD_COMMIT'" <<'REMOTE'
   set -e
   expected_commit="$1"
-  chmod +x ~/dndshare.new ~/session-image-sync.new ~/race-image-sync.new ~/bestiary-image-sync.new ~/dndshare-run.sh ~/fetch-secrets.sh
+  chmod +x ~/dndshare.new ~/session-image-sync.new ~/race-image-sync.new ~/class-image-sync.new ~/bestiary-image-sync.new ~/dndshare-run.sh ~/fetch-secrets.sh
   while IFS= read -r unit_line; do
     case "$unit_line" in
       Environment=*) export "${unit_line#Environment=}" ;;
@@ -82,10 +87,12 @@ ssh -i "$SSH_KEY" "$VM_USER@$VM_HOST" "bash -s -- '$BUILD_COMMIT'" <<'REMOTE'
   set +a
   ~/bestiary-image-sync.new
   ~/race-image-sync.new
+  ~/class-image-sync.new
   sudo systemctl stop dndshare || true
   ~/session-image-sync.new
   mv ~/session-image-sync.new ~/session-image-sync
   mv ~/race-image-sync.new ~/race-image-sync
+  mv ~/class-image-sync.new ~/class-image-sync
   mv ~/bestiary-image-sync.new ~/bestiary-image-sync
   mv ~/dndshare.new ~/dndshare
   sudo install -m 644 ~/dndshare.service /etc/systemd/system/dndshare.service

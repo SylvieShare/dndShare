@@ -128,6 +128,18 @@ ability-score choices use a stronger six-tile desktop grid (three/two columns at
 narrower breakpoints), a prominent completion counter and distinct selected and
 locked states.
 
+The class step follows the same selection flow. All fifteen built-in base classes,
+including Artificer, Magus and Shaman, are full-width illustrated rows with an
+original male/female class portrait. A row presents its short handbook description,
+hit die, primary abilities, saving throws, proficiencies, level-one features and
+available archetype names; feature descriptions use the shared hover tooltip.
+Dependent equipment, skill, feature, archetype and spell choices are announced in
+the row but rendered as separate framed sections only after selection. The selected
+row moves to the top, the other classes leave the list, and the same stable back and
+scroll-restoration behaviour as the race step returns to the catalogue. Built-in
+class JPEGs are uploaded by deploy to `system-class-images/v1/*`, registered as
+system `storage_image` rows and consumed through each class item's `iconImageUrl`.
+
 Key rules:
 
 - race/class/subrace/subclass are handbook item references;
@@ -146,8 +158,8 @@ Key rules:
 - resets and incomplete-create decisions use shared `ConfirmDialog`;
 - the draft persists in `localStorage` and is cleared after successful create.
 
-Race/class tiles include visual artwork and the current step repeats the
-selected option's benefits below the choices. Handbook equipment rows can open
+Race and class rows include visual artwork; the class result block records the
+resolved class choices below the controls. Handbook equipment rows can open
 their full item card. Skill choices use description tooltips and spell choice
 rows omit the school label; their detail action uses a question-mark help icon.
 Character name belongs to the Personality step;
