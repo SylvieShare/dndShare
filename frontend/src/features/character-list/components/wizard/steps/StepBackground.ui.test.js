@@ -6,9 +6,17 @@ const source = readFileSync(fileURLToPath(new URL('./StepBackground.vue', import
 
 describe('background step presentation', () => {
   it('renders illustrated backgrounds in a two-column grid', () => {
+    expect(source).toContain('<IllustratedChoiceStage')
+    expect(source).toContain('back-text="К выбору предыстории"')
+    expect(source).toContain('two-column')
     expect(source).toContain('<BackgroundSelectCard')
-    expect(source).toContain('.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr))')
-    expect(source).toContain('@media (max-width: 700px) { .grid { grid-template-columns: minmax(0, 1fr); } }')
+  })
+
+  it('expands only the selected background and renders its details below', () => {
+    expect(source).toContain('v-for="b in visibleBackgrounds"')
+    expect(source).toContain('state.background ? [state.background] : bgPool.value')
+    expect(source).toContain('<template #details>')
+    expect(source).toContain('@clear="state.background = null"')
   })
 
   it('uses the dedicated cover and never stretches the compact icon', () => {

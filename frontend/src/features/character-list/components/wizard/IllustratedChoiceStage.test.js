@@ -12,7 +12,13 @@ describe('illustrated choice stage', () => {
   })
 
   it('owns shared selection motion and scroll restoration', () => {
-    expect(source).toContain('<TransitionGroup name="illustrated-list"')
+    expect(source).toContain('name="illustrated-list"')
     expect(source).toContain("scroller.scrollTo({ top: scrollTop, behavior: 'auto' })")
+  })
+
+  it('supports a responsive two-column catalogue that collapses after selection', () => {
+    expect(source).toContain("'illustrated-choice-list--two-column': twoColumn && !selected")
+    expect(source).toContain('.illustrated-choice-list--two-column { grid-template-columns: repeat(2, minmax(0, 1fr)); }')
+    expect(source).toContain('@media (max-width: 700px)')
   })
 })

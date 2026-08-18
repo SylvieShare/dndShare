@@ -48,7 +48,7 @@ defineEmits(['select'])
 }
 .background-card:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--accent) 44%, var(--border)); box-shadow: var(--shadow-md); }
 .background-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-.background-card--selected { border-color: color-mix(in srgb, var(--accent) 58%, var(--border)); box-shadow: 0 14px 34px color-mix(in srgb, var(--bg) 30%, transparent); }
+.background-card--selected { min-height: 270px; display: grid; grid-template-columns: minmax(280px, .95fr) minmax(0, 1.55fr); border-color: color-mix(in srgb, var(--accent) 58%, var(--border)); box-shadow: 0 14px 34px color-mix(in srgb, var(--bg) 30%, transparent); }
 .background-card--selected:hover { transform: none; }
 .background-card-visual { position: relative; display: block; width: 100%; aspect-ratio: 3 / 2; overflow: hidden; background: color-mix(in srgb, var(--accent) 8%, var(--surface-raised)); }
 .background-card-visual img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 28%; transition: transform .35s cubic-bezier(.22,1,.36,1); }
@@ -63,5 +63,14 @@ defineEmits(['select'])
 .background-card-skills { display: flex; flex-direction: column; gap: 2px; margin-top: auto; padding-top: 7px; }
 .background-card-skills span { color: var(--text-muted); font-size: 8px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
 .background-card-skills b { overflow: hidden; color: var(--text-1); font-size: 11px; font-weight: 500; line-height: 1.35; text-overflow: ellipsis; white-space: nowrap; }
+.background-card--selected .background-card-visual { height: 100%; aspect-ratio: auto; }
+.background-card--selected .background-card-body { justify-content: center; padding: 20px 22px; }
+.background-card--selected .background-card-title { font-size: 24px; }
+.background-card--selected .background-card-description { -webkit-line-clamp: 3; }
+@media (max-width: 700px) {
+  .background-card--selected { display: flex; min-height: 0; }
+  .background-card--selected .background-card-visual { height: auto; aspect-ratio: 3 / 2; }
+  .background-card--selected .background-card-body { padding: 16px; }
+}
 @media (prefers-reduced-motion: reduce) { .background-card, .background-card-visual img { transition: none; } }
 </style>

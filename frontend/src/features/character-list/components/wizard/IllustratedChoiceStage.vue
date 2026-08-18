@@ -13,7 +13,12 @@
             <span><span class="illustrated-choice-back-label">Назад</span><span class="illustrated-choice-back-note">{{ backText }}</span></span>
           </button>
         </Transition>
-        <TransitionGroup name="illustrated-list" tag="div" class="illustrated-choice-list">
+        <TransitionGroup
+          name="illustrated-list"
+          tag="div"
+          class="illustrated-choice-list"
+          :class="{ 'illustrated-choice-list--two-column': twoColumn && !selected }"
+        >
           <slot name="cards" />
         </TransitionGroup>
       </div>
@@ -39,6 +44,7 @@ const props = defineProps({
   loadingText: { type: String, default: 'Загрузка справочника…' },
   emptyText: { type: String, default: 'В справочнике пока нет вариантов.' },
   backText: { type: String, default: 'К выбору' },
+  twoColumn: { type: Boolean, default: false },
 })
 const emit = defineEmits(['clear'])
 const stage = ref(null)
@@ -74,6 +80,7 @@ function clearSelection() {
 .illustrated-choice-muted { margin: 0; color: var(--text-muted); font-size: 13px; }
 .illustrated-choice-stage { position: relative; overflow-anchor: none; }
 .illustrated-choice-list { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+.illustrated-choice-list--two-column { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .illustrated-choice-details { display: flex; flex-direction: column; gap: 12px; overflow-anchor: none; }
 .illustrated-choice-back { position: absolute; z-index: 5; top: 10px; left: 10px; display: inline-flex; align-items: center; gap: 9px; padding: 6px 10px 6px 6px; color: var(--text-2); background: color-mix(in srgb, var(--bg) 78%, transparent); border: 1px solid color-mix(in srgb, var(--border) 78%, transparent); box-shadow: var(--shadow-sm); backdrop-filter: blur(12px); border-radius: var(--r-md); font: inherit; text-align: left; cursor: pointer; transition: color .15s, background .15s, border-color .15s, transform .18s cubic-bezier(.22,1,.36,1); }
 .illustrated-choice-back:hover { color: var(--text-1); background: color-mix(in srgb, var(--accent) 12%, var(--bg)); border-color: color-mix(in srgb, var(--accent) 24%, var(--border)); transform: translateX(-2px); }
@@ -96,4 +103,5 @@ function clearSelection() {
 .illustrated-back-leave-active { transition: opacity .14s ease, transform .2s cubic-bezier(.4,0,1,1); }
 .illustrated-back-enter-from, .illustrated-back-leave-to { opacity: 0; transform: translateX(-10px); }
 @media (prefers-reduced-motion: reduce) { .illustrated-list-move, .illustrated-list-enter-active, .illustrated-list-leave-active, .illustrated-details-enter-active, .illustrated-details-leave-active, .illustrated-back-enter-active, .illustrated-back-leave-active { transition: none; } }
+@media (max-width: 700px) { .illustrated-choice-list--two-column { grid-template-columns: minmax(0, 1fr); } }
 </style>

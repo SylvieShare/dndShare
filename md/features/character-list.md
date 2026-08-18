@@ -151,11 +151,13 @@ The background step also works with handbook item references (type 11), not
 suggest values. Its catalogue is an exact two-column desktop grid that collapses
 to one column at 700px and below. Every card uses only `coverImageUrl`, followed
 by the background name, its short handbook description and granted skills; a
-missing cover produces a monogram instead of stretching `iconImageUrl`. Selecting
-a card keeps the catalogue visible and reveals the existing skill, tool,
-language, feature, equipment and money summary below it. Built-in background
-covers live in system `storage_image` rows assigned through the generic
-`item.cover_image_id` relation.
+missing cover produces a monogram instead of stretching `iconImageUrl`. Selection
+uses the shared `IllustratedChoiceStage`: the chosen card expands into a
+full-width horizontal row, the other backgrounds leave the catalogue, and a
+back action restores the two-column list without changing the content scroll.
+The existing skill, tool, language, feature, equipment and money summary appears
+below the expanded card. Built-in background covers live in system
+`storage_image` rows assigned through the generic `item.cover_image_id` relation.
 
 Key rules:
 
