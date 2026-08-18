@@ -25,6 +25,11 @@ func TestMCPPublishesSystemItemImageToolContract(t *testing.T) {
 				t.Fatalf("required parameter %q is missing from %#v", key, required)
 			}
 		}
+		properties, _ := input["properties"].(map[string]any)
+		preservePrevious, _ := properties["preservePrevious"].(map[string]any)
+		if preservePrevious["type"] != "boolean" {
+			t.Fatalf("preservePrevious must be a boolean property: %#v", preservePrevious)
+		}
 		return
 	}
 	t.Fatal("handbook_item_set_system_image definition not found")
@@ -33,18 +38,19 @@ func TestMCPPublishesSystemItemImageToolContract(t *testing.T) {
 func TestParseMCPSystemItemImageValidatesContent(t *testing.T) {
 	pngHeader := []byte{'\x89', 'P', 'N', 'G', '\r', '\n', '\x1a', '\n'}
 	args := map[string]json.RawMessage{
-		"itemId":     json.RawMessage(`42`),
-		"slot":       json.RawMessage(`" ICON "`),
-		"fileName":   json.RawMessage(`" fireball.png "`),
-		"mimeType":   json.RawMessage(`"IMAGE/PNG"`),
-		"dataBase64": json.RawMessage(`"` + base64.StdEncoding.EncodeToString(pngHeader) + `"`),
+		"itemId":           json.RawMessage(`42`),
+		"slot":             json.RawMessage(`" ICON "`),
+		"fileName":         json.RawMessage(`" fireball.png "`),
+		"mimeType":         json.RawMessage(`"IMAGE/PNG"`),
+		"dataBase64":       json.RawMessage(`"` + base64.StdEncoding.EncodeToString(pngHeader) + `"`),
+		"preservePrevious": json.RawMessage(`true`),
 	}
 
 	upload, err := parseMCPSystemItemImage(args)
 	if err != nil {
 		t.Fatalf("parseMCPSystemItemImage: %v", err)
 	}
-	if upload.ItemID != 42 || upload.Slot != "icon" || upload.FileName != "fireball.png" || upload.MIMEType != "image/png" {
+	if upload.ItemID != 42 || upload.Slot != "icon" || upload.FileName != "fireball.png" || upload.MIMEType != "image/png" || !upload.PreservePrevious {
 		t.Fatalf("unexpected normalized upload: %#v", upload)
 	}
 }

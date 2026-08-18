@@ -20,11 +20,12 @@ const (
 )
 
 type mcpSystemItemImage struct {
-	ItemID   int64
-	Slot     string
-	FileName string
-	MIMEType string
-	Data     []byte
+	ItemID           int64
+	Slot             string
+	FileName         string
+	MIMEType         string
+	Data             []byte
+	PreservePrevious bool
 }
 
 func (s *Server) toolSystemItemSetImage(ctx context.Context, args map[string]json.RawMessage) (any, error) {
@@ -72,7 +73,9 @@ func (s *Server) toolSystemItemSetImage(ctx context.Context, args map[string]jso
 		}
 		return nil, err
 	}
-	s.cleanupItemIconContext(ctx, replaced)
+	if !upload.PreservePrevious {
+		s.cleanupItemIconContext(ctx, replaced)
+	}
 
 	items, err := s.store.GetByIds(ctx, []int64{upload.ItemID}, nil)
 	if err != nil {
@@ -82,14 +85,15 @@ func (s *Server) toolSystemItemSetImage(ctx context.Context, args map[string]jso
 		return nil, fmt.Errorf("system handbook item %d disappeared after image installation", upload.ItemID)
 	}
 	return map[string]any{
-		"item":      items[0],
-		"slot":      upload.Slot,
-		"imageId":   imageID,
-		"imageUrl":  stored.URL,
-		"objectKey": stored.Key,
-		"fileName":  upload.FileName,
-		"mimeType":  upload.MIMEType,
-		"fileSize":  len(upload.Data),
+		"item":              items[0],
+		"slot":              upload.Slot,
+		"imageId":           imageID,
+		"imageUrl":          stored.URL,
+		"objectKey":         stored.Key,
+		"fileName":          upload.FileName,
+		"mimeType":          upload.MIMEType,
+		"fileSize":          len(upload.Data),
+		"preservedPrevious": upload.PreservePrevious,
 	}, nil
 }
 
@@ -151,12 +155,17 @@ func parseMCPSystemItemImage(args map[string]json.RawMessage) (mcpSystemItemImag
 	if detected != mimeType {
 		return mcpSystemItemImage{}, fmt.Errorf("mimeType %q does not match detected content type %q", mimeType, detected)
 	}
+	preservePrevious, err := argBoolDefault(args, "preservePrevious", false)
+	if err != nil {
+		return mcpSystemItemImage{}, err
+	}
 	return mcpSystemItemImage{
-		ItemID:   itemID,
-		Slot:     slot,
-		FileName: fileName,
-		MIMEType: mimeType,
-		Data:     data,
+		ItemID:           itemID,
+		Slot:             slot,
+		FileName:         fileName,
+		MIMEType:         mimeType,
+		Data:             data,
+		PreservePrevious: preservePrevious,
 	}, nil
 }
 
