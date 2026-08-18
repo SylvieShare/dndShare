@@ -5,8 +5,8 @@ import (
 	"fmt"
 )
 
-// Image describes one verified system race illustration and the handbook
-// names whose base-race or subrace item must reference it.
+// Image describes one verified system race cover and the handbook names whose
+// base-race or subrace item must reference it.
 type Image struct {
 	Key       string
 	FileName  string

@@ -1,8 +1,9 @@
--- Built-in race artwork is stored in S3 and projected through the same
--- item.icon_image_id -> storage_image contract as every other handbook image.
+-- Existing 3:2 race artwork is retained as a detail cover. Compact race icons
+-- use a separate system-race-icons namespace and are assigned by deploy sync.
+DROP INDEX IF EXISTS dndshare.idx_storage_image_system_race_key;
 CREATE UNIQUE INDEX IF NOT EXISTS idx_storage_image_system_race_key
     ON dndshare.storage_image USING btree ("key")
-    WHERE "type" = 'item_icon' AND user_id IS NULL AND "key" LIKE 'system-race-images/%';
+    WHERE user_id IS NULL AND "key" LIKE 'system-race-images/%';
 
 WITH race_images(object_key, file_name, file_size) AS (
     VALUES
@@ -21,10 +22,10 @@ INSERT INTO dndshare.storage_image (
 )
 SELECT NULL, object_key,
        'https://storage.yandexcloud.net/dndshare/' || object_key,
-       'item_icon', false, file_name, 'image/jpeg', file_size
+       'item_cover', false, file_name, 'image/jpeg', file_size
 FROM race_images
-ON CONFLICT ("key") WHERE "type" = 'item_icon' AND user_id IS NULL AND "key" LIKE 'system-race-images/%'
-DO UPDATE SET deleted = false, file_name = EXCLUDED.file_name,
+ON CONFLICT ("key") WHERE user_id IS NULL AND "key" LIKE 'system-race-images/%'
+DO UPDATE SET "type" = 'item_cover', deleted = false, file_name = EXCLUDED.file_name,
               mime_type = EXCLUDED.mime_type, file_size = EXCLUDED.file_size;
 
 WITH race_mapping(object_key, aliases) AS (
@@ -40,11 +41,12 @@ WITH race_mapping(object_key, aliases) AS (
       ('system-race-images/v1/tiefling.jpg', ARRAY['tiefling', 'тифлинг'])
 )
 UPDATE dndshare.item race
-SET icon_svg_id = NULL, icon_image_id = image.id
+SET cover_image_id = image.id,
+    icon_image_id = CASE WHEN race.icon_image_id = image.id THEN NULL ELSE race.icon_image_id END
 FROM race_mapping mapping
 JOIN dndshare.storage_image image
   ON image."key" = mapping.object_key
- AND image."type" = 'item_icon'
+ AND image."type" = 'item_cover'
  AND image.deleted = false
 WHERE race.user_id IS NULL
   AND race.parent_id IS NULL

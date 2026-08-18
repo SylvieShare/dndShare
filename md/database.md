@@ -82,10 +82,13 @@ Startup data correction переводит прежние значения в э
 включает; FK использует `ON DELETE SET NULL`.
 Импортированные изображения существ также используют `icon_image_id`; внешний
 URL хранится в системной строке `storage_image`, а не в `item.data`.
-Иллюстрации девяти базовых рас используют тот же контракт: системные строки
-`storage_image` с ключами `system-race-images/v1/*` назначаются базовым item типа
-8 через `icon_image_id`. Startup seed создаёт идемпотентные ссылки, а deploy-sync
-проверяет и загружает фактические JPEG в S3; frontend-ресурсов-дублей нет.
+Прежние иллюстрации рас используют независимый контракт обложки: системные
+строки `storage_image(type='item_cover')` с ключами
+`system-race-images/v1/*` назначаются item типа 8 через `cover_image_id`.
+Компактные прозрачные WebP используют отдельные ключи
+`system-race-icons/v1/*` и `icon_image_id`. Startup seed идемпотентно переносит
+старую ссылку из иконки в обложку, не затирая уже назначенную новую иконку, а
+deploy-sync проверяет и загружает фактические файлы в S3; frontend-дублей нет.
 Startup schema переименовывает прежний `item.svg_id` в `icon_svg_id` без
 runtime alias. Sections `schema/06_item_icons.sql` и
 `schema/07_feature_icons.sql` идемпотентно создают SVG для базового оружия,
@@ -120,9 +123,12 @@ Rich descriptions остаются HTML-строками внутри соотв
 
 Иллюстрации девяти базовых рас и девяти встроенных подрас загружаются deployment-
 синхронизатором по стабильным ключам `system-race-images/v1/...`. Для каждой
-создаётся системная строка `storage_image(type='item_icon')`; базовые расы
-связываются только с item без `parent_id`, а подрасы — только с дочерними item типа
-8 через `item.icon_image_id`.
+создаётся системная строка `storage_image(type='item_cover')`; базовые расы
+связываются только с item без `parent_id`, а подрасы — только с дочерними item
+типа 8 через `item.cover_image_id`. Отдельный синхронизатор загружает их
+геральдические иконки по ключам `system-race-icons/v1/...`, создаёт
+`storage_image(type='item_icon')` и назначает через `item.icon_image_id` с тем
+же разделением base/subrace.
 
 Пятнадцать встроенных базовых классов используют параллельный namespace
 `system-class-images/v1/*`. Startup seed создаёт системные

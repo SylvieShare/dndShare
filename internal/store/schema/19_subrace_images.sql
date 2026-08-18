@@ -17,10 +17,10 @@ INSERT INTO dndshare.storage_image (
 )
 SELECT NULL, object_key,
        'https://storage.yandexcloud.net/dndshare/' || object_key,
-       'item_icon', false, file_name, 'image/jpeg', file_size
+       'item_cover', false, file_name, 'image/jpeg', file_size
 FROM subrace_images
-ON CONFLICT ("key") WHERE "type" = 'item_icon' AND user_id IS NULL AND "key" LIKE 'system-race-images/%'
-DO UPDATE SET deleted = false, file_name = EXCLUDED.file_name,
+ON CONFLICT ("key") WHERE user_id IS NULL AND "key" LIKE 'system-race-images/%'
+DO UPDATE SET "type" = 'item_cover', deleted = false, file_name = EXCLUDED.file_name,
               mime_type = EXCLUDED.mime_type, file_size = EXCLUDED.file_size;
 
 WITH subrace_mapping(object_key, aliases) AS (
@@ -36,11 +36,12 @@ WITH subrace_mapping(object_key, aliases) AS (
       ('system-race-images/v1/subraces/stout-halfling.jpg', ARRAY['stouthalfling', 'коренастыйполурослик'])
 )
 UPDATE dndshare.item subrace
-SET icon_svg_id = NULL, icon_image_id = image.id
+SET cover_image_id = image.id,
+    icon_image_id = CASE WHEN subrace.icon_image_id = image.id THEN NULL ELSE subrace.icon_image_id END
 FROM subrace_mapping mapping
 JOIN dndshare.storage_image image
   ON image."key" = mapping.object_key
- AND image."type" = 'item_icon'
+ AND image."type" = 'item_cover'
  AND image.deleted = false
 WHERE subrace.user_id IS NULL
   AND subrace.parent_id IS NOT NULL

@@ -135,6 +135,35 @@ The initial semantic motifs are:
 - **Circle of Scarlet:** a pale-rose core enclosed by a segmented crimson ring
   and four diamond thorns, without literal blood or gore.
 
+### Race icon art direction
+
+Race icons use **heraldic character busts**, not abstract runes and not reduced
+versions of the cover portrait. The silhouette should identify the ancestry
+before the internal detail is noticed.
+
+- Show only the head and shoulders in side or three-quarter view. Build one
+  strong, compact outer contour with a thick deep-plum outline and very few
+  internal shapes; the icon must remain readable at 64 px.
+- Use polished flat-cartoon rendering, saturated jewel-tone fills and restrained
+  two-step shading. Avoid realistic skin texture, painterly backgrounds and
+  miniature costume detail.
+- Communicate ancestry through anatomy and one large shape: an elf's pointed
+  ear, a dwarf's beard and broad shoulders, a tiefling's horns or a
+  dragonborn's angular snout. Do not depend on text, scenery, weapons or a
+  collection of tiny props.
+- Keep related subraces visibly related through proportions and anatomy. Give
+  each subrace its own silhouette variation, palette and one major costume or
+  hair shape rather than producing simple recolors.
+- Do not add a tile, disc, rune ring, frame, shadow, glow, particles, letters,
+  numbers, logos or watermarks. Empty canvas space must be genuine alpha.
+
+The production asset is a lossless `128×128` RGBA WebP with the opaque bounds
+centered inside a common safe margin. Every file is inspected at both 128 and
+64 px on light and dark surfaces. `cmd/race-icon-sync` verifies the embedded
+manifest, uploads all nine base-race and nine subrace busts to stable
+`system-race-icons/v1/` keys and assigns them through `item.icon_image_id`.
+The larger legacy race illustrations remain independent covers.
+
 ### Item cover art direction
 
 Item covers are atmospheric wide illustrations for the shared detail header,
@@ -152,8 +181,8 @@ setting, energy and color while preserving readable UI overlay space.
 - Reserve a calmer, darker lower band for the title and controls. Do not bake
   in text, letters, numbers, logos, watermarks, borders, badges or UI frames.
 - Inspect the final asset at 4:1 on desktop and mobile. During migration the
-  header honors an older cover's intrinsic ratio, so existing 3:1 artwork is
-  shown whole until it is regenerated. Decorative covers use empty alt text
+  header honors an older cover's intrinsic ratio, so existing non-4:1 artwork
+  is shown whole until it is regenerated. Decorative covers use empty alt text
   because the item name already labels the header.
 
 The initial spell covers are **Fireball**, **Bless** and **Aura of Vitality**.

@@ -85,13 +85,25 @@ func (s *Service) UploadSystemImage(ctx context.Context, body io.Reader, size in
 	return s.put(ctx, body, size, key, contentType)
 }
 
-// UploadRaceImage stores built-in race artwork under a stable, versioned key.
+// UploadRaceImage stores built-in race cover artwork under a stable key.
 func (s *Service) UploadRaceImage(ctx context.Context, body io.Reader, size int64, key, contentType string) (StoredObject, error) {
 	if !strings.HasPrefix(key, "system-race-images/") || strings.Contains(key, "..") {
 		return StoredObject{}, fmt.Errorf("invalid system race image object key %q", key)
 	}
 	if !strings.HasPrefix(contentType, "image/") {
 		return StoredObject{}, fmt.Errorf("invalid system race image content type %q", contentType)
+	}
+	return s.put(ctx, body, size, key, contentType)
+}
+
+// UploadRaceIcon stores a compact built-in race emblem under its own stable
+// namespace, independent from the larger race cover artwork.
+func (s *Service) UploadRaceIcon(ctx context.Context, body io.Reader, size int64, key, contentType string) (StoredObject, error) {
+	if !strings.HasPrefix(key, "system-race-icons/") || strings.Contains(key, "..") {
+		return StoredObject{}, fmt.Errorf("invalid system race icon object key %q", key)
+	}
+	if contentType != "image/webp" {
+		return StoredObject{}, fmt.Errorf("invalid system race icon content type %q", contentType)
 	}
 	return s.put(ctx, body, size, key, contentType)
 }

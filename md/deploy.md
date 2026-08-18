@@ -25,7 +25,8 @@ VM под systemd; Docker, JAR и Maven в production path не использу
 2. запускает `npm run build` в `frontend/`;
 3. копирует `frontend/target/dist` в `internal/assets/dist`;
 4. собирает статический `linux/amd64` бинарь с текущим Git SHA в
-   `internal/web.BuildCommit`, `session-image-sync`, `race-image-sync` и
+   `internal/web.BuildCommit` и служебные sync-бинарники, включая
+   `session-image-sync`, `race-image-sync`, `race-icon-sync` и
    `class-image-sync`;
 5. копирует бинарники, `deploy/dndshare.service` и
    `deploy/dndshare-run.sh` на VM;
@@ -81,12 +82,21 @@ VM под systemd; Docker, JAR и Maven в production path не использу
 URL строк `storage_image` до запуска новой версии приложения. Основной бинарь
 и frontend эти JPEG не содержат.
 
-Иллюстрации базовых рас аналогично входят только в служебный бинарь
-`cmd/race-image-sync`. Deploy сверяет размер и SHA-256 с манифестом
+Иллюстрации всех девяти базовых рас и девяти подрас входят только в служебный
+бинарь `cmd/race-image-sync`. Deploy сверяет размер и SHA-256 с манифестом
 `internal/raceimages`, загружает файлы под стабильными ключами
 `system-race-images/v1/`, обновляет системные строки `storage_image` и назначает
-их через `item.icon_image_id` всем соответствующим базовым race item. Основной
-бинарь и frontend эти JPEG не содержат.
+их как legacy-обложки через `item.cover_image_id`. Повторный запуск очищает
+`icon_image_id` только если он всё ещё ссылается на ту же старую иллюстрацию,
+поэтому отдельная компактная иконка не теряется. Основной бинарь и frontend эти
+JPEG не содержат.
+
+Компактные иконки тех же рас входят только в `cmd/race-icon-sync`. Манифест
+`internal/raceicons` фиксирует размер и SHA-256 всех прозрачных WebP 128×128;
+deploy загружает их в `system-race-icons/v1/` и назначает ровно одному
+совпавшему race item через `item.icon_image_id`. Заменённое изображение не
+удаляется, если оно продолжает использоваться как обложка. Основной бинарь и
+frontend эти WebP не содержат.
 
 Иллюстрации базовых классов входят только в `cmd/class-image-sync`. Манифест
 `internal/classimages` фиксирует размер и SHA-256 для всех пятнадцати JPEG;
