@@ -30,7 +30,7 @@
         class="sp-item-icon"
         :item="entry.item"
         :fallback-to-type="false"
-        :size="48"
+        :size="64"
       />
       <span
         v-else-if="school"

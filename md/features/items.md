@@ -78,7 +78,7 @@ Spell icons form one set of **static magical runes**. They use the same visual
 grammar while their center and palette communicate the spell itself.
 
 - Build the icon from one dominant central glyph, an incomplete circular sigil
-  and at most four large accents. It must remain distinct at the 48 px
+  and at most four large accents. It must remain distinct at the 64 px
   character-sheet size.
 - Use broad flat-cartoon shapes, a thick deep-plum contour, saturated fills and
   restrained soft shading. Avoid realistic painting and micro-detail.
@@ -92,7 +92,7 @@ grammar while their center and palette communicate the spell itself.
 The production asset is a lossless `128×128` RGBA WebP with genuine alpha and
 clean antialiased edges. Generate at a larger size, extract the background,
 center the opaque bounds with a common safe margin and downsample with a
-high-quality filter. Inspect every result at 128, 64 and 48 px. The deploy-only
+high-quality filter. Inspect every result at 128 and 64 px. The deploy-only
 `cmd/spell-rune-sync` uploads the files from `internal/spellimages` to stable
 `system-spell-runes/v1/` S3 keys and registers them in `storage_image`; neither
 the main binary nor frontend static assets contain the WebP files.
@@ -107,7 +107,7 @@ Primary request: <one dominant glyph for the spell inside an incomplete sigil>
 Style/medium: polished flat-cartoon game icon; broad clean shapes; thick
   deep-plum contour; restrained soft shading
 Composition/framing: centered compact silhouette; even transparent padding;
-  excellent readability at 48×48; at most seven major shapes
+  excellent readability at 64×64; at most seven major shapes
 Color palette: <spell-specific palette>
 Constraints: genuine transparent alpha; no checkerboard, frame, badge, square
   tile, scenery, caster, hand, text, logo, watermark, cast shadow, tiny

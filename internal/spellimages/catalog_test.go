@@ -8,8 +8,8 @@ import (
 )
 
 func TestCatalogAssetsMatchManifest(t *testing.T) {
-	if len(Catalog) != 4 {
-		t.Fatalf("got %d spell runes, want 4", len(Catalog))
+	if len(Catalog) != 54 {
+		t.Fatalf("got %d spell runes, want 54", len(Catalog))
 	}
 	keys := map[string]bool{}
 	objects := map[string]bool{}
