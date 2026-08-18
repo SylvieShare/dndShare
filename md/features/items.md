@@ -168,7 +168,37 @@ centered inside a common safe margin. Every file is inspected at both 128 and
 `cmd/race-icon-sync` verifies the embedded
 manifest, uploads all nine base-race and nine subrace busts to stable
 `system-race-icons/v1/` keys and assigns them through `item.icon_image_id`.
-The larger legacy race illustrations remain independent covers.
+The larger race illustrations remain independent covers.
+
+### Race cover art direction
+
+Race covers are portrait-oriented detail artwork derived from the same visual
+language as the heraldic icons. They are a deliberate `3:2` exception to the
+wide `4:1` item-cover contract below: the race header preserves the intrinsic
+ratio within its height limit instead of forcing a panoramic crop.
+
+- Store an opaque `1536×1024` JPEG without text, frames, badges, logos or
+  watermarks. The current generated set uses JPEG quality 88.
+- Preserve the recognizable ancestry, number of characters and broad pose of
+  the corresponding legacy cover, but redraw it as polished flat-cartoon game
+  art with thick deep-plum contours, broad shapes and restrained two-step
+  shading. Do not reuse or enlarge the square icon itself.
+- Keep the character group near the central 55–65% of the canvas, with air
+  above and beside the silhouettes. Use a dark plum/navy, low-detail
+  background and leave the lower area calmer so the header overlay remains
+  readable.
+- Let anatomy and one or two large costume shapes communicate the race. Avoid
+  photorealistic skin, painterly noise, micro-detail and busy scenery; props
+  are acceptable only when they are part of the defining pose.
+- Keep subraces visibly related to their base race while varying palette,
+  silhouette and one major costume or hair shape.
+
+The complete set contains nine base races and nine subraces. New covers are
+installed through MCP `handbook_item_set_system_image(slot="cover",
+preservePrevious=true)`. The earlier realistic `system-race-images/v1/`
+objects and their active `storage_image` rows are intentionally retained for
+rollback or a future selectable style; they are not bundled into the main
+application binary.
 
 ### Item cover art direction
 
