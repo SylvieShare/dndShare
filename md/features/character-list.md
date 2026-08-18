@@ -114,6 +114,12 @@ frontend static assets: deploy uploads them to stable S3 keys, registers system
 wizard reads the resulting `iconImageUrl` from the ordinary handbook item response.
 Selection retains the regular card surface; only its border, status and shadow
 signal selection, so nested fact and subrace chips keep sufficient contrast.
+The concise “Раса” label is presented as a display-font page heading with a short
+accent rule. After selection, “Выборы расы” is split into lightly framed groups so
+ability scores, language, feat and feature choices do not visually merge. Floating
+ability-score choices use a stronger six-tile desktop grid (three/two columns at
+narrower breakpoints), a prominent completion counter and distinct selected and
+locked states.
 
 Key rules:
 
