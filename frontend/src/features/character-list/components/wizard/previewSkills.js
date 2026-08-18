@@ -13,3 +13,11 @@ export function sourceSkillLabels({ proficiencyIds = [], featureIds = [], expert
     return expertise.has(String(id)) ? `${label} (Компетентность)` : label
   }).filter(Boolean)
 }
+
+export function liveSkillModifier({ abilityMod = 0, proficiencyBonus = 0, skillId, proficiencyIds = [], expertiseIds = [] }) {
+  const key = String(skillId)
+  const expertise = expertiseIds.some((id) => String(id) === key)
+  const proficient = expertise || proficiencyIds.some((id) => String(id) === key)
+  const multiplier = expertise ? 2 : proficient ? 1 : 0
+  return Number(abilityMod) + Number(proficiencyBonus) * multiplier
+}

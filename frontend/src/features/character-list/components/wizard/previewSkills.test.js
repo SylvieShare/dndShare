@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { sourceSkillLabels } from './previewSkills'
+import { liveSkillModifier, sourceSkillLabels } from './previewSkills'
 
 const labels = { 1: 'Атлетика', 2: 'Акробатика', 3: 'Обман' }
 const labelFor = (id) => labels[id] || ''
@@ -20,5 +20,26 @@ describe('sourceSkillLabels', () => {
 
     expect(race).toEqual(['Атлетика'])
     expect(charClass).toEqual(['Атлетика (Компетентность)'])
+  })
+})
+
+describe('liveSkillModifier', () => {
+  it('adds proficiency selected through a feature choice immediately', () => {
+    expect(liveSkillModifier({
+      abilityMod: 1,
+      proficiencyBonus: 2,
+      skillId: 3,
+      proficiencyIds: ['3'],
+    })).toBe(3)
+  })
+
+  it('uses twice the proficiency bonus for expertise', () => {
+    expect(liveSkillModifier({
+      abilityMod: -1,
+      proficiencyBonus: 2,
+      skillId: 2,
+      proficiencyIds: [2],
+      expertiseIds: ['2'],
+    })).toBe(3)
   })
 })

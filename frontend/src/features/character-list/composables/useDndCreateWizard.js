@@ -19,6 +19,7 @@ import { contentScopeQuery, normalizeContentSourceSettings } from '@/shared/api/
 import { dieSides } from '@/shared/lib/systemDice'
 import { randomDndName } from '@/shared/lib/dndNames'
 import { buildDndCharacterPayload } from './dndCreateWizardPayload'
+import { liveSkillModifier } from '@/features/character-list/components/wizard/previewSkills'
 import {
   createDndWizardState,
   DND_WIZARD_STORAGE_KEY,
@@ -418,6 +419,10 @@ export function useDndCreateWizard() {
       .forEach((fc) => ids.push(...(state.choices[fc.id] || [])))
     return [...new Set(ids.map(String))]
   })
+  const expertiseSkillIds = computed(() => featureChoices.value
+    .filter(isExpertiseChoice)
+    .flatMap((fc) => state.choices[fc.id] || [])
+    .map(String))
   function choiceOptionList(fcOrChoice) {
     const fc = fcOrChoice?.choice ? fcOrChoice : null
     const choice = fc?.choice || fcOrChoice
@@ -490,7 +495,13 @@ export function useDndCreateWizard() {
   function skillMod(skillId) {
     const st = skillStat(skillId)
     if (!st) return 0
-    return mods.value[st] + (state.skillIds.includes(skillId) ? PROF_BONUS : 0)
+    return liveSkillModifier({
+      abilityMod: mods.value[st],
+      proficiencyBonus: PROF_BONUS,
+      skillId,
+      proficiencyIds: proficientSkillIds.value,
+      expertiseIds: expertiseSkillIds.value,
+    })
   }
   function toggleSkill(id) {
     const i = state.skillIds.indexOf(id)
