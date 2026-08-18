@@ -7,12 +7,12 @@
     </div>
 
     <button
-      v-if="level < 20"
+      v-if="canLevelUp"
       class="lved-levelup"
       :class="{ 'lved-levelup-ready': canLevelUp }"
       type="button"
       @click="$emit('levelup')"
-    >↑ {{ canLevelUp ? 'Level Up!' : 'Повысить уровень' }} → {{ level + 1 }}</button>
+    >↑ Level Up! → {{ level + 1 }}</button>
 
     <FormField label="Уровень">
       <FormNumberInput :value="level" :min="1" :max="20" @change="set('level', $event)" />

@@ -49,6 +49,9 @@
         <span class="dsov-metric-copy">
           <span>Истощение</span>
           <strong>{{ exhaustionLevel }} ур.</strong>
+          <ul class="dsov-exhaustion-effects">
+            <li v-for="effect in exhaustionEffects" :key="effect">{{ effect }}</li>
+          </ul>
         </span>
       </component>
 
@@ -78,6 +81,7 @@ import SvgIcon from '@/shared/ui/SvgIcon'
 const props = defineProps({
   activeItems: { type: Array, default: () => [] },
   exhaustionLevel: { type: Number, default: 0 },
+  exhaustionEffects: { type: Array, default: () => [] },
   inspirationActive: { type: Boolean, default: false },
   editable: { type: Boolean, default: false },
 })
@@ -151,8 +155,7 @@ function select(kind) {
 .dsov-name { overflow: hidden; color: var(--text-1); font-size: 12px; font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
 .dsov-empty { padding-top: 2px; color: var(--text-muted); font-size: 12px; }
 
-.dsov-metrics { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0; padding-top: 9px; }
-.dsov-metrics--single { grid-template-columns: minmax(0, 1fr); }
+.dsov-metrics { display: flex; flex-direction: column; padding-top: 9px; }
 .dsov-metric {
   display: flex;
   align-items: center;
@@ -166,11 +169,13 @@ function select(kind) {
   font: inherit;
   text-align: left;
 }
-.dsov-metric + .dsov-metric { padding-left: 11px; border-left: 1px solid var(--border); }
+.dsov-metric + .dsov-metric { margin-top: 8px; padding-top: 10px; border-top: 1px solid var(--border); }
 .dsov-metric-icon { flex: 0 0 auto; }
 .dsov-metric-copy { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
 .dsov-metric-copy span { overflow: hidden; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
 .dsov-metric-copy strong { color: var(--text-2); font-size: 12px; line-height: 1.2; }
+.dsov-exhaustion-effects { display: flex; flex-direction: column; gap: 3px; margin: 5px 0 0; padding: 0; color: var(--text-2); font-size: 10px; line-height: 1.3; list-style: none; }
+.dsov-exhaustion-effects li::before { content: '·'; margin-right: 5px; color: var(--danger); }
 .dsov-metric--exhaustion { color: var(--danger); }
 .dsov-metric--exhaustion strong { color: var(--danger); }
 .dsov-metric--inspiration { color: var(--accent-soft); }

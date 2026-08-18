@@ -20,6 +20,8 @@ describe('desktop status overview', () => {
     expect(viewSource).toContain('v-if="hasActiveMetrics"')
     expect(viewSource).toContain('v-if="exhaustionLevel > 0"')
     expect(viewSource).toContain('v-if="inspirationActive"')
+    expect(viewSource).toContain('v-for="effect in exhaustionEffects"')
+    expect(source).toContain('normalizedExhaustion.value.effects.slice(0, exhaustionLevel.value)')
     expect(viewSource).not.toContain("inspirationActive ? 'есть' : 'нет'")
     expect(viewSource).not.toContain("exhaustionLevel > 0 ? `${exhaustionLevel} ур.` : 'нет'")
   })

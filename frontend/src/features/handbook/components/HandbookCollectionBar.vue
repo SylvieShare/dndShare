@@ -1,9 +1,9 @@
 <template>
-  <div class="col-bar">
+  <div class="col-bar" :class="{ 'col-bar--controls-only': !showIdentity }">
   <div class="col-bar-inner">
 
     <!-- ── Left: back + identity ── -->
-    <div class="col-bar-left">
+    <div v-if="showIdentity" class="col-bar-left">
       <RouterLink class="col-back-btn" to="/handbook">
         <svg viewBox="0 0 16 16" fill="none" width="14" height="14">
           <path d="M10 13L5 8L10 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
@@ -28,7 +28,7 @@
         <input
           :value="search"
           class="col-search"
-          :placeholder="`Поиск в коллекции «${type.name}»...`"
+          :placeholder="searchPlaceholder || `Поиск в коллекции «${type.name}»...`"
           @input="$emit('update:search', $event.target.value)"
         />
       </div>
@@ -159,6 +159,8 @@ const props = defineProps({
   resultCount: { type: Number, default: 0 },
   hasMore: { type: Boolean, default: false },
   filtered: { type: Boolean, default: false },
+  showIdentity: { type: Boolean, default: true },
+  searchPlaceholder: { type: String, default: '' },
 })
 
 const emit = defineEmits(['add', 'update:search', 'update:group-by', 'update:filters', 'update:content-source-ids'])

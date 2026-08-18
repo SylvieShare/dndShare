@@ -8,36 +8,6 @@
     :z-index="zIndex"
     @close="$emit('close')"
   >
-    <template #header-actions>
-      <div class="picker-header-controls">
-          <div class="picker-search-wrap">
-            <svg class="picker-search-icon" viewBox="0 0 16 16" fill="none" width="14" height="14">
-              <circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/>
-              <path d="M10 10L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-            </svg>
-            <input
-              v-model="searchQ"
-              class="picker-search"
-              type="text"
-              :placeholder="searchPlaceholder"
-              autofocus
-              @input="onSearchInput"
-            />
-          </div>
-
-          <div v-if="groupFields.length" class="picker-group">
-            <span class="picker-group-label">ГРУППИРОВКА</span>
-            <button
-              v-for="f in groupFields"
-              :key="f.key"
-              class="picker-group-btn"
-              :class="{ active: groupBy === f.key }"
-              @click="groupBy = groupBy === f.key ? null : f.key"
-            >{{ f.nameShort || f.name }}</button>
-          </div>
-      </div>
-    </template>
-
     <div class="picker-modal">
 
         <div v-if="allTypes.length > 1" class="picker-tabs">
@@ -54,6 +24,25 @@
           </button>
         </div>
 
+        <HandbookCollectionBar
+          v-if="itemType"
+          v-model:search="searchQ"
+          v-model:group-by="groupBy"
+          v-model:filters="filters"
+          :type="itemType"
+          :filter-fields="filterFields"
+          :filter-suggests="filterSuggests"
+          :content-sources="visibleContentSources"
+          :content-source-ids="contentSourceIds"
+          :result-count="filteredItems.length"
+          :has-more="hasMore"
+          :filtered="isFiltered"
+          :search-placeholder="searchPlaceholder"
+          :show-identity="false"
+          class="picker-collection-bar"
+          @update:content-source-ids="contentSourceIds = $event"
+        />
+
         <div class="picker-body">
           <HandbookItemList
             :type="itemType"
@@ -66,6 +55,7 @@
             class="picker-list"
             @select="selectedItem = $event"
             @load-more="loadMore"
+            @update:group-by="groupBy = $event"
           />
           <HandbookItemDetail
             :item="selectedItem"
@@ -126,19 +116,21 @@
 </template>
 
 <script setup>
-import { computed, inject, onMounted, ref, watch } from 'vue'
+import { computed, inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { fetchGet } from '@/shared/api/http'
-import { contentScopeQuery } from '@/shared/api/contentSourcesApi'
+import { contentScopeQuery, contentSourcesApi, normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'
+import HandbookCollectionBar from '@/features/handbook/components/HandbookCollectionBar'
 import HandbookItemDetail from '@/features/handbook/components/HandbookItemDetail'
 import SvgIcon from '@/shared/ui/SvgIcon'
 import HandbookItemList from '@/features/handbook/components/HandbookItemList'
 import ItemEditModal from '@/features/character-editor/components/ItemEditModal'
 import { AppModalFrame } from '@sylvieshare/share-ui'
-import { collectSuggestIds } from '@/features/handbook/objects/lib/schemaFields'
+import { collectSuggestIds, getSuggestId, walkFieldsWithPath } from '@/features/handbook/objects/lib/schemaFields'
 import { useItemTypesStore } from '@/stores/itemTypes'
 import { useSuggestStore } from '@/stores/suggest'
 
 const PAGE_SIZE = 30
+const GROUPED_PAGE_SIZE = 500
 
 const props = defineProps({
   itemTypeIds: { type: Array, required: true },
@@ -174,6 +166,9 @@ const loadingMore = ref(false)
 const hasMore = ref(false)
 const searchQ = ref('')
 const groupBy = ref(null)
+const filters = ref({})
+const availableContentSources = ref([])
+const contentSourceIds = ref([])
 const createOpen = ref(false)
 let offset = 0
 let reqSeq = 0
@@ -183,8 +178,28 @@ const excludeSet = computed(() =>
   new Set(props.excludeItems.map(i => i?.id ?? i).filter(x => x != null).map(String))
 )
 
-const groupFields = computed(() =>
-  (itemType.value?.fields || []).filter(f => f.group)
+const suggestStore = useSuggestStore()
+const filterFields = computed(() =>
+  walkFieldsWithPath(itemType.value?.fields || [])
+    .filter(({ field }) => field.filter && field.type !== 'item')
+    .map(({ field, path }) => ({ ...field, path: field.filter_path || path }))
+)
+const filterSuggests = computed(() => {
+  const map = {}
+  for (const field of filterFields.value) {
+    const suggestId = getSuggestId(field)
+    if (suggestId != null) map[suggestId] = suggestStore.items(suggestId) || []
+  }
+  return map
+})
+const contentSourceSettings = computed(() => normalizeContentSourceSettings(effectiveContentSources.value))
+const visibleContentSources = computed(() => {
+  if (contentSourceSettings.value.mode !== 'selected') return availableContentSources.value
+  const allowed = new Set(contentSourceSettings.value.ids.map(String))
+  return availableContentSources.value.filter(source => allowed.has(String(source.id)))
+})
+const isFiltered = computed(() =>
+  !!searchQ.value.trim() || Object.keys(filters.value).length > 0 || contentSourceIds.value.length > 0
 )
 
 const filteredItems = computed(() =>
@@ -210,8 +225,15 @@ async function loadTypes() {
 
 function ensureSuggestsForType(type) {
   if (!type) return
-  const store = useSuggestStore()
-  for (const sid of collectSuggestIds(type.fields || [])) store.ensure(sid)
+  for (const sid of collectSuggestIds(type.fields || [])) suggestStore.ensure(sid)
+}
+
+async function fetchContentSources() {
+  const typeId = activeTypeId.value
+  const response = effectiveSourceVersionId.value != null
+    ? await contentSourcesApi.listForVersion(effectiveSourceVersionId.value).catch(() => null)
+    : await contentSourcesApi.listForSystem(itemType.value?.sourceId).catch(() => null)
+  if (activeTypeId.value === typeId) availableContentSources.value = response?.sources || []
 }
 
 function setActiveType(id) {
@@ -219,10 +241,26 @@ function setActiveType(id) {
   activeTypeId.value = id
   searchQ.value = ''
   groupBy.value = null
+  filters.value = {}
+  contentSourceIds.value = []
   selectedItem.value = null
   items.value = []
   ensureSuggestsForType(itemType.value)
+  fetchContentSources()
   fetchItems('')
+}
+
+function filtersQuery() {
+  const params = new URLSearchParams(contentScopeQuery(effectiveContentSources.value, effectiveSourceVersionId.value).replace(/^&/, ''))
+  if (Object.keys(filters.value).length) params.set('filters', JSON.stringify(filters.value))
+  if (contentSourceIds.value.length) {
+    const selected = contentSourceSettings.value.mode === 'selected'
+      ? contentSourceIds.value.filter(id => contentSourceSettings.value.ids.some(allowed => String(allowed) === String(id)))
+      : contentSourceIds.value
+    params.set('contentSourceIds', selected.join(','))
+  }
+  const raw = params.toString()
+  return raw ? `&${raw}` : ''
 }
 
 async function fetchItems(q, append = false) {
@@ -233,14 +271,29 @@ async function fetchItems(q, append = false) {
   if (append) loadingMore.value = true
   else { loading.value = true; hasMore.value = false }
   try {
-    const lq = `&limit=${PAGE_SIZE}&offset=${off}`
-    const sourceQ = contentScopeQuery(effectiveContentSources.value, effectiveSourceVersionId.value)
-    const url = q.trim()
-      ? `/items/search?typeId=${activeTypeId.value}&q=${encodeURIComponent(q.trim())}${lq}${sourceQ}`
-      : `/items?typeId=${activeTypeId.value}${lq}${sourceQ}`
-    const res = await fetchGet(url)
+    const pageSize = groupBy.value ? GROUPED_PAGE_SIZE : PAGE_SIZE
+    const fq = filtersQuery()
+    const fetchPage = (pageOffset) => {
+      const lq = `&limit=${pageSize}&offset=${pageOffset}`
+      const url = q.trim()
+        ? `/items/search?typeId=${activeTypeId.value}&q=${encodeURIComponent(q.trim())}${lq}${fq}`
+        : `/items?typeId=${activeTypeId.value}${lq}${fq}`
+      return fetchGet(url)
+    }
+    const res = await fetchPage(off)
     if (id !== reqSeq) return
-    const next = res?.items || []
+    let next = res?.items || []
+    if (groupBy.value && !append) {
+      let nextOffset = off + next.length
+      let lastPageSize = next.length
+      while (lastPageSize === pageSize) {
+        const page = (await fetchPage(nextOffset))?.items || []
+        if (id !== reqSeq) return
+        next = [...next, ...page]
+        nextOffset += page.length
+        lastPageSize = page.length
+      }
+    }
     if (append) {
       const ids = new Set(items.value.map(i => i.id))
       items.value = [...items.value, ...next.filter(i => !ids.has(i.id))]
@@ -248,7 +301,7 @@ async function fetchItems(q, append = false) {
       items.value = next
     }
     offset = off + next.length
-    hasMore.value = next.length === PAGE_SIZE
+    hasMore.value = !groupBy.value && next.length === pageSize
   } finally {
     if (id === reqSeq) { loading.value = false; loadingMore.value = false }
   }
@@ -256,19 +309,31 @@ async function fetchItems(q, append = false) {
 
 function loadMore() { fetchItems(searchQ.value, true) }
 
-function onSearchInput() {
-  clearTimeout(searchTimer)
-  searchTimer = setTimeout(() => fetchItems(searchQ.value), 280)
-}
-
 watch(searchQ, (val) => {
   clearTimeout(searchTimer)
   searchTimer = setTimeout(() => fetchItems(val), 280)
 })
 
+watch(filters, () => {
+  selectedItem.value = null
+  fetchItems(searchQ.value)
+}, { deep: true })
+
+watch(contentSourceIds, () => {
+  selectedItem.value = null
+  fetchItems(searchQ.value)
+}, { deep: true })
+
+watch(groupBy, () => {
+  selectedItem.value = null
+  fetchItems(searchQ.value)
+})
+
 watch([effectiveContentSources, effectiveSourceVersionId], () => {
   selectedItem.value = null
   items.value = []
+  contentSourceIds.value = []
+  fetchContentSources()
   fetchItems(searchQ.value)
 }, { deep: true })
 
@@ -287,8 +352,11 @@ function onItemCreated(item) {
 
 onMounted(async () => {
   await loadTypes()
+  await fetchContentSources()
   fetchItems('')
 })
+
+onBeforeUnmount(() => clearTimeout(searchTimer))
 </script>
 
 <style scoped src="./styles/ItemPickerModal.css"></style>

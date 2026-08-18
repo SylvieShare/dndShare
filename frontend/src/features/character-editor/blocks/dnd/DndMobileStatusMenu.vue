@@ -14,9 +14,16 @@
           <SvgIcon v-if="item.svg" class="dmsm-status-icon" :svg="item.svg" :color="item.color || '#888888'" filter />
           <span v-else class="dmsm-status-dot"></span>
         </span>
-        <span v-if="exhaustionLevel > 0" class="dmsm-badge dmsm-badge--exhaustion" :title="`Истощение: ${exhaustionLevel}`">
+        <button
+          v-if="exhaustionLevel > 0"
+          class="dmsm-badge dmsm-badge--exhaustion"
+          type="button"
+          :disabled="!canInteract"
+          :title="`Истощение: ${exhaustionLevel}`"
+          @click="openEditor('exhaustion')"
+        >
           Истощение {{ exhaustionLevel }}
-        </span>
+        </button>
         <span v-if="inspirationActive" class="dmsm-badge dmsm-badge--inspiration" title="Вдохновение">
           <span aria-hidden="true">✦</span> Вдохновение
         </span>
@@ -142,7 +149,7 @@ function hideStatusTooltip() {
 }
 function openEditor(kind, closeMenu) {
   hideStatusTooltip()
-  closeMenu()
+  closeMenu?.()
   editorKind.value = kind
 }
 function closeEditor() {
@@ -212,9 +219,11 @@ function setInspiration(value) {
   border-radius: 7px;
   font-size: 10px;
   font-weight: 800;
+  font-family: inherit;
   white-space: nowrap;
 }
-.dmsm-badge--exhaustion { color: var(--danger); background: color-mix(in srgb, var(--danger) 11%, transparent); }
+.dmsm-badge--exhaustion { border: 0; color: var(--danger); background: color-mix(in srgb, var(--danger) 11%, transparent); cursor: pointer; touch-action: manipulation; }
+.dmsm-badge--exhaustion:disabled { cursor: default; }
 .dmsm-badge--inspiration { color: var(--accent-soft); background: color-mix(in srgb, var(--accent) 13%, transparent); }
 .dmsm-trigger {
   display: inline-flex;

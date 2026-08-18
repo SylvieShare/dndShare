@@ -45,6 +45,28 @@ describe('buildCharacterData hit dice', () => {
   })
 })
 
+describe('buildCharacterData spell preparation', () => {
+  it('enables preparation automatically for classes that prepare spells', () => {
+    const result = buildCharacterData({
+      race: selection(1, 'Человек'),
+      charClass: selection(2, 'Жрец', { spellcasting: { ability: 5, prepares: true } }),
+      suggestValue: () => '',
+    })
+
+    expect(result.data.values.spells.preparation).toBe(true)
+  })
+
+  it('keeps preparation disabled for known-spell casters', () => {
+    const result = buildCharacterData({
+      race: selection(1, 'Человек'),
+      charClass: selection(2, 'Чародей', { spellcasting: { ability: 6, prepares: false } }),
+      suggestValue: () => '',
+    })
+
+    expect(result.data.values.spells.preparation).toBe(false)
+  })
+})
+
 describe('buildCharacterData starting equipment', () => {
   it('puts handbook weapons into the dedicated weapon block instead of inventory', () => {
     const result = buildCharacterData({

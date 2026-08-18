@@ -125,6 +125,8 @@ ability scores, language, feat and feature choices do not visually merge. Floati
 ability-score choices use a stronger six-tile desktop grid (three/two columns at
 narrower breakpoints), a prominent completion counter and distinct selected and
 locked states.
+On phones, choosing a race scrolls the newly revealed lore and dependent choices
+into view with a smooth transition instead of leaving them below the viewport.
 
 The class step follows the same selection flow. All fifteen built-in base classes,
 including Artificer, Magus and Shaman, are full-width illustrated rows with an
@@ -159,6 +161,9 @@ Key rules:
 - feat and item selection uses the handbook `ItemPickerModal`;
 - the Personality step's dice action uses the shared race-aware name generator,
   preferring the selected subrace and avoiding an unchanged consecutive result;
+- the Personality step uses the same fixed 3×3 D&D alignment enum as the sheet;
+- classes whose handbook `spellcasting.prepares` flag is enabled create a
+  spellbook with preparation mode enabled automatically;
 - resets and incomplete-create decisions use shared `ConfirmDialog`;
 - the draft persists in `localStorage` and is cleared after successful create.
 

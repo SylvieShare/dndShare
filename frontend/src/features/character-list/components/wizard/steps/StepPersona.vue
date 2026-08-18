@@ -11,10 +11,7 @@
     </FormField>
 
     <FormField label="Мировоззрение" vertical>
-      <FormSelect v-model:value="p.alignment">
-        <option value="">—</option>
-        <option v-for="a in ALIGNMENTS" :key="a" :value="a">{{ a }}</option>
-      </FormSelect>
+      <DndAlignmentPicker v-model="p.alignment" />
     </FormField>
 
     <div class="two rich-fields">
@@ -51,18 +48,12 @@
 <script setup>
 import { computed, inject } from 'vue'
 import InputDescription from '@/shared/ui/InputDescription'
+import DndAlignmentPicker from '@/shared/ui/DndAlignmentPicker.vue'
 import { FormField } from '@sylvieshare/share-ui'
-import { FormSelect } from '@sylvieshare/share-ui'
 import { FormTextInput } from '@sylvieshare/share-ui'
 
 const { state, randomName } = inject('createWizard')
 const p = state.persona
-
-const ALIGNMENTS = [
-  'Законно-добрый', 'Нейтрально-добрый', 'Хаотично-добрый',
-  'Законно-нейтральный', 'Нейтральный', 'Хаотично-нейтральный',
-  'Законно-злой', 'Нейтрально-злой', 'Хаотично-злой',
-]
 
 const appearanceFields = [
   { key: 'age', label: 'Возраст' },

@@ -199,6 +199,7 @@ export function buildCharacterData(input) {
     else if (grants.spellcasting) slots[0] = { ...slots[0], total: 2 }
     values.spells = {
       stat_path: grants.spellcasting?.abilityId ?? '',
+      preparation: !!grants.spellcasting?.prepares,
       spells: [...new Set([...spellIds, ...grantedExtra, ...featSpellIds])].map((id) => ({
         id,
         prepared: true,

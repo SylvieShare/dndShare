@@ -490,7 +490,7 @@
   },
   "person_alignment": {
     "id": "person_alignment",
-    "type": "INPUT_TEXT",
+    "type": "DND_ALIGNMENT",
     "title": "Мировоззрение",
     "content": {
       "placeholder": "Мировоззрение"

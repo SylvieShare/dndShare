@@ -25,4 +25,9 @@ describe('race step hierarchy', () => {
     expect(source).not.toContain('<RichContent v-if="subraceDesc"')
     expect(source).toContain('.subrace-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr))')
   })
+
+  it('scrolls the selected race details into view on phones', () => {
+    expect(source).toContain("window.matchMedia?.('(max-width: 640px)').matches")
+    expect(source).toContain("scrollIntoView({ behavior: 'smooth', block: 'start' })")
+  })
 })

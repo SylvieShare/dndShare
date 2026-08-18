@@ -10,6 +10,7 @@
       <DndStatusOverviewView
         :active-items="activeItems"
         :exhaustion-level="exhaustionLevel"
+        :exhaustion-effects="exhaustionEffects"
         :inspiration-active="inspirationActive"
         :editable="canInteract"
         @select="openSection"
@@ -33,6 +34,7 @@
       <DndStatusOverviewView
         :active-items="activeItems"
         :exhaustion-level="exhaustionLevel"
+        :exhaustion-effects="exhaustionEffects"
         :inspiration-active="inspirationActive"
         @show-tooltip="showStatusTooltip"
         @hide-tooltip="hideStatusTooltip"
@@ -129,7 +131,9 @@ const activeIds = computed(() => Array.isArray(props.values?.[ids.value.states])
 const allItems = computed(() => suggestStore.items(suggestTypeId.value))
 const activeItems = computed(() => allItems.value.filter(item => activeIds.value.includes(item.id)))
 const exhaustionValue = computed(() => props.values?.[ids.value.exhaustion] || { level: 0 })
-const exhaustionLevel = computed(() => normalizeExhaustion(exhaustionValue.value).level)
+const normalizedExhaustion = computed(() => normalizeExhaustion(exhaustionValue.value))
+const exhaustionLevel = computed(() => normalizedExhaustion.value.level)
+const exhaustionEffects = computed(() => normalizedExhaustion.value.effects.slice(0, exhaustionLevel.value))
 const inspirationValue = computed(() => props.values?.[ids.value.inspiration] ?? false)
 const inspirationActive = computed(() => isInspirationActive(inspirationValue.value))
 const hasActiveSummary = computed(() => activeItems.value.length > 0 || exhaustionLevel.value > 0 || inspirationActive.value)

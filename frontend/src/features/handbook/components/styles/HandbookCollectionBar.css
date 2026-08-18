@@ -102,6 +102,11 @@
   gap: 8px;
   flex-shrink: 0;
 }
+.col-bar--controls-only .col-bar-inner { max-width: none; padding: 10px 16px; }
+.col-bar--controls-only .col-bar-right { width: 100%; flex: 1; }
+.col-bar--controls-only .col-search-wrap { flex: 1; min-width: 0; }
+.col-bar--controls-only .col-search { width: 100%; }
+.col-bar--controls-only .col-search:focus { width: 100%; }
 
 /* Search */
 .col-search-wrap {

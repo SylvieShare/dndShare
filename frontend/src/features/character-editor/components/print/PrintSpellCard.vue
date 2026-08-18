@@ -89,6 +89,9 @@ const components = computed(() => {
 .spell-description :deep(ul), .spell-description :deep(ol) { margin: 1.3mm 0 1.8mm 4mm; }
 .spell-description :deep(table) { max-width: 100%; font-size: 6.4px; }
 .spell-description :deep(td), .spell-description :deep(th) { border-color: #baaa8d; padding: .7mm 1mm; }
+.spell-description :deep(.rich-node), .spell-higher :deep(.rich-node) { gap: .7mm; margin-inline: .3mm; padding: .2mm 1mm; border-color: #d7cdbb; border-radius: 1.2mm; background: #f7f4ed; color: #655b4d; font-size: .9em; font-weight: 500; line-height: 1.25; }
+.spell-description :deep(.rich-node--dice), .spell-higher :deep(.rich-node--dice) { color: #655b4d; }
+.spell-description :deep(.rich-node-average), .spell-higher :deep(.rich-node-average) { color: #4f4639; font-size: 1em; font-weight: 650; }
 .spell-empty { margin: 2mm 0 0; color: #81725b; font: italic 7px Georgia, serif; }
 .spell-higher { margin-top: 2.5mm; padding-top: 2mm; border-top: .5px solid #b9ab93; color: #332e27; font: 7px/1.42 Georgia, serif; }
 .spell-higher > strong { display: block; margin-bottom: 1mm; font: 700 5.5px/1 Arial, sans-serif; letter-spacing: .07em; text-transform: uppercase; color: #6f604a; }

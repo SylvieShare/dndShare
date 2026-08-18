@@ -26,5 +26,8 @@ defineProps({ feature: { type: Object, required: true } })
 .feature-description { margin-top: 2.5mm; color: #332e27; font: 8px/1.5 Georgia, serif; }
 .feature-description :deep(h1), .feature-description :deep(h2), .feature-description :deep(h3), .feature-description :deep(h4) { color: #332e27; font-size: 9px; margin: 2mm 0 1mm; }
 .feature-description :deep(ul), .feature-description :deep(ol) { margin: 1.5mm 0 2mm 4.5mm; }
+.feature-description :deep(.rich-node) { gap: .7mm; margin-inline: .3mm; padding: .2mm 1mm; border-color: #d7cdbb; border-radius: 1.2mm; background: #f7f4ed; color: #655b4d; font-size: .9em; font-weight: 500; line-height: 1.25; }
+.feature-description :deep(.rich-node--dice) { color: #655b4d; }
+.feature-description :deep(.rich-node-average) { color: #4f4639; font-size: 1em; font-weight: 650; }
 .feature-empty { margin: 2.5mm 0 0; color: #81725b; font: italic 8px Georgia, serif; }
 </style>

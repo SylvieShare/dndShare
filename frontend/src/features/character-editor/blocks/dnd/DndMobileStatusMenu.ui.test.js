@@ -11,6 +11,8 @@ describe('mobile HP and status strip', () => {
     expect(source).toContain('v-if="exhaustionLevel > 0"')
     expect(source).toContain('v-if="inspirationActive"')
     expect(source).toContain('Истощение {{ exhaustionLevel }}')
+    expect(source).toContain("@click=\"openEditor('exhaustion')\"")
+    expect(source).toContain('closeMenu?.()')
     expect(source).toContain('<span aria-hidden="true">✦</span> Вдохновение')
     expect(source).not.toMatch(/Ист\.|\u0412дохн\./)
     expect(source).toContain('Статусы')

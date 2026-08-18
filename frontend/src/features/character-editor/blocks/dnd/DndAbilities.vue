@@ -62,6 +62,7 @@
       v-if="pickerOpen && block.content.item_id"
       :item-type-ids="[block.content.item_id]"
       :exclude-items="usedIds"
+      :z-index="3200"
       title="Способности"
       search-placeholder="Поиск способности..."
       @close="pickerOpen = false"

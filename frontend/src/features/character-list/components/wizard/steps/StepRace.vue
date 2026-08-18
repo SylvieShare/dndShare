@@ -28,10 +28,11 @@
       </template>
 
       <template #details>
-        <section v-if="raceDesc" class="race-lore">
-          <div class="sheet-section-title">О расе</div>
-          <RichContent class="step-desc" :html="raceDesc" />
-        </section>
+        <div ref="detailsRef" class="race-details">
+          <section v-if="raceDesc" class="race-lore">
+            <div class="sheet-section-title">О расе</div>
+            <RichContent class="step-desc" :html="raceDesc" />
+          </section>
 
         <template v-if="subraces.length">
           <div class="sheet-section-title step-gap">Происхождение</div>
@@ -135,6 +136,7 @@
             <StepChoices v-if="raceFeatureChoices.length" scope="race" class="choice-block" />
           </div>
         </section>
+        </div>
       </template>
     </IllustratedChoiceStage>
 
@@ -159,7 +161,7 @@
 </template>
 
 <script setup>
-import { computed, inject, ref } from 'vue'
+import { computed, inject, nextTick, ref } from 'vue'
 import FeatChoiceModal from '@/features/character-editor/components/FeatChoiceModal.vue'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import { featChoices } from '@/features/items/lib/featRules'
@@ -190,6 +192,7 @@ const hasRaceChoices = computed(() => {
 
 const pickerOpen = ref(false)
 const featConfigItem = ref(null)
+const detailsRef = ref(null)
 
 function summaryFor(race) {
   return raceCardSummary({
@@ -202,6 +205,9 @@ function summaryFor(race) {
 function selectRace(race) {
   if (state.race?.id === race.id) return
   state.race = race
+  if (window.matchMedia?.('(max-width: 640px)').matches) {
+    nextTick(() => detailsRef.value?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
+  }
 }
 function featName(id) { return featPool.value.find((f) => f.id === id)?.name || `#${id}` }
 function onFeatPick(item) {
@@ -218,6 +224,7 @@ function onFeatChoicesConfirm(choices) {
 
 <style scoped>
 .step { position: relative; display: flex; flex-direction: column; gap: 12px; }
+.race-details { display: flex; flex-direction: column; scroll-margin-top: 12px; }
 .race-lore { display: flex; flex-direction: column; gap: 7px; }
 .step-gap { margin-top: 8px; }
 .step-desc {

@@ -75,15 +75,17 @@ outside the page root.
 The desktop skills sidebar groups conditions, exhaustion and heroic inspiration
 inside one interactive **Статусы** tile. The tile keeps the rules term
 **Состояния** for the condition list itself, summarizes active condition chips,
-the non-zero exhaustion level and active inspiration without expanding
-exhaustion effects, and omits both inactive indicators from the tile. It
+the non-zero exhaustion level and active inspiration, expands every exhaustion
+effect active at the current level, and omits both inactive indicators from the
+tile. Exhaustion and inspiration occupy separate summary rows. It
 opens one vertical morph editor with direct tabs for all three domains. Clicking
 a domain inside the tile opens its corresponding tab. The compact mobile strip
 keeps HP at its intrinsic number width and never lets
 the HP numbers shrink. Its right side contains a fixed **Статусы** action
 button with editors for conditions, exhaustion and heroic inspiration. Active
 condition icons, a non-zero exhaustion level and active inspiration stay visible
-in a horizontally scrollable summary; the larger condition icons are frameless
+in a horizontally scrollable summary; the non-zero exhaustion badge opens its
+editor directly for an owner. The larger condition icons are frameless
 and show the condition description on hover. Empty and zero values render no placeholder.
 Heroic inspiration is stored as the boolean `values.inspiration`.
 
@@ -177,6 +179,9 @@ kind and recovery summary when the sheet has an attached session context. Hit-di
 rolls remain normal `dice_roll` events; opening or cancelling a rest does not
 write history.
 
+The level-up editor does not render its level-up action until current XP reaches
+the threshold for the next level; direct numeric level editing remains available.
+
 Race abilities, class abilities and feats remain separate canonical arrays and
 use their corresponding handbook item types and independent editors. Desktop
 and mobile present the three domains as sections of one visual tile with shared
@@ -201,6 +206,8 @@ item has one. Every row reserves the same icon slot, so names remain aligned
 when an icon is absent; simplified custom rows leave that slot empty instead of
 showing a placeholder. Inventory glyphs are neutral gray, frameless, have no
 background tile and use the available row height for a larger drawing.
+The same picker is used for feats and abilities and opens above the active morph
+editor, so its filters and item selection are never hidden behind the morph.
 The list shows count as a badge and has no inline increment/decrement controls.
 Clicking an inventory row opens the shared `RowActionMenu`: referenced items can
 open their description, while editable rows offer spend, add, change and delete.
@@ -268,6 +275,11 @@ by `InputDescription` and render through the DnD adapter over `RichContent`.
 The toolbar inserts ordinary links plus atomic dice/item/suggest references;
 selecting an existing reference offers change/delete actions. A field has one
 schema key; components do not try `desc` and then `description`.
+
+`person_alignment` is a fixed nine-value D&D enum rendered by the shared 3×3
+alignment popover in both the character sheet and the creation wizard. The
+print view renders larger, always-open spell-slot circles and gives inline rich
+dice formulas a quieter paper style inside feature and spell descriptions.
 
 ## Saving and synchronization
 
