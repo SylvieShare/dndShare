@@ -58,7 +58,7 @@ func uploadImage(ctx context.Context, objects *storage.Service, image classimage
 	if actual := hex.EncodeToString(digest[:]); actual != image.SHA256 {
 		return storage.StoredObject{}, fmt.Errorf("verify %s: SHA-256 %s, want %s", image.FileName, actual, image.SHA256)
 	}
-	stored, err := objects.UploadRaceImage(ctx, bytes.NewReader(data), image.Size, image.ObjectKey, image.MimeType)
+	stored, err := objects.UploadClassImage(ctx, bytes.NewReader(data), image.Size, image.ObjectKey, image.MimeType)
 	if err != nil {
 		return storage.StoredObject{}, fmt.Errorf("upload %s: %w", image.FileName, err)
 	}
