@@ -1,50 +1,62 @@
 <template>
   <div class="step">
     <template v-for="fc in list" :key="fc.id">
-      <div class="sheet-section-title">
-        {{ fc.name }}
-        <span class="count" :class="{ done: choiceSelected(fc.id).length === (Number(fc.choice.count) || 1) }">{{ choiceSelected(fc.id).length }} / {{ Number(fc.choice.count) || 1 }}</span>
-      </div>
-      <p v-if="fc.choice.text" class="hint">{{ fc.choice.text }}</p>
-
-      <MultiSearchSelect
-        v-if="isLangChoice(fc.choice)"
-        :options="optionsFor(fc)"
+      <SkillPicker
+        v-if="isSkillChoice(fc.choice)"
+        :title="fc.name"
+        :hint="fc.choice.text || 'Выбери навыки, которыми персонаж будет владеть.'"
+        :options="skillOptionsFor(fc)"
         :selected="choiceSelected(fc.id)"
         :limit="Number(fc.choice.count) || 1"
-        :suggest-type-id="6"
-        allow-create
-        placeholder="Найти язык…"
         @toggle="(id) => toggleChoice(fc.id, id, Number(fc.choice.count) || 1)"
       />
 
-      <div v-else-if="isChips(fc.choice)" class="chips">
-        <button
-          v-for="opt in choiceOptionList(fc)"
-          :key="opt.value"
-          class="chip"
-          :class="{ on: isSel(fc, opt), off: locked(fc, opt) }"
-          @click="toggleChoice(fc.id, opt.value, Number(fc.choice.count) || 1)"
-        >{{ opt.label }}</button>
-      </div>
+      <template v-else>
+        <div class="sheet-section-title">
+          {{ fc.name }}
+          <span class="count" :class="{ done: choiceSelected(fc.id).length === (Number(fc.choice.count) || 1) }">{{ choiceSelected(fc.id).length }} / {{ Number(fc.choice.count) || 1 }}</span>
+        </div>
+        <p v-if="fc.choice.text" class="hint">{{ fc.choice.text }}</p>
 
-      <div v-else class="list">
-        <div
-          v-for="opt in choiceOptionList(fc)"
-          :key="opt.value"
-          class="opt"
-          :class="{ on: isSel(fc, opt), off: locked(fc, opt) }"
-          @click="toggleChoice(fc.id, opt.value, Number(fc.choice.count) || 1)"
-        >
-          <span class="box" :class="{ radio: (Number(fc.choice.count) || 1) === 1 }">
-            <svg v-if="isSel(fc, opt)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6" /></svg>
-          </span>
-          <div class="opt-body">
-            <div class="opt-label">{{ opt.label }}</div>
-            <div v-if="opt.desc" class="opt-desc">{{ opt.desc }}</div>
+        <MultiSearchSelect
+          v-if="isLangChoice(fc.choice)"
+          :options="optionsFor(fc)"
+          :selected="choiceSelected(fc.id)"
+          :limit="Number(fc.choice.count) || 1"
+          :suggest-type-id="6"
+          allow-create
+          placeholder="Найти язык…"
+          @toggle="(id) => toggleChoice(fc.id, id, Number(fc.choice.count) || 1)"
+        />
+
+        <div v-else-if="isChips(fc.choice)" class="chips">
+          <button
+            v-for="opt in choiceOptionList(fc)"
+            :key="opt.value"
+            class="chip"
+            :class="{ on: isSel(fc, opt), off: locked(fc, opt) }"
+            @click="toggleChoice(fc.id, opt.value, Number(fc.choice.count) || 1)"
+          >{{ opt.label }}</button>
+        </div>
+
+        <div v-else class="list">
+          <div
+            v-for="opt in choiceOptionList(fc)"
+            :key="opt.value"
+            class="opt"
+            :class="{ on: isSel(fc, opt), off: locked(fc, opt) }"
+            @click="toggleChoice(fc.id, opt.value, Number(fc.choice.count) || 1)"
+          >
+            <span class="box" :class="{ radio: (Number(fc.choice.count) || 1) === 1 }">
+              <svg v-if="isSel(fc, opt)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6" /></svg>
+            </span>
+            <div class="opt-body">
+              <div class="opt-label">{{ opt.label }}</div>
+              <div v-if="opt.desc" class="opt-desc">{{ opt.desc }}</div>
+            </div>
           </div>
         </div>
-      </div>
+      </template>
     </template>
   </div>
 </template>
@@ -52,6 +64,7 @@
 <script setup>
 import { computed, inject } from 'vue'
 import MultiSearchSelect from '@/features/character-list/components/wizard/MultiSearchSelect.vue'
+import SkillPicker from '@/features/character-list/components/wizard/SkillPicker.vue'
 import { choicePresentation } from '@/features/character-list/components/wizard/choicePresentation'
 
 const props = defineProps({ scope: { type: String, default: 'all' } })
@@ -70,7 +83,9 @@ function locked(fc, opt) {
 }
 function isChips(choice) { return choicePresentation(choice) === 'chips' }
 function isLangChoice(choice) { return choicePresentation(choice) === 'language' }
+function isSkillChoice(choice) { return choicePresentation(choice) === 'skill' }
 function optionsFor(fc) { return choiceOptionList(fc).map((o) => ({ id: o.value, name: o.label })) }
+function skillOptionsFor(fc) { return choiceOptionList(fc).map((o) => ({ id: o.value, name: o.label, desc: o.desc || '' })) }
 </script>
 
 <style scoped>

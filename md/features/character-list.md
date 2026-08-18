@@ -97,6 +97,10 @@ expanded `item.data.description`: an original three-paragraph lore article witho
 repeating ability bonuses, followed by subrace choices, while the
 remaining rows disappear. A dedicated “Назад / К выбору расы” action reverses the
 morph and returns to the full list without changing the current content scroll.
+Skill choices carried by a racial ability (for example Half-Elf
+“Универсальность навыков”) use the same shared skill picker as the class
+“Владение навыками” section: checkbox cards show the governing ability and the
+current modifier, enforce the pick limit and expose skill descriptions on hover.
 The action floats over the selected illustration and does not occupy a layout row,
 so its disappearance cannot displace the returning card even when the scroll is at
 the top. The reverse render also restores the captured `.cc-main` scroll position

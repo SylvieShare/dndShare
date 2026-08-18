@@ -428,7 +428,7 @@ export function useDndCreateWizard() {
         const allowed = new Set(proficientSkillIds.value)
         items = items.filter((it) => allowed.has(String(it.id)))
       }
-      return items.map((it) => ({ value: it.id, label: it.value }))
+      return items.map((it) => ({ value: it.id, label: it.value, desc: it.desc || '' }))
     }
     return (choice.options || []).map((o) => ({ value: o.label, label: o.label, desc: o.desc }))
   }

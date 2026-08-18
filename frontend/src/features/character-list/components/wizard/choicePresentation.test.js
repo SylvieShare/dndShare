@@ -3,7 +3,7 @@ import { choicePresentation } from './choicePresentation'
 
 describe('choicePresentation', () => {
   it('shows skill suggestions as checkbox cards', () => {
-    expect(choicePresentation({ from_suggest_id: 15 })).toBe('list')
+    expect(choicePresentation({ from_suggest_id: 15 })).toBe('skill')
   })
 
   it('keeps language suggestions in the searchable selector', () => {
