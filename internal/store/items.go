@@ -11,7 +11,7 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-// Item — строка dndshare.item. Иконка проецируется из svg_storage или storage_image.
+// Item — строка dndshare.item. Иконка и обложка проецируются из медиахранилищ.
 type Item struct {
 	ID               int64              `json:"id"`
 	UserID           *int64             `json:"userId,omitempty"`
@@ -24,8 +24,10 @@ type Item struct {
 	CustomSourceID   *int64             `json:"customSourceId,omitempty"`
 	IconSVGID        *int64             `json:"iconSvgId,omitempty"`
 	IconImageID      *int64             `json:"iconImageId,omitempty"`
+	CoverImageID     *int64             `json:"coverImageId,omitempty"`
 	SVG              *string            `json:"svg,omitempty"`
 	IconImageURL     *string            `json:"iconImageUrl,omitempty"`
+	CoverImageURL    *string            `json:"coverImageUrl,omitempty"`
 	ContentSourceIDs []int64            `json:"contentSourceIds"`
 	ContentSources   []ContentSourceRef `json:"contentSources"`
 }
@@ -67,14 +69,14 @@ type ItemFilter struct {
 	Values []any
 }
 
-const itemColumns = "id, user_id, name, name_en, data, type_id, created_at, parent_id, custom_source_id, icon_svg_id, icon_image_id"
+const itemColumns = "id, user_id, name, name_en, data, type_id, created_at, parent_id, custom_source_id, icon_svg_id, icon_image_id, cover_image_id"
 
 func scanItemRow(rows pgx.Rows) (Item, error) {
 	var it Item
-	var userID, parentID, customSourceID, iconSVGID, iconImageID *int64
-	var nameEn, svg, iconImageURL *string
+	var userID, parentID, customSourceID, iconSVGID, iconImageID, coverImageID *int64
+	var nameEn, svg, iconImageURL, coverImageURL *string
 	var data []byte
-	if err := rows.Scan(&it.ID, &userID, &it.Name, &nameEn, &data, &it.TypeID, &it.CreatedAt, &parentID, &customSourceID, &iconSVGID, &iconImageID, &svg, &iconImageURL); err != nil {
+	if err := rows.Scan(&it.ID, &userID, &it.Name, &nameEn, &data, &it.TypeID, &it.CreatedAt, &parentID, &customSourceID, &iconSVGID, &iconImageID, &coverImageID, &svg, &iconImageURL, &coverImageURL); err != nil {
 		return Item{}, err
 	}
 	it.UserID = userID
@@ -83,9 +85,11 @@ func scanItemRow(rows pgx.Rows) (Item, error) {
 	it.CustomSourceID = customSourceID
 	it.IconSVGID = iconSVGID
 	it.IconImageID = iconImageID
+	it.CoverImageID = coverImageID
 	it.Data = json.RawMessage(data)
 	it.SVG = svg
 	it.IconImageURL = iconImageURL
+	it.CoverImageURL = coverImageURL
 	return it, nil
 }
 
@@ -119,7 +123,7 @@ func (s *Store) FindChildren(ctx context.Context, parentID int64, userID *int64,
 	where = append(where, publicOrOwnedPredicate("i", userID, len(args)))
 	where = appendContentScopeSQL(where, &args, scope)
 	rows, err := s.pool.Query(ctx,
-		"SELECT "+itemSelectColumns("i")+" FROM dndshare.item i "+itemIconJoins("i")+" WHERE "+strings.Join(where, " AND ")+" ORDER BY i.name, i.id",
+		"SELECT "+itemSelectColumns("i")+" FROM dndshare.item i "+itemMediaJoins("i")+" WHERE "+strings.Join(where, " AND ")+" ORDER BY i.name, i.id",
 		args...,
 	)
 	if err != nil {
@@ -151,12 +155,13 @@ func prefixedItemColumns(alias string) string {
 }
 
 func itemSelectColumns(alias string) string {
-	return prefixedItemColumns(alias) + ", item_svg.data AS svg_data, item_image.url AS icon_image_url"
+	return prefixedItemColumns(alias) + ", item_svg.data AS svg_data, item_image.url AS icon_image_url, item_cover.url AS cover_image_url"
 }
 
-func itemIconJoins(alias string) string {
+func itemMediaJoins(alias string) string {
 	return "LEFT JOIN dndshare.svg_storage item_svg ON item_svg.id = " + alias + ".icon_svg_id " +
-		"LEFT JOIN dndshare.storage_image item_image ON item_image.id = " + alias + ".icon_image_id AND item_image.deleted = false"
+		"LEFT JOIN dndshare.storage_image item_image ON item_image.id = " + alias + ".icon_image_id AND item_image.deleted = false " +
+		"LEFT JOIN dndshare.storage_image item_cover ON item_cover.id = " + alias + ".cover_image_id AND item_cover.deleted = false"
 }
 
 var pathSegmentRegex = regexp.MustCompile(`^[A-Za-z_][A-Za-z0-9_]*$`)
@@ -268,7 +273,7 @@ func (s *Store) searchItems(ctx context.Context, typeID int64, q *string, userID
 		}
 	}
 
-	sql := "SELECT " + itemSelectColumns("i") + " FROM dndshare.item i " + itemIconJoins("i") + " WHERE " + strings.Join(where, " AND ") +
+	sql := "SELECT " + itemSelectColumns("i") + " FROM dndshare.item i " + itemMediaJoins("i") + " WHERE " + strings.Join(where, " AND ") +
 		" ORDER BY i.name, i.id LIMIT " + add(limit) + " OFFSET " + add(offset)
 	rows, err := s.pool.Query(ctx, sql, args...)
 	if err != nil {
@@ -349,7 +354,7 @@ func (s *Store) GetByIds(ctx context.Context, ids []int64, userID *int64) ([]Ite
 	visibility := publicOrOwnedPredicate("i", userID, len(args))
 	rows, err := s.pool.Query(ctx,
 		`SELECT `+itemSelectColumns("i")+`
-		   FROM dndshare.item i `+itemIconJoins("i")+`
+		   FROM dndshare.item i `+itemMediaJoins("i")+`
 		  WHERE i.id = ANY($1) AND `+visibility,
 		args...,
 	)
@@ -388,7 +393,7 @@ func (s *Store) SearchByTypesAndName(ctx context.Context, typeIDs []int64, q str
 		where = append(where, "i.user_id IS NULL")
 	}
 	where = appendContentScopeSQL(where, &args, scope)
-	sql := "SELECT " + itemSelectColumns("i") + " FROM dndshare.item i " + itemIconJoins("i") +
+	sql := "SELECT " + itemSelectColumns("i") + " FROM dndshare.item i " + itemMediaJoins("i") +
 		" WHERE " + strings.Join(where, " AND ") + " ORDER BY i.user_id NULLS LAST, i.id LIMIT 30"
 	rows, err := s.pool.Query(ctx, sql, args...)
 	if err != nil {
@@ -404,7 +409,7 @@ func (s *Store) SearchByTypesAndName(ctx context.Context, typeIDs []int64, q str
 // FindBaseByTypeAndNameEn — базовый предмет по типу и nameEn (case-insensitive). ErrNotFound если нет.
 func (s *Store) FindBaseByTypeAndNameEn(ctx context.Context, typeID int64, nameEn string) (Item, error) {
 	rows, err := s.pool.Query(ctx,
-		"SELECT "+itemSelectColumns("i")+" FROM dndshare.item i "+itemIconJoins("i")+" WHERE i.type_id = $1 AND i.user_id IS NULL AND lower(i.name_en) = lower($2)",
+		"SELECT "+itemSelectColumns("i")+" FROM dndshare.item i "+itemMediaJoins("i")+" WHERE i.type_id = $1 AND i.user_id IS NULL AND lower(i.name_en) = lower($2)",
 		typeID, nameEn,
 	)
 	if err != nil {

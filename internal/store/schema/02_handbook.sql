@@ -205,6 +205,7 @@ CREATE TABLE IF NOT EXISTS dndshare.item (
     parent_id  int8 NULL REFERENCES dndshare.item(id) ON DELETE SET NULL,
     icon_svg_id int8 NULL REFERENCES dndshare.svg_storage(id),
     icon_image_id int8 NULL REFERENCES dndshare.storage_image(id) ON DELETE SET NULL,
+    cover_image_id int8 NULL REFERENCES dndshare.storage_image(id) ON DELETE SET NULL,
     custom_source_id int8 NULL,
     CONSTRAINT item_pk PRIMARY KEY (id)
 );
@@ -221,6 +222,7 @@ DO $$ BEGIN
 END $$;
 ALTER TABLE dndshare.item ADD COLUMN IF NOT EXISTS icon_svg_id int8 NULL REFERENCES dndshare.svg_storage(id);
 ALTER TABLE dndshare.item ADD COLUMN IF NOT EXISTS icon_image_id int8 NULL REFERENCES dndshare.storage_image(id) ON DELETE SET NULL;
+ALTER TABLE dndshare.item ADD COLUMN IF NOT EXISTS cover_image_id int8 NULL REFERENCES dndshare.storage_image(id) ON DELETE SET NULL;
 ALTER TABLE dndshare.item ADD COLUMN IF NOT EXISTS custom_source_id int8 NULL;
 
 DO $$ BEGIN
@@ -234,6 +236,10 @@ DO $$ BEGIN
             CHECK (num_nonnulls(icon_svg_id, icon_image_id) <= 1);
     END IF;
 END $$;
+
+CREATE INDEX IF NOT EXISTS idx_item_cover_image_id
+    ON dndshare.item USING btree (cover_image_id)
+    WHERE cover_image_id IS NOT NULL;
 
 -- Creature artwork used to be the only item image kept inside rules JSON.
 -- Move it to the canonical raster icon relation before runtime reads begin.

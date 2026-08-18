@@ -94,14 +94,14 @@ func (s *Store) MakeBase(ctx context.Context, id int64) error {
 		return err
 	}
 	defer tx.Rollback(ctx)
-	var imageID *int64
+	var imageID, coverImageID *int64
 	err = tx.QueryRow(ctx,
 		`UPDATE dndshare.item
 		    SET user_id = NULL, custom_source_id = NULL
 		  WHERE id = $1
-		  RETURNING icon_image_id`,
+		  RETURNING icon_image_id, cover_image_id`,
 		id,
-	).Scan(&imageID)
+	).Scan(&imageID, &coverImageID)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return ErrNotFound
 	}
@@ -110,6 +110,11 @@ func (s *Store) MakeBase(ctx context.Context, id int64) error {
 	}
 	if imageID != nil {
 		if _, err := tx.Exec(ctx, `UPDATE dndshare.storage_image SET user_id = NULL WHERE id = $1`, *imageID); err != nil {
+			return err
+		}
+	}
+	if coverImageID != nil {
+		if _, err := tx.Exec(ctx, `UPDATE dndshare.storage_image SET user_id = NULL WHERE id = $1`, *coverImageID); err != nil {
 			return err
 		}
 	}
@@ -122,14 +127,14 @@ func (s *Store) Delete(ctx context.Context, id, userID int64, isAdmin bool) (Ite
 	var err error
 	if isAdmin {
 		err = s.pool.QueryRow(ctx,
-			"DELETE FROM dndshare.item WHERE id = $1 RETURNING icon_svg_id, icon_image_id",
+			"DELETE FROM dndshare.item WHERE id = $1 RETURNING icon_svg_id, icon_image_id, cover_image_id",
 			id,
-		).Scan(&refs.SVGID, &refs.ImageID)
+		).Scan(&refs.SVGID, &refs.ImageID, &refs.CoverImageID)
 	} else {
 		err = s.pool.QueryRow(ctx,
-			"DELETE FROM dndshare.item WHERE id = $1 AND user_id = $2 RETURNING icon_svg_id, icon_image_id",
+			"DELETE FROM dndshare.item WHERE id = $1 AND user_id = $2 RETURNING icon_svg_id, icon_image_id, cover_image_id",
 			id, userID,
-		).Scan(&refs.SVGID, &refs.ImageID)
+		).Scan(&refs.SVGID, &refs.ImageID, &refs.CoverImageID)
 	}
 	if errors.Is(err, pgx.ErrNoRows) {
 		return ItemIconRefs{}, ErrNotFound

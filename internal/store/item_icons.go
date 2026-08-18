@@ -10,8 +10,9 @@ import (
 // ItemIconRefs contains storage rows that stopped being referenced by an item
 // mutation. Callers may remove them after the transaction commits.
 type ItemIconRefs struct {
-	SVGID   *int64
-	ImageID *int64
+	SVGID        *int64
+	ImageID      *int64
+	CoverImageID *int64
 }
 
 // CanEditItemIcon verifies ownership before an image body is uploaded to S3.

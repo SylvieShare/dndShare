@@ -118,6 +118,17 @@ func (s *Service) UploadSpellRune(ctx context.Context, body io.Reader, size int6
 	return s.put(ctx, body, size, key, contentType)
 }
 
+// UploadItemCover stores built-in handbook cover art under a stable key.
+func (s *Service) UploadItemCover(ctx context.Context, body io.Reader, size int64, key, contentType string) (StoredObject, error) {
+	if !strings.HasPrefix(key, "system-item-covers/") || strings.Contains(key, "..") {
+		return StoredObject{}, fmt.Errorf("invalid system item cover object key %q", key)
+	}
+	if contentType != "image/webp" {
+		return StoredObject{}, fmt.Errorf("invalid system item cover content type %q", contentType)
+	}
+	return s.put(ctx, body, size, key, contentType)
+}
+
 // UploadBestiaryImage stores imported creature artwork under a stable key so a
 // repeated catalogue import overwrites the object instead of leaking new ones.
 func (s *Service) UploadBestiaryImage(ctx context.Context, body io.Reader, size int64, key, contentType string) (StoredObject, error) {

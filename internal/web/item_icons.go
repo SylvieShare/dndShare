@@ -133,17 +133,22 @@ func (s *Server) cleanupItemIconContext(ctx context.Context, refs store.ItemIcon
 			log.Printf("delete orphaned item svg %d: %v", *refs.SVGID, err)
 		}
 	}
-	if refs.ImageID == nil {
+	s.cleanupItemStorageImage(ctx, refs.ImageID)
+	s.cleanupItemStorageImage(ctx, refs.CoverImageID)
+}
+
+func (s *Server) cleanupItemStorageImage(ctx context.Context, imageID *int64) {
+	if imageID == nil {
 		return
 	}
-	key, err := s.store.MarkStorageImageDeletedIfUnreferenced(ctx, *refs.ImageID)
+	key, err := s.store.MarkStorageImageDeletedIfUnreferenced(ctx, *imageID)
 	if err != nil {
-		log.Printf("mark orphaned item image %d deleted: %v", *refs.ImageID, err)
+		log.Printf("mark orphaned item image %d deleted: %v", *imageID, err)
 		return
 	}
 	if key != nil {
 		if err := s.s3.DeleteObject(ctx, *key); err != nil {
-			log.Printf("delete orphaned item image %d (%q): %v", *refs.ImageID, *key, err)
+			log.Printf("delete orphaned item image %d (%q): %v", *imageID, *key, err)
 		}
 	}
 }

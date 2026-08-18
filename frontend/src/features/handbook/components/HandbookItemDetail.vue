@@ -2,19 +2,11 @@
   <div class="detail-panel">
     <template v-if="item">
 
-      <!-- Sticky header with name / ID / edit -->
-      <div v-if="!customRenderer && showTitle" class="detail-head">
-        <ItemIcon v-if="item.iconImageUrl || item.svg" :item="item" :fallback-to-type="false" :size="28" />
-        <div class="detail-title-text">
-          <span class="detail-name">{{ item.name }}</span>
-          <span v-if="item.nameEn" class="detail-name-en">{{ item.nameEn }}</span>
-        </div>
-        <span v-if="item.userId != null" class="detail-custom-mark">✦ ваше</span>
-        <div class="detail-head-actions">
-          <span class="detail-id">ID {{ item.id }}</span>
+      <ItemDetailHeader v-if="showTitle" :item="item">
+        <template #actions>
           <button v-if="canEdit" class="btn-edit" @click="$emit('edit', item)">Редактировать</button>
-        </div>
-      </div>
+        </template>
+      </ItemDetailHeader>
 
       <div v-if="item.contentSources?.length && type?.id !== 5" class="detail-sources">
         <span v-for="source in item.contentSources" :key="source.id" :title="source.name">{{ source.code || source.name }}</span>
@@ -26,7 +18,7 @@
         :is="customRenderer"
         :item="item"
         :type="type"
-        :show-title="showTitle"
+        :show-title="false"
         :actor-name="actorName"
       />
 
@@ -93,7 +85,7 @@
       </template>
 
       <!-- Edit button for custom renderers -->
-      <div v-if="customRenderer && canEdit" class="detail-edit-row">
+      <div v-if="customRenderer && canEdit && !showTitle" class="detail-edit-row">
         <span class="detail-id">ID {{ item.id }}</span>
         <button class="btn-edit" @click="$emit('edit', item)">Редактировать</button>
       </div>
@@ -105,7 +97,7 @@
 
 <script setup>
 import { computed, watch } from 'vue'
-import ItemIcon from '@/features/items/components/ItemIcon.vue'
+import ItemDetailHeader from '@/features/handbook/components/ItemDetailHeader.vue'
 import { useSuggestStore } from '@/stores/suggest'
 import { ensureItemNames, itemName } from '@/features/handbook/objects/lib/itemNames'
 import { getSuggestId, isFieldVisible } from '@/features/handbook/objects/lib/schemaFields'
@@ -217,54 +209,8 @@ function formatSubValue(sub, value) {
   margin: auto 0;
 }
 
-/* ── Sticky header ── */
-.detail-head {
-  position: sticky;
-  top: -16px;
-  z-index: 5;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin: -16px -20px 14px;
-  padding: 16px 20px 10px;
-  background: var(--bg);
-  border-bottom: 1px solid color-mix(in srgb, var(--text-on-accent) 6%, transparent);
-}
-
-.detail-title-text {
-  min-width: 0;
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.detail-name {
-  font-size: 17px;
-  font-weight: 600;
-  color: var(--text-1);
-}
-
-.detail-name-en {
-  font-size: 13px;
-  color: var(--text-muted);
-}
-
-.detail-custom-mark {
-  font-size: 10px;
-  color: var(--accent);
-}
-
 .detail-sources { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
 .detail-sources span { border-radius: 999px; background: color-mix(in srgb, var(--accent) 12%, var(--surface)); color: var(--accent); padding: 3px 8px; font-size: 9px; font-weight: 700; letter-spacing: .04em; }
-
-.detail-head-actions {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
 
 .detail-id { font-size: 11px; color: var(--text-muted); }
 
@@ -357,30 +303,12 @@ function formatSubValue(sub, value) {
     padding: 14px 16px;
   }
 
-  .detail-head {
-    position: static;
-    margin: 0 0 12px;
-    padding: 0;
-    background: transparent;
-    border-bottom: none;
-  }
 }
 
 @media (max-width: 520px) {
   .detail-panel {
     padding: 12px;
     overflow: visible;
-  }
-
-  .detail-head {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-  }
-
-  .detail-head-actions {
-    margin-left: 0;
-    width: 100%;
   }
 
   .btn-edit {

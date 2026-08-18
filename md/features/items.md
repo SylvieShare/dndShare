@@ -74,6 +74,10 @@ entries and selected choices.
 - details open through the handbook `ItemViewModal`/modal stack; `ItemViewModal`
   forwards an optional action slot into the fixed `AppModalFrame` footer, so
   character-specific mutations do not leak into handbook detail renderers;
+- every item detail uses `ItemDetailHeader.vue`. It renders a panoramic
+  `coverImageUrl` as full-bleed artwork behind the identity block and actions;
+  without a usable cover it keeps the same structure as a compact neutral
+  header and never stretches the square icon into a banner;
 - field labels and errors use shared form components;
 - direct color literals are rejected by `npm run check:colors`.
 
@@ -129,3 +133,27 @@ The initial semantic motifs are:
   turquoise sigil segments and three life leaves.
 - **Circle of Scarlet:** a pale-rose core enclosed by a segmented crimson ring
   and four diamond thorns, without literal blood or gore.
+
+### Item cover art direction
+
+Item covers are atmospheric wide illustrations for the shared detail header,
+not enlarged icons. The icon remains the compact identity mark; a cover adds
+setting, energy and color while preserving readable UI overlay space.
+
+- Store an opaque lossy WebP at exactly `1536×512` (3:1), normally no more
+  than 350 KB. Do not use alpha for a full-bleed scene.
+- Keep the dominant motif inside the central 50–60% safe zone. Both outer
+  edges must be expendable so responsive `object-fit: cover; object-position:
+  center` crops remain meaningful.
+- Use polished stylized fantasy key art: broad graphic painterly shapes,
+  confident contours and restrained detail. It should be richer than the rune
+  while sharing its palette and semantic motif; avoid photorealism.
+- Reserve a calmer, darker lower band for the title and controls. Do not bake
+  in text, letters, numbers, logos, watermarks, borders, badges or UI frames.
+- Inspect the final asset at desktop 3:1 and mobile 2:1 crops. Decorative
+  covers use empty alt text because the item name already labels the header.
+
+The initial spell covers are **Fireball**, **Bless** and **Aura of Vitality**.
+`cmd/item-cover-sync` verifies the embedded manifest, uploads them to stable
+`system-item-covers/v1/spells/` keys and assigns the resulting
+`storage_image(type='item_cover')` rows through `item.cover_image_id`.
