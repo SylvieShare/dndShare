@@ -115,6 +115,7 @@ func (s *Store) BestiaryCreateItem(ctx context.Context, name, nameEn string, dat
 func setBestiaryItemContentSource(ctx context.Context, tx pgx.Tx, itemID, typeID int64, sourceCode, sourceName string) error {
 	sourceCode = strings.ToUpper(strings.TrimSpace(sourceCode))
 	sourceName = strings.TrimSpace(sourceName)
+	hasDisplayName := sourceName != "" && !strings.EqualFold(sourceName, sourceCode)
 	if sourceName == "" {
 		sourceName = sourceCode
 	}
@@ -152,6 +153,14 @@ func setBestiaryItemContentSource(ctx context.Context, tx pgx.Tx, itemID, typeID
 		LIMIT 1`, typeID, sourceCode, sourceName).Scan(&contentSourceID, &sourceVersionID)
 	if err != nil {
 		return err
+	}
+	if hasDisplayName {
+		if _, err := tx.Exec(ctx,
+			`UPDATE dndshare.content_source SET name = $1, code = $2 WHERE id = $3`,
+			sourceName, sourceCode, contentSourceID,
+		); err != nil {
+			return err
+		}
 	}
 	if _, err := tx.Exec(ctx, `
 		INSERT INTO dndshare.content_source_compatibility (content_source_id, source_version_id, status)

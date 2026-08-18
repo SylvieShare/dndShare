@@ -49,6 +49,10 @@ func TestHandbookSchemaBackfillsBestiaryContentSources(t *testing.T) {
 		"INSERT INTO dndshare.content_source",
 		"INSERT INTO dndshare.item_content_source",
 		"WHERE i.type_id = 6",
+		"upper(btrim(code))",
+		"WHEN 'PHB' THEN 'Книга игрока'",
+		"WHEN 'MM' THEN 'Бестиарий'",
+		"WHEN 'DMF5E' THEN 'Углублённая магия для 5 редакции'",
 	} {
 		if !strings.Contains(schemaHandbookSQL, fragment) {
 			t.Fatalf("bestiary source migration is missing %q", fragment)

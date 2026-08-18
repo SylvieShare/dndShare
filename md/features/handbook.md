@@ -34,6 +34,11 @@ The importer also resolves the upstream book code/name to `content_source` and
 replaces the creature's `item_content_source` link on every import. Startup SQL
 backfills the same relation for creatures imported before this contract, so the
 handbook publication filter is server-backed for bestiary entries as well.
+Publication identity is the trimmed, uppercase code within one game system and
+edition. Startup SQL merges case-only duplicates, preserves their item links and
+normalizes the D&D 5e spell/bestiary catalogue to one Russian display name per
+known code; `DMG` and `DMF5E` remain separate because they identify different
+books. Repeated bestiary imports refresh the display name from upstream metadata.
 Deploy also runs the idempotent `cmd/bestiary-image-sync` migration: only legacy
 bestiary rows without an object key are copied, so later deploys are no-ops. If
 an upstream file is already unavailable, its dead URL and item association are

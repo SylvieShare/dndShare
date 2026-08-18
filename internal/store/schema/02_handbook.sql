@@ -780,34 +780,171 @@ CREATE TABLE IF NOT EXISTS dndshare.dictionary_text (
 -- every existing imported creature into the relational publication model.
 -- Unknown/new upstream codes remain usable and are displayed as their code;
 -- the importer supplies the human-readable name for all future inserts.
-WITH source_names(code, name) AS (
-    VALUES
-        ('BAM', 'Астральный зверинец Бу'),
-        ('BGDIA', 'Врата Балдура: Нисхождение в Авернус'),
-        ('BGG', 'Бигби представляет: Триумф великанов'),
-        ('BMT', 'Книга многих вещей'),
-        ('COS', 'Проклятье Страда'),
-        ('DMG', 'Руководство мастера'),
-        ('EGTW', 'Путеводитель исследователя по Дикогорью'),
-        ('ERLW', 'Эберрон. Из пепла Последней войны'),
-        ('FTD', 'Сокровищница драконов Фицбана'),
-        ('GGR', 'Справочник гильдмастера по Равнике'),
-        ('GOS', 'Призраки Солтмарша'),
-        ('IDROTF', 'Долина Ледяного Ветра: Иней Морозной девы'),
-        ('MM', 'Бестиарий'),
-        ('MOT', 'Мифические одиссеи Тероса'),
-        ('MPMM', 'Морденкайнен представляет: Монстры Мультивселенной'),
-        ('MTF', 'Том Морденкайнена о врагах'),
-        ('SCC', 'Стриксхейвен: Учебная программа хаоса'),
-        ('TCE', 'Котёл Таши со всякой всячиной'),
-        ('TOA', 'Гробница Аннигиляции'),
-        ('VGM', 'Справочник Воло по монстрам'),
-        ('VRGR', 'Руководство ван Рихтена по Равенлофту'),
-        ('WBtW', 'Чащоба за Ведьминым светом'),
-        ('WDH', 'Глубоководье: Драконий куш'),
-        ('WDMM', 'Глубоководье: Подземелье безумного мага'),
-        ('XGE', 'Руководство Занатара обо всём')
-), bestiary_codes AS (
+-- Codes are the stable identity. Merge any historical rows which differ only
+-- by case/whitespace before enforcing that identity in the unique index.
+WITH ranked AS (
+    SELECT id,
+           first_value(id) OVER (
+               PARTITION BY source_id, COALESCE(native_source_version_id, 0), upper(btrim(code))
+               ORDER BY id
+           ) AS canonical_id
+    FROM dndshare.content_source
+), duplicates AS (
+    SELECT id, canonical_id FROM ranked WHERE id <> canonical_id
+)
+INSERT INTO dndshare.item_content_source AS target (item_id, content_source_id, page, primary_source)
+SELECT ics.item_id, d.canonical_id, ics.page, ics.primary_source
+FROM dndshare.item_content_source ics
+JOIN duplicates d ON d.id = ics.content_source_id
+ON CONFLICT (item_id, content_source_id) DO UPDATE
+SET page = COALESCE(target.page, EXCLUDED.page),
+    primary_source = target.primary_source OR EXCLUDED.primary_source;
+
+WITH ranked AS (
+    SELECT id,
+           first_value(id) OVER (
+               PARTITION BY source_id, COALESCE(native_source_version_id, 0), upper(btrim(code))
+               ORDER BY id
+           ) AS canonical_id
+    FROM dndshare.content_source
+), duplicates AS (
+    SELECT id, canonical_id FROM ranked WHERE id <> canonical_id
+)
+INSERT INTO dndshare.content_source_compatibility (content_source_id, source_version_id, status)
+SELECT d.canonical_id, csc.source_version_id, csc.status
+FROM dndshare.content_source_compatibility csc
+JOIN duplicates d ON d.id = csc.content_source_id
+ON CONFLICT (content_source_id, source_version_id) DO NOTHING;
+
+WITH ranked AS (
+    SELECT id,
+           first_value(id) OVER (
+               PARTITION BY source_id, COALESCE(native_source_version_id, 0), upper(btrim(code))
+               ORDER BY id
+           ) AS canonical_id
+    FROM dndshare.content_source
+)
+DELETE FROM dndshare.content_source cs
+USING ranked r
+WHERE cs.id = r.id AND r.id <> r.canonical_id;
+
+UPDATE dndshare.content_source SET code = upper(btrim(code));
+DROP INDEX IF EXISTS dndshare.content_source_system_edition_code_key;
+CREATE UNIQUE INDEX content_source_system_edition_code_key
+    ON dndshare.content_source (
+        source_id,
+        COALESCE(native_source_version_id, 0),
+        upper(btrim(code))
+    );
+
+-- TTG exposes localized names and mixed-case short names. Keep one canonical
+-- Russian display name per normalized code across spells and the bestiary.
+CREATE OR REPLACE FUNCTION dndshare.canonical_dnd5e_content_source_name(raw_code text)
+RETURNS text
+LANGUAGE sql
+IMMUTABLE
+AS $$
+    SELECT CASE upper(btrim(raw_code))
+        WHEN 'AAG' THEN 'Руководство астрального приключенца'
+        WHEN 'AATM' THEN 'Атлас приключений: Морг'
+        WHEN 'AI' THEN 'Корпорация приобретений'
+        WHEN 'BAM' THEN 'Астральный зверинец Бу'
+        WHEN 'BGDIA' THEN 'Врата Балдура: Нисхождение в Авернус'
+        WHEN 'BGG' THEN 'Бигби представляет: Триумф великанов'
+        WHEN 'BMT' THEN 'Книга многих вещей'
+        WHEN 'BOTJR' THEN 'Звери Гнилых джунглей'
+        WHEN 'CM' THEN 'Тайны Кэндлкипа'
+        WHEN 'COA' THEN 'Цепи Асмодея'
+        WHEN 'CON' THEN 'Хроники Наймирии'
+        WHEN 'COS' THEN 'Проклятье Страда'
+        WHEN 'CRCOTN' THEN 'Решающая Роль: Зов Пустоты'
+        WHEN 'DIP' THEN 'Дракон Ледяного Шпиля'
+        WHEN 'DMF5E' THEN 'Углублённая магия для 5 редакции'
+        WHEN 'DMG' THEN 'Руководство мастера'
+        WHEN 'DITLCOT' THEN 'Спуск в Затерянные пещеры Цойканта'
+        WHEN 'DODK' THEN 'Подземелья Драккенхайма'
+        WHEN 'DOSI' THEN 'Драконы острова Штормрек'
+        WHEN 'DSOTDQ' THEN 'Драконье Копьё: Тень Королевы Драконов'
+        WHEN 'EGTW' THEN 'Путеводитель исследователя по Дикогорью'
+        WHEN 'ERLW' THEN 'Эберрон. Из пепла Последней войны'
+        WHEN 'FTD' THEN 'Сокровищница драконов Фицбана'
+        WHEN 'GGR' THEN 'Справочник гильдмастера по Равнике'
+        WHEN 'GHTPG' THEN 'Руководство игрока в Мрачной лощине'
+        WHEN 'GOS' THEN 'Призраки Солтмарша'
+        WHEN 'HAT' THEN 'Честь среди воров'
+        WHEN 'HFTT' THEN 'Охота на Фессалгидру'
+        WHEN 'HOTDQ' THEN 'Клад Королевы Драконов'
+        WHEN 'ICB' THEN 'Книга класса Механист'
+        WHEN 'IDROTF' THEN 'Долина Ледяного Ветра: Иней Морозной девы'
+        WHEN 'JTTRC' THEN 'Путешествие по Сияющей Цитадели'
+        WHEN 'KFTGV' THEN 'Ключи от Золотого Хранилища'
+        WHEN 'KKW' THEN 'Путь Кренко'
+        WHEN 'LH' THEN 'Лазерлама'
+        WHEN 'LHEX' THEN 'Лазерлама (расширение)'
+        WHEN 'LLK' THEN 'Потерянная лаборатория Квалиша'
+        WHEN 'LMOP' THEN 'Затерянные Рудники Фанделвера'
+        WHEN 'LOX' THEN 'Свет Зариксиды'
+        WHEN 'MCV1' THEN 'Справочник чудовищ: том 1'
+        WHEN 'MCV2DC' THEN 'Компендиум чудовищ, том 2: Существа Драконьего Копья'
+        WHEN 'MCV3MC' THEN 'Компендиум чудовищ, том 3: Существа Майнкрафта'
+        WHEN 'MCV4EC' THEN 'Компендиум чудовищ, том 4: Существа Элдраина'
+        WHEN 'MHH' THEN 'Мидгард: Справочник героя'
+        WHEN 'MM' THEN 'Бестиарий'
+        WHEN 'MOT' THEN 'Мифические одиссеи Тероса'
+        WHEN 'MPMM' THEN 'Морденкайнен представляет: Монстры Мультивселенной'
+        WHEN 'MPP' THEN 'Планарный парад Морте'
+        WHEN 'MTF' THEN 'Том Морденкайнена о врагах'
+        WHEN 'ODL' THEN 'Одиссея Повелителей драконов'
+        WHEN 'OOTA' THEN 'Из Бездны'
+        WHEN 'OOW' THEN 'Планетарий Странника'
+        WHEN 'PG' THEN 'Путеводитель игрока: Прорастающий хаос'
+        WHEN 'PABTSO' THEN 'Фанделвер и Подземье: Разрушенный обелиск'
+        WHEN 'PHB' THEN 'Книга игрока'
+        WHEN 'POTA' THEN 'Принцы апокалипсиса'
+        WHEN 'QFTIS' THEN 'Приключения на Бесконечной лестнице'
+        WHEN 'ROT' THEN 'Пробуждение Тиамат'
+        WHEN 'SATO' THEN 'Сигил и Внешние Земли'
+        WHEN 'SCAG' THEN 'Путеводитель приключенца по Побережью Меча'
+        WHEN 'SCC' THEN 'Стриксхейвен: Учебная программа хаоса'
+        WHEN 'SKT' THEN 'Гром Штормового Короля'
+        WHEN 'TCE' THEN 'Котёл Таши со всякой всячиной'
+        WHEN 'TDCS' THEN 'Сеттинг кампании Тал`Дорей'
+        WHEN 'TLTRW' THEN 'Тэй — земли красных волшебников'
+        WHEN 'TOA' THEN 'Гробница Аннигиляции'
+        WHEN 'TOFW' THEN 'Поворот Колеса Фортуны'
+        WHEN 'TP' THEN 'Рукобоец'
+        WHEN 'TVD' THEN 'Досье Векны'
+        WHEN 'UA20POR' THEN 'Unearthed Arcana: Пересмотр псионических способностей'
+        WHEN 'UA21DO' THEN 'Unearthed Arcana: Драконьи варианты'
+        WHEN 'UA22GO' THEN 'Unearthed Arcana 2022: Гиганты'
+        WHEN 'UA22WOTM' THEN 'Unearthed Arcana: Чудеса Мультивселенной'
+        WHEN 'UACDW' THEN 'Unearthed Arcana: Жрец, Друид и Волшебник'
+        WHEN 'UAFRW' THEN 'Unearthed Arcana: Воин, Следопыт и Волшебник'
+        WHEN 'UAMM' THEN 'Unearthed Arcana: Современная магия'
+        WHEN 'UAMOS' THEN 'Unearthed Arcana: Маги Стриксхейвена'
+        WHEN 'UASMT' THEN 'Unearthed Arcana: Заклинания и магические тату'
+        WHEN 'UASS' THEN 'Unearthed Arcana: Стартовые заклинания'
+        WHEN 'UATOBM' THEN 'Unearthed Arcana: Древняя чёрная магия'
+        WHEN 'VEOR' THEN 'Векна: Накануне погибели'
+        WHEN 'VGM' THEN 'Справочник Воло по монстрам'
+        WHEN 'VRGR' THEN 'Руководство ван Рихтена по Равенлофту'
+        WHEN 'VSOS' THEN 'Шпиль тайн Вальды'
+        WHEN 'WBTW' THEN 'Чащоба за Ведьминым светом'
+        WHEN 'WDH' THEN 'Глубоководье: Драконий куш'
+        WHEN 'WDMM' THEN 'Глубоководье: Подземелье безумного мага'
+        WHEN 'XGE' THEN 'Руководство Занатара обо всём'
+        ELSE NULL
+    END
+$$;
+
+UPDATE dndshare.content_source cs
+SET name = dndshare.canonical_dnd5e_content_source_name(cs.code)
+FROM dndshare."source" src
+WHERE src.id = cs.source_id
+  AND lower(src.name) = 'dnd5e'
+  AND dndshare.canonical_dnd5e_content_source_name(cs.code) IS NOT NULL;
+
+WITH bestiary_codes AS (
     SELECT DISTINCT upper(btrim(i.data #>> '{identity,source}')) AS code
     FROM dndshare.item i
     WHERE i.type_id = 6
@@ -825,11 +962,12 @@ WITH source_names(code, name) AS (
 INSERT INTO dndshare.content_source (
     source_id, native_source_version_id, name, code, kind, is_default, sort_order
 )
-SELECT sc.source_id, sc.source_version_id, COALESCE(sn.name, bc.code), bc.code,
+SELECT sc.source_id, sc.source_version_id,
+       COALESCE(dndshare.canonical_dnd5e_content_source_name(bc.code), bc.code),
+       bc.code,
        'addon', false, 100
 FROM bestiary_codes bc
 CROSS JOIN source_context sc
-LEFT JOIN source_names sn ON upper(sn.code) = bc.code
 ON CONFLICT DO NOTHING;
 
 INSERT INTO dndshare.content_source_compatibility (content_source_id, source_version_id, status)
@@ -858,3 +996,5 @@ WHERE i.type_id = 6
   AND NULLIF(btrim(i.data #>> '{identity,source}'), '') IS NOT NULL
   AND (sv.id IS NULL OR lower(sv.version) = '2014')
 ON CONFLICT (item_id, content_source_id) DO NOTHING;
+
+DROP FUNCTION dndshare.canonical_dnd5e_content_source_name(text);
