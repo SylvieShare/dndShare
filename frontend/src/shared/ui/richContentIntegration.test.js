@@ -6,6 +6,7 @@ import { createRichNodeHtml, decodeRichNodePayload } from '@sylvieshare/share-ui
 const inputSource = readFileSync(fileURLToPath(new URL('./InputDescription.vue', import.meta.url)), 'utf8')
 const inlineSource = readFileSync(fileURLToPath(new URL('./DndRichInlineNode.vue', import.meta.url)), 'utf8')
 const contentSource = readFileSync(fileURLToPath(new URL('./DndRichContent.vue', import.meta.url)), 'utf8')
+const themeSource = readFileSync(fileURLToPath(new URL('../../app/theme.css', import.meta.url)), 'utf8')
 const enemySource = readFileSync(fileURLToPath(new URL('../../features/items/detail-components/EnemyDetailContent.vue', import.meta.url)), 'utf8')
 const itemModalSource = readFileSync(fileURLToPath(new URL('../../features/handbook/components/ItemViewModal.vue', import.meta.url)), 'utf8')
 const itemDetailSource = readFileSync(fileURLToPath(new URL('../../features/handbook/components/HandbookItemDetail.vue', import.meta.url)), 'utf8')
@@ -47,6 +48,12 @@ describe('DnD rich content integration', () => {
     expect(inlineSource).toContain(':actor-name="actorName"')
     expect(itemModalSource).toContain(':actor-name="actorName"')
     expect(itemDetailSource).toContain(':actor-name="actorName"')
+  })
+
+  it('uses the editorial prose font for rendered descriptions', () => {
+    expect(contentSource).toContain('class="dnd-rich-content"')
+    expect(themeSource).toContain('--font-prose: "Literata"')
+    expect(themeSource).toContain('.dnd-rich-content')
   })
 
   it('migrates only the approved kobold example', () => {

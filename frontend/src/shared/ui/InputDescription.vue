@@ -199,6 +199,11 @@ function removeEditingNode() {
 
 <style scoped>
 .input-desc { display: flex; flex-direction: column; }
+.input-desc :deep(.desc-editor),
+.input-desc :deep(.desc-view) {
+  font-family: var(--font-prose);
+  font-optical-sizing: auto;
+}
 .desc-head { display: flex; align-items: center; gap: 8px; min-height: 24px; margin-bottom: 4px; }
 
 .desc-title {

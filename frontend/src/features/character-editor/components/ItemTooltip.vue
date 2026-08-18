@@ -6,7 +6,7 @@
       :style="boxStyle"
     >
       <div class="itt-title">{{ title }}</div>
-      <RichContent v-if="displayDesc" class="itt-desc" :html="displayDesc" />
+      <RichContent v-if="displayDesc" class="itt-desc dnd-rich-content" :html="displayDesc" />
       <template v-if="$slots.details">
         <div class="itt-sep"></div>
         <div class="itt-details">

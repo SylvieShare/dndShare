@@ -2,7 +2,7 @@
 
 The shared application palette lives in `@sylvieshare/share-ui/styles.css`.
 `frontend/src/app/theme.css` contains only DnD Share layout, its exact purple
-accent shades, domain colors and the player-handout paper palettes. Component styles must use these tokens;
+accent shades, domain colors, product typography and the player-handout paper palettes. Component styles must use these tokens;
 `npm run check:colors` rejects direct hex/RGB/HSL colors and removed legacy
 tokens.
 
@@ -91,6 +91,7 @@ transmitted artifact itself and must not be reused for application chrome.
 | `--r-xs`, `--r-sm`, `--r-md`, `--r-lg`, `--r-pill` | Shared radius scale. |
 | `--font-ui` | All controls, body text and numeric data. |
 | `--font-display` | Entity names and display headings only. |
+| `--font-prose` | Long-form descriptions and rich-text editor content; DnD Share sets it to Literata. |
 
 Keep numbers in the UI font with `font-variant-numeric: tabular-nums`; display-serif digits are easy to misread.
 

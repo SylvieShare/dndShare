@@ -1,5 +1,5 @@
 <template>
-  <RichContent v-bind="$attrs" :html="html">
+  <RichContent class="dnd-rich-content" v-bind="$attrs" :html="html">
     <template #node="{ node }">
       <DndRichInlineNode :node="node" :actor-name="actorName" />
     </template>

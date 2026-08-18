@@ -6,6 +6,9 @@
   --sidebar-expanded-w: 224px;
   --content-max: 1400px;
 
+  /* Long-form descriptions use an editorial face distinct from UI chrome. */
+  --font-prose: "Literata", Georgia, "Times New Roman", serif;
+
   /* Product accent. Exact shades preserve the established DnD Share palette. */
   --accent: #7c5ce2;
   --accent-hover: #6847c7;
@@ -29,6 +32,11 @@
   --material-note-arcane-bg: #100e18;
   --material-note-arcane-glow: #352852;
   --material-note-arcane-text: #ded4ff;
+}
+
+.dnd-rich-content {
+  font-family: var(--font-prose);
+  font-optical-sizing: auto;
 }
 
 @media (max-width: 640px) {
