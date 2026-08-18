@@ -272,6 +272,36 @@ installed through MCP
 content-addressed `system-item-media/v1/` objects. Compact icons remain an
 independent optional slot; the wizard never stretches an icon into a cover.
 
+### Bestiary icon art direction
+
+Bestiary icons are **portrait recognition marks**, not miniature versions of
+the cover. For creatures with a recognizable head, the silhouette should work
+like the heraldic race icons and identify the creature before its internal
+details are noticed.
+
+- Show one head in side or three-quarter view with only a short neck. Do not
+  include shoulders, torso, limbs, weapons or scenery. Let defining anatomy —
+  horns, ears, jaw, beak, eye stalks or tentacles — shape the outer contour.
+- The rule is semantic rather than literally anatomical: a headless construct,
+  ooze, swarm or similarly unusual creature may use its smallest distinctive
+  complete form instead. It must still be one compact recognition silhouette,
+  not a scene.
+- Use a thick continuous deep-plum contour, broad flat-cartoon shapes,
+  saturated creature-specific fills and restrained two-step shading. Remove
+  realistic surface texture, painterly noise, tiny scales and costume detail.
+- Center the opaque bounds in a square with even genuine transparent padding.
+  Do not add a tile, disc, rune ring, frame, badge, cast shadow, glow,
+  particles, text, logo or watermark.
+- Store a lossless `128×128` RGBA PNG or WebP and inspect it at both 128 and
+  the production display size of `64×64`. The silhouette, face direction and
+  defining anatomy must remain clear at the smaller size.
+
+New generated icons are installed through MCP
+`handbook_item_set_system_image(slot="icon", preservePrevious=true)`. **Kobold**
+is the first production example of the head-and-short-neck rule; its swept
+horns, long reptilian muzzle and cheek frill carry the identity without a body
+or weapon.
+
 ### Bestiary cover art direction
 
 Bestiary covers use a taller **3:2** composition because the shared header also
