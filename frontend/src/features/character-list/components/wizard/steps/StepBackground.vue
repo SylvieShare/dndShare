@@ -4,14 +4,14 @@
     <p v-if="loading && !bgPool.length" class="hint">Загрузка справочника…</p>
     <p v-else-if="!bgPool.length" class="hint">В справочнике пока нет предысторий.</p>
     <div v-else class="grid">
-      <SelectTile
+      <BackgroundSelectCard
         v-for="b in bgPool"
         :key="b.id"
         :title="b.name"
         :subtitle="skillsOf(b)"
+        :description="descriptionOf(b)"
         :monogram="monogramOf(b.name)"
-        :image-url="b.iconImageUrl || ''"
-        :svg="b.svg || ''"
+        :image-url="b.coverImageUrl || ''"
         :selected="state.background?.id === b.id"
         @select="state.background = b"
       />
@@ -48,8 +48,8 @@
 
 <script setup>
 import { computed, inject } from 'vue'
+import BackgroundSelectCard from '@/features/character-list/components/wizard/BackgroundSelectCard.vue'
 import MultiSearchSelect from '@/features/character-list/components/wizard/MultiSearchSelect.vue'
-import SelectTile from '@/features/character-list/components/wizard/SelectTile.vue'
 import { monogramOf } from '@/features/character-list/components/wizard/labels'
 import { backgroundStartingEquipment, formatStartingCoins } from '@/features/character-editor/settings/dnd/creation/backgroundEquipment'
 
@@ -61,6 +61,9 @@ const {
 
 function skillsOf(b) {
   return (b.data?.skills || []).map((id) => suggestValue(15, id)).filter(Boolean).join(', ')
+}
+function descriptionOf(b) {
+  return String(b.data?.description || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
 }
 const feature = computed(() => {
   const d = state.background?.data || {}
@@ -78,7 +81,7 @@ const moneyLabel = computed(() => formatStartingCoins(backgroundStart.value.coin
 .hint { font-size: 12px; color: var(--text-muted); margin: 0; display: flex; align-items: center; gap: 8px; }
 .count { font-size: 12px; font-weight: 600; color: var(--text-muted); }
 .count.done { color: var(--success); }
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 
 .facts { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
 .facts li { font-size: 13px; color: var(--text-2); line-height: 1.4; }
@@ -86,4 +89,5 @@ const moneyLabel = computed(() => formatStartingCoins(backgroundStart.value.coin
 .fk { display: block; font-size: 10px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 1px; }
 
 .pick { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+@media (max-width: 700px) { .grid { grid-template-columns: minmax(0, 1fr); } }
 </style>

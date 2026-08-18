@@ -237,6 +237,33 @@ compact identity surfaces; installing a class cover does not replace or delete
 those icons. Subclasses keep the cover-only fallback contract and show a
 monogram until a dedicated cover is assigned.
 
+### Background cover art direction
+
+Backgrounds are regular handbook `item` rows (type 11), not suggests. They use
+the generic `item.cover_image_id` relation, so adding artwork requires neither a
+background-specific column nor a new storage model.
+
+- Store an opaque `1536×1024` (3:2) JPEG at quality 88. The aspect ratio matches
+  the half-width cards in the character-creation wizard and remains usable in a
+  future shared item header.
+- Show exactly one adult character in a three-quarter portrait, occupying about
+  55% of the canvas. Communicate the background with one dominant prop and one
+  simple environmental cue: a sailor with rope against a moonlit ship, or a
+  sage with a quill beside a quiet library window.
+- Reuse the race/class flat-cartoon language: thick deep-plum contours, broad
+  readable shapes, expressive faces, restrained two-step shading and a calm
+  dark plum/navy vignette. Give each background its own muted jewel-tone
+  palette.
+- Keep the silhouette legible in a half-width card. Avoid crowds, collections
+  of tiny props, readable documents, text, frames, badges, logos, watermarks,
+  photorealistic texture, gore and busy scenery.
+
+The production set covers all thirteen built-in backgrounds. Covers are
+installed through MCP
+`handbook_item_set_system_image(slot="cover", preservePrevious=true)` and use
+content-addressed `system-item-media/v1/` objects. Compact icons remain an
+independent optional slot; the wizard never stretches an icon into a cover.
+
 ### Bestiary cover art direction
 
 Bestiary covers use a taller **3:2** composition because the shared header also

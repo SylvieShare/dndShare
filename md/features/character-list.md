@@ -147,6 +147,16 @@ display heading, keyed list transition, scroll restoration, detail reveal and th
 back action positioned over the selected card image. New systems can reuse this
 shell while supplying their own cards and dependent-choice content.
 
+The background step also works with handbook item references (type 11), not
+suggest values. Its catalogue is an exact two-column desktop grid that collapses
+to one column at 700px and below. Every card uses only `coverImageUrl`, followed
+by the background name, its short handbook description and granted skills; a
+missing cover produces a monogram instead of stretching `iconImageUrl`. Selecting
+a card keeps the catalogue visible and reveals the existing skill, tool,
+language, feature, equipment and money summary below it. Built-in background
+covers live in system `storage_image` rows assigned through the generic
+`item.cover_image_id` relation.
+
 Key rules:
 
 - race/class/subrace/subclass are handbook item references;
