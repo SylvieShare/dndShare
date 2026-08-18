@@ -71,12 +71,10 @@ primary current value for each step (for example,
 the chosen race, class/subclass or background) without repeating its mechanical
 details. The header contains only the workspace title; reset lives in the
 central footer beside navigation, and there is no duplicate numeric step counter.
-The class step ends with a live «Результат выбора» block: it attributes grants,
-selected features, equipment and spells to that source and shows what will be
-written to the character sheet. The race step does not repeat that summary below
-its controls because the selected race card already contains the base result and
-the dependent choices remain visible in place. Ability descriptions remain
-available from the race card on hover and in class result disclosures. On narrow screens the workspace becomes
+Neither race nor class repeats a «Результат выбора» block below its controls:
+the selected illustrated card already contains the base result and dependent
+choices remain visible in their own sections. Ability descriptions remain
+available from the illustrated cards on hover. On narrow screens the workspace becomes
 one column, while the navigation footer stays pinned to the visible bottom edge.
 Only the capped central column owns an opaque `--bg` surface across its header,
 work area and footer, with continuous side borders framing it on desktop. The
@@ -134,11 +132,17 @@ original male/female class portrait. A row presents its short handbook descripti
 hit die, primary abilities, saving throws, proficiencies, level-one features and
 available archetype names; feature descriptions use the shared hover tooltip.
 Dependent equipment, skill, feature, archetype and spell choices are announced in
-the row but rendered as separate framed sections only after selection. The selected
+the row but each type is rendered as its own accent-edged section only after selection. The selected
 row moves to the top, the other classes leave the list, and the same stable back and
 scroll-restoration behaviour as the race step returns to the catalogue. Built-in
 class JPEGs are uploaded by deploy to `system-class-images/v1/*`, registered as
 system `storage_image` rows and consumed through each class item's `iconImageUrl`.
+The selected class is followed by a separate three-paragraph lore article; the
+compact card uses `item.data.short_description` and does not repeat mechanics in
+that prose. Race and class screens share `IllustratedChoiceStage`, which owns the
+display heading, keyed list transition, scroll restoration, detail reveal and the
+back action positioned over the selected card image. New systems can reuse this
+shell while supplying their own cards and dependent-choice content.
 
 Key rules:
 

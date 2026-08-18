@@ -1,22 +1,16 @@
 <template>
   <div class="step">
-    <h1 class="race-step-title">Раса</h1>
-    <p v-if="loading && !races.length" class="hint">Загрузка справочника…</p>
-    <p v-else-if="!races.length" class="hint">В справочнике пока нет рас.</p>
-    <template v-else>
-      <Transition name="race-back">
-        <button v-if="state.race" type="button" class="race-back" @click="clearRace">
-          <span class="race-back-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6" /></svg>
-          </span>
-          <span>
-            <span class="race-back-label">Назад</span>
-            <span class="race-back-note">К выбору расы</span>
-          </span>
-        </button>
-      </Transition>
-
-      <TransitionGroup ref="raceStage" name="race-list" tag="div" class="race-grid">
+    <IllustratedChoiceStage
+      title="Раса"
+      :selected="!!state.race"
+      :selection-key="state.race?.id"
+      :loading="loading && !races.length"
+      :empty="!loading && !races.length"
+      empty-text="В справочнике пока нет рас."
+      back-text="К выбору расы"
+      @clear="state.race = null"
+    >
+      <template #cards>
         <RaceSelectCard
           v-for="r in visibleRaces"
           :key="r.id"
@@ -31,10 +25,9 @@
           :selected="state.race?.id === r.id"
           @select="selectRace(r)"
         />
-      </TransitionGroup>
+      </template>
 
-      <Transition name="choice-panel">
-        <div v-if="state.race" :key="state.race.id" class="selection-details">
+      <template #details>
         <section v-if="raceDesc" class="race-lore">
           <div class="sheet-section-title">О расе</div>
           <RichContent class="step-desc" :html="raceDesc" />
@@ -142,9 +135,8 @@
             <StepChoices v-if="raceFeatureChoices.length" scope="race" class="choice-block" />
           </div>
         </section>
-        </div>
-      </Transition>
-    </template>
+      </template>
+    </IllustratedChoiceStage>
 
     <ItemPickerModal
       v-if="pickerOpen"
@@ -167,11 +159,12 @@
 </template>
 
 <script setup>
-import { computed, inject, nextTick, ref } from 'vue'
+import { computed, inject, ref } from 'vue'
 import FeatChoiceModal from '@/features/character-editor/components/FeatChoiceModal.vue'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import { featChoices } from '@/features/items/lib/featRules'
 import MultiSearchSelect from '@/features/character-list/components/wizard/MultiSearchSelect.vue'
+import IllustratedChoiceStage from '@/features/character-list/components/wizard/IllustratedChoiceStage.vue'
 import RaceSelectCard from '@/features/character-list/components/wizard/RaceSelectCard.vue'
 import { raceCardSummary } from '@/features/character-list/components/wizard/raceCardSummary'
 import RichContent from '@/shared/ui/DndRichContent.vue'
@@ -197,8 +190,6 @@ const hasRaceChoices = computed(() => {
 
 const pickerOpen = ref(false)
 const featConfigItem = ref(null)
-const raceStage = ref(null)
-let raceScrollTimer = null
 
 function summaryFor(race) {
   return raceCardSummary({
@@ -208,33 +199,9 @@ function summaryFor(race) {
     subraces: raceSubraceNames(race.id),
   })
 }
-function scrollToRaceStage() {
-  const stage = raceStage.value?.$el || raceStage.value
-  requestAnimationFrame(() => stage?.closest('.cc-main')?.scrollTo({
-    top: 0,
-    behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
-  }))
-}
-function scheduleRaceScroll() {
-  clearTimeout(raceScrollTimer)
-  raceScrollTimer = setTimeout(scrollToRaceStage, window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 560)
-}
 function selectRace(race) {
   if (state.race?.id === race.id) return
   state.race = race
-  scheduleRaceScroll()
-}
-function clearRace() {
-  if (!state.race) return
-  clearTimeout(raceScrollTimer)
-  raceScrollTimer = null
-  const stage = raceStage.value?.$el || raceStage.value
-  const scroller = stage?.closest('.cc-main')
-  const scrollTop = scroller?.scrollTop || 0
-  state.race = null
-  if (scroller && scrollTop > 0) {
-    nextTick(() => requestAnimationFrame(() => scroller.scrollTo({ top: scrollTop, behavior: 'auto' })))
-  }
 }
 function featName(id) { return featPool.value.find((f) => f.id === id)?.name || `#${id}` }
 function onFeatPick(item) {
@@ -251,29 +218,6 @@ function onFeatChoicesConfirm(choices) {
 
 <style scoped>
 .step { position: relative; display: flex; flex-direction: column; gap: 12px; }
-.race-step-title {
-  position: relative;
-  width: fit-content;
-  margin: 0 0 6px;
-  padding-bottom: 9px;
-  color: var(--text-1);
-  font-family: var(--font-display);
-  font-size: clamp(28px, 3.2vw, 36px);
-  font-weight: 700;
-  letter-spacing: .01em;
-  line-height: 1;
-}
-.race-step-title::after {
-  content: '';
-  position: absolute;
-  left: 1px;
-  bottom: 0;
-  width: 46px;
-  height: 3px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, var(--accent), color-mix(in srgb, var(--accent) 18%, transparent));
-}
-.selection-details { display: flex; flex-direction: column; gap: 12px; scroll-margin-top: 12px; overflow-anchor: none; }
 .race-lore { display: flex; flex-direction: column; gap: 7px; }
 .step-gap { margin-top: 8px; }
 .step-desc {
@@ -286,48 +230,6 @@ function onFeatChoicesConfirm(choices) {
 .count { font-size: 12px; font-weight: 600; color: var(--text-muted); }
 .count.done { color: var(--success); }
 .subrace-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-.race-grid { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; overflow-anchor: none; }
-.race-back {
-  position: absolute;
-  z-index: 4;
-  top: calc(clamp(28px, 3.2vw, 36px) + 40px);
-  left: 10px;
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  padding: 6px 10px 6px 6px;
-  color: var(--text-2);
-  background: color-mix(in srgb, var(--bg) 78%, transparent);
-  border: 1px solid color-mix(in srgb, var(--border) 78%, transparent);
-  box-shadow: var(--shadow-sm);
-  backdrop-filter: blur(12px);
-  border-radius: var(--r-md);
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-  transition: color .15s, background .15s, border-color .15s, transform .18s cubic-bezier(.22, 1, .36, 1);
-}
-.race-back:hover {
-  color: var(--text-1);
-  background: color-mix(in srgb, var(--accent) 12%, var(--bg));
-  border-color: color-mix(in srgb, var(--accent) 24%, var(--border));
-  transform: translateX(-2px);
-}
-.race-back:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.race-back-icon {
-  width: 31px;
-  height: 31px;
-  flex-shrink: 0;
-  display: grid;
-  place-items: center;
-  color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 14%, transparent);
-  border-radius: 10px;
-}
-.race-back-icon svg { width: 17px; height: 17px; }
-.race-back > span:last-child { display: flex; flex-direction: column; gap: 1px; }
-.race-back-label { font-size: 13px; font-weight: 700; line-height: 1.1; }
-.race-back-note { font-size: 10px; color: var(--text-muted); line-height: 1.1; }
 
 .race-choices { display: flex; flex-direction: column; gap: 11px; margin-top: 8px; }
 .choices-title {
@@ -461,35 +363,6 @@ function onFeatChoicesConfirm(choices) {
   .choice-block { padding: 14px; }
   .asi-chips { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .subrace-grid { grid-template-columns: minmax(0, 1fr); }
-}
-
-.race-list-move { transition: transform .52s cubic-bezier(.22, 1, .36, 1); }
-.race-list-enter-active {
-  transition: opacity .34s .12s ease, transform .48s .08s cubic-bezier(.22, 1, .36, 1), filter .34s .12s ease;
-}
-.race-list-leave-active {
-  position: absolute;
-  z-index: 0;
-  left: 0;
-  right: 0;
-  transition: opacity .2s ease, transform .32s cubic-bezier(.4, 0, 1, 1), filter .24s ease;
-}
-.race-list-enter-from { opacity: 0; transform: translateY(18px) scale(.965); filter: blur(4px); }
-.race-list-leave-to { opacity: 0; transform: translateY(8px) scale(.97); filter: blur(4px); }
-
-.choice-panel-enter-active { transition: opacity .34s .24s ease, transform .46s .2s cubic-bezier(.22, 1, .36, 1); }
-.choice-panel-leave-active { transition: opacity .16s ease, transform .22s cubic-bezier(.4, 0, 1, 1); }
-.choice-panel-enter-from { opacity: 0; transform: translateY(18px); }
-.choice-panel-leave-to { opacity: 0; transform: translateY(8px); }
-
-.race-back-enter-active { transition: opacity .28s .18s ease, transform .38s .14s cubic-bezier(.22, 1, .36, 1); }
-.race-back-leave-active { transition: opacity .14s ease, transform .2s cubic-bezier(.4, 0, 1, 1); }
-.race-back-enter-from, .race-back-leave-to { opacity: 0; transform: translateX(-10px); }
-
-@media (prefers-reduced-motion: reduce) {
-  .race-list-move, .race-list-enter-active, .race-list-leave-active,
-  .choice-panel-enter-active, .choice-panel-leave-active,
-  .race-back-enter-active, .race-back-leave-active { transition: none; }
 }
 
 </style>

@@ -6,8 +6,9 @@ const source = readFileSync(fileURLToPath(new URL('./StepRace.vue', import.meta.
 
 describe('race step hierarchy', () => {
   it('uses an expressive page heading without changing its concise label', () => {
-    expect(source).toContain('<h1 class="race-step-title">Раса</h1>')
-    expect(source).toContain('font-family: var(--font-display)')
+    expect(source).toContain('<IllustratedChoiceStage')
+    expect(source).toContain('title="Раса"')
+    expect(source).toContain('back-text="К выбору расы"')
   })
 
   it('separates race choices and emphasizes ability-score selection', () => {
