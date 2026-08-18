@@ -107,6 +107,17 @@ func (s *Service) UploadClassImage(ctx context.Context, body io.Reader, size int
 	return s.put(ctx, body, size, key, contentType)
 }
 
+// UploadSpellRune stores a built-in spell rune under a stable, versioned key.
+func (s *Service) UploadSpellRune(ctx context.Context, body io.Reader, size int64, key, contentType string) (StoredObject, error) {
+	if !strings.HasPrefix(key, "system-spell-runes/") || strings.Contains(key, "..") {
+		return StoredObject{}, fmt.Errorf("invalid system spell rune object key %q", key)
+	}
+	if !strings.HasPrefix(contentType, "image/") {
+		return StoredObject{}, fmt.Errorf("invalid system spell rune content type %q", contentType)
+	}
+	return s.put(ctx, body, size, key, contentType)
+}
+
 // UploadBestiaryImage stores imported creature artwork under a stable key so a
 // repeated catalogue import overwrites the object instead of leaking new ones.
 func (s *Service) UploadBestiaryImage(ctx context.Context, body io.Reader, size int64, key, contentType string) (StoredObject, error) {

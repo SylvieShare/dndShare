@@ -94,6 +94,13 @@ deploy загружает их в `system-class-images/v1/`, обновляет 
 `storage_image` и назначает через `item.icon_image_id` только базовым class item.
 Основной бинарь и frontend эти JPEG не содержат.
 
+Статичные руны выбранных заклинаний входят только в `cmd/spell-rune-sync`.
+Манифест `internal/spellimages` фиксирует размер и SHA-256 прозрачных WebP
+128×128; deploy загружает их в `system-spell-runes/v1/`, назначает совпавшим
+базовым spell item через `item.icon_image_id`, помечает заменённые растровые
+иконки удалёнными и удаляет их прежние S3-объекты. Основной бинарь и frontend
+эти WebP не содержат.
+
 Deploy также запускает `cmd/bestiary-image-sync`. Команда выбирает только
 старые системные картинки бестиария без S3 object key, копирует их по стабильным
 ключам `bestiary/v1/` и заменяет внешний URL в `storage_image`; повторный запуск

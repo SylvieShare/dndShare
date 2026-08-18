@@ -72,62 +72,55 @@ entries and selected choices.
 - field labels and errors use shared form components;
 - direct color literals are rejected by `npm run check:colors`.
 
-### Raster spell icon art direction
+### Static spell rune art direction
 
-Raster spell icons form one set of **glossy interface emblems**. Their visual
-language comes from `SpellSlotSphere` and `PotionVial`: the Fireball icon is
-the concrete set reference, while later icons change only subject and palette.
+Spell icons form one set of **static magical runes**. They use the same visual
+grammar while their center and palette communicate the spell itself.
 
-- Show one compact dominant magical symbol that remains recognizable at the
-  48 px character-sheet size. Use no more than six or seven major shapes.
-- Use crisp vector-like 2.5D drawing, a thick dark-navy contour, saturated
-  smooth fills and only a restrained soft gradient. Do not use painterly or
-  realistic texture.
-- Give every icon one large cream-white glossy highlight in the upper-left and
-  two smaller highlight bubbles. This repeats the glass/liquid treatment used
-  by spell slots and potions.
-- Center the silhouette and use roughly 70–80% of the square canvas, retaining
-  even clear padding on every side. Nothing may be cropped.
-- Do not add a decorative frame, unrelated badge or plate, square backdrop,
-  scenery, caster, hand, text, logo or watermark. A ring or drop is allowed
-  when it is part of the spell's semantic symbol.
-- Avoid external glow, cast shadows, detached particles and fine details. The
-  spell-specific palette and inner glyph convey the effect. Harmful blood
-  magic should feel dangerous but not graphic or gory.
+- Build the icon from one dominant central glyph, an incomplete circular sigil
+  and at most four large accents. It must remain distinct at the 48 px
+  character-sheet size.
+- Use broad flat-cartoon shapes, a thick deep-plum contour, saturated fills and
+  restrained soft shading. Avoid realistic painting and micro-detail.
+- Center the silhouette in a square with even transparent padding. Nothing may
+  be cropped or depend on a visible tile, badge or external frame.
+- Do not add text, letters, numbers, tiny inscriptions, detached particle
+  clouds, cast shadows, scenery, hands, casters, logos or watermarks.
+- Animation is not part of the production contract. A strong static glyph is
+  the baseline; motion may be explored later without changing the stored art.
 
-The production asset is a `128×128` RGBA WebP with transparent corners and
-clean antialiased edges without a chroma-key fringe. Generate at a larger
-square size, extract the background, then downsample with a high-quality
-filter. Inspect the result at 128, 64 and 48 px. Only the final WebP is uploaded
-to S3 and registered in `storage_image`; it is not added to frontend static
-assets. Generation masters may be retained outside the runtime repository.
+The production asset is a lossless `128×128` RGBA WebP with genuine alpha and
+clean antialiased edges. Generate at a larger size, extract the background,
+center the opaque bounds with a common safe margin and downsample with a
+high-quality filter. Inspect every result at 128, 64 and 48 px. The deploy-only
+`cmd/spell-rune-sync` uploads the files from `internal/spellimages` to stable
+`system-spell-runes/v1/` S3 keys and registers them in `storage_image`; neither
+the main binary nor frontend static assets contain the WebP files.
 
-Use this base prompt for subsequent icons, replacing only the subject and
+Use this base prompt for subsequent runes, replacing only the subject and
 palette sections:
 
 ```text
 Use case: stylized-concept
-Asset type: transparent 128×128 fantasy game UI spell icon
-Primary request: <one dominant magical emblem for the spell>
-Style/medium: crisp vector-like 2.5D game UI illustration; match the Fireball
-  icon's thick dark-navy contour, smooth fill and glossy liquid finish
-Composition/framing: centered compact silhouette; fill 70–80% of the square;
-  even clear padding; nothing cropped; at most 6–7 major shapes
-Lighting/mood: one large cream-white upper-left highlight and two smaller
-  highlight bubbles; no external glow or cast shadow
+Asset type: transparent static fantasy game UI spell rune
+Primary request: <one dominant glyph for the spell inside an incomplete sigil>
+Style/medium: polished flat-cartoon game icon; broad clean shapes; thick
+  deep-plum contour; restrained soft shading
+Composition/framing: centered compact silhouette; even transparent padding;
+  excellent readability at 48×48; at most seven major shapes
 Color palette: <spell-specific palette>
-Constraints: perfectly flat removable chroma-key background; no frame, badge,
-  plate, scenery, caster, hand, text, logo, watermark, cast shadow or detached
-  edge particles; no painterly texture; no key color inside the subject
+Constraints: genuine transparent alpha; no checkerboard, frame, badge, square
+  tile, scenery, caster, hand, text, logo, watermark, cast shadow, tiny
+  particles, inscriptions, painterly texture or micro-detail
 ```
 
 The initial semantic motifs are:
 
-- **Fireball:** a compact red-orange flame orb with one simple golden inner
-  flame.
-- **Bless:** a glossy golden holy-water drop beneath three short blessing rays,
-  with one ivory four-point inner spark.
-- **Aura of Vitality:** an emerald orb inside a broad turquoise ring with three
-  small leaf-like crests and one golden inner spark.
-- **Circle of Scarlet:** a glossy crimson energy pillar rising from a flattened
-  scarlet ritual ring, with one pale-pink inner spark and no literal gore.
+- **Fireball:** a red-orange central flame inside four plum-and-amber sigil
+  segments and four outward energy points.
+- **Bless:** an ivory-gold four-point sacred spark with three ascending rays
+  and warm-gold sigil segments.
+- **Aura of Vitality:** an emerald heart-leaf crossed by a golden pulse, with
+  turquoise sigil segments and three life leaves.
+- **Circle of Scarlet:** a pale-rose core enclosed by a segmented crimson ring
+  and four diamond thorns, without literal blood or gore.
