@@ -34,7 +34,9 @@
   --material-note-arcane-text: #ded4ff;
 }
 
-.dnd-rich-content {
+/* RichContent declares `font: inherit` on its root. Keep this selector more
+   specific so that shorthand cannot reset the product prose face. */
+body .rc.dnd-rich-content {
   font-family: var(--font-prose);
   font-optical-sizing: auto;
 }

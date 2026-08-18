@@ -53,7 +53,7 @@ describe('DnD rich content integration', () => {
   it('uses the editorial prose font for rendered descriptions', () => {
     expect(contentSource).toContain('class="dnd-rich-content"')
     expect(themeSource).toContain('--font-prose: "Literata"')
-    expect(themeSource).toContain('.dnd-rich-content')
+    expect(themeSource).toContain('body .rc.dnd-rich-content')
   })
 
   it('migrates only the approved kobold example', () => {
