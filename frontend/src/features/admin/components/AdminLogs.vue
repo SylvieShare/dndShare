@@ -187,7 +187,7 @@ onMounted(load)
 }
 
 .col-path {
-  font-family: monospace;
+  font-family: var(--font-mono);
   font-size: 12px;
   white-space: nowrap;
 }
@@ -218,7 +218,7 @@ onMounted(load)
 }
 
 .trace-pre {
-  font-family: monospace;
+  font-family: var(--font-mono);
   font-size: 10px;
   color: var(--text-2);
   white-space: pre-wrap;

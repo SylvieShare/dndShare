@@ -176,7 +176,7 @@ const rootStyle = computed(() => ({
   fill: #fff;
   stroke: #0a0b12;
   paint-order: stroke;
-  font-family: "SF Mono", Consolas, "Courier New", monospace;
+  font-family: var(--font-mono);
   font-weight: 700;
   text-anchor: middle;
   dominant-baseline: central;

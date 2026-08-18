@@ -62,7 +62,7 @@ const detailStyle = computed(() => ({
 .session-entity-detail-heading { position: relative; z-index: 1; min-width: 0; display: flex; flex: 1; flex-direction: column; align-items: flex-start; gap: 6px; }
 .session-entity-detail-context { min-height: 13px; }
 .session-entity-detail-eyebrow { display: flex; align-items: center; gap: 6px; color: color-mix(in srgb, var(--entity-detail-color) 78%, var(--text-1)); font-size: 9px; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; }
-.session-entity-detail-heading h2 { max-width: 720px; margin: 0; overflow: hidden; color: var(--text-1); font-family: var(--font-display); font-size: clamp(27px, 3vw, 38px); font-weight: 720; line-height: 1.08; text-overflow: ellipsis; white-space: nowrap; }
+.session-entity-detail-heading h2 { max-width: 720px; margin: 0; overflow: hidden; color: var(--text-1); font-family: var(--font-display); font-size: clamp(27px, 3vw, 38px); font-weight: 700; line-height: 1.08; text-overflow: ellipsis; white-space: nowrap; }
 .session-entity-detail-summary { max-width: 680px; color: var(--text-2); font-size: 11px; line-height: 1.45; }
 .session-entity-detail-meta { display: flex; flex-wrap: wrap; gap: 8px 14px; color: var(--text-muted); font-size: 9px; }
 .session-entity-detail-meta :deep(span) { display: inline-flex; align-items: center; gap: 4px; }

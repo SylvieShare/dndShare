@@ -302,11 +302,12 @@
 }
 
 .hb-card-count-num {
-  font-family: var(--font-display);
+  font-family: var(--font-ui);
   font-size: 38px;
   font-weight: 600;
   line-height: 1;
   color: var(--card-color, var(--accent));
+  font-variant-numeric: tabular-nums;
 }
 
 .hb-collection-card--wide .hb-card-count-num {

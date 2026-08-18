@@ -132,7 +132,7 @@ function submit() {
 .source-version {
   font-size: 11px;
   color: var(--text-muted);
-  font-family: monospace;
+  font-family: var(--font-mono);
 }
 
 .source-item.active .source-version {

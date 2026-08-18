@@ -92,7 +92,7 @@
   overflow: auto;
   padding: clamp(38px, 6vw, 110px);
   color: var(--text-1);
-  font-family: var(--font-display);
+  font-family: var(--font-prose);
   font-size: clamp(24px, 2.4vw, 46px);
   line-height: 1.62;
   white-space: pre-wrap;

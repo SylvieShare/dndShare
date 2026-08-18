@@ -16,6 +16,11 @@
 экран должен давать короткий ответ за 10–30 секунд, а затем позволять раскрыть
 пример и связанные детали.
 
+Article summaries, leads, paragraphs, bullet text and explanatory callouts use
+the shared `--font-prose` reading face. Navigation, search, formulas, compact
+cards and numeric UI remain in `--font-ui`; article and section names use
+`--font-display`.
+
 ## Продуктовые принципы
 
 1. **Сценарии вместо пересказа книги.** Материалы называются по задаче игрока:

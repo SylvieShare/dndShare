@@ -19,15 +19,15 @@ defineProps({ feature: { type: Object, required: true } })
 <style scoped>
 .feature-card { position: relative; min-width: 0; padding: 4mm; border: 1px solid #695a44; background: #fffefa; box-shadow: inset 0 0 0 .8mm #fffefa, inset 0 0 0 1mm #c8baa0; break-inside: avoid; align-self: start; }
 .feature-card--wide { grid-column: 1 / -1; }
-.feature-kind { margin-bottom: 1.5mm; font: 700 5.5px/1 Arial, sans-serif; letter-spacing: .11em; text-transform: uppercase; color: #8a7a61; }
+.feature-kind { margin-bottom: 1.5mm; font: 700 5.5px/1 var(--font-print-ui); letter-spacing: .11em; text-transform: uppercase; color: #8a7a61; }
 .feature-card header { display: flex; align-items: baseline; justify-content: space-between; gap: 3mm; padding-bottom: 2mm; border-bottom: .5px solid #b9ab93; }
-.feature-card h3 { min-width: 0; margin: 0; font: 700 14px/1.2 Georgia, serif; overflow-wrap: anywhere; }
-.feature-card header strong { flex: 0 0 auto; font: 700 7px/1 Arial, sans-serif; }
-.feature-description { margin-top: 2.5mm; color: #332e27; font: 8px/1.5 Georgia, serif; }
+.feature-card h3 { min-width: 0; margin: 0; font: 700 14px/1.2 var(--font-print-display); overflow-wrap: anywhere; }
+.feature-card header strong { flex: 0 0 auto; font: 700 7px/1 var(--font-print-ui); }
+.feature-description { margin-top: 2.5mm; color: #332e27; font: 8px/1.5 var(--font-print-prose); }
 .feature-description :deep(h1), .feature-description :deep(h2), .feature-description :deep(h3), .feature-description :deep(h4) { color: #332e27; font-size: 9px; margin: 2mm 0 1mm; }
 .feature-description :deep(ul), .feature-description :deep(ol) { margin: 1.5mm 0 2mm 4.5mm; }
 .feature-description :deep(.rich-node) { gap: .7mm; margin-inline: .3mm; padding: .2mm 1mm; border-color: #d7cdbb; border-radius: 1.2mm; background: #f7f4ed; color: #655b4d; font-size: .9em; font-weight: 500; line-height: 1.25; }
 .feature-description :deep(.rich-node--dice) { color: #655b4d; }
 .feature-description :deep(.rich-node-average) { color: #4f4639; font-size: 1em; font-weight: 650; }
-.feature-empty { margin: 2.5mm 0 0; color: #81725b; font: italic 8px Georgia, serif; }
+.feature-empty { margin: 2.5mm 0 0; color: #81725b; font: italic 8px var(--font-print-prose); }
 </style>

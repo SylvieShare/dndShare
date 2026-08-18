@@ -70,20 +70,20 @@ const components = computed(() => {
 .spell-card--span-3 { grid-column: 1 / -1; }
 .spell-head { display: grid; grid-template-columns: 10mm minmax(0, 1fr); gap: 2.5mm; align-items: start; padding-bottom: 2.5mm; border-bottom: .5px solid #b9ab93; }
 .spell-level { width: 9mm; height: 9mm; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #695a44; border-radius: 50%; }
-.spell-level span { font: 700 12px/.8 Georgia, serif; }
-.spell-level small { margin-top: .7mm; font: 700 4.5px/1 Arial, sans-serif; letter-spacing: .05em; text-transform: uppercase; color: #756751; }
+.spell-level span { font: 700 12px/.8 var(--font-print-display); }
+.spell-level small { margin-top: .7mm; font: 700 4.5px/1 var(--font-print-ui); letter-spacing: .05em; text-transform: uppercase; color: #756751; }
 .spell-title { min-width: 0; }
 .spell-name-row { display: flex; align-items: baseline; flex-wrap: wrap; gap: 1.5mm; }
-.spell-title h3 { min-width: 0; margin: 0; font: 700 13px/1.15 Georgia, serif; overflow-wrap: anywhere; }
-.spell-prepared { font: 700 5px/1 Arial, sans-serif; letter-spacing: .07em; text-transform: uppercase; color: #6a593e; }
+.spell-title h3 { min-width: 0; margin: 0; font: 700 13px/1.15 var(--font-print-display); overflow-wrap: anywhere; }
+.spell-prepared { font: 700 5px/1 var(--font-print-ui); letter-spacing: .07em; text-transform: uppercase; color: #6a593e; }
 .spell-tags { display: flex; flex-wrap: wrap; gap: 1mm; margin-top: 1.3mm; }
-.spell-tags span { padding: .7mm 1.4mm; border: .4px solid #baaa8d; font: 700 5px/1 Arial, sans-serif; letter-spacing: .04em; text-transform: uppercase; color: #6f604a; }
+.spell-tags span { padding: .7mm 1.4mm; border: .4px solid #baaa8d; font: 700 5px/1 var(--font-print-ui); letter-spacing: .04em; text-transform: uppercase; color: #6f604a; }
 .spell-meta { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5mm 2.5mm; margin: 2.5mm 0; }
 .spell-meta div { min-width: 0; border-bottom: .35px solid #d1c7b5; padding-bottom: .8mm; }
-.spell-meta dt { font: 700 5px/1 Arial, sans-serif; letter-spacing: .07em; text-transform: uppercase; color: #81725b; }
-.spell-meta dd { margin: .7mm 0 0; font: 7px/1.25 Arial, sans-serif; overflow-wrap: anywhere; }
-.spell-combat { margin: 2mm 0; padding: 1.5mm 2mm; border-left: 1.5px solid #695a44; background: #f1ede4; font: 700 7px/1.35 Arial, sans-serif; }
-.spell-description { color: #332e27; font: 7.2px/1.42 Georgia, serif; text-align: left; }
+.spell-meta dt { font: 700 5px/1 var(--font-print-ui); letter-spacing: .07em; text-transform: uppercase; color: #81725b; }
+.spell-meta dd { margin: .7mm 0 0; font: 7px/1.25 var(--font-print-ui); overflow-wrap: anywhere; }
+.spell-combat { margin: 2mm 0; padding: 1.5mm 2mm; border-left: 1.5px solid #695a44; background: #f1ede4; font: 700 7px/1.35 var(--font-print-ui); }
+.spell-description { color: #332e27; font: 7.2px/1.42 var(--font-print-prose); text-align: left; }
 .spell-description :deep(p) { margin-bottom: 1.5mm; }
 .spell-description :deep(h1), .spell-description :deep(h2), .spell-description :deep(h3), .spell-description :deep(h4) { color: #332e27; font-size: 8px; margin: 2mm 0 1mm; }
 .spell-description :deep(ul), .spell-description :deep(ol) { margin: 1.3mm 0 1.8mm 4mm; }
@@ -92,8 +92,8 @@ const components = computed(() => {
 .spell-description :deep(.rich-node), .spell-higher :deep(.rich-node) { gap: .7mm; margin-inline: .3mm; padding: .2mm 1mm; border-color: #d7cdbb; border-radius: 1.2mm; background: #f7f4ed; color: #655b4d; font-size: .9em; font-weight: 500; line-height: 1.25; }
 .spell-description :deep(.rich-node--dice), .spell-higher :deep(.rich-node--dice) { color: #655b4d; }
 .spell-description :deep(.rich-node-average), .spell-higher :deep(.rich-node-average) { color: #4f4639; font-size: 1em; font-weight: 650; }
-.spell-empty { margin: 2mm 0 0; color: #81725b; font: italic 7px Georgia, serif; }
-.spell-higher { margin-top: 2.5mm; padding-top: 2mm; border-top: .5px solid #b9ab93; color: #332e27; font: 7px/1.42 Georgia, serif; }
-.spell-higher > strong { display: block; margin-bottom: 1mm; font: 700 5.5px/1 Arial, sans-serif; letter-spacing: .07em; text-transform: uppercase; color: #6f604a; }
-.spell-source { margin-top: 2.5mm; padding-top: 1.5mm; border-top: .35px solid #d1c7b5; font: 5.5px/1.2 Arial, sans-serif; color: #81725b; }
+.spell-empty { margin: 2mm 0 0; color: #81725b; font: italic 7px var(--font-print-prose); }
+.spell-higher { margin-top: 2.5mm; padding-top: 2mm; border-top: .5px solid #b9ab93; color: #332e27; font: 7px/1.42 var(--font-print-prose); }
+.spell-higher > strong { display: block; margin-bottom: 1mm; font: 700 5.5px/1 var(--font-print-ui); letter-spacing: .07em; text-transform: uppercase; color: #6f604a; }
+.spell-source { margin-top: 2.5mm; padding-top: 1.5mm; border-top: .35px solid #d1c7b5; font: 5.5px/1.2 var(--font-print-ui); color: #81725b; }
 </style>

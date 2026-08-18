@@ -72,7 +72,7 @@ defineProps({
 .rules-unavailable h1 {
   margin: 0;
   color: var(--text-1);
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-display);
   font-size: clamp(32px, 6vw, 48px);
   line-height: 1;
 }
@@ -81,6 +81,7 @@ defineProps({
   max-width: 500px;
   margin: 18px auto 0;
   color: var(--text-2);
+  font-family: var(--font-prose);
   line-height: 1.65;
 }
 

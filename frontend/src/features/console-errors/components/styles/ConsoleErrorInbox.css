@@ -176,7 +176,7 @@
   border-radius: 10px;
   background: var(--bg);
   color: var(--text-2);
-  font: 11px/1.5 var(--font-mono, monospace);
+  font: 11px/1.5 var(--font-mono);
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }

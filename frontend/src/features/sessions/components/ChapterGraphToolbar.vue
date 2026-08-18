@@ -361,7 +361,7 @@ function createArc() {
 .chapter-arc-trigger:hover:not(:disabled), .chapter-arc-trigger[aria-expanded="true"] { background: color-mix(in srgb, var(--text-on-accent) 7%, transparent); }
 .chapter-arc-trigger:disabled { opacity: 0.48; cursor: not-allowed; }
 .chapter-arc-prefix { flex: none; color: var(--text-muted); font-size: 10px; font-weight: 800; letter-spacing: 0.1em; }
-.chapter-arc-number { display: inline-flex; min-width: 20px; align-items: center; justify-content: center; color: var(--accent-soft); font-family: var(--font-display); font-size: 17px; font-weight: 700; letter-spacing: 0.04em; line-height: 1; }
+.chapter-arc-number { display: inline-flex; min-width: 20px; align-items: center; justify-content: center; color: var(--accent-soft); font-family: var(--font-ui); font-size: 17px; font-weight: 700; letter-spacing: 0.04em; line-height: 1; font-variant-numeric: tabular-nums; }
 .chapter-arc-name { min-width: 0; flex: 0 1 auto; margin-left: -6px; overflow: hidden; text-align: left; text-overflow: ellipsis; white-space: nowrap; }
 .chapter-arc-chevron { flex: none; transition: transform 0.15s; }
 .chapter-arc-trigger[aria-expanded="true"] .chapter-arc-chevron { transform: rotate(180deg); }
@@ -379,7 +379,7 @@ function createArc() {
 .chapter-arc-row--placeholder { opacity: 0.38; }
 .chapter-arc-row.active { background: color-mix(in srgb, var(--accent) 12%, transparent); }
 .chapter-arc-pick { min-width: 0; flex: 1; display: grid; grid-template-columns: 32px minmax(0, 1fr); align-items: center; gap: 6px; padding: 8px; border: 0; background: none; color: var(--text-2); font: inherit; text-align: left; cursor: pointer; }
-.chapter-arc-pick > span { color: var(--accent-soft); font-family: var(--font-display); font-size: 15px; font-weight: 700; letter-spacing: 0.04em; text-align: center; }
+.chapter-arc-pick > span { color: var(--accent-soft); font-family: var(--font-ui); font-size: 15px; font-weight: 700; letter-spacing: 0.04em; text-align: center; font-variant-numeric: tabular-nums; }
 .chapter-arc-pick strong { overflow: hidden; color: var(--text-1); font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
 .chapter-arc-pick small { grid-column: 2; color: var(--text-muted); font-size: 9px; }
 .chapter-arc-edit { width: 28px; height: 28px; display: grid; flex: none; margin-right: 4px; place-items: center; border: 0; border-radius: 6px; background: none; color: var(--text-muted); cursor: pointer; }

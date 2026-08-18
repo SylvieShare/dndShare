@@ -90,10 +90,16 @@ transmitted artifact itself and must not be reused for application chrome.
 | `--shadow-lg` | Modal, menu and detached-surface shadow. |
 | `--r-xs`, `--r-sm`, `--r-md`, `--r-lg`, `--r-pill` | Shared radius scale. |
 | `--font-ui` | All controls, body text and numeric data. |
-| `--font-display` | Entity names and display headings only. |
-| `--font-prose` | Long-form descriptions and rich-text editor content; DnD Share sets it to Literata. |
+| `--font-display` | Entity names and display headings at readable display sizes; DnD Share uses variable Cormorant Garamond 500–700. |
+| `--font-prose` | Long-form descriptions, rules, world notes and rich-text editor content; DnD Share uses variable Literata 400–700 with optical sizing and italic. |
+| `--font-mono` | Logs, identifiers, data keys, formulas and other technical text. |
+| `--font-print-ui`, `--font-print-display`, `--font-print-prose` | Print-only role stacks. They currently preserve the proven Arial/Georgia metrics and must not be changed without pagination QA. |
 
-Keep numbers in the UI font with `font-variant-numeric: tabular-nums`; display-serif digits are easy to misread.
+Keep functional numbers in the UI font with `font-variant-numeric: tabular-nums`;
+display-serif digits are easy to misread. Compact summaries, hints, operational
+messages and card snippets also remain UI text even when their CSS class contains
+`description`. Use prose for text intended to be read as sentences or paragraphs,
+not merely scanned.
 
 ## Allowed raw-color exceptions
 

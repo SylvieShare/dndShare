@@ -205,7 +205,7 @@ function choiceEffects(choice) {
 .fdc-benefits { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); overflow: hidden; border: 1px solid var(--border); border-radius: 10px; background: color-mix(in srgb, var(--surface) 78%, transparent); }
 .fdc-benefit { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 10px; border-right: 1px solid var(--border); }
 .fdc-benefit:last-child { border-right: none; }
-.fdc-benefit-value { color: var(--feat); font-family: var(--font-display); font-size: 21px; font-weight: 700; }
+.fdc-benefit-value { color: var(--feat); font-family: var(--font-ui); font-size: 21px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .fdc-benefit-label { color: var(--text-muted); font-size: 9px; letter-spacing: 0.06em; text-transform: uppercase; }
 .fdc-section { display: flex; flex-direction: column; gap: 8px; }
 .fdc-grants { display: flex; flex-direction: column; gap: 7px; }

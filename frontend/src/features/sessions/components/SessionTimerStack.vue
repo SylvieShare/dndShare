@@ -90,7 +90,7 @@ async function run(action) { await action().catch(() => {}) }
 .session-timer-dismiss { width: 25px; height: 25px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 6px; background: transparent; color: var(--text-muted); cursor: pointer; }
 .session-timer-dismiss:hover { background: color-mix(in srgb, var(--danger) 10%, transparent); color: var(--danger); }
 .session-timer-readout { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 10px 1px 7px; }
-.session-timer-readout time { font-family: var(--font-display); font-size: 27px; font-weight: 760; letter-spacing: .045em; line-height: 1; font-variant-numeric: tabular-nums; }
+.session-timer-readout time { font-family: var(--font-ui); font-size: 27px; font-weight: 750; letter-spacing: .045em; line-height: 1; font-variant-numeric: tabular-nums; }
 .session-timer-readout span { color: var(--text-muted); font-size: 8px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
 .session-timer-card--paused .session-timer-readout span { color: var(--warning); }
 .session-timer-card--completed .session-timer-readout time, .session-timer-card--completed .session-timer-readout span { color: var(--danger); }

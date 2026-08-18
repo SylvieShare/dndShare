@@ -310,6 +310,12 @@ crossfade, and shows `Включить звук` only when browser autoplay poli
 a user gesture.
 The combat toolbar does not duplicate the standalone-screen launch action.
 
+Plain text and styled-note bodies use the shared `--font-prose` reading face in
+both the DM preview and standalone player presentation. Compact material-list
+metadata, controls and counters remain in the UI face. Full NPC, location and
+quest detail paragraphs follow the same split; their list-card snippets remain
+UI text.
+
 A scenario participates in universal relations and edits them in its main
 editor. Opening a scenario relation navigates directly to its block canvas.
 Scenarios themselves are not a player-display mode: the master broadcasts a
@@ -346,7 +352,7 @@ second nested switcher or session title bar. `SessionGraphCanvas` keeps one
 physical `NestedGraphCanvas` mounted for all narrative levels. The session name is
 the largest text in the command bar. The unframed arc trigger reads
 `АРКА <Roman number> <name>` with the original muted uppercase label and a
-typographic accent-colored Roman number, gains a quiet background only on
+bold UI-font accent-colored Roman number, gains a quiet background only on
 hover/open, and opens the complete arc list with the shared action-menu motion.
 A DM drags any non-interactive
 part of a row to reorder arcs; arrow controls are not used. Each row has a

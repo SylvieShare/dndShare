@@ -203,7 +203,7 @@ function confirm() {
 .fcm-section { padding: 13px; border: 1px solid var(--border); border-radius: var(--r-md); background: color-mix(in srgb, var(--surface) 86%, transparent); }
 .fcm-section-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
 .fcm-label { color: var(--text-1); font-size: 13px; font-weight: 700; }
-.fcm-key { margin-top: 2px; color: var(--text-muted); font-family: monospace; font-size: 9px; }
+.fcm-key { margin-top: 2px; color: var(--text-muted); font-family: var(--font-mono); font-size: 9px; }
 .fcm-count { flex-shrink: 0; padding: 3px 8px; border-radius: var(--r-pill); background: var(--surface-raised); color: var(--text-muted); font-size: 10px; font-weight: 800; }
 .fcm-count.complete { background: color-mix(in srgb, var(--success) 16%, transparent); color: var(--success); }
 .fcm-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 7px; }

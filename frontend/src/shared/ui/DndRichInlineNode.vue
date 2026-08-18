@@ -76,7 +76,7 @@
   >
     <div class="rich-suggest-popover">
       <strong>{{ suggest?.value || node.label }}</strong>
-      <RichContent v-if="suggest?.desc" :html="suggest.desc" />
+      <RichContent v-if="suggest?.desc" class="dnd-rich-content" :html="suggest.desc" />
       <span v-else class="rich-suggest-empty">Описание не добавлено</span>
     </div>
   </BasePopover>
@@ -209,7 +209,7 @@ button.rich-node:active { transform: scale(.97); }
 }
 .rich-node-die { display: inline-flex; align-items: center; gap: 1px; }
 .rich-node-average { color: var(--text-1); font-size: 1.08em; font-weight: 800; }
-.rich-node-or { margin: 0 2px; color: var(--text-muted); font-family: var(--font-display, Georgia, serif); font-size: .95em; font-style: italic; font-weight: 600; letter-spacing: .025em; }
+.rich-node-or { margin: 0 2px; color: var(--text-muted); font-family: var(--font-prose); font-size: .95em; font-style: italic; font-weight: 600; letter-spacing: .025em; }
 .rich-node-sign { color: var(--text-muted); }
 .rich-node--unknown { color: var(--text-muted); }
 .rich-suggest-popover { display: flex; flex-direction: column; gap: 6px; max-width: 340px; color: var(--text-2); font-size: 12px; }

@@ -320,7 +320,7 @@ function onFeatChoicesConfirm(choices) {
   cursor: pointer;
   transition: transform .16s ease, background .16s ease, border-color .16s ease, box-shadow .16s ease, opacity .16s ease;
 }
-.asi-chip span { font-family: var(--font-display); font-size: 15px; font-weight: 700; letter-spacing: .035em; }
+.asi-chip span { font-family: var(--font-ui); font-size: 15px; font-weight: 700; letter-spacing: .035em; }
 .asi-chip b { color: var(--accent); font-size: 14px; font-variant-numeric: tabular-nums; }
 .asi-chip:hover {
   transform: translateY(-1px);

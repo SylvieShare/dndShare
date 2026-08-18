@@ -77,15 +77,15 @@ defineProps({
 .sheet-heading { display: grid; grid-template-columns: 12mm auto 1fr; align-items: center; gap: 3mm; margin: 0 0 6mm; }
 .sheet-heading-mark { width: 11mm; height: 11mm; display: grid; place-items: center; border: 1px solid #72634d; transform: rotate(45deg); }
 .sheet-heading-mark::before { content: ''; position: absolute; inset: 1.2mm; border: .4px solid #baaa8d; }
-.sheet-heading-mark span { position: relative; z-index: 1; transform: rotate(-45deg); font: 700 7px/1 Georgia, serif; color: #72634d; }
+.sheet-heading-mark span { position: relative; z-index: 1; transform: rotate(-45deg); font: 700 7px/1 var(--font-print-display); color: #72634d; }
 .sheet-heading-copy { min-width: 0; }
-.sheet-kicker { margin-bottom: 1mm; font: 700 6px/1 Arial, sans-serif; letter-spacing: .18em; text-transform: uppercase; color: #8a7a61; }
-.sheet-heading h2 { margin: 0; font: 700 21px/1 Georgia, serif; letter-spacing: .015em; }
+.sheet-kicker { margin-bottom: 1mm; font: 700 6px/1 var(--font-print-ui); letter-spacing: .18em; text-transform: uppercase; color: #8a7a61; }
+.sheet-heading h2 { margin: 0; font: 700 21px/1 var(--font-print-display); letter-spacing: .015em; }
 .sheet-heading-rule { display: flex; align-items: center; margin-left: 2mm; }
 .sheet-heading-rule::before,
 .sheet-heading-rule::after { content: '◆'; font-size: 5px; color: #8a7a61; }
 .sheet-heading-rule i { flex: 1; height: 1px; margin: 0 1.5mm; background: linear-gradient(90deg, #8a7a61, #d8cdb8); }
-.sheet-footer { position: absolute; z-index: 2; left: 13mm; right: 13mm; bottom: 7mm; display: grid; grid-template-columns: auto 1fr auto 1fr auto; align-items: center; gap: 2mm; color: #8a7a61; font: 700 6px/1 Georgia, serif; }
+.sheet-footer { position: absolute; z-index: 2; left: 13mm; right: 13mm; bottom: 7mm; display: grid; grid-template-columns: auto 1fr auto 1fr auto; align-items: center; gap: 2mm; color: #8a7a61; font: 700 6px/1 var(--font-print-display); }
 .sheet-footer i { height: .5px; background: #baaa8d; }
 
 @media (max-width: 760px) {

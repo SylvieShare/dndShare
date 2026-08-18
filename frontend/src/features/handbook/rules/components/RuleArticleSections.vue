@@ -105,6 +105,7 @@ defineProps({
   max-width: 760px;
   margin: 0 0 22px;
   color: var(--text-2);
+  font-family: var(--font-prose);
   font-size: 17px;
   line-height: 1.65;
 }
@@ -113,6 +114,7 @@ defineProps({
   max-width: 780px;
   margin: 13px 0 0;
   color: var(--text-2);
+  font-family: var(--font-prose);
   font-size: 15px;
   line-height: 1.72;
 }
@@ -130,6 +132,7 @@ defineProps({
   position: relative;
   padding-left: 24px;
   color: var(--text-2);
+  font-family: var(--font-prose);
   font-size: 15px;
   line-height: 1.65;
 }
@@ -192,7 +195,7 @@ defineProps({
 .rule-step strong,
 .rule-step span span { display: block; }
 .rule-step strong { margin-bottom: 5px; color: var(--text-1); }
-.rule-step span span { color: var(--text-2); font-size: 13px; line-height: 1.5; }
+.rule-step span span { color: var(--text-2); font-family: var(--font-prose); font-size: 13px; line-height: 1.5; }
 
 .rule-example,
 .rule-note {
@@ -214,7 +217,7 @@ defineProps({
 
 .rule-callout-label svg { width: 16px; height: 16px; color: var(--tile-color); }
 .rule-example p,
-.rule-note p { margin: 8px 0 0; color: var(--text-2); font-size: 14px; line-height: 1.6; }
+.rule-note p { margin: 8px 0 0; color: var(--text-2); font-family: var(--font-prose); font-size: 14px; line-height: 1.6; }
 
 @media (max-width: 720px) {
   .rule-article-sections { gap: 42px; }

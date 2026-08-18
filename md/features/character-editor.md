@@ -280,6 +280,9 @@ schema key; components do not try `desc` and then `description`.
 alignment popover in both the character sheet and the creation wizard. The
 print view renders larger, always-open spell-slot circles and gives inline rich
 dice formulas a quieter paper style inside feature and spell descriptions.
+Print CSS uses semantic `--font-print-ui`, `--font-print-display` and
+`--font-print-prose` stacks. Their current Arial/Georgia values deliberately
+preserve pagination; replacing them requires a rendered page-by-page review.
 
 ## Saving and synchronization
 

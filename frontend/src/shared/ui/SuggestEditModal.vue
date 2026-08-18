@@ -218,11 +218,11 @@ async function save() {
 .preview-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
 .preview-name-row { display: flex; align-items: baseline; gap: 7px; flex-wrap: wrap; }
 .preview-name { font-size: 15px; font-weight: 600; color: var(--text-1); }
-.preview-code { font-size: 11px; color: var(--text-muted); font-family: monospace; }
+.preview-code { font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); }
 .preview-color-badge {
   align-self: flex-start;
   font-size: 11px;
-  font-family: monospace;
+  font-family: var(--font-mono);
   border-radius: var(--r-xs);
   padding: 2px 7px;
   border: 1px solid transparent;

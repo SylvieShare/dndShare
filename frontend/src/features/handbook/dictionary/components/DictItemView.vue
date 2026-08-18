@@ -184,7 +184,7 @@ async function deleteItem() {
 .view-meta-code {
   font-size: 11px;
   color: var(--text-muted);
-  font-family: monospace;
+  font-family: var(--font-mono);
   background: color-mix(in srgb, var(--text-on-accent) 6%, transparent);
   border: 1px solid color-mix(in srgb, var(--text-on-accent) 8%, transparent);
   border-radius: 4px;
@@ -196,7 +196,7 @@ async function deleteItem() {
   align-items: center;
   gap: 4px;
   font-size: 11px;
-  font-family: monospace;
+  font-family: var(--font-mono);
   border: 1px solid transparent;
   border-radius: 4px;
   padding: 1px 6px;

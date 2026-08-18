@@ -166,7 +166,7 @@ function creatureKey(creature, index) {
   color: var(--text-1);
   font-family: var(--font-display);
   font-size: 18px;
-  font-weight: 760;
+  font-weight: 700;
   line-height: 1.18;
   text-shadow: 0 1px 12px color-mix(in srgb, var(--block-color) 16%, transparent);
 }

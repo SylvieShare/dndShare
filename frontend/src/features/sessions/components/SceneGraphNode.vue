@@ -74,10 +74,11 @@ const status = computed(() => sceneStatus(props.scene.status))
   top: 12px;
   left: 14px;
   color: color-mix(in srgb, var(--text-1) 82%, transparent);
-  font-family: var(--font-display);
+  font-family: var(--font-ui);
   font-size: 30px;
   font-weight: 800;
   line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
 .scene-graph-node-status {
   position: absolute;

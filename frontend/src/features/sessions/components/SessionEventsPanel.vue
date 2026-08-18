@@ -275,7 +275,7 @@ watch([authorFilter, actorFilter, categoryFilters], async () => {
 .sep-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 39px; padding: 0 2px 9px; border-bottom: 1px solid color-mix(in srgb, var(--text-on-accent) 8%, var(--border)); }
 .sep-head-copy { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
 .sep-heading-line { display: flex; align-items: center; gap: 7px; }
-.sep-title { color: var(--text-1); font-family: var(--font-display); font-size: 12px; font-weight: 750; letter-spacing: 0.11em; }
+.sep-title { color: var(--text-1); font-family: var(--font-ui); font-size: 12px; font-weight: 750; letter-spacing: 0.11em; }
 .sep-count { color: var(--text-muted); font-size: 9px; font-variant-numeric: tabular-nums; }
 .sep-live { width: 6px; height: 6px; border-radius: 50%; background: var(--success); box-shadow: 0 0 7px color-mix(in srgb, var(--success) 65%, transparent); }
 .sep-live--error { background: var(--danger); box-shadow: 0 0 7px color-mix(in srgb, var(--danger) 65%, transparent); }

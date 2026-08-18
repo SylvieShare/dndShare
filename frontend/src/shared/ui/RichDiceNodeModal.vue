@@ -82,7 +82,7 @@ onMounted(() => nextTick(() => formulaInput.value?.focus?.()))
 .rdm-preview { display: flex; align-items: center; gap: 5px; min-height: 48px; padding: 8px 12px; border: 1px solid var(--border); border-radius: var(--r-md); background: var(--surface-raised); color: var(--text-muted); }
 .rdm-preview--invalid { border-color: color-mix(in srgb, var(--danger) 45%, var(--border)); color: var(--danger); }
 .rdm-average { color: var(--text-1); font-size: 16px; }
-.rdm-or { margin: 0 3px; color: var(--text-muted); font-family: var(--font-display, Georgia, serif); font-style: italic; font-weight: 600; letter-spacing: .025em; }
+.rdm-or { margin: 0 3px; color: var(--text-muted); font-family: var(--font-prose); font-style: italic; font-weight: 600; letter-spacing: .025em; }
 .rdm-die { display: inline-flex; align-items: center; gap: 2px; color: var(--accent-soft); }
 .rdm-actions { display: flex; align-items: center; justify-content: flex-end; gap: 8px; width: 100%; }
 .rdm-actions button { padding: 7px 12px; border: 0; border-radius: var(--r-sm); font: inherit; font-size: 12px; cursor: pointer; }

@@ -52,7 +52,7 @@ const { state, sourceVersionId } = inject('createWizard')
 .ver.on { background: color-mix(in srgb, var(--accent) 16%, var(--surface)); }
 .ver.soon { opacity: 0.55; cursor: default; }
 .ver-strip { position: absolute; top: 12px; bottom: 12px; left: 0; width: 3px; border-radius: 0 2px 2px 0; background: var(--accent); }
-.ver-badge { font-family: var(--font-display); font-size: 30px; font-weight: 700; color: var(--accent); line-height: 1; }
+.ver-badge { font-family: var(--font-ui); font-size: 30px; font-weight: 700; color: var(--accent); line-height: 1; font-variant-numeric: tabular-nums; }
 .ver.soon .ver-badge { color: var(--text-muted); }
 .ver-title { font-size: 15px; font-weight: 600; color: var(--text-1); margin-top: 8px; }
 .ver-desc { font-size: 12px; color: var(--text-muted); margin-top: 3px; }

@@ -399,7 +399,7 @@ function rawExpression(entry) {
 .dice-pop-type-val  { color: var(--text-1); font-weight: 700; }
 
 .dice-pop-raw {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: var(--font-mono);
   font-size: 11px;
   color: var(--text-muted);
   margin-top: 8px;

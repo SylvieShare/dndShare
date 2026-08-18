@@ -372,7 +372,7 @@ onBeforeUnmount(() => {
 }
 
 .run-code {
-  font-family: monospace;
+  font-family: var(--font-mono);
   font-size: 11px;
   color: var(--text-2);
 }
@@ -491,7 +491,7 @@ onBeforeUnmount(() => {
 }
 
 .details-pre {
-  font-family: monospace;
+  font-family: var(--font-mono);
   font-size: 11px;
   color: var(--text-1);
   white-space: pre-wrap;

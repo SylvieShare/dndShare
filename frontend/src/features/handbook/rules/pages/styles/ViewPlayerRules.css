@@ -138,6 +138,7 @@
   max-width: 670px;
   margin: 0;
   color: var(--text-2);
+  font-family: var(--font-prose);
   font-size: 17px;
   line-height: 1.6;
 }
@@ -211,7 +212,7 @@
 .rule-article-icon :deep(svg) { width: 34px; height: 34px; }
 .rule-article-number { margin: 0; color: var(--text-muted); font-size: 11px; text-transform: uppercase; letter-spacing: .07em; }
 .rule-article-header h1 { margin: 4px 0 0; font-size: clamp(36px, 5.4vw, 60px); }
-.rule-article-summary { max-width: 780px; margin: 20px 0 0; color: var(--text-2); font-size: 18px; line-height: 1.55; }
+.rule-article-summary { max-width: 780px; margin: 20px 0 0; color: var(--text-2); font-family: var(--font-prose); font-size: 18px; line-height: 1.55; }
 .rule-article-jump { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 24px; }
 .rule-article-jump a { padding: 5px 9px; border: 1px solid var(--border); border-radius: 7px; color: var(--text-muted); background: var(--surface); font-size: 10px; text-decoration: none; }
 .rule-article-jump a:hover { color: var(--text-1); border-color: color-mix(in srgb, var(--rule-accent) 42%, var(--border)); }

@@ -334,7 +334,7 @@ onMounted(async () => {
   text-transform: uppercase;
 }
 .hero-title {
-  font-family: var(--font-display, inherit);
+  font-family: var(--font-display);
   font-size: 38px;
   font-weight: 700;
   color: var(--text-1);
@@ -356,13 +356,14 @@ onMounted(async () => {
 }
 .hero-chip--chapter { background: color-mix(in srgb, var(--accent) 18%, transparent); }
 .chip-roman {
-  font-family: var(--font-display, inherit);
+  font-family: var(--font-ui);
   font-weight: 800;
   color: var(--accent-soft);
 }
 .hero-desc {
   margin: 8px 0 0;
   color: var(--text-2);
+  font-family: var(--font-prose);
   font-size: 14px;
   line-height: 1.45;
   max-width: 720px;

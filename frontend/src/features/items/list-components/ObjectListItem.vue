@@ -92,11 +92,12 @@ const nameEnFormatted = computed(() =>
   flex: 0 0 28px;
   display: grid;
   place-items: center;
-  font-family: var(--font-display);
+  font-family: var(--font-ui);
   font-size: 20px;
   font-weight: 600;
   line-height: 1;
   text-align: center;
+  font-variant-numeric: tabular-nums;
 }
 
 .oli-main {

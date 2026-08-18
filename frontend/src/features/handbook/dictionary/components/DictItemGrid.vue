@@ -167,7 +167,7 @@ function stripTags(html) {
 .card-code {
   font-size: 11px;
   color: var(--text-muted);
-  font-family: monospace;
+  font-family: var(--font-mono);
   white-space: nowrap;
   flex-shrink: 0;
 }

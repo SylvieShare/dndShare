@@ -290,7 +290,11 @@ HTML-контрактом и selection API, а `DndRichContent` — значен
 Read-only `DndRichContent` и текстовая область `InputDescription` используют
 отдельный книжный шрифт `--font-prose` (Literata в DnD Share). UI-кнопки,
 метаданные и короткие подписи остаются в `--font-ui`, а заголовки сущностей — в
-`--font-display`.
+`--font-display`. Та же prose-роль применяется к статьям правил, полноценным
+описаниям мира и текстовым материалам сессии; короткие карточные excerpts,
+ошибки и служебные сообщения не считаются long-form только из-за имени поля
+`description`. Технические ключи, формулы, идентификаторы и логи используют
+единый `--font-mono`.
 
 `dice` хранит `{formula,label?,average?}` и показывает ручное среднее перед
 составом формулы через `SystemDie`; клик отправляет выражение в общий dice store.
@@ -371,7 +375,9 @@ DOM update и прервать переход по timeout. Все служеб�
 
 Общая палитра и canvas приходят из `@sylvieshare/share-ui/styles.css`, который
 импортируется один раз в `main.js`. `src/app/theme.css` задаёт DnD-акцент,
-layout и доменные цвета. `npm run check:colors` входит в production build и
+layout, доменные цвета и продуктовые prose/mono/print font stacks. Cormorant
+Garamond и Literata подключаются как variable web fonts; display-роль не
+запрашивает веса выше поддерживаемого `700`. `npm run check:colors` входит в production build и
 запрещает новые прямые hex/RGB/HSL значения. Подробности — `md/css-variables.md`.
 
 ## Обновление share-ui
