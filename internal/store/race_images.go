@@ -14,14 +14,16 @@ const assignSystemRaceCoverSQL = `
 	WHERE user_id IS NULL
 	  AND type_id = 8
 	  AND (($3::boolean AND parent_id IS NOT NULL) OR (NOT $3::boolean AND parent_id IS NULL))
+	  AND (cover_image_id IS NULL OR cover_image_id = $1)
 	  AND (
 		regexp_replace(replace(lower(COALESCE(name_en, '')), 'ё', 'е'), '[^a-zа-я0-9]+', '', 'g') = ANY($2)
 		OR regexp_replace(replace(lower(name), 'ё', 'е'), '[^a-zа-я0-9]+', '', 'g') = ANY($2)
 	  )`
 
 // UpsertSystemRaceImage registers legacy race artwork as a cover. When the
-// same row is still used as the old icon, that icon reference is cleared;
-// independently assigned compact icons are preserved on repeated deploys.
+// same row is still used as the old icon, that icon reference is cleared.
+// Independently assigned icons and covers are preserved on repeated bootstrap
+// syncs.
 func (s *Store) UpsertSystemRaceImage(ctx context.Context, key, url, fileName, mimeType string, fileSize int64, aliases []string, subrace bool) (int64, error) {
 	tx, err := s.pool.Begin(ctx)
 	if err != nil {

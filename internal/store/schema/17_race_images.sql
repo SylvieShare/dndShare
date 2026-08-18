@@ -51,6 +51,7 @@ JOIN dndshare.storage_image image
 WHERE race.user_id IS NULL
   AND race.parent_id IS NULL
   AND race.type_id = 8
+  AND (race.cover_image_id IS NULL OR race.cover_image_id = image.id)
   AND (
     regexp_replace(replace(lower(COALESCE(race.name_en, '')), 'ё', 'е'), '[^a-zа-я0-9]+', '', 'g') = ANY(mapping.aliases)
     OR regexp_replace(replace(lower(race.name), 'ё', 'е'), '[^a-zа-я0-9]+', '', 'g') = ANY(mapping.aliases)

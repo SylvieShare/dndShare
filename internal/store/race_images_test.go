@@ -15,6 +15,7 @@ func TestRaceImageSchemaUsesItemStorageContract(t *testing.T) {
 		"race.user_id IS NULL",
 		"race.parent_id IS NULL",
 		"race.type_id = 8",
+		"race.cover_image_id IS NULL OR race.cover_image_id = image.id",
 	} {
 		if !strings.Contains(schemaRaceImagesSQL, fragment) {
 			t.Fatalf("race image schema must contain %q", fragment)
@@ -37,6 +38,7 @@ func TestRaceCoverAssignmentOnlyClearsTheMigratedLegacyIcon(t *testing.T) {
 		"CASE WHEN icon_image_id = $1 THEN NULL ELSE icon_image_id END",
 		"user_id IS NULL",
 		"type_id = 8",
+		"cover_image_id IS NULL OR cover_image_id = $1",
 		"parent_id IS NOT NULL",
 		"parent_id IS NULL",
 	} {
@@ -54,6 +56,7 @@ func TestSubraceImageSchemaOnlyLinksChildRaceItems(t *testing.T) {
 		"subrace.user_id IS NULL",
 		"subrace.parent_id IS NOT NULL",
 		"subrace.type_id = 8",
+		"subrace.cover_image_id IS NULL OR subrace.cover_image_id = image.id",
 	} {
 		if !strings.Contains(schemaSubraceImagesSQL, fragment) {
 			t.Fatalf("subrace image schema must contain %q", fragment)
