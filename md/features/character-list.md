@@ -92,7 +92,9 @@ remaining rows disappear. A dedicated “Назад / К выбору расы�
 morph and returns to the full list without changing the current content scroll.
 The action floats over the selected illustration and does not occupy a layout row,
 so its disappearance cannot displace the returning card even when the scroll is at
-the top. The other rows fade away while the detailed
+the top. The reverse render also restores the captured `.cc-main` scroll position
+on Vue's next layout frame, preventing a transient content-height change from
+resetting a partially scrolled step. The other rows fade away while the detailed
 content rises in after the move; reduced-motion disables the sequence. Custom races
 fall back to their handbook image or a monogram. Built-in illustrations are not
 frontend static assets: deploy uploads them to stable S3 keys, registers system

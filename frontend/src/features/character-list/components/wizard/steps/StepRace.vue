@@ -160,7 +160,7 @@
 </template>
 
 <script setup>
-import { computed, inject, ref } from 'vue'
+import { computed, inject, nextTick, ref } from 'vue'
 import FeatChoiceModal from '@/features/character-editor/components/FeatChoiceModal.vue'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import { featChoices } from '@/features/items/lib/featRules'
@@ -223,7 +223,13 @@ function clearRace() {
   if (!state.race) return
   clearTimeout(raceScrollTimer)
   raceScrollTimer = null
+  const stage = raceStage.value?.$el || raceStage.value
+  const scroller = stage?.closest('.cc-main')
+  const scrollTop = scroller?.scrollTop || 0
   state.race = null
+  if (scroller && scrollTop > 0) {
+    nextTick(() => requestAnimationFrame(() => scroller.scrollTo({ top: scrollTop, behavior: 'auto' })))
+  }
 }
 function featName(id) { return featPool.value.find((f) => f.id === id)?.name || `#${id}` }
 function onFeatPick(item) {
