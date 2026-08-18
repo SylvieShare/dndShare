@@ -7,6 +7,13 @@ describe('race card summary', () => {
       .toBe('Древний народ гор.')
   })
 
+  it('prefers a mechanics-free short description over the expanded article', () => {
+    expect(shortRaceDescription({ data: {
+      short_description: 'Живёт между двумя культурами и ищет собственный путь.',
+      description: '<p>Получает +2 к Харизме и другие преимущества.</p>',
+    } })).toBe('Живёт между двумя культурами и ищет собственный путь.')
+  })
+
   it('collects base grants and lists subraces without applying their grants', () => {
     const race = {
       id: 4,

@@ -85,14 +85,16 @@ application canvas.
 
 The race step uses full-width illustrated rows. Each built-in race has a consistent
 landscape portrait of a male and female character; beside it the row shows a short
-handbook description, every base-race grant and the choices that will follow (for
+mechanics-free portrait from `item.data.short_description`, every base-race grant
+and the choices that will follow (for
 example a language or feat) without applying any subrace grants. Available subraces
 are shown by name in a separate compact chip row instead of the generic
 “После выбора: подраса” label. Race abilities are individually hoverable and use
 the shared item tooltip for their handbook descriptions. After selection,
 the chosen keyed row uses a FLIP layout transition to move from its list position
 into the full-width hero above the
-complete handbook description and subrace choices, while the
+expanded `item.data.description`: an original three-paragraph lore article without
+repeating ability bonuses, followed by subrace choices, while the
 remaining rows disappear. A dedicated “Назад / К выбору расы” action reverses the
 morph and returns to the full list without changing the current content scroll.
 The action floats over the selected illustration and does not occupy a layout row,
