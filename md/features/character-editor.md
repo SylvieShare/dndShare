@@ -154,9 +154,11 @@ per-class sum updates `lvl.level`.
 Clicking the editable portrait opens actions for upload, crop and clear.
 Cropping produces and uploads a new WebP object, so the same framing is visible
 in the sheet, character list and session UI. Drag-and-drop enters the same crop
-flow instead of bypassing it. Non-text sheet actions keep a bounded document
-history; `Ctrl+Z`/`Cmd+Z` restores the previous snapshot and schedules the
-normal debounced save. Focused native text editors retain browser undo.
+flow instead of bypassing it. After every owner edit, the browser keeps the
+three latest character-data snapshots in per-character local storage. Storage
+failures do not interrupt editing or the normal debounced server save. The
+sheet does not install a global `Ctrl+Z`/`Cmd+Z` handler; focused text editors
+retain browser-native undo.
 
 ## Level up and rests
 

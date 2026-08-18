@@ -7,7 +7,7 @@ const identitySource = readFileSync(fileURLToPath(new URL('../dnd/DndCharIdentit
 const cropSource = readFileSync(fileURLToPath(new URL('../../components/AvatarCropModal.vue', import.meta.url)), 'utf8')
 const viewSource = readFileSync(fileURLToPath(new URL('../../pages/ViewCharacter.vue', import.meta.url)), 'utf8')
 
-describe('character portrait and undo UI', () => {
+describe('character portrait UI', () => {
   it('opens upload, crop and clear actions from both portrait editors', () => {
     for (const source of [avatarSource, identitySource]) {
       expect(source).toContain('Загрузить изображение')
@@ -24,9 +24,8 @@ describe('character portrait and undo UI', () => {
     expect(cropSource).toContain("'image/webp'")
   })
 
-  it('registers sheet-level Ctrl/Cmd+Z restoration', () => {
-    expect(viewSource).toContain('createCharacterUndoHistory()')
-    expect(viewSource).toContain("window.addEventListener('keydown', onUndoKeydown)")
-    expect(viewSource).toContain('replaceData(previous)')
+  it('records browser snapshots after sheet changes without a global undo handler', () => {
+    expect(viewSource).toContain('recordCharacterSnapshot(uuid, data.value)')
+    expect(viewSource).not.toContain('onUndoKeydown')
   })
 })

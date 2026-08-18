@@ -181,12 +181,6 @@ export function useCharacterData(uuid, isMobile) {
     }
   }
 
-  function replaceData(value) {
-    data.value = { values: {}, var: {}, ...(value || {}) }
-    charCtx.var = data.value.var || {}
-    document.title = data.value.values?.name || 'Персонаж'
-  }
-
   function onPublicToggle(val) {
     publicVisible.value = val
     fetchPut('/char/' + uuid + '/public', { publicVisible: val })
@@ -261,7 +255,6 @@ export function useCharacterData(uuid, isMobile) {
     updateValue,
     updateVar,
     updateContentSources,
-    replaceData,
     onPublicToggle,
     invalidateTabCache,
   }
