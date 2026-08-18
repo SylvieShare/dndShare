@@ -10,7 +10,7 @@
         v-model="query"
         class="hs-input"
         type="text"
-        placeholder="Поиск по справочнику и правилам..."
+        placeholder="Поиск по справочнику"
         autocomplete="off"
         spellcheck="false"
         @focus="onFocus"
