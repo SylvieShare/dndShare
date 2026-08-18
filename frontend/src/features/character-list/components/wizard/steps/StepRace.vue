@@ -221,8 +221,9 @@ function selectRace(race) {
 }
 function clearRace() {
   if (!state.race) return
+  clearTimeout(raceScrollTimer)
+  raceScrollTimer = null
   state.race = null
-  scheduleRaceScroll()
 }
 function featName(id) { return featPool.value.find((f) => f.id === id)?.name || `#${id}` }
 function onFeatPick(item) {
@@ -238,8 +239,8 @@ function onFeatChoicesConfirm(choices) {
 </script>
 
 <style scoped>
-.step { display: flex; flex-direction: column; gap: 12px; }
-.selection-details { display: flex; flex-direction: column; gap: 12px; scroll-margin-top: 12px; }
+.step { position: relative; display: flex; flex-direction: column; gap: 12px; }
+.selection-details { display: flex; flex-direction: column; gap: 12px; scroll-margin-top: 12px; overflow-anchor: none; }
 .race-lore { display: flex; flex-direction: column; gap: 7px; }
 .step-gap { margin-top: 8px; }
 .step-desc {
@@ -252,16 +253,21 @@ function onFeatChoicesConfirm(choices) {
 .count { font-size: 12px; font-weight: 600; color: var(--text-muted); }
 .count.done { color: var(--success); }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
-.race-grid { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+.race-grid { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; overflow-anchor: none; }
 .race-back {
-  align-self: flex-start;
+  position: absolute;
+  z-index: 4;
+  top: 38px;
+  left: 10px;
   display: inline-flex;
   align-items: center;
   gap: 9px;
   padding: 6px 10px 6px 6px;
   color: var(--text-2);
-  background: transparent;
-  border: 1px solid transparent;
+  background: color-mix(in srgb, var(--bg) 78%, transparent);
+  border: 1px solid color-mix(in srgb, var(--border) 78%, transparent);
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(12px);
   border-radius: var(--r-md);
   font: inherit;
   text-align: left;
@@ -270,7 +276,7 @@ function onFeatChoicesConfirm(choices) {
 }
 .race-back:hover {
   color: var(--text-1);
-  background: color-mix(in srgb, var(--accent) 8%, var(--surface));
+  background: color-mix(in srgb, var(--accent) 12%, var(--bg));
   border-color: color-mix(in srgb, var(--accent) 24%, var(--border));
   transform: translateX(-2px);
 }

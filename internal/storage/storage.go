@@ -85,6 +85,17 @@ func (s *Service) UploadSystemImage(ctx context.Context, body io.Reader, size in
 	return s.put(ctx, body, size, key, contentType)
 }
 
+// UploadRaceImage stores built-in race artwork under a stable, versioned key.
+func (s *Service) UploadRaceImage(ctx context.Context, body io.Reader, size int64, key, contentType string) (StoredObject, error) {
+	if !strings.HasPrefix(key, "system-race-images/") || strings.Contains(key, "..") {
+		return StoredObject{}, fmt.Errorf("invalid system race image object key %q", key)
+	}
+	if !strings.HasPrefix(contentType, "image/") {
+		return StoredObject{}, fmt.Errorf("invalid system race image content type %q", contentType)
+	}
+	return s.put(ctx, body, size, key, contentType)
+}
+
 // UploadBestiaryImage stores imported creature artwork under a stable key so a
 // repeated catalogue import overwrites the object instead of leaking new ones.
 func (s *Service) UploadBestiaryImage(ctx context.Context, body io.Reader, size int64, key, contentType string) (StoredObject, error) {

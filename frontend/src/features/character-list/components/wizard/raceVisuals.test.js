@@ -1,18 +1,13 @@
 import { describe, expect, it } from 'vitest'
-import { normalizeRaceName, raceImageFor } from './raceVisuals'
+import { raceImageFor } from './raceVisuals'
 
 describe('race visuals', () => {
-  it('normalizes localized and hyphenated race names', () => {
-    expect(normalizeRaceName('Полу-эльф')).toBe('полуэльф')
-    expect(normalizeRaceName('Драконорождённый')).toBe('драконорожденный')
+  it('uses the storage image projected by the race item', () => {
+    expect(raceImageFor({ name: 'Тифлинг', iconImageUrl: 'https://storage.example/tiefling.jpg' }))
+      .toBe('https://storage.example/tiefling.jpg')
   })
 
-  it('finds built-in art by Russian and English names', () => {
-    expect(raceImageFor({ name: 'Тифлинг' })).toBe('/static/races/tiefling.jpg')
-    expect(raceImageFor({ name: 'Неизвестно', nameEn: 'Half-Orc' })).toBe('/static/races/half-orc.jpg')
-  })
-
-  it('falls back to an item image for custom races', () => {
-    expect(raceImageFor({ name: 'Автогном', iconImageUrl: '/custom.png' })).toBe('/custom.png')
+  it('leaves a race without an item image to the monogram fallback', () => {
+    expect(raceImageFor({ name: 'Автогном' })).toBe('')
   })
 })

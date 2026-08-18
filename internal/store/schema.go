@@ -61,6 +61,9 @@ var schemaRichContentSQL string
 //go:embed schema/16_session_timers.sql
 var schemaSessionTimersSQL string
 
+//go:embed schema/17_race_images.sql
+var schemaRaceImagesSQL string
+
 var schemaParts = []struct {
 	name string
 	sql  string
@@ -81,6 +84,7 @@ var schemaParts = []struct {
 	{"session-entities", schemaSessionEntitiesSQL},
 	{"rich-content", schemaRichContentSQL},
 	{"session-timers", schemaSessionTimersSQL},
+	{"race-images", schemaRaceImagesSQL},
 }
 
 func applySchema(ctx context.Context, pool *pgxpool.Pool) error {

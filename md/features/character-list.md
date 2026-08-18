@@ -89,9 +89,15 @@ the chosen keyed row uses a FLIP layout transition to move from its list positio
 into the full-width hero above the
 complete handbook description, subrace choices and the result block, while the
 remaining rows disappear. A dedicated “Назад / К выбору расы” action reverses the
-morph and returns to the full list. The other rows fade away while the detailed
+morph and returns to the full list without changing the current content scroll.
+The action floats over the selected illustration and does not occupy a layout row,
+so its disappearance cannot displace the returning card even when the scroll is at
+the top. The other rows fade away while the detailed
 content rises in after the move; reduced-motion disables the sequence. Custom races
-fall back to their handbook image or a monogram.
+fall back to their handbook image or a monogram. Built-in illustrations are not
+frontend static assets: deploy uploads them to stable S3 keys, registers system
+`storage_image` rows and assigns those rows to base race `item.icon_image_id`; the
+wizard reads the resulting `iconImageUrl` from the ordinary handbook item response.
 
 Key rules:
 
