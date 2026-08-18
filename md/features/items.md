@@ -102,8 +102,9 @@ grammar while their center and palette communicate the spell itself.
 The production asset is a lossless `128×128` RGBA WebP with genuine alpha and
 clean antialiased edges. Generate at a larger size, extract the background,
 center the opaque bounds with a common safe margin and downsample with a
-high-quality filter. Inspect every result at 128 and 64 px. The deploy-only
-`cmd/spell-rune-sync` uploads the files from `internal/spellimages` to stable
+high-quality filter. Inspect every result at 128 and 64 px. The manual
+legacy/bootstrap `cmd/spell-rune-sync` can upload the files from
+`internal/spellimages` to stable
 `system-spell-runes/v1/` S3 keys and registers them in `storage_image`; neither
 the main binary nor frontend static assets contain the WebP files.
 This manifest remains the bootstrap for its existing set. New system icons are
@@ -163,7 +164,8 @@ before the internal detail is noticed.
 
 The production asset is a lossless `128×128` RGBA WebP with the opaque bounds
 centered inside a common safe margin. Every file is inspected at both 128 and
-64 px on light and dark surfaces. `cmd/race-icon-sync` verifies the embedded
+64 px on light and dark surfaces. The manual legacy/bootstrap
+`cmd/race-icon-sync` verifies the embedded
 manifest, uploads all nine base-race and nine subrace busts to stable
 `system-race-icons/v1/` keys and assigns them through `item.icon_image_id`.
 The larger legacy race illustrations remain independent covers.
@@ -192,7 +194,8 @@ setting, energy and color while preserving readable UI overlay space.
   the item name already labels the header.
 
 The initial spell covers are **Fireball**, **Bless** and **Aura of Vitality**.
-`cmd/item-cover-sync` verifies the embedded manifest, uploads them to stable
+The manual legacy/bootstrap `cmd/item-cover-sync` verifies the embedded
+manifest and uploads them to stable
 `system-item-covers/v1/spells/` keys and assigns the resulting
 `storage_image(type='item_cover')` rows through `item.cover_image_id`.
 This manifest remains their reproducible bootstrap. New covers are installed

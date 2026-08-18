@@ -58,7 +58,7 @@ Tool schemas должны совпадать с текущей item/suggest mode
 
 Общий JSON body `/mcp` ограничен 16 МБ: этого достаточно для 10 МБ бинарной
 обложки после base64-кодирования и JSON envelope. Встроенные каталоги, уже
-закреплённые manifest-driven deploy-sync, остаются воспроизводимым bootstrap;
+закреплённые ручными manifest-driven sync-командами, остаются воспроизводимым bootstrap;
 для новых сгенерированных изображений отдельный sync-бинарь не требуется.
 
 ## Error-report automation
