@@ -84,9 +84,11 @@ application canvas.
 The race step uses large illustrated cards in a two-column desktop grid. Each
 built-in race has a consistent landscape portrait of a male and female character.
 After selection, that card becomes a full-width hero above the race description,
-subrace choices and the result block; the remaining cards move below the details
-under “Сменить расу”. On narrow screens both the hero and the race list stack into
-one column. Custom races fall back to their handbook image or a monogram.
+subrace choices and the result block, while the remaining cards disappear. A
+dedicated “Назад / К выбору расы” action returns to the full grid. The grid-to-hero
+transition uses a short scale, blur and content-rise sequence, with a reduced-motion
+fallback. On narrow screens both the hero and the race list stack into one column.
+Custom races fall back to their handbook image or a monogram.
 
 Key rules:
 

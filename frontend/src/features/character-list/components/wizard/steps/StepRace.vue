@@ -3,9 +3,19 @@
     <div class="sheet-section-title">Раса</div>
     <p v-if="loading && !races.length" class="hint">Загрузка справочника…</p>
     <p v-else-if="!races.length" class="hint">В справочнике пока нет рас.</p>
-    <template v-else>
-      <Transition name="race-hero" mode="out-in">
-        <div v-if="state.race" :key="state.race.id" ref="raceHero" class="race-hero">
+    <Transition v-else name="race-stage" mode="out-in" @after-enter="afterRaceStageEnter">
+      <div v-if="state.race" :key="`selected-${state.race.id}`" ref="raceStage" class="race-selected">
+        <button type="button" class="race-back" @click="clearRace">
+          <span class="race-back-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6" /></svg>
+          </span>
+          <span>
+            <span class="race-back-label">Назад</span>
+            <span class="race-back-note">К выбору расы</span>
+          </span>
+        </button>
+
+        <div class="race-hero">
           <RaceSelectCard
             :title="state.race.name"
             :subtitle="asiSummary(state.race)"
@@ -15,23 +25,8 @@
             @select="selectRace(state.race)"
           />
         </div>
-      </Transition>
 
-      <div v-if="!state.race" class="race-grid">
-        <RaceSelectCard
-          v-for="r in races"
-          :key="r.id"
-          :title="r.name"
-          :subtitle="asiSummary(r)"
-          :monogram="monogramOf(r.name)"
-          :image-url="raceImageFor(r)"
-          @select="selectRace(r)"
-        />
-      </div>
-    </template>
-
-    <Transition name="choice-panel" mode="out-in" @after-enter="afterRaceDetailsEnter">
-      <div v-if="state.race" :key="state.race.id" class="selection-details">
+        <div class="selection-details">
         <RichContent v-if="raceDesc" class="step-desc" :html="raceDesc" />
 
         <template v-if="subraces.length">
@@ -130,19 +125,12 @@
         </template>
 
         <ChoiceResult source="race" />
-      </div>
-    </Transition>
-
-    <section v-if="state.race && otherRaces.length" class="other-races">
-      <div class="other-races-head">
-        <div>
-          <div class="sheet-section-title">Сменить расу</div>
-          <p class="hint">Выборы текущей расы будут сброшены</p>
         </div>
       </div>
-      <div class="race-grid">
+
+      <div v-else key="picker" ref="raceStage" class="race-grid">
         <RaceSelectCard
-          v-for="r in otherRaces"
+          v-for="r in races"
           :key="r.id"
           :title="r.name"
           :subtitle="asiSummary(r)"
@@ -151,7 +139,7 @@
           @select="selectRace(r)"
         />
       </div>
-    </section>
+    </Transition>
 
     <ItemPickerModal
       v-if="pickerOpen"
@@ -195,7 +183,6 @@ const {
 } = inject('createWizard')
 const raceDesc = computed(() => state.race?.data?.description || '')
 const subraceDesc = computed(() => state.subrace?.data?.description || '')
-const otherRaces = computed(() => races.value.filter((race) => race.id !== state.race?.id))
 const atAsiLimit = computed(() => grants.value.asiChoice && state.asiChoice.length >= grants.value.asiChoice.count)
 const hasRaceChoices = computed(() => {
   const g = grants.value
@@ -204,7 +191,7 @@ const hasRaceChoices = computed(() => {
 
 const pickerOpen = ref(false)
 const featConfigItem = ref(null)
-const raceHero = ref(null)
+const raceStage = ref(null)
 let scrollPending = false
 
 function selectRace(race) {
@@ -212,10 +199,15 @@ function selectRace(race) {
   scrollPending = true
   state.race = race
 }
-function afterRaceDetailsEnter() {
+function clearRace() {
+  if (!state.race) return
+  scrollPending = true
+  state.race = null
+}
+function afterRaceStageEnter() {
   if (!scrollPending) return
   scrollPending = false
-  requestAnimationFrame(() => raceHero.value?.scrollIntoView({
+  requestAnimationFrame(() => raceStage.value?.scrollIntoView({
     behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
     block: 'start',
   }))
@@ -247,11 +239,45 @@ function onFeatChoicesConfirm(choices) {
 .count { font-size: 12px; font-weight: 600; color: var(--text-muted); }
 .count.done { color: var(--success); }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
-.race-hero { width: 100%; scroll-margin-top: 4px; }
+.race-selected { display: flex; flex-direction: column; gap: 12px; scroll-margin-top: 4px; }
+.race-hero { width: 100%; }
 .race-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
-.other-races { display: flex; flex-direction: column; gap: 11px; margin-top: 12px; }
-.other-races-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
-.other-races-head .hint { margin-top: 3px; }
+.race-back {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 6px 10px 6px 6px;
+  color: var(--text-2);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--r-md);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: color .15s, background .15s, border-color .15s, transform .18s cubic-bezier(.22, 1, .36, 1);
+}
+.race-back:hover {
+  color: var(--text-1);
+  background: color-mix(in srgb, var(--accent) 8%, var(--surface));
+  border-color: color-mix(in srgb, var(--accent) 24%, var(--border));
+  transform: translateX(-2px);
+}
+.race-back:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.race-back-icon {
+  width: 31px;
+  height: 31px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  border-radius: 10px;
+}
+.race-back-icon svg { width: 17px; height: 17px; }
+.race-back > span:last-child { display: flex; flex-direction: column; gap: 1px; }
+.race-back-label { font-size: 13px; font-weight: 700; line-height: 1.1; }
+.race-back-note { font-size: 10px; color: var(--text-muted); line-height: 1.1; }
 
 .opts { display: flex; flex-wrap: wrap; gap: 8px; }
 .opt {
@@ -306,18 +332,30 @@ function onFeatChoicesConfirm(choices) {
 .feat-add:hover { background: color-mix(in srgb, var(--accent) 14%, var(--surface)); }
 .feat-add svg { width: 16px; height: 16px; }
 
-.choice-panel-enter-active,
-.choice-panel-leave-active { transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.14s ease; }
-.choice-panel-enter-from { opacity: 0; transform: translateX(16px); }
-.choice-panel-leave-to { opacity: 0; transform: translateX(-12px); }
-.race-hero-enter-active,
-.race-hero-leave-active { transition: transform .24s cubic-bezier(.22, 1, .36, 1), opacity .16s ease; }
-.race-hero-enter-from { opacity: 0; transform: scale(.97); }
-.race-hero-leave-to { opacity: 0; transform: scale(.985); }
+.race-stage-enter-active {
+  transition: opacity .28s ease, transform .42s cubic-bezier(.22, 1, .36, 1), filter .32s ease;
+}
+.race-stage-leave-active {
+  transition: opacity .16s ease, transform .22s cubic-bezier(.4, 0, 1, 1), filter .18s ease;
+}
+.race-stage-enter-from { opacity: 0; transform: translateY(18px) scale(.965); filter: blur(5px); }
+.race-stage-leave-to { opacity: 0; transform: translateY(-8px) scale(.985); filter: blur(3px); }
+.race-selected.race-stage-enter-active .race-hero { animation: race-card-settle .52s cubic-bezier(.22, 1, .36, 1) both; }
+.race-selected.race-stage-enter-active .selection-details { animation: race-details-rise .42s .09s cubic-bezier(.22, 1, .36, 1) both; }
+
+@keyframes race-card-settle {
+  from { opacity: .5; transform: scale(.94); clip-path: inset(8% 3% round 22px); }
+  to { opacity: 1; transform: scale(1); clip-path: inset(0 round 0); }
+}
+@keyframes race-details-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
 @media (prefers-reduced-motion: reduce) {
-  .choice-panel-enter-active, .choice-panel-leave-active,
-  .race-hero-enter-active, .race-hero-leave-active { transition: none; }
+  .race-stage-enter-active, .race-stage-leave-active { transition: none; }
+  .race-selected.race-stage-enter-active .race-hero,
+  .race-selected.race-stage-enter-active .selection-details { animation: none; }
 }
 
 @media (max-width: 640px) {
