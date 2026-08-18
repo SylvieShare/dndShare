@@ -24,7 +24,20 @@
       </span>
       <span class="race-card-title">{{ title }}</span>
       <span v-if="subtitle" class="race-card-subtitle">{{ subtitle }}</span>
-      <span v-if="selected" class="race-card-note">Особенности и доступные варианты показаны ниже</span>
+      <span v-if="description" class="race-card-description">{{ description }}</span>
+
+      <span v-if="facts.length" class="race-card-facts">
+        <span v-for="fact in facts" :key="fact.label" class="race-card-fact" :class="{ 'race-card-fact--wide': fact.wide }">
+          <span>{{ fact.label }}</span>
+          <b>{{ fact.value }}</b>
+        </span>
+      </span>
+
+      <span v-if="choices.length" class="race-card-choices">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1" /></svg>
+        После выбора: {{ choices.join(' · ') }}
+      </span>
+      <span v-else-if="selected" class="race-card-note">Все базовые особенности будут добавлены автоматически</span>
     </span>
   </button>
 </template>
@@ -36,6 +49,9 @@ defineProps({
   monogram: { type: String, default: '' },
   imageUrl: { type: String, default: '' },
   selected: { type: Boolean, default: false },
+  description: { type: String, default: '' },
+  facts: { type: Array, default: () => [] },
+  choices: { type: Array, default: () => [] },
 })
 defineEmits(['select'])
 </script>
@@ -45,8 +61,10 @@ defineEmits(['select'])
   min-width: 0;
   padding: 0;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: minmax(270px, .9fr) minmax(0, 1.65fr);
+  width: 100%;
+  min-height: 230px;
   text-align: left;
   color: inherit;
   font: inherit;
@@ -54,7 +72,7 @@ defineEmits(['select'])
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   cursor: pointer;
-  transition: transform .18s cubic-bezier(.22, 1, .36, 1), border-color .15s, box-shadow .18s;
+  transition: transform .18s cubic-bezier(.22, 1, .36, 1), border-color .15s, box-shadow .18s, min-height .42s cubic-bezier(.22, 1, .36, 1), grid-template-columns .42s cubic-bezier(.22, 1, .36, 1);
 }
 .race-card:hover {
   transform: translateY(-2px);
@@ -67,7 +85,7 @@ defineEmits(['select'])
   position: relative;
   display: block;
   width: 100%;
-  aspect-ratio: 2.05 / 1;
+  height: 100%;
   overflow: hidden;
   background: color-mix(in srgb, var(--accent) 8%, var(--surface-raised));
 }
@@ -99,8 +117,9 @@ defineEmits(['select'])
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 3px;
-  padding: 13px 15px 15px;
+  justify-content: center;
+  gap: 4px;
+  padding: 18px 20px;
 }
 .race-card-title {
   font-family: var(--font-display);
@@ -110,6 +129,61 @@ defineEmits(['select'])
   color: var(--text-1);
 }
 .race-card-subtitle { font-size: 12px; color: var(--text-muted); }
+.race-card-description {
+  display: -webkit-box;
+  margin-top: 5px;
+  overflow: hidden;
+  color: var(--text-2);
+  font-size: 12px;
+  line-height: 1.45;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+.race-card-facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: 9px;
+}
+.race-card-fact {
+  min-width: 0;
+  padding: 6px 8px;
+  background: color-mix(in srgb, var(--surface-raised) 74%, transparent);
+  border-radius: 8px;
+}
+.race-card-fact--wide { grid-column: 1 / -1; }
+.race-card-fact > span {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--text-muted);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.race-card-fact b {
+  display: block;
+  overflow: hidden;
+  color: var(--text-1);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+}
+.race-card-choices {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  margin-top: 8px;
+  padding: 6px 9px;
+  color: var(--accent-soft);
+  background: color-mix(in srgb, var(--accent) 11%, transparent);
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 600;
+}
+.race-card-choices svg { width: 13px; height: 13px; flex-shrink: 0; }
 .race-card-status {
   display: inline-flex;
   align-items: center;
@@ -126,10 +200,8 @@ defineEmits(['select'])
 .race-card-note { margin-top: 7px; font-size: 12px; line-height: 1.4; color: var(--text-2); }
 
 .race-card--selected {
-  display: grid;
-  grid-template-columns: minmax(0, 1.55fr) minmax(230px, .75fr);
-  width: 100%;
-  min-height: 260px;
+  grid-template-columns: minmax(300px, .95fr) minmax(0, 1.25fr);
+  min-height: 300px;
   border-color: color-mix(in srgb, var(--accent) 52%, var(--border));
   background: color-mix(in srgb, var(--accent) 5%, var(--surface));
   box-shadow: var(--shadow-lg);
@@ -137,16 +209,13 @@ defineEmits(['select'])
 .race-card--selected:hover { transform: none; }
 .race-card--selected .race-card-visual { height: 100%; aspect-ratio: auto; }
 .race-card--selected .race-card-visual img { object-position: center 24%; }
-.race-card--selected .race-card-body {
-  justify-content: center;
-  padding: 24px;
-}
+.race-card--selected .race-card-body { padding: 24px; }
 .race-card--selected .race-card-title { font-size: 30px; }
 
 @media (max-width: 700px) {
-  .race-card--selected { display: flex; min-height: 0; }
-  .race-card--selected .race-card-visual { height: auto; aspect-ratio: 1.85 / 1; }
-  .race-card--selected .race-card-body { padding: 16px; }
+  .race-card, .race-card--selected { display: flex; flex-direction: column; min-height: 0; }
+  .race-card .race-card-visual, .race-card--selected .race-card-visual { height: auto; aspect-ratio: 1.85 / 1; }
+  .race-card .race-card-body, .race-card--selected .race-card-body { padding: 16px; }
   .race-card--selected .race-card-title { font-size: 25px; }
 }
 </style>

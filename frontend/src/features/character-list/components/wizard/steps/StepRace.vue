@@ -3,9 +3,9 @@
     <div class="sheet-section-title">Раса</div>
     <p v-if="loading && !races.length" class="hint">Загрузка справочника…</p>
     <p v-else-if="!races.length" class="hint">В справочнике пока нет рас.</p>
-    <Transition v-else name="race-stage" mode="out-in" @after-enter="afterRaceStageEnter">
-      <div v-if="state.race" :key="`selected-${state.race.id}`" ref="raceStage" class="race-selected">
-        <button type="button" class="race-back" @click="clearRace">
+    <template v-else>
+      <Transition name="race-back">
+        <button v-if="state.race" type="button" class="race-back" @click="clearRace">
           <span class="race-back-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6" /></svg>
           </span>
@@ -14,20 +14,30 @@
             <span class="race-back-note">К выбору расы</span>
           </span>
         </button>
+      </Transition>
 
-        <div class="race-hero">
-          <RaceSelectCard
-            :title="state.race.name"
-            :subtitle="asiSummary(state.race)"
-            :monogram="monogramOf(state.race.name)"
-            :image-url="raceImageFor(state.race)"
-            selected
-            @select="selectRace(state.race)"
-          />
-        </div>
+      <TransitionGroup ref="raceStage" name="race-list" tag="div" class="race-grid">
+        <RaceSelectCard
+          v-for="r in visibleRaces"
+          :key="r.id"
+          :title="r.name"
+          :subtitle="asiSummary(r)"
+          :monogram="monogramOf(r.name)"
+          :image-url="raceImageFor(r)"
+          :description="summaryFor(r).description"
+          :facts="summaryFor(r).facts"
+          :choices="summaryFor(r).choices"
+          :selected="state.race?.id === r.id"
+          @select="selectRace(r)"
+        />
+      </TransitionGroup>
 
-        <div class="selection-details">
-        <RichContent v-if="raceDesc" class="step-desc" :html="raceDesc" />
+      <Transition name="choice-panel">
+        <div v-if="state.race" :key="state.race.id" class="selection-details">
+        <section v-if="raceDesc" class="race-lore">
+          <div class="sheet-section-title">О расе</div>
+          <RichContent class="step-desc" :html="raceDesc" />
+        </section>
 
         <template v-if="subraces.length">
           <div class="sheet-section-title step-gap">Происхождение</div>
@@ -124,22 +134,10 @@
           <StepChoices v-if="raceFeatureChoices.length" scope="race" />
         </template>
 
-        <ChoiceResult source="race" />
+          <ChoiceResult source="race" />
         </div>
-      </div>
-
-      <div v-else key="picker" ref="raceStage" class="race-grid">
-        <RaceSelectCard
-          v-for="r in races"
-          :key="r.id"
-          :title="r.name"
-          :subtitle="asiSummary(r)"
-          :monogram="monogramOf(r.name)"
-          :image-url="raceImageFor(r)"
-          @select="selectRace(r)"
-        />
-      </div>
-    </Transition>
+      </Transition>
+    </template>
 
     <ItemPickerModal
       v-if="pickerOpen"
@@ -169,6 +167,7 @@ import { featChoices } from '@/features/items/lib/featRules'
 import MultiSearchSelect from '@/features/character-list/components/wizard/MultiSearchSelect.vue'
 import ChoiceResult from '@/features/character-list/components/wizard/ChoiceResult.vue'
 import RaceSelectCard from '@/features/character-list/components/wizard/RaceSelectCard.vue'
+import { raceCardSummary } from '@/features/character-list/components/wizard/raceCardSummary'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 import SelectTile from '@/features/character-list/components/wizard/SelectTile.vue'
 import { raceImageFor } from '@/features/character-list/components/wizard/raceVisuals'
@@ -178,11 +177,13 @@ import { STAT_SHORT, asiSummary, monogramOf } from '@/features/character-list/co
 
 const {
   races, subraces, state, loading, grants, STATS, toggleAsiChoice,
+  raceAbilities, raceHasSubraces, suggestValue,
   raceLangOptions, raceLangLimit, toggleRaceLang, raceLangsComplete,
   featPool, featLimit, toggleFeat, setFeatSelection, featEligibility, featComplete, raceFeatureChoices,
 } = inject('createWizard')
 const raceDesc = computed(() => state.race?.data?.description || '')
 const subraceDesc = computed(() => state.subrace?.data?.description || '')
+const visibleRaces = computed(() => state.race ? [state.race] : races.value)
 const atAsiLimit = computed(() => grants.value.asiChoice && state.asiChoice.length >= grants.value.asiChoice.count)
 const hasRaceChoices = computed(() => {
   const g = grants.value
@@ -192,25 +193,36 @@ const hasRaceChoices = computed(() => {
 const pickerOpen = ref(false)
 const featConfigItem = ref(null)
 const raceStage = ref(null)
-let scrollPending = false
+let raceScrollTimer = null
 
+function summaryFor(race) {
+  return raceCardSummary({
+    race,
+    raceAbilities: raceAbilities.value,
+    suggestValue,
+    hasSubraces: raceHasSubraces(race.id),
+  })
+}
+function scrollToRaceStage() {
+  const stage = raceStage.value?.$el || raceStage.value
+  requestAnimationFrame(() => stage?.closest('.cc-main')?.scrollTo({
+    top: 0,
+    behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+  }))
+}
+function scheduleRaceScroll() {
+  clearTimeout(raceScrollTimer)
+  raceScrollTimer = setTimeout(scrollToRaceStage, window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 560)
+}
 function selectRace(race) {
   if (state.race?.id === race.id) return
-  scrollPending = true
   state.race = race
+  scheduleRaceScroll()
 }
 function clearRace() {
   if (!state.race) return
-  scrollPending = true
   state.race = null
-}
-function afterRaceStageEnter() {
-  if (!scrollPending) return
-  scrollPending = false
-  requestAnimationFrame(() => raceStage.value?.scrollIntoView({
-    behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
-    block: 'start',
-  }))
+  scheduleRaceScroll()
 }
 function featName(id) { return featPool.value.find((f) => f.id === id)?.name || `#${id}` }
 function onFeatPick(item) {
@@ -228,6 +240,7 @@ function onFeatChoicesConfirm(choices) {
 <style scoped>
 .step { display: flex; flex-direction: column; gap: 12px; }
 .selection-details { display: flex; flex-direction: column; gap: 12px; scroll-margin-top: 12px; }
+.race-lore { display: flex; flex-direction: column; gap: 7px; }
 .step-gap { margin-top: 8px; }
 .step-desc {
   font-size: 13px; color: var(--text-2); line-height: 1.5;
@@ -239,9 +252,7 @@ function onFeatChoicesConfirm(choices) {
 .count { font-size: 12px; font-weight: 600; color: var(--text-muted); }
 .count.done { color: var(--success); }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
-.race-selected { display: flex; flex-direction: column; gap: 12px; scroll-margin-top: 4px; }
-.race-hero { width: 100%; }
-.race-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.race-grid { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
 .race-back {
   align-self: flex-start;
   display: inline-flex;
@@ -332,33 +343,33 @@ function onFeatChoicesConfirm(choices) {
 .feat-add:hover { background: color-mix(in srgb, var(--accent) 14%, var(--surface)); }
 .feat-add svg { width: 16px; height: 16px; }
 
-.race-stage-enter-active {
-  transition: opacity .28s ease, transform .42s cubic-bezier(.22, 1, .36, 1), filter .32s ease;
+.race-list-move { transition: transform .52s cubic-bezier(.22, 1, .36, 1); }
+.race-list-enter-active {
+  transition: opacity .34s .12s ease, transform .48s .08s cubic-bezier(.22, 1, .36, 1), filter .34s .12s ease;
 }
-.race-stage-leave-active {
-  transition: opacity .16s ease, transform .22s cubic-bezier(.4, 0, 1, 1), filter .18s ease;
+.race-list-leave-active {
+  position: absolute;
+  z-index: 0;
+  left: 0;
+  right: 0;
+  transition: opacity .2s ease, transform .32s cubic-bezier(.4, 0, 1, 1), filter .24s ease;
 }
-.race-stage-enter-from { opacity: 0; transform: translateY(18px) scale(.965); filter: blur(5px); }
-.race-stage-leave-to { opacity: 0; transform: translateY(-8px) scale(.985); filter: blur(3px); }
-.race-selected.race-stage-enter-active .race-hero { animation: race-card-settle .52s cubic-bezier(.22, 1, .36, 1) both; }
-.race-selected.race-stage-enter-active .selection-details { animation: race-details-rise .42s .09s cubic-bezier(.22, 1, .36, 1) both; }
+.race-list-enter-from { opacity: 0; transform: translateY(18px) scale(.965); filter: blur(4px); }
+.race-list-leave-to { opacity: 0; transform: translateY(8px) scale(.97); filter: blur(4px); }
 
-@keyframes race-card-settle {
-  from { opacity: .5; transform: scale(.94); clip-path: inset(8% 3% round 22px); }
-  to { opacity: 1; transform: scale(1); clip-path: inset(0 round 0); }
-}
-@keyframes race-details-rise {
-  from { opacity: 0; transform: translateY(14px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+.choice-panel-enter-active { transition: opacity .34s .24s ease, transform .46s .2s cubic-bezier(.22, 1, .36, 1); }
+.choice-panel-leave-active { transition: opacity .16s ease, transform .22s cubic-bezier(.4, 0, 1, 1); }
+.choice-panel-enter-from { opacity: 0; transform: translateY(18px); }
+.choice-panel-leave-to { opacity: 0; transform: translateY(8px); }
+
+.race-back-enter-active { transition: opacity .28s .18s ease, transform .38s .14s cubic-bezier(.22, 1, .36, 1); }
+.race-back-leave-active { transition: opacity .14s ease, transform .2s cubic-bezier(.4, 0, 1, 1); }
+.race-back-enter-from, .race-back-leave-to { opacity: 0; transform: translateX(-10px); }
 
 @media (prefers-reduced-motion: reduce) {
-  .race-stage-enter-active, .race-stage-leave-active { transition: none; }
-  .race-selected.race-stage-enter-active .race-hero,
-  .race-selected.race-stage-enter-active .selection-details { animation: none; }
+  .race-list-move, .race-list-enter-active, .race-list-leave-active,
+  .choice-panel-enter-active, .choice-panel-leave-active,
+  .race-back-enter-active, .race-back-leave-active { transition: none; }
 }
 
-@media (max-width: 640px) {
-  .race-grid { grid-template-columns: 1fr; }
-}
 </style>

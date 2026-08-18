@@ -81,14 +81,17 @@ work area and footer, with continuous side borders framing it on desktop. The
 floating step rail and the space outside that column remain on the global dotted
 application canvas.
 
-The race step uses large illustrated cards in a two-column desktop grid. Each
-built-in race has a consistent landscape portrait of a male and female character.
-After selection, that card becomes a full-width hero above the race description,
-subrace choices and the result block, while the remaining cards disappear. A
-dedicated “Назад / К выбору расы” action returns to the full grid. The grid-to-hero
-transition uses a short scale, blur and content-rise sequence, with a reduced-motion
-fallback. On narrow screens both the hero and the race list stack into one column.
-Custom races fall back to their handbook image or a monogram.
+The race step uses full-width illustrated rows. Each built-in race has a consistent
+landscape portrait of a male and female character; beside it the row shows a short
+handbook description, every base-race grant and the choices that will follow (for
+example a required subrace) without applying any subrace grants. After selection,
+the chosen keyed row uses a FLIP layout transition to move from its list position
+into the full-width hero above the
+complete handbook description, subrace choices and the result block, while the
+remaining rows disappear. A dedicated “Назад / К выбору расы” action reverses the
+morph and returns to the full list. The other rows fade away while the detailed
+content rises in after the move; reduced-motion disables the sequence. Custom races
+fall back to their handbook image or a monogram.
 
 Key rules:
 

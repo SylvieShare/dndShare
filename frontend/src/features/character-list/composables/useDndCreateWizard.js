@@ -50,6 +50,7 @@ export function useDndCreateWizard() {
   ;[3, 4, 5, 6, 7, 15, 16].forEach((t) => suggestStore.ensure(t))
 
   const races = ref([])
+  const raceSubraceParentIds = ref(new Set())
   const classes = ref([])
   const subraces = ref([])
   const subclasses = ref([])
@@ -87,7 +88,11 @@ export function useDndCreateWizard() {
         fetchGet(`/items?typeId=${BG_TYPE}&limit=200${sourceSuffix()}`),
       ])
       // Base races/classes only — subraces/subclasses are children (parentId set).
-      races.value = (r?.items || []).filter((i) => !i.parentId)
+      const raceItems = r?.items || []
+      races.value = raceItems.filter((i) => !i.parentId)
+      raceSubraceParentIds.value = new Set(raceItems
+        .filter((item) => item.parentId && item.typeId === RACE_TYPE)
+        .map((item) => String(item.parentId)))
       classes.value = (c?.items || []).filter((i) => !i.parentId)
       raceAbilities.value = ra?.items || []
       classAbilities.value = ca?.items || []
@@ -143,6 +148,7 @@ export function useDndCreateWizard() {
     const it = suggestStore.items(typeId).find((s) => String(s.id) === String(id))
     return it?.value || ''
   }
+  function raceHasSubraces(raceId) { return raceSubraceParentIds.value.has(String(raceId)) }
 
   // Changing background clears its chosen languages.
   watch(() => state.background?.id, () => { if (!hydrating) state.bgLangIds = [] })
@@ -586,6 +592,7 @@ export function useDndCreateWizard() {
     STATS,
     state, sourceVersionId, setSourceVersionId,
     races, classes, subraces, subclasses, spellPool, featPool, bgPool, loading,
+    raceHasSubraces,
     raceAbilities, classAbilities,
     grants, isCaster, skillOptions, skillLimit, finalScores, racialBonus, featBonuses,
     pointsSpent, pointsLeft,
