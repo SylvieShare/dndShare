@@ -76,6 +76,9 @@ var schemaClassImagesSQL string
 //go:embed schema/21_class_lore.sql
 var schemaClassLoreSQL string
 
+//go:embed schema/22_system_item_media.sql
+var schemaSystemItemMediaSQL string
+
 var schemaParts = []struct {
 	name string
 	sql  string
@@ -101,6 +104,7 @@ var schemaParts = []struct {
 	{"subrace-images", schemaSubraceImagesSQL},
 	{"class-images", schemaClassImagesSQL},
 	{"class-lore", schemaClassLoreSQL},
+	{"system-item-media", schemaSystemItemMediaSQL},
 }
 
 func applySchema(ctx context.Context, pool *pgxpool.Pool) error {

@@ -28,12 +28,38 @@ Read:
 Write:
 
 - `handbook_item_create`, `handbook_item_update`, `handbook_item_delete`;
+- `handbook_item_set_system_image`;
 - `handbook_suggest_create`, `handbook_suggest_update`,
   `handbook_suggest_set_svg`, `handbook_suggest_delete`.
 
 Tool schemas должны совпадать с текущей item/suggest model. При обновлении item
 передаются все поля, которые нужно сохранить; source links задаются через
 актуальные `contentSourceIds`.
+
+### Установка системных изображений
+
+`handbook_item_set_system_image` — основной runtime-путь для установки и
+замены новых изображений базовых item. Tool принимает `itemId`, `slot`
+(`icon` или `cover`), `fileName`, точный `mimeType` и `dataBase64`. В
+`dataBase64` передаётся обычный standard base64 без `data:`-префикса.
+
+- tool требует `MCP_WRITE_ENABLED=true` и принимает только item с
+  `user_id IS NULL`; пользовательский контент через него изменить нельзя;
+- иконка может быть PNG/WebP размером до 5 МБ, обложка — JPEG/PNG/WebP до
+  10 МБ; MIME сверяется с сигнатурой фактических байтов;
+- объект загружается в S3 по content-addressed ключу
+  `system-item-media/v1/items/{itemId}/{slot}/{sha256}.{ext}`;
+- запись `storage_image` создаётся или активируется идемпотентно, после чего
+  выбранная ссылка item меняется в одной DB-транзакции. Для `icon` также
+  очищается прежний `icon_svg_id`, `cover` остаётся независимым;
+- прежняя непривязанная картинка помечается удалённой и её S3-объект удаляется.
+  Повторная установка тех же байтов использует тот же ключ и строку;
+- ответ содержит обновлённый item и метаданные установленного изображения.
+
+Общий JSON body `/mcp` ограничен 16 МБ: этого достаточно для 10 МБ бинарной
+обложки после base64-кодирования и JSON envelope. Встроенные каталоги, уже
+закреплённые manifest-driven deploy-sync, остаются воспроизводимым bootstrap;
+для новых сгенерированных изображений отдельный sync-бинарь не требуется.
 
 ## Error-report automation
 

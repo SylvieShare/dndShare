@@ -106,6 +106,10 @@ high-quality filter. Inspect every result at 128 and 64 px. The deploy-only
 `cmd/spell-rune-sync` uploads the files from `internal/spellimages` to stable
 `system-spell-runes/v1/` S3 keys and registers them in `storage_image`; neither
 the main binary nor frontend static assets contain the WebP files.
+This manifest remains the bootstrap for its existing set. New system icons are
+installed through MCP `handbook_item_set_system_image(slot="icon")`; they use
+content-addressed `system-item-media/v1/` keys and do not need to be committed
+to the repository.
 
 Use this base prompt for subsequent runes, replacing only the subject and
 palette sections:
@@ -189,3 +193,6 @@ The initial spell covers are **Fireball**, **Bless** and **Aura of Vitality**.
 `cmd/item-cover-sync` verifies the embedded manifest, uploads them to stable
 `system-item-covers/v1/spells/` keys and assigns the resulting
 `storage_image(type='item_cover')` rows through `item.cover_image_id`.
+This manifest remains their reproducible bootstrap. New covers are installed
+through MCP `handbook_item_set_system_image(slot="cover")`; the MCP path keeps
+the same independent `cover_image_id` model without adding assets to Git.

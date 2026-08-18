@@ -119,6 +119,14 @@ deploy загружает их под стабильными ключами `sys
 после чего их прежние S3-объекты удаляются. Основной бинарь и frontend эти WebP
 не содержат.
 
+Эти sync-команды сохраняются как воспроизводимый bootstrap уже встроенных
+наборов. Новые и замещающие изображения системных item можно устанавливать без
+нового deploy-манифеста через MCP `handbook_item_set_system_image`: tool
+проверяет системного владельца, MIME и размер, кладёт байты в S3 под
+content-addressed `system-item-media/v1/` ключом и обновляет `storage_image` и
+ссылку item. Для вызова production MCP должны быть заданы `MCP_AUTH_TOKEN` и
+`MCP_WRITE_ENABLED=true`.
+
 Deploy также запускает `cmd/bestiary-image-sync`. Команда выбирает только
 старые системные картинки бестиария без S3 object key, копирует их по стабильным
 ключам `bestiary/v1/` и заменяет внешний URL в `storage_image`; повторный запуск

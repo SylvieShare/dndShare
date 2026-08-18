@@ -141,6 +141,21 @@ func (s *Service) UploadItemCover(ctx context.Context, body io.Reader, size int6
 	return s.put(ctx, body, size, key, contentType)
 }
 
+// UploadSystemItemMedia stores an image installed through MCP under the
+// content-addressed system item namespace. The caller is responsible for
+// validating slot-specific dimensions and size limits.
+func (s *Service) UploadSystemItemMedia(ctx context.Context, body io.Reader, size int64, key, contentType string) (StoredObject, error) {
+	if !strings.HasPrefix(key, "system-item-media/") || strings.Contains(key, "..") {
+		return StoredObject{}, fmt.Errorf("invalid system item media object key %q", key)
+	}
+	switch contentType {
+	case "image/jpeg", "image/png", "image/webp":
+	default:
+		return StoredObject{}, fmt.Errorf("invalid system item media content type %q", contentType)
+	}
+	return s.put(ctx, body, size, key, contentType)
+}
+
 // UploadBestiaryImage stores imported creature artwork under a stable key so a
 // repeated catalogue import overwrites the object instead of leaking new ones.
 func (s *Service) UploadBestiaryImage(ctx context.Context, body io.Reader, size int64, key, contentType string) (StoredObject, error) {

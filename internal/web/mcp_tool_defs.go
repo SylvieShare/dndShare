@@ -138,6 +138,15 @@ func mcpToolDefs() []map[string]any {
 		tool("handbook_item_delete",
 			"Delete an item by id (admin: works for any owner including base items).",
 			schema(map[string]any{"id": intP("Item id")}, "id")),
+		tool("handbook_item_set_system_image",
+			"Upload and assign an icon or cover to a base system handbook item. Accepts plain standard base64, stores the image in S3 under a content-addressed key, replaces the selected slot, and removes an unreferenced previous asset. Icons allow PNG/WebP up to 5 MB; covers allow JPEG/PNG/WebP up to 10 MB. Requires MCP write operations to be enabled and never changes user-owned items.",
+			schema(map[string]any{
+				"itemId":     intP("Positive id of a base system item (user_id must be null)"),
+				"slot":       map[string]any{"type": "string", "enum": []string{"icon", "cover"}, "description": "Image slot"},
+				"fileName":   strP("Original file name stored as metadata"),
+				"mimeType":   strP("Exact image MIME type matching the bytes"),
+				"dataBase64": strP("Plain standard base64 without a data URL prefix"),
+			}, "itemId", "slot", "fileName", "mimeType", "dataBase64")),
 		tool("handbook_suggest_create",
 			"Create a base (shared, user_id=null) suggest in the given type.",
 			schema(map[string]any{
