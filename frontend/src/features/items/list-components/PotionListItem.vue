@@ -1,8 +1,7 @@
 <template>
-  <ObjectListItem :item="item" :gap="12" :custom="item.userId != null">
-    <template #leading>
-      <ItemIcon v-if="item.iconImageUrl || item.svg" :item="item" :fallback-to-type="false" />
-      <PotionVial v-else class="pli-vial" :color="data.color" :rarity="rarity" size="sm" />
+  <ObjectListItem :item="item" :type="type" :icon-fallback-to-type="false" :custom="item.userId != null">
+    <template #icon-fallback>
+      <PotionVial class="pli-vial" :color="data.color" :rarity="rarity" size="sm" />
     </template>
     <template #subtitle>
       <span class="pli-rarity" :style="{ color: preset.color }">{{ preset.label }}</span>
@@ -15,7 +14,6 @@
 <script setup>
 import { computed } from 'vue'
 
-import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import ObjectListItem from '@/features/items/list-components/ObjectListItem'
 import PotionVial from '@/features/items/components/PotionVial'
 import { rarityOf } from '@/features/items/lib/potionRarity'

@@ -1,6 +1,21 @@
 <template>
-  <div class="oli" :style="{ gap: gap + 'px' }">
-    <slot name="leading" />
+  <div class="oli">
+    <div class="oli-icon">
+      <slot name="icon">
+        <ItemIcon
+          v-if="hasResolvedIcon"
+          :item="item"
+          :type="type"
+          :fallback-to-type="iconFallbackToType"
+          :size="resolvedIconSize"
+        />
+        <slot v-else name="icon-fallback" />
+      </slot>
+    </div>
+
+    <div v-if="$slots.metric" class="oli-metric">
+      <slot name="metric" />
+    </div>
 
     <div class="oli-main">
       <div class="oli-name-row" :class="{ 'oli-name-row--center': nameCenter }">
@@ -25,18 +40,26 @@
 
 <script setup>
 import { computed } from 'vue'
+import ItemIcon from '@/features/items/components/ItemIcon.vue'
 
-// Shared row shell for handbook object lists (items/weapons/spells/potions/enemies).
-// Each object type wraps this and fills the #leading / #trailing / #name-extras
-// slots with its own icon and badges; the name row, subtitle and chevron are common.
+// Shared row shell for handbook object lists. The stable order is icon, optional
+// metric, two-line identity, then trailing metadata and the disclosure chevron.
 const props = defineProps({
   item: { type: Object, required: true },
-  gap: { type: Number, default: 8 },
+  type: { type: Object, default: null },
   nameEn: { type: String, default: '' },
   custom: { type: Boolean, default: false },
   subtitle: { type: String, default: '' },
   nameCenter: { type: Boolean, default: false },
+  iconFallbackToType: { type: Boolean, default: true },
 })
+
+const hasResolvedIcon = computed(() => !!(
+  props.item?.iconImageUrl
+  || props.item?.svg
+  || (props.iconFallbackToType && props.type?.svg)
+))
+const resolvedIconSize = computed(() => props.item?.iconImageUrl ? 64 : 22)
 
 const nameEnFormatted = computed(() =>
   (props.nameEn || '')
@@ -49,8 +72,31 @@ const nameEnFormatted = computed(() =>
 .oli {
   display: flex;
   align-items: center;
+  gap: 8px;
   width: 100%;
   min-width: 0;
+  min-height: 64px;
+}
+
+.oli-icon {
+  width: 64px;
+  height: 64px;
+  flex: 0 0 64px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.oli-metric {
+  width: 28px;
+  flex: 0 0 28px;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1;
+  text-align: center;
 }
 
 .oli-main {

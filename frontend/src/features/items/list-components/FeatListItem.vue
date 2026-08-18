@@ -1,9 +1,8 @@
 <template>
-  <ObjectListItem :item="item" :name-en="item.nameEn || ''" :custom="item.userId != null" :gap="11">
-    <template #leading>
+  <ObjectListItem :item="item" :type="type" :name-en="item.nameEn || ''" :custom="item.userId != null" :icon-fallback-to-type="false">
+    <template #icon-fallback>
       <span class="fli-sigil" aria-hidden="true">
-        <ItemIcon v-if="item.iconImageUrl || item.svg" :item="item" :fallback-to-type="false" :size="17" />
-        <template v-else>✦</template>
+        ✦
       </span>
     </template>
     <template #subtitle>
@@ -20,12 +19,14 @@
 <script setup>
 import { computed } from 'vue'
 
-import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import ObjectListItem from '@/features/items/list-components/ObjectListItem'
 import { featChoices, featPrereq } from '@/features/items/lib/featRules'
 import { STAT_FULL, SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
 
-const props = defineProps({ item: { type: Object, required: true } })
+const props = defineProps({
+  item: { type: Object, required: true },
+  type: { type: Object, default: null },
+})
 const data = computed(() => props.item.data || {})
 const prereq = computed(() => featPrereq(props.item))
 const choiceCount = computed(() => featChoices(props.item).reduce((sum, choice) => sum + choice.count, 0))

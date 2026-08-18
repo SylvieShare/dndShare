@@ -1,8 +1,7 @@
 <template>
-  <ObjectListItem :item="item" name-center>
-    <template v-if="item.iconImageUrl || item.svg || cr != null" #leading>
-      <ItemIcon v-if="item.iconImageUrl || item.svg" :item="item" :fallback-to-type="false" />
-      <span v-if="cr != null" class="enemy-item-cr-num" :title="`Уровень опасности: ${cr}`">{{ cr }}</span>
+  <ObjectListItem :item="item" :type="type" name-center>
+    <template v-if="cr != null" #metric>
+      <span class="enemy-item-cr-num" :title="`Уровень опасности: ${cr}`">{{ cr }}</span>
     </template>
     <template v-if="item.data?.identity?.named_npc" #name-extras>
       <span class="enemy-item-named">Именной</span>
@@ -28,7 +27,6 @@
 
 <script setup>
 import { computed, watch } from 'vue'
-import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import ObjectListItem from '@/features/items/list-components/ObjectListItem'
 import { findField, getSuggestId } from '@/features/handbook/objects/lib/schemaFields'
 import { useSuggestStore } from '@/stores/suggest'
@@ -108,14 +106,7 @@ const subtitle = computed(() => {
 
 <style scoped>
 .enemy-item-cr-num {
-  flex-shrink: 0;
-  font-family: var(--font-display);
-  font-size: 20px;
-  font-weight: 600;
   color: var(--danger);
-  line-height: 1;
-  min-width: 24px;
-  text-align: center;
 }
 
 .enemy-item-named {

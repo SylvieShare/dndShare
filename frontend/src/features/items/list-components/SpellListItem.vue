@@ -1,14 +1,6 @@
 <template>
-  <ObjectListItem :item="item" :name-en="item.nameEn || ''" :custom="item.userId != null" :subtitle="subtitle">
-    <template #leading>
-      <ItemIcon
-        v-if="item.iconImageUrl"
-        class="sli-rune"
-        :item="item"
-        :fallback-to-type="false"
-        :size="64"
-      />
-      <ItemIcon v-else class="sli-type-icon" :item="item" :type="type" />
+  <ObjectListItem :item="item" :type="type" :name-en="item.nameEn || ''" :custom="item.userId != null" :subtitle="subtitle">
+    <template #metric>
       <span
         class="sli-lvl"
         :class="{ 'sli-lvl-zero': data.lvl === 0 }"
@@ -26,7 +18,6 @@
 
 <script setup>
 import { computed } from 'vue'
-import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import ObjectListItem from '@/features/items/list-components/ObjectListItem'
 import { useSchemaSuggests } from '@/features/handbook/objects/lib/useSchemaSuggests'
 
@@ -51,14 +42,7 @@ const subtitle = computed(() => {
 
 <style scoped>
 .sli-lvl {
-  flex-shrink: 0;
-  font-family: var(--font-display);
-  font-size: 20px;
-  font-weight: 600;
   color: var(--accent-soft);
-  line-height: 1;
-  min-width: 20px;
-  text-align: center;
 }
 .sli-lvl-zero { color: var(--accent); }
 
@@ -79,7 +63,4 @@ const subtitle = computed(() => {
   color: var(--success);
 }
 
-@media (max-width: 520px) {
-  .sli-type-icon { display: none; }
-}
 </style>

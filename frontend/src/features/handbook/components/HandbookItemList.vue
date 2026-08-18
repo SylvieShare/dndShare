@@ -42,10 +42,7 @@
                   v-for="item in group.items"
                   :key="item.id"
                   class="list-row list-row-rich"
-                  :class="{
-                    selected: selectedItem && selectedItem.id === item.id,
-                    'list-row-spell': type.id === 5,
-                  }"
+                  :class="{ selected: selectedItem && selectedItem.id === item.id }"
                   @click="$emit('select', item)"
                 >
                   <EnemyListItem v-if="type.id === 6" :item="item" :type="type" />
@@ -54,11 +51,13 @@
                   <ItemListItem v-else-if="type.id === 2" :item="item" :type="type" />
                   <PotionListItem v-else-if="type.id === 10" :item="item" :type="type" />
                   <FeatListItem v-else-if="type.id === 7" :item="item" :type="type" />
-                  <template v-else>
-                    <ItemIcon v-if="item.iconImageUrl || item.svg" :item="item" :fallback-to-type="false" :size="22" />
-                    <span class="item-name">{{ item.name }}</span>
-                    <span v-if="item.userId != null" class="item-custom-mark" title="Ваш объект">✦</span>
-                  </template>
+                  <ObjectListItem
+                    v-else
+                    :item="item"
+                    :type="type"
+                    :name-en="item.nameEn || ''"
+                    :custom="item.userId != null"
+                  />
                 </div>
               </template>
             </template>
@@ -69,12 +68,8 @@
             <div
               v-for="item in items"
               :key="item.id"
-              class="list-row"
-              :class="{
-                selected: selectedItem && selectedItem.id === item.id,
-                'list-row-rich': hasRichRenderer,
-                'list-row-spell': type.id === 5,
-              }"
+              class="list-row list-row-rich"
+              :class="{ selected: selectedItem && selectedItem.id === item.id }"
               @click="$emit('select', item)"
             >
               <EnemyListItem v-if="type.id === 6" :item="item" :type="type" />
@@ -83,11 +78,13 @@
               <ItemListItem v-else-if="type.id === 2" :item="item" :type="type" />
               <PotionListItem v-else-if="type.id === 10" :item="item" :type="type" />
               <FeatListItem v-else-if="type.id === 7" :item="item" :type="type" />
-              <template v-else>
-                <ItemIcon v-if="item.iconImageUrl || item.svg" :item="item" :fallback-to-type="false" :size="22" />
-                <span class="item-name">{{ item.name }}</span>
-                <span v-if="item.userId != null" class="item-custom-mark" title="Ваш объект">✦</span>
-              </template>
+              <ObjectListItem
+                v-else
+                :item="item"
+                :type="type"
+                :name-en="item.nameEn || ''"
+                :custom="item.userId != null"
+              />
             </div>
           </template>
 
@@ -108,10 +105,10 @@
 import { computed, ref, watch } from 'vue'
 import { findFieldByPath, getByPath, getSuggestId, walkFieldsWithPath } from '@/features/handbook/objects/lib/schemaFields'
 import { useSuggestStore } from '@/stores/suggest'
-import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import EnemyListItem from '@/features/items/list-components/EnemyListItem'
 import FeatListItem from '@/features/items/list-components/FeatListItem'
 import ItemListItem from '@/features/items/list-components/ItemListItem'
+import ObjectListItem from '@/features/items/list-components/ObjectListItem'
 import PotionListItem from '@/features/items/list-components/PotionListItem'
 import SpellListItem from '@/features/items/list-components/SpellListItem'
 import WeaponListItem from '@/features/items/list-components/WeaponListItem'
@@ -138,7 +135,6 @@ function toggleGroup(label) {
   collapsedGroups.value = s
 }
 
-const hasRichRenderer = computed(() => [1, 2, 5, 6, 7, 10].includes(props.type?.id))
 const groupFields = computed(() => walkFieldsWithPath(props.type?.fields || [])
   .filter(({ field }) => field.group)
   .map(({ field, path }) => ({ ...field, path })))
@@ -308,29 +304,15 @@ function onScroll(e) {
 
 .list-row-rich {
   margin: 2px 8px;
-  padding: 10px 12px;
+  min-height: 66px;
+  padding: 0 12px 0 0;
   border: 1px solid var(--border);
   border-radius: 10px;
   background: var(--surface);
+  overflow: hidden;
 }
 .list-row-rich:hover { background: var(--surface-active); border-color: var(--border-strong); }
 .list-row-rich.selected { background: color-mix(in srgb, var(--accent) 20%, var(--surface-active)); border-color: var(--accent); }
-
-.list-row-rich.list-row-spell {
-  min-height: 66px;
-  padding-top: 0;
-  padding-bottom: 0;
-}
-
-.item-name {
-  font-size: 13px;
-  color: var(--text-1);
-  flex: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.item-custom-mark { font-size: 8px; color: var(--accent); flex-shrink: 0; }
 
 /* ── Load more ── */
 .list-tail {
