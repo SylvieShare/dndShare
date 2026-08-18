@@ -17,7 +17,7 @@
           :title="r.name"
           :subtitle="asiSummary(r)"
           :monogram="monogramOf(r.name)"
-          :image-url="raceImageFor(r)"
+          :image-url="raceCoverFor(r)"
           :description="summaryFor(r).description"
           :facts="summaryFor(r).facts"
           :choices="summaryFor(r).choices"
@@ -44,7 +44,7 @@
               :subtitle="asiSummary(s)"
               :description="s.data?.description || ''"
               :monogram="monogramOf(s.name)"
-              :image-url="s.iconImageUrl || ''"
+              :image-url="s.coverImageUrl || ''"
               :selected="state.subrace?.id === s.id"
               @select="state.subrace = s"
             />
@@ -171,7 +171,7 @@ import RaceSelectCard from '@/features/character-list/components/wizard/RaceSele
 import { raceCardSummary } from '@/features/character-list/components/wizard/raceCardSummary'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 import SubraceSelectCard from '@/features/character-list/components/wizard/SubraceSelectCard.vue'
-import { raceImageFor } from '@/features/character-list/components/wizard/raceVisuals'
+import { raceCoverFor } from '@/features/character-list/components/wizard/raceVisuals'
 import StepChoices from '@/features/character-list/components/wizard/steps/StepChoices.vue'
 import StepSkills from '@/features/character-list/components/wizard/steps/StepSkills.vue'
 import { STAT_SHORT, asiSummary, monogramOf } from '@/features/character-list/components/wizard/labels'

@@ -10,6 +10,12 @@ describe('class step hierarchy', () => {
     expect(source).toContain('back-text="К выбору класса"')
   })
 
+  it('uses covers rather than icons for classes and subclasses', () => {
+    expect(source).toContain(':image-url="c.coverImageUrl || \'\'"')
+    expect(source).toContain(':image-url="s.coverImageUrl || \'\'"')
+    expect(source).not.toContain('iconImageUrl')
+  })
+
   it('separates every dependent class choice and omits the duplicate result', () => {
     expect(source).toContain('class="choice-stack"')
     expect(source).toContain('<StepClassEquipment v-if="classEquipmentProfile" class="choice-block"')

@@ -1,3 +1,3 @@
-export function raceImageFor(race) {
-  return race?.iconImageUrl || ''
+export function raceCoverFor(race) {
+  return race?.coverImageUrl || ''
 }

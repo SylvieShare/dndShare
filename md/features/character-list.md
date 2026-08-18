@@ -105,12 +105,12 @@ so its disappearance cannot displace the returning card even when the scroll is 
 the top. The reverse render also restores the captured `.cc-main` scroll position
 on Vue's next layout frame, preventing a transient content-height change from
 resetting a partially scrolled step. The other rows fade away while the detailed
-content rises in after the move; reduced-motion disables the sequence. Custom races
-fall back to their handbook image or a monogram. Built-in illustrations are not
-frontend static assets: deploy uploads them to stable S3 keys, registers system
-`storage_image` rows and assigns those rows to base race and subrace
-`item.icon_image_id`; the
-wizard reads the resulting `iconImageUrl` from the ordinary handbook item response.
+content rises in after the move; reduced-motion disables the sequence. Race and
+subrace cards read only the handbook `coverImageUrl`; the compact icon is never
+stretched into their illustration slot, and an item without a cover falls back
+to a monogram. Built-in illustrations are not frontend static assets: they live
+in system `storage_image` rows assigned through `item.cover_image_id` and arrive
+with the ordinary handbook item response.
 The nine built-in subraces have matching original paired portraits. Their choice
 cards use a 3:2 media treatment in an exact two-column desktop grid, collapsing to
 one column on narrow phones. Each card contains its own description below the name
@@ -128,17 +128,17 @@ locked states.
 On phones, choosing a race scrolls the newly revealed lore and dependent choices
 into view with a smooth transition instead of leaving them below the viewport.
 
-The class step follows the same selection flow. All fifteen built-in base classes,
-including Artificer, Magus and Shaman, are full-width illustrated rows with an
-original male/female class portrait. A row presents its short handbook description,
+The class step follows the same selection flow. Base classes are full-width rows
+whose illustration reads `coverImageUrl` and falls back to a monogram when no
+cover is assigned. A row presents its short handbook description,
 hit die, primary abilities, saving throws, proficiencies, level-one features and
 available archetype names; feature descriptions use the shared hover tooltip.
 Dependent equipment, skill, feature, archetype and spell choices are announced in
 the row but each type is rendered as its own accent-edged section only after selection. The selected
 row moves to the top, the other classes leave the list, and the same stable back and
-scroll-restoration behaviour as the race step returns to the catalogue. Built-in
-class JPEGs are uploaded by deploy to `system-class-images/v1/*`, registered as
-system `storage_image` rows and consumed through each class item's `iconImageUrl`.
+scroll-restoration behaviour as the race step returns to the catalogue. Subclass
+tiles follow the same cover-only rule; `iconImageUrl` remains reserved for compact
+handbook identity surfaces and never substitutes for a wizard cover.
 The selected class is followed by a separate three-paragraph lore article; the
 compact card uses `item.data.short_description` and does not repeat mechanics in
 that prose. Race and class screens share `IllustratedChoiceStage`, which owns the
