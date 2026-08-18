@@ -50,7 +50,7 @@ export function useDndCreateWizard() {
   ;[3, 4, 5, 6, 7, 15, 16].forEach((t) => suggestStore.ensure(t))
 
   const races = ref([])
-  const raceSubraceParentIds = ref(new Set())
+  const raceSubracesByParent = ref(new Map())
   const classes = ref([])
   const subraces = ref([])
   const subclasses = ref([])
@@ -90,9 +90,12 @@ export function useDndCreateWizard() {
       // Base races/classes only — subraces/subclasses are children (parentId set).
       const raceItems = r?.items || []
       races.value = raceItems.filter((i) => !i.parentId)
-      raceSubraceParentIds.value = new Set(raceItems
-        .filter((item) => item.parentId && item.typeId === RACE_TYPE)
-        .map((item) => String(item.parentId)))
+      const subraceMap = new Map()
+      raceItems.filter((item) => item.parentId && item.typeId === RACE_TYPE).forEach((item) => {
+        const key = String(item.parentId)
+        subraceMap.set(key, [...(subraceMap.get(key) || []), item.name].filter(Boolean))
+      })
+      raceSubracesByParent.value = subraceMap
       classes.value = (c?.items || []).filter((i) => !i.parentId)
       raceAbilities.value = ra?.items || []
       classAbilities.value = ca?.items || []
@@ -148,7 +151,7 @@ export function useDndCreateWizard() {
     const it = suggestStore.items(typeId).find((s) => String(s.id) === String(id))
     return it?.value || ''
   }
-  function raceHasSubraces(raceId) { return raceSubraceParentIds.value.has(String(raceId)) }
+  function raceSubraceNames(raceId) { return raceSubracesByParent.value.get(String(raceId)) || [] }
 
   // Changing background clears its chosen languages.
   watch(() => state.background?.id, () => { if (!hydrating) state.bgLangIds = [] })
@@ -592,7 +595,7 @@ export function useDndCreateWizard() {
     STATS,
     state, sourceVersionId, setSourceVersionId,
     races, classes, subraces, subclasses, spellPool, featPool, bgPool, loading,
-    raceHasSubraces,
+    raceSubraceNames,
     raceAbilities, classAbilities,
     grants, isCaster, skillOptions, skillLimit, finalScores, racialBonus, featBonuses,
     pointsSpent, pointsLeft,

@@ -29,7 +29,24 @@
       <span v-if="facts.length" class="race-card-facts">
         <span v-for="fact in facts" :key="fact.label" class="race-card-fact" :class="{ 'race-card-fact--wide': fact.wide }">
           <span>{{ fact.label }}</span>
-          <b>{{ fact.value }}</b>
+          <b v-if="fact.entries?.length" class="race-card-ability-list">
+            <span
+              v-for="entry in fact.entries"
+              :key="entry.name"
+              class="race-card-ability"
+              :class="{ 'race-card-ability--described': entry.description }"
+              @mouseenter="showAbilityTooltip($event, entry)"
+              @mouseleave="hideAbilityTooltip"
+            >{{ entry.name }}</span>
+          </b>
+          <b v-else>{{ fact.value }}</b>
+        </span>
+      </span>
+
+      <span v-if="subraces.length" class="race-card-subraces">
+        <span class="race-card-subraces-label">Доступные подрасы</span>
+        <span class="race-card-subrace-list">
+          <span v-for="subrace in subraces" :key="subrace" class="race-card-subrace">{{ subrace }}</span>
         </span>
       </span>
 
@@ -40,9 +57,21 @@
       <span v-else-if="selected" class="race-card-note">Все базовые особенности будут добавлены автоматически</span>
     </span>
   </button>
+
+  <ItemTooltip
+    v-if="tooltip.visible"
+    :title="tooltip.title"
+    :desc="tooltip.desc"
+    :x="tooltip.x"
+    :top="tooltip.top"
+    :bottom="tooltip.bottom"
+  />
 </template>
 
 <script setup>
+import { reactive } from 'vue'
+import ItemTooltip from '@/features/character-editor/components/ItemTooltip.vue'
+
 defineProps({
   title: { type: String, default: '' },
   subtitle: { type: String, default: '' },
@@ -52,8 +81,25 @@ defineProps({
   description: { type: String, default: '' },
   facts: { type: Array, default: () => [] },
   choices: { type: Array, default: () => [] },
+  subraces: { type: Array, default: () => [] },
 })
 defineEmits(['select'])
+
+const tooltip = reactive({ visible: false, title: '', desc: '', x: 0, top: null, bottom: null })
+function showAbilityTooltip(event, ability) {
+  if (!ability.description) return
+  const rect = event.currentTarget.getBoundingClientRect()
+  const above = window.innerHeight - rect.bottom < 220 && rect.top > 220
+  Object.assign(tooltip, {
+    visible: true,
+    title: ability.name,
+    desc: ability.description,
+    x: Math.min(rect.left, window.innerWidth - 360),
+    top: above ? null : rect.bottom + 7,
+    bottom: above ? window.innerHeight - rect.top + 7 : null,
+  })
+}
+function hideAbilityTooltip() { tooltip.visible = false }
 </script>
 
 <style scoped>
@@ -170,6 +216,22 @@ defineEmits(['select'])
   line-height: 1.35;
   text-overflow: ellipsis;
 }
+.race-card-ability-list { display: flex !important; flex-wrap: wrap; gap: 3px 9px; white-space: normal; }
+.race-card-ability { position: relative; }
+.race-card-ability:not(:last-child)::after { content: '·'; position: absolute; left: calc(100% + 4px); color: var(--text-muted); }
+.race-card-ability--described { cursor: help; text-decoration: underline dotted color-mix(in srgb, var(--text-muted) 72%, transparent); text-underline-offset: 3px; }
+.race-card-subraces { display: flex; flex-direction: column; gap: 5px; margin-top: 8px; }
+.race-card-subraces-label { color: var(--text-muted); font-size: 8px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+.race-card-subrace-list { display: flex; flex-wrap: wrap; gap: 5px; }
+.race-card-subrace {
+  padding: 4px 8px;
+  color: var(--text-2);
+  background: color-mix(in srgb, var(--surface-raised) 82%, transparent);
+  border: 1px solid color-mix(in srgb, var(--border) 72%, transparent);
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 600;
+}
 .race-card-choices {
   display: inline-flex;
   align-items: center;
@@ -203,7 +265,6 @@ defineEmits(['select'])
   grid-template-columns: minmax(300px, .95fr) minmax(0, 1.25fr);
   min-height: 300px;
   border-color: color-mix(in srgb, var(--accent) 52%, var(--border));
-  background: color-mix(in srgb, var(--accent) 5%, var(--surface));
   box-shadow: var(--shadow-lg);
 }
 .race-card--selected:hover { transform: none; }

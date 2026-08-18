@@ -7,7 +7,7 @@ describe('race card summary', () => {
       .toBe('Древний народ гор.')
   })
 
-  it('collects base grants and flags future choices without applying a subrace', () => {
+  it('collects base grants and lists subraces without applying their grants', () => {
     const race = {
       id: 4,
       data: {
@@ -20,7 +20,7 @@ describe('race card summary', () => {
     }
     const summary = raceCardSummary({
       race,
-      hasSubraces: true,
+      subraces: ['Высший эльф', 'Лесной эльф'],
       suggestValue: (typeId, id) => typeId === 6 && id === 10 ? 'Общий' : '',
     })
 
@@ -28,6 +28,23 @@ describe('race card summary', () => {
       expect.objectContaining({ label: 'Характеристики', value: 'ЛОВ +2' }),
       expect.objectContaining({ label: 'Языки', value: 'Общий' }),
     ]))
-    expect(summary.choices).toEqual(['подраса', 'язык'])
+    expect(summary.subraces).toEqual(['Высший эльф', 'Лесной эльф'])
+    expect(summary.choices).toEqual(['язык'])
+  })
+
+  it('keeps race ability descriptions for card tooltips', () => {
+    const summary = raceCardSummary({
+      race: { id: 4, data: {} },
+      raceAbilities: [{
+        id: 10,
+        name: 'Тёмное зрение',
+        data: { level: 1, race_ids: [{ id: 4 }], description: '<p>Видит в темноте.</p>' },
+      }],
+    })
+
+    expect(summary.facts).toContainEqual(expect.objectContaining({
+      label: 'Способности',
+      entries: [{ name: 'Тёмное зрение', description: '<p>Видит в темноте.</p>' }],
+    }))
   })
 })

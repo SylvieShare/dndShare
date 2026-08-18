@@ -27,6 +27,7 @@
           :description="summaryFor(r).description"
           :facts="summaryFor(r).facts"
           :choices="summaryFor(r).choices"
+          :subraces="summaryFor(r).subraces"
           :selected="state.race?.id === r.id"
           @select="selectRace(r)"
         />
@@ -133,8 +134,6 @@
 
           <StepChoices v-if="raceFeatureChoices.length" scope="race" />
         </template>
-
-          <ChoiceResult source="race" />
         </div>
       </Transition>
     </template>
@@ -165,7 +164,6 @@ import FeatChoiceModal from '@/features/character-editor/components/FeatChoiceMo
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import { featChoices } from '@/features/items/lib/featRules'
 import MultiSearchSelect from '@/features/character-list/components/wizard/MultiSearchSelect.vue'
-import ChoiceResult from '@/features/character-list/components/wizard/ChoiceResult.vue'
 import RaceSelectCard from '@/features/character-list/components/wizard/RaceSelectCard.vue'
 import { raceCardSummary } from '@/features/character-list/components/wizard/raceCardSummary'
 import RichContent from '@/shared/ui/DndRichContent.vue'
@@ -177,7 +175,7 @@ import { STAT_SHORT, asiSummary, monogramOf } from '@/features/character-list/co
 
 const {
   races, subraces, state, loading, grants, STATS, toggleAsiChoice,
-  raceAbilities, raceHasSubraces, suggestValue,
+  raceAbilities, raceSubraceNames, suggestValue,
   raceLangOptions, raceLangLimit, toggleRaceLang, raceLangsComplete,
   featPool, featLimit, toggleFeat, setFeatSelection, featEligibility, featComplete, raceFeatureChoices,
 } = inject('createWizard')
@@ -200,7 +198,7 @@ function summaryFor(race) {
     race,
     raceAbilities: raceAbilities.value,
     suggestValue,
-    hasSubraces: raceHasSubraces(race.id),
+    subraces: raceSubraceNames(race.id),
   })
 }
 function scrollToRaceStage() {

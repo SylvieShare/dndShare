@@ -71,10 +71,12 @@ primary current value for each step (for example,
 the chosen race, class/subclass or background) without repeating its mechanical
 details. The header contains only the workspace title; reset lives in the
 central footer beside navigation, and there is no duplicate numeric step counter.
-Race and class steps instead end with a live «Результат выбора» block:
-it attributes grants, selected features, equipment and spells to that source and
-shows what will be written to the character sheet. Ability descriptions remain
-available there as inline disclosures. On narrow screens the workspace becomes
+The class step ends with a live «Результат выбора» block: it attributes grants,
+selected features, equipment and spells to that source and shows what will be
+written to the character sheet. The race step does not repeat that summary below
+its controls because the selected race card already contains the base result and
+the dependent choices remain visible in place. Ability descriptions remain
+available from the race card on hover and in class result disclosures. On narrow screens the workspace becomes
 one column, while the navigation footer stays pinned to the visible bottom edge.
 Only the capped central column owns an opaque `--bg` surface across its header,
 work area and footer, with continuous side borders framing it on desktop. The
@@ -84,10 +86,13 @@ application canvas.
 The race step uses full-width illustrated rows. Each built-in race has a consistent
 landscape portrait of a male and female character; beside it the row shows a short
 handbook description, every base-race grant and the choices that will follow (for
-example a required subrace) without applying any subrace grants. After selection,
+example a language or feat) without applying any subrace grants. Available subraces
+are shown by name in a separate compact chip row instead of the generic
+“После выбора: подраса” label. Race abilities are individually hoverable and use
+the shared item tooltip for their handbook descriptions. After selection,
 the chosen keyed row uses a FLIP layout transition to move from its list position
 into the full-width hero above the
-complete handbook description, subrace choices and the result block, while the
+complete handbook description and subrace choices, while the
 remaining rows disappear. A dedicated “Назад / К выбору расы” action reverses the
 morph and returns to the full list without changing the current content scroll.
 The action floats over the selected illustration and does not occupy a layout row,
@@ -100,6 +105,8 @@ fall back to their handbook image or a monogram. Built-in illustrations are not
 frontend static assets: deploy uploads them to stable S3 keys, registers system
 `storage_image` rows and assigns those rows to base race `item.icon_image_id`; the
 wizard reads the resulting `iconImageUrl` from the ordinary handbook item response.
+Selection retains the regular card surface; only its border, status and shadow
+signal selection, so nested fact and subrace chips keep sufficient contrast.
 
 Key rules:
 

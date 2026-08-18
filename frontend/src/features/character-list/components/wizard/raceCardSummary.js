@@ -18,8 +18,8 @@ function resolved(ids, typeId, suggestValue) {
   return [...new Set((ids || []).map((id) => suggestValue(typeId, id)).filter(Boolean))]
 }
 
-function pushFact(facts, label, value, wide = false) {
-  if (value) facts.push({ label, value, wide })
+function pushFact(facts, label, value, wide = false, entries = []) {
+  if (value) facts.push({ label, value, wide, entries })
 }
 
 export function shortRaceDescription(race, limit = 220) {
@@ -29,7 +29,7 @@ export function shortRaceDescription(race, limit = 220) {
   return `${text.slice(0, limit).replace(/\s+\S*$/, '')}…`
 }
 
-export function raceCardSummary({ race, raceAbilities = [], suggestValue = () => '', hasSubraces = false }) {
+export function raceCardSummary({ race, raceAbilities = [], suggestValue = () => '', subraces = [] }) {
   const grants = extractGrants({ race })
   const facts = []
   const asi = grants.asi.map((entry) => `${STAT_SHORT[entry.stat]} +${entry.bonus}`)
@@ -47,22 +47,26 @@ export function raceCardSummary({ race, raceAbilities = [], suggestValue = () =>
   ]
   pushFact(facts, 'Владения', proficiencies.join(', '), true)
 
-  const abilities = featuresForBinding(raceAbilities, { raceId: race?.id }, 1)
-    .map((ability) => ability.name)
-    .filter(Boolean)
-  pushFact(facts, 'Способности', abilities.join(', '), true)
+  const raceFeatures = featuresForBinding(raceAbilities, { raceId: race?.id }, 1)
+  const abilities = raceFeatures
+    .filter((ability) => ability.name)
+    .map((ability) => ({ name: ability.name, description: ability.data?.description || '' }))
+  pushFact(facts, 'Способности', abilities.map((ability) => ability.name).join(', '), true, abilities)
 
   const choices = []
-  if (hasSubraces) choices.push('подраса')
   if (grants.raceVariants?.length) choices.push('вариант расы')
   if (grants.asiChoice) choices.push('характеристики')
   if (grants.raceSkillChoice) choices.push('навыки')
   if (grants.langChoice) choices.push('язык')
   if (grants.featChoice) choices.push('черта')
 
-  const featureChoices = featuresForBinding(raceAbilities, { raceId: race?.id }, 1)
-    .some((ability) => ability?.data?.choice)
+  const featureChoices = raceFeatures.some((ability) => ability?.data?.choice)
   if (featureChoices && !choices.includes('особенности')) choices.push('особенности')
 
-  return { description: shortRaceDescription(race), facts, choices }
+  return {
+    description: shortRaceDescription(race),
+    facts,
+    choices,
+    subraces: [...new Set(subraces.filter(Boolean))],
+  }
 }
