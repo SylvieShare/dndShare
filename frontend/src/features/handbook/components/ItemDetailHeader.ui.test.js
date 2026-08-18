@@ -6,6 +6,7 @@ const read = name => readFileSync(fileURLToPath(new URL(`./${name}`, import.meta
 const headerSource = read('ItemDetailHeader.vue')
 const detailSource = read('HandbookItemDetail.vue')
 const enemySummarySource = read('../../items/detail-components/EnemyDetailSummary.vue')
+const enemySummaryStyles = read('../../items/detail-components/styles/EnemyDetailSummary.css')
 const enemyContentSource = read('../../items/detail-components/EnemyDetailContent.vue')
 
 describe('handbook item detail cover', () => {
@@ -41,6 +42,17 @@ describe('handbook item detail cover', () => {
     expect(enemySummarySource).toContain('class="enemy-abilities"')
     expect(enemyContentSource).not.toContain('class="enemy-abilities"')
     expect(enemyContentSource).not.toContain('class="enemy-top"')
+  })
+
+  it('frames a centered creature with side stats and bottom abilities', () => {
+    expect(enemySummarySource).toContain('class="enemy-stats-side enemy-stats-left"')
+    expect(enemySummarySource).toContain('class="enemy-cover-safe-zone"')
+    expect(enemySummarySource).toContain('class="enemy-stats-side enemy-stats-right"')
+    expect(enemySummaryStyles).toContain('"left center right"')
+    expect(enemySummaryStyles).toContain('"abilities abilities abilities"')
+    expect(enemySummaryStyles).toContain('min-height: 190px;')
+    expect(enemySummaryStyles).toContain('"left right"')
+    expect(enemySummaryStyles).toContain('"abilities abilities"')
   })
 
   it('uses the icon only as a missing-cover fallback and moves the id below the content', () => {

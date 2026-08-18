@@ -11,7 +11,7 @@
     </div>
 
     <div class="enemy-stats-block">
-      <div class="enemy-stats-row">
+      <div class="enemy-stats-side enemy-stats-left">
         <div class="enemy-stat-card enemy-stat-cr">
           <div class="stat-label" title="Уровень опасности помогает мастеру подобрать существо подходящей сложности для группы.">
             <Gauge class="stat-icon" aria-hidden="true" /> Уровень опасности
@@ -24,6 +24,11 @@
           <div class="stat-value">{{ combat.ac ?? '—' }}</div>
           <div v-if="combat.ac_note" class="stat-note">{{ combat.ac_note }}</div>
         </div>
+      </div>
+
+      <div class="enemy-cover-safe-zone" aria-hidden="true"></div>
+
+      <div class="enemy-stats-side enemy-stats-right">
         <div class="enemy-stat-card">
           <div class="stat-label" title="Хиты — запас здоровья существа"><Heart class="stat-icon" aria-hidden="true" /> Хиты</div>
           <div class="stat-value">{{ combat.hp ?? '—' }}</div>
@@ -33,9 +38,6 @@
           <div class="stat-label" title="Бонус мастерства"><Sparkles class="stat-icon" aria-hidden="true" /> Бонус мастерства</div>
           <div class="stat-value">{{ formatBonus(combat.proficiencyBonus) }}</div>
         </div>
-      </div>
-
-      <div class="enemy-speed-row">
         <template v-if="combat.speed_opt?.length">
           <div v-for="speed in combat.speed_opt" :key="speed.name || '__base'" class="enemy-stat-card enemy-stat-speed">
             <div class="stat-label"><component :is="speedIcon(speed.name)" class="stat-icon" aria-hidden="true" /> {{ speedLabel(speed.name) }}</div>

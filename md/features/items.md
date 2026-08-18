@@ -88,7 +88,11 @@ entries and selected choices.
   tags, CR/AC/HP/proficiency, speeds and all six ability modifiers are rendered
   in the header summary slot. The cover itself is not dimmed: the title uses a
   compact content-sized scrim and each metadata/stat group owns its translucent
-  block. Skills and all later sections remain below the artwork;
+  block. On desktop CR/AC anchor the left edge, HP/proficiency/speeds anchor the
+  right edge, a reserved center column exposes the creature, and abilities form
+  the bottom strip. At `520px` and below the side groups become two columns and
+  abilities use a `3×2` grid. Skills and all later sections remain below the
+  artwork;
 - field labels and errors use shared form components;
 - direct color literals are rejected by `npm run check:colors`.
 

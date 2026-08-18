@@ -9,12 +9,16 @@
 .enemy-summary-meta {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
+  align-self: flex-end;
   flex-wrap: wrap;
   gap: 8px 12px;
+  max-width: 65%;
 }
 
 .enemy-tags {
   display: flex;
+  justify-content: flex-end;
   flex-wrap: wrap;
   gap: 5px;
 }
@@ -50,24 +54,34 @@
 }
 
 .enemy-stats-block {
-  display: flex;
-  flex-direction: column;
-  align-self: flex-start;
-  gap: 8px;
-  width: min(100%, 780px);
-}
-
-.enemy-stats-row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
-  gap: 8px;
+  grid-template-columns: minmax(140px, 220px) minmax(180px, 1fr) minmax(140px, 220px);
+  grid-template-areas:
+    "left center right"
+    "abilities abilities abilities";
+  align-items: start;
+  gap: 10px 16px;
   width: 100%;
 }
 
-.enemy-speed-row {
+.enemy-stats-side {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 8px;
+}
+
+.enemy-stats-left {
+  grid-area: left;
+}
+
+.enemy-stats-right {
+  grid-area: right;
+}
+
+.enemy-cover-safe-zone {
+  grid-area: center;
+  min-height: 190px;
+  pointer-events: none;
 }
 
 .enemy-stat-card {
@@ -83,7 +97,7 @@
 }
 
 .enemy-stat-speed {
-  min-width: 74px;
+  min-width: 0;
 }
 
 .enemy-stat-cr {
@@ -139,6 +153,7 @@
 }
 
 .enemy-abilities {
+  grid-area: abilities;
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 0;
@@ -197,13 +212,35 @@
   line-height: 1.2;
 }
 
+@media (max-width: 900px) {
+  .enemy-stats-block {
+    grid-template-columns: minmax(120px, 160px) minmax(80px, 1fr) minmax(120px, 160px);
+    column-gap: 8px;
+  }
+
+  .enemy-cover-safe-zone { min-height: 160px; }
+}
+
 @media (max-width: 760px) {
-  .enemy-stats-block { width: 100%; }
+  .enemy-summary-meta {
+    align-self: flex-start;
+    justify-content: flex-start;
+    max-width: 100%;
+  }
+
+  .enemy-tags { justify-content: flex-start; }
   .enemy-abilities { grid-template-columns: repeat(3, 1fr); row-gap: 12px; }
 }
 
 @media (max-width: 520px) {
-  .enemy-stats-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .enemy-stats-block {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+      "left right"
+      "abilities abilities";
+  }
+
+  .enemy-cover-safe-zone { display: none; }
   .stat-value { font-size: 24px; }
   .ab-mod { font-size: 22px; }
 }
