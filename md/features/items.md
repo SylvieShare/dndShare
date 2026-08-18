@@ -184,10 +184,12 @@ setting, energy and color while preserving readable UI overlay space.
   while sharing its palette and semantic motif; avoid photorealism.
 - Reserve a calmer, darker lower band for the title and controls. Do not bake
   in text, letters, numbers, logos, watermarks, borders, badges or UI frames.
-- Inspect the final asset at 4:1 on desktop and mobile. During migration the
-  header honors an older cover's intrinsic ratio, so existing non-4:1 artwork
-  is shown whole until it is regenerated. Decorative covers use empty alt text
-  because the item name already labels the header.
+- Inspect the final asset at 4:1 on desktop and mobile. The header honors an
+  older cover's intrinsic ratio up to its shared `min(320px, 42dvh)` height
+  limit; taller legacy artwork is top-aligned and continues downward behind a
+  translucent dark identity strip, while detail content remains reachable in
+  the vertically scrollable panel. Decorative covers use empty alt text because
+  the item name already labels the header.
 
 The initial spell covers are **Fireball**, **Bless** and **Aura of Vitality**.
 `cmd/item-cover-sync` verifies the embedded manifest, uploads them to stable

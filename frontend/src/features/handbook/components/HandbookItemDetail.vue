@@ -194,10 +194,12 @@ function formatSubValue(sub, value) {
 .detail-panel {
   flex: 1;
   min-width: 0;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   padding: 16px 20px;
   overflow-y: auto;
+  overscroll-behavior-y: contain;
   background: var(--bg);
 }
 
@@ -308,7 +310,6 @@ function formatSubValue(sub, value) {
 @media (max-width: 520px) {
   .detail-panel {
     padding: 12px;
-    overflow: visible;
   }
 
   .btn-edit {

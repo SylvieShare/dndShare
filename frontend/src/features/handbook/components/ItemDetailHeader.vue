@@ -1,7 +1,11 @@
 <template>
   <header
+    ref="headerElement"
     class="item-detail-header"
-    :class="{ 'item-detail-header-covered': hasCover }"
+    :class="{
+      'item-detail-header-covered': hasCover,
+      'item-detail-header-tall-cover': coverHeightLimited,
+    }"
     :style="coverStyle"
   >
     <img
@@ -11,7 +15,7 @@
       alt=""
       aria-hidden="true"
       @load="onCoverLoad"
-      @error="coverFailed = true"
+      @error="onCoverError"
     />
     <div class="item-detail-shade" aria-hidden="true"></div>
 
@@ -37,7 +41,7 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 
 const props = defineProps({
@@ -46,6 +50,9 @@ const props = defineProps({
 
 const coverFailed = ref(false)
 const coverAspectRatio = ref('4 / 1')
+const coverHeightLimited = ref(false)
+const coverNaturalSize = ref(null)
+const headerElement = ref(null)
 const hasCover = computed(() => Boolean(props.item.coverImageUrl) && !coverFailed.value)
 const coverStyle = computed(() => hasCover.value
   ? { '--cover-aspect-ratio': coverAspectRatio.value }
@@ -57,19 +64,55 @@ const formattedNameEn = computed(() => String(props.item.nameEn || '')
 watch(() => props.item.coverImageUrl, () => {
   coverFailed.value = false
   coverAspectRatio.value = '4 / 1'
+  coverHeightLimited.value = false
+  coverNaturalSize.value = null
 })
 
 function onCoverLoad(event) {
   const width = event.currentTarget?.naturalWidth
   const height = event.currentTarget?.naturalHeight
-  if (width > 0 && height > 0) coverAspectRatio.value = `${width} / ${height}`
+  if (width > 0 && height > 0) {
+    coverAspectRatio.value = `${width} / ${height}`
+    coverNaturalSize.value = { width, height }
+    nextTick(updateCoverLayout)
+  }
 }
+
+function onCoverError() {
+  coverFailed.value = true
+  coverHeightLimited.value = false
+  coverNaturalSize.value = null
+}
+
+function updateCoverLayout() {
+  const header = headerElement.value
+  const size = coverNaturalSize.value
+  if (!header || !size || !hasCover.value) {
+    coverHeightLimited.value = false
+    return
+  }
+  const intrinsicHeight = header.clientWidth * size.height / size.width
+  coverHeightLimited.value = intrinsicHeight > header.clientHeight + 1
+}
+
+let resizeObserver
+onMounted(() => {
+  resizeObserver = new ResizeObserver(updateCoverLayout)
+  if (headerElement.value) resizeObserver.observe(headerElement.value)
+  window.visualViewport?.addEventListener('resize', updateCoverLayout)
+})
+
+onBeforeUnmount(() => {
+  resizeObserver?.disconnect()
+  window.visualViewport?.removeEventListener('resize', updateCoverLayout)
+})
 </script>
 
 <style scoped>
 .item-detail-header {
   position: relative;
   isolation: isolate;
+  flex: 0 0 auto;
   min-height: 86px;
   box-sizing: border-box;
   display: flex;
@@ -84,6 +127,7 @@ function onCoverLoad(event) {
 
 .item-detail-header-covered {
   aspect-ratio: var(--cover-aspect-ratio, 4 / 1);
+  max-height: min(320px, 42dvh);
   min-height: 0;
 }
 
@@ -108,6 +152,15 @@ function onCoverLoad(event) {
   z-index: -2;
   object-fit: cover;
   object-position: center;
+}
+
+.item-detail-header-tall-cover .item-detail-cover {
+  object-position: center top;
+}
+
+.item-detail-header-tall-cover .item-detail-content {
+  background: color-mix(in srgb, var(--scrim) 62%, transparent);
+  backdrop-filter: blur(2px);
 }
 
 .item-detail-shade {
