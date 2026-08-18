@@ -66,8 +66,7 @@ watch(() => props.item.coverImageUrl, () => { coverFailed.value = false })
 
 .item-detail-header-covered {
   aspect-ratio: 3 / 1;
-  min-height: 132px;
-  max-height: 240px;
+  min-height: 0;
 }
 
 .item-detail-header-covered .item-detail-title h1 {
@@ -170,11 +169,6 @@ watch(() => props.item.coverImageUrl, () => { coverFailed.value = false })
 @media (max-width: 520px) {
   .item-detail-header {
     margin: -12px -12px 14px;
-  }
-
-  .item-detail-header-covered {
-    aspect-ratio: 2 / 1;
-    min-height: 154px;
   }
 
   .item-detail-content {

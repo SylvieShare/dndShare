@@ -72,7 +72,8 @@ entries and selected choices.
   icon well on desktop and mobile; compact SVG/type, potion-vial and feat-sigil
   fallbacks stay centered in the same geometry;
 - details open through the handbook `ItemViewModal`/modal stack; `ItemViewModal`
-  forwards an optional action slot into the fixed `AppModalFrame` footer, so
+  uses the lower-level `AppModal` because the shared item header is its only
+  header, and forwards an optional action slot into a fixed footer, so
   character-specific mutations do not leak into handbook detail renderers;
 - every item detail uses `ItemDetailHeader.vue`. It renders a panoramic
   `coverImageUrl` as full-bleed artwork behind the identity block and actions;
