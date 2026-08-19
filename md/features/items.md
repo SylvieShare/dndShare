@@ -75,7 +75,10 @@ entries and selected choices.
   fixed control area at the top of the list column, above its independently
   scrolling rows. Text search matches a case-insensitive substring of either
   the Russian name or `nameEn`; publication codes remain in the dedicated
-  source filter. The main catalogue and item pickers reuse this placement;
+  source filter. The main catalogue and item pickers reuse this placement.
+  Bestiary schema filters cover creature type, size, environment, legendary
+  status, named-NPC status and CR; the finite CR list is stored in schema
+  metadata so the filter control is available before any dictionary request;
 - details open through the handbook `ItemViewModal`/modal stack; `ItemViewModal`
   uses the lower-level `AppModal` because the shared item header is its only
   header, and forwards an optional action slot into a fixed footer, so

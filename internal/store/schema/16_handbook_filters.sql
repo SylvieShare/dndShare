@@ -9,24 +9,38 @@ DECLARE
     result jsonb;
 BEGIN
     SELECT jsonb_agg(
-        CASE WHEN section ->> 'key' = 'identity' THEN section || jsonb_build_object(
+        CASE
+        WHEN section ->> 'key' = 'identity' THEN section || jsonb_build_object(
             'fields', COALESCE((
                 SELECT jsonb_agg(
                     CASE
-                        WHEN field ->> 'key' IN ('creature_type', 'size', 'environment')
-                            THEN field || '{"filter":true}'::jsonb
+                        WHEN field ->> 'key' IN (
+                            'creature_type', 'size', 'environment', 'is_legendary', 'named_npc'
+                        ) THEN field || '{"filter":true}'::jsonb
+                        -- Existing alignment values are not normalized enough for
+                        -- exact matching, so do not expose a misleading filter.
                         WHEN field ->> 'key' = 'alignment'
-                            THEN field || jsonb_build_object(
-                                'filter', true,
-                                'filter_values', '["Законно-добрый","Нейтрально-добрый","Хаотично-добрый","Законно-нейтральный","Нейтральный","Хаотично-нейтральный","Законно-злой","Нейтрально-злой","Хаотично-злой","Без мировоззрения"]'::jsonb
-                            )
+                            THEN field - 'filter' - 'filter_values'
                         ELSE field
                     END
                     ORDER BY field_ord
                 )
                 FROM jsonb_array_elements(section -> 'fields') WITH ORDINALITY nested(field, field_ord)
             ), '[]'::jsonb)
-        ) ELSE section END
+        )
+        WHEN section ->> 'key' = 'combat' THEN section || jsonb_build_object(
+            'fields', COALESCE((
+                SELECT jsonb_agg(
+                    CASE WHEN field ->> 'key' = 'cr' THEN field || jsonb_build_object(
+                        'filter', true,
+                        'filter_values', '["0","1/8","1/4","1/2","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","30"]'::jsonb
+                    ) ELSE field END
+                    ORDER BY field_ord
+                )
+                FROM jsonb_array_elements(section -> 'fields') WITH ORDINALITY nested(field, field_ord)
+            ), '[]'::jsonb)
+        )
+        ELSE section END
         ORDER BY section_ord
     ) INTO result
     FROM jsonb_array_elements(document) WITH ORDINALITY sections(section, section_ord);

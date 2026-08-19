@@ -58,6 +58,9 @@ var schemaSessionEntitiesSQL string
 //go:embed schema/15_rich_content.sql
 var schemaRichContentSQL string
 
+//go:embed schema/16_handbook_filters.sql
+var schemaHandbookFiltersSQL string
+
 //go:embed schema/16_session_timers.sql
 var schemaSessionTimersSQL string
 
@@ -98,6 +101,7 @@ var schemaParts = []struct {
 	{"material-links", schemaMaterialLinksSQL},
 	{"session-entities", schemaSessionEntitiesSQL},
 	{"rich-content", schemaRichContentSQL},
+	{"handbook-filters", schemaHandbookFiltersSQL},
 	{"session-timers", schemaSessionTimersSQL},
 	{"race-images", schemaRaceImagesSQL},
 	{"race-lore", schemaRaceLoreSQL},

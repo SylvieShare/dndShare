@@ -80,6 +80,10 @@ Startup data correction переводит прежние значения в э
 `cover_image_id → storage_image/S3` и поэтому может сосуществовать с любым
 форматом иконки. Ограничение `item_single_icon_check` обложку намеренно не
 включает; FK использует `ON DELETE SET NULL`.
+Фильтры справочника задаются metadata `filter` в `item_type.fields`. Для
+бестиария startup schema поддерживает фильтры по типу, размеру, среде,
+легендарности, именованному NPC и CR; точные варианты CR лежат в
+`filter_values`, поэтому UI может показать фильтр без дополнительного словаря.
 Новые системные изображения, установленные через MCP, используют
 content-addressed ключи `system-item-media/v1/items/{itemId}/{slot}/{sha256}`.
 Частичный unique index действует только на этот namespace и строки с
