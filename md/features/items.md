@@ -383,7 +383,9 @@ compact creature icon and from legacy artwork imported from external sources.
 New generated covers are installed through MCP
 `handbook_item_set_system_image(slot="cover", preservePrevious=true)`, which
 keeps the previous imported/generated asset available for rollback. **Kobold**
-is the first production cover using this `1536×1152` contract.
+is the first production cover using this `1536×1152` contract. The complete
+twelve-row kobold family is the first finished bestiary set: every row keeps
+the shared portrait icon and has its own mechanics-specific 4:3 cover.
 
 ### Item cover art direction
 
