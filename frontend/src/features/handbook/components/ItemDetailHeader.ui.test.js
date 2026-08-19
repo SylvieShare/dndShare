@@ -28,6 +28,7 @@ describe('handbook item detail cover', () => {
     expect(headerSource).toContain('const TYPE_COVER_STYLES = {')
     expect(headerSource).toContain("'--cover-min-height': '440px'")
     expect(headerSource).toContain('TYPE_COVER_STYLES[props.type?.id]')
+    expect(headerSource).toContain('.item-detail-header-covered.item-detail-header-summary {\n  aspect-ratio: var(--cover-aspect-ratio, 4 / 3);')
   })
 
   it('keeps bestiary data in local translucent blocks without shading the whole cover', () => {
@@ -50,6 +51,8 @@ describe('handbook item detail cover', () => {
     expect(enemySummarySource).toContain('class="enemy-stats-side enemy-stats-right"')
     expect(enemySummaryStyles).toContain('"left center right"')
     expect(enemySummaryStyles).toContain('"abilities abilities abilities"')
+    expect(enemySummaryStyles).toContain('grid-template-rows: minmax(min-content, 1fr) auto;')
+    expect(headerSource).toContain('.item-detail-header-summary .item-detail-summary {\n  flex: 1;')
     expect(enemySummaryStyles).toContain('min-height: 190px;')
     expect(enemySummaryStyles).toContain('"left right"')
     expect(enemySummaryStyles).toContain('"abilities abilities"')

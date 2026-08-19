@@ -117,7 +117,7 @@ function onCoverError() {
 }
 
 .item-detail-header-covered.item-detail-header-summary {
-  aspect-ratio: auto;
+  aspect-ratio: var(--cover-aspect-ratio, 4 / 3);
   min-height: var(--cover-min-height, 440px);
 }
 
@@ -167,7 +167,6 @@ function onCoverError() {
   min-height: inherit;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
 }
 
 .item-detail-content {
@@ -186,6 +185,12 @@ function onCoverError() {
 
 .item-detail-summary {
   padding: 0 20px 24px;
+}
+
+.item-detail-header-summary .item-detail-summary {
+  flex: 1;
+  min-height: 0;
+  display: flex;
 }
 
 .item-detail-icon {

@@ -1,4 +1,6 @@
 .enemy-summary {
+  flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -54,8 +56,10 @@
 }
 
 .enemy-stats-block {
+  flex: 1;
   display: grid;
   grid-template-columns: minmax(140px, 220px) minmax(180px, 1fr) minmax(140px, 220px);
+  grid-template-rows: minmax(min-content, 1fr) auto;
   grid-template-areas:
     "left center right"
     "abilities abilities abilities";
