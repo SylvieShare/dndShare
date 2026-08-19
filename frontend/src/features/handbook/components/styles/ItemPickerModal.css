@@ -10,8 +10,6 @@
   overflow: hidden;
 }
 
-.picker-collection-bar { flex: 0 0 auto; }
-
 .picker-tabs {
   display: flex;
   align-items: stretch;

@@ -4,6 +4,25 @@
       <div class="empty-hint">Выберите коллекцию</div>
     </template>
     <template v-else>
+      <HandbookCollectionBar
+        v-if="showControls"
+        :type="type"
+        :search="search"
+        :filters="filters"
+        :filter-fields="filterFields"
+        :filter-suggests="filterSuggests"
+        :content-sources="contentSources"
+        :content-source-ids="contentSourceIds"
+        :result-count="items.length"
+        :has-more="hasMore"
+        :filtered="filtered"
+        :search-placeholder="searchPlaceholder"
+        :show-identity="false"
+        class="list-collection-controls"
+        @update:search="$emit('update:search', $event)"
+        @update:filters="$emit('update:filters', $event)"
+        @update:content-source-ids="$emit('update:content-source-ids', $event)"
+      />
       <div v-if="groupFields.length" class="list-group-toolbar">
         <span class="list-group-label">Группировать список</span>
         <div class="list-group-actions">
@@ -105,6 +124,7 @@
 import { computed, ref, watch } from 'vue'
 import { findFieldByPath, getByPath, getSuggestId, walkFieldsWithPath } from '@/features/handbook/objects/lib/schemaFields'
 import { useSuggestStore } from '@/stores/suggest'
+import HandbookCollectionBar from '@/features/handbook/components/HandbookCollectionBar'
 import EnemyListItem from '@/features/items/list-components/EnemyListItem'
 import FeatListItem from '@/features/items/list-components/FeatListItem'
 import ItemListItem from '@/features/items/list-components/ItemListItem'
@@ -122,9 +142,25 @@ const props = defineProps({
   loadingMore: { type: Boolean, default: false },
   hasMore: { type: Boolean, default: false },
   groupBy: { type: String, default: null },
+  showControls: { type: Boolean, default: false },
+  search: { type: String, default: '' },
+  filters: { type: Object, default: () => ({}) },
+  filterFields: { type: Array, default: () => [] },
+  filterSuggests: { type: Object, default: () => ({}) },
+  contentSources: { type: Array, default: () => [] },
+  contentSourceIds: { type: Array, default: () => [] },
+  filtered: { type: Boolean, default: false },
+  searchPlaceholder: { type: String, default: '' },
 })
 
-const emit = defineEmits(['select', 'load-more', 'update:group-by'])
+const emit = defineEmits([
+  'select',
+  'load-more',
+  'update:group-by',
+  'update:search',
+  'update:filters',
+  'update:content-source-ids',
+])
 
 const suggestStore = useSuggestStore()
 
@@ -203,6 +239,11 @@ function onScroll(e) {
   flex-direction: column;
   overflow: hidden;
   background: var(--bg);
+}
+
+.list-collection-controls {
+  flex: 0 0 auto;
+  border-bottom: 1px solid var(--border);
 }
 
 .empty-hint {

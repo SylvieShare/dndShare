@@ -24,25 +24,6 @@
           </button>
         </div>
 
-        <HandbookCollectionBar
-          v-if="itemType"
-          v-model:search="searchQ"
-          v-model:group-by="groupBy"
-          v-model:filters="filters"
-          :type="itemType"
-          :filter-fields="filterFields"
-          :filter-suggests="filterSuggests"
-          :content-sources="visibleContentSources"
-          :content-source-ids="contentSourceIds"
-          :result-count="filteredItems.length"
-          :has-more="hasMore"
-          :filtered="isFiltered"
-          :search-placeholder="searchPlaceholder"
-          :show-identity="false"
-          class="picker-collection-bar"
-          @update:content-source-ids="contentSourceIds = $event"
-        />
-
         <div class="picker-body">
           <HandbookItemList
             :type="itemType"
@@ -52,10 +33,22 @@
             :loading-more="loadingMore"
             :has-more="hasMore"
             :group-by="groupBy"
+            :search="searchQ"
+            :filters="filters"
+            :filter-fields="filterFields"
+            :filter-suggests="filterSuggests"
+            :content-sources="visibleContentSources"
+            :content-source-ids="contentSourceIds"
+            :filtered="isFiltered"
+            :search-placeholder="searchPlaceholder"
+            show-controls
             class="picker-list"
             @select="selectedItem = $event"
             @load-more="loadMore"
             @update:group-by="groupBy = $event"
+            @update:search="searchQ = $event"
+            @update:filters="filters = $event"
+            @update:content-source-ids="contentSourceIds = $event"
           />
           <HandbookItemDetail
             :item="selectedItem"
@@ -119,7 +112,6 @@
 import { computed, inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { fetchGet } from '@/shared/api/http'
 import { contentScopeQuery, contentSourcesApi, normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'
-import HandbookCollectionBar from '@/features/handbook/components/HandbookCollectionBar'
 import HandbookItemDetail from '@/features/handbook/components/HandbookItemDetail'
 import SvgIcon from '@/shared/ui/SvgIcon'
 import HandbookItemList from '@/features/handbook/components/HandbookItemList'

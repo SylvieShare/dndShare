@@ -6,7 +6,11 @@ const source = readFileSync(fileURLToPath(new URL('./ItemPickerModal.vue', impor
 
 describe('handbook item picker controls', () => {
   it('reuses handbook filters, sources and nested grouping', () => {
-    expect(source).toContain('<HandbookCollectionBar')
+    expect(source).toContain('<HandbookItemList')
+    expect(source).toContain('show-controls')
+    expect(source).toContain(':content-sources="visibleContentSources"')
+    expect(source).toContain('@update:search="searchQ = $event"')
+    expect(source).toContain('@update:filters="filters = $event"')
     expect(source).toContain('walkFieldsWithPath(itemType.value?.fields || [])')
     expect(source).toContain('@update:group-by="groupBy = $event"')
     expect(source).toContain('contentSourceIds')

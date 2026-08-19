@@ -71,6 +71,9 @@ entries and selected choices.
   CR, a two-line identity block and trailing metadata. Raster artwork fills the
   icon well on desktop and mobile; compact SVG/type, potion-vial and feat-sigil
   fallbacks stay centered in the same geometry;
+- handbook search, schema filters and publication-source filters live in the
+  fixed control area at the top of the list column, above its independently
+  scrolling rows. The main catalogue and item pickers reuse this placement;
 - details open through the handbook `ItemViewModal`/modal stack; `ItemViewModal`
   uses the lower-level `AppModal` because the shared item header is its only
   header, and forwards an optional action slot into a fixed footer, so

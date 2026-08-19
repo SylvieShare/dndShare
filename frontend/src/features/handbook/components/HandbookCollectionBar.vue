@@ -18,7 +18,7 @@
     </div>
 
     <!-- ── Right: search + group + filter ── -->
-    <div class="col-bar-right">
+    <div v-if="showControls" class="col-bar-right">
 
       <div class="col-search-wrap">
         <svg class="col-search-icon" viewBox="0 0 16 16" fill="none">
@@ -43,6 +43,7 @@
           <svg viewBox="0 0 16 16" fill="none" width="16" height="16">
             <path d="M2 4h12M4 8h8M6 12h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
+          <span class="col-filter-label">Фильтры</span>
           <span v-if="activeFilterCount" class="col-filter-count">{{ activeFilterCount }}</span>
         </button>
 
@@ -101,6 +102,7 @@
           <svg viewBox="0 0 16 16" fill="none" width="16" height="16">
             <path d="M3 2.5h8.5A1.5 1.5 0 0 1 13 4v9.5l-3.5-2-3.5 2V4A1.5 1.5 0 0 0 4.5 2.5H3Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
           </svg>
+          <span class="col-filter-label">Источники</span>
           <span v-if="activeContentSourceCount" class="col-filter-count">{{ activeContentSourceCount }}</span>
         </button>
 
@@ -160,6 +162,7 @@ const props = defineProps({
   hasMore: { type: Boolean, default: false },
   filtered: { type: Boolean, default: false },
   showIdentity: { type: Boolean, default: true },
+  showControls: { type: Boolean, default: true },
   searchPlaceholder: { type: String, default: '' },
 })
 

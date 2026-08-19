@@ -4,21 +4,14 @@
     <!-- ── Collection bar: full viewport width ── -->
     <HandbookCollectionBar
       v-if="selectedType"
-      v-model:search="searchQ"
-      v-model:group-by="groupBy"
-      v-model:filters="filters"
       :type="selectedType"
-      :filter-fields="filterFields"
-      :filter-suggests="filterSuggests"
-      :content-sources="contentSources"
-      :content-source-ids="contentSourceIds"
       :can-add="isAuth"
       :result-count="filteredItems.length"
       :has-more="hasMore"
       :filtered="isFiltered"
+      :show-controls="false"
       class="handbook-col-bar"
       @add="openAddModal"
-      @update:content-source-ids="contentSourceIds = $event"
     />
 
     <!-- ── Inner: max-width centered ── -->
@@ -62,10 +55,21 @@
             :loading-more="loadingMore"
             :has-more="hasMore"
             :group-by="groupBy"
+            :search="searchQ"
+            :filters="filters"
+            :filter-fields="filterFields"
+            :filter-suggests="filterSuggests"
+            :content-sources="contentSources"
+            :content-source-ids="contentSourceIds"
+            :filtered="isFiltered"
+            show-controls
             class="handbook-list"
             @select="selectItem"
             @load-more="loadMore"
             @update:group-by="groupBy = $event"
+            @update:search="searchQ = $event"
+            @update:filters="filters = $event"
+            @update:content-source-ids="contentSourceIds = $event"
           />
 
           <HandbookItemDetail
