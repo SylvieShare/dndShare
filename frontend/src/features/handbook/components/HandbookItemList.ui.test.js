@@ -33,10 +33,10 @@ describe('handbook list controls', () => {
     expect(handbookPage).toContain(':content-sources="contentSources"')
   })
 
-  it('frames the grouping toolbar on every side', () => {
+  it('keeps only the requested left side frame on the grouping toolbar', () => {
     const toolbar = source.match(/\.list-group-toolbar\s*\{([^}]*)\}/)?.[1] || ''
 
-    expect(toolbar).toContain('border-right: 1px solid var(--border);')
     expect(toolbar).toContain('border-left: 1px solid var(--border);')
+    expect(toolbar).not.toContain('border-right:')
   })
 })
