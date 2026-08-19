@@ -90,6 +90,31 @@ SELECT * FROM (VALUES
     ('Щит', 'Shield', 'shield', 10, 6, NULL, false, NULL, NULL, false, true, 2, 'Щит занимает одну руку и увеличивает КД на 2.')
 ) AS seed(name, name_en, category, cost, weight, ac, use_dex, dex_cap, strength_required, stealth_disadvantage, shield, shield_bonus, description);
 
+-- The legacy magic-item import used the generic English name "Shield" for all
+-- three enhancement tiers. An earlier broad name migration could therefore
+-- mistake them for the mundane shield. Their stable ids/icons identify the
+-- canonical PHB rows and let startup restore their original catalogue role.
+UPDATE dndshare.item item
+SET type_id = 2,
+    name = seed.name,
+    name_en = 'Shield',
+    data = jsonb_build_object(
+        'desc', '<p>' || seed.description || '</p>',
+        'armor', jsonb_build_object('shield', true, 'shield_bonus', seed.shield_bonus),
+        'cost', jsonb_build_object('value', NULL, 'suggest_id', NULL),
+        'weight', 6,
+        'rarity', seed.rarity
+    )
+FROM (VALUES
+    (92::bigint, 207::bigint, 'Щит +1', 1, 3, 'Магический щит даёт дополнительный бонус +1 к КД сверх обычного бонуса щита.'),
+    (112, 208, 'Щит +2', 2, 4, 'Магический щит даёт дополнительный бонус +2 к КД сверх обычного бонуса щита.'),
+    (304, 209, 'Щит +3', 3, 5, 'Магический щит даёт дополнительный бонус +3 к КД сверх обычного бонуса щита.')
+) AS seed(id, icon_svg_id, name, rarity, shield_bonus, description)
+WHERE item.user_id IS NULL
+  AND item.id = seed.id
+  AND item.icon_svg_id = seed.icon_svg_id
+  AND lower(COALESCE(item.name_en, '')) = 'shield';
+
 -- Older databases may already contain mundane armor in the generic gear type.
 -- Move only shared PHB rows; user-created and magical shields remain untouched.
 UPDATE dndshare.item item
@@ -98,6 +123,7 @@ FROM starting_shop_armor seed
 WHERE item.user_id IS NULL
   AND item.type_id = 2
   AND lower(COALESCE(item.name_en, '')) = lower(seed.name_en)
+  AND COALESCE(item.data ->> 'rarity', '0') = '0'
   AND EXISTS (
       SELECT 1
       FROM dndshare.item_content_source link
@@ -136,7 +162,8 @@ SET name = seed.name,
     ))
 FROM starting_shop_armor seed
 WHERE item.user_id IS NULL AND item.type_id = 12
-  AND lower(COALESCE(item.name_en, '')) = lower(seed.name_en);
+  AND lower(COALESCE(item.name_en, '')) = lower(seed.name_en)
+  AND COALESCE(item.data ->> 'rarity', '0') = '0';
 
 CREATE TEMP TABLE starting_shop_tools ON COMMIT DROP AS
 SELECT * FROM (VALUES
@@ -308,7 +335,9 @@ UPDATE dndshare.item item
 SET data = item.data || jsonb_build_object(
     'available_in_starting_shop', true,
     'weight', CASE
-        WHEN lower(COALESCE(item.name_en, '')) = 'sling' AND item.data ->> 'weight' IS NULL THEN to_jsonb(0)
+        WHEN (
+            lower(COALESCE(item.name_en, '')) = 'sling' OR lower(item.name) = 'праща'
+        ) AND item.data ->> 'weight' IS NULL THEN to_jsonb(0)
         ELSE item.data -> 'weight'
     END,
     'notes', CASE

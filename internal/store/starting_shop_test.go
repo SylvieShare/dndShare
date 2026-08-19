@@ -31,6 +31,9 @@ func TestStartingShopSeedsDedicatedArmorAndTransportCatalogues(t *testing.T) {
 		"CREATE TEMP TABLE starting_shop_tools",
 		"('Воровские инструменты', 'Thieves'' Tools'",
 		"('Набор травника', 'Herbalism Kit'",
+		"(92::bigint, 207::bigint, 'Щит +1'",
+		"COALESCE(item.data ->> 'rarity', '0') = '0'",
+		"lower(item.name) = 'праща'",
 		"'available_in_starting_shop', true",
 	} {
 		if !strings.Contains(schemaStartingShopSQL, fragment) {
