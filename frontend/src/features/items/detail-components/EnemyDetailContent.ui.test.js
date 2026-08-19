@@ -26,7 +26,7 @@ describe('enemy detail section hierarchy', () => {
     expect(enemySource).toContain('class="enemy-blocks enemy-blocks--actions"')
     expect(enemyStyles).toContain('font-family: var(--font-ui);')
     expect(enemyStyles).toContain('font-size: 16px;')
-    expect(enemyStyles).toContain('font-weight: 800;')
+    expect(enemyStyles).toContain('font-weight: 700;')
     expect(enemyStyles).toContain('.block-name::before')
     expect(enemyStyles).toContain('.enemy-blocks--actions .block-name::before')
   })

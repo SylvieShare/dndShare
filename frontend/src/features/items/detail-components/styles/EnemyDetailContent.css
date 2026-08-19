@@ -139,16 +139,16 @@
   color: color-mix(in srgb, var(--text-1) 82%, var(--text-muted));
   font-family: var(--font-ui);
   font-size: 16px;
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1.25;
   letter-spacing: .01em;
 }
 
 .block-name::before {
   content: '';
-  width: 3px;
+  width: 2px;
   height: 14px;
-  flex: 0 0 3px;
+  flex: 0 0 2px;
   border-radius: 2px;
   background: color-mix(in srgb, var(--accent-soft) 72%, var(--text-2));
   box-shadow: 0 0 8px color-mix(in srgb, var(--accent) 22%, transparent);
