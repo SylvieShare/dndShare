@@ -102,7 +102,9 @@ frontend эти WebP не содержат.
 `cmd/class-image-sync`. Манифест
 `internal/classimages` фиксирует размер и SHA-256 для всех пятнадцати JPEG;
 при ручном запуске команда загружает их в `system-class-images/v1/`, обновляет системные строки
-`storage_image` и назначает через `item.icon_image_id` только базовым class item.
+`storage_image` и назначает через `item.icon_image_id` только базовым class item
+без иконки или с прежней иконкой из того же namespace. Установленные через MCP
+`system-item-media/v1/*` иконки команда не перезаписывает.
 Основной бинарь и frontend эти JPEG не содержат.
 
 Статичные руны выбранных заклинаний входят в ручной legacy/bootstrap-инструмент

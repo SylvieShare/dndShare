@@ -57,6 +57,15 @@ WHERE class_item.user_id IS NULL
   AND class_item.parent_id IS NULL
   AND class_item.type_id = 9
   AND (
+    class_item.icon_image_id IS NULL
+    OR EXISTS (
+      SELECT 1
+      FROM dndshare.storage_image current_image
+      WHERE current_image.id = class_item.icon_image_id
+        AND current_image."key" LIKE 'system-class-images/%'
+    )
+  )
+  AND (
     regexp_replace(replace(lower(COALESCE(class_item.name_en, '')), 'ё', 'е'), '[^a-zа-я0-9]+', '', 'g') = ANY(mapping.aliases)
     OR regexp_replace(replace(lower(class_item.name), 'ё', 'е'), '[^a-zа-я0-9]+', '', 'g') = ANY(mapping.aliases)
   );

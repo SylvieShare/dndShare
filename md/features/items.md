@@ -288,10 +288,11 @@ one controlled magical effect rather than ancestry.
 The production set covers all fifteen base classes. It is installed through
 MCP `handbook_item_set_system_image(slot="cover", preservePrevious=true)` and
 uses content-addressed `system-item-media/v1/` objects. Existing realistic
-`system-class-images/v1/` rows remain assigned to `item.icon_image_id` for
-compact identity surfaces; installing a class cover does not replace or delete
-those icons. Subclasses keep the cover-only fallback contract and show a
-monogram until a dedicated cover is assigned.
+`system-class-images/v1/` rows remain active as rollback candidates, while the
+new heraldic `system-item-media/v1/` emblem remains assigned to
+`item.icon_image_id`; installing a class cover does not replace or delete that
+icon. Subclasses keep the cover-only fallback contract and show a monogram
+until a dedicated cover is assigned.
 
 ### Background cover art direction
 

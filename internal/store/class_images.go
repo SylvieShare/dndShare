@@ -7,6 +7,26 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
+const attachSystemClassImageSQL = `
+	UPDATE dndshare.item class_item
+	SET icon_svg_id = NULL, icon_image_id = $1
+	WHERE class_item.user_id IS NULL
+	  AND class_item.type_id = 9
+	  AND class_item.parent_id IS NULL
+	  AND (
+		class_item.icon_image_id IS NULL
+		OR EXISTS (
+			SELECT 1
+			FROM dndshare.storage_image current_image
+			WHERE current_image.id = class_item.icon_image_id
+			  AND current_image."key" LIKE 'system-class-images/%'
+		)
+	  )
+	  AND (
+		regexp_replace(replace(lower(COALESCE(class_item.name_en, '')), 'ё', 'е'), '[^a-zа-я0-9]+', '', 'g') = ANY($2)
+		OR regexp_replace(replace(lower(class_item.name), 'ё', 'е'), '[^a-zа-я0-9]+', '', 'g') = ANY($2)
+	  )`
+
 // UpsertSystemClassImage registers a stable S3 object and attaches it to the
 // matching built-in base class item.
 func (s *Store) UpsertSystemClassImage(ctx context.Context, key, url, fileName, mimeType string, fileSize int64, aliases []string) (int64, error) {
@@ -36,14 +56,7 @@ func (s *Store) UpsertSystemClassImage(ctx context.Context, key, url, fileName, 
 		return 0, err
 	}
 
-	result, err := tx.Exec(ctx, `
-		UPDATE dndshare.item
-		SET icon_svg_id = NULL, icon_image_id = $1
-		WHERE user_id IS NULL AND type_id = 9 AND parent_id IS NULL
-		  AND (
-			regexp_replace(replace(lower(COALESCE(name_en, '')), 'ё', 'е'), '[^a-zа-я0-9]+', '', 'g') = ANY($2)
-			OR regexp_replace(replace(lower(name), 'ё', 'е'), '[^a-zа-я0-9]+', '', 'g') = ANY($2)
-		  )`, imageID, aliases)
+	result, err := tx.Exec(ctx, attachSystemClassImageSQL, imageID, aliases)
 	if err != nil {
 		return 0, err
 	}
