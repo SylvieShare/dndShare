@@ -39,11 +39,7 @@ WITH icon_seed(type_id, object_key, image_url, file_name, file_size) AS (
 UPDATE dndshare.item_type item_type
 SET icon_image_id = image.id
 FROM icon_seed seed
-JOIN dndshare.storage_image image
-  ON image."key" = seed.object_key
- AND image.user_id IS NULL
- AND image."type" = 'item_type_icon'
- AND image.deleted = false
+JOIN inserted image ON image."key" = seed.object_key
 WHERE item_type.id = seed.type_id;
 
 -- The former item_type SVG is not a runtime fallback after every registered

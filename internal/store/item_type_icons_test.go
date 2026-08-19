@@ -33,6 +33,7 @@ func TestHandbookTypeIconsReplaceTypeSVGsWithStaticRasterMedia(t *testing.T) {
 		"/static/handbook-types/1-weapons.png",
 		"/static/handbook-types/13-transport.png",
 		"SET icon_image_id = image.id",
+		"JOIN inserted image ON image.\"key\" = seed.object_key",
 		"ALTER TABLE dndshare.item_type DROP COLUMN svg_id",
 	} {
 		if !strings.Contains(schemaHandbookTypeIconsSQL, fragment) {
