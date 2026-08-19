@@ -356,6 +356,10 @@ details are noticed.
 - Store a lossless `128×128` RGBA PNG or WebP and inspect it at both 128 and
   the production display size of `64×64`. The silhouette, face direction and
   defining anatomy must remain clear at the smaller size.
+- Derive a new recognition mark from the creature name, stat block and defining
+  mechanics first. Imported/legacy artwork is a reference only when those
+  sources leave the intended anatomy or form genuinely ambiguous; it is not an
+  automatic composition or style template.
 
 New generated icons are installed through MCP
 `handbook_item_set_system_image(slot="icon", preservePrevious=true)`. **Kobold**
@@ -392,6 +396,16 @@ drake head. **Eyedrake** has its own complete-form eye-and-maw mark, while
 **Fume Drake** uses a separate emerald smoke-dragon head. This is the preferred
 family rule: reuse an icon while the anatomy stays recognizably the same, then
 split the icon when a named variant changes the creature's defining outline.
+
+The seventeen-row skeleton set applies the same rule across a wider anatomical
+family. It uses sixteen marks: **Skeletal Riding Horse** and **Warhorse
+Skeleton** share one equine skull, while humanoid skeleton, rat swarm,
+key-shaped skull, alchemist, dwarf, skeletal swarm, predatory dinosaur,
+minotaur, crystal-spined thunderbeast, incomplete dragon, juggernaut, frost
+giant, armored knight, skeletal bloodfin and storm giant each keep a distinct
+silhouette. Bone color and rendering stay consistent, but anatomy and one
+large semantic accent carry the identity at `64×64`; minor equipment is never
+used as a substitute for a different outer contour.
 
 Existing imported bestiary artwork is not treated as a compact icon: for every
 system creature still using an importer-owned image it is migrated from
@@ -460,6 +474,16 @@ and environment. Eyedrake and Fume Drake keep their exceptional anatomy in
 both icon and cover. Every cover was installed through MCP with
 `preservePrevious=true`, so imported predecessors remain available for
 rollback.
+
+All seventeen skeleton rows have individual `1536×1152` covers, including the
+two horse entries that deliberately share their compact equine icon. Each
+scene is driven by the stat block and habitat: the Skeleton Key crawls across
+an Omu tomb ceiling, the dinosaur pounces in an exhausted mine, the bloodfin
+coils underwater, and the two giant skeletons keep separate frost and storm
+effects. Only the anatomically ambiguous Thunderbeast used its imported image
+as a shape reference. The complete set was installed through MCP with
+`preservePrevious=true`; twelve replaced imported covers remain recoverable,
+while five rows received their first cover.
 
 ### Item cover art direction
 
