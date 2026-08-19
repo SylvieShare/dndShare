@@ -75,6 +75,12 @@ function defaultCoverAspectRatio(typeId) {
   return ''
 }
 
+function coverAspectRatioForDimensions(width, height, typeId) {
+  if (!(width > 0 && height > 0)) return defaultCoverAspectRatio(typeId)
+  if (typeId === 6 && height > width) return '1 / 1'
+  return `${width} / ${height}`
+}
+
 const coverFailed = ref(false)
 const coverAspectRatio = ref(defaultCoverAspectRatio(props.type?.id))
 const displayedCoverUrl = ref(props.item.coverImageUrl || '')
@@ -116,9 +122,11 @@ watch(
       }
       if (requestVersion !== coverRequestVersion) return
 
-      if (image.naturalWidth > 0 && image.naturalHeight > 0) {
-        coverAspectRatio.value = `${image.naturalWidth} / ${image.naturalHeight}`
-      }
+      coverAspectRatio.value = coverAspectRatioForDimensions(
+        image.naturalWidth,
+        image.naturalHeight,
+        typeId,
+      )
       clearCoverSwapTimer()
       coverFailed.value = false
       previousCoverUrl.value = displayedCoverUrl.value
@@ -155,9 +163,7 @@ function clearCoverSwapTimer() {
 function onCoverLoad(event) {
   const width = event.currentTarget?.naturalWidth
   const height = event.currentTarget?.naturalHeight
-  if (width > 0 && height > 0) {
-    coverAspectRatio.value = `${width} / ${height}`
-  }
+  coverAspectRatio.value = coverAspectRatioForDimensions(width, height, props.type?.id)
 }
 
 function onCoverError() {

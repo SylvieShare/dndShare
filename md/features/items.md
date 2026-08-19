@@ -389,6 +389,10 @@ the same cover slot even when its intrinsic aspect ratio differs.
 - Inspect at the desktop `440px` minimum header and at a `390px` mobile
   viewport. The mobile layout may crop the outer sides, but the subject and all
   defining features must remain readable between and behind the local blocks.
+  Legacy portrait artwork is displayed through an image-driven viewport no
+  taller than 1:1; `object-fit: cover` crops its vertical excess. The combat
+  summary may still increase the header beyond that preferred image geometry
+  rather than being clipped.
 
 New generated covers are installed through MCP
 `handbook_item_set_system_image(slot="cover", preservePrevious=true)`, which

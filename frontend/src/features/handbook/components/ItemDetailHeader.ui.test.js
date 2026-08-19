@@ -37,6 +37,13 @@ describe('handbook item detail cover', () => {
     expect(headerSource).not.toContain("coverAspectRatio.value = '4 / 1'")
   })
 
+  it('caps portrait bestiary artwork at a square image-driven geometry', () => {
+    expect(headerSource).toContain('function coverAspectRatioForDimensions(width, height, typeId)')
+    expect(headerSource).toContain("if (typeId === 6 && height > width) return '1 / 1'")
+    expect(headerSource).toContain('coverAspectRatioForDimensions(\n        image.naturalWidth,')
+    expect(headerSource).toContain('coverAspectRatioForDimensions(width, height, props.type?.id)')
+  })
+
   it('supports a separate cover height profile for each handbook type', () => {
     expect(headerSource).toContain('const TYPE_COVER_STYLES = {')
     expect(headerSource).toContain("'--cover-min-height': '440px'")
