@@ -25,6 +25,10 @@
   gap: 5px;
 }
 
+.enemy-tags-left {
+  justify-content: flex-start;
+}
+
 .enemy-tag {
   padding: 2px 7px;
   border: 1px solid color-mix(in srgb, var(--text-on-accent) 28%, transparent);
@@ -41,18 +45,6 @@
   border-color: color-mix(in srgb, var(--accent) 54%, transparent);
   background: color-mix(in srgb, var(--accent) 18%, transparent);
   color: var(--text-on-accent);
-}
-
-.enemy-source {
-  padding: 2px 7px;
-  border: 1px solid color-mix(in srgb, var(--text-on-accent) 18%, transparent);
-  border-radius: 4px;
-  background: color-mix(in srgb, var(--surface) 68%, transparent);
-  color: color-mix(in srgb, var(--text-on-accent) 62%, transparent);
-  font-size: 11px;
-  letter-spacing: .05em;
-  text-shadow: 0 1px 7px var(--scrim);
-  backdrop-filter: blur(4px);
 }
 
 .enemy-stats-block {

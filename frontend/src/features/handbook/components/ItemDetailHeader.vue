@@ -42,6 +42,9 @@
           <span v-if="formattedNameEn">{{ formattedNameEn }}</span>
         </div>
         <span v-if="item.userId != null" class="item-detail-custom">✦ ваше</span>
+        <div v-if="$slots.corner" class="item-detail-corner">
+          <slot name="corner" />
+        </div>
         <div class="item-detail-actions">
           <slot name="actions" />
         </div>
@@ -355,7 +358,23 @@ function onCoverError() {
   margin-left: auto;
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 10px;
+}
+
+.item-detail-actions:empty {
+  display: none;
+}
+
+.item-detail-corner {
+  flex: none;
+  align-self: flex-start;
+  margin-left: auto;
+  display: flex;
+}
+
+.item-detail-corner + .item-detail-actions {
+  margin-left: 0;
 }
 
 @media (max-width: 760px) {

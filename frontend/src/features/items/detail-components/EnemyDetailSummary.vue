@@ -1,17 +1,17 @@
 <template>
   <div class="enemy-summary">
-    <div v-if="identity.source || identity.named_npc || tags.length" class="enemy-summary-meta">
-      <div v-if="identity.named_npc || tags.length" class="enemy-tags">
-        <span v-if="identity.named_npc" class="enemy-tag enemy-tag-named">Именной</span>
-        <span v-for="tag in tags" :key="tag" class="enemy-tag">{{ tag }}</span>
-      </div>
-      <div v-if="identity.source" class="enemy-source">
-        {{ identity.source }}<template v-if="identity.source_page"> · СТР. {{ identity.source_page }}</template>
+    <div v-if="alignmentTags.length" class="enemy-summary-meta">
+      <div class="enemy-tags">
+        <span v-for="tag in alignmentTags" :key="`${tag.key}:${tag.label}`" class="enemy-tag">{{ tag.label }}</span>
       </div>
     </div>
 
     <div class="enemy-stats-block">
       <div class="enemy-stats-side enemy-stats-left">
+        <div v-if="identity.named_npc || detailTags.length" class="enemy-tags enemy-tags-left">
+          <span v-if="identity.named_npc" class="enemy-tag enemy-tag-named">Именной</span>
+          <span v-for="tag in detailTags" :key="`${tag.key}:${tag.label}`" class="enemy-tag">{{ tag.label }}</span>
+        </div>
         <div class="enemy-stat-card enemy-stat-cr">
           <div class="stat-label" title="Уровень опасности помогает мастеру подобрать существо подходящей сложности для группы.">
             <Gauge class="stat-icon" aria-hidden="true" /> Уровень опасности
@@ -117,25 +117,27 @@ const combat = computed(() => props.item.data?.combat || {})
 const stats = computed(() => props.item.data?.stats || {})
 const saves = computed(() => props.item.data?.saving_throws || {})
 
-const tags = computed(() => {
+const tagRows = computed(() => {
   const result = []
   for (const { field, value } of walkFields(props.type?.fields || [], props.item?.data || {})) {
     if (!field.tag || value == null || value === '' || value === false) continue
     if (field.type === 'bool' || field.type === 'boolean') {
-      result.push(field.name.toUpperCase())
+      result.push({ key: field.key, label: field.name.toUpperCase() })
     } else if (field.type === 'suggest' || field.type === 'suggest_array') {
       const typeId = getSuggestId(field)
       const ids = Array.isArray(value) ? value : [value]
       const labels = typeId == null
         ? ids.map(String)
         : ids.map(id => suggestStore.items(typeId)?.find(suggest => suggest.id === id)?.value).filter(Boolean)
-      if (labels.length) result.push(labels.join(', ').toUpperCase())
+      if (labels.length) result.push({ key: field.key, label: labels.join(', ').toUpperCase() })
     } else {
-      result.push(String(value).toUpperCase())
+      result.push({ key: field.key, label: String(value).toUpperCase() })
     }
   }
   return result
 })
+const alignmentTags = computed(() => tagRows.value.filter(tag => tag.key === 'alignment'))
+const detailTags = computed(() => tagRows.value.filter(tag => tag.key !== 'alignment'))
 
 function formatBonus(value) {
   return value == null ? '' : signedBonus(value)
