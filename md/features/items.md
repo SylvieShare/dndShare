@@ -361,14 +361,20 @@ one olive-green, broad crocodilian head icon. The low swept-back ridge, amber
 eye and pale throat distinguish it from the smaller horned kobold mark at
 `64×64`.
 
+The five-row cult family uses one hooded human portrait mark: a pointed
+burgundy hood, plain antique-gold half-mask and short wrapped neck remain
+recognizable at `64×64`. **Cultist**, **Occult Initiate**, **Occult
+Extollant**, **Occult Silvertongue** and **Cult Fanatic** deliberately share
+this icon while their covers communicate rank and mechanics independently.
+
 Existing imported bestiary artwork is not treated as a compact icon: for every
-non-kobold system creature it is migrated from `icon_image_id` to
-`cover_image_id` through MCP
+system creature still using an importer-owned image it is migrated from
+`icon_image_id` to `cover_image_id` through MCP
 `handbook_bestiary_migrate_icons_to_covers`. The migration reuses the same S3
 object, never overwrites an existing cover and clears the old icon relation.
 Creatures without imported artwork remain on the item-type fallback. The
-kobold family is excluded because it already has the intentional shared icon
-and unique generated covers.
+kobold, lizardfolk and cult families are unaffected because their intentional
+shared icons are generated item icons rather than importer-owned artwork.
 
 ### Bestiary cover art direction
 
@@ -412,6 +418,10 @@ club-and-spiked-shield warrior, armored scaleshield, swamp-magic shaman,
 fang-dagger subchief and hulking render each have a unique scene and silhouette.
 All six covers use the `1536×1152` JPEG contract and were installed through
 MCP with `preservePrevious=true` so imported predecessors remain recoverable.
+The five cult-family covers follow the same contract: guard, novice, forbidden
+scholar, charismatic leader and fanatic each receive a distinct single-person
+scene while retaining the shared hood-and-mask identity. Replaced imported
+covers remain recoverable through `preservePrevious=true`.
 
 ### Item cover art direction
 
