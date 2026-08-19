@@ -324,7 +324,7 @@
 }
 
 .encounter-screen__turn-portrait--cover {
-  width: clamp(220px, 28vw, 520px);
+  width: 28vw;
   height: auto;
   align-self: stretch;
   margin-right: 0;

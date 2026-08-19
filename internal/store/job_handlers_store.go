@@ -137,7 +137,8 @@ func setBestiaryItemContentSource(ctx context.Context, tx pgx.Tx, itemID, typeID
 			INSERT INTO dndshare.content_source (
 				source_id, native_source_version_id, name, code, kind, is_default, sort_order
 			)
-			SELECT source_id, source_version_id, $3, $2, 'addon', false, 100
+			SELECT source_id, source_version_id, $3, $2,
+			       dndshare.classify_content_source_kind($2), false, 100
 			FROM source_context
 			ON CONFLICT DO NOTHING
 			RETURNING id, native_source_version_id
@@ -156,7 +157,9 @@ func setBestiaryItemContentSource(ctx context.Context, tx pgx.Tx, itemID, typeID
 	}
 	if hasDisplayName {
 		if _, err := tx.Exec(ctx,
-			`UPDATE dndshare.content_source SET name = $1, code = $2 WHERE id = $3`,
+			`UPDATE dndshare.content_source
+			    SET name = $1, code = $2, kind = dndshare.classify_content_source_kind($2)
+			  WHERE id = $3`,
 			sourceName, sourceCode, contentSourceID,
 		); err != nil {
 			return err

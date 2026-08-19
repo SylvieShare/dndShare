@@ -270,6 +270,22 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
+.col-source-filter-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.col-source-filter-count {
+  min-width: 18px;
+  padding: 1px 5px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--text-on-accent) 6%, transparent);
+  color: var(--text-muted);
+  font-size: 9px;
+  line-height: 14px;
+  text-align: center;
+}
 .col-filter-title-toggle {
   width: 100%;
   margin-bottom: 0;

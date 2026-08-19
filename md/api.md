@@ -77,7 +77,9 @@ as the event author.
 
 - `GET /api/sources` → systems с `versions:[{id,sourceId,version}]`.
   Одинарного `source.version` нет.
-- `GET /api/content-sources?sourceId=&sourceVersionId=`
+- `GET /api/content-sources?sourceId=&sourceVersionId=` возвращает публикации с
+  `kind`: `core`, `supplement`, `setting`, `adventure`, `playtest` или
+  `third_party`;
 - `GET /api/item-types`
 - `GET /api/items`
 - `GET /api/items/by-ids?ids=`

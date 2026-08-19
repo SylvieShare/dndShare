@@ -22,6 +22,8 @@ describe('handbook list controls', () => {
     expect(controls).toContain("'Поиск по названию — RU / EN...'")
     expect(controls).toContain('v-if="hasChoiceOptions(field)"')
     expect(controls).toContain('hasFilterValues(f) || hasItemFilterOptions(f)')
+    expect(controls).toContain('v-for="group in contentSourceGroups"')
+    expect(controls).toContain('groupContentSources(props.contentSources)')
   })
 
   it('keeps the wide collection bar identity-only on the handbook page', () => {

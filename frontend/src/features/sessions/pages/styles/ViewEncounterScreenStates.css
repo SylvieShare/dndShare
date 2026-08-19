@@ -113,7 +113,7 @@
   }
 
   .encounter-screen__turn-portrait--cover {
-    width: min(38vw, 220px);
+    width: 38vw;
     height: auto;
   }
 

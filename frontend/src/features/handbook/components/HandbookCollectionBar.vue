@@ -112,11 +112,14 @@
             <span class="col-filter-head-title">Источники</span>
             <button v-if="activeContentSourceCount" class="col-filter-clear" @click="clearContentSourceFilter">Сбросить</button>
           </div>
-          <div v-if="contentSources.length" class="col-filter-group">
-            <div class="col-filter-title">Источники</div>
+          <div v-for="group in contentSourceGroups" :key="group.kind" class="col-filter-group">
+            <div class="col-filter-title col-source-filter-title">
+              <span>{{ group.label }}</span>
+              <span class="col-source-filter-count">{{ group.sources.length }}</span>
+            </div>
             <div class="col-filter-options">
               <button
-                v-for="source in contentSources"
+                v-for="source in group.sources"
                 :key="source.id"
                 class="col-filter-chip"
                 :class="{ active: contentSourceSelected(source.id) }"
@@ -139,6 +142,7 @@ import { computed, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 import { getSuggestId } from '@/features/handbook/objects/lib/schemaFields'
 import { fetchGet } from '@/shared/api/http'
+import { groupContentSources } from '@/shared/lib/contentSourceKinds'
 import { BasePopover } from '@sylvieshare/share-ui'
 import { MultiToggle } from '@sylvieshare/share-ui'
 
@@ -191,6 +195,7 @@ const activeFilterCount = computed(() =>
 )
 
 const activeContentSourceCount = computed(() => props.contentSourceIds.length)
+const contentSourceGroups = computed(() => groupContentSources(props.contentSources))
 
 const visibleFilterFields = computed(() => props.filterFields.filter(hasAvailableOptions))
 

@@ -13,6 +13,8 @@ describe('public encounter portraits', () => {
     expect(mainStyles).toContain('.encounter-screen__turn-portrait--cover {')
     expect(mainStyles).toContain('align-self: stretch;')
     expect(mainStyles).toContain('margin-right: 0;')
+    expect(mainStyles).toContain('width: 28vw;')
+    expect(mainStyles).not.toContain('width: clamp(220px, 28vw, 520px);')
   })
 
   it('renders NPC artwork without a frame or backing surface', () => {

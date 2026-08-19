@@ -69,6 +69,11 @@ Startup data correction переводит прежние значения в э
 `source` — игровая система, `source_version` — редакция правил.
 `content_source` — книга/публикация, а
 `content_source_compatibility` задаёт её доступность для редакции.
+`content_source.kind` хранит одну каталоговую категорию: `core`, `supplement`,
+`setting`, `adventure`, `playtest` или `third_party`. Постоянная SQL-функция
+`classify_content_source_kind(code)` является единым правилом для startup-
+нормализации и импорта новых источников; неизвестный код получает
+`supplement`, пока не будет классифицирован явно.
 `item_version_compatibility` может переопределить статус отдельного item.
 
 `item_type` хранит schema fields типа, `item` — контент, `suggest_type/suggest`

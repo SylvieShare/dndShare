@@ -88,12 +88,52 @@ CREATE TABLE IF NOT EXISTS dndshare.content_source (
     "name"                   varchar NOT NULL,
     code                     varchar NOT NULL,
     description              text NULL,
-    kind                     varchar DEFAULT 'addon' NOT NULL,
+    kind                     varchar DEFAULT 'supplement' NOT NULL,
     is_default               bool DEFAULT false NOT NULL,
     sort_order               int4 DEFAULT 0 NOT NULL,
     CONSTRAINT content_source_pk PRIMARY KEY (id),
-    CONSTRAINT content_source_kind_check CHECK (kind IN ('base', 'addon', 'third_party'))
+    CONSTRAINT content_source_kind_check CHECK (kind IN ('core', 'supplement', 'setting', 'adventure', 'playtest', 'third_party'))
 );
+ALTER TABLE dndshare.content_source DROP CONSTRAINT IF EXISTS content_source_kind_check;
+ALTER TABLE dndshare.content_source ALTER COLUMN kind SET DEFAULT 'supplement';
+
+-- A publication has one catalogue-facing category. Official books are split by
+-- purpose; playtest and third-party material take precedence over that purpose.
+-- Unknown future codes start as supplements until explicitly classified.
+CREATE OR REPLACE FUNCTION dndshare.classify_content_source_kind(raw_code text)
+RETURNS varchar
+LANGUAGE sql
+IMMUTABLE
+AS $$
+    SELECT CASE
+        WHEN upper(btrim(COALESCE(raw_code, ''))) IN ('PHB', 'MM', 'DMG')
+            THEN 'core'
+        WHEN upper(btrim(COALESCE(raw_code, ''))) LIKE 'UA%'
+            THEN 'playtest'
+        WHEN upper(btrim(COALESCE(raw_code, ''))) IN (
+            'AATM', 'BOTJR', 'COA', 'CON', 'DMF5E', 'DODK', 'GHTPG', 'LH', 'LHEX',
+            'MHH', 'ODL', 'OOW', 'PG', 'TDCS', 'TLTRW', 'TP', 'VSOS'
+        ) THEN 'third_party'
+        WHEN upper(btrim(COALESCE(raw_code, ''))) IN (
+            'AAG', 'AI', 'EGTW', 'ERLW', 'GGR', 'MOT', 'SATO', 'SCAG', 'SCC', 'VRGR'
+        ) THEN 'setting'
+        WHEN upper(btrim(COALESCE(raw_code, ''))) IN (
+            'BGDIA', 'CM', 'COS', 'CRCOTN', 'DIP', 'DITLCOT', 'DOSI', 'DSOTDQ',
+            'GOS', 'HFTT', 'HOTDQ', 'IDROTF', 'JTTRC', 'KFTGV', 'KKW', 'LLK',
+            'LMOP', 'LOX', 'OOTA', 'PABTSO', 'POTA', 'QFTIS', 'ROT', 'SKT',
+            'TOA', 'TOFW', 'VEOR', 'WBTW', 'WDH', 'WDMM'
+        ) THEN 'adventure'
+        ELSE 'supplement'
+    END
+$$;
+
+UPDATE dndshare.content_source
+SET kind = dndshare.classify_content_source_kind(code)
+WHERE kind IS DISTINCT FROM dndshare.classify_content_source_kind(code);
+
+ALTER TABLE dndshare.content_source
+    ADD CONSTRAINT content_source_kind_check
+    CHECK (kind IN ('core', 'supplement', 'setting', 'adventure', 'playtest', 'third_party'));
 -- The same publication code may exist in multiple editions (PHB 2014 and PHB
 -- 2024). COALESCE also keeps edition-neutral packs unique within a system.
 ALTER TABLE dndshare.content_source DROP CONSTRAINT IF EXISTS content_source_source_code_key;
@@ -407,7 +447,7 @@ INSERT INTO dndshare.content_source (
 )
 SELECT src.id, sv.id, 'Player''s Handbook', 'PHB',
        'Основная книга правил для создания персонажей D&D пятой редакции.',
-       'base', true, 0
+       'core', true, 0
 FROM dndshare."source" src
 LEFT JOIN dndshare.source_version sv ON sv.source_id = src.id AND lower(sv.version) = '2014'
 WHERE lower(src.name) = 'dnd5e'
@@ -448,11 +488,7 @@ SELECT DISTINCT
         WHEN 'LLK' THEN 'Приключение Lost Laboratory of Kwalish с дополнительным игровым материалом.'
         ELSE 'Дополнительный источник материалов для D&D пятой редакции.'
       END),
-    CASE
-      WHEN upper(sg.value) IN ('PHB', 'DMF5E') THEN 'base'
-      WHEN upper(sg.value) LIKE 'UA%' THEN 'third_party'
-      ELSE 'addon'
-    END,
+    dndshare.classify_content_source_kind(sg.value),
     upper(sg.value) = 'PHB',
     CASE WHEN upper(sg.value) = 'PHB' THEN 0 ELSE 100 END,
     sg.id
@@ -964,7 +1000,7 @@ INSERT INTO dndshare.content_source (
 SELECT sc.source_id, sc.source_version_id,
        COALESCE(dndshare.canonical_dnd5e_content_source_name(bc.code), bc.code),
        bc.code,
-       'addon', false, 100
+       dndshare.classify_content_source_kind(bc.code), false, 100
 FROM bestiary_codes bc
 CROSS JOIN source_context sc
 ON CONFLICT DO NOTHING;

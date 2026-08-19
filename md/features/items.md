@@ -75,7 +75,10 @@ entries and selected choices.
   fixed control area at the top of the list column, above its independently
   scrolling rows. Text search matches a case-insensitive substring of either
   the Russian name or `nameEn`; publication codes remain in the dedicated
-  source filter. The main catalogue and item pickers reuse this placement.
+  source filter. Its publications are grouped as core books, official
+  supplements, settings, adventures, Unearthed Arcana and third-party
+  material; PHB, MM and DMG keep that canonical order inside the core group.
+  The main catalogue and item pickers reuse this placement.
   Bestiary schema filters cover creature type, size, environment, legendary
   status, named-NPC status and CR; the finite CR list is stored in schema
   metadata so the filter control is available before any dictionary request.

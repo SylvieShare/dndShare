@@ -59,3 +59,22 @@ func TestHandbookSchemaBackfillsBestiaryContentSources(t *testing.T) {
 		}
 	}
 }
+
+func TestHandbookSchemaNormalizesContentSourceCategories(t *testing.T) {
+	for _, fragment := range []string{
+		"CREATE OR REPLACE FUNCTION dndshare.classify_content_source_kind(raw_code text)",
+		"('PHB', 'MM', 'DMG')",
+		"LIKE 'UA%'",
+		"'setting'",
+		"'adventure'",
+		"'playtest'",
+		"'third_party'",
+		"ELSE 'supplement'",
+		"SET kind = dndshare.classify_content_source_kind(code)",
+		"CHECK (kind IN ('core', 'supplement', 'setting', 'adventure', 'playtest', 'third_party'))",
+	} {
+		if !strings.Contains(schemaHandbookSQL, fragment) {
+			t.Fatalf("content source category migration is missing %q", fragment)
+		}
+	}
+}
