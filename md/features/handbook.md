@@ -138,6 +138,11 @@ render a duplicate source chip for spells; other item types retain the wrapper
 source chip when no specialized publication label exists.
 Feature-specific mutations are passed into the fixed footer through the
 `actions` slot. Descriptions use the shared rich renderer.
+Bestiary detail sections use the illustrated `DetailSection` heading: a
+semantic Lucide icon in a compact accent frame, a high-contrast uppercase label
+and a fading divider. Combat actions use the same hierarchy with a restrained
+danger/accent tone so the block can be found quickly without competing with
+the action cards themselves.
 
 ### Related player rules
 

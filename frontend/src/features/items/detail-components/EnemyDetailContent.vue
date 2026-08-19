@@ -10,6 +10,7 @@
 
     <!-- Environment -->
     <DetailSection v-if="environmentLabels.length" label="Среда обитания">
+      <template #icon><MapPin /></template>
       <div class="enemy-chips">
         <span v-for="label in environmentLabels" :key="label" class="enemy-chip">{{ label }}</span>
       </div>
@@ -17,6 +18,7 @@
 
     <!-- Feats -->
     <DetailSection v-if="item.data.feats?.length" label="Особенности">
+      <template #icon><Sparkles /></template>
       <div class="enemy-blocks">
         <div v-for="b in item.data.feats" :key="b.name" class="enemy-block-tile">
           <div class="block-name">{{ b.name }}</div>
@@ -26,7 +28,8 @@
     </DetailSection>
 
     <!-- Actions -->
-    <DetailSection v-if="item.data.actions?.length" label="Действия">
+    <DetailSection v-if="item.data.actions?.length" label="Действия" tone="combat">
+      <template #icon><Swords /></template>
       <div class="enemy-blocks">
         <div v-for="b in item.data.actions" :key="b.name" class="enemy-block-tile">
           <div class="block-name">{{ b.name }}</div>
@@ -37,6 +40,7 @@
 
     <!-- Reactions -->
     <DetailSection v-if="item.data.reactions?.length" label="Реакции">
+      <template #icon><Shield /></template>
       <div class="enemy-blocks">
         <div v-for="b in item.data.reactions" :key="b.name" class="enemy-block-tile">
           <div class="block-name">{{ b.name }}</div>
@@ -52,11 +56,13 @@
       collapsible
       :default-open="false"
     >
+      <template #icon><BookOpen /></template>
       <RichContent class="enemy-desc" :html="item.data.description" :actor-name="actorName || item.name" />
     </DetailSection>
 
     <!-- Tags as accordion (at the very bottom) -->
     <DetailSection v-if="tagSuggests.length" label="Теги">
+      <template #icon><Tags /></template>
       <div class="enemy-tag-list">
         <div v-for="s in tagSuggests" :key="s.id" class="enemy-tag-card" :class="{ active: expandedTag === s.id }">
           <button
@@ -80,6 +86,7 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue'
+import { BookOpen, MapPin, Shield, Sparkles, Swords, Tags } from '@lucide/vue'
 import { findField, getSuggestId } from '@/features/handbook/objects/lib/schemaFields'
 import DetailSection from '@/shared/ui/DetailSection.vue'
 import RichContent from '@/shared/ui/DndRichContent.vue'
