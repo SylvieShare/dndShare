@@ -184,6 +184,54 @@ manifest, uploads all nine base-race and nine subrace busts to stable
 `system-race-icons/v1/` keys and assigns them through `item.icon_image_id`.
 The larger race illustrations remain independent covers.
 
+### Class icon art direction
+
+Class icons use **heraldic profession emblems** rather than character portraits
+or miniature scenes. Each emblem communicates the class through one dominant
+tool, relic or magical focus, so it remains distinct from race busts and spell
+runes while belonging to the same visual family.
+
+- Build one compact centered emblem from one dominant object and no more than
+  two large supporting accents. Prefer a readable outer silhouette over literal
+  inventory detail; crossed-object bundles and collections of tiny equipment
+  are avoided.
+- Use the established polished flat-cartoon rendering: a thick deep-plum
+  contour, saturated jewel-tone fills, restrained two-step shading and small
+  warm highlights. The object may be slightly three-quarter, but must not use
+  realistic texture or painterly noise.
+- Give every class its own silhouette and primary palette. Repeated motifs such
+  as blades or magic must differ structurally: a fighter's closed helm, a
+  paladin's tower shield, a magus's spell-charged sword and a rogue's narrow
+  dagger cannot be simple recolors.
+- Center the opaque bounds inside one common safe margin. Do not add a tile,
+  disc, external frame, scenery, character, detached particle cloud, cast
+  shadow, text, letters, numbers, logo or watermark. Empty canvas space must be
+  genuine alpha.
+
+The production asset is a lossless `128×128` RGBA WebP, inspected at both 128
+and 64 px on light and dark surfaces. New class icons are installed through MCP
+`handbook_item_set_system_image(slot="icon", preservePrevious=true)`, retaining
+the earlier class artwork as a rollback/style-set candidate rather than
+shipping another image-sync binary.
+
+The initial semantic motifs are:
+
+- **Bard:** golden lyre with a violet ribbon-like sound accent;
+- **Barbarian:** chipped double-headed axe with a crimson war-mark;
+- **Fighter:** steel closed helm with one restrained sword accent;
+- **Wizard:** open indigo spellbook carrying a cyan arcane star;
+- **Druid:** emerald oak leaf beneath a compact antler crown;
+- **Cleric:** ivory-gold reliquary sun with a radiant center;
+- **Artificer:** brass gear holding a bright blue power crystal;
+- **Warlock:** violet occult eye held by an obsidian clawed crescent;
+- **Magus:** slender steel sword crossed by a blue-violet spell flare;
+- **Monk:** wrapped amber fist enclosed by a simple prayer-bead arc;
+- **Paladin:** ivory tower shield bearing a warm golden sun;
+- **Rogue:** narrow silver dagger passing through a dark split mask;
+- **Ranger:** green longbow with one arrow and a pine-sprig accent;
+- **Sorcerer:** crimson innate-magic crystal wrapped in a living flame;
+- **Shaman:** turquoise ritual mask with three broad spirit feathers.
+
 ### Race cover art direction
 
 Race covers are portrait-oriented detail artwork derived from the same visual
