@@ -116,6 +116,11 @@ entries and selected choices.
 - Icons and covers are independent `item.icon_image_id` and
   `item.cover_image_id` relations backed by `storage_image`. MCP stores their
   content-addressed objects under `system-item-media/v1/` in S3.
+- Define the image from the item name, structured data, description and
+  mechanics first. Open existing or imported artwork only when those sources
+  leave the creature, character count, anatomy, equipment or other defining
+  form genuinely ambiguous. Use it only as a factual shape reference; never as
+  the default composition, rendering style or palette template.
 - Do not commit generated image binaries to the application repository or add
   them to a startup sync command. Existing sync commands and embedded manifests
   are legacy bootstraps only.
@@ -230,10 +235,10 @@ ratio within its height limit instead of forcing a panoramic crop.
 
 - Store an opaque `1536×1024` JPEG at quality 88 without text, frames, badges,
   logos or watermarks.
-- Preserve the recognizable ancestry, number of characters and broad pose of
-  the corresponding legacy cover, but redraw it as polished flat-cartoon game
-  art with thick deep-plum contours, broad shapes and restrained two-step
-  shading. Do not reuse or enlarge the square icon itself.
+- Choose the character count and broad pose from the ancestry's data and
+  defining traits. Render polished flat-cartoon game art with thick deep-plum
+  contours, broad shapes and restrained two-step shading. Do not reuse or
+  enlarge the square icon itself.
 - Keep the character group near the central 55–65% of the canvas, with air
   above and beside the silhouettes. Use a dark plum/navy, low-detail
   background and leave the lower area calmer so the header overlay remains
@@ -253,10 +258,10 @@ one controlled magical effect rather than ancestry.
 - Store an opaque `1536×1024` JPEG at quality 88. Keep exactly two adult class
   representatives in the central 55–65% of the canvas, with breathing room and
   a calm dark lower band for the shared header overlay.
-- Preserve the broad composition and defining equipment of the corresponding
-  legacy class portrait, but simplify them into strong silhouettes: a bard's
-  instruments, a fighter's shield and polearm, a wizard's book and staff or an
-  artificer's device and gauntlet. Avoid dense collections of tiny props.
+- Choose the broad composition and defining equipment from the class data, then
+  simplify them into strong silhouettes: a bard's instruments, a fighter's
+  shield and polearm, a wizard's book and staff or an artificer's device and
+  gauntlet. Avoid dense collections of tiny props.
 - Match the race-cover rendering: thick deep-plum contours, broad graphic
   shapes, expressive stylized faces, restrained two-step shading and a dark
   plum/navy atmospheric background. Use a distinct muted jewel-tone palette
@@ -321,10 +326,6 @@ details are noticed.
 - Store a lossless `128×128` RGBA PNG or WebP and inspect it at both 128 and
   the production display size of `64×64`. The silhouette, face direction and
   defining anatomy must remain clear at the smaller size.
-- Derive a new recognition mark from the creature name, stat block and defining
-  mechanics first. Imported/legacy artwork is a reference only when those
-  sources leave the intended anatomy or form genuinely ambiguous; it is not an
-  automatic composition or style template.
 
 A creature family may share one identical recognition mark when its variants
 have the same defining anatomy. Source duplicates and age or rank variants do
