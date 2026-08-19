@@ -67,7 +67,7 @@ describe('handbook item detail cover', () => {
     expect(detailSource).toContain('<template v-if="isEnemy" #summary>')
     expect(headerSource).toContain('<slot name="summary" />')
     expect(headerSource).toContain('<slot name="corner" />')
-    expect(detailSource).toContain(':title="enemySourceTitle"')
+    expect(detailSource).toContain(':title="itemSourceTitle"')
     expect(detailSource).toContain('source.name || source.code')
     expect(headerSource).toContain('.item-detail-header-covered.item-detail-header-summary .item-detail-shade')
     expect(headerSource).toContain('display: none;')
@@ -77,6 +77,14 @@ describe('handbook item detail cover', () => {
     expect(enemySummarySource).toContain('class="enemy-abilities"')
     expect(enemyContentSource).not.toContain('class="enemy-abilities"')
     expect(enemyContentSource).not.toContain('class="enemy-top"')
+  })
+
+  it('keeps edit and source in one shared right-aligned row for every item type', () => {
+    expect(headerSource).toContain('class="item-detail-controls"')
+    expect(headerSource.indexOf('<slot name="actions" />')).toBeLessThan(headerSource.indexOf('<slot name="corner" />'))
+    expect(detailSource).toContain('<template v-if="itemSourceLabel" #corner>')
+    expect(detailSource).toContain('<Pencil :size="14" aria-hidden="true" />')
+    expect(detailSource).not.toContain('class="detail-sources"')
   })
 
   it('frames a centered creature with side stats and bottom abilities', () => {

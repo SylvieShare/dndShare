@@ -74,7 +74,6 @@
     <RichContent v-if="description" class="fdc-description" :html="description" />
     <div v-else class="fdc-empty">Описание отсутствует</div>
 
-    <footer v-if="data.source_page" class="fdc-source">Книга игрока · стр. {{ data.source_page }}</footer>
   </article>
 </template>
 
@@ -223,6 +222,5 @@ function choiceEffects(choice) {
 .fdc-divider { height: 1px; background: linear-gradient(90deg, color-mix(in srgb, var(--feat) 45%, transparent), var(--border) 35%, transparent); }
 .fdc-description { color: var(--text-2); font-size: 13px; line-height: 1.68; }
 .fdc-empty { color: var(--text-muted); font-size: 12px; font-style: italic; }
-.fdc-source { align-self: flex-end; color: var(--text-muted); font-size: 9px; letter-spacing: 0.05em; text-transform: uppercase; }
 @media (max-width: 560px) { .fdc-sigil { width: 50px; height: 50px; } .fdc-title-row h2 { font-size: 21px; } }
 </style>

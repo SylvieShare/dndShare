@@ -42,11 +42,13 @@
           <span v-if="formattedNameEn">{{ formattedNameEn }}</span>
         </div>
         <span v-if="item.userId != null" class="item-detail-custom">✦ ваше</span>
-        <div v-if="$slots.corner" class="item-detail-corner">
-          <slot name="corner" />
-        </div>
-        <div class="item-detail-actions">
-          <slot name="actions" />
+        <div v-if="$slots.actions || $slots.corner" class="item-detail-controls">
+          <div class="item-detail-actions">
+            <slot name="actions" />
+          </div>
+          <div v-if="$slots.corner" class="item-detail-corner">
+            <slot name="corner" />
+          </div>
         </div>
       </div>
 
@@ -354,27 +356,25 @@ function onCoverError() {
   font-size: 10px;
 }
 
-.item-detail-actions {
+.item-detail-controls {
+  flex: none;
+  align-self: flex-start;
   margin-left: auto;
   display: flex;
   align-items: center;
   justify-content: flex-end;
   gap: 10px;
+  max-width: 100%;
 }
 
-.item-detail-actions:empty {
-  display: none;
+.item-detail-actions,
+.item-detail-corner {
+  display: flex;
+  align-items: center;
 }
 
 .item-detail-corner {
   flex: none;
-  align-self: flex-start;
-  margin-left: auto;
-  display: flex;
-}
-
-.item-detail-corner + .item-detail-actions {
-  margin-left: 0;
 }
 
 @media (max-width: 760px) {
@@ -413,9 +413,8 @@ function onCoverError() {
     flex: 0 1 auto;
   }
 
-  .item-detail-actions {
-    width: 100%;
-    margin-left: 0;
+  .item-detail-controls {
+    margin-left: auto;
   }
 }
 

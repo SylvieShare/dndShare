@@ -6,21 +6,19 @@
         <template v-if="isEnemy" #summary>
           <EnemyDetailSummary :item="item" :type="type" />
         </template>
-        <template v-if="isEnemy" #corner>
+        <template v-if="itemSourceLabel" #corner>
           <span
-            v-if="enemySourceLabel"
-            class="enemy-detail-source"
-            :title="enemySourceTitle"
-          >{{ enemySourceLabel }}</span>
+            class="item-detail-source"
+            :title="itemSourceTitle"
+          >{{ itemSourceLabel }}</span>
         </template>
         <template #actions>
-          <button v-if="canEdit" class="btn-edit" @click="$emit('edit', item)">Редактировать</button>
+          <button v-if="canEdit" class="btn-edit" @click="$emit('edit', item)">
+            <Pencil :size="14" aria-hidden="true" />
+            Редактировать
+          </button>
         </template>
       </ItemDetailHeader>
-
-      <div v-if="item.contentSources?.length && type?.id !== 5" class="detail-sources">
-        <span v-for="source in item.contentSources" :key="source.id" :title="source.name">{{ source.code || source.name }}</span>
-      </div>
 
       <!-- Custom renderer (Weapon, Spell, Enemy…) -->
       <component
@@ -97,7 +95,10 @@
       <!-- Edit button for custom renderers -->
       <div v-if="customRenderer && canEdit && !showTitle" class="detail-edit-row">
         <span class="detail-id">ID {{ item.id }}</span>
-        <button class="btn-edit" @click="$emit('edit', item)">Редактировать</button>
+        <button class="btn-edit" @click="$emit('edit', item)">
+          <Pencil :size="14" aria-hidden="true" />
+          Редактировать
+        </button>
       </div>
 
       <div v-if="showTitle" class="detail-technical-meta">
@@ -111,6 +112,7 @@
 
 <script setup>
 import { computed, watch } from 'vue'
+import { Pencil } from '@lucide/vue'
 import ItemDetailHeader from '@/features/handbook/components/ItemDetailHeader.vue'
 import { useSuggestStore } from '@/stores/suggest'
 import { ensureItemNames, itemName } from '@/features/handbook/objects/lib/itemNames'
@@ -150,20 +152,22 @@ defineEmits(['edit'])
 
 const customRenderer = computed(() => CUSTOM_RENDERERS[props.type?.id] || null)
 const isEnemy = computed(() => props.type?.id === 6)
-const enemySourceLabel = computed(() => {
+const itemSourceLabel = computed(() => {
   const sources = (props.item?.contentSources || [])
     .map(source => source.code || source.name)
     .filter(Boolean)
   const fallback = props.item?.data?.identity?.source
   const label = sources.length ? sources.join(', ') : fallback
-  const page = props.item?.data?.identity?.source_page
+  const page = props.item?.data?.identity?.source_page ?? props.item?.data?.source_page
   return label ? `${label}${page ? ` · СТР. ${page}` : ''}` : ''
 })
-const enemySourceTitle = computed(() => {
+const itemSourceTitle = computed(() => {
   const sources = (props.item?.contentSources || [])
     .map(source => source.name || source.code)
     .filter(Boolean)
-  return sources.length ? sources.join(', ') : enemySourceLabel.value
+  const label = sources.length ? sources.join(', ') : props.item?.data?.identity?.source
+  const page = props.item?.data?.identity?.source_page ?? props.item?.data?.source_page
+  return label ? `${label}${page ? ` · стр. ${page}` : ''}` : itemSourceLabel.value
 })
 
 const typeFields = computed(() => props.type?.fields || [])
@@ -242,14 +246,15 @@ function formatSubValue(sub, value) {
   margin: auto 0;
 }
 
-.detail-sources { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
-.detail-sources span { border-radius: 999px; background: color-mix(in srgb, var(--accent) 12%, var(--surface)); color: var(--accent); padding: 3px 8px; font-size: 9px; font-weight: 700; letter-spacing: .04em; }
-
 .detail-id { font-size: 11px; color: var(--text-muted); }
 
-.enemy-detail-source {
+.item-detail-source {
+  min-height: 27px;
   max-width: min(280px, 32vw);
   overflow: hidden;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
   padding: 2px 7px;
   border: 1px solid color-mix(in srgb, var(--text-on-accent) 18%, transparent);
   border-radius: 4px;
@@ -274,6 +279,10 @@ function formatSubValue(sub, value) {
 }
 
 .btn-edit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   background: none;
   border: 1px dashed var(--border);
   color: var(--text-2);
@@ -282,6 +291,7 @@ function formatSubValue(sub, value) {
   font-size: 12px;
   cursor: pointer;
   font-family: inherit;
+  white-space: nowrap;
   transition: color 0.15s, border-color 0.15s, background 0.15s;
 }
 .btn-edit:hover { color: var(--text-1); border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, transparent); }
@@ -367,10 +377,6 @@ function formatSubValue(sub, value) {
 @media (max-width: 520px) {
   .detail-panel {
     padding: 12px;
-  }
-
-  .btn-edit {
-    width: 100%;
   }
 }
 </style>

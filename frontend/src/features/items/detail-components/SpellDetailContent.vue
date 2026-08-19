@@ -48,11 +48,6 @@
       <span class="sdc-classes">{{ classes.join(', ') }}</span>
     </div>
 
-    <div v-if="source" class="sdc-source-row">
-      <span class="sdc-ref-label">Источник</span>
-      <span class="sdc-source">{{ source }}</span>
-    </div>
-
     <div class="sdc-divider"></div>
 
     <RichContent v-if="data.description" class="sdc-desc" :html="data.description" />
@@ -114,7 +109,6 @@ const schoolStyle = computed(() => {
     color: schoolColor.value,
   }
 })
-const source = computed(() => (props.item.contentSources || []).map((entry) => entry.name || entry.code).filter(Boolean).join(', '))
 const classes = computed(() => classIds.value.map(id => classNames.value[id]).filter(Boolean))
 const hasComponents = computed(() => {
   const c = data.value.components
@@ -228,15 +222,7 @@ function colorAlpha(color, alpha) {
 .sdc-comp-m { font-size: 11px; color: var(--text-muted); font-style: italic; }
 
 .sdc-refs { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-.sdc-source-row { display: flex; align-items: center; gap: 10px; padding-top: 9px; border-top: 1px solid var(--border); }
 .sdc-ref-label { flex: 0 0 auto; color: var(--text-muted); font-size: 9px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
-.sdc-source {
-  font-size: 11px;
-  color: var(--text-muted);
-  background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
-  border-radius: 4px;
-  padding: 2px 8px;
-}
 .sdc-classes { font-size: 12px; color: var(--text-muted); }
 
 .sdc-desc {
