@@ -161,7 +161,7 @@
 
 .block-text {
   font-size: 13px;
-  color: var(--text-2);
+  color: color-mix(in srgb, var(--text-2) 88%, var(--text-muted));
   line-height: 1.6;
 }
 

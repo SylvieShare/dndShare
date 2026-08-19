@@ -145,7 +145,8 @@ danger/accent tone so the block can be found quickly without competing with
 the action cards themselves. Names inside feature/action/reaction cards use a
 larger medium-bold UI face, restrained light-gray color and a thin accent marker;
 action markers inherit the combat tone while prose remains in the rich-content
-typography.
+typography. Ordinary card prose is mixed slightly toward `text-muted`; dice,
+links and other inline interactive nodes keep their own stronger colors.
 
 ### Related player rules
 
