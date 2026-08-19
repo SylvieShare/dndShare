@@ -226,6 +226,19 @@ and 64 px on light and dark surfaces. New class icons are installed through MCP
 the earlier class artwork as a rollback/style-set candidate rather than
 shipping another image-sync binary.
 
+Subclass icons follow an **inherited-anchor rule**. When the parent has a strong
+carrier shape, every sibling keeps it and replaces the dominant internal sign:
+wizard schools share the open spellbook, paladin oaths share the tower shield,
+cleric domains share the reliquary sun and druid circles share the antler/leaf
+language. Other families inherit the parent's contour weight and palette while
+using a new specialization silhouette. A subclass must therefore read as part
+of its class family and remain distinguishable from every sibling at `64×64`;
+it must not be a simple recolor of the base-class emblem.
+
+The production subclass set covers all 41 built-in child class items. These
+transparent `128×128` WebP files use the same MCP installation contract as base
+classes and are not embedded in a startup image-sync binary.
+
 The initial semantic motifs are:
 
 - **Bard:** golden lyre with a violet ribbon-like sound accent;
