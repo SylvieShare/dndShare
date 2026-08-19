@@ -48,7 +48,18 @@ describe('handbook item detail cover', () => {
     expect(headerSource).toContain('const TYPE_COVER_STYLES = {')
     expect(headerSource).toContain("'--cover-min-height': '440px'")
     expect(headerSource).toContain('TYPE_COVER_STYLES[props.type?.id]')
-    expect(headerSource).toContain('.item-detail-header-covered.item-detail-header-summary {\n  aspect-ratio: var(--cover-aspect-ratio, auto);')
+    expect(headerSource).toContain('.item-detail-header-covered.item-detail-header-summary::before {')
+    expect(headerSource).toContain('aspect-ratio: var(--cover-aspect-ratio, auto);')
+  })
+
+  it('lets a bestiary summary grow beyond the image-driven cover height', () => {
+    expect(headerSource).toContain('.item-detail-header-covered.item-detail-header-summary {\n  aspect-ratio: auto;\n  display: grid;\n  grid-template-columns: minmax(0, 1fr);')
+    expect(headerSource).toContain("content: '';\n  grid-area: 1 / 1;")
+    expect(headerSource).toContain('min-height: var(--cover-min-height, 440px);')
+    expect(headerSource).toContain('.item-detail-header-summary .item-detail-overlay {\n  min-height: var(--cover-min-height, 0);')
+    expect(headerSource).toContain('.item-detail-header-covered.item-detail-header-summary .item-detail-overlay {\n  grid-area: 1 / 1;')
+    expect(headerSource).toContain('.item-detail-header-summary .item-detail-summary {\n  flex: 1;\n  min-height: min-content;')
+    expect(enemySummaryStyles).toContain('.enemy-summary {\n  flex: 1;\n  min-height: min-content;')
   })
 
   it('keeps bestiary data in local translucent blocks without shading the whole cover', () => {
@@ -59,7 +70,7 @@ describe('handbook item detail cover', () => {
     expect(headerSource).toContain('display: none;')
     expect(headerSource).toContain('.item-detail-header-covered.item-detail-header-summary .item-detail-title')
     expect(headerSource).toContain('width: fit-content;')
-    expect(headerSource).not.toContain('.item-detail-header-covered.item-detail-header-summary .item-detail-overlay {')
+    expect(headerSource).not.toContain('.item-detail-header-covered.item-detail-header-summary .item-detail-overlay {\n  background:')
     expect(enemySummarySource).toContain('class="enemy-abilities"')
     expect(enemyContentSource).not.toContain('class="enemy-abilities"')
     expect(enemyContentSource).not.toContain('class="enemy-top"')
