@@ -17,6 +17,8 @@ const weaponContentSource = read('../../items/detail-components/WeaponDetailCont
 const transportSummarySource = read('../../items/detail-components/TransportDetailSummary.vue')
 const transportSummaryStyles = read('../../items/detail-components/styles/TransportDetailSummary.css')
 const transportContentSource = read('../../items/detail-components/TransportDetailContent.vue')
+const gearSummarySource = read('../../items/detail-components/GearDetailSummary.vue')
+const gearContentSource = read('../../items/detail-components/ItemDetailContent.vue')
 
 describe('handbook item detail cover', () => {
   it('uses the intrinsic cover ratio without a shared maximum height', () => {
@@ -73,6 +75,20 @@ describe('handbook item detail cover', () => {
     expect(transportSummaryStyles).toContain('"left center right"')
     expect(transportContentSource).toContain('label="Эксплуатация"')
     expect(transportContentSource).toContain('label="Характеристики объекта"')
+  })
+
+  it('shows purchasable gear as a complete 2:3 portrait with price and weight on the cover', () => {
+    expect(headerSource).toContain("if (typeId === 2) return '2 / 3'")
+    expect(headerSource).toContain("2: {\n    '--cover-min-height': '560px'")
+    expect(headerSource).toContain('[data-item-type-id="2"]::before')
+    expect(headerSource).toContain('[data-item-type-id="2"] .item-detail-cover')
+    expect(headerSource).toContain('object-fit: contain;')
+    expect(detailSource).toContain('<GearDetailSummary :item="item" />')
+    expect(detailSource).toContain('available_in_starting_shop === true')
+    expect(detailSource).toContain('economyInHeader: isShopGearCovered.value')
+    expect(gearSummarySource).toContain('class="gear-economy-card gear-economy-cost"')
+    expect(gearSummarySource).toContain('class="gear-economy-card gear-economy-weight"')
+    expect(gearContentSource).toContain('!economyInHeader && data.weight != null')
   })
 
   it('uses the shared 4:3 object showcase for weapon damage, economy and OR proficiencies', () => {

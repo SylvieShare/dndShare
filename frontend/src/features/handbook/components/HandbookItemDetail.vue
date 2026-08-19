@@ -15,6 +15,9 @@
         <template v-else-if="isTransport" #summary>
           <TransportDetailSummary :item="item" />
         </template>
+        <template v-else-if="isShopGearCovered" #summary>
+          <GearDetailSummary :item="item" />
+        </template>
         <template v-if="itemSourceLabel" #corner>
           <span
             class="item-detail-source"
@@ -37,6 +40,7 @@
         :type="type"
         :show-title="false"
         :actor-name="actorName"
+        v-bind="customRendererProps"
       />
 
       <!-- Generic schema-based view -->
@@ -132,6 +136,7 @@ import ArmorDetailSummary from '@/features/items/detail-components/ArmorDetailSu
 import EnemyDetailContent from '@/features/items/detail-components/EnemyDetailContent'
 import EnemyDetailSummary from '@/features/items/detail-components/EnemyDetailSummary.vue'
 import FeatDetailContent from '@/features/items/detail-components/FeatDetailContent'
+import GearDetailSummary from '@/features/items/detail-components/GearDetailSummary.vue'
 import ItemDetailContent from '@/features/items/detail-components/ItemDetailContent'
 import PotionDetailContent from '@/features/items/detail-components/PotionDetailContent'
 import SpellDetailContent from '@/features/items/detail-components/SpellDetailContent'
@@ -171,6 +176,12 @@ const isEnemy = computed(() => props.type?.id === 6)
 const isWeapon = computed(() => props.type?.id === 1)
 const isArmor = computed(() => props.type?.id === 12)
 const isTransport = computed(() => props.type?.id === 13)
+const isShopGearCovered = computed(() => props.type?.id === 2
+  && props.item?.data?.available_in_starting_shop === true
+  && Boolean(props.item?.coverImageUrl))
+const customRendererProps = computed(() => props.type?.id === 2
+  ? { economyInHeader: isShopGearCovered.value }
+  : {})
 const itemSourceLabel = computed(() => {
   const sources = (props.item?.contentSources || [])
     .map(source => source.code || source.name)

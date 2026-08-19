@@ -119,6 +119,14 @@ entries and selected choices.
   movement/capacity/relation rail stays at the bottom. Mount icons are compact
   head portraits facing right; object and vehicle icons use their own full
   silhouette. The full contract is in `md/features/transport.md`;
+- ordinary type-2 gear marked `available_in_starting_shop=true` uses a portrait
+  item-showcase contract when a cover is assigned. The source cover is an opaque
+  `1024×1536` JPEG (`2:3`) and is shown in full with `object-fit: contain` inside
+  a `560px` minimum header rather than cropped across the modal width. Price and
+  weight are real translucent UI cards over the quiet lower part of the cover
+  and are not baked into the illustration or repeated below it. Without an
+  assigned cover the item keeps the compact generic header and its ordinary
+  metadata section;
 - field labels and errors use shared form components;
 - direct color literals are rejected by `npm run check:colors`.
 
@@ -245,6 +253,26 @@ language. Other families inherit the parent's contour weight and palette while
 using a new specialization silhouette. A subclass must therefore read as part
 of its class family and remain distinguishable from every sibling at `64×64`;
 it must not be a simple recolor of the base-class emblem.
+
+### Starting-shop gear art direction
+
+Mundane purchasable gear uses one object-focused flat-cartoon family. The pilot
+system assets are item `349` («Арбалетный болт») and item `384` («Молоток»).
+
+- The icon is a single compact object silhouette on genuine alpha, stored as a
+  lossless `128×128` RGBA WebP and checked at `64×64`. Use the established thick
+  deep-plum outline, broad shapes, restrained two-step shading and warm material
+  highlights. Do not add a tile, frame, floor, hand, text or cast shadow.
+- The cover is an opaque `1024×1536` JPEG (`2:3`). Show the complete object in
+  the upper two-thirds of a subdued workshop or travel context. Keep the lower
+  third naturally dark and low-detail for the HTML price and weight cards; never
+  paint fake panels, badges, gems, labels, numbers or other UI into the image.
+- A cover describes the purchased row rather than a generic theme. Ammunition
+  may show its sold bundle while retaining one dominant projectile; containers
+  and tool kits must keep their factual contents and silhouette recognizable.
+- Generate at a larger size, crop to exact `2:3`, and downsample with a
+  high-quality filter. Install both slots only through MCP
+  `handbook_item_set_system_image`; do not commit image binaries.
 
 ### Race cover art direction
 

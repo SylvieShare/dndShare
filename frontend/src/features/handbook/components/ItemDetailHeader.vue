@@ -69,6 +69,9 @@ const props = defineProps({
 })
 
 const TYPE_COVER_STYLES = {
+  2: {
+    '--cover-min-height': '560px',
+  },
   1: {
     '--cover-min-height': '420px',
   },
@@ -84,6 +87,7 @@ const TYPE_COVER_STYLES = {
 }
 
 function defaultCoverAspectRatio(typeId) {
+  if (typeId === 2) return '2 / 3'
   if (typeId === 5) return '4 / 1'
   if (typeId === 1 || typeId === 6 || typeId === 12) return '4 / 3'
   if (typeId === 13) return '3 / 2'
@@ -224,6 +228,14 @@ function onCoverError() {
   width: 100%;
   min-height: var(--cover-min-height, 440px);
   aspect-ratio: var(--cover-aspect-ratio, auto);
+}
+
+.item-detail-header-covered.item-detail-header-summary[data-item-type-id="2"]::before {
+  aspect-ratio: auto;
+}
+
+.item-detail-header-covered[data-item-type-id="2"] .item-detail-cover {
+  object-fit: contain;
 }
 
 .item-detail-header-covered .item-detail-title h1 {

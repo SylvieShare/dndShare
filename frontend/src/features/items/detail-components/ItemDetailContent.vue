@@ -16,8 +16,8 @@
     <DetailSection v-if="hasMeta" label="Характеристики">
       <template #icon><PackageOpen /></template>
       <div class="idc-meta">
-        <span v-if="data.weight != null" class="idc-badge">{{ data.weight }} фунт.</span>
-        <span v-if="costLabel" class="idc-badge idc-cost">{{ costLabel }}</span>
+        <span v-if="!economyInHeader && data.weight != null" class="idc-badge">{{ data.weight }} фунт.</span>
+        <span v-if="!economyInHeader && costLabel" class="idc-badge idc-cost">{{ costLabel }}</span>
         <span v-if="data.is_container" class="idc-badge idc-container">Контейнер</span>
         <span v-if="data.consumable" class="idc-badge idc-consumable">Расходуемое</span>
       </div>
@@ -36,12 +36,15 @@ import { useCostFormatter } from '@/features/items/lib/useCostFormatter'
 const props = defineProps({
   item: { type: Object, required: true },
   showTitle: { type: Boolean, default: true },
+  economyInHeader: { type: Boolean, default: false },
 })
 
 const data = computed(() => props.item.data || {})
 const { format: formatCost } = useCostFormatter()
 const costLabel = computed(() => formatCost(data.value.cost))
-const hasMeta = computed(() => data.value.weight != null || !!costLabel.value || data.value.is_container || data.value.consumable)
+const hasMeta = computed(() => (!props.economyInHeader && (data.value.weight != null || !!costLabel.value))
+  || data.value.is_container
+  || data.value.consumable)
 </script>
 
 <style scoped>
