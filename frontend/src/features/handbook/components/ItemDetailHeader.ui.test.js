@@ -11,7 +11,7 @@ const enemyContentSource = read('../../items/detail-components/EnemyDetailConten
 
 describe('handbook item detail cover', () => {
   it('uses the intrinsic cover ratio without a shared maximum height', () => {
-    expect(headerSource).toContain('aspect-ratio: var(--cover-aspect-ratio, 4 / 1);')
+    expect(headerSource).toContain('aspect-ratio: var(--cover-aspect-ratio, auto);')
     expect(headerSource).not.toContain('max-height: min(320px, 42dvh);')
     expect(headerSource).not.toContain("'--cover-max-height'")
     expect(headerSource).toContain('flex: 0 0 auto;')
@@ -24,11 +24,24 @@ describe('handbook item detail cover', () => {
     expect(headerSource).not.toContain('object-position: center top;')
   })
 
+  it('preloads and quickly crossfades covers without resetting bestiary geometry', () => {
+    expect(headerSource).toContain("if (typeId === 5) return '4 / 1'")
+    expect(headerSource).toContain("if (typeId === 6) return '4 / 3'")
+    expect(headerSource).toContain("return ''")
+    expect(headerSource).toContain('const image = new Image()')
+    expect(headerSource).toContain('await image.decode()')
+    expect(headerSource).toContain(':key="displayedCoverUrl"')
+    expect(headerSource).toContain('class="item-detail-cover item-detail-cover-previous"')
+    expect(headerSource).toContain('animation: item-detail-cover-enter 160ms')
+    expect(headerSource).toContain('@media (prefers-reduced-motion: reduce)')
+    expect(headerSource).not.toContain("coverAspectRatio.value = '4 / 1'")
+  })
+
   it('supports a separate cover height profile for each handbook type', () => {
     expect(headerSource).toContain('const TYPE_COVER_STYLES = {')
     expect(headerSource).toContain("'--cover-min-height': '440px'")
     expect(headerSource).toContain('TYPE_COVER_STYLES[props.type?.id]')
-    expect(headerSource).toContain('.item-detail-header-covered.item-detail-header-summary {\n  aspect-ratio: var(--cover-aspect-ratio, 4 / 3);')
+    expect(headerSource).toContain('.item-detail-header-covered.item-detail-header-summary {\n  aspect-ratio: var(--cover-aspect-ratio, auto);')
   })
 
   it('keeps bestiary data in local translucent blocks without shading the whole cover', () => {

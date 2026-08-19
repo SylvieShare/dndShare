@@ -177,57 +177,99 @@ func setBestiaryItemContentSource(ctx context.Context, tx pgx.Tx, itemID, typeID
 	return err
 }
 
-// setBestiaryItemImage keeps imported artwork outside rules JSON. A manually
-// assigned raster icon wins over the importer; importer-owned rows are updated
+// setBestiaryItemImage keeps imported artwork outside rules JSON. Imported art
+// belongs to the cover slot; compact portrait icons remain independent.
+// Explicit covers win over the importer, while importer-owned rows are updated
 // in place so repeated jobs do not accumulate storage_image records.
 func setBestiaryItemImage(ctx context.Context, tx pgx.Tx, itemID int64, imageKey, imageURL string) error {
-	var imageID *int64
-	var imageType *string
+	var coverID, iconID *int64
+	var coverType, coverKey, iconType, iconKey *string
 	if err := tx.QueryRow(ctx,
-		`SELECT i.icon_image_id, img."type"
+		`SELECT i.cover_image_id, cover."type", cover."key",
+		        i.icon_image_id, icon."type", icon."key"
 		 FROM dndshare.item i
-		 LEFT JOIN dndshare.storage_image img ON img.id = i.icon_image_id
+		 LEFT JOIN dndshare.storage_image cover ON cover.id = i.cover_image_id
+		 LEFT JOIN dndshare.storage_image icon ON icon.id = i.icon_image_id
 		 WHERE i.id = $1
 		 FOR UPDATE OF i`,
 		itemID,
-	).Scan(&imageID, &imageType); err != nil {
+	).Scan(&coverID, &coverType, &coverKey, &iconID, &iconType, &iconKey); err != nil {
 		return err
 	}
 
 	imageURL = strings.TrimSpace(imageURL)
 	imageKey = strings.TrimSpace(imageKey)
-	if imageID != nil && imageType != nil && *imageType == "bestiary" {
+
+	var imageID *int64
+	legacyIcon := false
+	switch {
+	case coverID != nil && isImportedBestiaryImage(coverType, coverKey):
+		imageID = coverID
+	case coverID != nil:
+		return nil
+	case iconID != nil && isImportedBestiaryImage(iconType, iconKey):
+		imageID = iconID
+		legacyIcon = true
+	}
+
+	if imageID != nil {
 		if imageURL == "" {
-			if _, err := tx.Exec(ctx, `UPDATE dndshare.item SET icon_image_id = NULL WHERE id = $1`, itemID); err != nil {
+			if _, err := tx.Exec(ctx,
+				`UPDATE dndshare.item
+				 SET cover_image_id = CASE WHEN cover_image_id = $1 THEN NULL ELSE cover_image_id END,
+				     icon_image_id = CASE WHEN icon_image_id = $1 THEN NULL ELSE icon_image_id END
+				 WHERE id = $2`,
+				*imageID, itemID,
+			); err != nil {
 				return err
 			}
 			_, err := tx.Exec(ctx, `UPDATE dndshare.storage_image SET deleted = true WHERE id = $1`, *imageID)
 			return err
 		}
-		_, err := tx.Exec(ctx,
-			`UPDATE dndshare.storage_image SET "key" = $1, url = $2, deleted = false WHERE id = $3`,
+		if _, err := tx.Exec(ctx,
+			`UPDATE dndshare.storage_image
+			 SET "key" = $1, url = $2, "type" = 'item_cover', deleted = false
+			 WHERE id = $3`,
 			imageKey, imageURL, *imageID,
-		)
-		return err
+		); err != nil {
+			return err
+		}
+		if legacyIcon {
+			_, err := tx.Exec(ctx,
+				`UPDATE dndshare.item
+				 SET cover_image_id = $1, icon_image_id = NULL
+				 WHERE id = $2 AND cover_image_id IS NULL AND icon_image_id = $1`,
+				*imageID, itemID,
+			)
+			return err
+		}
+		return nil
 	}
-	if imageID != nil || imageURL == "" {
+	if imageURL == "" {
 		return nil
 	}
 
 	var savedImageID int64
 	if err := tx.QueryRow(ctx,
 		`INSERT INTO dndshare.storage_image (user_id, "key", url, "type")
-		 VALUES (NULL, $1, $2, 'bestiary')
+		 VALUES (NULL, $1, $2, 'item_cover')
 		 RETURNING id`,
 		imageKey, imageURL,
 	).Scan(&savedImageID); err != nil {
 		return err
 	}
 	_, err := tx.Exec(ctx,
-		`UPDATE dndshare.item SET icon_svg_id = NULL, icon_image_id = $1 WHERE id = $2`,
+		`UPDATE dndshare.item SET cover_image_id = $1 WHERE id = $2 AND cover_image_id IS NULL`,
 		savedImageID, itemID,
 	)
 	return err
+}
+
+func isImportedBestiaryImage(imageType, key *string) bool {
+	if imageType != nil && *imageType == "bestiary" {
+		return true
+	}
+	return key != nil && strings.HasPrefix(*key, "bestiary/v1/")
 }
 
 // BestiaryFindSuggestByCode — id базового suggest по типу и коду (без регистра).

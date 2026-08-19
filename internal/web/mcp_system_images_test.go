@@ -35,6 +35,46 @@ func TestMCPPublishesSystemItemImageToolContract(t *testing.T) {
 	t.Fatal("handbook_item_set_system_image definition not found")
 }
 
+func TestMCPPublishesBestiaryIconMigrationToolContract(t *testing.T) {
+	for _, definition := range mcpToolDefs() {
+		if definition["name"] != "handbook_bestiary_migrate_icons_to_covers" {
+			continue
+		}
+		input, ok := definition["inputSchema"].(map[string]any)
+		if !ok {
+			t.Fatalf("missing input schema: %#v", definition)
+		}
+		properties, _ := input["properties"].(map[string]any)
+		for _, key := range []string{"excludeItemIds", "apply", "expectedCandidateCount"} {
+			if _, ok := properties[key]; !ok {
+				t.Fatalf("migration property %q is missing from %#v", key, properties)
+			}
+		}
+		return
+	}
+	t.Fatal("handbook_bestiary_migrate_icons_to_covers definition not found")
+}
+
+func TestUniquePositiveIDsNormalizesAndRejectsInvalidInput(t *testing.T) {
+	ids := uniquePositiveIDs([]int64{12, 7, 12, 9})
+	if len(ids) != 3 || ids[0] != 12 || ids[1] != 7 || ids[2] != 9 {
+		t.Fatalf("unexpected normalized ids: %#v", ids)
+	}
+	if ids := uniquePositiveIDs([]int64{12, 0}); ids != nil {
+		t.Fatalf("zero id must be rejected: %#v", ids)
+	}
+}
+
+func TestBestiaryIconMigrationApplyRequiresWriteAuthorization(t *testing.T) {
+	args := map[string]json.RawMessage{
+		"apply": json.RawMessage(`true`),
+	}
+	_, err := (&Server{}).toolSystemBestiaryMigrateIconsToCovers(t.Context(), args)
+	if err == nil || !strings.Contains(err.Error(), "write operations") {
+		t.Fatalf("apply must fail without write authorization, got %v", err)
+	}
+}
+
 func TestParseMCPSystemItemImageValidatesContent(t *testing.T) {
 	pngHeader := []byte{'\x89', 'P', 'N', 'G', '\r', '\n', '\x1a', '\n'}
 	args := map[string]json.RawMessage{

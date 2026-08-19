@@ -133,6 +133,13 @@ content-addressed `system-item-media/v1/` ключом и обновляет `st
 ссылку item. Для вызова production MCP должны быть заданы `MCP_AUTH_TOKEN` и
 `MCP_WRITE_ENABLED=true`.
 
+Перенос уже зарегистрированных картинок бестиария из компактной иконки в
+обложку выполняется без повторной загрузки через MCP
+`handbook_bestiary_migrate_icons_to_covers`. Сначала вызывается dry-run с
+`apply=false`, затем полученный `candidateCount` передаётся как
+`expectedCandidateCount` вместе с `apply=true`. Нужные семейства исключаются
+явным списком `excludeItemIds`; занятые обложки tool не перезаписывает.
+
 `cmd/bestiary-image-sync` также является ручной legacy-командой. Она выбирает только
 старые системные картинки бестиария без S3 object key, копирует их по стабильным
 ключам `bestiary/v1/` и заменяет внешний URL в `storage_image`; повторный запуск

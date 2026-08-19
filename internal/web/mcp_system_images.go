@@ -28,6 +28,59 @@ type mcpSystemItemImage struct {
 	PreservePrevious bool
 }
 
+func (s *Server) toolSystemBestiaryMigrateIconsToCovers(ctx context.Context, args map[string]json.RawMessage) (any, error) {
+	apply, err := argBoolDefault(args, "apply", false)
+	if err != nil {
+		return nil, err
+	}
+	if apply {
+		if err := s.mcpRequireWrite(); err != nil {
+			return nil, err
+		}
+	}
+	excludeItemIDs, err := argInt64SliceDefault(args, "excludeItemIds", []int64{})
+	if err != nil {
+		return nil, err
+	}
+	excludeItemIDs = uniquePositiveIDs(excludeItemIDs)
+	if excludeItemIDs == nil {
+		return nil, errors.New("excludeItemIds must contain only positive integers")
+	}
+	expectedCandidateCount, err := argInt64Opt(args, "expectedCandidateCount")
+	if err != nil {
+		return nil, err
+	}
+	if expectedCandidateCount != nil && *expectedCandidateCount < 0 {
+		return nil, errors.New("expectedCandidateCount must not be negative")
+	}
+	if apply && expectedCandidateCount == nil {
+		return nil, errors.New("expectedCandidateCount is required when apply=true; run a dry-run first")
+	}
+
+	return s.store.MigrateSystemBestiaryIconsToCovers(
+		ctx,
+		excludeItemIDs,
+		apply,
+		expectedCandidateCount,
+	)
+}
+
+func uniquePositiveIDs(ids []int64) []int64 {
+	result := make([]int64, 0, len(ids))
+	seen := make(map[int64]struct{}, len(ids))
+	for _, id := range ids {
+		if id <= 0 {
+			return nil
+		}
+		if _, ok := seen[id]; ok {
+			continue
+		}
+		seen[id] = struct{}{}
+		result = append(result, id)
+	}
+	return result
+}
+
 func (s *Server) toolSystemItemSetImage(ctx context.Context, args map[string]json.RawMessage) (any, error) {
 	if err := s.mcpRequireWrite(); err != nil {
 		return nil, err

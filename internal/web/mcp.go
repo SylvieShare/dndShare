@@ -573,6 +573,8 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 		return s.toolItemDelete(ctx, args)
 	case "handbook_item_set_system_image":
 		return s.toolSystemItemSetImage(ctx, args)
+	case "handbook_bestiary_migrate_icons_to_covers":
+		return s.toolSystemBestiaryMigrateIconsToCovers(ctx, args)
 	case "handbook_suggest_create":
 		return s.toolSuggestCreate(ctx, args)
 	case "handbook_suggest_update":

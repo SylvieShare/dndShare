@@ -28,8 +28,10 @@ The database allows at most one format. All item reads, including paged lists
 and multi-type search, return the assigned projection.
 Bestiary artwork follows the same contract: the import job downloads the
 upstream file, writes it under the stable `bestiary/v1/<slug>` key in our S3 and
-registers that key/URL in a system `storage_image` row. External CDN URLs are
-never served as item icons and artwork is never stored in `item.data`.
+registers that key/URL in a system `storage_image` row. Imported artwork is
+served through `cover_image_id`; the compact icon slot is reserved for explicit
+portrait marks such as the shared kobold-family icon. External CDN URLs are
+never served by the application and artwork is never stored in `item.data`.
 The importer also resolves the upstream book code/name to `content_source` and
 replaces the creature's `item_content_source` link on every import. Startup SQL
 backfills the same relation for creatures imported before this contract, so the
@@ -39,8 +41,8 @@ edition. Startup SQL merges case-only duplicates, preserves their item links and
 normalizes the D&D 5e spell/bestiary catalogue to one Russian display name per
 known code; `DMG` and `DMF5E` remain separate because they identify different
 books. Repeated bestiary imports refresh the display name from upstream metadata.
-Deploy also runs the idempotent `cmd/bestiary-image-sync` migration: only legacy
-bestiary rows without an object key are copied, so later deploys are no-ops. If
+The manual idempotent `cmd/bestiary-image-sync` migration copies only legacy
+bestiary rows without an object key, so later runs are no-ops. If
 an upstream file is already unavailable, its dead URL and item association are
 removed and the item falls back to the type icon.
 

@@ -77,6 +77,18 @@ func argInt64Slice(args map[string]json.RawMessage, key string) ([]int64, error)
 	return v, nil
 }
 
+func argInt64SliceDefault(args map[string]json.RawMessage, key string, def []int64) ([]int64, error) {
+	raw, ok := rawArg(args, key)
+	if !ok {
+		return def, nil
+	}
+	var v []int64
+	if err := json.Unmarshal(raw, &v); err != nil {
+		return nil, fmt.Errorf("parameter %q must be an array of integers", key)
+	}
+	return v, nil
+}
+
 func argString(args map[string]json.RawMessage, key string) (string, error) {
 	raw, ok := rawArg(args, key)
 	if !ok {

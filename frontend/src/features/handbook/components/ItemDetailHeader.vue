@@ -9,9 +9,18 @@
     :style="coverStyle"
   >
     <img
+      v-if="previousCoverUrl"
+      class="item-detail-cover item-detail-cover-previous"
+      :src="previousCoverUrl"
+      alt=""
+      aria-hidden="true"
+    />
+    <img
       v-if="hasCover"
+      :key="displayedCoverUrl"
       class="item-detail-cover"
-      :src="item.coverImageUrl"
+      :class="{ 'item-detail-cover-entering': previousCoverUrl }"
+      :src="displayedCoverUrl"
       alt=""
       aria-hidden="true"
       @load="onCoverLoad"
@@ -46,7 +55,7 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 
 const props = defineProps({
@@ -60,21 +69,88 @@ const TYPE_COVER_STYLES = {
   },
 }
 
+function defaultCoverAspectRatio(typeId) {
+  if (typeId === 5) return '4 / 1'
+  if (typeId === 6) return '4 / 3'
+  return ''
+}
+
 const coverFailed = ref(false)
-const coverAspectRatio = ref('4 / 1')
-const hasCover = computed(() => Boolean(props.item.coverImageUrl) && !coverFailed.value)
+const coverAspectRatio = ref(defaultCoverAspectRatio(props.type?.id))
+const displayedCoverUrl = ref(props.item.coverImageUrl || '')
+const previousCoverUrl = ref('')
+let coverRequestVersion = 0
+let coverSwapTimer = null
+
+const hasCover = computed(() => Boolean(displayedCoverUrl.value) && !coverFailed.value)
 const coverStyle = computed(() => ({
   ...(TYPE_COVER_STYLES[props.type?.id] || {}),
-  ...(hasCover.value ? { '--cover-aspect-ratio': coverAspectRatio.value } : {}),
+  ...(hasCover.value && coverAspectRatio.value ? { '--cover-aspect-ratio': coverAspectRatio.value } : {}),
 }))
 const formattedNameEn = computed(() => String(props.item.nameEn || '')
   .replace(/_/g, ' ')
   .replace(/\b[a-z]/g, char => char.toUpperCase()))
 
-watch(() => props.item.coverImageUrl, () => {
-  coverFailed.value = false
-  coverAspectRatio.value = '4 / 1'
+watch(
+  () => [props.item.coverImageUrl || '', props.type?.id],
+  ([url, typeId]) => {
+    const requestVersion = ++coverRequestVersion
+    coverFailed.value = false
+    coverAspectRatio.value = defaultCoverAspectRatio(typeId)
+
+    if (!url) {
+      clearCoverSwapTimer()
+      previousCoverUrl.value = ''
+      displayedCoverUrl.value = ''
+      return
+    }
+    if (url === displayedCoverUrl.value) return
+
+    const image = new Image()
+    image.decoding = 'async'
+    image.onload = async () => {
+      try {
+        await image.decode()
+      } catch {
+        // A decoded preload is preferred, but onload is enough to swap safely.
+      }
+      if (requestVersion !== coverRequestVersion) return
+
+      if (image.naturalWidth > 0 && image.naturalHeight > 0) {
+        coverAspectRatio.value = `${image.naturalWidth} / ${image.naturalHeight}`
+      }
+      clearCoverSwapTimer()
+      coverFailed.value = false
+      previousCoverUrl.value = displayedCoverUrl.value
+      displayedCoverUrl.value = url
+      if (previousCoverUrl.value) {
+        coverSwapTimer = globalThis.setTimeout(() => {
+          previousCoverUrl.value = ''
+          coverSwapTimer = null
+        }, 180)
+      }
+    }
+    image.onerror = () => {
+      if (requestVersion !== coverRequestVersion) return
+      clearCoverSwapTimer()
+      previousCoverUrl.value = ''
+      displayedCoverUrl.value = ''
+      coverFailed.value = true
+    }
+    image.src = url
+  },
+)
+
+onBeforeUnmount(() => {
+  coverRequestVersion += 1
+  clearCoverSwapTimer()
 })
+
+function clearCoverSwapTimer() {
+  if (coverSwapTimer == null) return
+  globalThis.clearTimeout(coverSwapTimer)
+  coverSwapTimer = null
+}
 
 function onCoverLoad(event) {
   const width = event.currentTarget?.naturalWidth
@@ -107,7 +183,7 @@ function onCoverError() {
 }
 
 .item-detail-header-covered {
-  aspect-ratio: var(--cover-aspect-ratio, 4 / 1);
+  aspect-ratio: var(--cover-aspect-ratio, auto);
   min-height: 0;
 }
 
@@ -117,7 +193,7 @@ function onCoverError() {
 }
 
 .item-detail-header-covered.item-detail-header-summary {
-  aspect-ratio: var(--cover-aspect-ratio, 4 / 3);
+  aspect-ratio: var(--cover-aspect-ratio, auto);
   min-height: var(--cover-min-height, 440px);
 }
 
@@ -141,6 +217,25 @@ function onCoverError() {
   z-index: -2;
   object-fit: cover;
   object-position: center;
+}
+
+.item-detail-cover-previous {
+  z-index: -3;
+}
+
+.item-detail-cover-entering {
+  animation: item-detail-cover-enter 160ms cubic-bezier(.2, .7, .2, 1) both;
+}
+
+@keyframes item-detail-cover-enter {
+  from {
+    opacity: 0;
+    transform: scale(1.008);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .item-detail-shade {
@@ -284,6 +379,12 @@ function onCoverError() {
   .item-detail-actions {
     width: 100%;
     margin-left: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .item-detail-cover-entering {
+    animation: none;
   }
 }
 </style>

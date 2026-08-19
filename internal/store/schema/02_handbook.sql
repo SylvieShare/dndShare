@@ -242,7 +242,7 @@ CREATE INDEX IF NOT EXISTS idx_item_cover_image_id
     WHERE cover_image_id IS NOT NULL;
 
 -- Creature artwork used to be the only item image kept inside rules JSON.
--- Move it to the canonical raster icon relation before runtime reads begin.
+-- Move it to the canonical cover relation before runtime reads begin.
 -- The imported URL points at the upstream bestiary CDN, so no S3 key exists.
 DO $$
 DECLARE
@@ -259,15 +259,14 @@ BEGIN
     LOOP
         IF NOT EXISTS (
             SELECT 1 FROM dndshare.item
-            WHERE id = creature.id AND icon_image_id IS NOT NULL
+			WHERE id = creature.id AND cover_image_id IS NOT NULL
         ) THEN
             INSERT INTO dndshare.storage_image (user_id, "key", url, "type")
-            VALUES (creature.user_id, NULL, creature.image_url, 'bestiary')
+			VALUES (creature.user_id, NULL, creature.image_url, 'item_cover')
             RETURNING id INTO saved_image_id;
 
             UPDATE dndshare.item
-            SET icon_svg_id = NULL,
-                icon_image_id = saved_image_id
+			SET cover_image_id = saved_image_id
             WHERE id = creature.id;
         END IF;
     END LOOP;

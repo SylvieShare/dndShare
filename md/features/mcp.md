@@ -29,6 +29,7 @@ Write:
 
 - `handbook_item_create`, `handbook_item_update`, `handbook_item_delete`;
 - `handbook_item_set_system_image`;
+- `handbook_bestiary_migrate_icons_to_covers`;
 - `handbook_suggest_create`, `handbook_suggest_update`,
   `handbook_suggest_set_svg`, `handbook_suggest_delete`.
 
@@ -58,6 +59,15 @@ Tool schemas должны совпадать с текущей item/suggest mode
   и сохраняет S3-объект для возврата или будущего стилевого набора;
   повторная установка тех же байтов использует тот же ключ и строку;
 - ответ содержит обновлённый item и метаданные установленного изображения.
+
+`handbook_bestiary_migrate_icons_to_covers` переносит уже существующие
+растровые изображения базовых существ из `icon_image_id` в `cover_image_id`,
+не загружая и не удаляя S3-объекты. Занятые обложки никогда не
+перезаписываются, пользовательские item не затрагиваются, а переданные
+`excludeItemIds` остаются без изменений. По умолчанию tool выполняет dry-run и
+возвращает `candidateCount`; применение требует `apply=true`, включённых write
+operations и точного `expectedCandidateCount` из последнего dry-run. У
+перенесённых `storage_image` тип нормализуется в `item_cover`.
 
 Общий JSON body `/mcp` ограничен 16 МБ: этого достаточно для 10 МБ бинарной
 обложки после base64-кодирования и JSON envelope. Встроенные каталоги, уже

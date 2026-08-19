@@ -36,8 +36,8 @@ func TestBestiaryArtworkMigratesOutOfRulesJSON(t *testing.T) {
 	for _, fragment := range []string{
 		"btrim(data ->> 'image_url') AS image_url",
 		`INSERT INTO dndshare.storage_image (user_id, "key", url, "type")`,
-		"VALUES (creature.user_id, NULL, creature.image_url, 'bestiary')",
-		"icon_image_id = saved_image_id",
+		"VALUES (creature.user_id, NULL, creature.image_url, 'item_cover')",
+		"cover_image_id = saved_image_id",
 		"SET data = data - 'image_url'",
 		"field ->> 'key' <> 'image_url'",
 	} {

@@ -148,6 +148,13 @@ func mcpToolDefs() []map[string]any {
 				"dataBase64":       strP("Plain standard base64 without a data URL prefix"),
 				"preservePrevious": boolP("Keep the replaced storage row and S3 object instead of deleting an unreferenced asset (default false)"),
 			}, "itemId", "slot", "fileName", "mimeType", "dataBase64")),
+		tool("handbook_bestiary_migrate_icons_to_covers",
+			"Audit or migrate legacy raster icons of base bestiary items into their cover slot without uploading or deleting S3 objects. Existing covers are never overwritten. Pass kobold or other protected item ids in excludeItemIds. The default apply=false is a dry-run; apply=true requires MCP write operations and an expectedCandidateCount equal to the preceding dry-run result.",
+			schema(map[string]any{
+				"excludeItemIds":        map[string]any{"type": "array", "items": map[string]any{"type": "integer"}, "description": "Base bestiary item ids to leave unchanged (default empty)"},
+				"apply":                 boolP("Apply the migration; default false performs a dry-run"),
+				"expectedCandidateCount": intP("Required with apply=true; must match candidateCount from the latest dry-run"),
+			})),
 		tool("handbook_suggest_create",
 			"Create a base (shared, user_id=null) suggest in the given type.",
 			schema(map[string]any{

@@ -354,11 +354,21 @@ all mechanical variants while giving every entry a unique cover. All twelve
 kobold rows, including alternate-source duplicates, the winged kobold and the
 vampire spawn, use the same kobold portrait mark.
 
+Existing imported bestiary artwork is not treated as a compact icon: for every
+non-kobold system creature it is migrated from `icon_image_id` to
+`cover_image_id` through MCP
+`handbook_bestiary_migrate_icons_to_covers`. The migration reuses the same S3
+object, never overwrites an existing cover and clears the old icon relation.
+Creatures without imported artwork remain on the item-type fallback. The
+kobold family is excluded because it already has the intentional shared icon
+and unique generated covers.
+
 ### Bestiary cover art direction
 
 Bestiary covers use a taller **4:3** composition because the shared header also
-contains the creature's complete combat summary. They are independent from the
-compact creature icon and from legacy artwork imported from external sources.
+contains the creature's complete combat summary. Newly generated covers are
+independent from the compact creature icon; legacy imported artwork occupies
+the same cover slot even when its intrinsic aspect ratio differs.
 
 - Store an opaque `1536×1152` JPEG at quality 88, normally no more than 500 KB.
   Do not use alpha for the full-bleed scene.
@@ -404,9 +414,10 @@ space. Bestiary covers are the explicit 4:3 exception defined above.
   while sharing its palette and semantic motif; avoid photorealism.
 - Reserve a calmer, darker lower band for the title and controls. Do not bake
   in text, letters, numbers, logos, watermarks, borders, badges or UI frames.
-- Inspect the final asset at 4:1 on desktop and mobile. The default header
-  follows the asset's intrinsic ratio without a shared maximum height. Cover
-  minimum height is configured per handbook type rather than imposed globally.
+- Inspect the final asset at 4:1 on desktop and mobile. Only the spell header
+  reserves 4:1 before the file loads; other item types use their intrinsic ratio
+  unless their own profile declares one. There is no shared maximum height.
+  Cover minimum height is configured per handbook type rather than imposed globally.
   The bestiary profile has a `440px` minimum and may grow to fit its combat
   summary through the ability-modifier row; its art remains undimmed while the
   title and summary use local translucent blocks. Detail content remains
