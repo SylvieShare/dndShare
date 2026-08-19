@@ -108,6 +108,18 @@ entries and selected choices.
 - field labels and errors use shared form components;
 - direct color literals are rejected by `npm run check:colors`.
 
+### System media workflow
+
+- Install new system raster media only through MCP
+  `handbook_item_set_system_image`, using `slot="icon"` or `slot="cover"` and
+  `preservePrevious=true` when replacing an existing asset.
+- Icons and covers are independent `item.icon_image_id` and
+  `item.cover_image_id` relations backed by `storage_image`. MCP stores their
+  content-addressed objects under `system-item-media/v1/` in S3.
+- Do not commit generated image binaries to the application repository or add
+  them to a startup sync command. Existing sync commands and embedded manifests
+  are legacy bootstraps only.
+
 ### Static spell rune art direction
 
 Spell icons form one set of **static magical runes**. They use the same visual
@@ -125,18 +137,10 @@ grammar while their center and palette communicate the spell itself.
 - Animation is not part of the production contract. A strong static glyph is
   the baseline; motion may be explored later without changing the stored art.
 
-The production asset is a lossless `128×128` RGBA WebP with genuine alpha and
-clean antialiased edges. Generate at a larger size, extract the background,
-center the opaque bounds with a common safe margin and downsample with a
-high-quality filter. Inspect every result at 128 and 64 px. The manual
-legacy/bootstrap `cmd/spell-rune-sync` can upload the files from
-`internal/spellimages` to stable
-`system-spell-runes/v1/` S3 keys and registers them in `storage_image`; neither
-the main binary nor frontend static assets contain the WebP files.
-This manifest remains the bootstrap for its existing set. New system icons are
-installed through MCP `handbook_item_set_system_image(slot="icon")`; they use
-content-addressed `system-item-media/v1/` keys and do not need to be committed
-to the repository.
+Store the result as a lossless `128×128` RGBA WebP with genuine alpha and clean
+antialiased edges. Generate at a larger size, extract the background, center
+the opaque bounds with a common safe margin and downsample with a high-quality
+filter. Inspect every result at 128 and 64 px.
 
 Use this base prompt for subsequent runes, replacing only the subject and
 palette sections:
@@ -154,17 +158,6 @@ Constraints: genuine transparent alpha; no checkerboard, frame, badge, square
   tile, scenery, caster, hand, text, logo, watermark, cast shadow, tiny
   particles, inscriptions, painterly texture or micro-detail
 ```
-
-The initial semantic motifs are:
-
-- **Fireball:** a red-orange central flame inside four plum-and-amber sigil
-  segments and four outward energy points.
-- **Bless:** an ivory-gold four-point sacred spark with three ascending rays
-  and warm-gold sigil segments.
-- **Aura of Vitality:** an emerald heart-leaf crossed by a golden pulse, with
-  turquoise sigil segments and three life leaves.
-- **Circle of Scarlet:** a pale-rose core enclosed by a segmented crimson ring
-  and four diamond thorns, without literal blood or gore.
 
 ### Race icon art direction
 
@@ -188,13 +181,9 @@ before the internal detail is noticed.
 - Do not add a tile, disc, rune ring, frame, shadow, glow, particles, letters,
   numbers, logos or watermarks. Empty canvas space must be genuine alpha.
 
-The production asset is a lossless `128×128` RGBA WebP with the opaque bounds
-centered inside a common safe margin. Every file is inspected at both 128 and
-64 px on light and dark surfaces. The manual legacy/bootstrap
-`cmd/race-icon-sync` verifies the embedded
-manifest, uploads all nine base-race and nine subrace busts to stable
-`system-race-icons/v1/` keys and assigns them through `item.icon_image_id`.
-The larger race illustrations remain independent covers.
+Store the result as a lossless `128×128` RGBA WebP with the opaque bounds
+centered inside a common safe margin. Inspect it at both 128 and 64 px on light
+and dark surfaces. Keep larger race illustrations as independent covers.
 
 ### Class icon art direction
 
@@ -220,11 +209,8 @@ runes while belonging to the same visual family.
   shadow, text, letters, numbers, logo or watermark. Empty canvas space must be
   genuine alpha.
 
-The production asset is a lossless `128×128` RGBA WebP, inspected at both 128
-and 64 px on light and dark surfaces. New class icons are installed through MCP
-`handbook_item_set_system_image(slot="icon", preservePrevious=true)`, retaining
-the earlier class artwork as a rollback/style-set candidate rather than
-shipping another image-sync binary.
+Store the result as a lossless `128×128` RGBA WebP and inspect it at both 128
+and 64 px on light and dark surfaces.
 
 Subclass icons follow an **inherited-anchor rule**. When the parent has a strong
 carrier shape, every sibling keeps it and replaces the dominant internal sign:
@@ -235,28 +221,6 @@ using a new specialization silhouette. A subclass must therefore read as part
 of its class family and remain distinguishable from every sibling at `64×64`;
 it must not be a simple recolor of the base-class emblem.
 
-The production subclass set covers all 41 built-in child class items. These
-transparent `128×128` WebP files use the same MCP installation contract as base
-classes and are not embedded in a startup image-sync binary.
-
-The initial semantic motifs are:
-
-- **Bard:** golden lyre with a violet ribbon-like sound accent;
-- **Barbarian:** chipped double-headed axe with a crimson war-mark;
-- **Fighter:** steel closed helm with one restrained sword accent;
-- **Wizard:** open indigo spellbook carrying a cyan arcane star;
-- **Druid:** emerald oak leaf beneath a compact antler crown;
-- **Cleric:** ivory-gold reliquary sun with a radiant center;
-- **Artificer:** brass gear holding a bright blue power crystal;
-- **Warlock:** violet occult eye held by an obsidian clawed crescent;
-- **Magus:** slender steel sword crossed by a blue-violet spell flare;
-- **Monk:** wrapped amber fist enclosed by a simple prayer-bead arc;
-- **Paladin:** ivory tower shield bearing a warm golden sun;
-- **Rogue:** narrow silver dagger passing through a dark split mask;
-- **Ranger:** green longbow with one arrow and a pine-sprig accent;
-- **Sorcerer:** crimson innate-magic crystal wrapped in a living flame;
-- **Shaman:** turquoise ritual mask with three broad spirit feathers.
-
 ### Race cover art direction
 
 Race covers are portrait-oriented detail artwork derived from the same visual
@@ -264,8 +228,8 @@ language as the heraldic icons. They are a deliberate `3:2` exception to the
 wide `4:1` item-cover contract below: the race header preserves the intrinsic
 ratio within its height limit instead of forcing a panoramic crop.
 
-- Store an opaque `1536×1024` JPEG without text, frames, badges, logos or
-  watermarks. The current generated set uses JPEG quality 88.
+- Store an opaque `1536×1024` JPEG at quality 88 without text, frames, badges,
+  logos or watermarks.
 - Preserve the recognizable ancestry, number of characters and broad pose of
   the corresponding legacy cover, but redraw it as polished flat-cartoon game
   art with thick deep-plum contours, broad shapes and restrained two-step
@@ -279,13 +243,6 @@ ratio within its height limit instead of forcing a panoramic crop.
   are acceptable only when they are part of the defining pose.
 - Keep subraces visibly related to their base race while varying palette,
   silhouette and one major costume or hair shape.
-
-The complete set contains nine base races and nine subraces. New covers are
-installed through MCP `handbook_item_set_system_image(slot="cover",
-preservePrevious=true)`. The earlier realistic `system-race-images/v1/`
-objects and their active `storage_image` rows are intentionally retained for
-rollback or a future selectable style; they are not bundled into the main
-application binary.
 
 ### Class cover art direction
 
@@ -310,14 +267,9 @@ one controlled magical effect rather than ancestry.
 - Do not include text, readable runes, letters, numbers, frames, badges, logos,
   watermarks, photorealistic skin, painterly noise, gore or busy scenery.
 
-The production set covers all fifteen base classes. It is installed through
-MCP `handbook_item_set_system_image(slot="cover", preservePrevious=true)` and
-uses content-addressed `system-item-media/v1/` objects. Existing realistic
-`system-class-images/v1/` rows remain active as rollback candidates, while the
-new heraldic `system-item-media/v1/` emblem remains assigned to
-`item.icon_image_id`; installing a class cover does not replace or delete that
-icon. Subclasses keep the cover-only fallback contract and show a monogram
-until a dedicated cover is assigned.
+Installing a class cover does not replace or delete its compact icon.
+Subclasses keep the cover-only fallback contract and show a monogram until a
+dedicated cover is assigned.
 
 ### Background cover art direction
 
@@ -340,11 +292,8 @@ background-specific column nor a new storage model.
   of tiny props, readable documents, text, frames, badges, logos, watermarks,
   photorealistic texture, gore and busy scenery.
 
-The production set covers all thirteen built-in backgrounds. Covers are
-installed through MCP
-`handbook_item_set_system_image(slot="cover", preservePrevious=true)` and use
-content-addressed `system-item-media/v1/` objects. Compact icons remain an
-independent optional slot; the wizard never stretches an icon into a cover.
+Compact background icons remain an independent optional slot; the wizard never
+stretches an icon into a cover.
 
 ### Bestiary icon art direction
 
@@ -377,91 +326,12 @@ details are noticed.
   sources leave the intended anatomy or form genuinely ambiguous; it is not an
   automatic composition or style template.
 
-New generated icons are installed through MCP
-`handbook_item_set_system_image(slot="icon", preservePrevious=true)`. **Kobold**
-is the first production example of the head-and-short-neck rule; its swept
-horns, long reptilian muzzle and cheek frill carry the identity without a body
-or weapon. A creature family may deliberately reuse one identical icon across
-all mechanical variants while giving every entry a unique cover. All twelve
-kobold rows, including alternate-source duplicates, the winged kobold and the
-vampire spawn, use the same kobold portrait mark.
-
-The six-row lizardfolk family is the second production example of this rule.
-**Lizardfolk**, **Lizardfolk Commoner**, **Lizardfolk Scaleshield**,
-**Lizardfolk Shaman**, **Lizardfolk Subchief** and **Lizardfolk Render** share
-one olive-green, broad crocodilian head icon. The low swept-back ridge, amber
-eye and pale throat distinguish it from the smaller horned kobold mark at
-`64×64`.
-
-**Злобоглаз / Beholder** is the production example of the complete-form
-exception for unusual anatomy. Its compact wine-purple orb keeps exactly ten
-separated eyestalks plus one dominant central eye; the silhouette must remain
-distinct from the four-stalk **Наблюдатель / Spectator** at `64×64`.
-
-The five-row cult family uses one hooded human portrait mark: a pointed
-burgundy hood, plain antique-gold half-mask and short wrapped neck remain
-recognizable at `64×64`. **Cultist**, **Occult Initiate**, **Occult
-Extollant**, **Occult Silvertongue** and **Cult Fanatic** deliberately share
-this icon while their covers communicate rank and mechanics independently.
-
-The eleven-row drake set uses three recognition marks instead of forcing
-unrelated anatomy into one silhouette. Nine ordinary dragon-hound entries —
-the five chromatic guard drakes, both source-specific **Guard Drake** rows,
-**Drake Companion** and **Ambush Drake** — share one slate-and-bronze wingless
-drake head. **Eyedrake** has its own complete-form eye-and-maw mark, while
-**Fume Drake** uses a separate emerald smoke-dragon head. This is the preferred
-family rule: reuse an icon while the anatomy stays recognizably the same, then
-split the icon when a named variant changes the creature's defining outline.
-
-The dragon-name audit covers 145 meaningful Russian/English matches after
-excluding the unrelated **Giant Dragonfly** and **Pendragon Beestinger**. Three
-pre-existing marks — both **Kobold Dragonshield** rows and **Incomplete Dragon
-Skeleton** — remain untouched. The other 142 rows use 48 marks: each of the 20
-true dragon lineages shares one mark across its four age categories, while
-faerie dragons and mechanically duplicated families share only when their
-defining anatomy stays the same. Oozes, shards, constructs and other changed
-forms keep separate complete-form marks. Legacy covers were consulted only for
-the genuinely ambiguous **Spiderdragon** and **Elder Brain Dragon** anatomy;
-all final assets are right-facing `128×128` transparent PNGs installed through
-MCP with `preservePrevious=true`.
-
-The seventeen-row skeleton set applies the same rule across a wider anatomical
-family. It uses sixteen marks: **Skeletal Riding Horse** and **Warhorse
-Skeleton** share one equine skull, while humanoid skeleton, rat swarm,
-key-shaped skull, alchemist, dwarf, skeletal swarm, predatory dinosaur,
-minotaur, crystal-spined thunderbeast, incomplete dragon, juggernaut, frost
-giant, armored knight, skeletal bloodfin and storm giant each keep a distinct
-silhouette. Bone color and rendering stay consistent, but anatomy and one
-large semantic accent carry the identity at `64×64`; minor equipment is never
-used as a substitute for a different outer contour.
-
-The eleven-row wolf-name set uses ten marks. The two source-specific
-**Guardian Wolf** rows deliberately share one noble primal-wolf head, while
-ordinary wolf, Overworld wolf, giant wolf spider, dire wolf, werewolf, winter
-wolf, Wolf-in-Sheep's-Clothing, Deathwolf and Miska the Wolf-Spider each keep a
-distinct silhouette. The giant wolf spider, plant mimic and Miska use the
-complete-form exception because a canid head would misidentify their anatomy.
-Miska's mark preserves the central four-armed demon torso and head between two
-separate wolf heads above the armored spider body.
-
-The thirteen-row goblinoid set uses nine marks. **Goblin** and **Goblin Gang
-Member** share the lean long-eared goblin head, while both **Goblin Boss** rows
-share a stockier brow-banded mark. The two psionic goblins keep separate
-violet-cyan brawler and commander silhouettes. Hobgoblins use a broader
-rust-red military profile: the base soldier, captain and warlord are distinct,
-while the two source-specific **Iron Shadow** rows share one masked mark and
-the two **Devastator** rows share one battle-mage mark. This keeps source
-duplicates visibly related without flattening meaningful rank, anatomy or
-mechanics into recolors.
-
-Existing imported bestiary artwork is not treated as a compact icon: for every
-system creature still using an importer-owned image it is migrated from
-`icon_image_id` to `cover_image_id` through MCP
-`handbook_bestiary_migrate_icons_to_covers`. The migration reuses the same S3
-object, never overwrites an existing cover and clears the old icon relation.
-Creatures without imported artwork remain on the item-type fallback. The
-kobold, lizardfolk and cult families are unaffected because their intentional
-shared icons are generated item icons rather than importer-owned artwork.
+A creature family may share one identical recognition mark when its variants
+have the same defining anatomy. Source duplicates and age or rank variants do
+not require separate icons by themselves. Split the family when a variant
+changes the outer contour or would be misidentified by the shared mark; color
+alone is not enough reason to split or merge it. Covers remain unique to the
+item and may communicate mechanics, habitat and rank independently.
 
 ### Bestiary cover art direction
 
@@ -494,62 +364,6 @@ the same cover slot even when its intrinsic aspect ratio differs.
   summary may still increase the header beyond that preferred image geometry
   rather than being clipped.
 
-New generated covers are installed through MCP
-`handbook_item_set_system_image(slot="cover", preservePrevious=true)`, which
-keeps the previous imported/generated asset available for rollback. **Kobold**
-is the first production cover using this `1536×1152` contract. The complete
-twelve-row kobold family is the first finished bestiary set: every row keeps
-the shared portrait icon and has its own mechanics-specific 4:3 cover.
-The lizardfolk family follows the same model across all six rows: commoner,
-club-and-spiked-shield warrior, armored scaleshield, swamp-magic shaman,
-fang-dagger subchief and hulking render each have a unique scene and silhouette.
-All six covers use the `1536×1152` JPEG contract and were installed through
-MCP with `preservePrevious=true` so imported predecessors remain recoverable.
-The Beholder cover uses the same contract: one complete ten-stalk subject above
-an Underdark pit, a restrained central antimagic cone and no more than two eye
-rays. Its former imported cover is retained through `preservePrevious=true`.
-The five cult-family covers follow the same contract: guard, novice, forbidden
-scholar, charismatic leader and fanatic each receive a distinct single-person
-scene while retaining the shared hood-and-mask identity. Replaced imported
-covers remain recoverable through `preservePrevious=true`.
-
-All eleven drake rows have individual `1536×1152` covers. The ordinary guard
-variants are differentiated by habitat and damage theme rather than by a flat
-recolor; the two source-specific generic guard drakes use hatchery and
-stronghold scenes, and the companion and ambush entries have their own posture
-and environment. Eyedrake and Fume Drake keep their exceptional anatomy in
-both icon and cover. Every cover was installed through MCP with
-`preservePrevious=true`, so imported predecessors remain available for
-rollback.
-
-All seventeen skeleton rows have individual `1536×1152` covers, including the
-two horse entries that deliberately share their compact equine icon. Each
-scene is driven by the stat block and habitat: the Skeleton Key crawls across
-an Omu tomb ceiling, the dinosaur pounces in an exhausted mine, the bloodfin
-coils underwater, and the two giant skeletons keep separate frost and storm
-effects. Only the anatomically ambiguous Thunderbeast used its imported image
-as a shape reference. The complete set was installed through MCP with
-`preservePrevious=true`; twelve replaced imported covers remain recoverable,
-while five rows received their first cover.
-
-All eleven wolf-name rows have individual `1536×1152` covers. The two Guardian
-Wolf entries reuse one icon but separate an old-growth sanctuary from moonlit
-elven ruins; every other row has both a distinct icon and a mechanics-specific
-scene. Names and stat blocks were sufficient for the ordinary forms. Only
-Miska used its imported cover as an anatomical reference so the central
-four-armed demon, flanking wolf heads and massive spider body remain accurate.
-The set was installed through MCP with `preservePrevious=true`, so all replaced
-imported covers remain available for rollback.
-
-All thirteen goblin and hobgoblin rows have individual `1536×1152` covers.
-Shared icon families split into mechanics-specific scenes: the gang member,
-melee and archer bosses, two psionic goblins, two Iron Shadows, captain, two
-Devastators and warlord remain independently recognizable in the detail
-header. Names, stat blocks and descriptions defined every form clearly, so no
-legacy artwork was needed as a shape reference. The set was installed through
-MCP with `preservePrevious=true`; nine replaced covers remain recoverable and
-four rows received their first cover.
-
 ### Item cover art direction
 
 General item and spell covers are atmospheric wide illustrations for the shared
@@ -576,12 +390,3 @@ space. Bestiary covers are the explicit 4:3 exception defined above.
   title and summary use local translucent blocks. Detail content remains
   reachable in the vertically scrollable panel. Decorative covers use empty
   alt text because the item name already labels the header.
-
-The initial spell covers are **Fireball**, **Bless** and **Aura of Vitality**.
-The manual legacy/bootstrap `cmd/item-cover-sync` verifies the embedded
-manifest and uploads them to stable
-`system-item-covers/v1/spells/` keys and assigns the resulting
-`storage_image(type='item_cover')` rows through `item.cover_image_id`.
-This manifest remains their reproducible bootstrap. New covers are installed
-through MCP `handbook_item_set_system_image(slot="cover")`; the MCP path keeps
-the same independent `cover_image_id` model without adding assets to Git.
