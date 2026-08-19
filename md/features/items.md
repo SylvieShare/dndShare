@@ -356,6 +356,9 @@ details are noticed.
 - Show one head in side or three-quarter view with only a short neck. Do not
   include shoulders, torso, limbs, weapons or scenery. Let defining anatomy —
   horns, ears, jaw, beak, eye stalks or tentacles — shape the outer contour.
+- In the left-pinned handbook tile, make portrait marks face right, toward the
+  identity text. If an otherwise approved final bitmap faces left, mirror that
+  bitmap instead of regenerating and changing its design.
 - The rule is semantic rather than literally anatomical: a headless construct,
   ooze, swarm or similarly unusual creature may use its smallest distinctive
   complete form instead. It must still be one compact recognition silhouette,
@@ -409,6 +412,18 @@ drake head. **Eyedrake** has its own complete-form eye-and-maw mark, while
 **Fume Drake** uses a separate emerald smoke-dragon head. This is the preferred
 family rule: reuse an icon while the anatomy stays recognizably the same, then
 split the icon when a named variant changes the creature's defining outline.
+
+The dragon-name audit covers 145 meaningful Russian/English matches after
+excluding the unrelated **Giant Dragonfly** and **Pendragon Beestinger**. Three
+pre-existing marks — both **Kobold Dragonshield** rows and **Incomplete Dragon
+Skeleton** — remain untouched. The other 142 rows use 48 marks: each of the 20
+true dragon lineages shares one mark across its four age categories, while
+faerie dragons and mechanically duplicated families share only when their
+defining anatomy stays the same. Oozes, shards, constructs and other changed
+forms keep separate complete-form marks. Legacy covers were consulted only for
+the genuinely ambiguous **Spiderdragon** and **Elder Brain Dragon** anatomy;
+all final assets are right-facing `128×128` transparent PNGs installed through
+MCP with `preservePrevious=true`.
 
 The seventeen-row skeleton set applies the same rule across a wider anatomical
 family. It uses sixteen marks: **Skeletal Riding Horse** and **Warhorse
