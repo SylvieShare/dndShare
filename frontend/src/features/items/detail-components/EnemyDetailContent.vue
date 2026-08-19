@@ -30,7 +30,7 @@
     <!-- Actions -->
     <DetailSection v-if="item.data.actions?.length" label="Действия" tone="combat">
       <template #icon><Swords /></template>
-      <div class="enemy-blocks">
+      <div class="enemy-blocks enemy-blocks--actions">
         <div v-for="b in item.data.actions" :key="b.name" class="enemy-block-tile">
           <div class="block-name">{{ b.name }}</div>
           <RichContent class="block-text" :html="b.value" :actor-name="actorName || item.name" />

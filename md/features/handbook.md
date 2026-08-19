@@ -142,7 +142,10 @@ Bestiary detail sections use the illustrated `DetailSection` heading: a
 semantic Lucide icon in a compact accent frame, a high-contrast uppercase label
 and a fading divider. Combat actions use the same hierarchy with a restrained
 danger/accent tone so the block can be found quickly without competing with
-the action cards themselves.
+the action cards themselves. Names inside feature/action/reaction cards use a
+larger heavy UI face, restrained light-gray color and a short accent marker;
+action markers inherit the combat tone while prose remains in the rich-content
+typography.
 
 ### Related player rules
 
