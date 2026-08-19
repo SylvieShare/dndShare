@@ -356,6 +356,14 @@ stats, jobs и error reports. Reviewer routes находятся под
 `/api/error-report-review`. Public authenticated report submission:
 `POST /api/error-reports`.
 
+`GET /api/admin-panel/stats` требует роль `ADMIN` и вместе со счётчиками
+пользователей и справочника возвращает `storage`:
+`{usedBytes,fileCount,unknownFileCount,breakdown}`. Элементы breakdown содержат
+`key,label,bytes,fileCount,unknownFileCount` для системных и пользовательских
+изображений, видео, системной и пользовательской музыки и SVG. В статистику
+входят активные управляемые объекты S3 и DB-backed файлы; удалённые строки и
+внешние URL без собственного объекта хранилища исключаются.
+
 Physical report deletion — только ADMIN HTTP endpoint. MCP lifecycle использует
 resolve/archive, см. `md/features/mcp.md`.
 

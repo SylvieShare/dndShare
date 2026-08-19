@@ -24,16 +24,70 @@ type LogEntity struct {
 
 // AdminStats — счётчики для админ-панели.
 type AdminStats struct {
-	Users        int64 `json:"users"`
-	Characters   int64 `json:"characters"`
-	Templates    int64 `json:"templates"`
-	BaseItems    int64 `json:"baseItems"`
-	UserItems    int64 `json:"userItems"`
-	BaseSuggests int64 `json:"baseSuggests"`
-	UserSuggests int64 `json:"userSuggests"`
-	Logs         int64 `json:"logs"`
-	ErrorReports int64 `json:"errorReports"`
+	Users        int64             `json:"users"`
+	Characters   int64             `json:"characters"`
+	Templates    int64             `json:"templates"`
+	BaseItems    int64             `json:"baseItems"`
+	UserItems    int64             `json:"userItems"`
+	BaseSuggests int64             `json:"baseSuggests"`
+	UserSuggests int64             `json:"userSuggests"`
+	Logs         int64             `json:"logs"`
+	ErrorReports int64             `json:"errorReports"`
+	Storage      AdminStorageStats `json:"storage"`
 }
+
+type AdminStorageCategory struct {
+	Key              string `json:"key"`
+	Label            string `json:"label"`
+	Bytes            int64  `json:"bytes"`
+	FileCount        int64  `json:"fileCount"`
+	UnknownFileCount int64  `json:"unknownFileCount"`
+}
+
+type AdminStorageStats struct {
+	UsedBytes        int64                  `json:"usedBytes"`
+	FileCount        int64                  `json:"fileCount"`
+	UnknownFileCount int64                  `json:"unknownFileCount"`
+	Breakdown        []AdminStorageCategory `json:"breakdown"`
+}
+
+const adminStorageStatsQuery = `
+	WITH stored_files AS (
+		SELECT CASE
+				WHEN image."type" = 'video' OR image.mime_type LIKE 'video/%' THEN 'video'
+				WHEN image.user_id IS NULL THEN 'systemImages'
+				ELSE 'userImages'
+			END AS category,
+			image.file_size
+		FROM dndshare.storage_image image
+		WHERE image.deleted = false
+		  AND (image."key" IS NOT NULL OR image.bytes IS NOT NULL)
+		UNION ALL
+		SELECT 'svg', svg.file_size
+		FROM dndshare.svg_storage svg
+		UNION ALL
+		SELECT CASE WHEN track.is_system THEN 'systemMusic' ELSE 'userMusic' END,
+			track.file_size
+		FROM dndshare.music_track track
+	), categories(category, label, sort_order) AS (VALUES
+		('systemImages', 'Системные изображения', 1),
+		('userImages', 'Пользовательские изображения', 2),
+		('video', 'Видео', 3),
+		('systemMusic', 'Системная музыка', 4),
+		('userMusic', 'Пользовательская музыка', 5),
+		('svg', 'SVG-иконки', 6)
+	)
+	SELECT categories.category,
+	       categories.label,
+	       COALESCE(SUM(stored_files.file_size), 0)::bigint,
+	       COUNT(stored_files.category)::bigint,
+	       COUNT(*) FILTER (
+	           WHERE stored_files.category IS NOT NULL AND stored_files.file_size IS NULL
+	       )::bigint
+	FROM categories
+	LEFT JOIN stored_files ON stored_files.category = categories.category
+	GROUP BY categories.category, categories.label, categories.sort_order
+	ORDER BY categories.sort_order`
 
 // ListUsers возвращает всех пользователей (без хэшей).
 func (s *Store) ListUsers(ctx context.Context) ([]AdminUser, error) {
@@ -103,5 +157,28 @@ func (s *Store) GetAdminStats(ctx context.Context) (AdminStats, error) {
 		(SELECT COUNT(*) FROM dndshare.logs),
 		(SELECT COUNT(*) FROM dndshare.error_report)`,
 	).Scan(&st.Users, &st.Characters, &st.Templates, &st.BaseItems, &st.UserItems, &st.BaseSuggests, &st.UserSuggests, &st.Logs, &st.ErrorReports)
-	return st, err
+	if err != nil {
+		return AdminStats{}, err
+	}
+
+	rows, err := s.pool.Query(ctx, adminStorageStatsQuery)
+	if err != nil {
+		return AdminStats{}, err
+	}
+	defer rows.Close()
+	st.Storage.Breakdown = make([]AdminStorageCategory, 0, 6)
+	for rows.Next() {
+		var category AdminStorageCategory
+		if err := rows.Scan(&category.Key, &category.Label, &category.Bytes, &category.FileCount, &category.UnknownFileCount); err != nil {
+			return AdminStats{}, err
+		}
+		st.Storage.UsedBytes += category.Bytes
+		st.Storage.FileCount += category.FileCount
+		st.Storage.UnknownFileCount += category.UnknownFileCount
+		st.Storage.Breakdown = append(st.Storage.Breakdown, category)
+	}
+	if err := rows.Err(); err != nil {
+		return AdminStats{}, err
+	}
+	return st, nil
 }

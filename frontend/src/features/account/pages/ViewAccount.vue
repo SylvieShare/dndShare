@@ -175,7 +175,7 @@ import {
 import { FormField, FormTextInput, SegmentDonutChart, SlidingTabs } from '@sylvieshare/share-ui'
 import { fetchGet, fetchPut } from '@/shared/api/http'
 import { useAccountStore } from '@/stores/account'
-import { formatBytes, formatStorageDate, hasKnownFileSize } from '@/features/account/lib/storageUsage'
+import { formatBytes, formatStorageDate, hasKnownFileSize } from '@/shared/lib/storageUsage'
 
 const EMPTY_STORAGE = Object.freeze({
   usedBytes: 0,
