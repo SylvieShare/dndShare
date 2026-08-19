@@ -68,9 +68,9 @@ const tintColor = computed(() => enc.avatarStyle(props.combatant)?.color || 'var
 }
 
 .enc-avatar--npc {
-  width: 72px;
-  margin-block: -10px;
-  align-self: stretch;
+  width: 64px;
+  height: 64px;
+  align-self: center;
   border-radius: 10px;
 }
 
@@ -78,7 +78,7 @@ const tintColor = computed(() => enc.avatarStyle(props.combatant)?.color || 'var
   width: 100%;
   height: 100%;
   object-fit: contain;
-  object-position: bottom center;
+  object-position: center;
 }
 
 /* Player photos crop to fill (face stays near the top). */

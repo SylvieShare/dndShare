@@ -12,16 +12,17 @@ function cssRule(selector) {
 }
 
 describe('EncounterAvatar', () => {
-  it('stretches NPC artwork across the combat tile while preserving player portraits', () => {
+  it('centres 64px NPC artwork vertically while preserving player portraits', () => {
     const npcRule = cssRule('\\.enc-avatar--npc')
     const playerRule = cssRule('\\.enc-avatar--player')
 
-    expect(npcRule).toContain('align-self: stretch;')
-    expect(npcRule).toContain('margin-block: -10px;')
-    expect(npcRule).not.toMatch(/\\bheight\s*:/)
+    expect(npcRule).toContain('width: 64px;')
+    expect(npcRule).toContain('height: 64px;')
+    expect(npcRule).toContain('align-self: center;')
     expect(playerRule).toContain('width: 62px;')
     expect(playerRule).toContain('height: 62px;')
     expect(playerRule).toContain('border-radius: 50%;')
     expect(source).toContain('object-fit: cover;')
+    expect(source).toContain('object-position: center;')
   })
 })

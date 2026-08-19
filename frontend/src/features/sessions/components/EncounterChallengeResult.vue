@@ -191,13 +191,10 @@ onBeforeUnmount(dispose)
   gap: 10px;
   overflow: hidden;
   padding: 7px 10px;
-  border: 1px solid color-mix(in srgb, var(--accent) 38%, var(--border));
-  border-radius: 11px;
-  background:
-    linear-gradient(135deg, color-mix(in srgb, var(--accent) 13%, transparent), transparent 64%),
-    color-mix(in srgb, var(--text-on-accent) 3%, transparent);
-  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--text-on-accent) 7%, transparent);
-  transition: border-color 0.18s, background 0.18s, box-shadow 0.18s;
+  border: 0;
+  border-inline: 1px solid color-mix(in srgb, var(--accent) 38%, var(--border));
+  background: none;
+  transition: border-color 0.18s;
 }
 
 .ecr-event {
@@ -337,26 +334,17 @@ onBeforeUnmount(dispose)
 }
 
 .ecr-result--rolling {
-  border-color: color-mix(in srgb, var(--accent) 72%, var(--border));
-  box-shadow:
-    inset 0 1px 0 color-mix(in srgb, var(--text-on-accent) 7%, transparent),
-    0 0 18px color-mix(in srgb, var(--accent) 18%, transparent);
+  border-inline-color: color-mix(in srgb, var(--accent) 72%, var(--border));
 }
 
 .ecr-result--critical {
-  border-color: color-mix(in srgb, var(--warning) 64%, var(--border));
-  background:
-    linear-gradient(135deg, color-mix(in srgb, var(--warning) 16%, transparent), transparent 64%),
-    color-mix(in srgb, var(--text-on-accent) 3%, transparent);
+  border-inline-color: color-mix(in srgb, var(--warning) 64%, var(--border));
 }
 
 .ecr-result--critical .ecr-total { color: var(--warning); }
 
 .ecr-result--fumble {
-  border-color: color-mix(in srgb, var(--danger) 58%, var(--border));
-  background:
-    linear-gradient(135deg, color-mix(in srgb, var(--danger) 14%, transparent), transparent 64%),
-    color-mix(in srgb, var(--text-on-accent) 3%, transparent);
+  border-inline-color: color-mix(in srgb, var(--danger) 58%, var(--border));
 }
 
 .ecr-result--fumble .ecr-total { color: var(--danger); }

@@ -285,6 +285,11 @@ function commitNoteEdit() {
   gap: 10px;
 }
 
+.enc-row-shell[data-encounter-section="combat"] {
+  width: 100%;
+  max-width: 880px;
+}
+
 .enc-row-shell--placeholder :deep(.enc-row-order) { opacity: 0.25; }
 
 .enc-row {

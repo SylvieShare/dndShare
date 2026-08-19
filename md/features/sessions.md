@@ -610,12 +610,13 @@ load/save, players, NPC item cache, HP, initiative, flow, states and dice.
 `useEncounter.js` composes them; row components remain presentation-only.
 
 The encounter workspace has no shared backing surface. Its header and every NPC
-row are separate `BaseTile` surfaces. In the chapter canvas the header is fixed
+row are separate `BaseTile` surfaces. Combat-scene rows are capped at 880px
+instead of stretching across the whole central workspace. In the chapter canvas the header is fixed
 beside the focused chapter while only the rows area scrolls. Row strips use the
 explicitly selected participant color for players or `iconColor` for NPCs; rows
 without an assigned color have no strip in either combat or the NPC reserve.
-NPC artwork stretches through the full 92px tile height while player portraits
-retain their compact framed crop. Session dice pass the default accent color
+NPC artwork uses its native 64×64 geometry and is centered vertically while
+player portraits retain their compact framed crop. Session dice pass the default accent color
 explicitly to every `SystemDie`.
 
 While combat is active, the DM header has a group-challenge action. It opens a
@@ -628,7 +629,9 @@ bonus for an NPC; an NPC without one falls back to its ability modifier. Each
 result is a fixed-size column after the creature's complete identity/HP block;
 combat rows reserve its height before any roll, so results never resize tiles.
 It reuses `SystemDie` and the shared roll-settle animation to show the d20 face,
-numeric modifier and total without a textual formula. The full check/save event
+numeric modifier and total without a textual formula. The result block has no
+backing surface or enclosing frame; only its left and right borders separate it
+from the combatant details. The full check/save event
 title wraps inside the embedded result. Its up/down controls keep the existing
 d20 visible and roll one extra d20 beside it, then keep the higher/lower natural
 value respectively. Only the new die animates; the unused die is crossed out
@@ -652,8 +655,8 @@ armor-class controls as the player rail. The left-rail tile and portrait keep
 the same height and circular geometry in and out of combat; the larger combat-scene
 portrait is circular too. Player photos use a soft alpha fade around their edges. An
 assigned session color appears as the portrait frame in both representations;
-player rows do not repeat a `PC` type chip. NPC artwork occupies the full row height instead of falling
-back to a name initial. Every combat-scene tile has a numbered marker on its
+player rows do not repeat a `PC` type chip. NPC artwork keeps its centered 64×64
+geometry instead of falling back to a name initial. Every combat-scene tile has a numbered marker on its
 left.
 `ViewSession.vue` owns the single `useEncounter` instance shared by the rail and
 `EncounterTab`, so selection and initiative always address the same encounter
