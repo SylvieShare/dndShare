@@ -2,6 +2,15 @@ package web
 
 import "testing"
 
+func TestBestiaryDisplayNameTrimsUpstreamWhitespace(t *testing.T) {
+	if got := bestiaryDisplayName("  Злобоглаз \n", "Beholder"); got != "Злобоглаз" {
+		t.Fatalf("bestiaryDisplayName() = %q, want trimmed Russian name", got)
+	}
+	if got := bestiaryDisplayName(" \t", " Beholder "); got != "Beholder" {
+		t.Fatalf("bestiaryDisplayName() fallback = %q, want trimmed fallback", got)
+	}
+}
+
 func TestBestiaryImageURLSelectsSupportedCDNImage(t *testing.T) {
 	detail := map[string]any{
 		"images": []any{

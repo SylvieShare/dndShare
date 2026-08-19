@@ -90,7 +90,7 @@ func jobBestiaryImport(s *Server, jc *JobContext) error {
 				continue
 			}
 			slug := strings.TrimPrefix(urlPath, "/bestiary/")
-			nameEng := jStr(jPath(im, "name", "eng"), slug)
+			nameEng := bestiaryDisplayName(jStr(jPath(im, "name", "eng"), slug), slug)
 
 			func() {
 				time.Sleep(200 * time.Millisecond)
@@ -100,7 +100,7 @@ func jobBestiaryImport(s *Server, jc *JobContext) error {
 					jc.Increment(1, "Ошибка: "+slug)
 					return
 				}
-				nameRus := jStr(jPath(detail, "name", "rus"), nameEng)
+				nameRus := bestiaryDisplayName(jStr(jPath(detail, "name", "rus"), nameEng), nameEng)
 				sizeIds, err := b.resolveSizeIds(ctx, detail, &multipleSizes, nameEng)
 				if err != nil {
 					errList = append(errList, fmt.Sprintf("%s: %s", slug, err.Error()))
@@ -164,6 +164,13 @@ func jobBestiaryImport(s *Server, jc *JobContext) error {
 		MultipleSizes: multipleSizes,
 	})
 	return nil
+}
+
+func bestiaryDisplayName(value, fallback string) string {
+	if value = strings.TrimSpace(value); value != "" {
+		return value
+	}
+	return strings.TrimSpace(fallback)
 }
 
 func bestiarySource(detail any) (string, string) {

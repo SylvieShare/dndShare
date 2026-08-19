@@ -369,6 +369,11 @@ one olive-green, broad crocodilian head icon. The low swept-back ridge, amber
 eye and pale throat distinguish it from the smaller horned kobold mark at
 `64×64`.
 
+**Злобоглаз / Beholder** is the production example of the complete-form
+exception for unusual anatomy. Its compact wine-purple orb keeps exactly ten
+separated eyestalks plus one dominant central eye; the silhouette must remain
+distinct from the four-stalk **Наблюдатель / Spectator** at `64×64`.
+
 The five-row cult family uses one hooded human portrait mark: a pointed
 burgundy hood, plain antique-gold half-mask and short wrapped neck remain
 recognizable at `64×64`. **Cultist**, **Occult Initiate**, **Occult
@@ -426,6 +431,9 @@ club-and-spiked-shield warrior, armored scaleshield, swamp-magic shaman,
 fang-dagger subchief and hulking render each have a unique scene and silhouette.
 All six covers use the `1536×1152` JPEG contract and were installed through
 MCP with `preservePrevious=true` so imported predecessors remain recoverable.
+The Beholder cover uses the same contract: one complete ten-stalk subject above
+an Underdark pit, a restrained central antimagic cone and no more than two eye
+rays. Its former imported cover is retained through `preservePrevious=true`.
 The five cult-family covers follow the same contract: guard, novice, forbidden
 scholar, charismatic leader and fanatic each receive a distinct single-person
 scene while retaining the shared hood-and-mask identity. Replaced imported
