@@ -156,11 +156,16 @@ fields idempotently. When changing a field, update both representations and
 migrate stored `item.data` before deleting the old key.
 
 Important types include weapons (1), items (2), race/class abilities (3/4),
-spells (5), bestiary (6), feats (7), races/classes (8/9), potions (10) and
-backgrounds (11).
+spells (5), bestiary (6), feats (7), races/classes (8/9), potions (10),
+backgrounds (11), armor (12) and transport (13).
 
-Generic item type 2 may contain `armor {ac,use_dex,dex_cap,shield,shield_bonus}`.
-The startup migration backfills the core PHB armor and shield rows by name.
+Mundane armor and shields belong to type 12 and keep the structured
+`armor {ac,use_dex,dex_cap,shield,shield_bonus}` rule consumed by character
+creation and the sheet. Type 2 is ordinary adventuring gear, equipment packs
+and tools; magical armor remains a magic item rather than being moved by name.
+Transport type 13 stores the book's speed/carrying capacity when a meaningful
+item weight is not supplied. The PHB 2014 starting-shop catalogue and audit
+rules are documented in `md/features/starting-shop.md`.
 
 ## MCP
 

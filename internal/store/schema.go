@@ -82,6 +82,9 @@ var schemaClassLoreSQL string
 //go:embed schema/22_system_item_media.sql
 var schemaSystemItemMediaSQL string
 
+//go:embed schema/23_starting_shop.sql
+var schemaStartingShopSQL string
+
 var schemaParts = []struct {
 	name string
 	sql  string
@@ -109,6 +112,7 @@ var schemaParts = []struct {
 	{"class-images", schemaClassImagesSQL},
 	{"class-lore", schemaClassLoreSQL},
 	{"system-item-media", schemaSystemItemMediaSQL},
+	{"starting-shop", schemaStartingShopSQL},
 }
 
 func applySchema(ctx context.Context, pool *pgxpool.Pool) error {

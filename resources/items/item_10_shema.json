@@ -27,5 +27,11 @@
     "key": "weight",
     "name": "Вес",
     "type": "int"
+  },
+  {
+    "key": "available_in_starting_shop",
+    "name": "Доступно в магазине при создании",
+    "type": "boolean",
+    "filter": true
   }
 ]

@@ -11,7 +11,8 @@ describe('armor rules', () => {
   it('prefers the structured handbook rule over the name fallback', () => {
     expect(armorRuleForEquipment({
       name: 'Неизвестный доспех',
-      armor: { ac: 13, use_dex: true, dex_cap: 1 },
+      typeId: 12,
+      data: { armor: { ac: 13, use_dex: true, dex_cap: 1 } },
     })).toEqual({ ac: 13, use_dex: true, dex_cap: 1 })
   })
 })

@@ -5,8 +5,20 @@
     "type": "description"
   },
   {
+    "key": "category",
+    "name": "Категория доспеха",
+    "type": "select",
+    "filter": true,
+    "options": [
+      { "value": "light", "label": "Лёгкий доспех" },
+      { "value": "medium", "label": "Средний доспех" },
+      { "value": "heavy", "label": "Тяжёлый доспех" },
+      { "value": "shield", "label": "Щит" }
+    ]
+  },
+  {
     "key": "armor",
-    "name": "Доспех",
+    "name": "Правило КД",
     "type": "object",
     "fields": [
       { "key": "ac", "name": "Базовый КД", "type": "int" },
@@ -15,6 +27,16 @@
       { "key": "shield", "name": "Это щит", "type": "bool" },
       { "key": "shield_bonus", "name": "Бонус щита", "type": "int" }
     ]
+  },
+  {
+    "key": "strength_required",
+    "name": "Требуемая Сила",
+    "type": "int"
+  },
+  {
+    "key": "stealth_disadvantage",
+    "name": "Помеха Скрытности",
+    "type": "boolean"
   },
   {
     "key": "cost",
@@ -26,27 +48,6 @@
     "key": "weight",
     "name": "Вес",
     "type": "int"
-  },
-  {
-    "key": "is_container",
-    "name": "Контейнер",
-    "type": "bool"
-  },
-  {
-    "key": "consumable",
-    "name": "Расходуемое",
-    "type": "bool"
-  },
-  {
-    "key": "equipment_category",
-    "name": "Категория снаряжения",
-    "type": "select",
-    "filter": true,
-    "options": [
-      { "value": "gear", "label": "Снаряжение" },
-      { "value": "tool", "label": "Инструмент" },
-      { "value": "pack", "label": "Набор снаряжения" }
-    ]
   },
   {
     "key": "available_in_starting_shop",
