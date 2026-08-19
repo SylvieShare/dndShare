@@ -112,11 +112,6 @@
     height: 88px;
   }
 
-  .encounter-screen__turn-portrait--cover {
-    width: 38vw;
-    height: auto;
-  }
-
   .initiative-track {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }

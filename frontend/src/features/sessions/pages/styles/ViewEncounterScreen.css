@@ -244,6 +244,7 @@
 
 .encounter-screen__turn {
   --turn-padding: clamp(20px, 2.2vw, 42px);
+  position: relative;
   min-height: clamp(132px, 18vh, 220px);
   box-sizing: border-box;
   justify-content: space-between;
@@ -323,20 +324,18 @@
   overflow: visible;
 }
 
-.encounter-screen__turn-portrait--cover {
-  width: 28vw;
-  height: auto;
-  align-self: stretch;
-  margin-right: 0;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
-  overflow: hidden;
-}
-
-.encounter-screen__turn-portrait--cover img {
-  object-position: center;
+.encounter-screen__turn-cover {
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  right: 0;
+  width: auto;
+  max-width: none;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  object-position: right center;
+  pointer-events: none;
 }
 
 .encounter-screen__turn-portrait img,

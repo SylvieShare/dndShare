@@ -757,7 +757,8 @@ the session name, round, current turn and the complete initiative order with
 portraits, markers and resolved condition names. The current-turn panel uses a
 bestiary creature's cover at full panel height against its right edge, with the
 ordinary portrait remaining the fallback for players and creatures without a
-cover. Exact HP is intentionally not
+cover. The cover keeps its intrinsic proportions as the viewport narrows; the
+left-hand turn text layers over the artwork instead of squeezing it. Exact HP is intentionally not
 part of the public DTO or UI: health is presented as `Здоров` above 50%,
 `Ранен` above 25%, `Критически ранен` at 25% or below, and `Без сознания`
 (player) / `Повержен` (NPC) at zero. A failed refresh keeps the last successful

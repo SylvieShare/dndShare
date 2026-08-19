@@ -8,13 +8,14 @@ const initiativeStyles = readFileSync(fileURLToPath(new URL('./styles/ViewEncoun
 
 describe('public encounter portraits', () => {
   it('fills the right edge of the current-turn panel with the creature cover', () => {
-    expect(pageSource).toContain("'encounter-screen__turn-portrait--cover': currentCombatant.coverImageUrl")
-    expect(pageSource).toContain('<img v-if="currentCombatant.coverImageUrl" :src="currentCombatant.coverImageUrl" alt="" />')
-    expect(mainStyles).toContain('.encounter-screen__turn-portrait--cover {')
-    expect(mainStyles).toContain('align-self: stretch;')
-    expect(mainStyles).toContain('margin-right: 0;')
-    expect(mainStyles).toContain('width: 28vw;')
-    expect(mainStyles).not.toContain('width: clamp(220px, 28vw, 520px);')
+    expect(pageSource).toContain('class="encounter-screen__turn-cover"')
+    expect(pageSource).toContain(':src="currentCombatant.coverImageUrl"')
+    expect(mainStyles).toContain('.encounter-screen__turn-cover {')
+    expect(mainStyles).toContain('position: absolute;')
+    expect(mainStyles).toContain('width: auto;')
+    expect(mainStyles).toContain('max-width: none;')
+    expect(mainStyles).toContain('height: 100%;')
+    expect(mainStyles).not.toContain('.encounter-screen__turn-portrait--cover')
   })
 
   it('renders NPC artwork without a frame or backing surface', () => {

@@ -171,17 +171,20 @@
           <h2 v-else>Нет доступного хода</h2>
         </div>
 
+        <img
+          v-if="currentCombatant?.coverImageUrl"
+          class="encounter-screen__turn-cover"
+          :src="currentCombatant.coverImageUrl"
+          alt=""
+        />
+
         <div
-          v-if="currentCombatant"
+          v-else-if="currentCombatant"
           class="encounter-screen__turn-portrait"
-          :class="{
-            'encounter-screen__turn-portrait--npc': currentCombatant.type === 'npc',
-            'encounter-screen__turn-portrait--cover': currentCombatant.coverImageUrl,
-          }"
+          :class="{ 'encounter-screen__turn-portrait--npc': currentCombatant.type === 'npc' }"
           :style="accentStyle(currentCombatant)"
         >
-          <img v-if="currentCombatant.coverImageUrl" :src="currentCombatant.coverImageUrl" alt="" />
-          <img v-else-if="currentCombatant.avatarUrl" :src="currentCombatant.avatarUrl" alt="" />
+          <img v-if="currentCombatant.avatarUrl" :src="currentCombatant.avatarUrl" alt="" />
           <span v-else-if="currentCombatant.avatarSvg" v-html="currentCombatant.avatarSvg" />
           <UserRound v-else :size="82" :stroke-width="1.1" aria-hidden="true" />
         </div>
