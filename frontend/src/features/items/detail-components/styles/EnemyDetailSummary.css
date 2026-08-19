@@ -50,7 +50,7 @@
 .enemy-stats-block {
   flex: 1;
   display: grid;
-  grid-template-columns: minmax(140px, 220px) minmax(180px, 1fr) minmax(140px, 220px);
+  grid-template-columns: minmax(132px, 190px) minmax(220px, 1fr) minmax(132px, 190px);
   grid-template-rows: minmax(min-content, 1fr) auto;
   grid-template-areas:
     "left center right"
@@ -210,7 +210,7 @@
 
 @media (max-width: 900px) {
   .enemy-stats-block {
-    grid-template-columns: minmax(120px, 160px) minmax(80px, 1fr) minmax(120px, 160px);
+    grid-template-columns: minmax(116px, 150px) minmax(100px, 1fr) minmax(116px, 150px);
     column-gap: 8px;
   }
 

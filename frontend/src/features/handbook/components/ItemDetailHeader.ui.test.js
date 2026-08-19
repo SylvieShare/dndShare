@@ -163,6 +163,7 @@ describe('handbook item detail cover', () => {
     expect(enemySummaryStyles).toContain('"left center right"')
     expect(enemySummaryStyles).toContain('"abilities abilities abilities"')
     expect(enemySummaryStyles).toContain('grid-template-rows: minmax(min-content, 1fr) auto;')
+    expect(enemySummaryStyles).toContain('grid-template-columns: minmax(132px, 190px) minmax(220px, 1fr) minmax(132px, 190px);')
     expect(headerSource).toContain('.item-detail-header-summary .item-detail-summary {\n  flex: 1;')
     expect(enemySummaryStyles).toContain('min-height: 190px;')
     expect(enemySummaryStyles).toContain('"left right"')

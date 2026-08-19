@@ -392,8 +392,10 @@ the same cover slot even when its intrinsic aspect ratio differs.
   Do not use alpha for the full-bleed scene.
 - Show one main creature unless plurality is essential to the stat block. Keep
   its recognizable silhouette, face and defining anatomy inside the central
-  40–50% safe zone; the outer sides must remain expendable for narrow-screen
-  `object-fit: cover` crops.
+  40–50% safe zone. Background and secondary atmosphere may continue into the
+  outer sides, but the face, defining anatomy and other recognition-critical
+  parts must not enter the side combat-stat columns. Those outer regions must
+  remain expendable for narrow-screen `object-fit: cover` crops.
 - Use the same polished flat-cartoon fantasy language as the creature icon:
   thick deep-plum contours, broad graphic shapes, restrained two-step shading
   and a controlled jewel-tone palette. Add enough environmental context to
