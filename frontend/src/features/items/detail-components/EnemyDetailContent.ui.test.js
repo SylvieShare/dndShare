@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 
 const enemySource = readFileSync(fileURLToPath(new URL('./EnemyDetailContent.vue', import.meta.url)), 'utf8')
-const enemyStyles = readFileSync(fileURLToPath(new URL('./styles/EnemyDetailContent.css', import.meta.url)), 'utf8')
+const entrySource = readFileSync(fileURLToPath(new URL('../../../shared/ui/DetailEntryCard.vue', import.meta.url)), 'utf8')
 const sectionSource = readFileSync(fileURLToPath(new URL('../../../shared/ui/DetailSection.vue', import.meta.url)), 'utf8')
 
 describe('enemy detail section hierarchy', () => {
@@ -23,12 +23,13 @@ describe('enemy detail section hierarchy', () => {
   })
 
   it('separates action names from prose with stronger type and a combat marker', () => {
-    expect(enemySource).toContain('class="enemy-blocks enemy-blocks--actions"')
-    expect(enemyStyles).toContain('font-family: var(--font-ui);')
-    expect(enemyStyles).toContain('font-size: 16px;')
-    expect(enemyStyles).toContain('font-weight: 700;')
-    expect(enemyStyles).toContain('.block-name::before')
-    expect(enemyStyles).toContain('.enemy-blocks--actions .block-name::before')
-    expect(enemyStyles).toContain('color: color-mix(in srgb, var(--text-2) 88%, var(--text-muted));')
+    expect(enemySource).toContain('<DetailEntryCard v-for="b in item.data.actions"')
+    expect(enemySource).toContain(':title="b.name" tone="combat"')
+    expect(entrySource).toContain('font-family: var(--font-ui);')
+    expect(entrySource).toContain('font-size: 16px;')
+    expect(entrySource).toContain('font-weight: 700;')
+    expect(entrySource).toContain('.detail-entry-card-title::before')
+    expect(entrySource).toContain('.detail-entry-card--combat .detail-entry-card-title::before')
+    expect(entrySource).toContain('color: color-mix(in srgb, var(--text-2) 88%, var(--text-muted));')
   })
 })

@@ -48,16 +48,19 @@
       <span class="sdc-classes">{{ classes.join(', ') }}</span>
     </div>
 
-    <div class="sdc-divider"></div>
-
-    <RichContent v-if="data.description" class="sdc-desc" :html="data.description" />
-    <div v-else class="sdc-no-desc">Описание отсутствует</div>
+    <DetailSection label="Описание заклинания">
+      <template #icon><ScrollText /></template>
+      <RichContent v-if="data.description" class="sdc-desc" :html="data.description" />
+      <div v-else class="sdc-no-desc">Описание отсутствует</div>
+    </DetailSection>
   </div>
 </template>
 
 <script setup>
 import { computed, ref, watch } from 'vue'
+import { ScrollText } from '@lucide/vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
+import DetailSection from '@/shared/ui/DetailSection.vue'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 import { useSchemaSuggests } from '@/features/handbook/objects/lib/useSchemaSuggests'
 import { itemsApi } from '@/shared/api/itemsApi'
@@ -179,8 +182,6 @@ function colorAlpha(color, alpha) {
   line-height: 1.2;
 }
 .sdc-name-en { font-size: 13px; color: var(--text-muted); }
-
-.sdc-divider { height: 1px; background: var(--border); }
 
 .sdc-meta-row {
   display: flex;

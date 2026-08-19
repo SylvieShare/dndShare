@@ -32,51 +32,50 @@
       </div>
     </div>
 
-    <div v-if="hasDamageInfo" class="wdc-divider"></div>
+    <DetailSection v-if="hasDamageInfo" label="Урон" tone="combat">
+      <template #icon><Swords /></template>
+      <div
+        class="wdc-damage-grid"
+        :class="{ 'wdc-damage-grid-paired': attacks.length && universeAttacks.length }"
+      >
+        <div v-if="attacks.length" class="wdc-damage-section">
+          <div class="wdc-section-title">Атака</div>
+          <div class="wdc-attacks">
+            <div v-for="(attack, idx) in attacks" :key="idx" class="wdc-attack">
+              <span class="wdc-dice" :class="{ 'wdc-dice-icon-wrap': attackDisplay(attack).diceSides }">
+                <template v-if="attackDisplay(attack).diceSides">
+                  <span v-if="attackDisplay(attack).count !== 1" class="wdc-dice-count">{{ attackDisplay(attack).count }}</span>
+                  <SystemDie :sides="attackDisplay(attack).diceSides" :size="46" />
+                </template>
+                <template v-else>{{ attackDisplay(attack).label }}</template>
+              </span>
+              <span v-if="damageTypeLabel(attack)" class="wdc-attack-sep"></span>
+              <span v-if="damageTypeLabel(attack)" class="wdc-damage-type">{{ damageTypeLabel(attack) }}</span>
+            </div>
+          </div>
+        </div>
 
-    <div
-      v-if="hasDamageInfo"
-      class="wdc-damage-grid"
-      :class="{ 'wdc-damage-grid-paired': attacks.length && universeAttacks.length }"
-    >
-      <div v-if="attacks.length" class="wdc-damage-section">
-        <div class="wdc-section-title">Атака</div>
-        <div class="wdc-attacks">
-          <div v-for="(attack, idx) in attacks" :key="idx" class="wdc-attack">
-            <span class="wdc-dice" :class="{ 'wdc-dice-icon-wrap': attackDisplay(attack).diceSides }">
-              <template v-if="attackDisplay(attack).diceSides">
-                <span v-if="attackDisplay(attack).count !== 1" class="wdc-dice-count">{{ attackDisplay(attack).count }}</span>
-                <SystemDie :sides="attackDisplay(attack).diceSides" :size="46" />
-              </template>
-              <template v-else>{{ attackDisplay(attack).label }}</template>
-            </span>
-            <span v-if="damageTypeLabel(attack)" class="wdc-attack-sep"></span>
-            <span v-if="damageTypeLabel(attack)" class="wdc-damage-type">{{ damageTypeLabel(attack) }}</span>
+        <div v-if="universeAttacks.length" class="wdc-damage-section wdc-damage-section-alt">
+          <div class="wdc-section-title">Атака двумя руками</div>
+          <div class="wdc-attacks">
+            <div v-for="(attack, idx) in universeAttacks" :key="idx" class="wdc-attack wdc-attack-alt">
+              <span class="wdc-dice" :class="{ 'wdc-dice-icon-wrap': attackDisplay(attack).diceSides }">
+                <template v-if="attackDisplay(attack).diceSides">
+                  <span v-if="attackDisplay(attack).count !== 1" class="wdc-dice-count">{{ attackDisplay(attack).count }}</span>
+                  <SystemDie :sides="attackDisplay(attack).diceSides" :size="46" />
+                </template>
+                <template v-else>{{ attackDisplay(attack).label }}</template>
+              </span>
+              <span v-if="damageTypeLabel(attack)" class="wdc-attack-sep"></span>
+              <span v-if="damageTypeLabel(attack)" class="wdc-damage-type">{{ damageTypeLabel(attack) }}</span>
+            </div>
           </div>
         </div>
       </div>
+    </DetailSection>
 
-      <div v-if="universeAttacks.length" class="wdc-damage-section wdc-damage-section-alt">
-        <div class="wdc-section-title">Атака двумя руками</div>
-        <div class="wdc-attacks">
-          <div v-for="(attack, idx) in universeAttacks" :key="idx" class="wdc-attack wdc-attack-alt">
-            <span class="wdc-dice" :class="{ 'wdc-dice-icon-wrap': attackDisplay(attack).diceSides }">
-              <template v-if="attackDisplay(attack).diceSides">
-                <span v-if="attackDisplay(attack).count !== 1" class="wdc-dice-count">{{ attackDisplay(attack).count }}</span>
-                <SystemDie :sides="attackDisplay(attack).diceSides" :size="46" />
-              </template>
-              <template v-else>{{ attackDisplay(attack).label }}</template>
-            </span>
-            <span v-if="damageTypeLabel(attack)" class="wdc-attack-sep"></span>
-            <span v-if="damageTypeLabel(attack)" class="wdc-damage-type">{{ damageTypeLabel(attack) }}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <template v-if="tagItems.length">
-      <div class="wdc-divider"></div>
-      <div class="wdc-section-title">Свойства</div>
+    <DetailSection v-if="tagItems.length" label="Свойства">
+      <template #icon><Tags /></template>
       <div class="wdc-tags">
         <span
           v-for="tag in tagItems"
@@ -89,12 +88,12 @@
           {{ tag.label }}
         </span>
       </div>
-    </template>
+    </DetailSection>
 
-    <template v-if="data.notes">
-      <div class="wdc-divider"></div>
+    <DetailSection v-if="data.notes" label="Описание">
+      <template #icon><BookOpen /></template>
       <RichContent class="wdc-notes" :html="data.notes" />
-    </template>
+    </DetailSection>
 
     <ItemTooltip
       v-if="tooltip.visible"
@@ -109,7 +108,9 @@
 
 <script setup>
 import { computed, ref } from 'vue'
+import { BookOpen, Swords, Tags } from '@lucide/vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
+import DetailSection from '@/shared/ui/DetailSection.vue'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 import { useCostFormatter } from '@/features/items/lib/useCostFormatter'
 import { useSchemaSuggests } from '@/features/handbook/objects/lib/useSchemaSuggests'
@@ -252,8 +253,6 @@ function hideTagTooltip() {
   line-height: 1.2;
 }
 .wdc-name-en { font-size: 13px; color: var(--text-muted); }
-
-.wdc-divider { height: 1px; background: var(--border); }
 
 .wdc-pills {
   display: flex;

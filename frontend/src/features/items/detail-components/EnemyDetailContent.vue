@@ -20,21 +20,19 @@
     <DetailSection v-if="item.data.feats?.length" label="Особенности">
       <template #icon><Sparkles /></template>
       <div class="enemy-blocks">
-        <div v-for="b in item.data.feats" :key="b.name" class="enemy-block-tile">
-          <div class="block-name">{{ b.name }}</div>
+        <DetailEntryCard v-for="b in item.data.feats" :key="b.name" :title="b.name">
           <RichContent class="block-text" :html="b.value" :actor-name="actorName || item.name" />
-        </div>
+        </DetailEntryCard>
       </div>
     </DetailSection>
 
     <!-- Actions -->
     <DetailSection v-if="item.data.actions?.length" label="Действия" tone="combat">
       <template #icon><Swords /></template>
-      <div class="enemy-blocks enemy-blocks--actions">
-        <div v-for="b in item.data.actions" :key="b.name" class="enemy-block-tile">
-          <div class="block-name">{{ b.name }}</div>
+      <div class="enemy-blocks">
+        <DetailEntryCard v-for="b in item.data.actions" :key="b.name" :title="b.name" tone="combat">
           <RichContent class="block-text" :html="b.value" :actor-name="actorName || item.name" />
-        </div>
+        </DetailEntryCard>
       </div>
     </DetailSection>
 
@@ -42,10 +40,9 @@
     <DetailSection v-if="item.data.reactions?.length" label="Реакции">
       <template #icon><Shield /></template>
       <div class="enemy-blocks">
-        <div v-for="b in item.data.reactions" :key="b.name" class="enemy-block-tile">
-          <div class="block-name">{{ b.name }}</div>
+        <DetailEntryCard v-for="b in item.data.reactions" :key="b.name" :title="b.name">
           <RichContent class="block-text" :html="b.value" :actor-name="actorName || item.name" />
-        </div>
+        </DetailEntryCard>
       </div>
     </DetailSection>
 
@@ -88,6 +85,7 @@
 import { computed, ref, watch } from 'vue'
 import { BookOpen, MapPin, Shield, Sparkles, Swords, Tags } from '@lucide/vue'
 import { findField, getSuggestId } from '@/features/handbook/objects/lib/schemaFields'
+import DetailEntryCard from '@/shared/ui/DetailEntryCard.vue'
 import DetailSection from '@/shared/ui/DetailSection.vue'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 import { useSuggestStore } from '@/stores/suggest'

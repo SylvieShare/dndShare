@@ -138,13 +138,17 @@ render a duplicate source chip for spells; other item types retain the wrapper
 source chip when no specialized publication label exists.
 Feature-specific mutations are passed into the fixed footer through the
 `actions` slot. Descriptions use the shared rich renderer.
-Bestiary detail sections use the illustrated `DetailSection` heading: a
-semantic Lucide icon in a compact accent frame, a high-contrast uppercase label
-and a fading divider. Combat actions use the same hierarchy with a restrained
-danger/accent tone so the block can be found quickly without competing with
-the action cards themselves. Names inside feature/action/reaction cards use a
-larger medium-bold UI face, restrained light-gray color and a thin accent marker;
-action markers inherit the combat tone while prose remains in the rich-content
+Specialized handbook details use the illustrated shared `DetailSection`
+heading for full semantic blocks: a Lucide icon in a compact accent frame, a
+high-contrast uppercase label and a fading divider. The pattern covers
+bestiary sections, armor rules, item and ability metadata, spell and feat
+descriptions, and weapon damage/properties without replacing each type's own
+summary layout. Combat sections use a restrained danger/accent tone so they can
+be found quickly without competing with their content.
+
+Repeated named entries use the shared `DetailEntryCard`. Its title has a
+medium-bold UI face, restrained light-gray color and a thin accent marker;
+combat markers inherit the combat tone while prose remains in rich-content
 typography. Ordinary card prose is mixed slightly toward `text-muted`; dice,
 links and other inline interactive nodes keep their own stronger colors.
 

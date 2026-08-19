@@ -39,18 +39,18 @@
       </div>
     </section>
 
-    <section v-if="grantGroups.length" class="fdc-section">
-      <div class="fdc-section-title">Даёт персонажу</div>
+    <DetailSection v-if="grantGroups.length" label="Даёт персонажу">
+      <template #icon><Gift /></template>
       <div class="fdc-grants">
         <div v-for="group in grantGroups" :key="group.label" class="fdc-grant-group">
           <span class="fdc-grant-label">{{ group.label }}</span>
           <span v-for="value in group.values" :key="value" class="fdc-grant-chip">{{ value }}</span>
         </div>
       </div>
-    </section>
+    </DetailSection>
 
-    <section v-if="choices.length" class="fdc-section">
-      <div class="fdc-section-title">Выбор при получении</div>
+    <DetailSection v-if="choices.length" label="Выбор при получении">
+      <template #icon><ListChecks /></template>
       <div class="fdc-choice-grid">
         <div v-for="choice in choices" :key="choice.key" class="fdc-choice">
           <div class="fdc-choice-head">
@@ -68,19 +68,23 @@
           </div>
         </div>
       </div>
-    </section>
+    </DetailSection>
 
-    <div class="fdc-divider"></div>
-    <RichContent v-if="description" class="fdc-description" :html="description" />
-    <div v-else class="fdc-empty">Описание отсутствует</div>
+    <DetailSection label="Описание">
+      <template #icon><BookOpen /></template>
+      <RichContent v-if="description" class="fdc-description" :html="description" />
+      <div v-else class="fdc-empty">Описание отсутствует</div>
+    </DetailSection>
 
   </article>
 </template>
 
 <script setup>
 import { computed } from 'vue'
+import { BookOpen, Gift, ListChecks } from '@lucide/vue'
 
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
+import DetailSection from '@/shared/ui/DetailSection.vue'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 import { featChoices, featDescription, featPrereq } from '@/features/items/lib/featRules'
 import { useSuggestStore } from '@/stores/suggest'
@@ -199,14 +203,13 @@ function choiceEffects(choice) {
 .fdc-badge-tag { color: var(--text-muted); text-transform: none; }
 .fdc-prereq { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border: 1px solid color-mix(in srgb, var(--feat) 28%, var(--border)); border-left: 3px solid var(--feat); border-radius: 9px; background: linear-gradient(100deg, color-mix(in srgb, var(--feat) 11%, transparent), transparent 65%); }
 .fdc-prereq-icon { color: var(--feat); font-size: 24px; line-height: 1; }
-.fdc-eyebrow, .fdc-section-title { color: var(--feat); font-size: 9px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; }
+.fdc-eyebrow { color: var(--feat); font-size: 9px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; }
 .fdc-prereq-text { margin-top: 3px; color: var(--text-1); font-size: 12px; font-weight: 600; line-height: 1.45; }
 .fdc-benefits { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); overflow: hidden; border: 1px solid var(--border); border-radius: 10px; background: color-mix(in srgb, var(--surface) 78%, transparent); }
 .fdc-benefit { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 10px; border-right: 1px solid var(--border); }
 .fdc-benefit:last-child { border-right: none; }
 .fdc-benefit-value { color: var(--feat); font-family: var(--font-ui); font-size: 21px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .fdc-benefit-label { color: var(--text-muted); font-size: 9px; letter-spacing: 0.06em; text-transform: uppercase; }
-.fdc-section { display: flex; flex-direction: column; gap: 8px; }
 .fdc-grants { display: flex; flex-direction: column; gap: 7px; }
 .fdc-grant-group { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
 .fdc-grant-label { width: 84px; color: var(--text-muted); font-size: 10px; }
@@ -219,7 +222,6 @@ function choiceEffects(choice) {
 .fdc-choice-effects { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 7px; }
 .fdc-choice-effects span { padding: 3px 7px; border: 1px solid color-mix(in srgb, var(--feat) 25%, transparent); border-radius: var(--r-pill); color: var(--feat); font-size: 9px; }
 .fdc-choice-options { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 7px; }
-.fdc-divider { height: 1px; background: linear-gradient(90deg, color-mix(in srgb, var(--feat) 45%, transparent), var(--border) 35%, transparent); }
 .fdc-description { color: var(--text-2); font-size: 13px; line-height: 1.68; }
 .fdc-empty { color: var(--text-muted); font-size: 12px; font-style: italic; }
 @media (max-width: 560px) { .fdc-sigil { width: 50px; height: 50px; } .fdc-title-row h2 { font-size: 21px; } }

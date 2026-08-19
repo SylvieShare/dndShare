@@ -7,24 +7,29 @@
 
     <div v-if="showTitle" class="idc-divider"></div>
 
-    <RichContent v-if="data.desc" class="idc-desc" :html="data.desc" />
-    <div v-else class="idc-no-desc">Описание отсутствует</div>
+    <DetailSection label="Описание">
+      <template #icon><BookOpen /></template>
+      <RichContent v-if="data.desc" class="idc-desc" :html="data.desc" />
+      <div v-else class="idc-no-desc">Описание отсутствует</div>
+    </DetailSection>
 
-    <template v-if="hasMeta">
-      <div class="idc-divider"></div>
+    <DetailSection v-if="hasMeta" label="Характеристики">
+      <template #icon><PackageOpen /></template>
       <div class="idc-meta">
         <span v-if="data.weight != null" class="idc-badge">{{ data.weight }} фунт.</span>
         <span v-if="costLabel" class="idc-badge idc-cost">{{ costLabel }}</span>
         <span v-if="data.is_container" class="idc-badge idc-container">Контейнер</span>
         <span v-if="data.consumable" class="idc-badge idc-consumable">Расходуемое</span>
       </div>
-    </template>
+    </DetailSection>
   </div>
 </template>
 
 <script setup>
 import { computed } from 'vue'
+import { BookOpen, PackageOpen } from '@lucide/vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
+import DetailSection from '@/shared/ui/DetailSection.vue'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 import { useCostFormatter } from '@/features/items/lib/useCostFormatter'
 

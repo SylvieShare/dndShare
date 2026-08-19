@@ -1,10 +1,12 @@
 <template>
   <div class="armor-detail-content">
     <DetailSection v-if="data.desc" label="Описание">
+      <template #icon><BookOpen /></template>
       <RichContent class="armor-description" :html="data.desc" :actor-name="actorName || item.name" />
     </DetailSection>
 
     <DetailSection label="Правила ношения">
+      <template #icon><ShieldCheck /></template>
       <div class="armor-rules">
         <div class="armor-rule">
           <span>Владение</span>
@@ -28,6 +30,7 @@
 
 <script setup>
 import { computed } from 'vue'
+import { BookOpen, ShieldCheck } from '@lucide/vue'
 import DetailSection from '@/shared/ui/DetailSection.vue'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 import { useSuggestStore } from '@/stores/suggest'

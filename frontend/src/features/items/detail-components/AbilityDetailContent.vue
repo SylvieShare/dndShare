@@ -7,23 +7,28 @@
 
     <div v-if="showTitle" class="adc-divider"></div>
 
-    <RichContent v-if="data.desc" class="adc-desc" :html="data.desc" />
-    <div v-else class="adc-no-desc">Описание отсутствует</div>
+    <DetailSection label="Описание">
+      <template #icon><Sparkles /></template>
+      <RichContent v-if="data.desc" class="adc-desc" :html="data.desc" />
+      <div v-else class="adc-no-desc">Описание отсутствует</div>
+    </DetailSection>
 
-    <template v-if="data.max_use || data.rollback_short_rest || data.rollback_long_rest">
-      <div class="adc-divider"></div>
+    <DetailSection v-if="data.max_use || data.rollback_short_rest || data.rollback_long_rest" label="Использование">
+      <template #icon><RefreshCcw /></template>
       <div class="adc-meta">
         <span v-if="data.max_use" class="adc-badge adc-uses">{{ data.max_use }} исп.</span>
         <span v-if="data.rollback_short_rest" class="adc-badge adc-sr">Короткий отдых</span>
         <span v-if="data.rollback_long_rest" class="adc-badge adc-lr">Длинный отдых</span>
       </div>
-    </template>
+    </DetailSection>
   </div>
 </template>
 
 <script setup>
 import { computed } from 'vue'
+import { RefreshCcw, Sparkles } from '@lucide/vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
+import DetailSection from '@/shared/ui/DetailSection.vue'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 
 const props = defineProps({
