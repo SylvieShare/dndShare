@@ -119,10 +119,16 @@ entries and selected choices.
   `item.cover_image_id` relations backed by `storage_image`. MCP stores their
   content-addressed objects under `system-item-media/v1/` in S3.
 - Define the image from the item name, structured data, description and
-  mechanics first. Open existing or imported artwork only when those sources
-  leave the creature, character count, anatomy, equipment or other defining
-  form genuinely ambiguous. Use it only as a factual shape reference; never as
-  the default composition, rendering style or palette template.
+  mechanics first. Before generating or replacing a system icon or cover,
+  always open the current or imported cover when one exists and compare it with
+  those sources. Treat that review as a required visual audit, not as automatic
+  approval of the old art direction: decide case by case which factual traits
+  (creature or character count, anatomy, silhouette, equipment and other
+  defining features) should remain recognizable, and which incidental choices
+  may be redesigned. Use the source cover only for those factual decisions;
+  never copy its composition, rendering style or palette by default. When no
+  source cover exists, proceed from the structured sources and record that the
+  visual audit had no source image.
 - Do not commit generated image binaries to the application repository or add
   them to a startup sync command. Existing sync commands and embedded manifests
   are legacy bootstraps only.
