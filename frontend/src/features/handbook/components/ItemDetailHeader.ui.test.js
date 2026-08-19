@@ -8,6 +8,9 @@ const detailSource = read('HandbookItemDetail.vue')
 const enemySummarySource = read('../../items/detail-components/EnemyDetailSummary.vue')
 const enemySummaryStyles = read('../../items/detail-components/styles/EnemyDetailSummary.css')
 const enemyContentSource = read('../../items/detail-components/EnemyDetailContent.vue')
+const armorSummarySource = read('../../items/detail-components/ArmorDetailSummary.vue')
+const armorSummaryStyles = read('../../items/detail-components/styles/ArmorDetailSummary.css')
+const armorContentSource = read('../../items/detail-components/ArmorDetailContent.vue')
 
 describe('handbook item detail cover', () => {
   it('uses the intrinsic cover ratio without a shared maximum height', () => {
@@ -26,7 +29,7 @@ describe('handbook item detail cover', () => {
 
   it('preloads and quickly crossfades covers without resetting bestiary geometry', () => {
     expect(headerSource).toContain("if (typeId === 5) return '4 / 1'")
-    expect(headerSource).toContain("if (typeId === 6) return '4 / 3'")
+    expect(headerSource).toContain("if (typeId === 6 || typeId === 12) return '4 / 3'")
     expect(headerSource).toContain("return ''")
     expect(headerSource).toContain('const image = new Image()')
     expect(headerSource).toContain('await image.decode()')
@@ -37,9 +40,24 @@ describe('handbook item detail cover', () => {
     expect(headerSource).not.toContain("coverAspectRatio.value = '4 / 1'")
   })
 
+  it('gives armor a 4:3 object showcase with side stats and a bottom requirement rail', () => {
+    expect(headerSource).toContain("if (typeId === 6 || typeId === 12) return '4 / 3'")
+    expect(headerSource).toContain("'--cover-min-height': '420px'")
+    expect(detailSource).toContain('<ArmorDetailSummary :item="item" />')
+    expect(detailSource).toContain('12: ArmorDetailContent')
+    expect(armorSummarySource).toContain('class="armor-summary-side armor-summary-left"')
+    expect(armorSummarySource).toContain('class="armor-cover-safe-zone"')
+    expect(armorSummarySource).toContain('class="armor-summary-side armor-summary-right"')
+    expect(armorSummarySource).toContain('class="armor-requirements"')
+    expect(armorSummaryStyles).toContain('"left center right"')
+    expect(armorSummaryStyles).toContain('"requirements requirements requirements"')
+    expect(armorContentSource).toContain('label="Описание"')
+    expect(armorContentSource).toContain('label="Правила ношения"')
+  })
+
   it('caps portrait bestiary artwork at a square image-driven geometry', () => {
     expect(headerSource).toContain('function coverAspectRatioForDimensions(width, height, typeId)')
-    expect(headerSource).toContain("if (typeId === 6 && height > width) return '1 / 1'")
+    expect(headerSource).toContain("if ((typeId === 6 || typeId === 12) && height > width) return '1 / 1'")
     expect(headerSource).toContain('coverAspectRatioForDimensions(\n        image.naturalWidth,')
     expect(headerSource).toContain('coverAspectRatioForDimensions(width, height, props.type?.id)')
   })

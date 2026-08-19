@@ -17,6 +17,13 @@
     ]
   },
   {
+    "key": "required_armor_proficiency",
+    "name": "Требуемое владение доспехами",
+    "type": "suggest",
+    "suggest_type_id": 3,
+    "filter": true
+  },
+  {
     "key": "armor",
     "name": "Правило КД",
     "type": "object",

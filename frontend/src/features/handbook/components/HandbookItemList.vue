@@ -69,6 +69,7 @@
                   <SpellListItem v-else-if="type.id === 5" :item="item" :type="type" />
                   <ItemListItem v-else-if="type.id === 2" :item="item" :type="type" />
                   <PotionListItem v-else-if="type.id === 10" :item="item" :type="type" />
+                  <ArmorListItem v-else-if="type.id === 12" :item="item" :type="type" />
                   <FeatListItem v-else-if="type.id === 7" :item="item" :type="type" />
                   <ObjectListItem
                     v-else
@@ -96,6 +97,7 @@
               <SpellListItem v-else-if="type.id === 5" :item="item" :type="type" />
               <ItemListItem v-else-if="type.id === 2" :item="item" :type="type" />
               <PotionListItem v-else-if="type.id === 10" :item="item" :type="type" />
+              <ArmorListItem v-else-if="type.id === 12" :item="item" :type="type" />
               <FeatListItem v-else-if="type.id === 7" :item="item" :type="type" />
               <ObjectListItem
                 v-else
@@ -126,6 +128,7 @@ import { findFieldByPath, getByPath, getSuggestId, walkFieldsWithPath } from '@/
 import { useSuggestStore } from '@/stores/suggest'
 import HandbookCollectionBar from '@/features/handbook/components/HandbookCollectionBar'
 import EnemyListItem from '@/features/items/list-components/EnemyListItem'
+import ArmorListItem from '@/features/items/list-components/ArmorListItem'
 import FeatListItem from '@/features/items/list-components/FeatListItem'
 import ItemListItem from '@/features/items/list-components/ItemListItem'
 import ObjectListItem from '@/features/items/list-components/ObjectListItem'

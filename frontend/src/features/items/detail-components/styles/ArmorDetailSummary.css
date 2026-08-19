@@ -1,0 +1,134 @@
+.armor-summary {
+  flex: 1;
+  width: 100%;
+  display: flex;
+}
+
+.armor-summary-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(140px, 210px) minmax(180px, 1fr) minmax(140px, 210px);
+  grid-template-rows: minmax(210px, 1fr) auto;
+  grid-template-areas:
+    "left center right"
+    "requirements requirements requirements";
+  align-items: start;
+  gap: 12px 18px;
+}
+
+.armor-summary-side {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.armor-summary-left { grid-area: left; }
+.armor-summary-right { grid-area: right; }
+.armor-cover-safe-zone { grid-area: center; min-height: 210px; }
+
+.armor-stat {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px;
+  border: 1px solid color-mix(in srgb, var(--text-on-accent) 18%, transparent);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  color: color-mix(in srgb, var(--text-on-accent) 60%, transparent);
+  font-size: 10px;
+  line-height: 1.25;
+  backdrop-filter: blur(5px);
+}
+
+.armor-stat-primary {
+  border-color: color-mix(in srgb, var(--accent) 48%, transparent);
+  background: color-mix(in srgb, var(--accent) 16%, var(--surface) 62%);
+}
+
+.armor-stat-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: color-mix(in srgb, var(--text-on-accent) 62%, transparent);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+
+.armor-stat strong {
+  color: var(--text-on-accent);
+  font-size: 29px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.05;
+  text-shadow: 0 1px 8px var(--scrim);
+}
+
+.armor-stat .armor-stat-compact {
+  margin-top: 3px;
+  font-size: 18px;
+  line-height: 1.15;
+}
+
+.armor-requirements {
+  grid-area: requirements;
+  display: grid;
+  grid-template-columns: 1.35fr 1fr 1fr;
+  gap: 0;
+  padding: 9px 4px;
+  border: 1px solid color-mix(in srgb, var(--text-on-accent) 18%, transparent);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  backdrop-filter: blur(5px);
+}
+
+.armor-requirement {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 2px 10px;
+  color: var(--text-on-accent);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.armor-requirement + .armor-requirement {
+  border-left: 1px solid color-mix(in srgb, var(--text-on-accent) 13%, transparent);
+}
+
+.armor-requirement > svg { flex: none; color: color-mix(in srgb, var(--accent) 66%, var(--text-on-accent)); }
+.armor-requirement span { min-width: 0; }
+.armor-requirement small {
+  display: block;
+  margin-bottom: 2px;
+  color: color-mix(in srgb, var(--text-on-accent) 54%, transparent);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 760px) {
+  .armor-summary-grid {
+    grid-template-columns: minmax(125px, 170px) minmax(70px, 1fr) minmax(125px, 170px);
+    gap: 9px;
+  }
+}
+
+@media (max-width: 520px) {
+  .armor-summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: auto auto;
+    grid-template-areas:
+      "left right"
+      "requirements requirements";
+  }
+
+  .armor-cover-safe-zone { display: none; }
+  .armor-requirements { grid-template-columns: 1fr; }
+  .armor-requirement { justify-content: flex-start; padding: 6px 10px; }
+  .armor-requirement + .armor-requirement { border-top: 1px solid color-mix(in srgb, var(--text-on-accent) 13%, transparent); border-left: 0; }
+}

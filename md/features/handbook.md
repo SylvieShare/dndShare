@@ -169,8 +169,12 @@ backgrounds (11), armor (12) and transport (13).
 
 Mundane armor and shields belong to type 12 and keep the structured
 `armor {ac,use_dex,dex_cap,shield,shield_bonus}` rule consumed by character
-creation and the sheet. Type 2 is ordinary adventuring gear, equipment packs
-and tools; magical armor remains a magic item rather than being moved by name.
+creation and the sheet. `required_armor_proficiency` is a suggest-type-3
+reference, so display and future shop validation use the same canonical
+proficiency as character grants. Type 2 is ordinary adventuring gear,
+equipment packs and tools; magical armor remains a magic item rather than being
+moved by name. The specialized presentation and image contract is documented
+in `md/features/armor.md`.
 Transport type 13 stores the book's speed/carrying capacity when a meaningful
 item weight is not supplied. The PHB 2014 starting-shop catalogue and audit
 rules are documented in `md/features/starting-shop.md`.

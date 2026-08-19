@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest'
 const source = readFileSync(fileURLToPath(new URL('./HandbookItemList.vue', import.meta.url)), 'utf8')
 const handbookPage = readFileSync(fileURLToPath(new URL('../pages/ViewHandbook.vue', import.meta.url)), 'utf8')
 const controls = readFileSync(fileURLToPath(new URL('./HandbookCollectionBar.vue', import.meta.url)), 'utf8')
+const armorList = readFileSync(fileURLToPath(new URL('../../items/list-components/ArmorListItem.vue', import.meta.url)), 'utf8')
 
 describe('handbook list controls', () => {
   it('owns search and filters above the scrollable rows', () => {
@@ -24,6 +25,14 @@ describe('handbook list controls', () => {
     expect(controls).toContain('hasFilterValues(f) || hasItemFilterOptions(f)')
     expect(controls).toContain('v-for="group in contentSourceGroups"')
     expect(controls).toContain('groupContentSources(props.contentSources)')
+  })
+
+  it('uses the shared rich row for armor with AC, material class and price', () => {
+    expect(source.match(/<ArmorListItem v-else-if="type.id === 12"/g)).toHaveLength(2)
+    expect(armorList).toContain('<ObjectListItem')
+    expect(armorList).toContain('#metric')
+    expect(armorList).toContain('armor-list-cost')
+    expect(armorList).toContain('Помеха Скрытности')
   })
 
   it('keeps the wide collection bar identity-only on the handbook page', () => {

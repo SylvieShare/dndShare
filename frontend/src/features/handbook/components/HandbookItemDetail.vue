@@ -6,6 +6,9 @@
         <template v-if="isEnemy" #summary>
           <EnemyDetailSummary :item="item" :type="type" />
         </template>
+        <template v-else-if="isArmor" #summary>
+          <ArmorDetailSummary :item="item" />
+        </template>
         <template v-if="itemSourceLabel" #corner>
           <span
             class="item-detail-source"
@@ -118,6 +121,8 @@ import { useSuggestStore } from '@/stores/suggest'
 import { ensureItemNames, itemName } from '@/features/handbook/objects/lib/itemNames'
 import { getSuggestId, isFieldVisible } from '@/features/handbook/objects/lib/schemaFields'
 import AbilityDetailContent from '@/features/items/detail-components/AbilityDetailContent'
+import ArmorDetailContent from '@/features/items/detail-components/ArmorDetailContent'
+import ArmorDetailSummary from '@/features/items/detail-components/ArmorDetailSummary.vue'
 import EnemyDetailContent from '@/features/items/detail-components/EnemyDetailContent'
 import EnemyDetailSummary from '@/features/items/detail-components/EnemyDetailSummary.vue'
 import FeatDetailContent from '@/features/items/detail-components/FeatDetailContent'
@@ -138,6 +143,7 @@ const CUSTOM_RENDERERS = {
   6: EnemyDetailContent,
   7: FeatDetailContent,
   10: PotionDetailContent,
+  12: ArmorDetailContent,
 }
 
 const props = defineProps({
@@ -152,6 +158,7 @@ defineEmits(['edit'])
 
 const customRenderer = computed(() => CUSTOM_RENDERERS[props.type?.id] || null)
 const isEnemy = computed(() => props.type?.id === 6)
+const isArmor = computed(() => props.type?.id === 12)
 const itemSourceLabel = computed(() => {
   const sources = (props.item?.contentSources || [])
     .map(source => source.code || source.name)

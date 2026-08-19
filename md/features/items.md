@@ -17,7 +17,9 @@ as alternate cost formats.
 
 ## Detail components
 
-Specialized details exist for weapons, spells, enemies, potions and feats.
+Specialized details exist for weapons, spells, enemies, potions, feats and
+armor. The armor-specific data, UI and art contract is documented in
+`md/features/armor.md`.
 They receive the same current `item.data` that the editor writes. Generic item
 detail handles remaining schema fields.
 
