@@ -1,4 +1,5 @@
 .hb-landing {
+  width: 100%;
   display: flex;
   min-height: calc(100vh - var(--header-h));
   min-height: calc(100dvh - var(--header-h));

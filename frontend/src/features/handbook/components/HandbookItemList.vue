@@ -260,7 +260,9 @@ function onScroll(e) {
   justify-content: space-between;
   gap: 10px;
   padding: 10px 14px;
+  border-right: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
+  border-left: 1px solid var(--border);
   background: var(--surface);
 }
 .list-group-label { color: var(--text-muted); font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }

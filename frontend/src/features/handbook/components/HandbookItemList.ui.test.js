@@ -32,4 +32,11 @@ describe('handbook list controls', () => {
     expect(handbookPage).toContain('show-controls')
     expect(handbookPage).toContain(':content-sources="contentSources"')
   })
+
+  it('frames the grouping toolbar on every side', () => {
+    const toolbar = source.match(/\.list-group-toolbar\s*\{([^}]*)\}/)?.[1] || ''
+
+    expect(toolbar).toContain('border-right: 1px solid var(--border);')
+    expect(toolbar).toContain('border-left: 1px solid var(--border);')
+  })
 })

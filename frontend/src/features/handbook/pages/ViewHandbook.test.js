@@ -23,4 +23,12 @@ describe('handbook canvas', () => {
       expect(source).not.toContain('calc(100vh - 54px)')
     }
   })
+
+  it('reserves the final landing width before handbook catalogues load', () => {
+    const landing = landingStyles.match(/\.hb-landing\s*\{([^}]*)\}/)?.[1] || ''
+
+    expect(landing).toContain('width: 100%;')
+    expect(landing).toContain('max-width: 1400px;')
+    expect(landing).toContain('box-sizing: border-box;')
+  })
 })
