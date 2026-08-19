@@ -12,6 +12,9 @@
         <template v-else-if="isArmor" #summary>
           <ArmorDetailSummary :item="item" />
         </template>
+        <template v-else-if="isTransport" #summary>
+          <TransportDetailSummary :item="item" />
+        </template>
         <template v-if="itemSourceLabel" #corner>
           <span
             class="item-detail-source"
@@ -132,6 +135,8 @@ import FeatDetailContent from '@/features/items/detail-components/FeatDetailCont
 import ItemDetailContent from '@/features/items/detail-components/ItemDetailContent'
 import PotionDetailContent from '@/features/items/detail-components/PotionDetailContent'
 import SpellDetailContent from '@/features/items/detail-components/SpellDetailContent'
+import TransportDetailContent from '@/features/items/detail-components/TransportDetailContent'
+import TransportDetailSummary from '@/features/items/detail-components/TransportDetailSummary.vue'
 import WeaponDetailContent from '@/features/items/detail-components/WeaponDetailContent'
 import WeaponDetailSummary from '@/features/items/detail-components/WeaponDetailSummary.vue'
 import RichContent from '@/shared/ui/DndRichContent.vue'
@@ -148,6 +153,7 @@ const CUSTOM_RENDERERS = {
   7: FeatDetailContent,
   10: PotionDetailContent,
   12: ArmorDetailContent,
+  13: TransportDetailContent,
 }
 
 const props = defineProps({
@@ -164,6 +170,7 @@ const customRenderer = computed(() => CUSTOM_RENDERERS[props.type?.id] || null)
 const isEnemy = computed(() => props.type?.id === 6)
 const isWeapon = computed(() => props.type?.id === 1)
 const isArmor = computed(() => props.type?.id === 12)
+const isTransport = computed(() => props.type?.id === 13)
 const itemSourceLabel = computed(() => {
   const sources = (props.item?.contentSources || [])
     .map(source => source.code || source.name)

@@ -1,14 +1,7 @@
 [
+  { "key": "desc", "name": "Описание", "type": "description" },
   {
-    "key": "desc",
-    "name": "Описание",
-    "type": "description"
-  },
-  {
-    "key": "category",
-    "name": "Категория транспорта",
-    "type": "select",
-    "filter": true,
+    "key": "category", "name": "Категория транспорта", "type": "select", "filter": true,
     "options": [
       { "value": "mount", "label": "Скакун" },
       { "value": "tack", "label": "Сёдла и упряжь" },
@@ -17,30 +10,58 @@
     ]
   },
   {
-    "key": "speed",
-    "name": "Скорость",
-    "type": "text"
+    "key": "tack_kind", "name": "Назначение снаряжения", "type": "select", "filter": true,
+    "show_on": { "key": "category", "value": "tack" },
+    "options": [
+      { "value": "feed", "label": "Корм" },
+      { "value": "storage", "label": "Перевозка груза" },
+      { "value": "military_saddle", "label": "Боевое седло" },
+      { "value": "pack_saddle", "label": "Грузовое седло" },
+      { "value": "riding_saddle", "label": "Ездовое седло" },
+      { "value": "exotic_saddle", "label": "Экзотическое седло" },
+      { "value": "control", "label": "Управление скакуном" }
+    ]
+  },
+  { "key": "creature_item_id", "name": "Существо в бестиарии", "type": "item", "item_type": 6, "show_on": { "key": "category", "value": "mount" } },
+  {
+    "key": "movement", "name": "Передвижение", "type": "object",
+    "fields": [
+      { "key": "value", "name": "Скорость", "type": "int" },
+      { "key": "unit", "name": "Единица", "type": "select", "options": [{ "value": "feet", "label": "Футы" }, { "value": "miles_per_hour", "label": "Мили в час" }] },
+      { "key": "mode", "name": "Режим", "type": "select", "options": [{ "value": "ground", "label": "По земле" }, { "value": "water", "label": "По воде" }, { "value": "air", "label": "По воздуху" }] }
+    ]
   },
   {
-    "key": "carrying_capacity",
-    "name": "Грузоподъёмность, фнт.",
-    "type": "int"
+    "key": "propulsion", "name": "Способ движения", "type": "select", "filter": true,
+    "options": [
+      { "value": "self", "label": "Собственный ход" },
+      { "value": "drawn", "label": "Тяга скакунов" },
+      { "value": "sail", "label": "Парус" },
+      { "value": "oar", "label": "Вёсла" },
+      { "value": "sail_or_oar", "label": "Парус или вёсла" }
+    ]
   },
   {
-    "key": "cost",
-    "name": "Стоимость",
-    "type": "int_by_suggest",
-    "suggest_type_id": 17
+    "key": "capacity", "name": "Вместимость", "type": "object",
+    "fields": [
+      { "key": "carrying_lb", "name": "Грузоподъёмность, фнт.", "type": "int" },
+      { "key": "crew", "name": "Экипаж", "type": "int" },
+      { "key": "passengers", "name": "Пассажиры", "type": "int" },
+      { "key": "cargo_lb", "name": "Груз, фнт.", "type": "int" },
+      { "key": "cargo_tons", "name": "Груз, тонн", "type": "int" }
+    ]
   },
   {
-    "key": "weight",
-    "name": "Вес",
-    "type": "int"
+    "key": "vehicle_stats", "name": "Характеристики объекта", "type": "object",
+    "fields": [
+      { "key": "ac", "name": "Класс доспеха", "type": "int" },
+      { "key": "hp", "name": "Хиты", "type": "int" },
+      { "key": "damage_threshold", "name": "Порог урона", "type": "int" }
+    ]
   },
-  {
-    "key": "available_in_starting_shop",
-    "name": "Доступно в магазине при создании",
-    "type": "boolean",
-    "filter": true
-  }
+  { "key": "rider_stability_advantage", "name": "Преимущество для удержания в седле", "type": "boolean", "show_on": { "key": "tack_kind", "value": "military_saddle" } },
+  { "key": "for_exotic_mount", "name": "Для экзотического скакуна", "type": "boolean", "show_on": { "key": "tack_kind", "value": "exotic_saddle" } },
+  { "key": "cost", "name": "Стоимость", "type": "int_by_suggest", "suggest_type_id": 17 },
+  { "key": "weight", "name": "Вес, фнт.", "type": "int" },
+  { "key": "available_in_starting_shop", "name": "Доступно в магазине при создании", "type": "boolean", "filter": true }
 ]

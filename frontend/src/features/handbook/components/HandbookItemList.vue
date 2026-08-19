@@ -70,6 +70,7 @@
                   <ItemListItem v-else-if="type.id === 2" :item="item" :type="type" />
                   <PotionListItem v-else-if="type.id === 10" :item="item" :type="type" />
                   <ArmorListItem v-else-if="type.id === 12" :item="item" :type="type" />
+                  <TransportListItem v-else-if="type.id === 13" :item="item" :type="type" />
                   <FeatListItem v-else-if="type.id === 7" :item="item" :type="type" />
                   <ObjectListItem
                     v-else
@@ -98,6 +99,7 @@
               <ItemListItem v-else-if="type.id === 2" :item="item" :type="type" />
               <PotionListItem v-else-if="type.id === 10" :item="item" :type="type" />
               <ArmorListItem v-else-if="type.id === 12" :item="item" :type="type" />
+              <TransportListItem v-else-if="type.id === 13" :item="item" :type="type" />
               <FeatListItem v-else-if="type.id === 7" :item="item" :type="type" />
               <ObjectListItem
                 v-else
@@ -134,6 +136,7 @@ import ItemListItem from '@/features/items/list-components/ItemListItem'
 import ObjectListItem from '@/features/items/list-components/ObjectListItem'
 import PotionListItem from '@/features/items/list-components/PotionListItem'
 import SpellListItem from '@/features/items/list-components/SpellListItem'
+import TransportListItem from '@/features/items/list-components/TransportListItem'
 import WeaponListItem from '@/features/items/list-components/WeaponListItem'
 import { dieLabel } from '@/shared/lib/systemDice'
 

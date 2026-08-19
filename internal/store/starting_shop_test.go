@@ -8,13 +8,31 @@ import (
 	"testing"
 )
 
-func TestWeaponCatalogSchemaIsEmbeddedLast(t *testing.T) {
+func TestTransportCatalogSchemaIsEmbeddedLast(t *testing.T) {
 	if len(schemaParts) == 0 {
 		t.Fatal("schemaParts is empty")
 	}
 	last := schemaParts[len(schemaParts)-1]
-	if last.name != "weapon-catalog" || last.sql == "" || last.sql != schemaWeaponCatalogSQL {
-		t.Fatal("weapon-catalog schema must be embedded as the final startup migration")
+	if last.name != "transport-catalog" || last.sql == "" || last.sql != schemaTransportCatalogSQL {
+		t.Fatal("transport-catalog schema must be embedded as the final startup migration")
+	}
+}
+
+func TestTransportCatalogUsesStructuredMechanics(t *testing.T) {
+	for _, fragment := range []string{
+		`"key":"movement"`,
+		`"key":"capacity"`,
+		`"key":"creature_item_id"`,
+		`"key":"vehicle_stats"`,
+		"('Warhorse', 'self', NULL, 'Warhorse'",
+		"('Donkey or Mule', 'self', NULL, 'Mule'",
+		"('Saddle, Military', NULL, 'military_saddle'",
+		"('Warship', 'sail'",
+		"data - 'speed' - 'carrying_capacity'",
+	} {
+		if !strings.Contains(schemaTransportCatalogSQL, fragment) {
+			t.Fatalf("transport catalogue schema must contain %q", fragment)
+		}
 	}
 }
 

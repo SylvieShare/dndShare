@@ -7,6 +7,7 @@ const handbookPage = readFileSync(fileURLToPath(new URL('../pages/ViewHandbook.v
 const controls = readFileSync(fileURLToPath(new URL('./HandbookCollectionBar.vue', import.meta.url)), 'utf8')
 const armorList = readFileSync(fileURLToPath(new URL('../../items/list-components/ArmorListItem.vue', import.meta.url)), 'utf8')
 const weaponList = readFileSync(fileURLToPath(new URL('../../items/list-components/WeaponListItem.vue', import.meta.url)), 'utf8')
+const transportList = readFileSync(fileURLToPath(new URL('../../items/list-components/TransportListItem.vue', import.meta.url)), 'utf8')
 
 describe('handbook list controls', () => {
   it('owns search and filters above the scrollable rows', () => {
@@ -34,6 +35,14 @@ describe('handbook list controls', () => {
     expect(armorList).toContain('#metric')
     expect(armorList).toContain('armor-list-cost')
     expect(armorList).toContain('Помеха Скрытности')
+  })
+
+  it('uses the shared rich row for transport with movement and price', () => {
+    expect(source.match(/<TransportListItem v-else-if="type.id === 13"/g)).toHaveLength(2)
+    expect(transportList).toContain('<ObjectListItem')
+    expect(transportList).toContain('#metric')
+    expect(transportList).toContain('transport-list-cost')
+    expect(transportList).toContain("sail_or_oar: 'Парус/вёсла'")
   })
 
   it('places weapon damage in the shared metric column and price at the trailing edge', () => {

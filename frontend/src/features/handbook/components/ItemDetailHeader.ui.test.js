@@ -14,6 +14,9 @@ const armorContentSource = read('../../items/detail-components/ArmorDetailConten
 const weaponSummarySource = read('../../items/detail-components/WeaponDetailSummary.vue')
 const weaponSummaryStyles = read('../../items/detail-components/styles/WeaponDetailSummary.css')
 const weaponContentSource = read('../../items/detail-components/WeaponDetailContent.vue')
+const transportSummarySource = read('../../items/detail-components/TransportDetailSummary.vue')
+const transportSummaryStyles = read('../../items/detail-components/styles/TransportDetailSummary.css')
+const transportContentSource = read('../../items/detail-components/TransportDetailContent.vue')
 
 describe('handbook item detail cover', () => {
   it('uses the intrinsic cover ratio without a shared maximum height', () => {
@@ -56,6 +59,20 @@ describe('handbook item detail cover', () => {
     expect(armorSummaryStyles).toContain('"requirements requirements requirements"')
     expect(armorContentSource).toContain('label="Описание"')
     expect(armorContentSource).toContain('label="Правила ношения"')
+  })
+
+  it('gives transport a 3:2 showcase with operational data around a safe center', () => {
+    expect(headerSource).toContain("if (typeId === 13) return '3 / 2'")
+    expect(headerSource).toContain("13: {\n    '--cover-min-height': '400px'")
+    expect(detailSource).toContain('<TransportDetailSummary :item="item" />')
+    expect(detailSource).toContain('13: TransportDetailContent')
+    expect(transportSummarySource).toContain('class="transport-summary-side transport-summary-left"')
+    expect(transportSummarySource).toContain('class="transport-cover-safe-zone"')
+    expect(transportSummarySource).toContain('class="transport-summary-side transport-summary-right"')
+    expect(transportSummarySource).toContain('class="transport-operations"')
+    expect(transportSummaryStyles).toContain('"left center right"')
+    expect(transportContentSource).toContain('label="Эксплуатация"')
+    expect(transportContentSource).toContain('label="Характеристики объекта"')
   })
 
   it('uses the shared 4:3 object showcase for weapon damage, economy and OR proficiencies', () => {

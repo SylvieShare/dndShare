@@ -136,7 +136,7 @@ Creature UI calls CR `Уровень опасности`, explains it for new pl
 semantic icons for AC, HP, proficiency and each movement type.
 
 Details are specialized by type where useful (weapon, spell, enemy, potion,
-feat), otherwise the generic field renderer is used. Item detail modals use
+feat, armor, transport), otherwise the generic field renderer is used. Item detail modals use
 `ItemViewModal` and fixed-chrome `AppModalFrame`; the standalone detail renderer
 keeps its own title, while the modal moves that title into the fixed header.
 An assigned raster or SVG item icon is shown in list rows, standard pickers,
@@ -195,9 +195,11 @@ Weapon type 1 stores its acceptable proficiency alternatives in
 `required_weapon_proficiencies`, a suggest-type-4 array with `match:any` OR
 semantics. The specialized presentation, image contract and unarmed-strike
 exception are documented in `md/features/weapons.md`.
-Transport type 13 stores the book's speed/carrying capacity when a meaningful
-item weight is not supplied. The PHB 2014 starting-shop catalogue and audit
-rules are documented in `md/features/starting-shop.md`.
+Transport type 13 stores structured movement, propulsion, capacity and optional
+vehicle combat data. Mount rows link to their type-6 bestiary creatures rather
+than copying stat blocks. The schema, specialized presentation and image rules
+are documented in `md/features/transport.md`; the PHB 2014 starting-shop audit
+is documented in `md/features/starting-shop.md`.
 
 ## MCP
 

@@ -17,9 +17,10 @@ as alternate cost formats.
 
 ## Detail components
 
-Specialized details exist for weapons, spells, enemies, potions, feats and
-armor. Their data, UI and art contracts are documented in
-`md/features/weapons.md` and `md/features/armor.md`.
+Specialized details exist for weapons, spells, enemies, potions, feats, armor
+and transport. Their data, UI and art contracts are documented in
+`md/features/weapons.md`, `md/features/armor.md` and
+`md/features/transport.md`.
 They receive the same current `item.data` that the editor writes. Generic item
 detail handles remaining schema fields.
 
@@ -113,6 +114,11 @@ entries and selected choices.
   tiles anchor the left edge, range/cost/weight tiles anchor the right edge,
   and a bottom translucent rail shows OR-proficiencies and properties. The
   weapon image remains visible in the reserved center column;
+- transport details use a `400px` minimum `3:2` cover profile. Category and
+  primary movement sit on the left, cost and weight on the right, and the
+  movement/capacity/relation rail stays at the bottom. Mount icons are compact
+  head portraits facing right; object and vehicle icons use their own full
+  silhouette. The full contract is in `md/features/transport.md`;
 - field labels and errors use shared form components;
 - direct color literals are rejected by `npm run check:colors`.
 
