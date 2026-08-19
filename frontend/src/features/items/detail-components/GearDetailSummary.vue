@@ -34,9 +34,9 @@ const costLabel = computed(() => formatCost(data.value.cost))
 }
 
 .gear-economy {
-  width: min(100%, 360px);
+  width: 100%;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(140px, 180px) minmax(180px, 1fr) minmax(140px, 180px);
   gap: 9px;
 }
 
@@ -75,15 +75,18 @@ const costLabel = computed(() => formatCost(data.value.cost))
 }
 
 .gear-economy-card small { color: color-mix(in srgb, var(--text-on-accent) 66%, transparent); font-size: 10px; }
-.gear-economy-card:only-child { grid-column: 1 / -1; }
-.gear-economy-cost { border-color: color-mix(in srgb, var(--warning) 44%, transparent); }
+.gear-economy-cost { grid-column: 1; border-color: color-mix(in srgb, var(--warning) 44%, transparent); }
 .gear-economy-cost > span { color: color-mix(in srgb, var(--warning) 78%, var(--text-on-accent)); }
-.gear-economy-weight { border-color: color-mix(in srgb, var(--accent) 40%, transparent); }
+.gear-economy-weight { grid-column: 3; border-color: color-mix(in srgb, var(--accent) 40%, transparent); }
 .gear-economy-weight > span { color: color-mix(in srgb, var(--accent-soft) 72%, var(--text-on-accent)); }
+.gear-economy .gear-economy-card:only-child { grid-column: 1 / 4; justify-self: center; width: min(100%, 180px); box-sizing: border-box; }
 
 @media (max-width: 420px) {
-  .gear-economy { gap: 7px; }
+  .gear-economy { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
   .gear-economy-card { padding: 9px 10px; }
+  .gear-economy-cost { grid-column: 1; }
+  .gear-economy-weight { grid-column: 2; }
+  .gear-economy .gear-economy-card:only-child { grid-column: 1 / 3; }
   .gear-economy-card strong { font-size: 17px; }
 }
 </style>

@@ -77,17 +77,15 @@ describe('handbook item detail cover', () => {
     expect(transportContentSource).toContain('label="Характеристики объекта"')
   })
 
-  it('shows purchasable gear as a complete 2:3 portrait with price and weight on the cover', () => {
-    expect(headerSource).toContain("if (typeId === 2) return '2 / 3'")
-    expect(headerSource).toContain("2: {\n    '--cover-min-height': '560px'")
-    expect(headerSource).toContain('[data-item-type-id="2"]::before')
-    expect(headerSource).toContain('[data-item-type-id="2"] .item-detail-cover')
-    expect(headerSource).toContain('object-fit: contain;')
+  it('shows purchasable gear as a 3:2 cover with price and weight around a safe center', () => {
+    expect(headerSource).toContain("if (typeId === 2) return '3 / 2'")
+    expect(headerSource).toContain("2: {\n    '--cover-min-height': '400px'")
     expect(detailSource).toContain('<GearDetailSummary :item="item" />')
     expect(detailSource).toContain('available_in_starting_shop === true')
     expect(detailSource).toContain('economyInHeader: isShopGearCovered.value')
     expect(gearSummarySource).toContain('class="gear-economy-card gear-economy-cost"')
     expect(gearSummarySource).toContain('class="gear-economy-card gear-economy-weight"')
+    expect(gearSummarySource).toContain('grid-template-columns: minmax(140px, 180px) minmax(180px, 1fr) minmax(140px, 180px);')
     expect(gearContentSource).toContain('!economyInHeader && data.weight != null')
   })
 
