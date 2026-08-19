@@ -6,6 +6,7 @@ const source = readFileSync(fileURLToPath(new URL('./HandbookItemList.vue', impo
 const handbookPage = readFileSync(fileURLToPath(new URL('../pages/ViewHandbook.vue', import.meta.url)), 'utf8')
 const controls = readFileSync(fileURLToPath(new URL('./HandbookCollectionBar.vue', import.meta.url)), 'utf8')
 const armorList = readFileSync(fileURLToPath(new URL('../../items/list-components/ArmorListItem.vue', import.meta.url)), 'utf8')
+const weaponList = readFileSync(fileURLToPath(new URL('../../items/list-components/WeaponListItem.vue', import.meta.url)), 'utf8')
 
 describe('handbook list controls', () => {
   it('owns search and filters above the scrollable rows', () => {
@@ -33,6 +34,12 @@ describe('handbook list controls', () => {
     expect(armorList).toContain('#metric')
     expect(armorList).toContain('armor-list-cost')
     expect(armorList).toContain('Помеха Скрытности')
+  })
+
+  it('places weapon damage in the shared metric column and price at the trailing edge', () => {
+    expect(weaponList).toContain('#metric')
+    expect(weaponList).toContain('#trailing')
+    expect(weaponList).toContain('wli-cost')
   })
 
   it('keeps the wide collection bar identity-only on the handbook page', () => {

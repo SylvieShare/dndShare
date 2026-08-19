@@ -69,6 +69,9 @@ const props = defineProps({
 })
 
 const TYPE_COVER_STYLES = {
+  1: {
+    '--cover-min-height': '420px',
+  },
   6: {
     '--cover-min-height': '440px',
   },
@@ -79,13 +82,13 @@ const TYPE_COVER_STYLES = {
 
 function defaultCoverAspectRatio(typeId) {
   if (typeId === 5) return '4 / 1'
-  if (typeId === 6 || typeId === 12) return '4 / 3'
+  if (typeId === 1 || typeId === 6 || typeId === 12) return '4 / 3'
   return ''
 }
 
 function coverAspectRatioForDimensions(width, height, typeId) {
   if (!(width > 0 && height > 0)) return defaultCoverAspectRatio(typeId)
-  if ((typeId === 6 || typeId === 12) && height > width) return '1 / 1'
+  if ((typeId === 1 || typeId === 6 || typeId === 12) && height > width) return '1 / 1'
   return `${width} / ${height}`
 }
 

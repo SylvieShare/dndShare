@@ -18,8 +18,8 @@ as alternate cost formats.
 ## Detail components
 
 Specialized details exist for weapons, spells, enemies, potions, feats and
-armor. The armor-specific data, UI and art contract is documented in
-`md/features/armor.md`.
+armor. Their data, UI and art contracts are documented in
+`md/features/weapons.md` and `md/features/armor.md`.
 They receive the same current `item.data` that the editor writes. Generic item
 detail handles remaining schema fields.
 
@@ -107,6 +107,10 @@ entries and selected choices.
   the bottom strip. At `520px` and below the side groups become two columns and
   abilities use a `3×2` grid. Skills and all later sections remain below the
   artwork;
+- weapon details use a `420px` minimum `4:3` cover profile. Damage/category
+  tiles anchor the left edge, range/cost/weight tiles anchor the right edge,
+  and a bottom translucent rail shows OR-proficiencies and properties. The
+  weapon image remains visible in the reserved center column;
 - field labels and errors use shared form components;
 - direct color literals are rejected by `npm run check:colors`.
 

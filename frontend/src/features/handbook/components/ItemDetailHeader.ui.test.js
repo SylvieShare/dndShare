@@ -11,6 +11,9 @@ const enemyContentSource = read('../../items/detail-components/EnemyDetailConten
 const armorSummarySource = read('../../items/detail-components/ArmorDetailSummary.vue')
 const armorSummaryStyles = read('../../items/detail-components/styles/ArmorDetailSummary.css')
 const armorContentSource = read('../../items/detail-components/ArmorDetailContent.vue')
+const weaponSummarySource = read('../../items/detail-components/WeaponDetailSummary.vue')
+const weaponSummaryStyles = read('../../items/detail-components/styles/WeaponDetailSummary.css')
+const weaponContentSource = read('../../items/detail-components/WeaponDetailContent.vue')
 
 describe('handbook item detail cover', () => {
   it('uses the intrinsic cover ratio without a shared maximum height', () => {
@@ -29,7 +32,7 @@ describe('handbook item detail cover', () => {
 
   it('preloads and quickly crossfades covers without resetting bestiary geometry', () => {
     expect(headerSource).toContain("if (typeId === 5) return '4 / 1'")
-    expect(headerSource).toContain("if (typeId === 6 || typeId === 12) return '4 / 3'")
+    expect(headerSource).toContain("if (typeId === 1 || typeId === 6 || typeId === 12) return '4 / 3'")
     expect(headerSource).toContain("return ''")
     expect(headerSource).toContain('const image = new Image()')
     expect(headerSource).toContain('await image.decode()')
@@ -41,7 +44,7 @@ describe('handbook item detail cover', () => {
   })
 
   it('gives armor a 4:3 object showcase with side stats and a bottom requirement rail', () => {
-    expect(headerSource).toContain("if (typeId === 6 || typeId === 12) return '4 / 3'")
+    expect(headerSource).toContain("if (typeId === 1 || typeId === 6 || typeId === 12) return '4 / 3'")
     expect(headerSource).toContain("'--cover-min-height': '420px'")
     expect(detailSource).toContain('<ArmorDetailSummary :item="item" />')
     expect(detailSource).toContain('12: ArmorDetailContent')
@@ -55,9 +58,24 @@ describe('handbook item detail cover', () => {
     expect(armorContentSource).toContain('label="Правила ношения"')
   })
 
+  it('uses the shared 4:3 object showcase for weapon damage, economy and OR proficiencies', () => {
+    expect(detailSource).toContain('<WeaponDetailSummary :item="item" />')
+    expect(headerSource).toContain("1: {\n    '--cover-min-height': '420px'")
+    expect(weaponSummarySource).toContain('class="weapon-summary-side weapon-summary-left"')
+    expect(weaponSummarySource).toContain('class="weapon-cover-safe-zone"')
+    expect(weaponSummarySource).toContain('class="weapon-summary-side weapon-summary-right"')
+    expect(weaponSummarySource).toContain('class="weapon-rules"')
+    expect(weaponSummarySource).toContain("labels.join(' или ')")
+    expect(weaponSummarySource).toContain("'Владеют все'")
+    expect(weaponSummaryStyles).toContain('"left center right"')
+    expect(weaponSummaryStyles).toContain('"rules rules rules"')
+    expect(weaponContentSource).toContain('v-if="showTitle && hasDamageInfo"')
+    expect(weaponContentSource).toContain('v-if="showTitle && tagItems.length"')
+  })
+
   it('caps portrait bestiary artwork at a square image-driven geometry', () => {
     expect(headerSource).toContain('function coverAspectRatioForDimensions(width, height, typeId)')
-    expect(headerSource).toContain("if ((typeId === 6 || typeId === 12) && height > width) return '1 / 1'")
+    expect(headerSource).toContain("if ((typeId === 1 || typeId === 6 || typeId === 12) && height > width) return '1 / 1'")
     expect(headerSource).toContain('coverAspectRatioForDimensions(\n        image.naturalWidth,')
     expect(headerSource).toContain('coverAspectRatioForDimensions(width, height, props.type?.id)')
   })

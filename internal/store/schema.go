@@ -88,6 +88,9 @@ var schemaStartingShopSQL string
 //go:embed schema/24_armor_catalog.sql
 var schemaArmorCatalogSQL string
 
+//go:embed schema/25_weapon_catalog.sql
+var schemaWeaponCatalogSQL string
+
 var schemaParts = []struct {
 	name string
 	sql  string
@@ -117,6 +120,7 @@ var schemaParts = []struct {
 	{"system-item-media", schemaSystemItemMediaSQL},
 	{"starting-shop", schemaStartingShopSQL},
 	{"armor-catalog", schemaArmorCatalogSQL},
+	{"weapon-catalog", schemaWeaponCatalogSQL},
 }
 
 func applySchema(ctx context.Context, pool *pgxpool.Pool) error {

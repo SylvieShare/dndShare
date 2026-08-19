@@ -44,6 +44,14 @@
     "filter": true
   },
   {
+    "key": "required_weapon_proficiencies",
+    "name": "Подходящие владения оружием",
+    "type": "suggest_array",
+    "suggest_id": 4,
+    "match": "any",
+    "filter": true
+  },
+  {
     "key": "universe_attacks",
     "name": "Универсальная атака",
     "type": "object_array",

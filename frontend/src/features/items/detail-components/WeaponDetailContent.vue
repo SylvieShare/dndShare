@@ -8,7 +8,7 @@
       </div>
     </div>
 
-    <div class="wdc-pills">
+    <div v-if="showTitle" class="wdc-pills">
       <span class="wdc-pill" :class="{ 'wdc-pill-on': data.is_military }">
         {{ data.is_military ? 'Воинское' : 'Простое' }}
       </span>
@@ -17,7 +17,7 @@
       </span>
     </div>
 
-    <div class="wdc-stat-grid">
+    <div v-if="showTitle" class="wdc-stat-grid">
       <div v-if="rangeLabel" class="wdc-stat-cell">
         <span class="wdc-stat-value">{{ rangeLabel }}</span>
         <span class="wdc-stat-label">Дистанция</span>
@@ -32,7 +32,7 @@
       </div>
     </div>
 
-    <DetailSection v-if="hasDamageInfo" label="Урон" tone="combat">
+    <DetailSection v-if="showTitle && hasDamageInfo" label="Урон" tone="combat">
       <template #icon><Swords /></template>
       <div
         class="wdc-damage-grid"
@@ -74,7 +74,7 @@
       </div>
     </DetailSection>
 
-    <DetailSection v-if="tagItems.length" label="Свойства">
+    <DetailSection v-if="showTitle && tagItems.length" label="Свойства">
       <template #icon><Tags /></template>
       <div class="wdc-tags">
         <span

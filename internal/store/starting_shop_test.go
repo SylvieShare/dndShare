@@ -8,13 +8,30 @@ import (
 	"testing"
 )
 
-func TestArmorCatalogSchemaIsEmbeddedLast(t *testing.T) {
+func TestWeaponCatalogSchemaIsEmbeddedLast(t *testing.T) {
 	if len(schemaParts) == 0 {
 		t.Fatal("schemaParts is empty")
 	}
 	last := schemaParts[len(schemaParts)-1]
-	if last.name != "armor-catalog" || last.sql == "" || last.sql != schemaArmorCatalogSQL {
-		t.Fatal("armor-catalog schema must be embedded as the final startup migration")
+	if last.name != "weapon-catalog" || last.sql == "" || last.sql != schemaWeaponCatalogSQL {
+		t.Fatal("weapon-catalog schema must be embedded as the final startup migration")
+	}
+}
+
+func TestWeaponCatalogLinksAnyMatchingProficiency(t *testing.T) {
+	for _, fragment := range []string{
+		`"key":"required_weapon_proficiencies"`,
+		`"match":"any"`,
+		"THEN 'Воинское оружие'",
+		"ELSE 'Простое оружие'",
+		"WHEN 'длинный меч' THEN 'Длинные мечи'",
+		"WHEN 'боевой топор' THEN 'Боевые топоры'",
+		"lower(item.name) = 'безоружный удар' THEN NULL",
+		"array_remove(ARRAY[broad.id, specific.id]",
+	} {
+		if !strings.Contains(schemaWeaponCatalogSQL, fragment) {
+			t.Fatalf("weapon catalogue schema must contain %q", fragment)
+		}
 	}
 }
 
@@ -101,4 +118,26 @@ func TestArmorResourceSchemaExposesRequiredProficiencySuggest(t *testing.T) {
 		return
 	}
 	t.Fatal("item_12 schema must expose required_armor_proficiency")
+}
+
+func TestWeaponResourceSchemaExposesAnyMatchingProficiencies(t *testing.T) {
+	path := filepath.Join("..", "..", "resources", "items", "item_1_shema.json")
+	body, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatalf("read %s: %v", path, err)
+	}
+	var fields []map[string]any
+	if err := json.Unmarshal(body, &fields); err != nil {
+		t.Fatalf("parse %s: %v", path, err)
+	}
+	for _, field := range fields {
+		if field["key"] != "required_weapon_proficiencies" {
+			continue
+		}
+		if field["type"] != "suggest_array" || field["suggest_id"] != float64(4) || field["match"] != "any" || field["filter"] != true {
+			t.Fatalf("unexpected weapon proficiency field: %#v", field)
+		}
+		return
+	}
+	t.Fatal("item_1 schema must expose required_weapon_proficiencies")
 }

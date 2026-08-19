@@ -180,6 +180,10 @@ proficiency as character grants. Type 2 is ordinary adventuring gear,
 equipment packs and tools; magical armor remains a magic item rather than being
 moved by name. The specialized presentation and image contract is documented
 in `md/features/armor.md`.
+Weapon type 1 stores its acceptable proficiency alternatives in
+`required_weapon_proficiencies`, a suggest-type-4 array with `match:any` OR
+semantics. The specialized presentation, image contract and unarmed-strike
+exception are documented in `md/features/weapons.md`.
 Transport type 13 stores the book's speed/carrying capacity when a meaningful
 item weight is not supplied. The PHB 2014 starting-shop catalogue and audit
 rules are documented in `md/features/starting-shop.md`.

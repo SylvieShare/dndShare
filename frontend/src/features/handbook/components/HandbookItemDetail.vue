@@ -6,6 +6,9 @@
         <template v-if="isEnemy" #summary>
           <EnemyDetailSummary :item="item" :type="type" />
         </template>
+        <template v-else-if="isWeapon" #summary>
+          <WeaponDetailSummary :item="item" />
+        </template>
         <template v-else-if="isArmor" #summary>
           <ArmorDetailSummary :item="item" />
         </template>
@@ -130,6 +133,7 @@ import ItemDetailContent from '@/features/items/detail-components/ItemDetailCont
 import PotionDetailContent from '@/features/items/detail-components/PotionDetailContent'
 import SpellDetailContent from '@/features/items/detail-components/SpellDetailContent'
 import WeaponDetailContent from '@/features/items/detail-components/WeaponDetailContent'
+import WeaponDetailSummary from '@/features/items/detail-components/WeaponDetailSummary.vue'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 import SystemDie from '@/shared/ui/SystemDie.vue'
 import { dieLabel } from '@/shared/lib/systemDice'
@@ -158,6 +162,7 @@ defineEmits(['edit'])
 
 const customRenderer = computed(() => CUSTOM_RENDERERS[props.type?.id] || null)
 const isEnemy = computed(() => props.type?.id === 6)
+const isWeapon = computed(() => props.type?.id === 1)
 const isArmor = computed(() => props.type?.id === 12)
 const itemSourceLabel = computed(() => {
   const sources = (props.item?.contentSources || [])

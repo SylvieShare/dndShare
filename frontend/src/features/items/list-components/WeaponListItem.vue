@@ -1,6 +1,6 @@
 <template>
   <ObjectListItem :item="item" :type="type" :name-en="item.nameEn || ''" :custom="item.userId != null" :subtitle="subtitle">
-    <template v-if="damage" #trailing>
+    <template v-if="damage" #metric>
       <span class="wli-damage">
         <template v-if="damage.diceSides">
           <span v-if="damage.count !== 1" class="wli-count">{{ damage.count }}</span>
@@ -9,6 +9,7 @@
         <template v-else>{{ damage.label }}</template>
       </span>
     </template>
+    <template v-if="costLabel" #trailing><span class="wli-cost">{{ costLabel }}</span></template>
   </ObjectListItem>
 </template>
 
@@ -18,6 +19,7 @@ import ObjectListItem from '@/features/items/list-components/ObjectListItem'
 import { useSchemaSuggests } from '@/features/handbook/objects/lib/useSchemaSuggests'
 import SystemDie from '@/shared/ui/SystemDie.vue'
 import { diceById } from '@/shared/lib/systemDice'
+import { useCostFormatter } from '@/features/items/lib/useCostFormatter'
 
 const props = defineProps({
   item: { type: Object, required: true },
@@ -30,6 +32,8 @@ const damageTypeMap = computed(() => Object.fromEntries(suggestItems('type').map
 const tagMap = computed(() => Object.fromEntries(suggestItems('tags').map(s => [s.id, s.value])))
 
 const data = computed(() => props.item.data || {})
+const { format: formatCost } = useCostFormatter()
+const costLabel = computed(() => formatCost(data.value.cost))
 const firstAttack = computed(() => Array.isArray(data.value.attacks) ? data.value.attacks[0] : null)
 
 const damage = computed(() => attackDamage(firstAttack.value))
@@ -73,5 +77,6 @@ function attackDamage(attack) {
 }
 
 .wli-count { min-width: 8px; text-align: right; }
+.wli-cost { color: var(--text-2); font-size: 11px; white-space: nowrap; }
 
 </style>
