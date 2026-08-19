@@ -300,15 +300,18 @@ New generated icons are installed through MCP
 `handbook_item_set_system_image(slot="icon", preservePrevious=true)`. **Kobold**
 is the first production example of the head-and-short-neck rule; its swept
 horns, long reptilian muzzle and cheek frill carry the identity without a body
-or weapon.
+or weapon. A creature family may deliberately reuse one identical icon across
+all mechanical variants while giving every entry a unique cover. All twelve
+kobold rows, including alternate-source duplicates, the winged kobold and the
+vampire spawn, use the same kobold portrait mark.
 
 ### Bestiary cover art direction
 
-Bestiary covers use a taller **3:2** composition because the shared header also
+Bestiary covers use a taller **4:3** composition because the shared header also
 contains the creature's complete combat summary. They are independent from the
 compact creature icon and from legacy artwork imported from external sources.
 
-- Store an opaque `1536×1024` JPEG at quality 88, normally no more than 500 KB.
+- Store an opaque `1536×1152` JPEG at quality 88, normally no more than 500 KB.
   Do not use alpha for the full-bleed scene.
 - Show one main creature unless plurality is essential to the stat block. Keep
   its recognizable silhouette, face and defining anatomy inside the central
@@ -331,14 +334,14 @@ compact creature icon and from legacy artwork imported from external sources.
 New generated covers are installed through MCP
 `handbook_item_set_system_image(slot="cover", preservePrevious=true)`, which
 keeps the previous imported/generated asset available for rollback. **Kobold**
-is the first production cover using this `1536×1024` contract.
+is the first production cover using this `1536×1152` contract.
 
 ### Item cover art direction
 
 General item and spell covers are atmospheric wide illustrations for the shared
 detail header, not enlarged icons. The icon remains the compact identity mark;
 a cover adds setting, energy and color while preserving readable UI overlay
-space. Bestiary covers are the explicit 3:2 exception defined above.
+space. Bestiary covers are the explicit 4:3 exception defined above.
 
 - Store an opaque lossy WebP at exactly `1536×384` (4:1), normally no more
   than 350 KB. Do not use alpha for a full-bleed scene.
