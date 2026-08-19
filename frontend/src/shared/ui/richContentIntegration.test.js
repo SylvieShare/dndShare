@@ -31,8 +31,10 @@ describe('DnD rich content integration', () => {
 
   it('connects nodes to dice, item preview/modal and suggest description behaviour', () => {
     expect(inlineSource).toContain('diceStore.roll')
-    expect(inlineSource).toContain(':size="27"')
+    expect(inlineSource).toContain(':size="23"')
     expect(inlineSource).toContain('vertical-align: middle')
+    expect(inlineSource).toContain('border: 0;')
+    expect(inlineSource).toContain('margin-inline: .28em;')
     expect(inlineSource).toContain('rich-node-average')
     expect(inlineSource).toContain('class="rich-node-or"')
     expect(inlineSource.indexOf('v-for="(part, index) in diceParts"')).toBeLessThan(inlineSource.indexOf('class="rich-node-average"'))

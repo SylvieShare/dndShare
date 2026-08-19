@@ -9,7 +9,7 @@
     <template v-for="(part, index) in diceParts" :key="index">
       <span v-if="index" class="rich-node-sign">{{ part.sign }}</span>
       <span v-if="part.kind === 'dice'" class="rich-node-die">
-        <span v-if="part.n > 1">{{ part.n }}×</span><SystemDie :sides="part.sides" :size="27" />
+        <span v-if="part.n > 1">{{ part.n }}×</span><SystemDie :sides="part.sides" :size="23" />
       </span>
       <span v-else>{{ part.value }}</span>
     </template>
@@ -30,7 +30,7 @@
     @blur="tooltipOpen = false"
     @click="itemModalOpen = true"
   >
-    <span aria-hidden="true">◫</span>{{ item?.name || node.label }}
+    <span class="rich-node-symbol" aria-hidden="true">◫</span>{{ item?.name || node.label }}
   </button>
 
   <button
@@ -42,7 +42,7 @@
     :aria-expanded="suggestOpen"
     @click="suggestOpen = !suggestOpen"
   >
-    <span aria-hidden="true">◆</span>{{ suggest?.value || node.label }}
+    <span class="rich-node-symbol" aria-hidden="true">◆</span>{{ suggest?.value || node.label }}
   </button>
 
   <span v-else class="rich-node rich-node--unknown">{{ node.label }}</span>
@@ -184,25 +184,29 @@ watch(() => [props.node.kind, props.node.payload?.id, props.node.payload?.typeId
   gap: 3px;
   max-width: 100%;
   margin: 0 1px;
-  padding: 1px 5px;
-  border: 1px solid color-mix(in srgb, var(--rich-node-color, var(--accent)) 42%, var(--border));
-  border-radius: 5px;
-  background: color-mix(in srgb, var(--rich-node-color, var(--accent)) 10%, var(--surface-raised));
-  color: var(--text-1);
+  padding: 0 4px;
+  border: 0;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--rich-node-color, var(--accent)) 6%, var(--surface-raised));
+  color: color-mix(in srgb, var(--text-2) 92%, var(--rich-node-color, var(--accent)));
   font: inherit;
-  line-height: 1.35;
+  line-height: 1.28;
   vertical-align: baseline;
 }
 
-button.rich-node { cursor: pointer; transition: background .12s, border-color .12s, transform .08s; }
-button.rich-node:hover { border-color: var(--rich-node-color, var(--accent)); background: color-mix(in srgb, var(--rich-node-color, var(--accent)) 17%, var(--surface-raised)); }
+button.rich-node { cursor: pointer; transition: background .12s, color .12s, transform .08s; }
+button.rich-node:hover { color: var(--text-1); background: color-mix(in srgb, var(--rich-node-color, var(--accent)) 12%, var(--surface-raised)); }
+button.rich-node:focus-visible { outline: 1px solid color-mix(in srgb, var(--rich-node-color, var(--accent)) 65%, var(--text-2)); outline-offset: 1px; }
 button.rich-node:active { transform: scale(.97); }
+.rich-node-symbol { color: color-mix(in srgb, var(--rich-node-color, var(--accent)) 52%, var(--text-muted)); font-size: .8em; }
 .rich-node--dice {
   gap: 5px;
-  padding: 2px 7px;
-  border-radius: 8px;
+  margin-inline: .28em;
+  padding: 0 5px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--accent) 9%, var(--surface-raised));
   color: var(--accent-soft);
-  font-size: 1.05em;
+  font-size: .98em;
   font-weight: 700;
   line-height: 1;
   vertical-align: middle;
