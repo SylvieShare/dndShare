@@ -354,6 +354,13 @@ all mechanical variants while giving every entry a unique cover. All twelve
 kobold rows, including alternate-source duplicates, the winged kobold and the
 vampire spawn, use the same kobold portrait mark.
 
+The six-row lizardfolk family is the second production example of this rule.
+**Lizardfolk**, **Lizardfolk Commoner**, **Lizardfolk Scaleshield**,
+**Lizardfolk Shaman**, **Lizardfolk Subchief** and **Lizardfolk Render** share
+one olive-green, broad crocodilian head icon. The low swept-back ridge, amber
+eye and pale throat distinguish it from the smaller horned kobold mark at
+`64×64`.
+
 Existing imported bestiary artwork is not treated as a compact icon: for every
 non-kobold system creature it is migrated from `icon_image_id` to
 `cover_image_id` through MCP
@@ -400,6 +407,11 @@ keeps the previous imported/generated asset available for rollback. **Kobold**
 is the first production cover using this `1536×1152` contract. The complete
 twelve-row kobold family is the first finished bestiary set: every row keeps
 the shared portrait icon and has its own mechanics-specific 4:3 cover.
+The lizardfolk family follows the same model across all six rows: commoner,
+club-and-spiked-shield warrior, armored scaleshield, swamp-magic shaman,
+fang-dagger subchief and hulking render each have a unique scene and silhouette.
+All six covers use the `1536×1152` JPEG contract and were installed through
+MCP with `preservePrevious=true` so imported predecessors remain recoverable.
 
 ### Item cover art direction
 
