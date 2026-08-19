@@ -31,10 +31,10 @@
     <div class="item-detail-overlay">
       <div class="item-detail-content">
         <ItemIcon
-          v-if="!hasCover && (item.iconImageUrl || item.svg)"
+          v-if="!hasCover && (item.iconImageUrl || item.svg || type?.iconImageUrl)"
           class="item-detail-icon"
           :item="item"
-          :fallback-to-type="false"
+          :type="type"
           :size="42"
         />
         <div class="item-detail-title">

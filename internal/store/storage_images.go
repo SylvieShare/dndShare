@@ -62,16 +62,11 @@ func (s *Store) GetActiveStorageImageByURL(ctx context.Context, url, typ string)
 	)
 }
 
-// MarkStorageImageDeletedIfUnreferenced marks an orphaned object as deleted
-// and returns its S3 key. A nil key means the row stayed referenced or the
-// image is an external URL with no S3 object.
-func (s *Store) MarkStorageImageDeletedIfUnreferenced(ctx context.Context, id int64) (*string, error) {
-	var key *string
-	err := s.pool.QueryRow(ctx,
-		`UPDATE dndshare.storage_image img
+const markStorageImageDeletedIfUnreferencedSQL = `UPDATE dndshare.storage_image img
 		    SET deleted = true
 		  WHERE img.id = $1
 		    AND img.deleted = false
+		    AND NOT EXISTS (SELECT 1 FROM dndshare.item_type item_type WHERE item_type.icon_image_id = img.id)
 		    AND NOT EXISTS (SELECT 1 FROM dndshare.item i WHERE i.icon_image_id = img.id)
 		    AND NOT EXISTS (SELECT 1 FROM dndshare.item i WHERE i.cover_image_id = img.id)
 		    AND NOT EXISTS (SELECT 1 FROM dndshare.session_image_catalog catalog WHERE catalog.image_id = img.id)
@@ -80,9 +75,14 @@ func (s *Store) MarkStorageImageDeletedIfUnreferenced(ctx context.Context, id in
 		    AND NOT EXISTS (SELECT 1 FROM dndshare.session_material material WHERE material.asset_id = img.id)
 		    AND NOT EXISTS (SELECT 1 FROM dndshare.session_location location WHERE location.image_id = img.id)
 		    AND NOT EXISTS (SELECT 1 FROM dndshare.session_npc npc WHERE npc.image_id = img.id)
-		  RETURNING img."key"`,
-		id,
-	).Scan(&key)
+		  RETURNING img."key"`
+
+// MarkStorageImageDeletedIfUnreferenced marks an orphaned object as deleted
+// and returns its S3 key. A nil key means the row stayed referenced or the
+// image is an external URL with no S3 object.
+func (s *Store) MarkStorageImageDeletedIfUnreferenced(ctx context.Context, id int64) (*string, error) {
+	var key *string
+	err := s.pool.QueryRow(ctx, markStorageImageDeletedIfUnreferencedSQL, id).Scan(&key)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, nil
 	}

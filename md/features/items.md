@@ -63,15 +63,17 @@ entries and selected choices.
   idempotent `item.svg` icons from startup schema; related class mechanics may
   share semantic artwork, while every item still has an explicit
   `icon_svg_id`;
-- `ItemIcon.vue` prefers `iconImageUrl`, then the item SVG, and may finally fall
-  back to the item-type SVG. Raster item icons are PNG/WebP objects registered
-  through `storage_image` and stored in S3;
+- `ItemIcon.vue` prefers the item's `iconImageUrl`, then its SVG, and finally
+  falls back to the item type's `iconImageUrl`. Raster item icons are PNG/WebP
+  objects registered through `storage_image` and stored in S3; collection
+  emblems use the same projection contract but point to transparent PNG assets
+  embedded under `public/static/handbook-types`;
   Handbook lists/pickers, the global header search, detail presentations and
   modal titles use the same rule instead of inferring art from localized names;
 - all handbook object rows share `ObjectListItem.vue`: a 64 px icon well is pinned to
   the left edge, followed by an optional metric such as spell level or monster
   CR, a two-line identity block and trailing metadata. Raster artwork fills the
-  icon well on desktop and mobile; compact SVG/type, potion-vial and feat-sigil
+  icon well on desktop and mobile; compact SVG, collection-emblem, potion-vial and feat-sigil
   fallbacks stay centered in the same geometry;
 - handbook search, schema filters and publication-source filters live in the
   fixed control area at the top of the list column, above its independently

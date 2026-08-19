@@ -75,13 +75,13 @@
                 <span class="hb-card-count-label"> записей</span>
               </span>
             </div>
-            <span
-              v-if="type.svg"
+            <img
+              v-if="type.iconImageUrl"
               class="hb-card-icon"
+              :src="type.iconImageUrl"
+              alt=""
               aria-hidden="true"
-              v-html="type.svg"
-              :style="type.color ? { color: type.color } : {}"
-            ></span>
+            />
           </button>
         </div>
 

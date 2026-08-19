@@ -18,7 +18,7 @@
             :class="{ active: activeTypeId === t.id }"
             @click="setActiveType(t.id)"
           >
-            <SvgIcon v-if="t.svg" class="picker-tab-icon" :svg="t.svg" />
+            <img v-if="t.iconImageUrl" class="picker-tab-icon" :src="t.iconImageUrl" alt="" aria-hidden="true" />
             <span class="picker-tab-name">{{ t.name }}</span>
             <span v-if="t.count != null" class="picker-tab-count">{{ t.count }}</span>
           </button>
@@ -113,7 +113,6 @@ import { computed, inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { fetchGet } from '@/shared/api/http'
 import { contentScopeQuery, contentSourcesApi, normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'
 import HandbookItemDetail from '@/features/handbook/components/HandbookItemDetail'
-import SvgIcon from '@/shared/ui/SvgIcon'
 import HandbookItemList from '@/features/handbook/components/HandbookItemList'
 import ItemEditModal from '@/features/character-editor/components/ItemEditModal'
 import { AppModalFrame } from '@sylvieshare/share-ui'

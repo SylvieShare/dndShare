@@ -21,6 +21,10 @@ subclass→class and future variants. Items may link to several publications via
 the server assigns the owner's default «Мои материалы» source atomically on
 creation. The schema allows more non-default personal sources later.
 
+Built-in item types expose `iconImageId/iconImageUrl` from
+`item_type.icon_image_id → storage_image`; these rows point to embedded static
+collection emblems. Item types no longer expose an SVG format.
+
 Item icons are metadata outside rules JSON. `item.svg` is the API projection of
 `item.icon_svg_id → svg_storage.data`; raster icons use
 `item.iconImageId/iconImageUrl` from `item.icon_image_id → storage_image/S3`.
@@ -90,6 +94,12 @@ rows use the opaque `--surface` level with distinct active and selected states.
 контекста. Переключение на landing локально для справочника: оно сохраняется при
 переходе в коллекцию и обратно, передаётся как `sourceVersionId`, но не изменяет
 профиль игрока и ссылку «Правила».
+Все 13 встроенных коллекций показывают собственную прозрачную растровую эмблему
+на landing, в мобильной сетке и во вкладках picker. Эмблема абстрактно обобщает
+визуальный язык item этой коллекции. Если у item нет ни собственной картинки,
+ни SVG, та же эмблема становится последним fallback в строке списка, глобальном
+поиске и компактной detail-шапке без обложки; специализированная динамическая
+колба зелья сохраняет приоритет в своей строке.
 Schema filter groups without available
 options are not shown. `ItemEditModal` is schema-driven and uses shared form primitives; its
 create title uses the current item type name. The spell form also accepts a
@@ -131,7 +141,8 @@ feat), otherwise the generic field renderer is used. Item detail modals use
 keeps its own title, while the modal moves that title into the fixed header.
 An assigned raster or SVG item icon is shown in list rows, standard pickers,
 the global header search and detail/modal headings; raster has priority and the
-item-type SVG is only a list fallback. Spell rows on character sheets show the
+item-type raster emblem is the final fallback when both item formats are absent.
+Spell rows on character sheets show the
 raster spell icon when assigned and otherwise keep the school symbol.
 Spell detail owns its canonical publication label, so the wrapper does not
 render a duplicate source chip for spells; other item types retain the wrapper

@@ -57,9 +57,11 @@ const props = defineProps({
 const hasResolvedIcon = computed(() => !!(
   props.item?.iconImageUrl
   || props.item?.svg
-  || (props.iconFallbackToType && props.type?.svg)
+  || (props.iconFallbackToType && props.type?.iconImageUrl)
 ))
-const resolvedIconSize = computed(() => props.item?.iconImageUrl ? 64 : 22)
+const resolvedIconSize = computed(() => (
+  props.item?.iconImageUrl || (!props.item?.svg && props.iconFallbackToType && props.type?.iconImageUrl)
+) ? 64 : 22)
 
 const nameEnFormatted = computed(() =>
   (props.nameEn || '')

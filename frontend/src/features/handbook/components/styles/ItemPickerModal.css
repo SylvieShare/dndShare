@@ -56,13 +56,12 @@
 .picker-tab.active::after { background: var(--accent); }
 
 .picker-tab-icon {
-  width: 16px;
-  height: 16px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  width: 22px;
+  height: 22px;
+  display: block;
+  object-fit: contain;
   flex-shrink: 0;
-  opacity: 0.5;
+  opacity: 0.72;
   transition: opacity 0.15s, filter 0.15s;
 }
 .picker-tab.active .picker-tab-icon {

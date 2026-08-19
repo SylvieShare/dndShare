@@ -139,7 +139,8 @@ describe('handbook item detail cover', () => {
   })
 
   it('uses the icon only as a missing-cover fallback and moves the id below the content', () => {
-    expect(headerSource).toContain('v-if="!hasCover && (item.iconImageUrl || item.svg)"')
+    expect(headerSource).toContain('v-if="!hasCover && (item.iconImageUrl || item.svg || type?.iconImageUrl)"')
+    expect(headerSource).toContain(':type="type"')
     expect(headerSource).not.toContain('class="item-detail-id"')
     expect(detailSource).toContain('v-if="showTitle" class="detail-technical-meta"')
     expect(detailSource).toContain('<span>ID {{ item.id }}</span>')

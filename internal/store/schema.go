@@ -88,6 +88,9 @@ var schemaStartingShopSQL string
 //go:embed schema/24_armor_catalog.sql
 var schemaArmorCatalogSQL string
 
+//go:embed schema/24_handbook_type_icons.sql
+var schemaHandbookTypeIconsSQL string
+
 //go:embed schema/25_weapon_catalog.sql
 var schemaWeaponCatalogSQL string
 
@@ -120,6 +123,7 @@ var schemaParts = []struct {
 	{"system-item-media", schemaSystemItemMediaSQL},
 	{"starting-shop", schemaStartingShopSQL},
 	{"armor-catalog", schemaArmorCatalogSQL},
+	{"handbook-type-icons", schemaHandbookTypeIconsSQL},
 	{"weapon-catalog", schemaWeaponCatalogSQL},
 }
 

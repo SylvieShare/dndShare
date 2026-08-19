@@ -7,7 +7,7 @@
     aria-hidden="true"
   >
     <img v-if="iconImageUrl" class="item-icon__image" :src="iconImageUrl" alt="" />
-    <SvgIcon v-else-if="iconSvg" class="item-icon__svg" :svg="iconSvg" :color="iconColor" />
+    <SvgIcon v-else-if="iconSvg" class="item-icon__svg" :svg="iconSvg" />
   </span>
 </template>
 
@@ -23,10 +23,9 @@ const props = defineProps({
   placeholder: { type: Boolean, default: false },
 })
 
-const iconImageUrl = computed(() => props.item?.iconImageUrl || '')
-const usesTypeIcon = computed(() => !iconImageUrl.value && !props.item?.svg && props.fallbackToType && !!props.type?.svg)
-const iconSvg = computed(() => props.item?.svg || (usesTypeIcon.value ? props.type.svg : ''))
-const iconColor = computed(() => usesTypeIcon.value ? props.type?.color : null)
+const usesTypeIcon = computed(() => !props.item?.iconImageUrl && !props.item?.svg && props.fallbackToType && !!props.type?.iconImageUrl)
+const iconImageUrl = computed(() => props.item?.iconImageUrl || (usesTypeIcon.value ? props.type.iconImageUrl : ''))
+const iconSvg = computed(() => props.item?.svg || '')
 const iconStyle = computed(() => {
   const size = typeof props.size === 'number' ? `${props.size}px` : props.size
   return { width: size, height: size }
@@ -50,7 +49,7 @@ const iconStyle = computed(() => {
   object-fit: contain;
 }
 
-.item-icon--type { opacity: 0.5; }
+.item-icon--type { opacity: 0.72; }
 
 .item-icon--placeholder {
   display: inline-block;

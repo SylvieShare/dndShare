@@ -179,15 +179,17 @@ CREATE TABLE IF NOT EXISTS dndshare.item_type (
     example     jsonb NULL,
     fields      jsonb NULL,
     source_id   int8 NULL REFERENCES dndshare."source"(id),
-    svg_id      int8 NULL REFERENCES dndshare.svg_storage(id),
+    icon_image_id int8 NULL REFERENCES dndshare.storage_image(id) ON DELETE SET NULL,
     color       varchar NULL,
     count_items int8 DEFAULT 0 NOT NULL,
     important   bool DEFAULT false NOT NULL,
     description varchar NULL,
     CONSTRAINT item_type_pk PRIMARY KEY (id)
 );
+ALTER TABLE dndshare.item_type
+    ADD COLUMN IF NOT EXISTS icon_image_id int8 NULL REFERENCES dndshare.storage_image(id) ON DELETE SET NULL;
 CREATE INDEX IF NOT EXISTS idx_item_type_source_id ON dndshare.item_type USING btree (source_id);
-CREATE INDEX IF NOT EXISTS idx_item_type_svg_id ON dndshare.item_type USING btree (svg_id);
+CREATE INDEX IF NOT EXISTS idx_item_type_icon_image_id ON dndshare.item_type USING btree (icon_image_id);
 
 -- Personal handbook provenance is deliberately separate from both source
 -- (game systems) and content_source (published books/content packs). Each user

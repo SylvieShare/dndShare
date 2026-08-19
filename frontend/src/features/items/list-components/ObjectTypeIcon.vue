@@ -1,11 +1,9 @@
 <template>
-  <SvgIcon v-if="type && type.svg" class="oti" :svg="type.svg" :color="type.color" />
+  <img v-if="type?.iconImageUrl" class="oti" :src="type.iconImageUrl" alt="" aria-hidden="true" />
   <span v-else class="oti-placeholder" aria-hidden="true"></span>
 </template>
 
 <script setup>
-import SvgIcon from '@/shared/ui/SvgIcon'
-
 defineProps({ type: { type: Object, default: null } })
 </script>
 
@@ -14,10 +12,9 @@ defineProps({ type: { type: Object, default: null } })
   width: 18px;
   height: 18px;
   flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0.5;
+  display: block;
+  object-fit: contain;
+  opacity: 0.72;
 }
 
 .oti-placeholder {

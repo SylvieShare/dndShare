@@ -78,7 +78,13 @@ Startup data correction переводит прежние значения в э
 
 `item_type` хранит schema fields типа, `item` — контент, `suggest_type/suggest`
 — словари. `item.parent_id` — единая связь для подрасы, подкласса и других
-вариантов. `item_content_source` связывает item с публикациями. Иконка item
+вариантов. `item_content_source` связывает item с публикациями. Каждая встроенная
+коллекция имеет растровую эмблему через
+`item_type.icon_image_id → storage_image`; строки типа `item_type_icon` указывают
+на прозрачные PNG, встроенные во frontend под `/static/handbook-types/`.
+Startup section `24_handbook_type_icons.sql` идемпотентно назначает эмблемы
+типам 1–13 и удаляет прежний runtime-контракт `item_type.svg_id`.
+Иконка item
 задаётся не более чем одной из колонок: `icon_svg_id → svg_storage` или
 `icon_image_id → storage_image/S3`; обе ссылки не являются частью `item.data`.
 Панорамная обложка хранится независимо в

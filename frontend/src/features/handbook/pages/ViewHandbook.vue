@@ -37,7 +37,7 @@
             :style="type.color ? { '--card-accent': type.color } : {}"
             @click="selectType(type)"
           >
-            <img v-if="type.svg" class="type-grid-icon" :src="type.svg" alt="" aria-hidden="true" />
+            <img v-if="type.iconImageUrl" class="type-grid-icon" :src="type.iconImageUrl" alt="" aria-hidden="true" />
             <span v-else class="type-grid-icon-placeholder" aria-hidden="true"></span>
             <span class="type-grid-name">{{ type.name }}</span>
             <span v-if="type.count != null" class="type-grid-count">{{ type.count }}</span>

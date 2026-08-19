@@ -34,17 +34,18 @@ type Item struct {
 
 // ItemType — строка dndshare.item_type (порт model/ItemType.kt). count дублирует countItems.
 type ItemType struct {
-	ID          int64           `json:"id"`
-	Name        string          `json:"name"`
-	Description *string         `json:"description,omitempty"`
-	Fields      json.RawMessage `json:"fields"`
-	SourceID    *int64          `json:"sourceId,omitempty"`
-	SourceName  *string         `json:"sourceName,omitempty"`
-	Color       *string         `json:"color,omitempty"`
-	SVG         *string         `json:"svg,omitempty"`
-	CountItems  int64           `json:"countItems"`
-	Important   bool            `json:"important"`
-	Count       int64           `json:"count"`
+	ID           int64           `json:"id"`
+	Name         string          `json:"name"`
+	Description  *string         `json:"description,omitempty"`
+	Fields       json.RawMessage `json:"fields"`
+	SourceID     *int64          `json:"sourceId,omitempty"`
+	SourceName   *string         `json:"sourceName,omitempty"`
+	Color        *string         `json:"color,omitempty"`
+	IconImageID  *int64          `json:"iconImageId,omitempty"`
+	IconImageURL *string         `json:"iconImageUrl,omitempty"`
+	CountItems   int64           `json:"countItems"`
+	Important    bool            `json:"important"`
+	Count        int64           `json:"count"`
 }
 
 // SourceVersion — редакция системы из dndshare.source_version.

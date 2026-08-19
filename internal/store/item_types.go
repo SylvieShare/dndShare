@@ -9,17 +9,18 @@ import (
 
 const itemTypeSelect = `SELECT it.id, it.name, it.description, it.fields, it.source_id, it.color, it.count_items, it.important,
 		s.name AS source_name,
-		ss.data AS svg_data
+		it.icon_image_id,
+		icon.url AS icon_image_url
 	FROM dndshare.item_type it
 	LEFT JOIN dndshare.source s ON s.id = it.source_id
-	LEFT JOIN dndshare.svg_storage ss ON ss.id = it.svg_id`
+	LEFT JOIN dndshare.storage_image icon ON icon.id = it.icon_image_id AND icon.deleted = false`
 
 func scanItemType(rows pgx.Rows) (ItemType, error) {
 	var it ItemType
-	var description, sourceName, color, svg *string
-	var sourceID *int64
+	var description, sourceName, color, iconImageURL *string
+	var sourceID, iconImageID *int64
 	var fields []byte
-	if err := rows.Scan(&it.ID, &it.Name, &description, &fields, &sourceID, &color, &it.CountItems, &it.Important, &sourceName, &svg); err != nil {
+	if err := rows.Scan(&it.ID, &it.Name, &description, &fields, &sourceID, &color, &it.CountItems, &it.Important, &sourceName, &iconImageID, &iconImageURL); err != nil {
 		return ItemType{}, err
 	}
 	it.Description = description
@@ -31,12 +32,13 @@ func scanItemType(rows pgx.Rows) (ItemType, error) {
 	it.SourceID = sourceID
 	it.SourceName = sourceName
 	it.Color = color
-	it.SVG = svg
+	it.IconImageID = iconImageID
+	it.IconImageURL = iconImageURL
 	it.Count = it.CountItems
 	return it, nil
 }
 
-// ItemTypeGetAll — все типы предметов (опц. по источнику), с source_name и svg.
+// ItemTypeGetAll — все типы предметов (опц. по источнику), с source_name и растровой иконкой.
 func (s *Store) ItemTypeGetAll(ctx context.Context, sourceID *int64) ([]ItemType, error) {
 	sql := itemTypeSelect
 	args := []any{}

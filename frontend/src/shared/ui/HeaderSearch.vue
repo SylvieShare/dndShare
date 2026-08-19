@@ -90,8 +90,6 @@ import { isDnd5e2014 } from '@/shared/lib/gameSystems'
 import { useItemTypesStore } from '@/stores/itemTypes'
 import { useGameContextStore } from '@/stores/gameContext'
 
-const NO_ICON_TYPE_IDS = new Set([5, 6])
-
 const router = useRouter()
 const gameContextStore = useGameContextStore()
 const inputEl = ref(null)
@@ -189,8 +187,8 @@ async function doSearch() {
         typeId: item.typeId,
         typeLabel: type?.name || 'Предметы',
         label: item.name,
-        iconImageUrl: item.iconImageUrl || null,
-        icon: item.svg || ((type && !NO_ICON_TYPE_IDS.has(item.typeId)) ? type.svg : null),
+        iconImageUrl: item.iconImageUrl || type?.iconImageUrl || null,
+        icon: item.svg || null,
         source: type?.sourceName || type?.name || null,
         url: { path: '/handbook', query: { type: item.typeId, item: item.id, sourceVersionId: context?.sourceVersionId } },
       }

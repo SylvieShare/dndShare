@@ -25,7 +25,8 @@ describe('handbook object list tile', () => {
     expect(metric).toBeGreaterThan(icon)
     expect(identity).toBeGreaterThan(metric)
     expect(trailing).toBeGreaterThan(identity)
-    expect(objectSource).toContain('props.item?.iconImageUrl ? 64 : 22')
+    expect(objectSource).toContain('props.type?.iconImageUrl')
+    expect(objectSource).toContain('? 64 : 22')
     expect(objectSource).toContain('<slot v-else name="icon-fallback" />')
   })
 

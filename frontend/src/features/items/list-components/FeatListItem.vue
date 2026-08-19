@@ -1,5 +1,5 @@
 <template>
-  <ObjectListItem :item="item" :type="type" :name-en="item.nameEn || ''" :custom="item.userId != null" :icon-fallback-to-type="false">
+  <ObjectListItem :item="item" :type="type" :name-en="item.nameEn || ''" :custom="item.userId != null">
     <template #icon-fallback>
       <span class="fli-sigil" aria-hidden="true">
         ✦

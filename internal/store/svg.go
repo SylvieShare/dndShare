@@ -55,7 +55,6 @@ func (s *Store) DeleteSvgIfUnreferenced(ctx context.Context, id int64) error {
 		`DELETE FROM dndshare.svg_storage svg
 		  WHERE svg.id = $1
 		    AND NOT EXISTS (SELECT 1 FROM dndshare.item i WHERE i.icon_svg_id = svg.id)
-		    AND NOT EXISTS (SELECT 1 FROM dndshare.item_type it WHERE it.svg_id = svg.id)
 		    AND NOT EXISTS (SELECT 1 FROM dndshare.suggest s WHERE s.svg_id = svg.id)
 		    AND NOT EXISTS (SELECT 1 FROM dndshare.suggest_type st WHERE st.svg_id = svg.id)`,
 		id,
