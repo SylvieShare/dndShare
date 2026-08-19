@@ -19,6 +19,7 @@ describe('handbook list controls', () => {
     expect(source).toContain('.list-collection-controls {\n  flex: 0 0 auto;')
     expect(controls).toContain('<span class="col-filter-label">Фильтры</span>')
     expect(controls).toContain('<span class="col-filter-label">Источники</span>')
+    expect(controls).toContain("'Поиск по названию — RU / EN...'")
   })
 
   it('keeps the wide collection bar identity-only on the handbook page', () => {

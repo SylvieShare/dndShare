@@ -73,7 +73,9 @@ entries and selected choices.
   fallbacks stay centered in the same geometry;
 - handbook search, schema filters and publication-source filters live in the
   fixed control area at the top of the list column, above its independently
-  scrolling rows. The main catalogue and item pickers reuse this placement;
+  scrolling rows. Text search matches a case-insensitive substring of either
+  the Russian name or `nameEn`; publication codes remain in the dedicated
+  source filter. The main catalogue and item pickers reuse this placement;
 - details open through the handbook `ItemViewModal`/modal stack; `ItemViewModal`
   uses the lower-level `AppModal` because the shared item header is its only
   header, and forwards an optional action slot into a fixed footer, so

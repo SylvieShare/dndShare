@@ -29,7 +29,7 @@ func mcpToolDefs() []map[string]any {
 				"offset": intP("Offset for pagination (default 0)"),
 			}, "typeId")),
 		tool("handbook_items_search",
-			"Search base (shared) items of a type by name (case-insensitive substring).",
+			"Search base (shared) items of a type by Russian or English name/nameEn (case-insensitive substring).",
 			schema(map[string]any{
 				"typeId": intP("Item type id"),
 				"q":      strP("Name query"),

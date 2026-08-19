@@ -83,7 +83,8 @@ as the event author.
 - `GET /api/items/by-ids?ids=`
 - `GET /api/items/children?parentId=`
 - `GET /api/items/search`, `GET /api/items/search-multi`; оба принимают
-  publication scope, включая `sourceVersionId`.
+  publication scope, включая `sourceVersionId`, и ищут case-insensitive
+  подстроку одновременно в русском `name` и английском `nameEn`.
 - `POST /api/items`, `PUT /api/items/{id}`
 - `POST /api/items/{id}/make-base`
 - `POST /api/items/{id}/icon-image` (multipart PNG/WebP, максимум 5 МБ)

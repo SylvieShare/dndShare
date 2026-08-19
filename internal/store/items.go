@@ -141,9 +141,14 @@ func (s *Store) GetByTypeAndUser(ctx context.Context, typeID int64, userID *int6
 	return s.searchItems(ctx, typeID, nil, userID, limit, offset, filters, scope)
 }
 
-// SearchByTypeAndName — то же, но с ILIKE-поиском по имени.
+// SearchByTypeAndName — то же, но с ILIKE-поиском по русскому или английскому имени.
 func (s *Store) SearchByTypeAndName(ctx context.Context, typeID int64, q string, userID *int64, limit, offset int, filters []ItemFilter, scope ContentScope) ([]Item, error) {
 	return s.searchItems(ctx, typeID, &q, userID, limit, offset, filters, scope)
+}
+
+func itemNameSearchPredicate(alias, placeholder string) string {
+	return "(" + alias + ".name ILIKE " + placeholder +
+		" OR COALESCE(" + alias + ".name_en, '') ILIKE " + placeholder + ")"
 }
 
 func prefixedItemColumns(alias string) string {
@@ -214,7 +219,7 @@ func (s *Store) searchItems(ctx context.Context, typeID int64, q *string, userID
 	}
 
 	if q != nil && strings.TrimSpace(*q) != "" {
-		where = append(where, "i.name ILIKE "+add("%"+*q+"%"))
+		where = append(where, itemNameSearchPredicate("i", add("%"+*q+"%")))
 	}
 
 	where = appendContentScopeSQL(where, &args, scope)
@@ -385,7 +390,7 @@ func (s *Store) SearchByTypesAndName(ctx context.Context, typeIDs []int64, q str
 	like := add("%" + q + "%")
 	where := []string{
 		"i.type_id IN (" + strings.Join(ph, ", ") + ")",
-		"i.name ILIKE " + like,
+		itemNameSearchPredicate("i", like),
 	}
 	if userID != nil {
 		where = append(where, "(i.user_id IS NULL OR i.user_id = "+add(*userID)+")")

@@ -127,7 +127,7 @@ const GROUPED_PAGE_SIZE = 500
 const props = defineProps({
   itemTypeIds: { type: Array, required: true },
   title: { type: String, default: 'Выбрать' },
-  searchPlaceholder: { type: String, default: 'Поиск...' },
+  searchPlaceholder: { type: String, default: 'Поиск по названию — RU / EN...' },
   excludeItems: { type: Array, default: () => [] },
   allowQuantity: { type: Boolean, default: false },
   createShowNameEn: { type: Boolean, default: false },

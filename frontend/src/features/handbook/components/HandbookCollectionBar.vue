@@ -28,7 +28,7 @@
         <input
           :value="search"
           class="col-search"
-          :placeholder="searchPlaceholder || `Поиск в коллекции «${type.name}»...`"
+          :placeholder="searchPlaceholder || 'Поиск по названию — RU / EN...'"
           @input="$emit('update:search', $event.target.value)"
         />
       </div>
