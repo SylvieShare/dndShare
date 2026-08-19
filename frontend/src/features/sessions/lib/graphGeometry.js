@@ -1,15 +1,74 @@
+function nodeCenter(node, size) {
+  return {
+    x: node.positionX + size.width / 2,
+    y: node.positionY + size.height / 2,
+  }
+}
+
+function connectionAxis(fromCenter, toCenter, horizontalReach, verticalReach) {
+  const horizontalDistance = Math.abs(toCenter.x - fromCenter.x) / Math.max(1, horizontalReach)
+  const verticalDistance = Math.abs(toCenter.y - fromCenter.y) / Math.max(1, verticalReach)
+  return horizontalDistance >= verticalDistance ? 'horizontal' : 'vertical'
+}
+
+function curvePath(start, end, axis, direction) {
+  if (axis === 'horizontal') {
+    const bend = Math.max(70, Math.abs(end.x - start.x) * 0.45)
+    return `M ${start.x} ${start.y} C ${start.x + direction * bend} ${start.y}, ${end.x - direction * bend} ${end.y}, ${end.x} ${end.y}`
+  }
+  const bend = Math.max(70, Math.abs(end.y - start.y) * 0.45)
+  return `M ${start.x} ${start.y} C ${start.x} ${start.y + direction * bend}, ${end.x} ${end.y - direction * bend}, ${end.x} ${end.y}`
+}
+
 export function graphEdgePath(from, to, dimensionsFor) {
   const fromSize = dimensionsFor(from)
   const toSize = dimensionsFor(to)
-  const fromCenterX = from.positionX + fromSize.width / 2
-  const fromCenterY = from.positionY + fromSize.height / 2
-  const toCenterX = to.positionX + toSize.width / 2
-  const toCenterY = to.positionY + toSize.height / 2
-  const direction = toCenterX >= fromCenterX ? 1 : -1
-  const startX = fromCenterX + direction * fromSize.width / 2
-  const endX = toCenterX - direction * toSize.width / 2
-  const bend = Math.max(70, Math.abs(endX - startX) * 0.45)
-  return `M ${startX} ${fromCenterY} C ${startX + direction * bend} ${fromCenterY}, ${endX - direction * bend} ${toCenterY}, ${endX} ${toCenterY}`
+  const fromCenter = nodeCenter(from, fromSize)
+  const toCenter = nodeCenter(to, toSize)
+  const axis = connectionAxis(
+    fromCenter,
+    toCenter,
+    (fromSize.width + toSize.width) / 2,
+    (fromSize.height + toSize.height) / 2,
+  )
+  if (axis === 'horizontal') {
+    const direction = toCenter.x >= fromCenter.x ? 1 : -1
+    return curvePath(
+      { x: fromCenter.x + direction * fromSize.width / 2, y: fromCenter.y },
+      { x: toCenter.x - direction * toSize.width / 2, y: toCenter.y },
+      axis,
+      direction,
+    )
+  }
+  const direction = toCenter.y >= fromCenter.y ? 1 : -1
+  return curvePath(
+    { x: fromCenter.x, y: fromCenter.y + direction * fromSize.height / 2 },
+    { x: toCenter.x, y: toCenter.y - direction * toSize.height / 2 },
+    axis,
+    direction,
+  )
+}
+
+export function graphEdgePathToPoint(from, point, dimensionsFor) {
+  const fromSize = dimensionsFor(from)
+  const fromCenter = nodeCenter(from, fromSize)
+  const axis = connectionAxis(fromCenter, point, fromSize.width / 2, fromSize.height / 2)
+  if (axis === 'horizontal') {
+    const direction = point.x >= fromCenter.x ? 1 : -1
+    return curvePath(
+      { x: fromCenter.x + direction * fromSize.width / 2, y: fromCenter.y },
+      point,
+      axis,
+      direction,
+    )
+  }
+  const direction = point.y >= fromCenter.y ? 1 : -1
+  return curvePath(
+    { x: fromCenter.x, y: fromCenter.y + direction * fromSize.height / 2 },
+    point,
+    axis,
+    direction,
+  )
 }
 
 export function graphEdgeMidpoint(from, to, dimensionsFor) {

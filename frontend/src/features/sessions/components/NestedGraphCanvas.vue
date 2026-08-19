@@ -20,7 +20,7 @@
     <div class="nested-graph-world" :style="worldStyle">
       <svg class="nested-graph-edges" aria-hidden="true">
         <defs>
-          <marker :id="markerId" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <marker :id="markerId" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
             <path d="M 0 0 L 10 5 L 0 10 z" class="nested-graph-edge-arrow" />
           </marker>
         </defs>
@@ -127,7 +127,7 @@ import { useGraphViewPersistence } from '@/features/sessions/composables/useGrap
 import { useGraphHotkeys } from '@/features/sessions/composables/useGraphHotkeys'
 import { graphNodeKey, useGraphSelection } from '@/features/sessions/composables/useGraphSelection'
 import { useRafLatest } from '@/features/sessions/composables/useRafLatest'
-import { graphEdgeMidpoint, graphEdgePath } from '@/features/sessions/lib/graphGeometry'
+import { graphEdgeMidpoint, graphEdgePath, graphEdgePathToPoint } from '@/features/sessions/lib/graphGeometry'
 import { clampGraphPan, graphContentBounds, translateGraphPositions } from '@/features/sessions/lib/graphViewport'
 
 const props = defineProps({
@@ -214,13 +214,7 @@ const renderedEdges = computed(() => props.edges.map(edge => {
 const labelledEdges = computed(() => renderedEdges.value.filter(edge => edge.label))
 const temporaryPath = computed(() => {
   if (!props.linkingFrom || !cursorWorld.value) return ''
-  const dimensions = nodeDimensions(props.linkingFrom)
-  return graphEdgePath(props.linkingFrom, {
-    positionX: cursorWorld.value.x - dimensions.width / 2,
-    positionY: cursorWorld.value.y - dimensions.height / 2,
-    _graphWidth: dimensions.width,
-    _graphHeight: dimensions.height,
-  }, nodeDimensions)
+  return graphEdgePathToPoint(props.linkingFrom, cursorWorld.value, nodeDimensions)
 })
 const contentBounds = computed(() => graphContentBounds(props.nodes, nodeDimensions))
 const { schedule: emitPositionPreview, cancel: clearPositionPreviewFrame } = useRafLatest(

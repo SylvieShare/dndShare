@@ -567,7 +567,9 @@ When a node drag crosses the movement threshold, the canvas emits one
 popover before position previews begin.
 Completing a link gesture creates an unlabelled directed edge immediately at
 every level; the edge action menu remains the explicit place to add or edit a
-label later.
+label later. During creation the temporary arrow ends exactly at the pointer.
+Its source and every completed edge use the centered port on the nearest facing
+side of each card, including the top and bottom sides.
 `SceneEditorModal` is used for scenario create/edit, `ConfirmDialog` for
 destructive actions, and `SceneBlockEditorModal` for block content. Scene and
 block CRUD remains in `session_scenes.go`; graph reads, positions and links are
