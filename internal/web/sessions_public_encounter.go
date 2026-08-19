@@ -27,20 +27,21 @@ type publicEncounterResponse struct {
 }
 
 type publicEncounterCombatant struct {
-	UID          string                 `json:"uid"`
-	Type         string                 `json:"type"`
-	Name         string                 `json:"name"`
-	AvatarURL    *string                `json:"avatarUrl,omitempty"`
-	AvatarSVG    *string                `json:"avatarSvg,omitempty"`
-	Color        *string                `json:"color,omitempty"`
-	MarkerLetter *string                `json:"markerLetter,omitempty"`
-	Initiative   *int                   `json:"initiative,omitempty"`
-	Side         string                 `json:"side"`
-	Surprised    bool                   `json:"surprised"`
-	Health       publicEncounterHealth  `json:"health"`
-	States       []publicEncounterState `json:"states"`
-	tieBreak     int
-	turnEligible bool
+	UID           string                 `json:"uid"`
+	Type          string                 `json:"type"`
+	Name          string                 `json:"name"`
+	AvatarURL     *string                `json:"avatarUrl,omitempty"`
+	AvatarSVG     *string                `json:"avatarSvg,omitempty"`
+	CoverImageURL *string                `json:"coverImageUrl,omitempty"`
+	Color         *string                `json:"color,omitempty"`
+	MarkerLetter  *string                `json:"markerLetter,omitempty"`
+	Initiative    *int                   `json:"initiative,omitempty"`
+	Side          string                 `json:"side"`
+	Surprised     bool                   `json:"surprised"`
+	Health        publicEncounterHealth  `json:"health"`
+	States        []publicEncounterState `json:"states"`
+	tieBreak      int
+	turnEligible  bool
 }
 
 type publicEncounterHealth struct {
@@ -234,6 +235,7 @@ func buildPublicCombatant(raw rawPublicCombatant, participant store.SessionParti
 		result.Color = raw.IconColor
 		result.AvatarURL = item.IconImageURL
 		result.AvatarSVG = item.SVG
+		result.CoverImageURL = item.CoverImageURL
 		maximum := npcMaximumHP(raw, item)
 		current := maximum
 		if raw.HPCurrent != nil {

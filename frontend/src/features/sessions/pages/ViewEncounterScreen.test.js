@@ -7,6 +7,14 @@ const mainStyles = readFileSync(fileURLToPath(new URL('./styles/ViewEncounterScr
 const initiativeStyles = readFileSync(fileURLToPath(new URL('./styles/ViewEncounterScreenInitiative.css', import.meta.url)), 'utf8')
 
 describe('public encounter portraits', () => {
+  it('fills the right edge of the current-turn panel with the creature cover', () => {
+    expect(pageSource).toContain("'encounter-screen__turn-portrait--cover': currentCombatant.coverImageUrl")
+    expect(pageSource).toContain('<img v-if="currentCombatant.coverImageUrl" :src="currentCombatant.coverImageUrl" alt="" />')
+    expect(mainStyles).toContain('.encounter-screen__turn-portrait--cover {')
+    expect(mainStyles).toContain('align-self: stretch;')
+    expect(mainStyles).toContain('margin-right: 0;')
+  })
+
   it('renders NPC artwork without a frame or backing surface', () => {
     expect(pageSource).toContain("'encounter-screen__turn-portrait--npc': currentCombatant.type === 'npc'")
     expect(pageSource).toContain("'initiative-card__portrait--npc': combatant.type === 'npc'")

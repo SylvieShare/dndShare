@@ -104,12 +104,17 @@
   }
 
   .encounter-screen__turn {
-    padding: 18px;
+    --turn-padding: 18px;
   }
 
   .encounter-screen__turn-portrait {
     width: 88px;
     height: 88px;
+  }
+
+  .encounter-screen__turn-portrait--cover {
+    width: min(38vw, 220px);
+    height: auto;
   }
 
   .initiative-track {

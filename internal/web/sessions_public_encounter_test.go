@@ -1,6 +1,10 @@
 package web
 
-import "testing"
+import (
+	"testing"
+
+	"dndshare/internal/store"
+)
 
 func TestEncounterHealthUsesPublicWordedBands(t *testing.T) {
 	tests := []struct {
@@ -26,5 +30,23 @@ func TestEncounterHealthUsesPublicWordedBands(t *testing.T) {
 				t.Fatalf("want %s/%s, got %s/%s", test.kind, test.label, got.Kind, got.Label)
 			}
 		})
+	}
+}
+
+func TestBuildPublicCombatantIncludesNPCItemCover(t *testing.T) {
+	coverURL := "https://cdn.example.test/creature-cover.webp"
+	itemID := int64(42)
+
+	combatant := buildPublicCombatant(rawPublicCombatant{
+		UID:      "npc-1",
+		Type:     "npc",
+		ItemID:   &itemID,
+		Override: map[string]any{},
+	}, store.SessionParticipantData{}, map[int64]store.Item{
+		itemID: {Name: "Совомедведь", CoverImageURL: &coverURL},
+	}, nil, 1)
+
+	if combatant.CoverImageURL == nil || *combatant.CoverImageURL != coverURL {
+		t.Fatalf("cover image URL = %v, want %q", combatant.CoverImageURL, coverURL)
 	}
 }

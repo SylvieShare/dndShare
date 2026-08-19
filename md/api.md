@@ -258,7 +258,8 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
 - `GET /api/public/sessions/{uuid}/encounter` is the anonymous, no-store TV
   projection of the current fight. It returns only the session name, round,
   current turn and initiative-ordered combatants with presentation fields,
-  resolved conditions and a worded health band. It never returns character
+  resolved conditions and a worded health band. Bestiary combatants also expose
+  `coverImageUrl` for the current-turn artwork. It never returns character
   sheets, exact HP, AC, notes or encounter challenge results;
 - `GET|POST /api/sessions/{uuid}/events` reads and appends the session timeline.
   The read endpoint accepts `after` and `limit`; the write endpoint accepts

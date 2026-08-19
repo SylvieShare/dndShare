@@ -243,11 +243,12 @@
 }
 
 .encounter-screen__turn {
+  --turn-padding: clamp(20px, 2.2vw, 42px);
   min-height: clamp(132px, 18vh, 220px);
   box-sizing: border-box;
   justify-content: space-between;
   gap: 32px;
-  padding: clamp(20px, 2.2vw, 42px);
+  padding: 0;
   border: 1px solid color-mix(in srgb, var(--accent) 34%, var(--border));
   border-radius: clamp(18px, 1.8vw, 32px);
   background:
@@ -258,7 +259,11 @@
 }
 
 .encounter-screen__turn-copy {
+  position: relative;
+  z-index: 1;
   min-width: 0;
+  flex: 1;
+  padding: var(--turn-padding) 0 var(--turn-padding) var(--turn-padding);
 }
 
 .encounter-screen__turn-name-row {
@@ -306,6 +311,7 @@
   background: color-mix(in srgb, var(--screen-combatant-color) 11%, var(--surface-raised));
   color: color-mix(in srgb, var(--screen-combatant-color) 72%, var(--text-2));
   box-shadow: 0 0 42px color-mix(in srgb, var(--screen-combatant-color) 18%, transparent);
+  margin-right: var(--turn-padding);
   overflow: hidden;
 }
 
@@ -315,6 +321,22 @@
   background: transparent;
   box-shadow: none;
   overflow: visible;
+}
+
+.encounter-screen__turn-portrait--cover {
+  width: clamp(220px, 28vw, 520px);
+  height: auto;
+  align-self: stretch;
+  margin-right: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: hidden;
+}
+
+.encounter-screen__turn-portrait--cover img {
+  object-position: center;
 }
 
 .encounter-screen__turn-portrait img,

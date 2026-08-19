@@ -174,10 +174,14 @@
         <div
           v-if="currentCombatant"
           class="encounter-screen__turn-portrait"
-          :class="{ 'encounter-screen__turn-portrait--npc': currentCombatant.type === 'npc' }"
+          :class="{
+            'encounter-screen__turn-portrait--npc': currentCombatant.type === 'npc',
+            'encounter-screen__turn-portrait--cover': currentCombatant.coverImageUrl,
+          }"
           :style="accentStyle(currentCombatant)"
         >
-          <img v-if="currentCombatant.avatarUrl" :src="currentCombatant.avatarUrl" alt="" />
+          <img v-if="currentCombatant.coverImageUrl" :src="currentCombatant.coverImageUrl" alt="" />
+          <img v-else-if="currentCombatant.avatarUrl" :src="currentCombatant.avatarUrl" alt="" />
           <span v-else-if="currentCombatant.avatarSvg" v-html="currentCombatant.avatarSvg" />
           <UserRound v-else :size="82" :stroke-width="1.1" aria-hidden="true" />
         </div>
