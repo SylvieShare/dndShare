@@ -378,8 +378,11 @@ A creature family may share one identical recognition mark when its variants
 have the same defining anatomy. Source duplicates and age or rank variants do
 not require separate icons by themselves. Split the family when a variant
 changes the outer contour or would be misidentified by the shared mark; color
-alone is not enough reason to split or merge it. Covers remain unique to the
-item and may communicate mechanics, habitat and rank independently.
+alone is not enough reason to split or merge it. Search for a reusable related
+mark across every handbook type, not only inside the bestiary; the production
+queue may still prioritize bestiary records while reusing an exact semantic
+match owned by another category. Covers remain unique to the item and may
+communicate mechanics, habitat and rank independently.
 
 ### Bestiary cover art direction
 
