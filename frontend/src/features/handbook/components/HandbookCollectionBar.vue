@@ -66,7 +66,7 @@
             </template>
             <template v-else>
               <div class="col-filter-title">{{ field.name }}</div>
-              <div v-if="hasFilterValues(field)" class="col-filter-options">
+              <div v-if="hasChoiceOptions(field)" class="col-filter-options">
                 <button
                   v-for="opt in filterValueOptions(field)"
                   :key="opt.value"
@@ -196,9 +196,11 @@ const visibleFilterFields = computed(() => props.filterFields.filter(hasAvailabl
 
 function isBoolField(f) { return f?.type === 'bool' || f?.type === 'boolean' }
 function hasFilterValues(f) { return Array.isArray(f?.filter_values) && f.filter_values.length > 0 }
+function hasItemFilterOptions(f) { return itemFilterOptions.value[f.path]?.length > 0 }
+function hasChoiceOptions(f) { return hasFilterValues(f) || hasItemFilterOptions(f) }
 function suggestOptions(f) { return props.filterSuggests[getSuggestId(f)] || [] }
 function hasAvailableOptions(f) {
-  return isBoolField(f) || hasFilterValues(f) || itemFilterOptions.value[f.path]?.length > 0 ||
+  return isBoolField(f) || hasChoiceOptions(f) ||
     ((f?.type === 'suggest' || f?.type === 'suggest_array') && suggestOptions(f).length > 0)
 }
 

@@ -28,6 +28,7 @@ func TestHandbookFiltersSchemaExposesUsefulBestiaryFilters(t *testing.T) {
 	for _, fragment := range []string{
 		"'creature_type', 'size', 'environment', 'is_legendary', 'named_npc'",
 		"field ->> 'key' = 'cr'",
+		`{"name":"Классы","filter":true,"filter_path":"classes.id","filter_item_type":9}`,
 		"'filter_values'",
 		`["0","1/8","1/4","1/2","1"`,
 		"field - 'filter' - 'filter_values'",

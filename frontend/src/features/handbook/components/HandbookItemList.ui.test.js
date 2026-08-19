@@ -20,6 +20,8 @@ describe('handbook list controls', () => {
     expect(controls).toContain('<span class="col-filter-label">Фильтры</span>')
     expect(controls).toContain('<span class="col-filter-label">Источники</span>')
     expect(controls).toContain("'Поиск по названию — RU / EN...'")
+    expect(controls).toContain('v-if="hasChoiceOptions(field)"')
+    expect(controls).toContain('hasFilterValues(f) || hasItemFilterOptions(f)')
   })
 
   it('keeps the wide collection bar identity-only on the handbook page', () => {

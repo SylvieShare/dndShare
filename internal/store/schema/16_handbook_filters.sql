@@ -58,7 +58,7 @@ UPDATE dndshare.item_type
 SET fields = COALESCE((
     SELECT jsonb_agg(
         CASE WHEN field ->> 'key' = 'classes'
-             THEN field || '{"filter":true,"filter_path":"classes.id","filter_item_type":9}'::jsonb
+             THEN field || '{"name":"Классы","filter":true,"filter_path":"classes.id","filter_item_type":9}'::jsonb
              ELSE field END
         ORDER BY ord
     )
