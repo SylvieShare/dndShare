@@ -9,7 +9,7 @@
     <template v-for="(part, index) in diceParts" :key="index">
       <span v-if="index" class="rich-node-sign">{{ part.sign }}</span>
       <span v-if="part.kind === 'dice'" class="rich-node-die">
-        <span v-if="part.n > 1">{{ part.n }}×</span><SystemDie :sides="part.sides" :size="23" />
+        <span v-if="part.n > 1">{{ part.n }}×</span><SystemDie :sides="part.sides" :size="25" />
       </span>
       <span v-else>{{ part.value }}</span>
     </template>

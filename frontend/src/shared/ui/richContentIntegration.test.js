@@ -31,7 +31,7 @@ describe('DnD rich content integration', () => {
 
   it('connects nodes to dice, item preview/modal and suggest description behaviour', () => {
     expect(inlineSource).toContain('diceStore.roll')
-    expect(inlineSource).toContain(':size="23"')
+    expect(inlineSource).toContain(':size="25"')
     expect(inlineSource).toContain('vertical-align: middle')
     expect(inlineSource).toContain('border: 0;')
     expect(inlineSource).toContain('margin-inline: .28em;')
