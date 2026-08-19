@@ -420,6 +420,16 @@ silhouette. Bone color and rendering stay consistent, but anatomy and one
 large semantic accent carry the identity at `64×64`; minor equipment is never
 used as a substitute for a different outer contour.
 
+The thirteen-row goblinoid set uses nine marks. **Goblin** and **Goblin Gang
+Member** share the lean long-eared goblin head, while both **Goblin Boss** rows
+share a stockier brow-banded mark. The two psionic goblins keep separate
+violet-cyan brawler and commander silhouettes. Hobgoblins use a broader
+rust-red military profile: the base soldier, captain and warlord are distinct,
+while the two source-specific **Iron Shadow** rows share one masked mark and
+the two **Devastator** rows share one battle-mage mark. This keeps source
+duplicates visibly related without flattening meaningful rank, anatomy or
+mechanics into recolors.
+
 Existing imported bestiary artwork is not treated as a compact icon: for every
 system creature still using an importer-owned image it is migrated from
 `icon_image_id` to `cover_image_id` through MCP
@@ -497,6 +507,15 @@ effects. Only the anatomically ambiguous Thunderbeast used its imported image
 as a shape reference. The complete set was installed through MCP with
 `preservePrevious=true`; twelve replaced imported covers remain recoverable,
 while five rows received their first cover.
+
+All thirteen goblin and hobgoblin rows have individual `1536×1152` covers.
+Shared icon families split into mechanics-specific scenes: the gang member,
+melee and archer bosses, two psionic goblins, two Iron Shadows, captain, two
+Devastators and warlord remain independently recognizable in the detail
+header. Names, stat blocks and descriptions defined every form clearly, so no
+legacy artwork was needed as a shape reference. The set was installed through
+MCP with `preservePrevious=true`; nine replaced covers remain recoverable and
+four rows received their first cover.
 
 ### Item cover art direction
 
