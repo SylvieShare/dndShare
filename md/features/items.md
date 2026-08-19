@@ -420,6 +420,15 @@ silhouette. Bone color and rendering stay consistent, but anatomy and one
 large semantic accent carry the identity at `64×64`; minor equipment is never
 used as a substitute for a different outer contour.
 
+The eleven-row wolf-name set uses ten marks. The two source-specific
+**Guardian Wolf** rows deliberately share one noble primal-wolf head, while
+ordinary wolf, Overworld wolf, giant wolf spider, dire wolf, werewolf, winter
+wolf, Wolf-in-Sheep's-Clothing, Deathwolf and Miska the Wolf-Spider each keep a
+distinct silhouette. The giant wolf spider, plant mimic and Miska use the
+complete-form exception because a canid head would misidentify their anatomy.
+Miska's mark preserves the central four-armed demon torso and head between two
+separate wolf heads above the armored spider body.
+
 The thirteen-row goblinoid set uses nine marks. **Goblin** and **Goblin Gang
 Member** share the lean long-eared goblin head, while both **Goblin Boss** rows
 share a stockier brow-banded mark. The two psionic goblins keep separate
@@ -507,6 +516,15 @@ effects. Only the anatomically ambiguous Thunderbeast used its imported image
 as a shape reference. The complete set was installed through MCP with
 `preservePrevious=true`; twelve replaced imported covers remain recoverable,
 while five rows received their first cover.
+
+All eleven wolf-name rows have individual `1536×1152` covers. The two Guardian
+Wolf entries reuse one icon but separate an old-growth sanctuary from moonlit
+elven ruins; every other row has both a distinct icon and a mechanics-specific
+scene. Names and stat blocks were sufficient for the ordinary forms. Only
+Miska used its imported cover as an anatomical reference so the central
+four-armed demon, flanking wolf heads and massive spider body remain accurate.
+The set was installed through MCP with `preservePrevious=true`, so all replaced
+imported covers remain available for rollback.
 
 All thirteen goblin and hobgoblin rows have individual `1536×1152` covers.
 Shared icon families split into mechanics-specific scenes: the gang member,
