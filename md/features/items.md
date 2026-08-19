@@ -381,6 +381,15 @@ recognizable at `64×64`. **Cultist**, **Occult Initiate**, **Occult
 Extollant**, **Occult Silvertongue** and **Cult Fanatic** deliberately share
 this icon while their covers communicate rank and mechanics independently.
 
+The eleven-row drake set uses three recognition marks instead of forcing
+unrelated anatomy into one silhouette. Nine ordinary dragon-hound entries —
+the five chromatic guard drakes, both source-specific **Guard Drake** rows,
+**Drake Companion** and **Ambush Drake** — share one slate-and-bronze wingless
+drake head. **Eyedrake** has its own complete-form eye-and-maw mark, while
+**Fume Drake** uses a separate emerald smoke-dragon head. This is the preferred
+family rule: reuse an icon while the anatomy stays recognizably the same, then
+split the icon when a named variant changes the creature's defining outline.
+
 Existing imported bestiary artwork is not treated as a compact icon: for every
 system creature still using an importer-owned image it is migrated from
 `icon_image_id` to `cover_image_id` through MCP
@@ -439,6 +448,15 @@ The five cult-family covers follow the same contract: guard, novice, forbidden
 scholar, charismatic leader and fanatic each receive a distinct single-person
 scene while retaining the shared hood-and-mask identity. Replaced imported
 covers remain recoverable through `preservePrevious=true`.
+
+All eleven drake rows have individual `1536×1152` covers. The ordinary guard
+variants are differentiated by habitat and damage theme rather than by a flat
+recolor; the two source-specific generic guard drakes use hatchery and
+stronghold scenes, and the companion and ambush entries have their own posture
+and environment. Eyedrake and Fume Drake keep their exceptional anatomy in
+both icon and cover. Every cover was installed through MCP with
+`preservePrevious=true`, so imported predecessors remain available for
+rollback.
 
 ### Item cover art direction
 
