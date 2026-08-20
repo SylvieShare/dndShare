@@ -1,5 +1,5 @@
 <template>
-  <div ref="root" class="equipment-select">
+  <div ref="root" class="equipment-select" role="group" :aria-label="placeholder">
     <ItemReferenceRow
       v-if="selectedItem"
       :item="selectedItem"

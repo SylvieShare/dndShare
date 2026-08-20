@@ -28,6 +28,7 @@ describe('handbook object list tile', () => {
     expect(objectSource).toContain('props.type?.iconImageUrl')
     expect(objectSource).toContain('? 64 : 22')
     expect(objectSource).toContain('<slot v-else name="icon-fallback" />')
+    expect(objectSource).toContain('min-width: clamp(40px, 4.5vw, 52px)')
   })
 
   it('keeps every rich item renderer on the shared abstraction', () => {

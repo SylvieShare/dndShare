@@ -47,6 +47,9 @@ describe('handbook list controls', () => {
 
   it('places weapon damage in the shared metric column and price at the trailing edge', () => {
     expect(weaponList).toContain('#metric')
+    expect(weaponList).toContain('<WeaponDamageMetric')
+    expect(weaponList).toContain(':size="36"')
+    expect(weaponList).not.toContain('wli-damage')
     expect(weaponList).toContain('#trailing')
     expect(weaponList).toContain('wli-cost')
   })

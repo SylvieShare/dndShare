@@ -24,46 +24,52 @@
       <div v-for="(group, groupIndex) in profile.groups" :key="group.id" class="choice-group">
         <div class="choice-title">{{ group.label || `Выбор ${groupIndex + 1}` }}</div>
 
-        <div
-          v-for="entry in group.options"
-          :key="entry.id"
-          class="choice-option"
-          :class="{ selected: optionSelected(group, entry) }"
-        >
-          <label class="choice-option-label">
-            <input
-              v-if="group.options.length > 1"
-              type="radio"
-              :name="`class-equipment-${profile.key}-${group.id}`"
-              :checked="optionSelected(group, entry)"
-              @change="selectEquipmentOption(group.id, entry.id)"
-            />
-            <span v-else class="single-mark" aria-hidden="true">•</span>
-            <span>{{ entry.label }}</span>
-          </label>
+        <div class="choice-options" :class="{ 'choice-options--paired': group.options.length === 2 }">
+          <div
+            v-for="entry in group.options"
+            :key="entry.id"
+            class="choice-option"
+            :class="{ selected: optionSelected(group, entry) }"
+          >
+            <label class="choice-option-label">
+              <input
+                v-if="group.options.length > 1"
+                class="choice-option-input"
+                type="radio"
+                :name="`class-equipment-${profile.key}-${group.id}`"
+                :checked="optionSelected(group, entry)"
+                @change="selectEquipmentOption(group.id, entry.id)"
+              />
+              <span class="choice-mark" aria-hidden="true">
+                <ShieldCheck v-if="optionSelected(group, entry)" :size="19" />
+                <Shield v-else :size="19" />
+              </span>
+              <span>{{ entry.label }}</span>
+            </label>
 
-          <div v-if="entry.items.length" class="option-items">
-            <ItemReferenceRow
-              v-for="linked in entry.items"
-              :key="linked.item?.id || linked.name"
-              :item="linked.item || missingItem(linked)"
-              :count="linked.count"
-              :disabled="!linked.item"
-              @activate="viewItem = linked.item"
-            />
-          </div>
+            <div v-if="entry.items.length" class="option-items">
+              <ItemReferenceRow
+                v-for="linked in entry.items"
+                :key="linked.item?.id || linked.name"
+                :item="linked.item || missingItem(linked)"
+                :count="linked.count"
+                :disabled="!linked.item"
+                @activate="viewItem = linked.item"
+              />
+            </div>
 
-          <div v-if="optionSelected(group, entry) && entry.picks?.length" class="concrete-picks">
-            <template v-for="pick in entry.picks" :key="pick.id">
-              <label v-for="index in pick.count" :key="`${pick.id}-${index}`" class="concrete-pick">
-                <span>{{ pick.label }}<template v-if="pick.count > 1"> {{ index }}</template></span>
+            <div v-if="optionSelected(group, entry) && entry.picks?.length" class="concrete-picks">
+              <template v-for="pick in entry.picks" :key="pick.id">
                 <EquipmentItemSelect
+                  v-for="index in pick.count"
+                  :key="`${pick.id}-${index}`"
                   :items="pick.options"
                   :model-value="pickValue(group.id, pick.id, index - 1)"
+                  :placeholder="pickPlaceholder(pick, index)"
                   @update:model-value="setEquipmentPick(group.id, entry.id, pick.id, index - 1, $event)"
                 />
-              </label>
-            </template>
+              </template>
+            </div>
           </div>
         </div>
       </div>
@@ -80,14 +86,14 @@
             @activate="viewItem = entry.item"
           />
         </div>
-        <label v-for="pick in profile.fixedPicks" :key="pick.id" class="concrete-pick fixed-pick">
-          <span>{{ pick.label }}</span>
+        <div v-for="pick in profile.fixedPicks" :key="pick.id" class="fixed-pick">
           <EquipmentItemSelect
             :items="pick.options"
             :model-value="pickValue('__fixed', pick.id, 0)"
+            :placeholder="pickPlaceholder(pick, 1)"
             @update:model-value="setEquipmentPick('__fixed', 'fixed', pick.id, 0, $event)"
           />
-        </label>
+        </div>
       </div>
     </template>
 
@@ -103,7 +109,7 @@
 
 <script setup>
 import { inject, ref } from 'vue'
-import { ShoppingBag } from '@lucide/vue'
+import { Shield, ShieldCheck, ShoppingBag } from '@lucide/vue'
 import EquipmentItemSelect from '@/features/character-list/components/wizard/EquipmentItemSelect.vue'
 import ItemReferenceRow from '@/features/items/components/ItemReferenceRow.vue'
 import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
@@ -124,6 +130,11 @@ function optionSelected(group, entry) {
 function pickValue(groupId, pickId, index) {
   return state.classEquipmentChoices?.[groupId]?.picks?.[pickId]?.[index] || ''
 }
+
+function pickPlaceholder(pick, index) {
+  const suffix = pick.count > 1 ? ` ${index}` : ''
+  return `Выберите: ${pick.label}${suffix}`
+}
 </script>
 
 <style scoped>
@@ -136,26 +147,29 @@ function pickValue(groupId, pickId, index) {
 .shop-notice svg { flex: none; color: var(--accent); }
 .choice-group { display: flex; flex-direction: column; gap: 6px; padding: 11px 12px; border: 1px solid var(--border); border-radius: var(--r-md); background: color-mix(in srgb, var(--surface) 80%, transparent); }
 .choice-title { margin-bottom: 1px; color: var(--text-muted); font-size: 10px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; }
-.choice-option { display: flex; flex-direction: column; gap: 8px; padding: 8px; border: 1px solid transparent; border-radius: var(--r-md); }
-.choice-option.selected { border-color: color-mix(in srgb, var(--accent) 30%, transparent); background: color-mix(in srgb, var(--accent) 7%, transparent); }
+.choice-options { display: grid; gap: 7px; }
+.choice-options--paired { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.choice-option { min-width: 0; display: flex; flex-direction: column; gap: 8px; padding: 10px; border: 1px solid var(--border); border-radius: var(--r-md); background: color-mix(in srgb, var(--surface) 72%, transparent); transition: border-color .15s, background .15s, box-shadow .15s; }
+.choice-option.selected { border-color: color-mix(in srgb, var(--accent) 58%, var(--border)); background: color-mix(in srgb, var(--accent) 9%, var(--surface)); box-shadow: inset 0 3px 0 color-mix(in srgb, var(--accent) 78%, transparent); }
 .choice-option-label { display: flex; align-items: flex-start; gap: 8px; color: var(--text-2); font-size: 13px; line-height: 1.35; cursor: pointer; }
 .choice-option.selected .choice-option-label { color: var(--text-1); }
-.choice-option-label input { margin: 2px 0 0; accent-color: var(--accent); }
-.single-mark { color: var(--accent); font-size: 18px; line-height: 12px; }
+.choice-option-input { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+.choice-option-label:focus-within { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+.choice-mark { flex: none; display: grid; place-items: center; color: var(--text-muted); }
+.choice-option.selected .choice-mark { color: var(--accent); }
 .option-items, .fixed-items { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; padding-left: 25px; }
 .concrete-picks { display: grid; gap: 9px; padding: 2px 0 1px 25px; }
-.concrete-pick { display: grid; grid-template-columns: minmax(120px, .55fr) minmax(220px, 1.45fr); align-items: start; gap: 10px; color: var(--text-muted); font-size: 12px; }
-.concrete-pick > span { padding-top: 11px; }
+.choice-options--paired .option-items { grid-template-columns: 1fr; padding-left: 0; }
+.choice-options--paired .concrete-picks { padding-left: 0; }
 .fixed { display: flex; flex-direction: column; gap: 8px; padding: 11px 12px; border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--border)); border-radius: var(--r-md); background: color-mix(in srgb, var(--accent) 6%, transparent); }
 .fixed-title { color: var(--accent); font-size: 10px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; }
 .fixed-items { padding-left: 0; }
-.fixed-pick { grid-template-columns: minmax(120px, .55fr) minmax(220px, 1.45fr); }
+.fixed-pick { width: 100%; }
 @media (max-width: 700px) {
   .equipment-heading { flex-direction: column; gap: 10px; }
   .shop-later { width: 100%; box-sizing: border-box; }
+  .choice-options--paired { grid-template-columns: 1fr; }
   .option-items, .fixed-items { grid-template-columns: 1fr; padding-left: 0; }
   .concrete-picks { padding-left: 0; }
-  .concrete-pick { grid-template-columns: 1fr; gap: 4px; }
-  .concrete-pick > span { padding-top: 0; }
 }
 </style>

@@ -11,6 +11,9 @@
       <span class="item-reference-name">{{ item.name }}</span>
       <span v-if="metaLabel" class="item-reference-meta">{{ metaLabel }}</span>
     </span>
+    <span v-if="firstAttack" class="item-reference-damage">
+      <WeaponDamageMetric :attack="firstAttack" :size="30" />
+    </span>
     <span v-if="count > 1" class="item-reference-count">×{{ count }}</span>
     <slot name="trailing">
       <span v-if="costLabel" class="item-reference-cost">{{ costLabel }}</span>
@@ -23,6 +26,7 @@
 import { computed } from 'vue'
 import { ChevronRight } from '@lucide/vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
+import WeaponDamageMetric from '@/features/items/components/WeaponDamageMetric.vue'
 import { useCostFormatter } from '@/features/items/lib/useCostFormatter'
 
 const props = defineProps({
@@ -39,6 +43,7 @@ defineEmits(['activate'])
 const data = computed(() => props.item.data || {})
 const { format: formatCost } = useCostFormatter()
 const costLabel = computed(() => formatCost(data.value.cost))
+const firstAttack = computed(() => Array.isArray(data.value.attacks) ? data.value.attacks[0] : null)
 const metaLabel = computed(() => [
   data.value.weight != null ? `${String(data.value.weight).replace('.', ',')} фнт.` : '',
   data.value.equipment_category === 'pack' ? 'Набор' : '',
@@ -58,6 +63,7 @@ const metaLabel = computed(() => [
 .item-reference-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
 .item-reference-name { overflow: hidden; color: var(--text-1); font-size: 13px; font-weight: 650; line-height: 1.25; text-overflow: ellipsis; white-space: nowrap; }
 .item-reference-meta { color: var(--text-muted); font-size: 10px; line-height: 1.2; }
+.item-reference-damage { width: clamp(36px, 5vw, 48px); flex: none; display: grid; place-items: center; }
 .item-reference-count { flex: none; min-width: 30px; color: var(--accent-soft); font-size: 12px; font-weight: 800; text-align: right; }
 .item-reference-cost { flex: none; color: var(--warning); font-size: 11px; font-weight: 700; white-space: nowrap; }
 .item-reference-chevron { flex: none; color: var(--text-muted); }

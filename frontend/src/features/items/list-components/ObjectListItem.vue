@@ -90,8 +90,9 @@ const nameEnFormatted = computed(() =>
 }
 
 .oli-metric {
-  width: 28px;
-  flex: 0 0 28px;
+  min-width: clamp(40px, 4.5vw, 52px);
+  flex: 0 0 auto;
+  padding-inline: clamp(0px, .5vw, 4px);
   display: grid;
   place-items: center;
   font-family: var(--font-ui);
