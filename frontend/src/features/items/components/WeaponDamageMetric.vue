@@ -1,5 +1,10 @@
 <template>
-  <span v-if="damage" class="weapon-damage-metric" :aria-label="`Урон: ${damage.label}`">
+  <span
+    v-if="damage"
+    class="weapon-damage-metric"
+    :class="`weapon-damage-metric--${layout}`"
+    :aria-label="`Урон: ${damage.label}`"
+  >
     <span class="weapon-damage-metric__value">
       <span v-if="damage.count !== 1" class="weapon-damage-metric__count">{{ damage.count }}</span>
       <SystemDie
@@ -22,6 +27,7 @@ import { diceById } from '@/shared/lib/systemDice'
 const props = defineProps({
   attack: { type: Object, default: null },
   size: { type: Number, default: 34 },
+  layout: { type: String, default: 'column' },
 })
 
 const damage = computed(() => {
@@ -51,4 +57,6 @@ const damage = computed(() => {
 .weapon-damage-metric__title { color: var(--text-muted); font-size: 7px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
 .weapon-damage-metric__count { min-width: 8px; text-align: right; }
 .weapon-damage-metric__label { font-variant-numeric: tabular-nums; }
+.weapon-damage-metric--row { flex-direction: row-reverse; justify-content: flex-end; gap: 8px; }
+.weapon-damage-metric--row .weapon-damage-metric__title { width: 50px; font-size: 8px; text-align: left; }
 </style>

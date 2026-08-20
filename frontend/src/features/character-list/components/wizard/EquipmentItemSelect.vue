@@ -5,6 +5,7 @@
       :item="selectedItem"
       selected
       show-details
+      :roomy-weapon="roomyWeapons"
       @activate="toggle"
       @details="viewDetails"
     />
@@ -27,6 +28,7 @@
           :selected="String(item.id) === String(modelValue)"
           :show-chevron="false"
           show-details
+          :roomy-weapon="roomyWeapons"
           @activate="choose(item)"
           @details="viewDetails"
         />
@@ -45,6 +47,7 @@ const props = defineProps({
   items: { type: Array, default: () => [] },
   modelValue: { type: [Number, String], default: '' },
   placeholder: { type: String, default: 'Выберите предмет' },
+  roomyWeapons: { type: Boolean, default: false },
 })
 
 const emit = defineEmits(['update:modelValue', 'details'])

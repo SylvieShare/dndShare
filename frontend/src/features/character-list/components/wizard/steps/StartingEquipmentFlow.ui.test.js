@@ -3,6 +3,8 @@ import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 
 const read = name => readFileSync(fileURLToPath(new URL(`./${name}.vue`, import.meta.url)), 'utf8')
+const itemReference = readFileSync(fileURLToPath(new URL('../../../../items/components/ItemReferenceRow.vue', import.meta.url)), 'utf8')
+const equipmentSelect = readFileSync(fileURLToPath(new URL('../EquipmentItemSelect.vue', import.meta.url)), 'utf8')
 
 describe('starting equipment wizard flow', () => {
   it('uses handbook item rows for class options, fixed grants and any-item picks', () => {
@@ -36,6 +38,16 @@ describe('starting equipment wizard flow', () => {
     expect(source).not.toContain('<span>{{ pick.label }}')
     expect(source).toContain('Также получите')
     expect(source).toContain('<ItemViewModal')
+  })
+
+  it('uses taller 64px weapon rows with stacked facts on the class step', () => {
+    const source = read('StepClassEquipment')
+    expect(source).toContain('roomy-weapon')
+    expect(source).toContain('roomy-weapons')
+    expect(equipmentSelect).toContain(':roomy-weapon="roomyWeapons"')
+    expect(itemReference).toContain("roomyWeapon && firstAttack ? 64 : 34")
+    expect(itemReference).toContain('.item-reference--roomy-weapon .item-reference-body { min-height: 96px;')
+    expect(itemReference).toContain('.item-reference--roomy-weapon .item-reference-weapon-details { display: flex; flex-direction: column;')
   })
 
   it('offers the PHB wealth roll, five catalogues and a budgeted cart', () => {

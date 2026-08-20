@@ -178,11 +178,12 @@ clears the previous class's spell picks so overlapping spell ids cannot satisfy
 the new class accidentally.
 
 Class starting equipment is resolved against handbook items before rendering.
-Fixed grants and every concrete branch use compact item rows that can open the
+Fixed grants and every concrete branch use item rows that can open the
 full handbook card; “any weapon/tool/focus” clauses use the same row inside a
-searchable dropdown and persist the selected item id. Weapon rows include their
-primary damage die with a centered “Урон” label below it; the narrower vertical
-metric leaves more room for long item names. Groups with exactly two alternatives use a two-column
+searchable dropdown and persist the selected item id. On the Class step, weapon
+rows use a taller presentation with a 64×64 handbook icon; the name, primary
+damage die and localized properties form separate readable lines to its right.
+Non-weapon item rows retain the compact shared presentation. Groups with exactly two alternatives use a two-column
 desktop layout with a single vertical divider and a shield-check marker on the
 selected branch; three or more alternatives are separated horizontally, and
 the columns collapse to the same horizontal separators on mobile. The group

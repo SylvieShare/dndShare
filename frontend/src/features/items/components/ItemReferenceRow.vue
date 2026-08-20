@@ -1,7 +1,11 @@
 <template>
   <div
     class="item-reference"
-    :class="{ 'item-reference--selected': selected, 'item-reference--disabled': disabled }"
+    :class="{
+      'item-reference--selected': selected,
+      'item-reference--disabled': disabled,
+      'item-reference--roomy-weapon': roomyWeapon && firstAttack,
+    }"
   >
     <button
       type="button"
@@ -9,17 +13,21 @@
       :disabled="disabled || !activatable"
       @click="$emit('activate', item)"
     >
-      <ItemIcon :item="item" :type="type" :size="34" placeholder />
-      <span class="item-reference-main">
-        <span class="item-reference-name">{{ item.name }}</span>
-        <span v-if="metaLabel" class="item-reference-meta">{{ metaLabel }}</span>
-      </span>
-      <span v-if="firstAttack" class="item-reference-damage">
-        <WeaponDamageMetric :attack="firstAttack" :size="30" />
-      </span>
-      <span v-if="firstAttack" class="item-reference-properties">
-        <small>Свойства</small>
-        <span>{{ weaponPropertiesLabel || '—' }}</span>
+      <ItemIcon class="item-reference-icon" :item="item" :type="type" :size="roomyWeapon && firstAttack ? 64 : 34" placeholder />
+      <span class="item-reference-info">
+        <span class="item-reference-main">
+          <span class="item-reference-name">{{ item.name }}</span>
+          <span v-if="metaLabel" class="item-reference-meta">{{ metaLabel }}</span>
+        </span>
+        <span v-if="firstAttack" class="item-reference-weapon-details">
+          <span class="item-reference-damage">
+            <WeaponDamageMetric :attack="firstAttack" :size="30" :layout="roomyWeapon ? 'row' : 'column'" />
+          </span>
+          <span class="item-reference-properties">
+            <small>Свойства</small>
+            <span>{{ weaponPropertiesLabel || '—' }}</span>
+          </span>
+        </span>
       </span>
       <span v-if="count > 1" class="item-reference-count">×{{ count }}</span>
       <slot name="trailing">
@@ -58,6 +66,7 @@ const props = defineProps({
   activatable: { type: Boolean, default: true },
   showChevron: { type: Boolean, default: true },
   showDetails: { type: Boolean, default: false },
+  roomyWeapon: { type: Boolean, default: false },
 })
 
 defineEmits(['activate', 'details'])
@@ -93,6 +102,7 @@ const metaLabel = computed(() => [
 .item-reference--disabled { opacity: .5; }
 .item-reference-body { min-width: 0; flex: 1; display: flex; align-items: center; gap: 10px; align-self: stretch; padding: 9px 0 9px 10px; border: 0; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; }
 .item-reference-body:disabled { cursor: default; }
+.item-reference-info, .item-reference-weapon-details { display: contents; }
 .item-reference-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
 .item-reference-name { overflow: hidden; color: var(--text-1); font-size: 13px; font-weight: 650; line-height: 1.25; text-overflow: ellipsis; white-space: nowrap; }
 .item-reference-meta { color: var(--text-muted); font-size: 10px; line-height: 1.2; }
@@ -106,4 +116,17 @@ const metaLabel = computed(() => [
 .item-reference-details { width: 30px; height: 30px; flex: none; display: grid; place-items: center; margin-right: 8px; padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--text-muted); cursor: pointer; transition: color .15s, background .15s; }
 .item-reference-details:hover:not(:disabled) { background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent); }
 .item-reference-details:disabled { cursor: default; }
+.item-reference--roomy-weapon .item-reference-body { min-height: 96px; align-items: center; gap: 14px; padding: 12px 0 12px 12px; }
+.item-reference--roomy-weapon .item-reference-info { min-width: 0; flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 7px; align-self: stretch; }
+.item-reference--roomy-weapon .item-reference-main { flex: none; }
+.item-reference--roomy-weapon .item-reference-name { font-size: 14px; line-height: 1.3; }
+.item-reference--roomy-weapon .item-reference-weapon-details { display: flex; flex-direction: column; align-items: stretch; gap: 5px; }
+.item-reference--roomy-weapon .item-reference-damage { width: auto; display: flex; place-items: unset; align-self: auto; }
+.item-reference--roomy-weapon .item-reference-properties { width: auto; display: grid; grid-template-columns: 58px minmax(0, 1fr); align-items: baseline; justify-content: initial; gap: 8px; font-size: 10px; line-height: 1.35; text-align: left; }
+.item-reference--roomy-weapon .item-reference-properties > span { display: block; overflow: visible; }
+.item-reference--roomy-weapon .item-reference-details { width: 34px; height: 34px; }
+@media (max-width: 420px) {
+  .item-reference--roomy-weapon .item-reference-body { gap: 11px; padding-left: 10px; }
+  .item-reference--roomy-weapon .item-reference-properties { grid-template-columns: 52px minmax(0, 1fr); }
+}
 </style>
