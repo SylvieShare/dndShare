@@ -95,7 +95,7 @@ scripts             исполняемые project guardrails для автом�
 - Отсутствующая строка возвращается как `store.ErrNotFound`.
 - Аутентификация использует cookie `sylvieshare-session-id` (`userId`) и
   `sylvieshare-session-uuid` (`uuid`), серверное состояние хранится в
-  `users_session`.
+  `users_session`; обе cookie сохраняются браузером 30 дней.
 - Роли: `ADMIN`, `HANDBOOK_ADMIN`, `ERROR_REPORT_AUTO_APPROVE`,
   `ERROR_REPORT_REVIEWER`.
 - Ошибка API имеет тело `{"type": ..., "desc": ...}`. Необработанная паника

@@ -18,6 +18,8 @@ const userIDKey ctxKey = 0
 const (
 	cookieSessionID   = "sylvieshare-session-id"
 	cookieSessionUUID = "sylvieshare-session-uuid"
+	// Persistent login survives a browser restart for 30 days.
+	sessionCookieMaxAge = 30 * 24 * 60 * 60
 )
 
 // Роли (dndshare.role.name).
@@ -180,8 +182,8 @@ func (s *Server) setSessionCookies(w http.ResponseWriter, r *http.Request, userI
 	secure := s.secure(r)
 	// HttpOnly: фронт не читает document.cookie, поэтому куки недоступны из JS (защита от
 	// кражи сессии через XSS). SameSite=Lax — базовая защита от CSRF при same-origin.
-	http.SetCookie(w, &http.Cookie{Name: cookieSessionID, Value: strconv.FormatInt(userID, 10), Path: "/", Secure: secure, HttpOnly: true, SameSite: http.SameSiteLaxMode})
-	http.SetCookie(w, &http.Cookie{Name: cookieSessionUUID, Value: session, Path: "/", Secure: secure, HttpOnly: true, SameSite: http.SameSiteLaxMode})
+	http.SetCookie(w, &http.Cookie{Name: cookieSessionID, Value: strconv.FormatInt(userID, 10), Path: "/", Secure: secure, HttpOnly: true, SameSite: http.SameSiteLaxMode, MaxAge: sessionCookieMaxAge})
+	http.SetCookie(w, &http.Cookie{Name: cookieSessionUUID, Value: session, Path: "/", Secure: secure, HttpOnly: true, SameSite: http.SameSiteLaxMode, MaxAge: sessionCookieMaxAge})
 }
 
 func (s *Server) clearSessionCookies(w http.ResponseWriter, r *http.Request) {

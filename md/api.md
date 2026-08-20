@@ -8,7 +8,8 @@ API реализован Go `net/http` в `internal/web`. Feature-файл ре�
 - JSON keys — camelCase.
 - Ошибка — JSON `{ "type": "...", "desc": "..." }`.
 - Session auth — cookies `sylvieshare-session-id` и
-  `sylvieshare-session-uuid`.
+  `sylvieshare-session-uuid`; обе cookie имеют `HttpOnly`, `SameSite=Lax` и
+  `Max-Age=2592000` (30 дней).
 - `shared/api/http.js` считает любой non-2xx ошибкой.
 - Старые route aliases и DTO fields не поддерживаются.
 - Health: `GET /api/health` возвращает status, DB state и build `commitSha`.
