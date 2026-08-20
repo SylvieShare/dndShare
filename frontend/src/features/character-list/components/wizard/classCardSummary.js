@@ -1,4 +1,5 @@
 import { featuresForBinding } from '@/features/character-editor/settings/dnd/creation/progression'
+import { grantedSpellsAt } from '@/features/character-editor/blocks/dnd/lib/levelUp'
 import { STAT_FULL, SUGGEST16_TO_STAT } from '@/features/character-list/components/wizard/labels'
 import { dieLabel } from '@/shared/lib/systemDice'
 
@@ -24,6 +25,12 @@ function statNames(ids) {
 
 function pushFact(facts, label, value, wide = false, entries = []) {
   if (value) facts.push({ label, value, wide, entries })
+}
+
+function ownerIds(rows) {
+  return (Array.isArray(rows) ? rows : [])
+    .map((row) => Number(row?.id ?? row))
+    .filter(Number.isFinite)
 }
 
 export function shortClassDescription(charClass, limit = 220) {
@@ -70,5 +77,42 @@ export function classCardSummary({ charClass, classAbilities = [], suggestValue 
     choices,
     subclasses: [...new Set(subclasses.filter(Boolean))],
     subclassLevel: Number(data.subclass_level) || null,
+  }
+}
+
+export function subclassCardSummary({ subclass, charClass, classAbilities = [], spellPool = [], suggestValue = () => '' }) {
+  const subclassId = Number(subclass?.id)
+  const features = featuresForBinding(classAbilities, {
+    classId: charClass?.id,
+    subclassId,
+  }, 1)
+    .filter((ability) => ownerIds(ability?.data?.subclass_ids).includes(subclassId))
+    .filter((ability) => ability?.name)
+    .map((ability) => ({
+      name: ability.name,
+      description: cleanText(ability.data?.desc || ability.data?.description || ''),
+    }))
+
+  const spellNames = new Map((spellPool || []).map((spell) => [Number(spell.id), spell.name]))
+  const granted = grantedSpellsAt([subclass], 1)
+  const namedSpells = granted.map((row) => spellNames.get(Number(row.spellId))).filter(Boolean)
+  const benefits = [...features]
+  if (namedSpells.length) {
+    benefits.push({ name: `Заклинания: ${[...new Set(namedSpells)].join(', ')}`, description: '' })
+  } else if (granted.length) {
+    benefits.push({ name: `Заклинания архетипа: ${granted.length}`, description: '' })
+  }
+
+  const data = subclass?.data || {}
+  const proficiencies = [
+    ...resolved(data.armor_prof, 3, suggestValue),
+    ...resolved(data.weapon_prof, 4, suggestValue),
+    ...resolved(data.tool_prof, 5, suggestValue),
+  ]
+  if (proficiencies.length) benefits.push({ name: `Владения: ${proficiencies.join(', ')}`, description: '' })
+
+  return {
+    description: shortClassDescription(subclass, 160),
+    benefits,
   }
 }

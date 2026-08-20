@@ -5,8 +5,16 @@
     <div v-if="grantedSpellList.length" class="sec">
       <div class="sheet-section-title">Заклинания архетипа</div>
       <p class="hint">Всегда подготовлены и не учитываются в числе подготовленных.</p>
-      <div class="granted">
-        <span v-for="sp in grantedSpellList" :key="sp.id" class="granted-tag">{{ sp.name }}</span>
+      <div class="granted list">
+        <SpellSelectTile
+          v-for="sp in grantedSpellList"
+          :key="sp.id"
+          :spell="sp"
+          :school="schoolName(sp)"
+          selected
+          readonly
+          @details="viewId = sp.id"
+        />
       </div>
     </div>
 
@@ -22,21 +30,16 @@
           <span class="count" :class="{ done: sec.chosen === sec.limit }">{{ sec.chosen }} / {{ sec.limit }}</span>
         </div>
         <div class="list">
-          <div
+          <SpellSelectTile
             v-for="sp in filtered(sec.pool)"
             :key="sp.id"
-            class="spell"
-            :class="{ on: state.spellIds.includes(sp.id), off: !state.spellIds.includes(sp.id) && sec.limit && sec.chosen >= sec.limit }"
-            @click="toggleSpell(sp.id, sec.kind)"
-          >
-            <span class="box">
-              <svg v-if="state.spellIds.includes(sp.id)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6" /></svg>
-            </span>
-            <span class="sp-name">{{ sp.name }}</span>
-            <button class="sp-view" title="Посмотреть заклинание" @click.stop="viewId = sp.id">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M9.7 9a2.5 2.5 0 0 1 4.8 1c0 1.8-2.5 2.1-2.5 4" /><path d="M12 17h.01" /></svg>
-            </button>
-          </div>
+            :spell="sp"
+            :school="schoolName(sp)"
+            :selected="state.spellIds.includes(sp.id)"
+            :disabled="!state.spellIds.includes(sp.id) && !!sec.limit && sec.chosen >= sec.limit"
+            @select="toggleSpell(sp.id, sec.kind)"
+            @details="viewId = sp.id"
+          />
         </div>
       </div>
     </template>
@@ -56,6 +59,8 @@
 <script setup>
 import { computed, inject, ref } from 'vue'
 import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
+import SpellSelectTile from '@/features/character-list/components/wizard/SpellSelectTile.vue'
+import { useSuggestStore } from '@/stores/suggest'
 
 const {
   state, grants,
@@ -65,6 +70,9 @@ const {
 
 const query = ref('')
 const viewId = ref(null)
+const suggestStore = useSuggestStore()
+suggestStore.ensure(7)
+const schoolMap = computed(() => new Map(suggestStore.items(7).map((entry) => [String(entry.id), entry.value])))
 
 const sections = computed(() => [
   { kind: 'cantrip', title: 'Заговоры', pool: cantripPool.value, limit: cantripLimit.value, chosen: cantripChosen.value },
@@ -79,8 +87,9 @@ const preparesNote = computed(() => (
 
 function filtered(pool) {
   const q = query.value.trim().toLowerCase()
-  return q ? pool.filter((sp) => String(sp.name).toLowerCase().includes(q)) : pool
+  return q ? pool.filter((sp) => [sp.name, sp.nameEn, schoolName(sp)].some((value) => String(value || '').toLowerCase().includes(q))) : pool
 }
+function schoolName(spell) { return schoolMap.value.get(String(spell?.data?.schoolId)) || '' }
 </script>
 
 <style scoped>
@@ -94,33 +103,9 @@ function filtered(pool) {
 }
 .search input:focus { border-color: var(--accent); }
 .sec { display: flex; flex-direction: column; gap: 8px; }
-.granted { display: flex; flex-wrap: wrap; gap: 7px; }
-.granted-tag {
-  display: inline-flex; align-items: center;
-  background: color-mix(in srgb, var(--accent) 13%, var(--surface));
-  border-radius: 999px; color: var(--text-1); font-size: 12px; padding: 6px 13px;
-}
+.granted { margin-top: 1px; }
 .count { font-size: 12px; font-weight: 600; color: var(--text-muted); letter-spacing: 0; text-transform: none; }
 .count.done { color: var(--success); }
-.list { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 6px; }
-.spell {
-  display: flex; align-items: center; gap: 10px;
-  background: var(--surface); border-radius: var(--r-md);
-  padding: 9px 12px; cursor: pointer; transition: background 0.15s;
-}
-.spell:hover { background: color-mix(in srgb, var(--accent) 12%, var(--surface)); }
-.spell.on { background: color-mix(in srgb, var(--accent) 16%, var(--surface)); }
-.spell.off { opacity: 0.45; cursor: default; }
-.spell.off:hover { background: var(--surface); }
-.box { flex-shrink: 0; width: 18px; height: 18px; border-radius: 5px; background: var(--surface-raised); display: flex; align-items: center; justify-content: center; }
-.spell.on .box { background: var(--accent); }
-.box svg { width: 12px; height: 12px; color: var(--text-on-accent); }
-.sp-name { flex: 1; font-size: 13px; color: var(--text-1); }
-.sp-view {
-  flex-shrink: 0; display: flex; align-items: center; justify-content: center;
-  width: 24px; height: 24px; border: none; border-radius: 6px;
-  background: none; color: var(--text-muted); cursor: pointer; transition: background 0.15s, color 0.15s;
-}
-.sp-view:hover { background: color-mix(in srgb, var(--accent) 18%, transparent); color: var(--accent); }
-.sp-view svg { width: 15px; height: 15px; }
+.list { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 7px; }
+@media (max-width: 560px) { .list { grid-template-columns: 1fr; } }
 </style>

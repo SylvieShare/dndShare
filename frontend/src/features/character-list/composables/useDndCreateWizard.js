@@ -489,16 +489,18 @@ export function useDndCreateWizard() {
     1,
     { options: chosenOptionLabels(state.choices) },
   ).map((r) => r.spellId))])
-  const grantedSpellNames = ref({})
+  const grantedSpellItems = ref({})
   watch(grantedSpellIds, async (ids) => {
-    const missing = ids.filter((id) => !grantedSpellNames.value[id])
+    const missing = ids.filter((id) => !grantedSpellItems.value[id])
     if (!missing.length) return
     const res = await fetchGet('/items/by-ids?ids=' + missing.join(','))
-    const next = { ...grantedSpellNames.value }
-    ;(res?.items || []).forEach((it) => { next[it.id] = it.name })
-    grantedSpellNames.value = next
+    const next = { ...grantedSpellItems.value }
+    ;(res?.items || []).forEach((it) => { next[it.id] = it })
+    grantedSpellItems.value = next
   }, { immediate: true })
-  const grantedSpellList = computed(() => grantedSpellIds.value.map((id) => ({ id, name: grantedSpellNames.value[id] || `#${id}` })))
+  const grantedSpellList = computed(() => grantedSpellIds.value.map((id) => (
+    grantedSpellItems.value[id] || { id, name: `#${id}`, data: {} }
+  )))
 
   // ─── Convenience actions ───────────────────────────────────────────────────
   function randomName() {

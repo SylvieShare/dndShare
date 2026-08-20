@@ -137,9 +137,12 @@ available archetype names; feature descriptions use the shared hover tooltip.
 Dependent equipment, skill, feature, archetype and spell choices are announced in
 the row but each type is rendered as its own accent-edged section only after selection. The selected
 row moves to the top, the other classes leave the list, and the same stable back and
-scroll-restoration behaviour as the race step returns to the catalogue. Subclass
-tiles follow the same cover-only rule; `iconImageUrl` remains reserved for compact
-handbook identity surfaces and never substitutes for a wizard cover.
+scroll-restoration behaviour as the race step returns to the catalogue. Archetype
+choices use compact dedicated cards rather than class covers: each card reads the
+handbook item's `iconImageUrl`/`svg` (with a monogram fallback), shows a shortened
+plain-text description and lists only the level-one features, proficiencies and
+granted spells owned by that archetype. The selected card keeps its accent surface
+and explicit status while the full handbook description remains below the grid.
 At every responsive width the workspace keeps its header and footer inside the
 viewport and gives vertical scrolling exclusively to `.cc-main`; scroll chaining
 to the document is contained. Equipment-column radios occupy their visible label
@@ -151,6 +154,15 @@ that prose. Race and class screens share `IllustratedChoiceStage`, which owns th
 display heading, keyed list transition, scroll restoration, detail reveal and the
 back action positioned over the selected card image. New systems can reuse this
 shell while supplying their own cards and dependent-choice content.
+
+Cantrip and first-circle selection uses a dedicated spell tile. It shows the
+spell's handbook icon (or a magic-glyph fallback), name, circle, school, casting
+time and range. The tile body changes the selection, while its separate question
+button opens the full handbook entry without affecting the chosen spells. Selected
+tiles retain their accent state; choices over the current limit remain readable
+and keep the handbook action available. Automatically granted archetype spells
+use the same tile in a selected read-only state, including their icon and handbook
+action.
 
 Class starting equipment is resolved against handbook items before rendering.
 Fixed grants and every concrete branch use compact item rows that can open the

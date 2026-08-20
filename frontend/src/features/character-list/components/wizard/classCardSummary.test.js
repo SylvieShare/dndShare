@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { classCardSummary, shortClassDescription } from './classCardSummary'
+import { classCardSummary, shortClassDescription, subclassCardSummary } from './classCardSummary'
 
 describe('class card summary', () => {
   it('turns handbook html into a compact plain-text description', () => {
@@ -36,5 +36,31 @@ describe('class card summary', () => {
       label: 'Способности 1 уровня',
       entries: [{ name: 'Второе дыхание', description: '<p>Восстанавливает хиты.</p>' }],
     }))
+  })
+
+  it('summarizes only the level-one benefits owned by an archetype', () => {
+    const summary = subclassCardSummary({
+      subclass: {
+        id: 70,
+        data: {
+          description: '<p>Воин, отточивший критические удары.</p>',
+          granted_spells: [{ level: 1, spell: { id: 501 } }],
+        },
+      },
+      charClass: { id: 7 },
+      classAbilities: [
+        { id: 1, name: 'Второе дыхание', data: { level: 1, class_ids: [{ id: 7 }] } },
+        { id: 2, name: 'Улучшенные критические удары', data: { level: 1, class_ids: [{ id: 7 }], subclass_ids: [{ id: 70 }], desc: '<p>Критический удар при 19–20.</p>' } },
+        { id: 3, name: 'Поздняя особенность', data: { level: 3, class_ids: [{ id: 7 }], subclass_ids: [{ id: 70 }] } },
+        { id: 4, name: 'Другой архетип', data: { level: 1, class_ids: [{ id: 7 }], subclass_ids: [{ id: 71 }] } },
+      ],
+      spellPool: [{ id: 501, name: 'Щит' }],
+    })
+
+    expect(summary.description).toBe('Воин, отточивший критические удары.')
+    expect(summary.benefits).toEqual([
+      { name: 'Улучшенные критические удары', description: 'Критический удар при 19–20.' },
+      { name: 'Заклинания: Щит', description: '' },
+    ])
   })
 })

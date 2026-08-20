@@ -39,13 +39,12 @@
           <section v-if="subclasses.length && subclassAtCreation" class="choice-block">
             <div class="sheet-section-title">Архетип</div>
             <div class="subclass-grid">
-              <SelectTile
+              <SubclassSelectTile
                 v-for="s in subclasses"
                 :key="s.id"
-                :title="s.name"
-                :monogram="monogramOf(s.name)"
-                :image-url="s.coverImageUrl || ''"
-                :svg="s.svg || ''"
+                :item="s"
+                :description="subclassSummaryFor(s).description"
+                :benefits="subclassSummaryFor(s).benefits"
                 :selected="state.subclass?.id === s.id"
                 @select="state.subclass = s"
               />
@@ -71,8 +70,8 @@ import { computed, inject } from 'vue'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 import ClassSelectCard from '@/features/character-list/components/wizard/ClassSelectCard.vue'
 import IllustratedChoiceStage from '@/features/character-list/components/wizard/IllustratedChoiceStage.vue'
-import { classCardSummary } from '@/features/character-list/components/wizard/classCardSummary'
-import SelectTile from '@/features/character-list/components/wizard/SelectTile.vue'
+import { classCardSummary, subclassCardSummary } from '@/features/character-list/components/wizard/classCardSummary'
+import SubclassSelectTile from '@/features/character-list/components/wizard/SubclassSelectTile.vue'
 import StepChoices from '@/features/character-list/components/wizard/steps/StepChoices.vue'
 import StepClassEquipment from '@/features/character-list/components/wizard/steps/StepClassEquipment.vue'
 import StepSkills from '@/features/character-list/components/wizard/steps/StepSkills.vue'
@@ -81,7 +80,7 @@ import { classSummary, monogramOf } from '@/features/character-list/components/w
 
 const {
   classes, subclasses, state, loading, suggestValue, subclassAtCreation,
-  skillOptions, classFeatureChoices, isCaster, classAbilities, classSubclassNames, classEquipmentProfile,
+  skillOptions, classFeatureChoices, isCaster, classAbilities, classSubclassNames, classEquipmentProfile, spellPool,
 } = inject('createWizard')
 const classDesc = computed(() => state.charClass?.data?.description || '')
 const subclassDesc = computed(() => state.subclass?.data?.description || '')
@@ -100,6 +99,15 @@ function summaryFor(charClass) {
     classAbilities: classAbilities.value,
     suggestValue,
     subclasses: classSubclassNames(charClass.id),
+  })
+}
+function subclassSummaryFor(subclass) {
+  return subclassCardSummary({
+    subclass,
+    charClass: state.charClass,
+    classAbilities: classAbilities.value,
+    spellPool: spellPool.value,
+    suggestValue,
   })
 }
 function selectClass(charClass) {

@@ -10,10 +10,12 @@ describe('class step hierarchy', () => {
     expect(source).toContain('back-text="К выбору класса"')
   })
 
-  it('uses covers rather than icons for classes and subclasses', () => {
+  it('keeps class covers and gives archetypes their own icon-led cards', () => {
     expect(source).toContain(':image-url="c.coverImageUrl || \'\'"')
-    expect(source).toContain(':image-url="s.coverImageUrl || \'\'"')
-    expect(source).not.toContain('iconImageUrl')
+    expect(source).toContain('<SubclassSelectTile')
+    expect(source).toContain(':item="s"')
+    expect(source).toContain(':description="subclassSummaryFor(s).description"')
+    expect(source).toContain(':benefits="subclassSummaryFor(s).benefits"')
   })
 
   it('separates every dependent class choice and omits the duplicate result', () => {
