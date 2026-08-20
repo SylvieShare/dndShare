@@ -166,12 +166,11 @@ const componentAriaLabel = computed(() => componentBadges.value.map(component =>
 }
 
 .spell-summary-components-card {
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding-top: 7px;
-  padding-bottom: 7px;
+  align-self: flex-end;
+  width: min(180px, 100%);
+  gap: 4px;
+  padding-top: 8px;
+  padding-bottom: 8px;
 }
 
 .spell-summary-components span {
@@ -194,7 +193,7 @@ const componentAriaLabel = computed(() => componentBadges.value.map(component =>
   .spell-summary-casting { gap: 5px; }
   .spell-summary-grid { gap: 7px; }
   .spell-summary-card { gap: 4px; padding: 9px 8px; }
-  .spell-summary-components-card { padding-top: 6px; padding-bottom: 6px; }
+  .spell-summary-components-card { width: min(150px, 100%); padding-top: 7px; padding-bottom: 7px; }
   .spell-summary-card > span { gap: 3px; font-size: 8px; letter-spacing: .04em; }
   .spell-summary-card > span svg { width: 12px; height: 12px; }
   .spell-summary-card strong { font-size: 13px; }

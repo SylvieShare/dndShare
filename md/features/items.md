@@ -107,9 +107,10 @@ entries and selected choices.
   shared maximum: the default follows the asset's intrinsic ratio, while a type
   may opt into a minimum height without branching the header;
 - spell details with a cover use a `300px` minimum `5:2` profile. Level and
-  school form a compact vertical identity block below the title. A full-width
-  component strip sits above the three-column row with casting time, range and
-  duration. These short values are omitted from the content below, while the
+  school form a compact vertical identity block below the title. A compact
+  component card is aligned to the right above the three-column row with
+  casting time, range and duration. These short values are omitted from the
+  content below, while the
   full material-component description remains there. The spell item type owns
   a `5:2` fallback cover, so production spell details always use the summary
   profile unless both stored references fail;
