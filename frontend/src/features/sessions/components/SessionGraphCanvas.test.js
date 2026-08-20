@@ -42,6 +42,7 @@ describe('session graph canvas', () => {
 
   it('offers one explicit contextual back button below the ancestor chain', () => {
     expect(source).toContain('class="session-graph-back"')
+    expect(source).toContain('v-if="showChapterAncestor && workspaceMode !== \'combat\'"')
     expect(source).toContain("displayLevel.value === 'blocks' ? 'К сценариям' : 'К главам'")
     expect(source).toContain("if (displayLevel.value === 'blocks') returnToScenes()")
     expect(source).toContain('else returnToChapters()')

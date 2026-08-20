@@ -67,7 +67,7 @@
     </NestedGraphCanvas>
 
     <button
-      v-if="showChapterAncestor"
+      v-if="showChapterAncestor && workspaceMode !== 'combat'"
       class="session-graph-back"
       type="button"
       @pointerdown.stop

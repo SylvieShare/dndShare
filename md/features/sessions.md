@@ -450,10 +450,11 @@ arc or delete.
 Status choices use the same configured semantic colors as the status badge on
 the chapter node. While scenarios or blocks are open, clicking the pinned
 chapter preview opens a reduced chapter menu with return-to-chapters, status
-change and edit actions. A single contextual back button below the pinned chain
-reads `К главам` on the scenario canvas and `К сценариям` on the block canvas,
-and always returns exactly one level. Double click remains a direct return
-shortcut.
+change and edit actions. Outside combat, a single contextual back button below
+the pinned chain reads `К главам` on the scenario canvas and `К сценариям` on
+the block canvas, and always returns exactly one level. Combat keeps the pinned
+context cards but hides this story-navigation button. Double click remains a
+direct return shortcut.
 Double-clicking a chapter opens its scenario canvas directly.
 Moving a node to another arc removes its old transitions after confirmation
 because a transition cannot cross arc boundaries.
