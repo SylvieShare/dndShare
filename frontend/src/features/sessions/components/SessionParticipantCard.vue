@@ -238,7 +238,8 @@ const participantAvatarStyle = computed(() => ({
   background: avaUrl.value ? 'transparent' : avatarColor.value,
 }))
 const participantTileStyle = computed(() => ({
-  '--participant-color': props.participant.color || 'transparent',
+  '--participant-color': props.participant.color || 'var(--border)',
+  '--participant-frame-width': props.participant.color ? '2px' : '1px',
 }))
 </script>
 
@@ -253,14 +254,11 @@ const participantTileStyle = computed(() => ({
   padding: 12px;
   overflow: hidden;
   user-select: none;
-  --participant-inset-shadow: inset 0 0 22px color-mix(in srgb, var(--participant-color) 42%, transparent);
   transition: height 0.42s cubic-bezier(0.22, 1, 0.36, 1), gap 0.42s cubic-bezier(0.22, 1, 0.36, 1), padding 0.42s cubic-bezier(0.22, 1, 0.36, 1), background 0.18s, border-color 0.18s, box-shadow 0.18s;
 }
 
 .p-card.base-tile {
-  box-shadow:
-    var(--participant-inset-shadow),
-    inset 0 0 0 1px var(--border);
+  box-shadow: inset 0 0 0 var(--participant-frame-width) var(--participant-color);
 }
 
 .p-card--compact { height: 48px; gap: 0; padding: 6px; justify-content: center; }
@@ -270,9 +268,7 @@ const participantTileStyle = computed(() => ({
 .p-card.p-card--reorderable:active { cursor: grabbing; }
 
 .p-card.base-tile--interactive:hover {
-  box-shadow:
-    var(--participant-inset-shadow),
-    inset 0 0 0 1px color-mix(in srgb, var(--participant-color) 42%, var(--border));
+  box-shadow: inset 0 0 0 var(--participant-frame-width) var(--participant-color);
 }
 
 .p-combat-controls {
@@ -298,8 +294,7 @@ const participantTileStyle = computed(() => ({
   background: color-mix(in srgb, var(--accent) 11%, var(--surface));
   border-color: color-mix(in srgb, var(--accent) 42%, var(--border));
   box-shadow:
-    var(--participant-inset-shadow),
-    inset 0 0 0 1px var(--border),
+    inset 0 0 0 var(--participant-frame-width) var(--participant-color),
     0 0 0 2px color-mix(in srgb, var(--accent) 10%, transparent);
 }
 

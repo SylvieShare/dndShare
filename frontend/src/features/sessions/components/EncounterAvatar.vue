@@ -2,7 +2,7 @@
   <div
     class="enc-avatar"
     :class="isPlayer ? 'enc-avatar--player' : 'enc-avatar--npc'"
-    :style="{ color: tintColor, '--enc-player-frame-color': playerColor || 'transparent' }"
+    :style="{ color: tintColor }"
   >
     <img v-if="imgSrc" class="enc-avatar-img" :class="{ 'enc-avatar-img--photo': isPlayer }" :src="imgSrc" alt="" />
     <span v-else-if="inlineSvg" class="enc-avatar-svg" v-html="inlineSvg" />
@@ -16,7 +16,6 @@ import { Image as ImageIcon } from '@lucide/vue'
 
 const props = defineProps({
   combatant: { type: Object, required: true },
-  playerColor: { type: String, default: null },
 })
 
 const enc = inject('encounter')
@@ -61,10 +60,7 @@ const tintColor = computed(() => enc.avatarStyle(props.combatant)?.color || 'var
 .enc-avatar--player {
   width: 62px;
   height: 62px;
-  box-sizing: border-box;
-  border: 2px solid var(--enc-player-frame-color);
   border-radius: 50%;
-  transition: border-color 0.15s ease;
 }
 
 .enc-avatar--npc {

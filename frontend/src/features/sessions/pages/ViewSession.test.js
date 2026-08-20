@@ -448,14 +448,16 @@ describe('ViewSession participant rail', () => {
   it('saves a session-local participant color and marks player tiles in both rails', () => {
     expect(source).toContain('await updateParticipantColor(sessionUuid, charId, color)')
     expect(source).toContain('{ ...participant, color: color || null }')
-    expect(encounterRowSource).toContain('<EncounterAvatar :combatant="combatant" :player-color="playerColor" />')
+    expect(encounterRowSource).toContain('<EncounterAvatar :combatant="combatant" />')
     expect(encounterRowSource).toContain('enc.participantColor(props.combatant.charId)')
-    expect(encounterRowSource).toContain(':strip="!!rowAccentColor"')
+    expect(encounterRowSource).toContain(':strip="isNpc && !!rowAccentColor"')
+    expect(encounterRowSource).toContain("'enc-row--player-colored': isPlayer.value && !!playerColor.value")
+    expect(encounterRowSource).toContain('box-shadow: inset 0 0 0 2px var(--enc-player-color);')
     expect(encounterRowSource).toContain(":color=\"rowAccentColor || 'var(--section-color)'\"")
     expect(encounterComposableSource).toContain("if (c.type === 'player') return participantColor(c.charId) || null")
     expect(encounterComposableSource).toContain('return c.iconColor || null')
-    expect(encounterAvatarSource).toContain('border: 2px solid var(--enc-player-frame-color);')
-    expect(encounterAvatarSource).toContain('playerColor: { type: String, default: null }')
+    expect(encounterAvatarSource).not.toContain('--enc-player-frame-color')
+    expect(encounterAvatarSource).not.toContain('playerColor: { type: String')
   })
 
   it('asks for confirmation before kicking a participant', () => {

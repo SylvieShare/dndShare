@@ -54,11 +54,11 @@ players by holding and dragging any non-interactive area of the participant
 tile; buttons and combat controls remain regular click targets. The shared
 `useSortable` interaction suppresses the menu click after an actual drag and
 persists the complete order in `session_participant.sort_order`; a failed save
-restores the previous order. The color is stored on the participant's
-session membership and always renders as a visible soft colored inset shadow
-across the whole participant tile, including its combat state; hover never
-replaces or gates the marker. The avatar itself has no color frame. The same
-color remains the player marker on encounter rows. Color palettes, encounter cloning and the
+restores the previous order. The color is stored on the participant's session
+membership and always renders as a 2px frame around the whole player tile,
+including its combat state; hover never replaces or gates the marker. The avatar
+itself has no color frame. The same 2px tile frame is the player marker on common
+combat rows; their former left `BaseTile` strip is not rendered. Color palettes, encounter cloning and the
 chapter status/arc choices use `RowActionSubmenu`: a separate adjacent popover
 on desktop and an inline section with a left accent boundary on mobile. Every participant trigger fills the rail width. A dashed `+` action
 beside the `ИГРОКИ` heading opens character creation and invite code/link copy
@@ -672,9 +672,9 @@ left rail. The common scene rows reuse the same compact initiative and
 armor-class controls as the player rail. The left-rail tile and portrait keep
 the same height and circular geometry in and out of combat; the larger combat-scene
 portrait is circular too. Player photos use a soft alpha fade around their edges. An
-assigned session color remains the inset shadow of the left-rail player tile and
-appears as the portrait frame in the common combat-scene row; player rows do not
-repeat a `PC` type chip. NPC artwork keeps its centered 64×64
+assigned session color appears as the 2px frame of both the left-rail player tile
+and the common combat-scene row; it is not repeated on the portrait or as a left
+strip. Player rows do not repeat a `PC` type chip. NPC artwork keeps its centered 64×64
 geometry instead of falling back to a name initial. Every combat-scene tile has a numbered marker on its
 left.
 `ViewSession.vue` owns the single `useEncounter` instance shared by the rail and

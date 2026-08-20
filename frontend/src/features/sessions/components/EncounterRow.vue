@@ -16,7 +16,8 @@
       class="enc-row"
       :class="rowClasses"
       :color="rowAccentColor || 'var(--section-color)'"
-      :strip="!!rowAccentColor"
+      :strip="isNpc && !!rowAccentColor"
+      :style="playerColor ? { '--enc-player-color': playerColor } : null"
       @pointerdown="onRowPointerDown"
       @click="onRowClick"
     >
@@ -31,7 +32,7 @@
       @update:initiative="enc.setInitiative(combatant, $event)"
     />
 
-    <EncounterAvatar :combatant="combatant" :player-color="playerColor" />
+    <EncounterAvatar :combatant="combatant" />
 
     <div class="enc-info">
       <div class="enc-name-row">
@@ -184,6 +185,7 @@ const skippedInTurn = computed(() =>
 
 const rowClasses = computed(() => ({
   'enc-row--current': props.isCurrent,
+  'enc-row--player-colored': isPlayer.value && !!playerColor.value,
   'enc-row--placeholder': enc.sortable.isSource(props.combatant),
   'enc-row--skipped': skippedInTurn.value,
 }))
@@ -312,6 +314,10 @@ function commitNoteEdit() {
 
 .enc-row.enc-row--current {
   background: color-mix(in srgb, var(--accent) 10%, var(--surface));
+}
+
+.enc-row.enc-row--player-colored {
+  box-shadow: inset 0 0 0 2px var(--enc-player-color);
 }
 
 .enc-row.enc-row--placeholder {
