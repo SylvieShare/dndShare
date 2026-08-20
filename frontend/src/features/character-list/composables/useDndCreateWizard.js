@@ -12,6 +12,7 @@ import { contentScopeQuery, normalizeContentSourceSettings } from '@/shared/api/
 import { dieSides } from '@/shared/lib/systemDice'
 import { randomDndName } from '@/shared/lib/dndNames'
 import { buildDndCharacterPayload } from './dndCreateWizardPayload'
+import { spellSelectionComplete } from '@/features/character-list/components/wizard/spellSelection'
 import { liveSkillModifier } from '@/features/character-list/components/wizard/previewSkills'
 import { useDndCreateEquipment } from './useDndCreateEquipment'
 import {
@@ -135,6 +136,7 @@ export function useDndCreateWizard() {
     if (hydrating) return
     state.subclass = null
     state.skillIds = []
+    state.spellIds = []
     equipment.resetEquipmentForClass()
     subclasses.value = []
     if (!c) return
@@ -481,7 +483,10 @@ export function useDndCreateWizard() {
     if (limit && chosen >= limit) return
     state.spellIds.push(id)
   }
-  const spellsComplete = computed(() => cantripChosen.value <= cantripLimit.value && spell1Chosen.value <= spell1Limit.value)
+  const spellsComplete = computed(() => (
+    spellSelectionComplete(cantripChosen.value, cantripLimit.value)
+    && spellSelectionComplete(spell1Chosen.value, spell1Limit.value)
+  ))
 
   // ─── Даруемые заклинания архетипа (домен жреца на 1 уровне) ────────────────
   const grantedSpellIds = computed(() => [...new Set(grantedSpellsAt(

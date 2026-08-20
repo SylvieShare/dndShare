@@ -25,4 +25,11 @@ describe('character creation workspace width', () => {
     expect(source).not.toContain('class="btn reset"')
     expect(source).toContain('confirmOpen.value = true')
   })
+
+  it('requires every non-zero class spell pick before leaving the class step', () => {
+    expect(source).toContain('cantripChosen.value !== cantripLimit.value')
+    expect(source).toContain('`Заговоры: ${cantripChosen.value} из ${cantripLimit.value}`')
+    expect(source).toContain('spell1Chosen.value !== spell1Limit.value')
+    expect(source).toContain('`Заклинания 1 круга: ${spell1Chosen.value} из ${spell1Limit.value}`')
+  })
 })

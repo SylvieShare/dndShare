@@ -168,7 +168,12 @@ tiles retain their accent state; choices over the current limit remain readable
 and keep the handbook action available. Automatically granted archetype spells
 use the same tile in a selected read-only state, including their icon and handbook
 action. The responsive grid is capped at three tiles per row, then falls back to
-two and one so longer spell names retain useful width.
+two and one so longer spell names retain useful width. Every non-zero known-spell
+or cantrip allowance must be filled exactly before the Class step can advance;
+the blocking hint reports the current and required counts. A prepared-spell tier
+whose creation allowance is zero remains intentionally optional. Changing class
+clears the previous class's spell picks so overlapping spell ids cannot satisfy
+the new class accidentally.
 
 Class starting equipment is resolved against handbook items before rendering.
 Fixed grants and every concrete branch use compact item rows that can open the

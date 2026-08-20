@@ -108,6 +108,7 @@ const {
   allEquipment, shopSpentCopper, startingWealthCopper, shopSpentLabel, shopRemainingLabel,
   requiresSubrace, requiresSubclass,
   scoresComplete, pointsLeft, skillLimit, spellsComplete,
+  cantripLimit, spell1Limit, cantripChosen, spell1Chosen,
   asiChoiceComplete, raceVariantsComplete,
   raceSkillsComplete, raceLangsComplete, featComplete,
   raceChoicesComplete, classChoicesComplete, classEquipmentComplete, bgLangsComplete,
@@ -192,7 +193,13 @@ function validateStep(key) {
       if (requiresSubclass.value && !state.subclass) return { ok: false, reason: 'Выбери архетип' }
       if (skillLimit.value && state.skillIds.length !== skillLimit.value) return { ok: false, reason: `Навыки: ${state.skillIds.length} из ${skillLimit.value}` }
       if (!classChoicesComplete.value) return { ok: false, reason: 'Заверши выборы класса' }
-      if (!spellsComplete.value) return { ok: false, reason: 'Слишком много заклинаний' }
+      if (cantripLimit.value > 0 && cantripChosen.value !== cantripLimit.value) {
+        return { ok: false, reason: `Заговоры: ${cantripChosen.value} из ${cantripLimit.value}` }
+      }
+      if (spell1Limit.value > 0 && spell1Chosen.value !== spell1Limit.value) {
+        return { ok: false, reason: `Заклинания 1 круга: ${spell1Chosen.value} из ${spell1Limit.value}` }
+      }
+      if (!spellsComplete.value) return { ok: false, reason: 'Проверь выбор заклинаний' }
       if (!classEquipmentComplete.value) return { ok: false, reason: 'Выбери стартовое снаряжение' }
       return { ok: true }
     case 'background':
