@@ -65,7 +65,7 @@
     </section>
 
     <template v-else-if="presentation?.visible && presentation.mode === 'combat' && snapshot?.active">
-      <section class="encounter-combat-stage" aria-label="Текущий ход и очередь">
+      <section class="encounter-combat-stage" :style="combatStageStyle" aria-label="Текущий ход и очередь">
         <Transition name="turn-spotlight" mode="out-in">
           <article
             v-if="currentCombatant"
@@ -218,15 +218,25 @@ const turnQueue = computed(() => {
   ]
 })
 const graveyard = computed(() => snapshot.value?.graveyard || [])
+const presentationScaleRatio = computed(() => Math.min(125, Math.max(75, Number(presentation.value?.displayScale) || 100)) / 100)
+const combatStageStyle = computed(() => {
+  const ratio = presentationScaleRatio.value
+  return {
+    '--broadcast-scale': ratio,
+    width: `${100 / ratio}%`,
+    height: `${100 / ratio}%`,
+  }
+})
 const queueSlotCount = computed(() => {
   const width = viewportWidth.value
   const screenPadding = Math.min(64, Math.max(24, width * 0.032))
   const cardSize = Math.min(128, Math.max(108, width * 0.08))
   const gap = Math.min(10, Math.max(8, width * 0.006))
-  const baseAvailableWidth = Math.max(cardSize, width - screenPadding * 2 - 10)
+  const contentWidth = (width - screenPadding * 2) / presentationScaleRatio.value
+  const baseAvailableWidth = Math.max(cardSize, contentWidth - 10)
   const baseSlots = Math.max(1, Math.floor((baseAvailableWidth + gap) / (cardSize + gap)))
   const stackReserve = turnQueue.value.length > baseSlots ? 82 : 10
-  const availableWidth = Math.max(cardSize, width - screenPadding * 2 - stackReserve)
+  const availableWidth = Math.max(cardSize, contentWidth - stackReserve)
   return Math.max(1, Math.floor((availableWidth + gap) / (cardSize + gap)))
 })
 const queueStackStart = computed(() => Math.max(0, queueSlotCount.value - 1))

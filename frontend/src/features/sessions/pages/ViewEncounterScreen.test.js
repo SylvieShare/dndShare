@@ -86,6 +86,15 @@ describe('public encounter composition', () => {
     expect(initiativeStyles).toContain('.encounter-queue__summary .encounter-screen__round')
   })
 
+  it('scales the full combat stage and recalculates queue capacity from its logical width', () => {
+    expect(pageSource).toContain(':style="combatStageStyle"')
+    expect(pageSource).toContain('presentation.value?.displayScale')
+    expect(pageSource).toContain("'--broadcast-scale': ratio")
+    expect(pageSource).toContain('(width - screenPadding * 2) / presentationScaleRatio.value')
+    expect(initiativeStyles).toContain('transform: scale(var(--broadcast-scale, 1));')
+    expect(initiativeStyles).toContain('transform-origin: center;')
+  })
+
   it('stacks graveyard rows upward on the right in name, icon and count order', () => {
     const nameIndex = pageSource.indexOf('<strong>{{ group.name }}</strong>')
     const portraitIndex = pageSource.indexOf('class="graveyard-card__portrait"')

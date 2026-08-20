@@ -15,3 +15,16 @@ func TestIdlePresentationCanShowClearedCanvas(t *testing.T) {
 		t.Fatal("legacy idle request without visibility must remain hidden")
 	}
 }
+
+func TestPresentationScaleRange(t *testing.T) {
+	for _, scale := range []int{75, 100, 125} {
+		if !validPresentationScale(scale) {
+			t.Fatalf("scale %d must be valid", scale)
+		}
+	}
+	for _, scale := range []int{0, 74, 126, 200} {
+		if validPresentationScale(scale) {
+			t.Fatalf("scale %d must be rejected", scale)
+		}
+	}
+}

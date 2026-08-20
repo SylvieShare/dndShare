@@ -842,6 +842,15 @@ in-process SSE hub rather than the database, so it
 reflects current connectivity and naturally resets during a server restart;
 screens reconnect automatically and reappear in the counter.
 
+The display popover keeps connection state, blackout controls and visual effects
+on its main level. A dedicated settings button opens a nested settings level for
+all persisted toggles: remote music, health and its numeric/worded mode, and the
+graveyard. The same level provides a `75–125%` combat-display scale slider in
+five-percent steps with a one-click reset to `100%`. The scale is stored with the
+session presentation, rescales the complete combat stage around its center and
+feeds the effective logical width back into queue capacity calculation; material
+playback and fixed timer overlays retain their full-screen geometry.
+
 The public endpoint builds a dedicated projection on the server rather than
 returning raw encounter or character JSON. It may resolve the session owner's
 referenced custom bestiary entries and condition suggestions, but exposes only

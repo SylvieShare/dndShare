@@ -280,6 +280,7 @@ type sessionPresentationRequest struct {
 	ShowHealth     bool   `json:"showHealth"`
 	HealthDisplay  string `json:"healthDisplay"`
 	ShowGraveyard  bool   `json:"showGraveyard"`
+	DisplayScale   int    `json:"displayScale"`
 	Effect         string `json:"effect"`
 	Transition     string `json:"transition"`
 }
@@ -290,6 +291,10 @@ func sessionPresentationVisible(mode string, requested *bool) bool {
 		visible = *requested
 	}
 	return visible
+}
+
+func validPresentationScale(scale int) bool {
+	return scale >= 75 && scale <= 125
 }
 
 func (s *Server) handleSaveSessionPresentation(w http.ResponseWriter, r *http.Request) {
@@ -337,9 +342,13 @@ func (s *Server) handleSaveSessionPresentation(w http.ResponseWriter, r *http.Re
 		badRequest(w, "Некорректный формат здоровья")
 		return
 	}
+	if !validPresentationScale(req.DisplayScale) {
+		badRequest(w, "Некорректный масштаб трансляции")
+		return
+	}
 	state, err := s.store.SaveSessionPresentation(
 		r.Context(), session.ID, req.Mode, visible, req.MaterialID, req.BroadcastMusic,
-		req.ShowHealth, req.HealthDisplay, req.ShowGraveyard, req.Effect, req.Transition,
+		req.ShowHealth, req.HealthDisplay, req.ShowGraveyard, req.DisplayScale, req.Effect, req.Transition,
 	)
 	if err != nil {
 		serverError(w, err)
@@ -358,6 +367,7 @@ type publicPresentationResponse struct {
 	ShowHealth     bool                        `json:"showHealth"`
 	HealthDisplay  string                      `json:"healthDisplay"`
 	ShowGraveyard  bool                        `json:"showGraveyard"`
+	DisplayScale   int                         `json:"displayScale"`
 	Timers         []sessionTimerResponse      `json:"timers"`
 	ServerTime     int64                       `json:"serverTime"`
 	Effect         string                      `json:"effect"`
@@ -399,7 +409,8 @@ func (s *Server) handleGetPublicPresentation(w http.ResponseWriter, r *http.Requ
 		SessionName: session.Name, Mode: state.Mode, Visible: state.Visible,
 		BroadcastMusic: state.BroadcastMusic, ShowHealth: state.ShowHealth,
 		HealthDisplay: state.HealthDisplay, ShowGraveyard: state.ShowGraveyard,
-		Timers: []sessionTimerResponse{}, ServerTime: time.Now().UnixMilli(),
+		DisplayScale: state.DisplayScale,
+		Timers:       []sessionTimerResponse{}, ServerTime: time.Now().UnixMilli(),
 		Effect: state.Effect, Transition: state.Transition, Revision: state.Revision,
 	}
 	timers, err := s.store.ListBroadcastSessionTimers(r.Context(), session.ID)

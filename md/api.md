@@ -242,7 +242,8 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
 - `GET|PUT /api/sessions/{uuid}/presentation` reads or replaces the owner-only
   live player-display state
   `{mode,visible,materialId,broadcastMusic,showHealth,healthDisplay,
-  showGraveyard,effect,transition}`. `healthDisplay` is `numbers` or `words`.
+  showGraveyard,displayScale,effect,transition}`. `healthDisplay` is `numbers`
+  or `words`; `displayScale` is an integer percentage from 75 through 125.
   Modes are `idle`, `material`, `combat`; effects are `none`, `rain`,
   `fog`, `embers`, `snow`, `storm`; transitions are `cut` or `fade`. An explicit
   `idle,visible:true` is the cleared dotted canvas, while `visible:false` is the

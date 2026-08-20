@@ -4,7 +4,7 @@ import { getSessionPresentation, getSessionPresentationConnections, saveSessionP
 export function useSessionPresentation({ sessionUuid, materials }) {
   const state = ref({
     mode: 'idle', visible: false, broadcastMusic: false,
-    showHealth: false, healthDisplay: 'numbers', showGraveyard: false,
+    showHealth: false, healthDisplay: 'numbers', showGraveyard: false, displayScale: 100,
     effect: 'none', transition: 'fade', revision: 0,
   })
   const loading = ref(false)
@@ -62,6 +62,7 @@ export function useSessionPresentation({ sessionUuid, materials }) {
         showHealth: payload.showHealth ?? state.value.showHealth ?? false,
         healthDisplay: payload.healthDisplay ?? state.value.healthDisplay ?? 'numbers',
         showGraveyard: payload.showGraveyard ?? state.value.showGraveyard ?? false,
+        displayScale: payload.displayScale ?? state.value.displayScale ?? 100,
       })
       return state.value
     } catch {
@@ -94,12 +95,17 @@ export function useSessionPresentation({ sessionUuid, materials }) {
     healthDisplay,
     materialId: state.value.materialId || null,
   })
+  const setDisplayScale = displayScale => save({
+    ...state.value,
+    displayScale: Math.min(125, Math.max(75, Math.round(Number(displayScale) || 100))),
+    materialId: state.value.materialId || null,
+  })
 
   return {
     state, loading, saving, error, activeLabel,
     connectedScreens, connectionsLoading, connectionsError,
     load, loadConnections, setConnectedScreens,
-    save, showMaterial, showCombat, blackout, reveal, clear, setEffect, setBroadcastMusic, setDisplayOption, setHealthDisplay,
+    save, showMaterial, showCombat, blackout, reveal, clear, setEffect, setBroadcastMusic, setDisplayOption, setHealthDisplay, setDisplayScale,
     materialById: materials?.byId,
   }
 }
