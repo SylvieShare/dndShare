@@ -1,5 +1,6 @@
 <template>
-  <span v-if="damage" class="weapon-damage-metric" :aria-label="damage.label">
+  <span v-if="damage" class="weapon-damage-metric" :aria-label="`Урон: ${damage.label}`">
+    <span class="weapon-damage-metric__title">Урон</span>
     <span v-if="damage.count !== 1" class="weapon-damage-metric__count">{{ damage.count }}</span>
     <SystemDie
       v-if="damage.diceSides"
@@ -35,7 +36,7 @@ const damage = computed(() => {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 2px;
+  gap: 3px;
   min-width: 0;
   color: var(--text-1);
   font-size: 12px;
@@ -43,6 +44,7 @@ const damage = computed(() => {
   line-height: 1;
   white-space: nowrap;
 }
+.weapon-damage-metric__title { margin-right: 1px; color: var(--text-muted); font-size: 8px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
 .weapon-damage-metric__count { min-width: 8px; text-align: right; }
 .weapon-damage-metric__label { font-variant-numeric: tabular-nums; }
 </style>

@@ -7,6 +7,7 @@ const handbookPage = readFileSync(fileURLToPath(new URL('../pages/ViewHandbook.v
 const controls = readFileSync(fileURLToPath(new URL('./HandbookCollectionBar.vue', import.meta.url)), 'utf8')
 const armorList = readFileSync(fileURLToPath(new URL('../../items/list-components/ArmorListItem.vue', import.meta.url)), 'utf8')
 const weaponList = readFileSync(fileURLToPath(new URL('../../items/list-components/WeaponListItem.vue', import.meta.url)), 'utf8')
+const weaponDamageMetric = readFileSync(fileURLToPath(new URL('../../items/components/WeaponDamageMetric.vue', import.meta.url)), 'utf8')
 const transportList = readFileSync(fileURLToPath(new URL('../../items/list-components/TransportListItem.vue', import.meta.url)), 'utf8')
 
 describe('handbook list controls', () => {
@@ -50,6 +51,8 @@ describe('handbook list controls', () => {
     expect(weaponList).toContain('<WeaponDamageMetric')
     expect(weaponList).toContain(':size="36"')
     expect(weaponList).not.toContain('wli-damage')
+    expect(weaponDamageMetric).toContain('class="weapon-damage-metric__title">Урон</span>')
+    expect(weaponDamageMetric).toContain('justify-content: center')
     expect(weaponList).toContain('#trailing')
     expect(weaponList).toContain('wli-cost')
   })

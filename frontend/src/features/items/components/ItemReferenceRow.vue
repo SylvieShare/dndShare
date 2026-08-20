@@ -63,7 +63,7 @@ const metaLabel = computed(() => [
 .item-reference-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
 .item-reference-name { overflow: hidden; color: var(--text-1); font-size: 13px; font-weight: 650; line-height: 1.25; text-overflow: ellipsis; white-space: nowrap; }
 .item-reference-meta { color: var(--text-muted); font-size: 10px; line-height: 1.2; }
-.item-reference-damage { width: clamp(36px, 5vw, 48px); flex: none; display: grid; place-items: center; }
+.item-reference-damage { width: clamp(64px, 7vw, 80px); flex: none; display: grid; place-items: center; align-self: stretch; }
 .item-reference-count { flex: none; min-width: 30px; color: var(--accent-soft); font-size: 12px; font-weight: 800; text-align: right; }
 .item-reference-cost { flex: none; color: var(--warning); font-size: 11px; font-weight: 700; white-space: nowrap; }
 .item-reference-chevron { flex: none; color: var(--text-muted); }

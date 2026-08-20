@@ -150,8 +150,8 @@ shell while supplying their own cards and dependent-choice content.
 Class starting equipment is resolved against handbook items before rendering.
 Fixed grants and every concrete branch use compact item rows that can open the
 full handbook card; “any weapon/tool/focus” clauses use the same row inside a
-searchable dropdown and persist the selected item id. Weapon rows include their
-primary damage die. Groups with exactly two alternatives use a two-column
+searchable dropdown and persist the selected item id. Weapon rows include a
+centered “Урон” label with their primary damage die. Groups with exactly two alternatives use a two-column
 desktop layout with a single vertical divider and a shield-check marker on the
 selected branch; three or more alternatives are separated horizontally, and
 the columns collapse to the same horizontal separators on mobile. The group
