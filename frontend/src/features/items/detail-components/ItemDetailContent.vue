@@ -13,6 +13,19 @@
       <div v-else class="idc-no-desc">Описание отсутствует</div>
     </DetailSection>
 
+    <DetailSection v-if="contents.length" label="Содержимое набора">
+      <template #icon><Package /></template>
+      <div class="idc-contents">
+        <ItemReferenceRow
+          v-for="entry in contents"
+          :key="entry.item.id"
+          :item="entry.item"
+          :count="entry.count"
+          @activate="viewItem = entry.item"
+        />
+      </div>
+    </DetailSection>
+
     <DetailSection v-if="hasMeta" label="Характеристики">
       <template #icon><PackageOpen /></template>
       <div class="idc-meta">
@@ -22,16 +35,27 @@
         <span v-if="data.consumable" class="idc-badge idc-consumable">Расходуемое</span>
       </div>
     </DetailSection>
+
+    <ItemViewModal
+      v-if="viewItem"
+      :item="viewItem"
+      :item-id="viewItem.id"
+      :item-type-id="viewItem.typeId"
+      @close="viewItem = null"
+    />
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
-import { BookOpen, PackageOpen } from '@lucide/vue'
+import { computed, ref, watch } from 'vue'
+import { BookOpen, Package, PackageOpen } from '@lucide/vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
+import ItemReferenceRow from '@/features/items/components/ItemReferenceRow.vue'
+import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
 import DetailSection from '@/shared/ui/DetailSection.vue'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 import { useCostFormatter } from '@/features/items/lib/useCostFormatter'
+import { itemsApi } from '@/shared/api/itemsApi'
 
 const props = defineProps({
   item: { type: Object, required: true },
@@ -45,6 +69,24 @@ const costLabel = computed(() => formatCost(data.value.cost))
 const hasMeta = computed(() => (!props.economyInHeader && (data.value.weight != null || !!costLabel.value))
   || data.value.is_container
   || data.value.consumable)
+const contentItems = ref([])
+const viewItem = ref(null)
+let contentRequest = 0
+const contentRows = computed(() => Array.isArray(data.value.contents) ? data.value.contents : [])
+const contents = computed(() => {
+  const byId = new Map(contentItems.value.map((item) => [String(item.id), item]))
+  return contentRows.value
+    .map((entry) => ({ item: byId.get(String(entry?.item_id)), count: Math.max(1, Number(entry?.count) || 1) }))
+    .filter((entry) => entry.item)
+})
+
+watch(contentRows, async (rows) => {
+  const request = ++contentRequest
+  const ids = [...new Set(rows.map((entry) => Number(entry?.item_id)).filter(Number.isFinite))]
+  if (!ids.length) { contentItems.value = []; return }
+  const response = await itemsApi.byIds(ids).catch(() => ({ items: [] }))
+  if (request === contentRequest) contentItems.value = response?.items || []
+}, { immediate: true })
 </script>
 
 <style scoped>
@@ -73,6 +115,7 @@ const hasMeta = computed(() => (!props.economyInHeader && (data.value.weight != 
 }
 
 .idc-no-desc { font-size: 13px; color: var(--text-muted); font-style: italic; }
+.idc-contents { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
 
 .idc-meta { display: flex; flex-wrap: wrap; gap: 6px; }
 
@@ -87,4 +130,5 @@ const hasMeta = computed(() => (!props.economyInHeader && (data.value.weight != 
 .idc-cost { background: color-mix(in srgb, var(--warning) 13%, transparent); color: var(--warning); }
 .idc-container { background: color-mix(in srgb, var(--accent-soft) 15%, transparent); color: var(--accent-soft); }
 .idc-consumable { background: color-mix(in srgb, var(--success) 15%, transparent); color: var(--success); }
+@media (max-width: 640px) { .idc-contents { grid-template-columns: 1fr; } }
 </style>

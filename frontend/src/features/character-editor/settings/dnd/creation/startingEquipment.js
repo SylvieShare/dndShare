@@ -5,7 +5,7 @@
  */
 
 const SIMPLE_MELEE = [
-  'Дубинка', 'Кинжал', 'Большая дубинка', 'Ручной топор', 'Метательное копьё',
+  'Дубинка', 'Кинжал', 'Палица', 'Ручной топор', 'Метательное копьё',
   'Лёгкий молот', 'Булава', 'Боевой посох', 'Серп', 'Копьё',
 ]
 const SIMPLE_RANGED = ['Лёгкий арбалет', 'Дротик', 'Короткий лук', 'Праща']
@@ -17,7 +17,10 @@ const MARTIAL_MELEE = [
 ]
 const MARTIAL_RANGED = ['Духовая трубка', 'Ручной арбалет', 'Тяжёлый арбалет', 'Длинный лук', 'Сеть']
 const MARTIAL_WEAPONS = [...MARTIAL_MELEE, ...MARTIAL_RANGED]
-const MUSICAL_INSTRUMENTS = ['Волынка', 'Барабан', 'Цимбалы', 'Флейта', 'Лира', 'Рожок', 'Свирель', 'Шалмей', 'Виола']
+const MUSICAL_INSTRUMENTS = ['Волынка', 'Барабаны', 'Цимбалы', 'Флейта', 'Лира', 'Рожок', 'Свирель', 'Шалмей', 'Виола']
+const ARCANE_FOCI = ['Кристалл', 'Сфера', 'Жезл', 'Посох', 'Волшебная палочка']
+const DRUIDIC_FOCI = ['Веточка омелы', 'Тотем', 'Деревянный посох', 'Тисовая палочка']
+const HOLY_SYMBOLS = ['Амулет', 'Эмблема', 'Реликварий']
 
 const item = (name, count = 1) => ({ name, count })
 const pick = (id, label, options, count = 1) => ({ id, label, options, count })
@@ -75,14 +78,16 @@ const PROFILES = {
       ]),
       group('pack', [option('priest', 'Набор священника', [item('Набор священника')]), option('explorer', 'Набор путешественника', [item('Набор путешественника')])]),
     ],
-    fixed: [item('Щит'), item('Священный символ')],
+    fixed: [item('Щит')],
+    fixedPicks: [pick('holy_symbol', 'Священный символ', HOLY_SYMBOLS)],
   },
   druid: {
     groups: [
       group('weapon_1', [option('shield', 'Деревянный щит', [item('Деревянный щит')]), option('simple', 'Одно простое оружие', [], [pick('weapon', 'Оружие', SIMPLE_WEAPONS)])]),
       group('weapon_2', [option('scimitar', 'Скимитар', [item('Скимитар')]), option('simple_melee', 'Простое рукопашное оружие', [], [pick('weapon', 'Оружие', SIMPLE_MELEE)])]),
     ],
-    fixed: [item('Кожаный доспех'), item('Набор путешественника'), item('Фокусировка друидов')],
+    fixed: [item('Кожаный доспех'), item('Набор путешественника')],
+    fixedPicks: [pick('druidic_focus', 'Фокусировка друидов', DRUIDIC_FOCI)],
   },
   fighter: {
     groups: [
@@ -112,7 +117,8 @@ const PROFILES = {
       group('simple', [option('javelins', 'Пять метательных копий', [item('Метательное копьё', 5)]), option('simple_melee', 'Любое простое рукопашное оружие', [], [pick('weapon', 'Оружие', SIMPLE_MELEE)])]),
       group('pack', [option('priest', 'Набор священника', [item('Набор священника')]), option('explorer', 'Набор путешественника', [item('Набор путешественника')])]),
     ],
-    fixed: [item('Кольчуга'), item('Священный символ')],
+    fixed: [item('Кольчуга')],
+    fixedPicks: [pick('holy_symbol', 'Священный символ', HOLY_SYMBOLS)],
   },
   ranger: {
     groups: [
@@ -137,7 +143,7 @@ const PROFILES = {
   sorcerer: {
     groups: [
       group('weapon', [option('crossbow', 'Лёгкий арбалет и 20 болтов', crossbow), option('simple', 'Любое простое оружие', [], [pick('weapon', 'Оружие', SIMPLE_WEAPONS)])]),
-      group('focus', [option('pouch', 'Мешочек с компонентами', [item('Мешочек с компонентами')]), option('focus', 'Магическая фокусировка', [item('Магическая фокусировка')])]),
+      group('focus', [option('pouch', 'Мешочек с компонентами', [item('Мешочек с компонентами')]), option('focus', 'Магическая фокусировка', [], [pick('focus', 'Фокусировка', ARCANE_FOCI)])]),
       group('pack', [option('dungeoneer', 'Набор исследователя подземелий', [item('Набор исследователя подземелий')]), option('explorer', 'Набор путешественника', [item('Набор путешественника')])]),
     ],
     fixed: [item('Кинжал', 2)],
@@ -145,7 +151,7 @@ const PROFILES = {
   warlock: {
     groups: [
       group('weapon_1', [option('crossbow', 'Лёгкий арбалет и 20 болтов', crossbow), option('simple', 'Любое простое оружие', [], [pick('weapon', 'Оружие', SIMPLE_WEAPONS)])]),
-      group('focus', [option('pouch', 'Мешочек с компонентами', [item('Мешочек с компонентами')]), option('focus', 'Магическая фокусировка', [item('Магическая фокусировка')])]),
+      group('focus', [option('pouch', 'Мешочек с компонентами', [item('Мешочек с компонентами')]), option('focus', 'Магическая фокусировка', [], [pick('focus', 'Фокусировка', ARCANE_FOCI)])]),
       group('pack', [option('scholar', 'Набор учёного', [item('Набор учёного')]), option('dungeoneer', 'Набор исследователя подземелий', [item('Набор исследователя подземелий')])]),
       group('weapon_2', [option('simple', 'Любое простое оружие', [], [pick('weapon', 'Оружие', SIMPLE_WEAPONS)])]),
     ],
@@ -154,7 +160,7 @@ const PROFILES = {
   wizard: {
     groups: [
       group('weapon', [option('staff', 'Боевой посох', [item('Боевой посох')]), option('dagger', 'Кинжал', [item('Кинжал')])]),
-      group('focus', [option('pouch', 'Мешочек с компонентами', [item('Мешочек с компонентами')]), option('focus', 'Магическая фокусировка', [item('Магическая фокусировка')])]),
+      group('focus', [option('pouch', 'Мешочек с компонентами', [item('Мешочек с компонентами')]), option('focus', 'Магическая фокусировка', [], [pick('focus', 'Фокусировка', ARCANE_FOCI)])]),
       group('pack', [option('scholar', 'Набор учёного', [item('Набор учёного')]), option('explorer', 'Набор путешественника', [item('Набор путешественника')])]),
     ],
     fixed: [item('Книга заклинаний')],
@@ -180,6 +186,59 @@ function normalized(value) {
   return String(value || '').trim().toLocaleLowerCase('ru').replace(/ё/g, 'е')
 }
 
+const CATALOGUE_ALIASES = {
+  [normalized('Деревянный щит')]: normalized('Щит'),
+  [normalized('Кожаная броня')]: normalized('Кожаный доспех'),
+}
+
+function catalogueKey(value) {
+  const key = normalized(value)
+  return CATALOGUE_ALIASES[key] || key
+}
+
+function equipmentEntry(entry) {
+  const linked = entry?.item
+  if (!linked) return { id: null, name: entry?.name || '', count: Math.max(1, Number(entry?.count) || 1) }
+  return {
+    id: linked.id,
+    name: linked.name,
+    count: Math.max(1, Number(entry?.count) || 1),
+    typeId: linked.typeId,
+    armor: linked.data?.armor,
+  }
+}
+
+/** Resolve the PHB choice definitions to actual handbook rows used by the UI. */
+export function resolveStartingEquipmentProfile(profile, catalogue = []) {
+  if (!profile) return null
+  const byName = new Map()
+  for (const entry of catalogue) {
+    if (entry?.name) byName.set(catalogueKey(entry.name), entry)
+  }
+  const resolveItem = (entry) => ({ ...entry, item: byName.get(catalogueKey(entry.name)) || null })
+  return {
+    ...profile,
+    groups: profile.groups.map((groupDef) => ({
+      ...groupDef,
+      options: groupDef.options.map((optionDef) => ({
+        ...optionDef,
+        items: (optionDef.items || []).map(resolveItem),
+        picks: (optionDef.picks || []).map((pickDef) => ({
+          ...pickDef,
+          options: pickDef.options
+            .map((name) => byName.get(catalogueKey(name)))
+            .filter(Boolean),
+        })),
+      })),
+    })),
+    fixed: (profile.fixed || []).map(resolveItem),
+    fixedPicks: (profile.fixedPicks || []).map((pickDef) => ({
+      ...pickDef,
+      options: pickDef.options.map((name) => byName.get(catalogueKey(name))).filter(Boolean),
+    })),
+  }
+}
+
 export function startingEquipmentProfile(charClass) {
   const names = [charClass?.name, charClass?.nameEn]
   const normalizedNames = names.map(normalized).filter(Boolean)
@@ -199,35 +258,69 @@ function selectedOption(groupDef, choices) {
 
 export function startingEquipmentComplete(profile, choices = {}) {
   if (!profile) return true
-  return profile.groups.every((groupDef) => {
+  const groupsComplete = profile.groups.every((groupDef) => {
     const selected = selectedOption(groupDef, choices)
     if (!selected) return false
     return (selected.picks || []).every((pickDef) => {
       const values = choices?.[groupDef.id]?.picks?.[pickDef.id] || []
-      return Array.from({ length: pickDef.count }, (_, index) => pickDef.options.includes(values[index])).every(Boolean)
+      return Array.from({ length: pickDef.count }, (_, index) => {
+        const saved = values[index]
+        return pickDef.options.some((optionEntry) => (
+          typeof optionEntry === 'string'
+            ? optionEntry === saved
+            : String(optionEntry.id) === String(saved) || optionEntry.name === saved
+        ))
+      }).every(Boolean)
     })
   })
+  const fixedComplete = (profile.fixedPicks || []).every((pickDef) => {
+    const values = choices?.__fixed?.picks?.[pickDef.id] || []
+    return Array.from({ length: pickDef.count }, (_, index) => pickDef.options.some((optionEntry) => (
+      typeof optionEntry === 'string'
+        ? optionEntry === values[index]
+        : String(optionEntry.id) === String(values[index]) || optionEntry.name === values[index]
+    ))).every(Boolean)
+  })
+  return groupsComplete && fixedComplete
 }
 
 function pushItem(map, entry) {
   if (!entry?.name) return
-  const key = normalized(entry.name)
+  const key = entry.id != null ? `id:${entry.id}` : `name:${normalized(entry.name)}`
   const saved = map.get(key)
   if (saved) saved.count += Math.max(1, Number(entry.count) || 1)
-  else map.set(key, { id: null, name: entry.name, count: Math.max(1, Number(entry.count) || 1) })
+  else map.set(key, { ...entry, id: entry.id ?? null, count: Math.max(1, Number(entry.count) || 1) })
 }
 
 export function selectedStartingEquipment(profile, choices = {}) {
   if (!profile) return []
   const merged = new Map()
-  ;(profile.fixed || []).forEach((entry) => pushItem(merged, entry))
+  ;(profile.fixed || []).forEach((entry) => pushItem(merged, equipmentEntry(entry)))
+  for (const pickDef of (profile.fixedPicks || [])) {
+    const values = choices?.__fixed?.picks?.[pickDef.id] || []
+    values.filter(Boolean).forEach((saved) => {
+      const optionEntry = pickDef.options.find((entry) => (
+        typeof entry === 'string' ? entry === saved : String(entry.id) === String(saved) || entry.name === saved
+      ))
+      if (typeof optionEntry === 'string') pushItem(merged, item(optionEntry))
+      else if (optionEntry) pushItem(merged, equipmentEntry({ item: optionEntry }))
+    })
+  }
   for (const groupDef of profile.groups) {
     const selected = selectedOption(groupDef, choices)
     if (!selected) continue
-    ;(selected.items || []).forEach((entry) => pushItem(merged, entry))
+    ;(selected.items || []).forEach((entry) => pushItem(merged, equipmentEntry(entry)))
     for (const pickDef of (selected.picks || [])) {
       const values = choices?.[groupDef.id]?.picks?.[pickDef.id] || []
-      values.filter(Boolean).forEach((name) => pushItem(merged, item(name)))
+      values.filter(Boolean).forEach((saved) => {
+        const optionEntry = pickDef.options.find((entry) => (
+          typeof entry === 'string'
+            ? entry === saved
+            : String(entry.id) === String(saved) || entry.name === saved
+        ))
+        if (typeof optionEntry === 'string') pushItem(merged, item(optionEntry))
+        else if (optionEntry) pushItem(merged, equipmentEntry({ item: optionEntry }))
+      })
     }
   }
   return [...merged.values()]

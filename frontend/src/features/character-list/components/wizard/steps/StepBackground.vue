@@ -31,8 +31,9 @@
           <li v-if="backgroundSkillNames.length"><span class="fk">Навыки</span>{{ backgroundSkillNames.join(', ') }}</li>
           <li v-if="backgroundToolNames.length"><span class="fk">Инструменты</span>{{ backgroundToolNames.join(', ') }}</li>
           <li v-if="feature.title"><span class="fk">Умение</span><b>{{ feature.title }}</b>{{ feature.desc ? ' — ' + feature.desc : '' }}</li>
-          <li v-if="backgroundStart.items.length"><span class="fk">Снаряжение</span>{{ equipmentLabel }}</li>
-          <li v-if="moneyLabel"><span class="fk">Кошелёк</span>{{ moneyLabel }}</li>
+          <li v-if="!state.buyStartingEquipment && backgroundStart.items.length"><span class="fk">Снаряжение</span>{{ equipmentLabel }}</li>
+          <li v-if="!state.buyStartingEquipment && moneyLabel"><span class="fk">Кошелёк</span>{{ moneyLabel }}</li>
+          <li v-if="state.buyStartingEquipment" class="shop-replacement"><span class="fk">Снаряжение</span>Заменено закупкой за начальное богатство класса</li>
         </ul>
 
         <div v-if="grants.bgLangChoice" class="pick">
@@ -100,6 +101,7 @@ function selectBackground(background) {
 .facts { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
 .facts li { font-size: 13px; color: var(--text-2); line-height: 1.4; }
 .facts b { color: var(--text-1); font-weight: 600; }
+.shop-replacement { padding: 8px 10px; border-radius: var(--r-sm); background: color-mix(in srgb, var(--accent) 9%, transparent); }
 .fk { display: block; font-size: 10px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 1px; }
 
 .pick { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }

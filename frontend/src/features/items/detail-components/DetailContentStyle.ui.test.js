@@ -27,4 +27,12 @@ describe('handbook detail visual hierarchy', () => {
     expect(source('WeaponDetailContent')).toContain('label="Урон" tone="combat"')
     expect(source('EnemyDetailContent')).toContain('label="Действия" tone="combat"')
   })
+
+  it('renders structured equipment-pack contents as item references', () => {
+    const componentSource = source('ItemDetailContent')
+    expect(componentSource).toContain('label="Содержимое набора"')
+    expect(componentSource).toContain('<ItemReferenceRow')
+    expect(componentSource).toContain('entry?.item_id')
+    expect(componentSource).toContain('<ItemViewModal')
+  })
 })

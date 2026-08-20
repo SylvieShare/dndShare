@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   STARTING_EQUIPMENT_CLASS_KEYS,
+  resolveStartingEquipmentProfile,
   selectedStartingEquipment,
   startingEquipmentComplete,
   startingEquipmentProfile,
@@ -12,7 +13,7 @@ const CLASS_NAMES = [
 ]
 
 function firstChoices(profile) {
-  return Object.fromEntries(profile.groups.map((group) => {
+  const choices = Object.fromEntries(profile.groups.map((group) => {
     const selected = group.options[0]
     const picks = Object.fromEntries((selected.picks || []).map((pick) => [
       pick.id,
@@ -20,6 +21,16 @@ function firstChoices(profile) {
     ]))
     return [group.id, { optionId: selected.id, picks }]
   }))
+  if (profile.fixedPicks?.length) {
+    choices.__fixed = {
+      optionId: 'fixed',
+      picks: Object.fromEntries(profile.fixedPicks.map((pick) => [
+        pick.id,
+        Array.from({ length: pick.count }, () => pick.options[0]),
+      ])),
+    }
+  }
+  return choices
 }
 
 describe('PHB starting equipment', () => {
@@ -64,5 +75,32 @@ describe('PHB starting equipment', () => {
     expect(startingEquipmentComplete(profile, choices)).toBe(false)
     choices.weapon_1.picks.weapon = ['Глефа']
     expect(startingEquipmentComplete(profile, choices)).toBe(true)
+  })
+
+  it('resolves class choices to handbook item ids', () => {
+    const catalogue = [
+      { id: 101, name: 'Рапира', typeId: 1, data: {} },
+      { id: 102, name: 'Короткий меч', typeId: 1, data: {} },
+      { id: 103, name: 'Короткий лук', typeId: 1, data: {} },
+      { id: 104, name: 'Колчан', typeId: 2, data: {} },
+      { id: 105, name: 'Стрела', typeId: 2, data: {} },
+      { id: 106, name: 'Набор взломщика', typeId: 2, data: {} },
+      { id: 107, name: 'Кожаный доспех', typeId: 12, data: { armor: { ac: 11, use_dex: true } } },
+      { id: 108, name: 'Кинжал', typeId: 1, data: {} },
+      { id: 109, name: 'Воровские инструменты', typeId: 2, data: {} },
+    ]
+    const profile = resolveStartingEquipmentProfile(startingEquipmentProfile({ name: 'Плут' }), catalogue)
+    const equipment = selectedStartingEquipment(profile, {
+      weapon_1: { optionId: 'rapier', picks: {} },
+      weapon_2: { optionId: 'shortbow', picks: {} },
+      pack: { optionId: 'burglar', picks: {} },
+    })
+
+    expect(equipment.find((entry) => entry.name === 'Рапира')).toMatchObject({ id: 101, typeId: 1 })
+    expect(equipment.find((entry) => entry.name === 'Кожаный доспех')).toMatchObject({
+      id: 107,
+      typeId: 12,
+      armor: { ac: 11, use_dex: true },
+    })
   })
 })

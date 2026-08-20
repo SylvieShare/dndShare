@@ -86,11 +86,40 @@ func TestStartingShopSeedsDedicatedArmorAndTransportCatalogues(t *testing.T) {
 		"COALESCE(item.data ->> 'rarity', '0') = '0'",
 		"lower(item.name) = 'праща'",
 		"'available_in_starting_shop', true",
+		`"key":"contents"`,
+		"('Набор путешественника', 8, 'Верёвка пеньковая (50 футов)', 1)",
+		"jsonb_build_object('item_id', item_id, 'count', quantity)",
 	} {
 		if !strings.Contains(schemaStartingShopSQL, fragment) {
 			t.Fatalf("starting shop schema must contain %q", fragment)
 		}
 	}
+}
+
+func TestEquipmentPackResourceSchemaExposesItemReferences(t *testing.T) {
+	path := filepath.Join("..", "..", "resources", "items", "item_2_shema.json")
+	body, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatalf("read %s: %v", path, err)
+	}
+	var fields []map[string]any
+	if err := json.Unmarshal(body, &fields); err != nil {
+		t.Fatalf("parse %s: %v", path, err)
+	}
+	for _, field := range fields {
+		if field["key"] != "contents" {
+			continue
+		}
+		if field["type"] != "object_array" {
+			t.Fatalf("unexpected contents field: %#v", field)
+		}
+		children, _ := field["fields"].([]any)
+		if len(children) != 2 {
+			t.Fatalf("contents must contain item and quantity fields: %#v", field)
+		}
+		return
+	}
+	t.Fatal("item_2 schema must expose pack contents")
 }
 
 func TestStartingShopResourceSchemasExposeSharedFlag(t *testing.T) {

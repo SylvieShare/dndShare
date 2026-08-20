@@ -7,7 +7,7 @@ INSERT INTO dndshare.item_type (id, name, fields, source_id, color, important, d
 VALUES (
     2,
     'Вещи',
-    '[{"key":"desc","name":"Описание","type":"description"},{"key":"armor","name":"Доспех","type":"object","fields":[{"key":"ac","name":"Базовый КД","type":"int"},{"key":"use_dex","name":"Добавлять Ловкость","type":"bool"},{"key":"dex_cap","name":"Максимум бонуса Ловкости","type":"int"},{"key":"shield","name":"Это щит","type":"bool"},{"key":"shield_bonus","name":"Бонус щита","type":"int"}]},{"key":"cost","name":"Стоимость","type":"int_by_suggest","suggest_type_id":17},{"key":"weight","name":"Вес","type":"int"},{"key":"is_container","name":"Контейнер","type":"bool"},{"key":"consumable","name":"Расходуемое","type":"bool"},{"key":"equipment_category","name":"Категория снаряжения","type":"select","filter":true,"options":[{"value":"gear","label":"Снаряжение"},{"value":"tool","label":"Инструмент"},{"value":"pack","label":"Набор снаряжения"}]},{"key":"available_in_starting_shop","name":"Доступно в магазине при создании","type":"boolean","filter":true}]'::jsonb,
+    '[{"key":"desc","name":"Описание","type":"description"},{"key":"armor","name":"Доспех","type":"object","fields":[{"key":"ac","name":"Базовый КД","type":"int"},{"key":"use_dex","name":"Добавлять Ловкость","type":"bool"},{"key":"dex_cap","name":"Максимум бонуса Ловкости","type":"int"},{"key":"shield","name":"Это щит","type":"bool"},{"key":"shield_bonus","name":"Бонус щита","type":"int"}]},{"key":"cost","name":"Стоимость","type":"int_by_suggest","suggest_type_id":17},{"key":"weight","name":"Вес","type":"int"},{"key":"is_container","name":"Контейнер","type":"bool"},{"key":"consumable","name":"Расходуемое","type":"bool"},{"key":"equipment_category","name":"Категория снаряжения","type":"select","filter":true,"options":[{"value":"gear","label":"Снаряжение"},{"value":"tool","label":"Инструмент"},{"value":"pack","label":"Набор снаряжения"}]},{"key":"contents","name":"Содержимое набора","type":"object_array","show_on":{"key":"equipment_category","value":"pack"},"fields":[{"key":"item_id","name":"Предмет","type":"item","item_type":2},{"key":"count","name":"Количество","type":"int","default":1}]},{"key":"available_in_starting_shop","name":"Доступно в магазине при создании","type":"boolean","filter":true}]'::jsonb,
     (SELECT id FROM dndshare."source" WHERE lower(name) = 'dnd5e' LIMIT 1),
     '#a97852',
     false,
@@ -55,6 +55,7 @@ WITH additions(type_id, field) AS (
     VALUES
         (1, '{"key":"available_in_starting_shop","name":"Доступно в магазине при создании","type":"boolean","filter":true}'::jsonb),
         (2, '{"key":"equipment_category","name":"Категория снаряжения","type":"select","filter":true,"options":[{"value":"gear","label":"Снаряжение"},{"value":"tool","label":"Инструмент"},{"value":"pack","label":"Набор снаряжения"}]}'::jsonb),
+        (2, '{"key":"contents","name":"Содержимое набора","type":"object_array","show_on":{"key":"equipment_category","value":"pack"},"fields":[{"key":"item_id","name":"Предмет","type":"item","item_type":2},{"key":"count","name":"Количество","type":"int","default":1}]}'::jsonb),
         (2, '{"key":"available_in_starting_shop","name":"Доступно в магазине при создании","type":"boolean","filter":true}'::jsonb),
         (10, '{"key":"available_in_starting_shop","name":"Доступно в магазине при создании","type":"boolean","filter":true}'::jsonb)
 ), missing AS (
@@ -329,6 +330,106 @@ FROM (VALUES
     ('Набор учёного', 10)
 ) AS seed(name, weight)
 WHERE item.user_id IS NULL AND item.type_id = 2 AND item.name = seed.name;
+
+-- Packs keep their component list as handbook item references. Quantities are
+-- the quantities printed in PHB 2014; the pack remains one inventory row when
+-- bought or granted, while its detail card can explain what it contains.
+WITH pack_contents(pack_name, position, item_name, quantity) AS (
+    VALUES
+        ('Набор артиста', 1, 'Рюкзак', 1),
+        ('Набор артиста', 2, 'Спальный мешок', 1),
+        ('Набор артиста', 3, 'Костюм', 2),
+        ('Набор артиста', 4, 'Свеча', 5),
+        ('Набор артиста', 5, 'Рацион (1 день)', 5),
+        ('Набор артиста', 6, 'Бурдюк', 1),
+        ('Набор артиста', 7, 'Набор для грима', 1),
+
+        ('Набор взломщика', 1, 'Рюкзак', 1),
+        ('Набор взломщика', 2, 'Шарики (мешочек 1000 шт.)', 1),
+        ('Набор взломщика', 3, 'Нить (10 футов)', 1),
+        ('Набор взломщика', 4, 'Колокольчик', 1),
+        ('Набор взломщика', 5, 'Свеча', 5),
+        ('Набор взломщика', 6, 'Лом', 1),
+        ('Набор взломщика', 7, 'Молоток', 1),
+        ('Набор взломщика', 8, 'Шлямбур', 10),
+        ('Набор взломщика', 9, 'Закрытый фонарь', 1),
+        ('Набор взломщика', 10, 'Масло (фляга)', 2),
+        ('Набор взломщика', 11, 'Рацион (1 день)', 5),
+        ('Набор взломщика', 12, 'Трутница', 1),
+        ('Набор взломщика', 13, 'Бурдюк', 1),
+        ('Набор взломщика', 14, 'Верёвка пеньковая (50 футов)', 1),
+
+        ('Набор дипломата', 1, 'Сундук', 1),
+        ('Набор дипломата', 2, 'Футляр для карты или свитка', 2),
+        ('Набор дипломата', 3, 'Богатая одежда', 1),
+        ('Набор дипломата', 4, 'Чернила (бутылочка 1 унция)', 1),
+        ('Набор дипломата', 5, 'Перо', 1),
+        ('Набор дипломата', 6, 'Лампа', 1),
+        ('Набор дипломата', 7, 'Масло (фляга)', 2),
+        ('Набор дипломата', 8, 'Бумага (1 лист)', 5),
+        ('Набор дипломата', 9, 'Духи (флакон)', 1),
+        ('Набор дипломата', 10, 'Сургуч', 1),
+        ('Набор дипломата', 11, 'Мыло', 1),
+
+        ('Набор исследователя подземелий', 1, 'Рюкзак', 1),
+        ('Набор исследователя подземелий', 2, 'Лом', 1),
+        ('Набор исследователя подземелий', 3, 'Молоток', 1),
+        ('Набор исследователя подземелий', 4, 'Шлямбур', 10),
+        ('Набор исследователя подземелий', 5, 'Факел', 10),
+        ('Набор исследователя подземелий', 6, 'Трутница', 1),
+        ('Набор исследователя подземелий', 7, 'Рацион (1 день)', 10),
+        ('Набор исследователя подземелий', 8, 'Бурдюк', 1),
+        ('Набор исследователя подземелий', 9, 'Верёвка пеньковая (50 футов)', 1),
+
+        ('Набор путешественника', 1, 'Рюкзак', 1),
+        ('Набор путешественника', 2, 'Спальный мешок', 1),
+        ('Набор путешественника', 3, 'Столовый набор', 1),
+        ('Набор путешественника', 4, 'Трутница', 1),
+        ('Набор путешественника', 5, 'Факел', 10),
+        ('Набор путешественника', 6, 'Рацион (1 день)', 10),
+        ('Набор путешественника', 7, 'Бурдюк', 1),
+        ('Набор путешественника', 8, 'Верёвка пеньковая (50 футов)', 1),
+
+        ('Набор священника', 1, 'Рюкзак', 1),
+        ('Набор священника', 2, 'Одеяло', 1),
+        ('Набор священника', 3, 'Свеча', 10),
+        ('Набор священника', 4, 'Трутница', 1),
+        ('Набор священника', 5, 'Коробка для пожертвований', 1),
+        ('Набор священника', 6, 'Брусок благовоний', 2),
+        ('Набор священника', 7, 'Кадило', 1),
+        ('Набор священника', 8, 'Облачение', 1),
+        ('Набор священника', 9, 'Рацион (1 день)', 2),
+        ('Набор священника', 10, 'Бурдюк', 1),
+
+        ('Набор учёного', 1, 'Рюкзак', 1),
+        ('Набор учёного', 2, 'Книга', 1),
+        ('Набор учёного', 3, 'Чернила (бутылочка 1 унция)', 1),
+        ('Набор учёного', 4, 'Перо', 1),
+        ('Набор учёного', 5, 'Пергамент (1 лист)', 10),
+        ('Набор учёного', 6, 'Маленький мешочек с песком', 1),
+        ('Набор учёного', 7, 'Маленький нож', 1)
+), resolved AS (
+    SELECT pack.id AS pack_id, component.id AS item_id,
+           pack_contents.position, pack_contents.quantity
+    FROM pack_contents
+    JOIN dndshare.item pack
+      ON pack.user_id IS NULL AND pack.type_id = 2 AND pack.name = pack_contents.pack_name
+    JOIN dndshare.item component
+      ON component.user_id IS NULL AND component.type_id = 2
+     AND component.name = pack_contents.item_name
+), grouped AS (
+    SELECT pack_id,
+           jsonb_agg(
+               jsonb_build_object('item_id', item_id, 'count', quantity)
+               ORDER BY position
+           ) AS contents
+    FROM resolved
+    GROUP BY pack_id
+)
+UPDATE dndshare.item pack
+SET data = jsonb_set(pack.data, '{contents}', grouped.contents, true)
+FROM grouped
+WHERE pack.id = grouped.pack_id;
 
 -- Every priced PHB weapon except the zero-cost unarmed strike is purchasable.
 UPDATE dndshare.item item

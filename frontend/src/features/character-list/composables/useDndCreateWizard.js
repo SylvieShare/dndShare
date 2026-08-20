@@ -7,19 +7,13 @@ import { SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
 import { extractGrants } from '@/features/character-editor/settings/dnd/creation/grants'
 import { featuresForBinding } from '@/features/character-editor/settings/dnd/creation/progression'
 import { evaluateFeatEligibility, featAbilityBonuses } from '@/features/items/lib/featRules'
-import { armorRuleByName } from '@/features/character-editor/settings/dnd/creation/armorRules'
-import {
-  mergeEquipment,
-  selectedStartingEquipment,
-  startingEquipmentComplete,
-  startingEquipmentProfile,
-} from '@/features/character-editor/settings/dnd/creation/startingEquipment'
 import { useSuggestStore } from '@/stores/suggest'
 import { contentScopeQuery, normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'
 import { dieSides } from '@/shared/lib/systemDice'
 import { randomDndName } from '@/shared/lib/dndNames'
 import { buildDndCharacterPayload } from './dndCreateWizardPayload'
 import { liveSkillModifier } from '@/features/character-list/components/wizard/previewSkills'
+import { useDndCreateEquipment } from './useDndCreateEquipment'
 import {
   createDndWizardState,
   DND_WIZARD_STORAGE_KEY,
@@ -30,7 +24,6 @@ import {
 } from './dndCreateWizardStats'
 
 export { POINT_BUY_BUDGET, pointCost, STANDARD_ARRAY } from './dndCreateWizardStats'
-
 const RACE_TYPE = 8
 const CLASS_TYPE = 9
 const RACE_ABIL_TYPE = 3
@@ -78,6 +71,8 @@ export function useDndCreateWizard() {
     sourceVersionId.value = id == null ? null : Number(id)
   }
 
+  const equipment = useDndCreateEquipment({ state, sourceSuffix })
+
   async function load() {
     loading.value = true
     try {
@@ -88,6 +83,7 @@ export function useDndCreateWizard() {
         fetchGet(`/items?typeId=${CLASS_ABIL_TYPE}&limit=500${sourceSuffix()}`),
         fetchGet(`/items?typeId=${FEAT_TYPE}&limit=500${sourceSuffix()}`),
         fetchGet(`/items?typeId=${BG_TYPE}&limit=200${sourceSuffix()}`),
+        equipment.loadEquipmentCatalogue(),
       ])
       // Base races/classes only — subraces/subclasses are children (parentId set).
       const raceItems = r?.items || []
@@ -139,7 +135,7 @@ export function useDndCreateWizard() {
     if (hydrating) return
     state.subclass = null
     state.skillIds = []
-    state.classEquipmentChoices = {}
+    equipment.resetEquipmentForClass()
     subclasses.value = []
     if (!c) return
     const classId = c.id
@@ -309,54 +305,6 @@ export function useDndCreateWizard() {
   const bgLangLimit = computed(() => grants.value.bgLangChoice?.count || 0)
   function toggleBgLang(id) { toggleFromList(state.bgLangIds, id, bgLangLimit.value) }
   const bgLangsComplete = computed(() => !grants.value.bgLangChoice || state.bgLangIds.length === bgLangLimit.value)
-
-  // ─── Equipment: PHB class choices + optional handbook additions ────────────
-  const classEquipmentProfile = computed(() => startingEquipmentProfile(state.charClass))
-  const classEquipmentComplete = computed(() => startingEquipmentComplete(classEquipmentProfile.value, state.classEquipmentChoices))
-  const classEquipment = computed(() => selectedStartingEquipment(classEquipmentProfile.value, state.classEquipmentChoices))
-  const allEquipment = computed(() => mergeEquipment(classEquipment.value, state.equipment))
-
-  function selectEquipmentOption(groupId, optionId) {
-    state.classEquipmentChoices = {
-      ...state.classEquipmentChoices,
-      [groupId]: { optionId, picks: {} },
-    }
-  }
-  function setEquipmentPick(groupId, optionId, pickId, index, value) {
-    const current = state.classEquipmentChoices[groupId]
-    const picks = current?.optionId === optionId ? { ...(current.picks || {}) } : {}
-    const values = [...(picks[pickId] || [])]
-    if (value) values[index] = value
-    else values[index] = ''
-    picks[pickId] = values
-    state.classEquipmentChoices = {
-      ...state.classEquipmentChoices,
-      [groupId]: { optionId, picks },
-    }
-  }
-
-  function addEquipment(item, qty = 1) {
-    if (!item?.id) return
-    const n = Math.max(1, Math.floor(Number(qty) || 1))
-    const existing = state.equipment.find((e) => e.id === item.id)
-    if (existing) existing.count += n
-    else state.equipment.push({
-      id: item.id,
-      name: item.name,
-      count: n,
-      typeId: item.typeId,
-      armor: item.data?.armor || armorRuleByName(item.name),
-    })
-  }
-  function removeEquipment(id) {
-    const i = state.equipment.findIndex((e) => e.id === id)
-    if (i >= 0) state.equipment.splice(i, 1)
-  }
-  function bumpEquipment(id, delta) {
-    const e = state.equipment.find((x) => x.id === id)
-    if (!e) return
-    e.count = Math.max(1, e.count + delta)
-  }
 
   const pointsSpent = computed(() => STATS.reduce((sum, s) => sum + pointCost(Number(state.scores[s] ?? 8)), 0))
   const pointsLeft = computed(() => POINT_BUY_BUDGET - pointsSpent.value)
@@ -570,7 +518,9 @@ export function useDndCreateWizard() {
       state,
       stats: STATS,
       featPool: featPool.value,
-      equipment: allEquipment.value,
+      equipment: equipment.allEquipment.value,
+      buyStartingEquipment: state.buyStartingEquipment,
+      startingWallet: equipment.shopWallet.value,
       grantedSpellIds: grantedSpellIds.value,
       featureChoices: featureChoices.value,
       raceAbilities: raceAbilities.value,
@@ -635,9 +585,7 @@ export function useDndCreateWizard() {
     featOptions, featLimit, toggleFeat, setFeatSelection, featEligibility, featComplete,
     // background + equipment
     backgroundSkillNames, backgroundToolNames, bgLangOptions, bgLangLimit, toggleBgLang, bgLangsComplete,
-    classEquipmentProfile, classEquipmentComplete, classEquipment, allEquipment,
-    selectEquipmentOption, setEquipmentPick,
-    addEquipment, removeEquipment, bumpEquipment,
+    ...equipment,
     // persistence
     restore, clearPersist, reset,
     // skills

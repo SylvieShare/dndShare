@@ -90,7 +90,7 @@ export function buildCharacterData(input) {
     background = null,
     scores = {}, asiChoice = [], skillIds = [], spellIds = [], grantedSpellIds = [], choices = [],
     raceSkillIds = [], raceLangIds = [], featIds = [], feats = [], bgLangIds = [],
-    equipment = [], persona = null, contentSources = null,
+    equipment = [], buyStartingEquipment = false, startingWallet = {}, persona = null, contentSources = null,
     raceAbilityItems = [], classAbilityItems = [], suggestValue,
   } = input || {}
 
@@ -221,15 +221,18 @@ export function buildCharacterData(input) {
     if (featTitle || featDesc) {
       values.notes = `Умение предыстории — ${featTitle}${featTitle && featDesc ? ': ' : ''}${featDesc}`
     }
-    values.money = addStartingCoins(values.money, backgroundStart.coins)
+    if (!buyStartingEquipment) values.money = addStartingCoins(values.money, backgroundStart.coins)
   }
+
+  if (buyStartingEquipment) values.money = addStartingCoins(values.money, startingWallet)
 
   // Catalogue weapons added on the equipment step belong to the dedicated
   // weapon block. That block has no quantity field, so multiple copies become
   // separate entries. Text-only PHB rows cannot become functional weapon cards
   // without a handbook id and therefore stay in the inventory with other gear.
-  // Coin fragments from the background are intentionally kept in `values.money`.
-  const startingEquipment = mergeEquipment(equipment, backgroundStart.items)
+  // Buying with class wealth replaces both the class kit and the background's
+  // possessions. Only purchases enter inventory; unspent change enters money.
+  const startingEquipment = mergeEquipment(equipment, buyStartingEquipment ? [] : backgroundStart.items)
   const isCatalogueWeapon = (entry) => Number(entry.typeId) === 1 && entry.id != null
   const weapons = startingEquipment.filter(isCatalogueWeapon)
   const equippedArmor = startingEquipment.filter((entry) => !isCatalogueWeapon(entry) && isArmorEquipment(entry))

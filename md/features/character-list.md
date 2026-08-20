@@ -147,6 +147,16 @@ display heading, keyed list transition, scroll restoration, detail reveal and th
 back action positioned over the selected card image. New systems can reuse this
 shell while supplying their own cards and dependent-choice content.
 
+Class starting equipment is resolved against handbook items before rendering.
+Fixed grants and every concrete branch use compact item rows that can open the
+full handbook card; “any weapon/tool/focus” clauses use the same row inside a
+searchable dropdown and persist the selected item id. A class may instead enable
+“Закупиться потом в магазине”. This disables both the class kit and background
+possessions, rolls the PHB 2014 class-wealth formula and replaces the later
+Equipment step with a searchable five-catalogue shop. Its cart compares all
+prices in copper, persists the individual dice and purchases in the draft, and
+places unspent gp/sp/cp into the created character's wallet.
+
 The background step also works with handbook item references (type 11), not
 suggest values. Its catalogue is an exact two-column desktop grid that collapses
 to one column at 700px and below. Every card uses only `coverImageUrl`, followed
@@ -156,7 +166,8 @@ uses the shared `IllustratedChoiceStage`: the chosen card expands into a
 full-width horizontal row, the other backgrounds leave the catalogue, and a
 back action restores the two-column list without changing the content scroll.
 The existing skill, tool, language, feature, equipment and money summary appears
-below the expanded card. Built-in background covers live in system
+below the expanded card. In starting-shop mode the equipment and money rows are
+replaced by an explicit note that class wealth owns them. Built-in background covers live in system
 `storage_image` rows assigned through the generic `item.cover_image_id` relation.
 
 Key rules:
@@ -165,6 +176,10 @@ Key rules:
 - all binding fields are arrays of item ids;
 - content publication scope is carried through every catalogue query;
 - choices granted by a race or class are completed on that source step;
+- class starting equipment uses handbook ids; text-only rows remain only for
+  legacy background sentences in the ready-kit path;
+- the starting-shop path is mutually exclusive with class/background equipment,
+  and its remaining class wealth is the only starting wallet amount;
 - handbook weapons added on the equipment step are written to the dedicated
   weapon block; other additions and text-only starting rows use the canonical
   sectioned inventory model;

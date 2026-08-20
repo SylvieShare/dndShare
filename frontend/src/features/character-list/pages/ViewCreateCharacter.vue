@@ -65,6 +65,7 @@ import CreateStepRail from '@/features/character-list/components/wizard/CreateSt
 import StepBackground from '@/features/character-list/components/wizard/steps/StepBackground.vue'
 import StepClass from '@/features/character-list/components/wizard/steps/StepClass.vue'
 import StepEquipment from '@/features/character-list/components/wizard/steps/StepEquipment.vue'
+import StepStartingShop from '@/features/character-list/components/wizard/steps/StepStartingShop.vue'
 import StepPersona from '@/features/character-list/components/wizard/steps/StepPersona.vue'
 import StepRace from '@/features/character-list/components/wizard/steps/StepRace.vue'
 import StepReview from '@/features/character-list/components/wizard/steps/StepReview.vue'
@@ -93,7 +94,7 @@ provide('createWizard', wz)
 
 const {
   state, load, buildPayload, restore, clearPersist, reset, setSourceVersionId,
-  allEquipment,
+  allEquipment, shopSpentCopper, startingWealthCopper, shopSpentLabel, shopRemainingLabel,
   requiresSubrace, requiresSubclass,
   scoresComplete, pointsLeft, skillLimit, spellsComplete,
   asiChoiceComplete, raceVariantsComplete,
@@ -107,11 +108,13 @@ const mainRef = ref(null)
 const invalidPulse = ref(false)
 function doReset() { resetOpen.value = false; reset() }
 const isComplete = computed(() =>
-  state.version === '2014' && !!state.race && !!state.charClass && classEquipmentComplete.value && !!state.background && !!state.name.trim() && scoresComplete.value)
+  state.version === '2014' && !!state.race && !!state.charClass && classEquipmentComplete.value
+  && (!state.buyStartingEquipment || !!state.startingWealthRoll)
+  && !!state.background && !!state.name.trim() && scoresComplete.value)
 
 const STEP_COMPONENTS = {
   version: StepVersion, race: StepRace, class: StepClass, background: StepBackground,
-  stats: StepStats, equipment: StepEquipment, persona: StepPersona, review: StepReview,
+  stats: StepStats, equipment: StepEquipment, shop: StepStartingShop, persona: StepPersona, review: StepReview,
 }
 
 const internalCreating = ref(false)
@@ -145,7 +148,9 @@ const steps = computed(() => [
   { key: 'class', title: 'Класс', summary: [state.charClass?.name, state.subclass?.name].filter(Boolean).join(' · ') },
   { key: 'background', title: 'Предыстория', summary: state.background?.name || '' },
   { key: 'stats', title: 'Характеристики', summary: statMethodLabel.value },
-  { key: 'equipment', title: 'Снаряжение', summary: equipmentLabel.value },
+  state.buyStartingEquipment
+    ? { key: 'shop', title: 'Магазин', summary: `${shopSpentLabel.value} · остаток ${shopRemainingLabel.value}` }
+    : { key: 'equipment', title: 'Снаряжение', summary: equipmentLabel.value },
   { key: 'persona', title: 'Личность', summary: state.name.trim() || state.persona.alignment || '' },
   { key: 'review', title: 'Обзор', summary: isComplete.value ? 'Можно создавать' : '' },
 ])
@@ -186,6 +191,10 @@ function validateStep(key) {
     case 'stats':
       if (!scoresComplete.value) return { ok: false, reason: 'Заполни все характеристики' }
       if (pointsLeft.value < 0) return { ok: false, reason: 'Превышен бюджет очков' }
+      return { ok: true }
+    case 'shop':
+      if (!state.startingWealthRoll) return { ok: false, reason: 'Брось начальное богатство' }
+      if (shopSpentCopper.value > startingWealthCopper.value) return { ok: false, reason: 'Превышен бюджет магазина' }
       return { ok: true }
     case 'persona':
       if (!state.name.trim()) return { ok: false, reason: 'Впиши имя персонажа' }

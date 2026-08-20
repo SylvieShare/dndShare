@@ -8,7 +8,7 @@ const PERSISTED_KEYS = [
   'subclass', 'raceVariant', 'statMethod', 'scores', 'rollPool', 'rollSeries', 'asiChoice',
   'raceSkillIds', 'raceLangIds', 'featIds', 'featSelections', 'skillIds',
   'spellIds', 'choices', 'background', 'bgLangIds', 'classEquipmentChoices',
-  'equipment', 'persona',
+  'buyStartingEquipment', 'startingWealthRoll', 'startingShopCart', 'equipment', 'persona',
 ]
 
 export function createDndWizardState() {
@@ -37,6 +37,9 @@ export function createDndWizardState() {
     background: null,
     bgLangIds: [],
     classEquipmentChoices: {},
+    buyStartingEquipment: false,
+    startingWealthRoll: null,
+    startingShopCart: [],
     equipment: [],
     persona: {
       alignment: '', traits: '', ideals: '', bonds: '', flaws: '', appearance: '',

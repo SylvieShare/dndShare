@@ -44,14 +44,17 @@ const wz = inject('createWizard')
 const {
   STATS, state, grants, finalScores, mods, maxHp, unarmoredAc, initiativeMod, spellDc, spellAtk,
   skillOptions, cantripPool, spell1Pool, suggestValue, raceAbilities, classAbilities,
-  allEquipment,
+  allEquipment, shopWallet,
 } = wz
 
 const mono = computed(() => monogramOf(state.charClass?.name || state.race?.name || '?'))
 const subraceOrRace = computed(() => state.subrace?.name || state.race?.name || '')
 const klass = computed(() => [state.charClass?.name, state.subclass?.name].filter(Boolean).join(' · '))
 const backgroundStart = computed(() => backgroundStartingEquipment(state.background))
-const displayedEquipment = computed(() => mergeEquipment(allEquipment.value, backgroundStart.value.items))
+const displayedEquipment = computed(() => mergeEquipment(
+  allEquipment.value,
+  state.buyStartingEquipment ? [] : backgroundStart.value.items,
+))
 function modClass(m) { return m > 0 ? 'pos' : m < 0 ? 'neg' : '' }
 
 const summary = computed(() => {
@@ -63,7 +66,7 @@ const summary = computed(() => {
   if (skills.length) out.push({ k: 'Навыки', v: skills.join(', ') })
   const langs = [...grants.value.languages, ...state.raceLangIds, ...state.bgLangIds].map((id) => suggestValue(6, id)).filter(Boolean)
   if (langs.length) out.push({ k: 'Языки', v: [...new Set(langs)].join(', ') })
-  const money = formatStartingCoins(backgroundStart.value.coins)
+  const money = formatStartingCoins(state.buyStartingEquipment ? shopWallet.value : backgroundStart.value.coins)
   if (money) out.push({ k: 'Кошелёк', v: money })
   const feats = [
     ...featuresForBinding(raceAbilities.value, { raceId: state.race?.id, subraceId: state.subrace?.id }, 1),

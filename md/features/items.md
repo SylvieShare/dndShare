@@ -32,6 +32,10 @@ Canonical examples:
 - feat description/prerequisites/choices: `description`,
   `prerequisite_groups`, `choices`;
 - potion rarity is a suggest id and cost is `int_by_suggest`.
+- equipment packs use `equipment_category:"pack"` and
+  `contents:[{item_id,count}]`; generic item detail renders those referenced
+  items immediately after the description and opens each through
+  `ItemViewModal`.
 
 `dice_id` is a system-die string (`"d4"`, `"d6"`, `"d8"`, `"d10"`, `"d12"`,
 `"d20"` or `"d100"`). Schema fields use `type:"dice"`; there is no dice

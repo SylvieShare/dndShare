@@ -49,6 +49,16 @@
     ]
   },
   {
+    "key": "contents",
+    "name": "Содержимое набора",
+    "type": "object_array",
+    "show_on": { "key": "equipment_category", "value": "pack" },
+    "fields": [
+      { "key": "item_id", "name": "Предмет", "type": "item", "item_type": 2 },
+      { "key": "count", "name": "Количество", "type": "int", "default": 1 }
+    ]
+  },
+  {
     "key": "available_in_starting_shop",
     "name": "Доступно в магазине при создании",
     "type": "boolean",

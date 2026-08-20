@@ -161,6 +161,26 @@ describe('buildCharacterData starting equipment', () => {
     expect(result.data.values.money.amounts['3']).toBe(25)
     expect(result.data.values.notes).toBe('Умение предыстории — Привилегированное положение: Люди склонны думать о вас хорошо.')
   })
+
+  it('replaces class and background gear with shop purchases and keeps the change', () => {
+    const result = buildCharacterData({
+      race: selection(1, 'Человек'),
+      charClass: selection(2, 'Воин'),
+      background: selection(3, 'Солдат', {
+        equipment: '<p>Копьё, форма, кошель с 10 зм.</p>',
+      }),
+      equipment: [{ id: 501, name: 'Латы', count: 1, typeId: 12, armor: { ac: 18, use_dex: false } }],
+      buyStartingEquipment: true,
+      startingWallet: { 3: 25, 2: 4 },
+      suggestValue: () => '',
+    })
+
+    expect(result.data.values.items.equipped).toEqual([
+      { uid: 'worn_0', id: 501, count: 1, override: null },
+    ])
+    expect(result.data.values.money.amounts).toMatchObject({ 2: 4, 3: 25 })
+    expect(result.data.values.items.sections).toEqual([])
+  })
 })
 
 describe('buildCharacterData persona', () => {
