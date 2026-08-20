@@ -795,8 +795,9 @@ visible browser tab also requests a fresh snapshot. In combat the active player
 or NPC occupies a compact `4:3` card on the left with full artwork and a blurred
 lower info layer; neither it nor the queue cards stretch to the screen height.
 Above it, the compact cyclic queue spans the full screen width and begins after
-the active turn. Each queue tile is vertical: a smaller full-fit creature icon
-with health below it, no name and no initiative value. An NPC letter is centered
+the active turn. Each narrow queue tile is only as wide as its smaller full-fit
+creature icon plus horizontal padding; health sits below the icon, with no name
+or initiative value. An NPC letter is centered
 on the icon's upper-right corner in its assigned color. Overflow
 shares the final right-hand slot as a visible stack. On turn change the
 active card exits left, the next one expands, and the combatant that just acted

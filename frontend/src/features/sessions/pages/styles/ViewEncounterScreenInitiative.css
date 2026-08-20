@@ -137,21 +137,25 @@
 
 .initiative-card {
   --screen-combatant-color: var(--accent);
+  --queue-portrait-size: clamp(52px, 4.5vw, 72px);
+  --queue-card-padding: clamp(10px, .8vw, 14px);
   position: relative;
   z-index: var(--queue-z);
   min-width: 0;
   min-height: 0;
   height: fit-content;
   align-self: start;
+  justify-self: center;
   grid-column: var(--queue-column);
   grid-row: 1;
+  width: calc(var(--queue-portrait-size) + var(--queue-card-padding) + var(--queue-card-padding));
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: clamp(8px, .7vw, 12px);
   box-sizing: border-box;
-  padding: clamp(10px, .8vw, 14px);
+  padding: var(--queue-card-padding);
   border: 1px solid color-mix(in srgb, var(--screen-combatant-color) 34%, var(--border-strong));
   border-radius: clamp(16px, 1.4vw, 24px);
   background: linear-gradient(180deg, color-mix(in srgb, var(--screen-combatant-color) 9%, var(--surface-raised)), color-mix(in srgb, var(--surface) 96%, transparent));
@@ -172,8 +176,8 @@
 
 .initiative-card__portrait {
   position: relative;
-  width: clamp(52px, 4.5vw, 72px);
-  height: clamp(52px, 4.5vw, 72px);
+  width: var(--queue-portrait-size);
+  height: var(--queue-portrait-size);
   min-height: 0;
   display: grid;
   flex: none;

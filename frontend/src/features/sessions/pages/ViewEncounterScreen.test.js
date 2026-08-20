@@ -54,6 +54,7 @@ describe('public encounter composition', () => {
     expect(initiativeStyles).toContain('.initiative-card__portrait img {')
     expect(initiativeStyles).toContain('object-fit: contain;')
     expect(initiativeStyles).toContain('flex-direction: column;')
+    expect(initiativeStyles).toContain('width: calc(var(--queue-portrait-size) + var(--queue-card-padding) + var(--queue-card-padding));')
     expect(pageSource).toContain('class="encounter-health initiative-card__health"')
     expect(pageSource).toContain('if (viewportWidth.value >= 1800) return 6')
   })
