@@ -57,6 +57,6 @@ const damage = computed(() => {
 .weapon-damage-metric__title { color: var(--text-muted); font-size: 7px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
 .weapon-damage-metric__count { min-width: 8px; text-align: right; }
 .weapon-damage-metric__label { font-variant-numeric: tabular-nums; }
-.weapon-damage-metric--row { flex-direction: row-reverse; justify-content: flex-end; gap: 8px; }
-.weapon-damage-metric--row .weapon-damage-metric__title { width: 50px; font-size: 8px; text-align: left; }
+.weapon-damage-metric--row { flex-direction: row-reverse; justify-content: flex-end; gap: 5px; }
+.weapon-damage-metric--row .weapon-damage-metric__title { width: auto; font-size: 8px; text-align: left; }
 </style>
