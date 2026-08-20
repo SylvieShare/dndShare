@@ -359,7 +359,7 @@ const grantedNewIds = computed(() => {
   const have = new Set((props.values?.spells?.spells || []).map((s) => s.id))
   return [...new Set(grantedRows.value.map((r) => r.spellId))].filter((id) => !have.has(id))
 })
-const { spellNames, grantedSpellList } = useGrantedSpellNames(grantedNewIds)
+const { spellNames, spellLevels, grantedSpellList } = useGrantedSpellNames(grantedNewIds)
 
 // ─── хиты ───────────────────────────────────────────────────────────────────
 const hitDieLabelOf = (item) => resolveHitDieLabel(item, dieLabel)
@@ -562,6 +562,7 @@ async function accept() {
     slotDiff: slotDiff.value,
     slotsAfter: slotsAfter.value,
     grantedNewIds: grantedNewIds.value,
+    grantedSpellLevels: spellLevels.value,
     classItem: classItem.value,
   })
   const catalogItems = [...abilityPool.value, ...Object.values(itemsById.value)]

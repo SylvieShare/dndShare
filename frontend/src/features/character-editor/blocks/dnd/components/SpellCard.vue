@@ -6,25 +6,20 @@
         :class="{
           'spell-row-clickable': !!entry.item,
           'spell-row-draggable': ctx.charCtx.ownerMode,
+          'spell-row-prepared': isPrepared,
+          'spell-row-permanent': isAlwaysPrepared,
           'sortable-placeholder': ctx.sortable.isSource(entry),
         }"
         :data-sortable-key="entry.ref.id"
         @pointerdown="onRowDown"
       >
-    <div class="sp-lead">
-      <button
-        v-if="ctx.preparation"
-        class="sp-prepared"
-        :class="{ on: entry.ref.prepared }"
-        :title="entry.ref.prepared ? 'В подготовленных' : 'Не подготовлено'"
-        :aria-label="entry.ref.prepared ? 'Подготовлено' : 'Не подготовлено'"
-        @click.stop="ctx.togglePrepared(entry.ref.id)"
-      >
-        <svg viewBox="0 0 24 24" width="16" height="16" :fill="entry.ref.prepared ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true">
-          <path d="M6.5 3.5h11a.5.5 0 0 1 .5.5v16l-6-3.6L6 20V4a.5.5 0 0 1 .5-.5z" />
-        </svg>
-      </button>
+    <PreparedSpellVine
+      v-if="isPrepared"
+      class="sp-prepared-vine"
+      :permanent="isAlwaysPrepared"
+    />
 
+    <div class="sp-lead">
       <ItemIcon
         v-if="entry.item?.iconImageUrl"
         class="sp-item-icon"
@@ -83,6 +78,24 @@
 
     <template #default="{ close }">
       <RowActionItem action="view" @click="openDetails(close)">Открыть описание</RowActionItem>
+      <RowActionItem
+        v-if="ctx.charCtx.ownerMode && canPrepare && !isAlwaysPrepared"
+        action="prepare"
+        :icon="Sprout"
+        tone="accent"
+        @click="togglePreparation(close)"
+      >
+        {{ isPrepared ? 'Снять подготовку' : 'Подготовить' }}
+      </RowActionItem>
+      <RowActionItem
+        v-if="ctx.charCtx.ownerMode && canPrepare"
+        action="always-prepare"
+        :icon="BookMarked"
+        tone="warning"
+        @click="toggleAlwaysPrepared(close)"
+      >
+        {{ isAlwaysPrepared ? 'Убрать постоянное изучение' : 'Изучено навсегда' }}
+      </RowActionItem>
       <RowActionSubmenu
         v-if="ctx.charCtx.ownerMode && canUse && hasHigherLevelChoice"
         label="Выберите ячейку"
@@ -125,9 +138,11 @@
 </template>
 
 <script setup>
+import { BookMarked, Sprout } from '@lucide/vue'
 import { computed, inject, ref, watch } from 'vue'
 
 import AttackDamage from '@/features/character-editor/blocks/dnd/components/AttackDamage.vue'
+import PreparedSpellVine from '@/features/character-editor/blocks/dnd/components/PreparedSpellVine.vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
@@ -149,6 +164,9 @@ const school = computed(() => ctx.schoolMeta(props.entry.item))
 
 // Круг каста: для slot-роста степпер от базового круга заклинания до макс. доступного героем.
 const baseLvl = computed(() => Number(data.value.lvl) || 0)
+const canPrepare = computed(() => !!ctx.preparation && baseLvl.value > 0)
+const isAlwaysPrepared = computed(() => canPrepare.value && !!props.entry.ref.always_prepared)
+const isPrepared = computed(() => canPrepare.value && (isAlwaysPrepared.value || !!props.entry.ref.prepared))
 const maxCast = computed(() => Math.max(baseLvl.value, Number(ctx.maxSlotLevel) || 0))
 const castOverride = ref(null)
 const castLevel = computed(() => {
@@ -194,6 +212,16 @@ function openDetails(close) {
   close()
 }
 
+function togglePreparation(close) {
+  ctx.togglePrepared(props.entry.ref.id)
+  close()
+}
+
+function toggleAlwaysPrepared(close) {
+  ctx.toggleAlwaysPrepared(props.entry.ref.id)
+  close()
+}
+
 function useWithoutChoice(close) {
   if (!canUse.value) return
   const level = baseLvl.value === 0 ? 0 : slotOptions.value[0]
@@ -216,6 +244,8 @@ function removeSpell(close) {
 <style scoped>
 .spell-row {
   position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: flex;
   align-items: center;
   gap: 14px;
@@ -223,6 +253,26 @@ function removeSpell(close) {
   padding: 12px 4px;
   transition: background 0.12s;
   cursor: default;
+}
+.spell-row > :not(.sp-prepared-vine) {
+  position: relative;
+  z-index: 1;
+}
+.sp-prepared-vine {
+  position: absolute;
+  z-index: 0;
+  top: 2px;
+  right: -2px;
+  bottom: 2px;
+  width: clamp(104px, 28%, 176px);
+  color: color-mix(in srgb, var(--accent) 38%, transparent);
+  opacity: 0.74;
+  pointer-events: none;
+}
+.spell-row-permanent .sp-prepared-vine {
+  width: clamp(120px, 31%, 194px);
+  color: color-mix(in srgb, var(--warning) 47%, transparent);
+  opacity: 0.82;
 }
 .spell-row-clickable { cursor: pointer; }
 .spell-row-draggable { cursor: grab; touch-action: pan-y; }
@@ -249,26 +299,6 @@ function removeSpell(close) {
 .sp-item-icon { flex: none; }
 .sp-school-svg { display: inline-flex; }
 .sp-school-svg :deep(svg) { width: 20px; height: 20px; }
-
-.sp-prepared {
-  width: 24px;
-  height: 24px;
-  flex: none;
-  display: grid;
-  place-items: center;
-  border: none;
-  background: none;
-  color: var(--text-muted);
-  cursor: pointer;
-  padding: 0;
-  transition: color 0.12s, transform 0.1s;
-}
-@media (hover: hover) {
-  .sp-prepared:hover { color: var(--text-muted); }
-  .sp-prepared.on:hover { color: var(--accent); }
-}
-.sp-prepared:active { transform: scale(0.88); }
-.sp-prepared.on { color: var(--accent); }
 
 .sp-info {
   flex: 1;

@@ -27,4 +27,13 @@ describe('character spell card icon', () => {
     expect(source).toContain('action="delete"')
     expect(source).not.toContain('class="sp-del"')
   })
+
+  it('moves both preparation statuses into actions and decorates leveled spells', () => {
+    expect(source).not.toContain('class="sp-prepared"')
+    expect(source).toContain('v-if="ctx.charCtx.ownerMode && canPrepare && !isAlwaysPrepared"')
+    expect(source).toContain('baseLvl.value > 0')
+    expect(source).toContain('ctx.togglePrepared(props.entry.ref.id)')
+    expect(source).toContain('ctx.toggleAlwaysPrepared(props.entry.ref.id)')
+    expect(source).toContain(':permanent="isAlwaysPrepared"')
+  })
 })

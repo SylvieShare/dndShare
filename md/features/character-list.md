@@ -237,7 +237,9 @@ Key rules:
   preferring the selected subrace and avoiding an unchanged consecutive result;
 - the Personality step uses the same fixed 3×3 D&D alignment enum as the sheet;
 - classes whose handbook `spellcasting.prepares` flag is enabled create a
-  spellbook with preparation mode enabled automatically;
+  spellbook with preparation mode enabled automatically; selected cantrips are
+  stored unprepared, selected leveled spells begin prepared, and granted
+  archetype/domain spells begin permanently prepared;
 - resets and incomplete-create decisions use shared `ConfirmDialog`;
 - the draft persists in `localStorage` and is cleared after successful create.
 

@@ -37,6 +37,7 @@ export function buildLevelUpUpdates({
   slotDiff,
   slotsAfter,
   grantedNewIds,
+  grantedSpellLevels = {},
   classItem,
 }) {
   const updates = {
@@ -161,6 +162,7 @@ export function buildLevelUpUpdates({
     const spells = values.spells && typeof values.spells === 'object'
       ? { ...values.spells }
       : { stat_path: castingAbilityIdOf(classItem) ?? '', spells: [], slots: defaultSlots() }
+    const spellEntries = (spells.spells || []).map((entry) => ({ ...entry }))
     if (applySlotChange) {
       const slots = Array.isArray(spells.slots) && spells.slots.length
         ? spells.slots.map((slot) => ({ ...slot }))
@@ -172,15 +174,31 @@ export function buildLevelUpUpdates({
       if (slotsAfter.pactMerged) spells.slots_rest = 'short_rest'
     }
     if (grantedNewIds.length) {
-      spells.spells = [...(spells.spells || []), ...grantedNewIds.map((id) => ({ id, prepared: true }))]
+      for (const id of grantedNewIds) {
+        const level = grantedSpellLevels[String(id)]
+        const prepared = level == null || Number(level) > 0
+        const existing = spellEntries.find((entry) => String(entry.id) === String(id))
+        if (existing) {
+          existing.prepared = prepared
+          if (prepared) existing.always_prepared = true
+          else delete existing.always_prepared
+        } else {
+          spellEntries.push({
+            id,
+            prepared,
+            ...(prepared ? { always_prepared: true } : {}),
+          })
+        }
+      }
     }
     if (featSpellIds.length) {
-      const existing = new Set((spells.spells || []).map((entry) => String(entry.id)))
+      const existing = new Set(spellEntries.map((entry) => String(entry.id)))
       const added = featSpellIds
         .filter((id) => !existing.has(String(id)))
         .map((id) => ({ id, prepared: true, source: 'feat' }))
-      spells.spells = [...(spells.spells || []), ...added]
+      spellEntries.push(...added)
     }
+    spells.spells = spellEntries
     updates.spells = spells
   }
 

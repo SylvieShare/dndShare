@@ -79,6 +79,7 @@ function addProficiencies(values, bucket, labels) {
  * @param {object} input.scores  base ability scores `{ STR, DEX, ... }`
  * @param {Array<number>} input.skillIds   chosen skill proficiencies (suggest 15)
  * @param {Array<number>} input.spellIds   chosen spell item ids
+ * @param {Record<string,number>} input.spellLevels spell levels by item id
  * @param {Array<object>} input.raceAbilityItems  fetched type-3 abilities
  * @param {Array<object>} input.classAbilityItems fetched type-4 abilities
  * @param {(typeId:number,id:number)=>string} input.suggestValue
@@ -88,7 +89,7 @@ export function buildCharacterData(input) {
   const {
     name = '', race, subrace = null, charClass, subclass = null, raceVariant = null,
     background = null,
-    scores = {}, asiChoice = [], skillIds = [], spellIds = [], grantedSpellIds = [], choices = [],
+    scores = {}, asiChoice = [], skillIds = [], spellIds = [], spellLevels = {}, grantedSpellIds = [], choices = [],
     raceSkillIds = [], raceLangIds = [], featIds = [], feats = [], bgLangIds = [],
     equipment = [], buyStartingEquipment = false, startingWallet = {}, persona = null, contentSources = null,
     raceAbilityItems = [], classAbilityItems = [], suggestValue,
@@ -189,6 +190,7 @@ export function buildCharacterData(input) {
   // the shared caster table (full 2 / half 0 / artificer 2 / warlock pact 1).
   // Granted subclass spells (cleric domains) are appended as prepared.
   const grantedExtra = grantedSpellIds.filter((id) => !spellIds.includes(id))
+  const grantedSpellIdSet = new Set(grantedSpellIds.map((id) => String(id)))
   if (grants.spellcasting || spellIds.length || grantedExtra.length || featSpellIds.length) {
     const slots = defaultSlots()
     const slotInfo = charClass ? computeSlots(
@@ -200,11 +202,17 @@ export function buildCharacterData(input) {
     values.spells = {
       stat_path: grants.spellcasting?.abilityId ?? '',
       preparation: !!grants.spellcasting?.prepares,
-      spells: [...new Set([...spellIds, ...grantedExtra, ...featSpellIds])].map((id) => ({
-        id,
-        prepared: true,
-        ...(featSpellIds.some((featId) => String(featId) === String(id)) ? { source: 'feat' } : {}),
-      })),
+      spells: [...new Set([...spellIds, ...grantedExtra, ...featSpellIds])].map((id) => {
+        const level = spellLevels[String(id)]
+        const prepared = level == null || Number(level) > 0
+        const alwaysPrepared = prepared && grantedSpellIdSet.has(String(id))
+        return {
+          id,
+          prepared,
+          ...(alwaysPrepared ? { always_prepared: true } : {}),
+          ...(featSpellIds.some((featId) => String(featId) === String(id)) ? { source: 'feat' } : {}),
+        }
+      }),
       slots,
       ...(slotInfo?.pactMerged ? { slots_rest: 'short_rest' } : {}),
     }

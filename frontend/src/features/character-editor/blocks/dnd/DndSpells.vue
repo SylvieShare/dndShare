@@ -39,7 +39,7 @@
           Подготовлено: {{ preparedSummary.total }}
         </span>
         <span v-for="row in preparedSummary.perLevel" :key="row.level" class="sp-prep-chip">
-          {{ row.level === 0 ? 'Заговоры' : row.level + ' круг' }} · {{ row.count }}
+          {{ row.level }} круг · {{ row.count }}
         </span>
       </div>
 
@@ -87,20 +87,7 @@
       :item-id="modalSpell.id"
       :item="modalSpell"
       @close="modalSpell = null"
-    >
-      <template v-if="canInteract" #actions>
-        <button
-          v-if="preparation && modalSpellRef"
-          type="button"
-          class="sp-modal-action sp-modal-prepare"
-          :class="{ active: modalSpellRef.prepared }"
-          :aria-pressed="modalSpellRef.prepared"
-          @click="togglePrepared(modalSpellRef.id)"
-        >
-          {{ modalSpellRef.prepared ? 'Снять подготовку' : 'Подготовить' }}
-        </button>
-      </template>
-    </ItemViewModal>
+    />
 
   </div>
 </template>
@@ -194,7 +181,9 @@ const spellsByLevel = computed(() => {
   return [...groups.entries()].sort((a, b) => a[0] - b[0]).map(([level, items]) => ({
     level,
     items,
-    preparedCount: items.filter(entry => entry.ref.prepared).length,
+    preparedCount: Number(level) > 0
+      ? items.filter(entry => entry.ref.prepared || entry.ref.always_prepared).length
+      : 0,
   }))
 })
 const preparedSummary = computed(() => {
@@ -207,8 +196,6 @@ const preparedSummary = computed(() => {
   }
   return { total, perLevel }
 })
-const modalSpellRef = computed(() => spells.value.find(spell => spell.id === modalSpell.value?.id) || null)
-
 // ─── Watch blockHidden → notify parent ────────────
 
 watch(blockHidden, v => setBlockHidden(v), { immediate: true })
@@ -222,7 +209,12 @@ function emitChange() {
     attack_bonus: attackBonusExtra.value,
     slots_rest: slotsRest.value,
     preparation: preparation.value,
-    spells: spells.value.map(s => ({ id: s.id, prepared: s.prepared })),
+    spells: spells.value.map(s => ({
+      id: s.id,
+      prepared: !!s.prepared,
+      ...(s.always_prepared ? { always_prepared: true } : {}),
+      ...(s.source ? { source: s.source } : {}),
+    })),
     slots: serializedSlots(),
   })
 }
@@ -277,15 +269,47 @@ function setPreparation(v) {
 
 async function loadDetails() {
   const ids = spells.value.map(s => s.id).filter(id => !itemMap[id])
-  if (!ids.length) return
-  const res = await itemsApi.byIds(ids)
-  for (const item of res.items || []) itemMap[item.id] = item
+  if (ids.length) {
+    const res = await itemsApi.byIds(ids)
+    for (const item of res.items || []) itemMap[item.id] = item
+  }
+  normalizePreparationStatuses()
+}
+
+function normalizePreparationStatuses() {
+  let changed = false
+  for (const spell of spells.value) {
+    const level = Number(itemMap[spell.id]?.data?.lvl)
+    if (level === 0 && (spell.prepared || spell.always_prepared)) {
+      spell.prepared = false
+      delete spell.always_prepared
+      changed = true
+    } else if (level > 0 && spell.always_prepared && !spell.prepared) {
+      spell.prepared = true
+      changed = true
+    }
+  }
+  if (changed) emitChange()
 }
 
 function togglePrepared(id) {
   if (!charCtx.ownerMode) return
-  const entry = spells.value.find(s => s.id === id)
-  if (entry) { entry.prepared = !entry.prepared; emitChange() }
+  const entry = spells.value.find(s => String(s.id) === String(id))
+  const level = Number(itemMap[id]?.data?.lvl)
+  if (entry && level > 0 && !entry.always_prepared) {
+    entry.prepared = !entry.prepared
+    emitChange()
+  }
+}
+
+function toggleAlwaysPrepared(id) {
+  if (!charCtx.ownerMode) return
+  const entry = spells.value.find(s => String(s.id) === String(id))
+  const level = Number(itemMap[id]?.data?.lvl)
+  if (!entry || level <= 0) return
+  entry.always_prepared = !entry.always_prepared
+  if (entry.always_prepared) entry.prepared = true
+  emitChange()
 }
 
 function removeSpell(id) {
@@ -422,6 +446,7 @@ provide('spellsBlockCtx', reactive({
   sortable,
   onSpellDragStart,
   togglePrepared,
+  toggleAlwaysPrepared,
   removeSpell,
   openSpell,
   schoolMeta,

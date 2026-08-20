@@ -524,6 +524,8 @@ export function useDndCreateWizard() {
     return buildDndCharacterPayload({
       state,
       stats: STATS,
+      spellPool: spellPool.value,
+      grantedSpellList: grantedSpellList.value,
       featPool: featPool.value,
       equipment: equipment.allEquipment.value,
       buyStartingEquipment: state.buyStartingEquipment,

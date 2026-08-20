@@ -65,6 +65,23 @@ describe('buildCharacterData spell preparation', () => {
 
     expect(result.data.values.spells.preparation).toBe(false)
   })
+
+  it('keeps cantrips unprepared and marks granted leveled spells as permanent', () => {
+    const result = buildCharacterData({
+      race: selection(1, 'Человек'),
+      charClass: selection(2, 'Жрец', { spellcasting: { ability: 5, prepares: true } }),
+      spellIds: [100, 101],
+      spellLevels: { 100: 0, 101: 1, 102: 1 },
+      grantedSpellIds: [102],
+      suggestValue: () => '',
+    })
+
+    expect(result.data.values.spells.spells).toEqual([
+      { id: 100, prepared: false },
+      { id: 101, prepared: true },
+      { id: 102, prepared: true, always_prepared: true },
+    ])
+  })
 })
 
 describe('buildCharacterData starting equipment', () => {

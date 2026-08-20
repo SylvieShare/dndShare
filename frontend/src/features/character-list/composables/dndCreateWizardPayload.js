@@ -8,6 +8,8 @@ function selectedItem(item) {
 export function buildDndCharacterPayload({
   state,
   stats,
+  spellPool,
+  grantedSpellList,
   featPool,
   equipment,
   buyStartingEquipment,
@@ -43,6 +45,11 @@ export function buildDndCharacterPayload({
     persona: { ...state.persona },
     skillIds: state.skillIds.slice(),
     spellIds: state.spellIds.slice(),
+    spellLevels: Object.fromEntries(
+      [...(spellPool || []), ...(grantedSpellList || [])]
+        .filter((spell) => spell.data?.lvl != null)
+        .map((spell) => [String(spell.id), Number(spell.data?.lvl) || 0]),
+    ),
     grantedSpellIds: grantedSpellIds.slice(),
     choices: featureChoices.map((feature) => ({
       abilityId: feature.id,

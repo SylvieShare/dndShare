@@ -122,13 +122,24 @@ The current shape under `data.values` is:
   {base,bonuses,use_dex}`;
 - HP: `{current,max,temp,ds_success,ds_failure,hitDice:[{die,total,used}]}`;
 - spellbook: `{stat_path,save_bonus,attack_bonus,slots_rest,preparation,
-  spells:[{id,prepared}],slots:[{level,total,used}]}`;
+  spells:[{id,prepared,always_prepared?}],slots:[{level,total,used}]}`;
 - inventory: `{equipped:[Entry],sections:[{id,name,items:[Entry]}]}`;
 - wallet: `{order:[suggestId],amounts:{[suggestId]:number}}`;
 - race/class/feat abilities: arrays of item references/current counters.
 
 There are no `class/subclass` mirrors, scalar level/stat/hit-dice forms, array
 spellbook, flat inventory or array wallet.
+
+Spell preparation applies only to spells of level 1 and higher. Cantrips never
+offer preparation actions, and stale preparation fields on them are cleared
+after handbook details load. Owners change regular and permanent preparation
+through the spell row action menu; the row has no standalone preparation
+checkbox. A prepared spell gets a monochrome accent vine in the right-side
+background. `always_prepared` represents an archetype/domain spell learned for
+good: it always implies `prepared`, uses an extended vine print in the warning
+tone and can be assigned or removed separately through the same menu. Granted
+archetype spells receive this status during creation and level-up.
+
 `internal/store/schema/03_characters.sql` migrates existing rows before HTTP
 start and removes the old keys. Components neither recognize nor write previous
 shapes.
