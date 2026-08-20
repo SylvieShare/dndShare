@@ -14,6 +14,7 @@
     @pointerup="onPointerUp"
     @pointercancel="cancelGesture"
     @pointerleave="clearHoverTargets"
+    @contextmenu="onContextMenu"
     @wheel.prevent="onWheel"
   >
     <div class="nested-graph-grid" :style="gridStyle" />
@@ -141,7 +142,7 @@
     </div>
 
     <div v-if="linkingFrom || (gesture?.type === 'edge' && gesture.moved)" class="nested-graph-link-hint">
-      {{ gesture?.type === 'edge' ? 'Перетащите конец связи на другую карточку' : 'Выберите карточку, в которую ведёт связь' }} · Esc — отменить
+      {{ gesture?.type === 'edge' ? 'Перетащите конец связи на другую карточку' : 'Выберите карточку, в которую ведёт связь' }} · Esc или ПКМ — отменить
     </div>
 
     <GraphSelectionBar
@@ -610,6 +611,13 @@ function clearHoverTargets() {
   linkPreviewTarget.value = null
   hoveredEdgeId.value = null
   if (gesture.value?.type === 'edge') gesture.value.hoveredTarget = null
+}
+
+function onContextMenu(event) {
+  if (!props.linkingFrom) return
+  event.preventDefault()
+  clearHoverTargets()
+  emit('start-link', null)
 }
 
 function onNativeDoubleClick(node) {

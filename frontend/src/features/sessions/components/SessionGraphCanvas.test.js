@@ -160,6 +160,15 @@ describe('session graph canvas', () => {
     expect(canvasSource).toContain("'nested-graph-node--link-preview-target'")
   })
 
+  it('cancels active link creation with the context button without replacing the normal context menu', () => {
+    expect(canvasSource).toContain('@contextmenu="onContextMenu"')
+    expect(canvasSource).not.toContain('@contextmenu.prevent')
+    expect(canvasSource).toContain('if (!props.linkingFrom) return')
+    expect(canvasSource).toContain('event.preventDefault()')
+    expect(canvasSource).toContain("emit('start-link', null)")
+    expect(canvasSource).toContain('Esc или ПКМ — отменить')
+  })
+
   it('derives block presentation from type and opens actions from the whole card', () => {
     expect(blockSource).toContain('sceneBlockColor(block.type)')
     expect(blockSource).toContain('background: var(--surface);')
