@@ -50,6 +50,11 @@ describe('handbook list controls', () => {
   it('places weapon damage in the shared metric column and price at the trailing edge', () => {
     expect(weaponList).toContain('#metric')
     expect(weaponList).toContain('<WeaponDamageMetric')
+    expect(weaponList).toContain('<ItemTooltip')
+    expect(weaponList).toContain('@mouseenter="showTagTooltip($event, tag)"')
+    expect(weaponList).toContain('@focus="showTagTooltip($event, tag)"')
+    expect(weaponList).toContain('details.desc ||')
+    expect(weaponList).toContain('wli-property--described')
     expect(weaponList).toContain(':size="36"')
     expect(weaponList).not.toContain('wli-damage')
     expect(weaponDamageMetric).toContain('class="weapon-damage-metric__title">Урон</span>')
