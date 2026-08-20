@@ -29,4 +29,11 @@ describe('spell selection tile', () => {
     expect(step).toContain('grid-template-columns: repeat(3, minmax(0, 1fr))')
     expect(step).toContain('grid-template-columns: repeat(2, minmax(0, 1fr))')
   })
+
+  it('renders every available spell directly without a search filter', () => {
+    expect(step).toContain('v-for="sp in sec.pool"')
+    expect(step).not.toContain('Поиск заклинания')
+    expect(step).not.toContain('filtered(sec.pool)')
+    expect(step).not.toContain('const query = ref')
+  })
 })

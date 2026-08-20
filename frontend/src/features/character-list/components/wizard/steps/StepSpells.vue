@@ -18,11 +18,6 @@
       </div>
     </div>
 
-    <div class="search">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" /></svg>
-      <input v-model="query" type="text" placeholder="Поиск заклинания…" />
-    </div>
-
     <template v-for="sec in sections" :key="sec.kind">
       <div v-if="sec.pool.length && sec.limit" class="sec">
         <div class="sheet-section-title">
@@ -31,7 +26,7 @@
         </div>
         <div class="list">
           <SpellSelectTile
-            v-for="sp in filtered(sec.pool)"
+            v-for="sp in sec.pool"
             :key="sp.id"
             :spell="sp"
             :school="schoolName(sp)"
@@ -68,7 +63,6 @@ const {
   grantedSpellList,
 } = inject('createWizard')
 
-const query = ref('')
 const viewId = ref(null)
 const suggestStore = useSuggestStore()
 suggestStore.ensure(7)
@@ -85,23 +79,12 @@ const preparesNote = computed(() => (
     : ''
 ))
 
-function filtered(pool) {
-  const q = query.value.trim().toLowerCase()
-  return q ? pool.filter((sp) => [sp.name, sp.nameEn, schoolName(sp)].some((value) => String(value || '').toLowerCase().includes(q))) : pool
-}
 function schoolName(spell) { return schoolMap.value.get(String(spell?.data?.schoolId)) || '' }
 </script>
 
 <style scoped>
 .step { display: flex; flex-direction: column; gap: 12px; }
 .hint { font-size: 12px; color: var(--text-muted); margin: 0; }
-.search { position: relative; display: flex; align-items: center; }
-.search svg { position: absolute; left: 11px; width: 15px; height: 15px; color: var(--text-muted); pointer-events: none; }
-.search input {
-  width: 100%; box-sizing: border-box; background: var(--surface-raised); border: 1px solid var(--border-strong);
-  border-radius: 9px; color: var(--text-1); font: inherit; font-size: 13px; padding: 8px 12px 8px 32px; outline: none;
-}
-.search input:focus { border-color: var(--accent); }
 .sec { display: flex; flex-direction: column; gap: 8px; }
 .granted { margin-top: 1px; }
 .count { font-size: 12px; font-weight: 600; color: var(--text-muted); letter-spacing: 0; text-transform: none; }
