@@ -7,10 +7,41 @@
   opacity: 0;
   pointer-events: none;
 }
+.session-graph-back {
+  position: absolute;
+  z-index: 21;
+  top: 14px;
+  left: var(--chapter-safe-left, 0px);
+  min-height: 30px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px 5px 8px;
+  border: 1px solid color-mix(in srgb, var(--accent) 38%, var(--border-strong));
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--popover-bg) 92%, transparent);
+  color: var(--accent-soft);
+  font: inherit;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--bg) 32%, transparent);
+  backdrop-filter: blur(10px);
+  transition: left 0.42s cubic-bezier(0.22, 1, 0.36, 1), background 0.15s, border-color 0.15s, color 0.15s;
+}
+.session-graph-back:hover {
+  border-color: color-mix(in srgb, var(--accent) 68%, var(--border-strong));
+  background: color-mix(in srgb, var(--accent) 14%, var(--popover-bg));
+  color: var(--text-1);
+}
+.session-graph-back:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
 .session-graph-ancestor {
   position: absolute;
   z-index: 20;
-  top: 14px;
+  top: 54px;
   width: 236px;
   height: 156px;
   cursor: zoom-out;
@@ -39,10 +70,12 @@
 .session-graph-state { color: var(--text-muted); }
 .session-graph-error { color: var(--danger); border: 1px solid color-mix(in srgb, var(--danger) 35%, transparent); }
 @media (max-width: 760px) {
+  .session-graph-back { left: 8px; }
   .session-graph-ancestor--chapter { left: 8px; }
   .session-graph-ancestor--scene { left: 260px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .session-graph-canvas__nested,
+  .session-graph-back,
   .session-graph-ancestor { transition: none; }
 }

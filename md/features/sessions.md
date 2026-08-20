@@ -449,7 +449,10 @@ arc or delete.
 Status choices use the same configured semantic colors as the status badge on
 the chapter node. While scenarios or blocks are open, clicking the pinned
 chapter preview opens a reduced chapter menu with return-to-chapters, status
-change and edit actions; double click remains a direct return shortcut.
+change and edit actions. A single contextual back button above the pinned chain
+reads `К главам` on the scenario canvas and `К сценариям` on the block canvas,
+and always returns exactly one level. Double click remains a direct return
+shortcut.
 Double-clicking a chapter opens its scenario canvas directly.
 Moving a node to another arc removes its old transitions after confirmation
 because a transition cannot cross arc boundaries.
@@ -551,8 +554,9 @@ Block edges are re-measured after content or width changes, and dragging the
 right edge persists a width in the `220..640px` range. Clicking the pinned
 scenario opens a reduced menu with return-to-scenarios, status and edit actions;
 double click remains the direct return shortcut. Double-clicking the pinned chapter at either
-nested level returns to chapters. Thus the visible ancestor chain is also the
-level navigation and does not duplicate a breadcrumb bar or physical canvas.
+nested level returns to chapters. Thus the visible ancestor chain and its single
+contextual back button provide level navigation without duplicating a breadcrumb
+bar or physical canvas.
 
 `NestedGraphCanvas` owns pan, zoom, drag, link-port, edge and spotlight mechanics
 for all three levels. `useSceneGraph` and `useSceneBlockGraph` own their server

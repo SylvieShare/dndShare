@@ -20,6 +20,7 @@
       :can-edit="isDm && workspaceMode !== 'combat'"
       :spotlight-node-id="activeSpotlightId"
       :spotlight-offset-x="spotlightOffsetX"
+      :spotlight-y="activeSpotlightTop"
       :initial-top="activeInitialTop"
       :empty-title="emptyCopy.title"
       :empty-description="emptyCopy.description"
@@ -65,6 +66,17 @@
         />
       </template>
     </NestedGraphCanvas>
+
+    <button
+      v-if="showChapterAncestor"
+      class="session-graph-back"
+      type="button"
+      @pointerdown.stop
+      @click.stop="navigateBack"
+    >
+      <ArrowLeft :size="15" aria-hidden="true" />
+      {{ backLabel }}
+    </button>
 
     <div
       v-if="showChapterAncestor"
@@ -195,6 +207,7 @@
 
 <script setup>
 import { computed, inject, ref, watch } from 'vue'
+import { ArrowLeft } from '@lucide/vue'
 import CanvasActionDock from '@/features/sessions/components/CanvasActionDock.vue'
 import CanvasHotkeyHints from '@/features/sessions/components/CanvasHotkeyHints.vue'
 import ChapterEdgeModal from '@/features/sessions/components/ChapterEdgeModal.vue'
@@ -339,6 +352,16 @@ const {
 const referencePickerItems = computed(() => {
   return buildSessionEntityCatalog(sessionWorld, sessionMaterials)
 })
+
+const ANCESTOR_TOP = 54
+const activeSpotlightTop = computed(() => transitionSpotlight.value ? ANCESTOR_TOP : 14)
+const backLabel = computed(() => displayLevel.value === 'blocks' ? 'К сценариям' : 'К главам')
+
+function navigateBack() {
+  closeGraphMenus()
+  if (displayLevel.value === 'blocks') returnToScenes()
+  else returnToChapters()
+}
 
 function openChapterAncestorMenu(event) {
   if (!props.isDm || !activeChapter.value) return
