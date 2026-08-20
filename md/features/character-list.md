@@ -153,8 +153,10 @@ full handbook card; “any weapon/tool/focus” clauses use the same row inside 
 searchable dropdown and persist the selected item id. Weapon rows include their
 primary damage die. Groups with exactly two alternatives use a two-column
 desktop layout and a shield-check marker on the selected branch; the columns
-collapse on mobile. Pick-kind labels are carried by the selector placeholder
-instead of occupying a separate title column. A class may instead enable
+collapse on mobile. Concrete item selectors remain visible before branch
+selection; choosing an item activates that branch, while switching columns
+clears the previous column's concrete picks. Pick-kind labels are carried by the
+selector placeholder instead of occupying a separate title column. A class may instead enable
 “Закупиться потом в магазине”. This disables both the class kit and background
 possessions, rolls the PHB 2014 class-wealth formula and replaces the later
 Equipment step with a searchable five-catalogue shop. Its cart compares all

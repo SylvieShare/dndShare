@@ -58,13 +58,13 @@
               />
             </div>
 
-            <div v-if="optionSelected(group, entry) && entry.picks?.length" class="concrete-picks">
+            <div v-if="entry.picks?.length" class="concrete-picks">
               <template v-for="pick in entry.picks" :key="pick.id">
                 <EquipmentItemSelect
                   v-for="index in pick.count"
                   :key="`${pick.id}-${index}`"
                   :items="pick.options"
-                  :model-value="pickValue(group.id, pick.id, index - 1)"
+                  :model-value="pickValue(group.id, entry.id, pick.id, index - 1)"
                   :placeholder="pickPlaceholder(pick, index)"
                   @update:model-value="setEquipmentPick(group.id, entry.id, pick.id, index - 1, $event)"
                 />
@@ -89,7 +89,7 @@
         <div v-for="pick in profile.fixedPicks" :key="pick.id" class="fixed-pick">
           <EquipmentItemSelect
             :items="pick.options"
-            :model-value="pickValue('__fixed', pick.id, 0)"
+            :model-value="pickValue('__fixed', 'fixed', pick.id, 0)"
             :placeholder="pickPlaceholder(pick, 1)"
             @update:model-value="setEquipmentPick('__fixed', 'fixed', pick.id, 0, $event)"
           />
@@ -127,8 +127,10 @@ function optionSelected(group, entry) {
   return selected === entry.id || (selected == null && group.options.length === 1)
 }
 
-function pickValue(groupId, pickId, index) {
-  return state.classEquipmentChoices?.[groupId]?.picks?.[pickId]?.[index] || ''
+function pickValue(groupId, optionId, pickId, index) {
+  const choice = state.classEquipmentChoices?.[groupId]
+  if (choice?.optionId !== optionId) return ''
+  return choice.picks?.[pickId]?.[index] || ''
 }
 
 function pickPlaceholder(pick, index) {
