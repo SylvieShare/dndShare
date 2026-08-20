@@ -799,6 +799,8 @@ the active turn. Queue tiles are tightly packed squares sized to fit a smaller
 full-fit creature icon and the longest worded health state below it, with no name
 or initiative value. The visible slot count follows the available screen width,
 so a long queue reaches the right edge before overflowing into its final stack.
+Below the cards, a quiet ticked scale with a right-pointing arrow labels the
+direction from the next turn toward later turns.
 An NPC letter sits just inside the icon's upper-right
 corner in its assigned color, clear of the tile frame. Overflow
 shares the final right-hand slot as a visible stack. On turn change the

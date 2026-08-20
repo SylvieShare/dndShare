@@ -126,6 +126,11 @@
                 <span v-if="queueStackCount > 1 && index === queueStackStart" class="initiative-card__stack-count">+{{ queueStackCount - 1 }}</span>
               </li>
             </TransitionGroup>
+            <div v-if="turnQueue.length" class="initiative-direction" aria-hidden="true">
+              <span>Следующий</span>
+              <i />
+              <span>Позже</span>
+            </div>
             <div v-else class="encounter-screen__no-combatants">Других участников нет.</div>
           </section>
 

@@ -140,6 +140,47 @@
   list-style: none;
 }
 
+.initiative-direction {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(9px, .8vw, 14px);
+  padding-right: 10px;
+  color: var(--text-muted);
+}
+.initiative-direction span {
+  font-size: clamp(8px, .58vw, 10px);
+  font-weight: 850;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.initiative-direction i {
+  position: relative;
+  height: 12px;
+  background: repeating-linear-gradient(to right, color-mix(in srgb, var(--accent) 38%, var(--border)) 0 1px, transparent 1px 36px) left bottom / 100% 5px no-repeat;
+}
+.initiative-direction i::before {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 18%, var(--border)), color-mix(in srgb, var(--accent) 72%, var(--border)));
+  content: '';
+}
+.initiative-direction i::after {
+  position: absolute;
+  top: 50%;
+  right: 1px;
+  width: 7px;
+  height: 7px;
+  border-top: 1px solid color-mix(in srgb, var(--accent) 76%, var(--text-2));
+  border-right: 1px solid color-mix(in srgb, var(--accent) 76%, var(--text-2));
+  content: '';
+  transform: translateY(-50%) rotate(45deg);
+}
+
 .initiative-card {
   --screen-combatant-color: var(--accent);
   position: relative;

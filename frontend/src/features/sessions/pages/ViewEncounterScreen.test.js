@@ -64,6 +64,11 @@ describe('public encounter composition', () => {
     expect(pageSource).toContain('class="encounter-health initiative-card__health"')
     expect(pageSource).toContain(`:style="{ '--queue-slots': queueSlotCount }"`)
     expect(pageSource).toContain('Math.floor((availableWidth + gap) / (cardSize + gap))')
+    expect(pageSource).toContain('class="initiative-direction"')
+    expect(pageSource).toContain('<span>Следующий</span>')
+    expect(pageSource).toContain('<span>Позже</span>')
+    expect(initiativeStyles).toContain('.initiative-direction i::after {')
+    expect(initiativeStyles).toContain('rotate(45deg)')
   })
 
   it('stacks graveyard rows upward on the right in name, icon and count order', () => {
