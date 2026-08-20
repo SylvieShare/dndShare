@@ -14,6 +14,7 @@ describe('public encounter portraits', () => {
     expect(initiativeStyles).toContain('position: absolute;')
     expect(initiativeStyles).toContain('.turn-spotlight__art img { object-fit: cover; }')
     expect(initiativeStyles).toContain('backdrop-filter: blur(8px)')
+    expect(initiativeStyles).toContain('aspect-ratio: 4 / 3;')
   })
 
   it('renders NPC artwork without a frame or backing surface', () => {
