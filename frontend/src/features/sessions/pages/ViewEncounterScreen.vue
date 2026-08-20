@@ -7,12 +7,8 @@
       </div>
     </header>
 
-    <aside v-if="pollFailed || (presentation?.mode === 'combat' && snapshot?.active)" class="encounter-screen__status" aria-live="polite">
-      <span v-if="presentation?.mode === 'combat' && snapshot?.active" class="encounter-screen__round">
-        <span>Раунд</span>
-        <strong>{{ snapshot.round }}</strong>
-      </span>
-      <span v-if="pollFailed" class="encounter-screen__connection is-offline">
+    <aside v-if="pollFailed" class="encounter-screen__status" aria-live="polite">
+      <span class="encounter-screen__connection is-offline">
         <WifiOff :size="17" aria-hidden="true" />
         Связь потеряна
       </span>
@@ -106,9 +102,19 @@
           <section class="encounter-queue" aria-label="Следующие ходы">
             <div class="encounter-screen__initiative-heading">
               <div><span>ДАЛЬШЕ ХОДЯТ</span><h2>Очередь</h2></div>
-              <span>{{ turnQueue.length }}</span>
+              <div class="encounter-queue__summary">
+                <span class="encounter-screen__round"><span>Раунд</span><strong>{{ snapshot.round }}</strong></span>
+                <span class="encounter-queue__total">{{ turnQueue.length }} в очереди</span>
+              </div>
             </div>
-            <TransitionGroup v-if="turnQueue.length" tag="ol" name="initiative-card" class="initiative-track" :style="{ '--queue-slots': queueSlotCount }">
+            <TransitionGroup
+              v-if="turnQueue.length"
+              tag="ol"
+              name="initiative-card"
+              class="initiative-track"
+              :class="{ 'initiative-track--overflow': queueStackCount > 1 }"
+              :style="{ '--queue-slots': queueSlotCount }"
+            >
               <li
                 v-for="(combatant, index) in turnQueue"
                 :key="combatant.uid"
@@ -217,7 +223,10 @@ const queueSlotCount = computed(() => {
   const screenPadding = Math.min(64, Math.max(24, width * 0.032))
   const cardSize = Math.min(128, Math.max(108, width * 0.08))
   const gap = Math.min(10, Math.max(8, width * 0.006))
-  const availableWidth = Math.max(cardSize, width - screenPadding * 2 - 10)
+  const baseAvailableWidth = Math.max(cardSize, width - screenPadding * 2 - 10)
+  const baseSlots = Math.max(1, Math.floor((baseAvailableWidth + gap) / (cardSize + gap)))
+  const stackReserve = turnQueue.value.length > baseSlots ? 82 : 10
+  const availableWidth = Math.max(cardSize, width - screenPadding * 2 - stackReserve)
   return Math.max(1, Math.floor((availableWidth + gap) / (cardSize + gap)))
 })
 const queueStackStart = computed(() => Math.max(0, queueSlotCount.value - 1))

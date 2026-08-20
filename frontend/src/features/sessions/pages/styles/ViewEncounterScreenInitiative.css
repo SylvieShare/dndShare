@@ -123,6 +123,10 @@
 .encounter-queue .encounter-screen__initiative-heading h2 {
   font-size: clamp(22px, 2vw, 34px);
 }
+.encounter-queue__summary { display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
+.encounter-queue__total { color: var(--text-muted); font-size: clamp(10px, .72vw, 13px); font-weight: 750; white-space: nowrap; }
+.encounter-queue__summary .encounter-screen__round { min-height: 36px; padding: 6px 12px; }
+.encounter-queue__summary .encounter-screen__round strong { font-size: 16px; }
 
 .initiative-track {
   --queue-card-size: clamp(108px, 8vw, 128px);
@@ -139,6 +143,7 @@
   padding: 0 10px 8px 0;
   list-style: none;
 }
+.initiative-track--overflow { padding-right: 82px; }
 
 .initiative-direction {
   min-width: 0;
@@ -206,7 +211,7 @@
   background: linear-gradient(180deg, color-mix(in srgb, var(--screen-combatant-color) 9%, var(--surface-raised)), color-mix(in srgb, var(--surface) 96%, transparent));
   box-shadow: 0 16px 38px color-mix(in srgb, var(--bg) 58%, transparent);
   overflow: visible;
-  translate: calc(var(--queue-stack-offset) * -4px) calc(var(--queue-stack-offset) * -5px);
+  translate: calc(var(--queue-stack-offset) * 18px) calc(var(--queue-stack-offset) * -24px);
   scale: calc(1 - var(--queue-stack-offset) * .018);
   transform-origin: right bottom;
   transition: border-color .24s, box-shadow .24s, opacity .24s, translate .42s cubic-bezier(.22, 1, .36, 1), scale .42s cubic-bezier(.22, 1, .36, 1);

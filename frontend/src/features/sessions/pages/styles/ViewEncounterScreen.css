@@ -174,7 +174,7 @@
 
 .encounter-screen__eyebrow,
 .encounter-screen__turn-label,
-.encounter-screen__initiative-heading > div > span,
+.encounter-screen__initiative-heading > div:first-child > span,
 .encounter-screen__empty-label {
   color: var(--accent-soft);
   font-size: clamp(10px, 0.72vw, 14px);

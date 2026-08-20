@@ -60,15 +60,25 @@ describe('public encounter composition', () => {
     expect(initiativeStyles).toContain('grid-template-columns: repeat(var(--queue-slots, 6), var(--queue-card-size));')
     expect(initiativeStyles).toContain('justify-content: start;')
     expect(initiativeStyles).toContain('aspect-ratio: 1;')
-    expect(initiativeStyles).toContain('translate: calc(var(--queue-stack-offset) * -4px)')
+    expect(initiativeStyles).toContain('translate: calc(var(--queue-stack-offset) * 18px) calc(var(--queue-stack-offset) * -24px);')
+    expect(initiativeStyles).toContain('.initiative-track--overflow { padding-right: 82px; }')
     expect(pageSource).toContain('class="encounter-health initiative-card__health"')
     expect(pageSource).toContain(`:style="{ '--queue-slots': queueSlotCount }"`)
+    expect(pageSource).toContain("'initiative-track--overflow': queueStackCount > 1")
+    expect(pageSource).toContain('const stackReserve = turnQueue.value.length > baseSlots ? 82 : 10')
     expect(pageSource).toContain('Math.floor((availableWidth + gap) / (cardSize + gap))')
     expect(pageSource).toContain('class="initiative-direction"')
     expect(pageSource).toContain('<span>Следующий</span>')
     expect(pageSource).toContain('<span>Позже</span>')
     expect(initiativeStyles).toContain('.initiative-direction i::after {')
     expect(initiativeStyles).toContain('rotate(45deg)')
+  })
+
+  it('keeps the current round in the queue heading instead of a floating status pill', () => {
+    expect(pageSource).toContain('class="encounter-queue__summary"')
+    expect(pageSource).toContain('<span>Раунд</span><strong>{{ snapshot.round }}</strong>')
+    expect(pageSource).not.toContain("pollFailed || (presentation?.mode === 'combat' && snapshot?.active)")
+    expect(initiativeStyles).toContain('.encounter-queue__summary .encounter-screen__round')
   })
 
   it('stacks graveyard rows upward on the right in name, icon and count order', () => {
