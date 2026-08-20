@@ -40,14 +40,14 @@ describe('session graph canvas', () => {
     expect(source).toContain('class="session-graph-ancestor session-graph-ancestor--scene"')
   })
 
-  it('offers one explicit contextual back button above the ancestor chain', () => {
+  it('offers one explicit contextual back button below the ancestor chain', () => {
     expect(source).toContain('class="session-graph-back"')
     expect(source).toContain("displayLevel.value === 'blocks' ? 'К сценариям' : 'К главам'")
     expect(source).toContain("if (displayLevel.value === 'blocks') returnToScenes()")
     expect(source).toContain('else returnToChapters()')
-    expect(source).toContain(':spotlight-y="activeSpotlightTop"')
-    expect(stylesSource).toMatch(/\.session-graph-back\s*\{[^}]*top:\s*14px;[^}]*left:\s*var\(--chapter-safe-left/s)
-    expect(stylesSource).toMatch(/\.session-graph-ancestor\s*\{[^}]*top:\s*54px;/s)
+    expect(source).not.toContain(':spotlight-y="activeSpotlightTop"')
+    expect(stylesSource).toMatch(/\.session-graph-back\s*\{[^}]*top:\s*178px;[^}]*left:\s*var\(--chapter-safe-left/s)
+    expect(stylesSource).toMatch(/\.session-graph-ancestor\s*\{[^}]*top:\s*14px;/s)
   })
 
   it('opens chapter actions from the pinned ancestor preview', () => {

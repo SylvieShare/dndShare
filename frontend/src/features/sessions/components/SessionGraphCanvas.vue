@@ -20,7 +20,6 @@
       :can-edit="isDm && workspaceMode !== 'combat'"
       :spotlight-node-id="activeSpotlightId"
       :spotlight-offset-x="spotlightOffsetX"
-      :spotlight-y="activeSpotlightTop"
       :initial-top="activeInitialTop"
       :empty-title="emptyCopy.title"
       :empty-description="emptyCopy.description"
@@ -353,8 +352,6 @@ const referencePickerItems = computed(() => {
   return buildSessionEntityCatalog(sessionWorld, sessionMaterials)
 })
 
-const ANCESTOR_TOP = 54
-const activeSpotlightTop = computed(() => transitionSpotlight.value ? ANCESTOR_TOP : 14)
 const backLabel = computed(() => displayLevel.value === 'blocks' ? 'К сценариям' : 'К главам')
 
 function navigateBack() {

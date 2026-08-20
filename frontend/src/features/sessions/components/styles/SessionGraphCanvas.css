@@ -10,7 +10,7 @@
 .session-graph-back {
   position: absolute;
   z-index: 21;
-  top: 14px;
+  top: 178px;
   left: var(--chapter-safe-left, 0px);
   min-height: 30px;
   display: inline-flex;
@@ -41,7 +41,7 @@
 .session-graph-ancestor {
   position: absolute;
   z-index: 20;
-  top: 54px;
+  top: 14px;
   width: 236px;
   height: 156px;
   cursor: zoom-out;

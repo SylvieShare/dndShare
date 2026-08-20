@@ -449,7 +449,7 @@ arc or delete.
 Status choices use the same configured semantic colors as the status badge on
 the chapter node. While scenarios or blocks are open, clicking the pinned
 chapter preview opens a reduced chapter menu with return-to-chapters, status
-change and edit actions. A single contextual back button above the pinned chain
+change and edit actions. A single contextual back button below the pinned chain
 reads `К главам` on the scenario canvas and `К сценариям` on the block canvas,
 and always returns exactly one level. Double click remains a direct return
 shortcut.
