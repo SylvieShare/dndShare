@@ -6,68 +6,79 @@
       </div>
     </div>
 
-    <div class="enemy-stats-block">
-      <div class="enemy-stats-side enemy-stats-left">
+    <CoverSummaryLayout
+      :side-min="132"
+      :side-max="190"
+      :center-min="220"
+      :safe-min-height="190"
+      :medium-side-min="116"
+      :medium-side-max="150"
+      :medium-center-min="100"
+    >
+      <template #left>
         <div v-if="identity.named_npc || detailTags.length" class="enemy-tags enemy-tags-left">
           <span v-if="identity.named_npc" class="enemy-tag enemy-tag-named">Именной</span>
           <span v-for="tag in detailTags" :key="`${tag.key}:${tag.label}`" class="enemy-tag">{{ tag.label }}</span>
         </div>
-        <div class="enemy-stat-card enemy-stat-cr">
-          <div class="stat-label" title="Уровень опасности помогает мастеру подобрать существо подходящей сложности для группы.">
-            <Gauge class="stat-icon" aria-hidden="true" /> Уровень опасности
-          </div>
-          <div class="stat-value">{{ combat.cr ?? '—' }}</div>
-          <div v-if="combat.xp != null" class="stat-note">{{ formatXp(combat.xp) }} опыта</div>
-        </div>
-        <div class="enemy-stat-card">
-          <div class="stat-label" title="Класс доспеха — сложность попадания по существу"><Shield class="stat-icon" aria-hidden="true" /> Класс доспеха</div>
-          <div class="stat-value">{{ combat.ac ?? '—' }}</div>
-          <div v-if="combat.ac_note" class="stat-note">{{ combat.ac_note }}</div>
-        </div>
-      </div>
+        <CoverStatCard
+          :icon="Gauge"
+          label="Уровень опасности"
+          :value="combat.cr ?? '—'"
+          :note="combat.xp != null ? `${formatXp(combat.xp)} опыта` : ''"
+          tone="danger"
+        />
+        <CoverStatCard :icon="Shield" label="Класс доспеха" :value="combat.ac ?? '—'" :note="combat.ac_note" />
+      </template>
 
-      <div class="enemy-cover-safe-zone" aria-hidden="true"></div>
-
-      <div class="enemy-stats-side enemy-stats-right">
-        <div class="enemy-stat-card">
-          <div class="stat-label" title="Хиты — запас здоровья существа"><Heart class="stat-icon" aria-hidden="true" /> Хиты</div>
-          <div class="stat-value">{{ combat.hp ?? '—' }}</div>
-          <div v-if="combat.hp_formula" class="stat-note">{{ combat.hp_formula }}</div>
-        </div>
-        <div v-if="combat.proficiencyBonus != null" class="enemy-stat-card">
-          <div class="stat-label" title="Бонус мастерства"><Sparkles class="stat-icon" aria-hidden="true" /> Бонус мастерства</div>
-          <div class="stat-value">{{ formatBonus(combat.proficiencyBonus) }}</div>
-        </div>
+      <template #right>
+        <CoverStatCard :icon="Heart" label="Хиты" :value="combat.hp ?? '—'" :note="combat.hp_formula" />
+        <CoverStatCard
+          v-if="combat.proficiencyBonus != null"
+          :icon="Sparkles"
+          label="Бонус мастерства"
+          :value="formatBonus(combat.proficiencyBonus)"
+        />
         <template v-if="combat.speed_opt?.length">
-          <div v-for="speed in combat.speed_opt" :key="speed.name || '__base'" class="enemy-stat-card enemy-stat-speed">
-            <div class="stat-label"><component :is="speedIcon(speed.name)" class="stat-icon" aria-hidden="true" /> {{ speedLabel(speed.name) }}</div>
-            <div class="stat-value speed-value">{{ speed.value }}</div>
-            <div class="stat-note">фт.</div>
-          </div>
+          <CoverStatCard
+            v-for="speed in combat.speed_opt"
+            :key="speed.name || '__base'"
+            :icon="speedIcon(speed.name)"
+            :label="speedLabel(speed.name)"
+            :value="speed.value"
+            note="фт."
+            size="medium"
+          />
         </template>
-        <div v-else-if="combat.speed" class="enemy-stat-card enemy-stat-speed">
-          <div class="stat-label"><Footprints class="stat-icon" aria-hidden="true" /> Пешком</div>
-          <div class="stat-value speed-value">{{ combat.speed }}</div>
-        </div>
-      </div>
+        <CoverStatCard
+          v-else-if="combat.speed"
+          :icon="Footprints"
+          label="Пешком"
+          :value="combat.speed"
+          size="medium"
+        />
+      </template>
 
-      <div class="enemy-abilities">
-        <div v-for="ability in abilities" :key="ability.key" class="enemy-ability">
-          <div class="ab-label">{{ ability.label }}</div>
-          <div class="ab-mod" :class="modClass(stats[ability.key])">{{ abilityMod(stats[ability.key]) }}</div>
-          <div class="ab-score">{{ stats[ability.key] ?? '—' }}</div>
-          <div v-if="saves[ability.key] != null" class="ab-save">
-            СПАС {{ formatBonus(saves[ability.key]) }}
+      <template #bottom>
+        <div class="enemy-abilities">
+          <div v-for="ability in abilities" :key="ability.key" class="enemy-ability">
+            <div class="ab-label">{{ ability.label }}</div>
+            <div class="ab-mod" :class="modClass(stats[ability.key])">{{ abilityMod(stats[ability.key]) }}</div>
+            <div class="ab-score">{{ stats[ability.key] ?? '—' }}</div>
+            <div v-if="saves[ability.key] != null" class="ab-save">
+              СПАС {{ formatBonus(saves[ability.key]) }}
+            </div>
           </div>
         </div>
-      </div>
-    </div>
+      </template>
+    </CoverSummaryLayout>
   </div>
 </template>
 
 <script setup>
 import { computed, watch } from 'vue'
 import { Bird, Footprints, Gauge, Heart, Mountain, Shield, Sparkles, Waves } from '@lucide/vue'
+import CoverStatCard from '@/features/items/components/cover/CoverStatCard.vue'
+import CoverSummaryLayout from '@/features/items/components/cover/CoverSummaryLayout.vue'
 import { abilityModifier, formatBonus as signedBonus } from '@/shared/lib/dnd'
 import { SAVE_ABBR } from '@/shared/lib/dndStats'
 import { getSuggestId } from '@/features/handbook/objects/lib/schemaFields'

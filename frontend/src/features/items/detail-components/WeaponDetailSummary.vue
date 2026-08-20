@@ -1,58 +1,43 @@
 <template>
   <div class="weapon-summary">
-    <div class="weapon-summary-grid">
-      <div class="weapon-summary-side weapon-summary-left">
-        <div class="weapon-stat weapon-stat-primary">
-          <span class="weapon-stat-label"><Swords :size="13" aria-hidden="true" /> Урон</span>
-          <strong>{{ mainDamage }}</strong>
-          <span>{{ mainDamageType }}</span>
-        </div>
-        <div v-if="versatileDamage" class="weapon-stat">
-          <span class="weapon-stat-label"><MoveDiagonal2 :size="13" aria-hidden="true" /> Двумя руками</span>
-          <strong>{{ versatileDamage }}</strong>
-        </div>
-        <div class="weapon-stat">
-          <span class="weapon-stat-label"><Badge :size="13" aria-hidden="true" /> Категория</span>
-          <strong class="weapon-stat-compact">{{ categoryLabel }}</strong>
-          <span>{{ data.is_long_range ? 'дальнобойное' : 'ближний бой' }}</span>
-        </div>
-      </div>
+    <CoverSummaryLayout>
+      <template #left>
+        <CoverStatCard :icon="Swords" label="Урон" :value="mainDamage" :note="mainDamageType" tone="danger" />
+        <CoverStatCard v-if="versatileDamage" :icon="MoveDiagonal2" label="Двумя руками" :value="versatileDamage" />
+        <CoverStatCard
+          :icon="Badge"
+          label="Категория"
+          :value="categoryLabel"
+          :note="data.is_long_range ? 'дальнобойное' : 'ближний бой'"
+          size="compact"
+        />
+      </template>
 
-      <div class="weapon-cover-safe-zone" aria-hidden="true"></div>
+      <template #right>
+        <CoverStatCard v-if="rangeLabel" :icon="Crosshair" label="Дистанция" :value="rangeLabel" size="compact" />
+        <CoverStatCard v-if="costLabel" :icon="Coins" label="Стоимость" :value="costLabel" size="compact" />
+        <CoverStatCard v-if="data.weight != null" :icon="Weight" label="Вес" :value="data.weight" note="фунт." />
+      </template>
 
-      <div class="weapon-summary-side weapon-summary-right">
-        <div v-if="rangeLabel" class="weapon-stat">
-          <span class="weapon-stat-label"><Crosshair :size="13" aria-hidden="true" /> Дистанция</span>
-          <strong class="weapon-stat-compact">{{ rangeLabel }}</strong>
-        </div>
-        <div v-if="costLabel" class="weapon-stat">
-          <span class="weapon-stat-label"><Coins :size="13" aria-hidden="true" /> Стоимость</span>
-          <strong class="weapon-stat-compact">{{ costLabel }}</strong>
-        </div>
-        <div v-if="data.weight != null" class="weapon-stat">
-          <span class="weapon-stat-label"><Weight :size="13" aria-hidden="true" /> Вес</span>
-          <strong>{{ data.weight }}</strong>
-          <span>фунт.</span>
-        </div>
-      </div>
-
-      <div class="weapon-rules">
-        <div class="weapon-rule weapon-rule-proficiency">
-          <BadgeCheck :size="15" aria-hidden="true" />
-          <span><small>Подходящее владение · любое</small>{{ proficiencyLabel }}</span>
-        </div>
-        <div class="weapon-rule">
-          <Tags :size="15" aria-hidden="true" />
-          <span><small>Свойства</small>{{ propertiesLabel }}</span>
-        </div>
-      </div>
-    </div>
+      <template #bottom>
+        <CoverSummaryRail columns="1.35fr 1fr">
+          <CoverSummaryRailItem :icon="BadgeCheck" label="Подходящее владение · любое">
+            {{ proficiencyLabel }}
+          </CoverSummaryRailItem>
+          <CoverSummaryRailItem :icon="Tags" label="Свойства">{{ propertiesLabel }}</CoverSummaryRailItem>
+        </CoverSummaryRail>
+      </template>
+    </CoverSummaryLayout>
   </div>
 </template>
 
 <script setup>
 import { computed } from 'vue'
 import { Badge, BadgeCheck, Coins, Crosshair, MoveDiagonal2, Swords, Tags, Weight } from '@lucide/vue'
+import CoverStatCard from '@/features/items/components/cover/CoverStatCard.vue'
+import CoverSummaryLayout from '@/features/items/components/cover/CoverSummaryLayout.vue'
+import CoverSummaryRail from '@/features/items/components/cover/CoverSummaryRail.vue'
+import CoverSummaryRailItem from '@/features/items/components/cover/CoverSummaryRailItem.vue'
 import { useCostFormatter } from '@/features/items/lib/useCostFormatter'
 import { diceById } from '@/shared/lib/systemDice'
 import { useSuggestStore } from '@/stores/suggest'
@@ -108,4 +93,6 @@ function damageFormula(attack) {
 }
 </script>
 
-<style scoped src="./styles/WeaponDetailSummary.css"></style>
+<style scoped>
+.weapon-summary { flex: 1; width: 100%; display: flex; }
+</style>

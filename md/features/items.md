@@ -137,6 +137,13 @@ entries and selected choices.
   `1536×1024` JPEG (`3:2`) and fills a `400px` minimum header. Price and weight
   are real translucent UI cards at the quiet lower left and right of the cover
   when present and are not baked into the illustration or repeated below it;
+- cover overlays reuse `components/cover/CoverStatCard.vue`,
+  `CoverSummaryLayout.vue`, `CoverSummaryRail.vue` and
+  `CoverSummaryRailItem.vue`. Domain summaries keep their own data mapping but
+  do not duplicate the frosted surface, side/center grid or segmented rail CSS.
+  A stat or rail icon is a larger right-centered introductory mark rather than
+  a small glyph prepended to the label; shared padding reserves its space on
+  desktop and mobile;
 - field labels and errors use shared form components;
 - direct color literals are rejected by `npm run check:colors`.
 

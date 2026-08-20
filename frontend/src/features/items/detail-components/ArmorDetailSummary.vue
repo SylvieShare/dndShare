@@ -1,53 +1,34 @@
 <template>
   <div class="armor-summary">
-    <div class="armor-summary-grid">
-      <div class="armor-summary-side armor-summary-left">
-        <div class="armor-stat armor-stat-primary">
-          <span class="armor-stat-label"><ShieldCheck :size="13" aria-hidden="true" /> Класс доспеха</span>
-          <strong>{{ armorValue }}</strong>
-          <span>{{ armorNote }}</span>
-        </div>
-        <div class="armor-stat">
-          <span class="armor-stat-label"><Layers3 :size="13" aria-hidden="true" /> Категория</span>
-          <strong class="armor-stat-compact">{{ categoryLabel }}</strong>
-        </div>
-      </div>
+    <CoverSummaryLayout :safe-min-height="210">
+      <template #left>
+        <CoverStatCard :icon="ShieldCheck" label="Класс доспеха" :value="armorValue" :note="armorNote" tone="accent" />
+        <CoverStatCard :icon="Layers3" label="Категория" :value="categoryLabel" size="compact" />
+      </template>
 
-      <div class="armor-cover-safe-zone" aria-hidden="true"></div>
+      <template #right>
+        <CoverStatCard v-if="costLabel" :icon="Coins" label="Стоимость" :value="costLabel" size="compact" />
+        <CoverStatCard v-if="data.weight != null" :icon="Weight" label="Вес" :value="data.weight" note="фунт." />
+      </template>
 
-      <div class="armor-summary-side armor-summary-right">
-        <div v-if="costLabel" class="armor-stat">
-          <span class="armor-stat-label"><Coins :size="13" aria-hidden="true" /> Стоимость</span>
-          <strong class="armor-stat-compact">{{ costLabel }}</strong>
-        </div>
-        <div v-if="data.weight != null" class="armor-stat">
-          <span class="armor-stat-label"><Weight :size="13" aria-hidden="true" /> Вес</span>
-          <strong>{{ data.weight }}</strong>
-          <span>фунт.</span>
-        </div>
-      </div>
-
-      <div class="armor-requirements">
-        <div class="armor-requirement">
-          <BadgeCheck :size="15" aria-hidden="true" />
-          <span><small>Владение</small>{{ proficiencyLabel }}</span>
-        </div>
-        <div class="armor-requirement">
-          <Dumbbell :size="15" aria-hidden="true" />
-          <span><small>Сила</small>{{ strengthLabel }}</span>
-        </div>
-        <div class="armor-requirement">
-          <EyeOff :size="15" aria-hidden="true" />
-          <span><small>Скрытность</small>{{ stealthLabel }}</span>
-        </div>
-      </div>
-    </div>
+      <template #bottom>
+        <CoverSummaryRail :columns="3">
+          <CoverSummaryRailItem :icon="BadgeCheck" label="Владение">{{ proficiencyLabel }}</CoverSummaryRailItem>
+          <CoverSummaryRailItem :icon="Dumbbell" label="Сила">{{ strengthLabel }}</CoverSummaryRailItem>
+          <CoverSummaryRailItem :icon="EyeOff" label="Скрытность">{{ stealthLabel }}</CoverSummaryRailItem>
+        </CoverSummaryRail>
+      </template>
+    </CoverSummaryLayout>
   </div>
 </template>
 
 <script setup>
 import { computed } from 'vue'
 import { BadgeCheck, Coins, Dumbbell, EyeOff, Layers3, ShieldCheck, Weight } from '@lucide/vue'
+import CoverStatCard from '@/features/items/components/cover/CoverStatCard.vue'
+import CoverSummaryLayout from '@/features/items/components/cover/CoverSummaryLayout.vue'
+import CoverSummaryRail from '@/features/items/components/cover/CoverSummaryRail.vue'
+import CoverSummaryRailItem from '@/features/items/components/cover/CoverSummaryRailItem.vue'
 import { useCostFormatter } from '@/features/items/lib/useCostFormatter'
 import { useSuggestStore } from '@/stores/suggest'
 
@@ -85,4 +66,6 @@ const strengthLabel = computed(() => data.value.strength_required != null ? `${d
 const stealthLabel = computed(() => data.value.stealth_disadvantage ? 'Помеха' : 'Без помехи')
 </script>
 
-<style scoped src="./styles/ArmorDetailSummary.css"></style>
+<style scoped>
+.armor-summary { flex: 1; width: 100%; display: flex; }
+</style>

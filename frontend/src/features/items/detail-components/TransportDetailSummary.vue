@@ -1,48 +1,31 @@
 <template>
   <div class="transport-summary">
-    <div class="transport-summary-grid">
-      <div class="transport-summary-side transport-summary-left">
-        <div class="transport-stat transport-stat-primary">
-          <span class="transport-stat-label"><component :is="categoryIcon" :size="13" aria-hidden="true" /> {{ primaryLabel }}</span>
-          <strong>{{ primaryValue }}</strong>
-          <span>{{ primaryNote }}</span>
-        </div>
-        <div class="transport-stat">
-          <span class="transport-stat-label"><Shapes :size="13" aria-hidden="true" /> Категория</span>
-          <strong class="transport-stat-compact">{{ categoryLabel }}</strong>
-        </div>
-      </div>
+    <CoverSummaryLayout
+      :side-min="145"
+      :side-max="215"
+      :center-min="220"
+      :medium-center-min="80"
+    >
+      <template #left>
+        <CoverStatCard :icon="categoryIcon" :label="primaryLabel" :value="primaryValue" :note="primaryNote" tone="accent" />
+        <CoverStatCard :icon="Shapes" label="Категория" :value="categoryLabel" size="compact" />
+      </template>
 
-      <div class="transport-cover-safe-zone" aria-hidden="true"></div>
+      <template #right>
+        <CoverStatCard v-if="costLabel" :icon="Coins" label="Стоимость" :value="costLabel" size="compact" />
+        <CoverStatCard v-if="data.weight != null" :icon="Weight" label="Вес" :value="data.weight" note="фунт." />
+      </template>
 
-      <div class="transport-summary-side transport-summary-right">
-        <div v-if="costLabel" class="transport-stat">
-          <span class="transport-stat-label"><Coins :size="13" aria-hidden="true" /> Стоимость</span>
-          <strong class="transport-stat-compact">{{ costLabel }}</strong>
-        </div>
-        <div v-if="data.weight != null" class="transport-stat">
-          <span class="transport-stat-label"><Weight :size="13" aria-hidden="true" /> Вес</span>
-          <strong>{{ data.weight }}</strong>
-          <span>фунт.</span>
-        </div>
-      </div>
-
-      <div class="transport-operations">
-        <div class="transport-operation">
-          <Waves v-if="movement.mode === 'water'" :size="15" aria-hidden="true" />
-          <Route v-else :size="15" aria-hidden="true" />
-          <span><small>Движение</small>{{ movementLabel || 'Не указано' }}</span>
-        </div>
-        <div class="transport-operation">
-          <PackageOpen :size="15" aria-hidden="true" />
-          <span><small>Вместимость</small>{{ capacityLabel }}</span>
-        </div>
-        <div class="transport-operation">
-          <Link2 :size="15" aria-hidden="true" />
-          <span><small>{{ relationTitle }}</small>{{ relationLabel }}</span>
-        </div>
-      </div>
-    </div>
+      <template #bottom>
+        <CoverSummaryRail :columns="3">
+          <CoverSummaryRailItem :icon="movement.mode === 'water' ? Waves : Route" label="Движение">
+            {{ movementLabel || 'Не указано' }}
+          </CoverSummaryRailItem>
+          <CoverSummaryRailItem :icon="PackageOpen" label="Вместимость">{{ capacityLabel }}</CoverSummaryRailItem>
+          <CoverSummaryRailItem :icon="Link2" :label="relationTitle">{{ relationLabel }}</CoverSummaryRailItem>
+        </CoverSummaryRail>
+      </template>
+    </CoverSummaryLayout>
   </div>
 </template>
 
@@ -50,6 +33,10 @@
 import { computed, watch } from 'vue'
 import { CarFront, Coins, Dog, Link2, PackageOpen, Route, Shapes, ShipWheel, Waves, Weight, Wrench } from '@lucide/vue'
 import { ensureItemNames, itemName } from '@/features/handbook/objects/lib/itemNames'
+import CoverStatCard from '@/features/items/components/cover/CoverStatCard.vue'
+import CoverSummaryLayout from '@/features/items/components/cover/CoverSummaryLayout.vue'
+import CoverSummaryRail from '@/features/items/components/cover/CoverSummaryRail.vue'
+import CoverSummaryRailItem from '@/features/items/components/cover/CoverSummaryRailItem.vue'
 import { useCostFormatter } from '@/features/items/lib/useCostFormatter'
 
 const props = defineProps({ item: { type: Object, required: true } })
@@ -103,4 +90,6 @@ function movementModeLabel(mode) { return ({ ground: 'по земле', water: '
 function propulsionLabel(value) { return ({ self: 'Собственный ход', drawn: 'Тяга скакунов', sail: 'Парус', oar: 'Вёсла', sail_or_oar: 'Парус или вёсла' })[value] || '' }
 </script>
 
-<style scoped src="./styles/TransportDetailSummary.css"></style>
+<style scoped>
+.transport-summary { flex: 1; width: 100%; display: flex; }
+</style>
