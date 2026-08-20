@@ -38,6 +38,22 @@ const setSystemItemCoverSQL = `
 	SET cover_image_id = $1
 	WHERE id = $2`
 
+const lockSystemItemTypeMediaTargetSQL = `
+	SELECT icon_image_id, cover_image_id
+	FROM dndshare.item_type
+	WHERE id = $1
+	FOR UPDATE`
+
+const setSystemItemTypeIconSQL = `
+	UPDATE dndshare.item_type
+	SET icon_image_id = $1
+	WHERE id = $2`
+
+const setSystemItemTypeCoverSQL = `
+	UPDATE dndshare.item_type
+	SET cover_image_id = $1
+	WHERE id = $2`
+
 // SystemItemExists performs the inexpensive pre-upload ownership check. The
 // setter repeats it under a row lock after S3 succeeds.
 func (s *Store) SystemItemExists(ctx context.Context, itemID int64) (bool, error) {
@@ -100,4 +116,53 @@ func (s *Store) SetSystemItemImage(ctx context.Context, itemID int64, slot, key,
 		return 0, ItemIconRefs{}, err
 	}
 	return imageID, previous, nil
+}
+
+// SetSystemItemTypeImage installs an icon or fallback cover for a handbook
+// category. Item-level media stays independent and takes precedence in the UI.
+func (s *Store) SetSystemItemTypeImage(ctx context.Context, typeID int64, slot, key, url, fileName, mimeType string, fileSize int64) (int64, *int64, error) {
+	tx, err := s.pool.Begin(ctx)
+	if err != nil {
+		return 0, nil, err
+	}
+	defer tx.Rollback(ctx)
+
+	var previousIconID, previousCoverID *int64
+	if err := tx.QueryRow(ctx, lockSystemItemTypeMediaTargetSQL, typeID).Scan(
+		&previousIconID,
+		&previousCoverID,
+	); errors.Is(err, pgx.ErrNoRows) {
+		return 0, nil, ErrNotFound
+	} else if err != nil {
+		return 0, nil, err
+	}
+
+	mediaType := "item_type_" + slot
+	var imageID int64
+	if err := tx.QueryRow(ctx, upsertSystemItemMediaSQL,
+		key, url, mediaType, fileName, mimeType, fileSize,
+	).Scan(&imageID); err != nil {
+		return 0, nil, err
+	}
+
+	var previousImageID *int64
+	switch slot {
+	case "icon":
+		if _, err := tx.Exec(ctx, setSystemItemTypeIconSQL, imageID, typeID); err != nil {
+			return 0, nil, err
+		}
+		previousImageID = previousIconID
+	case "cover":
+		if _, err := tx.Exec(ctx, setSystemItemTypeCoverSQL, imageID, typeID); err != nil {
+			return 0, nil, err
+		}
+		previousImageID = previousCoverID
+	default:
+		return 0, nil, fmt.Errorf("unsupported system item type image slot %q", slot)
+	}
+
+	if err := tx.Commit(ctx); err != nil {
+		return 0, nil, err
+	}
+	return imageID, previousImageID, nil
 }

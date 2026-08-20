@@ -50,6 +50,9 @@ func TestItemTypesProjectRasterIconsWithoutSVGFallback(t *testing.T) {
 		"it.icon_image_id",
 		"icon.url AS icon_image_url",
 		"LEFT JOIN dndshare.storage_image icon",
+		"it.cover_image_id",
+		"cover.url AS cover_image_url",
+		"LEFT JOIN dndshare.storage_image cover",
 	} {
 		if !strings.Contains(itemTypeSelect, fragment) {
 			t.Fatalf("item type query must contain %q", fragment)
@@ -61,7 +64,9 @@ func TestItemTypesProjectRasterIconsWithoutSVGFallback(t *testing.T) {
 }
 
 func TestStorageImagesStayActiveWhileReferencedByItemType(t *testing.T) {
-	if !strings.Contains(markStorageImageDeletedIfUnreferencedSQL, "dndshare.item_type") {
-		t.Fatal("storage image cleanup must preserve item type icons")
+	for _, fragment := range []string{"item_type.icon_image_id", "item_type.cover_image_id"} {
+		if !strings.Contains(markStorageImageDeletedIfUnreferencedSQL, fragment) {
+			t.Fatalf("storage image cleanup must preserve item type media referenced by %q", fragment)
+		}
 	}
 }

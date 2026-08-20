@@ -10,17 +10,20 @@ import (
 const itemTypeSelect = `SELECT it.id, it.name, it.description, it.fields, it.source_id, it.color, it.count_items, it.important,
 		s.name AS source_name,
 		it.icon_image_id,
-		icon.url AS icon_image_url
+		icon.url AS icon_image_url,
+		it.cover_image_id,
+		cover.url AS cover_image_url
 	FROM dndshare.item_type it
 	LEFT JOIN dndshare.source s ON s.id = it.source_id
-	LEFT JOIN dndshare.storage_image icon ON icon.id = it.icon_image_id AND icon.deleted = false`
+	LEFT JOIN dndshare.storage_image icon ON icon.id = it.icon_image_id AND icon.deleted = false
+	LEFT JOIN dndshare.storage_image cover ON cover.id = it.cover_image_id AND cover.deleted = false`
 
 func scanItemType(rows pgx.Rows) (ItemType, error) {
 	var it ItemType
-	var description, sourceName, color, iconImageURL *string
-	var sourceID, iconImageID *int64
+	var description, sourceName, color, iconImageURL, coverImageURL *string
+	var sourceID, iconImageID, coverImageID *int64
 	var fields []byte
-	if err := rows.Scan(&it.ID, &it.Name, &description, &fields, &sourceID, &color, &it.CountItems, &it.Important, &sourceName, &iconImageID, &iconImageURL); err != nil {
+	if err := rows.Scan(&it.ID, &it.Name, &description, &fields, &sourceID, &color, &it.CountItems, &it.Important, &sourceName, &iconImageID, &iconImageURL, &coverImageID, &coverImageURL); err != nil {
 		return ItemType{}, err
 	}
 	it.Description = description
@@ -34,6 +37,8 @@ func scanItemType(rows pgx.Rows) (ItemType, error) {
 	it.Color = color
 	it.IconImageID = iconImageID
 	it.IconImageURL = iconImageURL
+	it.CoverImageID = coverImageID
+	it.CoverImageURL = coverImageURL
 	it.Count = it.CountItems
 	return it, nil
 }

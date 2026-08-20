@@ -84,6 +84,10 @@ Startup data correction переводит прежние значения в э
 на прозрачные PNG, встроенные во frontend под `/static/handbook-types/`.
 Startup section `24_handbook_type_icons.sql` идемпотентно назначает эмблемы
 типам 1–13 и удаляет прежний runtime-контракт `item_type.svg_id`.
+Независимая `item_type.cover_image_id → storage_image/S3` хранит типовую
+обложку-заглушку коллекции. Item-level `cover_image_id` имеет приоритет, поэтому
+типовой визуал не копируется в каждую строку item и автоматически обслуживает
+новый контент без собственной обложки.
 Иконка item
 задаётся не более чем одной из колонок: `icon_svg_id → svg_storage` или
 `icon_image_id → storage_image/S3`; обе ссылки не являются частью `item.data`.
@@ -96,11 +100,12 @@ Startup section `24_handbook_type_icons.sql` идемпотентно назна
 легендарности, именованному NPC и CR; точные варианты CR лежат в
 `filter_values`, поэтому UI может показать фильтр без дополнительного словаря.
 Новые системные изображения, установленные через MCP, используют
-content-addressed ключи `system-item-media/v1/items/{itemId}/{slot}/{sha256}`.
+content-addressed ключи `system-item-media/v1/items/{itemId}/{slot}/{sha256}`
+для item и `system-item-media/v1/item-types/{typeId}/{slot}/{sha256}` для типов.
 Частичный unique index действует только на этот namespace и строки с
 `user_id IS NULL`, поэтому повторная установка тех же байтов переиспользует
 одну `storage_image`, не меняя правила пользовательских загрузок и прежних
-deploy-каталогов. Назначение блокирует и проверяет системный item в транзакции;
+deploy-каталогов. Назначение блокирует и проверяет системный item или тип в транзакции;
 для иконки очищается альтернативный `icon_svg_id`, а обложка остаётся
 независимой. MCP-флаг `preservePrevious=true` меняет только последующую очистку:
 прежняя непривязанная строка `storage_image` остаётся активной вместе с S3-

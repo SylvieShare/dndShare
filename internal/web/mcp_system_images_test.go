@@ -35,6 +35,29 @@ func TestMCPPublishesSystemItemImageToolContract(t *testing.T) {
 	t.Fatal("handbook_item_set_system_image definition not found")
 }
 
+func TestMCPPublishesSystemItemTypeImageToolContract(t *testing.T) {
+	for _, definition := range mcpToolDefs() {
+		if definition["name"] != "handbook_item_type_set_system_image" {
+			continue
+		}
+		input, ok := definition["inputSchema"].(map[string]any)
+		if !ok {
+			t.Fatalf("missing input schema: %#v", definition)
+		}
+		required, ok := input["required"].([]string)
+		if !ok {
+			t.Fatalf("required must be []string: %#v", input["required"])
+		}
+		for _, key := range []string{"typeId", "slot", "fileName", "mimeType", "dataBase64"} {
+			if !containsString(required, key) {
+				t.Fatalf("required parameter %q is missing from %#v", key, required)
+			}
+		}
+		return
+	}
+	t.Fatal("handbook_item_type_set_system_image definition not found")
+}
+
 func TestMCPPublishesBestiaryIconMigrationToolContract(t *testing.T) {
 	for _, definition := range mcpToolDefs() {
 		if definition["name"] != "handbook_bestiary_migrate_icons_to_covers" {
@@ -116,6 +139,25 @@ func TestParseMCPSystemItemImageRejectsMIMEAndDataURL(t *testing.T) {
 	}
 }
 
+func TestParseMCPSystemItemTypeImageUsesTypeID(t *testing.T) {
+	pngHeader := []byte{'\x89', 'P', 'N', 'G', '\r', '\n', '\x1a', '\n'}
+	args := map[string]json.RawMessage{
+		"typeId":     json.RawMessage(`5`),
+		"slot":       json.RawMessage(`"cover"`),
+		"fileName":   json.RawMessage(`"spell-placeholder.png"`),
+		"mimeType":   json.RawMessage(`"image/png"`),
+		"dataBase64": json.RawMessage(`"` + base64.StdEncoding.EncodeToString(pngHeader) + `"`),
+	}
+
+	upload, err := parseMCPSystemItemTypeImage(args)
+	if err != nil {
+		t.Fatalf("parseMCPSystemItemTypeImage: %v", err)
+	}
+	if upload.TypeID != 5 || upload.Slot != "cover" {
+		t.Fatalf("unexpected type upload: %#v", upload)
+	}
+}
+
 func TestSystemItemMediaKeyIsStableAndContentAddressed(t *testing.T) {
 	first := systemItemMediaKey(42, "icon", "image/webp", []byte("one"))
 	again := systemItemMediaKey(42, "icon", "image/webp", []byte("one"))
@@ -128,6 +170,13 @@ func TestSystemItemMediaKeyIsStableAndContentAddressed(t *testing.T) {
 	}
 	if !strings.HasPrefix(first, "system-item-media/v1/items/42/icon/") || !strings.HasSuffix(first, ".webp") {
 		t.Fatalf("unexpected key: %q", first)
+	}
+}
+
+func TestSystemItemTypeMediaKeyUsesDedicatedTargetPath(t *testing.T) {
+	key := systemItemTypeMediaKey(5, "cover", "image/webp", []byte("spell-placeholder"))
+	if !strings.HasPrefix(key, "system-item-media/v1/item-types/5/cover/") || !strings.HasSuffix(key, ".webp") {
+		t.Fatalf("unexpected item type key: %q", key)
 	}
 }
 

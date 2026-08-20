@@ -179,11 +179,12 @@ const customRenderer = computed(() => CUSTOM_RENDERERS[props.type?.id] || null)
 const isEnemy = computed(() => props.type?.id === 6)
 const isWeapon = computed(() => props.type?.id === 1)
 const isArmor = computed(() => props.type?.id === 12)
-const isSpellCovered = computed(() => props.type?.id === 5 && Boolean(props.item?.coverImageUrl))
+const effectiveCoverImageUrl = computed(() => props.item?.coverImageUrl || props.type?.coverImageUrl || '')
+const isSpellCovered = computed(() => props.type?.id === 5 && Boolean(effectiveCoverImageUrl.value))
 const isTransport = computed(() => props.type?.id === 13)
 const isShopGearCovered = computed(() => props.type?.id === 2
   && props.item?.data?.available_in_starting_shop === true
-  && Boolean(props.item?.coverImageUrl))
+  && Boolean(effectiveCoverImageUrl.value))
 const customRendererProps = computed(() => {
   if (props.type?.id === 2) return { economyInHeader: isShopGearCovered.value }
   if (props.type?.id === 5) return { summaryInHeader: isSpellCovered.value }

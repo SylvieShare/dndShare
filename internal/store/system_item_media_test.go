@@ -24,6 +24,17 @@ func TestSystemItemMediaQueriesPreserveOwnershipAndSlots(t *testing.T) {
 	if strings.Contains(setSystemItemCoverSQL, "icon_") || !strings.Contains(setSystemItemCoverSQL, "cover_image_id = $1") {
 		t.Fatalf("cover update must remain independent from the icon: %s", setSystemItemCoverSQL)
 	}
+	for _, fragment := range []string{"icon_image_id", "cover_image_id", "FOR UPDATE"} {
+		if !strings.Contains(lockSystemItemTypeMediaTargetSQL, fragment) {
+			t.Fatalf("system item type lock query must contain %q", fragment)
+		}
+	}
+	if !strings.Contains(setSystemItemTypeIconSQL, "icon_image_id = $1") {
+		t.Fatalf("item type icon update is incomplete: %s", setSystemItemTypeIconSQL)
+	}
+	if !strings.Contains(setSystemItemTypeCoverSQL, "cover_image_id = $1") {
+		t.Fatalf("item type cover update is incomplete: %s", setSystemItemTypeCoverSQL)
+	}
 }
 
 func TestSystemItemMediaSchemaHasScopedUniqueKey(t *testing.T) {

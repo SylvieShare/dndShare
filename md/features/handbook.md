@@ -23,7 +23,10 @@ creation. The schema allows more non-default personal sources later.
 
 Built-in item types expose `iconImageId/iconImageUrl` from
 `item_type.icon_image_id → storage_image`; these rows point to embedded static
-collection emblems. Item types no longer expose an SVG format.
+collection emblems. Nullable `coverImageId/coverImageUrl` comes from the
+independent `item_type.cover_image_id` relation and acts as the collection-wide
+cover fallback when an item has no own cover. Item types no longer expose an
+SVG format.
 
 Item icons are metadata outside rules JSON. `item.svg` is the API projection of
 `item.icon_svg_id → svg_storage.data`; raster icons use

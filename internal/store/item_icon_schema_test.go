@@ -32,6 +32,17 @@ func TestItemCoverIsIndependentFromIconFormats(t *testing.T) {
 	}
 }
 
+func TestItemTypeSupportsIndependentFallbackCover(t *testing.T) {
+	for _, fragment := range []string{
+		"ADD COLUMN IF NOT EXISTS cover_image_id int8 NULL REFERENCES dndshare.storage_image(id) ON DELETE SET NULL",
+		"idx_item_type_cover_image_id",
+	} {
+		if !strings.Contains(schemaHandbookSQL, fragment) {
+			t.Fatalf("item type cover schema must contain %q", fragment)
+		}
+	}
+}
+
 func TestBestiaryArtworkMigratesOutOfRulesJSON(t *testing.T) {
 	for _, fragment := range []string{
 		"btrim(data ->> 'image_url') AS image_url",

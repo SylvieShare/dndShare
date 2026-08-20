@@ -81,8 +81,8 @@ as the event author.
 - `GET /api/content-sources?sourceId=&sourceVersionId=` возвращает публикации с
   `kind`: `core`, `supplement`, `setting`, `adventure`, `playtest` или
   `third_party`;
-- `GET /api/item-types` → типы с nullable `iconImageId`/`iconImageUrl`; прежнего
-  поля `svg` у item type нет;
+- `GET /api/item-types` → типы с nullable `iconImageId`/`iconImageUrl` и
+  `coverImageId`/`coverImageUrl`; прежнего поля `svg` у item type нет;
 - `GET /api/items`
 - `GET /api/items/by-ids?ids=`
 - `GET /api/items/children?parentId=`

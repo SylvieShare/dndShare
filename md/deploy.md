@@ -127,11 +127,11 @@ frontend эти WebP не содержат.
 Все image-sync-команды сохраняются как воспроизводимый ручной bootstrap уже
 встроенных наборов, но штатный `deploy/deploy.sh` их не собирает, не передаёт на
 VM и не запускает. Новые и замещающие изображения системных item устанавливаются
-через MCP `handbook_item_set_system_image`: tool
-проверяет системного владельца, MIME и размер, кладёт байты в S3 под
-content-addressed `system-item-media/v1/` ключом и обновляет `storage_image` и
-ссылку item. Для вызова production MCP должны быть заданы `MCP_AUTH_TOKEN` и
-`MCP_WRITE_ENABLED=true`.
+через MCP `handbook_item_set_system_image`; типовые fallback-изображения — через
+`handbook_item_type_set_system_image`. Tools проверяют цель, MIME и размер,
+кладут байты в S3 под content-addressed `system-item-media/v1/` ключом и
+обновляют `storage_image` с соответствующей ссылкой. Для вызова production MCP
+должны быть заданы `MCP_AUTH_TOKEN` и `MCP_WRITE_ENABLED=true`.
 
 Перенос уже зарегистрированных картинок бестиария из компактной иконки в
 обложку выполняется без повторной загрузки через MCP

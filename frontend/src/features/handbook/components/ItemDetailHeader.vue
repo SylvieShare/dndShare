@@ -105,7 +105,8 @@ function coverAspectRatioForDimensions(width, height, typeId) {
 
 const coverFailed = ref(false)
 const coverAspectRatio = ref(defaultCoverAspectRatio(props.type?.id))
-const displayedCoverUrl = ref(props.item.coverImageUrl || '')
+const requestedCoverUrl = computed(() => props.item.coverImageUrl || props.type?.coverImageUrl || '')
+const displayedCoverUrl = ref(requestedCoverUrl.value)
 const previousCoverUrl = ref('')
 let coverRequestVersion = 0
 let coverSwapTimer = null
@@ -120,7 +121,7 @@ const formattedNameEn = computed(() => String(props.item.nameEn || '')
   .replace(/\b[a-z]/g, char => char.toUpperCase()))
 
 watch(
-  () => [props.item.coverImageUrl || '', props.type?.id],
+  () => [requestedCoverUrl.value, props.type?.id],
   ([url, typeId]) => {
     const requestVersion = ++coverRequestVersion
     coverFailed.value = false

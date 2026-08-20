@@ -28,6 +28,15 @@ type mcpSystemItemImage struct {
 	PreservePrevious bool
 }
 
+type mcpSystemItemTypeImage struct {
+	TypeID           int64
+	Slot             string
+	FileName         string
+	MIMEType         string
+	Data             []byte
+	PreservePrevious bool
+}
+
 func (s *Server) toolSystemBestiaryMigrateIconsToCovers(ctx context.Context, args map[string]json.RawMessage) (any, error) {
 	apply, err := argBoolDefault(args, "apply", false)
 	if err != nil {
@@ -150,6 +159,70 @@ func (s *Server) toolSystemItemSetImage(ctx context.Context, args map[string]jso
 	}, nil
 }
 
+func (s *Server) toolSystemItemTypeSetImage(ctx context.Context, args map[string]json.RawMessage) (any, error) {
+	if err := s.mcpRequireWrite(); err != nil {
+		return nil, err
+	}
+	upload, err := parseMCPSystemItemTypeImage(args)
+	if err != nil {
+		return nil, err
+	}
+
+	if _, err := s.store.ItemTypeGetById(ctx, upload.TypeID); errors.Is(err, store.ErrNotFound) {
+		return nil, fmt.Errorf("handbook item type %d not found", upload.TypeID)
+	} else if err != nil {
+		return nil, err
+	}
+
+	key := systemItemTypeMediaKey(upload.TypeID, upload.Slot, upload.MIMEType, upload.Data)
+	stored, err := s.s3.UploadSystemItemMedia(
+		ctx,
+		bytes.NewReader(upload.Data),
+		int64(len(upload.Data)),
+		key,
+		upload.MIMEType,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	imageID, replacedImageID, err := s.store.SetSystemItemTypeImage(
+		ctx,
+		upload.TypeID,
+		upload.Slot,
+		stored.Key,
+		stored.URL,
+		upload.FileName,
+		upload.MIMEType,
+		int64(len(upload.Data)),
+	)
+	if err != nil {
+		if errors.Is(err, store.ErrNotFound) {
+			return nil, fmt.Errorf("handbook item type %d not found", upload.TypeID)
+		}
+		return nil, err
+	}
+	if !upload.PreservePrevious {
+		s.cleanupItemStorageImage(ctx, replacedImageID)
+	}
+
+	itemType, err := s.store.ItemTypeGetById(ctx, upload.TypeID)
+	if err != nil {
+		return nil, err
+	}
+	return map[string]any{
+		"itemType":          itemType,
+		"slot":              upload.Slot,
+		"imageId":           imageID,
+		"imageUrl":          stored.URL,
+		"objectKey":         stored.Key,
+		"fileName":          upload.FileName,
+		"mimeType":          upload.MIMEType,
+		"fileSize":          len(upload.Data),
+		"preservedPrevious": upload.PreservePrevious,
+	}, nil
+}
+
 func parseMCPSystemItemImage(args map[string]json.RawMessage) (mcpSystemItemImage, error) {
 	itemID, err := argInt64(args, "itemId")
 	if err != nil {
@@ -222,6 +295,34 @@ func parseMCPSystemItemImage(args map[string]json.RawMessage) (mcpSystemItemImag
 	}, nil
 }
 
+func parseMCPSystemItemTypeImage(args map[string]json.RawMessage) (mcpSystemItemTypeImage, error) {
+	typeID, err := argInt64(args, "typeId")
+	if err != nil {
+		return mcpSystemItemTypeImage{}, err
+	}
+	if typeID <= 0 {
+		return mcpSystemItemTypeImage{}, errors.New("typeId must be a positive integer")
+	}
+
+	itemArgs := make(map[string]json.RawMessage, len(args)+1)
+	for key, value := range args {
+		itemArgs[key] = value
+	}
+	itemArgs["itemId"] = json.RawMessage(fmt.Sprintf("%d", typeID))
+	parsed, err := parseMCPSystemItemImage(itemArgs)
+	if err != nil {
+		return mcpSystemItemTypeImage{}, err
+	}
+	return mcpSystemItemTypeImage{
+		TypeID:           typeID,
+		Slot:             parsed.Slot,
+		FileName:         parsed.FileName,
+		MIMEType:         parsed.MIMEType,
+		Data:             parsed.Data,
+		PreservePrevious: parsed.PreservePrevious,
+	}, nil
+}
+
 func validateMCPSystemItemMIME(slot, mimeType string) error {
 	switch slot {
 	case "icon":
@@ -239,11 +340,19 @@ func validateMCPSystemItemMIME(slot, mimeType string) error {
 }
 
 func systemItemMediaKey(itemID int64, slot, mimeType string, data []byte) string {
+	return systemMediaKey(fmt.Sprintf("items/%d", itemID), slot, mimeType, data)
+}
+
+func systemItemTypeMediaKey(typeID int64, slot, mimeType string, data []byte) string {
+	return systemMediaKey(fmt.Sprintf("item-types/%d", typeID), slot, mimeType, data)
+}
+
+func systemMediaKey(target, slot, mimeType string, data []byte) string {
 	extension := map[string]string{
 		"image/jpeg": "jpg",
 		"image/png":  "png",
 		"image/webp": "webp",
 	}[mimeType]
 	digest := sha256.Sum256(data)
-	return fmt.Sprintf("system-item-media/v1/items/%d/%s/%x.%s", itemID, slot, digest, extension)
+	return fmt.Sprintf("system-item-media/v1/%s/%s/%x.%s", target, slot, digest, extension)
 }

@@ -29,6 +29,7 @@ Write:
 
 - `handbook_item_create`, `handbook_item_update`, `handbook_item_delete`;
 - `handbook_item_set_system_image`;
+- `handbook_item_type_set_system_image`;
 - `handbook_bestiary_migrate_icons_to_covers`;
 - `handbook_suggest_create`, `handbook_suggest_update`,
   `handbook_suggest_set_svg`, `handbook_suggest_delete`.
@@ -59,6 +60,13 @@ Tool schemas должны совпадать с текущей item/suggest mode
   и сохраняет S3-объект для возврата или будущего стилевого набора;
   повторная установка тех же байтов использует тот же ключ и строку;
 - ответ содержит обновлённый item и метаданные установленного изображения.
+
+`handbook_item_type_set_system_image` использует тот же контракт байтов,
+слотов, MIME, лимитов и `preservePrevious`, но принимает `typeId`, назначает
+медиа в `item_type.icon_image_id` или `item_type.cover_image_id` и возвращает
+обновлённый `itemType`. Его content-addressed namespace —
+`system-item-media/v1/item-types/{typeId}/{slot}/{sha256}.{ext}`. Типовая
+обложка является fallback: собственная обложка item всегда имеет приоритет.
 
 `handbook_bestiary_migrate_icons_to_covers` переносит уже существующие
 растровые изображения базовых существ из `icon_image_id` в `cover_image_id`,

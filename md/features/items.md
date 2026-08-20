@@ -96,11 +96,12 @@ entries and selected choices.
   uses the lower-level `AppModal` because the shared item header is its only
   header, and forwards an optional action slot into a fixed footer, so
   character-specific mutations do not leak into handbook detail renderers;
-- every item detail uses `ItemDetailHeader.vue`. It renders a panoramic
-  `coverImageUrl` as full-bleed artwork behind the identity block and actions;
-  without a usable cover it keeps the same structure as a compact neutral
-  header and uses the compact icon as its image fallback. A loaded cover hides
-  the icon instead of duplicating two identity images. The technical item ID is
+- every item detail uses `ItemDetailHeader.vue`. It renders a panoramic item
+  `coverImageUrl` as full-bleed artwork behind the identity block and actions,
+  falling back to the item type's `coverImageUrl`. Without either usable cover
+  it keeps the same structure as a compact neutral header and uses the compact
+  icon as its image fallback. A loaded cover hides the icon instead of
+  duplicating two identity images. The technical item ID is
   rendered as muted metadata at the bottom of the detail content, never on the
   artwork. Cover height is a per-handbook-type presentation profile without a
   shared maximum: the default follows the asset's intrinsic ratio, while a type
@@ -109,8 +110,9 @@ entries and selected choices.
   school form a compact vertical identity block below the title. A full-width
   component strip sits above the three-column row with casting time, range and
   duration. These short values are omitted from the content below, while the
-  full material-component description remains there; spells without a cover
-  keep level, school, components and the compact metadata row in normal content;
+  full material-component description remains there. The spell item type owns
+  a `5:2` fallback cover, so production spell details always use the summary
+  profile unless both stored references fail;
 - bestiary details use a `440px` minimum cover profile. Their identity, source,
   tags, CR/AC/HP/proficiency, speeds and all six ability modifiers are rendered
   in the header summary slot. The cover itself is not dimmed: the title uses a
@@ -142,10 +144,12 @@ entries and selected choices.
 ### System media workflow
 
 - Install new system raster media only through MCP
-  `handbook_item_set_system_image`, using `slot="icon"` or `slot="cover"` and
-  `preservePrevious=true` when replacing an existing asset.
+  `handbook_item_set_system_image` or `handbook_item_type_set_system_image`,
+  using `slot="icon"` or `slot="cover"` and `preservePrevious=true` when
+  replacing an existing asset.
 - Icons and covers are independent `item.icon_image_id` and
-  `item.cover_image_id` relations backed by `storage_image`. MCP stores their
+  `item.cover_image_id` relations backed by `storage_image`; item types may own
+  the same independent slots as collection-wide fallbacks. MCP stores their
   content-addressed objects under `system-item-media/v1/` in S3.
 - Define the image from the item name, structured data, description and
   mechanics first. Before generating or replacing a system icon or cover,

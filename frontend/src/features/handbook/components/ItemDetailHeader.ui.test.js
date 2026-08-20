@@ -55,6 +55,8 @@ describe('handbook item detail cover', () => {
     expect(headerSource).toContain("if (typeId === 5) return '5 / 2'")
     expect(detailSource).toContain('<SpellDetailSummary :item="item" :type="type" />')
     expect(detailSource).toContain('summaryInHeader: isSpellCovered.value')
+    expect(detailSource).toContain("props.item?.coverImageUrl || props.type?.coverImageUrl || ''")
+    expect(headerSource).toContain("props.item.coverImageUrl || props.type?.coverImageUrl || ''")
     expect(spellSummarySource).toContain('grid-template-columns: repeat(3, minmax(0, 1fr));')
     expect(spellSummarySource).toContain('class="spell-summary-kind"')
     expect(spellSummarySource).toContain('class="spell-summary-casting"')
