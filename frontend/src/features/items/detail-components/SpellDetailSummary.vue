@@ -5,28 +5,28 @@
       <span v-if="school">{{ school }}</span>
     </div>
 
-    <div class="spell-summary-grid">
-      <div v-if="data.time" class="spell-summary-card">
-        <span><Clock3 :size="14" aria-hidden="true" /> Время</span>
-        <strong>{{ data.time }}</strong>
+    <div class="spell-summary-casting">
+      <div v-if="hasComponents" class="spell-summary-card spell-summary-components-card">
+        <span><Shapes :size="14" aria-hidden="true" /> Компоненты</span>
+        <strong class="spell-summary-components" :aria-label="componentAriaLabel">
+          <span
+            v-for="component in componentBadges"
+            :key="component.short"
+            :title="component.title"
+            aria-hidden="true"
+          >{{ component.short }}</span>
+        </strong>
       </div>
-      <div v-if="data.range" class="spell-summary-card">
-        <span><LocateFixed :size="14" aria-hidden="true" /> Дистанция</span>
-        <strong>{{ data.range }}</strong>
-      </div>
-      <div v-if="hasComponents || data.duration" class="spell-summary-stack">
-        <div v-if="hasComponents" class="spell-summary-card spell-summary-card-compact">
-          <span><Shapes :size="14" aria-hidden="true" /> Компоненты</span>
-          <strong class="spell-summary-components" :aria-label="componentAriaLabel">
-            <span
-              v-for="component in componentBadges"
-              :key="component.short"
-              :title="component.title"
-              aria-hidden="true"
-            >{{ component.short }}</span>
-          </strong>
+      <div class="spell-summary-grid">
+        <div v-if="data.time" class="spell-summary-card">
+          <span><Clock3 :size="14" aria-hidden="true" /> Время</span>
+          <strong>{{ data.time }}</strong>
         </div>
-        <div v-if="data.duration" class="spell-summary-card spell-summary-card-compact">
+        <div v-if="data.range" class="spell-summary-card">
+          <span><LocateFixed :size="14" aria-hidden="true" /> Дистанция</span>
+          <strong>{{ data.range }}</strong>
+        </div>
+        <div v-if="data.duration" class="spell-summary-card">
           <span><Hourglass :size="14" aria-hidden="true" /> Длительность</span>
           <strong>{{ data.duration }}</strong>
         </div>
@@ -110,18 +110,18 @@ const componentAriaLabel = computed(() => componentBadges.value.map(component =>
   white-space: nowrap;
 }
 
+.spell-summary-casting {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
 .spell-summary-grid {
   width: 100%;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 9px;
-}
-
-.spell-summary-stack {
-  min-width: 0;
-  display: grid;
-  grid-auto-rows: minmax(0, 1fr);
-  gap: 7px;
 }
 
 .spell-summary-card {
@@ -137,12 +137,6 @@ const componentAriaLabel = computed(() => componentBadges.value.map(component =>
   box-shadow: 0 8px 24px color-mix(in srgb, var(--scrim) 50%, transparent);
   backdrop-filter: blur(7px);
   box-sizing: border-box;
-}
-
-.spell-summary-card-compact {
-  gap: 3px;
-  padding-top: 7px;
-  padding-bottom: 7px;
 }
 
 .spell-summary-card > span {
@@ -165,14 +159,19 @@ const componentAriaLabel = computed(() => componentBadges.value.map(component =>
   text-overflow: ellipsis;
 }
 
-.spell-summary-card-compact strong {
-  font-size: 14px;
-}
-
 .spell-summary-components {
   display: flex;
   align-items: center;
   gap: 5px;
+}
+
+.spell-summary-components-card {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 7px;
+  padding-bottom: 7px;
 }
 
 .spell-summary-components span {
@@ -192,14 +191,13 @@ const componentAriaLabel = computed(() => componentBadges.value.map(component =>
   .spell-summary-kind { min-width: 96px; padding: 7px 9px; }
   .spell-summary-kind strong { font-size: 12px; }
   .spell-summary-kind span { font-size: 9px; }
+  .spell-summary-casting { gap: 5px; }
   .spell-summary-grid { gap: 7px; }
-  .spell-summary-stack { gap: 5px; }
   .spell-summary-card { gap: 4px; padding: 9px 8px; }
-  .spell-summary-card-compact { gap: 2px; padding-top: 6px; padding-bottom: 6px; }
+  .spell-summary-components-card { padding-top: 6px; padding-bottom: 6px; }
   .spell-summary-card > span { gap: 3px; font-size: 8px; letter-spacing: .04em; }
   .spell-summary-card > span svg { width: 12px; height: 12px; }
   .spell-summary-card strong { font-size: 13px; }
-  .spell-summary-card-compact strong { font-size: 12px; }
   .spell-summary-components { gap: 3px; }
   .spell-summary-components span { min-width: 18px; height: 18px; font-size: 10px; }
 }
