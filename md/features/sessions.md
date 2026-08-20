@@ -55,10 +55,10 @@ tile; buttons and combat controls remain regular click targets. The shared
 `useSortable` interaction suppresses the menu click after an actual drag and
 persists the complete order in `session_participant.sort_order`; a failed save
 restores the previous order. The color is stored on the participant's
-session membership and renders as a visible soft colored inset shadow across
-the whole participant tile, including its combat and hover states; the avatar
-itself has no color frame. The same color remains the player marker on encounter
-rows. Color palettes, encounter cloning and the
+session membership and always renders as a visible soft colored inset shadow
+across the whole participant tile, including its combat state; hover never
+replaces or gates the marker. The avatar itself has no color frame. The same
+color remains the player marker on encounter rows. Color palettes, encounter cloning and the
 chapter status/arc choices use `RowActionSubmenu`: a separate adjacent popover
 on desktop and an inline section with a left accent boundary on mobile. Every participant trigger fills the rail width. A dashed `+` action
 beside the `ИГРОКИ` heading opens character creation and invite code/link copy

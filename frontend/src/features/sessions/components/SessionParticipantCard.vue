@@ -254,10 +254,13 @@ const participantTileStyle = computed(() => ({
   overflow: hidden;
   user-select: none;
   --participant-inset-shadow: inset 0 0 22px color-mix(in srgb, var(--participant-color) 42%, transparent);
+  transition: height 0.42s cubic-bezier(0.22, 1, 0.36, 1), gap 0.42s cubic-bezier(0.22, 1, 0.36, 1), padding 0.42s cubic-bezier(0.22, 1, 0.36, 1), background 0.18s, border-color 0.18s, box-shadow 0.18s;
+}
+
+.p-card.base-tile {
   box-shadow:
     var(--participant-inset-shadow),
     inset 0 0 0 1px var(--border);
-  transition: height 0.42s cubic-bezier(0.22, 1, 0.36, 1), gap 0.42s cubic-bezier(0.22, 1, 0.36, 1), padding 0.42s cubic-bezier(0.22, 1, 0.36, 1), background 0.18s, border-color 0.18s, box-shadow 0.18s;
 }
 
 .p-card--compact { height: 48px; gap: 0; padding: 6px; justify-content: center; }
@@ -290,8 +293,8 @@ const participantTileStyle = computed(() => ({
   pointer-events: auto;
 }
 
-.p-card--current,
-.p-card--current.base-tile--interactive:hover {
+.p-card.p-card--current,
+.p-card.p-card--current.base-tile--interactive:hover {
   background: color-mix(in srgb, var(--accent) 11%, var(--surface));
   border-color: color-mix(in srgb, var(--accent) 42%, var(--border));
   box-shadow:
