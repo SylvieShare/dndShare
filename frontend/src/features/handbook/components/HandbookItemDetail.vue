@@ -12,13 +12,13 @@
         <template v-else-if="isArmor" #summary>
           <ArmorDetailSummary :item="item" />
         </template>
-        <template v-else-if="isSpellCovered" #summary>
+        <template v-else-if="isSpell" #summary>
           <SpellDetailSummary :item="item" :type="type" />
         </template>
         <template v-else-if="isTransport" #summary>
           <TransportDetailSummary :item="item" />
         </template>
-        <template v-else-if="isShopGearCovered" #summary>
+        <template v-else-if="isGear" #summary>
           <GearDetailSummary :item="item" />
         </template>
         <template v-if="itemSourceLabel" #corner>
@@ -179,15 +179,12 @@ const customRenderer = computed(() => CUSTOM_RENDERERS[props.type?.id] || null)
 const isEnemy = computed(() => props.type?.id === 6)
 const isWeapon = computed(() => props.type?.id === 1)
 const isArmor = computed(() => props.type?.id === 12)
-const effectiveCoverImageUrl = computed(() => props.item?.coverImageUrl || props.type?.coverImageUrl || '')
-const isSpellCovered = computed(() => props.type?.id === 5 && Boolean(effectiveCoverImageUrl.value))
+const isSpell = computed(() => props.type?.id === 5)
 const isTransport = computed(() => props.type?.id === 13)
-const isShopGearCovered = computed(() => props.type?.id === 2
-  && props.item?.data?.available_in_starting_shop === true
-  && Boolean(effectiveCoverImageUrl.value))
+const isGear = computed(() => props.type?.id === 2)
 const customRendererProps = computed(() => {
-  if (props.type?.id === 2) return { economyInHeader: isShopGearCovered.value }
-  if (props.type?.id === 5) return { summaryInHeader: isSpellCovered.value }
+  if (props.type?.id === 2) return { economyInHeader: true }
+  if (props.type?.id === 5) return { summaryInHeader: true }
   return {}
 })
 const itemSourceLabel = computed(() => {

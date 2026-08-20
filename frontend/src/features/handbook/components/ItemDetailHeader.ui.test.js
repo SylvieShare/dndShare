@@ -38,7 +38,8 @@ describe('handbook item detail cover', () => {
   })
 
   it('preloads and quickly crossfades covers without resetting bestiary geometry', () => {
-    expect(headerSource).toContain("if (typeId === 5) return '5 / 2'")
+    expect(headerSource).toContain("if ([3, 4, 5, 7, 10].includes(typeId)) return '5 / 2'")
+    expect(headerSource).toContain("if ([2, 8, 9, 11, 13].includes(typeId)) return '3 / 2'")
     expect(headerSource).toContain("if (typeId === 1 || typeId === 6 || typeId === 12) return '4 / 3'")
     expect(headerSource).toContain("return ''")
     expect(headerSource).toContain('const image = new Image()')
@@ -52,10 +53,9 @@ describe('handbook item detail cover', () => {
 
   it('gives covered spells a 5:2 casting dashboard without duplicating its summary below', () => {
     expect(headerSource).toContain("5: {\n    '--cover-min-height': '300px'")
-    expect(headerSource).toContain("if (typeId === 5) return '5 / 2'")
+    expect(headerSource).toContain("if ([3, 4, 5, 7, 10].includes(typeId)) return '5 / 2'")
     expect(detailSource).toContain('<SpellDetailSummary :item="item" :type="type" />')
-    expect(detailSource).toContain('summaryInHeader: isSpellCovered.value')
-    expect(detailSource).toContain("props.item?.coverImageUrl || props.type?.coverImageUrl || ''")
+    expect(detailSource).toContain('if (props.type?.id === 5) return { summaryInHeader: true }')
     expect(headerSource).toContain("props.item.coverImageUrl || props.type?.coverImageUrl || ''")
     expect(spellSummarySource).toContain('grid-template-columns: repeat(3, minmax(0, 1fr));')
     expect(spellSummarySource).toContain('class="spell-summary-kind"')
@@ -87,7 +87,7 @@ describe('handbook item detail cover', () => {
   })
 
   it('gives transport a 3:2 showcase with operational data around a safe center', () => {
-    expect(headerSource).toContain("if (typeId === 13) return '3 / 2'")
+    expect(headerSource).toContain("if ([2, 8, 9, 11, 13].includes(typeId)) return '3 / 2'")
     expect(headerSource).toContain("13: {\n    '--cover-min-height': '400px'")
     expect(detailSource).toContain('<TransportDetailSummary :item="item" />')
     expect(detailSource).toContain('13: TransportDetailContent')
@@ -100,12 +100,11 @@ describe('handbook item detail cover', () => {
     expect(transportContentSource).toContain('label="Характеристики объекта"')
   })
 
-  it('shows purchasable gear as a 3:2 cover with price and weight around a safe center', () => {
-    expect(headerSource).toContain("if (typeId === 2) return '3 / 2'")
+  it('shows gear as a 3:2 cover with price and weight around a safe center', () => {
+    expect(headerSource).toContain("if ([2, 8, 9, 11, 13].includes(typeId)) return '3 / 2'")
     expect(headerSource).toContain("2: {\n    '--cover-min-height': '400px'")
     expect(detailSource).toContain('<GearDetailSummary :item="item" />')
-    expect(detailSource).toContain('available_in_starting_shop === true')
-    expect(detailSource).toContain('economyInHeader: isShopGearCovered.value')
+    expect(detailSource).toContain('if (props.type?.id === 2) return { economyInHeader: true }')
     expect(gearSummarySource).toContain('class="gear-economy-card gear-economy-cost"')
     expect(gearSummarySource).toContain('class="gear-economy-card gear-economy-weight"')
     expect(gearSummarySource).toContain('grid-template-columns: minmax(140px, 180px) minmax(180px, 1fr) minmax(140px, 180px);')
@@ -193,9 +192,10 @@ describe('handbook item detail cover', () => {
     expect(enemySummaryStyles).toContain('"abilities abilities"')
   })
 
-  it('uses the icon only as a missing-cover fallback and moves the id below the content', () => {
-    expect(headerSource).toContain('v-if="!hasCover && (item.iconImageUrl || item.svg || type?.iconImageUrl)"')
-    expect(headerSource).toContain(':type="type"')
+  it('always uses cover geometry and moves the id below the content', () => {
+    expect(headerSource).toContain('class="item-detail-header item-detail-header-covered"')
+    expect(headerSource).not.toContain('<ItemIcon')
+    expect(headerSource).not.toContain('item-detail-header:not(.item-detail-header-covered)')
     expect(headerSource).not.toContain('class="item-detail-id"')
     expect(detailSource).toContain('v-if="showTitle" class="detail-technical-meta"')
     expect(detailSource).toContain('<span>ID {{ item.id }}</span>')

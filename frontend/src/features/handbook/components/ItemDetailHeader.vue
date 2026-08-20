@@ -1,8 +1,7 @@
 <template>
   <header
-    class="item-detail-header"
+    class="item-detail-header item-detail-header-covered"
     :class="{
-      'item-detail-header-covered': hasCover,
       'item-detail-header-summary': $slots.summary,
     }"
     :data-item-type-id="type?.id || undefined"
@@ -16,7 +15,7 @@
       aria-hidden="true"
     />
     <img
-      v-if="hasCover"
+      v-if="coverImageAvailable"
       :key="displayedCoverUrl"
       class="item-detail-cover"
       :class="{ 'item-detail-cover-entering': previousCoverUrl }"
@@ -30,13 +29,6 @@
 
     <div class="item-detail-overlay">
       <div class="item-detail-content">
-        <ItemIcon
-          v-if="!hasCover && (item.iconImageUrl || item.svg || type?.iconImageUrl)"
-          class="item-detail-icon"
-          :item="item"
-          :type="type"
-          :size="42"
-        />
         <div class="item-detail-title">
           <h1>{{ item.name }}</h1>
           <span v-if="formattedNameEn">{{ formattedNameEn }}</span>
@@ -61,7 +53,6 @@
 
 <script setup>
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
-import ItemIcon from '@/features/items/components/ItemIcon.vue'
 
 const props = defineProps({
   item: { type: Object, required: true },
@@ -90,10 +81,9 @@ const TYPE_COVER_STYLES = {
 }
 
 function defaultCoverAspectRatio(typeId) {
-  if (typeId === 2) return '3 / 2'
-  if (typeId === 5) return '5 / 2'
+  if ([2, 8, 9, 11, 13].includes(typeId)) return '3 / 2'
+  if ([3, 4, 5, 7, 10].includes(typeId)) return '5 / 2'
   if (typeId === 1 || typeId === 6 || typeId === 12) return '4 / 3'
-  if (typeId === 13) return '3 / 2'
   return ''
 }
 
@@ -111,10 +101,10 @@ const previousCoverUrl = ref('')
 let coverRequestVersion = 0
 let coverSwapTimer = null
 
-const hasCover = computed(() => Boolean(displayedCoverUrl.value) && !coverFailed.value)
+const coverImageAvailable = computed(() => Boolean(displayedCoverUrl.value) && !coverFailed.value)
 const coverStyle = computed(() => ({
   ...(TYPE_COVER_STYLES[props.type?.id] || {}),
-  ...(hasCover.value && coverAspectRatio.value ? { '--cover-aspect-ratio': coverAspectRatio.value } : {}),
+  ...(coverAspectRatio.value ? { '--cover-aspect-ratio': coverAspectRatio.value } : {}),
 }))
 const formattedNameEn = computed(() => String(props.item.nameEn || '')
   .replace(/_/g, ' ')
@@ -282,10 +272,6 @@ function onCoverError() {
     linear-gradient(0deg, var(--scrim) 0%, color-mix(in srgb, var(--scrim) 10%, transparent) 75%);
 }
 
-.item-detail-header:not(.item-detail-header-covered) .item-detail-shade {
-  opacity: .25;
-}
-
 .item-detail-header-covered.item-detail-header-summary .item-detail-shade {
   display: none;
 }
@@ -327,11 +313,6 @@ function onCoverError() {
   flex: 1;
   min-height: min-content;
   display: flex;
-}
-
-.item-detail-icon {
-  flex: none;
-  filter: drop-shadow(0 2px 7px color-mix(in srgb, var(--scrim) 68%, transparent));
 }
 
 .item-detail-title {

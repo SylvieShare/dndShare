@@ -6,6 +6,7 @@
 /frontend/dist/
 /frontend/test-results/
 /frontend/playwright-report/
+/output/imagegen/
 node_modules/
 *.env
 .env

@@ -25,8 +25,9 @@ Built-in item types expose `iconImageId/iconImageUrl` from
 `item_type.icon_image_id → storage_image`; these rows point to embedded static
 collection emblems. Nullable `coverImageId/coverImageUrl` comes from the
 independent `item_type.cover_image_id` relation and acts as the collection-wide
-cover fallback when an item has no own cover. Item types no longer expose an
-SVG format.
+cover fallback when an item has no own cover. Every built-in type has this
+relation populated in production; the nullable API shape remains technical
+storage truth. Item types no longer expose an SVG format.
 
 Item icons are metadata outside rules JSON. `item.svg` is the API projection of
 `item.icon_svg_id → svg_storage.data`; raster icons use
@@ -51,7 +52,7 @@ books. Repeated bestiary imports refresh the display name from upstream metadata
 The manual idempotent `cmd/bestiary-image-sync` migration copies only legacy
 bestiary rows without an object key, so later runs are no-ops. If
 an upstream file is already unavailable, its dead URL and item association are
-removed and the item falls back to the type icon.
+removed and the item falls back to the type cover.
 
 Saved user items are backfilled to that source during startup. Personal source
 ids are never stored or read in `item.data`, and item/suggest id reads expose
@@ -101,8 +102,8 @@ rows use the opaque `--surface` level with distinct active and selected states.
 на landing, в мобильной сетке и во вкладках picker. Эмблема абстрактно обобщает
 визуальный язык item этой коллекции. Если у item нет ни собственной картинки,
 ни SVG, та же эмблема становится последним fallback в строке списка, глобальном
-поиске и компактной detail-шапке без обложки; специализированная динамическая
-колба зелья сохраняет приоритет в своей строке.
+поиске и picker; detail-шапка независимо использует item- или type-level cover.
+Специализированная динамическая колба зелья сохраняет приоритет в своей строке.
 Schema filter groups without available
 options are not shown. `ItemEditModal` is schema-driven and uses shared form primitives; its
 create title uses the current item type name. The spell form also accepts a

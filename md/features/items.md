@@ -98,22 +98,22 @@ entries and selected choices.
   character-specific mutations do not leak into handbook detail renderers;
 - every item detail uses `ItemDetailHeader.vue`. It renders a panoramic item
   `coverImageUrl` as full-bleed artwork behind the identity block and actions,
-  falling back to the item type's `coverImageUrl`. Without either usable cover
-  it keeps the same structure as a compact neutral header and uses the compact
-  icon as its image fallback. A loaded cover hides the icon instead of
-  duplicating two identity images. The technical item ID is
+  falling back to the item type's `coverImageUrl`. Every built-in item type owns
+  that fallback, so the header always uses cover geometry and never substitutes
+  the compact icon. A missing or failed image keeps the same type profile over
+  the neutral header background instead of switching layouts. The technical item ID is
   rendered as muted metadata at the bottom of the detail content, never on the
   artwork. Cover height is a per-handbook-type presentation profile without a
   shared maximum: the default follows the asset's intrinsic ratio, while a type
   may opt into a minimum height without branching the header;
-- spell details with a cover use a `300px` minimum `5:2` profile. Level and
+- spell details use a `300px` minimum `5:2` profile. Level and
   school form a compact vertical identity block below the title. A compact
   component card is aligned to the right above the three-column row with
   casting time, range and duration. These short values are omitted from the
   content below, while the
   full material-component description remains there. The spell item type owns
-  a `5:2` fallback cover, so production spell details always use the summary
-  profile unless both stored references fail;
+  a `5:2` fallback cover, and a failed image does not restore the former
+  duplicate metadata layout;
 - bestiary details use a `440px` minimum cover profile. Their identity, source,
   tags, CR/AC/HP/proficiency, speeds and all six ability modifiers are rendered
   in the header summary slot. The cover itself is not dimmed: the title uses a
@@ -132,13 +132,11 @@ entries and selected choices.
   movement/capacity/relation rail stays at the bottom. Mount icons are compact
   head portraits facing right; object and vehicle icons use their own full
   silhouette. The full contract is in `md/features/transport.md`;
-- ordinary type-2 gear marked `available_in_starting_shop=true` uses a portrait
-  item-showcase contract when a cover is assigned. The source cover is an opaque
+- all ordinary type-2 gear uses a portrait item-showcase contract. The type owns
+  a fallback cover and an item-level cover may replace it. The source cover is an opaque
   `1536×1024` JPEG (`3:2`) and fills a `400px` minimum header. Price and weight
   are real translucent UI cards at the quiet lower left and right of the cover
-  and are not baked into the illustration or repeated below it. Without an
-  assigned cover the item keeps the compact generic header and its ordinary
-  metadata section;
+  when present and are not baked into the illustration or repeated below it;
 - field labels and errors use shared form components;
 - direct color literals are rejected by `npm run check:colors`.
 
@@ -152,6 +150,11 @@ entries and selected choices.
   `item.cover_image_id` relations backed by `storage_image`; item types may own
   the same independent slots as collection-wide fallbacks. MCP stores their
   content-addressed objects under `system-item-media/v1/` in S3.
+- All 13 built-in item types own a production fallback cover. Types 1, 6 and 12
+  use opaque `1536×1152` JPEG (`4:3`); types 2, 8, 9, 11 and 13 use opaque
+  `1536×1024` JPEG (`3:2`); types 3, 4, 5, 7 and 10 use opaque `1600×640`
+  lossy WebP (`5:2`). Item-level artwork always has priority without changing
+  the detail layout.
 - Define the image from the item name, structured data, description and
   mechanics first. Before generating or replacing a system icon or cover,
   always open the current or imported cover when one exists and compare it with
