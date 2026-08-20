@@ -129,21 +129,22 @@
             <div v-else class="encounter-screen__no-combatants">Других участников нет.</div>
           </section>
 
-          <section v-if="presentation.showGraveyard && graveyard.length" class="encounter-graveyard" aria-label="Кладбище">
-            <div class="encounter-graveyard__heading"><Skull :size="18" /><span>Кладбище</span></div>
-            <div class="encounter-graveyard__list">
-              <article v-for="group in graveyard" :key="group.key" class="graveyard-card" :style="accentStyle(group)">
-                <div class="graveyard-card__portrait">
-                  <img v-if="group.avatarUrl || group.coverImageUrl" :src="group.avatarUrl || group.coverImageUrl" alt="" />
-                  <span v-else-if="group.avatarSvg" v-html="group.avatarSvg" />
-                  <Skull v-else :size="26" aria-hidden="true" />
-                </div>
-                <strong>{{ group.name }}</strong>
-                <b>×{{ group.count }}</b>
-              </article>
-            </div>
-          </section>
         </div>
+
+        <section v-if="presentation.showGraveyard && graveyard.length" class="encounter-graveyard" aria-label="Кладбище">
+          <div class="encounter-graveyard__heading"><Skull :size="18" /><span>Кладбище</span></div>
+          <div class="encounter-graveyard__list">
+            <article v-for="group in graveyard" :key="group.key" class="graveyard-card" :style="accentStyle(group)">
+              <strong>{{ group.name }}</strong>
+              <div class="graveyard-card__portrait">
+                <img v-if="group.avatarUrl || group.coverImageUrl" :src="group.avatarUrl || group.coverImageUrl" alt="" />
+                <span v-else-if="group.avatarSvg" v-html="group.avatarSvg" />
+                <Skull v-else :size="26" aria-hidden="true" />
+              </div>
+              <b>×{{ group.count }}</b>
+            </article>
+          </div>
+        </section>
       </section>
     </template>
     <TransitionGroup v-if="presentation?.visible && broadcastTimers.length" name="broadcast-timer" tag="aside" class="broadcast-timers" aria-label="Таймеры">

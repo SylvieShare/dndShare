@@ -792,20 +792,21 @@ controls. Its SSE stream refreshes the presentation and, in combat mode, the
 public encounter projection immediately; fallback polling and a control sync
 cover reconnects, server restarts and missed in-memory signals. Returning to a
 visible browser tab also requests a fresh snapshot. In combat the active player
-or NPC occupies a compact `4:3` card on the left with full artwork and a blurred
+or NPC occupies a larger `4:3` card on the left with full artwork and a blurred
 lower info layer; neither it nor the queue cards stretch to the screen height.
 Above it, the compact cyclic queue spans the full screen width and begins after
-the active turn. Each narrow queue tile is only as wide as its smaller full-fit
-creature icon plus horizontal padding; health sits below the icon, with no name
-or initiative value. An NPC letter is centered
-on the icon's upper-right corner in its assigned color. Overflow
+the active turn. Queue tiles are tightly packed squares sized to fit a smaller
+full-fit creature icon and the longest worded health state below it, with no name
+or initiative value. An NPC letter sits just inside the icon's upper-right
+corner in its assigned color, clear of the tile frame. Overflow
 shares the final right-hand slot as a visible stack. On turn change the
 active card exits left, the next one expands, and the combatant that just acted
 appears at the queue tail. NPC letters remain emphasized before names on the
 active card. A persisted health setting can show either numeric current/max HP
 or the worded bands `Здоров`, `Ранен`, `При смерти`; another flag enables a
-separate graveyard. The graveyard groups dead NPCs by
-bestiary type and shows one entry with a count. Health numbers are omitted from
+separate graveyard. The graveyard sits at the lower right and grows upward as a
+vertical list. It groups dead NPCs by bestiary type and renders each row as name,
+icon and count. Health numbers are omitted from
 the public DTO unless health is enabled in numeric mode. Initiative values are
 not included in the public projection. A failed refresh keeps the last
 successful snapshot visible and marks the connection as interrupted.

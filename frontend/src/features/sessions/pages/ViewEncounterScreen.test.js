@@ -30,6 +30,8 @@ describe('public encounter portraits', () => {
     expect(pageSource).toContain('class="initiative-card__corner-marker"')
     expect(pageSource).not.toContain('<strong>{{ combatant.name }}</strong>')
     expect(initiativeStyles).toContain('.creature-marker {')
+    expect(initiativeStyles).toContain('top: 3px;')
+    expect(initiativeStyles).toContain('right: 3px;')
     expect(initiativeStyles).toContain('transform: translate(50%, -50%);')
     expect(initiativeStyles).toContain('var(--screen-combatant-color)')
   })
@@ -47,16 +49,31 @@ describe('public encounter composition', () => {
     expect(initiativeStyles).toContain('.initiative-card--stacked')
   })
 
-  it('places the compact full-width queue above the active card without cropping icons', () => {
-    expect(initiativeStyles).toContain('grid-template-columns: minmax(0, 1fr);')
+  it('places a tightly packed square queue above the larger active card without cropping icons', () => {
+    expect(initiativeStyles).toContain('grid-template-columns: minmax(0, 1fr) auto;')
     expect(initiativeStyles).toContain('grid-row: 1;')
     expect(initiativeStyles).toContain('grid-row: 2;')
+    expect(initiativeStyles).toContain('width: clamp(360px, 46vw, 700px);')
     expect(initiativeStyles).toContain('.initiative-card__portrait img {')
     expect(initiativeStyles).toContain('object-fit: contain;')
     expect(initiativeStyles).toContain('flex-direction: column;')
-    expect(initiativeStyles).toContain('width: calc(var(--queue-portrait-size) + var(--queue-card-padding) + var(--queue-card-padding));')
+    expect(initiativeStyles).toContain('grid-template-columns: repeat(var(--queue-slots, 6), var(--queue-card-size));')
+    expect(initiativeStyles).toContain('justify-content: start;')
+    expect(initiativeStyles).toContain('aspect-ratio: 1;')
     expect(pageSource).toContain('class="encounter-health initiative-card__health"')
     expect(pageSource).toContain('if (viewportWidth.value >= 1800) return 6')
+  })
+
+  it('stacks graveyard rows upward on the right in name, icon and count order', () => {
+    const nameIndex = pageSource.indexOf('<strong>{{ group.name }}</strong>')
+    const portraitIndex = pageSource.indexOf('class="graveyard-card__portrait"')
+    const countIndex = pageSource.indexOf('<b>×{{ group.count }}</b>')
+    expect(nameIndex).toBeLessThan(portraitIndex)
+    expect(portraitIndex).toBeLessThan(countIndex)
+    expect(initiativeStyles).toContain('.encounter-graveyard {')
+    expect(initiativeStyles).toContain('flex-direction: column-reverse;')
+    expect(initiativeStyles).toContain('grid-column: 2;')
+    expect(initiativeStyles).toContain('grid-template-columns: minmax(0, 1fr) 38px auto;')
   })
 
   it('uses a flat canvas and no combatant color strip', () => {
