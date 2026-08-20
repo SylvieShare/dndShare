@@ -45,6 +45,14 @@ describe('public encounter composition', () => {
     expect(initiativeStyles).toContain('.initiative-card--stacked')
   })
 
+  it('places the compact full-width queue above the active card without cropping icons', () => {
+    expect(initiativeStyles).toContain('grid-template-columns: minmax(0, 1fr);')
+    expect(initiativeStyles).toContain('grid-row: 1;')
+    expect(initiativeStyles).toContain('grid-row: 2;')
+    expect(initiativeStyles).toContain('.initiative-card__portrait img { object-fit: contain; }')
+    expect(pageSource).toContain('if (viewportWidth.value >= 1800) return 6')
+  })
+
   it('uses a flat canvas and no combatant color strip', () => {
     expect(mainStyles).toContain('background-color: var(--app-canvas-bg);')
     expect(mainStyles).toContain('background-image: var(--app-canvas-pattern);')

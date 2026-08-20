@@ -794,8 +794,9 @@ cover reconnects, server restarts and missed in-memory signals. Returning to a
 visible browser tab also requests a fresh snapshot. In combat the active player
 or NPC occupies a compact `4:3` card on the left with full artwork and a blurred
 lower info layer; neither it nor the queue cards stretch to the screen height.
-The right side contains the cyclic queue beginning after the active turn;
-overflow shares the final right-hand slot as a visible stack. On turn change the
+Above it, the compact cyclic queue spans the full screen width and begins after
+the active turn; its smaller creature icons use a full uncropped fit. Overflow
+shares the final right-hand slot as a visible stack. On turn change the
 active card exits left, the next one expands, and the combatant that just acted
 appears at the queue tail. NPC letters are emphasized before names in their
 assigned colors. Optional persisted display flags expose numeric current/max HP,

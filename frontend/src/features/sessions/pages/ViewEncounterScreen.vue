@@ -216,9 +216,10 @@ const turnQueue = computed(() => {
 })
 const graveyard = computed(() => snapshot.value?.graveyard || [])
 const queueSlotCount = computed(() => {
-  if (viewportWidth.value >= 1700) return 4
-  if (viewportWidth.value >= 1100) return 3
-  if (viewportWidth.value >= 720) return 2
+  if (viewportWidth.value >= 1800) return 6
+  if (viewportWidth.value >= 1400) return 5
+  if (viewportWidth.value >= 1000) return 4
+  if (viewportWidth.value >= 720) return 3
   return 1
 })
 const queueStackStart = computed(() => Math.max(0, queueSlotCount.value - 1))
