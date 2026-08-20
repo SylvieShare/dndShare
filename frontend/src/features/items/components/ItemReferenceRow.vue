@@ -96,7 +96,7 @@ const metaLabel = computed(() => [
 .item-reference-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
 .item-reference-name { overflow: hidden; color: var(--text-1); font-size: 13px; font-weight: 650; line-height: 1.25; text-overflow: ellipsis; white-space: nowrap; }
 .item-reference-meta { color: var(--text-muted); font-size: 10px; line-height: 1.2; }
-.item-reference-damage { width: clamp(64px, 7vw, 80px); flex: none; display: grid; place-items: center; align-self: stretch; }
+.item-reference-damage { width: clamp(46px, 5vw, 58px); flex: none; display: grid; place-items: center; align-self: stretch; }
 .item-reference-properties { width: clamp(72px, 9vw, 118px); min-width: 0; flex: none; display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 2px; color: var(--text-2); font-size: 9px; line-height: 1.2; text-align: right; }
 .item-reference-properties small { color: var(--text-muted); font-size: 7px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
 .item-reference-properties > span { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }

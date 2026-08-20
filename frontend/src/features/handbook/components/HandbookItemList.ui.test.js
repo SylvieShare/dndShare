@@ -53,6 +53,8 @@ describe('handbook list controls', () => {
     expect(weaponList).toContain(':size="36"')
     expect(weaponList).not.toContain('wli-damage')
     expect(weaponDamageMetric).toContain('class="weapon-damage-metric__title">Урон</span>')
+    expect(weaponDamageMetric.indexOf('class="weapon-damage-metric__value"')).toBeLessThan(weaponDamageMetric.indexOf('class="weapon-damage-metric__title"'))
+    expect(weaponDamageMetric).toContain('flex-direction: column')
     expect(weaponDamageMetric).toContain('justify-content: center')
     expect(itemReference).toContain('<small>Свойства</small>')
     expect(itemReference).toContain('suggestStore.items(14)')
