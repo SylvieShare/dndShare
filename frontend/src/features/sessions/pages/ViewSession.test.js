@@ -51,10 +51,19 @@ describe('ViewSession participant rail', () => {
     expect(source).toContain('<div class="players-actions">')
     expect(source).toContain('<RowActionMenu>')
     expect(source).toContain('class="players-actions-trigger"')
+    expect(source).toContain('<RowActionItem action="join"')
+    expect(source).toContain('Присоединить своего персонажа')
     expect(source).toContain('<RowActionItem action="create"')
     expect(source).toContain('<RowActionItem action="copy"')
     expect(source).toContain('<RowActionItem action="copy-link"')
     expect(source).not.toContain('invite-section')
+  })
+
+  it('attaches an existing owned character without leaving the session workspace', () => {
+    expect(source).toContain('<SessionJoinModal')
+    expect(source).toContain(':redirect-on-join="false"')
+    expect(source).toContain('@joined="handleOwnCharacterJoined"')
+    expect(source).toContain('await refreshParticipants()')
   })
 
   it('creates a character through the full modal wizard and attaches it without opening the sheet', () => {

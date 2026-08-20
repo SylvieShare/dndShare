@@ -142,6 +142,7 @@
                 </button>
               </template>
               <template #default="{ close }">
+                <RowActionItem action="join" @click="openJoinOwn(); close()">Присоединить своего персонажа</RowActionItem>
                 <RowActionItem action="create" @click="openCreate(); close()">Создать персонажа</RowActionItem>
                 <RowActionItem action="copy" @click="copyCode(); close()">Скопировать код приглашения</RowActionItem>
                 <RowActionItem action="copy-link" @click="copyLink(); close()">Скопировать ссылку приглашения</RowActionItem>
@@ -222,6 +223,16 @@
         @close="closeCreate"
         @create="createChar"
       />
+
+      <SessionJoinModal
+        v-if="joinOwnOpen"
+        :session-uuid="sessionUuid"
+        :session-name="session.name"
+        title="Присоединить своего персонажа"
+        :redirect-on-join="false"
+        @close="joinOwnOpen = false"
+        @joined="handleOwnCharacterJoined"
+      />
     </div>
   </div>
 </template>
@@ -240,6 +251,7 @@ import DicePanel from '@/features/sessions/components/DicePanel.vue'
 import MusicPanel from '@/features/sessions/components/MusicPanel.vue'
 import SessionEventsPanel from '@/features/sessions/components/SessionEventsPanel.vue'
 import SessionEditModal from '@/features/sessions/components/SessionEditModal.vue'
+import SessionJoinModal from '@/features/sessions/components/SessionJoinModal.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 import SessionCenterWorkspace from '@/features/sessions/components/SessionCenterWorkspace.vue'
@@ -356,6 +368,7 @@ function toggleToolPanel(panel) {
 
 const sheetUuid = ref(null)
 const createOpen = ref(false)
+const joinOwnOpen = ref(false)
 const creating = ref(false)
 const createError = ref('')
 const createModalRef = ref(null)
@@ -681,6 +694,16 @@ function openCreate() {
   templateStore.ensure()
   createError.value = ''
   createOpen.value = true
+}
+
+function openJoinOwn() {
+  joinOwnOpen.value = true
+}
+
+async function handleOwnCharacterJoined() {
+  joinOwnOpen.value = false
+  await refreshParticipants().catch(() => {})
+  syncVersions()
 }
 
 function closeCreate() {

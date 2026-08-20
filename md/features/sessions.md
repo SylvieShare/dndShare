@@ -24,6 +24,9 @@ For sessions where the current user is a participant, the response also
 includes the owner's login and the tile shows it as the DM name.
 Participant avatar for the list is read from the canonical character data;
 `char_template.path_values_for_list` does not exist.
+When the whole list or the selected ownership filter is empty, the page shows
+a two-column start state: one card opens session creation and the other accepts
+an invitation code inline. On narrow screens the cards stack vertically.
 
 ## Participant display
 
@@ -61,8 +64,10 @@ itself has no color frame. The same 2px tile frame is the player marker on commo
 combat rows; their former left `BaseTile` strip is not rendered. Color palettes, encounter cloning and the
 chapter status/arc choices use `RowActionSubmenu`: a separate adjacent popover
 on desktop and an inline section with a left accent boundary on mobile. Every participant trigger fills the rail width. A dashed `+` action
-beside the `ИГРОКИ` heading opens character creation and invite code/link copy
-actions; the rail has no separate invitation tile. A separate header control
+beside the `ИГРОКИ` heading opens existing-owned-character attachment, character
+creation and invite code/link copy actions. Attaching an existing character uses
+the same transfer confirmation as the invitation flow, refreshes the rail and
+keeps the session workspace open; the rail has no separate invitation tile. A separate header control
 switches the rail between its normal width and a compact avatar-only mode. The
 choice is stored per session in `localStorage`. Combat is the third visual
 state: it temporarily expands the same rail for initiative and selection

@@ -1,13 +1,13 @@
 <template>
-  <AppModalFrame wide title="Войти в сессию" :subtitle="sessionName" @close="$emit('close')">
+  <AppModalFrame wide :title="title" :subtitle="sessionName" @close="$emit('close')">
 
     <div v-if="loadingChars" class="chars-loading">
       <div v-for="n in 3" :key="n" class="char-skeleton" />
     </div>
 
-    <div v-else-if="chars.length" class="chars-grid">
+    <div v-else-if="availableChars.length" class="chars-grid">
       <div
-        v-for="char in chars"
+        v-for="char in availableChars"
         :key="char.uuid"
         class="char-tile"
         :class="{ joining: joiningId === char.id }"
@@ -29,6 +29,7 @@
     </div>
 
     <div v-else class="no-chars">Нет доступных персонажей</div>
+    <div v-if="joiningError" class="join-error" role="alert">{{ joiningError }}</div>
   </AppModalFrame>
 
   <ConfirmDialog
@@ -54,8 +55,10 @@ import { useTemplateStore } from '@/stores/template'
 const props = defineProps({
   sessionUuid: { type: String, required: true },
   sessionName: { type: String, default: '' },
+  title: { type: String, default: 'Войти в сессию' },
+  redirectOnJoin: { type: Boolean, default: true },
 })
-defineEmits(['close'])
+const emit = defineEmits(['close', 'joined'])
 
 const router = useRouter()
 const templateStore = useTemplateStore()
@@ -64,6 +67,11 @@ const sessionsByChar = ref({})
 const loadingChars = ref(true)
 const joiningId = ref(null)
 const pendingTransfer = ref(null)
+const joiningError = ref('')
+
+const availableChars = computed(() => chars.value.filter(char =>
+  sessionsByChar.value[char.uuid]?.[0]?.uuid !== props.sessionUuid
+))
 
 const transferMessage = computed(() => {
   const pending = pendingTransfer.value
@@ -95,22 +103,25 @@ function lvl(char) {
 
 async function joinChar(char, replaceExisting = false) {
   if (joiningId.value) return
+  joiningError.value = ''
   joiningId.value = char.id
   try {
     await joinSession(props.sessionUuid, char.id, replaceExisting)
-    router.push('/char/' + char.uuid)
+    emit('joined', char)
+    if (props.redirectOnJoin) router.push('/char/' + char.uuid)
   } catch (error) {
     if (error?.status === 409 && !replaceExisting) {
       pendingTransfer.value = { char, currentSession: sessionsByChar.value[char.uuid]?.[0] ?? null }
       return
     }
-    throw error
+    joiningError.value = 'Не удалось присоединить персонажа. Попробуйте ещё раз.'
   } finally {
     joiningId.value = null
   }
 }
 
 function selectChar(char) {
+  joiningError.value = ''
   const currentSession = sessionsByChar.value[char.uuid]?.[0]
   if (currentSession && currentSession.uuid !== props.sessionUuid) {
     pendingTransfer.value = { char, currentSession }
@@ -250,6 +261,13 @@ onMounted(async () => {
   color: var(--text-muted);
   text-align: center;
   padding: 32px 0;
+}
+
+.join-error {
+  margin-top: 12px;
+  color: var(--danger);
+  font-size: 13px;
+  text-align: center;
 }
 
 @keyframes sk-pulse {

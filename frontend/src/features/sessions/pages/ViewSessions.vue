@@ -5,8 +5,8 @@
         <h1 class="page-title">Сессии</h1>
         <span v-if="sessions.length" class="total-badge">{{ sessions.length }}</span>
       </div>
-      <div class="header-right">
-        <div class="code-entry">
+      <div v-if="loading || hasAnything" class="header-right">
+        <div class="code-entry" :class="{ 'code-entry--invalid': joinError }" :title="joinError || undefined">
           <span class="code-label">КОД</span>
           <input
             v-model="joinCode"
@@ -14,6 +14,7 @@
             type="text"
             placeholder="XXXXX-00000"
             maxlength="11"
+            :aria-invalid="!!joinError"
             @keydown.enter="handleJoin"
           />
           <button class="btn-join" :disabled="!joinCode.trim() || joining" @click="handleJoin">
@@ -59,14 +60,50 @@
       </template>
     </template>
 
-    <div v-else class="empty">
-      <svg class="empty-icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-        <path d="M24 4 6 14v20l18 10 18-10V14L24 4Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-        <path d="M24 4v40M6 14l18 10 18-10" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-      </svg>
-      <div class="empty-text">Сессий пока нет</div>
-      <div class="empty-sub">Создайте свою кампанию или войдите по коду от мастера</div>
-      <button class="btn-create" @click="showModal = true">+ Создать сессию</button>
+    <div v-else class="empty-state">
+      <div class="empty-heading">
+        <span class="empty-kicker">{{ sessions.length ? 'В ЭТОЙ КАТЕГОРИИ ПОКА ПУСТО' : 'ВАШЕ СЛЕДУЮЩЕЕ ПРИКЛЮЧЕНИЕ' }}</span>
+        <h2>{{ sessions.length ? 'Выберите, как продолжить' : 'С чего начнём?' }}</h2>
+        <p>Станьте мастером новой истории или присоединитесь к уже начатой.</p>
+      </div>
+
+      <div class="empty-actions">
+        <BaseTile class="empty-action-card" color="var(--accent)" tint>
+          <div class="empty-action-icon"><Sparkles :size="24" /></div>
+          <span class="empty-action-eyebrow">Хочу создать сессию</span>
+          <h3>Соберите свою кампанию</h3>
+          <p>Задайте название и систему — остальное можно наполнить уже по ходу приключения.</p>
+          <button type="button" class="empty-create-button" @click="showModal = true">
+            <Plus :size="17" />
+            Создать сессию
+          </button>
+        </BaseTile>
+
+        <BaseTile class="empty-action-card" color="var(--info)" tint>
+          <div class="empty-action-icon empty-action-icon--join"><KeyRound :size="24" /></div>
+          <span class="empty-action-eyebrow">Хочу присоединиться</span>
+          <h3>Введите код от мастера</h3>
+          <p>Код приглашения состоит из букв и цифр. После проверки останется выбрать персонажа.</p>
+          <form class="empty-join-form" @submit.prevent="handleJoin">
+            <FormTextInput
+              v-model:value="joinCode"
+              mono
+              placeholder="XXXXX-00000"
+              :maxlength="11"
+              :invalid="!!joinError"
+              aria-label="Код приглашения"
+              @enter="handleJoin"
+            />
+            <button type="submit" class="empty-join-button" :disabled="!joinCode.trim() || joining" aria-label="Войти в сессию">
+              <span>{{ joining ? 'Проверяем…' : 'Войти' }}</span>
+              <ArrowRight :size="17" />
+            </button>
+          </form>
+          <span class="empty-join-hint" :class="{ 'empty-join-hint--error': joinError }" role="status">
+            {{ joinError || 'Например, DRAGN-20418' }}
+          </span>
+        </BaseTile>
+      </div>
     </div>
 
     <SessionCreateModal
@@ -104,12 +141,13 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { ArrowRight, KeyRound, Plus, Sparkles } from '@lucide/vue'
 import SessionCard from '@/features/sessions/components/SessionCard'
 import SessionCreateModal from '@/features/sessions/components/SessionCreateModal'
 import SessionJoinModal from '@/features/sessions/components/SessionJoinModal'
-import { ConfirmDialog } from '@sylvieshare/share-ui'
+import { BaseTile, ConfirmDialog, FormTextInput } from '@sylvieshare/share-ui'
 import { consumePrefetch } from '@/app/router'
 import { createSession, deleteSession, getSessionByCode, getSessions, leaveSession } from '@/shared/api/sessionsApi'
 
@@ -126,6 +164,7 @@ const loading = ref(true)
 const showModal = ref(false)
 const joinCode = ref('')
 const joining = ref(false)
+const joinError = ref('')
 const joinSession = ref(null)
 const pendingDelete = ref(null)
 const pendingLeave = ref(null)
@@ -155,16 +194,23 @@ async function handleJoin() {
   const code = joinCode.value.trim()
   if (!code || joining.value) return
   joining.value = true
+  joinError.value = ''
   try {
     const res = await getSessionByCode(code)
     if (res?.uuid) {
       joinSession.value = { uuid: res.uuid, name: res.name }
       joinCode.value = ''
+    } else {
+      joinError.value = 'Сессия с таким кодом не найдена'
     }
+  } catch {
+    joinError.value = 'Сессия с таким кодом не найдена'
   } finally {
     joining.value = false
   }
 }
+
+watch(joinCode, () => { joinError.value = '' })
 
 function confirmDelete(session) { pendingDelete.value = session }
 function confirmLeave(session)  { pendingLeave.value = session }
@@ -272,6 +318,10 @@ onMounted(() => loadSessions(consumePrefetch(route.fullPath)))
   border-radius: 8px;
   padding: 0 10px;
   height: 34px;
+}
+
+.code-entry--invalid {
+  border-color: var(--danger);
 }
 
 .code-label {
@@ -424,35 +474,142 @@ onMounted(() => loadSessions(consumePrefetch(route.fullPath)))
   animation-delay: 0.2s;
 }
 
-.empty {
+.empty-state {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 10px;
-  min-height: 280px;
+  justify-content: flex-start;
+  gap: 28px;
+  min-height: 360px;
+  padding: clamp(28px, 6vh, 72px) 0 24px;
+}
+
+.empty-heading {
+  max-width: 520px;
   text-align: center;
 }
 
-.empty-icon {
-  width: 48px;
-  height: 48px;
+.empty-kicker,
+.empty-action-eyebrow {
+  display: block;
+  color: var(--accent-soft);
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 0.1em;
+}
+
+.empty-heading h2 {
+  margin: 7px 0 5px;
+  color: var(--text-1);
+  font-size: clamp(22px, 3vw, 30px);
+}
+
+.empty-heading p,
+.empty-action-card > p {
+  margin: 0;
   color: var(--text-muted);
-  opacity: 0.6;
-  margin-bottom: 2px;
-}
-
-.empty-text {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--text-2);
-}
-
-.empty-sub {
   font-size: 13px;
+  line-height: 1.55;
+}
+
+.empty-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  width: min(820px, 100%);
+}
+
+.empty-action-card {
+  min-height: 248px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.empty-action-icon {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 20px;
+  border: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--accent) 13%, transparent);
+  color: var(--accent-soft);
+}
+
+.empty-action-icon--join {
+  border-color: color-mix(in srgb, var(--info) 30%, transparent);
+  background: color-mix(in srgb, var(--info) 12%, transparent);
+  color: var(--info);
+}
+
+.empty-action-card h3 {
+  margin: 6px 0 7px;
+  color: var(--text-1);
+  font-size: 18px;
+}
+
+.empty-create-button,
+.empty-join-button {
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 15px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--accent);
+  color: var(--text-on-accent);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 650;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.15s;
+}
+
+.empty-create-button {
+  margin-top: auto;
+}
+
+.empty-create-button:hover,
+.empty-join-button:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.empty-create-button:active,
+.empty-join-button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.empty-join-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  width: 100%;
+  margin-top: auto;
+}
+
+.empty-join-form :deep(.form-text-input) {
+  height: 38px;
+}
+
+.empty-join-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.empty-join-hint {
+  min-height: 16px;
+  margin-top: 6px;
   color: var(--text-muted);
-  max-width: 320px;
-  margin-bottom: 6px;
+  font-size: 11px;
+}
+
+.empty-join-hint--error {
+  color: var(--danger);
 }
 
 @keyframes sk-pulse {
@@ -467,6 +624,24 @@ onMounted(() => loadSessions(consumePrefetch(route.fullPath)))
 
   .header-left {
     display: none;
+  }
+
+  .header-right {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .empty-state {
+    gap: 22px;
+    padding-top: 24px;
+  }
+
+  .empty-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .empty-action-card {
+    min-height: 230px;
   }
 
   .card-skeleton { height: 278px; }

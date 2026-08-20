@@ -27,6 +27,7 @@ import {
   Plus,
   RotateCcw,
   Trash2,
+  UserRoundPlus,
   UserRoundX,
 } from '@lucide/vue'
 
@@ -42,6 +43,7 @@ const ACTION_ICONS = {
   reset: RotateCcw,
   remove: Trash2,
   kick: UserRoundX,
+  join: UserRoundPlus,
   use: Pill,
   view: Eye,
 }

@@ -18,9 +18,27 @@ describe('single session membership', () => {
     expect(source).toContain('sessionsByChar')
   })
 
+  it('can attach a character in place and excludes characters already in the target session', () => {
+    expect(modal).toContain("redirectOnJoin: { type: Boolean, default: true }")
+    expect(modal).toContain("emit('joined', char)")
+    expect(modal).toContain('if (props.redirectOnJoin)')
+    expect(modal).toContain('!== props.sessionUuid')
+  })
+
   it('sends explicit replacement intent to the server', () => {
     expect(api).toContain('replaceExisting = false')
     expect(api).toContain('{ charId, replaceExisting }')
+  })
+})
+
+describe('sessions empty state', () => {
+  it('offers creation and code joining in two action columns for every empty filter', () => {
+    expect(sessionsPage).toContain('v-else class="empty-state"')
+    expect(sessionsPage).toContain('class="empty-actions"')
+    expect(sessionsPage).toContain('Хочу создать сессию')
+    expect(sessionsPage).toContain('Хочу присоединиться')
+    expect(sessionsPage).toContain('grid-template-columns: repeat(2, minmax(0, 1fr))')
+    expect(sessionsPage).toContain('@submit.prevent="handleJoin"')
   })
 })
 
