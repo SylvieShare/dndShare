@@ -261,18 +261,14 @@ function removeSpell(close) {
 .sp-prepared-vine {
   position: absolute;
   z-index: 0;
-  top: 2px;
-  right: -2px;
-  bottom: 2px;
-  width: clamp(230px, 55%, 420px);
+  inset: 7px 10px;
   color: color-mix(in srgb, var(--accent) 38%, transparent);
-  opacity: 0.78;
+  opacity: 0.74;
   pointer-events: none;
 }
 .spell-row-permanent .sp-prepared-vine {
-  width: clamp(260px, 62%, 460px);
   color: color-mix(in srgb, var(--warning) 47%, transparent);
-  opacity: 0.84;
+  opacity: 0.82;
 }
 .spell-row-clickable { cursor: pointer; }
 .spell-row-draggable { cursor: grab; touch-action: pan-y; }

@@ -134,10 +134,13 @@ Spell preparation applies only to spells of level 1 and higher. Cantrips never
 offer preparation actions, and stale preparation fields on them are cleared
 after handbook details load. Owners change regular and permanent preparation
 through the spell row action menu; the row has no standalone preparation
-checkbox. A prepared spell gets a monochrome accent vine in the right-side
-background. The regular and permanent ornaments are generated transparent PNG
-masks, intentionally wide and heavy enough to remain legible at row height;
-CSS preserves their source aspect ratio and supplies their theme-aware color.
+checkbox. A prepared spell gets two monochrome vine ornaments inside rounded
+side brackets inset from the row edges. Each bracket has a stronger central
+vertical stroke; its short horizontal arms fade toward the open centre instead
+of forming a full frame. Spell content remains above the background ornament.
+The regular and permanent ornaments are generated transparent PNG masks; CSS
+mirrors the left ornament, preserves source proportions and supplies
+theme-aware color.
 `always_prepared` represents an archetype/domain spell learned for good: it
 always implies `prepared`, is excluded from the ordinary prepared-spell total,
 uses a richer vine print in the warning tone and can be assigned or removed
