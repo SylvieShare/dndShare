@@ -82,7 +82,7 @@ export function useSessionPresentation({ sessionUuid, materials }) {
   const reveal = () => state.value.mode === 'idle'
     ? save({ mode: 'idle', visible: true, effect: 'none', transition: 'fade' })
     : save({ ...state.value, visible: true, materialId: state.value.materialId || null })
-  const clear = () => save({ mode: 'idle', visible: true, effect: 'none', transition: 'fade' })
+  const removeMaterial = () => save({ mode: 'idle', visible: true, effect: 'none', transition: 'fade' })
   const setEffect = effect => save({ ...state.value, effect, materialId: state.value.materialId || null })
   const setBroadcastMusic = enabled => save({ ...state.value, broadcastMusic: !!enabled, materialId: state.value.materialId || null })
   const setDisplayOption = (key, enabled) => save({
@@ -105,7 +105,7 @@ export function useSessionPresentation({ sessionUuid, materials }) {
     state, loading, saving, error, activeLabel,
     connectedScreens, connectionsLoading, connectionsError,
     load, loadConnections, setConnectedScreens,
-    save, showMaterial, showCombat, blackout, reveal, clear, setEffect, setBroadcastMusic, setDisplayOption, setHealthDisplay, setDisplayScale,
+    save, showMaterial, showCombat, blackout, reveal, removeMaterial, setEffect, setBroadcastMusic, setDisplayOption, setHealthDisplay, setDisplayScale,
     materialById: materials?.byId,
   }
 }

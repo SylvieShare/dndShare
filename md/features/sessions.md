@@ -308,8 +308,11 @@ it is contextual; with no scenario links it remains available throughout the
 session. Chapter attachment is not part of the model. The editor uses the same
 editable universal relation list and searchable picker as locations, NPCs and
 quests. The session-header display control
-shows live state, opens the standalone display and provides contextual
-materials, blackout/reveal/clear actions and the player-only effect selector.
+shows the current `Бой` / `Картинка` / `Письмо` / `Видео` / `Ничего` mode,
+opens the standalone display and provides one icon toggle for blackout/reveal.
+An active material has a contextual `Убрать` action; there are no generic clear
+or stop actions. The player-only effect selector uses a compact illustrated icon
+grid rather than plain text chips.
 Its `Транслировать музыку` checkbox moves audible playback from the DM page to
 the standalone display without changing the controller, queue or timeline. The
 DM audio engine remains muted while it advances the clock and album queue; this
@@ -835,18 +838,20 @@ uses the version-aware batch endpoint, but
 only for ids named by an invalidation. Membership snapshots include each
 character's technical version.
 
-The DM header control also displays the live number of public screens connected
-to that session. Its button uses a green connected treatment whenever at least
-one SSE subscriber exists; the popover shows the exact connection count and
-updates from the authenticated session stream whenever a public display
-subscribes or disconnects; reconnect catch-up reads the owner-only counter once.
+The DM header control tracks the live number of public screens connected to that
+session. Its button uses a green connected treatment whenever at least one SSE
+subscriber exists, while the popover reserves its primary status row for the
+current display mode and visibility. Connection state updates from the
+authenticated session stream whenever a public display subscribes or
+disconnects; reconnect catch-up reads the owner-only counter once.
 Each public browser tab counts as one screen. This counter comes from the
 in-process SSE hub rather than the database, so it
 reflects current connectivity and naturally resets during a server restart;
 screens reconnect automatically and reappear in the counter.
 
-The display popover keeps connection state, blackout controls and visual effects
-on its main level. A dedicated settings button opens a nested settings level for
+The display popover keeps the current mode, an icon-only blackout/reveal toggle,
+the contextual material removal action and an illustrated visual-effect grid on
+its main level. A dedicated settings button opens a nested settings level for
 all persisted toggles: remote music, health and its numeric/worded mode, and the
 graveyard. The same level provides a `75–125%` combat-display scale slider in
 five-percent steps with a one-click reset to `100%`. The scale is stored with the
