@@ -156,13 +156,14 @@ back action positioned over the selected card image. New systems can reuse this
 shell while supplying their own cards and dependent-choice content.
 
 Cantrip and first-circle selection uses a dedicated spell tile. It shows the
-spell's handbook icon (or a magic-glyph fallback), name, circle, school, casting
+spell's enlarged handbook icon without a backing disc (or a magic-glyph fallback), name, circle, school, casting
 time and range. The tile body changes the selection, while its separate question
 button opens the full handbook entry without affecting the chosen spells. Selected
 tiles retain their accent state; choices over the current limit remain readable
 and keep the handbook action available. Automatically granted archetype spells
 use the same tile in a selected read-only state, including their icon and handbook
-action.
+action. The responsive grid is capped at three tiles per row, then falls back to
+two and one so longer spell names retain useful width.
 
 Class starting equipment is resolved against handbook items before rendering.
 Fixed grants and every concrete branch use compact item rows that can open the

@@ -8,8 +8,8 @@
       @click="$emit('select')"
     >
       <span class="spell-tile-icon" aria-hidden="true">
-        <ItemIcon v-if="spell.iconImageUrl || spell.svg" :item="spell" :size="38" />
-        <Sparkles v-else :size="22" />
+        <ItemIcon v-if="spell.iconImageUrl || spell.svg" :item="spell" :size="46" />
+        <Sparkles v-else :size="28" />
       </span>
       <span class="spell-tile-copy">
         <strong>{{ spell.name }}</strong>
@@ -65,13 +65,13 @@ const details = computed(() => [data.value.time, data.value.range].filter(Boolea
 .spell-tile-body:disabled { cursor: default; }
 .spell-tile--readonly { transform: none; }
 .spell-tile-body:focus-visible, .spell-tile-view:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.spell-tile-icon { width: 42px; height: 42px; flex: none; display: grid; place-items: center; border-radius: 50%; background: color-mix(in srgb, var(--accent) 13%, var(--surface-raised)); color: var(--accent); }
+.spell-tile-icon { width: 48px; height: 48px; flex: none; display: grid; place-items: center; color: var(--accent); }
 .spell-tile-copy { min-width: 0; flex: 1; display: flex; flex-direction: column; gap: 2px; }
 .spell-tile-copy strong { overflow: hidden; color: var(--text-1); font-size: 12px; font-weight: 700; line-height: 1.25; text-overflow: ellipsis; white-space: nowrap; }
 .spell-tile-meta { color: var(--accent-soft); font-size: 9px; font-weight: 650; line-height: 1.2; }
 .spell-tile-details { overflow: hidden; color: var(--text-muted); font-size: 9px; line-height: 1.2; text-overflow: ellipsis; white-space: nowrap; }
 .spell-tile-choice { width: 17px; height: 17px; flex: none; display: grid; place-items: center; border: 1px solid var(--border-strong); border-radius: 50%; color: var(--text-on-accent); }
 .spell-tile-choice--selected { border-color: var(--accent); background: var(--accent); }
-.spell-tile-view { width: 31px; flex: none; display: grid; place-items: center; margin: 6px 6px 6px 0; padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--text-muted); cursor: pointer; transition: color .15s, background .15s; }
+.spell-tile-view { width: 32px; height: 32px; aspect-ratio: 1; align-self: center; flex: 0 0 32px; display: grid; place-items: center; margin: 0 7px 0 0; padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--text-muted); cursor: pointer; transition: color .15s, background .15s; }
 .spell-tile-view:hover { background: color-mix(in srgb, var(--accent) 13%, transparent); color: var(--accent); }
 </style>

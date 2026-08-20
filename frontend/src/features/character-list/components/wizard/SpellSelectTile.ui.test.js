@@ -9,6 +9,8 @@ describe('spell selection tile', () => {
   it('shows handbook artwork with a thematic fallback and compact spell facts', () => {
     expect(tile).toContain('<ItemIcon v-if="spell.iconImageUrl || spell.svg"')
     expect(tile).toContain('<Sparkles v-else')
+    expect(tile).toContain(':size="46"')
+    expect(tile).not.toContain('spell-tile-icon { width: 48px; height: 48px; flex: none; display: grid; place-items: center; border-radius')
     expect(tile).toContain("data.value.time")
     expect(tile).toContain("data.value.range")
     expect(tile).toContain('props.school')
@@ -20,5 +22,11 @@ describe('spell selection tile', () => {
     expect(step).toContain('<SpellSelectTile')
     expect(step).toContain('@details="viewId = sp.id"')
     expect(step).toContain('readonly')
+  })
+
+  it('keeps the details action circular and limits the desktop grid to three tiles', () => {
+    expect(tile).toContain('width: 32px; height: 32px; aspect-ratio: 1;')
+    expect(step).toContain('grid-template-columns: repeat(3, minmax(0, 1fr))')
+    expect(step).toContain('grid-template-columns: repeat(2, minmax(0, 1fr))')
   })
 })

@@ -106,6 +106,7 @@ function schoolName(spell) { return schoolMap.value.get(String(spell?.data?.scho
 .granted { margin-top: 1px; }
 .count { font-size: 12px; font-weight: 600; color: var(--text-muted); letter-spacing: 0; text-transform: none; }
 .count.done { color: var(--success); }
-.list { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 7px; }
+.list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
+@media (max-width: 900px) { .list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 560px) { .list { grid-template-columns: 1fr; } }
 </style>
