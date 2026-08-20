@@ -461,10 +461,11 @@ is omitted. `sceneCount` is derived by the graph
 read API, not stored on `session_chapter`, and is updated optimistically when
 contextual scene CRUD changes the count.
 
-Chapter transitions are directed edges inside one arc. They may have a short
-optional label; clicking either the curve or label opens edit/reverse/delete
-actions. The graph API validates that both ends and the edge belong to the same
-arc and session.
+Chapter transitions are one-way or bidirectional edges inside one arc. They may
+have a short optional label; clicking either the curve or label opens label,
+direction and delete actions. Reverse is shown only for a one-way edge. The
+graph API validates that both ends and the edge belong to the same arc and
+session.
 
 The built-in story image catalogue is shared by chapters, scenarios and locations
 and served by `GET /api/session-images?scope=story`. The picker first selects one of
@@ -481,7 +482,7 @@ and edges for scenario nodes and edges. The selected chapter gets a temporary
 presentation transform to the safe top-left corner; normal coordinates stay
 unchanged and the other nodes and edges fade out. Once the swap completes it is
 rendered as a fixed ancestor card above the same canvas. The scenario graph has
-its own persisted viewport, coordinates and directed edges. Its illustrated
+its own persisted viewport, coordinates and direction-aware edges. Its illustrated
 nodes can be dragged and linked through the same right-side port pattern. The
 DM creates or edits the scenario name, lifecycle status and required shared-catalogue
 image, or deletes the scenario. Its optional top status chip uses the same
@@ -497,7 +498,7 @@ Double-clicking a scenario switches the same physical canvas to the third graph.
 The scenario node first moves to the top immediately to the right of its chapter
 and its peers and edges fade out; then block nodes replace the graph payload.
 Description, dialogue, combat, reward, image, material, location, NPC and quest blocks have independent coordinates, persisted widths,
-content-sized heights and directed links. Their accent color is derived from
+content-sized heights and direction-aware links. Their accent color is derived from
 the type instead of being user-selected or stored. Block cards use the same
 dark `var(--surface)` backing and inset border as `BaseTile`, with only a quiet
 type-colored hover tint and no leading color strip. Every card starts with a
@@ -565,11 +566,15 @@ positions and edges are server state.
 When a node drag crosses the movement threshold, the canvas emits one
 `drag-start` signal and closes any chapter, scenario, block or edge action
 popover before position previews begin.
-Completing a link gesture creates an unlabelled directed edge immediately at
+Completing a link gesture creates an unlabelled one-way edge immediately at
 every level; the edge action menu remains the explicit place to add or edit a
 label later. During creation the temporary arrow ends exactly at the pointer.
 Its source and every completed edge use the centered port on the nearest facing
-side of each card, including the top and bottom sides.
+side of each card, including the top and bottom sides. The same menu at all
+three levels can reverse a one-way edge or toggle it to/from bidirectional;
+reverse is hidden while both arrowheads are active. Dragging the enlarged hit
+area near either endpoint previews the existing edge from the pointer and
+persists the new source or target when dropped on another card.
 `SceneEditorModal` is used for scenario create/edit, `ConfirmDialog` for
 destructive actions, and `SceneBlockEditorModal` for block content. Scene and
 block CRUD remains in `session_scenes.go`; graph reads, positions and links are

@@ -49,9 +49,20 @@
   pointer-events: none;
 }
 .nested-graph-edge-line--temporary { stroke-dasharray: 6 5; opacity: 0.72; }
+.nested-graph-edge--rewiring > :not(.nested-graph-edge-endpoint) { opacity: 0.18; }
 .nested-graph-edge-arrow { fill: var(--accent-soft); }
 .nested-graph-edge-hit { fill: none; stroke: transparent; stroke-width: 16; cursor: pointer; pointer-events: stroke; }
 .nested-graph-edge-hit:hover + .nested-graph-edge-line { stroke: var(--accent); stroke-width: 3; }
+.nested-graph-edge-endpoint {
+  fill: transparent;
+  stroke: transparent;
+  stroke-width: 2;
+  cursor: grab;
+  pointer-events: all;
+  vector-effect: non-scaling-stroke;
+}
+.nested-graph-edge-endpoint:hover { stroke: var(--accent); }
+.nested-graph-edge-endpoint:active { cursor: grabbing; }
 .nested-graph-edge-label {
   position: absolute;
   max-width: 180px;

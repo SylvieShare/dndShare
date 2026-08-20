@@ -24,11 +24,12 @@ type SessionScene struct {
 }
 
 type SessionSceneEdge struct {
-	ID          int64   `json:"id"`
-	ChapterID   int64   `json:"chapterId"`
-	FromSceneID int64   `json:"fromSceneId"`
-	ToSceneID   int64   `json:"toSceneId"`
-	Label       *string `json:"label,omitempty"`
+	ID            int64   `json:"id"`
+	ChapterID     int64   `json:"chapterId"`
+	FromSceneID   int64   `json:"fromSceneId"`
+	ToSceneID     int64   `json:"toSceneId"`
+	Label         *string `json:"label,omitempty"`
+	Bidirectional bool    `json:"bidirectional"`
 }
 
 // SessionSceneItem — строка dndshare.session_scene_item (порт model/SessionScene.kt).
@@ -45,11 +46,12 @@ type SessionSceneItem struct {
 }
 
 type SessionSceneItemEdge struct {
-	ID         int64   `json:"id"`
-	SceneID    int64   `json:"sceneId"`
-	FromItemID int64   `json:"fromItemId"`
-	ToItemID   int64   `json:"toItemId"`
-	Label      *string `json:"label,omitempty"`
+	ID            int64   `json:"id"`
+	SceneID       int64   `json:"sceneId"`
+	FromItemID    int64   `json:"fromItemId"`
+	ToItemID      int64   `json:"toItemId"`
+	Label         *string `json:"label,omitempty"`
+	Bidirectional bool    `json:"bidirectional"`
 }
 
 // SceneSession — минимум из dndshare."session", нужный контроллеру сцен (id + владелец).
@@ -300,7 +302,7 @@ func (s *Store) DeleteSceneItem(ctx context.Context, id int64) error {
 
 func scanSceneEdge(row pgx.Row) (SessionSceneEdge, error) {
 	var edge SessionSceneEdge
-	err := row.Scan(&edge.ID, &edge.ChapterID, &edge.FromSceneID, &edge.ToSceneID, &edge.Label)
+	err := row.Scan(&edge.ID, &edge.ChapterID, &edge.FromSceneID, &edge.ToSceneID, &edge.Label, &edge.Bidirectional)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return SessionSceneEdge{}, ErrNotFound
 	}
@@ -309,7 +311,7 @@ func scanSceneEdge(row pgx.Row) (SessionSceneEdge, error) {
 
 func (s *Store) GetSceneEdgesByChapter(ctx context.Context, chapterID int64) ([]SessionSceneEdge, error) {
 	rows, err := s.pool.Query(ctx,
-		`SELECT id, chapter_id, from_scene_id, to_scene_id, label
+		`SELECT id, chapter_id, from_scene_id, to_scene_id, label, bidirectional
 		 FROM dndshare.session_scene_edge WHERE chapter_id = $1 ORDER BY id`, chapterID)
 	if err != nil {
 		return nil, err
@@ -318,7 +320,7 @@ func (s *Store) GetSceneEdgesByChapter(ctx context.Context, chapterID int64) ([]
 	var edges []SessionSceneEdge
 	for rows.Next() {
 		var edge SessionSceneEdge
-		if err := rows.Scan(&edge.ID, &edge.ChapterID, &edge.FromSceneID, &edge.ToSceneID, &edge.Label); err != nil {
+		if err := rows.Scan(&edge.ID, &edge.ChapterID, &edge.FromSceneID, &edge.ToSceneID, &edge.Label, &edge.Bidirectional); err != nil {
 			return nil, err
 		}
 		edges = append(edges, edge)
@@ -328,21 +330,22 @@ func (s *Store) GetSceneEdgesByChapter(ctx context.Context, chapterID int64) ([]
 
 func (s *Store) GetSceneEdge(ctx context.Context, id int64) (SessionSceneEdge, error) {
 	return scanSceneEdge(s.pool.QueryRow(ctx,
-		`SELECT id, chapter_id, from_scene_id, to_scene_id, label
+		`SELECT id, chapter_id, from_scene_id, to_scene_id, label, bidirectional
 		 FROM dndshare.session_scene_edge WHERE id = $1`, id))
 }
 
-func (s *Store) CreateSceneEdge(ctx context.Context, chapterID, fromID, toID int64, label *string) (SessionSceneEdge, error) {
+func (s *Store) CreateSceneEdge(ctx context.Context, chapterID, fromID, toID int64, label *string, bidirectional bool) (SessionSceneEdge, error) {
 	return scanSceneEdge(s.pool.QueryRow(ctx,
-		`INSERT INTO dndshare.session_scene_edge (chapter_id, from_scene_id, to_scene_id, label)
-		 VALUES ($1, $2, $3, $4)
-		 RETURNING id, chapter_id, from_scene_id, to_scene_id, label`, chapterID, fromID, toID, cleanOptional(label)))
+		`INSERT INTO dndshare.session_scene_edge (chapter_id, from_scene_id, to_scene_id, label, bidirectional)
+		 VALUES ($1, $2, $3, $4, $5)
+		 RETURNING id, chapter_id, from_scene_id, to_scene_id, label, bidirectional`, chapterID, fromID, toID, cleanOptional(label), bidirectional))
 }
 
-func (s *Store) UpdateSceneEdgeLabel(ctx context.Context, id int64, label *string) (SessionSceneEdge, error) {
+func (s *Store) UpdateSceneEdge(ctx context.Context, id, fromID, toID int64, label *string, bidirectional bool) (SessionSceneEdge, error) {
 	return scanSceneEdge(s.pool.QueryRow(ctx,
-		`UPDATE dndshare.session_scene_edge SET label = $2 WHERE id = $1
-		 RETURNING id, chapter_id, from_scene_id, to_scene_id, label`, id, cleanOptional(label)))
+		`UPDATE dndshare.session_scene_edge
+		 SET from_scene_id = $2, to_scene_id = $3, label = $4, bidirectional = $5 WHERE id = $1
+		 RETURNING id, chapter_id, from_scene_id, to_scene_id, label, bidirectional`, id, fromID, toID, cleanOptional(label), bidirectional))
 }
 
 func (s *Store) DeleteSceneEdge(ctx context.Context, id int64) error {
@@ -352,7 +355,7 @@ func (s *Store) DeleteSceneEdge(ctx context.Context, id int64) error {
 
 func scanSceneItemEdge(row pgx.Row) (SessionSceneItemEdge, error) {
 	var edge SessionSceneItemEdge
-	err := row.Scan(&edge.ID, &edge.SceneID, &edge.FromItemID, &edge.ToItemID, &edge.Label)
+	err := row.Scan(&edge.ID, &edge.SceneID, &edge.FromItemID, &edge.ToItemID, &edge.Label, &edge.Bidirectional)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return SessionSceneItemEdge{}, ErrNotFound
 	}
@@ -361,7 +364,7 @@ func scanSceneItemEdge(row pgx.Row) (SessionSceneItemEdge, error) {
 
 func (s *Store) GetSceneItemEdges(ctx context.Context, sceneID int64) ([]SessionSceneItemEdge, error) {
 	rows, err := s.pool.Query(ctx,
-		`SELECT id, scene_id, from_item_id, to_item_id, label
+		`SELECT id, scene_id, from_item_id, to_item_id, label, bidirectional
 		 FROM dndshare.session_scene_item_edge WHERE scene_id = $1 ORDER BY id`, sceneID)
 	if err != nil {
 		return nil, err
@@ -370,7 +373,7 @@ func (s *Store) GetSceneItemEdges(ctx context.Context, sceneID int64) ([]Session
 	var edges []SessionSceneItemEdge
 	for rows.Next() {
 		var edge SessionSceneItemEdge
-		if err := rows.Scan(&edge.ID, &edge.SceneID, &edge.FromItemID, &edge.ToItemID, &edge.Label); err != nil {
+		if err := rows.Scan(&edge.ID, &edge.SceneID, &edge.FromItemID, &edge.ToItemID, &edge.Label, &edge.Bidirectional); err != nil {
 			return nil, err
 		}
 		edges = append(edges, edge)
@@ -380,21 +383,22 @@ func (s *Store) GetSceneItemEdges(ctx context.Context, sceneID int64) ([]Session
 
 func (s *Store) GetSceneItemEdge(ctx context.Context, id int64) (SessionSceneItemEdge, error) {
 	return scanSceneItemEdge(s.pool.QueryRow(ctx,
-		`SELECT id, scene_id, from_item_id, to_item_id, label
+		`SELECT id, scene_id, from_item_id, to_item_id, label, bidirectional
 		 FROM dndshare.session_scene_item_edge WHERE id = $1`, id))
 }
 
-func (s *Store) CreateSceneItemEdge(ctx context.Context, sceneID, fromID, toID int64, label *string) (SessionSceneItemEdge, error) {
+func (s *Store) CreateSceneItemEdge(ctx context.Context, sceneID, fromID, toID int64, label *string, bidirectional bool) (SessionSceneItemEdge, error) {
 	return scanSceneItemEdge(s.pool.QueryRow(ctx,
-		`INSERT INTO dndshare.session_scene_item_edge (scene_id, from_item_id, to_item_id, label)
-		 VALUES ($1, $2, $3, $4)
-		 RETURNING id, scene_id, from_item_id, to_item_id, label`, sceneID, fromID, toID, cleanOptional(label)))
+		`INSERT INTO dndshare.session_scene_item_edge (scene_id, from_item_id, to_item_id, label, bidirectional)
+		 VALUES ($1, $2, $3, $4, $5)
+		 RETURNING id, scene_id, from_item_id, to_item_id, label, bidirectional`, sceneID, fromID, toID, cleanOptional(label), bidirectional))
 }
 
-func (s *Store) UpdateSceneItemEdgeLabel(ctx context.Context, id int64, label *string) (SessionSceneItemEdge, error) {
+func (s *Store) UpdateSceneItemEdge(ctx context.Context, id, fromID, toID int64, label *string, bidirectional bool) (SessionSceneItemEdge, error) {
 	return scanSceneItemEdge(s.pool.QueryRow(ctx,
-		`UPDATE dndshare.session_scene_item_edge SET label = $2 WHERE id = $1
-		 RETURNING id, scene_id, from_item_id, to_item_id, label`, id, cleanOptional(label)))
+		`UPDATE dndshare.session_scene_item_edge
+		 SET from_item_id = $2, to_item_id = $3, label = $4, bidirectional = $5 WHERE id = $1
+		 RETURNING id, scene_id, from_item_id, to_item_id, label, bidirectional`, id, fromID, toID, cleanOptional(label), bidirectional))
 }
 
 func (s *Store) DeleteSceneItemEdge(ctx context.Context, id int64) error {

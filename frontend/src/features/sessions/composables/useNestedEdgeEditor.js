@@ -38,7 +38,7 @@ export function useNestedEdgeEditor({ sceneGraph, blockGraph, saving, actionErro
     saving.value = true
     actionError.value = ''
     try {
-      await graph.updateEdge(edge.id, label)
+      await graph.updateEdge(edge.id, { label })
       closeEditor()
     } catch {
       actionError.value = 'Не удалось сохранить подпись перехода'

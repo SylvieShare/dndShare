@@ -329,10 +329,26 @@ CREATE TABLE IF NOT EXISTS dndshare.session_chapter_edge (
     from_chapter_id int8 NOT NULL REFERENCES dndshare.session_chapter(id) ON DELETE CASCADE,
     to_chapter_id   int8 NOT NULL REFERENCES dndshare.session_chapter(id) ON DELETE CASCADE,
     label           varchar(240) NULL,
+    bidirectional   boolean NOT NULL DEFAULT false,
     CONSTRAINT session_chapter_edge_pk PRIMARY KEY (id),
-    CONSTRAINT session_chapter_edge_pair_key UNIQUE (from_chapter_id, to_chapter_id),
     CONSTRAINT session_chapter_edge_not_self CHECK (from_chapter_id <> to_chapter_id)
 );
+ALTER TABLE dndshare.session_chapter_edge ADD COLUMN IF NOT EXISTS bidirectional boolean NOT NULL DEFAULT false;
+UPDATE dndshare.session_chapter_edge edge
+SET bidirectional = true,
+    label = COALESCE(edge.label, reverse_edge.label)
+FROM dndshare.session_chapter_edge reverse_edge
+WHERE edge.id < reverse_edge.id
+  AND edge.from_chapter_id = reverse_edge.to_chapter_id
+  AND edge.to_chapter_id = reverse_edge.from_chapter_id;
+DELETE FROM dndshare.session_chapter_edge duplicate
+USING dndshare.session_chapter_edge kept
+WHERE kept.id < duplicate.id
+  AND kept.from_chapter_id = duplicate.to_chapter_id
+  AND kept.to_chapter_id = duplicate.from_chapter_id;
+ALTER TABLE dndshare.session_chapter_edge DROP CONSTRAINT IF EXISTS session_chapter_edge_pair_key;
+CREATE UNIQUE INDEX IF NOT EXISTS session_chapter_edge_unordered_pair_key
+    ON dndshare.session_chapter_edge (LEAST(from_chapter_id, to_chapter_id), GREATEST(from_chapter_id, to_chapter_id));
 CREATE INDEX IF NOT EXISTS idx_session_chapter_edge_arc_id ON dndshare.session_chapter_edge USING btree (arc_id);
 
 DO $$ BEGIN
@@ -397,10 +413,26 @@ CREATE TABLE IF NOT EXISTS dndshare.session_scene_edge (
     from_scene_id int8 NOT NULL REFERENCES dndshare.session_scene(id) ON DELETE CASCADE,
     to_scene_id   int8 NOT NULL REFERENCES dndshare.session_scene(id) ON DELETE CASCADE,
     label         varchar NULL,
+    bidirectional boolean NOT NULL DEFAULT false,
     CONSTRAINT session_scene_edge_pk PRIMARY KEY (id),
-    CONSTRAINT session_scene_edge_pair_key UNIQUE (from_scene_id, to_scene_id),
     CONSTRAINT session_scene_edge_not_self CHECK (from_scene_id <> to_scene_id)
 );
+ALTER TABLE dndshare.session_scene_edge ADD COLUMN IF NOT EXISTS bidirectional boolean NOT NULL DEFAULT false;
+UPDATE dndshare.session_scene_edge edge
+SET bidirectional = true,
+    label = COALESCE(edge.label, reverse_edge.label)
+FROM dndshare.session_scene_edge reverse_edge
+WHERE edge.id < reverse_edge.id
+  AND edge.from_scene_id = reverse_edge.to_scene_id
+  AND edge.to_scene_id = reverse_edge.from_scene_id;
+DELETE FROM dndshare.session_scene_edge duplicate
+USING dndshare.session_scene_edge kept
+WHERE kept.id < duplicate.id
+  AND kept.from_scene_id = duplicate.to_scene_id
+  AND kept.to_scene_id = duplicate.from_scene_id;
+ALTER TABLE dndshare.session_scene_edge DROP CONSTRAINT IF EXISTS session_scene_edge_pair_key;
+CREATE UNIQUE INDEX IF NOT EXISTS session_scene_edge_unordered_pair_key
+    ON dndshare.session_scene_edge (LEAST(from_scene_id, to_scene_id), GREATEST(from_scene_id, to_scene_id));
 CREATE INDEX IF NOT EXISTS idx_session_scene_edge_chapter_id ON dndshare.session_scene_edge USING btree (chapter_id);
 
 CREATE TABLE IF NOT EXISTS dndshare.session_scene_item (
@@ -467,10 +499,26 @@ CREATE TABLE IF NOT EXISTS dndshare.session_scene_item_edge (
     from_item_id int8 NOT NULL REFERENCES dndshare.session_scene_item(id) ON DELETE CASCADE,
     to_item_id   int8 NOT NULL REFERENCES dndshare.session_scene_item(id) ON DELETE CASCADE,
     label        varchar NULL,
+    bidirectional boolean NOT NULL DEFAULT false,
     CONSTRAINT session_scene_item_edge_pk PRIMARY KEY (id),
-    CONSTRAINT session_scene_item_edge_pair_key UNIQUE (from_item_id, to_item_id),
     CONSTRAINT session_scene_item_edge_not_self CHECK (from_item_id <> to_item_id)
 );
+ALTER TABLE dndshare.session_scene_item_edge ADD COLUMN IF NOT EXISTS bidirectional boolean NOT NULL DEFAULT false;
+UPDATE dndshare.session_scene_item_edge edge
+SET bidirectional = true,
+    label = COALESCE(edge.label, reverse_edge.label)
+FROM dndshare.session_scene_item_edge reverse_edge
+WHERE edge.id < reverse_edge.id
+  AND edge.from_item_id = reverse_edge.to_item_id
+  AND edge.to_item_id = reverse_edge.from_item_id;
+DELETE FROM dndshare.session_scene_item_edge duplicate
+USING dndshare.session_scene_item_edge kept
+WHERE kept.id < duplicate.id
+  AND kept.from_item_id = duplicate.to_item_id
+  AND kept.to_item_id = duplicate.from_item_id;
+ALTER TABLE dndshare.session_scene_item_edge DROP CONSTRAINT IF EXISTS session_scene_item_edge_pair_key;
+CREATE UNIQUE INDEX IF NOT EXISTS session_scene_item_edge_unordered_pair_key
+    ON dndshare.session_scene_item_edge (LEAST(from_item_id, to_item_id), GREATEST(from_item_id, to_item_id));
 CREATE INDEX IF NOT EXISTS idx_session_scene_item_edge_scene_id ON dndshare.session_scene_item_edge USING btree (scene_id);
 
 CREATE SEQUENCE IF NOT EXISTS dndshare.encounter_id_seq;

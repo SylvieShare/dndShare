@@ -9,6 +9,12 @@ func TestSessionScenesMigrateToTwoNestedGraphs(t *testing.T) {
 	for _, fragment := range []string{
 		"CREATE TABLE IF NOT EXISTS dndshare.session_scene_edge",
 		"CREATE TABLE IF NOT EXISTS dndshare.session_scene_item_edge",
+		"ALTER TABLE dndshare.session_chapter_edge ADD COLUMN IF NOT EXISTS bidirectional",
+		"ALTER TABLE dndshare.session_scene_edge ADD COLUMN IF NOT EXISTS bidirectional",
+		"ALTER TABLE dndshare.session_scene_item_edge ADD COLUMN IF NOT EXISTS bidirectional",
+		"session_chapter_edge_unordered_pair_key",
+		"session_scene_edge_unordered_pair_key",
+		"session_scene_item_edge_unordered_pair_key",
 		"ALTER TABLE dndshare.session_scene ADD COLUMN IF NOT EXISTS position_x",
 		"ALTER TABLE dndshare.session_scene ADD COLUMN IF NOT EXISTS image_preset_key",
 		"ALTER TABLE dndshare.session_scene ADD COLUMN IF NOT EXISTS status",

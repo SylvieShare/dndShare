@@ -20,8 +20,8 @@ export function createSceneEdge(uuid, payload) {
   return fetchPost(`/sessions/${uuid}/scene-edges`, payload)
 }
 
-export function updateSceneEdge(uuid, edgeId, label) {
-  return fetchPatch(`/sessions/${uuid}/scene-edges/${edgeId}`, { label })
+export function updateSceneEdge(uuid, edgeId, payload) {
+  return fetchPatch(`/sessions/${uuid}/scene-edges/${edgeId}`, payload)
 }
 
 export function deleteSceneEdge(uuid, edgeId) {
@@ -52,8 +52,8 @@ export function createSceneBlockEdge(uuid, payload) {
   return fetchPost(`/sessions/${uuid}/block-edges`, payload)
 }
 
-export function updateSceneBlockEdge(uuid, edgeId, label) {
-  return fetchPatch(`/sessions/${uuid}/block-edges/${edgeId}`, { label })
+export function updateSceneBlockEdge(uuid, edgeId, payload) {
+  return fetchPatch(`/sessions/${uuid}/block-edges/${edgeId}`, payload)
 }
 
 export function deleteSceneBlockEdge(uuid, edgeId) {

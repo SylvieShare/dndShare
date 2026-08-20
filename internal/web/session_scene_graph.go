@@ -115,10 +115,11 @@ func (s *Server) handleCreateSceneEdge(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var req struct {
-		ChapterID   int64   `json:"chapterId"`
-		FromSceneID int64   `json:"fromSceneId"`
-		ToSceneID   int64   `json:"toSceneId"`
-		Label       *string `json:"label"`
+		ChapterID     int64   `json:"chapterId"`
+		FromSceneID   int64   `json:"fromSceneId"`
+		ToSceneID     int64   `json:"toSceneId"`
+		Label         *string `json:"label"`
+		Bidirectional bool    `json:"bidirectional"`
 	}
 	if err := decodeJSON(r, &req); err != nil || req.FromSceneID == req.ToSceneID {
 		badRequest(w, "bad body")
@@ -139,7 +140,7 @@ func (s *Server) handleCreateSceneEdge(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "scenes must belong to the chapter")
 		return
 	}
-	edge, err := s.store.CreateSceneEdge(r.Context(), req.ChapterID, req.FromSceneID, req.ToSceneID, cleanText(req.Label, 240))
+	edge, err := s.store.CreateSceneEdge(r.Context(), req.ChapterID, req.FromSceneID, req.ToSceneID, cleanText(req.Label, 240), req.Bidirectional)
 	if store.IsUniqueViolation(err) {
 		conflict(w, "link already exists")
 		return
@@ -209,13 +210,32 @@ func (s *Server) handleUpdateSceneEdge(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var req struct {
-		Label *string `json:"label"`
+		FromSceneID   int64   `json:"fromSceneId"`
+		ToSceneID     int64   `json:"toSceneId"`
+		Label         *string `json:"label"`
+		Bidirectional bool    `json:"bidirectional"`
 	}
-	if err := decodeJSON(r, &req); err != nil {
+	if err := decodeJSON(r, &req); err != nil || req.FromSceneID == req.ToSceneID {
 		badRequest(w, "bad body")
 		return
 	}
-	updated, err := s.store.UpdateSceneEdgeLabel(r.Context(), edgeID, cleanText(req.Label, 240))
+	from, ok := s.requireSceneInSession(w, r, req.FromSceneID, sess.ID)
+	if !ok {
+		return
+	}
+	to, ok := s.requireSceneInSession(w, r, req.ToSceneID, sess.ID)
+	if !ok {
+		return
+	}
+	if from.ChapterID != edge.ChapterID || to.ChapterID != edge.ChapterID {
+		badRequest(w, "scenes must belong to the chapter")
+		return
+	}
+	updated, err := s.store.UpdateSceneEdge(r.Context(), edgeID, req.FromSceneID, req.ToSceneID, cleanText(req.Label, 240), req.Bidirectional)
+	if store.IsUniqueViolation(err) {
+		conflict(w, "link already exists")
+		return
+	}
 	if err != nil {
 		serverError(w, err)
 		return
@@ -276,10 +296,11 @@ func (s *Server) handleCreateSceneBlockEdge(w http.ResponseWriter, r *http.Reque
 		return
 	}
 	var req struct {
-		SceneID    int64   `json:"sceneId"`
-		FromItemID int64   `json:"fromItemId"`
-		ToItemID   int64   `json:"toItemId"`
-		Label      *string `json:"label"`
+		SceneID       int64   `json:"sceneId"`
+		FromItemID    int64   `json:"fromItemId"`
+		ToItemID      int64   `json:"toItemId"`
+		Label         *string `json:"label"`
+		Bidirectional bool    `json:"bidirectional"`
 	}
 	if err := decodeJSON(r, &req); err != nil || req.FromItemID == req.ToItemID {
 		badRequest(w, "bad body")
@@ -294,7 +315,7 @@ func (s *Server) handleCreateSceneBlockEdge(w http.ResponseWriter, r *http.Reque
 	if _, ok := s.requireItemInScene(w, r, req.ToItemID, req.SceneID); !ok {
 		return
 	}
-	edge, err := s.store.CreateSceneItemEdge(r.Context(), req.SceneID, req.FromItemID, req.ToItemID, cleanText(req.Label, 240))
+	edge, err := s.store.CreateSceneItemEdge(r.Context(), req.SceneID, req.FromItemID, req.ToItemID, cleanText(req.Label, 240), req.Bidirectional)
 	if store.IsUniqueViolation(err) {
 		conflict(w, "link already exists")
 		return
@@ -364,13 +385,26 @@ func (s *Server) handleUpdateSceneBlockEdge(w http.ResponseWriter, r *http.Reque
 		return
 	}
 	var req struct {
-		Label *string `json:"label"`
+		FromItemID    int64   `json:"fromItemId"`
+		ToItemID      int64   `json:"toItemId"`
+		Label         *string `json:"label"`
+		Bidirectional bool    `json:"bidirectional"`
 	}
-	if err := decodeJSON(r, &req); err != nil {
+	if err := decodeJSON(r, &req); err != nil || req.FromItemID == req.ToItemID {
 		badRequest(w, "bad body")
 		return
 	}
-	updated, err := s.store.UpdateSceneItemEdgeLabel(r.Context(), edgeID, cleanText(req.Label, 240))
+	if _, ok := s.requireItemInScene(w, r, req.FromItemID, edge.SceneID); !ok {
+		return
+	}
+	if _, ok := s.requireItemInScene(w, r, req.ToItemID, edge.SceneID); !ok {
+		return
+	}
+	updated, err := s.store.UpdateSceneItemEdge(r.Context(), edgeID, req.FromItemID, req.ToItemID, cleanText(req.Label, 240), req.Bidirectional)
+	if store.IsUniqueViolation(err) {
+		conflict(w, "link already exists")
+		return
+	}
 	if err != nil {
 		serverError(w, err)
 		return

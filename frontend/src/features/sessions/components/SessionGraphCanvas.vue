@@ -31,6 +31,7 @@
       @edge-click="handleEdgeClick"
       @start-link="startLink"
       @finish-link="finishLink"
+      @rewire-edge="rewireEdge"
       @preview-positions="previewPositions"
       @save-positions="savePositions"
       @preview-size="previewSize"
@@ -134,6 +135,8 @@
     <NestedEdgeMenus
       ref="edgeMenus"
       @edit="openNestedEdgeEdit"
+      @toggle-direction="toggleNestedEdgeDirection"
+      @reverse="reverseNestedEdge"
       @delete="requestNestedEdgeDelete"
     />
 
@@ -232,7 +235,7 @@ const emit = defineEmits([
   'preview-positions', 'save-positions', 'delete-nodes', 'selection-change', 'create-chapter', 'open-chapters', 'open-scenes',
   'chapter-ancestor-click', 'scene-count', 'send-block-to-combat', 'change-nodes-status',
   'workspace-context-change',
-  'drag-start',
+  'drag-start', 'rewire-edge',
 ])
 
 const canvas = ref(null)
@@ -414,6 +417,39 @@ async function finishLink(node) {
   const from = target.value
   target.value = null
   await createNestedEdge(displayLevel.value, from, node)
+}
+
+async function updateNestedEdge(level, edge, patch, fallback) {
+  const graph = level === 'scenes' ? sceneGraph : blockGraph
+  edgeMenus.value?.close()
+  saving.value = true
+  actionError.value = ''
+  try {
+    await graph.updateEdge(edge.id, patch)
+  } catch {
+    actionError.value = fallback
+  } finally {
+    saving.value = false
+  }
+}
+
+function toggleNestedEdgeDirection(edge, level) {
+  return updateNestedEdge(level, edge, { bidirectional: !edge.bidirectional }, 'Не удалось изменить направление перехода')
+}
+
+function reverseNestedEdge(edge, level) {
+  const patch = level === 'scenes'
+    ? { fromSceneId: edge.toSceneId, toSceneId: edge.fromSceneId }
+    : { fromItemId: edge.toItemId, toItemId: edge.fromItemId }
+  return updateNestedEdge(level, edge, patch, 'Не удалось поменять направление перехода')
+}
+
+function rewireEdge(edge, from, to) {
+  if (displayLevel.value === 'chapters') return emit('rewire-edge', edge, from, to)
+  const patch = displayLevel.value === 'scenes'
+    ? { fromSceneId: from.id, toSceneId: to.id }
+    : { fromItemId: from.id, toItemId: to.id }
+  return updateNestedEdge(displayLevel.value, edge, patch, 'Не удалось переставить конец перехода')
 }
 
 function openNestedEdgeEdit(edge, level) {

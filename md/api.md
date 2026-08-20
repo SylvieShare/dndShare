@@ -212,7 +212,8 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
   operations accept at most 200 distinct nodes. Chapter deletion rejects the
   complete request if any selected chapter still has scenarios;
 - `POST /api/sessions/{uuid}/chapter-edges` and `PATCH|DELETE
-  /api/sessions/{uuid}/chapter-edges/{edgeId}`;
+  /api/sessions/{uuid}/chapter-edges/{edgeId}` use the complete edge payload
+  `{arcId,fromChapterId,toChapterId,label,bidirectional}`;
 - read/write encounter and music state;
   authenticated music reads additionally include `syncedAt` and `serverTime`
   millisecond timestamps so a reloaded remote controller can restore its clock;
@@ -283,8 +284,9 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
   additionally accepts `x/y`), and every scenario response carries `imageId`, resolved
   `imageUrl` and optional `imageCatalogKey`;
 - `POST /api/sessions/{uuid}/scene-edges` and
-  `DELETE /api/sessions/{uuid}/scene-edges/{edgeId}` manage directed links
-  inside one chapter;
+  `PATCH|DELETE /api/sessions/{uuid}/scene-edges/{edgeId}` manage links inside
+  one chapter. PATCH accepts the complete mutable edge
+  `{fromSceneId,toSceneId,label,bidirectional}` so either endpoint can move;
 - `GET /api/sessions/{uuid}/scenes/{sceneId}/block-graph` returns
   `{scene,items,edges}`. Blocks use `POST .../scenes/{sceneId}/items` and
   `PATCH|DELETE .../scenes/{sceneId}/items/{itemId}`. A block has `type`
@@ -300,8 +302,9 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
   from the same session. Image blocks accept
   only `image`/`map`; material blocks accept every material kind;
 - `POST /api/sessions/{uuid}/block-edges` and
-  `DELETE /api/sessions/{uuid}/block-edges/{edgeId}` manage directed links
-  inside one scenario.
+  `PATCH|DELETE /api/sessions/{uuid}/block-edges/{edgeId}` manage links inside
+  one scenario. PATCH accepts
+  `{fromItemId,toItemId,label,bidirectional}`.
 
 Arc, chapter and transition mutations are owner-only. Chapter `number` is a
 string. A chapter mutation uses `{arcId,number,name,description,status,

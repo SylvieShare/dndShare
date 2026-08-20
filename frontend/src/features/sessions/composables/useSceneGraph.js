@@ -114,14 +114,22 @@ export function useSceneGraph({ sessionUuid, chapterId }) {
 
   async function createEdge(fromSceneId, toSceneId, label = null) {
     const edge = await apiCreateEdge(sessionUuid, {
-      chapterId: resolvedChapterId(), fromSceneId, toSceneId, label,
+      chapterId: resolvedChapterId(), fromSceneId, toSceneId, label, bidirectional: false,
     })
     edges.value = [...edges.value, edge]
     return edge
   }
 
-  async function updateEdge(edgeId, label) {
-    const updated = await apiUpdateEdge(sessionUuid, edgeId, label)
+  async function updateEdge(edgeId, patch) {
+    const current = edges.value.find(edge => edge.id === edgeId)
+    if (!current) return null
+    const updated = await apiUpdateEdge(sessionUuid, edgeId, {
+      fromSceneId: current.fromSceneId,
+      toSceneId: current.toSceneId,
+      label: current.label ?? null,
+      bidirectional: !!current.bidirectional,
+      ...patch,
+    })
     edges.value = edges.value.map(edge => edge.id === edgeId ? updated : edge)
     return updated
   }

@@ -122,6 +122,7 @@ type edgeMutationRequest struct {
 	FromChapterID int64   `json:"fromChapterId"`
 	ToChapterID   int64   `json:"toChapterId"`
 	Label         *string `json:"label"`
+	Bidirectional bool    `json:"bidirectional"`
 }
 
 func (s *Server) handleCreateChapterEdge(w http.ResponseWriter, r *http.Request) {
@@ -137,7 +138,7 @@ func (s *Server) handleCreateChapterEdge(w http.ResponseWriter, r *http.Request)
 	if !s.validEdgeMutation(w, r, session.ID, body) {
 		return
 	}
-	edge, err := s.store.CreateChapterEdge(r.Context(), body.ArcID, body.FromChapterID, body.ToChapterID, cleanText(body.Label, 240))
+	edge, err := s.store.CreateChapterEdge(r.Context(), body.ArcID, body.FromChapterID, body.ToChapterID, cleanText(body.Label, 240), body.Bidirectional)
 	if store.IsUniqueViolation(err) {
 		conflict(w, "Такой переход уже существует")
 		return
@@ -166,7 +167,7 @@ func (s *Server) handleUpdateChapterEdge(w http.ResponseWriter, r *http.Request)
 	if !s.validEdgeMutation(w, r, session.ID, body) {
 		return
 	}
-	if err := s.store.UpdateChapterEdge(r.Context(), edge.ID, body.FromChapterID, body.ToChapterID, cleanText(body.Label, 240)); err != nil {
+	if err := s.store.UpdateChapterEdge(r.Context(), edge.ID, body.FromChapterID, body.ToChapterID, cleanText(body.Label, 240), body.Bidirectional); err != nil {
 		if store.IsUniqueViolation(err) {
 			conflict(w, "Такой переход уже существует")
 			return

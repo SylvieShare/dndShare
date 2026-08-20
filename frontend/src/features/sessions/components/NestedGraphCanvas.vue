@@ -5,7 +5,7 @@
     :class="{
       'nested-graph-canvas--panning': gesture?.type === 'pan',
       'nested-graph-canvas--selecting': gesture?.type === 'selection',
-      'nested-graph-canvas--linking': linkingFrom,
+      'nested-graph-canvas--linking': linkingFrom || (gesture?.type === 'edge' && gesture.moved),
       'nested-graph-canvas--locked': locked,
       'nested-graph-canvas--spotlight': spotlightNodeId != null,
     }"
@@ -24,14 +24,36 @@
             <path d="M 0 0 L 10 5 L 0 10 z" class="nested-graph-edge-arrow" />
           </marker>
         </defs>
-        <g v-for="edge in renderedEdges" :key="`${graphKey}:${edge.id}`">
+        <g v-for="edge in renderedEdges" :key="`${graphKey}:${edge.id}`" :class="{ 'nested-graph-edge--rewiring': isRewiringEdge(edge) }">
           <path class="nested-graph-edge-hit" :d="edge.path" @pointerdown.stop @click.stop="$emit('edge-click', edge.raw, $event.currentTarget)" />
-          <path class="nested-graph-edge-line" :d="edge.path" :marker-end="`url(#${markerId})`" />
+          <path
+            class="nested-graph-edge-line"
+            :d="edge.path"
+            :marker-start="edge.bidirectional ? `url(#${markerId})` : undefined"
+            :marker-end="`url(#${markerId})`"
+          />
+          <template v-if="canEdit">
+            <circle
+              class="nested-graph-edge-endpoint"
+              :cx="edge.start.x"
+              :cy="edge.start.y"
+              :r="12 / zoom"
+              @pointerdown.stop="onEdgeEndpointDown($event, edge, 'from')"
+            />
+            <circle
+              class="nested-graph-edge-endpoint"
+              :cx="edge.end.x"
+              :cy="edge.end.y"
+              :r="12 / zoom"
+              @pointerdown.stop="onEdgeEndpointDown($event, edge, 'to')"
+            />
+          </template>
         </g>
         <path
           v-if="temporaryPath"
           class="nested-graph-edge-line nested-graph-edge-line--temporary"
           :d="temporaryPath"
+          :marker-start="temporaryBidirectional ? `url(#${markerId})` : undefined"
           :marker-end="`url(#${markerId})`"
         />
       </svg>
@@ -105,8 +127,8 @@
       <button v-if="canEdit && showEmptyAction" type="button" @click.stop="$emit('create-first')">{{ createLabel }}</button>
     </div>
 
-    <div v-if="linkingFrom" class="nested-graph-link-hint">
-      Выберите карточку, в которую ведёт связь · Esc — отменить
+    <div v-if="linkingFrom || (gesture?.type === 'edge' && gesture.moved)" class="nested-graph-link-hint">
+      {{ gesture?.type === 'edge' ? 'Перетащите конец связи на другую карточку' : 'Выберите карточку, в которую ведёт связь' }} · Esc — отменить
     </div>
 
     <GraphSelectionBar
@@ -127,7 +149,12 @@ import { useGraphViewPersistence } from '@/features/sessions/composables/useGrap
 import { useGraphHotkeys } from '@/features/sessions/composables/useGraphHotkeys'
 import { graphNodeKey, useGraphSelection } from '@/features/sessions/composables/useGraphSelection'
 import { useRafLatest } from '@/features/sessions/composables/useRafLatest'
-import { graphEdgeMidpoint, graphEdgePath, graphEdgePathToPoint } from '@/features/sessions/lib/graphGeometry'
+import {
+  graphEdgeGeometry,
+  graphEdgeMidpoint,
+  graphEdgePathFromPoint,
+  graphEdgePathToPoint,
+} from '@/features/sessions/lib/graphGeometry'
 import { clampGraphPan, graphContentBounds, translateGraphPositions } from '@/features/sessions/lib/graphViewport'
 
 const props = defineProps({
@@ -162,7 +189,7 @@ const props = defineProps({
 const emit = defineEmits([
   'node-click', 'node-double-click', 'edge-click', 'start-link', 'finish-link',
   'preview-positions', 'save-positions', 'preview-size', 'save-size', 'create-first',
-  'selection-change', 'delete-selection', 'change-selection-status', 'drag-start',
+  'selection-change', 'delete-selection', 'change-selection-status', 'drag-start', 'rewire-edge',
 ])
 
 const instanceId = getCurrentInstance()?.uid ?? Math.random().toString(36).slice(2)
@@ -207,15 +234,23 @@ useGraphHotkeys({
 const renderedEdges = computed(() => props.edges.map(edge => {
   const from = nodeMap.value.get(edge[props.fromKey])
   const to = nodeMap.value.get(edge[props.toKey])
+  const geometry = from && to ? graphEdgeGeometry(from, to, nodeDimensions) : null
   return from && to
-    ? { ...edge, raw: edge, path: graphEdgePath(from, to, nodeDimensions), mid: graphEdgeMidpoint(from, to, nodeDimensions) }
+    ? { ...edge, raw: edge, ...geometry, mid: graphEdgeMidpoint(from, to, nodeDimensions) }
     : null
 }).filter(Boolean))
 const labelledEdges = computed(() => renderedEdges.value.filter(edge => edge.label))
 const temporaryPath = computed(() => {
-  if (!props.linkingFrom || !cursorWorld.value) return ''
-  return graphEdgePathToPoint(props.linkingFrom, cursorWorld.value, nodeDimensions)
+  if (!cursorWorld.value) return ''
+  if (gesture.value?.type === 'edge') {
+    if (!gesture.value.moved) return ''
+    return gesture.value.endpoint === 'to'
+      ? graphEdgePathToPoint(gesture.value.from, cursorWorld.value, nodeDimensions)
+      : graphEdgePathFromPoint(cursorWorld.value, gesture.value.to, nodeDimensions)
+  }
+  return props.linkingFrom ? graphEdgePathToPoint(props.linkingFrom, cursorWorld.value, nodeDimensions) : ''
 })
+const temporaryBidirectional = computed(() => gesture.value?.type === 'edge' && !!gesture.value.edge.bidirectional)
 const contentBounds = computed(() => graphContentBounds(props.nodes, nodeDimensions))
 const { schedule: emitPositionPreview, cancel: clearPositionPreviewFrame } = useRafLatest(
   positions => emit('preview-positions', positions),
@@ -230,6 +265,10 @@ const { read: readView, save: saveView } = useGraphViewPersistence({
 function isDraggedNode(node) {
   if (gesture.value?.type === 'resize') return gesture.value.node.id === node.id
   return gesture.value?.type === 'node' && gesture.value.nodeKeys.has(graphNodeKey(node))
+}
+
+function isRewiringEdge(edge) {
+  return gesture.value?.type === 'edge' && gesture.value.moved && edge.id === gesture.value.edge.id
 }
 
 function nodeDimensions(node) {
@@ -322,7 +361,7 @@ function safeFrame() {
 
 function onCanvasDown(event) {
   if (props.locked || event.button !== 0) return
-  if (event.target.closest('.nested-graph-node, .nested-graph-edge-label, .nested-graph-edge-hit')) return
+  if (event.target.closest('.nested-graph-node, .nested-graph-edge-label, .nested-graph-edge-hit, .nested-graph-edge-endpoint')) return
   if (props.canEdit && (event.ctrlKey || event.metaKey)) {
     viewport.value.setPointerCapture(event.pointerId)
     gesture.value = beginFrameSelection(event, null, pointInWorld, viewport.value.getBoundingClientRect())
@@ -337,6 +376,28 @@ function onCanvasDown(event) {
     startY: event.clientY,
     panX: pan.value.x,
     panY: pan.value.y,
+  }
+}
+
+function onEdgeEndpointDown(event, edge, endpoint) {
+  if (props.locked || !props.canEdit || event.button !== 0) return
+  const from = nodeMap.value.get(edge[props.fromKey])
+  const to = nodeMap.value.get(edge[props.toKey])
+  if (!from || !to) return
+  clearSelection()
+  cursorWorld.value = pointInWorld(event)
+  viewport.value.setPointerCapture(event.pointerId)
+  gesture.value = {
+    type: 'edge',
+    pointerId: event.pointerId,
+    edge: edge.raw,
+    endpoint,
+    from,
+    to,
+    anchor: event.currentTarget,
+    startClientX: event.clientX,
+    startClientY: event.clientY,
+    moved: false,
   }
 }
 
@@ -410,6 +471,12 @@ function onPointerMove(event) {
     emit('preview-size', active.node.id, Math.round(width))
     return
   }
+  if (active.type === 'edge') {
+    const wasMoved = active.moved
+    active.moved ||= Math.hypot(event.clientX - active.startClientX, event.clientY - active.startClientY) > 4
+    if (active.moved && !wasMoved) emit('drag-start')
+    return
+  }
   if (active.type === 'selection') {
     updateFrameSelection(active, event, pointInWorld, nodeDimensions)
     return
@@ -431,6 +498,21 @@ function onPointerUp(event) {
   if (active.type === 'selection') {
     if (!active.moved && active.node) lastNodeClick = null
     finishFrameSelection(active)
+    cancelGesture(false)
+    return
+  }
+  if (active.type === 'edge') {
+    if (active.moved) {
+      const target = nodeAtClientPoint(event.clientX, event.clientY)
+      const from = active.endpoint === 'from' ? target : active.from
+      const to = active.endpoint === 'to' ? target : active.to
+      if (from && to && String(from.id) !== String(to.id)
+        && (String(from.id) !== String(active.from.id) || String(to.id) !== String(active.to.id))) {
+        emit('rewire-edge', active.edge, from, to)
+      }
+    } else {
+      emit('edge-click', active.edge, active.anchor)
+    }
     cancelGesture(false)
     return
   }
@@ -463,6 +545,12 @@ function onPointerUp(event) {
   }
   cancelGesture(false)
   if (contentMayHaveShrunk) nextTick(() => { if (clampCurrentPan()) saveView() })
+}
+
+function nodeAtClientPoint(clientX, clientY) {
+  const element = document.elementFromPoint(clientX, clientY)?.closest?.('.nested-graph-node')
+  const id = element?.dataset.graphNodeId
+  return id == null ? null : nodeMap.value.get(id) ?? props.nodes.find(node => String(node.id) === id) ?? null
 }
 
 function onNativeDoubleClick(node) {

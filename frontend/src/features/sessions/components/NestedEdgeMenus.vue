@@ -2,6 +2,10 @@
   <BasePopover v-model:open="open" :anchor="anchor" :min-width="210">
     <div v-if="edge" class="nested-edge-menu">
       <RowActionItem action="edit" @click="run('edit')">Изменить подпись</RowActionItem>
+      <RowActionItem :icon="ArrowLeftRight" @click="run('toggle-direction')">
+        {{ edge.bidirectional ? 'Сделать односторонним' : 'Сделать двусторонним' }}
+      </RowActionItem>
+      <RowActionItem v-if="!edge.bidirectional" :icon="Repeat2" @click="run('reverse')">Поменять направление</RowActionItem>
       <RowActionItem action="delete" tone="danger" @click="run('delete')">Удалить переход</RowActionItem>
     </div>
   </BasePopover>
@@ -9,10 +13,11 @@
 
 <script setup>
 import { ref } from 'vue'
+import { ArrowLeftRight, Repeat2 } from '@lucide/vue'
 import { BasePopover } from '@sylvieshare/share-ui'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 
-const emit = defineEmits(['edit', 'delete'])
+const emit = defineEmits(['edit', 'toggle-direction', 'reverse', 'delete'])
 const open = ref(false)
 const anchor = ref(null)
 const edge = ref(null)

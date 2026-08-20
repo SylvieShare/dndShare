@@ -122,14 +122,22 @@ export function useSceneBlockGraph({ sessionUuid, sceneId }) {
 
   async function createEdge(fromItemId, toItemId, label = null) {
     const edge = await apiCreateEdge(sessionUuid, {
-      sceneId: resolvedSceneId(), fromItemId, toItemId, label,
+      sceneId: resolvedSceneId(), fromItemId, toItemId, label, bidirectional: false,
     })
     edges.value = [...edges.value, edge]
     return edge
   }
 
-  async function updateEdge(edgeId, label) {
-    const updated = await apiUpdateEdge(sessionUuid, edgeId, label)
+  async function updateEdge(edgeId, patch) {
+    const current = edges.value.find(edge => edge.id === edgeId)
+    if (!current) return null
+    const updated = await apiUpdateEdge(sessionUuid, edgeId, {
+      fromItemId: current.fromItemId,
+      toItemId: current.toItemId,
+      label: current.label ?? null,
+      bidirectional: !!current.bidirectional,
+      ...patch,
+    })
     edges.value = edges.value.map(edge => edge.id === edgeId ? updated : edge)
     return updated
   }

@@ -44,6 +44,7 @@ type SessionChapterEdge struct {
 	FromChapterID int64   `json:"fromChapterId"`
 	ToChapterID   int64   `json:"toChapterId"`
 	Label         *string `json:"label,omitempty"`
+	Bidirectional bool    `json:"bidirectional"`
 }
 
 type SessionChapterGraph struct {
@@ -349,7 +350,7 @@ func (s *Store) SetCurrentChapter(ctx context.Context, sessionID int64, chapterI
 
 func (s *Store) GetChapterEdgesBySession(ctx context.Context, sessionID int64) ([]SessionChapterEdge, error) {
 	rows, err := s.pool.Query(ctx,
-		`SELECT edge.id, edge.arc_id, edge.from_chapter_id, edge.to_chapter_id, edge.label
+		`SELECT edge.id, edge.arc_id, edge.from_chapter_id, edge.to_chapter_id, edge.label, edge.bidirectional
 		 FROM dndshare.session_chapter_edge edge
 		 JOIN dndshare.session_arc arc ON arc.id = edge.arc_id
 		 WHERE arc.session_id = $1 ORDER BY edge.id`, sessionID)
@@ -360,7 +361,7 @@ func (s *Store) GetChapterEdgesBySession(ctx context.Context, sessionID int64) (
 	var edges []SessionChapterEdge
 	for rows.Next() {
 		var edge SessionChapterEdge
-		if err := rows.Scan(&edge.ID, &edge.ArcID, &edge.FromChapterID, &edge.ToChapterID, &edge.Label); err != nil {
+		if err := rows.Scan(&edge.ID, &edge.ArcID, &edge.FromChapterID, &edge.ToChapterID, &edge.Label, &edge.Bidirectional); err != nil {
 			return nil, err
 		}
 		edges = append(edges, edge)
@@ -371,30 +372,30 @@ func (s *Store) GetChapterEdgesBySession(ctx context.Context, sessionID int64) (
 func (s *Store) GetChapterEdge(ctx context.Context, id int64) (SessionChapterEdge, error) {
 	var edge SessionChapterEdge
 	err := s.pool.QueryRow(ctx,
-		`SELECT id, arc_id, from_chapter_id, to_chapter_id, label
+		`SELECT id, arc_id, from_chapter_id, to_chapter_id, label, bidirectional
 		 FROM dndshare.session_chapter_edge WHERE id = $1`, id,
-	).Scan(&edge.ID, &edge.ArcID, &edge.FromChapterID, &edge.ToChapterID, &edge.Label)
+	).Scan(&edge.ID, &edge.ArcID, &edge.FromChapterID, &edge.ToChapterID, &edge.Label, &edge.Bidirectional)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return SessionChapterEdge{}, ErrNotFound
 	}
 	return edge, err
 }
 
-func (s *Store) CreateChapterEdge(ctx context.Context, arcID, fromID, toID int64, label *string) (SessionChapterEdge, error) {
+func (s *Store) CreateChapterEdge(ctx context.Context, arcID, fromID, toID int64, label *string, bidirectional bool) (SessionChapterEdge, error) {
 	var edge SessionChapterEdge
 	err := s.pool.QueryRow(ctx,
-		`INSERT INTO dndshare.session_chapter_edge (arc_id, from_chapter_id, to_chapter_id, label)
-		 VALUES ($1, $2, $3, $4)
-		 RETURNING id, arc_id, from_chapter_id, to_chapter_id, label`, arcID, fromID, toID, cleanOptional(label),
-	).Scan(&edge.ID, &edge.ArcID, &edge.FromChapterID, &edge.ToChapterID, &edge.Label)
+		`INSERT INTO dndshare.session_chapter_edge (arc_id, from_chapter_id, to_chapter_id, label, bidirectional)
+		 VALUES ($1, $2, $3, $4, $5)
+		 RETURNING id, arc_id, from_chapter_id, to_chapter_id, label, bidirectional`, arcID, fromID, toID, cleanOptional(label), bidirectional,
+	).Scan(&edge.ID, &edge.ArcID, &edge.FromChapterID, &edge.ToChapterID, &edge.Label, &edge.Bidirectional)
 	return edge, err
 }
 
-func (s *Store) UpdateChapterEdge(ctx context.Context, id, fromID, toID int64, label *string) error {
+func (s *Store) UpdateChapterEdge(ctx context.Context, id, fromID, toID int64, label *string, bidirectional bool) error {
 	_, err := s.pool.Exec(ctx,
 		`UPDATE dndshare.session_chapter_edge
-		 SET from_chapter_id = $2, to_chapter_id = $3, label = $4 WHERE id = $1`,
-		id, fromID, toID, cleanOptional(label))
+		 SET from_chapter_id = $2, to_chapter_id = $3, label = $4, bidirectional = $5 WHERE id = $1`,
+		id, fromID, toID, cleanOptional(label), bidirectional)
 	return err
 }
 

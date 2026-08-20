@@ -58,6 +58,7 @@
         @edge-click="openEdgeMenu"
         @start-link="startLink"
         @finish-link="finishLink"
+        @rewire-edge="rewireEdge"
         @preview-positions="graph.setLocalPositions"
         @save-positions="savePositions"
         @selection-change="closeMenus"
@@ -141,7 +142,10 @@
     >
       <template v-if="activeEdge">
         <RowActionItem action="edit" @click="editEdge(activeEdge)">Изменить подпись</RowActionItem>
-        <RowActionItem :icon="ArrowLeftRight" @click="reverseEdge(activeEdge)">Поменять направление</RowActionItem>
+        <RowActionItem :icon="ArrowLeftRight" @click="toggleEdgeDirection(activeEdge)">
+          {{ activeEdge.bidirectional ? 'Сделать односторонним' : 'Сделать двусторонним' }}
+        </RowActionItem>
+        <RowActionItem v-if="!activeEdge.bidirectional" :icon="Repeat2" @click="reverseEdge(activeEdge)">Поменять направление</RowActionItem>
         <RowActionItem action="delete" tone="danger" @click="confirmEdgeDelete(activeEdge)">Удалить переход</RowActionItem>
       </template>
     </BasePopover>
@@ -186,7 +190,7 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue'
-import { ArrowLeft, ArrowLeftRight, Check, Circle, CircleDot, FolderInput, GitBranchPlus, ListChecks } from '@lucide/vue'
+import { ArrowLeft, ArrowLeftRight, Check, Circle, CircleDot, FolderInput, GitBranchPlus, ListChecks, Repeat2 } from '@lucide/vue'
 import ArcEditorModal from '@/features/sessions/components/ArcEditorModal.vue'
 import ChapterEdgeModal from '@/features/sessions/components/ChapterEdgeModal.vue'
 import ChapterEditorModal from '@/features/sessions/components/ChapterEditorModal.vue'
@@ -382,7 +386,7 @@ async function finishLink(chapter) {
   if (!linkingFrom.value || chapter.id === linkingFrom.value.id) return
   const from = linkingFrom.value
   linkingFrom.value = null
-  const data = { arcId: from.arcId, fromChapterId: from.id, toChapterId: chapter.id, label: null }
+  const data = { arcId: from.arcId, fromChapterId: from.id, toChapterId: chapter.id, label: null, bidirectional: false }
   try {
     await perform(() => graph.createEdge(data), 'Не удалось создать переход — возможно, он уже существует')
   } catch { /* shown */ }
@@ -399,7 +403,7 @@ async function saveEdge(label) {
   const from = graph.chapters.value.find(chapter => chapter.id === edge?.fromChapterId)
   const to = graph.chapters.value.find(chapter => chapter.id === edge?.toChapterId)
   if (!from || !to) return
-  const data = { arcId: from.arcId, fromChapterId: from.id, toChapterId: to.id, label }
+  const data = { arcId: from.arcId, fromChapterId: from.id, toChapterId: to.id, label, bidirectional: !!edge.bidirectional }
   try {
     await perform(() => graph.updateEdge(edge.id, data), 'Не удалось сохранить переход')
     closeEditors()
@@ -414,7 +418,34 @@ async function reverseEdge(edge) {
       fromChapterId: edge.toChapterId,
       toChapterId: edge.fromChapterId,
       label: edge.label ?? null,
+      bidirectional: false,
     }), 'Не удалось поменять направление перехода')
+  } catch { /* shown */ }
+}
+
+async function toggleEdgeDirection(edge) {
+  closeMenus()
+  try {
+    await perform(() => graph.updateEdge(edge.id, {
+      arcId: edge.arcId,
+      fromChapterId: edge.fromChapterId,
+      toChapterId: edge.toChapterId,
+      label: edge.label ?? null,
+      bidirectional: !edge.bidirectional,
+    }), 'Не удалось изменить направление перехода')
+  } catch { /* shown */ }
+}
+
+async function rewireEdge(edge, from, to) {
+  closeMenus()
+  try {
+    await perform(() => graph.updateEdge(edge.id, {
+      arcId: edge.arcId,
+      fromChapterId: from.id,
+      toChapterId: to.id,
+      label: edge.label ?? null,
+      bidirectional: !!edge.bidirectional,
+    }), 'Не удалось переставить конец перехода')
   } catch { /* shown */ }
 }
 
