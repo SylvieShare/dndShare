@@ -403,9 +403,14 @@ the same cover slot even when its intrinsic aspect ratio differs.
   thick deep-plum contours, broad graphic shapes, restrained two-step shading
   and a controlled jewel-tone palette. Add enough environmental context to
   communicate habitat, but avoid photorealism, painterly noise and micro-detail.
-- Preserve meaningful vertical space above and below the creature. Keep the
-  areas behind the compact title scrim and translucent combat-stat blocks calm
-  enough for readable UI without globally darkening the artwork.
+- Do not reserve an empty lower third. Let the creature normally occupy about
+  70–85% of the cover height, and allow scenery plus non-critical lower anatomy
+  (feet, tail tips or wing edges) to continue behind the translucent ability
+  strip. The artwork must remain fully composed down to the bottom edge: only
+  the lowest 8–12% may be visually calmer, and it must still contain background,
+  ground or secondary silhouette detail rather than empty space. The face and
+  recognition-critical anatomy must stay clear of the bottom and side stat
+  blocks.
 - Do not bake in text, letters, numbers, readable runes, UI, frames, badges,
   logos or watermarks. Avoid gore and keep important anatomy away from every
   edge.
