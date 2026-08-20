@@ -285,6 +285,9 @@ describe('ViewSession participant rail', () => {
 
   it('reuses one encounter in the combat workspace and the expanding player rail', () => {
     expect(source).toContain('const encounter = reactive(useEncounter({')
+    expect(source).toContain('participants.value = res?.participants ?? []\n    syncVersions()\n    await encounter.load()')
+    expect(encounterComposableSource).not.toContain('onMounted(() => {\n    load()')
+    expect(encounterComposableSource).toContain('encounter,\n    load,')
     expect(source).toContain(':encounter="encounter"')
     expect(source).toContain(':combat-mode="playersRailMode === \'combat\'"')
     expect(styles).toContain('.campaign-workspace--combat .workspace-dock--left')

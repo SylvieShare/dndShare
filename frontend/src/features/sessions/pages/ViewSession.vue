@@ -745,6 +745,7 @@ onMounted(async () => {
     session.value = res?.session ?? null
     participants.value = res?.participants ?? []
     syncVersions()
+    await encounter.load()
     await chapterGraph.load()
     musicStore.setContext({ uuid: sessionUuid, dm: isDm.value })
     await sessionEventsStore.setContext({ uuid: sessionUuid, actorUuid: sheetUuid.value })

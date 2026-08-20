@@ -299,7 +299,6 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
   }
 
   onMounted(() => {
-    load()
     document.addEventListener('visibilitychange', flushWhenBackgrounded)
     window.addEventListener('pagehide', persistence.flushSave)
   })
@@ -312,6 +311,7 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
 
   return {
     encounter,
+    load,
     loadError: persistence.loadError,
     saveError: persistence.saveError,
     inCombat,

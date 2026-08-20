@@ -672,8 +672,9 @@ left rail. The common scene rows reuse the same compact initiative and
 armor-class controls as the player rail. The left-rail tile and portrait keep
 the same height and circular geometry in and out of combat; the larger combat-scene
 portrait is circular too. Player photos use a soft alpha fade around their edges. An
-assigned session color appears as the portrait frame in both representations;
-player rows do not repeat a `PC` type chip. NPC artwork keeps its centered 64×64
+assigned session color remains the inset shadow of the left-rail player tile and
+appears as the portrait frame in the common combat-scene row; player rows do not
+repeat a `PC` type chip. NPC artwork keeps its centered 64×64
 geometry instead of falling back to a name initial. Every combat-scene tile has a numbered marker on its
 left.
 `ViewSession.vue` owns the single `useEncounter` instance shared by the rail and
@@ -746,6 +747,9 @@ or block canvas instead of combat.
 Encounter hydration and saving are fail-safe: a failed initial GET never turns
 into an empty PUT, writes are snapshotted and serialized after the debounce, a
 failed latest write is retried, and a pending snapshot is flushed on unmount.
+`ViewSession` hydrates its participant list before loading and reconciling the
+encounter, so persisted player positions and initiative survive reload just as
+NPC combat state does.
 The same flush starts when the tab becomes hidden or receives `pagehide`, which
 keeps the debounce window from dropping the latest change during navigation.
 The participant list is periodically refreshed while the page is visible;
