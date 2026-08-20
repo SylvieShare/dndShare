@@ -152,8 +152,11 @@ Fixed grants and every concrete branch use compact item rows that can open the
 full handbook card; “any weapon/tool/focus” clauses use the same row inside a
 searchable dropdown and persist the selected item id. Weapon rows include their
 primary damage die. Groups with exactly two alternatives use a two-column
-desktop layout and a shield-check marker on the selected branch; the columns
-collapse on mobile. Concrete item selectors remain visible before branch
+desktop layout with a single vertical divider and a shield-check marker on the
+selected branch; three or more alternatives are separated horizontally, and
+the columns collapse to the same horizontal separators on mobile. The group
+title continues into a fading rule rather than introducing another nested card.
+Concrete item selectors remain visible before branch
 selection; choosing an item activates that branch, while switching columns
 clears the previous column's concrete picks. Pick-kind labels are carried by the
 selector placeholder instead of occupying a separate title column. A class may instead enable

@@ -148,11 +148,14 @@ function pickPlaceholder(pick, index) {
 .shop-notice { display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--border)); border-radius: var(--r-md); background: color-mix(in srgb, var(--accent) 9%, var(--surface)); color: var(--text-2); font-size: 12px; line-height: 1.5; }
 .shop-notice svg { flex: none; color: var(--accent); }
 .choice-group { display: flex; flex-direction: column; gap: 6px; padding: 11px 12px; border: 1px solid var(--border); border-radius: var(--r-md); background: color-mix(in srgb, var(--surface) 80%, transparent); }
-.choice-title { margin-bottom: 1px; color: var(--text-muted); font-size: 10px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; }
-.choice-options { display: grid; gap: 7px; }
+.choice-title { display: flex; align-items: center; gap: 9px; margin-bottom: 2px; color: var(--text-muted); font-size: 10px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; }
+.choice-title::after { height: 1px; flex: 1; background: linear-gradient(90deg, var(--border-strong), transparent); content: ''; }
+.choice-options { display: grid; gap: 0; }
 .choice-options--paired { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.choice-option { min-width: 0; display: flex; flex-direction: column; gap: 8px; padding: 10px; border: 1px solid var(--border); border-radius: var(--r-md); background: color-mix(in srgb, var(--surface) 72%, transparent); transition: border-color .15s, background .15s, box-shadow .15s; }
-.choice-option.selected { border-color: color-mix(in srgb, var(--accent) 58%, var(--border)); background: color-mix(in srgb, var(--accent) 9%, var(--surface)); box-shadow: inset 0 3px 0 color-mix(in srgb, var(--accent) 78%, transparent); }
+.choice-option { min-width: 0; display: flex; flex-direction: column; gap: 8px; padding-block: 8px 4px; }
+.choice-options:not(.choice-options--paired) .choice-option + .choice-option { margin-top: 8px; padding-top: 12px; border-top: 1px solid var(--border); }
+.choice-options--paired .choice-option:first-child { padding-right: 14px; }
+.choice-options--paired .choice-option + .choice-option { padding-left: 14px; border-left: 1px solid var(--border); }
 .choice-option-label { display: flex; align-items: flex-start; gap: 8px; color: var(--text-2); font-size: 13px; line-height: 1.35; cursor: pointer; }
 .choice-option.selected .choice-option-label { color: var(--text-1); }
 .choice-option-input { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
@@ -171,6 +174,8 @@ function pickPlaceholder(pick, index) {
   .equipment-heading { flex-direction: column; gap: 10px; }
   .shop-later { width: 100%; box-sizing: border-box; }
   .choice-options--paired { grid-template-columns: 1fr; }
+  .choice-options--paired .choice-option:first-child { padding-right: 0; }
+  .choice-options--paired .choice-option + .choice-option { margin-top: 8px; padding: 12px 0 4px; border-top: 1px solid var(--border); border-left: 0; }
   .option-items, .fixed-items { grid-template-columns: 1fr; padding-left: 0; }
   .concrete-picks { padding-left: 0; }
 }
