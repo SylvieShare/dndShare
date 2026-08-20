@@ -49,20 +49,30 @@
   pointer-events: none;
 }
 .nested-graph-edge-line--temporary { stroke-dasharray: 6 5; opacity: 0.72; }
-.nested-graph-edge--rewiring > :not(.nested-graph-edge-endpoint) { opacity: 0.18; }
+.nested-graph-edge--rewiring > :not(.nested-graph-edge-endpoint-zone) { opacity: 0.18; }
 .nested-graph-edge-arrow { fill: var(--accent-soft); }
 .nested-graph-edge-hit { fill: none; stroke: transparent; stroke-width: 16; cursor: pointer; pointer-events: stroke; }
 .nested-graph-edge-hit:hover + .nested-graph-edge-line { stroke: var(--accent); stroke-width: 3; }
-.nested-graph-edge-endpoint {
-  fill: transparent;
+.nested-graph-edge--endpoint-hover .nested-graph-edge-line { stroke: var(--accent); stroke-width: 3; }
+.nested-graph-edge-endpoint-zone {
+  fill: none;
   stroke: transparent;
-  stroke-width: 2;
+  stroke-width: 18;
   cursor: grab;
-  pointer-events: all;
+  pointer-events: stroke;
   vector-effect: non-scaling-stroke;
 }
-.nested-graph-edge-endpoint:hover { stroke: var(--accent); }
-.nested-graph-edge-endpoint:active { cursor: grabbing; }
+.nested-graph-edge-endpoint-zone:active { cursor: grabbing; }
+.nested-graph-node--link-preview-target::before {
+  position: absolute;
+  z-index: 19;
+  inset: -5px;
+  border: 2px solid var(--success);
+  border-radius: 17px;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--success) 16%, transparent);
+  content: '';
+  pointer-events: none;
+}
 .nested-graph-edge-label {
   position: absolute;
   max-width: 180px;

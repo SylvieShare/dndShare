@@ -573,8 +573,12 @@ Its source and every completed edge use the centered port on the nearest facing
 side of each card, including the top and bottom sides. The same menu at all
 three levels can reverse a one-way edge or toggle it to/from bidirectional;
 reverse is hidden while both arrowheads are active. Dragging the enlarged hit
-area near either endpoint previews the existing edge from the pointer and
-persists the new source or target when dropped on another card.
+area along the first or last part of a hovered curve previews the existing edge
+from the pointer and persists the new source or target when dropped on another
+card. This keeps converging edges individually reachable before their shared
+port. While creating or rewiring an edge, hovering a valid node snaps the
+temporary path to the complete future port-to-port geometry and highlights the
+prospective target.
 `SceneEditorModal` is used for scenario create/edit, `ConfirmDialog` for
 destructive actions, and `SceneBlockEditorModal` for block content. Scene and
 block CRUD remains in `session_scenes.go`; graph reads, positions and links are

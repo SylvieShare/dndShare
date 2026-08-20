@@ -13,6 +13,7 @@
     @pointermove="onPointerMove"
     @pointerup="onPointerUp"
     @pointercancel="cancelGesture"
+    @pointerleave="clearHoverTargets"
     @wheel.prevent="onWheel"
   >
     <div class="nested-graph-grid" :style="gridStyle" />
@@ -24,7 +25,14 @@
             <path d="M 0 0 L 10 5 L 0 10 z" class="nested-graph-edge-arrow" />
           </marker>
         </defs>
-        <g v-for="edge in renderedEdges" :key="`${graphKey}:${edge.id}`" :class="{ 'nested-graph-edge--rewiring': isRewiringEdge(edge) }">
+        <g
+          v-for="edge in renderedEdges"
+          :key="`${graphKey}:${edge.id}`"
+          :class="{
+            'nested-graph-edge--rewiring': isRewiringEdge(edge),
+            'nested-graph-edge--endpoint-hover': hoveredEdgeId === edge.id,
+          }"
+        >
           <path class="nested-graph-edge-hit" :d="edge.path" @pointerdown.stop @click.stop="$emit('edge-click', edge.raw, $event.currentTarget)" />
           <path
             class="nested-graph-edge-line"
@@ -33,18 +41,22 @@
             :marker-end="`url(#${markerId})`"
           />
           <template v-if="canEdit">
-            <circle
-              class="nested-graph-edge-endpoint"
-              :cx="edge.start.x"
-              :cy="edge.start.y"
-              :r="12 / zoom"
+            <path
+              class="nested-graph-edge-endpoint-zone"
+              :d="edge.path"
+              pathLength="100"
+              stroke-dasharray="30 70"
+              @pointerenter="hoverEdgeEndpoint(edge)"
+              @pointerleave="leaveEdgeEndpoint(edge)"
               @pointerdown.stop="onEdgeEndpointDown($event, edge, 'from')"
             />
-            <circle
-              class="nested-graph-edge-endpoint"
-              :cx="edge.end.x"
-              :cy="edge.end.y"
-              :r="12 / zoom"
+            <path
+              class="nested-graph-edge-endpoint-zone"
+              :d="edge.reversePath"
+              pathLength="100"
+              stroke-dasharray="30 70"
+              @pointerenter="hoverEdgeEndpoint(edge)"
+              @pointerleave="leaveEdgeEndpoint(edge)"
               @pointerdown.stop="onEdgeEndpointDown($event, edge, 'to')"
             />
           </template>
@@ -76,7 +88,8 @@
         :data-graph-node-id="node.id"
         :class="{
           'nested-graph-node--linking': node.id === linkingFrom?.id,
-          'nested-graph-node--target': !!linkingFrom && node.id !== linkingFrom.id,
+          'nested-graph-node--target': isAvailableLinkTarget(node),
+          'nested-graph-node--link-preview-target': node.id === previewTargetNode?.id,
           'nested-graph-node--spotlight': node.id === spotlightNodeId,
           'nested-graph-node--suppressed': spotlightNodeId != null && node.id !== spotlightNodeId,
           'nested-graph-node--selected': isSelected(node),
@@ -199,6 +212,8 @@ const pan = ref({ x: 48, y: props.initialTop })
 const zoom = ref(1)
 const cursorWorld = ref(null)
 const gesture = ref(null)
+const linkPreviewTarget = ref(null)
+const hoveredEdgeId = ref(null)
 const viewportRevision = ref(0)
 const sizeRevision = ref(0)
 const measuredHeights = new Map()
@@ -244,13 +259,25 @@ const temporaryPath = computed(() => {
   if (!cursorWorld.value) return ''
   if (gesture.value?.type === 'edge') {
     if (!gesture.value.moved) return ''
+    const target = gesture.value.hoveredTarget
+    if (target) {
+      return gesture.value.endpoint === 'to'
+        ? graphEdgeGeometry(gesture.value.from, target, nodeDimensions).path
+        : graphEdgeGeometry(target, gesture.value.to, nodeDimensions).path
+    }
     return gesture.value.endpoint === 'to'
       ? graphEdgePathToPoint(gesture.value.from, cursorWorld.value, nodeDimensions)
       : graphEdgePathFromPoint(cursorWorld.value, gesture.value.to, nodeDimensions)
   }
-  return props.linkingFrom ? graphEdgePathToPoint(props.linkingFrom, cursorWorld.value, nodeDimensions) : ''
+  if (!props.linkingFrom) return ''
+  return linkPreviewTarget.value
+    ? graphEdgeGeometry(props.linkingFrom, linkPreviewTarget.value, nodeDimensions).path
+    : graphEdgePathToPoint(props.linkingFrom, cursorWorld.value, nodeDimensions)
 })
 const temporaryBidirectional = computed(() => gesture.value?.type === 'edge' && !!gesture.value.edge.bidirectional)
+const previewTargetNode = computed(() => gesture.value?.type === 'edge'
+  ? gesture.value.hoveredTarget ?? null
+  : linkPreviewTarget.value)
 const contentBounds = computed(() => graphContentBounds(props.nodes, nodeDimensions))
 const { schedule: emitPositionPreview, cancel: clearPositionPreviewFrame } = useRafLatest(
   positions => emit('preview-positions', positions),
@@ -269,6 +296,21 @@ function isDraggedNode(node) {
 
 function isRewiringEdge(edge) {
   return gesture.value?.type === 'edge' && gesture.value.moved && edge.id === gesture.value.edge.id
+}
+
+function isAvailableLinkTarget(node) {
+  if (props.linkingFrom) return String(node.id) !== String(props.linkingFrom.id)
+  if (gesture.value?.type !== 'edge' || !gesture.value.moved) return false
+  const fixed = gesture.value.endpoint === 'to' ? gesture.value.from : gesture.value.to
+  return String(node.id) !== String(fixed.id)
+}
+
+function hoverEdgeEndpoint(edge) {
+  if (gesture.value?.type !== 'edge') hoveredEdgeId.value = edge.id
+}
+
+function leaveEdgeEndpoint(edge) {
+  if (hoveredEdgeId.value === edge.id && gesture.value?.type !== 'edge') hoveredEdgeId.value = null
 }
 
 function nodeDimensions(node) {
@@ -361,7 +403,7 @@ function safeFrame() {
 
 function onCanvasDown(event) {
   if (props.locked || event.button !== 0) return
-  if (event.target.closest('.nested-graph-node, .nested-graph-edge-label, .nested-graph-edge-hit, .nested-graph-edge-endpoint')) return
+  if (event.target.closest('.nested-graph-node, .nested-graph-edge-label, .nested-graph-edge-hit, .nested-graph-edge-endpoint-zone')) return
   if (props.canEdit && (event.ctrlKey || event.metaKey)) {
     viewport.value.setPointerCapture(event.pointerId)
     gesture.value = beginFrameSelection(event, null, pointInWorld, viewport.value.getBoundingClientRect())
@@ -398,6 +440,7 @@ function onEdgeEndpointDown(event, edge, endpoint) {
     startClientX: event.clientX,
     startClientY: event.clientY,
     moved: false,
+    hoveredTarget: null,
   }
 }
 
@@ -454,6 +497,12 @@ function onResizeDown(event, node) {
 function onPointerMove(event) {
   if (props.locked) return
   cursorWorld.value = pointInWorld(event)
+  const hoveredNode = nodeAtClientPoint(event.clientX, event.clientY)
+  if (props.linkingFrom) {
+    linkPreviewTarget.value = hoveredNode && String(hoveredNode.id) !== String(props.linkingFrom.id)
+      ? hoveredNode
+      : null
+  }
   const active = gesture.value
   if (!active || active.pointerId !== event.pointerId) return
   if (active.type === 'pan') {
@@ -475,6 +524,10 @@ function onPointerMove(event) {
     const wasMoved = active.moved
     active.moved ||= Math.hypot(event.clientX - active.startClientX, event.clientY - active.startClientY) > 4
     if (active.moved && !wasMoved) emit('drag-start')
+    const fixed = active.endpoint === 'to' ? active.from : active.to
+    active.hoveredTarget = hoveredNode && String(hoveredNode.id) !== String(fixed.id)
+      ? hoveredNode
+      : null
     return
   }
   if (active.type === 'selection') {
@@ -553,6 +606,12 @@ function nodeAtClientPoint(clientX, clientY) {
   return id == null ? null : nodeMap.value.get(id) ?? props.nodes.find(node => String(node.id) === id) ?? null
 }
 
+function clearHoverTargets() {
+  linkPreviewTarget.value = null
+  hoveredEdgeId.value = null
+  if (gesture.value?.type === 'edge') gesture.value.hoveredTarget = null
+}
+
 function onNativeDoubleClick(node) {
   if (props.locked) emit('node-double-click', node)
 }
@@ -567,6 +626,7 @@ function cancelGesture(rollback = true) {
   if (rollback && active?.moved && active.type === 'node') emit('preview-positions', active.nodes)
   if (rollback && active?.moved && active.type === 'resize') emit('preview-size', active.node.id, active.startWidth)
   cancelFrameSelection()
+  hoveredEdgeId.value = null
   gesture.value = null
 }
 
@@ -641,6 +701,7 @@ watch(() => props.graphKey, graphKey => {
     refreshNodeObservers()
   })
 })
+watch(() => props.linkingFrom, () => { linkPreviewTarget.value = null })
 watch(() => [props.nodes.length, props.dynamicNodeHeight], () => nextTick(refreshNodeObservers), { flush: 'post' })
 watch(contentBounds, () => {
   if (['node', 'resize'].includes(gesture.value?.type)) return

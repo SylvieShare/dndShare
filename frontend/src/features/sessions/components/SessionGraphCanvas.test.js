@@ -142,8 +142,12 @@ describe('session graph canvas', () => {
     expect(apiSource).toContain('updateSceneBlockEdge')
     expect(source).toContain('@rewire-edge="rewireEdge"')
     expect(canvasSource).toContain("onEdgeEndpointDown($event, edge, 'to')")
+    expect(canvasSource).toContain(':d="edge.reversePath"')
+    expect(canvasSource).toContain('stroke-dasharray="30 70"')
     expect(canvasSource).toContain("emit('rewire-edge', active.edge, from, to)")
     expect(canvasSource).toContain(':marker-start="edge.bidirectional')
+    expect(canvasSource).toContain('graphEdgeGeometry(props.linkingFrom, linkPreviewTarget.value, nodeDimensions).path')
+    expect(canvasSource).toContain("'nested-graph-node--link-preview-target'")
   })
 
   it('derives block presentation from type and opens actions from the whole card', () => {

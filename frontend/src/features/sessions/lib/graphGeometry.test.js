@@ -18,6 +18,7 @@ describe('graph edge geometry', () => {
       start: { x: 300, y: 140 },
       end: { x: 500, y: 380 },
       path: 'M 300 140 C 390 140, 410 380, 500 380',
+      reversePath: 'M 500 380 C 410 380, 390 140, 300 140',
     })
   })
 

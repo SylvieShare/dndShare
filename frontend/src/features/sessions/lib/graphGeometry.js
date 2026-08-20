@@ -14,17 +14,23 @@ function connectionAxis(fromCenter, toCenter, horizontalReach, verticalReach) {
 function curveGeometry(start, end, axis, direction) {
   if (axis === 'horizontal') {
     const bend = Math.max(70, Math.abs(end.x - start.x) * 0.45)
+    const control1 = { x: start.x + direction * bend, y: start.y }
+    const control2 = { x: end.x - direction * bend, y: end.y }
     return {
       start,
       end,
-      path: `M ${start.x} ${start.y} C ${start.x + direction * bend} ${start.y}, ${end.x - direction * bend} ${end.y}, ${end.x} ${end.y}`,
+      path: `M ${start.x} ${start.y} C ${control1.x} ${control1.y}, ${control2.x} ${control2.y}, ${end.x} ${end.y}`,
+      reversePath: `M ${end.x} ${end.y} C ${control2.x} ${control2.y}, ${control1.x} ${control1.y}, ${start.x} ${start.y}`,
     }
   }
   const bend = Math.max(70, Math.abs(end.y - start.y) * 0.45)
+  const control1 = { x: start.x, y: start.y + direction * bend }
+  const control2 = { x: end.x, y: end.y - direction * bend }
   return {
     start,
     end,
-    path: `M ${start.x} ${start.y} C ${start.x} ${start.y + direction * bend}, ${end.x} ${end.y - direction * bend}, ${end.x} ${end.y}`,
+    path: `M ${start.x} ${start.y} C ${control1.x} ${control1.y}, ${control2.x} ${control2.y}, ${end.x} ${end.y}`,
+    reversePath: `M ${end.x} ${end.y} C ${control2.x} ${control2.y}, ${control1.x} ${control1.y}, ${start.x} ${start.y}`,
   }
 }
 
