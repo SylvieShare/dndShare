@@ -66,6 +66,7 @@ type publicEncounterGraveyard struct {
 type publicEncounterState struct {
 	Name  string  `json:"name"`
 	Color *string `json:"color,omitempty"`
+	SVG   *string `json:"svg,omitempty"`
 }
 
 type rawPublicEncounter struct {
@@ -169,7 +170,7 @@ func (s *Server) handleGetPublicEncounter(w http.ResponseWriter, r *http.Request
 	}
 	statesByID := make(map[int64]publicEncounterState, len(states))
 	for _, state := range states {
-		statesByID[state.ID] = publicEncounterState{Name: state.Value, Color: state.Color}
+		statesByID[state.ID] = publicEncounterState{Name: state.Value, Color: state.Color, SVG: state.Svg}
 	}
 
 	combatants := make([]publicEncounterCombatant, 0, len(encounter.Combatants))

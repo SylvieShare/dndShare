@@ -38,6 +38,18 @@ describe('public encounter portraits', () => {
     expect(initiativeStyles).toContain('transform: translate(50%, -50%);')
     expect(initiativeStyles).toContain('var(--screen-combatant-color)')
   })
+
+  it('shows compact names and condition icons inside queue tiles', () => {
+    expect(pageSource).toContain('class="initiative-card__name"')
+    expect(pageSource).toContain('{{ combatant.name }}')
+    expect(pageSource).toContain('class="initiative-card__states"')
+    expect(pageSource).toContain('queueStates(combatant).slice(0, 3)')
+    expect(pageSource).toContain('v-else-if="state.svg"')
+    expect(pageSource).toContain("{ name: 'Врасплох', color: 'var(--warning)', surprised: true }")
+    expect(initiativeStyles).toContain('.initiative-card__name {')
+    expect(initiativeStyles).toContain('text-overflow: ellipsis;')
+    expect(initiativeStyles).toContain('.initiative-card__states {')
+  })
 })
 
 describe('public encounter composition', () => {

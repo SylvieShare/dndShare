@@ -52,6 +52,29 @@ func TestBuildPublicCombatantIncludesNPCItemCover(t *testing.T) {
 	}
 }
 
+func TestBuildPublicCombatantIncludesStatePresentation(t *testing.T) {
+	stateID := int64(7)
+	color := "#e66a52"
+	svg := `<svg viewBox="0 0 24 24"><path d="M12 2v20"/></svg>`
+
+	combatant := buildPublicCombatant(rawPublicCombatant{
+		UID:      "npc-1",
+		Type:     "npc",
+		States:   []int64{stateID},
+		Override: map[string]any{"name": "Гоблин"},
+	}, store.SessionParticipantData{}, nil, map[int64]publicEncounterState{
+		stateID: {Name: "Оглушён", Color: &color, SVG: &svg},
+	}, 1, false)
+
+	if len(combatant.States) != 1 {
+		t.Fatalf("states = %d, want 1", len(combatant.States))
+	}
+	state := combatant.States[0]
+	if state.Name != "Оглушён" || state.Color == nil || *state.Color != color || state.SVG == nil || *state.SVG != svg {
+		t.Fatalf("state presentation = %#v", state)
+	}
+}
+
 func TestEncounterHealthIncludesNumbersOnlyWhenEnabled(t *testing.T) {
 	hidden := encounterHealth(7, 12, true, false)
 	if hidden.Current != nil || hidden.Maximum != nil {

@@ -212,7 +212,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: clamp(5px, .5vw, 7px);
+  gap: clamp(2px, .28vw, 4px);
   box-sizing: border-box;
   padding: var(--queue-card-padding);
   border: 1px solid color-mix(in srgb, var(--screen-combatant-color) 34%, var(--border-strong));
@@ -250,14 +250,14 @@
 
 .initiative-card__portrait--npc { border: 0; border-radius: 0; background: transparent; }
 .initiative-card__portrait img,
-.initiative-card__portrait > span:not(.initiative-card__corner-marker),
+.initiative-card__portrait > span:not(.initiative-card__corner-marker):not(.initiative-card__states),
 .initiative-card__portrait :deep(svg) { width: 100%; height: 100%; }
 .initiative-card__portrait img {
   border-radius: inherit;
   object-fit: contain;
   overflow: hidden;
 }
-.initiative-card__portrait > span:not(.initiative-card__corner-marker) { display: grid; place-items: center; border-radius: inherit; overflow: hidden; }
+.initiative-card__portrait > span:not(.initiative-card__corner-marker):not(.initiative-card__states) { display: grid; place-items: center; border-radius: inherit; overflow: hidden; }
 .initiative-card__corner-marker {
   position: absolute;
   top: 3px;
@@ -268,7 +268,47 @@
   transform: translate(50%, -50%);
   font-size: clamp(9px, .7vw, 12px);
 }
-.initiative-card__health { max-width: 100%; min-height: 24px; padding: 3px 7px; font-size: clamp(9px, .62vw, 11px); white-space: nowrap; }
+.initiative-card__name {
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  margin-top: -1px;
+  color: var(--text-2);
+  font-size: clamp(9px, .68vw, 11px);
+  font-weight: 750;
+  line-height: 1.15;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.initiative-card__health { max-width: 100%; min-height: 22px; padding: 2px 7px; font-size: clamp(9px, .62vw, 11px); white-space: nowrap; }
+
+.initiative-card__states {
+  position: absolute;
+  bottom: -5px;
+  left: -5px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.initiative-card__state-icon,
+.initiative-card__state-more {
+  --screen-state-color: var(--info);
+  width: clamp(18px, 1.35vw, 21px);
+  height: clamp(18px, 1.35vw, 21px);
+  display: grid;
+  flex: none;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--screen-state-color) 62%, var(--border));
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--screen-state-color) 18%, var(--scrim));
+  color: color-mix(in srgb, var(--screen-state-color) 82%, var(--text-1));
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--bg) 68%, transparent);
+}
+.initiative-card__state-icon :deep(.svg-icon) { width: 11px; height: 11px; }
+.initiative-card__state-icon > i { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.initiative-card__state-more { font-size: 8px; font-weight: 900; }
 
 .initiative-card__stack-count {
   position: absolute;

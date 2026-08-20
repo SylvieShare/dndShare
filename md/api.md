@@ -267,7 +267,8 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
 - `GET /api/public/sessions/{uuid}/encounter` is the anonymous, no-store TV
   projection of the current fight. It returns only the session name, round,
   current turn and server-ordered combatants with presentation fields,
-  resolved conditions and a worded health band. When enabled by the presentation
+  resolved conditions with their display `color` and optional `svg` icon, and a
+  worded health band. When enabled by the presentation
   state in `numbers` mode, health also contains `current/maximum`; `graveyard`
   contains dead NPC
   groups by bestiary type. Bestiary combatants also expose `coverImageUrl` for

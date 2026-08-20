@@ -127,7 +127,26 @@
                   <span v-else-if="combatant.avatarSvg" v-html="combatant.avatarSvg" />
                   <UserRound v-else :size="45" :stroke-width="1.15" aria-hidden="true" />
                   <span v-if="combatant.markerLetter" class="initiative-card__corner-marker">{{ combatant.markerLetter }}</span>
+                  <span
+                    v-if="queueStates(combatant).length"
+                    class="initiative-card__states"
+                    :aria-label="`Состояния: ${queueStates(combatant).map(state => state.name).join(', ')}`"
+                  >
+                    <span
+                      v-for="state in queueStates(combatant).slice(0, 3)"
+                      :key="state.name"
+                      class="initiative-card__state-icon"
+                      :style="stateStyle(state)"
+                      :title="state.name"
+                    >
+                      <CircleAlert v-if="state.surprised" :size="12" :stroke-width="2.4" aria-hidden="true" />
+                      <SvgIcon v-else-if="state.svg" :svg="state.svg" :color="state.color || '#888888'" filter />
+                      <i v-else aria-hidden="true" />
+                    </span>
+                    <span v-if="queueStates(combatant).length > 3" class="initiative-card__state-more" aria-hidden="true">+{{ queueStates(combatant).length - 3 }}</span>
+                  </span>
                 </div>
+                <span class="initiative-card__name" :title="combatant.name">{{ combatant.name }}</span>
                 <span v-if="presentation.showHealth" class="encounter-health initiative-card__health" :class="healthClass(combatant)">{{ healthDisplayText(combatant) }}</span>
                 <span v-if="queueStackCount > 1 && index === queueStackStart" class="initiative-card__stack-count">+{{ queueStackCount - 1 }}</span>
               </li>
@@ -174,10 +193,11 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { HeartPulse, Images, Skull, Swords, Timer, UserRound, Volume2, WifiOff } from '@lucide/vue'
+import { CircleAlert, HeartPulse, Images, Skull, Swords, Timer, UserRound, Volume2, WifiOff } from '@lucide/vue'
 import { getPublicDisplayMusic, getPublicEncounter, getPublicPresentation } from '@/shared/api/sessionsApi'
 import { useDisplayMusic } from '@/features/sessions/composables/useDisplayMusic'
 import { formatTimerDuration, timerProgress, timerRemainingMs } from '@/features/sessions/lib/sessionTimers'
+import SvgIcon from '@/shared/ui/SvgIcon.vue'
 
 const CONTROL_SYNC_INTERVAL_MS = 45_000
 const REQUEST_TIMEOUT_MS = 8_000
@@ -281,6 +301,12 @@ function queueCardStyle(combatant, index) {
 
 function stateStyle(state) {
   return state?.color ? { '--screen-state-color': state.color } : {}
+}
+
+function queueStates(combatant) {
+  const states = Array.isArray(combatant?.states) ? combatant.states : []
+  if (!combatant?.surprised || snapshot.value?.round !== 0) return states
+  return [...states, { name: 'Врасплох', color: 'var(--warning)', surprised: true }]
 }
 
 function healthClass(combatant) {
