@@ -105,10 +105,12 @@ entries and selected choices.
   artwork. Cover height is a per-handbook-type presentation profile without a
   shared maximum: the default follows the asset's intrinsic ratio, while a type
   may opt into a minimum height without branching the header;
-- spell details with a cover use a `300px` minimum `5:2` profile. Casting time,
-  range and duration are three local translucent cards along the bottom of the
-  artwork and are omitted from the content below; spells without a cover keep
-  the compact metadata row in their normal content;
+- spell details with a cover use a `300px` minimum `5:2` profile. Level and
+  school form a compact vertical identity block below the title. The bottom
+  keeps three columns: casting time, range, and a stack with components above
+  duration. These short values are omitted from the content below, while the
+  full material-component description remains there; spells without a cover
+  keep level, school, components and the compact metadata row in normal content;
 - bestiary details use a `440px` minimum cover profile. Their identity, source,
   tags, CR/AC/HP/proficiency, speeds and all six ability modifiers are rendered
   in the header summary slot. The cover itself is not dimmed: the title uses a

@@ -8,9 +8,9 @@
       </div>
     </div>
 
-    <div class="sdc-pills">
-      <span v-if="lvlLabel" class="sdc-pill sdc-pill-lvl">{{ lvlLabel }}</span>
-      <span v-if="school" class="sdc-pill sdc-pill-school" :style="schoolStyle">{{ school }}</span>
+    <div v-if="!summaryInHeader || data.concentration || data.ritual" class="sdc-pills">
+      <span v-if="!summaryInHeader && lvlLabel" class="sdc-pill sdc-pill-lvl">{{ lvlLabel }}</span>
+      <span v-if="!summaryInHeader && school" class="sdc-pill sdc-pill-school" :style="schoolStyle">{{ school }}</span>
       <span v-if="data.concentration" class="sdc-pill sdc-pill-conc">Концентрация</span>
       <span v-if="data.ritual" class="sdc-pill sdc-pill-ritual">Ритуал</span>
     </div>
@@ -33,13 +33,15 @@
       </div>
     </div>
 
-    <div v-if="hasComponents" class="sdc-comp-row">
-      <span class="sdc-comp-lbl">Компоненты:</span>
-      <span v-if="data.components?.v" class="sdc-comp" tabindex="0" title="Вербальный компонент: заклинатель произносит магические слова">В</span>
-      <span v-if="data.components?.s" class="sdc-comp" tabindex="0" title="Соматический компонент: заклинатель выполняет жесты свободной рукой">С</span>
-      <span v-if="data.components?.m" class="sdc-comp" tabindex="0" title="Материальный компонент: нужен указанный предмет или магическая фокусировка">М</span>
-      <span v-if="data.components?.m && typeof data.components.m === 'string'" class="sdc-comp-m">
-        ({{ data.components.m }})
+    <div v-if="showComponentsInContent" class="sdc-comp-row">
+      <span class="sdc-comp-lbl">{{ summaryInHeader ? 'Материальный компонент:' : 'Компоненты:' }}</span>
+      <template v-if="!summaryInHeader">
+        <span v-if="data.components?.v" class="sdc-comp" tabindex="0" title="Вербальный компонент: заклинатель произносит магические слова">В</span>
+        <span v-if="data.components?.s" class="sdc-comp" tabindex="0" title="Соматический компонент: заклинатель выполняет жесты свободной рукой">С</span>
+        <span v-if="data.components?.m" class="sdc-comp" tabindex="0" title="Материальный компонент: нужен указанный предмет или магическая фокусировка">М</span>
+      </template>
+      <span v-if="materialComponent" class="sdc-comp-m">
+        {{ summaryInHeader ? materialComponent : `(${materialComponent})` }}
       </span>
     </div>
 
@@ -118,6 +120,8 @@ const hasComponents = computed(() => {
   const c = data.value.components
   return c && (c.v || c.s || c.m)
 })
+const materialComponent = computed(() => typeof data.value.components?.m === 'string' ? data.value.components.m : '')
+const showComponentsInContent = computed(() => hasComponents.value && (!props.summaryInHeader || materialComponent.value))
 const nameEnFormatted = computed(() =>
   (props.item.nameEn || '')
     .replace(/_/g, ' ')

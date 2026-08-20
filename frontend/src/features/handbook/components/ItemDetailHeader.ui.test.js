@@ -50,16 +50,20 @@ describe('handbook item detail cover', () => {
     expect(headerSource).not.toContain("coverAspectRatio.value = '4 / 1'")
   })
 
-  it('gives covered spells a 5:2 showcase with time, range and duration cards', () => {
+  it('gives covered spells a 5:2 casting dashboard without duplicating its summary below', () => {
     expect(headerSource).toContain("5: {\n    '--cover-min-height': '300px'")
     expect(headerSource).toContain("if (typeId === 5) return '5 / 2'")
-    expect(detailSource).toContain('<SpellDetailSummary :item="item" />')
+    expect(detailSource).toContain('<SpellDetailSummary :item="item" :type="type" />')
     expect(detailSource).toContain('summaryInHeader: isSpellCovered.value')
     expect(spellSummarySource).toContain('grid-template-columns: repeat(3, minmax(0, 1fr));')
+    expect(spellSummarySource).toContain('class="spell-summary-kind"')
+    expect(spellSummarySource).toContain('class="spell-summary-stack"')
+    expect(spellSummarySource).toContain('Компоненты')
     expect(spellSummarySource).toContain('Время')
     expect(spellSummarySource).toContain('Дистанция')
     expect(spellSummarySource).toContain('Длительность')
     expect(spellContentSource).toContain('!summaryInHeader && (data.time || data.range || data.duration)')
+    expect(spellContentSource).toContain("summaryInHeader ? 'Материальный компонент:' : 'Компоненты:'")
   })
 
   it('gives armor a 4:3 object showcase with side stats and a bottom requirement rail', () => {

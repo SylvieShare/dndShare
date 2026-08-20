@@ -13,7 +13,7 @@
           <ArmorDetailSummary :item="item" />
         </template>
         <template v-else-if="isSpellCovered" #summary>
-          <SpellDetailSummary :item="item" />
+          <SpellDetailSummary :item="item" :type="type" />
         </template>
         <template v-else-if="isTransport" #summary>
           <TransportDetailSummary :item="item" />
