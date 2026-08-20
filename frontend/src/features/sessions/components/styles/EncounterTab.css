@@ -188,10 +188,25 @@
 .enc-toolbar :deep(.enc-icon-btn:disabled) { cursor: not-allowed; opacity: 0.32; }
 
 .enc-toolbar :deep(.enc-icon-btn--primary) {
+  display: inline-flex;
+  width: auto;
+  min-width: 144px;
+  height: 48px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 0 18px;
   border-color: color-mix(in srgb, var(--accent) 56%, transparent);
   background: var(--accent);
   color: var(--text-on-accent);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: .01em;
+  white-space: nowrap;
 }
+
+.enc-primary-label { line-height: 1; }
 
 .enc-toolbar :deep(.enc-icon-btn--primary:hover:not(:disabled)) {
   border-color: var(--accent);

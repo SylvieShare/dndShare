@@ -619,8 +619,9 @@ combat header sits immediately to the right of the focused chapter;
 combatants remain independent tiles below it rather than being wrapped in one
 central card. On desktop the combat workspace retains the same reserved right
 boundary whether the tool rail is open or empty, so hiding all right-side tools
-does not stretch the central combat column. The header groups compact icon actions for starting or ending
-combat and turn navigation. Its growing secondary action row uses labelled
+does not stretch the central combat column. The header uses one enlarged,
+labelled primary action, “Начать бой” or “Закончить бой”, while turn navigation
+remains compact and icon-only. Its growing secondary action row uses labelled
 groups only for categories that currently contain multiple actions; single
 pre-combat roll and dead-combatant actions remain direct icon
 buttons without a group title or frame. Nested action components use the same

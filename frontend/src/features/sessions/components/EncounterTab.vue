@@ -27,8 +27,9 @@
           aria-keyshortcuts="Shift+Enter"
           @click="toggleCombat"
         >
-          <Square v-if="enc.encounter.active" :size="18" />
-          <Swords v-else :size="19" />
+          <Square v-if="enc.encounter.active" :size="22" />
+          <Swords v-else :size="23" />
+          <span class="enc-primary-label">{{ enc.encounter.active ? 'Закончить бой' : 'Начать бой' }}</span>
           <span v-if="!enc.encounter.active && startSelectionCount" class="enc-icon-count">{{ startSelectionCount }}</span>
           <kbd v-if="showShortcutHints" class="enc-shortcut-hint" aria-hidden="true">{{ shortcutLabels.panel }}+Enter</kbd>
         </button>

@@ -396,6 +396,14 @@ describe('ViewSession participant rail', () => {
     expect(encounterStylesSource).toContain('.enc-action-group-controls')
   })
 
+  it('shows an enlarged labelled primary combat action', () => {
+    expect(encounterSource).toContain("{{ enc.encounter.active ? 'Закончить бой' : 'Начать бой' }}")
+    expect(encounterSource).toContain('class="enc-primary-label"')
+    expect(encounterStylesSource).toContain('min-width: 144px;')
+    expect(encounterStylesSource).toContain('height: 48px;')
+    expect(encounterStylesSource).toContain('.enc-primary-label { line-height: 1; }')
+  })
+
   it('opens row actions from the tile and keeps concrete controls independent', () => {
     expect(encounterRowSource).toContain('@click="onRowClick"')
     expect(encounterRowSource).toContain('ref="rowMenuRef"')
