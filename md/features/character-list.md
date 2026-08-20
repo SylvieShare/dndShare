@@ -158,6 +158,10 @@ the columns collapse to the same horizontal separators on mobile. The group
 title continues into a fading rule rather than introducing another nested card.
 Items in the active branch retain the shared row's hover-like accent state;
 fixed grants use the same treatment because they are selected automatically.
+Weapon rows show localized property names on the right. In class alternatives,
+the row body selects its branch and a separate question-mark action opens the
+handbook card without changing that selection; re-clicking an active branch
+does not clear its concrete picker values.
 Concrete item selectors remain visible before branch
 selection; choosing an item activates that branch, while switching columns
 clears the previous column's concrete picks. Pick-kind labels are carried by the

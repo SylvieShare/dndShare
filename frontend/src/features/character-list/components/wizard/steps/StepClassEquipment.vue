@@ -55,7 +55,9 @@
                 :count="linked.count"
                 :selected="optionSelected(group, entry)"
                 :disabled="!linked.item"
-                @activate="viewItem = linked.item"
+                show-details
+                @activate="selectOptionFromItem(group, entry)"
+                @details="viewItem = linked.item"
               />
             </div>
 
@@ -68,6 +70,7 @@
                   :model-value="pickValue(group.id, entry.id, pick.id, index - 1)"
                   :placeholder="pickPlaceholder(pick, index)"
                   @update:model-value="setEquipmentPick(group.id, entry.id, pick.id, index - 1, $event)"
+                  @details="viewItem = $event"
                 />
               </template>
             </div>
@@ -85,7 +88,9 @@
             :count="entry.count"
             selected
             :disabled="!entry.item"
-            @activate="viewItem = entry.item"
+            :activatable="false"
+            show-details
+            @details="viewItem = entry.item"
           />
         </div>
         <div v-for="pick in profile.fixedPicks" :key="pick.id" class="fixed-pick">
@@ -94,6 +99,7 @@
             :model-value="pickValue('__fixed', 'fixed', pick.id, 0)"
             :placeholder="pickPlaceholder(pick, 1)"
             @update:model-value="setEquipmentPick('__fixed', 'fixed', pick.id, 0, $event)"
+            @details="viewItem = $event"
           />
         </div>
       </div>
@@ -127,6 +133,10 @@ const missingItem = (entry) => ({ id: `missing:${entry.name}`, name: `${entry.na
 function optionSelected(group, entry) {
   const selected = state.classEquipmentChoices?.[group.id]?.optionId
   return selected === entry.id || (selected == null && group.options.length === 1)
+}
+
+function selectOptionFromItem(group, entry) {
+  if (!optionSelected(group, entry)) selectEquipmentOption(group.id, entry.id)
 }
 
 function pickValue(groupId, optionId, pickId, index) {

@@ -8,6 +8,7 @@ const controls = readFileSync(fileURLToPath(new URL('./HandbookCollectionBar.vue
 const armorList = readFileSync(fileURLToPath(new URL('../../items/list-components/ArmorListItem.vue', import.meta.url)), 'utf8')
 const weaponList = readFileSync(fileURLToPath(new URL('../../items/list-components/WeaponListItem.vue', import.meta.url)), 'utf8')
 const weaponDamageMetric = readFileSync(fileURLToPath(new URL('../../items/components/WeaponDamageMetric.vue', import.meta.url)), 'utf8')
+const itemReference = readFileSync(fileURLToPath(new URL('../../items/components/ItemReferenceRow.vue', import.meta.url)), 'utf8')
 const transportList = readFileSync(fileURLToPath(new URL('../../items/list-components/TransportListItem.vue', import.meta.url)), 'utf8')
 
 describe('handbook list controls', () => {
@@ -53,6 +54,10 @@ describe('handbook list controls', () => {
     expect(weaponList).not.toContain('wli-damage')
     expect(weaponDamageMetric).toContain('class="weapon-damage-metric__title">Урон</span>')
     expect(weaponDamageMetric).toContain('justify-content: center')
+    expect(itemReference).toContain('<small>Свойства</small>')
+    expect(itemReference).toContain('suggestStore.items(14)')
+    expect(itemReference).toContain('<CircleHelp')
+    expect(itemReference).toContain("defineEmits(['activate', 'details'])")
     expect(weaponList).toContain('#trailing')
     expect(weaponList).toContain('wli-cost')
   })

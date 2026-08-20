@@ -4,7 +4,9 @@
       v-if="selectedItem"
       :item="selectedItem"
       selected
+      show-details
       @activate="toggle"
+      @details="viewDetails"
     />
     <button v-else type="button" class="equipment-select-empty" @click="toggle">
       <Search :size="16" aria-hidden="true" />
@@ -24,7 +26,9 @@
           :item="item"
           :selected="String(item.id) === String(modelValue)"
           :show-chevron="false"
+          show-details
           @activate="choose(item)"
+          @details="viewDetails"
         />
         <span v-if="!filtered.length" class="equipment-select-none">Ничего не найдено</span>
       </div>
@@ -43,7 +47,7 @@ const props = defineProps({
   placeholder: { type: String, default: 'Выберите предмет' },
 })
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'details'])
 const root = ref(null)
 const input = ref(null)
 const open = ref(false)
@@ -60,6 +64,7 @@ function toggle() {
 }
 function close() { open.value = false; query.value = '' }
 function choose(item) { emit('update:modelValue', item.id); close() }
+function viewDetails(item) { emit('details', item); close() }
 function onDocumentPointer(event) { if (root.value && !root.value.contains(event.target)) close() }
 
 onMounted(() => document.addEventListener('mousedown', onDocumentPointer))
