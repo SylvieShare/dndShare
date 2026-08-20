@@ -45,9 +45,11 @@ describe('starting equipment wizard flow', () => {
     expect(source).toContain('roomy-weapon')
     expect(source).toContain('roomy-weapons')
     expect(equipmentSelect).toContain(':roomy-weapon="roomyWeapons"')
-    expect(itemReference).toContain("roomyWeapon && firstAttack ? 64 : 34")
+    expect(itemReference).toContain(':size="isRoomyWeapon ? 64 : 34"')
     expect(itemReference).toContain('.item-reference--roomy-weapon .item-reference-body { min-height: 96px;')
-    expect(itemReference).toContain('.item-reference--roomy-weapon .item-reference-weapon-details { display: flex; flex-direction: column;')
+    expect(itemReference).toContain('grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: auto auto;')
+    expect(itemReference).toContain('class="item-reference-economy"')
+    expect(itemReference).toContain("content: '·'")
   })
 
   it('offers the PHB wealth roll, five catalogues and a budgeted cart', () => {

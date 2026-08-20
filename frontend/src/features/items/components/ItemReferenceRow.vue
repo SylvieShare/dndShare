@@ -4,7 +4,7 @@
     :class="{
       'item-reference--selected': selected,
       'item-reference--disabled': disabled,
-      'item-reference--roomy-weapon': roomyWeapon && firstAttack,
+      'item-reference--roomy-weapon': isRoomyWeapon,
     }"
   >
     <button
@@ -13,26 +13,33 @@
       :disabled="disabled || !activatable"
       @click="$emit('activate', item)"
     >
-      <ItemIcon class="item-reference-icon" :item="item" :type="type" :size="roomyWeapon && firstAttack ? 64 : 34" placeholder />
+      <ItemIcon class="item-reference-icon" :item="item" :type="type" :size="isRoomyWeapon ? 64 : 34" placeholder />
       <span class="item-reference-info">
         <span class="item-reference-main">
           <span class="item-reference-name">{{ item.name }}</span>
-          <span v-if="metaLabel" class="item-reference-meta">{{ metaLabel }}</span>
+          <span v-if="metaLabel && !isRoomyWeapon" class="item-reference-meta">{{ metaLabel }}</span>
         </span>
         <span v-if="firstAttack" class="item-reference-weapon-details">
           <span class="item-reference-damage">
-            <WeaponDamageMetric :attack="firstAttack" :size="30" :layout="roomyWeapon ? 'row' : 'column'" />
+            <WeaponDamageMetric :attack="firstAttack" :size="30" :layout="isRoomyWeapon ? 'row' : 'column'" />
           </span>
           <span class="item-reference-properties">
             <small>Свойства</small>
             <span>{{ weaponPropertiesLabel || '—' }}</span>
           </span>
         </span>
+        <span v-if="isRoomyWeapon && (count > 1 || costLabel || weightLabel)" class="item-reference-economy">
+          <span v-if="count > 1" class="item-reference-count">×{{ count }}</span>
+          <span v-if="costLabel" class="item-reference-cost">{{ costLabel }}</span>
+          <span v-if="weightLabel" class="item-reference-weight">{{ weightLabel }}</span>
+        </span>
       </span>
-      <span v-if="count > 1" class="item-reference-count">×{{ count }}</span>
-      <slot name="trailing">
-        <span v-if="costLabel" class="item-reference-cost">{{ costLabel }}</span>
-      </slot>
+      <template v-if="!isRoomyWeapon">
+        <span v-if="count > 1" class="item-reference-count">×{{ count }}</span>
+        <slot name="trailing">
+          <span v-if="costLabel" class="item-reference-cost">{{ costLabel }}</span>
+        </slot>
+      </template>
       <ChevronRight v-if="showChevron && !showDetails" :size="16" class="item-reference-chevron" aria-hidden="true" />
     </button>
     <button
@@ -77,6 +84,8 @@ suggestStore.ensure(14)
 const { format: formatCost } = useCostFormatter()
 const costLabel = computed(() => formatCost(data.value.cost))
 const firstAttack = computed(() => Array.isArray(data.value.attacks) ? data.value.attacks[0] : null)
+const isRoomyWeapon = computed(() => props.roomyWeapon && !!firstAttack.value)
+const weightLabel = computed(() => data.value.weight != null ? `${String(data.value.weight).replace('.', ',')} фнт.` : '')
 const weaponPropertiesLabel = computed(() => {
   const labels = new Map(suggestStore.items(14).map((entry) => [String(entry.id), entry.value]))
   return (Array.isArray(data.value.tags) ? data.value.tags : [])
@@ -85,7 +94,7 @@ const weaponPropertiesLabel = computed(() => {
     .join(', ')
 })
 const metaLabel = computed(() => [
-  data.value.weight != null ? `${String(data.value.weight).replace('.', ',')} фнт.` : '',
+  weightLabel.value,
   data.value.equipment_category === 'pack' ? 'Набор' : '',
 ].filter(Boolean).join(' · '))
 </script>
@@ -117,16 +126,21 @@ const metaLabel = computed(() => [
 .item-reference-details:hover:not(:disabled) { background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent); }
 .item-reference-details:disabled { cursor: default; }
 .item-reference--roomy-weapon .item-reference-body { min-height: 96px; align-items: center; gap: 14px; padding: 12px 0 12px 12px; }
-.item-reference--roomy-weapon .item-reference-info { min-width: 0; flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 7px; align-self: stretch; }
+.item-reference--roomy-weapon .item-reference-info { min-width: 0; flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: auto auto; align-content: center; align-items: center; column-gap: 14px; row-gap: 8px; align-self: stretch; }
 .item-reference--roomy-weapon .item-reference-main { flex: none; }
 .item-reference--roomy-weapon .item-reference-name { font-size: 14px; line-height: 1.3; }
-.item-reference--roomy-weapon .item-reference-weapon-details { display: flex; flex-direction: column; align-items: stretch; gap: 5px; }
-.item-reference--roomy-weapon .item-reference-damage { width: auto; display: flex; place-items: unset; align-self: auto; }
-.item-reference--roomy-weapon .item-reference-properties { width: auto; display: grid; grid-template-columns: 58px minmax(0, 1fr); align-items: baseline; justify-content: initial; gap: 8px; font-size: 10px; line-height: 1.35; text-align: left; }
-.item-reference--roomy-weapon .item-reference-properties > span { display: block; overflow: visible; }
+.item-reference--roomy-weapon .item-reference-weapon-details { display: contents; }
+.item-reference--roomy-weapon .item-reference-damage { width: auto; display: flex; place-items: unset; align-self: center; grid-column: 2; grid-row: 1; }
+.item-reference--roomy-weapon .item-reference-properties { width: auto; min-width: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: baseline; justify-content: initial; gap: 8px; grid-column: 1; grid-row: 2; font-size: 10px; line-height: 1.35; text-align: left; }
+.item-reference--roomy-weapon .item-reference-properties > span { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.item-reference-economy { display: flex; align-items: baseline; justify-content: flex-end; gap: 0; grid-column: 2; grid-row: 2; color: var(--text-muted); font-size: 10px; line-height: 1.3; white-space: nowrap; }
+.item-reference-economy > span + span::before { margin: 0 6px; color: var(--border-strong); content: '·'; }
+.item-reference--roomy-weapon .item-reference-count { min-width: 0; font-size: 11px; }
+.item-reference-weight { color: var(--text-muted); }
 .item-reference--roomy-weapon .item-reference-details { width: 34px; height: 34px; }
 @media (max-width: 420px) {
   .item-reference--roomy-weapon .item-reference-body { gap: 11px; padding-left: 10px; }
-  .item-reference--roomy-weapon .item-reference-properties { grid-template-columns: 52px minmax(0, 1fr); }
+  .item-reference--roomy-weapon .item-reference-info { column-gap: 10px; }
+  .item-reference-economy > span + span::before { margin-inline: 4px; }
 }
 </style>
