@@ -60,8 +60,10 @@ describe('public encounter composition', () => {
     expect(initiativeStyles).toContain('grid-template-columns: repeat(var(--queue-slots, 6), var(--queue-card-size));')
     expect(initiativeStyles).toContain('justify-content: start;')
     expect(initiativeStyles).toContain('aspect-ratio: 1;')
+    expect(initiativeStyles).toContain('translate: calc(var(--queue-stack-offset) * -4px)')
     expect(pageSource).toContain('class="encounter-health initiative-card__health"')
-    expect(pageSource).toContain('if (viewportWidth.value >= 1800) return 6')
+    expect(pageSource).toContain(`:style="{ '--queue-slots': queueSlotCount }"`)
+    expect(pageSource).toContain('Math.floor((availableWidth + gap) / (cardSize + gap))')
   })
 
   it('stacks graveyard rows upward on the right in name, icon and count order', () => {
@@ -73,7 +75,11 @@ describe('public encounter composition', () => {
     expect(initiativeStyles).toContain('.encounter-graveyard {')
     expect(initiativeStyles).toContain('flex-direction: column-reverse;')
     expect(initiativeStyles).toContain('grid-column: 2;')
-    expect(initiativeStyles).toContain('grid-template-columns: minmax(0, 1fr) 38px auto;')
+    expect(initiativeStyles).toContain('grid-template-columns: minmax(0, 1fr) 48px auto;')
+    expect(initiativeStyles).toContain('padding: 5px 0;')
+    expect(initiativeStyles).toContain('background: transparent;')
+    expect(initiativeStyles).toContain('text-align: right;')
+    expect(initiativeStyles).toContain('.graveyard-card__portrait { width: 48px;')
   })
 
   it('uses a flat canvas and no combatant color strip', () => {

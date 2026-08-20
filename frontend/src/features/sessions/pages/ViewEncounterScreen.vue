@@ -108,7 +108,7 @@
               <div><span>ДАЛЬШЕ ХОДЯТ</span><h2>Очередь</h2></div>
               <span>{{ turnQueue.length }}</span>
             </div>
-            <TransitionGroup v-if="turnQueue.length" tag="ol" name="initiative-card" class="initiative-track">
+            <TransitionGroup v-if="turnQueue.length" tag="ol" name="initiative-card" class="initiative-track" :style="{ '--queue-slots': queueSlotCount }">
               <li
                 v-for="(combatant, index) in turnQueue"
                 :key="combatant.uid"
@@ -208,11 +208,12 @@ const turnQueue = computed(() => {
 })
 const graveyard = computed(() => snapshot.value?.graveyard || [])
 const queueSlotCount = computed(() => {
-  if (viewportWidth.value >= 1800) return 6
-  if (viewportWidth.value >= 1400) return 5
-  if (viewportWidth.value >= 1000) return 4
-  if (viewportWidth.value >= 720) return 3
-  return 1
+  const width = viewportWidth.value
+  const screenPadding = Math.min(64, Math.max(24, width * 0.032))
+  const cardSize = Math.min(128, Math.max(108, width * 0.08))
+  const gap = Math.min(10, Math.max(8, width * 0.006))
+  const availableWidth = Math.max(cardSize, width - screenPadding * 2 - 10)
+  return Math.max(1, Math.floor((availableWidth + gap) / (cardSize + gap)))
 })
 const queueStackStart = computed(() => Math.max(0, queueSlotCount.value - 1))
 const queueStackCount = computed(() => Math.max(0, turnQueue.value.length - queueStackStart.value))

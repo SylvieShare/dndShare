@@ -797,7 +797,9 @@ lower info layer; neither it nor the queue cards stretch to the screen height.
 Above it, the compact cyclic queue spans the full screen width and begins after
 the active turn. Queue tiles are tightly packed squares sized to fit a smaller
 full-fit creature icon and the longest worded health state below it, with no name
-or initiative value. An NPC letter sits just inside the icon's upper-right
+or initiative value. The visible slot count follows the available screen width,
+so a long queue reaches the right edge before overflowing into its final stack.
+An NPC letter sits just inside the icon's upper-right
 corner in its assigned color, clear of the tile frame. Overflow
 shares the final right-hand slot as a visible stack. On turn change the
 active card exits left, the next one expands, and the combatant that just acted
@@ -805,8 +807,8 @@ appears at the queue tail. NPC letters remain emphasized before names on the
 active card. A persisted health setting can show either numeric current/max HP
 or the worded bands `Здоров`, `Ранен`, `При смерти`; another flag enables a
 separate graveyard. The graveyard sits at the lower right and grows upward as a
-vertical list. It groups dead NPCs by bestiary type and renders each row as name,
-icon and count. Health numbers are omitted from
+vertical list. It groups dead NPCs by bestiary type and renders each larger,
+unframed row as a right-aligned name, unbacked icon and count. Health numbers are omitted from
 the public DTO unless health is enabled in numeric mode. Initiative values are
 not included in the public projection. A failed refresh keeps the last
 successful snapshot visible and marks the connection as interrupted.

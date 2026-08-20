@@ -165,7 +165,7 @@
   background: linear-gradient(180deg, color-mix(in srgb, var(--screen-combatant-color) 9%, var(--surface-raised)), color-mix(in srgb, var(--surface) 96%, transparent));
   box-shadow: 0 16px 38px color-mix(in srgb, var(--bg) 58%, transparent);
   overflow: visible;
-  translate: calc(var(--queue-stack-offset) * 8px) calc(var(--queue-stack-offset) * -5px);
+  translate: calc(var(--queue-stack-offset) * -4px) calc(var(--queue-stack-offset) * -5px);
   scale: calc(1 - var(--queue-stack-offset) * .018);
   transform-origin: right bottom;
   transition: border-color .24s, box-shadow .24s, opacity .24s, translate .42s cubic-bezier(.22, 1, .36, 1), scale .42s cubic-bezier(.22, 1, .36, 1);
@@ -250,22 +250,22 @@
 .graveyard-card {
   --screen-combatant-color: var(--text-muted);
   min-width: 0;
+  min-height: 58px;
   width: 100%;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 38px auto;
+  grid-template-columns: minmax(0, 1fr) 48px auto;
   align-items: center;
-  gap: 8px;
-  padding: 7px 10px 7px 7px;
-  border: 1px solid color-mix(in srgb, var(--screen-combatant-color) 25%, var(--border));
-  border-radius: 11px;
-  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  gap: 12px;
+  padding: 5px 0;
+  border: 0;
+  background: transparent;
   filter: grayscale(.58);
 }
-.graveyard-card__portrait { width: 38px; height: 38px; display: grid; place-items: center; overflow: hidden; border-radius: 8px; background: var(--surface-raised); color: var(--text-muted); }
+.graveyard-card__portrait { width: 48px; height: 48px; display: grid; place-items: center; overflow: visible; background: transparent; color: var(--text-muted); }
 .graveyard-card__portrait img, .graveyard-card__portrait > span, .graveyard-card__portrait :deep(svg) { width: 100%; height: 100%; }
-.graveyard-card__portrait img { object-fit: cover; }
-.graveyard-card strong { overflow: hidden; color: var(--text-2); font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
-.graveyard-card b { color: var(--text-1); font-size: 15px; }
+.graveyard-card__portrait img { object-fit: contain; }
+.graveyard-card strong { overflow: hidden; color: var(--text-2); font-size: 14px; text-align: right; text-overflow: ellipsis; white-space: nowrap; }
+.graveyard-card b { color: var(--text-1); font-size: 18px; }
 
 .turn-spotlight-enter-active,
 .turn-spotlight-leave-active { transition: opacity .38s ease, transform .46s cubic-bezier(.55, 0, .3, 1); }
@@ -278,14 +278,10 @@
 .initiative-card-leave-to { opacity: 0; transform: translateX(-38px) scale(.94); }
 .initiative-card-leave-active { position: absolute; }
 
-@media (min-width: 1800px) { .initiative-track { --queue-slots: 6; } }
-@media (min-width: 1400px) and (max-width: 1799px) { .initiative-track { --queue-slots: 5; } }
-@media (min-width: 1000px) and (max-width: 1399px) { .initiative-track { --queue-slots: 4; } }
-@media (min-width: 720px) and (max-width: 999px) { .initiative-track { --queue-slots: 3; } }
 @media (max-width: 719px) {
   .encounter-combat-stage { grid-template-columns: 1fr; grid-template-rows: auto auto auto; align-content: start; }
   .turn-spotlight { max-width: 560px; justify-self: center; }
-  .initiative-track { --queue-slots: 1; min-height: 0; }
+  .initiative-track { min-height: 0; }
   .encounter-combat-side { min-height: 0; }
   .encounter-graveyard { grid-column: 1; grid-row: 3; justify-self: end; }
 }
