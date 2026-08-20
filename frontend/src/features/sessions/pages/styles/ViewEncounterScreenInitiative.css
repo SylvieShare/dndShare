@@ -77,19 +77,25 @@
   white-space: nowrap;
 }
 
-.creature-marker {
+.creature-marker,
+.initiative-card__corner-marker {
   display: grid;
+  place-items: center;
+  border: 2px solid color-mix(in srgb, var(--screen-combatant-color) 76%, var(--text-1));
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--screen-combatant-color) 78%, var(--surface));
+  color: var(--text-on-accent);
+  box-shadow: 0 5px 14px color-mix(in srgb, var(--bg) 66%, transparent);
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.creature-marker {
   width: clamp(30px, 2.4vw, 44px);
   height: clamp(30px, 2.4vw, 44px);
   flex: none;
-  place-items: center;
-  border: 2px solid color-mix(in srgb, var(--screen-combatant-color) 82%, var(--text-on-accent));
-  border-radius: 50%;
-  background: color-mix(in srgb, var(--screen-combatant-color) 22%, var(--scrim));
-  box-shadow: 0 0 20px color-mix(in srgb, var(--screen-combatant-color) 38%, transparent);
-  color: color-mix(in srgb, var(--screen-combatant-color) 72%, var(--text-on-accent));
   font-size: clamp(14px, 1.1vw, 20px);
-  font-weight: 950;
 }
 
 .turn-spotlight--empty {
@@ -256,18 +262,8 @@
   z-index: 2;
   width: clamp(20px, 1.7vw, 26px);
   height: clamp(20px, 1.7vw, 26px);
-  display: grid;
-  place-items: center;
   transform: translate(50%, -50%);
-  border: 2px solid color-mix(in srgb, var(--screen-combatant-color) 76%, var(--text-1));
-  border-radius: 50%;
-  background: color-mix(in srgb, var(--screen-combatant-color) 78%, var(--surface));
-  color: var(--text-on-accent);
-  box-shadow: 0 5px 14px color-mix(in srgb, var(--bg) 66%, transparent);
-  font-family: var(--font-display);
   font-size: clamp(9px, .7vw, 12px);
-  font-weight: 700;
-  line-height: 1;
 }
 .initiative-card__health { max-width: 100%; min-height: 24px; padding: 3px 7px; font-size: clamp(9px, .62vw, 11px); white-space: nowrap; }
 

@@ -809,7 +809,8 @@ corner in its assigned color, clear of the tile frame. Overflow
 shares the final right-hand slot as a visible stack. On turn change the
 active card exits left, the next one expands, and the combatant that just acted
 appears at the queue tail. NPC letters remain emphasized before names on the
-active card. A persisted health setting can show either numeric current/max HP
+active card and share the same filled badge treatment in both positions; only
+their size differs. A persisted health setting can show either numeric current/max HP
 or the worded bands `Здоров`, `Ранен`, `При смерти`; another flag enables a
 separate graveyard. The graveyard sits at the lower right and grows upward as a
 vertical list. It groups dead NPCs by bestiary type and renders each larger,
