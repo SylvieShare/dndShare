@@ -1,15 +1,21 @@
 .enc-graveyard-trigger {
   position: relative;
-  display: inline-grid;
-  width: 36px;
+  display: inline-flex;
+  width: auto;
   height: 36px;
-  flex: 0 0 36px;
-  place-items: center;
-  padding: 0;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 11px;
   border: 1px solid color-mix(in srgb, var(--danger) 30%, transparent);
   border-radius: 9px;
   background: color-mix(in srgb, var(--danger) 10%, transparent);
   color: var(--danger);
+  font: inherit;
+  font-size: 11px;
+  font-weight: 750;
+  white-space: nowrap;
   cursor: pointer;
   transition: color 0.14s, background 0.14s, border-color 0.14s, transform 0.1s;
 }
@@ -21,6 +27,8 @@
 }
 
 .enc-graveyard-trigger:active { transform: scale(0.92); }
+
+.enc-graveyard-trigger-label { line-height: 1; }
 
 .enc-graveyard-count {
   position: absolute;
@@ -77,7 +85,6 @@
 .enc-graveyard-head small { color: var(--text-muted); font-size: 10px; }
 
 .enc-graveyard-clear,
-.enc-graveyard-bulk,
 .enc-graveyard-actions button {
   display: inline-flex;
   align-items: center;
@@ -103,20 +110,6 @@
 
 .enc-graveyard-clear:disabled { cursor: not-allowed; opacity: 0.35; }
 .enc-graveyard-clear:hover:not(:disabled) { background: color-mix(in srgb, var(--danger) 17%, transparent); }
-
-.enc-graveyard-bulk {
-  width: 100%;
-  padding: 7px 9px;
-  border-color: color-mix(in srgb, var(--danger) 24%, transparent);
-  color: var(--danger);
-}
-
-.enc-graveyard-bulk > span {
-  margin-left: auto;
-  padding: 1px 6px;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--danger) 18%, transparent);
-}
 
 .enc-graveyard-entry {
   overflow: hidden;

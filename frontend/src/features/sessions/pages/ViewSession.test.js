@@ -305,7 +305,12 @@ describe('ViewSession participant rail', () => {
     expect(encounterSource).not.toContain('ЗАПАС ИГРОКОВ')
     expect(encounterSource).not.toContain('КЛАДБИЩЕ')
     expect(encounterSource).toContain('<EncounterGraveyardMenu')
-    expect(graveyardSource).toContain('aria-label="Погибшие существа"')
+    expect(encounterSource).toContain('>Убить</span>')
+    expect(encounterSource).toContain("@click=\"enc.sendSelectedTo('dead')\"")
+    expect(encounterSource).toContain('const deadMoveCount = computed(() => enc.selectedToMoveTo(\'dead\'))')
+    expect(graveyardSource).toContain('aria-label="Кладбище погибших существ"')
+    expect(graveyardSource).toContain('class="enc-graveyard-trigger-label">Кладбище</span>')
+    expect(graveyardSource).not.toContain('Переместить выбранных')
     expect(graveyardSource).toContain('Удалить всех')
   })
 

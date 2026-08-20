@@ -4,11 +4,12 @@
     type="button"
     class="enc-graveyard-trigger"
     :class="{ 'enc-graveyard-trigger--active': open }"
-    title="Погибшие существа"
-    aria-label="Погибшие существа"
+    title="Открыть кладбище"
+    aria-label="Кладбище погибших существ"
     @click="open = !open"
   >
-    <Skull :size="18" />
+    <Bone :size="18" />
+    <span class="enc-graveyard-trigger-label">Кладбище</span>
     <span v-if="deadItems.length" class="enc-graveyard-count">{{ deadItems.length }}</span>
   </button>
 
@@ -37,17 +38,6 @@
           Удалить всех
         </button>
       </div>
-
-      <button
-        v-if="isDm && deadMoveCount"
-        type="button"
-        class="enc-graveyard-bulk"
-        @click="moveSelectedToGraveyard"
-      >
-        <Skull :size="16" />
-        Переместить выбранных
-        <span>{{ deadMoveCount }}</span>
-      </button>
 
       <div v-if="deadItems.length" class="enc-graveyard-list">
         <div v-for="combatant in deadItems" :key="combatant.uid" class="enc-graveyard-entry">
@@ -109,7 +99,7 @@
 
 <script setup>
 import { computed, inject, ref } from 'vue'
-import { ChevronRight, Eye, RotateCcw, Skull, Trash2 } from '@lucide/vue'
+import { Bone, ChevronRight, Eye, RotateCcw, Skull, Trash2 } from '@lucide/vue'
 import { AppModalFrame } from '@sylvieshare/share-ui'
 import { BasePopover } from '@sylvieshare/share-ui'
 import { ConfirmDialog } from '@sylvieshare/share-ui'
@@ -128,7 +118,6 @@ const confirmDeleteDead = ref(false)
 
 const deadItems = computed(() => enc.sortable.displayItems('dead'))
 const deadNpcCount = computed(() => deadItems.value.filter(combatant => combatant.type === 'npc').length)
-const deadMoveCount = computed(() => enc.selectedToMoveTo('dead'))
 
 function combatantName(combatant) {
   return combatant.type === 'player'
@@ -160,11 +149,6 @@ function restoreCombatant(combatant) {
 
 function deleteCombatant(combatant) {
   enc.removeNpc(combatant)
-  selectedUid.value = null
-}
-
-function moveSelectedToGraveyard() {
-  enc.sendSelectedTo('dead')
   selectedUid.value = null
 }
 

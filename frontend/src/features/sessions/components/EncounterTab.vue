@@ -117,6 +117,20 @@
           </div>
         </div>
 
+        <button
+          v-if="props.isDm"
+          type="button"
+          class="enc-icon-btn enc-icon-btn--danger enc-icon-btn--labelled"
+          :disabled="deadMoveCount === 0"
+          title="Убить выбранных — переместить на кладбище"
+          aria-label="Убить выбранных — переместить на кладбище"
+          @click="enc.sendSelectedTo('dead')"
+        >
+          <Skull :size="18" />
+          <span>Убить</span>
+          <span v-if="deadMoveCount" class="enc-icon-count">{{ deadMoveCount }}</span>
+        </button>
+
         <EncounterGraveyardMenu :is-dm="props.isDm" @view-participant="$emit('view-participant', $event)" />
       </div>
     </BaseTile>
@@ -325,6 +339,7 @@ import {
   ListChecks,
   LogIn,
   Plus,
+  Skull,
   Square,
   Swords,
   Trash2,
@@ -375,6 +390,7 @@ const currentTurnUid = computed(() => enc.currentTurnUid)
 const startSelectionCount = computed(() => enc.selectedRerollCount)
 const combatMoveCount = computed(() => enc.selectedToMoveTo('combat'))
 const reserveMoveCount = computed(() => enc.selectedToMoveTo('reserve'))
+const deadMoveCount = computed(() => enc.selectedToMoveTo('dead'))
 const allSelectedInCombat = computed(() =>
   combatItems.value.length > 0 && combatItems.value.every(combatant => enc.isSelected(combatant))
 )
