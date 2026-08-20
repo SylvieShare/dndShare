@@ -127,7 +127,7 @@ defineProps({
   height: 27px;
   color: color-mix(in srgb, var(--cover-stat-tone) 72%, var(--text-on-accent));
   filter: drop-shadow(0 2px 8px color-mix(in srgb, var(--scrim) 64%, transparent));
-  opacity: .88;
+  opacity: .46;
   pointer-events: none;
   transform: translateY(-50%);
 }

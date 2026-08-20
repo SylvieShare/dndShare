@@ -50,7 +50,7 @@ defineProps({
   width: 24px;
   height: 24px;
   color: color-mix(in srgb, var(--accent) 68%, var(--text-on-accent));
-  opacity: .88;
+  opacity: .46;
   pointer-events: none;
   transform: translateY(-50%);
 }

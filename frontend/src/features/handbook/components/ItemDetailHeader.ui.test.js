@@ -189,7 +189,7 @@ describe('handbook item detail cover', () => {
     expect(coverSummaryLayoutSource).toContain('"bottom bottom"')
   })
 
-  it('standardizes cover tiles and uses larger right-centered icon marks', () => {
+  it('standardizes cover tiles and uses larger translucent right-centered icon marks', () => {
     for (const source of [enemySummarySource, armorSummarySource, weaponSummarySource, transportSummarySource, gearSummarySource, spellSummarySource]) {
       expect(source).toContain('CoverStatCard')
     }
@@ -198,9 +198,11 @@ describe('handbook item detail cover', () => {
     expect(coverStatCardSource).toContain('top: 50%;')
     expect(coverStatCardSource).toContain('right: 12px;')
     expect(coverStatCardSource).toContain('width: 27px;')
+    expect(coverStatCardSource).toContain('opacity: .46;')
     expect(coverStatCardSource).toContain('transform: translateY(-50%);')
     expect(coverSummaryRailSource).toContain('var(--cover-summary-rail-columns)')
     expect(coverSummaryRailItemSource).toContain('class="cover-summary-rail-mark"')
+    expect(coverSummaryRailItemSource).toContain('opacity: .46;')
   })
 
   it('always uses cover geometry and moves the id below the content', () => {

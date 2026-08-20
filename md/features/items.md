@@ -141,9 +141,9 @@ entries and selected choices.
   `CoverSummaryLayout.vue`, `CoverSummaryRail.vue` and
   `CoverSummaryRailItem.vue`. Domain summaries keep their own data mapping but
   do not duplicate the frosted surface, side/center grid or segmented rail CSS.
-  A stat or rail icon is a larger right-centered introductory mark rather than
-  a small glyph prepended to the label; shared padding reserves its space on
-  desktop and mobile;
+  A stat or rail icon is a larger translucent right-centered introductory mark
+  rather than a small glyph prepended to the label; shared padding reserves its
+  space on desktop and mobile;
 - field labels and errors use shared form components;
 - direct color literals are rejected by `npm run check:colors`.
 
