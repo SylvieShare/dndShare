@@ -81,13 +81,12 @@
 .initiative-card__corner-marker {
   display: grid;
   place-items: center;
-  border: 2px solid color-mix(in srgb, var(--screen-combatant-color) 76%, var(--text-1));
+  border: 2px solid color-mix(in srgb, var(--screen-combatant-color) 82%, var(--text-on-accent));
   border-radius: 50%;
-  background: color-mix(in srgb, var(--screen-combatant-color) 78%, var(--surface));
-  color: var(--text-on-accent);
-  box-shadow: 0 5px 14px color-mix(in srgb, var(--bg) 66%, transparent);
-  font-family: var(--font-display);
-  font-weight: 700;
+  background: color-mix(in srgb, var(--screen-combatant-color) 22%, var(--scrim));
+  color: color-mix(in srgb, var(--screen-combatant-color) 72%, var(--text-on-accent));
+  box-shadow: 0 0 20px color-mix(in srgb, var(--screen-combatant-color) 38%, transparent);
+  font-weight: 950;
   line-height: 1;
 }
 

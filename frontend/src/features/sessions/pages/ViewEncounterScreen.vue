@@ -264,7 +264,7 @@ function queueCardStyle(combatant, index) {
   return {
     ...style,
     '--queue-column': queueSlotCount.value,
-    '--queue-stack-offset': Math.min(index - queueStackStart.value, 4),
+    '--queue-stack-offset': index - queueStackStart.value,
     '--queue-z': 100 - index,
   }
 }
