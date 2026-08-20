@@ -103,4 +103,18 @@ describe('PHB starting equipment', () => {
       armor: { ac: 11, use_dex: true },
     })
   })
+
+  it('chooses one canonical purchasable row when old data contains duplicate names', () => {
+    const profile = startingEquipmentProfile({ name: 'Волшебник' })
+    const resolved = resolveStartingEquipmentProfile(profile, [
+      { id: 900, name: 'Кинжал', typeId: 1, data: {} },
+      { id: 901, name: 'Кинжал', typeId: 1, data: { available_in_starting_shop: true } },
+      { id: 902, name: 'Боевой посох', typeId: 1, data: { available_in_starting_shop: true } },
+      { id: 903, name: 'Мешочек с компонентами', typeId: 2, data: { available_in_starting_shop: true } },
+      { id: 904, name: 'Набор учёного', typeId: 2, data: { available_in_starting_shop: true } },
+      { id: 905, name: 'Книга заклинаний', typeId: 2, data: { available_in_starting_shop: true } },
+    ])
+
+    expect(resolved.groups[0].options.find((option) => option.id === 'dagger').items[0].item.id).toBe(901)
+  })
 })

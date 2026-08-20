@@ -412,11 +412,24 @@ WITH pack_contents(pack_name, position, item_name, quantity) AS (
     SELECT pack.id AS pack_id, component.id AS item_id,
            pack_contents.position, pack_contents.quantity
     FROM pack_contents
-    JOIN dndshare.item pack
-      ON pack.user_id IS NULL AND pack.type_id = 2 AND pack.name = pack_contents.pack_name
-    JOIN dndshare.item component
-      ON component.user_id IS NULL AND component.type_id = 2
-     AND component.name = pack_contents.item_name
+    JOIN LATERAL (
+        SELECT candidate.id
+        FROM dndshare.item candidate
+        WHERE candidate.user_id IS NULL AND candidate.type_id = 2
+          AND candidate.name = pack_contents.pack_name
+        ORDER BY (COALESCE(candidate.data ->> 'available_in_starting_shop', 'false') = 'true') DESC,
+                 candidate.id
+        LIMIT 1
+    ) pack ON true
+    JOIN LATERAL (
+        SELECT candidate.id
+        FROM dndshare.item candidate
+        WHERE candidate.user_id IS NULL AND candidate.type_id = 2
+          AND candidate.name = pack_contents.item_name
+        ORDER BY (COALESCE(candidate.data ->> 'available_in_starting_shop', 'false') = 'true') DESC,
+                 candidate.id
+        LIMIT 1
+    ) component ON true
 ), grouped AS (
     SELECT pack_id,
            jsonb_agg(

@@ -213,7 +213,17 @@ export function resolveStartingEquipmentProfile(profile, catalogue = []) {
   if (!profile) return null
   const byName = new Map()
   for (const entry of catalogue) {
-    if (entry?.name) byName.set(catalogueKey(entry.name), entry)
+    if (!entry?.name) continue
+    const key = catalogueKey(entry.name)
+    const saved = byName.get(key)
+    const score = (itemEntry) => (
+      (itemEntry?.data?.available_in_starting_shop === true ? 4 : 0)
+      + (Number(itemEntry?.typeId) === 12 ? 2 : 0)
+      + (itemEntry?.iconImageUrl || itemEntry?.svg ? 1 : 0)
+    )
+    if (!saved || score(entry) > score(saved) || (score(entry) === score(saved) && Number(entry.id) < Number(saved.id))) {
+      byName.set(key, entry)
+    }
   }
   const resolveItem = (entry) => ({ ...entry, item: byName.get(catalogueKey(entry.name)) || null })
   return {

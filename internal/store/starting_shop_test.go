@@ -89,6 +89,8 @@ func TestStartingShopSeedsDedicatedArmorAndTransportCatalogues(t *testing.T) {
 		`"key":"contents"`,
 		"('Набор путешественника', 8, 'Верёвка пеньковая (50 футов)', 1)",
 		"jsonb_build_object('item_id', item_id, 'count', quantity)",
+		"JOIN LATERAL (",
+		"ORDER BY (COALESCE(candidate.data ->> 'available_in_starting_shop', 'false') = 'true') DESC",
 	} {
 		if !strings.Contains(schemaStartingShopSQL, fragment) {
 			t.Fatalf("starting shop schema must contain %q", fragment)
