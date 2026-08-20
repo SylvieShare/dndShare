@@ -91,11 +91,14 @@ describe('public encounter composition', () => {
     expect(initiativeStyles).toContain('rotate(45deg)')
   })
 
-  it('keeps the current round in the queue heading instead of a floating status pill', () => {
-    expect(pageSource).toContain('class="encounter-queue__summary"')
+  it('keeps the current round and queue count directly below the direction scale', () => {
+    const directionIndex = pageSource.indexOf('class="initiative-direction"')
+    const summaryIndex = pageSource.indexOf('class="encounter-queue__summary"')
+    expect(directionIndex).toBeGreaterThan(-1)
+    expect(summaryIndex).toBeGreaterThan(directionIndex)
     expect(pageSource).toContain('<span>Раунд</span><strong>{{ snapshot.round }}</strong>')
     expect(pageSource).not.toContain("pollFailed || (presentation?.mode === 'combat' && snapshot?.active)")
-    expect(initiativeStyles).toContain('.encounter-queue__summary .encounter-screen__round')
+    expect(initiativeStyles).toContain('.initiative-direction + .encounter-queue__summary')
   })
 
   it('scales the full combat stage and recalculates queue capacity from its logical width', () => {

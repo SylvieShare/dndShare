@@ -132,7 +132,7 @@
 .encounter-queue .encounter-screen__initiative-heading h2 {
   font-size: clamp(22px, 2vw, 34px);
 }
-.encounter-queue__summary { display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
+.encounter-queue__summary { display: flex; align-items: center; justify-content: flex-end; gap: 10px; padding-right: 10px; }
 .encounter-queue__total { color: var(--text-muted); font-size: clamp(10px, .72vw, 13px); font-weight: 750; white-space: nowrap; }
 .encounter-queue__summary .encounter-screen__round { min-height: 36px; padding: 6px 12px; }
 .encounter-queue__summary .encounter-screen__round strong { font-size: 16px; }
@@ -194,6 +194,8 @@
   content: '';
   transform: translateY(-50%) rotate(45deg);
 }
+
+.initiative-direction + .encounter-queue__summary { margin-top: -4px; }
 
 .initiative-card {
   --screen-combatant-color: var(--accent);

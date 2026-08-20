@@ -807,10 +807,10 @@ collapse into a count. The visible slot count follows the available screen width
 so a long queue reaches the right edge before overflowing into its final stack.
 Below the cards, a quiet ticked scale with a right-pointing arrow labels the
 direction from the next turn toward later turns.
-Overflow layers fan diagonally upward and right inside a reserved edge corridor;
+The current round and queue count sit together below that direction scale,
+aligned to its right edge. Overflow layers fan diagonally upward and right inside a reserved edge corridor;
 the offset leaves each NPC letter visible and continues past the viewport edge
-without collapsing later layers. The current round lives beside the
-queue count in the queue heading instead of floating over the screen.
+without collapsing later layers.
 An NPC letter sits just inside the icon's upper-right
 corner in its assigned color, clear of the tile frame. Overflow
 shares the final right-hand slot as a visible stack. On turn change the

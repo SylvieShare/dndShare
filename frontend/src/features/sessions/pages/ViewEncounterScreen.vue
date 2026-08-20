@@ -102,10 +102,6 @@
           <section class="encounter-queue" aria-label="Следующие ходы">
             <div class="encounter-screen__initiative-heading">
               <div><span>ДАЛЬШЕ ХОДЯТ</span><h2>Очередь</h2></div>
-              <div class="encounter-queue__summary">
-                <span class="encounter-screen__round"><span>Раунд</span><strong>{{ snapshot.round }}</strong></span>
-                <span class="encounter-queue__total">{{ turnQueue.length }} в очереди</span>
-              </div>
             </div>
             <TransitionGroup
               v-if="turnQueue.length"
@@ -155,6 +151,10 @@
               <span>Следующий</span>
               <i />
               <span>Позже</span>
+            </div>
+            <div v-if="turnQueue.length" class="encounter-queue__summary">
+              <span class="encounter-screen__round"><span>Раунд</span><strong>{{ snapshot.round }}</strong></span>
+              <span class="encounter-queue__total">{{ turnQueue.length }} в очереди</span>
             </div>
             <div v-else class="encounter-screen__no-combatants">Других участников нет.</div>
           </section>
