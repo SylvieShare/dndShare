@@ -5,6 +5,7 @@ import (
 	"errors"
 	"net/http"
 	"sort"
+	"strconv"
 	"strings"
 
 	"dndshare/internal/store"
@@ -24,6 +25,7 @@ type publicEncounterResponse struct {
 	Round       int                        `json:"round"`
 	CurrentUID  *string                    `json:"currentUid,omitempty"`
 	Combatants  []publicEncounterCombatant `json:"combatants"`
+	Graveyard   []publicEncounterGraveyard `json:"graveyard"`
 }
 
 type publicEncounterCombatant struct {
@@ -45,8 +47,20 @@ type publicEncounterCombatant struct {
 }
 
 type publicEncounterHealth struct {
-	Kind  string `json:"kind"`
-	Label string `json:"label"`
+	Kind    string   `json:"kind"`
+	Label   string   `json:"label"`
+	Current *float64 `json:"current,omitempty"`
+	Maximum *float64 `json:"maximum,omitempty"`
+}
+
+type publicEncounterGraveyard struct {
+	Key           string  `json:"key"`
+	Name          string  `json:"name"`
+	AvatarURL     *string `json:"avatarUrl,omitempty"`
+	AvatarSVG     *string `json:"avatarSvg,omitempty"`
+	CoverImageURL *string `json:"coverImageUrl,omitempty"`
+	Color         *string `json:"color,omitempty"`
+	Count         int     `json:"count"`
 }
 
 type publicEncounterState struct {
@@ -114,19 +128,27 @@ func (s *Server) handleGetPublicEncounter(w http.ResponseWriter, r *http.Request
 	for _, participant := range participants {
 		participantsByID[participant.CharID] = participant
 	}
+	presentation, err := s.store.GetSessionPresentation(r.Context(), session.ID)
+	if err != nil {
+		serverError(w, err)
+		return
+	}
 
 	itemIDs := make([]int64, 0)
 	stateIDs := make([]int64, 0)
 	for _, combatant := range encounter.Combatants {
-		if combatant.Position != "combat" {
+		includeGraveyard := presentation.ShowGraveyard && combatant.Position == "dead" && combatant.Type == "npc"
+		if combatant.Position != "combat" && !includeGraveyard {
 			continue
 		}
 		if combatant.ItemID != nil {
 			itemIDs = append(itemIDs, *combatant.ItemID)
 		}
-		stateIDs = append(stateIDs, combatant.States...)
-		if combatant.Type == "player" {
-			stateIDs = append(stateIDs, participantStateIDs(participantsByID[combatant.CharID])...)
+		if combatant.Position == "combat" {
+			stateIDs = append(stateIDs, combatant.States...)
+			if combatant.Type == "player" {
+				stateIDs = append(stateIDs, participantStateIDs(participantsByID[combatant.CharID])...)
+			}
 		}
 	}
 	ownerID := session.OwnerUserID
@@ -155,7 +177,9 @@ func (s *Server) handleGetPublicEncounter(w http.ResponseWriter, r *http.Request
 		if raw.Position != "combat" {
 			continue
 		}
-		combatants = append(combatants, buildPublicCombatant(raw, participantsByID[raw.CharID], itemsByID, statesByID, encounter.Round))
+		combatants = append(combatants, buildPublicCombatant(
+			raw, participantsByID[raw.CharID], itemsByID, statesByID, encounter.Round, presentation.ShowHealth,
+		))
 	}
 	sort.SliceStable(combatants, func(i, j int) bool {
 		a, b := combatants[i], combatants[j]
@@ -192,6 +216,33 @@ func (s *Server) handleGetPublicEncounter(w http.ResponseWriter, r *http.Request
 		}
 	}
 
+	graveyard := []publicEncounterGraveyard{}
+	if presentation.ShowGraveyard {
+		groups := map[string]int{}
+		for _, raw := range encounter.Combatants {
+			if raw.Position != "dead" || raw.Type != "npc" {
+				continue
+			}
+			combatant := buildPublicCombatant(raw, store.SessionParticipantData{}, itemsByID, nil, encounter.Round, false)
+			key := "name:" + strings.ToLower(combatant.Name)
+			if raw.ItemID != nil {
+				key = "item:" + strconv.FormatInt(*raw.ItemID, 10)
+			}
+			if index, ok := groups[key]; ok {
+				graveyard[index].Count++
+				continue
+			}
+			groups[key] = len(graveyard)
+			graveyard = append(graveyard, publicEncounterGraveyard{
+				Key: key, Name: combatant.Name, AvatarURL: combatant.AvatarURL, AvatarSVG: combatant.AvatarSVG,
+				CoverImageURL: combatant.CoverImageURL, Color: combatant.Color, Count: 1,
+			})
+		}
+		sort.SliceStable(graveyard, func(i, j int) bool {
+			return strings.ToLower(graveyard[i].Name) < strings.ToLower(graveyard[j].Name)
+		})
+	}
+
 	w.Header().Set("Cache-Control", "no-store")
 	writeJSON(w, http.StatusOK, publicEncounterResponse{
 		SessionName: session.Name,
@@ -199,10 +250,11 @@ func (s *Server) handleGetPublicEncounter(w http.ResponseWriter, r *http.Request
 		Round:       encounter.Round,
 		CurrentUID:  currentUID,
 		Combatants:  nonNil(combatants),
+		Graveyard:   nonNil(graveyard),
 	})
 }
 
-func buildPublicCombatant(raw rawPublicCombatant, participant store.SessionParticipantData, items map[int64]store.Item, states map[int64]publicEncounterState, round int) publicEncounterCombatant {
+func buildPublicCombatant(raw rawPublicCombatant, participant store.SessionParticipantData, items map[int64]store.Item, states map[int64]publicEncounterState, round int, showHealth bool) publicEncounterCombatant {
 	result := publicEncounterCombatant{
 		UID:          raw.UID,
 		Type:         raw.Type,
@@ -224,7 +276,7 @@ func buildPublicCombatant(raw rawPublicCombatant, participant store.SessionParti
 		result.AvatarURL = participantAvatar(participant)
 		result.Color = participant.Color
 		current, maximum, known := participantHP(participant)
-		result.Health = encounterHealth(current, maximum, known, false)
+		result.Health = encounterHealth(current, maximum, known, false, showHealth)
 		stateIDs = participantStateIDs(participant)
 	} else {
 		var item store.Item
@@ -241,7 +293,7 @@ func buildPublicCombatant(raw rawPublicCombatant, participant store.SessionParti
 		if raw.HPCurrent != nil {
 			current = *raw.HPCurrent
 		}
-		result.Health = encounterHealth(current, maximum, maximum > 0, true)
+		result.Health = encounterHealth(current, maximum, maximum > 0, true, showHealth)
 		result.turnEligible = result.turnEligible && current > 0
 		stateIDs = raw.States
 	}
@@ -256,24 +308,34 @@ func buildPublicCombatant(raw rawPublicCombatant, participant store.SessionParti
 	return result
 }
 
-func encounterHealth(current, maximum float64, known, npc bool) publicEncounterHealth {
+func encounterHealth(current, maximum float64, known, npc, showNumbers bool) publicEncounterHealth {
 	if !known || maximum <= 0 {
 		return publicEncounterHealth{Kind: "unknown", Label: "Состояние неизвестно"}
 	}
+	health := publicEncounterHealth{}
+	if showNumbers {
+		health.Current = &current
+		health.Maximum = &maximum
+	}
 	if current <= 0 {
 		if npc {
-			return publicEncounterHealth{Kind: "down", Label: "Повержен"}
+			health.Kind, health.Label = "down", "Повержен"
+			return health
 		}
-		return publicEncounterHealth{Kind: "down", Label: "Без сознания"}
+		health.Kind, health.Label = "down", "Без сознания"
+		return health
 	}
 	ratio := current / maximum
 	if ratio > 0.5 {
-		return publicEncounterHealth{Kind: "healthy", Label: "Здоров"}
+		health.Kind, health.Label = "healthy", "Здоров"
+		return health
 	}
 	if ratio > 0.25 {
-		return publicEncounterHealth{Kind: "wounded", Label: "Ранен"}
+		health.Kind, health.Label = "wounded", "Ранен"
+		return health
 	}
-	return publicEncounterHealth{Kind: "critical", Label: "Критически ранен"}
+	health.Kind, health.Label = "critical", "Критически ранен"
+	return health
 }
 
 func participantName(participant store.SessionParticipantData) string {

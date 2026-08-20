@@ -31,6 +31,9 @@ type SessionPresentationState struct {
 	MaterialID     *int64           `json:"materialId,omitempty"`
 	Material       *SessionMaterial `json:"material,omitempty"`
 	BroadcastMusic bool             `json:"broadcastMusic"`
+	ShowHealth     bool             `json:"showHealth"`
+	ShowGraveyard  bool             `json:"showGraveyard"`
+	ShowInitiative bool             `json:"showInitiative"`
 	Effect         string           `json:"effect"`
 	Transition     string           `json:"transition"`
 	Revision       int64            `json:"revision"`
@@ -229,11 +232,16 @@ func (s *Store) DeleteSessionMaterial(ctx context.Context, sessionID, id int64) 
 }
 
 func (s *Store) GetSessionPresentation(ctx context.Context, sessionID int64) (SessionPresentationState, error) {
-	state := SessionPresentationState{SessionID: sessionID, Mode: "idle", Effect: "none", Transition: "fade"}
+	state := SessionPresentationState{SessionID: sessionID, Mode: "idle", ShowInitiative: true, Effect: "none", Transition: "fade"}
 	err := s.pool.QueryRow(ctx, `
-		SELECT mode, visible, material_id, broadcast_music, effect, transition, revision, changed_at
+		SELECT mode, visible, material_id, broadcast_music, show_health, show_graveyard,
+		       show_initiative, effect, transition, revision, changed_at
 		FROM dndshare.session_presentation_state WHERE session_id = $1`, sessionID,
-	).Scan(&state.Mode, &state.Visible, &state.MaterialID, &state.BroadcastMusic, &state.Effect, &state.Transition, &state.Revision, &state.ChangedAt)
+	).Scan(
+		&state.Mode, &state.Visible, &state.MaterialID, &state.BroadcastMusic,
+		&state.ShowHealth, &state.ShowGraveyard, &state.ShowInitiative,
+		&state.Effect, &state.Transition, &state.Revision, &state.ChangedAt,
+	)
 	if errors.Is(err, pgx.ErrNoRows) {
 		state.ChangedAt = time.Now()
 	} else if err != nil {
@@ -257,18 +265,25 @@ func (s *Store) SaveSessionPresentation(
 	visible bool,
 	materialID *int64,
 	broadcastMusic bool,
+	showHealth bool,
+	showGraveyard bool,
+	showInitiative bool,
 	effect, transition string,
 ) (SessionPresentationState, error) {
 	_, err := s.pool.Exec(ctx, `
 		INSERT INTO dndshare.session_presentation_state
-		    (session_id, mode, visible, material_id, broadcast_music, effect, transition, revision)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, 1)
+		    (session_id, mode, visible, material_id, broadcast_music, show_health,
+		     show_graveyard, show_initiative, effect, transition, revision)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, 1)
 		ON CONFLICT (session_id) DO UPDATE SET
 		    mode = EXCLUDED.mode, visible = EXCLUDED.visible,
 		    material_id = EXCLUDED.material_id, broadcast_music = EXCLUDED.broadcast_music,
+		    show_health = EXCLUDED.show_health, show_graveyard = EXCLUDED.show_graveyard,
+		    show_initiative = EXCLUDED.show_initiative,
 		    effect = EXCLUDED.effect, transition = EXCLUDED.transition,
 		    revision = dndshare.session_presentation_state.revision + 1,
-		    changed_at = now()`, sessionID, mode, visible, materialID, broadcastMusic, effect, transition)
+		    changed_at = now()`, sessionID, mode, visible, materialID, broadcastMusic,
+		showHealth, showGraveyard, showInitiative, effect, transition)
 	if err != nil {
 		return SessionPresentationState{}, err
 	}

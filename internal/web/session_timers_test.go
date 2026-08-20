@@ -12,10 +12,10 @@ func TestProjectSessionTimerUsesAbsoluteDeadline(t *testing.T) {
 	endsAt := now.Add(90 * time.Second)
 	timer := store.SessionTimer{
 		ID: 7, Description: "Стража прибудет", DurationMS: 120_000,
-		EndsAt: &endsAt, CreatedAt: now.Add(-30 * time.Second), ChangedAt: now,
+		EndsAt: &endsAt, Broadcast: true, CreatedAt: now.Add(-30 * time.Second), ChangedAt: now,
 	}
 	projected := projectSessionTimer(timer, now)
-	if projected.RemainingMS != 90_000 || projected.Completed || projected.EndsAt == nil {
+	if projected.RemainingMS != 90_000 || projected.Completed || projected.EndsAt == nil || !projected.Broadcast {
 		t.Fatalf("unexpected running timer projection: %#v", projected)
 	}
 }

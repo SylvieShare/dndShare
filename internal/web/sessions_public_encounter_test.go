@@ -25,7 +25,7 @@ func TestEncounterHealthUsesPublicWordedBands(t *testing.T) {
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			got := encounterHealth(test.current, test.maximum, test.known, test.npc)
+			got := encounterHealth(test.current, test.maximum, test.known, test.npc, false)
 			if got.Kind != test.kind || got.Label != test.label {
 				t.Fatalf("want %s/%s, got %s/%s", test.kind, test.label, got.Kind, got.Label)
 			}
@@ -44,9 +44,20 @@ func TestBuildPublicCombatantIncludesNPCItemCover(t *testing.T) {
 		Override: map[string]any{},
 	}, store.SessionParticipantData{}, map[int64]store.Item{
 		itemID: {Name: "Совомедведь", CoverImageURL: &coverURL},
-	}, nil, 1)
+	}, nil, 1, false)
 
 	if combatant.CoverImageURL == nil || *combatant.CoverImageURL != coverURL {
 		t.Fatalf("cover image URL = %v, want %q", combatant.CoverImageURL, coverURL)
+	}
+}
+
+func TestEncounterHealthIncludesNumbersOnlyWhenEnabled(t *testing.T) {
+	hidden := encounterHealth(7, 12, true, true, false)
+	if hidden.Current != nil || hidden.Maximum != nil {
+		t.Fatal("hidden health must not expose numeric values")
+	}
+	shown := encounterHealth(7, 12, true, true, true)
+	if shown.Current == nil || *shown.Current != 7 || shown.Maximum == nil || *shown.Maximum != 12 {
+		t.Fatalf("numeric health = %v/%v, want 7/12", shown.Current, shown.Maximum)
 	}
 }

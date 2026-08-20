@@ -123,11 +123,13 @@ and log group by its own vertical divider.
 как стеклянная карточка справа под шапкой; при открытой колонке инструментов
 стек сдвигается влево и не перекрывает её. Карточка показывает серверно
 синхронизированный отсчёт и прогресс, позволяет поставить таймер на паузу,
-продолжить и добавить одну или пять минут. После нуля она получает заметное
+продолжить и добавить одну или пять минут. После нуля карточка получает заметное
 завершённое состояние и кнопку `Убрать`; добавление времени запускает её снова.
 Таймеры сохраняются в PostgreSQL, поэтому переживают перезагрузку страницы и
-сон браузера. Они видны только мастеру в рабочем пространстве сессии и никогда
-не попадают на анонимный экран трансляции.
+сон браузера. При создании мастер может включить `Показывать в трансляции`;
+флаг относится только к этому таймеру. Такие отсчёты появляются на анонимном
+экране с локально синхронизированным временем и прогрессом, остальные остаются
+только в рабочем пространстве мастера.
 Заголовок music panel не дублирует название выбранного альбома; текущий трек
 остаётся в основном playback-блоке.
 `SessionEventsPanel` расположен под музыкой, занимает свободную высоту и
@@ -789,17 +791,17 @@ for a television or projector. It has no application navigation or authenticated
 controls. Its SSE stream refreshes the presentation and, in combat mode, the
 public encounter projection immediately; fallback polling and a control sync
 cover reconnects, server restarts and missed in-memory signals. Returning to a
-visible browser tab also requests a fresh snapshot. The screen shows
-the session name, round, current turn and the complete initiative order with
-portraits, markers and resolved condition names. The current-turn panel uses a
-bestiary creature's cover at full panel height against its right edge, with the
-ordinary portrait remaining the fallback for players and creatures without a
-cover. The cover keeps its intrinsic proportions as the viewport narrows; the
-left-hand turn text layers over the artwork instead of squeezing it. Exact HP is intentionally not
-part of the public DTO or UI: health is presented as `Здоров` above 50%,
-`Ранен` above 25%, `Критически ранен` at 25% or below, and `Без сознания`
-(player) / `Повержен` (NPC) at zero. A failed refresh keeps the last successful
-snapshot visible and marks the connection as interrupted.
+visible browser tab also requests a fresh snapshot. In combat the active player
+or NPC occupies the large left card with full artwork and a blurred lower info
+layer. The right side contains the cyclic queue beginning after the active turn;
+overflow shares the final right-hand slot as a visible stack. On turn change the
+active card exits left, the next one expands, and the combatant that just acted
+appears at the queue tail. NPC letters are emphasized before names in their
+assigned colors. Optional persisted display flags expose numeric current/max HP,
+initiative values and a separate graveyard. The graveyard groups dead NPCs by
+bestiary type and shows one entry with a count. Health numbers are omitted from
+the public DTO while their flag is disabled. A failed refresh keeps the last
+successful snapshot visible and marks the connection as interrupted.
 
 The authenticated session page owns one typed SSE invalidation stream for the
 participant list, character versions, timeline and public-screen presence.
@@ -826,8 +828,9 @@ screens reconnect automatically and reappear in the counter.
 The public endpoint builds a dedicated projection on the server rather than
 returning raw encounter or character JSON. It may resolve the session owner's
 referenced custom bestiary entries and condition suggestions, but exposes only
-their display name, icon and condition label/color; character sheets, exact HP,
-AC, notes and challenge results remain private.
+their display fields and condition label/color. Exact current/max HP is projected
+only when the master enables it; character sheets, AC, notes and challenge
+results remain private.
 
 The encounter never embeds `itemRaw` and does not read denormalized NPC fields.
 Startup SQL converts previous records to `itemId + override`; frontend only

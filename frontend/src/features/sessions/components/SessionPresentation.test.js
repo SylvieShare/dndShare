@@ -22,12 +22,15 @@ const sessionPage = read('../pages/ViewSession.vue')
 const sessionsApi = read('../../../shared/api/sessionsApi.js')
 
 describe('session presentation workspace', () => {
-  it('keeps materials as a primary DM workspace and a contextual header control', () => {
+  it('keeps materials as a primary DM workspace but removes them from the display dropdown', () => {
     expect(toolbar).toContain("{ key: 'materials', label: 'Материалы'")
     expect(toolbar).toContain('<SessionPresentationControl')
-    expect(control).toContain('Материалы сессии')
+    expect(control).not.toContain('Материалы сессии')
     expect(control).toContain('Затемнить')
     expect(control).toContain('Эффект на экране игроков')
+    expect(control).toContain('Показывать здоровье')
+    expect(control).toContain('Показывать кладбище')
+    expect(control).toContain('Показывать инициативу')
     expect(workspace).toContain('Транслировать')
   })
 

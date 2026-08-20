@@ -11,6 +11,7 @@
       <div class="session-timer-card-head">
         <span class="session-timer-card-icon"><BellRing v-if="timer.completed" :size="15" /><Timer v-else :size="15" /></span>
         <strong>{{ timer.description }}</strong>
+        <span v-if="timer.broadcast" class="session-timer-live" title="Показывается в трансляции"><MonitorUp :size="13" /></span>
         <button v-if="!timer.completed" type="button" class="session-timer-dismiss" title="Отменить таймер" aria-label="Отменить таймер" :disabled="timers.isPending(timer.id)" @click="run(() => timers.remove(timer.id))"><X :size="14" /></button>
       </div>
 
@@ -40,7 +41,7 @@
 </template>
 
 <script setup>
-import { BellRing, Pause, Play, Timer, Trash2, X } from '@lucide/vue'
+import { BellRing, MonitorUp, Pause, Play, Timer, Trash2, X } from '@lucide/vue'
 import { formatTimerDuration } from '@/features/sessions/lib/sessionTimers'
 
 const props = defineProps({ timers: { type: Object, required: true } })
@@ -84,7 +85,8 @@ async function run(action) { await action().catch(() => {}) }
 .session-timer-card--paused::before { background: var(--warning); }
 .session-timer-card--completed { border-color: color-mix(in srgb, var(--danger) 62%, var(--border)); background: color-mix(in srgb, var(--danger) 9%, var(--popover-bg)); box-shadow: 0 10px 34px color-mix(in srgb, var(--danger) 17%, transparent); animation: session-timer-completed 1.4s ease-in-out 2; }
 .session-timer-card--completed::before { background: var(--danger); opacity: 1; }
-.session-timer-card-head { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 8px; }
+.session-timer-card-head { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; align-items: center; gap: 8px; }
+.session-timer-live { width: 24px; height: 24px; display: grid; place-items: center; border-radius: 7px; background: color-mix(in srgb, var(--success) 13%, transparent); color: var(--success); }
 .session-timer-card-icon { width: 27px; height: 27px; display: grid; place-items: center; border-radius: 8px; background: color-mix(in srgb, var(--accent) 13%, transparent); color: var(--accent-soft); }
 .session-timer-card--paused .session-timer-card-icon { background: color-mix(in srgb, var(--warning) 12%, transparent); color: var(--warning); }
 .session-timer-card--completed .session-timer-card-icon { background: color-mix(in srgb, var(--danger) 15%, transparent); color: var(--danger); }

@@ -129,15 +129,13 @@
 
     <div class="chapter-toolbar-view">
       <SessionPresentationControl
-        v-if="isDm && presentation && materials"
+        v-if="isDm && presentation"
         :session-uuid="sessionUuid"
         :is-dm="isDm"
         :presentation="presentation"
-        :materials="materials"
-        :scene="workspaceScene"
       />
       <SessionTimerControl v-if="isDm && timers" :timers="timers" />
-      <span v-if="isDm && ((presentation && materials) || timers)" class="chapter-toolbar-rule" />
+      <span v-if="isDm && (presentation || timers)" class="chapter-toolbar-rule" />
 
       <div class="chapter-panel-tools" aria-label="Панели сессии">
         <button type="button" class="chapter-tool-btn chapter-tool-btn--icon" :class="{ 'chapter-tool-btn--active': diceOpen }" title="Кубики" aria-label="Кубики" aria-keyshortcuts="Shift+D" :aria-pressed="diceOpen" @click="$emit('toggle-dice')">

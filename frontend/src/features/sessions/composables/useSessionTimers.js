@@ -67,13 +67,13 @@ export function useSessionTimers({ sessionUuid }) {
     }
   }
 
-  async function create({ description, durationMs }) {
+  async function create({ description, durationMs, broadcast = false }) {
     if (creating.value) return null
     creating.value = true
     error.value = ''
     const requestedAt = Date.now()
     try {
-      const response = await createSessionTimer(sessionUuid, { description, durationMs })
+      const response = await createSessionTimer(sessionUuid, { description, durationMs, broadcast })
       replaceTimer(response.timer)
       syncClock(response.serverTime, requestedAt)
       return response.timer

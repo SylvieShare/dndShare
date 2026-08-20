@@ -2,7 +2,11 @@ import { computed, ref } from 'vue'
 import { getSessionPresentation, getSessionPresentationConnections, saveSessionPresentation } from '@/shared/api/sessionsApi'
 
 export function useSessionPresentation({ sessionUuid, materials }) {
-  const state = ref({ mode: 'idle', visible: false, broadcastMusic: false, effect: 'none', transition: 'fade', revision: 0 })
+  const state = ref({
+    mode: 'idle', visible: false, broadcastMusic: false,
+    showHealth: false, showGraveyard: false, showInitiative: true,
+    effect: 'none', transition: 'fade', revision: 0,
+  })
   const loading = ref(false)
   const saving = ref(false)
   const error = ref('')
@@ -55,6 +59,9 @@ export function useSessionPresentation({ sessionUuid, materials }) {
       state.value = await saveSessionPresentation(sessionUuid, {
         ...payload,
         broadcastMusic: payload.broadcastMusic ?? state.value.broadcastMusic ?? false,
+        showHealth: payload.showHealth ?? state.value.showHealth ?? false,
+        showGraveyard: payload.showGraveyard ?? state.value.showGraveyard ?? false,
+        showInitiative: payload.showInitiative ?? state.value.showInitiative ?? true,
       })
       return state.value
     } catch {
@@ -77,12 +84,17 @@ export function useSessionPresentation({ sessionUuid, materials }) {
   const clear = () => save({ mode: 'idle', visible: true, effect: 'none', transition: 'fade' })
   const setEffect = effect => save({ ...state.value, effect, materialId: state.value.materialId || null })
   const setBroadcastMusic = enabled => save({ ...state.value, broadcastMusic: !!enabled, materialId: state.value.materialId || null })
+  const setDisplayOption = (key, enabled) => save({
+    ...state.value,
+    [key]: !!enabled,
+    materialId: state.value.materialId || null,
+  })
 
   return {
     state, loading, saving, error, activeLabel,
     connectedScreens, connectionsLoading, connectionsError,
     load, loadConnections, setConnectedScreens,
-    save, showMaterial, showCombat, blackout, reveal, clear, setEffect, setBroadcastMusic,
+    save, showMaterial, showCombat, blackout, reveal, clear, setEffect, setBroadcastMusic, setDisplayOption,
     materialById: materials?.byId,
   }
 }

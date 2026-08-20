@@ -7,35 +7,41 @@ const mainStyles = readFileSync(fileURLToPath(new URL('./styles/ViewEncounterScr
 const initiativeStyles = readFileSync(fileURLToPath(new URL('./styles/ViewEncounterScreenInitiative.css', import.meta.url)), 'utf8')
 
 describe('public encounter portraits', () => {
-  it('fills the right edge of the current-turn panel with the creature cover', () => {
-    expect(pageSource).toContain('class="encounter-screen__turn-cover"')
-    expect(pageSource).toContain(':src="currentCombatant.coverImageUrl"')
-    expect(mainStyles).toContain('.encounter-screen__turn-cover {')
-    expect(mainStyles).toContain('position: absolute;')
-    expect(mainStyles).toContain('width: auto;')
-    expect(mainStyles).toContain('max-width: none;')
-    expect(mainStyles).toContain('height: 100%;')
-    expect(mainStyles).not.toContain('.encounter-screen__turn-portrait--cover')
+  it('uses the creature cover as the full active-turn artwork', () => {
+    expect(pageSource).toContain('class="turn-spotlight__art"')
+    expect(pageSource).toContain(':src="currentCombatant.coverImageUrl || currentCombatant.avatarUrl"')
+    expect(initiativeStyles).toContain('.turn-spotlight__art {')
+    expect(initiativeStyles).toContain('position: absolute;')
+    expect(initiativeStyles).toContain('.turn-spotlight__art img { object-fit: cover; }')
+    expect(initiativeStyles).toContain('backdrop-filter: blur(8px)')
   })
 
   it('renders NPC artwork without a frame or backing surface', () => {
-    expect(pageSource).toContain("'encounter-screen__turn-portrait--npc': currentCombatant.type === 'npc'")
+    expect(pageSource).toContain("'turn-spotlight__art--npc': currentCombatant.type === 'npc'")
     expect(pageSource).toContain("'initiative-card__portrait--npc': combatant.type === 'npc'")
-    expect(mainStyles).toContain('.encounter-screen__turn-portrait--npc {')
+    expect(initiativeStyles).toContain('.turn-spotlight__art--npc img')
     expect(initiativeStyles).toContain('.initiative-card__portrait--npc {')
     expect(initiativeStyles).toContain('background: transparent;')
   })
 
-  it('does not stretch the NPC letter marker over its artwork', () => {
-    expect(mainStyles).toContain('.initiative-card__portrait > span:not(.initiative-card__marker)')
-    expect(initiativeStyles).toContain('.initiative-card__portrait > span:not(.initiative-card__marker)')
+  it('places emphasized colored creature letters before names', () => {
+    expect(pageSource).toContain('class="creature-marker"')
+    expect(pageSource).toContain('<strong>{{ combatant.name }}</strong>')
+    expect(initiativeStyles).toContain('.creature-marker {')
+    expect(initiativeStyles).toContain('var(--screen-combatant-color)')
   })
 })
 
 describe('public encounter composition', () => {
-  it('places initiative before the current-turn spotlight', () => {
-    expect(pageSource.indexOf('class="encounter-screen__initiative"'))
-      .toBeLessThan(pageSource.indexOf('class="encounter-screen__turn"'))
+  it('keeps the active turn left and a cyclic stacked queue right', () => {
+    expect(pageSource.indexOf('class="turn-spotlight"'))
+      .toBeLessThan(pageSource.indexOf('class="encounter-combat-side"'))
+    expect(pageSource).toContain('...combatants.value.slice(currentIndex.value + 1)')
+    expect(pageSource).toContain('...combatants.value.slice(0, currentIndex.value)')
+    expect(pageSource).toContain('mode="out-in"')
+    expect(initiativeStyles).toContain('.turn-spotlight-leave-to')
+    expect(initiativeStyles).toContain('translateX(-115%)')
+    expect(initiativeStyles).toContain('.initiative-card--stacked')
   })
 
   it('uses a flat canvas and no combatant color strip', () => {
@@ -45,5 +51,14 @@ describe('public encounter composition', () => {
     expect(mainStyles).not.toContain('.encounter-screen::before')
     expect(mainStyles).not.toContain('.encounter-screen__glow')
     expect(initiativeStyles).not.toContain('.initiative-card::after')
+  })
+
+  it('supports optional numeric health, initiative, graveyard and public timers', () => {
+    expect(pageSource).toContain('presentation.showHealth')
+    expect(pageSource).toContain('presentation.showInitiative')
+    expect(pageSource).toContain('presentation.showGraveyard')
+    expect(pageSource).toContain('class="encounter-graveyard"')
+    expect(pageSource).toContain('class="broadcast-timers"')
+    expect(mainStyles).toContain('.broadcast-timer')
   })
 })

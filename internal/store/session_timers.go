@@ -19,20 +19,22 @@ type SessionTimer struct {
 	EndsAt      *time.Time
 	RemainingMS *int64
 	Paused      bool
+	Broadcast   bool
 	CreatedAt   time.Time
 	ChangedAt   time.Time
 }
 
 const sessionTimerSelect = `
 	SELECT id, session_id, description, duration_ms, ends_at, remaining_ms,
-	       paused, created_at, changed_at
+	       paused, broadcast, created_at, changed_at
 	FROM dndshare.session_timer`
 
 func scanSessionTimer(row pgx.Row) (SessionTimer, error) {
 	var timer SessionTimer
 	err := row.Scan(
 		&timer.ID, &timer.SessionID, &timer.Description, &timer.DurationMS,
-		&timer.EndsAt, &timer.RemainingMS, &timer.Paused, &timer.CreatedAt, &timer.ChangedAt,
+		&timer.EndsAt, &timer.RemainingMS, &timer.Paused, &timer.Broadcast,
+		&timer.CreatedAt, &timer.ChangedAt,
 	)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return SessionTimer{}, ErrNotFound
@@ -59,18 +61,37 @@ func (s *Store) ListSessionTimers(ctx context.Context, sessionID int64) ([]Sessi
 	return timers, rows.Err()
 }
 
+func (s *Store) ListBroadcastSessionTimers(ctx context.Context, sessionID int64) ([]SessionTimer, error) {
+	rows, err := s.pool.Query(ctx, sessionTimerSelect+`
+		WHERE session_id = $1 AND broadcast = true
+		ORDER BY created_at, id`, sessionID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	timers := []SessionTimer{}
+	for rows.Next() {
+		timer, err := scanSessionTimer(rows)
+		if err != nil {
+			return nil, err
+		}
+		timers = append(timers, timer)
+	}
+	return timers, rows.Err()
+}
+
 func (s *Store) GetSessionTimer(ctx context.Context, sessionID, timerID int64) (SessionTimer, error) {
 	return scanSessionTimer(s.pool.QueryRow(ctx, sessionTimerSelect+`
 		WHERE session_id = $1 AND id = $2`, sessionID, timerID))
 }
 
-func (s *Store) CreateSessionTimer(ctx context.Context, sessionID int64, description string, durationMS int64) (SessionTimer, error) {
+func (s *Store) CreateSessionTimer(ctx context.Context, sessionID int64, description string, durationMS int64, broadcast bool) (SessionTimer, error) {
 	return scanSessionTimer(s.pool.QueryRow(ctx, `
 		INSERT INTO dndshare.session_timer
-		    (session_id, description, duration_ms, ends_at)
-		VALUES ($1, $2, $3, clock_timestamp() + ($3::double precision * interval '1 millisecond'))
+		    (session_id, description, duration_ms, ends_at, broadcast)
+		VALUES ($1, $2, $3, clock_timestamp() + ($3::double precision * interval '1 millisecond'), $4)
 		RETURNING id, session_id, description, duration_ms, ends_at, remaining_ms,
-		          paused, created_at, changed_at`, sessionID, description, durationMS))
+		          paused, broadcast, created_at, changed_at`, sessionID, description, durationMS, broadcast))
 }
 
 func (s *Store) PauseSessionTimer(ctx context.Context, sessionID, timerID int64) (SessionTimer, error) {
@@ -82,7 +103,7 @@ func (s *Store) PauseSessionTimer(ctx context.Context, sessionID, timerID int64)
 		    changed_at = clock_timestamp()
 		WHERE session_id = $1 AND id = $2 AND paused = false
 		RETURNING id, session_id, description, duration_ms, ends_at, remaining_ms,
-		          paused, created_at, changed_at`, sessionID, timerID))
+		          paused, broadcast, created_at, changed_at`, sessionID, timerID))
 }
 
 func (s *Store) ResumeSessionTimer(ctx context.Context, sessionID, timerID int64) (SessionTimer, error) {
@@ -94,7 +115,7 @@ func (s *Store) ResumeSessionTimer(ctx context.Context, sessionID, timerID int64
 		    changed_at = clock_timestamp()
 		WHERE session_id = $1 AND id = $2 AND paused = true AND remaining_ms > 0
 		RETURNING id, session_id, description, duration_ms, ends_at, remaining_ms,
-		          paused, created_at, changed_at`, sessionID, timerID))
+		          paused, broadcast, created_at, changed_at`, sessionID, timerID))
 }
 
 func (s *Store) AddSessionTimerTime(ctx context.Context, sessionID, timerID, amountMS int64) (SessionTimer, error) {
@@ -109,7 +130,7 @@ func (s *Store) AddSessionTimerTime(ctx context.Context, sessionID, timerID, amo
 		    changed_at = clock_timestamp()
 		WHERE session_id = $1 AND id = $2
 		RETURNING id, session_id, description, duration_ms, ends_at, remaining_ms,
-		          paused, created_at, changed_at`, sessionID, timerID, amountMS))
+		          paused, broadcast, created_at, changed_at`, sessionID, timerID, amountMS))
 }
 
 func (s *Store) DeleteSessionTimer(ctx context.Context, sessionID, timerID int64) error {

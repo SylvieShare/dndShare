@@ -46,6 +46,9 @@ CREATE TABLE IF NOT EXISTS dndshare.session_presentation_state (
     visible    bool DEFAULT false NOT NULL,
     material_id int8 NULL REFERENCES dndshare.session_material(id) ON DELETE SET NULL,
     broadcast_music bool DEFAULT false NOT NULL,
+    show_health bool DEFAULT false NOT NULL,
+    show_graveyard bool DEFAULT false NOT NULL,
+    show_initiative bool DEFAULT true NOT NULL,
     effect     varchar(24) DEFAULT 'none' NOT NULL,
     transition varchar(16) DEFAULT 'fade' NOT NULL,
     revision   int8 DEFAULT 0 NOT NULL,
@@ -56,7 +59,10 @@ CREATE TABLE IF NOT EXISTS dndshare.session_presentation_state (
     CONSTRAINT session_presentation_transition_check CHECK (transition IN ('cut', 'fade'))
 );
 ALTER TABLE dndshare.session_presentation_state
-    ADD COLUMN IF NOT EXISTS broadcast_music bool DEFAULT false NOT NULL;
+    ADD COLUMN IF NOT EXISTS broadcast_music bool DEFAULT false NOT NULL,
+    ADD COLUMN IF NOT EXISTS show_health bool DEFAULT false NOT NULL,
+    ADD COLUMN IF NOT EXISTS show_graveyard bool DEFAULT false NOT NULL,
+    ADD COLUMN IF NOT EXISTS show_initiative bool DEFAULT true NOT NULL;
 
 UPDATE dndshare.session_presentation_state
 SET mode = 'idle', visible = true, material_id = NULL,

@@ -16,8 +16,11 @@ describe('session timer workspace', () => {
     expect(toolbar).toContain('<SessionTimerControl')
     expect(control).toContain('Запустить таймер')
     expect(control).toContain('Быстрый выбор длительности')
+    expect(control).toContain('Показывать в трансляции')
+    expect(control).toContain('broadcast: broadcast.value')
     expect(page).toContain('<SessionTimerStack v-if="isDm"')
     expect(publicScreen).not.toContain('SessionTimerStack')
+    expect(publicScreen).toContain('class="broadcast-timers"')
   })
 
   it('supports pause, resume, added time and a completed removal state', () => {
@@ -28,6 +31,7 @@ describe('session timer workspace', () => {
     expect(stack).toContain('Убрать')
     expect(composable).toContain("const pause = timerId => mutate(timerId, { action: 'pause' })")
     expect(composable).toContain("const resume = timerId => mutate(timerId, { action: 'resume' })")
+    expect(stack).toContain('timer.broadcast')
   })
 
   it('persists timers through the owner-only session API and uses server clock offset', () => {

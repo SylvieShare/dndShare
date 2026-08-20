@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS dndshare.session_timer (
     ends_at       timestamptz NULL,
     remaining_ms  int8 NULL,
     paused        bool DEFAULT false NOT NULL,
+    broadcast     bool DEFAULT false NOT NULL,
     created_at    timestamptz DEFAULT now() NOT NULL,
     changed_at    timestamptz DEFAULT now() NOT NULL,
     CONSTRAINT session_timer_pk PRIMARY KEY (id),
@@ -19,6 +20,9 @@ CREATE TABLE IF NOT EXISTS dndshare.session_timer (
         (paused = false AND ends_at IS NOT NULL AND remaining_ms IS NULL)
     )
 );
+
+ALTER TABLE dndshare.session_timer
+    ADD COLUMN IF NOT EXISTS broadcast bool DEFAULT false NOT NULL;
 
 CREATE INDEX IF NOT EXISTS idx_session_timer_session_id
     ON dndshare.session_timer USING btree (session_id, id);

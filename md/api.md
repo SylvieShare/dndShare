@@ -232,16 +232,17 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
   100 MB, stores it in S3 and returns the same `{upload_id,url,key}` shape as
   image upload;
 - `GET|POST /api/sessions/{uuid}/timers` lists owner-only session timers or
-  starts one from `{description,durationMs}`. Every list response includes
+  starts one from `{description,durationMs,broadcast}`. Every list response includes
   `serverTime`; timer projections contain `{id,description,durationMs,
-  remainingMs,endsAt?,paused,completed}`. `PATCH
+  remainingMs,endsAt?,paused,broadcast,completed}`. `PATCH
   /api/sessions/{uuid}/timers/{timerId}` accepts `{action:"pause"|"resume"}`
   or `{action:"add",amountMs}`; `DELETE` on the same route removes a timer.
-  Timers are DM workspace tools and are not included in anonymous player-screen
-  projections;
+  Only timers created with `broadcast:true` are included in the anonymous
+  player-screen projection;
 - `GET|PUT /api/sessions/{uuid}/presentation` reads or replaces the owner-only
   live player-display state
-  `{mode,visible,materialId,broadcastMusic,effect,transition}`.
+  `{mode,visible,materialId,broadcastMusic,showHealth,showGraveyard,
+  showInitiative,effect,transition}`.
   Modes are `idle`, `material`, `combat`; effects are `none`, `rain`,
   `fog`, `embers`, `snow`, `storm`; transitions are `cut` or `fade`. An explicit
   `idle,visible:true` is the cleared dotted canvas, while `visible:false` is the
@@ -251,7 +252,9 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
   subscriptions. It is deliberately not persisted in the database;
 - `GET /api/public/sessions/{uuid}/presentation` is the anonymous no-store safe
   projection used by `/screen/:uuid`; its material projection exposes only
-  `{id,kind,name,caption,content,noteStyle,assetUrl}` required for playback;
+  `{id,kind,name,caption,content,noteStyle,assetUrl}` required for playback. It
+  also returns the three combat display flags, `serverTime` and only the timers
+  whose individual `broadcast` flag is enabled;
 - `GET /api/public/sessions/{uuid}/presentation/events` is the anonymous SSE
   invalidation stream. Events contain no session data: each `refresh` tells the
   display to reload its safe projections. Heartbeats prevent proxy buffering
@@ -263,9 +266,11 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
 - `GET /api/public/sessions/{uuid}/encounter` is the anonymous, no-store TV
   projection of the current fight. It returns only the session name, round,
   current turn and initiative-ordered combatants with presentation fields,
-  resolved conditions and a worded health band. Bestiary combatants also expose
-  `coverImageUrl` for the current-turn artwork. It never returns character
-  sheets, exact HP, AC, notes or encounter challenge results;
+  resolved conditions and a worded health band. When enabled by the presentation
+  state, health also contains `current/maximum` and `graveyard` contains dead NPC
+  groups by bestiary type. Bestiary combatants also expose `coverImageUrl` for
+  the current-turn artwork. It never returns character sheets, AC, notes or
+  encounter challenge results;
 - `GET|POST /api/sessions/{uuid}/events` reads and appends the session timeline.
   The read endpoint accepts `after` and `limit`; the write endpoint accepts
   `{type,action,data,actorCharUuid?,actorName?,visibility?,clientActionId?}`. The server

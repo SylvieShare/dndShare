@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
 	"dndshare/internal/store"
 )
@@ -276,6 +277,9 @@ type sessionPresentationRequest struct {
 	Visible        *bool  `json:"visible"`
 	MaterialID     *int64 `json:"materialId"`
 	BroadcastMusic bool   `json:"broadcastMusic"`
+	ShowHealth     bool   `json:"showHealth"`
+	ShowGraveyard  bool   `json:"showGraveyard"`
+	ShowInitiative bool   `json:"showInitiative"`
 	Effect         string `json:"effect"`
 	Transition     string `json:"transition"`
 }
@@ -329,7 +333,10 @@ func (s *Server) handleSaveSessionPresentation(w http.ResponseWriter, r *http.Re
 		badRequest(w, "Некорректный эффект показа")
 		return
 	}
-	state, err := s.store.SaveSessionPresentation(r.Context(), session.ID, req.Mode, visible, req.MaterialID, req.BroadcastMusic, req.Effect, req.Transition)
+	state, err := s.store.SaveSessionPresentation(
+		r.Context(), session.ID, req.Mode, visible, req.MaterialID, req.BroadcastMusic,
+		req.ShowHealth, req.ShowGraveyard, req.ShowInitiative, req.Effect, req.Transition,
+	)
 	if err != nil {
 		serverError(w, err)
 		return
@@ -344,6 +351,11 @@ type publicPresentationResponse struct {
 	Visible        bool                        `json:"visible"`
 	Material       *publicPresentationMaterial `json:"material,omitempty"`
 	BroadcastMusic bool                        `json:"broadcastMusic"`
+	ShowHealth     bool                        `json:"showHealth"`
+	ShowGraveyard  bool                        `json:"showGraveyard"`
+	ShowInitiative bool                        `json:"showInitiative"`
+	Timers         []sessionTimerResponse      `json:"timers"`
+	ServerTime     int64                       `json:"serverTime"`
 	Effect         string                      `json:"effect"`
 	Transition     string                      `json:"transition"`
 	Revision       int64                       `json:"revision"`
@@ -381,8 +393,19 @@ func (s *Server) handleGetPublicPresentation(w http.ResponseWriter, r *http.Requ
 	}
 	response := publicPresentationResponse{
 		SessionName: session.Name, Mode: state.Mode, Visible: state.Visible,
-		BroadcastMusic: state.BroadcastMusic, Effect: state.Effect, Transition: state.Transition, Revision: state.Revision,
+		BroadcastMusic: state.BroadcastMusic, ShowHealth: state.ShowHealth,
+		ShowGraveyard: state.ShowGraveyard, ShowInitiative: state.ShowInitiative,
+		Timers: []sessionTimerResponse{}, ServerTime: time.Now().UnixMilli(),
+		Effect: state.Effect, Transition: state.Transition, Revision: state.Revision,
 	}
+	timers, err := s.store.ListBroadcastSessionTimers(r.Context(), session.ID)
+	if err != nil {
+		serverError(w, err)
+		return
+	}
+	now := time.Now()
+	response.Timers = projectSessionTimers(timers, now).Timers
+	response.ServerTime = now.UnixMilli()
 	if state.Material != nil {
 		response.Material = &publicPresentationMaterial{
 			ID: state.Material.ID, Kind: state.Material.Kind, Name: state.Material.Name,

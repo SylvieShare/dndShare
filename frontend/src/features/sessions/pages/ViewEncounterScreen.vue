@@ -69,127 +69,99 @@
     </section>
 
     <template v-else-if="presentation?.visible && presentation.mode === 'combat' && snapshot?.active">
-      <section class="encounter-screen__initiative" aria-label="Порядок инициативы">
-        <div class="encounter-screen__initiative-heading">
-          <div>
-            <span>ПОРЯДОК ХОДОВ</span>
-            <h2>Инициатива</h2>
-          </div>
-          <span>{{ combatants.length }} {{ combatantCountLabel }}</span>
-        </div>
-
-        <TransitionGroup
-          v-if="combatants.length"
-          tag="ol"
-          name="initiative-card"
-          class="initiative-track"
-        >
-          <li
-            v-for="(combatant, index) in combatants"
-            :key="combatant.uid"
-            class="initiative-card"
-            :class="{
-              'initiative-card--current': combatant.uid === snapshot.currentUid,
-              'initiative-card--down': combatant.health.kind === 'down',
-            }"
-            :style="accentStyle(combatant)"
+      <section class="encounter-combat-stage" aria-label="Текущий ход и очередь">
+        <Transition name="turn-spotlight" mode="out-in">
+          <article
+            v-if="currentCombatant"
+            :key="currentCombatant.uid"
+            class="turn-spotlight"
+            :style="accentStyle(currentCombatant)"
+            aria-live="polite"
           >
-            <div class="initiative-card__order">
-              <span>{{ index + 1 }}</span>
-              <small v-if="combatant.initiative != null">иниц. {{ combatant.initiative }}</small>
-              <small v-else>без броска</small>
+            <div class="turn-spotlight__art" :class="{ 'turn-spotlight__art--npc': currentCombatant.type === 'npc' }">
+              <img v-if="currentCombatant.coverImageUrl || currentCombatant.avatarUrl" :src="currentCombatant.coverImageUrl || currentCombatant.avatarUrl" alt="" />
+              <span v-else-if="currentCombatant.avatarSvg" v-html="currentCombatant.avatarSvg" />
+              <UserRound v-else :size="110" :stroke-width="1" aria-hidden="true" />
             </div>
-
-            <div
-              class="initiative-card__portrait"
-              :class="{ 'initiative-card__portrait--npc': combatant.type === 'npc' }"
-            >
-              <img v-if="combatant.avatarUrl" :src="combatant.avatarUrl" alt="" />
-              <span v-else-if="combatant.avatarSvg" v-html="combatant.avatarSvg" />
-              <UserRound v-else :size="45" :stroke-width="1.15" aria-hidden="true" />
-              <span v-if="combatant.markerLetter" class="initiative-card__marker">
-                {{ combatant.markerLetter }}
-              </span>
-            </div>
-
-            <div class="initiative-card__body">
-              <strong>{{ combatant.name }}</strong>
-              <span class="encounter-health" :class="healthClass(combatant)">
-                <HeartPulse :size="14" aria-hidden="true" />
-                {{ combatant.health.label }}
-              </span>
-              <div v-if="combatant.states.length || (combatant.surprised && snapshot.round === 0)" class="initiative-card__states">
-                <span
-                  v-for="state in combatant.states"
-                  :key="state.name"
-                  class="encounter-state"
-                  :style="stateStyle(state)"
-                >{{ state.name }}</span>
-                <span v-if="combatant.surprised && snapshot.round === 0" class="encounter-state">Врасплох</span>
+            <div class="turn-spotlight__info">
+              <span class="encounter-screen__turn-label">СЕЙЧАС ХОДИТ</span>
+              <div class="turn-spotlight__name">
+                <span v-if="currentCombatant.markerLetter" class="creature-marker">{{ currentCombatant.markerLetter }}</span>
+                <h2>{{ currentCombatant.name }}</h2>
+              </div>
+              <div class="encounter-screen__turn-meta">
+                <span v-if="presentation.showHealth && hasNumericHealth(currentCombatant)" class="encounter-health" :class="healthClass(currentCombatant)">
+                  <HeartPulse :size="18" aria-hidden="true" />
+                  {{ healthNumbers(currentCombatant) }} HP
+                </span>
+                <span v-if="presentation.showInitiative && currentCombatant.initiative != null" class="turn-spotlight__initiative">
+                  Инициатива {{ currentCombatant.initiative }}
+                </span>
+                <span v-for="state in currentCombatant.states" :key="state.name" class="encounter-state" :style="stateStyle(state)">{{ state.name }}</span>
+                <span v-if="currentCombatant.surprised && snapshot.round === 0" class="encounter-state">Врасплох</span>
               </div>
             </div>
+          </article>
+          <div v-else key="no-turn" class="turn-spotlight turn-spotlight--empty">Нет доступного хода</div>
+        </Transition>
 
-            <span v-if="combatant.uid === snapshot.currentUid" class="initiative-card__current-label">
-              Текущий ход
-            </span>
-          </li>
-        </TransitionGroup>
-
-        <div v-else class="encounter-screen__no-combatants">
-          Бой начался — участники скоро появятся.
-        </div>
-      </section>
-
-      <section class="encounter-screen__turn" aria-live="polite">
-        <div class="encounter-screen__turn-copy">
-          <span class="encounter-screen__turn-label">СЕЙЧАС ХОДИТ</span>
-          <template v-if="currentCombatant">
-            <div class="encounter-screen__turn-name-row">
-              <span
-                v-if="currentCombatant.markerLetter"
-                class="encounter-screen__turn-marker"
-                :style="accentStyle(currentCombatant)"
-              >{{ currentCombatant.markerLetter }}</span>
-              <h2>{{ currentCombatant.name }}</h2>
+        <div class="encounter-combat-side">
+          <section class="encounter-queue" aria-label="Следующие ходы">
+            <div class="encounter-screen__initiative-heading">
+              <div><span>ДАЛЬШЕ ХОДЯТ</span><h2>Очередь</h2></div>
+              <span>{{ turnQueue.length }}</span>
             </div>
-            <div class="encounter-screen__turn-meta">
-              <span class="encounter-health" :class="healthClass(currentCombatant)">
-                <HeartPulse :size="18" aria-hidden="true" />
-                {{ currentCombatant.health.label }}
-              </span>
-              <span
-                v-for="state in currentCombatant.states"
-                :key="state.name"
-                class="encounter-state"
-                :style="stateStyle(state)"
-              >{{ state.name }}</span>
-              <span v-if="currentCombatant.surprised && snapshot.round === 0" class="encounter-state">
-                Врасплох
-              </span>
+            <TransitionGroup v-if="turnQueue.length" tag="ol" name="initiative-card" class="initiative-track">
+              <li
+                v-for="(combatant, index) in turnQueue"
+                :key="combatant.uid"
+                class="initiative-card"
+                :class="{ 'initiative-card--down': combatant.health.kind === 'down', 'initiative-card--stacked': index >= queueStackStart }"
+                :style="queueCardStyle(combatant, index)"
+              >
+                <div class="initiative-card__portrait" :class="{ 'initiative-card__portrait--npc': combatant.type === 'npc' }">
+                  <img v-if="combatant.avatarUrl" :src="combatant.avatarUrl" alt="" />
+                  <span v-else-if="combatant.avatarSvg" v-html="combatant.avatarSvg" />
+                  <UserRound v-else :size="45" :stroke-width="1.15" aria-hidden="true" />
+                </div>
+                <div class="initiative-card__body">
+                  <div class="initiative-card__name">
+                    <span v-if="combatant.markerLetter" class="creature-marker">{{ combatant.markerLetter }}</span>
+                    <strong>{{ combatant.name }}</strong>
+                  </div>
+                  <small v-if="presentation.showInitiative && combatant.initiative != null">Инициатива {{ combatant.initiative }}</small>
+                  <span v-if="presentation.showHealth && hasNumericHealth(combatant)" class="encounter-health" :class="healthClass(combatant)">{{ healthNumbers(combatant) }} HP</span>
+                </div>
+                <span v-if="queueStackCount > 1 && index === queueStackStart" class="initiative-card__stack-count">+{{ queueStackCount - 1 }}</span>
+              </li>
+            </TransitionGroup>
+            <div v-else class="encounter-screen__no-combatants">Других участников нет.</div>
+          </section>
+
+          <section v-if="presentation.showGraveyard && graveyard.length" class="encounter-graveyard" aria-label="Кладбище">
+            <div class="encounter-graveyard__heading"><Skull :size="18" /><span>Кладбище</span></div>
+            <div class="encounter-graveyard__list">
+              <article v-for="group in graveyard" :key="group.key" class="graveyard-card" :style="accentStyle(group)">
+                <div class="graveyard-card__portrait">
+                  <img v-if="group.avatarUrl || group.coverImageUrl" :src="group.avatarUrl || group.coverImageUrl" alt="" />
+                  <span v-else-if="group.avatarSvg" v-html="group.avatarSvg" />
+                  <Skull v-else :size="26" aria-hidden="true" />
+                </div>
+                <strong>{{ group.name }}</strong>
+                <b>×{{ group.count }}</b>
+              </article>
             </div>
-          </template>
-          <h2 v-else>Нет доступного хода</h2>
-        </div>
-
-        <img
-          v-if="currentCombatant?.coverImageUrl"
-          class="encounter-screen__turn-cover"
-          :src="currentCombatant.coverImageUrl"
-          alt=""
-        />
-
-        <div
-          v-else-if="currentCombatant"
-          class="encounter-screen__turn-portrait"
-          :class="{ 'encounter-screen__turn-portrait--npc': currentCombatant.type === 'npc' }"
-          :style="accentStyle(currentCombatant)"
-        >
-          <img v-if="currentCombatant.avatarUrl" :src="currentCombatant.avatarUrl" alt="" />
-          <span v-else-if="currentCombatant.avatarSvg" v-html="currentCombatant.avatarSvg" />
-          <UserRound v-else :size="82" :stroke-width="1.1" aria-hidden="true" />
+          </section>
         </div>
       </section>
     </template>
+    <TransitionGroup v-if="presentation?.visible && broadcastTimers.length" name="broadcast-timer" tag="aside" class="broadcast-timers" aria-label="Таймеры">
+      <article v-for="timer in broadcastTimers" :key="timer.id" class="broadcast-timer" :class="{ 'broadcast-timer--completed': timer.completed }" :style="{ '--timer-progress': `${Math.round(timer.progress * 100)}%` }">
+        <Timer :size="19" />
+        <span><small>{{ timer.description }}</small><strong>{{ formatTimerDuration(timer.remainingMs) }}</strong></span>
+        <i aria-hidden="true"><b /></i>
+      </article>
+    </TransitionGroup>
     <div v-if="presentation?.visible && presentation.effect !== 'none'" class="presentation-effect" aria-hidden="true">
       <i v-for="index in 22" :key="index" :style="effectParticleStyle(index)" />
     </div>
@@ -199,9 +171,10 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { HeartPulse, Images, Swords, UserRound, Volume2, WifiOff } from '@lucide/vue'
+import { HeartPulse, Images, Skull, Swords, Timer, UserRound, Volume2, WifiOff } from '@lucide/vue'
 import { getPublicDisplayMusic, getPublicEncounter, getPublicPresentation } from '@/shared/api/sessionsApi'
 import { useDisplayMusic } from '@/features/sessions/composables/useDisplayMusic'
+import { formatTimerDuration, timerProgress, timerRemainingMs } from '@/features/sessions/lib/sessionTimers'
 
 const CONTROL_SYNC_INTERVAL_MS = 45_000
 const REQUEST_TIMEOUT_MS = 8_000
@@ -214,6 +187,9 @@ const presentation = ref(null)
 const loading = ref(true)
 const fatalError = ref(false)
 const pollFailed = ref(false)
+const clock = ref(Date.now())
+const serverOffsetMs = ref(0)
+const viewportWidth = ref(typeof window === 'undefined' ? 1440 : window.innerWidth)
 const displayMusic = useDisplayMusic()
 let eventSource = null
 let fallbackTimer = null
@@ -223,11 +199,35 @@ let syncing = false
 let syncPending = false
 let fallbackDelay = FALLBACK_INITIAL_MS
 let fallbackRunning = false
+let clockTimer = null
 
 const combatants = computed(() => snapshot.value?.combatants || [])
 const currentCombatant = computed(() =>
   combatants.value.find(combatant => combatant.uid === snapshot.value?.currentUid) || null
 )
+const currentIndex = computed(() => combatants.value.findIndex(combatant => combatant.uid === snapshot.value?.currentUid))
+const turnQueue = computed(() => {
+  if (!combatants.value.length) return []
+  if (currentIndex.value < 0) return combatants.value
+  return [
+    ...combatants.value.slice(currentIndex.value + 1),
+    ...combatants.value.slice(0, currentIndex.value),
+  ]
+})
+const graveyard = computed(() => snapshot.value?.graveyard || [])
+const queueSlotCount = computed(() => {
+  if (viewportWidth.value >= 1700) return 4
+  if (viewportWidth.value >= 1100) return 3
+  if (viewportWidth.value >= 720) return 2
+  return 1
+})
+const queueStackStart = computed(() => Math.max(0, queueSlotCount.value - 1))
+const queueStackCount = computed(() => Math.max(0, turnQueue.value.length - queueStackStart.value))
+const serverNow = computed(() => clock.value - serverOffsetMs.value)
+const broadcastTimers = computed(() => (presentation.value?.timers || []).map(timer => {
+  const remainingMs = timerRemainingMs(timer, serverNow.value)
+  return { ...timer, remainingMs, progress: timerProgress(timer, serverNow.value), completed: remainingMs <= 0 }
+}))
 const presentationMaterial = computed(() => presentation.value?.material || null)
 const presentationImage = computed(() => {
   const material = presentationMaterial.value
@@ -246,18 +246,19 @@ const screenClasses = computed(() => ({
   [`encounter-screen--effect-${presentation.value?.effect}`]: presentation.value?.visible && presentation.value?.effect !== 'none',
 }))
 
-const combatantCountLabel = computed(() => {
-  const count = combatants.value.length
-  const lastTwo = count % 100
-  const last = count % 10
-  if (lastTwo >= 11 && lastTwo <= 14) return 'участников'
-  if (last === 1) return 'участник'
-  if (last >= 2 && last <= 4) return 'участника'
-  return 'участников'
-})
-
 function accentStyle(combatant) {
   return combatant?.color ? { '--screen-combatant-color': combatant.color } : {}
+}
+
+function queueCardStyle(combatant, index) {
+  const style = accentStyle(combatant)
+  if (index < queueStackStart.value) return { ...style, '--queue-column': index + 1, '--queue-stack-offset': 0, '--queue-z': 100 - index }
+  return {
+    ...style,
+    '--queue-column': queueSlotCount.value,
+    '--queue-stack-offset': Math.min(index - queueStackStart.value, 4),
+    '--queue-z': 100 - index,
+  }
 }
 
 function stateStyle(state) {
@@ -268,12 +269,26 @@ function healthClass(combatant) {
   return `encounter-health--${combatant?.health?.kind || 'unknown'}`
 }
 
+function hasNumericHealth(combatant) {
+  return combatant?.health?.current != null && combatant?.health?.maximum != null
+}
+
+function healthNumbers(combatant) {
+  return `${formatHealthValue(combatant.health.current)}/${formatHealthValue(combatant.health.maximum)}`
+}
+
+function formatHealthValue(value) {
+  const number = Number(value)
+  return Number.isInteger(number) ? String(number) : number.toFixed(1)
+}
+
 async function syncScreen() {
   if (syncing) {
     syncPending = true
     return
   }
   syncing = true
+  const requestedAt = Date.now()
   requestController?.abort()
   requestController = new AbortController()
   const timeout = window.setTimeout(() => requestController?.abort(), REQUEST_TIMEOUT_MS)
@@ -285,6 +300,8 @@ async function syncScreen() {
       nextPresentation.broadcastMusic ? getPublicDisplayMusic(route.params.uuid, options) : Promise.resolve(null),
     ])
     presentation.value = nextPresentation
+    const remoteTime = Number(nextPresentation.serverTime)
+    if (Number.isFinite(remoteTime)) serverOffsetMs.value = ((requestedAt + Date.now()) / 2) - remoteTime
     if (nextPresentation.mode === 'combat') snapshot.value = nextSnapshot
     if (nextPresentation.broadcastMusic) await displayMusic.sync(nextMusic)
     else displayMusic.stop()
@@ -358,6 +375,8 @@ onMounted(() => {
   syncScreen()
   connectEvents()
   controlTimer = window.setInterval(syncScreen, CONTROL_SYNC_INTERVAL_MS)
+  clockTimer = window.setInterval(() => { clock.value = Date.now() }, 250)
+  window.addEventListener('resize', updateViewportWidth)
   document.addEventListener('visibilitychange', pollWhenVisible)
 })
 
@@ -365,10 +384,16 @@ onBeforeUnmount(() => {
   eventSource?.close()
   stopFallback()
   window.clearInterval(controlTimer)
+  window.clearInterval(clockTimer)
   requestController?.abort()
   displayMusic.dispose()
   document.removeEventListener('visibilitychange', pollWhenVisible)
+  window.removeEventListener('resize', updateViewportWidth)
 })
+
+function updateViewportWidth() {
+  viewportWidth.value = window.innerWidth
+}
 </script>
 
 <style scoped src="./styles/ViewEncounterScreen.css"></style>

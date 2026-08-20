@@ -14,6 +14,9 @@ func TestSessionPresentationSchemaKeepsMaterialsAndOneLiveState(t *testing.T) {
 		"ADD COLUMN IF NOT EXISTS material_id",
 		"CREATE TABLE IF NOT EXISTS dndshare.session_presentation_state",
 		"ADD COLUMN IF NOT EXISTS broadcast_music",
+		"ADD COLUMN IF NOT EXISTS show_health",
+		"ADD COLUMN IF NOT EXISTS show_graveyard",
+		"ADD COLUMN IF NOT EXISTS show_initiative",
 		"mode IN ('idle', 'material', 'combat')",
 		"WHERE mode = 'scene'",
 		"DROP COLUMN IF EXISTS scene_id",
@@ -63,6 +66,17 @@ func TestSessionMaterialTypesSchemaSeparatesAssetsAndWrittenContent(t *testing.T
 	} {
 		if !strings.Contains(schemaSessionMaterialTypesSQL, fragment) {
 			t.Fatalf("typed material schema must contain %q", fragment)
+		}
+	}
+}
+
+func TestSessionTimerSchemaKeepsPerTimerBroadcastFlag(t *testing.T) {
+	for _, fragment := range []string{
+		"broadcast     bool DEFAULT false NOT NULL",
+		"ADD COLUMN IF NOT EXISTS broadcast bool DEFAULT false NOT NULL",
+	} {
+		if !strings.Contains(schemaSessionTimersSQL, fragment) {
+			t.Fatalf("session timer schema must contain %q", fragment)
 		}
 	}
 }

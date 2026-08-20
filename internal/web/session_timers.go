@@ -32,6 +32,7 @@ type sessionTimerResponse struct {
 	RemainingMS int64  `json:"remainingMs"`
 	EndsAt      *int64 `json:"endsAt,omitempty"`
 	Paused      bool   `json:"paused"`
+	Broadcast   bool   `json:"broadcast"`
 	Completed   bool   `json:"completed"`
 	CreatedAt   int64  `json:"createdAt"`
 	ChangedAt   int64  `json:"changedAt"`
@@ -61,7 +62,8 @@ func projectSessionTimer(timer store.SessionTimer, now time.Time) sessionTimerRe
 	}
 	return sessionTimerResponse{
 		ID: timer.ID, Description: timer.Description, DurationMS: timer.DurationMS,
-		RemainingMS: remainingMS, EndsAt: endsAt, Paused: timer.Paused, Completed: remainingMS == 0,
+		RemainingMS: remainingMS, EndsAt: endsAt, Paused: timer.Paused,
+		Broadcast: timer.Broadcast, Completed: remainingMS == 0,
 		CreatedAt: timer.CreatedAt.UnixMilli(), ChangedAt: timer.ChangedAt.UnixMilli(),
 	}
 }
@@ -102,6 +104,7 @@ func (s *Server) handleGetSessionTimers(w http.ResponseWriter, r *http.Request) 
 type createSessionTimerRequest struct {
 	Description string `json:"description"`
 	DurationMS  int64  `json:"durationMs"`
+	Broadcast   bool   `json:"broadcast"`
 }
 
 func (s *Server) handleCreateSessionTimer(w http.ResponseWriter, r *http.Request) {
@@ -136,10 +139,13 @@ func (s *Server) handleCreateSessionTimer(w http.ResponseWriter, r *http.Request
 		conflict(w, "Сначала уберите один из активных таймеров")
 		return
 	}
-	timer, err := s.store.CreateSessionTimer(r.Context(), session.ID, req.Description, req.DurationMS)
+	timer, err := s.store.CreateSessionTimer(r.Context(), session.ID, req.Description, req.DurationMS, req.Broadcast)
 	if err != nil {
 		serverError(w, err)
 		return
+	}
+	if timer.Broadcast {
+		s.displayEvents.publish(session.ID)
 	}
 	writeSessionTimer(w, timer)
 }
@@ -225,6 +231,9 @@ func (s *Server) handleUpdateSessionTimer(w http.ResponseWriter, r *http.Request
 		}
 		return
 	}
+	if updated.Broadcast {
+		s.displayEvents.publish(session.ID)
+	}
 	writeSessionTimer(w, updated)
 }
 
@@ -241,6 +250,15 @@ func (s *Server) handleDeleteSessionTimer(w http.ResponseWriter, r *http.Request
 	if !ok {
 		return
 	}
+	current, err := s.store.GetSessionTimer(r.Context(), session.ID, timerID)
+	if err != nil {
+		if errors.Is(err, store.ErrNotFound) {
+			notFound(w, "Таймер не найден")
+		} else {
+			serverError(w, err)
+		}
+		return
+	}
 	if err := s.store.DeleteSessionTimer(r.Context(), session.ID, timerID); err != nil {
 		if errors.Is(err, store.ErrNotFound) {
 			notFound(w, "Таймер не найден")
@@ -248,6 +266,9 @@ func (s *Server) handleDeleteSessionTimer(w http.ResponseWriter, r *http.Request
 			serverError(w, err)
 		}
 		return
+	}
+	if current.Broadcast {
+		s.displayEvents.publish(session.ID)
 	}
 	writeJSON(w, http.StatusNoContent, nil)
 }

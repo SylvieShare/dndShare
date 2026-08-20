@@ -41,6 +41,12 @@
           </div>
         </fieldset>
 
+        <label class="session-timer-broadcast">
+          <input v-model="broadcast" type="checkbox" />
+          <MonitorUp :size="16" />
+          <span><strong>Показывать в трансляции</strong><small>Только для этого таймера</small></span>
+        </label>
+
         <button class="session-timer-submit" type="submit" :disabled="!canCreate || timers.creating.value">
           <Play :size="14" fill="currentColor" />
           {{ timers.creating.value ? 'Запускаем…' : 'Запустить таймер' }}
@@ -58,7 +64,7 @@
 
 <script setup>
 import { computed, ref } from 'vue'
-import { Layers3, Play, Timer, TimerReset } from '@lucide/vue'
+import { Layers3, MonitorUp, Play, Timer, TimerReset } from '@lucide/vue'
 import { BasePopover } from '@sylvieshare/share-ui'
 
 const props = defineProps({ timers: { type: Object, required: true } })
@@ -67,6 +73,7 @@ const open = ref(false)
 const description = ref('')
 const minutes = ref(5)
 const seconds = ref(0)
+const broadcast = ref(false)
 const presets = [
   { minutes: 1, label: '1 мин' },
   { minutes: 5, label: '5 мин' },
@@ -102,8 +109,9 @@ function setDuration(value) {
 async function submit() {
   if (!canCreate.value || props.timers.creating.value) return
   try {
-    await props.timers.create({ description: description.value.trim(), durationMs: durationMs.value })
+    await props.timers.create({ description: description.value.trim(), durationMs: durationMs.value, broadcast: broadcast.value })
     description.value = ''
+    broadcast.value = false
   } catch { /* the composable exposes a localized error */ }
 }
 </script>
@@ -136,6 +144,7 @@ async function submit() {
 .session-timer-menu header strong { color: var(--text-1); font-size: 13px; }
 .session-timer-menu-icon { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 9px; background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent-soft); }
 .session-timer-description { display: flex; flex-direction: column; gap: 5px; }
+.session-timer-broadcast { display: grid; grid-template-columns: auto auto minmax(0, 1fr); align-items: center; gap: 8px; padding: 9px; border: 1px solid var(--border); border-radius: 8px; background: color-mix(in srgb, var(--accent) 5%, var(--surface-raised)); color: var(--text-2); cursor: pointer; }.session-timer-broadcast input { width: 15px; height: 15px; margin: 0; accent-color: var(--accent); }.session-timer-broadcast > span { display: flex; min-width: 0; flex-direction: column; gap: 1px; }.session-timer-broadcast strong { color: var(--text-1); font-size: 10px; }.session-timer-broadcast small { color: var(--text-muted); font-size: 8px; }
 .session-timer-menu input { box-sizing: border-box; border: 1px solid var(--border); border-radius: 8px; outline: none; background: var(--surface); color: var(--text-1); font: inherit; transition: border-color .15s, box-shadow .15s; }
 .session-timer-menu input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 14%, transparent); }
 .session-timer-description input { width: 100%; padding: 9px 10px; font-size: 11px; }
