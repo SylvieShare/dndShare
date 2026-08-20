@@ -168,9 +168,10 @@ function pickPlaceholder(pick, index) {
 .choice-options:not(.choice-options--paired) .choice-option + .choice-option { margin-top: 8px; padding-top: 12px; border-top: 1px solid var(--border); }
 .choice-options--paired .choice-option:first-child { padding-right: 14px; }
 .choice-options--paired .choice-option + .choice-option { padding-left: 14px; border-left: 1px solid var(--border); }
-.choice-option-label { display: flex; align-items: flex-start; gap: 8px; color: var(--text-2); font-size: 13px; line-height: 1.35; cursor: pointer; }
+.choice-option-label { position: relative; display: flex; align-items: flex-start; gap: 8px; color: var(--text-2); font-size: 13px; line-height: 1.35; cursor: pointer; }
 .choice-option.selected .choice-option-label { color: var(--text-1); }
-.choice-option-input { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+.choice-option-input { position: absolute; z-index: 1; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.choice-option-label > span { pointer-events: none; }
 .choice-option-label:focus-within { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
 .choice-mark { flex: none; display: grid; place-items: center; color: var(--text-muted); }
 .choice-option.selected .choice-mark { color: var(--accent); }

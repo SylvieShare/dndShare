@@ -17,6 +17,9 @@ describe('starting equipment wizard flow', () => {
     expect(source).toContain('border-left: 1px solid var(--border)')
     expect(source).toContain('.choice-options:not(.choice-options--paired) .choice-option + .choice-option')
     expect(source).toContain('border-top: 1px solid var(--border)')
+    expect(source).toContain('.choice-option-label { position: relative;')
+    expect(source).toContain('inset: 0; width: 100%; height: 100%')
+    expect(source).not.toContain('clip: rect(0 0 0 0)')
     const optionRule = source.match(/\.choice-option \{([^}]*)\}/)?.[1] || ''
     expect(optionRule).not.toContain('background:')
     expect(optionRule).not.toContain('border-radius:')

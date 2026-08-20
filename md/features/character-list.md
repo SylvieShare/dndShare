@@ -140,6 +140,11 @@ row moves to the top, the other classes leave the list, and the same stable back
 scroll-restoration behaviour as the race step returns to the catalogue. Subclass
 tiles follow the same cover-only rule; `iconImageUrl` remains reserved for compact
 handbook identity surfaces and never substitutes for a wizard cover.
+At every responsive width the workspace keeps its header and footer inside the
+viewport and gives vertical scrolling exclusively to `.cc-main`; scroll chaining
+to the document is contained. Equipment-column radios occupy their visible label
+geometry, so focusing a column title cannot move the document to an off-screen
+one-pixel control.
 The selected class is followed by a separate three-paragraph lore article; the
 compact card uses `item.data.short_description` and does not repeat mechanics in
 that prose. Race and class screens share `IllustratedChoiceStage`, which owns the

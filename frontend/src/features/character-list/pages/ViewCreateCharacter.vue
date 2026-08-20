@@ -372,6 +372,8 @@ onMounted(async () => {
   min-width: 0;
   overflow-x: clip;
   overflow-y: auto;
+  overscroll-behavior-y: contain;
+  scrollbar-gutter: stable;
   padding: 4px 16px 16px;
   background: var(--bg);
 }
@@ -421,7 +423,7 @@ onMounted(async () => {
   .cc-rail { display: none; }
   .cc-main { padding-inline: 24px; }
   .cc-foot-main { padding-inline: 24px; }
-  .cc { height: auto; min-height: calc(100vh - var(--header-h)); }
+  .cc { height: calc(100vh - var(--header-h)); height: calc(100dvh - var(--header-h)); min-height: 0; }
   .cc.cc--embedded { height: 100%; min-height: 0; }
 }
 

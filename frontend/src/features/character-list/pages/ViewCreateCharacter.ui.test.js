@@ -9,4 +9,12 @@ describe('character creation workspace width', () => {
     expect(source).toContain('--cc-main-max: 1120px;')
     expect(source).toContain('grid-template-columns: 220px minmax(0, var(--cc-main-max));')
   })
+
+  it('keeps responsive scrolling inside the wizard workspace', () => {
+    expect(source).toContain('overflow-y: auto;')
+    expect(source).toContain('overscroll-behavior-y: contain;')
+    expect(source).toContain('scrollbar-gutter: stable;')
+    expect(source).toContain('height: calc(100dvh - var(--header-h)); min-height: 0;')
+    expect(source).not.toContain('.cc { height: auto;')
+  })
 })
