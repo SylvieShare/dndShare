@@ -137,10 +137,10 @@ through the spell row action menu; the row has no standalone preparation
 checkbox. A prepared spell gets two compact rounded side brackets inset from
 the row edges. They occupy reserved horizontal space and therefore shorten the
 spell content instead of sitting behind it. Each bracket ends with its rounded
-arc, with no extended or fading horizontal arm, and has a stronger central
-vertical stroke. Regular preparation uses the accent tone; permanent
-preparation uses a thicker warning-tone bracket. No botanical background asset
-is rendered.
+arc, with no extended or fading horizontal arm. Its entire side edge is thicker
+than the top and bottom edges, without a separate central stripe. Regular
+preparation uses the accent tone; permanent preparation uses a thicker
+warning-tone bracket. No botanical background asset is rendered.
 `always_prepared` represents an archetype/domain spell learned for good: it
 always implies `prepared`, is excluded from the ordinary prepared-spell total,
 uses a richer vine print in the warning tone and can be assigned or removed
