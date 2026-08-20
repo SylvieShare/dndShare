@@ -47,22 +47,31 @@ CREATE TABLE IF NOT EXISTS dndshare.session_presentation_state (
     material_id int8 NULL REFERENCES dndshare.session_material(id) ON DELETE SET NULL,
     broadcast_music bool DEFAULT false NOT NULL,
     show_health bool DEFAULT false NOT NULL,
+    health_display varchar(16) DEFAULT 'numbers' NOT NULL,
     show_graveyard bool DEFAULT false NOT NULL,
-    show_initiative bool DEFAULT true NOT NULL,
     effect     varchar(24) DEFAULT 'none' NOT NULL,
     transition varchar(16) DEFAULT 'fade' NOT NULL,
     revision   int8 DEFAULT 0 NOT NULL,
     changed_at timestamptz DEFAULT now() NOT NULL,
     CONSTRAINT session_presentation_state_pk PRIMARY KEY (session_id),
     CONSTRAINT session_presentation_mode_check CHECK (mode IN ('idle', 'material', 'combat')),
+    CONSTRAINT session_presentation_health_display_check CHECK (health_display IN ('numbers', 'words')),
     CONSTRAINT session_presentation_effect_check CHECK (effect IN ('none', 'rain', 'fog', 'embers', 'snow', 'storm')),
     CONSTRAINT session_presentation_transition_check CHECK (transition IN ('cut', 'fade'))
 );
 ALTER TABLE dndshare.session_presentation_state
     ADD COLUMN IF NOT EXISTS broadcast_music bool DEFAULT false NOT NULL,
     ADD COLUMN IF NOT EXISTS show_health bool DEFAULT false NOT NULL,
-    ADD COLUMN IF NOT EXISTS show_graveyard bool DEFAULT false NOT NULL,
-    ADD COLUMN IF NOT EXISTS show_initiative bool DEFAULT true NOT NULL;
+    ADD COLUMN IF NOT EXISTS health_display varchar(16) DEFAULT 'numbers' NOT NULL,
+    ADD COLUMN IF NOT EXISTS show_graveyard bool DEFAULT false NOT NULL;
+
+UPDATE dndshare.session_presentation_state
+SET health_display = 'numbers'
+WHERE health_display NOT IN ('numbers', 'words');
+ALTER TABLE dndshare.session_presentation_state DROP CONSTRAINT IF EXISTS session_presentation_health_display_check;
+ALTER TABLE dndshare.session_presentation_state ADD CONSTRAINT session_presentation_health_display_check
+    CHECK (health_display IN ('numbers', 'words'));
+ALTER TABLE dndshare.session_presentation_state DROP COLUMN IF EXISTS show_initiative;
 
 UPDATE dndshare.session_presentation_state
 SET mode = 'idle', visible = true, material_id = NULL,

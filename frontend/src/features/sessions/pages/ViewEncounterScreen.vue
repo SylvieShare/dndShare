@@ -65,7 +65,7 @@
       </div>
       <p class="encounter-screen__empty-label">Все готово</p>
       <h2>Ожидаем начала боя</h2>
-      <span>Инициатива появится здесь автоматически.</span>
+      <span>Очередь появится здесь автоматически.</span>
     </section>
 
     <template v-else-if="presentation?.visible && presentation.mode === 'combat' && snapshot?.active">
@@ -90,12 +90,9 @@
                 <h2>{{ currentCombatant.name }}</h2>
               </div>
               <div class="encounter-screen__turn-meta">
-                <span v-if="presentation.showHealth && hasNumericHealth(currentCombatant)" class="encounter-health" :class="healthClass(currentCombatant)">
+                <span v-if="presentation.showHealth" class="encounter-health" :class="healthClass(currentCombatant)">
                   <HeartPulse :size="18" aria-hidden="true" />
-                  {{ healthNumbers(currentCombatant) }} HP
-                </span>
-                <span v-if="presentation.showInitiative && currentCombatant.initiative != null" class="turn-spotlight__initiative">
-                  Инициатива {{ currentCombatant.initiative }}
+                  {{ healthDisplayText(currentCombatant) }}
                 </span>
                 <span v-for="state in currentCombatant.states" :key="state.name" class="encounter-state" :style="stateStyle(state)">{{ state.name }}</span>
                 <span v-if="currentCombatant.surprised && snapshot.round === 0" class="encounter-state">Врасплох</span>
@@ -123,15 +120,9 @@
                   <img v-if="combatant.avatarUrl" :src="combatant.avatarUrl" alt="" />
                   <span v-else-if="combatant.avatarSvg" v-html="combatant.avatarSvg" />
                   <UserRound v-else :size="45" :stroke-width="1.15" aria-hidden="true" />
+                  <span v-if="combatant.markerLetter" class="initiative-card__corner-marker">{{ combatant.markerLetter }}</span>
                 </div>
-                <div class="initiative-card__body">
-                  <div class="initiative-card__name">
-                    <span v-if="combatant.markerLetter" class="creature-marker">{{ combatant.markerLetter }}</span>
-                    <strong>{{ combatant.name }}</strong>
-                  </div>
-                  <small v-if="presentation.showInitiative && combatant.initiative != null">Инициатива {{ combatant.initiative }}</small>
-                  <span v-if="presentation.showHealth && hasNumericHealth(combatant)" class="encounter-health" :class="healthClass(combatant)">{{ healthNumbers(combatant) }} HP</span>
-                </div>
+                <span v-if="presentation.showHealth" class="encounter-health initiative-card__health" :class="healthClass(combatant)">{{ healthDisplayText(combatant) }}</span>
                 <span v-if="queueStackCount > 1 && index === queueStackStart" class="initiative-card__stack-count">+{{ queueStackCount - 1 }}</span>
               </li>
             </TransitionGroup>
@@ -276,6 +267,13 @@ function hasNumericHealth(combatant) {
 
 function healthNumbers(combatant) {
   return `${formatHealthValue(combatant.health.current)}/${formatHealthValue(combatant.health.maximum)}`
+}
+
+function healthDisplayText(combatant) {
+  if (presentation.value?.healthDisplay === 'numbers' && hasNumericHealth(combatant)) {
+    return `${healthNumbers(combatant)} HP`
+  }
+  return combatant?.health?.label || 'Неизвестно'
 }
 
 function formatHealthValue(value) {

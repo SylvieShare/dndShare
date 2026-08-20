@@ -29,8 +29,11 @@ describe('session presentation workspace', () => {
     expect(control).toContain('Затемнить')
     expect(control).toContain('Эффект на экране игроков')
     expect(control).toContain('Показывать здоровье')
+    expect(control).toContain('Числа')
+    expect(control).toContain('Словами')
     expect(control).toContain('Показывать кладбище')
-    expect(control).toContain('Показывать инициативу')
+    expect(control).not.toContain('Показывать инициативу')
+    expect(presentationState).toContain("healthDisplay: 'numbers'")
     expect(workspace).toContain('Транслировать')
   })
 

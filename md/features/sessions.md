@@ -795,14 +795,18 @@ visible browser tab also requests a fresh snapshot. In combat the active player
 or NPC occupies a compact `4:3` card on the left with full artwork and a blurred
 lower info layer; neither it nor the queue cards stretch to the screen height.
 Above it, the compact cyclic queue spans the full screen width and begins after
-the active turn; its smaller creature icons use a full uncropped fit. Overflow
+the active turn. Each queue tile is vertical: a smaller full-fit creature icon
+with health below it, no name and no initiative value. An NPC letter is centered
+on the icon's upper-right corner in its assigned color. Overflow
 shares the final right-hand slot as a visible stack. On turn change the
 active card exits left, the next one expands, and the combatant that just acted
-appears at the queue tail. NPC letters are emphasized before names in their
-assigned colors. Optional persisted display flags expose numeric current/max HP,
-initiative values and a separate graveyard. The graveyard groups dead NPCs by
+appears at the queue tail. NPC letters remain emphasized before names on the
+active card. A persisted health setting can show either numeric current/max HP
+or the worded bands `Здоров`, `Ранен`, `При смерти`; another flag enables a
+separate graveyard. The graveyard groups dead NPCs by
 bestiary type and shows one entry with a count. Health numbers are omitted from
-the public DTO while their flag is disabled. A failed refresh keeps the last
+the public DTO unless health is enabled in numeric mode. Initiative values are
+not included in the public projection. A failed refresh keeps the last
 successful snapshot visible and marks the connection as interrupted.
 
 The authenticated session page owns one typed SSE invalidation stream for the
@@ -831,7 +835,8 @@ The public endpoint builds a dedicated projection on the server rather than
 returning raw encounter or character JSON. It may resolve the session owner's
 referenced custom bestiary entries and condition suggestions, but exposes only
 their display fields and condition label/color. Exact current/max HP is projected
-only when the master enables it; character sheets, AC, notes and challenge
+only when the master enables health in numeric mode; character sheets,
+initiative values, AC, notes and challenge
 results remain private.
 
 The encounter never embeds `itemRaw` and does not read denormalized NPC fields.

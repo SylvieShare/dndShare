@@ -278,8 +278,8 @@ type sessionPresentationRequest struct {
 	MaterialID     *int64 `json:"materialId"`
 	BroadcastMusic bool   `json:"broadcastMusic"`
 	ShowHealth     bool   `json:"showHealth"`
+	HealthDisplay  string `json:"healthDisplay"`
 	ShowGraveyard  bool   `json:"showGraveyard"`
-	ShowInitiative bool   `json:"showInitiative"`
 	Effect         string `json:"effect"`
 	Transition     string `json:"transition"`
 }
@@ -333,9 +333,13 @@ func (s *Server) handleSaveSessionPresentation(w http.ResponseWriter, r *http.Re
 		badRequest(w, "Некорректный эффект показа")
 		return
 	}
+	if req.HealthDisplay != "numbers" && req.HealthDisplay != "words" {
+		badRequest(w, "Некорректный формат здоровья")
+		return
+	}
 	state, err := s.store.SaveSessionPresentation(
 		r.Context(), session.ID, req.Mode, visible, req.MaterialID, req.BroadcastMusic,
-		req.ShowHealth, req.ShowGraveyard, req.ShowInitiative, req.Effect, req.Transition,
+		req.ShowHealth, req.HealthDisplay, req.ShowGraveyard, req.Effect, req.Transition,
 	)
 	if err != nil {
 		serverError(w, err)
@@ -352,8 +356,8 @@ type publicPresentationResponse struct {
 	Material       *publicPresentationMaterial `json:"material,omitempty"`
 	BroadcastMusic bool                        `json:"broadcastMusic"`
 	ShowHealth     bool                        `json:"showHealth"`
+	HealthDisplay  string                      `json:"healthDisplay"`
 	ShowGraveyard  bool                        `json:"showGraveyard"`
-	ShowInitiative bool                        `json:"showInitiative"`
 	Timers         []sessionTimerResponse      `json:"timers"`
 	ServerTime     int64                       `json:"serverTime"`
 	Effect         string                      `json:"effect"`
@@ -394,7 +398,7 @@ func (s *Server) handleGetPublicPresentation(w http.ResponseWriter, r *http.Requ
 	response := publicPresentationResponse{
 		SessionName: session.Name, Mode: state.Mode, Visible: state.Visible,
 		BroadcastMusic: state.BroadcastMusic, ShowHealth: state.ShowHealth,
-		ShowGraveyard: state.ShowGraveyard, ShowInitiative: state.ShowInitiative,
+		HealthDisplay: state.HealthDisplay, ShowGraveyard: state.ShowGraveyard,
 		Timers: []sessionTimerResponse{}, ServerTime: time.Now().UnixMilli(),
 		Effect: state.Effect, Transition: state.Transition, Revision: state.Revision,
 	}

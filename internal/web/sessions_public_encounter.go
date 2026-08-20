@@ -37,7 +37,7 @@ type publicEncounterCombatant struct {
 	CoverImageURL *string                `json:"coverImageUrl,omitempty"`
 	Color         *string                `json:"color,omitempty"`
 	MarkerLetter  *string                `json:"markerLetter,omitempty"`
-	Initiative    *int                   `json:"initiative,omitempty"`
+	Initiative    *int                   `json:"-"`
 	Side          string                 `json:"side"`
 	Surprised     bool                   `json:"surprised"`
 	Health        publicEncounterHealth  `json:"health"`
@@ -173,12 +173,13 @@ func (s *Server) handleGetPublicEncounter(w http.ResponseWriter, r *http.Request
 	}
 
 	combatants := make([]publicEncounterCombatant, 0, len(encounter.Combatants))
+	showHealthNumbers := presentation.ShowHealth && presentation.HealthDisplay == "numbers"
 	for _, raw := range encounter.Combatants {
 		if raw.Position != "combat" {
 			continue
 		}
 		combatants = append(combatants, buildPublicCombatant(
-			raw, participantsByID[raw.CharID], itemsByID, statesByID, encounter.Round, presentation.ShowHealth,
+			raw, participantsByID[raw.CharID], itemsByID, statesByID, encounter.Round, showHealthNumbers,
 		))
 	}
 	sort.SliceStable(combatants, func(i, j int) bool {
@@ -276,7 +277,7 @@ func buildPublicCombatant(raw rawPublicCombatant, participant store.SessionParti
 		result.AvatarURL = participantAvatar(participant)
 		result.Color = participant.Color
 		current, maximum, known := participantHP(participant)
-		result.Health = encounterHealth(current, maximum, known, false, showHealth)
+		result.Health = encounterHealth(current, maximum, known, showHealth)
 		stateIDs = participantStateIDs(participant)
 	} else {
 		var item store.Item
@@ -293,7 +294,7 @@ func buildPublicCombatant(raw rawPublicCombatant, participant store.SessionParti
 		if raw.HPCurrent != nil {
 			current = *raw.HPCurrent
 		}
-		result.Health = encounterHealth(current, maximum, maximum > 0, true, showHealth)
+		result.Health = encounterHealth(current, maximum, maximum > 0, showHealth)
 		result.turnEligible = result.turnEligible && current > 0
 		stateIDs = raw.States
 	}
@@ -308,9 +309,9 @@ func buildPublicCombatant(raw rawPublicCombatant, participant store.SessionParti
 	return result
 }
 
-func encounterHealth(current, maximum float64, known, npc, showNumbers bool) publicEncounterHealth {
+func encounterHealth(current, maximum float64, known, showNumbers bool) publicEncounterHealth {
 	if !known || maximum <= 0 {
-		return publicEncounterHealth{Kind: "unknown", Label: "Состояние неизвестно"}
+		return publicEncounterHealth{Kind: "unknown", Label: "Неизвестно"}
 	}
 	health := publicEncounterHealth{}
 	if showNumbers {
@@ -318,11 +319,7 @@ func encounterHealth(current, maximum float64, known, npc, showNumbers bool) pub
 		health.Maximum = &maximum
 	}
 	if current <= 0 {
-		if npc {
-			health.Kind, health.Label = "down", "Повержен"
-			return health
-		}
-		health.Kind, health.Label = "down", "Без сознания"
+		health.Kind, health.Label = "down", "При смерти"
 		return health
 	}
 	ratio := current / maximum
@@ -334,7 +331,7 @@ func encounterHealth(current, maximum float64, known, npc, showNumbers bool) pub
 		health.Kind, health.Label = "wounded", "Ранен"
 		return health
 	}
-	health.Kind, health.Label = "critical", "Критически ранен"
+	health.Kind, health.Label = "critical", "При смерти"
 	return health
 }
 

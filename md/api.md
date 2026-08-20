@@ -241,8 +241,8 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
   player-screen projection;
 - `GET|PUT /api/sessions/{uuid}/presentation` reads or replaces the owner-only
   live player-display state
-  `{mode,visible,materialId,broadcastMusic,showHealth,showGraveyard,
-  showInitiative,effect,transition}`.
+  `{mode,visible,materialId,broadcastMusic,showHealth,healthDisplay,
+  showGraveyard,effect,transition}`. `healthDisplay` is `numbers` or `words`.
   Modes are `idle`, `material`, `combat`; effects are `none`, `rain`,
   `fog`, `embers`, `snow`, `storm`; transitions are `cut` or `fade`. An explicit
   `idle,visible:true` is the cleared dotted canvas, while `visible:false` is the
@@ -253,7 +253,7 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
 - `GET /api/public/sessions/{uuid}/presentation` is the anonymous no-store safe
   projection used by `/screen/:uuid`; its material projection exposes only
   `{id,kind,name,caption,content,noteStyle,assetUrl}` required for playback. It
-  also returns the three combat display flags, `serverTime` and only the timers
+  also returns the combat display settings, `serverTime` and only the timers
   whose individual `broadcast` flag is enabled;
 - `GET /api/public/sessions/{uuid}/presentation/events` is the anonymous SSE
   invalidation stream. Events contain no session data: each `refresh` tells the
@@ -265,12 +265,13 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
   and queued track IDs/URLs. Personal tracks are checked against the session owner;
 - `GET /api/public/sessions/{uuid}/encounter` is the anonymous, no-store TV
   projection of the current fight. It returns only the session name, round,
-  current turn and initiative-ordered combatants with presentation fields,
+  current turn and server-ordered combatants with presentation fields,
   resolved conditions and a worded health band. When enabled by the presentation
-  state, health also contains `current/maximum` and `graveyard` contains dead NPC
+  state in `numbers` mode, health also contains `current/maximum`; `graveyard`
+  contains dead NPC
   groups by bestiary type. Bestiary combatants also expose `coverImageUrl` for
-  the current-turn artwork. It never returns character sheets, AC, notes or
-  encounter challenge results;
+  the current-turn artwork. Initiative values, character sheets, AC, notes and
+  encounter challenge results are never returned;
 - `GET|POST /api/sessions/{uuid}/events` reads and appends the session timeline.
   The read endpoint accepts `after` and `limit`; the write endpoint accepts
   `{type,action,data,actorCharUuid?,actorName?,visibility?,clientActionId?}`. The server

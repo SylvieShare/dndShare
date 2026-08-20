@@ -4,7 +4,7 @@ import { getSessionPresentation, getSessionPresentationConnections, saveSessionP
 export function useSessionPresentation({ sessionUuid, materials }) {
   const state = ref({
     mode: 'idle', visible: false, broadcastMusic: false,
-    showHealth: false, showGraveyard: false, showInitiative: true,
+    showHealth: false, healthDisplay: 'numbers', showGraveyard: false,
     effect: 'none', transition: 'fade', revision: 0,
   })
   const loading = ref(false)
@@ -60,8 +60,8 @@ export function useSessionPresentation({ sessionUuid, materials }) {
         ...payload,
         broadcastMusic: payload.broadcastMusic ?? state.value.broadcastMusic ?? false,
         showHealth: payload.showHealth ?? state.value.showHealth ?? false,
+        healthDisplay: payload.healthDisplay ?? state.value.healthDisplay ?? 'numbers',
         showGraveyard: payload.showGraveyard ?? state.value.showGraveyard ?? false,
-        showInitiative: payload.showInitiative ?? state.value.showInitiative ?? true,
       })
       return state.value
     } catch {
@@ -89,12 +89,17 @@ export function useSessionPresentation({ sessionUuid, materials }) {
     [key]: !!enabled,
     materialId: state.value.materialId || null,
   })
+  const setHealthDisplay = healthDisplay => save({
+    ...state.value,
+    healthDisplay,
+    materialId: state.value.materialId || null,
+  })
 
   return {
     state, loading, saving, error, activeLabel,
     connectedScreens, connectionsLoading, connectionsError,
     load, loadConnections, setConnectedScreens,
-    save, showMaterial, showCombat, blackout, reveal, clear, setEffect, setBroadcastMusic, setDisplayOption,
+    save, showMaterial, showCombat, blackout, reveal, clear, setEffect, setBroadcastMusic, setDisplayOption, setHealthDisplay,
     materialById: materials?.byId,
   }
 }

@@ -40,15 +40,38 @@
         </label>
         <section class="presentation-display-settings">
           <h3>Информация в бою</h3>
-          <label v-for="option in displayOptions" :key="option.key" class="presentation-setting-toggle">
+          <div class="presentation-health-setting">
+            <label class="presentation-setting-toggle presentation-health-setting__toggle">
+              <input
+                type="checkbox"
+                :checked="presentation.state.value.showHealth"
+                :disabled="presentation.saving.value"
+                @change="toggleDisplayOption('showHealth', $event)"
+              />
+              <HeartPulse :size="17" />
+              <span><strong>Показывать здоровье</strong><small>Состояние участников на экране</small></span>
+            </label>
+            <div class="presentation-health-mode" aria-label="Формат здоровья">
+              <button
+                v-for="option in healthDisplayOptions"
+                :key="option.key"
+                type="button"
+                :class="{ active: presentation.state.value.healthDisplay === option.key }"
+                :aria-pressed="presentation.state.value.healthDisplay === option.key"
+                :disabled="presentation.saving.value"
+                @click="setHealthDisplay(option.key)"
+              >{{ option.label }}</button>
+            </div>
+          </div>
+          <label class="presentation-setting-toggle">
             <input
               type="checkbox"
-              :checked="presentation.state.value[option.key]"
+              :checked="presentation.state.value.showGraveyard"
               :disabled="presentation.saving.value"
-              @change="toggleDisplayOption(option.key, $event)"
+              @change="toggleDisplayOption('showGraveyard', $event)"
             />
-            <component :is="option.icon" :size="17" />
-            <span><strong>{{ option.label }}</strong><small>{{ option.description }}</small></span>
+            <Skull :size="17" />
+            <span><strong>Показывать кладбище</strong><small>Поверженные существа по типам</small></span>
           </label>
         </section>
         <section>
@@ -65,7 +88,7 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue'
-import { ExternalLink, HeartPulse, ListOrdered, MonitorUp, Moon, Skull, Square, Sun, Volume2 } from '@lucide/vue'
+import { ExternalLink, HeartPulse, MonitorUp, Moon, Skull, Square, Sun, Volume2 } from '@lucide/vue'
 import { BasePopover } from '@sylvieshare/share-ui'
 
 const props = defineProps({
@@ -79,10 +102,9 @@ const effects = [
   { key: 'fog', label: 'Туман' }, { key: 'embers', label: 'Искры' },
   { key: 'snow', label: 'Снег' }, { key: 'storm', label: 'Гроза' },
 ]
-const displayOptions = [
-  { key: 'showHealth', label: 'Показывать здоровье', description: 'Текущие и максимальные HP числом', icon: HeartPulse },
-  { key: 'showGraveyard', label: 'Показывать кладбище', description: 'Поверженные существа по типам', icon: Skull },
-  { key: 'showInitiative', label: 'Показывать инициативу', description: 'Значения инициативы в очереди', icon: ListOrdered },
+const healthDisplayOptions = [
+  { key: 'numbers', label: 'Числа' },
+  { key: 'words', label: 'Словами' },
 ]
 const hasConnectedScreens = computed(() => props.presentation.connectedScreens.value > 0)
 const connectionLabel = computed(() => {
@@ -105,6 +127,7 @@ watch(open, value => { if (value) props.presentation.loadConnections() })
 async function run(action, close = true) { await action().catch(() => {}); if (close) open.value = false }
 function toggleMusic(event) { run(() => props.presentation.setBroadcastMusic(event.target.checked), false) }
 function toggleDisplayOption(key, event) { run(() => props.presentation.setDisplayOption(key, event.target.checked), false) }
+function setHealthDisplay(mode) { run(() => props.presentation.setHealthDisplay(mode), false) }
 </script>
 
 <style scoped>
@@ -113,6 +136,7 @@ function toggleDisplayOption(key, event) { run(() => props.presentation.setDispl
 .presentation-connection { display: grid; grid-template-columns: 8px minmax(0, 1fr) auto; align-items: center; gap: 9px; margin: -3px 3px 0; padding: 8px 9px; border: 1px solid var(--border); border-radius: 8px; background: color-mix(in srgb, var(--text-on-accent) 3%, transparent); }.presentation-connection-pulse { width: 7px; height: 7px; border-radius: 50%; background: var(--text-muted); }.presentation-connection > span:not(.presentation-connection-pulse) { min-width: 0; display: flex; flex-direction: column; gap: 2px; }.presentation-connection strong { color: var(--text-2); font-size: 10px; }.presentation-connection small { color: var(--text-muted); font-size: 8px; line-height: 1.35; }.presentation-connection b { min-width: 22px; color: var(--success); font-size: 15px; text-align: right; }.presentation-connection--online { border-color: color-mix(in srgb, var(--success) 32%, var(--border)); background: color-mix(in srgb, var(--success) 7%, transparent); }.presentation-connection--online .presentation-connection-pulse { background: var(--success); box-shadow: 0 0 8px var(--success); animation: presentation-connection-pulse 2s ease-in-out infinite; }.presentation-connection--online strong { color: var(--text-1); }.presentation-connection--error:not(.presentation-connection--online) .presentation-connection-pulse { background: var(--warning); }
 .presentation-menu-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px; }.presentation-menu button { min-height: 32px; display: flex; align-items: center; justify-content: center; gap: 6px; border: 1px solid var(--border); border-radius: 7px; background: var(--surface-raised); color: var(--text-2); cursor: pointer; font: inherit; font-size: 10px; }.presentation-menu button:hover { border-color: var(--accent); color: var(--text-1); }.presentation-menu button.primary { border-color: var(--accent); background: var(--accent); color: var(--text-on-accent); }
 .presentation-setting-toggle { display: grid; grid-template-columns: auto auto minmax(0, 1fr); align-items: center; gap: 8px; padding: 9px; border: 1px solid var(--border); border-radius: 8px; background: color-mix(in srgb, var(--accent) 5%, var(--surface-raised)); color: var(--text-2); cursor: pointer; }.presentation-setting-toggle:hover { border-color: color-mix(in srgb, var(--accent) 60%, var(--border)); }.presentation-setting-toggle input { width: 15px; height: 15px; margin: 0; accent-color: var(--accent); }.presentation-setting-toggle > span { min-width: 0; display: flex; flex-direction: column; gap: 1px; }.presentation-setting-toggle strong { color: var(--text-1); font-size: 10px; }.presentation-setting-toggle small { color: var(--text-muted); font-size: 8px; }
+.presentation-health-setting { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: stretch; border: 1px solid var(--border); border-radius: 8px; background: color-mix(in srgb, var(--accent) 5%, var(--surface-raised)); }.presentation-health-setting:hover { border-color: color-mix(in srgb, var(--accent) 60%, var(--border)); }.presentation-health-setting__toggle { border: 0; background: transparent; }.presentation-health-setting__toggle:hover { border-color: transparent; }.presentation-health-mode { display: grid; grid-template-columns: repeat(2, auto); align-items: center; gap: 3px; padding: 6px; }.presentation-menu .presentation-health-mode button { min-height: 26px; padding: 4px 7px; font-size: 8px; }.presentation-menu .presentation-health-mode button.active { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 18%, var(--surface-raised)); color: var(--accent-soft); }.presentation-menu .presentation-health-mode button:disabled { cursor: default; opacity: .42; }
 .presentation-menu section { display: flex; flex-direction: column; gap: 5px; }.presentation-menu h3 { margin: 0 5px 2px; }.presentation-effects { display: flex; flex-wrap: wrap; gap: 4px; }.presentation-effects button { min-height: 27px; padding: 4px 8px; }.presentation-effects button.active { border-color: var(--accent); color: var(--accent-soft); }.presentation-menu-error { color: var(--danger); font-size: 9px; }
 @keyframes presentation-connection-pulse { 50% { opacity: .45; } }
 @media (prefers-reduced-motion: reduce) { .presentation-connection--online .presentation-connection-pulse { animation: none; } }

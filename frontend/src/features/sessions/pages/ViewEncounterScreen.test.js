@@ -25,10 +25,12 @@ describe('public encounter portraits', () => {
     expect(initiativeStyles).toContain('background: transparent;')
   })
 
-  it('places emphasized colored creature letters before names', () => {
+  it('keeps emphasized colored creature letters by active names and on queue portrait corners', () => {
     expect(pageSource).toContain('class="creature-marker"')
-    expect(pageSource).toContain('<strong>{{ combatant.name }}</strong>')
+    expect(pageSource).toContain('class="initiative-card__corner-marker"')
+    expect(pageSource).not.toContain('<strong>{{ combatant.name }}</strong>')
     expect(initiativeStyles).toContain('.creature-marker {')
+    expect(initiativeStyles).toContain('transform: translate(50%, -50%);')
     expect(initiativeStyles).toContain('var(--screen-combatant-color)')
   })
 })
@@ -49,7 +51,10 @@ describe('public encounter composition', () => {
     expect(initiativeStyles).toContain('grid-template-columns: minmax(0, 1fr);')
     expect(initiativeStyles).toContain('grid-row: 1;')
     expect(initiativeStyles).toContain('grid-row: 2;')
-    expect(initiativeStyles).toContain('.initiative-card__portrait img { object-fit: contain; }')
+    expect(initiativeStyles).toContain('.initiative-card__portrait img {')
+    expect(initiativeStyles).toContain('object-fit: contain;')
+    expect(initiativeStyles).toContain('flex-direction: column;')
+    expect(pageSource).toContain('class="encounter-health initiative-card__health"')
     expect(pageSource).toContain('if (viewportWidth.value >= 1800) return 6')
   })
 
@@ -62,9 +67,12 @@ describe('public encounter composition', () => {
     expect(initiativeStyles).not.toContain('.initiative-card::after')
   })
 
-  it('supports optional numeric health, initiative, graveyard and public timers', () => {
+  it('supports optional numeric or worded health, graveyard and public timers without initiative', () => {
     expect(pageSource).toContain('presentation.showHealth')
-    expect(pageSource).toContain('presentation.showInitiative')
+    expect(pageSource).toContain("presentation.value?.healthDisplay === 'numbers'")
+    expect(pageSource).toContain("combatant?.health?.label || 'Неизвестно'")
+    expect(pageSource).not.toContain('presentation.showInitiative')
+    expect(pageSource).not.toContain('Инициатива')
     expect(pageSource).toContain('presentation.showGraveyard')
     expect(pageSource).toContain('class="encounter-graveyard"')
     expect(pageSource).toContain('class="broadcast-timers"')
