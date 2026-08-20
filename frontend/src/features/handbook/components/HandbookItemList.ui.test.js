@@ -29,6 +29,8 @@ describe('handbook list controls', () => {
     expect(controls).toContain('hasFilterValues(f) || hasItemFilterOptions(f)')
     expect(controls).toContain('v-for="group in contentSourceGroups"')
     expect(controls).toContain('groupContentSources(props.contentSources)')
+    expect(source).toContain(':popover-z-index="popoverZIndex"')
+    expect(controls.match(/:z-index="popoverZIndex"/g)).toHaveLength(2)
   })
 
   it('uses the shared rich row for armor with AC, material class and price', () => {

@@ -41,6 +41,7 @@
             :content-source-ids="contentSourceIds"
             :filtered="isFiltered"
             :search-placeholder="searchPlaceholder"
+            :popover-z-index="zIndex + 10"
             show-controls
             class="picker-list"
             @select="selectedItem = $event"

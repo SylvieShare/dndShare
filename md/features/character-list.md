@@ -241,6 +241,11 @@ Key rules:
 - resets and incomplete-create decisions use shared `ConfirmDialog`;
 - the draft persists in `localStorage` and is cleared after successful create.
 
+Handbook item pickers opened from the character sheet reuse the full collection
+controls. Their teleported schema-filter and content-source popovers inherit a
+layer just above the picker modal, rather than the global page-popover default,
+so both menus remain visible and interactive over fullscreen item search.
+
 Race and class rows include visual artwork; the class result block records the
 resolved class choices below the controls. Handbook equipment rows can open
 their full item card. Skill choices use description tooltips; spell tiles show

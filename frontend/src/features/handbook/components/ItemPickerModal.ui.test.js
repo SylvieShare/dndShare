@@ -14,6 +14,7 @@ describe('handbook item picker controls', () => {
     expect(source).toContain('walkFieldsWithPath(itemType.value?.fields || [])')
     expect(source).toContain('@update:group-by="groupBy = $event"')
     expect(source).toContain('contentSourceIds')
+    expect(source).toContain(':popover-z-index="zIndex + 10"')
   })
 
   it('loads the full catalogue before grouping', () => {

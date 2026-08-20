@@ -47,7 +47,7 @@
           <span v-if="activeFilterCount" class="col-filter-count">{{ activeFilterCount }}</span>
         </button>
 
-        <BasePopover v-model:open="filterOpen" :anchor="filterBtnRef" placement="bottom-end" :min-width="300">
+        <BasePopover v-model:open="filterOpen" :anchor="filterBtnRef" placement="bottom-end" :min-width="300" :z-index="popoverZIndex">
           <div class="col-filter-body">
           <div class="col-filter-head">
             <span class="col-filter-head-title">Фильтр</span>
@@ -106,7 +106,7 @@
           <span v-if="activeContentSourceCount" class="col-filter-count">{{ activeContentSourceCount }}</span>
         </button>
 
-        <BasePopover v-model:open="contentSourceFilterOpen" :anchor="contentSourceBtnRef" placement="bottom-end" :min-width="300">
+        <BasePopover v-model:open="contentSourceFilterOpen" :anchor="contentSourceBtnRef" placement="bottom-end" :min-width="300" :z-index="popoverZIndex">
           <div class="col-filter-body">
           <div class="col-filter-head">
             <span class="col-filter-head-title">Источники</span>
@@ -168,6 +168,7 @@ const props = defineProps({
   showIdentity: { type: Boolean, default: true },
   showControls: { type: Boolean, default: true },
   searchPlaceholder: { type: String, default: '' },
+  popoverZIndex: { type: Number, default: 200 },
 })
 
 const emit = defineEmits(['add', 'update:search', 'update:group-by', 'update:filters', 'update:content-source-ids'])

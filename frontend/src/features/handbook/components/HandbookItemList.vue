@@ -17,6 +17,7 @@
         :has-more="hasMore"
         :filtered="filtered"
         :search-placeholder="searchPlaceholder"
+        :popover-z-index="popoverZIndex"
         :show-identity="false"
         class="list-collection-controls"
         @update:search="$emit('update:search', $event)"
@@ -157,6 +158,7 @@ const props = defineProps({
   contentSourceIds: { type: Array, default: () => [] },
   filtered: { type: Boolean, default: false },
   searchPlaceholder: { type: String, default: '' },
+  popoverZIndex: { type: Number, default: 200 },
 })
 
 const emit = defineEmits([
