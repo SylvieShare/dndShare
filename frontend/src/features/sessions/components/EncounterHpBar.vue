@@ -54,8 +54,8 @@
         v-if="canEdit"
         type="button"
         class="enc-graveyard-btn enc-revive-btn"
-        title="Воскресить с полными хитами"
-        @click="enc.reviveCombatant(combatant)"
+        title="Воскресить"
+        @click="enc.requestRevive(combatant)"
       >Воскресить</button>
     </div>
   </div>

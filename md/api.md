@@ -327,6 +327,10 @@ use `{sceneId,fromItemId,toItemId,label}`. Each transition may only connect
 nodes of one parent canvas. Reordering arcs accepts `{ids:[...]}` containing
 every arc exactly once; response order becomes the new automatic numbering.
 
+Timer countdowns can be shortened through
+`PATCH /api/sessions/{uuid}/timers/{timerId}/subtract` with `{amountMs}`; the
+server clamps the remaining duration at zero.
+
 Точные routes находятся в `internal/web/sessions.go`,
 `internal/web/session_scenes.go`, `internal/web/session_scene_graph.go`,
 `internal/web/session_world.go`, `internal/web/session_presentation.go`,

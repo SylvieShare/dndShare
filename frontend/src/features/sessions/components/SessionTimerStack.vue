@@ -30,6 +30,8 @@
           {{ timer.paused ? 'Продолжить' : 'Пауза' }}
         </button>
         <span class="session-timer-actions-spacer" />
+        <button v-if="!timer.completed" type="button" :disabled="timers.isPending(timer.id)" @click="run(() => timers.subtractTime(timer.id, 300_000))">−5 мин</button>
+        <button v-if="!timer.completed" type="button" :disabled="timers.isPending(timer.id)" @click="run(() => timers.subtractTime(timer.id, 60_000))">−1 мин</button>
         <button type="button" :disabled="timers.isPending(timer.id)" @click="run(() => timers.addTime(timer.id, 60_000))">+1 мин</button>
         <button type="button" :disabled="timers.isPending(timer.id)" @click="run(() => timers.addTime(timer.id, 300_000))">+5 мин</button>
       </div>

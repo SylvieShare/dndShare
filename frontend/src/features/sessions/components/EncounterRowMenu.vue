@@ -56,7 +56,7 @@
       <RowActionItem
         v-if="canRevive"
         action="revive"
-        @click="enc.reviveCombatant(combatant); close()"
+        @click="enc.requestRevive(combatant); close()"
       >Воскресить</RowActionItem>
       <RowActionItem
         v-if="canDelete"
@@ -92,7 +92,7 @@ const canRerollHp = computed(() =>
   isNpc.value && props.section !== 'combat' && !!enc.npcHpFormula(props.combatant)
 )
 const canDelete = computed(() => isNpc.value)
-const canRevive = computed(() => props.section === 'dead')
+const canRevive = computed(() => props.section === 'dead' && enc.canEditPlayerHp())
 
 const cloneCount = ref(1)
 const menuRef = ref(null)

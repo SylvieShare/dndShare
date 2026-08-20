@@ -3,6 +3,7 @@ import {
   createSessionTimer,
   deleteSessionTimer,
   getSessionTimers,
+  subtractSessionTimerTime,
   updateSessionTimer,
 } from '@/shared/api/sessionsApi'
 import { timerProgress, timerRemainingMs } from '@/features/sessions/lib/sessionTimers'
@@ -108,6 +109,26 @@ export function useSessionTimers({ sessionUuid }) {
   const resume = timerId => mutate(timerId, { action: 'resume' })
   const addTime = (timerId, amountMs) => mutate(timerId, { action: 'add', amountMs })
 
+  async function subtractTime(timerId, amountMs) {
+    if (pendingIds.value.has(timerId)) return null
+    pendingIds.value = new Set([...pendingIds.value, timerId])
+    error.value = ''
+    const requestedAt = Date.now()
+    try {
+      const response = await subtractSessionTimerTime(sessionUuid, timerId, amountMs)
+      replaceTimer(response.timer)
+      syncClock(response.serverTime, requestedAt)
+      return response.timer
+    } catch (reason) {
+      error.value = reason?.message || 'Не удалось уменьшить таймер'
+      throw reason
+    } finally {
+      const next = new Set(pendingIds.value)
+      next.delete(timerId)
+      pendingIds.value = next
+    }
+  }
+
   async function remove(timerId) {
     if (pendingIds.value.has(timerId)) return
     pendingIds.value = new Set([...pendingIds.value, timerId])
@@ -136,6 +157,6 @@ export function useSessionTimers({ sessionUuid }) {
 
   return {
     timers, displayed, completedCount, loading, creating, pendingIds, error,
-    load, create, pause, resume, addTime, remove, isPending, dispose,
+    load, create, pause, resume, addTime, subtractTime, remove, isPending, dispose,
   }
 }

@@ -39,29 +39,21 @@
 
           <div class="p-info">
             <div class="p-name">{{ displayName }}</div>
-            <div v-if="who" class="p-who">{{ who }}</div>
+            <div v-if="who && !isDead" class="p-who">{{ who }}</div>
 
             <template v-if="showHp">
               <template v-if="isDead">
                 <div class="ds-row">
-                  <span class="ds-label">Смерть</span>
-                  <span class="ds-group">
-                    <span
-                      v-for="i in 3"
-                      :key="'s' + i"
-                      class="ds-pip ds-success"
-                      :class="{ filled: i <= hp.ds_success }"
-                    />
-                  </span>
-                  <span class="ds-sep">/</span>
-                  <span class="ds-group">
-                    <span
-                      v-for="i in 3"
-                      :key="'f' + i"
-                      class="ds-pip ds-failure"
-                      :class="{ filled: i <= hp.ds_failure }"
-                    />
-                  </span>
+                  <span class="ds-label">При смерти</span>
+                  <span class="ds-counts">(✓ {{ hp.ds_success }} / ✕ {{ hp.ds_failure }})</span>
+                  <button
+                    v-if="isDm"
+                    type="button"
+                    class="ds-revive"
+                    title="Воскресить игрока"
+                    aria-label="Воскресить игрока"
+                    @click.stop="$emit('revive')"
+                  ><HeartPulse :size="14" /></button>
                 </div>
               </template>
 
@@ -131,7 +123,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { Palette } from '@lucide/vue'
+import { HeartPulse, Palette } from '@lucide/vue'
 import { BaseTile } from '@sylvieshare/share-ui'
 import { ColorPresetPicker } from '@sylvieshare/share-ui'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
@@ -158,7 +150,7 @@ const props = defineProps({
   combatCurrent: { type: Boolean, default: false },
   combatEditable: { type: Boolean, default: false },
 })
-const emit = defineEmits(['view', 'kick', 'color', 'drag-start', 'update:combat-selected', 'update:initiative'])
+const emit = defineEmits(['view', 'kick', 'color', 'revive', 'drag-start', 'update:combat-selected', 'update:initiative'])
 
 const REORDER_IGNORE = 'button, input, textarea, select, a, [contenteditable="true"], .p-combat-controls'
 
@@ -422,7 +414,7 @@ const participantTileStyle = computed(() => ({
 .ds-row {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   margin-top: 5px;
 }
 
@@ -434,32 +426,22 @@ const participantTileStyle = computed(() => ({
   flex-shrink: 0;
 }
 
-.ds-group {
-  display: flex;
-  gap: 3px;
+.ds-counts { overflow: hidden; color: var(--text-muted); font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
+
+.ds-revive {
+  width: 24px;
+  height: 24px;
+  display: grid;
+  flex: 0 0 24px;
+  place-items: center;
+  margin-left: auto;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--success) 42%, var(--border));
+  border-radius: 7px;
+  background: color-mix(in srgb, var(--success) 11%, transparent);
+  color: var(--success);
+  cursor: pointer;
 }
 
-.ds-pip {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  border: 1px solid var(--surface-active);
-  background: transparent;
-  transition: background 0.15s, border-color 0.15s;
-}
-
-.ds-pip.ds-success.filled {
-  background: var(--success);
-  border-color: var(--success);
-}
-
-.ds-pip.ds-failure.filled {
-  background: var(--danger);
-  border-color: var(--danger);
-}
-
-.ds-sep {
-  font-size: 10px;
-  color: var(--text-muted);
-}
+.ds-revive:hover { border-color: var(--success); background: color-mix(in srgb, var(--success) 18%, transparent); }
 </style>

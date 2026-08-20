@@ -9,7 +9,6 @@ export function useEncounterFlow({
   selectedUids,
   unselect,
   rollInitiativeFor,
-  npcHpMax,
 }) {
   function setInitiative(c, val) {
     mutate(() => {
@@ -158,16 +157,14 @@ export function useEncounterFlow({
     unselect(c.uid)
   }
 
-  function reviveCombatant(c) {
+  function reviveCombatant(c, hpAmount) {
+    const revivedHp = Math.max(1, Math.floor(Number(hpAmount) || 1))
     mutate(() => {
       const t = getCombatant(c.uid)
       if (!t) return
       if (t.position === 'dead') t.position = 'reserve'
       if (t.type === 'npc') {
-        if (!t.hpCurrent || t.hpCurrent <= 0) {
-          const max = npcHpMax ? npcHpMax(t) : 0
-          t.hpCurrent = Math.max(1, Number(max) || 1)
-        }
+        t.hpCurrent = revivedHp
         t.hpDsSuccess = 0
         t.hpDsFailure = 0
       }

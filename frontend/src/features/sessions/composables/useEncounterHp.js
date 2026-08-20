@@ -202,6 +202,20 @@ export function useEncounterHp({
     await charactersApi.patchData(p.charUuid, updates)
   }
 
+  async function revivePlayer(c, hpAmount) {
+    const p = findParticipant(c.charId)
+    if (!p) throw new Error('Игрок не найден')
+    const hpPath = pvHpPath(p)
+    if (!hpPath) throw new Error('У персонажа нет блока HP')
+    const updates = [
+      { path: `${hpPath}.current`,    value: Math.max(1, Math.floor(Number(hpAmount) || 1)) },
+      { path: `${hpPath}.ds_success`, value: 0 },
+      { path: `${hpPath}.ds_failure`, value: 0 },
+    ]
+    await charactersApi.patchData(p.charUuid, updates)
+    applyLocalPatches(c.charId, updates)
+  }
+
   function npcHpFormula(c) {
     return resolveNpcHpFormula ? resolveNpcHpFormula(c) : ''
   }
@@ -253,6 +267,7 @@ export function useEncounterHp({
     onNpcDsChange,
     onPlayerHpChange,
     onPlayerDsChange,
+    revivePlayer,
     npcHpFormula,
     rollNpcHpFromFormula,
   }

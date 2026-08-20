@@ -413,6 +413,9 @@ shortcuts ignore key repeats, text inputs, content-editable fields, open dialogs
 and popovers. The only text-input exception is `↑` / `↓` in a session catalogue
 search field, where the keys navigate the currently filtered rows.
 
+Master timer cards also provide `−1 мин` and `−5 мин` controls. Subtraction is
+persisted on the server and clamps the remaining countdown at zero.
+
 Combat uses the same contextual shortcut system. `Shift+B` opens or closes the
 combat workspace for any participant and preserves the chapter/scenario context
 of the visible story canvas. Its session-header tab represents workspace
@@ -641,7 +644,10 @@ explicitly selected participant color for players or `iconColor` for NPCs; rows
 without an assigned color have no strip in either combat or the NPC reserve.
 NPC artwork uses its native 64×64 geometry and is centered vertically while
 player portraits retain their compact framed crop. Session dice pass the default accent color
-explicitly to every `SystemDie`.
+explicitly to every `SystemDie`. Master rolls made from the session dice panel
+enable critical presentation for d20 only: a kept natural 20 shows the shared
+critical-success visual, while a kept natural 1 shows the shared critical-failure
+visual, including advantage and disadvantage rolls.
 
 While combat is active, the DM header has a group-challenge action. It opens a
 compact setup popover with one of the six D&D abilities and a saving-throw
@@ -829,7 +835,12 @@ batch-loads referenced handbook items through `/api/items/by-ids`.
 
 Player display and HP come through `participantView`. HP writes use the
 accessor's canonical `hpPath`; current/temp HP and death saves are patched back
-to the character only when the current user may perform the action.
+to the character only when the current user may perform the action. A player at
+zero HP is summarized in the participant rail as `При смерти` with compact
+success/failure counts instead of death-save pips. The DM can start revival from
+that tile. Every player or NPC revival action first asks for the resulting HP;
+player HP and cleared death saves are patched to the character, while NPC HP is
+stored in encounter state.
 The player color marker is read from `session_participant`, not copied into the
 encounter combatant, so changing it is reflected across every encounter section.
 

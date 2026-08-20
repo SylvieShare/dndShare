@@ -28,6 +28,9 @@ import { useSuggestStore } from '@/stores/suggest'
 
 export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRollNpcHp }) {
   const encounter = ref({ active: false, round: 0, turnIndex: 0, combatants: [] })
+  const reviveTarget = ref(null)
+  const reviveSaving = ref(false)
+  const reviveError = ref('')
   const loaded = ref(false)
   const persistence = useEncounterPersistence({
     source: encounter,
@@ -209,8 +212,47 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
     selectedUids: selection.selectedUids,
     unselect: selection.unselect,
     rollInitiativeFor,
-    npcHpMax: npcData.npcHpMax,
   })
+
+  const reviveTargetName = computed(() => {
+    const target = reviveTarget.value
+    if (!target) return ''
+    return target.type === 'player' ? playerDisplayName(target) : npcData.npcName(target)
+  })
+  const reviveTargetMaxHp = computed(() => {
+    const target = reviveTarget.value
+    return target ? Math.max(0, Number(hp.hpParts(target).max) || 0) : 0
+  })
+
+  function requestRevive(c) {
+    if (!hp.canEditPlayerHp()) return
+    const target = c?.uid ? getCombatant(c.uid) : null
+    if (!target) return
+    reviveError.value = ''
+    reviveTarget.value = target
+  }
+
+  function cancelRevive() {
+    if (reviveSaving.value) return
+    reviveTarget.value = null
+    reviveError.value = ''
+  }
+
+  async function confirmRevive(hpAmount) {
+    const target = reviveTarget.value
+    if (!target || reviveSaving.value) return
+    reviveSaving.value = true
+    reviveError.value = ''
+    try {
+      if (target.type === 'player') await hp.revivePlayer(target, hpAmount)
+      flow.reviveCombatant(target, hpAmount)
+      reviveTarget.value = null
+    } catch (reason) {
+      reviveError.value = reason?.message || 'Не удалось воскресить участника'
+    } finally {
+      reviveSaving.value = false
+    }
+  }
 
   const sortable = useSortable({
     groups: {
@@ -312,6 +354,14 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
   return {
     encounter,
     load,
+    reviveTarget,
+    reviveTargetName,
+    reviveTargetMaxHp,
+    reviveSaving,
+    reviveError,
+    requestRevive,
+    cancelRevive,
+    confirmRevive,
     loadError: persistence.loadError,
     saveError: persistence.saveError,
     inCombat,
@@ -423,6 +473,5 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
     sendSelectedTo:         flow.sendSelectedTo,
     sendToReserve:          flow.sendToReserve,
     sendToGraveyard:        flow.sendToGraveyard,
-    reviveCombatant:        flow.reviveCombatant,
   }
 }

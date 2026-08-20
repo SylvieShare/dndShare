@@ -50,7 +50,16 @@ describe('SessionParticipantCard actions', () => {
     expect(source).toContain('<ColorPresetPicker')
     expect(source).toContain('@update:model-value="color => assignColor(color, closeColor)"')
     expect(source).toMatch(/v-if="isDm"[\s\S]*?action="kick"[\s\S]*?>\{\{ kickPending \? 'Исключение…' : 'Выгнать' \}\}<\/RowActionItem>/)
-    expect(source).toContain("defineEmits(['view', 'kick', 'color', 'drag-start', 'update:combat-selected', 'update:initiative'])")
+    expect(source).toContain("defineEmits(['view', 'kick', 'color', 'revive', 'drag-start', 'update:combat-selected', 'update:initiative'])")
+  })
+
+  it('shows a compact near-death summary and a DM revive action', () => {
+    expect(source).toContain('<span class="ds-label">При смерти</span>')
+    expect(source).toContain('(✓ {{ hp.ds_success }} / ✕ {{ hp.ds_failure }})')
+    expect(source).toContain('aria-label="Воскресить игрока"')
+    expect(source).toContain('@click.stop="$emit(\'revive\')"')
+    expect(source).not.toContain('class="ds-pip')
+    expect(source).not.toContain('v-for="i in 3"')
   })
 
   it('uses the whole non-interactive card area as the drag handle', () => {

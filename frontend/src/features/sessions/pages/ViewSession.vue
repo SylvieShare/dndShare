@@ -11,6 +11,17 @@
       @cancel="pendingKick = null"
     />
 
+    <EncounterReviveModal
+      v-if="encounter.reviveTarget"
+      :key="encounter.reviveTarget.uid"
+      :name="encounter.reviveTargetName"
+      :max-hp="encounter.reviveTargetMaxHp"
+      :saving="encounter.reviveSaving"
+      :error="encounter.reviveError"
+      @close="encounter.cancelRevive"
+      @confirm="encounter.confirmRevive"
+    />
+
     <SessionEditModal
       v-if="editOpen && session"
       :session="session"
@@ -185,6 +196,7 @@
             @view="openParticipant"
             @color="setParticipantColor"
             @kick="requestKickParticipant"
+            @revive="encounter.requestRevive(encounterPlayer(p.charId))"
             @drag-start="startParticipantDrag($event, p, participantIndex)"
             @update:combat-selected="setEncounterPlayerSelected(p.charId, $event)"
             @update:initiative="setEncounterPlayerInitiative(p.charId, $event)"
@@ -248,6 +260,7 @@ import CharacterCreateWizardModal from '@/features/character-list/components/Cha
 import CharacterSheetModal from '@/features/sessions/components/CharacterSheetModal.vue'
 import ChapterGraphTab from '@/features/sessions/components/ChapterGraphTab.vue'
 import DicePanel from '@/features/sessions/components/DicePanel.vue'
+import EncounterReviveModal from '@/features/sessions/components/EncounterReviveModal.vue'
 import MusicPanel from '@/features/sessions/components/MusicPanel.vue'
 import SessionEventsPanel from '@/features/sessions/components/SessionEventsPanel.vue'
 import SessionEditModal from '@/features/sessions/components/SessionEditModal.vue'

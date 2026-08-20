@@ -143,7 +143,8 @@ function viewCombatant(combatant) {
 }
 
 function restoreCombatant(combatant) {
-  enc.reviveCombatant(combatant)
+  enc.requestRevive(combatant)
+  open.value = false
   selectedUid.value = null
 }
 

@@ -100,6 +100,10 @@ export function updateSessionTimer(uuid, timerId, data) {
   return fetchPatch(`/sessions/${uuid}/timers/${timerId}`, data)
 }
 
+export function subtractSessionTimerTime(uuid, timerId, amountMs) {
+  return fetchPatch(`/sessions/${uuid}/timers/${timerId}/subtract`, { amountMs })
+}
+
 export function deleteSessionTimer(uuid, timerId) {
   return fetchDelete(`/sessions/${uuid}/timers/${timerId}`)
 }

@@ -21,6 +21,8 @@ const encounterControlsSource = readFileSync(fileURLToPath(new URL('../component
 const encounterMarkerSource = readFileSync(fileURLToPath(new URL('../components/EncounterMarkerMenu.vue', import.meta.url)), 'utf8')
 const encounterMenuSource = readFileSync(fileURLToPath(new URL('../components/EncounterRowMenu.vue', import.meta.url)), 'utf8')
 const encounterFlowSource = readFileSync(fileURLToPath(new URL('../composables/useEncounterFlow.js', import.meta.url)), 'utf8')
+const encounterHpSource = readFileSync(fileURLToPath(new URL('../composables/useEncounterHp.js', import.meta.url)), 'utf8')
+const reviveModalSource = readFileSync(fileURLToPath(new URL('../components/EncounterReviveModal.vue', import.meta.url)), 'utf8')
 const encounterStatesSource = readFileSync(fileURLToPath(new URL('../composables/useEncounterStates.js', import.meta.url)), 'utf8')
 const encounterTransitionSource = readFileSync(fileURLToPath(new URL('../composables/useEncounterCombatTransition.js', import.meta.url)), 'utf8')
 const encounterChallengeSource = readFileSync(fileURLToPath(new URL('../composables/useEncounterChallenge.js', import.meta.url)), 'utf8')
@@ -212,6 +214,26 @@ describe('ViewSession participant rail', () => {
   it('uses the opened character sheet as the actor for session dice rolls', () => {
     expect(source).toContain('watch(sheetUuid, actorUuid => {')
     expect(source).toContain('sessionEventsStore.setActor(actorUuid, sessionUuid)')
+  })
+
+  it('shows critical success and failure visuals for master d20 rolls', () => {
+    expect(dicePanelSource).toContain("{ crit_mode: sides === 20 }")
+    expect(dicePanelSource).toContain('outcome: d20Outcome(sides, winner)')
+    expect(dicePanelSource).toContain("if (value === 20) return { kind: 'crit', sides, value }")
+    expect(dicePanelSource).toContain("if (value === 1) return { kind: 'fumble', sides, value }")
+  })
+
+  it('asks for HP before reviving players and NPCs', () => {
+    expect(source).toContain('<EncounterReviveModal')
+    expect(source).toContain('@revive="encounter.requestRevive(encounterPlayer(p.charId))"')
+    expect(reviveModalSource).toContain('Укажите количество HP после воскрешения')
+    expect(reviveModalSource).toContain('submit-text="Воскресить"')
+    expect(encounterComposableSource).toContain('async function confirmRevive(hpAmount)')
+    expect(encounterComposableSource).toContain("if (target.type === 'player') await hp.revivePlayer(target, hpAmount)")
+    expect(encounterFlowSource).toContain('function reviveCombatant(c, hpAmount)')
+    expect(encounterHpSource).toContain('async function revivePlayer(c, hpAmount)')
+    expect(graveyardSource).toContain('enc.requestRevive(combatant)')
+    expect(encounterMenuSource).toContain('enc.requestRevive(combatant); close()')
   })
 
   it('animates displayed rolls on every viewport and cleans up popup timers', () => {
