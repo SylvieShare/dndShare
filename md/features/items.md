@@ -105,6 +105,10 @@ entries and selected choices.
   artwork. Cover height is a per-handbook-type presentation profile without a
   shared maximum: the default follows the asset's intrinsic ratio, while a type
   may opt into a minimum height without branching the header;
+- spell details with a cover use a `300px` minimum `5:2` profile. Casting time,
+  range and duration are three local translucent cards along the bottom of the
+  artwork and are omitted from the content below; spells without a cover keep
+  the compact metadata row in their normal content;
 - bestiary details use a `440px` minimum cover profile. Their identity, source,
   tags, CR/AC/HP/proficiency, speeds and all six ability modifiers are rendered
   in the header summary slot. The cover itself is not dimmed: the title uses a
@@ -433,7 +437,7 @@ detail header, not enlarged icons. The icon remains the compact identity mark;
 a cover adds setting, energy and color while preserving readable UI overlay
 space. Bestiary covers are the explicit 4:3 exception defined above.
 
-- Store an opaque lossy WebP at exactly `1536×384` (4:1), normally no more
+- Store an opaque lossy WebP at exactly `1600×640` (5:2), normally no more
   than 350 KB. Do not use alpha for a full-bleed scene.
 - Keep the dominant motif inside the central 50–60% safe zone. Both outer
   edges must be expendable so responsive `object-fit: cover; object-position:
@@ -443,8 +447,8 @@ space. Bestiary covers are the explicit 4:3 exception defined above.
   while sharing its palette and semantic motif; avoid photorealism.
 - Reserve a calmer, darker lower band for the title and controls. Do not bake
   in text, letters, numbers, logos, watermarks, borders, badges or UI frames.
-- Inspect the final asset at 4:1 on desktop and mobile. Only the spell header
-  reserves 4:1 before the file loads; other item types use their intrinsic ratio
+- Inspect the final asset at 5:2 on desktop and mobile. Only the spell header
+  reserves 5:2 before the file loads; other item types use their intrinsic ratio
   unless their own profile declares one. There is no shared maximum height.
   Cover minimum height is configured per handbook type rather than imposed globally.
   The bestiary profile has a `440px` minimum and may grow to fit its combat

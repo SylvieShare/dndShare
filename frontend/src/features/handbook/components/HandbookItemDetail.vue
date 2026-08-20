@@ -12,6 +12,9 @@
         <template v-else-if="isArmor" #summary>
           <ArmorDetailSummary :item="item" />
         </template>
+        <template v-else-if="isSpellCovered" #summary>
+          <SpellDetailSummary :item="item" />
+        </template>
         <template v-else-if="isTransport" #summary>
           <TransportDetailSummary :item="item" />
         </template>
@@ -140,6 +143,7 @@ import GearDetailSummary from '@/features/items/detail-components/GearDetailSumm
 import ItemDetailContent from '@/features/items/detail-components/ItemDetailContent'
 import PotionDetailContent from '@/features/items/detail-components/PotionDetailContent'
 import SpellDetailContent from '@/features/items/detail-components/SpellDetailContent'
+import SpellDetailSummary from '@/features/items/detail-components/SpellDetailSummary.vue'
 import TransportDetailContent from '@/features/items/detail-components/TransportDetailContent'
 import TransportDetailSummary from '@/features/items/detail-components/TransportDetailSummary.vue'
 import WeaponDetailContent from '@/features/items/detail-components/WeaponDetailContent'
@@ -175,13 +179,16 @@ const customRenderer = computed(() => CUSTOM_RENDERERS[props.type?.id] || null)
 const isEnemy = computed(() => props.type?.id === 6)
 const isWeapon = computed(() => props.type?.id === 1)
 const isArmor = computed(() => props.type?.id === 12)
+const isSpellCovered = computed(() => props.type?.id === 5 && Boolean(props.item?.coverImageUrl))
 const isTransport = computed(() => props.type?.id === 13)
 const isShopGearCovered = computed(() => props.type?.id === 2
   && props.item?.data?.available_in_starting_shop === true
   && Boolean(props.item?.coverImageUrl))
-const customRendererProps = computed(() => props.type?.id === 2
-  ? { economyInHeader: isShopGearCovered.value }
-  : {})
+const customRendererProps = computed(() => {
+  if (props.type?.id === 2) return { economyInHeader: isShopGearCovered.value }
+  if (props.type?.id === 5) return { summaryInHeader: isSpellCovered.value }
+  return {}
+})
 const itemSourceLabel = computed(() => {
   const sources = (props.item?.contentSources || [])
     .map(source => source.code || source.name)

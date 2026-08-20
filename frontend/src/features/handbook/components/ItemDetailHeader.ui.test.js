@@ -19,6 +19,8 @@ const transportSummaryStyles = read('../../items/detail-components/styles/Transp
 const transportContentSource = read('../../items/detail-components/TransportDetailContent.vue')
 const gearSummarySource = read('../../items/detail-components/GearDetailSummary.vue')
 const gearContentSource = read('../../items/detail-components/ItemDetailContent.vue')
+const spellSummarySource = read('../../items/detail-components/SpellDetailSummary.vue')
+const spellContentSource = read('../../items/detail-components/SpellDetailContent.vue')
 
 describe('handbook item detail cover', () => {
   it('uses the intrinsic cover ratio without a shared maximum height', () => {
@@ -36,7 +38,7 @@ describe('handbook item detail cover', () => {
   })
 
   it('preloads and quickly crossfades covers without resetting bestiary geometry', () => {
-    expect(headerSource).toContain("if (typeId === 5) return '4 / 1'")
+    expect(headerSource).toContain("if (typeId === 5) return '5 / 2'")
     expect(headerSource).toContain("if (typeId === 1 || typeId === 6 || typeId === 12) return '4 / 3'")
     expect(headerSource).toContain("return ''")
     expect(headerSource).toContain('const image = new Image()')
@@ -46,6 +48,18 @@ describe('handbook item detail cover', () => {
     expect(headerSource).toContain('animation: item-detail-cover-enter 160ms')
     expect(headerSource).toContain('@media (prefers-reduced-motion: reduce)')
     expect(headerSource).not.toContain("coverAspectRatio.value = '4 / 1'")
+  })
+
+  it('gives covered spells a 5:2 showcase with time, range and duration cards', () => {
+    expect(headerSource).toContain("5: {\n    '--cover-min-height': '300px'")
+    expect(headerSource).toContain("if (typeId === 5) return '5 / 2'")
+    expect(detailSource).toContain('<SpellDetailSummary :item="item" />')
+    expect(detailSource).toContain('summaryInHeader: isSpellCovered.value')
+    expect(spellSummarySource).toContain('grid-template-columns: repeat(3, minmax(0, 1fr));')
+    expect(spellSummarySource).toContain('Время')
+    expect(spellSummarySource).toContain('Дистанция')
+    expect(spellSummarySource).toContain('Длительность')
+    expect(spellContentSource).toContain('!summaryInHeader && (data.time || data.range || data.duration)')
   })
 
   it('gives armor a 4:3 object showcase with side stats and a bottom requirement rail', () => {

@@ -15,7 +15,7 @@
       <span v-if="data.ritual" class="sdc-pill sdc-pill-ritual">Ритуал</span>
     </div>
 
-    <div v-if="data.time || data.range || data.duration" class="sdc-meta-row">
+    <div v-if="!summaryInHeader && (data.time || data.range || data.duration)" class="sdc-meta-row">
       <div v-if="data.time" class="sdc-meta-cell">
         <img class="sdc-meta-icon" :src="iconUrls.time" alt="" aria-hidden="true" />
         <span class="sdc-meta-val">{{ data.time }}</span>
@@ -69,6 +69,7 @@ const props = defineProps({
   item: { type: Object, required: true },
   type: { type: Object, default: null },
   showTitle: { type: Boolean, default: true },
+  summaryInHeader: { type: Boolean, default: false },
 })
 
 const { suggestItems } = useSchemaSuggests(() => props.type)
