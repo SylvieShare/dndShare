@@ -22,8 +22,8 @@ defineProps({
   mask-position: right center;
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
-  -webkit-mask-size: 100% 100%;
-  mask-size: 100% 100%;
+  -webkit-mask-size: contain;
+  mask-size: contain;
 }
 
 .prepared-spell-vine-permanent {

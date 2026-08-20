@@ -28,6 +28,10 @@ export function spellSummary(item) {
   return sentence.length > 96 ? sentence.slice(0, 93).trim() + '...' : sentence
 }
 
+export function countsTowardPreparation(spellRef, level) {
+  return Number(level) > 0 && !!spellRef?.prepared && !spellRef?.always_prepared
+}
+
 export function groupTitle(level) {
   if (level === 0) return 'Заговоры · неогр.'
   if (level == null || level < 0) return 'Без уровня'

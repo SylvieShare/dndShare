@@ -8,7 +8,7 @@ describe('prepared spell vine artwork', () => {
   it('uses separate generated monochrome masks for both preparation states', () => {
     expect(source).toContain("url('/static/spells/prepared-vine.png')")
     expect(source).toContain("url('/static/spells/permanent-vine.png')")
-    expect(source).toContain('mask-size: 100% 100%')
+    expect(source).toContain('mask-size: contain')
     expect(source).not.toContain('<svg')
   })
 })

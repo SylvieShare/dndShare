@@ -137,11 +137,12 @@ through the spell row action menu; the row has no standalone preparation
 checkbox. A prepared spell gets a monochrome accent vine in the right-side
 background. The regular and permanent ornaments are generated transparent PNG
 masks, intentionally wide and heavy enough to remain legible at row height;
-CSS supplies their theme-aware color. `always_prepared` represents an
-archetype/domain spell learned for good: it always implies `prepared`, uses a
-richer vine print in the warning tone and can be assigned or removed separately
-through the same menu. Granted archetype spells receive this status during
-creation and level-up.
+CSS preserves their source aspect ratio and supplies their theme-aware color.
+`always_prepared` represents an archetype/domain spell learned for good: it
+always implies `prepared`, is excluded from the ordinary prepared-spell total,
+uses a richer vine print in the warning tone and can be assigned or removed
+separately through the same menu. Granted archetype spells receive this status
+during creation and level-up.
 
 `internal/store/schema/03_characters.sql` migrates existing rows before HTTP
 start and removes the old keys. Components neither recognize nor write previous

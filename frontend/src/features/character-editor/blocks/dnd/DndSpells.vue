@@ -101,7 +101,7 @@ import SpellSlotsBar from '@/features/character-editor/blocks/dnd/components/Spe
 import { BaseTile } from '@sylvieshare/share-ui'
 import { useSpellCalc } from '@/features/character-editor/blocks/dnd/composables/useSpellCalc'
 import { useSpellSlots } from '@/features/character-editor/blocks/dnd/composables/useSpellSlots'
-import { SPELL_LEVELS, formatBonus, groupTitle, spellSummary } from '@/features/character-editor/blocks/dnd/lib/spellEntry'
+import { SPELL_LEVELS, countsTowardPreparation, formatBonus, groupTitle, spellSummary } from '@/features/character-editor/blocks/dnd/lib/spellEntry'
 import { availableSpellSlotLevels as availableSlotLevels } from '@/features/character-editor/blocks/dnd/lib/spellUse'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
@@ -182,7 +182,7 @@ const spellsByLevel = computed(() => {
     level,
     items,
     preparedCount: Number(level) > 0
-      ? items.filter(entry => entry.ref.prepared || entry.ref.always_prepared).length
+      ? items.filter(entry => countsTowardPreparation(entry.ref, level)).length
       : 0,
   }))
 })
