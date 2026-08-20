@@ -15,7 +15,12 @@ describe('SessionParticipantCard actions', () => {
     expect(source).toContain('<RowActionMenu>')
     expect(source).toContain('<template #trigger>')
     expect(source).toContain(':style="participantAvatarStyle"')
-    expect(source).toContain("borderColor: props.participant.color || 'transparent'")
+    expect(source).toContain(':style="participantTileStyle"')
+    expect(source).toContain("'--participant-color': props.participant.color || 'transparent'")
+    expect(source).not.toContain("borderColor: props.participant.color || 'transparent'")
+    expect(source).toContain('inset 0 0 18px color-mix(in srgb, var(--participant-color) 28%, transparent),')
+    expect(source).toContain('inset 0 0 0 1px var(--border);')
+    expect(source).not.toContain('border: 2px solid transparent;')
   })
 
   it('makes the action trigger and participant tile span the whole rail', () => {

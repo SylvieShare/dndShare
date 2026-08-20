@@ -16,6 +16,7 @@
             'p-card--reorderable': reorderEnabled,
           }"
           :title="compact ? displayName : undefined"
+          :style="participantTileStyle"
           interactive
         >
           <EncounterCombatControls
@@ -235,7 +236,9 @@ const avatarColor = computed(() => {
 
 const participantAvatarStyle = computed(() => ({
   background: avaUrl.value ? 'transparent' : avatarColor.value,
-  borderColor: props.participant.color || 'transparent',
+}))
+const participantTileStyle = computed(() => ({
+  '--participant-color': props.participant.color || 'transparent',
 }))
 </script>
 
@@ -250,7 +253,10 @@ const participantAvatarStyle = computed(() => ({
   padding: 12px;
   overflow: hidden;
   user-select: none;
-  transition: height 0.42s cubic-bezier(0.22, 1, 0.36, 1), gap 0.42s cubic-bezier(0.22, 1, 0.36, 1), padding 0.42s cubic-bezier(0.22, 1, 0.36, 1), background 0.18s, border-color 0.18s;
+  box-shadow:
+    inset 0 0 18px color-mix(in srgb, var(--participant-color) 28%, transparent),
+    inset 0 0 0 1px var(--border);
+  transition: height 0.42s cubic-bezier(0.22, 1, 0.36, 1), gap 0.42s cubic-bezier(0.22, 1, 0.36, 1), padding 0.42s cubic-bezier(0.22, 1, 0.36, 1), background 0.18s, border-color 0.18s, box-shadow 0.18s;
 }
 
 .p-card--compact { height: 48px; gap: 0; padding: 6px; justify-content: center; }
@@ -280,7 +286,10 @@ const participantAvatarStyle = computed(() => ({
 .p-card--current {
   background: color-mix(in srgb, var(--accent) 11%, var(--surface));
   border-color: color-mix(in srgb, var(--accent) 42%, var(--border));
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 10%, transparent);
+  box-shadow:
+    inset 0 0 18px color-mix(in srgb, var(--participant-color) 28%, transparent),
+    inset 0 0 0 1px var(--border),
+    0 0 0 2px color-mix(in srgb, var(--accent) 10%, transparent);
 }
 
 .p-card-menu {
@@ -318,9 +327,6 @@ const participantAvatarStyle = computed(() => ({
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  box-sizing: border-box;
-  border: 2px solid transparent;
-  transition: border-color 0.15s ease;
 }
 
 .ava-img {
