@@ -9,11 +9,25 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4V2M15 16v-2M8 9h2M20 9h2M17.8 11.8L19 13M17.8 6.2L19 5M3 21l9-9M12.2 6.2L11 5" /></svg>
           Создание персонажа
         </div>
+        <button class="cc-mobile-reset" title="Начать создание сначала" @click="resetOpen = true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5" /></svg>
+          <span>Сбросить</span>
+        </button>
       </div>
     </header>
 
     <div class="cc-body">
-      <CreateStepRail class="cc-rail" :steps="steps" :current="current" :reachable="maxReachable" @go="goTo" />
+      <CreateStepRail
+        class="cc-rail"
+        :steps="steps"
+        :current="current"
+        :reachable="maxReachable"
+        :show-incomplete="!isFullyValid"
+        :creating="creating"
+        @go="goTo"
+        @reset="resetOpen = true"
+        @create-incomplete="createIncomplete"
+      />
 
       <main ref="mainRef" class="cc-main" :class="{ 'cc-main--invalid': invalidPulse }">
         <transition name="cc-fade" mode="out-in">
@@ -25,10 +39,7 @@
     <footer class="cc-foot">
       <div class="cc-foot-main">
         <button class="btn ghost" @click="back">{{ current === 0 ? 'Отмена' : 'Назад' }}</button>
-        <button class="btn reset" title="Начать создание сначала" @click="resetOpen = true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5" /></svg>
-          Сбросить
-        </button>
+        <button v-if="!isFullyValid" class="btn incomplete-mobile" :disabled="creating" @click="createIncomplete">Создать неполноценного</button>
         <span v-if="error" class="cc-error" role="alert">{{ error }}</span>
         <span v-else-if="blockReason && !isLast" class="cc-reason">{{ blockReason }}</span>
         <div class="cc-actions">
@@ -209,6 +220,7 @@ function validateStep(key) {
 const validation = computed(() => validateStep(stepKey.value))
 const canNext = computed(() => validation.value.ok)
 const blockReason = computed(() => (validation.value.ok ? '' : validation.value.reason))
+const isFullyValid = computed(() => steps.value.every((step) => validateStep(step.key).ok))
 
 // Furthest step the user may jump to via the rail: the first invalid step (which
 // still needs filling), or the last step when everything so far is valid. Going
@@ -258,6 +270,15 @@ function createNow() {
   }
   if (isComplete.value) submit()
   else confirmOpen.value = true
+}
+
+function createIncomplete() {
+  if (creating.value) return
+  if (accountStore.authStatus !== 'success') {
+    window.dispatchEvent(new CustomEvent('dndshare:request-auth'))
+    return
+  }
+  confirmOpen.value = true
 }
 
 async function submit() {
@@ -357,6 +378,7 @@ onMounted(async () => {
 .cc-x svg { width: 18px; height: 18px; }
 .cc-title { display: flex; align-items: center; gap: 9px; font-family: var(--font-display); font-size: 23px; font-weight: 600; color: var(--warning); }
 .cc-title svg { width: 20px; height: 20px; color: var(--accent); }
+.cc-mobile-reset { display: none; }
 
 .cc-body {
   flex: 1;
@@ -402,12 +424,8 @@ onMounted(async () => {
 @keyframes cc-invalid { 0%, 100% { box-shadow: none; } 35% { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--danger) 72%, transparent); } }
 .btn.ghost { background: transparent; color: var(--text-2); box-shadow: inset 0 0 0 1px var(--border-strong); }
 .btn.ghost:hover { color: var(--text-1); }
-.btn.reset {
-  display: inline-flex; align-items: center; gap: 7px;
-  background: transparent; color: var(--text-muted); font-size: 12px; font-weight: 600; padding-inline: 12px;
-}
-.btn.reset:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, transparent); }
-.btn.reset svg { width: 14px; height: 14px; }
+.btn.incomplete-mobile { display: none; background: transparent; color: var(--text-muted); padding-inline: 8px; font-size: 10px; font-weight: 500; }
+.btn.incomplete-mobile:hover:not(:disabled) { color: var(--text-2); }
 .btn.soft { background: transparent; color: var(--text-muted); padding-inline: 14px; font-size: 13px; }
 .btn.soft:hover:not(:disabled) { background: color-mix(in srgb, var(--text-on-accent) 5%, transparent); color: var(--text-1); }
 .btn.next { background: var(--accent); color: var(--text-on-accent); }
@@ -420,6 +438,12 @@ onMounted(async () => {
   .cc-head, .cc-body, .cc-foot { grid-template-columns: minmax(0, 1fr); padding-inline: 0; }
   .cc-head-main, .cc-main, .cc-foot-main { grid-column: 1; }
   .cc-head-main { padding-inline: 24px; }
+  .cc-mobile-reset {
+    margin-left: auto; display: inline-flex; align-items: center; gap: 5px; padding: 6px 7px;
+    border: 0; border-radius: 7px; background: transparent; color: var(--text-muted); font: inherit; font-size: 10px; cursor: pointer;
+  }
+  .cc-mobile-reset:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 9%, transparent); }
+  .cc-mobile-reset svg { width: 13px; height: 13px; }
   .cc-rail { display: none; }
   .cc-main { padding-inline: 24px; }
   .cc-foot-main { padding-inline: 24px; }
@@ -448,7 +472,7 @@ onMounted(async () => {
   .cc-error { order: -1; flex: 0 0 100%; max-width: none; }
   .cc-actions { gap: 6px; }
   .btn { padding: 10px 18px; }
-  .btn.reset { padding-inline: 10px; }
+  .btn.incomplete-mobile { display: inline-flex; }
   .btn.soft { padding-inline: 10px; }
 }
 </style>

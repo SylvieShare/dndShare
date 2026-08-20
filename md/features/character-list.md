@@ -70,8 +70,13 @@ area. A separate 220px step rail floats directly
 to that column's left; there is no permanent right preview. The rail shows the
 primary current value for each step (for example,
 the chosen race, class/subclass or background) without repeating its mechanical
-details. The header contains only the workspace title; reset lives in the
-central footer beside navigation, and there is no duplicate numeric step counter.
+details. Reset sits in the rail heading opposite “Создание”; the central footer
+contains only ordinary step navigation. When at least one required choice is
+still missing, a deliberately quiet “Создать неполноценного” action appears below
+the step list and opens the shared confirmation before building the partial sheet.
+It disappears once every step validates. Because the rail is hidden in the
+single-column layout, compact reset and partial-create equivalents remain in the
+mobile header and footer. There is no duplicate numeric step counter.
 Neither race nor class repeats a «Результат выбора» block below its controls:
 the selected illustrated card already contains the base result and dependent
 choices remain visible in their own sections. Ability descriptions remain
@@ -231,8 +236,8 @@ Key rules:
 
 Race and class rows include visual artwork; the class result block records the
 resolved class choices below the controls. Handbook equipment rows can open
-their full item card. Skill choices use description tooltips and spell choice
-rows omit the school label; their detail action uses a question-mark help icon.
+their full item card. Skill choices use description tooltips; spell tiles show
+the school label and their detail action uses a question-mark help icon.
 Character name belongs to the Personality step;
 age/height/weight fields show race-aware recommendations and the larger
 background fields keep enough vertical room for prose. Pressing an unavailable

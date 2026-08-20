@@ -17,4 +17,12 @@ describe('character creation workspace width', () => {
     expect(source).toContain('height: calc(100dvh - var(--header-h)); min-height: 0;')
     expect(source).not.toContain('.cc { height: auto;')
   })
+
+  it('moves reset into the step rail and exposes incomplete creation outside the final step', () => {
+    expect(source).toContain('@reset="resetOpen = true"')
+    expect(source).toContain('@create-incomplete="createIncomplete"')
+    expect(source).toContain(':show-incomplete="!isFullyValid"')
+    expect(source).not.toContain('class="btn reset"')
+    expect(source).toContain('confirmOpen.value = true')
+  })
 })
