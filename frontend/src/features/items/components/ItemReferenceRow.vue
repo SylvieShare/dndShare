@@ -58,7 +58,7 @@ const metaLabel = computed(() => [
   font: inherit; text-align: left; cursor: pointer; transition: border-color .15s, background .15s, transform .15s;
 }
 .item-reference:hover:not(:disabled) { border-color: color-mix(in srgb, var(--accent) 48%, var(--border)); background: color-mix(in srgb, var(--accent) 8%, var(--surface)); transform: translateY(-1px); }
-.item-reference--selected { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--surface)); box-shadow: inset 3px 0 0 var(--accent); }
+.item-reference--selected { border-color: color-mix(in srgb, var(--accent) 48%, var(--border)); background: color-mix(in srgb, var(--accent) 8%, var(--surface)); }
 .item-reference--disabled { opacity: .5; cursor: not-allowed; }
 .item-reference-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
 .item-reference-name { overflow: hidden; color: var(--text-1); font-size: 13px; font-weight: 650; line-height: 1.25; text-overflow: ellipsis; white-space: nowrap; }

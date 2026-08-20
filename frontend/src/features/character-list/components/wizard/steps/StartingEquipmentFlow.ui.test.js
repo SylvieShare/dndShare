@@ -24,6 +24,8 @@ describe('starting equipment wizard flow', () => {
     expect(source).not.toContain('optionSelected(group, entry) && entry.picks')
     expect(source).toContain('pickValue(group.id, entry.id, pick.id, index - 1)')
     expect(source).toContain('choice?.optionId !== optionId')
+    expect(source).toContain(':selected="optionSelected(group, entry)"')
+    expect(source).toMatch(/:count="entry\.count"\s+selected/)
     expect(source).toContain(':placeholder="pickPlaceholder(pick, index)"')
     expect(source).not.toContain('<span>{{ pick.label }}')
     expect(source).toContain('Также получите')

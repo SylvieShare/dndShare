@@ -156,6 +156,8 @@ desktop layout with a single vertical divider and a shield-check marker on the
 selected branch; three or more alternatives are separated horizontally, and
 the columns collapse to the same horizontal separators on mobile. The group
 title continues into a fading rule rather than introducing another nested card.
+Items in the active branch retain the shared row's hover-like accent state;
+fixed grants use the same treatment because they are selected automatically.
 Concrete item selectors remain visible before branch
 selection; choosing an item activates that branch, while switching columns
 clears the previous column's concrete picks. Pick-kind labels are carried by the

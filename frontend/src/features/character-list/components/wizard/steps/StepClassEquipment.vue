@@ -53,6 +53,7 @@
                 :key="linked.item?.id || linked.name"
                 :item="linked.item || missingItem(linked)"
                 :count="linked.count"
+                :selected="optionSelected(group, entry)"
                 :disabled="!linked.item"
                 @activate="viewItem = linked.item"
               />
@@ -82,6 +83,7 @@
             :key="entry.item?.id || entry.name"
             :item="entry.item || missingItem(entry)"
             :count="entry.count"
+            selected
             :disabled="!entry.item"
             @activate="viewItem = entry.item"
           />
