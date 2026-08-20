@@ -253,8 +253,9 @@ const participantTileStyle = computed(() => ({
   padding: 12px;
   overflow: hidden;
   user-select: none;
+  --participant-inset-shadow: inset 0 0 22px color-mix(in srgb, var(--participant-color) 42%, transparent);
   box-shadow:
-    inset 0 0 18px color-mix(in srgb, var(--participant-color) 28%, transparent),
+    var(--participant-inset-shadow),
     inset 0 0 0 1px var(--border);
   transition: height 0.42s cubic-bezier(0.22, 1, 0.36, 1), gap 0.42s cubic-bezier(0.22, 1, 0.36, 1), padding 0.42s cubic-bezier(0.22, 1, 0.36, 1), background 0.18s, border-color 0.18s, box-shadow 0.18s;
 }
@@ -264,6 +265,12 @@ const participantTileStyle = computed(() => ({
 
 .p-card.p-card--reorderable { cursor: grab; touch-action: none; }
 .p-card.p-card--reorderable:active { cursor: grabbing; }
+
+.p-card.base-tile--interactive:hover {
+  box-shadow:
+    var(--participant-inset-shadow),
+    inset 0 0 0 1px color-mix(in srgb, var(--participant-color) 42%, var(--border));
+}
 
 .p-combat-controls {
   width: 112px;
@@ -283,11 +290,12 @@ const participantTileStyle = computed(() => ({
   pointer-events: auto;
 }
 
-.p-card--current {
+.p-card--current,
+.p-card--current.base-tile--interactive:hover {
   background: color-mix(in srgb, var(--accent) 11%, var(--surface));
   border-color: color-mix(in srgb, var(--accent) 42%, var(--border));
   box-shadow:
-    inset 0 0 18px color-mix(in srgb, var(--participant-color) 28%, transparent),
+    var(--participant-inset-shadow),
     inset 0 0 0 1px var(--border),
     0 0 0 2px color-mix(in srgb, var(--accent) 10%, transparent);
 }
