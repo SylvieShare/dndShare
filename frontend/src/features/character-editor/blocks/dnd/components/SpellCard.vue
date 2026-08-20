@@ -13,9 +13,9 @@
         :data-sortable-key="entry.ref.id"
         @pointerdown="onRowDown"
       >
-    <PreparedSpellVine
+    <PreparedSpellBrackets
       v-if="isPrepared"
-      class="sp-prepared-vine"
+      class="sp-prepared-brackets"
       :permanent="isAlwaysPrepared"
     />
 
@@ -142,7 +142,7 @@ import { BookMarked, Sprout } from '@lucide/vue'
 import { computed, inject, ref, watch } from 'vue'
 
 import AttackDamage from '@/features/character-editor/blocks/dnd/components/AttackDamage.vue'
-import PreparedSpellVine from '@/features/character-editor/blocks/dnd/components/PreparedSpellVine.vue'
+import PreparedSpellBrackets from '@/features/character-editor/blocks/dnd/components/PreparedSpellBrackets.vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
@@ -251,24 +251,23 @@ function removeSpell(close) {
   gap: 14px;
   min-height: 60px;
   padding: 12px 4px;
-  transition: background 0.12s;
+  transition: background 0.12s, padding 0.15s;
   cursor: default;
 }
-.spell-row > :not(.sp-prepared-vine) {
+.spell-row-prepared { padding-inline: 28px; }
+.spell-row > :not(.sp-prepared-brackets) {
   position: relative;
   z-index: 1;
 }
-.sp-prepared-vine {
+.sp-prepared-brackets {
   position: absolute;
-  z-index: 0;
+  z-index: 2;
   inset: 7px 10px;
-  color: color-mix(in srgb, var(--accent) 38%, transparent);
-  opacity: 0.74;
+  color: color-mix(in srgb, var(--accent) 62%, transparent);
   pointer-events: none;
 }
-.spell-row-permanent .sp-prepared-vine {
-  color: color-mix(in srgb, var(--warning) 47%, transparent);
-  opacity: 0.82;
+.spell-row-permanent .sp-prepared-brackets {
+  color: color-mix(in srgb, var(--warning) 68%, transparent);
 }
 .spell-row-clickable { cursor: pointer; }
 .spell-row-draggable { cursor: grab; touch-action: pan-y; }
