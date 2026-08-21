@@ -172,11 +172,13 @@ single class, `lvl.level` controls the effective level; for multiclass the
 per-class sum updates `lvl.level`.
 
 Clicking the editable portrait opens actions for upload, crop, clear and a
-separate character-icon upload. The icon always uses a square crop and is stored
-outside character JSON; the portrait keeps its sheet aspect. Character cards and
-session participants prefer the icon and fall back to the portrait when it is
-absent. Drag-and-drop for the portrait enters the same crop flow instead of
-bypassing it. After every owner edit, the browser keeps the
+separate character-icon upload. An icon is uploaded directly without the crop
+workspace; PNG/WebP dimensions must not exceed 256×256. It is stored outside
+character JSON, while the portrait keeps its existing crop flow and sheet aspect.
+Character cards and session participants prefer the icon and fall back to the
+portrait when it is absent. Drag-and-drop for the portrait enters the same crop
+flow instead of bypassing it. Portrait action popovers use a layer above the
+fullscreen session sheet. After every owner edit, the browser keeps the
 three latest character-data snapshots in per-character local storage. Storage
 failures do not interrupt editing or the normal debounced server save. The
 sheet does not install a global `Ctrl+Z`/`Cmd+Z` handler; focused text editors

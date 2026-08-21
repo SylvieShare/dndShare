@@ -20,9 +20,18 @@ describe('character portrait UI', () => {
     }
   })
 
-  it('crops the list and session icon as a square', () => {
-    expect(avatarSource).toContain("cropAspect.value = 1")
-    expect(identitySource).toContain("setAvaCropSource(file, 'icon')")
+  it('uploads the list and session icon directly without opening the crop modal', () => {
+    for (const source of [avatarSource, identitySource]) {
+      expect(source).toContain('if (file) uploadIcon(file)')
+      expect(source).not.toContain("setCropSource(file, file.name || 'character-icon.webp'")
+      expect(source).not.toContain("setAvaCropSource(file, 'icon')")
+    }
+  })
+
+  it('renders portrait action popovers above the embedded session sheet', () => {
+    for (const source of [avatarSource, identitySource]) {
+      expect(source).toContain(':z-index="3200"')
+    }
   })
 
   it('renders a draggable crop workspace and exports WebP', () => {

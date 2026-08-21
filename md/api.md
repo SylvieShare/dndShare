@@ -62,7 +62,8 @@ roles, а также `hasCharacters` — признак наличия хотя 
 - `PATCH /api/char/{uuid}/data-patch`
 - `PUT /api/char/{uuid}/public`
 - `POST /api/char/{uuid}/icon-image` принимает принадлежащую владельцу
-  квадратную PNG/WebP-иконку до 5 МБ и атомарно заменяет прежнюю.
+  PNG/WebP-иконку до 5 МБ и разрешением не более 256×256, без серверного
+  масштабирования или кадрирования; валидная загрузка атомарно заменяет прежнюю.
 - `POST /api/char/{uuid}/clone`
 - `DELETE /api/char/{uuid}`
 

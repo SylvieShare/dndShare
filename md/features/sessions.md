@@ -44,8 +44,10 @@ wizard as a fullscreen modal. Its result carries an explicit rules
 `sourceVersionId`, is attached to the current session and refreshes the
 participant rail; the modal then closes without opening the new sheet or
 changing the route. The invitation flow continues to use the compact
-`CharacterCreateModal` and opens the joined character after creation. One
-character can belong to at most one session. Both invitation entry points show
+`CharacterCreateModal` and opens the joined character after creation. The
+character sheet opened from the participant rail uses the shared dotted app
+canvas; its teleported portrait action menu stays above the fullscreen sheet.
+A character can belong to at most one session. Both invitation entry points show
 a confirmation naming the previous session before a transfer; confirmation
 sends an explicit replacement flag, and the backend atomically removes the old
 membership before creating the new one. A database unique constraint on

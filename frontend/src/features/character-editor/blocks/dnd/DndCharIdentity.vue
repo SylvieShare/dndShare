@@ -35,9 +35,9 @@
             <span v-else class="dciw-ava-hint">Фото</span>
             <div v-if="avaUrl" class="dciw-ava-overlay">Изменить</div>
             <input ref="avaInput" type="file" accept="image/*" style="display:none" @change="onAvaChange" />
-            <input ref="iconInput" type="file" accept="image/*" style="display:none" @change="onIconChange" />
+            <input ref="iconInput" type="file" accept=".png,.webp,image/png,image/webp" style="display:none" @change="onIconChange" />
           </div>
-          <BasePopover v-model:open="avaMenuOpen" :anchor="avaEl" placement="bottom-start" :min-width="180">
+          <BasePopover v-model:open="avaMenuOpen" :anchor="avaEl" placement="bottom-start" :min-width="180" :z-index="3200">
             <div class="dciw-ava-actions" role="menu" aria-label="Действия с портретом">
               <button type="button" role="menuitem" @click="chooseAvaFile">Загрузить изображение</button>
               <button type="button" role="menuitem" @click="chooseIconFile">Загрузить иконку</button>
@@ -182,7 +182,6 @@ const avaValue = ref(null)
 const avaError = ref('')
 const avaMenuOpen = ref(false)
 const avaCropSource = ref('')
-const avaCropTarget = ref('portrait')
 let avaCropObjectUrl = ''
 const avaUrl = computed(() => {
   const v = avaValue.value
@@ -327,7 +326,7 @@ function onAvaChange(e) {
 }
 function onIconChange(e) {
   const file = e.target.files[0]
-  if (file) openIconFileCrop(file)
+  if (file) uploadIcon(file)
   e.target.value = ''
 }
 function chooseAvaFile() {
@@ -342,20 +341,10 @@ function clearAvaCropObjectUrl() {
   if (avaCropObjectUrl) URL.revokeObjectURL(avaCropObjectUrl)
   avaCropObjectUrl = ''
 }
-function setAvaCropSource(blob, target = 'portrait') {
+function setAvaCropSource(blob) {
   clearAvaCropObjectUrl()
   avaCropObjectUrl = URL.createObjectURL(blob)
   avaCropSource.value = avaCropObjectUrl
-  avaCropTarget.value = target
-}
-function openIconFileCrop(file) {
-  avaMenuOpen.value = false
-  avaError.value = ''
-  if (file.size > 8 * 1024 * 1024) {
-    avaError.value = 'Файл слишком большой (максимум 8 МБ)'
-    return
-  }
-  setAvaCropSource(file, 'icon')
 }
 function openAvaFileCrop(file) {
   avaMenuOpen.value = false
@@ -385,20 +374,16 @@ function closeAvaCrop() {
   clearAvaCropObjectUrl()
 }
 function uploadAvaCrop(blob) {
-  const target = avaCropTarget.value
   closeAvaCrop()
-  const fileName = target === 'icon' ? 'character-icon.webp' : 'portrait.webp'
-  const file = new File([blob], fileName, { type: blob.type || 'image/webp' })
-  if (target === 'icon') uploadIcon(file)
-  else uploadAva(file)
+  uploadAva(new File([blob], 'portrait.webp', { type: blob.type || 'image/webp' }))
 }
 async function uploadIcon(file) {
   avaError.value = ''
   try {
     if (typeof charCtx.uploadCharacterIcon !== 'function') throw new Error('icon upload is unavailable')
     await charCtx.uploadCharacterIcon(file)
-  } catch {
-    avaError.value = 'Не удалось загрузить иконку'
+  } catch (error) {
+    avaError.value = error?.message || 'Не удалось загрузить иконку'
   }
 }
 function clearAva() {

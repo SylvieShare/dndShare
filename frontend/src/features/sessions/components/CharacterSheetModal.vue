@@ -1,6 +1,6 @@
 <template>
   <AppModal fullscreen :z-index="zIndex" @close="emit('close')">
-    <div class="csm">
+    <div class="csm share-app-canvas">
       <CharEditorToolbar
         modal
         :publicVisible="publicVisible"
@@ -130,7 +130,6 @@ onMounted(async () => {
   flex-direction: column;
   height: 100%;
   min-height: 0;
-  background: var(--bg);
 }
 
 .csm-body {
@@ -138,13 +137,13 @@ onMounted(async () => {
   min-height: 0;
   overflow-x: auto;
   overflow-y: auto;
-  background: var(--bg);
+  background: transparent;
 }
 
 .container {
   margin: 0 auto;
   padding: 18px 16px 28px;
-  background: var(--bg);
+  background: transparent;
 }
 
 .desktop-tabs {

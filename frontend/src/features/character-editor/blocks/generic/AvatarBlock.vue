@@ -51,14 +51,14 @@
     <input
       ref="iconFileInput"
       type="file"
-      accept="image/*"
+      accept=".png,.webp,image/png,image/webp"
       style="display:none"
       @change="onIconFileChange"
     />
     <span v-if="uploadError" class="avatar-error">{{ uploadError }}</span>
   </div>
 
-  <BasePopover v-model:open="actionsOpen" :anchor="avatarEl" placement="bottom-start" :min-width="180">
+  <BasePopover v-model:open="actionsOpen" :anchor="avatarEl" placement="bottom-start" :min-width="180" :z-index="3200">
     <div class="avatar-actions" role="menu" aria-label="Действия с портретом">
       <button type="button" role="menuitem" @click="chooseFile">Загрузить изображение</button>
       <button type="button" role="menuitem" @click="chooseIconFile">Загрузить иконку</button>
@@ -97,7 +97,6 @@ const actionsOpen = ref(false)
 const cropSource = ref('')
 const cropFileName = ref('portrait.webp')
 const cropAspect = ref(1)
-const cropTarget = ref('portrait')
 let cropObjectUrl = ''
 
 // `fill` → stretch to the container's full height (corners clipped by the container's overflow)
@@ -139,7 +138,7 @@ function onFileChange(e) {
 
 function onIconFileChange(e) {
   const file = e.target.files[0]
-  if (file) openIconFileCrop(file)
+  if (file) uploadIcon(file)
   e.target.value = ''
 }
 
@@ -163,28 +162,13 @@ function clearCropObjectUrl() {
   cropObjectUrl = ''
 }
 
-function setCropSource(blob, fileName = 'portrait.webp', target = 'portrait') {
+function setCropSource(blob, fileName = 'portrait.webp') {
   clearCropObjectUrl()
   cropObjectUrl = URL.createObjectURL(blob)
   cropSource.value = cropObjectUrl
   cropFileName.value = fileName.replace(/\.[^.]+$/, '') + '.webp'
-  cropTarget.value = target
-  if (target === 'icon') {
-    cropAspect.value = 1
-  } else {
-    const rect = avatarEl.value?.getBoundingClientRect()
-    cropAspect.value = rect?.width && rect?.height ? rect.width / rect.height : 1
-  }
-}
-
-function openIconFileCrop(file) {
-  actionsOpen.value = false
-  uploadError.value = ''
-  if (file.size > 8 * 1024 * 1024) {
-    uploadError.value = 'Файл слишком большой (максимум 8 МБ)'
-    return
-  }
-  setCropSource(file, file.name || 'character-icon.webp', 'icon')
+  const rect = avatarEl.value?.getBoundingClientRect()
+  cropAspect.value = rect?.width && rect?.height ? rect.width / rect.height : 1
 }
 
 function openFileCrop(file) {
@@ -219,10 +203,8 @@ function closeCrop() {
 
 function uploadCrop(blob) {
   const file = new File([blob], cropFileName.value, { type: blob.type || 'image/webp' })
-  const target = cropTarget.value
   closeCrop()
-  if (target === 'icon') uploadIcon(file)
-  else upload(file)
+  upload(file)
 }
 
 async function uploadIcon(file) {
@@ -231,8 +213,8 @@ async function uploadIcon(file) {
   try {
     if (typeof charCtx.uploadCharacterIcon !== 'function') throw new Error('icon upload is unavailable')
     await charCtx.uploadCharacterIcon(file)
-  } catch {
-    uploadError.value = 'Не удалось загрузить иконку'
+  } catch (error) {
+    uploadError.value = error?.message || 'Не удалось загрузить иконку'
   } finally {
     iconUploading.value = false
   }
