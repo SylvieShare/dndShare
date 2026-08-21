@@ -104,6 +104,13 @@ rows use the opaque `--surface` level with distinct active and selected states.
 ни SVG, та же эмблема становится последним fallback в строке списка, глобальном
 поиске и picker; detail-шапка независимо использует item- или type-level cover.
 Специализированная динамическая колба зелья сохраняет приоритет в своей строке.
+На landing каждая коллекция занимает половину широкой сетки, то есть прежнюю
+двойную ширину, а на более узком экране — всю строку. Текстовая часть карточки
+резервирует место под эмблему, поэтому название, описание и список подразделов
+никогда не заходят под изображение. Самостоятельные каталоги собраны в группу
+«Основные разделы», а каждый родительский каталог образует отдельную группу со
+всеми своими подразделами; состав групп строится из `parentTypeId` и не требует
+перечня id на frontend.
 Schema filter groups without available
 options are not shown. `ItemEditModal` is schema-driven and uses shared form primitives; its
 create title uses the current item type name. The spell form also accepts a

@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest'
 
 const styles = readFileSync(fileURLToPath(new URL('./styles/ViewHandbook.css', import.meta.url)), 'utf8')
 const landingStyles = readFileSync(fileURLToPath(new URL('./styles/HandbookLanding.css', import.meta.url)), 'utf8')
+const landingSource = readFileSync(fileURLToPath(new URL('./HandbookLanding.vue', import.meta.url)), 'utf8')
 const dictionaryView = readFileSync(fileURLToPath(new URL('../dictionary/ViewDictionary.vue', import.meta.url)), 'utf8')
 
 describe('handbook canvas', () => {
@@ -30,5 +31,17 @@ describe('handbook canvas', () => {
     expect(landing).toContain('width: 100%;')
     expect(landing).toContain('max-width: 1400px;')
     expect(landing).toContain('box-sizing: border-box;')
+  })
+
+  it('gives every collection a double-width card and groups related catalogues', () => {
+    const grid = landingStyles.match(/\.hb-collections-grid\s*\{([^}]*)\}/)?.[1] || ''
+    const cardTop = landingStyles.match(/\.hb-card-top\s*\{([^}]*)\}/)?.[1] || ''
+
+    expect(grid).toContain('grid-template-columns: repeat(2, minmax(0, 1fr));')
+    expect(cardTop).toContain('padding-right: 156px;')
+    expect(landingSource).toContain('v-for="group in collectionGroups"')
+    expect(landingSource).toContain("name: 'Основные разделы'")
+    expect(landingSource).toContain('types: [root, ...descendants]')
+    expect(landingSource).not.toContain("'hb-collection-card--wide': type.important")
   })
 })

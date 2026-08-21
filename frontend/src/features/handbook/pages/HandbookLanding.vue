@@ -56,35 +56,45 @@
         </div>
 
         <div v-if="loadingTypes" class="hb-loading">Загрузка…</div>
-        <div v-else class="hb-collections-grid">
-          <button
-            v-for="type in itemTypes"
-            :key="type.id"
-            class="hb-collection-card"
-            :class="{ 'hb-collection-card--wide': type.important }"
-            :style="cardStyle(type)"
-            @click="emit('select-type', type, selectedSourceVersionId)"
-          >
-            <div class="hb-card-top">
-              <span v-if="parentTypeName(type)" class="hb-card-parent">Раздел «{{ parentTypeName(type) }}»</span>
-              <span class="hb-card-name">{{ type.name }}</span>
-              <p v-if="type.description" class="hb-card-desc">{{ type.description }}</p>
-              <p v-if="childTypeNames(type)" class="hb-card-children">Подразделы: {{ childTypeNames(type) }}</p>
+        <div v-else class="hb-collection-groups">
+          <section v-for="group in collectionGroups" :key="group.key" class="hb-collection-group">
+            <div class="hb-collection-group-header">
+              <span class="hb-collection-group-title">{{ group.name }}</span>
+              <span class="hb-collection-group-count">{{ group.types.length }}</span>
+              <span class="hb-collection-group-meta">{{ group.description }}</span>
             </div>
-            <div class="hb-card-bottom">
-              <span class="hb-card-count">
-                <strong class="hb-card-count-num">{{ type.countItems }}</strong>
-                <span class="hb-card-count-label"> записей</span>
-              </span>
+
+            <div class="hb-collections-grid">
+              <button
+                v-for="type in group.types"
+                :key="type.id"
+                class="hb-collection-card"
+                :style="cardStyle(type)"
+                @click="emit('select-type', type, selectedSourceVersionId)"
+              >
+                <div class="hb-card-top">
+                  <span v-if="parentTypeName(type)" class="hb-card-parent">Раздел «{{ parentTypeName(type) }}»</span>
+                  <span v-else-if="childTypeNames(type)" class="hb-card-parent">Основной каталог</span>
+                  <span class="hb-card-name">{{ type.name }}</span>
+                  <p v-if="type.description" class="hb-card-desc">{{ type.description }}</p>
+                  <p v-if="childTypeNames(type)" class="hb-card-children">Подразделы: {{ childTypeNames(type) }}</p>
+                </div>
+                <div class="hb-card-bottom">
+                  <span class="hb-card-count">
+                    <strong class="hb-card-count-num">{{ type.countItems }}</strong>
+                    <span class="hb-card-count-label"> записей</span>
+                  </span>
+                </div>
+                <img
+                  v-if="type.iconImageUrl"
+                  class="hb-card-icon"
+                  :src="type.iconImageUrl"
+                  alt=""
+                  aria-hidden="true"
+                />
+              </button>
             </div>
-            <img
-              v-if="type.iconImageUrl"
-              class="hb-card-icon"
-              :src="type.iconImageUrl"
-              alt=""
-              aria-hidden="true"
-            />
-          </button>
+          </section>
         </div>
 
         <!-- Dictionaries section -->
@@ -152,6 +162,46 @@ const selectedSource = computed(() => sources.value.find(s => s.id === selectedS
 const selectedVersion = computed(() => selectedSource.value?.versions?.find(
   version => Number(version.id) === Number(selectedSourceVersionId.value),
 ) || null)
+const collectionGroups = computed(() => {
+  const types = itemTypes.value
+  const knownIds = new Set(types.map(type => Number(type.id)))
+  const roots = types.filter(type => type.parentTypeId == null || !knownIds.has(Number(type.parentTypeId)))
+  const descendantsOf = (root) => {
+    const result = []
+    const appendChildren = (parent) => {
+      for (const child of types.filter(type => Number(type.parentTypeId) === Number(parent.id))) {
+        result.push(child)
+        appendChildren(child)
+      }
+    }
+    appendChildren(root)
+    return result
+  }
+  const families = roots
+    .map(root => ({ root, descendants: descendantsOf(root) }))
+    .filter(group => group.descendants.length > 0)
+  const familyRootIds = new Set(families.map(group => Number(group.root.id)))
+  const independent = roots.filter(type => !familyRootIds.has(Number(type.id)))
+  const groups = []
+
+  if (independent.length) {
+    groups.push({
+      key: 'main',
+      name: 'Основные разделы',
+      description: 'Самостоятельные коллекции',
+      types: independent,
+    })
+  }
+  for (const { root, descendants } of families) {
+    groups.push({
+      key: `family-${root.id}`,
+      name: root.name,
+      description: 'Основной каталог и связанные подразделы',
+      types: [root, ...descendants],
+    })
+  }
+  return groups
+})
 
 function activeVersionLabel(source) {
   if (source.id === selectedSourceId.value && selectedVersion.value) return selectedVersion.value.version

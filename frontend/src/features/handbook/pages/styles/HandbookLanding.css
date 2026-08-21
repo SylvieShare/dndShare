@@ -214,10 +214,58 @@
   color: var(--text-muted);
 }
 
-/* Collections grid */
+/* Collection groups */
+.hb-collection-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.hb-collection-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+}
+
+.hb-collection-group-header {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  min-width: 0;
+  padding: 0 4px 2px;
+}
+
+.hb-collection-group-title {
+  color: var(--text-1);
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.hb-collection-group-count {
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 13%, transparent);
+  color: var(--text-2);
+  font-size: 11px;
+  font-weight: 750;
+  font-variant-numeric: tabular-nums;
+}
+
+.hb-collection-group-meta {
+  min-width: 0;
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+/* Every collection gets the former double-width card footprint. */
 .hb-collections-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
 }
 
@@ -234,7 +282,7 @@
   cursor: pointer;
   font-family: inherit;
   text-align: left;
-  min-height: 130px;
+  min-height: 176px;
   overflow: hidden;
   transition: box-shadow 0.15s;
 }
@@ -255,11 +303,6 @@
   box-shadow: 0 0 0 1px var(--card-color, var(--border-strong));
 }
 
-.hb-collection-card--wide {
-  grid-column: span 2;
-  min-height: 170px;
-}
-
 /* Card top: name + description */
 .hb-card-top {
   display: flex;
@@ -267,6 +310,7 @@
   gap: 6px;
   position: relative;
   z-index: 1;
+  padding-right: 156px;
 }
 
 .hb-card-name {
@@ -283,10 +327,6 @@
   text-transform: uppercase;
 }
 
-.hb-collection-card--wide .hb-card-name {
-  font-size: 28px;
-}
-
 .hb-card-desc {
   font-size: 12px;
   color: var(--text-muted);
@@ -294,7 +334,6 @@
   margin: 0;
 }
 .hb-card-children {
-  max-width: calc(100% - 76px);
   margin: 0;
   color: var(--text-2);
   font-size: 10px;
@@ -308,6 +347,7 @@
   z-index: 1;
   margin-top: auto;
   padding-top: 12px;
+  padding-right: 156px;
 }
 
 .hb-card-count {
@@ -326,10 +366,6 @@
   font-variant-numeric: tabular-nums;
 }
 
-.hb-collection-card--wide .hb-card-count-num {
-  font-size: 48px;
-}
-
 .hb-card-count-label {
   font-size: 12px;
   color: var(--text-muted);
@@ -337,21 +373,15 @@
 
 .hb-card-icon {
   position: absolute;
-  right: 0;
+  right: 10px;
   top: 50%;
   transform: translateY(-54%);
-  width: 120px;
-  height: 120px;
+  width: 154px;
+  height: 154px;
   object-fit: contain;
   opacity: 0.78;
   filter: drop-shadow(0 10px 18px color-mix(in srgb, var(--card-color, var(--accent)) 22%, transparent));
   pointer-events: none;
-}
-
-.hb-collection-card--wide .hb-card-icon {
-  width: 154px;
-  height: 154px;
-  right: 10px;
 }
 
 /* Dicts grid */
@@ -466,7 +496,7 @@
 /* ── Responsive ── */
 @media (max-width: 1100px) {
   .hb-collections-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: 1fr;
   }
   .hb-dicts-grid {
     grid-template-columns: repeat(3, 1fr);
@@ -505,7 +535,7 @@
     padding-right: 16px;
   }
   .hb-collections-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
   }
   .hb-dicts-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -513,11 +543,33 @@
 }
 
 @media (max-width: 520px) {
-  .hb-collections-grid {
-    grid-template-columns: 1fr 1fr;
+  .hb-collection-group {
+    margin: 0 -6px;
+    padding: 10px;
   }
-  .hb-collection-card--wide {
-    grid-column: span 2;
+
+  .hb-collection-group-header {
+    flex-wrap: wrap;
+  }
+
+  .hb-collection-group-meta {
+    flex-basis: 100%;
+  }
+
+  .hb-collection-card {
+    min-height: 164px;
+    padding: 16px;
+  }
+
+  .hb-card-top,
+  .hb-card-bottom {
+    padding-right: 106px;
+  }
+
+  .hb-card-icon {
+    width: 116px;
+    height: 116px;
+    right: 2px;
   }
   .hb-dicts-grid {
     grid-template-columns: 1fr;
