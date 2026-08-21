@@ -170,7 +170,9 @@ use the same tile in a selected read-only state, including their icon and handbo
 action. The responsive grid is capped at three tiles per row, then falls back to
 two and one so longer spell names retain useful width. Every available option is
 rendered directly in its circle section; the creation picker has no search or
-client-side filtering. Every non-zero known-spell
+client-side filtering. The catalogue request is narrowed server-side to the
+selected class and circles zero and one, then follows every API page instead of
+silently stopping at the 500-item catalogue boundary. Every non-zero known-spell
 or cantrip allowance must be filled exactly before the Class step can advance;
 the blocking hint reports the current and required counts. A prepared-spell tier
 whose creation allowance is zero remains intentionally optional. Changing class

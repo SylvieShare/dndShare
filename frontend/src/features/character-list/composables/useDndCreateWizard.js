@@ -9,6 +9,7 @@ import { featuresForBinding } from '@/features/character-editor/settings/dnd/cre
 import { evaluateFeatEligibility, featAbilityBonuses } from '@/features/items/lib/featRules'
 import { useSuggestStore } from '@/stores/suggest'
 import { contentScopeQuery, normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'
+import { itemsApi } from '@/shared/api/itemsApi'
 import { dieSides } from '@/shared/lib/systemDice'
 import { randomDndName } from '@/shared/lib/dndNames'
 import { buildDndCharacterPayload } from './dndCreateWizardPayload'
@@ -335,8 +336,14 @@ export function useDndCreateWizard() {
 
   async function loadSpells() {
     if (!state.charClass) { spellPool.value = []; return }
-    const res = await fetchGet(`/items?typeId=${SPELL_TYPE}&limit=500${sourceSuffix()}`)
     const classId = state.charClass.id
+    const res = await itemsApi.listAll(SPELL_TYPE, {
+      contentSources: state.contentSources,
+      sourceVersionId: sourceVersionId.value,
+    }, {
+      'classes.id': [classId],
+      lvl: [0, 1],
+    })
     spellPool.value = (res?.items || []).filter((sp) => {
       const lvl = Number(sp.data?.lvl ?? 0)
       if (lvl > 1) return false
