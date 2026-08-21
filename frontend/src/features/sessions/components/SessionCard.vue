@@ -69,10 +69,10 @@
           <template v-if="session.myRole === 'player' && myParticipant">
             <span
               class="my-char"
-              :class="{ 'my-char--initial': !myParticipant.avaUrl }"
+              :class="{ 'my-char--initial': !participantImageUrl(myParticipant) }"
               :style="myAvatarStyle"
             >
-              <span v-if="!myParticipant.avaUrl" class="my-char-initial">{{ initialOf(myParticipant) }}</span>
+              <span v-if="!participantImageUrl(myParticipant)" class="my-char-initial">{{ initialOf(myParticipant) }}</span>
             </span>
             <span class="my-char-label">Мой персонаж</span>
           </template>
@@ -82,10 +82,10 @@
                 v-for="participant in participants.slice(0, 4)"
                 :key="participant.charUuid"
                 class="avatar"
-                :class="{ 'avatar--initial': !participant.avaUrl }"
+                :class="{ 'avatar--initial': !participantImageUrl(participant) }"
                 :style="avatarStyle(participant)"
               >
-                <span v-if="!participant.avaUrl" class="avatar-initial">{{ initialOf(participant) }}</span>
+                <span v-if="!participantImageUrl(participant)" class="avatar-initial">{{ initialOf(participant) }}</span>
               </span>
             </div>
             <span class="part-count">{{ participantLabel }}</span>
@@ -170,8 +170,13 @@ const myParticipant = computed(() => {
 })
 
 function avatarStyle(participant) {
-  if (participant.avaUrl) return { backgroundImage: `url(${participant.avaUrl})` }
+  const imageUrl = participantImageUrl(participant)
+  if (imageUrl) return { backgroundImage: `url(${imageUrl})` }
   return { background: uuidColor(participant.charUuid) }
+}
+
+function participantImageUrl(participant) {
+  return participant?.iconImageUrl || participant?.avaUrl || ''
 }
 
 const myAvatarStyle = computed(() => {

@@ -70,6 +70,7 @@ const markStorageImageDeletedIfUnreferencedSQL = `UPDATE dndshare.storage_image 
 		    AND NOT EXISTS (SELECT 1 FROM dndshare.item_type item_type WHERE item_type.cover_image_id = img.id)
 		    AND NOT EXISTS (SELECT 1 FROM dndshare.item i WHERE i.icon_image_id = img.id)
 		    AND NOT EXISTS (SELECT 1 FROM dndshare.item i WHERE i.cover_image_id = img.id)
+		    AND NOT EXISTS (SELECT 1 FROM dndshare."char" character WHERE character.icon_image_id = img.id)
 		    AND NOT EXISTS (SELECT 1 FROM dndshare.session_image_catalog catalog WHERE catalog.image_id = img.id)
 		    AND NOT EXISTS (SELECT 1 FROM dndshare.session_chapter chapter WHERE chapter.image_id = img.id)
 		    AND NOT EXISTS (SELECT 1 FROM dndshare.session_scene scene WHERE scene.image_id = img.id)

@@ -15,7 +15,14 @@ describe('character portrait UI', () => {
       expect(source).toContain('Очистить')
       expect(source).toContain('<AvatarCropModal')
       expect(source).toContain('/api/storage/images/${')
+      expect(source).toContain('Загрузить иконку')
+      expect(source).toContain('uploadCharacterIcon')
     }
+  })
+
+  it('crops the list and session icon as a square', () => {
+    expect(avatarSource).toContain("cropAspect.value = 1")
+    expect(identitySource).toContain("setAvaCropSource(file, 'icon')")
   })
 
   it('renders a draggable crop workspace and exports WebP', () => {

@@ -55,6 +55,7 @@ import { currentChapterLabel } from '@/features/sessions/lib/chapterGraph'
 const props = defineProps({
   uuid: String,
   data: { type: Object, default: () => ({}) },
+  iconImageUrl: { type: String, default: '' },
   raw: { type: Object, default: null },
   templateName: String,
   sourceVersion: String,
@@ -74,7 +75,7 @@ const displayName = computed(() => {
   return props.accessors?.displayName(props.data) || '(без имени)'
 })
 const avaUrl = computed(() => {
-  return props.accessors?.avatar(props.data) || null
+  return props.iconImageUrl || props.accessors?.avatar(props.data) || null
 })
 const who = computed(() => {
   return props.accessors?.subtitle(props.data) || ''
@@ -113,6 +114,8 @@ function navigate() {
       sourceId: props.raw.sourceId,
       sourceName: props.raw.sourceName,
       sourceVersion: props.raw.sourceVersion,
+      iconImageId: props.raw.iconImageId,
+      iconImageUrl: props.raw.iconImageUrl,
     })
   }
   router.push('/char/' + props.uuid)

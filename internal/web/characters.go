@@ -143,6 +143,8 @@ type characterResponse struct {
 	SourceID        *int64          `json:"sourceId,omitempty"`
 	SourceName      *string         `json:"sourceName,omitempty"`
 	SourceVersion   *string         `json:"sourceVersion,omitempty"`
+	IconImageID     *int64          `json:"iconImageId,omitempty"`
+	IconImageURL    *string         `json:"iconImageUrl,omitempty"`
 	Data            json.RawMessage `json:"data"`
 	PublicVisible   bool            `json:"publicVisible"`
 	UserID          int64           `json:"userId"`
@@ -169,6 +171,8 @@ func (s *Server) handleGetChar(w http.ResponseWriter, r *http.Request) {
 		SourceID:        char.SourceID,
 		SourceName:      char.SourceName,
 		SourceVersion:   char.SourceVersion,
+		IconImageID:     char.IconImageID,
+		IconImageURL:    char.IconImageURL,
 		Data:            char.Data,
 		PublicVisible:   char.PublicVisible,
 		UserID:          char.UserID,

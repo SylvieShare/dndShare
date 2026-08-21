@@ -23,10 +23,12 @@ export function useCharacterData(uuid, isMobile) {
   const isOwner = ref(false)
   const publicVisible = ref(false)
   const version = ref(0)
+  const iconImageId = ref(null)
+  const iconImageUrl = ref(null)
   const sessions = ref([])
 
   provide('charCtx', charCtx)
-  Object.assign(charCtx, { sourceVersionId, contentSources })
+  Object.assign(charCtx, { sourceVersionId, contentSources, iconImageId, iconImageUrl, uploadCharacterIcon })
 
   function apply(res) {
     if (!res) {
@@ -39,6 +41,8 @@ export function useCharacterData(uuid, isMobile) {
     data.value = { values: {}, var: {}, ...res.data }
     publicVisible.value = res.publicVisible
     version.value = Number(res.version) || 0
+    iconImageId.value = res.iconImageId ?? null
+    iconImageUrl.value = res.iconImageUrl ?? null
     sourceVersionId.value = res.sourceVersionId ?? null
     charCtx.dictionaries = template.value.dictionaries || {}
     charCtx.var = data.value.var || {}
@@ -66,6 +70,8 @@ export function useCharacterData(uuid, isMobile) {
       userId: seed.userId,
       version: seed.version,
       sourceVersionId: seed.sourceVersionId,
+      iconImageId: seed.iconImageId,
+      iconImageUrl: seed.iconImageUrl,
     }
   }
 
@@ -211,11 +217,27 @@ export function useCharacterData(uuid, isMobile) {
       if (!res) return false
       data.value = { values: {}, var: {}, ...res.data }
       version.value = Number(res.version) || 0
+      iconImageId.value = res.iconImageId ?? null
+      iconImageUrl.value = res.iconImageUrl ?? null
       sourceVersionId.value = res.sourceVersionId ?? sourceVersionId.value
       charCtx.var = data.value.var || {}
       document.title = data.value.values?.name || 'Персонаж'
       return true
     } catch { return false }
+  }
+
+  async function uploadCharacterIcon(file) {
+    const formData = new FormData()
+    formData.append('file', file)
+    const response = await fetch(`/api/char/${uuid}/icon-image`, { method: 'POST', body: formData })
+    if (!response.ok) {
+      const payload = await response.json().catch(() => ({}))
+      throw new Error(payload?.desc || String(response.status))
+    }
+    const result = await response.json()
+    iconImageId.value = result.iconImageId ?? null
+    iconImageUrl.value = result.iconImageUrl ?? null
+    return result
   }
 
   function invalidateTabCache() {
@@ -232,6 +254,8 @@ export function useCharacterData(uuid, isMobile) {
     isOwner,
     publicVisible,
     version,
+    iconImageId,
+    iconImageUrl,
     sessions,
     topSession,
     hasSessionContext,

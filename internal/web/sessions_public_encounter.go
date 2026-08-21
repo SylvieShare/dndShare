@@ -345,6 +345,9 @@ func participantName(participant store.SessionParticipantData) string {
 }
 
 func participantAvatar(participant store.SessionParticipantData) *string {
+	if participant.IconImageURL != nil && *participant.IconImageURL != "" {
+		return participant.IconImageURL
+	}
 	values := objectValue(participant.Data, "values")
 	avatar := stringValue(objectValue(values, "ava"), "url")
 	if avatar == "" {

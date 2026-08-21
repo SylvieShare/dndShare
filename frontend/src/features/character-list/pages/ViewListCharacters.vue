@@ -31,6 +31,7 @@
             :key="char.uuid"
             :uuid="char.uuid"
             :data="char.data"
+            :iconImageUrl="char.iconImageUrl"
             :raw="char"
             :templateName="templateName(char.templateId)"
             :sourceVersion="char.sourceVersion"

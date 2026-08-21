@@ -52,6 +52,21 @@ func TestBuildPublicCombatantIncludesNPCItemCover(t *testing.T) {
 	}
 }
 
+func TestParticipantAvatarPrefersCharacterIcon(t *testing.T) {
+	iconURL := "https://cdn.example.test/icon.webp"
+	participant := store.SessionParticipantData{
+		IconImageURL: &iconURL,
+		Data: map[string]any{"values": map[string]any{
+			"ava": map[string]any{"url": "https://cdn.example.test/portrait.webp"},
+		}},
+	}
+
+	avatar := participantAvatar(participant)
+	if avatar == nil || *avatar != iconURL {
+		t.Fatalf("participant avatar = %v, want icon %q", avatar, iconURL)
+	}
+}
+
 func TestBuildPublicCombatantIncludesStatePresentation(t *testing.T) {
 	stateID := int64(7)
 	color := "#e66a52"

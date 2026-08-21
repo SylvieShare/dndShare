@@ -48,17 +48,21 @@ roles, а также `hasCharacters` — признак наличия хотя 
 - Public `GET /api/templates` → `{templates:[{id,name}]}`. Он используется
   гостевым wizard до запроса авторизации; template schema/create form/path maps
   не возвращаются.
-- `GET /api/chars` → `{chars,sessionsByChar}`.
+- `GET /api/chars` → `{chars,sessionsByChar}`; строка персонажа содержит
+  nullable `iconImageId/iconImageUrl`.
 - `POST /api/chars` принимает `{templateId,sourceVersionId,data}`.
   `sourceVersionId` обязателен и должен существовать.
 - `POST /api/chars/poll`
 - `GET /api/char/{uuid}` → template/source metadata, data, visibility,
-  owner id и technical version. DB template JSON в ответ не включается.
+  owner id, technical version и nullable `iconImageId/iconImageUrl`. DB
+  template JSON в ответ не включается.
 - `GET /api/char/{uuid}/version`
 - `GET /api/char/{uuid}/sessions`
 - `PUT /api/char/{uuid}/data`
 - `PATCH /api/char/{uuid}/data-patch`
 - `PUT /api/char/{uuid}/public`
+- `POST /api/char/{uuid}/icon-image` принимает принадлежащую владельцу
+  квадратную PNG/WebP-иконку до 5 МБ и атомарно заменяет прежнюю.
 - `POST /api/char/{uuid}/clone`
 - `DELETE /api/char/{uuid}`
 

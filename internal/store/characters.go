@@ -21,6 +21,8 @@ type CharacterItem struct {
 	SourceID        *int64          `json:"sourceId,omitempty"`
 	SourceName      *string         `json:"sourceName,omitempty"`
 	SourceVersion   *string         `json:"sourceVersion,omitempty"`
+	IconImageID     *int64          `json:"iconImageId,omitempty"`
+	IconImageURL    *string         `json:"iconImageUrl,omitempty"`
 	Data            json.RawMessage `json:"data"`
 	PublicVisible   bool            `json:"publicVisible"`
 	Deleted         bool            `json:"deleted"`
@@ -62,6 +64,9 @@ type CharSessionBrief struct {
 
 const characterCols = `c.id, c.uuid::text, c.user_id, c.template_id,
  c.source_version_id, sv.source_id, src.name, sv.version,
+ c.icon_image_id,
+ (SELECT image.url FROM dndshare.storage_image image
+   WHERE image.id = c.icon_image_id AND image.deleted = false) AS icon_image_url,
  c.data, c.public_visible, c.deleted, c.created_at, c.changed_at, c."version"`
 
 func scanCharacter(row pgx.Row) (CharacterItem, error) {
@@ -69,6 +74,7 @@ func scanCharacter(row pgx.Row) (CharacterItem, error) {
 	var data []byte
 	err := row.Scan(&c.ID, &c.UUID, &c.UserID, &c.TemplateID,
 		&c.SourceVersionID, &c.SourceID, &c.SourceName, &c.SourceVersion,
+		&c.IconImageID, &c.IconImageURL,
 		&data, &c.PublicVisible, &c.Deleted, &c.CreatedAt, &c.ChangedAt, &c.Version)
 	if err != nil {
 		return CharacterItem{}, err

@@ -40,7 +40,9 @@ HTTP-сервиса. Liquibase и отдельного Kotlin backend в про�
 
 `char_template` содержит только `id` и `name`. `char` хранит владельца,
 template id, `source_version_id`, JSON документа, public/deleted flags,
-техническую `version` и timestamps.
+техническую `version`, timestamps и nullable `icon_image_id → storage_image`.
+Иконка является отдельным квадратным представлением персонажа для компактных
+списков; основной портрет остаётся в каноническом JSON `values.ava`.
 
 Игровая система определяется через `source_version → source`. Создание
 персонажа требует конкретный `source_version_id`; сервер не подставляет версию

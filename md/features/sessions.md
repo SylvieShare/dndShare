@@ -22,7 +22,8 @@ and last-change time stay in the content area. Without a selected chapter the
 cover uses the campaign initial; on narrow screens it moves above the content.
 For sessions where the current user is a participant, the response also
 includes the owner's login and the tile shows it as the DM name.
-Participant avatar for the list is read from the canonical character data;
+Participant media for the list prefers the character's independent
+`iconImageUrl` and falls back to the setting avatar in canonical character data;
 `char_template.path_values_for_list` does not exist.
 When the whole list or the selected ownership filter is empty, the page shows
 a two-column start state: one card opens session creation and the other accepts
@@ -32,9 +33,10 @@ an invitation code inline. On narrow screens the cards stack vertically.
 
 `lib/participantView.js` is the only participant adapter. It resolves the
 setting from `templateId` and delegates name/avatar/subtitle/level/HP/AC to the
-same accessors used by character cards and the sheet. Entry contract is
-`{templateId,data}`. If the setting is not registered, there is no path-map
-fallback.
+same accessors used by character cards and the sheet. Its avatar projection
+first checks `iconImageUrl`, then uses the setting accessor. Entry contract is
+`{templateId,data,iconImageUrl?}`. If the setting is not registered, there is no
+path-map fallback.
 
 `ViewSession` and join pages ensure the template store before rendering. In the
 session workspace, `CharacterCreateWizardModal` presents the full D&D creation

@@ -25,6 +25,7 @@ export function pvName(entry) {
 }
 
 export function pvAvatar(entry) {
+  if (entry?.iconImageUrl) return entry.iconImageUrl
   const a = accessorsFor(entry)
   return a?.avatar(entry?.data) || null
 }

@@ -54,15 +54,19 @@ CREATE TABLE IF NOT EXISTS dndshare."char" (
     deleted        bool DEFAULT false NOT NULL,
     death          varchar DEFAULT 'false' NOT NULL,
     "version"      int8 DEFAULT 1 NOT NULL,
+    icon_image_id   int8 NULL REFERENCES dndshare.storage_image(id) ON DELETE SET NULL,
     CONSTRAINT char_pk PRIMARY KEY (id),
     CONSTRAINT char_uuid_key UNIQUE (uuid)
 );
 ALTER TABLE dndshare."char"
     ADD COLUMN IF NOT EXISTS source_version_id int8 NULL REFERENCES dndshare.source_version(id);
+ALTER TABLE dndshare."char"
+    ADD COLUMN IF NOT EXISTS icon_image_id int8 NULL REFERENCES dndshare.storage_image(id) ON DELETE SET NULL;
 CREATE INDEX IF NOT EXISTS idx_char_user_id ON dndshare."char" USING btree (user_id);
 CREATE INDEX IF NOT EXISTS idx_char_user_changed ON dndshare."char" USING btree (user_id, changed_at DESC) WHERE (deleted = false);
 CREATE INDEX IF NOT EXISTS idx_char_template_id ON dndshare."char" USING btree (template_id);
 CREATE INDEX IF NOT EXISTS idx_char_source_version_id ON dndshare."char" USING btree (source_version_id);
+CREATE INDEX IF NOT EXISTS idx_char_icon_image_id ON dndshare."char" USING btree (icon_image_id) WHERE icon_image_id IS NOT NULL;
 
 -- Existing characters predate source_version_id. Backfill the two known
 -- template families without touching already classified rows.

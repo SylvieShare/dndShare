@@ -30,9 +30,10 @@ the browser.
 
 Card display data comes only from per-setting accessors in
 `features/character-editor/settings/index.js`. `CharBox` receives
-`displayName/avatar/subtitle/level/abilities`; it does not know JSON paths and
-does not receive template `pathValues`. D&D and VTM both have registered
-accessors.
+`displayName/avatar/subtitle/level/abilities` plus the character's independent
+`iconImageUrl`; the icon takes priority and the setting avatar is the fallback.
+The card does not know JSON paths and does not receive template `pathValues`.
+D&D and VTM both have registered accessors.
 
 The D&D card includes `CharStatRadar`; its six scores and suggest metadata also
 come from `dndAccessors`. Opening a card seeds `charSeed.js`, so the editor can
