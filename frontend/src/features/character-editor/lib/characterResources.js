@@ -4,6 +4,20 @@ function nonNegativeInt(value) {
   return Math.max(0, Math.floor(Number(value) || 0))
 }
 
+const ABILITY_RESOURCE_COLORS = [
+  '#f87171', '#fbbf24', '#4ade80', '#38bdf8', '#c084fc', '#94a3b8',
+  '#fb7185', '#fb923c', '#2dd4bf', '#60a5fa', '#818cf8', '#e879f9',
+]
+
+function abilityResourceColor(item, definition, fallback) {
+  const configured = definition.rule.resource_color || item.data?.resource_color
+  if (configured) return configured
+  const seed = `${item.id ?? item.name ?? ''}:${definition.key || 'main'}`
+  let hash = 0
+  for (let index = 0; index < seed.length; index += 1) hash = ((hash * 31) + seed.charCodeAt(index)) >>> 0
+  return ABILITY_RESOURCE_COLORS[hash % ABILITY_RESOURCE_COLORS.length] || fallback
+}
+
 function entryKey(entry) {
   return String(entry?.uid || entry?.id || '')
 }
@@ -130,7 +144,7 @@ export function createAbilityResourceSource(valueId, color) {
           return [{
             key: `abilities:${valueId}:${entryKey(entry)}${definition.key ? `:${definition.key}` : ''}`,
             title: definition.rule.title || item.name || 'Способность',
-            color_point: definition.rule.resource_color || item.data?.resource_color || color,
+            color_point: abilityResourceColor(item, definition, color),
             value: Math.min(abilityAvailable(entry, definition, total), total),
             total,
             ...rest,

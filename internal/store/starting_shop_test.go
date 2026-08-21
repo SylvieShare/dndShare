@@ -9,15 +9,16 @@ import (
 )
 
 func TestToolProficiencyCatalogIsEmbeddedAfterItemTypeHierarchy(t *testing.T) {
-	if len(schemaParts) < 6 {
+	if len(schemaParts) < 7 {
 		t.Fatal("schemaParts must contain the final item catalogue sections")
 	}
-	hierarchy := schemaParts[len(schemaParts)-6]
-	tools := schemaParts[len(schemaParts)-5]
-	resources := schemaParts[len(schemaParts)-4]
-	classTools := schemaParts[len(schemaParts)-3]
-	resourceFixes := schemaParts[len(schemaParts)-2]
-	resourceAudit := schemaParts[len(schemaParts)-1]
+	hierarchy := schemaParts[len(schemaParts)-7]
+	tools := schemaParts[len(schemaParts)-6]
+	resources := schemaParts[len(schemaParts)-5]
+	classTools := schemaParts[len(schemaParts)-4]
+	resourceFixes := schemaParts[len(schemaParts)-3]
+	resourceAudit := schemaParts[len(schemaParts)-2]
+	resourceColors := schemaParts[len(schemaParts)-1]
 	if hierarchy.name != "item-type-hierarchy" || hierarchy.sql == "" || hierarchy.sql != schemaItemTypeHierarchySQL {
 		t.Fatal("item-type-hierarchy schema must be embedded after the equipment catalogues")
 	}
@@ -35,6 +36,9 @@ func TestToolProficiencyCatalogIsEmbeddedAfterItemTypeHierarchy(t *testing.T) {
 	}
 	if resourceAudit.name != "ability-resource-catalog-audit" || resourceAudit.sql == "" || resourceAudit.sql != schemaAbilityResourceCatalogAuditSQL {
 		t.Fatal("ability resource catalogue audit must be embedded after targeted fixes")
+	}
+	if resourceColors.name != "ability-resource-colors" || resourceColors.sql == "" || resourceColors.sql != schemaAbilityResourceColorsSQL {
+		t.Fatal("ability resource colors must be embedded after the complete resource catalogue")
 	}
 }
 
@@ -115,6 +119,7 @@ func TestAbilityResourceSchemasExposeModifierFormula(t *testing.T) {
 			t.Fatalf("ability schema %s must default max_use_min to 1", typeID)
 		}
 		for _, key := range []string{
+			"resource_color",
 			"max_use_stat_multiplier", "max_use_bonus", "max_use_level_multiplier",
 			"max_use_scaling", "rollback_short_rest_level", "short_rest_recovery",
 			"short_rest_recovery_level", "use_resources",
@@ -127,6 +132,18 @@ func TestAbilityResourceSchemasExposeModifierFormula(t *testing.T) {
 	for _, fragment := range []string{"max_use_stat", "max_use_min", "item_type.id IN (3, 4, 7)"} {
 		if !strings.Contains(schemaAbilityResourcesSQL, fragment) {
 			t.Fatalf("ability resource startup schema must contain %q", fragment)
+		}
+	}
+}
+
+func TestAbilityResourceColorsCoverCatalogAndNestedResources(t *testing.T) {
+	for _, fragment := range []string{
+		"Оружие дыхания", "Вдохновение барда", "Источник магии: очки чародейства",
+		"Ярость", "Удачливый", "resource_color", "faerie_fire", "arcanum_9",
+		"greater_restoration", "item_type.id IN (3, 4, 7)",
+	} {
+		if !strings.Contains(schemaAbilityResourceColorsSQL, fragment) {
+			t.Fatalf("ability resource colors must contain %q", fragment)
 		}
 	}
 }

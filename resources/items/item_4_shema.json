@@ -10,6 +10,11 @@
     "type": "int"
   },
   {
+    "name": "Цвет ресурса",
+    "key": "resource_color",
+    "type": "color"
+  },
+  {
     "name": "Редактируемое количество использований",
     "key": "manual_size",
     "type": "bool"
@@ -70,6 +75,7 @@
     "fields": [
       { "name": "Ключ", "key": "key", "type": "text" },
       { "name": "Название", "key": "title", "type": "text" },
+      { "name": "Цвет", "key": "resource_color", "type": "color" },
       { "name": "Уровень", "key": "level", "type": "int" },
       { "name": "Максимум", "key": "max_use", "type": "int" },
       { "name": "Характеристика", "key": "max_use_stat", "type": "suggest", "suggest_id": 16 },

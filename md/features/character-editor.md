@@ -216,6 +216,9 @@ Ability rules can derive the maximum from a live ability modifier, a class-level
 multiplier or `scaling[].uses`; `use_resources` contributes several independent
 rows. Level-gated short-rest recovery and partial recovery use the same source
 contract, so the rest action has no class- or feature-specific branches.
+Each ability resource owns `resource_color`; nested counters may override it.
+Unconfigured custom abilities receive a stable color derived from their item id,
+so resources from one domain do not collapse into a single class/race/feat color.
 Short/long rest uses this same aggregate contract to update current spell slots,
 all matching resources, ability counters and hit-dice pools without scalar
 mirrors. Long rest also restores resources marked for short-rest recovery.
@@ -243,6 +246,10 @@ formula wins over a stale simultaneous `manual_size` flag. Charge pips are
 rendered only in the shared resources tile, so spending from there writes the
 available value back to the owning ability entry and later stat or level changes
 immediately update the displayed maximum.
+Sorcery points are not a manual sheet resource: the level-2 «Источник магии»
+class feature contributes them with a maximum equal to the Sorcerer class level.
+Long rest restores the pool, while Sorcerous Restoration adds four points on a
+short rest at Sorcerer level 20.
 
 Feat ability-score bonuses are represented as readonly named bonus rows. The
 creation assembler, level-up flow and manual feat editor use the same rule: add

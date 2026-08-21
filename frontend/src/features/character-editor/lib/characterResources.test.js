@@ -32,6 +32,7 @@ const items = new Map([
     class_ids: [{ id: 200 }], max_use_level_multiplier: 1,
     rollback_long_rest: true, short_rest_recovery: 4, short_rest_recovery_level: 20,
   } }],
+  ['60', { id: 60, name: 'Цветная способность', data: { max_use: 1, resource_color: '#123abc' } }],
 ])
 
 const values = {
@@ -85,6 +86,19 @@ describe('character resource sources', () => {
     expect(result[2]).toMatchObject({ title: 'Второе дыхание', readonly: true, value: 0, total: 2, long_rest: true })
   })
 
+  it('uses configured colors and gives unconfigured abilities stable varied colors', () => {
+    const coloredValues = {
+      ...values,
+      abilities_class: [{ id: 20 }, { id: 50 }, { id: 60 }],
+    }
+    const result = collectCharacterResources(coloredValues, items, sources)
+      .filter((resource) => resource.readonly)
+    expect(result.find((resource) => resource.title === 'Цветная способность').color_point).toBe('#123abc')
+    expect(result.find((resource) => resource.title === 'Второе дыхание').color_point)
+      .not.toBe(result.find((resource) => resource.title === 'Очки чародейства').color_point)
+    expect(new Set(result.map((resource) => resource.color_point)).size).toBeGreaterThan(1)
+  })
+
   it('writes use back to the contributing ability array', () => {
     const patch = setCharacterResourceAvailable(values, items, 'abilities:abilities_race:10', 1, sources)
     expect(patch).toEqual({ abilities_race: [{ id: 10, count: 1, resource_version: 1 }] })
@@ -130,6 +144,22 @@ describe('character resource sources', () => {
     const short = restoreCharacterResources(classValues, items, 'short', sources)
     expect(short.patch.abilities_class[0]).toMatchObject({ id: 40, count: 4, resource_version: 1 })
     expect(short.patch.abilities_class[1]).toMatchObject({ id: 50, count: 7, resource_version: 1 })
+  })
+
+  it('contributes sorcery points from the Font of Magic feature and Sorcerer level', () => {
+    const sorcerer = {
+      ...values,
+      lvl: { level: 7 },
+      classes: [{ id: 100, level: 5 }, { id: 200, level: 2 }],
+      abilities_class: [{ id: 50 }],
+    }
+    expect(collectCharacterResources(sorcerer, items, sources)
+      .find((resource) => resource.title === 'Очки чародейства')).toMatchObject({
+      title: 'Очки чародейства',
+      value: 2,
+      total: 2,
+      long_rest: true,
+    })
   })
 
   it('restores every matching source through one rest contract', () => {
