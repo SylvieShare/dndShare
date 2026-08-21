@@ -79,6 +79,11 @@ Startup data correction переводит прежние значения в э
 `item_type` хранит schema fields типа, `item` — контент, `suggest_type/suggest`
 — словари. `item.parent_id` — единая связь для подрасы, подкласса и других
 вариантов. `item_content_source` связывает item с публикациями. Каждая встроенная
+предыстория (тип 11) хранит инструменты и стартовое снаряжение как массивы
+`tool_items`/`equipment_items` с `item_id`, а монеты — как `starting_coins`;
+startup section `27_background_equipment.sql` заменяет прежнее текстовое поле
+`equipment`, создаёт справочные карточки для сюжетных предметов и категорий
+«по выбору» и связывает их с PHB 2014. Каждая встроенная
 коллекция имеет растровую эмблему через
 `item_type.icon_image_id → storage_image`; строки типа `item_type_icon` указывают
 на прозрачные PNG, встроенные во frontend под `/static/handbook-types/`.

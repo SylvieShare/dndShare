@@ -24,12 +24,14 @@ describe('background step presentation', () => {
     expect(source).not.toContain('iconImageUrl')
   })
 
-  it('renders every tool proficiency and text-only equipment grant as a shared tile', () => {
-    expect(source).toContain('<BaseTile')
-    expect(source).toContain('v-for="toolName in backgroundToolNames"')
-    expect(source).toContain('v-for="(entry, entryIndex) in backgroundStart.items"')
-    expect(source).toContain('<Hammer')
-    expect(source).toContain('<Backpack')
+  it('renders canonical tool and equipment references that open handbook cards', () => {
+    expect(source).toContain('<ItemReferenceRow')
+    expect(source).toContain('v-for="item in backgroundToolItems"')
+    expect(source).toContain('v-for="entry in backgroundStart.items"')
+    expect(source).toContain('@activate="viewItem = item"')
+    expect(source).toContain('@activate="viewItem = entry"')
+    expect(source).toContain('<ItemViewModal')
+    expect(source).not.toContain('<BaseTile')
     expect(source).toContain('grid-template-columns: repeat(2, minmax(0, 1fr))')
     expect(source).toContain('@media (max-width: 640px)')
   })

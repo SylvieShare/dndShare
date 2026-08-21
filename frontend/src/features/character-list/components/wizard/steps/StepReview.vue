@@ -35,7 +35,7 @@
 
 <script setup>
 import { computed, inject } from 'vue'
-import { backgroundStartingEquipment, formatStartingCoins } from '@/features/character-editor/settings/dnd/creation/backgroundEquipment'
+import { formatStartingCoins } from '@/features/character-editor/settings/dnd/creation/backgroundEquipment'
 import { featuresForBinding } from '@/features/character-editor/settings/dnd/creation/progression'
 import { mergeEquipment } from '@/features/character-editor/settings/dnd/creation/startingEquipment'
 import { STAT_SHORT, formatMod, monogramOf } from '@/features/character-list/components/wizard/labels'
@@ -44,13 +44,12 @@ const wz = inject('createWizard')
 const {
   STATS, state, grants, finalScores, mods, maxHp, unarmoredAc, initiativeMod, spellDc, spellAtk,
   skillOptions, cantripPool, spell1Pool, suggestValue, raceAbilities, classAbilities,
-  allEquipment, shopWallet,
+  allEquipment, shopWallet, backgroundStart,
 } = wz
 
 const mono = computed(() => monogramOf(state.charClass?.name || state.race?.name || '?'))
 const subraceOrRace = computed(() => state.subrace?.name || state.race?.name || '')
 const klass = computed(() => [state.charClass?.name, state.subclass?.name].filter(Boolean).join(' · '))
-const backgroundStart = computed(() => backgroundStartingEquipment(state.background))
 const displayedEquipment = computed(() => mergeEquipment(
   allEquipment.value,
   state.buyStartingEquipment ? [] : backgroundStart.value.items,

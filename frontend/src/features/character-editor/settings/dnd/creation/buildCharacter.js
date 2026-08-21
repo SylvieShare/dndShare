@@ -16,7 +16,7 @@ import { defaultSlots } from '../../../blocks/dnd/lib/spellEntry.js'
 import { featAbilityBonuses, featEntry, featGrantedSpellIds, featGrants } from '@/features/items/lib/featRules'
 import { defaultEntry as defaultWeaponEntry } from '../../../blocks/dnd/lib/weaponEntry.js'
 import { blankValues } from '../newCharacter.js'
-import { addStartingCoins, backgroundStartingEquipment } from './backgroundEquipment.js'
+import { addStartingCoins } from './backgroundEquipment.js'
 import { applyGrants, extractGrants } from './grants.js'
 import { featureIdsForBinding } from './progression.js'
 import { mergeEquipment } from './startingEquipment.js'
@@ -91,7 +91,8 @@ export function buildCharacterData(input) {
     background = null,
     scores = {}, asiChoice = [], skillIds = [], spellIds = [], spellLevels = {}, grantedSpellIds = [], choices = [],
     raceSkillIds = [], raceLangIds = [], featIds = [], feats = [], bgLangIds = [],
-    equipment = [], buyStartingEquipment = false, startingWallet = {}, persona = null, contentSources = null,
+    equipment = [], backgroundEquipment = { items: [], coins: {} },
+    buyStartingEquipment = false, startingWallet = {}, persona = null, contentSources = null,
     raceAbilityItems = [], classAbilityItems = [], suggestValue,
   } = input || {}
 
@@ -100,7 +101,7 @@ export function buildCharacterData(input) {
     charClass: charClass?.item, subclass: subclass?.item,
     raceVariant, background: background?.item,
   })
-  const backgroundStart = backgroundStartingEquipment(background)
+  const backgroundStart = backgroundEquipment || { items: [], coins: {} }
   const featEntries = feats.map(({ item, choices }) => featEntry(item, choices || {}))
 
   const raceBinding = { raceId: race?.id, subraceId: subrace?.id }
@@ -236,8 +237,8 @@ export function buildCharacterData(input) {
 
   // Catalogue weapons added on the equipment step belong to the dedicated
   // weapon block. That block has no quantity field, so multiple copies become
-  // separate entries. Text-only PHB rows cannot become functional weapon cards
-  // without a handbook id and therefore stay in the inventory with other gear.
+  // separate entries. Background possessions use the same canonical handbook
+  // references as class equipment, including functional weapons and armor.
   // Buying with class wealth replaces both the class kit and the background's
   // possessions. Only purchases enter inventory; unspent change enters money.
   const startingEquipment = mergeEquipment(equipment, buyStartingEquipment ? [] : backgroundStart.items)

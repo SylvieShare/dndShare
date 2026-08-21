@@ -49,6 +49,18 @@ export function useDndCreateEquipment({ state, sourceSuffix }) {
     }
   }
 
+  async function ensureEquipmentCatalogueItems(ids) {
+    const known = new Set(equipmentCatalogue.value.map((item) => String(item.id)))
+    const missing = [...new Set((ids || []).map(Number).filter((id) => id > 0 && !known.has(String(id))))]
+    if (!missing.length) return
+    const response = await fetchGet(`/items/by-ids?ids=${missing.join(',')}`)
+    const next = [...equipmentCatalogue.value]
+    for (const item of (response?.items || [])) {
+      if (!next.some((saved) => String(saved.id) === String(item.id))) next.push(item)
+    }
+    equipmentCatalogue.value = next
+  }
+
   const baseClassEquipmentProfile = computed(() => startingEquipmentProfile(state.charClass))
   const classEquipmentProfile = computed(() => resolveStartingEquipmentProfile(
     baseClassEquipmentProfile.value,
@@ -148,7 +160,7 @@ export function useDndCreateEquipment({ state, sourceSuffix }) {
   }
 
   return {
-    loadEquipmentCatalogue, equipmentCatalogue, shopLoading,
+    loadEquipmentCatalogue, ensureEquipmentCatalogueItems, equipmentCatalogue, shopLoading,
     classEquipmentProfile, classEquipmentComplete, classEquipment, allEquipment,
     selectEquipmentOption, setEquipmentPick,
     addEquipment, removeEquipment, bumpEquipment,

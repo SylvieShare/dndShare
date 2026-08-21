@@ -163,18 +163,23 @@ describe('buildCharacterData starting equipment', () => {
       race: selection(1, 'Человек'),
       charClass: selection(2, 'Плут'),
       background: selection(3, 'Дворянин', {
-        equipment: '<p>Изящная одежда, перстень-печатка, свиток родословной, кошель с 25 зм.</p>',
         feature: 'Привилегированное положение',
         feature_desc: '<p>Люди склонны думать о вас хорошо.</p>',
       }),
       equipment: [{ id: null, name: 'Рапира', count: 1 }],
+      backgroundEquipment: {
+        items: [
+          { id: 374, name: 'Богатая одежда', count: 1, typeId: 2 },
+          { id: 430, name: 'Печатка', count: 1, typeId: 2 },
+          { id: 901, name: 'Свиток родословной', count: 1, typeId: 2 },
+        ],
+        coins: { 3: 25 },
+      },
       suggestValue: () => '',
     })
 
     const items = result.data.values.items.sections[0].items
-    expect(items.map((item) => item.override?.name)).toEqual([
-      'Рапира', 'Изящная одежда', 'перстень-печатка', 'свиток родословной',
-    ])
+    expect(items.map((item) => item.id ?? item.override?.name)).toEqual(['Рапира', 374, 430, 901])
     expect(result.data.values.money.amounts['3']).toBe(25)
     expect(result.data.values.notes).toBe('Умение предыстории — Привилегированное положение: Люди склонны думать о вас хорошо.')
   })
@@ -184,9 +189,10 @@ describe('buildCharacterData starting equipment', () => {
       race: selection(1, 'Человек'),
       charClass: selection(2, 'Воин'),
       background: selection(3, 'Солдат', {
-        equipment: '<p>Копьё, форма, кошель с 10 зм.</p>',
+        equipment_items: [{ item_id: 99, count: 1 }],
       }),
       equipment: [{ id: 501, name: 'Латы', count: 1, typeId: 12, armor: { ac: 18, use_dex: false } }],
+      backgroundEquipment: { items: [{ id: 99, name: 'Копьё', count: 1, typeId: 1 }], coins: { 3: 10 } },
       buyStartingEquipment: true,
       startingWallet: { 3: 25, 2: 4 },
       suggestValue: () => '',

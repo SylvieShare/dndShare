@@ -1,51 +1,69 @@
-/**
- * Starting possessions in handbook background items are stored as one rich-text
- * sentence. Split that sentence into custom inventory rows and coin amounts so
- * the create wizard can apply both mechanically.
- */
+/** Canonical handbook references granted by a D&D background. */
 
-export const COIN_IDS = { 'мм': 1, 'см': 2, 'зм': 3, 'эм': 4, 'пм': 5 }
 export const COIN_ORDER = [1, 2, 3, 4, 5]
 
-const COIN_LABELS = Object.fromEntries(Object.entries(COIN_IDS).map(([label, id]) => [id, label]))
-
-function stripHtml(value) {
-  return String(value || '')
-    .replace(/<br\s*\/?\s*>/gi, ', ')
-    .replace(/<\/p\s*>/gi, ' ')
-    .replace(/<[^>]*>/g, ' ')
-    .replace(/&nbsp;|&#160;/gi, ' ')
-    .replace(/&amp;/gi, '&')
-    .replace(/&quot;/gi, '"')
-    .replace(/&#39;|&apos;/gi, "'")
-    .replace(/\s+/g, ' ')
-    .trim()
-}
+const COIN_LABELS = { 1: 'мм', 2: 'см', 3: 'зм', 4: 'эм', 5: 'пм' }
 
 function equipmentData(background) {
   return background?.item?.data || background?.data || {}
 }
 
-export function backgroundStartingEquipment(background) {
-  const text = stripHtml(equipmentData(background).equipment)
-  const items = []
+function referenceRows(background, key) {
+  const rows = equipmentData(background)[key]
+  return Array.isArray(rows) ? rows : []
+}
+
+function catalogueMap(catalogue) {
+  return new Map((catalogue || []).map((item) => [String(item.id), item]))
+}
+
+function inventoryEntry(item, count = 1) {
+  return {
+    id: item.id,
+    name: item.name,
+    count: Math.max(1, Math.floor(Number(count) || 1)),
+    typeId: item.typeId,
+    armor: item.data?.armor || null,
+    data: item.data || {},
+    iconImageUrl: item.iconImageUrl || null,
+    svg: item.svg || null,
+    coverImageUrl: item.coverImageUrl || null,
+  }
+}
+
+function resolveRows(background, key, catalogue) {
+  const byId = catalogueMap(catalogue)
+  return referenceRows(background, key)
+    .map((row) => {
+      const item = byId.get(String(row?.item_id))
+      return item ? inventoryEntry(item, row?.count) : null
+    })
+    .filter(Boolean)
+}
+
+export function backgroundReferenceIds(background) {
+  return [...referenceRows(background, 'tool_items'), ...referenceRows(background, 'equipment_items')]
+    .map((row) => Number(row?.item_id))
+    .filter((id) => Number.isInteger(id) && id > 0)
+}
+
+export function backgroundToolItems(background, catalogue = []) {
+  return resolveRows(background, 'tool_items', catalogue)
+}
+
+export function backgroundStartingEquipment(background, catalogue = []) {
+  const data = equipmentData(background)
+  const items = resolveRows(background, 'equipment_items', catalogue)
   const coins = {}
 
-  for (const raw of text.split(/\s*,\s*/)) {
-    const fragment = raw.trim().replace(/[.;]+$/, '').trim()
-    if (!fragment) continue
-
-    const money = fragment.match(/^(?:кошел(?:ь|ёк|ек)\s+с\s+)?(\d+)\s*(мм|см|эм|зм|пм)\.?$/i)
-    if (money) {
-      const coinId = COIN_IDS[money[2].toLocaleLowerCase('ru')]
-      coins[coinId] = (Number(coins[coinId]) || 0) + Number(money[1])
-      continue
-    }
-
-    items.push({ id: null, name: fragment, count: 1 })
+  for (const row of (Array.isArray(data.starting_coins) ? data.starting_coins : [])) {
+    const currencyId = Number(row?.currency_id)
+    const amount = Number(row?.amount)
+    if (!COIN_ORDER.includes(currencyId) || !Number.isFinite(amount) || amount <= 0) continue
+    coins[currencyId] = (Number(coins[currencyId]) || 0) + amount
   }
 
-  return { text, items, coins, gold: Number(coins[COIN_IDS['зм']]) || 0 }
+  return { items, coins, gold: Number(coins[3]) || 0 }
 }
 
 export function formatStartingCoins(coins = {}) {

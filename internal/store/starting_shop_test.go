@@ -8,13 +8,29 @@ import (
 	"testing"
 )
 
-func TestTransportCatalogSchemaIsEmbeddedLast(t *testing.T) {
+func TestBackgroundEquipmentSchemaIsEmbeddedAfterCatalogues(t *testing.T) {
 	if len(schemaParts) == 0 {
 		t.Fatal("schemaParts is empty")
 	}
 	last := schemaParts[len(schemaParts)-1]
-	if last.name != "transport-catalog" || last.sql == "" || last.sql != schemaTransportCatalogSQL {
-		t.Fatal("transport-catalog schema must be embedded as the final startup migration")
+	if last.name != "background-equipment" || last.sql == "" || last.sql != schemaBackgroundEquipmentSQL {
+		t.Fatal("background-equipment schema must be embedded after the equipment catalogues")
+	}
+}
+
+func TestBackgroundEquipmentUsesCanonicalItemReferences(t *testing.T) {
+	for _, fragment := range []string{
+		"CREATE TEMP TABLE background_grant_links",
+		"('Моряк', 'tool', 1, 2, 'Инструменты навигатора', 1)",
+		"('Моряк', 'equipment', 1, 1, 'Дубинка', 1)",
+		"'tool_items'",
+		"'equipment_items'",
+		"'starting_coins'",
+		"background.data - 'equipment'",
+	} {
+		if !strings.Contains(schemaBackgroundEquipmentSQL, fragment) {
+			t.Fatalf("background equipment schema must contain %q", fragment)
+		}
 	}
 }
 

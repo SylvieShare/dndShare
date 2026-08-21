@@ -223,11 +223,13 @@ uses the shared `IllustratedChoiceStage`: the chosen card expands into a
 full-width horizontal row, the other backgrounds leave the catalogue, and a
 back action restores the two-column list without changing the content scroll.
 The existing skill, language, feature and money summary appears below the expanded
-card. Every granted tool proficiency and every item parsed from the legacy
-background equipment sentence is rendered as its own shared `BaseTile`; tools
-and equipment use distinct icons and captions without pretending that text-only
-grants have handbook ids. The tile grid uses two desktop columns and one mobile
-column. In starting-shop mode the equipment tiles and money row are
+card. Every granted tool and possession is stored on the background as a
+canonical handbook item id and rendered through `ItemReferenceRow`; activating
+the row opens `ItemViewModal`. Concrete weapons therefore keep their combat
+data, while category choices such as “musical instrument of your choice” point
+to an explicit handbook choice card instead of an arbitrary concrete item. The
+reference grid uses two desktop columns and one mobile column. In starting-shop
+mode the equipment rows and money row are
 replaced by an explicit note that class wealth owns them. Built-in background covers live in system
 `storage_image` rows assigned through the generic `item.cover_image_id` relation.
 
@@ -237,13 +239,13 @@ Key rules:
 - all binding fields are arrays of item ids;
 - content publication scope is carried through every catalogue query;
 - choices granted by a race or class are completed on that source step;
-- class starting equipment uses handbook ids; text-only rows remain only for
-  legacy background sentences in the ready-kit path;
+- class and background starting equipment use handbook ids; the background
+  schema stores `tool_items`, `equipment_items` and `starting_coins` directly;
 - the starting-shop path is mutually exclusive with class/background equipment,
   and its remaining class wealth is the only starting wallet amount;
-- handbook weapons added on the equipment step are written to the dedicated
-  weapon block; other additions and text-only starting rows use the canonical
-  sectioned inventory model;
+- handbook weapons added by the class, background or equipment step are written
+  to the dedicated weapon block; other additions use the canonical sectioned
+  inventory model;
 - starting armor and shields are written to `items.equipped` and initialize the
   sheet's structured AC rule, including a medium-armor Dexterity cap;
 - descriptions are edited/rendered through the shared rich-description pair;

@@ -12,6 +12,11 @@ import { contentScopeQuery, normalizeContentSourceSettings } from '@/shared/api/
 import { itemsApi } from '@/shared/api/itemsApi'
 import { dieSides } from '@/shared/lib/systemDice'
 import { randomDndName } from '@/shared/lib/dndNames'
+import {
+  backgroundReferenceIds,
+  backgroundStartingEquipment,
+  backgroundToolItems as resolveBackgroundToolItems,
+} from '@/features/character-editor/settings/dnd/creation/backgroundEquipment'
 import { buildDndCharacterPayload } from './dndCreateWizardPayload'
 import { spellSelectionComplete } from '@/features/character-list/components/wizard/spellSelection'
 import { liveSkillModifier } from '@/features/character-list/components/wizard/previewSkills'
@@ -108,6 +113,7 @@ export function useDndCreateWizard() {
       classAbilities.value = ca?.items || []
       featPool.value = ft?.items || []
       bgPool.value = bg?.items || []
+      await equipment.ensureEquipmentCatalogueItems(bgPool.value.flatMap(backgroundReferenceIds))
     } finally {
       loading.value = false
       loadedOnce = true
@@ -298,7 +304,8 @@ export function useDndCreateWizard() {
 
   // ─── Background (type 11): fixed skills/tools/languages + a chosen language ──
   const backgroundSkillNames = computed(() => (grants.value.backgroundSkills || []).map((id) => suggestValue(SKILL_SUGGEST, id)).filter(Boolean))
-  const backgroundToolNames = computed(() => (state.background?.data?.tool_prof || []).map((id) => suggestValue(5, id)).filter(Boolean))
+  const backgroundStart = computed(() => backgroundStartingEquipment(state.background, equipment.equipmentCatalogue.value))
+  const backgroundToolItems = computed(() => resolveBackgroundToolItems(state.background, equipment.equipmentCatalogue.value))
   const bgLangOptions = computed(() => {
     if (!grants.value.bgLangChoice) return []
     return [...new Set([...STANDARD_LANG_IDS, ...state.bgLangIds])]
@@ -535,6 +542,7 @@ export function useDndCreateWizard() {
       grantedSpellList: grantedSpellList.value,
       featPool: featPool.value,
       equipment: equipment.allEquipment.value,
+      backgroundEquipment: backgroundStart.value,
       buyStartingEquipment: state.buyStartingEquipment,
       startingWallet: equipment.shopWallet.value,
       grantedSpellIds: grantedSpellIds.value,
@@ -600,7 +608,8 @@ export function useDndCreateWizard() {
     raceLangOptions, raceLangLimit, toggleRaceLang, raceLangsComplete,
     featOptions, featLimit, toggleFeat, setFeatSelection, featEligibility, featComplete,
     // background + equipment
-    backgroundSkillNames, backgroundToolNames, bgLangOptions, bgLangLimit, toggleBgLang, bgLangsComplete,
+    backgroundSkillNames, backgroundStart, backgroundToolItems,
+    bgLangOptions, bgLangLimit, toggleBgLang, bgLangsComplete,
     ...equipment,
     // persistence
     restore, clearPersist, reset,

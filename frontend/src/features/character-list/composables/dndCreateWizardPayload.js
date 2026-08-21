@@ -12,6 +12,7 @@ export function buildDndCharacterPayload({
   grantedSpellList,
   featPool,
   equipment,
+  backgroundEquipment,
   buyStartingEquipment,
   startingWallet,
   grantedSpellIds,
@@ -40,6 +41,10 @@ export function buildDndCharacterPayload({
     })),
     bgLangIds: state.bgLangIds.slice(),
     equipment: equipment.map((entry) => ({ ...entry })),
+    backgroundEquipment: {
+      items: (backgroundEquipment?.items || []).map((entry) => ({ ...entry })),
+      coins: { ...(backgroundEquipment?.coins || {}) },
+    },
     buyStartingEquipment,
     startingWallet: { ...(startingWallet || {}) },
     persona: { ...state.persona },

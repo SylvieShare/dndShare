@@ -60,14 +60,13 @@
 import { computed, inject, ref } from 'vue'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
-import { backgroundStartingEquipment, formatStartingCoins } from '@/features/character-editor/settings/dnd/creation/backgroundEquipment'
+import { formatStartingCoins } from '@/features/character-editor/settings/dnd/creation/backgroundEquipment'
 
-const { state, classEquipment, addEquipment, removeEquipment, bumpEquipment } = inject('createWizard')
+const { state, classEquipment, backgroundStart, addEquipment, removeEquipment, bumpEquipment } = inject('createWizard')
 
 const pickerOpen = ref(false)
 const viewItem = ref(null)
 function onPick(item, qty = 1) { addEquipment(item, qty) }
-const backgroundStart = computed(() => backgroundStartingEquipment(state.background))
 const moneyLabel = computed(() => formatStartingCoins(backgroundStart.value.coins))
 function equipmentLabel(items) {
   return items.map((entry) => entry.count > 1 ? `${entry.name} ×${entry.count}` : entry.name).join(', ')
