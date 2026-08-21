@@ -32,7 +32,15 @@
       <div v-for="s in STATS" :key="s" class="stat" :class="{ primary: primaryAbilities.includes(s) }">
         <div class="stat-head">
           <span class="stat-identity">
-            <span class="stat-code">{{ s }}</span>
+            <span class="stat-symbol" :style="{ '--stat-color': suggestFor(s)?.color || 'var(--accent)' }">
+              <SvgIcon
+                v-if="suggestFor(s)?.svg"
+                class="stat-icon"
+                :svg="suggestFor(s).svg"
+                :color="suggestFor(s).color || 'var(--accent)'"
+              />
+              <span v-else class="stat-code">{{ s }}</span>
+            </span>
             <span class="stat-name">{{ STAT_FULL[s] }}</span>
           </span>
           <span v-if="primaryAbilities.includes(s)" class="primary-badge">
@@ -44,7 +52,8 @@
         <div class="stat-score-row">
           <span class="stat-score">
             <small>Итог</small>
-            <strong>{{ assigned(s) ? finalScores[s] : '—' }}</strong>
+            <strong v-if="assigned(s)">{{ finalScores[s] }}</strong>
+            <strong v-else class="stat-placeholder">?</strong>
           </span>
           <span class="stat-mod" :class="assigned(s) ? modClass(mods[s]) : ''">
             <small>Модификатор</small>
@@ -53,7 +62,7 @@
         </div>
 
         <div class="stat-breakdown">
-          <span>База <strong>{{ assigned(s) ? state.scores[s] : '—' }}</strong></span>
+          <span>База <strong :class="{ 'base-placeholder': !assigned(s) }">{{ assigned(s) ? state.scores[s] : '?' }}</strong></span>
           <span v-if="asiFor(s)" class="stat-asi">Раса <strong>+{{ asiFor(s) }}</strong></span>
           <span v-else class="stat-no-asi">Без бонуса расы</span>
         </div>
@@ -70,7 +79,6 @@
             <small v-else class="step-cost">Достигнут максимум</small>
           </template>
           <div v-else class="pool-field">
-            <span class="ctl-label">Назначить значение</span>
             <ValueSelect
               class="pool-picker"
               :model-value="state.scores[s] ?? null"
@@ -99,8 +107,10 @@
 import { computed, inject, ref } from 'vue'
 import { ConfirmDialog, MultiToggle, ValueSelect } from '@sylvieshare/share-ui'
 import SystemDie from '@/shared/ui/SystemDie.vue'
+import SvgIcon from '@/shared/ui/SvgIcon.vue'
 import { POINT_BUY_BUDGET, STANDARD_ARRAY, pointCost } from '@/features/character-list/composables/useDndCreateWizard'
-import { STAT_FULL, formatMod } from '@/features/character-list/components/wizard/labels'
+import { STAT_FULL, SUGGEST16_TO_STAT, formatMod } from '@/features/character-list/components/wizard/labels'
+import { useSuggestStore } from '@/stores/suggest'
 
 const { STATS, state, grants, finalScores, mods, pointsLeft, primaryAbilities, setMethod, rollStats, quickBuild } = inject('createWizard')
 
@@ -118,8 +128,15 @@ const hint = computed(() => ({
 
 const pool = computed(() => (state.statMethod === 'roll' ? state.rollPool : STANDARD_ARRAY))
 const rerollConfirmOpen = ref(false)
+const suggestStore = useSuggestStore()
+const statSuggestByKey = computed(() => Object.fromEntries(
+  suggestStore.items(16)
+    .map(item => [SUGGEST16_TO_STAT[Number(item.id)], item])
+    .filter(([stat]) => stat),
+))
 
 function assigned(s) { return state.scores[s] != null }
+function suggestFor(s) { return statSuggestByKey.value[s] || null }
 function asiFor(s) { return (grants.value.asi || []).filter((a) => a.stat === s).reduce((sum, a) => sum + a.bonus, 0) }
 function modClass(m) { return m > 0 ? 'pos' : m < 0 ? 'neg' : '' }
 
@@ -207,14 +224,17 @@ function confirmReroll() {
 .stat.primary::after { border-color: color-mix(in srgb, var(--accent) 15%, transparent); }
 .stat-head { position: relative; z-index: 1; min-height: 26px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .stat-identity { min-width: 0; display: flex; align-items: center; gap: 8px; }
-.stat-code { flex: none; display: inline-grid; place-items: center; min-width: 32px; height: 24px; padding: 0 6px; border-radius: 7px; background: color-mix(in srgb, var(--text-muted) 10%, transparent); color: var(--text-2); font-size: 10px; font-weight: 800; letter-spacing: .08em; }
+.stat-symbol { flex: none; display: inline-grid; place-items: center; width: 30px; height: 30px; border: 1px solid color-mix(in srgb, var(--stat-color) 28%, transparent); border-radius: 9px; background: color-mix(in srgb, var(--stat-color) 10%, transparent); }
+.stat-icon { width: 20px; height: 20px; }
+.stat-code { color: var(--text-2); font-size: 9px; font-weight: 800; letter-spacing: .06em; }
 .stat-name { min-width: 0; color: var(--text-1); font-size: 12px; font-weight: 750; line-height: 1.2; }
 .primary-badge { flex: none; display: inline-flex; align-items: center; gap: 4px; padding: 4px 6px; border-radius: var(--r-pill); background: color-mix(in srgb, var(--accent) 13%, transparent); color: var(--accent); font-size: 8px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
 .star { width: 10px; height: 10px; }
 .stat-score-row { position: relative; z-index: 1; display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin-top: 13px; }
 .stat-score, .stat-mod { display: flex; flex-direction: column; gap: 2px; }
 .stat-score small, .stat-mod small, .ctl-label { color: var(--text-muted); font-size: 8px; font-weight: 750; letter-spacing: .08em; line-height: 1.1; text-transform: uppercase; }
-.stat-score strong { color: var(--text-1); font-size: 44px; font-weight: 760; font-variant-numeric: tabular-nums; letter-spacing: -.04em; line-height: .9; }
+.stat-score strong { min-height: 40px; color: var(--text-1); font-size: 44px; font-weight: 760; font-variant-numeric: tabular-nums; letter-spacing: -.04em; line-height: .9; }
+.stat-score .stat-placeholder { color: var(--text-muted); font-weight: 620; opacity: .58; }
 .stat-mod { align-items: flex-end; }
 .stat-mod strong { min-width: 44px; padding: 6px 8px; border-radius: 9px; background: color-mix(in srgb, var(--text-muted) 9%, transparent); color: var(--text-2); font-size: 17px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1; text-align: center; }
 .stat-mod.pos strong { background: color-mix(in srgb, var(--success) 13%, transparent); color: var(--success); }
@@ -222,6 +242,7 @@ function confirmReroll() {
 .stat-breakdown { position: relative; z-index: 1; min-height: 25px; display: flex; align-items: center; gap: 7px; margin-top: 10px; color: var(--text-muted); font-size: 10px; }
 .stat-breakdown > span { display: inline-flex; align-items: baseline; gap: 3px; }
 .stat-breakdown strong { color: var(--text-2); font-size: 11px; }
+.stat-breakdown .base-placeholder { color: var(--text-muted); opacity: .68; }
 .stat-breakdown .stat-asi { padding: 3px 6px; border-radius: var(--r-pill); background: color-mix(in srgb, var(--accent) 11%, transparent); color: var(--accent); }
 .stat-breakdown .stat-asi strong { color: inherit; }
 .stat-no-asi { opacity: .72; }

@@ -39,6 +39,15 @@ describe('D&D ability scores', () => {
     expect(source).toContain('@media (max-width: 820px)')
     expect(source).toContain('@media (max-width: 460px)')
     expect(source).toContain(':deep(.share-multi-toggle)')
+    expect(source).toContain('v-else class="stat-placeholder">?</strong>')
+    expect(source).toContain("assigned(s) ? state.scores[s] : '?'")
+  })
+
+  it('renders ability icons and colors from suggest type 16', () => {
+    expect(source).toContain('suggestStore.items(16)')
+    expect(source).toContain('SUGGEST16_TO_STAT[Number(item.id)]')
+    expect(source).toContain('<SvgIcon')
+    expect(source).toContain(':color="suggestFor(s).color')
   })
 
   it('uses the shared custom value picker instead of a native select', () => {
@@ -49,6 +58,7 @@ describe('D&D ability scores', () => {
     expect(source).toContain('.vs-option:first-of-type')
     expect(source).toContain('доступно ×${count}')
     expect(source).not.toContain('<select')
+    expect(source).not.toContain('<span class="ctl-label">Назначить значение</span>')
   })
 
   it('asks for confirmation before replacing an existing dice pool', () => {
