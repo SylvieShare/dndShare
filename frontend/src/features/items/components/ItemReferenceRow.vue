@@ -23,7 +23,12 @@
           <span class="item-reference-damage">
             <WeaponDamageMetric :attack="firstAttack" :size="30" :layout="isRoomyWeapon ? 'row' : 'column'" />
           </span>
-          <span class="item-reference-properties">
+          <span
+            class="item-reference-properties"
+            :class="{ 'item-reference-properties--interactive': isRoomyWeapon && weaponPropertiesLabel }"
+            @mouseenter="showPropertiesTooltip"
+            @mouseleave="hidePropertiesTooltip"
+          >
             <small>Свойства</small>
             <span>{{ weaponPropertiesLabel || '—' }}</span>
           </span>
@@ -53,12 +58,21 @@
     >
       <CircleHelp :size="17" aria-hidden="true" />
     </button>
+    <ItemTooltip
+      v-if="propertiesTooltip.visible"
+      title="Свойства"
+      :desc="weaponPropertiesLabel"
+      :x="propertiesTooltip.x"
+      :top="propertiesTooltip.top"
+      :bottom="propertiesTooltip.bottom"
+    />
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, reactive } from 'vue'
 import { ChevronRight, CircleHelp } from '@lucide/vue'
+import ItemTooltip from '@/features/character-editor/components/ItemTooltip.vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import WeaponDamageMetric from '@/features/items/components/WeaponDamageMetric.vue'
 import { useCostFormatter } from '@/features/items/lib/useCostFormatter'
@@ -97,6 +111,21 @@ const metaLabel = computed(() => [
   weightLabel.value,
   data.value.equipment_category === 'pack' ? 'Набор' : '',
 ].filter(Boolean).join(' · '))
+const propertiesTooltip = reactive({ visible: false, x: 0, top: null, bottom: null })
+
+function showPropertiesTooltip(event) {
+  if (!isRoomyWeapon.value || !weaponPropertiesLabel.value) return
+  const rect = event.currentTarget.getBoundingClientRect()
+  const placeAbove = window.innerHeight - rect.bottom < 160
+  Object.assign(propertiesTooltip, {
+    visible: true,
+    x: Math.max(8, Math.min(rect.right - 192, window.innerWidth - 368)),
+    top: placeAbove ? null : rect.bottom + 8,
+    bottom: placeAbove ? window.innerHeight - rect.top + 8 : null,
+  })
+}
+
+function hidePropertiesTooltip() { propertiesTooltip.visible = false }
 </script>
 
 <style scoped>
@@ -133,6 +162,8 @@ const metaLabel = computed(() => [
 .item-reference--roomy-weapon .item-reference-damage { width: auto; display: flex; place-items: unset; align-self: center; grid-column: 1; grid-row: 2; }
 .item-reference--roomy-weapon .item-reference-properties { width: auto; min-width: 0; display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 2px; grid-column: 2; grid-row: 2; font-size: 10px; line-height: 1.35; text-align: right; }
 .item-reference--roomy-weapon .item-reference-properties > span { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.item-reference-properties--interactive { cursor: help; }
+.item-reference-properties--interactive > span { border-bottom: 1px dotted color-mix(in srgb, var(--accent) 65%, transparent); }
 .item-reference-economy { display: flex; align-items: baseline; justify-content: flex-end; gap: 0; grid-column: 2; grid-row: 1; color: var(--text-muted); font-size: 10px; line-height: 1.3; white-space: nowrap; }
 .item-reference-economy > span + span::before { margin: 0 6px; color: var(--border-strong); content: '·'; }
 .item-reference--roomy-weapon .item-reference-count { min-width: 0; font-size: 11px; }

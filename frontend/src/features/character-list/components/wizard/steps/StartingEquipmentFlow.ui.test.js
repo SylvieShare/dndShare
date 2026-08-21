@@ -54,6 +54,9 @@ describe('starting equipment wizard flow', () => {
     expect(itemReference).toMatch(/\.item-reference-economy \{[^}]*grid-column: 2; grid-row: 1;/)
     expect(itemReference).toContain('class="item-reference-economy"')
     expect(itemReference).toContain("content: '·'")
+    expect(itemReference).toContain('@mouseenter="showPropertiesTooltip"')
+    expect(itemReference).toContain('<ItemTooltip')
+    expect(itemReference).toContain(':desc="weaponPropertiesLabel"')
   })
 
   it('offers the PHB wealth roll, five catalogues and a budgeted cart', () => {
