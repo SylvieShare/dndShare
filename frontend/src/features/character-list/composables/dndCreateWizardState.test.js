@@ -7,18 +7,18 @@ import {
 } from './dndCreateWizardState'
 
 describe('D&D creation wizard state', () => {
-  it('moves an old persona or review draft back after removing the equipment step', () => {
+  it('moves old drafts back after removing the equipment and review steps', () => {
     expect(normalizeDndWizardDraft({ step: 6, buyStartingEquipment: false }).step).toBe(5)
-    expect(normalizeDndWizardDraft({ step: 7, buyStartingEquipment: false }).step).toBe(6)
+    expect(normalizeDndWizardDraft({ step: 7, buyStartingEquipment: false }).step).toBe(5)
   })
 
   it('keeps the old equipment position as the next persona step', () => {
     expect(normalizeDndWizardDraft({ step: 5, buyStartingEquipment: false }).step).toBe(5)
   })
 
-  it('does not shift the flow when the optional shop is present or already migrated', () => {
+  it('keeps the optional shop position and clamps migrated drafts to persona', () => {
     expect(normalizeDndWizardDraft({ step: 6, buyStartingEquipment: true }).step).toBe(6)
-    expect(normalizeDndWizardDraft({ flowVersion: DND_WIZARD_FLOW_VERSION, step: 6, buyStartingEquipment: false }).step).toBe(6)
+    expect(normalizeDndWizardDraft({ flowVersion: DND_WIZARD_FLOW_VERSION, step: 6, buyStartingEquipment: false }).step).toBe(5)
   })
 
   it('persists the current flow version', () => {

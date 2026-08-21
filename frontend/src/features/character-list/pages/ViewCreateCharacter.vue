@@ -44,10 +44,20 @@
         <span v-else-if="blockReason && !isLast" class="cc-reason">{{ blockReason }}</span>
         <div class="cc-actions">
           <button v-if="!isLast" class="btn next" :class="{ disabled: !canNext }" :aria-disabled="!canNext" @click="next">Далее</button>
-          <button v-else class="btn create" :disabled="creating" @click="createNow">{{ creating ? 'Создание…' : 'Создать персонажа' }}</button>
+          <template v-else>
+            <button class="btn soft" type="button" :disabled="creating || !dndTemplateId" @click="openPreview">Предпросмотр листа</button>
+            <button class="btn create" :disabled="creating" @click="createNow">{{ creating ? 'Создание…' : 'Создать персонажа' }}</button>
+          </template>
         </div>
       </div>
     </footer>
+
+    <CharacterSheetModal
+      v-if="previewDraft"
+      :draft="previewDraft"
+      :z-index="3200"
+      @close="previewDraft = null"
+    />
 
     <ConfirmDialog
       v-if="confirmOpen"
@@ -78,9 +88,9 @@ import StepClass from '@/features/character-list/components/wizard/steps/StepCla
 import StepStartingShop from '@/features/character-list/components/wizard/steps/StepStartingShop.vue'
 import StepPersona from '@/features/character-list/components/wizard/steps/StepPersona.vue'
 import StepRace from '@/features/character-list/components/wizard/steps/StepRace.vue'
-import StepReview from '@/features/character-list/components/wizard/steps/StepReview.vue'
 import StepStats from '@/features/character-list/components/wizard/steps/StepStats.vue'
 import StepVersion from '@/features/character-list/components/wizard/steps/StepVersion.vue'
+import CharacterSheetModal from '@/features/character-editor/components/CharacterSheetModal.vue'
 import { ConfirmDialog } from '@sylvieshare/share-ui'
 import { fetchGet, fetchPost } from '@/shared/api/http'
 import { findSourceVersion } from '@/shared/lib/sourceVersions'
@@ -127,7 +137,7 @@ const isComplete = computed(() =>
 
 const STEP_COMPONENTS = {
   version: StepVersion, race: StepRace, class: StepClass, background: StepBackground,
-  stats: StepStats, shop: StepStartingShop, persona: StepPersona, review: StepReview,
+  stats: StepStats, shop: StepStartingShop, persona: StepPersona,
 }
 
 const internalCreating = ref(false)
@@ -155,7 +165,6 @@ const steps = computed(() => [
     ? [{ key: 'shop', title: 'Магазин', summary: `${shopSpentLabel.value} · остаток ${shopRemainingLabel.value}` }]
     : []),
   { key: 'persona', title: 'Личность', summary: state.name.trim() || state.persona.alignment || '' },
-  { key: 'review', title: 'Обзор', summary: isComplete.value ? 'Можно создавать' : '' },
 ])
 const current = computed(() => state.step)
 const stepKey = computed(() => steps.value[current.value]?.key)
@@ -208,9 +217,6 @@ function validateStep(key) {
       return { ok: true }
     case 'persona':
       if (!state.name.trim()) return { ok: false, reason: 'Впиши имя персонажа' }
-      return { ok: true }
-    case 'review':
-      if (!state.name.trim()) return { ok: false, reason: 'Впиши имя' }
       return { ok: true }
     default:
       return { ok: true }
@@ -278,6 +284,24 @@ function createIncomplete() {
     return
   }
   confirmOpen.value = true
+}
+
+const previewDraft = ref(null)
+
+function openPreview() {
+  const template = templateStore.byId(dndTemplateId.value)
+  if (!template) return
+  const payload = buildPayload()
+  previewDraft.value = {
+    templateName: template.name,
+    data: payload.data,
+    publicVisible: false,
+    userId: null,
+    version: 0,
+    sourceVersionId: sourceVersionId.value,
+    iconImageId: null,
+    iconImageUrl: state.persona?.icon?.url || null,
+  }
 }
 
 async function submit() {

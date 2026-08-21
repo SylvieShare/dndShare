@@ -44,4 +44,14 @@ describe('character creation workspace width', () => {
     expect(source).toContain('...(state.buyStartingEquipment')
     expect(source).toContain("[{ key: 'shop', title: 'Магазин'")
   })
+
+  it('finishes on persona and opens the assembled sheet as a read-only preview', () => {
+    expect(source).not.toContain('StepReview')
+    expect(source).not.toContain("key: 'review'")
+    expect(source).toContain('Предпросмотр листа')
+    expect(source).toContain('<CharacterSheetModal')
+    expect(source).toContain(':draft="previewDraft"')
+    expect(source).toContain('const payload = buildPayload()')
+    expect(source).toContain('userId: null')
+  })
 })

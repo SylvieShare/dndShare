@@ -20,6 +20,8 @@
     <DndCreateWizard
       v-if="isDndTemplate"
       :template-id="selectedTemplateId"
+      :template-name="selectedTemplate?.name || ''"
+      :source-version-id="sourceVersionId"
       :creating="creating"
       @create="onWizardCreate"
       @cancel="requestClose"

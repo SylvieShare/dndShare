@@ -25,8 +25,10 @@ describe('DnD rich content integration', () => {
     expect(inputSource).toContain("openCreate('dice')")
     expect(inputSource).toContain("openCreate('item')")
     expect(inputSource).toContain("openCreate('suggest')")
-    expect(inputSource).toContain('BookOpenCheck, Dices, Ellipsis, PackageSearch')
+    expect(inputSource).toContain('BookOpenCheck, Dices, Ellipsis, Link2, PackageSearch')
     expect(inputSource).toContain('openCreateFromMenu')
+    expect(inputSource).toContain(':show-link-button="false"')
+    expect(inputSource).toContain('openLinkFromMenu')
     expect(inputSource).toContain('@container (max-width: 400px)')
     expect(inputSource).toContain('@node-select="selectNode"')
     expect(inputSource).toContain('updateRichNode')
@@ -42,7 +44,7 @@ describe('DnD rich content integration', () => {
 
   it('renders the description editor as a bordered transparent surface', () => {
     expect(inputSource).toContain('background: transparent;')
-    expect(inputSource).toContain('border: 1px solid var(--border);')
+    expect(inputSource).toContain('border: 2px solid var(--border);')
   })
 
   it('connects nodes to dice, item preview/modal and suggest description behaviour', () => {

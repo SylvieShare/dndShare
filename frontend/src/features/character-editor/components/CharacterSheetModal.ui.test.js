@@ -12,4 +12,12 @@ describe('embedded character sheet presentation', () => {
     expect(source.match(/background: transparent;/g)).toHaveLength(2)
     expect(source).not.toContain('background: var(--bg);')
   })
+
+  it('can render a local draft without enabling sheet mutations', () => {
+    expect(source).toContain('draft: { type: Object, default: null }')
+    expect(source).toContain('loadPreview(props.draft)')
+    expect(source).toContain('!previewMode.value && (isOwner.value || props.isDm)')
+    expect(source).toContain('if (previewMode.value) return')
+    expect(source).toContain('Предпросмотр черновика · только чтение')
+  })
 })

@@ -22,6 +22,8 @@
         @close="emit('close')"
       />
 
+      <div v-if="previewMode" class="csm-preview-note">Предпросмотр черновика · только чтение</div>
+
       <div class="csm-body">
         <div v-if="loading" class="container sk-container">
           <div class="sk-block" style="width:100%; height:52px" />
@@ -64,20 +66,21 @@ import { useSaveDebounce } from '@/features/character-editor/composables/useSave
 import { useSessionEventsStore } from '@/stores/sessionEvents'
 
 const props = defineProps({
-  uuid: { type: String, required: true },
+  uuid: { type: String, default: '' },
+  draft: { type: Object, default: null },
   isDm: { type: Boolean, default: false },
   zIndex: { type: Number, default: 3000 },
 })
 const emit = defineEmits(['close'])
 const sessionEventsStore = useSessionEventsStore()
-
+const previewMode = computed(() => Boolean(props.draft))
 const isMobile = ref(false)
 
 const {
   loading, template, data, charCtx, isOwner, publicVisible,
   toolbarTabs, charName, charSub, toolbarBlocksList,
-  load, blocksForTab, containerWidthForTab, getInitialTabs,
-  updateValue, updateVar, onPublicToggle,
+  load, loadPreview, blocksForTab, containerWidthForTab, getInitialTabs,
+  updateValue, updateVar, onPublicToggle: updatePublicVisible,
 } = useCharacterData(props.uuid, isMobile)
 
 const pendingSessionEvents = []
@@ -87,6 +90,7 @@ const { saveStatus, pendingSecondsLeft, scheduleSave } = useSaveDebounce(props.u
 })
 
 charCtx.logSessionEvent = event => {
+  if (previewMode.value) return
   const pending = sessionEventsStore.pendingCharacterEvent(event)
   if (pending) {
     pendingSessionEvents.push(pending)
@@ -94,8 +98,7 @@ charCtx.logSessionEvent = event => {
   }
 }
 
-const canEdit = computed(() => isOwner.value || props.isDm)
-
+const canEdit = computed(() => !previewMode.value && (isOwner.value || props.isDm))
 const activeTab = ref(0)
 const visited = ref(new Set([0]))
 const visitedTabIndexes = computed(() => [...visited.value])
@@ -105,74 +108,41 @@ function setActiveTab(index) {
   visited.value = new Set([...visited.value, index])
 }
 
+function onPublicToggle(value) {
+  if (previewMode.value) return
+  updatePublicVisible(value)
+}
+
 function onUpdateValue(event) {
+  if (previewMode.value) return
   updateValue(event)
   scheduleSave()
 }
 
 function onUpdateVar(patch) {
+  if (previewMode.value) return
   updateVar(patch)
   scheduleSave()
 }
 
 onMounted(async () => {
-  await load()
+  if (previewMode.value) loadPreview(props.draft)
+  else await load()
   charCtx.ownerMode = canEdit.value
   const tabs = getInitialTabs()
-  const defaultIdx = tabs.findIndex(t => t.default)
+  const defaultIdx = tabs.findIndex(tab => tab.default)
   setActiveTab(defaultIdx >= 0 ? defaultIdx : 0)
 })
 </script>
 
 <style scoped>
-.csm {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  min-height: 0;
-}
-
-.csm-body {
-  flex: 1;
-  min-height: 0;
-  overflow-x: auto;
-  overflow-y: auto;
-  background: transparent;
-}
-
-.container {
-  margin: 0 auto;
-  padding: 18px 16px 28px;
-  background: transparent;
-}
-
-.desktop-tabs {
-  display: flex;
-  flex-direction: column;
-  min-height: 100%;
-}
-
-.desktop-tabs > .container {
-  display: flex;
-  flex: 1 1 auto;
-  flex-direction: column;
-  width: 100%;
-  min-height: 0;
-}
-
-.sk-container {
-  max-width: 900px;
-}
-
-.sk-block {
-  border-radius: 12px;
-  background: var(--popover-bg);
-  margin-bottom: 12px;
-  animation: sk-pulse 1.4s ease-in-out infinite;
-}
-
-@keyframes sk-pulse {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.4; }
-}
+.csm { display: flex; flex-direction: column; height: 100%; min-height: 0; }
+.csm-preview-note { flex: none; padding: 5px 14px; border-bottom: 1px solid var(--border); background: color-mix(in srgb, var(--accent) 8%, var(--bg)); color: var(--accent-soft); font-size: 10px; font-weight: 700; letter-spacing: .04em; text-align: center; text-transform: uppercase; }
+.csm-body { flex: 1; min-height: 0; overflow-x: auto; overflow-y: auto; background: transparent; }
+.container { margin: 0 auto; padding: 18px 16px 28px; background: transparent; }
+.desktop-tabs { display: flex; flex-direction: column; min-height: 100%; }
+.desktop-tabs > .container { display: flex; flex: 1 1 auto; flex-direction: column; width: 100%; min-height: 0; }
+.sk-container { max-width: 900px; }
+.sk-block { margin-bottom: 12px; border-radius: 12px; background: var(--popover-bg); animation: sk-pulse 1.4s ease-in-out infinite; }
+@keyframes sk-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .4; } }
 </style>

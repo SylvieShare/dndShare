@@ -103,19 +103,9 @@
         </label>
       </section>
 
-      <!-- Review -->
-      <section v-else-if="stepKey === 'review'" class="wz-sec">
-        <div class="wz-review">
-          <div><b>{{ state.name || 'Без имени' }}</b></div>
-          <div class="wz-muted">{{ [state.race?.name, state.subrace?.name].filter(Boolean).join(' · ') }} · {{ [state.charClass?.name, state.subclass?.name].filter(Boolean).join(' · ') }}</div>
-          <div class="wz-scores">
-            <span v-for="s in STATS" :key="s">{{ s }} {{ finalScores[s] }}</span>
-          </div>
-        </div>
-      </section>
     </div>
 
-    <!-- Grants preview (shown on identity/review) -->
+    <!-- Grants preview -->
     <div v-if="showGrants" class="wz-grants">
       <div class="wz-grants-title">Вы получите</div>
       <ul class="wz-grants-list">
@@ -133,14 +123,25 @@
     <div class="wz-nav">
       <button class="wz-btn ghost" @click="back">{{ state.step === 0 ? 'Отмена' : 'Назад' }}</button>
       <button v-if="!isLast" class="wz-btn" :disabled="!canNext" @click="next">Далее</button>
-      <button v-else class="wz-btn" :disabled="creating || !canNext" @click="submit">{{ creating ? 'Создание…' : 'Создать' }}</button>
+      <div v-else class="wz-nav-actions">
+        <button class="wz-btn soft" :disabled="creating || !templateName" @click="openPreview">Предпросмотр листа</button>
+        <button class="wz-btn" :disabled="creating || !canNext" @click="submit">{{ creating ? 'Создание…' : 'Создать' }}</button>
+      </div>
     </div>
+
+    <CharacterSheetModal
+      v-if="previewDraft"
+      :draft="previewDraft"
+      :z-index="3200"
+      @close="previewDraft = null"
+    />
   </div>
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import DndStatAssign from './DndStatAssign.vue'
+import CharacterSheetModal from '@/features/character-editor/components/CharacterSheetModal.vue'
 import { FormField } from '@sylvieshare/share-ui'
 import { FormTextInput } from '@sylvieshare/share-ui'
 import { featuresForBinding } from '@/features/character-editor/settings/dnd/creation/progression'
@@ -149,6 +150,8 @@ import { dieLabel } from '@/shared/lib/systemDice'
 
 const props = defineProps({
   templateId: { type: [Number, String], required: true },
+  templateName: { type: String, default: '' },
+  sourceVersionId: { type: [Number, String], default: null },
   creating: { type: Boolean, default: false },
 })
 const emit = defineEmits(['create', 'cancel'])
@@ -172,12 +175,11 @@ const steps = computed(() => {
   ]
   if (featureChoices.value.length) s.push({ key: 'features', title: 'Выборы' })
   if (isCaster.value) s.push({ key: 'spells', title: 'Магия' })
-  s.push({ key: 'review', title: 'Обзор' })
   return s
 })
 const stepKey = computed(() => steps.value[state.step]?.key)
 const isLast = computed(() => state.step >= steps.value.length - 1)
-const showGrants = computed(() => (stepKey.value === 'identity' || stepKey.value === 'review') && (state.race || state.charClass))
+const showGrants = computed(() => stepKey.value === 'identity' && (state.race || state.charClass))
 // Subclass is chosen at creation only when the class picks its archetype at level 1.
 const subclassAtCreation = computed(() => (Number(state.charClass?.data?.subclass_level) || 99) <= 1)
 const requiresSubclass = computed(() => subclassAtCreation.value && subclasses.value.length > 0)
@@ -237,6 +239,23 @@ function submit() {
   if (props.creating) return
   emit('create', { templateId: props.templateId, ...buildPayload() })
 }
+
+const previewDraft = ref(null)
+
+function openPreview() {
+  if (!props.templateName) return
+  const payload = buildPayload()
+  previewDraft.value = {
+    templateName: props.templateName,
+    data: payload.data,
+    publicVisible: false,
+    userId: null,
+    version: 0,
+    sourceVersionId: props.sourceVersionId,
+    iconImageId: null,
+    iconImageUrl: state.persona?.icon?.url || null,
+  }
+}
 </script>
 
 <style scoped>
@@ -259,16 +278,16 @@ function submit() {
 .wz-select:focus { border-color: var(--accent); }
 .wz-check { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-1); cursor: pointer; }
 .wz-muted { font-size: 12px; color: var(--text-muted); margin: 0; }
-.wz-review { display: flex; flex-direction: column; gap: 6px; }
-.wz-scores { display: flex; flex-wrap: wrap; gap: 10px; font-weight: 600; color: var(--text-2); margin-top: 6px; }
 .wz-grants { background: var(--surface-raised); border: 1px solid var(--border-strong); border-radius: 10px; padding: 12px 14px; }
 .wz-grants-title { font-size: 12px; font-weight: 700; color: var(--accent); margin-bottom: 6px; }
 .wz-grants-list { margin: 0; padding-left: 18px; font-size: 12px; color: var(--text-muted); display: flex; flex-direction: column; gap: 3px; }
 .wz-nav { display: flex; justify-content: space-between; gap: 10px; padding-top: 4px; }
+.wz-nav-actions { display: flex; justify-content: flex-end; gap: 8px; }
 .wz-btn {
   background: var(--accent); color: var(--text-on-accent); border: none; border-radius: 8px;
   padding: 9px 20px; font: inherit; font-weight: 600; cursor: pointer;
 }
 .wz-btn:disabled { opacity: 0.5; cursor: default; }
 .wz-btn.ghost { background: transparent; color: var(--text-muted); border: 1px solid var(--border-strong); }
+.wz-btn.soft { background: var(--surface-raised); color: var(--accent); border: 1px solid var(--border-strong); }
 </style>

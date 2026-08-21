@@ -30,7 +30,7 @@ export function useCharacterData(uuid, isMobile) {
   provide('charCtx', charCtx)
   Object.assign(charCtx, { sourceVersionId, contentSources, iconImageId, iconImageUrl, uploadCharacterIcon })
 
-  function apply(res) {
+  function apply(res, { updateDocumentTitle = true } = {}) {
     if (!res) {
       throw new Error('Empty character response')
     }
@@ -52,7 +52,7 @@ export function useCharacterData(uuid, isMobile) {
     charCtx.ownerMode = isOwner.value
     loading.value = false
 
-    document.title = data.value.values?.name || 'Персонаж'
+    if (updateDocumentTitle) document.title = data.value.values?.name || 'Персонаж'
 
     return res
   }
@@ -101,6 +101,10 @@ export function useCharacterData(uuid, isMobile) {
     await useAccountStore().ensureAuth()
     const res = await fetchGet('/char/' + uuid)
     return apply(res)
+  }
+
+  function loadPreview(preview) {
+    return apply(preview, { updateDocumentTitle: false })
   }
 
   const layout = computed(() => activeLayoutProfile(template.value, isMobile.value))
@@ -276,6 +280,7 @@ export function useCharacterData(uuid, isMobile) {
     commonMobileBlockNode,
     commonMobileScrollHide,
     load,
+    loadPreview,
     loadSync,
     blocksForTab,
     containerWidthForTab,

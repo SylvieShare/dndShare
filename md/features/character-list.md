@@ -65,7 +65,7 @@ items and suggests must load without a session.
 ## Full D&D wizard
 
 The fixed steps are: Версия → Раса → Класс → Предыстория → Характеристики →
-Личность → Обзор. Когда игрок заменяет стартовый комплект начальным богатством,
+Личность. Когда игрок заменяет стартовый комплект начальным богатством,
 между Характеристиками и Личностью появляется единственный дополнительный шаг
 Магазин; отдельного шага Снаряжение нет. The desktop layout keeps the main step content in
 a responsive column capped at 1120px, giving race and class covers a wider media
@@ -80,6 +80,10 @@ the step list and opens the shared confirmation before building the partial shee
 It disappears once every step validates. Because the rail is hidden in the
 single-column layout, compact reset and partial-create equivalents remain in the
 mobile header and footer. There is no duplicate numeric step counter.
+Личность — последний шаг: рядом с созданием доступен необязательный
+«Предпросмотр листа». Он собирает текущий черновик тем же `buildPayload`, открывает
+настоящий полноэкранный лист с его вкладками в `ownerMode=false` и ничего не
+записывает на сервер; отдельного обязательного шага обзора нет.
 Neither race nor class repeats a «Результат выбора» block below its controls:
 the selected illustrated card already contains the base result and dependent
 choices remain visible in their own sections. Ability descriptions remain

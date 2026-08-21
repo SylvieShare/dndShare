@@ -2,7 +2,7 @@ import { normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'
 import { emptyScores } from './dndCreateWizardStats'
 
 export const DND_WIZARD_STORAGE_KEY = 'dnd-create-wizard-v2'
-export const DND_WIZARD_FLOW_VERSION = 3
+export const DND_WIZARD_FLOW_VERSION = 4
 
 const PERSISTED_KEYS = [
   'flowVersion', 'step', 'version', 'contentSources', 'name', 'race', 'subrace', 'charClass',
@@ -63,6 +63,8 @@ export function normalizeDndWizardDraft(saved) {
   if (savedFlowVersion < DND_WIZARD_FLOW_VERSION && !draft.buyStartingEquipment && Number(draft.step) > 5) {
     draft.step = Number(draft.step) - 1
   }
+  const lastStep = draft.buyStartingEquipment ? 6 : 5
+  draft.step = Math.max(0, Math.min(Number(draft.step) || 0, lastStep))
   draft.flowVersion = DND_WIZARD_FLOW_VERSION
   return draft
 }

@@ -23,11 +23,21 @@
         :editable="editing"
         :placeholder="block.content?.placeholder ?? 'Текст...'"
         :labels="RUSSIAN_LABELS"
+        :show-link-button="false"
         @update:model-value="$emit('update:value', block.id, $event)"
         @node-select="selectNode"
       >
         <template #toolbar>
           <span class="rich-insert-actions">
+            <button
+              type="button"
+              class="rich-tool-btn"
+              title="Вставить ссылку"
+              aria-label="Вставить ссылку"
+              @mousedown.prevent="openLink($event.currentTarget)"
+            >
+              <Link2 :size="16" :stroke-width="1.8" aria-hidden="true" />
+            </button>
             <button
               type="button"
               class="rich-tool-btn"
@@ -83,6 +93,10 @@
       @update:open="insertMenuOpen = $event"
     >
       <div class="rich-insert-menu">
+        <button type="button" role="menuitem" @mousedown.prevent="openLinkFromMenu">
+          <Link2 :size="17" aria-hidden="true" />
+          <span>Ссылка</span>
+        </button>
         <button type="button" role="menuitem" @mousedown.prevent="openCreateFromMenu('dice')">
           <Dices :size="17" aria-hidden="true" />
           <span>Формула броска</span>
@@ -144,7 +158,7 @@
 <script setup>
 import { computed, inject, ref } from 'vue'
 import { BasePopover, RichTextEditor } from '@sylvieshare/share-ui'
-import { BookOpenCheck, Dices, Ellipsis, PackageSearch } from '@lucide/vue'
+import { BookOpenCheck, Dices, Ellipsis, Link2, PackageSearch } from '@lucide/vue'
 import { useItemTypesStore } from '@/stores/itemTypes'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import RichDiceNodeModal from '@/shared/ui/RichDiceNodeModal.vue'
@@ -225,6 +239,15 @@ function openCreateFromMenu(kind) {
   openCreate(kind, false)
 }
 
+function openLink(anchor) {
+  insertMenuOpen.value = false
+  editorRef.value?.openLinkEditor?.(anchor)
+}
+
+function openLinkFromMenu() {
+  openLink(insertMenuTrigger.value)
+}
+
 async function editSelectedNode() {
   if (!selectedNode.value) return
   editingTarget.value = selectedNode.value
@@ -288,7 +311,7 @@ function removeEditingNode() {
 .input-desc :deep(.desc-editor) {
   box-sizing: border-box;
   background: transparent;
-  border: 1px solid var(--border);
+  border: 2px solid var(--border);
 }
 
 .input-desc :deep(.desc-editor:focus) {
