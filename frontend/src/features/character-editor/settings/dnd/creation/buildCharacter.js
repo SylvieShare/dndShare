@@ -309,6 +309,9 @@ export function buildCharacterData(input) {
       const v = persona[k]
       if (v != null && String(v).trim() !== '') values[blockId] = v
     }
+    if (persona.portrait?.url) {
+      values.ava = { url: persona.portrait.url, upload_id: persona.portrait.upload_id ?? null }
+    }
   }
 
   // Identity: race is a direct item reference; classes have one canonical list.

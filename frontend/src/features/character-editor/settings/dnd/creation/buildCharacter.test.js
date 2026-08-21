@@ -243,7 +243,7 @@ describe('buildCharacterData starting equipment', () => {
 })
 
 describe('buildCharacterData persona', () => {
-  it('preserves rich persona fields and stores backstory and allies in their sheet blocks', () => {
+  it('preserves rich persona fields, portrait, backstory and allies in their sheet blocks', () => {
     const result = buildCharacterData({
       race: selection(1, 'Человек'),
       charClass: selection(2, 'Воин'),
@@ -251,12 +251,14 @@ describe('buildCharacterData persona', () => {
         traits: '<p><b>Смелый</b> и любознательный</p>',
         backstory: '<p>Вырос в портовом городе</p>',
         allies: '<ul><li>Гильдия картографов</li></ul>',
+        portrait: { url: 'https://storage.example/hero.webp', upload_id: 42 },
       },
     })
 
     expect(result.data.values.person_traits).toBe('<p><b>Смелый</b> и любознательный</p>')
     expect(result.data.values.person_backstory).toBe('<p>Вырос в портовом городе</p>')
     expect(result.data.values.person_allies).toBe('<ul><li>Гильдия картографов</li></ul>')
+    expect(result.data.values.ava).toEqual({ url: 'https://storage.example/hero.webp', upload_id: 42 })
   })
 })
 

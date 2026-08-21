@@ -90,6 +90,15 @@ work area and footer, with continuous side borders framing it on desktop. The
 floating step rail and the space outside that column remain on the global dotted
 application canvas.
 
+The personality step is composed as a character portrait rather than a flat form:
+identity and alignment sit beside separate portrait and compact-icon pickers, then
+character, story and physical appearance continue in icon-labelled sections. Both
+images use the shared crop workspace and are stored in the local wizard draft after
+upload. The portrait becomes `values.ava`; the square 256×256 icon is submitted as
+`iconImageUploadId` and linked to the new character's independent `icon_image_id`.
+When no icon is selected, character cards and sessions continue to fall back to the
+portrait.
+
 The race step uses full-width illustrated rows. Each built-in race has a consistent
 landscape portrait of a male and female character; beside it the row shows a short
 mechanics-free portrait from `item.data.short_description`, every base-race grant

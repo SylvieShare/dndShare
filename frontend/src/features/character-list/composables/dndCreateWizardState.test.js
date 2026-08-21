@@ -24,4 +24,14 @@ describe('D&D creation wizard state', () => {
   it('persists the current flow version', () => {
     expect(serializeDndWizardState(createDndWizardState()).flowVersion).toBe(DND_WIZARD_FLOW_VERSION)
   })
+
+  it('keeps uploaded persona media in the draft', () => {
+    const state = createDndWizardState()
+    state.persona.portrait = { url: '/portrait.webp', upload_id: 41 }
+    state.persona.icon = { url: '/icon.webp', upload_id: 42 }
+    expect(serializeDndWizardState(state).persona).toMatchObject({
+      portrait: { upload_id: 41 },
+      icon: { upload_id: 42 },
+    })
+  })
 })

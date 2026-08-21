@@ -48,6 +48,7 @@ export function createDndWizardState() {
     persona: {
       alignment: '', traits: '', ideals: '', bonds: '', flaws: '', appearance: '',
       backstory: '', allies: '', age: '', height: '', weight: '', eyes: '', hair: '', skin: '',
+      portrait: null, icon: null,
     },
   }
 }

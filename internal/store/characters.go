@@ -133,15 +133,24 @@ func (s *Store) HasCharacters(ctx context.Context, userID int64) (bool, error) {
 }
 
 // CreateCharacter вставляет нового персонажа и возвращает его uuid.
-func (s *Store) CreateCharacter(ctx context.Context, userID, templateID int64, sourceVersionID *int64, data json.RawMessage) (string, error) {
+func (s *Store) CreateCharacter(ctx context.Context, userID, templateID int64, sourceVersionID, iconImageUploadID *int64, data json.RawMessage) (string, error) {
 	if len(data) == 0 {
 		data = json.RawMessage("{}")
 	}
+	if iconImageUploadID != nil {
+		image, err := s.GetActiveUserStorageImage(ctx, *iconImageUploadID, userID)
+		if err != nil {
+			return "", err
+		}
+		if image.Type == nil || *image.Type != "character_icon" {
+			return "", ErrNotFound
+		}
+	}
 	var uuid string
 	err := s.pool.QueryRow(ctx,
-		`INSERT INTO dndshare."char" (user_id, template_id, source_version_id, data, public_visible)
-		 VALUES ($1, $2, $3, CAST($4 AS jsonb), true) RETURNING uuid::text`,
-		userID, templateID, sourceVersionID, string(data),
+		`INSERT INTO dndshare."char" (user_id, template_id, source_version_id, icon_image_id, data, public_visible)
+		 VALUES ($1, $2, $3, $4, CAST($5 AS jsonb), true) RETURNING uuid::text`,
+		userID, templateID, sourceVersionID, iconImageUploadID, string(data),
 	).Scan(&uuid)
 	return uuid, err
 }

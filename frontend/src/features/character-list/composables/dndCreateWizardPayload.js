@@ -23,7 +23,7 @@ export function buildDndCharacterPayload({
   suggestValue,
   isExpertiseChoice,
 }) {
-  return buildCharacterData({
+  const payload = buildCharacterData({
     name: state.name.trim(),
     race: selectedItem(state.race),
     subrace: selectedItem(state.subrace),
@@ -69,4 +69,9 @@ export function buildDndCharacterPayload({
     suggestValue,
     contentSources: normalizeContentSourceSettings(state.contentSources),
   })
+  const iconUploadId = Number(state.persona?.icon?.upload_id)
+  return {
+    ...payload,
+    ...(iconUploadId > 0 ? { iconImageUploadId: iconUploadId } : {}),
+  }
 }

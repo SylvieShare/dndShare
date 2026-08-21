@@ -61,9 +61,10 @@ func (s *Server) handleGetChars(w http.ResponseWriter, r *http.Request) {
 // --- POST /api/chars ---
 
 type characterCreateRequest struct {
-	TemplateID      int64           `json:"templateId"`
-	SourceVersionID *int64          `json:"sourceVersionId"`
-	Data            json.RawMessage `json:"data"`
+	TemplateID        int64           `json:"templateId"`
+	SourceVersionID   *int64          `json:"sourceVersionId"`
+	IconImageUploadID *int64          `json:"iconImageUploadId,omitempty"`
+	Data              json.RawMessage `json:"data"`
 }
 
 type characterCreatedResponse struct {
@@ -107,8 +108,12 @@ func (s *Server) handleCreateChar(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "Неизвестная версия системы")
 		return
 	}
-	uuid, err := s.store.CreateCharacter(r.Context(), uid, req.TemplateID, req.SourceVersionID, req.Data)
+	uuid, err := s.store.CreateCharacter(r.Context(), uid, req.TemplateID, req.SourceVersionID, req.IconImageUploadID, req.Data)
 	if err != nil {
+		if errors.Is(err, store.ErrNotFound) {
+			badRequest(w, "Неизвестная иконка персонажа")
+			return
+		}
 		serverError(w, err)
 		return
 	}
@@ -405,7 +410,7 @@ func (s *Server) handleCloneChar(w http.ResponseWriter, r *http.Request) {
 		serverError(w, err)
 		return
 	}
-	newUUID, err := s.store.CreateCharacter(r.Context(), uid, char.TemplateID, char.SourceVersionID, data)
+	newUUID, err := s.store.CreateCharacter(r.Context(), uid, char.TemplateID, char.SourceVersionID, nil, data)
 	if err != nil {
 		serverError(w, err)
 		return

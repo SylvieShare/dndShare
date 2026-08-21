@@ -1,6 +1,7 @@
 package web
 
 import (
+	"bytes"
 	"errors"
 	"io"
 	"log"
@@ -51,7 +52,7 @@ func (s *Server) handleGetUserImage(w http.ResponseWriter, r *http.Request) {
 		serverError(w, err)
 		return
 	}
-	if record.Key == nil || record.Type == nil || *record.Type != "image" {
+	if record.Key == nil || record.Type == nil || (*record.Type != "image" && *record.Type != "character_icon") {
 		notFound(w, "")
 		return
 	}
@@ -113,12 +114,38 @@ func (s *Server) handleUploadImage(w http.ResponseWriter, r *http.Request) {
 	if mime == "" {
 		mime = "application/octet-stream"
 	}
-	stored, err := s.s3.UploadImage(r.Context(), file, header.Size, header.Filename, mime, "")
+	typ := "image"
+	prefix := ""
+	var reader io.Reader = file
+	if r.FormValue("purpose") == "character_icon" {
+		if header.Size <= 0 || header.Size > maxCharacterIconBytes {
+			badRequest(w, "Иконка должна быть не больше 5 МБ")
+			return
+		}
+		data, readErr := io.ReadAll(file)
+		if readErr != nil {
+			serverError(w, readErr)
+			return
+		}
+		mime = http.DetectContentType(data)
+		if mime != "image/png" && mime != "image/webp" {
+			badRequest(w, "Поддерживаются только PNG и WebP")
+			return
+		}
+		if validateErr := validateCharacterIconDimensions(data, mime); validateErr != nil {
+			badRequest(w, validateErr.Error())
+			return
+		}
+		typ = "character_icon"
+		prefix = "character-icons-staged"
+		reader = bytes.NewReader(data)
+	}
+	stored, err := s.s3.UploadImage(r.Context(), reader, header.Size, header.Filename, mime, prefix)
 	if err != nil {
 		serverError(w, err)
 		return
 	}
-	id, err := s.store.SaveStorageImage(r.Context(), uid, stored.Key, stored.URL, "image", safeUploadFileName(header.Filename), mime, header.Size)
+	id, err := s.store.SaveStorageImage(r.Context(), uid, stored.Key, stored.URL, typ, safeUploadFileName(header.Filename), mime, header.Size)
 	if err != nil {
 		if deleteErr := s.s3.DeleteObject(r.Context(), stored.Key); deleteErr != nil {
 			log.Printf("delete unattached image %q: %v", stored.Key, deleteErr)

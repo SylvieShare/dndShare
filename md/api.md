@@ -50,8 +50,11 @@ roles, а также `hasCharacters` — признак наличия хотя 
   не возвращаются.
 - `GET /api/chars` → `{chars,sessionsByChar}`; строка персонажа содержит
   nullable `iconImageId/iconImageUrl`.
-- `POST /api/chars` принимает `{templateId,sourceVersionId,data}`.
-  `sourceVersionId` обязателен и должен существовать.
+- `POST /api/chars` принимает
+  `{templateId,sourceVersionId,iconImageUploadId?,data}`. `sourceVersionId`
+  обязателен и должен существовать. Необязательный `iconImageUploadId` должен
+  указывать на активную подготовленную `character_icon` текущего пользователя;
+  при создании она связывается с `char.icon_image_id`.
 - `POST /api/chars/poll`
 - `GET /api/char/{uuid}` → template/source metadata, data, visibility,
   owner id, technical version и nullable `iconImageId/iconImageUrl`. DB
@@ -70,7 +73,9 @@ roles, а также `hasCharacters` — признак наличия хотя 
 
 Owned storage images can be read through authenticated
 `GET /api/storage/images/{id}`. The same-origin stream exists for browser image
-editing/canvas use and does not expose another user's object.
+editing/canvas use and does not expose another user's object. A multipart upload
+to `POST /api/storage/images` with `purpose=character_icon` accepts only PNG/WebP
+up to 256×256 and records a staged icon that can be consumed by character create.
 
 Editor определяет schema по `templateName` через frontend setting registry.
 `PUT /api/char/{uuid}/data` accepts `{data,events?}`. Each optional event has
