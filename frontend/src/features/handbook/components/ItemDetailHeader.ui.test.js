@@ -20,6 +20,7 @@ const transportSummarySource = read('../../items/detail-components/TransportDeta
 const transportContentSource = read('../../items/detail-components/TransportDetailContent.vue')
 const gearSummarySource = read('../../items/detail-components/GearDetailSummary.vue')
 const gearContentSource = read('../../items/detail-components/ItemDetailContent.vue')
+const toolSummarySource = read('../../items/detail-components/ToolDetailSummary.vue')
 const spellSummarySource = read('../../items/detail-components/SpellDetailSummary.vue')
 const spellContentSource = read('../../items/detail-components/SpellDetailContent.vue')
 
@@ -103,6 +104,7 @@ describe('handbook item detail cover', () => {
     expect(headerSource).toContain("2: {\n    '--cover-min-height': '400px'")
     expect(headerSource).toContain("14: {\n    '--cover-min-height': '400px'")
     expect(detailSource).toContain('<GearDetailSummary :item="item" :type="type" />')
+    expect(detailSource).toContain('<ToolDetailSummary :item="item" />')
     expect(detailSource).toContain('if (props.type?.id === 2 || props.type?.id === 14) return { economyInHeader: true }')
     expect(gearSummarySource).toContain('class="gear-economy-card gear-economy-cost"')
     expect(gearSummarySource).toContain('tone="warning"')
@@ -112,6 +114,15 @@ describe('handbook item detail cover', () => {
     expect(gearSummarySource).toContain('tone="accent"')
     expect(gearSummarySource).toContain('grid-template-columns: minmax(140px, 180px) minmax(180px, 1fr) minmax(140px, 180px);')
     expect(gearContentSource).toContain('!economyInHeader && data.weight != null')
+  })
+
+  it('shows tool proficiency requirements below the cover with OR semantics', () => {
+    expect(detailSource).toContain('<template v-else-if="isTool" #summary>')
+    expect(toolSummarySource).toContain('label="Требуется владение"')
+    expect(toolSummarySource).toContain('data.value.required_tool_proficiencies')
+    expect(toolSummarySource).toContain('suggestStore.ensure(5)')
+    expect(toolSummarySource).toContain("labels.join(' или ')")
+    expect(toolSummarySource).toContain("'Не требуется'")
   })
 
   it('uses the shared 4:3 object showcase for weapon damage, economy and OR proficiencies', () => {

@@ -8,13 +8,17 @@ import (
 	"testing"
 )
 
-func TestItemTypeHierarchySchemaIsEmbeddedLast(t *testing.T) {
-	if len(schemaParts) == 0 {
-		t.Fatal("schemaParts is empty")
+func TestToolProficiencyCatalogIsEmbeddedAfterItemTypeHierarchy(t *testing.T) {
+	if len(schemaParts) < 2 {
+		t.Fatal("schemaParts must contain the final item catalogue sections")
 	}
+	penultimate := schemaParts[len(schemaParts)-2]
 	last := schemaParts[len(schemaParts)-1]
-	if last.name != "item-type-hierarchy" || last.sql == "" || last.sql != schemaItemTypeHierarchySQL {
+	if penultimate.name != "item-type-hierarchy" || penultimate.sql == "" || penultimate.sql != schemaItemTypeHierarchySQL {
 		t.Fatal("item-type-hierarchy schema must be embedded after the equipment catalogues")
+	}
+	if last.name != "tool-proficiency-catalog" || last.sql == "" || last.sql != schemaToolProficiencyCatalogSQL {
+		t.Fatal("tool proficiency catalogue must be embedded after the tool item type exists")
 	}
 }
 
@@ -102,6 +106,23 @@ func TestWeaponCatalogLinksAnyMatchingProficiency(t *testing.T) {
 	} {
 		if !strings.Contains(schemaWeaponCatalogSQL, fragment) {
 			t.Fatalf("weapon catalogue schema must contain %q", fragment)
+		}
+	}
+}
+
+func TestToolCatalogLinksConcreteAndBroadProficiencies(t *testing.T) {
+	for _, fragment := range []string{
+		"'{required_tool_proficiencies}'",
+		"('tool-music-lute', 'Лютня'",
+		"('tool-game-dice', 'Кости'",
+		"('Alchemist''s Supplies', 'artisan', 'Инструменты алхимика', 'Инструменты ремесленников')",
+		"('Lute', 'musical', 'Лютня', 'Музыкальные инструменты')",
+		"array_remove(ARRAY[specific.id, broad.id]",
+		"'background con tools choice'",
+		"jsonb_build_object('equipment_category', 'gear')",
+	} {
+		if !strings.Contains(schemaToolProficiencyCatalogSQL, fragment) {
+			t.Fatalf("tool proficiency catalogue must contain %q", fragment)
 		}
 	}
 }
@@ -279,4 +300,26 @@ func TestWeaponResourceSchemaExposesAnyMatchingProficiencies(t *testing.T) {
 		return
 	}
 	t.Fatal("item_1 schema must expose required_weapon_proficiencies")
+}
+
+func TestToolResourceSchemaExposesAnyMatchingProficiencies(t *testing.T) {
+	path := filepath.Join("..", "..", "resources", "items", "item_14_shema.json")
+	body, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatalf("read %s: %v", path, err)
+	}
+	var fields []map[string]any
+	if err := json.Unmarshal(body, &fields); err != nil {
+		t.Fatalf("parse %s: %v", path, err)
+	}
+	for _, field := range fields {
+		if field["key"] != "required_tool_proficiencies" {
+			continue
+		}
+		if field["type"] != "suggest_array" || field["suggest_id"] != float64(5) || field["match"] != "any" || field["filter"] != true {
+			t.Fatalf("unexpected tool proficiency field: %#v", field)
+		}
+		return
+	}
+	t.Fatal("item_14 schema must expose required_tool_proficiencies")
 }

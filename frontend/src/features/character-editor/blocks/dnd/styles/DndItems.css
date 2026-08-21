@@ -163,8 +163,6 @@
   font-size: 10px;
   line-height: 1.2;
 }
-.di-tool-meta > span + span::before { margin-right: 7px; color: var(--border-strong); content: '·'; }
-.di-tool-proficient { color: var(--success); font-weight: 700; }
 .di-row-name:hover .di-row-name-text { color: var(--accent); }
 .di-row-name-editable { text-decoration: underline dotted color-mix(in srgb, var(--text-muted) 55%, transparent); text-underline-offset: 3px; }
 

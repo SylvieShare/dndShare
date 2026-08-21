@@ -30,11 +30,13 @@ describe('inventory item actions', () => {
     expect(blocks.tools).toBeUndefined()
   })
 
-  it('shows tools in inventory with proficiency state and a dedicated action', () => {
+  it('shows tools as inventory items without mutating character proficiencies', () => {
     expect(source).toContain("'di-row-tool': isToolEntry(entry)")
-    expect(source).toContain("isToolProficient(entry) ? 'Владение' : 'Нет владения'")
-    expect(source).toContain('toggleToolProficiency(entry, close)')
-    expect(source).toContain('charCtx.updateValues({ proficiencies })')
+    expect(source).toContain('{{ toolCategoryLabel(entry) }}')
+    expect(source).not.toContain('isToolProficient')
+    expect(source).not.toContain('toggleToolProficiency')
+    expect(source).not.toContain('charCtx.updateValues({ proficiencies })')
+    expect(blocks.items.content.tool_proficiency_bucket).toBeUndefined()
   })
 
   it('uses 64px handbook icons for inventory rows', () => {

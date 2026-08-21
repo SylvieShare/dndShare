@@ -17,6 +17,14 @@
     ]
   },
   {
+    "key": "required_tool_proficiencies",
+    "name": "Требуемые владения",
+    "type": "suggest_array",
+    "suggest_id": 5,
+    "match": "any",
+    "filter": true
+  },
+  {
     "key": "cost",
     "name": "Стоимость",
     "type": "int_by_suggest",

@@ -18,6 +18,9 @@
         <template v-else-if="isTransport" #summary>
           <TransportDetailSummary :item="item" />
         </template>
+        <template v-else-if="isTool" #summary>
+          <ToolDetailSummary :item="item" />
+        </template>
         <template v-else-if="isGear" #summary>
           <GearDetailSummary :item="item" :type="type" />
         </template>
@@ -144,6 +147,7 @@ import ItemDetailContent from '@/features/items/detail-components/ItemDetailCont
 import PotionDetailContent from '@/features/items/detail-components/PotionDetailContent'
 import SpellDetailContent from '@/features/items/detail-components/SpellDetailContent'
 import SpellDetailSummary from '@/features/items/detail-components/SpellDetailSummary.vue'
+import ToolDetailSummary from '@/features/items/detail-components/ToolDetailSummary.vue'
 import TransportDetailContent from '@/features/items/detail-components/TransportDetailContent'
 import TransportDetailSummary from '@/features/items/detail-components/TransportDetailSummary.vue'
 import WeaponDetailContent from '@/features/items/detail-components/WeaponDetailContent'
@@ -182,7 +186,8 @@ const isWeapon = computed(() => props.type?.id === 1)
 const isArmor = computed(() => props.type?.id === 12)
 const isSpell = computed(() => props.type?.id === 5)
 const isTransport = computed(() => props.type?.id === 13)
-const isGear = computed(() => props.type?.id === 2 || props.type?.id === 14)
+const isTool = computed(() => props.type?.id === 14)
+const isGear = computed(() => props.type?.id === 2)
 const customRendererProps = computed(() => {
   if (props.type?.id === 2 || props.type?.id === 14) return { economyInHeader: true }
   if (props.type?.id === 5) return { summaryInHeader: true }

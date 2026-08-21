@@ -109,6 +109,9 @@ var schemaItemCatalogFixesSQL string
 //go:embed schema/30_item_type_hierarchy.sql
 var schemaItemTypeHierarchySQL string
 
+//go:embed schema/31_tool_proficiency_catalog.sql
+var schemaToolProficiencyCatalogSQL string
+
 var schemaParts = []struct {
 	name string
 	sql  string
@@ -145,6 +148,7 @@ var schemaParts = []struct {
 	{"item-instance-params", schemaItemInstanceParamsSQL},
 	{"item-catalog-fixes", schemaItemCatalogFixesSQL},
 	{"item-type-hierarchy", schemaItemTypeHierarchySQL},
+	{"tool-proficiency-catalog", schemaToolProficiencyCatalogSQL},
 }
 
 func applySchema(ctx context.Context, pool *pgxpool.Pool) error {

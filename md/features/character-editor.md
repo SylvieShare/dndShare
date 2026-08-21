@@ -271,12 +271,14 @@ menu on desktop or inside its bounded mobile section and records the chosen
 level. A spell row renders its transparent raster
 `item.iconImageUrl` when assigned; otherwise it retains the school SVG symbol.
 
-Type-14 tool entries stay in the ordinary inventory but have a compact category
-and proficiency line under the name. Their row action menu can toggle the
-concrete tool name in the global proficiency bucket. Moving or deleting an owned
-tool never silently removes proficiency; a character may know a tool without
-carrying it and carry one without being proficient. Inventory rows use 64×64
-handbook images while retaining type-specific inner content.
+Type-14 tool entries stay in the ordinary inventory and have a compact category
+line under the name. Their row action menu never changes character proficiency:
+ownership and `proficiencies['Инструменты']` are independent, so a character may
+know a tool without carrying it and carry one without being proficient. The
+handbook detail resolves `required_tool_proficiencies` through suggest type 5
+and displays the acceptable concrete/category proficiencies under the cover;
+multiple links use OR semantics. Inventory rows use 64×64 handbook images while
+retaining type-specific inner content.
 
 Starting armor is placed directly in the equipped array. Its handbook
 `data.armor` rule initializes AC as readonly equipment-derived bonuses; light

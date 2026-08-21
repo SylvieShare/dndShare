@@ -215,8 +215,7 @@
         { "type_id": 1, "value_id": "weapon", "label": "Оружие" },
         { "type_id": 10, "value_id": "potions", "label": "Зелья" }
       ],
-      "tool_type_id": 14,
-      "tool_proficiency_bucket": "Инструменты"
+      "tool_type_id": 14
     }
   },
   "counters": {

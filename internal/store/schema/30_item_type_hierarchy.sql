@@ -18,6 +18,7 @@ VALUES (
     '[
       {"key":"desc","name":"Описание","type":"description"},
       {"key":"category","name":"Категория инструмента","type":"select","filter":true,"options":[{"value":"artisan","label":"Ремесленные инструменты"},{"value":"gaming","label":"Игровые наборы"},{"value":"musical","label":"Музыкальные инструменты"},{"value":"kit","label":"Прочие наборы"}]},
+      {"key":"required_tool_proficiencies","name":"Требуемые владения","type":"suggest_array","suggest_id":5,"match":"any","filter":true},
       {"key":"cost","name":"Стоимость","type":"int_by_suggest","suggest_type_id":17},
       {"key":"weight","name":"Вес","type":"int"},
       {"key":"available_in_starting_shop","name":"Доступно в магазине при создании","type":"boolean","filter":true}
