@@ -16,7 +16,9 @@ WHERE item_type.id IN (3, 4, 7)
 
 -- Fixed spell grants found by auditing the built-in racial and class feature
 -- catalogue: Drow Magic, Infernal Legacy, Природная иллюзия, Bonus Cantrip:
--- Light, Improved Minor Illusion, Mage Hand Legerdemain and Shadow Arts.
+-- Light, Improved Minor Illusion, Mage Hand Legerdemain, Shadow Arts, Spirit
+-- Seeker, Spirit Walker, Undead Thralls, Shapechanger, Thousand Forms,
+-- Restorative Reagents, Chemical Mastery and Empty Body.
 -- Leveled racial spells and Shadow Arts do not spend ordinary spell slots;
 -- their own feature resource/payment remains the usage authority.
 WITH grants(item_id, granted_spells) AS (
@@ -27,7 +29,15 @@ WITH grants(item_id, granted_spells) AS (
         (4430, '[{"spell":{"id":519},"level":1,"ability":5}]'::jsonb),
         (4307, '[{"spell":{"id":498},"level":2,"ability":4}]'::jsonb),
         (4213, '[{"spell":{"id":468},"level":3,"ability":4}]'::jsonb),
-        (4452, '[{"spell":{"id":498},"level":3,"ability":5},{"spell":{"id":833},"level":3,"ability":5,"slotless":true},{"spell":{"id":823},"level":3,"ability":5,"slotless":true},{"spell":{"id":698},"level":3,"ability":5,"slotless":true},{"spell":{"id":828},"level":3,"ability":5,"slotless":true}]'::jsonb)
+        (4452, '[{"spell":{"id":498},"level":3,"ability":5},{"spell":{"id":833},"level":3,"ability":5,"slotless":true},{"spell":{"id":823},"level":3,"ability":5,"slotless":true},{"spell":{"id":698},"level":3,"ability":5,"slotless":true},{"spell":{"id":828},"level":3,"ability":5,"slotless":true}]'::jsonb),
+        (4422, '[{"spell":{"id":728},"level":3,"ability":5,"slotless":true},{"spell":{"id":660},"level":3,"ability":5,"slotless":true}]'::jsonb),
+        (4221, '[{"spell":{"id":1164},"level":10,"ability":5,"slotless":true}]'::jsonb),
+        (4260, '[{"spell":{"id":864},"level":6,"ability":4}]'::jsonb),
+        (4313, '[{"spell":{"id":1067},"level":10,"ability":4,"slotless":true}]'::jsonb),
+        (4249, '[{"spell":{"id":815},"level":14,"ability":5,"slotless":true}]'::jsonb),
+        (4438, '[{"spell":{"id":753},"level":9,"ability":4,"slotless":true}]'::jsonb),
+        (4440, '[{"spell":{"id":1118},"level":15,"ability":4,"slotless":true},{"spell":{"id":1254},"level":15,"ability":4,"slotless":true}]'::jsonb),
+        (4446, '[{"spell":{"id":1408},"level":18,"ability":5,"slotless":true}]'::jsonb)
 )
 UPDATE dndshare.item item
 SET data = jsonb_set(COALESCE(item.data, '{}'::jsonb), '{granted_spells}', grants.granted_spells, true)

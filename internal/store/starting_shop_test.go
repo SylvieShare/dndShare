@@ -144,6 +144,7 @@ func TestAbilitySpellGrantsCoverFixedCatalogSources(t *testing.T) {
 	for _, fragment := range []string{
 		"granted_spells", "Природная иллюзия", "Заклинательная характеристика",
 		"(4087,", "(1443,", "(4092,", "(4430,", "(4307,", "(4213,", "(4452,",
+		"(4422,", "(4221,", "(4260,", "(4313,", "(4249,", "(4438,", "(4440,", "(4446,",
 		`"slotless":true`, "item_type.id IN (3, 4, 7)",
 	} {
 		if !strings.Contains(schemaAbilitySpellGrantsSQL, fragment) {
