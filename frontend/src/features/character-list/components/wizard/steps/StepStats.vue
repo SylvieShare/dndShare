@@ -12,7 +12,7 @@
     <p class="hint">{{ hint }}</p>
 
     <div v-if="state.statMethod === 'roll'" class="roll-cta">
-      <button type="button" class="roll-btn" @click="rollStats">
+      <button type="button" class="roll-btn" @click="requestRoll">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3" /><circle cx="8" cy="8" r="1.4" fill="currentColor" /><circle cx="16" cy="16" r="1.4" fill="currentColor" /><circle cx="16" cy="8" r="1.4" fill="currentColor" /><circle cx="8" cy="16" r="1.4" fill="currentColor" /></svg>
         {{ state.rollPool.length ? 'Перебросить 4d6 ×6' : 'Бросить 4d6 ×6' }}
       </button>
@@ -30,37 +30,74 @@
 
     <div class="grid">
       <div v-for="s in STATS" :key="s" class="stat" :class="{ primary: primaryAbilities.includes(s) }">
-        <span v-if="primaryAbilities.includes(s)" class="stat-strip" />
         <div class="stat-head">
-          <span class="stat-name">{{ STAT_FULL[s] }}</span>
-          <svg v-if="primaryAbilities.includes(s)" class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3L22 9.3l-5 5 1.2 7L12 17.8 5.8 21.3 7 14.3l-5-5 7.1-1z" /></svg>
+          <span class="stat-identity">
+            <span class="stat-code">{{ s }}</span>
+            <span class="stat-name">{{ STAT_FULL[s] }}</span>
+          </span>
+          <span v-if="primaryAbilities.includes(s)" class="primary-badge">
+            <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3L22 9.3l-5 5 1.2 7L12 17.8 5.8 21.3 7 14.3l-5-5 7.1-1z" /></svg>
+            Ключевая
+          </span>
         </div>
 
-        <div class="stat-nums">
-          <span class="stat-final">{{ assigned(s) ? finalScores[s] : '—' }}</span>
-          <span v-if="assigned(s)" class="stat-mod" :class="modClass(mods[s])">{{ formatMod(mods[s]) }}</span>
+        <div class="stat-score-row">
+          <span class="stat-score">
+            <small>Итог</small>
+            <strong>{{ assigned(s) ? finalScores[s] : '—' }}</strong>
+          </span>
+          <span class="stat-mod" :class="assigned(s) ? modClass(mods[s]) : ''">
+            <small>Модификатор</small>
+            <strong>{{ assigned(s) ? formatMod(mods[s]) : '—' }}</strong>
+          </span>
         </div>
-        <div v-if="asiFor(s)" class="stat-asi">+{{ asiFor(s) }} от расы</div>
+
+        <div class="stat-breakdown">
+          <span>База <strong>{{ assigned(s) ? state.scores[s] : '—' }}</strong></span>
+          <span v-if="asiFor(s)" class="stat-asi">Раса <strong>+{{ asiFor(s) }}</strong></span>
+          <span v-else class="stat-no-asi">Без бонуса расы</span>
+        </div>
 
         <div class="stat-ctl">
           <template v-if="state.statMethod === 'pointbuy'">
-            <button class="step-btn" :disabled="(state.scores[s] ?? 8) <= 8" @click="bump(s, -1)">−</button>
-            <span class="step-val">{{ state.scores[s] ?? 8 }}</span>
-            <span class="next-step"><button class="step-btn" :disabled="(state.scores[s] ?? 8) >= 15 || pointsLeft < costStep(s)" @click="bump(s, 1)">+</button><small v-if="(state.scores[s] ?? 8) < 15">{{ costStep(s) }} очк.</small></span>
+            <span class="ctl-label">Базовое значение</span>
+            <span class="stat-stepper">
+              <button class="step-btn" :disabled="(state.scores[s] ?? 8) <= 8" :aria-label="`Уменьшить ${STAT_FULL[s]}`" @click="bump(s, -1)">−</button>
+              <span class="step-val">{{ state.scores[s] ?? 8 }}</span>
+              <button class="step-btn" :disabled="(state.scores[s] ?? 8) >= 15 || pointsLeft < costStep(s)" :aria-label="`Увеличить ${STAT_FULL[s]}`" @click="bump(s, 1)">+</button>
+            </span>
+            <small v-if="(state.scores[s] ?? 8) < 15" class="step-cost">Следующий шаг: {{ costStep(s) }} очк.</small>
+            <small v-else class="step-cost">Достигнут максимум</small>
           </template>
-          <select v-else class="pool-select" :value="state.scores[s] ?? ''" @change="assign(s, $event.target.value)">
-            <option value="">—</option>
-            <option v-for="(v, i) in availablePool(s)" :key="`${v}-${i}`" :value="v">{{ v }}</option>
-          </select>
+          <div v-else class="pool-field">
+            <span class="ctl-label">Назначить значение</span>
+            <ValueSelect
+              class="pool-picker"
+              :model-value="state.scores[s] ?? null"
+              :options="poolOptions(s)"
+              placeholder="Выберите значение"
+              :aria-label="`Назначить значение характеристики ${STAT_FULL[s]}`"
+              @update:model-value="assign(s, $event)"
+            />
+          </div>
         </div>
       </div>
     </div>
+
+    <ConfirmDialog
+      v-if="rerollConfirmOpen"
+      title="Перебросить результаты?"
+      message="Судьба уже высказалась. Просить её повторить бросок — поведение, недостойное настоящего героя. Всё равно продолжить?"
+      confirm-label="Да, мне не стыдно"
+      @cancel="rerollConfirmOpen = false"
+      @confirm="confirmReroll"
+    />
   </div>
 </template>
 
 <script setup>
-import { computed, inject } from 'vue'
-import { MultiToggle } from '@sylvieshare/share-ui'
+import { computed, inject, ref } from 'vue'
+import { ConfirmDialog, MultiToggle, ValueSelect } from '@sylvieshare/share-ui'
 import SystemDie from '@/shared/ui/SystemDie.vue'
 import { POINT_BUY_BUDGET, STANDARD_ARRAY, pointCost } from '@/features/character-list/composables/useDndCreateWizard'
 import { STAT_FULL, formatMod } from '@/features/character-list/components/wizard/labels'
@@ -80,6 +117,7 @@ const hint = computed(() => ({
 }[state.statMethod] || ''))
 
 const pool = computed(() => (state.statMethod === 'roll' ? state.rollPool : STANDARD_ARRAY))
+const rerollConfirmOpen = ref(false)
 
 function assigned(s) { return state.scores[s] != null }
 function asiFor(s) { return (grants.value.asi || []).filter((a) => a.stat === s).reduce((sum, a) => sum + a.bonus, 0) }
@@ -103,6 +141,18 @@ function availablePool(stat) {
   if (current != null && !available.some(value => value === Number(current))) available.unshift(Number(current))
   return available
 }
+function poolOptions(stat) {
+  const counts = new Map()
+  for (const value of availablePool(stat)) counts.set(value, (counts.get(value) || 0) + 1)
+  return [
+    { value: '', label: 'Не назначено', key: `${stat}-empty` },
+    ...Array.from(counts, ([value, count]) => ({
+      value,
+      label: count > 1 ? `${value} · доступно ×${count}` : String(value),
+      key: `${stat}-${value}`,
+    })),
+  ]
+}
 function assign(stat, raw) { state.scores[stat] = raw === '' ? null : Number(raw) }
 function costStep(stat) {
   const cur = state.scores[stat] ?? 8
@@ -111,6 +161,14 @@ function costStep(stat) {
 function bump(stat, dir) {
   const cur = state.scores[stat] ?? 8
   state.scores[stat] = Math.max(8, Math.min(15, cur + dir))
+}
+function requestRoll() {
+  if (state.rollPool.length) rerollConfirmOpen.value = true
+  else rollStats()
+}
+function confirmReroll() {
+  rerollConfirmOpen.value = false
+  rollStats()
 }
 </script>
 
@@ -133,43 +191,58 @@ function bump(stat, dir) {
   padding: 10px 18px; font: inherit; font-weight: 600; cursor: pointer;
 }
 .roll-btn svg { width: 17px; height: 17px; }
-.roll-series { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; width: 100%; }
-.roll-series-item { display: flex; align-items: center; gap: 8px; min-width: 0; padding: 6px 8px; border-radius: 8px; background: var(--surface); }
+.roll-series { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; width: 100%; }
+.roll-series-item { display: flex; align-items: center; gap: 8px; min-width: 0; padding: 7px 9px; border: 1px solid color-mix(in srgb, var(--border) 72%, transparent); border-radius: 9px; background: var(--surface); }
 .roll-series-item > strong { min-width: 20px; color: var(--text-1); font-size: 15px; text-align: center; }
 .roll-dice { display: flex; align-items: center; gap: 2px; }
 .roll-dice > span { position: relative; display: inline-flex; }
 .roll-dice i { position: absolute; inset: 0; display: grid; place-items: center; color: var(--text-on-accent); font-size: 8px; font-style: normal; font-weight: 800; pointer-events: none; }
 .roll-dice .dropped { opacity: .36; filter: grayscale(1); }
 .roll-dice .dropped::after { position: absolute; left: 1px; right: 1px; top: 50%; height: 1px; background: var(--danger); content: ''; transform: rotate(-25deg); }
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 11px; }
-.stat { position: relative;
-  background: var(--surface);
-  border-radius: var(--r-md);
-  padding: 11px 13px 12px;
-  overflow: hidden;
-}
-.stat.primary { background: color-mix(in srgb, var(--accent) 10%, var(--surface)); }
-.stat-strip { position: absolute; top: 8px; bottom: 8px; left: 0; width: 3px; border-radius: 0 2px 2px 0; background: var(--accent); }
-.stat-head { display: flex; align-items: center; gap: 6px; }
-.stat-name { font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-muted); font-weight: 650; }
-.star { width: 12px; height: 12px; color: var(--accent); }
-.stat-nums { display: flex; align-items: baseline; gap: 8px; margin-top: 4px; }
-.stat-final { font-size: 30px; font-weight: 700; color: var(--text-1); font-variant-numeric: tabular-nums; line-height: 1; }
-.stat-mod { font-size: 13px; font-weight: 600; color: var(--text-2); font-variant-numeric: tabular-nums; }
-.stat-mod.pos { color: var(--success); }
-.stat-mod.neg { color: var(--danger); }
-.stat-asi { font-size: 10px; color: var(--accent); margin-top: 3px; }
-.stat-ctl { display: flex; align-items: center; gap: 8px; margin-top: 9px; }
-.pool-select { flex: 1; background: var(--surface-raised); border: 1px solid var(--border-strong); border-radius: 7px;
-  color: var(--text-1); font: inherit; font-size: 13px; padding: 6px 8px; outline: none;
-}
-.pool-select:focus { border-color: var(--accent); }
-.step-btn { width: 28px; height: 28px; border-radius: 7px; border: 1px solid var(--border-strong);
-  background: var(--surface-raised); color: var(--text-1); cursor: pointer; font-size: 16px; line-height: 1;
-}
-.step-btn:disabled { opacity: 0.4; cursor: default; }
-.step-val { min-width: 26px; text-align: center; font-weight: 700; color: var(--text-1); font-variant-numeric: tabular-nums; }
-.next-step { display: inline-flex; align-items: center; gap: 4px; }
-.next-step small { color: var(--text-muted); font-size: 10px; font-weight: 650; white-space: nowrap; }
-@media (max-width: 640px) { .stats-bar { display: grid; grid-template-columns: 1fr auto; gap: 8px; } .stats-bar :deep(.mt-toggle) { grid-column: 1 / -1; width: 100%; } .qb { justify-content: center; min-height: 36px; } .budget { margin-left: 0; justify-self: end; } .roll-cta { align-items: stretch; } .roll-btn { width: 100%; justify-content: center; } .roll-series { grid-template-columns: 1fr; } }
+.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 13px; }
+.stat { position: relative; min-width: 0; min-height: 196px; display: flex; flex-direction: column; padding: 16px; overflow: visible; border: 1px solid color-mix(in srgb, var(--border) 88%, transparent); border-radius: calc(var(--r-md) + 2px); background: linear-gradient(145deg, color-mix(in srgb, var(--surface-raised) 72%, var(--surface)), var(--surface)); box-shadow: 0 8px 22px color-mix(in srgb, var(--scrim) 9%, transparent); }
+.stat::after { position: absolute; right: 9px; bottom: 9px; width: 64px; height: 64px; border: 1px solid color-mix(in srgb, var(--text-muted) 8%, transparent); border-radius: 50%; content: ''; pointer-events: none; }
+.stat.primary { border-color: color-mix(in srgb, var(--accent) 46%, var(--border)); background: linear-gradient(145deg, color-mix(in srgb, var(--accent) 14%, var(--surface-raised)), color-mix(in srgb, var(--accent) 5%, var(--surface))); box-shadow: 0 9px 24px color-mix(in srgb, var(--accent) 10%, transparent); }
+.stat.primary::after { border-color: color-mix(in srgb, var(--accent) 15%, transparent); }
+.stat-head { position: relative; z-index: 1; min-height: 26px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.stat-identity { min-width: 0; display: flex; align-items: center; gap: 8px; }
+.stat-code { flex: none; display: inline-grid; place-items: center; min-width: 32px; height: 24px; padding: 0 6px; border-radius: 7px; background: color-mix(in srgb, var(--text-muted) 10%, transparent); color: var(--text-2); font-size: 10px; font-weight: 800; letter-spacing: .08em; }
+.stat-name { min-width: 0; color: var(--text-1); font-size: 12px; font-weight: 750; line-height: 1.2; }
+.primary-badge { flex: none; display: inline-flex; align-items: center; gap: 4px; padding: 4px 6px; border-radius: var(--r-pill); background: color-mix(in srgb, var(--accent) 13%, transparent); color: var(--accent); font-size: 8px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
+.star { width: 10px; height: 10px; }
+.stat-score-row { position: relative; z-index: 1; display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin-top: 13px; }
+.stat-score, .stat-mod { display: flex; flex-direction: column; gap: 2px; }
+.stat-score small, .stat-mod small, .ctl-label { color: var(--text-muted); font-size: 8px; font-weight: 750; letter-spacing: .08em; line-height: 1.1; text-transform: uppercase; }
+.stat-score strong { color: var(--text-1); font-size: 44px; font-weight: 760; font-variant-numeric: tabular-nums; letter-spacing: -.04em; line-height: .9; }
+.stat-mod { align-items: flex-end; }
+.stat-mod strong { min-width: 44px; padding: 6px 8px; border-radius: 9px; background: color-mix(in srgb, var(--text-muted) 9%, transparent); color: var(--text-2); font-size: 17px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1; text-align: center; }
+.stat-mod.pos strong { background: color-mix(in srgb, var(--success) 13%, transparent); color: var(--success); }
+.stat-mod.neg strong { background: color-mix(in srgb, var(--danger) 13%, transparent); color: var(--danger); }
+.stat-breakdown { position: relative; z-index: 1; min-height: 25px; display: flex; align-items: center; gap: 7px; margin-top: 10px; color: var(--text-muted); font-size: 10px; }
+.stat-breakdown > span { display: inline-flex; align-items: baseline; gap: 3px; }
+.stat-breakdown strong { color: var(--text-2); font-size: 11px; }
+.stat-breakdown .stat-asi { padding: 3px 6px; border-radius: var(--r-pill); background: color-mix(in srgb, var(--accent) 11%, transparent); color: var(--accent); }
+.stat-breakdown .stat-asi strong { color: inherit; }
+.stat-no-asi { opacity: .72; }
+.stat-ctl { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: stretch; gap: 6px; margin-top: auto; padding-top: 12px; border-top: 1px solid color-mix(in srgb, var(--border) 72%, transparent); }
+.pool-field { display: flex; flex-direction: column; gap: 6px; }
+.pool-picker { width: 100%; }
+.pool-picker :deep(.vs-button) { min-height: 40px; border-color: var(--border-strong); border-radius: 10px; background: linear-gradient(135deg, color-mix(in srgb, var(--surface-raised) 88%, var(--surface)), var(--surface-raised)); padding: 8px 11px; }
+.pool-picker :deep(.vs-button:hover), .pool-picker :deep(.vs-button[aria-expanded="true"]) { border-color: color-mix(in srgb, var(--accent) 68%, var(--border-strong)); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 11%, transparent); }
+.pool-picker :deep(.vs-button > span:first-child) { color: var(--text-1); font-size: 14px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.pool-picker :deep(.vs-arrow) { color: var(--accent); transition: transform .15s ease; }
+.pool-picker :deep(.vs-button[aria-expanded="true"] .vs-arrow) { transform: rotate(180deg); }
+.pool-picker :deep(.vs-drop) { min-width: 100%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px; padding: 6px; border-color: color-mix(in srgb, var(--accent) 34%, var(--border-strong)); border-radius: 12px; background: color-mix(in srgb, var(--surface-raised) 94%, transparent); box-shadow: 0 16px 38px color-mix(in srgb, var(--scrim) 28%, transparent); }
+.pool-picker :deep(.vs-option) { min-width: 0; justify-content: center; border: 1px solid color-mix(in srgb, var(--border) 65%, transparent); border-radius: 8px; background: color-mix(in srgb, var(--surface) 78%, transparent); color: var(--text-2); font-size: 12px; font-weight: 750; text-align: center; }
+.pool-picker :deep(.vs-option:hover), .pool-picker :deep(.vs-option--active) { border-color: color-mix(in srgb, var(--accent) 42%, var(--border)); background: color-mix(in srgb, var(--accent) 10%, var(--surface)); color: var(--text-1); }
+.pool-picker :deep(.vs-option[aria-selected="true"]) { border-color: color-mix(in srgb, var(--accent) 68%, var(--border)); background: color-mix(in srgb, var(--accent) 17%, var(--surface)); color: var(--accent); }
+.stat-stepper { display: grid; grid-template-columns: 36px minmax(38px, 1fr) 36px; align-items: center; min-height: 38px; border: 1px solid var(--border-strong); border-radius: 10px; background: var(--surface-raised); overflow: hidden; }
+.step-btn { width: 36px; height: 36px; border: 0; background: transparent; color: var(--text-1); cursor: pointer; font-size: 20px; line-height: 1; }
+.step-btn:hover:not(:disabled) { background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent); }
+.step-btn:disabled { opacity: .35; cursor: default; }
+.step-val { min-width: 0; border-inline: 1px solid color-mix(in srgb, var(--border) 70%, transparent); color: var(--text-1); font-size: 17px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 36px; text-align: center; }
+.step-cost { min-height: 12px; color: var(--text-muted); font-size: 9px; line-height: 1.2; text-align: center; }
+@media (max-width: 820px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .roll-series { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .stats-bar { display: grid; grid-template-columns: 1fr auto; gap: 8px; } .stats-bar :deep(.mt-toggle) { grid-column: 1 / -1; width: 100%; } .qb { justify-content: center; min-height: 36px; } .budget { margin-left: 0; justify-self: end; } .roll-cta { align-items: stretch; } .roll-btn { width: 100%; justify-content: center; } }
+@media (max-width: 460px) { .grid, .roll-series { grid-template-columns: 1fr; } .stat { min-height: 188px; padding: 14px; } }
 </style>

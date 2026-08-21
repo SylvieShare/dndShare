@@ -1,5 +1,9 @@
 import { describe, expect, it, vi } from 'vitest'
+import { readFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
 import { STANDARD_ARRAY, STATS } from '@/features/character-list/composables/dndCreateWizardStats'
+
+const source = readFileSync(fileURLToPath(new URL('./StepStats.vue', import.meta.url)), 'utf8')
 
 vi.mock('@/stores/suggest', () => ({
   useSuggestStore: () => ({ ensure: vi.fn(), items: () => [], loaded: () => false }),
@@ -25,5 +29,30 @@ describe('D&D ability scores', () => {
 
     expect(wizard.state.statMethod).toBe('array')
     expect(Object.values(wizard.state.scores).sort((a, b) => b - a)).toEqual(STANDARD_ARRAY)
+  })
+
+  it('uses a three-column roomy card grid with category-specific score details', () => {
+    expect(source).toContain('.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));')
+    expect(source).toContain('class="stat-score-row"')
+    expect(source).toContain('class="stat-breakdown"')
+    expect(source).toContain('class="primary-badge"')
+    expect(source).toContain('@media (max-width: 820px)')
+    expect(source).toContain('@media (max-width: 460px)')
+  })
+
+  it('uses the shared custom value picker instead of a native select', () => {
+    expect(source).toContain('<ValueSelect')
+    expect(source).toContain(':options="poolOptions(s)"')
+    expect(source).toContain('grid-template-columns: repeat(2, minmax(0, 1fr))')
+    expect(source).toContain('доступно ×${count}')
+    expect(source).not.toContain('<select')
+  })
+
+  it('asks for confirmation before replacing an existing dice pool', () => {
+    expect(source).toContain('@click="requestRoll"')
+    expect(source).toContain('if (state.rollPool.length) rerollConfirmOpen.value = true')
+    expect(source).toContain('<ConfirmDialog')
+    expect(source).toContain('поведение, недостойное настоящего героя')
+    expect(source).toContain('confirm-label="Да, мне не стыдно"')
   })
 })
