@@ -158,18 +158,26 @@ const suggestTypes = ref([])
 const loadingTypes = ref(false)
 const loadingDicts = ref(false)
 
+// A landing category is presentation-only. Do not model it through
+// parentTypeId: that relation intentionally expands parent catalogues in item
+// pickers (for example, "Вещи" includes "Оружие"). Feature ownership remains
+// item-level data: race_ids/subrace_ids and class_ids/subclass_ids.
+const featureTypeIds = new Set([3, 4, 7])
+
 const selectedSource = computed(() => sources.value.find(s => s.id === selectedSourceId.value) || null)
 const selectedVersion = computed(() => selectedSource.value?.versions?.find(
   version => Number(version.id) === Number(selectedSourceVersionId.value),
 ) || null)
 const collectionGroups = computed(() => {
   const types = itemTypes.value
-  const knownIds = new Set(types.map(type => Number(type.id)))
-  const roots = types.filter(type => type.parentTypeId == null || !knownIds.has(Number(type.parentTypeId)))
+  const features = types.filter(type => featureTypeIds.has(Number(type.id)))
+  const hierarchyTypes = types.filter(type => !featureTypeIds.has(Number(type.id)))
+  const knownIds = new Set(hierarchyTypes.map(type => Number(type.id)))
+  const roots = hierarchyTypes.filter(type => type.parentTypeId == null || !knownIds.has(Number(type.parentTypeId)))
   const descendantsOf = (root) => {
     const result = []
     const appendChildren = (parent) => {
-      for (const child of types.filter(type => Number(type.parentTypeId) === Number(parent.id))) {
+      for (const child of hierarchyTypes.filter(type => Number(type.parentTypeId) === Number(parent.id))) {
         result.push(child)
         appendChildren(child)
       }
@@ -190,6 +198,14 @@ const collectionGroups = computed(() => {
       name: 'Основные разделы',
       description: 'Самостоятельные коллекции',
       types: independent,
+    })
+  }
+  if (features.length) {
+    groups.push({
+      key: 'features',
+      name: 'Способности и черты',
+      description: 'Расовые и классовые способности, а также выбираемые черты',
+      types: features,
     })
   }
   for (const { root, descendants } of families) {
