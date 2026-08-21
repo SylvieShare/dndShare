@@ -32,6 +32,7 @@ type publicEncounterCombatant struct {
 	UID           string                 `json:"uid"`
 	Type          string                 `json:"type"`
 	Name          string                 `json:"name"`
+	IconImageURL  *string                `json:"iconImageUrl,omitempty"`
 	AvatarURL     *string                `json:"avatarUrl,omitempty"`
 	AvatarSVG     *string                `json:"avatarSvg,omitempty"`
 	CoverImageURL *string                `json:"coverImageUrl,omitempty"`
@@ -275,7 +276,8 @@ func buildPublicCombatant(raw rawPublicCombatant, participant store.SessionParti
 	var stateIDs []int64
 	if raw.Type == "player" {
 		result.Name = participantName(participant)
-		result.AvatarURL = participantAvatar(participant)
+		result.IconImageURL = participant.IconImageURL
+		result.AvatarURL = participantPortrait(participant)
 		result.Color = participant.Color
 		current, maximum, known := participantHP(participant)
 		result.Health = encounterHealth(current, maximum, known, showHealth)
@@ -344,10 +346,7 @@ func participantName(participant store.SessionParticipantData) string {
 	return stringValue(values, "name")
 }
 
-func participantAvatar(participant store.SessionParticipantData) *string {
-	if participant.IconImageURL != nil && *participant.IconImageURL != "" {
-		return participant.IconImageURL
-	}
+func participantPortrait(participant store.SessionParticipantData) *string {
 	values := objectValue(participant.Data, "values")
 	avatar := stringValue(objectValue(values, "ava"), "url")
 	if avatar == "" {

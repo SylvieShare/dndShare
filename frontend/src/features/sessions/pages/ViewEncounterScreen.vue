@@ -75,7 +75,7 @@
             aria-live="polite"
           >
             <div class="turn-spotlight__art" :class="{ 'turn-spotlight__art--npc': currentCombatant.type === 'npc' }">
-              <img v-if="currentCombatant.coverImageUrl || currentCombatant.avatarUrl" :src="currentCombatant.coverImageUrl || currentCombatant.avatarUrl" alt="" />
+              <img v-if="activeCombatantImage(currentCombatant)" :src="activeCombatantImage(currentCombatant)" alt="" />
               <span v-else-if="currentCombatant.avatarSvg" v-html="currentCombatant.avatarSvg" />
               <UserRound v-else :size="110" :stroke-width="1" aria-hidden="true" />
             </div>
@@ -122,10 +122,10 @@
                   class="initiative-card__portrait"
                   :class="{
                     'initiative-card__portrait--npc': combatant.type === 'npc',
-                    'initiative-card__portrait--icon': combatant.type === 'player' && !combatant.avatarUrl && !combatant.avatarSvg,
+                    'initiative-card__portrait--icon': combatant.type === 'player' && (combatant.iconImageUrl || (!combatant.avatarUrl && !combatant.avatarSvg)),
                   }"
                 >
-                  <img v-if="combatant.avatarUrl" :src="combatant.avatarUrl" alt="" />
+                  <img v-if="queueCombatantImage(combatant)" :src="queueCombatantImage(combatant)" alt="" />
                   <span v-else-if="combatant.avatarSvg" v-html="combatant.avatarSvg" />
                   <UserRound v-else :size="45" :stroke-width="1.15" aria-hidden="true" />
                   <span v-if="combatant.markerLetter" class="initiative-card__corner-marker">{{ combatant.markerLetter }}</span>
@@ -289,6 +289,15 @@ const screenClasses = computed(() => ({
   'encounter-screen--blackout': presentation.value && !presentation.value.visible,
   [`encounter-screen--effect-${presentation.value?.effect}`]: presentation.value?.visible && presentation.value?.effect !== 'none',
 }))
+
+function activeCombatantImage(combatant) {
+  if (combatant?.type === 'player') return combatant.avatarUrl || combatant.iconImageUrl || ''
+  return combatant?.coverImageUrl || combatant?.avatarUrl || ''
+}
+
+function queueCombatantImage(combatant) {
+  return combatant?.iconImageUrl || combatant?.avatarUrl || ''
+}
 
 function accentStyle(combatant) {
   return combatant?.color ? { '--screen-combatant-color': combatant.color } : {}

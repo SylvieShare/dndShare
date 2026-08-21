@@ -52,18 +52,24 @@ func TestBuildPublicCombatantIncludesNPCItemCover(t *testing.T) {
 	}
 }
 
-func TestParticipantAvatarPrefersCharacterIcon(t *testing.T) {
+func TestBuildPublicCombatantSeparatesPlayerIconAndPortrait(t *testing.T) {
 	iconURL := "https://cdn.example.test/icon.webp"
+	portraitURL := "https://cdn.example.test/portrait.webp"
 	participant := store.SessionParticipantData{
 		IconImageURL: &iconURL,
 		Data: map[string]any{"values": map[string]any{
-			"ava": map[string]any{"url": "https://cdn.example.test/portrait.webp"},
+			"ava": map[string]any{"url": portraitURL},
 		}},
 	}
 
-	avatar := participantAvatar(participant)
-	if avatar == nil || *avatar != iconURL {
-		t.Fatalf("participant avatar = %v, want icon %q", avatar, iconURL)
+	combatant := buildPublicCombatant(rawPublicCombatant{
+		UID: "player-1", Type: "player",
+	}, participant, nil, nil, 1, false)
+	if combatant.IconImageURL == nil || *combatant.IconImageURL != iconURL {
+		t.Fatalf("player icon = %v, want %q", combatant.IconImageURL, iconURL)
+	}
+	if combatant.AvatarURL == nil || *combatant.AvatarURL != portraitURL {
+		t.Fatalf("player portrait = %v, want %q", combatant.AvatarURL, portraitURL)
 	}
 }
 

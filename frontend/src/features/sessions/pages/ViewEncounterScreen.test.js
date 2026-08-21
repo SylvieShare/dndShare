@@ -9,7 +9,8 @@ const initiativeStyles = readFileSync(fileURLToPath(new URL('./styles/ViewEncoun
 describe('public encounter portraits', () => {
   it('uses the creature cover as the full active-turn artwork', () => {
     expect(pageSource).toContain('class="turn-spotlight__art"')
-    expect(pageSource).toContain(':src="currentCombatant.coverImageUrl || currentCombatant.avatarUrl"')
+    expect(pageSource).toContain(':src="activeCombatantImage(currentCombatant)"')
+    expect(pageSource).toContain("if (combatant?.type === 'player') return combatant.avatarUrl || combatant.iconImageUrl || ''")
     expect(initiativeStyles).toContain('.turn-spotlight__art {')
     expect(initiativeStyles).toContain('position: absolute;')
     expect(initiativeStyles).toContain('.turn-spotlight__art img { object-fit: cover; }')
@@ -26,9 +27,9 @@ describe('public encounter portraits', () => {
   })
 
   it('leaves the fallback player icon unframed while keeping image portraits unchanged', () => {
-    expect(pageSource).toContain("'initiative-card__portrait--icon': combatant.type === 'player' && !combatant.avatarUrl && !combatant.avatarSvg")
+    expect(pageSource).toContain("'initiative-card__portrait--icon': combatant.type === 'player' && (combatant.iconImageUrl || (!combatant.avatarUrl && !combatant.avatarSvg))")
     expect(initiativeStyles).toContain('.initiative-card__portrait--npc,\n.initiative-card__portrait--icon { border: 0; border-radius: 0; background: transparent; }')
-    expect(pageSource).toContain('<img v-if="combatant.avatarUrl"')
+    expect(pageSource).toContain("return combatant?.iconImageUrl || combatant?.avatarUrl || ''")
   })
 
   it('keeps emphasized colored creature letters by active names and on queue portrait corners', () => {

@@ -809,8 +809,9 @@ Above it, the compact cyclic queue spans the full screen width and begins after
 the active turn. Queue tiles are tightly packed squares sized to fit a smaller
 full-fit creature icon and the longest worded health state below it. A compact,
 ellipsized name sits between the portrait and health, while initiative remains
-hidden. Fallback player symbols have no inner frame or backing, while uploaded
-portraits retain their image treatment. Active conditions sit over the portrait edge as their colored dictionary
+hidden. The queue prefers the character's small `iconImageUrl` and renders it
+without an inner frame or backing; the active card prefers the sheet portrait
+and falls back to that icon only when no portrait exists. Active conditions sit over the portrait edge as their colored dictionary
 icons; an iconless custom condition uses a colored dot, and additional conditions
 collapse into a count. The visible slot count follows the available screen width,
 so a long queue reaches the right edge before overflowing into its final stack.

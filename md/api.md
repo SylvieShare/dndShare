@@ -278,7 +278,9 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
   state in `numbers` mode, health also contains `current/maximum`; `graveyard`
   contains dead NPC
   groups by bestiary type. Bestiary combatants also expose `coverImageUrl` for
-  the current-turn artwork. Initiative values, character sheets, AC, notes and
+  the current-turn artwork. Player combatants expose the small character
+  `iconImageUrl` separately from the sheet portrait `avatarUrl`, so the queue
+  and active-turn card can choose the intended asset independently. Initiative values, character sheets, AC, notes and
   encounter challenge results are never returned;
 - `GET|POST /api/sessions/{uuid}/events` reads and appends the session timeline.
   The read endpoint accepts `after` and `limit`; the write endpoint accepts
