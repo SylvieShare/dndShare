@@ -17,18 +17,18 @@ defineProps({
 
 <style scoped>
 .inventory-item-icon {
-  width: 52px;
-  height: 52px;
+  width: 64px;
+  height: 64px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  flex: 0 0 52px;
+  flex: 0 0 64px;
   color: var(--text-muted);
 }
 
 .inventory-item-icon__svg {
-  width: 52px;
-  height: 52px;
+  width: 64px;
+  height: 64px;
 }
-.inventory-item-icon__image { width: 52px; height: 52px; display: block; object-fit: contain; }
+.inventory-item-icon__image { width: 64px; height: 64px; display: block; object-fit: contain; }
 </style>

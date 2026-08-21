@@ -213,9 +213,10 @@
       "include_related_types": true,
       "specialized_destinations": [
         { "type_id": 1, "value_id": "weapon", "label": "Оружие" },
-        { "type_id": 10, "value_id": "potions", "label": "Зелья" },
-        { "type_id": 14, "value_id": "tools", "label": "Инструменты" }
-      ]
+        { "type_id": 10, "value_id": "potions", "label": "Зелья" }
+      ],
+      "tool_type_id": 14,
+      "tool_proficiency_bucket": "Инструменты"
     }
   },
   "counters": {
@@ -235,15 +236,6 @@
     "id": "potions",
     "type": "DND_POTIONS",
     "content": {}
-  },
-  "tools": {
-    "id": "tools",
-    "type": "DND_TOOLS",
-    "content": {
-      "item_type_id": 14,
-      "proficiency_value_id": "proficiencies",
-      "proficiency_bucket": "Инструменты"
-    }
   },
   "notes": {
     "id": "notes",

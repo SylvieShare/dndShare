@@ -18,14 +18,15 @@ func TestItemTypeHierarchySchemaIsEmbeddedLast(t *testing.T) {
 	}
 }
 
-func TestItemTypeHierarchyCreatesToolsAndMigratesOwnedEntries(t *testing.T) {
+func TestItemTypeHierarchyCreatesToolsAndKeepsOwnedEntriesInInventory(t *testing.T) {
 	for _, fragment := range []string{
 		"parent_type_id",
 		"14,\n    'Инструменты'",
 		"WHERE id IN (1, 10, 12, 13, 14)",
 		"item.data ->> 'equipment_category' = 'tool'",
-		"move_inventory_tools_to_collection",
-		"'{tools}'",
+		"move_tools_collection_to_inventory",
+		"values_data - 'tools'",
+		"first_items || tools",
 		"values.proficiencies",
 	} {
 		if !strings.Contains(schemaItemTypeHierarchySQL, fragment) {

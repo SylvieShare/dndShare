@@ -247,8 +247,8 @@ exactly once and carries an explicit «Владение», «Предмет» or
 предмет» badge. Where the background grants a tool proficiency, the character
 stores the concrete name (for example, `Кости`) instead of the generic category
 (`Игровой набор`). If that option also grants a physical item, it is assembled
-separately into `values.tools`; ownership and proficiency never duplicate one
-another in the UI. Equipment-only choices are omitted when class wealth replaces
+as a type-14 entry in the ordinary inventory; ownership and proficiency never
+duplicate one another in the UI. Equipment-only choices are omitted when class wealth replaces
 starting equipment.
 
 The PHB 2014 audit identifies mechanical item/tool choices for nine base

@@ -34,7 +34,6 @@ import DndQuests from '@/features/character-editor/blocks/dnd/DndQuests'
 import DndRest from '@/features/character-editor/blocks/dnd/DndRest'
 import DndSpells from '@/features/character-editor/blocks/dnd/DndSpells'
 import DndStatusOverview from '@/features/character-editor/blocks/dnd/DndStatusOverview'
-import DndTools from '@/features/character-editor/blocks/dnd/DndTools'
 import DndWeapons from '@/features/character-editor/blocks/dnd/DndWeapons'
 import LayoutInnerTabs from '@/features/character-editor/blocks/layout/LayoutInnerTabs'
 import SectionHeader from '@/features/character-editor/blocks/layout/SectionHeader'
@@ -77,7 +76,6 @@ export const BLOCK_REGISTRY = {
   DND_SPEED:        { component: DndSpeed },
   DND_SPELLS:       { component: DndSpells, passValuesOnly: true },
   DND_STATUS_OVERVIEW: { component: DndStatusOverview, noValue: true, passValuesOnly: true },
-  DND_TOOLS:        { component: DndTools },
   DND_WEAPONS:      { component: DndWeapons, passValues: true },
   INPUT_DESCRIPTION:{ component: InputDescription },
   INPUT_INT_BLOCK:  { component: InputIntBlock },

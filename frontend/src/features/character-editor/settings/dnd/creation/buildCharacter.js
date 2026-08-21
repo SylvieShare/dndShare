@@ -246,12 +246,10 @@ export function buildCharacterData(input) {
   const startingEquipment = mergeEquipment(equipment, buyStartingEquipment ? [] : backgroundStart.items)
   const isCatalogueWeapon = (entry) => Number(entry.typeId) === 1 && entry.item_id != null
   const isCataloguePotion = (entry) => Number(entry.typeId) === 10 && entry.item_id != null
-  const isCatalogueTool = (entry) => Number(entry.typeId) === 14 && entry.item_id != null
   const weapons = startingEquipment.filter(isCatalogueWeapon)
   const potions = startingEquipment.filter(isCataloguePotion)
-  const tools = startingEquipment.filter(isCatalogueTool)
-  const equippedArmor = startingEquipment.filter((entry) => !isCatalogueWeapon(entry) && !isCataloguePotion(entry) && !isCatalogueTool(entry) && isArmorEquipment(entry))
-  const inventory = startingEquipment.filter((entry) => !isCatalogueWeapon(entry) && !isCataloguePotion(entry) && !isCatalogueTool(entry) && !isArmorEquipment(entry))
+  const equippedArmor = startingEquipment.filter((entry) => !isCatalogueWeapon(entry) && !isCataloguePotion(entry) && isArmorEquipment(entry))
+  const inventory = startingEquipment.filter((entry) => !isCatalogueWeapon(entry) && !isCataloguePotion(entry) && !isArmorEquipment(entry))
   const ownedEntry = (entry, index, prefix) => ({
     uid: `${prefix}_${index}`,
     item_id: entry.item_id ?? null,
@@ -266,7 +264,6 @@ export function buildCharacterData(input) {
     ))
   }
   if (potions.length) values.potions = potions.map((entry, index) => ownedEntry(entry, index, 'potion'))
-  if (tools.length) values.tools = tools.map((entry, index) => ownedEntry(entry, index, 'tool'))
   if (inventory.length || equippedArmor.length) {
     values.items = {
       equipped: equippedArmor.map((entry, i) => ownedEntry(entry, i, 'worn')),

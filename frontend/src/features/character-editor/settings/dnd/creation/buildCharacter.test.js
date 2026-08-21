@@ -129,7 +129,7 @@ describe('buildCharacterData starting equipment', () => {
     expect(result.data.values.items).toBeUndefined()
   })
 
-  it('stores physical tools and potions in their dedicated sheet blocks', () => {
+  it('stores physical tools in inventory and potions in their dedicated sheet block', () => {
     const result = buildCharacterData({
       race: selection(1, 'Человек'),
       charClass: selection(2, 'Артист'),
@@ -143,14 +143,14 @@ describe('buildCharacterData starting equipment', () => {
       suggestValue: (typeId, id) => (typeId === 5 && id === 26 ? 'Музыкальный инструмент' : ''),
     })
 
-    expect(result.data.values.tools).toEqual([
-      { uid: 'tool_0', item_id: 701, count: 1, params: {}, override: null },
-    ])
     expect(result.data.values.potions).toEqual([
       { uid: 'potion_0', item_id: 702, count: 2, params: {}, override: null },
     ])
     expect(result.data.values.proficiencies['Инструменты']).toEqual(['Лютня'])
-    expect(result.data.values.items).toBeUndefined()
+    expect(result.data.values.items.sections[0].items).toEqual([
+      { uid: 'eq_0', item_id: 701, count: 1, params: {}, override: null },
+    ])
+    expect(result.data.values.tools).toBeUndefined()
   })
 
   it('stores PHB rows without catalog ids as editable custom inventory items', () => {

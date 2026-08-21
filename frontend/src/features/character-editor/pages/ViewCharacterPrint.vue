@@ -123,7 +123,6 @@
             <section v-if="coins.length" class="box coins-box"><BoxTitle>Монеты</BoxTitle><div v-for="coin in coins" :key="coin.id"><strong>{{ coin.amount }}</strong><span>{{ coin.name }}</span></div></section>
             <section v-if="counters.length" class="box list-box"><BoxTitle>Ресурсы</BoxTitle><div v-for="counter in counters" :key="counter.id"><span>{{ counter.name || 'Ресурс' }}</span><strong>{{ counter.value }}<template v-if="counter.max != null"> / {{ counter.max }}</template> {{ counter.unit }}</strong></div></section>
             <section v-if="potions.length" class="box list-box"><BoxTitle>Зелья</BoxTitle><div v-for="potion in potions" :key="potion.uid"><span>{{ potion.name }}</span><strong>× {{ potion.count }}</strong></div></section>
-            <section v-if="tools.length" class="box list-box"><BoxTitle>Инструменты</BoxTitle><div v-for="tool in tools" :key="tool.uid"><span>{{ tool.name }}</span><strong v-if="toolStatus(tool)">{{ toolStatus(tool) }}</strong></div></section>
             <section v-if="equipmentProficiencyGroups.length" class="box prose-box"><BoxTitle>Владения и языки</BoxTitle><div v-for="group in equipmentProficiencyGroups" :key="group.name" class="prose-group"><h3>{{ group.name }}</h3><p>{{ group.value }}</p></div></section>
           </div>
         </div>
@@ -297,17 +296,7 @@ const inventorySections = computed(() => [
 const counters = computed(() => normalizeCounters(values.value.counters))
 const coins = computed(() => Object.entries(values.value.money?.amounts || {}).filter(([, amount]) => Number(amount)).map(([id, amount]) => ({ id, amount: Number(amount), name: suggest.items(17).find(item => String(item.id) === id)?.value || `мон. ${id}` })))
 const potions = computed(() => (Array.isArray(values.value.potions) ? values.value.potions : []).map(entry => ({ ...entry, count: Number(entry.count) || 1, name: ownedItemName(entry, 'Зелье') })))
-const tools = computed(() => {
-  const proficient = new Set((values.value.proficiencies?.['Инструменты'] || []).map(value => text(value).toLocaleLowerCase('ru')))
-  return (Array.isArray(values.value.tools) ? values.value.tools : []).map(entry => {
-    const name = ownedItemName(entry, 'Инструмент')
-    return { ...entry, count: Number(entry.count) || 1, name, proficient: proficient.has(name.toLocaleLowerCase('ru')) }
-  })
-})
-function toolStatus(tool) {
-  return [tool.proficient ? 'владение' : '', tool.count > 1 ? `× ${tool.count}` : ''].filter(Boolean).join(' · ')
-}
-const hasEquipmentSide = computed(() => counters.value.length || coins.value.length || potions.value.length || tools.value.length || equipmentProficiencyGroups.value.length)
+const hasEquipmentSide = computed(() => counters.value.length || coins.value.length || potions.value.length || equipmentProficiencyGroups.value.length)
 const hasEquipment = computed(() => inventorySections.value.length || hasEquipmentSide.value)
 const equipmentPages = computed(() => {
   if (!hasEquipment.value) return []

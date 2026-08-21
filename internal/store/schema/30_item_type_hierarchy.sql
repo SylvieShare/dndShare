@@ -110,10 +110,10 @@ SET fields = COALESCE((
 ), '[]'::jsonb)
 WHERE item_type.id = 2;
 
--- Existing sheets used the generic inventory for owned tools. Move those
--- entries to values.tools once; proficiencies remain the independent source of
--- truth in values.proficiencies."Инструменты".
-CREATE OR REPLACE FUNCTION dndshare.move_inventory_tools_to_collection(document jsonb)
+-- Physical tools live in the generic inventory. Return entries created by the
+-- short-lived dedicated tools block to the first inventory section once;
+-- proficiencies remain independent in values.proficiencies."Инструменты".
+CREATE OR REPLACE FUNCTION dndshare.move_tools_collection_to_inventory(document jsonb)
 RETURNS jsonb
 LANGUAGE plpgsql
 STABLE
@@ -121,85 +121,51 @@ AS $$
 DECLARE
     values_data jsonb := CASE WHEN jsonb_typeof(document -> 'values') = 'object'
         THEN document -> 'values' ELSE '{}'::jsonb END;
-    inventory jsonb := values_data -> 'items';
-    tools jsonb := CASE WHEN jsonb_typeof(values_data -> 'tools') = 'array'
-        THEN values_data -> 'tools' ELSE '[]'::jsonb END;
-    moved jsonb := '[]'::jsonb;
-    equipped jsonb;
+    tools jsonb;
+    inventory jsonb;
     sections jsonb;
+    first_section jsonb;
+    first_items jsonb;
 BEGIN
-    IF jsonb_typeof(inventory) IS DISTINCT FROM 'object' THEN
+    IF jsonb_typeof(values_data -> 'tools') IS DISTINCT FROM 'array' THEN
         RETURN document;
     END IF;
 
-    SELECT COALESCE(jsonb_agg(entry ORDER BY source_order, entry_order), '[]'::jsonb)
-    INTO moved
-    FROM (
-        SELECT entry, 0::bigint AS source_order, entry_order
-        FROM jsonb_array_elements(CASE WHEN jsonb_typeof(inventory -> 'equipped') = 'array'
-            THEN inventory -> 'equipped' ELSE '[]'::jsonb END)
-            WITH ORDINALITY equipped_rows(entry, entry_order)
-        UNION ALL
-        SELECT entry, section_order, entry_order
-        FROM jsonb_array_elements(CASE WHEN jsonb_typeof(inventory -> 'sections') = 'array'
-            THEN inventory -> 'sections' ELSE '[]'::jsonb END)
-            WITH ORDINALITY section_rows(section, section_order)
-        CROSS JOIN LATERAL jsonb_array_elements(CASE WHEN jsonb_typeof(section -> 'items') = 'array'
-            THEN section -> 'items' ELSE '[]'::jsonb END)
-            WITH ORDINALITY item_rows(entry, entry_order)
-    ) owned
-    JOIN dndshare.item linked ON linked.id = CASE
-        WHEN COALESCE(owned.entry ->> 'item_id', '') ~ '^[0-9]+$'
-            THEN (owned.entry ->> 'item_id')::bigint
-        ELSE NULL
-    END
-    WHERE linked.type_id = 14;
+    tools := values_data -> 'tools';
+    values_data := values_data - 'tools';
 
-    IF jsonb_array_length(moved) = 0 THEN
-        RETURN document;
+    IF jsonb_array_length(tools) > 0 THEN
+        inventory := CASE WHEN jsonb_typeof(values_data -> 'items') = 'object'
+            THEN values_data -> 'items' ELSE '{}'::jsonb END;
+        sections := CASE WHEN jsonb_typeof(inventory -> 'sections') = 'array'
+            THEN inventory -> 'sections' ELSE '[]'::jsonb END;
+
+        IF jsonb_array_length(sections) = 0 THEN
+            sections := jsonb_build_array(jsonb_build_object(
+                'id', 'bag',
+                'name', 'Рюкзак',
+                'items', tools
+            ));
+        ELSE
+            first_section := CASE WHEN jsonb_typeof(sections -> 0) = 'object'
+                THEN sections -> 0 ELSE jsonb_build_object('id', 'bag', 'name', 'Рюкзак') END;
+            first_items := CASE WHEN jsonb_typeof(first_section -> 'items') = 'array'
+                THEN first_section -> 'items' ELSE '[]'::jsonb END;
+            first_section := (first_section - 'items')
+                || jsonb_build_object('items', first_items || tools);
+            sections := jsonb_set(sections, '{0}', first_section, true);
+        END IF;
+
+        inventory := jsonb_set(inventory, '{sections}', sections, true);
+        values_data := jsonb_set(values_data, '{items}', inventory, true);
     END IF;
 
-    SELECT COALESCE(jsonb_agg(entry ORDER BY entry_order), '[]'::jsonb)
-    INTO equipped
-    FROM jsonb_array_elements(CASE WHEN jsonb_typeof(inventory -> 'equipped') = 'array'
-        THEN inventory -> 'equipped' ELSE '[]'::jsonb END)
-        WITH ORDINALITY equipped_rows(entry, entry_order)
-    LEFT JOIN dndshare.item linked ON linked.id = CASE
-        WHEN COALESCE(entry ->> 'item_id', '') ~ '^[0-9]+$' THEN (entry ->> 'item_id')::bigint
-        ELSE NULL
-    END
-    WHERE linked.type_id IS DISTINCT FROM 14;
-
-    SELECT COALESCE(jsonb_agg(
-        (section - 'items') || jsonb_build_object('items', COALESCE(filtered.items, '[]'::jsonb))
-        ORDER BY section_order
-    ), '[]'::jsonb)
-    INTO sections
-    FROM jsonb_array_elements(CASE WHEN jsonb_typeof(inventory -> 'sections') = 'array'
-        THEN inventory -> 'sections' ELSE '[]'::jsonb END)
-        WITH ORDINALITY section_rows(section, section_order)
-    LEFT JOIN LATERAL (
-        SELECT jsonb_agg(entry ORDER BY entry_order) AS items
-        FROM jsonb_array_elements(CASE WHEN jsonb_typeof(section -> 'items') = 'array'
-            THEN section -> 'items' ELSE '[]'::jsonb END)
-            WITH ORDINALITY item_rows(entry, entry_order)
-        LEFT JOIN dndshare.item linked ON linked.id = CASE
-            WHEN COALESCE(entry ->> 'item_id', '') ~ '^[0-9]+$' THEN (entry ->> 'item_id')::bigint
-            ELSE NULL
-        END
-        WHERE linked.type_id IS DISTINCT FROM 14
-    ) filtered ON true;
-
-    inventory := jsonb_set(inventory, '{equipped}', equipped, true);
-    inventory := jsonb_set(inventory, '{sections}', sections, true);
-    values_data := jsonb_set(values_data, '{items}', inventory, true);
-    values_data := jsonb_set(values_data, '{tools}', tools || moved, true);
     RETURN jsonb_set(document, '{values}', values_data, true);
 END;
 $$;
 
 WITH migrated AS (
-    SELECT character.id, dndshare.move_inventory_tools_to_collection(character.data) AS data
+    SELECT character.id, dndshare.move_tools_collection_to_inventory(character.data) AS data
     FROM dndshare."char" character
 )
 UPDATE dndshare."char" character
@@ -210,7 +176,7 @@ FROM migrated
 WHERE character.id = migrated.id
   AND character.data IS DISTINCT FROM migrated.data;
 
-DROP FUNCTION dndshare.move_inventory_tools_to_collection(jsonb);
+DROP FUNCTION dndshare.move_tools_collection_to_inventory(jsonb);
 
 UPDATE dndshare.item_type item_type
 SET count_items = (

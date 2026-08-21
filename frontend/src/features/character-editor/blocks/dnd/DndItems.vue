@@ -69,6 +69,7 @@
                   :class="{
                     'sortable-placeholder': sortable.isSource(entry),
                     'di-row-draggable': canDrag,
+                    'di-row-tool': isToolEntry(entry),
                   }"
                   :data-sortable-key="entry.uid"
                   @pointerdown="onRowDown($event, entry, section.id, idx)"
@@ -81,10 +82,18 @@
                     :type-image-url="entry.display.typeImageUrl"
                   />
 
-                  <span class="di-row-name" :title="entry.display.name">
-                    <span class="di-row-name-text">{{ entry.display.name }}</span>
-                    <span v-if="entry.count > 1" class="di-count-badge">
-                      <span class="di-count-x">x</span>{{ entry.count }}
+                  <span class="di-row-copy">
+                    <span class="di-row-name" :title="entry.display.name">
+                      <span class="di-row-name-text">{{ entry.display.name }}</span>
+                      <span v-if="entry.count > 1" class="di-count-badge">
+                        <span class="di-count-x">x</span>{{ entry.count }}
+                      </span>
+                    </span>
+                    <span v-if="isToolEntry(entry)" class="di-tool-meta">
+                      <span>{{ toolCategoryLabel(entry) }}</span>
+                      <span :class="{ 'di-tool-proficient': isToolProficient(entry) }">
+                        {{ isToolProficient(entry) ? 'Владение' : 'Нет владения' }}
+                      </span>
                     </span>
                   </span>
                 </div>
@@ -96,6 +105,12 @@
                   action="view"
                   @click="viewEntry(entry, close)"
                 >Открыть описание</RowActionItem>
+                <RowActionItem
+                  v-if="canToggleToolProficiency(entry)"
+                  :icon="BadgeCheck"
+                  :tone="isToolProficient(entry) ? 'default' : 'success'"
+                  @click="toggleToolProficiency(entry, close)"
+                >{{ isToolProficient(entry) ? 'Убрать владение' : 'Отметить владение' }}</RowActionItem>
                 <RowActionItem
                   v-if="canMoveToSpecialized(entry)"
                   :icon="ArrowRightLeft"
@@ -200,7 +215,7 @@
 
 <script setup>
 import { computed, inject, nextTick, onMounted, reactive, ref, watch } from 'vue'
-import { ArrowRightLeft } from '@lucide/vue'
+import { ArrowRightLeft, BadgeCheck } from '@lucide/vue'
 
 import { BaseTile } from '@sylvieshare/share-ui'
 import InventoryItemIcon from '@/features/character-editor/components/InventoryItemIcon.vue'
@@ -290,6 +305,8 @@ const pickerTypeIds = computed(() => {
   return related.length ? related : [rootTypeId.value]
 })
 const specializedDestinations = computed(() => props.block.content?.specialized_destinations || [])
+const toolTypeId = computed(() => Number(props.block.content?.tool_type_id) || 14)
+const toolProficiencyBucket = computed(() => props.block.content?.tool_proficiency_bucket || 'Инструменты')
 
 function sectionGroup(id) { return 'sec_' + id }
 
@@ -297,8 +314,57 @@ function entryWithDisplay(entry) {
   return { ...entry, display: entryDisplayData(entry, catalog, typeById.value) }
 }
 
+function entryTypeId(entry) {
+  return Number(entry.display?.base?.typeId ?? catalog[entry.item_id]?.typeId)
+}
+
+function isToolEntry(entry) {
+  return entryTypeId(entry) === toolTypeId.value
+}
+
+function proficiencyName(value) {
+  if (value && typeof value === 'object') return String(value.name ?? value.value ?? value.title ?? '')
+  return String(value ?? '')
+}
+
+function toolProficiencies() {
+  const values = charCtx.values?.proficiencies?.[toolProficiencyBucket.value]
+  return Array.isArray(values) ? values : []
+}
+
+function isToolProficient(entry) {
+  const name = entry.display.name.trim().toLocaleLowerCase('ru')
+  return toolProficiencies().some(value => proficiencyName(value).trim().toLocaleLowerCase('ru') === name)
+}
+
+function canToggleToolProficiency(entry) {
+  return canManage.value && typeof charCtx.updateValues === 'function' && isToolEntry(entry)
+}
+
+function toolCategoryLabel(entry) {
+  return ({
+    artisan: 'Ремесленный инструмент',
+    gaming: 'Игровой набор',
+    musical: 'Музыкальный инструмент',
+    kit: 'Набор инструментов',
+  })[entry.display.base?.data?.category] || 'Инструмент'
+}
+
+function toggleToolProficiency(entry, close) {
+  if (!canToggleToolProficiency(entry)) return
+  const proficiencies = { ...(charCtx.values?.proficiencies || {}) }
+  const current = [...toolProficiencies()]
+  const normalized = entry.display.name.trim().toLocaleLowerCase('ru')
+  const index = current.findIndex(value => proficiencyName(value).trim().toLocaleLowerCase('ru') === normalized)
+  if (index >= 0) current.splice(index, 1)
+  else current.push(entry.display.name)
+  proficiencies[toolProficiencyBucket.value] = current
+  charCtx.updateValues({ proficiencies })
+  close()
+}
+
 function specializedDestination(entry) {
-  const typeId = Number(entry.display?.base?.typeId ?? catalog[entry.item_id]?.typeId)
+  const typeId = entryTypeId(entry)
   return specializedDestinations.value.find(destination => Number(destination.type_id) === typeId) || null
 }
 
