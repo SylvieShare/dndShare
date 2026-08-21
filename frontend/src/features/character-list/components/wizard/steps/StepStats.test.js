@@ -31,6 +31,12 @@ describe('D&D ability scores', () => {
     expect(Object.values(wizard.state.scores).sort((a, b) => b - a)).toEqual(STANDARD_ARRAY)
   })
 
+  it('shows quick build only for the standard array and puts roll in the same toolbar slot', () => {
+    expect(source).toContain('<button v-if="state.statMethod === \'array\'" type="button" class="qb"')
+    expect(source).toContain('<button v-else-if="state.statMethod === \'roll\'" type="button" class="roll-btn"')
+    expect(source).not.toContain('class="roll-cta"')
+  })
+
   it('uses a three-column roomy card grid with category-specific score details', () => {
     expect(source).toContain('.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));')
     expect(source).toContain('class="stat-score-row"')
@@ -67,5 +73,14 @@ describe('D&D ability scores', () => {
     expect(source).toContain('<ConfirmDialog')
     expect(source).toContain('поведение, недостойное настоящего героя')
     expect(source).toContain('confirm-label="Да, мне не стыдно"')
+  })
+
+  it('renders larger real die faces and reuses the shared roll animation', () => {
+    expect(source).toContain("from '@/shared/composables/useDiceRollAnimation'")
+    expect(source).toContain('useDiceRollAnimation({ shouldAnimate: shouldAnimateDice })')
+    expect(source).toContain(':value="displayedDieValue(seriesIndex, dieIndex, die.value)"')
+    expect(source).toContain(':size="32"')
+    expect(source).toContain('@keyframes stats-die-tumble')
+    expect(source).not.toContain('<i>{{ die.value }}</i>')
   })
 })

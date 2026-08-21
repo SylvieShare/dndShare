@@ -329,9 +329,12 @@ Point-buy подчёркивает остаток бюджета и цену с�
 его меню раскрывает значения компактной сеткой и показывает число доступных
 копий для одинаковых результатов, не используя нативный select.
 На средних и мобильных экранах сетка перестраивается в две и одну колонку.
-Первый бросок выполняется сразу, а повторный требует шуточного подтверждения о
-недостойной героя попытке спорить с судьбой. Each 4d6 series shows all dice and strikes through its discarded
-lowest die. Equal totals remain separate pool entries; assigned values disappear
+Быстрая сборка показывается только для стандартного набора; в режиме броска её
+место в панели занимает кнопка броска. Первый бросок выполняется сразу, а
+повторный требует шуточного подтверждения о недостойной героя попытке спорить с
+судьбой. Each 4d6 series uses the shared dice-roll animation, shows enlarged d6
+faces with their actual values and strikes through its discarded lowest die.
+Equal totals remain separate pool entries; assigned values disappear
 from other selectors instead of staying disabled. **Быстрая сборка** доступна на mobile и раскладывает стандартный
 набор по приоритетам выбранного класса.
 

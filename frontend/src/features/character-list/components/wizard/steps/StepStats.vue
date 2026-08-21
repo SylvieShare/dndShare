@@ -1,30 +1,43 @@
 <template>
   <div class="step">
     <div class="stats-bar">
-      <MultiToggle :options="methodOptions" :model-value="state.statMethod" @update:model-value="setMethod" />
-      <button type="button" class="qb" title="Раскидать стандартный набор по классу" @click="quickBuild">
+      <MultiToggle :options="methodOptions" :model-value="state.statMethod" @update:model-value="changeMethod" />
+      <button v-if="state.statMethod === 'array'" type="button" class="qb" title="Раскидать стандартный набор по классу" @click="quickBuild">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7z" /></svg>
         Быстрая сборка
+      </button>
+      <button v-else-if="state.statMethod === 'roll'" type="button" class="roll-btn" @click="requestRoll">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3" /><circle cx="8" cy="8" r="1.4" fill="currentColor" /><circle cx="16" cy="16" r="1.4" fill="currentColor" /><circle cx="16" cy="8" r="1.4" fill="currentColor" /><circle cx="8" cy="16" r="1.4" fill="currentColor" /></svg>
+        {{ state.rollPool.length ? 'Перебросить 4d6 ×6' : 'Бросить 4d6 ×6' }}
       </button>
       <span v-if="state.statMethod === 'pointbuy'" class="budget" :class="{ over: pointsLeft < 0 }">Осталось <b>{{ pointsLeft }}</b> / {{ BUDGET }}</span>
     </div>
 
     <p class="hint">{{ hint }}</p>
 
-    <div v-if="state.statMethod === 'roll'" class="roll-cta">
-      <button type="button" class="roll-btn" @click="requestRoll">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3" /><circle cx="8" cy="8" r="1.4" fill="currentColor" /><circle cx="16" cy="16" r="1.4" fill="currentColor" /><circle cx="16" cy="8" r="1.4" fill="currentColor" /><circle cx="8" cy="16" r="1.4" fill="currentColor" /></svg>
-        {{ state.rollPool.length ? 'Перебросить 4d6 ×6' : 'Бросить 4d6 ×6' }}
-      </button>
-      <div v-if="state.rollSeries.length" class="roll-series" aria-label="Результаты бросков характеристик">
-        <div v-for="(series, seriesIndex) in state.rollSeries" :key="seriesIndex" class="roll-series-item">
-          <strong>{{ series.total }}</strong>
-          <span class="roll-dice">
-            <span v-for="die in series.dice" :key="die.id" :class="{ dropped: die.dropped }" :title="die.dropped ? 'Младший результат не учитывается' : `${die.value}`">
-              <SystemDie :sides="6" :size="22" /><i>{{ die.value }}</i>
-            </span>
+    <div v-if="state.statMethod === 'roll' && state.rollSeries.length" class="roll-series" aria-label="Результаты бросков характеристик">
+      <div
+        v-for="(series, seriesIndex) in state.rollSeries"
+        :key="seriesIndex"
+        class="roll-series-item"
+        :class="{ rolling: seriesRolling(seriesIndex) }"
+      >
+        <strong>{{ displayedSeriesTotal(seriesIndex, series.total) }}</strong>
+        <span class="roll-dice">
+          <span
+            v-for="(die, dieIndex) in series.dice"
+            :key="die.id"
+            :class="{ dropped: die.dropped && !seriesRolling(seriesIndex), rolling: seriesRolling(seriesIndex) }"
+            :style="{ '--die-index': dieIndex }"
+            :title="die.dropped ? 'Младший результат не учитывается' : `${die.value}`"
+          >
+            <SystemDie
+              :sides="6"
+              :value="displayedDieValue(seriesIndex, dieIndex, die.value)"
+              :size="32"
+            />
           </span>
-        </div>
+        </span>
       </div>
     </div>
 
@@ -104,12 +117,13 @@
 </template>
 
 <script setup>
-import { computed, inject, ref } from 'vue'
+import { computed, inject, onBeforeUnmount, ref } from 'vue'
 import { ConfirmDialog, MultiToggle, ValueSelect } from '@sylvieshare/share-ui'
 import SystemDie from '@/shared/ui/SystemDie.vue'
 import SvgIcon from '@/shared/ui/SvgIcon.vue'
 import { POINT_BUY_BUDGET, STANDARD_ARRAY, pointCost } from '@/features/character-list/composables/useDndCreateWizard'
 import { STAT_FULL, SUGGEST16_TO_STAT, formatMod } from '@/features/character-list/components/wizard/labels'
+import { useDiceRollAnimation } from '@/shared/composables/useDiceRollAnimation'
 import { useSuggestStore } from '@/stores/suggest'
 
 const { STATS, state, grants, finalScores, mods, pointsLeft, primaryAbilities, setMethod, rollStats, quickBuild } = inject('createWizard')
@@ -128,6 +142,8 @@ const hint = computed(() => ({
 
 const pool = computed(() => (state.statMethod === 'roll' ? state.rollPool : STANDARD_ARRAY))
 const rerollConfirmOpen = ref(false)
+const rollAnimationEntries = ref([])
+let rollAnimationSequence = 0
 const suggestStore = useSuggestStore()
 const statSuggestByKey = computed(() => Object.fromEntries(
   suggestStore.items(16)
@@ -179,14 +195,61 @@ function bump(stat, dir) {
   const cur = state.scores[stat] ?? 8
   state.scores[stat] = Math.max(8, Math.min(15, cur + dir))
 }
+function shouldAnimateDice() {
+  if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return false
+  return !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+}
+const {
+  displayedRoll,
+  displayedTotal,
+  startEntryAnimation,
+  isRolling,
+  dispose: disposeRollAnimation,
+} = useDiceRollAnimation({ shouldAnimate: shouldAnimateDice })
+function rollEntry(seriesIndex) { return rollAnimationEntries.value[seriesIndex] || null }
+function seriesRolling(seriesIndex) {
+  const entry = rollEntry(seriesIndex)
+  return entry ? isRolling(entry.id) : false
+}
+function displayedDieValue(seriesIndex, dieIndex, actual) {
+  const entry = rollEntry(seriesIndex)
+  return entry ? displayedRoll(entry, 0, dieIndex, actual) : actual
+}
+function displayedSeriesTotal(seriesIndex, actual) {
+  const entry = rollEntry(seriesIndex)
+  return entry ? displayedTotal(entry) : actual
+}
+function animateRoll() {
+  disposeRollAnimation()
+  rollStats()
+  rollAnimationSequence += 1
+  rollAnimationEntries.value = state.rollSeries.map((series, seriesIndex) => ({
+    id: `wizard-stats-${rollAnimationSequence}-${seriesIndex}`,
+    result: {
+      parts: [{
+        sign: '+', operator: '+', kind: 'dice', sides: 6,
+        rolls: series.dice.map(die => die.value),
+        dropped: series.dice.flatMap((die, index) => die.dropped ? [index] : []),
+      }],
+      total: series.total,
+    },
+  }))
+  rollAnimationEntries.value.forEach(startEntryAnimation)
+}
+function changeMethod(method) {
+  disposeRollAnimation()
+  rollAnimationEntries.value = []
+  setMethod(method)
+}
 function requestRoll() {
   if (state.rollPool.length) rerollConfirmOpen.value = true
-  else rollStats()
+  else animateRoll()
 }
 function confirmReroll() {
   rerollConfirmOpen.value = false
-  rollStats()
+  animateRoll()
 }
+onBeforeUnmount(disposeRollAnimation)
 </script>
 
 <style scoped>
@@ -202,20 +265,29 @@ function confirmReroll() {
 .budget b { font-size: 18px; line-height: 0; }
 .budget.over { color: var(--danger); }
 .hint { font-size: 12px; color: var(--text-muted); margin: 0; }
-.roll-cta { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
 .roll-btn { display: inline-flex; align-items: center; gap: 8px;
   background: var(--accent); color: var(--text-on-accent); border: none; border-radius: 9px;
-  padding: 10px 18px; font: inherit; font-weight: 600; cursor: pointer;
+  min-height: 34px; padding: 7px 12px; font: inherit; font-size: 12px; font-weight: 750; cursor: pointer;
 }
 .roll-btn svg { width: 17px; height: 17px; }
 .roll-series { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; width: 100%; }
-.roll-series-item { display: flex; align-items: center; gap: 8px; min-width: 0; padding: 7px 9px; border: 1px solid color-mix(in srgb, var(--border) 72%, transparent); border-radius: 9px; background: var(--surface); }
-.roll-series-item > strong { min-width: 20px; color: var(--text-1); font-size: 15px; text-align: center; }
-.roll-dice { display: flex; align-items: center; gap: 2px; }
+.roll-series-item { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 9px 11px; border: 1px solid color-mix(in srgb, var(--border) 72%, transparent); border-radius: 10px; background: var(--surface); transition: border-color .18s ease, box-shadow .18s ease; }
+.roll-series-item.rolling { border-color: color-mix(in srgb, var(--accent) 50%, var(--border)); box-shadow: 0 0 18px color-mix(in srgb, var(--accent) 10%, transparent); }
+.roll-series-item > strong { min-width: 27px; color: var(--text-1); font-size: 19px; font-variant-numeric: tabular-nums; text-align: center; }
+.roll-series-item.rolling > strong { color: var(--accent); }
+.roll-dice { display: flex; align-items: center; gap: 3px; }
 .roll-dice > span { position: relative; display: inline-flex; }
-.roll-dice i { position: absolute; inset: 0; display: grid; place-items: center; color: var(--text-on-accent); font-size: 8px; font-style: normal; font-weight: 800; pointer-events: none; }
 .roll-dice .dropped { opacity: .36; filter: grayscale(1); }
 .roll-dice .dropped::after { position: absolute; left: 1px; right: 1px; top: 50%; height: 1px; background: var(--danger); content: ''; transform: rotate(-25deg); }
+.roll-dice > span.rolling { transform-origin: center; animation: stats-die-tumble .56s cubic-bezier(.22, .78, .2, 1) both; animation-delay: calc(var(--die-index) * 28ms); }
+@keyframes stats-die-tumble {
+  0% { transform: translateY(0) rotate(0deg) scale(.9); }
+  18% { transform: translateY(-6px) rotate(-14deg) scale(1.06); }
+  38% { transform: translateY(2px) rotate(11deg) scale(.96); }
+  58% { transform: translateY(-3px) rotate(-8deg) scale(1.03); }
+  78% { transform: translateY(1px) rotate(5deg) scale(.99); }
+  100% { transform: translateY(0) rotate(0deg) scale(1); }
+}
 .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 13px; }
 .stat { position: relative; min-width: 0; min-height: 196px; display: flex; flex-direction: column; padding: 16px; overflow: visible; border: 1px solid color-mix(in srgb, var(--border) 88%, transparent); border-radius: calc(var(--r-md) + 2px); background: linear-gradient(145deg, color-mix(in srgb, var(--surface-raised) 72%, var(--surface)), var(--surface)); box-shadow: 0 8px 22px color-mix(in srgb, var(--scrim) 9%, transparent); }
 .stat:focus-within { z-index: 20; }
@@ -266,6 +338,7 @@ function confirmReroll() {
 .step-val { min-width: 0; border-inline: 1px solid color-mix(in srgb, var(--border) 70%, transparent); color: var(--text-1); font-size: 17px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 36px; text-align: center; }
 .step-cost { min-height: 12px; color: var(--text-muted); font-size: 9px; line-height: 1.2; text-align: center; }
 @media (max-width: 820px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .roll-series { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 640px) { .stats-bar { display: grid; grid-template-columns: 1fr auto; gap: 8px; } .stats-bar :deep(.share-multi-toggle) { grid-column: 1 / -1; width: 100%; } .qb { justify-content: center; min-height: 36px; } .budget { margin-left: 0; justify-self: end; } .roll-cta { align-items: stretch; } .roll-btn { width: 100%; justify-content: center; } }
+@media (max-width: 640px) { .stats-bar { display: grid; grid-template-columns: 1fr auto; gap: 8px; } .stats-bar :deep(.share-multi-toggle) { grid-column: 1 / -1; width: 100%; } .qb { justify-content: center; min-height: 36px; } .budget { margin-left: 0; justify-self: end; } .roll-btn { width: 100%; justify-content: center; } }
 @media (max-width: 460px) { .grid, .roll-series { grid-template-columns: 1fr; } .stat { min-height: 188px; padding: 14px; } }
+@media (prefers-reduced-motion: reduce) { .roll-dice > span.rolling { animation: none; } }
 </style>
