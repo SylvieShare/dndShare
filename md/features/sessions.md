@@ -47,6 +47,8 @@ changing the route. The invitation flow continues to use the compact
 `CharacterCreateModal` and opens the joined character after creation. The
 character sheet opened from the participant rail uses the shared dotted app
 canvas; its teleported portrait action menu stays above the fullscreen sheet.
+The DM can replace a participant's character icon from that sheet; the backend
+rechecks that the character still belongs to a session owned by the acting DM.
 A character can belong to at most one session. Both invitation entry points show
 a confirmation naming the previous session before a transfer; confirmation
 sends an explicit replacement flag, and the backend atomically removes the old

@@ -22,16 +22,8 @@ func (s *Server) routesCharacterIcons(mux *http.ServeMux) {
 }
 
 func (s *Server) handleUploadCharacterIconImage(w http.ResponseWriter, r *http.Request) {
-	uid, ok := mustUser(w, r)
+	uid, character, ok := s.loadCharWritable(w, r)
 	if !ok {
-		return
-	}
-	character, ok := s.loadChar(w, r)
-	if !ok {
-		return
-	}
-	if character.UserID != uid {
-		unauthorized(w)
 		return
 	}
 

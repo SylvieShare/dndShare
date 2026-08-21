@@ -30,3 +30,19 @@ func TestCharacterProjectionIncludesActiveIcon(t *testing.T) {
 		}
 	}
 }
+
+func TestCharacterIconWriteAllowsOwnerOrSessionGM(t *testing.T) {
+	for _, fragment := range []string{
+		"character.user_id = $2",
+		"dndshare.session_participant",
+		`dndshare."session"`,
+		"participant.char_id = character.id",
+		"session.owner_user_id = $2",
+		"session.deleted = false",
+		"FOR UPDATE",
+	} {
+		if !strings.Contains(characterIconWriteAccessSQL, fragment) {
+			t.Fatalf("character icon write access must contain %q", fragment)
+		}
+	}
+}

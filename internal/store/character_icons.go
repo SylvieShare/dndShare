@@ -7,23 +7,37 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
+const characterIconWriteAccessSQL = `SELECT character.user_id, character.icon_image_id
+   FROM dndshare."char" character
+  WHERE character.id = $1
+    AND character.deleted = false
+    AND (
+      character.user_id = $2
+      OR EXISTS (
+        SELECT 1
+          FROM dndshare.session_participant participant
+          JOIN dndshare."session" session
+            ON session.id = participant.session_id
+           AND session.deleted = false
+         WHERE participant.char_id = character.id
+           AND session.owner_user_id = $2
+      )
+    )
+  FOR UPDATE`
+
 // SetCharacterIconImage registers an uploaded object and atomically assigns it
-// to an owned character. The previous image is returned for post-commit cleanup.
-func (s *Store) SetCharacterIconImage(ctx context.Context, charID, userID int64, key, url, fileName, mimeType string, fileSize int64) (int64, *int64, error) {
+// when the actor owns the character or is the GM of its session. The previous
+// image is returned for post-commit cleanup.
+func (s *Store) SetCharacterIconImage(ctx context.Context, charID, actorUserID int64, key, url, fileName, mimeType string, fileSize int64) (int64, *int64, error) {
 	tx, err := s.pool.Begin(ctx)
 	if err != nil {
 		return 0, nil, err
 	}
 	defer tx.Rollback(ctx)
 
+	var ownerUserID int64
 	var oldImageID *int64
-	err = tx.QueryRow(ctx,
-		`SELECT icon_image_id
-		   FROM dndshare."char"
-		  WHERE id = $1 AND user_id = $2 AND deleted = false
-		  FOR UPDATE`,
-		charID, userID,
-	).Scan(&oldImageID)
+	err = tx.QueryRow(ctx, characterIconWriteAccessSQL, charID, actorUserID).Scan(&ownerUserID, &oldImageID)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return 0, nil, ErrNotFound
 	}
@@ -36,7 +50,7 @@ func (s *Store) SetCharacterIconImage(ctx context.Context, charID, userID int64,
 		`INSERT INTO dndshare.storage_image (user_id, "key", url, "type", file_name, mime_type, file_size)
 		 VALUES ($1, $2, $3, 'image', NULLIF($4, ''), NULLIF($5, ''), $6)
 		 RETURNING id`,
-		userID, key, url, fileName, mimeType, fileSize,
+		ownerUserID, key, url, fileName, mimeType, fileSize,
 	).Scan(&imageID)
 	if err != nil {
 		return 0, nil, err
