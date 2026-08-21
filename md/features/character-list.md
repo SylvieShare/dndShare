@@ -240,7 +240,9 @@ data and use the same roomy 64px-icon weapon row everywhere in the wizard,
 including backgrounds and the starting shop. Category choices such as
 “musical instrument of your choice” point
 to an explicit handbook choice card instead of an arbitrary concrete item. The
-reference grid uses two desktop columns and one mobile column. In starting-shop
+background equipment area separates weapons and other possessions into
+independent grids, so a roomy weapon row never stretches an adjacent compact
+item. Each grid uses two desktop columns and one mobile column. In starting-shop
 mode the equipment rows and money row are
 replaced by an explicit note that class wealth owns them. Built-in background covers live in system
 `storage_image` rows assigned through the generic `item.cover_image_id` relation.

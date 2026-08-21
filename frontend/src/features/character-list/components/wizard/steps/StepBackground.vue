@@ -58,16 +58,32 @@
 
         <div v-if="!state.buyStartingEquipment && backgroundStart.items.length" class="grant-group">
           <span class="fk">Снаряжение</span>
-          <div class="grant-tiles">
-            <ItemReferenceRow
-              v-for="entry in backgroundStart.items"
-              :key="`${entry.item_id}:${JSON.stringify(entry.params)}`"
-              :item="{ ...entry, id: entry.item_id }"
-              :count="entry.count"
-              :params="entry.params"
-              roomy-weapon
-              @activate="viewItem = { ...entry, id: entry.item_id }"
-            />
+          <div v-if="backgroundWeaponItems.length" class="grant-subgroup">
+            <span class="grant-subtitle">Оружие</span>
+            <div class="grant-tiles grant-tiles--weapons">
+              <ItemReferenceRow
+                v-for="entry in backgroundWeaponItems"
+                :key="`${entry.item_id}:${JSON.stringify(entry.params)}`"
+                :item="{ ...entry, id: entry.item_id }"
+                :count="entry.count"
+                :params="entry.params"
+                roomy-weapon
+                @activate="viewItem = { ...entry, id: entry.item_id }"
+              />
+            </div>
+          </div>
+          <div v-if="backgroundOtherItems.length" class="grant-subgroup">
+            <span v-if="backgroundWeaponItems.length" class="grant-subtitle">Остальное снаряжение</span>
+            <div class="grant-tiles grant-tiles--equipment">
+              <ItemReferenceRow
+                v-for="entry in backgroundOtherItems"
+                :key="`${entry.item_id}:${JSON.stringify(entry.params)}`"
+                :item="{ ...entry, id: entry.item_id }"
+                :count="entry.count"
+                :params="entry.params"
+                @activate="viewItem = { ...entry, id: entry.item_id }"
+              />
+            </div>
           </div>
         </div>
 
@@ -145,6 +161,8 @@ const backgroundCoins = computed(() => {
       }
     })
 })
+const backgroundWeaponItems = computed(() => backgroundStart.value.items.filter((entry) => Number(entry.typeId) === 1))
+const backgroundOtherItems = computed(() => backgroundStart.value.items.filter((entry) => Number(entry.typeId) !== 1))
 const visibleBackgrounds = computed(() => state.background ? [state.background] : bgPool.value)
 const viewItem = ref(null)
 
@@ -177,7 +195,10 @@ function selectBackground(background) {
 .background-wallet :deep(.ma-dot) { width: 20px; height: 20px; }
 .background-wallet :deep(.ma-label) { font-size: 14px; font-weight: 650; }
 .grant-group { display: flex; flex-direction: column; gap: 6px; }
-.grant-tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.grant-subgroup { display: flex; flex-direction: column; gap: 5px; }
+.grant-subgroup + .grant-subgroup { margin-top: 3px; }
+.grant-subtitle { color: var(--text-muted); font-size: 10px; font-weight: 650; line-height: 1.2; }
+.grant-tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 8px; }
 
 .pick { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
 @media (max-width: 640px) { .background-details { padding: 14px; } .grant-tiles { grid-template-columns: 1fr; } }
