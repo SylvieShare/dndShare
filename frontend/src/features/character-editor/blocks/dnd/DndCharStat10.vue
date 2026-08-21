@@ -21,6 +21,7 @@
       :tooltip-max-desc="skillTooltipMaxDesc"
       :tooltip-width="skillTooltipWidth"
       :mobile-variant="isMobileVariant"
+      :show-edit="canEdit"
       @edit="openEditor"
       @roll-stat="rollD20Plus(`${displayTitle} — проверка`, mod)"
       @roll-save="rollD20Plus(`${displayTitle} — спасбросок`, save)"
@@ -92,7 +93,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, inject, onMounted, ref, watch } from 'vue'
 import { abilityModifier, d20Expr, sumBonuses } from '@/shared/lib/dnd'
 import { BaseTile } from '@sylvieshare/share-ui'
 import DndStatEditor from '@/features/character-editor/blocks/dnd/components/DndStatEditor'
@@ -106,6 +107,8 @@ import { useSuggestStore } from '@/stores/suggest'
 
 const props = defineProps(['block', 'value', 'values', 'vars'])
 const emit = defineEmits(['update:value', 'update:var'])
+const charCtx = inject('charCtx', { ownerMode: true })
+const canEdit = computed(() => !!charCtx.ownerMode)
 
 // ─── Editor window state ───────────────────────────────────────────────────────
 const tileRef = ref(null)
@@ -288,6 +291,7 @@ function onOpenSkill(id) {
 
 // ─── Editor window open/close ──────────────────────────────────────────────────
 function openEditor() {
+  if (!canEdit.value) return
   editSkillId.value = null
   openFrom(tileRef.value?.$el)
 }

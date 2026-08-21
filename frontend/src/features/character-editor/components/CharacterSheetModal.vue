@@ -32,7 +32,7 @@
           <div class="sk-block" style="width:100%; height:90px" />
         </div>
 
-        <div v-else-if="template" class="desktop-tabs" :inert="previewMode">
+        <div v-else-if="template" class="desktop-tabs">
           <div
             v-for="index in visitedTabIndexes"
             :key="'csm-tab-' + index"

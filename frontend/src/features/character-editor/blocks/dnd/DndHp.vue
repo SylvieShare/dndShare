@@ -1,8 +1,8 @@
 <template>
-  <BaseTile v-if="!isCompact" :color="barColor" framed interactive @click="open">
+  <BaseTile v-if="!isCompact" :color="barColor" framed :interactive="canEdit" @click="openEditor">
     <DndHpView :hp="hp" @change="onHpChange" />
   </BaseTile>
-  <DndHpView v-else compact :hp="hp" @open="open" @change="onHpChange" />
+  <DndHpView v-else compact :hp="hp" @open="openEditor" @change="onHpChange" />
 
   <MorphEditorShell
     v-if="editorOpen"
@@ -23,7 +23,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
 import { BaseTile } from '@sylvieshare/share-ui'
 import DndHpEditor from '@/features/character-editor/blocks/dnd/components/DndHpEditor'
 import DndHpView from '@/features/character-editor/blocks/dnd/components/DndHpView'
@@ -33,7 +33,9 @@ import { normalizeHitDice, withHitDice } from '@/features/character-editor/block
 
 const props = defineProps(['block', 'value', 'values'])
 const emit = defineEmits(['update:value'])
-const { editorOpen, originRect, originEl, open, close } = useMorphOrigin()
+const charCtx = inject('charCtx', { ownerMode: true })
+const canEdit = computed(() => !!charCtx.ownerMode)
+const { editorOpen, originRect, originEl, open: openMorph, close } = useMorphOrigin()
 
 const isCompact = computed(() => props.block?.props?.variant === 'compact')
 const hp = computed(() => {
@@ -54,6 +56,11 @@ const barColor = computed(() => {
 })
 
 function onHpChange(h) {
+  if (!canEdit.value) return
   emit('update:value', props.block.id, withHitDice(h, normalizeHitDice(h)))
+}
+
+function openEditor() {
+  if (canEdit.value) openMorph()
 }
 </script>

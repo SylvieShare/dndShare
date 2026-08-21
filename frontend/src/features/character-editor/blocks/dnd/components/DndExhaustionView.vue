@@ -4,7 +4,7 @@
   <div class="exh-view">
     <div class="exh-head">
       <span class="sheet-tile-title exh-label">{{ level > 0 ? 'Истощение' : 'Истощения нет' }}</span>
-      <span class="exh-pencil" aria-hidden="true">
+      <span v-if="editable" class="exh-pencil" aria-hidden="true">
         <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 20h9" />
           <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
@@ -23,6 +23,7 @@ defineProps({
   level: { type: Number, default: 0 },
   valueText: { type: String, default: '' },
   activeEffects: { type: Array, default: () => [] },
+  editable: { type: Boolean, default: false },
 })
 </script>
 

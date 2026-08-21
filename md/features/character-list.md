@@ -83,7 +83,9 @@ mobile header and footer. There is no duplicate numeric step counter.
 Личность — последний шаг: рядом с созданием доступен необязательный
 «Предпросмотр листа». Он собирает текущий черновик тем же `buildPayload`, открывает
 настоящий полноэкранный лист с его вкладками в `ownerMode=false` и ничего не
-записывает на сервер; отдельного обязательного шага обзора нет.
+записывает на сервер. Вкладки, броски, подсказки и read-only карточки предметов
+остаются доступны, а входы в редакторы и обработчики изменений заблокированы;
+отдельного обязательного шага обзора нет.
 Neither race nor class repeats a «Результат выбора» block below its controls:
 the selected illustrated card already contains the base result and dependent
 choices remain visible in their own sections. Ability descriptions remain

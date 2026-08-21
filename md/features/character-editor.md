@@ -233,7 +233,9 @@ comes from handbook. A referenced row prefers `iconImageUrl`, then `svg`, then
 the collection image. Weapon, armor and ordinary item rows retain type-specific
 content composition; simplified custom inventory rows leave the image slot empty
 instead of showing a placeholder. Inventory glyphs are neutral gray, frameless
-and use a 64×64 px slot.
+and use a 64×64 px slot. Weapon cards use the same 64×64 slot and prefer the
+handbook `iconImageUrl`, falling back to the weapon SVG; the rest of the
+weapon-specific attack, damage and property composition remains unchanged.
 Every owned inventory item, potion and tool uses `item_id`, an explicit `count` and a
 typed `params` object. `params` contains values of the concrete instance and is
 not an alternative handbook-data or free-form override store. Item-type

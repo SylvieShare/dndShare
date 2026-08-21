@@ -4,7 +4,13 @@
        rollable attack/damage, property tooltips) and false in the morph clone (plain text + ghost pencil
        that fades as the window opens). -->
   <div class="w-card-main">
-    <span v-if="itemSvg" class="w-icon" v-html="itemSvg"></span>
+    <ItemIcon
+      v-if="weaponItem?.iconImageUrl || weaponItem?.svg"
+      class="w-icon"
+      :item="weaponItem"
+      :size="64"
+      :fallback-to-type="false"
+    />
     <div class="w-card-view">
       <div class="w-card-title">
         <div class="w-name-main">
@@ -71,6 +77,7 @@
 <script setup>
 import { computed, inject } from 'vue'
 import AttackDamage from '@/features/character-editor/blocks/dnd/components/AttackDamage.vue'
+import ItemIcon from '@/features/items/components/ItemIcon.vue'
 
 const props = defineProps({
   entry: { type: Object, required: true },
@@ -82,8 +89,8 @@ const emit = defineEmits(['name-down', 'name-click', 'edit', 'roll-attack', 'rol
 
 const ctx = inject('weaponsBlockCtx')
 
-// weapon icon comes from the linked handbook item (item.svg, stored in svg_storage by icon_svg_id)
-const itemSvg = computed(() => ctx.item(props.entry)?.svg || '')
+// The linked handbook weapon may use either a stored image or an SVG icon.
+const weaponItem = computed(() => ctx.item(props.entry))
 // owner: name opens the edit morph; non-owner: name opens the read-only item card (if linked)
 const nameClickable = computed(() => ctx.charCtx.ownerMode || !!ctx.item(props.entry))
 </script>
@@ -92,19 +99,16 @@ const nameClickable = computed(() => ctx.charCtx.ownerMode || !!ctx.item(props.e
 /* icon column (flush left, fixed-size square, vertically centred) + the padded content grid */
 .w-card-main { display: flex; align-items: stretch; gap: 0; min-width: 0; }
 .w-icon {
-  flex: 0 0 52px;
+  flex: 0 0 64px;
   align-self: center;
-  width: 52px;
-  height: 52px;
+  width: 64px;
+  height: 64px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--text-2);
   overflow: hidden;
 }
-/* item.svg (from svg_storage) — already drawn on a diagonal, uses currentColor */
-.w-icon :deep(svg) { width: 100%; height: 100%; display: block; }
-
 .w-card-view {
   flex: 1 1 auto;
   display: grid;

@@ -1,6 +1,6 @@
 <template>
   <!-- toolbar mini -->
-  <div v-if="variant === 'mini'" class="cmini" :class="{ 'cmini-toggled': toggled }" @click="open">
+  <div v-if="variant === 'mini'" class="cmini" :class="{ 'cmini-toggled': toggled, 'cmini-editable': canEdit }" @click="open">
     <span class="cmini-label">{{ miniLabel || label }}</span>
     <span class="cmini-value">
       <span v-if="pre" class="cmini-plus">{{ pre }}</span>{{ value }}<span v-if="unit" class="cmini-unit">{{ unit }}</span>
@@ -9,14 +9,14 @@
 
   <!-- desktop grid tile -->
   <BaseTile v-else-if="variant === 'tile'" ref="tileRef" class="util-tile" :color="color" :strip="toggled">
-    <StatTileFace :label="label" :value="value" :pre="pre" :unit="unit" :icon="icon" :rollable="rollable" :color="color" @edit="openTile" @open="openTile" @roll="$emit('action')" />
+    <StatTileFace :label="label" :value="value" :pre="pre" :unit="unit" :icon="icon" :rollable="rollable" :color="color" @edit="openTile" @open="openTile" @roll="runAction" />
   </BaseTile>
 
   <!-- any other variant (e.g. mobile default): block may override the look via the `tile` slot.
        `open` opens the morph editor; `action` fires the tile's primary action (roll / shield). -->
-  <slot v-else name="tile" :open="open" :action="() => $emit('action')">
+  <slot v-else name="tile" :open="open" :action="runAction">
     <BaseTile ref="tileRef" class="util-tile" :color="color" :strip="toggled">
-      <StatTileFace :label="label" :value="value" :pre="pre" :unit="unit" :icon="icon" :rollable="rollable" :color="color" @edit="openTile" @open="openTile" @roll="$emit('action')" />
+      <StatTileFace :label="label" :value="value" :pre="pre" :unit="unit" :icon="icon" :rollable="rollable" :color="color" @edit="openTile" @open="openTile" @roll="runAction" />
     </BaseTile>
   </slot>
 
@@ -41,15 +41,15 @@
 // Shared shell for the small "label + value" sheet tiles (AC / initiative / speed / prof-bonus).
 // Owns the three variants (mini / tile / default) and the click-to-morph editor. A block supplies its
 // computed display (label/value/pre/unit/color) and an `editor` slot; the morph and chrome are here.
-// Clicking the tile always opens the editor; `rollable` tiles show a dice button that emits `action`.
+// Owners can open the editor; `rollable` tiles keep their dice action on read-only sheets.
 // The colored strip appears only while `toggled` (AC with its shield up), so resting tiles have no strip.
-import { ref } from 'vue'
+import { computed, inject, ref } from 'vue'
 import { BaseTile } from '@sylvieshare/share-ui'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
 import StatTileFace from '@/features/character-editor/blocks/dnd/components/StatTileFace'
 import { useMorphOrigin } from '@/features/character-editor/composables/useMorphOrigin'
 
-defineProps({
+const props = defineProps({
   variant: { type: String, default: '' },
   label: { type: String, default: '' },
   miniLabel: { type: String, default: '' },
@@ -63,12 +63,16 @@ defineProps({
   editorWidth: { type: Number, default: 320 },
   minViewWidth: { type: Number, default: 150 },
 })
-defineEmits(['action'])
+const emit = defineEmits(['action'])
 
 const tileRef = ref(null)
-const { editorOpen, originRect, originEl, open, openFrom, close } = useMorphOrigin()
+const charCtx = inject('charCtx', { ownerMode: true })
+const canEdit = computed(() => !!charCtx.ownerMode)
+const { editorOpen, originRect, originEl, open: openMorph, openFrom, close } = useMorphOrigin()
 
-function openTile() { openFrom(tileRef.value?.$el || null) }
+function open() { if (canEdit.value) openMorph() }
+function openTile() { if (canEdit.value) openFrom(tileRef.value?.$el || null) }
+function runAction() { if (props.rollable || canEdit.value) emit('action') }
 </script>
 
 <style scoped>
@@ -86,8 +90,9 @@ function openTile() { openFrom(tileRef.value?.$el || null) }
   padding: 4px 6px;
   user-select: none;
   box-sizing: border-box;
-  cursor: pointer;
+  cursor: default;
 }
+.cmini-editable { cursor: pointer; }
 .cmini:hover .cmini-value { color: var(--text-on-accent); }
 .cmini-label {
   font-size: 9px;

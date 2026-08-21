@@ -1,10 +1,10 @@
 <template>
-  <button v-if="isCompact" class="exh-compact" :class="{ 'exh-compact--on': level > 0 }" type="button" title="Истощение" @click="open">
+  <button v-if="isCompact" class="exh-compact" :class="{ 'exh-compact--on': level > 0 }" type="button" title="Истощение" :disabled="!canEdit" @click="openEditor">
     <span class="exh-compact-label">Истощение</span>
     <strong>{{ level }}</strong>
   </button>
-  <BaseTile v-else class="exh-tile" :color="color" :strip="level > 0" interactive @click="open">
-    <DndExhaustionView :level="level" :value-text="valueText" :active-effects="activeEffects" />
+  <BaseTile v-else class="exh-tile" :color="color" :strip="level > 0" :interactive="canEdit" @click="openEditor">
+    <DndExhaustionView :level="level" :value-text="valueText" :active-effects="activeEffects" :editable="canEdit" />
   </BaseTile>
 
   <MorphEditorShell
@@ -18,7 +18,7 @@
   >
     <template #view>
       <div class="exh-face">
-        <DndExhaustionView :level="level" :value-text="valueText" :active-effects="activeEffects" />
+        <DndExhaustionView :level="level" :value-text="valueText" :active-effects="activeEffects" editable />
       </div>
     </template>
 
@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
 import { BaseTile } from '@sylvieshare/share-ui'
 import DndExhaustionEditor from '@/features/character-editor/blocks/dnd/components/DndExhaustionEditor'
 import DndExhaustionView from '@/features/character-editor/blocks/dnd/components/DndExhaustionView'
@@ -39,7 +39,9 @@ import { normalizeExhaustion } from '@/features/character-editor/blocks/dnd/lib/
 
 const props = defineProps(['block', 'value'])
 const emit = defineEmits(['update:value'])
-const { editorOpen, originRect, originEl, open, close } = useMorphOrigin()
+const charCtx = inject('charCtx', { ownerMode: true })
+const canEdit = computed(() => !!charCtx.ownerMode)
+const { editorOpen, originRect, originEl, open: openMorph, close } = useMorphOrigin()
 
 const normalized = computed(() => normalizeExhaustion(props.value))
 const data = computed(() => normalized.value.data)
@@ -51,7 +53,8 @@ const color = computed(() => (level.value > 0 ? 'var(--danger)' : 'var(--text-mu
 const isCompact = computed(() => props.block?.props?.variant === 'compact')
 
 function closeEditor() { close() }
-function emitValue(value) { emit('update:value', props.block.id, value) }
+function openEditor() { if (canEdit.value) openMorph() }
+function emitValue(value) { if (canEdit.value) emit('update:value', props.block.id, value) }
 </script>
 
 <style scoped>

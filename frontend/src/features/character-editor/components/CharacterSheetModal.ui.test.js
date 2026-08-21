@@ -18,7 +18,7 @@ describe('embedded character sheet presentation', () => {
     expect(source).toContain('loadPreview(props.draft)')
     expect(source).toContain('!previewMode.value && (isOwner.value || props.isDm)')
     expect(source).toContain('if (previewMode.value) return')
-    expect(source).toContain(':inert="previewMode"')
+    expect(source).not.toContain(':inert="previewMode"')
     expect(source).toContain("button[title='Редактировать']")
     expect(source).toContain('Предпросмотр черновика · только чтение')
   })
