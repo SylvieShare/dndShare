@@ -37,4 +37,11 @@ describe('character creation workspace width', () => {
     expect(source).toContain('!backgroundItemChoicesComplete.value')
     expect(source).toContain("reason: 'Заверши выборы предыстории'")
   })
+
+  it('skips the equipment step and inserts only the optional starting shop', () => {
+    expect(source).not.toContain('StepEquipment')
+    expect(source).not.toContain("key: 'equipment'")
+    expect(source).toContain('...(state.buyStartingEquipment')
+    expect(source).toContain("[{ key: 'shop', title: 'Магазин'")
+  })
 })

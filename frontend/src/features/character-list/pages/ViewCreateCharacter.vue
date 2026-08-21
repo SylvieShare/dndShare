@@ -75,7 +75,6 @@ import { useRouter } from 'vue-router'
 import CreateStepRail from '@/features/character-list/components/wizard/CreateStepRail.vue'
 import StepBackground from '@/features/character-list/components/wizard/steps/StepBackground.vue'
 import StepClass from '@/features/character-list/components/wizard/steps/StepClass.vue'
-import StepEquipment from '@/features/character-list/components/wizard/steps/StepEquipment.vue'
 import StepStartingShop from '@/features/character-list/components/wizard/steps/StepStartingShop.vue'
 import StepPersona from '@/features/character-list/components/wizard/steps/StepPersona.vue'
 import StepRace from '@/features/character-list/components/wizard/steps/StepRace.vue'
@@ -105,7 +104,7 @@ provide('createWizard', wz)
 
 const {
   state, load, buildPayload, restore, clearPersist, reset, setSourceVersionId,
-  allEquipment, shopSpentCopper, startingWealthCopper, shopSpentLabel, shopRemainingLabel,
+  shopSpentCopper, startingWealthCopper, shopSpentLabel, shopRemainingLabel,
   requiresSubrace, requiresSubclass,
   scoresComplete, pointsLeft, skillLimit, spellsComplete,
   cantripLimit, spell1Limit, cantripChosen, spell1Chosen,
@@ -128,7 +127,7 @@ const isComplete = computed(() =>
 
 const STEP_COMPONENTS = {
   version: StepVersion, race: StepRace, class: StepClass, background: StepBackground,
-  stats: StepStats, equipment: StepEquipment, shop: StepStartingShop, persona: StepPersona, review: StepReview,
+  stats: StepStats, shop: StepStartingShop, persona: StepPersona, review: StepReview,
 }
 
 const internalCreating = ref(false)
@@ -139,32 +138,22 @@ const sourceVersionId = computed(() => findSourceVersion(dndSource.value, state.
 watch(sourceVersionId, (id) => setSourceVersionId(id), { immediate: true })
 
 // Race/class choices are made inline on their own steps (skills, feature choices
-// and spells are folded into the Class step; race choices into Race). Снаряжение
-// и Личность — необязательные шаги.
+// and spells are folded into the Class step; race choices into Race). Магазин
+// появляется только при замене стартового комплекта начальным богатством.
 const statMethodLabel = computed(() => ({
   array: 'Стандартный набор',
   pointbuy: 'Покупка очков',
   roll: 'Бросок кубиков',
 })[state.statMethod] || '')
-const equipmentCount = computed(() => allEquipment.value.reduce((sum, entry) => sum + (Number(entry.count) || 1), 0))
-const equipmentLabel = computed(() => {
-  const count = equipmentCount.value
-  if (!count) return ''
-  const mod100 = count % 100
-  const mod10 = count % 10
-  const noun = mod100 >= 11 && mod100 <= 14 ? 'предметов' : mod10 === 1 ? 'предмет' : mod10 >= 2 && mod10 <= 4 ? 'предмета' : 'предметов'
-  return `${count} ${noun}`
-})
-
 const steps = computed(() => [
   { key: 'version', title: 'Версия', summary: state.version ? `D&D 5e · ${state.version}` : '' },
   { key: 'race', title: 'Раса', summary: [state.race?.name, state.subrace?.name].filter(Boolean).join(' · ') },
   { key: 'class', title: 'Класс', summary: [state.charClass?.name, state.subclass?.name].filter(Boolean).join(' · ') },
   { key: 'background', title: 'Предыстория', summary: state.background?.name || '' },
   { key: 'stats', title: 'Характеристики', summary: statMethodLabel.value },
-  state.buyStartingEquipment
-    ? { key: 'shop', title: 'Магазин', summary: `${shopSpentLabel.value} · остаток ${shopRemainingLabel.value}` }
-    : { key: 'equipment', title: 'Снаряжение', summary: equipmentLabel.value },
+  ...(state.buyStartingEquipment
+    ? [{ key: 'shop', title: 'Магазин', summary: `${shopSpentLabel.value} · остаток ${shopRemainingLabel.value}` }]
+    : []),
   { key: 'persona', title: 'Личность', summary: state.name.trim() || state.persona.alignment || '' },
   { key: 'review', title: 'Обзор', summary: isComplete.value ? 'Можно создавать' : '' },
 ])

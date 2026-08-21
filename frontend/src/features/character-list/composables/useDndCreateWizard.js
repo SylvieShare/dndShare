@@ -28,6 +28,7 @@ import { useDndCreateEquipment } from './useDndCreateEquipment'
 import {
   createDndWizardState,
   DND_WIZARD_STORAGE_KEY,
+  normalizeDndWizardDraft,
   serializeDndWizardState,
 } from './dndCreateWizardState'
 import {
@@ -609,6 +610,7 @@ export function useDndCreateWizard() {
     let saved = null
     try { saved = JSON.parse(localStorage.getItem(DND_WIZARD_STORAGE_KEY) || 'null') } catch { saved = null }
     if (!saved) return
+    saved = normalizeDndWizardDraft(saved)
     hydrating = true
     Object.assign(state, saved)
     state.contentSources = normalizeContentSourceSettings(state.contentSources)

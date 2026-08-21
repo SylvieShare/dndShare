@@ -65,7 +65,9 @@ items and suggests must load without a session.
 ## Full D&D wizard
 
 The fixed steps are: Версия → Раса → Класс → Предыстория → Характеристики →
-Снаряжение → Личность → Обзор. The desktop layout keeps the main step content in
+Личность → Обзор. Когда игрок заменяет стартовый комплект начальным богатством,
+между Характеристиками и Личностью появляется единственный дополнительный шаг
+Магазин; отдельного шага Снаряжение нет. The desktop layout keeps the main step content in
 a responsive column capped at 1120px, giving race and class covers a wider media
 area. A separate 220px step rail floats directly
 to that column's left; there is no permanent right preview. The rail shows the
