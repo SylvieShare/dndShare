@@ -5,6 +5,11 @@ import { describe, expect, it } from 'vitest'
 const source = readFileSync(fileURLToPath(new URL('./StepClass.vue', import.meta.url)), 'utf8')
 
 describe('class step hierarchy', () => {
+  it('keeps the selected class visible while the catalogue reloads', () => {
+    expect(source).toContain(':loading="loading && !classes.length && !state.charClass"')
+    expect(source).toContain(':empty="!loading && !classes.length && !state.charClass"')
+  })
+
   it('uses the shared illustrated selection stage', () => {
     expect(source).toContain('<IllustratedChoiceStage')
     expect(source).toContain('back-text="К выбору класса"')

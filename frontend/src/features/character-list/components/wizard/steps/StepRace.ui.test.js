@@ -5,6 +5,11 @@ import { describe, expect, it } from 'vitest'
 const source = readFileSync(fileURLToPath(new URL('./StepRace.vue', import.meta.url)), 'utf8')
 
 describe('race step hierarchy', () => {
+  it('keeps the selected race visible while the catalogue reloads', () => {
+    expect(source).toContain(':loading="loading && !races.length && !state.race"')
+    expect(source).toContain(':empty="!loading && !races.length && !state.race"')
+  })
+
   it('uses an expressive page heading without changing its concise label', () => {
     expect(source).toContain('<IllustratedChoiceStage')
     expect(source).toContain('title="Раса"')

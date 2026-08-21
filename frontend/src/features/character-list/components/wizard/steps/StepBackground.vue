@@ -1,15 +1,16 @@
 <template>
-  <IllustratedChoiceStage
-    title="Предыстория"
-    :selected="!!state.background"
-    :selection-key="state.background?.id"
-    :loading="loading && !bgPool.length"
-    :empty="!loading && !bgPool.length"
-    empty-text="В справочнике пока нет предысторий."
-    back-text="К выбору предыстории"
-    two-column
-    @clear="state.background = null"
-  >
+  <div class="step">
+    <IllustratedChoiceStage
+      title="Предыстория"
+      :selected="!!state.background"
+      :selection-key="state.background?.id"
+      :loading="loading && !bgPool.length && !state.background"
+      :empty="!loading && !bgPool.length && !state.background"
+      empty-text="В справочнике пока нет предысторий."
+      back-text="К выбору предыстории"
+      two-column
+      @clear="state.background = null"
+    >
     <template #cards>
       <BackgroundSelectCard
         v-for="b in visibleBackgrounds"
@@ -125,13 +126,14 @@
         </div>
       </section>
     </template>
-  </IllustratedChoiceStage>
-  <ItemViewModal
-    v-if="viewItem"
-    :item-id="viewItem.id"
-    :item-type-id="viewItem.typeId"
-    @close="viewItem = null"
-  />
+    </IllustratedChoiceStage>
+    <ItemViewModal
+      v-if="viewItem"
+      :item-id="viewItem.id"
+      :item-type-id="viewItem.typeId"
+      @close="viewItem = null"
+    />
+  </div>
 </template>
 
 <script setup>
@@ -201,6 +203,7 @@ function selectBackground(background) {
 </script>
 
 <style scoped>
+.step { position: relative; display: flex; flex-direction: column; gap: 12px; }
 .hint { font-size: 12px; color: var(--text-muted); margin: 0; display: flex; align-items: center; gap: 8px; }
 .count { font-size: 12px; font-weight: 600; color: var(--text-muted); }
 .count.done { color: var(--success); }

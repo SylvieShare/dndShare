@@ -5,6 +5,12 @@ import { describe, expect, it } from 'vitest'
 const source = readFileSync(fileURLToPath(new URL('./StepBackground.vue', import.meta.url)), 'utf8')
 
 describe('background step presentation', () => {
+  it('has one element root so wizard transitions can remount the selected step', () => {
+    expect(source).toMatch(/<template>\s*<div class="step">/)
+    expect(source).toContain(':loading="loading && !bgPool.length && !state.background"')
+    expect(source).toContain(':empty="!loading && !bgPool.length && !state.background"')
+  })
+
   it('renders illustrated backgrounds in a two-column grid', () => {
     expect(source).toContain('<IllustratedChoiceStage')
     expect(source).toContain('back-text="К выбору предыстории"')
