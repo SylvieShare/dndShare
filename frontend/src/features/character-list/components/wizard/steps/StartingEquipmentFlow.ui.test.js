@@ -50,6 +50,7 @@ describe('starting equipment wizard flow', () => {
     expect(itemReference).toContain('grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); grid-template-rows: auto auto;')
     expect(itemReference).toMatch(/\.item-reference-damage \{[^}]*grid-column: 1; grid-row: 2;/)
     expect(itemReference).toMatch(/\.item-reference-properties \{[^}]*grid-column: 2; grid-row: 2;/)
+    expect(itemReference).toMatch(/\.item-reference-properties \{[^}]*flex-direction: column; align-items: flex-end;/)
     expect(itemReference).toMatch(/\.item-reference-economy \{[^}]*grid-column: 2; grid-row: 1;/)
     expect(itemReference).toContain('class="item-reference-economy"')
     expect(itemReference).toContain("content: '·'")

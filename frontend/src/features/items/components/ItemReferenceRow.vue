@@ -131,7 +131,7 @@ const metaLabel = computed(() => [
 .item-reference--roomy-weapon .item-reference-name { font-size: 14px; line-height: 1.3; }
 .item-reference--roomy-weapon .item-reference-weapon-details { display: contents; }
 .item-reference--roomy-weapon .item-reference-damage { width: auto; display: flex; place-items: unset; align-self: center; grid-column: 1; grid-row: 2; }
-.item-reference--roomy-weapon .item-reference-properties { width: auto; min-width: 0; display: flex; align-items: baseline; justify-content: flex-end; gap: 8px; grid-column: 2; grid-row: 2; font-size: 10px; line-height: 1.35; text-align: right; }
+.item-reference--roomy-weapon .item-reference-properties { width: auto; min-width: 0; display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 2px; grid-column: 2; grid-row: 2; font-size: 10px; line-height: 1.35; text-align: right; }
 .item-reference--roomy-weapon .item-reference-properties > span { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .item-reference-economy { display: flex; align-items: baseline; justify-content: flex-end; gap: 0; grid-column: 2; grid-row: 1; color: var(--text-muted); font-size: 10px; line-height: 1.3; white-space: nowrap; }
 .item-reference-economy > span + span::before { margin: 0 6px; color: var(--border-strong); content: '·'; }
