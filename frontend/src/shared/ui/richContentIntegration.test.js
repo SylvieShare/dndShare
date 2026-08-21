@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest'
 import { createRichNodeHtml, decodeRichNodePayload } from '@sylvieshare/share-ui'
 
 const inputSource = readFileSync(fileURLToPath(new URL('./InputDescription.vue', import.meta.url)), 'utf8')
+const suggestModalSource = readFileSync(fileURLToPath(new URL('./RichSuggestNodeModal.vue', import.meta.url)), 'utf8')
 const inlineSource = readFileSync(fileURLToPath(new URL('./DndRichInlineNode.vue', import.meta.url)), 'utf8')
 const contentSource = readFileSync(fileURLToPath(new URL('./DndRichContent.vue', import.meta.url)), 'utf8')
 const themeSource = readFileSync(fileURLToPath(new URL('../../app/theme.css', import.meta.url)), 'utf8')
@@ -30,6 +31,13 @@ describe('DnD rich content integration', () => {
     expect(inputSource).toContain('@node-select="selectNode"')
     expect(inputSource).toContain('updateRichNode')
     expect(inputSource).toContain('removeRichNode')
+  })
+
+  it('loads suggest terms from the current API response contract', () => {
+    expect(suggestModalSource).toContain('types.value = response?.items || []')
+    expect(suggestModalSource).not.toContain('response?.types')
+    expect(suggestModalSource).toContain('Не удалось загрузить разделы справочника.')
+    expect(inputSource).toContain('Термин справочника')
   })
 
   it('renders the description editor as a bordered transparent surface', () => {

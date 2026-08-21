@@ -49,8 +49,8 @@
             <button
               type="button"
               class="rich-tool-btn"
-              title="Вставить ссылку на справочник"
-              aria-label="Вставить ссылку на справочник"
+              title="Вставить термин справочника"
+              aria-label="Вставить термин справочника"
               @mousedown.prevent="openCreate('suggest')"
             >
               <BookOpenCheck :size="16" :stroke-width="1.8" aria-hidden="true" />
@@ -93,7 +93,7 @@
         </button>
         <button type="button" role="menuitem" @mousedown.prevent="openCreateFromMenu('suggest')">
           <BookOpenCheck :size="17" aria-hidden="true" />
-          <span>Ссылка на справочник</span>
+          <span>Термин справочника</span>
         </button>
       </div>
     </BasePopover>
@@ -196,7 +196,7 @@ const insertMenuTrigger = ref(null)
 const insertMenuOpen = ref(false)
 
 function nodeTypeLabel(kind) {
-  return ({ dice: 'Формула броска', item: 'Ссылка на предмет', suggest: 'Ссылка на справочник' })[kind] || 'Встроенный элемент'
+  return ({ dice: 'Формула броска', item: 'Ссылка на предмет', suggest: 'Термин справочника' })[kind] || 'Встроенный элемент'
 }
 
 function selectNode(selection) {

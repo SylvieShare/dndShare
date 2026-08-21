@@ -1,12 +1,16 @@
 <template>
-  <AppModalFrame title="Ссылка на справочник" :z-index="4600" @close="$emit('close')">
+  <AppModalFrame title="Термин справочника" :z-index="4600" @close="$emit('close')">
     <div class="rsm-form">
       <FormField label="Раздел" vertical>
-        <FormSelect v-model:value="typeId" @change="picked = null">
-          <option value="" disabled>Выберите раздел</option>
+        <FormSelect v-model:value="typeId" :disabled="loadingTypes || Boolean(loadError)" @change="picked = null">
+          <option value="" disabled>{{ typePlaceholder }}</option>
           <option v-for="type in types" :key="type.id" :value="String(type.id)">{{ type.name }}</option>
         </FormSelect>
       </FormField>
+      <span v-if="loadError" class="rsm-load-error">
+        {{ loadError }}
+        <button type="button" @click="load">Повторить</button>
+      </span>
       <FormField label="Значение" vertical>
         <SuggestPicker
           v-if="typeId"
@@ -47,11 +51,19 @@ import SuggestPicker from '@/shared/ui/SuggestPicker.vue'
 const props = defineProps({ node: { type: Object, default: null } })
 const emit = defineEmits(['close', 'save', 'remove'])
 const types = ref([])
+const loadingTypes = ref(false)
+const loadError = ref('')
 const typeId = ref(props.node?.payload?.typeId != null ? String(props.node.payload.typeId) : '')
 const currentId = ref(props.node?.payload?.id ?? '')
 const picked = ref(null)
 const suggestStore = useSuggestStore()
 const editing = computed(() => Boolean(props.node))
+const typePlaceholder = computed(() => {
+  if (loadingTypes.value) return 'Загружаем разделы…'
+  if (loadError.value) return 'Разделы недоступны'
+  if (!types.value.length) return 'Разделы справочника не найдены'
+  return 'Выберите раздел'
+})
 const currentSuggest = computed(() => suggestStore.items(Number(typeId.value))
   .find(item => Number(item.id) === Number(currentId.value)) || null)
 
@@ -61,10 +73,19 @@ watch(typeId, async value => {
 })
 
 async function load() {
-  const response = await suggestApi.types().catch(() => ({ types: [] }))
-  types.value = response?.types || []
-  if (typeId.value && currentId.value !== '') {
-    await suggestStore.ensureItems(Number(typeId.value), [Number(currentId.value)]).catch(() => {})
+  loadingTypes.value = true
+  loadError.value = ''
+  try {
+    const response = await suggestApi.types()
+    types.value = response?.items || []
+    if (typeId.value && currentId.value !== '') {
+      await suggestStore.ensureItems(Number(typeId.value), [Number(currentId.value)])
+    }
+  } catch {
+    types.value = []
+    loadError.value = 'Не удалось загрузить разделы справочника.'
+  } finally {
+    loadingTypes.value = false
   }
 }
 
@@ -84,6 +105,8 @@ onMounted(load)
 <style scoped>
 .rsm-form { display: flex; flex-direction: column; gap: 14px; }
 .rsm-hint { color: var(--text-muted); font-size: 12px; }
+.rsm-load-error { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: -8px; color: var(--danger); font-size: 11px; }
+.rsm-load-error button { padding: 3px 6px; border: 0; border-radius: var(--r-sm); background: var(--surface-raised); color: var(--text-2); font: inherit; cursor: pointer; }
 .rsm-preview { display: flex; flex-direction: column; gap: 5px; max-height: 180px; padding: 10px 12px; overflow: auto; border: 1px solid var(--border); border-radius: var(--r-md); background: var(--surface-raised); color: var(--text-muted); font-size: 12px; }
 .rsm-preview strong { color: var(--text-1); font-size: 13px; }
 .rsm-actions { display: flex; align-items: center; justify-content: flex-end; gap: 8px; width: 100%; }
