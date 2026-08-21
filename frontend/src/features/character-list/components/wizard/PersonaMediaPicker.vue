@@ -43,9 +43,8 @@
 
     <div class="icon-column">
       <div class="media-copy">
-        <span class="media-kicker">Иконка</span>
-        <strong>Для карточки и сессии</strong>
-        <p>Квадратное изображение героя в списках и на игровом поле. Если его не выбрать, будет использован портрет.</p>
+        <strong>Иконка персонажа</strong>
+        <p>Для карточки и сессии. Без неё используется портрет.</p>
       </div>
 
       <div
@@ -249,35 +248,27 @@ onBeforeUnmount(clearCropObjectUrl)
 .persona-media {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(180px, 0.72fr) minmax(230px, 1fr);
-  gap: 18px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
   min-width: 0;
 }
 .portrait-column, .icon-column { min-width: 0; }
 .portrait-column { display: flex; flex-direction: column; gap: 8px; }
 .icon-column {
+  align-self: start;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 112px;
-  grid-template-rows: 1fr auto;
+  grid-template-columns: 76px minmax(0, 1fr);
+  grid-template-rows: auto auto;
   align-items: center;
-  gap: 10px 16px;
-  padding: 16px;
+  gap: 8px 12px;
+  padding: 12px;
   border: 1px solid var(--border);
   border-radius: 16px;
   background: color-mix(in srgb, var(--surface-raised) 80%, transparent);
 }
-.media-copy { align-self: start; }
-.media-kicker {
-  display: block;
-  margin-bottom: 4px;
-  color: var(--accent);
-  font-size: 10px;
-  font-weight: 750;
-  letter-spacing: .09em;
-  text-transform: uppercase;
-}
+.media-copy { grid-column: 2; align-self: center; }
 .media-copy strong { display: block; color: var(--text); font-size: 14px; }
-.media-copy p { margin: 6px 0 0; color: var(--text-muted); font-size: 11px; line-height: 1.45; }
+.media-copy p { margin: 4px 0 0; color: var(--text-muted); font-size: 10px; line-height: 1.4; }
 .media-drop {
   position: relative;
   overflow: hidden;
@@ -295,7 +286,7 @@ onBeforeUnmount(clearCropObjectUrl)
 }
 .media-drop.is-dragging { transform: translateY(-2px); }
 .portrait-drop { width: 100%; aspect-ratio: 4 / 5; border-radius: 18px; }
-.icon-drop { width: 112px; aspect-ratio: 1; border-radius: 24px; }
+.icon-drop { grid-column: 1; grid-row: 1; width: 76px; aspect-ratio: 1; border-radius: 18px; }
 .media-drop img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: top center; }
 .media-placeholder, .media-progress {
   position: absolute;
@@ -334,17 +325,17 @@ onBeforeUnmount(clearCropObjectUrl)
 }
 .media-actions button:hover { border-color: var(--border-strong); color: var(--text); }
 .media-actions .danger { margin-left: auto; color: var(--danger); }
-.icon-actions { grid-column: 1 / -1; }
+.icon-actions { grid-column: 2; }
+.icon-actions button { min-height: 27px; padding: 4px 7px; }
 .media-error { grid-column: 1 / -1; margin: 0; color: var(--danger); font-size: 11px; }
 @keyframes media-spin { to { transform: rotate(360deg); } }
 
 @media (max-width: 700px) {
-  .persona-media { grid-template-columns: 132px minmax(0, 1fr); gap: 12px; }
   .portrait-drop { border-radius: 15px; }
   .portrait-column .media-actions { flex-wrap: wrap; }
   .portrait-column .media-actions button { flex: 1 1 auto; }
-  .icon-column { grid-template-columns: minmax(0, 1fr) 88px; padding: 12px; }
-  .icon-drop { width: 88px; border-radius: 20px; }
+  .icon-column { grid-template-columns: 68px minmax(0, 1fr); padding: 10px; }
+  .icon-drop { width: 68px; border-radius: 16px; }
 }
 
 @media (max-width: 480px) {

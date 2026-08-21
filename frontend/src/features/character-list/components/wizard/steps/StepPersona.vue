@@ -38,6 +38,26 @@
           <span><UserRound :size="14" aria-hidden="true" />{{ raceLabel }}</span>
           <span><Shield :size="14" aria-hidden="true" />{{ classLabel }}</span>
         </div>
+
+        <div class="appearance-block">
+          <div class="section-heading appearance-heading">
+            <span class="section-icon"><ScanFace :size="18" aria-hidden="true" /></span>
+            <div><h3>Облик</h3><p>Впечатление от героя и короткие ориентиры для отыгрыша.</p></div>
+          </div>
+          <InputDescription
+            class="rich-field appearance-description"
+            :block="appearanceDescriptionField"
+            :value="p.appearance"
+            editable
+            @update:value="(_id, value) => p.appearance = value"
+          />
+          <div class="phys">
+            <FormField v-for="field in appearanceFields" :key="field.key" :label="field.label" vertical>
+              <FormTextInput v-model:value="p[field.key]" />
+              <small v-if="appearanceHint(field.key)" class="appearance-hint">{{ appearanceHint(field.key) }}</small>
+            </FormField>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -62,7 +82,7 @@
     <section class="persona-section">
       <div class="section-heading">
         <span class="section-icon"><BookOpenText :size="18" aria-hidden="true" /></span>
-        <div><h3>История</h3><p>Внешность, прошлое и люди, которые всё ещё имеют значение.</p></div>
+        <div><h3>История</h3><p>Прошлое и люди, которые всё ещё имеют значение.</p></div>
       </div>
       <div class="story-grid">
         <InputDescription
@@ -78,18 +98,6 @@
       </div>
     </section>
 
-    <section class="persona-section">
-      <div class="section-heading">
-        <span class="section-icon"><ScanFace :size="18" aria-hidden="true" /></span>
-        <div><h3>Облик</h3><p>Короткие ориентиры для листа и отыгрыша.</p></div>
-      </div>
-      <div class="phys">
-        <FormField v-for="field in appearanceFields" :key="field.key" :label="field.label" vertical>
-          <FormTextInput v-model:value="p[field.key]" />
-          <small v-if="appearanceHint(field.key)" class="appearance-hint">{{ appearanceHint(field.key) }}</small>
-        </FormField>
-      </div>
-    </section>
   </div>
 </template>
 
@@ -124,9 +132,12 @@ const personalityFields = [
 
 const storyFields = [
   { id: 'person_backstory', key: 'backstory', title: 'Предыстория персонажа', content: { placeholder: 'Расскажи историю персонажа' } },
-  { id: 'person_appearance', key: 'appearance', title: 'Внешность', content: { placeholder: 'Как выглядит персонаж' } },
   { id: 'person_allies', key: 'allies', title: 'Союзники и организации', content: { placeholder: 'Союзники, организации, контакты' } },
 ]
+
+const appearanceDescriptionField = {
+  id: 'person_appearance', key: 'appearance', title: 'Внешность', content: { placeholder: 'Как выглядит персонаж' },
+}
 
 const RACE_HINTS = [
   [/дварф|дворф/, { age: 'Обычно взрослые с 50 лет, живут около 350 лет', height: 'Обычно 120–150 см', weight: 'Обычно около 70 кг' }],
@@ -163,7 +174,7 @@ function appearanceHint(key) { return raceHints.value[key] || '' }
 .hint { font-size: 12px; line-height: 1.45; color: var(--text-muted); margin: 4px 0 0; }
 .identity-card {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: 220px minmax(0, 1fr);
   gap: 22px;
   padding: 20px;
   border: 1px solid var(--border);
@@ -173,7 +184,7 @@ function appearanceHint(key) { return raceHints.value[key] || '' }
     var(--surface);
   box-shadow: 0 12px 34px color-mix(in srgb, var(--scrim) 8%, transparent);
 }
-.identity-fields { display: flex; flex-direction: column; justify-content: center; gap: 14px; min-width: 0; }
+.identity-fields { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
 .identity-eyebrow { display: flex; align-items: center; gap: 6px; color: var(--accent); font-size: 10px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
 .identity-summary { display: flex; flex-wrap: wrap; gap: 7px; }
 .identity-summary span { display: inline-flex; align-items: center; gap: 6px; min-width: 0; padding: 6px 9px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface-raised); color: var(--text-2); font-size: 11px; }
@@ -189,8 +200,11 @@ function appearanceHint(key) { return raceHints.value[key] || '' }
 .personality-fields .rich-field:nth-of-type(2) :deep(.editable-div) { min-height: 88px; }
 .rich-field :deep(.desc-title) { font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); font-weight: 650; }
 .story-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; align-items: start; }
-.story-field--backstory { grid-row: span 2; }
 .story-field--backstory :deep(.editable-div) { min-height: 224px; }
+.appearance-block { margin-top: 2px; padding-top: 15px; border-top: 1px solid var(--border); }
+.appearance-heading { margin-bottom: 11px; }
+.appearance-description { margin-bottom: 12px; }
+.appearance-description :deep(.editable-div) { min-height: 92px; }
 .phys { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; align-items: start; }
 .name-field { display: grid; grid-template-columns: minmax(0, 1fr) 38px; gap: 8px; }
 .name-dice { display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--border-strong); border-radius: 9px; background: var(--surface-raised); color: var(--accent); cursor: pointer; }
@@ -199,8 +213,8 @@ function appearanceHint(key) { return raceHints.value[key] || '' }
 
 @media (max-width: 640px) {
   .identity-card, .persona-section { padding: 13px; border-radius: 15px; }
+  .identity-card { grid-template-columns: minmax(0, 1fr); }
   .story-grid { grid-template-columns: 1fr; }
-  .story-field--backstory { grid-row: auto; }
   .story-field--backstory :deep(.editable-div) { min-height: 150px; }
   .phys { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }

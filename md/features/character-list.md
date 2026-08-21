@@ -91,8 +91,9 @@ floating step rail and the space outside that column remain on the global dotted
 application canvas.
 
 The personality step is composed as a character portrait rather than a flat form:
-identity and alignment sit beside separate portrait and compact-icon pickers, then
-character, story and physical appearance continue in icon-labelled sections. Both
+the portrait and a deliberately compact secondary icon sit beside identity,
+alignment and the complete appearance group; character and story continue in
+icon-labelled sections below. Both
 images use the shared crop workspace and are stored in the local wizard draft after
 upload. The portrait becomes `values.ava`; the square 256×256 icon is submitted as
 `iconImageUploadId` and linked to the new character's independent `icon_image_id`.
