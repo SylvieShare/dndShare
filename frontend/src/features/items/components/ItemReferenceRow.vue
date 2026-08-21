@@ -4,7 +4,9 @@
     :class="{
       'item-reference--selected': selected,
       'item-reference--disabled': disabled,
+      'item-reference--roomy': isRoomy,
       'item-reference--roomy-weapon': isRoomyWeapon,
+      'item-reference--roomy-armor': isRoomyArmor,
     }"
   >
     <button
@@ -13,11 +15,11 @@
       :disabled="disabled || !activatable"
       @click="$emit('activate', item)"
     >
-      <ItemIcon class="item-reference-icon" :item="item" :type="type" :size="isRoomyWeapon ? 64 : 34" placeholder />
+      <ItemIcon class="item-reference-icon" :item="item" :type="type" :size="isRoomy ? 64 : 34" placeholder />
       <span class="item-reference-info">
         <span class="item-reference-main">
           <span class="item-reference-name">{{ item.name }}</span>
-          <span v-if="metaLabel && !isRoomyWeapon" class="item-reference-meta">{{ metaLabel }}</span>
+          <span v-if="metaLabel && !isRoomy" class="item-reference-meta">{{ metaLabel }}</span>
         </span>
         <span v-if="firstAttack" class="item-reference-weapon-details">
           <span class="item-reference-damage">
@@ -43,13 +45,26 @@
             </span>
           </span>
         </span>
-        <span v-if="isRoomyWeapon && (count > 1 || costLabel || weightLabel)" class="item-reference-economy">
+        <span v-if="isRoomyArmor" class="item-reference-armor-details">
+          <span class="item-reference-armor-category">
+            <small>Категория</small>
+            <span>{{ armorCategoryLabel }}</span>
+          </span>
+          <span class="item-reference-armor-stats">
+            <span class="item-reference-armor-ac">
+              <small>{{ armor.shield ? 'Бонус КД' : 'КД' }}</small>
+              <strong>{{ armorValue }}</strong>
+            </span>
+            <span v-if="data.stealth_disadvantage" class="item-reference-armor-stealth">Помеха Скрытности</span>
+          </span>
+        </span>
+        <span v-if="isRoomy && (count > 1 || costLabel || weightLabel)" class="item-reference-economy">
           <span v-if="count > 1" class="item-reference-count">×{{ count }}</span>
           <span v-if="costLabel" class="item-reference-cost">{{ costLabel }}</span>
           <span v-if="weightLabel" class="item-reference-weight">{{ weightLabel }}</span>
         </span>
       </span>
-      <template v-if="!isRoomyWeapon">
+      <template v-if="!isRoomy">
         <span v-if="count > 1" class="item-reference-count">×{{ count }}</span>
         <slot name="trailing">
           <span v-if="costLabel" class="item-reference-cost">{{ costLabel }}</span>
@@ -98,6 +113,7 @@ const props = defineProps({
   showChevron: { type: Boolean, default: true },
   showDetails: { type: Boolean, default: false },
   roomyWeapon: { type: Boolean, default: false },
+  roomyArmor: { type: Boolean, default: false },
 })
 
 defineEmits(['activate', 'details'])
@@ -108,8 +124,22 @@ suggestStore.ensure(14)
 const { format: formatCost } = useCostFormatter()
 const costLabel = computed(() => formatCost(data.value.cost))
 const firstAttack = computed(() => Array.isArray(data.value.attacks) ? data.value.attacks[0] : null)
+const armor = computed(() => data.value.armor || {})
 const isRoomyWeapon = computed(() => props.roomyWeapon && !!firstAttack.value)
+const isRoomyArmor = computed(() => props.roomyArmor && (
+  Number(props.item.typeId) === 12 || Object.keys(armor.value).length > 0
+))
+const isRoomy = computed(() => isRoomyWeapon.value || isRoomyArmor.value)
 const weightLabel = computed(() => data.value.weight != null ? `${String(data.value.weight).replace('.', ',')} фнт.` : '')
+const armorCategoryLabel = computed(() => ({
+  light: 'Лёгкий',
+  medium: 'Средний',
+  heavy: 'Тяжёлый',
+  shield: 'Щит',
+})[data.value.category] || 'Доспех')
+const armorValue = computed(() => armor.value.shield
+  ? `+${armor.value.shield_bonus ?? 2}`
+  : (armor.value.ac ?? '—'))
 const weaponPropertyItems = computed(() => {
   const details = new Map(suggestStore.items(14).map((entry) => [String(entry.id), entry]))
   return (Array.isArray(data.value.tags) ? data.value.tags : [])
@@ -169,23 +199,32 @@ function hidePropertyTooltip() { propertiesTooltip.visible = false }
 .item-reference-details { width: 30px; height: 30px; flex: none; display: grid; place-items: center; margin-right: 8px; padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--text-muted); cursor: pointer; transition: color .15s, background .15s; }
 .item-reference-details:hover:not(:disabled) { background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent); }
 .item-reference-details:disabled { cursor: default; }
-.item-reference--roomy-weapon .item-reference-body { min-height: 96px; align-items: center; gap: 14px; padding: 12px 0 12px 12px; }
-.item-reference--roomy-weapon .item-reference-info { min-width: 0; flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); grid-template-rows: auto auto; align-content: center; align-items: center; column-gap: 14px; row-gap: 8px; align-self: stretch; }
-.item-reference--roomy-weapon .item-reference-main { flex: none; grid-column: 1; grid-row: 1; }
-.item-reference--roomy-weapon .item-reference-name { font-size: 14px; line-height: 1.3; }
+.item-reference--roomy .item-reference-body { min-height: 96px; align-items: center; gap: 14px; padding: 12px 0 12px 12px; }
+.item-reference--roomy .item-reference-info { min-width: 0; flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); grid-template-rows: auto auto; align-content: center; align-items: center; column-gap: 14px; row-gap: 8px; align-self: stretch; }
+.item-reference--roomy .item-reference-main { flex: none; grid-column: 1; grid-row: 1; }
+.item-reference--roomy .item-reference-name { font-size: 14px; line-height: 1.3; }
 .item-reference--roomy-weapon .item-reference-weapon-details { display: contents; }
 .item-reference--roomy-weapon .item-reference-damage { width: auto; display: flex; place-items: unset; align-self: center; grid-column: 1; grid-row: 2; }
 .item-reference--roomy-weapon .item-reference-properties { width: auto; min-width: 0; display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 2px; grid-column: 2; grid-row: 2; font-size: 10px; line-height: 1.35; text-align: right; }
 .item-reference--roomy-weapon .item-reference-properties > span { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .item-reference-property-value--described { border-bottom: 1px dotted color-mix(in srgb, var(--accent) 65%, transparent); cursor: help; }
+.item-reference--roomy-armor .item-reference-armor-details { display: contents; }
+.item-reference-armor-category { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 2px; grid-column: 1; grid-row: 2; color: var(--text-2); font-size: 10px; line-height: 1.3; }
+.item-reference-armor-category small, .item-reference-armor-ac small { color: var(--text-muted); font-size: 7px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
+.item-reference-armor-stats { min-width: 0; display: flex; align-items: center; justify-content: flex-end; gap: 8px; grid-column: 2; grid-row: 2; text-align: right; }
+.item-reference-armor-ac { flex: none; display: flex; align-items: baseline; gap: 5px; color: var(--text-1); }
+.item-reference-armor-ac strong { font-size: 16px; font-variant-numeric: tabular-nums; line-height: 1; }
+.item-reference-armor-stealth { min-width: 0; overflow: hidden; padding: 3px 6px; border-radius: var(--r-xs); background: color-mix(in srgb, var(--warning) 10%, transparent); color: var(--warning); font-size: 9px; font-weight: 700; line-height: 1.2; text-overflow: ellipsis; white-space: nowrap; }
 .item-reference-economy { display: flex; align-items: baseline; justify-content: flex-end; gap: 0; grid-column: 2; grid-row: 1; color: var(--text-muted); font-size: 10px; line-height: 1.3; white-space: nowrap; }
 .item-reference-economy > span + span::before { margin: 0 6px; color: var(--border-strong); content: '·'; }
-.item-reference--roomy-weapon .item-reference-count { min-width: 0; font-size: 11px; }
+.item-reference--roomy .item-reference-count { min-width: 0; font-size: 11px; }
 .item-reference-weight { color: var(--text-muted); }
-.item-reference--roomy-weapon .item-reference-details { width: 34px; height: 34px; }
+.item-reference--roomy .item-reference-details { width: 34px; height: 34px; }
 @media (max-width: 420px) {
-  .item-reference--roomy-weapon .item-reference-body { gap: 11px; padding-left: 10px; }
-  .item-reference--roomy-weapon .item-reference-info { column-gap: 10px; }
+  .item-reference--roomy .item-reference-body { gap: 11px; padding-left: 10px; }
+  .item-reference--roomy .item-reference-info { column-gap: 10px; }
+  .item-reference-armor-stats { gap: 5px; }
+  .item-reference-armor-stealth { max-width: 80px; }
   .item-reference-economy > span + span::before { margin-inline: 4px; }
 }
 </style>

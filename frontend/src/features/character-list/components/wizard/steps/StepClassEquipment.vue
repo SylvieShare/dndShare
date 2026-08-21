@@ -57,6 +57,7 @@
                 :disabled="!linked.item"
                 show-details
                 roomy-weapon
+                roomy-armor
                 @activate="selectOptionFromItem(group, entry)"
                 @details="viewItem = linked.item"
               />
@@ -71,6 +72,7 @@
                   :model-value="pickValue(group.id, entry.id, pick.id, index - 1)"
                   :placeholder="pickPlaceholder(pick, index)"
                   roomy-weapons
+                  roomy-armor
                   @update:model-value="setEquipmentPick(group.id, entry.id, pick.id, index - 1, $event)"
                   @details="viewItem = $event"
                 />
@@ -93,6 +95,7 @@
             :activatable="false"
             show-details
             roomy-weapon
+            roomy-armor
             @details="viewItem = entry.item"
           />
         </div>
@@ -102,6 +105,7 @@
             :model-value="pickValue('__fixed', 'fixed', pick.id, 0)"
             :placeholder="pickPlaceholder(pick, 1)"
             roomy-weapons
+            roomy-armor
             @update:model-value="setEquipmentPick('__fixed', 'fixed', pick.id, 0, $event)"
             @details="viewItem = $event"
           />

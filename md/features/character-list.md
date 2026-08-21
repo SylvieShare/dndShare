@@ -190,6 +190,9 @@ right column pairs the compact count/price/weight group with properties below it
 Every localized property is a separate hover target. When its suggest entry has
 a description, hovering that property opens the shared tooltip with the property
 name and its own description.
+Armor rows on the same Class step use the same taller 64×64-icon layout. The
+second line exposes the armor category and AC (or shield bonus); the trailing
+Stealth disadvantage marker is rendered only when `stealth_disadvantage` is true.
 Non-weapon item rows retain the compact shared presentation. Groups with exactly two alternatives use a two-column
 desktop layout with a single vertical divider and a shield-check marker on the
 selected branch; three or more alternatives are separated horizontally, and

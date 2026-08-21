@@ -6,6 +6,7 @@
       selected
       show-details
       :roomy-weapon="roomyWeapons"
+      :roomy-armor="roomyArmor"
       @activate="toggle"
       @details="viewDetails"
     />
@@ -29,6 +30,7 @@
           :show-chevron="false"
           show-details
           :roomy-weapon="roomyWeapons"
+          :roomy-armor="roomyArmor"
           @activate="choose(item)"
           @details="viewDetails"
         />
@@ -48,6 +50,7 @@ const props = defineProps({
   modelValue: { type: [Number, String], default: '' },
   placeholder: { type: String, default: 'Выберите предмет' },
   roomyWeapons: { type: Boolean, default: false },
+  roomyArmor: { type: Boolean, default: false },
 })
 
 const emit = defineEmits(['update:modelValue', 'details'])
