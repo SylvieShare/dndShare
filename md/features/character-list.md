@@ -251,6 +251,11 @@ as a type-14 entry in the ordinary inventory; ownership and proficiency never
 duplicate one another in the UI. Equipment-only choices are omitted when class wealth replaces
 starting equipment.
 
+On the Background step every granted-item row uses the compact roomy variant:
+long names wrap instead of truncating, vertical padding stays close to the 64px
+icon, and the narrow right rail stacks the handbook-details action, cost and
+weight from top to bottom.
+
 The PHB 2014 audit identifies mechanical item/tool choices for nine base
 backgrounds: Acolyte (holy symbol and devotional text), Charlatan (con prop),
 Criminal and Noble (gaming set), Entertainer (musical instrument), Folk Hero

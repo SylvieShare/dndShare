@@ -7,6 +7,7 @@
       'item-reference--roomy': isRoomy,
       'item-reference--roomy-weapon': isRoomyWeapon,
       'item-reference--roomy-armor': isRoomyArmor,
+      'item-reference--compact-side': compactSide,
     }"
   >
     <button
@@ -18,7 +19,10 @@
       <ItemIcon class="item-reference-icon" :item="item" :type="type" :size="64" placeholder />
       <span class="item-reference-info">
         <span class="item-reference-main">
-          <span class="item-reference-name">{{ displayName }}</span>
+          <span class="item-reference-name">
+            {{ displayName }}
+            <span v-if="compactSide && count > 1" class="item-reference-count item-reference-count--inline">×{{ count }}</span>
+          </span>
           <span v-if="metaLabel" class="item-reference-meta">{{ metaLabel }}</span>
         </span>
         <span v-if="firstAttack" class="item-reference-weapon-details">
@@ -58,7 +62,7 @@
             <span v-if="data.stealth_disadvantage" class="item-reference-armor-stealth">Помеха Скрытности</span>
           </span>
         </span>
-        <span v-if="count > 1 || costLabel || weightLabel" class="item-reference-economy">
+        <span v-if="!compactSide && (count > 1 || costLabel || weightLabel)" class="item-reference-economy">
           <span v-if="count > 1" class="item-reference-count">×{{ count }}</span>
           <span v-if="costLabel" class="item-reference-cost">{{ costLabel }}</span>
           <span v-if="weightLabel" class="item-reference-weight">{{ weightLabel }}</span>
@@ -66,8 +70,25 @@
       </span>
       <ChevronRight v-if="showChevron && !showDetails" :size="16" class="item-reference-chevron" aria-hidden="true" />
     </button>
+    <span v-if="compactSide && (showDetails || costLabel || weightLabel)" class="item-reference-side">
+      <button
+        v-if="showDetails"
+        type="button"
+        class="item-reference-details"
+        :disabled="disabled"
+        title="Открыть в справочнике"
+        :aria-label="`Открыть «${item.name}» в справочнике`"
+        @click.stop="$emit('details', item)"
+      >
+        <CircleHelp :size="17" aria-hidden="true" />
+      </button>
+      <span v-if="costLabel || weightLabel" class="item-reference-economy">
+        <span v-if="costLabel" class="item-reference-cost">{{ costLabel }}</span>
+        <span v-if="weightLabel" class="item-reference-weight">{{ weightLabel }}</span>
+      </span>
+    </span>
     <button
-      v-if="showDetails"
+      v-else-if="showDetails"
       type="button"
       class="item-reference-details"
       :disabled="disabled"
@@ -109,6 +130,7 @@ const props = defineProps({
   showDetails: { type: Boolean, default: false },
   roomyWeapon: { type: Boolean, default: false },
   roomyArmor: { type: Boolean, default: false },
+  compactSide: { type: Boolean, default: false },
 })
 
 defineEmits(['activate', 'details'])
@@ -227,9 +249,22 @@ function hidePropertyTooltip() { propertiesTooltip.visible = false }
 .item-reference--roomy .item-reference-count { min-width: 0; font-size: 11px; }
 .item-reference-weight { color: var(--text-muted); }
 .item-reference--roomy .item-reference-details { width: 34px; height: 34px; }
+.item-reference--compact-side { align-items: stretch; gap: 4px; }
+.item-reference--compact-side .item-reference-body { min-height: 78px; gap: 10px; padding: 6px 0 6px 8px; }
+.item-reference--compact-side .item-reference-info { column-gap: 10px; row-gap: 4px; }
+.item-reference--compact-side .item-reference-main { grid-column: 1 / -1; }
+.item-reference--compact-side .item-reference-name { overflow: visible; text-overflow: clip; white-space: normal; overflow-wrap: anywhere; }
+.item-reference-count--inline { display: inline; margin-left: 4px; }
+.item-reference-side { width: 58px; flex: 0 0 58px; display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 4px 6px 5px 0; }
+.item-reference--compact-side .item-reference-details { width: 28px; height: 28px; margin: 0; }
+.item-reference--compact-side .item-reference-economy { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 1px; color: var(--text-muted); font-size: 9px; line-height: 1.25; text-align: center; white-space: nowrap; }
+.item-reference--compact-side .item-reference-economy > span + span::before { content: none; }
+.item-reference--compact-side .item-reference-cost { font-size: 10px; }
 @media (max-width: 420px) {
   .item-reference--roomy .item-reference-body { gap: 11px; padding-left: 10px; }
   .item-reference--roomy .item-reference-info { column-gap: 10px; }
+  .item-reference--compact-side .item-reference-body { gap: 8px; padding: 5px 0 5px 7px; }
+  .item-reference--compact-side .item-reference-side { width: 52px; flex-basis: 52px; padding-right: 4px; }
   .item-reference-armor-stats { gap: 5px; }
   .item-reference-armor-stealth { max-width: 80px; }
   .item-reference-economy > span + span::before { margin-inline: 4px; }
