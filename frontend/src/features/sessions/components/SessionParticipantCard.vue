@@ -32,7 +32,7 @@
             @update:initiative="$emit('update:initiative', $event)"
           />
 
-          <div class="p-avatar" :style="participantAvatarStyle">
+          <div class="p-avatar" :class="{ 'p-avatar--icon': isIcon }" :style="participantAvatarStyle">
             <img v-if="avaUrl" :src="avaUrl" class="ava-img" alt="" />
             <span v-else class="ava-initial">{{ initial }}</span>
           </div>
@@ -188,6 +188,7 @@ const displayName = computed(() => pvName(props.participant) || '(без име�
 const initial = computed(() => displayName.value.charAt(0).toUpperCase())
 
 const avaUrl = computed(() => pvAvatar(props.participant))
+const isIcon = computed(() => Boolean(props.participant.iconImageUrl))
 
 const who = computed(() => pvSubtitle(props.participant))
 const armorClass = computed(() => pvAc(props.participant))
@@ -242,7 +243,7 @@ const participantTileStyle = computed(() => ({
   display: flex;
   align-items: center;
   gap: 9px;
-  height: 72px;
+  height: 88px;
   padding: 12px;
   overflow: hidden;
   user-select: none;
@@ -318,13 +319,17 @@ const participantTileStyle = computed(() => ({
 
 .p-avatar {
   flex-shrink: 0;
-  width: 44px;
-  height: 44px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+}
+
+.p-avatar--icon {
+  border-radius: 0;
 }
 
 .ava-img {
@@ -334,6 +339,13 @@ const participantTileStyle = computed(() => ({
   object-position: top center;
   -webkit-mask-image: radial-gradient(ellipse 82% 84% at 50% 44%, var(--text-on-accent) 54%, transparent 100%);
   mask-image: radial-gradient(ellipse 82% 84% at 50% 44%, var(--text-on-accent) 54%, transparent 100%);
+}
+
+.p-avatar--icon .ava-img {
+  object-fit: contain;
+  object-position: center;
+  -webkit-mask-image: none;
+  mask-image: none;
 }
 
 .ava-initial {

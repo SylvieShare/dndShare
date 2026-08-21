@@ -44,8 +44,17 @@ describe('SessionParticipantCard actions', () => {
 
   it('uses a larger avatar in the expanded player rail', () => {
     expect(source).toContain('.p-avatar {')
-    expect(source).toContain('width: 44px;\n  height: 44px;')
+    expect(source).toContain('width: 64px;\n  height: 64px;')
     expect(source).toContain('.ava-initial {\n  font-size: 16px;')
+  })
+
+  it('renders a character icon without portrait rounding or masking', () => {
+    expect(source).toContain(":class=\"{ 'p-avatar--icon': isIcon }\"")
+    expect(source).toContain('const isIcon = computed(() => Boolean(props.participant.iconImageUrl))')
+    expect(source).toContain('.p-avatar--icon {\n  border-radius: 0;\n}')
+    expect(source).toContain('.p-avatar--icon .ava-img {')
+    expect(source).toContain('object-fit: contain;')
+    expect(source).toContain('-webkit-mask-image: none;\n  mask-image: none;')
   })
 
   it('offers view to everyone and DM-only color and kick actions', () => {
@@ -85,7 +94,7 @@ describe('SessionParticipantCard actions', () => {
     expect(source).toContain('<EncounterCombatControls\n            class="p-combat-controls"')
     expect(source).not.toContain('v-if="combatMode"')
     expect(source).toContain(':inert="!combatMode"')
-    expect(source).toContain('height: 72px;')
+    expect(source).toContain('height: 88px;')
     expect(source).not.toContain('.p-card--combat .p-avatar')
     expect(source).toContain('margin-left: -121px;')
     expect(source).toContain('.p-card--combat .p-combat-controls')

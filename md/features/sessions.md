@@ -75,8 +75,9 @@ creation and invite code/link copy actions. Attaching an existing character uses
 the same transfer confirmation as the invitation flow, refreshes the rail and
 keeps the session workspace open; the rail has no separate invitation tile. A separate header control
 switches the `264px` rail between its normal width and a compact avatar-only mode.
-Expanded participant tiles use a larger `44px` avatar while compact mode keeps
-its `36px` geometry. The
+Expanded participant tiles use a `64px` image while compact mode keeps its
+`36px` geometry. Independent character icons render square without the portrait
+rounding or radial mask; setting-provided portraits retain both. The
 choice is stored per session in `localStorage`. Combat is the third visual
 state: it temporarily expands the same rail for initiative and selection
 controls, then returns to the user's saved normal or compact state when combat
