@@ -38,6 +38,7 @@ describe('D&D ability scores', () => {
     expect(source).toContain('class="primary-badge"')
     expect(source).toContain('@media (max-width: 820px)')
     expect(source).toContain('@media (max-width: 460px)')
+    expect(source).toContain(':deep(.share-multi-toggle)')
   })
 
   it('uses the shared custom value picker instead of a native select', () => {

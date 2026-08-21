@@ -245,6 +245,6 @@ function confirmReroll() {
 .step-val { min-width: 0; border-inline: 1px solid color-mix(in srgb, var(--border) 70%, transparent); color: var(--text-1); font-size: 17px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 36px; text-align: center; }
 .step-cost { min-height: 12px; color: var(--text-muted); font-size: 9px; line-height: 1.2; text-align: center; }
 @media (max-width: 820px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .roll-series { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 640px) { .stats-bar { display: grid; grid-template-columns: 1fr auto; gap: 8px; } .stats-bar :deep(.mt-toggle) { grid-column: 1 / -1; width: 100%; } .qb { justify-content: center; min-height: 36px; } .budget { margin-left: 0; justify-self: end; } .roll-cta { align-items: stretch; } .roll-btn { width: 100%; justify-content: center; } }
+@media (max-width: 640px) { .stats-bar { display: grid; grid-template-columns: 1fr auto; gap: 8px; } .stats-bar :deep(.share-multi-toggle) { grid-column: 1 / -1; width: 100%; } .qb { justify-content: center; min-height: 36px; } .budget { margin-left: 0; justify-self: end; } .roll-cta { align-items: stretch; } .roll-btn { width: 100%; justify-content: center; } }
 @media (max-width: 460px) { .grid, .roll-series { grid-template-columns: 1fr; } .stat { min-height: 188px; padding: 14px; } }
 </style>
