@@ -53,6 +53,20 @@
 
     <AddButton block @click="$emit('add', '', DEFAULT_COLOR)">Ресурс</AddButton>
     </EditorSection>
+
+    <EditorSection v-if="readonlyResources.length" title="Из листа">
+      <div class="bre-readonly-list">
+        <div v-for="row in readonlyResources" :key="row.key" class="bre-readonly-row">
+          <span class="bre-strip" :style="{ background: row.color_point }"></span>
+          <span class="bre-readonly-copy">
+            <span class="bre-readonly-title">{{ row.title }}</span>
+            <span class="bre-readonly-source">{{ row.source_label || 'Системный ресурс' }}</span>
+          </span>
+          <span class="bre-readonly-count">{{ row.value }} / {{ row.total }}</span>
+          <span class="bre-lock" title="Редактируется в источнике">Только чтение</span>
+        </div>
+      </div>
+    </EditorSection>
   </EditorPanel>
 </template>
 
@@ -71,6 +85,7 @@ const DEFAULT_COLOR = '#c084fc'
 
 const props = defineProps({
   resources: { type: Array, default: () => [] },
+  readonlyResources: { type: Array, default: () => [] },
 })
 const emit = defineEmits(['reorder', 'change-color', 'rename', 'set-total', 'remove', 'add', 'set-rest'])
 
@@ -178,4 +193,41 @@ function onDragStart(e, row, idx) {
   gap: 22px;
   padding-left: 26px;
 }
+
+.bre-readonly-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.bre-readonly-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 40px;
+  padding: 7px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+}
+
+.bre-readonly-copy {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.bre-readonly-title {
+  overflow: hidden;
+  color: var(--text-1);
+  font-size: 12px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bre-readonly-source { color: var(--text-muted); font-size: 10px; }
+.bre-readonly-count { color: var(--text-2); font-size: 12px; font-variant-numeric: tabular-nums; }
+.bre-lock { color: var(--text-muted); font-size: 9px; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; }
 </style>

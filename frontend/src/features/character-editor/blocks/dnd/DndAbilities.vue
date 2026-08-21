@@ -14,7 +14,6 @@
         :skeleton-count="skeletonCount"
         :title="title"
         :manage="ownerMode"
-        @toggle-dot="toggleDot"
         @view="onView"
         @manage="onManage"
         @show-tooltip="showTooltip"
@@ -39,7 +38,6 @@
           manage
           :edit-fade="revealed"
           panel
-          @toggle-dot="toggleDot"
           @view="onView"
           @show-tooltip="showTooltip"
           @hide-tooltip="hideTooltip"
@@ -77,8 +75,8 @@
       :top="tooltip.top"
       :bottom="tooltip.bottom"
     >
-      <template v-if="tooltip.item && (tooltip.item.data?.max_use || tooltip.item.data?.rollback_short_rest || tooltip.item.data?.rollback_long_rest)" #details>
-        <AbilityTooltipDetails :item="tooltip.item" />
+      <template v-if="tooltip.item && (tooltip.item.data?.max_use || tooltip.item.data?.max_use_stat || tooltip.item.data?.rollback_short_rest || tooltip.item.data?.rollback_long_rest)" #details>
+        <AbilityTooltipDetails :item="tooltip.item" :values="values" />
       </template>
     </ItemTooltip>
 
@@ -129,6 +127,7 @@ import { ensureItemNames, itemName } from '@/features/handbook/objects/lib/itemN
 import { useSuggestStore } from '@/stores/suggest'
 import { useMorphOrigin } from "@/features/character-editor/composables/useMorphOrigin"
 import { logSessionEntryAdded } from '@/features/character-editor/lib/sessionEntryEvents'
+import { abilityUseTotal } from '@/shared/lib/dndAbilityUses'
 
 const props = defineProps(['block', 'value', 'values'])
 const emit = defineEmits(['update:value'])
@@ -155,8 +154,7 @@ const entries = computed(() =>
       const item = catalog.value.find(c => c.id === s.id)
       if (!item) return null
       const manualSize = !!item.data?.manual_size
-      const catalogMaxUse = item.data?.max_use ?? null
-      const maxUse = manualSize ? (s.max_use ?? catalogMaxUse ?? 0) : catalogMaxUse
+      const maxUse = abilityUseTotal(item.data, props.values, s)
       return {
         key: s.uid || String(s.id),
         uid: s.uid,
@@ -302,14 +300,14 @@ function addFromCatalog(item) {
     return
   }
   if (Number(props.block.content.item_id) === 7) {
-    const entry = featEntry(item)
+    const entry = featEntry(item, {}, props.values)
     emitChange([...stored.value, entry])
     applyFeatStatBonuses(item, entry)
     logAddedEntry(item)
     return
   }
   const manualSize = !!item.data?.manual_size
-  const maxUse = item.data?.max_use ?? null
+  const maxUse = abilityUseTotal(item.data, props.values)
   const entry = { id: item.id, count: maxUse ?? 0 }
   if (manualSize) entry.max_use = maxUse ?? 0
   emitChange([...stored.value, entry])
@@ -318,7 +316,7 @@ function addFromCatalog(item) {
 
 function onFeatChoicesConfirm(choices) {
   const item = featConfigItem.value
-  const entry = featEntry(item, choices)
+  const entry = featEntry(item, choices, props.values)
   emitChange([...stored.value, entry])
   applyFeatStatBonuses(item, entry)
   logAddedEntry(item)
@@ -338,11 +336,6 @@ function removeAbility(key) {
 function reorderAbilities(keys) {
   const byKey = new Map(stored.value.map(s => [s.uid || String(s.id), s]))
   emitChange(keys.map(key => byKey.get(key)).filter(Boolean))
-}
-
-function toggleDot(entry, i) {
-  const newCount = i <= entry.count ? i - 1 : i
-  emitChange(stored.value.map(s => (s.uid || String(s.id)) === entry.key ? { ...s, count: newCount } : s))
 }
 
 function increaseMaxUse(entry) {
@@ -386,6 +379,7 @@ function onFormSaved(item) {
   const idx = catalog.value.findIndex(it => it.id === item.id)
   if (idx >= 0) catalog.value[idx] = item
   else catalog.value.push(item)
+  charCtx.characterResources?.rememberItems?.([item])
   if (!form.editingItem) addFromCatalog(item)
   form.open = false
 }
@@ -394,7 +388,9 @@ onMounted(async () => {
   if (stored.value.length > 0) {
     const ids = stored.value.map(s => s.id)
     try {
-      const r = await itemsApi.byIds(ids)
+      const r = charCtx.characterResources?.ensureItems
+        ? await charCtx.characterResources.ensureItems(ids)
+        : await itemsApi.byIds(ids)
       catalog.value = r.items || []
       hydrateFeatChoices()
     } catch (e) { /* show what we have */ }

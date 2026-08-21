@@ -13,10 +13,10 @@
       <div v-else class="adc-no-desc">Описание отсутствует</div>
     </DetailSection>
 
-    <DetailSection v-if="data.max_use || data.rollback_short_rest || data.rollback_long_rest" label="Использование">
+    <DetailSection v-if="useRuleLabel || data.rollback_short_rest || data.rollback_long_rest" label="Использование">
       <template #icon><RefreshCcw /></template>
       <div class="adc-meta">
-        <span v-if="data.max_use" class="adc-badge adc-uses">{{ data.max_use }} исп.</span>
+        <span v-if="useRuleLabel" class="adc-badge adc-uses">{{ useRuleLabel }}</span>
         <span v-if="data.rollback_short_rest" class="adc-badge adc-sr">Короткий отдых</span>
         <span v-if="data.rollback_long_rest" class="adc-badge adc-lr">Длинный отдых</span>
       </div>
@@ -30,6 +30,7 @@ import { RefreshCcw, Sparkles } from '@lucide/vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import DetailSection from '@/shared/ui/DetailSection.vue'
 import RichContent from '@/shared/ui/DndRichContent.vue'
+import { STAT_FULL, SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
 
 const props = defineProps({
   item: { type: Object, required: true },
@@ -37,6 +38,14 @@ const props = defineProps({
 })
 
 const data = computed(() => props.item.data || {})
+const useRuleLabel = computed(() => {
+  const stat = SUGGEST16_TO_STAT[Number(data.value.max_use_stat)]
+  if (stat) {
+    const minimum = data.value.max_use_min == null ? 1 : Math.max(0, Number(data.value.max_use_min) || 0)
+    return `Модификатор ${STAT_FULL[stat].toLowerCase()}, минимум ${minimum}`
+  }
+  return data.value.max_use ? `${data.value.max_use} исп.` : ''
+})
 </script>
 
 <style scoped>

@@ -14,6 +14,7 @@ import { STAT_KEYS, SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
 import { computeSlots } from '../../../blocks/dnd/lib/levelUp.js'
 import { defaultSlots } from '../../../blocks/dnd/lib/spellEntry.js'
 import { featAbilityBonuses, featEntry, featGrantedSpellIds, featGrants } from '@/features/items/lib/featRules'
+import { abilityUseTotal } from '@/shared/lib/dndAbilityUses'
 import { defaultEntry as defaultWeaponEntry } from '../../../blocks/dnd/lib/weaponEntry.js'
 import { blankValues } from '../newCharacter.js'
 import { addStartingCoins } from './backgroundEquipment.js'
@@ -139,6 +140,10 @@ export function buildCharacterData(input) {
       values[bonus.stat] = block
       finalScore[bonus.stat] = (finalScore[bonus.stat] || 0) + applied
     }
+  }
+
+  for (const [featIndex, { item }] of feats.entries()) {
+    featEntries[featIndex].count = abilityUseTotal(item.data, values, featEntries[featIndex]) || 0
   }
 
   // HP at level 1 = hit-die face (set by applyGrants) + CON modifier.

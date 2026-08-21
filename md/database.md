@@ -62,6 +62,9 @@ template id, `source_version_id`, JSON документа, public/deleted flags,
 - `spells` — `{stat_path,save_bonus,attack_bonus,slots_rest,preparation,spells,slots}`;
 - `items` — `{equipped,sections}`;
 - `money` — `{order,amounts}`.
+- `abilities_race`, `abilities_class`, `abilities_feats` — item-reference arrays
+  with the available usage counter in `count`; a manual per-character maximum is
+  present only when the handbook item enables `manual_size`.
 
 Startup data correction переводит прежние значения в этот вид и удаляет старые
 ключи. Vue-компоненты знают только этот контракт.
@@ -84,6 +87,11 @@ Startup data correction переводит прежние значения в э
 подразделами «Вещей». Корневая коллекция может включать предметы всех дочерних
 типов в picker, не смешивая сами справочные записи. `item.parent_id` — отдельная
 связь между записями для подрасы, подкласса и других вариантов.
+Типы 3, 4 и 7 описывают использования через `max_use` либо через пару
+`max_use_stat`/`max_use_min`: вторая форма вычисляет максимум из живого
+модификатора характеристики персонажа с настраиваемым минимумом. Startup section
+`32_ability_resources.sql` идемпотентно добавляет эти поля в schema `item_type`;
+само вычисленное значение в `item.data` или JSON персонажа не дублируется.
 `item_content_source` связывает item с публикациями. Каждая встроенная
 предыстория (тип 11) хранит владения инструментами в `tool_items`, а физически
 выдаваемое стартовое снаряжение — в `equipment_items`; оба массива содержат

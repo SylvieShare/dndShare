@@ -94,10 +94,9 @@ function spendDie(die) {
   emit('update:value', ids.value.hp, spendHitDie(hp.value, result?.total ?? 0, die))
 }
 
-function finishShort() {
-  const previousResources = props.values?.[ids.value.resources]
-  const nextResources = restResources(previousResources, 'short')
-  emit('update:value', ids.value.resources, nextResources)
+async function finishShort() {
+  const resourceRecovery = await restoreAllResources('short')
+  emitPatch(resourceRecovery.patch)
   const spells = props.values?.[ids.value.spells]
   if (spells && typeof spells === 'object') {
     const next = shortRestSpells(spells)
@@ -115,19 +114,20 @@ function finishShort() {
       kind: 'short',
       hpRecovered: Math.max(0, (Number(hp.value.current) || 0) - (shortStart.value?.hp || 0)),
       hitDiceSpent,
-      resourcesRecovered: recoveredResourceNames(previousResources, nextResources),
+      resourcesRecovered: resourceRecovery.recoveredNames,
     },
   })
   shortOpen.value = false
 }
 
-function applyLong(recovery) {
+async function applyLong(recovery) {
   const i = ids.value
   const recoveredCount = longRestRecoveryCount(hp.value)
+  const resourceRecovery = await restoreAllResources('long')
   emit('update:value', i.hp, longRestHp(hp.value, recovery))
   const spells = props.values?.[i.spells]
   if (spells && typeof spells === 'object') emit('update:value', i.spells, longRestSpells(spells))
-  emit('update:value', i.resources, restResources(props.values?.[i.resources], 'long'))
+  emitPatch(resourceRecovery.patch)
   const ex = props.values?.[i.exhaustion]
   if (exhaustionLevel(ex) > 0) emit('update:value', i.exhaustion, longRestExhaustion(ex))
   charCtx.logSessionEvent?.({
@@ -137,7 +137,7 @@ function applyLong(recovery) {
       kind: 'long',
       hpRecovered: Math.max(0, (Number(hp.value.max) || 0) - (Number(hp.value.current) || 0)),
       hitDiceRecovered: recoveredCount,
-      resourcesRecovered: recoveredResourceNames(props.values?.[i.resources], restResources(props.values?.[i.resources], 'long')),
+      resourcesRecovered: resourceRecovery.recoveredNames,
     },
   })
   longOpen.value = false
@@ -148,6 +148,18 @@ function recoveredResourceNames(before, after) {
   return after
     .filter((resource, index) => Number(resource.value) > Number(before[index]?.value))
     .map(resource => resource.title || 'Ресурс')
+}
+
+async function restoreAllResources(kind) {
+  if (charCtx.characterResources?.restore) return charCtx.characterResources.restore(kind)
+  const valueId = ids.value.resources
+  const before = props.values?.[valueId]
+  const after = restResources(before, kind)
+  return { patch: { [valueId]: after }, recoveredNames: recoveredResourceNames(before, after) }
+}
+
+function emitPatch(patch) {
+  for (const [id, value] of Object.entries(patch || {})) emit('update:value', id, value)
 }
 </script>
 

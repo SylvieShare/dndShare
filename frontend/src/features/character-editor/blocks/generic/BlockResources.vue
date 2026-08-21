@@ -29,7 +29,8 @@
       </template>
       <template #editor>
         <BlockResourcesEditor
-          :resources="resources"
+          :resources="manualResources"
+          :readonly-resources="readonlyResources"
           @reorder="reorder"
           @change-color="changeColor"
           @rename="rename"
@@ -57,7 +58,14 @@ const charCtx = inject('charCtx', { ownerMode: true })
 const root = ref(null)
 const { editorOpen, originRect, originEl, openFrom, close } = useMorphOrigin()
 
-const resources = computed(() => Array.isArray(props.value) ? props.value : [])
+const manualResources = computed(() => Array.isArray(props.value) ? props.value : [])
+const resources = computed(() => {
+  const contributed = charCtx.characterResources?.resources
+  if (Array.isArray(contributed)) return contributed
+  if (Array.isArray(contributed?.value)) return contributed.value
+  return manualResources.value
+})
+const readonlyResources = computed(() => resources.value.filter((resource) => resource.readonly))
 const ownerMode = computed(() => charCtx.ownerMode)
 
 function emitResources(next) {
@@ -72,10 +80,10 @@ function toggle(ri, p) {
   if (!ownerMode.value) return
   const current = resources.value[ri]
   const nextValue = p <= current.value ? p - 1 : p
-  emitResources(resources.value.map((r, i) => {
-    if (i !== ri) return r
-    return { ...r, value: nextValue }
-  }))
+  const patch = current.key && charCtx.characterResources?.setAvailable
+    ? charCtx.characterResources.setAvailable(current.key, nextValue)
+    : { [props.block.id]: manualResources.value.map((r, i) => i === ri ? { ...r, value: nextValue } : r) }
+  for (const [id, value] of Object.entries(patch || {})) emit('update:value', id, value)
   if (nextValue < Number(current.value)) {
     charCtx.logSessionEvent?.({
       type: 'resource_used',
@@ -87,23 +95,23 @@ function toggle(ri, p) {
 
 function setTotal(ri, total) {
   const t = Math.max(0, parseInt(total) || 0)
-  emitResources(resources.value.map((r, i) => i === ri ? { ...r, total: t, value: Math.min(r.value, t) } : r))
+  emitResources(manualResources.value.map((r, i) => i === ri ? { ...r, total: t, value: Math.min(r.value, t) } : r))
 }
 
 function rename(ri, title) {
-  emitResources(resources.value.map((r, i) => i === ri ? { ...r, title } : r))
+  emitResources(manualResources.value.map((r, i) => i === ri ? { ...r, title } : r))
 }
 
 function changeColor(ri, color_point) {
-  emitResources(resources.value.map((r, i) => i === ri ? { ...r, color_point } : r))
+  emitResources(manualResources.value.map((r, i) => i === ri ? { ...r, color_point } : r))
 }
 
 function setRest(ri, kind, value) {
-  emitResources(resources.value.map((r, i) => i === ri ? { ...r, [kind]: !!value } : r))
+  emitResources(manualResources.value.map((r, i) => i === ri ? { ...r, [kind]: !!value } : r))
 }
 
 function remove(ri) {
-  emitResources(resources.value.filter((_, i) => i !== ri))
+  emitResources(manualResources.value.filter((_, i) => i !== ri))
 }
 
 function reorder(next) {
@@ -111,7 +119,7 @@ function reorder(next) {
 }
 
 function add(title, color_point) {
-  emitResources([...resources.value, { title, color_point, value: 0, total: 0, short_rest: false, long_rest: false }])
+  emitResources([...manualResources.value, { title, color_point, value: 0, total: 0, short_rest: false, long_rest: false }])
 }
 </script>
 

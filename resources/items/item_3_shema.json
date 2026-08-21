@@ -15,6 +15,18 @@
     "type": "bool"
   },
   {
+    "name": "Характеристика количества использований",
+    "key": "max_use_stat",
+    "type": "suggest",
+    "suggest_id": 16
+  },
+  {
+    "name": "Минимум использований от модификатора",
+    "key": "max_use_min",
+    "type": "int",
+    "default": 1
+  },
+  {
     "name": "Восстанавливается на коротком отдыхе",
     "key": "rollback_short_rest",
     "type": "bool"

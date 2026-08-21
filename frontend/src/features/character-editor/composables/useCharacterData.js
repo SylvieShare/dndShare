@@ -5,6 +5,7 @@ import { useAccountStore } from '@/stores/account'
 import { useTemplateStore } from '@/stores/template'
 import { settingAccessors, settingRenderSchema } from '@/features/character-editor/settings'
 import { normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'
+import { useCharacterResources } from '@/features/character-editor/composables/useCharacterResources'
 import {
   activeLayoutProfile,
   initialTabs,
@@ -26,9 +27,18 @@ export function useCharacterData(uuid, isMobile) {
   const iconImageId = ref(null)
   const iconImageUrl = ref(null)
   const sessions = ref([])
+  const characterValues = computed(() => data.value.values || {})
+  const characterResources = useCharacterResources(characterValues)
 
   provide('charCtx', charCtx)
-  Object.assign(charCtx, { sourceVersionId, contentSources, iconImageId, iconImageUrl, uploadCharacterIcon })
+  Object.assign(charCtx, {
+    sourceVersionId,
+    contentSources,
+    iconImageId,
+    iconImageUrl,
+    uploadCharacterIcon,
+    characterResources,
+  })
 
   function apply(res, { updateDocumentTitle = true } = {}) {
     if (!res) {

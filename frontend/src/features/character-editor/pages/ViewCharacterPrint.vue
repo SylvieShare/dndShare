@@ -181,6 +181,7 @@ import { formatHitDice, normalizeHitDice } from '@/features/character-editor/blo
 import { abilityModifiersBySuggest, weaponAbilityModifier } from '@/features/character-editor/blocks/dnd/lib/weaponAbility'
 import { dieLabel } from '@/shared/lib/systemDice'
 import { useSuggestStore } from '@/stores/suggest'
+import { abilityUseTotal } from '@/shared/lib/dndAbilityUses'
 
 const PrintField = defineComponent({
   props: { label: String, value: String },
@@ -388,8 +389,8 @@ const hasPersonality = computed(() => avatar.value || appearanceFields.value.som
 const featureCards = computed(() => [
   { group: 'Расовые особенности', value: values.value.abilities_race }, { group: 'Классовые особенности', value: values.value.abilities_class }, { group: 'Черты', value: values.value.abilities_feats },
 ].flatMap(group => (Array.isArray(group.value) ? group.value : []).map((entry, index) => {
-  const item = itemById(entry.id); const description = item?.data?.description || item?.data?.desc || ''; const length = plainLength(description)
-  return { key: entry.uid || `${group.group}-${entry.id}-${index}`, group: group.group, name: item?.name || entry.name || `Особенность #${entry.id || '—'}`, description, countText: entry.max_use != null ? `${entry.count ?? entry.max_use} / ${entry.max_use}` : '', span: length > 700 ? 2 : 1, textLength: length }
+  const item = itemById(entry.id); const description = item?.data?.description || item?.data?.desc || ''; const length = plainLength(description); const total = abilityUseTotal(item?.data, values.value, entry)
+  return { key: entry.uid || `${group.group}-${entry.id}-${index}`, group: group.group, name: item?.name || entry.name || `Особенность #${entry.id || '—'}`, description, countText: total != null ? `${Math.min(Number(entry.count ?? total) || 0, total)} / ${total}` : '', span: length > 700 ? 2 : 1, textLength: length }
 })))
 const featurePages = computed(() => featureCards.value.length ? paginateGrid(featureCards.value, 2, 230, 230) : [])
 

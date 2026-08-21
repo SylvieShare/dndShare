@@ -14,6 +14,7 @@ import {
   hitDiceFromClasses,
   withHitDice,
 } from '@/features/character-editor/blocks/dnd/lib/hitDice'
+import { abilityUseTotal } from '@/shared/lib/dndAbilityUses'
 
 export function buildLevelUpUpdates({
   values,
@@ -52,7 +53,7 @@ export function buildLevelUpUpdates({
   const currentAbilities = Array.isArray(values.abilities_class) ? values.abilities_class : []
   const knownAbilityIds = new Set(currentAbilities.map((entry) => entry.id))
   const addedAbilities = features.filter((feature) => !knownAbilityIds.has(feature.id)).map((feature) => {
-    const maxUse = feature.data?.max_use ?? null
+    const maxUse = abilityUseTotal(feature.data, values)
     const entry = { id: feature.id, count: maxUse ?? 0 }
     if (feature.data?.manual_size) entry.max_use = maxUse ?? 0
     return entry
@@ -72,7 +73,7 @@ export function buildLevelUpUpdates({
     if (asiMode === 'feat' && featPick) {
       const feats = Array.isArray(values.abilities_feats) ? values.abilities_feats : []
       if (featPick.data?.repeatable || !feats.some((feat) => feat.id === featPick.id)) {
-        updates.abilities_feats = [...feats, featEntry(featPick, featPick.selectedChoices || {})]
+        updates.abilities_feats = [...feats, featEntry(featPick, featPick.selectedChoices || {}, values)]
       }
 
       const currentStatBlock = (stat) => ({ ...(updates[stat] || values[stat] || {}) })

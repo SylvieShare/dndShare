@@ -10,7 +10,7 @@
     />
 
     <div v-if="resources.length" class="brv-list">
-      <div v-for="(res, i) in resources" :key="i" class="brv-row">
+      <div v-for="(res, i) in resources" :key="res.key || i" class="brv-row">
         <div class="brv-trow">
           <span class="brv-title" :style="{ color: res.color_point }">{{ res.title }}</span>
           <span v-if="res.short_rest" class="brv-rest" title="Восстанавливается на коротком отдыхе">

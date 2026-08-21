@@ -38,6 +38,11 @@ describe('featRules', () => {
     expect(featEntry(item, { choice_1: [4] })).toEqual({ id: 7, count: 3, choices: { choice_1: [4] } })
   })
 
+  it('initializes modifier-based uses from the live character score', () => {
+    const item = { id: 8, data: { max_use_stat: 6, max_use_min: 1 } }
+    expect(featEntry(item, {}, { CHA: { value: { base: 18, bonuses: [] } } })).toEqual({ id: 8, count: 4 })
+  })
+
   it('resolves canonical ability-score shapes', () => {
     expect(abilityScoresFromValues({
       STR: { value: { base: 13, bonuses: [{ value: 2 }] } },

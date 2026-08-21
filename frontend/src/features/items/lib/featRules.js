@@ -1,5 +1,6 @@
 import { resolveNumValue } from '@/shared/lib/dnd'
 import { SUGGEST16_TO_STAT, STAT_FULL, STAT_KEYS } from '@/shared/lib/dndStats'
+import { abilityUseTotal } from '@/shared/lib/dndAbilityUses'
 
 const ABILITY_ID_BY_STAT = Object.fromEntries(
   Object.entries(SUGGEST16_TO_STAT).map(([id, stat]) => [stat, Number(id)]),
@@ -103,10 +104,11 @@ export function choiceSelectionsComplete(item, selections = {}) {
   return featChoices(item).every((choice) => asArray(selections[choice.key]).length === choice.count)
 }
 
-export function featEntry(item, selections = {}) {
+export function featEntry(item, selections = {}, values = {}) {
   const data = featData(item)
-  const maxUse = number(data.max_use)
-  const entry = { id: item.id, count: maxUse || 0 }
+  const entry = { id: item.id }
+  const maxUse = abilityUseTotal(data, values, entry)
+  entry.count = maxUse || 0
   if (data.repeatable) {
     entry.uid = globalThis.crypto?.randomUUID?.() || `feat_${item.id}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
   }

@@ -9,16 +9,49 @@ import (
 )
 
 func TestToolProficiencyCatalogIsEmbeddedAfterItemTypeHierarchy(t *testing.T) {
-	if len(schemaParts) < 2 {
+	if len(schemaParts) < 3 {
 		t.Fatal("schemaParts must contain the final item catalogue sections")
 	}
-	penultimate := schemaParts[len(schemaParts)-2]
-	last := schemaParts[len(schemaParts)-1]
-	if penultimate.name != "item-type-hierarchy" || penultimate.sql == "" || penultimate.sql != schemaItemTypeHierarchySQL {
+	hierarchy := schemaParts[len(schemaParts)-3]
+	tools := schemaParts[len(schemaParts)-2]
+	resources := schemaParts[len(schemaParts)-1]
+	if hierarchy.name != "item-type-hierarchy" || hierarchy.sql == "" || hierarchy.sql != schemaItemTypeHierarchySQL {
 		t.Fatal("item-type-hierarchy schema must be embedded after the equipment catalogues")
 	}
-	if last.name != "tool-proficiency-catalog" || last.sql == "" || last.sql != schemaToolProficiencyCatalogSQL {
+	if tools.name != "tool-proficiency-catalog" || tools.sql == "" || tools.sql != schemaToolProficiencyCatalogSQL {
 		t.Fatal("tool proficiency catalogue must be embedded after the tool item type exists")
+	}
+	if resources.name != "ability-resources" || resources.sql == "" || resources.sql != schemaAbilityResourcesSQL {
+		t.Fatal("ability resource fields must be embedded after handbook item types exist")
+	}
+}
+
+func TestAbilityResourceSchemasExposeModifierFormula(t *testing.T) {
+	for _, typeID := range []string{"3", "4", "7"} {
+		path := filepath.Join("..", "..", "resources", "items", "item_"+typeID+"_shema.json")
+		contents, err := os.ReadFile(path)
+		if err != nil {
+			t.Fatalf("read ability schema %s: %v", typeID, err)
+		}
+		var fields []map[string]any
+		if err := json.Unmarshal(contents, &fields); err != nil {
+			t.Fatalf("parse ability schema %s: %v", typeID, err)
+		}
+		byKey := make(map[string]map[string]any, len(fields))
+		for _, field := range fields {
+			byKey[field["key"].(string)] = field
+		}
+		if byKey["max_use_stat"]["suggest_id"] != float64(16) {
+			t.Fatalf("ability schema %s must select max_use_stat from suggest 16", typeID)
+		}
+		if byKey["max_use_min"]["default"] != float64(1) {
+			t.Fatalf("ability schema %s must default max_use_min to 1", typeID)
+		}
+	}
+	for _, fragment := range []string{"max_use_stat", "max_use_min", "item_type.id IN (3, 4, 7)"} {
+		if !strings.Contains(schemaAbilityResourcesSQL, fragment) {
+			t.Fatalf("ability resource startup schema must contain %q", fragment)
+		}
 	}
 }
 

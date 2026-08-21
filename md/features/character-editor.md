@@ -129,7 +129,10 @@ The current shape under `data.values` is:
   type-14 entries in inventory, while tool proficiency remains in
   `proficiencies['Инструменты']` and is not inferred from ownership;
 - wallet: `{order:[suggestId],amounts:{[suggestId]:number}}`;
-- race/class/feat abilities: arrays of item references/current counters.
+- race/class/feat abilities: arrays of item references/current counters
+  `{id,uid?,count,max_use?,choices?}`. `count` is the available charge count;
+  fixed and modifier-derived maxima remain handbook rules rather than copied
+  character data (only `manual_size` stores `max_use` on the entry).
 
 There are no `class/subclass` mirrors, scalar level/stat/hit-dice forms, array
 spellbook, flat inventory or array wallet.
@@ -195,11 +198,20 @@ HP gain, ASI/feat, proficiency changes and spell-slot differences. It emits one
 map of canonical block updates. `hp.hitDice` pools equal die types and is the
 only hit-dice representation.
 
-`lib/levelUp.js`, `lib/hitDice.js` and `lib/rest.js` are pure and unit-tested.
+`lib/levelUp.js`, `lib/hitDice.js`, `lib/rest.js` and
+`lib/characterResources.js` are pure and unit-tested.
 Spellcasting ability is explicit handbook data (`spellcasting.ability` or
 `spellcasting_ability` for later half-caster levels); it is not inferred from a
-localized class name. Short/long rest update current spell slots, ability
-counters and hit-dice pools without scalar mirrors.
+localized class name. `characterResources.js` defines the resource-source
+contract (`itemIds`, `collect`, `setAvailable`, `restore`). Manual resources and
+race/class/feat ability counters implement the same contract; another domain,
+such as charged magic items, can join the aggregate by registering another
+source adapter without changing the resources or rest blocks. Contributed rows
+are visible and usable in the shared resources tile, but read-only in its
+editor because their title, maximum and rest rules belong to the source item.
+Short/long rest uses this same aggregate contract to update current spell slots,
+all matching resources, ability counters and hit-dice pools without scalar
+mirrors. Long rest also restores resources marked for short-rest recovery.
 Completing either rest publishes one `rest_completed` session event with its
 kind and recovery summary when the sheet has an attached session context. Hit-die
 rolls remain normal `dice_roll` events; opening or cancelling a rest does not
@@ -216,6 +228,13 @@ outer chrome and internal dividers. Their sheet rows render the assigned
 instead of falling back to the former circle-with-dot marker. Entry names use
 the primary text color so they remain visually stronger than muted section
 headings.
+
+Handbook item types 3, 4 and 7 use `max_use` for a fixed maximum. Setting
+`max_use_stat` (suggest dictionary 16) changes the maximum to that live ability
+modifier, clamped by `max_use_min` (default 1); `manual_size` keeps its existing
+per-character override semantics. Charge pips are rendered only in the shared
+resources tile, so spending from there writes `count` back to the owning ability
+entry and a later ability-score change immediately changes the displayed maximum.
 
 Feat ability-score bonuses are represented as readonly named bonus rows. The
 creation assembler, level-up flow and manual feat editor use the same rule: add

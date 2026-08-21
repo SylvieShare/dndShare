@@ -1,6 +1,6 @@
 <template>
   <template v-if="hasDetails">
-    <span v-if="data.max_use" class="atd-uses">{{ data.max_use }} исп.</span>
+    <span v-if="usesLabel" class="atd-uses">{{ usesLabel }}</span>
     <span v-if="data.rollback_short_rest" class="atd-badge atd-sr">КО</span>
     <span v-if="data.rollback_long_rest" class="atd-badge atd-lr">ДО</span>
   </template>
@@ -8,13 +8,24 @@
 
 <script setup>
 import { computed } from 'vue'
+import { abilityUseTotal } from '@/shared/lib/dndAbilityUses'
+import { STAT_FULL, SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
 
 const props = defineProps({
   item: { type: Object, required: true },
+  values: { type: Object, default: () => ({}) },
 })
 
 const data = computed(() => props.item.data || {})
-const hasDetails = computed(() => data.value.max_use || data.value.rollback_short_rest || data.value.rollback_long_rest)
+const usesLabel = computed(() => {
+  const total = abilityUseTotal(data.value, props.values)
+  if (total == null) return ''
+  const stat = SUGGEST16_TO_STAT[Number(data.value.max_use_stat)]
+  if (!stat) return `${total} исп.`
+  const minimum = data.value.max_use_min == null ? 1 : Math.max(0, Number(data.value.max_use_min) || 0)
+  return `${total} исп. · модификатор ${STAT_FULL[stat].toLowerCase()}, минимум ${minimum}`
+})
+const hasDetails = computed(() => usesLabel.value || data.value.rollback_short_rest || data.value.rollback_long_rest)
 </script>
 
 <style scoped>

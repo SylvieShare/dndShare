@@ -28,17 +28,6 @@
           <SvgIcon v-if="entry.svg" class="abv-icon-svg" :svg="entry.svg" />
         </span>
 
-        <div v-if="entry.max_use" class="abv-uses">
-          <button
-            v-for="i in entry.max_use"
-            :key="i"
-            class="abv-dot"
-            :class="{ 'abv-dot-used': i > entry.count }"
-            :title="i <= entry.count ? 'Использовать' : 'Восстановить'"
-            @click.stop="$emit('toggle-dot', entry, i)"
-          />
-        </div>
-
         <span class="abv-copy">
           <span class="abv-name">{{ entry.name }}</span>
           <span v-if="entry.choice_summary" class="abv-choice">{{ entry.choice_summary }}</span>
@@ -64,7 +53,7 @@ defineProps({
   editFade: { type: Boolean, default: false },
   panel: { type: Boolean, default: false },
 })
-defineEmits(['toggle-dot', 'view', 'show-tooltip', 'hide-tooltip', 'manage'])
+defineEmits(['view', 'show-tooltip', 'hide-tooltip', 'manage'])
 </script>
 
 <style scoped>
@@ -119,30 +108,6 @@ defineEmits(['toggle-dot', 'view', 'show-tooltip', 'hide-tooltip', 'manage'])
 }
 .abv-icon-svg { width: 20px; height: 20px; }
 .abv-card:hover .abv-icon { color: var(--text-2); }
-
-.abv-uses {
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  flex-shrink: 0;
-}
-
-.abv-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  border: none;
-  background-color: var(--accent);
-  cursor: pointer;
-  padding: 0;
-  flex-shrink: 0;
-  transition: opacity 0.12s;
-}
-.abv-dot-used {
-  background-color: transparent;
-  border: 1.5px solid var(--border-strong);
-}
-.abv-dot:hover { opacity: 0.7; }
 
 .abv-copy {
   flex: 1;

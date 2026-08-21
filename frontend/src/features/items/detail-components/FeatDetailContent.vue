@@ -17,7 +17,7 @@
         <div class="fdc-badges">
           <span v-if="data.repeatable" class="fdc-badge fdc-badge-repeat">Можно брать повторно</span>
           <span v-if="choices.length" class="fdc-badge">{{ choicesCountLabel }}</span>
-          <span v-if="data.max_use" class="fdc-badge">{{ data.max_use }} исп.</span>
+          <span v-if="useRuleLabel" class="fdc-badge">{{ useRuleLabel }}</span>
           <span v-if="restLabel" class="fdc-badge fdc-badge-rest">{{ restLabel }}</span>
           <span v-for="tag in tags" :key="tag" class="fdc-badge fdc-badge-tag">{{ tag }}</span>
         </div>
@@ -104,6 +104,14 @@ const prereq = computed(() => featPrereq(props.item))
 const choices = computed(() => featChoices(props.item))
 const nameEn = computed(() => String(props.item.nameEn || '').replace(/_/g, ' ').replace(/\b[a-z]/g, (char) => char.toUpperCase()))
 const tags = computed(() => String(data.value.tags || '').split(/[,;]+/).map((tag) => tag.trim()).filter(Boolean))
+const useRuleLabel = computed(() => {
+  const stat = SUGGEST16_TO_STAT[Number(data.value.max_use_stat)]
+  if (stat) {
+    const minimum = data.value.max_use_min == null ? 1 : Math.max(0, Number(data.value.max_use_min) || 0)
+    return `Модификатор ${STAT_FULL[stat].toLowerCase()}, минимум ${minimum}`
+  }
+  return data.value.max_use ? `${data.value.max_use} исп.` : ''
+})
 
 function suggestLabel(typeId, id) {
   return suggestStore.items(Number(typeId))?.find((item) => String(item.id) === String(id))?.value || `#${id}`
