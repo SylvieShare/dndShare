@@ -275,6 +275,13 @@
   font-weight: 600;
   line-height: 1.2;
 }
+.hb-card-parent {
+  color: var(--card-color, var(--accent));
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
 
 .hb-collection-card--wide .hb-card-name {
   font-size: 28px;
@@ -285,6 +292,14 @@
   color: var(--text-muted);
   line-height: 1.4;
   margin: 0;
+}
+.hb-card-children {
+  max-width: calc(100% - 76px);
+  margin: 0;
+  color: var(--text-2);
+  font-size: 10px;
+  font-weight: 650;
+  line-height: 1.35;
 }
 
 /* Card bottom: count */

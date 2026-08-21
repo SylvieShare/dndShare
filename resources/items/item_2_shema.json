@@ -44,7 +44,6 @@
     "filter": true,
     "options": [
       { "value": "gear", "label": "Снаряжение" },
-      { "value": "tool", "label": "Инструмент" },
       { "value": "pack", "label": "Набор снаряжения" }
     ]
   },

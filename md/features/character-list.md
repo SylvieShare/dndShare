@@ -194,7 +194,8 @@ name and its own description.
 Armor rows on the same Class step use the same taller 64×64-icon layout. The
 second line exposes the armor category and AC (or shield bonus); the trailing
 Stealth disadvantage marker is rendered only when `stealth_disadvantage` is true.
-Non-weapon item rows retain the compact shared presentation. Groups with exactly two alternatives use a two-column
+Other item and tool rows reserve the same 64×64 icon geometry while keeping
+their own metadata composition. Groups with exactly two alternatives use a two-column
 desktop layout with a single vertical divider and a shield-check marker on the
 selected branch; three or more alternatives are separated horizontally, and
 the columns collapse to the same horizontal separators on mobile. The group
@@ -241,10 +242,14 @@ including backgrounds and the starting shop. Category choices such as “one
 gaming set” or “one musical instrument” are stored as data-driven
 `item_choices`. The Background step renders every active choice with the shared
 searchable equipment selector and cannot advance until the choice is complete.
-The selected handbook item replaces the generic tool row; where the background
-also grants a tool proficiency, the character stores the concrete name (for
-example, `Кости`) instead of the generic category (`Игровой набор`). Equipment-
-only choices are omitted when class wealth replaces starting equipment.
+The selected handbook item replaces the generic tool row. A choice is shown
+exactly once and carries an explicit «Владение», «Предмет» or «Владение +
+предмет» badge. Where the background grants a tool proficiency, the character
+stores the concrete name (for example, `Кости`) instead of the generic category
+(`Игровой набор`). If that option also grants a physical item, it is assembled
+separately into `values.tools`; ownership and proficiency never duplicate one
+another in the UI. Equipment-only choices are omitted when class wealth replaces
+starting equipment.
 
 The PHB 2014 audit identifies mechanical item/tool choices for nine base
 backgrounds: Acolyte (holy symbol and devotional text), Charlatan (con prop),

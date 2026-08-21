@@ -15,11 +15,11 @@
       :disabled="disabled || !activatable"
       @click="$emit('activate', item)"
     >
-      <ItemIcon class="item-reference-icon" :item="item" :type="type" :size="isRoomy ? 64 : 34" placeholder />
+      <ItemIcon class="item-reference-icon" :item="item" :type="type" :size="64" placeholder />
       <span class="item-reference-info">
         <span class="item-reference-main">
           <span class="item-reference-name">{{ displayName }}</span>
-          <span v-if="metaLabel && !isRoomy" class="item-reference-meta">{{ metaLabel }}</span>
+          <span v-if="metaLabel" class="item-reference-meta">{{ metaLabel }}</span>
         </span>
         <span v-if="firstAttack" class="item-reference-weapon-details">
           <span class="item-reference-damage">
@@ -58,18 +58,12 @@
             <span v-if="data.stealth_disadvantage" class="item-reference-armor-stealth">Помеха Скрытности</span>
           </span>
         </span>
-        <span v-if="isRoomy && (count > 1 || costLabel || weightLabel)" class="item-reference-economy">
+        <span v-if="count > 1 || costLabel || weightLabel" class="item-reference-economy">
           <span v-if="count > 1" class="item-reference-count">×{{ count }}</span>
           <span v-if="costLabel" class="item-reference-cost">{{ costLabel }}</span>
           <span v-if="weightLabel" class="item-reference-weight">{{ weightLabel }}</span>
         </span>
       </span>
-      <template v-if="!isRoomy">
-        <span v-if="count > 1" class="item-reference-count">×{{ count }}</span>
-        <slot name="trailing">
-          <span v-if="costLabel" class="item-reference-cost">{{ costLabel }}</span>
-        </slot>
-      </template>
       <ChevronRight v-if="showChevron && !showDetails" :size="16" class="item-reference-chevron" aria-hidden="true" />
     </button>
     <button
@@ -134,11 +128,11 @@ const measuredCost = computed(() => props.params?.length_ft != null && data.valu
 const costLabel = computed(() => formatCost(measuredCost.value || data.value.cost))
 const firstAttack = computed(() => Array.isArray(data.value.attacks) ? data.value.attacks[0] : null)
 const armor = computed(() => data.value.armor || {})
-const isRoomyWeapon = computed(() => props.roomyWeapon && !!firstAttack.value)
-const isRoomyArmor = computed(() => props.roomyArmor && (
+const isRoomyWeapon = computed(() => !!firstAttack.value && (props.roomyWeapon || Number(props.item.typeId) === 1))
+const isRoomyArmor = computed(() => (props.roomyArmor || Number(props.item.typeId) === 12) && (
   Number(props.item.typeId) === 12 || Object.keys(armor.value).length > 0
 ))
-const isRoomy = computed(() => isRoomyWeapon.value || isRoomyArmor.value)
+const isRoomy = true
 const weight = computed(() => props.params?.length_ft != null && data.value.unit_weight != null
   ? Number(props.params.length_ft) * Number(data.value.unit_weight)
   : data.value.weight)
@@ -163,7 +157,6 @@ const weaponPropertyItems = computed(() => {
 })
 const weaponPropertiesLabel = computed(() => weaponPropertyItems.value.map((entry) => entry.label).join(', '))
 const metaLabel = computed(() => [
-  weightLabel.value,
   data.value.equipment_category === 'pack' ? 'Набор' : '',
 ].filter(Boolean).join(' · '))
 const propertiesTooltip = reactive({ visible: false, title: '', desc: '', x: 0, top: null, bottom: null })

@@ -36,6 +36,7 @@ type Item struct {
 type ItemType struct {
 	ID             int64           `json:"id"`
 	Name           string          `json:"name"`
+	ParentTypeID   *int64          `json:"parentTypeId,omitempty"`
 	Description    *string         `json:"description,omitempty"`
 	Fields         json.RawMessage `json:"fields"`
 	InstanceFields json.RawMessage `json:"instanceFields"`

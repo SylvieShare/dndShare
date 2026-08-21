@@ -85,5 +85,7 @@ export function entryDisplayData(entry, catalog, typeById = {}) {
   const weight = ov.weight ?? measuredWeight ?? base?.data?.weight ?? null
   const isCustom = entry.item_id == null
   const svg = base?.svg ?? ''
-  return { name, desc, consumable, cost, weight, isCustom, svg, base }
+  const iconImageUrl = base?.iconImageUrl || ''
+  const typeImageUrl = !iconImageUrl && !svg ? (typeById[base?.typeId]?.iconImageUrl || '') : ''
+  return { name, desc, consumable, cost, weight, isCustom, svg, iconImageUrl, typeImageUrl, base }
 }

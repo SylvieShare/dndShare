@@ -17,4 +17,17 @@ describe('inventory item actions', () => {
     expect(source).toContain("type: 'item_spent'")
     expect(source).toContain("type: 'item_added'")
   })
+
+  it('includes linked handbook subsections and moves their entries to specialized blocks', () => {
+    expect(source).toContain('itemTypesStore.relatedTypeIds(rootTypeId.value)')
+    expect(source).toContain('specialized_destinations')
+    expect(source).toContain('moveToSpecialized')
+    expect(source).toContain('ownedEntryToWeapons')
+    expect(source).toContain('charCtx.updateValues({ items: taken.inventory, [targetId]: target })')
+  })
+
+  it('uses the same 52px icon component as weapon rows', () => {
+    expect(source).toContain(':image-url="entry.display.iconImageUrl"')
+    expect(source).toContain(':type-image-url="entry.display.typeImageUrl"')
+  })
 })

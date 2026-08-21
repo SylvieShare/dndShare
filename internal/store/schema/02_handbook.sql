@@ -176,6 +176,7 @@ CREATE INDEX IF NOT EXISTS idx_storage_image_user_id ON dndshare.storage_image U
 CREATE TABLE IF NOT EXISTS dndshare.item_type (
     id          bigserial NOT NULL,
     "name"      varchar NOT NULL,
+    parent_type_id int8 NULL REFERENCES dndshare.item_type(id) ON DELETE SET NULL,
     example     jsonb NULL,
     fields      jsonb NULL,
     instance_fields jsonb DEFAULT '[]'::jsonb NOT NULL,
@@ -189,12 +190,15 @@ CREATE TABLE IF NOT EXISTS dndshare.item_type (
     CONSTRAINT item_type_pk PRIMARY KEY (id)
 );
 ALTER TABLE dndshare.item_type
+    ADD COLUMN IF NOT EXISTS parent_type_id int8 NULL REFERENCES dndshare.item_type(id) ON DELETE SET NULL;
+ALTER TABLE dndshare.item_type
     ADD COLUMN IF NOT EXISTS icon_image_id int8 NULL REFERENCES dndshare.storage_image(id) ON DELETE SET NULL;
 ALTER TABLE dndshare.item_type
     ADD COLUMN IF NOT EXISTS cover_image_id int8 NULL REFERENCES dndshare.storage_image(id) ON DELETE SET NULL;
 ALTER TABLE dndshare.item_type
     ADD COLUMN IF NOT EXISTS instance_fields jsonb DEFAULT '[]'::jsonb NOT NULL;
 CREATE INDEX IF NOT EXISTS idx_item_type_source_id ON dndshare.item_type USING btree (source_id);
+CREATE INDEX IF NOT EXISTS idx_item_type_parent_type_id ON dndshare.item_type USING btree (parent_type_id);
 CREATE INDEX IF NOT EXISTS idx_item_type_icon_image_id ON dndshare.item_type USING btree (icon_image_id);
 CREATE INDEX IF NOT EXISTS idx_item_type_cover_image_id ON dndshare.item_type USING btree (cover_image_id);
 

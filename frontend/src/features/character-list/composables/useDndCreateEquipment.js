@@ -18,7 +18,7 @@ import {
   startingWealthFormula,
 } from '@/features/character-editor/settings/dnd/creation/startingShop'
 
-const CATALOGUE_TYPE_IDS = [1, 2, 10, 12, 13]
+const CATALOGUE_TYPE_IDS = [1, 2, 10, 12, 13, 14]
 
 function inventoryEntry(item, count = 1, type = null) {
   return {
@@ -77,7 +77,7 @@ export function useDndCreateEquipment({ state, sourceSuffix }) {
   const baseClassEquipmentProfile = computed(() => startingEquipmentProfile(state.charClass))
   const classEquipmentProfile = computed(() => resolveStartingEquipmentProfile(
     baseClassEquipmentProfile.value,
-    equipmentCatalogue.value.filter((item) => [1, 2, 12].includes(Number(item.typeId)) && item.userId == null),
+    equipmentCatalogue.value.filter((item) => [1, 2, 12, 14].includes(Number(item.typeId)) && item.userId == null),
   ))
   const classEquipmentComplete = computed(() => state.buyStartingEquipment
     || startingEquipmentComplete(classEquipmentProfile.value, state.classEquipmentChoices))

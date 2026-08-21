@@ -72,6 +72,7 @@
                   <PotionListItem v-else-if="type.id === 10" :item="item" :type="type" />
                   <ArmorListItem v-else-if="type.id === 12" :item="item" :type="type" />
                   <TransportListItem v-else-if="type.id === 13" :item="item" :type="type" />
+                  <ItemListItem v-else-if="type.id === 14" :item="item" :type="type" />
                   <FeatListItem v-else-if="type.id === 7" :item="item" :type="type" />
                   <ObjectListItem
                     v-else
@@ -101,6 +102,7 @@
               <PotionListItem v-else-if="type.id === 10" :item="item" :type="type" />
               <ArmorListItem v-else-if="type.id === 12" :item="item" :type="type" />
               <TransportListItem v-else-if="type.id === 13" :item="item" :type="type" />
+              <ItemListItem v-else-if="type.id === 14" :item="item" :type="type" />
               <FeatListItem v-else-if="type.id === 7" :item="item" :type="type" />
               <ObjectListItem
                 v-else

@@ -125,6 +125,8 @@ The current shape under `data.values` is:
   spells:[{id,prepared,always_prepared?}],slots:[{level,total,used}]}`;
 - inventory: `{equipped:[Entry],sections:[{id,name,items:[Entry]}]}`, where an
   owned item entry is `{uid,item_id,count,params,override}`;
+- potions/tools: independent arrays of the same owned entries; tool proficiency
+  remains in `proficiencies['Инструменты']` and is not inferred from ownership;
 - wallet: `{order:[suggestId],amounts:{[suggestId]:number}}`;
 - race/class/feat abilities: arrays of item references/current counters.
 
@@ -221,15 +223,18 @@ entry is deleted.
 
 ## Items, weapons and spells
 
-`DndItems` uses `lib/itemSection.js` and the handbook item picker. Equipped items
-are a top-level array; user sections never double as equipped. Entry override
+`DndItems` uses `lib/itemSection.js` and the handbook item picker. Its «Вещи»
+picker follows `item_type.parent_type_id` and therefore searches the root type 2
+plus all linked child catalogues. Equipped items are a top-level array; user
+sections never double as equipped. Entry override
 is for a custom name/description/count metadata, while referenced item content
-comes from handbook. A referenced row renders its handbook `item.svg` when the
-item has one. Every row reserves the same icon slot, so names remain aligned
-when an icon is absent; simplified custom rows leave that slot empty instead of
-showing a placeholder. Inventory glyphs are neutral gray, frameless, have no
-background tile and use the available row height for a larger drawing.
-Every owned inventory item and potion uses `item_id`, an explicit `count` and a
+comes from handbook. A referenced row prefers `iconImageUrl`, then `svg`, then
+the collection image. Weapon, armor and ordinary item rows reserve the same
+icon geometry while retaining type-specific content composition; simplified
+custom rows leave that slot empty instead of showing a placeholder. Inventory
+glyphs are neutral gray, frameless and use the same 52px sheet icon size as
+weapons.
+Every owned inventory item, potion and tool uses `item_id`, an explicit `count` and a
 typed `params` object. `params` contains values of the concrete instance and is
 not an alternative handbook-data or free-form override store. Item-type
 `instanceFields` declares the available parameters. Measured gear such as hemp
@@ -244,7 +249,10 @@ Clicking an inventory row opens the shared `RowActionMenu`: referenced items can
 open their description, while editable rows offer spend, add, change and delete.
 Spend/add changes the stack by one and publishes `item_spent`/`item_added` in an
 attached session; editing metadata or deleting an entry does not claim a gameplay
-action. Creating a new inventory item or weapon publishes `entry_added`; the
+action. A referenced child-type item also offers a move to its specialized
+weapon, potion or tool block. Potions and tools can move back to the ordinary
+inventory without recreating the owned entry; the reverse action for weapons is
+intentionally deferred. Creating a new inventory item or weapon publishes `entry_added`; the
 same event covers newly picked potions and spells, feats and class/racial
 abilities, including additions granted by level-up. A multi-quantity picker
 creates one entry with that count. Potion tiles open the shared `RowActionMenu` with
@@ -260,6 +268,13 @@ possible, `RowActionSubmenu` shows the available slot levels beside the action
 menu on desktop or inside its bounded mobile section and records the chosen
 level. A spell row renders its transparent raster
 `item.iconImageUrl` when assigned; otherwise it retains the school SVG symbol.
+
+`DndTools` is a separate character-sheet block backed by `values.tools`. It uses
+ordinary handbook images and the shared owned-entry contract, supports quantity,
+details and movement back to «Вещи», and can toggle the concrete tool name in
+the global proficiency bucket. Moving or deleting an owned tool never silently
+removes proficiency; a character may know a tool without carrying it and carry
+one without being proficient.
 
 Starting armor is placed directly in the equipped array. Its handbook
 `data.armor` rule initializes AC as readonly equipment-derived bonuses; light
@@ -330,8 +345,10 @@ technical revision is unrelated to character level or rules edition.
 The dedicated D&D wizard and compact session creation both call the pure engine
 under `settings/dnd/creation`. `blankValues`, grants, progression, equipment and
 `buildCharacterData` are the only producers of new D&D documents. Catalogue
-weapons added during creation are emitted into `values.weapon`; inventory keeps
-the other catalogue additions and text-only starting-equipment rows. See
+weapons added during creation are emitted into `values.weapon`, potions into
+`values.potions`, and tools into `values.tools`; inventory keeps the other
+catalogue additions and text-only starting-equipment rows. Background tool
+proficiency is assembled independently into `values.proficiencies`. See
 `md/features/character-list.md` for the UI flow.
 
 ## Tests

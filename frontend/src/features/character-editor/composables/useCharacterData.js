@@ -160,8 +160,12 @@ export function useCharacterData(uuid, isMobile) {
   }
 
   function updateValue({ id, value }) {
-    data.value = { ...data.value, values: { ...data.value.values, [id]: value } }
-    if (id === 'name' && value) document.title = value
+    updateValues({ [id]: value })
+  }
+
+  function updateValues(patch) {
+    data.value = { ...data.value, values: { ...data.value.values, ...(patch || {}) } }
+    if (patch?.name) document.title = patch.name
   }
 
   function updateVar(patch) {
@@ -277,6 +281,7 @@ export function useCharacterData(uuid, isMobile) {
     containerWidthForTab,
     getInitialTabs,
     updateValue,
+    updateValues,
     updateVar,
     updateContentSources,
     onPublicToggle,

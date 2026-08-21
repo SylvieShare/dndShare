@@ -47,6 +47,7 @@ func TestHandbookTypeIconsReplaceTypeSVGsWithStaticRasterMedia(t *testing.T) {
 
 func TestItemTypesProjectRasterIconsWithoutSVGFallback(t *testing.T) {
 	for _, fragment := range []string{
+		"it.parent_type_id",
 		"it.icon_image_id",
 		"icon.url AS icon_image_url",
 		"LEFT JOIN dndshare.storage_image icon",

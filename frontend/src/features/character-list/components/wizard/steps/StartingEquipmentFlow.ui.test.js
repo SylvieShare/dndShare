@@ -47,7 +47,8 @@ describe('starting equipment wizard flow', () => {
     expect(source).toContain('roomy-armor')
     expect(equipmentSelect).toContain(':roomy-weapon="roomyWeapons"')
     expect(equipmentSelect).toContain(':roomy-armor="roomyArmor"')
-    expect(itemReference).toContain(':size="isRoomy ? 64 : 34"')
+    expect(itemReference).toContain(':size="64"')
+    expect(itemReference).toContain('const isRoomy = true')
     expect(itemReference).toContain('.item-reference--roomy .item-reference-body { min-height: 96px;')
     expect(itemReference).toContain('grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); grid-template-rows: auto auto;')
     expect(itemReference).toMatch(/\.item-reference-damage \{[^}]*grid-column: 1; grid-row: 2;/)
@@ -69,11 +70,12 @@ describe('starting equipment wizard flow', () => {
     expect(itemReference).toContain('Помеха Скрытности')
   })
 
-  it('offers the PHB wealth roll, five catalogues and a budgeted cart', () => {
+  it('offers the PHB wealth roll, linked equipment catalogues and a budgeted cart', () => {
     const source = read('StepStartingShop')
     expect(source).toContain('Начальное богатство')
     expect(source).toContain('startingWealthFormulaLabel')
     expect(source).toContain("{ id: 13, label: 'Транспорт' }")
+    expect(source).toContain("{ id: 14, label: 'Инструменты' }")
     expect(source).toContain('canBuyShopItem(item)')
     expect(source).toContain('<ConfirmDialog')
     expect(source).toContain('Останется в кошельке')

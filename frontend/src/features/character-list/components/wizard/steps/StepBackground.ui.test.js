@@ -32,7 +32,7 @@ describe('background step presentation', () => {
 
   it('renders canonical tool and equipment references that open handbook cards', () => {
     expect(source).toContain('<ItemReferenceRow')
-    expect(source).toContain('v-for="item in backgroundToolItems"')
+    expect(source).toContain('v-for="item in displayedBackgroundToolItems"')
     expect(source).toContain('v-for="entry in backgroundWeaponItems"')
     expect(source).toContain('v-for="entry in backgroundOtherItems"')
     expect(source).toContain('Number(entry.typeId) === 1')
@@ -47,6 +47,14 @@ describe('background step presentation', () => {
     expect(source).toContain('grid-template-columns: repeat(2, minmax(0, 1fr))')
     expect(source).toContain('align-items: start')
     expect(source).toContain('@media (max-width: 640px)')
+  })
+
+  it('shows a selected background choice once and identifies its effects', () => {
+    expect(source).toContain('{{ choiceEffectLabel(choice) }}')
+    expect(source).toContain("selectedChoiceIds('grants_tool_item')")
+    expect(source).toContain("selectedChoiceIds('grants_equipment_item')")
+    expect(source).toContain("return 'Владение + предмет'")
+    expect(source).toContain("return 'Владение'")
   })
 
   it('renders required item choices from background data with the shared equipment picker', () => {

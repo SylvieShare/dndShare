@@ -125,6 +125,7 @@ const {
 
 const TYPE_LABELS = [
   { id: 2, label: 'Снаряжение' },
+  { id: 14, label: 'Инструменты' },
   { id: 1, label: 'Оружие' },
   { id: 12, label: 'Доспехи' },
   { id: 10, label: 'Зелья' },

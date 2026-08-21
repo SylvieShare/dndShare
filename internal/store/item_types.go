@@ -7,7 +7,7 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-const itemTypeSelect = `SELECT it.id, it.name, it.description, it.fields, it.instance_fields, it.source_id, it.color, it.count_items, it.important,
+const itemTypeSelect = `SELECT it.id, it.name, it.parent_type_id, it.description, it.fields, it.instance_fields, it.source_id, it.color, it.count_items, it.important,
 		s.name AS source_name,
 		it.icon_image_id,
 		icon.url AS icon_image_url,
@@ -21,12 +21,13 @@ const itemTypeSelect = `SELECT it.id, it.name, it.description, it.fields, it.ins
 func scanItemType(rows pgx.Rows) (ItemType, error) {
 	var it ItemType
 	var description, sourceName, color, iconImageURL, coverImageURL *string
-	var sourceID, iconImageID, coverImageID *int64
+	var parentTypeID, sourceID, iconImageID, coverImageID *int64
 	var fields, instanceFields []byte
-	if err := rows.Scan(&it.ID, &it.Name, &description, &fields, &instanceFields, &sourceID, &color, &it.CountItems, &it.Important, &sourceName, &iconImageID, &iconImageURL, &coverImageID, &coverImageURL); err != nil {
+	if err := rows.Scan(&it.ID, &it.Name, &parentTypeID, &description, &fields, &instanceFields, &sourceID, &color, &it.CountItems, &it.Important, &sourceName, &iconImageID, &iconImageURL, &coverImageID, &coverImageURL); err != nil {
 		return ItemType{}, err
 	}
 	it.Description = description
+	it.ParentTypeID = parentTypeID
 	if fields == nil {
 		it.Fields = json.RawMessage("[]")
 	} else {

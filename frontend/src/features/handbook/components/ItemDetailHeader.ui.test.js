@@ -40,7 +40,7 @@ describe('handbook item detail cover', () => {
 
   it('preloads and quickly crossfades covers without resetting bestiary geometry', () => {
     expect(headerSource).toContain("if ([3, 4, 5, 7, 10].includes(typeId)) return '5 / 2'")
-    expect(headerSource).toContain("if ([2, 8, 9, 11, 13].includes(typeId)) return '3 / 2'")
+    expect(headerSource).toContain("if ([2, 8, 9, 11, 13, 14].includes(typeId)) return '3 / 2'")
     expect(headerSource).toContain("if (typeId === 1 || typeId === 6 || typeId === 12) return '4 / 3'")
     expect(headerSource).toContain("return ''")
     expect(headerSource).toContain('const image = new Image()')
@@ -87,7 +87,7 @@ describe('handbook item detail cover', () => {
   })
 
   it('gives transport a 3:2 showcase with operational data around a safe center', () => {
-    expect(headerSource).toContain("if ([2, 8, 9, 11, 13].includes(typeId)) return '3 / 2'")
+    expect(headerSource).toContain("if ([2, 8, 9, 11, 13, 14].includes(typeId)) return '3 / 2'")
     expect(headerSource).toContain("13: {\n    '--cover-min-height': '400px'")
     expect(detailSource).toContain('<TransportDetailSummary :item="item" />')
     expect(detailSource).toContain('13: TransportDetailContent')
@@ -99,10 +99,11 @@ describe('handbook item detail cover', () => {
   })
 
   it('shows gear as a 3:2 cover with price and weight around a safe center', () => {
-    expect(headerSource).toContain("if ([2, 8, 9, 11, 13].includes(typeId)) return '3 / 2'")
+    expect(headerSource).toContain("if ([2, 8, 9, 11, 13, 14].includes(typeId)) return '3 / 2'")
     expect(headerSource).toContain("2: {\n    '--cover-min-height': '400px'")
+    expect(headerSource).toContain("14: {\n    '--cover-min-height': '400px'")
     expect(detailSource).toContain('<GearDetailSummary :item="item" :type="type" />')
-    expect(detailSource).toContain('if (props.type?.id === 2) return { economyInHeader: true }')
+    expect(detailSource).toContain('if (props.type?.id === 2 || props.type?.id === 14) return { economyInHeader: true }')
     expect(gearSummarySource).toContain('class="gear-economy-card gear-economy-cost"')
     expect(gearSummarySource).toContain('tone="warning"')
     expect(gearSummarySource).toContain('class="gear-economy-card gear-economy-weight"')

@@ -75,7 +75,11 @@
                   @mouseenter="e => showTooltip(e, entry)"
                   @mouseleave="hideTooltip"
                 >
-                  <InventoryItemIcon :svg="entry.display.svg" />
+                  <InventoryItemIcon
+                    :svg="entry.display.svg"
+                    :image-url="entry.display.iconImageUrl"
+                    :type-image-url="entry.display.typeImageUrl"
+                  />
 
                   <span class="di-row-name" :title="entry.display.name">
                     <span class="di-row-name-text">{{ entry.display.name }}</span>
@@ -92,6 +96,12 @@
                   action="view"
                   @click="viewEntry(entry, close)"
                 >Открыть описание</RowActionItem>
+                <RowActionItem
+                  v-if="canMoveToSpecialized(entry)"
+                  :icon="ArrowRightLeft"
+                  tone="info"
+                  @click="moveToSpecialized(section.id, entry, close)"
+                >Переместить в «{{ specializedDestination(entry).label }}»</RowActionItem>
                 <RowActionItem
                   v-if="canManage"
                   action="use"
@@ -190,6 +200,7 @@
 
 <script setup>
 import { computed, inject, nextTick, onMounted, reactive, ref, watch } from 'vue'
+import { ArrowRightLeft } from '@lucide/vue'
 
 import { BaseTile } from '@sylvieshare/share-ui'
 import InventoryItemIcon from '@/features/character-editor/components/InventoryItemIcon.vue'
@@ -217,6 +228,11 @@ import {
   makeSectionId,
   normalizeValue,
 } from '@/features/character-editor/blocks/dnd/lib/itemSection'
+import {
+  appendOwnedEntry,
+  ownedEntryToWeapons,
+  takeInventoryEntry,
+} from '@/features/character-editor/blocks/dnd/lib/itemPlacement'
 
 const props = defineProps({ block: Object, value: { default: null } })
 const emit = defineEmits(['update:value'])
@@ -259,7 +275,7 @@ function setItems(next, sectionId, items) {
   if (sec) sec.items = items
 }
 
-const typeIdsList = computed(() => props.block.content?.item_ids || [])
+const rootTypeId = computed(() => Number(props.block.content?.item_type_id || props.block.content?.item_ids?.[0] || 2))
 // Single mode: owners get every control (add / manage / drag); viewers see a read-only list.
 const canManage = computed(() => !!charCtx.ownerMode)
 const canAdd = computed(() => !!charCtx.ownerMode)
@@ -267,12 +283,40 @@ const canDrag = computed(() => !!charCtx.ownerMode)
 
 const typeById = computed(() => Object.fromEntries(itemTypesStore.allTypes.map((type) => [type.id, type])))
 const modalItem = computed(() => modalSelection.value?.item_id != null ? catalog[modalSelection.value.item_id] ?? null : null)
-const pickerTypeIds = computed(() => typeIdsList.value)
+const pickerTypeIds = computed(() => {
+  const related = props.block.content?.include_related_types
+    ? itemTypesStore.relatedTypeIds(rootTypeId.value)
+    : (props.block.content?.item_ids || [rootTypeId.value])
+  return related.length ? related : [rootTypeId.value]
+})
+const specializedDestinations = computed(() => props.block.content?.specialized_destinations || [])
 
 function sectionGroup(id) { return 'sec_' + id }
 
 function entryWithDisplay(entry) {
   return { ...entry, display: entryDisplayData(entry, catalog, typeById.value) }
+}
+
+function specializedDestination(entry) {
+  const typeId = Number(entry.display?.base?.typeId ?? catalog[entry.item_id]?.typeId)
+  return specializedDestinations.value.find(destination => Number(destination.type_id) === typeId) || null
+}
+
+function canMoveToSpecialized(entry) {
+  return canManage.value && typeof charCtx.updateValues === 'function' && !!specializedDestination(entry)
+}
+
+function moveToSpecialized(sectionId, entry, close) {
+  const destination = specializedDestination(entry)
+  const taken = takeInventoryEntry(model.value, sectionId, entry.uid)
+  if (!destination || !taken) return
+  const currentValues = charCtx.values || {}
+  const targetId = destination.value_id
+  const target = targetId === 'weapon'
+    ? [...(Array.isArray(currentValues.weapon) ? currentValues.weapon : []), ...ownedEntryToWeapons(taken.entry)]
+    : appendOwnedEntry(currentValues[targetId], taken.entry)
+  charCtx.updateValues({ items: taken.inventory, [targetId]: target })
+  close()
 }
 
 function sectionItems(sectionId) {

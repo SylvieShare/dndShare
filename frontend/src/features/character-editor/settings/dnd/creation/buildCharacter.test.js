@@ -129,6 +129,30 @@ describe('buildCharacterData starting equipment', () => {
     expect(result.data.values.items).toBeUndefined()
   })
 
+  it('stores physical tools and potions in their dedicated sheet blocks', () => {
+    const result = buildCharacterData({
+      race: selection(1, 'Человек'),
+      charClass: selection(2, 'Артист'),
+      background: selection(3, 'Артист', { tool_prof: [26] }),
+      backgroundToolProficiencies: [{ replaces: 26, name: 'Лютня' }],
+      backgroundEquipment: {
+        items: [{ item_id: 701, name: 'Лютня', count: 1, typeId: 14, params: {} }],
+        coins: {},
+      },
+      equipment: [{ item_id: 702, name: 'Зелье лечения', count: 2, typeId: 10, params: {} }],
+      suggestValue: (typeId, id) => (typeId === 5 && id === 26 ? 'Музыкальный инструмент' : ''),
+    })
+
+    expect(result.data.values.tools).toEqual([
+      { uid: 'tool_0', item_id: 701, count: 1, params: {}, override: null },
+    ])
+    expect(result.data.values.potions).toEqual([
+      { uid: 'potion_0', item_id: 702, count: 2, params: {}, override: null },
+    ])
+    expect(result.data.values.proficiencies['Инструменты']).toEqual(['Лютня'])
+    expect(result.data.values.items).toBeUndefined()
+  })
+
   it('stores PHB rows without catalog ids as editable custom inventory items', () => {
     const result = buildCharacterData({
       race: selection(1, 'Человек'),

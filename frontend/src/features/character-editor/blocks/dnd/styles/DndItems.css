@@ -120,9 +120,9 @@
   position: relative;
   display: flex;
   align-items: center;
-  gap: 8px;
-  min-height: 44px;
-  padding: 6px 4px;
+  gap: 16px;
+  min-height: 80px;
+  padding: 14px 4px;
   transition: background 0.12s;
 }
 .di-rows :deep(.ram-custom-trigger + .ram-custom-trigger .di-row) {

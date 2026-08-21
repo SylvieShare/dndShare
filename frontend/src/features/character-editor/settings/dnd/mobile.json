@@ -102,6 +102,10 @@
             "kind": "block"
           },
           {
+            "ref": "tools",
+            "kind": "block"
+          },
+          {
             "ref": "items",
             "kind": "block"
           }

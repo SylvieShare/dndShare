@@ -8,13 +8,29 @@ import (
 	"testing"
 )
 
-func TestItemCatalogFixesSchemaIsEmbeddedLast(t *testing.T) {
+func TestItemTypeHierarchySchemaIsEmbeddedLast(t *testing.T) {
 	if len(schemaParts) == 0 {
 		t.Fatal("schemaParts is empty")
 	}
 	last := schemaParts[len(schemaParts)-1]
-	if last.name != "item-catalog-fixes" || last.sql == "" || last.sql != schemaItemCatalogFixesSQL {
-		t.Fatal("item-catalog-fixes schema must be embedded after the equipment catalogues")
+	if last.name != "item-type-hierarchy" || last.sql == "" || last.sql != schemaItemTypeHierarchySQL {
+		t.Fatal("item-type-hierarchy schema must be embedded after the equipment catalogues")
+	}
+}
+
+func TestItemTypeHierarchyCreatesToolsAndMigratesOwnedEntries(t *testing.T) {
+	for _, fragment := range []string{
+		"parent_type_id",
+		"14,\n    'Инструменты'",
+		"WHERE id IN (1, 10, 12, 13, 14)",
+		"item.data ->> 'equipment_category' = 'tool'",
+		"move_inventory_tools_to_collection",
+		"'{tools}'",
+		"values.proficiencies",
+	} {
+		if !strings.Contains(schemaItemTypeHierarchySQL, fragment) {
+			t.Fatalf("item type hierarchy schema must contain %q", fragment)
+		}
 	}
 }
 
@@ -198,7 +214,7 @@ func TestItemCatalogFixesRestoreCanonicalEquipment(t *testing.T) {
 }
 
 func TestStartingShopResourceSchemasExposeSharedFlag(t *testing.T) {
-	for _, typeID := range []string{"1", "2", "10", "12", "13"} {
+	for _, typeID := range []string{"1", "2", "10", "12", "13", "14"} {
 		path := filepath.Join("..", "..", "resources", "items", "item_"+typeID+"_shema.json")
 		body, err := os.ReadFile(path)
 		if err != nil {

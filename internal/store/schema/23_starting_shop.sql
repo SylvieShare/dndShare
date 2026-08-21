@@ -41,7 +41,7 @@ VALUES (
     (SELECT id FROM dndshare."source" WHERE lower(name) = 'dnd5e' LIMIT 1),
     '#a97852',
     false,
-    'Обычное снаряжение, готовые наборы и инструменты.'
+    'Обычное снаряжение и готовые наборы.'
 )
 ON CONFLICT (id) DO NOTHING;
 
@@ -242,7 +242,7 @@ SELECT seed.name, seed.name_en, 2, '{}'::jsonb
 FROM starting_shop_tools seed
 WHERE NOT EXISTS (
     SELECT 1 FROM dndshare.item current
-    WHERE current.user_id IS NULL AND current.type_id = 2
+    WHERE current.user_id IS NULL AND current.type_id IN (2, 14)
       AND lower(COALESCE(current.name_en, '')) = lower(seed.name_en)
 );
 
@@ -256,7 +256,7 @@ SET data = item.data || jsonb_build_object(
     'available_in_starting_shop', true
 )
 FROM starting_shop_tools seed
-WHERE item.user_id IS NULL AND item.type_id = 2
+WHERE item.user_id IS NULL AND item.type_id IN (2, 14)
   AND lower(COALESCE(item.name_en, '')) = lower(seed.name_en);
 
 CREATE TEMP TABLE starting_shop_transport ON COMMIT DROP AS
@@ -456,7 +456,7 @@ WITH pack_contents(pack_name, position, item_name, quantity) AS (
     JOIN LATERAL (
         SELECT candidate.id
         FROM dndshare.item candidate
-        WHERE candidate.user_id IS NULL AND candidate.type_id = 2
+        WHERE candidate.user_id IS NULL AND candidate.type_id IN (2, 14)
           AND candidate.name = pack_contents.item_name
         ORDER BY (COALESCE(candidate.data ->> 'available_in_starting_shop', 'false') = 'true') DESC,
                  candidate.id
@@ -548,7 +548,7 @@ WITH phb AS (
     FROM dndshare.item item
     WHERE item.user_id IS NULL AND (
         item.type_id IN (12, 13)
-        OR (item.type_id = 2 AND EXISTS (
+        OR (item.type_id IN (2, 14) AND EXISTS (
             SELECT 1 FROM starting_shop_tools tool
             WHERE lower(tool.name_en) = lower(COALESCE(item.name_en, ''))
         ))
@@ -566,7 +566,7 @@ SET count_items = (
     SELECT COUNT(*) FROM dndshare.item item
     WHERE item.type_id = item_type.id AND item.user_id IS NULL
 )
-WHERE item_type.id IN (1, 2, 10, 12, 13);
+WHERE item_type.id IN (1, 2, 10, 12, 13, 14);
 
 SELECT setval(
     pg_get_serial_sequence('dndshare.item_type', 'id'),

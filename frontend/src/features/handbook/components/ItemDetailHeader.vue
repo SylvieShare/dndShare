@@ -63,6 +63,9 @@ const TYPE_COVER_STYLES = {
   2: {
     '--cover-min-height': '400px',
   },
+  14: {
+    '--cover-min-height': '400px',
+  },
   5: {
     '--cover-min-height': '300px',
   },
@@ -81,7 +84,7 @@ const TYPE_COVER_STYLES = {
 }
 
 function defaultCoverAspectRatio(typeId) {
-  if ([2, 8, 9, 11, 13].includes(typeId)) return '3 / 2'
+  if ([2, 8, 9, 11, 13, 14].includes(typeId)) return '3 / 2'
   if ([3, 4, 5, 7, 10].includes(typeId)) return '5 / 2'
   if (typeId === 1 || typeId === 6 || typeId === 12) return '4 / 3'
   return ''

@@ -66,8 +66,10 @@
             @click="emit('select-type', type, selectedSourceVersionId)"
           >
             <div class="hb-card-top">
+              <span v-if="parentTypeName(type)" class="hb-card-parent">Раздел «{{ parentTypeName(type) }}»</span>
               <span class="hb-card-name">{{ type.name }}</span>
               <p v-if="type.description" class="hb-card-desc">{{ type.description }}</p>
+              <p v-if="childTypeNames(type)" class="hb-card-children">Подразделы: {{ childTypeNames(type) }}</p>
             </div>
             <div class="hb-card-bottom">
               <span class="hb-card-count">
@@ -170,6 +172,15 @@ function selectVersion(versionID) {
 function cardStyle(type) {
   if (!type.color) return {}
   return { '--card-color': type.color }
+}
+function parentTypeName(type) {
+  return itemTypes.value.find(candidate => Number(candidate.id) === Number(type.parentTypeId))?.name || ''
+}
+function childTypeNames(type) {
+  return itemTypes.value
+    .filter(candidate => Number(candidate.parentTypeId) === Number(type.id))
+    .map(candidate => candidate.name)
+    .join(' · ')
 }
 
 async function fetchSources() {

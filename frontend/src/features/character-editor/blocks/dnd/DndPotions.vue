@@ -4,9 +4,11 @@
       :potions="potionEntries"
       :can-use="charCtx.ownerMode"
       :can-add="charCtx.ownerMode"
+      :can-move="charCtx.ownerMode && typeof charCtx.updateValues === 'function'"
       @use="onUse"
       @replenish="onReplenish"
       @view="onView"
+      @move="onMove"
       @add="pickerOpen = true"
     />
 
@@ -38,6 +40,7 @@ import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
 import PotionShelf from '@/features/character-editor/blocks/dnd/components/PotionShelf'
 import { itemsApi } from '@/shared/api/itemsApi'
 import { makeEntryUid } from '@/features/character-editor/blocks/dnd/lib/itemSection'
+import { appendInventoryEntry } from '@/features/character-editor/blocks/dnd/lib/itemPlacement'
 import { instanceParamsKey } from '@/features/items/lib/itemInstance'
 import { logSessionEntryAdded } from '@/features/character-editor/lib/sessionEntryEvents'
 
@@ -107,6 +110,17 @@ function onReplenish(uid) {
 
 function onView(uid) {
   if (entries.value.some(e => e.uid === uid && e.item_id != null)) modalEntryUid.value = uid
+}
+
+function onMove(uid) {
+  const next = clone()
+  const index = next.findIndex(entry => entry.uid === uid)
+  if (index < 0 || typeof charCtx.updateValues !== 'function') return
+  const [entry] = next.splice(index, 1)
+  charCtx.updateValues({
+    potions: next,
+    items: appendInventoryEntry(charCtx.values?.items, entry),
+  })
 }
 
 function onPick(item, qty = 1) {

@@ -212,7 +212,7 @@ const {
   activeTabs, toolbarTabs, mobileTabs,
   headerTitle, charName, charSub, toolbarBlocksList, commonMobileBlockNode, commonMobileScrollHide,
   load, loadSync, blocksForTab, containerWidthForTab, getInitialTabs,
-  updateValue, updateVar, updateContentSources, onPublicToggle, invalidateTabCache,
+  updateValue, updateValues, updateVar, updateContentSources, onPublicToggle, invalidateTabCache,
 } = useCharacterData(uuid, isMobile)
 
 const mobileIdentityEditorBlock = computed(() =>
@@ -248,6 +248,13 @@ Object.assign(charCtx, {
   pendingSecondsLeft,
   sourceVersionId,
   contentSources,
+  values: computed(() => data.value.values || {}),
+  updateValues: patch => {
+    updateValues(patch)
+    recordSnapshot()
+    nextTick(() => uiStore.setHeaderTitle(headerTitle.value))
+    scheduleSave()
+  },
   setContentSources: value => {
     onUpdateContentSources(value)
   },

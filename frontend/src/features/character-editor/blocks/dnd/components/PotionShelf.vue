@@ -20,6 +20,7 @@
             <RowActionItem v-if="canUse" action="use" tone="accent" @click="usePotion(p, close)">Использовать</RowActionItem>
             <RowActionItem v-if="canAdd" action="replenish" tone="success" @click="replenishPotion(p, close)">Пополнить (+1)</RowActionItem>
             <RowActionItem action="view" tone="info" @click="viewPotion(p, close)">Просмотреть</RowActionItem>
+            <RowActionItem v-if="canMove" :icon="ArrowRightLeft" @click="movePotion(p, close)">Переместить в вещи</RowActionItem>
           </template>
         </RowActionMenu>
 
@@ -36,6 +37,7 @@
 
 <script setup>
 import PotionVial from '@/features/items/components/PotionVial'
+import { ArrowRightLeft } from '@lucide/vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 
@@ -43,8 +45,9 @@ const props = defineProps({
   potions: { type: Array, default: () => [] },
   canUse: { type: Boolean, default: false },
   canAdd: { type: Boolean, default: false },
+  canMove: { type: Boolean, default: false },
 })
-const emit = defineEmits(['use', 'replenish', 'view', 'add'])
+const emit = defineEmits(['use', 'replenish', 'view', 'move', 'add'])
 
 const vials = new Map()
 const busy = new Set()
@@ -86,6 +89,11 @@ function replenishPotion(p, close) {
 function viewPotion(p, close) {
   close()
   emit('view', p.uid)
+}
+
+function movePotion(p, close) {
+  close()
+  if (props.canMove) emit('move', p.uid)
 }
 </script>
 

@@ -41,7 +41,7 @@ WHERE NOT EXISTS (
     SELECT 1
     FROM dndshare.item current
     WHERE current.user_id IS NULL
-      AND current.type_id = 2
+      AND current.type_id IN (2, 14)
       AND lower(COALESCE(current.name_en, '')) = lower(seed.name_en)
 );
 
@@ -49,7 +49,7 @@ WHERE NOT EXISTS (
 UPDATE dndshare.item
 SET name = 'Набор для фальсификации'
 WHERE user_id IS NULL
-  AND type_id = 2
+  AND type_id IN (2, 14)
   AND lower(COALESCE(name_en, '')) = 'forgery kit';
 
 WITH phb AS (
@@ -67,7 +67,7 @@ WITH phb AS (
     FROM dndshare.item item
     JOIN background_reference_items seed
       ON lower(COALESCE(item.name_en, '')) = lower(seed.name_en)
-    WHERE item.user_id IS NULL AND item.type_id = 2
+    WHERE item.user_id IS NULL AND item.type_id IN (2, 14)
 )
 INSERT INTO dndshare.item_content_source (item_id, content_source_id, page, primary_source)
 SELECT seeded.id, phb.id, 125, true
@@ -87,7 +87,7 @@ BEGIN
         FROM background_reference_items seed
         JOIN dndshare.item item
           ON item.user_id IS NULL
-         AND item.type_id = 2
+         AND item.type_id IN (2, 14)
          AND lower(COALESCE(item.name_en, '')) = lower(seed.name_en)
         JOIN LATERAL (
             SELECT source_item.icon_svg_id
@@ -219,7 +219,7 @@ BEGIN
         SELECT 1
         FROM dndshare.item item
         WHERE item.user_id IS NULL
-          AND item.type_id = grant_row.item_type_id
+          AND (item.type_id = grant_row.item_type_id OR (grant_row.item_type_id = 2 AND item.type_id = 14))
           AND lower(btrim(item.name)) = lower(grant_row.item_name)
     );
 
@@ -318,7 +318,7 @@ BEGIN
         SELECT 1
         FROM dndshare.item item
         WHERE item.user_id IS NULL
-          AND item.type_id = 2
+          AND item.type_id IN (2, 14)
           AND lower(btrim(item.name)) = lower(option_row.item_name)
     );
 
@@ -331,7 +331,7 @@ BEGIN
           SELECT 1
           FROM dndshare.item item
           WHERE item.user_id IS NULL
-            AND item.type_id = 2
+            AND item.type_id IN (2, 14)
             AND lower(btrim(item.name)) = lower(replacement.value)
       );
 
@@ -353,7 +353,7 @@ WITH resolved AS (
         SELECT item.id
         FROM dndshare.item item
         WHERE item.user_id IS NULL
-          AND item.type_id = grant_row.item_type_id
+          AND (item.type_id = grant_row.item_type_id OR (grant_row.item_type_id = 2 AND item.type_id = 14))
           AND lower(btrim(item.name)) = lower(grant_row.item_name)
         ORDER BY item.id
         LIMIT 1
@@ -403,7 +403,7 @@ WITH resolved_choices AS (
         SELECT item.id
         FROM dndshare.item item
         WHERE item.user_id IS NULL
-          AND item.type_id = 2
+          AND item.type_id IN (2, 14)
           AND lower(btrim(item.name)) = lower(option_row.item_name)
         ORDER BY (item.data ->> 'available_in_starting_shop')::boolean DESC NULLS LAST, item.id
         LIMIT 1
@@ -412,7 +412,7 @@ WITH resolved_choices AS (
         SELECT item.id
         FROM dndshare.item item
         WHERE item.user_id IS NULL
-          AND item.type_id = 2
+          AND item.type_id IN (2, 14)
           AND lower(btrim(item.name)) = lower(definition.replace_tool_item_name)
         ORDER BY item.id
         LIMIT 1
@@ -421,7 +421,7 @@ WITH resolved_choices AS (
         SELECT item.id
         FROM dndshare.item item
         WHERE item.user_id IS NULL
-          AND item.type_id = 2
+          AND item.type_id IN (2, 14)
           AND lower(btrim(item.name)) = lower(definition.replace_equipment_item_name)
         ORDER BY item.id
         LIMIT 1
@@ -483,6 +483,6 @@ WHERE item_type.id = 11;
 UPDATE dndshare.item_type
 SET count_items = (
     SELECT COUNT(*) FROM dndshare.item item
-    WHERE item.type_id = 2 AND item.user_id IS NULL
+    WHERE item.type_id = dndshare.item_type.id AND item.user_id IS NULL
 )
-WHERE id = 2;
+WHERE id IN (2, 14);

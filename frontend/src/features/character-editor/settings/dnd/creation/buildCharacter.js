@@ -245,29 +245,35 @@ export function buildCharacterData(input) {
   // possessions. Only purchases enter inventory; unspent change enters money.
   const startingEquipment = mergeEquipment(equipment, buyStartingEquipment ? [] : backgroundStart.items)
   const isCatalogueWeapon = (entry) => Number(entry.typeId) === 1 && entry.item_id != null
+  const isCataloguePotion = (entry) => Number(entry.typeId) === 10 && entry.item_id != null
+  const isCatalogueTool = (entry) => Number(entry.typeId) === 14 && entry.item_id != null
   const weapons = startingEquipment.filter(isCatalogueWeapon)
-  const equippedArmor = startingEquipment.filter((entry) => !isCatalogueWeapon(entry) && isArmorEquipment(entry))
-  const inventory = startingEquipment.filter((entry) => !isCatalogueWeapon(entry) && !isArmorEquipment(entry))
+  const potions = startingEquipment.filter(isCataloguePotion)
+  const tools = startingEquipment.filter(isCatalogueTool)
+  const equippedArmor = startingEquipment.filter((entry) => !isCatalogueWeapon(entry) && !isCataloguePotion(entry) && !isCatalogueTool(entry) && isArmorEquipment(entry))
+  const inventory = startingEquipment.filter((entry) => !isCatalogueWeapon(entry) && !isCataloguePotion(entry) && !isCatalogueTool(entry) && !isArmorEquipment(entry))
+  const ownedEntry = (entry, index, prefix) => ({
+    uid: `${prefix}_${index}`,
+    item_id: entry.item_id ?? null,
+    count: Math.max(1, Number(entry.count) || 1),
+    params: { ...(entry.params || {}) },
+    override: entry.item_id == null ? { name: entry.name || 'Предмет' } : null,
+  })
   if (weapons.length) {
     values.weapon = weapons.flatMap((entry) => Array.from(
       { length: Math.max(1, Number(entry.count) || 1) },
       () => ({ ...defaultWeaponEntry(), item_id: entry.item_id, params: { ...defaultWeaponEntry().params, ...(entry.params || {}) } }),
     ))
   }
+  if (potions.length) values.potions = potions.map((entry, index) => ownedEntry(entry, index, 'potion'))
+  if (tools.length) values.tools = tools.map((entry, index) => ownedEntry(entry, index, 'tool'))
   if (inventory.length || equippedArmor.length) {
-    const inventoryEntry = (e, i, prefix) => ({
-      uid: `${prefix}_${i}`,
-      item_id: e.item_id ?? null,
-      count: Math.max(1, Number(e.count) || 1),
-      params: { ...(e.params || {}) },
-      override: e.item_id == null ? { name: e.name || 'Предмет' } : null,
-    })
     values.items = {
-      equipped: equippedArmor.map((entry, i) => inventoryEntry(entry, i, 'worn')),
+      equipped: equippedArmor.map((entry, i) => ownedEntry(entry, i, 'worn')),
       sections: inventory.length ? [{
         id: 'bag',
         name: 'Снаряжение',
-        items: inventory.map((entry, i) => inventoryEntry(entry, i, 'eq')),
+        items: inventory.map((entry, i) => ownedEntry(entry, i, 'eq')),
       }] : [],
     }
   }

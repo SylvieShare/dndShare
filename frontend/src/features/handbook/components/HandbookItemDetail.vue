@@ -163,6 +163,7 @@ const CUSTOM_RENDERERS = {
   10: PotionDetailContent,
   12: ArmorDetailContent,
   13: TransportDetailContent,
+  14: ItemDetailContent,
 }
 
 const props = defineProps({
@@ -181,9 +182,9 @@ const isWeapon = computed(() => props.type?.id === 1)
 const isArmor = computed(() => props.type?.id === 12)
 const isSpell = computed(() => props.type?.id === 5)
 const isTransport = computed(() => props.type?.id === 13)
-const isGear = computed(() => props.type?.id === 2)
+const isGear = computed(() => props.type?.id === 2 || props.type?.id === 14)
 const customRendererProps = computed(() => {
-  if (props.type?.id === 2) return { economyInHeader: true }
+  if (props.type?.id === 2 || props.type?.id === 14) return { economyInHeader: true }
   if (props.type?.id === 5) return { summaryInHeader: true }
   return {}
 })

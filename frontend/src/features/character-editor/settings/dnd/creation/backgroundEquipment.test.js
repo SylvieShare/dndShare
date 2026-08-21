@@ -15,10 +15,10 @@ describe('background starting equipment', () => {
   const catalogue = [
     { id: 35, name: 'Дубинка', typeId: 1, data: { attacks: [{ damage: '1к4' }] } },
     { id: 417, name: 'Кошель', typeId: 2, data: { equipment_category: 'gear' }, svg: '<svg />' },
-    { id: 4473, name: 'Инструменты навигатора', typeId: 2, data: { equipment_category: 'tool' } },
-    { id: 500, name: 'Игровой набор (по выбору)', typeId: 2, data: { equipment_category: 'tool' } },
-    { id: 501, name: 'Карты', typeId: 2, data: { equipment_category: 'tool' } },
-    { id: 502, name: 'Кости', typeId: 2, data: { equipment_category: 'tool' } },
+    { id: 4473, name: 'Инструменты навигатора', typeId: 14, data: { category: 'kit' } },
+    { id: 500, name: 'Игровой набор (по выбору)', typeId: 14, data: { category: 'gaming' } },
+    { id: 501, name: 'Карты', typeId: 14, data: { category: 'gaming' } },
+    { id: 502, name: 'Кости', typeId: 14, data: { category: 'gaming' } },
   ]
 
   it('resolves background possessions and wallet from canonical handbook ids', () => {

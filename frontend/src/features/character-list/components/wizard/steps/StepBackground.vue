@@ -52,7 +52,10 @@
           </div>
           <div class="background-choice-list">
             <div v-for="choice in activeBackgroundItemChoices" :key="choice.key" class="background-choice">
-              <span class="background-choice-label">{{ choice.label }}</span>
+              <span class="background-choice-label">
+                {{ choice.label }}
+                <span class="background-choice-effect">{{ choiceEffectLabel(choice) }}</span>
+              </span>
               <EquipmentItemSelect
                 :items="choice.options"
                 :model-value="state.backgroundItemChoices?.[choice.key] || ''"
@@ -64,11 +67,11 @@
           </div>
         </div>
 
-        <div v-if="backgroundToolItems.length" class="grant-group">
-          <span class="fk">Инструменты</span>
+        <div v-if="displayedBackgroundToolItems.length" class="grant-group">
+          <span class="fk">Владения инструментами</span>
           <div class="grant-tiles">
             <ItemReferenceRow
-              v-for="item in backgroundToolItems"
+              v-for="item in displayedBackgroundToolItems"
               :key="`${item.item_id}:${JSON.stringify(item.params)}`"
               :item="{ ...item, id: item.item_id }"
               :params="item.params"
@@ -78,7 +81,7 @@
           </div>
         </div>
 
-        <div v-if="!state.buyStartingEquipment && backgroundStart.items.length" class="grant-group">
+        <div v-if="!state.buyStartingEquipment && displayedBackgroundEquipment.length" class="grant-group">
           <span class="fk">Снаряжение</span>
           <div v-if="backgroundWeaponItems.length" class="grant-subgroup">
             <span class="grant-subtitle">Оружие</span>
@@ -186,13 +189,36 @@ const backgroundCoins = computed(() => {
       }
     })
 })
-const backgroundWeaponItems = computed(() => backgroundStart.value.items.filter((entry) => Number(entry.typeId) === 1))
-const backgroundOtherItems = computed(() => backgroundStart.value.items.filter((entry) => Number(entry.typeId) !== 1))
+function selectedChoiceIds(effectKey) {
+  return new Set(activeBackgroundItemChoices.value.flatMap((choice) => {
+    if (choice?.[effectKey] !== true) return []
+    const selected = choice.options.find(item => String(item.id) === String(state.backgroundItemChoices?.[choice.key]))
+    return selected ? [String(selected.id)] : []
+  }))
+}
+const displayedBackgroundToolItems = computed(() => {
+  const selected = selectedChoiceIds('grants_tool_item')
+  return backgroundToolItems.value.filter(entry => !selected.has(String(entry.item_id)))
+})
+const displayedBackgroundEquipment = computed(() => {
+  const selected = selectedChoiceIds('grants_equipment_item')
+  return backgroundStart.value.items.filter(entry => !selected.has(String(entry.item_id)))
+})
+const backgroundWeaponItems = computed(() => displayedBackgroundEquipment.value.filter((entry) => Number(entry.typeId) === 1))
+const backgroundOtherItems = computed(() => displayedBackgroundEquipment.value.filter((entry) => Number(entry.typeId) !== 1))
 const selectedChoiceCount = computed(() => activeBackgroundItemChoices.value.filter((choice) => (
   choice.options.some((item) => String(item.id) === String(state.backgroundItemChoices?.[choice.key]))
 )).length)
 const visibleBackgrounds = computed(() => state.background ? [state.background] : bgPool.value)
 const viewItem = ref(null)
+
+function choiceEffectLabel(choice) {
+  const proficiency = choice.grants_tool_proficiency === true
+  const physicalItem = choice.grants_equipment_item === true
+  if (proficiency && physicalItem) return 'Владение + предмет'
+  if (proficiency) return 'Владение'
+  return 'Предмет'
+}
 
 suggestStore.ensure(17).catch(() => {}).finally(() => { currencyLoading.value = false })
 
@@ -230,6 +256,7 @@ function selectBackground(background) {
 .background-choice-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 .background-choice { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
 .background-choice-label { color: var(--text-2); font-size: 11px; font-weight: 650; }
+.background-choice-effect { display: inline-flex; margin-left: 5px; padding: 2px 6px; border-radius: var(--r-pill); background: color-mix(in srgb, var(--accent) 13%, transparent); color: var(--accent-soft); font-size: 9px; font-weight: 750; letter-spacing: .02em; }
 .grant-subgroup { display: flex; flex-direction: column; gap: 5px; }
 .grant-subgroup + .grant-subgroup { margin-top: 3px; }
 .grant-subtitle { color: var(--text-muted); font-size: 10px; font-weight: 650; line-height: 1.2; }
