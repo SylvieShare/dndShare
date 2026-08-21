@@ -34,6 +34,26 @@ func TestBackgroundEquipmentUsesCanonicalItemReferences(t *testing.T) {
 	}
 }
 
+func TestBackgroundEquipmentDefinesConcreteHandbookChoices(t *testing.T) {
+	for _, fragment := range []string{
+		"CREATE TEMP TABLE background_choice_option_sets",
+		"CREATE TEMP TABLE background_choice_definitions",
+		"('Преступник', 1, 'gaming_set'",
+		"('Артист', 1, 'musical_instrument'",
+		"('Народный герой', 1, 'artisan_tools'",
+		"('Солдат', 2, 'gaming_gear'",
+		"('Шарлатан', 1, 'charlatan_con'",
+		"'replace_tool_prof_id'",
+		"'replace_tool_item_id'",
+		"'replace_equipment_item_id'",
+		"'{item_choices}'",
+	} {
+		if !strings.Contains(schemaBackgroundEquipmentSQL, fragment) {
+			t.Fatalf("background equipment schema must contain %q", fragment)
+		}
+	}
+}
+
 func TestTransportCatalogUsesStructuredMechanics(t *testing.T) {
 	for _, fragment := range []string{
 		`"key":"movement"`,

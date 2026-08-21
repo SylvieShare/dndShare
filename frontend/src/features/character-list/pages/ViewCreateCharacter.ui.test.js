@@ -32,4 +32,9 @@ describe('character creation workspace width', () => {
     expect(source).toContain('spell1Chosen.value !== spell1Limit.value')
     expect(source).toContain('`Заклинания 1 круга: ${spell1Chosen.value} из ${spell1Limit.value}`')
   })
+
+  it('requires all choices owned by the selected background', () => {
+    expect(source).toContain('!backgroundItemChoicesComplete.value')
+    expect(source).toContain("reason: 'Заверши выборы предыстории'")
+  })
 })

@@ -112,6 +112,7 @@ const {
   asiChoiceComplete, raceVariantsComplete,
   raceSkillsComplete, raceLangsComplete, featComplete,
   raceChoicesComplete, classChoicesComplete, classEquipmentComplete, bgLangsComplete,
+  backgroundItemChoicesComplete,
 } = wz
 
 const confirmOpen = ref(false)
@@ -122,7 +123,8 @@ function doReset() { resetOpen.value = false; reset() }
 const isComplete = computed(() =>
   state.version === '2014' && !!state.race && !!state.charClass && classEquipmentComplete.value
   && (!state.buyStartingEquipment || !!state.startingWealthRoll)
-  && !!state.background && !!state.name.trim() && scoresComplete.value)
+  && !!state.background && backgroundItemChoicesComplete.value
+  && !!state.name.trim() && scoresComplete.value)
 
 const STEP_COMPONENTS = {
   version: StepVersion, race: StepRace, class: StepClass, background: StepBackground,
@@ -204,6 +206,7 @@ function validateStep(key) {
       return { ok: true }
     case 'background':
       if (!state.background) return { ok: false, reason: 'Выбери предысторию' }
+      if (!backgroundItemChoicesComplete.value) return { ok: false, reason: 'Заверши выборы предыстории' }
       if (!bgLangsComplete.value) return { ok: false, reason: 'Выбери языки предыстории' }
       return { ok: true }
     case 'stats':

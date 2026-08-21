@@ -21,6 +21,7 @@ function inventoryEntry(item, count = 1) {
   return {
     item_id: item.id,
     name: item.name,
+    nameEn: item.nameEn || '',
     count: Math.max(1, Math.floor(Number(count) || 1)),
     params: {},
     typeId: item.typeId,
@@ -30,6 +31,73 @@ function inventoryEntry(item, count = 1) {
     svg: item.svg || null,
     coverImageUrl: item.coverImageUrl || null,
   }
+}
+
+function choiceRows(background) {
+  const rows = equipmentData(background).item_choices
+  return Array.isArray(rows) ? rows : []
+}
+
+export function backgroundChoiceProfile(background, catalogue = []) {
+  const byId = catalogueMap(catalogue)
+  const choices = choiceRows(background).map((definition) => ({
+    ...definition,
+    key: String(definition?.key || ''),
+    label: String(definition?.label || 'Выбор предыстории'),
+    options: (Array.isArray(definition?.option_item_ids) ? definition.option_item_ids : [])
+      .map((id) => byId.get(String(id)))
+      .filter(Boolean),
+  })).filter((definition) => definition.key)
+  return choices.length ? { choices } : null
+}
+
+function activeChoiceDefinitions(profile, includeEquipment = true) {
+  return (profile?.choices || []).filter((definition) => (
+    definition.grants_tool_proficiency === true
+    || (includeEquipment && definition.grants_equipment_item === true)
+  ))
+}
+
+function selectedChoiceItem(definition, selections = {}) {
+  const saved = selections?.[definition.key]
+  return definition.options.find((item) => String(item.id) === String(saved)) || null
+}
+
+export function backgroundChoicesComplete(profile, selections = {}, { includeEquipment = true } = {}) {
+  return activeChoiceDefinitions(profile, includeEquipment)
+    .every((definition) => !!selectedChoiceItem(definition, selections))
+}
+
+export function activeBackgroundChoices(profile, includeEquipment = true) {
+  return activeChoiceDefinitions(profile, includeEquipment)
+}
+
+function applySelectedChoices(rows, profile, selections, grantKey, replacementKey) {
+  const next = [...rows]
+  for (const definition of (profile?.choices || [])) {
+    if (definition?.[grantKey] !== true) continue
+    const replacementId = definition?.[replacementKey]
+    const selected = selectedChoiceItem(definition, selections)
+    if (replacementId != null) {
+      const index = next.findIndex((entry) => String(entry.item_id) === String(replacementId))
+      if (index >= 0) {
+        next.splice(index, 1, ...(selected ? [inventoryEntry(selected)] : []))
+        continue
+      }
+    }
+    if (selected) next.push(inventoryEntry(selected))
+  }
+  return next
+}
+
+export function backgroundToolProficiencySelections(profile, selections = {}) {
+  return (profile?.choices || []).flatMap((definition) => {
+    if (definition.grants_tool_proficiency !== true) return []
+    const selected = selectedChoiceItem(definition, selections)
+    if (!selected) return []
+    const replaces = Number(definition.replace_tool_prof_id)
+    return [{ ...(Number.isInteger(replaces) ? { replaces } : {}), name: selected.name }]
+  })
 }
 
 function resolveRows(background, key, catalogue) {
@@ -43,18 +111,41 @@ function resolveRows(background, key, catalogue) {
 }
 
 export function backgroundReferenceIds(background) {
-  return [...referenceRows(background, 'tool_items'), ...referenceRows(background, 'equipment_items')]
-    .map((row) => Number(row?.item_id))
-    .filter((id) => Number.isInteger(id) && id > 0)
+  const choiceReferences = choiceRows(background).flatMap((definition) => [
+    ...(Array.isArray(definition?.option_item_ids) ? definition.option_item_ids : []),
+    definition?.replace_tool_item_id,
+    definition?.replace_equipment_item_id,
+  ])
+  return [...new Set([
+    ...referenceRows(background, 'tool_items').map((row) => row?.item_id),
+    ...referenceRows(background, 'equipment_items').map((row) => row?.item_id),
+    ...choiceReferences,
+  ]
+    .map(Number)
+    .filter((id) => Number.isInteger(id) && id > 0))]
 }
 
-export function backgroundToolItems(background, catalogue = []) {
-  return resolveRows(background, 'tool_items', catalogue)
+export function backgroundToolItems(background, catalogue = [], selections = {}) {
+  const profile = backgroundChoiceProfile(background, catalogue)
+  return applySelectedChoices(
+    resolveRows(background, 'tool_items', catalogue),
+    profile,
+    selections,
+    'grants_tool_item',
+    'replace_tool_item_id',
+  )
 }
 
-export function backgroundStartingEquipment(background, catalogue = []) {
+export function backgroundStartingEquipment(background, catalogue = [], selections = {}) {
   const data = equipmentData(background)
-  const items = resolveRows(background, 'equipment_items', catalogue)
+  const profile = backgroundChoiceProfile(background, catalogue)
+  const items = applySelectedChoices(
+    resolveRows(background, 'equipment_items', catalogue),
+    profile,
+    selections,
+    'grants_equipment_item',
+    'replace_equipment_item_id',
+  )
   const coins = {}
 
   for (const row of (Array.isArray(data.starting_coins) ? data.starting_coins : [])) {

@@ -85,6 +85,18 @@ describe('buildCharacterData spell preparation', () => {
 })
 
 describe('buildCharacterData starting equipment', () => {
+  it('stores the concrete background tool proficiency instead of its generic category', () => {
+    const result = buildCharacterData({
+      race: selection(1, 'Человек'),
+      charClass: selection(2, 'Плут'),
+      background: selection(3, 'Преступник', { tool_prof: [22] }),
+      backgroundToolProficiencies: [{ replaces: 22, name: 'Кости' }],
+      suggestValue: (typeId, id) => (typeId === 5 && id === 22 ? 'Игровой набор' : ''),
+    })
+
+    expect(result.data.values.proficiencies['Инструменты']).toEqual(['Кости'])
+  })
+
   it('puts handbook weapons into the dedicated weapon block instead of inventory', () => {
     const result = buildCharacterData({
       race: selection(1, 'Человек'),

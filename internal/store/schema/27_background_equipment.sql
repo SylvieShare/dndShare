@@ -7,6 +7,7 @@ CREATE TEMP TABLE background_reference_items ON COMMIT DROP AS
 SELECT * FROM (VALUES
     ('Священный символ (по выбору)', 'Background Holy Symbol Choice', 'gear', 'Священный символ персонажа: амулет, эмблема или реликварий на выбор.', 'Эмблема'),
     ('Молитвенник', 'Prayer Book', 'gear', 'Книга молитв и обрядов, связанная с верой персонажа.', 'Книга'),
+    ('Молитвенный барабан', 'Prayer Wheel', 'gear', 'Молитвенный барабан с текстами и символами веры персонажа.', 'Эмблема'),
     ('Музыкальный инструмент (по выбору)', 'Background Musical Instrument Choice', 'tool', 'Один музыкальный инструмент из справочника по выбору персонажа.', 'Набор для грима'),
     ('Подарок поклонника', 'Favor of an Admirer', 'gear', 'Памятный подарок от поклонника выступлений персонажа.', 'Тотем'),
     ('Карта родного города', 'Map of Home City', 'gear', 'Карта улиц и приметных мест родного города персонажа.', 'Пергамент (1 лист)'),
@@ -21,7 +22,11 @@ SELECT * FROM (VALUES
     ('Свиток с записями размышлений', 'Scroll Case of Notes', 'gear', 'Свиток с записями исследований или духовных размышлений персонажа.', 'Пергамент (1 лист)'),
     ('Знак различия', 'Insignia of Rank', 'gear', 'Знак воинского звания или принадлежности к подразделению.', 'Эмблема'),
     ('Трофей с павшего врага', 'Trophy from a Fallen Enemy', 'gear', 'Памятный трофей, взятый у побеждённого противника.', 'Тотем'),
-    ('Инструменты афериста (по выбору)', 'Background Con Tools Choice', 'tool', 'Набор для мошеннической схемы по выбору: десять закупоренных бутылок, утяжелённые кости, краплёные карты или кольцо-печатка вымышленного герцога.', 'Набор для грима')
+    ('Инструменты афериста (по выбору)', 'Background Con Tools Choice', 'tool', 'Набор для мошеннической схемы по выбору: десять закупоренных бутылок, утяжелённые кости, краплёные карты или кольцо-печатка вымышленного герцога.', 'Набор для грима'),
+    ('Запечатанные бутыли с подкрашенной жидкостью', 'Charlatan Colored Bottles', 'gear', 'Десять запечатанных бутылей с подкрашенной жидкостью для мошеннической схемы.', 'Бутылка стеклянная'),
+    ('Шулерские кости', 'Charlatan Loaded Dice', 'gear', 'Утяжелённые игральные кости для мошеннической схемы.', 'Кости'),
+    ('Краплёные карты', 'Charlatan Marked Cards', 'gear', 'Колода краплёных карт для мошеннической схемы.', 'Карты'),
+    ('Кольцо-печатка вымышленного герцога', 'Charlatan Fake Signet Ring', 'gear', 'Кольцо-печатка вымышленного герцога для мошеннической схемы.', 'Печатка')
 ) AS seed(name, name_en, equipment_category, description, icon_source_name);
 
 INSERT INTO dndshare.item (name, name_en, type_id, data)
@@ -233,6 +238,112 @@ SELECT * FROM (VALUES
     ('Шарлатан', 3, 15)
 ) AS coins(background_name, currency_id, amount);
 
+-- Every concrete PHB choice is a handbook item id. The same definition drives
+-- the picker, replaces the old placeholder reference and, when requested,
+-- replaces a generic tool proficiency with the selected concrete tool name.
+CREATE TEMP TABLE background_choice_option_sets ON COMMIT DROP AS
+SELECT * FROM (VALUES
+    ('holy_symbol', 1, 'Амулет'),
+    ('holy_symbol', 2, 'Эмблема'),
+    ('holy_symbol', 3, 'Реликварий'),
+    ('devotional_text', 1, 'Молитвенник'),
+    ('devotional_text', 2, 'Молитвенный барабан'),
+    ('charlatan_con', 1, 'Запечатанные бутыли с подкрашенной жидкостью'),
+    ('charlatan_con', 2, 'Шулерские кости'),
+    ('charlatan_con', 3, 'Краплёные карты'),
+    ('charlatan_con', 4, 'Кольцо-печатка вымышленного герцога'),
+    ('gaming_set', 1, 'Драконьи шахматы'),
+    ('gaming_set', 2, 'Карты'),
+    ('gaming_set', 3, 'Кости'),
+    ('gaming_set', 4, 'Ставка трёх драконов'),
+    ('gaming_gear', 1, 'Кости'),
+    ('gaming_gear', 2, 'Карты'),
+    ('musical_instrument', 1, 'Барабаны'),
+    ('musical_instrument', 2, 'Виола'),
+    ('musical_instrument', 3, 'Волынка'),
+    ('musical_instrument', 4, 'Лира'),
+    ('musical_instrument', 5, 'Лютня'),
+    ('musical_instrument', 6, 'Рожок'),
+    ('musical_instrument', 7, 'Свирель'),
+    ('musical_instrument', 8, 'Флейта'),
+    ('musical_instrument', 9, 'Цимбалы'),
+    ('musical_instrument', 10, 'Шалмей'),
+    ('artisan_tools', 1, 'Инструменты алхимика'),
+    ('artisan_tools', 2, 'Инструменты гончара'),
+    ('artisan_tools', 3, 'Инструменты жестянщика'),
+    ('artisan_tools', 4, 'Инструменты каллиграфа'),
+    ('artisan_tools', 5, 'Инструменты каменщика'),
+    ('artisan_tools', 6, 'Инструменты картографа'),
+    ('artisan_tools', 7, 'Инструменты кожевника'),
+    ('artisan_tools', 8, 'Инструменты кузнеца'),
+    ('artisan_tools', 9, 'Инструменты пивовара'),
+    ('artisan_tools', 10, 'Инструменты плотника'),
+    ('artisan_tools', 11, 'Инструменты повара'),
+    ('artisan_tools', 12, 'Инструменты резчика по дереву'),
+    ('artisan_tools', 13, 'Инструменты сапожника'),
+    ('artisan_tools', 14, 'Инструменты стеклодува'),
+    ('artisan_tools', 15, 'Инструменты ткача'),
+    ('artisan_tools', 16, 'Инструменты художника'),
+    ('artisan_tools', 17, 'Инструменты ювелира')
+) AS option_row(option_set, position, item_name);
+
+CREATE TEMP TABLE background_choice_definitions ON COMMIT DROP AS
+SELECT * FROM (VALUES
+    ('Аколит', 1, 'holy_symbol', 'Священный символ', 'holy_symbol', false, false, true, NULL::int8, NULL::varchar, 'Священный символ (по выбору)'),
+    ('Аколит', 2, 'devotional_text', 'Молитвенник или молитвенный барабан', 'devotional_text', false, false, true, NULL, NULL, 'Молитвенник'),
+    ('Артист', 1, 'musical_instrument', 'Музыкальный инструмент', 'musical_instrument', true, true, true, 26, 'Музыкальный инструмент (по выбору)', 'Музыкальный инструмент (по выбору)'),
+    ('Гильдейский ремесленник', 1, 'artisan_tools', 'Ремесленные инструменты', 'artisan_tools', true, true, true, 25, 'Инструменты ремесленника (по выбору)', 'Инструменты ремесленника (по выбору)'),
+    ('Дворянин', 1, 'gaming_set', 'Игровой набор', 'gaming_set', true, true, false, 22, 'Игровой набор (по выбору)', NULL),
+    ('Народный герой', 1, 'artisan_tools', 'Ремесленные инструменты', 'artisan_tools', true, true, true, 25, 'Инструменты ремесленника (по выбору)', 'Инструменты ремесленника (по выбору)'),
+    ('Преступник', 1, 'gaming_set', 'Игровой набор', 'gaming_set', true, true, false, 22, 'Игровой набор (по выбору)', NULL),
+    ('Солдат', 1, 'gaming_set', 'Игровой набор', 'gaming_set', true, true, false, 22, 'Игровой набор (по выбору)', NULL),
+    ('Солдат', 2, 'gaming_gear', 'Игровые кости или карты', 'gaming_gear', false, false, true, NULL, NULL, 'Кости'),
+    ('Чужеземец', 1, 'musical_instrument', 'Музыкальный инструмент', 'musical_instrument', true, true, false, 26, 'Музыкальный инструмент (по выбору)', NULL),
+    ('Шарлатан', 1, 'charlatan_con', 'Приспособление для жульничества', 'charlatan_con', false, false, true, NULL, NULL, 'Инструменты афериста (по выбору)')
+) AS choice_row(
+    background_name, position, choice_key, choice_label, option_set,
+    grants_tool_proficiency, grants_tool_item, grants_equipment_item,
+    replace_tool_prof_id, replace_tool_item_name, replace_equipment_item_name
+);
+
+DO $$
+DECLARE
+    missing_options text;
+    missing_replacements text;
+BEGIN
+    SELECT string_agg(option_row.option_set || ': ' || option_row.item_name, ', ' ORDER BY option_row.option_set, option_row.position)
+    INTO missing_options
+    FROM background_choice_option_sets option_row
+    WHERE NOT EXISTS (
+        SELECT 1
+        FROM dndshare.item item
+        WHERE item.user_id IS NULL
+          AND item.type_id = 2
+          AND lower(btrim(item.name)) = lower(option_row.item_name)
+    );
+
+    SELECT string_agg(definition.background_name || ': ' || replacement.value, ', ' ORDER BY definition.background_name, replacement.value)
+    INTO missing_replacements
+    FROM background_choice_definitions definition
+    CROSS JOIN LATERAL unnest(ARRAY[definition.replace_tool_item_name, definition.replace_equipment_item_name]) AS replacement(value)
+    WHERE replacement.value IS NOT NULL
+      AND NOT EXISTS (
+          SELECT 1
+          FROM dndshare.item item
+          WHERE item.user_id IS NULL
+            AND item.type_id = 2
+            AND lower(btrim(item.name)) = lower(replacement.value)
+      );
+
+    IF missing_options IS NOT NULL THEN
+        RAISE EXCEPTION 'background choice options are missing: %', missing_options;
+    END IF;
+    IF missing_replacements IS NOT NULL THEN
+        RAISE EXCEPTION 'background choice replacements are missing: %', missing_replacements;
+    END IF;
+END
+$$;
+
 WITH resolved AS (
     SELECT grant_row.background_name, grant_row.section, grant_row.position, grant_row.count, linked.id AS item_id,
            CASE WHEN grant_row.item_name = 'Верёвка шёлковая'
@@ -274,6 +385,80 @@ WHERE background.user_id IS NULL
   AND background.type_id = 11
   AND lower(btrim(background.name)) = lower(grants.background_name);
 
+WITH resolved_choices AS (
+    SELECT definition.background_name,
+           definition.position,
+           definition.choice_key,
+           definition.choice_label,
+           definition.grants_tool_proficiency,
+           definition.grants_tool_item,
+           definition.grants_equipment_item,
+           definition.replace_tool_prof_id,
+           tool_placeholder.id AS replace_tool_item_id,
+           equipment_placeholder.id AS replace_equipment_item_id,
+           jsonb_agg(option_item.id ORDER BY option_row.position) AS option_item_ids
+    FROM background_choice_definitions definition
+    JOIN background_choice_option_sets option_row ON option_row.option_set = definition.option_set
+    JOIN LATERAL (
+        SELECT item.id
+        FROM dndshare.item item
+        WHERE item.user_id IS NULL
+          AND item.type_id = 2
+          AND lower(btrim(item.name)) = lower(option_row.item_name)
+        ORDER BY (item.data ->> 'available_in_starting_shop')::boolean DESC NULLS LAST, item.id
+        LIMIT 1
+    ) option_item ON true
+    LEFT JOIN LATERAL (
+        SELECT item.id
+        FROM dndshare.item item
+        WHERE item.user_id IS NULL
+          AND item.type_id = 2
+          AND lower(btrim(item.name)) = lower(definition.replace_tool_item_name)
+        ORDER BY item.id
+        LIMIT 1
+    ) tool_placeholder ON true
+    LEFT JOIN LATERAL (
+        SELECT item.id
+        FROM dndshare.item item
+        WHERE item.user_id IS NULL
+          AND item.type_id = 2
+          AND lower(btrim(item.name)) = lower(definition.replace_equipment_item_name)
+        ORDER BY item.id
+        LIMIT 1
+    ) equipment_placeholder ON true
+    GROUP BY definition.background_name, definition.position, definition.choice_key, definition.choice_label,
+             definition.grants_tool_proficiency, definition.grants_tool_item, definition.grants_equipment_item,
+             definition.replace_tool_prof_id, tool_placeholder.id, equipment_placeholder.id
+), choice_payload AS (
+    SELECT background_name,
+           jsonb_agg(jsonb_strip_nulls(jsonb_build_object(
+               'key', choice_key,
+               'label', choice_label,
+               'option_item_ids', option_item_ids,
+               'grants_tool_proficiency', grants_tool_proficiency,
+               'grants_tool_item', grants_tool_item,
+               'grants_equipment_item', grants_equipment_item,
+               'replace_tool_prof_id', replace_tool_prof_id,
+               'replace_tool_item_id', replace_tool_item_id,
+               'replace_equipment_item_id', replace_equipment_item_id
+           )) ORDER BY position) AS item_choices
+    FROM resolved_choices
+    GROUP BY background_name
+)
+UPDATE dndshare.item background
+SET data = jsonb_set(background.data, '{item_choices}', choice_payload.item_choices, true)
+FROM choice_payload
+WHERE background.user_id IS NULL
+  AND background.type_id = 11
+  AND lower(btrim(background.name)) = lower(choice_payload.background_name);
+
+UPDATE dndshare.item background
+SET data = jsonb_set(background.data, '{item_choices}', '[]'::jsonb, true)
+WHERE background.user_id IS NULL
+  AND background.type_id = 11
+  AND background.name IN (SELECT background_name FROM background_starting_coins)
+  AND NOT (background.data ? 'item_choices');
+
 -- Backgrounds without a tool proficiency still receive an explicit empty list.
 UPDATE dndshare.item background
 SET data = jsonb_set(background.data, '{tool_items}', '[]'::jsonb, true)
@@ -286,11 +471,12 @@ UPDATE dndshare.item_type item_type
 SET fields = (
     SELECT COALESCE(jsonb_agg(field ORDER BY ordinal), '[]'::jsonb)
     FROM jsonb_array_elements(COALESCE(item_type.fields, '[]'::jsonb)) WITH ORDINALITY AS existing(field, ordinal)
-    WHERE field ->> 'key' NOT IN ('equipment', 'tool_items', 'equipment_items', 'starting_coins')
+    WHERE field ->> 'key' NOT IN ('equipment', 'tool_items', 'equipment_items', 'starting_coins', 'item_choices')
 ) || '[
   {"name":"Инструменты справочника","key":"tool_items","type":"object_array","fields":[{"name":"Предмет справочника (ID)","key":"item_id","type":"int"},{"name":"Количество","key":"count","type":"int","default":1},{"name":"Параметры экземпляра","key":"params","type":"object","fields":[{"name":"Длина, фт.","key":"length_ft","type":"int"},{"name":"Магический бонус","key":"magic_bonus","type":"int"}]}]},
   {"name":"Стартовое снаряжение справочника","key":"equipment_items","type":"object_array","fields":[{"name":"Предмет справочника (ID)","key":"item_id","type":"int"},{"name":"Количество","key":"count","type":"int","default":1},{"name":"Параметры экземпляра","key":"params","type":"object","fields":[{"name":"Длина, фт.","key":"length_ft","type":"int"},{"name":"Магический бонус","key":"magic_bonus","type":"int"}]}]},
-  {"name":"Стартовые монеты","key":"starting_coins","type":"object_array","fields":[{"name":"Валюта","key":"currency_id","type":"suggest","suggest_id":17},{"name":"Количество","key":"amount","type":"int"}]}
+  {"name":"Стартовые монеты","key":"starting_coins","type":"object_array","fields":[{"name":"Валюта","key":"currency_id","type":"suggest","suggest_id":17},{"name":"Количество","key":"amount","type":"int"}]},
+  {"name":"Выборы предметов предыстории","key":"item_choices","type":"object_array","fields":[{"name":"Ключ","key":"key","type":"text"},{"name":"Название","key":"label","type":"text"},{"name":"ID вариантов","key":"option_item_ids","type":"text"},{"name":"Даёт владение инструментом","key":"grants_tool_proficiency","type":"boolean"},{"name":"Показывать среди инструментов","key":"grants_tool_item","type":"boolean"},{"name":"Выдавать в снаряжение","key":"grants_equipment_item","type":"boolean"},{"name":"Заменяемое владение (ID)","key":"replace_tool_prof_id","type":"int"},{"name":"Заменяемый инструмент (ID)","key":"replace_tool_item_id","type":"int"},{"name":"Заменяемое снаряжение (ID)","key":"replace_equipment_item_id","type":"int"}]}
 ]'::jsonb
 WHERE item_type.id = 11;
 

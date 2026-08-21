@@ -8,6 +8,7 @@ const PERSISTED_KEYS = [
   'subclass', 'raceVariant', 'statMethod', 'scores', 'rollPool', 'rollSeries', 'asiChoice',
   'raceSkillIds', 'raceLangIds', 'featIds', 'featSelections', 'skillIds',
   'spellIds', 'choices', 'background', 'bgLangIds', 'classEquipmentChoices',
+  'backgroundItemChoices',
   'buyStartingEquipment', 'startingWealthRoll', 'startingShopCart', 'equipment', 'persona',
 ]
 
@@ -36,6 +37,7 @@ export function createDndWizardState() {
     choices: {},
     background: null,
     bgLangIds: [],
+    backgroundItemChoices: {},
     classEquipmentChoices: {},
     buyStartingEquipment: false,
     startingWealthRoll: null,

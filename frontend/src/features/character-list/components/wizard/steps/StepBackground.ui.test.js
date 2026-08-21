@@ -43,6 +43,14 @@ describe('background step presentation', () => {
     expect(source).toContain('@media (max-width: 640px)')
   })
 
+  it('renders required item choices from background data with the shared equipment picker', () => {
+    expect(source).toContain('<EquipmentItemSelect')
+    expect(source).toContain('v-for="choice in activeBackgroundItemChoices"')
+    expect(source).toContain('state.backgroundItemChoices?.[choice.key]')
+    expect(source).toContain('setBackgroundItemChoice(choice.key, $event)')
+    expect(source).toContain('backgroundItemChoicesComplete')
+  })
+
   it('renders starting money as a prominent wallet using currency suggest icons', () => {
     expect(source).toContain('<BaseTile')
     expect(source).toContain('<BlockMoneyView')

@@ -78,7 +78,10 @@ function mergeIds(target, ids) {
  * one object. Each argument is a handbook item (`{ data }`) or null. Sub items
  * are merged on top of their base.
  */
-export function extractGrants({ race, subrace, charClass, subclass, raceVariant, background } = {}) {
+export function extractGrants({
+  race, subrace, charClass, subclass, raceVariant, background,
+  backgroundToolProficiencies = [],
+} = {}) {
   const grants = {
     size: null,
     speed: null,
@@ -92,6 +95,7 @@ export function extractGrants({ race, subrace, charClass, subclass, raceVariant,
     bgLangChoice: null,
     saves: [],
     proficiencies: { armor: [], weapon: [], tool: [] },
+    proficiencyLabels: { tool: [] },
     languages: [],
     hitDieId: null,
     skillChoice: null,
@@ -178,7 +182,14 @@ export function extractGrants({ race, subrace, charClass, subclass, raceVariant,
   if (bgData) {
     asList(bgData.skills).forEach((id) => pushUnique(grants.backgroundSkills, num(id) ?? id))
     mergeIds(grants.languages, bgData.languages)
-    mergeIds(grants.proficiencies.tool, bgData.tool_prof)
+    const replacedToolIds = new Set(asList(backgroundToolProficiencies)
+      .map((selection) => num(selection?.replaces))
+      .filter((id) => id != null))
+    mergeIds(grants.proficiencies.tool, asList(bgData.tool_prof)
+      .filter((id) => !replacedToolIds.has(num(id))))
+    asList(backgroundToolProficiencies).forEach((selection) => {
+      pushUnique(grants.proficiencyLabels.tool, String(selection?.name || '').trim())
+    })
     if (bgData.lang_choice && num(bgData.lang_choice.count)) {
       grants.bgLangChoice = { count: num(bgData.lang_choice.count) }
     }
@@ -236,6 +247,10 @@ export function applyGrants(values, grants, opts = {}) {
   applyProfBucket(profs, PROF_BUCKETS.armor.key, grants.proficiencies.armor, PROF_BUCKETS.armor.typeId, suggestValue)
   applyProfBucket(profs, PROF_BUCKETS.weapon.key, grants.proficiencies.weapon, PROF_BUCKETS.weapon.typeId, suggestValue)
   applyProfBucket(profs, PROF_BUCKETS.tool.key, grants.proficiencies.tool, PROF_BUCKETS.tool.typeId, suggestValue)
+  asList(grants.proficiencyLabels?.tool).forEach((label) => {
+    if (!Array.isArray(profs[PROF_BUCKETS.tool.key])) profs[PROF_BUCKETS.tool.key] = []
+    pushUnique(profs[PROF_BUCKETS.tool.key], label)
+  })
   applyProfBucket(profs, 'Языки', grants.languages, LANG_TYPE_ID, suggestValue)
   out.proficiencies = profs
 

@@ -92,6 +92,7 @@ export function buildCharacterData(input) {
     scores = {}, asiChoice = [], skillIds = [], spellIds = [], spellLevels = {}, grantedSpellIds = [], choices = [],
     raceSkillIds = [], raceLangIds = [], featIds = [], feats = [], bgLangIds = [],
     equipment = [], backgroundEquipment = { items: [], coins: {} },
+    backgroundToolProficiencies = [],
     buyStartingEquipment = false, startingWallet = {}, persona = null, contentSources = null,
     raceAbilityItems = [], classAbilityItems = [], suggestValue,
   } = input || {}
@@ -100,6 +101,7 @@ export function buildCharacterData(input) {
     race: race?.item, subrace: subrace?.item,
     charClass: charClass?.item, subclass: subclass?.item,
     raceVariant, background: background?.item,
+    backgroundToolProficiencies,
   })
   const backgroundStart = backgroundEquipment || { items: [], coins: {} }
   const featEntries = feats.map(({ item, choices }) => featEntry(item, choices || {}))

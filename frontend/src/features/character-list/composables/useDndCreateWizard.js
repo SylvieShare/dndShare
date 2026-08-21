@@ -13,8 +13,12 @@ import { itemsApi } from '@/shared/api/itemsApi'
 import { dieSides } from '@/shared/lib/systemDice'
 import { randomDndName } from '@/shared/lib/dndNames'
 import {
+  activeBackgroundChoices,
+  backgroundChoiceProfile,
+  backgroundChoicesComplete,
   backgroundReferenceIds,
   backgroundStartingEquipment,
+  backgroundToolProficiencySelections,
   backgroundToolItems as resolveBackgroundToolItems,
 } from '@/features/character-editor/settings/dnd/creation/backgroundEquipment'
 import { buildDndCharacterPayload } from './dndCreateWizardPayload'
@@ -168,8 +172,33 @@ export function useDndCreateWizard() {
   function raceSubraceNames(raceId) { return raceSubracesByParent.value.get(String(raceId)) || [] }
   function classSubclassNames(classId) { return classSubclassesByParent.value.get(String(classId)) || [] }
 
-  // Changing background clears its chosen languages.
-  watch(() => state.background?.id, () => { if (!hydrating) state.bgLangIds = [] })
+  // Changing background clears choices that belong to the previous background.
+  watch(() => state.background?.id, () => {
+    if (hydrating) return
+    state.bgLangIds = []
+    state.backgroundItemChoices = {}
+  })
+
+  const backgroundItemChoiceProfile = computed(() => backgroundChoiceProfile(
+    state.background,
+    equipment.equipmentCatalogue.value,
+  ))
+  const activeBackgroundItemChoices = computed(() => activeBackgroundChoices(
+    backgroundItemChoiceProfile.value,
+    !state.buyStartingEquipment,
+  ))
+  const backgroundItemChoicesComplete = computed(() => backgroundChoicesComplete(
+    backgroundItemChoiceProfile.value,
+    state.backgroundItemChoices,
+    { includeEquipment: !state.buyStartingEquipment },
+  ))
+  const selectedBackgroundToolProficiencies = computed(() => backgroundToolProficiencySelections(
+    backgroundItemChoiceProfile.value,
+    state.backgroundItemChoices,
+  ))
+  function setBackgroundItemChoice(key, itemId) {
+    state.backgroundItemChoices = { ...state.backgroundItemChoices, [key]: itemId }
+  }
 
   const grants = computed(() => extractGrants({
     race: state.race,
@@ -178,6 +207,7 @@ export function useDndCreateWizard() {
     subclass: state.subclass,
     raceVariant: state.raceVariant,
     background: state.background,
+    backgroundToolProficiencies: selectedBackgroundToolProficiencies.value,
   }))
 
   const isCaster = computed(() => !!grants.value.spellcasting)
@@ -304,8 +334,16 @@ export function useDndCreateWizard() {
 
   // ─── Background (type 11): fixed skills/tools/languages + a chosen language ──
   const backgroundSkillNames = computed(() => (grants.value.backgroundSkills || []).map((id) => suggestValue(SKILL_SUGGEST, id)).filter(Boolean))
-  const backgroundStart = computed(() => backgroundStartingEquipment(state.background, equipment.equipmentCatalogue.value))
-  const backgroundToolItems = computed(() => resolveBackgroundToolItems(state.background, equipment.equipmentCatalogue.value))
+  const backgroundStart = computed(() => backgroundStartingEquipment(
+    state.background,
+    equipment.equipmentCatalogue.value,
+    state.backgroundItemChoices,
+  ))
+  const backgroundToolItems = computed(() => resolveBackgroundToolItems(
+    state.background,
+    equipment.equipmentCatalogue.value,
+    state.backgroundItemChoices,
+  ))
   const bgLangOptions = computed(() => {
     if (!grants.value.bgLangChoice) return []
     return [...new Set([...STANDARD_LANG_IDS, ...state.bgLangIds])]
@@ -543,6 +581,7 @@ export function useDndCreateWizard() {
       featPool: featPool.value,
       equipment: equipment.allEquipment.value,
       backgroundEquipment: backgroundStart.value,
+      backgroundToolProficiencies: selectedBackgroundToolProficiencies.value,
       buyStartingEquipment: state.buyStartingEquipment,
       startingWallet: equipment.shopWallet.value,
       grantedSpellIds: grantedSpellIds.value,
@@ -609,6 +648,8 @@ export function useDndCreateWizard() {
     featOptions, featLimit, toggleFeat, setFeatSelection, featEligibility, featComplete,
     // background + equipment
     backgroundSkillNames, backgroundStart, backgroundToolItems,
+    backgroundItemChoiceProfile, activeBackgroundItemChoices, backgroundItemChoicesComplete,
+    setBackgroundItemChoice,
     bgLangOptions, bgLangLimit, toggleBgLang, bgLangsComplete,
     ...equipment,
     // persistence

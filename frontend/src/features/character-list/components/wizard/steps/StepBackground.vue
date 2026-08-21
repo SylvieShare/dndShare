@@ -42,6 +42,27 @@
           <BlockMoneyView title="Кошелёк" :loading="currencyLoading" :coins="backgroundCoins" />
         </BaseTile>
 
+        <div v-if="activeBackgroundItemChoices.length" class="grant-group background-choices">
+          <div class="background-choices-head">
+            <span class="fk">Выбор предыстории</span>
+            <span class="count" :class="{ done: backgroundItemChoicesComplete }">
+              {{ selectedChoiceCount }} / {{ activeBackgroundItemChoices.length }}
+            </span>
+          </div>
+          <div class="background-choice-list">
+            <div v-for="choice in activeBackgroundItemChoices" :key="choice.key" class="background-choice">
+              <span class="background-choice-label">{{ choice.label }}</span>
+              <EquipmentItemSelect
+                :items="choice.options"
+                :model-value="state.backgroundItemChoices?.[choice.key] || ''"
+                :placeholder="`Выберите: ${choice.label.toLocaleLowerCase('ru')}`"
+                @update:model-value="setBackgroundItemChoice(choice.key, $event)"
+                @details="viewItem = $event"
+              />
+            </div>
+          </div>
+        </div>
+
         <div v-if="backgroundToolItems.length" class="grant-group">
           <span class="fk">Инструменты</span>
           <div class="grant-tiles">
@@ -117,6 +138,7 @@
 import { computed, inject, ref } from 'vue'
 import { BaseTile } from '@sylvieshare/share-ui'
 import BackgroundSelectCard from '@/features/character-list/components/wizard/BackgroundSelectCard.vue'
+import EquipmentItemSelect from '@/features/character-list/components/wizard/EquipmentItemSelect.vue'
 import IllustratedChoiceStage from '@/features/character-list/components/wizard/IllustratedChoiceStage.vue'
 import MultiSearchSelect from '@/features/character-list/components/wizard/MultiSearchSelect.vue'
 import BlockMoneyView from '@/features/character-editor/blocks/generic/components/BlockMoneyView.vue'
@@ -129,6 +151,7 @@ import { useSuggestStore } from '@/stores/suggest'
 const {
   bgPool, state, loading, grants, suggestValue,
   backgroundSkillNames, backgroundStart, backgroundToolItems,
+  activeBackgroundItemChoices, backgroundItemChoicesComplete, setBackgroundItemChoice,
   bgLangOptions, bgLangLimit, toggleBgLang, bgLangsComplete,
 } = inject('createWizard')
 
@@ -163,6 +186,9 @@ const backgroundCoins = computed(() => {
 })
 const backgroundWeaponItems = computed(() => backgroundStart.value.items.filter((entry) => Number(entry.typeId) === 1))
 const backgroundOtherItems = computed(() => backgroundStart.value.items.filter((entry) => Number(entry.typeId) !== 1))
+const selectedChoiceCount = computed(() => activeBackgroundItemChoices.value.filter((choice) => (
+  choice.options.some((item) => String(item.id) === String(state.backgroundItemChoices?.[choice.key]))
+)).length)
 const visibleBackgrounds = computed(() => state.background ? [state.background] : bgPool.value)
 const viewItem = ref(null)
 
@@ -195,11 +221,17 @@ function selectBackground(background) {
 .background-wallet :deep(.ma-dot) { width: 20px; height: 20px; }
 .background-wallet :deep(.ma-label) { font-size: 14px; font-weight: 650; }
 .grant-group { display: flex; flex-direction: column; gap: 6px; }
+.background-choices { padding: 12px; border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--border)); border-radius: var(--r-md); background: color-mix(in srgb, var(--accent) 6%, transparent); }
+.background-choices-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.background-choices-head .fk { margin: 0; }
+.background-choice-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.background-choice { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.background-choice-label { color: var(--text-2); font-size: 11px; font-weight: 650; }
 .grant-subgroup { display: flex; flex-direction: column; gap: 5px; }
 .grant-subgroup + .grant-subgroup { margin-top: 3px; }
 .grant-subtitle { color: var(--text-muted); font-size: 10px; font-weight: 650; line-height: 1.2; }
 .grant-tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 8px; }
 
 .pick { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
-@media (max-width: 640px) { .background-details { padding: 14px; } .grant-tiles { grid-template-columns: 1fr; } }
+@media (max-width: 640px) { .background-details { padding: 14px; } .grant-tiles, .background-choice-list { grid-template-columns: 1fr; } }
 </style>

@@ -237,10 +237,21 @@ tool and possession is stored on the background as a
 canonical handbook item id and rendered through `ItemReferenceRow`; activating
 the row opens `ItemViewModal`. Concrete weapons therefore keep their combat
 data and use the same roomy 64px-icon weapon row everywhere in the wizard,
-including backgrounds and the starting shop. Category choices such as
-“musical instrument of your choice” point
-to an explicit handbook choice card instead of an arbitrary concrete item. The
-background equipment area separates weapons and other possessions into
+including backgrounds and the starting shop. Category choices such as “one
+gaming set” or “one musical instrument” are stored as data-driven
+`item_choices`. The Background step renders every active choice with the shared
+searchable equipment selector and cannot advance until the choice is complete.
+The selected handbook item replaces the generic tool row; where the background
+also grants a tool proficiency, the character stores the concrete name (for
+example, `Кости`) instead of the generic category (`Игровой набор`). Equipment-
+only choices are omitted when class wealth replaces starting equipment.
+
+The PHB 2014 audit identifies mechanical item/tool choices for nine base
+backgrounds: Acolyte (holy symbol and devotional text), Charlatan (con prop),
+Criminal and Noble (gaming set), Entertainer (musical instrument), Folk Hero
+and Guild Artisan (artisan's tools), Outlander (musical instrument), and Soldier
+(gaming-set proficiency plus dice/cards equipment). All other base-background
+item and tool grants are fixed. The background equipment area separates weapons and other possessions into
 independent grids, so a roomy weapon row never stretches an adjacent compact
 item. Each grid uses two desktop columns and one mobile column. In starting-shop
 mode the equipment rows and money row are
@@ -255,7 +266,8 @@ Key rules:
 - choices granted by a race or class are completed on that source step;
 - class and background starting equipment use handbook ids; the background
   schema stores parameterized `tool_items`, `equipment_items` and
-  `starting_coins` directly;
+  `starting_coins` directly, while `item_choices` describes concrete selectable
+  item ids and the generic grants they replace;
 - the starting-shop path is mutually exclusive with class/background equipment,
   and its remaining class wealth is the only starting wallet amount;
 - handbook weapons added by the class, background or equipment step are written
