@@ -185,8 +185,8 @@ full handbook card; “any weapon/tool/focus” clauses use the same row inside 
 searchable dropdown and persist the selected item id. On the Class step, weapon
 rows use a taller presentation with a 64×64 handbook icon; the name, primary
 damage die, localized properties, count, price and weight form two readable
-lines to its right. The first line pairs the name with damage; the second pairs
-properties with the compact count/price/weight group.
+columns to its right. The left column pairs the name with damage below it; the
+right column pairs the compact count/price/weight group with properties below it.
 Non-weapon item rows retain the compact shared presentation. Groups with exactly two alternatives use a two-column
 desktop layout with a single vertical divider and a shield-check marker on the
 selected branch; three or more alternatives are separated horizontally, and

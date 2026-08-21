@@ -126,14 +126,14 @@ const metaLabel = computed(() => [
 .item-reference-details:hover:not(:disabled) { background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent); }
 .item-reference-details:disabled { cursor: default; }
 .item-reference--roomy-weapon .item-reference-body { min-height: 96px; align-items: center; gap: 14px; padding: 12px 0 12px 12px; }
-.item-reference--roomy-weapon .item-reference-info { min-width: 0; flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: auto auto; align-content: center; align-items: center; column-gap: 14px; row-gap: 8px; align-self: stretch; }
-.item-reference--roomy-weapon .item-reference-main { flex: none; }
+.item-reference--roomy-weapon .item-reference-info { min-width: 0; flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); grid-template-rows: auto auto; align-content: center; align-items: center; column-gap: 14px; row-gap: 8px; align-self: stretch; }
+.item-reference--roomy-weapon .item-reference-main { flex: none; grid-column: 1; grid-row: 1; }
 .item-reference--roomy-weapon .item-reference-name { font-size: 14px; line-height: 1.3; }
 .item-reference--roomy-weapon .item-reference-weapon-details { display: contents; }
-.item-reference--roomy-weapon .item-reference-damage { width: auto; display: flex; place-items: unset; align-self: center; grid-column: 2; grid-row: 1; }
-.item-reference--roomy-weapon .item-reference-properties { width: auto; min-width: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: baseline; justify-content: initial; gap: 8px; grid-column: 1; grid-row: 2; font-size: 10px; line-height: 1.35; text-align: left; }
+.item-reference--roomy-weapon .item-reference-damage { width: auto; display: flex; place-items: unset; align-self: center; grid-column: 1; grid-row: 2; }
+.item-reference--roomy-weapon .item-reference-properties { width: auto; min-width: 0; display: flex; align-items: baseline; justify-content: flex-end; gap: 8px; grid-column: 2; grid-row: 2; font-size: 10px; line-height: 1.35; text-align: right; }
 .item-reference--roomy-weapon .item-reference-properties > span { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.item-reference-economy { display: flex; align-items: baseline; justify-content: flex-end; gap: 0; grid-column: 2; grid-row: 2; color: var(--text-muted); font-size: 10px; line-height: 1.3; white-space: nowrap; }
+.item-reference-economy { display: flex; align-items: baseline; justify-content: flex-end; gap: 0; grid-column: 2; grid-row: 1; color: var(--text-muted); font-size: 10px; line-height: 1.3; white-space: nowrap; }
 .item-reference-economy > span + span::before { margin: 0 6px; color: var(--border-strong); content: '·'; }
 .item-reference--roomy-weapon .item-reference-count { min-width: 0; font-size: 11px; }
 .item-reference-weight { color: var(--text-muted); }
