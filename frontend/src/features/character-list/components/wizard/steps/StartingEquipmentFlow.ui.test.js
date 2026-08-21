@@ -64,6 +64,7 @@ describe('starting equipment wizard flow', () => {
     expect(itemReference).toContain('desc: entry.desc ||')
     expect(itemReference).toContain('class="item-reference-armor-category"')
     expect(itemReference).toContain('class="item-reference-armor-ac"')
+    expect(itemReference).toContain('.item-reference-armor-ac small { font-size: 10px;')
     expect(itemReference).toContain('v-if="data.stealth_disadvantage"')
     expect(itemReference).toContain('Помеха Скрытности')
   })

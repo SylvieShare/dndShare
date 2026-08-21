@@ -210,7 +210,9 @@ function hidePropertyTooltip() { propertiesTooltip.visible = false }
 .item-reference-property-value--described { border-bottom: 1px dotted color-mix(in srgb, var(--accent) 65%, transparent); cursor: help; }
 .item-reference--roomy-armor .item-reference-armor-details { display: contents; }
 .item-reference-armor-category { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 2px; grid-column: 1; grid-row: 2; color: var(--text-2); font-size: 10px; line-height: 1.3; }
-.item-reference-armor-category small, .item-reference-armor-ac small { color: var(--text-muted); font-size: 7px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
+.item-reference-armor-category small, .item-reference-armor-ac small { color: var(--text-muted); font-weight: 750; text-transform: uppercase; }
+.item-reference-armor-category small { font-size: 7px; letter-spacing: .08em; }
+.item-reference-armor-ac small { font-size: 10px; font-weight: 800; letter-spacing: .04em; }
 .item-reference-armor-stats { min-width: 0; display: flex; align-items: center; justify-content: flex-end; gap: 8px; grid-column: 2; grid-row: 2; text-align: right; }
 .item-reference-armor-ac { flex: none; display: flex; align-items: baseline; gap: 5px; color: var(--text-1); }
 .item-reference-armor-ac strong { font-size: 16px; font-variant-numeric: tabular-nums; line-height: 1; }
