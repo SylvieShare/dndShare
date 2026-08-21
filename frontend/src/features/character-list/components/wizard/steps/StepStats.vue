@@ -201,6 +201,7 @@ function confirmReroll() {
 .roll-dice .dropped::after { position: absolute; left: 1px; right: 1px; top: 50%; height: 1px; background: var(--danger); content: ''; transform: rotate(-25deg); }
 .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 13px; }
 .stat { position: relative; min-width: 0; min-height: 196px; display: flex; flex-direction: column; padding: 16px; overflow: visible; border: 1px solid color-mix(in srgb, var(--border) 88%, transparent); border-radius: calc(var(--r-md) + 2px); background: linear-gradient(145deg, color-mix(in srgb, var(--surface-raised) 72%, var(--surface)), var(--surface)); box-shadow: 0 8px 22px color-mix(in srgb, var(--scrim) 9%, transparent); }
+.stat:focus-within { z-index: 20; }
 .stat::after { position: absolute; right: 9px; bottom: 9px; width: 64px; height: 64px; border: 1px solid color-mix(in srgb, var(--text-muted) 8%, transparent); border-radius: 50%; content: ''; pointer-events: none; }
 .stat.primary { border-color: color-mix(in srgb, var(--accent) 46%, var(--border)); background: linear-gradient(145deg, color-mix(in srgb, var(--accent) 14%, var(--surface-raised)), color-mix(in srgb, var(--accent) 5%, var(--surface))); box-shadow: 0 9px 24px color-mix(in srgb, var(--accent) 10%, transparent); }
 .stat.primary::after { border-color: color-mix(in srgb, var(--accent) 15%, transparent); }
@@ -232,8 +233,9 @@ function confirmReroll() {
 .pool-picker :deep(.vs-button > span:first-child) { color: var(--text-1); font-size: 14px; font-weight: 800; font-variant-numeric: tabular-nums; }
 .pool-picker :deep(.vs-arrow) { color: var(--accent); transition: transform .15s ease; }
 .pool-picker :deep(.vs-button[aria-expanded="true"] .vs-arrow) { transform: rotate(180deg); }
-.pool-picker :deep(.vs-drop) { min-width: 100%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px; padding: 6px; border-color: color-mix(in srgb, var(--accent) 34%, var(--border-strong)); border-radius: 12px; background: color-mix(in srgb, var(--surface-raised) 94%, transparent); box-shadow: 0 16px 38px color-mix(in srgb, var(--scrim) 28%, transparent); }
+.pool-picker :deep(.vs-drop) { min-width: 100%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px; padding: 6px; border-color: color-mix(in srgb, var(--accent) 34%, var(--border-strong)); border-radius: 12px; background: var(--popover-bg); box-shadow: 0 16px 38px color-mix(in srgb, var(--scrim) 38%, transparent); }
 .pool-picker :deep(.vs-option) { min-width: 0; justify-content: center; border: 1px solid color-mix(in srgb, var(--border) 65%, transparent); border-radius: 8px; background: color-mix(in srgb, var(--surface) 78%, transparent); color: var(--text-2); font-size: 12px; font-weight: 750; text-align: center; }
+.pool-picker :deep(.vs-option:first-of-type) { grid-column: 1 / -1; }
 .pool-picker :deep(.vs-option:hover), .pool-picker :deep(.vs-option--active) { border-color: color-mix(in srgb, var(--accent) 42%, var(--border)); background: color-mix(in srgb, var(--accent) 10%, var(--surface)); color: var(--text-1); }
 .pool-picker :deep(.vs-option[aria-selected="true"]) { border-color: color-mix(in srgb, var(--accent) 68%, var(--border)); background: color-mix(in srgb, var(--accent) 17%, var(--surface)); color: var(--accent); }
 .stat-stepper { display: grid; grid-template-columns: 36px minmax(38px, 1fr) 36px; align-items: center; min-height: 38px; border: 1px solid var(--border-strong); border-radius: 10px; background: var(--surface-raised); overflow: hidden; }

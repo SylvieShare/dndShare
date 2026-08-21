@@ -44,6 +44,8 @@ describe('D&D ability scores', () => {
     expect(source).toContain('<ValueSelect')
     expect(source).toContain(':options="poolOptions(s)"')
     expect(source).toContain('grid-template-columns: repeat(2, minmax(0, 1fr))')
+    expect(source).toContain('.stat:focus-within { z-index: 20; }')
+    expect(source).toContain('.vs-option:first-of-type')
     expect(source).toContain('доступно ×${count}')
     expect(source).not.toContain('<select')
   })
