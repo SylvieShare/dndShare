@@ -20,14 +20,6 @@
           @update:model-value="v => ctx.setParam(index, 'magic_bonus', Number(v) || 0)"
         />
       </FormField>
-      <FormField vertical label="Владение" class="wed-f-prof">
-        <ToggleSwitch
-          :modelValue="ctx.isWeaponProficient(entry)"
-          label=""
-          :disabled="ctx.hasLinkedWeaponProficiency(entry)"
-          @update:modelValue="ctx.setField(index, 'proficient', $event)"
-        />
-      </FormField>
       </div>
     </EditorSection>
 
@@ -86,7 +78,6 @@ import { FormField } from '@sylvieshare/share-ui'
 import InputDescription from '@/shared/ui/InputDescription'
 import { MultiToggle } from '@sylvieshare/share-ui'
 import { RemoveButton } from '@sylvieshare/share-ui'
-import { ToggleSwitch } from '@sylvieshare/share-ui'
 import { ValueSelect } from '@sylvieshare/share-ui'
 
 const props = defineProps({
@@ -104,14 +95,11 @@ function onDelete() {
 </script>
 
 <style scoped>
-/* Характеристика / Магия / Владение in one row, all controls the same height (34px) */
+/* Характеристика / Магия in one row, all controls the same height (34px) */
 .wed-top { display: flex; align-items: flex-end; gap: 12px; }
 .wed-f-stat { flex: 1 1 auto; min-width: 0; }
-.wed-f-prof { flex: 0 0 auto; }
 
 .wed-top :deep(.mt-toggle) { height: 34px; box-sizing: border-box; align-items: center; }
-.wed-f-prof :deep(.toggle-btn) { height: 34px; padding: 0; }
-.wed-f-prof :deep(.toggle-text) { display: none; }
 
 .wed-extra-row {
   display: grid;

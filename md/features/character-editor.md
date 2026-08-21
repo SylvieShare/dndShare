@@ -257,7 +257,10 @@ content composition; simplified custom inventory rows leave the image slot empty
 instead of showing a placeholder. Inventory glyphs are neutral gray, frameless
 and use a 64×64 px slot. Weapon cards use the same 64×64 slot and prefer the
 handbook `iconImageUrl`, falling back to the weapon SVG; the rest of the
-weapon-specific attack, damage and property composition remains unchanged.
+weapon-specific attack, damage and property composition remains unchanged. A
+click on a weapon tile opens its action menu instead of navigating directly
+from the name. The menu contains handbook description, edit, move-to-inventory
+and delete actions according to the viewer's permissions and linked item state.
 Every owned inventory item, potion and tool uses `item_id`, an explicit `count` and a
 typed `params` object. `params` contains values of the concrete instance and is
 not an alternative handbook-data or free-form override store. Item-type
@@ -275,9 +278,10 @@ separate removal of one copy and deletion of the whole entry. Only simplified
 rows created without a handbook `item_id` offer metadata editing; inventory
 removal is not recorded as item use. Adding a copy publishes `item_added` in an
 attached session. A referenced child-type item also offers a move to its specialized
-weapon or potion block. Potions can move back to the ordinary inventory without
-recreating the owned entry; the reverse action for weapons is
-intentionally deferred. Creating a new inventory item or weapon publishes `entry_added`; the
+weapon or potion block. Potions and linked weapons can move back to the ordinary
+inventory. A weapon keeps its magic bonus and weapon-only instance settings in
+namespaced instance parameters so moving it to inventory and back is lossless.
+Creating a new inventory item or weapon publishes `entry_added`; the
 same event covers newly picked potions and spells, feats and class/racial
 abilities, including additions granted by level-up. A multi-quantity picker
 creates one entry with that count. Potion tiles open the shared `RowActionMenu` with
@@ -304,9 +308,10 @@ multiple links use OR semantics. Inventory tiles resolve those links against the
 character proficiency buckets and show `Владение` only on matching tools and
 armor. Weapon tiles use the same resolver for
 `required_weapon_proficiencies`; an automatic match also supplies the attack
-proficiency bonus, while the per-entry switch remains available for unlinked or
-custom weapons. Inventory rows use 64×64 handbook images while retaining
-type-specific inner content.
+proficiency bonus. The expanded weapon editor does not expose a separate
+proficiency switch: it is determined from the character's proficiencies and
+the weapon handbook links. Inventory rows use 64×64 handbook images while
+retaining type-specific inner content.
 
 Starting armor is placed directly in the equipped array. Its handbook
 `data.armor` rule initializes AC as readonly equipment-derived bonuses; light

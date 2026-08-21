@@ -1,5 +1,11 @@
-import { defaultEntry as defaultWeaponEntry } from './weaponEntry'
-import { cloneModel, EQUIPPED_ID, normalizeValue } from './itemSection'
+import {
+  defaultEntry as defaultWeaponEntry,
+  normalizeAddAttacks,
+  normalizeWeaponParams,
+} from './weaponEntry'
+import { cloneModel, EQUIPPED_ID, makeEntryUid, normalizeValue } from './itemSection'
+
+const WEAPON_STATE_KEY = '_weapon_state'
 
 export function cloneOwnedEntry(entry) {
   return {
@@ -38,10 +44,35 @@ export function appendOwnedEntry(value, entry) {
   return [...cloneOwnedCollection(value), cloneOwnedEntry(entry)]
 }
 
+export function weaponEntryToOwnedEntry(entry) {
+  return {
+    uid: makeEntryUid(),
+    item_id: entry.item_id ?? null,
+    count: 1,
+    params: {
+      ...(entry.params || {}),
+      [WEAPON_STATE_KEY]: {
+        stat_suggest_id: entry.stat_suggest_id ?? null,
+        proficient: !!entry.proficient,
+        add_attacks: normalizeAddAttacks(entry.add_attacks),
+        desc: entry.desc || '',
+      },
+    },
+    override: null,
+  }
+}
+
 export function ownedEntryToWeapons(entry) {
+  const params = { ...(entry.params || {}) }
+  const savedState = params[WEAPON_STATE_KEY] && typeof params[WEAPON_STATE_KEY] === 'object'
+    ? params[WEAPON_STATE_KEY]
+    : {}
+  delete params[WEAPON_STATE_KEY]
   return Array.from({ length: Math.max(1, Number(entry.count) || 1) }, () => ({
     ...defaultWeaponEntry(),
+    ...savedState,
     item_id: entry.item_id,
-    params: { ...defaultWeaponEntry().params, ...(entry.params || {}) },
+    params: normalizeWeaponParams({ ...defaultWeaponEntry().params, ...params }),
+    add_attacks: normalizeAddAttacks(savedState.add_attacks),
   }))
 }

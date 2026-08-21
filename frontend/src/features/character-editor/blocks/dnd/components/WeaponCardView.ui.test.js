@@ -16,4 +16,10 @@ describe('weapon card icon', () => {
     expect(source).toContain('ctx.isWeaponProficient(entry)')
     expect(source).toContain('class="w-proficiency">Владение</span>')
   })
+
+  it('leaves card navigation to the weapon action menu', () => {
+    expect(source).not.toContain("emit('name-click')")
+    expect(source).not.toContain("emit('edit')")
+    expect(source).not.toContain('w-name-clickable')
+  })
 })

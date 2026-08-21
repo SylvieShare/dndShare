@@ -111,6 +111,10 @@ import { SYSTEM_DICE } from '@/shared/lib/systemDice'
 import { logSessionEntryAdded } from '@/features/character-editor/lib/sessionEntryEvents'
 import { abilityModifiersBySuggest } from '@/features/character-editor/blocks/dnd/lib/weaponAbility'
 import { hasItemProficiency } from '@/features/character-editor/lib/itemProficiency'
+import {
+  appendInventoryEntry,
+  weaponEntryToOwnedEntry,
+} from '@/features/character-editor/blocks/dnd/lib/itemPlacement'
 
 const props = defineProps(['block', 'value', 'values', 'vars'])
 const emit  = defineEmits(['update:value'])
@@ -291,6 +295,22 @@ function deleteWeapon(index) {
   emitChange()
 }
 
+function canMoveWeaponToItems(entry) {
+  return !!charCtx.ownerMode
+    && entry?.item_id != null
+    && typeof charCtx.updateValues === 'function'
+}
+
+function moveWeaponToItems(index) {
+  const entry = entries.value[index]
+  if (!canMoveWeaponToItems(entry)) return
+  const nextWeapons = entries.value.filter((_, entryIndex) => entryIndex !== index).map(cleanEntry)
+  charCtx.updateValues({
+    weapon: nextWeapons,
+    items: appendInventoryEntry(charCtx.values?.items, weaponEntryToOwnedEntry(entry)),
+  })
+}
+
 const sortable = useSortable({
   groups: { weapons: { items: entries } },
   getKey: e => e._key,
@@ -354,6 +374,8 @@ provide('weaponsBlockCtx', reactive({
   addAttack,
   removeAttack,
   deleteWeapon,
+  canMoveWeaponToItems,
+  moveWeaponToItems,
   onDragStart,
   openItemModal: id => { modalItemId.value = id },
   toggleNote: key => { activeNoteKey.value = activeNoteKey.value === key ? null : key },

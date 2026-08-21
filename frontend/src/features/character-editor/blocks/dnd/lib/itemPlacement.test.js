@@ -4,6 +4,7 @@ import {
   appendOwnedEntry,
   ownedEntryToWeapons,
   takeInventoryEntry,
+  weaponEntryToOwnedEntry,
 } from './itemPlacement'
 
 const inventory = {
@@ -34,5 +35,27 @@ describe('owned item placement', () => {
     const entries = ownedEntryToWeapons({ item_id: 77, count: 2, params: { magic_bonus: 2 } })
     expect(entries).toHaveLength(2)
     expect(entries[0]).toMatchObject({ item_id: 77, params: { magic_bonus: 2 } })
+  })
+
+  it('preserves weapon instance settings when moving through inventory', () => {
+    const owned = weaponEntryToOwnedEntry({
+      item_id: 77,
+      params: { magic_bonus: 2 },
+      stat_suggest_id: 16,
+      proficient: true,
+      add_attacks: [{ count: 1, dice_id: 8, type_suggest_id: 12 }],
+      desc: 'Семейный клинок',
+    })
+    const [restored] = ownedEntryToWeapons(owned)
+
+    expect(owned.uid).toMatch(/^item-/)
+    expect(restored).toMatchObject({
+      item_id: 77,
+      params: { magic_bonus: 2 },
+      stat_suggest_id: 16,
+      proficient: true,
+      add_attacks: [{ count: 1, dice_id: 8, type_suggest_id: 12 }],
+      desc: 'Семейный клинок',
+    })
   })
 })

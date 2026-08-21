@@ -1,8 +1,7 @@
 <template>
   <!-- Shared weapon row, rendered both in the list tile and inside the morph #view, so the geometry
-       can never drift between the two. `interactive` is true in the tile (name handlers, pencil button,
-       rollable attack/damage, property tooltips) and false in the morph clone (plain text + ghost pencil
-       that fades as the window opens). -->
+       can never drift between the two. `interactive` is true in the tile (drag handle, rollable
+       attack/damage and property tooltips) and false in the morph clone. -->
   <div class="w-card-main">
     <ItemIcon
       v-if="weaponItem?.iconImageUrl || weaponItem?.svg"
@@ -16,36 +15,10 @@
         <div class="w-name-main">
           <span
             class="w-name"
-            :class="{ 'w-name-clickable': interactive && nameClickable, 'w-name-drag': interactive && ctx.charCtx.ownerMode }"
+            :class="{ 'w-name-drag': interactive && ctx.charCtx.ownerMode }"
             @pointerdown="interactive && emit('name-down', $event)"
-            @click="interactive && emit('name-click')"
           >{{ ctx.itemTitle(entry) }}</span>
           <span v-if="ctx.magicBonus(entry) > 0" class="w-name-magic">+{{ ctx.magicBonus(entry) }}</span>
-          <template v-if="ctx.charCtx.ownerMode">
-            <button
-              v-if="interactive"
-              class="w-edit-btn"
-              type="button"
-              title="Редактировать"
-              @click.stop="emit('edit')"
-            >
-              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M12 20h9" />
-                <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
-              </svg>
-            </button>
-            <span
-              v-else
-              class="w-edit-btn w-edit-btn--ghost"
-              :class="{ 'w-edit-btn--hidden': revealed }"
-              aria-hidden="true"
-            >
-              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 20h9" />
-                <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
-              </svg>
-            </span>
-          </template>
         </div>
         <span v-if="ctx.rangeLabel(entry)" class="w-range">{{ ctx.rangeLabel(entry) }}</span>
         <span v-else-if="ctx.itemSubtitle(entry)" class="w-subtitle">{{ ctx.itemSubtitle(entry) }}</span>
@@ -82,18 +55,15 @@ import ItemIcon from '@/features/items/components/ItemIcon.vue'
 
 const props = defineProps({
   entry: { type: Object, required: true },
-  // tile = full interactivity; morph clone = static (revealed fades the ghost pencil out)
+  // tile = full interactivity; morph clone = static
   interactive: { type: Boolean, default: false },
-  revealed: { type: Boolean, default: false },
 })
-const emit = defineEmits(['name-down', 'name-click', 'edit', 'roll-attack', 'roll-damage', 'roll-damage-two'])
+const emit = defineEmits(['name-down', 'roll-attack', 'roll-damage', 'roll-damage-two'])
 
 const ctx = inject('weaponsBlockCtx')
 
 // The linked handbook weapon may use either a stored image or an SVG icon.
 const weaponItem = computed(() => ctx.item(props.entry))
-// owner: name opens the edit morph; non-owner: name opens the read-only item card (if linked)
-const nameClickable = computed(() => ctx.charCtx.ownerMode || !!ctx.item(props.entry))
 </script>
 
 <style scoped>
@@ -142,9 +112,7 @@ const nameClickable = computed(() => ctx.charCtx.ownerMode || !!ctx.item(props.e
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.w-name-clickable { cursor: pointer; transition: color 0.12s; }
-.w-name-clickable:hover { color: var(--accent); }
-/* name doubles as the reorder handle for owners */
+/* The name remains the reorder handle for owners; a click is handled by the card action menu. */
 .w-name-drag { cursor: grab; touch-action: none; }
 .w-name-drag:active { cursor: grabbing; }
 
@@ -154,31 +122,6 @@ const nameClickable = computed(() => ctx.charCtx.ownerMode || !!ctx.item(props.e
   color: var(--accent-soft);
   flex-shrink: 0;
 }
-
-.w-edit-btn {
-  display: inline-grid;
-  place-items: center;
-  width: 20px;
-  height: 20px;
-  padding: 0;
-  box-sizing: border-box;
-  flex-shrink: 0;
-  align-self: center;
-  border: none;
-  border-radius: 6px;
-  background: none;
-  color: var(--text-muted);
-  cursor: pointer;
-  opacity: 0.35;
-  transition: color 0.15s, opacity 0.2s ease;
-}
-@media (hover: hover) { .w-edit-btn:hover { color: var(--accent); opacity: 1; } }
-.w-edit-btn:focus-visible { color: var(--accent); opacity: 1; }
-
-/* morph stand-in pencil: present so the row geometry matches the tile (no jitter), but fades out
-   as the window opens and back in as it closes */
-.w-edit-btn--ghost { pointer-events: none; }
-.w-edit-btn--hidden { opacity: 0; }
 
 .w-range, .w-subtitle {
   font-size: 11px;
