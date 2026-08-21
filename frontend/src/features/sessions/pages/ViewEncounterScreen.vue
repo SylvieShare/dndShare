@@ -118,7 +118,13 @@
                 :class="{ 'initiative-card--down': combatant.health.kind === 'down', 'initiative-card--stacked': index >= queueStackStart }"
                 :style="queueCardStyle(combatant, index)"
               >
-                <div class="initiative-card__portrait" :class="{ 'initiative-card__portrait--npc': combatant.type === 'npc' }">
+                <div
+                  class="initiative-card__portrait"
+                  :class="{
+                    'initiative-card__portrait--npc': combatant.type === 'npc',
+                    'initiative-card__portrait--icon': combatant.type === 'player' && !combatant.avatarUrl && !combatant.avatarSvg,
+                  }"
+                >
                   <img v-if="combatant.avatarUrl" :src="combatant.avatarUrl" alt="" />
                   <span v-else-if="combatant.avatarSvg" v-html="combatant.avatarSvg" />
                   <UserRound v-else :size="45" :stroke-width="1.15" aria-hidden="true" />

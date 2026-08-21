@@ -21,8 +21,14 @@ describe('public encounter portraits', () => {
     expect(pageSource).toContain("'turn-spotlight__art--npc': currentCombatant.type === 'npc'")
     expect(pageSource).toContain("'initiative-card__portrait--npc': combatant.type === 'npc'")
     expect(initiativeStyles).toContain('.turn-spotlight__art--npc img')
-    expect(initiativeStyles).toContain('.initiative-card__portrait--npc {')
+    expect(initiativeStyles).toContain('.initiative-card__portrait--npc,')
     expect(initiativeStyles).toContain('background: transparent;')
+  })
+
+  it('leaves the fallback player icon unframed while keeping image portraits unchanged', () => {
+    expect(pageSource).toContain("'initiative-card__portrait--icon': combatant.type === 'player' && !combatant.avatarUrl && !combatant.avatarSvg")
+    expect(initiativeStyles).toContain('.initiative-card__portrait--npc,\n.initiative-card__portrait--icon { border: 0; border-radius: 0; background: transparent; }')
+    expect(pageSource).toContain('<img v-if="combatant.avatarUrl"')
   })
 
   it('keeps emphasized colored creature letters by active names and on queue portrait corners', () => {

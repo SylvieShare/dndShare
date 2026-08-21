@@ -318,8 +318,8 @@ const participantTileStyle = computed(() => ({
 
 .p-avatar {
   flex-shrink: 0;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -337,7 +337,7 @@ const participantTileStyle = computed(() => ({
 }
 
 .ava-initial {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
   color: var(--text-on-accent);
 }
@@ -354,6 +354,8 @@ const participantTileStyle = computed(() => ({
 }
 
 .p-card--compact .p-info { flex: 0 0 0; overflow: hidden; opacity: 0; transform: translateX(-7px); }
+.p-card--compact .p-avatar { width: 36px; height: 36px; }
+.p-card--compact .ava-initial { font-size: 14px; }
 
 @media (prefers-reduced-motion: reduce) {
   .p-card,

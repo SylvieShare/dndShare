@@ -30,7 +30,7 @@
 }
 
 .campaign-graph {
-  --chapter-safe-left: 288px;
+  --chapter-safe-left: 306px;
   --chapter-safe-right: 0px;
   width: 100%;
   height: 100%;
@@ -68,7 +68,7 @@
 .workspace-dock--left {
   left: 14px;
   bottom: auto;
-  width: 246px;
+  width: 264px;
   max-height: calc(100% - 84px);
   transition: width 0.42s cubic-bezier(0.22, 1, 0.36, 1);
 }

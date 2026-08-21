@@ -39,6 +39,13 @@ describe('SessionParticipantCard actions', () => {
     expect(source).toContain('.p-card--compact { height: 48px; gap: 0; padding: 6px; justify-content: center; }')
     expect(source).toContain('.p-card--compact .p-combat-controls { margin-left: -112px; }')
     expect(source).toContain('.p-card--compact .p-info { flex: 0 0 0; overflow: hidden; opacity: 0;')
+    expect(source).toContain('.p-card--compact .p-avatar { width: 36px; height: 36px; }')
+  })
+
+  it('uses a larger avatar in the expanded player rail', () => {
+    expect(source).toContain('.p-avatar {')
+    expect(source).toContain('width: 44px;\n  height: 44px;')
+    expect(source).toContain('.ava-initial {\n  font-size: 16px;')
   })
 
   it('offers view to everyone and DM-only color and kick actions', () => {

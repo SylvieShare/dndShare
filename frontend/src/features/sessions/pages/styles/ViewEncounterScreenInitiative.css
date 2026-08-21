@@ -250,7 +250,8 @@
   color: color-mix(in srgb, var(--screen-combatant-color) 66%, var(--text-2));
 }
 
-.initiative-card__portrait--npc { border: 0; border-radius: 0; background: transparent; }
+.initiative-card__portrait--npc,
+.initiative-card__portrait--icon { border: 0; border-radius: 0; background: transparent; }
 .initiative-card__portrait img,
 .initiative-card__portrait > span:not(.initiative-card__corner-marker):not(.initiative-card__states),
 .initiative-card__portrait :deep(svg) { width: 100%; height: 100%; }

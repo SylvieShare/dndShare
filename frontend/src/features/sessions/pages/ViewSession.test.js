@@ -91,7 +91,7 @@ describe('ViewSession participant rail', () => {
     expect(source).toContain('workspace-dock workspace-dock--right')
     expect(styles).toContain('.campaign-workspace {')
     expect(styles).toContain('position: absolute;')
-    expect(styles).toContain('--chapter-safe-left: 288px;')
+    expect(styles).toContain('--chapter-safe-left: 306px;')
     expect(styles).toContain('.campaign-workspace--right-dock .campaign-graph')
     expect(styles).toContain('--chapter-safe-right: 350px;')
     expect(source).not.toContain('campaign-workspace--hotkeys')
@@ -119,6 +119,7 @@ describe('ViewSession participant rail', () => {
     expect(source).toContain("'players-rail-toggle--error': kickError || colorError || participantOrderError")
     expect(styles).toMatch(/\.campaign-workspace--players-collapsed \.campaign-graph\s*\{[^}]*--chapter-safe-left:\s*94px;/s)
     expect(styles).toMatch(/\.campaign-workspace--players-collapsed \.workspace-dock--left\s*\{[^}]*width:\s*52px;/s)
+    expect(styles).toMatch(/\.workspace-dock--left\s*\{[^}]*width:\s*264px;/s)
     expect(styles).toMatch(/\.campaign-workspace--combat \.workspace-dock--left\s*\{[^}]*width:\s*360px;/s)
   })
 

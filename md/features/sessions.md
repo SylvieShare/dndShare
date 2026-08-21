@@ -72,7 +72,9 @@ beside the `ИГРОКИ` heading opens existing-owned-character attachment, cha
 creation and invite code/link copy actions. Attaching an existing character uses
 the same transfer confirmation as the invitation flow, refreshes the rail and
 keeps the session workspace open; the rail has no separate invitation tile. A separate header control
-switches the rail between its normal width and a compact avatar-only mode. The
+switches the `264px` rail between its normal width and a compact avatar-only mode.
+Expanded participant tiles use a larger `44px` avatar while compact mode keeps
+its `36px` geometry. The
 choice is stored per session in `localStorage`. Combat is the third visual
 state: it temporarily expands the same rail for initiative and selection
 controls, then returns to the user's saved normal or compact state when combat
@@ -682,7 +684,7 @@ header action is highlighted while results exist and clears them on the next
 click.
 
 Players have no separate encounter reserve section. Opening combat smoothly
-widens the existing left participant rail from 246px to 360px; every player tile gains the
+widens the existing left participant rail from 264px to 360px; every player tile gains the
 encounter checkbox, initiative input and armor-class indicator, and the current
 turn is highlighted there. These controls remain mounted inside a fixed-height
 tile and slide in from behind its left edge together with the widening rail;
@@ -805,7 +807,8 @@ Above it, the compact cyclic queue spans the full screen width and begins after
 the active turn. Queue tiles are tightly packed squares sized to fit a smaller
 full-fit creature icon and the longest worded health state below it. A compact,
 ellipsized name sits between the portrait and health, while initiative remains
-hidden. Active conditions sit over the portrait edge as their colored dictionary
+hidden. Fallback player symbols have no inner frame or backing, while uploaded
+portraits retain their image treatment. Active conditions sit over the portrait edge as their colored dictionary
 icons; an iconless custom condition uses a colored dot, and additional conditions
 collapse into a count. The visible slot count follows the available screen width,
 so a long queue reaches the right edge before overflowing into its final stack.
