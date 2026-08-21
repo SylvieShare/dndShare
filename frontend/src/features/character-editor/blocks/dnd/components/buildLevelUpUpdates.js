@@ -14,7 +14,7 @@ import {
   hitDiceFromClasses,
   withHitDice,
 } from '@/features/character-editor/blocks/dnd/lib/hitDice'
-import { abilityUseTotal } from '@/shared/lib/dndAbilityUses'
+import { abilityUseTotal, abilityUsesAreManual } from '@/shared/lib/dndAbilityUses'
 
 export function buildLevelUpUpdates({
   values,
@@ -55,7 +55,7 @@ export function buildLevelUpUpdates({
   const addedAbilities = features.filter((feature) => !knownAbilityIds.has(feature.id)).map((feature) => {
     const maxUse = abilityUseTotal(feature.data, values)
     const entry = { id: feature.id, count: maxUse ?? 0 }
-    if (feature.data?.manual_size) entry.max_use = maxUse ?? 0
+    if (abilityUsesAreManual(feature.data)) entry.max_use = maxUse ?? 0
     return entry
   })
   if (addedAbilities.length) updates.abilities_class = [...currentAbilities, ...addedAbilities]

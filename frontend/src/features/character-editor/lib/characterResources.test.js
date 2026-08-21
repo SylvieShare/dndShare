@@ -7,7 +7,7 @@ import {
   restoreCharacterResources,
   setCharacterResourceAvailable,
 } from './characterResources'
-import { abilityUseTotal } from '@/shared/lib/dndAbilityUses'
+import { abilityUseTotal, abilityUsesAreManual } from '@/shared/lib/dndAbilityUses'
 
 const sources = [
   createManualResourceSource('resources'),
@@ -35,6 +35,12 @@ describe('character resource sources', () => {
     })).toBe(2)
     expect(abilityUseTotal({ max_use: 5 }, values)).toBe(5)
     expect(abilityUseTotal({ max_use: 5, manual_size: true }, values, { max_use: 7 })).toBe(7)
+  })
+
+  it('gives an explicit modifier formula priority over a stale manual flag', () => {
+    const data = { max_use: 1, manual_size: true, max_use_stat: 3, max_use_min: 1 }
+    expect(abilityUseTotal(data, values, { max_use: 9 })).toBe(4)
+    expect(abilityUsesAreManual(data)).toBe(false)
   })
 
   it('combines editable and read-only contributed resources', () => {

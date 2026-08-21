@@ -9,13 +9,14 @@ import (
 )
 
 func TestToolProficiencyCatalogIsEmbeddedAfterItemTypeHierarchy(t *testing.T) {
-	if len(schemaParts) < 4 {
+	if len(schemaParts) < 5 {
 		t.Fatal("schemaParts must contain the final item catalogue sections")
 	}
-	hierarchy := schemaParts[len(schemaParts)-4]
-	tools := schemaParts[len(schemaParts)-3]
-	resources := schemaParts[len(schemaParts)-2]
-	classTools := schemaParts[len(schemaParts)-1]
+	hierarchy := schemaParts[len(schemaParts)-5]
+	tools := schemaParts[len(schemaParts)-4]
+	resources := schemaParts[len(schemaParts)-3]
+	classTools := schemaParts[len(schemaParts)-2]
+	resourceFixes := schemaParts[len(schemaParts)-1]
 	if hierarchy.name != "item-type-hierarchy" || hierarchy.sql == "" || hierarchy.sql != schemaItemTypeHierarchySQL {
 		t.Fatal("item-type-hierarchy schema must be embedded after the equipment catalogues")
 	}
@@ -27,6 +28,26 @@ func TestToolProficiencyCatalogIsEmbeddedAfterItemTypeHierarchy(t *testing.T) {
 	}
 	if classTools.name != "class-tool-choices" || classTools.sql == "" || classTools.sql != schemaClassToolChoicesSQL {
 		t.Fatal("class tool choices must be embedded after concrete tool proficiencies exist")
+	}
+	if resourceFixes.name != "ability-resource-catalog-fixes" || resourceFixes.sql == "" || resourceFixes.sql != schemaAbilityResourceCatalogFixesSQL {
+		t.Fatal("ability resource catalogue fixes must be embedded after resource fields exist")
+	}
+}
+
+func TestCanonicalModifierBasedAbilitiesHaveStructuredResourceRules(t *testing.T) {
+	for _, fragment := range []string{
+		"Вдохновение барда",
+		"Bardic Inspiration",
+		"Гнев бури",
+		"Wrath of the Storm",
+		"'max_use_stat', resource_rules.stat_id",
+		"'max_use_min', 1",
+		"- 'manual_size' - 'max_use'",
+		"entry.value - 'count' - 'max_use'",
+	} {
+		if !strings.Contains(schemaAbilityResourceCatalogFixesSQL, fragment) {
+			t.Fatalf("ability resource catalogue fixes must contain %q", fragment)
+		}
 	}
 }
 

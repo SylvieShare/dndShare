@@ -232,7 +232,10 @@ headings.
 Handbook item types 3, 4 and 7 use `max_use` for a fixed maximum. Setting
 `max_use_stat` (suggest dictionary 16) changes the maximum to that live ability
 modifier, clamped by `max_use_min` (default 1); `manual_size` keeps its existing
-per-character override semantics. Charge pips are rendered only in the shared
+per-character override semantics when no modifier formula is configured. An
+explicit `max_use_stat` always wins over a stale simultaneous `manual_size` flag.
+The canonical «Вдохновение барда» and «Гнев бури» entries use Charisma and
+Wisdom respectively, both with minimum 1 and long-rest recovery. Charge pips are rendered only in the shared
 resources tile, so spending from there writes `count` back to the owning ability
 entry and a later ability-score change immediately changes the displayed maximum.
 

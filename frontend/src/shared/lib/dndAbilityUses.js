@@ -8,8 +8,6 @@ function nonNegativeInt(value) {
 /** Resolve the live charge maximum configured on an ability handbook item. */
 export function abilityUseTotal(itemData, values = {}, storedEntry = {}) {
   const data = itemData || {}
-  if (data.manual_size) return nonNegativeInt(storedEntry.max_use ?? data.max_use)
-
   const stat = SUGGEST16_TO_STAT[Number(data.max_use_stat)]
   if (stat) {
     const modifier = abilityModifier(resolveNumValue(values?.[stat]?.value))
@@ -17,6 +15,13 @@ export function abilityUseTotal(itemData, values = {}, storedEntry = {}) {
     return Math.max(minimum, modifier)
   }
 
+  if (data.manual_size) return nonNegativeInt(storedEntry.max_use ?? data.max_use)
+
   if (data.max_use == null || data.max_use === '') return null
   return nonNegativeInt(data.max_use)
+}
+
+export function abilityUsesAreManual(itemData) {
+  const data = itemData || {}
+  return !!data.manual_size && !SUGGEST16_TO_STAT[Number(data.max_use_stat)]
 }

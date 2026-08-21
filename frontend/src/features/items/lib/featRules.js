@@ -1,6 +1,6 @@
 import { resolveNumValue } from '@/shared/lib/dnd'
 import { SUGGEST16_TO_STAT, STAT_FULL, STAT_KEYS } from '@/shared/lib/dndStats'
-import { abilityUseTotal } from '@/shared/lib/dndAbilityUses'
+import { abilityUseTotal, abilityUsesAreManual } from '@/shared/lib/dndAbilityUses'
 
 const ABILITY_ID_BY_STAT = Object.fromEntries(
   Object.entries(SUGGEST16_TO_STAT).map(([id, stat]) => [stat, Number(id)]),
@@ -112,7 +112,7 @@ export function featEntry(item, selections = {}, values = {}) {
   if (data.repeatable) {
     entry.uid = globalThis.crypto?.randomUUID?.() || `feat_${item.id}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
   }
-  if (data.manual_size) entry.max_use = maxUse || 0
+  if (abilityUsesAreManual(data)) entry.max_use = maxUse || 0
   if (Object.keys(selections).length) entry.choices = selections
   return entry
 }
