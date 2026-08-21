@@ -21,10 +21,65 @@
     "suggest_id": 16
   },
   {
-    "name": "Минимум использований от модификатора",
+    "name": "Минимум использований",
     "key": "max_use_min",
     "type": "int",
     "default": 1
+  },
+  {
+    "name": "Множитель модификатора",
+    "key": "max_use_stat_multiplier",
+    "type": "int",
+    "default": 1
+  },
+  {
+    "name": "Добавка к максимуму",
+    "key": "max_use_bonus",
+    "type": "int",
+    "default": 0
+  },
+  {
+    "name": "Множитель уровня класса",
+    "key": "max_use_level_multiplier",
+    "type": "int"
+  },
+  {
+    "name": "Использовать uses из прогрессии",
+    "key": "max_use_scaling",
+    "type": "bool"
+  },
+  {
+    "name": "Короткий отдых с уровня",
+    "key": "rollback_short_rest_level",
+    "type": "int"
+  },
+  {
+    "name": "Частично восстановить на коротком отдыхе",
+    "key": "short_rest_recovery",
+    "type": "int"
+  },
+  {
+    "name": "Частичное восстановление с уровня",
+    "key": "short_rest_recovery_level",
+    "type": "int"
+  },
+  {
+    "name": "Несколько независимых ресурсов",
+    "key": "use_resources",
+    "type": "object_array",
+    "fields": [
+      { "name": "Ключ", "key": "key", "type": "text" },
+      { "name": "Название", "key": "title", "type": "text" },
+      { "name": "Уровень", "key": "level", "type": "int" },
+      { "name": "Максимум", "key": "max_use", "type": "int" },
+      { "name": "Характеристика", "key": "max_use_stat", "type": "suggest", "suggest_id": 16 },
+      { "name": "Множитель модификатора", "key": "max_use_stat_multiplier", "type": "int", "default": 1 },
+      { "name": "Добавка", "key": "max_use_bonus", "type": "int", "default": 0 },
+      { "name": "Минимум", "key": "max_use_min", "type": "int", "default": 1 },
+      { "name": "Множитель уровня класса", "key": "max_use_level_multiplier", "type": "int" },
+      { "name": "Короткий отдых", "key": "rollback_short_rest", "type": "bool" },
+      { "name": "Длинный отдых", "key": "rollback_long_rest", "type": "bool" }
+    ]
   },
   {
     "name": "Восстанавливается на коротком отдыхе",

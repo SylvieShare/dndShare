@@ -35,12 +35,12 @@ describe('featRules', () => {
     const item = { id: 7, data: { choices: [{ count: 1, from_suggest_id: 16 }], max_use: 3 } }
     expect(featChoices(item)[0]).toMatchObject({ key: 'choice_1', source: 'suggest', count: 1 })
     expect(choiceSelectionsComplete(item, { choice_1: [4] })).toBe(true)
-    expect(featEntry(item, { choice_1: [4] })).toEqual({ id: 7, count: 3, choices: { choice_1: [4] } })
+    expect(featEntry(item, { choice_1: [4] })).toEqual({ id: 7, count: 3, resource_version: 1, choices: { choice_1: [4] } })
   })
 
   it('initializes modifier-based uses from the live character score', () => {
     const item = { id: 8, data: { max_use_stat: 6, max_use_min: 1 } }
-    expect(featEntry(item, {}, { CHA: { value: { base: 18, bonuses: [] } } })).toEqual({ id: 8, count: 4 })
+    expect(featEntry(item, {}, { CHA: { value: { base: 18, bonuses: [] } } })).toEqual({ id: 8, count: 4, resource_version: 1 })
   })
 
   it('resolves canonical ability-score shapes', () => {

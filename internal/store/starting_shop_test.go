@@ -9,14 +9,15 @@ import (
 )
 
 func TestToolProficiencyCatalogIsEmbeddedAfterItemTypeHierarchy(t *testing.T) {
-	if len(schemaParts) < 5 {
+	if len(schemaParts) < 6 {
 		t.Fatal("schemaParts must contain the final item catalogue sections")
 	}
-	hierarchy := schemaParts[len(schemaParts)-5]
-	tools := schemaParts[len(schemaParts)-4]
-	resources := schemaParts[len(schemaParts)-3]
-	classTools := schemaParts[len(schemaParts)-2]
-	resourceFixes := schemaParts[len(schemaParts)-1]
+	hierarchy := schemaParts[len(schemaParts)-6]
+	tools := schemaParts[len(schemaParts)-5]
+	resources := schemaParts[len(schemaParts)-4]
+	classTools := schemaParts[len(schemaParts)-3]
+	resourceFixes := schemaParts[len(schemaParts)-2]
+	resourceAudit := schemaParts[len(schemaParts)-1]
 	if hierarchy.name != "item-type-hierarchy" || hierarchy.sql == "" || hierarchy.sql != schemaItemTypeHierarchySQL {
 		t.Fatal("item-type-hierarchy schema must be embedded after the equipment catalogues")
 	}
@@ -31,6 +32,9 @@ func TestToolProficiencyCatalogIsEmbeddedAfterItemTypeHierarchy(t *testing.T) {
 	}
 	if resourceFixes.name != "ability-resource-catalog-fixes" || resourceFixes.sql == "" || resourceFixes.sql != schemaAbilityResourceCatalogFixesSQL {
 		t.Fatal("ability resource catalogue fixes must be embedded after resource fields exist")
+	}
+	if resourceAudit.name != "ability-resource-catalog-audit" || resourceAudit.sql == "" || resourceAudit.sql != schemaAbilityResourceCatalogAuditSQL {
+		t.Fatal("ability resource catalogue audit must be embedded after targeted fixes")
 	}
 }
 
@@ -110,10 +114,33 @@ func TestAbilityResourceSchemasExposeModifierFormula(t *testing.T) {
 		if byKey["max_use_min"]["default"] != float64(1) {
 			t.Fatalf("ability schema %s must default max_use_min to 1", typeID)
 		}
+		for _, key := range []string{
+			"max_use_stat_multiplier", "max_use_bonus", "max_use_level_multiplier",
+			"max_use_scaling", "rollback_short_rest_level", "short_rest_recovery",
+			"short_rest_recovery_level", "use_resources",
+		} {
+			if byKey[key] == nil {
+				t.Fatalf("ability schema %s must expose %s", typeID, key)
+			}
+		}
 	}
 	for _, fragment := range []string{"max_use_stat", "max_use_min", "item_type.id IN (3, 4, 7)"} {
 		if !strings.Contains(schemaAbilityResourcesSQL, fragment) {
 			t.Fatalf("ability resource startup schema must contain %q", fragment)
+		}
+	}
+}
+
+func TestAbilityResourceAuditCoversRacesClassesAndFeats(t *testing.T) {
+	for _, fragment := range []string{
+		"Дроуская магия", "Дьявольское наследие",
+		"max_use_level_multiplier", "max_use_scaling", "use_resources",
+		"Подписные заклинания", "Таинственный арканум", "Химическое мастерство",
+		"Удачливый", "Посвящённый в магию", "Мастер боевых искусств",
+		"resource_version", "abilities_race", "abilities_class", "abilities_feats",
+	} {
+		if !strings.Contains(schemaAbilityResourceCatalogAuditSQL, fragment) {
+			t.Fatalf("ability resource catalogue audit must contain %q", fragment)
 		}
 	}
 }

@@ -127,7 +127,7 @@ import { ensureItemNames, itemName } from '@/features/handbook/objects/lib/itemN
 import { useSuggestStore } from '@/stores/suggest'
 import { useMorphOrigin } from "@/features/character-editor/composables/useMorphOrigin"
 import { logSessionEntryAdded } from '@/features/character-editor/lib/sessionEntryEvents'
-import { abilityUseTotal, abilityUsesAreManual } from '@/shared/lib/dndAbilityUses'
+import { abilityHasResources, abilityUseTotal, abilityUsesAreManual } from '@/shared/lib/dndAbilityUses'
 
 const props = defineProps(['block', 'value', 'values'])
 const emit = defineEmits(['update:value'])
@@ -309,6 +309,7 @@ function addFromCatalog(item) {
   const manualSize = abilityUsesAreManual(item.data)
   const maxUse = abilityUseTotal(item.data, props.values)
   const entry = { id: item.id, count: maxUse ?? 0 }
+  if (abilityHasResources(item.data)) entry.resource_version = 1
   if (manualSize) entry.max_use = maxUse ?? 0
   emitChange([...stored.value, entry])
   logAddedEntry(item)

@@ -18,10 +18,27 @@ const sources = [
 const items = new Map([
   ['10', { id: 10, name: 'Дыхание дракона', data: { max_use_stat: 3, max_use_min: 1, rollback_short_rest: true } }],
   ['20', { id: 20, name: 'Второе дыхание', data: { max_use: 2, rollback_long_rest: true } }],
+  ['30', { id: 30, name: 'Дроуская магия', data: {
+    use_resources: [
+      { key: 'faerie_fire', title: 'Огненные феи', level: 3, max_use: 1, rollback_long_rest: true },
+      { key: 'darkness', title: 'Тьма', level: 5, max_use: 1, rollback_long_rest: true },
+    ],
+  } }],
+  ['40', { id: 40, name: 'Вдохновение барда', data: {
+    class_ids: [{ id: 100 }], max_use_stat: 6, max_use_min: 1,
+    rollback_long_rest: true, rollback_short_rest_level: 5,
+  } }],
+  ['50', { id: 50, name: 'Очки чародейства', data: {
+    class_ids: [{ id: 200 }], max_use_level_multiplier: 1,
+    rollback_long_rest: true, short_rest_recovery: 4, short_rest_recovery_level: 20,
+  } }],
 ])
 
 const values = {
   CON: { value: { base: 18, bonuses: [] } },
+  CHA: { value: { base: 18, bonuses: [] } },
+  lvl: { level: 7 },
+  classes: [{ id: 100, level: 5 }, { id: 200, level: 2 }],
   resources: [{ title: 'Удача', value: 1, total: 3, short_rest: true }],
   abilities_race: [{ id: 10, count: 2 }],
   abilities_class: [{ id: 20, count: 0 }],
@@ -33,8 +50,25 @@ describe('character resource sources', () => {
     expect(abilityUseTotal({ max_use_stat: 3, max_use_min: 2 }, {
       CON: { value: { base: 10, bonuses: [] } },
     })).toBe(2)
+    expect(abilityUseTotal({ max_use_stat: 3, max_use_stat_multiplier: 2, max_use_bonus: 1, max_use_min: 2 }, values)).toBe(9)
     expect(abilityUseTotal({ max_use: 5 }, values)).toBe(5)
     expect(abilityUseTotal({ max_use: 5, manual_size: true }, values, { max_use: 7 })).toBe(7)
+  })
+
+  it('resolves class-level and explicit uses progression formulas', () => {
+    expect(abilityUseTotal({ class_ids: [{ id: 200 }], max_use_level_multiplier: 5 }, values)).toBe(10)
+    expect(abilityUseTotal({
+      class_ids: [{ id: 100 }],
+      max_use_scaling: true,
+      scaling: [{ level: 1, uses: 2 }, { level: 5, uses: 3 }, { level: 9, uses: 4 }],
+    }, values)).toBe(3)
+    expect(abilityUseTotal({
+      max_use_scaling: true,
+      scaling: [{ level: 1, uses: 2 }, { level: 20, uses: 0 }],
+    }, { lvl: { level: 20 } })).toBe(0)
+    expect(abilityUseTotal({ class_ids: [{ id: 200 }], max_use_level_multiplier: 1 }, {
+      lvl: { level: 8 }, classes: [{ id: 200, level: 1 }],
+    })).toBe(8)
   })
 
   it('gives an explicit modifier formula priority over a stale manual flag', () => {
@@ -53,7 +87,49 @@ describe('character resource sources', () => {
 
   it('writes use back to the contributing ability array', () => {
     const patch = setCharacterResourceAvailable(values, items, 'abilities:abilities_race:10', 1, sources)
-    expect(patch).toEqual({ abilities_race: [{ id: 10, count: 1 }] })
+    expect(patch).toEqual({ abilities_race: [{ id: 10, count: 1, resource_version: 1 }] })
+  })
+
+  it('exposes independent level-gated resources and persists each counter separately', () => {
+    const multiValues = { ...values, abilities_race: [{ id: 30 }] }
+    const result = collectCharacterResources(multiValues, items, sources)
+      .filter((resource) => resource.source_label === 'Дроуская магия')
+    expect(result.map((resource) => resource.title)).toEqual(['Огненные феи', 'Тьма'])
+
+    const patch = setCharacterResourceAvailable(
+      multiValues,
+      items,
+      'abilities:abilities_race:30:faerie_fire',
+      0,
+      sources,
+    )
+    expect(patch.abilities_race[0]).toEqual({
+      id: 30,
+      resource_version: 1,
+      resource_counts: { faerie_fire: 0 },
+    })
+  })
+
+  it('hides nested resources until their owner level is reached', () => {
+    const lowLevel = {
+      ...values,
+      lvl: { level: 4 },
+      abilities_race: [{ id: 30 }],
+    }
+    expect(collectCharacterResources(lowLevel, items, sources)
+      .filter((resource) => resource.source_label === 'Дроуская магия')
+      .map((resource) => resource.title)).toEqual(['Огненные феи'])
+  })
+
+  it('unlocks short-rest recovery at the configured class level and supports partial recovery', () => {
+    const classValues = {
+      ...values,
+      classes: [{ id: 100, level: 5 }, { id: 200, level: 20 }],
+      abilities_class: [{ id: 40, count: 0 }, { id: 50, count: 3 }],
+    }
+    const short = restoreCharacterResources(classValues, items, 'short', sources)
+    expect(short.patch.abilities_class[0]).toMatchObject({ id: 40, count: 4, resource_version: 1 })
+    expect(short.patch.abilities_class[1]).toMatchObject({ id: 50, count: 7, resource_version: 1 })
   })
 
   it('restores every matching source through one rest contract', () => {

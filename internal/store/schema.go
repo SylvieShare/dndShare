@@ -121,6 +121,9 @@ var schemaClassToolChoicesSQL string
 //go:embed schema/34_ability_resource_catalog_fixes.sql
 var schemaAbilityResourceCatalogFixesSQL string
 
+//go:embed schema/35_ability_resource_catalog_audit.sql
+var schemaAbilityResourceCatalogAuditSQL string
+
 var schemaParts = []struct {
 	name string
 	sql  string
@@ -161,6 +164,7 @@ var schemaParts = []struct {
 	{"ability-resources", schemaAbilityResourcesSQL},
 	{"class-tool-choices", schemaClassToolChoicesSQL},
 	{"ability-resource-catalog-fixes", schemaAbilityResourceCatalogFixesSQL},
+	{"ability-resource-catalog-audit", schemaAbilityResourceCatalogAuditSQL},
 }
 
 func applySchema(ctx context.Context, pool *pgxpool.Pool) error {

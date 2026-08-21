@@ -130,9 +130,12 @@ The current shape under `data.values` is:
   `proficiencies['Инструменты']` and is not inferred from ownership;
 - wallet: `{order:[suggestId],amounts:{[suggestId]:number}}`;
 - race/class/feat abilities: arrays of item references/current counters
-  `{id,uid?,count,max_use?,choices?}`. `count` is the available charge count;
-  fixed and modifier-derived maxima remain handbook rules rather than copied
-  character data (only `manual_size` stores `max_use` on the entry).
+  `{id,uid?,count,max_use?,resource_counts?,resource_version?,choices?}`.
+  `count` stores the available charges of a single resource; `resource_counts`
+  maps stable keys when one ability owns several independent resources.
+  `resource_version` marks counters already migrated to the unified contract.
+  Fixed and derived maxima remain handbook rules rather than copied character
+  data (only `manual_size` stores `max_use` on the entry).
 
 There are no `class/subclass` mirrors, scalar level/stat/hit-dice forms, array
 spellbook, flat inventory or array wallet.
@@ -209,6 +212,10 @@ such as charged magic items, can join the aggregate by registering another
 source adapter without changing the resources or rest blocks. Contributed rows
 are visible and usable in the shared resources tile, but read-only in its
 editor because their title, maximum and rest rules belong to the source item.
+Ability rules can derive the maximum from a live ability modifier, a class-level
+multiplier or `scaling[].uses`; `use_resources` contributes several independent
+rows. Level-gated short-rest recovery and partial recovery use the same source
+contract, so the rest action has no class- or feature-specific branches.
 Short/long rest uses this same aggregate contract to update current spell slots,
 all matching resources, ability counters and hit-dice pools without scalar
 mirrors. Long rest also restores resources marked for short-rest recovery.
@@ -229,15 +236,13 @@ instead of falling back to the former circle-with-dot marker. Entry names use
 the primary text color so they remain visually stronger than muted section
 headings.
 
-Handbook item types 3, 4 and 7 use `max_use` for a fixed maximum. Setting
-`max_use_stat` (suggest dictionary 16) changes the maximum to that live ability
-modifier, clamped by `max_use_min` (default 1); `manual_size` keeps its existing
-per-character override semantics when no modifier formula is configured. An
-explicit `max_use_stat` always wins over a stale simultaneous `manual_size` flag.
-The canonical «Вдохновение барда» and «Гнев бури» entries use Charisma and
-Wisdom respectively, both with minimum 1 and long-rest recovery. Charge pips are rendered only in the shared
-resources tile, so spending from there writes `count` back to the owning ability
-entry and a later ability-score change immediately changes the displayed maximum.
+Handbook item types 3, 4 and 7 use `max_use` for a fixed maximum. They also
+support formulas based on an ability modifier or owning class level, explicit
+`uses` progression, and several independently named counters. An explicit
+formula wins over a stale simultaneous `manual_size` flag. Charge pips are
+rendered only in the shared resources tile, so spending from there writes the
+available value back to the owning ability entry and later stat or level changes
+immediately update the displayed maximum.
 
 Feat ability-score bonuses are represented as readonly named bonus rows. The
 creation assembler, level-up flow and manual feat editor use the same rule: add

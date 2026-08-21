@@ -1,4 +1,4 @@
-import { abilityUseTotal } from '@/shared/lib/dndAbilityUses'
+import { abilityOwnerLevel, abilityUseTotal } from '@/shared/lib/dndAbilityUses'
 
 function nonNegativeInt(value) {
   return Math.max(0, Math.floor(Number(value) || 0))
@@ -12,6 +12,50 @@ function restoresOn(resource, kind) {
   return kind === 'long'
     ? !!(resource.short_rest || resource.long_rest)
     : !!resource.short_rest
+}
+
+function abilityResourceDefinitions(itemData) {
+  const rules = Array.isArray(itemData?.use_resources) ? itemData.use_resources.filter(Boolean) : []
+  if (!rules.length) return [{ key: null, rule: itemData || {}, multiple: false }]
+  return rules.map((rule, index) => ({
+    key: String(rule.key || `resource_${index + 1}`),
+    rule,
+    multiple: true,
+  }))
+}
+
+function abilityRestRule(rule, ownerData, values) {
+  const level = abilityOwnerLevel(ownerData, values)
+  const shortRestLevel = rule.rollback_short_rest_level == null ? null : nonNegativeInt(rule.rollback_short_rest_level)
+  const partialLevel = rule.short_rest_recovery_level == null ? null : nonNegativeInt(rule.short_rest_recovery_level)
+  return {
+    short_rest: !!rule.rollback_short_rest || (shortRestLevel != null && level >= shortRestLevel),
+    long_rest: !!rule.rollback_long_rest,
+    short_rest_recovery: partialLevel == null || level >= partialLevel
+      ? nonNegativeInt(rule.short_rest_recovery)
+      : 0,
+  }
+}
+
+function abilityAvailable(entry, definition, total) {
+  if (!definition.multiple) return entry.count == null ? total : nonNegativeInt(entry.count)
+  const stored = entry.resource_counts?.[definition.key]
+  return stored == null ? total : nonNegativeInt(stored)
+}
+
+function withAbilityAvailable(entry, definition, available) {
+  if (!definition.multiple) return { ...entry, count: available, resource_version: 1 }
+  return {
+    ...entry,
+    resource_version: 1,
+    resource_counts: { ...(entry.resource_counts || {}), [definition.key]: available },
+  }
+}
+
+function restoredAvailable(resource, kind, current, total) {
+  if (kind === 'long') return restoresOn(resource, kind) ? total : current
+  if (resource.short_rest) return total
+  return Math.min(total, current + nonNegativeInt(resource.short_rest_recovery))
 }
 
 /**
@@ -79,20 +123,28 @@ export function createAbilityResourceSource(valueId, color) {
       return entries.flatMap((entry) => {
         const item = itemsById.get(String(entry.id))
         if (!item) return []
-        const total = abilityUseTotal(item.data, values, entry)
-        if (total == null || total <= 0) return []
-        return [{
-          key: `abilities:${valueId}:${entryKey(entry)}`,
-          title: item.name || 'Способность',
-          color_point: item.data?.resource_color || color,
-          value: Math.min(nonNegativeInt(entry.count ?? total), total),
-          total,
-          short_rest: !!item.data?.rollback_short_rest,
-          long_rest: !!item.data?.rollback_long_rest,
-          readonly: true,
-          source_label: 'Настраивается в способности',
-          source: { sourceId: this.id, valueId, entryKey: entryKey(entry) },
-        }]
+        return abilityResourceDefinitions(item.data).flatMap((definition) => {
+          const total = abilityUseTotal(definition.rule, values, entry, item.data)
+          if (total == null || total <= 0) return []
+          const rest = abilityRestRule(definition.rule, item.data, values)
+          return [{
+            key: `abilities:${valueId}:${entryKey(entry)}${definition.key ? `:${definition.key}` : ''}`,
+            title: definition.rule.title || item.name || 'Способность',
+            color_point: definition.rule.resource_color || item.data?.resource_color || color,
+            value: Math.min(abilityAvailable(entry, definition, total), total),
+            total,
+            ...rest,
+            readonly: true,
+            source_label: definition.multiple ? item.name : 'Настраивается в способности',
+            source: {
+              sourceId: this.id,
+              valueId,
+              entryKey: entryKey(entry),
+              resourceKey: definition.key,
+              multiple: definition.multiple,
+            },
+          }]
+        })
       })
     },
     setAvailable(values, resource, available) {
@@ -100,8 +152,14 @@ export function createAbilityResourceSource(valueId, color) {
       const key = resource.source?.entryKey
       if (!entries.some((entry) => entryKey(entry) === key)) return {}
       const nextValue = Math.min(nonNegativeInt(available), nonNegativeInt(resource.total))
+      const definition = {
+        key: resource.source?.resourceKey,
+        multiple: !!resource.source?.multiple,
+      }
       return {
-        [valueId]: entries.map((entry) => entryKey(entry) === key ? { ...entry, count: nextValue } : entry),
+        [valueId]: entries.map((entry) => entryKey(entry) === key
+          ? withAbilityAvailable(entry, definition, nextValue)
+          : entry),
       }
     },
     restore(values, itemsById, kind) {
@@ -111,17 +169,19 @@ export function createAbilityResourceSource(valueId, color) {
       const next = entries.map((entry) => {
         const item = itemsById.get(String(entry.id))
         if (!item) return entry
-        const total = abilityUseTotal(item.data, values, entry)
-        const resource = {
-          short_rest: !!item.data?.rollback_short_rest,
-          long_rest: !!item.data?.rollback_long_rest,
+        let nextEntry = entry
+        for (const definition of abilityResourceDefinitions(item.data)) {
+          const total = abilityUseTotal(definition.rule, values, nextEntry, item.data)
+          if (total == null) continue
+          const resource = abilityRestRule(definition.rule, item.data, values)
+          const current = Math.min(abilityAvailable(nextEntry, definition, total), total)
+          const restored = restoredAvailable(resource, kind, current, total)
+          if (restored <= current) continue
+          recoveredNames.push(definition.rule.title || item.name || 'Способность')
+          nextEntry = withAbilityAvailable(nextEntry, definition, restored)
+          changed = true
         }
-        if (total == null || !restoresOn(resource, kind)) return entry
-        const current = entry.count == null ? total : nonNegativeInt(entry.count)
-        if (current < total) recoveredNames.push(item.name || 'Способность')
-        if (current === total) return entry
-        changed = true
-        return { ...entry, count: total }
+        return nextEntry
       })
       return { patch: changed ? { [valueId]: next } : {}, recoveredNames }
     },
