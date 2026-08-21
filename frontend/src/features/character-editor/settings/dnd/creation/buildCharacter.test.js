@@ -85,6 +85,21 @@ describe('buildCharacterData spell preparation', () => {
 })
 
 describe('buildCharacterData starting equipment', () => {
+  it('stores three chosen bard instruments without the broad musical category', () => {
+    const labels = { 319: 'Барабаны', 322: 'Лютня', 326: 'Флейта' }
+    const result = buildCharacterData({
+      race: selection(1, 'Человек'),
+      charClass: selection(4016, 'Бард', {
+        tool_prof_choice: { count: 3, from: [319, 322, 326] },
+      }),
+      classToolProficiencyIds: [319, 322, 326],
+      suggestValue: (typeId, id) => typeId === 5 ? labels[id] || '' : '',
+    })
+
+    expect(result.data.values.proficiencies['Инструменты']).toEqual(['Барабаны', 'Лютня', 'Флейта'])
+    expect(result.data.values.proficiencies['Инструменты']).not.toContain('Музыкальные инструменты')
+  })
+
   it('stores the concrete background tool proficiency instead of its generic category', () => {
     const result = buildCharacterData({
       race: selection(1, 'Человек'),

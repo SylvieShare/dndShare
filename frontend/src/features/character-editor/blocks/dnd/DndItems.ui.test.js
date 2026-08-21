@@ -7,16 +7,19 @@ const iconSource = readFileSync(fileURLToPath(new URL('../../components/Inventor
 const blocks = JSON.parse(readFileSync(fileURLToPath(new URL('../../settings/dnd/blocks.json', import.meta.url)), 'utf8'))
 
 describe('inventory item actions', () => {
-  it('uses one row menu for spending, replenishing and editing', () => {
+  it('uses quantity actions and only edits simplified custom items', () => {
     expect(source).toContain('<RowActionMenu')
-    expect(source).toContain('>Потратить</RowActionItem>')
-    expect(source).toContain('>Добавить</RowActionItem>')
+    expect(source).not.toContain('>Потратить</RowActionItem>')
+    expect(source).toContain('>Добавить +1</RowActionItem>')
+    expect(source).toContain('>Удалить одну</RowActionItem>')
+    expect(source).toContain('v-if="canManage && entry.count > 1"')
+    expect(source).toContain('v-if="canManage && entry.item_id == null"')
     expect(source).toContain('>Изменить</RowActionItem>')
     expect(source).not.toContain('FormNumberInput')
   })
 
-  it('publishes semantic inventory events', () => {
-    expect(source).toContain("type: 'item_spent'")
+  it('publishes semantic inventory additions without treating removal as spending', () => {
+    expect(source).not.toContain("type: 'item_spent'")
     expect(source).toContain("type: 'item_added'")
   })
 
@@ -33,6 +36,8 @@ describe('inventory item actions', () => {
   it('shows tools as inventory items without mutating character proficiencies', () => {
     expect(source).toContain("'di-row-tool': isToolEntry(entry)")
     expect(source).toContain('{{ toolCategoryLabel(entry) }}')
+    expect(source).toContain('entryHasProficiency(entry)')
+    expect(source).toContain('class="di-item-proficient">Владение</span>')
     expect(source).not.toContain('isToolProficient')
     expect(source).not.toContain('toggleToolProficiency')
     expect(source).not.toContain('charCtx.updateValues({ proficiencies })')

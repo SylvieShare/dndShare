@@ -54,6 +54,7 @@
 
           <StepClassEquipment v-if="classEquipmentProfile" class="choice-block" />
           <StepSkills v-if="skillOptions.length" class="choice-block" />
+          <StepToolProficiencies v-if="classToolProficiencyOptions.length" class="choice-block" />
           <StepChoices v-if="classFeatureChoices.length" scope="class" class="choice-block" />
           <section v-if="isCaster" class="choice-block">
             <div class="sheet-section-title">Заклинания</div>
@@ -75,12 +76,13 @@ import SubclassSelectTile from '@/features/character-list/components/wizard/Subc
 import StepChoices from '@/features/character-list/components/wizard/steps/StepChoices.vue'
 import StepClassEquipment from '@/features/character-list/components/wizard/steps/StepClassEquipment.vue'
 import StepSkills from '@/features/character-list/components/wizard/steps/StepSkills.vue'
+import StepToolProficiencies from '@/features/character-list/components/wizard/steps/StepToolProficiencies.vue'
 import StepSpells from '@/features/character-list/components/wizard/steps/StepSpells.vue'
 import { classSummary, monogramOf } from '@/features/character-list/components/wizard/labels'
 
 const {
   classes, subclasses, state, loading, suggestValue, subclassAtCreation,
-  skillOptions, classFeatureChoices, isCaster, classAbilities, classSubclassNames, classEquipmentProfile, spellPool,
+  skillOptions, classToolProficiencyOptions, classFeatureChoices, isCaster, classAbilities, classSubclassNames, classEquipmentProfile, spellPool,
 } = inject('createWizard')
 const classDesc = computed(() => state.charClass?.data?.description || '')
 const subclassDesc = computed(() => state.subclass?.data?.description || '')
@@ -89,6 +91,7 @@ const hasClassChoices = computed(() => (
   (subclasses.value.length && subclassAtCreation.value)
   || classEquipmentProfile.value
   || skillOptions.value.length
+  || classToolProficiencyOptions.value.length
   || classFeatureChoices.value.length
   || isCaster.value
 ))

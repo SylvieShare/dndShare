@@ -115,6 +115,9 @@ var schemaToolProficiencyCatalogSQL string
 //go:embed schema/32_ability_resources.sql
 var schemaAbilityResourcesSQL string
 
+//go:embed schema/33_class_tool_choices.sql
+var schemaClassToolChoicesSQL string
+
 var schemaParts = []struct {
 	name string
 	sql  string
@@ -153,6 +156,7 @@ var schemaParts = []struct {
 	{"item-type-hierarchy", schemaItemTypeHierarchySQL},
 	{"tool-proficiency-catalog", schemaToolProficiencyCatalogSQL},
 	{"ability-resources", schemaAbilityResourcesSQL},
+	{"class-tool-choices", schemaClassToolChoicesSQL},
 }
 
 func applySchema(ctx context.Context, pool *pgxpool.Pool) error {

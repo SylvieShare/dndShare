@@ -21,8 +21,8 @@
           <svg v-if="isSelected(opt.id)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6" /></svg>
         </span>
         <span class="sk-name">{{ opt.name }}</span>
-        <span v-if="skillStat(opt.id)" class="sk-abil">{{ STAT_SHORT[skillStat(opt.id)] }}</span>
-        <span class="sk-mod" :class="modClass(skillMod(opt.id))">{{ formatMod(skillMod(opt.id)) }}</span>
+        <span v-if="showMechanics && skillStat(opt.id)" class="sk-abil">{{ STAT_SHORT[skillStat(opt.id)] }}</span>
+        <span v-if="showMechanics" class="sk-mod" :class="modClass(skillMod(opt.id))">{{ formatMod(skillMod(opt.id)) }}</span>
       </div>
     </div>
     <ItemTooltip
@@ -48,6 +48,7 @@ const props = defineProps({
   options: { type: Array, default: () => [] },
   selected: { type: Array, default: () => [] },
   limit: { type: Number, default: 0 },
+  showMechanics: { type: Boolean, default: true },
 })
 const emit = defineEmits(['toggle'])
 const { skillStat, skillMod } = inject('createWizard')

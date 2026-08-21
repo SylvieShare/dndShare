@@ -27,6 +27,7 @@ describe('class step hierarchy', () => {
     expect(source).toContain('class="choice-stack"')
     expect(source).toContain('<StepClassEquipment v-if="classEquipmentProfile" class="choice-block"')
     expect(source).toContain('<StepSkills v-if="skillOptions.length" class="choice-block"')
+    expect(source).toContain('<StepToolProficiencies v-if="classToolProficiencyOptions.length" class="choice-block"')
     expect(source).toContain('<StepChoices v-if="classFeatureChoices.length" scope="class" class="choice-block"')
     expect(source).not.toContain('ChoiceResult')
   })

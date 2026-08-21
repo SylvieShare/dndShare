@@ -11,4 +11,9 @@ describe('weapon card icon', () => {
     expect(source).toContain(':size="64"')
     expect(source).toMatch(/\.w-icon \{[^}]*flex: 0 0 64px;[^}]*width: 64px;[^}]*height: 64px;/)
   })
+
+  it('shows resolved weapon proficiency on the tile', () => {
+    expect(source).toContain('ctx.isWeaponProficient(entry)')
+    expect(source).toContain('class="w-proficiency">Владение</span>')
+  })
 })

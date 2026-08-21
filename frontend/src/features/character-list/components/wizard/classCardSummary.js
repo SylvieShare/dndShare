@@ -66,6 +66,7 @@ export function classCardSummary({ charClass, classAbilities = [], suggestValue 
   const choices = []
   if (data.starting_equipment || data.startingEquipment) choices.push('снаряжение')
   if (data.skill_choice?.count) choices.push(`${data.skill_choice.count} навыка`)
+  if (data.tool_prof_choice?.count) choices.push(`${data.tool_prof_choice.count} инструмента`)
   if (classFeatures.some((ability) => ability?.data?.choice)) choices.push('особенности')
   const spellcasting = data.spellcasting
   if (spellcasting && (Number(spellcasting.cantrips_known) > 0 || Number(spellcasting.spells_known) > 0)) choices.push('заклинания')

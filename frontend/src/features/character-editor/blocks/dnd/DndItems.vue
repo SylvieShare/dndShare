@@ -89,8 +89,9 @@
                         <span class="di-count-x">x</span>{{ entry.count }}
                       </span>
                     </span>
-                    <span v-if="isToolEntry(entry)" class="di-tool-meta">
-                      <span>{{ toolCategoryLabel(entry) }}</span>
+                    <span v-if="isToolEntry(entry) || entryHasProficiency(entry)" class="di-item-meta">
+                      <span v-if="isToolEntry(entry)">{{ toolCategoryLabel(entry) }}</span>
+                      <span v-if="entryHasProficiency(entry)" class="di-item-proficient">Владение</span>
                     </span>
                   </span>
                 </div>
@@ -110,18 +111,17 @@
                 >Переместить в «{{ specializedDestination(entry).label }}»</RowActionItem>
                 <RowActionItem
                   v-if="canManage"
-                  action="use"
-                  tone="accent"
-                  @click="spendEntry(section.id, entry, close)"
-                >Потратить</RowActionItem>
-                <RowActionItem
-                  v-if="canManage"
                   action="replenish"
                   tone="success"
                   @click="addEntry(section.id, entry, close)"
-                >Добавить</RowActionItem>
+                >Добавить +1</RowActionItem>
                 <RowActionItem
-                  v-if="canManage"
+                  v-if="canManage && entry.count > 1"
+                  action="delete"
+                  @click="deleteOneEntry(section.id, entry, close)"
+                >Удалить одну</RowActionItem>
+                <RowActionItem
+                  v-if="canManage && entry.item_id == null"
                   action="edit"
                   @click="editEntry(section.id, entry, close)"
                 >Изменить</RowActionItem>
@@ -221,7 +221,9 @@ import { RowActionMenu } from '@sylvieshare/share-ui'
 import { SectionLabel } from '@sylvieshare/share-ui'
 import { itemsApi } from '@/shared/api/itemsApi'
 import { useItemTypesStore } from '@/stores/itemTypes'
+import { useSuggestStore } from '@/stores/suggest'
 import { applicableInstanceFields, defaultInstanceParams } from '@/features/items/lib/itemInstance'
+import { hasItemProficiency } from '@/features/character-editor/lib/itemProficiency'
 import { useSortable } from '@sylvieshare/share-ui'
 import { logSessionEntryAdded } from '@/features/character-editor/lib/sessionEntryEvents'
 import {
@@ -256,6 +258,7 @@ const confirmDel = reactive({ open: false, id: null, name: '' })
 const renamingId = ref(null)
 const renameInputs = ref([])
 const itemTypesStore = useItemTypesStore()
+const suggestStore = useSuggestStore()
 
 const model = computed(() => normalizeValue(props.value))
 
@@ -310,6 +313,10 @@ function entryTypeId(entry) {
 
 function isToolEntry(entry) {
   return entryTypeId(entry) === toolTypeId.value
+}
+
+function entryHasProficiency(entry) {
+  return hasItemProficiency(entry.display?.base, charCtx.values, (typeId) => suggestStore.items(typeId))
 }
 
 function toolCategoryLabel(entry) {
@@ -535,14 +542,8 @@ function viewEntry(entry, close) {
   close()
 }
 
-function spendEntry(sectionId, entry, close) {
-  const previous = Math.max(1, Number(entry.count) || 1)
+function deleteOneEntry(sectionId, entry, close) {
   decrement(sectionId, entry.uid)
-  charCtx.logSessionEvent?.({
-    type: 'item_spent',
-    action: `Потрачено: ${entry.display.name}`,
-    data: { itemId: entry.item_id || null, remaining: Math.max(0, previous - 1) },
-  })
   close()
 }
 
@@ -594,7 +595,10 @@ function hideTooltip() { tooltip.visible = false }
 
 onMounted(async () => {
   try {
-    await itemTypesStore.ensureAll().catch(() => [])
+    await Promise.all([
+      itemTypesStore.ensureAll().catch(() => []),
+      ...[3, 4, 5].map((typeId) => suggestStore.ensure(typeId).catch(() => [])),
+    ])
     const ids = allCatalogIds(model.value)
     if (ids.length) {
       const r = await itemsApi.byIds(ids)

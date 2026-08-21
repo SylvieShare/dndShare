@@ -148,6 +148,7 @@ export function useDndCreateWizard() {
     if (hydrating) return
     state.subclass = null
     state.skillIds = []
+    state.classToolProficiencyIds = []
     state.spellIds = []
     equipment.resetEquipmentForClass()
     subclasses.value = []
@@ -208,6 +209,7 @@ export function useDndCreateWizard() {
     subclass: state.subclass,
     raceVariant: state.raceVariant,
     background: state.background,
+    classToolProficiencyIds: state.classToolProficiencyIds,
     backgroundToolProficiencies: selectedBackgroundToolProficiencies.value,
   }))
 
@@ -219,6 +221,25 @@ export function useDndCreateWizard() {
     desc: suggestStore.items(SKILL_SUGGEST).find(item => String(item.id) === String(id))?.desc || '',
   })))
   const skillLimit = computed(() => grants.value.skillChoice?.count || 0)
+  const classToolProficiencyOptions = computed(() => {
+    const choice = grants.value.toolProficiencyChoice
+    if (!choice) return []
+    const allowed = new Set((choice.from || []).map(String))
+    return suggestStore.items(5)
+      .filter((item) => allowed.has(String(item.id)))
+      .map((item) => ({ id: item.id, name: item.value, desc: item.desc || '' }))
+  })
+  const classToolProficiencyLimit = computed(() => grants.value.toolProficiencyChoice?.count || 0)
+  const classToolProficienciesComplete = computed(() => {
+    if (!grants.value.toolProficiencyChoice) return true
+    const allowed = new Set(classToolProficiencyOptions.value.map((option) => String(option.id)))
+    const selected = new Set(state.classToolProficiencyIds.map(String))
+    return selected.size === classToolProficiencyLimit.value
+      && [...selected].every((id) => allowed.has(id))
+  })
+  function toggleClassToolProficiency(id) {
+    toggleFromList(state.classToolProficiencyIds, id, classToolProficiencyLimit.value)
+  }
 
   function racialBonus(s) {
     const fixed = (grants.value.asi || []).filter((a) => a.stat === s).reduce((sum, a) => sum + a.bonus, 0)
@@ -631,6 +652,8 @@ export function useDndCreateWizard() {
     raceSubraceNames,
     raceAbilities, classAbilities, classSubclassNames,
     grants, isCaster, skillOptions, skillLimit, finalScores, racialBonus, featBonuses,
+    classToolProficiencyOptions, classToolProficiencyLimit,
+    classToolProficienciesComplete, toggleClassToolProficiency,
     pointsSpent, pointsLeft,
     featureChoices, raceFeatureChoices, classFeatureChoices,
     choiceOptionList, choiceSelected, toggleChoice, choicesComplete,

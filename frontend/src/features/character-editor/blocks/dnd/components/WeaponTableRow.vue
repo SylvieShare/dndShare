@@ -52,6 +52,7 @@
         </div>
       </div>
       <span v-if="ctx.itemSubtitle(entry)" class="w-subtitle">{{ ctx.itemSubtitle(entry) }}</span>
+      <span v-if="ctx.isWeaponProficient(entry)" class="w-proficiency-label">Владение</span>
     </td>
 
     <td v-if="ctx.charCtx.ownerMode" class="w-stat-controls">
@@ -66,8 +67,10 @@
       />
       <button
         class="w-prof"
-        :class="{ on: entry.proficient }"
+        :class="{ on: ctx.isWeaponProficient(entry) }"
         type="button"
+        :disabled="ctx.hasLinkedWeaponProficiency(entry)"
+        :title="ctx.hasLinkedWeaponProficiency(entry) ? 'Получено из владений персонажа' : ''"
         @click="ctx.setField(index, 'proficient', !entry.proficient)"
       >
         Владение
@@ -297,6 +300,7 @@ const colspan = computed(() => ctx.charCtx.ownerMode ? 6 : 4)
   font-size: 11px;
   color: var(--text-muted);
 }
+.w-proficiency-label { display: block; margin-top: 2px; color: var(--success); font-size: 9px; font-weight: 700; }
 
 .w-name-actions {
   display: inline-flex;

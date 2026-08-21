@@ -38,6 +38,15 @@ describe('class card summary', () => {
     }))
   })
 
+  it('announces a class tool proficiency choice without granting its broad category', () => {
+    const summary = classCardSummary({
+      charClass: { id: 4016, data: { tool_prof_choice: { count: 3, from: [319, 322, 326] } } },
+      suggestValue: () => '',
+    })
+    expect(summary.choices).toContain('3 инструмента')
+    expect(summary.facts.find((fact) => fact.label === 'Владения')).toBeUndefined()
+  })
+
   it('summarizes only the level-one benefits owned by an archetype', () => {
     const summary = subclassCardSummary({
       subclass: {

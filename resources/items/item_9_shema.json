@@ -42,6 +42,25 @@
     "suggest_id": 5
   },
   {
+    "name": "Выбор владений инструментами",
+    "key": "tool_prof_choice",
+    "type": "object",
+    "fields": [
+      {
+        "name": "Количество",
+        "key": "count",
+        "type": "int",
+        "default": 1
+      },
+      {
+        "name": "Из владений",
+        "key": "from",
+        "type": "suggest_array",
+        "suggest_id": 5
+      }
+    ]
+  },
+  {
     "name": "Выбор навыков",
     "key": "skill_choice",
     "type": "object",

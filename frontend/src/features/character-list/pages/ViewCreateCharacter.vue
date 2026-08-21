@@ -121,6 +121,7 @@ const {
   asiChoiceComplete, raceVariantsComplete,
   raceSkillsComplete, raceLangsComplete, featComplete,
   raceChoicesComplete, classChoicesComplete, classEquipmentComplete, bgLangsComplete,
+  classToolProficienciesComplete, classToolProficiencyLimit,
   backgroundItemChoicesComplete,
 } = wz
 
@@ -130,7 +131,8 @@ const mainRef = ref(null)
 const invalidPulse = ref(false)
 function doReset() { resetOpen.value = false; reset() }
 const isComplete = computed(() =>
-  state.version === '2014' && !!state.race && !!state.charClass && classEquipmentComplete.value
+  state.version === '2014' && !!state.race && !!state.charClass
+  && classToolProficienciesComplete.value && classEquipmentComplete.value
   && (!state.buyStartingEquipment || !!state.startingWealthRoll)
   && !!state.background && backgroundItemChoicesComplete.value
   && !!state.name.trim() && scoresComplete.value)
@@ -192,6 +194,7 @@ function validateStep(key) {
       if (!state.charClass) return { ok: false, reason: 'Выбери класс' }
       if (requiresSubclass.value && !state.subclass) return { ok: false, reason: 'Выбери архетип' }
       if (skillLimit.value && state.skillIds.length !== skillLimit.value) return { ok: false, reason: `Навыки: ${state.skillIds.length} из ${skillLimit.value}` }
+      if (!classToolProficienciesComplete.value) return { ok: false, reason: `Инструменты: ${state.classToolProficiencyIds.length} из ${classToolProficiencyLimit.value}` }
       if (!classChoicesComplete.value) return { ok: false, reason: 'Заверши выборы класса' }
       if (cantripLimit.value > 0 && cantripChosen.value !== cantripLimit.value) {
         return { ok: false, reason: `Заговоры: ${cantripChosen.value} из ${cantripLimit.value}` }

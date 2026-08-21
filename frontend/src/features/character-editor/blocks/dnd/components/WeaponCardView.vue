@@ -49,6 +49,7 @@
         </div>
         <span v-if="ctx.rangeLabel(entry)" class="w-range">{{ ctx.rangeLabel(entry) }}</span>
         <span v-else-if="ctx.itemSubtitle(entry)" class="w-subtitle">{{ ctx.itemSubtitle(entry) }}</span>
+        <span v-if="ctx.isWeaponProficient(entry)" class="w-proficiency">Владение</span>
       </div>
       <AttackDamage
         :attack="ctx.formatBonus(ctx.attackBonus(entry))"
@@ -185,6 +186,12 @@ const nameClickable = computed(() => ctx.charCtx.ownerMode || !!ctx.item(props.e
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.w-proficiency {
+  color: var(--success);
+  font-size: 10px;
+  font-weight: 700;
 }
 
 .w-props-inline {

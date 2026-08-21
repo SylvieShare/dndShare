@@ -158,7 +158,7 @@ whose illustration reads `coverImageUrl` and falls back to a monogram when no
 cover is assigned. A row presents its short handbook description,
 hit die, primary abilities, saving throws, proficiencies, level-one features and
 available archetype names; feature descriptions use the shared hover tooltip.
-Dependent equipment, skill, feature, archetype and spell choices are announced in
+Dependent equipment, skill, tool-proficiency, feature, archetype and spell choices are announced in
 the row but each type is rendered as its own accent-edged section only after selection. The selected
 row moves to the top, the other classes leave the list, and the same stable back and
 scroll-restoration behaviour as the race step returns to the catalogue. Archetype
@@ -172,6 +172,12 @@ viewport and gives vertical scrolling exclusively to `.cc-main`; scroll chaining
 to the document is contained. Equipment-column radios occupy their visible label
 geometry, so focusing a column title cannot move the document to an off-screen
 one-pixel control.
+`item.data.tool_prof_choice {count,from}` describes a class-owned choice from
+suggest type 5. PHB 2014 bard uses it to require three distinct concrete musical
+instruments. The picker deliberately omits skill ability/modifier columns,
+persists its IDs in `classToolProficiencyIds`, blocks forward navigation until
+all three are chosen and writes their labels to the character's tool proficiency
+bucket. The broad `Музыкальные инструменты` category is not granted.
 The selected class is followed by a separate three-paragraph lore article; the
 compact card uses `item.data.short_description` and does not repeat mechanics in
 that prose. Race and class screens share `IllustratedChoiceStage`, which owns the

@@ -80,6 +80,7 @@ function mergeIds(target, ids) {
  */
 export function extractGrants({
   race, subrace, charClass, subclass, raceVariant, background,
+  classToolProficiencyIds = [],
   backgroundToolProficiencies = [],
 } = {}) {
   const grants = {
@@ -99,6 +100,7 @@ export function extractGrants({
     languages: [],
     hitDieId: null,
     skillChoice: null,
+    toolProficiencyChoice: null,
     spellcasting: null,
     subclassLevel: null,
     asiLevels: null,
@@ -157,6 +159,12 @@ export function extractGrants({
     mergeIds(grants.proficiencies.armor, d.armor_prof)
     mergeIds(grants.proficiencies.weapon, d.weapon_prof)
     mergeIds(grants.proficiencies.tool, d.tool_prof)
+    if (d.tool_prof_choice && num(d.tool_prof_choice.count) != null) {
+      grants.toolProficiencyChoice = {
+        count: num(d.tool_prof_choice.count),
+        from: asList(d.tool_prof_choice.from).map((id) => num(id) ?? id),
+      }
+    }
     if (d.skill_choice && num(d.skill_choice.count) != null) {
       grants.skillChoice = {
         count: num(d.skill_choice.count),
@@ -175,6 +183,16 @@ export function extractGrants({
     }
     if (num(d.subclass_level) != null) grants.subclassLevel = num(d.subclass_level)
     if (d.asi_levels != null && d.asi_levels !== '') grants.asiLevels = d.asi_levels
+  }
+
+  if (grants.toolProficiencyChoice) {
+    const allowed = new Set(grants.toolProficiencyChoice.from.map(String))
+    mergeIds(
+      grants.proficiencies.tool,
+      asList(classToolProficiencyIds)
+        .filter((id) => allowed.has(String(id)))
+        .slice(0, grants.toolProficiencyChoice.count),
+    )
   }
 
   // Background (type 11): fixed skill proficiencies, fixed + chosen languages, tools.

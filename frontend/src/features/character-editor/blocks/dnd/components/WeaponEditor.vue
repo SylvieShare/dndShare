@@ -22,8 +22,9 @@
       </FormField>
       <FormField vertical label="Владение" class="wed-f-prof">
         <ToggleSwitch
-          :modelValue="!!entry.proficient"
+          :modelValue="ctx.isWeaponProficient(entry)"
           label=""
+          :disabled="ctx.hasLinkedWeaponProficiency(entry)"
           @update:modelValue="ctx.setField(index, 'proficient', $event)"
         />
       </FormField>

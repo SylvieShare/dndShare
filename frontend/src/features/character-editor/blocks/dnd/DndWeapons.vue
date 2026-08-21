@@ -110,10 +110,12 @@ import { useSuggestStore } from '@/stores/suggest'
 import { SYSTEM_DICE } from '@/shared/lib/systemDice'
 import { logSessionEntryAdded } from '@/features/character-editor/lib/sessionEntryEvents'
 import { abilityModifiersBySuggest } from '@/features/character-editor/blocks/dnd/lib/weaponAbility'
+import { hasItemProficiency } from '@/features/character-editor/lib/itemProficiency'
 
 const props = defineProps(['block', 'value', 'values', 'vars'])
 const emit  = defineEmits(['update:value'])
 const charCtx = inject('charCtx', () => ({ ownerMode: true, dictionaries: {}, var: {} }))
+const suggestStore = useSuggestStore()
 
 const entries                = ref([])
 const modalItemId            = ref(null)
@@ -126,7 +128,7 @@ const magicOptions = [0, 1, 2, 3].map(value => ({ value, label: value > 0 ? '+' 
 
 function suggestItems(typeId) {
   if (typeId == null) return []
-  return useSuggestStore().items(typeId) || []
+  return suggestStore.items(typeId) || []
 }
 
 const tagSuggestTypeId    = computed(() => props.block.content.tag_suggest_type_id || inferredTagSuggestTypeId.value)
@@ -153,6 +155,14 @@ const profBonus   = computed(() => {
   if (!path) return 0
   return Number(path.split('.').reduce((cur, key) => cur?.[key], props.values)) || 0
 })
+
+function hasLinkedWeaponProficiency(entry) {
+  return hasItemProficiency(item(entry), charCtx.values || props.values, suggestItems)
+}
+
+function isWeaponProficient(entry) {
+  return !!entry.proficient || hasLinkedWeaponProficiency(entry)
+}
 
 const {
   itemMap,
@@ -188,6 +198,7 @@ const {
   propertyItems,
   itemBaseAttacks,
   itemTwoHandedAttacks,
+  isProficient: isWeaponProficient,
 })
 
 const modalItem   = computed(() => modalItemId.value != null ? itemMap.value[modalItemId.value] || null : null)
@@ -321,6 +332,8 @@ provide('weaponsBlockCtx', reactive({
   item,
   itemTitle,
   itemSubtitle,
+  isWeaponProficient,
+  hasLinkedWeaponProficiency,
   rangeLabel,
   propertyItems,
   magicBonus,
@@ -368,7 +381,8 @@ onMounted(() => {
     props.block.content.stat_suggest_type_id,
     props.block.content.type_attack_suggest_type_id,
     tagSuggestTypeId.value,
-  ].filter(Boolean).forEach(id => useSuggestStore().ensure(id))
+    4,
+  ].filter(Boolean).forEach(id => suggestStore.ensure(id))
   ensureTagSuggestType()
 })
 

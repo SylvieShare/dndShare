@@ -9,12 +9,13 @@ import (
 )
 
 func TestToolProficiencyCatalogIsEmbeddedAfterItemTypeHierarchy(t *testing.T) {
-	if len(schemaParts) < 3 {
+	if len(schemaParts) < 4 {
 		t.Fatal("schemaParts must contain the final item catalogue sections")
 	}
-	hierarchy := schemaParts[len(schemaParts)-3]
-	tools := schemaParts[len(schemaParts)-2]
-	resources := schemaParts[len(schemaParts)-1]
+	hierarchy := schemaParts[len(schemaParts)-4]
+	tools := schemaParts[len(schemaParts)-3]
+	resources := schemaParts[len(schemaParts)-2]
+	classTools := schemaParts[len(schemaParts)-1]
 	if hierarchy.name != "item-type-hierarchy" || hierarchy.sql == "" || hierarchy.sql != schemaItemTypeHierarchySQL {
 		t.Fatal("item-type-hierarchy schema must be embedded after the equipment catalogues")
 	}
@@ -24,6 +25,47 @@ func TestToolProficiencyCatalogIsEmbeddedAfterItemTypeHierarchy(t *testing.T) {
 	if resources.name != "ability-resources" || resources.sql == "" || resources.sql != schemaAbilityResourcesSQL {
 		t.Fatal("ability resource fields must be embedded after handbook item types exist")
 	}
+	if classTools.name != "class-tool-choices" || classTools.sql == "" || classTools.sql != schemaClassToolChoicesSQL {
+		t.Fatal("class tool choices must be embedded after concrete tool proficiencies exist")
+	}
+}
+
+func TestBardChoosesThreeConcreteMusicalToolProficiencies(t *testing.T) {
+	for _, fragment := range []string{
+		`"key":"tool_prof_choice"`,
+		"class.data - 'tool_prof'",
+		"'count', 3",
+		"suggest.code LIKE 'tool-music-%'",
+		"lower('Бард')",
+		"jsonb_array_length(COALESCE(musical.ids, '[]'::jsonb)) = 10",
+	} {
+		if !strings.Contains(schemaClassToolChoicesSQL, fragment) {
+			t.Fatalf("bard tool choice schema must contain %q", fragment)
+		}
+	}
+}
+
+func TestClassResourceSchemaExposesToolProficiencyChoice(t *testing.T) {
+	path := filepath.Join("..", "..", "resources", "items", "item_9_shema.json")
+	contents, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatalf("read %s: %v", path, err)
+	}
+	var fields []map[string]any
+	if err := json.Unmarshal(contents, &fields); err != nil {
+		t.Fatalf("parse %s: %v", path, err)
+	}
+	for _, field := range fields {
+		if field["key"] != "tool_prof_choice" {
+			continue
+		}
+		children, _ := field["fields"].([]any)
+		if field["type"] != "object" || len(children) != 2 {
+			t.Fatalf("unexpected class tool choice field: %#v", field)
+		}
+		return
+	}
+	t.Fatal("item_9 schema must expose tool_prof_choice")
 }
 
 func TestAbilityResourceSchemasExposeModifierFormula(t *testing.T) {

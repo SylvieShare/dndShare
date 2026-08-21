@@ -25,6 +25,12 @@ describe('D&D creation wizard state', () => {
     expect(serializeDndWizardState(createDndWizardState()).flowVersion).toBe(DND_WIZARD_FLOW_VERSION)
   })
 
+  it('persists concrete class tool proficiency choices', () => {
+    const state = createDndWizardState()
+    state.classToolProficiencyIds = [319, 322, 326]
+    expect(serializeDndWizardState(state).classToolProficiencyIds).toEqual([319, 322, 326])
+  })
+
   it('keeps uploaded persona media in the draft', () => {
     const state = createDndWizardState()
     state.persona.portrait = { url: '/portrait.webp', upload_id: 41 }

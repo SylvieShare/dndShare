@@ -51,6 +51,7 @@ export function buildDndCharacterPayload({
     startingWallet: { ...(startingWallet || {}) },
     persona: { ...state.persona },
     skillIds: state.skillIds.slice(),
+    classToolProficiencyIds: state.classToolProficiencyIds.slice(),
     spellIds: state.spellIds.slice(),
     spellLevels: Object.fromEntries(
       [...(spellPool || []), ...(grantedSpellList || [])]

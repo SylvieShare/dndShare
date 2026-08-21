@@ -91,6 +91,7 @@ export function buildCharacterData(input) {
     name = '', race, subrace = null, charClass, subclass = null, raceVariant = null,
     background = null,
     scores = {}, asiChoice = [], skillIds = [], spellIds = [], spellLevels = {}, grantedSpellIds = [], choices = [],
+    classToolProficiencyIds = [],
     raceSkillIds = [], raceLangIds = [], featIds = [], feats = [], bgLangIds = [],
     equipment = [], backgroundEquipment = { items: [], coins: {} },
     backgroundToolProficiencies = [],
@@ -101,6 +102,7 @@ export function buildCharacterData(input) {
   const grants = extractGrants({
     race: race?.item, subrace: subrace?.item,
     charClass: charClass?.item, subclass: subclass?.item,
+    classToolProficiencyIds,
     raceVariant, background: background?.item,
     backgroundToolProficiencies,
   })

@@ -267,10 +267,11 @@ The same picker is used for feats and abilities and opens above the active morph
 editor, so its filters and item selection are never hidden behind the morph.
 The list shows count as a badge and has no inline increment/decrement controls.
 Clicking an inventory row opens the shared `RowActionMenu`: referenced items can
-open their description, while editable rows offer spend, add, change and delete.
-Spend/add changes the stack by one and publishes `item_spent`/`item_added` in an
-attached session; editing metadata or deleting an entry does not claim a gameplay
-action. A referenced child-type item also offers a move to its specialized
+open their description and add one copy. A stack with more than one copy offers
+separate removal of one copy and deletion of the whole entry. Only simplified
+rows created without a handbook `item_id` offer metadata editing; inventory
+removal is not recorded as item use. Adding a copy publishes `item_added` in an
+attached session. A referenced child-type item also offers a move to its specialized
 weapon or potion block. Potions can move back to the ordinary inventory without
 recreating the owned entry; the reverse action for weapons is
 intentionally deferred. Creating a new inventory item or weapon publishes `entry_added`; the
@@ -296,8 +297,13 @@ ownership and `proficiencies['Инструменты']` are independent, so a ch
 know a tool without carrying it and carry one without being proficient. The
 handbook detail resolves `required_tool_proficiencies` through suggest type 5
 and displays the acceptable concrete/category proficiencies under the cover;
-multiple links use OR semantics. Inventory rows use 64×64 handbook images while
-retaining type-specific inner content.
+multiple links use OR semantics. Inventory tiles resolve those links against the
+character proficiency buckets and show `Владение` only on matching tools and
+armor. Weapon tiles use the same resolver for
+`required_weapon_proficiencies`; an automatic match also supplies the attack
+proficiency bonus, while the per-entry switch remains available for unlinked or
+custom weapons. Inventory rows use 64×64 handbook images while retaining
+type-specific inner content.
 
 Starting armor is placed directly in the equipped array. Its handbook
 `data.armor` rule initializes AC as readonly equipment-derived bonuses; light
@@ -373,6 +379,11 @@ weapons added during creation are emitted into `values.weapon`, potions into
 other catalogue additions and text-only starting-equipment rows. Background tool
 proficiency is assembled independently into `values.proficiencies`. See
 `md/features/character-list.md` for the UI flow.
+Class data may declare `tool_prof_choice {count,from}` with suggest type 5 IDs.
+The PHB 2014 bard uses this contract to require three distinct concrete musical
+instrument choices on the Class step; it no longer grants the broad
+`Музыкальные инструменты` category. The selected suggest labels are written to
+`values.proficiencies['Инструменты']` and survive wizard draft persistence.
 
 ## Tests
 
