@@ -1,6 +1,6 @@
 <template>
   <AppModal fullscreen :z-index="zIndex" @close="emit('close')">
-    <div class="csm share-app-canvas">
+    <div class="csm share-app-canvas" :class="{ 'csm--preview': previewMode }">
       <CharEditorToolbar
         modal
         :publicVisible="publicVisible"
@@ -32,7 +32,7 @@
           <div class="sk-block" style="width:100%; height:90px" />
         </div>
 
-        <div v-else-if="template" class="desktop-tabs">
+        <div v-else-if="template" class="desktop-tabs" :inert="previewMode">
           <div
             v-for="index in visitedTabIndexes"
             :key="'csm-tab-' + index"
@@ -138,6 +138,7 @@ onMounted(async () => {
 <style scoped>
 .csm { display: flex; flex-direction: column; height: 100%; min-height: 0; }
 .csm-preview-note { flex: none; padding: 5px 14px; border-bottom: 1px solid var(--border); background: color-mix(in srgb, var(--accent) 8%, var(--bg)); color: var(--accent-soft); font-size: 10px; font-weight: 700; letter-spacing: .04em; text-align: center; text-transform: uppercase; }
+.csm--preview .desktop-tabs :deep(button[title='Редактировать']) { display: none; }
 .csm-body { flex: 1; min-height: 0; overflow-x: auto; overflow-y: auto; background: transparent; }
 .container { margin: 0 auto; padding: 18px 16px 28px; background: transparent; }
 .desktop-tabs { display: flex; flex-direction: column; min-height: 100%; }
