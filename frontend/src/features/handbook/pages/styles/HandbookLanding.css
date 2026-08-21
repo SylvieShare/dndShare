@@ -262,10 +262,10 @@
   font-size: 11px;
 }
 
-/* Every collection gets the former double-width card footprint. */
+/* Compact on wide screens, spacious enough for the emblem on smaller ones. */
 .hb-collections-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
 }
 
@@ -282,7 +282,7 @@
   cursor: pointer;
   font-family: inherit;
   text-align: left;
-  min-height: 176px;
+  min-height: 164px;
   overflow: hidden;
   transition: box-shadow 0.15s;
 }
@@ -310,7 +310,7 @@
   gap: 6px;
   position: relative;
   z-index: 1;
-  padding-right: 156px;
+  padding-right: 118px;
 }
 
 .hb-card-name {
@@ -347,7 +347,7 @@
   z-index: 1;
   margin-top: auto;
   padding-top: 12px;
-  padding-right: 156px;
+  padding-right: 118px;
 }
 
 .hb-card-count {
@@ -373,11 +373,11 @@
 
 .hb-card-icon {
   position: absolute;
-  right: 10px;
+  right: 6px;
   top: 50%;
   transform: translateY(-54%);
-  width: 154px;
-  height: 154px;
+  width: 120px;
+  height: 120px;
   object-fit: contain;
   opacity: 0.78;
   filter: drop-shadow(0 10px 18px color-mix(in srgb, var(--card-color, var(--accent)) 22%, transparent));
@@ -494,12 +494,18 @@
 }
 
 /* ── Responsive ── */
-@media (max-width: 1100px) {
+@media (max-width: 1200px) {
   .hb-collections-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .hb-dicts-grid {
     grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .hb-collections-grid {
+    grid-template-columns: 1fr;
   }
 }
 

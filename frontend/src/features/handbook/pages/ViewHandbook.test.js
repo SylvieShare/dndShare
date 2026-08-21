@@ -33,12 +33,12 @@ describe('handbook canvas', () => {
     expect(landing).toContain('box-sizing: border-box;')
   })
 
-  it('gives every collection a double-width card and groups related catalogues', () => {
+  it('uses a compact three-column collection grid and groups related catalogues', () => {
     const grid = landingStyles.match(/\.hb-collections-grid\s*\{([^}]*)\}/)?.[1] || ''
     const cardTop = landingStyles.match(/\.hb-card-top\s*\{([^}]*)\}/)?.[1] || ''
 
-    expect(grid).toContain('grid-template-columns: repeat(2, minmax(0, 1fr));')
-    expect(cardTop).toContain('padding-right: 156px;')
+    expect(grid).toContain('grid-template-columns: repeat(3, minmax(0, 1fr));')
+    expect(cardTop).toContain('padding-right: 118px;')
     expect(landingSource).toContain('v-for="group in collectionGroups"')
     expect(landingSource).toContain("name: 'Основные разделы'")
     expect(landingSource).toContain('const featureTypeIds = new Set([3, 4, 7])')
