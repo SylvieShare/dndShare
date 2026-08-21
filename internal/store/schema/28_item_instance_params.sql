@@ -33,7 +33,7 @@ WHERE item_type.id = 2;
 -- migration is idempotent on every existing database.
 UPDATE dndshare.item
 SET name = CASE
-        WHEN lower(name) IN (lower('Верёвка пеньковая (50 футов)'), lower('50-футовая пеньковая верёвка'))
+        WHEN lower(name) IN (lower('Верёвка пеньковая (50 футов)'), lower('50-футовая пеньковая верёвка'), lower('Верёвка пеньковая'))
             THEN 'Верёвка пеньковая'
         ELSE 'Верёвка шёлковая'
     END,

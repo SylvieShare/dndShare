@@ -5,7 +5,7 @@
 -- Concrete length is intentionally not stored on the handbook row.
 UPDATE dndshare.item
 SET name = CASE
-        WHEN lower(name) IN (lower('Верёвка пеньковая (50 футов)'), lower('50-футовая пеньковая верёвка'))
+        WHEN lower(name) IN (lower('Верёвка пеньковая (50 футов)'), lower('50-футовая пеньковая верёвка'), lower('Верёвка пеньковая'))
             THEN 'Верёвка пеньковая'
         ELSE 'Верёвка шёлковая'
     END,

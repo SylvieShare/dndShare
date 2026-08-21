@@ -8,13 +8,13 @@ import (
 	"testing"
 )
 
-func TestItemInstanceParamsSchemaIsEmbeddedAfterCatalogues(t *testing.T) {
+func TestItemCatalogFixesSchemaIsEmbeddedLast(t *testing.T) {
 	if len(schemaParts) == 0 {
 		t.Fatal("schemaParts is empty")
 	}
 	last := schemaParts[len(schemaParts)-1]
-	if last.name != "item-instance-params" || last.sql == "" || last.sql != schemaItemInstanceParamsSQL {
-		t.Fatal("item-instance-params schema must be embedded after the equipment catalogues")
+	if last.name != "item-catalog-fixes" || last.sql == "" || last.sql != schemaItemCatalogFixesSQL {
+		t.Fatal("item-catalog-fixes schema must be embedded after the equipment catalogues")
 	}
 }
 
@@ -154,6 +154,25 @@ func TestItemInstanceParamsSchemaDefinesRopeAndWeaponParameters(t *testing.T) {
 	} {
 		if !strings.Contains(schemaItemInstanceParamsSQL, fragment) {
 			t.Fatalf("item instance params schema must contain %q", fragment)
+		}
+	}
+}
+
+func TestItemCatalogFixesRestoreCanonicalEquipment(t *testing.T) {
+	for _, fragment := range []string{
+		"WHERE id = 423",
+		"name_en = 'Rope, hempen'",
+		"WHERE id = 424",
+		"dndshare.replace_catalog_item_reference(saved_character.data, 1428, 424)",
+		"DELETE FROM dndshare.item duplicate",
+		"SET name = 'Комплект для лазания'",
+		"lower('Climber''s Kit')",
+		"lower('Rope of Climbing')",
+		"lower('Rope of Entanglement')",
+		"upper(content.code) = 'DMG'",
+	} {
+		if !strings.Contains(schemaItemCatalogFixesSQL, fragment) {
+			t.Fatalf("item catalogue fixes schema must contain %q", fragment)
 		}
 	}
 }
