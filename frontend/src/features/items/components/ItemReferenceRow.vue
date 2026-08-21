@@ -7,7 +7,6 @@
       'item-reference--roomy': isRoomy,
       'item-reference--roomy-weapon': isRoomyWeapon,
       'item-reference--roomy-armor': isRoomyArmor,
-      'item-reference--compact-side': compactSide,
     }"
   >
     <button
@@ -21,7 +20,7 @@
         <span class="item-reference-main">
           <span class="item-reference-name">
             {{ displayName }}
-            <span v-if="compactSide && count > 1" class="item-reference-count item-reference-count--inline">×{{ count }}</span>
+            <span v-if="count > 1" class="item-reference-count item-reference-count--inline">×{{ count }}</span>
           </span>
           <span v-if="metaLabel" class="item-reference-meta">{{ metaLabel }}</span>
         </span>
@@ -62,15 +61,10 @@
             <span v-if="data.stealth_disadvantage" class="item-reference-armor-stealth">Помеха Скрытности</span>
           </span>
         </span>
-        <span v-if="!compactSide && (count > 1 || costLabel || weightLabel)" class="item-reference-economy">
-          <span v-if="count > 1" class="item-reference-count">×{{ count }}</span>
-          <span v-if="costLabel" class="item-reference-cost">{{ costLabel }}</span>
-          <span v-if="weightLabel" class="item-reference-weight">{{ weightLabel }}</span>
-        </span>
       </span>
       <ChevronRight v-if="showChevron && !showDetails" :size="16" class="item-reference-chevron" aria-hidden="true" />
     </button>
-    <span v-if="compactSide && (showDetails || costLabel || weightLabel)" class="item-reference-side">
+    <span v-if="showDetails || costLabel || weightLabel" class="item-reference-side">
       <button
         v-if="showDetails"
         type="button"
@@ -87,17 +81,6 @@
         <span v-if="weightLabel" class="item-reference-weight">{{ weightLabel }}</span>
       </span>
     </span>
-    <button
-      v-else-if="showDetails"
-      type="button"
-      class="item-reference-details"
-      :disabled="disabled"
-      title="Открыть в справочнике"
-      :aria-label="`Открыть «${item.name}» в справочнике`"
-      @click.stop="$emit('details', item)"
-    >
-      <CircleHelp :size="17" aria-hidden="true" />
-    </button>
     <ItemTooltip
       v-if="propertiesTooltip.visible"
       :title="propertiesTooltip.title"
@@ -130,7 +113,6 @@ const props = defineProps({
   showDetails: { type: Boolean, default: false },
   roomyWeapon: { type: Boolean, default: false },
   roomyArmor: { type: Boolean, default: false },
-  compactSide: { type: Boolean, default: false },
 })
 
 defineEmits(['activate', 'details'])
@@ -226,10 +208,11 @@ function hidePropertyTooltip() { propertiesTooltip.visible = false }
 .item-reference-details { width: 30px; height: 30px; flex: none; display: grid; place-items: center; margin-right: 8px; padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--text-muted); cursor: pointer; transition: color .15s, background .15s; }
 .item-reference-details:hover:not(:disabled) { background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent); }
 .item-reference-details:disabled { cursor: default; }
-.item-reference--roomy .item-reference-body { min-height: 96px; align-items: center; gap: 14px; padding: 12px 0 12px 12px; }
-.item-reference--roomy .item-reference-info { min-width: 0; flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); grid-template-rows: auto auto; align-content: center; align-items: center; column-gap: 14px; row-gap: 8px; align-self: stretch; }
-.item-reference--roomy .item-reference-main { flex: none; grid-column: 1; grid-row: 1; }
-.item-reference--roomy .item-reference-name { font-size: 14px; line-height: 1.3; }
+.item-reference--roomy { align-items: stretch; gap: 4px; }
+.item-reference--roomy .item-reference-body { min-height: 78px; align-items: center; gap: 10px; padding: 6px 0 6px 8px; }
+.item-reference--roomy .item-reference-info { min-width: 0; flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); grid-template-rows: auto auto; align-content: center; align-items: center; column-gap: 10px; row-gap: 4px; align-self: stretch; }
+.item-reference--roomy .item-reference-main { flex: none; grid-column: 1 / -1; grid-row: 1; }
+.item-reference--roomy .item-reference-name { overflow: visible; font-size: 14px; line-height: 1.3; text-overflow: clip; white-space: normal; overflow-wrap: anywhere; }
 .item-reference--roomy-weapon .item-reference-weapon-details { display: contents; }
 .item-reference--roomy-weapon .item-reference-damage { width: auto; display: flex; place-items: unset; align-self: center; grid-column: 1; grid-row: 2; }
 .item-reference--roomy-weapon .item-reference-properties { width: auto; min-width: 0; display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 2px; grid-column: 2; grid-row: 2; font-size: 10px; line-height: 1.35; text-align: right; }
@@ -244,29 +227,19 @@ function hidePropertyTooltip() { propertiesTooltip.visible = false }
 .item-reference-armor-ac { flex: none; display: flex; align-items: baseline; gap: 5px; color: var(--text-1); }
 .item-reference-armor-ac strong { font-size: 16px; font-variant-numeric: tabular-nums; line-height: 1; }
 .item-reference-armor-stealth { min-width: 0; overflow: hidden; padding: 3px 6px; border-radius: var(--r-xs); background: color-mix(in srgb, var(--warning) 10%, transparent); color: var(--warning); font-size: 9px; font-weight: 700; line-height: 1.2; text-overflow: ellipsis; white-space: nowrap; }
-.item-reference-economy { display: flex; align-items: baseline; justify-content: flex-end; gap: 0; grid-column: 2; grid-row: 1; color: var(--text-muted); font-size: 10px; line-height: 1.3; white-space: nowrap; }
-.item-reference-economy > span + span::before { margin: 0 6px; color: var(--border-strong); content: '·'; }
 .item-reference--roomy .item-reference-count { min-width: 0; font-size: 11px; }
 .item-reference-weight { color: var(--text-muted); }
-.item-reference--roomy .item-reference-details { width: 34px; height: 34px; }
-.item-reference--compact-side { align-items: stretch; gap: 4px; }
-.item-reference--compact-side .item-reference-body { min-height: 78px; gap: 10px; padding: 6px 0 6px 8px; }
-.item-reference--compact-side .item-reference-info { column-gap: 10px; row-gap: 4px; }
-.item-reference--compact-side .item-reference-main { grid-column: 1 / -1; }
-.item-reference--compact-side .item-reference-name { overflow: visible; text-overflow: clip; white-space: normal; overflow-wrap: anywhere; }
 .item-reference-count--inline { display: inline; margin-left: 4px; }
 .item-reference-side { width: 58px; flex: 0 0 58px; display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 4px 6px 5px 0; }
-.item-reference--compact-side .item-reference-details { width: 28px; height: 28px; margin: 0; }
-.item-reference--compact-side .item-reference-economy { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 1px; color: var(--text-muted); font-size: 9px; line-height: 1.25; text-align: center; white-space: nowrap; }
-.item-reference--compact-side .item-reference-economy > span + span::before { content: none; }
-.item-reference--compact-side .item-reference-cost { font-size: 10px; }
+.item-reference--roomy .item-reference-details { width: 28px; height: 28px; margin: 0; }
+.item-reference-economy { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 1px; color: var(--text-muted); font-size: 9px; line-height: 1.25; text-align: center; white-space: nowrap; }
+.item-reference-economy > span + span::before { content: none; }
+.item-reference--roomy .item-reference-cost { font-size: 10px; }
 @media (max-width: 420px) {
-  .item-reference--roomy .item-reference-body { gap: 11px; padding-left: 10px; }
+  .item-reference--roomy .item-reference-body { gap: 8px; padding: 5px 0 5px 7px; }
   .item-reference--roomy .item-reference-info { column-gap: 10px; }
-  .item-reference--compact-side .item-reference-body { gap: 8px; padding: 5px 0 5px 7px; }
-  .item-reference--compact-side .item-reference-side { width: 52px; flex-basis: 52px; padding-right: 4px; }
+  .item-reference--roomy .item-reference-side { width: 52px; flex-basis: 52px; padding-right: 4px; }
   .item-reference-armor-stats { gap: 5px; }
   .item-reference-armor-stealth { max-width: 80px; }
-  .item-reference-economy > span + span::before { margin-inline: 4px; }
 }
 </style>

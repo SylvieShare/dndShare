@@ -251,10 +251,12 @@ as a type-14 entry in the ordinary inventory; ownership and proficiency never
 duplicate one another in the UI. Equipment-only choices are omitted when class wealth replaces
 starting equipment.
 
-On the Background step every granted-item row uses the compact roomy variant:
-long names wrap instead of truncating, vertical padding stays close to the 64px
-icon, and the narrow right rail stacks the handbook-details action, cost and
-weight from top to bottom.
+Class equipment, background grants and the starting shop use the same roomy
+`ItemReferenceRow` geometry. Long names wrap instead of truncating, vertical
+padding stays close to the 64px icon, and the narrow right rail stacks the
+handbook-details action, cost and weight from top to bottom. Item categories
+change only their inner facts: weapons show damage and properties, armor shows
+its AC rules, while ordinary gear keeps its own metadata.
 
 The PHB 2014 audit identifies mechanical item/tool choices for nine base
 backgrounds: Acolyte (holy symbol and devotional text), Charlatan (con prop),

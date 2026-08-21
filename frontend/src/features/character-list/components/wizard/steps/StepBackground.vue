@@ -60,7 +60,6 @@
                 :items="choice.options"
                 :model-value="state.backgroundItemChoices?.[choice.key] || ''"
                 :placeholder="`Выберите: ${choice.label.toLocaleLowerCase('ru')}`"
-                compact-side
                 @update:model-value="setBackgroundItemChoice(choice.key, $event)"
                 @details="viewItem = $event"
               />
@@ -77,7 +76,6 @@
               :item="{ ...item, id: item.item_id }"
               :params="item.params"
               roomy-weapon
-              compact-side
               @activate="viewItem = { ...item, id: item.item_id }"
               @details="viewItem = { ...item, id: item.item_id }"
               show-details
@@ -97,7 +95,6 @@
                 :count="entry.count"
                 :params="entry.params"
                 roomy-weapon
-                compact-side
                 @activate="viewItem = { ...entry, id: entry.item_id }"
                 @details="viewItem = { ...entry, id: entry.item_id }"
                 show-details
@@ -113,7 +110,6 @@
                 :item="{ ...entry, id: entry.item_id }"
                 :count="entry.count"
                 :params="entry.params"
-                compact-side
                 @activate="viewItem = { ...entry, id: entry.item_id }"
                 @details="viewItem = { ...entry, id: entry.item_id }"
                 show-details

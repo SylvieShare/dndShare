@@ -4,7 +4,6 @@ import { describe, expect, it } from 'vitest'
 
 const source = readFileSync(fileURLToPath(new URL('./StepBackground.vue', import.meta.url)), 'utf8')
 const itemReference = readFileSync(fileURLToPath(new URL('../../../../items/components/ItemReferenceRow.vue', import.meta.url)), 'utf8')
-const equipmentSelect = readFileSync(fileURLToPath(new URL('../EquipmentItemSelect.vue', import.meta.url)), 'utf8')
 
 describe('background step presentation', () => {
   it('has one element root so wizard transitions can remount the selected step', () => {
@@ -45,7 +44,6 @@ describe('background step presentation', () => {
     expect(source).toContain('@activate="viewItem = { ...item, id: item.item_id }"')
     expect(source).toContain('@activate="viewItem = { ...entry, id: entry.item_id }"')
     expect(source).toContain('roomy-weapon')
-    expect(source).toContain('compact-side')
     expect(source).toContain('show-details')
     expect(source).toContain('<ItemViewModal')
     expect(source).toContain('grid-template-columns: repeat(2, minmax(0, 1fr))')
@@ -53,12 +51,12 @@ describe('background step presentation', () => {
     expect(source).toContain('@media (max-width: 640px)')
   })
 
-  it('uses compact multi-line item rows with a stacked details, cost and weight rail', () => {
-    expect(equipmentSelect).toContain(':compact-side="compactSide"')
-    expect(itemReference).toContain("'item-reference--compact-side': compactSide")
+  it('uses the shared multi-line item rows with a stacked details, cost and weight rail', () => {
+    expect(source).not.toContain('compact-side')
+    expect(itemReference).not.toContain('compactSide')
     expect(itemReference).toContain('class="item-reference-side"')
     expect(itemReference).toMatch(/item-reference-details[\s\S]*item-reference-cost[\s\S]*item-reference-weight/)
-    expect(itemReference).toContain('min-height: 78px')
+    expect(itemReference).toContain('.item-reference--roomy .item-reference-body { min-height: 78px')
     expect(itemReference).toContain('padding: 6px 0 6px 8px')
     expect(itemReference).toContain('white-space: normal')
     expect(itemReference).toContain('overflow-wrap: anywhere')

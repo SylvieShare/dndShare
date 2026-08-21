@@ -46,6 +46,8 @@
               :params="item.params"
               roomy-weapon
               @activate="viewItem = item"
+              @details="viewItem = item"
+              show-details
             />
             <button
               type="button"
