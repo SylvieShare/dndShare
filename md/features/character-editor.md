@@ -225,6 +225,8 @@ such as charged magic items, can join the aggregate by registering another
 source adapter without changing the resources or rest blocks. Contributed rows
 are visible and usable in the shared resources tile, but read-only in its
 editor because their title, maximum and rest rules belong to the source item.
+Every read-only editor row names that handbook item explicitly as its source;
+it never substitutes a generic configuration hint for the source name.
 Ability rules can derive the maximum from a live ability modifier, a class-level
 multiplier or `scaling[].uses`; `use_resources` contributes several independent
 rows. Level-gated short-rest recovery and partial recovery use the same source

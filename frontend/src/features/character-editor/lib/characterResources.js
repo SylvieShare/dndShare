@@ -149,7 +149,7 @@ export function createAbilityResourceSource(valueId, color) {
             total,
             ...rest,
             readonly: true,
-            source_label: definition.multiple ? item.name : 'Настраивается в способности',
+            source_label: item.name || 'Способность',
             source: {
               sourceId: this.id,
               valueId,

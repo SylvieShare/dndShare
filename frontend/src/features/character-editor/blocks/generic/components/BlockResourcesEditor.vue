@@ -60,7 +60,7 @@
           <span class="bre-strip" :style="{ background: row.color_point }"></span>
           <span class="bre-readonly-copy">
             <span class="bre-readonly-title">{{ row.title }}</span>
-            <span class="bre-readonly-source">{{ row.source_label || 'Системный ресурс' }}</span>
+            <span class="bre-readonly-source">Источник: {{ row.source_label || 'системные правила' }}</span>
           </span>
           <span class="bre-readonly-count">{{ row.value }} / {{ row.total }}</span>
           <span class="bre-lock" title="Редактируется в источнике">Только чтение</span>
