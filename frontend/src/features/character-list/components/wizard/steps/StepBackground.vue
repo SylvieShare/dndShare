@@ -30,9 +30,17 @@
         <ul class="facts">
           <li v-if="backgroundSkillNames.length"><span class="fk">Навыки</span>{{ backgroundSkillNames.join(', ') }}</li>
           <li v-if="feature.title"><span class="fk">Умение</span><b>{{ feature.title }}</b>{{ feature.desc ? ' — ' + feature.desc : '' }}</li>
-          <li v-if="!state.buyStartingEquipment && moneyLabel"><span class="fk">Кошелёк</span>{{ moneyLabel }}</li>
           <li v-if="state.buyStartingEquipment" class="shop-replacement"><span class="fk">Снаряжение</span>Заменено закупкой за начальное богатство класса</li>
         </ul>
+
+        <BaseTile
+          v-if="!state.buyStartingEquipment && backgroundCoins.length"
+          class="background-wallet"
+          color="var(--warning)"
+          tint
+        >
+          <BlockMoneyView title="Кошелёк" :loading="currencyLoading" :coins="backgroundCoins" />
+        </BaseTile>
 
         <div v-if="backgroundToolItems.length" class="grant-group">
           <span class="fk">Инструменты</span>
@@ -91,13 +99,16 @@
 
 <script setup>
 import { computed, inject, ref } from 'vue'
+import { BaseTile } from '@sylvieshare/share-ui'
 import BackgroundSelectCard from '@/features/character-list/components/wizard/BackgroundSelectCard.vue'
 import IllustratedChoiceStage from '@/features/character-list/components/wizard/IllustratedChoiceStage.vue'
 import MultiSearchSelect from '@/features/character-list/components/wizard/MultiSearchSelect.vue'
+import BlockMoneyView from '@/features/character-editor/blocks/generic/components/BlockMoneyView.vue'
 import ItemReferenceRow from '@/features/items/components/ItemReferenceRow.vue'
 import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
 import { monogramOf } from '@/features/character-list/components/wizard/labels'
-import { formatStartingCoins } from '@/features/character-editor/settings/dnd/creation/backgroundEquipment'
+import { COIN_ORDER } from '@/features/character-editor/settings/dnd/creation/backgroundEquipment'
+import { useSuggestStore } from '@/stores/suggest'
 
 const {
   bgPool, state, loading, grants, suggestValue,
@@ -116,9 +127,28 @@ const feature = computed(() => {
   const desc = d.feature_desc ? String(d.feature_desc).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim() : ''
   return { title: d.feature || '', desc }
 })
-const moneyLabel = computed(() => formatStartingCoins(backgroundStart.value.coins))
+const suggestStore = useSuggestStore()
+const currencyLoading = ref(!suggestStore.loaded(17))
+const fallbackCoinLabels = { 1: 'мм', 2: 'см', 3: 'зм', 4: 'эм', 5: 'пм' }
+const backgroundCoins = computed(() => {
+  const currencies = new Map(suggestStore.items(17).map((coin) => [String(coin.id), coin]))
+  return [...COIN_ORDER].reverse()
+    .filter((id) => Number(backgroundStart.value.coins[id]) > 0)
+    .map((id) => {
+      const currency = currencies.get(String(id))
+      return {
+        id,
+        title: currency?.value || fallbackCoinLabels[id] || `мон. ${id}`,
+        iconUrl: currency?.svg || '',
+        color: currency?.color || '#d6a84f',
+        amount: Number(backgroundStart.value.coins[id]),
+      }
+    })
+})
 const visibleBackgrounds = computed(() => state.background ? [state.background] : bgPool.value)
 const viewItem = ref(null)
+
+suggestStore.ensure(17).catch(() => {}).finally(() => { currencyLoading.value = false })
 
 function selectBackground(background) {
   if (state.background?.id === background.id) return
@@ -137,6 +167,15 @@ function selectBackground(background) {
 .facts b { color: var(--text-1); font-weight: 600; }
 .shop-replacement { padding: 8px 10px; border-radius: var(--r-sm); background: color-mix(in srgb, var(--accent) 9%, transparent); }
 .fk { display: block; font-size: 10px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 1px; }
+.background-wallet { padding: 15px 16px; }
+.background-wallet :deep(.money-title) { margin-bottom: 10px; color: var(--warning); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; }
+.background-wallet :deep(.money-line) { align-items: center; gap: 10px 22px; }
+.background-wallet :deep(.money-amount) { align-items: center; gap: 9px; }
+.background-wallet :deep(.ma-value) { font-size: 28px; font-weight: 800; }
+.background-wallet :deep(.ma-img) { width: 24px; height: 24px; color: var(--warning); }
+.background-wallet :deep(.ma-img svg) { width: 24px; height: 24px; }
+.background-wallet :deep(.ma-dot) { width: 20px; height: 20px; }
+.background-wallet :deep(.ma-label) { font-size: 14px; font-weight: 650; }
 .grant-group { display: flex; flex-direction: column; gap: 6px; }
 .grant-tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
 

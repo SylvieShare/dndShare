@@ -229,8 +229,11 @@ missing cover produces a monogram instead of stretching `iconImageUrl`. Selectio
 uses the shared `IllustratedChoiceStage`: the chosen card expands into a
 full-width horizontal row, the other backgrounds leave the catalogue, and a
 back action restores the two-column list without changing the content scroll.
-The existing skill, language, feature and money summary appears below the expanded
-card. Every granted tool and possession is stored on the background as a
+The existing skill, language and feature summary appears below the expanded
+card. Starting money uses the shared character-sheet money face inside a
+dedicated accent tile: currency name, color and SVG come from suggest type 17,
+with a larger amount and coin icon instead of a compact text fact. Every granted
+tool and possession is stored on the background as a
 canonical handbook item id and rendered through `ItemReferenceRow`; activating
 the row opens `ItemViewModal`. Concrete weapons therefore keep their combat
 data and use the same roomy 64px-icon weapon row everywhere in the wizard,

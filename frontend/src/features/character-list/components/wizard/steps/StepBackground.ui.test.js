@@ -32,8 +32,17 @@ describe('background step presentation', () => {
     expect(source).toContain('@activate="viewItem = { ...entry, id: entry.item_id }"')
     expect(source).toContain('roomy-weapon')
     expect(source).toContain('<ItemViewModal')
-    expect(source).not.toContain('<BaseTile')
     expect(source).toContain('grid-template-columns: repeat(2, minmax(0, 1fr))')
     expect(source).toContain('@media (max-width: 640px)')
+  })
+
+  it('renders starting money as a prominent wallet using currency suggest icons', () => {
+    expect(source).toContain('<BaseTile')
+    expect(source).toContain('<BlockMoneyView')
+    expect(source).toContain('suggestStore.ensure(17)')
+    expect(source).toContain('currency?.svg')
+    expect(source).toContain('class="background-wallet"')
+    expect(source).toContain('.background-wallet :deep(.ma-img) { width: 24px; height: 24px;')
+    expect(source).not.toContain('<span class="fk">Кошелёк</span>{{ moneyLabel }}')
   })
 })
