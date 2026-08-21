@@ -1,4 +1,5 @@
 import { computed, ref } from 'vue'
+import { defaultInstanceParams, instanceParamsKey } from '@/features/items/lib/itemInstance'
 import { fetchGet } from '@/shared/api/http'
 import { armorRuleByName } from '@/features/character-editor/settings/dnd/creation/armorRules'
 import {
@@ -19,11 +20,12 @@ import {
 
 const CATALOGUE_TYPE_IDS = [1, 2, 10, 12, 13]
 
-function inventoryEntry(item, count = 1) {
+function inventoryEntry(item, count = 1, type = null) {
   return {
-    id: item.id,
+    item_id: item.id,
     name: item.name,
     count: Math.max(1, Math.floor(Number(count) || 1)),
+    params: { ...defaultInstanceParams(type, item), ...(item.params || {}) },
     typeId: item.typeId,
     armor: item.data?.armor || armorRuleByName(item.name),
     data: item.data || {},
@@ -33,17 +35,28 @@ function inventoryEntry(item, count = 1) {
   }
 }
 
+function sameInstance(entry, reference) {
+  const itemId = reference?.item_id ?? reference?.id ?? reference
+  const params = reference && typeof reference === 'object' ? reference.params : null
+  return String(entry.item_id) === String(itemId)
+    && (params == null || instanceParamsKey(entry.params) === instanceParamsKey(params))
+}
+
 export function useDndCreateEquipment({ state, sourceSuffix }) {
   const equipmentCatalogue = ref([])
+  const equipmentTypes = ref([])
   const shopLoading = ref(false)
+  const typeById = (id) => equipmentTypes.value.find((type) => Number(type.id) === Number(id)) || null
 
   async function loadEquipmentCatalogue() {
     shopLoading.value = true
     try {
-      const responses = await Promise.all(CATALOGUE_TYPE_IDS.map((typeId) => (
-        fetchGet(`/items?typeId=${typeId}&limit=500${sourceSuffix()}`)
-      )))
+      const [responses, typesResponse] = await Promise.all([
+        Promise.all(CATALOGUE_TYPE_IDS.map((typeId) => fetchGet(`/items?typeId=${typeId}&limit=500${sourceSuffix()}`))),
+        fetchGet('/item-types'),
+      ])
       equipmentCatalogue.value = responses.flatMap((response) => response?.items || [])
+      equipmentTypes.value = typesResponse?.types || []
     } finally {
       shopLoading.value = false
     }
@@ -77,6 +90,7 @@ export function useDndCreateEquipment({ state, sourceSuffix }) {
 
   const startingShopItems = computed(() => equipmentCatalogue.value
     .filter((item) => item.userId == null && item.data?.available_in_starting_shop === true)
+    .map((item) => ({ ...item, params: defaultInstanceParams(typeById(item.typeId), item) }))
     .filter((item) => itemCostCopper(item) != null)
     .sort((a, b) => a.name.localeCompare(b.name, 'ru')))
   const startingWealthFormulaLabel = computed(() => startingWealthFormula(baseClassEquipmentProfile.value?.key))
@@ -103,17 +117,18 @@ export function useDndCreateEquipment({ state, sourceSuffix }) {
 
   function addEquipment(item, quantity = 1) {
     if (!item?.id) return
-    const next = inventoryEntry(item, quantity)
-    const existing = state.equipment.find((entry) => String(entry.id) === String(item.id))
+    const next = inventoryEntry(item, quantity, typeById(item.typeId))
+    const existing = state.equipment.find((entry) => String(entry.item_id) === String(item.id)
+      && instanceParamsKey(entry.params) === instanceParamsKey(next.params))
     if (existing) existing.count += next.count
     else state.equipment.push(next)
   }
-  function removeEquipment(id) {
-    const index = state.equipment.findIndex((entry) => String(entry.id) === String(id))
+  function removeEquipment(reference) {
+    const index = state.equipment.findIndex((entry) => sameInstance(entry, reference))
     if (index >= 0) state.equipment.splice(index, 1)
   }
-  function bumpEquipment(id, delta) {
-    const entry = state.equipment.find((item) => String(item.id) === String(id))
+  function bumpEquipment(reference, delta) {
+    const entry = state.equipment.find((item) => sameInstance(item, reference))
     if (entry) entry.count = Math.max(1, entry.count + delta)
   }
 
@@ -139,19 +154,21 @@ export function useDndCreateEquipment({ state, sourceSuffix }) {
   function addShopItem(item) {
     const price = itemCostCopper(item)
     if (price == null || price > shopRemainingCopper.value) return
-    const existing = state.startingShopCart.find((entry) => String(entry.id) === String(item.id))
+    const next = inventoryEntry(item, 1, typeById(item.typeId))
+    const existing = state.startingShopCart.find((entry) => String(entry.item_id) === String(item.id)
+      && instanceParamsKey(entry.params) === instanceParamsKey(next.params))
     if (existing) existing.count += 1
-    else state.startingShopCart.push(inventoryEntry(item))
+    else state.startingShopCart.push(next)
   }
-  function removeShopItem(id) {
-    const index = state.startingShopCart.findIndex((entry) => String(entry.id) === String(id))
+  function removeShopItem(reference) {
+    const index = state.startingShopCart.findIndex((entry) => sameInstance(entry, reference))
     if (index >= 0) state.startingShopCart.splice(index, 1)
   }
-  function bumpShopItem(id, delta) {
-    const entry = state.startingShopCart.find((item) => String(item.id) === String(id))
+  function bumpShopItem(reference, delta) {
+    const entry = state.startingShopCart.find((item) => sameInstance(item, reference))
     if (!entry) return
     if (delta > 0 && itemCostCopper(entry) > shopRemainingCopper.value) return
-    if (delta < 0 && entry.count <= 1) { removeShopItem(id); return }
+    if (delta < 0 && entry.count <= 1) { removeShopItem(reference); return }
     entry.count = Math.max(1, entry.count + delta)
   }
   function canBuyShopItem(item) {

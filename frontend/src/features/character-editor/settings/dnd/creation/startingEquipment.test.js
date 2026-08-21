@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   STARTING_EQUIPMENT_CLASS_KEYS,
+  mergeEquipment,
   resolveStartingEquipmentProfile,
   selectedStartingEquipment,
   startingEquipmentComplete,
@@ -34,6 +35,18 @@ function firstChoices(profile) {
 }
 
 describe('PHB starting equipment', () => {
+  it('keeps parameterized variants in separate stacks', () => {
+    const equipment = mergeEquipment(
+      [{ item_id: 77, name: 'Верёвка пеньковая', count: 1, params: { length_ft: 50 } }],
+      [{ item_id: 77, name: 'Верёвка пеньковая', count: 1, params: { length_ft: 30 } }],
+      [{ item_id: 77, name: 'Верёвка пеньковая', count: 2, params: { length_ft: 50 } }],
+    )
+    expect(equipment).toEqual([
+      { item_id: 77, name: 'Верёвка пеньковая', count: 3, params: { length_ft: 50 } },
+      { item_id: 77, name: 'Верёвка пеньковая', count: 1, params: { length_ft: 30 } },
+    ])
+  })
+
   it('covers all twelve base classes in Russian', () => {
     const profiles = CLASS_NAMES.map((name) => startingEquipmentProfile({ name }))
     expect(profiles.every(Boolean)).toBe(true)
@@ -96,9 +109,9 @@ describe('PHB starting equipment', () => {
       pack: { optionId: 'burglar', picks: {} },
     })
 
-    expect(equipment.find((entry) => entry.name === 'Рапира')).toMatchObject({ id: 101, typeId: 1 })
+    expect(equipment.find((entry) => entry.name === 'Рапира')).toMatchObject({ item_id: 101, typeId: 1, params: { magic_bonus: 0 } })
     expect(equipment.find((entry) => entry.name === 'Кожаный доспех')).toMatchObject({
-      id: 107,
+      item_id: 107,
       typeId: 12,
       armor: { ac: 11, use_dex: true },
     })

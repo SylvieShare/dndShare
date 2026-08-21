@@ -99,6 +99,7 @@ import {
   findFieldByKey,
   isSameCleanValue,
   normalizeAddAttacks,
+  normalizeWeaponParams,
 } from '@/features/character-editor/blocks/dnd/lib/weaponEntry'
 import ItemPickerModal from "@/features/handbook/components/ItemPickerModal.vue"
 import ItemTooltip from "@/features/character-editor/components/ItemTooltip"
@@ -235,6 +236,14 @@ function setField(index, field, value) {
   emitChange()
 }
 
+function setParam(index, field, value) {
+  entries.value[index] = {
+    ...entries.value[index],
+    params: normalizeWeaponParams({ ...entries.value[index].params, [field]: value }),
+  }
+  emitChange()
+}
+
 function setAttackField(index, attackIndex, field, value) {
   const attacks = normalizeAddAttacks(entries.value[index].add_attacks)
   attacks[attackIndex] = { ...attacks[attackIndex], [field]: value }
@@ -327,6 +336,7 @@ provide('weaponsBlockCtx', reactive({
   showPropertyTooltip,
   hidePropertyTooltip,
   setField,
+  setParam,
   setAttackField,
   addAttack,
   removeAttack,
@@ -346,6 +356,7 @@ watch(() => props.value, (nextValue, oldValue) => {
   entries.value = (props.value || []).map(entry => ({
     ...defaultEntry(),
     ...entry,
+    params: normalizeWeaponParams(entry.params),
     add_attacks: normalizeAddAttacks(entry.add_attacks),
     _key: entry._key || nextKey(),
   }))

@@ -242,22 +242,23 @@ export function buildCharacterData(input) {
   // Buying with class wealth replaces both the class kit and the background's
   // possessions. Only purchases enter inventory; unspent change enters money.
   const startingEquipment = mergeEquipment(equipment, buyStartingEquipment ? [] : backgroundStart.items)
-  const isCatalogueWeapon = (entry) => Number(entry.typeId) === 1 && entry.id != null
+  const isCatalogueWeapon = (entry) => Number(entry.typeId) === 1 && entry.item_id != null
   const weapons = startingEquipment.filter(isCatalogueWeapon)
   const equippedArmor = startingEquipment.filter((entry) => !isCatalogueWeapon(entry) && isArmorEquipment(entry))
   const inventory = startingEquipment.filter((entry) => !isCatalogueWeapon(entry) && !isArmorEquipment(entry))
   if (weapons.length) {
     values.weapon = weapons.flatMap((entry) => Array.from(
       { length: Math.max(1, Number(entry.count) || 1) },
-      () => ({ ...defaultWeaponEntry(), item_id: entry.id }),
+      () => ({ ...defaultWeaponEntry(), item_id: entry.item_id, params: { ...defaultWeaponEntry().params, ...(entry.params || {}) } }),
     ))
   }
   if (inventory.length || equippedArmor.length) {
     const inventoryEntry = (e, i, prefix) => ({
       uid: `${prefix}_${i}`,
-      id: e.id ?? null,
+      item_id: e.item_id ?? null,
       count: Math.max(1, Number(e.count) || 1),
-      override: e.id == null ? { name: e.name || 'Предмет' } : null,
+      params: { ...(e.params || {}) },
+      override: e.item_id == null ? { name: e.name || 'Предмет' } : null,
     })
     values.items = {
       equipped: equippedArmor.map((entry, i) => inventoryEntry(entry, i, 'worn')),

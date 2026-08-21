@@ -19,15 +19,15 @@
     </div>
 
     <div v-if="state.equipment.length" class="items">
-      <div v-for="e in state.equipment" :key="e.id" class="row">
-        <span class="row-name">{{ e.name }}</span>
+      <div v-for="e in state.equipment" :key="`${e.item_id}:${JSON.stringify(e.params)}`" class="row">
+        <span class="row-name">{{ instanceName(e) }}</span>
         <button class="row-view" title="Открыть карточку предмета" @click="viewItem = e">⌕</button>
         <div class="qty">
-          <button class="q-btn" @click="bumpEquipment(e.id, -1)">−</button>
+          <button class="q-btn" @click="bumpEquipment(e, -1)">−</button>
           <span class="q-val">{{ e.count }}</span>
-          <button class="q-btn" @click="bumpEquipment(e.id, 1)">+</button>
+          <button class="q-btn" @click="bumpEquipment(e, 1)">+</button>
         </div>
-        <button class="row-x" title="Убрать" @click="removeEquipment(e.id)">
+        <button class="row-x" title="Убрать" @click="removeEquipment(e)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
         </button>
       </div>
@@ -49,7 +49,7 @@
     />
     <ItemViewModal
       v-if="viewItem"
-      :item-id="viewItem.id"
+      :item-id="viewItem.item_id"
       :item-type-id="viewItem.typeId"
       @close="viewItem = null"
     />
@@ -67,9 +67,10 @@ const { state, classEquipment, backgroundStart, addEquipment, removeEquipment, b
 const pickerOpen = ref(false)
 const viewItem = ref(null)
 function onPick(item, qty = 1) { addEquipment(item, qty) }
+function instanceName(entry) { return entry.params?.length_ft != null ? `${entry.name} · ${entry.params.length_ft} фт.` : entry.name }
 const moneyLabel = computed(() => formatStartingCoins(backgroundStart.value.coins))
 function equipmentLabel(items) {
-  return items.map((entry) => entry.count > 1 ? `${entry.name} ×${entry.count}` : entry.name).join(', ')
+  return items.map((entry) => entry.count > 1 ? `${instanceName(entry)} ×${entry.count}` : instanceName(entry)).join(', ')
 }
 </script>
 

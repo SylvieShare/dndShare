@@ -19,7 +19,7 @@ func mcpToolDefs() []map[string]any {
 			"List handbook systems. Returns id, name, versions [{id, sourceId, version}], countItems.",
 			schema(map[string]any{})),
 		tool("handbook_item_types",
-			"List item types (handbook object categories such as enemies, weapons). Each type's `fields` array is the schema describing which keys are allowed in an item's `data`. Read this before creating or updating items.",
+			"List item types (handbook object categories such as enemies, weapons). Each type's `fields` array describes handbook item `data`; `instanceFields` describes typed `params` stored on owned or granted item references. Read this before creating or updating items.",
 			schema(map[string]any{"sourceId": intP("Optional source id to filter by")})),
 		tool("handbook_items",
 			"List base (shared) items of a given type, paginated.",

@@ -90,18 +90,18 @@ describe('buildCharacterData starting equipment', () => {
       race: selection(1, 'Человек'),
       charClass: selection(2, 'Плут'),
       equipment: [
-        { id: 101, name: 'Кинжал', count: 2, typeId: 1 },
-        { id: 202, name: 'Верёвка', count: 1, typeId: 2 },
+        { item_id: 101, name: 'Кинжал', count: 2, typeId: 1, params: { magic_bonus: 0 } },
+        { item_id: 202, name: 'Верёвка', count: 1, typeId: 2, params: { length_ft: 50 } },
       ],
       suggestValue: () => '',
     })
 
     expect(result.data.values.weapon).toEqual([
-      { item_id: 101, magic_up: 0, stat_suggest_id: null, proficient: false, add_attacks: [], desc: '' },
-      { item_id: 101, magic_up: 0, stat_suggest_id: null, proficient: false, add_attacks: [], desc: '' },
+      { item_id: 101, params: { magic_bonus: 0 }, stat_suggest_id: null, proficient: false, add_attacks: [], desc: '' },
+      { item_id: 101, params: { magic_bonus: 0 }, stat_suggest_id: null, proficient: false, add_attacks: [], desc: '' },
     ])
     expect(result.data.values.items.sections[0].items).toEqual([
-      { uid: 'eq_0', id: 202, count: 1, override: null },
+      { uid: 'eq_0', item_id: 202, count: 1, params: { length_ft: 50 }, override: null },
     ])
   })
 
@@ -109,7 +109,7 @@ describe('buildCharacterData starting equipment', () => {
     const result = buildCharacterData({
       race: selection(1, 'Человек'),
       charClass: selection(2, 'Воин'),
-      equipment: [{ id: 101, name: 'Длинный меч', count: 1, typeId: 1 }],
+      equipment: [{ item_id: 101, name: 'Длинный меч', count: 1, typeId: 1, params: { magic_bonus: 0 } }],
       suggestValue: () => '',
     })
 
@@ -121,12 +121,12 @@ describe('buildCharacterData starting equipment', () => {
     const result = buildCharacterData({
       race: selection(1, 'Человек'),
       charClass: selection(2, 'Плут'),
-      equipment: [{ id: null, name: 'Кинжал', count: 2 }],
+      equipment: [{ item_id: null, name: 'Кинжал', count: 2, params: {} }],
       suggestValue: () => '',
     })
 
     expect(result.data.values.items.sections[0].items[0]).toMatchObject({
-      id: null,
+      item_id: null,
       count: 2,
       override: { name: 'Кинжал' },
     })
@@ -138,8 +138,8 @@ describe('buildCharacterData starting equipment', () => {
       charClass: selection(2, 'Воин'),
       scores: { DEX: 18 },
       equipment: [
-        { id: null, name: 'Чешуйчатый доспех', count: 1 },
-        { id: null, name: 'Щит', count: 1 },
+        { item_id: null, name: 'Чешуйчатый доспех', count: 1, params: {} },
+        { item_id: null, name: 'Щит', count: 1, params: {} },
       ],
       suggestValue: () => '',
     })
@@ -166,12 +166,12 @@ describe('buildCharacterData starting equipment', () => {
         feature: 'Привилегированное положение',
         feature_desc: '<p>Люди склонны думать о вас хорошо.</p>',
       }),
-      equipment: [{ id: null, name: 'Рапира', count: 1 }],
+      equipment: [{ item_id: null, name: 'Рапира', count: 1, params: {} }],
       backgroundEquipment: {
         items: [
-          { id: 374, name: 'Богатая одежда', count: 1, typeId: 2 },
-          { id: 430, name: 'Печатка', count: 1, typeId: 2 },
-          { id: 901, name: 'Свиток родословной', count: 1, typeId: 2 },
+          { item_id: 374, name: 'Богатая одежда', count: 1, typeId: 2, params: {} },
+          { item_id: 430, name: 'Печатка', count: 1, typeId: 2, params: {} },
+          { item_id: 901, name: 'Свиток родословной', count: 1, typeId: 2, params: {} },
         ],
         coins: { 3: 25 },
       },
@@ -179,7 +179,7 @@ describe('buildCharacterData starting equipment', () => {
     })
 
     const items = result.data.values.items.sections[0].items
-    expect(items.map((item) => item.id ?? item.override?.name)).toEqual(['Рапира', 374, 430, 901])
+    expect(items.map((item) => item.item_id ?? item.override?.name)).toEqual(['Рапира', 374, 430, 901])
     expect(result.data.values.money.amounts['3']).toBe(25)
     expect(result.data.values.notes).toBe('Умение предыстории — Привилегированное положение: Люди склонны думать о вас хорошо.')
   })
@@ -191,15 +191,15 @@ describe('buildCharacterData starting equipment', () => {
       background: selection(3, 'Солдат', {
         equipment_items: [{ item_id: 99, count: 1 }],
       }),
-      equipment: [{ id: 501, name: 'Латы', count: 1, typeId: 12, armor: { ac: 18, use_dex: false } }],
-      backgroundEquipment: { items: [{ id: 99, name: 'Копьё', count: 1, typeId: 1 }], coins: { 3: 10 } },
+      equipment: [{ item_id: 501, name: 'Латы', count: 1, typeId: 12, params: {}, armor: { ac: 18, use_dex: false } }],
+      backgroundEquipment: { items: [{ item_id: 99, name: 'Копьё', count: 1, typeId: 1, params: { magic_bonus: 0 } }], coins: { 3: 10 } },
       buyStartingEquipment: true,
       startingWallet: { 3: 25, 2: 4 },
       suggestValue: () => '',
     })
 
     expect(result.data.values.items.equipped).toEqual([
-      { uid: 'worn_0', id: 501, count: 1, override: null },
+      { uid: 'worn_0', item_id: 501, count: 1, params: {}, override: null },
     ])
     expect(result.data.values.money.amounts).toMatchObject({ 2: 4, 3: 25 })
     expect(result.data.values.items.sections).toEqual([])

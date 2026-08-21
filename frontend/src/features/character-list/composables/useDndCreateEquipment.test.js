@@ -42,4 +42,20 @@ describe('class equipment branch switching', () => {
       picks: { weapons: ['longsword'] },
     })
   })
+
+  it('updates only the matching parameterized instance', () => {
+    const state = wizardState()
+    state.equipment = [
+      { item_id: 42, count: 1, params: { length_ft: 25 } },
+      { item_id: 42, count: 2, params: { length_ft: 50 } },
+    ]
+    const equipment = useDndCreateEquipment({ state, sourceSuffix: () => '' })
+
+    equipment.bumpEquipment(state.equipment[1], 1)
+    equipment.removeEquipment(state.equipment[0])
+
+    expect(state.equipment).toEqual([
+      { item_id: 42, count: 3, params: { length_ft: 50 } },
+    ])
+  })
 })

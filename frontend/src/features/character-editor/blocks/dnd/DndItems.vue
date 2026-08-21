@@ -61,7 +61,7 @@
               v-for="(entry, idx) in displaySectionItems(section.id)"
               :key="entry.uid"
               block
-              :disabled="draggedThisGesture || (!canManage && entry.id == null)"
+              :disabled="draggedThisGesture || (!canManage && entry.item_id == null)"
             >
               <template #trigger>
                 <div
@@ -88,7 +88,7 @@
 
               <template #default="{ close }">
                 <RowActionItem
-                  v-if="entry.id != null"
+                  v-if="entry.item_id != null"
                   action="view"
                   @click="viewEntry(entry, close)"
                 >Открыть описание</RowActionItem>
@@ -172,6 +172,7 @@
       v-if="form.open"
       :entry="form.entry"
       :base-item="form.baseItem"
+      :instance-fields="form.instanceFields"
       @close="form.open = false"
       @save="onInlineFormSave"
     />
@@ -202,6 +203,8 @@ import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 import { SectionLabel } from '@sylvieshare/share-ui'
 import { itemsApi } from '@/shared/api/itemsApi'
+import { useItemTypesStore } from '@/stores/itemTypes'
+import { applicableInstanceFields, defaultInstanceParams } from '@/features/items/lib/itemInstance'
 import { useSortable } from '@sylvieshare/share-ui'
 import { logSessionEntryAdded } from '@/features/character-editor/lib/sessionEntryEvents'
 import {
@@ -226,10 +229,11 @@ const modalSelection = ref(null)
 const pickerOpen = ref(false)
 const pickerSectionId = ref(null)
 const tooltip = reactive({ visible: false, name: '', desc: '', item: null, x: 0, top: null, bottom: null })
-const form = reactive({ open: false, sectionId: null, entry: null, baseItem: null })
+const form = reactive({ open: false, sectionId: null, entry: null, baseItem: null, instanceFields: [] })
 const confirmDel = reactive({ open: false, id: null, name: '' })
 const renamingId = ref(null)
 const renameInputs = ref([])
+const itemTypesStore = useItemTypesStore()
 
 const model = computed(() => normalizeValue(props.value))
 
@@ -261,13 +265,14 @@ const canManage = computed(() => !!charCtx.ownerMode)
 const canAdd = computed(() => !!charCtx.ownerMode)
 const canDrag = computed(() => !!charCtx.ownerMode)
 
-const modalItem = computed(() => modalSelection.value?.id != null ? catalog[modalSelection.value.id] ?? null : null)
+const typeById = computed(() => Object.fromEntries(itemTypesStore.allTypes.map((type) => [type.id, type])))
+const modalItem = computed(() => modalSelection.value?.item_id != null ? catalog[modalSelection.value.item_id] ?? null : null)
 const pickerTypeIds = computed(() => typeIdsList.value)
 
 function sectionGroup(id) { return 'sec_' + id }
 
 function entryWithDisplay(entry) {
-  return { ...entry, display: entryDisplayData(entry, catalog) }
+  return { ...entry, display: entryDisplayData(entry, catalog, typeById.value) }
 }
 
 function sectionItems(sectionId) {
@@ -414,14 +419,16 @@ function onPickerPick(item, qty = 1) {
   const next = cloneModel(model.value)
   const list = itemsRef(next, pickerSectionId.value) || next.sections[0]?.items
   if (!list) return
-  list.push({ uid: makeEntryUid(), id: item.id, count: n, override: null })
+  const type = typeById.value[item.typeId]
+  list.push({ uid: makeEntryUid(), item_id: item.id, count: n, params: defaultInstanceParams(type, item), override: null })
   emitModel(next)
   logSessionEntryAdded(charCtx, { kind: 'item', title: item.name, itemId: item.id, count: n })
 }
 
 function openInlineForm(sectionId, entry) {
-  const baseItem = entry?.id != null ? (catalog[entry.id] || null) : null
-  Object.assign(form, { open: true, sectionId, entry, baseItem })
+  const baseItem = entry?.item_id != null ? (catalog[entry.item_id] || null) : null
+  const instanceFields = applicableInstanceFields(typeById.value[baseItem?.typeId], baseItem)
+  Object.assign(form, { open: true, sectionId, entry, baseItem, instanceFields })
 }
 
 function onInlineFormSave(fields) {
@@ -439,12 +446,14 @@ function onInlineFormSave(fields) {
       if (fields.desc !== (baseData.desc || '')) ov.desc = fields.desc
       if (fields.consumable !== !!baseData.consumable) ov.consumable = fields.consumable
       item.override = Object.keys(ov).length ? ov : null
+      item.params = { ...(fields.params || {}) }
     }
   } else {
     list.push({
       uid: makeEntryUid(),
-      id: null,
+      item_id: null,
       count: 1,
+      params: {},
       override: { name: fields.name, desc: fields.desc, consumable: fields.consumable },
     })
   }
@@ -454,7 +463,7 @@ function onInlineFormSave(fields) {
 }
 
 function viewEntry(entry, close) {
-  modalSelection.value = { sectionId: findSectionOfEntry(entry.uid), uid: entry.uid, id: entry.id }
+  modalSelection.value = { sectionId: findSectionOfEntry(entry.uid), uid: entry.uid, item_id: entry.item_id }
   close()
 }
 
@@ -464,7 +473,7 @@ function spendEntry(sectionId, entry, close) {
   charCtx.logSessionEvent?.({
     type: 'item_spent',
     action: `Потрачено: ${entry.display.name}`,
-    data: { itemId: entry.id || null, remaining: Math.max(0, previous - 1) },
+    data: { itemId: entry.item_id || null, remaining: Math.max(0, previous - 1) },
   })
   close()
 }
@@ -474,7 +483,7 @@ function addEntry(sectionId, entry, close) {
   charCtx.logSessionEvent?.({
     type: 'item_added',
     action: `Добавлено: ${entry.display.name}`,
-    data: { itemId: entry.id || null, remaining },
+    data: { itemId: entry.item_id || null, remaining },
   })
   close()
 }
@@ -502,9 +511,12 @@ function showTooltip(e, entry) {
   if (!d.desc && !d.cost && d.weight == null) return
   const rect = e.currentTarget.getBoundingClientRect()
   const above = window.innerHeight - rect.bottom < 150
+  const detailItem = d.base
+    ? { ...d.base, data: { ...(d.base.data || {}), cost: d.cost || null, weight: d.weight } }
+    : (d.isCustom ? { name: d.name, data: { desc: d.desc, consumable: d.consumable } } : null)
   Object.assign(tooltip, {
     visible: true, name: d.name, desc: d.desc,
-    item: d.base || (d.isCustom ? { name: d.name, data: { desc: d.desc, consumable: d.consumable } } : null),
+    item: detailItem,
     x: Math.min(rect.left, window.innerWidth - 320),
     top: above ? null : rect.bottom + 6,
     bottom: above ? window.innerHeight - rect.top + 6 : null,
@@ -514,6 +526,7 @@ function hideTooltip() { tooltip.visible = false }
 
 onMounted(async () => {
   try {
+    await itemTypesStore.ensureAll().catch(() => [])
     const ids = allCatalogIds(model.value)
     if (ids.length) {
       const r = await itemsApi.byIds(ids)

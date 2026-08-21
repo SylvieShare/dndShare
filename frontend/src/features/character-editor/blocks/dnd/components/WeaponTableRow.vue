@@ -77,10 +77,10 @@
     <td v-if="ctx.charCtx.ownerMode">
       <ValueSelect
         class="w-magic-select"
-        :model-value="entry.magic_up ?? 0"
+        :model-value="entry.params?.magic_bonus ?? 0"
         :options="ctx.magicOptions"
         placeholder="0"
-        @update:model-value="ctx.setField(index, 'magic_up', Number($event) || 0)"
+        @update:model-value="ctx.setParam(index, 'magic_bonus', Number($event) || 0)"
       />
     </td>
 

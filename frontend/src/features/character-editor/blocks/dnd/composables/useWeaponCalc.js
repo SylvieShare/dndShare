@@ -19,7 +19,7 @@ export function useWeaponCalc({
   }
 
   function magicBonus(entry) {
-    return Number(entry.magic_up) || 0
+    return Number(entry.params?.magic_bonus) || 0
   }
 
   function attackBonus(entry) {

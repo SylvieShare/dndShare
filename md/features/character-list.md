@@ -214,6 +214,12 @@ possessions, rolls the PHB 2014 class-wealth formula and replaces the later
 Equipment step with a searchable five-catalogue shop. Its cart compares all
 prices in copper, persists the individual dice and purchases in the draft, and
 places unspent gp/sp/cp into the created character's wallet.
+Every granted or purchased owned-item reference carries canonical
+`{item_id,count,params}` data through the draft and creation assembler. Concrete
+parameters are part of the stack identity: equal rope references of the same
+length merge, while different lengths remain separate. Built-in packs grant
+50-foot hemp rope and the sailor background grants 50-foot silk rope through
+`params.length_ft`; the shared handbook cards themselves have no fixed length.
 
 The background step also works with handbook item references (type 11), not
 suggest values. Its catalogue is an exact two-column desktop grid that collapses
@@ -241,7 +247,8 @@ Key rules:
 - content publication scope is carried through every catalogue query;
 - choices granted by a race or class are completed on that source step;
 - class and background starting equipment use handbook ids; the background
-  schema stores `tool_items`, `equipment_items` and `starting_coins` directly;
+  schema stores parameterized `tool_items`, `equipment_items` and
+  `starting_coins` directly;
 - the starting-shop path is mutually exclusive with class/background equipment,
   and its remaining class wealth is the only starting wallet amount;
 - handbook weapons added by the class, background or equipment step are written

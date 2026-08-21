@@ -22,7 +22,7 @@ describe('background starting equipment', () => {
       },
     }, catalogue)
 
-    expect(result.items.map((item) => [item.id, item.name, item.count])).toEqual([
+    expect(result.items.map((item) => [item.item_id, item.name, item.count])).toEqual([
       [35, 'Дубинка', 1], [417, 'Кошель', 2],
     ])
     expect(result.items[0].typeId).toBe(1)
@@ -42,6 +42,15 @@ describe('background starting equipment', () => {
 
     expect(backgroundToolItems(background, catalogue).map((item) => item.name)).toEqual(['Инструменты навигатора'])
     expect(backgroundReferenceIds(background)).toEqual([4473, 35])
+  })
+
+  it('preserves parameters carried by a granted item reference', () => {
+    const rope = { id: 88, name: 'Верёвка шёлковая', typeId: 2, data: { measurement: 'length' } }
+    const result = backgroundStartingEquipment({
+      data: { equipment_items: [{ item_id: 88, count: 1, params: { length_ft: 30 } }] },
+    }, [rope])
+
+    expect(result.items[0]).toMatchObject({ item_id: 88, count: 1, params: { length_ft: 30 } })
   })
 
   it('adds coins to the canonical wallet shape', () => {

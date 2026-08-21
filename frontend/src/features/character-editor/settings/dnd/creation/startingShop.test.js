@@ -25,6 +25,11 @@ describe('PHB 2014 starting shop', () => {
     expect(cartCostCopper([{ ...silverItem, count: 2 }, { ...goldItem, count: 1 }])).toBe(250)
   })
 
+  it('prices measured gear from its instance length', () => {
+    const rope = { data: { cost: { value: 1, suggest_id: 3 }, unit_cost_copper: 2 }, params: { length_ft: 30 } }
+    expect(itemCostCopper(rope)).toBe(60)
+  })
+
   it('formats change and stores it in the canonical wallet denominations', () => {
     expect(formatCopper(1234)).toBe('12 зм 3 см 4 мм')
     expect(copperToWallet(1234)).toEqual({ 1: 4, 2: 3, 3: 12 })

@@ -1,5 +1,10 @@
 export function defaultEntry() {
-  return { item_id: null, magic_up: 0, stat_suggest_id: null, proficient: false, add_attacks: [], desc: '' }
+  return { item_id: null, params: { magic_bonus: 0 }, stat_suggest_id: null, proficient: false, add_attacks: [], desc: '' }
+}
+
+export function normalizeWeaponParams(params) {
+  const source = params && typeof params === 'object' && !Array.isArray(params) ? params : {}
+  return { ...source, magic_bonus: Math.max(0, Math.min(3, Math.trunc(Number(source.magic_bonus) || 0))) }
 }
 
 export function normalizeAddAttacks(attacks) {
@@ -13,7 +18,7 @@ export function normalizeAddAttacks(attacks) {
 export function cleanEntry(entry) {
   return {
     item_id: entry.item_id,
-    magic_up: Number(entry.magic_up) || 0,
+    params: normalizeWeaponParams(entry.params),
     stat_suggest_id: entry.stat_suggest_id ?? null,
     proficient: !!entry.proficient,
     add_attacks: normalizeAddAttacks(entry.add_attacks),

@@ -267,7 +267,11 @@ BEGIN
         JOIN icon_defs defs ON defs.icon_key = mapped.icon_key
         JOIN dndshare.item i
           ON i.type_id = mapped.type_id
-         AND lower(btrim(i.name)) = lower(mapped.item_name)
+         AND lower(btrim(CASE i.name
+             WHEN 'Верёвка пеньковая' THEN 'Верёвка пеньковая (50 футов)'
+             WHEN 'Верёвка шёлковая' THEN 'Верёвка шёлковая (50 футов)'
+             ELSE i.name
+         END)) = lower(mapped.item_name)
         WHERE i.user_id IS NULL
           AND i.icon_svg_id IS NULL
           AND i.icon_image_id IS NULL

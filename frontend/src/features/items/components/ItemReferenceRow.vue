@@ -18,7 +18,7 @@
       <ItemIcon class="item-reference-icon" :item="item" :type="type" :size="isRoomy ? 64 : 34" placeholder />
       <span class="item-reference-info">
         <span class="item-reference-main">
-          <span class="item-reference-name">{{ item.name }}</span>
+          <span class="item-reference-name">{{ displayName }}</span>
           <span v-if="metaLabel && !isRoomy" class="item-reference-meta">{{ metaLabel }}</span>
         </span>
         <span v-if="firstAttack" class="item-reference-weapon-details">
@@ -107,6 +107,7 @@ const props = defineProps({
   item: { type: Object, required: true },
   type: { type: Object, default: null },
   count: { type: Number, default: 1 },
+  params: { type: Object, default: () => ({}) },
   selected: { type: Boolean, default: false },
   disabled: { type: Boolean, default: false },
   activatable: { type: Boolean, default: true },
@@ -119,10 +120,18 @@ const props = defineProps({
 defineEmits(['activate', 'details'])
 
 const data = computed(() => props.item.data || {})
+const displayName = computed(() => {
+  if (props.params?.length_ft != null) return `${props.item.name} · ${props.params.length_ft} фт.`
+  if (Number(props.params?.magic_bonus) > 0) return `${props.item.name} · +${Number(props.params.magic_bonus)}`
+  return props.item.name
+})
 const suggestStore = useSuggestStore()
 suggestStore.ensure(14)
 const { format: formatCost } = useCostFormatter()
-const costLabel = computed(() => formatCost(data.value.cost))
+const measuredCost = computed(() => props.params?.length_ft != null && data.value.unit_cost_copper != null
+  ? { value: Number(props.params.length_ft) * Number(data.value.unit_cost_copper), suggest_id: 1 }
+  : null)
+const costLabel = computed(() => formatCost(measuredCost.value || data.value.cost))
 const firstAttack = computed(() => Array.isArray(data.value.attacks) ? data.value.attacks[0] : null)
 const armor = computed(() => data.value.armor || {})
 const isRoomyWeapon = computed(() => props.roomyWeapon && !!firstAttack.value)
@@ -130,7 +139,10 @@ const isRoomyArmor = computed(() => props.roomyArmor && (
   Number(props.item.typeId) === 12 || Object.keys(armor.value).length > 0
 ))
 const isRoomy = computed(() => isRoomyWeapon.value || isRoomyArmor.value)
-const weightLabel = computed(() => data.value.weight != null ? `${String(data.value.weight).replace('.', ',')} фнт.` : '')
+const weight = computed(() => props.params?.length_ft != null && data.value.unit_weight != null
+  ? Number(props.params.length_ft) * Number(data.value.unit_weight)
+  : data.value.weight)
+const weightLabel = computed(() => weight.value != null ? `${String(weight.value).replace('.', ',')} фнт.` : '')
 const armorCategoryLabel = computed(() => ({
   light: 'Лёгкий',
   medium: 'Средний',

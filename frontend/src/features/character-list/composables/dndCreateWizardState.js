@@ -1,7 +1,7 @@
 import { normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'
 import { emptyScores } from './dndCreateWizardStats'
 
-export const DND_WIZARD_STORAGE_KEY = 'dnd-create-wizard-v1'
+export const DND_WIZARD_STORAGE_KEY = 'dnd-create-wizard-v2'
 
 const PERSISTED_KEYS = [
   'step', 'version', 'contentSources', 'name', 'race', 'subrace', 'charClass',

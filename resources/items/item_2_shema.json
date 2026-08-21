@@ -49,13 +49,41 @@
     ]
   },
   {
+    "key": "measurement",
+    "name": "Способ измерения экземпляра",
+    "type": "select",
+    "options": [
+      { "value": "length", "label": "Длина" }
+    ]
+  },
+  {
+    "key": "unit_cost_copper",
+    "name": "Стоимость единицы, мм",
+    "type": "int",
+    "show_on": { "key": "measurement", "value": "length" }
+  },
+  {
+    "key": "unit_weight",
+    "name": "Вес единицы, фнт.",
+    "type": "int",
+    "show_on": { "key": "measurement", "value": "length" }
+  },
+  {
     "key": "contents",
     "name": "Содержимое набора",
     "type": "object_array",
     "show_on": { "key": "equipment_category", "value": "pack" },
     "fields": [
       { "key": "item_id", "name": "Предмет", "type": "item", "item_type": 2 },
-      { "key": "count", "name": "Количество", "type": "int", "default": 1 }
+      { "key": "count", "name": "Количество", "type": "int", "default": 1 },
+      {
+        "key": "params",
+        "name": "Параметры экземпляра",
+        "type": "object",
+        "fields": [
+          { "key": "length_ft", "name": "Длина, фт.", "type": "int" }
+        ]
+      }
     ]
   },
   {

@@ -19,9 +19,10 @@ function catalogueMap(catalogue) {
 
 function inventoryEntry(item, count = 1) {
   return {
-    id: item.id,
+    item_id: item.id,
     name: item.name,
     count: Math.max(1, Math.floor(Number(count) || 1)),
+    params: {},
     typeId: item.typeId,
     armor: item.data?.armor || null,
     data: item.data || {},
@@ -36,7 +37,7 @@ function resolveRows(background, key, catalogue) {
   return referenceRows(background, key)
     .map((row) => {
       const item = byId.get(String(row?.item_id))
-      return item ? inventoryEntry(item, row?.count) : null
+      return item ? { ...inventoryEntry(item, row?.count), params: { ...(row?.params || {}) } } : null
     })
     .filter(Boolean)
 }

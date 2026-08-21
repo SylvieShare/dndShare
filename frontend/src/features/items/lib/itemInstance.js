@@ -1,0 +1,62 @@
+function plainObject(value) {
+  return value && typeof value === 'object' && !Array.isArray(value) ? value : {}
+}
+
+export function applicableInstanceFields(type, item) {
+  return (type?.instanceFields || []).filter((field) => {
+    const condition = field?.applies_when
+    if (!condition) return true
+    return item?.data?.[condition.item_data_key] === condition.value
+  })
+}
+
+export function normalizeInstanceParams(params, fields = [], { defaults = false } = {}) {
+  const source = plainObject(params)
+  const next = {}
+  for (const field of fields) {
+    let value = source[field.key]
+    if (value == null && defaults) value = field.default
+    if (value == null || value === '') continue
+    if (field.type === 'int') {
+      value = Number(value)
+      if (!Number.isFinite(value)) continue
+      value = Math.trunc(value)
+      if (field.min != null) value = Math.max(Number(field.min), value)
+      if (field.max != null) value = Math.min(Number(field.max), value)
+    } else if (field.type === 'boolean' || field.type === 'bool') {
+      value = !!value
+    }
+    next[field.key] = value
+  }
+  return next
+}
+
+export function defaultInstanceParams(type, item) {
+  const fields = applicableInstanceFields(type, item)
+  return normalizeInstanceParams({}, fields, { defaults: true })
+}
+
+export function instanceParamsKey(params) {
+  const canonical = (value) => {
+    if (Array.isArray(value)) return value.map(canonical)
+    if (!value || typeof value !== 'object') return value
+    return Object.fromEntries(Object.keys(value).sort().map((key) => [key, canonical(value[key])]))
+  }
+  return JSON.stringify(canonical(plainObject(params)))
+}
+
+export function instanceParamLabels(params, fields = []) {
+  const source = plainObject(params)
+  return fields.flatMap((field) => {
+    const value = source[field.key]
+    if (value == null || value === '') return []
+    if (field.key === 'magic_bonus') return Number(value) > 0 ? [`+${Number(value)}`] : []
+    const option = (field.options || []).find((entry) => String(entry.value) === String(value))
+    return [`${option?.label || value}${field.unit ? ` ${field.unit}` : ''}`]
+  })
+}
+
+export function instanceDisplayName(item, params, type) {
+  const labels = instanceParamLabels(params, applicableInstanceFields(type, item))
+  return [item?.name || '—', ...labels].join(' · ')
+}

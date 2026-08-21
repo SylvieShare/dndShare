@@ -34,6 +34,11 @@ export function rollStartingWealth(classKey, random = Math.random) {
 }
 
 export function itemCostCopper(item) {
+  const measured = Number(item?.params?.length_ft)
+  const unitCost = Number(item?.data?.unit_cost_copper)
+  if (Number.isFinite(measured) && measured > 0 && Number.isFinite(unitCost) && unitCost >= 0) {
+    return Math.round(measured * unitCost)
+  }
   const cost = item?.data?.cost
   const value = Number(cost?.value)
   const multiplier = COPPER_PER_COIN[Number(cost?.suggest_id)]

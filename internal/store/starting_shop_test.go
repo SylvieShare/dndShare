@@ -8,13 +8,13 @@ import (
 	"testing"
 )
 
-func TestBackgroundEquipmentSchemaIsEmbeddedAfterCatalogues(t *testing.T) {
+func TestItemInstanceParamsSchemaIsEmbeddedAfterCatalogues(t *testing.T) {
 	if len(schemaParts) == 0 {
 		t.Fatal("schemaParts is empty")
 	}
 	last := schemaParts[len(schemaParts)-1]
-	if last.name != "background-equipment" || last.sql == "" || last.sql != schemaBackgroundEquipmentSQL {
-		t.Fatal("background-equipment schema must be embedded after the equipment catalogues")
+	if last.name != "item-instance-params" || last.sql == "" || last.sql != schemaItemInstanceParamsSQL {
+		t.Fatal("item-instance-params schema must be embedded after the equipment catalogues")
 	}
 }
 
@@ -103,8 +103,8 @@ func TestStartingShopSeedsDedicatedArmorAndTransportCatalogues(t *testing.T) {
 		"lower(item.name) = 'праща'",
 		"'available_in_starting_shop', true",
 		`"key":"contents"`,
-		"('Набор путешественника', 8, 'Верёвка пеньковая (50 футов)', 1)",
-		"jsonb_build_object('item_id', item_id, 'count', quantity)",
+		"('Набор путешественника', 8, 'Верёвка пеньковая', 1)",
+		"jsonb_build_object('item_id', item_id, 'count', quantity, 'params', params)",
 		"JOIN LATERAL (",
 		"ORDER BY (COALESCE(candidate.data ->> 'available_in_starting_shop', 'false') = 'true') DESC",
 	} {
@@ -132,12 +132,30 @@ func TestEquipmentPackResourceSchemaExposesItemReferences(t *testing.T) {
 			t.Fatalf("unexpected contents field: %#v", field)
 		}
 		children, _ := field["fields"].([]any)
-		if len(children) != 2 {
-			t.Fatalf("contents must contain item and quantity fields: %#v", field)
+		if len(children) != 3 {
+			t.Fatalf("contents must contain item, quantity and instance params fields: %#v", field)
 		}
 		return
 	}
 	t.Fatal("item_2 schema must expose pack contents")
+}
+
+func TestItemInstanceParamsSchemaDefinesRopeAndWeaponParameters(t *testing.T) {
+	for _, fragment := range []string{
+		`"key":"magic_bonus"`,
+		`"key":"length_ft"`,
+		`instance_fields`,
+		`'unit_cost_copper'`,
+		`normalize_owned_item_entry`,
+		`normalize_weapon_instances`,
+		`entry -> 'id'`,
+		`entry -> 'magic_up'`,
+		`data - 'cost' - 'weight'`,
+	} {
+		if !strings.Contains(schemaItemInstanceParamsSQL, fragment) {
+			t.Fatalf("item instance params schema must contain %q", fragment)
+		}
+	}
 }
 
 func TestStartingShopResourceSchemasExposeSharedFlag(t *testing.T) {

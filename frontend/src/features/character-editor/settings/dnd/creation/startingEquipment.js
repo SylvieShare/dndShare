@@ -4,6 +4,8 @@
  * "any weapon/instrument" clauses; this module turns them into inventory rows.
  */
 
+import { instanceParamsKey } from '@/features/items/lib/itemInstance'
+
 const SIMPLE_MELEE = [
   'Дубинка', 'Кинжал', 'Палица', 'Ручной топор', 'Метательное копьё',
   'Лёгкий молот', 'Булава', 'Боевой посох', 'Серп', 'Копьё',
@@ -198,11 +200,17 @@ function catalogueKey(value) {
 
 function equipmentEntry(entry) {
   const linked = entry?.item
-  if (!linked) return { id: null, name: entry?.name || '', count: Math.max(1, Number(entry?.count) || 1) }
+  if (!linked) return { item_id: null, name: entry?.name || '', count: Math.max(1, Number(entry?.count) || 1), params: { ...(entry?.params || {}) } }
+  const params = {
+    ...(Number(linked.typeId) === 1 ? { magic_bonus: 0 } : {}),
+    ...(linked.data?.measurement === 'length' ? { length_ft: 50 } : {}),
+    ...(entry?.params || {}),
+  }
   return {
-    id: linked.id,
+    item_id: linked.id,
     name: linked.name,
     count: Math.max(1, Number(entry?.count) || 1),
+    params,
     typeId: linked.typeId,
     armor: linked.data?.armor,
   }
@@ -296,10 +304,12 @@ export function startingEquipmentComplete(profile, choices = {}) {
 
 function pushItem(map, entry) {
   if (!entry?.name) return
-  const key = entry.id != null ? `id:${entry.id}` : `name:${normalized(entry.name)}`
+  const key = entry.item_id != null
+    ? `id:${entry.item_id}:params:${instanceParamsKey(entry.params)}`
+    : `name:${normalized(entry.name)}:params:${instanceParamsKey(entry.params)}`
   const saved = map.get(key)
   if (saved) saved.count += Math.max(1, Number(entry.count) || 1)
-  else map.set(key, { ...entry, id: entry.id ?? null, count: Math.max(1, Number(entry.count) || 1) })
+  else map.set(key, { ...entry, item_id: entry.item_id ?? null, params: { ...(entry.params || {}) }, count: Math.max(1, Number(entry.count) || 1) })
 }
 
 export function selectedStartingEquipment(profile, choices = {}) {
@@ -340,10 +350,12 @@ export function mergeEquipment(...lists) {
   const merged = new Map()
   for (const entry of lists.flat()) {
     if (!entry?.name) continue
-    const key = entry.id != null ? `id:${entry.id}` : `name:${normalized(entry.name)}`
+    const key = entry.item_id != null
+      ? `id:${entry.item_id}:params:${instanceParamsKey(entry.params)}`
+      : `name:${normalized(entry.name)}:params:${instanceParamsKey(entry.params)}`
     const saved = merged.get(key)
     if (saved) saved.count += Math.max(1, Number(entry.count) || 1)
-    else merged.set(key, { ...entry, id: entry.id ?? null, count: Math.max(1, Number(entry.count) || 1) })
+    else merged.set(key, { ...entry, item_id: entry.item_id ?? null, params: { ...(entry.params || {}) }, count: Math.max(1, Number(entry.count) || 1) })
   }
   return [...merged.values()]
 }

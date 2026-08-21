@@ -41,7 +41,7 @@
         <div v-else-if="!visibleItems.length" class="shop-empty">В этой категории ничего не найдено.</div>
         <div v-else class="shop-items">
           <div v-for="item in visibleItems" :key="item.id" class="shop-item">
-            <ItemReferenceRow :item="item" @activate="viewItem = item" />
+            <ItemReferenceRow :item="item" :params="item.params" @activate="viewItem = item" />
             <button
               type="button"
               class="shop-add"
@@ -66,15 +66,15 @@
         </div>
         <div v-if="!state.startingShopCart.length" class="cart-empty">Добавляйте предметы из каталога. Покупки сразу считаются в бюджете.</div>
         <div v-else class="cart-items">
-          <div v-for="entry in state.startingShopCart" :key="entry.id" class="cart-item">
-            <button class="cart-name" type="button" @click="viewItem = entry">{{ entry.name }}</button>
+          <div v-for="entry in state.startingShopCart" :key="`${entry.item_id}:${JSON.stringify(entry.params)}`" class="cart-item">
+            <button class="cart-name" type="button" @click="viewItem = entry">{{ instanceName(entry) }}</button>
             <span class="cart-price">{{ priceLabel(entry) }}</span>
             <div class="cart-quantity">
-              <button type="button" aria-label="Уменьшить" @click="bumpShopItem(entry.id, -1)">−</button>
+              <button type="button" aria-label="Уменьшить" @click="bumpShopItem(entry, -1)">−</button>
               <strong>{{ entry.count }}</strong>
-              <button type="button" aria-label="Увеличить" :disabled="!canBuyShopItem(entry)" @click="bumpShopItem(entry.id, 1)">+</button>
+              <button type="button" aria-label="Увеличить" :disabled="!canBuyShopItem(entry)" @click="bumpShopItem(entry, 1)">+</button>
             </div>
-            <button class="cart-remove" type="button" aria-label="Убрать" @click="removeShopItem(entry.id)">
+            <button class="cart-remove" type="button" aria-label="Убрать" @click="removeShopItem(entry)">
               <X :size="14" aria-hidden="true" />
             </button>
           </div>
@@ -89,7 +89,7 @@
     <ItemViewModal
       v-if="viewItem"
       :item="viewItem"
-      :item-id="viewItem.id"
+      :item-id="viewItem.item_id ?? viewItem.id"
       :item-type-id="viewItem.typeId"
       @close="viewItem = null"
     />
@@ -141,6 +141,7 @@ const visibleItems = computed(() => {
 const cartCount = computed(() => state.startingShopCart.reduce((sum, entry) => sum + Math.max(1, Number(entry.count) || 1), 0))
 const cartCountLabel = computed(() => cartCount.value ? `${cartCount.value} шт.` : 'Пока пусто')
 const priceLabel = (item) => formatCopper(itemCostCopper(item))
+const instanceName = (entry) => entry.params?.length_ft != null ? `${entry.name} · ${entry.params.length_ft} фт.` : entry.name
 
 function requestReroll() {
   if (state.startingShopCart.length) rerollConfirmOpen.value = true

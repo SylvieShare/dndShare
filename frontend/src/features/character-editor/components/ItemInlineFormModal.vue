@@ -9,6 +9,12 @@
       <FormTextarea v-model:value="desc" placeholder="Описание..." :rows="4" />
     </FormField>
 
+    <ItemInstanceParamsFields
+      :fields="instanceFields"
+      :model-value="params"
+      @update:model-value="params = $event"
+    />
+
     <button
       class="iim-toggle"
       :class="{ 'iim-toggle-on': consumable }"
@@ -39,10 +45,13 @@ import { FormActionButtons } from '@sylvieshare/share-ui'
 import { FormField } from '@sylvieshare/share-ui'
 import { FormTextInput } from '@sylvieshare/share-ui'
 import { FormTextarea } from '@sylvieshare/share-ui'
+import ItemInstanceParamsFields from '@/features/items/components/ItemInstanceParamsFields.vue'
+import { normalizeInstanceParams } from '@/features/items/lib/itemInstance'
 
 const props = defineProps({
   entry: { type: Object, default: null },
   baseItem: { type: Object, default: null },
+  instanceFields: { type: Array, default: () => [] },
 })
 const emit = defineEmits(['close', 'save'])
 
@@ -51,6 +60,7 @@ const fallback = props.baseItem?.data || {}
 const name = ref(ov.name ?? props.baseItem?.name ?? '')
 const desc = ref(ov.desc ?? fallback.desc ?? '')
 const consumable = ref(!!(ov.consumable ?? fallback.consumable ?? false))
+const params = ref(normalizeInstanceParams(props.entry?.params, props.instanceFields, { defaults: true }))
 
 function submit() {
   const trimmed = name.value.trim()
@@ -59,6 +69,7 @@ function submit() {
     name: trimmed,
     desc: desc.value,
     consumable: consumable.value,
+    params: params.value,
   })
 }
 </script>

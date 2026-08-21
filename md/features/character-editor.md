@@ -123,7 +123,8 @@ The current shape under `data.values` is:
 - HP: `{current,max,temp,ds_success,ds_failure,hitDice:[{die,total,used}]}`;
 - spellbook: `{stat_path,save_bonus,attack_bonus,slots_rest,preparation,
   spells:[{id,prepared,always_prepared?}],slots:[{level,total,used}]}`;
-- inventory: `{equipped:[Entry],sections:[{id,name,items:[Entry]}]}`;
+- inventory: `{equipped:[Entry],sections:[{id,name,items:[Entry]}]}`, where an
+  owned item entry is `{uid,item_id,count,params,override}`;
 - wallet: `{order:[suggestId],amounts:{[suggestId]:number}}`;
 - race/class/feat abilities: arrays of item references/current counters.
 
@@ -147,9 +148,9 @@ uses a richer vine print in the warning tone and can be assigned or removed
 separately through the same menu. Granted archetype spells receive this status
 during creation and level-up.
 
-`internal/store/schema/03_characters.sql` migrates existing rows before HTTP
-start and removes the old keys. Components neither recognize nor write previous
-shapes.
+`internal/store/schema/03_characters.sql` and the later canonical migrations,
+including `28_item_instance_params.sql`, migrate existing rows before HTTP start
+and remove old keys. Components neither recognize nor write previous shapes.
 
 ## Semantic accessors
 
@@ -228,6 +229,14 @@ item has one. Every row reserves the same icon slot, so names remain aligned
 when an icon is absent; simplified custom rows leave that slot empty instead of
 showing a placeholder. Inventory glyphs are neutral gray, frameless, have no
 background tile and use the available row height for a larger drawing.
+Every owned inventory item and potion uses `item_id`, an explicit `count` and a
+typed `params` object. `params` contains values of the concrete instance and is
+not an alternative handbook-data or free-form override store. Item-type
+`instanceFields` declares the available parameters. Measured gear such as hemp
+and silk rope stores `length_ft` on each reference; its handbook row stores only
+measurement kind plus unit cost/weight. Displayed cost and weight scale with the
+stored length, and stacks merge only when both `item_id` and canonical `params`
+match.
 The same picker is used for feats and abilities and opens above the active morph
 editor, so its filters and item selection are never hidden behind the morph.
 The list shows count as a badge and has no inline increment/decrement controls.
@@ -282,6 +291,9 @@ use Strength, ranged weapons use Dexterity, and finesse weapons use the larger
 of the current Strength and Dexterity modifiers. The calculation is live, so a
 later ability-score change updates attack and damage without rewriting the
 weapon entry. A manually selected ability overrides Auto.
+Weapon enhancement follows the same owned-instance contract: the explicit
+`params.magic_bonus` value supplies the bonus to both attack and damage.
+`magic_up` is not read or written.
 All `dice_id` values are fixed system strings (`"d4"`…`"d100"`); die visuals
 use `SystemDie` and never load suggest type 11. Spell
 handbook dice use only `dice_id/type`. Spell class ownership uses item-id

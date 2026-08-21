@@ -7,7 +7,7 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-const itemTypeSelect = `SELECT it.id, it.name, it.description, it.fields, it.source_id, it.color, it.count_items, it.important,
+const itemTypeSelect = `SELECT it.id, it.name, it.description, it.fields, it.instance_fields, it.source_id, it.color, it.count_items, it.important,
 		s.name AS source_name,
 		it.icon_image_id,
 		icon.url AS icon_image_url,
@@ -22,8 +22,8 @@ func scanItemType(rows pgx.Rows) (ItemType, error) {
 	var it ItemType
 	var description, sourceName, color, iconImageURL, coverImageURL *string
 	var sourceID, iconImageID, coverImageID *int64
-	var fields []byte
-	if err := rows.Scan(&it.ID, &it.Name, &description, &fields, &sourceID, &color, &it.CountItems, &it.Important, &sourceName, &iconImageID, &iconImageURL, &coverImageID, &coverImageURL); err != nil {
+	var fields, instanceFields []byte
+	if err := rows.Scan(&it.ID, &it.Name, &description, &fields, &instanceFields, &sourceID, &color, &it.CountItems, &it.Important, &sourceName, &iconImageID, &iconImageURL, &coverImageID, &coverImageURL); err != nil {
 		return ItemType{}, err
 	}
 	it.Description = description
@@ -31,6 +31,11 @@ func scanItemType(rows pgx.Rows) (ItemType, error) {
 		it.Fields = json.RawMessage("[]")
 	} else {
 		it.Fields = json.RawMessage(fields)
+	}
+	if instanceFields == nil {
+		it.InstanceFields = json.RawMessage("[]")
+	} else {
+		it.InstanceFields = json.RawMessage(instanceFields)
 	}
 	it.SourceID = sourceID
 	it.SourceName = sourceName

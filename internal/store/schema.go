@@ -100,6 +100,9 @@ var schemaTransportCatalogSQL string
 //go:embed schema/27_background_equipment.sql
 var schemaBackgroundEquipmentSQL string
 
+//go:embed schema/28_item_instance_params.sql
+var schemaItemInstanceParamsSQL string
+
 var schemaParts = []struct {
 	name string
 	sql  string
@@ -133,6 +136,7 @@ var schemaParts = []struct {
 	{"weapon-catalog", schemaWeaponCatalogSQL},
 	{"transport-catalog", schemaTransportCatalogSQL},
 	{"background-equipment", schemaBackgroundEquipmentSQL},
+	{"item-instance-params", schemaItemInstanceParamsSQL},
 }
 
 func applySchema(ctx context.Context, pool *pgxpool.Pool) error {

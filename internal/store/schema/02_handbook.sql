@@ -178,6 +178,7 @@ CREATE TABLE IF NOT EXISTS dndshare.item_type (
     "name"      varchar NOT NULL,
     example     jsonb NULL,
     fields      jsonb NULL,
+    instance_fields jsonb DEFAULT '[]'::jsonb NOT NULL,
     source_id   int8 NULL REFERENCES dndshare."source"(id),
     icon_image_id int8 NULL REFERENCES dndshare.storage_image(id) ON DELETE SET NULL,
     cover_image_id int8 NULL REFERENCES dndshare.storage_image(id) ON DELETE SET NULL,
@@ -191,6 +192,8 @@ ALTER TABLE dndshare.item_type
     ADD COLUMN IF NOT EXISTS icon_image_id int8 NULL REFERENCES dndshare.storage_image(id) ON DELETE SET NULL;
 ALTER TABLE dndshare.item_type
     ADD COLUMN IF NOT EXISTS cover_image_id int8 NULL REFERENCES dndshare.storage_image(id) ON DELETE SET NULL;
+ALTER TABLE dndshare.item_type
+    ADD COLUMN IF NOT EXISTS instance_fields jsonb DEFAULT '[]'::jsonb NOT NULL;
 CREATE INDEX IF NOT EXISTS idx_item_type_source_id ON dndshare.item_type USING btree (source_id);
 CREATE INDEX IF NOT EXISTS idx_item_type_icon_image_id ON dndshare.item_type USING btree (icon_image_id);
 CREATE INDEX IF NOT EXISTS idx_item_type_cover_image_id ON dndshare.item_type USING btree (cover_image_id);

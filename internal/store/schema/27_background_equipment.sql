@@ -150,7 +150,7 @@ SELECT * FROM (VALUES
     -- Sailor
     ('Моряк', 'tool', 1, 2, 'Инструменты навигатора', 1),
     ('Моряк', 'equipment', 1, 1, 'Дубинка', 1),
-    ('Моряк', 'equipment', 2, 2, 'Верёвка шёлковая (50 футов)', 1),
+    ('Моряк', 'equipment', 2, 2, 'Верёвка шёлковая', 1),
     ('Моряк', 'equipment', 3, 2, 'Счастливый талисман', 1),
     ('Моряк', 'equipment', 4, 2, 'Обычная одежда', 1),
     ('Моряк', 'equipment', 5, 2, 'Кошель', 1),
@@ -234,7 +234,9 @@ SELECT * FROM (VALUES
 ) AS coins(background_name, currency_id, amount);
 
 WITH resolved AS (
-    SELECT grant_row.background_name, grant_row.section, grant_row.position, grant_row.count, linked.id AS item_id
+    SELECT grant_row.background_name, grant_row.section, grant_row.position, grant_row.count, linked.id AS item_id,
+           CASE WHEN grant_row.item_name = 'Верёвка шёлковая'
+               THEN '{"length_ft":50}'::jsonb ELSE '{}'::jsonb END AS params
     FROM background_grant_links grant_row
     JOIN LATERAL (
         SELECT item.id
@@ -247,9 +249,9 @@ WITH resolved AS (
     ) linked ON true
 ), grants AS (
     SELECT background_name,
-           COALESCE(jsonb_agg(jsonb_build_object('item_id', item_id, 'count', count) ORDER BY position)
+           COALESCE(jsonb_agg(jsonb_build_object('item_id', item_id, 'count', count, 'params', params) ORDER BY position)
                FILTER (WHERE section = 'tool'), '[]'::jsonb) AS tool_items,
-           COALESCE(jsonb_agg(jsonb_build_object('item_id', item_id, 'count', count) ORDER BY position)
+           COALESCE(jsonb_agg(jsonb_build_object('item_id', item_id, 'count', count, 'params', params) ORDER BY position)
                FILTER (WHERE section = 'equipment'), '[]'::jsonb) AS equipment_items
     FROM resolved
     GROUP BY background_name
@@ -286,8 +288,8 @@ SET fields = (
     FROM jsonb_array_elements(COALESCE(item_type.fields, '[]'::jsonb)) WITH ORDINALITY AS existing(field, ordinal)
     WHERE field ->> 'key' NOT IN ('equipment', 'tool_items', 'equipment_items', 'starting_coins')
 ) || '[
-  {"name":"Инструменты справочника","key":"tool_items","type":"object_array","fields":[{"name":"Предмет справочника (ID)","key":"item_id","type":"int"},{"name":"Количество","key":"count","type":"int","default":1}]},
-  {"name":"Стартовое снаряжение справочника","key":"equipment_items","type":"object_array","fields":[{"name":"Предмет справочника (ID)","key":"item_id","type":"int"},{"name":"Количество","key":"count","type":"int","default":1}]},
+  {"name":"Инструменты справочника","key":"tool_items","type":"object_array","fields":[{"name":"Предмет справочника (ID)","key":"item_id","type":"int"},{"name":"Количество","key":"count","type":"int","default":1},{"name":"Параметры экземпляра","key":"params","type":"object","fields":[{"name":"Длина, фт.","key":"length_ft","type":"int"},{"name":"Магический бонус","key":"magic_bonus","type":"int"}]}]},
+  {"name":"Стартовое снаряжение справочника","key":"equipment_items","type":"object_array","fields":[{"name":"Предмет справочника (ID)","key":"item_id","type":"int"},{"name":"Количество","key":"count","type":"int","default":1},{"name":"Параметры экземпляра","key":"params","type":"object","fields":[{"name":"Длина, фт.","key":"length_ft","type":"int"},{"name":"Магический бонус","key":"magic_bonus","type":"int"}]}]},
   {"name":"Стартовые монеты","key":"starting_coins","type":"object_array","fields":[{"name":"Валюта","key":"currency_id","type":"suggest","suggest_id":17},{"name":"Количество","key":"amount","type":"int"}]}
 ]'::jsonb
 WHERE item_type.id = 11;

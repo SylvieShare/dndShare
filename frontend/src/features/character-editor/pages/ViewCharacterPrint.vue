@@ -266,13 +266,13 @@ function attackParts(entry, item) {
   const baseParts = (item?.data?.attacks || []).map(part => ({ ...part, diceKey: part.dice_id, typeKey: part.type }))
   const extraParts = (entry.add_attacks || []).map(part => ({ ...part, diceKey: part.dice_id, typeKey: part.type_suggest_id }))
   const result = [...baseParts, ...extraParts].map(part => [diceLabel(part.diceKey) ? `${Number(part.count) || 1}${diceLabel(part.diceKey)}` : '', damageType(part.typeKey)].filter(Boolean).join(' ')).filter(Boolean)
-  const flat = weaponStatMod(entry, item) + (Number(entry.magic_up) || 0)
+  const flat = weaponStatMod(entry, item) + (Number(entry.params?.magic_bonus) || 0)
   if (flat && result.length) result[0] += ` ${signed(flat)}`
   return result.join(' + ')
 }
 const attacks = computed(() => (Array.isArray(values.value.weapon) ? values.value.weapon : []).slice(0, 8).map((entry, index) => {
   const item = itemById(entry.item_id); const statMod = weaponStatMod(entry, item)
-  return { key: `${entry.item_id}-${index}`, name: item?.name || `Оружие #${entry.item_id || '—'}`, bonus: statMod + (Number(entry.magic_up) || 0) + (entry.proficient ? profBonus.value : 0), damage: attackParts(entry, item), properties: weaponProperties(item), description: entry.desc || '' }
+  return { key: `${entry.item_id}-${index}`, name: item?.name || `Оружие #${entry.item_id || '—'}`, bonus: statMod + (Number(entry.params?.magic_bonus) || 0) + (entry.proficient ? profBonus.value : 0), damage: attackParts(entry, item), properties: weaponProperties(item), description: entry.desc || '' }
 }))
 const attackBlankRows = computed(() => Math.max(0, 5 - attacks.value.length))
 const proficiencyGroups = computed(() => Object.entries(values.value.proficiencies || {}).map(([name, value]) => ({ name, value: Array.isArray(value) ? value.map(text).filter(Boolean).join(', ') : text(value) })).filter(group => group.value))
@@ -284,14 +284,18 @@ const mainProficiencyGroups = computed(() => mainCanFitProficiencies.value ? pro
 const equipmentProficiencyGroups = computed(() => mainCanFitProficiencies.value ? [] : proficiencyGroups.value)
 
 const inventoryModel = computed(() => normalizeValue(values.value.items))
-function inventoryEntry(entry) { return { ...entry, name: entry.override?.name || itemById(entry.id)?.name || (entry.id != null ? `Предмет #${entry.id}` : 'Предмет') } }
+function ownedItemName(entry, fallback = 'Предмет') {
+  const base = entry.override?.name || itemById(entry.item_id)?.name || (entry.item_id != null ? `${fallback} #${entry.item_id}` : fallback)
+  return entry.params?.length_ft != null ? `${base} · ${entry.params.length_ft} фт.` : base
+}
+function inventoryEntry(entry) { return { ...entry, name: ownedItemName(entry) } }
 const inventorySections = computed(() => [
   { id: 'equipped', name: 'Экипировано', items: inventoryModel.value.equipped.map(inventoryEntry) },
   ...inventoryModel.value.sections.map(section => ({ ...section, items: section.items.map(inventoryEntry) })),
 ].filter(section => section.items.length))
 const counters = computed(() => normalizeCounters(values.value.counters))
 const coins = computed(() => Object.entries(values.value.money?.amounts || {}).filter(([, amount]) => Number(amount)).map(([id, amount]) => ({ id, amount: Number(amount), name: suggest.items(17).find(item => String(item.id) === id)?.value || `мон. ${id}` })))
-const potions = computed(() => (Array.isArray(values.value.potions) ? values.value.potions : []).map(entry => ({ ...entry, count: Number(entry.count) || 1, name: entry.override?.name || itemById(entry.id)?.name || 'Зелье' })))
+const potions = computed(() => (Array.isArray(values.value.potions) ? values.value.potions : []).map(entry => ({ ...entry, count: Number(entry.count) || 1, name: ownedItemName(entry, 'Зелье') })))
 const hasEquipmentSide = computed(() => counters.value.length || coins.value.length || potions.value.length || equipmentProficiencyGroups.value.length)
 const hasEquipment = computed(() => inventorySections.value.length || hasEquipmentSide.value)
 const equipmentPages = computed(() => {
@@ -397,8 +401,8 @@ const personalityNumber = computed(() => spellStart.value + spellPages.value.len
 function collectItemIds(data) {
   const ids = new Set(); const add = id => { if (id != null && id !== '') ids.add(id) }
   for (const entry of data.weapon || []) add(entry.item_id)
-  const inv = normalizeValue(data.items); inv.equipped.forEach(entry => add(entry.id)); inv.sections.forEach(section => section.items.forEach(entry => add(entry.id)))
-  ;(Array.isArray(data.potions) ? data.potions : []).forEach(entry => add(entry.id)); (data.spells?.spells || []).forEach(entry => add(entry.id))
+  const inv = normalizeValue(data.items); inv.equipped.forEach(entry => add(entry.item_id)); inv.sections.forEach(section => section.items.forEach(entry => add(entry.item_id)))
+  ;(Array.isArray(data.potions) ? data.potions : []).forEach(entry => add(entry.item_id)); (data.spells?.spells || []).forEach(entry => add(entry.id))
   for (const key of ['abilities_race', 'abilities_class', 'abilities_feats']) (data[key] || []).forEach(entry => add(entry.id))
   return [...ids]
 }

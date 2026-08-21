@@ -21,6 +21,7 @@
           :key="entry.item.id"
           :item="entry.item"
           :count="entry.count"
+          :params="entry.params"
           @activate="viewItem = entry.item"
         />
       </div>
@@ -76,7 +77,7 @@ const contentRows = computed(() => Array.isArray(data.value.contents) ? data.val
 const contents = computed(() => {
   const byId = new Map(contentItems.value.map((item) => [String(item.id), item]))
   return contentRows.value
-    .map((entry) => ({ item: byId.get(String(entry?.item_id)), count: Math.max(1, Number(entry?.count) || 1) }))
+    .map((entry) => ({ item: byId.get(String(entry?.item_id)), count: Math.max(1, Number(entry?.count) || 1), params: { ...(entry?.params || {}) } }))
     .filter((entry) => entry.item)
 })
 

@@ -15,9 +15,9 @@
       <FormField vertical label="Магия">
         <MultiToggle
           :options="ctx.magicOptions"
-          :model-value="entry.magic_up ?? 0"
+          :model-value="entry.params?.magic_bonus ?? 0"
           :neutral-value="0"
-          @update:model-value="v => ctx.setField(index, 'magic_up', Number(v) || 0)"
+          @update:model-value="v => ctx.setParam(index, 'magic_bonus', Number(v) || 0)"
         />
       </FormField>
       <FormField vertical label="Владение" class="wed-f-prof">

@@ -39,9 +39,10 @@
           <div class="grant-tiles">
             <ItemReferenceRow
               v-for="item in backgroundToolItems"
-              :key="item.id"
-              :item="item"
-              @activate="viewItem = item"
+              :key="`${item.item_id}:${JSON.stringify(item.params)}`"
+              :item="{ ...item, id: item.item_id }"
+              :params="item.params"
+              @activate="viewItem = { ...item, id: item.item_id }"
             />
           </div>
         </div>
@@ -51,10 +52,11 @@
           <div class="grant-tiles">
             <ItemReferenceRow
               v-for="entry in backgroundStart.items"
-              :key="entry.id"
-              :item="entry"
+              :key="`${entry.item_id}:${JSON.stringify(entry.params)}`"
+              :item="{ ...entry, id: entry.item_id }"
               :count="entry.count"
-              @activate="viewItem = entry"
+              :params="entry.params"
+              @activate="viewItem = { ...entry, id: entry.item_id }"
             />
           </div>
         </div>

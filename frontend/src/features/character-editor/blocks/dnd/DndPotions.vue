@@ -38,6 +38,7 @@ import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
 import PotionShelf from '@/features/character-editor/blocks/dnd/components/PotionShelf'
 import { itemsApi } from '@/shared/api/itemsApi'
 import { makeEntryUid } from '@/features/character-editor/blocks/dnd/lib/itemSection'
+import { instanceParamsKey } from '@/features/items/lib/itemInstance'
 import { logSessionEntryAdded } from '@/features/character-editor/lib/sessionEntryEvents'
 
 const POTION_TYPE = 10
@@ -54,10 +55,10 @@ const modalEntryUid = ref(null)
 const entries = computed(() => (Array.isArray(props.value) ? props.value : []))
 
 const potionEntries = computed(() => entries.value.map(e => {
-  const base = catalog[e.id] || {}
+  const base = catalog[e.item_id] || {}
   return {
     uid: e.uid,
-    id: e.id,
+    id: e.item_id,
     count: e.count,
     name: e.override?.name ?? base.name ?? 'Зелье',
     color: base.data?.color || null,
@@ -67,11 +68,11 @@ const potionEntries = computed(() => entries.value.map(e => {
 
 const modalItem = computed(() => {
   const entry = entries.value.find(e => e.uid === modalEntryUid.value)
-  return entry?.id != null ? catalog[entry.id] ?? null : null
+  return entry?.item_id != null ? catalog[entry.item_id] ?? null : null
 })
 
 function clone() {
-  return entries.value.map(e => ({ uid: e.uid, id: e.id ?? null, count: e.count, override: e.override ? { ...e.override } : null }))
+  return entries.value.map(e => ({ uid: e.uid, item_id: e.item_id ?? null, count: e.count, params: { ...(e.params || {}) }, override: e.override ? { ...e.override } : null }))
 }
 
 function onUse(uid) {
@@ -105,7 +106,7 @@ function onReplenish(uid) {
 }
 
 function onView(uid) {
-  if (entries.value.some(e => e.uid === uid && e.id != null)) modalEntryUid.value = uid
+  if (entries.value.some(e => e.uid === uid && e.item_id != null)) modalEntryUid.value = uid
 }
 
 function onPick(item, qty = 1) {
@@ -113,16 +114,17 @@ function onPick(item, qty = 1) {
   if (!catalog[item.id]) catalog[item.id] = item
   const next = clone()
   // Merge into an existing stack of the same potion (no custom override) so the rack shows one vial.
-  const existing = next.find(e => e.id === item.id && !e.override)
+  const existing = next.find(e => e.item_id === item.id && !e.override
+    && instanceParamsKey(e.params) === instanceParamsKey({}))
   if (existing) existing.count = Math.min(999, (existing.count || 1) + n)
-  else next.push({ uid: makeEntryUid(), id: item.id, count: n, override: null })
+  else next.push({ uid: makeEntryUid(), item_id: item.id, count: n, params: {}, override: null })
   pickerOpen.value = false
   emit('update:value', props.block.id, next)
   logSessionEntryAdded(charCtx, { kind: 'potion', title: item.name, itemId: item.id, count: n })
 }
 
 async function loadCatalog() {
-  const ids = [...new Set(entries.value.map(e => e.id).filter(id => id != null))]
+  const ids = [...new Set(entries.value.map(e => e.item_id).filter(id => id != null))]
   if (!ids.length) return
   try {
     const r = await itemsApi.byIds(ids)

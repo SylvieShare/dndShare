@@ -1,6 +1,36 @@
 -- Player's Handbook 2014 shop catalogue used by the character-creation wizard.
 -- The local Russian PHB in docs/ is authoritative for names, prices and weights.
 
+-- Normalize measured gear before packs and backgrounds resolve it by name.
+-- Concrete length is intentionally not stored on the handbook row.
+UPDATE dndshare.item
+SET name = CASE
+        WHEN lower(name) IN (lower('Верёвка пеньковая (50 футов)'), lower('50-футовая пеньковая верёвка'))
+            THEN 'Верёвка пеньковая'
+        ELSE 'Верёвка шёлковая'
+    END,
+    name_en = CASE
+        WHEN lower(name) IN (lower('Верёвка пеньковая (50 футов)'), lower('50-футовая пеньковая верёвка'), lower('Верёвка пеньковая'))
+            THEN 'Rope, hempen'
+        ELSE 'Rope, silk'
+    END,
+    data = (data - 'cost' - 'weight') || jsonb_build_object(
+        'measurement', 'length',
+        'unit_cost_copper', CASE
+            WHEN lower(name) IN (lower('Верёвка пеньковая (50 футов)'), lower('50-футовая пеньковая верёвка'), lower('Верёвка пеньковая')) THEN 2
+            ELSE 20
+        END,
+        'unit_weight', CASE
+            WHEN lower(name) IN (lower('Верёвка пеньковая (50 футов)'), lower('50-футовая пеньковая верёвка'), lower('Верёвка пеньковая')) THEN 0.2
+            ELSE 0.1
+        END
+    )
+WHERE user_id IS NULL AND type_id = 2
+  AND lower(name) IN (
+      lower('Верёвка пеньковая (50 футов)'), lower('50-футовая пеньковая верёвка'), lower('Верёвка пеньковая'),
+      lower('Верёвка шёлковая (50 футов)'), lower('Верёвка шёлковая')
+  );
+
 -- Types 1-6 historically arrived with the imported catalogue. This migration
 -- creates type 2 on a clean database because it also seeds PHB tools there.
 INSERT INTO dndshare.item_type (id, name, fields, source_id, color, important, description)
@@ -357,7 +387,7 @@ WITH pack_contents(pack_name, position, item_name, quantity) AS (
         ('Набор взломщика', 11, 'Рацион (1 день)', 5),
         ('Набор взломщика', 12, 'Трутница', 1),
         ('Набор взломщика', 13, 'Бурдюк', 1),
-        ('Набор взломщика', 14, 'Верёвка пеньковая (50 футов)', 1),
+        ('Набор взломщика', 14, 'Верёвка пеньковая', 1),
 
         ('Набор дипломата', 1, 'Сундук', 1),
         ('Набор дипломата', 2, 'Футляр для карты или свитка', 2),
@@ -379,7 +409,7 @@ WITH pack_contents(pack_name, position, item_name, quantity) AS (
         ('Набор исследователя подземелий', 6, 'Трутница', 1),
         ('Набор исследователя подземелий', 7, 'Рацион (1 день)', 10),
         ('Набор исследователя подземелий', 8, 'Бурдюк', 1),
-        ('Набор исследователя подземелий', 9, 'Верёвка пеньковая (50 футов)', 1),
+        ('Набор исследователя подземелий', 9, 'Верёвка пеньковая', 1),
 
         ('Набор путешественника', 1, 'Рюкзак', 1),
         ('Набор путешественника', 2, 'Спальный мешок', 1),
@@ -388,7 +418,7 @@ WITH pack_contents(pack_name, position, item_name, quantity) AS (
         ('Набор путешественника', 5, 'Факел', 10),
         ('Набор путешественника', 6, 'Рацион (1 день)', 10),
         ('Набор путешественника', 7, 'Бурдюк', 1),
-        ('Набор путешественника', 8, 'Верёвка пеньковая (50 футов)', 1),
+        ('Набор путешественника', 8, 'Верёвка пеньковая', 1),
 
         ('Набор священника', 1, 'Рюкзак', 1),
         ('Набор священника', 2, 'Одеяло', 1),
@@ -410,7 +440,9 @@ WITH pack_contents(pack_name, position, item_name, quantity) AS (
         ('Набор учёного', 7, 'Маленький нож', 1)
 ), resolved AS (
     SELECT pack.id AS pack_id, component.id AS item_id,
-           pack_contents.position, pack_contents.quantity
+           pack_contents.position, pack_contents.quantity,
+           CASE WHEN pack_contents.item_name = 'Верёвка пеньковая'
+               THEN '{"length_ft":50}'::jsonb ELSE '{}'::jsonb END AS params
     FROM pack_contents
     JOIN LATERAL (
         SELECT candidate.id
@@ -433,7 +465,7 @@ WITH pack_contents(pack_name, position, item_name, quantity) AS (
 ), grouped AS (
     SELECT pack_id,
            jsonb_agg(
-               jsonb_build_object('item_id', item_id, 'count', quantity)
+               jsonb_build_object('item_id', item_id, 'count', quantity, 'params', params)
                ORDER BY position
            ) AS contents
     FROM resolved
