@@ -25,12 +25,22 @@
           </span>
           <span
             class="item-reference-properties"
-            :class="{ 'item-reference-properties--interactive': isRoomyWeapon && weaponPropertiesLabel }"
-            @mouseenter="showPropertiesTooltip"
-            @mouseleave="hidePropertiesTooltip"
           >
             <small>Свойства</small>
-            <span>{{ weaponPropertiesLabel || '—' }}</span>
+            <span class="item-reference-property-values">
+              <template v-if="weaponPropertyItems.length">
+                <template v-for="(property, propertyIndex) in weaponPropertyItems" :key="property.id ?? propertyIndex">
+                  <span v-if="propertyIndex" class="item-reference-property-separator">, </span>
+                  <span
+                    class="item-reference-property-value"
+                    :class="{ 'item-reference-property-value--described': isRoomyWeapon && property.desc }"
+                    @mouseenter="showPropertyTooltip($event, property)"
+                    @mouseleave="hidePropertyTooltip"
+                  >{{ property.label }}</span>
+                </template>
+              </template>
+              <span v-else>—</span>
+            </span>
           </span>
         </span>
         <span v-if="isRoomyWeapon && (count > 1 || costLabel || weightLabel)" class="item-reference-economy">
@@ -60,8 +70,8 @@
     </button>
     <ItemTooltip
       v-if="propertiesTooltip.visible"
-      title="Свойства"
-      :desc="weaponPropertiesLabel"
+      :title="propertiesTooltip.title"
+      :desc="propertiesTooltip.desc"
       :x="propertiesTooltip.x"
       :top="propertiesTooltip.top"
       :bottom="propertiesTooltip.bottom"
@@ -100,32 +110,37 @@ const costLabel = computed(() => formatCost(data.value.cost))
 const firstAttack = computed(() => Array.isArray(data.value.attacks) ? data.value.attacks[0] : null)
 const isRoomyWeapon = computed(() => props.roomyWeapon && !!firstAttack.value)
 const weightLabel = computed(() => data.value.weight != null ? `${String(data.value.weight).replace('.', ',')} фнт.` : '')
-const weaponPropertiesLabel = computed(() => {
-  const labels = new Map(suggestStore.items(14).map((entry) => [String(entry.id), entry.value]))
+const weaponPropertyItems = computed(() => {
+  const details = new Map(suggestStore.items(14).map((entry) => [String(entry.id), entry]))
   return (Array.isArray(data.value.tags) ? data.value.tags : [])
-    .map((id) => labels.get(String(id)))
-    .filter(Boolean)
-    .join(', ')
+    .map((id) => {
+      const entry = details.get(String(id))
+      return entry ? { id: entry.id, label: entry.value, desc: entry.desc || '' } : null
+    })
+    .filter((entry) => entry?.label)
 })
+const weaponPropertiesLabel = computed(() => weaponPropertyItems.value.map((entry) => entry.label).join(', '))
 const metaLabel = computed(() => [
   weightLabel.value,
   data.value.equipment_category === 'pack' ? 'Набор' : '',
 ].filter(Boolean).join(' · '))
-const propertiesTooltip = reactive({ visible: false, x: 0, top: null, bottom: null })
+const propertiesTooltip = reactive({ visible: false, title: '', desc: '', x: 0, top: null, bottom: null })
 
-function showPropertiesTooltip(event) {
-  if (!isRoomyWeapon.value || !weaponPropertiesLabel.value) return
+function showPropertyTooltip(event, property) {
+  if (!isRoomyWeapon.value || !property.desc) return
   const rect = event.currentTarget.getBoundingClientRect()
-  const placeAbove = window.innerHeight - rect.bottom < 160
+  const placeAbove = window.innerHeight - rect.bottom < 220
   Object.assign(propertiesTooltip, {
     visible: true,
-    x: Math.max(8, Math.min(rect.right - 192, window.innerWidth - 368)),
+    title: property.label,
+    desc: property.desc,
+    x: Math.max(8, Math.min(rect.left, window.innerWidth - 368)),
     top: placeAbove ? null : rect.bottom + 8,
     bottom: placeAbove ? window.innerHeight - rect.top + 8 : null,
   })
 }
 
-function hidePropertiesTooltip() { propertiesTooltip.visible = false }
+function hidePropertyTooltip() { propertiesTooltip.visible = false }
 </script>
 
 <style scoped>
@@ -162,8 +177,7 @@ function hidePropertiesTooltip() { propertiesTooltip.visible = false }
 .item-reference--roomy-weapon .item-reference-damage { width: auto; display: flex; place-items: unset; align-self: center; grid-column: 1; grid-row: 2; }
 .item-reference--roomy-weapon .item-reference-properties { width: auto; min-width: 0; display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 2px; grid-column: 2; grid-row: 2; font-size: 10px; line-height: 1.35; text-align: right; }
 .item-reference--roomy-weapon .item-reference-properties > span { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.item-reference-properties--interactive { cursor: help; }
-.item-reference-properties--interactive > span { border-bottom: 1px dotted color-mix(in srgb, var(--accent) 65%, transparent); }
+.item-reference-property-value--described { border-bottom: 1px dotted color-mix(in srgb, var(--accent) 65%, transparent); cursor: help; }
 .item-reference-economy { display: flex; align-items: baseline; justify-content: flex-end; gap: 0; grid-column: 2; grid-row: 1; color: var(--text-muted); font-size: 10px; line-height: 1.3; white-space: nowrap; }
 .item-reference-economy > span + span::before { margin: 0 6px; color: var(--border-strong); content: '·'; }
 .item-reference--roomy-weapon .item-reference-count { min-width: 0; font-size: 11px; }
