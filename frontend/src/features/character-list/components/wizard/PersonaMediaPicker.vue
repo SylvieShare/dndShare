@@ -29,11 +29,11 @@
       <div class="media-actions">
         <button type="button" @click="choose('portrait')">
           <Upload :size="15" aria-hidden="true" />
-          {{ portraitUrl ? 'Заменить' : 'Загрузить' }}
+          <span class="action-label">{{ portraitUrl ? 'Заменить' : 'Загрузить' }}</span>
         </button>
         <button v-if="portraitUrl" type="button" @click="cropCurrent('portrait')">
           <Crop :size="15" aria-hidden="true" />
-          Кадрировать
+          <span class="action-label">Кадрировать</span>
         </button>
         <button v-if="portraitUrl" class="danger" type="button" title="Удалить портрет" @click="clear('portrait')">
           <Trash2 :size="15" aria-hidden="true" />
@@ -71,13 +71,13 @@
       </div>
 
       <div class="media-actions icon-actions">
-        <button type="button" @click="choose('icon')">
+        <button type="button" :title="iconUrl ? 'Заменить иконку' : 'Загрузить иконку'" @click="choose('icon')">
           <Upload :size="15" aria-hidden="true" />
-          {{ iconUrl ? 'Заменить' : 'Загрузить' }}
+          <span class="action-label">{{ iconUrl ? 'Заменить' : 'Загрузить' }}</span>
         </button>
-        <button v-if="iconUrl" type="button" @click="cropCurrent('icon')">
+        <button v-if="iconUrl" type="button" title="Кадрировать иконку" @click="cropCurrent('icon')">
           <Crop :size="15" aria-hidden="true" />
-          Кадрировать
+          <span class="action-label">Кадрировать</span>
         </button>
         <button v-if="iconUrl" class="danger" type="button" title="Удалить иконку" @click="clear('icon')">
           <Trash2 :size="15" aria-hidden="true" />
@@ -250,6 +250,7 @@ onBeforeUnmount(clearCropObjectUrl)
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 12px;
+  align-content: start;
   min-width: 0;
 }
 .portrait-column, .icon-column { min-width: 0; }
@@ -257,18 +258,18 @@ onBeforeUnmount(clearCropObjectUrl)
 .icon-column {
   align-self: start;
   display: grid;
-  grid-template-columns: 76px minmax(0, 1fr);
+  grid-template-columns: 60px minmax(0, 1fr);
   grid-template-rows: auto auto;
   align-items: center;
-  gap: 8px 12px;
-  padding: 12px;
+  gap: 6px 10px;
+  padding: 9px;
   border: 1px solid var(--border);
   border-radius: 16px;
   background: color-mix(in srgb, var(--surface-raised) 80%, transparent);
 }
 .media-copy { grid-column: 2; align-self: center; }
-.media-copy strong { display: block; color: var(--text); font-size: 14px; }
-.media-copy p { margin: 4px 0 0; color: var(--text-muted); font-size: 10px; line-height: 1.4; }
+.media-copy strong { display: block; color: var(--text); font-size: 12px; }
+.media-copy p { margin: 3px 0 0; color: var(--text-muted); font-size: 9px; line-height: 1.35; }
 .media-drop {
   position: relative;
   overflow: hidden;
@@ -286,7 +287,7 @@ onBeforeUnmount(clearCropObjectUrl)
 }
 .media-drop.is-dragging { transform: translateY(-2px); }
 .portrait-drop { width: 100%; aspect-ratio: 4 / 5; border-radius: 18px; }
-.icon-drop { grid-column: 1; grid-row: 1; width: 76px; aspect-ratio: 1; border-radius: 18px; }
+.icon-drop { grid-column: 1; grid-row: 1; width: 60px; aspect-ratio: 1; border-radius: 15px; }
 .media-drop img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: top center; }
 .media-placeholder, .media-progress {
   position: absolute;
@@ -303,7 +304,7 @@ onBeforeUnmount(clearCropObjectUrl)
 .media-placeholder b { font-size: 13px; }
 .media-placeholder span { max-width: 170px; color: var(--text-muted); font-size: 10px; line-height: 1.4; }
 .icon-placeholder { gap: 6px; padding: 10px; }
-.icon-placeholder span { font-size: 10px; }
+.icon-placeholder span { display: none; }
 .media-progress { background: color-mix(in srgb, var(--surface) 78%, transparent); backdrop-filter: blur(3px); font-size: 11px; }
 .media-progress svg { animation: media-spin .8s linear infinite; }
 .media-actions { display: flex; gap: 5px; min-width: 0; }
@@ -326,7 +327,9 @@ onBeforeUnmount(clearCropObjectUrl)
 .media-actions button:hover { border-color: var(--border-strong); color: var(--text); }
 .media-actions .danger { margin-left: auto; color: var(--danger); }
 .icon-actions { grid-column: 2; }
-.icon-actions button { min-height: 27px; padding: 4px 7px; }
+.icon-actions button { width: 28px; min-height: 27px; padding: 4px; }
+.icon-actions .action-label { display: none; }
+.icon-actions .danger { margin-left: 0; }
 .media-error { grid-column: 1 / -1; margin: 0; color: var(--danger); font-size: 11px; }
 @keyframes media-spin { to { transform: rotate(360deg); } }
 
@@ -334,8 +337,8 @@ onBeforeUnmount(clearCropObjectUrl)
   .portrait-drop { border-radius: 15px; }
   .portrait-column .media-actions { flex-wrap: wrap; }
   .portrait-column .media-actions button { flex: 1 1 auto; }
-  .icon-column { grid-template-columns: 68px minmax(0, 1fr); padding: 10px; }
-  .icon-drop { width: 68px; border-radius: 16px; }
+  .icon-column { grid-template-columns: 60px minmax(0, 1fr); padding: 9px; }
+  .icon-drop { width: 60px; border-radius: 15px; }
 }
 
 @media (max-width: 480px) {
