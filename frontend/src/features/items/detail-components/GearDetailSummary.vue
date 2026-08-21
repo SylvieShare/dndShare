@@ -6,16 +6,17 @@
         :icon="Coins"
         label="Стоимость"
         :value="costLabel"
+        :note="measuredNote"
         tone="warning"
         size="medium"
         class="gear-economy-card gear-economy-cost"
       />
       <CoverStatCard
-        v-if="data.weight != null"
+        v-if="weight != null"
         :icon="Weight"
         label="Вес"
-        :value="data.weight"
-        note="фунт."
+        :value="weight"
+        :note="weightNote"
         tone="accent"
         size="medium"
         class="gear-economy-card gear-economy-weight"
@@ -28,12 +29,24 @@
 import { computed } from 'vue'
 import { Coins, Weight } from '@lucide/vue'
 import CoverStatCard from '@/features/items/components/cover/CoverStatCard.vue'
+import { measuredItemEconomy } from '@/features/items/lib/itemInstance'
 import { useCostFormatter } from '@/features/items/lib/useCostFormatter'
 
-const props = defineProps({ item: { type: Object, required: true } })
+const props = defineProps({
+  item: { type: Object, required: true },
+  type: { type: Object, default: null },
+})
 const data = computed(() => props.item.data || {})
+const measuredEconomy = computed(() => measuredItemEconomy(props.type, props.item))
 const { format: formatCost } = useCostFormatter()
-const costLabel = computed(() => formatCost(data.value.cost))
+const costLabel = computed(() => formatCost(data.value.cost || measuredEconomy.value?.cost))
+const weight = computed(() => data.value.weight ?? measuredEconomy.value?.weight)
+const measuredNote = computed(() => measuredEconomy.value
+  ? `за ${measuredEconomy.value.quantity} ${measuredEconomy.value.unit}`
+  : '')
+const weightNote = computed(() => measuredEconomy.value
+  ? `фунт. за ${measuredEconomy.value.quantity} ${measuredEconomy.value.unit}`
+  : 'фунт.')
 </script>
 
 <style scoped>

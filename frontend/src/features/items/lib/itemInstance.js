@@ -36,6 +36,39 @@ export function defaultInstanceParams(type, item) {
   return normalizeInstanceParams({}, fields, { defaults: true })
 }
 
+export function copperCost(value) {
+  const copper = Math.round(Number(value))
+  if (!Number.isFinite(copper) || copper < 0) return null
+  if (copper % 100 === 0) return { value: copper / 100, suggest_id: 3 }
+  if (copper % 10 === 0) return { value: copper / 10, suggest_id: 2 }
+  return { value: copper, suggest_id: 1 }
+}
+
+export function measuredItemEconomy(type, item, params = null) {
+  const fields = applicableInstanceFields(type, item)
+  const field = fields.find(entry => entry.unit_cost_data_key || entry.unit_weight_data_key)
+  if (!field) return null
+
+  const values = params == null
+    ? normalizeInstanceParams({}, fields, { defaults: true })
+    : normalizeInstanceParams(params, fields)
+  const quantity = Number(values[field.key])
+  if (!Number.isFinite(quantity) || quantity <= 0) return null
+
+  const unitCost = Number(item?.data?.[field.unit_cost_data_key])
+  const unitWeight = Number(item?.data?.[field.unit_weight_data_key])
+  const costCopper = Number.isFinite(unitCost) && unitCost >= 0 ? Math.round(quantity * unitCost) : null
+  const weight = Number.isFinite(unitWeight) && unitWeight >= 0 ? quantity * unitWeight : null
+
+  return {
+    quantity,
+    unit: field.unit || '',
+    costCopper,
+    cost: costCopper == null ? null : copperCost(costCopper),
+    weight,
+  }
+}
+
 export function instanceParamsKey(params) {
   const canonical = (value) => {
     if (Array.isArray(value)) return value.map(canonical)

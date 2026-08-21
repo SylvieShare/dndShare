@@ -136,7 +136,11 @@ entries and selected choices.
   a fallback cover and an item-level cover may replace it. The source cover is an opaque
   `1536×1024` JPEG (`3:2`) and fills a `400px` minimum header. Price and weight
   are real translucent UI cards at the quiet lower left and right of the cover
-  when present and are not baked into the illustration or repeated below it;
+  when present and are not baked into the illustration or repeated below it.
+  Measured gear derives both cards from the item type's default instance value
+  and its `unit_cost_data_key`/`unit_weight_data_key`: the handbook therefore
+  shows the price and weight "за 50 фт." for rope while the shared item still
+  carries no concrete length;
 - cover overlays reuse `components/cover/CoverStatCard.vue`,
   `CoverSummaryLayout.vue`, `CoverSummaryRail.vue` and
   `CoverSummaryRailItem.vue`. Domain summaries keep their own data mapping but

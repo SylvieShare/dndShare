@@ -19,7 +19,7 @@
           <TransportDetailSummary :item="item" />
         </template>
         <template v-else-if="isGear" #summary>
-          <GearDetailSummary :item="item" />
+          <GearDetailSummary :item="item" :type="type" />
         </template>
         <template v-if="itemSourceLabel" #corner>
           <span
