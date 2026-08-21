@@ -30,6 +30,7 @@ describe('background step presentation', () => {
     expect(source).toContain('v-for="entry in backgroundStart.items"')
     expect(source).toContain('@activate="viewItem = { ...item, id: item.item_id }"')
     expect(source).toContain('@activate="viewItem = { ...entry, id: entry.item_id }"')
+    expect(source).toContain('roomy-weapon')
     expect(source).toContain('<ItemViewModal')
     expect(source).not.toContain('<BaseTile')
     expect(source).toContain('grid-template-columns: repeat(2, minmax(0, 1fr))')

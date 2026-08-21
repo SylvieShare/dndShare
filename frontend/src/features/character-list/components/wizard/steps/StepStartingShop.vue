@@ -41,7 +41,12 @@
         <div v-else-if="!visibleItems.length" class="shop-empty">В этой категории ничего не найдено.</div>
         <div v-else class="shop-items">
           <div v-for="item in visibleItems" :key="item.id" class="shop-item">
-            <ItemReferenceRow :item="item" :params="item.params" @activate="viewItem = item" />
+            <ItemReferenceRow
+              :item="item"
+              :params="item.params"
+              roomy-weapon
+              @activate="viewItem = item"
+            />
             <button
               type="button"
               class="shop-add"

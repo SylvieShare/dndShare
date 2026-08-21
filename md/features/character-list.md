@@ -233,7 +233,9 @@ The existing skill, language, feature and money summary appears below the expand
 card. Every granted tool and possession is stored on the background as a
 canonical handbook item id and rendered through `ItemReferenceRow`; activating
 the row opens `ItemViewModal`. Concrete weapons therefore keep their combat
-data, while category choices such as “musical instrument of your choice” point
+data and use the same roomy 64px-icon weapon row everywhere in the wizard,
+including backgrounds and the starting shop. Category choices such as
+“musical instrument of your choice” point
 to an explicit handbook choice card instead of an arbitrary concrete item. The
 reference grid uses two desktop columns and one mobile column. In starting-shop
 mode the equipment rows and money row are

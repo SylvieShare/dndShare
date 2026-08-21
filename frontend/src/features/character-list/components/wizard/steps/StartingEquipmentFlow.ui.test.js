@@ -77,5 +77,6 @@ describe('starting equipment wizard flow', () => {
     expect(source).toContain('canBuyShopItem(item)')
     expect(source).toContain('<ConfirmDialog')
     expect(source).toContain('Останется в кошельке')
+    expect(source).toContain('roomy-weapon')
   })
 })

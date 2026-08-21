@@ -42,6 +42,7 @@
               :key="`${item.item_id}:${JSON.stringify(item.params)}`"
               :item="{ ...item, id: item.item_id }"
               :params="item.params"
+              roomy-weapon
               @activate="viewItem = { ...item, id: item.item_id }"
             />
           </div>
@@ -56,6 +57,7 @@
               :item="{ ...entry, id: entry.item_id }"
               :count="entry.count"
               :params="entry.params"
+              roomy-weapon
               @activate="viewItem = { ...entry, id: entry.item_id }"
             />
           </div>
