@@ -9,16 +9,17 @@ import (
 )
 
 func TestToolProficiencyCatalogIsEmbeddedAfterItemTypeHierarchy(t *testing.T) {
-	if len(schemaParts) < 7 {
+	if len(schemaParts) < 8 {
 		t.Fatal("schemaParts must contain the final item catalogue sections")
 	}
-	hierarchy := schemaParts[len(schemaParts)-7]
-	tools := schemaParts[len(schemaParts)-6]
-	resources := schemaParts[len(schemaParts)-5]
-	classTools := schemaParts[len(schemaParts)-4]
-	resourceFixes := schemaParts[len(schemaParts)-3]
-	resourceAudit := schemaParts[len(schemaParts)-2]
-	resourceColors := schemaParts[len(schemaParts)-1]
+	hierarchy := schemaParts[len(schemaParts)-8]
+	tools := schemaParts[len(schemaParts)-7]
+	resources := schemaParts[len(schemaParts)-6]
+	classTools := schemaParts[len(schemaParts)-5]
+	resourceFixes := schemaParts[len(schemaParts)-4]
+	resourceAudit := schemaParts[len(schemaParts)-3]
+	resourceColors := schemaParts[len(schemaParts)-2]
+	spellGrants := schemaParts[len(schemaParts)-1]
 	if hierarchy.name != "item-type-hierarchy" || hierarchy.sql == "" || hierarchy.sql != schemaItemTypeHierarchySQL {
 		t.Fatal("item-type-hierarchy schema must be embedded after the equipment catalogues")
 	}
@@ -39,6 +40,9 @@ func TestToolProficiencyCatalogIsEmbeddedAfterItemTypeHierarchy(t *testing.T) {
 	}
 	if resourceColors.name != "ability-resource-colors" || resourceColors.sql == "" || resourceColors.sql != schemaAbilityResourceColorsSQL {
 		t.Fatal("ability resource colors must be embedded after the complete resource catalogue")
+	}
+	if spellGrants.name != "ability-spell-grants" || spellGrants.sql == "" || spellGrants.sql != schemaAbilitySpellGrantsSQL {
+		t.Fatal("ability spell grants must be embedded after the ability catalogue")
 	}
 }
 
@@ -122,7 +126,7 @@ func TestAbilityResourceSchemasExposeModifierFormula(t *testing.T) {
 			"resource_color",
 			"max_use_stat_multiplier", "max_use_bonus", "max_use_level_multiplier",
 			"max_use_scaling", "rollback_short_rest_level", "short_rest_recovery",
-			"short_rest_recovery_level", "use_resources",
+			"short_rest_recovery_level", "use_resources", "granted_spells",
 		} {
 			if byKey[key] == nil {
 				t.Fatalf("ability schema %s must expose %s", typeID, key)
@@ -132,6 +136,18 @@ func TestAbilityResourceSchemasExposeModifierFormula(t *testing.T) {
 	for _, fragment := range []string{"max_use_stat", "max_use_min", "item_type.id IN (3, 4, 7)"} {
 		if !strings.Contains(schemaAbilityResourcesSQL, fragment) {
 			t.Fatalf("ability resource startup schema must contain %q", fragment)
+		}
+	}
+}
+
+func TestAbilitySpellGrantsCoverFixedCatalogSources(t *testing.T) {
+	for _, fragment := range []string{
+		"granted_spells", "Природная иллюзия", "Заклинательная характеристика",
+		"(4087,", "(1443,", "(4092,", "(4430,", "(4307,", "(4213,", "(4452,",
+		`"slotless":true`, "item_type.id IN (3, 4, 7)",
+	} {
+		if !strings.Contains(schemaAbilitySpellGrantsSQL, fragment) {
+			t.Fatalf("ability spell grants must contain %q", fragment)
 		}
 	}
 }

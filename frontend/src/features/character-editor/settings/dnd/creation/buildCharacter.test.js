@@ -46,6 +46,34 @@ describe('buildCharacterData hit dice', () => {
 })
 
 describe('buildCharacterData spell preparation', () => {
+  it('adds a racial spell as read-only with its source and casting ability', () => {
+    const naturalIllusion = {
+      id: 4092,
+      name: 'Природная иллюзия',
+      data: { race_ids: [{ id: 1 }], level: 1, granted_spells: [{ spell: { id: 498 }, ability: 4 }] },
+    }
+    const result = buildCharacterData({
+      race: selection(1, 'Лесной гном'),
+      charClass: selection(2, 'Воин'),
+      raceAbilityItems: [naturalIllusion],
+      suggestValue: () => '',
+    })
+
+    expect(result.data.values.spells.spells).toEqual([{
+      id: 498,
+      prepared: false,
+      external_only: true,
+      casting_ability: 4,
+      casting_ability_source: 'ability',
+      granted_by: [{
+        kind: 'ability',
+        item_id: 4092,
+        label: 'Природная иллюзия',
+        casting_ability: 4,
+      }],
+    }])
+  })
+
   it('enables preparation automatically for classes that prepare spells', () => {
     const result = buildCharacterData({
       race: selection(1, 'Человек'),

@@ -5,7 +5,7 @@
         class="spell-row"
         :class="{
           'spell-row-clickable': !!entry.item,
-          'spell-row-draggable': ctx.charCtx.ownerMode,
+          'spell-row-draggable': ctx.charCtx.ownerMode && !isReadonlyGrant,
           'spell-row-prepared': isPrepared,
           'spell-row-permanent': isAlwaysPrepared,
           'sortable-placeholder': ctx.sortable.isSource(entry),
@@ -48,6 +48,7 @@
         <span v-if="data.ritual" class="sp-tag sp-tag-ritual" title="Ритуал">Р</span>
       </div>
       <span v-if="entry.item?.data" class="sp-meta">{{ ctx.spellMetaLine(entry.item) }}</span>
+      <span v-if="grantSummary" class="sp-grant">{{ grantSummary }}</span>
     </div>
 
     <div v-if="hasMetrics" class="sp-metrics">
@@ -62,7 +63,7 @@
         <button type="button" class="sp-step-btn" :disabled="castLevel >= maxCast" @click.stop="incCast">+</button>
       </span>
       <AttackDamage
-        :attack="entry.item?.data?.damage?.range_attack ? ctx.formatBonus(ctx.attackBonus) : null"
+        :attack="entry.item?.data?.damage?.range_attack ? ctx.formatBonus(ctx.spellAttackBonus(entry)) : null"
         :damage-parts="damageParts"
         :modifier="damageModifier"
         :heal-parts="healParts"
@@ -128,7 +129,7 @@
         {{ canUse ? 'Использовать' : 'Нет доступных ячеек' }}
       </RowActionItem>
       <RowActionItem
-        v-if="ctx.charCtx.ownerMode"
+        v-if="ctx.charCtx.ownerMode && !isReadonlyGrant"
         action="delete"
         tone="danger"
         @click="removeSpell(close)"
@@ -164,9 +165,20 @@ const school = computed(() => ctx.schoolMeta(props.entry.item))
 
 // Круг каста: для slot-роста степпер от базового круга заклинания до макс. доступного героем.
 const baseLvl = computed(() => Number(data.value.lvl) || 0)
-const canPrepare = computed(() => !!ctx.preparation && baseLvl.value > 0)
+const isReadonlyGrant = computed(() => !!props.entry.ref.external_only)
+const canPrepare = computed(() => !!ctx.preparation && baseLvl.value > 0 && !isReadonlyGrant.value)
 const isAlwaysPrepared = computed(() => canPrepare.value && !!props.entry.ref.always_prepared)
 const isPrepared = computed(() => canPrepare.value && (isAlwaysPrepared.value || !!props.entry.ref.prepared))
+const grantSummary = computed(() => {
+  const sources = Array.isArray(props.entry.ref.granted_by) ? props.entry.ref.granted_by : []
+  const labels = [...new Set(sources.map((source) => String(source?.label || '').trim()).filter(Boolean))]
+  if (!labels.length) return ''
+  const sourceLabel = labels.length === 1
+    ? `Даровано особенностью «${labels[0]}»`
+    : `Даровано особенностями: ${labels.join(', ')}`
+  const ability = props.entry.ref.casting_ability != null ? ctx.spellAbilityLabel(props.entry) : ''
+  return ability ? `${sourceLabel} · Заклинательная характеристика: ${ability}` : sourceLabel
+})
 const maxCast = computed(() => Math.max(baseLvl.value, Number(ctx.maxSlotLevel) || 0))
 const castOverride = ref(null)
 const castLevel = computed(() => {
@@ -203,6 +215,7 @@ watch(() => ctx.sortable.dragging, v => { if (v) draggedThisGesture.value = true
 
 function onRowDown(e) {
   if (e.target.closest('button')) return
+  if (isReadonlyGrant.value) return
   draggedThisGesture.value = false
   ctx.onSpellDragStart(e, props.entry, props.level, props.idx)
 }
@@ -346,6 +359,17 @@ function removeSpell(close) {
   min-width: 0;
   color: var(--text-2);
   font-size: 13px;
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sp-grant {
+  min-width: 0;
+  color: var(--accent-soft);
+  font-size: 11px;
+  font-weight: 650;
   line-height: 1.25;
   overflow: hidden;
   text-overflow: ellipsis;

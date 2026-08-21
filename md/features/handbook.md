@@ -199,6 +199,11 @@ Important types include weapons (1), items (2), race/class abilities (3/4),
 spells (5), bestiary (6), feats (7), races/classes (8/9), potions (10),
 backgrounds (11), armor (12) and transport (13).
 
+Ability types 3, 4 and 7 expose `granted_spells`. Each row references a spell,
+its unlock level, an optional casting-ability override and whether the cast is
+slotless. This is the catalogue authority for fixed spell grants; the character
+sheet derives its read-only external spell entries and provenance from it.
+
 Mundane armor and shields belong to type 12 and keep the structured
 `armor {ac,use_dex,dex_cap,shield,shield_bonus}` rule consumed by character
 creation and the sheet. `required_armor_proficiency` is a suggest-type-3

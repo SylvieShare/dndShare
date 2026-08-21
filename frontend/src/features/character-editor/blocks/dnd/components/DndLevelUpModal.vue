@@ -579,6 +579,11 @@ onMounted(async () => {
   try {
     const ids = new Set()
     entries.value.forEach((e) => { ids.add(e.id); if (e.subclass) ids.add(e.subclass.id) })
+    for (const key of ['abilities_race', 'abilities_class', 'abilities_feats']) {
+      for (const entry of (Array.isArray(props.values?.[key]) ? props.values[key] : [])) {
+        if (entry?.id != null) ids.add(entry.id)
+      }
+    }
     const [byIds, abils, classes] = await Promise.all([
       ids.size ? itemsApi.byIds([...ids]) : Promise.resolve({ items: [] }),
       fetchGet(`/items?typeId=${CLASS_ABIL_TYPE}&limit=500${sourceSuffix()}`),

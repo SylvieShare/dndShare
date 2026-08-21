@@ -15,6 +15,7 @@ import {
   withHitDice,
 } from '@/features/character-editor/blocks/dnd/lib/hitDice'
 import { abilityHasResources, abilityUseTotal, abilityUsesAreManual } from '@/shared/lib/dndAbilityUses'
+import { abilitySpellGrantRows, syncAbilityGrantedSpells } from '@/features/character-editor/blocks/dnd/lib/abilitySpellGrants'
 
 export function buildLevelUpUpdates({
   values,
@@ -160,7 +161,20 @@ export function buildLevelUpUpdates({
   }
 
   const applySlotChange = applySlots && slotDiff.length && slotsAfter?.isCaster
-  if (applySlotChange || grantedNewIds.length || featSpellIds.length) {
+  const nextValues = { ...values, ...updates }
+  const activeAbilityIds = new Set(['abilities_race', 'abilities_class', 'abilities_feats']
+    .flatMap((key) => Array.isArray(nextValues[key]) ? nextValues[key] : [])
+    .map((entry) => String(entry.id)))
+  const abilityItems = [...features, ...Object.values(itemsById || {}), ...(featPick ? [featPick] : [])]
+    .filter((item, index, all) => item?.id != null
+      && activeAbilityIds.has(String(item.id))
+      && all.findIndex((candidate) => String(candidate?.id) === String(item.id)) === index)
+  const resolvedAbilityIds = new Set(abilityItems.map((item) => String(item.id)))
+  const abilityItemsComplete = [...activeAbilityIds].every((id) => resolvedAbilityIds.has(id))
+  const abilityGrantRows = abilitySpellGrantRows(abilityItems, nextValues)
+  const hasExistingAbilityGrants = (values.spells?.spells || []).some((entry) =>
+    (entry.granted_by || []).some((source) => source?.kind === 'ability'))
+  if (applySlotChange || grantedNewIds.length || featSpellIds.length || (abilityItemsComplete && (abilityGrantRows.length || hasExistingAbilityGrants))) {
     const spells = values.spells && typeof values.spells === 'object'
       ? { ...values.spells }
       : { stat_path: castingAbilityIdOf(classItem) ?? '', spells: [], slots: defaultSlots() }
@@ -200,7 +214,9 @@ export function buildLevelUpUpdates({
         .map((id) => ({ id, prepared: true, source: 'feat' }))
       spellEntries.push(...added)
     }
-    spells.spells = spellEntries
+    spells.spells = abilityItemsComplete
+      ? syncAbilityGrantedSpells(spellEntries, abilityGrantRows)
+      : spellEntries
     updates.spells = spells
   }
 

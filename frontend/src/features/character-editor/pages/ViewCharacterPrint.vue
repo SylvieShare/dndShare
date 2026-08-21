@@ -342,18 +342,40 @@ const spellcasting = computed(() => {
   return { stat: statKey ? STAT_FULL[statKey] : '—', saveDc: 8 + profBonus.value + mod + (Number(data.save_bonus) || 0), attackBonus: profBonus.value + mod + (Number(data.attack_bonus) || 0) }
 })
 function spellDice(rows) { return (Array.isArray(rows) ? rows : []).map(row => { const die = diceLabel(row.dice_id); const typeValue = damageType(row.type); return [die ? `${Number(row.count) || 1}${die}` : '', typeValue].filter(Boolean).join(' ') }).filter(Boolean).join(' + ') }
-function spellCombatLine(item) {
+function spellEntryCasting(entry) {
+  const spellData = values.value.spells || {}
+  const abilityId = entry?.casting_ability ?? spellData.stat_path
+  const statKey = SUGGEST16_TO_STAT[Number(abilityId)]
+  const mod = statKey ? abilityModifier(abilityScore(statKey)) : 0
+  return {
+    ability: entry?.casting_ability != null && statKey ? STAT_FULL[statKey] : '',
+    saveDc: 8 + profBonus.value + mod + (Number(spellData.save_bonus) || 0),
+    attackBonus: profBonus.value + mod + (Number(spellData.attack_bonus) || 0),
+  }
+}
+function spellGrantLine(entry) {
+  const labels = [...new Set((Array.isArray(entry?.granted_by) ? entry.granted_by : [])
+    .map(source => text(source?.label)).filter(Boolean))]
+  if (!labels.length) return ''
+  const source = labels.length === 1
+    ? `Даровано особенностью «${labels[0]}»`
+    : `Даровано особенностями: ${labels.join(', ')}`
+  const casting = spellEntryCasting(entry)
+  return casting.ability ? `${source} · Заклинательная характеристика: ${casting.ability}` : source
+}
+function spellCombatLine(item, entry) {
   const data = item?.data || {}; const parts = []
-  if (data.damage?.range_attack) parts.push('Атака заклинанием')
-  if (data.damage?.save_ability) parts.push(`Спасбросок ${SAVE_ABBR[data.damage.save_ability] || String(data.damage.save_ability).toUpperCase()}${data.damage.save_effect === 'half' ? ' — половина урона' : ''}`)
+  const casting = spellEntryCasting(entry)
+  if (data.damage?.range_attack) parts.push(`Атака заклинанием ${signed(casting.attackBonus)}`)
+  if (data.damage?.save_ability) parts.push(`Спасбросок ${SAVE_ABBR[data.damage.save_ability] || String(data.damage.save_ability).toUpperCase()} Сл ${casting.saveDc}${data.damage.save_effect === 'half' ? ' — половина урона' : ''}`)
   const damage = spellDice(data.damage?.dices); if (damage) parts.push(`Урон: ${damage}`)
   const heal = spellDice(data.heal?.dices); if (heal) parts.push(`Лечение: ${heal}`)
   return parts.join(' · ')
 }
 const spellCards = computed(() => rawSpells.value.map((entry, index) => {
-  const item = itemById(entry.id); const data = item?.data || {}; const length = plainLength(data.description) + plainLength(data.upper)
+  const item = itemById(entry.id); const data = item?.data || {}; const grantLine = spellGrantLine(entry); const length = plainLength(data.description) + plainLength(data.upper) + grantLine.length
   const span = length > 1150 ? 3 : length > 380 ? 2 : 1
-  return { ...entry, id: `${entry.id}-${index}`, itemId: entry.id, name: item?.name || `Заклинание #${entry.id}`, level: Number(data.lvl ?? -1), data, school: suggest.items(7).find(s => String(s.id) === String(data.schoolId))?.value || '', source: (item?.contentSources || []).map(source => source.name || source.code).filter(Boolean).join(', '), combatLine: spellCombatLine(item), span, textLength: length }
+  return { ...entry, id: `${entry.id}-${index}`, itemId: entry.id, name: item?.name || `Заклинание #${entry.id}`, level: Number(data.lvl ?? -1), data, school: suggest.items(7).find(s => String(s.id) === String(data.schoolId))?.value || '', source: (item?.contentSources || []).map(source => source.name || source.code).filter(Boolean).join(', '), grantLine, combatLine: spellCombatLine(item, entry), span, textLength: length }
 }))
 function estimatedCardHeight(card, columns) {
   const widthFactor = Math.max(1, Math.min(columns, card.span || 1)); const charsPerLine = columns === 3 ? 34 * widthFactor : 58 * widthFactor

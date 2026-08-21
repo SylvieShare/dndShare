@@ -122,7 +122,8 @@ The current shape under `data.values` is:
   {base,bonuses,use_dex}`;
 - HP: `{current,max,temp,ds_success,ds_failure,hitDice:[{die,total,used}]}`;
 - spellbook: `{stat_path,save_bonus,attack_bonus,slots_rest,preparation,
-  spells:[{id,prepared,always_prepared?}],slots:[{level,total,used}]}`;
+  spells:[{id,prepared,always_prepared?,external_only?,granted_by?,
+  casting_ability?,slotless?}],slots:[{level,total,used}]}`;
 - inventory: `{equipped:[Entry],sections:[{id,name,items:[Entry]}]}`, where an
   owned item entry is `{uid,item_id,count,params,override}`;
 - potions: an independent array of the same owned entries; physical tools are
@@ -156,6 +157,18 @@ always implies `prepared`, is excluded from the ordinary prepared-spell total,
 uses a richer vine print in the warning tone and can be assigned or removed
 separately through the same menu. Granted archetype spells receive this status
 during creation and level-up.
+
+An ability, class feature or feat may contribute spells through its handbook
+`granted_spells` contract. Such a spell is shown in the ordinary spell list but
+is read-only while the character owns it only through that external source:
+the row cannot be reordered, prepared or deleted. `granted_by` records the
+source feature displayed to the player; `casting_ability` overrides the
+spellbook-wide ability for that spell's attack bonus and save DC, and is shown
+only when an override exists. `slotless` means that use does not spend an
+ordinary spell slot. Removing the source removes an external-only entry, but a
+spell that the character also owns normally remains and only loses the source
+metadata. Creation, level-up and the live sheet use the same synchronization
+rule. The print sheet preserves both provenance and the per-spell casting math.
 
 `internal/store/schema/03_characters.sql` and the later canonical migrations,
 including `28_item_instance_params.sql`, migrate existing rows before HTTP start

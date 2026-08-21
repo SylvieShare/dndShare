@@ -127,6 +127,9 @@ var schemaAbilityResourceCatalogAuditSQL string
 //go:embed schema/36_ability_resource_colors.sql
 var schemaAbilityResourceColorsSQL string
 
+//go:embed schema/37_ability_spell_grants.sql
+var schemaAbilitySpellGrantsSQL string
+
 var schemaParts = []struct {
 	name string
 	sql  string
@@ -169,6 +172,7 @@ var schemaParts = []struct {
 	{"ability-resource-catalog-fixes", schemaAbilityResourceCatalogFixesSQL},
 	{"ability-resource-catalog-audit", schemaAbilityResourceCatalogAuditSQL},
 	{"ability-resource-colors", schemaAbilityResourceColorsSQL},
+	{"ability-spell-grants", schemaAbilitySpellGrantsSQL},
 }
 
 func applySchema(ctx context.Context, pool *pgxpool.Pool) error {

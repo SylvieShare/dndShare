@@ -103,6 +103,7 @@ import { useSpellCalc } from '@/features/character-editor/blocks/dnd/composables
 import { useSpellSlots } from '@/features/character-editor/blocks/dnd/composables/useSpellSlots'
 import { SPELL_LEVELS, countsTowardPreparation, formatBonus, groupTitle, spellSummary } from '@/features/character-editor/blocks/dnd/lib/spellEntry'
 import { availableSpellSlotLevels as availableSlotLevels } from '@/features/character-editor/blocks/dnd/lib/spellUse'
+import { abilitySpellGrantRows, syncAbilityGrantedSpells } from '@/features/character-editor/blocks/dnd/lib/abilitySpellGrants'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
 import { useSortable } from '@sylvieshare/share-ui'
@@ -214,6 +215,12 @@ function emitChange() {
       prepared: !!s.prepared,
       ...(s.always_prepared ? { always_prepared: true } : {}),
       ...(s.source ? { source: s.source } : {}),
+      ...(Array.isArray(s.granted_by) && s.granted_by.length ? { granted_by: s.granted_by } : {}),
+      ...(s.external_only ? { external_only: true } : {}),
+      ...(s.casting_ability != null ? { casting_ability: s.casting_ability } : {}),
+      ...(s.casting_ability_source ? { casting_ability_source: s.casting_ability_source } : {}),
+      ...(s.slotless ? { slotless: true } : {}),
+      ...(s.slotless_source ? { slotless_source: s.slotless_source } : {}),
     })),
     slots: serializedSlots(),
   })
@@ -391,7 +398,7 @@ function diceExpr(parts, withType) {
 }
 
 function rollSpellAttack(entry) {
-  const bonus = attackBonus.value
+  const bonus = spellAttackBonus(entry)
   dice.roll(`Атака: ${spellTitle(entry)}`, `1d20${bonus >= 0 ? '+' : ''}${bonus}`, { crit_mode: true })
 }
 
@@ -414,6 +421,7 @@ function rollSpellHeal(entry, castLevel) {
 
 function availableSpellSlotLevels(entry) {
   const level = Number(entry?.item?.data?.lvl) || 0
+  if (entry?.ref?.slotless) return [level]
   return availableSlotLevels(localSlots.value, level)
 }
 
@@ -425,7 +433,7 @@ function slotRemaining(level) {
 function useSpell(entry, slotLevel) {
   if (!entry?.item) return
   const spellLevel = Number(entry?.item?.data?.lvl) || 0
-  if (spellLevel > 0) {
+  if (spellLevel > 0 && !entry.ref?.slotless) {
     const available = availableSpellSlotLevels(entry)
     if (!available.includes(slotLevel)) return
     adjustSlotUsed(slotLevel, 1)
@@ -439,6 +447,56 @@ function useSpell(entry, slotLevel) {
       slotLevel: spellLevel === 0 ? 0 : slotLevel,
     },
   })
+}
+
+function spellCastingAbility(entry) {
+  return entry?.ref?.casting_ability ?? statPath.value
+}
+
+function spellStatModifier(entry) {
+  const ability = spellCastingAbility(entry)
+  if (ability == null || ability === '') return 0
+  const stats = props.values?.stats || charCtx.var?.stats || {}
+  return Number(stats[String(ability)] ?? 0)
+}
+
+function spellAttackBonus(entry) {
+  return profBonus.value + spellStatModifier(entry) + attackBonusExtra.value
+}
+
+function spellSaveDC(entry) {
+  return 8 + profBonus.value + spellStatModifier(entry) + saveBonusExtra.value
+}
+
+function spellAbilityLabel(entry) {
+  const ability = spellCastingAbility(entry)
+  return statOptions.value.find((stat) => String(stat.value) === String(ability))?.label || ''
+}
+
+function abilityIds() {
+  return [...new Set(['abilities_race', 'abilities_class', 'abilities_feats']
+    .flatMap((key) => Array.isArray(props.values?.[key]) ? props.values[key] : [])
+    .map((entry) => entry?.id)
+    .filter((id) => id != null))]
+}
+
+let grantSyncSequence = 0
+async function syncExternalAbilitySpells() {
+  const sequence = ++grantSyncSequence
+  const ids = abilityIds()
+  const response = charCtx.characterResources?.ensureItems
+    ? await charCtx.characterResources.ensureItems(ids)
+    : (ids.length ? await itemsApi.byIds(ids) : { items: [] })
+  if (sequence !== grantSyncSequence) return
+  const items = response?.items || []
+  const resolvedIds = new Set(items.map((item) => String(item.id)))
+  if (ids.some((id) => !resolvedIds.has(String(id)))) return
+  const grants = abilitySpellGrantRows(items, props.values)
+  const next = syncAbilityGrantedSpells(spells.value, grants)
+  if (JSON.stringify(next) === JSON.stringify(spells.value)) return
+  spells.value = next
+  emitChange()
+  await loadDetails()
 }
 
 provide('spellsBlockCtx', reactive({
@@ -458,6 +516,9 @@ provide('spellsBlockCtx', reactive({
   hasSpellMetrics,
   formatBonus,
   attackBonus,
+  spellAttackBonus,
+  spellSaveDC,
+  spellAbilityLabel,
   charLevel,
   maxSlotLevel,
   preparation,
@@ -484,8 +545,18 @@ onMounted(async () => {
   const ensures = [school_suggest_id, stat_suggest_type_id, damageTypeSuggestTypeId.value]
     .filter(Boolean)
     .map(id => useSuggestStore().ensure(id))
-  await Promise.all([loadDetails(), ...ensures])
+  await Promise.all([syncExternalAbilitySpells(), ...ensures])
+  await loadDetails()
 })
+
+watch(
+  () => JSON.stringify({
+    abilities: abilityIds(),
+    level: props.values?.lvl?.level,
+    classes: props.values?.classes,
+  }),
+  () => { if (spells.value.length || abilityIds().length) syncExternalAbilitySpells() },
+)
 </script>
 
 <style scoped src="./styles/DndSpells.css"></style>

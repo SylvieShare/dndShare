@@ -15,6 +15,8 @@
       </div>
     </header>
 
+    <div v-if="spell.grantLine" class="spell-grant">{{ spell.grantLine }}</div>
+
     <dl class="spell-meta">
       <div><dt>Время</dt><dd>{{ spell.data.time || '—' }}</dd></div>
       <div><dt>Дистанция</dt><dd>{{ spell.data.range || '—' }}</dd></div>
@@ -78,6 +80,7 @@ const components = computed(() => {
 .spell-prepared { font: 700 5px/1 var(--font-print-ui); letter-spacing: .07em; text-transform: uppercase; color: #6a593e; }
 .spell-tags { display: flex; flex-wrap: wrap; gap: 1mm; margin-top: 1.3mm; }
 .spell-tags span { padding: .7mm 1.4mm; border: .4px solid #baaa8d; font: 700 5px/1 var(--font-print-ui); letter-spacing: .04em; text-transform: uppercase; color: #6f604a; }
+.spell-grant { margin-top: 2mm; padding: 1.4mm 1.8mm; border-left: 1.2px solid #786344; background: #f4efe5; color: #5f503b; font: 700 6px/1.3 var(--font-print-ui); }
 .spell-meta { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5mm 2.5mm; margin: 2.5mm 0; }
 .spell-meta div { min-width: 0; border-bottom: .35px solid #d1c7b5; padding-bottom: .8mm; }
 .spell-meta dt { font: 700 5px/1 var(--font-print-ui); letter-spacing: .07em; text-transform: uppercase; color: #81725b; }

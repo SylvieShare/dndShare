@@ -320,6 +320,9 @@ Key rules:
   spellbook with preparation mode enabled automatically; selected cantrips are
   stored unprepared, selected leveled spells begin prepared, and granted
   archetype/domain spells begin permanently prepared;
+- fixed racial, class-feature and feat `granted_spells` are added even for a
+  non-caster, remain read-only, retain their source and use their configured
+  per-spell casting ability instead of the class-wide spellcasting ability;
 - resets and incomplete-create decisions use shared `ConfirmDialog`;
 - the draft persists in `localStorage` and is cleared after successful create.
 

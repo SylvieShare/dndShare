@@ -365,6 +365,17 @@
     "type": "bool"
   },
   {
+    "name": "Дарованные заклинания",
+    "key": "granted_spells",
+    "type": "object_array",
+    "fields": [
+      { "name": "Заклинание", "key": "spell", "type": "item", "item_type": 5 },
+      { "name": "С уровня", "key": "level", "type": "int", "default": 1 },
+      { "name": "Заклинательная характеристика", "key": "ability", "type": "suggest", "suggest_id": 16 },
+      { "name": "Без расхода ячейки", "key": "slotless", "type": "bool" }
+    ]
+  },
+  {
     "name": "Теги",
     "key": "tags",
     "type": "text"
