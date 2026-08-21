@@ -360,8 +360,6 @@ export function useDndCreateWizard() {
   function setMethod(method) {
     state.statMethod = method
     state.scores = emptyScores()
-    state.rollPool = []
-    state.rollSeries = []
     if (method === 'pointbuy') STATS.forEach((s) => { state.scores[s] = 8 })
   }
 

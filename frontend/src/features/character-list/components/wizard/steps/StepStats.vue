@@ -94,7 +94,7 @@
           <div v-else class="pool-field">
             <ValueSelect
               class="pool-picker"
-              :model-value="state.scores[s] ?? null"
+              :model-value="selectedPoolValue(s)"
               :options="poolOptions(s)"
               placeholder="Выберите значение"
               :aria-label="`Назначить значение характеристики ${STAT_FULL[s]}`"
@@ -175,18 +175,27 @@ function availablePool(stat) {
   return available
 }
 function poolOptions(stat) {
-  const counts = new Map()
-  for (const value of availablePool(stat)) counts.set(value, (counts.get(value) || 0) + 1)
+  const occurrences = new Map()
   return [
     { value: '', label: 'Не назначено', key: `${stat}-empty` },
-    ...Array.from(counts, ([value, count]) => ({
-      value,
-      label: count > 1 ? `${value} · доступно ×${count}` : String(value),
-      key: `${stat}-${value}`,
-    })),
+    ...availablePool(stat).map((value) => {
+      const occurrence = (occurrences.get(value) || 0) + 1
+      occurrences.set(value, occurrence)
+      return {
+        value: `${value}:${occurrence}`,
+        label: String(value),
+        key: `${stat}-${value}-${occurrence}`,
+      }
+    }),
   ]
 }
-function assign(stat, raw) { state.scores[stat] = raw === '' ? null : Number(raw) }
+function scoreFromPoolToken(raw) { return Number(String(raw).split(':')[0]) }
+function selectedPoolValue(stat) {
+  if (state.scores[stat] == null) return null
+  const score = Number(state.scores[stat])
+  return poolOptions(stat).find(option => option.value !== '' && scoreFromPoolToken(option.value) === score)?.value ?? null
+}
+function assign(stat, raw) { state.scores[stat] = raw === '' ? null : scoreFromPoolToken(raw) }
 function costStep(stat) {
   const cur = state.scores[stat] ?? 8
   return pointCost(Math.min(cur + 1, 15)) - pointCost(cur)

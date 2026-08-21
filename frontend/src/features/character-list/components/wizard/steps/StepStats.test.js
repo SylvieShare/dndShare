@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { STANDARD_ARRAY, STATS } from '@/features/character-list/composables/dndCreateWizardStats'
+import { createDndWizardState, serializeDndWizardState } from '@/features/character-list/composables/dndCreateWizardState'
 
 const source = readFileSync(fileURLToPath(new URL('./StepStats.vue', import.meta.url)), 'utf8')
 
@@ -12,15 +13,30 @@ vi.mock('@/stores/suggest', () => ({
 const { useDndCreateWizard } = await import('@/features/character-list/composables/useDndCreateWizard')
 
 describe('D&D ability scores', () => {
-  it('resets an earlier distribution and initializes point buy at 8', () => {
+  it('resets an earlier distribution, initializes point buy at 8 and remembers the roll', () => {
     const wizard = useDndCreateWizard()
     wizard.state.scores = Object.fromEntries(STATS.map((stat) => [stat, 15]))
     wizard.state.rollPool = [18, 16, 14, 12, 10, 8]
+    wizard.state.rollSeries = [{ total: 18, dice: [] }]
 
     wizard.setMethod('pointbuy')
 
-    expect(wizard.state.rollPool).toEqual([])
+    expect(wizard.state.rollPool).toEqual([18, 16, 14, 12, 10, 8])
+    expect(wizard.state.rollSeries).toEqual([{ total: 18, dice: [] }])
     expect(wizard.state.scores).toEqual(Object.fromEntries(STATS.map((stat) => [stat, 8])))
+  })
+
+  it('persists an unassigned roll pool in the wizard draft', () => {
+    const state = createDndWizardState()
+    state.statMethod = 'roll'
+    state.rollPool = [16, 14, 14, 12, 11, 8]
+    state.rollSeries = [{ total: 16, dice: [{ id: 0, value: 6, dropped: false }] }]
+
+    const saved = serializeDndWizardState(state)
+
+    expect(Object.values(saved.scores)).toEqual([null, null, null, null, null, null])
+    expect(saved.rollPool).toEqual(state.rollPool)
+    expect(saved.rollSeries).toEqual(state.rollSeries)
   })
 
   it('quick build assigns every value from the standard array', () => {
@@ -59,10 +75,12 @@ describe('D&D ability scores', () => {
   it('uses the shared custom value picker instead of a native select', () => {
     expect(source).toContain('<ValueSelect')
     expect(source).toContain(':options="poolOptions(s)"')
+    expect(source).toContain(':model-value="selectedPoolValue(s)"')
     expect(source).toContain('grid-template-columns: repeat(2, minmax(0, 1fr))')
     expect(source).toContain('.stat:focus-within { z-index: 20; }')
     expect(source).toContain('.vs-option:first-of-type')
-    expect(source).toContain('доступно ×${count}')
+    expect(source).toContain('value: `${value}:${occurrence}`')
+    expect(source).toContain('key: `${stat}-${value}-${occurrence}`')
     expect(source).not.toContain('<select')
     expect(source).not.toContain('<span class="ctl-label">Назначить значение</span>')
   })
