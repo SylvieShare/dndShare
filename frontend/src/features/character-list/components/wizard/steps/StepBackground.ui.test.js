@@ -23,4 +23,14 @@ describe('background step presentation', () => {
     expect(source).toContain(':image-url="b.coverImageUrl || \'\'"')
     expect(source).not.toContain('iconImageUrl')
   })
+
+  it('renders every tool proficiency and text-only equipment grant as a shared tile', () => {
+    expect(source).toContain('<BaseTile')
+    expect(source).toContain('v-for="toolName in backgroundToolNames"')
+    expect(source).toContain('v-for="(entry, entryIndex) in backgroundStart.items"')
+    expect(source).toContain('<Hammer')
+    expect(source).toContain('<Backpack')
+    expect(source).toContain('grid-template-columns: repeat(2, minmax(0, 1fr))')
+    expect(source).toContain('@media (max-width: 640px)')
+  })
 })

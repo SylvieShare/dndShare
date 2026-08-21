@@ -222,8 +222,12 @@ missing cover produces a monogram instead of stretching `iconImageUrl`. Selectio
 uses the shared `IllustratedChoiceStage`: the chosen card expands into a
 full-width horizontal row, the other backgrounds leave the catalogue, and a
 back action restores the two-column list without changing the content scroll.
-The existing skill, tool, language, feature, equipment and money summary appears
-below the expanded card. In starting-shop mode the equipment and money rows are
+The existing skill, language, feature and money summary appears below the expanded
+card. Every granted tool proficiency and every item parsed from the legacy
+background equipment sentence is rendered as its own shared `BaseTile`; tools
+and equipment use distinct icons and captions without pretending that text-only
+grants have handbook ids. The tile grid uses two desktop columns and one mobile
+column. In starting-shop mode the equipment tiles and money row are
 replaced by an explicit note that class wealth owns them. Built-in background covers live in system
 `storage_image` rows assigned through the generic `item.cover_image_id` relation.
 
