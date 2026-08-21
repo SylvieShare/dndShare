@@ -163,7 +163,7 @@ function appearanceHint(key) { return raceHints.value[key] || '' }
 .hint { font-size: 12px; line-height: 1.45; color: var(--text-muted); margin: 4px 0 0; }
 .identity-card {
   display: grid;
-  grid-template-columns: minmax(360px, .95fr) minmax(300px, 1.05fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: 22px;
   padding: 20px;
   border: 1px solid var(--border);
@@ -196,10 +196,6 @@ function appearanceHint(key) { return raceHints.value[key] || '' }
 .name-dice { display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--border-strong); border-radius: 9px; background: var(--surface-raised); color: var(--accent); cursor: pointer; }
 .name-dice:hover { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, var(--surface-raised)); }
 .appearance-hint { display: block; margin-top: 4px; color: var(--text-muted); font-size: 10px; line-height: 1.35; }
-
-@media (max-width: 900px) {
-  .identity-card { grid-template-columns: minmax(0, 1fr); }
-}
 
 @media (max-width: 640px) {
   .identity-card, .persona-section { padding: 13px; border-radius: 15px; }
