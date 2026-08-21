@@ -27,13 +27,76 @@
         @node-select="selectNode"
       >
         <template #toolbar>
-          <button type="button" class="rich-tool-btn" title="Вставить формулу броска" @mousedown.prevent="openCreate('dice')">◇</button>
-          <button type="button" class="rich-tool-btn" title="Вставить ссылку на предмет" @mousedown.prevent="openCreate('item')">◫</button>
-          <button type="button" class="rich-tool-btn" title="Вставить ссылку на справочник" @mousedown.prevent="openCreate('suggest')">◆</button>
+          <span class="rich-insert-actions">
+            <button
+              type="button"
+              class="rich-tool-btn"
+              title="Вставить формулу броска"
+              aria-label="Вставить формулу броска"
+              @mousedown.prevent="openCreate('dice')"
+            >
+              <Dices :size="16" :stroke-width="1.8" aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              class="rich-tool-btn"
+              title="Вставить ссылку на предмет"
+              aria-label="Вставить ссылку на предмет"
+              @mousedown.prevent="openCreate('item')"
+            >
+              <PackageSearch :size="16" :stroke-width="1.8" aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              class="rich-tool-btn"
+              title="Вставить ссылку на справочник"
+              aria-label="Вставить ссылку на справочник"
+              @mousedown.prevent="openCreate('suggest')"
+            >
+              <BookOpenCheck :size="16" :stroke-width="1.8" aria-hidden="true" />
+            </button>
+          </span>
+          <button
+            ref="insertMenuTrigger"
+            type="button"
+            class="rich-tool-btn rich-insert-more"
+            title="Вставить элемент"
+            aria-label="Вставить элемент"
+            aria-haspopup="menu"
+            :aria-expanded="insertMenuOpen"
+            @mousedown.prevent="toggleInsertMenu"
+          >
+            <Ellipsis :size="18" :stroke-width="2" aria-hidden="true" />
+          </button>
         </template>
         <template #node="{ node }"><DndRichInlineNode :node="node" /></template>
       </RichTextEditor>
     </div>
+
+    <BasePopover
+      :open="insertMenuOpen"
+      :anchor="insertMenuTrigger"
+      :min-width="210"
+      :z-index="4550"
+      role="menu"
+      aria-label="Вставить элемент"
+      @update:open="insertMenuOpen = $event"
+    >
+      <div class="rich-insert-menu">
+        <button type="button" role="menuitem" @mousedown.prevent="openCreateFromMenu('dice')">
+          <Dices :size="17" aria-hidden="true" />
+          <span>Формула броска</span>
+        </button>
+        <button type="button" role="menuitem" @mousedown.prevent="openCreateFromMenu('item')">
+          <PackageSearch :size="17" aria-hidden="true" />
+          <span>Ссылка на предмет</span>
+        </button>
+        <button type="button" role="menuitem" @mousedown.prevent="openCreateFromMenu('suggest')">
+          <BookOpenCheck :size="17" aria-hidden="true" />
+          <span>Ссылка на справочник</span>
+        </button>
+      </div>
+    </BasePopover>
 
     <BasePopover
       :open="Boolean(selectedNode)"
@@ -81,6 +144,7 @@
 <script setup>
 import { computed, inject, ref } from 'vue'
 import { BasePopover, RichTextEditor } from '@sylvieshare/share-ui'
+import { BookOpenCheck, Dices, Ellipsis, PackageSearch } from '@lucide/vue'
 import { useItemTypesStore } from '@/stores/itemTypes'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import RichDiceNodeModal from '@/shared/ui/RichDiceNodeModal.vue'
@@ -128,6 +192,8 @@ const selectedNode = ref(null)
 const editingTarget = ref(null)
 const activeEditor = ref('')
 const itemTypeIds = ref([])
+const insertMenuTrigger = ref(null)
+const insertMenuOpen = ref(false)
 
 function nodeTypeLabel(kind) {
   return ({ dice: 'Формула броска', item: 'Ссылка на предмет', suggest: 'Ссылка на справочник' })[kind] || 'Встроенный элемент'
@@ -138,8 +204,8 @@ function selectNode(selection) {
   selectedNode.value = selection
 }
 
-async function openCreate(kind) {
-  editorRef.value?.rememberSelection?.()
+async function openCreate(kind, rememberSelection = true) {
+  if (rememberSelection) editorRef.value?.rememberSelection?.()
   editingTarget.value = null
   selectedNode.value = null
   activeEditor.value = kind
@@ -147,6 +213,16 @@ async function openCreate(kind) {
     const types = await useItemTypesStore().ensureAll().catch(() => [])
     itemTypeIds.value = types.map(type => type.id)
   }
+}
+
+function toggleInsertMenu() {
+  editorRef.value?.rememberSelection?.()
+  insertMenuOpen.value = !insertMenuOpen.value
+}
+
+function openCreateFromMenu(kind) {
+  insertMenuOpen.value = false
+  openCreate(kind, false)
 }
 
 async function editSelectedNode() {
@@ -198,11 +274,25 @@ function removeEditingNode() {
 </script>
 
 <style scoped>
-.input-desc { display: flex; flex-direction: column; }
+.input-desc {
+  display: flex;
+  flex-direction: column;
+  container-type: inline-size;
+}
 .input-desc :deep(.desc-editor),
 .input-desc :deep(.desc-view) {
   font-family: var(--font-prose);
   font-optical-sizing: auto;
+}
+
+.input-desc :deep(.desc-editor) {
+  box-sizing: border-box;
+  background: transparent;
+  border: 1px solid var(--border);
+}
+
+.input-desc :deep(.desc-editor:focus) {
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
 }
 .desc-head { display: flex; align-items: center; gap: 8px; min-height: 24px; margin-bottom: 4px; }
 
@@ -272,6 +362,39 @@ function removeEditingNode() {
   place-items: center;
 }
 .rich-tool-btn:hover { background: var(--surface-raised); color: var(--accent-soft); }
+.rich-insert-actions { display: inline-flex; align-items: center; gap: 2px; flex-shrink: 0; }
+.rich-insert-more { display: none; }
+
+.rich-insert-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.rich-insert-menu button {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 9px;
+  background: none;
+  border: 0;
+  border-radius: var(--r-sm);
+  color: var(--text-2);
+  font: inherit;
+  font-size: 12px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.rich-insert-menu button:hover { background: var(--surface-raised); color: var(--text-1); }
+.rich-insert-menu button svg { flex-shrink: 0; color: var(--accent-soft); }
+
+@container (max-width: 400px) {
+  .rich-insert-actions { display: none; }
+  .rich-insert-more { display: grid; }
+}
+
 .rich-node-menu { display: flex; flex-direction: column; gap: 5px; max-width: 280px; }
 .rich-node-menu-label { color: var(--text-muted); font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
 .rich-node-menu strong { overflow: hidden; color: var(--text-1); font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
