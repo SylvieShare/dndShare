@@ -243,8 +243,8 @@ const participantTileStyle = computed(() => ({
   display: flex;
   align-items: center;
   gap: 9px;
-  height: 88px;
-  padding: 12px;
+  height: 72px;
+  padding: 4px;
   overflow: hidden;
   user-select: none;
   transition: height 0.42s cubic-bezier(0.22, 1, 0.36, 1), gap 0.42s cubic-bezier(0.22, 1, 0.36, 1), padding 0.42s cubic-bezier(0.22, 1, 0.36, 1), background 0.18s, border-color 0.18s, box-shadow 0.18s;

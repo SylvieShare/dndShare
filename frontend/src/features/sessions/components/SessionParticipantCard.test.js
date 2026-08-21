@@ -45,6 +45,7 @@ describe('SessionParticipantCard actions', () => {
   it('uses a larger avatar in the expanded player rail', () => {
     expect(source).toContain('.p-avatar {')
     expect(source).toContain('width: 64px;\n  height: 64px;')
+    expect(source).toContain('height: 72px;\n  padding: 4px;')
     expect(source).toContain('.ava-initial {\n  font-size: 16px;')
   })
 
@@ -94,7 +95,7 @@ describe('SessionParticipantCard actions', () => {
     expect(source).toContain('<EncounterCombatControls\n            class="p-combat-controls"')
     expect(source).not.toContain('v-if="combatMode"')
     expect(source).toContain(':inert="!combatMode"')
-    expect(source).toContain('height: 88px;')
+    expect(source).toContain('height: 72px;')
     expect(source).not.toContain('.p-card--combat .p-avatar')
     expect(source).toContain('margin-left: -121px;')
     expect(source).toContain('.p-card--combat .p-combat-controls')
