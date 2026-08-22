@@ -108,6 +108,9 @@
     "name": "Классы",
     "key": "class_ids",
     "type": "object_array",
+    "filter": true,
+    "filter_path": "class_ids.id",
+    "filter_item_type": 9,
     "fields": [
       { "name": "Класс", "key": "id", "type": "item", "item_type": 9 }
     ]

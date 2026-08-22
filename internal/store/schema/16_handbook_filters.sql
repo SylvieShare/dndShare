@@ -67,6 +67,33 @@ SET fields = COALESCE((
 ), '[]'::jsonb)
 WHERE id = 5 AND jsonb_typeof(fields) = 'array';
 
+-- Feature catalogues use their canonical owner arrays as ordinary handbook
+-- filters. Options come from root race/class items, while subclass/subrace
+-- features remain included because their data also carries the base owner.
+UPDATE dndshare.item_type
+SET fields = COALESCE((
+    SELECT jsonb_agg(
+        CASE WHEN field ->> 'key' = 'race_ids'
+             THEN field || '{"name":"Расы","filter":true,"filter_path":"race_ids.id","filter_item_type":8}'::jsonb
+             ELSE field END
+        ORDER BY ord
+    )
+    FROM jsonb_array_elements(fields) WITH ORDINALITY rows(field, ord)
+), '[]'::jsonb)
+WHERE id = 3 AND jsonb_typeof(fields) = 'array';
+
+UPDATE dndshare.item_type
+SET fields = COALESCE((
+    SELECT jsonb_agg(
+        CASE WHEN field ->> 'key' = 'class_ids'
+             THEN field || '{"name":"Классы","filter":true,"filter_path":"class_ids.id","filter_item_type":9}'::jsonb
+             ELSE field END
+        ORDER BY ord
+    )
+    FROM jsonb_array_elements(fields) WITH ORDINALITY rows(field, ord)
+), '[]'::jsonb)
+WHERE id = 4 AND jsonb_typeof(fields) = 'array';
+
 -- Generic equipment can carry the mechanical armor rule used by the creation
 -- wizard and character sheet. Keep it nested so ordinary objects stay simple.
 UPDATE dndshare.item_type

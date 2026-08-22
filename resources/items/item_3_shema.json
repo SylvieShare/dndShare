@@ -108,6 +108,9 @@
     "name": "Расы",
     "key": "race_ids",
     "type": "object_array",
+    "filter": true,
+    "filter_path": "race_ids.id",
+    "filter_item_type": 8,
     "fields": [
       { "name": "Раса", "key": "id", "type": "item", "item_type": 8 }
     ]
