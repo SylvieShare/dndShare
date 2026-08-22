@@ -14,7 +14,12 @@ describe('character feature widgets', () => {
       data: {
         class_ids: [{ id: 4015 }],
         weapon_damage: [{ dice: 'd6', dice_count_level_divisor: 2, dice_count_rounding: 'up' }],
-        sheet_widgets: [{ key: 'sneak_attack', kind: 'metric', value_source: 'weapon_damage' }],
+        sheet_widgets: [{
+          key: 'sneak_attack',
+          kind: 'metric',
+          value_source: 'weapon_damage',
+          details: ['Фехтовальное или дальнобойное оружие', 'Без помехи', ''],
+        }],
       },
     }]])
 
@@ -22,6 +27,7 @@ describe('character feature widgets', () => {
       key: 'sneak_attack',
       value: '3к6',
       dice: { count: 3, sides: 6, label: 'd6' },
+      details: ['Фехтовальное или дальнобойное оружие', 'Без помехи'],
       active: false,
     }])
   })

@@ -60,6 +60,9 @@ export function collectCharacterFeatureWidgets(values, itemsById, resources = []
         kind: definition.kind || 'metric',
         title: definition.title || item.name || 'Способность',
         description: definition.description || '',
+        details: (Array.isArray(definition.details) ? definition.details : [])
+          .map(value => String(value || '').trim())
+          .filter(Boolean),
         tone: definition.tone || 'accent',
         value: metric.value,
         dice: metric.dice,

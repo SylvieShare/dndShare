@@ -21,6 +21,10 @@
         <div v-else-if="widget.value" class="fw-value" :class="{ 'fw-value--compact': widget.value.length > 8 }">{{ widget.value }}</div>
       </div>
 
+      <ul v-if="widget.details.length" class="fw-details" aria-label="Условия способности">
+        <li v-for="detail in widget.details" :key="detail">{{ detail }}</li>
+      </ul>
+
       <div v-if="widget.resource || widget.kind === 'toggle'" class="fw-footer">
         <span v-if="widget.resource" class="fw-resource">
           <small>Доступно</small>
@@ -109,6 +113,9 @@ function toggle(widget) {
 .fw-dice { display: inline-flex; align-items: center; justify-content: flex-end; min-width: 58px; }
 .fw-dice :deep(.dd-count) { font-size: 20px; }
 .fw-value--compact { max-width: 92px; font-size: 15px; line-height: 1.1; text-align: right; }
+.fw-details { display: flex; flex-wrap: wrap; gap: 5px; margin: 10px 0 0; padding: 0; list-style: none; }
+.fw-details li { display: inline-flex; align-items: center; gap: 5px; padding: 4px 7px; border: 1px solid color-mix(in srgb, var(--fw-tone) 18%, transparent); border-radius: 999px; background: color-mix(in srgb, var(--fw-tone) 7%, transparent); color: var(--text-muted); font-size: 9px; line-height: 1.25; }
+.fw-details li::before { width: 4px; height: 4px; border-radius: 50%; background: var(--fw-tone); content: ''; flex: 0 0 auto; }
 .fw-footer { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 11px; padding-top: 10px; border-top: 1px solid color-mix(in srgb, var(--fw-tone) 18%, var(--border)); }
 .fw-resource { display: inline-flex; flex-direction: column; color: var(--text-muted); font-size: 10px; }
 .fw-resource b { color: var(--text-1); font-size: 14px; }

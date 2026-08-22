@@ -460,9 +460,12 @@ match.
 `sheet_widgets` is an ability-owned contract for prominent class-mechanic cards
 in the sheet side column and mobile skills tab. A widget may display a fixed or
 progression-derived metric, own a persisted toggle, bind to the ability resource,
-or add a note to another ability's panel through a shared key. The runtime does
-not check class, feature name or item id. Sneak Attack publishes its live dice as
-a metric; Rage publishes its current damage progression and an active toggle.
+or add a note to another ability's panel through a shared key. Compact condition
+theses are also owned by the widget data rather than its UI component. The
+runtime does not check class, feature name or item id. Sneak Attack publishes
+its live dice together with eligible-weapon, advantage-or-nearby-enemy,
+no-disadvantage and once-per-turn reminders; Rage publishes its current damage
+progression and an active toggle.
 Entering Rage consumes one available use, while leaving it active only changes
 the persisted mode state. Subclass features can contribute `note` widgets with
 the same key to extend that panel.
