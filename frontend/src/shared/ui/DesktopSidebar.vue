@@ -11,7 +11,7 @@
     <template #brand>
       <SidebarBrand :as="RouterLink" to="/" label="DnD Share" aria-label="DnD Share">
         <template #icon>
-          <img class="brand-mascot-mark" src="/brand-mascot.webp" alt="" />
+          <img class="brand-mark" src="/brand-mark.webp" alt="" />
         </template>
       </SidebarBrand>
     </template>
@@ -119,7 +119,7 @@ async function openSearch(toggle) {
 </script>
 
 <style scoped>
-.brand-mascot-mark {
+.brand-mark {
   display: block;
   width: 40px;
   height: 40px;

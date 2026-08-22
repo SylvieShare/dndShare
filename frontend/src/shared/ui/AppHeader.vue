@@ -13,7 +13,7 @@
 
       <div class="brand-wrap" v-click-outside="closeMenu">
         <button class="brand-btn" type="button" :class="{ open: menuOpen }" @click="toggleBrandMenu">
-          <img class="brand-mascot-mark" src="/brand-mascot.webp" alt="" aria-hidden="true" />
+          <img class="brand-mark" src="/brand-mark.webp" alt="" aria-hidden="true" />
           <span>DnD Share</span>
           <span class="brand-arrow">▾</span>
         </button>
@@ -188,7 +188,7 @@ function openErrorReporter() {
   background: var(--surface-raised);
 }
 
-.brand-mascot-mark {
+.brand-mark {
   display: block;
   width: 32px;
   height: 32px;
