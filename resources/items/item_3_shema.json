@@ -286,6 +286,54 @@
     ]
   },
   {
+    "name": "Производные эффекты",
+    "key": "derived_effects",
+    "type": "object_array",
+    "fields": [
+      { "name": "Вид", "key": "kind", "type": "select", "options": [
+        { "value": "armor_formula", "label": "Формула КД" },
+        { "value": "armor_bonus", "label": "Бонус КД" },
+        { "value": "speed_bonus", "label": "Бонус скорости" },
+        { "value": "skill_proficiency", "label": "Владение навыком" },
+        { "value": "save_proficiency", "label": "Владение спасброском" },
+        { "value": "check_bonus", "label": "Бонус проверки" },
+        { "value": "skill_bonus", "label": "Бонус навыка" },
+        { "value": "save_bonus", "label": "Бонус спасброска" },
+        { "value": "weapon_attack_bonus", "label": "Бонус атаки оружием" },
+        { "value": "critical_threshold", "label": "Порог критического попадания" },
+        { "value": "roll_mode", "label": "Режим броска" }
+      ] },
+      { "name": "С уровня", "key": "level", "type": "int", "default": 1 },
+      { "name": "Значение", "key": "value", "type": "int" },
+      { "name": "База", "key": "base", "type": "int" },
+      { "name": "Характеристики", "key": "ability_ids", "type": "suggest_array", "suggest_id": 16 },
+      { "name": "Ранг владения", "key": "rank", "type": "int" },
+      { "name": "Ключ выбора", "key": "choice_key", "type": "text" },
+      { "name": "Значения выбора", "key": "choice_values", "type": "text_array" },
+      { "name": "Цель берётся из выбора", "key": "target_from_choice", "type": "bool" },
+      { "name": "Группа прогрессии", "key": "group", "type": "text" },
+      { "name": "Множитель мастерства", "key": "proficiency_multiplier", "type": "float" },
+      { "name": "Только без владения", "key": "only_without_proficiency", "type": "bool" },
+      { "name": "Характеристика-модификатор", "key": "ability_modifier", "type": "suggest", "suggest_id": 16 },
+      { "name": "Нужен доспех", "key": "requires_armor", "type": "bool" },
+      { "name": "Без доспеха", "key": "requires_no_armor", "type": "bool" },
+      { "name": "Разрешён щит", "key": "allow_shield", "type": "bool", "default": true },
+      { "name": "Не в тяжёлом доспехе", "key": "forbid_heavy_armor", "type": "bool" },
+      { "name": "Вид оружия", "key": "weapon_kind", "type": "select", "options": [
+        { "value": "any", "label": "Любое" },
+        { "value": "melee", "label": "Рукопашное" },
+        { "value": "ranged", "label": "Дальнобойное" }
+      ] },
+      { "name": "Области броска", "key": "scopes", "type": "text_array" },
+      { "name": "Режим", "key": "mode", "type": "select", "options": [
+        { "value": "advantage", "label": "Преимущество" },
+        { "value": "disadvantage", "label": "Помеха" }
+      ] },
+      { "name": "Пояснение", "key": "label", "type": "text" }
+    ]
+  },
+
+  {
     "name": "Дарованные заклинания",
     "key": "granted_spells",
     "type": "object_array",

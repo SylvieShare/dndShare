@@ -33,6 +33,14 @@
         </div>
 
         <button
+          v-if="entry.has_choices"
+          class="abe-edit"
+          type="button"
+          title="Изменить выбор способности"
+          @click="$emit('choices', entry)"
+        >◇</button>
+
+        <button
           v-if="entry.isUserOwned"
           class="abe-edit"
           type="button"
@@ -62,7 +70,7 @@ import { reorderByDrop, useSortable } from '@sylvieshare/share-ui'
 const props = defineProps({
   entries: { type: Array, default: () => [] },
 })
-const emit = defineEmits(['add', 'remove', 'inc', 'dec', 'edit', 'reorder'])
+const emit = defineEmits(['add', 'remove', 'inc', 'dec', 'edit', 'choices', 'reorder'])
 
 const sortable = useSortable({
   groups: {

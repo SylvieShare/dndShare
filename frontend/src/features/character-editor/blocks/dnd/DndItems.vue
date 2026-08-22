@@ -374,7 +374,11 @@ function characterProficiencyBonus() {
 function toolCheckBonus(entry, ability) {
   const values = charCtx.values || {}
   const modifier = abilityModifier(resolveNumValue(values?.[ability.key]?.value ?? 10))
-  return modifier + (entryHasProficiency(entry) ? characterProficiencyBonus() : 0)
+  const proficient = entryHasProficiency(entry)
+  const derived = charCtx.characterDerivedEffects?.bonus?.('check_bonus', {
+    kind: 'tool', abilitySuggestId: ability.suggestId, proficient, item: entry.display.base,
+  })?.total || 0
+  return modifier + (proficient ? characterProficiencyBonus() : 0) + derived
 }
 
 function rollTool(entry, ability, closeAbilities, closeMenu) {

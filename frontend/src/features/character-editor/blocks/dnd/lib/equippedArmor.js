@@ -1,6 +1,7 @@
 import { abilityModifier, resolveNumValue, sumBonuses } from '@/shared/lib/dnd'
 import { normalizeValue } from '@/features/character-editor/blocks/dnd/lib/itemSection'
 import { hasItemProficiency } from '@/features/character-editor/lib/itemProficiency'
+import { SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
 
 function number(value, fallback = 0) {
   const parsed = Number(value)
@@ -36,7 +37,7 @@ function instanceBonus(entry) {
  * Derives every armor effect from the catalogue items in `items.equipped`.
  * One best body armor and one best shield are active; duplicates never stack.
  */
-export function deriveEquippedArmor(values = {}, items = {}, suggestItems = () => []) {
+export function deriveEquippedArmor(values = {}, items = {}, suggestItems = () => [], derivedRules = {}) {
   const dexterity = abilityModifier(resolveNumValue(values?.DEX?.value ?? 10))
   const strength = resolveNumValue(values?.STR?.value ?? 10)
   const equipped = normalizeValue(values?.items).equipped
@@ -73,9 +74,34 @@ export function deriveEquippedArmor(values = {}, items = {}, suggestItems = () =
   const shields = candidates.filter(row => row.shield)
   const body = best(bodies)
   const shield = best(shields)
+  const formulas = (Array.isArray(derivedRules?.formulas) ? derivedRules.formulas : []).flatMap((rule) => {
+    if (body || (shield && rule.allow_shield === false)) return []
+    const modifiers = (Array.isArray(rule.ability_ids) ? rule.ability_ids : []).map((suggestId) => {
+      const stat = SUGGEST16_TO_STAT[Number(suggestId)]
+      return stat ? abilityModifier(resolveNumValue(values?.[stat]?.value ?? 10)) : 0
+    })
+    return [{
+      ...rule,
+      value: number(rule.base, 10) + modifiers.reduce((sum, modifier) => sum + modifier, 0),
+      modifiers,
+    }]
+  })
+  const abilityFormula = best(formulas)
+  const bodyValue = body?.value ?? abilityFormula?.value ?? 10 + dexterity
+  const abilityBonuses = (Array.isArray(derivedRules?.bonuses) ? derivedRules.bonuses : []).filter((rule) => {
+    if (rule.requires_armor && !body) return false
+    if (rule.requires_no_armor && body) return false
+    if (rule.forbid_heavy_armor && body?.item?.data?.category === 'heavy') return false
+    return true
+  }).map(rule => ({
+    ...rule,
+    name: rule.label || rule.source_label || 'Способность',
+    title: rule.label || rule.source_label || 'Способность',
+    value: number(rule.value),
+    readonly: true,
+  })).filter(rule => rule.value)
   const manualBonuses = manualArmorBonuses(values)
-  const manualBonus = sumBonuses(manualBonuses)
-  const bodyValue = body?.value ?? 10 + dexterity
+  const manualBonus = sumBonuses(manualBonuses) + sumBonuses(abilityBonuses)
   const shieldValue = shield?.value ?? 0
   const active = [body, shield].filter(Boolean)
   const nonproficient = active.filter(row => !row.proficient)
@@ -97,6 +123,8 @@ export function deriveEquippedArmor(values = {}, items = {}, suggestItems = () =
     dexterity,
     strength,
     body,
+    abilityFormula,
+    abilityBonuses,
     shield,
     bodies,
     shields,

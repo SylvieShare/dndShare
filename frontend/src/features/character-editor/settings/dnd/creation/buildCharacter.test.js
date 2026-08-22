@@ -47,6 +47,28 @@ describe('buildCharacterData skill choices', () => {
     expect(result.data.values.STR.skills['1'].up).toBe(1)
   })
 
+  it('keeps source-owned expertise on the ability instead of copying a hidden skill flag', () => {
+    const ability = {
+      id: 42,
+      name: 'Компетентность',
+      data: {
+        class_ids: [{ id: 9 }],
+        level: 1,
+        derived_effects: [{ kind: 'skill_proficiency', rank: 2, choice_key: 'choice', target_from_choice: true }],
+      },
+    }
+    const result = buildCharacterData({
+      race: selection(1, 'Человек'),
+      charClass: selection(9, 'Плут'),
+      classAbilityItems: [ability],
+      choices: [{ abilityId: 42, choiceKey: 'choice', from_suggest_id: 15, expertise: true, selected: [2] }],
+      suggestValue: () => '',
+    })
+
+    expect(result.data.values.abilities_class[0].choices).toEqual({ choice: [2] })
+    expect(result.data.values.DEX?.skills?.['2']?.up || 0).toBe(0)
+  })
+
   it('applies a fixed racial skill proficiency', () => {
     const result = buildCharacterData({
       race: selection(4027, 'Эльф', { skill_prof: [10] }),

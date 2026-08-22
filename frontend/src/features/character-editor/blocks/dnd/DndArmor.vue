@@ -25,14 +25,18 @@
       <EditorPanel title="Класс доспеха (КД)">
         <EditorSection title="Экипировка">
           <div class="armor-source">
-            <span><b>{{ armorState.body?.name || 'Без доспеха' }}</b><small>{{ bodyFormula }}</small></span>
-            <strong>{{ armorState.body?.value ?? 10 + armorState.dexterity }}</strong>
+            <span><b>{{ armorState.body?.name || armorState.abilityFormula?.source_label || 'Без доспеха' }}</b><small>{{ bodyFormula }}</small></span>
+            <strong>{{ armorState.body?.value ?? armorState.abilityFormula?.value ?? 10 + armorState.dexterity }}</strong>
           </div>
           <div v-if="armorState.shield" class="armor-source">
             <span><b>{{ armorState.shield.name }}</b><small>Экипированный щит</small></span>
             <strong>+{{ armorState.shield.value }}</strong>
           </div>
           <div v-else class="armor-empty">Щит не экипирован</div>
+          <div v-for="bonus in armorState.abilityBonuses" :key="bonus.key" class="armor-source">
+            <span><b>{{ bonus.source_label }}</b><small>{{ bonus.label || 'Бонус способности' }}</small></span>
+            <strong>{{ signed(bonus.value) }}</strong>
+          </div>
           <div v-if="armorState.bodyConflict || armorState.shieldConflict" class="armor-warning">
             Одновременно учитывается только {{ armorState.bodyConflict ? 'доспех с наибольшим КД' : '' }}{{ armorState.bodyConflict && armorState.shieldConflict ? ' и ' : '' }}{{ armorState.shieldConflict ? 'щит с наибольшим бонусом' : '' }}.
           </div>
@@ -66,6 +70,11 @@ const armorData = computed(() => props.value && typeof props.value === 'object' 
 const armorState = computed(() => charCtx.characterArmor?.state || deriveEquippedArmor(props.values))
 const bodyFormula = computed(() => {
   const body = armorState.value.body
+  const formula = armorState.value.abilityFormula
+  if (!body && formula) {
+    const mods = (formula.modifiers || []).map(signed).join(' + ')
+    return `${formula.base || 10}${mods ? ` + ${mods}` : ''}`
+  }
   if (!body) return `10 ${armorState.value.dexterity >= 0 ? '+' : '−'} ${Math.abs(armorState.value.dexterity)} Ловкости`
   if (body.item?.data?.armor?.use_dex === false) return 'Базовый КД доспеха'
   const cap = body.item?.data?.armor?.dex_cap

@@ -6,13 +6,14 @@ import { useSessionEventsStore } from '@/stores/sessionEvents'
 const AUTO_DISMISS_MS = 6000
 const MAX_STACK = 5
 
-function detectOutcome(result) {
+function detectOutcome(result, criticalThreshold = null) {
   let fumble = null
   for (const p of result.parts) {
     if (p.kind !== 'dice') continue
     const rolls = p.keptIndex == null ? p.rolls : [p.rolls[p.keptIndex]]
     for (const r of rolls) {
-      if (r === p.sides) return { kind: 'crit', sides: p.sides, value: r }
+      const threshold = p.sides === 20 && criticalThreshold != null ? Math.max(2, Number(criticalThreshold) || 20) : p.sides
+      if (r >= threshold) return { kind: 'crit', sides: p.sides, value: r }
       if (r === 1 && !fumble) fumble = { kind: 'fumble', sides: p.sides, value: r }
     }
   }
@@ -88,7 +89,7 @@ export const useDiceStore = defineStore('dice', () => {
 
   function roll(action, expression, opts = {}) {
     const result = rollDiceExpression(expression)
-    const outcome = opts.crit_mode ? detectOutcome(result) : null
+    const outcome = opts.crit_mode ? detectOutcome(result, opts.critical_threshold) : null
     return pushEntry({
       action,
       actor: opts.actor,
@@ -118,7 +119,7 @@ export const useDiceStore = defineStore('dice', () => {
       }
     }
     result.rollMode = normalizedMode
-    const outcome = opts.crit_mode ? detectOutcome(result) : null
+    const outcome = opts.crit_mode ? detectOutcome(result, opts.critical_threshold) : null
     const triggers = keptNaturalD20(result) === 1
       ? (Array.isArray(opts.roll_triggers) ? opts.roll_triggers : []).filter((rule) => rule.event === 'natural_one' && rule.action === 'reroll')
       : []

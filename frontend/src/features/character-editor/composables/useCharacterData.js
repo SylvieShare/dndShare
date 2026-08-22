@@ -12,6 +12,7 @@ import { useCharacterDefenses } from '@/features/character-editor/composables/us
 import { useCharacterHitPoints } from '@/features/character-editor/composables/useCharacterHitPoints'
 import { useCharacterPassiveEffects } from '@/features/character-editor/composables/useCharacterPassiveEffects'
 import { useCharacterCombatEffects } from '@/features/character-editor/composables/useCharacterCombatEffects'
+import { useCharacterDerivedEffects } from '@/features/character-editor/composables/useCharacterDerivedEffects'
 import {
   activeLayoutProfile,
   initialTabs,
@@ -39,8 +40,9 @@ export function useCharacterData(uuid, isMobile) {
   const characterHitPoints = useCharacterHitPoints(characterValues, characterResources.itemsById)
   const characterPassiveEffects = useCharacterPassiveEffects(characterValues, characterResources.itemsById)
   const characterCombatEffects = useCharacterCombatEffects(characterValues, characterResources.itemsById)
-  const characterArmor = useCharacterArmor(characterValues, characterResources)
-  const characterRolls = useCharacterRollEffects(characterArmor)
+  const characterDerivedEffects = useCharacterDerivedEffects(characterValues, characterResources.itemsById)
+  const characterArmor = useCharacterArmor(characterValues, characterResources, characterDerivedEffects)
+  const characterRolls = useCharacterRollEffects(characterArmor, [context => characterDerivedEffects.rollEffects(context)])
 
   provide('charCtx', charCtx)
   Object.assign(charCtx, {
@@ -54,6 +56,7 @@ export function useCharacterData(uuid, isMobile) {
     characterHitPoints,
     characterPassiveEffects,
     characterCombatEffects,
+    characterDerivedEffects,
     characterArmor,
     characterRolls,
     values: characterValues,

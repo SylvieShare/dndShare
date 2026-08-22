@@ -3,7 +3,7 @@ import { useSuggestStore } from '@/stores/suggest'
 import { normalizeValue } from '@/features/character-editor/blocks/dnd/lib/itemSection'
 import { deriveEquippedArmor } from '@/features/character-editor/blocks/dnd/lib/equippedArmor'
 
-export function useCharacterArmor(values, characterResources) {
+export function useCharacterArmor(values, characterResources, characterDerivedEffects = null) {
   const suggest = useSuggestStore()
   const equippedIds = computed(() => normalizeValue(values.value?.items).equipped
     .map(entry => entry.item_id)
@@ -22,6 +22,7 @@ export function useCharacterArmor(values, characterResources) {
     values.value,
     characterResources.itemsById?.value || new Map(),
     typeId => suggest.items(typeId),
+    characterDerivedEffects?.armorRules?.value || { formulas: [], bonuses: [] },
   ))
 
   return { state, hydrate }

@@ -83,7 +83,7 @@ import { computed, onMounted, reactive, watch } from 'vue'
 
 import { AppModalFrame } from '@sylvieshare/share-ui'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
-import { actionableItemChoices, choiceSelectionsComplete } from '@/features/items/lib/itemChoices'
+import { actionableItemChoices, choiceSelectionsComplete, itemMatchesChoiceFilter } from '@/features/items/lib/itemChoices'
 import { useSuggestStore } from '@/stores/suggest'
 
 const props = defineProps({
@@ -159,24 +159,11 @@ function selectedItems(choice) {
 
 function openItemChoice(choice) { itemPicker.choice = choice }
 
-function parseItemFilter(raw) {
-  if (!raw) return null
-  try { return JSON.parse(raw) } catch { /* use key=value shorthand below */ }
-  const [key, ...rest] = String(raw).split('=')
-  return key && rest.length ? { [key.trim()]: rest.join('=').trim() } : null
-}
-
 function itemChoiceEligibility(item) {
   if (itemPicker.choice && isExcluded(itemPicker.choice, item.id)) {
     return { eligible: false, reasons: ['Этот вариант уже использован'] }
   }
-  const filter = parseItemFilter(itemPicker.choice?.item_filter)
-  if (!filter) return { eligible: true, reasons: [] }
-  const matches = Object.entries(filter).every(([key, expected]) => {
-    const actual = String(key).split('.').reduce((value, segment) => value?.[segment], item.data)
-    const allowed = Array.isArray(expected) ? expected : [expected]
-    return allowed.some((value) => String(value) === String(actual))
-  })
+  const matches = itemMatchesChoiceFilter(item, itemPicker.choice?.item_filter)
   return { eligible: matches, reasons: matches ? [] : ['Не подходит под фильтр выбора'] }
 }
 

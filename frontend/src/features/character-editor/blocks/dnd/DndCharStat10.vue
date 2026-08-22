@@ -14,7 +14,7 @@
       :mod="mod"
       :raw="statDisplayValue"
       :save="save"
-      :save-up="!!statData.save_up"
+      :save-up="saveUp"
       :skills="skillsView"
       :check-mode="checkRollMode"
       :check-mode-source="checkModeSource"
@@ -29,7 +29,7 @@
       :mobile-variant="isMobileVariant"
       :show-edit="canEdit"
       @edit="openEditor"
-      @roll-stat="rollD20Plus(`${displayTitle} — проверка`, mod, checkRollMode, 'ability_check')"
+      @roll-stat="rollD20Plus(`${displayTitle} — проверка`, checkTotal, checkRollMode, 'ability_check')"
       @roll-save="rollD20Plus(`${displayTitle} — спасбросок`, save, saveRollMode, 'saving_throw')"
       @roll-skill="id => rollD20Plus(skillTitle(id), skillBonus(id), skillRollMode(id), 'ability_check')"
     />
@@ -55,7 +55,7 @@
         :mod="mod"
         :raw="statDisplayValue"
         :save="save"
-        :save-up="!!statData.save_up"
+        :save-up="saveUp"
         :skills="skillsView"
         :check-mode="checkRollMode"
         :check-mode-source="checkModeSource"
@@ -67,7 +67,7 @@
         :skill-skeleton-count="skillSkeletonCount"
         :tooltip-max-desc="skillTooltipMaxDesc"
         :tooltip-width="skillTooltipWidth"
-        @roll-stat="rollD20Plus(`${displayTitle} — проверка`, mod, checkRollMode, 'ability_check')"
+        @roll-stat="rollD20Plus(`${displayTitle} — проверка`, checkTotal, checkRollMode, 'ability_check')"
         @roll-save="rollD20Plus(`${displayTitle} — спасбросок`, save, saveRollMode, 'saving_throw')"
         @roll-skill="id => rollD20Plus(skillTitle(id), skillBonus(id), skillRollMode(id), 'ability_check')"
       />
@@ -77,7 +77,8 @@
       <DndStatEditor
         :title="displayTitle"
         :base-data="numData"
-        :save-up="!!statData.save_up"
+        :save-up="saveUp"
+        :save-source="derivedSaveSource"
         :save-bonuses="statData.save_bonuses || []"
         :skills="skillsView"
         :allow-add-skills="!!block.content.allow_add_skills"
@@ -186,9 +187,18 @@ const profBonus = computed(() => {
   return path.split('.').reduce((cur, key) => cur?.[key], props.values) ?? 2
 })
 const mod = computed(() => abilityModifier(statDisplayValue.value))
+const checkTotal = computed(() => mod.value + (charCtx.characterDerivedEffects?.bonus?.('check_bonus', {
+  kind: 'ability_check', abilitySuggestId: titleSuggestId.value, proficient: false,
+})?.total || 0))
+const derivedSave = computed(() => charCtx.characterDerivedEffects?.saveProficiency?.(titleSuggestId.value) || { rank: 0, sources: [] })
+const saveUp = computed(() => !!statData.value.save_up || derivedSave.value.rank > 0)
+const derivedSaveSource = computed(() => derivedSave.value.sources.map(rule => rule.source_label).join(' · '))
 const save = computed(() => {
   const extra = sumBonuses(statData.value.save_bonuses)
-  return mod.value + (statData.value.save_up ? profBonus.value : 0) + extra
+  const derived = charCtx.characterDerivedEffects?.bonus?.('save_bonus', {
+    kind: 'saving_throw', abilitySuggestId: titleSuggestId.value,
+  })?.total || 0
+  return mod.value + (saveUp.value ? profBonus.value : 0) + extra + derived
 })
 
 const suggestItems = computed(() => {
@@ -234,7 +244,9 @@ const skillsList = computed(() => {
       const suggest = suggestById.value[id]
       return {
         id,
-        up: saved.up || 0,
+        up: Math.max(saved.up || 0, derivedSkillProficiency(id).rank),
+        manual_up: saved.up || 0,
+        proficiency_source: derivedSkillProficiency(id).sources.map(rule => rule.source_label).join(' · '),
         override_title: saved.override_title || '',
         title: saved.override_title || suggest?.value || id,
         desc: suggest?.desc || '',
@@ -258,13 +270,16 @@ const skillTooltipMaxDesc = computed(() => Number(props.block.content.skill_tool
 const skillTooltipWidth = computed(() => Number(props.block.content.skill_tooltip_width ?? 420))
 const isMobileVariant = computed(() => (props.block.props?.variant || props.block.content?.variant) === 'mobile')
 const armorState = computed(() => charCtx.characterArmor?.state || {})
-const statRollEffects = computed(() => charCtx.characterRolls?.effects
-  ? charCtx.characterRolls.effects({ kind: 'ability', abilitySuggestId: titleSuggestId.value })
+const checkRollEffects = computed(() => charCtx.characterRolls?.effects
+  ? charCtx.characterRolls.effects({ kind: 'ability_check', abilitySuggestId: titleSuggestId.value })
   : armorAbilityRollEffects(armorState.value, titleSuggestId.value))
-const checkAutomatic = computed(() => resolveRollMode('auto', statRollEffects.value))
-const saveAutomatic = computed(() => resolveRollMode('auto', statRollEffects.value))
-const checkResolved = computed(() => resolveRollMode(statData.value.check_roll_mode, statRollEffects.value))
-const saveResolved = computed(() => resolveRollMode(statData.value.save_roll_mode, statRollEffects.value))
+const saveRollEffects = computed(() => charCtx.characterRolls?.effects
+  ? charCtx.characterRolls.effects({ kind: 'saving_throw', abilitySuggestId: titleSuggestId.value })
+  : armorAbilityRollEffects(armorState.value, titleSuggestId.value))
+const checkAutomatic = computed(() => resolveRollMode('auto', checkRollEffects.value))
+const saveAutomatic = computed(() => resolveRollMode('auto', saveRollEffects.value))
+const checkResolved = computed(() => resolveRollMode(statData.value.check_roll_mode, checkRollEffects.value))
+const saveResolved = computed(() => resolveRollMode(statData.value.save_roll_mode, saveRollEffects.value))
 const checkAutoMode = computed(() => checkAutomatic.value.mode)
 const saveAutoMode = computed(() => saveAutomatic.value.mode)
 const checkAutoSource = computed(() => checkAutomatic.value.source)
@@ -287,11 +302,21 @@ function skillTitle(id) { return skillsList.value.find(s => s.id === String(id))
 function skillBonus(id) {
   const skill = skillsMap.value[String(id)] || { up: 0 }
   const extra = sumBonuses(skill.bonuses)
-  return mod.value + (skill.up || 0) * profBonus.value + extra
+  const rank = Math.max(skill.up || 0, derivedSkillProficiency(id).rank)
+  const derived = charCtx.characterDerivedEffects?.bonus?.('skill_bonus', {
+    kind: 'skill_check', abilitySuggestId: titleSuggestId.value, skillId: id, proficient: rank > 0,
+  })?.total || 0
+  return mod.value + rank * profBonus.value + extra + derived
+}
+
+function derivedSkillProficiency(id) {
+  return charCtx.characterDerivedEffects?.skillProficiency?.(id) || { rank: 0, sources: [] }
 }
 
 function skillRollEffects(id) {
-  const effects = [...statRollEffects.value]
+  const effects = charCtx.characterRolls?.effects
+    ? [...charCtx.characterRolls.effects({ kind: 'skill_check', abilitySuggestId: titleSuggestId.value, skillId: id })]
+    : [...checkRollEffects.value]
   if (String(id) === '4' && armorState.value.stealthDisadvantage && armorState.value.body?.name) {
     effects.push({ mode: 'disadvantage', source: `${armorState.value.body.name}: помеха Скрытности` })
   }

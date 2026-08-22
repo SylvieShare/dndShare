@@ -24,6 +24,18 @@ describe('deriveEquippedArmor', () => {
     expect(result.byUid.u0.active).toBe(false)
   })
 
+  it('uses an ability AC formula only while its equipment conditions are met', () => {
+    const rules = { formulas: [{ key: 'monk', base: 10, ability_ids: [2, 5], allow_shield: false, source_label: 'Защита без доспехов' }] }
+    const unarmored = deriveEquippedArmor({ DEX: { value: 16 }, WIS: { value: 14 } }, {}, () => [], rules)
+    expect(unarmored.total).toBe(15)
+    expect(unarmored.abilityFormula.source_label).toBe('Защита без доспехов')
+
+    const shield = armor(3, 'Щит', { category: 'shield', armor: { shield: true, shield_bonus: 2 } })
+    const equippedShield = deriveEquippedArmor({ DEX: { value: 16 }, WIS: { value: 14 }, items: equipped(3) }, { 3: shield }, () => [], rules)
+    expect(equippedShield.total).toBe(15)
+    expect(equippedShield.abilityFormula).toBeNull()
+  })
+
   it('applies stealth and non-proficiency effects only from active equipment', () => {
     const items = {
       1: armor(1, 'Чешуйчатый доспех', {

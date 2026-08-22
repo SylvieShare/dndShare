@@ -129,6 +129,7 @@ export function buildCharacterData(input) {
   const classBinding = { classId: charClass?.id, subclassId: subclass?.id }
   const raceAbilityIds = featureIdsForBinding(raceAbilityItems, raceBinding, 1)
   const classAbilityIds = featureIdsForBinding(classAbilityItems, classBinding, 1)
+  const abilityItemsById = new Map([...raceAbilityItems, ...classAbilityItems].map(item => [String(item.id), item]))
 
   let { values } = applyGrants(blankValues(), grants, { suggestValue, raceAbilityIds, classAbilityIds })
   values.abilities_race = attachAbilityChoices(values.abilities_race, choices)
@@ -209,7 +210,11 @@ export function buildCharacterData(input) {
   for (const ch of choices) {
     const sel = ch?.selected || []
     if (!sel.length) continue
-    if (Number(ch.from_suggest_id) === 15) sel.forEach((id) => addSkillProf(values, id, ch.expertise ? 2 : 1))
+    const abilityItem = abilityItemsById.get(String(ch.abilityId))
+    const sourceOwnedSkill = (abilityItem?.data?.derived_effects || []).some(effect => (
+      effect?.kind === 'skill_proficiency' && (!effect.choice_key || effect.choice_key === ch.choiceKey)
+    ))
+    if (Number(ch.from_suggest_id) === 15 && !sourceOwnedSkill) sel.forEach((id) => addSkillProf(values, id, ch.expertise ? 2 : 1))
     else if (Number(ch.from_suggest_id) === 6) addLanguages(values, sel.map((id) => suggestValue?.(6, id)).filter(Boolean))
     if (ch.abilityId != null) {
       const storageKey = ch.selectionKey ?? ch.abilityId

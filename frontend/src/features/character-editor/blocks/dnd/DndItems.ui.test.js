@@ -44,7 +44,8 @@ describe('inventory item actions', () => {
     expect(blocks.items.content.tool_proficiency_bucket).toBeUndefined()
     expect(source).toContain('v-if="isToolEntry(entry)" label="Характеристика для проверки"')
     expect(source).toContain('diceStore.rollD20(')
-    expect(source).toContain('entryHasProficiency(entry) ? characterProficiencyBonus() : 0')
+    expect(source).toContain('proficient ? characterProficiencyBonus() : 0')
+    expect(source).toContain("characterDerivedEffects?.bonus?.('check_bonus'")
   })
 
   it('uses 64px handbook icons for inventory rows', () => {

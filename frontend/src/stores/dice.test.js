@@ -74,4 +74,11 @@ describe('dice roll presentation metadata', () => {
     random.mockRestore()
     store.clear()
   })
+
+  it('honors a character-derived weapon critical threshold', () => {
+    vi.spyOn(Math, 'random').mockReturnValueOnce(0.91)
+    const store = useDiceStore()
+    store.rollD20('Атака чемпиона', 0, 'normal', { crit_mode: true, critical_threshold: 19, log: false })
+    expect(store.stack[0].outcome).toMatchObject({ kind: 'crit', value: 19 })
+  })
 })

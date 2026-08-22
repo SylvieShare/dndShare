@@ -28,6 +28,7 @@
     </div>
 
     <EditorSection title="Степень умения">
+      <div v-if="skill.proficiency_source" class="sk-source">Источник: {{ skill.proficiency_source }}</div>
       <div class="sk-prof-row">
         <button
           v-for="opt in profOptions"
@@ -71,7 +72,7 @@ const props = defineProps({
 const emit = defineEmits(['change', 'back'])
 
 const local = reactive({
-  up: props.skill.up || 0,
+  up: props.skill.manual_up || 0,
   override_title: props.skill.override_title || '',
   bonuses: [...(props.skill.bonuses || [])],
   roll_mode: props.skill.roll_mode || 'auto',
@@ -95,7 +96,7 @@ const profOptions = [
 
 const total = computed(() => {
   const extra = sumBonuses(local.bonuses)
-  return props.mod + (local.up || 0) * props.profBonus + extra
+  return props.mod + Math.max(local.up || 0, props.skill.up || 0) * props.profBonus + extra
 })
 
 function update(field, value) {
@@ -161,6 +162,7 @@ function update(field, value) {
 .sk-rename::placeholder { color: var(--text-muted); font-weight: 400; }
 
 .sk-prof-row { display: flex; gap: 6px; }
+.sk-source { padding: 7px 9px; border: 1px solid var(--border); border-radius: 8px; color: var(--text-muted); font-size: 10px; }
 
 .sk-prof-btn {
   flex: 1;

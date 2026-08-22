@@ -51,6 +51,7 @@
           @inc="increaseMaxUse"
           @dec="decreaseMaxUse"
           @edit="openEditForm"
+          @choices="openChoiceEditor"
           @reorder="reorderAbilities"
         />
       </template>
@@ -92,6 +93,7 @@
     <FeatChoiceModal
       v-if="choiceConfigItem"
       :item="choiceConfigItem"
+      :initial-choices="choiceInitialChoices"
       :excluded-choices="choiceExcludedChoices"
       @confirm="onChoicesConfirm"
       @close="choiceConfigItem = null"
@@ -143,6 +145,7 @@ const pickerOpen  = ref(false)
 const tooltip     = reactive({ visible: false, name: '', desc: '', item: null, x: 0, top: null, bottom: null })
 const form        = reactive({ open: false, editingItem: null, initialName: '' })
 const choiceConfigItem = ref(null)
+const choiceEditingKey = ref(null)
 const { editorOpen, originRect, originEl, openFrom, close } = useMorphOrigin()
 
 const ownerMode = computed(() => charCtx.ownerMode)
@@ -170,6 +173,7 @@ const entries = computed(() =>
         count: s.count ?? maxUse ?? 0,
         choices: s.choices || {},
         choice_summary: itemChoiceSummary(item, s.choices || {}),
+        has_choices: actionableItemChoices(item).length > 0,
         isUserOwned: item.userId != null,
       }
     })
@@ -194,11 +198,12 @@ const choiceExcludedChoices = computed(() => {
     ...itemChoices(item).filter((choice) => choice.unique_across_takes).map((choice) => choice.key),
   ].filter(Boolean))
   const result = {}
-  for (const entry of stored.value.filter((storedEntry) => storedEntry.id === item.id)) {
+  for (const entry of stored.value.filter((storedEntry) => storedEntry.id === item.id && (storedEntry.uid || String(storedEntry.id)) !== choiceEditingKey.value)) {
     for (const key of uniqueKeys) result[key] = [...(result[key] || []), ...(entry.choices?.[key] || [])]
   }
   return result
 })
+const choiceInitialChoices = computed(() => stored.value.find(entry => (entry.uid || String(entry.id)) === choiceEditingKey.value)?.choices || {})
 
 function itemChoiceSummary(item, selections) {
   const labels = []
@@ -295,6 +300,7 @@ function logAddedEntry(item) {
 function addFromCatalog(item) {
   if (!catalog.value.find(c => c.id === item.id)) catalog.value.push(item)
   if (actionableItemChoices(item).length) {
+    choiceEditingKey.value = null
     choiceConfigItem.value = item
     pickerOpen.value = false
     return
@@ -307,8 +313,33 @@ function addFromCatalog(item) {
   logAddedEntry(item)
 }
 
+function openChoiceEditor(entry) {
+  const item = catalog.value.find(candidate => candidate.id === entry.id)
+  if (!item || !actionableItemChoices(item).length) return
+  choiceEditingKey.value = entry.key || entry.uid || String(entry.id)
+  choiceConfigItem.value = item
+}
+
 function onChoicesConfirm(choices) {
   const item = choiceConfigItem.value
+  if (choiceEditingKey.value) {
+    const oldEntry = stored.value.find(entry => (entry.uid || String(entry.id)) === choiceEditingKey.value)
+    const nextEntry = oldEntry ? { ...oldEntry, choices } : null
+    if (oldEntry && nextEntry) {
+      if (Number(props.block.content.item_id) === 7) {
+        removeFeatStatBonuses(item, oldEntry)
+        applyFeatStatBonuses(item, nextEntry)
+      }
+      emitChange(stored.value.map(entry => (entry.uid || String(entry.id)) === choiceEditingKey.value ? nextEntry : entry))
+      const selectedItemIds = actionableItemChoices(item)
+        .filter(choice => choice.source === 'item')
+        .flatMap(choice => choices[choice.key] || [])
+      if (selectedItemIds.length) ensureItemNames(selectedItemIds).catch(() => {})
+    }
+    choiceEditingKey.value = null
+    choiceConfigItem.value = null
+    return
+  }
   const entry = featEntry(item, choices, props.values)
   emitChange([...stored.value, entry])
   if (Number(props.block.content.item_id) === 7) applyFeatStatBonuses(item, entry)

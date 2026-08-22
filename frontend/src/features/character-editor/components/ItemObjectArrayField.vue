@@ -28,8 +28,9 @@
               <span>{{ sub.name }}</span>
             </button>
             <input
-              v-else-if="sub.type === 'int'"
+              v-else-if="sub.type === 'int' || sub.type === 'float'"
               type="number"
+              :step="sub.type === 'float' ? 'any' : '1'"
               class="iem-input iem-input-sm"
               :value="row[sub.key] ?? ''"
               @input="editor.setObjectArrayField(field.key, rowIndex, sub.key, editor.numberOrNull($event.target.value))"
@@ -80,6 +81,30 @@
                 :value="suggest.id"
               >{{ suggest.value }}</option>
             </select>
+            <div v-else-if="sub.type === 'suggest_array'" class="iem-chip-row">
+              <button
+                v-for="id in rowArray(row, sub.key)"
+                :key="id"
+                class="iem-chip"
+                type="button"
+                @click="removeRowArrayValue(field.key, rowIndex, sub.key, id, row)"
+              >{{ editor.getSuggestLabel(editor.getSuggestId(sub), id) }} ×</button>
+              <select class="iem-select iem-select-sm" value="" @change="addRowSuggest(field.key, rowIndex, sub, row, $event)">
+                <option value="">+ Добавить</option>
+                <option
+                  v-for="suggest in editor.getSuggests(editor.getSuggestId(sub)).filter(option => !rowArray(row, sub.key).some(id => String(id) === String(option.id)))"
+                  :key="suggest.id"
+                  :value="suggest.id"
+                >{{ suggest.value }}</option>
+              </select>
+            </div>
+            <input
+              v-else-if="sub.type === 'text_array'"
+              type="text"
+              class="iem-input iem-input-sm"
+              :value="rowArray(row, sub.key).join(', ')"
+              @input="setRowTextArray(field.key, rowIndex, sub.key, $event.target.value)"
+            />
 
             <div v-else-if="sub.type === 'object_array'" class="iem-object-array iem-object-array-nested">
               <div
@@ -189,4 +214,17 @@ import { SYSTEM_DICE } from '@/shared/lib/systemDice'
 
 defineProps({ field: { type: Object, required: true } })
 const editor = inject(itemFieldEditorKey)
+
+function rowArray(row, key) { return Array.isArray(row?.[key]) ? row[key] : [] }
+function removeRowArrayValue(key, rowIndex, subKey, value, row) {
+  editor.setObjectArrayField(key, rowIndex, subKey, rowArray(row, subKey).filter(entry => String(entry) !== String(value)))
+}
+function addRowSuggest(key, rowIndex, sub, row, event) {
+  const value = editor.numberOrNull(event.target.value)
+  if (value != null) editor.setObjectArrayField(key, rowIndex, sub.key, [...rowArray(row, sub.key), value])
+  event.target.value = ''
+}
+function setRowTextArray(key, rowIndex, subKey, value) {
+  editor.setObjectArrayField(key, rowIndex, subKey, String(value).split(',').map(entry => entry.trim()).filter(Boolean))
+}
 </script>

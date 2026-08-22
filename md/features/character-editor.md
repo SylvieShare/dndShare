@@ -334,6 +334,30 @@ result. Weapons expose a critical-damage roll that doubles all attack damage
 dice, keeps the flat modifier once and then applies matching ability modifiers
 such as Savage Attacks' extra melee weapon die.
 
+Class, race and feat items may also contribute `derived_effects`. This is the
+single source contract for calculated AC formulas and bonuses, speed bonuses,
+skill/save proficiencies, check/save/weapon-attack bonuses, roll modes and
+critical thresholds. Every row keeps its handbook feature as the visible source,
+is level-gated by the owning class, may depend on a stored feature choice and is
+removed automatically with that feature. The sheet does not copy these values
+into hidden character flags. Scaling rows that share a `group` use the highest
+currently unlocked value rather than stacking every historical tier.
+
+Unarmored Defense, Draconic Resilience, Fast and Unarmored Movement, Expertise,
+Jack of All Trades, Diamond Soul, Slippery Mind, Aura of Protection, the Defense
+and Archery fighting styles, and Champion critical thresholds use this contract.
+The same calculations are used by the interactive and print sheets. Contextual
+or activated effects such as Rage and Reckless Attack remain visible in the
+read-only special-properties block until an explicit active mode is selected;
+they are never applied permanently merely because the feature is owned.
+
+Fixed class-feature spell selections use the existing ability-choice grant
+contract. Druid cantrip, Magical Secrets, Spell Mastery and Signature Spells are
+therefore selected when the feature is gained and appear as externally granted
+read-only spells with their casting ability and source. Item filters traverse
+object arrays in the shared add-from-handbook dialog as well as during creation
+and level-up.
+
 Feat ability-score bonuses are represented as readonly named bonus rows. The
 creation assembler, level-up flow and manual feat editor use the same rule: add
 the row when the feat is gained and remove its source-keyed row when that feat

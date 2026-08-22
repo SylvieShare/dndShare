@@ -25,6 +25,7 @@
         <span class="se-prof-label">Владение спасброском</span>
         <span class="se-prof-badge">{{ saveUp ? 'Есть' : 'Нет' }}</span>
       </button>
+      <div v-if="saveSource" class="se-readonly-source">Источник: {{ saveSource }}</div>
       <BonusList :bonuses="saveBonuses || []" @update:bonuses="$emit('update-save-bonuses', $event)" />
       <RollModeControl
         :model-value="saveRollMode"
@@ -95,6 +96,7 @@ const props = defineProps({
   title: { type: String, default: '' },
   baseData: { type: Object, default: () => ({ base: 10, bonuses: [] }) },
   saveUp: { type: Boolean, default: false },
+  saveSource: { type: String, default: '' },
   saveBonuses: { type: Array, default: () => [] },
   skills: { type: Array, default: () => [] },
   allowAddSkills: { type: Boolean, default: false },
@@ -161,6 +163,7 @@ function onAddSubmit() {
 .se-prof-on .se-prof-label { color: var(--text-1); }
 .se-prof-badge { font-size: 11px; font-weight: 700; color: var(--text-muted); letter-spacing: 0.04em; }
 .se-prof-on .se-prof-badge { color: var(--accent); }
+.se-readonly-source { padding: 7px 9px; border: 1px solid var(--border); border-radius: 8px; color: var(--text-muted); font-size: 10px; }
 
 /* ── Skill rows ── */
 .se-skill-row {

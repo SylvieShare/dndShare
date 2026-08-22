@@ -186,7 +186,7 @@ const {
 
 const {
   magicBonus,
-  attackBonus,
+  attackBonus: baseAttackBonus,
   damageBonus,
   formatBonus,
   damageExpression,
@@ -210,6 +210,19 @@ const {
   isProficient: isWeaponProficient,
 })
 
+function weaponEffectContext(entry) {
+  const base = item(entry)
+  return {
+    kind: 'attack',
+    abilitySuggestId: weaponAbilitySuggestId(entry, base, propertyItems(entry), statsVar.value),
+    weaponKind: base?.data?.is_long_range ? 'ranged' : 'melee',
+  }
+}
+
+function attackBonus(entry) {
+  return baseAttackBonus(entry) + (charCtx.characterDerivedEffects?.bonus?.('weapon_attack_bonus', weaponEffectContext(entry))?.total || 0)
+}
+
 const modalItem   = computed(() => modalItemId.value != null ? itemMap.value[modalItemId.value] || null : null)
 const variant     = computed(() => props.block.props?.variant || props.block.content?.variant || 'list')
 const canAddItems = computed(() => !!charCtx.ownerMode)
@@ -220,10 +233,12 @@ const dice = useDiceStore()
 
 function rollAttack(entry) {
   const bonus = attackBonus(entry)
-  const abilityId = weaponAbilitySuggestId(entry, item(entry), propertyItems(entry), statsVar.value)
-  const mode = armorAttackWarning.value && ['1', '2'].includes(String(abilityId)) ? 'disadvantage' : 'normal'
+  const context = weaponEffectContext(entry)
+  const resolved = charCtx.characterRolls?.resolve?.('auto', context)
+  const mode = resolved?.mode || (armorAttackWarning.value && ['1', '2'].includes(String(context.abilitySuggestId)) ? 'disadvantage' : 'normal')
   dice.rollD20(`Атака: ${itemTitle(entry)}`, bonus, mode, {
     crit_mode: true,
+    critical_threshold: charCtx.characterDerivedEffects?.criticalThreshold?.(context) || 20,
     roll_triggers: charCtx.characterCombatEffects?.rollTriggers?.('attack') || [],
   })
 }

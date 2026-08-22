@@ -195,6 +195,13 @@ import { collectCharacterDefenses, DEFENSE_KINDS } from '@/features/character-ed
 import { hpMaximum } from '@/features/character-editor/blocks/dnd/lib/hp'
 import { collectCharacterHpBonuses } from '@/features/character-editor/lib/characterHitPoints'
 import { normalizeHpMaximum } from '@/features/character-editor/blocks/dnd/lib/hp'
+import {
+  collectCharacterDerivedEffects,
+  derivedArmorRules,
+  derivedNumericBonus,
+  derivedProficiency,
+  derivedSpeedBonuses,
+} from '@/features/character-editor/lib/characterDerivedEffects'
 
 const PrintField = defineComponent({
   props: { label: String, value: String },
@@ -237,9 +244,12 @@ const avatar = computed(() => values.value.ava?.url || '')
 function abilityScore(key) { return resolveNumValue(values.value[key]?.value) || 10 }
 const storedProf = computed(() => values.value.prof_bonus || {})
 const profBonus = computed(() => (storedProf.value.auto === false ? Number(storedProf.value.v) || 0 : proficiencyBonus(level.value)) + sumBonuses(storedProf.value.bonuses))
+const printDerivedEffects = computed(() => collectCharacterDerivedEffects(values.value, new Map(Object.entries(catalog.value))))
 const abilities = computed(() => STAT_KEYS.map(key => {
-  const score = abilityScore(key); const mod = abilityModifier(score); const saveProficient = !!values.value[key]?.save_up
-  return { key, score, mod, short: STAT_SHORT[key], full: STAT_FULL[key], saveProficient, save: mod + (saveProficient ? profBonus.value : 0) + sumBonuses(values.value[key]?.save_bonuses) }
+  const score = abilityScore(key); const mod = abilityModifier(score); const abilityId = STAT_KEYS.indexOf(key) + 1
+  const saveProficient = !!values.value[key]?.save_up || derivedProficiency(printDerivedEffects.value, 'save_proficiency', { kind: 'saving_throw', abilitySuggestId: abilityId }).rank > 0
+  const sourceBonus = derivedNumericBonus(printDerivedEffects.value, 'save_bonus', values.value, { kind: 'saving_throw', abilitySuggestId: abilityId }).total
+  return { key, score, mod, short: STAT_SHORT[key], full: STAT_FULL[key], saveProficient, save: mod + (saveProficient ? profBonus.value : 0) + sumBonuses(values.value[key]?.save_bonuses) + sourceBonus }
 }))
 
 const hp = computed(() => {
@@ -249,19 +259,24 @@ const hp = computed(() => {
   const effective = { ...raw, max: { ...maximum, bonuses: [...maximum.bonuses, ...contributed] } }
   return { ...effective, max: hpMaximum(effective) }
 })
-const printArmor = computed(() => deriveEquippedArmor(values.value, catalog.value, typeId => suggest.items(typeId)))
+const printArmor = computed(() => deriveEquippedArmor(values.value, catalog.value, typeId => suggest.items(typeId), derivedArmorRules(printDerivedEffects.value)))
 const armorClass = computed(() => printArmor.value.total)
 const initiative = computed(() => {
   const data = values.value.initiative || {}
-  return (Number(data.base) || 0) + sumBonuses(data.bonuses) + (data.use_dex === false ? 0 : abilityModifier(abilityScore('DEX')))
+  const sourceBonus = derivedNumericBonus(printDerivedEffects.value, 'check_bonus', values.value, { kind: 'ability_check', abilitySuggestId: 2, proficient: false }).total
+  return (Number(data.base) || 0) + sumBonuses(data.bonuses) + (data.use_dex === false ? 0 : abilityModifier(abilityScore('DEX'))) + sourceBonus
 })
-const speedLabel = computed(() => `${(Number(values.value.speed?.base) || 0) + sumBonuses(values.value.speed?.bonuses) - printArmor.value.speedPenalty} фт.`)
+const speedLabel = computed(() => {
+  const source = derivedSpeedBonuses(printDerivedEffects.value, { kind: 'speed', bodyArmor: !!printArmor.value.body, heavyArmor: printArmor.value.body?.item?.data?.category === 'heavy', shield: !!printArmor.value.shield }).total
+  return `${(Number(values.value.speed?.base) || 0) + sumBonuses(values.value.speed?.bonuses) + source - printArmor.value.speedPenalty} фт.`
+})
 const hitDice = computed(() => formatHitDice(normalizeHitDice(hp.value)))
 
 const SKILL_STAT = { 1: 'STR', 2: 'DEX', 3: 'DEX', 4: 'DEX', 5: 'INT', 6: 'INT', 7: 'INT', 8: 'INT', 9: 'INT', 10: 'WIS', 11: 'WIS', 12: 'WIS', 13: 'WIS', 14: 'WIS', 15: 'CHA', 16: 'CHA', 17: 'CHA', 18: 'CHA' }
 const skills = computed(() => Object.entries(SKILL_STAT).map(([id, stat]) => {
-  const stored = values.value[stat]?.skills?.[id] || {}; const rank = Number(stored.up) || 0
-  return { id, name: stored.override_title || suggest.items(15).find(item => String(item.id) === id)?.value || '', rank, statShort: STAT_SHORT[stat], bonus: abilityModifier(abilityScore(stat)) + rank * profBonus.value + sumBonuses(stored.bonuses) }
+  const stored = values.value[stat]?.skills?.[id] || {}; const rank = Math.max(Number(stored.up) || 0, derivedProficiency(printDerivedEffects.value, 'skill_proficiency', { kind: 'skill_check', skillId: id }).rank)
+  const sourceBonus = derivedNumericBonus(printDerivedEffects.value, 'skill_bonus', values.value, { kind: 'skill_check', skillId: id, abilitySuggestId: STAT_KEYS.indexOf(stat) + 1, proficient: rank > 0 }).total
+  return { id, name: stored.override_title || suggest.items(15).find(item => String(item.id) === id)?.value || '', rank, statShort: STAT_SHORT[stat], bonus: abilityModifier(abilityScore(stat)) + rank * profBonus.value + sumBonuses(stored.bonuses) + sourceBonus }
 }))
 const passivePerception = computed(() => 10 + (skills.value.find(skill => skill.id === '10')?.bonus || 0))
 
@@ -299,7 +314,8 @@ function attackParts(entry, item) {
 }
 const attacks = computed(() => (Array.isArray(values.value.weapon) ? values.value.weapon : []).slice(0, 8).map((entry, index) => {
   const item = itemById(entry.item_id); const statMod = weaponStatMod(entry, item)
-  return { key: `${entry.item_id}-${index}`, name: item?.name || `Оружие #${entry.item_id || '—'}`, bonus: statMod + (Number(entry.params?.magic_bonus) || 0) + (entry.proficient ? profBonus.value : 0), damage: attackParts(entry, item), properties: weaponProperties(item), description: entry.desc || '' }
+  const sourceBonus = derivedNumericBonus(printDerivedEffects.value, 'weapon_attack_bonus', values.value, { kind: 'attack', weaponKind: item?.data?.is_long_range ? 'ranged' : 'melee' }).total
+  return { key: `${entry.item_id}-${index}`, name: item?.name || `Оружие #${entry.item_id || '—'}`, bonus: statMod + (Number(entry.params?.magic_bonus) || 0) + (entry.proficient ? profBonus.value : 0) + sourceBonus, damage: attackParts(entry, item), properties: weaponProperties(item), description: entry.desc || '' }
 }))
 const attackBlankRows = computed(() => Math.max(0, 5 - attacks.value.length))
 const proficiencyGroups = computed(() => Object.entries(values.value.proficiencies || {}).map(([name, value]) => ({ name, value: Array.isArray(value) ? value.map(text).filter(Boolean).join(', ') : text(value) })).filter(group => group.value))

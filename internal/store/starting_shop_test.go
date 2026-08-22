@@ -9,22 +9,23 @@ import (
 )
 
 func TestToolProficiencyCatalogIsEmbeddedAfterItemTypeHierarchy(t *testing.T) {
-	if len(schemaParts) < 13 {
+	if len(schemaParts) < 14 {
 		t.Fatal("schemaParts must contain the final item catalogue sections")
 	}
-	hierarchy := schemaParts[len(schemaParts)-13]
-	tools := schemaParts[len(schemaParts)-12]
-	resources := schemaParts[len(schemaParts)-11]
-	classTools := schemaParts[len(schemaParts)-10]
-	resourceFixes := schemaParts[len(schemaParts)-9]
-	resourceAudit := schemaParts[len(schemaParts)-8]
-	resourceColors := schemaParts[len(schemaParts)-7]
-	spellGrants := schemaParts[len(schemaParts)-6]
-	equippedArmor := schemaParts[len(schemaParts)-5]
-	defenses := schemaParts[len(schemaParts)-4]
-	castLevel := schemaParts[len(schemaParts)-3]
-	choices := schemaParts[len(schemaParts)-2]
-	racialAutomation := schemaParts[len(schemaParts)-1]
+	hierarchy := schemaParts[len(schemaParts)-14]
+	tools := schemaParts[len(schemaParts)-13]
+	resources := schemaParts[len(schemaParts)-12]
+	classTools := schemaParts[len(schemaParts)-11]
+	resourceFixes := schemaParts[len(schemaParts)-10]
+	resourceAudit := schemaParts[len(schemaParts)-9]
+	resourceColors := schemaParts[len(schemaParts)-8]
+	spellGrants := schemaParts[len(schemaParts)-7]
+	equippedArmor := schemaParts[len(schemaParts)-6]
+	defenses := schemaParts[len(schemaParts)-5]
+	castLevel := schemaParts[len(schemaParts)-4]
+	choices := schemaParts[len(schemaParts)-3]
+	racialAutomation := schemaParts[len(schemaParts)-2]
+	classAutomation := schemaParts[len(schemaParts)-1]
 	if hierarchy.name != "item-type-hierarchy" || hierarchy.sql == "" || hierarchy.sql != schemaItemTypeHierarchySQL {
 		t.Fatal("item-type-hierarchy schema must be embedded after the equipment catalogues")
 	}
@@ -63,6 +64,9 @@ func TestToolProficiencyCatalogIsEmbeddedAfterItemTypeHierarchy(t *testing.T) {
 	}
 	if racialAutomation.name != "racial-automation" || racialAutomation.sql == "" || racialAutomation.sql != schemaRacialAutomationSQL {
 		t.Fatal("racial automation must be embedded after the shared ability choice contract")
+	}
+	if classAutomation.name != "class-ability-automation" || classAutomation.sql == "" || classAutomation.sql != schemaClassAbilityAutomationSQL {
+		t.Fatal("class automation must be embedded after shared racial contracts")
 	}
 }
 
@@ -161,7 +165,7 @@ func TestAbilityResourceSchemasExposeModifierFormula(t *testing.T) {
 			"resource_color",
 			"max_use_stat_multiplier", "max_use_bonus", "max_use_level_multiplier",
 			"max_use_scaling", "rollback_short_rest_level", "short_rest_recovery",
-			"short_rest_recovery_level", "use_resources", "granted_spells",
+			"short_rest_recovery_level", "use_resources", "granted_spells", "derived_effects",
 		} {
 			if byKey[key] == nil {
 				t.Fatalf("ability schema %s must expose %s", typeID, key)
@@ -171,6 +175,20 @@ func TestAbilityResourceSchemasExposeModifierFormula(t *testing.T) {
 	for _, fragment := range []string{"max_use_stat", "max_use_min", "item_type.id IN (3, 4, 7)"} {
 		if !strings.Contains(schemaAbilityResourcesSQL, fragment) {
 			t.Fatalf("ability resource startup schema must contain %q", fragment)
+		}
+	}
+}
+
+func TestClassAbilityAutomationUsesSharedSourceContracts(t *testing.T) {
+	for _, fragment := range []string{
+		"derived_effects", "armor_formula", "skill_proficiency", "critical_threshold",
+		"Драконья стойкость", "Защита без доспехов", "Жестокий критический удар",
+		"Мастер на все руки", "Аура защиты", "Алмазная душа",
+		"Дополнительный заговор", "Тайны магии", "Знаток заклинаний", "Подписные заклинания",
+		"Защита мыслей", "Химическое мастерство", "passive_effects",
+	} {
+		if !strings.Contains(schemaClassAbilityAutomationSQL, fragment) {
+			t.Fatalf("class ability automation must contain %q", fragment)
 		}
 	}
 }
