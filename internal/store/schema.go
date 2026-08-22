@@ -154,6 +154,9 @@ var schemaFeatAutomationSQL string
 //go:embed schema/45_rogue_automation.sql
 var schemaRogueAutomationSQL string
 
+//go:embed schema/46_rogue_catalog_fixes.sql
+var schemaRogueCatalogFixesSQL string
+
 var schemaParts = []struct {
 	name string
 	sql  string
@@ -205,6 +208,7 @@ var schemaParts = []struct {
 	{"class-ability-automation", schemaClassAbilityAutomationSQL},
 	{"feat-automation", schemaFeatAutomationSQL},
 	{"rogue-automation", schemaRogueAutomationSQL},
+	{"rogue-catalog-fixes", schemaRogueCatalogFixesSQL},
 }
 
 func applySchema(ctx context.Context, pool *pgxpool.Pool) error {

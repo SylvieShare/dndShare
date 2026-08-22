@@ -9,25 +9,26 @@ import (
 )
 
 func TestToolProficiencyCatalogIsEmbeddedAfterItemTypeHierarchy(t *testing.T) {
-	if len(schemaParts) < 14 {
+	if len(schemaParts) < 17 {
 		t.Fatal("schemaParts must contain the final item catalogue sections")
 	}
-	hierarchy := schemaParts[len(schemaParts)-16]
-	tools := schemaParts[len(schemaParts)-15]
-	resources := schemaParts[len(schemaParts)-14]
-	classTools := schemaParts[len(schemaParts)-13]
-	resourceFixes := schemaParts[len(schemaParts)-12]
-	resourceAudit := schemaParts[len(schemaParts)-11]
-	resourceColors := schemaParts[len(schemaParts)-10]
-	spellGrants := schemaParts[len(schemaParts)-9]
-	equippedArmor := schemaParts[len(schemaParts)-8]
-	defenses := schemaParts[len(schemaParts)-7]
-	castLevel := schemaParts[len(schemaParts)-6]
-	choices := schemaParts[len(schemaParts)-5]
-	racialAutomation := schemaParts[len(schemaParts)-4]
-	classAutomation := schemaParts[len(schemaParts)-3]
-	featAutomation := schemaParts[len(schemaParts)-2]
-	rogueAutomation := schemaParts[len(schemaParts)-1]
+	hierarchy := schemaParts[len(schemaParts)-17]
+	tools := schemaParts[len(schemaParts)-16]
+	resources := schemaParts[len(schemaParts)-15]
+	classTools := schemaParts[len(schemaParts)-14]
+	resourceFixes := schemaParts[len(schemaParts)-13]
+	resourceAudit := schemaParts[len(schemaParts)-12]
+	resourceColors := schemaParts[len(schemaParts)-11]
+	spellGrants := schemaParts[len(schemaParts)-10]
+	equippedArmor := schemaParts[len(schemaParts)-9]
+	defenses := schemaParts[len(schemaParts)-8]
+	castLevel := schemaParts[len(schemaParts)-7]
+	choices := schemaParts[len(schemaParts)-6]
+	racialAutomation := schemaParts[len(schemaParts)-5]
+	classAutomation := schemaParts[len(schemaParts)-4]
+	featAutomation := schemaParts[len(schemaParts)-3]
+	rogueAutomation := schemaParts[len(schemaParts)-2]
+	rogueCatalogFixes := schemaParts[len(schemaParts)-1]
 	if hierarchy.name != "item-type-hierarchy" || hierarchy.sql == "" || hierarchy.sql != schemaItemTypeHierarchySQL {
 		t.Fatal("item-type-hierarchy schema must be embedded after the equipment catalogues")
 	}
@@ -75,6 +76,24 @@ func TestToolProficiencyCatalogIsEmbeddedAfterItemTypeHierarchy(t *testing.T) {
 	}
 	if rogueAutomation.name != "rogue-automation" || rogueAutomation.sql == "" || rogueAutomation.sql != schemaRogueAutomationSQL {
 		t.Fatal("rogue automation must be embedded after the shared automation contracts")
+	}
+	if rogueCatalogFixes.name != "rogue-catalog-fixes" || rogueCatalogFixes.sql == "" || rogueCatalogFixes.sql != schemaRogueCatalogFixesSQL {
+		t.Fatal("rogue catalogue fixes must be embedded after rogue automation")
+	}
+}
+
+func TestLegacyAssassinateCopyIsRedirectedToSystemItem(t *testing.T) {
+	for _, fragment := range []string{
+		"SET name = 'Ликвидация'",
+		"lower('Assassinate')",
+		"duplicate.id = 4012",
+		"entry.value ->> 'id' = target.old_id::text",
+		"version = character.version + 1",
+		"DELETE FROM dndshare.item duplicate",
+	} {
+		if !strings.Contains(schemaRogueCatalogFixesSQL, fragment) {
+			t.Fatalf("rogue catalogue fixes must contain %q", fragment)
+		}
 	}
 }
 
