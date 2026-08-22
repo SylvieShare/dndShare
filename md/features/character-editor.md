@@ -434,6 +434,13 @@ click on a weapon tile opens its action menu instead of navigating directly
 from the name. Attack, damage, critical damage and ability-contributed damage
 rolls live only in that menu; the displayed attack and damage values are not
 independent click targets. Logical groups use the shared action-menu separator.
+Attack, damage, critical damage and feature damage actions use distinct Lucide
+icons instead of the generic ellipsis. The source tile stays highlighted while
+its menu is open; spell, inventory and potion action menus follow the same
+interaction rule. Below the weapon list, two always-available preset tiles expose
+Strength-based unarmed and improvised-weapon attack, damage and critical rolls.
+Unarmed attacks include proficiency and deal `max(0, 1 + Strength modifier)`;
+the generic improvised weapon is not proficient and deals `1d4 + Strength`.
 The remaining menu contains handbook description, edit, move-to-inventory and
 delete actions according to the viewer's permissions and linked item state.
 Every owned inventory item, potion and tool uses `item_id`, an explicit `count` and a
@@ -444,6 +451,16 @@ and silk rope stores `length_ft` on each reference; its handbook row stores only
 measurement kind plus unit cost/weight. Displayed cost and weight scale with the
 stored length, and stacks merge only when both `item_id` and canonical `params`
 match.
+
+`sheet_widgets` is an ability-owned contract for prominent class-mechanic cards
+in the sheet side column and mobile skills tab. A widget may display a fixed or
+progression-derived metric, own a persisted toggle, bind to the ability resource,
+or add a note to another ability's panel through a shared key. The runtime does
+not check class, feature name or item id. Sneak Attack publishes its live dice as
+a metric; Rage publishes its current damage progression and an active toggle.
+Entering Rage consumes one available use, while leaving it active only changes
+the persisted mode state. Subclass features can contribute `note` widgets with
+the same key to extend that panel.
 The same picker is used for feats and abilities and opens above the active morph
 editor, so its filters and item selection are never hidden behind the morph.
 The list shows count as a badge and has no inline increment/decrement controls.

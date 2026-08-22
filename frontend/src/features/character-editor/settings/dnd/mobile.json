@@ -119,6 +119,10 @@
         },
         "children": [
           {
+            "ref": "feature_widgets",
+            "kind": "block"
+          },
+          {
             "ref": "resources",
             "kind": "block"
           },

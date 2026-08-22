@@ -47,6 +47,18 @@ body .rc.dnd-rich-content {
   font-optical-sizing: auto;
 }
 
+/* Action-menu triggers keep their source visible while the teleported menu is open. */
+.action-menu-source {
+  transition: border-color 140ms ease, background-color 140ms ease, box-shadow 140ms ease, transform 140ms ease;
+}
+
+.action-menu-source--open {
+  border-color: color-mix(in srgb, var(--accent-soft) 58%, var(--border)) !important;
+  background-color: color-mix(in srgb, var(--accent) 9%, var(--surface)) !important;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 16%, transparent), 0 8px 24px color-mix(in srgb, var(--bg) 45%, transparent);
+  transform: translateY(-1px);
+}
+
 @media (max-width: 640px) {
   :root {
     --header-h: 50px;

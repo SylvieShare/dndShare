@@ -31,10 +31,11 @@ describe('D&D mobile sheet schema', () => {
     expect(diary?.content?.children?.map(block => block.ref)).toEqual(['quests', 'diary', 'notes'])
   })
 
-  it('shows resources first on the mobile skills tab', () => {
+  it('shows ability widgets before resources on the mobile skills tab', () => {
     const skills = schema.layouts.mobile.tabs.find(tab => tab.title === 'Умения')
-    const [resources, defenses, proficiencies, features] = skills?.content?.children || []
+    const [featureWidgets, resources, defenses, proficiencies, features] = skills?.content?.children || []
 
+    expect(featureWidgets?.ref).toBe('feature_widgets')
     expect([resources?.ref, defenses?.ref, proficiencies?.ref]).toEqual(['resources', 'defenses', 'proficiencies'])
     expect(schema.blocks.passive_effects).toBeUndefined()
     expect(features?.props?.tile).toBe(true)

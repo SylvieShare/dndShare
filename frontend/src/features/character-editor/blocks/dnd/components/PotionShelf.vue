@@ -9,8 +9,12 @@
     <div class="ps-row">
       <div v-for="p in potions" :key="p.uid" class="ps-vial">
         <RowActionMenu :title="`Действия: ${p.name}`">
-          <template #trigger>
-            <button class="ps-glasswrap ps-clickable" :title="`Действия: ${p.name}`">
+          <template #trigger="{ open: menuOpen }">
+            <button
+              class="ps-glasswrap ps-clickable action-menu-source"
+              :class="{ 'action-menu-source--open': menuOpen }"
+              :title="`Действия: ${p.name}`"
+            >
               <PotionVial :ref="el => setVial(p.uid, el)" :color="p.color" :rarity="p.rarity" size="md" />
               <span v-if="p.count > 1" class="ps-badge">×{{ p.count }}</span>
             </button>

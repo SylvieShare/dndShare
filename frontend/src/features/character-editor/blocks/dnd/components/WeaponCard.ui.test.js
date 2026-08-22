@@ -16,6 +16,12 @@ describe('weapon card actions', () => {
     expect(source).toContain('>Редактировать</RowActionItem>')
     expect(source).toContain('>Переместить в вещи</RowActionItem>')
     expect(source).toContain('>Удалить</RowActionItem>')
+    expect(source).toContain('action="attack"')
+    expect(source).toContain('action="damage"')
+    expect(source).toContain('action="critical"')
+    expect(source).toContain('action="feature-damage"')
+    expect(source).toContain('action="feature-critical"')
+    expect(source).toContain("'action-menu-source--open': menuOpen")
   })
 
   it('keeps weapon values display-only outside the action menu', () => {

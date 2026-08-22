@@ -1,14 +1,15 @@
 <template>
   <RowActionMenu block :disabled="draggedThisGesture">
-    <template #trigger>
+    <template #trigger="{ open: menuOpen }">
       <div
-        class="spell-row"
+        class="spell-row action-menu-source"
         :class="{
           'spell-row-clickable': !!entry.item,
           'spell-row-draggable': ctx.charCtx.ownerMode && !isReadonlyGrant,
           'spell-row-prepared': isPrepared,
           'spell-row-permanent': isAlwaysPrepared,
           'sortable-placeholder': ctx.sortable.isSource(entry),
+          'action-menu-source--open': menuOpen,
         }"
         :data-sortable-key="entry.ref.id"
         @pointerdown="onRowDown"

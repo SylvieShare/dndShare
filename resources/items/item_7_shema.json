@@ -472,6 +472,23 @@
     ]
   },
   {
+    "name": "Виджеты листа", "key": "sheet_widgets", "type": "object_array",
+    "fields": [
+      { "name": "Ключ общей панели", "key": "key", "type": "text" },
+      { "name": "Название", "key": "title", "type": "text" },
+      { "name": "Вид", "key": "kind", "type": "select", "default": "metric", "options": [{ "value": "metric", "label": "Показатель" }, { "value": "toggle", "label": "Переключатель" }, { "value": "note", "label": "Дополнение панели" }] },
+      { "name": "Источник значения", "key": "value_source", "type": "select", "options": [{ "value": "weapon_damage", "label": "Кости дополнительного урона" }, { "value": "scaling", "label": "Текущая строка прогрессии" }] },
+      { "name": "Постоянное значение", "key": "value", "type": "text" },
+      { "name": "Пояснение", "key": "description", "type": "text" },
+      { "name": "Цвет", "key": "tone", "type": "select", "default": "accent", "options": [{ "value": "accent", "label": "Акцент" }, { "value": "danger", "label": "Красный" }, { "value": "warning", "label": "Жёлтый" }, { "value": "success", "label": "Зелёный" }, { "value": "info", "label": "Синий" }] },
+      { "name": "Ключ ресурса", "key": "resource_key", "type": "text" },
+      { "name": "Подпись включения", "key": "inactive_label", "type": "text" },
+      { "name": "Подпись активности", "key": "active_label", "type": "text" },
+      { "name": "Порядок", "key": "priority", "type": "int" },
+      { "name": "С уровня", "key": "level", "type": "int", "default": 1 }
+    ]
+  },
+  {
     "name": "Защиты по выбору", "key": "choice_defenses", "type": "object_array",
     "fields": [{ "name": "ID способности с выбором", "key": "source_item_id", "type": "int" }, { "name": "Ключ выбора", "key": "choice_key", "type": "text" }, { "name": "Соответствия", "key": "options", "type": "object_array", "fields": [{ "name": "Значение выбора", "key": "value", "type": "text" }, { "name": "Тип урона", "key": "damage_type", "type": "suggest", "suggest_id": 12 }, { "name": "Вид защиты", "key": "kind", "type": "select", "default": "resistance", "options": [{ "value": "resistance", "label": "Сопротивление" }, { "value": "immunity", "label": "Невосприимчивость" }, { "value": "vulnerability", "label": "Уязвимость" }] }] }]
   },

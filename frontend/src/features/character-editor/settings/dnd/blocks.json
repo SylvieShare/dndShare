@@ -317,6 +317,11 @@
       "max_in_row": 10
     }
   },
+  "feature_widgets": {
+    "id": "feature_widgets",
+    "type": "DND_FEATURE_WIDGETS",
+    "content": {}
+  },
   "defenses": {
     "id": "defenses",
     "type": "DND_DEFENSES",

@@ -536,6 +536,10 @@
                         "kind": "block"
                       },
                       {
+                        "ref": "feature_widgets",
+                        "kind": "block"
+                      },
+                      {
                         "ref": "resources",
                         "kind": "block"
                       },

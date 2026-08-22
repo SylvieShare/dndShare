@@ -4,11 +4,11 @@
     :title="`Действия: ${ctx.itemTitle(entry)}`"
     :disabled="draggedThisGesture || (!ctx.charCtx.ownerMode && !ctx.item(entry))"
   >
-    <template #trigger>
+    <template #trigger="{ open: menuOpen }">
       <BaseTile
         ref="cardEl"
-        class="w-card"
-        :class="{ 'sortable-placeholder': ctx.sortable.isSource(entry) }"
+        class="w-card action-menu-source"
+        :class="{ 'sortable-placeholder': ctx.sortable.isSource(entry), 'action-menu-source--open': menuOpen }"
         :data-sortable-key="entry._key"
         @pointerdown="draggedThisGesture = false"
       >
@@ -44,23 +44,28 @@
     <template #default="{ close: closeMenu }">
       <RowActionItem
         v-if="ctx.item(entry)"
+        action="attack"
         @click="rollAttack(closeMenu)"
       >Бросок на атаку</RowActionItem>
       <RowActionItem
         v-if="hasDamage"
+        action="damage"
         @click="rollDamage(closeMenu)"
       >Бросок на урон</RowActionItem>
       <RowActionItem
         v-if="hasTwoHandedDamage"
+        action="damage"
         @click="rollDamageTwoHanded(closeMenu)"
       >Бросок на урон двумя руками</RowActionItem>
       <RowActionItem
         v-if="hasDamage"
+        action="critical"
         tone="warning"
         @click="rollCritical(closeMenu)"
       >Бросок на критический урон</RowActionItem>
       <RowActionItem
         v-if="hasTwoHandedDamage"
+        action="critical"
         tone="warning"
         @click="rollCriticalTwoHanded(closeMenu)"
       >Бросок на критический урон двумя руками</RowActionItem>
@@ -69,10 +74,12 @@
         <RowActionSeparator />
         <template v-for="action in weaponDamageActions" :key="action.key">
           <RowActionItem
+            action="feature-damage"
             tone="accent"
             @click="rollWeaponDamageAction(closeMenu, action, false)"
           >{{ action.menu_label || `Бросок: ${action.label || action.source_label}` }}</RowActionItem>
           <RowActionItem
+            action="feature-critical"
             tone="warning"
             @click="rollWeaponDamageAction(closeMenu, action, true)"
           >{{ action.critical_menu_label || `Критический бросок: ${action.label || action.source_label}` }}</RowActionItem>

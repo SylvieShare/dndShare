@@ -11,7 +11,7 @@ describe('RowActionItem', () => {
   })
 
   it('provides icons for the standard action vocabulary', () => {
-    for (const action of ['use', 'replenish', 'view', 'delete', 'edit', 'create', 'copy', 'copy-link', 'kick', 'revive']) {
+    for (const action of ['use', 'replenish', 'view', 'delete', 'edit', 'create', 'copy', 'copy-link', 'kick', 'revive', 'attack', 'damage', 'critical', 'feature-damage', 'feature-critical']) {
       expect(source).toMatch(new RegExp(`['"]?${action}['"]?:`))
     }
   })

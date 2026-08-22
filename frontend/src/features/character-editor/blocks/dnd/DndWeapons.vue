@@ -51,6 +51,29 @@
       </tbody>
     </table>
 
+    <div class="w-preset-grid" aria-label="Базовые атаки">
+      <PresetAttackCard
+        title="Рукопашный удар"
+        subtitle="Владение · Сила · дробящий"
+        :attack="formatBonus(unarmedAttackBonus)"
+        :damage-label="unarmedDamageLabel"
+        :icon="HandFist"
+        @attack="rollPresetAttack('unarmed')"
+        @damage="rollPresetDamage('unarmed')"
+        @critical="rollPresetDamage('unarmed', true)"
+      />
+      <PresetAttackCard
+        title="Импровизированное оружие"
+        subtitle="Без владения · Сила · 1к4"
+        :attack="formatBonus(improvisedAttackBonus)"
+        :damage-label="improvisedDamageLabel"
+        :icon="Hammer"
+        @attack="rollPresetAttack('improvised')"
+        @damage="rollPresetDamage('improvised')"
+        @critical="rollPresetDamage('improvised', true)"
+      />
+    </div>
+
     <div v-if="canAddItems" class="w-add">
       <button class="w-picker-btn" @click="pickerOpen = true">+ Добавить оружие...</button>
     </div>
@@ -89,11 +112,13 @@ function nextKey() { return ++keyCounter }
 
 <script setup>
 import { computed, inject, onMounted, provide, reactive, ref, watch } from 'vue'
+import { Hammer, HandFist } from '@lucide/vue'
 
 import { BaseTile } from '@sylvieshare/share-ui'
 import { useItemTypesStore } from '@/stores/itemTypes'
 import WeaponCard from '@/features/character-editor/blocks/dnd/components/WeaponCard.vue'
 import WeaponTableRow from '@/features/character-editor/blocks/dnd/components/WeaponTableRow.vue'
+import PresetAttackCard from '@/features/character-editor/blocks/dnd/components/PresetAttackCard.vue'
 import { useWeaponCalc } from '@/features/character-editor/blocks/dnd/composables/useWeaponCalc'
 import { useWeaponItems } from '@/features/character-editor/blocks/dnd/composables/useWeaponItems'
 import {
@@ -229,6 +254,12 @@ const variant     = computed(() => props.block.props?.variant || props.block.con
 const canAddItems = computed(() => !!charCtx.ownerMode)
 const armorState = computed(() => charCtx.characterArmor?.state || {})
 const armorAttackWarning = computed(() => !!armorState.value.strengthDexDisadvantage)
+const strengthModifier = computed(() => Number(statsVar.value['1']) || 0)
+const unarmedAttackBonus = computed(() => strengthModifier.value + profBonus.value)
+const improvisedAttackBonus = computed(() => strengthModifier.value)
+const unarmedDamage = computed(() => Math.max(0, 1 + strengthModifier.value))
+const unarmedDamageLabel = computed(() => `${unarmedDamage.value} дробящий`)
+const improvisedDamageLabel = computed(() => `1к4 ${formatBonus(strengthModifier.value)} дробящий`)
 
 const dice = useDiceStore()
 
@@ -242,6 +273,38 @@ function rollAttack(entry) {
     critical_threshold: charCtx.characterDerivedEffects?.criticalThreshold?.(context) || 20,
     roll_triggers: charCtx.characterCombatEffects?.rollTriggers?.('attack') || [],
   })
+}
+
+function presetAttackDefinition(kind) {
+  if (kind === 'unarmed') {
+    return { title: 'Рукопашный удар', attackBonus: unarmedAttackBonus.value }
+  }
+  return { title: 'Импровизированное оружие', attackBonus: improvisedAttackBonus.value }
+}
+
+function rollPresetAttack(kind) {
+  const preset = presetAttackDefinition(kind)
+  const context = { kind: 'attack', abilitySuggestId: 1, weaponKind: 'melee' }
+  const resolved = charCtx.characterRolls?.resolve?.('auto', context)
+  const mode = resolved?.mode || (armorAttackWarning.value ? 'disadvantage' : 'normal')
+  dice.rollD20(`Атака: ${preset.title}`, preset.attackBonus, mode, {
+    crit_mode: true,
+    critical_threshold: charCtx.characterDerivedEffects?.criticalThreshold?.(context) || 20,
+    roll_triggers: charCtx.characterCombatEffects?.rollTriggers?.('attack') || [],
+  })
+}
+
+function presetDamageExpression(kind, critical) {
+  if (kind === 'unarmed') return `${unarmedDamage.value}{Дробящий}`
+  const diceCount = critical ? 2 : 1
+  const modifier = strengthModifier.value
+  const suffix = modifier === 0 ? '' : `${modifier > 0 ? '+' : ''}${modifier}{Дробящий}`
+  return `${diceCount}d4{Дробящий}${suffix}`
+}
+
+function rollPresetDamage(kind, critical = false) {
+  const preset = presetAttackDefinition(kind)
+  dice.roll(`${critical ? 'Критический урон' : 'Урон'}: ${preset.title}`, presetDamageExpression(kind, critical))
 }
 
 function rollDamage(entry) {
@@ -507,6 +570,13 @@ onMounted(() => {
   flex-direction: column;
   gap: 12px;
   min-width: 0;
+}
+
+.w-preset-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 12px;
 }
 
 .w-table {

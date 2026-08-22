@@ -112,6 +112,12 @@ traits or feats: eligible weapon kind, damage die, fixed or level-scaled count,
 critical multiplication and menu labels. Section
 `47_weapon_damage_actions.sql` publishes Sneak Attack through this contract;
 the sheet derives its current d6 count from the owning Rogue level.
+`sheet_widgets` publishes prominent ability-owned panels without class or item-id
+checks. Widget definitions select metric/toggle/note presentation, a value source,
+resource binding, tone and shared panel key. Section
+`48_feature_sheet_widgets.sql` adds the contract and configures Sneak Attack and
+Rage as its first consumers; active toggle state is stored on the owned ability
+entry in `widget_states`.
 Section `34_ability_resource_catalog_fixes.sql` задаёт структурированные правила
 Харизмы для «Вдохновения барда» и Мудрости для «Гнева бури», удаляет прежний
 ручной максимум вдохновения и переводит его полные старые character entries на

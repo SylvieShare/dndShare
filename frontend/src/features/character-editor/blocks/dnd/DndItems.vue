@@ -63,13 +63,14 @@
               block
               :disabled="draggedThisGesture || (!canManage && entry.item_id == null)"
             >
-              <template #trigger>
+              <template #trigger="{ open: menuOpen }">
                 <div
-                  class="di-row"
+                  class="di-row action-menu-source"
                   :class="{
                     'sortable-placeholder': sortable.isSource(entry),
                     'di-row-draggable': canDrag,
                     'di-row-tool': isToolEntry(entry),
+                    'action-menu-source--open': menuOpen,
                   }"
                   :data-sortable-key="entry.uid"
                   @pointerdown="onRowDown($event, entry, section.id, idx)"

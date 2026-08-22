@@ -16,6 +16,8 @@ import { computed } from 'vue'
 import { ActionMenuItem } from '@sylvieshare/share-ui'
 import {
   Copy,
+  Crosshair,
+  Dices,
   Ellipsis,
   Eye,
   FilePenLine,
@@ -26,21 +28,28 @@ import {
   Pill,
   Plus,
   RotateCcw,
+  Sparkles,
+  Swords,
   Trash2,
   UserRoundPlus,
   UserRoundX,
 } from '@lucide/vue'
 
 const ACTION_ICONS = {
+  attack: Crosshair,
   create: Plus,
   copy: Copy,
   'copy-link': Link,
   delete: Trash2,
   edit: Pencil,
+  damage: Swords,
+  'feature-damage': Dices,
+  'feature-critical': Sparkles,
   note: FilePenLine,
   replenish: PackagePlus,
   revive: HeartPulse,
   reset: RotateCcw,
+  critical: Sparkles,
   remove: Trash2,
   kick: UserRoundX,
   join: UserRoundPlus,

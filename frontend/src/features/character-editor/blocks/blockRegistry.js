@@ -22,6 +22,7 @@ import DndCounters from '@/features/character-editor/blocks/dnd/DndCounters'
 import DndDefenses from '@/features/character-editor/blocks/dnd/DndDefenses'
 import DndDiary from '@/features/character-editor/blocks/dnd/DndDiary'
 import DndExhaustion from '@/features/character-editor/blocks/dnd/DndExhaustion'
+import DndFeatureWidgets from '@/features/character-editor/blocks/dnd/DndFeatureWidgets.vue'
 import DndHitDice from '@/features/character-editor/blocks/dnd/DndHitDice'
 import DndHp from '@/features/character-editor/blocks/dnd/DndHp'
 import DndInitiative from '@/features/character-editor/blocks/dnd/DndInitiative'
@@ -67,6 +68,7 @@ export const BLOCK_REGISTRY = {
   DND_DEFENSES:     { component: DndDefenses },
   DND_DIARY:        { component: DndDiary },
   DND_EXHAUSTION:   { component: DndExhaustion },
+  DND_FEATURE_WIDGETS: { component: DndFeatureWidgets, noValue: true, passValuesOnly: true },
   DND_HIT_DICE:     { component: DndHitDice },
   DND_HP:           { component: DndHp, passValues: true },
   DND_INITIATIVE:   { component: DndInitiative, passValuesOnly: true },
