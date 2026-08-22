@@ -15,20 +15,24 @@ function currentScaling(data, level) {
 
 function featureDice(data, level) {
   const rule = (Array.isArray(data?.weapon_damage) ? data.weapon_damage : [])[0]
-  if (!rule) return ''
+  if (!rule) return { value: '', dice: null }
   const fixed = Math.max(0, Number(rule.dice_count) || 0)
   const divisor = Math.max(0, Number(rule.dice_count_level_divisor) || 0)
   const scaled = divisor
     ? (rule.dice_count_rounding === 'down' ? Math.floor(level / divisor) : Math.ceil(level / divisor))
     : fixed
-  const die = String(rule.dice || '').trim().replace(/^d/i, 'к')
-  return scaled > 0 && die ? `${scaled}${die}` : ''
+  const rawDie = String(rule.dice || '').trim()
+  const sides = Number(rawDie.replace(/^d/i, '')) || null
+  const die = rawDie.replace(/^d/i, 'к')
+  return scaled > 0 && die
+    ? { value: `${scaled}${die}`, dice: sides ? { count: scaled, sides, label: rawDie } : null }
+    : { value: '', dice: null }
 }
 
 function widgetValue(definition, data, level) {
   if (definition.value_source === 'weapon_damage') return featureDice(data, level)
-  if (definition.value_source === 'scaling') return String(currentScaling(data, level)?.value || '')
-  return String(definition.value || '')
+  if (definition.value_source === 'scaling') return { value: String(currentScaling(data, level)?.value || ''), dice: null }
+  return { value: String(definition.value || ''), dice: null }
 }
 
 export function collectCharacterFeatureWidgets(values, itemsById, resources = []) {
@@ -47,6 +51,7 @@ export function collectCharacterFeatureWidgets(values, itemsById, resources = []
         && (!definition.resource_key || row.source?.resourceKey === definition.resource_key)
       )) || null
       const scaling = currentScaling(item.data || {}, level)
+      const metric = widgetValue(definition, item.data || {}, level)
       const resource = resolvedResource || (definition.kind === 'toggle' && Number(scaling?.uses) === 0
         ? { value: '∞', total: '∞', unlimited: true }
         : null)
@@ -56,7 +61,8 @@ export function collectCharacterFeatureWidgets(values, itemsById, resources = []
         title: definition.title || item.name || 'Способность',
         description: definition.description || '',
         tone: definition.tone || 'accent',
-        value: widgetValue(definition, item.data || {}, level),
+        value: metric.value,
+        dice: metric.dice,
         active_label: definition.active_label || 'Активно',
         inactive_label: definition.inactive_label || 'Активировать',
         priority: Number(definition.priority) || 0,

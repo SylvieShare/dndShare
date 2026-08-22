@@ -5,10 +5,6 @@
       <span class="dd-grp" :style="{ '--dc': g.typeColor }">
         <span class="dd-dice">
           <template v-if="g.dice.length">
-            <template v-if="g.modifier > 0">
-              <span class="dd-term">{{ g.modifier }}</span>
-              <span class="dd-op">+</span>
-            </template>
             <template v-for="(part, pi) in g.dice" :key="pi">
               <span v-if="pi > 0" class="dd-op">+</span>
               <span v-if="part.count !== 1" class="dd-count">{{ part.count }}</span>
@@ -20,9 +16,9 @@
               />
               <span v-else class="dd-text">{{ dieText(part) }}</span>
             </template>
-            <template v-if="g.modifier < 0">
-              <span class="dd-op">−</span>
-              <span class="dd-term">{{ -g.modifier }}</span>
+            <template v-if="g.modifier !== 0">
+              <span class="dd-op">{{ g.modifier > 0 ? '+' : '−' }}</span>
+              <span class="dd-term">{{ Math.abs(g.modifier) }}</span>
             </template>
           </template>
           <span v-else class="dd-term">{{ g.modifier > 0 ? '+' + g.modifier : '−' + (-g.modifier) }}</span>

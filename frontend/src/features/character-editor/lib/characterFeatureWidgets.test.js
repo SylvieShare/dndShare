@@ -21,6 +21,7 @@ describe('character feature widgets', () => {
     expect(collectCharacterFeatureWidgets(values, items)).toMatchObject([{
       key: 'sneak_attack',
       value: '3к6',
+      dice: { count: 3, sides: 6, label: 'd6' },
       active: false,
     }])
   })
@@ -45,4 +46,3 @@ describe('character feature widgets', () => {
     })
   })
 })
-

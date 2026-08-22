@@ -54,9 +54,10 @@
     <div class="w-preset-grid" aria-label="Базовые атаки">
       <PresetAttackCard
         title="Рукопашный удар"
-        subtitle="Владение · Сила · дробящий"
-        :attack="formatBonus(unarmedAttackBonus)"
-        :damage-label="unarmedDamageLabel"
+        subtitle="Владение · Сила · без кости урона"
+        :attack-bonus="unarmedAttackBonus"
+        :flat-damage="unarmedDamageFormula"
+        damage-type="Дробящий"
         :icon="HandFist"
         @attack="rollPresetAttack('unarmed')"
         @damage="rollPresetDamage('unarmed')"
@@ -65,8 +66,9 @@
       <PresetAttackCard
         title="Импровизированное оружие"
         subtitle="Без владения · Сила · 1к4"
-        :attack="formatBonus(improvisedAttackBonus)"
-        :damage-label="improvisedDamageLabel"
+        :attack-bonus="improvisedAttackBonus"
+        :damage-parts="improvisedDamageParts"
+        :damage-modifier="strengthModifier"
         :icon="Hammer"
         @attack="rollPresetAttack('improvised')"
         @damage="rollPresetDamage('improvised')"
@@ -144,6 +146,12 @@ import {
   weaponEntryToOwnedEntry,
 } from '@/features/character-editor/blocks/dnd/lib/itemPlacement'
 import { weaponDamageActionExpression } from '@/features/character-editor/blocks/dnd/lib/weaponDamageAction'
+import {
+  improvisedWeaponAttackBonus as resolveImprovisedWeaponAttackBonus,
+  presetDamageExpression as resolvePresetDamageExpression,
+  unarmedStrikeAttackBonus,
+  unarmedStrikeDamage,
+} from '@/features/character-editor/blocks/dnd/lib/presetAttacks'
 
 const props = defineProps(['block', 'value', 'values', 'vars'])
 const emit  = defineEmits(['update:value'])
@@ -255,11 +263,11 @@ const canAddItems = computed(() => !!charCtx.ownerMode)
 const armorState = computed(() => charCtx.characterArmor?.state || {})
 const armorAttackWarning = computed(() => !!armorState.value.strengthDexDisadvantage)
 const strengthModifier = computed(() => Number(statsVar.value['1']) || 0)
-const unarmedAttackBonus = computed(() => strengthModifier.value + profBonus.value)
-const improvisedAttackBonus = computed(() => strengthModifier.value)
-const unarmedDamage = computed(() => Math.max(0, 1 + strengthModifier.value))
-const unarmedDamageLabel = computed(() => `${unarmedDamage.value} дробящий`)
-const improvisedDamageLabel = computed(() => `1к4 ${formatBonus(strengthModifier.value)} дробящий`)
+const unarmedAttackBonus = computed(() => unarmedStrikeAttackBonus(strengthModifier.value, profBonus.value))
+const improvisedAttackBonus = computed(() => resolveImprovisedWeaponAttackBonus(strengthModifier.value))
+const unarmedDamage = computed(() => unarmedStrikeDamage(strengthModifier.value))
+const unarmedDamageFormula = computed(() => ({ base: 1, modifier: strengthModifier.value, total: unarmedDamage.value }))
+const improvisedDamageParts = [{ count: 1, diceSides: 4, diceLabel: 'd4', type: 'Дробящий', typeColor: 'var(--warning)' }]
 
 const dice = useDiceStore()
 
@@ -295,11 +303,7 @@ function rollPresetAttack(kind) {
 }
 
 function presetDamageExpression(kind, critical) {
-  if (kind === 'unarmed') return `${unarmedDamage.value}{Дробящий}`
-  const diceCount = critical ? 2 : 1
-  const modifier = strengthModifier.value
-  const suffix = modifier === 0 ? '' : `${modifier > 0 ? '+' : ''}${modifier}{Дробящий}`
-  return `${diceCount}d4{Дробящий}${suffix}`
+  return resolvePresetDamageExpression(kind, strengthModifier.value, critical)
 }
 
 function rollPresetDamage(kind, critical = false) {

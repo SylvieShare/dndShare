@@ -12,7 +12,13 @@
           <strong>{{ widget.title }}</strong>
           <span v-if="widget.description">{{ widget.description }}</span>
         </div>
-        <div v-if="widget.value" class="fw-value" :class="{ 'fw-value--compact': widget.value.length > 8 }">{{ widget.value }}</div>
+        <div v-if="widget.dice" class="fw-dice" :aria-label="widget.value">
+          <DamageDice
+            :parts="[{ count: widget.dice.count, diceSides: widget.dice.sides, diceLabel: widget.dice.label }]"
+            default-color="var(--fw-tone)"
+          />
+        </div>
+        <div v-else-if="widget.value" class="fw-value" :class="{ 'fw-value--compact': widget.value.length > 8 }">{{ widget.value }}</div>
       </div>
 
       <div v-if="widget.resource || widget.kind === 'toggle'" class="fw-footer">
@@ -47,6 +53,7 @@ import { computed, inject, watch } from 'vue'
 import { Flame } from '@lucide/vue'
 import { BaseTile } from '@sylvieshare/share-ui'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
+import DamageDice from '@/features/character-editor/blocks/dnd/components/DamageDice.vue'
 import { collectCharacterFeatureWidgets } from '@/features/character-editor/lib/characterFeatureWidgets'
 
 const charCtx = inject('charCtx', { ownerMode: false, values: {} })
@@ -99,6 +106,8 @@ function toggle(widget) {
 .fw-title strong { color: var(--text-1); font-size: 13px; }
 .fw-title span { color: var(--text-muted); font-size: 10px; line-height: 1.35; }
 .fw-value { color: var(--fw-tone); font-size: 25px; font-weight: 850; letter-spacing: -.04em; }
+.fw-dice { display: inline-flex; align-items: center; justify-content: flex-end; min-width: 58px; }
+.fw-dice :deep(.dd-count) { font-size: 20px; }
 .fw-value--compact { max-width: 92px; font-size: 15px; line-height: 1.1; text-align: right; }
 .fw-footer { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 11px; padding-top: 10px; border-top: 1px solid color-mix(in srgb, var(--fw-tone) 18%, var(--border)); }
 .fw-resource { display: inline-flex; flex-direction: column; color: var(--text-muted); font-size: 10px; }
