@@ -22,12 +22,12 @@ WITH addition(field) AS (
 UPDATE dndshare.item_type item_type
 SET fields = (
   SELECT jsonb_agg(
-    CASE WHEN field ->> 'key' = 'feature_actions' THEN jsonb_set(
-      field,
+    CASE WHEN row_field.field ->> 'key' = 'feature_actions' THEN jsonb_set(
+      row_field.field,
       '{fields}',
-      COALESCE(field -> 'fields', '[]'::jsonb) || jsonb_build_array(addition.field),
+      COALESCE(row_field.field -> 'fields', '[]'::jsonb) || jsonb_build_array(addition.field),
       true
-    ) ELSE field END
+    ) ELSE row_field.field END
     ORDER BY ord
   )
   FROM jsonb_array_elements(item_type.fields) WITH ORDINALITY AS row_field(field, ord)
