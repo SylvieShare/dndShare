@@ -218,6 +218,16 @@ handbook list and detail header.
   then install both slots only through MCP `handbook_item_set_system_image`
   with `preservePrevious=true` when replacing an existing asset.
 
+When the recurring DnD Share mascot appears on a cover, her canonical identity,
+costume, emotion range and reusable pose references are defined in
+[`md/mascot.md`](../mascot.md). That character contract overrides generic
+character-design choices but does not change the `1600×640` cover geometry,
+storage workflow or content restrictions above. Build each scene from the item
+mechanic and the canonical mascot reference; do not use another finished cover
+as an intermediate character reference. Match the mascot and environment at
+the same detail density, and choose an expression specific to the scene instead
+of repeating the same neutral or stern face.
+
 ### Static spell rune art direction
 
 Spell icons form one set of **static magical runes**. They use the same visual
