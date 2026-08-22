@@ -112,12 +112,13 @@ import { useDiceStore } from '@/stores/dice'
 import { useSuggestStore } from '@/stores/suggest'
 import { SYSTEM_DICE } from '@/shared/lib/systemDice'
 import { logSessionEntryAdded } from '@/features/character-editor/lib/sessionEntryEvents'
-import { abilityModifiersBySuggest, weaponAbilitySuggestId } from '@/features/character-editor/blocks/dnd/lib/weaponAbility'
+import { abilityModifiersBySuggest, isFinesseWeapon, weaponAbilitySuggestId } from '@/features/character-editor/blocks/dnd/lib/weaponAbility'
 import { hasItemProficiency } from '@/features/character-editor/lib/itemProficiency'
 import {
   appendInventoryEntry,
   weaponEntryToOwnedEntry,
 } from '@/features/character-editor/blocks/dnd/lib/itemPlacement'
+import { weaponDamageActionExpression } from '@/features/character-editor/blocks/dnd/lib/weaponDamageAction'
 
 const props = defineProps(['block', 'value', 'values', 'vars'])
 const emit  = defineEmits(['update:value'])
@@ -253,6 +254,45 @@ function rollDamageTwoHanded(entry) {
   const expr = damageExpressionTwoHanded(entry)
   if (!expr || expr === '0') return
   dice.roll(`Урон (2р): ${itemTitle(entry)}`, expr)
+}
+
+function hasWeaponDamage(entry) {
+  return damagePartsRaw(entry).length > 0 || damageBonus(entry) !== 0
+}
+
+function weaponDamageContext(entry) {
+  const base = item(entry)
+  const ranged = !!base?.data?.is_long_range
+  return {
+    melee: !ranged,
+    ranged,
+    finesse: isFinesseWeapon(base, propertyItems(entry)),
+  }
+}
+
+function weaponDamageActions(entry) {
+  return charCtx.characterCombatEffects?.weaponDamageActions?.(weaponDamageContext(entry)) || []
+}
+
+function actionDamageExpression(entry, action, critical = false, twoHanded = false) {
+  const base = critical
+    ? (twoHanded ? criticalDamageExpressionTwoHanded(entry, extraCriticalDice(entry)) : criticalDamageExpression(entry, extraCriticalDice(entry)))
+    : (twoHanded ? damageExpressionTwoHanded(entry) : damageExpression(entry))
+  const primary = damagePartsRaw(entry)[0] || {}
+  return weaponDamageActionExpression({
+    baseExpression: base,
+    action,
+    critical,
+    damageType: primary.type,
+    damageTypeColor: primary.typeColor,
+  })
+}
+
+function rollWeaponDamageAction(entry, action, critical = false, twoHanded = false) {
+  const expr = actionDamageExpression(entry, action, critical, twoHanded)
+  if (!expr) return
+  const label = action.label || action.source_label || 'Дополнительный урон'
+  dice.roll(`${critical ? 'Критический урон' : 'Урон'}: ${itemTitle(entry)} — ${label}`, expr)
 }
 
 function extraCriticalDice(entry) {
@@ -404,10 +444,13 @@ provide('weaponsBlockCtx', reactive({
   damageParts,
   damagePartsRaw,
   twoHandedParts,
+  hasWeaponDamage,
+  weaponDamageActions,
   rollAttack,
   rollDamage,
   rollDamageTwoHanded,
   rollCriticalDamage,
+  rollWeaponDamageAction,
   showPropertyTooltip,
   hidePropertyTooltip,
   setField,

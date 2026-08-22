@@ -372,6 +372,14 @@ result. Weapons expose a critical-damage roll that doubles all attack damage
 dice, keeps the flat modifier once and then applies matching ability modifiers
 such as Savage Attacks' extra melee weapon die.
 
+`weapon_damage` is the shared contract for an ability-owned optional damage
+action. It declares the die, a fixed or owner-level-scaled count, eligible weapon
+kinds, menu labels and whether the contributed dice double on a critical hit.
+Sneak Attack uses this contract with `ceil(rogue level / 2)d6` and appears only
+for finesse or ranged weapons; runtime code does not check its name or item id.
+The `once_per_turn` flag is preserved for encounter-aware usage tracking, but a
+standalone sheet roll does not silently consume or block it without turn state.
+
 Class, race and feat items may also contribute `derived_effects`. This is the
 single source contract for calculated AC formulas and bonuses, speed bonuses,
 skill/save proficiencies, visible armor/weapon/tool/language proficiencies,
@@ -423,8 +431,11 @@ and use a 64×64 px slot. Weapon cards use the same 64×64 slot and prefer the
 handbook `iconImageUrl`, falling back to the weapon SVG; the rest of the
 weapon-specific attack, damage and property composition remains unchanged. A
 click on a weapon tile opens its action menu instead of navigating directly
-from the name. The menu contains handbook description, edit, move-to-inventory
-and delete actions according to the viewer's permissions and linked item state.
+from the name. Attack, damage, critical damage and ability-contributed damage
+rolls live only in that menu; the displayed attack and damage values are not
+independent click targets. Logical groups use the shared action-menu separator.
+The remaining menu contains handbook description, edit, move-to-inventory and
+delete actions according to the viewer's permissions and linked item state.
 Every owned inventory item, potion and tool uses `item_id`, an explicit `count` and a
 typed `params` object. `params` contains values of the concrete instance and is
 not an alternative handbook-data or free-form override store. Item-type

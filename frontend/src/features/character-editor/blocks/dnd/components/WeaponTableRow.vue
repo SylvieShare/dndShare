@@ -88,11 +88,7 @@
     </td>
 
     <td v-if="!ctx.charCtx.ownerMode" class="w-attack-cell">
-      <span
-        class="w-attack w-attack-clickable"
-        title="Бросить атаку"
-        @click="ctx.rollAttack(entry)"
-      >{{ ctx.formatBonus(ctx.attackBonus(entry)) }}</span>
+      <span class="w-attack">{{ ctx.formatBonus(ctx.attackBonus(entry)) }}</span>
     </td>
 
     <td class="w-damage">
@@ -134,9 +130,6 @@
       <span
         v-else
         class="w-damage-view"
-        :class="{ 'w-damage-view-clickable': ctx.damageParts(entry).length }"
-        :title="ctx.damageParts(entry).length ? 'Бросить урон' : null"
-        @click="ctx.rollDamage(entry)"
       >
         <template v-for="(part, partIndex) in ctx.damageParts(entry)" :key="partIndex">
           <span v-if="partIndex > 0" class="w-damage-comma">,</span>
@@ -151,13 +144,6 @@
           </span>
         </template>
       </span>
-      <button
-        v-if="!ctx.charCtx.ownerMode && ctx.damageParts(entry).length"
-        class="w-crit-btn"
-        type="button"
-        title="Бросить критический урон"
-        @click="ctx.rollCriticalDamage(entry)"
-      >Крит</button>
     </td>
 
     <td v-if="ctx.charCtx.ownerMode" class="w-delete-cell">
@@ -236,7 +222,6 @@ const colspan = computed(() => ctx.charCtx.ownerMode ? 6 : 4)
 .w-row {
   transition: background 0.12s;
 }
-.w-crit-btn { margin-left: 6px; border: 1px solid color-mix(in srgb, var(--warning) 45%, transparent); border-radius: 6px; padding: 3px 6px; background: color-mix(in srgb, var(--warning) 10%, transparent); color: var(--warning); font: inherit; font-size: 9px; font-weight: 700; cursor: pointer; text-transform: uppercase; }
 .w-row.w-row-hovered td { background: color-mix(in srgb, var(--text-on-accent) 4%, transparent); }
 .w-row-with-desc td { border-bottom: 0; }
 

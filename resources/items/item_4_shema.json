@@ -245,6 +245,22 @@
     "fields": [{ "name": "Вид оружия", "key": "weapon_kind", "type": "select", "options": [{ "value": "melee", "label": "Рукопашное" }, { "value": "any", "label": "Любое" }] }, { "name": "Дополнительных костей оружия", "key": "extra_weapon_dice", "type": "int", "default": 1 }, { "name": "С уровня", "key": "level", "type": "int", "default": 1 }]
   },
   {
+    "name": "Дополнительный урон оружием", "key": "weapon_damage", "type": "object_array",
+    "fields": [
+      { "name": "Название", "key": "label", "type": "text" },
+      { "name": "Пункт меню", "key": "menu_label", "type": "text" },
+      { "name": "Пункт меню для крита", "key": "critical_menu_label", "type": "text" },
+      { "name": "Кость урона", "key": "dice", "type": "dice" },
+      { "name": "Количество костей", "key": "dice_count", "type": "int", "default": 1 },
+      { "name": "Делитель уровня для количества", "key": "dice_count_level_divisor", "type": "int" },
+      { "name": "Округление количества", "key": "dice_count_rounding", "type": "select", "default": "up", "options": [{ "value": "up", "label": "Вверх" }, { "value": "down", "label": "Вниз" }] },
+      { "name": "Подходящее оружие", "key": "weapon_kind", "type": "select", "default": "any", "options": [{ "value": "any", "label": "Любое" }, { "value": "melee", "label": "Рукопашное" }, { "value": "ranged", "label": "Дальнобойное" }, { "value": "finesse", "label": "Фехтовальное" }, { "value": "finesse_or_ranged", "label": "Фехтовальное или дальнобойное" }] },
+      { "name": "Удваивать кости при крите", "key": "double_on_critical", "type": "bool", "default": true },
+      { "name": "Раз в ход", "key": "once_per_turn", "type": "bool" },
+      { "name": "С уровня", "key": "level", "type": "int", "default": 1 }
+    ]
+  },
+  {
     "name": "Защиты по выбору", "key": "choice_defenses", "type": "object_array",
     "fields": [{ "name": "ID способности с выбором", "key": "source_item_id", "type": "int" }, { "name": "Ключ выбора", "key": "choice_key", "type": "text" }, { "name": "Соответствия", "key": "options", "type": "object_array", "fields": [{ "name": "Значение выбора", "key": "value", "type": "text" }, { "name": "Тип урона", "key": "damage_type", "type": "suggest", "suggest_id": 12 }, { "name": "Вид защиты", "key": "kind", "type": "select", "default": "resistance", "options": [{ "value": "resistance", "label": "Сопротивление" }, { "value": "immunity", "label": "Невосприимчивость" }, { "value": "vulnerability", "label": "Уязвимость" }] }] }]
   },

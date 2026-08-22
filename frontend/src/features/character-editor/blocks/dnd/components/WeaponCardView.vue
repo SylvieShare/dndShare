@@ -1,7 +1,6 @@
 <template>
   <!-- Shared weapon row, rendered both in the list tile and inside the morph #view, so the geometry
-       can never drift between the two. `interactive` is true in the tile (drag handle, rollable
-       attack/damage and property tooltips) and false in the morph clone. -->
+       can never drift between the two. Weapon values are display-only; rolls live in the card menu. -->
   <div class="w-card-main">
     <ItemIcon
       v-if="weaponItem?.iconImageUrl || weaponItem?.svg"
@@ -29,11 +28,6 @@
         :damage-parts="ctx.damagePartsRaw(entry)"
         :modifier="ctx.damageBonus(entry)"
         :two-handed-parts="ctx.twoHandedParts(entry)"
-        :rollable="interactive"
-        @roll-attack="emit('roll-attack')"
-        @roll-damage="emit('roll-damage')"
-        @roll-damage-two="emit('roll-damage-two')"
-        @roll-critical="emit('roll-critical')"
       />
       <div class="w-props-inline">
         <span
@@ -59,7 +53,7 @@ const props = defineProps({
   // tile = full interactivity; morph clone = static
   interactive: { type: Boolean, default: false },
 })
-const emit = defineEmits(['name-down', 'roll-attack', 'roll-damage', 'roll-damage-two', 'roll-critical'])
+const emit = defineEmits(['name-down'])
 
 const ctx = inject('weaponsBlockCtx')
 

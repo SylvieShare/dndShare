@@ -1,17 +1,17 @@
 <template>
   <div class="ad">
-    <button
+    <component
+      :is="rollable ? 'button' : 'span'"
       v-if="hasAttack"
-      type="button"
+      :type="rollable ? 'button' : undefined"
       class="ad-atk"
       :class="{ 'ad-clickable': rollable }"
-      :disabled="!rollable"
-      title="Бросок атаки"
-      @click.stop="$emit('roll-attack')"
+      :title="rollable ? 'Бросок атаки' : undefined"
+      @click="onRoll($event, 'roll-attack')"
     >
       <span class="ad-atk-label">Атака</span>
       <span>{{ attack }}</span>
-    </button>
+    </component>
 
     <button
       v-if="hasDamage && rollable"
@@ -21,43 +21,43 @@
       @click.stop="$emit('roll-critical')"
     >Крит</button>
 
-    <button
+    <component
+      :is="rollable ? 'button' : 'span'"
       v-if="hasDamage"
-      type="button"
+      :type="rollable ? 'button' : undefined"
       class="ad-dmg"
       :class="{ 'ad-clickable': rollable }"
-      :disabled="!rollable"
-      title="Бросок урона"
-      @click.stop="$emit('roll-damage')"
+      :title="rollable ? 'Бросок урона' : undefined"
+      @click="onRoll($event, 'roll-damage')"
     >
       <DamageDice :parts="damageParts" :modifier="modifier" />
-    </button>
+    </component>
 
-    <button
+    <component
+      :is="rollable ? 'button' : 'span'"
       v-if="twoHandedParts.length"
-      type="button"
+      :type="rollable ? 'button' : undefined"
       class="ad-dmg ad-2h"
       :class="{ 'ad-clickable': rollable }"
-      :disabled="!rollable"
-      title="Урон двумя руками"
-      @click.stop="$emit('roll-damage-two')"
+      :title="rollable ? 'Урон двумя руками' : undefined"
+      @click="onRoll($event, 'roll-damage-two')"
     >
       <span class="ad-2h-label">2р</span>
       <DamageDice :parts="twoHandedParts" :modifier="modifier" />
-    </button>
+    </component>
 
-    <button
+    <component
+      :is="rollable ? 'button' : 'span'"
       v-if="healParts.length"
-      type="button"
+      :type="rollable ? 'button' : undefined"
       class="ad-heal"
       :class="{ 'ad-clickable': rollable }"
-      :disabled="!rollable"
-      title="Бросок лечения"
-      @click.stop="$emit('roll-heal')"
+      :title="rollable ? 'Бросок лечения' : undefined"
+      @click="onRoll($event, 'roll-heal')"
     >
       <span class="ad-heal-mark">♥</span>
       <DamageDice :parts="healParts" :modifier="0" default-color="var(--success)" />
-    </button>
+    </component>
   </div>
 </template>
 
@@ -66,9 +66,9 @@ import { computed } from 'vue'
 
 import DamageDice from '@/features/character-editor/blocks/dnd/components/DamageDice.vue'
 
-// Shared attack/damage display used by both spells and weapons. The attack is a bordered pill that rolls
-// `1d20 + bonus`; damage/heal are clickable groups of `DamageDice`. `twoHandedParts` renders an extra
-// "2р" group for versatile weapons (the same flat `modifier` applies). All rolls are delegated upward.
+// Shared attack/damage display used by both spells and weapons. `rollable` turns the displayed values
+// into controls for spell cards; weapon cards keep them read-only and expose rolls in their action menu.
+// `twoHandedParts` renders an extra "2р" group for versatile weapons (the same flat `modifier` applies).
 const props = defineProps({
   attack: { type: String, default: null },          // e.g. "+7"; null/'' → no attack chip
   damageParts: { type: Array, default: () => [] },
@@ -77,7 +77,13 @@ const props = defineProps({
   healParts: { type: Array, default: () => [] },
   rollable: { type: Boolean, default: false },
 })
-defineEmits(['roll-attack', 'roll-damage', 'roll-damage-two', 'roll-critical', 'roll-heal'])
+const emit = defineEmits(['roll-attack', 'roll-damage', 'roll-damage-two', 'roll-critical', 'roll-heal'])
+
+function onRoll(event, name) {
+  if (!props.rollable) return
+  event.stopPropagation()
+  emit(name)
+}
 
 const hasAttack = computed(() => props.attack != null && props.attack !== '')
 const hasDamage = computed(() => props.damageParts.length > 0 || props.modifier !== 0)
@@ -112,10 +118,6 @@ const hasDamage = computed(() => props.damageParts.length > 0 || props.modifier 
 .ad-clickable { cursor: pointer; transition: filter 0.12s, transform 0.08s; }
 @media (hover: hover) { .ad-clickable:hover { filter: brightness(1.22); } }
 .ad-clickable:active { transform: scale(0.96); }
-.ad-atk:disabled,
-.ad-dmg:disabled,
-.ad-heal:disabled { cursor: default; }
-
 .ad-atk {
   padding: 5px 11px;
   border-radius: 8px;

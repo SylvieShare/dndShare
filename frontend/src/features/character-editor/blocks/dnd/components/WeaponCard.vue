@@ -16,10 +16,6 @@
           :entry="entry"
           interactive
           @name-down="onNameDown"
-          @roll-attack="ctx.rollAttack(entry)"
-          @roll-damage="ctx.rollDamage(entry)"
-          @roll-damage-two="ctx.rollDamageTwoHanded(entry)"
-          @roll-critical="ctx.rollCriticalDamage(entry)"
         />
 
         <RichContent v-if="entry.desc" class="w-desc-text" :html="entry.desc" />
@@ -48,9 +44,42 @@
     <template #default="{ close: closeMenu }">
       <RowActionItem
         v-if="ctx.item(entry)"
+        @click="rollAttack(closeMenu)"
+      >Бросок на атаку</RowActionItem>
+      <RowActionItem
+        v-if="hasDamage"
+        @click="rollDamage(closeMenu)"
+      >Бросок на урон</RowActionItem>
+      <RowActionItem
+        v-if="hasTwoHandedDamage"
+        @click="rollDamageTwoHanded(closeMenu)"
+      >Бросок на урон двумя руками</RowActionItem>
+      <RowActionItem
+        v-if="hasDamage"
         tone="warning"
         @click="rollCritical(closeMenu)"
-      >Бросить критический урон</RowActionItem>
+      >Бросок на критический урон</RowActionItem>
+      <RowActionItem
+        v-if="hasTwoHandedDamage"
+        tone="warning"
+        @click="rollCriticalTwoHanded(closeMenu)"
+      >Бросок на критический урон двумя руками</RowActionItem>
+
+      <template v-if="weaponDamageActions.length">
+        <RowActionSeparator />
+        <template v-for="action in weaponDamageActions" :key="action.key">
+          <RowActionItem
+            tone="accent"
+            @click="rollWeaponDamageAction(closeMenu, action, false)"
+          >{{ action.menu_label || `Бросок: ${action.label || action.source_label}` }}</RowActionItem>
+          <RowActionItem
+            tone="warning"
+            @click="rollWeaponDamageAction(closeMenu, action, true)"
+          >{{ action.critical_menu_label || `Критический бросок: ${action.label || action.source_label}` }}</RowActionItem>
+        </template>
+      </template>
+
+      <RowActionSeparator v-if="ctx.item(entry)" />
       <RowActionItem
         v-if="ctx.item(entry)"
         action="view"
@@ -67,6 +96,7 @@
         tone="info"
         @click="moveToItems(closeMenu)"
       >Переместить в вещи</RowActionItem>
+      <RowActionSeparator v-if="ctx.charCtx.ownerMode" />
       <RowActionItem
         v-if="ctx.charCtx.ownerMode"
         action="delete"
@@ -79,11 +109,12 @@
 
 <script setup>
 import { ArrowRightLeft } from '@lucide/vue'
-import { inject, ref, watch } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 import { BaseTile } from '@sylvieshare/share-ui'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
+import RowActionSeparator from '@/shared/ui/RowActionSeparator.vue'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
 import WeaponCardView from '@/features/character-editor/blocks/dnd/components/WeaponCardView.vue'
 import WeaponEditor from '@/features/character-editor/blocks/dnd/components/WeaponEditor.vue'
@@ -97,6 +128,9 @@ const props = defineProps({
 const ctx = inject('weaponsBlockCtx')
 const cardEl = ref(null)
 const { editorOpen, originRect, originEl, openFrom, close } = useMorphOrigin()
+const hasDamage = computed(() => ctx.hasWeaponDamage(props.entry))
+const hasTwoHandedDamage = computed(() => ctx.twoHandedParts(props.entry).length > 0)
+const weaponDamageActions = computed(() => ctx.weaponDamageActions(props.entry))
 
 // reorder by dragging the name; the sortable's 4px threshold keeps a plain click a click. A drag
 // flips `sortable.dragging` mid-gesture — we remember it so the trailing click doesn't open the menu.
@@ -116,9 +150,29 @@ function editWeapon(closeMenu) {
   closeMenu()
   openEditor()
 }
+function rollAttack(closeMenu) {
+  closeMenu()
+  ctx.rollAttack(props.entry)
+}
+function rollDamage(closeMenu) {
+  closeMenu()
+  ctx.rollDamage(props.entry)
+}
+function rollDamageTwoHanded(closeMenu) {
+  closeMenu()
+  ctx.rollDamageTwoHanded(props.entry)
+}
 function rollCritical(closeMenu) {
   closeMenu()
   ctx.rollCriticalDamage(props.entry)
+}
+function rollCriticalTwoHanded(closeMenu) {
+  closeMenu()
+  ctx.rollCriticalDamage(props.entry, true)
+}
+function rollWeaponDamageAction(closeMenu, action, critical) {
+  closeMenu()
+  ctx.rollWeaponDamageAction(props.entry, action, critical)
 }
 function moveToItems(closeMenu) {
   closeMenu()

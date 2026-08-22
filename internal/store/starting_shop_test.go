@@ -9,26 +9,27 @@ import (
 )
 
 func TestToolProficiencyCatalogIsEmbeddedAfterItemTypeHierarchy(t *testing.T) {
-	if len(schemaParts) < 17 {
+	if len(schemaParts) < 18 {
 		t.Fatal("schemaParts must contain the final item catalogue sections")
 	}
-	hierarchy := schemaParts[len(schemaParts)-17]
-	tools := schemaParts[len(schemaParts)-16]
-	resources := schemaParts[len(schemaParts)-15]
-	classTools := schemaParts[len(schemaParts)-14]
-	resourceFixes := schemaParts[len(schemaParts)-13]
-	resourceAudit := schemaParts[len(schemaParts)-12]
-	resourceColors := schemaParts[len(schemaParts)-11]
-	spellGrants := schemaParts[len(schemaParts)-10]
-	equippedArmor := schemaParts[len(schemaParts)-9]
-	defenses := schemaParts[len(schemaParts)-8]
-	castLevel := schemaParts[len(schemaParts)-7]
-	choices := schemaParts[len(schemaParts)-6]
-	racialAutomation := schemaParts[len(schemaParts)-5]
-	classAutomation := schemaParts[len(schemaParts)-4]
-	featAutomation := schemaParts[len(schemaParts)-3]
-	rogueAutomation := schemaParts[len(schemaParts)-2]
-	rogueCatalogFixes := schemaParts[len(schemaParts)-1]
+	hierarchy := schemaParts[len(schemaParts)-18]
+	tools := schemaParts[len(schemaParts)-17]
+	resources := schemaParts[len(schemaParts)-16]
+	classTools := schemaParts[len(schemaParts)-15]
+	resourceFixes := schemaParts[len(schemaParts)-14]
+	resourceAudit := schemaParts[len(schemaParts)-13]
+	resourceColors := schemaParts[len(schemaParts)-12]
+	spellGrants := schemaParts[len(schemaParts)-11]
+	equippedArmor := schemaParts[len(schemaParts)-10]
+	defenses := schemaParts[len(schemaParts)-9]
+	castLevel := schemaParts[len(schemaParts)-8]
+	choices := schemaParts[len(schemaParts)-7]
+	racialAutomation := schemaParts[len(schemaParts)-6]
+	classAutomation := schemaParts[len(schemaParts)-5]
+	featAutomation := schemaParts[len(schemaParts)-4]
+	rogueAutomation := schemaParts[len(schemaParts)-3]
+	rogueCatalogFixes := schemaParts[len(schemaParts)-2]
+	weaponDamageActions := schemaParts[len(schemaParts)-1]
 	if hierarchy.name != "item-type-hierarchy" || hierarchy.sql == "" || hierarchy.sql != schemaItemTypeHierarchySQL {
 		t.Fatal("item-type-hierarchy schema must be embedded after the equipment catalogues")
 	}
@@ -79,6 +80,24 @@ func TestToolProficiencyCatalogIsEmbeddedAfterItemTypeHierarchy(t *testing.T) {
 	}
 	if rogueCatalogFixes.name != "rogue-catalog-fixes" || rogueCatalogFixes.sql == "" || rogueCatalogFixes.sql != schemaRogueCatalogFixesSQL {
 		t.Fatal("rogue catalogue fixes must be embedded after rogue automation")
+	}
+	if weaponDamageActions.name != "weapon-damage-actions" || weaponDamageActions.sql == "" || weaponDamageActions.sql != schemaWeaponDamageActionsSQL {
+		t.Fatal("weapon damage actions must be embedded after rogue catalogue fixes")
+	}
+}
+
+func TestSneakAttackPublishesGenericWeaponDamageAction(t *testing.T) {
+	for _, fragment := range []string{
+		`"key":"weapon_damage"`,
+		`"dice":"d6"`,
+		`"dice_count_level_divisor":2`,
+		`"weapon_kind":"finesse_or_ranged"`,
+		`"double_on_critical":true`,
+		"lower('Скрытая атака')",
+	} {
+		if !strings.Contains(schemaWeaponDamageActionsSQL, fragment) {
+			t.Fatalf("weapon damage action schema must contain %q", fragment)
+		}
 	}
 }
 

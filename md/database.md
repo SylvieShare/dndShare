@@ -107,6 +107,11 @@ known-spell pickers. Ability choices may combine dictionaries through
 `suggest_sources`, require an owned proficiency and exclude an already reached
 rank. `display_scaling [{level,label}]` is presentation data resolved against
 the owning class level.
+`weapon_damage` describes optional damage rolls contributed by abilities, race
+traits or feats: eligible weapon kind, damage die, fixed or level-scaled count,
+critical multiplication and menu labels. Section
+`47_weapon_damage_actions.sql` publishes Sneak Attack through this contract;
+the sheet derives its current d6 count from the owning Rogue level.
 Section `34_ability_resource_catalog_fixes.sql` задаёт структурированные правила
 Харизмы для «Вдохновения барда» и Мудрости для «Гнева бури», удаляет прежний
 ручной максимум вдохновения и переводит его полные старые character entries на
