@@ -31,7 +31,12 @@ in `blockRegistry.js`. Generic blocks live in `blocks/generic`, D&D blocks in
 receive data by block id.
 
 Desktop and mobile share block definitions but have separate placement
-profiles. The mobile D&D stats tab uses a 12px top-level column gap. Tab state
+profiles. The desktop base tab keeps compact class, race and feat summaries in
+the side column; the separate **Способности** tab shows the same entries as
+expanded cards with a 64×64 handbook icon and the full description inline.
+The renamed mobile **Способности** tab uses the expanded cards as well and
+starts with prominent feature widgets, actions, resources, defenses and
+proficiencies. The mobile D&D stats tab uses a 12px top-level column gap. Tab state
 is encoded in the route query. `CharacterTabPane.vue` owns
 one tab pane; swipe/drag logic is extracted into composables. On mobile, each
 tab owns its nested scroll position and keeps `--bg` as its canvas. Content is
@@ -39,8 +44,7 @@ split into semantic `--surface` blocks instead of painting a whole tab: every
 weapon is a card; spell parameters, slots and each spell level are separate
 cards; inventory sections and utility widgets are separate; the personality
 profile declares the `Основное`, `Облик`, `Характер` and `История` tile groups
-in `mobile.json`. The mobile skills tab starts with the shared resources block,
-followed by proficiencies and character abilities. The character route hides the global app header at the mobile
+in `mobile.json`. The character route hides the global app header at the mobile
 breakpoint and gives the full viewport to its own toolbar; that toolbar menu has
 an explicit **К персонажам** action, including on read-only public sheets. Its
 desktop shell also occupies the full viewport because application navigation is
@@ -471,7 +475,7 @@ stored length, and stacks merge only when both `item_id` and canonical `params`
 match.
 
 `sheet_widgets` is an ability-owned contract for prominent class-mechanic cards
-in the sheet side column and mobile skills tab. A widget may display a fixed or
+in the sheet side column and abilities tabs. A widget may display a fixed or
 progression-derived metric, own a persisted toggle, bind to the ability resource,
 or add a note to another ability's panel through a shared key. Compact condition
 theses are also owned by the widget data rather than its UI component. The
@@ -482,6 +486,18 @@ progression and an active toggle.
 Entering Rage consumes one available use, while leaving it active only changes
 the persisted mode state. Subclass features can contribute `note` widgets with
 the same key to extend that panel.
+
+`feature_actions` is the matching ability-owned contract for the shared
+**Действия** block. Class abilities, racial abilities and feats may contribute
+an action, bonus action, reaction, free action or special action together with
+its description, read-only requirements, level gate, priority and an optional
+ability-resource binding. The block merges those source rows with editable
+custom actions from `values.actions`; source-provided rows identify their
+ability and cannot be edited on the character. Using a resource-bound action
+spends the configured amount and all uses are written to the attached session.
+The first catalog consumers are Cunning Action, Uncanny Dodge and the relevant
+Rogue archetype features. The block is available in the base side column and
+in the expanded abilities tabs.
 The same picker is used for feats and abilities and opens above the active morph
 editor, so its filters and item selection are never hidden behind the morph.
 The list shows count as a badge and has no inline increment/decrement controls.

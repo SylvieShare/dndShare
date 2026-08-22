@@ -110,7 +110,7 @@
     },
     {
       "svg": "/static/tab-skills.svg",
-      "title": "Умения",
+      "title": "Способности",
       "content": {
         "kind": "layout",
         "type": "column",
@@ -120,6 +120,10 @@
         "children": [
           {
             "ref": "feature_widgets",
+            "kind": "block"
+          },
+          {
+            "ref": "actions",
             "kind": "block"
           },
           {
@@ -135,40 +139,25 @@
             "kind": "block"
           },
           {
-            "kind": "layout",
-            "type": "column",
-            "props": {
-              "gap": "0",
-              "tile": true,
-              "style": {
-                "padding": "0"
-              }
-            },
-            "children": [
-              {
-                "ref": "abilities_feats",
-                "kind": "block",
-                "content": {
-                  "embedded": true
-                }
-              },
-              {
-                "ref": "abilities_race",
-                "kind": "block",
-                "content": {
-                  "embedded": true,
-                  "divider": true
-                }
-              },
-              {
-                "ref": "abilities_class",
-                "kind": "block",
-                "content": {
-                  "embedded": true,
-                  "divider": true
-                }
-              }
-            ]
+            "ref": "abilities_class",
+            "kind": "block",
+            "content": {
+              "expanded": true
+            }
+          },
+          {
+            "ref": "abilities_race",
+            "kind": "block",
+            "content": {
+              "expanded": true
+            }
+          },
+          {
+            "ref": "abilities_feats",
+            "kind": "block",
+            "content": {
+              "expanded": true
+            }
           }
         ]
       }

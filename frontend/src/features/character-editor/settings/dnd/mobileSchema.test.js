@@ -31,24 +31,21 @@ describe('D&D mobile sheet schema', () => {
     expect(diary?.content?.children?.map(block => block.ref)).toEqual(['quests', 'diary', 'notes'])
   })
 
-  it('shows ability widgets before resources on the mobile skills tab', () => {
-    const skills = schema.layouts.mobile.tabs.find(tab => tab.title === 'Умения')
-    const [featureWidgets, resources, defenses, proficiencies, features] = skills?.content?.children || []
+  it('shows actions and expanded feature cards on the mobile abilities tab', () => {
+    const abilities = schema.layouts.mobile.tabs.find(tab => tab.title === 'Способности')
+    const [featureWidgets, actions, resources, defenses, proficiencies, ...features] = abilities?.content?.children || []
 
     expect(featureWidgets?.ref).toBe('feature_widgets')
+    expect(actions?.ref).toBe('actions')
     expect([resources?.ref, defenses?.ref, proficiencies?.ref]).toEqual(['resources', 'defenses', 'proficiencies'])
     expect(schema.blocks.passive_effects).toBeUndefined()
-    expect(features?.props?.tile).toBe(true)
-    expect(features?.children?.map(block => block.ref)).toEqual([
-      'abilities_feats',
-      'abilities_race',
+    expect(features.map(block => block.ref)).toEqual([
       'abilities_class',
+      'abilities_race',
+      'abilities_feats',
     ])
-    expect(features?.children?.map(block => block.content)).toEqual([
-      { embedded: true },
-      { embedded: true, divider: true },
-      { embedded: true, divider: true },
-    ])
+    expect(features.every(block => block.content?.expanded === true)).toBe(true)
+    expect(schema.blocks.actions.type).toBe('DND_ACTIONS')
   })
 
   it('keeps HP content-sized and groups the remaining mobile status actions', () => {

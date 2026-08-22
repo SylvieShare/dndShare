@@ -76,11 +76,13 @@ describe('D&D desktop sheet schema', () => {
 
   it('keeps derived defenses beside the character resources', () => {
     const featureWidgets = findNode(base?.content, node => node.ref === 'feature_widgets')
+    const actions = findNode(base?.content, node => node.ref === 'actions')
     const resources = findNode(base?.content, node => node.ref === 'resources')
     const passiveEffects = findNode(base?.content, node => node.ref === 'passive_effects')
     const defenses = findNode(base?.content, node => node.ref === 'defenses')
 
     expect(featureWidgets).toBeTruthy()
+    expect(actions).toBeTruthy()
     expect(resources).toBeTruthy()
     expect(passiveEffects).toBeNull()
     expect(defenses).toBeTruthy()
@@ -88,6 +90,17 @@ describe('D&D desktop sheet schema', () => {
       type: 'DND_DEFENSES',
       content: { damage_type_suggest_id: 12 },
     })
+  })
+
+  it('adds a dedicated expanded abilities tab without removing compact base summaries', () => {
+    const abilities = schema.layouts.desktop.tabs.find(tab => tab.title === 'Способности')
+    const expanded = ['abilities_class', 'abilities_race', 'abilities_feats']
+      .map(ref => findNode(abilities?.content, node => node.ref === ref))
+
+    expect(abilities).toBeTruthy()
+    expect(findNode(abilities?.content, node => node.ref === 'actions')).toBeTruthy()
+    expect(expanded.every(node => node?.content?.expanded === true)).toBe(true)
+    expect(schema.blocks.actions.type).toBe('DND_ACTIONS')
   })
 
   it('groups feats and race/class abilities in one visual tile', () => {

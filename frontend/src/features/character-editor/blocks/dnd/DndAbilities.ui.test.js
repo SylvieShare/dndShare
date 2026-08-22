@@ -13,4 +13,12 @@ describe('ability rows', () => {
     expect(viewSource).toContain('v-for="effect in entry.passive_effects || []"')
     expect(viewSource).toContain('<b>{{ effect.title }}</b>')
   })
+
+  it('supports expanded cards with 64px item art and inline descriptions', () => {
+    expect(blockSource).toContain(':expanded="!!block.content?.expanded"')
+    expect(blockSource).toContain('item,')
+    expect(viewSource).toContain(':item="entry.item" :size="64"')
+    expect(viewSource).toContain('expanded && entry.desc')
+    expect(viewSource).toMatch(/\.abv--expanded \.abv-card \{[^}]*grid-template-columns: 64px minmax\(0, 1fr\) auto;/)
+  })
 })

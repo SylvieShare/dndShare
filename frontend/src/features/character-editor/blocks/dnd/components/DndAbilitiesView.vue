@@ -1,5 +1,5 @@
 <template>
-  <div class="abv" :class="{ 'abv--panel': panel }">
+  <div class="abv" :class="{ 'abv--panel': panel, 'abv--expanded': expanded }">
     <SheetBlockTitle
       v-if="title || manage"
       :title="title"
@@ -21,11 +21,12 @@
         class="abv-card"
         title="Подробнее"
         @click="$emit('view', entry)"
-        @mouseenter="e => $emit('show-tooltip', e, entry)"
-        @mouseleave="$emit('hide-tooltip')"
+        @mouseenter="e => !expanded && $emit('show-tooltip', e, entry)"
+        @mouseleave="!expanded && $emit('hide-tooltip')"
       >
         <span class="abv-icon" aria-hidden="true">
-          <SvgIcon v-if="entry.svg" class="abv-icon-svg" :svg="entry.svg" />
+          <ItemIcon v-if="expanded" :item="entry.item" :size="64" :fallback-to-type="false" />
+          <SvgIcon v-else-if="entry.svg" class="abv-icon-svg" :svg="entry.svg" />
         </span>
 
         <span class="abv-copy">
@@ -33,6 +34,7 @@
             {{ entry.name }}<span v-if="entry.scaling_label" class="abv-scaling"> · {{ entry.scaling_label }}</span>
           </span>
           <span v-if="entry.choice_summary" class="abv-choice">{{ entry.choice_summary }}</span>
+          <DndRichContent v-if="expanded && entry.desc" class="abv-description" :html="entry.desc" />
           <span
             v-for="effect in entry.passive_effects || []"
             :key="effect.key"
@@ -53,6 +55,8 @@
 <script setup>
 import SheetBlockTitle from '@/shared/ui/SheetBlockTitle'
 import SvgIcon from '@/shared/ui/SvgIcon.vue'
+import DndRichContent from '@/shared/ui/DndRichContent.vue'
+import ItemIcon from '@/features/items/components/ItemIcon.vue'
 
 defineProps({
   entries: { type: Array, default: () => [] },
@@ -62,6 +66,7 @@ defineProps({
   manage: { type: Boolean, default: false },
   editFade: { type: Boolean, default: false },
   panel: { type: Boolean, default: false },
+  expanded: { type: Boolean, default: false },
 })
 defineEmits(['view', 'show-tooltip', 'hide-tooltip', 'manage'])
 </script>
@@ -152,4 +157,21 @@ defineEmits(['view', 'show-tooltip', 'hide-tooltip', 'manage'])
 }
 .abv-sr { background-color: color-mix(in srgb, var(--success) 18%, transparent); color: var(--success); }
 .abv-lr { background-color: color-mix(in srgb, var(--info) 18%, transparent); color: var(--info); }
+
+.abv--expanded { gap: 11px; padding: 13px; }
+.abv--expanded .abv-list { gap: 9px; }
+.abv--expanded .abv-card { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto; align-items: start; gap: 13px; min-height: 88px; padding: 12px; border: 1px solid var(--border); border-radius: 11px; background: var(--surface-raised); }
+.abv--expanded .abv-card:hover { border-color: color-mix(in srgb, var(--accent) 35%, var(--border)); background: color-mix(in srgb, var(--accent) 4%, var(--surface-raised)); }
+.abv--expanded .abv-icon { width: 64px; height: 64px; color: var(--text-2); }
+.abv--expanded .abv-name { font-size: 15px; font-weight: 750; white-space: normal; overflow: visible; }
+.abv--expanded .abv-choice { margin-top: 2px; font-size: 10px; white-space: normal; overflow: visible; }
+.abv-description { margin-top: 5px; color: var(--text-2); font-size: 11px; line-height: 1.5; }
+.abv-description :deep(p) { margin: 0; }
+.abv-description :deep(p + p) { margin-top: 6px; }
+.abv--expanded .abv-effect { margin-top: 5px; font-size: 10px; }
+@media (max-width: 520px) {
+  .abv--expanded .abv-card { grid-template-columns: 56px minmax(0, 1fr) auto; gap: 10px; padding: 10px; }
+  .abv--expanded .abv-icon { width: 56px; height: 56px; }
+  .abv--expanded .abv-icon :deep(.item-icon) { width: 56px !important; height: 56px !important; }
+}
 </style>

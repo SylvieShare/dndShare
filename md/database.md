@@ -123,6 +123,13 @@ class ability and feat schemas. Reliable Talent declares a level-11
 `minimum_natural` adjustment for ability checks with at least full proficiency;
 runtime matching uses the structured scope and proficiency rank rather than the
 feature title or item id.
+`50_feature_actions.sql` adds the generic `feature_actions` object-array field
+to class abilities, racial abilities and feats. Each row describes action
+economy, display text, read-only requirements, level and priority, and may bind
+the action to the source ability resource. The startup catalog configuration
+locates the initial Rogue consumers by stable English identity; runtime only
+reads the structured rows. Character-created actions are stored separately in
+`char.values.actions` and remain editable.
 Section `34_ability_resource_catalog_fixes.sql` задаёт структурированные правила
 Харизмы для «Вдохновения барда» и Мудрости для «Гнева бури», удаляет прежний
 ручной максимум вдохновения и переводит его полные старые character entries на

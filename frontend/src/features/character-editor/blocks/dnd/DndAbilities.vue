@@ -14,6 +14,7 @@
         :skeleton-count="skeletonCount"
         :title="title"
         :manage="ownerMode"
+        :expanded="!!block.content?.expanded"
         @view="onView"
         @manage="onManage"
         @show-tooltip="showTooltip"
@@ -38,6 +39,7 @@
           manage
           :edit-fade="revealed"
           panel
+          :expanded="!!block.content?.expanded"
           @view="onView"
           @show-tooltip="showTooltip"
           @hide-tooltip="hideTooltip"
@@ -181,6 +183,7 @@ const entries = computed(() =>
         uid: s.uid,
         id: s.id,
         name: item.name,
+        item,
         svg: item.svg || '',
         desc: Number(props.block.content.item_id) === 7 ? (item.data?.description || '') : (item.data?.desc || ''),
         max_use: maxUse,

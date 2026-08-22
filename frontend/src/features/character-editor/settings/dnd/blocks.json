@@ -322,6 +322,11 @@
     "type": "DND_FEATURE_WIDGETS",
     "content": {}
   },
+  "actions": {
+    "id": "actions",
+    "type": "DND_ACTIONS",
+    "content": {}
+  },
   "defenses": {
     "id": "defenses",
     "type": "DND_DEFENSES",

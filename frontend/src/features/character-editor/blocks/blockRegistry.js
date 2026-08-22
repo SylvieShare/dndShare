@@ -14,6 +14,7 @@ import LinePointsList from '@/features/character-editor/blocks/generic/LinePoint
 import SettingsMenuTile from '@/features/character-editor/blocks/generic/SettingsMenuTile'
 import StubTile from '@/features/character-editor/blocks/generic/StubTile'
 import DndAbilities from '@/features/character-editor/blocks/dnd/DndAbilities'
+import DndActions from '@/features/character-editor/blocks/dnd/DndActions.vue'
 import DndAlignment from '@/features/character-editor/blocks/dnd/DndAlignment'
 import DndArmor from '@/features/character-editor/blocks/dnd/DndArmor'
 import DndCharIdentity from '@/features/character-editor/blocks/dnd/DndCharIdentity'
@@ -61,6 +62,7 @@ export const BLOCK_REGISTRY = {
   CAMPAIGN_BADGE:   { component: CampaignBadge, noValue: true },
   BLOCK_LVL:        { component: DndLvl, passValues: true },
   DND_ABILITIES:    { component: DndAbilities, passValuesOnly: true },
+  DND_ACTIONS:      { component: DndActions, passValuesOnly: true },
   DND_ALIGNMENT:    { component: DndAlignment },
   DND_ARMOR:        { component: DndArmor, passValues: true },
   DND_CHAR_IDENTITY:{ component: DndCharIdentity, passValues: true },
