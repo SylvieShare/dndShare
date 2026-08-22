@@ -1,6 +1,7 @@
 import { resolveNumValue } from '@/shared/lib/dnd'
 import { SUGGEST16_TO_STAT, STAT_FULL, STAT_KEYS } from '@/shared/lib/dndStats'
 import { abilityHasResources, abilityUseTotal, abilityUsesAreManual } from '@/shared/lib/dndAbilityUses'
+import { choiceSelectionsComplete, itemChoices } from '@/features/items/lib/itemChoices'
 
 const ABILITY_ID_BY_STAT = Object.fromEntries(
   Object.entries(SUGGEST16_TO_STAT).map(([id, stat]) => [stat, Number(id)]),
@@ -31,21 +32,7 @@ export function featPrereq(item) {
 }
 
 export function featChoices(item) {
-  return asArray(featData(item).choices).filter(Boolean).map((choice, index) => normalizeChoice(choice, index))
-}
-
-function normalizeChoice(choice, index) {
-  const source = choice.source
-    || (choice.from_suggest_id ? 'suggest' : null)
-    || (choice.from_item_type_id ? 'item' : null)
-    || 'inline'
-  return {
-    ...choice,
-    key: String(choice.key || `choice_${index + 1}`),
-    count: Math.max(1, number(choice.count) || 1),
-    source,
-    options: asArray(choice.options),
-  }
+  return itemChoices(item)
 }
 
 export function abilityScoresFromValues(values = {}) {
@@ -100,9 +87,7 @@ export function evaluateFeatEligibility(item, context = {}) {
   }
 }
 
-export function choiceSelectionsComplete(item, selections = {}) {
-  return featChoices(item).every((choice) => asArray(selections[choice.key]).length === choice.count)
-}
+export { choiceSelectionsComplete }
 
 export function featEntry(item, selections = {}, values = {}) {
   const data = featData(item)

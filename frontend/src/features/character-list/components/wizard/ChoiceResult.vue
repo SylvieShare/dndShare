@@ -45,11 +45,12 @@ import RichContent from '@/shared/ui/DndRichContent.vue'
 import { featuresForBinding } from '@/features/character-editor/settings/dnd/creation/progression'
 import { sourceSkillLabels } from '@/features/character-list/components/wizard/previewSkills'
 import { STAT_SHORT } from '@/features/character-list/components/wizard/labels'
+import { itemChoiceRows } from '@/features/items/lib/itemChoices'
 
 const props = defineProps({ source: { type: String, required: true } })
 const {
   state, grants, suggestValue, raceAbilities, classAbilities, featPool,
-  classEquipment, spellPool, grantedSpellList,
+  classEquipment, spellPool, grantedSpellList, choiceOptionList,
 } = inject('createWizard')
 
 function names(ids, typeId) {
@@ -66,16 +67,17 @@ function itemProficiencies(items) {
   ]
 }
 function selectedChoiceLabels(item) {
-  const choice = item?.data?.choice
-  const selected = state.choices[item?.id] || []
-  if (!choice || !selected.length) return []
-  if (choice.from_suggest_id) return names(selected, Number(choice.from_suggest_id))
-  return selected.map((value) => {
-    const option = (choice.options || []).find((entry) => String(entry.value ?? entry.label) === String(value))
-    return option?.label || String(value)
+  return itemChoiceRows(item).flatMap((row) => {
+    const selected = state.choices[row.id] || []
+    if (row.choice.from_suggest_id != null) return names(selected, Number(row.choice.from_suggest_id))
+    return selected.map((value) => {
+      const option = choiceOptionList(row).find((entry) => String(entry.value) === String(value))
+      return option?.label || String(value)
+    })
   })
 }
-function isSkillChoice(item) { return Number(item?.data?.choice?.from_suggest_id) === 15 }
+function skillChoiceRows(item) { return itemChoiceRows(item).filter((row) => Number(row.choice.from_suggest_id) === 15) }
+function isSkillChoice(item) { return skillChoiceRows(item).length > 0 }
 function isExpertise(item) { return isSkillChoice(item) && /компетентност/i.test(item?.name || '') }
 function boundFeatures(source) {
   if (source === 'race') {
@@ -103,10 +105,10 @@ const abilities = computed(() => sourceFeatures.value
 const skillLabels = computed(() => {
   const featureSkillIds = sourceFeatures.value
     .filter((item) => isSkillChoice(item) && !isExpertise(item))
-    .flatMap((item) => state.choices[item.id] || [])
+    .flatMap((item) => skillChoiceRows(item).flatMap((row) => state.choices[row.id] || []))
   const expertiseIds = sourceFeatures.value
     .filter(isExpertise)
-    .flatMap((item) => state.choices[item.id] || [])
+    .flatMap((item) => skillChoiceRows(item).flatMap((row) => state.choices[row.id] || []))
   return sourceSkillLabels({
     proficiencyIds: props.source === 'race' ? state.raceSkillIds : state.skillIds,
     featureIds: featureSkillIds,

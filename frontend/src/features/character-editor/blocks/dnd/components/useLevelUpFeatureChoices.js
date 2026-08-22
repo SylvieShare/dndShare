@@ -1,70 +1,75 @@
 import { computed, ref, watch } from 'vue'
+import { itemChoiceRows } from '@/features/items/lib/itemChoices'
 
 export function useLevelUpFeatureChoices(features, suggestStore) {
   const selections = ref({})
 
-  function featureChoice(feature) {
-    const choice = feature?.data?.choice
-    if (!choice) return null
-    return choice.from_suggest_id || (Array.isArray(choice.options) && choice.options.length)
-      ? choice
-      : null
+  function featureChoiceRows(feature) {
+    return itemChoiceRows(feature)
   }
 
-  const choosableFeatures = computed(() => features.value.filter(featureChoice))
+  function featureChoices(feature) { return featureChoiceRows(feature).map((row) => row.choice) }
+  function featureChoice(feature) { return featureChoices(feature)[0] || null }
+  function selectionKey(feature, choice) {
+    return featureChoiceRows(feature).find((row) => row.choice.key === choice?.key)?.id ?? feature?.id
+  }
+
+  const choosableFeatures = computed(() => features.value.filter((feature) => featureChoiceRows(feature).length))
   watch(choosableFeatures, (list) => {
     list.forEach((feature) => {
-      const choice = featureChoice(feature)
-      if (choice?.from_suggest_id) suggestStore.ensure(Number(choice.from_suggest_id))
+      featureChoices(feature).forEach((choice) => {
+        if (choice.from_suggest_id != null) suggestStore.ensure(Number(choice.from_suggest_id))
+      })
     })
   }, { immediate: true })
 
-  function choiceCount(feature) {
-    return Number(featureChoice(feature)?.count) || 1
+  function choiceCount(feature, choice = featureChoice(feature)) {
+    return Number(choice?.count) || 1
   }
 
-  function choiceOptions(feature) {
-    const choice = featureChoice(feature)
+  function choiceOptions(feature, choice = featureChoice(feature)) {
     if (!choice) return []
-    if (choice.from_suggest_id) {
+    if (choice.from_suggest_id != null) {
       return suggestStore.items(Number(choice.from_suggest_id))
         .map((item) => ({ value: item.id, label: item.value }))
     }
     return (choice.options || []).map((option) => ({
-      value: option.label,
-      label: option.label,
-      desc: option.desc,
-    }))
+      value: option.value ?? option.label,
+      label: option.label || option.value,
+      desc: option.desc || '',
+    })).filter((option) => option.value != null && option.value !== '')
   }
 
-  function selected(abilityId) {
-    return selections.value[abilityId] || []
+  function selected(feature, choice = featureChoice(feature)) {
+    return selections.value[selectionKey(feature, choice)] || []
   }
 
-  function choiceLocked(feature, option) {
-    const current = selected(feature.id)
+  function choiceLocked(feature, choice, option) {
+    const current = selected(feature, choice)
     if (current.some((value) => String(value) === String(option.value))) return false
-    return current.length >= choiceCount(feature)
+    return current.length >= choiceCount(feature, choice)
   }
 
-  function toggleChoice(feature, value) {
-    const current = selected(feature.id)
+  function toggleChoice(feature, choice, value) {
+    const current = selected(feature, choice)
     const hasValue = current.some((entry) => String(entry) === String(value))
     let next
-    if (choiceCount(feature) === 1) next = hasValue ? [] : [value]
+    if (choiceCount(feature, choice) === 1) next = hasValue ? [] : [value]
     else if (hasValue) next = current.filter((entry) => String(entry) !== String(value))
-    else next = current.length < choiceCount(feature) ? [...current, value] : current
-    selections.value = { ...selections.value, [feature.id]: next }
+    else next = current.length < choiceCount(feature, choice) ? [...current, value] : current
+    selections.value = { ...selections.value, [selectionKey(feature, choice)]: next }
   }
 
-  function choiceComplete(feature) {
-    return selected(feature.id).length === choiceCount(feature)
+  function choiceComplete(feature, choice) {
+    if (choice) return selected(feature, choice).length === choiceCount(feature, choice)
+    return featureChoices(feature).every((entry) => choiceComplete(feature, entry))
   }
 
-  const complete = computed(() => choosableFeatures.value.every(choiceComplete))
+  const complete = computed(() => choosableFeatures.value.every((feature) => choiceComplete(feature)))
 
   return {
     featureChoice,
+    featureChoices,
     selections,
     choiceCount,
     choiceOptions,

@@ -9,20 +9,21 @@ import (
 )
 
 func TestToolProficiencyCatalogIsEmbeddedAfterItemTypeHierarchy(t *testing.T) {
-	if len(schemaParts) < 11 {
+	if len(schemaParts) < 12 {
 		t.Fatal("schemaParts must contain the final item catalogue sections")
 	}
-	hierarchy := schemaParts[len(schemaParts)-11]
-	tools := schemaParts[len(schemaParts)-10]
-	resources := schemaParts[len(schemaParts)-9]
-	classTools := schemaParts[len(schemaParts)-8]
-	resourceFixes := schemaParts[len(schemaParts)-7]
-	resourceAudit := schemaParts[len(schemaParts)-6]
-	resourceColors := schemaParts[len(schemaParts)-5]
-	spellGrants := schemaParts[len(schemaParts)-4]
-	equippedArmor := schemaParts[len(schemaParts)-3]
-	defenses := schemaParts[len(schemaParts)-2]
-	castLevel := schemaParts[len(schemaParts)-1]
+	hierarchy := schemaParts[len(schemaParts)-12]
+	tools := schemaParts[len(schemaParts)-11]
+	resources := schemaParts[len(schemaParts)-10]
+	classTools := schemaParts[len(schemaParts)-9]
+	resourceFixes := schemaParts[len(schemaParts)-8]
+	resourceAudit := schemaParts[len(schemaParts)-7]
+	resourceColors := schemaParts[len(schemaParts)-6]
+	spellGrants := schemaParts[len(schemaParts)-5]
+	equippedArmor := schemaParts[len(schemaParts)-4]
+	defenses := schemaParts[len(schemaParts)-3]
+	castLevel := schemaParts[len(schemaParts)-2]
+	choices := schemaParts[len(schemaParts)-1]
 	if hierarchy.name != "item-type-hierarchy" || hierarchy.sql == "" || hierarchy.sql != schemaItemTypeHierarchySQL {
 		t.Fatal("item-type-hierarchy schema must be embedded after the equipment catalogues")
 	}
@@ -55,6 +56,24 @@ func TestToolProficiencyCatalogIsEmbeddedAfterItemTypeHierarchy(t *testing.T) {
 	}
 	if castLevel.name != "ability-spell-cast-level" || castLevel.sql == "" || castLevel.sql != schemaAbilitySpellCastLevelSQL {
 		t.Fatal("ability spell cast level must be embedded after the granted-spell contract")
+	}
+	if choices.name != "ability-choices" || choices.sql == "" || choices.sql != schemaAbilityChoicesSQL {
+		t.Fatal("ability choices must be embedded after the ability catalogue migrations")
+	}
+}
+
+func TestAbilityChoicesMigrationCanonicalizesItemsAndCharacters(t *testing.T) {
+	for _, fragment := range []string{
+		`"key":"choices"`,
+		"WHERE item_type.id IN (3, 4)",
+		"jsonb_build_object('key', 'choice')",
+		"feature_choices",
+		"abilities_race",
+		"abilities_class",
+	} {
+		if !strings.Contains(schemaAbilityChoicesSQL, fragment) {
+			t.Fatalf("ability choices migration must contain %q", fragment)
+		}
 	}
 }
 

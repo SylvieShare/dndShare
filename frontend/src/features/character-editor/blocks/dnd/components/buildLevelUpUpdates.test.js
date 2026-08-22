@@ -90,3 +90,45 @@ describe('buildLevelUpUpdates granted spells', () => {
     ])
   })
 })
+
+describe('buildLevelUpUpdates feature choices', () => {
+  it('stores all selections on a newly granted class ability', () => {
+    const feature = {
+      id: 42,
+      data: { choices: [
+        { key: 'style', options: [{ value: 'defense', label: 'Защита' }] },
+        { key: 'tool', from_suggest_id: 5 },
+      ] },
+    }
+    const updates = buildLevelUpUpdates({
+      values: { lvl: { level: 1 }, hp: { max: 10, current: 10 }, abilities_class: [] },
+      newTotal: 2,
+      isPlain: false,
+      entriesAfter: [{ id: 1, name: 'Воин', level: 2 }],
+      features: [feature],
+      itemsById: { 1: {}, 42: feature },
+      hitDieLabelOf: () => 'd10',
+      hitDieLabel: 'd10',
+      hpGain: 6,
+      asiNow: false,
+      asiSkipped: true,
+      asiMode: 'asi',
+      featPick: null,
+      suggestItems: () => [],
+      asiStats: [],
+      asiDelta: 0,
+      featureChoiceSelections: { '42:style': ['defense'], '42:tool': [7] },
+      applySlots: false,
+      slotDiff: [],
+      slotsAfter: null,
+      grantedNewIds: [],
+      classItem: {},
+    })
+
+    expect(updates.abilities_class).toEqual([{
+      id: 42,
+      count: 0,
+      choices: { style: ['defense'], tool: [7] },
+    }])
+  })
+})

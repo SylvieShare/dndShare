@@ -100,19 +100,32 @@
             </button>
           </div>
           <div v-if="featSnippet(f)" class="lu-feat-desc">{{ featSnippet(f) }}</div>
-          <template v-if="featChoice(f)">
+          <template v-for="choice in featChoices(f)" :key="choice.key">
             <div class="lu-feat-choice-title">
-              {{ featChoice(f).text || 'Сделай выбор' }}
-              <span class="lu-req" :class="{ done: choiceCompleteFor(f) }">{{ choiceSel(f.id).length }} / {{ choiceCount(f) }}</span>
+              {{ choice.text || 'Сделай выбор' }}
+              <span class="lu-req" :class="{ done: choiceCompleteFor(f, choice) }">{{ choiceSel(f, choice).length }} / {{ choiceCount(f, choice) }}</span>
             </div>
-            <div class="lu-chips">
+            <div v-if="choice.source === 'item'" class="lu-chips">
               <button
-                v-for="opt in choiceOptions(f)"
+                v-for="itemId in choiceSel(f, choice)"
+                :key="itemId"
+                class="lu-chip on"
+                @click="toggleFeatureChoice(f, choice, itemId)"
+              >{{ featureChoiceItemNames[itemId] || `#${itemId}` }} ×</button>
+              <button
+                v-if="choiceSel(f, choice).length < choiceCount(f, choice)"
+                class="lu-roll"
+                @click="featureItemChoice = { feature: f, choice }"
+              >Выбрать из справочника…</button>
+            </div>
+            <div v-else class="lu-chips">
+              <button
+                v-for="opt in choiceOptions(f, choice)"
                 :key="opt.value"
                 class="lu-chip"
-                :class="{ on: choiceSel(f.id).some((v) => String(v) === String(opt.value)), off: choiceLocked(f, opt) }"
+                :class="{ on: choiceSel(f, choice).some((v) => String(v) === String(opt.value)), off: choiceLocked(f, choice, opt) }"
                 :title="opt.desc || ''"
-                @click="toggleFeatureChoice(f, opt.value)"
+                @click="toggleFeatureChoice(f, choice, opt.value)"
               >{{ opt.label }}</button>
             </div>
           </template>
@@ -216,6 +229,17 @@
       @close="featPickerOpen = false"
     />
 
+    <ItemPickerModal
+      v-if="featureItemChoice"
+      :item-type-ids="[Number(featureItemChoice.choice.from_item_type_id)]"
+      :exclude-items="choiceSel(featureItemChoice.feature, featureItemChoice.choice)"
+      title="Выбор для способности"
+      search-placeholder="Поиск в справочнике…"
+      :item-eligibility="featureChoiceItemEligibility"
+      @pick="onFeatureChoiceItemPick"
+      @close="featureItemChoice = null"
+    />
+
     <FeatChoiceModal
       v-if="featConfigItem"
       :item="featConfigItem"
@@ -292,6 +316,8 @@ const asiStats = ref([])
 const asiSkipped = ref(false)
 const applySlots = ref(true)
 const viewFeature = ref(null)
+const featureItemChoice = ref(null)
+const featureChoiceItemNames = ref({})
 
 const {
   target,
@@ -331,7 +357,7 @@ const features = computed(() => {
 })
 
 const {
-  featureChoice: featChoice,
+  featureChoices: featChoices,
   selections: featureChoiceSel,
   choiceCount,
   choiceOptions,
@@ -341,6 +367,33 @@ const {
   choiceComplete: choiceCompleteFor,
   complete: featureChoicesComplete,
 } = useLevelUpFeatureChoices(features, suggestStore)
+
+function parseFeatureChoiceItemFilter(raw) {
+  if (!raw) return null
+  try { return JSON.parse(raw) } catch { /* use key=value shorthand below */ }
+  const [key, ...rest] = String(raw).split('=')
+  return key && rest.length ? { [key.trim()]: rest.join('=').trim() } : null
+}
+function featureChoiceItemEligibility(item) {
+  const filter = parseFeatureChoiceItemFilter(featureItemChoice.value?.choice?.item_filter)
+  if (!filter) return { eligible: true, reasons: [] }
+  const matches = Object.entries(filter).every(([key, expected]) => {
+    const actual = String(key).split('.').reduce((value, segment) => value?.[segment], item.data)
+    const allowed = Array.isArray(expected) ? expected : [expected]
+    return allowed.some((value) => String(value) === String(actual))
+  })
+  return { eligible: matches, reasons: matches ? [] : ['Не подходит под фильтр выбора'] }
+}
+function onFeatureChoiceItemPick(item) {
+  const target = featureItemChoice.value
+  if (!target) return
+  const selectedBefore = choiceSel(target.feature, target.choice).length
+  featureChoiceItemNames.value = { ...featureChoiceItemNames.value, [item.id]: item.name }
+  toggleFeatureChoice(target.feature, target.choice, item.id)
+  if (selectedBefore + 1 >= choiceCount(target.feature, target.choice)) {
+    featureItemChoice.value = null
+  }
+}
 
 // ─── даруемые заклинания (домен/клятва/круг) ────────────────────────────────
 const effectiveSubclassItem = computed(() => (subclassPick.value

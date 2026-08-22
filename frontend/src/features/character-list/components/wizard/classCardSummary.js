@@ -2,6 +2,7 @@ import { featuresForBinding } from '@/features/character-editor/settings/dnd/cre
 import { grantedSpellsAt } from '@/features/character-editor/blocks/dnd/lib/levelUp'
 import { STAT_FULL, SUGGEST16_TO_STAT } from '@/features/character-list/components/wizard/labels'
 import { dieLabel } from '@/shared/lib/systemDice'
+import { actionableItemChoices } from '@/features/items/lib/itemChoices'
 
 function cleanText(value) {
   return String(value || '')
@@ -67,7 +68,7 @@ export function classCardSummary({ charClass, classAbilities = [], suggestValue 
   if (data.starting_equipment || data.startingEquipment) choices.push('снаряжение')
   if (data.skill_choice?.count) choices.push(`${data.skill_choice.count} навыка`)
   if (data.tool_prof_choice?.count) choices.push(`${data.tool_prof_choice.count} инструмента`)
-  if (classFeatures.some((ability) => ability?.data?.choice)) choices.push('особенности')
+  if (classFeatures.some((ability) => actionableItemChoices(ability).length)) choices.push('особенности')
   const spellcasting = data.spellcasting
   if (spellcasting && (Number(spellcasting.cantrips_known) > 0 || Number(spellcasting.spells_known) > 0)) choices.push('заклинания')
   if (Number(data.subclass_level) === 1 && subclasses.length) choices.push('архетип')

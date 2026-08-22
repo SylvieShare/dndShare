@@ -16,6 +16,7 @@ import {
 } from '@/features/character-editor/blocks/dnd/lib/hitDice'
 import { abilityHasResources, abilityUseTotal, abilityUsesAreManual } from '@/shared/lib/dndAbilityUses'
 import { abilitySpellGrantRows, syncAbilityGrantedSpells } from '@/features/character-editor/blocks/dnd/lib/abilitySpellGrants'
+import { choicesForEntry } from '@/features/items/lib/itemChoices'
 
 export function buildLevelUpUpdates({
   values,
@@ -56,6 +57,8 @@ export function buildLevelUpUpdates({
   const addedAbilities = features.filter((feature) => !knownAbilityIds.has(feature.id)).map((feature) => {
     const maxUse = abilityUseTotal(feature.data, values)
     const entry = { id: feature.id, count: maxUse ?? 0 }
+    const choices = choicesForEntry(feature, featureChoiceSelections)
+    if (Object.keys(choices).length) entry.choices = choices
     if (abilityHasResources(feature.data)) entry.resource_version = 1
     if (abilityUsesAreManual(feature.data)) entry.max_use = maxUse ?? 0
     return entry

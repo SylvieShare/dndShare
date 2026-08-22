@@ -159,18 +159,35 @@
     ]
   },
   {
-    "name": "Выбор (choice)",
-    "key": "choice",
-    "type": "object",
+    "name": "Выборы при получении",
+    "key": "choices",
+    "type": "object_array",
     "fields": [
-      { "name": "Текст", "key": "text", "type": "text" },
-      { "name": "Сколько выбрать", "key": "count", "type": "int" },
-      { "name": "Из словаря (suggest type id)", "key": "from_suggest_id", "type": "int" },
+      { "name": "Ключ", "key": "key", "type": "text" },
+      { "name": "Подсказка игроку", "key": "text", "type": "text" },
+      { "name": "Сколько выбрать", "key": "count", "type": "int", "default": 1 },
+      {
+        "name": "Источник вариантов",
+        "key": "source",
+        "type": "select",
+        "default": "inline",
+        "options": [
+          { "value": "inline", "label": "Варианты ниже" },
+          { "value": "suggest", "label": "Словарь" },
+          { "value": "item", "label": "Предметы справочника" }
+        ]
+      },
+      { "name": "ID словаря", "key": "from_suggest_id", "type": "int", "show_on": { "key": "source", "value": "suggest" } },
+      { "name": "ID типа предметов", "key": "from_item_type_id", "type": "int", "show_on": { "key": "source", "value": "item" } },
+      { "name": "Фильтр предметов", "key": "item_filter", "type": "text", "show_on": { "key": "source", "value": "item" } },
+      { "name": "Не повторять вариант", "key": "unique_across_takes", "type": "bool" },
       {
         "name": "Варианты",
         "key": "options",
         "type": "object_array",
+        "show_on": { "key": "source", "value": "inline" },
         "fields": [
+          { "name": "Значение", "key": "value", "type": "text" },
           { "name": "Название", "key": "label", "type": "text" },
           { "name": "Описание", "key": "desc", "type": "text" }
         ]

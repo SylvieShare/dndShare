@@ -90,11 +90,11 @@
     />
 
     <FeatChoiceModal
-      v-if="featConfigItem"
-      :item="featConfigItem"
-      :excluded-choices="featExcludedChoices"
-      @confirm="onFeatChoicesConfirm"
-      @close="featConfigItem = null"
+      v-if="choiceConfigItem"
+      :item="choiceConfigItem"
+      :excluded-choices="choiceExcludedChoices"
+      @confirm="onChoicesConfirm"
+      @close="choiceConfigItem = null"
     />
 
     <ItemViewModal
@@ -121,13 +121,14 @@ import ItemTooltip from "@/features/character-editor/components/ItemTooltip"
 import MorphEditorShell from "@/features/character-editor/components/MorphEditorShell"
 import AbilityTooltipDetails from "@/features/items/detail-components/AbilityTooltipDetails"
 import ItemViewModal from "@/features/handbook/components/ItemViewModal.vue"
-import { featAbilityBonuses, featChoices, featEntry } from '@/features/items/lib/featRules'
+import { featAbilityBonuses, featEntry } from '@/features/items/lib/featRules'
+import { actionableItemChoices, itemChoices } from '@/features/items/lib/itemChoices'
 import { resolveNumValue } from '@/shared/lib/dnd'
 import { ensureItemNames, itemName } from '@/features/handbook/objects/lib/itemNames'
 import { useSuggestStore } from '@/stores/suggest'
 import { useMorphOrigin } from "@/features/character-editor/composables/useMorphOrigin"
 import { logSessionEntryAdded } from '@/features/character-editor/lib/sessionEntryEvents'
-import { abilityHasResources, abilityUseTotal, abilityUsesAreManual } from '@/shared/lib/dndAbilityUses'
+import { abilityUseTotal, abilityUsesAreManual } from '@/shared/lib/dndAbilityUses'
 
 const props = defineProps(['block', 'value', 'values'])
 const emit = defineEmits(['update:value'])
@@ -141,7 +142,7 @@ const modalEntry  = ref(null)
 const pickerOpen  = ref(false)
 const tooltip     = reactive({ visible: false, name: '', desc: '', item: null, x: 0, top: null, bottom: null })
 const form        = reactive({ open: false, editingItem: null, initialName: '' })
-const featConfigItem = ref(null)
+const choiceConfigItem = ref(null)
 const { editorOpen, originRect, originEl, openFrom, close } = useMorphOrigin()
 
 const ownerMode = computed(() => charCtx.ownerMode)
@@ -168,7 +169,7 @@ const entries = computed(() =>
         rollback_long_rest:  !!item.data?.rollback_long_rest,
         count: s.count ?? maxUse ?? 0,
         choices: s.choices || {},
-        choice_summary: Number(props.block.content.item_id) === 7 ? featChoiceSummary(item, s.choices || {}) : '',
+        choice_summary: itemChoiceSummary(item, s.choices || {}),
         isUserOwned: item.userId != null,
       }
     })
@@ -185,12 +186,12 @@ const skeletonCount = computed(() => Math.max(1, stored.value.length) || 2)
 const usedIds       = computed(() => stored.value
   .filter((storedEntry) => !catalog.value.find((item) => item.id === storedEntry.id)?.data?.repeatable)
   .map((storedEntry) => storedEntry.id))
-const featExcludedChoices = computed(() => {
-  const item = featConfigItem.value
+const choiceExcludedChoices = computed(() => {
+  const item = choiceConfigItem.value
   if (!item?.data?.repeatable) return {}
   const uniqueKeys = new Set([
     item.data.unique_choice_key,
-    ...featChoices(item).filter((choice) => choice.unique_across_takes).map((choice) => choice.key),
+    ...itemChoices(item).filter((choice) => choice.unique_across_takes).map((choice) => choice.key),
   ].filter(Boolean))
   const result = {}
   for (const entry of stored.value.filter((storedEntry) => storedEntry.id === item.id)) {
@@ -199,9 +200,9 @@ const featExcludedChoices = computed(() => {
   return result
 })
 
-function featChoiceSummary(item, selections) {
+function itemChoiceSummary(item, selections) {
   const labels = []
-  for (const choice of featChoices(item)) {
+  for (const choice of itemChoices(item)) {
     for (const value of (selections[choice.key] || [])) {
       if (choice.source === 'suggest') {
         labels.push(suggestStore.items(Number(choice.from_suggest_id)).find((entry) => String(entry.id) === String(value))?.value || `#${value}`)
@@ -215,12 +216,11 @@ function featChoiceSummary(item, selections) {
   return labels.join(', ')
 }
 
-function hydrateFeatChoices() {
-  if (Number(props.block.content.item_id) !== 7) return
+function hydrateItemChoices() {
   const itemIds = []
   for (const item of catalog.value) {
-    for (const choice of featChoices(item)) {
-      if (choice.from_suggest_id) suggestStore.ensure(Number(choice.from_suggest_id))
+    for (const choice of itemChoices(item)) {
+      if (choice.from_suggest_id != null) suggestStore.ensure(Number(choice.from_suggest_id))
       if (choice.source !== 'item') continue
       for (const storedEntry of stored.value.filter((entry) => entry.id === item.id)) {
         itemIds.push(...(storedEntry?.choices?.[choice.key] || []))
@@ -294,34 +294,30 @@ function logAddedEntry(item) {
 
 function addFromCatalog(item) {
   if (!catalog.value.find(c => c.id === item.id)) catalog.value.push(item)
-  if (Number(props.block.content.item_id) === 7 && featChoices(item).length) {
-    featConfigItem.value = item
+  if (actionableItemChoices(item).length) {
+    choiceConfigItem.value = item
     pickerOpen.value = false
     return
   }
-  if (Number(props.block.content.item_id) === 7) {
-    const entry = featEntry(item, {}, props.values)
-    emitChange([...stored.value, entry])
-    applyFeatStatBonuses(item, entry)
-    logAddedEntry(item)
-    return
-  }
-  const manualSize = abilityUsesAreManual(item.data)
-  const maxUse = abilityUseTotal(item.data, props.values)
-  const entry = { id: item.id, count: maxUse ?? 0 }
-  if (abilityHasResources(item.data)) entry.resource_version = 1
-  if (manualSize) entry.max_use = maxUse ?? 0
+  const entry = featEntry(item, {}, props.values)
   emitChange([...stored.value, entry])
+  if (Number(props.block.content.item_id) === 7) {
+    applyFeatStatBonuses(item, entry)
+  }
   logAddedEntry(item)
 }
 
-function onFeatChoicesConfirm(choices) {
-  const item = featConfigItem.value
+function onChoicesConfirm(choices) {
+  const item = choiceConfigItem.value
   const entry = featEntry(item, choices, props.values)
   emitChange([...stored.value, entry])
-  applyFeatStatBonuses(item, entry)
+  if (Number(props.block.content.item_id) === 7) applyFeatStatBonuses(item, entry)
+  const selectedItemIds = actionableItemChoices(item)
+    .filter((choice) => choice.source === 'item')
+    .flatMap((choice) => choices[choice.key] || [])
+  if (selectedItemIds.length) ensureItemNames(selectedItemIds).catch(() => {})
   logAddedEntry(item)
-  featConfigItem.value = null
+  choiceConfigItem.value = null
 }
 
 function removeAbility(key) {
@@ -393,7 +389,7 @@ onMounted(async () => {
         ? await charCtx.characterResources.ensureItems(ids)
         : await itemsApi.byIds(ids)
       catalog.value = r.items || []
-      hydrateFeatChoices()
+      hydrateItemChoices()
     } catch (e) { /* show what we have */ }
   }
   loading.value = false

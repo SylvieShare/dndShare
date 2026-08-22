@@ -143,6 +143,9 @@ The current shape under `data.values` is:
 - wallet: `{order:[suggestId],amounts:{[suggestId]:number}}`;
 - race/class/feat abilities: arrays of item references/current counters
   `{id,uid?,count,max_use?,resource_counts?,resource_version?,choices?}`.
+  `choices` maps each stable handbook choice key to the selected values, for
+  example `{style:['defense'],language:[6]}`; selections belong to this owned
+  entry rather than to a hidden class/race rule;
   `count` stores the available charges of a single resource; `resource_counts`
   maps stable keys when one ability owns several independent resources.
   `resource_version` marks counters already migrated to the unified contract.
@@ -269,6 +272,14 @@ write history.
 
 The level-up editor does not render its level-up action until current XP reaches
 the threshold for the next level; direct numeric level editing remains available.
+
+Race abilities, class abilities and feats use one `choices` contract when they
+are granted. Adding an item from a handbook picker first opens the mandatory
+choice dialog and writes the result into the new ability entry only after all
+sections are complete. Inline variants, suggest dictionaries and references to
+another handbook item type are supported. Character creation and level-up use
+the same keys and persistence shape; an item with several choice sections keeps
+them independently addressable.
 
 Race abilities, class abilities and feats remain separate canonical arrays and
 use their corresponding handbook item types and independent editors. Desktop

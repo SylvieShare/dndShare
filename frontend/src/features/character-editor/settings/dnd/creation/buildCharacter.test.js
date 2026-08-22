@@ -16,6 +16,26 @@ describe('buildCharacterData skill choices', () => {
     expect(result.data.values.feature_choices['42']).toEqual([2])
   })
 
+  it('stores several selections on the granted ability entry', () => {
+    const ability = { id: 42, name: 'Универсальность', data: { race_ids: [{ id: 1 }], level: 1 } }
+    const result = buildCharacterData({
+      race: selection(1, 'Человек'),
+      charClass: selection(2, 'Воин'),
+      raceAbilityItems: [ability],
+      choices: [
+        { abilityId: 42, choiceKey: 'skill', selectionKey: '42:skill', from_suggest_id: 15, selected: [2] },
+        { abilityId: 42, choiceKey: 'language', selectionKey: '42:language', from_suggest_id: 6, selected: [6] },
+      ],
+      suggestValue: (typeId, id) => typeId === 6 && id === 6 ? 'Дварфский' : '',
+    })
+
+    expect(result.data.values.abilities_race).toEqual([{
+      id: 42,
+      choices: { skill: [2], language: [6] },
+    }])
+    expect(result.data.values.feature_choices).toEqual({ '42:skill': [2], '42:language': [6] })
+  })
+
   it('keeps regular skill feature choices as normal proficiency', () => {
     const result = buildCharacterData({
       race: selection(1, 'Человек'),

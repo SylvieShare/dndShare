@@ -1,7 +1,7 @@
 <template>
-  <AppModalFrame wide :title="item.name" subtitle="Настройка черты" :z-index="4600" @close="$emit('close')">
+  <AppModalFrame wide :title="item.name" subtitle="Выбор при получении" :z-index="4600" @close="$emit('close')">
     <div class="fcm">
-      <p class="fcm-intro">Сделайте обязательные выборы. Они сохранятся в листе персонажа вместе с чертой.</p>
+      <p class="fcm-intro">Сделайте обязательные выборы. Они сохранятся в листе персонажа вместе с записью.</p>
 
       <div class="fcm-sections">
         <section v-for="choice in choices" :key="choice.key" class="fcm-section">
@@ -83,7 +83,7 @@ import { computed, onMounted, reactive, watch } from 'vue'
 
 import { AppModalFrame } from '@sylvieshare/share-ui'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
-import { choiceSelectionsComplete, featChoices } from '@/features/items/lib/featRules'
+import { actionableItemChoices, choiceSelectionsComplete } from '@/features/items/lib/itemChoices'
 import { useSuggestStore } from '@/stores/suggest'
 
 const props = defineProps({
@@ -94,7 +94,7 @@ const props = defineProps({
 
 const emit = defineEmits(['close', 'confirm'])
 const suggestStore = useSuggestStore()
-const choices = computed(() => featChoices(props.item))
+const choices = computed(() => actionableItemChoices(props.item))
 const selections = reactive({})
 const itemNames = reactive({})
 const itemPicker = reactive({ choice: null })

@@ -71,6 +71,20 @@ function addProficiencies(values, bucket, labels) {
   values.proficiencies = profs
 }
 
+function attachAbilityChoices(entries, choices) {
+  const byAbility = new Map()
+  for (const choice of choices) {
+    const selected = Array.isArray(choice?.selected) ? choice.selected : []
+    if (choice?.abilityId == null || !choice.choiceKey || !selected.length) continue
+    const key = String(choice.abilityId)
+    byAbility.set(key, { ...(byAbility.get(key) || {}), [choice.choiceKey]: selected.slice() })
+  }
+  return (Array.isArray(entries) ? entries : []).map((entry) => {
+    const selected = byAbility.get(String(entry.id))
+    return selected ? { ...entry, choices: selected } : entry
+  })
+}
+
 /**
  * @param {object} input
  * @param {string} input.name
@@ -116,6 +130,8 @@ export function buildCharacterData(input) {
   const classAbilityIds = featureIdsForBinding(classAbilityItems, classBinding, 1)
 
   let { values } = applyGrants(blankValues(), grants, { suggestValue, raceAbilityIds, classAbilityIds })
+  values.abilities_race = attachAbilityChoices(values.abilities_race, choices)
+  values.abilities_class = attachAbilityChoices(values.abilities_class, choices)
 
   // Ability scores: chosen base + racial ASI (fixed + floating choice) as a named bonus.
   const floatBonus = grants.asiChoice?.bonus || 0
@@ -186,15 +202,17 @@ export function buildCharacterData(input) {
 
   const featSpellIds = feats.flatMap(({ item, choices: featChoices = {} }) => featGrantedSpellIds(item, featChoices))
 
-  // Feature choices (granted abilities' `choice`): skill/language picks are
-  // applied mechanically; every choice is recorded under `feature_choices`.
+  // Feature choices: skill/language picks are applied mechanically. The shared
+  // selection contract lives on the ability entry; `feature_choices` remains a
+  // flat compatibility/index map for option-dependent spell grants.
   for (const ch of choices) {
     const sel = ch?.selected || []
     if (!sel.length) continue
     if (Number(ch.from_suggest_id) === 15) sel.forEach((id) => addSkillProf(values, id, ch.expertise ? 2 : 1))
     else if (Number(ch.from_suggest_id) === 6) addLanguages(values, sel.map((id) => suggestValue?.(6, id)).filter(Boolean))
     if (ch.abilityId != null) {
-      values.feature_choices = { ...(values.feature_choices || {}), [ch.abilityId]: sel.slice() }
+      const storageKey = ch.selectionKey ?? ch.abilityId
+      values.feature_choices = { ...(values.feature_choices || {}), [storageKey]: sel.slice() }
     }
   }
 

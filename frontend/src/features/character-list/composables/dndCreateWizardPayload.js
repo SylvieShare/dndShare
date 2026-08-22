@@ -60,7 +60,9 @@ export function buildDndCharacterPayload({
     ),
     grantedSpellIds: grantedSpellIds.slice(),
     choices: featureChoices.map((feature) => ({
-      abilityId: feature.id,
+      abilityId: feature.abilityId,
+      choiceKey: feature.choiceKey,
+      selectionKey: feature.id,
       from_suggest_id: feature.choice.from_suggest_id,
       expertise: isExpertiseChoice(feature),
       selected: (state.choices[feature.id] || []).slice(),

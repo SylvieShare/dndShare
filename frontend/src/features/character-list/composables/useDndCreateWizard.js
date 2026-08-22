@@ -7,6 +7,7 @@ import { SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
 import { extractGrants } from '@/features/character-editor/settings/dnd/creation/grants'
 import { featuresForBinding } from '@/features/character-editor/settings/dnd/creation/progression'
 import { evaluateFeatEligibility, featAbilityBonuses } from '@/features/items/lib/featRules'
+import { itemChoiceRows } from '@/features/items/lib/itemChoices'
 import { useSuggestStore } from '@/stores/suggest'
 import { contentScopeQuery, normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'
 import { itemsApi } from '@/shared/api/itemsApi'
@@ -417,13 +418,13 @@ export function useDndCreateWizard() {
     })
   }
 
-  // Level-1 granted features that carry an actionable `choice` (suggest dictionary
-  // or named options), split by source so each is made on its own step (race
-  // choices on the Race step, class choices on the Class step).
+  const featureChoiceItemOptions = reactive({})
+
+  // Level-1 granted features that carry one or more shared item choices, split
+  // by source so each is made on its own step (race choices on the Race step,
+  // class choices on the Class step).
   function toChoices(list) {
-    return list
-      .filter((a) => a?.data?.choice && (a.data.choice.from_suggest_id || (a.data.choice.options || []).length))
-      .map((a) => ({ id: a.id, name: a.name, choice: a.data.choice }))
+    return list.flatMap(itemChoiceRows)
   }
   const raceFeatureChoices = computed(() => toChoices(featuresForBinding(raceAbilities.value, { raceId: state.race?.id, subraceId: state.subrace?.id }, 1)))
   const classFeatureChoices = computed(() => toChoices(featuresForBinding(classAbilities.value, { classId: state.charClass?.id, subclassId: state.subclass?.id }, 1)))
@@ -432,8 +433,37 @@ export function useDndCreateWizard() {
   const raceChoicesComplete = computed(() => raceFeatureChoices.value.every(isChoiceComplete))
   const classChoicesComplete = computed(() => classFeatureChoices.value.every(isChoiceComplete))
 
+  function parseChoiceItemFilter(raw) {
+    if (!raw) return null
+    try { return JSON.parse(raw) } catch { /* use key=value shorthand below */ }
+    const [key, ...rest] = String(raw).split('=')
+    return key && rest.length ? { [key.trim()]: rest.join('=').trim() } : null
+  }
+  function itemMatchesChoiceFilter(item, raw) {
+    const filter = parseChoiceItemFilter(raw)
+    if (!filter) return true
+    return Object.entries(filter).every(([key, expected]) => {
+      const actual = String(key).split('.').reduce((value, segment) => value?.[segment], item.data)
+      const allowed = Array.isArray(expected) ? expected : [expected]
+      return allowed.some((value) => String(value) === String(actual))
+    })
+  }
   watch(featureChoices, (list) => {
-    list.forEach((fc) => { if (fc.choice.from_suggest_id) suggestStore.ensure(Number(fc.choice.from_suggest_id)) })
+    list.forEach(async (fc) => {
+      if (fc.choice.from_suggest_id != null) suggestStore.ensure(Number(fc.choice.from_suggest_id))
+      if (fc.choice.source !== 'item' || fc.choice.from_item_type_id == null || featureChoiceItemOptions[fc.id]) return
+      try {
+        const response = await itemsApi.listAll(Number(fc.choice.from_item_type_id), {
+          contentSources: state.contentSources,
+          sourceVersionId: sourceVersionId.value,
+        })
+        featureChoiceItemOptions[fc.id] = (response?.items || [])
+          .filter((item) => itemMatchesChoiceFilter(item, fc.choice.item_filter))
+          .map((item) => ({ value: item.id, label: item.name, desc: item.data?.description || item.data?.desc || '' }))
+      } catch {
+        featureChoiceItemOptions[fc.id] = []
+      }
+    })
   }, { immediate: true })
 
   function isExpertiseChoice(fc) {
@@ -458,7 +488,8 @@ export function useDndCreateWizard() {
     const fc = fcOrChoice?.choice ? fcOrChoice : null
     const choice = fc?.choice || fcOrChoice
     if (!choice) return []
-    if (choice.from_suggest_id) {
+    if (choice.source === 'item') return featureChoiceItemOptions[fc?.id] || []
+    if (choice.from_suggest_id != null) {
       let items = suggestStore.items(Number(choice.from_suggest_id))
       if (isExpertiseChoice(fc)) {
         const allowed = new Set(proficientSkillIds.value)
@@ -466,7 +497,11 @@ export function useDndCreateWizard() {
       }
       return items.map((it) => ({ value: it.id, label: it.value, desc: it.desc || '' }))
     }
-    return (choice.options || []).map((o) => ({ value: o.label, label: o.label, desc: o.desc }))
+    return (choice.options || []).map((o) => ({
+      value: o.value ?? o.label,
+      label: o.label || o.value,
+      desc: o.desc || '',
+    })).filter((option) => option.value != null && option.value !== '')
   }
   function choiceSelected(abilityId) {
     return state.choices[abilityId] || []

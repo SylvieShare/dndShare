@@ -1,6 +1,7 @@
 import { extractGrants } from '@/features/character-editor/settings/dnd/creation/grants'
 import { featuresForBinding } from '@/features/character-editor/settings/dnd/creation/progression'
 import { STAT_SHORT } from '@/features/character-list/components/wizard/labels'
+import { actionableItemChoices } from '@/features/items/lib/itemChoices'
 
 function cleanText(value) {
   return String(value || '')
@@ -61,7 +62,7 @@ export function raceCardSummary({ race, raceAbilities = [], suggestValue = () =>
   if (grants.langChoice) choices.push('язык')
   if (grants.featChoice) choices.push('черта')
 
-  const featureChoices = raceFeatures.some((ability) => ability?.data?.choice)
+  const featureChoices = raceFeatures.some((ability) => actionableItemChoices(ability).length)
   if (featureChoices && !choices.includes('особенности')) choices.push('особенности')
 
   return {

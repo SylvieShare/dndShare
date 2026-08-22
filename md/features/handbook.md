@@ -74,6 +74,9 @@ evaluates native/compatible/legacy/blocked status for a target edition.
 
 - race/class features bind only with `race_ids`, `subrace_ids`, `class_ids`,
   `subclass_ids` arrays of handbook item ids;
+- race/class features and feats share `choices`: each row has a stable `key`,
+  required `count` and an inline, suggest-dictionary or handbook-item source;
+  the chosen values are stored on the character's owned ability entry;
 - spells bind through `classes: [{id: classItemId}]`;
 - feats use `description`, `prerequisite_groups`, `choices`, repeatable/grant
   metadata;
@@ -83,8 +86,9 @@ evaluates native/compatible/legacy/blocked status for a target edition.
 - parent/child identity uses item ids, not suggest ids.
 
 Startup SQL converts former single bindings, spell suggest ids, alternate feat
-keys and scalar costs before serving traffic. Runtime code does not union old
-and new fields, and there are no admin jobs for those migrations.
+keys, scalar costs and ability `choice` objects before serving traffic. A small
+read adapter still accepts singular `choice` on externally imported item data,
+but all editors and writes use `choices`; there are no admin migration jobs.
 
 ## UI
 
@@ -124,6 +128,9 @@ has an id. `components/ItemPickerModal.vue`
 is the standard server-backed picker used by the character wizard/editor;
 `components/ItemViewModal.vue` is the standard detail window. Both belong to
 the handbook feature because they compose handbook API, stores and renderers.
+When a type 3, 4 or 7 item declares actionable `choices`, every character-sheet
+picker completes those choices before attaching the item. The same dialog is
+used for abilities and feats; malformed empty choice rows do not block adding.
 The picker reuses `HandbookCollectionBar` and `HandbookItemList`, so it exposes
 the same nested schema filters, publication filter and nested grouping controls
 as the full collection page. Grouped picker results also load every server page

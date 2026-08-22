@@ -4,6 +4,7 @@ import {
   evaluateFeatEligibility,
   featChoices,
 } from '@/features/items/lib/featRules'
+import { actionableItemChoices } from '@/features/items/lib/itemChoices'
 
 export function useLevelUpFeatSelection({ values, entries, itemsById, newTotal, suggestStore }) {
   const featPick = ref(null)
@@ -61,7 +62,7 @@ export function useLevelUpFeatSelection({ values, entries, itemsById, newTotal, 
   function pick(item) {
     if (item?.id == null) return
     featPickerOpen.value = false
-    if (featChoices(item).length) featConfigItem.value = item
+    if (actionableItemChoices(item).length) featConfigItem.value = item
     else featPick.value = { ...item, selectedChoices: {} }
   }
 

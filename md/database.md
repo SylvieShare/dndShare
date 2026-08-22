@@ -129,6 +129,13 @@ Section `39_character_defenses_and_racial_grants.sql` добавляет общ�
 Section `40_ability_spell_cast_level.sql` расширяет дарованные заклинания
 фиксированным `cast_level`; в частности, «Адское возмездие» из «Дьявольского
 наследия» сотворяется 2-м уровнем без хардкода в карточке заклинания.
+Section `41_ability_choices.sql` переводит типы 3 и 4 на тот же массив
+`choices`, который используют черты: стабильный ключ, количество и источник
+вариантов (`inline`, `suggest` или другой тип item). Старые одиночные `choice`
+переносятся в `choices[{key:'choice'}]`, а сохранённые `feature_choices`
+копируются в `choices` конкретной записи способности персонажа. Плоская карта
+остаётся как индекс совместимости для зависимых от выбранного варианта
+заклинаний; новым источником истины является запись способности.
 `item_content_source` связывает item с публикациями. Каждая встроенная
 предыстория (тип 11) хранит владения инструментами в `tool_items`, а физически
 выдаваемое стартовое снаряжение — в `equipment_items`; оба массива содержат
@@ -312,9 +319,9 @@ suggest остаются валидны; составной primary key обес
 Актуальные связи:
 
 - способности рас/классов используют только массивы `race_ids`,
-  `subrace_ids`, `class_ids`, `subclass_ids`;
+  `subrace_ids`, `class_ids`, `subclass_ids` и общий массив `choices`;
 - заклинания используют `classes: [{id: classItemId}]`;
-- черты используют `description`, `prerequisite_groups`, `choices`;
+- черты используют `description`, `prerequisite_groups` и тот же `choices`;
 - стоимость `int_by_suggest` хранится как `{value,suggest_id}`.
 
 При старте `schema/02_handbook.sql` переносит старые одинарные bindings, spell

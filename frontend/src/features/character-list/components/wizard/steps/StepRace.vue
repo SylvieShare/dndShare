@@ -164,7 +164,7 @@
 import { computed, inject, nextTick, ref } from 'vue'
 import FeatChoiceModal from '@/features/character-editor/components/FeatChoiceModal.vue'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
-import { featChoices } from '@/features/items/lib/featRules'
+import { actionableItemChoices } from '@/features/items/lib/itemChoices'
 import MultiSearchSelect from '@/features/character-list/components/wizard/MultiSearchSelect.vue'
 import IllustratedChoiceStage from '@/features/character-list/components/wizard/IllustratedChoiceStage.vue'
 import RaceSelectCard from '@/features/character-list/components/wizard/RaceSelectCard.vue'
@@ -213,7 +213,7 @@ function featName(id) { return featPool.value.find((f) => f.id === id)?.name || 
 function onFeatPick(item) {
   if (item?.id == null) return
   pickerOpen.value = false
-  if (featChoices(item).length) featConfigItem.value = item
+  if (actionableItemChoices(item).length) featConfigItem.value = item
   else setFeatSelection(item, {})
 }
 function onFeatChoicesConfirm(choices) {
