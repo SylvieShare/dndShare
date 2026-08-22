@@ -33,6 +33,7 @@
 import { computed } from 'vue'
 import { EditorSection } from '@sylvieshare/share-ui'
 import { normalizeHitDice } from '@/features/character-editor/blocks/dnd/lib/hitDice'
+import { hpMaximum } from '@/features/character-editor/blocks/dnd/lib/hp'
 
 const props = defineProps({
   hp: { type: Object, required: true },
@@ -41,7 +42,7 @@ const props = defineProps({
 defineEmits(['spend', 'finish'])
 
 const current = computed(() => Number(props.hp.current) || 0)
-const max = computed(() => Number(props.hp.max) || 0)
+const max = computed(() => hpMaximum(props.hp))
 const hitDice = computed(() => normalizeHitDice(props.hp))
 const conLabel = computed(() => (props.conMod >= 0 ? '+' : '') + props.conMod)
 function canSpend(pool) { return pool.used < pool.total && current.value < max.value }

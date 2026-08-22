@@ -23,8 +23,8 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
-import { abilityModByPath, d20Expr, sumBonuses } from '@/shared/lib/dnd'
+import { computed, inject } from 'vue'
+import { abilityModByPath, sumBonuses } from '@/shared/lib/dnd'
 import NumBonusEditor from '@/features/character-editor/blocks/dnd/components/NumBonusEditor'
 import StatTile from '@/features/character-editor/blocks/dnd/components/StatTile'
 import { ToggleSwitch } from '@sylvieshare/share-ui'
@@ -32,6 +32,7 @@ import { useDiceStore } from '@/stores/dice'
 
 const props = defineProps(['block', 'value', 'values'])
 const emit = defineEmits(['update:value'])
+const charCtx = inject('charCtx', {})
 
 const diceStore = useDiceStore()
 
@@ -53,8 +54,9 @@ function onChange(data) { emit('update:value', props.block.id, data) }
 function setUseDex(v) { emit('update:value', props.block.id, { ...numData.value, use_dex: v }) }
 
 function rollInit() {
-  const b = displayValue.value
-  const expr = d20Expr(b)
-  diceStore.roll('Инициатива', expr, { crit_mode: true })
+  diceStore.rollD20('Инициатива', displayValue.value, 'normal', {
+    crit_mode: true,
+    roll_triggers: charCtx.characterCombatEffects?.rollTriggers?.('ability_check') || [],
+  })
 }
 </script>

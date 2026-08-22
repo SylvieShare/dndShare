@@ -17,6 +17,7 @@ import {
 import { abilityHasResources, abilityUseTotal, abilityUsesAreManual } from '@/shared/lib/dndAbilityUses'
 import { abilitySpellGrantRows, syncAbilityGrantedSpells } from '@/features/character-editor/blocks/dnd/lib/abilitySpellGrants'
 import { choicesForEntry } from '@/features/items/lib/itemChoices'
+import { hpMaximum, normalizeHpMaximum } from '@/features/character-editor/blocks/dnd/lib/hp'
 
 export function buildLevelUpUpdates({
   values,
@@ -66,8 +67,9 @@ export function buildLevelUpUpdates({
   if (addedAbilities.length) updates.abilities_class = [...currentAbilities, ...addedAbilities]
 
   const hp = { ...(values.hp || {}) }
-  hp.max = (Number(hp.max) || 0) + hpGain
-  hp.current = Math.min(hp.max, (Number(hp.current) || 0) + hpGain)
+  const maximum = normalizeHpMaximum(hp.max)
+  hp.max = { ...maximum, base: maximum.base + hpGain }
+  hp.current = Math.min(hpMaximum(hp), (Number(hp.current) || 0) + hpGain)
   const classDice = entriesAfter.map((entry) => hitDieLabelOf(itemsById[entry.id]))
   updates.hp = classDice.every(Boolean)
     ? withHitDice(hp, hitDiceFromClasses(hp, entriesAfter, (entry) => hitDieLabelOf(itemsById[entry.id])))

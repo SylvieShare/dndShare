@@ -1,7 +1,7 @@
 <template>
   <div v-for="(bonus, i) in bonuses" :key="i" class="bl-row">
     <template v-if="bonus.readonly">
-      <div class="bl-readonly-name"><span>{{ bonus.name || bonus.title || 'Бонус' }}</span><small>из правил</small></div>
+      <div class="bl-readonly-name"><span>{{ bonus.name || bonus.title || 'Бонус' }}</span><small>{{ bonus.source_label ? `Источник: ${bonus.source_label}` : 'Источник: способности' }}</small></div>
       <strong class="bl-readonly-value">{{ Number(bonus.value) >= 0 ? '+' : '' }}{{ bonus.value }}</strong>
     </template>
     <template v-else>
@@ -10,7 +10,7 @@
       <RemoveButton label="Удалить бонус" @click="remove(i)" />
     </template>
   </div>
-  <AddButton block @click="add">Добавить бонус</AddButton>
+  <AddButton v-if="allowAdd" block @click="add">Добавить бонус</AddButton>
 </template>
 
 <script setup>
@@ -19,7 +19,10 @@ import { FormNumberInput } from '@sylvieshare/share-ui'
 import { FormTextInput } from '@sylvieshare/share-ui'
 import { RemoveButton } from '@sylvieshare/share-ui'
 
-const props = defineProps({ bonuses: { type: Array, default: () => [] } })
+const props = defineProps({
+  bonuses: { type: Array, default: () => [] },
+  allowAdd: { type: Boolean, default: true },
+})
 const emit = defineEmits(['update:bonuses'])
 
 function set(i, field, v) {

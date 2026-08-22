@@ -29,9 +29,9 @@
       :mobile-variant="isMobileVariant"
       :show-edit="canEdit"
       @edit="openEditor"
-      @roll-stat="rollD20Plus(`${displayTitle} — проверка`, mod, checkRollMode)"
-      @roll-save="rollD20Plus(`${displayTitle} — спасбросок`, save, saveRollMode)"
-      @roll-skill="id => rollD20Plus(skillTitle(id), skillBonus(id), skillRollMode(id))"
+      @roll-stat="rollD20Plus(`${displayTitle} — проверка`, mod, checkRollMode, 'ability_check')"
+      @roll-save="rollD20Plus(`${displayTitle} — спасбросок`, save, saveRollMode, 'saving_throw')"
+      @roll-skill="id => rollD20Plus(skillTitle(id), skillBonus(id), skillRollMode(id), 'ability_check')"
     />
   </BaseTile>
 
@@ -67,9 +67,9 @@
         :skill-skeleton-count="skillSkeletonCount"
         :tooltip-max-desc="skillTooltipMaxDesc"
         :tooltip-width="skillTooltipWidth"
-        @roll-stat="rollD20Plus(`${displayTitle} — проверка`, mod, checkRollMode)"
-        @roll-save="rollD20Plus(`${displayTitle} — спасбросок`, save, saveRollMode)"
-        @roll-skill="id => rollD20Plus(skillTitle(id), skillBonus(id), skillRollMode(id))"
+        @roll-stat="rollD20Plus(`${displayTitle} — проверка`, mod, checkRollMode, 'ability_check')"
+        @roll-save="rollD20Plus(`${displayTitle} — спасбросок`, save, saveRollMode, 'saving_throw')"
+        @roll-skill="id => rollD20Plus(skillTitle(id), skillBonus(id), skillRollMode(id), 'ability_check')"
       />
     </template>
 
@@ -379,8 +379,12 @@ function closeEditor() {
 
 // ─── Dice ──────────────────────────────────────────────────────────────────────
 const diceStore = useDiceStore()
-function rollD20Plus(title, bonus, mode = 'normal') {
-  diceStore.rollD20(title, bonus, mode, { crit_mode: true, color: statColor.value })
+function rollD20Plus(title, bonus, mode = 'normal', scope = 'ability_check') {
+  diceStore.rollD20(title, bonus, mode, {
+    crit_mode: true,
+    color: statColor.value,
+    roll_triggers: charCtx.characterCombatEffects?.rollTriggers?.(scope) || [],
+  })
 }
 
 // ─── Watches ─────────────────────────────────────────────────────────────────

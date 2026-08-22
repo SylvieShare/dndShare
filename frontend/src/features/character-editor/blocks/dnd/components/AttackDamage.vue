@@ -14,6 +14,14 @@
     </button>
 
     <button
+      v-if="hasDamage && rollable"
+      type="button"
+      class="ad-crit ad-clickable"
+      title="Бросить критический урон"
+      @click.stop="$emit('roll-critical')"
+    >Крит</button>
+
+    <button
       v-if="hasDamage"
       type="button"
       class="ad-dmg"
@@ -69,7 +77,7 @@ const props = defineProps({
   healParts: { type: Array, default: () => [] },
   rollable: { type: Boolean, default: false },
 })
-defineEmits(['roll-attack', 'roll-damage', 'roll-damage-two', 'roll-heal'])
+defineEmits(['roll-attack', 'roll-damage', 'roll-damage-two', 'roll-critical', 'roll-heal'])
 
 const hasAttack = computed(() => props.attack != null && props.attack !== '')
 const hasDamage = computed(() => props.damageParts.length > 0 || props.modifier !== 0)
@@ -86,7 +94,8 @@ const hasDamage = computed(() => props.damageParts.length > 0 || props.modifier 
 
 .ad-atk,
 .ad-dmg,
-.ad-heal {
+.ad-heal,
+.ad-crit {
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -148,4 +157,5 @@ const hasDamage = computed(() => props.damageParts.length > 0 || props.modifier 
   font-size: 15px;
 }
 .ad-heal-mark { color: var(--success); font-size: 13px; }
+.ad-crit { padding: 4px 7px; border: 1px solid color-mix(in srgb, var(--warning) 45%, transparent); border-radius: 7px; background: color-mix(in srgb, var(--warning) 10%, transparent); color: var(--warning); font-size: 9px; letter-spacing: .04em; text-transform: uppercase; }
 </style>

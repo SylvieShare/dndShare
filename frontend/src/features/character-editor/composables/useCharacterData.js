@@ -9,6 +9,9 @@ import { useCharacterResources } from '@/features/character-editor/composables/u
 import { useCharacterArmor } from '@/features/character-editor/composables/useCharacterArmor'
 import { useCharacterRollEffects } from '@/features/character-editor/composables/useCharacterRollEffects'
 import { useCharacterDefenses } from '@/features/character-editor/composables/useCharacterDefenses'
+import { useCharacterHitPoints } from '@/features/character-editor/composables/useCharacterHitPoints'
+import { useCharacterPassiveEffects } from '@/features/character-editor/composables/useCharacterPassiveEffects'
+import { useCharacterCombatEffects } from '@/features/character-editor/composables/useCharacterCombatEffects'
 import {
   activeLayoutProfile,
   initialTabs,
@@ -33,6 +36,9 @@ export function useCharacterData(uuid, isMobile) {
   const characterValues = computed(() => data.value.values || {})
   const characterResources = useCharacterResources(characterValues)
   const characterDefenses = useCharacterDefenses(characterValues, characterResources.itemsById)
+  const characterHitPoints = useCharacterHitPoints(characterValues, characterResources.itemsById)
+  const characterPassiveEffects = useCharacterPassiveEffects(characterValues, characterResources.itemsById)
+  const characterCombatEffects = useCharacterCombatEffects(characterValues, characterResources.itemsById)
   const characterArmor = useCharacterArmor(characterValues, characterResources)
   const characterRolls = useCharacterRollEffects(characterArmor)
 
@@ -45,6 +51,9 @@ export function useCharacterData(uuid, isMobile) {
     uploadCharacterIcon,
     characterResources,
     characterDefenses,
+    characterHitPoints,
+    characterPassiveEffects,
+    characterCombatEffects,
     characterArmor,
     characterRolls,
     values: characterValues,

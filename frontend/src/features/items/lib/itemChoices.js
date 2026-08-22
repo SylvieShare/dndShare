@@ -78,3 +78,28 @@ export function choicesForEntry(item, selections = {}) {
 export function choiceSelectionsComplete(item, selections = {}) {
   return actionableItemChoices(item).every((choice) => asArray(selections[choice.key]).length === choice.count)
 }
+
+export function parseItemChoiceFilter(raw) {
+  if (!raw) return null
+  if (typeof raw === 'object') return raw
+  try { return JSON.parse(raw) } catch { /* use key=value shorthand */ }
+  const [key, ...rest] = String(raw).split('=')
+  return key && rest.length ? { [key.trim()]: rest.join('=').trim() } : null
+}
+
+function valuesAtPath(value, segments) {
+  if (!segments.length) return Array.isArray(value) ? value.flatMap((entry) => valuesAtPath(entry, [])) : [value]
+  if (Array.isArray(value)) return value.flatMap((entry) => valuesAtPath(entry, segments))
+  if (value == null || typeof value !== 'object') return []
+  return valuesAtPath(value[segments[0]], segments.slice(1))
+}
+
+export function itemMatchesChoiceFilter(item, raw) {
+  const filter = parseItemChoiceFilter(raw)
+  if (!filter) return true
+  return Object.entries(filter).every(([key, expected]) => {
+    const actual = valuesAtPath(item?.data, String(key).split('.'))
+    const allowed = Array.isArray(expected) ? expected : [expected]
+    return actual.some((candidate) => allowed.some((value) => String(value) === String(candidate)))
+  })
+}

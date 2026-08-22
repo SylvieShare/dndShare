@@ -6,6 +6,7 @@ import {
   choicesForEntry,
   itemChoiceRows,
   itemChoices,
+  itemMatchesChoiceFilter,
 } from './itemChoices'
 
 describe('handbook item choices', () => {
@@ -59,5 +60,11 @@ describe('handbook item choices', () => {
     const item = { data: { choices: [{ key: 'empty' }, { key: 'ready', options: [{ label: 'Да' }] }] } }
 
     expect(actionableItemChoices(item).map((choice) => choice.key)).toEqual(['ready'])
+  })
+
+  it('matches scalar fields and paths through object arrays', () => {
+    const spell = { data: { lvl: 0, classes: [{ id: 4014 }, { id: 4017 }] } }
+    expect(itemMatchesChoiceFilter(spell, '{"lvl":0,"classes.id":4014}')).toBe(true)
+    expect(itemMatchesChoiceFilter(spell, '{"lvl":1,"classes.id":4014}')).toBe(false)
   })
 })

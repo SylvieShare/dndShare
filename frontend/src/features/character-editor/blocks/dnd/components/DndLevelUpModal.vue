@@ -286,6 +286,7 @@ import { useLevelUpTarget } from './useLevelUpTarget'
 import { useGrantedSpellNames } from './useGrantedSpellNames'
 import { featSnippet, hitDieLabel as resolveHitDieLabel, monogram, multiclassPrerequisiteLabel } from './levelUpPresentation'
 import { levelUpSessionAdditions } from '@/features/character-editor/blocks/dnd/lib/levelUpSessionAdditions'
+import { itemMatchesChoiceFilter } from '@/features/items/lib/itemChoices'
 
 const CLASS_TYPE = 9
 const CLASS_ABIL_TYPE = 4
@@ -368,20 +369,8 @@ const {
   complete: featureChoicesComplete,
 } = useLevelUpFeatureChoices(features, suggestStore)
 
-function parseFeatureChoiceItemFilter(raw) {
-  if (!raw) return null
-  try { return JSON.parse(raw) } catch { /* use key=value shorthand below */ }
-  const [key, ...rest] = String(raw).split('=')
-  return key && rest.length ? { [key.trim()]: rest.join('=').trim() } : null
-}
 function featureChoiceItemEligibility(item) {
-  const filter = parseFeatureChoiceItemFilter(featureItemChoice.value?.choice?.item_filter)
-  if (!filter) return { eligible: true, reasons: [] }
-  const matches = Object.entries(filter).every(([key, expected]) => {
-    const actual = String(key).split('.').reduce((value, segment) => value?.[segment], item.data)
-    const allowed = Array.isArray(expected) ? expected : [expected]
-    return allowed.some((value) => String(value) === String(actual))
-  })
+  const matches = itemMatchesChoiceFilter(item, featureItemChoice.value?.choice?.item_filter)
   return { eligible: matches, reasons: matches ? [] : ['Не подходит под фильтр выбора'] }
 }
 function onFeatureChoiceItemPick(item) {

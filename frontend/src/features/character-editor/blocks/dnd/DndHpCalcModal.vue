@@ -57,6 +57,7 @@ import { AppModalFrame } from '@sylvieshare/share-ui'
 import SystemDie from '@/shared/ui/SystemDie.vue'
 import DndDeathSaves from './DndDeathSaves'
 import { normalizeHitDice, setHitDieUsed } from '@/features/character-editor/blocks/dnd/lib/hitDice'
+import { hpMaximum } from '@/features/character-editor/blocks/dnd/lib/hp'
 
 const props = defineProps({
   hp:          { type: Object, required: true },
@@ -66,7 +67,7 @@ const emit = defineEmits(['close', 'change', 'graveyard'])
 const calcAmount = ref('')
 const hpCurrent = computed(() => parseInt(props.hp.current) || 0)
 const isDead = computed(() => hpCurrent.value <= 0)
-const hpMax = computed(() => parseInt(props.hp.max) || 0)
+const hpMax = computed(() => hpMaximum(props.hp))
 const hpTemp = computed(() => parseInt(props.hp.temp) || 0)
 const hitDice = computed(() => normalizeHitDice(props.hp))
 const barPct = computed(() => {
@@ -120,7 +121,7 @@ function applyCalc(type) {
     hp.temp = temp - absorbed
     hp.current = Math.max(0, (parseInt(hp.current) || 0) - (amount - absorbed))
   } else if (type === 'heal') {
-    hp.current = Math.min(parseInt(hp.max) || 0, (parseInt(hp.current) || 0) + amount)
+    hp.current = Math.min(hpMaximum(hp), (parseInt(hp.current) || 0) + amount)
   } else if (type === 'temp') {
     hp.temp = (parseInt(hp.temp) || 0) + amount
   }

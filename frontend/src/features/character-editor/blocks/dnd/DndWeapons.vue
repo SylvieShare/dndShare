@@ -191,6 +191,8 @@ const {
   formatBonus,
   damageExpression,
   damageExpressionTwoHanded,
+  criticalDamageExpression,
+  criticalDamageExpressionTwoHanded,
   damageParts,
   damagePartsRaw,
   twoHandedParts,
@@ -220,7 +222,10 @@ function rollAttack(entry) {
   const bonus = attackBonus(entry)
   const abilityId = weaponAbilitySuggestId(entry, item(entry), propertyItems(entry), statsVar.value)
   const mode = armorAttackWarning.value && ['1', '2'].includes(String(abilityId)) ? 'disadvantage' : 'normal'
-  dice.rollD20(`Атака: ${itemTitle(entry)}`, bonus, mode, { crit_mode: true })
+  dice.rollD20(`Атака: ${itemTitle(entry)}`, bonus, mode, {
+    crit_mode: true,
+    roll_triggers: charCtx.characterCombatEffects?.rollTriggers?.('attack') || [],
+  })
 }
 
 function rollDamage(entry) {
@@ -233,6 +238,21 @@ function rollDamageTwoHanded(entry) {
   const expr = damageExpressionTwoHanded(entry)
   if (!expr || expr === '0') return
   dice.roll(`Урон (2р): ${itemTitle(entry)}`, expr)
+}
+
+function extraCriticalDice(entry) {
+  return charCtx.characterCombatEffects?.extraCriticalWeaponDice?.({
+    melee: !item(entry)?.data?.is_long_range,
+  }) || 0
+}
+
+function rollCriticalDamage(entry, twoHanded = false) {
+  const extra = extraCriticalDice(entry)
+  const expr = twoHanded
+    ? criticalDamageExpressionTwoHanded(entry, extra)
+    : criticalDamageExpression(entry, extra)
+  if (!expr || expr === '0') return
+  dice.roll(`Критический урон: ${itemTitle(entry)}`, expr)
 }
 
 function loadItems() {
@@ -372,6 +392,7 @@ provide('weaponsBlockCtx', reactive({
   rollAttack,
   rollDamage,
   rollDamageTwoHanded,
+  rollCriticalDamage,
   showPropertyTooltip,
   hidePropertyTooltip,
   setField,

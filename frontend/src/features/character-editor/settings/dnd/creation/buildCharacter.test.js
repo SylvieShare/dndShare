@@ -68,7 +68,7 @@ describe('buildCharacterData hit dice', () => {
     })
 
     expect(result.data.values.hp).toMatchObject({
-      max: 8,
+      max: { base: 8, bonuses: [] },
       current: 8,
       hitDice: [{ die: 'd6', total: 1, used: 0 }],
     })
@@ -346,7 +346,7 @@ describe('buildCharacterData feats', () => {
     })
 
     expect(result.data.values.CON.value).toEqual({ base: 15, bonuses: [{ name: 'Стойкий ученик', title: 'Стойкий ученик', value: 1, readonly: true, sourceFeatKey: 'feat:70' }] })
-    expect(result.data.values.hp.max).toBe(13)
+    expect(result.data.values.hp.max).toEqual({ base: 13, bonuses: [] })
     expect(result.data.values.proficiencies['Доспехи']).toContain('Средние доспехи')
     expect(result.data.values.DEX.skills['2'].up).toBe(1)
     expect(result.data.values.INT.save_up).toBe(true)

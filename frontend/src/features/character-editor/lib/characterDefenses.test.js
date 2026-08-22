@@ -48,4 +48,26 @@ describe('character defenses', () => {
     values.lvl.level = 3
     expect(collectCharacterDefenses(values, items, [source])).toHaveLength(2)
   })
+
+  it('derives a defense from a choice stored on another owned ability', () => {
+    const source = createAbilityDefenseSource('abilities_race')
+    const values = { abilities_race: [
+      { id: 10, choices: { ancestry: ['red'] } },
+      { id: 11 },
+    ] }
+    const items = new Map([
+      ['10', { id: 10, name: 'Оружие дыхания', data: {} }],
+      ['11', { id: 11, name: 'Сопротивление урону', data: { choice_defenses: [{
+        source_item_id: 10,
+        choice_key: 'ancestry',
+        options: [{ value: 'red', damage_type: 5, kind: 'resistance' }],
+      }] } }],
+    ])
+
+    expect(collectCharacterDefenses(values, items, [source])).toMatchObject([{
+      damage_type: 5,
+      kind: 'resistance',
+      readonly: true,
+    }])
+  })
 })

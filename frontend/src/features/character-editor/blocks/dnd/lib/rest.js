@@ -9,6 +9,7 @@ import {
   normalizeHitDice,
   withHitDice,
 } from '@/features/character-editor/blocks/dnd/lib/hitDice'
+import { hpMaximum } from '@/features/character-editor/blocks/dnd/lib/hp'
 
 // Ability modifier from the DND_CHAR_STAT_10 shape: `{ value: { base, bonuses } }`.
 export function statMod(statVal) {
@@ -35,7 +36,7 @@ function recoveryFor(recovery, die) {
 // Long rest: full HP, drop temp + death saves, regain half the spent hit dice.
 export function longRestHp(hp, recovery = null) {
   let h = { ...(hp || {}) }
-  const max = Number(h.max) || 0
+  const max = hpMaximum(h)
   const pools = normalizeHitDice(h).map((row) => ({ ...row }))
   let left = longRestRecoveryCount(h)
   for (const row of pools) {
@@ -91,7 +92,7 @@ export function exhaustionLevel(ex) {
 // Apply one spent hit die: heal by `amount` (rolled elsewhere), clamp to max, mark one die used.
 export function spendHitDie(hp, amount, die = null) {
   let h = { ...(hp || {}) }
-  const max = Number(h.max) || 0
+  const max = hpMaximum(h)
   const current = Number(h.current) || 0
   const pools = normalizeHitDice(h).map((row) => ({ ...row }))
   const selected = die

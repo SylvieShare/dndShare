@@ -57,4 +57,21 @@ describe('dice roll presentation metadata', () => {
     random.mockRestore()
     store.clear()
   })
+
+  it('offers a one-time reroll action for a matching natural-one trigger', () => {
+    const random = vi.spyOn(Math, 'random').mockReturnValueOnce(0).mockReturnValueOnce(0.5)
+    const store = useDiceStore()
+    store.rollD20('Атака', 2, 'normal', {
+      log: false,
+      roll_triggers: [{ event: 'natural_one', action: 'reroll', source_label: 'Везучий' }],
+    })
+
+    expect(store.stack[0].actions[0].label).toContain('Везучий')
+    store.runAction(store.stack[0].id, 'reroll')
+    expect(store.stack).toHaveLength(1)
+    expect(store.stack[0].result.parts[0].rolls).toEqual([11])
+    expect(store.stack[0].actions).toEqual([])
+    random.mockRestore()
+    store.clear()
+  })
 })

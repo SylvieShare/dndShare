@@ -95,6 +95,27 @@ export function useWeaponCalc({
     return buildDamageExpr(itemTwoHandedAttacks ? itemTwoHandedAttacks(entry) : [], entry)
   }
 
+  function buildCriticalDamageExpr(attacks, entry, extraWeaponDice = 0) {
+    const doubled = (attacks || []).map((attack, index) => ({
+      ...attack,
+      count: (Number(attack.count) || 1) * 2 + (index === 0 ? Math.max(0, Number(extraWeaponDice) || 0) : 0),
+    }))
+    const doubledExtra = normalizeAddAttacks(entry.add_attacks).map((attack) => ({
+      count: (Number(attack.count) || 1) * 2,
+      dice_id: attack.dice_id,
+      type_suggest_id: attack.type_suggest_id,
+    }))
+    return buildDamageExpr(doubled, { ...entry, add_attacks: doubledExtra })
+  }
+
+  function criticalDamageExpression(entry, extraWeaponDice = 0) {
+    return buildCriticalDamageExpr(itemBaseAttacks(entry), entry, extraWeaponDice)
+  }
+
+  function criticalDamageExpressionTwoHanded(entry, extraWeaponDice = 0) {
+    return buildCriticalDamageExpr(itemTwoHandedAttacks ? itemTwoHandedAttacks(entry) : [], entry, extraWeaponDice)
+  }
+
   // Table presentation keeps the flat modifier on the first damage part.
   function damageParts(entry) {
     const parts = itemBaseAttacks(entry).map(attackDisplay)
@@ -135,6 +156,8 @@ export function useWeaponCalc({
     formatLabel,
     damageExpression,
     damageExpressionTwoHanded,
+    criticalDamageExpression,
+    criticalDamageExpressionTwoHanded,
     damageParts,
     damagePartsRaw,
     twoHandedParts,

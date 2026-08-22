@@ -19,6 +19,12 @@ function detectOutcome(result) {
   return fumble
 }
 
+function keptNaturalD20(result) {
+  const part = result.parts.find((row) => row.kind === 'dice' && row.sides === 20)
+  if (!part) return null
+  return part.keptIndex == null ? part.rolls?.[0] : part.rolls?.[part.keptIndex]
+}
+
 export const useDiceStore = defineStore('dice', () => {
   const stack = ref([])
   const timers = new Map()
@@ -55,6 +61,8 @@ export const useDiceStore = defineStore('dice', () => {
         outcome: entry.outcome || null,
         color: entry.color || null,
         duration,
+        actions: Array.isArray(entry.actions) ? entry.actions : [],
+        rerollSpec: entry.rerollSpec || null,
       })
       while (stack.value.length > MAX_STACK) {
         const removed = stack.value.shift()
@@ -111,10 +119,27 @@ export const useDiceStore = defineStore('dice', () => {
     }
     result.rollMode = normalizedMode
     const outcome = opts.crit_mode ? detectOutcome(result) : null
+    const triggers = keptNaturalD20(result) === 1
+      ? (Array.isArray(opts.roll_triggers) ? opts.roll_triggers : []).filter((rule) => rule.event === 'natural_one' && rule.action === 'reroll')
+      : []
+    const actions = triggers.length ? [{
+      key: 'reroll',
+      label: triggers[0].label || `Перебросить — ${triggers[0].source_label || 'способность'}`,
+    }] : []
     return pushEntry({
       action, actor: opts.actor, result, outcome, color: opts.color,
       popup: opts.popup, log: opts.log, duration: opts.duration,
+      actions,
+      rerollSpec: actions.length ? { action, bonus, mode: normalizedMode, opts: { ...opts, roll_triggers: [] } } : null,
     })
+  }
+
+  function runAction(id, key) {
+    const entry = stack.value.find((row) => row.id === id)
+    if (!entry || key !== 'reroll' || !entry.rerollSpec) return null
+    const spec = entry.rerollSpec
+    dismiss(id)
+    return rollD20(spec.action, spec.bonus, spec.mode, spec.opts)
   }
 
   function clear() {
@@ -123,5 +148,5 @@ export const useDiceStore = defineStore('dice', () => {
     stack.value = []
   }
 
-  return { stack, roll, rollD20, pushEntry, dismiss, clear }
+  return { stack, roll, rollD20, pushEntry, runAction, dismiss, clear }
 })

@@ -181,6 +181,10 @@
       { "name": "ID типа предметов", "key": "from_item_type_id", "type": "int", "show_on": { "key": "source", "value": "item" } },
       { "name": "Фильтр предметов", "key": "item_filter", "type": "text", "show_on": { "key": "source", "value": "item" } },
       { "name": "Не повторять вариант", "key": "unique_across_takes", "type": "bool" },
+      { "name": "Добавить выбранные заклинания", "key": "grant_spells", "type": "bool" },
+      { "name": "Характеристика заклинаний", "key": "casting_ability", "type": "suggest", "suggest_id": 16 },
+      { "name": "Без расхода ячейки", "key": "slotless", "type": "bool" },
+      { "name": "С уровня", "key": "level", "type": "int", "default": 1 },
       {
         "name": "Варианты",
         "key": "options",
@@ -222,6 +226,63 @@
         "type": "int",
         "default": 1
       }
+    ]
+  },
+  {
+    "name": "Бонусы к максимуму хитов",
+    "key": "hp_bonuses",
+    "type": "object_array",
+    "fields": [
+      { "name": "Название", "key": "title", "type": "text" },
+      { "name": "Постоянный бонус", "key": "base", "type": "int" },
+      { "name": "За каждый уровень", "key": "per_level", "type": "int" },
+      { "name": "С уровня", "key": "level", "type": "int", "default": 1 }
+    ]
+  },
+  {
+    "name": "Пассивные свойства",
+    "key": "passive_effects",
+    "type": "object_array",
+    "fields": [
+      { "name": "Название", "key": "title", "type": "text" },
+      { "name": "Пояснение", "key": "description", "type": "text" },
+      { "name": "Вид", "key": "tone", "type": "select", "default": "info", "options": [{ "value": "info", "label": "Информация" }, { "value": "success", "label": "Защита" }, { "value": "warning", "label": "Условие" }, { "value": "danger", "label": "Ограничение" }] },
+      { "name": "С уровня", "key": "level", "type": "int", "default": 1 }
+    ]
+  },
+  {
+    "name": "Триггеры броска",
+    "key": "roll_triggers",
+    "type": "object_array",
+    "fields": [
+      { "name": "Событие", "key": "event", "type": "select", "options": [{ "value": "natural_one", "label": "Натуральная 1" }] },
+      { "name": "Действие", "key": "action", "type": "select", "options": [{ "value": "reroll", "label": "Предложить переброс" }] },
+      { "name": "Текст действия", "key": "label", "type": "text" },
+      { "name": "С уровня", "key": "level", "type": "int", "default": 1 }
+    ]
+  },
+  {
+    "name": "Модификаторы критического урона",
+    "key": "critical_damage",
+    "type": "object_array",
+    "fields": [
+      { "name": "Вид оружия", "key": "weapon_kind", "type": "select", "options": [{ "value": "melee", "label": "Рукопашное" }, { "value": "any", "label": "Любое" }] },
+      { "name": "Дополнительных костей оружия", "key": "extra_weapon_dice", "type": "int", "default": 1 },
+      { "name": "С уровня", "key": "level", "type": "int", "default": 1 }
+    ]
+  },
+  {
+    "name": "Защиты по выбору",
+    "key": "choice_defenses",
+    "type": "object_array",
+    "fields": [
+      { "name": "ID способности с выбором", "key": "source_item_id", "type": "int" },
+      { "name": "Ключ выбора", "key": "choice_key", "type": "text" },
+      { "name": "Соответствия", "key": "options", "type": "object_array", "fields": [
+        { "name": "Значение выбора", "key": "value", "type": "text" },
+        { "name": "Тип урона", "key": "damage_type", "type": "suggest", "suggest_id": 12 },
+        { "name": "Вид защиты", "key": "kind", "type": "select", "default": "resistance", "options": [{ "value": "resistance", "label": "Сопротивление" }, { "value": "immunity", "label": "Невосприимчивость" }, { "value": "vulnerability", "label": "Уязвимость" }] }
+      ] }
     ]
   },
   {

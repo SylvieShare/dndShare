@@ -1,4 +1,5 @@
 import { abilityOwnerLevel } from '@/shared/lib/dndAbilityUses'
+import { itemChoices } from '@/features/items/lib/itemChoices'
 
 function number(value) {
   if (value == null || value === '') return null
@@ -34,6 +35,32 @@ export function abilitySpellGrantRows(items, values = {}) {
           ...(castLevel != null ? { cast_level: castLevel } : {}),
         },
       })
+    }
+    const ownedEntry = ['abilities_race', 'abilities_class', 'abilities_feats']
+      .flatMap((key) => Array.isArray(values?.[key]) ? values[key] : [])
+      .find((entry) => String(entry?.id) === String(item.id))
+    for (const choice of itemChoices(item).filter((rule) => rule.grant_spells)) {
+      const unlockLevel = number(choice.level) ?? number(data.level) ?? 1
+      if (ownerLevel < unlockLevel) continue
+      for (const selected of (Array.isArray(ownedEntry?.choices?.[choice.key]) ? ownedEntry.choices[choice.key] : [])) {
+        const spellId = number(selected)
+        if (spellId == null) continue
+        const castingAbility = number(choice.casting_ability)
+        const castLevel = number(choice.cast_level)
+        rows.push({
+          spellId,
+          castingAbility,
+          castLevel,
+          slotless: !!choice.slotless,
+          source: {
+            kind: 'ability',
+            item_id: item.id,
+            label: item.name || 'Способность',
+            ...(castingAbility != null ? { casting_ability: castingAbility } : {}),
+            ...(castLevel != null ? { cast_level: castLevel } : {}),
+          },
+        })
+      }
     }
   }
   return rows

@@ -2,6 +2,7 @@ import { ref } from 'vue'
 import { charactersApi } from '@/shared/api/charactersApi'
 import { pvHp, pvHpPath } from '@/features/sessions/lib/participantView'
 import { useDiceStore } from '@/stores/dice'
+import { hpMaximum } from '@/features/character-editor/blocks/dnd/lib/hp'
 
 export function useEncounterHp({
   getCombatant,
@@ -98,7 +99,7 @@ export function useEncounterHp({
     const v = (p && pvHp(p)) || {}
     return {
       current: Number(v.current) || 0,
-      max: Number(v.max) || 0,
+      max: hpMaximum(v),
       temp: Number(v.temp) || 0,
       ds_success: Number(v.ds_success) || 0,
       ds_failure: Number(v.ds_failure) || 0,
@@ -178,7 +179,6 @@ export function useEncounterHp({
     if (!hpPath) return
     const updates = [
       { path: `${hpPath}.current`,    value: Number(hp.current) || 0 },
-      { path: `${hpPath}.max`,        value: Number(hp.max) || 0 },
       { path: `${hpPath}.temp`,       value: Number(hp.temp) || 0 },
       { path: `${hpPath}.hitDice`,    value: Array.isArray(hp.hitDice) ? hp.hitDice : [] },
       { path: `${hpPath}.ds_success`, value: Number(hp.ds_success) || 0 },

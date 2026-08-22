@@ -33,6 +33,7 @@
         @roll-attack="emit('roll-attack')"
         @roll-damage="emit('roll-damage')"
         @roll-damage-two="emit('roll-damage-two')"
+        @roll-critical="emit('roll-critical')"
       />
       <div class="w-props-inline">
         <span
@@ -58,7 +59,7 @@ const props = defineProps({
   // tile = full interactivity; morph clone = static
   interactive: { type: Boolean, default: false },
 })
-const emit = defineEmits(['name-down', 'roll-attack', 'roll-damage', 'roll-damage-two'])
+const emit = defineEmits(['name-down', 'roll-attack', 'roll-damage', 'roll-damage-two', 'roll-critical'])
 
 const ctx = inject('weaponsBlockCtx')
 

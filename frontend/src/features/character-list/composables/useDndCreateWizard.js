@@ -7,7 +7,7 @@ import { SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
 import { extractGrants } from '@/features/character-editor/settings/dnd/creation/grants'
 import { featuresForBinding } from '@/features/character-editor/settings/dnd/creation/progression'
 import { evaluateFeatEligibility, featAbilityBonuses } from '@/features/items/lib/featRules'
-import { itemChoiceRows } from '@/features/items/lib/itemChoices'
+import { itemChoiceRows, itemMatchesChoiceFilter } from '@/features/items/lib/itemChoices'
 import { useSuggestStore } from '@/stores/suggest'
 import { contentScopeQuery, normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'
 import { itemsApi } from '@/shared/api/itemsApi'
@@ -433,21 +433,6 @@ export function useDndCreateWizard() {
   const raceChoicesComplete = computed(() => raceFeatureChoices.value.every(isChoiceComplete))
   const classChoicesComplete = computed(() => classFeatureChoices.value.every(isChoiceComplete))
 
-  function parseChoiceItemFilter(raw) {
-    if (!raw) return null
-    try { return JSON.parse(raw) } catch { /* use key=value shorthand below */ }
-    const [key, ...rest] = String(raw).split('=')
-    return key && rest.length ? { [key.trim()]: rest.join('=').trim() } : null
-  }
-  function itemMatchesChoiceFilter(item, raw) {
-    const filter = parseChoiceItemFilter(raw)
-    if (!filter) return true
-    return Object.entries(filter).every(([key, expected]) => {
-      const actual = String(key).split('.').reduce((value, segment) => value?.[segment], item.data)
-      const allowed = Array.isArray(expected) ? expected : [expected]
-      return allowed.some((value) => String(value) === String(actual))
-    })
-  }
   watch(featureChoices, (list) => {
     list.forEach(async (fc) => {
       if (fc.choice.from_suggest_id != null) suggestStore.ensure(Number(fc.choice.from_suggest_id))

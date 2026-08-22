@@ -192,6 +192,9 @@ import { useSuggestStore } from '@/stores/suggest'
 import { abilityUseTotal } from '@/shared/lib/dndAbilityUses'
 import { deriveEquippedArmor } from '@/features/character-editor/blocks/dnd/lib/equippedArmor'
 import { collectCharacterDefenses, DEFENSE_KINDS } from '@/features/character-editor/lib/characterDefenses'
+import { hpMaximum } from '@/features/character-editor/blocks/dnd/lib/hp'
+import { collectCharacterHpBonuses } from '@/features/character-editor/lib/characterHitPoints'
+import { normalizeHpMaximum } from '@/features/character-editor/blocks/dnd/lib/hp'
 
 const PrintField = defineComponent({
   props: { label: String, value: String },
@@ -239,7 +242,13 @@ const abilities = computed(() => STAT_KEYS.map(key => {
   return { key, score, mod, short: STAT_SHORT[key], full: STAT_FULL[key], saveProficient, save: mod + (saveProficient ? profBonus.value : 0) + sumBonuses(values.value[key]?.save_bonuses) }
 }))
 
-const hp = computed(() => ({ current: 0, max: 0, temp: 0, ds_success: 0, ds_failure: 0, ...(values.value.hp || {}) }))
+const hp = computed(() => {
+  const raw = { current: 0, max: 0, temp: 0, ds_success: 0, ds_failure: 0, ...(values.value.hp || {}) }
+  const maximum = normalizeHpMaximum(raw.max)
+  const contributed = collectCharacterHpBonuses(values.value, new Map(Object.entries(catalog.value)))
+  const effective = { ...raw, max: { ...maximum, bonuses: [...maximum.bonuses, ...contributed] } }
+  return { ...effective, max: hpMaximum(effective) }
+})
 const printArmor = computed(() => deriveEquippedArmor(values.value, catalog.value, typeId => suggest.items(typeId)))
 const armorClass = computed(() => printArmor.value.total)
 const initiative = computed(() => {

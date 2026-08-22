@@ -23,10 +23,26 @@
       </div>
     </div>
 
-    <!-- Max / dice config -->
-    <FormField label="Максимум HP">
-      <FormNumberInput :value="hp.max || 0" :min="0" :max="999" @change="set('max', $event)" />
+    <!-- Maximum HP is a transparent base + source bonuses calculation. -->
+    <div class="hpe-max-summary">
+      <span>Максимум хитов</span>
+      <strong>{{ maximumTotal }}</strong>
+    </div>
+    <FormField label="База хитов">
+      <FormNumberInput :value="maximum.base" :min="0" :max="999" @change="setMaximumBase" />
     </FormField>
+    <div v-if="racialBonuses.length" class="hpe-field">
+      <span class="hpe-label">Расовые бонусы</span>
+      <BonusList :bonuses="racialBonuses" :allow-add="false" />
+    </div>
+    <div v-if="otherSourceBonuses.length" class="hpe-field">
+      <span class="hpe-label">Другие бонусы из способностей</span>
+      <BonusList :bonuses="otherSourceBonuses" :allow-add="false" />
+    </div>
+    <div class="hpe-field">
+      <span class="hpe-label">Ручные бонусы</span>
+      <BonusList :bonuses="manualBonuses" @update:bonuses="setManualBonuses" />
+    </div>
     <div v-if="hitDice.length === 1" class="hpe-field">
       <span class="hpe-label">Тип кубика</span>
       <div class="hpe-pills">
@@ -52,6 +68,7 @@ import CalcPad from '@/features/character-editor/components/CalcPad'
 import { EditorPanel } from '@sylvieshare/share-ui'
 import { FormField } from '@sylvieshare/share-ui'
 import { FormNumberInput } from '@sylvieshare/share-ui'
+import BonusList from '@/shared/ui/BonusList.vue'
 import SystemDie from '@/shared/ui/SystemDie.vue'
 import { HIT_DICE } from '@/shared/lib/systemDice'
 import {
@@ -59,6 +76,7 @@ import {
   normalizeHitDice,
   setHitDieUsed,
 } from '@/features/character-editor/blocks/dnd/lib/hitDice'
+import { hpMaximum, normalizeHpMaximum, withHpBase, withHpBonuses } from '@/features/character-editor/blocks/dnd/lib/hp'
 
 const props = defineProps({
   hp: { type: Object, required: true },
@@ -67,6 +85,11 @@ const emit = defineEmits(['change'])
 const calcAmount = ref('')
 
 const hitDice = computed(() => normalizeHitDice(props.hp))
+const maximum = computed(() => normalizeHpMaximum(props.hp.max))
+const maximumTotal = computed(() => hpMaximum(props.hp))
+const racialBonuses = computed(() => maximum.value.bonuses.filter((row) => row?.source?.category === 'race'))
+const otherSourceBonuses = computed(() => maximum.value.bonuses.filter((row) => row?.source?.sourceId && row?.source?.category !== 'race'))
+const manualBonuses = computed(() => maximum.value.bonuses.filter((row) => !row?.source?.sourceId))
 
 function evalExpr(expr) {
   const clean = String(expr).replace(/−/g, '-').replace(/[^0-9+\-*/\s.]/g, '')
@@ -87,7 +110,7 @@ function applyCalc(type) {
     hp.temp = temp - absorbed
     hp.current = Math.max(0, (parseInt(hp.current) || 0) - (amount - absorbed))
   } else if (type === 'heal') {
-    hp.current = Math.min(parseInt(hp.max) || 0, (parseInt(hp.current) || 0) + amount)
+    hp.current = Math.min(hpMaximum(hp), (parseInt(hp.current) || 0) + amount)
   } else if (type === 'temp') {
     hp.temp = (parseInt(hp.temp) || 0) + amount
   }
@@ -99,7 +122,10 @@ function adjustDice(pool, delta) {
   emit('change', setHitDieUsed(props.hp, pool.die, pool.used + delta))
 }
 function setDie(die) { emit('change', changeHitDieType(props.hp, hitDice.value[0].die, die)) }
-function set(field, value) { emit('change', { ...props.hp, [field]: value }) }
+function setMaximumBase(value) { emit('change', withHpBase(props.hp, value)) }
+function setManualBonuses(value) {
+  emit('change', withHpBonuses(props.hp, [...racialBonuses.value, ...otherSourceBonuses.value, ...value]))
+}
 </script>
 
 <style scoped>
@@ -154,6 +180,8 @@ function set(field, value) { emit('change', { ...props.hp, [field]: value }) }
 .hpe-dice-btn:disabled { opacity: 0.25; cursor: not-allowed; }
 
 .hpe-field { display: flex; flex-direction: column; gap: 8px; }
+.hpe-max-summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 12px; border-radius: 8px; background: color-mix(in srgb, var(--accent) 10%, var(--surface)); color: var(--text-2); font-size: 13px; }
+.hpe-max-summary strong { color: var(--accent-soft); font-size: 20px; }
 .hpe-label { color: var(--text-muted); font-size: 13px; }
 .hpe-pills { display: flex; flex-wrap: wrap; gap: 6px; }
 .hpe-pill {

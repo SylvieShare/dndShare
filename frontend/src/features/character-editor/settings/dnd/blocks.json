@@ -324,6 +324,10 @@
       "damage_type_suggest_id": 12
     }
   },
+  "passive_effects": {
+    "id": "passive_effects",
+    "type": "DND_PASSIVE_EFFECTS"
+  },
   "initiative": {
     "id": "initiative",
     "type": "DND_INITIATIVE",

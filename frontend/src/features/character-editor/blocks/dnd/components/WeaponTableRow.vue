@@ -151,6 +151,13 @@
           </span>
         </template>
       </span>
+      <button
+        v-if="!ctx.charCtx.ownerMode && ctx.damageParts(entry).length"
+        class="w-crit-btn"
+        type="button"
+        title="Бросить критический урон"
+        @click="ctx.rollCriticalDamage(entry)"
+      >Крит</button>
     </td>
 
     <td v-if="ctx.charCtx.ownerMode" class="w-delete-cell">
@@ -229,6 +236,7 @@ const colspan = computed(() => ctx.charCtx.ownerMode ? 6 : 4)
 .w-row {
   transition: background 0.12s;
 }
+.w-crit-btn { margin-left: 6px; border: 1px solid color-mix(in srgb, var(--warning) 45%, transparent); border-radius: 6px; padding: 3px 6px; background: color-mix(in srgb, var(--warning) 10%, transparent); color: var(--warning); font: inherit; font-size: 9px; font-weight: 700; cursor: pointer; text-transform: uppercase; }
 .w-row.w-row-hovered td { background: color-mix(in srgb, var(--text-on-accent) 4%, transparent); }
 .w-row-with-desc td { border-bottom: 0; }
 

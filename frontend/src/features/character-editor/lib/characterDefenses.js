@@ -61,7 +61,7 @@ export function createAbilityDefenseSource(valueId) {
         const item = itemsById.get(String(entry.id))
         if (!item) return []
         const ownerLevel = abilityOwnerLevel(item.data || {}, values)
-        return (Array.isArray(item.data?.defenses) ? item.data.defenses : []).flatMap((rule, index) => {
+        const fixed = (Array.isArray(item.data?.defenses) ? item.data.defenses : []).flatMap((rule, index) => {
           const damageType = normalizedDamageType(rule?.damage_type)
           const unlockLevel = Number(rule?.level) || 1
           if (damageType == null || ownerLevel < unlockLevel) return []
@@ -79,6 +79,23 @@ export function createAbilityDefenseSource(valueId) {
             },
           }]
         })
+        const selected = (Array.isArray(item.data?.choice_defenses) ? item.data.choice_defenses : []).flatMap((rule, index) => {
+          const sourceEntry = entries.find((candidate) => String(candidate?.id) === String(rule?.source_item_id))
+          const choices = Array.isArray(sourceEntry?.choices?.[rule?.choice_key]) ? sourceEntry.choices[rule.choice_key] : []
+          return choices.flatMap((choice) => (Array.isArray(rule?.options) ? rule.options : []).flatMap((option) => {
+            const damageType = normalizedDamageType(option?.damage_type)
+            if (String(option?.value) !== String(choice) || damageType == null) return []
+            return [{
+              key: `abilities:${valueId}:${entryKey(entry)}:choice:${index}:${choice}`,
+              damage_type: damageType,
+              kind: normalizedKind(option?.kind),
+              readonly: true,
+              source_label: `способность «${item.name || 'Без названия'}»`,
+              source: { sourceId: this.id, valueId, entryKey: entryKey(entry), itemId: item.id },
+            }]
+          }))
+        })
+        return [...fixed, ...selected]
       })
     },
   }

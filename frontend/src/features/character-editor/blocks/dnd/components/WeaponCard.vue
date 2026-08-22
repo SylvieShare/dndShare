@@ -19,6 +19,7 @@
           @roll-attack="ctx.rollAttack(entry)"
           @roll-damage="ctx.rollDamage(entry)"
           @roll-damage-two="ctx.rollDamageTwoHanded(entry)"
+          @roll-critical="ctx.rollCriticalDamage(entry)"
         />
 
         <RichContent v-if="entry.desc" class="w-desc-text" :html="entry.desc" />
@@ -45,6 +46,11 @@
     </template>
 
     <template #default="{ close: closeMenu }">
+      <RowActionItem
+        v-if="ctx.item(entry)"
+        tone="warning"
+        @click="rollCritical(closeMenu)"
+      >Бросить критический урон</RowActionItem>
       <RowActionItem
         v-if="ctx.item(entry)"
         action="view"
@@ -109,6 +115,10 @@ function openDescription(closeMenu) {
 function editWeapon(closeMenu) {
   closeMenu()
   openEditor()
+}
+function rollCritical(closeMenu) {
+  closeMenu()
+  ctx.rollCriticalDamage(props.entry)
 }
 function moveToItems(closeMenu) {
   closeMenu()

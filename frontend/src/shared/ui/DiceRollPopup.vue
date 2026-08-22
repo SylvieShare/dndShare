@@ -91,6 +91,12 @@
 
       <div class="dice-pop-raw">{{ rawExpression(entry) }}</div>
 
+      <div v-if="entry.actions?.length && !isRolling(entry.id)" class="dice-pop-actions">
+        <button v-for="action in entry.actions" :key="action.key" type="button" @click="store.runAction(entry.id, action.key)">
+          {{ action.label }}
+        </button>
+      </div>
+
       <div class="dice-pop-bar" :style="{ animationDuration: entry.duration + 'ms' }" />
     </div>
   </TransitionGroup>
@@ -229,6 +235,8 @@ function rawExpression(entry) {
   z-index: 1;
 }
 .dice-pop-close:hover { color: var(--text-1); background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); }
+.dice-pop-actions { display: flex; gap: 6px; margin-top: 9px; }
+.dice-pop-actions button { flex: 1; border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--border)); border-radius: 8px; padding: 8px 10px; background: color-mix(in srgb, var(--accent) 14%, var(--surface)); color: var(--text-1); font: inherit; font-weight: 700; cursor: pointer; }
 
 .dice-pop-title {
   font-size: 14px;

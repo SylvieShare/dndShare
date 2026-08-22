@@ -10,6 +10,7 @@
  */
 import { settingAccessors } from '@/features/character-editor/settings'
 import { normalizeHitDice } from '@/features/character-editor/blocks/dnd/lib/hitDice'
+import { hpMaximum } from '@/features/character-editor/blocks/dnd/lib/hp'
 import { useTemplateStore } from '@/stores/template'
 
 function tplOf(entry) {
@@ -47,7 +48,7 @@ export function pvHp(entry) {
   const hitDice = normalizeHitDice(v)
   return {
     current: Number(v.current) || 0,
-    max: Number(v.max) || 0,
+    max: hpMaximum(v),
     temp: Number(v.temp) || 0,
     hitDice,
     ds_success: Number(v.ds_success) || 0,

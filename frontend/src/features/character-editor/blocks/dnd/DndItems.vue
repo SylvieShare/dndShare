@@ -386,7 +386,10 @@ function rollTool(entry, ability, closeAbilities, closeMenu) {
     `${entry.display.name} — ${ability.label}`,
     toolCheckBonus(entry, ability),
     resolved.mode,
-    { crit_mode: true },
+    {
+      crit_mode: true,
+      roll_triggers: charCtx.characterCombatEffects?.rollTriggers?.('ability_check') || [],
+    },
   )
   closeAbilities()
   closeMenu()

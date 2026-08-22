@@ -123,6 +123,7 @@
 
 <script setup>
 import { computed } from 'vue'
+import { hpMaximum } from '@/features/character-editor/blocks/dnd/lib/hp'
 import { HeartPulse, Palette } from '@lucide/vue'
 import { BaseTile } from '@sylvieshare/share-ui'
 import { ColorPresetPicker } from '@sylvieshare/share-ui'
@@ -198,7 +199,7 @@ const hp = computed(() => {
   if (!v) return null
   return {
     current:    Number(v.current)    ?? 0,
-    max:        Number(v.max)        || 0,
+    max:        hpMaximum(v),
     temp:       Number(v.temp)       || 0,
     ds_success: Number(v.ds_success) || 0,
     ds_failure: Number(v.ds_failure) || 0,

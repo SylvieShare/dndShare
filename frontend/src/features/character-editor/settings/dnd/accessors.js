@@ -10,6 +10,7 @@
  */
 
 import { abilityModByPath, abilityModifier } from '@/shared/lib/dnd'
+import { hpMaximum } from '@/features/character-editor/blocks/dnd/lib/hp'
 
 function refName(val) {
   return val && typeof val === 'object' ? String(val.name || '') : ''
@@ -60,7 +61,7 @@ export const dndAccessors = {
     if (!v || typeof v !== 'object') return null
     return {
       current: Number(v.current) || 0,
-      max: Number(v.max) || 0,
+      max: hpMaximum(v),
       temp: Number(v.temp) || 0,
       ds_success: Number(v.ds_success) || 0,
       ds_failure: Number(v.ds_failure) || 0,

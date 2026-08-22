@@ -42,6 +42,19 @@ describe('ability spell grants', () => {
     })
   })
 
+  it('grants a spell selected through a configurable ability choice', () => {
+    const cantrip = {
+      id: 9,
+      name: 'Заговор волшебника',
+      data: { choices: [{ key: 'wizard_cantrip', grant_spells: true, casting_ability: 4 }] },
+    }
+    const rows = abilitySpellGrantRows([cantrip], {
+      lvl: { level: 1 },
+      abilities_race: [{ id: 9, choices: { wizard_cantrip: [777] } }],
+    })
+    expect(rows).toMatchObject([{ spellId: 777, castingAbility: 4, source: { item_id: 9 } }])
+  })
+
   it('keeps a manually owned spell when its ability source disappears', () => {
     const withGrant = syncAbilityGrantedSpells([{ id: 498, prepared: false }], abilitySpellGrantRows([ability], { lvl: { level: 1 } }))
     expect(withGrant[0].external_only).toBeUndefined()

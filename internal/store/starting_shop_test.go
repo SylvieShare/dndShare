@@ -9,21 +9,22 @@ import (
 )
 
 func TestToolProficiencyCatalogIsEmbeddedAfterItemTypeHierarchy(t *testing.T) {
-	if len(schemaParts) < 12 {
+	if len(schemaParts) < 13 {
 		t.Fatal("schemaParts must contain the final item catalogue sections")
 	}
-	hierarchy := schemaParts[len(schemaParts)-12]
-	tools := schemaParts[len(schemaParts)-11]
-	resources := schemaParts[len(schemaParts)-10]
-	classTools := schemaParts[len(schemaParts)-9]
-	resourceFixes := schemaParts[len(schemaParts)-8]
-	resourceAudit := schemaParts[len(schemaParts)-7]
-	resourceColors := schemaParts[len(schemaParts)-6]
-	spellGrants := schemaParts[len(schemaParts)-5]
-	equippedArmor := schemaParts[len(schemaParts)-4]
-	defenses := schemaParts[len(schemaParts)-3]
-	castLevel := schemaParts[len(schemaParts)-2]
-	choices := schemaParts[len(schemaParts)-1]
+	hierarchy := schemaParts[len(schemaParts)-13]
+	tools := schemaParts[len(schemaParts)-12]
+	resources := schemaParts[len(schemaParts)-11]
+	classTools := schemaParts[len(schemaParts)-10]
+	resourceFixes := schemaParts[len(schemaParts)-9]
+	resourceAudit := schemaParts[len(schemaParts)-8]
+	resourceColors := schemaParts[len(schemaParts)-7]
+	spellGrants := schemaParts[len(schemaParts)-6]
+	equippedArmor := schemaParts[len(schemaParts)-5]
+	defenses := schemaParts[len(schemaParts)-4]
+	castLevel := schemaParts[len(schemaParts)-3]
+	choices := schemaParts[len(schemaParts)-2]
+	racialAutomation := schemaParts[len(schemaParts)-1]
 	if hierarchy.name != "item-type-hierarchy" || hierarchy.sql == "" || hierarchy.sql != schemaItemTypeHierarchySQL {
 		t.Fatal("item-type-hierarchy schema must be embedded after the equipment catalogues")
 	}
@@ -59,6 +60,9 @@ func TestToolProficiencyCatalogIsEmbeddedAfterItemTypeHierarchy(t *testing.T) {
 	}
 	if choices.name != "ability-choices" || choices.sql == "" || choices.sql != schemaAbilityChoicesSQL {
 		t.Fatal("ability choices must be embedded after the ability catalogue migrations")
+	}
+	if racialAutomation.name != "racial-automation" || racialAutomation.sql == "" || racialAutomation.sql != schemaRacialAutomationSQL {
+		t.Fatal("racial automation must be embedded after the shared ability choice contract")
 	}
 }
 

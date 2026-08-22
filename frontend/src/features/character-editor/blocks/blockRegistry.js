@@ -30,6 +30,7 @@ import DndSpeed from '@/features/character-editor/blocks/dnd/DndSpeed'
 import DndLvl from '@/features/character-editor/blocks/dnd/DndLvl'
 import DndMobileStatusMenu from '@/features/character-editor/blocks/dnd/DndMobileStatusMenu'
 import DndPotions from '@/features/character-editor/blocks/dnd/DndPotions'
+import DndPassiveEffects from '@/features/character-editor/blocks/dnd/DndPassiveEffects'
 import DndProfBonus from '@/features/character-editor/blocks/dnd/DndProfBonus'
 import DndQuests from '@/features/character-editor/blocks/dnd/DndQuests'
 import DndRest from '@/features/character-editor/blocks/dnd/DndRest'
@@ -72,6 +73,7 @@ export const BLOCK_REGISTRY = {
   DND_INITIATIVE:   { component: DndInitiative, passValuesOnly: true },
   DND_MOBILE_STATUS_MENU: { component: DndMobileStatusMenu, noValue: true, passValuesOnly: true },
   DND_POTIONS:      { component: DndPotions },
+  DND_PASSIVE_EFFECTS: { component: DndPassiveEffects, noValue: true },
   DND_PROF_BONUS:   { component: DndProfBonus, passValues: true },
   DND_QUESTS:       { component: DndQuests },
   DND_REST:         { component: DndRest, noValue: true, passValuesOnly: true },

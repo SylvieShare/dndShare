@@ -540,6 +540,10 @@
                         "kind": "block"
                       },
                       {
+                        "ref": "passive_effects",
+                        "kind": "block"
+                      },
+                      {
                         "ref": "defenses",
                         "kind": "block"
                       },

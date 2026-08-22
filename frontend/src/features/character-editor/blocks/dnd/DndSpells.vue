@@ -409,7 +409,10 @@ function diceExpr(parts, withType) {
 function rollSpellAttack(entry) {
   if (spellcastingBlocked.value) return
   const bonus = spellAttackBonus(entry)
-  dice.roll(`Атака: ${spellTitle(entry)}`, `1d20${bonus >= 0 ? '+' : ''}${bonus}`, { crit_mode: true })
+  dice.rollD20(`Атака: ${spellTitle(entry)}`, bonus, 'normal', {
+    crit_mode: true,
+    roll_triggers: charCtx.characterCombatEffects?.rollTriggers?.('attack') || [],
+  })
 }
 
 function exprWithBonus(parts, withType) {
@@ -564,7 +567,9 @@ onMounted(async () => {
 
 watch(
   () => JSON.stringify({
-    abilities: abilityIds(),
+    abilities: ['abilities_race', 'abilities_class', 'abilities_feats']
+      .flatMap((key) => Array.isArray(props.values?.[key]) ? props.values[key] : [])
+      .map((entry) => ({ id: entry.id, choices: entry.choices })),
     level: props.values?.lvl?.level,
     classes: props.values?.classes,
   }),

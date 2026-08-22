@@ -76,9 +76,11 @@ describe('D&D desktop sheet schema', () => {
 
   it('keeps derived defenses beside the character resources', () => {
     const resources = findNode(base?.content, node => node.ref === 'resources')
+    const passiveEffects = findNode(base?.content, node => node.ref === 'passive_effects')
     const defenses = findNode(base?.content, node => node.ref === 'defenses')
 
     expect(resources).toBeTruthy()
+    expect(passiveEffects).toBeTruthy()
     expect(defenses).toBeTruthy()
     expect(schema.blocks.defenses).toMatchObject({
       type: 'DND_DEFENSES',

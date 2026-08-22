@@ -16,7 +16,7 @@ function clone(value) {
 const PRESET = {
   lvl: { level: 1, exp: 0 },
   speed: { base: 30, bonuses: [] },
-  hp: { max: 10, current: 10, hitDice: [{ die: 'd8', total: 1, used: 0 }] },
+  hp: { max: { base: 10, bonuses: [] }, current: 10, hitDice: [{ die: 'd8', total: 1, used: 0 }] },
   armor: { bonuses: [] },
   initiative: { base: 0, bonuses: [], use_dex: true },
   inspiration: false,

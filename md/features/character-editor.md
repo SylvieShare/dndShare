@@ -77,7 +77,11 @@ synchronization and document-scoped focus handling needed by editors teleported
 outside the page root.
 For an owner, clicking the HP tile opens its vertical editor with a container
 morph from the clicked tile. The editor keeps the source tile width instead of
-falling back to the narrow no-origin panel width.
+falling back to the narrow no-origin panel width. Maximum HP is stored as
+`max {base,bonuses}`: the editor separates its base, read-only racial and other
+ability contributions, and editable manual bonuses. Healing, rests, level-up,
+print and encounter projections use the resolved total; encounter writes never
+overwrite the maximum's source structure.
 The desktop skills sidebar groups conditions, exhaustion and heroic inspiration
 inside one interactive **Статусы** tile. The tile keeps the rules term
 **Состояния** for the condition list itself, summarizes active condition chips,
@@ -131,7 +135,8 @@ The current shape under `data.values` is:
   доспехов в `items.equipped` и не копируются в персонажа;
 - numeric tile with bonuses: `speed {base,bonuses}` and `initiative
   {base,bonuses,use_dex}`;
-- HP: `{current,max,temp,ds_success,ds_failure,hitDice:[{die,total,used}]}`;
+- HP: `{current,max:{base,bonuses},temp,ds_success,ds_failure,
+  hitDice:[{die,total,used}]}`; legacy numeric `max` remains read-compatible;
 - spellbook: `{stat_path,save_bonus,attack_bonus,slots_rest,preparation,
   spells:[{id,prepared,always_prepared?,external_only?,granted_by?,
   casting_ability?,slotless?}],slots:[{level,total,used}]}`;
@@ -280,6 +285,10 @@ sections are complete. Inline variants, suggest dictionaries and references to
 another handbook item type are supported. Character creation and level-up use
 the same keys and persistence shape; an item with several choice sections keeps
 them independently addressable.
+An item choice may set `grant_spells` and `casting_ability`; selected handbook
+spell ids then become read-only external spells with the ability card recorded
+as their source. Item filters traverse object arrays (for example
+`{"lvl":0,"classes.id":4014}` for a Wizard cantrip).
 
 Race abilities, class abilities and feats remain separate canonical arrays and
 use their corresponding handbook item types and independent editors. Desktop
@@ -309,6 +318,21 @@ manual `{damage_type,kind}` rows, where `kind` is `resistance`, `immunity` or
 editable, while contributed rows show their exact ability source and cannot be
 changed from the character. Equal rows are collapsed for display, but opposite
 effects are intentionally preserved instead of inventing a conflict rule.
+Choice-dependent defenses use `choice_defenses`: a rule points to another owned
+ability entry and maps its stable choice value to a damage type. Dragonborn
+ancestry therefore drives resistance from the single Breath Weapon choice.
+
+The read-only **Особые свойства** block sits above defenses and aggregates
+`passive_effects` from race/class abilities and feats. It holds contextual
+permissions, advantages, immunities and limitations such as Brave, Fey
+Ancestry and Sunlight Sensitivity that cannot safely be forced onto every roll
+without knowing the originating game effect.
+
+Ability `roll_triggers` and `critical_damage` are separate shared contracts. A
+natural-one reroll appears on the settled dice popup and produces one replacement
+result. Weapons expose a critical-damage roll that doubles all attack damage
+dice, keeps the flat modifier once and then applies matching ability modifiers
+such as Savage Attacks' extra melee weapon die.
 
 Feat ability-score bonuses are represented as readonly named bonus rows. The
 creation assembler, level-up flow and manual feat editor use the same rule: add

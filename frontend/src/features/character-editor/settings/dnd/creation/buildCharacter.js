@@ -23,6 +23,7 @@ import { featureIdsForBinding } from './progression.js'
 import { mergeEquipment } from './startingEquipment.js'
 import { isArmorEquipment } from './armorRules.js'
 import { abilitySpellGrantRows, syncAbilityGrantedSpells } from '../../../blocks/dnd/lib/abilitySpellGrants.js'
+import { normalizeHpMaximum } from '../../../blocks/dnd/lib/hp.js'
 
 const STATS = STAT_KEYS
 
@@ -166,9 +167,9 @@ export function buildCharacterData(input) {
   }
 
   // HP at level 1 = hit-die face (set by applyGrants) + CON modifier.
-  if (values.hp && Number(values.hp.max)) {
-    const hp = values.hp.max + mod(finalScore.CON)
-    values.hp = { ...values.hp, max: hp, current: hp }
+  if (values.hp) {
+    const hp = normalizeHpMaximum(values.hp.max).base + mod(finalScore.CON)
+    values.hp = { ...values.hp, max: { base: hp, bonuses: [] }, current: hp }
   }
 
   // Skill proficiencies (class skill_choice + race skill choice + background fixed).

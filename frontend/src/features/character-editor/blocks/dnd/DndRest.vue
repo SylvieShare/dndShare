@@ -43,6 +43,7 @@ import {
   spendHitDie,
   statMod,
 } from '@/features/character-editor/blocks/dnd/lib/rest'
+import { hpMaximum } from '@/features/character-editor/blocks/dnd/lib/hp'
 import { normalizeHitDice } from '@/features/character-editor/blocks/dnd/lib/hitDice'
 
 const SHORT_COLOR = 'var(--warning)'
@@ -135,7 +136,7 @@ async function applyLong(recovery) {
     action: 'Длинный отдых',
     data: {
       kind: 'long',
-      hpRecovered: Math.max(0, (Number(hp.value.max) || 0) - (Number(hp.value.current) || 0)),
+      hpRecovered: Math.max(0, hpMaximum(hp.value) - (Number(hp.value.current) || 0)),
       hitDiceRecovered: recoveredCount,
       resourcesRecovered: resourceRecovery.recoveredNames,
     },

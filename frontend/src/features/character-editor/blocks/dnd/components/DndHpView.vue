@@ -53,6 +53,7 @@ import StatBar from '@/shared/ui/StatBar.vue'
 import SystemDie from '@/shared/ui/SystemDie.vue'
 import DndDeathSaves from '@/features/character-editor/blocks/dnd/DndDeathSaves'
 import { normalizeHitDice } from '@/features/character-editor/blocks/dnd/lib/hitDice'
+import { hpMaximum } from '@/features/character-editor/blocks/dnd/lib/hp'
 
 const props = defineProps({
   hp: { type: Object, required: true },
@@ -61,7 +62,7 @@ const props = defineProps({
 defineEmits(['open', 'change'])
 
 const hpCurrent = computed(() => parseInt(props.hp.current) || 0)
-const hpMax = computed(() => parseInt(props.hp.max) || 0)
+const hpMax = computed(() => hpMaximum(props.hp))
 const hpTemp = computed(() => parseInt(props.hp.temp) || 0)
 const hitDice = computed(() => normalizeHitDice(props.hp))
 const barPct = computed(() => {
