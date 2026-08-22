@@ -29,7 +29,9 @@
         </span>
 
         <span class="abv-copy">
-          <span class="abv-name">{{ entry.name }}</span>
+          <span class="abv-name">
+            {{ entry.name }}<span v-if="entry.scaling_label" class="abv-scaling"> · {{ entry.scaling_label }}</span>
+          </span>
           <span v-if="entry.choice_summary" class="abv-choice">{{ entry.choice_summary }}</span>
           <span
             v-for="effect in entry.passive_effects || []"
@@ -132,6 +134,7 @@ defineEmits(['view', 'show-tooltip', 'hide-tooltip', 'manage'])
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.abv-scaling { color: var(--accent); font-weight: 750; }
 .abv-choice { color: var(--text-muted); font-size: 9px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .abv-effect { margin-top: 2px; color: var(--text-2); font-size: 10px; line-height: 1.35; }
 .abv-effect b { color: var(--info); font-weight: 650; }

@@ -91,7 +91,8 @@
                     </span>
                     <span v-if="isToolEntry(entry) || entryHasProficiency(entry) || armorMeta(entry)" class="di-item-meta">
                       <span v-if="isToolEntry(entry)">{{ toolCategoryLabel(entry) }}</span>
-                      <span v-if="entryHasProficiency(entry)" class="di-item-proficient">Владение</span>
+                      <span v-if="toolProficiencyRank(entry) >= 2" class="di-item-proficient">Компетентность</span>
+                      <span v-else-if="toolProficiencyRank(entry) >= 1" class="di-item-proficient">Владение</span>
                       <template v-if="armorMeta(entry)">
                         <span :class="armorMeta(entry).active ? 'di-item-armor' : 'di-item-muted'">
                           {{ armorMeta(entry).active ? (armorMeta(entry).shield ? `Щит +${armorMeta(entry).value} КД` : `КД ${armorMeta(entry).value}`) : 'Не учитывается в КД' }}
@@ -348,6 +349,17 @@ function entryHasProficiency(entry) {
   return hasItemProficiency(entry.display?.base, charCtx.values, (typeId) => suggestStore.items(typeId))
 }
 
+function toolProficiencyRank(entry) {
+  const ids = Array.isArray(entry.display?.base?.data?.required_tool_proficiencies)
+    ? entry.display.base.data.required_tool_proficiencies
+    : []
+  const derived = ids.reduce((rank, id) => Math.max(
+    rank,
+    Number(charCtx.characterDerivedEffects?.toolProficiency?.(id)?.rank) || 0,
+  ), 0)
+  return Math.max(entryHasProficiency(entry) ? 1 : 0, derived)
+}
+
 function armorMeta(entry) {
   if (entryTypeId(entry) !== 12) return null
   return charCtx.characterArmor?.state?.byUid?.[String(entry.uid)] || null
@@ -374,11 +386,12 @@ function characterProficiencyBonus() {
 function toolCheckBonus(entry, ability) {
   const values = charCtx.values || {}
   const modifier = abilityModifier(resolveNumValue(values?.[ability.key]?.value ?? 10))
-  const proficient = entryHasProficiency(entry)
+  const proficiencyRank = toolProficiencyRank(entry)
+  const proficient = proficiencyRank > 0
   const derived = charCtx.characterDerivedEffects?.bonus?.('check_bonus', {
     kind: 'tool', abilitySuggestId: ability.suggestId, proficient, item: entry.display.base,
   })?.total || 0
-  return modifier + (proficient ? characterProficiencyBonus() : 0) + derived
+  return modifier + proficiencyRank * characterProficiencyBonus() + derived
 }
 
 function rollTool(entry, ability, closeAbilities, closeMenu) {

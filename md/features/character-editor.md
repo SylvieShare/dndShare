@@ -247,11 +247,18 @@ HP gain, ASI/feat, proficiency changes and spell-slot differences. It emits one
 map of canonical block updates. `hp.hitDice` pools equal die types and is the
 only hit-dice representation.
 
+Static proficiencies declared by a newly selected subclass are applied by the
+same data contract as class proficiencies. An archetype such as Assassin
+therefore grants its tool proficiencies during level-up without an
+archetype-specific branch.
+
 `lib/levelUp.js`, `lib/hitDice.js`, `lib/rest.js` and
 `lib/characterResources.js` are pure and unit-tested.
-Spellcasting ability is explicit handbook data (`spellcasting.ability` or
-`spellcasting_ability` for later half-caster levels); it is not inferred from a
-localized class name. `characterResources.js` defines the resource-source
+Spellcasting ability and slot contribution are explicit handbook data
+(`spellcasting.ability` and `caster_progression`). Full, half, third and pact
+casters are never inferred from a localized name or catalogue id. A subclass
+spellcasting ability takes precedence over the base class when the spell block
+is created. `characterResources.js` defines the resource-source
 contract (`itemIds`, `collect`, `setAvailable`, `restore`). Manual resources and
 race/class/feat ability counters implement the same contract; another domain,
 such as charged magic items, can join the aggregate by registering another
@@ -297,6 +304,24 @@ as their source. Item filters traverse object arrays (for example
 `{"lvl":0,"classes.id":4014}` for a Wizard cantrip). The choice picker sends
 these rules as fixed server-side catalogue filters immediately, displays them
 as ability-owned filters and does not allow the player to change or reset them.
+
+A character-bound choice may require an existing proficiency and exclude a
+target that has already reached a configured rank. Rogue Expertise uses this
+contract for proficient skills and thieves' tools. Tool checks resolve the
+same proficiency rank as skills, so rank 2 contributes twice the proficiency
+bonus and is labelled «Компетентность» in inventory.
+
+Known-spell limits may also be declared by the selected class or subclass.
+Arcane Trickster publishes its Wizard list, Intelligence, cantrip/spell table,
+allowed schools and the number of school exceptions at each level. The spell
+tile shows current totals, locks the picker to available circles and the class
+list, and disables additions that exceed either the known count or the current
+school-exception allowance. Mage Hand Legerdemain marks its granted Mage Hand
+as counting toward the cantrip limit.
+
+Ability items may expose `display_scaling [{level,label}]`. The sheet and print
+views resolve the latest row against the owning class level; Sneak Attack uses
+it to show the current damage dice directly beside its name.
 
 Race abilities, class abilities and feats remain separate canonical arrays and
 use their corresponding handbook item types and independent editors. Desktop

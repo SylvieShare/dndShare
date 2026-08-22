@@ -99,6 +99,14 @@ Startup data correction переводит прежние значения в э
 `short_rest_recovery_level` описывает частичное восстановление. Startup section
 `32_ability_resources.sql` и последующие дополнения идемпотентно поддерживают эти
 поля в schema `item_type`; вычисленный максимум в JSON персонажа не дублируется.
+Class/subclass items use `caster_progression` (`full`, `half`, `halfup`,
+`third`, `pact`) as the canonical spell-slot contribution. Nested
+`spellcasting` data may additionally contain `list_class`,
+`known_progression`, `allowed_schools` and `unrestricted_progression` for
+known-spell pickers. Ability choices may combine dictionaries through
+`suggest_sources`, require an owned proficiency and exclude an already reached
+rank. `display_scaling [{level,label}]` is presentation data resolved against
+the owning class level.
 Section `34_ability_resource_catalog_fixes.sql` задаёт структурированные правила
 Харизмы для «Вдохновения барда» и Мудрости для «Гнева бури», удаляет прежний
 ручной максимум вдохновения и переводит его полные старые character entries на

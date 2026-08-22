@@ -79,3 +79,11 @@ export function abilityHasResources(itemData) {
     || data.max_use_level_multiplier != null
     || !!data.max_use_scaling
 }
+
+/** Current short label from a generic level-based display progression. */
+export function abilityScalingLabel(itemData, values = {}) {
+  const rows = (Array.isArray(itemData?.display_scaling) ? itemData.display_scaling : [])
+    .filter((row) => row?.label && nonNegativeInt(row.level) <= abilityOwnerLevel(itemData, values))
+    .sort((left, right) => nonNegativeInt(right.level) - nonNegativeInt(left.level))
+  return rows[0]?.label ? String(rows[0].label) : ''
+}

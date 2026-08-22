@@ -300,6 +300,9 @@ Key rules:
 - all binding fields are arrays of item ids;
 - content publication scope is carried through every catalogue query;
 - choices granted by a race or class are completed on that source step;
+- proficiency-bound union choices are restricted to proficiencies already
+  selected on the character; Rogue Expertise can therefore choose either a
+  proficient skill or thieves' tools during creation;
 - class and background starting equipment use handbook ids; the background
   schema stores parameterized `tool_items`, `equipment_items` and
   `starting_coins` directly, while `item_choices` describes concrete selectable
@@ -320,6 +323,8 @@ Key rules:
   spellbook with preparation mode enabled automatically; selected cantrips are
   stored unprepared, selected leveled spells begin prepared, and granted
   archetype/domain spells begin permanently prepared;
+- spell-slot progression is read from `caster_progression` on class/subclass
+  handbook data rather than inferred from English or localized names;
 - fixed racial, class-feature and feat `granted_spells` are added even for a
   non-caster, remain read-only, retain their source and use their configured
   per-spell casting ability and cast level instead of guessing them from the

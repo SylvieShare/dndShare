@@ -4,8 +4,9 @@
  * Character classes live in `values.classes`: `[{ id, name, level, subclass }]`
  * (`subclass` — `{ id, name }` or null).
  *
- * Caster math follows the PHB 2014 multiclass rules. Caster kind is detected
- * from the handbook item's `nameEn` (stable, unlike Russian display names).
+ * Caster math follows the PHB 2014 multiclass rules. Every class/subclass
+ * declares its progression in handbook data; runtime math never checks names
+ * or concrete catalogue ids.
  */
 
 export const LEVEL_CAP = 20
@@ -82,20 +83,13 @@ export const FULL_CASTER_SLOTS = [
   [4, 3, 3, 3, 3, 2, 1, 1, 1], [4, 3, 3, 3, 3, 2, 2, 1, 1],
 ]
 
-const FULL_CASTERS = ['bard', 'cleric', 'druid', 'sorcerer', 'wizard']
-const HALF_CASTERS = ['paladin', 'ranger']
-const THIRD_SUBCLASSES = ['eldritch knight', 'arcane trickster']
-
 /** 'full' | 'half' | 'halfup' | 'third' | 'pact' | null from handbook items. */
 export function casterKindOf(classItem, subclassItem) {
-  const n = String(classItem?.nameEn || '').trim().toLowerCase()
-  if (FULL_CASTERS.includes(n)) return 'full'
-  if (HALF_CASTERS.includes(n)) return 'half'
-  if (n === 'artificer') return 'halfup'
-  if (n === 'warlock') return 'pact'
-  const s = String(subclassItem?.nameEn || '').trim().toLowerCase()
-  if (THIRD_SUBCLASSES.includes(s)) return 'third'
-  return null
+  const value = subclassItem?.data?.caster_progression
+    || subclassItem?.data?.spellcasting?.progression
+    || classItem?.data?.caster_progression
+    || classItem?.data?.spellcasting?.progression
+  return ['full', 'half', 'halfup', 'third', 'pact'].includes(value) ? value : null
 }
 
 export function pactSlots(warlockLevel) {
@@ -202,8 +196,11 @@ export function chosenOptionLabels(...choiceMaps) {
 }
 
 /** Spellcasting stat (suggest-16 id) stored explicitly on the class item. */
-export function castingAbilityIdOf(classItem) {
-  return num(classItem?.data?.spellcasting?.ability ?? classItem?.data?.spellcasting_ability)
+export function castingAbilityIdOf(classItem, subclassItem = null) {
+  return num(subclassItem?.data?.spellcasting?.ability
+    ?? subclassItem?.data?.spellcasting_ability
+    ?? classItem?.data?.spellcasting?.ability
+    ?? classItem?.data?.spellcasting_ability)
 }
 
 // ─── multiclassing rules (PHB, keyed by class nameEn) ───────────────────────

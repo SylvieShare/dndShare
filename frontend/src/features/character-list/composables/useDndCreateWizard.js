@@ -436,6 +436,7 @@ export function useDndCreateWizard() {
   watch(featureChoices, (list) => {
     list.forEach(async (fc) => {
       if (fc.choice.from_suggest_id != null) suggestStore.ensure(Number(fc.choice.from_suggest_id))
+      for (const source of (fc.choice.suggest_sources || [])) suggestStore.ensure(Number(source.suggest_id))
       if (fc.choice.source !== 'item' || fc.choice.from_item_type_id == null || featureChoiceItemOptions[fc.id]) return
       try {
         const response = await itemsApi.listAll(Number(fc.choice.from_item_type_id), {
@@ -452,7 +453,7 @@ export function useDndCreateWizard() {
   }, { immediate: true })
 
   function isExpertiseChoice(fc) {
-    return Number(fc?.choice?.from_suggest_id) === SKILL_SUGGEST && /компетентност/i.test(fc?.name || '')
+    return !!fc?.choice?.requires_proficiency && Number(fc?.choice?.exclude_rank) >= 2
   }
   const proficientSkillIds = computed(() => {
     const ids = [
@@ -468,12 +469,32 @@ export function useDndCreateWizard() {
   const expertiseSkillIds = computed(() => featureChoices.value
     .filter(isExpertiseChoice)
     .flatMap((fc) => state.choices[fc.id] || [])
-    .map(String))
+    .map((value) => String(value).replace(/^skill:/, '')))
+  const proficientToolIds = computed(() => [...new Set([
+    ...(grants.value.proficiencies?.tool || []),
+    ...state.classToolProficiencyIds,
+  ].map(String))])
+  function choiceValueAllowed(fc, value) {
+    if (!fc?.choice?.requires_proficiency) return true
+    const raw = String(value)
+    if (raw.startsWith('skill:')) return proficientSkillIds.value.includes(raw.slice(6))
+    if (raw.startsWith('tool:')) return proficientToolIds.value.includes(raw.slice(5))
+    return proficientSkillIds.value.includes(raw)
+  }
   function choiceOptionList(fcOrChoice) {
     const fc = fcOrChoice?.choice ? fcOrChoice : null
     const choice = fc?.choice || fcOrChoice
     if (!choice) return []
     if (choice.source === 'item') return featureChoiceItemOptions[fc?.id] || []
+    if (choice.source === 'suggest_union') {
+      return (choice.suggest_sources || []).flatMap((source) => (
+        suggestStore.items(Number(source.suggest_id)) || []
+      ).map((item) => ({
+        value: `${source.prefix}:${item.id}`,
+        label: item.value,
+        desc: source.label || item.desc || '',
+      }))).filter((option) => choiceValueAllowed(fc, option.value))
+    }
     if (choice.from_suggest_id != null) {
       let items = suggestStore.items(Number(choice.from_suggest_id))
       if (isExpertiseChoice(fc)) {
@@ -493,7 +514,7 @@ export function useDndCreateWizard() {
   }
   function toggleChoice(abilityId, value, count) {
     const fc = featureChoices.value.find((item) => item.id === abilityId)
-    if (isExpertiseChoice(fc) && !proficientSkillIds.value.includes(String(value))) return
+    if (!choiceValueAllowed(fc, value)) return
     const cur = state.choices[abilityId] || []
     const has = cur.some((v) => String(v) === String(value))
     let next
@@ -506,13 +527,12 @@ export function useDndCreateWizard() {
     }
     state.choices = { ...state.choices, [abilityId]: next }
   }
-  watch(proficientSkillIds, (ids) => {
-    const allowed = new Set(ids)
+  watch([proficientSkillIds, proficientToolIds], () => {
     const next = { ...state.choices }
     let changed = false
     featureChoices.value.filter(isExpertiseChoice).forEach((fc) => {
       const selected = next[fc.id] || []
-      const valid = selected.filter((id) => allowed.has(String(id)))
+      const valid = selected.filter((value) => choiceValueAllowed(fc, value))
       if (valid.length !== selected.length) { next[fc.id] = valid; changed = true }
     })
     if (changed) state.choices = next

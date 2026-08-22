@@ -1,7 +1,7 @@
 import { computed, ref, watch } from 'vue'
 import { itemChoiceRows } from '@/features/items/lib/itemChoices'
 
-export function useLevelUpFeatureChoices(features, suggestStore) {
+export function useLevelUpFeatureChoices(features, suggestStore, optionEligibility = null) {
   const selections = ref({})
 
   function featureChoiceRows(feature) {
@@ -19,6 +19,7 @@ export function useLevelUpFeatureChoices(features, suggestStore) {
     list.forEach((feature) => {
       featureChoices(feature).forEach((choice) => {
         if (choice.from_suggest_id != null) suggestStore.ensure(Number(choice.from_suggest_id))
+        for (const source of (choice.suggest_sources || [])) suggestStore.ensure(Number(source.suggest_id))
       })
     })
   }, { immediate: true })
@@ -32,12 +33,23 @@ export function useLevelUpFeatureChoices(features, suggestStore) {
     if (choice.from_suggest_id != null) {
       return suggestStore.items(Number(choice.from_suggest_id))
         .map((item) => ({ value: item.id, label: item.value }))
+        .filter((option) => !optionEligibility || optionEligibility(feature, choice, option.value)?.eligible !== false)
+    }
+    if (choice.source === 'suggest_union') {
+      return (choice.suggest_sources || []).flatMap((source) => (
+        suggestStore.items(Number(source.suggest_id)) || []
+      ).map((item) => ({
+        value: `${source.prefix}:${item.id}`,
+        label: item.value,
+        desc: source.label || item.desc || '',
+      }))).filter((option) => !optionEligibility || optionEligibility(feature, choice, option.value)?.eligible !== false)
     }
     return (choice.options || []).map((option) => ({
       value: option.value ?? option.label,
       label: option.label || option.value,
       desc: option.desc || '',
     })).filter((option) => option.value != null && option.value !== '')
+      .filter((option) => !optionEligibility || optionEligibility(feature, choice, option.value)?.eligible !== false)
   }
 
   function selected(feature, choice = featureChoice(feature)) {

@@ -288,6 +288,7 @@ import { useGrantedSpellNames } from './useGrantedSpellNames'
 import { featSnippet, hitDieLabel as resolveHitDieLabel, monogram, multiclassPrerequisiteLabel } from './levelUpPresentation'
 import { levelUpSessionAdditions } from '@/features/character-editor/blocks/dnd/lib/levelUpSessionAdditions'
 import { itemMatchesChoiceFilter, parseItemChoiceFilter } from '@/features/items/lib/itemChoices'
+import { characterChoiceOptionEligibility } from '@/features/items/lib/characterChoiceEligibility'
 
 const CLASS_TYPE = 9
 const CLASS_ABIL_TYPE = 4
@@ -368,7 +369,13 @@ const {
   toggleChoice: toggleFeatureChoice,
   choiceComplete: choiceCompleteFor,
   complete: featureChoicesComplete,
-} = useLevelUpFeatureChoices(features, suggestStore)
+} = useLevelUpFeatureChoices(features, suggestStore, (_feature, choice, value) => (
+  characterChoiceOptionEligibility(choice, value, {
+    values: props.values,
+    items: [...abilityPool.value, ...Object.values(itemsById.value)],
+    suggestItems: (typeId) => suggestStore.items(typeId),
+  })
+))
 
 function featureChoiceItemEligibility(item) {
   const matches = itemMatchesChoiceFilter(item, featureItemChoice.value?.choice?.item_filter)
@@ -608,6 +615,8 @@ async function accept() {
     grantedNewIds: grantedNewIds.value,
     grantedSpellLevels: spellLevels.value,
     classItem: classItem.value,
+    subclassItem: effectiveSubclassItem.value,
+    subclassSelectedNow: !!subclassPick.value,
   })
   const catalogItems = [...abilityPool.value, ...Object.values(itemsById.value)]
   if (featPick.value) catalogItems.push(featPick.value)

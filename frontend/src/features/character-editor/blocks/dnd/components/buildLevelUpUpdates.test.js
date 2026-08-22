@@ -132,3 +132,28 @@ describe('buildLevelUpUpdates feature choices', () => {
     }])
   })
 })
+
+describe('buildLevelUpUpdates subclass grants', () => {
+  it('applies subclass tool proficiencies and its casting ability', () => {
+    const updates = buildLevelUpUpdates({
+      values: { lvl: { level: 2 }, hp: { max: 15, current: 15 }, proficiencies: { Инструменты: [] } },
+      newTotal: 3,
+      isPlain: false,
+      entriesAfter: [{ id: 1, name: 'Плут', level: 3, subclass: { id: 2, name: 'Убийца' } }],
+      features: [],
+      itemsById: { 1: {}, 2: {} },
+      hitDieLabelOf: () => 'd8', hitDieLabel: 'd8', hpGain: 5,
+      asiNow: false, asiSkipped: true, asiMode: 'asi', featPick: null,
+      suggestItems: (typeId) => typeId === 5 ? [{ id: 24, value: 'Набор для грима' }] : [],
+      asiStats: [], asiDelta: 0, featureChoiceSelections: {},
+      applySlots: true, slotDiff: [{ level: 1, from: 0, to: 2 }],
+      slotsAfter: { totals: [2, 0, 0, 0, 0, 0, 0, 0, 0], isCaster: true },
+      grantedNewIds: [], classItem: { data: {} },
+      subclassItem: { data: { tool_prof: [24], spellcasting: { ability: 4 } } },
+      subclassSelectedNow: true,
+    })
+
+    expect(updates.proficiencies['Инструменты']).toEqual(['Набор для грима'])
+    expect(updates.spells.stat_path).toBe(4)
+  })
+})

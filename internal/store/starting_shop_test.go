@@ -12,21 +12,22 @@ func TestToolProficiencyCatalogIsEmbeddedAfterItemTypeHierarchy(t *testing.T) {
 	if len(schemaParts) < 14 {
 		t.Fatal("schemaParts must contain the final item catalogue sections")
 	}
-	hierarchy := schemaParts[len(schemaParts)-15]
-	tools := schemaParts[len(schemaParts)-14]
-	resources := schemaParts[len(schemaParts)-13]
-	classTools := schemaParts[len(schemaParts)-12]
-	resourceFixes := schemaParts[len(schemaParts)-11]
-	resourceAudit := schemaParts[len(schemaParts)-10]
-	resourceColors := schemaParts[len(schemaParts)-9]
-	spellGrants := schemaParts[len(schemaParts)-8]
-	equippedArmor := schemaParts[len(schemaParts)-7]
-	defenses := schemaParts[len(schemaParts)-6]
-	castLevel := schemaParts[len(schemaParts)-5]
-	choices := schemaParts[len(schemaParts)-4]
-	racialAutomation := schemaParts[len(schemaParts)-3]
-	classAutomation := schemaParts[len(schemaParts)-2]
-	featAutomation := schemaParts[len(schemaParts)-1]
+	hierarchy := schemaParts[len(schemaParts)-16]
+	tools := schemaParts[len(schemaParts)-15]
+	resources := schemaParts[len(schemaParts)-14]
+	classTools := schemaParts[len(schemaParts)-13]
+	resourceFixes := schemaParts[len(schemaParts)-12]
+	resourceAudit := schemaParts[len(schemaParts)-11]
+	resourceColors := schemaParts[len(schemaParts)-10]
+	spellGrants := schemaParts[len(schemaParts)-9]
+	equippedArmor := schemaParts[len(schemaParts)-8]
+	defenses := schemaParts[len(schemaParts)-7]
+	castLevel := schemaParts[len(schemaParts)-6]
+	choices := schemaParts[len(schemaParts)-5]
+	racialAutomation := schemaParts[len(schemaParts)-4]
+	classAutomation := schemaParts[len(schemaParts)-3]
+	featAutomation := schemaParts[len(schemaParts)-2]
+	rogueAutomation := schemaParts[len(schemaParts)-1]
 	if hierarchy.name != "item-type-hierarchy" || hierarchy.sql == "" || hierarchy.sql != schemaItemTypeHierarchySQL {
 		t.Fatal("item-type-hierarchy schema must be embedded after the equipment catalogues")
 	}
@@ -71,6 +72,9 @@ func TestToolProficiencyCatalogIsEmbeddedAfterItemTypeHierarchy(t *testing.T) {
 	}
 	if featAutomation.name != "feat-automation" || featAutomation.sql == "" || featAutomation.sql != schemaFeatAutomationSQL {
 		t.Fatal("feat automation must be embedded after shared class and racial contracts")
+	}
+	if rogueAutomation.name != "rogue-automation" || rogueAutomation.sql == "" || rogueAutomation.sql != schemaRogueAutomationSQL {
+		t.Fatal("rogue automation must be embedded after the shared automation contracts")
 	}
 }
 

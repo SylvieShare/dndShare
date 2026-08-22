@@ -72,6 +72,11 @@
 
     <!-- Поиск / добавление -->
     <div v-if="canAddItems" class="sp-add-section">
+      <div v-if="knownRules" class="sp-known-summary">
+        <span>Заговоры <b>{{ knownCounts.cantrips }} / {{ knownRules.cantripsKnown }}</b></span>
+        <span>Заклинания <b>{{ knownCounts.spells }} / {{ knownRules.spellsKnown }}</b></span>
+        <span v-if="knownRules.allowedSchoolIds.length">Вне основных школ <b>{{ knownCounts.unrestricted }} / {{ knownRules.unrestrictedSpells }}</b></span>
+      </div>
       <button class="sp-picker-btn" @click="pickerOpen = true">+ Найти заклинание...</button>
     </div>
 
@@ -79,6 +84,8 @@
       v-if="pickerOpen && block.content.item_type_id"
       :item-type-ids="[block.content.item_type_id]"
       :exclude-items="spells.map(s => s.id)"
+      :fixed-filters="spellPickerFilters"
+      :item-eligibility="spellPickerEligibility"
       title="Заклинания"
       search-placeholder="Поиск заклинания..."
       @close="pickerOpen = false"
@@ -116,6 +123,7 @@ import { useDiceStore } from '@/stores/dice'
 import { useSuggestStore } from '@/stores/suggest'
 import { SYSTEM_DICE } from '@/shared/lib/systemDice'
 import { logSessionEntryAdded } from '@/features/character-editor/lib/sessionEntryEvents'
+import { characterSpellcastingRules, spellCountsTowardKnown } from '@/features/character-editor/blocks/dnd/lib/spellcastingRules'
 
 const props = defineProps(['block', 'value', 'values'])
 const emit  = defineEmits(['update:value'])
@@ -131,6 +139,7 @@ const preparation = ref(false)
 const itemMap    = reactive({})
 const modalSpell = ref(null)
 const pickerOpen = ref(false)
+const classItemMap = reactive({})
 
 // ─── Computeds ─────────────────────────────────────
 
@@ -172,6 +181,7 @@ const blockHidden  = computed(() =>
 const showStatsBar = computed(() => hasStatConfig.value || canInteract.value || activeSlots.value.length > 0)
 const armorState = computed(() => charCtx.characterArmor?.state || {})
 const spellcastingBlocked = computed(() => !!armorState.value.castingBlocked)
+const knownRules = computed(() => characterSpellcastingRules(props.values?.classes, classItemMap))
 
 const schoolMap = computed(() => {
   const id = props.block.content?.school_suggest_id
@@ -230,6 +240,7 @@ function emitChange() {
       ...(s.slotless_source ? { slotless_source: s.slotless_source } : {}),
       ...(s.cast_level != null ? { cast_level: s.cast_level } : {}),
       ...(s.cast_level_source ? { cast_level_source: s.cast_level_source } : {}),
+      ...(s.counts_as_known ? { counts_as_known: true } : {}),
     })),
     slots: serializedSlots(),
   })
@@ -246,6 +257,50 @@ const {
 } = useSpellSlots({ canInteract, emitChange })
 
 const maxSlotLevel = computed(() => activeSlots.value.reduce((m, s) => Math.max(m, s.level), 0))
+const knownEntries = computed(() => spells.value
+  .filter(spellCountsTowardKnown)
+  .map((ref) => ({ ref, item: itemMap[ref.id] }))
+  .filter((entry) => entry.item))
+const knownCounts = computed(() => {
+  const rules = knownRules.value
+  const leveled = knownEntries.value.filter((entry) => Number(entry.item.data?.lvl) > 0)
+  const allowed = new Set((rules?.allowedSchoolIds || []).map(String))
+  return {
+    cantrips: knownEntries.value.filter((entry) => Number(entry.item.data?.lvl) === 0).length,
+    spells: leveled.length,
+    unrestricted: allowed.size
+      ? leveled.filter((entry) => !allowed.has(String(entry.item.data?.schoolId))).length
+      : 0,
+  }
+})
+const spellPickerFilters = computed(() => {
+  const rules = knownRules.value
+  if (!rules) return {}
+  const levels = Array.from({ length: Math.max(0, maxSlotLevel.value) + 1 }, (_, index) => index)
+  return {
+    ...(rules.listClassId != null ? { 'classes.id': [rules.listClassId] } : {}),
+    lvl: levels,
+  }
+})
+
+function spellPickerEligibility(item) {
+  const rules = knownRules.value
+  if (!rules) return { eligible: true, reasons: [] }
+  const level = Number(item?.data?.lvl)
+  const reasons = []
+  if (rules.listClassId != null && !(item?.data?.classes || []).some((entry) => String(entry?.id) === String(rules.listClassId))) {
+    reasons.push('Не входит в список заклинаний выбранного класса')
+  }
+  if (level > maxSlotLevel.value) reasons.push('Круг заклинания пока недоступен')
+  if (level === 0 && knownCounts.value.cantrips >= rules.cantripsKnown) reasons.push('Лимит известных заговоров уже заполнен')
+  if (level > 0 && knownCounts.value.spells >= rules.spellsKnown) reasons.push('Лимит известных заклинаний уже заполнен')
+  if (level > 0 && rules.allowedSchoolIds.length
+    && !rules.allowedSchoolIds.some((id) => String(id) === String(item?.data?.schoolId))
+    && knownCounts.value.unrestricted >= rules.unrestrictedSpells) {
+    reasons.push('Все доступные заклинания вне основных школ уже выбраны')
+  }
+  return { eligible: reasons.length === 0, reasons }
+}
 
 const {
   schoolMeta,
@@ -372,7 +427,7 @@ function onSpellDragStart(e, entry, level, idx) {
 }
 
 function addSpell(item) {
-  if (!spells.value.some(s => s.id === item.id)) {
+  if (spellPickerEligibility(item).eligible && !spells.value.some(s => s.id === item.id)) {
     itemMap[item.id] = item
     spells.value.push({ id: item.id, prepared: false })
     emitChange()
@@ -514,6 +569,15 @@ async function syncExternalAbilitySpells() {
   await loadDetails()
 }
 
+async function loadClassItems() {
+  const classIds = [...new Set((Array.isArray(props.values?.classes) ? props.values.classes : [])
+    .flatMap((entry) => [entry?.id, entry?.subclass?.id]).filter((id) => id != null))]
+  const missing = classIds.filter((id) => !classItemMap[id])
+  if (!missing.length) return
+  const response = await itemsApi.byIds(missing)
+  for (const item of response?.items || []) classItemMap[item.id] = item
+}
+
 provide('spellsBlockCtx', reactive({
   charCtx,
   sortable,
@@ -557,6 +621,7 @@ onMounted(async () => {
   slotsRest.value = raw.slots_rest || 'long_rest'
   preparation.value = !!raw.preparation
   loadSlots(raw.slots || [])
+  await loadClassItems()
   const { school_suggest_id, stat_suggest_type_id } = props.block.content || {}
   const ensures = [school_suggest_id, stat_suggest_type_id, damageTypeSuggestTypeId.value]
     .filter(Boolean)
@@ -573,7 +638,10 @@ watch(
     level: props.values?.lvl?.level,
     classes: props.values?.classes,
   }),
-  () => { if (spells.value.length || abilityIds().length) syncExternalAbilitySpells() },
+  () => {
+    loadClassItems()
+    if (spells.value.length || abilityIds().length) syncExternalAbilitySpells()
+  },
 )
 </script>
 

@@ -41,7 +41,7 @@
               type="button"
               class="fcm-option"
               :class="{ selected: isSelected(choice, option.value), disabled: optionDisabled(choice, option.value) }"
-              :title="isExcluded(choice, option.value) ? 'Этот вариант уже использован в другом взятии черты' : ''"
+              :title="optionReason(choice, option.value)"
               @click="toggle(choice, option.value)"
             >
               <span class="fcm-option-mark">
@@ -92,6 +92,7 @@ const props = defineProps({
   item: { type: Object, required: true },
   initialChoices: { type: Object, default: () => ({}) },
   excludedChoices: { type: Object, default: () => ({}) },
+  optionEligibility: { type: Function, default: null },
 })
 
 const emit = defineEmits(['close', 'confirm'])
@@ -118,6 +119,14 @@ function selected(choice) { return selections[choice.key] || [] }
 function excluded(choice) { return Array.isArray(props.excludedChoices?.[choice.key]) ? props.excludedChoices[choice.key] : [] }
 function isSelected(choice, value) { return selected(choice).some((current) => String(current) === String(value)) }
 function isExcluded(choice, value) { return excluded(choice).some((current) => String(current) === String(value)) }
+function eligibility(choice, value) {
+  if (isSelected(choice, value) || !props.optionEligibility) return { eligible: true, reason: '' }
+  return props.optionEligibility(choice, value) || { eligible: true, reason: '' }
+}
+function optionReason(choice, value) {
+  if (isExcluded(choice, value)) return 'Этот вариант уже использован'
+  return eligibility(choice, value).reason || ''
+}
 function isComplete(choice) { return selected(choice).length === choice.count }
 function dependencyComplete(choice) { return !choice.depends_on_choice || (selections[choice.depends_on_choice] || []).length > 0 }
 const complete = computed(() => choiceSelectionsComplete(props.item, selections))
@@ -147,11 +156,13 @@ function optionsFor(choice) {
 }
 
 function optionDisabled(choice, value) {
-  return isExcluded(choice, value) || (!isSelected(choice, value) && selected(choice).length >= choice.count)
+  return isExcluded(choice, value)
+    || !eligibility(choice, value).eligible
+    || (!isSelected(choice, value) && selected(choice).length >= choice.count)
 }
 
 function toggle(choice, value) {
-  if (isExcluded(choice, value)) return
+  if (isExcluded(choice, value) || !eligibility(choice, value).eligible) return
   const current = selected(choice)
   if (isSelected(choice, value)) {
     selections[choice.key] = current.filter((entry) => String(entry) !== String(value))

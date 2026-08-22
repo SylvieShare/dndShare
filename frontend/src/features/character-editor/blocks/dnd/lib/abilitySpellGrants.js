@@ -44,6 +44,7 @@ export function abilitySpellGrantRows(items, values = {}) {
         castingAbility,
         castLevel,
         slotless: !!rule?.slotless,
+        countsAsKnown: !!rule?.counts_as_known,
         source: {
           kind: 'ability',
           item_id: item.id,
@@ -66,6 +67,7 @@ export function abilitySpellGrantRows(items, values = {}) {
           castingAbility,
           castLevel,
           slotless: !!choice.slotless,
+          countsAsKnown: !!choice.counts_as_known,
           source: {
             kind: 'ability',
             item_id: item.id,
@@ -117,6 +119,7 @@ export function syncAbilityGrantedSpells(entries, grantRows) {
           delete entry.cast_level
           delete entry.cast_level_source
         }
+        delete entry.counts_as_known
       }
       result.push(entry)
       continue
@@ -139,6 +142,8 @@ export function syncAbilityGrantedSpells(entries, grantRows) {
       delete entry.slotless
       delete entry.slotless_source
     }
+    if (wanted.some((row) => row.countsAsKnown)) entry.counts_as_known = true
+    else delete entry.counts_as_known
     const castLevel = wanted.find((row) => row.castLevel != null)?.castLevel
     if (castLevel != null) {
       entry.cast_level = castLevel
@@ -161,6 +166,7 @@ export function syncAbilityGrantedSpells(entries, grantRows) {
       granted_by: wanted.map((row) => row.source),
       ...(castingAbility != null ? { casting_ability: castingAbility, casting_ability_source: 'ability' } : {}),
       ...(wanted.some((row) => row.slotless) ? { slotless: true, slotless_source: 'ability' } : {}),
+      ...(wanted.some((row) => row.countsAsKnown) ? { counts_as_known: true } : {}),
       ...(castLevel != null ? { cast_level: castLevel, cast_level_source: 'ability' } : {}),
     })
   }

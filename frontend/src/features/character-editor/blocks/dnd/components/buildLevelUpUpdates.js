@@ -43,6 +43,8 @@ export function buildLevelUpUpdates({
   grantedNewIds,
   grantedSpellLevels = {},
   classItem,
+  subclassItem = null,
+  subclassSelectedNow = false,
 }) {
   const updates = {
     lvl: { exp: 0, ...(values.lvl || {}), level: newTotal },
@@ -75,6 +77,28 @@ export function buildLevelUpUpdates({
     ? withHitDice(hp, hitDiceFromClasses(hp, entriesAfter, (entry) => hitDieLabelOf(itemsById[entry.id])))
     : addHitDie(hp, hitDieLabel || 'd8')
 
+  // A newly selected subclass may grant static proficiencies of its own.
+  // Apply the same class-data contract used during character creation instead
+  // of teaching the level-up flow about individual archetypes.
+  if (subclassSelectedNow && subclassItem) {
+    const data = subclassItem.data || {}
+    const proficiencies = { ...(values.proficiencies || {}) }
+    const addProficiency = (bucket, typeId, ids) => {
+      if (!Array.isArray(ids) || !ids.length) return
+      const labels = [...(proficiencies[bucket] || [])]
+      for (const id of ids) {
+        const label = suggestItems(typeId).find((entry) => String(entry.id) === String(id))?.value
+        if (label && !labels.includes(label)) labels.push(label)
+      }
+      proficiencies[bucket] = labels
+    }
+    addProficiency('Доспехи', 3, data.armor_prof)
+    addProficiency('Оружие', 4, data.weapon_prof)
+    addProficiency('Инструменты', 5, data.tool_prof)
+    addProficiency('Языки', 6, data.languages)
+    if (Object.keys(proficiencies).length) updates.proficiencies = proficiencies
+  }
+
   let featSpellIds = []
   if (asiNow && !asiSkipped) {
     if (asiMode === 'feat' && featPick) {
@@ -103,7 +127,7 @@ export function buildLevelUpUpdates({
       const selectedChoices = featPick.selectedChoices || {}
       const grant = featGrants(featPick, selectedChoices)
       featSpellIds = featGrantedSpellIds(featPick, selectedChoices)
-      const proficiencies = { ...(values.proficiencies || {}) }
+      const proficiencies = { ...(updates.proficiencies || values.proficiencies || {}) }
       const addProficiency = (bucket, typeId, ids) => {
         if (!ids?.length) return
         const labels = [...(proficiencies[bucket] || [])]
@@ -182,7 +206,8 @@ export function buildLevelUpUpdates({
   if (applySlotChange || grantedNewIds.length || featSpellIds.length || (abilityItemsComplete && (abilityGrantRows.length || hasExistingAbilityGrants))) {
     const spells = values.spells && typeof values.spells === 'object'
       ? { ...values.spells }
-      : { stat_path: castingAbilityIdOf(classItem) ?? '', spells: [], slots: defaultSlots() }
+      : { stat_path: castingAbilityIdOf(classItem, subclassItem) ?? '', spells: [], slots: defaultSlots() }
+    if (!spells.stat_path) spells.stat_path = castingAbilityIdOf(classItem, subclassItem) ?? ''
     const spellEntries = (spells.spells || []).map((entry) => ({ ...entry }))
     if (applySlotChange) {
       const slots = Array.isArray(spells.slots) && spells.slots.length

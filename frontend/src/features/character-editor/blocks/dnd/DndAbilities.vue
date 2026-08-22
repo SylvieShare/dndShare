@@ -95,6 +95,7 @@
       :item="choiceConfigItem"
       :initial-choices="choiceInitialChoices"
       :excluded-choices="choiceExcludedChoices"
+      :option-eligibility="choiceOptionEligibility"
       @confirm="onChoicesConfirm"
       @close="choiceConfigItem = null"
     />
@@ -130,8 +131,9 @@ import { ensureItemNames, itemName } from '@/features/handbook/objects/lib/itemN
 import { useSuggestStore } from '@/stores/suggest'
 import { useMorphOrigin } from "@/features/character-editor/composables/useMorphOrigin"
 import { logSessionEntryAdded } from '@/features/character-editor/lib/sessionEntryEvents'
-import { abilityUseTotal, abilityUsesAreManual } from '@/shared/lib/dndAbilityUses'
+import { abilityScalingLabel, abilityUseTotal, abilityUsesAreManual } from '@/shared/lib/dndAbilityUses'
 import { useFeatSheetRequirements } from '@/features/character-editor/composables/useFeatSheetRequirements'
+import { characterChoiceOptionEligibility } from '@/features/items/lib/characterChoiceEligibility'
 
 const props = defineProps(['block', 'value', 'values'])
 const emit = defineEmits(['update:value'])
@@ -188,6 +190,7 @@ const entries = computed(() =>
         count: s.count ?? maxUse ?? 0,
         choices: s.choices || {},
         choice_summary: itemChoiceSummary(item, s.choices || {}),
+        scaling_label: abilityScalingLabel(item.data, props.values),
         passive_effects: [
           ...(!requirementsMet(item) ? [{
             title: 'Требования не выполнены',
@@ -227,6 +230,13 @@ const choiceExcludedChoices = computed(() => {
   return result
 })
 const choiceInitialChoices = computed(() => stored.value.find(entry => (entry.uid || String(entry.id)) === choiceEditingKey.value)?.choices || {})
+function choiceOptionEligibility(choice, value) {
+  return characterChoiceOptionEligibility(choice, value, {
+    values: props.values,
+    items: catalog.value,
+    suggestItems: (typeId) => suggestStore.items(typeId),
+  })
+}
 const { requirementsMet, sync: syncFeatRequirements } = useFeatSheetRequirements({
   isFeatBlock: () => isFeatBlock.value,
   values: () => props.values,
