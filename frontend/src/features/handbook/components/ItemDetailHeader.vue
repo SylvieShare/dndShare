@@ -3,6 +3,7 @@
     class="item-detail-header item-detail-header-covered"
     :class="{
       'item-detail-header-summary': $slots.summary,
+      'item-detail-header-title-only-shade': titleOnlyShade,
     }"
     :data-item-type-id="type?.id || undefined"
     :style="coverStyle"
@@ -105,6 +106,7 @@ let coverRequestVersion = 0
 let coverSwapTimer = null
 
 const coverImageAvailable = computed(() => Boolean(displayedCoverUrl.value) && !coverFailed.value)
+const titleOnlyShade = computed(() => [3, 4, 7].includes(props.type?.id))
 const coverStyle = computed(() => ({
   ...(TYPE_COVER_STYLES[props.type?.id] || {}),
   ...(coverAspectRatio.value ? { '--cover-aspect-ratio': coverAspectRatio.value } : {}),
@@ -279,6 +281,10 @@ function onCoverError() {
   display: none;
 }
 
+.item-detail-header-covered.item-detail-header-title-only-shade .item-detail-shade {
+  display: none;
+}
+
 .item-detail-overlay {
   width: 100%;
   min-width: 0;
@@ -322,7 +328,8 @@ function onCoverError() {
   min-width: 0;
 }
 
-.item-detail-header-covered.item-detail-header-summary .item-detail-title {
+.item-detail-header-covered.item-detail-header-summary .item-detail-title,
+.item-detail-header-covered.item-detail-header-title-only-shade .item-detail-title {
   width: fit-content;
   max-width: 100%;
   padding: 7px 10px;

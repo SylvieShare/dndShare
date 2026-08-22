@@ -180,6 +180,13 @@ describe('handbook item detail cover', () => {
     expect(enemyContentSource).not.toContain('class="enemy-top"')
   })
 
+  it('limits cover dimming for abilities and feats to the title panel', () => {
+    expect(headerSource).toContain('const titleOnlyShade = computed(() => [3, 4, 7].includes(props.type?.id))')
+    expect(headerSource).toContain("'item-detail-header-title-only-shade': titleOnlyShade")
+    expect(headerSource).toContain('.item-detail-header-covered.item-detail-header-title-only-shade .item-detail-shade')
+    expect(headerSource).toContain('.item-detail-header-covered.item-detail-header-title-only-shade .item-detail-title')
+  })
+
   it('keeps edit and source in one shared right-aligned row for every item type', () => {
     expect(headerSource).toContain('class="item-detail-controls"')
     expect(headerSource.indexOf('<slot name="actions" />')).toBeLessThan(headerSource.indexOf('<slot name="corner" />'))
