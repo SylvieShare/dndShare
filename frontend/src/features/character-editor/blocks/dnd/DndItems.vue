@@ -110,6 +110,22 @@
                   action="view"
                   @click="viewEntry(entry, close)"
                 >Открыть описание</RowActionItem>
+                <RowActionSubmenu v-if="isToolEntry(entry)" label="Характеристика для проверки" :min-width="230">
+                  <template #trigger="{ open }">
+                    <RowActionItem :icon="Dices" tone="accent" submenu :submenu-open="open">Бросок</RowActionItem>
+                  </template>
+                  <template #default="{ close: closeAbilities }">
+                    <RowActionItem
+                      v-for="ability in toolAbilityOptions"
+                      :key="ability.key"
+                      :icon="Dices"
+                      @click="rollTool(entry, ability, closeAbilities, close)"
+                    >
+                      {{ ability.label }}
+                      <template #suffix>{{ signed(toolCheckBonus(entry, ability)) }}</template>
+                    </RowActionItem>
+                  </template>
+                </RowActionSubmenu>
                 <RowActionItem
                   v-if="canMoveToSpecialized(entry)"
                   :icon="ArrowRightLeft"
@@ -213,9 +229,9 @@
 
 <script setup>
 import { computed, inject, nextTick, onMounted, reactive, ref, watch } from 'vue'
-import { ArrowRightLeft } from '@lucide/vue'
+import { ArrowRightLeft, Dices } from '@lucide/vue'
 
-import { BaseTile } from '@sylvieshare/share-ui'
+import { BaseTile, RowActionSubmenu } from '@sylvieshare/share-ui'
 import InventoryItemIcon from '@/features/character-editor/components/InventoryItemIcon.vue'
 import ItemInlineFormModal from '@/features/character-editor/components/ItemInlineFormModal'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
@@ -231,6 +247,10 @@ import { useItemTypesStore } from '@/stores/itemTypes'
 import { useSuggestStore } from '@/stores/suggest'
 import { applicableInstanceFields, defaultInstanceParams } from '@/features/items/lib/itemInstance'
 import { hasItemProficiency } from '@/features/character-editor/lib/itemProficiency'
+import { abilityModifier, formatBonus as signed, proficiencyBonus, resolveNumValue, sumBonuses } from '@/shared/lib/dnd'
+import { STAT_FULL, STAT_KEYS } from '@/shared/lib/dndStats'
+import { armorAbilityRollEffects, resolveRollMode } from '@/features/character-editor/blocks/dnd/lib/rollMode'
+import { useDiceStore } from '@/stores/dice'
 import { useSortable } from '@sylvieshare/share-ui'
 import { logSessionEntryAdded } from '@/features/character-editor/lib/sessionEntryEvents'
 import {
@@ -266,6 +286,8 @@ const renamingId = ref(null)
 const renameInputs = ref([])
 const itemTypesStore = useItemTypesStore()
 const suggestStore = useSuggestStore()
+const diceStore = useDiceStore()
+const toolAbilityOptions = STAT_KEYS.map((key, index) => ({ key, suggestId: index + 1, label: STAT_FULL[key] }))
 
 const model = computed(() => normalizeValue(props.value))
 
@@ -338,6 +360,36 @@ function toolCategoryLabel(entry) {
     musical: 'Музыкальный инструмент',
     kit: 'Набор инструментов',
   })[entry.display.base?.data?.category] || 'Инструмент'
+}
+
+function characterProficiencyBonus() {
+  const values = charCtx.values || {}
+  const stored = values.prof_bonus || {}
+  const base = stored.auto === false
+    ? Number(stored.v) || 0
+    : proficiencyBonus(values.lvl?.level)
+  return base + sumBonuses(stored.bonuses)
+}
+
+function toolCheckBonus(entry, ability) {
+  const values = charCtx.values || {}
+  const modifier = abilityModifier(resolveNumValue(values?.[ability.key]?.value ?? 10))
+  return modifier + (entryHasProficiency(entry) ? characterProficiencyBonus() : 0)
+}
+
+function rollTool(entry, ability, closeAbilities, closeMenu) {
+  const armorState = charCtx.characterArmor?.state || {}
+  const resolved = charCtx.characterRolls?.resolve
+    ? charCtx.characterRolls.resolve('auto', { kind: 'tool', abilitySuggestId: ability.suggestId, item: entry.display.base })
+    : resolveRollMode('auto', armorAbilityRollEffects(armorState, ability.suggestId))
+  diceStore.rollD20(
+    `${entry.display.name} — ${ability.label}`,
+    toolCheckBonus(entry, ability),
+    resolved.mode,
+    { crit_mode: true },
+  )
+  closeAbilities()
+  closeMenu()
 }
 
 function specializedDestination(entry) {

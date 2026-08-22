@@ -17,7 +17,7 @@
         >
           <span class="save-shield-icon"></span>
           <span class="save-chip-val">{{ signed(save) }}</span>
-          <RollModeBadge :mode="saveMode" :source="saveModeSource" />
+          <RollModeBadge :mode="saveMode" :source="saveModeSource" :cancelled="saveModeCancelled" />
         </div>
       </template>
     </SheetBlockTitle>
@@ -27,7 +27,7 @@
       <SvgIcon v-if="suggestSvg" class="stat-icon" :svg="suggestSvg" :color="color" />
       <span class="stat-mod">{{ signed(mod) }}</span>
       <span class="stat-raw">({{ raw }})</span>
-      <RollModeBadge :mode="checkMode" :source="checkModeSource" />
+      <RollModeBadge :mode="checkMode" :source="checkModeSource" :cancelled="checkModeCancelled" />
     </div>
 
     <!-- ── Skills ── -->
@@ -53,7 +53,7 @@
           @mouseleave="hideTooltip"
         >{{ skill.title }}</span>
         <span class="skill-line"></span>
-        <RollModeBadge :mode="skill.rollMode" :source="skill.rollModeSource" />
+        <RollModeBadge :mode="skill.rollMode" :source="skill.rollModeSource" :cancelled="skill.rollModeCancelled" />
         <span
           class="skill-chip"
           :class="{ 'skill-chip-active': skill.up > 0, 'skill-chip-master': skill.up >= 2 }"
@@ -104,6 +104,8 @@ const props = defineProps({
   checkModeSource: { type: String, default: '' },
   saveMode: { type: String, default: 'normal' },
   saveModeSource: { type: String, default: '' },
+  checkModeCancelled: { type: Boolean, default: false },
+  saveModeCancelled: { type: Boolean, default: false },
 })
 defineEmits(['edit', 'roll-stat', 'roll-save', 'roll-skill'])
 

@@ -17,9 +17,11 @@
       :save-up="!!statData.save_up"
       :skills="skillsView"
       :check-mode="checkRollMode"
-      :check-mode-source="checkAutoSource"
+      :check-mode-source="checkModeSource"
+      :check-mode-cancelled="checkResolved.cancelled"
       :save-mode="saveRollMode"
-      :save-mode-source="saveAutoSource"
+      :save-mode-source="saveModeSource"
+      :save-mode-cancelled="saveResolved.cancelled"
       :skills-loading="skillsLoading"
       :skill-skeleton-count="skillSkeletonCount"
       :tooltip-max-desc="skillTooltipMaxDesc"
@@ -56,9 +58,11 @@
         :save-up="!!statData.save_up"
         :skills="skillsView"
         :check-mode="checkRollMode"
-        :check-mode-source="checkAutoSource"
+        :check-mode-source="checkModeSource"
+        :check-mode-cancelled="checkResolved.cancelled"
         :save-mode="saveRollMode"
-        :save-mode-source="saveAutoSource"
+        :save-mode-source="saveModeSource"
+        :save-mode-cancelled="saveResolved.cancelled"
         :skills-loading="skillsLoading"
         :skill-skeleton-count="skillSkeletonCount"
         :tooltip-max-desc="skillTooltipMaxDesc"
@@ -113,7 +117,7 @@
 <script setup>
 import { computed, inject, onMounted, ref, watch } from 'vue'
 import { abilityModifier, sumBonuses } from '@/shared/lib/dnd'
-import { armorRollMode } from '@/features/character-editor/blocks/dnd/lib/equippedArmor'
+import { armorAbilityRollEffects, resolveRollMode } from '@/features/character-editor/blocks/dnd/lib/rollMode'
 import { BaseTile } from '@sylvieshare/share-ui'
 import DndStatEditor from '@/features/character-editor/blocks/dnd/components/DndStatEditor'
 import DndStatSkillEditor from '@/features/character-editor/blocks/dnd/components/DndStatSkillEditor'
@@ -246,23 +250,29 @@ const skillsView = computed(() => skillsList.value.map(s => ({
   ...s,
   bonus: skillBonus(s.id),
   rollMode: skillRollMode(s.id),
-  rollModeSource: skillAutoSource(s.id),
+  rollModeSource: skillModeSource(s.id),
+  rollModeCancelled: skillResolved(s.id).cancelled,
 })))
 
 const skillTooltipMaxDesc = computed(() => Number(props.block.content.skill_tooltip_max_desc ?? 0))
 const skillTooltipWidth = computed(() => Number(props.block.content.skill_tooltip_width ?? 420))
 const isMobileVariant = computed(() => (props.block.props?.variant || props.block.content?.variant) === 'mobile')
 const armorState = computed(() => charCtx.characterArmor?.state || {})
-const armorAffectsStat = computed(() => ['1', '2'].includes(String(titleSuggestId.value)) && !!armorState.value.strengthDexDisadvantage)
-const checkAutoMode = computed(() => armorAffectsStat.value ? 'disadvantage' : 'normal')
-const saveAutoMode = computed(() => armorAffectsStat.value ? 'disadvantage' : 'normal')
-const armorSource = computed(() => armorState.value.nonproficient?.length
-  ? `Нет владения: ${armorState.value.nonproficient.map(row => row.name).join(', ')}`
-  : '')
-const checkAutoSource = computed(() => armorAffectsStat.value ? armorSource.value : '')
-const saveAutoSource = computed(() => armorAffectsStat.value ? armorSource.value : '')
-const checkRollMode = computed(() => armorRollMode(statData.value.check_roll_mode, checkAutoMode.value === 'disadvantage'))
-const saveRollMode = computed(() => armorRollMode(statData.value.save_roll_mode, saveAutoMode.value === 'disadvantage'))
+const statRollEffects = computed(() => charCtx.characterRolls?.effects
+  ? charCtx.characterRolls.effects({ kind: 'ability', abilitySuggestId: titleSuggestId.value })
+  : armorAbilityRollEffects(armorState.value, titleSuggestId.value))
+const checkAutomatic = computed(() => resolveRollMode('auto', statRollEffects.value))
+const saveAutomatic = computed(() => resolveRollMode('auto', statRollEffects.value))
+const checkResolved = computed(() => resolveRollMode(statData.value.check_roll_mode, statRollEffects.value))
+const saveResolved = computed(() => resolveRollMode(statData.value.save_roll_mode, statRollEffects.value))
+const checkAutoMode = computed(() => checkAutomatic.value.mode)
+const saveAutoMode = computed(() => saveAutomatic.value.mode)
+const checkAutoSource = computed(() => checkAutomatic.value.source)
+const saveAutoSource = computed(() => saveAutomatic.value.source)
+const checkRollMode = computed(() => checkResolved.value.mode)
+const saveRollMode = computed(() => saveResolved.value.mode)
+const checkModeSource = computed(() => checkResolved.value.source)
+const saveModeSource = computed(() => saveResolved.value.source)
 
 const editSkill = computed(() => {
   if (editSkillId.value == null) return null
@@ -280,23 +290,32 @@ function skillBonus(id) {
   return mod.value + (skill.up || 0) * profBonus.value + extra
 }
 
+function skillRollEffects(id) {
+  const effects = [...statRollEffects.value]
+  if (String(id) === '4' && armorState.value.stealthDisadvantage && armorState.value.body?.name) {
+    effects.push({ mode: 'disadvantage', source: `${armorState.value.body.name}: помеха Скрытности` })
+  }
+  return effects
+}
+
 function skillAutoMode(id) {
-  return armorAffectsStat.value || (String(id) === '4' && armorState.value.stealthDisadvantage)
-    ? 'disadvantage'
-    : 'normal'
+  return resolveRollMode('auto', skillRollEffects(id)).mode
 }
 
 function skillAutoSource(id) {
-  const sources = []
-  if (armorAffectsStat.value && armorSource.value) sources.push(armorSource.value)
-  if (String(id) === '4' && armorState.value.stealthDisadvantage && armorState.value.body?.name) {
-    sources.push(`${armorState.value.body.name}: помеха Скрытности`)
-  }
-  return [...new Set(sources)].join(' · ')
+  return resolveRollMode('auto', skillRollEffects(id)).source
 }
 
 function skillRollMode(id) {
-  return armorRollMode(skillsMap.value[String(id)]?.roll_mode, skillAutoMode(id) === 'disadvantage')
+  return skillResolved(id).mode
+}
+
+function skillModeSource(id) {
+  return skillResolved(id).source
+}
+
+function skillResolved(id) {
+  return resolveRollMode(skillsMap.value[String(id)]?.roll_mode, skillRollEffects(id))
 }
 
 function emitValue(patch) {

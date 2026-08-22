@@ -7,6 +7,7 @@ import { settingAccessors, settingRenderSchema } from '@/features/character-edit
 import { normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'
 import { useCharacterResources } from '@/features/character-editor/composables/useCharacterResources'
 import { useCharacterArmor } from '@/features/character-editor/composables/useCharacterArmor'
+import { useCharacterRollEffects } from '@/features/character-editor/composables/useCharacterRollEffects'
 import {
   activeLayoutProfile,
   initialTabs,
@@ -31,6 +32,7 @@ export function useCharacterData(uuid, isMobile) {
   const characterValues = computed(() => data.value.values || {})
   const characterResources = useCharacterResources(characterValues)
   const characterArmor = useCharacterArmor(characterValues, characterResources)
+  const characterRolls = useCharacterRollEffects(characterArmor)
 
   provide('charCtx', charCtx)
   Object.assign(charCtx, {
@@ -41,6 +43,7 @@ export function useCharacterData(uuid, isMobile) {
     uploadCharacterIcon,
     characterResources,
     characterArmor,
+    characterRolls,
     values: characterValues,
   })
 

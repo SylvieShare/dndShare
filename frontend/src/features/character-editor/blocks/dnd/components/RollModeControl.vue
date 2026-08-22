@@ -3,12 +3,14 @@
     <div class="rm-options" role="group" :aria-label="label">
       <button v-for="option in options" :key="option.value" type="button" :class="{ active: modelValue === option.value }" @click="$emit('update:modelValue', option.value)">{{ option.label }}</button>
     </div>
-    <small v-if="modelValue === 'auto' && autoMode !== 'normal'">Автоматически: {{ autoMode === 'advantage' ? 'преимущество' : 'помеха' }}{{ source ? ` · ${source}` : '' }}</small>
+    <small v-if="modelValue === 'auto' && source">Автоматически: {{ autoModeLabel }} · {{ source }}</small>
   </div>
 </template>
 
 <script setup>
-defineProps({
+import { computed } from 'vue'
+
+const props = defineProps({
   modelValue: { type: String, default: 'auto' },
   autoMode: { type: String, default: 'normal' },
   source: { type: String, default: '' },
@@ -21,6 +23,11 @@ const options = [
   { value: 'advantage', label: 'Преимущество' },
   { value: 'disadvantage', label: 'Помеха' },
 ]
+const autoModeLabel = computed(() => ({
+  advantage: 'преимущество',
+  disadvantage: 'помеха',
+  normal: 'обычный бросок',
+})[props.autoMode] || 'обычный бросок')
 </script>
 
 <style scoped>

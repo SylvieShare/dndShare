@@ -146,6 +146,18 @@ The current shape under `data.values` is:
 There are no `class/subclass` mirrors, scalar level/stat/hit-dice forms, array
 spellbook, flat inventory or array wallet.
 
+Автоматические источники преимущества и помехи собираются независимо. Если
+хотя бы один источник даёт преимущество и хотя бы один — помеху, они взаимно
+отменяются и итоговый режим становится обычным, независимо от количества
+источников. Явный режим в редакторе остаётся пользовательским переопределением.
+`useCharacterRollEffects` предоставляет единый `register/effects/resolve`
+контракт: доспехи являются встроенным источником, а способности, состояния и
+предметы могут регистрировать дополнительные эффекты без изменения компонентов
+характеристик и инструментов.
+Для инструмента в меню снаряжения доступен бросок с выбором одной из шести
+характеристик; владение инструментом автоматически добавляет бонус мастерства,
+а режим броска использует те же автоматические эффекты характеристики.
+
 Spell preparation applies only to spells of level 1 and higher. Cantrips never
 offer preparation actions, and stale preparation fields on them are cleared
 after handbook details load. Owners change regular and permanent preparation

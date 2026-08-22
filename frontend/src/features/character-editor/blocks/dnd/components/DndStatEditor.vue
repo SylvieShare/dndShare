@@ -46,7 +46,7 @@
       >
         <span class="se-skill-name">{{ skill.title }}</span>
         <span class="se-skill-prof" :class="`se-skill-prof--${skill.up}`">{{ profLabel(skill.up) }}</span>
-        <RollModeBadge :mode="skill.rollMode" :source="skill.rollModeSource" />
+        <RollModeBadge :mode="skill.rollMode" :source="skill.rollModeSource" :cancelled="skill.rollModeCancelled" />
         <span class="se-skill-chip">{{ signed(skill.bonus) }}</span>
         <span
           v-if="skill.custom"

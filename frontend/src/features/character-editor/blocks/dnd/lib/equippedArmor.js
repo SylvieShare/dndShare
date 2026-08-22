@@ -113,8 +113,3 @@ export function deriveEquippedArmor(values = {}, items = {}, suggestItems = () =
     speedPenalty,
   }
 }
-
-export function armorRollMode(manualMode, automaticDisadvantage) {
-  if (['normal', 'advantage', 'disadvantage'].includes(manualMode)) return manualMode
-  return automaticDisadvantage ? 'disadvantage' : 'normal'
-}

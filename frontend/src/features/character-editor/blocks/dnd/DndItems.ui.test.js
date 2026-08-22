@@ -42,6 +42,9 @@ describe('inventory item actions', () => {
     expect(source).not.toContain('toggleToolProficiency')
     expect(source).not.toContain('charCtx.updateValues({ proficiencies })')
     expect(blocks.items.content.tool_proficiency_bucket).toBeUndefined()
+    expect(source).toContain('v-if="isToolEntry(entry)" label="Характеристика для проверки"')
+    expect(source).toContain('diceStore.rollD20(')
+    expect(source).toContain('entryHasProficiency(entry) ? characterProficiencyBonus() : 0')
   })
 
   it('uses 64px handbook icons for inventory rows', () => {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { armorRollMode, deriveEquippedArmor } from './equippedArmor'
+import { deriveEquippedArmor } from './equippedArmor'
 
 const armor = (id, name, data) => ({ id, name, typeId: 12, data })
 const equipped = (...ids) => ({
@@ -41,12 +41,6 @@ describe('deriveEquippedArmor', () => {
     const withProficiency = deriveEquippedArmor({ DEX: { value: 14 }, items: equipped(1), proficiencies: { Доспехи: ['Средние доспехи'] } }, items, suggestItems)
     expect(withProficiency.strengthDexDisadvantage).toBe(false)
     expect(withProficiency.castingBlocked).toBe(false)
-  })
-
-  it('lets an explicit roll mode override automatic disadvantage', () => {
-    expect(armorRollMode('auto', true)).toBe('disadvantage')
-    expect(armorRollMode('normal', true)).toBe('normal')
-    expect(armorRollMode('advantage', true)).toBe('advantage')
   })
 
   it('reduces speed when heavy armor requires more Strength, except for dwarves', () => {
