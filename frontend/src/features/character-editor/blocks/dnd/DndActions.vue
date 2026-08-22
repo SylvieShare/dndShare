@@ -1,14 +1,16 @@
 <template>
   <div ref="root" class="da-block">
-    <DndActionsView
-      :groups="groups"
-      :manage="ownerMode"
-      :action-suggestions="actionSuggestions"
-      @add="addAction"
-      @edit="editAction"
-      @move="moveAction"
-      @remove="removeAction"
-    />
+    <BaseTile class="da-tile">
+      <DndActionsView
+        :groups="groups"
+        :manage="ownerMode"
+        :action-suggestions="actionSuggestions"
+        @add="addAction"
+        @edit="editAction"
+        @move="moveAction"
+        @remove="removeAction"
+      />
+    </BaseTile>
 
     <MorphEditorShell
       v-if="editorOpen && editingAction"
@@ -38,6 +40,7 @@
 
 <script setup>
 import { computed, inject, nextTick, onMounted, ref, watch } from 'vue'
+import { BaseTile } from '@sylvieshare/share-ui'
 import DndActionsEditor from '@/features/character-editor/blocks/dnd/components/DndActionsEditor.vue'
 import DndActionsView from '@/features/character-editor/blocks/dnd/components/DndActionsView.vue'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell.vue'
@@ -129,5 +132,6 @@ onMounted(() => suggestStore.ensure(24))
 </script>
 
 <style scoped>
-.da-block { width: 100%; min-width: 0; box-sizing: border-box; }
+.da-block, .da-tile { width: 100%; min-width: 0; box-sizing: border-box; }
+.da-tile { display: block; }
 </style>

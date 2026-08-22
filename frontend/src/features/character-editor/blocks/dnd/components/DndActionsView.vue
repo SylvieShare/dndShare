@@ -7,6 +7,16 @@
         <component :is="groupIcon(group.value)" :size="15" :stroke-width="2" />
         <span>{{ group.label }}</span>
         <i></i>
+        <button
+          v-if="manage"
+          type="button"
+          class="dav-add"
+          :aria-label="`Добавить: ${group.label}`"
+          :title="`Добавить: ${group.label}`"
+          @click="$emit('add', group.value, $event.currentTarget)"
+        >
+          <Plus :size="14" :stroke-width="2" />
+        </button>
       </header>
 
       <div class="dav-list">
@@ -59,15 +69,6 @@
           </template>
         </RowActionMenu>
 
-        <button
-          v-if="manage"
-          type="button"
-          class="dav-add"
-          @click="$emit('add', group.value, $event.currentTarget)"
-        >
-          <Plus :size="15" :stroke-width="2" />
-          <span>Добавить</span>
-        </button>
       </div>
     </section>
 
@@ -157,7 +158,7 @@ function hideActionTooltip() {
 .dav-group--bonus_action { --dav-tone: var(--info); }
 .dav-group--reaction { --dav-tone: var(--warning); }
 .dav-group--free { --dav-tone: var(--success); }
-.dav-group-head { display: grid; grid-template-columns: auto auto minmax(12px, 1fr); gap: 6px; align-items: center; color: var(--dav-tone); font-size: 9px; font-weight: 800; letter-spacing: .065em; text-transform: uppercase; }
+.dav-group-head { display: grid; grid-template-columns: auto auto minmax(12px, 1fr) auto; gap: 6px; align-items: center; color: var(--dav-tone); font-size: 9px; font-weight: 800; letter-spacing: .065em; text-transform: uppercase; }
 .dav-group-head i { height: 1px; background: color-mix(in srgb, var(--dav-tone) 24%, transparent); }
 .dav-list { display: flex; flex-direction: column; }
 .dav-action { display: grid; grid-template-columns: 36px minmax(0, 1fr) auto; gap: 9px; align-items: start; padding: 10px 2px; cursor: pointer; transition: background-color .12s; }
@@ -174,6 +175,6 @@ function hideActionTooltip() {
 .dav-requirements { display: flex; flex-direction: column; gap: 2px; margin-top: 2px; color: var(--text-muted); font-size: 9px; line-height: 1.35; }
 .dav-requirements > span::before { margin-right: 5px; color: var(--dav-tone); content: '•'; }
 .dav-resource { align-self: center; padding: 3px 5px; border-radius: 5px; background: color-mix(in srgb, var(--dav-tone) 12%, transparent); color: var(--dav-tone); font-size: 10px; font-weight: 800; }
-.dav-add { display: flex; min-height: 34px; align-items: center; justify-content: center; gap: 5px; margin-top: 4px; border: 1px dashed color-mix(in srgb, var(--dav-tone) 42%, var(--border)); border-radius: 8px; background: transparent; color: var(--dav-tone); cursor: pointer; font: inherit; font-size: 10px; font-weight: 700; }
+.dav-add { display: grid; width: 25px; height: 25px; padding: 0; place-items: center; border: 1px dashed color-mix(in srgb, var(--dav-tone) 50%, var(--border)); border-radius: 7px; background: transparent; color: var(--dav-tone); cursor: pointer; }
 .dav-add:hover { background: color-mix(in srgb, var(--dav-tone) 6%, transparent); border-color: var(--dav-tone); }
 </style>

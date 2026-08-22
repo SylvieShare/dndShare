@@ -7,7 +7,7 @@
       'ab-block--divider': block.content?.divider,
     }"
   >
-    <component :is="block.content?.embedded || block.content?.expanded ? 'div' : BaseTile" class="ab-tile">
+    <component :is="block.content?.embedded ? 'div' : BaseTile" class="ab-tile">
       <DndAbilitiesView
         :entries="entries"
         :loading="loading"
@@ -16,6 +16,7 @@
         :manage="ownerMode"
         :expanded="!!block.content?.expanded"
         @view="onView"
+        @add="pickerOpen = true"
         @manage="onManage"
         @show-tooltip="showTooltip"
         @hide-tooltip="hideTooltip"
@@ -41,6 +42,7 @@
           panel
           :expanded="!!block.content?.expanded"
           @view="onView"
+          @add="pickerOpen = true"
           @show-tooltip="showTooltip"
           @hide-tooltip="hideTooltip"
         />

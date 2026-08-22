@@ -34,8 +34,10 @@ Desktop and mobile share block definitions but have separate placement
 profiles. The desktop base layout moves class, race and feat entries out of the
 side column into the visible inner **Способности** tab alongside **Оружие**,
 **Магия** and **Снаряжение**. It shows expanded cards with a 64×64 handbook icon
-and the full description inline. Expanded entries do not create nested card
-backgrounds or outlines; thin separators divide both entries and ability kinds.
+and the full description inline. Class abilities, racial abilities and feats
+each own one shared tile; entries inside it do not create nested backgrounds or
+outlines and are divided by thin separators. Each tile header has a compact
+dashed plus control for adding an entry.
 The renamed mobile **Способности** tab uses the expanded cards as well and
 starts with prominent feature widgets, actions, resources, defenses and
 proficiencies. The mobile D&D stats tab uses a 12px top-level column gap. Tab state
@@ -498,10 +500,10 @@ type 24. Hovering those linked names shows the suggest description. The block
 merges source rows with editable custom actions from `values.actions`;
 source-provided rows identify their ability, use its icon and cannot be edited
 on the character. Both kinds can be reordered within their action-economy group;
-the stable row-key order is stored in `values.action_order`. Each group ends
-with its own dashed add control, while editing and deletion live in the row
-action menu. The block has no nested card background and currently does not
-execute or log actions. Cunning Action is one source row linking Dash,
+the stable row-key order is stored in `values.action_order`. Each group header
+ends with a compact dashed plus control, while editing and deletion live in the
+row action menu. The block owns one shared tile; rows inside it have no nested
+card background and currently do not execute or log actions. Cunning Action is one source row linking Dash,
 Disengage and Hide rather than three duplicated rows. The block is available in
 the desktop side column and the mobile abilities tab.
 The same picker is used for feats and abilities and opens above the active morph

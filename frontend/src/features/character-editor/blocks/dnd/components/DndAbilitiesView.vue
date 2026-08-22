@@ -6,7 +6,13 @@
       :show-edit="manage"
       :edit-fade="editFade"
       @edit="$emit('manage')"
-    />
+    >
+      <template v-if="manage" #aside>
+        <button class="abv-add" type="button" title="Добавить" aria-label="Добавить" @click.stop="$emit('add', $event.currentTarget)">
+          <Plus :size="14" :stroke-width="2" />
+        </button>
+      </template>
+    </SheetBlockTitle>
 
     <div v-if="loading" class="abv-list">
       <div v-for="i in skeletonCount" :key="i" class="abv-skeleton"></div>
@@ -53,6 +59,7 @@
 </template>
 
 <script setup>
+import { Plus } from '@lucide/vue'
 import SheetBlockTitle from '@/shared/ui/SheetBlockTitle'
 import SvgIcon from '@/shared/ui/SvgIcon.vue'
 import DndRichContent from '@/shared/ui/DndRichContent.vue'
@@ -68,7 +75,7 @@ defineProps({
   panel: { type: Boolean, default: false },
   expanded: { type: Boolean, default: false },
 })
-defineEmits(['view', 'show-tooltip', 'hide-tooltip', 'manage'])
+defineEmits(['view', 'show-tooltip', 'hide-tooltip', 'manage', 'add'])
 </script>
 
 <style scoped>
@@ -158,7 +165,7 @@ defineEmits(['view', 'show-tooltip', 'hide-tooltip', 'manage'])
 .abv-sr { background-color: color-mix(in srgb, var(--success) 18%, transparent); color: var(--success); }
 .abv-lr { background-color: color-mix(in srgb, var(--info) 18%, transparent); color: var(--info); }
 
-.abv--expanded { gap: 8px; padding: 0; }
+.abv--expanded { gap: 8px; padding: 13px; }
 .abv--expanded .abv-list { gap: 0; }
 .abv--expanded .abv-card { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto; align-items: start; gap: 13px; min-height: 88px; padding: 13px 2px; border: 0; border-radius: 0; background: transparent; }
 .abv--expanded .abv-card + .abv-card { border-top: 1px solid var(--border); }
@@ -170,6 +177,8 @@ defineEmits(['view', 'show-tooltip', 'hide-tooltip', 'manage'])
 .abv-description :deep(p) { margin: 0; }
 .abv-description :deep(p + p) { margin-top: 6px; }
 .abv--expanded .abv-effect { margin-top: 5px; font-size: 10px; }
+.abv-add { display: grid; width: 25px; height: 25px; padding: 0; place-items: center; border: 1px dashed color-mix(in srgb, var(--accent) 52%, var(--border)); border-radius: 7px; background: transparent; color: var(--accent); cursor: pointer; }
+.abv-add:hover { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 7%, transparent); }
 @media (max-width: 520px) {
   .abv--expanded .abv-card { grid-template-columns: 56px minmax(0, 1fr) auto; gap: 10px; padding: 10px; }
   .abv--expanded .abv-icon { width: 56px; height: 56px; }
