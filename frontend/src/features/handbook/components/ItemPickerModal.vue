@@ -35,6 +35,7 @@
             :group-by="groupBy"
             :search="searchQ"
             :filters="filters"
+            :locked-filters="normalizedFixedFilters"
             :filter-fields="filterFields"
             :filter-suggests="filterSuggests"
             :content-sources="visibleContentSources"
@@ -48,7 +49,7 @@
             @load-more="loadMore"
             @update:group-by="groupBy = $event"
             @update:search="searchQ = $event"
-            @update:filters="filters = $event"
+            @update:filters="updateFilters"
             @update:content-source-ids="contentSourceIds = $event"
           />
           <HandbookItemDetail
@@ -132,6 +133,7 @@ const props = defineProps({
   allowQuantity: { type: Boolean, default: false },
   createShowNameEn: { type: Boolean, default: false },
   itemEligibility: { type: Function, default: null },
+  fixedFilters: { type: Object, default: () => ({}) },
   zIndex: { type: Number, default: 3000 },
   contentSources: { type: Object, default: null },
   sourceVersionId: { type: [Number, String], default: null },
@@ -158,7 +160,16 @@ const loadingMore = ref(false)
 const hasMore = ref(false)
 const searchQ = ref('')
 const groupBy = ref(null)
-const filters = ref({})
+function normalizeFilterValues(source) {
+  return Object.fromEntries(Object.entries(source || {}).flatMap(([key, value]) => {
+    if (value == null || value === '') return []
+    if (typeof value === 'boolean') return [[key, value]]
+    return [[key, Array.isArray(value) ? [...value] : [value]]]
+  }))
+}
+
+const normalizedFixedFilters = computed(() => normalizeFilterValues(props.fixedFilters))
+const filters = ref({ ...normalizedFixedFilters.value })
 const availableContentSources = ref([])
 const contentSourceIds = ref([])
 const createOpen = ref(false)
@@ -233,13 +244,17 @@ function setActiveType(id) {
   activeTypeId.value = id
   searchQ.value = ''
   groupBy.value = null
-  filters.value = {}
+  filters.value = { ...normalizedFixedFilters.value }
   contentSourceIds.value = []
   selectedItem.value = null
   items.value = []
   ensureSuggestsForType(itemType.value)
   fetchContentSources()
   fetchItems('')
+}
+
+function updateFilters(next) {
+  filters.value = { ...(next || {}), ...normalizedFixedFilters.value }
 }
 
 function filtersQuery() {
@@ -327,6 +342,13 @@ watch([effectiveContentSources, effectiveSourceVersionId], () => {
   contentSourceIds.value = []
   fetchContentSources()
   fetchItems(searchQ.value)
+}, { deep: true })
+
+watch(normalizedFixedFilters, (next, previous) => {
+  const previousKeys = new Set(Object.keys(previous || {}))
+  const editable = Object.fromEntries(Object.entries(filters.value).filter(([key]) => !previousKeys.has(key)))
+  filters.value = { ...editable, ...next }
+  selectedItem.value = null
 }, { deep: true })
 
 function pick() {

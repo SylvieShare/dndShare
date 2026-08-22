@@ -51,7 +51,7 @@
           <div class="col-filter-body">
           <div class="col-filter-head">
             <span class="col-filter-head-title">Фильтр</span>
-            <button v-if="activeFilterCount" class="col-filter-clear" @click="clearSchemaFilters">Сбросить</button>
+            <button v-if="editableFilterCount" class="col-filter-clear" @click="clearSchemaFilters">Сбросить</button>
           </div>
           <div v-for="field in visibleFilterFields" :key="field.path" class="col-filter-group">
             <template v-if="isBoolField(field)">
@@ -60,9 +60,11 @@
                 :model-value="boolFilterValue(field.path)"
                 :options="boolFilterOptions"
                 :neutral-value="'any'"
+                :disabled="filterLocked(field.path)"
                 block
                 @update:model-value="setBoolFilter(field.path, $event)"
               />
+              <small v-if="filterLocked(field.path)" class="col-filter-locked">Задано способностью</small>
             </template>
             <template v-else>
               <div class="col-filter-title">{{ field.name }}</div>
@@ -71,7 +73,8 @@
                   v-for="opt in filterValueOptions(field)"
                   :key="opt.value"
                   class="col-filter-chip"
-                  :class="{ active: isSelected(field.path, opt.value) }"
+                  :class="{ active: isSelected(field.path, opt.value), locked: filterLocked(field.path) }"
+                  :disabled="filterLocked(field.path)"
                   @click="toggleValue(field.path, opt.value)"
                 >{{ opt.label }}</button>
               </div>
@@ -80,10 +83,12 @@
                   v-for="opt in suggestOptions(field)"
                   :key="opt.id"
                   class="col-filter-chip"
-                  :class="{ active: isSelected(field.path, opt.id) }"
+                  :class="{ active: isSelected(field.path, opt.id), locked: filterLocked(field.path) }"
+                  :disabled="filterLocked(field.path)"
                   @click="toggleValue(field.path, opt.id)"
                 >{{ opt.value }}</button>
               </div>
+              <small v-if="filterLocked(field.path)" class="col-filter-locked">Задано способностью</small>
             </template>
           </div>
           </div>
@@ -157,6 +162,7 @@ const props = defineProps({
   search: { type: String, default: '' },
   groupBy: { type: String, default: null },
   filters: { type: Object, default: () => ({}) },
+  lockedFilters: { type: Object, default: () => ({}) },
   filterFields: { type: Array, default: () => [] },
   filterSuggests: { type: Object, default: () => ({}) },
   contentSources: { type: Array, default: () => [] },
@@ -194,6 +200,11 @@ const activeFilterCount = computed(() =>
     return val == null ? sum : sum + 1
   }, 0)
 )
+const editableFilterCount = computed(() => Object.entries(props.filters).reduce((sum, [key, val]) => {
+  if (filterLocked(key)) return sum
+  if (Array.isArray(val)) return sum + val.length
+  return val == null ? sum : sum + 1
+}, 0))
 
 const activeContentSourceCount = computed(() => props.contentSourceIds.length)
 const contentSourceGroups = computed(() => groupContentSources(props.contentSources))
@@ -220,6 +231,7 @@ function filterValueOptions(f) {
 }
 
 function isSelected(key, id) { return (props.filters[key] || []).includes(id) }
+function filterLocked(key) { return Object.prototype.hasOwnProperty.call(props.lockedFilters, key) }
 
 function emitFilter(key, value) {
   const next = { ...props.filters }
@@ -229,6 +241,7 @@ function emitFilter(key, value) {
 }
 
 function toggleValue(key, id) {
+  if (filterLocked(key)) return
   const cur = [...(props.filters[key] || [])]
   const idx = cur.indexOf(id)
   if (idx === -1) cur.push(id)
@@ -244,6 +257,7 @@ function boolFilterValue(key) {
 }
 
 function setBoolFilter(key, value) {
+  if (filterLocked(key)) return
   if (value === 'true') emitFilter(key, true)
   else if (value === 'false') emitFilter(key, false)
   else emitFilter(key, null)
@@ -261,7 +275,7 @@ function toggleContentSource(id) {
 }
 
 function clearSchemaFilters() {
-  emit('update:filters', {})
+  emit('update:filters', { ...props.lockedFilters })
 }
 
 function clearContentSourceFilter() {

@@ -288,7 +288,9 @@ them independently addressable.
 An item choice may set `grant_spells` and `casting_ability`; selected handbook
 spell ids then become read-only external spells with the ability card recorded
 as their source. Item filters traverse object arrays (for example
-`{"lvl":0,"classes.id":4014}` for a Wizard cantrip).
+`{"lvl":0,"classes.id":4014}` for a Wizard cantrip). The choice picker sends
+these rules as fixed server-side catalogue filters immediately, displays them
+as ability-owned filters and does not allow the player to change or reset them.
 
 Race abilities, class abilities and feats remain separate canonical arrays and
 use their corresponding handbook item types and independent editors. Desktop
@@ -322,11 +324,12 @@ Choice-dependent defenses use `choice_defenses`: a rule points to another owned
 ability entry and maps its stable choice value to a damage type. Dragonborn
 ancestry therefore drives resistance from the single Breath Weapon choice.
 
-The read-only **Особые свойства** block sits above defenses and aggregates
-`passive_effects` from race/class abilities and feats. It holds contextual
-permissions, advantages, immunities and limitations such as Brave, Fey
-Ancestry and Sunlight Sensitivity that cannot safely be forced onto every roll
-without knowing the originating game effect.
+`passive_effects` are rendered directly below the race/class ability or feat
+that owns them. An entry without contextual text remains a compact name-only
+row; an entry such as Brave, Fey Ancestry or Sunlight Sensitivity expands only
+enough to show its contextual permission, advantage, immunity or limitation.
+There is no separate special-properties block and the source name is not
+repeated below the same ability.
 
 Ability `roll_triggers` and `critical_damage` are separate shared contracts. A
 natural-one reroll appears on the settled dice popup and produces one replacement
@@ -348,7 +351,7 @@ Jack of All Trades, Diamond Soul, Slippery Mind, Aura of Protection, the Defense
 and Archery fighting styles, and Champion critical thresholds use this contract.
 The same calculations are used by the interactive and print sheets. Contextual
 or activated effects such as Rage and Reckless Attack remain visible in the
-read-only special-properties block until an explicit active mode is selected;
+text of their owning ability until an explicit active mode is selected;
 they are never applied permanently merely because the feature is owned.
 
 Fixed class-feature spell selections use the existing ability-choice grant

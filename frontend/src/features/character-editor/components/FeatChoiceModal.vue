@@ -65,6 +65,7 @@
       :title="itemPicker.choice.text || 'Выберите предмет'"
       :exclude-items="[...selected(itemPicker.choice), ...excluded(itemPicker.choice)]"
       :item-eligibility="itemChoiceEligibility"
+      :fixed-filters="choiceItemFilters(itemPicker.choice)"
       :z-index="4800"
       @pick="onItemPick"
       @close="itemPicker.choice = null"
@@ -83,7 +84,7 @@ import { computed, onMounted, reactive, watch } from 'vue'
 
 import { AppModalFrame } from '@sylvieshare/share-ui'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
-import { actionableItemChoices, choiceSelectionsComplete, itemMatchesChoiceFilter } from '@/features/items/lib/itemChoices'
+import { actionableItemChoices, choiceSelectionsComplete, itemMatchesChoiceFilter, parseItemChoiceFilter } from '@/features/items/lib/itemChoices'
 import { useSuggestStore } from '@/stores/suggest'
 
 const props = defineProps({
@@ -158,6 +159,7 @@ function selectedItems(choice) {
 }
 
 function openItemChoice(choice) { itemPicker.choice = choice }
+function choiceItemFilters(choice) { return parseItemChoiceFilter(choice?.item_filter) || {} }
 
 function itemChoiceEligibility(item) {
   if (itemPicker.choice && isExcluded(itemPicker.choice, item.id)) {

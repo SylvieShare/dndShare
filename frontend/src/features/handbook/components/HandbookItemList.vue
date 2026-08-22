@@ -9,6 +9,7 @@
         :type="type"
         :search="search"
         :filters="filters"
+        :locked-filters="lockedFilters"
         :filter-fields="filterFields"
         :filter-suggests="filterSuggests"
         :content-sources="contentSources"
@@ -154,6 +155,7 @@ const props = defineProps({
   showControls: { type: Boolean, default: false },
   search: { type: String, default: '' },
   filters: { type: Object, default: () => ({}) },
+  lockedFilters: { type: Object, default: () => ({}) },
   filterFields: { type: Array, default: () => [] },
   filterSuggests: { type: Object, default: () => ({}) },
   contentSources: { type: Array, default: () => [] },

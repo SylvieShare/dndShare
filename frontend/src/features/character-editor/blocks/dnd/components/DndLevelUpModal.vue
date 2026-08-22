@@ -236,6 +236,7 @@
       title="Выбор для способности"
       search-placeholder="Поиск в справочнике…"
       :item-eligibility="featureChoiceItemEligibility"
+      :fixed-filters="featureChoiceItemFilters"
       @pick="onFeatureChoiceItemPick"
       @close="featureItemChoice = null"
     />
@@ -286,7 +287,7 @@ import { useLevelUpTarget } from './useLevelUpTarget'
 import { useGrantedSpellNames } from './useGrantedSpellNames'
 import { featSnippet, hitDieLabel as resolveHitDieLabel, monogram, multiclassPrerequisiteLabel } from './levelUpPresentation'
 import { levelUpSessionAdditions } from '@/features/character-editor/blocks/dnd/lib/levelUpSessionAdditions'
-import { itemMatchesChoiceFilter } from '@/features/items/lib/itemChoices'
+import { itemMatchesChoiceFilter, parseItemChoiceFilter } from '@/features/items/lib/itemChoices'
 
 const CLASS_TYPE = 9
 const CLASS_ABIL_TYPE = 4
@@ -373,6 +374,7 @@ function featureChoiceItemEligibility(item) {
   const matches = itemMatchesChoiceFilter(item, featureItemChoice.value?.choice?.item_filter)
   return { eligible: matches, reasons: matches ? [] : ['Не подходит под фильтр выбора'] }
 }
+const featureChoiceItemFilters = computed(() => parseItemChoiceFilter(featureItemChoice.value?.choice?.item_filter) || {})
 function onFeatureChoiceItemPick(item) {
   const target = featureItemChoice.value
   if (!target) return

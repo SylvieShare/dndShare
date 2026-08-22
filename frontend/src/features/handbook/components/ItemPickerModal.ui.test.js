@@ -10,7 +10,7 @@ describe('handbook item picker controls', () => {
     expect(source).toContain('show-controls')
     expect(source).toContain(':content-sources="visibleContentSources"')
     expect(source).toContain('@update:search="searchQ = $event"')
-    expect(source).toContain('@update:filters="filters = $event"')
+    expect(source).toContain('@update:filters="updateFilters"')
     expect(source).toContain('walkFieldsWithPath(itemType.value?.fields || [])')
     expect(source).toContain('@update:group-by="groupBy = $event"')
     expect(source).toContain('contentSourceIds')
@@ -20,5 +20,11 @@ describe('handbook item picker controls', () => {
   it('loads the full catalogue before grouping', () => {
     expect(source).toContain('const GROUPED_PAGE_SIZE = 500')
     expect(source).toContain('while (lastPageSize === pageSize)')
+  })
+
+  it('applies fixed filters and keeps them locked in the catalogue controls', () => {
+    expect(source).toContain('fixedFilters: { type: Object')
+    expect(source).toContain(':locked-filters="normalizedFixedFilters"')
+    expect(source).toContain('...normalizedFixedFilters.value')
   })
 })

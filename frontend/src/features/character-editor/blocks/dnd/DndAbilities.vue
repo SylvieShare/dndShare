@@ -151,6 +151,19 @@ const { editorOpen, originRect, originEl, openFrom, close } = useMorphOrigin()
 const ownerMode = computed(() => charCtx.ownerMode)
 const title = computed(() => props.block.title || props.block.content?.title || '')
 const stored = computed(() => props.value || [])
+const passiveEffects = computed(() => {
+  const value = charCtx.characterPassiveEffects?.effects
+  if (Array.isArray(value)) return value
+  return Array.isArray(value?.value) ? value.value : []
+})
+
+function passiveEffectsFor(entry) {
+  const key = String(entry?.uid || entry?.id || '')
+  return passiveEffects.value.filter((effect) => (
+    effect?.source?.valueId === props.block.id
+    && String(effect?.source?.entryKey || '') === key
+  ))
+}
 
 const entries = computed(() =>
   stored.value
@@ -173,6 +186,7 @@ const entries = computed(() =>
         count: s.count ?? maxUse ?? 0,
         choices: s.choices || {},
         choice_summary: itemChoiceSummary(item, s.choices || {}),
+        passive_effects: passiveEffectsFor(s),
         has_choices: actionableItemChoices(item).length > 0,
         isUserOwned: item.userId != null,
       }

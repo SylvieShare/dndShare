@@ -31,6 +31,14 @@
         <span class="abv-copy">
           <span class="abv-name">{{ entry.name }}</span>
           <span v-if="entry.choice_summary" class="abv-choice">{{ entry.choice_summary }}</span>
+          <span
+            v-for="effect in entry.passive_effects || []"
+            :key="effect.key"
+            class="abv-effect"
+            :class="`abv-effect--${effect.tone}`"
+          >
+            <b>{{ effect.title }}</b><template v-if="effect.description"> — {{ effect.description }}</template>
+          </span>
         </span>
 
         <span v-if="entry.rollback_short_rest" class="abv-badge abv-sr" title="Восстанавливается на коротком отдыхе">КО</span>
@@ -125,6 +133,11 @@ defineEmits(['view', 'show-tooltip', 'hide-tooltip', 'manage'])
   text-overflow: ellipsis;
 }
 .abv-choice { color: var(--text-muted); font-size: 9px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.abv-effect { margin-top: 2px; color: var(--text-2); font-size: 10px; line-height: 1.35; }
+.abv-effect b { color: var(--info); font-weight: 650; }
+.abv-effect--warning b { color: var(--warning); }
+.abv-effect--danger b { color: var(--danger); }
+.abv-effect--success b { color: var(--success); }
 
 .abv-badge {
   font-size: 9px;

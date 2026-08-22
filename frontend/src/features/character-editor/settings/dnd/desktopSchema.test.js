@@ -80,7 +80,7 @@ describe('D&D desktop sheet schema', () => {
     const defenses = findNode(base?.content, node => node.ref === 'defenses')
 
     expect(resources).toBeTruthy()
-    expect(passiveEffects).toBeTruthy()
+    expect(passiveEffects).toBeNull()
     expect(defenses).toBeTruthy()
     expect(schema.blocks.defenses).toMatchObject({
       type: 'DND_DEFENSES',
@@ -95,6 +95,7 @@ describe('D&D desktop sheet schema', () => {
     )
 
     expect(features?.props?.tile).toBe(true)
+    expect(schema.blocks.passive_effects).toBeUndefined()
     expect(features?.children?.map(block => block.content)).toEqual([
       { embedded: true },
       { embedded: true, divider: true },

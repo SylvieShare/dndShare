@@ -337,6 +337,9 @@
   background: color-mix(in srgb, var(--accent-soft) 14%, transparent);
   color: var(--accent-soft);
 }
+.col-filter-chip.locked { cursor: default; opacity: .82; }
+.col-filter-chip.locked:hover { border-color: color-mix(in srgb, var(--accent-soft) 35%, transparent); }
+.col-filter-locked { display: block; margin-top: 5px; color: var(--text-muted); font-size: 9px; }
 
 .col-filter-clear {
   border: none; background: none;
