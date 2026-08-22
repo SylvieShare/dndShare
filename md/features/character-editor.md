@@ -437,15 +437,18 @@ independent click targets. Logical groups use the shared action-menu separator.
 Attack, damage, critical damage and feature damage actions use distinct Lucide
 icons instead of the generic ellipsis. The source tile stays highlighted while
 its menu is open; spell, inventory and potion action menus follow the same
-interaction rule. Below the weapon list, two always-available preset tiles expose
+interaction rule. Below the weapon list, two always-available full-width rows expose
 Strength-based unarmed and improvised-weapon attack, damage and critical rolls.
 Unarmed attacks include proficiency and deal `max(0, 1 + Strength modifier)`;
 the generic improvised weapon is not proficient and deals `1d4 + Strength`.
-Attack formulas render a d20 polyhedron, while damage formulas and prominent
-feature metrics such as Sneak Attack render their actual system dice before the
-flat modifier. An unarmed strike has no damage die, so its tile instead shows
-the complete fixed expression `1 + Strength modifier = total`; zero is a valid
-result for a negative Strength modifier and the total never becomes negative.
+The rows reuse the weapon tile geometry and `AttackDamage`: attack is a numeric
+bonus without a decorative d20 and damage has no enclosing formula frame. The
+unarmed total keeps `1 + Strength modifier = total` in its hover explanation;
+zero is valid and the total never becomes negative. Their 64 px illustrations
+reuse system artwork from the Unarmed Strike and Club handbook items, so the
+sheet does not ship duplicate raster assets or diverge from the weapon art set.
+Prominent feature metrics such as Sneak Attack still render their actual system
+dice before the flat modifier.
 The remaining menu contains handbook description, edit, move-to-inventory and
 delete actions according to the viewer's permissions and linked item state.
 Every owned inventory item, potion and tool uses `item_id`, an explicit `count` and a

@@ -30,7 +30,11 @@
       :title="rollable ? 'Бросок урона' : undefined"
       @click="onRoll($event, 'roll-damage')"
     >
-      <DamageDice :parts="damageParts" :modifier="modifier" />
+      <span v-if="flatDamage !== null" class="ad-flat" :title="flatDamageTitle || undefined">
+        <strong>{{ flatDamage }}</strong>
+        <small v-if="flatDamageType">{{ flatDamageType }}</small>
+      </span>
+      <DamageDice v-else :parts="damageParts" :modifier="modifier" />
     </component>
 
     <component
@@ -75,6 +79,9 @@ const props = defineProps({
   modifier: { type: Number, default: 0 },            // flat damage bonus (stat+magic), shared by 1h & 2h
   twoHandedParts: { type: Array, default: () => [] }, // versatile two-handed dice
   healParts: { type: Array, default: () => [] },
+  flatDamage: { type: Number, default: null },
+  flatDamageType: { type: String, default: '' },
+  flatDamageTitle: { type: String, default: '' },
   rollable: { type: Boolean, default: false },
 })
 const emit = defineEmits(['roll-attack', 'roll-damage', 'roll-damage-two', 'roll-critical', 'roll-heal'])
@@ -86,7 +93,7 @@ function onRoll(event, name) {
 }
 
 const hasAttack = computed(() => props.attack != null && props.attack !== '')
-const hasDamage = computed(() => props.damageParts.length > 0 || props.modifier !== 0)
+const hasDamage = computed(() => props.flatDamage !== null || props.damageParts.length > 0 || props.modifier !== 0)
 </script>
 
 <style scoped>
@@ -135,6 +142,9 @@ const hasDamage = computed(() => props.damageParts.length > 0 || props.modifier 
 }
 
 .ad-dmg { padding: 2px 2px; }
+.ad-flat { display: inline-flex; flex-direction: column; align-items: center; gap: 1px; color: var(--warning); }
+.ad-flat strong { font-size: 16px; font-weight: 800; }
+.ad-flat small { font-size: 11px; font-weight: 600; letter-spacing: .02em; opacity: .9; }
 
 .ad-2h { gap: 7px; }
 .ad-2h-label {

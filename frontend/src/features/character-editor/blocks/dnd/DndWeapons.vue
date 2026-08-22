@@ -54,22 +54,23 @@
     <div class="w-preset-grid" aria-label="Базовые атаки">
       <PresetAttackCard
         title="Рукопашный удар"
-        subtitle="Владение · Сила · без кости урона"
+        subtitle="Сила · урон 1 + модификатор"
         :attack-bonus="unarmedAttackBonus"
         :flat-damage="unarmedDamageFormula"
         damage-type="Дробящий"
-        :icon="HandFist"
+        :icon-item="unarmedPresetItem"
+        proficient
         @attack="rollPresetAttack('unarmed')"
         @damage="rollPresetDamage('unarmed')"
         @critical="rollPresetDamage('unarmed', true)"
       />
       <PresetAttackCard
         title="Импровизированное оружие"
-        subtitle="Без владения · Сила · 1к4"
+        subtitle="Сила · без владения"
         :attack-bonus="improvisedAttackBonus"
         :damage-parts="improvisedDamageParts"
         :damage-modifier="strengthModifier"
-        :icon="Hammer"
+        :icon-item="improvisedPresetItem"
         @attack="rollPresetAttack('improvised')"
         @damage="rollPresetDamage('improvised')"
         @critical="rollPresetDamage('improvised', true)"
@@ -114,8 +115,6 @@ function nextKey() { return ++keyCounter }
 
 <script setup>
 import { computed, inject, onMounted, provide, reactive, ref, watch } from 'vue'
-import { Hammer, HandFist } from '@lucide/vue'
-
 import { BaseTile } from '@sylvieshare/share-ui'
 import { useItemTypesStore } from '@/stores/itemTypes'
 import WeaponCard from '@/features/character-editor/blocks/dnd/components/WeaponCard.vue'
@@ -148,6 +147,7 @@ import {
 import { weaponDamageActionExpression } from '@/features/character-editor/blocks/dnd/lib/weaponDamageAction'
 import {
   improvisedWeaponAttackBonus as resolveImprovisedWeaponAttackBonus,
+  PRESET_ATTACK_ART_ITEM_IDS,
   presetDamageExpression as resolvePresetDamageExpression,
   unarmedStrikeAttackBonus,
   unarmedStrikeDamage,
@@ -268,6 +268,8 @@ const improvisedAttackBonus = computed(() => resolveImprovisedWeaponAttackBonus(
 const unarmedDamage = computed(() => unarmedStrikeDamage(strengthModifier.value))
 const unarmedDamageFormula = computed(() => ({ base: 1, modifier: strengthModifier.value, total: unarmedDamage.value }))
 const improvisedDamageParts = [{ count: 1, diceSides: 4, diceLabel: 'd4', type: 'Дробящий', typeColor: 'var(--warning)' }]
+const unarmedPresetItem = computed(() => itemMap.value[PRESET_ATTACK_ART_ITEM_IDS.unarmed] || null)
+const improvisedPresetItem = computed(() => itemMap.value[PRESET_ATTACK_ART_ITEM_IDS.improvised] || null)
 
 const dice = useDiceStore()
 
@@ -378,7 +380,11 @@ function rollCriticalDamage(entry, twoHanded = false) {
 }
 
 function loadItems() {
-  return loadItemsRaw(entries.value)
+  return loadItemsRaw([
+    ...entries.value,
+    { item_id: PRESET_ATTACK_ART_ITEM_IDS.unarmed },
+    { item_id: PRESET_ATTACK_ART_ITEM_IDS.improvised },
+  ])
 }
 
 async function ensureTagSuggestType() {
@@ -578,7 +584,7 @@ onMounted(() => {
 
 .w-preset-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 12px;
   margin-top: 12px;
 }
