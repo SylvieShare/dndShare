@@ -181,6 +181,43 @@ entries and selected choices.
   them to a startup sync command. Existing sync commands and embedded manifests
   are legacy bootstraps only.
 
+### Character-feature media art direction
+
+Racial abilities (type 3), class features (type 4) and feats (type 7) use one
+shared media contract. The three categories keep distinct semantic motifs, but
+their rendering, dimensions and visual weight remain consistent in the same
+handbook list and detail header.
+
+- Store the icon as a lossless `128×128` RGBA WebP with genuine alpha and
+  inspect it at the production `64×64` size on a dark surface. Build one compact
+  action emblem from one dominant object or sign and no more than two large
+  supporting accents. Use the established thick deep-plum contour, broad
+  flat-cartoon shapes, saturated restrained fills and two-step shading.
+- Class-feature icons describe an action, tool or professional technique;
+  racial-ability icons describe a defining inherited or anatomical sign plus
+  its effect; feat icons describe a learned technique, discipline or piece of
+  equipment. Do not turn any of them into a miniature character scene.
+- Related records may share one identical icon only when they express the same
+  mechanic and the same symbol remains unambiguous. Every record still receives
+  its own cover. A shared topic or palette alone is not enough to reuse an icon.
+- Store the cover as an opaque lossy `1600×640` WebP (`5:2`, quality 88). Show a
+  concrete moment in which the ability matters rather than enlarging the icon
+  or drawing a generic portrait. The detail header contains only the item name
+  and source over its own scrim, so the illustration may use the full canvas:
+  do not reserve a blank title zone or an empty lower band. Keep the action
+  balanced across the panorama and all defining faces, anatomy, tools and
+  effects comfortably inside the outer crop.
+- Match the race/class flat-cartoon family: thick deep-plum contours, broad
+  readable silhouettes, expressive stylized faces when characters are needed,
+  restrained two-step shading and a controlled item-specific palette. Avoid
+  photorealistic skin, painterly noise, dense scenery and micro-detail.
+- The icon and cover share the same mechanic and palette but remain independent
+  compositions. Do not include text, readable runes, letters, numbers, frames,
+  badges, baked-in UI, logos, watermarks or gore.
+- Generate at a larger size, crop and downsample to the exact contracts above,
+  then install both slots only through MCP `handbook_item_set_system_image`
+  with `preservePrevious=true` when replacing an existing asset.
+
 ### Static spell rune art direction
 
 Spell icons form one set of **static magical runes**. They use the same visual
