@@ -2,7 +2,7 @@
 -- groups them by action economy and keeps their source and conditions readonly;
 -- runtime code does not inspect feature names or ids.
 WITH addition(field) AS (
-  VALUES ('{"name":"Действия на листе","key":"feature_actions","type":"object_array","fields":[{"name":"Ключ","key":"key","type":"text"},{"name":"Название","key":"title","type":"text"},{"name":"Вид действия","key":"action_type","type":"select","default":"action","options":[{"value":"action","label":"Действие"},{"value":"bonus_action","label":"Бонусное действие"},{"value":"reaction","label":"Реакция"},{"value":"free","label":"Свободное действие"},{"value":"special","label":"Особое действие"}]},{"name":"Описание","key":"description","type":"description"},{"name":"Условия","key":"requirements","type":"text_array"},{"name":"Расходует ресурс способности","key":"uses_resource","type":"bool"},{"name":"Ключ отдельного ресурса","key":"resource_key","type":"text"},{"name":"Расход ресурса","key":"resource_cost","type":"int","default":1},{"name":"Порядок","key":"priority","type":"int"},{"name":"С уровня","key":"level","type":"int","default":1}]}'::jsonb)
+  VALUES ('{"name":"Действия на листе","key":"feature_actions","type":"object_array","fields":[{"name":"Ключ","key":"key","type":"text"},{"name":"Название","key":"title","type":"text"},{"name":"Вид действия","key":"action_type","type":"select","default":"action","options":[{"value":"action","label":"Действие"},{"value":"bonus_action","label":"Бонусное действие"},{"value":"reaction","label":"Реакция"},{"value":"free","label":"Свободное действие"},{"value":"special","label":"Особое действие"}]},{"name":"Описание","key":"description","type":"description"},{"name":"Стандартные действия","key":"suggest_action_codes","type":"text_array"},{"name":"Условия","key":"requirements","type":"text_array"},{"name":"Расходует ресурс способности","key":"uses_resource","type":"bool"},{"name":"Ключ отдельного ресурса","key":"resource_key","type":"text"},{"name":"Расход ресурса","key":"resource_cost","type":"int","default":1},{"name":"Порядок","key":"priority","type":"int"},{"name":"С уровня","key":"level","type":"int","default":1}]}'::jsonb)
 )
 UPDATE dndshare.item_type item_type
 SET fields = COALESCE(item_type.fields, '[]'::jsonb) || jsonb_build_array(addition.field)
@@ -14,11 +14,43 @@ WHERE item_type.id IN (3, 4, 7)
     WHERE current ->> 'key' = 'feature_actions'
   );
 
+-- Existing databases already have the outer feature_actions field. Extend its
+-- nested editor contract independently so startup remains idempotent.
+WITH addition(field) AS (
+  VALUES ('{"name":"Стандартные действия","key":"suggest_action_codes","type":"text_array"}'::jsonb)
+)
+UPDATE dndshare.item_type item_type
+SET fields = (
+  SELECT jsonb_agg(
+    CASE WHEN field ->> 'key' = 'feature_actions' THEN jsonb_set(
+      field,
+      '{fields}',
+      COALESCE(field -> 'fields', '[]'::jsonb) || jsonb_build_array(addition.field),
+      true
+    ) ELSE field END
+    ORDER BY ord
+  )
+  FROM jsonb_array_elements(item_type.fields) WITH ORDINALITY AS row_field(field, ord)
+  CROSS JOIN addition
+)
+WHERE item_type.id IN (3, 4, 7)
+  AND EXISTS (
+    SELECT 1 FROM jsonb_array_elements(item_type.fields) field
+    WHERE field ->> 'key' = 'feature_actions'
+  )
+  AND NOT EXISTS (
+    SELECT 1
+    FROM jsonb_array_elements(item_type.fields) field
+    CROSS JOIN LATERAL jsonb_array_elements(COALESCE(field -> 'fields', '[]'::jsonb)) nested
+    WHERE field ->> 'key' = 'feature_actions'
+      AND nested ->> 'key' = 'suggest_action_codes'
+  );
+
 UPDATE dndshare.item
 SET data = jsonb_set(
   COALESCE(data, '{}'::jsonb),
   '{feature_actions}',
-  '[{"key":"cunning_dash","title":"Рывок","action_type":"bonus_action","description":"Совершить Рывок бонусным действием.","requirements":["Только в свой ход"],"level":2,"priority":10},{"key":"cunning_disengage","title":"Отход","action_type":"bonus_action","description":"Совершить Отход бонусным действием.","requirements":["Только в свой ход"],"level":2,"priority":20},{"key":"cunning_hide","title":"Засада","action_type":"bonus_action","description":"Совершить Засаду бонусным действием.","requirements":["Только в свой ход"],"level":2,"priority":30}]'::jsonb,
+  '[{"key":"cunning_action","title":"Хитрое действие","action_type":"bonus_action","description":"Совершите одно из стандартных действий бонусным действием.","suggest_action_codes":["dash","disengage","hide"],"requirements":["Только в свой ход"],"level":2,"priority":10}]'::jsonb,
   true
 )
 WHERE type_id = 4

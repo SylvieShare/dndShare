@@ -54,6 +54,7 @@ function contributedActions(values, itemsById, resources) {
         action_type: actionType(definition.action_type),
         description: String(definition.description || ''),
         requirements: requirements(definition.requirements),
+        suggest_action_codes: requirements(definition.suggest_action_codes),
         priority: Number(definition.priority) || 0,
         resource_cost: Math.max(1, Number(definition.resource_cost) || 1),
         resource: matchingResource(resources, valueId, ownedEntry, definition),
@@ -74,6 +75,7 @@ function manualActions(values) {
     action_type: actionType(entry.action_type),
     description: String(entry.description || ''),
     requirements: requirements(entry.requirements),
+    suggest_action_codes: [],
     priority: Number(entry.priority) || index,
     resource: null,
     readonly: false,
@@ -83,18 +85,23 @@ function manualActions(values) {
 }
 
 export function collectCharacterFeatureActions(values, itemsById, resources = []) {
+  const orderedKeys = Array.isArray(values?.action_order) ? values.action_order.map(String) : []
+  const order = new Map(orderedKeys.map((key, index) => [key, index]))
   return [...manualActions(values), ...contributedActions(values, itemsById, resources)]
     .sort((left, right) => (
       (TYPE_ORDER.get(left.action_type) ?? 99) - (TYPE_ORDER.get(right.action_type) ?? 99)
+      || (order.has(left.key) || order.has(right.key)
+        ? (order.get(left.key) ?? Number.MAX_SAFE_INTEGER) - (order.get(right.key) ?? Number.MAX_SAFE_INTEGER)
+        : 0)
       || left.priority - right.priority
       || left.title.localeCompare(right.title, 'ru')
     ))
 }
 
-export function groupCharacterFeatureActions(actions) {
+export function groupCharacterFeatureActions(actions, includeEmpty = false) {
   return FEATURE_ACTION_TYPES.map(type => ({
     ...type,
     label: type.group_label,
     actions: actions.filter(action => action.action_type === type.value),
-  })).filter(group => group.actions.length)
+  })).filter(group => includeEmpty || group.actions.length)
 }

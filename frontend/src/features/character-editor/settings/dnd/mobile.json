@@ -149,14 +149,16 @@
             "ref": "abilities_race",
             "kind": "block",
             "content": {
-              "expanded": true
+              "expanded": true,
+              "divider": true
             }
           },
           {
             "ref": "abilities_feats",
             "kind": "block",
             "content": {
-              "expanded": true
+              "expanded": true,
+              "divider": true
             }
           }
         ]

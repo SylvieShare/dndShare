@@ -158,10 +158,11 @@ defineEmits(['view', 'show-tooltip', 'hide-tooltip', 'manage'])
 .abv-sr { background-color: color-mix(in srgb, var(--success) 18%, transparent); color: var(--success); }
 .abv-lr { background-color: color-mix(in srgb, var(--info) 18%, transparent); color: var(--info); }
 
-.abv--expanded { gap: 11px; padding: 13px; }
-.abv--expanded .abv-list { gap: 9px; }
-.abv--expanded .abv-card { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto; align-items: start; gap: 13px; min-height: 88px; padding: 12px; border: 1px solid var(--border); border-radius: 11px; background: var(--surface-raised); }
-.abv--expanded .abv-card:hover { border-color: color-mix(in srgb, var(--accent) 35%, var(--border)); background: color-mix(in srgb, var(--accent) 4%, var(--surface-raised)); }
+.abv--expanded { gap: 8px; padding: 0; }
+.abv--expanded .abv-list { gap: 0; }
+.abv--expanded .abv-card { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto; align-items: start; gap: 13px; min-height: 88px; padding: 13px 2px; border: 0; border-radius: 0; background: transparent; }
+.abv--expanded .abv-card + .abv-card { border-top: 1px solid var(--border); }
+.abv--expanded .abv-card:hover { background: color-mix(in srgb, var(--accent) 4%, transparent); }
 .abv--expanded .abv-icon { width: 64px; height: 64px; color: var(--text-2); }
 .abv--expanded .abv-name { font-size: 15px; font-weight: 750; white-space: normal; overflow: visible; }
 .abv--expanded .abv-choice { margin-top: 2px; font-size: 10px; white-space: normal; overflow: visible; }

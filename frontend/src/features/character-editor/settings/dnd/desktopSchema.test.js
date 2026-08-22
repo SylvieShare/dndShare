@@ -103,6 +103,7 @@ describe('D&D desktop sheet schema', () => {
 
     expect(abilities).toBeTruthy()
     expect(expanded.every(node => node?.content?.expanded === true)).toBe(true)
+    expect(expanded.slice(1).every(node => node?.content?.divider === true)).toBe(true)
     expect(sidebarFeatures).toBeNull()
     expect(schema.blocks.actions.type).toBe('DND_ACTIONS')
   })

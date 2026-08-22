@@ -40,4 +40,18 @@ describe('character feature actions', () => {
 
     expect(collectCharacterFeatureActions(values, items, resources)[0].resource).toBe(resources[0])
   })
+
+  it('uses the persisted per-sheet order and can include empty action groups', () => {
+    const values = {
+      actions: [
+        { uid: 'first', title: 'Первое', action_type: 'reaction' },
+        { uid: 'second', title: 'Второе', action_type: 'reaction' },
+      ],
+      action_order: ['manual:second', 'manual:first'],
+    }
+    const actions = collectCharacterFeatureActions(values, new Map())
+
+    expect(actions.map(action => action.title)).toEqual(['Второе', 'Первое'])
+    expect(groupCharacterFeatureActions(actions, true)).toHaveLength(5)
+  })
 })

@@ -45,6 +45,7 @@ describe('D&D mobile sheet schema', () => {
       'abilities_feats',
     ])
     expect(features.every(block => block.content?.expanded === true)).toBe(true)
+    expect(features.slice(1).every(block => block.content?.divider === true)).toBe(true)
     expect(schema.blocks.actions.type).toBe('DND_ACTIONS')
   })
 

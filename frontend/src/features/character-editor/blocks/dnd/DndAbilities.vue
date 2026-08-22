@@ -7,7 +7,7 @@
       'ab-block--divider': block.content?.divider,
     }"
   >
-    <component :is="block.content?.embedded ? 'div' : BaseTile" class="ab-tile">
+    <component :is="block.content?.embedded || block.content?.expanded ? 'div' : BaseTile" class="ab-tile">
       <DndAbilitiesView
         :entries="entries"
         :loading="loading"
@@ -485,7 +485,7 @@ onMounted(async () => {
 
 <style scoped>
 .ab-block { min-width: 0; }
-.ab-block--divider { border-top: 1px solid var(--border); }
+.ab-block--divider { padding-top: 13px; border-top: 1px solid var(--border); }
 
 .ab-tile {
   display: block;

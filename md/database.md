@@ -126,7 +126,8 @@ feature title or item id.
 `50_feature_actions.sql` adds the generic `feature_actions` object-array field
 to class abilities, racial abilities and feats. Each row describes action
 economy, display text, read-only requirements, level and priority, and may bind
-the action to the source ability resource. The startup catalog configuration
+the action to the source ability resource or reference standard combat actions
+by their stable suggest type-24 codes. The startup catalog configuration
 locates the initial Rogue consumers by stable English identity; runtime only
 reads the structured rows. Character-created actions are stored separately in
 `char.values.actions` and remain editable.

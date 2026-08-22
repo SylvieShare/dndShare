@@ -20,5 +20,7 @@ describe('ability rows', () => {
     expect(viewSource).toContain(':item="entry.item" :size="64"')
     expect(viewSource).toContain('expanded && entry.desc')
     expect(viewSource).toMatch(/\.abv--expanded \.abv-card \{[^}]*grid-template-columns: 64px minmax\(0, 1fr\) auto;/)
+    expect(viewSource).toContain('.abv--expanded .abv-card + .abv-card { border-top: 1px solid var(--border); }')
+    expect(viewSource).toMatch(/\.abv--expanded \.abv-card \{[^}]*border: 0;/)
   })
 })

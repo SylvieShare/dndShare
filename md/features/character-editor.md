@@ -34,7 +34,8 @@ Desktop and mobile share block definitions but have separate placement
 profiles. The desktop base layout moves class, race and feat entries out of the
 side column into the visible inner **Способности** tab alongside **Оружие**,
 **Магия** and **Снаряжение**. It shows expanded cards with a 64×64 handbook icon
-and the full description inline.
+and the full description inline. Expanded entries do not create nested card
+backgrounds or outlines; thin separators divide both entries and ability kinds.
 The renamed mobile **Способности** tab uses the expanded cards as well and
 starts with prominent feature widgets, actions, resources, defenses and
 proficiencies. The mobile D&D stats tab uses a 12px top-level column gap. Tab state
@@ -491,14 +492,18 @@ the same key to extend that panel.
 `feature_actions` is the matching ability-owned contract for the shared
 **Действия** block. Class abilities, racial abilities and feats may contribute
 an action, bonus action, reaction, free action or special action together with
-its description, read-only requirements, level gate, priority and an optional
-ability-resource binding. The block merges those source rows with editable
-custom actions from `values.actions`; source-provided rows identify their
-ability and cannot be edited on the character. Using a resource-bound action
-spends the configured amount and all uses are written to the attached session.
-The first catalog consumers are Cunning Action, Uncanny Dodge and the relevant
-Rogue archetype features. The block is available in the base side column and
-in the expanded abilities tabs.
+its description, read-only requirements, level gate, priority, optional
+ability-resource binding and links to standard combat-action codes from suggest
+type 24. Hovering those linked names shows the suggest description. The block
+merges source rows with editable custom actions from `values.actions`;
+source-provided rows identify their ability, use its icon and cannot be edited
+on the character. Both kinds can be reordered within their action-economy group;
+the stable row-key order is stored in `values.action_order`. Each group ends
+with its own dashed add control, while editing and deletion live in the row
+action menu. The block has no nested card background and currently does not
+execute or log actions. Cunning Action is one source row linking Dash,
+Disengage and Hide rather than three duplicated rows. The block is available in
+the desktop side column and the mobile abilities tab.
 The same picker is used for feats and abilities and opens above the active morph
 editor, so its filters and item selection are never hidden behind the morph.
 The list shows count as a badge and has no inline increment/decrement controls.
