@@ -75,6 +75,22 @@ describe('dice roll presentation metadata', () => {
     store.clear()
   })
 
+  it('keeps the natural die visible while applying a minimum d20 result', () => {
+    vi.spyOn(Math, 'random').mockReturnValueOnce(0)
+    const store = useDiceStore()
+    const result = store.rollD20('Скрытность', 4, 'normal', {
+      crit_mode: true,
+      log: false,
+      roll_adjustments: [{ kind: 'minimum_natural', value: 10, label: 'Надёжный талант' }],
+    })
+
+    expect(result.parts[0].rolls).toEqual([1])
+    expect(result.parts[0].sum).toBe(10)
+    expect(result.total).toBe(14)
+    expect(result.adjustments).toEqual([{ kind: 'minimum_natural', label: 'Надёжный талант', original: 1, value: 10 }])
+    expect(store.stack[0].outcome).toBeNull()
+  })
+
   it('honors a character-derived weapon critical threshold', () => {
     vi.spyOn(Math, 'random').mockReturnValueOnce(0.91)
     const store = useDiceStore()

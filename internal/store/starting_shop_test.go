@@ -9,28 +9,29 @@ import (
 )
 
 func TestToolProficiencyCatalogIsEmbeddedAfterItemTypeHierarchy(t *testing.T) {
-	if len(schemaParts) < 19 {
+	if len(schemaParts) < 20 {
 		t.Fatal("schemaParts must contain the final item catalogue sections")
 	}
-	hierarchy := schemaParts[len(schemaParts)-19]
-	tools := schemaParts[len(schemaParts)-18]
-	resources := schemaParts[len(schemaParts)-17]
-	classTools := schemaParts[len(schemaParts)-16]
-	resourceFixes := schemaParts[len(schemaParts)-15]
-	resourceAudit := schemaParts[len(schemaParts)-14]
-	resourceColors := schemaParts[len(schemaParts)-13]
-	spellGrants := schemaParts[len(schemaParts)-12]
-	equippedArmor := schemaParts[len(schemaParts)-11]
-	defenses := schemaParts[len(schemaParts)-10]
-	castLevel := schemaParts[len(schemaParts)-9]
-	choices := schemaParts[len(schemaParts)-8]
-	racialAutomation := schemaParts[len(schemaParts)-7]
-	classAutomation := schemaParts[len(schemaParts)-6]
-	featAutomation := schemaParts[len(schemaParts)-5]
-	rogueAutomation := schemaParts[len(schemaParts)-4]
-	rogueCatalogFixes := schemaParts[len(schemaParts)-3]
-	weaponDamageActions := schemaParts[len(schemaParts)-2]
-	featureSheetWidgets := schemaParts[len(schemaParts)-1]
+	hierarchy := schemaParts[len(schemaParts)-20]
+	tools := schemaParts[len(schemaParts)-19]
+	resources := schemaParts[len(schemaParts)-18]
+	classTools := schemaParts[len(schemaParts)-17]
+	resourceFixes := schemaParts[len(schemaParts)-16]
+	resourceAudit := schemaParts[len(schemaParts)-15]
+	resourceColors := schemaParts[len(schemaParts)-14]
+	spellGrants := schemaParts[len(schemaParts)-13]
+	equippedArmor := schemaParts[len(schemaParts)-12]
+	defenses := schemaParts[len(schemaParts)-11]
+	castLevel := schemaParts[len(schemaParts)-10]
+	choices := schemaParts[len(schemaParts)-9]
+	racialAutomation := schemaParts[len(schemaParts)-8]
+	classAutomation := schemaParts[len(schemaParts)-7]
+	featAutomation := schemaParts[len(schemaParts)-6]
+	rogueAutomation := schemaParts[len(schemaParts)-5]
+	rogueCatalogFixes := schemaParts[len(schemaParts)-4]
+	weaponDamageActions := schemaParts[len(schemaParts)-3]
+	featureSheetWidgets := schemaParts[len(schemaParts)-2]
+	rollAdjustments := schemaParts[len(schemaParts)-1]
 	if hierarchy.name != "item-type-hierarchy" || hierarchy.sql == "" || hierarchy.sql != schemaItemTypeHierarchySQL {
 		t.Fatal("item-type-hierarchy schema must be embedded after the equipment catalogues")
 	}
@@ -87,6 +88,24 @@ func TestToolProficiencyCatalogIsEmbeddedAfterItemTypeHierarchy(t *testing.T) {
 	}
 	if featureSheetWidgets.name != "feature-sheet-widgets" || featureSheetWidgets.sql == "" || featureSheetWidgets.sql != schemaFeatureSheetWidgetsSQL {
 		t.Fatal("feature sheet widgets must be embedded after weapon damage actions")
+	}
+	if rollAdjustments.name != "roll-adjustments" || rollAdjustments.sql == "" || rollAdjustments.sql != schemaRollAdjustmentsSQL {
+		t.Fatal("roll adjustments must be embedded after feature sheet widgets")
+	}
+}
+
+func TestReliableTalentPublishesGenericD20Adjustment(t *testing.T) {
+	for _, fragment := range []string{
+		`"key":"roll_adjustments"`,
+		`"kind":"minimum_natural"`,
+		`"scope":"ability_check"`,
+		`"minimum_proficiency_rank":1`,
+		`"level":11`,
+		"lower('Reliable Talent')",
+	} {
+		if !strings.Contains(schemaRollAdjustmentsSQL, fragment) {
+			t.Fatalf("roll adjustment schema must contain %q", fragment)
+		}
 	}
 }
 

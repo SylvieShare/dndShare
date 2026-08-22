@@ -24,6 +24,7 @@ function abilityRows(values, itemsById, field) {
 export function collectCharacterCombatEffects(values, itemsById) {
   return {
     rollTriggers: abilityRows(values, itemsById, 'roll_triggers'),
+    rollAdjustments: abilityRows(values, itemsById, 'roll_adjustments'),
     criticalDamage: abilityRows(values, itemsById, 'critical_damage'),
     weaponDamage: abilityRows(values, itemsById, 'weapon_damage'),
   }
@@ -33,6 +34,16 @@ export function matchingRollTriggers(effects, scope) {
   return (effects?.rollTriggers || []).filter((rule) => {
     const scopes = Array.isArray(rule.scopes) ? rule.scopes : []
     return !scopes.length || scopes.includes(scope)
+  })
+}
+
+export function matchingRollAdjustments(effects, scope, context = {}) {
+  const proficiencyRank = Math.max(0, Number(context.proficiencyRank) || 0)
+  return (effects?.rollAdjustments || []).filter((rule) => {
+    const scopes = Array.isArray(rule.scopes) ? rule.scopes : []
+    if (rule.scope && rule.scope !== scope) return false
+    if (scopes.length && !scopes.includes(scope)) return false
+    return proficiencyRank >= Math.max(0, Number(rule.minimum_proficiency_rank) || 0)
   })
 }
 

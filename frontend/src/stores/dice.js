@@ -26,6 +26,31 @@ function keptNaturalD20(result) {
   return part.keptIndex == null ? part.rolls?.[0] : part.rolls?.[part.keptIndex]
 }
 
+function applyD20Adjustments(result, adjustments = []) {
+  const part = result.parts.find((row) => row.kind === 'dice' && row.sides === 20)
+  if (!part) return []
+  const keptIndex = part.keptIndex == null ? 0 : part.keptIndex
+  const natural = Number(part.rolls?.[keptIndex]) || 0
+  const rule = adjustments
+    .filter(row => row?.kind === 'minimum_natural')
+    .map(row => ({ ...row, value: Math.max(0, Number(row.value) || 0) }))
+    .filter(row => row.value > natural)
+    .sort((left, right) => right.value - left.value)[0]
+  if (!rule) return []
+
+  part.sum = rule.value
+  result.total = evaluateDiceParts(result.parts).total
+  result.byType = [{ label: null, color: null, value: result.total }]
+  const applied = [{
+    kind: rule.kind,
+    label: rule.label || rule.source_label || 'Корректировка броска',
+    original: natural,
+    value: rule.value,
+  }]
+  result.adjustments = applied
+  return applied
+}
+
 export const useDiceStore = defineStore('dice', () => {
   const stack = ref([])
   const timers = new Map()
@@ -119,7 +144,9 @@ export const useDiceStore = defineStore('dice', () => {
       }
     }
     result.rollMode = normalizedMode
-    const outcome = opts.crit_mode ? detectOutcome(result, opts.critical_threshold) : null
+    const appliedAdjustments = applyD20Adjustments(result, Array.isArray(opts.roll_adjustments) ? opts.roll_adjustments : [])
+    const detectedOutcome = opts.crit_mode ? detectOutcome(result, opts.critical_threshold) : null
+    const outcome = appliedAdjustments.length && detectedOutcome?.kind === 'fumble' ? null : detectedOutcome
     const triggers = keptNaturalD20(result) === 1
       ? (Array.isArray(opts.roll_triggers) ? opts.roll_triggers : []).filter((rule) => rule.event === 'natural_one' && rule.action === 'reroll')
       : []

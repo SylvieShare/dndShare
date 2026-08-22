@@ -91,6 +91,13 @@
 
       <div class="dice-pop-raw">{{ rawExpression(entry) }}</div>
 
+      <div v-if="entry.result.adjustments?.length && !isRolling(entry.id)" class="dice-pop-adjustments">
+        <div v-for="adjustment in entry.result.adjustments" :key="`${adjustment.kind}:${adjustment.label}`">
+          <span>{{ adjustment.label }}</span>
+          <strong>{{ adjustment.original }} → {{ adjustment.value }}</strong>
+        </div>
+      </div>
+
       <div v-if="entry.actions?.length && !isRolling(entry.id)" class="dice-pop-actions">
         <button v-for="action in entry.actions" :key="action.key" type="button" @click="store.runAction(entry.id, action.key)">
           {{ action.label }}
@@ -413,6 +420,9 @@ function rawExpression(entry) {
   margin-top: 8px;
   overflow-wrap: anywhere;
 }
+.dice-pop-adjustments { display: grid; gap: 5px; margin-top: 8px; }
+.dice-pop-adjustments > div { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 6px 8px; border-radius: var(--r-sm); background: color-mix(in srgb, var(--success) 11%, transparent); color: var(--text-2); font-size: 11px; }
+.dice-pop-adjustments strong { color: var(--success); font-size: 12px; }
 
 .dice-pop-bar {
   position: absolute;

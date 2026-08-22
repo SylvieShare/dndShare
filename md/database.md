@@ -118,6 +118,11 @@ resource binding, tone and shared panel key. Section
 `48_feature_sheet_widgets.sql` adds the contract and configures Sneak Attack and
 Rage as its first consumers; active toggle state is stored on the owned ability
 entry in `widget_states`.
+`49_roll_adjustments.sql` adds source-owned automatic d20 adjustments to race,
+class ability and feat schemas. Reliable Talent declares a level-11
+`minimum_natural` adjustment for ability checks with at least full proficiency;
+runtime matching uses the structured scope and proficiency rank rather than the
+feature title or item id.
 Section `34_ability_resource_catalog_fixes.sql` задаёт структурированные правила
 Харизмы для «Вдохновения барда» и Мудрости для «Гнева бури», удаляет прежний
 ручной максимум вдохновения и переводит его полные старые character entries на

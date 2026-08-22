@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import {
   collectCharacterCombatEffects,
   extraCriticalWeaponDice,
+  matchingRollAdjustments,
   matchingRollTriggers,
   matchingWeaponDamageActions,
 } from './characterCombatEffects'
@@ -10,8 +11,9 @@ describe('character combat effects', () => {
   const items = new Map([
     ['1', { id: 1, name: 'Везучий', data: { roll_triggers: [{ event: 'natural_one', action: 'reroll', scopes: ['attack'] }] } }],
     ['2', { id: 2, name: 'Свирепые атаки', data: { critical_damage: [{ weapon_kind: 'melee', extra_weapon_dice: 1 }] } }],
+    ['3', { id: 3, name: 'Надёжный талант', data: { roll_adjustments: [{ kind: 'minimum_natural', value: 10, scope: 'ability_check', minimum_proficiency_rank: 1 }] } }],
   ])
-  const effects = collectCharacterCombatEffects({ lvl: { level: 1 }, abilities_race: [{ id: 1 }, { id: 2 }] }, items)
+  const effects = collectCharacterCombatEffects({ lvl: { level: 11 }, abilities_race: [{ id: 1 }, { id: 2 }], abilities_class: [{ id: 3 }] }, items)
 
   it('filters roll triggers by context', () => {
     expect(matchingRollTriggers(effects, 'attack')).toHaveLength(1)
@@ -21,6 +23,12 @@ describe('character combat effects', () => {
   it('applies critical modifiers only to matching weapons', () => {
     expect(extraCriticalWeaponDice(effects, { melee: true })).toBe(1)
     expect(extraCriticalWeaponDice(effects, { melee: false })).toBe(0)
+  })
+
+  it('applies roll adjustments only to matching proficient checks', () => {
+    expect(matchingRollAdjustments(effects, 'ability_check', { proficiencyRank: 1 })).toHaveLength(1)
+    expect(matchingRollAdjustments(effects, 'ability_check', { proficiencyRank: 0 })).toHaveLength(0)
+    expect(matchingRollAdjustments(effects, 'saving_throw', { proficiencyRank: 1 })).toHaveLength(0)
   })
 
   it('resolves level-scaled weapon damage only for eligible weapons', () => {

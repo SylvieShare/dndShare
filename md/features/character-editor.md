@@ -372,6 +372,15 @@ result. Weapons expose a critical-damage roll that doubles all attack damage
 dice, keeps the flat modifier once and then applies matching ability modifiers
 such as Savage Attacks' extra melee weapon die.
 
+Ability `roll_adjustments` is the corresponding contract for automatic,
+source-labelled changes to a settled d20. A rule declares its roll scope,
+minimum proficiency rank, level gate and adjustment kind. Reliable Talent uses
+`minimum_natural` for proficient ability checks: the popup and session log keep
+the rolled face visible, show `original → 10` with the feature source and
+calculate the total from 10. Plain ability checks, saving throws and checks with
+no full proficiency remain unchanged; expertise and proficient tool checks are
+eligible.
+
 `weapon_damage` is the shared contract for an ability-owned optional damage
 action. It declares the die, a fixed or owner-level-scaled count, eligible weapon
 kinds, menu labels and whether the contributed dice double on a critical hit.

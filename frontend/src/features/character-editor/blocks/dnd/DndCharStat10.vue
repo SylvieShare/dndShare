@@ -31,7 +31,7 @@
       @edit="openEditor"
       @roll-stat="rollD20Plus(`${displayTitle} — проверка`, checkTotal, checkRollMode, 'ability_check')"
       @roll-save="rollD20Plus(`${displayTitle} — спасбросок`, save, saveRollMode, 'saving_throw')"
-      @roll-skill="id => rollD20Plus(skillTitle(id), skillBonus(id), skillRollMode(id), 'ability_check')"
+      @roll-skill="id => rollD20Plus(skillTitle(id), skillBonus(id), skillRollMode(id), 'ability_check', { proficiencyRank: skillProficiencyRank(id) })"
     />
   </BaseTile>
 
@@ -69,7 +69,7 @@
         :tooltip-width="skillTooltipWidth"
         @roll-stat="rollD20Plus(`${displayTitle} — проверка`, checkTotal, checkRollMode, 'ability_check')"
         @roll-save="rollD20Plus(`${displayTitle} — спасбросок`, save, saveRollMode, 'saving_throw')"
-        @roll-skill="id => rollD20Plus(skillTitle(id), skillBonus(id), skillRollMode(id), 'ability_check')"
+        @roll-skill="id => rollD20Plus(skillTitle(id), skillBonus(id), skillRollMode(id), 'ability_check', { proficiencyRank: skillProficiencyRank(id) })"
       />
     </template>
 
@@ -299,10 +299,15 @@ const editSkill = computed(() => {
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 function skillTitle(id) { return skillsList.value.find(s => s.id === String(id))?.title || String(id) }
 
+function skillProficiencyRank(id) {
+  const skill = skillsMap.value[String(id)] || { up: 0 }
+  return Math.max(skill.up || 0, derivedSkillProficiency(id).rank)
+}
+
 function skillBonus(id) {
   const skill = skillsMap.value[String(id)] || { up: 0 }
   const extra = sumBonuses(skill.bonuses)
-  const rank = Math.max(skill.up || 0, derivedSkillProficiency(id).rank)
+  const rank = skillProficiencyRank(id)
   const derived = charCtx.characterDerivedEffects?.bonus?.('skill_bonus', {
     kind: 'skill_check', abilitySuggestId: titleSuggestId.value, skillId: id, proficient: rank > 0,
   })?.total || 0
@@ -404,11 +409,12 @@ function closeEditor() {
 
 // ─── Dice ──────────────────────────────────────────────────────────────────────
 const diceStore = useDiceStore()
-function rollD20Plus(title, bonus, mode = 'normal', scope = 'ability_check') {
+function rollD20Plus(title, bonus, mode = 'normal', scope = 'ability_check', context = {}) {
   diceStore.rollD20(title, bonus, mode, {
     crit_mode: true,
     color: statColor.value,
     roll_triggers: charCtx.characterCombatEffects?.rollTriggers?.(scope) || [],
+    roll_adjustments: charCtx.characterCombatEffects?.rollAdjustments?.(scope, context) || [],
   })
 }
 

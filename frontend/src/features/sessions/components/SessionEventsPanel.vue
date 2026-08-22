@@ -105,20 +105,27 @@
                         <strong v-if="event.type === 'dice_roll'" class="sep-total">{{ event.data?.result?.total }}</strong>
                       </div>
 
-                      <div v-if="event.type === 'dice_roll'" class="sep-roll">
-                        <template v-for="(part, index) in event.data?.result?.parts || []" :key="index">
-                          <span v-if="index || part.sign === '-'" class="sep-sign">{{ part.sign }}</span>
-                          <template v-if="part.kind === 'dice'">
-                            <span
-                              v-for="(value, rollIndex) in part.rolls"
-                              :key="rollIndex"
-                              class="sep-die-value"
-                              :class="{ 'sep-die-value--dropped': part.dropped?.includes(rollIndex) }"
-                            >{{ value }}</span>
+                      <template v-if="event.type === 'dice_roll'">
+                        <div class="sep-roll">
+                          <template v-for="(part, index) in event.data?.result?.parts || []" :key="index">
+                            <span v-if="index || part.sign === '-'" class="sep-sign">{{ part.sign }}</span>
+                            <template v-if="part.kind === 'dice'">
+                              <span
+                                v-for="(value, rollIndex) in part.rolls"
+                                :key="rollIndex"
+                                class="sep-die-value"
+                                :class="{ 'sep-die-value--dropped': part.dropped?.includes(rollIndex) }"
+                              >{{ value }}</span>
+                            </template>
+                            <span v-else class="sep-flat">{{ part.value }}</span>
                           </template>
-                          <span v-else class="sep-flat">{{ part.value }}</span>
-                        </template>
-                      </div>
+                        </div>
+                        <div
+                          v-for="adjustment in event.data?.result?.adjustments || []"
+                          :key="`${adjustment.kind}:${adjustment.label}`"
+                          class="sep-details sep-adjustment"
+                        >{{ adjustment.label }}: {{ adjustment.original }} → {{ adjustment.value }}</div>
+                      </template>
 
                       <div v-else-if="event.type === 'spell_used'" class="sep-details">
                         {{ spellDetails(event.data) }}
@@ -336,5 +343,6 @@ watch([authorFilter, actorFilter, categoryFilters], async () => {
 .sep-roll { display: flex; flex-wrap: wrap; align-items: center; gap: 3px; max-width: 100%; margin-top: 5px; min-width: 0; }
 .sep-die-value { min-width: 23px; height: 23px; padding: 0 4px; box-sizing: border-box; display: inline-grid; place-items: center; border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--border)); border-radius: 6px; background: var(--surface-raised); color: var(--text-1); font-size: 11px; font-weight: 800; }
 .sep-die-value--dropped { opacity: .42; text-decoration: line-through; }
+.sep-adjustment { color: var(--success); }
 .sep-sign, .sep-flat { color: var(--text-muted); font-size: 10px; }
 </style>
