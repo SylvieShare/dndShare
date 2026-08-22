@@ -173,7 +173,7 @@ defineEmits(['view', 'show-tooltip', 'hide-tooltip', 'manage', 'add'])
 .abv--expanded .abv-icon { width: 64px; height: 64px; color: var(--text-2); }
 .abv--expanded .abv-name { font-size: 15px; font-weight: 750; white-space: normal; overflow: visible; }
 .abv--expanded .abv-choice { margin-top: 2px; font-size: 10px; white-space: normal; overflow: visible; }
-.abv-description { margin-top: 5px; color: var(--text-2); font-size: 11px; line-height: 1.5; }
+.abv--expanded .abv-description { margin-top: 5px; color: var(--text-2); font-size: 11px; line-height: 1.5; }
 .abv-description :deep(p) { margin: 0; }
 .abv-description :deep(p + p) { margin-top: 6px; }
 .abv--expanded .abv-effect { margin-top: 5px; font-size: 10px; }

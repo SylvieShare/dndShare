@@ -36,7 +36,8 @@ side column into the visible inner **Способности** tab alongside **О
 **Магия** and **Снаряжение**. It shows expanded cards with a 64×64 handbook icon
 and the full description inline. Class abilities, racial abilities and feats
 each own one shared tile; entries inside it do not create nested backgrounds or
-outlines and are divided by thin separators. Each tile header has a compact
+outlines and are divided by thin separators. Their rich descriptions use the
+same muted `--text-2` tone as action-row descriptions. Each tile header has a compact
 dashed plus control for adding an entry.
 The renamed mobile **Способности** tab uses the expanded cards as well and
 starts with prominent feature widgets, actions, resources, defenses and
