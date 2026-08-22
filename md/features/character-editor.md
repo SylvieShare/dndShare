@@ -72,6 +72,9 @@ The character viewport keeps its pre-keyboard height while a rich-text or form
 editor is focused. `useCharacterViewport` owns the visual/layout viewport
 synchronization and document-scoped focus handling needed by editors teleported
 outside the page root.
+For an owner, clicking the HP tile opens its vertical editor with a container
+morph from the clicked tile. The editor keeps the source tile width instead of
+falling back to the narrow no-origin panel width.
 The desktop skills sidebar groups conditions, exhaustion and heroic inspiration
 inside one interactive **Статусы** tile. The tile keeps the rules term
 **Состояния** for the condition list itself, summarizes active condition chips,

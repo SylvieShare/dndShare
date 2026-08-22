@@ -60,7 +60,7 @@ function onHpChange(h) {
   emit('update:value', props.block.id, withHitDice(h, normalizeHitDice(h)))
 }
 
-function openEditor() {
-  if (canEdit.value) openMorph()
+function openEditor(event) {
+  if (canEdit.value) openMorph(event)
 }
 </script>
