@@ -92,29 +92,18 @@ describe('D&D desktop sheet schema', () => {
     })
   })
 
-  it('adds a dedicated expanded abilities tab without removing compact base summaries', () => {
-    const abilities = schema.layouts.desktop.tabs.find(tab => tab.title === 'Способности')
+  it('moves abilities from the sidebar into a visible expanded inner tab', () => {
+    const abilities = innerTabs.children.find(tab => tab.title === 'Способности')
     const expanded = ['abilities_class', 'abilities_race', 'abilities_feats']
       .map(ref => findNode(abilities?.content, node => node.ref === ref))
-
-    expect(abilities).toBeTruthy()
-    expect(findNode(abilities?.content, node => node.ref === 'actions')).toBeTruthy()
-    expect(expanded.every(node => node?.content?.expanded === true)).toBe(true)
-    expect(schema.blocks.actions.type).toBe('DND_ACTIONS')
-  })
-
-  it('groups feats and race/class abilities in one visual tile', () => {
-    const features = findNode(
+    const sidebarFeatures = findNode(
       base?.content,
       node => node.children?.map(child => child.ref).join(',') === 'abilities_feats,abilities_race,abilities_class',
     )
 
-    expect(features?.props?.tile).toBe(true)
-    expect(schema.blocks.passive_effects).toBeUndefined()
-    expect(features?.children?.map(block => block.content)).toEqual([
-      { embedded: true },
-      { embedded: true, divider: true },
-      { embedded: true, divider: true },
-    ])
+    expect(abilities).toBeTruthy()
+    expect(expanded.every(node => node?.content?.expanded === true)).toBe(true)
+    expect(sidebarFeatures).toBeNull()
+    expect(schema.blocks.actions.type).toBe('DND_ACTIONS')
   })
 })

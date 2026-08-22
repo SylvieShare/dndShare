@@ -3,7 +3,7 @@
  *
  * Split across three data files (assembled here):
  *   - blocks.json   — id-keyed block definitions (shared by both profiles);
- *   - desktop.json  — desktop layout profile (tabs База / Личность / Заметки);
+ *   - desktop.json  — desktop layout with the visible inner content tabs;
  *   - mobile.json   — mobile layout profile (6 tabs + toolbar/common strips).
  *
  * On top of the layout data this applies a code-driven restyle:

@@ -11,7 +11,7 @@
     <template #brand>
       <SidebarBrand :as="RouterLink" to="/" label="DnD Share" aria-label="DnD Share">
         <template #icon>
-          <img class="brand-mascot-mark" src="/icon.svg" alt="" />
+          <img class="brand-mascot-mark" src="/brand-mascot.webp" alt="" />
         </template>
       </SidebarBrand>
     </template>
@@ -121,9 +121,9 @@ async function openSearch(toggle) {
 <style scoped>
 .brand-mascot-mark {
   display: block;
-  width: 30px;
-  height: 30px;
-  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
 }
 
 .desktop-sidebar :deep(.sidebar-search) {

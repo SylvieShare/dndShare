@@ -31,9 +31,10 @@ in `blockRegistry.js`. Generic blocks live in `blocks/generic`, D&D blocks in
 receive data by block id.
 
 Desktop and mobile share block definitions but have separate placement
-profiles. The desktop base tab keeps compact class, race and feat summaries in
-the side column; the separate **Способности** tab shows the same entries as
-expanded cards with a 64×64 handbook icon and the full description inline.
+profiles. The desktop base layout moves class, race and feat entries out of the
+side column into the visible inner **Способности** tab alongside **Оружие**,
+**Магия** and **Снаряжение**. It shows expanded cards with a 64×64 handbook icon
+and the full description inline.
 The renamed mobile **Способности** tab uses the expanded cards as well and
 starts with prominent feature widgets, actions, resources, defenses and
 proficiencies. The mobile D&D stats tab uses a 12px top-level column gap. Tab state

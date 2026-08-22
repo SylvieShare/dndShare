@@ -21,7 +21,8 @@ describe('desktop sidebar icons', () => {
 
   it('uses the mascot mark as the application brand', () => {
     expect(sidebarSource).toContain('class="brand-mascot-mark"')
-    expect(sidebarSource).toContain('src="/icon.svg"')
+    expect(sidebarSource).toContain('src="/brand-mascot.webp"')
+    expect(sidebarSource).not.toContain('/icon.svg')
     expect(sidebarSource).not.toContain(':icon="Dices"')
   })
 

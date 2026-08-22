@@ -228,6 +228,39 @@
                             }
                           },
                           {
+                            "title": "Способности",
+                            "content": {
+                              "kind": "layout",
+                              "type": "column",
+                              "props": {
+                                "gap": "14px"
+                              },
+                              "children": [
+                                {
+                                  "ref": "abilities_class",
+                                  "kind": "block",
+                                  "content": {
+                                    "expanded": true
+                                  }
+                                },
+                                {
+                                  "ref": "abilities_race",
+                                  "kind": "block",
+                                  "content": {
+                                    "expanded": true
+                                  }
+                                },
+                                {
+                                  "ref": "abilities_feats",
+                                  "kind": "block",
+                                  "content": {
+                                    "expanded": true
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
                             "title": "Снаряжение",
                             "content": {
                               "kind": "layout",
@@ -558,42 +591,6 @@
                       {
                         "ref": "proficiencies",
                         "kind": "block"
-                      },
-                      {
-                        "kind": "layout",
-                        "type": "column",
-                        "props": {
-                          "gap": "0",
-                          "tile": true,
-                          "style": {
-                            "padding": "0"
-                          }
-                        },
-                        "children": [
-                          {
-                            "ref": "abilities_feats",
-                            "kind": "block",
-                            "content": {
-                              "embedded": true
-                            }
-                          },
-                          {
-                            "ref": "abilities_race",
-                            "kind": "block",
-                            "content": {
-                              "embedded": true,
-                              "divider": true
-                            }
-                          },
-                          {
-                            "ref": "abilities_class",
-                            "kind": "block",
-                            "content": {
-                              "embedded": true,
-                              "divider": true
-                            }
-                          }
-                        ]
                       }
                     ]
                   }
@@ -604,89 +601,6 @@
         ]
       },
       "default": true
-    },
-    {
-      "title": "Способности",
-      "width": 1180,
-      "content": {
-        "kind": "layout",
-        "type": "row",
-        "props": {
-          "gap": "20px",
-          "style": {
-            "padding": "20px"
-          }
-        },
-        "children": [
-          {
-            "kind": "layout",
-            "type": "column",
-            "props": {
-              "gap": "11px",
-              "style": {
-                "width": "340px"
-              },
-              "shrink": "0"
-            },
-            "children": [
-              {
-                "ref": "feature_widgets",
-                "kind": "block"
-              },
-              {
-                "ref": "actions",
-                "kind": "block"
-              },
-              {
-                "ref": "resources",
-                "kind": "block"
-              },
-              {
-                "ref": "defenses",
-                "kind": "block"
-              },
-              {
-                "ref": "proficiencies",
-                "kind": "block"
-              }
-            ]
-          },
-          {
-            "kind": "layout",
-            "type": "column",
-            "props": {
-              "gap": "14px",
-              "grow": "1",
-              "style": {
-                "min-width": "0"
-              }
-            },
-            "children": [
-              {
-                "ref": "abilities_class",
-                "kind": "block",
-                "content": {
-                  "expanded": true
-                }
-              },
-              {
-                "ref": "abilities_race",
-                "kind": "block",
-                "content": {
-                  "expanded": true
-                }
-              },
-              {
-                "ref": "abilities_feats",
-                "kind": "block",
-                "content": {
-                  "expanded": true
-                }
-              }
-            ]
-          }
-        ]
-      }
     }
   ]
 }
