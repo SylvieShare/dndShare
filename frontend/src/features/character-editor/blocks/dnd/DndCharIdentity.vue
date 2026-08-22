@@ -1,22 +1,25 @@
 <template>
   <div class="dci-wrap">
-    <span class="dci-name" :style="nameStyle">{{ nameVal || 'Имя персонажа' }}</span>
-    <template v-if="racePart || classPart">
-      <span class="dci-sep">·</span>
-      <span class="dci-sub">{{ subline }}</span>
-    </template>
-    <button
-      v-if="canEdit"
-      class="dci-edit"
-      type="button"
-      title="Редактировать"
-      @click.stop="openWindow"
-    >
-      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M12 20h9" />
-        <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
-      </svg>
-    </button>
+    <div class="dci-main-row">
+      <span class="dci-name" :style="nameStyle">{{ nameVal || 'Имя персонажа' }}</span>
+      <template v-if="racePart">
+        <span class="dci-sep">·</span>
+        <span class="dci-sub">{{ racePart }}</span>
+      </template>
+      <button
+        v-if="canEdit"
+        class="dci-edit"
+        type="button"
+        title="Редактировать"
+        @click.stop="openWindow"
+      >
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 20h9" />
+          <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
+        </svg>
+      </button>
+    </div>
+    <span v-if="classPart" class="dci-classes" :title="classPart">{{ classPart }}</span>
 
     <AppModalFrame v-if="windowOpen" title="Персонаж" @close="close">
       <div class="dciw-body">
@@ -219,7 +222,6 @@ const classPart = computed(() => classesLabel(classEntriesOf({
   classes: props.values?.[classesId.value],
   lvl: props.values?.[lvlId.value],
 })))
-const subline = computed(() => [racePart.value, classPart.value].filter(Boolean).join(' · '))
 
 const nameColor = computed(() => props.block.content?.name_color || 'var(--text-on-accent)')
 const nameStyle = computed(() => ({ color: nameColor.value }))
@@ -450,9 +452,19 @@ function close() {
 <style scoped>
 .dci-wrap {
   display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.dci-main-row {
+  display: flex;
   align-items: baseline;
-  flex-wrap: nowrap;
-  gap: 0;
+  width: 100%;
   min-width: 0;
   overflow: hidden;
 }
@@ -491,6 +503,19 @@ function close() {
   text-overflow: ellipsis;
   flex: 0 1 auto;
   min-width: 0;
+}
+
+.dci-classes {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--text-2);
+  font-size: 14px;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .dci-edit {

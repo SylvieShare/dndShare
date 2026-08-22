@@ -45,7 +45,10 @@ breakpoint and gives the full viewport to its own toolbar; that toolbar menu has
 an explicit **К персонажам** action, including on read-only public sheets. Its
 desktop shell also occupies the full viewport because application navigation is
 provided by the fixed side rail and does not reserve a top-header offset. Its
-active tab still registers its DOM scroller through `useAppHeaderCollapse` so
+desktop identity summary keeps the class list on a separate single line below
+the name and race; an overlong multiclass label is ellipsized instead of
+increasing the sheet width. The active tab still registers its DOM scroller
+through `useAppHeaderCollapse` so
 the compact common strip has one shared scroll/settle observer; regular routes
 keep the header in document flow. Completed tab changes are pushed into the
 `tab` route query. Browser Back and Forward therefore restore prior tabs (even
