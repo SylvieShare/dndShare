@@ -10,6 +10,8 @@ describe('mobile app header navigation', () => {
   it('keeps the brand menu and omits the current page title', () => {
     expect(headerSource).toContain('<MobileHeaderBack v-if="mobileBackTarget"')
     expect(headerSource).toContain('<span>DnD Share</span>')
+    expect(headerSource).toContain('class="brand-mascot-mark"')
+    expect(headerSource).toContain('src="/icon.svg"')
     expect(headerSource).toContain('class="brand-menu"')
     expect(headerSource).toContain('class="brand-menu-item brand-menu-report"')
     expect(headerSource).toContain('requestErrorReport()')

@@ -19,6 +19,12 @@ describe('desktop sidebar icons', () => {
     expect(sidebarSource).toMatch(/rules:\s*BookOpenCheck/)
   })
 
+  it('uses the mascot mark as the application brand', () => {
+    expect(sidebarSource).toContain('class="brand-mascot-mark"')
+    expect(sidebarSource).toContain('src="/icon.svg"')
+    expect(sidebarSource).not.toContain(':icon="Dices"')
+  })
+
   it('keeps the common navigation item unlabeled', () => {
     expect(sidebarSource).not.toContain("common: 'Общее'")
     expect(sidebarSource).toContain('startsGroup(item) && groupLabel(item.group)')

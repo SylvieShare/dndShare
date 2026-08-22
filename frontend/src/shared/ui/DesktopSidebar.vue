@@ -9,7 +9,11 @@
     collapse-label="Свернуть панель"
   >
     <template #brand>
-      <SidebarBrand :as="RouterLink" to="/" label="DnD Share" aria-label="DnD Share" :icon="Dices" />
+      <SidebarBrand :as="RouterLink" to="/" label="DnD Share" aria-label="DnD Share">
+        <template #icon>
+          <img class="brand-mascot-mark" src="/icon.svg" alt="" />
+        </template>
+      </SidebarBrand>
     </template>
 
     <template #default="{ expanded, toggle }">
@@ -67,7 +71,7 @@
 <script setup>
 import { computed, nextTick, ref } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
-import { BookOpen, BookOpenCheck, CircleAlert, Dices, ScrollText, Search, Shield, UserRoundPlus, Users } from '@lucide/vue'
+import { BookOpen, BookOpenCheck, CircleAlert, ScrollText, Search, Shield, UserRoundPlus, Users } from '@lucide/vue'
 import { AppSidebar, SidebarBrand, SidebarNavItem } from '@sylvieshare/share-ui'
 import HeaderSearch from '@/shared/ui/HeaderSearch'
 import GameContextSelector from '@/shared/ui/GameContextSelector.vue'
@@ -115,6 +119,13 @@ async function openSearch(toggle) {
 </script>
 
 <style scoped>
+.brand-mascot-mark {
+  display: block;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+}
+
 .desktop-sidebar :deep(.sidebar-search) {
   display: flex;
   align-items: center;
