@@ -92,6 +92,7 @@ export function extractGrants({
     raceSkillChoice: null,
     langChoice: null,
     featChoice: null,
+    skillProficiencies: [],
     backgroundSkills: [],
     bgLangChoice: null,
     saves: [],
@@ -127,6 +128,7 @@ export function extractGrants({
     // Race-side "pick N" offers: extra skills / language / feat (e.g. Half-Elf).
     captureRaceChoices(d, grants)
     mergeIds(grants.languages, d.languages)
+    mergeIds(grants.skillProficiencies, d.skill_prof)
     mergeIds(grants.proficiencies.armor, d.armor_prof)
     mergeIds(grants.proficiencies.weapon, d.weapon_prof)
     mergeIds(grants.proficiencies.tool, d.tool_prof)

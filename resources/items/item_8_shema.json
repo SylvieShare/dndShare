@@ -36,6 +36,12 @@
     ]
   },
   {
+    "name": "Фиксированные владения навыками",
+    "key": "skill_prof",
+    "type": "suggest_array",
+    "suggest_id": 15
+  },
+  {
     "name": "Языки",
     "key": "languages",
     "type": "suggest_array",

@@ -201,8 +201,15 @@ backgrounds (11), armor (12) and transport (13).
 
 Ability types 3, 4 and 7 expose `granted_spells`. Each row references a spell,
 its unlock level, an optional casting-ability override and whether the cast is
-slotless. This is the catalogue authority for fixed spell grants; the character
-sheet derives its read-only external spell entries and provenance from it.
+slotless. An optional `cast_level` fixes the level at which an innate spell is
+cast. The same ability types expose level-gated `defenses` rows with a damage
+type and resistance/immunity/vulnerability kind. These are the catalogue
+authorities for fixed spell and damage-defense grants; the character sheet
+derives its read-only external entries and provenance from them.
+
+Race items (type 8) keep fixed skill proficiencies in `skill_prof`. Selection
+rules such as `skill_choice` and `lang_choice` also belong to the race record,
+not to an ongoing text-only ability.
 
 Mundane armor and shields belong to type 12 and keep the structured
 `armor {ac,use_dex,dex_cap,shield,shield_bonus}` rule consumed by character

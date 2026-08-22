@@ -41,6 +41,7 @@ export function raceCardSummary({ race, raceAbilities = [], suggestValue = () =>
   pushFact(facts, 'Языки', resolved(grants.languages, 6, suggestValue).join(', '), true)
 
   const proficiencies = [
+    ...resolved(grants.skillProficiencies, 15, suggestValue),
     ...resolved(grants.proficiencies.armor, 3, suggestValue),
     ...resolved(grants.proficiencies.weapon, 4, suggestValue),
     ...resolved(grants.proficiencies.tool, 5, suggestValue),

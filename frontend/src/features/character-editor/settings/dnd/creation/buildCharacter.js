@@ -158,6 +158,7 @@ export function buildCharacterData(input) {
   // Skill proficiencies (class skill_choice + race skill choice + background fixed).
   for (const raw of skillIds) addSkillProf(values, raw)
   for (const raw of raceSkillIds) addSkillProf(values, raw)
+  for (const raw of (grants.skillProficiencies || [])) addSkillProf(values, raw)
   for (const raw of (grants.backgroundSkills || [])) addSkillProf(values, raw)
 
   // Race-chosen + background-chosen extra languages (suggest 6) into the Языки bucket.

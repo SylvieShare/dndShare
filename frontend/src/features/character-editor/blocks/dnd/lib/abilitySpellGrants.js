@@ -20,15 +20,18 @@ export function abilitySpellGrantRows(items, values = {}) {
       const unlockLevel = number(rule?.level) ?? number(data.level) ?? 1
       if (spellId == null || ownerLevel < unlockLevel) continue
       const castingAbility = number(rule?.ability)
+      const castLevel = number(rule?.cast_level)
       rows.push({
         spellId,
         castingAbility,
+        castLevel,
         slotless: !!rule?.slotless,
         source: {
           kind: 'ability',
           item_id: item.id,
           label: item.name || 'Способность',
           ...(castingAbility != null ? { casting_ability: castingAbility } : {}),
+          ...(castLevel != null ? { cast_level: castLevel } : {}),
         },
       })
     }
@@ -69,6 +72,10 @@ export function syncAbilityGrantedSpells(entries, grantRows) {
           delete entry.slotless
           delete entry.slotless_source
         }
+        if (entry.cast_level_source === 'ability') {
+          delete entry.cast_level
+          delete entry.cast_level_source
+        }
       }
       result.push(entry)
       continue
@@ -91,12 +98,21 @@ export function syncAbilityGrantedSpells(entries, grantRows) {
       delete entry.slotless
       delete entry.slotless_source
     }
+    const castLevel = wanted.find((row) => row.castLevel != null)?.castLevel
+    if (castLevel != null) {
+      entry.cast_level = castLevel
+      entry.cast_level_source = 'ability'
+    } else if (entry.cast_level_source === 'ability') {
+      delete entry.cast_level
+      delete entry.cast_level_source
+    }
     result.push(entry)
   }
 
   for (const [id, wanted] of desired) {
     if (existingIds.has(id)) continue
     const castingAbility = wanted.find((row) => row.castingAbility != null)?.castingAbility
+    const castLevel = wanted.find((row) => row.castLevel != null)?.castLevel
     result.push({
       id: Number(id),
       prepared: false,
@@ -104,6 +120,7 @@ export function syncAbilityGrantedSpells(entries, grantRows) {
       granted_by: wanted.map((row) => row.source),
       ...(castingAbility != null ? { casting_ability: castingAbility, casting_ability_source: 'ability' } : {}),
       ...(wanted.some((row) => row.slotless) ? { slotless: true, slotless_source: 'ability' } : {}),
+      ...(castLevel != null ? { cast_level: castLevel, cast_level_source: 'ability' } : {}),
     })
   }
   return result

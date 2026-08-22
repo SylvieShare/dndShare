@@ -317,6 +317,13 @@
       "max_in_row": 10
     }
   },
+  "defenses": {
+    "id": "defenses",
+    "type": "DND_DEFENSES",
+    "content": {
+      "damage_type_suggest_id": 12
+    }
+  },
   "initiative": {
     "id": "initiative",
     "type": "DND_INITIATIVE",

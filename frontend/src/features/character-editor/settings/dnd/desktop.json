@@ -540,6 +540,10 @@
                         "kind": "block"
                       },
                       {
+                        "ref": "defenses",
+                        "kind": "block"
+                      },
+                      {
                         "ref": "desktop_statuses",
                         "kind": "block"
                       },

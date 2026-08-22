@@ -58,7 +58,7 @@
       </span>
       <span v-if="instances > 1" class="sp-mul">×{{ instances }}</span>
       <span v-if="isSlotScaled" class="sp-step" title="Круг ячейки" @pointerdown.stop @click.stop>
-        <button type="button" class="sp-step-btn" :disabled="castLevel <= baseLvl" @click.stop="decCast">−</button>
+        <button type="button" class="sp-step-btn" :disabled="castLevel <= minimumCastLevel" @click.stop="decCast">−</button>
         <span class="sp-step-val">{{ castLevel }}<small>круг</small></span>
         <button type="button" class="sp-step-btn" :disabled="castLevel >= maxCast" @click.stop="incCast">+</button>
       </span>
@@ -177,19 +177,23 @@ const grantSummary = computed(() => {
     ? `Даровано особенностью «${labels[0]}»`
     : `Даровано особенностями: ${labels.join(', ')}`
   const ability = props.entry.ref.casting_ability != null ? ctx.spellAbilityLabel(props.entry) : ''
-  return ability ? `${sourceLabel} · Заклинательная характеристика: ${ability}` : sourceLabel
+  const castLevel = Number(props.entry.ref.cast_level) || 0
+  const details = [ability ? `Заклинательная характеристика: ${ability}` : '', castLevel ? `Уровень сотворения: ${castLevel}` : ''].filter(Boolean)
+  return details.length ? `${sourceLabel} · ${details.join(' · ')}` : sourceLabel
 })
-const maxCast = computed(() => Math.max(baseLvl.value, Number(ctx.maxSlotLevel) || 0))
+const fixedCastLevel = computed(() => Number(props.entry.ref.cast_level) || null)
+const minimumCastLevel = computed(() => fixedCastLevel.value || baseLvl.value)
+const maxCast = computed(() => fixedCastLevel.value || Math.max(baseLvl.value, Number(ctx.maxSlotLevel) || 0))
 const castOverride = ref(null)
 const castLevel = computed(() => {
-  const v = castOverride.value ?? baseLvl.value
-  return Math.min(Math.max(v, baseLvl.value), maxCast.value)
+  const v = castOverride.value ?? minimumCastLevel.value
+  return Math.min(Math.max(v, minimumCastLevel.value), maxCast.value)
 })
 const isSlotScaled = computed(() =>
-  (dmg.value.scaling === 'slot' || data.value.heal?.scaling === 'slot') && maxCast.value > baseLvl.value
+  !fixedCastLevel.value && (dmg.value.scaling === 'slot' || data.value.heal?.scaling === 'slot') && maxCast.value > baseLvl.value
 )
 function incCast() { if (castLevel.value < maxCast.value) castOverride.value = castLevel.value + 1 }
-function decCast() { if (castLevel.value > baseLvl.value) castOverride.value = castLevel.value - 1 }
+function decCast() { if (castLevel.value > minimumCastLevel.value) castOverride.value = castLevel.value - 1 }
 
 const damageParts = computed(() => ctx.damageDiceParts(props.entry.item, castLevel.value, ctx.charLevel))
 const healParts = computed(() => ctx.healDiceParts(props.entry.item, castLevel.value, ctx.charLevel))
@@ -206,7 +210,7 @@ const slotOptions = computed(() => ctx.availableSpellSlotLevels(props.entry))
 const canUse = computed(() => !ctx.spellcastingBlocked && !!props.entry.item && (baseLvl.value === 0 || slotOptions.value.length > 0))
 const useLabel = computed(() => ctx.spellcastingBlocked ? 'Запрещено доспехом' : (canUse.value ? 'Использовать' : 'Нет доступных ячеек'))
 const hasHigherLevelChoice = computed(() =>
-  slotOptions.value.some(level => level > baseLvl.value)
+  !props.entry.ref.slotless && slotOptions.value.some(level => level > baseLvl.value)
 )
 
 // Drag the whole row to reorder; the sortable's 4px threshold keeps a plain tap a click. A drag flips

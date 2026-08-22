@@ -26,6 +26,16 @@ describe('buildCharacterData skill choices', () => {
 
     expect(result.data.values.STR.skills['1'].up).toBe(1)
   })
+
+  it('applies a fixed racial skill proficiency', () => {
+    const result = buildCharacterData({
+      race: selection(4027, 'Эльф', { skill_prof: [10] }),
+      charClass: selection(2, 'Воин'),
+      suggestValue: () => '',
+    })
+
+    expect(result.data.values.WIS.skills['10'].up).toBe(1)
+  })
 })
 
 describe('buildCharacterData hit dice', () => {

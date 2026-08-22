@@ -28,7 +28,7 @@ describe('ability spell grants', () => {
     const drow = { id: 4087, name: 'Дроуская магия', data: {
       granted_spells: [
         { spell: { id: 511 }, level: 1, ability: 6 },
-        { spell: { id: 627 }, level: 3, ability: 6, slotless: true },
+        { spell: { id: 627 }, level: 3, ability: 6, slotless: true, cast_level: 2 },
       ],
     } }
     expect(abilitySpellGrantRows([drow], { lvl: { level: 2 } }).map((row) => row.spellId)).toEqual([511])
@@ -36,6 +36,8 @@ describe('ability spell grants', () => {
     expect(syncAbilityGrantedSpells([], rows).find((entry) => entry.id === 627)).toMatchObject({
       casting_ability: 6,
       slotless: true,
+      cast_level: 2,
+      cast_level_source: 'ability',
       external_only: true,
     })
   })
@@ -62,11 +64,14 @@ describe('ability spell grants', () => {
       casting_ability_source: 'ability',
       slotless: true,
       slotless_source: 'ability',
+      cast_level: 2,
+      cast_level_source: 'ability',
     }
     const grants = [{
       spellId: 498,
       castingAbility: null,
       slotless: false,
+      castLevel: null,
       source: { kind: 'ability', item_id: 4092, label: 'Природная иллюзия' },
     }]
 

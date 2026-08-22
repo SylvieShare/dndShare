@@ -178,6 +178,36 @@
     ]
   },
   {
+    "name": "Защиты",
+    "key": "defenses",
+    "type": "object_array",
+    "fields": [
+      {
+        "name": "Тип урона",
+        "key": "damage_type",
+        "type": "suggest",
+        "suggest_id": 12
+      },
+      {
+        "name": "Вид защиты",
+        "key": "kind",
+        "type": "select",
+        "default": "resistance",
+        "options": [
+          { "value": "resistance", "label": "Сопротивление" },
+          { "value": "immunity", "label": "Невосприимчивость" },
+          { "value": "vulnerability", "label": "Уязвимость" }
+        ]
+      },
+      {
+        "name": "С уровня",
+        "key": "level",
+        "type": "int",
+        "default": 1
+      }
+    ]
+  },
+  {
     "name": "Дарованные заклинания",
     "key": "granted_spells",
     "type": "object_array",
@@ -185,6 +215,7 @@
       { "name": "Заклинание", "key": "spell", "type": "item", "item_type": 5 },
       { "name": "С уровня", "key": "level", "type": "int", "default": 1 },
       { "name": "Заклинательная характеристика", "key": "ability", "type": "suggest", "suggest_id": 16 },
+      { "name": "Уровень сотворения", "key": "cast_level", "type": "int" },
       { "name": "Без расхода ячейки", "key": "slotless", "type": "bool" }
     ]
   }

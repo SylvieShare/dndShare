@@ -19,6 +19,7 @@ import DndArmor from '@/features/character-editor/blocks/dnd/DndArmor'
 import DndCharIdentity from '@/features/character-editor/blocks/dnd/DndCharIdentity'
 import DndCharStat10 from '@/features/character-editor/blocks/dnd/DndCharStat10'
 import DndCounters from '@/features/character-editor/blocks/dnd/DndCounters'
+import DndDefenses from '@/features/character-editor/blocks/dnd/DndDefenses'
 import DndDiary from '@/features/character-editor/blocks/dnd/DndDiary'
 import DndExhaustion from '@/features/character-editor/blocks/dnd/DndExhaustion'
 import DndHitDice from '@/features/character-editor/blocks/dnd/DndHitDice'
@@ -63,6 +64,7 @@ export const BLOCK_REGISTRY = {
   DND_ARMOR:        { component: DndArmor, passValues: true },
   DND_CHAR_IDENTITY:{ component: DndCharIdentity, passValues: true },
   DND_CHAR_STAT_10: { component: DndCharStat10, passValues: true },
+  DND_DEFENSES:     { component: DndDefenses },
   DND_DIARY:        { component: DndDiary },
   DND_EXHAUSTION:   { component: DndExhaustion },
   DND_HIT_DICE:     { component: DndHitDice },

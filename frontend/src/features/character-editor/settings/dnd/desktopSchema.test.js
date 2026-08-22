@@ -74,6 +74,18 @@ describe('D&D desktop sheet schema', () => {
     })
   })
 
+  it('keeps derived defenses beside the character resources', () => {
+    const resources = findNode(base?.content, node => node.ref === 'resources')
+    const defenses = findNode(base?.content, node => node.ref === 'defenses')
+
+    expect(resources).toBeTruthy()
+    expect(defenses).toBeTruthy()
+    expect(schema.blocks.defenses).toMatchObject({
+      type: 'DND_DEFENSES',
+      content: { damage_type_suggest_id: 12 },
+    })
+  })
+
   it('groups feats and race/class abilities in one visual tile', () => {
     const features = findNode(
       base?.content,

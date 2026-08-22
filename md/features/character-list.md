@@ -120,8 +120,8 @@ expanded `item.data.description`: an original three-paragraph lore article witho
 repeating ability bonuses, followed by subrace choices, while the
 remaining rows disappear. A dedicated “Назад / К выбору расы” action reverses the
 morph and returns to the full list without changing the current content scroll.
-Skill choices carried by a racial ability (for example Half-Elf
-“Универсальность навыков”) use the same shared skill picker as the class
+Skill choices carried by the race record (for example the Half-Elf's two skill
+choices) use the same shared skill picker as the class
 “Владение навыками” section: checkbox cards show the governing ability and the
 live modifier (including proficiency or expertise as soon as it is selected),
 enforce the pick limit and expose skill descriptions on hover.
@@ -322,7 +322,12 @@ Key rules:
   archetype/domain spells begin permanently prepared;
 - fixed racial, class-feature and feat `granted_spells` are added even for a
   non-caster, remain read-only, retain their source and use their configured
-  per-spell casting ability instead of the class-wide spellcasting ability;
+  per-spell casting ability and cast level instead of guessing them from the
+  class-wide spellcasting settings;
+- one-time racial grants live directly on race/subrace data: `lang_choice`,
+  `skill_choice`, fixed `skill_prof`, and weapon/tool proficiencies. Textual
+  ability cards represent ongoing rules only and are not duplicated on the
+  finished sheet;
 - resets and incomplete-create decisions use shared `ConfirmDialog`;
 - the draft persists in `localStorage` and is cleared after successful create.
 

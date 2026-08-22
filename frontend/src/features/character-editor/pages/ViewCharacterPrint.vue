@@ -94,6 +94,14 @@
             </div>
           </div>
         </section>
+        <section v-if="printDefenses.length" class="box print-defenses">
+          <BoxTitle>Защиты и уязвимости</BoxTitle>
+          <div class="print-defense-grid">
+            <div v-for="defense in printDefenses" :key="`${defense.kind}:${defense.damage_type}`">
+              <span>{{ defenseKindLabel(defense.kind) }}</span><strong>{{ damageType(defense.damage_type) || `Тип #${defense.damage_type}` }}</strong>
+            </div>
+          </div>
+        </section>
       </PrintPage>
 
       <PrintPage
@@ -183,6 +191,7 @@ import { dieLabel } from '@/shared/lib/systemDice'
 import { useSuggestStore } from '@/stores/suggest'
 import { abilityUseTotal } from '@/shared/lib/dndAbilityUses'
 import { deriveEquippedArmor } from '@/features/character-editor/blocks/dnd/lib/equippedArmor'
+import { collectCharacterDefenses, DEFENSE_KINDS } from '@/features/character-editor/lib/characterDefenses'
 
 const PrintField = defineComponent({
   props: { label: String, value: String },
@@ -250,6 +259,17 @@ const passivePerception = computed(() => 10 + (skills.value.find(skill => skill.
 function itemById(id) { return catalog.value[String(id)] || catalog.value[id] || null }
 function diceLabel(id) { return dieLabel(id) }
 function damageType(id) { return suggest.items(12).find(item => String(item.id) === String(id))?.value || '' }
+function defenseKindLabel(kind) { return DEFENSE_KINDS.find(entry => entry.value === kind)?.label || 'Сопротивление' }
+const printDefenses = computed(() => {
+  const rows = collectCharacterDefenses(values.value, new Map(Object.entries(catalog.value)))
+  const seen = new Set()
+  return rows.filter((row) => {
+    const key = `${row.kind}:${row.damage_type}`
+    if (seen.has(key)) return false
+    seen.add(key)
+    return true
+  })
+})
 function weaponPropertyLabels(item) {
   return (Array.isArray(item?.data?.tags) ? item.data.tags : []).map(tag => {
     if (tag && typeof tag === 'object') return text(tag)
@@ -358,7 +378,11 @@ function spellGrantLine(entry) {
     ? `Даровано особенностью «${labels[0]}»`
     : `Даровано особенностями: ${labels.join(', ')}`
   const casting = spellEntryCasting(entry)
-  return casting.ability ? `${source} · Заклинательная характеристика: ${casting.ability}` : source
+  const details = [
+    casting.ability ? `Заклинательная характеристика: ${casting.ability}` : '',
+    Number(entry?.cast_level) > 0 ? `Уровень сотворения: ${Number(entry.cast_level)}` : '',
+  ].filter(Boolean)
+  return details.length ? `${source} · ${details.join(' · ')}` : source
 }
 function spellCombatLine(item, entry) {
   const data = item?.data || {}; const parts = []
@@ -467,6 +491,7 @@ onBeforeUnmount(() => document.documentElement.classList.remove('character-print
 table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 6.8px; }th { padding: 1.2mm; border-bottom: .7px solid #695a44; color: #756751; font-size: 5px; letter-spacing: .06em; text-align: left; text-transform: uppercase; }td { height: 5.5mm; padding: 1mm 1.2mm; border-bottom: .35px solid #baaa8d; overflow-wrap: anywhere; }th:nth-child(2), td:nth-child(2) { width: 17%; text-align: center; }th:nth-child(3), td:nth-child(3) { width: 40%; }.attack-name { display: block; font-weight: 700; }.attack-properties { display: block; margin-top: .5mm; color: #756751; font-size: 5.2px; font-weight: 700; line-height: 1.25; }.attack-description-row td { height: auto; padding: .8mm 1.2mm 1.2mm; background: rgba(186, 170, 141, .08); color: #554b3d; text-align: left; }.attack-description-row :deep(.rc) { font: italic 5.8px/1.35 var(--font-print-prose); }.attack-description-row :deep(.rc > :first-child) { margin-top: 0; }.attack-description-row :deep(.rc > :last-child) { margin-bottom: 0; }
 .passive-box { display: flex; align-items: center; gap: 2.2mm; }.passive-box strong { flex: 0 0 auto; width: 8mm; font: 700 13px/1 var(--font-print-display); text-align: center; }.passive-box span { min-width: 0; font-size: 5px; font-weight: 800; line-height: 1.25; text-transform: uppercase; }.skills-box { padding-inline: 2.2mm; }.skills-box .line-row { grid-template-columns: 3mm 6.5mm minmax(0, 1fr); min-height: 4.7mm; }
 .main-proficiencies { margin-top: 3mm; padding: 2.5mm 3mm; }.main-proficiencies :deep(.box-title) { margin-bottom: 2mm; }.main-proficiency-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2mm 4mm; }.main-proficiency-grid .prose-group + .prose-group { margin-top: 0; }.main-proficiency-grid .prose-group { min-width: 0; }.main-proficiency-grid .prose-group p { font-size: 6.5px; line-height: 1.3; }
+.print-defenses { margin-top: 3mm; padding: 2.5mm 3mm; }.print-defense-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2mm 4mm; }.print-defense-grid > div { display: flex; flex-direction: column; gap: .7mm; }.print-defense-grid span { color: #756751; font-size: 5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }.print-defense-grid strong { font-size: 7px; }
 .equipment-grid { display: grid; grid-template-columns: minmax(0, 1fr) 59mm; gap: 5mm; align-items: start; min-width: 0; }.equipment-grid--full { grid-template-columns: 1fr; }.inventory-section + .inventory-section { margin-top: 4mm; }.inventory-section h3, .prose-group h3 { margin: 0 0 1.2mm; font: 700 6px/1 var(--font-print-ui); letter-spacing: .08em; text-transform: uppercase; color: #756751; }.inventory-row, .list-box > div { display: flex; justify-content: space-between; gap: 4mm; min-height: 6mm; padding: 1.2mm 0; border-bottom: .35px solid #baaa8d; font-size: 8px; }.inventory-row span, .list-box span { min-width: 0; overflow-wrap: anywhere; }.inventory-row strong, .list-box strong { flex: 0 0 auto; white-space: nowrap; }
 .coins-box { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2mm; }.coins-box :deep(.box-title) { grid-column: 1 / -1; }.coins-box > div { min-width: 0; text-align: center; }.coins-box strong { display: block; font: 700 13px/1 var(--font-print-display); }.coins-box > div > span { display: block; margin-top: 1mm; font-size: 5px; text-transform: uppercase; overflow-wrap: anywhere; }.prose-group + .prose-group { margin-top: 2.5mm; }.prose-group p { margin: 0; font: 7px/1.4 var(--font-print-prose); overflow-wrap: anywhere; }.empty-state { padding: 12mm 0; color: #8a7a61; font: italic 9px var(--font-print-prose); text-align: center; }
 .spell-summary { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-bottom: 4mm; }.slots-box { display: flex; align-items: flex-start; flex-wrap: wrap; gap: 3mm 7mm; margin-bottom: 4mm; }.slots-box :deep(.box-title) { width: 100%; justify-content: flex-start; }.slots-box > div { display: flex; align-items: center; gap: 1.2mm; font-size: 7px; }.slots-box > div > span { min-width: 11mm; font-weight: 700; }.slots-box i { width: 4mm; height: 4mm; display: inline-block; flex: 0 0 auto; border: .8px solid #4f4639; border-radius: 50%; background: #fffefa; }.spell-card-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-flow: row dense; gap: 3mm; align-items: start; min-width: 0; }

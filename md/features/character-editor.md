@@ -188,7 +188,9 @@ the row cannot be reordered, prepared or deleted. `granted_by` records the
 source feature displayed to the player; `casting_ability` overrides the
 spellbook-wide ability for that spell's attack bonus and save DC, and is shown
 only when an override exists. `slotless` means that use does not spend an
-ordinary spell slot. Removing the source removes an external-only entry, but a
+ordinary spell slot. `cast_level` may fix the rules-defined level of that cast,
+including damage/healing scaling, independently of the spell's base level.
+Removing the source removes an external-only entry, but a
 spell that the character also owns normally remains and only loses the source
 metadata. Creation, level-up and the live sheet use the same synchronization
 rule. The print sheet preserves both provenance and the per-spell casting math.
@@ -288,6 +290,14 @@ Sorcery points are not a manual sheet resource: the level-2 «Источник �
 class feature contributes them with a maximum equal to the Sorcerer class level.
 Long rest restores the pool, while Sorcerous Restoration adds four points on a
 short rest at Sorcerer level 20.
+
+Damage defenses use the same source-adapter pattern. `values.defenses` stores
+manual `{damage_type,kind}` rows, where `kind` is `resistance`, `immunity` or
+`vulnerability`; ability items may contribute level-gated rows through
+`data.defenses`. The sheet and print view merge both sources. Manual rows stay
+editable, while contributed rows show their exact ability source and cannot be
+changed from the character. Equal rows are collapsed for display, but opposite
+effects are intentionally preserved instead of inventing a conflict rule.
 
 Feat ability-score bonuses are represented as readonly named bonus rows. The
 creation assembler, level-up flow and manual feat editor use the same rule: add

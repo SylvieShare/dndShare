@@ -8,6 +8,7 @@ import { normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'
 import { useCharacterResources } from '@/features/character-editor/composables/useCharacterResources'
 import { useCharacterArmor } from '@/features/character-editor/composables/useCharacterArmor'
 import { useCharacterRollEffects } from '@/features/character-editor/composables/useCharacterRollEffects'
+import { useCharacterDefenses } from '@/features/character-editor/composables/useCharacterDefenses'
 import {
   activeLayoutProfile,
   initialTabs,
@@ -31,6 +32,7 @@ export function useCharacterData(uuid, isMobile) {
   const sessions = ref([])
   const characterValues = computed(() => data.value.values || {})
   const characterResources = useCharacterResources(characterValues)
+  const characterDefenses = useCharacterDefenses(characterValues, characterResources.itemsById)
   const characterArmor = useCharacterArmor(characterValues, characterResources)
   const characterRolls = useCharacterRollEffects(characterArmor)
 
@@ -42,6 +44,7 @@ export function useCharacterData(uuid, isMobile) {
     iconImageUrl,
     uploadCharacterIcon,
     characterResources,
+    characterDefenses,
     characterArmor,
     characterRolls,
     values: characterValues,

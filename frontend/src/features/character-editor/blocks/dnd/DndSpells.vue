@@ -228,6 +228,8 @@ function emitChange() {
       ...(s.casting_ability_source ? { casting_ability_source: s.casting_ability_source } : {}),
       ...(s.slotless ? { slotless: true } : {}),
       ...(s.slotless_source ? { slotless_source: s.slotless_source } : {}),
+      ...(s.cast_level != null ? { cast_level: s.cast_level } : {}),
+      ...(s.cast_level_source ? { cast_level_source: s.cast_level_source } : {}),
     })),
     slots: serializedSlots(),
   })
@@ -431,7 +433,7 @@ function rollSpellHeal(entry, castLevel) {
 
 function availableSpellSlotLevels(entry) {
   const level = Number(entry?.item?.data?.lvl) || 0
-  if (entry?.ref?.slotless) return [level]
+  if (entry?.ref?.slotless) return [Number(entry?.ref?.cast_level) || level]
   return availableSlotLevels(localSlots.value, level)
 }
 

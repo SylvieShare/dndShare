@@ -123,6 +123,10 @@
             "kind": "block"
           },
           {
+            "ref": "defenses",
+            "kind": "block"
+          },
+          {
             "ref": "proficiencies",
             "kind": "block"
           },

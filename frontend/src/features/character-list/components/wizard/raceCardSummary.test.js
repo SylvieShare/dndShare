@@ -22,18 +22,20 @@ describe('race card summary', () => {
         speed: 30,
         size: 'Средний',
         languages: [10],
+        skill_prof: [10],
         lang_choice: { count: 1, from: [11] },
       },
     }
     const summary = raceCardSummary({
       race,
       subraces: ['Высший эльф', 'Лесной эльф'],
-      suggestValue: (typeId, id) => typeId === 6 && id === 10 ? 'Общий' : '',
+      suggestValue: (typeId, id) => typeId === 6 && id === 10 ? 'Общий' : typeId === 15 && id === 10 ? 'Внимание' : '',
     })
 
     expect(summary.facts).toEqual(expect.arrayContaining([
       expect.objectContaining({ label: 'Характеристики', value: 'ЛОВ +2' }),
       expect.objectContaining({ label: 'Языки', value: 'Общий' }),
+      expect.objectContaining({ label: 'Владения', value: 'Внимание' }),
     ]))
     expect(summary.subraces).toEqual(['Высший эльф', 'Лесной эльф'])
     expect(summary.choices).toEqual(['язык'])
