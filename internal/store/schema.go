@@ -133,6 +133,12 @@ var schemaAbilitySpellGrantsSQL string
 //go:embed schema/38_equipped_armor.sql
 var schemaEquippedArmorSQL string
 
+//go:embed schema/39_character_defenses_and_racial_grants.sql
+var schemaCharacterDefensesAndRacialGrantsSQL string
+
+//go:embed schema/40_ability_spell_cast_level.sql
+var schemaAbilitySpellCastLevelSQL string
+
 var schemaParts = []struct {
 	name string
 	sql  string
@@ -177,6 +183,8 @@ var schemaParts = []struct {
 	{"ability-resource-colors", schemaAbilityResourceColorsSQL},
 	{"ability-spell-grants", schemaAbilitySpellGrantsSQL},
 	{"equipped-armor", schemaEquippedArmorSQL},
+	{"character-defenses-and-racial-grants", schemaCharacterDefensesAndRacialGrantsSQL},
+	{"ability-spell-cast-level", schemaAbilitySpellCastLevelSQL},
 }
 
 func applySchema(ctx context.Context, pool *pgxpool.Pool) error {

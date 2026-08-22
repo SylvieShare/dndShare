@@ -9,18 +9,20 @@ import (
 )
 
 func TestToolProficiencyCatalogIsEmbeddedAfterItemTypeHierarchy(t *testing.T) {
-	if len(schemaParts) < 9 {
+	if len(schemaParts) < 11 {
 		t.Fatal("schemaParts must contain the final item catalogue sections")
 	}
-	hierarchy := schemaParts[len(schemaParts)-9]
-	tools := schemaParts[len(schemaParts)-8]
-	resources := schemaParts[len(schemaParts)-7]
-	classTools := schemaParts[len(schemaParts)-6]
-	resourceFixes := schemaParts[len(schemaParts)-5]
-	resourceAudit := schemaParts[len(schemaParts)-4]
-	resourceColors := schemaParts[len(schemaParts)-3]
-	spellGrants := schemaParts[len(schemaParts)-2]
-	equippedArmor := schemaParts[len(schemaParts)-1]
+	hierarchy := schemaParts[len(schemaParts)-11]
+	tools := schemaParts[len(schemaParts)-10]
+	resources := schemaParts[len(schemaParts)-9]
+	classTools := schemaParts[len(schemaParts)-8]
+	resourceFixes := schemaParts[len(schemaParts)-7]
+	resourceAudit := schemaParts[len(schemaParts)-6]
+	resourceColors := schemaParts[len(schemaParts)-5]
+	spellGrants := schemaParts[len(schemaParts)-4]
+	equippedArmor := schemaParts[len(schemaParts)-3]
+	defenses := schemaParts[len(schemaParts)-2]
+	castLevel := schemaParts[len(schemaParts)-1]
 	if hierarchy.name != "item-type-hierarchy" || hierarchy.sql == "" || hierarchy.sql != schemaItemTypeHierarchySQL {
 		t.Fatal("item-type-hierarchy schema must be embedded after the equipment catalogues")
 	}
@@ -47,6 +49,12 @@ func TestToolProficiencyCatalogIsEmbeddedAfterItemTypeHierarchy(t *testing.T) {
 	}
 	if equippedArmor.name != "equipped-armor" || equippedArmor.sql == "" || equippedArmor.sql != schemaEquippedArmorSQL {
 		t.Fatal("equipped armor schema must be embedded after the item and ability catalogues")
+	}
+	if defenses.name != "character-defenses-and-racial-grants" || defenses.sql == "" || defenses.sql != schemaCharacterDefensesAndRacialGrantsSQL {
+		t.Fatal("character defenses and racial grants must be embedded after the ability catalogue")
+	}
+	if castLevel.name != "ability-spell-cast-level" || castLevel.sql == "" || castLevel.sql != schemaAbilitySpellCastLevelSQL {
+		t.Fatal("ability spell cast level must be embedded after the granted-spell contract")
 	}
 }
 
