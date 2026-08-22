@@ -17,6 +17,7 @@
         >
           <span class="save-shield-icon"></span>
           <span class="save-chip-val">{{ signed(save) }}</span>
+          <RollModeBadge :mode="saveMode" :source="saveModeSource" />
         </div>
       </template>
     </SheetBlockTitle>
@@ -26,6 +27,7 @@
       <SvgIcon v-if="suggestSvg" class="stat-icon" :svg="suggestSvg" :color="color" />
       <span class="stat-mod">{{ signed(mod) }}</span>
       <span class="stat-raw">({{ raw }})</span>
+      <RollModeBadge :mode="checkMode" :source="checkModeSource" />
     </div>
 
     <!-- ── Skills ── -->
@@ -51,6 +53,7 @@
           @mouseleave="hideTooltip"
         >{{ skill.title }}</span>
         <span class="skill-line"></span>
+        <RollModeBadge :mode="skill.rollMode" :source="skill.rollModeSource" />
         <span
           class="skill-chip"
           :class="{ 'skill-chip-active': skill.up > 0, 'skill-chip-master': skill.up >= 2 }"
@@ -78,6 +81,7 @@ import { signedOrZero as signed } from '@/shared/lib/dnd'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip'
 import SheetBlockTitle from '@/shared/ui/SheetBlockTitle'
 import SvgIcon from '@/shared/ui/SvgIcon'
+import RollModeBadge from '@/features/character-editor/blocks/dnd/components/RollModeBadge.vue'
 
 const props = defineProps({
   title: { type: String, default: '' },
@@ -96,6 +100,10 @@ const props = defineProps({
   mode: { type: String, default: 'tile' },   // 'tile' | 'panel'
   showEdit: { type: Boolean, default: true },
   editFade: { type: Boolean, default: false },  // fade the edit pencil out (driven by the morph `revealed`)
+  checkMode: { type: String, default: 'normal' },
+  checkModeSource: { type: String, default: '' },
+  saveMode: { type: String, default: 'normal' },
+  saveModeSource: { type: String, default: '' },
 })
 defineEmits(['edit', 'roll-stat', 'roll-save', 'roll-skill'])
 

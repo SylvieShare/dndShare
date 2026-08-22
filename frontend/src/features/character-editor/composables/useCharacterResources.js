@@ -54,6 +54,7 @@ export function useCharacterResources(values, sources = DND_CHARACTER_RESOURCE_S
 
   return {
     resources,
+    itemsById,
     ensureItems,
     rememberItems,
     item(id) { return itemsById.value.get(String(id)) || null },

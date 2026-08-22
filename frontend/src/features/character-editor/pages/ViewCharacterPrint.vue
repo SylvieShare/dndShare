@@ -182,6 +182,7 @@ import { abilityModifiersBySuggest, weaponAbilityModifier } from '@/features/cha
 import { dieLabel } from '@/shared/lib/systemDice'
 import { useSuggestStore } from '@/stores/suggest'
 import { abilityUseTotal } from '@/shared/lib/dndAbilityUses'
+import { deriveEquippedArmor } from '@/features/character-editor/blocks/dnd/lib/equippedArmor'
 
 const PrintField = defineComponent({
   props: { label: String, value: String },
@@ -230,17 +231,13 @@ const abilities = computed(() => STAT_KEYS.map(key => {
 }))
 
 const hp = computed(() => ({ current: 0, max: 0, temp: 0, ds_success: 0, ds_failure: 0, ...(values.value.hp || {}) }))
-const armorClass = computed(() => {
-  const armor = values.value.armor || {}
-  const rawDex = armor.use_dex ? abilityModifier(abilityScore('DEX')) : 0
-  const dex = armor.dex_cap == null ? rawDex : Math.min(rawDex, Number(armor.dex_cap))
-  return (Number(armor.ac) || 0) + dex + (armor.shield ? Number(armor.shield_bonus) || 0 : 0) + sumBonuses(armor.bonuses)
-})
+const printArmor = computed(() => deriveEquippedArmor(values.value, catalog.value, typeId => suggest.items(typeId)))
+const armorClass = computed(() => printArmor.value.total)
 const initiative = computed(() => {
   const data = values.value.initiative || {}
   return (Number(data.base) || 0) + sumBonuses(data.bonuses) + (data.use_dex === false ? 0 : abilityModifier(abilityScore('DEX')))
 })
-const speedLabel = computed(() => `${(Number(values.value.speed?.base) || 0) + sumBonuses(values.value.speed?.bonuses)} фт.`)
+const speedLabel = computed(() => `${(Number(values.value.speed?.base) || 0) + sumBonuses(values.value.speed?.bonuses) - printArmor.value.speedPenalty} фт.`)
 const hitDice = computed(() => formatHitDice(normalizeHitDice(hp.value)))
 
 const SKILL_STAT = { 1: 'STR', 2: 'DEX', 3: 'DEX', 4: 'DEX', 5: 'INT', 6: 'INT', 7: 'INT', 8: 'INT', 9: 'INT', 10: 'WIS', 11: 'WIS', 12: 'WIS', 13: 'WIS', 14: 'WIS', 15: 'CHA', 16: 'CHA', 17: 'CHA', 18: 'CHA' }
@@ -434,7 +431,7 @@ async function load() {
   try {
     const res = await fetchGet('/char/' + route.params.uuid); if (!res?.data || res?.type) throw new Error(res?.desc || 'Персонаж не найден или недоступен.')
     response.value = res; const itemIds = collectItemIds(res.data?.values || {})
-    const tasks = [7, 12, 14, 15, 17].map(id => suggest.ensure(id).catch(() => null))
+    const tasks = [3, 7, 12, 14, 15, 17].map(id => suggest.ensure(id).catch(() => null))
     if (itemIds.length) tasks.push(itemsApi.byIds(itemIds).then(result => { catalog.value = Object.fromEntries((result?.items || []).map(item => [String(item.id), item])) }).catch(() => null))
     await Promise.all(tasks); document.title = `${characterName.value} — лист для печати`
   } catch (e) { error.value = e?.message || 'Произошла ошибка при загрузке.' } finally { loading.value = false }

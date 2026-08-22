@@ -211,7 +211,7 @@ describe('buildCharacterData starting equipment', () => {
     })
   })
 
-  it('equips starting armor and derives readonly AC rules from it', () => {
+  it('equips starting armor without duplicating its rules on the character', () => {
     const result = buildCharacterData({
       race: selection(1, 'Человек'),
       charClass: selection(2, 'Воин'),
@@ -224,17 +224,7 @@ describe('buildCharacterData starting equipment', () => {
     })
 
     expect(result.data.values.items.equipped).toHaveLength(2)
-    expect(result.data.values.armor).toMatchObject({
-      ac: 10,
-      use_dex: true,
-      dex_cap: 2,
-      shield: true,
-      shield_bonus: 2,
-      shield_readonly: true,
-    })
-    expect(result.data.values.armor.bonuses).toEqual([
-      expect.objectContaining({ name: 'Экипировано: Чешуйчатый доспех', value: 4, readonly: true }),
-    ])
+    expect(result.data.values.armor).toEqual({ bonuses: [] })
   })
 
   it('adds background possessions to inventory and its gold to the wallet', () => {

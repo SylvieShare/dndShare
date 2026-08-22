@@ -16,6 +16,10 @@
       :save="save"
       :save-up="!!statData.save_up"
       :skills="skillsView"
+      :check-mode="checkRollMode"
+      :check-mode-source="checkAutoSource"
+      :save-mode="saveRollMode"
+      :save-mode-source="saveAutoSource"
       :skills-loading="skillsLoading"
       :skill-skeleton-count="skillSkeletonCount"
       :tooltip-max-desc="skillTooltipMaxDesc"
@@ -23,9 +27,9 @@
       :mobile-variant="isMobileVariant"
       :show-edit="canEdit"
       @edit="openEditor"
-      @roll-stat="rollD20Plus(`${displayTitle} — проверка`, mod)"
-      @roll-save="rollD20Plus(`${displayTitle} — спасбросок`, save)"
-      @roll-skill="id => rollD20Plus(skillTitle(id), skillBonus(id))"
+      @roll-stat="rollD20Plus(`${displayTitle} — проверка`, mod, checkRollMode)"
+      @roll-save="rollD20Plus(`${displayTitle} — спасбросок`, save, saveRollMode)"
+      @roll-skill="id => rollD20Plus(skillTitle(id), skillBonus(id), skillRollMode(id))"
     />
   </BaseTile>
 
@@ -51,13 +55,17 @@
         :save="save"
         :save-up="!!statData.save_up"
         :skills="skillsView"
+        :check-mode="checkRollMode"
+        :check-mode-source="checkAutoSource"
+        :save-mode="saveRollMode"
+        :save-mode-source="saveAutoSource"
         :skills-loading="skillsLoading"
         :skill-skeleton-count="skillSkeletonCount"
         :tooltip-max-desc="skillTooltipMaxDesc"
         :tooltip-width="skillTooltipWidth"
-        @roll-stat="rollD20Plus(`${displayTitle} — проверка`, mod)"
-        @roll-save="rollD20Plus(`${displayTitle} — спасбросок`, save)"
-        @roll-skill="id => rollD20Plus(skillTitle(id), skillBonus(id))"
+        @roll-stat="rollD20Plus(`${displayTitle} — проверка`, mod, checkRollMode)"
+        @roll-save="rollD20Plus(`${displayTitle} — спасбросок`, save, saveRollMode)"
+        @roll-skill="id => rollD20Plus(skillTitle(id), skillBonus(id), skillRollMode(id))"
       />
     </template>
 
@@ -69,9 +77,17 @@
         :save-bonuses="statData.save_bonuses || []"
         :skills="skillsView"
         :allow-add-skills="!!block.content.allow_add_skills"
+        :check-roll-mode="statData.check_roll_mode || 'auto'"
+        :check-auto-mode="checkAutoMode"
+        :check-auto-source="checkAutoSource"
+        :save-roll-mode="statData.save_roll_mode || 'auto'"
+        :save-auto-mode="saveAutoMode"
+        :save-auto-source="saveAutoSource"
         @update-base="onBaseChange"
         @toggle-save="pickSave"
         @update-save-bonuses="onSaveBonusesChange"
+        @update-check-roll-mode="value => setRollMode('check_roll_mode', value)"
+        @update-save-roll-mode="value => setRollMode('save_roll_mode', value)"
         @open-skill="onOpenSkill"
         @delete-skill="deleteSkill"
         @add-skill="addSkill"
@@ -85,6 +101,8 @@
         :skill="editSkill"
         :mod="mod"
         :prof-bonus="profBonus"
+        :auto-mode="skillAutoMode(editSkillId)"
+        :auto-source="skillAutoSource(editSkillId)"
         @change="onSkillChange"
         @back="nav.backToDetail"
       />
@@ -94,7 +112,8 @@
 
 <script setup>
 import { computed, inject, onMounted, ref, watch } from 'vue'
-import { abilityModifier, d20Expr, sumBonuses } from '@/shared/lib/dnd'
+import { abilityModifier, sumBonuses } from '@/shared/lib/dnd'
+import { armorRollMode } from '@/features/character-editor/blocks/dnd/lib/equippedArmor'
 import { BaseTile } from '@sylvieshare/share-ui'
 import DndStatEditor from '@/features/character-editor/blocks/dnd/components/DndStatEditor'
 import DndStatSkillEditor from '@/features/character-editor/blocks/dnd/components/DndStatSkillEditor'
@@ -198,6 +217,7 @@ const skillsMap = computed(() => {
       up: Number(data?.up) || 0,
       override_title: data?.override_title || '',
       bonuses: Array.isArray(data?.bonuses) ? data.bonuses : [],
+      roll_mode: data?.roll_mode || 'auto',
     },
   ]))
 })
@@ -215,17 +235,34 @@ const skillsList = computed(() => {
         title: saved.override_title || suggest?.value || id,
         desc: suggest?.desc || '',
         custom: !baseSkillIds.value.includes(id),
+        roll_mode: saved.roll_mode || 'auto',
       }
     })
     .filter(skill => suggestById.value[skill.id] || skillsMap.value[skill.id])
 })
 
 // View list with precomputed bonus (consumed by DndStatView and DndStatEditor)
-const skillsView = computed(() => skillsList.value.map(s => ({ ...s, bonus: skillBonus(s.id) })))
+const skillsView = computed(() => skillsList.value.map(s => ({
+  ...s,
+  bonus: skillBonus(s.id),
+  rollMode: skillRollMode(s.id),
+  rollModeSource: skillAutoSource(s.id),
+})))
 
 const skillTooltipMaxDesc = computed(() => Number(props.block.content.skill_tooltip_max_desc ?? 0))
 const skillTooltipWidth = computed(() => Number(props.block.content.skill_tooltip_width ?? 420))
 const isMobileVariant = computed(() => (props.block.props?.variant || props.block.content?.variant) === 'mobile')
+const armorState = computed(() => charCtx.characterArmor?.state || {})
+const armorAffectsStat = computed(() => ['1', '2'].includes(String(titleSuggestId.value)) && !!armorState.value.strengthDexDisadvantage)
+const checkAutoMode = computed(() => armorAffectsStat.value ? 'disadvantage' : 'normal')
+const saveAutoMode = computed(() => armorAffectsStat.value ? 'disadvantage' : 'normal')
+const armorSource = computed(() => armorState.value.nonproficient?.length
+  ? `Нет владения: ${armorState.value.nonproficient.map(row => row.name).join(', ')}`
+  : '')
+const checkAutoSource = computed(() => armorAffectsStat.value ? armorSource.value : '')
+const saveAutoSource = computed(() => armorAffectsStat.value ? armorSource.value : '')
+const checkRollMode = computed(() => armorRollMode(statData.value.check_roll_mode, checkAutoMode.value === 'disadvantage'))
+const saveRollMode = computed(() => armorRollMode(statData.value.save_roll_mode, saveAutoMode.value === 'disadvantage'))
 
 const editSkill = computed(() => {
   if (editSkillId.value == null) return null
@@ -243,6 +280,25 @@ function skillBonus(id) {
   return mod.value + (skill.up || 0) * profBonus.value + extra
 }
 
+function skillAutoMode(id) {
+  return armorAffectsStat.value || (String(id) === '4' && armorState.value.stealthDisadvantage)
+    ? 'disadvantage'
+    : 'normal'
+}
+
+function skillAutoSource(id) {
+  const sources = []
+  if (armorAffectsStat.value && armorSource.value) sources.push(armorSource.value)
+  if (String(id) === '4' && armorState.value.stealthDisadvantage && armorState.value.body?.name) {
+    sources.push(`${armorState.value.body.name}: помеха Скрытности`)
+  }
+  return [...new Set(sources)].join(' · ')
+}
+
+function skillRollMode(id) {
+  return armorRollMode(skillsMap.value[String(id)]?.roll_mode, skillAutoMode(id) === 'disadvantage')
+}
+
 function emitValue(patch) {
   emit('update:value', props.block.id, { ...statData.value, mod: mod.value, ...patch })
 }
@@ -258,6 +314,7 @@ function emitSkills(skills) { emitValue({ skills }) }
 function pickSave() { emitValue({ save_up: !statData.value.save_up }) }
 function onBaseChange(data) { emitValue({ value: data }) }
 function onSaveBonusesChange(b) { emitValue({ save_bonuses: b }) }
+function setRollMode(field, value) { emitValue({ [field]: value }) }
 
 function deleteSkill(id) {
   const newMap = { ...skillsMap.value }
@@ -278,7 +335,7 @@ function onSkillChange(data) {
   const id = editSkillId.value
   if (id == null) return
   const existing = skillsMap.value[id] || { up: 0 }
-  const updated = { ...existing, up: data.up, bonuses: data.bonuses }
+  const updated = { ...existing, up: data.up, bonuses: data.bonuses, roll_mode: data.roll_mode || 'auto' }
   if (data.override_title) updated.override_title = data.override_title
   else delete updated.override_title
   emitSkills({ ...skillsMap.value, [id]: updated })
@@ -303,9 +360,8 @@ function closeEditor() {
 
 // ─── Dice ──────────────────────────────────────────────────────────────────────
 const diceStore = useDiceStore()
-function rollD20Plus(title, bonus) {
-  const expr = d20Expr(bonus)
-  diceStore.roll(title, expr, { crit_mode: true, color: statColor.value })
+function rollD20Plus(title, bonus, mode = 'normal') {
+  diceStore.rollD20(title, bonus, mode, { crit_mode: true, color: statColor.value })
 }
 
 // ─── Watches ─────────────────────────────────────────────────────────────────

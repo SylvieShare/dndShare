@@ -21,7 +21,7 @@ import { addStartingCoins } from './backgroundEquipment.js'
 import { applyGrants, extractGrants } from './grants.js'
 import { featureIdsForBinding } from './progression.js'
 import { mergeEquipment } from './startingEquipment.js'
-import { armorRuleForEquipment, isArmorEquipment } from './armorRules.js'
+import { isArmorEquipment } from './armorRules.js'
 import { abilitySpellGrantRows, syncAbilityGrantedSpells } from '../../../blocks/dnd/lib/abilitySpellGrants.js'
 
 const STATS = STAT_KEYS
@@ -293,32 +293,6 @@ export function buildCharacterData(input) {
         items: inventory.map((entry, i) => ownedEntry(entry, i, 'eq')),
       }] : [],
     }
-  }
-
-  if (equippedArmor.length) {
-    const rules = equippedArmor.map((entry) => ({ entry, rule: armorRuleForEquipment(entry) }))
-    const body = rules.find(({ rule }) => rule && !rule.shield)
-    const shield = rules.find(({ rule }) => rule?.shield)
-    const armor = { ...(values.armor || {}), bonuses: [] }
-    if (body) {
-      armor.ac = 10
-      armor.use_dex = body.rule.use_dex !== false
-      if (body.rule.dex_cap != null) armor.dex_cap = Number(body.rule.dex_cap)
-      else delete armor.dex_cap
-      armor.bonuses.push({
-        name: `Экипировано: ${body.entry.name}`,
-        title: body.entry.name,
-        value: Math.max(0, Number(body.rule.ac) - 10),
-        readonly: true,
-      })
-    }
-    if (shield) {
-      armor.shield = true
-      armor.shield_bonus = Number(shield.rule.shield_bonus) || 2
-      armor.shield_source = shield.entry.name
-      armor.shield_readonly = true
-    }
-    values.armor = armor
   }
 
   // Personality / description → the person_* sheet blocks. Rich-text fields are

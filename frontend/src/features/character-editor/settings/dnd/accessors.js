@@ -70,11 +70,11 @@ export const dndAccessors = {
   ac(data) {
     const armor = data?.values?.armor
     if (!armor || typeof armor !== 'object') return null
-    const base = Number(armor.ac) || 0
-    const shield = armor.shield ? (Number(armor.shield_bonus) || 0) : 0
-    const dexMod = armor.use_dex ? (abilityModByPath(data?.values, 'values.DEX.mod') || 0) : 0
-    const dex = armor.dex_cap == null ? dexMod : Math.min(dexMod, Number(armor.dex_cap))
-    return base + shield + dex + sumBonuses(armor.bonuses)
+    // Compact consumers do not hydrate handbook items. They can always show
+    // the canonical unarmored value; the full sheet and print view replace it
+    // with the equipped-item calculation once the catalogue rows are loaded.
+    const dex = abilityModByPath(data?.values, 'values.DEX.mod') || 0
+    return 10 + dex + sumBonuses(armor.bonuses)
   },
 
   initiativeBonus(data) {

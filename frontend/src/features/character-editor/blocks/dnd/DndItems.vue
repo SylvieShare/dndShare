@@ -89,9 +89,16 @@
                         <span class="di-count-x">x</span>{{ entry.count }}
                       </span>
                     </span>
-                    <span v-if="isToolEntry(entry) || entryHasProficiency(entry)" class="di-item-meta">
+                    <span v-if="isToolEntry(entry) || entryHasProficiency(entry) || armorMeta(entry)" class="di-item-meta">
                       <span v-if="isToolEntry(entry)">{{ toolCategoryLabel(entry) }}</span>
                       <span v-if="entryHasProficiency(entry)" class="di-item-proficient">Владение</span>
+                      <template v-if="armorMeta(entry)">
+                        <span :class="armorMeta(entry).active ? 'di-item-armor' : 'di-item-muted'">
+                          {{ armorMeta(entry).active ? (armorMeta(entry).shield ? `Щит +${armorMeta(entry).value} КД` : `КД ${armorMeta(entry).value}`) : 'Не учитывается в КД' }}
+                        </span>
+                        <span v-if="!armorMeta(entry).proficient" class="di-item-danger">Нет владения</span>
+                        <span v-if="armorMeta(entry).stealthDisadvantage" class="di-item-danger">Помеха Скрытности</span>
+                      </template>
                     </span>
                   </span>
                 </div>
@@ -317,6 +324,11 @@ function isToolEntry(entry) {
 
 function entryHasProficiency(entry) {
   return hasItemProficiency(entry.display?.base, charCtx.values, (typeId) => suggestStore.items(typeId))
+}
+
+function armorMeta(entry) {
+  if (entryTypeId(entry) !== 12) return null
+  return charCtx.characterArmor?.state?.byUid?.[String(entry.uid)] || null
 }
 
 function toolCategoryLabel(entry) {

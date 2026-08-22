@@ -40,4 +40,21 @@ describe('dice roll presentation metadata', () => {
       actor: { name: 'Гоблин', charUuid: null },
     }))
   })
+
+  it('keeps the correct d20 for advantage and ignores the discarded natural result', () => {
+    const random = vi.spyOn(Math, 'random')
+      .mockReturnValueOnce(0)
+      .mockReturnValueOnce(0.99)
+    const store = useDiceStore()
+    const result = store.rollD20('Проверка', 3, 'advantage', { crit_mode: true, log: false })
+
+    expect(result.parts[0].rolls).toEqual([1, 20])
+    expect(result.parts[0].keptIndex).toBe(1)
+    expect(result.parts[0].dropped).toEqual([0])
+    expect(result.total).toBe(23)
+    expect(result.rollMode).toBe('advantage')
+    expect(store.stack[0].outcome).toEqual({ kind: 'crit', sides: 20, value: 20 })
+    random.mockRestore()
+    store.clear()
+  })
 })

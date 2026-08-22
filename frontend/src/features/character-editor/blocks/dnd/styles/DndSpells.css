@@ -2,6 +2,8 @@
   min-width: 0;
   color: var(--text-1);
 }
+.sp-armor-warning { display: flex; flex-direction: column; gap: 3px; margin-bottom: 12px; padding: 10px 12px; border: 1px solid color-mix(in srgb, var(--danger) 50%, var(--border)); border-radius: 10px; background: color-mix(in srgb, var(--danger) 9%, transparent); color: var(--text-2); font-size: 12px; line-height: 1.4; }
+.sp-armor-warning strong { color: var(--danger); }
 
 .sg-lvl {
   display: block;

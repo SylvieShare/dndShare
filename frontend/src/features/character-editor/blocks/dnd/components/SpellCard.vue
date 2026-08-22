@@ -126,7 +126,7 @@
         :disabled="!canUse"
         @click="useWithoutChoice(close)"
       >
-        {{ canUse ? 'Использовать' : 'Нет доступных ячеек' }}
+        {{ useLabel }}
       </RowActionItem>
       <RowActionItem
         v-if="ctx.charCtx.ownerMode && !isReadonlyGrant"
@@ -203,7 +203,8 @@ const saveTag = computed(() => {
 })
 const instances = computed(() => Number(dmg.value.instances) || 1)
 const slotOptions = computed(() => ctx.availableSpellSlotLevels(props.entry))
-const canUse = computed(() => !!props.entry.item && (baseLvl.value === 0 || slotOptions.value.length > 0))
+const canUse = computed(() => !ctx.spellcastingBlocked && !!props.entry.item && (baseLvl.value === 0 || slotOptions.value.length > 0))
+const useLabel = computed(() => ctx.spellcastingBlocked ? 'Запрещено доспехом' : (canUse.value ? 'Использовать' : 'Нет доступных ячеек'))
 const hasHigherLevelChoice = computed(() =>
   slotOptions.value.some(level => level > baseLvl.value)
 )

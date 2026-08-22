@@ -1,6 +1,11 @@
 <template>
   <div v-show="!blockHidden" class="spells-block">
 
+    <div v-if="spellcastingBlocked" class="sp-armor-warning" role="status">
+      <strong>Сотворение заклинаний недоступно</strong>
+      <span>Нет владения экипировкой: {{ armorState.nonproficient.map(row => row.name).join(', ') }}.</span>
+    </div>
+
     <SpellSlotsBar
       v-if="showStatsBar"
       :has-stat-config="hasStatConfig"
@@ -165,6 +170,8 @@ const blockHidden  = computed(() =>
   props.block.hide_on_empty && !charCtx.ownerMode && !canAddItems.value && spells.value.length === 0
 )
 const showStatsBar = computed(() => hasStatConfig.value || canInteract.value || activeSlots.value.length > 0)
+const armorState = computed(() => charCtx.characterArmor?.state || {})
+const spellcastingBlocked = computed(() => !!armorState.value.castingBlocked)
 
 const schoolMap = computed(() => {
   const id = props.block.content?.school_suggest_id
@@ -398,6 +405,7 @@ function diceExpr(parts, withType) {
 }
 
 function rollSpellAttack(entry) {
+  if (spellcastingBlocked.value) return
   const bonus = spellAttackBonus(entry)
   dice.roll(`Атака: ${spellTitle(entry)}`, `1d20${bonus >= 0 ? '+' : ''}${bonus}`, { crit_mode: true })
 }
@@ -410,11 +418,13 @@ function exprWithBonus(parts, withType) {
 }
 
 function rollSpellDamage(entry, castLevel) {
+  if (spellcastingBlocked.value) return
   const expr = exprWithBonus(damageDiceParts(entry.item, castLevel, charLevel.value), true)
   if (expr) dice.roll(`Урон: ${spellTitle(entry)}`, expr)
 }
 
 function rollSpellHeal(entry, castLevel) {
+  if (spellcastingBlocked.value) return
   const expr = exprWithBonus(healDiceParts(entry.item, castLevel, charLevel.value), false)
   if (expr) dice.roll(`Лечение: ${spellTitle(entry)}`, expr)
 }
@@ -431,7 +441,7 @@ function slotRemaining(level) {
 }
 
 function useSpell(entry, slotLevel) {
-  if (!entry?.item) return
+  if (!entry?.item || spellcastingBlocked.value) return
   const spellLevel = Number(entry?.item?.data?.lvl) || 0
   if (spellLevel > 0 && !entry.ref?.slotless) {
     const available = availableSpellSlotLevels(entry)
@@ -528,6 +538,7 @@ provide('spellsBlockCtx', reactive({
   availableSpellSlotLevels,
   slotRemaining,
   useSpell,
+  spellcastingBlocked,
 }))
 
 // ─── Lifecycle ─────────────────────────────────────

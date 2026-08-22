@@ -82,8 +82,8 @@ describe('character resource sources', () => {
     const result = collectCharacterResources(values, items, sources)
     expect(result).toHaveLength(3)
     expect(result[0]).toMatchObject({ title: 'Удача', readonly: false, value: 1, total: 3 })
-    expect(result[1]).toMatchObject({ title: 'Дыхание дракона', source_label: 'Дыхание дракона', readonly: true, value: 2, total: 4, short_rest: true })
-    expect(result[2]).toMatchObject({ title: 'Второе дыхание', source_label: 'Второе дыхание', readonly: true, value: 0, total: 2, long_rest: true })
+    expect(result[1]).toMatchObject({ title: 'Дыхание дракона', source_label: 'способности', readonly: true, value: 2, total: 4, short_rest: true })
+    expect(result[2]).toMatchObject({ title: 'Второе дыхание', source_label: 'способности', readonly: true, value: 0, total: 2, long_rest: true })
   })
 
   it('uses configured colors and gives unconfigured abilities stable varied colors', () => {
@@ -107,7 +107,7 @@ describe('character resource sources', () => {
   it('exposes independent level-gated resources and persists each counter separately', () => {
     const multiValues = { ...values, abilities_race: [{ id: 30 }] }
     const result = collectCharacterResources(multiValues, items, sources)
-      .filter((resource) => resource.source_label === 'Дроуская магия')
+      .filter((resource) => resource.key.startsWith('abilities:abilities_race:30:'))
     expect(result.map((resource) => resource.title)).toEqual(['Огненные феи', 'Тьма'])
 
     const patch = setCharacterResourceAvailable(
@@ -131,7 +131,7 @@ describe('character resource sources', () => {
       abilities_race: [{ id: 30 }],
     }
     expect(collectCharacterResources(lowLevel, items, sources)
-      .filter((resource) => resource.source_label === 'Дроуская магия')
+      .filter((resource) => resource.key.startsWith('abilities:abilities_race:30:'))
       .map((resource) => resource.title)).toEqual(['Огненные феи'])
   })
 

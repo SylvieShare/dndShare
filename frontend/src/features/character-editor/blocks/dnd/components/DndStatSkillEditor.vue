@@ -44,6 +44,10 @@
       <BonusList :bonuses="local.bonuses" @update:bonuses="update('bonuses', $event)" />
     </EditorSection>
 
+    <EditorSection title="Режим броска">
+      <RollModeControl :model-value="local.roll_mode" :auto-mode="autoMode" :source="autoSource" :label="`Режим проверки: ${skill.title}`" @update:model-value="update('roll_mode', $event)" />
+    </EditorSection>
+
     <EditorTotal>Итого: <strong>{{ signed(total) }}</strong></EditorTotal>
   </EditorPanel>
 </template>
@@ -55,11 +59,14 @@ import BonusList from '@/shared/ui/BonusList'
 import { EditorPanel } from '@sylvieshare/share-ui'
 import { EditorSection } from '@sylvieshare/share-ui'
 import { EditorTotal } from '@sylvieshare/share-ui'
+import RollModeControl from '@/features/character-editor/blocks/dnd/components/RollModeControl.vue'
 
 const props = defineProps({
   skill: { type: Object, required: true },
   mod: { type: Number, default: 0 },
   profBonus: { type: Number, default: 2 },
+  autoMode: { type: String, default: 'normal' },
+  autoSource: { type: String, default: '' },
 })
 const emit = defineEmits(['change', 'back'])
 
@@ -67,6 +74,7 @@ const local = reactive({
   up: props.skill.up || 0,
   override_title: props.skill.override_title || '',
   bonuses: [...(props.skill.bonuses || [])],
+  roll_mode: props.skill.roll_mode || 'auto',
 })
 
 // rename: pencil → input; Enter blurs; empty + blur removes the override
@@ -92,7 +100,7 @@ const total = computed(() => {
 
 function update(field, value) {
   local[field] = value
-  emit('change', { up: local.up, override_title: local.override_title, bonuses: local.bonuses })
+  emit('change', { up: local.up, override_title: local.override_title, bonuses: local.bonuses, roll_mode: local.roll_mode })
 }
 </script>
 

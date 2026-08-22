@@ -1,5 +1,8 @@
 ﻿<template>
   <div class="weapons-block">
+    <div v-if="armorAttackWarning" class="w-armor-warning">
+      Атаки Силой и Ловкостью совершаются с помехой: нет владения {{ armorState.nonproficient.map(row => `«${row.name}»`).join(', ') }}.
+    </div>
     <BaseTile v-if="entries.length === 0 && !canAddItems" class="w-empty">Нет записей</BaseTile>
 
     <div v-else-if="variant === 'list'" class="w-list" data-sortable-container="weapons">
@@ -109,7 +112,7 @@ import { useDiceStore } from '@/stores/dice'
 import { useSuggestStore } from '@/stores/suggest'
 import { SYSTEM_DICE } from '@/shared/lib/systemDice'
 import { logSessionEntryAdded } from '@/features/character-editor/lib/sessionEntryEvents'
-import { abilityModifiersBySuggest } from '@/features/character-editor/blocks/dnd/lib/weaponAbility'
+import { abilityModifiersBySuggest, weaponAbilitySuggestId } from '@/features/character-editor/blocks/dnd/lib/weaponAbility'
 import { hasItemProficiency } from '@/features/character-editor/lib/itemProficiency'
 import {
   appendInventoryEntry,
@@ -208,13 +211,16 @@ const {
 const modalItem   = computed(() => modalItemId.value != null ? itemMap.value[modalItemId.value] || null : null)
 const variant     = computed(() => props.block.props?.variant || props.block.content?.variant || 'list')
 const canAddItems = computed(() => !!charCtx.ownerMode)
+const armorState = computed(() => charCtx.characterArmor?.state || {})
+const armorAttackWarning = computed(() => !!armorState.value.strengthDexDisadvantage)
 
 const dice = useDiceStore()
 
 function rollAttack(entry) {
   const bonus = attackBonus(entry)
-  const expr = `1d20${bonus >= 0 ? '+' : ''}${bonus}`
-  dice.roll(`Атака: ${itemTitle(entry)}`, expr, { crit_mode: true })
+  const abilityId = weaponAbilitySuggestId(entry, item(entry), propertyItems(entry), statsVar.value)
+  const mode = armorAttackWarning.value && ['1', '2'].includes(String(abilityId)) ? 'disadvantage' : 'normal'
+  dice.rollD20(`Атака: ${itemTitle(entry)}`, bonus, mode, { crit_mode: true })
 }
 
 function rollDamage(entry) {
@@ -415,6 +421,7 @@ onMounted(() => {
   min-width: 0;
   color: var(--text-1);
 }
+.w-armor-warning { margin-bottom: 12px; padding: 9px 11px; border: 1px solid color-mix(in srgb, var(--danger) 50%, var(--border)); border-radius: 9px; background: color-mix(in srgb, var(--danger) 9%, transparent); color: var(--text-2); font-size: 11px; line-height: 1.45; }
 
 .w-list {
   display: flex;

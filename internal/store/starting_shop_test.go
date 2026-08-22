@@ -9,17 +9,18 @@ import (
 )
 
 func TestToolProficiencyCatalogIsEmbeddedAfterItemTypeHierarchy(t *testing.T) {
-	if len(schemaParts) < 8 {
+	if len(schemaParts) < 9 {
 		t.Fatal("schemaParts must contain the final item catalogue sections")
 	}
-	hierarchy := schemaParts[len(schemaParts)-8]
-	tools := schemaParts[len(schemaParts)-7]
-	resources := schemaParts[len(schemaParts)-6]
-	classTools := schemaParts[len(schemaParts)-5]
-	resourceFixes := schemaParts[len(schemaParts)-4]
-	resourceAudit := schemaParts[len(schemaParts)-3]
-	resourceColors := schemaParts[len(schemaParts)-2]
-	spellGrants := schemaParts[len(schemaParts)-1]
+	hierarchy := schemaParts[len(schemaParts)-9]
+	tools := schemaParts[len(schemaParts)-8]
+	resources := schemaParts[len(schemaParts)-7]
+	classTools := schemaParts[len(schemaParts)-6]
+	resourceFixes := schemaParts[len(schemaParts)-5]
+	resourceAudit := schemaParts[len(schemaParts)-4]
+	resourceColors := schemaParts[len(schemaParts)-3]
+	spellGrants := schemaParts[len(schemaParts)-2]
+	equippedArmor := schemaParts[len(schemaParts)-1]
 	if hierarchy.name != "item-type-hierarchy" || hierarchy.sql == "" || hierarchy.sql != schemaItemTypeHierarchySQL {
 		t.Fatal("item-type-hierarchy schema must be embedded after the equipment catalogues")
 	}
@@ -43,6 +44,9 @@ func TestToolProficiencyCatalogIsEmbeddedAfterItemTypeHierarchy(t *testing.T) {
 	}
 	if spellGrants.name != "ability-spell-grants" || spellGrants.sql == "" || spellGrants.sql != schemaAbilitySpellGrantsSQL {
 		t.Fatal("ability spell grants must be embedded after the ability catalogue")
+	}
+	if equippedArmor.name != "equipped-armor" || equippedArmor.sql == "" || equippedArmor.sql != schemaEquippedArmorSQL {
+		t.Fatal("equipped armor schema must be embedded after the item and ability catalogues")
 	}
 }
 

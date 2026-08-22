@@ -165,6 +165,9 @@
 }
 .di-item-meta > span + span::before { margin-right: 7px; color: var(--border-strong); content: '·'; }
 .di-item-proficient { color: var(--success); font-weight: 700; }
+.di-item-armor { color: var(--accent); font-weight: 700; }
+.di-item-muted { color: var(--text-muted); }
+.di-item-danger { color: var(--danger); font-weight: 700; }
 .di-row-name:hover .di-row-name-text { color: var(--accent); }
 .di-row-name-editable { text-decoration: underline dotted color-mix(in srgb, var(--text-muted) 55%, transparent); text-underline-offset: 3px; }
 

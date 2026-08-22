@@ -115,9 +115,14 @@ The current shape under `data.values` is:
 - identity: `name`, `race/subrace {id,name}`, `classes
   [{id,name,level,subclass}]`, `ava {url,upload_id?}`;
 - level: `lvl {level,exp}`;
-- ability: `STR..CHA {value:{base,bonuses},save_up,save_bonuses,skills}`;
-- armor: `{ac,use_dex,dex_cap?,bonuses,shield,shield_bonus}`; rule-derived
-  bonuses carry `readonly` and a source key;
+- ability: `STR..CHA {value:{base,bonuses},save_up,save_bonuses,
+  check_roll_mode?,save_roll_mode?,skills}`; навык может хранить `roll_mode`.
+  Отсутствующий режим или `auto` использует эффекты экипировки, остальные
+  значения (`normal`, `advantage`, `disadvantage`) являются явным
+  переопределением;
+- armor: `{bonuses}` хранит только дополнительные ручные бонусы. Базовый КД,
+  Ловкость, щит, помеха Скрытности и владение вычисляются из каталожных
+  доспехов в `items.equipped` и не копируются в персонажа;
 - numeric tile with bonuses: `speed {base,bonuses}` and `initiative
   {base,bonuses,use_dex}`;
 - HP: `{current,max,temp,ds_success,ds_failure,hitDice:[{die,total,used}]}`;
@@ -225,8 +230,8 @@ such as charged magic items, can join the aggregate by registering another
 source adapter without changing the resources or rest blocks. Contributed rows
 are visible and usable in the shared resources tile, but read-only in its
 editor because their title, maximum and rest rules belong to the source item.
-Every read-only editor row names that handbook item explicitly as its source;
-it never substitutes a generic configuration hint for the source name.
+Every read-only editor row uses the stable label `Источник: способности`;
+the resource title already carries the exact handbook item name.
 Ability rules can derive the maximum from a live ability modifier, a class-level
 multiplier or `scaling[].uses`; `use_resources` contributes several independent
 rows. Level-gated short-rest recovery and partial recovery use the same source

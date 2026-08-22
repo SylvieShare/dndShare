@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { rollDiceExpression } from '@/shared/lib/dice'
+import { evaluateDiceParts, rollDiceExpression } from '@/shared/lib/dice'
 import { useSessionEventsStore } from '@/stores/sessionEvents'
 
 const AUTO_DISMISS_MS = 6000
@@ -10,7 +10,8 @@ function detectOutcome(result) {
   let fumble = null
   for (const p of result.parts) {
     if (p.kind !== 'dice') continue
-    for (const r of p.rolls) {
+    const rolls = p.keptIndex == null ? p.rolls : [p.rolls[p.keptIndex]]
+    for (const r of rolls) {
       if (r === p.sides) return { kind: 'crit', sides: p.sides, value: r }
       if (r === 1 && !fumble) fumble = { kind: 'fumble', sides: p.sides, value: r }
     }
@@ -92,11 +93,35 @@ export const useDiceStore = defineStore('dice', () => {
     })
   }
 
+  function rollD20(action, bonus = 0, mode = 'normal', opts = {}) {
+    const normalizedMode = ['advantage', 'disadvantage'].includes(mode) ? mode : 'normal'
+    const modifier = Number(bonus) || 0
+    const expression = `${normalizedMode === 'normal' ? 1 : 2}d20${modifier >= 0 ? '+' : ''}${modifier}`
+    const result = rollDiceExpression(expression)
+    if (normalizedMode !== 'normal') {
+      const part = result.parts.find(row => row.kind === 'dice' && row.sides === 20)
+      if (part?.rolls?.length >= 2) {
+        const target = normalizedMode === 'advantage' ? Math.max(...part.rolls) : Math.min(...part.rolls)
+        part.keptIndex = part.rolls.indexOf(target)
+        part.dropped = part.rolls.map((_, index) => index).filter(index => index !== part.keptIndex)
+        part.sum = target
+        result.total = evaluateDiceParts(result.parts).total
+        result.byType = [{ label: null, color: null, value: result.total }]
+      }
+    }
+    result.rollMode = normalizedMode
+    const outcome = opts.crit_mode ? detectOutcome(result) : null
+    return pushEntry({
+      action, actor: opts.actor, result, outcome, color: opts.color,
+      popup: opts.popup, log: opts.log, duration: opts.duration,
+    })
+  }
+
   function clear() {
     for (const t of timers.values()) clearTimeout(t)
     timers.clear()
     stack.value = []
   }
 
-  return { stack, roll, pushEntry, dismiss, clear }
+  return { stack, roll, rollD20, pushEntry, dismiss, clear }
 })

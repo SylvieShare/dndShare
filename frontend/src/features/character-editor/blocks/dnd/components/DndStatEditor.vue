@@ -8,6 +8,16 @@
       <BonusList :bonuses="baseData.bonuses || []" @update:bonuses="setBaseBonuses" />
     </EditorSection>
 
+    <EditorSection title="Проверка характеристики">
+      <RollModeControl
+        :model-value="checkRollMode"
+        :auto-mode="checkAutoMode"
+        :source="checkAutoSource"
+        label="Режим проверки характеристики"
+        @update:model-value="$emit('update-check-roll-mode', $event)"
+      />
+    </EditorSection>
+
     <!-- ── Спасбросок ── -->
     <EditorSection title="Спасбросок">
       <button class="se-prof-toggle" :class="{ 'se-prof-on': saveUp }" type="button" @click="$emit('toggle-save')">
@@ -16,6 +26,13 @@
         <span class="se-prof-badge">{{ saveUp ? 'Есть' : 'Нет' }}</span>
       </button>
       <BonusList :bonuses="saveBonuses || []" @update:bonuses="$emit('update-save-bonuses', $event)" />
+      <RollModeControl
+        :model-value="saveRollMode"
+        :auto-mode="saveAutoMode"
+        :source="saveAutoSource"
+        label="Режим спасброска"
+        @update:model-value="$emit('update-save-roll-mode', $event)"
+      />
     </EditorSection>
 
     <!-- ── Навыки ── -->
@@ -29,6 +46,7 @@
       >
         <span class="se-skill-name">{{ skill.title }}</span>
         <span class="se-skill-prof" :class="`se-skill-prof--${skill.up}`">{{ profLabel(skill.up) }}</span>
+        <RollModeBadge :mode="skill.rollMode" :source="skill.rollModeSource" />
         <span class="se-skill-chip">{{ signed(skill.bonus) }}</span>
         <span
           v-if="skill.custom"
@@ -70,6 +88,8 @@ import { EditorPanel } from '@sylvieshare/share-ui'
 import { EditorSection } from '@sylvieshare/share-ui'
 import { FormField } from '@sylvieshare/share-ui'
 import { FormNumberInput } from '@sylvieshare/share-ui'
+import RollModeControl from '@/features/character-editor/blocks/dnd/components/RollModeControl.vue'
+import RollModeBadge from '@/features/character-editor/blocks/dnd/components/RollModeBadge.vue'
 
 const props = defineProps({
   title: { type: String, default: '' },
@@ -78,8 +98,14 @@ const props = defineProps({
   saveBonuses: { type: Array, default: () => [] },
   skills: { type: Array, default: () => [] },
   allowAddSkills: { type: Boolean, default: false },
+  checkRollMode: { type: String, default: 'auto' },
+  checkAutoMode: { type: String, default: 'normal' },
+  checkAutoSource: { type: String, default: '' },
+  saveRollMode: { type: String, default: 'auto' },
+  saveAutoMode: { type: String, default: 'normal' },
+  saveAutoSource: { type: String, default: '' },
 })
-const emit = defineEmits(['update-base', 'toggle-save', 'update-save-bonuses', 'open-skill', 'delete-skill', 'add-skill'])
+const emit = defineEmits(['update-base', 'toggle-save', 'update-save-bonuses', 'update-check-roll-mode', 'update-save-roll-mode', 'open-skill', 'delete-skill', 'add-skill'])
 
 const newSkillName = ref('')
 const adding = ref(false)
