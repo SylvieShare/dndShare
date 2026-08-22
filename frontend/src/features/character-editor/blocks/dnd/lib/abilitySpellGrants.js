@@ -11,10 +11,27 @@ function sourceKey(source) {
   return `${source?.kind || ''}:${source?.item_id ?? ''}`
 }
 
+function choiceOption(item, choiceKey, selectedValue) {
+  const choice = itemChoices(item).find((row) => row.key === choiceKey)
+  return (choice?.options || []).find((option) => String(option.value ?? option.label) === String(selectedValue)) || null
+}
+
+function choiceCastingAbility(item, ownedEntry, choice) {
+  const fixed = number(choice.casting_ability)
+  if (fixed != null) return fixed
+  const sourceKey = choice.casting_ability_choice_key
+  const selected = sourceKey && ownedEntry?.choices?.[sourceKey]?.[0]
+  return number(choiceOption(item, sourceKey, selected)?.casting_ability)
+}
+
 export function abilitySpellGrantRows(items, values = {}) {
   const rows = []
   for (const item of items || []) {
     const data = item?.data || {}
+    const ownedEntry = ['abilities_race', 'abilities_class', 'abilities_feats']
+      .flatMap((key) => Array.isArray(values?.[key]) ? values[key] : [])
+      .find((entry) => String(entry?.id) === String(item.id))
+    if (ownedEntry?.requirements_met === false) continue
     const ownerLevel = abilityOwnerLevel(data, values)
     for (const rule of (Array.isArray(data.granted_spells) ? data.granted_spells : [])) {
       const spellId = number(rule?.spell?.id ?? rule?.spell)
@@ -36,16 +53,13 @@ export function abilitySpellGrantRows(items, values = {}) {
         },
       })
     }
-    const ownedEntry = ['abilities_race', 'abilities_class', 'abilities_feats']
-      .flatMap((key) => Array.isArray(values?.[key]) ? values[key] : [])
-      .find((entry) => String(entry?.id) === String(item.id))
     for (const choice of itemChoices(item).filter((rule) => rule.grant_spells)) {
       const unlockLevel = number(choice.level) ?? number(data.level) ?? 1
       if (ownerLevel < unlockLevel) continue
       for (const selected of (Array.isArray(ownedEntry?.choices?.[choice.key]) ? ownedEntry.choices[choice.key] : [])) {
         const spellId = number(selected)
         if (spellId == null) continue
-        const castingAbility = number(choice.casting_ability)
+        const castingAbility = choiceCastingAbility(item, ownedEntry, choice)
         const castLevel = number(choice.cast_level)
         rows.push({
           spellId,

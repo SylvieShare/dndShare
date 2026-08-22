@@ -103,6 +103,7 @@
         "options": [
           { "value": "inline", "label": "Варианты ниже" },
           { "value": "suggest", "label": "Словарь" },
+          { "value": "suggest_union", "label": "Несколько словарей" },
           { "value": "item", "label": "Предметы справочника" }
         ]
       },
@@ -111,6 +112,17 @@
         "key": "from_suggest_id",
         "type": "int",
         "show_on": { "key": "source", "value": "suggest" }
+      },
+      {
+        "name": "Объединённые словари",
+        "key": "suggest_sources",
+        "type": "object_array",
+        "show_on": { "key": "source", "value": "suggest_union" },
+        "fields": [
+          { "name": "ID словаря", "key": "suggest_id", "type": "int" },
+          { "name": "Префикс", "key": "prefix", "type": "text" },
+          { "name": "Название группы", "key": "label", "type": "text" }
+        ]
       },
       {
         "name": "ID типа предметов",
@@ -124,6 +136,33 @@
         "type": "text",
         "show_on": { "key": "source", "value": "item" }
       },
+      {
+        "name": "Зависит от выбора",
+        "key": "depends_on_choice",
+        "type": "text"
+      },
+      {
+        "name": "Динамический фильтр",
+        "key": "item_filter_from_choice",
+        "type": "object",
+        "fields": [
+          { "name": "Ключ выбора", "key": "choice_key", "type": "text" },
+          { "name": "Путь поля", "key": "path", "type": "text" }
+        ]
+      },
+      {
+        "name": "Характеристика из выбора",
+        "key": "casting_ability_choice_key",
+        "type": "text"
+      },
+      {
+        "name": "Характеристика заклинаний",
+        "key": "casting_ability",
+        "type": "suggest",
+        "suggest_id": 16
+      },
+      { "name": "Без расхода ячейки", "key": "slotless", "type": "bool" },
+      { "name": "Уровень сотворения", "key": "cast_level", "type": "int" },
       {
         "name": "Не повторять вариант",
         "key": "unique_across_takes",
@@ -173,6 +212,12 @@
             "name": "Описание",
             "key": "desc",
             "type": "text"
+          },
+          {
+            "name": "Заклинательная характеристика",
+            "key": "casting_ability",
+            "type": "suggest",
+            "suggest_id": 16
           }
         ]
       }
@@ -425,6 +470,10 @@
         { "value": "speed_bonus", "label": "Бонус скорости" },
         { "value": "skill_proficiency", "label": "Владение навыком" },
         { "value": "save_proficiency", "label": "Владение спасброском" },
+        { "value": "armor_proficiency", "label": "Владение доспехом" },
+        { "value": "weapon_proficiency", "label": "Владение оружием" },
+        { "value": "tool_proficiency", "label": "Владение инструментом" },
+        { "value": "language_proficiency", "label": "Владение языком" },
         { "value": "check_bonus", "label": "Бонус проверки" },
         { "value": "skill_bonus", "label": "Бонус навыка" },
         { "value": "save_bonus", "label": "Бонус спасброска" },
@@ -440,6 +489,8 @@
       { "name": "Ключ выбора", "key": "choice_key", "type": "text" },
       { "name": "Значения выбора", "key": "choice_values", "type": "text_array" },
       { "name": "Цель берётся из выбора", "key": "target_from_choice", "type": "bool" },
+      { "name": "Цели", "key": "target_ids", "type": "text_array" },
+      { "name": "Префикс значения выбора", "key": "choice_value_prefix", "type": "text" },
       { "name": "Группа прогрессии", "key": "group", "type": "text" },
       { "name": "Множитель мастерства", "key": "proficiency_multiplier", "type": "float" },
       { "name": "Только без владения", "key": "only_without_proficiency", "type": "bool" },

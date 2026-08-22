@@ -131,11 +131,13 @@ import { useSuggestStore } from '@/stores/suggest'
 import { useMorphOrigin } from "@/features/character-editor/composables/useMorphOrigin"
 import { logSessionEntryAdded } from '@/features/character-editor/lib/sessionEntryEvents'
 import { abilityUseTotal, abilityUsesAreManual } from '@/shared/lib/dndAbilityUses'
+import { useFeatSheetRequirements } from '@/features/character-editor/composables/useFeatSheetRequirements'
 
 const props = defineProps(['block', 'value', 'values'])
 const emit = defineEmits(['update:value'])
 const charCtx = inject('charCtx', { ownerMode: false })
 const suggestStore = useSuggestStore()
+const isFeatBlock = computed(() => Number(props.block.content.item_id) === 7)
 
 const root        = ref(null)
 const catalog     = ref([])
@@ -186,7 +188,14 @@ const entries = computed(() =>
         count: s.count ?? maxUse ?? 0,
         choices: s.choices || {},
         choice_summary: itemChoiceSummary(item, s.choices || {}),
-        passive_effects: passiveEffectsFor(s),
+        passive_effects: [
+          ...(!requirementsMet(item) ? [{
+            title: 'Требования не выполнены',
+            description: 'Черта сохранена на листе, но её бонусы и другие эффекты не применяются.',
+            tone: 'danger',
+          }] : []),
+          ...passiveEffectsFor(s),
+        ],
         has_choices: actionableItemChoices(item).length > 0,
         isUserOwned: item.userId != null,
       }
@@ -218,6 +227,16 @@ const choiceExcludedChoices = computed(() => {
   return result
 })
 const choiceInitialChoices = computed(() => stored.value.find(entry => (entry.uid || String(entry.id)) === choiceEditingKey.value)?.choices || {})
+const { requirementsMet, sync: syncFeatRequirements } = useFeatSheetRequirements({
+  isFeatBlock: () => isFeatBlock.value,
+  values: () => props.values,
+  entries: () => stored.value,
+  catalog: () => catalog.value,
+  armorDictionary: () => suggestStore.items(3) || [],
+  onActivate: applyFeatStatBonuses,
+  onDeactivate: removeFeatStatBonuses,
+  onChange: emitChange,
+})
 
 function itemChoiceSummary(item, selections) {
   const labels = []
@@ -225,6 +244,10 @@ function itemChoiceSummary(item, selections) {
     for (const value of (selections[choice.key] || [])) {
       if (choice.source === 'suggest') {
         labels.push(suggestStore.items(Number(choice.from_suggest_id)).find((entry) => String(entry.id) === String(value))?.value || `#${value}`)
+      } else if (choice.source === 'suggest_union') {
+        const [prefix, id] = String(value).split(':')
+        const source = (choice.suggest_sources || []).find((entry) => String(entry.prefix) === prefix)
+        labels.push(suggestStore.items(Number(source?.suggest_id)).find((entry) => String(entry.id) === id)?.value || String(value))
       } else if (choice.source === 'item') {
         labels.push(itemName(value) || `#${value}`)
       } else {
@@ -240,6 +263,7 @@ function hydrateItemChoices() {
   for (const item of catalog.value) {
     for (const choice of itemChoices(item)) {
       if (choice.from_suggest_id != null) suggestStore.ensure(Number(choice.from_suggest_id))
+      for (const source of (choice.suggest_sources || [])) suggestStore.ensure(Number(source.suggest_id))
       if (choice.source !== 'item') continue
       for (const storedEntry of stored.value.filter((entry) => entry.id === item.id)) {
         itemIds.push(...(storedEntry?.choices?.[choice.key] || []))
@@ -320,8 +344,9 @@ function addFromCatalog(item) {
     return
   }
   const entry = featEntry(item, {}, props.values)
+  if (isFeatBlock.value && !requirementsMet(item)) entry.requirements_met = false
   emitChange([...stored.value, entry])
-  if (Number(props.block.content.item_id) === 7) {
+  if (Number(props.block.content.item_id) === 7 && entry.requirements_met !== false) {
     applyFeatStatBonuses(item, entry)
   }
   logAddedEntry(item)
@@ -355,8 +380,9 @@ function onChoicesConfirm(choices) {
     return
   }
   const entry = featEntry(item, choices, props.values)
+  if (isFeatBlock.value && !requirementsMet(item)) entry.requirements_met = false
   emitChange([...stored.value, entry])
-  if (Number(props.block.content.item_id) === 7) applyFeatStatBonuses(item, entry)
+  if (Number(props.block.content.item_id) === 7 && entry.requirements_met !== false) applyFeatStatBonuses(item, entry)
   const selectedItemIds = actionableItemChoices(item)
     .filter((choice) => choice.source === 'item')
     .flatMap((choice) => choices[choice.key] || [])
@@ -427,6 +453,7 @@ function onFormSaved(item) {
 }
 
 onMounted(async () => {
+  if (isFeatBlock.value) suggestStore.ensure(3)
   if (stored.value.length > 0) {
     const ids = stored.value.map(s => s.id)
     try {
@@ -435,10 +462,12 @@ onMounted(async () => {
         : await itemsApi.byIds(ids)
       catalog.value = r.items || []
       hydrateItemChoices()
+      syncFeatRequirements()
     } catch (e) { /* show what we have */ }
   }
   loading.value = false
 })
+
 </script>
 
 <style scoped>

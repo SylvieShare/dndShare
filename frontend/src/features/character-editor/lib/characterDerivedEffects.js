@@ -1,6 +1,7 @@
 import { abilityModifier, proficiencyBonus, resolveNumValue, sumBonuses } from '@/shared/lib/dnd'
 import { abilityOwnerLevel } from '@/shared/lib/dndAbilityUses'
 import { SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
+import { featureEntryActive } from '@/features/character-editor/lib/featureEntryState'
 
 const VALUE_IDS = ['abilities_feats', 'abilities_race', 'abilities_class']
 
@@ -29,7 +30,8 @@ function choiceMatches(rule, entry) {
 function targetMatches(rule, entry, context) {
   if (!rule?.target_from_choice) return true
   const target = context.skillId ?? context.abilitySuggestId ?? context.targetId
-  return target != null && selected(entry, rule.choice_key).some(value => String(value) === String(target))
+  const prefix = rule.choice_value_prefix ? `${rule.choice_value_prefix}:` : ''
+  return target != null && selected(entry, rule.choice_key).some(value => String(value) === `${prefix}${target}`)
 }
 
 function contextMatches(rule, entry, context = {}) {
@@ -52,6 +54,7 @@ function contextMatches(rule, entry, context = {}) {
 
 export function collectCharacterDerivedEffects(values = {}, itemsById = new Map()) {
   return VALUE_IDS.flatMap((valueId) => asArray(values?.[valueId]).flatMap((entry) => {
+    if (!featureEntryActive(valueId, entry)) return []
     const item = itemsById.get(String(entry.id))
     if (!item) return []
     const ownerLevel = abilityOwnerLevel(item.data || {}, values)
@@ -100,6 +103,18 @@ export function derivedProficiency(effects, kind, context = {}) {
     rank: active.reduce((rank, rule) => Math.max(rank, number(rule.rank, 1)), 0),
     sources: active,
   }
+}
+
+export function derivedGrantedProficiencies(effects, kind) {
+  return asArray(effects).filter((rule) => rule.kind === kind).flatMap((rule) => {
+    const prefix = rule.choice_value_prefix ? `${rule.choice_value_prefix}:` : ''
+    const targets = rule.target_from_choice
+      ? selected(rule.source_entry, rule.choice_key)
+        .filter((value) => !prefix || String(value).startsWith(prefix))
+        .map((value) => String(value).slice(prefix.length))
+      : asArray(rule.target_ids)
+    return targets.map((targetId) => ({ targetId, source: rule.source_label }))
+  })
 }
 
 export function derivedNumericBonus(effects, kind, values, context = {}) {

@@ -75,11 +75,14 @@ evaluates native/compatible/legacy/blocked status for a target edition.
 - race/class features bind only with `race_ids`, `subrace_ids`, `class_ids`,
   `subclass_ids` arrays of handbook item ids;
 - race/class features and feats share `choices`: each row has a stable `key`,
-  required `count` and an inline, suggest-dictionary or handbook-item source;
-  the chosen values are stored on the character's owned ability entry;
+  required `count` and an inline, suggest-dictionary, union-of-dictionaries or
+  handbook-item source; the chosen values are stored on the character's owned
+  ability entry. Dependent item choices can derive and lock a catalogue filter
+  from an earlier choice;
 - spells bind through `classes: [{id: classItemId}]`;
-- feats use `description`, `prerequisite_groups`, `choices`, repeatable/grant
-  metadata;
+- feats use `description`, structured `prereq`, `choices`, repeatable/resource,
+  spell-grant, passive and derived-effect metadata. The system catalogue
+  contains all 42 Player's Handbook 2014 feats;
 - `int_by_suggest` stores `{value,suggest_id}`;
 - rich descriptions use their single schema key and render through the DnD
   `RichContent` adapter, which resolves dice/item/suggest inline nodes;

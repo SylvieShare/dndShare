@@ -521,7 +521,8 @@ startup schema, а не job registry.
 ## Как менять схему
 
 1. Добавить финальное DDL в логический файл `internal/store/schema/*.sql`:
-   foundation, handbook, characters, sessions, seed, item-icons, feature-icons
+   foundation, handbook, characters, sessions, seed, item-icons, feature-icons,
+   domain automation (including racial, class and feat automation),
    session-world или session-images. Порядок файлов задаёт
    зависимости и не должен меняться неявно.
 2. Если есть старые данные, перед удалением старого поля выполнить

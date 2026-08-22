@@ -285,6 +285,12 @@ sections are complete. Inline variants, suggest dictionaries and references to
 another handbook item type are supported. Character creation and level-up use
 the same keys and persistence shape; an item with several choice sections keeps
 them independently addressable.
+Several dictionaries may be combined into one counted choice with namespaced
+values (for example Skilled's skills and tools). A choice may depend on an
+earlier choice and derive an immutable item filter from it. Magic Initiate,
+Spell Sniper and Ritual Caster therefore ask for a class first and then open a
+spell catalogue locked to that class, spell level and spell kind; the selected
+class also supplies the granted spell's casting ability.
 An item choice may set `grant_spells` and `casting_ability`; selected handbook
 spell ids then become read-only external spells with the ability card recorded
 as their source. Item filters traverse object arrays (for example
@@ -300,6 +306,10 @@ outer chrome and internal dividers. Their sheet rows render the assigned
 instead of falling back to the former circle-with-dot marker. Entry names use
 the primary text color so they remain visually stronger than muted section
 headings.
+Character creation and level-up reject a feat whose structured prerequisite is
+not met. Manual sheet editing deliberately allows it: the owned entry is marked
+«Требования не выполнены», and its bonuses, resources, defenses, passive rules,
+derived effects and granted spells are suppressed.
 
 Handbook item types 3, 4 and 7 use `max_use` for a fixed maximum. They also
 support formulas based on an ability modifier or owning class level, explicit
@@ -339,8 +349,9 @@ such as Savage Attacks' extra melee weapon die.
 
 Class, race and feat items may also contribute `derived_effects`. This is the
 single source contract for calculated AC formulas and bonuses, speed bonuses,
-skill/save proficiencies, check/save/weapon-attack bonuses, roll modes and
-critical thresholds. Every row keeps its handbook feature as the visible source,
+skill/save proficiencies, visible armor/weapon/tool/language proficiencies,
+check/save/weapon-attack bonuses, roll modes and critical thresholds. Every row
+keeps its handbook feature as the visible source,
 is level-gated by the owning class, may depend on a stored feature choice and is
 removed automatically with that feature. The sheet does not copy these values
 into hidden character flags. Scaling rows that share a `group` use the highest
@@ -365,6 +376,12 @@ Feat ability-score bonuses are represented as readonly named bonus rows. The
 creation assembler, level-up flow and manual feat editor use the same rule: add
 the row when the feat is gained and remove its source-keyed row when that feat
 entry is deleted.
+The PHB feat catalogue additionally uses this automation for Tough hit points,
+Alert initiative, Mobile speed, Resilient saving throws, armor/weapon/language
+proficiencies, Lucky/Martial Adept/Magic Initiate resources and all feat choices.
+Rules that require a target, turn state, reaction or optional attack mode remain
+readonly contextual effects on the owning feat instead of being applied to
+unrelated rolls.
 
 ## Items, weapons and spells
 

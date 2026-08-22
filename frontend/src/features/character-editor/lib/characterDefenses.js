@@ -1,4 +1,5 @@
 import { abilityOwnerLevel } from '@/shared/lib/dndAbilityUses'
+import { featureEntryActive } from './featureEntryState'
 
 export const DEFENSE_KINDS = Object.freeze([
   { value: 'resistance', label: 'Сопротивление' },
@@ -58,6 +59,7 @@ export function createAbilityDefenseSource(valueId) {
     collect(values, itemsById) {
       const entries = Array.isArray(values?.[valueId]) ? values[valueId] : []
       return entries.flatMap((entry) => {
+        if (!featureEntryActive(valueId, entry)) return []
         const item = itemsById.get(String(entry.id))
         if (!item) return []
         const ownerLevel = abilityOwnerLevel(item.data || {}, values)

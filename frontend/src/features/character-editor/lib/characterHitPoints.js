@@ -1,4 +1,5 @@
 import { abilityOwnerLevel } from '@/shared/lib/dndAbilityUses'
+import { featureEntryActive } from './featureEntryState'
 
 function entryKey(entry) {
   return String(entry?.uid || entry?.id || '')
@@ -10,6 +11,7 @@ export function createAbilityHpBonusSource(valueId, category) {
     collect(values, itemsById) {
       const entries = Array.isArray(values?.[valueId]) ? values[valueId] : []
       return entries.flatMap((entry) => {
+        if (!featureEntryActive(valueId, entry)) return []
         const item = itemsById.get(String(entry.id))
         if (!item) return []
         const level = abilityOwnerLevel(item.data || {}, values)
@@ -42,4 +44,3 @@ export const DND_CHARACTER_HP_BONUS_SOURCES = [
 export function collectCharacterHpBonuses(values, itemsById, sources = DND_CHARACTER_HP_BONUS_SOURCES) {
   return sources.flatMap((source) => source.collect(values, itemsById))
 }
-

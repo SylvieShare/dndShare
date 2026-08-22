@@ -50,17 +50,17 @@ const displayValue = computed(() => {
   return (d.base || 0) + sumBonuses(d.bonuses) + dexExtra.value + derivedBonus.value
 })
 const derivedBonus = computed(() => charCtx.characterDerivedEffects?.bonus?.('check_bonus', {
-  kind: 'ability_check', abilitySuggestId: 2, proficient: false,
+  kind: 'initiative', abilitySuggestId: 2, proficient: false,
 })?.total || 0)
 
 function onChange(data) { emit('update:value', props.block.id, data) }
 function setUseDex(v) { emit('update:value', props.block.id, { ...numData.value, use_dex: v }) }
 
 function rollInit() {
-  const resolved = charCtx.characterRolls?.resolve?.('auto', { kind: 'ability_check', abilitySuggestId: 2 })
+  const resolved = charCtx.characterRolls?.resolve?.('auto', { kind: 'initiative', abilitySuggestId: 2 })
   diceStore.rollD20('Инициатива', displayValue.value, resolved?.mode || 'normal', {
     crit_mode: true,
-    roll_triggers: charCtx.characterCombatEffects?.rollTriggers?.('ability_check') || [],
+    roll_triggers: charCtx.characterCombatEffects?.rollTriggers?.('initiative') || [],
   })
 }
 </script>

@@ -3,6 +3,7 @@ import {
   collectCharacterDerivedEffects,
   derivedArmorRules,
   derivedCriticalThreshold,
+  derivedGrantedProficiencies,
   derivedNumericBonus,
   derivedProficiency,
   derivedSpeedBonuses,
@@ -53,5 +54,22 @@ describe('class-derived effects', () => {
   it('can derive a half-proficiency bonus without mutating sheet data', () => {
     const effect = [{ kind: 'check_bonus', proficiency_multiplier: 0.5, source_entry: {} }]
     expect(derivedNumericBonus(effect, 'check_bonus', values(9), { kind: 'ability_check', proficient: false }).total).toBe(2)
+  })
+
+  it('resolves source-owned mixed proficiencies selected by prefix', () => {
+    const effects = [{
+      kind: 'tool_proficiency',
+      choice_key: 'training',
+      choice_value_prefix: 'tool',
+      target_from_choice: true,
+      source_entry: { choices: { training: ['skill:2', 'tool:7'] } },
+      source_label: 'Знаток',
+    }]
+    expect(derivedGrantedProficiencies(effects, 'tool_proficiency')).toEqual([{ targetId: '7', source: 'Знаток' }])
+  })
+
+  it('ignores all derived effects of a feat marked with unmet requirements', () => {
+    const featItems = new Map([['9', { id: 9, name: 'Бдительность', data: { derived_effects: [{ kind: 'check_bonus', value: 5 }] } }]])
+    expect(collectCharacterDerivedEffects({ abilities_feats: [{ id: 9, requirements_met: false }] }, featItems)).toEqual([])
   })
 })

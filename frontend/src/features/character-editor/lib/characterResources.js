@@ -1,4 +1,5 @@
 import { abilityOwnerLevel, abilityUseTotal } from '@/shared/lib/dndAbilityUses'
+import { featureEntryActive } from './featureEntryState'
 
 function nonNegativeInt(value) {
   return Math.max(0, Math.floor(Number(value) || 0))
@@ -135,6 +136,7 @@ export function createAbilityResourceSource(valueId, color) {
     collect(values, itemsById) {
       const entries = Array.isArray(values?.[valueId]) ? values[valueId] : []
       return entries.flatMap((entry) => {
+        if (!featureEntryActive(valueId, entry)) return []
         const item = itemsById.get(String(entry.id))
         if (!item) return []
         return abilityResourceDefinitions(item.data).flatMap((definition) => {
@@ -181,6 +183,7 @@ export function createAbilityResourceSource(valueId, color) {
       const recoveredNames = []
       let changed = false
       const next = entries.map((entry) => {
+        if (!featureEntryActive(valueId, entry)) return entry
         const item = itemsById.get(String(entry.id))
         if (!item) return entry
         let nextEntry = entry

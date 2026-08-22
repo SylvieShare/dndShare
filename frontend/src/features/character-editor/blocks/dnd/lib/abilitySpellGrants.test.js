@@ -55,6 +55,29 @@ describe('ability spell grants', () => {
     expect(rows).toMatchObject([{ spellId: 777, castingAbility: 4, source: { item_id: 9 } }])
   })
 
+  it('takes the spellcasting ability from a dependent class choice', () => {
+    const initiate = {
+      id: 10,
+      name: 'Посвящённый в магию',
+      data: { choices: [
+        { key: 'magic_class', options: [{ value: 4014, label: 'Волшебник', casting_ability: 4 }] },
+        { key: 'spell', grant_spells: true, casting_ability_choice_key: 'magic_class', slotless: true, cast_level: 1 },
+      ] },
+    }
+    const rows = abilitySpellGrantRows([initiate], {
+      lvl: { level: 1 },
+      abilities_feats: [{ id: 10, choices: { magic_class: [4014], spell: [900] } }],
+    })
+    expect(rows).toMatchObject([{ spellId: 900, castingAbility: 4, slotless: true, castLevel: 1 }])
+  })
+
+  it('does not grant spells from a feat with unmet requirements', () => {
+    expect(abilitySpellGrantRows([ability], {
+      lvl: { level: 1 },
+      abilities_feats: [{ id: 4092, requirements_met: false }],
+    })).toEqual([])
+  })
+
   it('keeps a manually owned spell when its ability source disappears', () => {
     const withGrant = syncAbilityGrantedSpells([{ id: 498, prepared: false }], abilitySpellGrantRows([ability], { lvl: { level: 1 } }))
     expect(withGrant[0].external_only).toBeUndefined()

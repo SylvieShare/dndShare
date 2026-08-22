@@ -1,9 +1,11 @@
 import { abilityOwnerLevel } from '@/shared/lib/dndAbilityUses'
+import { featureEntryActive } from './featureEntryState'
 
 const VALUE_IDS = ['abilities_feats', 'abilities_race', 'abilities_class']
 
 function abilityRows(values, itemsById, field) {
   return VALUE_IDS.flatMap((valueId) => (Array.isArray(values?.[valueId]) ? values[valueId] : []).flatMap((entry) => {
+    if (!featureEntryActive(valueId, entry)) return []
     const item = itemsById.get(String(entry.id))
     if (!item) return []
     const ownerLevel = abilityOwnerLevel(item.data || {}, values)
@@ -34,4 +36,3 @@ export function extraCriticalWeaponDice(effects, { melee = false } = {}) {
     return sum + Math.max(0, Number(rule.extra_weapon_dice) || 0)
   }, 0)
 }
-

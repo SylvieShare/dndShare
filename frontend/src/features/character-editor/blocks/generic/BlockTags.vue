@@ -4,7 +4,7 @@
     :interactive="canInteract"
     @click="canInteract && open($event)"
   >
-    <BlockTagsView :sections="sections" :label="label" :editable="canInteract" />
+    <BlockTagsView :sections="displaySections" :label="label" :editable="canInteract" />
   </BaseTile>
 
   <MorphEditorShell
@@ -16,7 +16,7 @@
     @close="close"
   >
     <template #view>
-      <BlockTagsView :sections="sections" :label="label" panel />
+      <BlockTagsView :sections="displaySections" :label="label" panel />
     </template>
     <template #editor>
       <BlockTagsEditor
@@ -38,10 +38,12 @@ import BlockTagsEditor from '@/features/character-editor/blocks/generic/componen
 import BlockTagsView from '@/features/character-editor/blocks/generic/components/BlockTagsView'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
 import { useMorphOrigin } from '@/features/character-editor/composables/useMorphOrigin'
+import { useSuggestStore } from '@/stores/suggest'
 
 const props = defineProps(['block', 'value'])
 const emit = defineEmits(['update:value'])
 const charCtx = inject('charCtx', { ownerMode: false })
+const suggestStore = useSuggestStore()
 const { editorOpen, originRect, originEl, open, close } = useMorphOrigin()
 
 const label = computed(() => props.block.title || props.block.content?.title || 'Владения')
@@ -52,11 +54,26 @@ const val = computed(() => props.value && !Array.isArray(props.value) ? props.va
 const fixedTitleSet = computed(() => new Set(fixedSections.value.map(s => s.title)))
 const customTitles = computed(() => Object.keys(val.value).filter(t => !fixedTitleSet.value.has(t)))
 const customSuggestId = computed(() => props.block.content?.custom_suggest_id)
+const proficiencyKind = { 3: 'armor_proficiency', 4: 'weapon_proficiency', 5: 'tool_proficiency', 6: 'language_proficiency' }
+
+for (const section of fixedSections.value) suggestStore.ensure(Number(section.suggest_id))
+
+function grantedTags(section) {
+  const kind = proficiencyKind[Number(section.suggest_id)]
+  if (!kind) return []
+  const rows = charCtx.characterDerivedEffects?.grantedProficiencies?.(kind) || []
+  const dictionary = suggestStore.items(Number(section.suggest_id)) || []
+  return rows.map((row) => dictionary.find((item) => String(item.id) === String(row.targetId))?.value).filter(Boolean)
+}
 
 const sections = computed(() => [
   ...fixedSections.value.map(s => ({ title: s.title, suggest_id: s.suggest_id, custom: false, tags: getTags(s.title) })),
   ...customTitles.value.map(t => ({ title: t, suggest_id: customSuggestId.value, custom: true, tags: getTags(t) })),
 ])
+const displaySections = computed(() => sections.value.map((section) => {
+  const fixed = fixedSections.value.find((row) => row.title === section.title)
+  return fixed ? { ...section, tags: [...new Set([...section.tags, ...grantedTags(fixed)])] } : section
+}))
 
 function getTags(title) {
   return val.value[title] ?? []

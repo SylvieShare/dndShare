@@ -29,8 +29,9 @@
               v-if="selected(choice).length < choice.count"
               type="button"
               class="fcm-open-picker"
+              :disabled="!dependencyComplete(choice)"
               @click="openItemChoice(choice)"
-            >+ Выбрать из справочника</button>
+            >{{ dependencyComplete(choice) ? '+ Выбрать из справочника' : 'Сначала сделайте предыдущий выбор' }}</button>
           </div>
 
           <div v-else class="fcm-options">
@@ -84,7 +85,7 @@ import { computed, onMounted, reactive, watch } from 'vue'
 
 import { AppModalFrame } from '@sylvieshare/share-ui'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
-import { actionableItemChoices, choiceSelectionsComplete, itemMatchesChoiceFilter, parseItemChoiceFilter } from '@/features/items/lib/itemChoices'
+import { actionableItemChoices, choiceSelectionsComplete, itemMatchesChoiceFilter, resolvedItemChoiceFilter } from '@/features/items/lib/itemChoices'
 import { useSuggestStore } from '@/stores/suggest'
 
 const props = defineProps({
@@ -106,6 +107,7 @@ function initialise() {
       ? [...props.initialChoices[choice.key]]
       : []
     if (choice.from_suggest_id) suggestStore.ensure(Number(choice.from_suggest_id))
+    for (const source of (choice.suggest_sources || [])) suggestStore.ensure(Number(source.suggest_id))
   }
 }
 
@@ -117,6 +119,7 @@ function excluded(choice) { return Array.isArray(props.excludedChoices?.[choice.
 function isSelected(choice, value) { return selected(choice).some((current) => String(current) === String(value)) }
 function isExcluded(choice, value) { return excluded(choice).some((current) => String(current) === String(value)) }
 function isComplete(choice) { return selected(choice).length === choice.count }
+function dependencyComplete(choice) { return !choice.depends_on_choice || (selections[choice.depends_on_choice] || []).length > 0 }
 const complete = computed(() => choiceSelectionsComplete(props.item, selections))
 
 function optionsFor(choice) {
@@ -126,6 +129,15 @@ function optionsFor(choice) {
       label: option.value,
       desc: option.desc || '',
     }))
+  }
+  if (choice.source === 'suggest_union') {
+    return (choice.suggest_sources || []).flatMap((source) => (
+      suggestStore.items(Number(source.suggest_id)) || []
+    ).map((option) => ({
+      value: `${source.prefix}:${option.id}`,
+      label: option.value,
+      desc: source.label || option.desc || '',
+    })))
   }
   return (choice.options || []).map((option) => ({
     value: option.value ?? option.label,
@@ -148,6 +160,9 @@ function toggle(choice, value) {
   } else if (current.length < choice.count) {
     selections[choice.key] = [...current, value]
   }
+  for (const dependent of choices.value.filter((entry) => entry.depends_on_choice === choice.key)) {
+    selections[dependent.key] = []
+  }
 }
 
 function remove(choice, value) {
@@ -158,14 +173,16 @@ function selectedItems(choice) {
   return selected(choice).map((id) => ({ id, name: itemNames[id] || `#${id}` }))
 }
 
-function openItemChoice(choice) { itemPicker.choice = choice }
-function choiceItemFilters(choice) { return parseItemChoiceFilter(choice?.item_filter) || {} }
+function openItemChoice(choice) {
+  if (dependencyComplete(choice)) itemPicker.choice = choice
+}
+function choiceItemFilters(choice) { return resolvedItemChoiceFilter(choice, selections) || {} }
 
 function itemChoiceEligibility(item) {
   if (itemPicker.choice && isExcluded(itemPicker.choice, item.id)) {
     return { eligible: false, reasons: ['Этот вариант уже использован'] }
   }
-  const matches = itemMatchesChoiceFilter(item, itemPicker.choice?.item_filter)
+  const matches = itemMatchesChoiceFilter(item, resolvedItemChoiceFilter(itemPicker.choice, selections))
   return { eligible: matches, reasons: matches ? [] : ['Не подходит под фильтр выбора'] }
 }
 
@@ -211,6 +228,7 @@ function confirm() {
 .fcm-picked { display: inline-flex; gap: 7px; padding: 6px 9px 6px 12px; background: color-mix(in srgb, var(--accent) 15%, var(--surface)); color: var(--text-1); }
 .fcm-picked b { color: var(--text-muted); }
 .fcm-open-picker { padding: 6px 12px; background: var(--surface-raised); color: var(--accent); }
+.fcm-open-picker:disabled { opacity: 0.45; cursor: default; }
 .fcm-actions { display: flex; justify-content: flex-end; gap: 9px; padding-top: 2px; }
 .fcm-cancel, .fcm-confirm { border: none; border-radius: 9px; padding: 9px 18px; font: inherit; font-size: 12px; font-weight: 700; cursor: pointer; }
 .fcm-cancel { background: var(--surface-raised); color: var(--text-2); }

@@ -25,6 +25,16 @@ export function useLevelUpFeatSelection({ values, entries, itemsById, newTotal, 
         if (!armorProfIds.includes(id)) armorProfIds.push(id)
       }
     }
+    for (const featEntry of (currentValues?.abilities_feats || [])) {
+      if (featEntry.requirements_met === false) continue
+      const feat = itemsById.value[featEntry.id]
+      for (const effect of (feat?.data?.derived_effects || [])) {
+        if (effect.kind !== 'armor_proficiency') continue
+        for (const id of (effect.target_ids || [])) {
+          if (!armorProfIds.some((current) => String(current) === String(id))) armorProfIds.push(id)
+        }
+      }
+    }
     return {
       stats: abilityScoresFromValues(currentValues),
       level: newTotal.value,

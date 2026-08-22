@@ -43,6 +43,7 @@ export function itemChoices(item) {
 export function actionableItemChoices(item) {
   return itemChoices(item).filter((choice) => (
     (choice.source === 'suggest' && choice.from_suggest_id != null)
+    || (choice.source === 'suggest_union' && asArray(choice.suggest_sources).length > 0)
     || (choice.source === 'item' && choice.from_item_type_id != null)
     || (choice.source === 'inline' && choice.options.length > 0)
   ))
@@ -76,7 +77,10 @@ export function choicesForEntry(item, selections = {}) {
 }
 
 export function choiceSelectionsComplete(item, selections = {}) {
-  return actionableItemChoices(item).every((choice) => asArray(selections[choice.key]).length === choice.count)
+  return actionableItemChoices(item).every((choice) => {
+    if (choice.depends_on_choice && !asArray(selections[choice.depends_on_choice]).length) return false
+    return asArray(selections[choice.key]).length === choice.count
+  })
 }
 
 export function parseItemChoiceFilter(raw) {
@@ -85,6 +89,15 @@ export function parseItemChoiceFilter(raw) {
   try { return JSON.parse(raw) } catch { /* use key=value shorthand */ }
   const [key, ...rest] = String(raw).split('=')
   return key && rest.length ? { [key.trim()]: rest.join('=').trim() } : null
+}
+
+export function resolvedItemChoiceFilter(choice, selections = {}) {
+  const base = parseItemChoiceFilter(choice?.item_filter) || {}
+  const dynamic = choice?.item_filter_from_choice
+  if (!dynamic?.path || !dynamic?.choice_key) return base
+  const selected = asArray(selections[dynamic.choice_key])
+  if (!selected.length) return null
+  return { ...base, [dynamic.path]: selected.length === 1 ? selected[0] : selected }
 }
 
 function valuesAtPath(value, segments) {
