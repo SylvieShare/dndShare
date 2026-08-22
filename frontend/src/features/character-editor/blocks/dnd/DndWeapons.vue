@@ -51,6 +51,9 @@
       </tbody>
     </table>
 
+    <div class="w-preset-divider" role="separator" aria-label="Базовые атаки">
+      <span>Базовые атаки</span>
+    </div>
     <div class="w-preset-grid" aria-label="Базовые атаки">
       <PresetAttackCard
         title="Рукопашный удар"
@@ -586,8 +589,21 @@ onMounted(() => {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 12px;
-  margin-top: 12px;
 }
+
+.w-preset-divider {
+  display: grid;
+  grid-template-columns: minmax(18px, 1fr) auto minmax(18px, 1fr);
+  gap: 10px;
+  align-items: center;
+  margin: 15px 0 10px;
+  color: var(--text-muted);
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.w-preset-divider::before, .w-preset-divider::after { height: 1px; background: color-mix(in srgb, var(--text-muted) 28%, transparent); content: ''; }
 
 .w-table {
   width: 100%;

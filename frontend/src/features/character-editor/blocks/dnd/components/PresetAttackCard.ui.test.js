@@ -17,5 +17,6 @@ describe('preset attack card presentation', () => {
     expect(source).toContain('class="pac-card action-menu-source"')
     expect(source).toContain("'action-menu-source--open': open")
     expect(source).toMatch(/\.pac-view \{[\s\S]*grid-template-columns: minmax\(0, 1fr\) auto;/)
+    expect(source).toMatch(/\.pac-main \{[^}]*min-height: 86px;/)
   })
 })

@@ -90,7 +90,7 @@ const flatDamageTitle = computed(() => (
   overflow: clip;
   cursor: pointer;
 }
-.pac-main { display: flex; align-items: stretch; min-width: 0; }
+.pac-main { display: flex; align-items: stretch; min-width: 0; min-height: 86px; }
 .pac-icon { display: flex; flex: 0 0 64px; align-self: center; align-items: center; justify-content: center; width: 64px; height: 64px; overflow: hidden; }
 .pac-view {
   display: grid;

@@ -437,8 +437,9 @@ independent click targets. Logical groups use the shared action-menu separator.
 Attack, damage, critical damage and feature damage actions use distinct Lucide
 icons instead of the generic ellipsis. The source tile stays highlighted while
 its menu is open; spell, inventory and potion action menus follow the same
-interaction rule. Below the weapon list, two always-available full-width rows expose
-Strength-based unarmed and improvised-weapon attack, damage and critical rolls.
+interaction rule. A labelled separator below the weapon list introduces two
+always-available full-width rows for Strength-based unarmed and
+improvised-weapon attack, damage and critical rolls.
 Unarmed attacks include proficiency and deal `max(0, 1 + Strength modifier)`;
 the generic improvised weapon is not proficient and deals `1d4 + Strength`.
 The rows reuse the weapon tile geometry and `AttackDamage`: attack is a numeric
