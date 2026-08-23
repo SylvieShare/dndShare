@@ -84,7 +84,7 @@ const steps = [
 .game-loop-scene {
   display: block;
   width: 100%;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 2 / 1;
   border-bottom: 1px solid var(--border);
   object-fit: cover;
 }
