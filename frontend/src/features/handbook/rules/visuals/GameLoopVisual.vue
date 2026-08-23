@@ -17,13 +17,13 @@
           </span>
         </span>
       </BaseTile>
-      <ArrowRight v-if="index < steps.length - 1" class="game-loop-arrow" aria-hidden="true" />
+      <ArrowDown v-if="index < steps.length - 1" class="game-loop-arrow" aria-hidden="true" />
     </li>
   </ol>
 </template>
 
 <script setup>
-import { ArrowRight, Dices, MessageSquareText, Sparkles, Target } from '@lucide/vue'
+import { ArrowDown, Dices, MessageSquareText, Sparkles, Target } from '@lucide/vue'
 import { BaseTile } from '@sylvieshare/share-ui'
 import actionImage from '@/features/handbook/rules/assets/game-loop-2-action.jpg'
 import consequencesImage from '@/features/handbook/rules/assets/game-loop-4-consequences.jpg'
@@ -72,23 +72,32 @@ const steps = [
 <style scoped>
 .game-loop {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   align-items: stretch;
-  gap: 34px;
+  gap: 42px;
   margin: 24px 0 26px;
   padding: 0;
   list-style: none;
 }
 .game-loop-item { position: relative; min-width: 0; }
-.game-loop-step { min-height: 0; height: 100%; padding: 0; overflow: hidden; box-sizing: border-box; }
+.game-loop-step {
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(300px, 1.45fr) minmax(220px, 1fr);
+  padding: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+}
 .game-loop-scene {
   display: block;
   width: 100%;
+  height: auto;
+  min-height: 210px;
   aspect-ratio: 2 / 1;
-  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
   object-fit: cover;
 }
-.game-loop-copy { display: flex; flex-direction: column; padding: 13px 14px 15px; }
+.game-loop-copy { display: flex; flex-direction: column; justify-content: center; padding: 22px 24px; }
 .game-loop-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
 .game-loop-icon { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 9px; color: var(--tile-color); background: color-mix(in srgb, var(--tile-color) 13%, transparent); }
 .game-loop-icon :deep(svg) { width: 18px; height: 18px; }
@@ -97,16 +106,10 @@ const steps = [
 .game-loop-dialogue { display: grid; gap: 8px; margin-top: 9px; }
 .game-loop-line { display: grid; gap: 4px; color: var(--text-2); font-family: var(--font-prose); font-size: 11px; line-height: 1.45; }
 .game-loop-role { width: fit-content; color: var(--tile-color); font-family: var(--font-ui); font-size: 9px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
-.game-loop-arrow { position: absolute; top: 50%; right: -26px; width: 18px; color: var(--text-muted); transform: translateY(-50%); }
+.game-loop-arrow { position: absolute; bottom: -30px; left: 50%; width: 18px; color: var(--text-muted); transform: translateX(-50%); }
 @media (max-width: 780px) {
-  .game-loop {
-    grid-template-columns: repeat(4, minmax(260px, 78vw));
-    padding-bottom: 10px;
-    overflow-x: auto;
-    overscroll-behavior-inline: contain;
-    scroll-snap-type: inline mandatory;
-  }
-  .game-loop-item { scroll-snap-align: start; }
+  .game-loop-step { grid-template-columns: minmax(0, 1fr); }
+  .game-loop-scene { min-height: 0; border-right: 0; border-bottom: 1px solid var(--border); }
 }
 
 @media (max-width: 420px) {
