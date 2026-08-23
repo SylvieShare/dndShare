@@ -15,6 +15,21 @@ func mcpToolDefs() []map[string]any {
 	}
 
 	return []map[string]any{
+		tool("sessions_list",
+			"List active sessions owned by one exact user login. Returns session metadata without participants or character sheets.",
+			schema(map[string]any{"ownerLogin": strP("Exact owner login")}, "ownerLogin")),
+		tool("session_adventure_get",
+			"Read the complete authored campaign projection for one session owned by the supplied login: arcs, chapters, scenarios, blocks, world entities, materials and graph edges. Does not expose participants or character sheets.",
+			schema(map[string]any{
+				"ownerLogin":  strP("Exact owner login"),
+				"sessionUuid": strP("Session UUID"),
+			}, "ownerLogin", "sessionUuid")),
+		tool("session_adventure_import",
+			"Atomically create a session and import a portable adventure for one existing user. The document is a JSON string with stable local keys for arcs, chapters, scenarios, blocks, locations, NPCs, quests, text/note materials and their edges/relations. System catalogue images are selected by imageKey. Any invalid reference rolls back the whole session. Requires MCP write operations to be enabled.",
+			schema(map[string]any{
+				"ownerLogin": strP("Exact existing user login that will own the session"),
+				"document":   strP("Portable SessionAdventureDocument encoded as one JSON object string"),
+			}, "ownerLogin", "document")),
 		tool("handbook_sources",
 			"List handbook systems. Returns id, name, versions [{id, sourceId, version}], countItems.",
 			schema(map[string]any{})),

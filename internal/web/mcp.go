@@ -204,6 +204,55 @@ func (s *Server) mcpRequireWrite() error {
 func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json.RawMessage) (any, error) {
 	ctx := r.Context()
 	switch name {
+	case "sessions_list":
+		ownerLogin, err := argString(args, "ownerLogin")
+		if err != nil {
+			return nil, err
+		}
+		owner, err := s.store.FindUserByLogin(ctx, ownerLogin)
+		if err != nil {
+			if errors.Is(err, store.ErrNotFound) {
+				return nil, fmt.Errorf("user %q not found", ownerLogin)
+			}
+			return nil, err
+		}
+		return s.store.GetOwnerSessions(ctx, owner.ID)
+
+	case "session_adventure_get":
+		ownerLogin, err := argString(args, "ownerLogin")
+		if err != nil {
+			return nil, err
+		}
+		sessionUUID, err := argString(args, "sessionUuid")
+		if err != nil {
+			return nil, err
+		}
+		result, err := s.store.GetSessionAdventure(ctx, ownerLogin, sessionUUID)
+		if errors.Is(err, store.ErrNotFound) {
+			return nil, fmt.Errorf("session %q owned by %q not found", sessionUUID, ownerLogin)
+		}
+		return result, err
+
+	case "session_adventure_import":
+		if err := s.mcpRequireWrite(); err != nil {
+			return nil, err
+		}
+		ownerLogin, err := argString(args, "ownerLogin")
+		if err != nil {
+			return nil, err
+		}
+		document, err := argString(args, "document")
+		if err != nil {
+			return nil, err
+		}
+		var adventure store.SessionAdventureDocument
+		decoder := json.NewDecoder(strings.NewReader(document))
+		decoder.DisallowUnknownFields()
+		if err := decoder.Decode(&adventure); err != nil {
+			return nil, fmt.Errorf("invalid adventure document: %w", err)
+		}
+		return s.store.ImportSessionAdventure(ctx, ownerLogin, adventure)
+
 	case "handbook_sources":
 		return s.store.SourceGetAll(ctx)
 

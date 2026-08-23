@@ -1,0 +1,191 @@
+{
+  "name": "Пепельная корона",
+  "description": "Оригинальное приключение в духе героического фэнтези. Над долиной Эйрваль загорается мёртвый маяк, а культ Бездымного Пламени собирает осколки короны, способной пробудить дракона под стеклянной горой. Кампания рассчитана на демонстрацию развилок, мира, заданий и сценарных блоков.",
+  "currentChapterKey": "embers-at-dawn",
+  "locations": [
+    {"key":"vale","name":"Долина Эйрваль","kind":"region","description":"Зелёная пограничная долина между Стеклянным кряжем и старой Имперской дорогой. Последнюю неделю на полях находят тёплый серый пепел.","imageKey":"mountains"},
+    {"key":"brindle","parentKey":"vale","name":"Бриндл","kind":"settlement","description":"Посёлок виноделов и стеклодувов. Каменные дома стоят вокруг сухого колодца и башни городского колокола.","imageKey":"village"},
+    {"key":"lantern-inn","parentKey":"brindle","name":"Таверна «Медный фонарь»","kind":"building","description":"Шумный общий зал, доска объявлений и закрытый подвал, где хозяйка прячет найденный осколок чёрного стекла.","imageKey":"tavern"},
+    {"key":"glasswood","parentKey":"vale","name":"Стеклянный лес","kind":"wilderness","description":"После древнего драконьего огня кора деревьев стала прозрачной. Ночью стволы звенят и повторяют произнесённые рядом слова.","imageKey":"forest"},
+    {"key":"ash-market","parentKey":"vale","name":"Пепельный рынок","kind":"district","description":"Кочевой чёрный рынок в развалинах дорожной крепости. Здесь продают реликвии, имена и безопасные пути через кряж.","imageKey":"ruins"},
+    {"key":"silent-observatory","parentKey":"vale","name":"Безмолвная обсерватория","kind":"dungeon","description":"Башня астрономов, вырубленная в горе. Её линзы теперь смотрят не на звёзды, а в раскалённое сердце кряжа.","imageKey":"castle"},
+    {"key":"crown-vault","parentKey":"silent-observatory","name":"Хранилище Короны","kind":"room","description":"Круглая камера над спящим драконом. Пять пьедесталов удерживают печать, шестой давно пуст.","imageKey":"dungeon"}
+  ],
+  "npcs": [
+    {"key":"mira","name":"Мира Вель","role":"Хозяйка «Медного фонаря»","description":"Бывшая разведчица. Говорит коротко, замечает оружие и выходы. Нашла первый осколок и боится, что за ним придут.","color":"#d39b45","imageKey":"npc-innkeeper-woman"},
+    {"key":"oren","name":"Орен Соль","role":"Слепой звонарь","description":"Слышит будущее в трещинах колокола. Уверен, что мёртвый маяк зажёг человек с голосом ребёнка.","color":"#8b7fd6","imageKey":"npc-mystic"},
+    {"key":"serah","name":"Сера Клин","role":"Капитан долинной стражи","description":"Практичная и упрямая. Готова доверить героям оборону Бриндла, но не расследование исчезновения своего брата.","color":"#4f9f8f","imageKey":"npc-guard-woman"},
+    {"key":"vesk","name":"Веск Пепельный","role":"Посредник чёрного рынка","description":"Улыбчивый торговец тайнами. Носит перчатки из драконьей кожи и знает два входа в обсерваторию.","color":"#bf6d4a","imageKey":"npc-merchant-man"},
+    {"key":"elian","name":"Элиан Ро","role":"Астроном-отступник","description":"Последний хранитель обсерватории. Считает, что дракона нужно разбудить контролируемо, иначе печать разрушит всю долину.","color":"#5d86c7","imageKey":"npc-scholar"},
+    {"key":"nia","name":"Ниа Безымянная","role":"Юная пророчица культа","description":"Номинальная глава Бездымного Пламени. На самом деле повторяет слова существа, которое говорит с ней через корону.","color":"#b54f64","imageKey":"npc-cultist-woman"}
+  ],
+  "quests": [
+    {"key":"save-brindle","name":"Колокол на рассвете","status":"active","goal":"Отразить налёт и не дать культистам забрать осколок из таверны.","condition":"Колокол Бриндла должен прозвонить до третьего удара мёртвого маяка.","reward":"Доверие Серой Клин, 150 зм и право пользоваться арсеналом стражи.","consequences":"Если колокол замолчит, жители покинут город, а культ получит подкрепление.","notes":"Первое задание должно быстро показать ставки, NPC и боевой сценарий."},
+    {"key":"echo-trail","name":"След стеклянного эха","status":"planned","goal":"Найти тропу культистов через Стеклянный лес.","condition":"Получить три подсказки: след пепла, украденную карту и эхо пароля.","reward":"Безопасный путь к Пепельному рынку и флакон жидкого стекла.","consequences":"При провале герои попадают на рынок через засаду охотников.","notes":"Расследование допускает социальное, исследовательское и силовое решение."},
+    {"key":"market-bargain","name":"Цена одного имени","status":"planned","goal":"Получить у Веска ключ-линзу от обсерватории.","condition":"Заплатить тайной, выполнить услугу или разоблачить его двойную игру.","reward":"Ключ-линза и сведения о слабом месте печати.","consequences":"Веск продаёт маршрут культу; в финале появляется дополнительный отряд.","notes":"Развилка кампании: сделка ведёт к тихому входу, конфликт — к штурму ворот."},
+    {"key":"break-crown","name":"Корона без пламени","status":"planned","goal":"Решить судьбу короны и спящего дракона.","condition":"Собрать минимум три осколка и настроить линзы обсерватории.","reward":"Реликвия долины и союз одного из трёх претендентов.","consequences":"Неверная настройка пробуждает дракона в ярости и разрушает Бриндл.","notes":"Финал имеет три решения: уничтожить, запечатать или принять корону."}
+  ],
+  "materials": [
+    {"key":"prophecy","kind":"note","name":"Пророчество на обгоревшей ленте","caption":"Находка из колокольни","content":"Когда шестая линза увидит чёрное солнце, корона вспомнит имя своего хозяина. Не буди огонь — разбуди того, кто им командует.","noteStyle":"parchment"},
+    {"key":"vesk-letter","kind":"note","name":"Письмо Веска культу","caption":"Улика для переговоров","content":"Путь через северный пролом будет свободен. Девочка получит линзу после звона. Моё настоящее имя в сделку не входит.","noteStyle":"letter"},
+    {"key":"lens-notes","kind":"text","name":"Схема шести линз","caption":"Записи Элиана","content":"Линзы отвечают на намерение, а не на заклинание. Три внешние гасят жар, две внутренние удерживают волю, шестая выбирает носителя короны."},
+    {"key":"nia-dossier","kind":"note","name":"Досье: Ниа Безымянная","caption":"Секрет мастера","content":"Ниа не обладает собственной магией. Голос приходит только рядом с осколками. Если разлучить её с короной, она вспомнит имя — Ниа Вель, пропавшая дочь Миры.","noteStyle":"dossier"}
+  ],
+  "relations": [
+    {"from":"location:lantern-inn","to":"npc:mira","note":"Мира владеет таверной и прячет осколок в винном подвале."},
+    {"from":"location:brindle","to":"npc:serah","note":"Сера отвечает за оборону посёлка."},
+    {"from":"location:glasswood","to":"quest:echo-trail","note":"Все три подсказки можно добыть в разных частях леса."},
+    {"from":"location:ash-market","to":"npc:vesk","note":"Веск появляется только после заката и меняет шатёр каждую ночь."},
+    {"from":"npc:vesk","to":"material:vesk-letter","note":"Письмо заставит Веска уступить ключ без услуги."},
+    {"from":"location:silent-observatory","to":"npc:elian","note":"Элиан заперт в западном куполе."},
+    {"from":"npc:nia","to":"material:nia-dossier","note":"Секрет родства раскрывается Мире только после финала."},
+    {"from":"location:crown-vault","to":"quest:break-crown","note":"Финальное решение принимается у шестого пьедестала."}
+  ],
+  "arcs": [
+    {
+      "key":"whispers",
+      "name":"I. Шёпот под золой",
+      "description":"Герои защищают Бриндл, идут по следу культа и выбирают способ получить ключ от Безмолвной обсерватории.",
+      "chapters": [
+        {
+          "key":"embers-at-dawn","number":"1","name":"Угли на рассвете","description":"Мёртвый маяк вспыхивает над долиной. Пока культисты штурмуют Бриндл, герои должны удержать колокол и защитить тайну Миры.","status":"in_progress","imageKey":"village","positionX":40,"positionY":120,
+          "scenes": [
+            {"key":"lantern-gathering","name":"Вечер в «Медном фонаре»","status":"ready","imageKey":"tavern","positionX":40,"positionY":90,
+              "blocks":[
+                {"key":"lantern-opening","type":"text","title":"Тишина перед звоном","data":{"text":"<p>За окнами идёт тёплый пепел. Вино в кружках дрожит, хотя пол неподвижен. Затем на далёкой горе загорается чёрно-красный маяк.</p>"},"positionX":20,"positionY":20,"width":360},
+                {"key":"lantern-mira","type":"npc","title":"Мира Вель","referenceKey":"mira","positionX":420,"positionY":20,"width":320},
+                {"key":"lantern-dialogue","type":"list","title":"Тревожные реплики","data":{"rows":[{"left":"Мира","right":"Если услышите третий звон — бегите не к воротам, а в подвал.","color":"#d39b45"},{"left":"Орен","right":"Сегодня колокол позвонит сам. Вопрос только — по кому.","color":"#8b7fd6"}]},"positionX":20,"positionY":250,"width":400},
+                {"key":"lantern-quest","type":"quest","title":"Колокол на рассвете","referenceKey":"save-brindle","positionX":470,"positionY":250,"width":340}
+              ],
+              "blockEdges":[{"from":"lantern-opening","to":"lantern-mira"},{"from":"lantern-mira","to":"lantern-dialogue"},{"from":"lantern-dialogue","to":"lantern-quest","label":"Первый удар"}]
+            },
+            {"key":"bell-defense","name":"Оборона колокольни","status":"planned","imageKey":"battle","positionX":410,"positionY":90,
+              "blocks":[
+                {"key":"bell-location","type":"location","title":"Бриндл","referenceKey":"brindle","positionX":20,"positionY":20,"width":320},
+                {"key":"bell-combat","type":"combat","title":"Налёт Бездымного Пламени","data":{"creatures":[{"kind":"simple","id":"ash-raider","name":"Пепельный налётчик","ac":13,"hp":11,"hpMax":11,"description":"Лёгкая броня, серп и дымовая склянка.","count":4},{"kind":"simple","id":"glass-hound","name":"Стеклянная гончая","ac":14,"hp":18,"hpMax":18,"description":"При ранении рассыпает острые осколки.","count":2}]},"positionX":390,"positionY":20,"width":420},
+                {"key":"bell-choice","type":"text","title":"Цена третьего удара","data":{"text":"<p>Каждый раунд один герой может вместо действия вращать заклинивший механизм. После трёх успехов колокол разбивает дымовую завесу и обращает налётчиков в бегство.</p>"},"positionX":20,"positionY":270,"width":390},
+                {"key":"bell-reward","type":"text","title":"После боя","data":{"text":"<p>В разбитом фонаре остаётся жетон с изображением шестилучевой линзы и стеклянная игла, указывающая в сторону леса.</p>"},"positionX":460,"positionY":300,"width":350}
+              ],
+              "blockEdges":[{"from":"bell-location","to":"bell-combat"},{"from":"bell-combat","to":"bell-choice","bidirectional":true},{"from":"bell-combat","to":"bell-reward","label":"Победа"}]
+            }
+          ],
+          "sceneEdges":[{"from":"lantern-gathering","to":"bell-defense","label":"Раздаётся первый звон"}]
+        },
+        {
+          "key":"glass-echo","number":"2","name":"След стеклянного эха","description":"Улики ведут в лес, где звук хранится дольше памяти. Герои могут добыть пароль культа, спасти разведчиков и узнать о Пепельном рынке.","status":"ready","imageKey":"forest","positionX":380,"positionY":120,
+          "scenes": [
+            {"key":"singing-trees","name":"Поющие деревья","status":"ready","imageKey":"forest","positionX":40,"positionY":90,
+              "blocks":[
+                {"key":"trees-location","type":"location","title":"Стеклянный лес","referenceKey":"glasswood","positionX":20,"positionY":20,"width":330},
+                {"key":"trees-trial","type":"text","title":"Испытание эхом","data":{"text":"<p>Чтобы пройти чащу, группа должна трижды повторить услышанную фразу, каждый раз меняя одно слово. Ошибка пробуждает стаю стеклянных птиц.</p>"},"positionX":400,"positionY":20,"width":390},
+                {"key":"trees-oren","type":"npc","title":"Орен Соль","referenceKey":"oren","positionX":20,"positionY":250,"width":320},
+                {"key":"trees-prophecy","type":"material","title":"Пророчество","materialKey":"prophecy","data":{"note":"Эхо произносит последнюю строку голосом Нии."},"positionX":400,"positionY":270,"width":380}
+              ],
+              "blockEdges":[{"from":"trees-location","to":"trees-trial"},{"from":"trees-trial","to":"trees-oren"},{"from":"trees-oren","to":"trees-prophecy","label":"Три успеха"}]
+            },
+            {"key":"broken-caravan","name":"Разбитый караван","status":"planned","imageKey":"road","positionX":420,"positionY":90,
+              "blocks":[
+                {"key":"caravan-clue","type":"text","title":"Три следа","data":{"text":"<ul><li>Серый пепел лежит против ветра.</li><li>Колёса сняты изнутри лагеря.</li><li>В стекле повторяется пароль: «Огонь без дыма».</li></ul>"},"positionX":20,"positionY":20,"width":380},
+                {"key":"caravan-combat","type":"combat","title":"Охотники за эхом","data":{"creatures":[{"kind":"simple","id":"echo-hunter","name":"Охотник за эхом","ac":14,"hp":22,"hpMax":22,"description":"Гасит звук вокруг себя и атакует из засады.","count":3}]},"positionX":450,"positionY":20,"width":370},
+                {"key":"caravan-quest","type":"quest","title":"След стеклянного эха","referenceKey":"echo-trail","positionX":20,"positionY":260,"width":350},
+                {"key":"caravan-exit","type":"text","title":"Куда ведёт игла","data":{"text":"<p>Под полозом каравана спрятана карта рынка. На обороте — знак Веска и время: первая ночь без луны.</p>"},"positionX":430,"positionY":270,"width":370}
+              ],
+              "blockEdges":[{"from":"caravan-clue","to":"caravan-combat","label":"Провал проверки"},{"from":"caravan-clue","to":"caravan-quest"},{"from":"caravan-quest","to":"caravan-exit","label":"Три подсказки"}]
+            }
+          ],
+          "sceneEdges":[{"from":"singing-trees","to":"broken-caravan","label":"Эхо указывает дорогу"}]
+        },
+        {
+          "key":"market-deal","number":"3A","name":"Сделка на Пепельном рынке","description":"Герои входят на рынок как покупатели. Веск предлагает ключ в обмен на имя предателя в страже.","status":"planned","imageKey":"negotiation","positionX":720,"positionY":20,
+          "scenes": [
+            {"key":"vesk-auction","name":"Аукцион забытых имён","status":"planned","imageKey":"negotiation","positionX":40,"positionY":90,
+              "blocks":[
+                {"key":"auction-market","type":"location","title":"Пепельный рынок","referenceKey":"ash-market","positionX":20,"positionY":20,"width":330},
+                {"key":"auction-vesk","type":"npc","title":"Веск Пепельный","referenceKey":"vesk","positionX":400,"positionY":20,"width":330},
+                {"key":"auction-dialogue","type":"list","title":"Торг","data":{"rows":[{"left":"Веск","right":"Золото покупает вещи. Мне нужно то, что останется с вами после сделки.","color":"#bf6d4a"},{"left":"Сера","right":"Если он назовёт моего брата — не верьте ни одному слову.","color":"#4f9f8f"}]},"positionX":20,"positionY":260,"width":420},
+                {"key":"auction-letter","type":"material","title":"Козырь героев","materialKey":"vesk-letter","data":{"note":"Предъявление письма снижает цену сделки до одной услуги."},"positionX":490,"positionY":270,"width":350}
+              ],
+              "blockEdges":[{"from":"auction-market","to":"auction-vesk"},{"from":"auction-vesk","to":"auction-dialogue"},{"from":"auction-letter","to":"auction-dialogue","label":"Давление"}]
+            }
+          ]
+        },
+        {
+          "key":"market-raid","number":"3B","name":"Ночь разбитых масок","description":"Если герои отвергают сделку, Веск запирает рынок. Ключ нужно забрать во время погони по рушащимся руинам.","status":"available","imageKey":"chase","positionX":720,"positionY":250,
+          "scenes": [
+            {"key":"market-chase","name":"Погоня за ключом","status":"planned","imageKey":"chase","positionX":40,"positionY":90,
+              "blocks":[
+                {"key":"chase-start","type":"text","title":"Рынок гаснет","data":{"text":"<p>Все фонари одновременно становятся синими. Продавцы надевают гладкие маски, а Веск бросает ключ курьеру на крыше.</p>"},"positionX":20,"positionY":20,"width":390},
+                {"key":"chase-obstacles","type":"list","title":"Три препятствия","data":{"rows":[{"left":"Раунд 1","right":"Шатры складываются в узкий лабиринт.","color":"#cc8452"},{"left":"Раунд 2","right":"Мост из щитов рушится над старым рвом.","color":"#b55c55"},{"left":"Раунд 3","right":"Курьер выпускает стеклянных воронов.","color":"#7d6fbd"}]},"positionX":460,"positionY":20,"width":390},
+                {"key":"chase-combat","type":"combat","title":"Последний заслон","data":{"creatures":[{"kind":"simple","id":"mask-guard","name":"Страж в гладкой маске","ac":15,"hp":27,"hpMax":27,"description":"Телохранитель Веска с цепным клинком.","count":2}]},"positionX":20,"positionY":280,"width":390},
+                {"key":"chase-key","type":"quest","title":"Цена одного имени","referenceKey":"market-bargain","positionX":460,"positionY":290,"width":360}
+              ],
+              "blockEdges":[{"from":"chase-start","to":"chase-obstacles"},{"from":"chase-obstacles","to":"chase-combat","label":"Два провала"},{"from":"chase-obstacles","to":"chase-key","label":"Три успеха"}]
+            }
+          ]
+        }
+      ],
+      "edges":[
+        {"from":"embers-at-dawn","to":"glass-echo","label":"Стеклянная игла"},
+        {"from":"glass-echo","to":"market-deal","label":"Принять приглашение"},
+        {"from":"glass-echo","to":"market-raid","label":"Войти силой"},
+        {"from":"market-deal","to":"market-raid","label":"Сделка сорвалась","bidirectional":true}
+      ]
+    },
+    {
+      "key":"crown",
+      "name":"II. Корона без пламени",
+      "description":"С ключом-линзой герои входят в обсерваторию, узнают правду о Нии и решают судьбу спящего дракона.",
+      "chapters": [
+        {
+          "key":"silent-stars","number":"4","name":"Обсерватория немых звёзд","description":"Линзы башни создают меняющийся лабиринт. Элиан знает, как открыть хранилище, но требует сначала восстановить печать.","status":"planned","imageKey":"castle","positionX":60,"positionY":120,
+          "scenes": [
+            {"key":"lens-labyrinth","name":"Лабиринт шести линз","status":"planned","imageKey":"puzzle","positionX":40,"positionY":90,
+              "blocks":[
+                {"key":"lens-location","type":"location","title":"Безмолвная обсерватория","referenceKey":"silent-observatory","positionX":20,"positionY":20,"width":360},
+                {"key":"lens-puzzle","type":"text","title":"Повернуть небо","data":{"text":"<p>Каждая линза меняет одно свойство комнаты: вес, свет, звук, время, направление и память. Чтобы открыть купол, нужно направить «память» на пустой пьедестал.</p>"},"positionX":430,"positionY":20,"width":420},
+                {"key":"lens-elian","type":"npc","title":"Элиан Ро","referenceKey":"elian","positionX":20,"positionY":280,"width":340},
+                {"key":"lens-material","type":"material","title":"Схема шести линз","materialKey":"lens-notes","data":{"note":"Элиан отдаёт записи после восстановления внешнего кольца."},"positionX":420,"positionY":290,"width":390}
+              ],
+              "blockEdges":[{"from":"lens-location","to":"lens-puzzle"},{"from":"lens-puzzle","to":"lens-elian"},{"from":"lens-elian","to":"lens-material"}]
+            },
+            {"key":"cult-in-dome","name":"Культ в западном куполе","status":"planned","imageKey":"battle","positionX":430,"positionY":90,
+              "blocks":[
+                {"key":"dome-nia","type":"npc","title":"Ниа Безымянная","referenceKey":"nia","positionX":20,"positionY":20,"width":340},
+                {"key":"dome-dialogue","type":"list","title":"Голос короны","data":{"rows":[{"left":"Ниа","right":"Я не хочу будить его. Я хочу, чтобы он перестал видеть мои сны.","color":"#b54f64"},{"left":"Голос","right":"Шестая линза уже выбрала. Осталось только назвать цену.","color":"#8f3d4e"}]},"positionX":410,"positionY":20,"width":420},
+                {"key":"dome-combat","type":"combat","title":"Стражи пророчицы","data":{"creatures":[{"kind":"simple","id":"ember-priest","name":"Жрец угольного круга","ac":14,"hp":36,"hpMax":36,"description":"Перенаправляет огненный урон в ближайшую линзу.","count":2},{"kind":"simple","id":"smoke-wisp","name":"Бездымный огонёк","ac":15,"hp":9,"hpMax":9,"description":"Невидим в полной темноте.","count":4}]},"positionX":20,"positionY":280,"width":410},
+                {"key":"dome-secret","type":"material","title":"Секрет Нии","materialKey":"nia-dossier","data":{"note":"Показать только после разговора с Мирой или проверки медальона Нии."},"positionX":480,"positionY":310,"width":360}
+              ],
+              "blockEdges":[{"from":"dome-nia","to":"dome-dialogue"},{"from":"dome-dialogue","to":"dome-combat","label":"Угроза"},{"from":"dome-dialogue","to":"dome-secret","label":"Доверие"}]
+            }
+          ],
+          "sceneEdges":[{"from":"lens-labyrinth","to":"cult-in-dome","label":"Открыть западный купол"}]
+        },
+        {
+          "key":"crown-awakens","number":"5","name":"Когда корона проснётся","description":"В хранилище сходятся Мира, Ниа, Элиан и Веск. Решение героев определит, кто станет голосом дракона и переживёт ли долина рассвет.","status":"planned","imageKey":"dungeon","positionX":420,"positionY":120,
+          "scenes": [
+            {"key":"sixth-pedestal","name":"Шестой пьедестал","status":"planned","imageKey":"discovery","positionX":40,"positionY":90,
+              "blocks":[
+                {"key":"pedestal-location","type":"location","title":"Хранилище Короны","referenceKey":"crown-vault","positionX":20,"positionY":20,"width":350},
+                {"key":"pedestal-quest","type":"quest","title":"Корона без пламени","referenceKey":"break-crown","positionX":420,"positionY":20,"width":350},
+                {"key":"pedestal-choices","type":"list","title":"Три решения","data":{"rows":[{"left":"Уничтожить","right":"Разбить линзы и сразиться с освобождённой тенью дракона.","color":"#c95f51"},{"left":"Запечатать","right":"Один герой отдаёт короне важное воспоминание.","color":"#557fb7"},{"left":"Принять","right":"Назвать нового носителя и заключить союз с драконом.","color":"#8e62b8"}]},"positionX":20,"positionY":270,"width":430},
+                {"key":"pedestal-clock","type":"text","title":"Часы катастрофы","data":{"text":"<p>После каждого раунда гаснет одна линза. На шестом ударе дракон просыпается сам. Убедительные обращения к Нии, Элиану или Мире могут восстановить по одной линзе.</p>"},"positionX":500,"positionY":270,"width":390}
+              ],
+              "blockEdges":[{"from":"pedestal-location","to":"pedestal-quest"},{"from":"pedestal-quest","to":"pedestal-choices"},{"from":"pedestal-choices","to":"pedestal-clock","bidirectional":true}]
+            },
+            {"key":"dragon-heart","name":"Сердце под горой","status":"planned","imageKey":"battle","positionX":440,"positionY":90,
+              "blocks":[
+                {"key":"heart-opening","type":"text","title":"Пробуждение","data":{"text":"<p>Каменный пол становится прозрачным. Под ним открывается золотой глаз величиной с площадь Бриндла, и все металлические предметы начинают светиться изнутри.</p>"},"positionX":20,"positionY":20,"width":420},
+                {"key":"heart-combat","type":"combat","title":"Тень дракона","data":{"creatures":[{"kind":"simple","id":"dragon-shadow","name":"Тень Аурикса","ac":17,"hp":126,"hpMax":126,"description":"Не может покинуть круг линз; меняет тип урона каждый раунд.","count":1}]},"positionX":490,"positionY":20,"width":390},
+                {"key":"heart-ending","type":"text","title":"Эпилог","data":{"text":"<p><strong>Уничтожение:</strong> долина свободна, но магическое стекло тускнеет. <strong>Печать:</strong> герой теряет воспоминание, а Ниа получает новую жизнь. <strong>Союз:</strong> Эйрваль становится первым владением вернувшегося дракона.</p>"},"positionX":20,"positionY":300,"width":500},
+                {"key":"heart-prophecy","type":"material","title":"Последняя строка","materialKey":"prophecy","data":{"note":"Теперь ясно: «хозяин» — не дракон, а тот, кто добровольно принимает ответственность за его силу."},"positionX":570,"positionY":300,"width":350}
+              ],
+              "blockEdges":[{"from":"heart-opening","to":"heart-combat"},{"from":"heart-combat","to":"heart-ending","label":"Победа"},{"from":"heart-prophecy","to":"heart-ending"}]
+            }
+          ],
+          "sceneEdges":[{"from":"sixth-pedestal","to":"dragon-heart","label":"Шестой удар"}]
+        }
+      ],
+      "edges":[{"from":"silent-stars","to":"crown-awakens","label":"Линзы настроены"}]
+    }
+  ]
+}

@@ -502,6 +502,11 @@ Startup SQL создаёт существующим сессиям первую 
 Существующие пары встречных рёбер на любом из трёх холстов startup migration
 сводит в одну двустороннюю связь, сохраняя первую непустую подпись.
 
+MCP bulk import does not add a persistence format or staging tables. Its
+portable string keys are resolved to the same session, arc, chapter, scene,
+world and material rows inside one PostgreSQL transaction; a failed reference
+leaves no partially created session.
+
 Encounter combatant хранит ссылку `itemId`, пользовательский `override` и
 уникальную для NPC латинскую метку `markerLetter` (`A`–`Z`).
 Старые embedded `itemRaw` и денормализованные name/ac/hp поля переносятся в

@@ -401,5 +401,20 @@ resolve/archive, см. `md/features/mcp.md`.
 
 ## MCP
 
+Session authoring tools use the bearer-authenticated MCP endpoint and never
+expose participant or character-sheet data:
+
+- `sessions_list({ownerLogin})` lists active sessions owned by one exact login;
+- `session_adventure_get({ownerLogin,sessionUuid})` returns the complete authored
+  campaign projection: arcs, chapters, scenarios, blocks, graph edges, world
+  entities and materials;
+- `session_adventure_import({ownerLogin,document})` creates a session from one
+  portable JSON document. The document uses stable local keys instead of
+  database ids. All keys, system catalogue images and cross-references are
+  resolved in one transaction; any invalid reference rolls back the entire
+  import. Portable materials are limited to `text` and `note`; uploaded binary
+  assets remain a separate owner-authenticated storage workflow. The mutation
+  requires `MCP_WRITE_ENABLED=true`.
+
 `POST /mcp` — bearer-authenticated JSON-RPC endpoint. Его tool contract описан
 в `md/features/mcp.md`; он не имеет HTTP compatibility aliases.
