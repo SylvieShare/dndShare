@@ -66,10 +66,14 @@ WHERE condition.type_id = 9
   );
 
 INSERT INTO dndshare.item (name, name_en, data, type_id)
-SELECT 'Ярость', 'Rage', '{"code":"rage","desc":"Преимущество на проверки и спасброски Силы, бонус к урону рукопашным оружием Силой и сопротивление дробящему, колющему и рубящему урону.","polarity":"positive","color":"#e0524e","stacking":"single","duration":{"kind":"manual"},"derived_effects":[{"kind":"roll_mode","mode":"advantage","scopes":["ability_check","skill_check","saving_throw"],"ability_ids":[1],"label":"ярость"},{"kind":"weapon_damage_bonus","value_parameter":"damage_bonus","ability_ids":[1],"weapon_kind":"melee","label":"бонус ярости"}],"defenses":[{"damage_type":1,"kind":"resistance"},{"damage_type":2,"kind":"resistance"},{"damage_type":3,"kind":"resistance"}]}'::jsonb, 15
+SELECT 'Ярость', 'Rage', '{"code":"rage","desc":"Преимущество на проверки и спасброски Силы, бонус к урону рукопашным оружием Силой и сопротивление дробящему, колющему и рубящему урону.","polarity":"positive","color":"#e0524e","stacking":"single","duration":{"kind":"minutes","value":1},"derived_effects":[{"kind":"roll_mode","mode":"advantage","scopes":["ability_check","skill_check","saving_throw"],"ability_ids":[1],"label":"ярость"},{"kind":"weapon_damage_bonus","value_parameter":"damage_bonus","ability_ids":[1],"weapon_kind":"melee","label":"бонус ярости"}],"defenses":[{"damage_type":1,"kind":"resistance"},{"damage_type":2,"kind":"resistance"},{"damage_type":3,"kind":"resistance"}]}'::jsonb, 15
 WHERE NOT EXISTS (
   SELECT 1 FROM dndshare.item WHERE type_id = 15 AND user_id IS NULL AND data ->> 'code' = 'rage'
 );
+
+UPDATE dndshare.item
+SET data = jsonb_set(data, '{duration}', '{"kind":"minutes","value":1}'::jsonb, true)
+WHERE type_id = 15 AND user_id IS NULL AND data ->> 'code' = 'rage';
 
 INSERT INTO dndshare.item (name, name_en, data, type_id)
 SELECT 'Щит веры', 'Shield of Faith', '{"code":"shield_of_faith","desc":"Бонус +2 к КД на время концентрации.","polarity":"positive","color":"#5aaf72","stacking":"single","duration":{"kind":"minutes","value":10},"concentration":true,"derived_effects":[{"kind":"armor_bonus","value":2,"label":"Щит веры"}]}'::jsonb, 15
@@ -201,7 +205,7 @@ WITH rage_config AS (
              ORDER BY COALESCE((scaling.value ->> 'level')::int, 0) DESC
              LIMIT 1
            ), 0)),
-           'duration', jsonb_build_object('kind', 'manual'),
+           'duration', jsonb_build_object('kind', 'minutes', 'value', 1),
            'concentration', false
          )) AS statuses
   FROM dndshare."char" character
@@ -233,6 +237,33 @@ SET data = jsonb_set(
 )
 FROM additions
 WHERE character.id = additions.id;
+
+WITH rage AS (
+  SELECT id FROM dndshare.item
+  WHERE type_id = 15 AND user_id IS NULL AND data ->> 'code' = 'rage'
+  LIMIT 1
+), rewritten AS (
+  SELECT character.id,
+         jsonb_agg(
+           CASE WHEN status.value ->> 'effect_id' = rage.id::text
+             THEN jsonb_set(status.value, '{duration}', '{"kind":"minutes","value":1}'::jsonb, true)
+             ELSE status.value
+           END
+           ORDER BY status.ordinality
+         ) AS statuses
+  FROM dndshare."char" character
+  CROSS JOIN rage
+  CROSS JOIN LATERAL jsonb_array_elements(CASE
+    WHEN jsonb_typeof(character.data #> '{values,states}') = 'array' THEN character.data #> '{values,states}'
+    ELSE '[]'::jsonb END
+  ) WITH ORDINALITY status(value, ordinality)
+  GROUP BY character.id
+)
+UPDATE dndshare."char" character
+SET data = jsonb_set(character.data, '{values,states}', rewritten.statuses, true)
+FROM rewritten
+WHERE character.id = rewritten.id
+  AND character.data #> '{values,states}' IS DISTINCT FROM rewritten.statuses;
 
 UPDATE dndshare.item_type item_type
 SET count_items = (SELECT COUNT(*) FROM dndshare.item item WHERE item.type_id = item_type.id AND item.user_id IS NULL)
