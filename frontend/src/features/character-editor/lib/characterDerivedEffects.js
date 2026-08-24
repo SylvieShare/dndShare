@@ -2,6 +2,7 @@ import { abilityModifier, proficiencyBonus, resolveNumValue, sumBonuses } from '
 import { abilityOwnerLevel } from '@/shared/lib/dndAbilityUses'
 import { SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
 import { featureEntryActive } from '@/features/character-editor/lib/featureEntryState'
+import { collectStatusDerivedEffects } from '@/features/character-editor/lib/characterStatuses'
 
 const VALUE_IDS = ['abilities_feats', 'abilities_race', 'abilities_class']
 
@@ -53,7 +54,7 @@ function contextMatches(rule, entry, context = {}) {
 }
 
 export function collectCharacterDerivedEffects(values = {}, itemsById = new Map()) {
-  return VALUE_IDS.flatMap((valueId) => asArray(values?.[valueId]).flatMap((entry) => {
+  const ownedEffects = VALUE_IDS.flatMap((valueId) => asArray(values?.[valueId]).flatMap((entry) => {
     if (!featureEntryActive(valueId, entry)) return []
     const item = itemsById.get(String(entry.id))
     if (!item) return []
@@ -69,6 +70,7 @@ export function collectCharacterDerivedEffects(values = {}, itemsById = new Map(
       }]
     })
   }))
+  return [...ownedEffects, ...collectStatusDerivedEffects(values, itemsById)]
 }
 
 export function matchingDerivedEffects(effects, kind, context = {}) {

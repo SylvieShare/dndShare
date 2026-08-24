@@ -18,7 +18,7 @@
       :type="editable ? 'button' : undefined"
       @click.stop="select('states')"
     >
-      <span class="dsov-label">Состояния</span>
+      <span class="dsov-label">Эффекты</span>
       <span v-if="activeItems.length" class="dsov-chips">
         <span
           v-for="item in activeItems"

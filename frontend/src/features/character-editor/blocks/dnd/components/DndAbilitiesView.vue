@@ -49,6 +49,20 @@
           >
             <b>{{ effect.title }}</b><template v-if="effect.description"> — {{ effect.description }}</template>
           </span>
+          <span v-if="manage && entry.status_effects?.length" class="abv-statuses">
+            <button
+              v-for="link in entry.status_effects"
+              :key="link.key"
+              type="button"
+              class="abv-status"
+              :class="{ 'abv-status--active': link.active }"
+              :disabled="!link.effect"
+              @click.stop="$emit('toggle-status', entry, link)"
+            >
+              <Activity :size="12" :stroke-width="2" />
+              {{ link.active ? 'Снять' : 'Добавить' }} {{ link.effect?.name || 'эффект' }}
+            </button>
+          </span>
         </span>
 
         <span v-if="entry.rollback_short_rest" class="abv-badge abv-sr" title="Восстанавливается на коротком отдыхе">КО</span>
@@ -59,7 +73,7 @@
 </template>
 
 <script setup>
-import { Plus } from '@lucide/vue'
+import { Activity, Plus } from '@lucide/vue'
 import SheetBlockTitle from '@/shared/ui/SheetBlockTitle'
 import SvgIcon from '@/shared/ui/SvgIcon.vue'
 import DndRichContent from '@/shared/ui/DndRichContent.vue'
@@ -75,7 +89,7 @@ defineProps({
   panel: { type: Boolean, default: false },
   expanded: { type: Boolean, default: false },
 })
-defineEmits(['view', 'show-tooltip', 'hide-tooltip', 'manage', 'add'])
+defineEmits(['view', 'show-tooltip', 'hide-tooltip', 'manage', 'add', 'toggle-status'])
 </script>
 
 <style scoped>
@@ -153,6 +167,10 @@ defineEmits(['view', 'show-tooltip', 'hide-tooltip', 'manage', 'add'])
 .abv-effect--warning b { color: var(--warning); }
 .abv-effect--danger b { color: var(--danger); }
 .abv-effect--success b { color: var(--success); }
+.abv-statuses { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; }
+.abv-status { display: inline-flex; align-items: center; gap: 4px; min-height: 24px; padding: 3px 7px; border: 1px solid color-mix(in srgb, var(--success) 40%, var(--border)); border-radius: 6px; background: color-mix(in srgb, var(--success) 8%, transparent); color: var(--success); font: inherit; font-size: 9px; font-weight: 700; cursor: pointer; }
+.abv-status--active { border-color: color-mix(in srgb, var(--danger) 45%, var(--border)); background: color-mix(in srgb, var(--danger) 9%, transparent); color: var(--danger); }
+.abv-status:disabled { cursor: default; opacity: .45; }
 
 .abv-badge {
   font-size: 9px;

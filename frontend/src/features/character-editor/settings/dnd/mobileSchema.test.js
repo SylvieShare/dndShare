@@ -63,7 +63,7 @@ describe('D&D mobile sheet schema', () => {
     })
     expect(schema.blocks.mobile_statuses.content).toEqual({
       states_id: 'states',
-      states_suggest_id: 9,
+      effect_item_type_id: 15,
       exhaustion_id: 'exhaustion',
       inspiration_id: 'inspiration',
     })

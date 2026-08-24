@@ -410,11 +410,32 @@ currently unlocked value rather than stacking every historical tier.
 
 Unarmored Defense, Draconic Resilience, Fast and Unarmored Movement, Expertise,
 Jack of All Trades, Diamond Soul, Slippery Mind, Aura of Protection, the Defense
-and Archery fighting styles, and Champion critical thresholds use this contract.
-The same calculations are used by the interactive and print sheets. Contextual
-or activated effects such as Rage and Reckless Attack remain visible in the
-text of their owning ability until an explicit active mode is selected;
-they are never applied permanently merely because the feature is owned.
+and Archery fighting styles, Danger Sense, and Champion critical thresholds use
+this contract. The same calculations are used by the interactive and print
+sheets. Danger Sense therefore marks Dexterity saving throws with its visible
+condition, while an activated rule is never applied merely because its feature
+is owned.
+
+Active effects use item type 15 (`Эффекты`) as a structured catalogue. Each
+catalogue row owns polarity (`positive`, `negative` or `neutral`), colour,
+description, stacking policy, default duration, concentration and optional
+`derived_effects`/`defenses`. `values.states` stores only runtime instances:
+`uid`, `effect_id`, source identity, bound `params`, duration and concentration.
+This keeps a temporary spell or ability effect removable with its source and
+allows the same catalogue effect to be added manually from the status block.
+Abilities, feats and spells declare zero or more links in `status_effects`;
+several links are presented as independent choices. A link may bind the owning
+ability's current scaling value into a named effect parameter.
+
+Rage is the first parameterized ability effect: activating its sheet widget
+consumes the ability resource, adds the shared Rage status and applies Strength
+check/save advantage, the current Strength-melee damage bonus and physical
+damage resistances. Shield of Faith exposes its linked status in the spell action
+menu, adds +2 AC and replaces another concentration status. Removing a source
+ability/spell removes statuses created by that source; manually added instances
+remain independent. Round countdown and encounter propagation are deliberately
+future consumers of the stored duration/source contract, not separate state
+formats.
 
 Fixed class-feature spell selections use the existing ability-choice grant
 contract. Druid cantrip, Magical Secrets, Spell Mastery and Signature Spells are
@@ -487,9 +508,11 @@ theses are also owned by the widget data rather than its UI component. The
 runtime does not check class, feature name or item id. Sneak Attack publishes
 its live dice together with eligible-weapon, advantage-or-nearby-enemy,
 no-disadvantage and once-per-turn reminders; Rage publishes its current damage
-progression and an active toggle.
-Entering Rage consumes one available use, while leaving it active only changes
-the persisted mode state. Subclass features can contribute `note` widgets with
+progression and an active toggle. Toggle widgets may reference a linked
+`status_effect_key`; their active state then comes from `values.states` rather
+than a parallel widget flag. Entering Rage consumes one available use, while
+leaving it active removes the source-owned effect without refunding the use.
+Subclass features can contribute `note` widgets with
 the same key to extend that panel.
 
 `feature_actions` is the matching ability-owned contract for the shared

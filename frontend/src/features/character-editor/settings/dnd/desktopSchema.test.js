@@ -67,7 +67,7 @@ describe('D&D desktop sheet schema', () => {
       type: 'DND_STATUS_OVERVIEW',
       content: {
         states_id: 'states',
-        states_suggest_id: 9,
+        effect_item_type_id: 15,
         exhaustion_id: 'exhaustion',
         inspiration_id: 'inspiration',
       },

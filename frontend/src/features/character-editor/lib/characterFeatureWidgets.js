@@ -1,5 +1,6 @@
 import { abilityOwnerLevel } from '@/shared/lib/dndAbilityUses'
 import { featureEntryActive } from './featureEntryState'
+import { linkedStatusActive, ownedAbilityStatusSource, statusEffectLinks } from './characterStatuses'
 
 const VALUE_IDS = ['abilities_feats', 'abilities_race', 'abilities_class']
 
@@ -55,6 +56,9 @@ export function collectCharacterFeatureWidgets(values, itemsById, resources = []
       const resource = resolvedResource || (definition.kind === 'toggle' && Number(scaling?.uses) === 0
         ? { value: '∞', total: '∞', unlimited: true }
         : null)
+      const statusEffectLink = statusEffectLinks(item)
+        .find(link => String(link.key) === String(definition.status_effect_key || '')) || null
+      const statusSource = ownedAbilityStatusSource(valueId, entry, item)
       return [{
         key,
         kind: definition.kind || 'metric',
@@ -72,7 +76,11 @@ export function collectCharacterFeatureWidgets(values, itemsById, resources = []
         value_id: valueId,
         entry_key: entryKey(entry),
         state_key: key,
-        active: !!entry.widget_states?.[key],
+        active: statusEffectLink
+          ? linkedStatusActive(values, item, statusEffectLink, statusSource)
+          : !!entry.widget_states?.[key],
+        status_effect_link: statusEffectLink,
+        status_source: statusSource,
         resource,
         item,
       }]

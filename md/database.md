@@ -116,8 +116,8 @@ the sheet derives its current d6 count from the owning Rogue level.
 checks. Widget definitions select metric/toggle/note presentation, a value source,
 resource binding, tone and shared panel key. Section
 `48_feature_sheet_widgets.sql` adds the contract and configures Sneak Attack and
-Rage as its first consumers; active toggle state is stored on the owned ability
-entry in `widget_states`.
+Rage as its first consumers. A toggle may bind to `status_effect_key`; that
+effect instance, rather than `widget_states`, is the canonical active state.
 `49_roll_adjustments.sql` adds source-owned automatic d20 adjustments to race,
 class ability and feat schemas. Reliable Talent declares a level-11
 `minimum_natural` adjustment for ability checks with at least full proficiency;
@@ -131,6 +131,14 @@ by their stable suggest type-24 codes. The startup catalog configuration
 locates the initial Rogue consumers by stable English identity; runtime only
 reads the structured rows. Character-created actions are stored separately in
 `char.values.actions` and remain editable.
+`51_status_effects.sql` creates item type 15 (`Эффекты`) and the generic
+`status_effects` link array on abilities, racial abilities, feats and spells.
+Catalogue items keep polarity, stacking, duration, concentration, derived
+bonuses and defenses. Character `values.states` contains source-owned runtime
+instances with bound parameters; legacy suggest-type-9 state ids and active
+Rage widget flags are migrated to that format. Rage and Shield of Faith are the
+initial automatic consumers, while all former condition suggests are imported
+as negative effect items for manual selection.
 Section `34_ability_resource_catalog_fixes.sql` задаёт структурированные правила
 Харизмы для «Вдохновения барда» и Мудрости для «Гнева бури», удаляет прежний
 ручной максимум вдохновения и переводит его полные старые character entries на

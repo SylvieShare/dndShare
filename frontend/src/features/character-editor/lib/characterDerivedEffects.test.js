@@ -6,6 +6,7 @@ import {
   derivedGrantedProficiencies,
   derivedNumericBonus,
   derivedProficiency,
+  derivedRollEffects,
   derivedSpeedBonuses,
 } from './characterDerivedEffects'
 
@@ -71,5 +72,21 @@ describe('class-derived effects', () => {
   it('ignores all derived effects of a feat marked with unmet requirements', () => {
     const featItems = new Map([['9', { id: 9, name: 'Бдительность', data: { derived_effects: [{ kind: 'check_bonus', value: 5 }] } }]])
     expect(collectCharacterDerivedEffects({ abilities_feats: [{ id: 9, requirements_met: false }] }, featItems)).toEqual([])
+  })
+
+  it('publishes roll and parameterized bonuses from active status instances', () => {
+    const statusItems = new Map([['100', {
+      id: 100,
+      name: 'Ярость',
+      data: { derived_effects: [
+        { kind: 'roll_mode', mode: 'advantage', scopes: ['ability_check'], ability_ids: [1] },
+        { kind: 'weapon_damage_bonus', value_parameter: 'damage_bonus', ability_ids: [1] },
+      ] },
+    }]])
+    const active = { states: [{ uid: 'rage', effect_id: 100, params: { damage_bonus: 3 } }] }
+    const effects = collectCharacterDerivedEffects(active, statusItems)
+    expect(derivedRollEffects(effects, { kind: 'ability_check', abilitySuggestId: 1 })).toMatchObject([{ mode: 'advantage' }])
+    expect(derivedNumericBonus(effects, 'weapon_damage_bonus', active, { abilitySuggestId: 1 }).total).toBe(3)
+    expect(derivedRollEffects(effects, { kind: 'ability_check', abilitySuggestId: 2 })).toEqual([])
   })
 })

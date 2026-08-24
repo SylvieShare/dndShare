@@ -169,6 +169,9 @@ var schemaRollAdjustmentsSQL string
 //go:embed schema/50_feature_actions.sql
 var schemaFeatureActionsSQL string
 
+//go:embed schema/51_status_effects.sql
+var schemaStatusEffectsSQL string
+
 var schemaParts = []struct {
 	name string
 	sql  string
@@ -225,6 +228,7 @@ var schemaParts = []struct {
 	{"feature-sheet-widgets", schemaFeatureSheetWidgetsSQL},
 	{"roll-adjustments", schemaRollAdjustmentsSQL},
 	{"feature-actions", schemaFeatureActionsSQL},
+	{"status-effects", schemaStatusEffectsSQL},
 }
 
 func applySchema(ctx context.Context, pool *pgxpool.Pool) error {

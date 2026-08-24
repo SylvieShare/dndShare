@@ -11,7 +11,7 @@ describe('desktop status overview', () => {
     expect(source).toContain('<BaseTile')
     expect(source).toContain(':strip="hasActiveSummary"')
     expect(viewSource).toContain('>Статусы<')
-    expect(viewSource).toContain('>Состояния<')
+    expect(viewSource).toContain('>Эффекты<')
     expect(viewSource).toContain('>Истощение<')
     expect(viewSource).toContain('>Вдохновение<')
   })

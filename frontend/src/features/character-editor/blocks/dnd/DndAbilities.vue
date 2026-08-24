@@ -18,6 +18,7 @@
         @view="onView"
         @add="pickerOpen = true"
         @manage="onManage"
+        @toggle-status="toggleAbilityStatus"
         @show-tooltip="showTooltip"
         @hide-tooltip="hideTooltip"
       />
@@ -43,6 +44,7 @@
           :expanded="!!block.content?.expanded"
           @view="onView"
           @add="pickerOpen = true"
+          @toggle-status="toggleAbilityStatus"
           @show-tooltip="showTooltip"
           @hide-tooltip="hideTooltip"
         />
@@ -138,6 +140,7 @@ import { logSessionEntryAdded } from '@/features/character-editor/lib/sessionEnt
 import { abilityScalingLabel, abilityUseTotal, abilityUsesAreManual } from '@/shared/lib/dndAbilityUses'
 import { useFeatSheetRequirements } from '@/features/character-editor/composables/useFeatSheetRequirements'
 import { characterChoiceOptionEligibility } from '@/features/items/lib/characterChoiceEligibility'
+import { ownedAbilityStatusSource } from '@/features/character-editor/lib/characterStatuses'
 
 const props = defineProps(['block', 'value', 'values'])
 const emit = defineEmits(['update:value'])
@@ -180,6 +183,7 @@ const entries = computed(() =>
       if (!item) return null
       const manualSize = abilityUsesAreManual(item.data)
       const maxUse = abilityUseTotal(item.data, props.values, s)
+      const statusSource = ownedAbilityStatusSource(props.block.id, s, item)
       return {
         key: s.uid || String(s.id),
         uid: s.uid,
@@ -206,6 +210,11 @@ const entries = computed(() =>
         ],
         has_choices: actionableItemChoices(item).length > 0,
         isUserOwned: item.userId != null,
+        status_effects: (charCtx.characterStatuses?.links?.(item) || []).map(link => ({
+          ...link,
+          active: !!charCtx.characterStatuses?.linkedActive?.(item, link, statusSource),
+        })),
+        status_source: statusSource,
       }
     })
     .filter(Boolean)
@@ -352,6 +361,8 @@ function logAddedEntry(item) {
 
 function addFromCatalog(item) {
   if (!catalog.value.find(c => c.id === item.id)) catalog.value.push(item)
+  charCtx.characterResources?.rememberItems?.([item])
+  charCtx.characterStatuses?.ensureLinks?.(item)
   if (actionableItemChoices(item).length) {
     choiceEditingKey.value = null
     choiceConfigItem.value = item
@@ -408,12 +419,23 @@ function onChoicesConfirm(choices) {
 
 function removeAbility(key) {
   hideTooltip()
+  const removedEntry = entries.value.find(entry => String(entry.key) === String(key))
   if (Number(props.block.content.item_id) === 7) {
     const entry = stored.value.find(s => (s.uid || String(s.id)) === key)
     const item = entry && catalog.value.find(candidate => candidate.id === entry.id)
     if (entry && item) removeFeatStatBonuses(item, entry)
   }
   emitChange(stored.value.filter(s => (s.uid || String(s.id)) !== key))
+  if (removedEntry?.status_source && typeof charCtx.updateValues === 'function') {
+    charCtx.updateValues({ states: charCtx.characterStatuses?.removeBySource?.(removedEntry.status_source) || [] })
+  }
+}
+
+function toggleAbilityStatus(entry, link) {
+  if (!ownerMode.value || !link?.effect || typeof charCtx.updateValues !== 'function') return
+  charCtx.updateValues({
+    states: charCtx.characterStatuses.toggleLinked(link.effect, entry.item, link, entry.status_source),
+  })
 }
 
 function reorderAbilities(keys) {
@@ -476,6 +498,7 @@ onMounted(async () => {
         ? await charCtx.characterResources.ensureItems(ids)
         : await itemsApi.byIds(ids)
       catalog.value = r.items || []
+      await Promise.all(catalog.value.map(item => charCtx.characterStatuses?.ensureLinks?.(item)))
       hydrateItemChoices()
       syncFeatRequirements()
     } catch (e) { /* show what we have */ }

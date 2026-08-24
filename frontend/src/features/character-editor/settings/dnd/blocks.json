@@ -285,7 +285,7 @@
     "type": "DND_MOBILE_STATUS_MENU",
     "content": {
       "states_id": "states",
-      "states_suggest_id": 9,
+      "effect_item_type_id": 15,
       "exhaustion_id": "exhaustion",
       "inspiration_id": "inspiration"
     }
@@ -295,7 +295,7 @@
     "type": "DND_STATUS_OVERVIEW",
     "content": {
       "states_id": "states",
-      "states_suggest_id": 9,
+      "effect_item_type_id": 15,
       "exhaustion_id": "exhaustion",
       "inspiration_id": "inspiration"
     }

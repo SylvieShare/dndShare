@@ -70,4 +70,18 @@ describe('character defenses', () => {
       readonly: true,
     }])
   })
+
+  it('shows defenses contributed by an active status effect', () => {
+    const values = { states: [{ uid: 'rage', effect_id: 100 }] }
+    const items = new Map([['100', {
+      id: 100,
+      name: 'Ярость',
+      data: { defenses: [{ damage_type: 3, kind: 'resistance' }] },
+    }]])
+    expect(collectCharacterDefenses(values, items, [])).toMatchObject([{
+      damage_type: 3,
+      kind: 'resistance',
+      readonly: true,
+    }])
+  })
 })

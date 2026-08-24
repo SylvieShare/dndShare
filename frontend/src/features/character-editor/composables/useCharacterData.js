@@ -13,6 +13,7 @@ import { useCharacterHitPoints } from '@/features/character-editor/composables/u
 import { useCharacterPassiveEffects } from '@/features/character-editor/composables/useCharacterPassiveEffects'
 import { useCharacterCombatEffects } from '@/features/character-editor/composables/useCharacterCombatEffects'
 import { useCharacterDerivedEffects } from '@/features/character-editor/composables/useCharacterDerivedEffects'
+import { useCharacterStatuses } from '@/features/character-editor/composables/useCharacterStatuses'
 import {
   activeLayoutProfile,
   initialTabs,
@@ -36,6 +37,7 @@ export function useCharacterData(uuid, isMobile) {
   const sessions = ref([])
   const characterValues = computed(() => data.value.values || {})
   const characterResources = useCharacterResources(characterValues)
+  const characterStatuses = useCharacterStatuses(characterValues, characterResources)
   const characterDefenses = useCharacterDefenses(characterValues, characterResources.itemsById)
   const characterHitPoints = useCharacterHitPoints(characterValues, characterResources.itemsById)
   const characterPassiveEffects = useCharacterPassiveEffects(characterValues, characterResources.itemsById)
@@ -52,6 +54,7 @@ export function useCharacterData(uuid, isMobile) {
     iconImageUrl,
     uploadCharacterIcon,
     characterResources,
+    characterStatuses,
     characterDefenses,
     characterHitPoints,
     characterPassiveEffects,

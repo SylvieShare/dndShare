@@ -27,4 +27,10 @@ describe('preset attacks', () => {
     expect(presetDamageExpression('improvised', -1)).toBe('1d4{Дробящий}-1{Дробящий}')
     expect(presetDamageExpression('improvised', -1, true)).toBe('2d4{Дробящий}-1{Дробящий}')
   })
+
+  it('adds an active flat feature bonus without doubling it on a critical hit', () => {
+    expect(unarmedStrikeDamage(3, 2)).toBe(6)
+    expect(presetDamageExpression('unarmed', 3, false, 2)).toBe('6{Дробящий}')
+    expect(presetDamageExpression('improvised', 3, true, 2)).toBe('2d4{Дробящий}+5{Дробящий}')
+  })
 })

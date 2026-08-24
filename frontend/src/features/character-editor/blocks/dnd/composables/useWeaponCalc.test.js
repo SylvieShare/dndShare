@@ -15,8 +15,10 @@ describe('weapon critical damage', () => {
       propertyItems: () => [],
       itemBaseAttacks: () => [{ count: 1, dice_id: 1, type: 2 }],
       itemTwoHandedAttacks: () => [],
+      damageBonusModifier: () => 2,
     })
     const entry = { stat_suggest_id: 1, params: {}, add_attacks: [{ count: 1, dice_id: 1, type_suggest_id: 2 }] }
-    expect(calc.criticalDamageExpression(entry, 1)).toBe('3d6{Рубящий}+2d6{Рубящий}+3{Рубящий}')
+    expect(calc.damageBonus(entry)).toBe(5)
+    expect(calc.criticalDamageExpression(entry, 1)).toBe('3d6{Рубящий}+2d6{Рубящий}+5{Рубящий}')
   })
 })

@@ -22,6 +22,7 @@ function findStatesBlock(templateStore, templateId) {
       return {
         valueId: b.content?.states_id || 'states',
         suggestId: b.content?.states_suggest_id || DND_STATES_SUGGEST_ID,
+        effectItemTypeId: Number(b.content?.effect_item_type_id) || null,
       }
     }
   }
@@ -49,7 +50,10 @@ export function useEncounterStates({
     if (c.type === 'player') {
       const p = findParticipant(c.charId)
       const cfg = p ? findStatesBlock(templateStore, p.templateId) : null
-      if (!cfg) return null
+      // Structured character effects need a dedicated encounter control that
+      // preserves source, duration and parameters. Do not feed them through the
+      // legacy suggest editor: it would overwrite the runtime instances.
+      if (!cfg || cfg.effectItemTypeId) return null
       return { id: cfg.valueId, title: 'состояние', content: { suggest_id: cfg.suggestId, variant: 'compact' }, props: {} }
     }
     const sid = defaultStatesSuggestId.value
@@ -60,7 +64,7 @@ export function useEncounterStates({
     if (c.type === 'player') {
       const p = findParticipant(c.charId)
       const cfg = p ? findStatesBlock(templateStore, p.templateId) : null
-      if (!cfg) return []
+      if (!cfg || cfg.effectItemTypeId) return []
       const raw = getByPath(p.data ?? {}, `values.${cfg.valueId}`)
       return Array.isArray(raw) ? raw : []
     }
@@ -72,7 +76,7 @@ export function useEncounterStates({
     if (c.type === 'player') {
       const p = findParticipant(c.charId)
       const cfg = p ? findStatesBlock(templateStore, p.templateId) : null
-      if (!p || !cfg) return
+      if (!p || !cfg || cfg.effectItemTypeId) return
       const updates = [{ path: `values.${cfg.valueId}`, value: list }]
       applyLocalPatches(c.charId, updates)
       await charactersApi.patchData(p.charUuid, updates)

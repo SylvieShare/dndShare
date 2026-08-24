@@ -130,6 +130,39 @@
         {{ useLabel }}
       </RowActionItem>
       <RowActionItem
+        v-if="ctx.charCtx.ownerMode && statusLinks.length === 1"
+        action="status"
+        :icon="Activity"
+        :tone="ctx.statusEffectActive(entry, statusLinks[0]) ? 'danger' : 'success'"
+        :disabled="!statusLinks[0].effect"
+        @click="toggleStatus(statusLinks[0], close)"
+      >
+        {{ statusActionLabel(statusLinks[0]) }}
+      </RowActionItem>
+      <RowActionSubmenu
+        v-else-if="ctx.charCtx.ownerMode && statusLinks.length > 1"
+        label="Эффекты"
+      >
+        <template #trigger="{ open }">
+          <RowActionItem action="status" :icon="Activity" submenu :submenu-open="open">
+            Эффекты
+          </RowActionItem>
+        </template>
+        <template #default="{ close: closeEffects }">
+          <RowActionItem
+            v-for="link in statusLinks"
+            :key="link.key"
+            action="status"
+            :icon="Activity"
+            :tone="ctx.statusEffectActive(entry, link) ? 'danger' : 'success'"
+            :disabled="!link.effect"
+            @click="toggleStatus(link, closeEffects, close)"
+          >
+            {{ statusActionLabel(link) }}
+          </RowActionItem>
+        </template>
+      </RowActionSubmenu>
+      <RowActionItem
         v-if="ctx.charCtx.ownerMode && !isReadonlyGrant"
         action="delete"
         tone="danger"
@@ -140,7 +173,7 @@
 </template>
 
 <script setup>
-import { BookMarked, Sprout } from '@lucide/vue'
+import { Activity, BookMarked, Sprout } from '@lucide/vue'
 import { computed, inject, ref, watch } from 'vue'
 
 import AttackDamage from '@/features/character-editor/blocks/dnd/components/AttackDamage.vue'
@@ -213,6 +246,7 @@ const useLabel = computed(() => ctx.spellcastingBlocked ? 'Запрещено д
 const hasHigherLevelChoice = computed(() =>
   !props.entry.ref.slotless && slotOptions.value.some(level => level > baseLvl.value)
 )
+const statusLinks = computed(() => ctx.statusEffectLinks(props.entry))
 
 // Drag the whole row to reorder; the sortable's 4px threshold keeps a plain tap a click. A drag flips
 // `sortable.dragging` mid-gesture — we remember it so the trailing click doesn't open the spell modal.
@@ -252,6 +286,17 @@ function useAtLevel(level, closeSubmenu, closeMenu) {
   ctx.useSpell(props.entry, level)
   closeSubmenu()
   closeMenu()
+}
+
+function statusActionLabel(link) {
+  const title = link.effect?.name || 'эффект'
+  return `${ctx.statusEffectActive(props.entry, link) ? 'Убрать' : 'Добавить'} эффект «${title}»`
+}
+
+function toggleStatus(link, closeSubmenu, closeMenu) {
+  ctx.toggleSpellStatus(props.entry, link)
+  closeSubmenu?.()
+  closeMenu?.()
 }
 
 function removeSpell(close) {

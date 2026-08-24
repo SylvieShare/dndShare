@@ -343,7 +343,9 @@ async function loadDetails() {
   if (ids.length) {
     const res = await itemsApi.byIds(ids)
     for (const item of res.items || []) itemMap[item.id] = item
+    charCtx.characterResources?.rememberItems?.(res.items || [])
   }
+  await Promise.all(spells.value.map(spell => charCtx.characterStatuses?.ensureLinks?.(itemMap[spell.id])))
   normalizePreparationStatuses()
 }
 
@@ -385,7 +387,14 @@ function toggleAlwaysPrepared(id) {
 
 function removeSpell(id) {
   const idx = spells.value.findIndex(s => s.id === id)
-  if (idx !== -1) { spells.value.splice(idx, 1); emitChange() }
+  if (idx !== -1) {
+    const entry = { ref: spells.value[idx], item: itemMap[id] }
+    if (typeof charCtx.updateValues === 'function') {
+      charCtx.updateValues({ states: charCtx.characterStatuses?.removeBySource?.(spellStatusSource(entry)) || [] })
+    }
+    spells.value.splice(idx, 1)
+    emitChange()
+  }
 }
 
 const spellGroups = Object.fromEntries(SPELL_LEVELS.map(lvl => {
@@ -429,6 +438,8 @@ function onSpellDragStart(e, entry, level, idx) {
 function addSpell(item) {
   if (spellPickerEligibility(item).eligible && !spells.value.some(s => s.id === item.id)) {
     itemMap[item.id] = item
+    charCtx.characterResources?.rememberItems?.([item])
+    charCtx.characterStatuses?.ensureLinks?.(item)
     spells.value.push({ id: item.id, prepared: false })
     emitChange()
     logSessionEntryAdded(charCtx, {
@@ -439,6 +450,35 @@ function addSpell(item) {
 
 function openSpell(entry) {
   if (entry.item) modalSpell.value = entry.item
+}
+
+function spellStatusSource(entry) {
+  return {
+    kind: 'spell',
+    item_id: entry?.item?.id ?? entry?.ref?.id ?? null,
+    value_id: props.block.id,
+    entry_key: String(entry?.ref?.id || ''),
+    label: entry?.item?.name || 'Заклинание',
+  }
+}
+
+function statusEffectLinks(entry) {
+  return charCtx.characterStatuses?.links?.(entry?.item) || []
+}
+
+function statusEffectActive(entry, link) {
+  return !!charCtx.characterStatuses?.linkedActive?.(entry?.item, link, spellStatusSource(entry))
+}
+
+function toggleSpellStatus(entry, link) {
+  if (!charCtx.ownerMode || !link?.effect || typeof charCtx.updateValues !== 'function') return
+  const active = statusEffectActive(entry, link)
+  const states = charCtx.characterStatuses.toggleLinked(link.effect, entry.item, link, spellStatusSource(entry))
+  charCtx.updateValues({ states })
+  charCtx.logSessionEvent?.({
+    type: 'status_effect',
+    action: `${active ? 'Снят' : 'Добавлен'} эффект «${link.effect.name || entry.item.name}»`,
+  })
 }
 
 // ─── Rolls ─────────────────────────────────────────
@@ -608,6 +648,9 @@ provide('spellsBlockCtx', reactive({
   slotRemaining,
   useSpell,
   spellcastingBlocked,
+  statusEffectLinks,
+  statusEffectActive,
+  toggleSpellStatus,
 }))
 
 // ─── Lifecycle ─────────────────────────────────────

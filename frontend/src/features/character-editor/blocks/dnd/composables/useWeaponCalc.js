@@ -14,6 +14,7 @@ export function useWeaponCalc({
   itemBaseAttacks,
   itemTwoHandedAttacks,
   isProficient = (entry) => !!entry.proficient,
+  damageBonusModifier = () => 0,
 }) {
   function statMod(entry) {
     return weaponAbilityModifier(entry, item(entry), propertyItems(entry), statsVar.value)
@@ -28,7 +29,7 @@ export function useWeaponCalc({
   }
 
   function damageBonus(entry) {
-    return statMod(entry) + magicBonus(entry)
+    return statMod(entry) + magicBonus(entry) + (Number(damageBonusModifier(entry)) || 0)
   }
 
   function attackDisplay(attack) {

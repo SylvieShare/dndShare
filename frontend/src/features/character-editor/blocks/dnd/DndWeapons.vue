@@ -72,7 +72,7 @@
         subtitle="Сила · без владения"
         :attack-bonus="improvisedAttackBonus"
         :damage-parts="improvisedDamageParts"
-        :damage-modifier="strengthModifier"
+        :damage-modifier="strengthModifier + presetDamageBonus"
         :icon-item="improvisedPresetItem"
         @attack="rollPresetAttack('improvised')"
         @damage="rollPresetDamage('improvised')"
@@ -245,6 +245,7 @@ const {
   itemBaseAttacks,
   itemTwoHandedAttacks,
   isProficient: isWeaponProficient,
+  damageBonusModifier: entry => charCtx.characterDerivedEffects?.bonus?.('weapon_damage_bonus', weaponEffectContext(entry))?.total || 0,
 })
 
 function weaponEffectContext(entry) {
@@ -268,8 +269,15 @@ const armorAttackWarning = computed(() => !!armorState.value.strengthDexDisadvan
 const strengthModifier = computed(() => Number(statsVar.value['1']) || 0)
 const unarmedAttackBonus = computed(() => unarmedStrikeAttackBonus(strengthModifier.value, profBonus.value))
 const improvisedAttackBonus = computed(() => resolveImprovisedWeaponAttackBonus(strengthModifier.value))
-const unarmedDamage = computed(() => unarmedStrikeDamage(strengthModifier.value))
-const unarmedDamageFormula = computed(() => ({ base: 1, modifier: strengthModifier.value, total: unarmedDamage.value }))
+const presetDamageBonus = computed(() => charCtx.characterDerivedEffects?.bonus?.('weapon_damage_bonus', {
+  kind: 'attack', abilitySuggestId: 1, weaponKind: 'melee',
+})?.total || 0)
+const unarmedDamage = computed(() => unarmedStrikeDamage(strengthModifier.value, presetDamageBonus.value))
+const unarmedDamageFormula = computed(() => ({
+  base: 1,
+  modifier: strengthModifier.value + presetDamageBonus.value,
+  total: unarmedDamage.value,
+}))
 const improvisedDamageParts = [{ count: 1, diceSides: 4, diceLabel: 'd4', type: 'Дробящий', typeColor: 'var(--warning)' }]
 const unarmedPresetItem = computed(() => itemMap.value[PRESET_ATTACK_ART_ITEM_IDS.unarmed] || null)
 const improvisedPresetItem = computed(() => itemMap.value[PRESET_ATTACK_ART_ITEM_IDS.improvised] || null)
@@ -308,7 +316,7 @@ function rollPresetAttack(kind) {
 }
 
 function presetDamageExpression(kind, critical) {
-  return resolvePresetDamageExpression(kind, strengthModifier.value, critical)
+  return resolvePresetDamageExpression(kind, strengthModifier.value, critical, presetDamageBonus.value)
 }
 
 function rollPresetDamage(kind, critical = false) {

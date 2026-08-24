@@ -60,14 +60,11 @@
           </button>
         </div>
 
-        <BlockStatesPickerEditor
+        <CharacterStatusEditor
           v-if="editorKind === 'states'"
-          :suggest-type-id="suggestTypeId"
-          :items="allItems"
-          :active-ids="activeIds"
-          title="Состояния"
-          @toggle="toggleState"
-          @created="onStateCreated"
+          :statuses="statuses"
+          @add="pickerOpen = true"
+          @remove="removeStatus"
         />
         <DndExhaustionEditor
           v-else-if="editorKind === 'exhaustion'"
@@ -83,6 +80,16 @@
     </template>
   </MorphEditorShell>
 
+  <ItemPickerModal
+    v-if="pickerOpen"
+    :item-type-ids="[effectItemTypeId]"
+    title="Эффекты и состояния"
+    search-placeholder="Поиск эффекта..."
+    :z-index="3400"
+    @close="pickerOpen = false"
+    @pick="addStatus"
+  />
+
   <ItemTooltip
     v-if="tooltip.visible"
     :title="tooltip.title"
@@ -94,19 +101,19 @@
 </template>
 
 <script setup>
-import { computed, inject, onMounted, ref } from 'vue'
+import { computed, inject, ref } from 'vue'
 import { Activity, BatteryLow, Sparkles } from '@lucide/vue'
 import { BaseTile } from '@sylvieshare/share-ui'
-import BlockStatesPickerEditor from '@/features/character-editor/blocks/generic/components/BlockStatesPickerEditor'
+import CharacterStatusEditor from '@/features/character-editor/blocks/dnd/components/CharacterStatusEditor.vue'
 import DndExhaustionEditor from '@/features/character-editor/blocks/dnd/components/DndExhaustionEditor'
 import DndInspirationEditor from '@/features/character-editor/blocks/dnd/components/DndInspirationEditor'
 import DndStatusOverviewView from '@/features/character-editor/blocks/dnd/components/DndStatusOverviewView'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip'
+import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
 import { useMorphOrigin } from '@/features/character-editor/composables/useMorphOrigin'
 import { normalizeExhaustion } from '@/features/character-editor/blocks/dnd/lib/exhaustion'
 import { isInspirationActive } from '@/features/character-editor/blocks/dnd/lib/mobileStatus'
-import { useSuggestStore } from '@/stores/suggest'
 
 const props = defineProps({
   block: { type: Object, required: true },
@@ -115,9 +122,9 @@ const props = defineProps({
 
 const emit = defineEmits(['update:value'])
 const charCtx = inject('charCtx', { ownerMode: true })
-const suggestStore = useSuggestStore()
 const root = ref(null)
 const editorKind = ref('states')
+const pickerOpen = ref(false)
 const tooltip = ref({ visible: false, title: '', desc: '', x: 0, top: null, bottom: null })
 const { editorOpen, originRect, originEl, openFrom, close } = useMorphOrigin()
 
@@ -126,10 +133,19 @@ const ids = computed(() => ({
   exhaustion: props.block.content?.exhaustion_id || 'exhaustion',
   inspiration: props.block.content?.inspiration_id || 'inspiration',
 }))
-const suggestTypeId = computed(() => props.block.content?.states_suggest_id || 9)
-const activeIds = computed(() => Array.isArray(props.values?.[ids.value.states]) ? props.values[ids.value.states] : [])
-const allItems = computed(() => suggestStore.items(suggestTypeId.value))
-const activeItems = computed(() => allItems.value.filter(item => activeIds.value.includes(item.id)))
+const effectItemTypeId = computed(() => Number(props.block.content?.effect_item_type_id) || 15)
+const statuses = computed(() => {
+  const value = charCtx.characterStatuses?.entries
+  return Array.isArray(value) ? value : Array.isArray(value?.value) ? value.value : []
+})
+const activeItems = computed(() => statuses.value.map(status => ({
+  id: status.uid,
+  value: status.title,
+  desc: status.description,
+  color: status.color,
+  svg: status.item?.svg || '',
+  polarity: status.polarity,
+})))
 const exhaustionValue = computed(() => props.values?.[ids.value.exhaustion] || { level: 0 })
 const normalizedExhaustion = computed(() => normalizeExhaustion(exhaustionValue.value))
 const exhaustionLevel = computed(() => normalizedExhaustion.value.level)
@@ -144,14 +160,10 @@ const summaryColor = computed(() => {
   return activeItems.value[0]?.color || 'var(--accent)'
 })
 const tabs = computed(() => [
-  { id: 'states', label: 'Состояния', icon: Activity, value: activeIds.value.length || '' },
+  { id: 'states', label: 'Эффекты', icon: Activity, value: statuses.value.length || '' },
   { id: 'exhaustion', label: 'Истощение', icon: BatteryLow, value: exhaustionLevel.value || '' },
   { id: 'inspiration', label: 'Вдохновение', icon: Sparkles, value: inspirationActive.value ? '✦' : '' },
 ])
-
-onMounted(() => {
-  suggestStore.ensure(suggestTypeId.value)
-})
 
 function updateValue(id, value) {
   emit('update:value', id, value)
@@ -169,15 +181,14 @@ function closeEditor() {
   close()
 }
 
-function toggleState(id) {
-  const next = activeIds.value.includes(id)
-    ? activeIds.value.filter(value => value !== id)
-    : [...activeIds.value, id]
-  updateValue(ids.value.states, next)
+function addStatus(item) {
+  pickerOpen.value = false
+  charCtx.characterResources?.rememberItems?.([item])
+  updateValue(ids.value.states, charCtx.characterStatuses?.addManual?.(item) || [])
 }
 
-function onStateCreated(item) {
-  suggestStore.addItem(suggestTypeId.value, item)
+function removeStatus(uid) {
+  updateValue(ids.value.states, charCtx.characterStatuses?.remove?.(uid) || [])
 }
 
 function setExhaustion(value) {

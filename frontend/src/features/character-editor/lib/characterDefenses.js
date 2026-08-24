@@ -1,5 +1,6 @@
 import { abilityOwnerLevel } from '@/shared/lib/dndAbilityUses'
 import { featureEntryActive } from './featureEntryState'
+import { collectStatusDefenses } from './characterStatuses'
 
 export const DEFENSE_KINDS = Object.freeze([
   { value: 'resistance', label: 'Сопротивление' },
@@ -115,5 +116,8 @@ export function defenseItemIds(values, sources = DND_CHARACTER_DEFENSE_SOURCES) 
 }
 
 export function collectCharacterDefenses(values, itemsById, sources = DND_CHARACTER_DEFENSE_SOURCES) {
-  return sources.flatMap((source) => source.collect(values, itemsById))
+  return [
+    ...sources.flatMap((source) => source.collect(values, itemsById)),
+    ...collectStatusDefenses(values, itemsById),
+  ]
 }

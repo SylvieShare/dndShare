@@ -40,7 +40,7 @@
       <template #default="{ close }">
         <RowActionItem :icon="Activity" @click="openEditor('states', close)">
           Статусы
-          <template v-if="activeIds.length" #suffix><span class="dmsm-menu-value">{{ activeIds.length }}</span></template>
+          <template v-if="statuses.length" #suffix><span class="dmsm-menu-value">{{ statuses.length }}</span></template>
         </RowActionItem>
         <RowActionItem :icon="BatteryLow" @click="openEditor('exhaustion', close)">
           Истощение
@@ -54,15 +54,22 @@
     </RowActionMenu>
 
     <AppModalFrame v-if="editorKind === 'states'" title="Статусы" :padded="false" @close="closeEditor">
-      <BlockStatesPickerEditor
-        :suggest-type-id="suggestTypeId"
-        :items="allItems"
-        :active-ids="activeIds"
-        title="Активные статусы"
-        @toggle="toggleState"
-        @created="onStateCreated"
+      <CharacterStatusEditor
+        :statuses="statuses"
+        @add="pickerOpen = true"
+        @remove="removeStatus"
       />
     </AppModalFrame>
+
+    <ItemPickerModal
+      v-if="pickerOpen"
+      :item-type-ids="[effectItemTypeId]"
+      title="Эффекты и состояния"
+      search-placeholder="Поиск эффекта..."
+      :z-index="3400"
+      @close="pickerOpen = false"
+      @pick="addStatus"
+    />
 
     <AppModalFrame v-if="editorKind === 'exhaustion'" title="Истощение" :padded="false" @close="closeEditor">
       <DndExhaustionEditor :value="exhaustionValue" embedded @change="setExhaustion" />
@@ -84,19 +91,19 @@
 </template>
 
 <script setup>
-import { computed, inject, onMounted, ref } from 'vue'
+import { computed, inject, ref } from 'vue'
 import { Activity, BatteryLow, Sparkles } from '@lucide/vue'
 import { AppModalFrame } from '@sylvieshare/share-ui'
-import BlockStatesPickerEditor from '@/features/character-editor/blocks/generic/components/BlockStatesPickerEditor'
+import CharacterStatusEditor from '@/features/character-editor/blocks/dnd/components/CharacterStatusEditor.vue'
 import DndExhaustionEditor from '@/features/character-editor/blocks/dnd/components/DndExhaustionEditor'
 import DndInspirationEditor from '@/features/character-editor/blocks/dnd/components/DndInspirationEditor'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip'
+import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 import SvgIcon from '@/shared/ui/SvgIcon'
 import { normalizeExhaustion } from '@/features/character-editor/blocks/dnd/lib/exhaustion'
 import { isInspirationActive } from '@/features/character-editor/blocks/dnd/lib/mobileStatus'
-import { useSuggestStore } from '@/stores/suggest'
 
 const props = defineProps({
   block: { type: Object, required: true },
@@ -104,8 +111,8 @@ const props = defineProps({
 })
 const emit = defineEmits(['update:value'])
 const charCtx = inject('charCtx', { ownerMode: true })
-const suggestStore = useSuggestStore()
 const editorKind = ref(null)
+const pickerOpen = ref(false)
 const tooltip = ref({ visible: false, title: '', desc: '', x: 0, top: null, bottom: null })
 
 const ids = computed(() => ({
@@ -113,20 +120,24 @@ const ids = computed(() => ({
   exhaustion: props.block.content?.exhaustion_id || 'exhaustion',
   inspiration: props.block.content?.inspiration_id || 'inspiration',
 }))
-const suggestTypeId = computed(() => props.block.content?.states_suggest_id || 9)
-const activeIds = computed(() => Array.isArray(props.values?.[ids.value.states]) ? props.values[ids.value.states] : [])
-const allItems = computed(() => suggestStore.items(suggestTypeId.value))
-const activeItems = computed(() => allItems.value.filter(item => activeIds.value.includes(item.id)))
+const effectItemTypeId = computed(() => Number(props.block.content?.effect_item_type_id) || 15)
+const statuses = computed(() => {
+  const value = charCtx.characterStatuses?.entries
+  return Array.isArray(value) ? value : Array.isArray(value?.value) ? value.value : []
+})
+const activeItems = computed(() => statuses.value.map(status => ({
+  id: status.uid,
+  value: status.title,
+  desc: status.description,
+  color: status.color,
+  svg: status.item?.svg || '',
+})))
 const exhaustionValue = computed(() => props.values?.[ids.value.exhaustion] || { level: 0 })
 const exhaustionLevel = computed(() => normalizeExhaustion(exhaustionValue.value).level)
 const inspirationValue = computed(() => props.values?.[ids.value.inspiration] ?? false)
 const inspirationActive = computed(() => isInspirationActive(inspirationValue.value))
 const hasActiveSummary = computed(() => activeItems.value.length > 0 || exhaustionLevel.value > 0 || inspirationActive.value)
 const canInteract = computed(() => !!charCtx.ownerMode)
-
-onMounted(() => {
-  suggestStore.ensure(suggestTypeId.value)
-})
 
 function updateValue(id, value) {
   emit('update:value', id, value)
@@ -155,14 +166,13 @@ function openEditor(kind, closeMenu) {
 function closeEditor() {
   editorKind.value = null
 }
-function toggleState(id) {
-  const next = activeIds.value.includes(id)
-    ? activeIds.value.filter(value => value !== id)
-    : [...activeIds.value, id]
-  updateValue(ids.value.states, next)
+function addStatus(item) {
+  pickerOpen.value = false
+  charCtx.characterResources?.rememberItems?.([item])
+  updateValue(ids.value.states, charCtx.characterStatuses?.addManual?.(item) || [])
 }
-function onStateCreated(item) {
-  suggestStore.addItem(suggestTypeId.value, item)
+function removeStatus(uid) {
+  updateValue(ids.value.states, charCtx.characterStatuses?.remove?.(uid) || [])
 }
 function setExhaustion(value) {
   updateValue(ids.value.exhaustion, value)

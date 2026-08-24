@@ -32,23 +32,29 @@ describe('character feature widgets', () => {
     }])
   })
 
-  it('binds a toggle to its ability resource and stored state', () => {
+  it('binds a toggle to its ability resource and active status', () => {
     const values = {
       lvl: { level: 3 },
-      abilities_class: [{ id: 10, uid: 'rage', widget_states: { rage: true } }],
+      abilities_class: [{ id: 10, uid: 'rage' }],
+      states: [{
+        uid: 'status-rage',
+        effect_id: 100,
+        source: { kind: 'ability', item_id: 10, value_id: 'abilities_class', entry_key: 'rage', link_key: 'rage' },
+      }],
     }
     const items = new Map([['10', {
       id: 10,
       name: 'Ярость',
       data: {
         scaling: [{ level: 1, value: '+2' }],
-        sheet_widgets: [{ key: 'rage', kind: 'toggle', value_source: 'scaling' }],
+        status_effects: [{ key: 'rage', effect: { id: 100 } }],
+        sheet_widgets: [{ key: 'rage', kind: 'toggle', value_source: 'scaling', status_effect_key: 'rage' }],
       },
     }]])
     const resources = [{ value: 2, total: 3, source: { valueId: 'abilities_class', entryKey: 'rage' } }]
 
     expect(collectCharacterFeatureWidgets(values, items, resources)[0]).toMatchObject({
-      value: '+2', active: true, resource: { value: 2, total: 3 },
+      value: '+2', active: true, resource: { value: 2, total: 3 }, status_effect_link: { effect_id: 100 },
     })
   })
 })
