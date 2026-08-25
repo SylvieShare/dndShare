@@ -44,7 +44,8 @@
               class="dae-textarea dae-textarea--requirements"
               :value="(action.requirements || []).join('\n')"
               placeholder="По одному на строку"
-              @input="change(action.uid, { requirements: lines($event.target.value) })"
+              @input="change(action.uid, { requirements: draftLines($event.target.value) })"
+              @blur="change(action.uid, { requirements: lines($event.target.value) })"
             ></textarea>
           </label>
         </article>
@@ -95,6 +96,10 @@ function typeLabel(value) {
 
 function lines(value) {
   return String(value || '').split('\n').map(line => line.trim()).filter(Boolean)
+}
+
+function draftLines(value) {
+  return String(value ?? '').split('\n')
 }
 </script>
 

@@ -21,4 +21,10 @@ describe('desktop utility tiles', () => {
     expect(settingsSource).toContain('class="sm-ic"')
     expect(settingsSource).toContain('<div class="sm-sub">меню</div>')
   })
+
+  it('hides the save row when there is no active save', () => {
+    expect(settingsSource).toContain("ctx.saveStatus === 'pending' || ctx.saveStatus === 'saving'")
+    expect(settingsSource).not.toContain('Сохранено')
+    expect(settingsSource).not.toContain('Ошибка сохранения')
+  })
 })

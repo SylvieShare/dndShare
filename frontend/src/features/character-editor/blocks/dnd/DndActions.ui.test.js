@@ -28,6 +28,8 @@ describe('character action block', () => {
     expect(editorSource).toContain('title="Свои действия"')
     expect(editorSource).toContain('title="Из листа"')
     expect(editorSource).toContain('Добавить действие')
+    expect(editorSource).toContain('@input="change(action.uid, { requirements: draftLines($event.target.value) })"')
+    expect(editorSource).toContain('@blur="change(action.uid, { requirements: lines($event.target.value) })"')
     expect(blockSource).toContain("makeUid('action')")
     expect(blockSource).toContain("emit('update:value', 'action_order', next)")
     expect(viewSource).not.toContain('Использовать')

@@ -84,7 +84,7 @@
                 </svg>
                 <span>К персонажам</span>
               </button>
-              <div v-if="canEdit" class="menu-item menu-save-item">
+              <div v-if="canEdit && (saveStatus === 'pending' || saveStatus === 'saving')" class="menu-item menu-save-item">
                 <div class="save-widget" :class="saveStatus">
                   <span class="save-dot"></span>
                   <span class="save-label">{{ saveLabel }}</span>
@@ -183,8 +183,7 @@ const saveLabel = computed(() => {
   switch (props.saveStatus) {
     case 'pending': return `Сохранение через ${props.pendingSecondsLeft}с`
     case 'saving':  return 'Сохраняется...'
-    case 'error':   return 'Ошибка сохранения'
-    default:        return 'Сохранено'
+    default:        return ''
   }
 })
 

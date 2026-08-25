@@ -104,6 +104,10 @@ The character viewport keeps its pre-keyboard height while a rich-text or form
 editor is focused. `useCharacterViewport` owns the visual/layout viewport
 synchronization and document-scoped focus handling needed by editors teleported
 outside the page root.
+Character autosave starts one second after the latest edit. The settings menu
+shows only pending or active saving; idle success is silent, while a failed save
+opens a separate retryable alert. Custom-action requirements preserve spaces
+and blank lines while typing, then trim empty rows when the field loses focus.
 For an owner, clicking the HP tile opens its vertical editor with a container
 morph from the clicked tile. The editor keeps the source tile width instead of
 falling back to the narrow no-origin panel width. Its desktop face places the

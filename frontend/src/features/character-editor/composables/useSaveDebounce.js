@@ -1,7 +1,7 @@
 import { ref, onBeforeUnmount } from 'vue'
 import { fetchPut } from '@/shared/api/http'
 
-const SAVE_DELAY_MS = 2000
+const SAVE_DELAY_MS = 1000
 
 export function useSaveDebounce(uuid, data, options = {}) {
   const saveStatus = ref('idle')
@@ -43,10 +43,18 @@ export function useSaveDebounce(uuid, data, options = {}) {
     }
   }
 
+  function retrySave() {
+    if (saveStatus.value === 'error') void save()
+  }
+
+  function dismissSaveError() {
+    if (saveStatus.value === 'error') saveStatus.value = 'idle'
+  }
+
   onBeforeUnmount(() => {
     if (saveStatus.value === 'pending') void save()
     else clearTimers()
   })
 
-  return { saveStatus, pendingSecondsLeft, scheduleSave }
+  return { saveStatus, pendingSecondsLeft, scheduleSave, retrySave, dismissSaveError }
 }

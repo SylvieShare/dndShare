@@ -160,6 +160,12 @@
         </div>
       </div>
     </div>
+
+    <CharacterSaveErrorToast
+      :visible="saveStatus === 'error'"
+      @retry="retrySave"
+      @dismiss="dismissSaveError"
+    />
   </div>
 </template>
 
@@ -169,6 +175,7 @@ import { useRoute, useRouter } from 'vue-router'
 import TemplateBlockInner from '@/features/character-editor/components/TemplateBlockInner'
 import CharacterTabPane from '@/features/character-editor/components/CharacterTabPane.vue'
 import CharEditorToolbar from '@/features/character-editor/components/CharEditorToolbar'
+import CharacterSaveErrorToast from '@/features/character-editor/components/CharacterSaveErrorToast.vue'
 import { useCharacterData } from '@/features/character-editor/composables/useCharacterData'
 import { useSaveDebounce } from '@/features/character-editor/composables/useSaveDebounce'
 import { useTabSwipe } from '@/features/character-editor/composables/useTabSwipe'
@@ -232,7 +239,7 @@ const activeSession = computed(() => {
 loadSync()
 
 const pendingSessionEvents = []
-const { saveStatus, pendingSecondsLeft, scheduleSave } = useSaveDebounce(uuid, data, {
+const { saveStatus, pendingSecondsLeft, scheduleSave, retrySave, dismissSaveError } = useSaveDebounce(uuid, data, {
   takeEvents: () => pendingSessionEvents.splice(0),
   restoreEvents: events => pendingSessionEvents.unshift(...events),
 })

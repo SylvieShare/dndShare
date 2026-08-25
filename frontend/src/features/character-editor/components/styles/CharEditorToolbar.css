@@ -335,8 +335,6 @@
   white-space: nowrap;
 }
 
-.save-widget.idle .save-dot   { background-color: var(--success); }
-.save-widget.idle .save-label { color: var(--success); }
 .save-widget.pending .save-dot   { background-color: var(--warning); }
 .save-widget.pending .save-label { color: var(--warning); }
 .save-widget.saving .save-dot {
@@ -344,8 +342,6 @@
   animation: pulse 0.9s ease-in-out infinite;
 }
 .save-widget.saving .save-label { color: var(--info); }
-.save-widget.error .save-dot   { background-color: var(--danger); }
-.save-widget.error .save-label { color: var(--danger); }
 
 @keyframes pulse {
   0%, 100% { opacity: 1; }

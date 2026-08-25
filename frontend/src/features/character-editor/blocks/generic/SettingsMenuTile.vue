@@ -9,7 +9,7 @@
 
     <transition name="sm-fade">
       <div v-if="open" class="sm-menu">
-        <div class="sm-save" :class="ctx.saveStatus">
+        <div v-if="ctx.saveStatus === 'pending' || ctx.saveStatus === 'saving'" class="sm-save" :class="ctx.saveStatus">
           <span class="sm-dot"></span>
           <span class="sm-save-label">{{ saveLabel }}</span>
         </div>
@@ -77,8 +77,7 @@ const saveLabel = computed(() => {
   switch (ctx.saveStatus) {
     case 'pending': return `Сохранение через ${ctx.pendingSecondsLeft}с`
     case 'saving': return 'Сохраняется...'
-    case 'error': return 'Ошибка сохранения'
-    default: return 'Сохранено'
+    default: return ''
   }
 })
 
@@ -160,10 +159,8 @@ function updateSources(value) {
 .sm-save { display: flex; align-items: center; gap: 7px; padding: 6px 8px 10px; border-bottom: 1px solid var(--border); margin-bottom: 2px; }
 .sm-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; transition: background-color 0.3s; }
 .sm-save-label { font-size: 12px; white-space: nowrap; }
-.sm-save.idle .sm-dot { background: var(--success); } .sm-save.idle .sm-save-label { color: var(--success); }
 .sm-save.pending .sm-dot { background: var(--warning); } .sm-save.pending .sm-save-label { color: var(--warning); }
 .sm-save.saving .sm-dot { background: var(--info); animation: sm-pulse 0.9s ease-in-out infinite; } .sm-save.saving .sm-save-label { color: var(--info); }
-.sm-save.error .sm-dot { background: var(--danger); } .sm-save.error .sm-save-label { color: var(--danger); }
 @keyframes sm-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
 .sm-fade-enter-active, .sm-fade-leave-active { transition: opacity 0.12s ease, transform 0.12s ease; }

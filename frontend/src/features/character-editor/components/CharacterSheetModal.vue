@@ -52,6 +52,12 @@
           </div>
         </div>
       </div>
+
+      <CharacterSaveErrorToast
+        :visible="saveStatus === 'error'"
+        @retry="retrySave"
+        @dismiss="dismissSaveError"
+      />
     </div>
   </AppModal>
 </template>
@@ -60,6 +66,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { AppModal } from '@sylvieshare/share-ui'
 import CharEditorToolbar from '@/features/character-editor/components/CharEditorToolbar'
+import CharacterSaveErrorToast from '@/features/character-editor/components/CharacterSaveErrorToast.vue'
 import TemplateBlockInner from '@/features/character-editor/components/TemplateBlockInner'
 import { useCharacterData } from '@/features/character-editor/composables/useCharacterData'
 import { useSaveDebounce } from '@/features/character-editor/composables/useSaveDebounce'
@@ -84,7 +91,7 @@ const {
 } = useCharacterData(props.uuid, isMobile)
 
 const pendingSessionEvents = []
-const { saveStatus, pendingSecondsLeft, scheduleSave } = useSaveDebounce(props.uuid, data, {
+const { saveStatus, pendingSecondsLeft, scheduleSave, retrySave, dismissSaveError } = useSaveDebounce(props.uuid, data, {
   takeEvents: () => pendingSessionEvents.splice(0),
   restoreEvents: events => pendingSessionEvents.unshift(...events),
 })
