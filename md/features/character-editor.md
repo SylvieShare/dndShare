@@ -111,9 +111,10 @@ does not render a textual health category or hit-die availability. Maximum HP is
 ability contributions, and editable manual bonuses. Healing, rests, level-up,
 print and encounter projections use the resolved total; encounter writes never
 overwrite the maximum's source structure.
-The desktop effect summary sits in its own `BaseTile` below the shared
-icon/name/HP tile. Active catalogue effects, non-zero exhaustion and heroic
-inspiration share one horizontally scrollable row of 64×64 icons. Catalogue
+The desktop effect summary sits inside the shared icon/name/HP `BaseTile`,
+directly below HP and without its own frame or background. Active catalogue
+effects, non-zero exhaustion and heroic inspiration share one horizontally
+scrollable row of 64×64 icons. Catalogue
 cells render either raster `iconImageUrl` or SVG; missing media falls back to a
 monogram rather than a colour dot. Each icon has its permanent effect name
 below it; optional catalogue `level` metadata and the live exhaustion level add

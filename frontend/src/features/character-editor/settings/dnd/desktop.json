@@ -119,14 +119,14 @@
                               {
                                 "ref": "hp",
                                 "kind": "block"
+                              },
+                              {
+                                "ref": "desktop_statuses",
+                                "kind": "block"
                               }
                             ]
                           }
                         ]
-                      },
-                      {
-                        "ref": "desktop_statuses",
-                        "kind": "block"
                       }
                     ]
                   }

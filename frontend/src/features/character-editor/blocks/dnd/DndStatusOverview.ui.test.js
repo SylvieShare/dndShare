@@ -8,8 +8,9 @@ const editorSource = readFileSync(fileURLToPath(new URL('./components/CharacterS
 const inspirationSource = readFileSync(fileURLToPath(new URL('./components/DndInspirationEditor.vue', import.meta.url)), 'utf8')
 
 describe('desktop status overview', () => {
-  it('uses one BaseTile summary with one explicit edit action', () => {
-    expect(source).toContain('<BaseTile v-if="summaryItems.length || showEditAction" class="dso-tile">')
+  it('renders a frameless summary with one explicit edit action', () => {
+    expect(source).not.toContain('<BaseTile')
+    expect(source).toContain('v-if="summaryItems.length || showEditAction"')
     expect(viewSource).not.toContain('sheet-tile-title')
     expect(viewSource).not.toContain('Добавить эффект')
     expect(viewSource).not.toContain('Добавить вдохновение')

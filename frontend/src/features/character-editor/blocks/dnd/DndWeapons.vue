@@ -602,9 +602,9 @@ onMounted(() => {
 .w-preset-divider {
   display: grid;
   grid-template-columns: minmax(18px, 1fr) auto minmax(18px, 1fr);
-  gap: 10px;
+  gap: 14px;
   align-items: center;
-  margin: 15px 0 10px;
+  margin: 24px 0 14px;
   color: var(--text-muted);
   font-size: 9px;
   font-weight: 750;

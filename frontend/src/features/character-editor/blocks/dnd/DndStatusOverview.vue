@@ -1,15 +1,14 @@
 <template>
   <div ref="root" class="dso-root">
-    <BaseTile v-if="summaryItems.length || showEditAction" class="dso-tile">
-      <DndStatusOverviewView
-        :items="summaryItems"
-        :editable="canInteract"
-        :show-edit-action="showEditAction"
-        @edit="openSection"
-        @show-tooltip="showStatusTooltip"
-        @hide-tooltip="hideStatusTooltip"
-      />
-    </BaseTile>
+    <DndStatusOverviewView
+      v-if="summaryItems.length || showEditAction"
+      :items="summaryItems"
+      :editable="canInteract"
+      :show-edit-action="showEditAction"
+      @edit="openSection"
+      @show-tooltip="showStatusTooltip"
+      @hide-tooltip="hideStatusTooltip"
+    />
   </div>
 
   <MorphEditorShell
@@ -92,7 +91,6 @@
 <script setup>
 import { computed, inject, ref } from 'vue'
 import { Activity, BatteryLow, Sparkles } from '@lucide/vue'
-import { BaseTile } from '@sylvieshare/share-ui'
 import CharacterStatusEditor from '@/features/character-editor/blocks/dnd/components/CharacterStatusEditor.vue'
 import DndExhaustionEditor from '@/features/character-editor/blocks/dnd/components/DndExhaustionEditor'
 import DndInspirationEditor from '@/features/character-editor/blocks/dnd/components/DndInspirationEditor'
@@ -230,7 +228,6 @@ function hideStatusTooltip() {
 
 <style scoped>
 .dso-root { min-width: 0; }
-.dso-tile { min-width: 0; padding: 12px 14px; }
 .dso-editor { border-top: 1px solid var(--border); background: var(--bg); }
 .dso-tabs {
   display: grid;
