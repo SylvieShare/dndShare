@@ -9,7 +9,7 @@ const editorSource = readFileSync(fileURLToPath(new URL('./components/DndActions
 describe('character action block', () => {
   it('groups action economy, uses source icons and resolves linked action tooltips', () => {
     expect(viewSource).toContain('v-for="group in groups"')
-    expect(viewSource).toContain('Источник: {{ action.source_label }}')
+    expect(viewSource).not.toContain('Источник: {{ action.source_label }}')
     expect(viewSource).toContain('v-for="requirement in action.requirements"')
     expect(viewSource).toContain('<ItemIcon v-if="action.item"')
     expect(viewSource).toContain('showActionTooltip($event, linked)')

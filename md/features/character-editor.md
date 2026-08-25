@@ -521,9 +521,10 @@ runtime does not check class, feature name or item id. Sneak Attack publishes
 its live dice together with eligible-weapon, advantage-or-nearby-enemy,
 no-disadvantage and once-per-turn reminders; Rage publishes its current damage
 progression and an active toggle. Toggle widgets may reference a linked
-`status_effect_key`; their active state then comes from `values.states` rather
-than a parallel widget flag. Entering Rage consumes one available use, while
-leaving it active removes the source-owned effect without refunding the use.
+`status_effect_key`; their active state then comes from any matching effect in
+`values.states` rather than a parallel widget flag or a matching source.
+Entering Rage consumes one available use, while leaving it active removes the
+matching effect without refunding the use.
 Subclass features can contribute `note` widgets with
 the same key to extend that panel.
 
@@ -534,8 +535,8 @@ its description, read-only requirements, level gate, priority, optional
 ability-resource binding and links to standard combat-action codes from suggest
 type 24. Hovering those linked names shows the suggest description. The block
 merges source rows with editable custom actions from `values.actions`;
-source-provided rows identify their ability, use its icon and cannot be edited
-on the character. Both kinds can be reordered within their action-economy group;
+source-provided rows use the ability icon, omit a duplicate textual source label
+and cannot be edited on the character. Both kinds can be reordered within their action-economy group;
 the stable row-key order is stored in `values.action_order`. Each group header
 is rendered only when it contains actions. The shared block-title pencil opens
 one morph editor for the complete block: custom actions are created, edited and

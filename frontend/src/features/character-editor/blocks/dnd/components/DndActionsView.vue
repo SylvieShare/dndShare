@@ -43,7 +43,6 @@
                     @mouseleave="hideActionTooltip"
                   >{{ linked.value }}</span>
                 </span>
-                <small v-if="action.source_label">Источник: {{ action.source_label }}</small>
                 <span v-if="action.requirements.length" class="dav-requirements">
                   <span v-for="requirement in action.requirements" :key="requirement">{{ requirement }}</span>
                 </span>
@@ -165,7 +164,6 @@ function hideActionTooltip() {
 .dav-copy { display: flex; min-width: 0; flex-direction: column; gap: 3px; }
 .dav-copy strong { color: var(--text-1); font-size: 12px; line-height: 1.25; }
 .dav-description { color: var(--text-2); font-size: 10px; line-height: 1.4; }
-.dav-copy small { color: var(--text-muted); font-size: 9px; }
 .dav-linked-actions { display: flex; flex-wrap: wrap; gap: 4px 8px; margin-top: 1px; }
 .dav-linked-action { color: var(--dav-tone); font-size: 10px; font-weight: 750; text-decoration: underline dotted; text-underline-offset: 3px; }
 .dav-requirements { display: flex; flex-direction: column; gap: 2px; margin-top: 2px; color: var(--text-muted); font-size: 9px; line-height: 1.35; }
