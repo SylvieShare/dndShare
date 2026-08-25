@@ -5,7 +5,7 @@
         :groups="groups"
         :manage="ownerMode"
         :action-suggestions="actionSuggestions"
-        @add="addAction"
+        @manage="openEditor"
         @edit="editAction"
         @move="moveAction"
         @remove="removeAction"
@@ -13,33 +13,38 @@
     </BaseTile>
 
     <MorphEditorShell
-      v-if="editorOpen && editingAction"
+      v-if="editorOpen"
       :origin-rect="originRect"
       :origin-el="originEl"
       :strip="false"
       :min-view-width="320"
       @close="closeEditor"
     >
-      <template #view>
+      <template #view="{ revealed }">
         <DndActionsView
           :groups="groups"
           :manage="ownerMode"
+          :edit-fade="revealed"
           :action-suggestions="actionSuggestions"
           panel
-          @edit="editAction"
-          @move="moveAction"
-          @remove="removeAction"
         />
       </template>
       <template #editor>
-        <DndActionsEditor :action="editingAction" @change="changeAction" />
+        <DndActionsEditor
+          :actions="manualActions"
+          :readonly-actions="readonlyActions"
+          :selected-uid="editingUid"
+          @add="addAction"
+          @change="changeAction"
+          @remove="removeAction"
+        />
       </template>
     </MorphEditorShell>
   </div>
 </template>
 
 <script setup>
-import { computed, inject, nextTick, onMounted, ref, watch } from 'vue'
+import { computed, inject, onMounted, ref, watch } from 'vue'
 import { BaseTile } from '@sylvieshare/share-ui'
 import DndActionsEditor from '@/features/character-editor/blocks/dnd/components/DndActionsEditor.vue'
 import DndActionsView from '@/features/character-editor/blocks/dnd/components/DndActionsView.vue'
@@ -60,11 +65,11 @@ const { editorOpen, originRect, originEl, openFrom, close } = useMorphOrigin()
 
 const ownerMode = computed(() => !!charCtx.ownerMode)
 const manualActions = computed(() => Array.isArray(props.value) ? props.value : [])
-const editingAction = computed(() => manualActions.value.find(action => action.uid === editingUid.value) || null)
 const itemsById = computed(() => charCtx.characterResources?.itemsById?.value || charCtx.characterResources?.itemsById || new Map())
 const resources = computed(() => charCtx.characterResources?.resources?.value || charCtx.characterResources?.resources || [])
 const actions = computed(() => collectCharacterFeatureActions(props.values || {}, itemsById.value, resources.value))
-const groups = computed(() => groupCharacterFeatureActions(actions.value, ownerMode.value))
+const groups = computed(() => groupCharacterFeatureActions(actions.value))
+const readonlyActions = computed(() => actions.value.filter(action => action.readonly))
 const actionSuggestions = computed(() => suggestStore.items(24) || [])
 
 watch([() => actions.value.length, ownerMode], ([length, canManage]) => setBlockHidden(!length && !canManage), { immediate: true })
@@ -77,18 +82,21 @@ function emitOrder(next) {
   emit('update:value', 'action_order', next)
 }
 
-async function addAction(actionType, origin) {
+function openEditor() {
+  editingUid.value = null
+  openFrom(root.value)
+}
+
+function addAction() {
   const uid = makeUid('action')
   editingUid.value = uid
   emitActions([...manualActions.value, {
     uid,
     title: 'Новое действие',
-    action_type: actionType,
+    action_type: 'action',
     description: '',
     requirements: [],
   }])
-  await nextTick()
-  openFrom(origin || root.value)
 }
 
 function editAction(action) {
@@ -97,9 +105,8 @@ function editAction(action) {
   openFrom(root.value)
 }
 
-function changeAction(patch) {
-  if (!editingUid.value) return
-  emitActions(manualActions.value.map(action => action.uid === editingUid.value ? { ...action, ...patch } : action))
+function changeAction(uid, patch) {
+  emitActions(manualActions.value.map(action => action.uid === uid ? { ...action, ...patch } : action))
 }
 
 function moveAction(action, direction) {
@@ -120,7 +127,7 @@ function removeAction(action) {
   if (action.readonly) return
   emitActions(manualActions.value.filter(entry => entry.uid !== action.uid))
   emitOrder((props.values?.action_order || []).filter(key => key !== action.key))
-  if (editingUid.value === action.uid) closeEditor()
+  if (editingUid.value === action.uid) editingUid.value = null
 }
 
 function closeEditor() {

@@ -106,7 +106,7 @@ missing media falls back to a monogram rather than a colour dot. Effect names st
 available in tooltips instead of permanent labels. Optional catalogue `level`
 metadata and the live exhaustion level appear as a rounded **Уровень N** label
 below the icon. The summary has no title, add cells,
-surface or frame. Owners use the single pencil-labelled **Редактировать состояние** link below HP to
+surface or frame. Owners use the single pencil-labelled **Состояние** link to the left of the icon row to
 open the shared editor for catalogue effects, exhaustion and inspiration.
 The compact mobile strip
 keeps HP at its intrinsic number width and never lets
@@ -537,9 +537,12 @@ merges source rows with editable custom actions from `values.actions`;
 source-provided rows identify their ability, use its icon and cannot be edited
 on the character. Both kinds can be reordered within their action-economy group;
 the stable row-key order is stored in `values.action_order`. Each group header
-ends with a compact dashed plus control, while editing and deletion live in the
-row action menu. The block owns one shared tile; rows inside it have no nested
-card background and currently do not execute or log actions. Cunning Action is one source row linking Dash,
+is rendered only when it contains actions. The shared block-title pencil opens
+one morph editor for the complete block: custom actions are created, edited and
+deleted there, while actions contributed by abilities are listed separately as
+read-only. Row menus retain direct editing and within-group reordering, but
+group headers have no add controls. The block owns one shared tile; rows inside
+it have no nested card background and currently do not execute or log actions. Cunning Action is one source row linking Dash,
 Disengage and Hide rather than three duplicated rows. The block is available in
 the desktop side column and the mobile abilities tab.
 The same picker is used for feats and abilities and opens above the active morph

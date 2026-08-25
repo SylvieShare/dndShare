@@ -14,20 +14,28 @@ describe('character action block', () => {
     expect(viewSource).toContain('<ItemIcon v-if="action.item"')
     expect(viewSource).toContain('showActionTooltip($event, linked)')
     expect(viewSource).toContain('<ItemTooltip')
-    expect(viewSource).toContain('title="Действия" :show-edit="false"')
+    expect(viewSource).toContain(':show-edit="manage"')
+    expect(viewSource).toContain('@edit="$emit(\'manage\')"')
   })
 
-  it('adds actions inside each group and edits or reorders them through row menus', () => {
-    expect(viewSource).toContain('class="dav-add"')
-    expect(viewSource).toContain(':aria-label="`Добавить: ${group.label}`"')
+  it('manages all custom actions from the block morph and keeps row reordering', () => {
+    expect(viewSource).not.toContain('class="dav-add"')
     expect(blockSource).toContain('<BaseTile class="da-tile">')
+    expect(blockSource).toContain(':readonly-actions="readonlyActions"')
     expect(viewSource).toContain('Переместить выше')
     expect(viewSource).toContain('Переместить ниже')
     expect(viewSource).toContain('action="edit"')
-    expect(editorSource).toContain('title="Своё действие"')
+    expect(editorSource).toContain('title="Свои действия"')
+    expect(editorSource).toContain('title="Из листа"')
+    expect(editorSource).toContain('Добавить действие')
     expect(blockSource).toContain("makeUid('action')")
     expect(blockSource).toContain("emit('update:value', 'action_order', next)")
     expect(viewSource).not.toContain('Использовать')
     expect(viewSource).not.toContain('<span>Добавить</span>')
+  })
+
+  it('omits empty action types from the sheet view', () => {
+    expect(blockSource).toContain('groupCharacterFeatureActions(actions.value)')
+    expect(blockSource).not.toContain('groupCharacterFeatureActions(actions.value, ownerMode.value)')
   })
 })
