@@ -81,7 +81,7 @@
                     "children": [
                       {
                         "kind": "layout",
-                        "type": "row",
+                        "type": "column",
                         "props": {
                           "gap": "0",
                           "style": {
@@ -93,38 +93,48 @@
                         },
                         "children": [
                           {
-                            "ref": "character_icon",
-                            "kind": "block"
-                          },
-                          {
                             "kind": "layout",
-                            "type": "column",
+                            "type": "row",
                             "props": {
-                              "gap": "10px",
-                              "grow": "1",
-                              "style": {
-                                "padding": "15px"
-                              }
+                              "gap": "0",
+                              "align-items": "stretch"
                             },
                             "children": [
                               {
-                                "ref": "char_identity",
-                                "kind": "block",
+                                "ref": "character_icon",
+                                "kind": "block"
+                              },
+                              {
+                                "kind": "layout",
+                                "type": "column",
                                 "props": {
+                                  "gap": "10px",
+                                  "grow": "1",
                                   "style": {
-                                    "min-width": "0"
+                                    "padding": "15px"
                                   }
-                                }
-                              },
-                              {
-                                "ref": "hp",
-                                "kind": "block"
-                              },
-                              {
-                                "ref": "desktop_statuses",
-                                "kind": "block"
+                                },
+                                "children": [
+                                  {
+                                    "ref": "char_identity",
+                                    "kind": "block",
+                                    "props": {
+                                      "style": {
+                                        "min-width": "0"
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "ref": "hp",
+                                    "kind": "block"
+                                  }
+                                ]
                               }
                             ]
+                          },
+                          {
+                            "ref": "desktop_statuses",
+                            "kind": "block"
                           }
                         ]
                       }

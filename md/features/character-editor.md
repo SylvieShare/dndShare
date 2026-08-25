@@ -112,7 +112,8 @@ ability contributions, and editable manual bonuses. Healing, rests, level-up,
 print and encounter projections use the resolved total; encounter writes never
 overwrite the maximum's source structure.
 The desktop effect summary sits inside the shared icon/name/HP `BaseTile`,
-directly below HP and without its own frame or background. Active catalogue
+directly below HP, spans from the header's left edge and has no frame or
+background of its own. Active catalogue
 effects, non-zero exhaustion and heroic inspiration share one horizontally
 scrollable row of 64×64 icons. Catalogue
 cells render either raster `iconImageUrl` or SVG; missing media falls back to a

@@ -86,7 +86,7 @@ describe('D&D desktop sheet schema', () => {
     const statuses = findNode(base?.content, node => node.ref === 'desktop_statuses')
     const summaryTile = findNode(
       base?.content,
-      node => node.props?.tile === true && node.children?.some(child => child.ref === 'character_icon'),
+      node => node.props?.tile === true && findNode(node, child => child.ref === 'character_icon'),
     )
     const hpColumn = findNode(summaryTile, node => node.type === 'column' && node.children?.some(child => child.ref === 'hp'))
     const sidebar = findNode(
@@ -98,11 +98,12 @@ describe('D&D desktop sheet schema', () => {
 
     expect(statuses).toBeTruthy()
     expect(summaryTile.props?.tile).toBe(true)
-    expect(summaryTile.children[0]?.ref).toBe('character_icon')
-    expect(hpColumn.children.map(child => child.ref)).toEqual(['char_identity', 'hp', 'desktop_statuses'])
+    expect(summaryTile.type).toBe('column')
+    expect(summaryTile.children[0]?.children[0]?.ref).toBe('character_icon')
+    expect(hpColumn.children.map(child => child.ref)).toEqual(['char_identity', 'hp'])
     expect(hpColumn.children[0].props?.grow).toBeUndefined()
     expect(hpColumn.children[0].props?.basis).toBeUndefined()
-    expect(hpColumn.children[2]).toBe(statuses)
+    expect(summaryTile.children[1]).toBe(statuses)
     expect(sidebar.children.some(child => child.ref === 'desktop_statuses')).toBe(false)
     expect(separateExhaustion).toBeNull()
     expect(separateStates).toBeNull()
