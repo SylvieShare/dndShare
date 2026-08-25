@@ -174,6 +174,7 @@ func TestRogueAndBarbarianPublishAbilityOwnedSheetWidgets(t *testing.T) {
 		`"Без помехи"`,
 		`"key":"rage"`,
 		`"kind":"toggle"`,
+		`"active_label":"Выйти из ярости"`,
 		"lower('Ярость')",
 	} {
 		if !strings.Contains(schemaFeatureSheetWidgetsSQL, fragment) {

@@ -97,6 +97,18 @@ export function removeStatusInstance(values, uid) {
   return normalizeStatusInstances(values?.[STATUS_VALUE_ID]).filter(row => row.uid !== String(uid))
 }
 
+export function statusEffectActive(values, effect) {
+  const effectId = statusEffectId(effect)
+  return effectId != null && normalizeStatusInstances(values?.[STATUS_VALUE_ID])
+    .some(row => row.effect_id === effectId)
+}
+
+export function removeStatusInstancesByEffect(values, effect) {
+  const effectId = statusEffectId(effect)
+  if (effectId == null) return normalizeStatusInstances(values?.[STATUS_VALUE_ID])
+  return normalizeStatusInstances(values?.[STATUS_VALUE_ID]).filter(row => row.effect_id !== effectId)
+}
+
 export function removeStatusesBySource(values, source = {}) {
   const keys = ['kind', 'item_id', 'value_id', 'entry_key']
   return normalizeStatusInstances(values?.[STATUS_VALUE_ID]).filter(row => (

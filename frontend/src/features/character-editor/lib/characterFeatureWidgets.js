@@ -1,6 +1,6 @@
 import { abilityOwnerLevel } from '@/shared/lib/dndAbilityUses'
 import { featureEntryActive } from './featureEntryState'
-import { linkedStatusActive, ownedAbilityStatusSource, statusEffectLinks } from './characterStatuses'
+import { ownedAbilityStatusSource, statusEffectActive, statusEffectLinks } from './characterStatuses'
 
 const VALUE_IDS = ['abilities_feats', 'abilities_race', 'abilities_class']
 
@@ -77,7 +77,7 @@ export function collectCharacterFeatureWidgets(values, itemsById, resources = []
         entry_key: entryKey(entry),
         state_key: key,
         active: statusEffectLink
-          ? linkedStatusActive(values, item, statusEffectLink, statusSource)
+          ? statusEffectActive(values, statusEffectLink)
           : !!entry.widget_states?.[key],
         status_effect_link: statusEffectLink,
         status_source: statusSource,

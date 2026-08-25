@@ -57,4 +57,22 @@ describe('character feature widgets', () => {
       value: '+2', active: true, resource: { value: 2, total: 3 }, status_effect_link: { effect_id: 100 },
     })
   })
+
+  it('treats a manually added linked effect as an active toggle', () => {
+    const values = {
+      lvl: { level: 3 },
+      abilities_class: [{ id: 10, uid: 'rage' }],
+      states: [{ uid: 'manual-rage', effect_id: 100, source: { kind: 'manual' } }],
+    }
+    const items = new Map([['10', {
+      id: 10,
+      name: 'Ярость',
+      data: {
+        status_effects: [{ key: 'rage', effect: { id: 100 } }],
+        sheet_widgets: [{ key: 'rage', kind: 'toggle', status_effect_key: 'rage' }],
+      },
+    }]])
+
+    expect(collectCharacterFeatureWidgets(values, items)[0].active).toBe(true)
+  })
 })

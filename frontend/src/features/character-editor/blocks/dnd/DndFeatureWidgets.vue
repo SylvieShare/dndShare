@@ -90,10 +90,15 @@ function toggle(widget) {
     patch = charCtx.characterResources?.setAvailable?.(widget.resource.key, Number(widget.resource.value) - 1) || {}
   }
   if (widget.status_effect_link) {
-    const link = charCtx.characterStatuses?.links?.(widget.item)
-      ?.find(row => String(row.key) === String(widget.status_effect_link.key))
-    if (!link?.effect) return
-    patch.states = charCtx.characterStatuses.toggleLinked(link.effect, widget.item, link, widget.status_source)
+    if (activating) {
+      const link = charCtx.characterStatuses?.links?.(widget.item)
+        ?.find(row => String(row.key) === String(widget.status_effect_link.key))
+      if (!link?.effect) return
+      patch.states = charCtx.characterStatuses.toggleLinked(link.effect, widget.item, link, widget.status_source)
+    } else {
+      patch.states = charCtx.characterStatuses?.removeEffect?.(widget.status_effect_link)
+      if (!patch.states) return
+    }
   } else {
     const currentRows = patch[widget.value_id] || values.value[widget.value_id] || []
     patch[widget.value_id] = currentRows.map(entry => String(entry.uid || entry.id || '') === widget.entry_key

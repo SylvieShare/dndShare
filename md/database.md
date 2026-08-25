@@ -117,7 +117,8 @@ checks. Widget definitions select metric/toggle/note presentation, a value sourc
 resource binding, tone and shared panel key. Section
 `48_feature_sheet_widgets.sql` adds the contract and configures Sneak Attack and
 Rage as its first consumers. A toggle may bind to `status_effect_key`; that
-effect instance, rather than `widget_states`, is the canonical active state.
+effect id, regardless of the instance source, rather than `widget_states`, is
+the canonical active state.
 `49_roll_adjustments.sql` adds source-owned automatic d20 adjustments to race,
 class ability and feat schemas. Reliable Talent declares a level-11
 `minimum_natural` adjustment for ability checks with at least full proficiency;

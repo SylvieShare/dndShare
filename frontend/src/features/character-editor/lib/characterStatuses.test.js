@@ -3,6 +3,8 @@ import {
   addStatusInstance,
   collectCharacterStatuses,
   linkedStatusActive,
+  removeStatusInstancesByEffect,
+  statusEffectActive,
   removeStatusesBySource,
   statusEffectLinks,
   toggleLinkedStatus,
@@ -55,6 +57,18 @@ describe('character statuses', () => {
     const once = addStatusInstance({ states: [] }, first)
     expect(addStatusInstance({ states: once }, first)).toHaveLength(1)
     expect(addStatusInstance({ states: once }, second)).toMatchObject([{ effect_id: 2, concentration: true }])
+  })
+
+  it('detects and removes an effect regardless of which source added it', () => {
+    const values = { states: [
+      { uid: 'manual-rage', effect_id: 100, source: { kind: 'manual' } },
+      { uid: 'blessing', effect_id: 200, source: { kind: 'spell' } },
+    ] }
+
+    expect(statusEffectActive(values, { effect_id: 100 })).toBe(true)
+    expect(removeStatusInstancesByEffect(values, { effect_id: 100 })).toMatchObject([
+      { uid: 'blessing', effect_id: 200 },
+    ])
   })
 
   it('collects polarity and removes all links owned by a deleted source', () => {

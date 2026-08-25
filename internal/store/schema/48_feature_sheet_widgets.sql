@@ -31,7 +31,7 @@ UPDATE dndshare.item
 SET data = jsonb_set(
   COALESCE(data, '{}'::jsonb),
   '{sheet_widgets}',
-  '[{"key":"rage","title":"Ярость","kind":"toggle","value_source":"scaling","description":"Текущий бонус к урону","tone":"danger","status_effect_key":"rage","inactive_label":"Войти в ярость","active_label":"Ярость активна","priority":20}]'::jsonb,
+  '[{"key":"rage","title":"Ярость","kind":"toggle","value_source":"scaling","description":"Текущий бонус к урону","tone":"danger","status_effect_key":"rage","inactive_label":"Войти в ярость","active_label":"Выйти из ярости","priority":20}]'::jsonb,
   true
 )
 WHERE type_id = 4 AND user_id IS NULL AND lower(name) = lower('Ярость');
