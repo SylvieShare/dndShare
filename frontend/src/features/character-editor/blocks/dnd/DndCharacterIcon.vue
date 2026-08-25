@@ -93,8 +93,8 @@ async function clearIcon() {
 <style scoped>
 .dci-icon-wrap {
   position: relative;
-  width: 103px;
-  flex: 0 0 103px;
+  width: 88px;
+  flex: 0 0 88px;
   margin-top: 15px;
   margin-left: 15px;
 }

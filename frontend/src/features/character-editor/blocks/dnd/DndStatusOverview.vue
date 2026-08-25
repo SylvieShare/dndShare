@@ -196,6 +196,6 @@ function hideStatusTooltip() {
 
 <style scoped>
 .dso-root { min-width: 0; }
-.dso-root--trigger :deep(.dsov) { gap: 0; padding: 10px 0 15px 15px; }
-.dso-root--trigger :deep(.dsov-add) { width: 88px; height: 44px; }
+.dso-root--trigger :deep(.dsov) { gap: 0; padding: 7px 0 14px 21px; }
+.dso-root--trigger :deep(.dsov-add) { width: 76px; height: 32px; gap: 3px; padding: 0 4px; font-size: 9px; }
 </style>

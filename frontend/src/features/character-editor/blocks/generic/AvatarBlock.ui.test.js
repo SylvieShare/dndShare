@@ -29,6 +29,7 @@ describe('character portrait UI', () => {
 
   it('uses the character icon in the sheet summary and falls back to the portrait', () => {
     expect(characterIconSource).toContain('charCtx.iconImageUrl || props.values?.ava?.url')
+    expect(characterIconSource).toMatch(/\.dci-icon-wrap \{[\s\S]*?width: 88px;[\s\S]*?flex: 0 0 88px;/)
     expect(characterIconSource).toMatch(/\.dci-icon \{[\s\S]*?width: 88px;[\s\S]*?height: 88px;/)
     expect(characterIconSource).toContain('background: none')
     expect(characterIconSource).toContain('border: 0')
