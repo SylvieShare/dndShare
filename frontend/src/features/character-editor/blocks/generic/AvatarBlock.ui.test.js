@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest'
 
 const avatarSource = readFileSync(fileURLToPath(new URL('./AvatarBlock.vue', import.meta.url)), 'utf8')
 const identitySource = readFileSync(fileURLToPath(new URL('../dnd/DndCharIdentity.vue', import.meta.url)), 'utf8')
+const characterIconSource = readFileSync(fileURLToPath(new URL('../dnd/DndCharacterIcon.vue', import.meta.url)), 'utf8')
 const cropSource = readFileSync(fileURLToPath(new URL('../../components/AvatarCropModal.vue', import.meta.url)), 'utf8')
 const viewSource = readFileSync(fileURLToPath(new URL('../../pages/ViewCharacter.vue', import.meta.url)), 'utf8')
 
@@ -26,6 +27,11 @@ describe('character portrait UI', () => {
       expect(source).not.toContain("setCropSource(file, file.name || 'character-icon.webp'")
       expect(source).not.toContain("setAvaCropSource(file, 'icon')")
     }
+  })
+
+  it('uses the character icon in the sheet summary and falls back to the portrait', () => {
+    expect(characterIconSource).toContain('charCtx.iconImageUrl || props.values?.ava?.url')
+    expect(characterIconSource).toMatch(/\.dci-icon \{[\s\S]*?width: 88px;[\s\S]*?height: 88px;/)
   })
 
   it('renders portrait action popovers above the embedded session sheet', () => {

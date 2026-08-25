@@ -72,43 +72,38 @@
                 "children": [
                   {
                     "kind": "layout",
-                    "type": "row",
+                    "type": "column",
                     "props": {
-                      "gap": "0",
-                      "grow": "1",
-                      "style": {
-                        "padding": "0",
-                        "overflow": "hidden"
-                      },
-                      "align-items": "stretch",
-                      "tile": true
+                      "gap": "8px",
+                      "grow": "1"
                     },
                     "children": [
                       {
-                        "ref": "ava",
-                        "kind": "block",
-                        "props": {
-                          "fill": true,
-                          "width": "115px"
-                        }
-                      },
-                      {
                         "kind": "layout",
-                        "type": "column",
+                        "type": "row",
                         "props": {
-                          "gap": "10px",
-                          "grow": "1",
+                          "gap": "0",
                           "style": {
-                            "padding": "15px"
-                          }
+                            "padding": "0",
+                            "overflow": "hidden"
+                          },
+                          "align-items": "stretch",
+                          "tile": true
                         },
                         "children": [
                           {
+                            "ref": "character_icon",
+                            "kind": "block"
+                          },
+                          {
                             "kind": "layout",
-                            "type": "row",
+                            "type": "column",
                             "props": {
-                              "gap": "12px",
-                              "align-items": "center"
+                              "gap": "10px",
+                              "grow": "1",
+                              "style": {
+                                "padding": "15px"
+                              }
                             },
                             "children": [
                               {
@@ -121,18 +116,18 @@
                                     "min-width": "0"
                                   }
                                 }
+                              },
+                              {
+                                "ref": "hp",
+                                "kind": "block"
                               }
                             ]
-                          },
-                          {
-                            "ref": "hp",
-                            "kind": "block"
-                          },
-                          {
-                            "ref": "desktop_statuses",
-                            "kind": "block"
                           }
                         ]
+                      },
+                      {
+                        "ref": "desktop_statuses",
+                        "kind": "block"
                       }
                     ]
                   },
@@ -421,40 +416,69 @@
                                       },
                                       "children": [
                                         {
-                                          "ref": "person_appearance",
-                                          "kind": "block"
-                                        },
-                                        {
                                           "kind": "layout",
-                                          "type": "grid",
+                                          "type": "row",
                                           "props": {
-                                            "gap": "10px",
-                                            "columns": 3
+                                            "gap": "18px",
+                                            "align-items": "stretch"
                                           },
                                           "children": [
                                             {
-                                              "ref": "person_height",
-                                              "kind": "block"
+                                              "ref": "ava",
+                                              "kind": "block",
+                                              "props": {
+                                                "width": "200px",
+                                                "height": "260px"
+                                              }
                                             },
                                             {
-                                              "ref": "person_weight",
-                                              "kind": "block"
-                                            },
-                                            {
-                                              "ref": "person_age",
-                                              "kind": "block"
-                                            },
-                                            {
-                                              "ref": "person_eyes",
-                                              "kind": "block"
-                                            },
-                                            {
-                                              "ref": "person_skin",
-                                              "kind": "block"
-                                            },
-                                            {
-                                              "ref": "person_hair",
-                                              "kind": "block"
+                                              "kind": "layout",
+                                              "type": "column",
+                                              "props": {
+                                                "gap": "12px",
+                                                "grow": 1,
+                                                "basis": 0
+                                              },
+                                              "children": [
+                                                {
+                                                  "ref": "person_appearance",
+                                                  "kind": "block"
+                                                },
+                                                {
+                                                  "kind": "layout",
+                                                  "type": "grid",
+                                                  "props": {
+                                                    "gap": "10px",
+                                                    "columns": 3
+                                                  },
+                                                  "children": [
+                                                    {
+                                                      "ref": "person_height",
+                                                      "kind": "block"
+                                                    },
+                                                    {
+                                                      "ref": "person_weight",
+                                                      "kind": "block"
+                                                    },
+                                                    {
+                                                      "ref": "person_age",
+                                                      "kind": "block"
+                                                    },
+                                                    {
+                                                      "ref": "person_eyes",
+                                                      "kind": "block"
+                                                    },
+                                                    {
+                                                      "ref": "person_skin",
+                                                      "kind": "block"
+                                                    },
+                                                    {
+                                                      "ref": "person_hair",
+                                                      "kind": "block"
+                                                    }
+                                                  ]
+                                                }
+                                              ]
                                             }
                                           ]
                                         }

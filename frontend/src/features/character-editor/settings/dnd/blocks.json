@@ -120,6 +120,10 @@
     "id": "ava",
     "type": "AVATARS"
   },
+  "character_icon": {
+    "id": "character_icon",
+    "type": "DND_CHARACTER_ICON"
+  },
   "lvl": {
     "id": "lvl",
     "type": "BLOCK_LVL",

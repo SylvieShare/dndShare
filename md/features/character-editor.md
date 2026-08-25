@@ -57,8 +57,10 @@ breakpoint and gives the full viewport to its own toolbar; that toolbar menu has
 an explicit **К персонажам** action, including on read-only public sheets. Its
 desktop shell also occupies the full viewport because application navigation is
 provided by the fixed side rail and does not reserve a top-header offset. Its
-desktop identity summary keeps the class list on a separate single line below
-the name and race; an overlong multiclass label is ellipsized instead of
+desktop identity summary uses the dedicated character icon to the left of the
+name and HP. The full portrait lives in the inner **Личность** tab beside the
+appearance fields. The class list stays on a separate single line below the
+name and race; an overlong multiclass label is ellipsized instead of
 increasing the sheet width. The active tab still registers its DOM scroller
 through `useAppHeaderCollapse` so
 the compact common strip has one shared scroll/settle observer; regular routes
@@ -96,13 +98,16 @@ does not render a textual health category or hit-die availability. Maximum HP is
 ability contributions, and editable manual bonuses. Healing, rests, level-up,
 print and encounter projections use the resolved total; encounter writes never
 overwrite the maximum's source structure.
-The desktop effects tile sits directly below HP instead of in the skills
-sidebar. It renders active conditions, non-zero exhaustion and heroic
-inspiration in one horizontally scrollable row of 64×64 icon cells with compact
-labels. Active inspiration is an effect in that row; while it is absent, an
-owner gets a separate direct **Добавить вдохновение** action. A separate add-effect
-cell opens the handbook picker. Clicking an active domain still opens the shared
-vertical morph editor with tabs for conditions, exhaustion and inspiration.
+The frameless desktop effect summary sits below the shared icon/name/HP tile
+instead of inside it or in the skills sidebar. Active catalogue effects,
+non-zero exhaustion and heroic inspiration share one horizontally scrollable
+row of 64×64 cells. Catalogue cells render either raster `iconImageUrl` or SVG;
+missing media falls back to a monogram rather than a colour dot. The effect name
+is placed on the bottom of the icon over a dark blurred overlay. Optional
+catalogue `level` metadata and the live exhaustion level appear as a second
+**Уровень N** line in that overlay. The summary has no title, add cells,
+surface or frame. Owners use the single **Редактировать состояние** link to
+open the shared editor for catalogue effects, exhaustion and inspiration.
 The compact mobile strip
 keeps HP at its intrinsic number width and never lets
 the HP numbers shrink. Its right side contains a fixed **Статусы** action
@@ -245,6 +250,8 @@ Clicking the editable portrait opens actions for upload, crop, clear and a
 separate character-icon upload. An icon is uploaded directly without the crop
 workspace; PNG/WebP dimensions must not exceed 256×256. It is stored outside
 character JSON, while the portrait keeps its existing crop flow and sheet aspect.
+The desktop summary prefers that icon and falls back to the portrait; the full
+portrait block is rendered in the **Личность** tab.
 Character cards and session participants prefer the icon and fall back to the
 portrait when it is absent. Drag-and-drop for the portrait enters the same crop
 flow instead of bypassing it. Portrait action popovers use a layer above the
@@ -423,7 +430,7 @@ is owned.
 
 Active effects use item type 15 (`Эффекты`) as a structured catalogue. Each
 catalogue row owns polarity (`positive`, `negative` or `neutral`), colour,
-description, stacking policy, default duration, concentration and optional
+description, optional presentation level, stacking policy, default duration, concentration and optional
 `derived_effects`/`defenses`. `values.states` stores only runtime instances:
 `uid`, `effect_id`, source identity, bound `params`, duration and concentration.
 This keeps a temporary spell or ability effect removable with its source and

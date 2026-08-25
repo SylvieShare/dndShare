@@ -11,7 +11,13 @@
           @mouseenter="showStatusTooltip($event, item)"
           @mouseleave="hideStatusTooltip"
         >
-          <SvgIcon v-if="item.svg" class="dmsm-status-icon" :svg="item.svg" :color="item.color || '#888888'" filter />
+          <ItemIcon
+            v-if="item.item?.iconImageUrl || item.item?.svg"
+            class="dmsm-status-icon"
+            :item="item.item"
+            :fallback-to-type="false"
+            :size="28"
+          />
           <span v-else class="dmsm-status-dot"></span>
         </span>
         <button
@@ -101,7 +107,7 @@ import ItemTooltip from '@/features/character-editor/components/ItemTooltip'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
-import SvgIcon from '@/shared/ui/SvgIcon'
+import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import { normalizeExhaustion } from '@/features/character-editor/blocks/dnd/lib/exhaustion'
 import { isInspirationActive } from '@/features/character-editor/blocks/dnd/lib/mobileStatus'
 
@@ -130,7 +136,7 @@ const activeItems = computed(() => statuses.value.map(status => ({
   value: status.title,
   desc: status.description,
   color: status.color,
-  svg: status.item?.svg || '',
+  item: status.item,
 })))
 const exhaustionValue = computed(() => props.values?.[ids.value.exhaustion] || { level: 0 })
 const exhaustionLevel = computed(() => normalizeExhaustion(exhaustionValue.value).level)

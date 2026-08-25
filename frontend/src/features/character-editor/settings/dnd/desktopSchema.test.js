@@ -78,10 +78,12 @@ describe('D&D desktop sheet schema', () => {
 
   it('groups conditions, exhaustion and inspiration in one desktop status block', () => {
     const statuses = findNode(base?.content, node => node.ref === 'desktop_statuses')
-    const hpColumn = findNode(
+    const summaryColumn = findNode(
       base?.content,
-      node => node.type === 'column' && node.children?.some(child => child.ref === 'hp'),
+      node => node.type === 'column' && node.children?.at(-1)?.ref === 'desktop_statuses',
     )
+    const summaryTile = summaryColumn.children[0]
+    const hpColumn = findNode(summaryTile, node => node.type === 'column' && node.children?.some(child => child.ref === 'hp'))
     const sidebar = findNode(
       base?.content,
       node => node.type === 'column' && node.children?.some(child => child.ref === 'feature_widgets'),
@@ -90,7 +92,10 @@ describe('D&D desktop sheet schema', () => {
     const separateStates = findNode(base?.content, node => node.ref === 'states')
 
     expect(statuses).toBeTruthy()
-    expect(hpColumn.children.slice(-2).map(child => child.ref)).toEqual(['hp', 'desktop_statuses'])
+    expect(summaryTile.props?.tile).toBe(true)
+    expect(summaryTile.children[0]?.ref).toBe('character_icon')
+    expect(hpColumn.children.map(child => child.ref)).toEqual(['char_identity', 'hp'])
+    expect(summaryColumn.children[1]).toBe(statuses)
     expect(sidebar.children.some(child => child.ref === 'desktop_statuses')).toBe(false)
     expect(separateExhaustion).toBeNull()
     expect(separateStates).toBeNull()
@@ -103,6 +108,19 @@ describe('D&D desktop sheet schema', () => {
         inspiration_id: 'inspiration',
       },
     })
+  })
+
+  it('moves the full portrait into the Personality tab', () => {
+    const personality = innerTabs.children.find(tab => tab.title === 'Личность')
+    const portrait = findNode(personality?.content, node => node.ref === 'ava')
+    const headerPortrait = findNode(
+      base?.content,
+      node => node.ref === 'ava' && node !== portrait,
+    )
+
+    expect(portrait?.props).toMatchObject({ width: '200px', height: '260px' })
+    expect(headerPortrait).toBeNull()
+    expect(schema.blocks.character_icon.type).toBe('DND_CHARACTER_ICON')
   })
 
   it('keeps derived defenses beside the character resources', () => {

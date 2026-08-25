@@ -139,6 +139,10 @@ instances with bound parameters; legacy suggest-type-9 state ids and active
 Rage widget flags are migrated to that format. Rage and Shield of Faith are the
 initial automatic consumers, while all former condition suggests are imported
 as negative effect items for manual selection.
+`52_status_effect_levels.sql` adds optional `level` presentation metadata to
+effect catalogue items. The live exhaustion value stays in its rules-owned
+character field, but the sheet presents it through the same level-aware effect
+cell without duplicating rest or exhaustion mechanics.
 Section `34_ability_resource_catalog_fixes.sql` задаёт структурированные правила
 Харизмы для «Вдохновения барда» и Мудрости для «Гнева бури», удаляет прежний
 ручной максимум вдохновения и переводит его полные старые character entries на

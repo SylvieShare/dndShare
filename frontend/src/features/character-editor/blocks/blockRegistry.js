@@ -18,6 +18,7 @@ import DndActions from '@/features/character-editor/blocks/dnd/DndActions.vue'
 import DndAlignment from '@/features/character-editor/blocks/dnd/DndAlignment'
 import DndArmor from '@/features/character-editor/blocks/dnd/DndArmor'
 import DndCharIdentity from '@/features/character-editor/blocks/dnd/DndCharIdentity'
+import DndCharacterIcon from '@/features/character-editor/blocks/dnd/DndCharacterIcon.vue'
 import DndCharStat10 from '@/features/character-editor/blocks/dnd/DndCharStat10'
 import DndCounters from '@/features/character-editor/blocks/dnd/DndCounters'
 import DndDefenses from '@/features/character-editor/blocks/dnd/DndDefenses'
@@ -66,6 +67,7 @@ export const BLOCK_REGISTRY = {
   DND_ALIGNMENT:    { component: DndAlignment },
   DND_ARMOR:        { component: DndArmor, passValues: true },
   DND_CHAR_IDENTITY:{ component: DndCharIdentity, passValues: true },
+  DND_CHARACTER_ICON:{ component: DndCharacterIcon, noValue: true, passValuesOnly: true },
   DND_CHAR_STAT_10: { component: DndCharStat10, passValues: true },
   DND_DEFENSES:     { component: DndDefenses },
   DND_DIARY:        { component: DndDiary },

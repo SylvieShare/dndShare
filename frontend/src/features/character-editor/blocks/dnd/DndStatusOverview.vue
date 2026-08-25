@@ -1,25 +1,12 @@
 <template>
   <div ref="root" class="dso-root">
-    <BaseTile
-      class="dso-tile"
-      :color="summaryColor"
-      :strip="hasActiveSummary"
-      :interactive="canInteract"
-      @click="openSection('states')"
-    >
-      <DndStatusOverviewView
-        :active-items="activeItems"
-        :exhaustion-level="exhaustionLevel"
-        :exhaustion-effects="exhaustionEffects"
-        :inspiration-active="inspirationActive"
-        :editable="canInteract"
-        @select="openSection"
-        @add-effect="pickerOpen = true"
-        @add-inspiration="setInspiration(true)"
-        @show-tooltip="showStatusTooltip"
-        @hide-tooltip="hideStatusTooltip"
-      />
-    </BaseTile>
+    <DndStatusOverviewView
+      :items="displayItems"
+      :editable="canInteract"
+      @edit="openSection"
+      @show-tooltip="showStatusTooltip"
+      @hide-tooltip="hideStatusTooltip"
+    />
   </div>
 
   <MorphEditorShell
@@ -27,17 +14,14 @@
     :origin-rect="originRect"
     :origin-el="originEl"
     :color="summaryColor"
-    :strip="hasActiveSummary"
+    :strip="false"
     orientation="vertical"
     :min-view-width="360"
     @close="closeEditor"
   >
     <template #view>
       <DndStatusOverviewView
-        :active-items="activeItems"
-        :exhaustion-level="exhaustionLevel"
-        :exhaustion-effects="exhaustionEffects"
-        :inspiration-active="inspirationActive"
+        :items="displayItems"
         @show-tooltip="showStatusTooltip"
         @hide-tooltip="hideStatusTooltip"
       />
@@ -105,7 +89,6 @@
 <script setup>
 import { computed, inject, ref } from 'vue'
 import { Activity, BatteryLow, Sparkles } from '@lucide/vue'
-import { BaseTile } from '@sylvieshare/share-ui'
 import CharacterStatusEditor from '@/features/character-editor/blocks/dnd/components/CharacterStatusEditor.vue'
 import DndExhaustionEditor from '@/features/character-editor/blocks/dnd/components/DndExhaustionEditor'
 import DndInspirationEditor from '@/features/character-editor/blocks/dnd/components/DndInspirationEditor'
@@ -142,10 +125,12 @@ const statuses = computed(() => {
 })
 const activeItems = computed(() => statuses.value.map(status => ({
   id: status.uid,
+  kind: 'states',
   value: status.title,
   desc: status.description,
   color: status.color,
-  svg: status.item?.svg || '',
+  item: status.item,
+  level: Math.max(0, Number(status.item?.data?.level) || 0),
   polarity: status.polarity,
 })))
 const exhaustionValue = computed(() => props.values?.[ids.value.exhaustion] || { level: 0 })
@@ -154,7 +139,23 @@ const exhaustionLevel = computed(() => normalizedExhaustion.value.level)
 const exhaustionEffects = computed(() => normalizedExhaustion.value.effects.slice(0, exhaustionLevel.value))
 const inspirationValue = computed(() => props.values?.[ids.value.inspiration] ?? false)
 const inspirationActive = computed(() => isInspirationActive(inspirationValue.value))
-const hasActiveSummary = computed(() => activeItems.value.length > 0 || exhaustionLevel.value > 0 || inspirationActive.value)
+const displayItems = computed(() => [
+  ...activeItems.value,
+  ...(exhaustionLevel.value > 0 ? [{
+    id: 'exhaustion',
+    kind: 'exhaustion',
+    value: 'Истощение',
+    desc: exhaustionEffects.value.join(' · '),
+    color: 'var(--danger)',
+    level: exhaustionLevel.value,
+  }] : []),
+  ...(inspirationActive.value ? [{
+    id: 'inspiration',
+    kind: 'inspiration',
+    value: 'Вдохновение',
+    color: 'var(--accent)',
+  }] : []),
+])
 const canInteract = computed(() => !!charCtx.ownerMode)
 const summaryColor = computed(() => {
   if (exhaustionLevel.value > 0) return 'var(--danger)'
@@ -175,7 +176,7 @@ function openSection(kind) {
   if (!canInteract.value) return
   editorKind.value = kind
   hideStatusTooltip()
-  openFrom(root.value?.querySelector('.dso-tile'))
+  openFrom(root.value)
 }
 
 function closeEditor() {
@@ -222,7 +223,6 @@ function hideStatusTooltip() {
 
 <style scoped>
 .dso-root { min-width: 0; }
-.dso-tile { overflow: hidden; }
 .dso-editor { border-top: 1px solid var(--border); background: var(--bg); }
 .dso-tabs {
   display: grid;

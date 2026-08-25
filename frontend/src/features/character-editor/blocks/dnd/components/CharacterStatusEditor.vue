@@ -4,7 +4,12 @@
       <div v-if="statuses.length" class="cse-list">
         <div v-for="status in statuses" :key="status.uid" class="cse-row" :class="`cse-row--${status.polarity}`">
           <span class="cse-mark" :style="{ '--c': status.color }">
-            <SvgIcon v-if="status.item?.svg" :svg="status.item.svg" />
+            <ItemIcon
+              v-if="status.item?.iconImageUrl || status.item?.svg"
+              :item="status.item"
+              :fallback-to-type="false"
+              :size="24"
+            />
           </span>
           <span class="cse-copy">
             <strong>{{ status.title }}</strong>
@@ -21,20 +26,21 @@
 
 <script setup>
 import { AddButton, EditorPanel, EditorSection, RemoveButton } from '@sylvieshare/share-ui'
-import SvgIcon from '@/shared/ui/SvgIcon.vue'
+import ItemIcon from '@/features/items/components/ItemIcon.vue'
 
 defineProps({ statuses: { type: Array, default: () => [] } })
 defineEmits(['add', 'remove'])
 
 function meta(status) {
   const polarity = status.polarity === 'positive' ? 'Положительный' : status.polarity === 'negative' ? 'Отрицательный' : 'Нейтральный'
+  const level = Number(status.item?.data?.level) > 0 ? ` · уровень ${Number(status.item.data.level)}` : ''
   const source = status.source?.label ? ` · ${status.source.label}` : status.source?.kind === 'manual' ? ' · добавлен вручную' : ''
   const concentration = status.concentration ? ' · концентрация' : ''
   const durations = { rounds: 'раунд.', minutes: 'мин.', hours: 'ч.', until_rest: 'до отдыха', permanent: 'постоянно' }
   const duration = status.duration?.kind && status.duration.kind !== 'manual'
     ? ` · ${status.duration.value ? `${status.duration.value} ` : ''}${durations[status.duration.kind] || status.duration.kind}`
     : ''
-  return `${polarity}${source}${duration}${concentration}`
+  return `${polarity}${level}${source}${duration}${concentration}`
 }
 </script>
 

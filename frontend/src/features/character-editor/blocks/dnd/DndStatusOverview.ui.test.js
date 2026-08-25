@@ -4,43 +4,46 @@ import { describe, expect, it } from 'vitest'
 
 const source = readFileSync(fileURLToPath(new URL('./DndStatusOverview.vue', import.meta.url)), 'utf8')
 const viewSource = readFileSync(fileURLToPath(new URL('./components/DndStatusOverviewView.vue', import.meta.url)), 'utf8')
+const editorSource = readFileSync(fileURLToPath(new URL('./components/CharacterStatusEditor.vue', import.meta.url)), 'utf8')
 const inspirationSource = readFileSync(fileURLToPath(new URL('./components/DndInspirationEditor.vue', import.meta.url)), 'utf8')
 
 describe('desktop status overview', () => {
-  it('presents effects, exhaustion and inspiration in one horizontal icon row', () => {
-    expect(source).toContain('<BaseTile')
-    expect(source).toContain(':strip="hasActiveSummary"')
-    expect(viewSource).toContain('>Эффекты<')
-    expect(viewSource).toContain('overflow-x: auto')
-    expect(viewSource).toMatch(/\.dsov-icon \{[\s\S]*?width: 64px;[\s\S]*?height: 64px;/)
-    expect(viewSource).toContain('Истощение {{ exhaustionLevel }}')
-    expect(viewSource).toContain('Вдохновение</span>')
+  it('uses a frameless summary with one explicit edit action', () => {
+    expect(source).not.toContain('<BaseTile')
+    expect(viewSource).not.toContain('sheet-tile-title')
+    expect(viewSource).not.toContain('Добавить эффект')
+    expect(viewSource).not.toContain('Добавить вдохновение')
+    expect(viewSource).toContain('Редактировать состояние')
+    expect(viewSource).toContain("$emit('edit', 'states')")
   })
 
-  it('omits inactive metrics and offers a separate direct inspiration action', () => {
-    expect(viewSource).toContain('v-if="exhaustionLevel > 0"')
-    expect(viewSource).toContain('v-if="inspirationActive"')
-    expect(viewSource).toContain('v-if="editable && !inspirationActive"')
-    expect(viewSource).toContain("$emit('add-inspiration')")
-    expect(source).toContain('@add-inspiration="setInspiration(true)"')
-    expect(source).toContain('normalizedExhaustion.value.effects.slice(0, exhaustionLevel.value)')
+  it('renders raster or SVG item icons instead of reducing them to color dots', () => {
+    expect(viewSource).toContain('<ItemIcon')
+    expect(viewSource).toContain('item.item.iconImageUrl || item.item.svg')
+    expect(editorSource).toContain('<ItemIcon')
+    expect(viewSource).not.toContain('dsov-dot')
   })
 
-  it('opens the effect picker from its own add action', () => {
-    expect(viewSource).toContain("$emit('add-effect')")
-    expect(source).toContain('@add-effect="pickerOpen = true"')
+  it('puts the effect name and optional level over the bottom of its 64px icon', () => {
+    expect(viewSource).toMatch(/\.dsov-effect \{[\s\S]*?width: 64px;[\s\S]*?height: 64px;/)
+    expect(viewSource).toContain('class="dsov-caption"')
+    expect(viewSource).toContain('backdrop-filter: blur(5px)')
+    expect(viewSource).toContain('Уровень {{ item.level }}')
+    expect(source).toContain('Number(status.item?.data?.level)')
   })
 
-  it('opens one editor with a direct tab for every status domain', () => {
+  it('presents exhaustion and inspiration as effects in the same display list', () => {
+    expect(source).toContain("kind: 'exhaustion'")
+    expect(source).toContain("kind: 'inspiration'")
+    expect(source).toContain('level: exhaustionLevel.value')
+    expect(viewSource).toContain("item.kind === 'exhaustion'")
+    expect(viewSource).toContain("item.kind === 'inspiration'")
+  })
+
+  it('keeps one editor with controls for effects, exhaustion and inspiration', () => {
     expect(source).toContain('role="tablist"')
     expect(source).toContain("v-if=\"editorKind === 'states'\"")
     expect(source).toContain("v-else-if=\"editorKind === 'exhaustion'\"")
-    for (const kind of ['states', 'exhaustion', 'inspiration']) {
-      expect(viewSource).toContain(`select('${kind}')`)
-    }
-  })
-
-  it('uses the shared boolean inspiration control', () => {
     expect(source).toContain('<DndInspirationEditor')
     expect(inspirationSource).toContain(':aria-pressed="active"')
     expect(inspirationSource).toContain("$emit('change', !active)")
