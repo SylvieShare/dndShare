@@ -129,7 +129,7 @@ func TestToolProficiencyCatalogIsEmbeddedAfterItemTypeHierarchy(t *testing.T) {
 func TestClassActionAutomationPublishesCrossFeatureResourceActions(t *testing.T) {
 	for _, fragment := range []string{
 		`"key":"resource_item_id"`,
-		`'Bardic Inspiration'`,
+		`'Вдохновение барда'`,
 		`'Second Wind'`,
 		`'Wild Shape'`,
 		`'Channel Divinity'`,

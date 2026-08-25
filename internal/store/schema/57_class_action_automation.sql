@@ -35,13 +35,13 @@ WHERE item_type.id IN (3, 4, 7)
 -- Only actions with unambiguous action economy are published here. Variable
 -- pools remain manually adjustable, while fixed costs receive a one-click
 -- resource spend in the action menu.
-WITH action_rules(class_id, name_en, resource_name_en, actions) AS (
+WITH action_rules(class_id, name_identity, resource_identity, actions) AS (
   VALUES
     (4013, 'Intimidating Presence', NULL, '[{"key":"intimidating_presence","title":"Устрашающее присутствие","action_type":"action","description":"Попытайтесь напугать существо своим присутствием.","requirements":["Существо в пределах 30 футов должно видеть или слышать вас","Цель совершает спасбросок Мудрости"],"priority":30}]'::jsonb),
     (4013, 'Retaliation', NULL, '[{"key":"retaliation","title":"Возмездие","action_type":"reaction","description":"Совершите рукопашную атаку оружием по существу, которое нанесло вам урон.","requirements":["Источник урона находится в пределах 5 футов"],"priority":20}]'::jsonb),
 
-    (4016, 'Bardic Inspiration', NULL, '[{"key":"bardic_inspiration","title":"Вдохновить союзника","action_type":"bonus_action","description":"Передайте слышащему вас существу в пределах 60 футов кость бардовского вдохновения на 10 минут.","uses_resource":true,"resource_cost":1,"priority":10}]'::jsonb),
-    (4016, 'Cutting Words', 'Bardic Inspiration', '[{"key":"cutting_words","title":"Острое словцо","action_type":"reaction","description":"Вычтите кость вдохновения из броска атаки, проверки характеристики или урона видимого существа.","requirements":["Цель в пределах 60 футов должна слышать вас","Решение принимается до результата броска"],"resource_cost":1,"priority":10}]'::jsonb),
+    (4016, 'Вдохновение барда', NULL, '[{"key":"bardic_inspiration","title":"Вдохновить союзника","action_type":"bonus_action","description":"Передайте слышащему вас существу в пределах 60 футов кость бардовского вдохновения на 10 минут.","uses_resource":true,"resource_cost":1,"priority":10}]'::jsonb),
+    (4016, 'Cutting Words', 'Вдохновение барда', '[{"key":"cutting_words","title":"Острое словцо","action_type":"reaction","description":"Вычтите кость вдохновения из броска атаки, проверки характеристики или урона видимого существа.","requirements":["Цель в пределах 60 футов должна слышать вас","Решение принимается до результата броска"],"resource_cost":1,"priority":10}]'::jsonb),
     (4016, 'Countercharm', NULL, '[{"key":"countercharm","title":"Контрочарование","action_type":"action","description":"Начните выступление; слышащие союзники в пределах 30 футов получают преимущество против испуга и очарования до конца вашего следующего хода.","priority":20}]'::jsonb),
 
     (4377, 'Second Wind', NULL, '[{"key":"second_wind","title":"Второе дыхание","action_type":"bonus_action","description":"Восстановите 1к10 + уровень воина хитов.","uses_resource":true,"resource_cost":1,"priority":10}]'::jsonb),
@@ -113,8 +113,11 @@ WITH action_rules(class_id, name_en, resource_name_en, actions) AS (
   LEFT JOIN dndshare.item resource
     ON resource.type_id = 4
    AND resource.user_id IS NULL
-   AND rules.resource_name_en IS NOT NULL
-   AND lower(COALESCE(resource.name_en, '')) = lower(rules.resource_name_en)
+   AND rules.resource_identity IS NOT NULL
+   AND (
+     lower(COALESCE(resource.name_en, '')) = lower(rules.resource_identity)
+     OR lower(resource.name) = lower(rules.resource_identity)
+   )
    AND EXISTS (
      SELECT 1
      FROM jsonb_array_elements(COALESCE(resource.data -> 'class_ids', '[]'::jsonb)) class_ref
@@ -122,8 +125,8 @@ WITH action_rules(class_id, name_en, resource_name_en, actions) AS (
    )
 ), rendered_rules AS (
   SELECT resolved_rules.class_id,
-         resolved_rules.name_en,
-         CASE WHEN resolved_rules.resource_name_en IS NULL OR resolved_rules.resource_item_id IS NULL THEN resolved_rules.actions ELSE (
+         resolved_rules.name_identity,
+         CASE WHEN resolved_rules.resource_identity IS NULL OR resolved_rules.resource_item_id IS NULL THEN resolved_rules.actions ELSE (
            SELECT jsonb_agg(
              action.value || jsonb_build_object('resource_item_id', resolved_rules.resource_item_id)
              ORDER BY action.ord
@@ -137,7 +140,10 @@ SET data = jsonb_set(COALESCE(target.data, '{}'::jsonb), '{feature_actions}', re
 FROM rendered_rules
 WHERE target.type_id = 4
   AND target.user_id IS NULL
-  AND lower(COALESCE(target.name_en, '')) = lower(rendered_rules.name_en)
+  AND (
+    lower(COALESCE(target.name_en, '')) = lower(rendered_rules.name_identity)
+    OR lower(target.name) = lower(rendered_rules.name_identity)
+  )
   AND EXISTS (
     SELECT 1
     FROM jsonb_array_elements(COALESCE(target.data -> 'class_ids', '[]'::jsonb)) class_ref
