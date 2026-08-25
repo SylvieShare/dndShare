@@ -57,17 +57,24 @@ export function longRestHp(hp, recovery = null) {
 // regardless of the configured recovery rest (short-rest casters recharge on a long rest too).
 export function longRestSpells(spells) {
   if (!spells || typeof spells !== 'object') return spells
-  if (!Array.isArray(spells.slots)) return spells
-  return { ...spells, slots: spells.slots.map(s => ({ ...s, used: 0 })) }
+  return {
+    ...spells,
+    ...(Array.isArray(spells.slots) ? { slots: spells.slots.map(s => ({ ...s, used: 0 })) } : {}),
+    ...(spells.pact_slots ? { pact_slots: { ...spells.pact_slots, used: 0 } } : {}),
+  }
 }
 
 // Short rest: recover spell slots only when the block is configured to recharge on a short rest
 // (e.g. warlock pact magic, `slots_rest === 'short_rest'`); otherwise leave them untouched.
 export function shortRestSpells(spells) {
   if (!spells || typeof spells !== 'object') return spells
-  if (spells.slots_rest !== 'short_rest') return spells
-  if (!Array.isArray(spells.slots)) return spells
-  return { ...spells, slots: spells.slots.map(s => ({ ...s, used: 0 })) }
+  const restoreShared = spells.slots_rest === 'short_rest' && Array.isArray(spells.slots)
+  if (!restoreShared && !spells.pact_slots) return spells
+  return {
+    ...spells,
+    ...(restoreShared ? { slots: spells.slots.map(s => ({ ...s, used: 0 })) } : {}),
+    ...(spells.pact_slots ? { pact_slots: { ...spells.pact_slots, used: 0 } } : {}),
+  }
 }
 
 // Restore resource charges to full. `kind` 'short' restores resources flagged `short_rest`;

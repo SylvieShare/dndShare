@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { longRestHp, longRestRecoveryCount, spendHitDie } from './rest'
+import { longRestHp, longRestRecoveryCount, longRestSpells, shortRestSpells, spendHitDie } from './rest'
 
 const hp = {
   current: 8,
@@ -29,5 +29,27 @@ describe('multiclass rests', () => {
       { die: 'd10', total: 3, used: 1 },
       { die: 'd6', total: 2, used: 1 },
     ])
+  })
+})
+
+describe('multiclass spell-slot recovery', () => {
+  const spells = {
+    slots_rest: 'long_rest',
+    slots: [{ level: 1, total: 4, used: 2 }],
+    pact_slots: { level: 2, total: 2, used: 1 },
+  }
+
+  it('restores only Pact Magic on a short rest', () => {
+    expect(shortRestSpells(spells)).toMatchObject({
+      slots: [{ level: 1, total: 4, used: 2 }],
+      pact_slots: { level: 2, total: 2, used: 0 },
+    })
+  })
+
+  it('restores both pools on a long rest', () => {
+    expect(longRestSpells(spells)).toMatchObject({
+      slots: [{ level: 1, total: 4, used: 0 }],
+      pact_slots: { level: 2, total: 2, used: 0 },
+    })
   })
 })

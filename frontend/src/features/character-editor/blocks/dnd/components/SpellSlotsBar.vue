@@ -7,7 +7,7 @@
         :show-edit="canInteract"
         @edit="editOpen = true"
       />
-      <div class="sp-stats">
+      <div v-if="castingStats.length <= 1" class="sp-stats">
         <div class="sp-tile sp-tile--base">
           <span class="sp-tlabel">Базовая хар-ка</span>
           <span class="sp-tval sp-tval-stat">{{ statLabel || '—' }}</span>
@@ -22,6 +22,37 @@
           <span class="sp-tlabel">Атака закл.</span>
           <span class="sp-tval sp-tval-atk">{{ attackBonus >= 0 ? '+' + attackBonus : attackBonus }}</span>
           <span class="sp-tline"></span>
+        </div>
+      </div>
+      <div v-else class="sp-caster-stats">
+        <div v-for="row in castingStats" :key="row.key" class="sp-caster-row">
+          <strong>{{ row.label }}</strong>
+          <span>{{ row.ability }}</span>
+          <span>СЛ {{ row.saveDC }}</span>
+          <span>Атака {{ row.attackBonus >= 0 ? '+' + row.attackBonus : row.attackBonus }}</span>
+        </div>
+      </div>
+    </BaseTile>
+
+    <BaseTile v-if="pactSlot && pactSlot.total > 0" class="sp-slots-panel sp-pact-panel">
+      <SheetBlockTitle class="sp-slots-head" title="Ячейки магии договора" />
+      <div class="sp-slots">
+        <div class="sp-slot-row">
+          <div class="sp-lvl">
+            <span class="sp-lvl-num">{{ pactSlot.level }}</span>
+            <span class="sp-lvl-unit">круг</span>
+          </div>
+          <div class="sp-orbs">
+            <SpellSlotSphere
+              v-for="i in orbOrder(pactSlot.total)"
+              :key="i"
+              :spent="i <= pactSlot.used"
+              :level="pactSlot.level"
+              :interactive="canInteract"
+              @click="$emit('toggle-pact-slot', i)"
+            />
+          </div>
+          <span class="sp-pact-rest">короткий отдых</span>
         </div>
       </div>
     </BaseTile>
@@ -63,12 +94,14 @@
       :attack-bonus="attackBonusExtra"
       :slots-rest="slotsRest"
       :preparation="preparation"
+      :automatic-slots="automaticSlots"
       @change="(level, total) => $emit('set-total', level, total)"
       @set-stat-path="$emit('set-stat-path', $event)"
       @set-save-bonus="$emit('set-save-bonus', $event)"
       @set-attack-bonus="$emit('set-attack-bonus', $event)"
       @set-slots-rest="$emit('set-slots-rest', $event)"
       @set-preparation="$emit('set-preparation', $event)"
+      @set-automatic-slots="$emit('set-automatic-slots', $event)"
       @close="editOpen = false"
     />
   </div>
@@ -98,8 +131,11 @@ const props = defineProps({
   preparation:     { type: Boolean, default: false },
   activeSlots:     { type: Array, default: () => [] },
   allSlots:        { type: Array, default: () => [] },
+  pactSlot:        { type: Object, default: null },
+  castingStats:    { type: Array, default: () => [] },
+  automaticSlots:  { type: Boolean, default: true },
 })
-defineEmits(['set-stat-path', 'set-total', 'set-save-bonus', 'set-attack-bonus', 'set-slots-rest', 'set-preparation', 'toggle-slot'])
+defineEmits(['set-stat-path', 'set-total', 'set-save-bonus', 'set-attack-bonus', 'set-slots-rest', 'set-preparation', 'set-automatic-slots', 'toggle-slot', 'toggle-pact-slot'])
 
 function orbOrder(total) {
   return Array.from({ length: total }, (_, k) => total - k)
@@ -128,6 +164,12 @@ const attackFormula = computed(() => `Бонус мастерства + моди
 }
 
 .sp-slots-head { margin-bottom: 12px; }
+
+.sp-caster-stats { display: grid; gap: 8px; }
+.sp-caster-row { display: grid; grid-template-columns: minmax(90px, 1fr) repeat(3, auto); align-items: center; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--border); color: var(--text-2); font-size: 12px; }
+.sp-caster-row:last-child { border-bottom: 0; }
+.sp-caster-row strong { color: var(--text-1); }
+.sp-pact-rest { margin-left: auto; color: var(--text-muted); font-size: 11px; }
 
 /* ── Статы (строка безрамочных плиток сверху) ── */
 .sp-stats {
@@ -254,6 +296,11 @@ const attackFormula = computed(() => `Бонус мастерства + моди
   .sp-stats {
     flex-wrap: nowrap;
     gap: 0;
+  }
+
+  .sp-caster-row {
+    grid-template-columns: 1fr auto;
+    gap: 5px 10px;
   }
 
   .sp-tile {

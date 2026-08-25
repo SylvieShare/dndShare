@@ -149,6 +149,9 @@
           <section v-if="spellSlots.length" class="box slots-box"><BoxTitle>Ячейки заклинаний</BoxTitle>
             <div v-for="slot in spellSlots" :key="slot.level"><span>{{ slot.level }} круг</span><i v-for="i in slot.total" :key="i"></i></div>
           </section>
+          <section v-if="pactSlot" class="box slots-box"><BoxTitle>Магия договора · короткий отдых</BoxTitle>
+            <div><span>{{ pactSlot.level }} круг</span><i v-for="i in pactSlot.total" :key="i"></i></div>
+          </section>
         </template>
         <div class="spell-card-grid"><PrintSpellCard v-for="spell in page.cards" :key="spell.id" :spell="spell" /></div>
         <div v-if="!page.cards.length" class="empty-state">Список заклинаний пуст</div>
@@ -379,6 +382,7 @@ const equipmentPages = computed(() => {
 
 const rawSpells = computed(() => Array.isArray(values.value.spells?.spells) ? values.value.spells.spells : [])
 const spellSlots = computed(() => (Array.isArray(values.value.spells?.slots) ? values.value.spells.slots : []).filter(slot => Number(slot.total) > 0))
+const pactSlot = computed(() => Number(values.value.spells?.pact_slots?.total) > 0 ? values.value.spells.pact_slots : null)
 const spellcasting = computed(() => {
   const data = values.value.spells || {}; const statKey = SUGGEST16_TO_STAT[Number(data.stat_path)]; const mod = statKey ? abilityModifier(abilityScore(statKey)) : 0
   return { stat: statKey ? STAT_FULL[statKey] : '—', saveDc: 8 + profBonus.value + mod + (Number(data.save_bonus) || 0), attackBonus: profBonus.value + mod + (Number(data.attack_bonus) || 0) }
@@ -442,8 +446,8 @@ function paginateGrid(cards, columns, firstCapacity, nextCapacity) {
   if (pageCards.length) { flushRow(); pages.push({ cards: pageCards }) }
   return pages
 }
-const hasSpells = computed(() => rawSpells.value.length || spellSlots.value.length)
-const spellPages = computed(() => hasSpells.value ? paginateGrid(spellCards.value, 3, spellSlots.value.length ? 190 : 222, 232) : [])
+const hasSpells = computed(() => rawSpells.value.length || spellSlots.value.length || pactSlot.value)
+const spellPages = computed(() => hasSpells.value ? paginateGrid(spellCards.value, 3, (spellSlots.value.length || pactSlot.value) ? 190 : 222, 232) : [])
 
 const appearanceFields = computed(() => [
   { label: 'Возраст', value: text(values.value.person_age) }, { label: 'Рост', value: text(values.value.person_height) }, { label: 'Вес', value: text(values.value.person_weight) },

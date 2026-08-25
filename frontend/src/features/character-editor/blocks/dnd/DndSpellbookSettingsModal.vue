@@ -8,6 +8,15 @@
       />
     </EditorSection>
 
+    <EditorSection title="Расчёт ячеек">
+      <ToggleSwitch
+        :model-value="automaticSlots"
+        label="Автоматически по уровням классов"
+        @update:model-value="$emit('set-automatic-slots', $event)"
+      />
+      <p class="ssm-hint">Отключите для домашних правил и ручного пула ячеек.</p>
+    </EditorSection>
+
     <EditorSection title="Базовая характеристика">
       <ValueSelect
         :model-value="statPath"
@@ -69,8 +78,9 @@ defineProps({
   attackBonus: { type: Number, default: 0 },
   slotsRest:   { type: String, default: 'long_rest' },
   preparation: { type: Boolean, default: false },
+  automaticSlots: { type: Boolean, default: true },
 })
-defineEmits(['close', 'change', 'set-stat-path', 'set-save-bonus', 'set-attack-bonus', 'set-slots-rest', 'set-preparation'])
+defineEmits(['close', 'change', 'set-stat-path', 'set-save-bonus', 'set-attack-bonus', 'set-slots-rest', 'set-preparation', 'set-automatic-slots'])
 </script>
 
 <style scoped>
@@ -85,6 +95,8 @@ defineEmits(['close', 'change', 'set-stat-path', 'set-save-bonus', 'set-attack-b
   color: var(--text-2);
   font-size: 13px;
 }
+
+.ssm-hint { margin: 6px 0 0; color: var(--text-muted); font-size: 11px; }
 
 .ssm-grid {
   display: grid;

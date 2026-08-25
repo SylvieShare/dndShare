@@ -49,6 +49,7 @@
         <span v-if="data.ritual" class="sp-tag sp-tag-ritual" title="Ритуал">Р</span>
       </div>
       <span v-if="entry.item?.data" class="sp-meta">{{ ctx.spellMetaLine(entry.item) }}</span>
+      <span v-if="classSourceSummary" class="sp-grant">{{ classSourceSummary }}</span>
       <span v-if="grantSummary" class="sp-grant">{{ grantSummary }}</span>
     </div>
 
@@ -89,6 +90,25 @@
       >
         {{ isPrepared ? 'Снять подготовку' : 'Подготовить' }}
       </RowActionItem>
+      <RowActionSubmenu
+        v-if="ctx.charCtx.ownerMode && ctx.spellcastingSources.length > 1 && !isReadonlyGrant"
+        label="Класс заклинания"
+      >
+        <template #trigger="{ open }">
+          <RowActionItem action="source" submenu :submenu-open="open">
+            Класс заклинания
+          </RowActionItem>
+        </template>
+        <template #default="{ close: closeSources }">
+          <RowActionItem
+            v-for="source in ctx.spellcastingSources"
+            :key="source.key"
+            action="source"
+            :tone="source.key === entry.ref.spellcasting_source ? 'accent' : 'default'"
+            @click="setSource(source.key, closeSources, close)"
+          >{{ source.label }}</RowActionItem>
+        </template>
+      </RowActionSubmenu>
       <RowActionItem
         v-if="ctx.charCtx.ownerMode && canPrepare"
         action="always-prepare"
@@ -109,14 +129,14 @@
         </template>
         <template #default="{ close: closeSlots }">
           <RowActionItem
-            v-for="levelOption in slotOptions"
-            :key="levelOption"
+            v-for="option in slotOptions"
+            :key="`${option.pool}:${option.level}`"
             action="use"
             tone="accent"
-            @click="useAtLevel(levelOption, closeSlots, close)"
+            @click="useAtSlot(option, closeSlots, close)"
           >
-            {{ levelOption }} круг
-            <template #suffix>{{ ctx.slotRemaining(levelOption) }} доступно</template>
+            {{ option.pool === 'pact' ? 'Магия договора · ' : '' }}{{ option.level }} круг
+            <template #suffix>{{ option.remaining }} доступно</template>
           </RowActionItem>
         </template>
       </RowActionSubmenu>
@@ -200,7 +220,7 @@ const school = computed(() => ctx.schoolMeta(props.entry.item))
 // Круг каста: для slot-роста степпер от базового круга заклинания до макс. доступного героем.
 const baseLvl = computed(() => Number(data.value.lvl) || 0)
 const isReadonlyGrant = computed(() => !!props.entry.ref.external_only)
-const canPrepare = computed(() => !!ctx.preparation && baseLvl.value > 0 && !isReadonlyGrant.value)
+const canPrepare = computed(() => !!ctx.spellCanPrepare(props.entry) && baseLvl.value > 0 && !isReadonlyGrant.value)
 const isAlwaysPrepared = computed(() => canPrepare.value && !!props.entry.ref.always_prepared)
 const isPrepared = computed(() => canPrepare.value && (isAlwaysPrepared.value || !!props.entry.ref.prepared))
 const grantSummary = computed(() => {
@@ -214,6 +234,12 @@ const grantSummary = computed(() => {
   const castLevel = Number(props.entry.ref.cast_level) || 0
   const details = [ability ? `Заклинательная характеристика: ${ability}` : '', castLevel ? `Уровень сотворения: ${castLevel}` : ''].filter(Boolean)
   return details.length ? `${sourceLabel} · ${details.join(' · ')}` : sourceLabel
+})
+const classSourceSummary = computed(() => {
+  const label = ctx.spellSourceLabel(props.entry)
+  if (!label) return ctx.spellcastingSources.length > 1 && !isReadonlyGrant.value ? 'Класс заклинания не указан' : ''
+  const ability = ctx.spellAbilityLabel(props.entry)
+  return [label, ability].filter(Boolean).join(' · ')
 })
 const fixedCastLevel = computed(() => Number(props.entry.ref.cast_level) || null)
 const minimumCastLevel = computed(() => fixedCastLevel.value || baseLvl.value)
@@ -240,11 +266,11 @@ const saveTag = computed(() => {
   return (SAVE_ABBR[a] || String(a).toUpperCase()) + (dmg.value.save_effect === 'half' ? ' ½' : '')
 })
 const instances = computed(() => Number(dmg.value.instances) || 1)
-const slotOptions = computed(() => ctx.availableSpellSlotLevels(props.entry))
+const slotOptions = computed(() => ctx.availableSpellSlotOptions(props.entry))
 const canUse = computed(() => !ctx.spellcastingBlocked && !!props.entry.item && (baseLvl.value === 0 || slotOptions.value.length > 0))
 const useLabel = computed(() => ctx.spellcastingBlocked ? 'Сотворение недоступно' : (canUse.value ? 'Использовать' : 'Нет доступных ячеек'))
 const hasHigherLevelChoice = computed(() =>
-  !props.entry.ref.slotless && slotOptions.value.some(level => level > baseLvl.value)
+  !props.entry.ref.slotless && (slotOptions.value.length > 1 || slotOptions.value.some(option => option.level > baseLvl.value))
 )
 const statusLinks = computed(() => ctx.statusEffectLinks(props.entry))
 
@@ -277,13 +303,18 @@ function toggleAlwaysPrepared(close) {
 
 function useWithoutChoice(close) {
   if (!canUse.value) return
-  const level = baseLvl.value === 0 ? 0 : slotOptions.value[0]
-  ctx.useSpell(props.entry, level)
+  ctx.useSpell(props.entry, slotOptions.value[0])
   close()
 }
 
-function useAtLevel(level, closeSubmenu, closeMenu) {
-  ctx.useSpell(props.entry, level)
+function useAtSlot(option, closeSubmenu, closeMenu) {
+  ctx.useSpell(props.entry, option)
+  closeSubmenu()
+  closeMenu()
+}
+
+function setSource(key, closeSubmenu, closeMenu) {
+  ctx.setSpellcastingSource(props.entry, key)
   closeSubmenu()
   closeMenu()
 }

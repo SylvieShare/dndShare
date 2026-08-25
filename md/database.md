@@ -61,7 +61,10 @@ template id, `source_version_id`, JSON документа, public/deleted flags,
 - `initiative` — `{base,bonuses,use_dex}`;
 - `ava` — `{url,upload_id?}`;
 - `hp.hitDice` — `[{die,total,used}]`;
-- `spells` — `{stat_path,save_bonus,attack_bonus,slots_rest,preparation,spells,slots}`;
+- `spells` — `{stat_path,save_bonus,attack_bonus,slots_rest,slots_auto,preparation,spells,slots,pact_slots?}`;
+  `slots` хранит общий пул Spellcasting, `pact_slots {level,total,used}` —
+  отдельный пул Pact Magic; запись заклинания может хранить
+  `spellcasting_source` и собственную `casting_ability`;
 - `items` — `{equipped,sections}`;
 - `money` — `{order,amounts}`.
 - `abilities_race`, `abilities_class`, `abilities_feats` — item-reference arrays

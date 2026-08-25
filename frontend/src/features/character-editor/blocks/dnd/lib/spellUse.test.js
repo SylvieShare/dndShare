@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { availableSpellSlotLevels } from './spellUse'
+import { availableSpellSlotLevels, availableSpellSlotOptions } from './spellUse'
 
 describe('spell use slot selection', () => {
   const slots = [
@@ -19,5 +19,21 @@ describe('spell use slot selection', () => {
 
   it('returns no choice when the character has no suitable slot', () => {
     expect(availableSpellSlotLevels(slots, 4)).toEqual([])
+  })
+})
+
+describe('separate Pact Magic slots', () => {
+  it('offers ordinary and pact slots independently, including at the same level', () => {
+    const slots = [{ level: 3, total: 2, used: 1 }]
+    const pact = { level: 3, total: 2, used: 0 }
+    expect(availableSpellSlotOptions(slots, pact, 1)).toEqual([
+      { pool: 'spellcasting', level: 3, remaining: 1 },
+      { pool: 'pact', level: 3, remaining: 2 },
+    ])
+  })
+
+  it('allows a warlock spell to use an ordinary slot and another class spell to use pact magic', () => {
+    expect(availableSpellSlotOptions([{ level: 2, total: 1, used: 0 }], { level: 3, total: 1, used: 0 }, 2))
+      .toHaveLength(2)
   })
 })

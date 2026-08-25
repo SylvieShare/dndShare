@@ -20,3 +20,14 @@ describe('spellcasting restrictions', () => {
     expect(cardSource).not.toContain('Запрещено доспехом')
   })
 })
+
+describe('multiclass spellcasting UI', () => {
+  it('keeps class sources and Pact Magic separate', () => {
+    expect(source).toContain('characterSpellcastingSources')
+    expect(source).toContain('computeSpellSlotPools')
+    expect(source).toContain(':pact-slot="pactSlot"')
+    expect(source).toContain('spellcasting_source')
+    expect(cardSource).toContain('Класс заклинания не указан')
+    expect(cardSource).toContain("option.pool === 'pact'")
+  })
+})
