@@ -1,5 +1,10 @@
 <template>
   <div v-if="items.length || editable" class="dsov">
+    <button v-if="showEditAction" class="dsov-edit" type="button" @click.stop="$emit('edit', 'states')">
+      <Pencil :size="13" :stroke-width="1.8" aria-hidden="true" />
+      <span>Состояние</span>
+    </button>
+
     <div v-if="items.length" class="dsov-row">
       <component
         :is="editable ? 'button' : 'div'"
@@ -32,10 +37,6 @@
       </component>
     </div>
 
-    <button v-if="showEditAction" class="dsov-edit" type="button" @click.stop="$emit('edit', 'states')">
-      <Pencil :size="13" :stroke-width="1.8" aria-hidden="true" />
-      <span>Редактировать состояние</span>
-    </button>
   </div>
 </template>
 

@@ -13,11 +13,13 @@ describe('desktop status overview', () => {
     expect(viewSource).not.toContain('sheet-tile-title')
     expect(viewSource).not.toContain('Добавить эффект')
     expect(viewSource).not.toContain('Добавить вдохновение')
-    expect(viewSource).toContain('Редактировать состояние')
+    expect(viewSource).toContain('<span>Состояние</span>')
+    expect(viewSource).not.toContain('Редактировать состояние')
     expect(viewSource).toContain('<Pencil')
     expect(viewSource).toContain("$emit('edit', 'states')")
     expect(source).toContain("displayMode.value === 'trigger' ? [] : displayItems.value")
     expect(source).toContain("displayMode.value !== 'summary'")
+    expect(viewSource.indexOf('class="dsov-edit"')).toBeLessThan(viewSource.indexOf('class="dsov-row"'))
   })
 
   it('renders raster or SVG item icons instead of reducing them to color dots', () => {

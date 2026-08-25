@@ -33,6 +33,7 @@ describe('D&D desktop sheet schema', () => {
     const levelRow = metricGrid.children.at(-1)
 
     expect(metricGrid.props?.width).toBe('344px')
+    expect(metricGrid.props?.style?.['grid-auto-rows']).toBe('64px')
     expect(metricGrid.children.slice(0, -1).map(child => child.ref)).toEqual([
       'armor', 'initiative', 'settings',
       'speed', 'prof_bonus', 'rest',
@@ -94,7 +95,7 @@ describe('D&D desktop sheet schema', () => {
     expect(statuses).toBeTruthy()
     expect(summaryTile.props?.tile).toBe(true)
     expect(summaryTile.children[0]?.ref).toBe('character_icon')
-    expect(hpColumn.children.map(child => child.ref)).toEqual(['char_identity', 'hp', 'desktop_status_editor'])
+    expect(hpColumn.children.map(child => child.ref)).toEqual(['char_identity', 'hp'])
     expect(hpColumn.children[0].props?.grow).toBeUndefined()
     expect(hpColumn.children[0].props?.basis).toBeUndefined()
     expect(summaryColumn.children[1]).toBe(statuses)
@@ -108,13 +109,10 @@ describe('D&D desktop sheet schema', () => {
         effect_item_type_id: 15,
         exhaustion_id: 'exhaustion',
         inspiration_id: 'inspiration',
-        display: 'summary',
+        display: 'all',
       },
     })
-    expect(schema.blocks.desktop_status_editor).toMatchObject({
-      type: 'DND_STATUS_OVERVIEW',
-      content: { display: 'trigger' },
-    })
+    expect(schema.blocks.desktop_status_editor).toBeUndefined()
   })
 
   it('moves the full portrait into the Personality tab', () => {
