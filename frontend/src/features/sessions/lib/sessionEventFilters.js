@@ -2,7 +2,7 @@ import { sessionEventActorIdentityKey, sessionEventActorLabel } from './sessionE
 
 export const SESSION_EVENT_CATEGORIES = [
   { value: 'dice', label: 'Броски', icon: '◇', types: ['dice_roll'] },
-  { value: 'character', label: 'Персонаж', icon: '✦', types: ['rest_completed', 'spell_used', 'item_spent', 'item_added', 'entry_added', 'resource_used'] },
+  { value: 'character', label: 'Персонаж', icon: '✦', types: ['rest_completed', 'spell_used', 'item_spent', 'item_added', 'entry_added', 'resource_used', 'feature_state', 'status_effect'] },
   { value: 'combat', label: 'Бой', icon: '⚔', types: ['encounter_started', 'encounter_finished'] },
   { value: 'story', label: 'Сюжет', icon: '→', types: ['chapter_started'] },
 ]

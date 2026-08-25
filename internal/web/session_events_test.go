@@ -24,3 +24,20 @@ func TestNormalizeCharacterSessionEntryAdded(t *testing.T) {
 		t.Fatalf("unexpected action: %q", event.Action)
 	}
 }
+
+func TestNormalizeCharacterSessionStateEvents(t *testing.T) {
+	for _, eventType := range []string{"feature_state", "status_effect"} {
+		event, ok := normalizeCharacterSessionEvent(characterSessionEventRequest{
+			SessionUUID:    "11111111-1111-4111-8111-111111111111",
+			Type:           eventType,
+			Action:         "Ярость: выключено",
+			ClientActionID: "22222222-2222-4222-8222-222222222222",
+		})
+		if !ok {
+			t.Fatalf("%s must be accepted as a character session event", eventType)
+		}
+		if event.EventType != eventType {
+			t.Fatalf("unexpected normalized event: %#v", event)
+		}
+	}
+}

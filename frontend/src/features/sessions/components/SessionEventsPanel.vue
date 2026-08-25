@@ -249,6 +249,8 @@ function eventIcon(type) {
     item_added: '+',
     entry_added: '+',
     resource_used: '◌',
+    feature_state: '◈',
+    status_effect: '✦',
     chapter_started: '→',
     encounter_started: '⚔',
     encounter_finished: '✓',

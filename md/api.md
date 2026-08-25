@@ -79,11 +79,12 @@ up to 256×256 and records a staged icon that can be consumed by character creat
 
 Editor определяет schema по `templateName` через frontend setting registry.
 `PUT /api/char/{uuid}/data` accepts `{data,events?}`. Each optional event has
-`{sessionUuid,type,title,data,visibility,clientActionId}`; the character update
+`{sessionUuid,type,action,data,visibility,clientActionId}`; the character update
 and authorized timeline inserts commit in one database transaction. For a
 participant the route binds the actor to this owned session character; for a
 DM editing a participant sheet it binds that character while retaining the DM
-as the event author.
+as the event author. Character-sheet event types include `feature_state` for
+ability toggles and `status_effect` for adding or removing linked effects.
 
 ## Sources and handbook
 

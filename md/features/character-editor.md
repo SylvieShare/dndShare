@@ -44,7 +44,9 @@ opens the shared row-action menu with **Посмотреть**, an owner-only
 and owner-only **Удалить**. Use spends that same normalized resource shown in
 the resources block and records `resource_used`; abilities with several
 independent resources remain usable from the resources block so the target
-counter is explicit. The former whole-tile morph editor is not used. The level tile sits below the desktop
+counter is explicit. Feature widget toggles record `feature_state`, while
+linked spell-effect changes record `status_effect`; both are accepted by the
+atomic character-save event contract. The former whole-tile morph editor is not used. The level tile sits below the desktop
 speed, proficiency-bonus and rest row and spans the full width of those three
 metric columns; the metric grid is 320 px wide and both its utility tiles and
 the level row are 80 px high. The level is not duplicated in the right side column.

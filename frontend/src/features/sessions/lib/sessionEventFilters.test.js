@@ -11,6 +11,8 @@ describe('session event filters', () => {
   it('maps event types into user-facing categories', () => {
     expect(sessionEventCategory('dice_roll')).toBe('dice')
     expect(sessionEventCategory('spell_used')).toBe('character')
+    expect(sessionEventCategory('feature_state')).toBe('character')
+    expect(sessionEventCategory('status_effect')).toBe('character')
     expect(sessionEventCategory('encounter_started')).toBe('combat')
   })
 

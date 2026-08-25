@@ -19,6 +19,8 @@ var allowedSessionEventTypes = map[string]bool{
 	"item_added":         true,
 	"entry_added":        true,
 	"resource_used":      true,
+	"feature_state":      true,
+	"status_effect":      true,
 	"chapter_started":    true,
 	"encounter_started":  true,
 	"encounter_finished": true,
