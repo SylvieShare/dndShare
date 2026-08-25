@@ -49,7 +49,9 @@ linked spell-effect changes record `status_effect`; both are accepted by the
 atomic character-save event contract. The desktop base page is one continuous
 three-column row: characteristics on the left, identity/HP/statuses/inner tabs
 in the flexible centre, and utilities plus feature widgets, actions, resources,
-defenses and proficiencies in the 320 px right column. The former whole-tile
+defenses and proficiencies in the right column. Both side columns use the same
+20 px inner padding, so their content has matching spacing from the centre; the
+right utility content remains 320 px wide. The former whole-tile
 morph editor is not used. The level tile sits below the desktop
 speed, proficiency-bonus and rest row and spans the full width of those three
 metric columns; the metric grid is 320 px wide and both its utility tiles and

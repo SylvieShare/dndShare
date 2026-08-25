@@ -23,7 +23,10 @@ describe('D&D desktop sheet schema', () => {
     expect(findNode(mainColumn, node => node.ref === 'desktop_statuses')).toBeTruthy()
     expect(findNode(mainColumn, node => node.type === 'inner_tabs')).toBeTruthy()
     expect(findNode(utilityColumn, node => node.ref === 'lvl')).toBeTruthy()
-    expect(utilityColumn.props?.width).toBe('320px')
+    expect(statsColumn.props?.style?.padding).toBe('20px')
+    expect(utilityColumn.props?.style?.padding).toBe('20px')
+    expect(utilityColumn.props?.style?.['margin-right']).toBeUndefined()
+    expect(utilityColumn.props?.width).toBe('360px')
     expect(utilityColumn.children.slice(1).map(child => child.ref)).toEqual([
       'feature_widgets', 'actions', 'resources', 'defenses', 'proficiencies',
     ])

@@ -541,11 +541,10 @@
             "type": "column",
             "props": {
               "gap": "11px",
-              "width": "320px",
+              "width": "360px",
               "shrink": "0",
               "style": {
-                "margin-top": "20px",
-                "margin-right": "16px"
+                "padding": "20px"
               }
             },
             "children": [
