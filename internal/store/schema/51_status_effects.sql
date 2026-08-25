@@ -41,7 +41,7 @@ WHERE item_type.id IN (3, 4, 5, 7)
 
 -- Preserve the former condition catalogue as real effect items. It remains
 -- editable and gains polarity/mechanics instead of being a label-only suggest.
-INSERT INTO dndshare.item (user_id, name, name_en, data, type_id, icon_svg_id)
+INSERT INTO dndshare.item (user_id, name, name_en, data, type_id, icon_svg_id, custom_source_id)
 SELECT condition.user_id,
        condition.value,
        NULL,
@@ -55,8 +55,12 @@ SELECT condition.user_id,
          'duration', jsonb_build_object('kind', 'manual')
        ),
        15,
-       condition.svg_id
+       condition.svg_id,
+       custom_source.id
 FROM dndshare.suggest condition
+LEFT JOIN dndshare.custom_item_source custom_source
+  ON custom_source.user_id = condition.user_id
+ AND custom_source.is_default
 WHERE condition.type_id = 9
   AND NOT EXISTS (
     SELECT 1 FROM dndshare.item effect
