@@ -95,6 +95,8 @@ describe('D&D desktop sheet schema', () => {
     expect(summaryTile.props?.tile).toBe(true)
     expect(summaryTile.children[0]?.ref).toBe('character_icon')
     expect(hpColumn.children.map(child => child.ref)).toEqual(['char_identity', 'hp', 'desktop_status_editor'])
+    expect(hpColumn.children[0].props?.grow).toBeUndefined()
+    expect(hpColumn.children[0].props?.basis).toBeUndefined()
     expect(summaryColumn.children[1]).toBe(statuses)
     expect(sidebar.children.some(child => child.ref === 'desktop_statuses')).toBe(false)
     expect(separateExhaustion).toBeNull()

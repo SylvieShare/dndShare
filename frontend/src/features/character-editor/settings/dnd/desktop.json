@@ -110,8 +110,6 @@
                                 "ref": "char_identity",
                                 "kind": "block",
                                 "props": {
-                                  "grow": "1",
-                                  "basis": "0",
                                   "style": {
                                     "min-width": "0"
                                   }
