@@ -38,7 +38,13 @@ and the full description inline. Class abilities, racial abilities and feats
 each own one shared tile; entries inside it do not create nested backgrounds or
 outlines and are divided by thin separators. Their rich descriptions use the
 same muted `--text-2` tone as action-row descriptions. Each tile header has a compact
-dashed plus control for adding an entry. The level tile sits below the desktop
+dashed plus control for adding an entry and no edit pencil. Clicking an ability
+opens the shared row-action menu with **Посмотреть**, an owner-only
+**Использовать** action when the ability has exactly one available resource,
+and owner-only **Удалить**. Use spends that same normalized resource shown in
+the resources block and records `resource_used`; abilities with several
+independent resources remain usable from the resources block so the target
+counter is explicit. The former whole-tile morph editor is not used. The level tile sits below the desktop
 speed, proficiency-bonus and rest row and spans the full width of those three
 metric columns; the metric grid is 320 px wide and both its utility tiles and
 the level row are 80 px high. The level is not duplicated in the right side column.

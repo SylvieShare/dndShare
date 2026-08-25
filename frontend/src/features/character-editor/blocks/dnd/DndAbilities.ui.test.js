@@ -27,4 +27,16 @@ describe('ability rows', () => {
     expect(viewSource).toContain('<template v-if="manage" #aside>')
     expect(viewSource).toContain('class="abv-add"')
   })
+
+  it('opens a row action menu without a block edit pencil', () => {
+    expect(viewSource).toContain(':show-edit="false"')
+    expect(viewSource).toContain('<RowActionMenu')
+    expect(viewSource).toContain('>Посмотреть</RowActionItem>')
+    expect(viewSource).toContain('entry.usable_resource?.value > 0')
+    expect(viewSource).toContain('action="use"')
+    expect(viewSource).toContain('action="delete"')
+    expect(blockSource).toContain('usable_resource: usableResourceFor(s)')
+    expect(blockSource).toContain("type: 'resource_used'")
+    expect(blockSource).not.toContain('<MorphEditorShell')
+  })
 })

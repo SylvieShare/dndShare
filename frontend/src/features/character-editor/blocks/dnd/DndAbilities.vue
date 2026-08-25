@@ -1,6 +1,5 @@
 <template>
   <div
-    ref="root"
     class="ab-block"
     :class="{
       'ab-block--embedded': block.content?.embedded,
@@ -16,52 +15,14 @@
         :manage="ownerMode"
         :expanded="!!block.content?.expanded"
         @view="onView"
+        @use="useAbility"
+        @remove="entry => removeAbility(entry.key)"
         @add="pickerOpen = true"
-        @manage="onManage"
         @toggle-status="toggleAbilityStatus"
         @show-tooltip="showTooltip"
         @hide-tooltip="hideTooltip"
       />
     </component>
-
-    <MorphEditorShell
-      v-if="editorOpen"
-      :origin-rect="originRect"
-      :origin-el="originEl"
-      :strip="false"
-      :min-view-width="300"
-      @close="close"
-    >
-      <template #view="{ revealed }">
-        <DndAbilitiesView
-          :entries="entries"
-          :loading="loading"
-          :skeleton-count="skeletonCount"
-          :title="title"
-          manage
-          :edit-fade="revealed"
-          panel
-          :expanded="!!block.content?.expanded"
-          @view="onView"
-          @add="pickerOpen = true"
-          @toggle-status="toggleAbilityStatus"
-          @show-tooltip="showTooltip"
-          @hide-tooltip="hideTooltip"
-        />
-      </template>
-      <template #editor>
-        <DndAbilitiesEditor
-          :entries="entries"
-          @add="pickerOpen = true"
-          @remove="removeAbility"
-          @inc="increaseMaxUse"
-          @dec="decreaseMaxUse"
-          @edit="openEditForm"
-          @choices="openChoiceEditor"
-          @reorder="reorderAbilities"
-        />
-      </template>
-    </MorphEditorShell>
 
     <ItemPickerModal
       v-if="pickerOpen && block.content.item_id"
@@ -86,15 +47,6 @@
         <AbilityTooltipDetails :item="tooltip.item" :values="values" />
       </template>
     </ItemTooltip>
-
-    <ItemEditModal
-      v-if="form.open"
-      :type-id="block.content.item_id"
-      :item="form.editingItem"
-      :initial-name="form.initialName"
-      @close="form.open = false"
-      @saved="onFormSaved"
-    />
 
     <FeatChoiceModal
       v-if="choiceConfigItem"
@@ -121,13 +73,10 @@ import { computed, inject, onMounted, reactive, ref } from 'vue'
 
 import { itemsApi } from '@/shared/api/itemsApi'
 import { BaseTile } from '@sylvieshare/share-ui'
-import DndAbilitiesEditor from "@/features/character-editor/blocks/dnd/components/DndAbilitiesEditor"
 import DndAbilitiesView from "@/features/character-editor/blocks/dnd/components/DndAbilitiesView"
 import FeatChoiceModal from '@/features/character-editor/components/FeatChoiceModal.vue'
-import ItemEditModal from "@/features/character-editor/components/ItemEditModal"
 import ItemPickerModal from "@/features/handbook/components/ItemPickerModal.vue"
 import ItemTooltip from "@/features/character-editor/components/ItemTooltip"
-import MorphEditorShell from "@/features/character-editor/components/MorphEditorShell"
 import AbilityTooltipDetails from "@/features/items/detail-components/AbilityTooltipDetails"
 import ItemViewModal from "@/features/handbook/components/ItemViewModal.vue"
 import { featAbilityBonuses, featEntry } from '@/features/items/lib/featRules'
@@ -135,9 +84,8 @@ import { actionableItemChoices, itemChoices } from '@/features/items/lib/itemCho
 import { resolveNumValue } from '@/shared/lib/dnd'
 import { ensureItemNames, itemName } from '@/features/handbook/objects/lib/itemNames'
 import { useSuggestStore } from '@/stores/suggest'
-import { useMorphOrigin } from "@/features/character-editor/composables/useMorphOrigin"
 import { logSessionEntryAdded } from '@/features/character-editor/lib/sessionEntryEvents'
-import { abilityScalingLabel, abilityUseTotal, abilityUsesAreManual } from '@/shared/lib/dndAbilityUses'
+import { abilityScalingLabel, abilityUseTotal } from '@/shared/lib/dndAbilityUses'
 import { useFeatSheetRequirements } from '@/features/character-editor/composables/useFeatSheetRequirements'
 import { characterChoiceOptionEligibility } from '@/features/items/lib/characterChoiceEligibility'
 import { ownedAbilityStatusSource } from '@/features/character-editor/lib/characterStatuses'
@@ -148,20 +96,21 @@ const charCtx = inject('charCtx', { ownerMode: false })
 const suggestStore = useSuggestStore()
 const isFeatBlock = computed(() => Number(props.block.content.item_id) === 7)
 
-const root        = ref(null)
 const catalog     = ref([])
 const loading     = ref(true)
 const modalEntry  = ref(null)
 const pickerOpen  = ref(false)
 const tooltip     = reactive({ visible: false, name: '', desc: '', item: null, x: 0, top: null, bottom: null })
-const form        = reactive({ open: false, editingItem: null, initialName: '' })
 const choiceConfigItem = ref(null)
-const choiceEditingKey = ref(null)
-const { editorOpen, originRect, originEl, openFrom, close } = useMorphOrigin()
 
 const ownerMode = computed(() => charCtx.ownerMode)
 const title = computed(() => props.block.title || props.block.content?.title || '')
 const stored = computed(() => props.value || [])
+const abilityResources = computed(() => {
+  const value = charCtx.characterResources?.resources
+  if (Array.isArray(value)) return value
+  return Array.isArray(value?.value) ? value.value : []
+})
 const passiveEffects = computed(() => {
   const value = charCtx.characterPassiveEffects?.effects
   if (Array.isArray(value)) return value
@@ -176,12 +125,20 @@ function passiveEffectsFor(entry) {
   ))
 }
 
+function usableResourceFor(entry) {
+  const key = String(entry?.uid || entry?.id || '')
+  const matches = abilityResources.value.filter(resource => (
+    resource.source?.valueId === props.block.id
+    && String(resource.source?.entryKey || '') === key
+  ))
+  return matches.length === 1 ? matches[0] : null
+}
+
 const entries = computed(() =>
   stored.value
     .map(s => {
       const item = catalog.value.find(c => c.id === s.id)
       if (!item) return null
-      const manualSize = abilityUsesAreManual(item.data)
       const maxUse = abilityUseTotal(item.data, props.values, s)
       const statusSource = ownedAbilityStatusSource(props.block.id, s, item)
       return {
@@ -193,10 +150,9 @@ const entries = computed(() =>
         svg: item.svg || '',
         desc: Number(props.block.content.item_id) === 7 ? (item.data?.description || '') : (item.data?.desc || ''),
         max_use: maxUse,
-        manual_size: manualSize,
         rollback_short_rest: !!item.data?.rollback_short_rest,
         rollback_long_rest:  !!item.data?.rollback_long_rest,
-        count: s.count ?? maxUse ?? 0,
+        usable_resource: usableResourceFor(s),
         choices: s.choices || {},
         choice_summary: itemChoiceSummary(item, s.choices || {}),
         scaling_label: abilityScalingLabel(item.data, props.values),
@@ -208,8 +164,6 @@ const entries = computed(() =>
           }] : []),
           ...passiveEffectsFor(s),
         ],
-        has_choices: actionableItemChoices(item).length > 0,
-        isUserOwned: item.userId != null,
         status_effects: (charCtx.characterStatuses?.links?.(item) || []).map(link => ({
           ...link,
           active: !!charCtx.characterStatuses?.linkedActive?.(item, link, statusSource),
@@ -238,12 +192,12 @@ const choiceExcludedChoices = computed(() => {
     ...itemChoices(item).filter((choice) => choice.unique_across_takes).map((choice) => choice.key),
   ].filter(Boolean))
   const result = {}
-  for (const entry of stored.value.filter((storedEntry) => storedEntry.id === item.id && (storedEntry.uid || String(storedEntry.id)) !== choiceEditingKey.value)) {
+  for (const entry of stored.value.filter((storedEntry) => storedEntry.id === item.id)) {
     for (const key of uniqueKeys) result[key] = [...(result[key] || []), ...(entry.choices?.[key] || [])]
   }
   return result
 })
-const choiceInitialChoices = computed(() => stored.value.find(entry => (entry.uid || String(entry.id)) === choiceEditingKey.value)?.choices || {})
+const choiceInitialChoices = {}
 function choiceOptionEligibility(choice, value) {
   return characterChoiceOptionEligibility(choice, value, {
     values: props.values,
@@ -342,13 +296,26 @@ function removeFeatStatBonuses(item, entry) {
   }
 }
 
-function onManage() {
+function onView(entry) {
   hideTooltip()
-  openFrom(root.value)
+  modalEntry.value = entry
 }
 
-function onView(entry) {
-  modalEntry.value = entry
+function useAbility(entry) {
+  hideTooltip()
+  const resource = entry.usable_resource
+  const available = Math.max(0, Number(resource?.value) || 0)
+  if (!ownerMode.value || !resource?.key || available <= 0) return
+  const remaining = available - 1
+  const patch = charCtx.characterResources?.setAvailable?.(resource.key, remaining) || {}
+  const updates = Object.entries(patch)
+  if (!updates.length) return
+  for (const [id, value] of updates) emit('update:value', id, value)
+  charCtx.logSessionEvent?.({
+    type: 'resource_used',
+    action: `Использовано: ${entry.name || 'Способность'}`,
+    data: { remaining, total: Number(resource.total) || 0 },
+  })
 }
 
 function logAddedEntry(item) {
@@ -364,7 +331,6 @@ function addFromCatalog(item) {
   charCtx.characterResources?.rememberItems?.([item])
   charCtx.characterStatuses?.ensureLinks?.(item)
   if (actionableItemChoices(item).length) {
-    choiceEditingKey.value = null
     choiceConfigItem.value = item
     pickerOpen.value = false
     return
@@ -378,33 +344,8 @@ function addFromCatalog(item) {
   logAddedEntry(item)
 }
 
-function openChoiceEditor(entry) {
-  const item = catalog.value.find(candidate => candidate.id === entry.id)
-  if (!item || !actionableItemChoices(item).length) return
-  choiceEditingKey.value = entry.key || entry.uid || String(entry.id)
-  choiceConfigItem.value = item
-}
-
 function onChoicesConfirm(choices) {
   const item = choiceConfigItem.value
-  if (choiceEditingKey.value) {
-    const oldEntry = stored.value.find(entry => (entry.uid || String(entry.id)) === choiceEditingKey.value)
-    const nextEntry = oldEntry ? { ...oldEntry, choices } : null
-    if (oldEntry && nextEntry) {
-      if (Number(props.block.content.item_id) === 7) {
-        removeFeatStatBonuses(item, oldEntry)
-        applyFeatStatBonuses(item, nextEntry)
-      }
-      emitChange(stored.value.map(entry => (entry.uid || String(entry.id)) === choiceEditingKey.value ? nextEntry : entry))
-      const selectedItemIds = actionableItemChoices(item)
-        .filter(choice => choice.source === 'item')
-        .flatMap(choice => choices[choice.key] || [])
-      if (selectedItemIds.length) ensureItemNames(selectedItemIds).catch(() => {})
-    }
-    choiceEditingKey.value = null
-    choiceConfigItem.value = null
-    return
-  }
   const entry = featEntry(item, choices, props.values)
   if (isFeatBlock.value && !requirementsMet(item)) entry.requirements_met = false
   emitChange([...stored.value, entry])
@@ -438,26 +379,6 @@ function toggleAbilityStatus(entry, link) {
   })
 }
 
-function reorderAbilities(keys) {
-  const byKey = new Map(stored.value.map(s => [s.uid || String(s.id), s]))
-  emitChange(keys.map(key => byKey.get(key)).filter(Boolean))
-}
-
-function increaseMaxUse(entry) {
-  const newMax = (entry.max_use ?? 0) + 1
-  emitChange(stored.value.map(s =>
-    (s.uid || String(s.id)) === entry.key ? { ...s, max_use: newMax, count: (s.count ?? 0) + 1 } : s
-  ))
-}
-
-function decreaseMaxUse(entry) {
-  const newMax = Math.max(0, (entry.max_use ?? 0) - 1)
-  emitChange(stored.value.map(s => {
-    if ((s.uid || String(s.id)) !== entry.key) return s
-    return { ...s, max_use: newMax, count: Math.min(s.count ?? 0, newMax) }
-  }))
-}
-
 function showTooltip(e, entry) {
   if (!entry.desc && !entry.max_use && !entry.rollback_short_rest && !entry.rollback_long_rest) return
   const rect = e.currentTarget.getBoundingClientRect()
@@ -473,21 +394,6 @@ function showTooltip(e, entry) {
 }
 
 function hideTooltip() { tooltip.visible = false }
-
-function openEditForm(entry) {
-  const item = catalog.value.find(it => it.id === entry.id)
-  if (!item) return
-  Object.assign(form, { open: true, editingItem: item, initialName: '' })
-}
-
-function onFormSaved(item) {
-  const idx = catalog.value.findIndex(it => it.id === item.id)
-  if (idx >= 0) catalog.value[idx] = item
-  else catalog.value.push(item)
-  charCtx.characterResources?.rememberItems?.([item])
-  if (!form.editingItem) addFromCatalog(item)
-  form.open = false
-}
 
 onMounted(async () => {
   if (isFeatBlock.value) suggestStore.ensure(3)

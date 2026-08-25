@@ -1,11 +1,9 @@
 <template>
-  <div class="abv" :class="{ 'abv--panel': panel, 'abv--expanded': expanded }">
+  <div class="abv" :class="{ 'abv--expanded': expanded }">
     <SheetBlockTitle
       v-if="title || manage"
       :title="title"
-      :show-edit="manage"
-      :edit-fade="editFade"
-      @edit="$emit('manage')"
+      :show-edit="false"
     >
       <template v-if="manage" #aside>
         <button class="abv-add" type="button" title="Добавить" aria-label="Добавить" @click.stop="$emit('add', $event.currentTarget)">
@@ -21,63 +19,95 @@
     <div v-else class="abv-list">
       <div v-if="!entries.length" class="abv-empty">—</div>
 
-      <div
+      <RowActionMenu
         v-for="entry in entries"
         :key="entry.key || entry.id"
-        class="abv-card"
-        title="Подробнее"
-        @click="$emit('view', entry)"
-        @mouseenter="e => !expanded && $emit('show-tooltip', e, entry)"
-        @mouseleave="!expanded && $emit('hide-tooltip')"
+        block
+        :title="`Действия: ${entry.name}`"
       >
-        <span class="abv-icon" aria-hidden="true">
-          <ItemIcon v-if="expanded" :item="entry.item" :size="64" :fallback-to-type="false" />
-          <SvgIcon v-else-if="entry.svg" class="abv-icon-svg" :svg="entry.svg" />
-        </span>
-
-        <span class="abv-copy">
-          <span class="abv-name">
-            {{ entry.name }}<span v-if="entry.scaling_label" class="abv-scaling"> · {{ entry.scaling_label }}</span>
-          </span>
-          <span v-if="entry.choice_summary" class="abv-choice">{{ entry.choice_summary }}</span>
-          <DndRichContent v-if="expanded && entry.desc" class="abv-description" :html="entry.desc" />
-          <span
-            v-for="effect in entry.passive_effects || []"
-            :key="effect.key"
-            class="abv-effect"
-            :class="`abv-effect--${effect.tone}`"
+        <template #trigger="{ open }">
+          <div
+            class="abv-card action-menu-source"
+            :class="{ 'action-menu-source--open': open }"
+            :title="`Действия: ${entry.name}`"
+            @click="$emit('hide-tooltip')"
+            @mouseenter="e => !expanded && $emit('show-tooltip', e, entry)"
+            @mouseleave="!expanded && $emit('hide-tooltip')"
           >
-            <b>{{ effect.title }}</b><template v-if="effect.description"> — {{ effect.description }}</template>
-          </span>
-          <span v-if="manage && entry.status_effects?.length" class="abv-statuses">
-            <button
-              v-for="link in entry.status_effects"
-              :key="link.key"
-              type="button"
-              class="abv-status"
-              :class="{ 'abv-status--active': link.active }"
-              :disabled="!link.effect"
-              @click.stop="$emit('toggle-status', entry, link)"
-            >
-              <Activity :size="12" :stroke-width="2" />
-              {{ link.active ? 'Снять' : 'Добавить' }} {{ link.effect?.name || 'эффект' }}
-            </button>
-          </span>
-        </span>
+            <span class="abv-icon" aria-hidden="true">
+              <ItemIcon v-if="expanded" :item="entry.item" :size="64" :fallback-to-type="false" />
+              <SvgIcon v-else-if="entry.svg" class="abv-icon-svg" :svg="entry.svg" />
+            </span>
 
-        <span v-if="entry.rollback_short_rest" class="abv-badge abv-sr" title="Восстанавливается на коротком отдыхе">КО</span>
-        <span v-if="entry.rollback_long_rest" class="abv-badge abv-lr" title="Восстанавливается на длинном отдыхе">ДО</span>
-      </div>
+            <span class="abv-copy">
+              <span class="abv-name">
+                {{ entry.name }}<span v-if="entry.scaling_label" class="abv-scaling"> · {{ entry.scaling_label }}</span>
+              </span>
+              <span v-if="entry.choice_summary" class="abv-choice">{{ entry.choice_summary }}</span>
+              <DndRichContent v-if="expanded && entry.desc" class="abv-description" :html="entry.desc" />
+              <span
+                v-for="effect in entry.passive_effects || []"
+                :key="effect.key"
+                class="abv-effect"
+                :class="`abv-effect--${effect.tone}`"
+              >
+                <b>{{ effect.title }}</b><template v-if="effect.description"> — {{ effect.description }}</template>
+              </span>
+              <span v-if="manage && entry.status_effects?.length" class="abv-statuses">
+                <button
+                  v-for="link in entry.status_effects"
+                  :key="link.key"
+                  type="button"
+                  class="abv-status"
+                  :class="{ 'abv-status--active': link.active }"
+                  :disabled="!link.effect"
+                  @click.stop="$emit('toggle-status', entry, link)"
+                >
+                  <Activity :size="12" :stroke-width="2" />
+                  {{ link.active ? 'Снять' : 'Добавить' }} {{ link.effect?.name || 'эффект' }}
+                </button>
+              </span>
+            </span>
+
+            <span v-if="entry.rollback_short_rest" class="abv-badge abv-sr" title="Восстанавливается на коротком отдыхе">КО</span>
+            <span v-if="entry.rollback_long_rest" class="abv-badge abv-lr" title="Восстанавливается на длинном отдыхе">ДО</span>
+          </div>
+        </template>
+
+        <template #default="{ close }">
+          <RowActionItem action="view" tone="info" @click="select(entry, close, 'view')">Посмотреть</RowActionItem>
+          <RowActionItem
+            v-if="manage && entry.usable_resource?.value > 0"
+            action="use"
+            tone="accent"
+            @click="select(entry, close, 'use')"
+          >
+            Использовать ({{ entry.usable_resource.value }}/{{ entry.usable_resource.total }})
+          </RowActionItem>
+          <RowActionSeparator v-if="manage" />
+          <RowActionItem
+            v-if="manage"
+            action="delete"
+            tone="danger"
+            @click="select(entry, close, 'remove')"
+          >
+            Удалить
+          </RowActionItem>
+        </template>
+      </RowActionMenu>
     </div>
   </div>
 </template>
 
 <script setup>
 import { Activity, Plus } from '@lucide/vue'
+import { RowActionMenu } from '@sylvieshare/share-ui'
 import SheetBlockTitle from '@/shared/ui/SheetBlockTitle'
 import SvgIcon from '@/shared/ui/SvgIcon.vue'
 import DndRichContent from '@/shared/ui/DndRichContent.vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
+import RowActionItem from '@/shared/ui/RowActionItem.vue'
+import RowActionSeparator from '@/shared/ui/RowActionSeparator.vue'
 
 defineProps({
   entries: { type: Array, default: () => [] },
@@ -85,11 +115,14 @@ defineProps({
   skeletonCount: { type: Number, default: 2 },
   title: { type: String, default: '' },
   manage: { type: Boolean, default: false },
-  editFade: { type: Boolean, default: false },
-  panel: { type: Boolean, default: false },
   expanded: { type: Boolean, default: false },
 })
-defineEmits(['view', 'show-tooltip', 'hide-tooltip', 'manage', 'add', 'toggle-status'])
+const emit = defineEmits(['view', 'use', 'remove', 'show-tooltip', 'hide-tooltip', 'add', 'toggle-status'])
+
+function select(entry, close, action) {
+  close()
+  emit(action, entry)
+}
 </script>
 
 <style scoped>
@@ -101,8 +134,6 @@ defineEmits(['view', 'show-tooltip', 'hide-tooltip', 'manage', 'add', 'toggle-st
   padding: 9px 10px 10px;
   box-sizing: border-box;
 }
-.abv--panel { padding-right: 14px; }
-
 .abv-list { display: flex; flex-direction: column; gap: 2px; }
 
 .abv-empty { color: var(--text-muted); font-size: 13px; padding: 4px 6px; }
@@ -130,7 +161,7 @@ defineEmits(['view', 'show-tooltip', 'hide-tooltip', 'manage', 'add', 'toggle-st
   cursor: pointer;
   min-height: 30px;
 }
-.abv-card:hover { background-color: color-mix(in srgb, var(--text-on-accent) 6%, transparent); }
+.abv-card:hover, .abv-card.action-menu-source--open { background-color: color-mix(in srgb, var(--text-on-accent) 6%, transparent); }
 .abv-card:hover .abv-name { color: var(--text-1); }
 
 .abv-icon {
