@@ -15,24 +15,18 @@ describe('D&D desktop sheet schema', () => {
   const base = schema.layouts.desktop.tabs.find(tab => tab.title === 'База')
   const innerTabs = findNode(base?.content, node => node.type === 'inner_tabs')
 
-  it('keeps an explicit right gutter around the central tab column', () => {
-    const tabColumn = findNode(
-      base?.content,
-      node => node.children?.some(child => child.type === 'inner_tabs'),
-    )
+  it('uses one desktop row with stats, main content and utility columns', () => {
+    const [statsColumn, mainColumn, utilityColumn] = base.content.children
 
-    expect(tabColumn.props?.style?.['margin-right']).toBe('16px')
-  })
-
-  it('keeps the lower content flush with the upper character summary', () => {
-    const contentColumn = findNode(
-      base?.content,
-      node => node.type === 'column'
-        && node.children?.some(child => findNode(child, nested => nested.ref === 'desktop_statuses'))
-        && node.children?.some(child => findNode(child, nested => nested.type === 'inner_tabs')),
-    )
-
-    expect(contentColumn.props?.gap).toBe('0px')
+    expect(statsColumn.children.map(child => child.ref)).toEqual(['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'])
+    expect(findNode(mainColumn, node => node.ref === 'character_icon')).toBeTruthy()
+    expect(findNode(mainColumn, node => node.ref === 'desktop_statuses')).toBeTruthy()
+    expect(findNode(mainColumn, node => node.type === 'inner_tabs')).toBeTruthy()
+    expect(findNode(utilityColumn, node => node.ref === 'lvl')).toBeTruthy()
+    expect(utilityColumn.props?.width).toBe('320px')
+    expect(utilityColumn.children.slice(1).map(child => child.ref)).toEqual([
+      'feature_widgets', 'actions', 'resources', 'defenses', 'proficiencies',
+    ])
   })
 
   it('places level below speed, proficiency bonus and rests across all three metric columns', () => {
@@ -43,7 +37,7 @@ describe('D&D desktop sheet schema', () => {
     const level = findNode(base?.content, node => node.ref === 'lvl')
     const levelRow = metricGrid.children.at(-1)
 
-    expect(metricGrid.props?.width).toBe('344px')
+    expect(metricGrid.props?.width).toBe('320px')
     expect(metricGrid.props?.style?.['grid-auto-rows']).toBe('64px')
     expect(metricGrid.children.slice(0, -1).map(child => child.ref)).toEqual([
       'armor', 'initiative', 'settings',

@@ -124,11 +124,11 @@ function emitVar(patch) {
   min-width: 0;
   box-sizing: border-box;
   gap: 0;
-  padding: 8px 12px 12px;
+  padding: 0;
 }
 
 .inner-tabs :deep(.sliding-tabs) {
-  padding-inline: 12px;
+  padding-inline: 0;
 }
 
 /* Transparent content stage: each pane owns its semantic surfaces. Height tracks the active pane

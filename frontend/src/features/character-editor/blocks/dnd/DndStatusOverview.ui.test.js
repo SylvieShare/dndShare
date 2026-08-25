@@ -8,8 +8,8 @@ const editorSource = readFileSync(fileURLToPath(new URL('./components/CharacterS
 const inspirationSource = readFileSync(fileURLToPath(new URL('./components/DndInspirationEditor.vue', import.meta.url)), 'utf8')
 
 describe('desktop status overview', () => {
-  it('uses a frameless summary with one explicit edit action', () => {
-    expect(source).not.toContain('<BaseTile')
+  it('uses one BaseTile summary with one explicit edit action', () => {
+    expect(source).toContain('<BaseTile v-if="summaryItems.length || showEditAction" class="dso-tile">')
     expect(viewSource).not.toContain('sheet-tile-title')
     expect(viewSource).not.toContain('Добавить эффект')
     expect(viewSource).not.toContain('Добавить вдохновение')
@@ -29,11 +29,12 @@ describe('desktop status overview', () => {
     expect(viewSource).not.toContain('dsov-dot')
   })
 
-  it('keeps frameless 64px effect icons without name labels and shows only an optional level below', () => {
+  it('keeps 64px effect icons and shows the name and optional level below', () => {
     expect(viewSource).toMatch(/\.dsov-icon \{[\s\S]*?width: 64px;[\s\S]*?height: 64px;/)
     expect(viewSource).toMatch(/\.dsov-effect \{[\s\S]*?border: 0;[\s\S]*?background: none;/)
-    expect(viewSource).toContain('v-if="item.level" class="dsov-caption"')
-    expect(viewSource).not.toContain('class="dsov-name"')
+    expect(viewSource).toContain('class="dsov-caption"')
+    expect(viewSource).toContain('class="dsov-name"')
+    expect(viewSource).toContain('{{ item.value }}')
     expect(viewSource).toMatch(/\.dsov-caption \{[\s\S]*?border-radius: 7px;/)
     expect(viewSource).not.toContain('backdrop-filter')
     expect(viewSource).toContain('Уровень {{ item.level }}')

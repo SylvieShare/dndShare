@@ -46,10 +46,14 @@ the resources block and records `resource_used`; abilities with several
 independent resources remain usable from the resources block so the target
 counter is explicit. Feature widget toggles record `feature_state`, while
 linked spell-effect changes record `status_effect`; both are accepted by the
-atomic character-save event contract. The former whole-tile morph editor is not used. The level tile sits below the desktop
+atomic character-save event contract. The desktop base page is one continuous
+three-column row: characteristics on the left, identity/HP/statuses/inner tabs
+in the flexible centre, and utilities plus feature widgets, actions, resources,
+defenses and proficiencies in the 320 px right column. The former whole-tile
+morph editor is not used. The level tile sits below the desktop
 speed, proficiency-bonus and rest row and spans the full width of those three
 metric columns; the metric grid is 320 px wide and both its utility tiles and
-the level row are 80 px high. The level is not duplicated in the right side column.
+the level row are 64 px high.
 The renamed mobile **Способности** tab uses the expanded cards as well and
 starts with prominent feature widgets, actions, resources, defenses and
 proficiencies. The mobile D&D stats tab uses a 12px top-level column gap. Tab state
@@ -87,8 +91,9 @@ page uses the same subtle 24px dot pattern as the session chapter canvas on its
 global `--bg` backdrop; the central tab remains transparent, and its cards do
 not merge back into one large tile. Desktop tab labels share
 the same muted, fixed-weight typography so the active, fully rounded 3px underline
-changes state without shifting label geometry; the central pane keeps the same explicit right
-gutter as the upper character summary. Mobile uses the same outer `tab` route contract.
+changes state without shifting label geometry; the tab group has no outer
+horizontal padding and aligns directly with the central column. Mobile uses the
+same outer `tab` route contract.
 The sticky mobile tab chrome ends with a narrow static masked blur and subtle
 `--scrim` darkening over the scrolling content; only that 18px strip uses
 `backdrop-filter`, with a plain dark gradient as the unsupported-browser
@@ -106,15 +111,14 @@ does not render a textual health category or hit-die availability. Maximum HP is
 ability contributions, and editable manual bonuses. Healing, rests, level-up,
 print and encounter projections use the resolved total; encounter writes never
 overwrite the maximum's source structure.
-The frameless desktop effect summary sits below the shared icon/name/HP tile
-instead of inside it or in the skills sidebar. Active catalogue effects,
-non-zero exhaustion and heroic inspiration share one horizontally scrollable
-row of frameless 64×64 icons. Catalogue cells render either raster `iconImageUrl` or SVG;
-missing media falls back to a monogram rather than a colour dot. Effect names stay
-available in tooltips instead of permanent labels. Optional catalogue `level`
-metadata and the live exhaustion level appear as a rounded **Уровень N** label
-below the icon. The summary has no title, add cells,
-surface or frame. Owners use the single pencil-labelled **Состояние** link to the left of the icon row to
+The desktop effect summary sits in its own `BaseTile` below the shared
+icon/name/HP tile. Active catalogue effects, non-zero exhaustion and heroic
+inspiration share one horizontally scrollable row of 64×64 icons. Catalogue
+cells render either raster `iconImageUrl` or SVG; missing media falls back to a
+monogram rather than a colour dot. Each icon has its permanent effect name
+below it; optional catalogue `level` metadata and the live exhaustion level add
+**Уровень N** to the same rounded caption. The summary has no title or add cells.
+Owners use the single pencil-labelled **Состояние** link to the left of the icon row to
 open the shared editor for catalogue effects, exhaustion and inspiration.
 The compact mobile strip
 keeps HP at its intrinsic number width and never lets

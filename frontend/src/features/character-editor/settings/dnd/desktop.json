@@ -55,16 +55,17 @@
             "type": "column",
             "props": {
               "grow": "1",
+              "basis": "0",
+              "min-width": "0",
               "style": {},
-              "gap": "0px"
+              "gap": "8px"
             },
             "children": [
               {
                 "kind": "layout",
-                "type": "row",
+                "type": "column",
                 "props": {
-                  "gap": "20px",
-                  "align-items": "stretch",
+                  "gap": "8px",
                   "style": {
                     "margin-top": "20px"
                   }
@@ -128,82 +129,14 @@
                         "kind": "block"
                       }
                     ]
-                  },
-                  {
-                    "kind": "layout",
-                    "type": "grid",
-                    "props": {
-                      "gap": "8px",
-                      "width": "344px",
-                      "shrink": "0",
-                      "columns": "3",
-                      "style": {
-                        "margin-right": "16px",
-                        "grid-auto-rows": "64px"
-                      }
-                    },
-                    "children": [
-                      {
-                        "ref": "armor",
-                        "kind": "block",
-                        "props": {
-                          "variant": "tile"
-                        }
-                      },
-                      {
-                        "ref": "initiative",
-                        "kind": "block",
-                        "props": {
-                          "variant": "tile"
-                        }
-                      },
-                      {
-                        "ref": "settings",
-                        "kind": "block"
-                      },
-                      {
-                        "ref": "speed",
-                        "kind": "block",
-                        "props": {
-                          "variant": "tile"
-                        }
-                      },
-                      {
-                        "ref": "prof_bonus",
-                        "kind": "block",
-                        "props": {
-                          "variant": "tile"
-                        }
-                      },
-                      {
-                        "ref": "rest",
-                        "kind": "block"
-                      },
-                      {
-                        "kind": "layout",
-                        "type": "row",
-                        "props": {
-                          "style": {
-                            "grid-column": "1 / -1",
-                            "height": "64px"
-                          }
-                        },
-                        "children": [
-                          {
-                            "ref": "lvl",
-                            "kind": "block"
-                          }
-                        ]
-                      }
-                    ]
                   }
                 ]
               },
               {
                 "kind": "layout",
-                "type": "row",
+                "type": "column",
                 "props": {
-                  "align-items": "stretch"
+                  "gap": "0"
                 },
                 "children": [
                   {
@@ -213,10 +146,7 @@
                       "gap": "0",
                       "grow": "1",
                       "basis": "0",
-                      "min-width": "0",
-                      "style": {
-                        "margin-right": "16px"
-                      }
+                      "min-width": "0"
                     },
                     "children": [
                       {
@@ -591,45 +521,109 @@
                         ]
                       }
                     ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "layout",
+            "type": "column",
+            "props": {
+              "gap": "11px",
+              "width": "320px",
+              "shrink": "0",
+              "style": {
+                "margin-top": "20px",
+                "margin-right": "16px"
+              }
+            },
+            "children": [
+              {
+                "kind": "layout",
+                "type": "grid",
+                "props": {
+                  "gap": "8px",
+                  "width": "320px",
+                  "columns": "3",
+                  "style": {
+                    "grid-auto-rows": "64px"
+                  }
+                },
+                "children": [
+                  {
+                    "ref": "armor",
+                    "kind": "block",
+                    "props": {
+                      "variant": "tile"
+                    }
+                  },
+                  {
+                    "ref": "initiative",
+                    "kind": "block",
+                    "props": {
+                      "variant": "tile"
+                    }
+                  },
+                  {
+                    "ref": "settings",
+                    "kind": "block"
+                  },
+                  {
+                    "ref": "speed",
+                    "kind": "block",
+                    "props": {
+                      "variant": "tile"
+                    }
+                  },
+                  {
+                    "ref": "prof_bonus",
+                    "kind": "block",
+                    "props": {
+                      "variant": "tile"
+                    }
+                  },
+                  {
+                    "ref": "rest",
+                    "kind": "block"
                   },
                   {
                     "kind": "layout",
-                    "type": "column",
+                    "type": "row",
                     "props": {
-                      "gap": "11px",
                       "style": {
-                        "width": "320px",
-                        "padding": "20px",
-                        "background": "var(--bg)",
-                        "border-left": "1px solid var(--border)",
-                        "border-bottom": "1px solid var(--border)"
-                      },
-                      "shrink": "0"
+                        "grid-column": "1 / -1",
+                        "height": "64px"
+                      }
                     },
                     "children": [
                       {
-                        "ref": "feature_widgets",
-                        "kind": "block"
-                      },
-                      {
-                        "ref": "actions",
-                        "kind": "block"
-                      },
-                      {
-                        "ref": "resources",
-                        "kind": "block"
-                      },
-                      {
-                        "ref": "defenses",
-                        "kind": "block"
-                      },
-                      {
-                        "ref": "proficiencies",
+                        "ref": "lvl",
                         "kind": "block"
                       }
                     ]
                   }
                 ]
+              },
+              {
+                "ref": "feature_widgets",
+                "kind": "block"
+              },
+              {
+                "ref": "actions",
+                "kind": "block"
+              },
+              {
+                "ref": "resources",
+                "kind": "block"
+              },
+              {
+                "ref": "defenses",
+                "kind": "block"
+              },
+              {
+                "ref": "proficiencies",
+                "kind": "block"
               }
             ]
           }
