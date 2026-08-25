@@ -25,9 +25,17 @@ describe('multiclass spellcasting UI', () => {
   it('keeps class sources and Pact Magic separate', () => {
     expect(source).toContain('characterSpellcastingSources')
     expect(source).toContain('computeSpellSlotPools')
-    expect(source).toContain(':pact-slot="pactSlot"')
+    expect(source).toContain(':active-slot-pools="activeSlotPools"')
     expect(source).toContain('spellcasting_source')
     expect(cardSource).toContain('Класс заклинания не указан')
-    expect(cardSource).toContain("option.pool === 'pact'")
+    expect(cardSource).toContain("option.pool === 'short_rest'")
+  })
+
+  it('splits the spellbook into all, per-class and other tabs', () => {
+    expect(source).toContain('v-for="tab in spellTabs"')
+    expect(source).toContain("{ key: 'all', label: 'Все' }")
+    expect(source).toContain("{ key: 'other', label: 'Другие' }")
+    expect(source).toContain('spells.value.filter(spellMatchesActiveTab)')
+    expect(source).toContain('Добавляйте заклинания во вкладке нужного класса')
   })
 })

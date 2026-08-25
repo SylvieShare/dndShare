@@ -135,7 +135,7 @@
             tone="accent"
             @click="useAtSlot(option, closeSlots, close)"
           >
-            {{ option.pool === 'pact' ? 'Магия договора · ' : '' }}{{ option.level }} круг
+            {{ option.pool === 'short_rest' ? 'Короткий отдых' : 'Долгий отдых' }} · {{ option.level }} круг
             <template #suffix>{{ option.remaining }} доступно</template>
           </RowActionItem>
         </template>

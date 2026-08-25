@@ -34,22 +34,30 @@ describe('multiclass rests', () => {
 
 describe('multiclass spell-slot recovery', () => {
   const spells = {
-    slots_rest: 'long_rest',
     slots: [{ level: 1, total: 4, used: 2 }],
-    pact_slots: { level: 2, total: 2, used: 1 },
+    slot_pools: {
+      long_rest: [{ level: 1, total: 4, used: 2 }],
+      short_rest: [{ level: 2, total: 2, used: 1 }, { level: 3, total: 1, used: 1 }],
+    },
   }
 
   it('restores only Pact Magic on a short rest', () => {
     expect(shortRestSpells(spells)).toMatchObject({
       slots: [{ level: 1, total: 4, used: 2 }],
-      pact_slots: { level: 2, total: 2, used: 0 },
+      slot_pools: {
+        long_rest: [{ level: 1, total: 4, used: 2 }],
+        short_rest: [{ level: 2, total: 2, used: 0 }, { level: 3, total: 1, used: 0 }],
+      },
     })
   })
 
   it('restores both pools on a long rest', () => {
     expect(longRestSpells(spells)).toMatchObject({
       slots: [{ level: 1, total: 4, used: 0 }],
-      pact_slots: { level: 2, total: 2, used: 0 },
+      slot_pools: {
+        long_rest: [{ level: 1, total: 4, used: 0 }],
+        short_rest: [{ level: 2, total: 2, used: 0 }, { level: 3, total: 1, used: 0 }],
+      },
     })
   })
 })

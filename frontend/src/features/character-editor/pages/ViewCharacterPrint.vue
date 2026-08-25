@@ -146,11 +146,11 @@
           <section class="spell-summary">
             <PrintField label="Базовая характеристика" :value="spellcasting.stat" /><PrintField label="Сл спасброска" :value="String(spellcasting.saveDc)" /><PrintField label="Бонус атаки" :value="signed(spellcasting.attackBonus)" />
           </section>
-          <section v-if="spellSlots.length" class="box slots-box"><BoxTitle>Ячейки заклинаний</BoxTitle>
-            <div v-for="slot in spellSlots" :key="slot.level"><span>{{ slot.level }} круг</span><i v-for="i in slot.total" :key="i"></i></div>
-          </section>
-          <section v-if="pactSlot" class="box slots-box"><BoxTitle>Магия договора · короткий отдых</BoxTitle>
-            <div><span>{{ pactSlot.level }} круг</span><i v-for="i in pactSlot.total" :key="i"></i></div>
+          <section v-if="spellSlotSections.length" class="box slots-box"><BoxTitle>Ячейки заклинаний</BoxTitle>
+            <template v-for="section in spellSlotSections" :key="section.rest">
+              <strong class="slots-rest-label">{{ section.rest === 'short_rest' ? 'Короткий отдых' : 'Долгий отдых' }}</strong>
+              <div v-for="slot in section.slots" :key="`${section.rest}:${slot.level}`"><span>{{ slot.level }} круг</span><i v-for="i in slot.total" :key="i"></i></div>
+            </template>
           </section>
         </template>
         <div class="spell-card-grid"><PrintSpellCard v-for="spell in page.cards" :key="spell.id" :spell="spell" /></div>
@@ -381,8 +381,20 @@ const equipmentPages = computed(() => {
 })
 
 const rawSpells = computed(() => Array.isArray(values.value.spells?.spells) ? values.value.spells.spells : [])
-const spellSlots = computed(() => (Array.isArray(values.value.spells?.slots) ? values.value.spells.slots : []).filter(slot => Number(slot.total) > 0))
-const pactSlot = computed(() => Number(values.value.spells?.pact_slots?.total) > 0 ? values.value.spells.pact_slots : null)
+const spellSlotSections = computed(() => {
+  const data = values.value.spells || {}
+  let canonical = data.slot_pools && typeof data.slot_pools === 'object' ? data.slot_pools : null
+  if (!canonical) {
+    canonical = { long_rest: [], short_rest: [] }
+    const legacyRest = data.slots_rest === 'short_rest' ? 'short_rest' : 'long_rest'
+    canonical[legacyRest] = Array.isArray(data.slots) ? data.slots : []
+    if (data.pact_slots) canonical.short_rest = [...canonical.short_rest, data.pact_slots]
+  }
+  return ['long_rest', 'short_rest'].map((rest) => ({
+    rest,
+    slots: (Array.isArray(canonical[rest]) ? canonical[rest] : []).filter((slot) => Number(slot.total) > 0),
+  })).filter((section) => section.slots.length)
+})
 const spellcasting = computed(() => {
   const data = values.value.spells || {}; const statKey = SUGGEST16_TO_STAT[Number(data.stat_path)]; const mod = statKey ? abilityModifier(abilityScore(statKey)) : 0
   return { stat: statKey ? STAT_FULL[statKey] : '—', saveDc: 8 + profBonus.value + mod + (Number(data.save_bonus) || 0), attackBonus: profBonus.value + mod + (Number(data.attack_bonus) || 0) }
@@ -446,8 +458,8 @@ function paginateGrid(cards, columns, firstCapacity, nextCapacity) {
   if (pageCards.length) { flushRow(); pages.push({ cards: pageCards }) }
   return pages
 }
-const hasSpells = computed(() => rawSpells.value.length || spellSlots.value.length || pactSlot.value)
-const spellPages = computed(() => hasSpells.value ? paginateGrid(spellCards.value, 3, (spellSlots.value.length || pactSlot.value) ? 190 : 222, 232) : [])
+const hasSpells = computed(() => rawSpells.value.length || spellSlotSections.value.length)
+const spellPages = computed(() => hasSpells.value ? paginateGrid(spellCards.value, 3, spellSlotSections.value.length ? 190 : 222, 232) : [])
 
 const appearanceFields = computed(() => [
   { label: 'Возраст', value: text(values.value.person_age) }, { label: 'Рост', value: text(values.value.person_height) }, { label: 'Вес', value: text(values.value.person_weight) },
@@ -526,6 +538,7 @@ table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 
 .equipment-grid { display: grid; grid-template-columns: minmax(0, 1fr) 59mm; gap: 5mm; align-items: start; min-width: 0; }.equipment-grid--full { grid-template-columns: 1fr; }.inventory-section + .inventory-section { margin-top: 4mm; }.inventory-section h3, .prose-group h3 { margin: 0 0 1.2mm; font: 700 6px/1 var(--font-print-ui); letter-spacing: .08em; text-transform: uppercase; color: #756751; }.inventory-row, .list-box > div { display: flex; justify-content: space-between; gap: 4mm; min-height: 6mm; padding: 1.2mm 0; border-bottom: .35px solid #baaa8d; font-size: 8px; }.inventory-row span, .list-box span { min-width: 0; overflow-wrap: anywhere; }.inventory-row strong, .list-box strong { flex: 0 0 auto; white-space: nowrap; }
 .coins-box { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2mm; }.coins-box :deep(.box-title) { grid-column: 1 / -1; }.coins-box > div { min-width: 0; text-align: center; }.coins-box strong { display: block; font: 700 13px/1 var(--font-print-display); }.coins-box > div > span { display: block; margin-top: 1mm; font-size: 5px; text-transform: uppercase; overflow-wrap: anywhere; }.prose-group + .prose-group { margin-top: 2.5mm; }.prose-group p { margin: 0; font: 7px/1.4 var(--font-print-prose); overflow-wrap: anywhere; }.empty-state { padding: 12mm 0; color: #8a7a61; font: italic 9px var(--font-print-prose); text-align: center; }
 .spell-summary { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-bottom: 4mm; }.slots-box { display: flex; align-items: flex-start; flex-wrap: wrap; gap: 3mm 7mm; margin-bottom: 4mm; }.slots-box :deep(.box-title) { width: 100%; justify-content: flex-start; }.slots-box > div { display: flex; align-items: center; gap: 1.2mm; font-size: 7px; }.slots-box > div > span { min-width: 11mm; font-weight: 700; }.slots-box i { width: 4mm; height: 4mm; display: inline-block; flex: 0 0 auto; border: .8px solid #4f4639; border-radius: 50%; background: #fffefa; }.spell-card-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-flow: row dense; gap: 3mm; align-items: start; min-width: 0; }
+.slots-rest-label { width: 100%; color: #6c6253; font-size: 6.5px; letter-spacing: .04em; text-transform: uppercase; }
 .details-grid { display: grid; grid-template-columns: 54mm minmax(0, 1fr); gap: 5mm; align-items: start; }.portrait-box img, .portrait-placeholder { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; filter: grayscale(1); border: .5px solid #baaa8d; }.portrait-placeholder { display: grid; place-items: center; color: #a09177; font: italic 10px var(--font-print-prose); }.portrait-box dl { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 1.5mm 3mm; margin: 4mm 0 0; }.portrait-box dt { font-size: 5px; font-weight: 800; text-transform: uppercase; color: #756751; }.portrait-box dd { min-width: 0; margin: 0; border-bottom: .35px solid #baaa8d; font: 7px var(--font-print-prose); overflow-wrap: anywhere; }.text-box { min-height: 20mm; }.text-box :deep(.rc) { color: #332e27; font: 8px/1.48 var(--font-print-prose); }.notes-box, .backstory-box { margin-top: 4mm; }.feature-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-flow: row dense; gap: 4mm; align-items: start; min-width: 0; }
 
 @media (max-width: 760px) { .print-view { padding: 14px 0 40px; overflow-x: auto; }.print-actions { width: 210mm; padding: 0 12px; } }

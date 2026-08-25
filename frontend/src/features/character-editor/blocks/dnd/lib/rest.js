@@ -57,6 +57,17 @@ export function longRestHp(hp, recovery = null) {
 // regardless of the configured recovery rest (short-rest casters recharge on a long rest too).
 export function longRestSpells(spells) {
   if (!spells || typeof spells !== 'object') return spells
+  if (spells.slot_pools && typeof spells.slot_pools === 'object') {
+    const slotPools = {
+      long_rest: (spells.slot_pools.long_rest || []).map((slot) => ({ ...slot, used: 0 })),
+      short_rest: (spells.slot_pools.short_rest || []).map((slot) => ({ ...slot, used: 0 })),
+    }
+    return {
+      ...spells,
+      slot_pools: slotPools,
+      ...(Array.isArray(spells.slots) ? { slots: slotPools.long_rest.map((slot) => ({ ...slot })) } : {}),
+    }
+  }
   return {
     ...spells,
     ...(Array.isArray(spells.slots) ? { slots: spells.slots.map(s => ({ ...s, used: 0 })) } : {}),
@@ -68,6 +79,15 @@ export function longRestSpells(spells) {
 // (e.g. warlock pact magic, `slots_rest === 'short_rest'`); otherwise leave them untouched.
 export function shortRestSpells(spells) {
   if (!spells || typeof spells !== 'object') return spells
+  if (spells.slot_pools && typeof spells.slot_pools === 'object') {
+    return {
+      ...spells,
+      slot_pools: {
+        ...spells.slot_pools,
+        short_rest: (spells.slot_pools.short_rest || []).map((slot) => ({ ...slot, used: 0 })),
+      },
+    }
+  }
   const restoreShared = spells.slots_rest === 'short_rest' && Array.isArray(spells.slots)
   if (!restoreShared && !spells.pact_slots) return spells
   return {

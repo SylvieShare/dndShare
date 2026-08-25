@@ -23,17 +23,22 @@ describe('spell use slot selection', () => {
 })
 
 describe('separate Pact Magic slots', () => {
-  it('offers ordinary and pact slots independently, including at the same level', () => {
-    const slots = [{ level: 3, total: 2, used: 1 }]
-    const pact = { level: 3, total: 2, used: 0 }
-    expect(availableSpellSlotOptions(slots, pact, 1)).toEqual([
-      { pool: 'spellcasting', level: 3, remaining: 1 },
-      { pool: 'pact', level: 3, remaining: 2 },
+  it('offers long- and short-rest slots independently, including at the same level', () => {
+    const pools = {
+      long_rest: [{ level: 3, total: 2, used: 1 }],
+      short_rest: [{ level: 3, total: 2, used: 0 }],
+    }
+    expect(availableSpellSlotOptions(pools, 1)).toEqual([
+      { pool: 'long_rest', level: 3, remaining: 1 },
+      { pool: 'short_rest', level: 3, remaining: 2 },
     ])
   })
 
   it('allows a warlock spell to use an ordinary slot and another class spell to use pact magic', () => {
-    expect(availableSpellSlotOptions([{ level: 2, total: 1, used: 0 }], { level: 3, total: 1, used: 0 }, 2))
+    expect(availableSpellSlotOptions({
+      long_rest: [{ level: 2, total: 1, used: 0 }],
+      short_rest: [{ level: 3, total: 1, used: 0 }],
+    }, 2))
       .toHaveLength(2)
   })
 })

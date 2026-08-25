@@ -37,20 +37,17 @@
       </div>
     </EditorSection>
 
-    <EditorSection title="Восстановление ячеек">
+    <EditorSection title="Ячейки заклинаний">
       <MultiToggle
         block
-        :model-value="slotsRest"
+        :model-value="editingRest"
         :options="REST_OPTIONS"
-        @update:model-value="$emit('set-slots-rest', $event)"
+        @update:model-value="editingRest = $event"
       />
-    </EditorSection>
-
-    <EditorSection title="Ячейки заклинаний">
       <div class="ssm-grid">
         <div v-for="sl in slots" :key="sl.level" class="ssm-cell">
           <span class="ssm-lvl">{{ sl.level }} круг</span>
-          <FormNumberInput :value="sl.total" :min="0" :max="9" @change="$emit('change', sl.level, $event)" />
+          <FormNumberInput :value="sl.total" :min="0" :max="9" @change="$emit('change', editingRest, sl.level, $event)" />
         </div>
       </div>
     </EditorSection>
@@ -58,6 +55,7 @@
 </template>
 
 <script setup>
+import { computed, ref } from 'vue'
 import { EditorSection } from '@sylvieshare/share-ui'
 import { AppModalFrame } from '@sylvieshare/share-ui'
 import { MultiToggle } from '@sylvieshare/share-ui'
@@ -66,21 +64,23 @@ import { ValueSelect } from '@sylvieshare/share-ui'
 import { FormNumberInput } from '@sylvieshare/share-ui'
 
 const REST_OPTIONS = [
-  { value: 'long_rest', label: 'Длинный отдых' },
+  { value: 'long_rest', label: 'Долгий отдых' },
   { value: 'short_rest', label: 'Короткий отдых' },
 ]
 
-defineProps({
-  slots:       { type: Array, required: true },
+const props = defineProps({
+  slotPools:   { type: Object, required: true },
   statPath:    { default: '' },
   statOptions: { type: Array, default: () => [] },
   saveBonus:   { type: Number, default: 0 },
   attackBonus: { type: Number, default: 0 },
-  slotsRest:   { type: String, default: 'long_rest' },
   preparation: { type: Boolean, default: false },
   automaticSlots: { type: Boolean, default: true },
 })
-defineEmits(['close', 'change', 'set-stat-path', 'set-save-bonus', 'set-attack-bonus', 'set-slots-rest', 'set-preparation', 'set-automatic-slots'])
+defineEmits(['close', 'change', 'set-stat-path', 'set-save-bonus', 'set-attack-bonus', 'set-preparation', 'set-automatic-slots'])
+
+const editingRest = ref('long_rest')
+const slots = computed(() => props.slotPools?.[editingRest.value] || [])
 </script>
 
 <style scoped>
@@ -102,6 +102,7 @@ defineEmits(['close', 'change', 'set-stat-path', 'set-save-bonus', 'set-attack-b
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px 14px;
+  margin-top: 12px;
 }
 
 .ssm-cell {

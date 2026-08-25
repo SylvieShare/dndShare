@@ -22,7 +22,7 @@ describe('character spell card icon', () => {
     expect(source).toContain('<RowActionMenu')
     expect(source).toContain('<RowActionSubmenu')
     expect(source).toContain('ctx.useSpell(props.entry, option)')
-    expect(source).toContain("option.pool === 'pact'")
+    expect(source).toContain("option.pool === 'short_rest'")
     expect(source).toContain('Выберите ячейку')
     expect(source).not.toContain('choosingSlot')
     expect(source).toContain('action="delete"')

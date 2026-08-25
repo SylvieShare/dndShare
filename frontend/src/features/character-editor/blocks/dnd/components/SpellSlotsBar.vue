@@ -34,72 +34,54 @@
       </div>
     </BaseTile>
 
-    <BaseTile v-if="pactSlot && pactSlot.total > 0" class="sp-slots-panel sp-pact-panel">
-      <SheetBlockTitle class="sp-slots-head" title="Ячейки магии договора" />
-      <div class="sp-slots">
-        <div class="sp-slot-row">
-          <div class="sp-lvl">
-            <span class="sp-lvl-num">{{ pactSlot.level }}</span>
-            <span class="sp-lvl-unit">круг</span>
-          </div>
-          <div class="sp-orbs">
-            <SpellSlotSphere
-              v-for="i in orbOrder(pactSlot.total)"
-              :key="i"
-              :spent="i <= pactSlot.used"
-              :level="pactSlot.level"
-              :interactive="canInteract"
-              @click="$emit('toggle-pact-slot', i)"
-            />
-          </div>
-          <span class="sp-pact-rest">короткий отдых</span>
-        </div>
-      </div>
-    </BaseTile>
-
-    <BaseTile v-if="activeSlots.length > 0" class="sp-slots-panel">
+    <BaseTile v-if="activeSlotPools.length > 0" class="sp-slots-panel">
       <SheetBlockTitle
         class="sp-slots-head"
         title="Ячейки заклинаний"
         :show-edit="canInteract"
         @edit="editOpen = true"
       />
-      <div class="sp-slots">
-        <div v-for="sl in activeSlots" :key="sl.level" class="sp-slot-row">
-          <div class="sp-lvl">
-            <span class="sp-lvl-num">{{ sl.level }}</span>
-            <span class="sp-lvl-unit">круг</span>
+      <div class="sp-pools">
+        <section v-for="pool in activeSlotPools" :key="pool.rest" class="sp-pool">
+          <div class="sp-pool-head">
+            <span>{{ pool.rest === 'short_rest' ? 'Короткий отдых' : 'Долгий отдых' }}</span>
+            <small>{{ pool.rest === 'short_rest' ? 'восстанавливаются также после долгого' : 'восстанавливаются после долгого' }}</small>
           </div>
-          <div class="sp-orbs">
-            <SpellSlotSphere
-              v-for="i in orbOrder(sl.total)"
-              :key="i"
-              :spent="i <= sl.used"
-              :level="sl.level"
-              :interactive="canInteract"
-              @click="$emit('toggle-slot', sl.level, i)"
-            />
-            <span v-if="sl.total === 0" class="sp-orbs-empty">—</span>
+          <div class="sp-slots">
+            <div v-for="slot in pool.slots" :key="slot.level" class="sp-slot-row">
+              <div class="sp-lvl">
+                <span class="sp-lvl-num">{{ slot.level }}</span>
+                <span class="sp-lvl-unit">круг</span>
+              </div>
+              <div class="sp-orbs">
+                <SpellSlotSphere
+                  v-for="i in orbOrder(slot.total)"
+                  :key="i"
+                  :spent="i <= slot.used"
+                  :level="slot.level"
+                  :interactive="canInteract"
+                  @click="$emit('toggle-slot', pool.rest, slot.level, i)"
+                />
+              </div>
+            </div>
           </div>
-        </div>
+        </section>
       </div>
     </BaseTile>
 
     <DndSpellbookSettingsModal
       v-if="editOpen"
-      :slots="allSlots"
+      :slot-pools="slotPools"
       :stat-path="statPath"
       :stat-options="statOptions"
       :save-bonus="saveBonusExtra"
       :attack-bonus="attackBonusExtra"
-      :slots-rest="slotsRest"
       :preparation="preparation"
       :automatic-slots="automaticSlots"
-      @change="(level, total) => $emit('set-total', level, total)"
+      @change="(rest, level, total) => $emit('set-total', rest, level, total)"
       @set-stat-path="$emit('set-stat-path', $event)"
       @set-save-bonus="$emit('set-save-bonus', $event)"
       @set-attack-bonus="$emit('set-attack-bonus', $event)"
-      @set-slots-rest="$emit('set-slots-rest', $event)"
       @set-preparation="$emit('set-preparation', $event)"
       @set-automatic-slots="$emit('set-automatic-slots', $event)"
       @close="editOpen = false"
@@ -127,15 +109,13 @@ const props = defineProps({
   attackBonus:     { type: Number, default: 0 },
   saveBonusExtra:   { type: Number, default: 0 },
   attackBonusExtra: { type: Number, default: 0 },
-  slotsRest:       { type: String, default: 'long_rest' },
   preparation:     { type: Boolean, default: false },
-  activeSlots:     { type: Array, default: () => [] },
-  allSlots:        { type: Array, default: () => [] },
-  pactSlot:        { type: Object, default: null },
+  activeSlotPools: { type: Array, default: () => [] },
+  slotPools:       { type: Object, default: () => ({ long_rest: [], short_rest: [] }) },
   castingStats:    { type: Array, default: () => [] },
   automaticSlots:  { type: Boolean, default: true },
 })
-defineEmits(['set-stat-path', 'set-total', 'set-save-bonus', 'set-attack-bonus', 'set-slots-rest', 'set-preparation', 'set-automatic-slots', 'toggle-slot', 'toggle-pact-slot'])
+defineEmits(['set-stat-path', 'set-total', 'set-save-bonus', 'set-attack-bonus', 'set-preparation', 'set-automatic-slots', 'toggle-slot'])
 
 function orbOrder(total) {
   return Array.from({ length: total }, (_, k) => total - k)
@@ -169,7 +149,10 @@ const attackFormula = computed(() => `Бонус мастерства + моди
 .sp-caster-row { display: grid; grid-template-columns: minmax(90px, 1fr) repeat(3, auto); align-items: center; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--border); color: var(--text-2); font-size: 12px; }
 .sp-caster-row:last-child { border-bottom: 0; }
 .sp-caster-row strong { color: var(--text-1); }
-.sp-pact-rest { margin-left: auto; color: var(--text-muted); font-size: 11px; }
+.sp-pools { display: grid; gap: 14px; }
+.sp-pool + .sp-pool { padding-top: 14px; border-top: 1px solid var(--border); }
+.sp-pool-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 4px; color: var(--text-1); font-size: 12px; font-weight: 750; }
+.sp-pool-head small { color: var(--text-muted); font-size: 10px; font-weight: 500; }
 
 /* ── Статы (строка безрамочных плиток сверху) ── */
 .sp-stats {

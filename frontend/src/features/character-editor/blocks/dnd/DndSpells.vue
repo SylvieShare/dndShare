@@ -19,23 +19,29 @@
       :attack-bonus="attackBonus"
       :save-bonus-extra="saveBonusExtra"
       :attack-bonus-extra="attackBonusExtra"
-      :slots-rest="slotsRest"
       :preparation="preparation"
-      :active-slots="activeSlots"
-      :all-slots="localSlots"
-      :pact-slot="pactSlot"
+      :active-slot-pools="activeSlotPools"
+      :slot-pools="slotPools"
       :casting-stats="spellcastingStatRows"
       :automatic-slots="automaticSlots"
       @set-stat-path="setStatPath"
       @set-total="setTotal"
       @set-save-bonus="setSaveBonus"
       @set-attack-bonus="setAttackBonus"
-      @set-slots-rest="setSlotsRest"
       @set-preparation="setPreparation"
       @toggle-slot="toggleSlot"
-      @toggle-pact-slot="togglePactSlot"
       @set-automatic-slots="setAutomaticSlots"
     />
+
+    <nav v-if="spellTabs.length > 1" class="sp-tabs" aria-label="Разделы магии">
+      <button
+        v-for="tab in spellTabs"
+        :key="tab.key"
+        type="button"
+        :class="{ active: activeSpellTab === tab.key }"
+        @click="activeSpellTab = tab.key"
+      >{{ tab.label }}</button>
+    </nav>
 
     <!-- Заклинания по уровням (мультиколонки) -->
     <div class="spells-groups">
@@ -79,15 +85,6 @@
 
     <!-- Поиск / добавление -->
     <div v-if="canAddItems" class="sp-add-section">
-      <div v-if="spellcastingSources.length > 1" class="sp-source-picker" role="group" aria-label="Класс заклинания">
-        <button
-          v-for="source in spellcastingSources"
-          :key="source.key"
-          type="button"
-          :class="{ active: source.key === selectedSourceKey }"
-          @click="selectedSourceKey = source.key"
-        >{{ source.label }}</button>
-      </div>
       <div v-if="knownRules" class="sp-known-summary">
         <span>{{ knownRules.label }}</span>
         <template v-if="knownRules.hasKnownProgression">
@@ -97,7 +94,8 @@
         </template>
         <span>Доступно до {{ selectedSourceMaxSpellLevel }} круга</span>
       </div>
-      <button class="sp-picker-btn" @click="pickerOpen = true">+ Найти заклинание...</button>
+      <p v-if="!canAddInActiveTab" class="sp-add-hint">Добавляйте заклинания во вкладке нужного класса или в разделе «Другие».</p>
+      <button v-else class="sp-picker-btn" @click="pickerOpen = true">+ Найти заклинание...</button>
     </div>
 
     <ItemPickerModal
@@ -155,16 +153,13 @@ const spells     = ref([])
 const statPath   = ref('')
 const saveBonusExtra   = ref(0)
 const attackBonusExtra = ref(0)
-const slotsRest  = ref('long_rest')
 const preparation = ref(false)
 const itemMap    = reactive({})
 const modalSpell = ref(null)
 const pickerOpen = ref(false)
 const classItemMap = reactive({})
-const pactSlot = ref(null)
-const selectedSourceKey = ref('')
+const activeSpellTab = ref('all')
 const automaticSlots = ref(true)
-let hadStoredPactSlots = false
 
 // ─── Computeds ─────────────────────────────────────
 
@@ -203,7 +198,7 @@ const canAddItems  = computed(() => !!charCtx.ownerMode)
 const blockHidden  = computed(() =>
   props.block.hide_on_empty && !charCtx.ownerMode && !canAddItems.value && spells.value.length === 0
 )
-const showStatsBar = computed(() => hasStatConfig.value || canInteract.value || activeSlots.value.length > 0)
+const showStatsBar = computed(() => hasStatConfig.value || canInteract.value || activeSlotPools.value.length > 0)
 const armorState = computed(() => charCtx.characterArmor?.state || {})
 const spellcastingRestrictions = computed(() => {
   const restrictions = []
@@ -223,8 +218,36 @@ const spellcastingRestrictions = computed(() => {
 })
 const spellcastingBlocked = computed(() => spellcastingRestrictions.value.length > 0)
 const spellcastingSources = computed(() => characterSpellcastingSources(props.values?.classes, classItemMap))
-const knownRules = computed(() => spellcastingSources.value.find(source => source.key === selectedSourceKey.value)
-  || spellcastingSources.value[0] || null)
+const sourceKeys = computed(() => new Set(spellcastingSources.value.map((source) => source.key)))
+function isOtherSpell(ref) {
+  if (sourceKeys.value.has(ref?.spellcasting_source)) return false
+  if (ref?.spellcasting_source) return true
+  if (ref?.external_only || ref?.casting_ability_source === 'ability' || ['feat', 'race', 'ability'].includes(ref?.source)) return true
+  return spellcastingSources.value.length !== 1
+}
+function spellMatchesActiveTab(ref) {
+  if (activeSpellTab.value === 'all') return true
+  if (activeSpellTab.value === 'other') return isOtherSpell(ref)
+  if (ref?.spellcasting_source === activeSpellTab.value) return true
+  return spellcastingSources.value.length === 1
+    && activeSpellTab.value === spellcastingSources.value[0]?.key
+    && !isOtherSpell(ref)
+}
+const hasOtherSpells = computed(() => spells.value.some(isOtherSpell))
+const spellTabs = computed(() => {
+  const sources = spellcastingSources.value
+  if (sources.length <= 1 && !hasOtherSpells.value) return [{ key: 'all', label: 'Все' }]
+  return [
+    { key: 'all', label: 'Все' },
+    ...sources.map((source) => ({ key: source.key, label: source.label })),
+    { key: 'other', label: 'Другие' },
+  ]
+})
+const activeTabSource = computed(() => spellcastingSources.value.find((source) => source.key === activeSpellTab.value) || null)
+const knownRules = computed(() => activeTabSource.value
+  || (spellcastingSources.value.length === 1 && activeSpellTab.value !== 'other' ? spellcastingSources.value[0] : null))
+const canAddInActiveTab = computed(() => activeSpellTab.value !== 'all'
+  || spellcastingSources.value.length <= 1)
 const selectedSourceMaxSpellLevel = computed(() => knownRules.value
   ? maximumSpellLevelForEntry(knownRules.value.entry, classItemMap)
   : maxSlotLevel.value)
@@ -246,7 +269,7 @@ const schoolMap = computed(() => {
 })
 const spellsByLevel = computed(() => {
   const groups = new Map()
-  for (const spellRef of spells.value) {
+  for (const spellRef of spells.value.filter(spellMatchesActiveTab)) {
     const item = itemMap[spellRef.id]
     const lvl = item?.data?.lvl ?? -1
     if (!groups.has(lvl)) groups.set(lvl, [])
@@ -277,14 +300,15 @@ watch(blockHidden, v => setBlockHidden(v), { immediate: true })
 // ─── Emit ──────────────────────────────────────────
 
 function emitChange() {
+  const serializedPools = serializedSlotPools()
   emit('update:value', props.block.id, {
     stat_path: statPath.value,
     save_bonus: saveBonusExtra.value,
     attack_bonus: attackBonusExtra.value,
-    slots_rest: slotsRest.value,
+    slots_rest: 'long_rest',
     preparation: preparation.value,
     slots_auto: automaticSlots.value,
-    ...(pactSlot.value?.total > 0 ? { pact_slots: { ...pactSlot.value } } : {}),
+    slot_pools: serializedPools,
     spells: spells.value.map(s => ({
       id: s.id,
       prepared: !!s.prepared,
@@ -301,23 +325,25 @@ function emitChange() {
       ...(s.counts_as_known ? { counts_as_known: true } : {}),
       ...(s.spellcasting_source ? { spellcasting_source: s.spellcasting_source } : {}),
     })),
-    slots: serializedSlots(),
+    // Compatibility mirror for level-up code that still reads the ordinary pool.
+    slots: serializedPools.long_rest,
   })
 }
 
 const {
-  localSlots,
-  activeSlots,
-  loadSlots,
-  serializedSlots,
+  slotPools,
+  activeSlotPools,
+  loadSlotPools,
+  serializedSlotPools,
   toggleSlot,
   setTotal,
+  replaceTotals,
   adjustSlotUsed,
 } = useSpellSlots({ canInteract, emitChange })
 
 const maxSlotLevel = computed(() => Math.max(
-  activeSlots.value.reduce((m, s) => Math.max(m, s.level), 0),
-  Number(pactSlot.value?.total) > 0 ? Number(pactSlot.value.level) : 0,
+  ...activeSlotPools.value.flatMap((pool) => pool.slots.map((slot) => Number(slot.level) || 0)),
+  0,
 ))
 const knownEntries = computed(() => spells.value
   .filter(spellCountsTowardKnown)
@@ -393,11 +419,6 @@ function setAttackBonus(v) {
   emitChange()
 }
 
-function setSlotsRest(v) {
-  slotsRest.value = v
-  emitChange()
-}
-
 function setPreparation(v) {
   preparation.value = !!v
   emitChange()
@@ -405,47 +426,28 @@ function setPreparation(v) {
 
 function setAutomaticSlots(value) {
   automaticSlots.value = !!value
-  if (automaticSlots.value) syncAutomaticSlotPools()
+  if (automaticSlots.value) syncAutomaticSlotPools(true)
   else emitChange()
 }
 
-function togglePactSlot(i) {
-  if (!canInteract.value || !pactSlot.value || i > pactSlot.value.total) return
-  pactSlot.value.used = i <= pactSlot.value.used ? i - 1 : i
-  emitChange()
-}
-
-function syncAutomaticSlotPools() {
+function syncAutomaticSlotPools(forceEmit = false) {
   if (!automaticSlots.value) return
   const entries = Array.isArray(props.values?.classes) ? props.values.classes : []
   const requiredIds = entries.flatMap((entry) => [entry?.id, entry?.subclass?.id]).filter((id) => id != null)
-  if (requiredIds.some((id) => !classItemMap[id])) return
-  const pools = computeSpellSlotPools(entries, classItemMap)
-  if (!pools.isCaster) return
-  let changed = false
-  const legacyPactUsed = !hadStoredPactSlots && pools.pact && pools.casterLevel === 0
-    ? Number(localSlots.value.find((slot) => slot.level === pools.pact.slotLevel)?.used) || 0
-    : 0
-  pools.totals.forEach((total, index) => {
-    const slot = localSlots.value[index]
-    if (!slot) return
-    const used = Math.min(Number(slot.used) || 0, total)
-    if (slot.total !== total || slot.used !== used) changed = true
-    slot.total = total
-    slot.used = used
-  })
-  if (pools.pact) {
-    const previous = pactSlot.value
-    const used = Math.min(previous?.used ?? legacyPactUsed, pools.pact.count)
-    const next = { level: pools.pact.slotLevel, total: pools.pact.count, used }
-    if (JSON.stringify(previous) !== JSON.stringify(next)) changed = true
-    pactSlot.value = next
-  } else if (pactSlot.value) {
-    pactSlot.value = null
-    changed = true
+  if (requiredIds.some((id) => !classItemMap[id])) {
+    if (forceEmit) emitChange()
+    return
   }
-  hadStoredPactSlots = true
-  if (changed) emitChange()
+  const pools = computeSpellSlotPools(entries, classItemMap)
+  if (!pools.isCaster) {
+    if (forceEmit) emitChange()
+    return
+  }
+  let changed = replaceTotals('long_rest', pools.totals)
+  const shortTotals = Array(9).fill(0)
+  if (pools.pact) shortTotals[pools.pact.slotLevel - 1] = pools.pact.count
+  changed = replaceTotals('short_rest', shortTotals) || changed
+  if (changed || forceEmit) emitChange()
 }
 
 async function loadDetails() {
@@ -649,7 +651,7 @@ function rollSpellHeal(entry, castLevel) {
 function availableSpellSlotOptions(entry) {
   const level = Number(entry?.item?.data?.lvl) || 0
   if (entry?.ref?.slotless) return [{ pool: 'slotless', level: Number(entry?.ref?.cast_level) || level, remaining: null }]
-  return availableSlotOptions(localSlots.value, pactSlot.value, level)
+  return availableSlotOptions(slotPools.value, level)
 }
 
 function useSpell(entry, slotOption) {
@@ -657,16 +659,11 @@ function useSpell(entry, slotOption) {
   const spellLevel = Number(entry?.item?.data?.lvl) || 0
   const option = typeof slotOption === 'object' && slotOption
     ? slotOption
-    : { pool: 'spellcasting', level: Number(slotOption) || 0 }
+    : { pool: 'long_rest', level: Number(slotOption) || 0 }
   if (spellLevel > 0 && !entry.ref?.slotless) {
     const available = availableSpellSlotOptions(entry)
     if (!available.some((candidate) => candidate.pool === option.pool && candidate.level === option.level)) return
-    if (option.pool === 'pact') {
-      pactSlot.value.used = Math.min(pactSlot.value.total, pactSlot.value.used + 1)
-      emitChange()
-    } else {
-      adjustSlotUsed(option.level, 1)
-    }
+    adjustSlotUsed(option.pool, option.level, 1)
   }
   charCtx.logSessionEvent?.({
     type: 'spell_used',
@@ -766,8 +763,9 @@ async function loadClassItems() {
     const response = await itemsApi.byIds(missing)
     for (const item of response?.items || []) classItemMap[item.id] = item
   }
-  if (!spellcastingSources.value.some((source) => source.key === selectedSourceKey.value)) {
-    selectedSourceKey.value = spellcastingSources.value[0]?.key || ''
+  if (!['all', 'other'].includes(activeSpellTab.value)
+    && !spellcastingSources.value.some((source) => source.key === activeSpellTab.value)) {
+    activeSpellTab.value = 'all'
   }
   syncAutomaticSlotPools()
 }
@@ -818,16 +816,9 @@ onMounted(async () => {
   statPath.value = raw.stat_path || ''
   saveBonusExtra.value = Number(raw.save_bonus) || 0
   attackBonusExtra.value = Number(raw.attack_bonus) || 0
-  slotsRest.value = raw.slots_rest || 'long_rest'
   preparation.value = !!raw.preparation
   automaticSlots.value = raw.slots_auto !== false
-  loadSlots(raw.slots || [])
-  hadStoredPactSlots = !!raw.pact_slots
-  pactSlot.value = raw.pact_slots ? {
-    level: Number(raw.pact_slots.level) || 1,
-    total: Math.max(0, Number(raw.pact_slots.total) || 0),
-    used: Math.max(0, Math.min(Number(raw.pact_slots.total) || 0, Number(raw.pact_slots.used) || 0)),
-  } : null
+  loadSlotPools(raw)
   await loadClassItems()
   const { school_suggest_id, stat_suggest_type_id } = props.block.content || {}
   const ensures = [school_suggest_id, stat_suggest_type_id, damageTypeSuggestTypeId.value]
