@@ -1,4 +1,5 @@
 import { computed, watch } from 'vue'
+import { itemsApi } from '@/shared/api/itemsApi'
 import {
   addStatusInstance,
   collectCharacterStatuses,
@@ -7,6 +8,7 @@ import {
   removeStatusInstancesByEffect,
   removeStatusInstance,
   removeStatusesBySource,
+  setStatusInstanceLevel,
   statusEffectLinks,
   statusItemIds,
   toggleLinkedStatus,
@@ -14,9 +16,21 @@ import {
 
 export function useCharacterStatuses(values, characterResources) {
   const itemsById = characterResources.itemsById
+  let catalogPromise = null
 
   async function ensureItems(ids = statusItemIds(values.value)) {
     return characterResources.ensureItems(ids)
+  }
+
+  async function ensureCatalog() {
+    if (catalogPromise) return catalogPromise
+    catalogPromise = itemsApi.listAll(15)
+      .then(response => {
+        characterResources.rememberItems(response?.items || [])
+        return response?.items || []
+      })
+      .catch(() => [])
+    return catalogPromise
   }
 
   watch(
@@ -24,6 +38,7 @@ export function useCharacterStatuses(values, characterResources) {
     () => { ensureItems() },
     { immediate: true },
   )
+  ensureCatalog()
 
   const entries = computed(() => collectCharacterStatuses(values.value, itemsById.value))
 
@@ -43,11 +58,16 @@ export function useCharacterStatuses(values, characterResources) {
   return {
     entries,
     ensureItems,
+    ensureCatalog,
     ensureLinks,
     links,
     normalized() { return normalizeStatusInstances(values.value?.states) },
     addManual(effect) { return addStatusInstance(values.value, effect, { source: { kind: 'manual' } }) },
     remove(uid) { return removeStatusInstance(values.value, uid) },
+    setLevel(uid, level) { return setStatusInstanceLevel(values.value, uid, level) },
+    itemByCode(code) {
+      return [...itemsById.value.values()].find(item => item?.data?.code === code) || null
+    },
     removeEffect(effect) { return removeStatusInstancesByEffect(values.value, effect) },
     removeBySource(source) { return removeStatusesBySource(values.value, source) },
     linkedActive(item, link, source) { return linkedStatusActive(values.value, item, link, source) },

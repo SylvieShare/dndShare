@@ -175,6 +175,14 @@ function closeEditor() {
 function addStatus(item) {
   pickerOpen.value = false
   charCtx.characterResources?.rememberItems?.([item])
+  if (item?.data?.code === 'exhaustion') {
+    setExhaustion({ ...normalizeExhaustion(exhaustionValue.value), level: Math.max(1, exhaustionLevel.value) })
+    return
+  }
+  if (item?.data?.code === 'inspiration') {
+    setInspiration(true)
+    return
+  }
   updateValue(ids.value.states, charCtx.characterStatuses?.addManual?.(item) || [])
 }
 function removeStatus(uid) {

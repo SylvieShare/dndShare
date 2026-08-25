@@ -115,15 +115,20 @@ print and encounter projections use the resolved total; encounter writes never
 overwrite the maximum's source structure.
 The desktop effect summary sits inside the shared icon/name/HP `BaseTile`,
 directly below HP, has 15 px left and bottom insets, and has no frame or
-background of its own. Active catalogue
+background of its own. The inset is owned by the rendered summary component,
+because placement styles cannot fall through its fragment roots. Active catalogue
 effects, non-zero exhaustion and heroic inspiration share one horizontally
 scrollable row of 64×64 icons. Catalogue
 cells render either raster `iconImageUrl` or SVG; missing media falls back to a
-monogram rather than a colour dot. Each icon has its permanent effect name
-below it; optional catalogue `level` metadata and the live exhaustion level add
-**Уровень N** to the same rounded caption. The summary has no title or add cells.
-Owners use the single pencil-labelled **Состояние** link to the left of the icon row to
-open the shared editor for catalogue effects, exhaustion and inspiration.
+monogram rather than a colour dot. A frameless copy block to the icon's right
+shows the item name, its dedicated `data.thesis`, and an optional live level.
+Owners add entries through the dashed **Состояние** cell. Clicking an active
+entry opens one row-action menu with handbook view and removal; exhaustion and
+catalogue effects that declare a level also expose increment/decrement actions.
+Catalogue levels are copied into runtime status parameters, so changing one
+character never mutates the shared item. Exhaustion and inspiration are system
+effect items with their own icons and covers, while their live level/flag remain
+in the existing rules-owned character fields for rest compatibility.
 The compact mobile strip
 keeps HP at its intrinsic number width and never lets
 the HP numbers shrink. Its right side contains a fixed **Статусы** action

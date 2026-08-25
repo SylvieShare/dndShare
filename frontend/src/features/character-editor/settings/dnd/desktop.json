@@ -134,13 +134,7 @@
                           },
                           {
                             "ref": "desktop_statuses",
-                            "kind": "block",
-                            "props": {
-                              "style": {
-                                "padding-left": "15px",
-                                "padding-bottom": "15px"
-                              }
-                            }
+                            "kind": "block"
                           }
                         ]
                       }

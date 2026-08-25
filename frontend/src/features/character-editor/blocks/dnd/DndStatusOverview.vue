@@ -1,72 +1,19 @@
 <template>
   <div ref="root" class="dso-root">
     <DndStatusOverviewView
-      v-if="summaryItems.length || showEditAction"
+      v-if="summaryItems.length || showAddAction"
       :items="summaryItems"
       :editable="canInteract"
-      :show-edit-action="showEditAction"
-      @edit="openSection"
+      :show-add-action="showAddAction"
+      @add="pickerOpen = true"
+      @view="viewStatus"
+      @remove="removeDisplayItem"
+      @increase-level="changeDisplayItemLevel($event, 1)"
+      @decrease-level="changeDisplayItemLevel($event, -1)"
       @show-tooltip="showStatusTooltip"
       @hide-tooltip="hideStatusTooltip"
     />
   </div>
-
-  <MorphEditorShell
-    v-if="editorOpen"
-    :origin-rect="originRect"
-    :origin-el="originEl"
-    :color="summaryColor"
-    :strip="false"
-    orientation="vertical"
-    :min-view-width="360"
-    @close="closeEditor"
-  >
-    <template #view>
-      <DndStatusOverviewView
-        :items="displayItems"
-        @show-tooltip="showStatusTooltip"
-        @hide-tooltip="hideStatusTooltip"
-      />
-    </template>
-
-    <template #editor>
-      <div class="dso-editor">
-        <div class="dso-tabs" role="tablist" aria-label="Редактирование статусов">
-          <button
-            v-for="tab in tabs"
-            :key="tab.id"
-            class="dso-tab"
-            :class="{ 'dso-tab--active': editorKind === tab.id }"
-            type="button"
-            role="tab"
-            :aria-selected="editorKind === tab.id"
-            @click="editorKind = tab.id"
-          >
-            <component :is="tab.icon" :size="16" :stroke-width="1.8" aria-hidden="true" />
-            <span>{{ tab.label }}</span>
-            <span v-if="tab.value" class="dso-tab-value" :class="`dso-tab-value--${tab.id}`">{{ tab.value }}</span>
-          </button>
-        </div>
-
-        <CharacterStatusEditor
-          v-if="editorKind === 'states'"
-          :statuses="statuses"
-          @add="pickerOpen = true"
-          @remove="removeStatus"
-        />
-        <DndExhaustionEditor
-          v-else-if="editorKind === 'exhaustion'"
-          :value="exhaustionValue"
-          @change="setExhaustion"
-        />
-        <DndInspirationEditor
-          v-else
-          :value="inspirationValue"
-          @change="setInspiration"
-        />
-      </div>
-    </template>
-  </MorphEditorShell>
 
   <ItemPickerModal
     v-if="pickerOpen"
@@ -76,6 +23,14 @@
     :z-index="3400"
     @close="pickerOpen = false"
     @pick="addStatus"
+  />
+
+  <ItemViewModal
+    v-if="viewItem"
+    :item="viewItem"
+    :item-id="Number(viewItem.id)"
+    :item-type-id="effectItemTypeId"
+    @close="viewItem = null"
   />
 
   <ItemTooltip
@@ -90,15 +45,10 @@
 
 <script setup>
 import { computed, inject, ref } from 'vue'
-import { Activity, BatteryLow, Sparkles } from '@lucide/vue'
-import CharacterStatusEditor from '@/features/character-editor/blocks/dnd/components/CharacterStatusEditor.vue'
-import DndExhaustionEditor from '@/features/character-editor/blocks/dnd/components/DndExhaustionEditor'
-import DndInspirationEditor from '@/features/character-editor/blocks/dnd/components/DndInspirationEditor'
 import DndStatusOverviewView from '@/features/character-editor/blocks/dnd/components/DndStatusOverviewView'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
-import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
-import { useMorphOrigin } from '@/features/character-editor/composables/useMorphOrigin'
+import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
 import { normalizeExhaustion } from '@/features/character-editor/blocks/dnd/lib/exhaustion'
 import { isInspirationActive } from '@/features/character-editor/blocks/dnd/lib/mobileStatus'
 
@@ -110,10 +60,9 @@ const props = defineProps({
 const emit = defineEmits(['update:value'])
 const charCtx = inject('charCtx', { ownerMode: true })
 const root = ref(null)
-const editorKind = ref('states')
 const pickerOpen = ref(false)
+const viewItem = ref(null)
 const tooltip = ref({ visible: false, title: '', desc: '', x: 0, top: null, bottom: null })
-const { editorOpen, originRect, originEl, openFrom, close } = useMorphOrigin()
 
 const ids = computed(() => ({
   states: props.block.content?.states_id || 'states',
@@ -130,9 +79,12 @@ const activeItems = computed(() => statuses.value.map(status => ({
   kind: 'states',
   value: status.title,
   desc: status.description,
+  thesis: status.item?.data?.thesis || status.description,
   color: status.color,
   item: status.item,
-  level: Math.max(0, Number(status.item?.data?.level) || 0),
+  level: Math.max(0, Number(status.params?.level ?? status.item?.data?.level) || 0),
+  adjustableLevel: Number(status.item?.data?.level) > 0,
+  maxLevel: Math.max(0, Number(status.item?.data?.max_level) || 0),
   polarity: status.polarity,
 })))
 const exhaustionValue = computed(() => props.values?.[ids.value.exhaustion] || { level: 0 })
@@ -141,57 +93,52 @@ const exhaustionLevel = computed(() => normalizedExhaustion.value.level)
 const exhaustionEffects = computed(() => normalizedExhaustion.value.effects.slice(0, exhaustionLevel.value))
 const inspirationValue = computed(() => props.values?.[ids.value.inspiration] ?? false)
 const inspirationActive = computed(() => isInspirationActive(inspirationValue.value))
+const exhaustionItem = computed(() => charCtx.characterStatuses?.itemByCode?.('exhaustion') || null)
+const inspirationItem = computed(() => charCtx.characterStatuses?.itemByCode?.('inspiration') || null)
 const displayItems = computed(() => [
   ...activeItems.value,
   ...(exhaustionLevel.value > 0 ? [{
     id: 'exhaustion',
     kind: 'exhaustion',
-    value: 'Истощение',
+    value: exhaustionItem.value?.name || 'Истощение',
     desc: exhaustionEffects.value.join(' · '),
-    color: 'var(--danger)',
+    thesis: exhaustionItem.value?.data?.thesis || 'Накопленные уровни постепенно ослабляют персонажа.',
+    color: exhaustionItem.value?.data?.color || 'var(--danger)',
     level: exhaustionLevel.value,
+    adjustableLevel: true,
+    maxLevel: 6,
+    item: exhaustionItem.value,
   }] : []),
   ...(inspirationActive.value ? [{
     id: 'inspiration',
     kind: 'inspiration',
-    value: 'Вдохновение',
-    color: 'var(--accent)',
+    value: inspirationItem.value?.name || 'Вдохновение',
+    desc: inspirationItem.value?.data?.desc || '',
+    thesis: inspirationItem.value?.data?.thesis || 'Даёт преимущество на один бросок к20.',
+    color: inspirationItem.value?.data?.color || 'var(--accent)',
+    item: inspirationItem.value,
   }] : []),
 ])
 const canInteract = computed(() => !!charCtx.ownerMode)
 const displayMode = computed(() => props.block.content?.display || 'all')
 const summaryItems = computed(() => (displayMode.value === 'trigger' ? [] : displayItems.value))
-const showEditAction = computed(() => canInteract.value && displayMode.value !== 'summary')
-const summaryColor = computed(() => {
-  if (exhaustionLevel.value > 0) return 'var(--danger)'
-  if (inspirationActive.value) return 'var(--accent)'
-  return activeItems.value[0]?.color || 'var(--accent)'
-})
-const tabs = computed(() => [
-  { id: 'states', label: 'Эффекты', icon: Activity, value: statuses.value.length || '' },
-  { id: 'exhaustion', label: 'Истощение', icon: BatteryLow, value: exhaustionLevel.value || '' },
-  { id: 'inspiration', label: 'Вдохновение', icon: Sparkles, value: inspirationActive.value ? '✦' : '' },
-])
+const showAddAction = computed(() => canInteract.value && displayMode.value !== 'summary')
 
 function updateValue(id, value) {
   emit('update:value', id, value)
 }
 
-function openSection(kind) {
-  if (!canInteract.value) return
-  editorKind.value = kind
-  hideStatusTooltip()
-  openFrom(root.value)
-}
-
-function closeEditor() {
-  hideStatusTooltip()
-  close()
-}
-
 function addStatus(item) {
   pickerOpen.value = false
   charCtx.characterResources?.rememberItems?.([item])
+  if (item?.data?.code === 'exhaustion') {
+    setExhaustion({ ...normalizedExhaustion.value, level: Math.max(1, exhaustionLevel.value) })
+    return
+  }
+  if (item?.data?.code === 'inspiration') {
+    setInspiration(true)
+    return
+  }
   updateValue(ids.value.states, charCtx.characterStatuses?.addManual?.(item) || [])
 }
 
@@ -205,6 +152,27 @@ function setExhaustion(value) {
 
 function setInspiration(value) {
   updateValue(ids.value.inspiration, value)
+}
+
+function viewStatus(item) {
+  viewItem.value = item?.item || null
+}
+
+function removeDisplayItem(item) {
+  if (item.kind === 'exhaustion') setExhaustion({ ...normalizedExhaustion.value, level: 0 })
+  else if (item.kind === 'inspiration') setInspiration(false)
+  else removeStatus(item.id)
+}
+
+function changeDisplayItemLevel(item, delta) {
+  if (item.kind === 'exhaustion') {
+    const level = Math.max(1, Math.min(6, exhaustionLevel.value + delta))
+    setExhaustion({ ...normalizedExhaustion.value, level })
+    return
+  }
+  const maxLevel = item.maxLevel || 99
+  const level = Math.max(1, Math.min(maxLevel, (Number(item.level) || 1) + delta))
+  updateValue(ids.value.states, charCtx.characterStatuses?.setLevel?.(item.id, level) || [])
 }
 
 function showStatusTooltip(event, item) {
@@ -228,36 +196,4 @@ function hideStatusTooltip() {
 
 <style scoped>
 .dso-root { min-width: 0; }
-.dso-editor { border-top: 1px solid var(--border); background: var(--bg); }
-.dso-tabs {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 5px;
-  padding: 10px 12px;
-  border-bottom: 1px solid var(--border);
-  background: var(--surface);
-}
-.dso-tab {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  min-width: 0;
-  min-height: 34px;
-  padding: 0 7px;
-  border: 1px solid transparent;
-  border-radius: var(--r-sm);
-  background: transparent;
-  color: var(--text-muted);
-  font: inherit;
-  font-size: 11px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: border-color 0.12s, background 0.12s, color 0.12s;
-}
-.dso-tab span:not(.dso-tab-value) { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.dso-tab--active { border-color: color-mix(in srgb, var(--accent) 35%, var(--border)); background: color-mix(in srgb, var(--accent) 10%, transparent); color: var(--text-1); }
-.dso-tab-value { flex: 0 0 auto; color: var(--text-muted); font-size: 10px; }
-.dso-tab-value--exhaustion { color: var(--danger); }
-.dso-tab-value--inspiration { color: var(--accent-soft); }
 </style>

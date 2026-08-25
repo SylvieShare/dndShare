@@ -107,10 +107,6 @@ describe('D&D desktop sheet schema', () => {
     expect(hpColumn.children[0].props?.grow).toBeUndefined()
     expect(hpColumn.children[0].props?.basis).toBeUndefined()
     expect(summaryTile.children[1]).toBe(statuses)
-    expect(statuses.props?.style).toEqual({
-      'padding-left': '15px',
-      'padding-bottom': '15px',
-    })
     expect(sidebar.children.some(child => child.ref === 'desktop_statuses')).toBe(false)
     expect(separateExhaustion).toBeNull()
     expect(separateStates).toBeNull()

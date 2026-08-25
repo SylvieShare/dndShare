@@ -6,6 +6,7 @@ import {
   removeStatusInstancesByEffect,
   statusEffectActive,
   removeStatusesBySource,
+  setStatusInstanceLevel,
   statusEffectLinks,
   toggleLinkedStatus,
 } from './characterStatuses'
@@ -57,6 +58,15 @@ describe('character statuses', () => {
     const once = addStatusInstance({ states: [] }, first)
     expect(addStatusInstance({ states: once }, first)).toHaveLength(1)
     expect(addStatusInstance({ states: once }, second)).toMatchObject([{ effect_id: 2, concentration: true }])
+  })
+
+  it('keeps a level on the runtime instance and changes it without mutating the item', () => {
+    const effect = { id: 4, data: { level: 2 } }
+    const states = addStatusInstance({ states: [] }, effect)
+
+    expect(states[0].params.level).toBe(2)
+    expect(setStatusInstanceLevel({ states }, states[0].uid, 3)[0].params.level).toBe(3)
+    expect(effect.data.level).toBe(2)
   })
 
   it('drops concentration when a new effect blocks maintaining it', () => {

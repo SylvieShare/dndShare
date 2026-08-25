@@ -79,11 +79,12 @@ export function createStatusInstance(effect, options = {}) {
   if (!Number.isFinite(effectId)) return null
   const source = { kind: 'manual', ...(options.source || {}) }
   const duration = options.duration || effect?.data?.duration || { kind: 'manual' }
+  const initialLevel = Math.max(0, Number(effect?.data?.level) || 0)
   return {
     uid: makeUid(effectId),
     effect_id: effectId,
     source,
-    params: { ...(options.params || {}) },
+    params: { ...(initialLevel > 0 ? { level: initialLevel } : {}), ...(options.params || {}) },
     duration,
     concentration: options.concentration ?? !!effect?.data?.concentration,
   }
@@ -103,6 +104,15 @@ export function addStatusInstance(values, effect, options = {}) {
 
 export function removeStatusInstance(values, uid) {
   return normalizeStatusInstances(values?.[STATUS_VALUE_ID]).filter(row => row.uid !== String(uid))
+}
+
+export function setStatusInstanceLevel(values, uid, level) {
+  const nextLevel = Math.max(1, Math.floor(Number(level) || 1))
+  return normalizeStatusInstances(values?.[STATUS_VALUE_ID]).map(row => (
+    row.uid === String(uid)
+      ? { ...row, params: { ...row.params, level: nextLevel } }
+      : row
+  ))
 }
 
 export function statusEffectActive(values, effect) {

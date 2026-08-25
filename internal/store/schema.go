@@ -178,6 +178,9 @@ var schemaStatusEffectLevelsSQL string
 //go:embed schema/53_activity_restrictions.sql
 var schemaActivityRestrictionsSQL string
 
+//go:embed schema/54_status_effect_catalog.sql
+var schemaStatusEffectCatalogSQL string
+
 var schemaParts = []struct {
 	name string
 	sql  string
@@ -237,6 +240,7 @@ var schemaParts = []struct {
 	{"status-effects", schemaStatusEffectsSQL},
 	{"status-effect-levels", schemaStatusEffectLevelsSQL},
 	{"activity-restrictions", schemaActivityRestrictionsSQL},
+	{"status-effect-catalog", schemaStatusEffectCatalogSQL},
 }
 
 func applySchema(ctx context.Context, pool *pgxpool.Pool) error {
