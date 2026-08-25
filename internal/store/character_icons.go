@@ -25,6 +25,10 @@ const characterIconWriteAccessSQL = `SELECT character.user_id, character.icon_im
     )
   FOR UPDATE`
 
+const clearCharacterIconSQL = `UPDATE dndshare."char"
+   SET icon_image_id = NULL, changed_at = now()
+ WHERE id = $1`
+
 // SetCharacterIconImage registers an uploaded object and atomically assigns it
 // when the actor owns the character or is the GM of its session. The previous
 // image is returned for post-commit cleanup.
@@ -67,4 +71,31 @@ func (s *Store) SetCharacterIconImage(ctx context.Context, charID, actorUserID i
 		return 0, nil, err
 	}
 	return imageID, oldImageID, nil
+}
+
+// ClearCharacterIconImage detaches the compact character icon for an owner or
+// session GM and returns the previous image for post-commit storage cleanup.
+func (s *Store) ClearCharacterIconImage(ctx context.Context, charID, actorUserID int64) (*int64, error) {
+	tx, err := s.pool.Begin(ctx)
+	if err != nil {
+		return nil, err
+	}
+	defer tx.Rollback(ctx)
+
+	var ownerUserID int64
+	var oldImageID *int64
+	err = tx.QueryRow(ctx, characterIconWriteAccessSQL, charID, actorUserID).Scan(&ownerUserID, &oldImageID)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return nil, ErrNotFound
+	}
+	if err != nil {
+		return nil, err
+	}
+	if _, err := tx.Exec(ctx, clearCharacterIconSQL, charID); err != nil {
+		return nil, err
+	}
+	if err := tx.Commit(ctx); err != nil {
+		return nil, err
+	}
+	return oldImageID, nil
 }

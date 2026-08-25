@@ -42,7 +42,9 @@ HTTP-сервиса. Liquibase и отдельного Kotlin backend в про�
 template id, `source_version_id`, JSON документа, public/deleted flags,
 техническую `version`, timestamps и nullable `icon_image_id → storage_image`.
 Иконка является отдельным квадратным представлением персонажа для компактных
-списков; основной портрет остаётся в каноническом JSON `values.ava`.
+списков; основной портрет остаётся в каноническом JSON `values.ava`. Иконку
+можно атомарно заменить или снять; отвязанный объект очищается только после
+проверки остальных ссылок на `storage_image`.
 
 Игровая система определяется через `source_version → source`. Создание
 персонажа требует конкретный `source_version_id`; сервер не подставляет версию

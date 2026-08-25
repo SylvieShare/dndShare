@@ -302,7 +302,18 @@
       "effect_item_type_id": 15,
       "exhaustion_id": "exhaustion",
       "inspiration_id": "inspiration",
-      "display": "all"
+      "display": "summary"
+    }
+  },
+  "desktop_status_trigger": {
+    "id": "desktop_status_trigger",
+    "type": "DND_STATUS_OVERVIEW",
+    "content": {
+      "states_id": "states",
+      "effect_item_type_id": 15,
+      "exhaustion_id": "exhaustion",
+      "inspiration_id": "inspiration",
+      "display": "trigger"
     }
   },
   "weapon": {

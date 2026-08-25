@@ -23,35 +23,6 @@
 
     <AppModalFrame v-if="windowOpen" title="Персонаж" @close="close">
       <div class="dciw-body">
-        <FormField label="Аватар" vertical>
-          <div
-            ref="avaEl"
-            class="dciw-ava"
-            :class="{ 'dciw-ava--drag': avaDragging, 'dciw-ava--empty': !avaUrl }"
-            @click="avaMenuOpen = !avaMenuOpen"
-            @dragover.prevent="avaDragging = true"
-            @dragleave.prevent="avaDragging = false"
-            @drop.prevent="onAvaDrop"
-          >
-            <img v-if="avaUrl" :src="avaUrl" class="dciw-ava-img" alt="avatar" />
-            <span v-else-if="avaUploading" class="dciw-ava-spinner"></span>
-            <span v-else class="dciw-ava-hint">Фото</span>
-            <div v-if="avaUrl" class="dciw-ava-overlay">Изменить</div>
-            <input ref="avaInput" type="file" accept="image/*" style="display:none" @change="onAvaChange" />
-            <input ref="iconInput" type="file" accept=".png,.webp,image/png,image/webp" style="display:none" @change="onIconChange" />
-          </div>
-          <BasePopover v-model:open="avaMenuOpen" :anchor="avaEl" placement="bottom-start" :min-width="180" :z-index="3200">
-            <div class="dciw-ava-actions" role="menu" aria-label="Действия с портретом">
-              <button type="button" role="menuitem" @click="chooseAvaFile">Загрузить изображение</button>
-              <button type="button" role="menuitem" @click="chooseIconFile">Загрузить иконку</button>
-              <button v-if="avaUrl" type="button" role="menuitem" @click="cropCurrentAva">Кадрировать</button>
-              <div v-if="avaUrl" class="dciw-ava-separator" />
-              <button v-if="avaUrl" type="button" role="menuitem" class="dciw-ava-danger" @click="clearAva">Очистить</button>
-            </div>
-          </BasePopover>
-          <span v-if="avaError" class="dciw-error">{{ avaError }}</span>
-        </FormField>
-
         <FormField label="Имя" vertical>
           <FormTextInput
             ref="nameInput"
@@ -132,19 +103,12 @@
       </template>
     </AppModalFrame>
 
-    <AvatarCropModal
-      v-if="avaCropSource"
-      :src="avaCropSource"
-      :aspect="1"
-      @close="closeAvaCrop"
-      @crop="uploadAvaCrop"
-    />
   </div>
 </template>
 
 <script setup>
 import { computed, inject, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
-import { AppModalFrame, BasePopover } from '@sylvieshare/share-ui'
+import { AppModalFrame } from '@sylvieshare/share-ui'
 import { FormActionButtons } from '@sylvieshare/share-ui'
 import { FormField } from '@sylvieshare/share-ui'
 import { FormNumberInput } from '@sylvieshare/share-ui'
@@ -153,7 +117,6 @@ import { ValueSelect } from '@sylvieshare/share-ui'
 import { classEntriesOf, classesLabel } from '@/features/character-editor/blocks/dnd/lib/levelUp'
 import { fetchGet } from '@/shared/api/http'
 import { contentScopeQuery } from '@/shared/api/contentSourcesApi'
-import AvatarCropModal from '@/features/character-editor/components/AvatarCropModal.vue'
 
 const RACE_TYPE = 8
 const CLASS_TYPE = 9
@@ -175,29 +138,11 @@ const races = ref([])
 const classes = ref([])
 const subraces = ref([])
 
-// ─── avatar (own block, edited here too) ───────────────────────────────────
-const avaInput = ref(null)
-const iconInput = ref(null)
-const avaEl = ref(null)
-const avaDragging = ref(false)
-const avaUploading = ref(false)
-const avaValue = ref(null)
-const avaError = ref('')
-const avaMenuOpen = ref(false)
-const avaCropSource = ref('')
-let avaCropObjectUrl = ''
-const avaUrl = computed(() => {
-  const v = avaValue.value
-  if (!v) return null
-  return v.url || null
-})
-
 const nameId     = computed(() => props.block.content?.name_id     || 'name')
 const raceId     = computed(() => props.block.content?.race_id     || 'race')
 const subraceId  = computed(() => props.block.content?.subrace_id  || 'subrace')
 const classesId  = computed(() => props.block.content?.classes_id  || 'classes')
 const lvlId      = computed(() => props.block.content?.lvl_id      || 'lvl')
-const avatarId   = computed(() => props.block.content?.avatar_id   || 'ava')
 
 function nameOf(v) {
   return v && typeof v === 'object' ? (v.name ?? '') : ''
@@ -288,7 +233,6 @@ function onIdentityEditRequest() {
 onMounted(() => window.addEventListener('dndshare:edit-character-identity', onIdentityEditRequest))
 onBeforeUnmount(() => {
   window.removeEventListener('dndshare:edit-character-identity', onIdentityEditRequest)
-  clearAvaCropObjectUrl()
 })
 
 watch(windowOpen, async (open) => {
@@ -303,9 +247,6 @@ watch(windowOpen, async (open) => {
   form.classes = entries.length
     ? entries.map((e) => ({ classId: e.id, subclassId: e.subclass?.id ?? '', level: e.level, subclasses: [] }))
     : [{ classId: '', subclassId: '', level: 1, subclasses: [] }]
-  avaValue.value  = props.values?.[avatarId.value] ?? null
-  avaDragging.value = false
-  avaError.value = ''
   await ensureBaseItems()
   await Promise.all([
     loadSubraces(form.raceId || null),
@@ -314,109 +255,6 @@ watch(windowOpen, async (open) => {
   await nextTick()
   nameInput.value?.focus?.()
 })
-
-// ─── avatar upload ─────────────────────────────────────────────────────────
-function onAvaDrop(e) {
-  avaDragging.value = false
-  const file = e.dataTransfer.files[0]
-  if (file && file.type.startsWith('image/')) openAvaFileCrop(file)
-}
-function onAvaChange(e) {
-  const file = e.target.files[0]
-  if (file) openAvaFileCrop(file)
-  e.target.value = ''
-}
-function onIconChange(e) {
-  const file = e.target.files[0]
-  if (file) uploadIcon(file)
-  e.target.value = ''
-}
-function chooseAvaFile() {
-  avaMenuOpen.value = false
-  avaInput.value?.click()
-}
-function chooseIconFile() {
-  avaMenuOpen.value = false
-  iconInput.value?.click()
-}
-function clearAvaCropObjectUrl() {
-  if (avaCropObjectUrl) URL.revokeObjectURL(avaCropObjectUrl)
-  avaCropObjectUrl = ''
-}
-function setAvaCropSource(blob) {
-  clearAvaCropObjectUrl()
-  avaCropObjectUrl = URL.createObjectURL(blob)
-  avaCropSource.value = avaCropObjectUrl
-}
-function openAvaFileCrop(file) {
-  avaMenuOpen.value = false
-  avaError.value = ''
-  if (file.size > 8 * 1024 * 1024) {
-    avaError.value = 'Файл слишком большой (максимум 8 МБ)'
-    return
-  }
-  setAvaCropSource(file)
-}
-async function cropCurrentAva() {
-  avaMenuOpen.value = false
-  avaError.value = ''
-  try {
-    const source = avaValue.value?.upload_id
-      ? `/api/storage/images/${avaValue.value.upload_id}`
-      : avaUrl.value
-    const response = await fetch(source)
-    if (!response.ok) throw new Error(String(response.status))
-    setAvaCropSource(await response.blob())
-  } catch {
-    avaError.value = 'Не удалось открыть изображение для кадрирования'
-  }
-}
-function closeAvaCrop() {
-  avaCropSource.value = ''
-  clearAvaCropObjectUrl()
-}
-function uploadAvaCrop(blob) {
-  closeAvaCrop()
-  uploadAva(new File([blob], 'portrait.webp', { type: blob.type || 'image/webp' }))
-}
-async function uploadIcon(file) {
-  avaError.value = ''
-  try {
-    if (typeof charCtx.uploadCharacterIcon !== 'function') throw new Error('icon upload is unavailable')
-    await charCtx.uploadCharacterIcon(file)
-  } catch (error) {
-    avaError.value = error?.message || 'Не удалось загрузить иконку'
-  }
-}
-function clearAva() {
-  avaMenuOpen.value = false
-  avaValue.value = null
-  avaError.value = ''
-}
-async function uploadAva(file) {
-  avaError.value = ''
-  if (file.size > 8 * 1024 * 1024) {
-    avaError.value = 'Файл слишком большой (максимум 8 МБ)'
-    return
-  }
-  avaUploading.value = true
-  const prev = avaValue.value
-  avaValue.value = null
-  try {
-    const formData = new FormData()
-    formData.append('file', file)
-    if (prev?.upload_id) formData.append('old_upload_id', prev.upload_id)
-    const res = await fetch('/api/storage/images', { method: 'POST', body: formData })
-    if (!res.ok) throw new Error(res.status)
-    const data = await res.json()
-    avaValue.value = { url: data.url, upload_id: data.upload_id }
-  } catch {
-    avaValue.value = prev
-    avaError.value = 'Не удалось загрузить изображение'
-  } finally {
-    avaUploading.value = false
-  }
-}
 
 function save() {
   emit('update:value', nameId.value, form.name)
@@ -440,7 +278,6 @@ function save() {
     emit('update:value', lvlId.value, { exp: 0, ...(lvlVal && typeof lvlVal === 'object' ? lvlVal : {}), level: Math.min(20, sum) })
   }
 
-  emit('update:value', avatarId.value, avaValue.value)
   windowOpen.value = false
 }
 
@@ -467,11 +304,6 @@ function close() {
   width: 100%;
   min-width: 0;
   overflow: hidden;
-}
-
-.dciw-error {
-  color: var(--danger);
-  font-size: 12px;
 }
 
 .dci-name {
@@ -569,53 +401,4 @@ function close() {
 .dciw-cls-total { font-size: 11px; color: var(--text-muted); }
 .dciw-cls-total b { color: var(--text-2); }
 
-/* avatar uploader */
-.dciw-ava {
-  position: relative;
-  width: 96px;
-  height: 96px;
-  border-radius: 14px;
-  overflow: hidden;
-  cursor: pointer;
-  background-color: color-mix(in srgb, var(--accent) 18%, var(--surface));
-  display: grid;
-  place-items: center;
-  transition: box-shadow 0.2s ease;
-}
-.dciw-ava--empty { border: 1px dashed var(--border-strong); }
-@media (hover: hover) { .dciw-ava:hover { box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 50%, transparent); } }
-.dciw-ava--drag { box-shadow: 0 0 0 2px var(--accent), 0 0 20px color-mix(in srgb, var(--accent) 40%, transparent); }
-
-.dciw-ava-img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
-.dciw-ava-hint { font-size: 12px; letter-spacing: 0.04em; color: color-mix(in srgb, var(--accent) 60%, transparent); }
-.dciw-ava-overlay {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  background: color-mix(in srgb, var(--scrim) 81%, transparent);
-  color: color-mix(in srgb, var(--text-on-accent) 85%, transparent);
-  font-size: 12px;
-  opacity: 0;
-  transition: opacity 0.18s ease;
-}
-@media (hover: hover) { .dciw-ava:hover .dciw-ava-overlay { opacity: 1; } }
-.dciw-ava-spinner {
-  width: 26px;
-  height: 26px;
-  border: 3px solid color-mix(in srgb, var(--accent) 25%, transparent);
-  border-top-color: color-mix(in srgb, var(--accent) 75%, transparent);
-  border-radius: 50%;
-  animation: dciw-spin 0.8s linear infinite;
-}
-.dciw-ava-actions { display: flex; flex-direction: column; gap: 2px; padding: 5px; }
-.dciw-ava-actions button {
-  width: 100%; padding: 8px 10px; border: 0; border-radius: 7px;
-  background: transparent; color: var(--text-2); font: inherit; font-size: 12px;
-  text-align: left; cursor: pointer;
-}
-.dciw-ava-actions button:hover { background: var(--surface-raised); color: var(--text-1); }
-.dciw-ava-actions .dciw-ava-danger { color: var(--danger); }
-.dciw-ava-separator { height: 1px; margin: 3px 5px; background: var(--border); }
-@keyframes dciw-spin { to { transform: rotate(360deg); } }
 </style>

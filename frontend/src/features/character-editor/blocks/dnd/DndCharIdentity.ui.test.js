@@ -46,7 +46,11 @@ describe('character identity summary', () => {
       }
       return null
     }
-    const summary = findNode(base.content, node => node.children?.[0]?.ref === 'character_icon')
+    const summary = findNode(
+      base.content,
+      node => node.type === 'column'
+        && node.children?.map(child => child.ref).join(',') === 'char_identity,hp',
+    )
     const block = layoutNodeToBlock(summary, schema)
     const values = {
       name: 'Лиссара',
@@ -68,5 +72,11 @@ describe('character identity summary', () => {
     expect(source).toContain('<div class="dci-main-row">')
     expect(source).toContain('<span v-if="classPart" class="dci-classes" :title="classPart">{{ classPart }}</span>')
     expect(source).toMatch(/\.dci-classes \{[^}]*max-width: 100%;[^}]*min-width: 0;[^}]*overflow: hidden;[^}]*text-overflow: ellipsis;[^}]*white-space: nowrap;/)
+  })
+
+  it('keeps portrait and icon editing out of the identity form', () => {
+    expect(source).not.toContain('label="Аватар"')
+    expect(source).not.toContain('<AvatarCropModal')
+    expect(source).not.toContain('uploadCharacterIcon')
   })
 })

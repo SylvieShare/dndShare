@@ -89,7 +89,9 @@ describe('D&D desktop sheet schema', () => {
     const statuses = findNode(base?.content, node => node.ref === 'desktop_statuses')
     const summaryTile = findNode(
       base?.content,
-      node => node.props?.tile === true && findNode(node, child => child.ref === 'character_icon'),
+      node => node.props?.tile === true
+        && node.children?.[0]?.type === 'row'
+        && node.children?.[1]?.ref === 'desktop_statuses',
     )
     const hpColumn = findNode(summaryTile, node => node.type === 'column' && node.children?.some(child => child.ref === 'hp'))
     const sidebar = findNode(
@@ -102,7 +104,8 @@ describe('D&D desktop sheet schema', () => {
     expect(statuses).toBeTruthy()
     expect(summaryTile.props?.tile).toBe(true)
     expect(summaryTile.type).toBe('column')
-    expect(summaryTile.children[0]?.children[0]?.ref).toBe('character_icon')
+    const iconColumn = findNode(summaryTile, node => node.type === 'column' && node.children?.some(child => child.ref === 'character_icon'))
+    expect(iconColumn.children.map(child => child.ref)).toEqual(['character_icon', 'desktop_status_trigger'])
     expect(hpColumn.children.map(child => child.ref)).toEqual(['char_identity', 'hp'])
     expect(hpColumn.children[0].props?.grow).toBeUndefined()
     expect(hpColumn.children[0].props?.basis).toBeUndefined()
@@ -117,8 +120,12 @@ describe('D&D desktop sheet schema', () => {
         effect_item_type_id: 15,
         exhaustion_id: 'exhaustion',
         inspiration_id: 'inspiration',
-        display: 'all',
+        display: 'summary',
       },
+    })
+    expect(schema.blocks.desktop_status_trigger).toMatchObject({
+      type: 'DND_STATUS_OVERVIEW',
+      content: { display: 'trigger' },
     })
     expect(schema.blocks.desktop_status_editor).toBeUndefined()
   })

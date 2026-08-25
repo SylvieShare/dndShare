@@ -19,6 +19,7 @@ func init() { registerRoutes((*Server).routesCharacterIcons) }
 
 func (s *Server) routesCharacterIcons(mux *http.ServeMux) {
 	mux.HandleFunc("POST /api/char/{uuid}/icon-image", s.handleUploadCharacterIconImage)
+	mux.HandleFunc("DELETE /api/char/{uuid}/icon-image", s.handleClearCharacterIconImage)
 }
 
 func (s *Server) handleUploadCharacterIconImage(w http.ResponseWriter, r *http.Request) {
@@ -83,6 +84,33 @@ func (s *Server) handleUploadCharacterIconImage(w http.ResponseWriter, r *http.R
 	writeJSON(w, http.StatusOK, map[string]any{
 		"iconImageId":  imageID,
 		"iconImageUrl": stored.URL,
+	})
+}
+
+func (s *Server) handleClearCharacterIconImage(w http.ResponseWriter, r *http.Request) {
+	uid, character, ok := s.loadCharWritable(w, r)
+	if !ok {
+		return
+	}
+
+	replaced, err := s.store.ClearCharacterIconImage(r.Context(), character.ID, uid)
+	if errors.Is(err, store.ErrNotFound) {
+		unauthorized(w)
+		return
+	}
+	if err != nil {
+		serverError(w, err)
+		return
+	}
+	s.cleanupItemStorageImage(r.Context(), replaced)
+	if sessionID, attached, lookupErr := s.store.SessionIDForCharacter(r.Context(), character.ID); lookupErr != nil {
+		log.Printf("lookup session for cleared character icon %d: %v", character.ID, lookupErr)
+	} else if attached {
+		s.publishSessionParticipants(sessionID)
+	}
+	writeJSON(w, http.StatusOK, map[string]any{
+		"iconImageId":  nil,
+		"iconImageUrl": nil,
 	})
 }
 

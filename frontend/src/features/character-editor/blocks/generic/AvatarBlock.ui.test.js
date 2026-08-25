@@ -9,37 +9,34 @@ const cropSource = readFileSync(fileURLToPath(new URL('../../components/AvatarCr
 const viewSource = readFileSync(fileURLToPath(new URL('../../pages/ViewCharacter.vue', import.meta.url)), 'utf8')
 
 describe('character portrait UI', () => {
-  it('opens upload, crop and clear actions from both portrait editors', () => {
-    for (const source of [avatarSource, identitySource]) {
-      expect(source).toContain('Загрузить изображение')
-      expect(source).toContain('Кадрировать')
-      expect(source).toContain('Очистить')
-      expect(source).toContain('<AvatarCropModal')
-      expect(source).toContain('/api/storage/images/${')
-      expect(source).toContain('Загрузить иконку')
-      expect(source).toContain('uploadCharacterIcon')
-    }
+  it('keeps portrait upload and cropping in the Personality portrait editor', () => {
+    expect(avatarSource).toContain('Загрузить изображение')
+    expect(avatarSource).toContain('Кадрировать')
+    expect(avatarSource).toContain('Очистить')
+    expect(avatarSource).toContain('<AvatarCropModal')
+    expect(avatarSource).toContain('/api/storage/images/${')
+    expect(identitySource).not.toContain('<AvatarCropModal')
   })
 
-  it('uploads the list and session icon directly without opening the crop modal', () => {
-    for (const source of [avatarSource, identitySource]) {
-      expect(source).toContain('if (file) uploadIcon(file)')
-      expect(source).not.toContain("setCropSource(file, file.name || 'character-icon.webp'")
-      expect(source).not.toContain("setAvaCropSource(file, 'icon')")
-    }
+  it('opens direct upload and clear actions from the compact header icon', () => {
+    expect(characterIconSource).toContain('Изменить иконку персонажа')
+    expect(characterIconSource).toContain('>Загрузить</button>')
+    expect(characterIconSource).toContain('>Очистить</button>')
+    expect(characterIconSource).toContain('uploadCharacterIcon(file)')
+    expect(characterIconSource).toContain('clearCharacterIcon()')
+    expect(characterIconSource).not.toContain('AvatarCropModal')
   })
 
   it('uses the character icon in the sheet summary and falls back to the portrait', () => {
     expect(characterIconSource).toContain('charCtx.iconImageUrl || props.values?.ava?.url')
     expect(characterIconSource).toMatch(/\.dci-icon \{[\s\S]*?width: 88px;[\s\S]*?height: 88px;/)
-    expect(characterIconSource).not.toMatch(/\.dci-icon \{[\s\S]*?background:/)
-    expect(characterIconSource).not.toMatch(/\.dci-icon \{[\s\S]*?border:/)
-    expect(characterIconSource).toContain('align-self: flex-start')
+    expect(characterIconSource).toContain('background: none')
+    expect(characterIconSource).toContain('border: 0')
     expect(characterIconSource).toContain('margin-top: 15px')
   })
 
   it('renders portrait action popovers above the embedded session sheet', () => {
-    for (const source of [avatarSource, identitySource]) {
+    for (const source of [avatarSource, characterIconSource]) {
       expect(source).toContain(':z-index="3200"')
     }
   })

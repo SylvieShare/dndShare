@@ -1,5 +1,5 @@
 <template>
-  <div ref="root" class="dso-root">
+  <div ref="root" class="dso-root" :class="`dso-root--${displayMode}`">
     <DndStatusOverviewView
       v-if="summaryItems.length || showAddAction"
       :items="summaryItems"
@@ -196,4 +196,6 @@ function hideStatusTooltip() {
 
 <style scoped>
 .dso-root { min-width: 0; }
+.dso-root--trigger :deep(.dsov) { gap: 0; padding: 10px 0 15px 15px; }
+.dso-root--trigger :deep(.dsov-add) { width: 88px; height: 44px; }
 </style>

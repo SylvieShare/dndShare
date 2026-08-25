@@ -53,6 +53,7 @@ export function useCharacterData(uuid, isMobile) {
     iconImageId,
     iconImageUrl,
     uploadCharacterIcon,
+    clearCharacterIcon,
     characterResources,
     characterStatuses,
     characterDefenses,
@@ -281,6 +282,16 @@ export function useCharacterData(uuid, isMobile) {
     iconImageId.value = result.iconImageId ?? null
     iconImageUrl.value = result.iconImageUrl ?? null
     return result
+  }
+
+  async function clearCharacterIcon() {
+    const response = await fetch(`/api/char/${uuid}/icon-image`, { method: 'DELETE' })
+    if (!response.ok) {
+      const payload = await response.json().catch(() => ({}))
+      throw new Error(payload?.desc || String(response.status))
+    }
+    iconImageId.value = null
+    iconImageUrl.value = null
   }
 
   function invalidateTabCache() {

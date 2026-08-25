@@ -28,6 +28,7 @@ func TestHandlerRegistersAllRoutesWithoutConflict(t *testing.T) {
 		{"PATCH", "/api/admin-panel/error-reports/1/approval", 401},
 		{"PATCH", "/api/sessions/00000000-0000-0000-0000-000000000000/participants-order", 401},
 		{"POST", "/api/char/00000000-0000-0000-0000-000000000000/icon-image", 401},
+		{"DELETE", "/api/char/00000000-0000-0000-0000-000000000000/icon-image", 401},
 		{"PATCH", "/api/sessions/00000000-0000-0000-0000-000000000000/graph-nodes/positions", 401},
 		{"POST", "/api/sessions/00000000-0000-0000-0000-000000000000/graph-nodes/delete", 401},
 		{"GET", "/api/public/sessions/not-a-uuid/presentation/events", 404},

@@ -18,6 +18,7 @@ describe('desktop status overview', () => {
     expect(viewSource).toMatch(/\.dsov \{[\s\S]*?padding: 0 0 15px 15px;/)
     expect(source).toContain("displayMode.value === 'trigger' ? [] : displayItems.value")
     expect(source).toContain("displayMode.value !== 'summary'")
+    expect(source).toContain('.dso-root--trigger :deep(.dsov-add) { width: 88px; height: 44px; }')
     expect(viewSource.indexOf('class="dsov-add"')).toBeGreaterThan(viewSource.indexOf('class="dsov-row"'))
   })
 

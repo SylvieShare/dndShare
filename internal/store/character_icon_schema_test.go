@@ -46,3 +46,11 @@ func TestCharacterIconWriteAllowsOwnerOrSessionGM(t *testing.T) {
 		}
 	}
 }
+
+func TestCharacterIconClearDetachesStoredImage(t *testing.T) {
+	for _, fragment := range []string{"icon_image_id = NULL", "changed_at = now()", "WHERE id = $1"} {
+		if !strings.Contains(clearCharacterIconSQL, fragment) {
+			t.Fatalf("character icon clear must contain %q", fragment)
+		}
+	}
+}
