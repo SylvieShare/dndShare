@@ -180,6 +180,15 @@
                       {
                         "ref": "rest",
                         "kind": "block"
+                      },
+                      {
+                        "ref": "lvl",
+                        "kind": "block",
+                        "props": {
+                          "style": {
+                            "grid-column": "1 / -1"
+                          }
+                        }
                       }
                     ]
                   }
@@ -564,10 +573,6 @@
                       "shrink": "0"
                     },
                     "children": [
-                      {
-                        "ref": "lvl",
-                        "kind": "block"
-                      },
                       {
                         "ref": "feature_widgets",
                         "kind": "block"

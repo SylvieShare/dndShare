@@ -38,7 +38,9 @@ and the full description inline. Class abilities, racial abilities and feats
 each own one shared tile; entries inside it do not create nested backgrounds or
 outlines and are divided by thin separators. Their rich descriptions use the
 same muted `--text-2` tone as action-row descriptions. Each tile header has a compact
-dashed plus control for adding an entry.
+dashed plus control for adding an entry. The level tile sits below the desktop
+speed, proficiency-bonus and rest row and spans the full width of those three
+metric columns; it is not duplicated in the right side column.
 The renamed mobile **Способности** tab uses the expanded cards as well and
 starts with prominent feature widgets, actions, resources, defenses and
 proficiencies. The mobile D&D stats tab uses a 12px top-level column gap. Tab state

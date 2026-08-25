@@ -24,6 +24,21 @@ describe('D&D desktop sheet schema', () => {
     expect(tabColumn.props?.style?.['margin-right']).toBe('16px')
   })
 
+  it('places level below speed, proficiency bonus and rests across all three metric columns', () => {
+    const metricGrid = findNode(
+      base?.content,
+      node => node.type === 'grid' && node.children?.some(child => child.ref === 'rest'),
+    )
+    const level = findNode(base?.content, node => node.ref === 'lvl')
+
+    expect(metricGrid.children.map(child => child.ref)).toEqual([
+      'armor', 'initiative', 'settings',
+      'speed', 'prof_bonus', 'rest',
+      'lvl',
+    ])
+    expect(level.props?.style?.['grid-column']).toBe('1 / -1')
+  })
+
   it('lets weapon entries and inventory sections own their surfaces', () => {
     const weapons = innerTabs.children.find(tab => tab.title === 'Оружие')
     const equipment = innerTabs.children.find(tab => tab.title === 'Снаряжение')
