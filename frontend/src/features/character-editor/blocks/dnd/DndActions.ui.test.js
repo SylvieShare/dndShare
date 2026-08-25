@@ -40,4 +40,11 @@ describe('character action block', () => {
     expect(blockSource).toContain('groupCharacterFeatureActions(actions.value)')
     expect(blockSource).not.toContain('groupCharacterFeatureActions(actions.value, ownerMode.value)')
   })
+
+  it('applies generic source action consequences from the row menu', () => {
+    expect(viewSource).toContain('v-for="effect in action.menu_effects || []"')
+    expect(viewSource).toContain("emit('apply-effect', action, effect)")
+    expect(blockSource).toContain('@apply-effect="applyActionEffect"')
+    expect(blockSource).toContain('featureActionEffectPatch(props.values || {}, effect)')
+  })
 })

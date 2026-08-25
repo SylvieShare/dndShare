@@ -1,5 +1,6 @@
 import { abilityOwnerLevel } from '@/shared/lib/dndAbilityUses'
 import { featureEntryActive } from './featureEntryState'
+import { collectCharacterStatuses } from './characterStatuses'
 
 export const FEATURE_ACTION_TYPES = [
   { value: 'action', label: 'Действие', group_label: 'Действия' },
@@ -26,6 +27,44 @@ function actionType(value) {
   return TYPE_ORDER.has(value) ? value : 'special'
 }
 
+function activeStatusCodes(values, itemsById) {
+  return new Set(collectCharacterStatuses(values, itemsById)
+    .map(status => String(status.item?.data?.code || '').trim())
+    .filter(Boolean))
+}
+
+function statusRequirementsMet(definition, codes) {
+  return requirements(definition?.required_status_codes).every(code => codes.has(code))
+}
+
+function menuEffects(values, definitions) {
+  return (Array.isArray(definitions) ? definitions : []).flatMap((definition, index) => {
+    if (definition?.kind !== 'adjust_counter') return []
+    const valueId = String(definition.value_id || '').trim()
+    const counterKey = String(definition.counter_key || '').trim()
+    if (!valueId || !counterKey) return []
+    const container = values?.[valueId]
+    const current = Math.floor(Number(container?.[counterKey]) || 0)
+    const min = Number.isFinite(Number(definition.min)) ? Number(definition.min) : 0
+    const max = Number.isFinite(Number(definition.max)) ? Number(definition.max) : Number.MAX_SAFE_INTEGER
+    const delta = Number(definition.delta) || 0
+    const next = Math.max(min, Math.min(max, current + delta))
+    return [{
+      ...definition,
+      key: String(definition.key || `${valueId}:${counterKey}:${index}`),
+      title: String(definition.title || 'Применить последствие'),
+      value_id: valueId,
+      counter_key: counterKey,
+      current,
+      next,
+      min,
+      max,
+      disabled: next === current,
+      suffix: max < Number.MAX_SAFE_INTEGER ? `${current}/${max}` : String(current),
+    }]
+  })
+}
+
 function matchingResource(resources, valueId, ownedEntry, definition) {
   if (!definition.uses_resource && !definition.resource_key) return null
   return resources.find(resource => (
@@ -38,6 +77,7 @@ function matchingResource(resources, valueId, ownedEntry, definition) {
 }
 
 function contributedActions(values, itemsById, resources) {
+  const statusCodes = activeStatusCodes(values, itemsById)
   return ABILITY_VALUE_IDS.flatMap(valueId => (
     Array.isArray(values?.[valueId]) ? values[valueId] : []
   ).flatMap(ownedEntry => {
@@ -47,7 +87,7 @@ function contributedActions(values, itemsById, resources) {
     const ownerLevel = abilityOwnerLevel(item.data || {}, values)
     const definitions = Array.isArray(item.data?.feature_actions) ? item.data.feature_actions : []
     return definitions.flatMap((definition, index) => {
-      if (ownerLevel < Math.max(1, Number(definition?.level) || 1)) return []
+      if (ownerLevel < Math.max(1, Number(definition?.level) || 1) || !statusRequirementsMet(definition, statusCodes)) return []
       return [{
         key: `feature:${valueId}:${entryKey(ownedEntry)}:${definition.key || index}`,
         title: String(definition.title || item.name || 'Действие'),
@@ -58,6 +98,7 @@ function contributedActions(values, itemsById, resources) {
         priority: Number(definition.priority) || 0,
         resource_cost: Math.max(1, Number(definition.resource_cost) || 1),
         resource: matchingResource(resources, valueId, ownedEntry, definition),
+        menu_effects: menuEffects(values, definition.menu_effects),
         readonly: true,
         source_label: item.name || 'Способность',
         item,
@@ -78,10 +119,26 @@ function manualActions(values) {
     suggest_action_codes: [],
     priority: Number(entry.priority) || index,
     resource: null,
+    menu_effects: [],
     readonly: false,
     source_label: '',
     item: null,
   }))
+}
+
+export function featureActionEffectPatch(values, effect) {
+  if (effect?.kind !== 'adjust_counter') return null
+  const valueId = String(effect.value_id || '').trim()
+  const counterKey = String(effect.counter_key || '').trim()
+  if (!valueId || !counterKey) return null
+  const container = values?.[valueId]
+  const currentValue = container && typeof container === 'object' && !Array.isArray(container) ? container : {}
+  const current = Math.floor(Number(currentValue[counterKey]) || 0)
+  const min = Number.isFinite(Number(effect.min)) ? Number(effect.min) : 0
+  const max = Number.isFinite(Number(effect.max)) ? Number(effect.max) : Number.MAX_SAFE_INTEGER
+  const next = Math.max(min, Math.min(max, current + (Number(effect.delta) || 0)))
+  if (next === current) return null
+  return { [valueId]: { ...currentValue, [counterKey]: next } }
 }
 
 export function collectCharacterFeatureActions(values, itemsById, resources = []) {

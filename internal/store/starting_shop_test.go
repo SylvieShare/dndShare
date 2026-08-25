@@ -9,35 +9,36 @@ import (
 )
 
 func TestToolProficiencyCatalogIsEmbeddedAfterItemTypeHierarchy(t *testing.T) {
-	if len(schemaParts) < 26 {
+	if len(schemaParts) < 27 {
 		t.Fatal("schemaParts must contain the final item catalogue sections")
 	}
-	hierarchy := schemaParts[len(schemaParts)-26]
-	tools := schemaParts[len(schemaParts)-25]
-	resources := schemaParts[len(schemaParts)-24]
-	classTools := schemaParts[len(schemaParts)-23]
-	resourceFixes := schemaParts[len(schemaParts)-22]
-	resourceAudit := schemaParts[len(schemaParts)-21]
-	resourceColors := schemaParts[len(schemaParts)-20]
-	spellGrants := schemaParts[len(schemaParts)-19]
-	equippedArmor := schemaParts[len(schemaParts)-18]
-	defenses := schemaParts[len(schemaParts)-17]
-	castLevel := schemaParts[len(schemaParts)-16]
-	choices := schemaParts[len(schemaParts)-15]
-	racialAutomation := schemaParts[len(schemaParts)-14]
-	classAutomation := schemaParts[len(schemaParts)-13]
-	featAutomation := schemaParts[len(schemaParts)-12]
-	rogueAutomation := schemaParts[len(schemaParts)-11]
-	rogueCatalogFixes := schemaParts[len(schemaParts)-10]
-	weaponDamageActions := schemaParts[len(schemaParts)-9]
-	featureSheetWidgets := schemaParts[len(schemaParts)-8]
-	rollAdjustments := schemaParts[len(schemaParts)-7]
-	featureActions := schemaParts[len(schemaParts)-6]
-	statusEffects := schemaParts[len(schemaParts)-5]
-	statusEffectLevels := schemaParts[len(schemaParts)-4]
-	activityRestrictions := schemaParts[len(schemaParts)-3]
-	statusEffectCatalog := schemaParts[len(schemaParts)-2]
-	removeStatusSuggest := schemaParts[len(schemaParts)-1]
+	hierarchy := schemaParts[len(schemaParts)-27]
+	tools := schemaParts[len(schemaParts)-26]
+	resources := schemaParts[len(schemaParts)-25]
+	classTools := schemaParts[len(schemaParts)-24]
+	resourceFixes := schemaParts[len(schemaParts)-23]
+	resourceAudit := schemaParts[len(schemaParts)-22]
+	resourceColors := schemaParts[len(schemaParts)-21]
+	spellGrants := schemaParts[len(schemaParts)-20]
+	equippedArmor := schemaParts[len(schemaParts)-19]
+	defenses := schemaParts[len(schemaParts)-18]
+	castLevel := schemaParts[len(schemaParts)-17]
+	choices := schemaParts[len(schemaParts)-16]
+	racialAutomation := schemaParts[len(schemaParts)-15]
+	classAutomation := schemaParts[len(schemaParts)-14]
+	featAutomation := schemaParts[len(schemaParts)-13]
+	rogueAutomation := schemaParts[len(schemaParts)-12]
+	rogueCatalogFixes := schemaParts[len(schemaParts)-11]
+	weaponDamageActions := schemaParts[len(schemaParts)-10]
+	featureSheetWidgets := schemaParts[len(schemaParts)-9]
+	rollAdjustments := schemaParts[len(schemaParts)-8]
+	featureActions := schemaParts[len(schemaParts)-7]
+	statusEffects := schemaParts[len(schemaParts)-6]
+	statusEffectLevels := schemaParts[len(schemaParts)-5]
+	activityRestrictions := schemaParts[len(schemaParts)-4]
+	statusEffectCatalog := schemaParts[len(schemaParts)-3]
+	removeStatusSuggest := schemaParts[len(schemaParts)-2]
+	frenzyAction := schemaParts[len(schemaParts)-1]
 	if hierarchy.name != "item-type-hierarchy" || hierarchy.sql == "" || hierarchy.sql != schemaItemTypeHierarchySQL {
 		t.Fatal("item-type-hierarchy schema must be embedded after the equipment catalogues")
 	}
@@ -115,6 +116,24 @@ func TestToolProficiencyCatalogIsEmbeddedAfterItemTypeHierarchy(t *testing.T) {
 	}
 	if removeStatusSuggest.name != "remove-status-suggest" || removeStatusSuggest.sql == "" || removeStatusSuggest.sql != schemaRemoveStatusSuggestSQL {
 		t.Fatal("obsolete status suggest must be removed after effect item migration")
+	}
+	if frenzyAction.name != "frenzy-action" || frenzyAction.sql == "" || frenzyAction.sql != schemaFrenzyActionSQL {
+		t.Fatal("frenzy action must be embedded after the status effect catalogue migration")
+	}
+}
+
+func TestFrenzyPublishesRageGatedBonusActionWithExhaustionConsequence(t *testing.T) {
+	for _, fragment := range []string{
+		`"required_status_codes"`,
+		`"menu_effects"`,
+		`"kind":"adjust_counter"`,
+		`"value_id":"exhaustion"`,
+		`"counter_key":"level"`,
+		`lower('Frenzy')`,
+	} {
+		if !strings.Contains(schemaFrenzyActionSQL, fragment) {
+			t.Fatalf("frenzy action schema must contain %q", fragment)
+		}
 	}
 }
 

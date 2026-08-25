@@ -20,7 +20,7 @@
           :key="action.key"
           block
           :title="`Действия: ${action.title}`"
-          :disabled="!manage || (group.actions.length < 2 && action.readonly)"
+          :disabled="!manage || (group.actions.length < 2 && action.readonly && !action.menu_effects?.length)"
         >
           <template #trigger="{ open }">
             <article
@@ -54,6 +54,18 @@
           </template>
 
           <template #default="{ close }">
+            <RowActionItem
+              v-for="effect in action.menu_effects || []"
+              :key="effect.key"
+              :icon="BatteryLow"
+              :tone="effect.tone || 'danger'"
+              :disabled="effect.disabled"
+              @click="applyEffect(action, effect, close)"
+            >
+              {{ effect.title }}
+              <template #suffix>{{ effect.suffix }}</template>
+            </RowActionItem>
+            <RowActionSeparator v-if="action.menu_effects?.length && (group.actions.length > 1 || !action.readonly)" />
             <RowActionItem v-if="actionIndex > 0" :icon="ArrowUp" @click="move(action, -1, close)">Переместить выше</RowActionItem>
             <RowActionItem v-if="actionIndex < group.actions.length - 1" :icon="ArrowDown" @click="move(action, 1, close)">Переместить ниже</RowActionItem>
             <RowActionSeparator v-if="!action.readonly && group.actions.length > 1" />
@@ -79,7 +91,7 @@
 
 <script setup>
 import { computed, ref } from 'vue'
-import { ArrowDown, ArrowUp, RotateCcw, Sparkles, Swords, Wind, Zap } from '@lucide/vue'
+import { ArrowDown, ArrowUp, BatteryLow, RotateCcw, Sparkles, Swords, Wind, Zap } from '@lucide/vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip.vue'
@@ -94,7 +106,7 @@ const props = defineProps({
   panel: { type: Boolean, default: false },
   actionSuggestions: { type: Array, default: () => [] },
 })
-const emit = defineEmits(['manage', 'edit', 'move', 'remove'])
+const emit = defineEmits(['manage', 'edit', 'move', 'remove', 'apply-effect'])
 const tooltip = ref({ visible: false, title: '', desc: '', x: 0, top: null, bottom: null })
 const suggestionsByCode = computed(() => new Map(props.actionSuggestions.map(item => [String(item.code || ''), item])))
 
@@ -125,6 +137,11 @@ function edit(action, close) {
 function remove(action, close) {
   close()
   emit('remove', action)
+}
+
+function applyEffect(action, effect, close) {
+  close()
+  emit('apply-effect', action, effect)
 }
 
 function showActionTooltip(event, item) {

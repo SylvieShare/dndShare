@@ -161,6 +161,13 @@ fallback with concise mechanical bullet points rendered beside the icon.
 ids, removes the temporary `legacy_suggest_id` metadata, and deletes suggest
 type 9 together with its rows. Character and encounter states now resolve only
 through item type 15; the old condition suggest catalogue is not retained.
+`56_frenzy_action.sql` extends source-owned sheet actions with active-effect
+requirements and typed row-menu consequences. `required_status_codes` controls
+visibility from the effect catalogue, while `menu_effects` can adjust a bounded
+character counter without runtime checks for a feature name or id. Frenzy uses
+the contract to expose its bonus-action melee attack only while Rage is active;
+its manual consequence adds one exhaustion level, with the rules text preserving
+the actual timing: exhaustion is gained when the frenzied Rage ends.
 Section `34_ability_resource_catalog_fixes.sql` задаёт структурированные правила
 Харизмы для «Вдохновения барда» и Мудрости для «Гнева бури», удаляет прежний
 ручной максимум вдохновения и переводит его полные старые character entries на

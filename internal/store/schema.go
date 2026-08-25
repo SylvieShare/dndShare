@@ -184,6 +184,9 @@ var schemaStatusEffectCatalogSQL string
 //go:embed schema/55_remove_status_suggest.sql
 var schemaRemoveStatusSuggestSQL string
 
+//go:embed schema/56_frenzy_action.sql
+var schemaFrenzyActionSQL string
+
 var schemaParts = []struct {
 	name string
 	sql  string
@@ -245,6 +248,7 @@ var schemaParts = []struct {
 	{"activity-restrictions", schemaActivityRestrictionsSQL},
 	{"status-effect-catalog", schemaStatusEffectCatalogSQL},
 	{"remove-status-suggest", schemaRemoveStatusSuggestSQL},
+	{"frenzy-action", schemaFrenzyActionSQL},
 }
 
 func applySchema(ctx context.Context, pool *pgxpool.Pool) error {

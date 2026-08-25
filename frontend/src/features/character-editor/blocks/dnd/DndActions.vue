@@ -9,6 +9,7 @@
         @edit="editAction"
         @move="moveAction"
         @remove="removeAction"
+        @apply-effect="applyActionEffect"
       />
     </BaseTile>
 
@@ -27,6 +28,7 @@
           :edit-fade="revealed"
           :action-suggestions="actionSuggestions"
           panel
+          @apply-effect="applyActionEffect"
         />
       </template>
       <template #editor>
@@ -50,7 +52,7 @@ import DndActionsEditor from '@/features/character-editor/blocks/dnd/components/
 import DndActionsView from '@/features/character-editor/blocks/dnd/components/DndActionsView.vue'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell.vue'
 import { useMorphOrigin } from '@/features/character-editor/composables/useMorphOrigin'
-import { collectCharacterFeatureActions, groupCharacterFeatureActions } from '@/features/character-editor/lib/characterFeatureActions'
+import { collectCharacterFeatureActions, featureActionEffectPatch, groupCharacterFeatureActions } from '@/features/character-editor/lib/characterFeatureActions'
 import { makeUid } from '@/features/character-editor/blocks/dnd/lib/itemEntry'
 import { useSuggestStore } from '@/stores/suggest'
 
@@ -128,6 +130,18 @@ function removeAction(action) {
   emitActions(manualActions.value.filter(entry => entry.uid !== action.uid))
   emitOrder((props.values?.action_order || []).filter(key => key !== action.key))
   if (editingUid.value === action.uid) editingUid.value = null
+}
+
+function applyActionEffect(action, effect) {
+  if (!ownerMode.value) return
+  const patch = featureActionEffectPatch(props.values || {}, effect)
+  if (!patch) return
+  for (const [id, value] of Object.entries(patch)) emit('update:value', id, value)
+  charCtx.logSessionEvent?.({
+    type: 'feature_action_effect',
+    action: `${action.title}: ${effect.title}`,
+    data: { actionKey: action.key, effectKey: effect.key },
+  })
 }
 
 function closeEditor() {
