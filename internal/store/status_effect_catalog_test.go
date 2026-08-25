@@ -7,9 +7,11 @@ import (
 
 func TestStatusEffectCatalogSeedsThesisAndSpecialEffects(t *testing.T) {
 	for _, fragment := range []string{
-		"\"key\":\"thesis\"",
-		"Штрафы растут с уровнем.",
-		"Преимущество на один бросок.",
+		"\"key\":\"thesis\",\"type\":\"textarea\"",
+		"- Уровни накапливают штрафы\\n- Продолжительный отдых снимает один уровень",
+		"- Преимущество на один бросок атаки, проверки или спасброска",
+		"- Помеха к проверкам характеристик и броскам атаки\\n- Не может переместиться ближе к источнику испуга",
+		"('rage', E'- Преимущество к проверкам и спасброскам Силы",
 		"data ->> 'code' = 'exhaustion'",
 		"data ->> 'code' = 'inspiration'",
 		"static-status-effect-media/v1/",

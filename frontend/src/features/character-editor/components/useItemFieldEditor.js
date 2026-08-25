@@ -13,7 +13,7 @@ import {
 export const itemFieldEditorKey = Symbol('itemFieldEditor')
 
 const FULL_WIDTH_TYPES = new Set([
-  'description', 'suggest_array', 'int_by_suggest', 'object', 'object_array', 'blocks',
+  'description', 'textarea', 'suggest_array', 'int_by_suggest', 'object', 'object_array', 'blocks',
 ])
 const CARD_TYPES = new Set(['object', 'object_array', 'blocks'])
 

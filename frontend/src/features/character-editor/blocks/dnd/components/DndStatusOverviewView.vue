@@ -109,11 +109,11 @@ function monogram(value) {
 }
 .dsov-effect {
   display: grid;
-  width: 228px;
+  width: 300px;
   grid-template-columns: 64px minmax(0, 1fr);
   align-items: center;
-  gap: 10px;
-  flex: 0 0 228px;
+  gap: 0;
+  flex: 0 0 300px;
   padding: 0;
   border: 0;
   background: none;
@@ -147,6 +147,7 @@ function monogram(value) {
   color: var(--text-muted);
   font-size: 9px;
   line-height: 1.35;
+  white-space: pre-line;
 }
 .dsov-add {
   display: inline-flex;

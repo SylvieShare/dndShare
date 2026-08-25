@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest'
 const source = readFileSync(fileURLToPath(new URL('./DndStatusOverview.vue', import.meta.url)), 'utf8')
 const viewSource = readFileSync(fileURLToPath(new URL('./components/DndStatusOverviewView.vue', import.meta.url)), 'utf8')
 const editorSource = readFileSync(fileURLToPath(new URL('./components/CharacterStatusEditor.vue', import.meta.url)), 'utf8')
+const schemaFieldSource = readFileSync(fileURLToPath(new URL('../../components/ItemSchemaField.vue', import.meta.url)), 'utf8')
 
 describe('desktop status overview', () => {
   it('renders a frameless summary with one dashed add action', () => {
@@ -18,7 +19,7 @@ describe('desktop status overview', () => {
     expect(viewSource).toMatch(/\.dsov \{[\s\S]*?padding: 0 0 15px 15px;/)
     expect(source).toContain("displayMode.value === 'trigger' ? [] : displayItems.value")
     expect(source).toContain("displayMode.value !== 'summary'")
-    expect(source).toContain('.dso-root--trigger :deep(.dsov-add) { width: 76px; height: 32px;')
+    expect(source).toContain('.dso-root--trigger :deep(.dsov-add) { width: 82px; height: 32px;')
     expect(viewSource.indexOf('class="dsov-add"')).toBeGreaterThan(viewSource.indexOf('class="dsov-row"'))
   })
 
@@ -36,6 +37,9 @@ describe('desktop status overview', () => {
     expect(viewSource).toContain('class="dsov-name"')
     expect(viewSource).toContain('class="dsov-thesis"')
     expect(viewSource).not.toContain('-webkit-line-clamp')
+    expect(viewSource).toMatch(/\.dsov-effect \{[\s\S]*?width: 300px;[\s\S]*?gap: 0;[\s\S]*?flex: 0 0 300px;/)
+    expect(viewSource).toMatch(/\.dsov-thesis \{[\s\S]*?white-space: pre-line;/)
+    expect(schemaFieldSource).toContain("field.type === 'textarea'")
     expect(viewSource).toContain('{{ item.value }}')
     expect(viewSource).toContain('Уровень {{ item.level }}')
     expect(source).toContain('status.params?.level ?? status.item?.data?.level')

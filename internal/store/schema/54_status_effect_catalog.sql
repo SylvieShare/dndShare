@@ -1,7 +1,7 @@
--- Effect cards use a dedicated short thesis beside the icon. Full rules remain
+-- Effect cards use a dedicated bullet thesis beside the icon. Full rules remain
 -- in desc and continue to power handbook detail and tooltips.
 WITH addition(field) AS (
-  VALUES ('{"name":"Тезис","key":"thesis","type":"text"}'::jsonb)
+  VALUES ('{"name":"Тезис","key":"thesis","type":"textarea"}'::jsonb)
 )
 UPDATE dndshare.item_type item_type
 SET fields = COALESCE(item_type.fields, '[]'::jsonb) || jsonb_build_array(addition.field)
@@ -11,6 +11,23 @@ WHERE item_type.id = 15
     SELECT 1
     FROM jsonb_array_elements(COALESCE(item_type.fields, '[]'::jsonb)) current
     WHERE current ->> 'key' = 'thesis'
+  );
+
+UPDATE dndshare.item_type item_type
+SET fields = (
+  SELECT jsonb_agg(
+    CASE WHEN field ->> 'key' = 'thesis'
+      THEN jsonb_set(field, '{type}', '"textarea"'::jsonb, true)
+      ELSE field
+    END
+    ORDER BY ordinality
+  )
+  FROM jsonb_array_elements(COALESCE(item_type.fields, '[]'::jsonb)) WITH ORDINALITY current(field, ordinality)
+)
+WHERE item_type.id = 15
+  AND EXISTS (
+    SELECT 1 FROM jsonb_array_elements(COALESCE(item_type.fields, '[]'::jsonb)) field
+    WHERE field ->> 'key' = 'thesis' AND field ->> 'type' IS DISTINCT FROM 'textarea'
   );
 
 WITH prepared AS (
@@ -44,7 +61,7 @@ WHERE item.id = theses.id
 
 INSERT INTO dndshare.item (name, name_en, data, type_id)
 SELECT 'Истощение', 'Exhaustion',
-       '{"code":"exhaustion","thesis":"Штрафы растут с уровнем.","desc":"Истощение имеет шесть уровней. Каждый новый уровень добавляет следующий штраф; шестой уровень означает смерть. Продолжительный отдых при выполнении условий обычно снимает один уровень.","polarity":"negative","color":"#d14f4f","stacking":"single","level":1,"max_level":6,"duration":{"kind":"permanent"}}'::jsonb,
+       '{"code":"exhaustion","thesis":"- Уровни накапливают штрафы\n- Продолжительный отдых снимает один уровень","desc":"Истощение имеет шесть уровней. Каждый новый уровень добавляет следующий штраф; шестой уровень означает смерть. Продолжительный отдых при выполнении условий обычно снимает один уровень.","polarity":"negative","color":"#d14f4f","stacking":"single","level":1,"max_level":6,"duration":{"kind":"permanent"}}'::jsonb,
        15
 WHERE NOT EXISTS (
   SELECT 1 FROM dndshare.item
@@ -53,26 +70,40 @@ WHERE NOT EXISTS (
 
 INSERT INTO dndshare.item (name, name_en, data, type_id)
 SELECT 'Вдохновение', 'Inspiration',
-       '{"code":"inspiration","thesis":"Преимущество на один бросок.","desc":"Вдохновение можно потратить, чтобы получить преимущество на одну атаку, проверку характеристики или спасбросок.","polarity":"positive","color":"#f2bd5a","stacking":"single","duration":{"kind":"permanent"}}'::jsonb,
+       '{"code":"inspiration","thesis":"- Преимущество на один бросок атаки, проверки или спасброска","desc":"Вдохновение можно потратить, чтобы получить преимущество на одну атаку, проверку характеристики или спасбросок.","polarity":"positive","color":"#f2bd5a","stacking":"single","duration":{"kind":"permanent"}}'::jsonb,
        15
 WHERE NOT EXISTS (
   SELECT 1 FROM dndshare.item
   WHERE type_id = 15 AND user_id IS NULL AND data ->> 'code' = 'inspiration'
 );
 
-UPDATE dndshare.item
-SET data = jsonb_set(
-  data,
-  '{thesis}',
-  to_jsonb(CASE data ->> 'code'
-    WHEN 'exhaustion' THEN 'Штрафы растут с уровнем.'
-    ELSE 'Преимущество на один бросок.'
-  END),
-  true
+WITH canonical(code, thesis) AS (
+  VALUES
+    ('blinded', E'- Не видит и проваливает проверки зрения\n- Его атаки с помехой; атаки по нему с преимуществом'),
+    ('charmed', E'- Не атакует и не вредит очаровавшему\n- Очаровавший имеет преимущество в социальных проверках'),
+    ('deafened', E'- Не слышит\n- Проваливает проверки слуха'),
+    ('frightened', E'- Помеха к проверкам характеристик и броскам атаки\n- Не может переместиться ближе к источнику испуга'),
+    ('grappled', E'- Скорость 0 без бонусов\n- Заканчивается при недееспособности захватившего или разрыве дистанции'),
+    ('incapacitated', E'- Не может совершать действия и реакции'),
+    ('invisible', E'- Нельзя увидеть без магии или особого чувства\n- Его атаки с преимуществом; атаки по нему с помехой'),
+    ('paralyzed', E'- Недееспособен, не двигается и не говорит\n- Проваливает спасброски Силы и Ловкости\n- Атаки по нему с преимуществом; попадание в 5 футах критическое'),
+    ('petrified', E'- Недееспособен, неподвижен и не замечает окружение\n- Сопротивление всему урону\n- Проваливает спасброски Силы и Ловкости; атаки по нему с преимуществом'),
+    ('poisoned', E'- Помеха к проверкам характеристик и броскам атаки'),
+    ('prone', E'- Только ползает или встаёт за половину скорости\n- Его атаки с помехой\n- Атаки в 5 футах с преимуществом, дальше — с помехой'),
+    ('restrained', E'- Скорость 0\n- Его атаки с помехой; атаки по нему с преимуществом\n- Помеха к спасброскам Ловкости'),
+    ('stunned', E'- Недееспособен, не двигается и говорит сбивчиво\n- Проваливает спасброски Силы и Ловкости\n- Атаки по нему с преимуществом'),
+    ('unconscious', E'- Недееспособен, падает и выпускает предметы\n- Проваливает спасброски Силы и Ловкости\n- Атаки по нему с преимуществом; попадание в 5 футах критическое'),
+    ('rage', E'- Преимущество к проверкам и спасброскам Силы\n- Бонус к урону оружием на Силе\n- Сопротивление дробящему, колющему и рубящему урону'),
+    ('shield_of_faith', E'- +2 к КД\n- Требует концентрации'),
+    ('exhaustion', E'- Уровни накапливают штрафы\n- Продолжительный отдых снимает один уровень'),
+    ('inspiration', E'- Преимущество на один бросок атаки, проверки или спасброска')
 )
-WHERE type_id = 15
-  AND user_id IS NULL
-  AND data ->> 'code' IN ('exhaustion', 'inspiration');
+UPDATE dndshare.item effect
+SET data = jsonb_set(effect.data, '{thesis}', to_jsonb(canonical.thesis), true)
+FROM canonical
+WHERE effect.type_id = 15
+  AND effect.user_id IS NULL
+  AND effect.data ->> 'code' = canonical.code;
 
 CREATE UNIQUE INDEX IF NOT EXISTS idx_storage_image_static_status_effect_media_key
   ON dndshare.storage_image USING btree ("key")

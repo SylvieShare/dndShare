@@ -106,6 +106,7 @@ describe('D&D desktop sheet schema', () => {
     expect(summaryTile.type).toBe('column')
     const iconColumn = findNode(summaryTile, node => node.type === 'column' && node.children?.some(child => child.ref === 'character_icon'))
     expect(iconColumn.children.map(child => child.ref)).toEqual(['character_icon', 'desktop_status_trigger'])
+    expect(iconColumn.props.style.flex).toBe('0 0 110px')
     expect(hpColumn.children.map(child => child.ref)).toEqual(['char_identity', 'hp'])
     expect(hpColumn.children[0].props?.grow).toBeUndefined()
     expect(hpColumn.children[0].props?.basis).toBeUndefined()

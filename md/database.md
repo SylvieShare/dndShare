@@ -151,11 +151,12 @@ cell without duplicating rest or exhaustion mechanics.
 and configures the active Rage status to block `spellcasting`, allowing sheet
 consumers to combine several restriction sources without feature-name checks;
 its `concentration` scope ends an active concentration status when applied.
-`54_status_effect_catalog.sql` adds the short `data.thesis` field, seeds
+`54_status_effect_catalog.sql` adds the multiline `data.thesis` field, seeds
 «Истощение» and «Вдохновение» as system effect items, and attaches their embedded
 item icons and covers through `storage_image`. Existing effect descriptions are
 converted into a phrase of at most 48 characters as an upgrade fallback and
-remain independently editable afterwards.
+remain independently editable afterwards. Standard system effects replace that
+fallback with concise mechanical bullet points rendered beside the icon.
 Section `34_ability_resource_catalog_fixes.sql` задаёт структурированные правила
 Харизмы для «Вдохновения барда» и Мудрости для «Гнева бури», удаляет прежний
 ручной максимум вдохновения и переводит его полные старые character entries на

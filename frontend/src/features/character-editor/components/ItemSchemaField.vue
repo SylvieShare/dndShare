@@ -49,6 +49,12 @@
       @input="editor.formData[field.key] = editor.numberOrNull($event.target.value)"
     />
 
+    <textarea
+      v-else-if="field.type === 'textarea'"
+      class="iem-textarea"
+      v-model="editor.formData[field.key]"
+    ></textarea>
+
     <select v-else-if="field.type === 'select'" class="iem-select" v-model="editor.formData[field.key]">
       <option value="">—</option>
       <option v-for="option in (field.options || [])" :key="option.value" :value="option.value">

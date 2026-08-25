@@ -102,7 +102,7 @@ const displayItems = computed(() => [
     kind: 'exhaustion',
     value: exhaustionItem.value?.name || 'Истощение',
     desc: exhaustionEffects.value.join(' · '),
-    thesis: exhaustionItem.value?.data?.thesis || 'Штрафы растут с уровнем.',
+    thesis: exhaustionItem.value?.data?.thesis || '- Уровни накапливают штрафы\n- Продолжительный отдых снимает один уровень',
     color: exhaustionItem.value?.data?.color || 'var(--danger)',
     level: exhaustionLevel.value,
     adjustableLevel: true,
@@ -114,7 +114,7 @@ const displayItems = computed(() => [
     kind: 'inspiration',
     value: inspirationItem.value?.name || 'Вдохновение',
     desc: inspirationItem.value?.data?.desc || '',
-    thesis: inspirationItem.value?.data?.thesis || 'Преимущество на один бросок.',
+    thesis: inspirationItem.value?.data?.thesis || '- Преимущество на один бросок атаки, проверки или спасброска',
     color: inspirationItem.value?.data?.color || 'var(--accent)',
     item: inspirationItem.value,
   }] : []),
@@ -196,6 +196,6 @@ function hideStatusTooltip() {
 
 <style scoped>
 .dso-root { min-width: 0; }
-.dso-root--trigger :deep(.dsov) { gap: 0; padding: 7px 0 14px 21px; }
-.dso-root--trigger :deep(.dsov-add) { width: 76px; height: 32px; gap: 3px; padding: 0 4px; font-size: 9px; }
+.dso-root--trigger :deep(.dsov) { gap: 0; padding: 7px 0 14px 18px; }
+.dso-root--trigger :deep(.dsov-add) { width: 82px; height: 32px; gap: 3px; padding: 0 4px; font-size: 9px; }
 </style>
