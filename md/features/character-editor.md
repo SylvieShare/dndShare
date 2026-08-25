@@ -122,7 +122,9 @@ scrollable row of 64×64 icons. Catalogue
 cells render either raster `iconImageUrl` or SVG; missing media falls back to a
 monogram rather than a colour dot. A frameless copy block to the icon's right
 shows the item name, its dedicated `data.thesis`, and an optional live level.
-Owners add entries through the dashed **Состояние** cell. Clicking an active
+The thesis is deliberately one short phrase and is rendered in full without a
+line clamp. Owners add entries through the dashed **Состояние** cell at the
+right edge, after active entries. Clicking an active
 entry opens one row-action menu with handbook view and removal; exhaustion and
 catalogue effects that declare a level also expose increment/decrement actions.
 Catalogue levels are copied into runtime status parameters, so changing one

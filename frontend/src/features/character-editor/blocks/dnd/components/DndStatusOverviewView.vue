@@ -1,10 +1,5 @@
 <template>
   <div v-if="items.length || editable" class="dsov">
-    <button v-if="showAddAction" class="dsov-add" type="button" @click.stop="$emit('add')">
-      <Plus :size="15" :stroke-width="1.8" aria-hidden="true" />
-      <span>Состояние</span>
-    </button>
-
     <div v-if="items.length" class="dsov-row">
       <RowActionMenu
         v-for="item in items"
@@ -69,6 +64,11 @@
         </template>
       </RowActionMenu>
     </div>
+
+    <button v-if="showAddAction" class="dsov-add" type="button" @click.stop="$emit('add')">
+      <Plus :size="15" :stroke-width="1.8" aria-hidden="true" />
+      <span>Состояние</span>
+    </button>
   </div>
 </template>
 
@@ -144,13 +144,9 @@ function monogram(value) {
 .dsov-name { min-width: 0; overflow: hidden; font-size: 11px; font-weight: 750; line-height: 1.15; text-overflow: ellipsis; white-space: nowrap; }
 .dsov-level { flex: 0 0 auto; color: var(--status-color); font-size: 8px; font-weight: 700; line-height: 1; }
 .dsov-thesis {
-  display: -webkit-box;
-  overflow: hidden;
   color: var(--text-muted);
   font-size: 9px;
   line-height: 1.35;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
 }
 .dsov-add {
   display: inline-flex;

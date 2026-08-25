@@ -13,20 +13,38 @@ WHERE item_type.id = 15
     WHERE current ->> 'key' = 'thesis'
   );
 
-UPDATE dndshare.item
+WITH prepared AS (
+  SELECT id,
+         regexp_replace(COALESCE(data ->> 'desc', ''), '<[^>]+>', '', 'g') AS clean_desc
+  FROM dndshare.item
+  WHERE type_id = 15
+    AND COALESCE(data ->> 'desc', '') <> ''
+), theses AS (
+  SELECT id,
+         left(clean_desc, 180) AS legacy_thesis,
+         CASE
+           WHEN length(clean_desc) <= 48 THEN clean_desc
+           ELSE regexp_replace(left(clean_desc, 48), '\s+\S*$', '')
+         END AS short_thesis
+  FROM prepared
+)
+UPDATE dndshare.item item
 SET data = jsonb_set(
-  COALESCE(data, '{}'::jsonb),
+  COALESCE(item.data, '{}'::jsonb),
   '{thesis}',
-  to_jsonb(left(regexp_replace(COALESCE(data ->> 'desc', ''), '<[^>]+>', '', 'g'), 180)),
+  to_jsonb(theses.short_thesis),
   true
 )
-WHERE type_id = 15
-  AND COALESCE(data ->> 'thesis', '') = ''
-  AND COALESCE(data ->> 'desc', '') <> '';
+FROM theses
+WHERE item.id = theses.id
+  AND (
+    COALESCE(item.data ->> 'thesis', '') = ''
+    OR item.data ->> 'thesis' = theses.legacy_thesis
+  );
 
 INSERT INTO dndshare.item (name, name_en, data, type_id)
 SELECT 'Истощение', 'Exhaustion',
-       '{"code":"exhaustion","thesis":"Накопленные уровни постепенно ослабляют персонажа.","desc":"Истощение имеет шесть уровней. Каждый новый уровень добавляет следующий штраф; шестой уровень означает смерть. Продолжительный отдых при выполнении условий обычно снимает один уровень.","polarity":"negative","color":"#d14f4f","stacking":"single","level":1,"max_level":6,"duration":{"kind":"permanent"}}'::jsonb,
+       '{"code":"exhaustion","thesis":"Штрафы растут с уровнем.","desc":"Истощение имеет шесть уровней. Каждый новый уровень добавляет следующий штраф; шестой уровень означает смерть. Продолжительный отдых при выполнении условий обычно снимает один уровень.","polarity":"negative","color":"#d14f4f","stacking":"single","level":1,"max_level":6,"duration":{"kind":"permanent"}}'::jsonb,
        15
 WHERE NOT EXISTS (
   SELECT 1 FROM dndshare.item
@@ -35,12 +53,26 @@ WHERE NOT EXISTS (
 
 INSERT INTO dndshare.item (name, name_en, data, type_id)
 SELECT 'Вдохновение', 'Inspiration',
-       '{"code":"inspiration","thesis":"Даёт преимущество на один бросок к20.","desc":"Вдохновение можно потратить, чтобы получить преимущество на одну атаку, проверку характеристики или спасбросок.","polarity":"positive","color":"#f2bd5a","stacking":"single","duration":{"kind":"permanent"}}'::jsonb,
+       '{"code":"inspiration","thesis":"Преимущество на один бросок.","desc":"Вдохновение можно потратить, чтобы получить преимущество на одну атаку, проверку характеристики или спасбросок.","polarity":"positive","color":"#f2bd5a","stacking":"single","duration":{"kind":"permanent"}}'::jsonb,
        15
 WHERE NOT EXISTS (
   SELECT 1 FROM dndshare.item
   WHERE type_id = 15 AND user_id IS NULL AND data ->> 'code' = 'inspiration'
 );
+
+UPDATE dndshare.item
+SET data = jsonb_set(
+  data,
+  '{thesis}',
+  to_jsonb(CASE data ->> 'code'
+    WHEN 'exhaustion' THEN 'Штрафы растут с уровнем.'
+    ELSE 'Преимущество на один бросок.'
+  END),
+  true
+)
+WHERE type_id = 15
+  AND user_id IS NULL
+  AND data ->> 'code' IN ('exhaustion', 'inspiration');
 
 CREATE UNIQUE INDEX IF NOT EXISTS idx_storage_image_static_status_effect_media_key
   ON dndshare.storage_image USING btree ("key")

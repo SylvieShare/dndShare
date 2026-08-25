@@ -18,7 +18,7 @@ describe('desktop status overview', () => {
     expect(viewSource).toMatch(/\.dsov \{[\s\S]*?padding: 0 0 15px 15px;/)
     expect(source).toContain("displayMode.value === 'trigger' ? [] : displayItems.value")
     expect(source).toContain("displayMode.value !== 'summary'")
-    expect(viewSource.indexOf('class="dsov-add"')).toBeLessThan(viewSource.indexOf('class="dsov-row"'))
+    expect(viewSource.indexOf('class="dsov-add"')).toBeGreaterThan(viewSource.indexOf('class="dsov-row"'))
   })
 
   it('renders raster or SVG item icons instead of reducing them to color dots', () => {
@@ -34,6 +34,7 @@ describe('desktop status overview', () => {
     expect(viewSource).toContain('class="dsov-copy"')
     expect(viewSource).toContain('class="dsov-name"')
     expect(viewSource).toContain('class="dsov-thesis"')
+    expect(viewSource).not.toContain('-webkit-line-clamp')
     expect(viewSource).toContain('{{ item.value }}')
     expect(viewSource).toContain('Уровень {{ item.level }}')
     expect(source).toContain('status.params?.level ?? status.item?.data?.level')

@@ -8,6 +8,8 @@ import (
 func TestStatusEffectCatalogSeedsThesisAndSpecialEffects(t *testing.T) {
 	for _, fragment := range []string{
 		"\"key\":\"thesis\"",
+		"Штрафы растут с уровнем.",
+		"Преимущество на один бросок.",
 		"data ->> 'code' = 'exhaustion'",
 		"data ->> 'code' = 'inspiration'",
 		"static-status-effect-media/v1/",
