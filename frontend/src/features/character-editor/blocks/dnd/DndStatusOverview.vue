@@ -1,8 +1,9 @@
 <template>
   <div ref="root" class="dso-root">
     <DndStatusOverviewView
-      :items="displayItems"
+      :items="summaryItems"
       :editable="canInteract"
+      :show-edit-action="showEditAction"
       @edit="openSection"
       @show-tooltip="showStatusTooltip"
       @hide-tooltip="hideStatusTooltip"
@@ -157,6 +158,9 @@ const displayItems = computed(() => [
   }] : []),
 ])
 const canInteract = computed(() => !!charCtx.ownerMode)
+const displayMode = computed(() => props.block.content?.display || 'all')
+const summaryItems = computed(() => (displayMode.value === 'trigger' ? [] : displayItems.value))
+const showEditAction = computed(() => canInteract.value && displayMode.value !== 'summary')
 const summaryColor = computed(() => {
   if (exhaustionLevel.value > 0) return 'var(--danger)'
   if (inspirationActive.value) return 'var(--accent)'

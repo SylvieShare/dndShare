@@ -14,7 +14,10 @@ describe('desktop status overview', () => {
     expect(viewSource).not.toContain('Добавить эффект')
     expect(viewSource).not.toContain('Добавить вдохновение')
     expect(viewSource).toContain('Редактировать состояние')
+    expect(viewSource).toContain('<Pencil')
     expect(viewSource).toContain("$emit('edit', 'states')")
+    expect(source).toContain("displayMode.value === 'trigger' ? [] : displayItems.value")
+    expect(source).toContain("displayMode.value !== 'summary'")
   })
 
   it('renders raster or SVG item icons instead of reducing them to color dots', () => {
@@ -24,10 +27,12 @@ describe('desktop status overview', () => {
     expect(viewSource).not.toContain('dsov-dot')
   })
 
-  it('puts the effect name and optional level over the bottom of its 64px icon', () => {
-    expect(viewSource).toMatch(/\.dsov-effect \{[\s\S]*?width: 64px;[\s\S]*?height: 64px;/)
+  it('puts the effect name and optional level in a rounded block directly below its frameless 64px icon', () => {
+    expect(viewSource).toMatch(/\.dsov-icon \{[\s\S]*?width: 64px;[\s\S]*?height: 64px;/)
+    expect(viewSource).toMatch(/\.dsov-effect \{[\s\S]*?border: 0;[\s\S]*?background: none;/)
     expect(viewSource).toContain('class="dsov-caption"')
-    expect(viewSource).toContain('backdrop-filter: blur(5px)')
+    expect(viewSource).toMatch(/\.dsov-caption \{[\s\S]*?border-radius: 7px;/)
+    expect(viewSource).not.toContain('backdrop-filter')
     expect(viewSource).toContain('Уровень {{ item.level }}')
     expect(source).toContain('Number(status.item?.data?.level)')
   })

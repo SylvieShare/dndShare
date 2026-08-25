@@ -120,6 +120,10 @@
                               {
                                 "ref": "hp",
                                 "kind": "block"
+                              },
+                              {
+                                "ref": "desktop_status_editor",
+                                "kind": "block"
                               }
                             ]
                           }
@@ -136,7 +140,7 @@
                     "type": "grid",
                     "props": {
                       "gap": "8px",
-                      "width": "320px",
+                      "width": "344px",
                       "shrink": "0",
                       "columns": "3",
                       "style": {
@@ -186,7 +190,7 @@
                         "props": {
                           "style": {
                             "grid-column": "1 / -1",
-                            "height": "80px"
+                            "height": "72px"
                           }
                         },
                         "children": [

@@ -32,6 +32,8 @@ describe('character portrait UI', () => {
   it('uses the character icon in the sheet summary and falls back to the portrait', () => {
     expect(characterIconSource).toContain('charCtx.iconImageUrl || props.values?.ava?.url')
     expect(characterIconSource).toMatch(/\.dci-icon \{[\s\S]*?width: 88px;[\s\S]*?height: 88px;/)
+    expect(characterIconSource).not.toMatch(/\.dci-icon \{[\s\S]*?background:/)
+    expect(characterIconSource).not.toMatch(/\.dci-icon \{[\s\S]*?border:/)
   })
 
   it('renders portrait action popovers above the embedded session sheet', () => {

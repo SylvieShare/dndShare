@@ -223,7 +223,7 @@ const classPart = computed(() => classesLabel(classEntriesOf({
   lvl: props.values?.[lvlId.value],
 })))
 
-const nameColor = computed(() => props.block.content?.name_color || 'var(--text-on-accent)')
+const nameColor = computed(() => props.block.content?.name_color || 'var(--text-1)')
 const nameStyle = computed(() => ({ color: nameColor.value }))
 
 const raceOptions     = computed(() => toOptions(races.value))

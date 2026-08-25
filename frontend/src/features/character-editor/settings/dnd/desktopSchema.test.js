@@ -32,7 +32,7 @@ describe('D&D desktop sheet schema', () => {
     const level = findNode(base?.content, node => node.ref === 'lvl')
     const levelRow = metricGrid.children.at(-1)
 
-    expect(metricGrid.props?.width).toBe('320px')
+    expect(metricGrid.props?.width).toBe('344px')
     expect(metricGrid.children.slice(0, -1).map(child => child.ref)).toEqual([
       'armor', 'initiative', 'settings',
       'speed', 'prof_bonus', 'rest',
@@ -40,7 +40,7 @@ describe('D&D desktop sheet schema', () => {
     expect(levelRow).toMatchObject({
       kind: 'layout',
       type: 'row',
-      props: { style: { 'grid-column': '1 / -1', height: '80px' } },
+      props: { style: { 'grid-column': '1 / -1', height: '72px' } },
     })
     expect(levelRow.children).toContain(level)
   })
@@ -94,7 +94,7 @@ describe('D&D desktop sheet schema', () => {
     expect(statuses).toBeTruthy()
     expect(summaryTile.props?.tile).toBe(true)
     expect(summaryTile.children[0]?.ref).toBe('character_icon')
-    expect(hpColumn.children.map(child => child.ref)).toEqual(['char_identity', 'hp'])
+    expect(hpColumn.children.map(child => child.ref)).toEqual(['char_identity', 'hp', 'desktop_status_editor'])
     expect(summaryColumn.children[1]).toBe(statuses)
     expect(sidebar.children.some(child => child.ref === 'desktop_statuses')).toBe(false)
     expect(separateExhaustion).toBeNull()
@@ -106,7 +106,12 @@ describe('D&D desktop sheet schema', () => {
         effect_item_type_id: 15,
         exhaustion_id: 'exhaustion',
         inspiration_id: 'inspiration',
+        display: 'summary',
       },
+    })
+    expect(schema.blocks.desktop_status_editor).toMatchObject({
+      type: 'DND_STATUS_OVERVIEW',
+      content: { display: 'trigger' },
     })
   })
 

@@ -62,8 +62,8 @@ const iconStyle = computed(() => ({
   align-items: stretch;
   justify-content: center;
   gap: 6px;
-  height: 80px;
-  padding: 10px 12px;
+  height: 72px;
+  padding: 8px 12px;
   user-select: none;
   box-sizing: border-box;
   min-width: 0;

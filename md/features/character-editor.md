@@ -57,8 +57,8 @@ breakpoint and gives the full viewport to its own toolbar; that toolbar menu has
 an explicit **К персонажам** action, including on read-only public sheets. Its
 desktop shell also occupies the full viewport because application navigation is
 provided by the fixed side rail and does not reserve a top-header offset. Its
-desktop identity summary uses the dedicated character icon to the left of the
-name and HP. The full portrait lives in the inner **Личность** tab beside the
+desktop identity summary uses the frameless dedicated character icon to the left of the
+visible name, race, class list and HP. The full portrait lives in the inner **Личность** tab beside the
 appearance fields. The class list stays on a separate single line below the
 name and race; an overlong multiclass label is ellipsized instead of
 increasing the sheet width. The active tab still registers its DOM scroller
@@ -101,12 +101,12 @@ overwrite the maximum's source structure.
 The frameless desktop effect summary sits below the shared icon/name/HP tile
 instead of inside it or in the skills sidebar. Active catalogue effects,
 non-zero exhaustion and heroic inspiration share one horizontally scrollable
-row of 64×64 cells. Catalogue cells render either raster `iconImageUrl` or SVG;
+row of frameless 64×64 icons. Catalogue cells render either raster `iconImageUrl` or SVG;
 missing media falls back to a monogram rather than a colour dot. The effect name
-is placed on the bottom of the icon over a dark blurred overlay. Optional
+is placed in a fully rounded dark label directly below the icon. Optional
 catalogue `level` metadata and the live exhaustion level appear as a second
-**Уровень N** line in that overlay. The summary has no title, add cells,
-surface or frame. Owners use the single **Редактировать состояние** link to
+**Уровень N** line in that label. The summary has no title, add cells,
+surface or frame. Owners use the single pencil-labelled **Редактировать состояние** link below HP to
 open the shared editor for catalogue effects, exhaustion and inspiration.
 The compact mobile strip
 keeps HP at its intrinsic number width and never lets

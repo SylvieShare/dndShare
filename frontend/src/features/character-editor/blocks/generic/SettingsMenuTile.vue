@@ -105,7 +105,7 @@ function updateSources(value) {
 
 .sm-tile {
   width: 100%;
-  min-height: 80px;
+  min-height: 72px;
   height: 100%;
   display: flex;
   flex-direction: column;
