@@ -30,13 +30,18 @@ describe('D&D desktop sheet schema', () => {
       node => node.type === 'grid' && node.children?.some(child => child.ref === 'rest'),
     )
     const level = findNode(base?.content, node => node.ref === 'lvl')
+    const levelRow = metricGrid.children.at(-1)
 
-    expect(metricGrid.children.map(child => child.ref)).toEqual([
+    expect(metricGrid.children.slice(0, -1).map(child => child.ref)).toEqual([
       'armor', 'initiative', 'settings',
       'speed', 'prof_bonus', 'rest',
-      'lvl',
     ])
-    expect(level.props?.style?.['grid-column']).toBe('1 / -1')
+    expect(levelRow).toMatchObject({
+      kind: 'layout',
+      type: 'row',
+      props: { style: { 'grid-column': '1 / -1' } },
+    })
+    expect(levelRow.children).toContain(level)
   })
 
   it('lets weapon entries and inventory sections own their surfaces', () => {
