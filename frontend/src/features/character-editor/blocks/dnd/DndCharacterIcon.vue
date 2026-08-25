@@ -23,8 +23,9 @@ const monogram = computed(() => String(props.values?.name || '?').trim().slice(0
   width: 88px;
   height: 88px;
   place-items: center;
-  align-self: center;
+  align-self: flex-start;
   flex: 0 0 88px;
+  margin-top: 15px;
   margin-left: 15px;
   overflow: hidden;
   border-radius: 18px;

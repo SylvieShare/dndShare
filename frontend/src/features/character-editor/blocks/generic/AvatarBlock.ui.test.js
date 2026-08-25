@@ -34,6 +34,8 @@ describe('character portrait UI', () => {
     expect(characterIconSource).toMatch(/\.dci-icon \{[\s\S]*?width: 88px;[\s\S]*?height: 88px;/)
     expect(characterIconSource).not.toMatch(/\.dci-icon \{[\s\S]*?background:/)
     expect(characterIconSource).not.toMatch(/\.dci-icon \{[\s\S]*?border:/)
+    expect(characterIconSource).toContain('align-self: flex-start')
+    expect(characterIconSource).toContain('margin-top: 15px')
   })
 
   it('renders portrait action popovers above the embedded session sheet', () => {

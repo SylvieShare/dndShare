@@ -27,10 +27,11 @@ describe('desktop status overview', () => {
     expect(viewSource).not.toContain('dsov-dot')
   })
 
-  it('puts the effect name and optional level in a rounded block directly below its frameless 64px icon', () => {
+  it('keeps frameless 64px effect icons without name labels and shows only an optional level below', () => {
     expect(viewSource).toMatch(/\.dsov-icon \{[\s\S]*?width: 64px;[\s\S]*?height: 64px;/)
     expect(viewSource).toMatch(/\.dsov-effect \{[\s\S]*?border: 0;[\s\S]*?background: none;/)
-    expect(viewSource).toContain('class="dsov-caption"')
+    expect(viewSource).toContain('v-if="item.level" class="dsov-caption"')
+    expect(viewSource).not.toContain('class="dsov-name"')
     expect(viewSource).toMatch(/\.dsov-caption \{[\s\S]*?border-radius: 7px;/)
     expect(viewSource).not.toContain('backdrop-filter')
     expect(viewSource).toContain('Уровень {{ item.level }}')

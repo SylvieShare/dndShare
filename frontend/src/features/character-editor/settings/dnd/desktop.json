@@ -188,7 +188,7 @@
                         "props": {
                           "style": {
                             "grid-column": "1 / -1",
-                            "height": "72px"
+                            "height": "64px"
                           }
                         },
                         "children": [

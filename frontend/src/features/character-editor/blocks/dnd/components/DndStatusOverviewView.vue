@@ -26,9 +26,8 @@
           <span v-else class="dsov-monogram" aria-hidden="true">{{ monogram(item.value) }}</span>
         </span>
 
-        <span class="dsov-caption">
-          <span class="dsov-name">{{ item.value }}</span>
-          <span v-if="item.level" class="dsov-level">Уровень {{ item.level }}</span>
+        <span v-if="item.level" class="dsov-caption">
+          <span class="dsov-level">Уровень {{ item.level }}</span>
         </span>
       </component>
     </div>
@@ -104,14 +103,6 @@ function monogram(value) {
   color: var(--text-on-accent);
   box-sizing: border-box;
   text-align: center;
-}
-.dsov-name {
-  overflow: hidden;
-  font-size: 8px;
-  font-weight: 750;
-  line-height: 1.05;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 .dsov-level { font-size: 7px; font-weight: 650; line-height: 1; opacity: 0.82; }
 .dsov-edit {

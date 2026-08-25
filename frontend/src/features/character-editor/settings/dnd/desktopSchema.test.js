@@ -40,7 +40,7 @@ describe('D&D desktop sheet schema', () => {
     expect(levelRow).toMatchObject({
       kind: 'layout',
       type: 'row',
-      props: { style: { 'grid-column': '1 / -1', height: '72px' } },
+      props: { style: { 'grid-column': '1 / -1', height: '64px' } },
     })
     expect(levelRow.children).toContain(level)
   })

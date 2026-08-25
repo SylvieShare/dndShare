@@ -65,5 +65,5 @@ function applyLevelUp(updates, additions = []) {
 </script>
 
 <style scoped>
-.lvl-tile { width: 100%; }
+.lvl-tile { width: 100%; height: 100%; }
 </style>

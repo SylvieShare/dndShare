@@ -74,13 +74,13 @@ defineEmits(['short', 'long'])
 .rest-half--short {
   clip-path: polygon(0 0, 57% 0, 45% 100%, 0 100%);
   justify-content: flex-start;
-  padding: 13px 50% 0 0;
+  padding: 9px 50% 0 0;
   color: var(--text-2);
 }
 .rest-half--long {
   clip-path: polygon(57% 0, 100% 0, 100% 100%, 45% 100%);
   justify-content: flex-end;
-  padding: 0 0 13px 50%;
+  padding: 0 0 9px 50%;
   color: var(--accent-soft);
 }
 

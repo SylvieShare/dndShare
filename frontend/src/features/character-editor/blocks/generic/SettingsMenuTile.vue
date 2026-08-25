@@ -1,7 +1,6 @@
 <template>
   <div class="sm-wrap" v-click-outside="() => (open = false)">
     <BaseTile class="sm-tile" :color="accent" strip interactive @click="open = !open">
-      <div class="sm-title">Настройки</div>
       <div class="sm-body">
         <img v-if="iconSrc" class="sm-ic" :src="iconSrc" :style="iconStyle" alt="" aria-hidden="true" />
         <div class="sm-sub">меню</div>
@@ -105,17 +104,14 @@ function updateSources(value) {
 
 .sm-tile {
   width: 100%;
-  min-height: 72px;
+  min-height: 64px;
   height: 100%;
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
-  gap: 8px;
   padding: 10px 12px;
   user-select: none;
 }
-.sm-title { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); line-height: 1; }
 .sm-body { display: flex; align-items: center; gap: 8px; }
 .sm-ic { width: 24px; height: 24px; flex-shrink: 0; opacity: 0.9; }
 .sm-sub { font-size: 13px; font-weight: 600; color: var(--text-2); }
