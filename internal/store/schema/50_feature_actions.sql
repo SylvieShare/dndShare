@@ -50,7 +50,7 @@ UPDATE dndshare.item
 SET data = jsonb_set(
   COALESCE(data, '{}'::jsonb),
   '{feature_actions}',
-  '[{"key":"cunning_action","title":"Хитрое действие","action_type":"bonus_action","description":"Совершите одно из стандартных действий бонусным действием.","suggest_action_codes":["dash","disengage","hide"],"requirements":["Только в свой ход"],"level":2,"priority":10}]'::jsonb,
+  '[{"key":"cunning_action","title":"Хитрое действие","action_type":"bonus_action","description":"Совершите одно из стандартных действий бонусным действием.","suggest_action_codes":["dash","disengage","hide"],"level":2,"priority":10}]'::jsonb,
   true
 )
 WHERE type_id = 4

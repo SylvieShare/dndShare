@@ -130,7 +130,8 @@ economy, display text, read-only requirements, level and priority, and may bind
 the action to the source ability resource or reference standard combat actions
 by their stable suggest type-24 codes. The startup catalog configuration
 locates the initial Rogue consumers by stable English identity; runtime only
-reads the structured rows. Character-created actions are stored separately in
+reads the structured rows. Cunning Action omits an own-turn requirement because
+that is already the default presentation for bonus actions. Character-created actions are stored separately in
 `char.values.actions` and remain editable.
 `51_status_effects.sql` creates item type 15 (`Эффекты`) and the generic
 `status_effects` link array on abilities, racial abilities, feats and spells.

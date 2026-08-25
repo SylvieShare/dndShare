@@ -167,6 +167,9 @@ func TestRogueFeaturesPublishGenericSheetActions(t *testing.T) {
 			t.Fatalf("feature action schema must contain %q", fragment)
 		}
 	}
+	if strings.Contains(schemaFeatureActionsSQL, `Только в свой ход`) {
+		t.Fatal("cunning action must not repeat the default own-turn requirement")
+	}
 }
 
 func TestReliableTalentPublishesGenericD20Adjustment(t *testing.T) {
