@@ -21,27 +21,19 @@
   <!-- Main widget -->
   <div v-else class="hp-widget" :style="{ '--hp-color': barColor }">
     <div class="hp-content" :class="{ 'hp-dead': isDead }" @click="$emit('open', $event)">
-      <div class="hp-top-row">
-        <div class="hp-main">
-          <img class="hp-heart-icon" :class="heartbeatClass" src="/static/hp-pulse.svg" :style="{ filter: svgColorFilter }" alt="" />
-          <span class="hp-current" :style="{ color: barColor }">{{ hpCurrent }}</span>
-          <div class="hp-sep">/</div>
-          <span class="hp-max">{{ hpMax }}</span>
-          <template v-if="hpTemp > 0">
-            <div class="hp-temp-sep">+</div>
-            <span class="hp-temp">{{ hpTemp }}</span>
-          </template>
-          <span v-if="hpStatus" class="hp-status-badge" :class="hpStatus.cls">{{ hpStatus.label }}</span>
-        </div>
-        <div class="hp-dice-row">
-          <span class="hp-dice-label">Кости хитов</span>
-          <span v-for="pool in hitDice" :key="pool.die" class="hp-dice-pool">
-            <span class="hp-dice-count">{{ pool.total - pool.used }}/{{ pool.total }}</span>
-            <SystemDie :sides="pool.die" :size="22" />
-          </span>
-        </div>
+      <div class="hp-main">
+        <img class="hp-heart-icon" :class="heartbeatClass" src="/static/hp-pulse.svg" :style="{ filter: svgColorFilter }" alt="" />
+        <span class="hp-current" :style="{ color: barColor }">{{ hpCurrent }}</span>
+        <div class="hp-sep">/</div>
+        <span class="hp-max">{{ hpMax }}</span>
+        <template v-if="hpTemp > 0">
+          <div class="hp-temp-sep">+</div>
+          <span class="hp-temp">{{ hpTemp }}</span>
+        </template>
       </div>
-      <StatBar size="large" decorated :percent="barPct" :color="barColor" :temp-percent="tempBarPct" temp-color="var(--info)" />
+      <div class="hp-bar">
+        <StatBar size="large" decorated :percent="barPct" :color="barColor" :temp-percent="tempBarPct" temp-color="var(--info)" />
+      </div>
     </div>
     <DndDeathSaves :hp="hp" @click.stop @change="$emit('change', $event)" />
   </div>
@@ -50,9 +42,7 @@
 <script setup>
 import { computed } from 'vue'
 import StatBar from '@/shared/ui/StatBar.vue'
-import SystemDie from '@/shared/ui/SystemDie.vue'
 import DndDeathSaves from '@/features/character-editor/blocks/dnd/DndDeathSaves'
-import { normalizeHitDice } from '@/features/character-editor/blocks/dnd/lib/hitDice'
 import { hpMaximum } from '@/features/character-editor/blocks/dnd/lib/hp'
 
 const props = defineProps({
@@ -64,7 +54,6 @@ defineEmits(['open', 'change'])
 const hpCurrent = computed(() => parseInt(props.hp.current) || 0)
 const hpMax = computed(() => hpMaximum(props.hp))
 const hpTemp = computed(() => parseInt(props.hp.temp) || 0)
-const hitDice = computed(() => normalizeHitDice(props.hp))
 const barPct = computed(() => {
   const max = hpMax.value
   if (max <= 0) return 0
@@ -82,15 +71,6 @@ const barColor = computed(() => {
   return 'var(--danger)'
 })
 const isDead = computed(() => hpCurrent.value <= 0)
-const hpStatus = computed(() => {
-  if (hpCurrent.value <= 0) return null
-  const p = barPct.value
-  if (p >= 100) return { label: 'Здоров', cls: 'status-full' }
-  if (p > 75) return { label: 'Хорошо', cls: 'status-good' }
-  if (p > 50) return { label: 'Ранен', cls: 'status-ok' }
-  if (p > 25) return { label: 'Опасно', cls: 'status-warn' }
-  return { label: 'Критически', cls: 'status-crit' }
-})
 const heartbeatClass = computed(() => {
   const p = barPct.value
   if (p > 50) return ''
@@ -125,17 +105,10 @@ const svgColorFilter = computed(() => {
   min-width: 200px;
   padding: 14px 16px;
 }
-.hp-content { display: flex; flex-direction: column; gap: 8px; transition: opacity 0.4s ease; cursor: pointer; }
+.hp-content { display: flex; align-items: center; gap: 18px; transition: opacity 0.4s ease; cursor: pointer; }
 .hp-content.hp-dead { opacity: 0.18; filter: blur(4px); pointer-events: none; user-select: none; transition: opacity 0.4s ease, filter 0.4s ease; }
-.hp-top-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.hp-main { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
-.hp-status-badge { font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; border: 1px solid currentColor; opacity: 0.85; margin-left: 6px; align-self: center; transition: color 0.3s ease, border-color 0.3s ease; }
-.status-full { color: var(--success); }
-.status-good { color: var(--success); }
-.status-ok { color: var(--warning); }
-.status-warn { color: var(--danger); }
-.status-crit { color: var(--danger); animation: hp-crit-pulse 1.4s ease-in-out infinite; }
-@keyframes hp-crit-pulse { 0%, 100% { opacity: 0.85; } 50% { opacity: 0.45; } }
+.hp-main { display: flex; align-items: center; gap: 4px; flex: 0 0 auto; white-space: nowrap; }
+.hp-bar { flex: 1 1 auto; min-width: 120px; }
 .hp-heart-icon { width: 26px; height: 26px; flex-shrink: 0; transition: filter 0.3s ease; align-self: center; margin-right: 2px; }
 .hb-medium { animation: hp-heartbeat 1.7s ease-in-out infinite; }
 .hb-fast { animation: hp-heartbeat 0.9s ease-in-out infinite; }
@@ -145,8 +118,4 @@ const svgColorFilter = computed(() => {
 .hp-max { color: var(--text-2); font-size: 22px; font-weight: bold; min-width: 16px; text-align: center; line-height: 1; }
 .hp-temp-sep { color: var(--text-muted); font-size: 16px; font-weight: bold; padding: 0 1px; }
 .hp-temp { color: var(--info); font-size: 18px; font-weight: bold; min-width: 12px; text-align: center; line-height: 1; }
-.hp-dice-row { display: flex; align-items: center; justify-content: flex-end; gap: 7px; flex-shrink: 0; flex-wrap: wrap; }
-.hp-dice-label { color: var(--text-muted); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-right: 2px; }
-.hp-dice-pool { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
-.hp-dice-count { color: var(--text-2); font-size: 14px; font-weight: 700; }
 </style>

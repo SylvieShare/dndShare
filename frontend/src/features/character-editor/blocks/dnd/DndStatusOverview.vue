@@ -14,6 +14,8 @@
         :inspiration-active="inspirationActive"
         :editable="canInteract"
         @select="openSection"
+        @add-effect="pickerOpen = true"
+        @add-inspiration="setInspiration(true)"
         @show-tooltip="showStatusTooltip"
         @hide-tooltip="hideStatusTooltip"
       />

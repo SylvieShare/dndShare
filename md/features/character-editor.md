@@ -40,7 +40,8 @@ outlines and are divided by thin separators. Their rich descriptions use the
 same muted `--text-2` tone as action-row descriptions. Each tile header has a compact
 dashed plus control for adding an entry. The level tile sits below the desktop
 speed, proficiency-bonus and rest row and spans the full width of those three
-metric columns; it is not duplicated in the right side column.
+metric columns; the metric grid is 320 px wide and both its utility tiles and
+the level row are 80 px high. The level is not duplicated in the right side column.
 The renamed mobile **Способности** tab uses the expanded cards as well and
 starts with prominent feature widgets, actions, resources, defenses and
 proficiencies. The mobile D&D stats tab uses a 12px top-level column gap. Tab state
@@ -88,19 +89,21 @@ synchronization and document-scoped focus handling needed by editors teleported
 outside the page root.
 For an owner, clicking the HP tile opens its vertical editor with a container
 morph from the clicked tile. The editor keeps the source tile width instead of
-falling back to the narrow no-origin panel width. Maximum HP is stored as
+falling back to the narrow no-origin panel width. Its desktop face places the
+heart and current/maximum/temporary numbers to the left of the health bar; it
+does not render a textual health category or hit-die availability. Maximum HP is stored as
 `max {base,bonuses}`: the editor separates its base, read-only racial and other
 ability contributions, and editable manual bonuses. Healing, rests, level-up,
 print and encounter projections use the resolved total; encounter writes never
 overwrite the maximum's source structure.
-The desktop skills sidebar groups conditions, exhaustion and heroic inspiration
-inside one interactive **Статусы** tile. The tile keeps the rules term
-**Состояния** for the condition list itself, summarizes active condition chips,
-the non-zero exhaustion level and active inspiration, expands every exhaustion
-effect active at the current level, and omits both inactive indicators from the
-tile. Exhaustion and inspiration occupy separate summary rows. It
-opens one vertical morph editor with direct tabs for all three domains. Clicking
-a domain inside the tile opens its corresponding tab. The compact mobile strip
+The desktop effects tile sits directly below HP instead of in the skills
+sidebar. It renders active conditions, non-zero exhaustion and heroic
+inspiration in one horizontally scrollable row of 64×64 icon cells with compact
+labels. Active inspiration is an effect in that row; while it is absent, an
+owner gets a separate direct **Добавить вдохновение** action. A separate add-effect
+cell opens the handbook picker. Clicking an active domain still opens the shared
+vertical morph editor with tabs for conditions, exhaustion and inspiration.
+The compact mobile strip
 keeps HP at its intrinsic number width and never lets
 the HP numbers shrink. Its right side contains a fixed **Статусы** action
 button with editors for conditions, exhaustion and heroic inspiration. Active

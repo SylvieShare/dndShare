@@ -7,23 +7,28 @@ const viewSource = readFileSync(fileURLToPath(new URL('./components/DndStatusOve
 const inspirationSource = readFileSync(fileURLToPath(new URL('./components/DndInspirationEditor.vue', import.meta.url)), 'utf8')
 
 describe('desktop status overview', () => {
-  it('presents conditions, exhaustion and inspiration as one status tile', () => {
+  it('presents effects, exhaustion and inspiration in one horizontal icon row', () => {
     expect(source).toContain('<BaseTile')
     expect(source).toContain(':strip="hasActiveSummary"')
-    expect(viewSource).toContain('>Статусы<')
     expect(viewSource).toContain('>Эффекты<')
-    expect(viewSource).toContain('>Истощение<')
-    expect(viewSource).toContain('>Вдохновение<')
+    expect(viewSource).toContain('overflow-x: auto')
+    expect(viewSource).toMatch(/\.dsov-icon \{[\s\S]*?width: 64px;[\s\S]*?height: 64px;/)
+    expect(viewSource).toContain('Истощение {{ exhaustionLevel }}')
+    expect(viewSource).toContain('Вдохновение</span>')
   })
 
-  it('omits inactive exhaustion and inspiration from the tile summary', () => {
-    expect(viewSource).toContain('v-if="hasActiveMetrics"')
+  it('omits inactive metrics and offers a separate direct inspiration action', () => {
     expect(viewSource).toContain('v-if="exhaustionLevel > 0"')
     expect(viewSource).toContain('v-if="inspirationActive"')
-    expect(viewSource).toContain('v-for="effect in exhaustionEffects"')
+    expect(viewSource).toContain('v-if="editable && !inspirationActive"')
+    expect(viewSource).toContain("$emit('add-inspiration')")
+    expect(source).toContain('@add-inspiration="setInspiration(true)"')
     expect(source).toContain('normalizedExhaustion.value.effects.slice(0, exhaustionLevel.value)')
-    expect(viewSource).not.toContain("inspirationActive ? 'есть' : 'нет'")
-    expect(viewSource).not.toContain("exhaustionLevel > 0 ? `${exhaustionLevel} ур.` : 'нет'")
+  })
+
+  it('opens the effect picker from its own add action', () => {
+    expect(viewSource).toContain("$emit('add-effect')")
+    expect(source).toContain('@add-effect="pickerOpen = true"')
   })
 
   it('opens one editor with a direct tab for every status domain', () => {
