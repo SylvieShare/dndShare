@@ -41,6 +41,26 @@ describe('character feature actions', () => {
     expect(collectCharacterFeatureActions(values, items, resources)[0].resource).toBe(resources[0])
   })
 
+  it('can bind and spend a resource contributed by another owned feature', () => {
+    const items = new Map([['20', {
+      id: 20,
+      name: 'Острое словцо',
+      data: { feature_actions: [{
+        title: 'Острое словцо',
+        action_type: 'reaction',
+        resource_item_id: 10,
+        resource_cost: 1,
+      }] },
+    }]])
+    const values = { lvl: { level: 3 }, abilities_class: [{ id: 20, uid: 'cutting-words' }] }
+    const resource = { item_id: 10, key: 'bardic-inspiration', value: 2, total: 3, source: {} }
+
+    expect(collectCharacterFeatureActions(values, items, [resource])[0]).toMatchObject({
+      resource,
+      resource_cost: 1,
+    })
+  })
+
   it('uses the persisted per-sheet order and can include empty action groups', () => {
     const values = {
       actions: [

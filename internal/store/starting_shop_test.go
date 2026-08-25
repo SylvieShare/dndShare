@@ -9,36 +9,37 @@ import (
 )
 
 func TestToolProficiencyCatalogIsEmbeddedAfterItemTypeHierarchy(t *testing.T) {
-	if len(schemaParts) < 27 {
+	if len(schemaParts) < 28 {
 		t.Fatal("schemaParts must contain the final item catalogue sections")
 	}
-	hierarchy := schemaParts[len(schemaParts)-27]
-	tools := schemaParts[len(schemaParts)-26]
-	resources := schemaParts[len(schemaParts)-25]
-	classTools := schemaParts[len(schemaParts)-24]
-	resourceFixes := schemaParts[len(schemaParts)-23]
-	resourceAudit := schemaParts[len(schemaParts)-22]
-	resourceColors := schemaParts[len(schemaParts)-21]
-	spellGrants := schemaParts[len(schemaParts)-20]
-	equippedArmor := schemaParts[len(schemaParts)-19]
-	defenses := schemaParts[len(schemaParts)-18]
-	castLevel := schemaParts[len(schemaParts)-17]
-	choices := schemaParts[len(schemaParts)-16]
-	racialAutomation := schemaParts[len(schemaParts)-15]
-	classAutomation := schemaParts[len(schemaParts)-14]
-	featAutomation := schemaParts[len(schemaParts)-13]
-	rogueAutomation := schemaParts[len(schemaParts)-12]
-	rogueCatalogFixes := schemaParts[len(schemaParts)-11]
-	weaponDamageActions := schemaParts[len(schemaParts)-10]
-	featureSheetWidgets := schemaParts[len(schemaParts)-9]
-	rollAdjustments := schemaParts[len(schemaParts)-8]
-	featureActions := schemaParts[len(schemaParts)-7]
-	statusEffects := schemaParts[len(schemaParts)-6]
-	statusEffectLevels := schemaParts[len(schemaParts)-5]
-	activityRestrictions := schemaParts[len(schemaParts)-4]
-	statusEffectCatalog := schemaParts[len(schemaParts)-3]
-	removeStatusSuggest := schemaParts[len(schemaParts)-2]
-	frenzyAction := schemaParts[len(schemaParts)-1]
+	hierarchy := schemaParts[len(schemaParts)-28]
+	tools := schemaParts[len(schemaParts)-27]
+	resources := schemaParts[len(schemaParts)-26]
+	classTools := schemaParts[len(schemaParts)-25]
+	resourceFixes := schemaParts[len(schemaParts)-24]
+	resourceAudit := schemaParts[len(schemaParts)-23]
+	resourceColors := schemaParts[len(schemaParts)-22]
+	spellGrants := schemaParts[len(schemaParts)-21]
+	equippedArmor := schemaParts[len(schemaParts)-20]
+	defenses := schemaParts[len(schemaParts)-19]
+	castLevel := schemaParts[len(schemaParts)-18]
+	choices := schemaParts[len(schemaParts)-17]
+	racialAutomation := schemaParts[len(schemaParts)-16]
+	classAutomation := schemaParts[len(schemaParts)-15]
+	featAutomation := schemaParts[len(schemaParts)-14]
+	rogueAutomation := schemaParts[len(schemaParts)-13]
+	rogueCatalogFixes := schemaParts[len(schemaParts)-12]
+	weaponDamageActions := schemaParts[len(schemaParts)-11]
+	featureSheetWidgets := schemaParts[len(schemaParts)-10]
+	rollAdjustments := schemaParts[len(schemaParts)-9]
+	featureActions := schemaParts[len(schemaParts)-8]
+	statusEffects := schemaParts[len(schemaParts)-7]
+	statusEffectLevels := schemaParts[len(schemaParts)-6]
+	activityRestrictions := schemaParts[len(schemaParts)-5]
+	statusEffectCatalog := schemaParts[len(schemaParts)-4]
+	removeStatusSuggest := schemaParts[len(schemaParts)-3]
+	frenzyAction := schemaParts[len(schemaParts)-2]
+	classActionAutomation := schemaParts[len(schemaParts)-1]
 	if hierarchy.name != "item-type-hierarchy" || hierarchy.sql == "" || hierarchy.sql != schemaItemTypeHierarchySQL {
 		t.Fatal("item-type-hierarchy schema must be embedded after the equipment catalogues")
 	}
@@ -119,6 +120,29 @@ func TestToolProficiencyCatalogIsEmbeddedAfterItemTypeHierarchy(t *testing.T) {
 	}
 	if frenzyAction.name != "frenzy-action" || frenzyAction.sql == "" || frenzyAction.sql != schemaFrenzyActionSQL {
 		t.Fatal("frenzy action must be embedded after the status effect catalogue migration")
+	}
+	if classActionAutomation.name != "class-action-automation" || classActionAutomation.sql == "" || classActionAutomation.sql != schemaClassActionAutomationSQL {
+		t.Fatal("class action automation must be embedded after the shared action contracts")
+	}
+}
+
+func TestClassActionAutomationPublishesCrossFeatureResourceActions(t *testing.T) {
+	for _, fragment := range []string{
+		`"key":"resource_item_id"`,
+		`'Bardic Inspiration'`,
+		`'Second Wind'`,
+		`'Wild Shape'`,
+		`'Channel Divinity'`,
+		`'Flash of Genius'`,
+		`'Ki'`,
+		`'Divine Sense'`,
+		`'Primeval Awareness'`,
+		`'Font of Magic'`,
+		`"resource_cost":5`,
+	} {
+		if !strings.Contains(schemaClassActionAutomationSQL, fragment) {
+			t.Fatalf("class action automation schema must contain %q", fragment)
+		}
 	}
 }
 

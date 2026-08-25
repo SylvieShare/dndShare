@@ -66,6 +66,13 @@ function menuEffects(values, definitions) {
 }
 
 function matchingResource(resources, valueId, ownedEntry, definition) {
+  const resourceItemId = Number(definition.resource_item_id)
+  if (Number.isFinite(resourceItemId)) {
+    return resources.find(resource => (
+      Number(resource.item_id) === resourceItemId
+      && (!definition.resource_key || resource.source?.resourceKey === definition.resource_key)
+    )) || null
+  }
   if (!definition.uses_resource && !definition.resource_key) return null
   return resources.find(resource => (
     resource.source?.valueId === valueId
@@ -96,7 +103,7 @@ function contributedActions(values, itemsById, resources) {
         requirements: requirements(definition.requirements),
         suggest_action_codes: requirements(definition.suggest_action_codes),
         priority: Number(definition.priority) || 0,
-        resource_cost: Math.max(1, Number(definition.resource_cost) || 1),
+        resource_cost: Math.max(0, Number(definition.resource_cost) || 0),
         resource: matchingResource(resources, valueId, ownedEntry, definition),
         menu_effects: menuEffects(values, definition.menu_effects),
         readonly: true,

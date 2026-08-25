@@ -16,7 +16,7 @@ frontend, PostgreSQL и S3-compatible object storage.
 - `md/` — актуальная wiki проекта: общая frontend-архитектура находится в
   `md/frontend.md`, CSS-токены — в `md/css-variables.md`, документация фич — в
   `md/features/*`.
-- `md/api.md`, `md/database.md` и `md/deploy.md` описывают контракт API, схему
+- `md/api.md`, `md/database.md`, `md/class-automation-audit.md` и `md/deploy.md` описывают контракт API, схему
   БД и процесс деплоя; лимиты размера исходных файлов описаны в
   `md/file-size-rules.md`.
 - `md/error-report-automation.md` — runbook регулярной обработки одобренных

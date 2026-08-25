@@ -145,6 +145,7 @@ export function createAbilityResourceSource(valueId, color) {
           const rest = abilityRestRule(definition.rule, item.data, values)
           return [{
             key: `abilities:${valueId}:${entryKey(entry)}${definition.key ? `:${definition.key}` : ''}`,
+            item_id: item.id,
             title: definition.rule.title || item.name || 'Способность',
             color_point: abilityResourceColor(item, definition, color),
             value: Math.min(abilityAvailable(entry, definition, total), total),

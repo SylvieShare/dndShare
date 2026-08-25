@@ -20,7 +20,7 @@
           :key="action.key"
           block
           :title="`Действия: ${action.title}`"
-          :disabled="!manage || (group.actions.length < 2 && action.readonly && !action.menu_effects?.length)"
+          :disabled="!manage || (group.actions.length < 2 && action.readonly && !action.menu_effects?.length && !canSpendResource(action))"
         >
           <template #trigger="{ open }">
             <article
@@ -55,6 +55,16 @@
 
           <template #default="{ close }">
             <RowActionItem
+              v-if="canSpendResource(action)"
+              :icon="BatteryLow"
+              tone="warning"
+              :disabled="action.resource.value < action.resource_cost"
+              @click="spendResource(action, close)"
+            >
+              Потратить {{ action.resource_cost }}: {{ action.resource.title }}
+              <template #suffix>{{ action.resource.value }}/{{ action.resource.total }}</template>
+            </RowActionItem>
+            <RowActionItem
               v-for="effect in action.menu_effects || []"
               :key="effect.key"
               :icon="BatteryLow"
@@ -65,7 +75,7 @@
               {{ effect.title }}
               <template #suffix>{{ effect.suffix }}</template>
             </RowActionItem>
-            <RowActionSeparator v-if="action.menu_effects?.length && (group.actions.length > 1 || !action.readonly)" />
+            <RowActionSeparator v-if="(canSpendResource(action) || action.menu_effects?.length) && (group.actions.length > 1 || !action.readonly)" />
             <RowActionItem v-if="actionIndex > 0" :icon="ArrowUp" @click="move(action, -1, close)">Переместить выше</RowActionItem>
             <RowActionItem v-if="actionIndex < group.actions.length - 1" :icon="ArrowDown" @click="move(action, 1, close)">Переместить ниже</RowActionItem>
             <RowActionSeparator v-if="!action.readonly && group.actions.length > 1" />
@@ -106,7 +116,7 @@ const props = defineProps({
   panel: { type: Boolean, default: false },
   actionSuggestions: { type: Array, default: () => [] },
 })
-const emit = defineEmits(['manage', 'edit', 'move', 'remove', 'apply-effect'])
+const emit = defineEmits(['manage', 'edit', 'move', 'remove', 'apply-effect', 'spend-resource'])
 const tooltip = ref({ visible: false, title: '', desc: '', x: 0, top: null, bottom: null })
 const suggestionsByCode = computed(() => new Map(props.actionSuggestions.map(item => [String(item.code || ''), item])))
 
@@ -142,6 +152,15 @@ function remove(action, close) {
 function applyEffect(action, effect, close) {
   close()
   emit('apply-effect', action, effect)
+}
+
+function canSpendResource(action) {
+  return !!action.resource && Number(action.resource_cost) > 0
+}
+
+function spendResource(action, close) {
+  close()
+  emit('spend-resource', action)
 }
 
 function showActionTooltip(event, item) {

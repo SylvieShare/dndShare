@@ -47,4 +47,12 @@ describe('character action block', () => {
     expect(blockSource).toContain('@apply-effect="applyActionEffect"')
     expect(blockSource).toContain('featureActionEffectPatch(props.values || {}, effect)')
   })
+
+  it('spends a resource linked to a source action from the same row menu', () => {
+    expect(viewSource).toContain('v-if="canSpendResource(action)"')
+    expect(viewSource).toContain('Потратить {{ action.resource_cost }}: {{ action.resource.title }}')
+    expect(viewSource).toContain("emit('spend-resource', action)")
+    expect(blockSource).toContain('@spend-resource="spendActionResource"')
+    expect(blockSource).toContain('characterResources?.setAvailable?.(action.resource.key, remaining)')
+  })
 })

@@ -83,7 +83,7 @@ describe('character resource sources', () => {
     expect(result).toHaveLength(3)
     expect(result[0]).toMatchObject({ title: 'Удача', readonly: false, value: 1, total: 3 })
     expect(result[1]).toMatchObject({ title: 'Дыхание дракона', source_label: 'способности', readonly: true, value: 2, total: 4, short_rest: true })
-    expect(result[2]).toMatchObject({ title: 'Второе дыхание', source_label: 'способности', readonly: true, value: 0, total: 2, long_rest: true })
+    expect(result[2]).toMatchObject({ item_id: 20, title: 'Второе дыхание', source_label: 'способности', readonly: true, value: 0, total: 2, long_rest: true })
   })
 
   it('uses configured colors and gives unconfigured abilities stable varied colors', () => {

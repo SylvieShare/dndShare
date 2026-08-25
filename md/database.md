@@ -168,6 +168,14 @@ character counter without runtime checks for a feature name or id. Frenzy uses
 the contract to expose its bonus-action melee attack only while Rage is active;
 its manual consequence adds one exhaustion level, with the rules text preserving
 the actual timing: exhaustion is gained when the frenzied Rage ends.
+`57_class_action_automation.sql` lets a feature action point to a resource owned
+by another feature through `resource_item_id`. Fixed action costs can then be
+spent from the row menu, while variable pools stay visible and manually
+adjustable. The catalogue publishes unambiguous actions and reactions for the
+other classes through this contract, including Bardic Inspiration, Second Wind,
+Wild Shape, cleric Channel Divinity options, ki techniques and sorcery-point
+features. Complex spell, form, companion and target-transfer systems remain
+outside this migration and are tracked in `md/class-automation-audit.md`.
 Section `34_ability_resource_catalog_fixes.sql` задаёт структурированные правила
 Харизмы для «Вдохновения барда» и Мудрости для «Гнева бури», удаляет прежний
 ручной максимум вдохновения и переводит его полные старые character entries на

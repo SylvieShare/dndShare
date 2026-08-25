@@ -10,6 +10,7 @@
         @move="moveAction"
         @remove="removeAction"
         @apply-effect="applyActionEffect"
+        @spend-resource="spendActionResource"
       />
     </BaseTile>
 
@@ -29,6 +30,7 @@
           :action-suggestions="actionSuggestions"
           panel
           @apply-effect="applyActionEffect"
+          @spend-resource="spendActionResource"
         />
       </template>
       <template #editor>
@@ -141,6 +143,20 @@ function applyActionEffect(action, effect) {
     type: 'feature_action_effect',
     action: `${action.title}: ${effect.title}`,
     data: { actionKey: action.key, effectKey: effect.key },
+  })
+}
+
+function spendActionResource(action) {
+  if (!ownerMode.value || !action.resource || action.resource_cost <= 0) return
+  const remaining = Number(action.resource.value) - action.resource_cost
+  if (remaining < 0) return
+  const patch = charCtx.characterResources?.setAvailable?.(action.resource.key, remaining) || {}
+  for (const [id, value] of Object.entries(patch)) emit('update:value', id, value)
+  if (!Object.keys(patch).length) return
+  charCtx.logSessionEvent?.({
+    type: 'feature_action_resource',
+    action: `${action.title}: потрачен ресурс «${action.resource.title}»`,
+    data: { actionKey: action.key, resourceKey: action.resource.key, cost: action.resource_cost },
   })
 }
 

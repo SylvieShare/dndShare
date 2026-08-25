@@ -5,6 +5,27 @@
     "type": "description"
   },
   {
+    "name": "Действия на листе",
+    "key": "feature_actions",
+    "type": "object_array",
+    "fields": [
+      { "name": "Ключ", "key": "key", "type": "text" },
+      { "name": "Название", "key": "title", "type": "text" },
+      { "name": "Вид действия", "key": "action_type", "type": "select", "default": "action", "options": [{ "value": "action", "label": "Действие" }, { "value": "bonus_action", "label": "Бонусное действие" }, { "value": "reaction", "label": "Реакция" }, { "value": "free", "label": "Свободное действие" }, { "value": "special", "label": "Особое действие" }] },
+      { "name": "Описание", "key": "description", "type": "description" },
+      { "name": "Стандартные действия", "key": "suggest_action_codes", "type": "text_array" },
+      { "name": "Условия", "key": "requirements", "type": "text_array" },
+      { "name": "Требуемые активные эффекты", "key": "required_status_codes", "type": "text_array" },
+      { "name": "Расходует ресурс способности", "key": "uses_resource", "type": "bool" },
+      { "name": "ID способности-ресурса", "key": "resource_item_id", "type": "int" },
+      { "name": "Ключ отдельного ресурса", "key": "resource_key", "type": "text" },
+      { "name": "Расход ресурса", "key": "resource_cost", "type": "int", "default": 1 },
+      { "name": "Пункты меню", "key": "menu_effects", "type": "object_array", "fields": [{ "name": "Ключ", "key": "key", "type": "text" }, { "name": "Название", "key": "title", "type": "text" }, { "name": "Действие", "key": "kind", "type": "text" }, { "name": "Поле персонажа", "key": "value_id", "type": "text" }, { "name": "Ключ счётчика", "key": "counter_key", "type": "text" }, { "name": "Изменение", "key": "delta", "type": "int" }, { "name": "Минимум", "key": "min", "type": "int" }, { "name": "Максимум", "key": "max", "type": "int" }, { "name": "Тон", "key": "tone", "type": "text" }] },
+      { "name": "Порядок", "key": "priority", "type": "int" },
+      { "name": "С уровня", "key": "level", "type": "int", "default": 1 }
+    ]
+  },
+  {
     "name": "Макс. использований",
     "key": "max_use",
     "type": "int"
