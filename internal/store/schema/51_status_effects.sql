@@ -41,8 +41,9 @@ WHERE item_type.id IN (3, 4, 5, 7)
 
 -- Preserve the former condition catalogue as real effect items. It remains
 -- editable and gains polarity/mechanics instead of being a label-only suggest.
-INSERT INTO dndshare.item (name, name_en, data, type_id, icon_svg_id)
-SELECT condition.value,
+INSERT INTO dndshare.item (user_id, name, name_en, data, type_id, icon_svg_id)
+SELECT condition.user_id,
+       condition.value,
        NULL,
        jsonb_build_object(
          'code', COALESCE(NULLIF(condition.code, ''), 'condition_' || condition.id::text),
@@ -57,11 +58,10 @@ SELECT condition.value,
        condition.svg_id
 FROM dndshare.suggest condition
 WHERE condition.type_id = 9
-  AND condition.user_id IS NULL
   AND NOT EXISTS (
     SELECT 1 FROM dndshare.item effect
     WHERE effect.type_id = 15
-      AND effect.user_id IS NULL
+      AND effect.user_id IS NOT DISTINCT FROM condition.user_id
       AND effect.data ->> 'legacy_suggest_id' = condition.id::text
   );
 

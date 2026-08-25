@@ -11,8 +11,6 @@ import (
 	"dndshare/internal/store"
 )
 
-const encounterStatesSuggestTypeID int64 = 9
-
 func init() { registerRoutes((*Server).routesPublicEncounter) }
 
 func (s *Server) routesPublicEncounter(mux *http.ServeMux) {
@@ -154,6 +152,7 @@ func (s *Server) handleGetPublicEncounter(w http.ResponseWriter, r *http.Request
 		}
 	}
 	ownerID := session.OwnerUserID
+	itemIDs = append(itemIDs, stateIDs...)
 	items, err := s.store.GetByIds(r.Context(), uniqueInt64s(itemIDs), &ownerID)
 	if err != nil {
 		serverError(w, err)
@@ -164,14 +163,11 @@ func (s *Server) handleGetPublicEncounter(w http.ResponseWriter, r *http.Request
 		itemsByID[item.ID] = item
 	}
 
-	states, err := s.store.GetSuggestsByIds(r.Context(), encounterStatesSuggestTypeID, uniqueInt64s(stateIDs), &ownerID)
-	if err != nil {
-		serverError(w, err)
-		return
-	}
-	statesByID := make(map[int64]publicEncounterState, len(states))
-	for _, state := range states {
-		statesByID[state.ID] = publicEncounterState{Name: state.Value, Color: state.Color, SVG: state.Svg}
+	statesByID := make(map[int64]publicEncounterState, len(stateIDs))
+	for _, stateID := range uniqueInt64s(stateIDs) {
+		if item, ok := itemsByID[stateID]; ok && item.TypeID == 15 {
+			statesByID[stateID] = publicStateFromItem(item)
+		}
 	}
 
 	combatants := make([]publicEncounterCombatant, 0, len(encounter.Combatants))
@@ -372,8 +368,26 @@ func participantStateIDs(participant store.SessionParticipantData) []int64 {
 	if participant.TemplateName != "DND5" {
 		return nil
 	}
-	raw := objectValue(participant.Data, "values")["states"]
-	return int64Slice(raw)
+	raw, _ := objectValue(participant.Data, "values")["states"].([]any)
+	ids := make([]int64, 0, len(raw))
+	for _, entry := range raw {
+		status, _ := entry.(map[string]any)
+		if id, ok := numberValue(status, "effect_id"); ok && id > 0 {
+			ids = append(ids, int64(id))
+		}
+	}
+	return ids
+}
+
+func publicStateFromItem(item store.Item) publicEncounterState {
+	state := publicEncounterState{Name: item.Name, SVG: item.SVG}
+	var data map[string]any
+	if json.Unmarshal(item.Data, &data) == nil {
+		if color := stringValue(data, "color"); color != "" {
+			state.Color = &color
+		}
+	}
+	return state
 }
 
 func npcPresentationName(raw rawPublicCombatant, item store.Item) string {

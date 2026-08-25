@@ -277,13 +277,6 @@
     },
     "hide_on_empty": true
   },
-  "states": {
-    "id": "states",
-    "type": "BLOCK_STATES",
-    "content": {
-      "suggest_id": 9
-    }
-  },
   "mobile_statuses": {
     "id": "mobile_statuses",
     "type": "DND_MOBILE_STATUS_MENU",

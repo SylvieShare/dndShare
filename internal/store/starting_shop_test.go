@@ -9,34 +9,35 @@ import (
 )
 
 func TestToolProficiencyCatalogIsEmbeddedAfterItemTypeHierarchy(t *testing.T) {
-	if len(schemaParts) < 25 {
+	if len(schemaParts) < 26 {
 		t.Fatal("schemaParts must contain the final item catalogue sections")
 	}
-	hierarchy := schemaParts[len(schemaParts)-25]
-	tools := schemaParts[len(schemaParts)-24]
-	resources := schemaParts[len(schemaParts)-23]
-	classTools := schemaParts[len(schemaParts)-22]
-	resourceFixes := schemaParts[len(schemaParts)-21]
-	resourceAudit := schemaParts[len(schemaParts)-20]
-	resourceColors := schemaParts[len(schemaParts)-19]
-	spellGrants := schemaParts[len(schemaParts)-18]
-	equippedArmor := schemaParts[len(schemaParts)-17]
-	defenses := schemaParts[len(schemaParts)-16]
-	castLevel := schemaParts[len(schemaParts)-15]
-	choices := schemaParts[len(schemaParts)-14]
-	racialAutomation := schemaParts[len(schemaParts)-13]
-	classAutomation := schemaParts[len(schemaParts)-12]
-	featAutomation := schemaParts[len(schemaParts)-11]
-	rogueAutomation := schemaParts[len(schemaParts)-10]
-	rogueCatalogFixes := schemaParts[len(schemaParts)-9]
-	weaponDamageActions := schemaParts[len(schemaParts)-8]
-	featureSheetWidgets := schemaParts[len(schemaParts)-7]
-	rollAdjustments := schemaParts[len(schemaParts)-6]
-	featureActions := schemaParts[len(schemaParts)-5]
-	statusEffects := schemaParts[len(schemaParts)-4]
-	statusEffectLevels := schemaParts[len(schemaParts)-3]
-	activityRestrictions := schemaParts[len(schemaParts)-2]
-	statusEffectCatalog := schemaParts[len(schemaParts)-1]
+	hierarchy := schemaParts[len(schemaParts)-26]
+	tools := schemaParts[len(schemaParts)-25]
+	resources := schemaParts[len(schemaParts)-24]
+	classTools := schemaParts[len(schemaParts)-23]
+	resourceFixes := schemaParts[len(schemaParts)-22]
+	resourceAudit := schemaParts[len(schemaParts)-21]
+	resourceColors := schemaParts[len(schemaParts)-20]
+	spellGrants := schemaParts[len(schemaParts)-19]
+	equippedArmor := schemaParts[len(schemaParts)-18]
+	defenses := schemaParts[len(schemaParts)-17]
+	castLevel := schemaParts[len(schemaParts)-16]
+	choices := schemaParts[len(schemaParts)-15]
+	racialAutomation := schemaParts[len(schemaParts)-14]
+	classAutomation := schemaParts[len(schemaParts)-13]
+	featAutomation := schemaParts[len(schemaParts)-12]
+	rogueAutomation := schemaParts[len(schemaParts)-11]
+	rogueCatalogFixes := schemaParts[len(schemaParts)-10]
+	weaponDamageActions := schemaParts[len(schemaParts)-9]
+	featureSheetWidgets := schemaParts[len(schemaParts)-8]
+	rollAdjustments := schemaParts[len(schemaParts)-7]
+	featureActions := schemaParts[len(schemaParts)-6]
+	statusEffects := schemaParts[len(schemaParts)-5]
+	statusEffectLevels := schemaParts[len(schemaParts)-4]
+	activityRestrictions := schemaParts[len(schemaParts)-3]
+	statusEffectCatalog := schemaParts[len(schemaParts)-2]
+	removeStatusSuggest := schemaParts[len(schemaParts)-1]
 	if hierarchy.name != "item-type-hierarchy" || hierarchy.sql == "" || hierarchy.sql != schemaItemTypeHierarchySQL {
 		t.Fatal("item-type-hierarchy schema must be embedded after the equipment catalogues")
 	}
@@ -111,6 +112,9 @@ func TestToolProficiencyCatalogIsEmbeddedAfterItemTypeHierarchy(t *testing.T) {
 	}
 	if statusEffectCatalog.name != "status-effect-catalog" || statusEffectCatalog.sql == "" || statusEffectCatalog.sql != schemaStatusEffectCatalogSQL {
 		t.Fatal("status effect catalogue must be embedded after activity restrictions")
+	}
+	if removeStatusSuggest.name != "remove-status-suggest" || removeStatusSuggest.sql == "" || removeStatusSuggest.sql != schemaRemoveStatusSuggestSQL {
+		t.Fatal("obsolete status suggest must be removed after effect item migration")
 	}
 }
 

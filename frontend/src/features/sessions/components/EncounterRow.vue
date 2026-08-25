@@ -61,13 +61,16 @@
             class="enc-surprised-chip"
           >врасплох</span>
         </template>
-        <BlockStates
-          v-if="statesBlock"
-          class="enc-states"
-          :block="statesBlock"
-          :value="statesValue"
-          @update:value="onStatesUpdate"
-        />
+        <div v-if="statesBlock && stateItems.length" class="enc-states">
+          <button
+            v-for="item in stateItems"
+            :key="item.id"
+            type="button"
+            class="enc-state"
+            :title="`Убрать ${item.name}`"
+            @click.stop="removeState(item.id)"
+          >{{ item.name }} ×</button>
+        </div>
         <span v-if="isNpc && combatant.note" class="enc-note" :title="combatant.note">{{ combatant.note }}</span>
       </div>
       <EncounterHpBar class="enc-info-hp" :combatant="combatant" :section="section" />
@@ -106,15 +109,14 @@
     >{{ opt.label }}</button>
   </BasePopover>
 
-  <SuggestMultiSelect
+  <ItemPickerModal
     v-if="statesEditorOpen && statesBlock"
-    :suggest-type-id="statesBlock.content.suggest_id"
-    :items="statesAllItems"
-    :active-ids="statesValue"
+    :item-type-ids="[statesBlock.content.item_type_id]"
+    :exclude-items="statesValue"
+    :z-index="9200"
     title="Состояния"
-    @toggle="onStatesToggle"
     @close="statesEditorOpen = false"
-    @created="onStatesCreated"
+    @pick="addState"
   />
 
   <AppModalFrame v-if="noteEditorOpen" :title="`Заметка — ${displayName}`" :z-index="9200" @close="cancelNoteEdit">
@@ -136,7 +138,7 @@
 
 <script setup>
 import { computed, inject, provide, reactive, ref } from 'vue'
-import BlockStates from '@/features/character-editor/blocks/generic/BlockStates'
+import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import EncounterAvatar from '@/features/sessions/components/EncounterAvatar.vue'
 import EncounterCombatControls from '@/features/sessions/components/EncounterCombatControls.vue'
 import EncounterChallengeResult from '@/features/sessions/components/EncounterChallengeResult.vue'
@@ -149,8 +151,7 @@ import { BasePopover } from '@sylvieshare/share-ui'
 import { BaseTile } from '@sylvieshare/share-ui'
 import { FormActionButtons } from '@sylvieshare/share-ui'
 import { FormTextarea } from '@sylvieshare/share-ui'
-import SuggestMultiSelect from '@/shared/ui/SuggestMultiSelect'
-import { useSuggestStore } from '@/stores/suggest'
+import { useItemReferenceMap } from '@/features/sessions/composables/useItemReferenceMap'
 
 const props = defineProps({
   combatant: { type: Object, required: true },
@@ -217,19 +218,11 @@ function pickSide(side) {
 const statesBlock = computed(() => enc.statesBlock(props.combatant))
 const statesValue = computed(() => enc.statesValue(props.combatant))
 
-function onStatesUpdate(_id, ids) {
-  enc.setStates(props.combatant, ids)
-}
-
 const localCharCtx = reactive({ ownerMode: false, dictionaries: {}, var: {} })
 provide('charCtx', localCharCtx)
 
-const suggestStoreLocal = useSuggestStore()
-const statesAllItems = computed(() => {
-  const sid = statesBlock.value?.content?.suggest_id
-  if (sid == null) return []
-  return suggestStoreLocal.items(sid) || []
-})
+const { itemById: stateItemById } = useItemReferenceMap(statesValue)
+const stateItems = computed(() => statesValue.value.map(stateItemById).filter(Boolean))
 
 const canEdit = computed(() => !!enc.canEditPlayerHp())
 const rowMenuVisible = computed(() => canEdit.value)
@@ -244,21 +237,16 @@ function onRowClick(event) {
 const statesEditorOpen = ref(false)
 
 function openStatesEditor() {
-  const sid = statesBlock.value?.content?.suggest_id
-  if (sid != null) suggestStoreLocal.ensure(sid)
   statesEditorOpen.value = true
 }
 
-function onStatesToggle(id) {
-  const cur = statesValue.value
-  const next = cur.includes(id) ? cur.filter(x => x !== id) : [...cur, id]
-  enc.setStates(props.combatant, next)
+function addState(item) {
+  enc.setStates(props.combatant, [...statesValue.value, item.id])
+  statesEditorOpen.value = false
 }
 
-function onStatesCreated(item) {
-  const sid = statesBlock.value?.content?.suggest_id
-  if (sid != null) suggestStoreLocal.addItem(sid, item)
-  enc.setStates(props.combatant, [...statesValue.value, item.id])
+function removeState(itemId) {
+  enc.setStates(props.combatant, statesValue.value.filter(id => String(id) !== String(itemId)))
 }
 
 const noteEditorOpen = ref(false)
@@ -384,8 +372,25 @@ function commitNoteEdit() {
 .enc-states {
   display: inline-flex;
   align-items: center;
+  gap: 3px;
   margin-left: 2px;
 }
+.enc-state {
+  max-width: 110px;
+  overflow: hidden;
+  padding: 1px 6px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: transparent;
+  color: var(--text-2);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 9px;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.enc-state:hover { border-color: var(--danger); color: var(--danger); }
 
 .enc-note {
   font-size: 11px;

@@ -452,11 +452,11 @@ describe('ViewSession participant rail', () => {
     expect(encounterMenuSource).toContain('const canDelete = computed(() => isNpc.value)')
     expect(encounterMenuSource).not.toContain('ColorPresetPicker')
     expect(encounterFlowSource).toContain('function sendToReserve(c)')
-    expect(encounterStatesSource).toContain('settingRenderSchema(tpl)?.blocks')
-    expect(encounterStatesSource).toContain("b?.type === 'DND_STATUS_OVERVIEW'")
-    expect(encounterStatesSource).toContain('valueId: b.content?.states_id')
+    expect(encounterStatesSource).toContain('DND_EFFECT_ITEM_TYPE_ID = 15')
+    expect(encounterStatesSource).toContain('content: { item_type_id: DND_EFFECT_ITEM_TYPE_ID')
     expect(encounterRowSource).toContain('title="Состояния"')
-    expect(encounterRowSource).toContain('suggestStoreLocal.ensure(sid)')
+    expect(encounterRowSource).toContain(':item-type-ids="[statesBlock.content.item_type_id]"')
+    expect(encounterRowSource).not.toContain('SuggestMultiSelect')
   })
 
   it('fades selected NPCs out before revealing the combat scene', () => {

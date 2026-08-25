@@ -96,6 +96,37 @@ func TestBuildPublicCombatantIncludesStatePresentation(t *testing.T) {
 	}
 }
 
+func TestParticipantStateIDsReadsStructuredEffectInstances(t *testing.T) {
+	participant := store.SessionParticipantData{
+		TemplateName: "DND5",
+		Data: map[string]any{"values": map[string]any{
+			"states": []any{
+				map[string]any{"uid": "rage-1", "effect_id": float64(42)},
+				map[string]any{"uid": "broken"},
+			},
+		}},
+	}
+
+	ids := participantStateIDs(participant)
+	if len(ids) != 1 || ids[0] != 42 {
+		t.Fatalf("state ids = %v, want [42]", ids)
+	}
+}
+
+func TestPublicStateUsesEffectItemPresentation(t *testing.T) {
+	color := "#e66a52"
+	svg := `<svg viewBox="0 0 24 24"></svg>`
+	state := publicStateFromItem(store.Item{
+		Name: "Испуг",
+		Data: json.RawMessage(`{"color":"#e66a52"}`),
+		SVG:  &svg,
+	})
+
+	if state.Name != "Испуг" || state.Color == nil || *state.Color != color || state.SVG == nil || *state.SVG != svg {
+		t.Fatalf("state presentation = %#v", state)
+	}
+}
+
 func TestEncounterHealthIncludesNumbersOnlyWhenEnabled(t *testing.T) {
 	hidden := encounterHealth(7, 12, true, false)
 	if hidden.Current != nil || hidden.Maximum != nil {

@@ -181,6 +181,9 @@ var schemaActivityRestrictionsSQL string
 //go:embed schema/54_status_effect_catalog.sql
 var schemaStatusEffectCatalogSQL string
 
+//go:embed schema/55_remove_status_suggest.sql
+var schemaRemoveStatusSuggestSQL string
+
 var schemaParts = []struct {
 	name string
 	sql  string
@@ -241,6 +244,7 @@ var schemaParts = []struct {
 	{"status-effect-levels", schemaStatusEffectLevelsSQL},
 	{"activity-restrictions", schemaActivityRestrictionsSQL},
 	{"status-effect-catalog", schemaStatusEffectCatalogSQL},
+	{"remove-status-suggest", schemaRemoveStatusSuggestSQL},
 }
 
 func applySchema(ctx context.Context, pool *pgxpool.Pool) error {
@@ -251,24 +255,37 @@ func applySchema(ctx context.Context, pool *pgxpool.Pool) error {
 	defer func() { _ = tx.Rollback(ctx) }()
 
 	for _, part := range schemaParts {
+		if part.name == "remove-status-suggest" {
+			richStats, err := migrateLegacyRichContent(ctx, tx)
+			if err != nil {
+				return fmt.Errorf("migrate legacy rich content: %w", err)
+			}
+			if richStats.Items > 0 {
+				log.Printf(
+					"migrated legacy rich content: items=%d dice=%d averages=%d item_links=%d suggest_links=%d native_links=%d",
+					richStats.Items,
+					richStats.DiceNodes,
+					richStats.DiceAverages,
+					richStats.ItemNodes,
+					richStats.SuggestNodes,
+					richStats.NativeLinks,
+				)
+			}
+			statusRichStats, err := migrateStatusSuggestRichContent(ctx, tx)
+			if err != nil {
+				return fmt.Errorf("migrate status suggest rich content: %w", err)
+			}
+			if statusRichStats.Items > 0 {
+				log.Printf(
+					"migrated status rich references: items=%d nodes=%d",
+					statusRichStats.Items,
+					statusRichStats.Nodes,
+				)
+			}
+		}
 		if _, err := tx.Exec(ctx, part.sql); err != nil {
 			return fmt.Errorf("apply schema part %s: %w", part.name, err)
 		}
-	}
-	richStats, err := migrateLegacyRichContent(ctx, tx)
-	if err != nil {
-		return fmt.Errorf("migrate legacy rich content: %w", err)
-	}
-	if richStats.Items > 0 {
-		log.Printf(
-			"migrated legacy rich content: items=%d dice=%d averages=%d item_links=%d suggest_links=%d native_links=%d",
-			richStats.Items,
-			richStats.DiceNodes,
-			richStats.DiceAverages,
-			richStats.ItemNodes,
-			richStats.SuggestNodes,
-			richStats.NativeLinks,
-		)
 	}
 	if err := tx.Commit(ctx); err != nil {
 		return fmt.Errorf("commit schema: %w", err)

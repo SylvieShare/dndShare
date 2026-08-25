@@ -27,7 +27,7 @@ export const dndAccessors = {
   // Data-path ids reused by the session encounter when it patches a player's
   // character data (`values.<id>`).
   initiativeBlockId: 'initiative',
-  states: { blockId: 'states', itemTypeId: 15, legacySuggestId: 9 },
+  states: { blockId: 'states', itemTypeId: 15 },
   // Write-back path for player HP (the encounter patches `<hpPath>.current` etc.).
   hpPath: 'values.hp',
 

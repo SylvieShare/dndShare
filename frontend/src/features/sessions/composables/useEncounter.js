@@ -176,9 +176,6 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
   })
 
   const states = useEncounterStates({
-    participants,
-    findParticipant,
-    applyLocalPatches,
     getCombatant,
     mutate,
   })

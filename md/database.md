@@ -157,6 +157,10 @@ item icons and covers through `storage_image`. Existing effect descriptions are
 converted into a phrase of at most 48 characters as an upgrade fallback and
 remain independently editable afterwards. Standard system effects replace that
 fallback with concise mechanical bullet points rendered beside the icon.
+`55_remove_status_suggest.sql` migrates NPC encounter state ids to effect item
+ids, removes the temporary `legacy_suggest_id` metadata, and deletes suggest
+type 9 together with its rows. Character and encounter states now resolve only
+through item type 15; the old condition suggest catalogue is not retained.
 Section `34_ability_resource_catalog_fixes.sql` задаёт структурированные правила
 Харизмы для «Вдохновения барда» и Мудрости для «Гнева бури», удаляет прежний
 ручной максимум вдохновения и переводит его полные старые character entries на
@@ -323,8 +327,11 @@ Rich descriptions остаются HTML-строками внутри соотв
 для HTML attribute. После SQL-схемы атомарная startup migration рекурсивно
 обходит строковые значения `item.data` и переводит импортированные
 `dice-roller` и `detail-tooltip` в текущий контракт. Ссылки на заклинания,
-существ и вещи разрешаются через базовые `item.name_en`, известные состояния,
-навыки, свойства оружия и типы урона — через базовые suggest. Неизвестные
+существ и вещи разрешаются через базовые `item.name_en`; состояния разрешаются
+через effect items типа 15, а навыки, свойства оружия и типы урона — через
+базовые suggest. Перед удалением прежнего suggest type 9 отдельная миграция
+рекурсивно заменяет его rich nodes во всех `item.data` на item nodes эффектов,
+сохраняя подпись ссылки. Неизвестные
 внутренние ссылки становятся абсолютными нативными ссылками на исходный
 справочник; внешний текст и неизвестная HTML-разметка сохраняются. Повторный
 запуск не меняет уже мигрированные документы.

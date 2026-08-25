@@ -114,6 +114,7 @@ describe('D&D desktop sheet schema', () => {
     expect(sidebar.children.some(child => child.ref === 'desktop_statuses')).toBe(false)
     expect(separateExhaustion).toBeNull()
     expect(separateStates).toBeNull()
+    expect(schema.blocks.states).toBeUndefined()
     expect(schema.blocks.desktop_statuses).toMatchObject({
       type: 'DND_STATUS_OVERVIEW',
       content: {
