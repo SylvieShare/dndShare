@@ -24,6 +24,17 @@ describe('D&D desktop sheet schema', () => {
     expect(tabColumn.props?.style?.['margin-right']).toBe('16px')
   })
 
+  it('keeps the lower content flush with the upper character summary', () => {
+    const contentColumn = findNode(
+      base?.content,
+      node => node.type === 'column'
+        && node.children?.some(child => findNode(child, nested => nested.ref === 'desktop_statuses'))
+        && node.children?.some(child => findNode(child, nested => nested.type === 'inner_tabs')),
+    )
+
+    expect(contentColumn.props?.gap).toBe('0px')
+  })
+
   it('places level below speed, proficiency bonus and rests across all three metric columns', () => {
     const metricGrid = findNode(
       base?.content,
