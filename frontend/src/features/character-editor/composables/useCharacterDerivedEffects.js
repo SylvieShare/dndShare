@@ -1,6 +1,7 @@
 import { computed } from 'vue'
 import {
   collectCharacterDerivedEffects,
+  derivedActivityBlocks,
   derivedArmorRules,
   derivedCriticalThreshold,
   derivedGrantedProficiencies,
@@ -22,6 +23,7 @@ export function useCharacterDerivedEffects(values, itemsById) {
     grantedProficiencies(kind) { return derivedGrantedProficiencies(effects.value, kind) },
     bonus(kind, context) { return derivedNumericBonus(effects.value, kind, values.value, context) },
     rollEffects(context) { return derivedRollEffects(effects.value, context) },
+    activityBlocks(activity) { return derivedActivityBlocks(effects.value, activity) },
     criticalThreshold(context) { return derivedCriticalThreshold(effects.value, context) },
   }
 }

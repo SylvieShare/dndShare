@@ -144,6 +144,10 @@ as negative effect items for manual selection.
 effect catalogue items. The live exhaustion value stays in its rules-owned
 character field, but the sheet presents it through the same level-aware effect
 cell without duplicating rest or exhaustion mechanics.
+`53_activity_restrictions.sql` adds the generic `activity_block` derived effect
+and configures the active Rage status to block `spellcasting`, allowing sheet
+consumers to combine several restriction sources without feature-name checks;
+its `concentration` scope ends an active concentration status when applied.
 Section `34_ability_resource_catalog_fixes.sql` задаёт структурированные правила
 Харизмы для «Вдохновения барда» и Мудрости для «Гнева бури», удаляет прежний
 ручной максимум вдохновения и переводит его полные старые character entries на

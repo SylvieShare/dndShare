@@ -142,6 +142,14 @@ export function derivedRollEffects(effects, context = {}) {
   }))
 }
 
+export function derivedActivityBlocks(effects, activity) {
+  return matchingDerivedEffects(effects, 'activity_block', { kind: activity }).map(rule => ({
+    key: rule.key,
+    source: rule.source_label || '',
+    label: rule.label || '',
+  }))
+}
+
 export function derivedCriticalThreshold(effects, context = {}) {
   return matchingDerivedEffects(effects, 'critical_threshold', context)
     .reduce((threshold, rule) => Math.min(threshold, Math.max(2, number(rule.value, 20))), 20)

@@ -59,6 +59,17 @@ describe('character statuses', () => {
     expect(addStatusInstance({ states: once }, second)).toMatchObject([{ effect_id: 2, concentration: true }])
   })
 
+  it('drops concentration when a new effect blocks maintaining it', () => {
+    const concentration = { uid: 'shield', effect_id: 2, concentration: true }
+    const rage = { id: 3, data: { derived_effects: [
+      { kind: 'activity_block', scopes: ['spellcasting', 'concentration'] },
+    ] } }
+
+    expect(addStatusInstance({ states: [concentration] }, rage)).toMatchObject([
+      { effect_id: 3, concentration: false },
+    ])
+  })
+
   it('detects and removes an effect regardless of which source added it', () => {
     const values = { states: [
       { uid: 'manual-rage', effect_id: 100, source: { kind: 'manual' } },

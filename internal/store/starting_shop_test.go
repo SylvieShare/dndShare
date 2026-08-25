@@ -9,32 +9,33 @@ import (
 )
 
 func TestToolProficiencyCatalogIsEmbeddedAfterItemTypeHierarchy(t *testing.T) {
-	if len(schemaParts) < 23 {
+	if len(schemaParts) < 24 {
 		t.Fatal("schemaParts must contain the final item catalogue sections")
 	}
-	hierarchy := schemaParts[len(schemaParts)-23]
-	tools := schemaParts[len(schemaParts)-22]
-	resources := schemaParts[len(schemaParts)-21]
-	classTools := schemaParts[len(schemaParts)-20]
-	resourceFixes := schemaParts[len(schemaParts)-19]
-	resourceAudit := schemaParts[len(schemaParts)-18]
-	resourceColors := schemaParts[len(schemaParts)-17]
-	spellGrants := schemaParts[len(schemaParts)-16]
-	equippedArmor := schemaParts[len(schemaParts)-15]
-	defenses := schemaParts[len(schemaParts)-14]
-	castLevel := schemaParts[len(schemaParts)-13]
-	choices := schemaParts[len(schemaParts)-12]
-	racialAutomation := schemaParts[len(schemaParts)-11]
-	classAutomation := schemaParts[len(schemaParts)-10]
-	featAutomation := schemaParts[len(schemaParts)-9]
-	rogueAutomation := schemaParts[len(schemaParts)-8]
-	rogueCatalogFixes := schemaParts[len(schemaParts)-7]
-	weaponDamageActions := schemaParts[len(schemaParts)-6]
-	featureSheetWidgets := schemaParts[len(schemaParts)-5]
-	rollAdjustments := schemaParts[len(schemaParts)-4]
-	featureActions := schemaParts[len(schemaParts)-3]
-	statusEffects := schemaParts[len(schemaParts)-2]
-	statusEffectLevels := schemaParts[len(schemaParts)-1]
+	hierarchy := schemaParts[len(schemaParts)-24]
+	tools := schemaParts[len(schemaParts)-23]
+	resources := schemaParts[len(schemaParts)-22]
+	classTools := schemaParts[len(schemaParts)-21]
+	resourceFixes := schemaParts[len(schemaParts)-20]
+	resourceAudit := schemaParts[len(schemaParts)-19]
+	resourceColors := schemaParts[len(schemaParts)-18]
+	spellGrants := schemaParts[len(schemaParts)-17]
+	equippedArmor := schemaParts[len(schemaParts)-16]
+	defenses := schemaParts[len(schemaParts)-15]
+	castLevel := schemaParts[len(schemaParts)-14]
+	choices := schemaParts[len(schemaParts)-13]
+	racialAutomation := schemaParts[len(schemaParts)-12]
+	classAutomation := schemaParts[len(schemaParts)-11]
+	featAutomation := schemaParts[len(schemaParts)-10]
+	rogueAutomation := schemaParts[len(schemaParts)-9]
+	rogueCatalogFixes := schemaParts[len(schemaParts)-8]
+	weaponDamageActions := schemaParts[len(schemaParts)-7]
+	featureSheetWidgets := schemaParts[len(schemaParts)-6]
+	rollAdjustments := schemaParts[len(schemaParts)-5]
+	featureActions := schemaParts[len(schemaParts)-4]
+	statusEffects := schemaParts[len(schemaParts)-3]
+	statusEffectLevels := schemaParts[len(schemaParts)-2]
+	activityRestrictions := schemaParts[len(schemaParts)-1]
 	if hierarchy.name != "item-type-hierarchy" || hierarchy.sql == "" || hierarchy.sql != schemaItemTypeHierarchySQL {
 		t.Fatal("item-type-hierarchy schema must be embedded after the equipment catalogues")
 	}
@@ -104,6 +105,9 @@ func TestToolProficiencyCatalogIsEmbeddedAfterItemTypeHierarchy(t *testing.T) {
 	if statusEffectLevels.name != "status-effect-levels" || statusEffectLevels.sql == "" || statusEffectLevels.sql != schemaStatusEffectLevelsSQL {
 		t.Fatal("status effect levels must be embedded after status effects")
 	}
+	if activityRestrictions.name != "activity-restrictions" || activityRestrictions.sql == "" || activityRestrictions.sql != schemaActivityRestrictionsSQL {
+		t.Fatal("activity restrictions must be embedded after status effect levels")
+	}
 }
 
 func TestStatusEffectLevelIsOptionalCatalogueMetadata(t *testing.T) {
@@ -127,6 +131,19 @@ func TestStatusEffectsPublishGenericActivationContract(t *testing.T) {
 	} {
 		if !strings.Contains(schemaStatusEffectsSQL, fragment) {
 			t.Fatalf("status effect schema must contain %q", fragment)
+		}
+	}
+}
+
+func TestActivityRestrictionsBlockSpellcastingThroughRageData(t *testing.T) {
+	for _, fragment := range []string{
+		`"value":"activity_block"`,
+		`"scopes":["spellcasting","concentration"]`,
+		`Нельзя сотворять заклинания или поддерживать концентрацию.`,
+		`item_type.id IN (3, 4, 7, 15)`,
+	} {
+		if !strings.Contains(schemaActivityRestrictionsSQL, fragment) {
+			t.Fatalf("activity restriction schema must contain %q", fragment)
 		}
 	}
 }

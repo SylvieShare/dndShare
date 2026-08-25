@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   collectCharacterDerivedEffects,
+  derivedActivityBlocks,
   derivedArmorRules,
   derivedCriticalThreshold,
   derivedGrantedProficiencies,
@@ -81,12 +82,17 @@ describe('class-derived effects', () => {
       data: { derived_effects: [
         { kind: 'roll_mode', mode: 'advantage', scopes: ['ability_check'], ability_ids: [1] },
         { kind: 'weapon_damage_bonus', value_parameter: 'damage_bonus', ability_ids: [1] },
+        { kind: 'activity_block', scopes: ['spellcasting'], label: 'Нельзя сотворять заклинания.' },
       ] },
     }]])
     const active = { states: [{ uid: 'rage', effect_id: 100, params: { damage_bonus: 3 } }] }
     const effects = collectCharacterDerivedEffects(active, statusItems)
     expect(derivedRollEffects(effects, { kind: 'ability_check', abilitySuggestId: 1 })).toMatchObject([{ mode: 'advantage' }])
     expect(derivedNumericBonus(effects, 'weapon_damage_bonus', active, { abilitySuggestId: 1 }).total).toBe(3)
+    expect(derivedActivityBlocks(effects, 'spellcasting')).toMatchObject([{
+      source: 'Ярость', label: 'Нельзя сотворять заклинания.',
+    }])
+    expect(derivedActivityBlocks(effects, 'movement')).toEqual([])
     expect(derivedRollEffects(effects, { kind: 'ability_check', abilitySuggestId: 2 })).toEqual([])
   })
 })

@@ -448,8 +448,13 @@ ability's current scaling value into a named effect parameter.
 Rage is the first parameterized ability effect: activating its sheet widget
 consumes the ability resource, adds the shared Rage status and applies Strength
 check/save advantage, the current Strength-melee damage bonus and physical
-damage resistances. Shield of Faith exposes its linked status in the spell action
-menu, adds +2 AC and replaces another concentration status. Removing a source
+damage resistances. The sheet follows the 2014 Rage rule, so ranged attacks made
+with Strength do not receive that damage bonus. Rage also publishes a generic
+`activity_block` for `spellcasting`; the spells block combines it with equipment
+proficiency restrictions in one notice and disables spell use without checking
+the Rage name. Its `concentration` scope also removes an active concentration
+status when Rage begins. Shield of Faith exposes its linked status in the spell
+action menu, adds +2 AC and replaces another concentration status. Removing a source
 ability/spell removes statuses created by that source; manually added instances
 remain independent. Round countdown and encounter propagation are deliberately
 future consumers of the stored duration/source contract, not separate state

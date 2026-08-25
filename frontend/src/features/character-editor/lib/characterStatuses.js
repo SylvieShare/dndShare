@@ -63,6 +63,12 @@ function makeUid(effectId) {
   return `status-${effectId}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`
 }
 
+function effectBlocksActivity(effect, activity) {
+  return asArray(effect?.data?.derived_effects).some(rule => (
+    rule?.kind === 'activity_block' && asArray(rule.scopes).includes(activity)
+  ))
+}
+
 function sameSource(left, right) {
   return ['kind', 'item_id', 'value_id', 'entry_key', 'link_key']
     .every(key => String(left?.[key] ?? '') === String(right?.[key] ?? ''))
@@ -87,7 +93,9 @@ export function addStatusInstance(values, effect, options = {}) {
   let current = normalizeStatusInstances(values?.[STATUS_VALUE_ID])
   const next = createStatusInstance(effect, options)
   if (!next) return current
-  if (next.concentration) current = current.filter(row => !row.concentration)
+  if (next.concentration || effectBlocksActivity(effect, 'concentration')) {
+    current = current.filter(row => !row.concentration)
+  }
   const multiple = effect?.data?.stacking === 'multiple'
   if (!multiple && current.some(row => row.effect_id === next.effect_id)) return current
   return [...current, next]

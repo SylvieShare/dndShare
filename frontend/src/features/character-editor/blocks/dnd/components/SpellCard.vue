@@ -134,7 +134,7 @@
         action="status"
         :icon="Activity"
         :tone="ctx.statusEffectActive(entry, statusLinks[0]) ? 'danger' : 'success'"
-        :disabled="!statusLinks[0].effect"
+        :disabled="!statusLinks[0].effect || (ctx.spellcastingBlocked && !ctx.statusEffectActive(entry, statusLinks[0]))"
         @click="toggleStatus(statusLinks[0], close)"
       >
         {{ statusActionLabel(statusLinks[0]) }}
@@ -155,7 +155,7 @@
             action="status"
             :icon="Activity"
             :tone="ctx.statusEffectActive(entry, link) ? 'danger' : 'success'"
-            :disabled="!link.effect"
+            :disabled="!link.effect || (ctx.spellcastingBlocked && !ctx.statusEffectActive(entry, link))"
             @click="toggleStatus(link, closeEffects, close)"
           >
             {{ statusActionLabel(link) }}
@@ -242,7 +242,7 @@ const saveTag = computed(() => {
 const instances = computed(() => Number(dmg.value.instances) || 1)
 const slotOptions = computed(() => ctx.availableSpellSlotLevels(props.entry))
 const canUse = computed(() => !ctx.spellcastingBlocked && !!props.entry.item && (baseLvl.value === 0 || slotOptions.value.length > 0))
-const useLabel = computed(() => ctx.spellcastingBlocked ? 'Запрещено доспехом' : (canUse.value ? 'Использовать' : 'Нет доступных ячеек'))
+const useLabel = computed(() => ctx.spellcastingBlocked ? 'Сотворение недоступно' : (canUse.value ? 'Использовать' : 'Нет доступных ячеек'))
 const hasHigherLevelChoice = computed(() =>
   !props.entry.ref.slotless && slotOptions.value.some(level => level > baseLvl.value)
 )

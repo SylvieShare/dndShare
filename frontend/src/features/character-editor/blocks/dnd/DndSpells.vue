@@ -1,9 +1,11 @@
 <template>
   <div v-show="!blockHidden" class="spells-block">
 
-    <div v-if="spellcastingBlocked" class="sp-armor-warning" role="status">
+    <div v-if="spellcastingBlocked" class="sp-casting-warning" role="status">
       <strong>Сотворение заклинаний недоступно</strong>
-      <span>Нет владения экипировкой: {{ armorState.nonproficient.map(row => row.name).join(', ') }}.</span>
+      <span v-for="restriction in spellcastingRestrictions" :key="restriction.key">
+        {{ restriction.message }}
+      </span>
     </div>
 
     <SpellSlotsBar
@@ -180,7 +182,23 @@ const blockHidden  = computed(() =>
 )
 const showStatsBar = computed(() => hasStatConfig.value || canInteract.value || activeSlots.value.length > 0)
 const armorState = computed(() => charCtx.characterArmor?.state || {})
-const spellcastingBlocked = computed(() => !!armorState.value.castingBlocked)
+const spellcastingRestrictions = computed(() => {
+  const restrictions = []
+  if (armorState.value.castingBlocked) {
+    restrictions.push({
+      key: 'armor-proficiency',
+      message: `Нет владения экипировкой: ${(armorState.value.nonproficient || []).map(row => row.name).join(', ')}.`,
+    })
+  }
+  for (const block of charCtx.characterDerivedEffects?.activityBlocks?.('spellcasting') || []) {
+    restrictions.push({
+      key: `effect:${block.key}`,
+      message: [block.source, block.label].filter(Boolean).join(': ') || 'Активный эффект запрещает сотворение заклинаний.',
+    })
+  }
+  return restrictions
+})
+const spellcastingBlocked = computed(() => spellcastingRestrictions.value.length > 0)
 const knownRules = computed(() => characterSpellcastingRules(props.values?.classes, classItemMap))
 
 const schoolMap = computed(() => {
@@ -473,6 +491,7 @@ function statusEffectActive(entry, link) {
 function toggleSpellStatus(entry, link) {
   if (!charCtx.ownerMode || !link?.effect || typeof charCtx.updateValues !== 'function') return
   const active = statusEffectActive(entry, link)
+  if (spellcastingBlocked.value && !active) return
   const states = charCtx.characterStatuses.toggleLinked(link.effect, entry.item, link, spellStatusSource(entry))
   charCtx.updateValues({ states })
   charCtx.logSessionEvent?.({
