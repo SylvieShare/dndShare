@@ -3,8 +3,8 @@
     <BaseTile v-if="hasStatConfig" class="sp-stats-panel">
       <SheetBlockTitle
         class="sp-mobile-panel-head"
-        title="Параметры магии"
-        :show-edit="canInteract"
+        :title="castingPanelTitle"
+        :show-edit="canInteract && showCastingConfig"
         @edit="editOpen = true"
       />
       <div v-if="castingStats.length <= 1" class="sp-stats">
@@ -78,6 +78,8 @@
       :attack-bonus="attackBonusExtra"
       :preparation="preparation"
       :automatic-slots="automaticSlots"
+      :show-casting-config="showCastingConfig"
+      :casting-label="castingLabel"
       @change="(rest, level, total) => $emit('set-total', rest, level, total)"
       @set-stat-path="$emit('set-stat-path', $event)"
       @set-save-bonus="$emit('set-save-bonus', $event)"
@@ -114,6 +116,8 @@ const props = defineProps({
   slotPools:       { type: Object, default: () => ({ long_rest: [], short_rest: [] }) },
   castingStats:    { type: Array, default: () => [] },
   automaticSlots:  { type: Boolean, default: true },
+  showCastingConfig: { type: Boolean, default: true },
+  castingLabel: { type: String, default: '' },
 })
 defineEmits(['set-stat-path', 'set-total', 'set-save-bonus', 'set-attack-bonus', 'set-preparation', 'set-automatic-slots', 'toggle-slot'])
 
@@ -123,6 +127,9 @@ function orbOrder(total) {
 const signedPart = value => Number(value) >= 0 ? `+ ${Number(value)}` : `− ${Math.abs(Number(value))}`
 const saveFormula = computed(() => `8 + бонус мастерства + модификатор ${props.statLabel || 'базовой характеристики'} ${signedPart(props.saveBonusExtra)} = ${props.saveDC}`)
 const attackFormula = computed(() => `Бонус мастерства + модификатор ${props.statLabel || 'базовой характеристики'} ${signedPart(props.attackBonusExtra)} = ${props.attackBonus >= 0 ? '+' : ''}${props.attackBonus}`)
+const castingPanelTitle = computed(() => props.castingStats.length <= 1 && props.castingLabel
+  ? `Параметры магии · ${props.castingLabel}`
+  : 'Параметры магии')
 </script>
 
 <style scoped>

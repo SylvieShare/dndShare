@@ -133,7 +133,7 @@ describe('buildCharacterData spell preparation', () => {
       suggestValue: () => '',
     })
 
-    expect(result.data.values.spells.preparation).toBe(true)
+    expect(result.data.values.spells.source_settings['class:2:'].preparation).toBe(true)
   })
 
   it('keeps preparation disabled for known-spell casters', () => {
@@ -143,7 +143,7 @@ describe('buildCharacterData spell preparation', () => {
       suggestValue: () => '',
     })
 
-    expect(result.data.values.spells.preparation).toBe(false)
+    expect(result.data.values.spells.source_settings['class:2:'].preparation).toBe(false)
   })
 
   it('keeps cantrips unprepared and marks granted leveled spells as permanent', () => {
@@ -157,9 +157,9 @@ describe('buildCharacterData spell preparation', () => {
     })
 
     expect(result.data.values.spells.spells).toEqual([
-      { id: 100, prepared: false },
-      { id: 101, prepared: true },
-      { id: 102, prepared: true, always_prepared: true },
+      { id: 100, prepared: false, spellcasting_source: 'class:2:' },
+      { id: 101, prepared: true, spellcasting_source: 'class:2:' },
+      { id: 102, prepared: true, always_prepared: true, spellcasting_source: 'class:2:' },
     ])
   })
 })

@@ -144,7 +144,9 @@
       >
         <template v-if="index === 0">
           <section class="spell-summary">
-            <PrintField label="Базовая характеристика" :value="spellcasting.stat" /><PrintField label="Сл спасброска" :value="String(spellcasting.saveDc)" /><PrintField label="Бонус атаки" :value="signed(spellcasting.attackBonus)" />
+            <template v-for="row in spellcastingSummaries" :key="row.key">
+              <PrintField :label="`${row.label} · характеристика`" :value="row.stat" /><PrintField :label="`${row.label} · СЛ`" :value="String(row.saveDc)" /><PrintField :label="`${row.label} · атака`" :value="signed(row.attackBonus)" />
+            </template>
           </section>
           <section v-if="spellSlotSections.length" class="box slots-box"><BoxTitle>Ячейки заклинаний</BoxTitle>
             <template v-for="section in spellSlotSections" :key="section.rest">
@@ -395,20 +397,62 @@ const spellSlotSections = computed(() => {
     slots: (Array.isArray(canonical[rest]) ? canonical[rest] : []).filter((slot) => Number(slot.total) > 0),
   })).filter((section) => section.slots.length)
 })
-const spellcasting = computed(() => {
-  const data = values.value.spells || {}; const statKey = SUGGEST16_TO_STAT[Number(data.stat_path)]; const mod = statKey ? abilityModifier(abilityScore(statKey)) : 0
-  return { stat: statKey ? STAT_FULL[statKey] : '—', saveDc: 8 + profBonus.value + mod + (Number(data.save_bonus) || 0), attackBonus: profBonus.value + mod + (Number(data.attack_bonus) || 0) }
+const spellcastingClassLabels = computed(() => new Map((Array.isArray(values.value.classes) ? values.value.classes : []).map((entry) => [
+  `class:${entry?.id ?? ''}:${entry?.subclass?.id ?? ''}`,
+  text(entry?.name || entry?.class?.name || 'Класс'),
+])))
+const spellcastingSourceSettings = computed(() => {
+  const data = values.value.spells || {}
+  if (data.source_settings && typeof data.source_settings === 'object' && !Array.isArray(data.source_settings)) {
+    return data.source_settings
+  }
+  const fallbackKey = spellcastingClassLabels.value.size === 1
+    ? [...spellcastingClassLabels.value.keys()][0]
+    : 'other'
+  return { [fallbackKey]: {
+    stat_path: data.stat_path ?? '',
+    save_bonus: Number(data.save_bonus) || 0,
+    attack_bonus: Number(data.attack_bonus) || 0,
+    preparation: !!data.preparation,
+  } }
+})
+function printSpellcastingSummary(key, setting) {
+  const statKey = SUGGEST16_TO_STAT[Number(setting?.stat_path)]
+  const mod = statKey ? abilityModifier(abilityScore(statKey)) : 0
+  return {
+    key,
+    label: key === 'other' ? 'Другие' : (spellcastingClassLabels.value.get(key) || 'Класс'),
+    stat: statKey ? STAT_FULL[statKey] : '—',
+    saveDc: 8 + profBonus.value + mod + (Number(setting?.save_bonus) || 0),
+    attackBonus: profBonus.value + mod + (Number(setting?.attack_bonus) || 0),
+  }
+}
+const spellcastingSummaries = computed(() => {
+  const settings = spellcastingSourceSettings.value
+  const classRows = [...spellcastingClassLabels.value.keys()]
+    .filter((key) => settings[key])
+    .map((key) => printSpellcastingSummary(key, settings[key]))
+  const hasOther = rawSpells.value.some((entry) => !spellcastingClassLabels.value.has(entry?.spellcasting_source))
+  if (hasOther && settings.other) classRows.push(printSpellcastingSummary('other', settings.other))
+  if (classRows.length) return classRows
+  const first = Object.entries(settings)[0]
+  return first ? [printSpellcastingSummary(first[0], first[1])] : []
 })
 function spellDice(rows) { return (Array.isArray(rows) ? rows : []).map(row => { const die = diceLabel(row.dice_id); const typeValue = damageType(row.type); return [die ? `${Number(row.count) || 1}${die}` : '', typeValue].filter(Boolean).join(' ') }).filter(Boolean).join(' + ') }
 function spellEntryCasting(entry) {
-  const spellData = values.value.spells || {}
-  const abilityId = entry?.casting_ability ?? spellData.stat_path
+  const classKeys = spellcastingClassLabels.value
+  const fallbackKey = classKeys.size === 1 ? [...classKeys.keys()][0] : 'other'
+  const sourceKey = classKeys.has(entry?.spellcasting_source) ? entry.spellcasting_source : fallbackKey
+  const setting = spellcastingSourceSettings.value[sourceKey] || spellcastingSourceSettings.value.other || {}
+  const abilityId = entry?.casting_ability != null && entry?.casting_ability_source !== 'class'
+    ? entry.casting_ability
+    : setting.stat_path
   const statKey = SUGGEST16_TO_STAT[Number(abilityId)]
   const mod = statKey ? abilityModifier(abilityScore(statKey)) : 0
   return {
     ability: entry?.casting_ability != null && statKey ? STAT_FULL[statKey] : '',
-    saveDc: 8 + profBonus.value + mod + (Number(spellData.save_bonus) || 0),
-    attackBonus: profBonus.value + mod + (Number(spellData.attack_bonus) || 0),
+    saveDc: 8 + profBonus.value + mod + (Number(setting.save_bonus) || 0),
+    attackBonus: profBonus.value + mod + (Number(setting.attack_bonus) || 0),
   }
 }
 function spellGrantLine(entry) {

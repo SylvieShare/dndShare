@@ -8,6 +8,16 @@
       </span>
     </div>
 
+    <nav v-if="spellTabs.length > 1" class="sp-tabs" aria-label="Разделы магии">
+      <button
+        v-for="tab in spellTabs"
+        :key="tab.key"
+        type="button"
+        :class="{ active: activeSpellTab === tab.key }"
+        @click="activeSpellTab = tab.key"
+      >{{ tab.label }}</button>
+    </nav>
+
     <SpellSlotsBar
       v-if="showStatsBar"
       :has-stat-config="hasStatConfig"
@@ -22,7 +32,9 @@
       :preparation="preparation"
       :active-slot-pools="activeSlotPools"
       :slot-pools="slotPools"
-      :casting-stats="spellcastingStatRows"
+      :casting-stats="displayedSpellcastingStatRows"
+      :show-casting-config="!!activeSettingsKey"
+      :casting-label="activeCastingLabel"
       :automatic-slots="automaticSlots"
       @set-stat-path="setStatPath"
       @set-total="setTotal"
@@ -32,16 +44,6 @@
       @toggle-slot="toggleSlot"
       @set-automatic-slots="setAutomaticSlots"
     />
-
-    <nav v-if="spellTabs.length > 1" class="sp-tabs" aria-label="Разделы магии">
-      <button
-        v-for="tab in spellTabs"
-        :key="tab.key"
-        type="button"
-        :class="{ active: activeSpellTab === tab.key }"
-        @click="activeSpellTab = tab.key"
-      >{{ tab.label }}</button>
-    </nav>
 
     <!-- Заклинания по уровням (мультиколонки) -->
     <div class="spells-groups">
@@ -143,6 +145,12 @@ import { SYSTEM_DICE } from '@/shared/lib/systemDice'
 import { logSessionEntryAdded } from '@/features/character-editor/lib/sessionEntryEvents'
 import { characterSpellcastingSources, spellCountsTowardKnown } from '@/features/character-editor/blocks/dnd/lib/spellcastingRules'
 import { computeSpellSlotPools, maximumSpellLevelForEntry } from '@/features/character-editor/blocks/dnd/lib/multiclassSpellcasting'
+import {
+  loadSpellcastingSettings,
+  OTHER_SPELLCASTING_SOURCE,
+  serializeSpellcastingSettings,
+  spellcastingSetting,
+} from '@/features/character-editor/blocks/dnd/lib/spellcastingSettings'
 
 const props = defineProps(['block', 'value', 'values'])
 const emit  = defineEmits(['update:value'])
@@ -150,10 +158,7 @@ const charCtx       = inject('charCtx',       () => ({ ownerMode: true, dictiona
 const setBlockHidden = inject('setBlockHidden', () => () => {})
 
 const spells     = ref([])
-const statPath   = ref('')
-const saveBonusExtra   = ref(0)
-const attackBonusExtra = ref(0)
-const preparation = ref(false)
+const sourceSettings = ref({})
 const itemMap    = reactive({})
 const modalSpell = ref(null)
 const pickerOpen = ref(false)
@@ -244,6 +249,33 @@ const spellTabs = computed(() => {
   ]
 })
 const activeTabSource = computed(() => spellcastingSources.value.find((source) => source.key === activeSpellTab.value) || null)
+const activeSettingsKey = computed(() => {
+  if (activeTabSource.value) return activeTabSource.value.key
+  if (activeSpellTab.value === 'other') return OTHER_SPELLCASTING_SOURCE
+  if (activeSpellTab.value === 'all' && spellcastingSources.value.length === 1) return spellcastingSources.value[0].key
+  return null
+})
+const activeCastingSetting = computed(() => activeSettingsKey.value
+  ? spellcastingSetting(sourceSettings.value, activeSettingsKey.value, spellcastingSources.value)
+  : null)
+const statPath = computed(() => activeCastingSetting.value?.stat_path ?? '')
+const saveBonusExtra = computed(() => activeCastingSetting.value?.save_bonus ?? 0)
+const attackBonusExtra = computed(() => activeCastingSetting.value?.attack_bonus ?? 0)
+const preparation = computed(() => {
+  if (activeCastingSetting.value) return activeCastingSetting.value.preparation
+  return spellcastingSources.value.some((source) => spellcastingSetting(
+    sourceSettings.value,
+    source.key,
+    spellcastingSources.value,
+  ).preparation) || spellcastingSetting(
+    sourceSettings.value,
+    OTHER_SPELLCASTING_SOURCE,
+    spellcastingSources.value,
+  ).preparation
+})
+const activeCastingLabel = computed(() => activeTabSource.value?.label
+  || spellcastingSources.value.find((source) => source.key === activeSettingsKey.value)?.label
+  || (activeSettingsKey.value === OTHER_SPELLCASTING_SOURCE ? 'Другие' : ''))
 const knownRules = computed(() => activeTabSource.value
   || (spellcastingSources.value.length === 1 && activeSpellTab.value !== 'other' ? spellcastingSources.value[0] : null))
 const canAddInActiveTab = computed(() => activeSpellTab.value !== 'all'
@@ -251,16 +283,28 @@ const canAddInActiveTab = computed(() => activeSpellTab.value !== 'all'
 const selectedSourceMaxSpellLevel = computed(() => knownRules.value
   ? maximumSpellLevelForEntry(knownRules.value.entry, classItemMap)
   : maxSlotLevel.value)
-const spellcastingStatRows = computed(() => spellcastingSources.value.map((source) => {
-  const modifier = spellStatModifier({ ref: { casting_ability: source.ability } })
+function castingStatRow(key, label) {
+  const setting = spellcastingSetting(sourceSettings.value, key, spellcastingSources.value)
+  const modifier = statModifierForAbility(setting.stat_path)
   return {
-    key: source.key,
-    label: source.label,
-    ability: statOptions.value.find((stat) => String(stat.value) === String(source.ability))?.label || '—',
-    saveDC: 8 + profBonus.value + modifier + saveBonusExtra.value,
-    attackBonus: profBonus.value + modifier + attackBonusExtra.value,
+    key,
+    label,
+    ability: statOptions.value.find((stat) => String(stat.value) === String(setting.stat_path))?.label || '—',
+    saveDC: 8 + profBonus.value + modifier + setting.save_bonus,
+    attackBonus: profBonus.value + modifier + setting.attack_bonus,
   }
-}))
+}
+const spellcastingStatRows = computed(() => spellcastingSources.value
+  .map((source) => castingStatRow(source.key, source.label)))
+const otherSpellcastingStatRow = computed(() => castingStatRow(OTHER_SPELLCASTING_SOURCE, 'Другие'))
+const displayedSpellcastingStatRows = computed(() => {
+  if (activeTabSource.value) return spellcastingStatRows.value.filter((row) => row.key === activeTabSource.value.key)
+  if (activeSpellTab.value === 'other') return [otherSpellcastingStatRow.value]
+  if (spellcastingSources.value.length === 1) return spellcastingStatRows.value
+  return hasOtherSpells.value
+    ? [...spellcastingStatRows.value, otherSpellcastingStatRow.value]
+    : spellcastingStatRows.value
+})
 
 const schoolMap = computed(() => {
   const id = props.block.content?.school_suggest_id
@@ -302,11 +346,8 @@ watch(blockHidden, v => setBlockHidden(v), { immediate: true })
 function emitChange() {
   const serializedPools = serializedSlotPools()
   emit('update:value', props.block.id, {
-    stat_path: statPath.value,
-    save_bonus: saveBonusExtra.value,
-    attack_bonus: attackBonusExtra.value,
+    source_settings: serializeSpellcastingSettings(sourceSettings.value, spellcastingSources.value),
     slots_rest: 'long_rest',
-    preparation: preparation.value,
     slots_auto: automaticSlots.value,
     slot_pools: serializedPools,
     spells: spells.value.map(s => ({
@@ -316,8 +357,12 @@ function emitChange() {
       ...(s.source ? { source: s.source } : {}),
       ...(Array.isArray(s.granted_by) && s.granted_by.length ? { granted_by: s.granted_by } : {}),
       ...(s.external_only ? { external_only: true } : {}),
-      ...(s.casting_ability != null ? { casting_ability: s.casting_ability } : {}),
-      ...(s.casting_ability_source ? { casting_ability_source: s.casting_ability_source } : {}),
+      ...(s.casting_ability != null && s.casting_ability_source !== 'class'
+        ? { casting_ability: s.casting_ability }
+        : {}),
+      ...(s.casting_ability_source && s.casting_ability_source !== 'class'
+        ? { casting_ability_source: s.casting_ability_source }
+        : {}),
       ...(s.slotless ? { slotless: true } : {}),
       ...(s.slotless_source ? { slotless_source: s.slotless_source } : {}),
       ...(s.cast_level != null ? { cast_level: s.cast_level } : {}),
@@ -405,22 +450,31 @@ const {
 // ─── Methods ───────────────────────────────────────
 
 function setStatPath(path) {
-  statPath.value = path
-  emitChange()
+  updateActiveCastingSetting('stat_path', path)
 }
 
 function setSaveBonus(v) {
-  saveBonusExtra.value = Number(v) || 0
-  emitChange()
+  updateActiveCastingSetting('save_bonus', Number(v) || 0)
 }
 
 function setAttackBonus(v) {
-  attackBonusExtra.value = Number(v) || 0
-  emitChange()
+  updateActiveCastingSetting('attack_bonus', Number(v) || 0)
 }
 
 function setPreparation(v) {
-  preparation.value = !!v
+  updateActiveCastingSetting('preparation', !!v)
+}
+
+function updateActiveCastingSetting(field, value) {
+  const key = activeSettingsKey.value
+  if (!key) return
+  sourceSettings.value = {
+    ...sourceSettings.value,
+    [key]: {
+      ...spellcastingSetting(sourceSettings.value, key, spellcastingSources.value),
+      [field]: value,
+    },
+  }
   emitChange()
 }
 
@@ -557,7 +611,6 @@ function addSpell(item) {
       id: item.id,
       prepared: false,
       ...(source?.key ? { spellcasting_source: source.key } : {}),
-      ...(source?.ability != null ? { casting_ability: source.ability, casting_ability_source: 'class' } : {}),
     })
     emitChange()
     logSessionEntryAdded(charCtx, {
@@ -682,8 +735,11 @@ function spellcastingSourceFor(entry) {
 }
 
 function spellCanPrepare(entry) {
-  const source = spellcastingSourceFor(entry)
-  return source ? source.prepares : preparation.value
+  return spellcastingSetting(
+    sourceSettings.value,
+    spellSettingsKeyFor(entry),
+    spellcastingSources.value,
+  ).preparation
 }
 
 function spellSourceLabel(entry) {
@@ -695,33 +751,47 @@ function setSpellcastingSource(entry, key) {
   const source = spellcastingSources.value.find((candidate) => candidate.key === key)
   if (!source) return
   entry.ref.spellcasting_source = source.key
-  if (source.ability != null) {
-    entry.ref.casting_ability = source.ability
-    entry.ref.casting_ability_source = 'class'
-  } else if (entry.ref.casting_ability_source === 'class') {
-    delete entry.ref.casting_ability
-    delete entry.ref.casting_ability_source
-  }
+  delete entry.ref.casting_ability
+  delete entry.ref.casting_ability_source
   emitChange()
 }
 
-function spellCastingAbility(entry) {
-  return entry?.ref?.casting_ability ?? spellcastingSourceFor(entry)?.ability ?? statPath.value
+function spellSettingsKeyFor(entry) {
+  const source = spellcastingSourceFor(entry)
+  if (source) return source.key
+  if (spellcastingSources.value.length === 1 && !isOtherSpell(entry?.ref)) return spellcastingSources.value[0].key
+  return OTHER_SPELLCASTING_SOURCE
 }
 
-function spellStatModifier(entry) {
-  const ability = spellCastingAbility(entry)
+function spellCastingAbility(entry) {
+  if (entry?.ref?.casting_ability != null && entry.ref.casting_ability_source !== 'class') {
+    return entry.ref.casting_ability
+  }
+  return spellcastingSetting(
+    sourceSettings.value,
+    spellSettingsKeyFor(entry),
+    spellcastingSources.value,
+  ).stat_path
+}
+
+function statModifierForAbility(ability) {
   if (ability == null || ability === '') return 0
   const stats = props.values?.stats || charCtx.var?.stats || {}
   return Number(stats[String(ability)] ?? 0)
 }
 
+function spellStatModifier(entry) {
+  return statModifierForAbility(spellCastingAbility(entry))
+}
+
 function spellAttackBonus(entry) {
-  return profBonus.value + spellStatModifier(entry) + attackBonusExtra.value
+  const setting = spellcastingSetting(sourceSettings.value, spellSettingsKeyFor(entry), spellcastingSources.value)
+  return profBonus.value + spellStatModifier(entry) + setting.attack_bonus
 }
 
 function spellSaveDC(entry) {
-  return 8 + profBonus.value + spellStatModifier(entry) + saveBonusExtra.value
+  const setting = spellcastingSetting(sourceSettings.value, spellSettingsKeyFor(entry), spellcastingSources.value)
+  return 8 + profBonus.value + spellStatModifier(entry) + setting.save_bonus
 }
 
 function spellAbilityLabel(entry) {
@@ -755,7 +825,7 @@ async function syncExternalAbilitySpells() {
   await loadDetails()
 }
 
-async function loadClassItems() {
+async function loadClassItems(syncSlots = true) {
   const classIds = [...new Set((Array.isArray(props.values?.classes) ? props.values.classes : [])
     .flatMap((entry) => [entry?.id, entry?.subclass?.id]).filter((id) => id != null))]
   const missing = classIds.filter((id) => !classItemMap[id])
@@ -767,7 +837,7 @@ async function loadClassItems() {
     && !spellcastingSources.value.some((source) => source.key === activeSpellTab.value)) {
     activeSpellTab.value = 'all'
   }
-  syncAutomaticSlotPools()
+  if (syncSlots) syncAutomaticSlotPools()
 }
 
 provide('spellsBlockCtx', reactive({
@@ -813,13 +883,11 @@ provide('spellsBlockCtx', reactive({
 onMounted(async () => {
   const raw = props.value && typeof props.value === 'object' && !Array.isArray(props.value) ? props.value : {}
   spells.value = (Array.isArray(raw.spells) ? raw.spells : []).map(s => ({ ...s }))
-  statPath.value = raw.stat_path || ''
-  saveBonusExtra.value = Number(raw.save_bonus) || 0
-  attackBonusExtra.value = Number(raw.attack_bonus) || 0
-  preparation.value = !!raw.preparation
   automaticSlots.value = raw.slots_auto !== false
   loadSlotPools(raw)
-  await loadClassItems()
+  await loadClassItems(false)
+  sourceSettings.value = loadSpellcastingSettings(raw, spellcastingSources.value)
+  syncAutomaticSlotPools()
   const { school_suggest_id, stat_suggest_type_id } = props.block.content || {}
   const ensures = [school_suggest_id, stat_suggest_type_id, damageTypeSuggestTypeId.value]
     .filter(Boolean)

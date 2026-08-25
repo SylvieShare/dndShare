@@ -239,6 +239,10 @@ export function buildCharacterData(input) {
   const grantedExtra = grantedSpellIds.filter((id) => !spellIds.includes(id))
   const grantedSpellIdSet = new Set(grantedSpellIds.map((id) => String(id)))
   if (grants.spellcasting || spellIds.length || grantedExtra.length || featSpellIds.length || abilityGrantRows.length) {
+    const classSpellcastingSource = grants.spellcasting && charClass
+      ? `class:${charClass.id ?? ''}:${subclass?.id ?? ''}`
+      : null
+    const classSpellIds = new Set([...spellIds, ...grantedExtra].map(String))
     const slots = defaultSlots()
     const slotInfo = charClass ? computeSlots(
       [{ id: charClass.id, level: 1, subclass: subclass ? { id: subclass.id } : null }],
@@ -255,11 +259,22 @@ export function buildCharacterData(input) {
         prepared,
         ...(alwaysPrepared ? { always_prepared: true } : {}),
         ...(featSpellIds.some((featId) => String(featId) === String(id)) ? { source: 'feat' } : {}),
+        ...(classSpellcastingSource && classSpellIds.has(String(id))
+          ? { spellcasting_source: classSpellcastingSource }
+          : {}),
       }
     })
-    values.spells = {
+    const defaultCastingSetting = {
       stat_path: grants.spellcasting?.abilityId ?? '',
+      save_bonus: 0,
+      attack_bonus: 0,
       preparation: !!grants.spellcasting?.prepares,
+    }
+    values.spells = {
+      source_settings: {
+        ...(classSpellcastingSource ? { [classSpellcastingSource]: defaultCastingSetting } : {}),
+        other: defaultCastingSetting,
+      },
       spells: syncAbilityGrantedSpells(spellEntries, abilityGrantRows),
       slots,
       ...(slotInfo?.pactMerged ? { slots_rest: 'short_rest' } : {}),

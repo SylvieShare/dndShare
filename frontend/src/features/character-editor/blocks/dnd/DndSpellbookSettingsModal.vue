@@ -1,6 +1,6 @@
 <template>
-  <AppModalFrame title="Магия" @close="$emit('close')">
-    <EditorSection title="Подготовка">
+  <AppModalFrame :title="modalTitle" @close="$emit('close')">
+    <EditorSection v-if="showCastingConfig" title="Подготовка">
       <ToggleSwitch
         :model-value="preparation"
         label="Подготовка заклинаний"
@@ -17,7 +17,7 @@
       <p class="ssm-hint">Отключите для домашних правил и ручного пула ячеек.</p>
     </EditorSection>
 
-    <EditorSection title="Базовая характеристика">
+    <EditorSection v-if="showCastingConfig" title="Базовая характеристика">
       <ValueSelect
         :model-value="statPath"
         :options="[{ value: '', label: '—' }, ...statOptions]"
@@ -26,7 +26,7 @@
       />
     </EditorSection>
 
-    <EditorSection title="Бонусы">
+    <EditorSection v-if="showCastingConfig" title="Бонусы">
       <div class="ssm-bonus">
         <span class="ssm-bonus-label">Спасбросок</span>
         <FormNumberInput :value="saveBonus" @change="$emit('set-save-bonus', $event)" />
@@ -76,11 +76,16 @@ const props = defineProps({
   attackBonus: { type: Number, default: 0 },
   preparation: { type: Boolean, default: false },
   automaticSlots: { type: Boolean, default: true },
+  showCastingConfig: { type: Boolean, default: true },
+  castingLabel: { type: String, default: '' },
 })
 defineEmits(['close', 'change', 'set-stat-path', 'set-save-bonus', 'set-attack-bonus', 'set-preparation', 'set-automatic-slots'])
 
 const editingRest = ref('long_rest')
 const slots = computed(() => props.slotPools?.[editingRest.value] || [])
+const modalTitle = computed(() => props.showCastingConfig && props.castingLabel
+  ? `Магия · ${props.castingLabel}`
+  : 'Магия')
 </script>
 
 <style scoped>

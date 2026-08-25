@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest'
 
 const source = readFileSync(fileURLToPath(new URL('./DndSpells.vue', import.meta.url)), 'utf8')
 const cardSource = readFileSync(fileURLToPath(new URL('./components/SpellCard.vue', import.meta.url)), 'utf8')
+const settingsSource = readFileSync(fileURLToPath(new URL('./DndSpellbookSettingsModal.vue', import.meta.url)), 'utf8')
 
 describe('spellcasting restrictions', () => {
   it('combines armor and active-effect restrictions in one notice', () => {
@@ -37,5 +38,13 @@ describe('multiclass spellcasting UI', () => {
     expect(source).toContain("{ key: 'other', label: 'Другие' }")
     expect(source).toContain('spells.value.filter(spellMatchesActiveTab)')
     expect(source).toContain('Добавляйте заклинания во вкладке нужного класса')
+  })
+
+  it('stores casting ability, bonuses and preparation per active tab', () => {
+    expect(source).toContain('source_settings: serializeSpellcastingSettings')
+    expect(source).toContain('activeSettingsKey')
+    expect(source).toContain("updateActiveCastingSetting('preparation'")
+    expect(settingsSource).toContain('v-if="showCastingConfig" title="Подготовка"')
+    expect(settingsSource).toContain('v-if="showCastingConfig" title="Базовая характеристика"')
   })
 })
