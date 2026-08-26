@@ -111,8 +111,9 @@ Startup data correction переводит прежние значения в э
 Class/subclass items use `caster_progression` (`full`, `half`, `halfup`,
 `third`, `pact`) as the canonical spell-slot contribution. Nested
 `spellcasting` data may additionally contain `list_class`,
-`known_progression`, `allowed_schools` and `unrestricted_progression` for
-known-spell pickers. Ability choices may combine dictionaries through
+`start_level`, `selection_mode`, `level_up_choices`, `known_progression`,
+`allowed_schools` and `unrestricted_progression` for class tabs and level-up
+spell pickers. Ability choices may combine dictionaries through
 `suggest_sources`, require an owned proficiency and exclude an already reached
 rank. `display_scaling [{level,label}]` is presentation data resolved against
 the owning class level.

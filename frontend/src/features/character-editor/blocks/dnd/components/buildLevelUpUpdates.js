@@ -18,6 +18,7 @@ import { abilityHasResources, abilityUseTotal, abilityUsesAreManual } from '@/sh
 import { abilitySpellGrantRows, syncAbilityGrantedSpells } from '@/features/character-editor/blocks/dnd/lib/abilitySpellGrants'
 import { choicesForEntry } from '@/features/items/lib/itemChoices'
 import { hpMaximum, normalizeHpMaximum } from '@/features/character-editor/blocks/dnd/lib/hp'
+import { applyLevelUpSpellSelection } from '@/features/character-editor/blocks/dnd/lib/levelUpSpellSelection'
 
 export function buildLevelUpUpdates({
   values,
@@ -45,6 +46,7 @@ export function buildLevelUpUpdates({
   classItem,
   subclassItem = null,
   subclassSelectedNow = false,
+  classSpellSelection = null,
 }) {
   const updates = {
     lvl: { exp: 0, ...(values.lvl || {}), level: newTotal },
@@ -203,12 +205,29 @@ export function buildLevelUpUpdates({
   const abilityGrantRows = abilitySpellGrantRows(abilityItems, nextValues)
   const hasExistingAbilityGrants = (values.spells?.spells || []).some((entry) =>
     (entry.granted_by || []).some((source) => source?.kind === 'ability'))
-  if (applySlotChange || grantedNewIds.length || featSpellIds.length || (abilityItemsComplete && (abilityGrantRows.length || hasExistingAbilityGrants))) {
+  if (applySlotChange || classSpellSelection || grantedNewIds.length || featSpellIds.length || (abilityItemsComplete && (abilityGrantRows.length || hasExistingAbilityGrants))) {
     const spells = values.spells && typeof values.spells === 'object'
       ? { ...values.spells }
-      : { stat_path: castingAbilityIdOf(classItem, subclassItem) ?? '', spells: [], slots: defaultSlots() }
-    if (!spells.stat_path) spells.stat_path = castingAbilityIdOf(classItem, subclassItem) ?? ''
-    const spellEntries = (spells.spells || []).map((entry) => ({ ...entry }))
+      : { source_settings: {}, spells: [], slots: defaultSlots() }
+    const castingAbility = castingAbilityIdOf(classItem, subclassItem) ?? ''
+    if (classSpellSelection?.sourceKey) {
+      const previousSettings = (classSpellSelection.sourceAliases || [])
+        .map((key) => spells.source_settings?.[key])
+        .find(Boolean)
+      spells.source_settings = {
+        ...(spells.source_settings || {}),
+        [classSpellSelection.sourceKey]: {
+          stat_path: castingAbility,
+          save_bonus: 0,
+          attack_bonus: 0,
+          preparation: !!classSpellSelection.prepares,
+          ...(previousSettings || {}),
+          ...(spells.source_settings?.[classSpellSelection.sourceKey] || {}),
+        },
+      }
+      for (const alias of classSpellSelection.sourceAliases || []) delete spells.source_settings[alias]
+    }
+    let spellEntries = applyLevelUpSpellSelection(spells.spells || [], classSpellSelection)
     if (applySlotChange) {
       const slots = Array.isArray(spells.slots) && spells.slots.length
         ? spells.slots.map((slot) => ({ ...slot }))
@@ -228,11 +247,13 @@ export function buildLevelUpUpdates({
           existing.prepared = prepared
           if (prepared) existing.always_prepared = true
           else delete existing.always_prepared
+          if (classSpellSelection?.sourceKey) existing.spellcasting_source = classSpellSelection.sourceKey
         } else {
           spellEntries.push({
             id,
             prepared,
             ...(prepared ? { always_prepared: true } : {}),
+            ...(classSpellSelection?.sourceKey ? { spellcasting_source: classSpellSelection.sourceKey } : {}),
           })
         }
       }

@@ -8,7 +8,7 @@
       />
     </EditorSection>
 
-    <EditorSection title="Расчёт ячеек">
+    <EditorSection v-if="showSlotConfig" title="Расчёт ячеек">
       <ToggleSwitch
         :model-value="automaticSlots"
         label="Автоматически по уровням классов"
@@ -37,7 +37,7 @@
       </div>
     </EditorSection>
 
-    <EditorSection title="Ячейки заклинаний">
+    <EditorSection v-if="showSlotConfig" title="Ячейки заклинаний">
       <MultiToggle
         block
         :model-value="editingRest"
@@ -78,6 +78,7 @@ const props = defineProps({
   automaticSlots: { type: Boolean, default: true },
   showCastingConfig: { type: Boolean, default: true },
   castingLabel: { type: String, default: '' },
+  showSlotConfig: { type: Boolean, default: true },
 })
 defineEmits(['close', 'change', 'set-stat-path', 'set-save-bonus', 'set-attack-bonus', 'set-preparation', 'set-automatic-slots'])
 

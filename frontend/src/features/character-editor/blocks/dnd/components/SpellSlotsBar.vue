@@ -1,6 +1,6 @@
 <template>
   <div class="sp-bar">
-    <BaseTile v-if="hasStatConfig" class="sp-stats-panel">
+    <BaseTile v-if="showStats && hasStatConfig" class="sp-stats-panel">
       <SheetBlockTitle
         class="sp-mobile-panel-head"
         :title="castingPanelTitle"
@@ -34,7 +34,7 @@
       </div>
     </BaseTile>
 
-    <BaseTile v-if="activeSlotPools.length > 0" class="sp-slots-panel">
+    <BaseTile v-if="showSlots && (activeSlotPools.length > 0 || canInteract)" class="sp-slots-panel">
       <SheetBlockTitle
         class="sp-slots-head"
         title="Ячейки заклинаний"
@@ -80,6 +80,7 @@
       :automatic-slots="automaticSlots"
       :show-casting-config="showCastingConfig"
       :casting-label="castingLabel"
+      :show-slot-config="showSlotConfig"
       @change="(rest, level, total) => $emit('set-total', rest, level, total)"
       @set-stat-path="$emit('set-stat-path', $event)"
       @set-save-bonus="$emit('set-save-bonus', $event)"
@@ -118,6 +119,9 @@ const props = defineProps({
   automaticSlots:  { type: Boolean, default: true },
   showCastingConfig: { type: Boolean, default: true },
   castingLabel: { type: String, default: '' },
+  showStats: { type: Boolean, default: true },
+  showSlots: { type: Boolean, default: true },
+  showSlotConfig: { type: Boolean, default: true },
 })
 defineEmits(['set-stat-path', 'set-total', 'set-save-bonus', 'set-attack-bonus', 'set-preparation', 'set-automatic-slots', 'toggle-slot'])
 

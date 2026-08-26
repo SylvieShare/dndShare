@@ -239,7 +239,7 @@ export function buildCharacterData(input) {
   const grantedExtra = grantedSpellIds.filter((id) => !spellIds.includes(id))
   const grantedSpellIdSet = new Set(grantedSpellIds.map((id) => String(id)))
   if (grants.spellcasting || spellIds.length || grantedExtra.length || featSpellIds.length || abilityGrantRows.length) {
-    const classSpellcastingSource = grants.spellcasting && charClass
+    const classSpellcastingSource = charClass && (grants.spellcasting || spellIds.length || grantedExtra.length)
       ? `class:${charClass.id ?? ''}:${subclass?.id ?? ''}`
       : null
     const classSpellIds = new Set([...spellIds, ...grantedExtra].map(String))

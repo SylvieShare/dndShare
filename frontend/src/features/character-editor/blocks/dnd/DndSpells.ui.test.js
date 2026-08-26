@@ -28,16 +28,16 @@ describe('multiclass spellcasting UI', () => {
     expect(source).toContain('computeSpellSlotPools')
     expect(source).toContain(':active-slot-pools="activeSlotPools"')
     expect(source).toContain('spellcasting_source')
-    expect(cardSource).toContain('Класс заклинания не указан')
     expect(cardSource).toContain("option.pool === 'short_rest'")
   })
 
-  it('splits the spellbook into all, per-class and other tabs', () => {
+  it('shows only class tabs and keeps slots plus grants above them', () => {
     expect(source).toContain('v-for="tab in spellTabs"')
-    expect(source).toContain("{ key: 'all', label: 'Все' }")
-    expect(source).toContain("{ key: 'other', label: 'Другие' }")
+    expect(source).not.toContain("{ key: 'all', label: 'Все' }")
+    expect(source).not.toContain("{ key: 'other', label: 'Другие' }")
+    expect(source).toContain('class="sp-standalone"')
+    expect(source.indexOf(':show-stats="false"')).toBeLessThan(source.indexOf('aria-label="Класс заклинаний"'))
     expect(source).toContain('spells.value.filter(spellMatchesActiveTab)')
-    expect(source).toContain('Добавляйте заклинания во вкладке нужного класса')
   })
 
   it('stores casting ability, bonuses and preparation per active tab', () => {
@@ -46,5 +46,11 @@ describe('multiclass spellcasting UI', () => {
     expect(source).toContain("updateActiveCastingSetting('preparation'")
     expect(settingsSource).toContain('v-if="showCastingConfig" title="Подготовка"')
     expect(settingsSource).toContain('v-if="showCastingConfig" title="Базовая характеристика"')
+  })
+
+  it('assigns legacy wizard-created spells to a compatible class source', () => {
+    expect(source).toContain('assignMissingSpellSources')
+    expect(source).toContain('inferredSpellcastingSource')
+    expect(source).toContain('classIds.has(String(source.listClassId')
   })
 })

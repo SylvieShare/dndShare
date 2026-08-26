@@ -37,4 +37,13 @@ describe('character spell card icon', () => {
     expect(source).toContain('ctx.toggleAlwaysPrepared(props.entry.ref.id)')
     expect(source).toContain(':permanent="isAlwaysPrepared"')
   })
+
+  it('uses a dice menu for normal and critical damage without a cast-level stepper', () => {
+    expect(source).toContain('damage-menu')
+    expect(source).toContain('@roll-critical="ctx.rollSpellDamage(entry, castLevel, true)"')
+    expect(source).not.toContain('class="sp-step"')
+    expect(source).not.toContain('classSourceSummary')
+    expect(source).not.toContain('Заклинательная характеристика:')
+    expect(source).not.toContain('Даровано особенностью')
+  })
 })

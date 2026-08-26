@@ -136,7 +136,13 @@ describe('buildLevelUpUpdates feature choices', () => {
 describe('buildLevelUpUpdates subclass grants', () => {
   it('applies subclass tool proficiencies and its casting ability', () => {
     const updates = buildLevelUpUpdates({
-      values: { lvl: { level: 2 }, hp: { max: 15, current: 15 }, proficiencies: { Инструменты: [] } },
+      values: {
+        lvl: { level: 2 }, hp: { max: 15, current: 15 }, proficiencies: { Инструменты: [] },
+        spells: {
+          source_settings: { 'class:1:': { stat_path: 4, save_bonus: 1, attack_bonus: 0, preparation: false } },
+          spells: [{ id: 50, spellcasting_source: 'class:1:' }], slots: [],
+        },
+      },
       newTotal: 3,
       isPlain: false,
       entriesAfter: [{ id: 1, name: 'Плут', level: 3, subclass: { id: 2, name: 'Убийца' } }],
@@ -151,9 +157,39 @@ describe('buildLevelUpUpdates subclass grants', () => {
       grantedNewIds: [], classItem: { data: {} },
       subclassItem: { data: { tool_prof: [24], spellcasting: { ability: 4 } } },
       subclassSelectedNow: true,
+      classSpellSelection: {
+        sourceKey: 'class:1:2', sourceAliases: ['class:1:'], prepares: false, entries: [{ id: 50, level: 1 }],
+      },
     })
 
     expect(updates.proficiencies['Инструменты']).toEqual(['Набор для грима'])
-    expect(updates.spells.stat_path).toBe(4)
+    expect(updates.spells.source_settings['class:1:2']).toMatchObject({ stat_path: 4, save_bonus: 1 })
+    expect(updates.spells.source_settings['class:1:']).toBeUndefined()
+    expect(updates.spells.spells[0].spellcasting_source).toBe('class:1:2')
+  })
+})
+
+describe('buildLevelUpUpdates class spell selection', () => {
+  it('creates paladin spell settings and assigns selected spells at level two', () => {
+    const updates = buildLevelUpUpdates({
+      values: { lvl: { level: 1 }, hp: { max: 12, current: 12 } },
+      newTotal: 2, isPlain: false,
+      entriesAfter: [{ id: 2, name: 'Паладин', level: 2 }],
+      features: [], itemsById: { 2: {} },
+      hitDieLabelOf: () => 'd10', hitDieLabel: 'd10', hpGain: 6,
+      asiNow: false, asiSkipped: true, asiMode: 'asi', featPick: null,
+      suggestItems: () => [], asiStats: [], asiDelta: 0, featureChoiceSelections: {},
+      applySlots: true, slotDiff: [{ level: 1, from: 0, to: 2 }],
+      slotsAfter: { totals: [2, 0, 0, 0, 0, 0, 0, 0, 0], isCaster: true },
+      grantedNewIds: [], classItem: { data: { spellcasting_ability: 6 } },
+      classSpellSelection: {
+        sourceKey: 'class:2:', prepares: true, entries: [{ id: 100, level: 1 }],
+      },
+    })
+
+    expect(updates.spells.source_settings['class:2:']).toMatchObject({ stat_path: 6, preparation: true })
+    expect(updates.spells.spells).toEqual([
+      { id: 100, prepared: true, spellcasting_source: 'class:2:' },
+    ])
   })
 })

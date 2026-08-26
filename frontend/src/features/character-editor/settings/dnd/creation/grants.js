@@ -173,7 +173,8 @@ export function extractGrants({
         from: asList(d.skill_choice.from).map((id) => num(id) ?? id),
       }
     }
-    if (d.spellcasting && (statKey(d.spellcasting.ability) || d.spellcasting.cantrips_known != null)) {
+    const spellcastingStartsNow = (num(d.spellcasting?.start_level) ?? 1) <= 1
+    if (spellcastingStartsNow && d.spellcasting && (statKey(d.spellcasting.ability) || d.spellcasting.cantrips_known != null)) {
       grants.spellcasting = {
         stat: statKey(d.spellcasting.ability),
         abilityId: num(d.spellcasting.ability),

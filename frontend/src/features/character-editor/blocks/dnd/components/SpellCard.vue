@@ -5,7 +5,7 @@
         class="spell-row action-menu-source"
         :class="{
           'spell-row-clickable': !!entry.item,
-          'spell-row-draggable': ctx.charCtx.ownerMode && !isReadonlyGrant,
+          'spell-row-draggable': ctx.charCtx.ownerMode && !isReadonlyGrant && !standalone,
           'spell-row-prepared': isPrepared,
           'spell-row-permanent': isAlwaysPrepared,
           'sortable-placeholder': ctx.sortable.isSource(entry),
@@ -49,7 +49,6 @@
         <span v-if="data.ritual" class="sp-tag sp-tag-ritual" title="Ритуал">Р</span>
       </div>
       <span v-if="entry.item?.data" class="sp-meta">{{ ctx.spellMetaLine(entry.item) }}</span>
-      <span v-if="classSourceSummary" class="sp-grant">{{ classSourceSummary }}</span>
       <span v-if="grantSummary" class="sp-grant">{{ grantSummary }}</span>
     </div>
 
@@ -59,19 +58,16 @@
         {{ saveTag }}
       </span>
       <span v-if="instances > 1" class="sp-mul">×{{ instances }}</span>
-      <span v-if="isSlotScaled" class="sp-step" title="Круг ячейки" @pointerdown.stop @click.stop>
-        <button type="button" class="sp-step-btn" :disabled="castLevel <= minimumCastLevel" @click.stop="decCast">−</button>
-        <span class="sp-step-val">{{ castLevel }}<small>круг</small></span>
-        <button type="button" class="sp-step-btn" :disabled="castLevel >= maxCast" @click.stop="incCast">+</button>
-      </span>
       <AttackDamage
         :attack="entry.item?.data?.damage?.range_attack ? ctx.formatBonus(ctx.spellAttackBonus(entry)) : null"
         :damage-parts="damageParts"
         :modifier="damageModifier"
         :heal-parts="healParts"
         :rollable="true"
+        damage-menu
         @roll-attack="ctx.rollSpellAttack(entry)"
         @roll-damage="ctx.rollSpellDamage(entry, castLevel)"
+        @roll-critical="ctx.rollSpellDamage(entry, castLevel, true)"
         @roll-heal="ctx.rollSpellHeal(entry, castLevel)"
       />
     </div>
@@ -208,6 +204,7 @@ const props = defineProps({
   entry: { type: Object, required: true },
   level: { type: Number, required: true },
   idx:   { type: Number, required: true },
+  standalone: { type: Boolean, default: false },
 })
 
 const ctx = inject('spellsBlockCtx')
@@ -227,33 +224,14 @@ const grantSummary = computed(() => {
   const sources = Array.isArray(props.entry.ref.granted_by) ? props.entry.ref.granted_by : []
   const labels = [...new Set(sources.map((source) => String(source?.label || '').trim()).filter(Boolean))]
   if (!labels.length) return ''
-  const sourceLabel = labels.length === 1
-    ? `Даровано особенностью «${labels[0]}»`
-    : `Даровано особенностями: ${labels.join(', ')}`
+  const sourceLabel = labels.join(', ')
   const ability = props.entry.ref.casting_ability != null ? ctx.spellAbilityLabel(props.entry) : ''
   const castLevel = Number(props.entry.ref.cast_level) || 0
-  const details = [ability ? `Заклинательная характеристика: ${ability}` : '', castLevel ? `Уровень сотворения: ${castLevel}` : ''].filter(Boolean)
+  const details = [ability, castLevel ? `${castLevel} круг` : ''].filter(Boolean)
   return details.length ? `${sourceLabel} · ${details.join(' · ')}` : sourceLabel
 })
-const classSourceSummary = computed(() => {
-  const label = ctx.spellSourceLabel(props.entry)
-  if (!label) return ctx.spellcastingSources.length > 1 && !isReadonlyGrant.value ? 'Класс заклинания не указан' : ''
-  const ability = ctx.spellAbilityLabel(props.entry)
-  return [label, ability].filter(Boolean).join(' · ')
-})
 const fixedCastLevel = computed(() => Number(props.entry.ref.cast_level) || null)
-const minimumCastLevel = computed(() => fixedCastLevel.value || baseLvl.value)
-const maxCast = computed(() => fixedCastLevel.value || Math.max(baseLvl.value, Number(ctx.maxSlotLevel) || 0))
-const castOverride = ref(null)
-const castLevel = computed(() => {
-  const v = castOverride.value ?? minimumCastLevel.value
-  return Math.min(Math.max(v, minimumCastLevel.value), maxCast.value)
-})
-const isSlotScaled = computed(() =>
-  !fixedCastLevel.value && (dmg.value.scaling === 'slot' || data.value.heal?.scaling === 'slot') && maxCast.value > baseLvl.value
-)
-function incCast() { if (castLevel.value < maxCast.value) castOverride.value = castLevel.value + 1 }
-function decCast() { if (castLevel.value > minimumCastLevel.value) castOverride.value = castLevel.value - 1 }
+const castLevel = computed(() => fixedCastLevel.value || baseLvl.value)
 
 const damageParts = computed(() => ctx.damageDiceParts(props.entry.item, castLevel.value, ctx.charLevel))
 const healParts = computed(() => ctx.healDiceParts(props.entry.item, castLevel.value, ctx.charLevel))
@@ -281,7 +259,7 @@ watch(() => ctx.sortable.dragging, v => { if (v) draggedThisGesture.value = true
 
 function onRowDown(e) {
   if (e.target.closest('button')) return
-  if (isReadonlyGrant.value) return
+  if (isReadonlyGrant.value || props.standalone) return
   draggedThisGesture.value = false
   ctx.onSpellDragStart(e, props.entry, props.level, props.idx)
 }
@@ -484,49 +462,6 @@ function removeSpell(close) {
   color: var(--text-2);
   font-size: 13px;
   font-weight: 800;
-}
-
-.sp-step {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 2px 4px;
-  border: 1px solid color-mix(in srgb, var(--text-on-accent) 12%, transparent);
-  border-radius: 8px;
-}
-.sp-step-btn {
-  width: 20px;
-  height: 20px;
-  display: grid;
-  place-items: center;
-  border: none;
-  border-radius: 5px;
-  background: color-mix(in srgb, var(--text-on-accent) 6%, transparent);
-  color: var(--text-1);
-  cursor: pointer;
-  font-size: 15px;
-  line-height: 1;
-  padding: 0;
-  transition: background 0.12s, color 0.12s;
-}
-.sp-step-btn:hover:not(:disabled) { background: color-mix(in srgb, var(--accent) 28%, transparent); }
-.sp-step-btn:disabled { opacity: 0.35; cursor: default; }
-.sp-step-val {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  line-height: 1;
-  min-width: 16px;
-  color: var(--text-1);
-  font-size: 14px;
-  font-weight: 800;
-}
-.sp-step-val small {
-  font-size: 8px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--text-muted);
 }
 
 .sp-del {

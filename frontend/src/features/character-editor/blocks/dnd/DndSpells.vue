@@ -8,7 +8,58 @@
       </span>
     </div>
 
-    <nav v-if="spellTabs.length > 1" class="sp-tabs" aria-label="Разделы магии">
+    <SpellSlotsBar
+      v-if="activeSlotPools.length || (canInteract && spellcastingSources.length)"
+      :has-stat-config="false"
+      :can-interact="canInteract"
+      :stat-path="statPath"
+      :stat-options="statOptions"
+      :stat-label="statLabel"
+      :save-d-c="saveDC"
+      :attack-bonus="attackBonus"
+      :save-bonus-extra="saveBonusExtra"
+      :attack-bonus-extra="attackBonusExtra"
+      :preparation="preparation"
+      :active-slot-pools="activeSlotPools"
+      :slot-pools="slotPools"
+      :casting-stats="[]"
+      :show-casting-config="false"
+      :show-stats="false"
+      :show-slots="true"
+      :show-slot-config="true"
+      :automatic-slots="automaticSlots"
+      @set-stat-path="setStatPath"
+      @set-total="setTotal"
+      @set-save-bonus="setSaveBonus"
+      @set-attack-bonus="setAttackBonus"
+      @set-preparation="setPreparation"
+      @toggle-slot="toggleSlot"
+      @set-automatic-slots="setAutomaticSlots"
+    />
+
+    <section v-if="standaloneSpellsByLevel.length" class="sp-standalone">
+      <div class="sp-standalone-title">Дарованные заклинания</div>
+      <div class="spells-groups">
+        <BaseTile v-for="group in standaloneSpellsByLevel" :key="`standalone:${group.level}`" class="spell-group">
+          <div class="sg-header">
+            <span class="sg-lvl">{{ groupTitle(group.level) }}</span>
+            <span class="sg-line"></span>
+          </div>
+          <div class="sg-spells">
+            <SpellCard
+              v-for="(entry, idx) in group.items"
+              :key="entry.ref.id"
+              :entry="entry"
+              :level="group.level"
+              :idx="idx"
+              standalone
+            />
+          </div>
+        </BaseTile>
+      </div>
+    </section>
+
+    <nav v-if="spellTabs.length" class="sp-tabs" aria-label="Класс заклинаний">
       <button
         v-for="tab in spellTabs"
         :key="tab.key"
@@ -19,7 +70,7 @@
     </nav>
 
     <SpellSlotsBar
-      v-if="showStatsBar"
+      v-if="activeTabSource && hasStatConfig"
       :has-stat-config="hasStatConfig"
       :can-interact="canInteract"
       :stat-path="statPath"
@@ -33,20 +84,20 @@
       :active-slot-pools="activeSlotPools"
       :slot-pools="slotPools"
       :casting-stats="displayedSpellcastingStatRows"
-      :show-casting-config="!!activeSettingsKey"
+      :show-casting-config="true"
       :casting-label="activeCastingLabel"
+      :show-stats="true"
+      :show-slots="false"
+      :show-slot-config="false"
       :automatic-slots="automaticSlots"
       @set-stat-path="setStatPath"
-      @set-total="setTotal"
       @set-save-bonus="setSaveBonus"
       @set-attack-bonus="setAttackBonus"
       @set-preparation="setPreparation"
-      @toggle-slot="toggleSlot"
-      @set-automatic-slots="setAutomaticSlots"
     />
 
     <!-- Заклинания по уровням (мультиколонки) -->
-    <div class="spells-groups">
+    <div v-if="activeTabSource" class="spells-groups">
       <div v-if="spellsByLevel.length === 0" class="spells-empty">
         Нет заклинаний
       </div>
@@ -86,18 +137,17 @@
     </div>
 
     <!-- Поиск / добавление -->
-    <div v-if="canAddItems" class="sp-add-section">
+    <div v-if="canAddItems && activeTabSource" class="sp-add-section">
       <div v-if="knownRules" class="sp-known-summary">
         <span>{{ knownRules.label }}</span>
         <template v-if="knownRules.hasKnownProgression">
-          <span>Заговоры <b>{{ knownCounts.cantrips }} / {{ knownRules.cantripsKnown }}</b></span>
-          <span>Заклинания <b>{{ knownCounts.spells }} / {{ knownRules.spellsKnown }}</b></span>
+          <span v-if="knownRules.cantripsKnown != null">Заговоры <b>{{ knownCounts.cantrips }} / {{ knownRules.cantripsKnown }}</b></span>
+          <span v-if="knownRules.spellsKnown != null">Заклинания <b>{{ knownCounts.spells }} / {{ knownRules.spellsKnown }}</b></span>
           <span v-if="knownRules.allowedSchoolIds.length">Вне основных школ <b>{{ knownCounts.unrestricted }} / {{ knownRules.unrestrictedSpells }}</b></span>
         </template>
         <span>Доступно до {{ selectedSourceMaxSpellLevel }} круга</span>
       </div>
-      <p v-if="!canAddInActiveTab" class="sp-add-hint">Добавляйте заклинания во вкладке нужного класса или в разделе «Другие».</p>
-      <button v-else class="sp-picker-btn" @click="pickerOpen = true">+ Найти заклинание...</button>
+      <button class="sp-picker-btn" @click="pickerOpen = true">+ Найти заклинание...</button>
     </div>
 
     <ItemPickerModal
@@ -163,7 +213,7 @@ const itemMap    = reactive({})
 const modalSpell = ref(null)
 const pickerOpen = ref(false)
 const classItemMap = reactive({})
-const activeSpellTab = ref('all')
+const activeSpellTab = ref('')
 const automaticSlots = ref(true)
 
 // ─── Computeds ─────────────────────────────────────
@@ -203,7 +253,6 @@ const canAddItems  = computed(() => !!charCtx.ownerMode)
 const blockHidden  = computed(() =>
   props.block.hide_on_empty && !charCtx.ownerMode && !canAddItems.value && spells.value.length === 0
 )
-const showStatsBar = computed(() => hasStatConfig.value || canInteract.value || activeSlotPools.value.length > 0)
 const armorState = computed(() => charCtx.characterArmor?.state || {})
 const spellcastingRestrictions = computed(() => {
   const restrictions = []
@@ -224,62 +273,27 @@ const spellcastingRestrictions = computed(() => {
 const spellcastingBlocked = computed(() => spellcastingRestrictions.value.length > 0)
 const spellcastingSources = computed(() => characterSpellcastingSources(props.values?.classes, classItemMap))
 const sourceKeys = computed(() => new Set(spellcastingSources.value.map((source) => source.key)))
-function isOtherSpell(ref) {
-  if (sourceKeys.value.has(ref?.spellcasting_source)) return false
-  if (ref?.spellcasting_source) return true
-  if (ref?.external_only || ref?.casting_ability_source === 'ability' || ['feat', 'race', 'ability'].includes(ref?.source)) return true
-  return spellcastingSources.value.length !== 1
+function isStandaloneSpell(ref) {
+  return !!ref?.external_only || !sourceKeys.value.has(ref?.spellcasting_source)
 }
 function spellMatchesActiveTab(ref) {
-  if (activeSpellTab.value === 'all') return true
-  if (activeSpellTab.value === 'other') return isOtherSpell(ref)
-  if (ref?.spellcasting_source === activeSpellTab.value) return true
-  return spellcastingSources.value.length === 1
-    && activeSpellTab.value === spellcastingSources.value[0]?.key
-    && !isOtherSpell(ref)
+  return !ref?.external_only && ref?.spellcasting_source === activeSpellTab.value
 }
-const hasOtherSpells = computed(() => spells.value.some(isOtherSpell))
-const spellTabs = computed(() => {
-  const sources = spellcastingSources.value
-  if (sources.length <= 1 && !hasOtherSpells.value) return [{ key: 'all', label: 'Все' }]
-  return [
-    { key: 'all', label: 'Все' },
-    ...sources.map((source) => ({ key: source.key, label: source.label })),
-    { key: 'other', label: 'Другие' },
-  ]
-})
+const spellTabs = computed(() => spellcastingSources.value
+  .map((source) => ({ key: source.key, label: source.label })))
 const activeTabSource = computed(() => spellcastingSources.value.find((source) => source.key === activeSpellTab.value) || null)
-const activeSettingsKey = computed(() => {
-  if (activeTabSource.value) return activeTabSource.value.key
-  if (activeSpellTab.value === 'other') return OTHER_SPELLCASTING_SOURCE
-  if (activeSpellTab.value === 'all' && spellcastingSources.value.length === 1) return spellcastingSources.value[0].key
-  return null
-})
+const activeSettingsKey = computed(() => activeTabSource.value?.key || null)
 const activeCastingSetting = computed(() => activeSettingsKey.value
   ? spellcastingSetting(sourceSettings.value, activeSettingsKey.value, spellcastingSources.value)
   : null)
 const statPath = computed(() => activeCastingSetting.value?.stat_path ?? '')
 const saveBonusExtra = computed(() => activeCastingSetting.value?.save_bonus ?? 0)
 const attackBonusExtra = computed(() => activeCastingSetting.value?.attack_bonus ?? 0)
-const preparation = computed(() => {
-  if (activeCastingSetting.value) return activeCastingSetting.value.preparation
-  return spellcastingSources.value.some((source) => spellcastingSetting(
-    sourceSettings.value,
-    source.key,
-    spellcastingSources.value,
-  ).preparation) || spellcastingSetting(
-    sourceSettings.value,
-    OTHER_SPELLCASTING_SOURCE,
-    spellcastingSources.value,
-  ).preparation
-})
+const preparation = computed(() => !!activeCastingSetting.value?.preparation)
 const activeCastingLabel = computed(() => activeTabSource.value?.label
   || spellcastingSources.value.find((source) => source.key === activeSettingsKey.value)?.label
-  || (activeSettingsKey.value === OTHER_SPELLCASTING_SOURCE ? 'Другие' : ''))
-const knownRules = computed(() => activeTabSource.value
-  || (spellcastingSources.value.length === 1 && activeSpellTab.value !== 'other' ? spellcastingSources.value[0] : null))
-const canAddInActiveTab = computed(() => activeSpellTab.value !== 'all'
-  || spellcastingSources.value.length <= 1)
+  || '')
+const knownRules = computed(() => activeTabSource.value)
 const selectedSourceMaxSpellLevel = computed(() => knownRules.value
   ? maximumSpellLevelForEntry(knownRules.value.entry, classItemMap)
   : maxSlotLevel.value)
@@ -296,15 +310,8 @@ function castingStatRow(key, label) {
 }
 const spellcastingStatRows = computed(() => spellcastingSources.value
   .map((source) => castingStatRow(source.key, source.label)))
-const otherSpellcastingStatRow = computed(() => castingStatRow(OTHER_SPELLCASTING_SOURCE, 'Другие'))
-const displayedSpellcastingStatRows = computed(() => {
-  if (activeTabSource.value) return spellcastingStatRows.value.filter((row) => row.key === activeTabSource.value.key)
-  if (activeSpellTab.value === 'other') return [otherSpellcastingStatRow.value]
-  if (spellcastingSources.value.length === 1) return spellcastingStatRows.value
-  return hasOtherSpells.value
-    ? [...spellcastingStatRows.value, otherSpellcastingStatRow.value]
-    : spellcastingStatRows.value
-})
+const displayedSpellcastingStatRows = computed(() => spellcastingStatRows.value
+  .filter((row) => row.key === activeTabSource.value?.key))
 
 const schoolMap = computed(() => {
   const id = props.block.content?.school_suggest_id
@@ -326,6 +333,18 @@ const spellsByLevel = computed(() => {
       ? items.filter(entry => countsTowardPreparation(entry.ref, level)).length
       : 0,
   }))
+})
+const standaloneSpellsByLevel = computed(() => {
+  const groups = new Map()
+  for (const spellRef of spells.value.filter(isStandaloneSpell)) {
+    const item = itemMap[spellRef.id]
+    const level = item?.data?.lvl ?? -1
+    if (!groups.has(level)) groups.set(level, [])
+    groups.get(level).push({ ref: spellRef, item })
+  }
+  return [...groups.entries()]
+    .sort((left, right) => left[0] - right[0])
+    .map(([level, items]) => ({ level, items }))
 })
 const preparedSummary = computed(() => {
   let total = 0
@@ -428,8 +447,8 @@ function spellPickerEligibility(item) {
     reasons.push('Не входит в список заклинаний выбранного класса')
   }
   if (level > selectedSourceMaxSpellLevel.value) reasons.push('Круг заклинания пока недоступен этому классу')
-  if (rules.hasKnownProgression && level === 0 && knownCounts.value.cantrips >= rules.cantripsKnown) reasons.push('Лимит известных заговоров уже заполнен')
-  if (rules.hasKnownProgression && level > 0 && knownCounts.value.spells >= rules.spellsKnown) reasons.push('Лимит известных заклинаний уже заполнен')
+  if (rules.hasKnownProgression && rules.cantripsKnown != null && level === 0 && knownCounts.value.cantrips >= rules.cantripsKnown) reasons.push('Лимит известных заговоров уже заполнен')
+  if (rules.hasKnownProgression && rules.spellsKnown != null && level > 0 && knownCounts.value.spells >= rules.spellsKnown) reasons.push('Лимит известных заклинаний уже заполнен')
   if (level > 0 && rules.allowedSchoolIds.length
     && !rules.allowedSchoolIds.some((id) => String(id) === String(item?.data?.schoolId))
     && knownCounts.value.unrestricted >= rules.unrestrictedSpells) {
@@ -513,6 +532,52 @@ async function loadDetails() {
   }
   await Promise.all(spells.value.map(spell => charCtx.characterStatuses?.ensureLinks?.(itemMap[spell.id])))
   normalizePreparationStatuses()
+  assignMissingSpellSources()
+}
+
+function isGrantedWithoutClass(ref) {
+  return !!ref?.external_only
+    || !!ref?.casting_ability_source
+    || !!ref?.source
+    || (Array.isArray(ref?.granted_by) && ref.granted_by.length > 0)
+}
+
+function inferredSpellcastingSource(ref) {
+  const classIds = new Set((Array.isArray(itemMap[ref?.id]?.data?.classes) ? itemMap[ref.id].data.classes : [])
+    .map((entry) => String(entry?.id ?? entry)))
+  const compatible = spellcastingSources.value.filter((source) =>
+    classIds.has(String(source.listClassId ?? source.classId)))
+  if (compatible.length) return compatible[0]
+  return spellcastingSources.value[0] || null
+}
+
+function assignMissingSpellSources() {
+  let changed = false
+  for (const ref of spells.value) {
+    if (sourceKeys.value.has(ref.spellcasting_source) || isGrantedWithoutClass(ref)) continue
+    const source = inferredSpellcastingSource(ref)
+    if (!source) continue
+    ref.spellcasting_source = source.key
+    changed = true
+  }
+  if (changed) emitChange()
+  return changed
+}
+
+function migrateSourceSettingAliases() {
+  let next = sourceSettings.value
+  let changed = false
+  for (const source of spellcastingSources.value) {
+    if (next[source.key]) continue
+    const prefix = `class:${source.classId}:`
+    const alias = Object.keys(next).find((key) => key.startsWith(prefix) && key !== source.key)
+    if (!alias) continue
+    next = { ...next, [source.key]: next[alias] }
+    delete next[alias]
+    changed = true
+  }
+  if (changed) sourceSettings.value = next
+  return changed
 }
 
 function normalizePreparationStatuses() {
@@ -689,10 +754,12 @@ function exprWithBonus(parts, withType) {
   return expr
 }
 
-function rollSpellDamage(entry, castLevel) {
+function rollSpellDamage(entry, castLevel, critical = false) {
   if (spellcastingBlocked.value) return
-  const expr = exprWithBonus(damageDiceParts(entry.item, castLevel, charLevel.value), true)
-  if (expr) dice.roll(`Урон: ${spellTitle(entry)}`, expr)
+  const parts = damageDiceParts(entry.item, castLevel, charLevel.value)
+    .map((part) => critical ? { ...part, count: (Number(part.count) || 1) * 2 } : part)
+  const expr = exprWithBonus(parts, true)
+  if (expr) dice.roll(`${critical ? 'Критический урон' : 'Урон'}: ${spellTitle(entry)}`, expr)
 }
 
 function rollSpellHeal(entry, castLevel) {
@@ -759,7 +826,7 @@ function setSpellcastingSource(entry, key) {
 function spellSettingsKeyFor(entry) {
   const source = spellcastingSourceFor(entry)
   if (source) return source.key
-  if (spellcastingSources.value.length === 1 && !isOtherSpell(entry?.ref)) return spellcastingSources.value[0].key
+  if (spellcastingSources.value.length === 1 && !isGrantedWithoutClass(entry?.ref)) return spellcastingSources.value[0].key
   return OTHER_SPELLCASTING_SOURCE
 }
 
@@ -833,11 +900,13 @@ async function loadClassItems(syncSlots = true) {
     const response = await itemsApi.byIds(missing)
     for (const item of response?.items || []) classItemMap[item.id] = item
   }
-  if (!['all', 'other'].includes(activeSpellTab.value)
-    && !spellcastingSources.value.some((source) => source.key === activeSpellTab.value)) {
-    activeSpellTab.value = 'all'
+  if (!spellcastingSources.value.some((source) => source.key === activeSpellTab.value)) {
+    activeSpellTab.value = spellcastingSources.value[0]?.key || ''
   }
+  const settingsMigrated = migrateSourceSettingAliases()
   if (syncSlots) syncAutomaticSlotPools()
+  const sourcesMigrated = Object.keys(itemMap).length ? assignMissingSpellSources() : false
+  if (settingsMigrated && !sourcesMigrated) emitChange()
 }
 
 provide('spellsBlockCtx', reactive({
@@ -887,6 +956,7 @@ onMounted(async () => {
   loadSlotPools(raw)
   await loadClassItems(false)
   sourceSettings.value = loadSpellcastingSettings(raw, spellcastingSources.value)
+  if (migrateSourceSettingAliases()) emitChange()
   syncAutomaticSlotPools()
   const { school_suggest_id, stat_suggest_type_id } = props.block.content || {}
   const ensures = [school_suggest_id, stat_suggest_type_id, damageTypeSuggestTypeId.value]

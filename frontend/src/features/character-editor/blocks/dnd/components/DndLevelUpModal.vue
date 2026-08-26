@@ -141,6 +141,16 @@
         </div>
       </div>
 
+      <div v-if="levelUpSpellContext" class="lu-sec">
+        <div class="lu-sec-title">Заклинания класса</div>
+        <LevelUpSpellSelection
+          :key="`${levelUpSpellContext.sourceKey}:${newClassLevel}`"
+          :context="levelUpSpellContext"
+          :existing-spells="props.values?.spells?.spells || []"
+          @change="classSpellSelection = $event"
+        />
+      </div>
+
       <!-- хиты -->
       <div v-if="!isPlain" class="lu-sec">
         <div class="lu-sec-title">Хиты</div>
@@ -289,6 +299,9 @@ import { featSnippet, hitDieLabel as resolveHitDieLabel, monogram, multiclassPre
 import { levelUpSessionAdditions } from '@/features/character-editor/blocks/dnd/lib/levelUpSessionAdditions'
 import { itemMatchesChoiceFilter, parseItemChoiceFilter } from '@/features/items/lib/itemChoices'
 import { characterChoiceOptionEligibility } from '@/features/items/lib/characterChoiceEligibility'
+import LevelUpSpellSelection from './LevelUpSpellSelection.vue'
+import { spellcastingRulesAt } from '@/features/character-editor/blocks/dnd/lib/spellcastingRules'
+import { maximumSpellLevelForEntry } from '@/features/character-editor/blocks/dnd/lib/multiclassSpellcasting'
 
 const CLASS_TYPE = 9
 const CLASS_ABIL_TYPE = 4
@@ -321,6 +334,7 @@ const applySlots = ref(true)
 const viewFeature = ref(null)
 const featureItemChoice = ref(null)
 const featureChoiceItemNames = ref({})
+const classSpellSelection = ref(null)
 
 const {
   target,
@@ -514,6 +528,33 @@ const slotsCatalog = computed(() => {
   return map
 })
 const slotsAfter = computed(() => (isPlain.value ? null : computeSlots(entriesAfter.value, slotsCatalog.value)))
+const levelUpSpellContext = computed(() => {
+  if (isPlain.value || !classItem.value) return null
+  const resolvedRules = spellcastingRulesAt(effectiveSubclassItem.value, newClassLevel.value)
+    || spellcastingRulesAt(classItem.value, newClassLevel.value)
+  if (!resolvedRules) return null
+  const rules = { ...resolvedRules, listClassId: resolvedRules.listClassId ?? classItem.value.id }
+  const subclassId = effectiveSubclass.value?.id ?? ''
+  const sourceKey = `class:${classItem.value.id}:${subclassId}`
+  const entry = {
+    id: classItem.value.id,
+    level: newClassLevel.value,
+    subclass: subclassId === '' ? null : { id: subclassId },
+  }
+  const knownClassSources = Object.keys(props.values?.spells?.source_settings || {})
+    .filter((key) => key.startsWith('class:'))
+  const previousSourceKey = targetEntry.value
+    ? `class:${classItem.value.id}:${targetEntry.value.subclass?.id ?? ''}`
+    : null
+  return {
+    rules,
+    sourceKey,
+    label: classItem.value.name,
+    maxSpellLevel: maximumSpellLevelForEntry(entry, slotsCatalog.value),
+    inferUnassigned: knownClassSources.length <= 1,
+    sourceAliases: previousSourceKey && previousSourceKey !== sourceKey ? [previousSourceKey] : [],
+  }
+})
 const slotDiff = computed(() => {
   if (!slotsAfter.value?.isCaster) return []
   const cur = Array.isArray(props.values?.spells?.slots) ? props.values.spells.slots : []
@@ -577,6 +618,7 @@ function resetPreview() {
   featConfigItem.value = null
   applySlots.value = true
   viewFeature.value = null
+  classSpellSelection.value = null
 }
 
 const canAccept = computed(() => {
@@ -585,6 +627,7 @@ const canAccept = computed(() => {
   if (needSubclass.value && !subclassPick.value) return false
   if (asiNow.value && !asiSkipped.value && !asiComplete.value) return false
   if (!featureChoicesComplete.value) return false
+  if (levelUpSpellContext.value && classSpellSelection.value?.sourceKey !== levelUpSpellContext.value.sourceKey) return false
   return true
 })
 
@@ -617,6 +660,7 @@ async function accept() {
     classItem: classItem.value,
     subclassItem: effectiveSubclassItem.value,
     subclassSelectedNow: !!subclassPick.value,
+    classSpellSelection: classSpellSelection.value,
   })
   const catalogItems = [...abilityPool.value, ...Object.values(itemsById.value)]
   if (featPick.value) catalogItems.push(featPick.value)

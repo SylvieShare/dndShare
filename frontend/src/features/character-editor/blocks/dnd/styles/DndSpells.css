@@ -28,6 +28,16 @@
   padding: 8px 4px;
 }
 
+.sp-standalone { margin-bottom: 18px; }
+.sp-standalone-title {
+  margin: 0 0 10px 2px;
+  color: var(--text-2);
+  font-size: 12px;
+  font-weight: 750;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
 /* ── Сводка по подготовленным (перед заговорами) ── */
 .sp-prep-summary {
   display: flex;

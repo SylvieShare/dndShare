@@ -13,17 +13,32 @@
       <span>{{ attack }}</span>
     </component>
 
-    <button
-      v-if="hasDamage && rollable"
-      type="button"
-      class="ad-crit ad-clickable"
-      title="Бросить критический урон"
-      @click.stop="$emit('roll-critical')"
-    >Крит</button>
+    <span
+      v-if="hasDamage && rollable && damageMenu"
+      class="ad-damage-menu"
+      @pointerdown.stop
+      @click.stop
+    >
+      <RowActionMenu title="Бросок урона">
+        <template #trigger>
+          <button type="button" class="ad-dmg ad-clickable" title="Выбрать бросок урона">
+            <span v-if="flatDamage !== null" class="ad-flat" :title="flatDamageTitle || undefined">
+              <strong>{{ flatDamage }}</strong>
+              <small v-if="flatDamageType">{{ flatDamageType }}</small>
+            </span>
+            <DamageDice v-else :parts="damageParts" :modifier="modifier" />
+          </button>
+        </template>
+        <template #default="{ close }">
+          <RowActionItem action="damage" @click="rollDamage(close, false)">Обычный урон</RowActionItem>
+          <RowActionItem action="critical" tone="warning" @click="rollDamage(close, true)">Критический урон</RowActionItem>
+        </template>
+      </RowActionMenu>
+    </span>
 
     <component
       :is="rollable ? 'button' : 'span'"
-      v-if="hasDamage"
+      v-if="hasDamage && (!rollable || !damageMenu)"
       :type="rollable ? 'button' : undefined"
       class="ad-dmg"
       :class="{ 'ad-clickable': rollable }"
@@ -69,6 +84,8 @@
 import { computed } from 'vue'
 
 import DamageDice from '@/features/character-editor/blocks/dnd/components/DamageDice.vue'
+import RowActionItem from '@/shared/ui/RowActionItem.vue'
+import { RowActionMenu } from '@sylvieshare/share-ui'
 
 // Shared attack/damage display used by both spells and weapons. `rollable` turns the displayed values
 // into controls for spell cards; weapon cards keep them read-only and expose rolls in their action menu.
@@ -83,6 +100,7 @@ const props = defineProps({
   flatDamageType: { type: String, default: '' },
   flatDamageTitle: { type: String, default: '' },
   rollable: { type: Boolean, default: false },
+  damageMenu: { type: Boolean, default: false },
 })
 const emit = defineEmits(['roll-attack', 'roll-damage', 'roll-damage-two', 'roll-critical', 'roll-heal'])
 
@@ -90,6 +108,11 @@ function onRoll(event, name) {
   if (!props.rollable) return
   event.stopPropagation()
   emit(name)
+}
+
+function rollDamage(close, critical) {
+  close()
+  emit(critical ? 'roll-critical' : 'roll-damage')
 }
 
 const hasAttack = computed(() => props.attack != null && props.attack !== '')
@@ -107,8 +130,7 @@ const hasDamage = computed(() => props.flatDamage !== null || props.damageParts.
 
 .ad-atk,
 .ad-dmg,
-.ad-heal,
-.ad-crit {
+.ad-heal {
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -121,6 +143,7 @@ const hasDamage = computed(() => props.flatDamage !== null || props.damageParts.
   white-space: nowrap;
   color: inherit;
 }
+.ad-damage-menu { display: inline-flex; }
 
 .ad-clickable { cursor: pointer; transition: filter 0.12s, transform 0.08s; }
 @media (hover: hover) { .ad-clickable:hover { filter: brightness(1.22); } }
@@ -169,5 +192,4 @@ const hasDamage = computed(() => props.flatDamage !== null || props.damageParts.
   font-size: 15px;
 }
 .ad-heal-mark { color: var(--success); font-size: 13px; }
-.ad-crit { padding: 4px 7px; border: 1px solid color-mix(in srgb, var(--warning) 45%, transparent); border-radius: 7px; background: color-mix(in srgb, var(--warning) 10%, transparent); color: var(--warning); font-size: 9px; letter-spacing: .04em; text-transform: uppercase; }
 </style>

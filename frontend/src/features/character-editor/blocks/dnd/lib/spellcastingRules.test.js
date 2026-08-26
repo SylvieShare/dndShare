@@ -42,4 +42,15 @@ describe('spellcasting handbook rules', () => {
       { key: 'class:2:', classId: 2, classLevel: 3, ability: 4, prepares: true, listClassId: 2 },
     ])
   })
+
+  it('does not expose a half-caster source before its configured start level', () => {
+    const paladin = { id: 3, data: { spellcasting: {
+      ability: 6, prepares: true, start_level: 2, selection_mode: 'prepared',
+    } } }
+
+    expect(spellcastingRulesAt(paladin, 1)).toBeNull()
+    expect(spellcastingRulesAt(paladin, 2)).toMatchObject({
+      ability: 6, prepares: true, startLevel: 2, selectionMode: 'prepared',
+    })
+  })
 })

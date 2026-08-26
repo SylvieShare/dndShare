@@ -162,6 +162,33 @@ describe('buildCharacterData spell preparation', () => {
       { id: 102, prepared: true, always_prepared: true, spellcasting_source: 'class:2:' },
     ])
   })
+
+  it('assigns wizard-selected spells to the class even when the catalogue grant is incomplete', () => {
+    const result = buildCharacterData({
+      race: selection(1, 'Человек'),
+      charClass: selection(7, 'Волшебник'),
+      spellIds: [100],
+      spellLevels: { 100: 1 },
+      suggestValue: () => '',
+    })
+
+    expect(result.data.values.spells.spells).toEqual([
+      { id: 100, prepared: true, spellcasting_source: 'class:7:' },
+    ])
+  })
+
+  it('does not create level-one magic for a half-caster that starts at level two', () => {
+    const result = buildCharacterData({
+      race: selection(1, 'Человек'),
+      charClass: selection(8, 'Паладин', {
+        caster_progression: 'half',
+        spellcasting: { ability: 6, prepares: true, start_level: 2 },
+      }),
+      suggestValue: () => '',
+    })
+
+    expect(result.data.values.spells).toBeUndefined()
+  })
 })
 
 describe('buildCharacterData starting equipment', () => {

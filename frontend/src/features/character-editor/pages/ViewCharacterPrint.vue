@@ -459,13 +459,11 @@ function spellGrantLine(entry) {
   const labels = [...new Set((Array.isArray(entry?.granted_by) ? entry.granted_by : [])
     .map(source => text(source?.label)).filter(Boolean))]
   if (!labels.length) return ''
-  const source = labels.length === 1
-    ? `Даровано особенностью «${labels[0]}»`
-    : `Даровано особенностями: ${labels.join(', ')}`
+  const source = labels.join(', ')
   const casting = spellEntryCasting(entry)
   const details = [
-    casting.ability ? `Заклинательная характеристика: ${casting.ability}` : '',
-    Number(entry?.cast_level) > 0 ? `Уровень сотворения: ${Number(entry.cast_level)}` : '',
+    casting.ability,
+    Number(entry?.cast_level) > 0 ? `${Number(entry.cast_level)} круг` : '',
   ].filter(Boolean)
   return details.length ? `${source} · ${details.join(' · ')}` : source
 }

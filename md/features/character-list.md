@@ -319,10 +319,14 @@ Key rules:
 - the Personality step's dice action uses the shared race-aware name generator,
   preferring the selected subrace and avoiding an unchanged consecutive result;
 - the Personality step uses the same fixed 3×3 D&D alignment enum as the sheet;
-- classes whose handbook `spellcasting.prepares` flag is enabled create a
-  spellbook with preparation mode enabled automatically; selected cantrips are
-  stored unprepared, selected leveled spells begin prepared, and granted
-  archetype/domain spells begin permanently prepared;
+- classes whose handbook `spellcasting.start_level` is 1 create a spellbook in
+  the creation wizard; when `spellcasting.prepares` is enabled, selected
+  cantrips are stored unprepared, selected leveled spells begin prepared, and
+  granted archetype/domain spells begin permanently prepared. Half-casters
+  with `start_level: 2` receive the spellbook from level-up instead;
+- every spell selected in the creation wizard stores its class
+  `spellcasting_source`; opening an older sheet repairs missing sources from the
+  spell's compatible class list;
 - spell-slot progression is read from `caster_progression` on class/subclass
   handbook data rather than inferred from English or localized names;
 - fixed racial, class-feature and feat `granted_spells` are added even for a

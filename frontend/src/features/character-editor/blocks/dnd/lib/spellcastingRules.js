@@ -14,8 +14,11 @@ function progressionAt(rows, level) {
 export function spellcastingRulesAt(item, level) {
   const spellcasting = item?.data?.spellcasting
   if (!spellcasting || typeof spellcasting !== 'object') return null
-  const row = progressionAt(spellcasting.known_progression, Math.max(1, number(level) || 1))
-  const unrestricted = progressionAt(spellcasting.unrestricted_progression, Math.max(1, number(level) || 1))
+  const classLevel = Math.max(1, number(level) || 1)
+  const startLevel = Math.max(1, number(spellcasting.start_level) || 1)
+  if (classLevel < startLevel) return null
+  const row = progressionAt(spellcasting.known_progression, classLevel)
+  const unrestricted = progressionAt(spellcasting.unrestricted_progression, classLevel)
   const cantripsKnown = number(row?.cantrips ?? spellcasting.cantrips_known)
   const spellsKnown = number(row?.spells ?? spellcasting.spells_known)
   const listClassId = referenceId(spellcasting.list_class)
@@ -25,8 +28,11 @@ export function spellcastingRulesAt(item, level) {
   return {
     ability,
     prepares,
-    cantripsKnown: Math.max(0, cantripsKnown || 0),
-    spellsKnown: Math.max(0, spellsKnown || 0),
+    startLevel,
+    selectionMode: String(spellcasting.selection_mode || (prepares ? 'prepared' : 'known')),
+    levelUpChoices: Math.max(0, number(spellcasting.level_up_choices) || 0),
+    cantripsKnown: cantripsKnown == null ? null : Math.max(0, cantripsKnown),
+    spellsKnown: spellsKnown == null ? null : Math.max(0, spellsKnown),
     hasKnownProgression: Array.isArray(spellcasting.known_progression) && spellcasting.known_progression.length > 0,
     listClassId,
     allowedSchoolIds: (Array.isArray(spellcasting.allowed_schools) ? spellcasting.allowed_schools : [])
