@@ -27,4 +27,9 @@ describe('item proficiency matching', () => {
     expect(itemProficiencyRule(leather).bucket).toBe('Доспехи')
     expect(hasItemProficiency(leather, { proficiencies: { Доспехи: ['Лёгкие доспехи'] } }, items)).toBe(true)
   })
+
+  it('accepts a source-owned proficiency without copying it into stored tags', () => {
+    const scaleMail = { typeId: 12, data: { required_armor_proficiency: 13 } }
+    expect(hasItemProficiency(scaleMail, {}, items, [{ targetId: 13, source: 'Умеренно бронированный' }])).toBe(true)
+  })
 })

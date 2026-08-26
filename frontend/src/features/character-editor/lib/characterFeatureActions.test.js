@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { collectCharacterFeatureActions, featureActionEffectPatch, groupCharacterFeatureActions } from './characterFeatureActions'
+import { collectCharacterFeatureActions, featureActionEffectPatch, featureActionResourceKeys, groupCharacterFeatureActions } from './characterFeatureActions'
 
 describe('character feature actions', () => {
   it('merges manual and level-gated source actions with readonly provenance', () => {
@@ -39,6 +39,10 @@ describe('character feature actions', () => {
     const resources = [{ key: 'resource-20', source: { valueId: 'abilities_feats', entryKey: 'feat-20', resourceKey: 'dice' }, value: 2, total: 3 }]
 
     expect(collectCharacterFeatureActions(values, items, resources)[0].resource).toBe(resources[0])
+    expect(featureActionResourceKeys(values, items, [
+      ...resources,
+      { key: 'resource-unbound', source: { valueId: 'abilities_feats', entryKey: 'feat-20', resourceKey: 'other' } },
+    ])).toEqual(new Set(['resource-20']))
   })
 
   it('can bind and spend a resource contributed by another owned feature', () => {

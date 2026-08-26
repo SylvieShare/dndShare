@@ -24,9 +24,9 @@ function isArmorItem(item) {
   return Number(item?.typeId) === 12 && item?.data?.armor && typeof item.data.armor === 'object'
 }
 
-function armorProficient(item, values, suggestItems) {
+function armorProficient(item, values, suggestItems, grantedProficiencies) {
   if (item?.data?.required_armor_proficiency == null) return true
-  return hasItemProficiency(item, values, suggestItems)
+  return hasItemProficiency(item, values, suggestItems, grantedProficiencies)
 }
 
 function instanceBonus(entry) {
@@ -37,7 +37,7 @@ function instanceBonus(entry) {
  * Derives every armor effect from the catalogue items in `items.equipped`.
  * One best body armor and one best shield are active; duplicates never stack.
  */
-export function deriveEquippedArmor(values = {}, items = {}, suggestItems = () => [], derivedRules = {}) {
+export function deriveEquippedArmor(values = {}, items = {}, suggestItems = () => [], derivedRules = {}, grantedProficiencies = []) {
   const dexterity = abilityModifier(resolveNumValue(values?.DEX?.value ?? 10))
   const strength = resolveNumValue(values?.STR?.value ?? 10)
   const equipped = normalizeValue(values?.items).equipped
@@ -62,7 +62,7 @@ export function deriveEquippedArmor(values = {}, items = {}, suggestItems = () =
       dex,
       magicBonus,
       value,
-      proficient: armorProficient(item, values, suggestItems),
+      proficient: armorProficient(item, values, suggestItems, grantedProficiencies),
       stealthDisadvantage: !shield && item.data.stealth_disadvantage === true,
     }]
   })

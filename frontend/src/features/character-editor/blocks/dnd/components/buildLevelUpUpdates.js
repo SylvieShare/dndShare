@@ -1,6 +1,6 @@
 import { resolveNumValue } from '@/shared/lib/dnd'
 import { STAT_KEYS } from '@/shared/lib/dndStats'
-import { castingAbilityIdOf } from '@/features/character-editor/blocks/dnd/lib/levelUp'
+import { castingAbilityIdOf, MULTICLASS_PROFICIENCY_GRANTS, multiclassProficiencyKey } from '@/features/character-editor/blocks/dnd/lib/levelUp'
 import { defaultSlots } from '@/features/character-editor/blocks/dnd/lib/spellEntry'
 import {
   featAbilityBonuses,
@@ -44,6 +44,7 @@ export function buildLevelUpUpdates({
   grantedNewIds,
   grantedSpellLevels = {},
   classItem,
+  isMulticlass = false,
   subclassItem = null,
   subclassSelectedNow = false,
   classSpellSelection = null,
@@ -79,12 +80,30 @@ export function buildLevelUpUpdates({
     ? withHitDice(hp, hitDiceFromClasses(hp, entriesAfter, (entry) => hitDieLabelOf(itemsById[entry.id])))
     : addHitDie(hp, hitDieLabel || 'd8')
 
+  if (isMulticlass) {
+    const grants = MULTICLASS_PROFICIENCY_GRANTS[multiclassProficiencyKey(classItem)] || {}
+    const proficiencies = { ...(updates.proficiencies || values.proficiencies || {}) }
+    for (const [bucket, grantedLabels] of Object.entries(grants)) {
+      const labels = [...(Array.isArray(proficiencies[bucket]) ? proficiencies[bucket] : [])]
+      const known = new Set(labels.map((label) => String(label).trim().toLocaleLowerCase('ru-RU')))
+      for (const label of grantedLabels) {
+        const normalized = label.trim().toLocaleLowerCase('ru-RU')
+        if (!known.has(normalized)) {
+          labels.push(label)
+          known.add(normalized)
+        }
+      }
+      proficiencies[bucket] = labels
+    }
+    if (Object.keys(grants).length) updates.proficiencies = proficiencies
+  }
+
   // A newly selected subclass may grant static proficiencies of its own.
   // Apply the same class-data contract used during character creation instead
   // of teaching the level-up flow about individual archetypes.
   if (subclassSelectedNow && subclassItem) {
     const data = subclassItem.data || {}
-    const proficiencies = { ...(values.proficiencies || {}) }
+    const proficiencies = { ...(updates.proficiencies || values.proficiencies || {}) }
     const addProficiency = (bucket, typeId, ids) => {
       if (!Array.isArray(ids) || !ids.length) return
       const labels = [...(proficiencies[bucket] || [])]

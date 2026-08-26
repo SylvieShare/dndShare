@@ -32,12 +32,17 @@ export function itemProficiencyRule(item) {
   return RULES[Number(item?.typeId)] || null
 }
 
-export function hasItemProficiency(item, values, suggestItems) {
+export function hasItemProficiency(item, values, suggestItems, grantedProficiencies = []) {
   const rule = itemProficiencyRule(item)
   if (!rule) return false
   const raw = item?.data?.[rule.dataKey]
   const requiredIds = rule.many ? (Array.isArray(raw) ? raw : []) : (raw == null ? [] : [raw])
   if (!requiredIds.length) return false
+
+  const required = new Set(requiredIds.map(String))
+  if ((Array.isArray(grantedProficiencies) ? grantedProficiencies : []).some((grant) => (
+    required.has(String(grant?.targetId ?? grant))
+  ))) return true
 
   const owned = new Set((Array.isArray(values?.proficiencies?.[rule.bucket])
     ? values.proficiencies[rule.bucket]
@@ -46,7 +51,6 @@ export function hasItemProficiency(item, values, suggestItems) {
     .filter(Boolean))
   if (!owned.size) return false
 
-  const required = new Set(requiredIds.map(String))
   return (suggestItems(rule.suggestTypeId) || []).some((suggest) => (
     required.has(String(suggest.id)) && owned.has(normalized(suggest.value))
   ))

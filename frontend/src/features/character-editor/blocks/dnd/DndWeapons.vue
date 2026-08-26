@@ -201,7 +201,12 @@ const profBonus   = computed(() => {
 })
 
 function hasLinkedWeaponProficiency(entry) {
-  return hasItemProficiency(item(entry), charCtx.values || props.values, suggestItems)
+  return hasItemProficiency(
+    item(entry),
+    charCtx.values || props.values,
+    suggestItems,
+    charCtx.characterDerivedEffects?.grantedProficiencies?.('weapon_proficiency') || [],
+  )
 }
 
 function isWeaponProficient(entry) {

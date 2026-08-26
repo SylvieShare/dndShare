@@ -11,6 +11,7 @@
         @remove="removeAction"
         @apply-effect="applyActionEffect"
         @spend-resource="spendActionResource"
+        @toggle-resource="toggleActionResource"
       />
     </BaseTile>
 
@@ -31,6 +32,7 @@
           panel
           @apply-effect="applyActionEffect"
           @spend-resource="spendActionResource"
+          @toggle-resource="toggleActionResource"
         />
       </template>
       <template #editor>
@@ -157,6 +159,20 @@ function spendActionResource(action) {
     type: 'feature_action_resource',
     action: `${action.title}: потрачен ресурс «${action.resource.title}»`,
     data: { actionKey: action.key, resourceKey: action.resource.key, cost: action.resource_cost },
+  })
+}
+
+function toggleActionResource(action, pip) {
+  if (!ownerMode.value || !action.resource) return
+  const current = Number(action.resource.value) || 0
+  const next = pip <= current ? pip - 1 : pip
+  const patch = charCtx.characterResources?.setAvailable?.(action.resource.key, next) || {}
+  for (const [id, value] of Object.entries(patch)) emit('update:value', id, value)
+  if (!Object.keys(patch).length || next >= current) return
+  charCtx.logSessionEvent?.({
+    type: 'resource_used',
+    action: `Использовано: ${action.resource.title || action.title || 'Ресурс'}`,
+    data: { remaining: next, total: Number(action.resource.total) || 0 },
   })
 }
 

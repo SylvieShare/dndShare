@@ -193,3 +193,67 @@ describe('buildLevelUpUpdates class spell selection', () => {
     ])
   })
 })
+
+describe('buildLevelUpUpdates multiclass grants', () => {
+  it('adds only missing fixed paladin proficiencies and preserves existing buckets', () => {
+    const updates = buildLevelUpUpdates({
+      values: {
+        lvl: { level: 2 }, hp: { max: 15, current: 15 },
+        proficiencies: {
+          'Доспехи': ['Лёгкие доспехи'],
+          'Оружие': ['Простое оружие'],
+          'Языки': ['Общий'],
+        },
+      },
+      newTotal: 3, isPlain: false, isMulticlass: true,
+      entriesAfter: [{ id: 1, name: 'Волшебник', level: 2 }, { id: 2, name: 'Паладин', level: 1 }],
+      features: [], itemsById: { 1: {}, 2: {} },
+      hitDieLabelOf: () => 'd10', hitDieLabel: 'd10', hpGain: 6,
+      asiNow: false, asiSkipped: true, asiMode: 'asi', featPick: null,
+      suggestItems: () => [], asiStats: [], asiDelta: 0, featureChoiceSelections: {},
+      applySlots: false, slotDiff: [], slotsAfter: null, grantedNewIds: [],
+      classItem: { nameEn: 'Paladin', data: {} },
+    })
+
+    expect(updates.proficiencies).toEqual({
+      'Доспехи': ['Лёгкие доспехи', 'Средние доспехи', 'Щиты'],
+      'Оружие': ['Простое оружие', 'Воинское оружие'],
+      'Языки': ['Общий'],
+    })
+  })
+
+  it('does not apply the full-class proficiency table outside multiclassing', () => {
+    const updates = buildLevelUpUpdates({
+      values: { lvl: { level: 1 }, hp: { max: 10, current: 10 }, proficiencies: {} },
+      newTotal: 2, isPlain: false, isMulticlass: false,
+      entriesAfter: [{ id: 2, name: 'Паладин', level: 2 }], features: [], itemsById: { 2: {} },
+      hitDieLabelOf: () => 'd10', hitDieLabel: 'd10', hpGain: 6,
+      asiNow: false, asiSkipped: true, asiMode: 'asi', featPick: null,
+      suggestItems: () => [], asiStats: [], asiDelta: 0, featureChoiceSelections: {},
+      applySlots: false, slotDiff: [], slotsAfter: null, grantedNewIds: [],
+      classItem: { nameEn: 'Paladin', data: {} },
+    })
+
+    expect(updates.proficiencies).toBeUndefined()
+  })
+
+  it('keeps multiclass grants when a level-one subclass grants another proficiency', () => {
+    const updates = buildLevelUpUpdates({
+      values: { lvl: { level: 2 }, hp: { max: 15, current: 15 }, proficiencies: {} },
+      newTotal: 3, isPlain: false, isMulticlass: true,
+      entriesAfter: [{ id: 1, name: 'Волшебник', level: 2 }, { id: 2, name: 'Жрец', level: 1 }],
+      features: [], itemsById: { 1: {}, 2: {} },
+      hitDieLabelOf: () => 'd8', hitDieLabel: 'd8', hpGain: 5,
+      asiNow: false, asiSkipped: true, asiMode: 'asi', featPick: null,
+      suggestItems: (typeId) => typeId === 4 ? [{ id: 30, value: 'Боевые молоты' }] : [],
+      asiStats: [], asiDelta: 0, featureChoiceSelections: {},
+      applySlots: false, slotDiff: [], slotsAfter: null, grantedNewIds: [],
+      classItem: { nameEn: 'Cleric', data: {} },
+      subclassItem: { data: { weapon_prof: [30] } },
+      subclassSelectedNow: true,
+    })
+
+    expect(updates.proficiencies['Доспехи']).toEqual(['Лёгкие доспехи', 'Средние доспехи', 'Щиты'])
+    expect(updates.proficiencies['Оружие']).toEqual(['Боевые молоты'])
+  })
+})

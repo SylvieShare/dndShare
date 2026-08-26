@@ -38,8 +38,10 @@ and the full description inline. Class abilities, racial abilities and feats
 each own one shared tile; entries inside it do not create nested backgrounds or
 outlines and are divided by thin separators. Their rich descriptions use the
 same muted `--text-2` tone as action-row descriptions. Each tile header has a compact
-dashed plus control for adding an entry and no edit pencil. Clicking an ability
-opens the shared row-action menu with **Посмотреть**, an owner-only
+dashed plus control for adding an entry and no edit pencil. The tiles reactively
+load handbook records for entries added by another sheet flow, so a feat gained
+during level-up appears immediately without a reload. Clicking an ability opens
+the shared row-action menu with **Посмотреть**, an owner-only
 **Использовать** action when the ability has exactly one available resource,
 and owner-only **Удалить**. Use spends that same normalized resource shown in
 the resources block and records `resource_used`; abilities with several
@@ -299,6 +301,10 @@ Static proficiencies declared by a newly selected subclass are applied by the
 same data contract as class proficiencies. An archetype such as Assassin
 therefore grants its tool proficiencies during level-up without an
 archetype-specific branch.
+Fixed armor, weapon and tool proficiencies from the multiclass proficiency
+table are also merged into the character automatically, without duplicating
+proficiencies already present. Grants that require a player choice, such as a
+bard's skill or musical instrument, remain an explicit manual reminder.
 
 `lib/levelUp.js`, `lib/hitDice.js`, `lib/rest.js` and
 `lib/characterResources.js` are pure and unit-tested.
@@ -495,6 +501,9 @@ entry is deleted.
 The PHB feat catalogue additionally uses this automation for Tough hit points,
 Alert initiative, Mobile speed, Resilient saving throws, armor/weapon/language
 proficiencies, Lucky/Martial Adept/Magic Initiate resources and all feat choices.
+Source-owned armor, weapon and tool proficiencies participate in equipment
+proficiency checks as well as the visible proficiency list; they are not copied
+into manual tags and stop applying when their source feat is removed or disabled.
 Rules that require a target, turn state, reaction or optional attack mode remain
 readonly contextual effects on the owning feat instead of being applied to
 unrelated rolls.
@@ -575,7 +584,16 @@ one morph editor for the complete block: custom actions are created, edited and
 deleted there, while actions contributed by abilities are listed separately as
 read-only. Row menus retain direct editing and within-group reordering, but
 group headers have no add controls. The block owns one shared tile; rows inside
-it have no nested card background and currently do not execute or log actions. Cunning Action is one source row linking Dash,
+it have no nested card background. A resource bound to a source action is shown
+on that action as the same color-coded charge spheres used by the resources
+tile: one charge stays at the right edge, while several charges wrap below the
+action text. Short- and long-rest recovery icons sit immediately to the right
+of the action name, and
+the bound resource is omitted from the shared resources tile to avoid a duplicate
+control. The spheres remain owner-interactive and write through the shared
+resource source contract; spending from the action menu remains available when
+the action declares a positive cost. Other consequences declared by the action
+also stay in its row menu. Cunning Action is one source row linking Dash,
 Disengage and Hide rather than three duplicated rows. The block is available in
 the desktop side column and the mobile abilities tab.
 The same picker is used for feats and abilities and opens above the active morph

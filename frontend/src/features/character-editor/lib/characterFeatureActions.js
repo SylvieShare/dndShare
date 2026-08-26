@@ -162,6 +162,13 @@ export function collectCharacterFeatureActions(values, itemsById, resources = []
     ))
 }
 
+export function featureActionResourceKeys(values, itemsById, resources = []) {
+  return new Set(collectCharacterFeatureActions(values, itemsById, resources)
+    .map(action => action.resource?.key)
+    .filter(key => key != null)
+    .map(String))
+}
+
 export function groupCharacterFeatureActions(actions, includeEmpty = false) {
   return FEATURE_ACTION_TYPES.map(type => ({
     ...type,

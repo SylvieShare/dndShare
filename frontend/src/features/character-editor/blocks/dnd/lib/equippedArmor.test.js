@@ -53,6 +53,16 @@ describe('deriveEquippedArmor', () => {
     const withProficiency = deriveEquippedArmor({ DEX: { value: 14 }, items: equipped(1), proficiencies: { Доспехи: ['Средние доспехи'] } }, items, suggestItems)
     expect(withProficiency.strengthDexDisadvantage).toBe(false)
     expect(withProficiency.castingBlocked).toBe(false)
+
+    const withFeatProficiency = deriveEquippedArmor(
+      { DEX: { value: 14 }, items: equipped(1), proficiencies: { Доспехи: [] } },
+      items,
+      suggestItems,
+      {},
+      [{ targetId: 20, source: 'Умеренно бронированный' }],
+    )
+    expect(withFeatProficiency.strengthDexDisadvantage).toBe(false)
+    expect(withFeatProficiency.castingBlocked).toBe(false)
   })
 
   it('reduces speed when heavy armor requires more Strength, except for dwarves', () => {

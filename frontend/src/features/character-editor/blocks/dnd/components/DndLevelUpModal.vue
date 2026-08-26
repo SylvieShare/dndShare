@@ -68,8 +68,9 @@
       <div v-if="isNew && !newPrereq.ok" class="lu-note lu-note-warn">
         Требование мультикласса не выполнено: {{ prereqLabel(classItem) }}. Взять класс всё равно можно — реши с мастером.
       </div>
-      <div v-if="isNew && newProfs" class="lu-note">
-        <b>Владения при мультиклассе:</b> {{ newProfs }}. Добавь их в блок владений вручную.
+      <div v-if="isMulticlass && (missingNewProfs || newProfChoice)" class="lu-note">
+        <template v-if="missingNewProfs"><b>Будут добавлены владения:</b> {{ missingNewProfs }}.</template>
+        <template v-if="newProfChoice"> <b>Нужно выбрать вручную:</b> {{ newProfChoice }}.</template>
       </div>
 
       <!-- субкласс -->
@@ -281,7 +282,8 @@ import { STAT_KEYS, STAT_SHORT } from '@/shared/lib/dndStats'
 import {
   avgHitDie, chosenOptionLabels, classEntriesOf, computeSlots,
   dieFaceOf, grantedSpellsAt, multiclassCheck,
-  MULTICLASS_PROFS, parseAsiLevels, totalLevel,
+  MULTICLASS_PROFICIENCY_CHOICES, MULTICLASS_PROFICIENCY_GRANTS,
+  multiclassProficiencyKey, parseAsiLevels, totalLevel,
 } from '@/features/character-editor/blocks/dnd/lib/levelUp'
 import { featuresForBinding } from '@/features/character-editor/settings/dnd/creation/progression'
 import { fetchGet } from '@/shared/api/http'
@@ -571,7 +573,19 @@ const scores = computed(() => Object.fromEntries(STATS.map((s) => [s, statScore(
 function prereq(c) { return multiclassCheck(c, scores.value) }
 const prereqLabel = multiclassPrerequisiteLabel
 const newPrereq = computed(() => (classItem.value ? prereq(classItem.value) : { ok: true }))
-const newProfs = computed(() => MULTICLASS_PROFS[String(classItem.value?.nameEn || '').trim().toLowerCase()] || '')
+const isMulticlass = computed(() => isNew.value && entries.value.length > 0)
+const multiclassKey = computed(() => multiclassProficiencyKey(classItem.value))
+const missingNewProfs = computed(() => {
+  if (!isMulticlass.value) return ''
+  const grants = MULTICLASS_PROFICIENCY_GRANTS[multiclassKey.value] || {}
+  const missing = []
+  for (const [bucket, labels] of Object.entries(grants)) {
+    const known = new Set((props.values?.proficiencies?.[bucket] || []).map((label) => String(label).trim().toLocaleLowerCase('ru-RU')))
+    missing.push(...labels.filter((label) => !known.has(label.trim().toLocaleLowerCase('ru-RU'))))
+  }
+  return missing.join(', ')
+})
+const newProfChoice = computed(() => isMulticlass.value ? MULTICLASS_PROFICIENCY_CHOICES[multiclassKey.value] || '' : '')
 
 async function loadSubclasses(cls, currentLevel) {
   subclassOptions.value = []
@@ -658,6 +672,7 @@ async function accept() {
     grantedNewIds: grantedNewIds.value,
     grantedSpellLevels: spellLevels.value,
     classItem: classItem.value,
+    isMulticlass: isMulticlass.value,
     subclassItem: effectiveSubclassItem.value,
     subclassSelectedNow: !!subclassPick.value,
     classSpellSelection: classSpellSelection.value,

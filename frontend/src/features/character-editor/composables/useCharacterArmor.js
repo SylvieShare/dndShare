@@ -23,6 +23,7 @@ export function useCharacterArmor(values, characterResources, characterDerivedEf
     characterResources.itemsById?.value || new Map(),
     typeId => suggest.items(typeId),
     characterDerivedEffects?.armorRules?.value || { formulas: [], bonuses: [] },
+    characterDerivedEffects?.grantedProficiencies?.('armor_proficiency') || [],
   ))
 
   return { state, hydrate }

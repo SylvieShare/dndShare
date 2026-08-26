@@ -39,4 +39,11 @@ describe('ability rows', () => {
     expect(blockSource).toContain("type: 'resource_used'")
     expect(blockSource).not.toContain('<MorphEditorShell')
   })
+
+  it('loads handbook items added externally after the ability block mounted', () => {
+    expect(blockSource).toContain('async function loadStoredItems()')
+    expect(blockSource).toContain("stored.value.map((entry) => String(entry.id)).sort().join(',')")
+    expect(blockSource).toContain('if (mounted.value) void loadStoredItems()')
+    expect(blockSource).toContain('catalog.value = [...catalog.value, ...added]')
+  })
 })

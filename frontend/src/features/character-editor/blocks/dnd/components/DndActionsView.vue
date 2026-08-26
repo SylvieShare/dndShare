@@ -32,7 +32,10 @@
                 <component v-else :is="groupIcon(action.action_type)" :size="19" :stroke-width="2" />
               </span>
               <span class="dav-copy">
-                <strong>{{ action.title }}</strong>
+                <span class="dav-title-row">
+                  <strong>{{ action.title }}</strong>
+                  <ResourceRestIcons v-if="action.resource" :resource="action.resource" />
+                </span>
                 <span v-if="action.description" class="dav-description">{{ action.description }}</span>
                 <span v-if="linkedActions(action).length" class="dav-linked-actions">
                   <span
@@ -46,9 +49,36 @@
                 <span v-if="action.requirements.length" class="dav-requirements">
                   <span v-for="requirement in action.requirements" :key="requirement">{{ requirement }}</span>
                 </span>
+                <span
+                  v-if="resourceTotal(action) > 1"
+                  class="dav-resource dav-resource--stacked"
+                  :title="action.resource.title"
+                >
+                  <span class="dav-resource-pips">
+                    <SpellSlotSphere
+                      v-for="pip in resourceTotal(action)"
+                      :key="pip"
+                      :spent="pip > resourceValue(action)"
+                      :size="RESOURCE_ORB_SIZE"
+                      :color="action.resource.color_point || undefined"
+                      :interactive="manage"
+                      @click.stop="manage && $emit('toggle-resource', action, pip)"
+                    />
+                  </span>
+                </span>
               </span>
-              <span v-if="action.resource" class="dav-resource" :title="action.resource.title">
-                {{ action.resource.value }}/{{ action.resource.total }}
+              <span
+                v-if="resourceTotal(action) === 1"
+                class="dav-resource dav-resource--single"
+                :title="action.resource.title"
+              >
+                <SpellSlotSphere
+                  :spent="resourceValue(action) < 1"
+                  :size="RESOURCE_ORB_SIZE"
+                  :color="action.resource.color_point || undefined"
+                  :interactive="manage"
+                  @click.stop="manage && $emit('toggle-resource', action, 1)"
+                />
               </span>
             </article>
           </template>
@@ -105,6 +135,8 @@ import { ArrowDown, ArrowUp, BatteryLow, RotateCcw, Sparkles, Swords, Wind, Zap 
 import { RowActionMenu } from '@sylvieshare/share-ui'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip.vue'
+import SpellSlotSphere from '@/features/items/components/SpellSlotSphere.vue'
+import ResourceRestIcons from '@/features/character-editor/blocks/generic/components/ResourceRestIcons.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionSeparator from '@/shared/ui/RowActionSeparator.vue'
 import SheetBlockTitle from '@/shared/ui/SheetBlockTitle.vue'
@@ -116,9 +148,10 @@ const props = defineProps({
   panel: { type: Boolean, default: false },
   actionSuggestions: { type: Array, default: () => [] },
 })
-const emit = defineEmits(['manage', 'edit', 'move', 'remove', 'apply-effect', 'spend-resource'])
+const emit = defineEmits(['manage', 'edit', 'move', 'remove', 'apply-effect', 'spend-resource', 'toggle-resource'])
 const tooltip = ref({ visible: false, title: '', desc: '', x: 0, top: null, bottom: null })
 const suggestionsByCode = computed(() => new Map(props.actionSuggestions.map(item => [String(item.code || ''), item])))
+const RESOURCE_ORB_SIZE = 30
 
 function groupIcon(type) {
   return ({
@@ -156,6 +189,14 @@ function applyEffect(action, effect, close) {
 
 function canSpendResource(action) {
   return !!action.resource && Number(action.resource_cost) > 0
+}
+
+function resourceTotal(action) {
+  return Math.max(0, Math.floor(Number(action.resource?.total) || 0))
+}
+
+function resourceValue(action) {
+  return Math.max(0, Math.floor(Number(action.resource?.value) || 0))
 }
 
 function spendResource(action, close) {
@@ -198,11 +239,15 @@ function hideActionTooltip() {
 .dav-action-icon { display: grid; width: 36px; height: 36px; place-items: center; overflow: hidden; color: var(--dav-tone); }
 .dav-action-icon :deep(.item-icon) { width: 34px; height: 34px; }
 .dav-copy { display: flex; min-width: 0; flex-direction: column; gap: 3px; }
-.dav-copy strong { color: var(--text-1); font-size: 12px; line-height: 1.25; }
+.dav-title-row { display: flex; min-width: 0; align-items: center; gap: 6px; }
+.dav-title-row strong { min-width: 0; color: var(--text-1); font-size: 12px; line-height: 1.25; }
 .dav-description { color: var(--text-2); font-size: 10px; line-height: 1.4; }
 .dav-linked-actions { display: flex; flex-wrap: wrap; gap: 4px 8px; margin-top: 1px; }
 .dav-linked-action { color: var(--dav-tone); font-size: 10px; font-weight: 750; text-decoration: underline dotted; text-underline-offset: 3px; }
 .dav-requirements { display: flex; flex-direction: column; gap: 2px; margin-top: 2px; color: var(--text-muted); font-size: 9px; line-height: 1.35; }
 .dav-requirements > span::before { margin-right: 5px; color: var(--dav-tone); content: '•'; }
-.dav-resource { align-self: center; padding: 3px 5px; border-radius: 5px; background: color-mix(in srgb, var(--dav-tone) 12%, transparent); color: var(--dav-tone); font-size: 10px; font-weight: 800; }
+.dav-resource { display: flex; min-width: 0; align-items: center; gap: 6px; }
+.dav-resource--single { align-self: center; }
+.dav-resource--stacked { flex-wrap: wrap; margin-top: 4px; }
+.dav-resource-pips { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
 </style>

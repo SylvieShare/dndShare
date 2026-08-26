@@ -69,7 +69,7 @@
 </template>
 
 <script setup>
-import { computed, inject, onMounted, reactive, ref } from 'vue'
+import { computed, inject, onMounted, reactive, ref, watch } from 'vue'
 
 import { itemsApi } from '@/shared/api/itemsApi'
 import { BaseTile } from '@sylvieshare/share-ui'
@@ -102,6 +102,8 @@ const modalEntry  = ref(null)
 const pickerOpen  = ref(false)
 const tooltip     = reactive({ visible: false, name: '', desc: '', item: null, x: 0, top: null, bottom: null })
 const choiceConfigItem = ref(null)
+const mounted = ref(false)
+const requestedCatalogIds = new Set()
 
 const ownerMode = computed(() => charCtx.ownerMode)
 const title = computed(() => props.block.title || props.block.content?.title || '')
@@ -395,20 +397,36 @@ function showTooltip(e, entry) {
 
 function hideTooltip() { tooltip.visible = false }
 
+async function loadStoredItems() {
+  const known = new Set(catalog.value.map((item) => String(item.id)))
+  const ids = [...new Set(stored.value.map((entry) => entry.id).filter((id) => id != null))]
+    .filter((id) => !known.has(String(id)) && !requestedCatalogIds.has(String(id)))
+  if (!ids.length) return
+
+  ids.forEach((id) => requestedCatalogIds.add(String(id)))
+  try {
+    const result = charCtx.characterResources?.ensureItems
+      ? await charCtx.characterResources.ensureItems(ids)
+      : await itemsApi.byIds(ids)
+    const current = new Set(catalog.value.map((item) => String(item.id)))
+    const added = (result?.items || []).filter((item) => !current.has(String(item.id)))
+    if (added.length) catalog.value = [...catalog.value, ...added]
+    await Promise.all(added.map((item) => charCtx.characterStatuses?.ensureLinks?.(item)))
+    hydrateItemChoices()
+    syncFeatRequirements()
+  } catch (e) { /* keep stored entries and retry after the next external change or reload */ }
+  finally { ids.forEach((id) => requestedCatalogIds.delete(String(id))) }
+}
+
+watch(
+  () => stored.value.map((entry) => String(entry.id)).sort().join(','),
+  () => { if (mounted.value) void loadStoredItems() },
+)
+
 onMounted(async () => {
+  mounted.value = true
   if (isFeatBlock.value) suggestStore.ensure(3)
-  if (stored.value.length > 0) {
-    const ids = stored.value.map(s => s.id)
-    try {
-      const r = charCtx.characterResources?.ensureItems
-        ? await charCtx.characterResources.ensureItems(ids)
-        : await itemsApi.byIds(ids)
-      catalog.value = r.items || []
-      await Promise.all(catalog.value.map(item => charCtx.characterStatuses?.ensureLinks?.(item)))
-      hydrateItemChoices()
-      syncFeatRequirements()
-    } catch (e) { /* show what we have */ }
-  }
+  await loadStoredItems()
   loading.value = false
 })
 

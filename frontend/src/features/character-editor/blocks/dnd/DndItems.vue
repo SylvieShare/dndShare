@@ -347,7 +347,13 @@ function isToolEntry(entry) {
 }
 
 function entryHasProficiency(entry) {
-  return hasItemProficiency(entry.display?.base, charCtx.values, (typeId) => suggestStore.items(typeId))
+  const kind = entryTypeId(entry) === 14 ? 'tool_proficiency' : entryTypeId(entry) === 1 ? 'weapon_proficiency' : 'armor_proficiency'
+  return hasItemProficiency(
+    entry.display?.base,
+    charCtx.values,
+    (typeId) => suggestStore.items(typeId),
+    charCtx.characterDerivedEffects?.grantedProficiencies?.(kind) || [],
+  )
 }
 
 function toolProficiencyRank(entry) {
