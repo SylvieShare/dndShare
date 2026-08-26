@@ -51,6 +51,7 @@ import BlockResourcesEditor from '@/features/character-editor/blocks/generic/com
 import BlockResourcesView from '@/features/character-editor/blocks/generic/components/BlockResourcesView'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
 import { useMorphOrigin } from '@/features/character-editor/composables/useMorphOrigin'
+import { featureActionResourceKeys } from '@/features/character-editor/lib/characterFeatureActions'
 
 const props = defineProps(['block', 'value'])
 const emit = defineEmits(['update:value'])
@@ -59,13 +60,19 @@ const root = ref(null)
 const { editorOpen, originRect, originEl, openFrom, close } = useMorphOrigin()
 
 const manualResources = computed(() => Array.isArray(props.value) ? props.value : [])
-const resources = computed(() => {
+const allResources = computed(() => {
   const contributed = charCtx.characterResources?.resources
   if (Array.isArray(contributed)) return contributed
   if (Array.isArray(contributed?.value)) return contributed.value
   return manualResources.value
 })
-const readonlyResources = computed(() => resources.value.filter((resource) => resource.readonly))
+const actionResourceKeys = computed(() => featureActionResourceKeys(
+  charCtx.values?.value || charCtx.values || {},
+  charCtx.characterResources?.itemsById?.value || charCtx.characterResources?.itemsById || new Map(),
+  allResources.value,
+))
+const resources = computed(() => allResources.value.filter(resource => !actionResourceKeys.value.has(String(resource.key))))
+const readonlyResources = computed(() => allResources.value.filter((resource) => resource.readonly))
 const ownerMode = computed(() => charCtx.ownerMode)
 
 function emitResources(next) {

@@ -575,7 +575,15 @@ one morph editor for the complete block: custom actions are created, edited and
 deleted there, while actions contributed by abilities are listed separately as
 read-only. Row menus retain direct editing and within-group reordering, but
 group headers have no add controls. The block owns one shared tile; rows inside
-it have no nested card background and currently do not execute or log actions. Cunning Action is one source row linking Dash,
+it have no nested card background. A resource bound to a source action is shown
+on that action as the same color-coded charge spheres used by the resources
+tile: one charge stays at the right edge, while several charges wrap below the
+action text. Short- and long-rest recovery icons sit immediately to the right
+of the action name, and the bound resource is omitted from the shared resources
+tile to avoid a duplicate control. The spheres remain owner-interactive and
+write through the shared resource source contract; spending from the action menu
+remains available when the action declares a positive cost. Other consequences
+declared by the action also stay in its row menu. Cunning Action is one source row linking Dash,
 Disengage and Hide rather than three duplicated rows. The block is available in
 the desktop side column and the mobile abilities tab.
 The same picker is used for feats and abilities and opens above the active morph

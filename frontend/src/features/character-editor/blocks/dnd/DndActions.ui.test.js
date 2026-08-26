@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest'
 const blockSource = readFileSync(fileURLToPath(new URL('./DndActions.vue', import.meta.url)), 'utf8')
 const viewSource = readFileSync(fileURLToPath(new URL('./components/DndActionsView.vue', import.meta.url)), 'utf8')
 const editorSource = readFileSync(fileURLToPath(new URL('./components/DndActionsEditor.vue', import.meta.url)), 'utf8')
+const resourcesSource = readFileSync(fileURLToPath(new URL('../generic/BlockResources.vue', import.meta.url)), 'utf8')
 
 describe('character action block', () => {
   it('groups action economy, uses source icons and resolves linked action tooltips', () => {
@@ -54,5 +55,18 @@ describe('character action block', () => {
     expect(viewSource).toContain("emit('spend-resource', action)")
     expect(blockSource).toContain('@spend-resource="spendActionResource"')
     expect(blockSource).toContain('characterResources?.setAvailable?.(action.resource.key, remaining)')
+  })
+
+  it('renders linked resources as colored interactive spheres with rest rules', () => {
+    expect(viewSource).not.toContain('<span v-if="action.resource" class="dav-resource"')
+    expect(viewSource).toContain('v-if="resourceTotal(action) === 1"')
+    expect(viewSource).toContain('v-if="resourceTotal(action) > 1"')
+    expect(viewSource).toContain(':color="action.resource.color_point || undefined"')
+    expect(viewSource).toContain('<span class="dav-title-row">')
+    expect(viewSource).toContain('<ResourceRestIcons v-if="action.resource" :resource="action.resource" />')
+    expect(viewSource).toContain("$emit('toggle-resource', action, pip)")
+    expect(blockSource).toContain('@toggle-resource="toggleActionResource"')
+    expect(resourcesSource).toContain('featureActionResourceKeys(')
+    expect(resourcesSource).toContain('!actionResourceKeys.value.has(String(resource.key))')
   })
 })
