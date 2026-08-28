@@ -2,6 +2,7 @@ import {ref} from 'vue'
 import {createRouter, createWebHistory} from 'vue-router'
 import PageMain from '@/views/PageMain'
 import ViewAdmin from '@/features/admin/pages/ViewAdmin'
+import ViewScreencastGuide from '@/features/admin/pages/ViewScreencastGuide.vue'
 import ViewHandbook from '@/features/handbook/pages/ViewHandbook'
 import ViewDictionary from '@/features/handbook/dictionary/ViewDictionary'
 import ViewDnd5e2014Rules from '@/features/handbook/rules/pages/ViewDnd5e2014Rules.vue'
@@ -106,6 +107,12 @@ const routes = [
         name: "Admin",
         component: ViewAdmin,
         meta: { title: 'Админка', section: 'admin', depth: 0 },
+    },
+    {
+        path: '/screencast-guide',
+        name: 'ScreencastGuide',
+        component: ViewScreencastGuide,
+        meta: { title: 'План скринкаста', section: 'admin', depth: 1, standaloneView: true },
     },
     {
         path: '/sessions',

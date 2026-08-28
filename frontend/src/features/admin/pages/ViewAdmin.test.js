@@ -23,4 +23,10 @@ describe('admin navigation shell', () => {
     expect(source).toContain("activeTab === 'ui-kit'")
     expect(source).toContain('<ComponentGallery')
   })
+
+  it('links to the standalone screencast guide', () => {
+    expect(source).toContain("{ name: 'ScreencastGuide' }")
+    expect(source).toContain('План скринкаста')
+    expect(source).toContain('target="_blank"')
+  })
 })

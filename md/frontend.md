@@ -490,7 +490,7 @@ HTTP-обслуживания; компоненты не содержат read-t
 Актуальные страницы: `/`, `/sessions`, `/sessions/:uuid`, `/screen/:uuid`, `/join/:code`,
 `/chars`, `/chars/new`, `/char/:uuid`, `/char/:uuid/print`, `/handbook`,
 `/handbook/dictionary`, `/handbook/objects`, `/rules`, `/rules/:articleSlug`,
-`/admin`. Неизвестный клиентский
+`/admin`, `/screencast-guide`. Неизвестный клиентский
 маршрут перенаправляется на `/`.
 
 Вкладка `/admin` «Статистика» показывает не только счётчики сущностей, но и
@@ -512,6 +512,14 @@ HTTP-обслуживания; компоненты не содержат read-t
 `/screen/:uuid` uses `meta.standaloneView`: like print mode, it removes the
 global sidebar, header and diagnostic overlays, but retains the dark application
 theme for a public read-only encounter display.
+
+`/screencast-guide` также использует `meta.standaloneView` и служит мобильным
+телесуфлёром для демонстрации проекта. Страница намеренно не содержит игровых
+или административных данных и доступна по прямой ссылке без API-запросов;
+ссылка на неё находится в боковой панели `/admin`. Сценарий хранит две
+синхронные колонки «действие/речь», подготовительный чек-лист, текущий шаг,
+масштаб текста и опциональный Screen Wake Lock. Прогресс и настройки остаются
+локальными в браузере через `localStorage`.
 
 Router prefetch хранится 30 секунд и используется страницами списков. Направление
 перехода определяется `meta.section/depth/pageOrder`; навигационные компоненты

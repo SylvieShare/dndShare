@@ -20,6 +20,10 @@
           {{ tab.label }}
         </button>
       </nav>
+      <RouterLink class="screencast-guide-link" :to="{ name: 'ScreencastGuide' }" target="_blank">
+        <span>План скринкаста</span>
+        <span aria-hidden="true">↗</span>
+      </RouterLink>
     </aside>
 
     <main
@@ -132,6 +136,28 @@ function onTabKeydown(event, index) {
   gap: 2px;
 }
 
+.screencast-guide-link {
+  display: flex;
+  min-height: 38px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 10px 4px 0;
+  padding: 0 10px;
+  border: 1px solid color-mix(in srgb, var(--accent) 34%, var(--border));
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--accent) 9%, transparent);
+  color: var(--accent-soft);
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.screencast-guide-link:hover {
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  color: var(--text-1);
+}
+
 .sidebar-tab {
   background: none;
   border: none;
@@ -215,6 +241,12 @@ function onTabKeydown(event, index) {
     overflow-x: auto;
     padding: 6px 8px;
     scrollbar-width: thin;
+  }
+
+  .screencast-guide-link {
+    min-height: 36px;
+    flex: 0 0 auto;
+    margin: 6px 8px 8px;
   }
 
   .sidebar-tab {
