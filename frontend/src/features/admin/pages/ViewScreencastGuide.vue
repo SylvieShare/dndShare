@@ -32,6 +32,10 @@
         <span>Подготовить до записи</span>
         <strong>{{ preparationDone }}/{{ screencastPreparation.length }}</strong>
       </summary>
+      <label class="guide-presenter">
+        <span>Имя автора для первой фразы</span>
+        <input v-model.trim="presenterName" type="text" placeholder="Например, Алексей" autocomplete="name">
+      </label>
       <label v-for="(item, index) in screencastPreparation" :key="item">
         <input v-model="preparation[index]" type="checkbox">
         <span>{{ item }}</span>
@@ -73,7 +77,7 @@
         </div>
 
         <div class="step-speech">
-          <p v-for="paragraph in step.speech" :key="paragraph">{{ paragraph }}</p>
+          <p v-for="paragraph in step.speech" :key="paragraph">{{ speechText(paragraph) }}</p>
           <div class="step-criteria">
             <span v-for="criterion in step.criteria" :key="criterion">{{ criterion }}</span>
           </div>
@@ -103,10 +107,12 @@ import {
 const progressKey = 'dndshare-screencast-guide-step'
 const fontKey = 'dndshare-screencast-guide-font'
 const preparationKey = 'dndshare-screencast-guide-preparation'
+const presenterKey = 'dndshare-screencast-guide-presenter'
 const fontSizes = [17, 19, 21, 23, 25]
 const currentIndex = ref(0)
 const fontLevel = ref(1)
 const preparation = ref(screencastPreparation.map(() => false))
+const presenterName = ref('')
 const wakeLock = ref(null)
 const wakeLockActive = ref(false)
 const wakeLockRequested = ref(false)
@@ -124,6 +130,10 @@ const totalTimeLabel = computed(() => `${Math.floor(screencastTotalSeconds / 60)
 function readStoredNumber(key, fallback, maximum) {
   const value = Number.parseInt(localStorage.getItem(key) || '', 10)
   return Number.isInteger(value) && value >= 0 && value <= maximum ? value : fallback
+}
+
+function speechText(paragraph) {
+  return paragraph.replaceAll('{{name}}', presenterName.value || '[впиши имя]')
 }
 
 function selectStep(index, scroll = false) {
@@ -182,10 +192,12 @@ function restoreWakeLock() {
 watch(currentIndex, value => localStorage.setItem(progressKey, String(value)))
 watch(fontLevel, value => localStorage.setItem(fontKey, String(value)))
 watch(preparation, value => localStorage.setItem(preparationKey, JSON.stringify(value)), { deep: true })
+watch(presenterName, value => localStorage.setItem(presenterKey, value))
 
 onMounted(() => {
   currentIndex.value = readStoredNumber(progressKey, 0, screencastSteps.length - 1)
   fontLevel.value = readStoredNumber(fontKey, 1, fontSizes.length - 1)
+  presenterName.value = localStorage.getItem(presenterKey) || ''
   try {
     const stored = JSON.parse(localStorage.getItem(preparationKey) || '[]')
     if (Array.isArray(stored) && stored.length === screencastPreparation.length) preparation.value = stored.map(Boolean)
@@ -252,6 +264,9 @@ button:disabled { cursor: default; opacity: 0.38; }
 .guide-preparation summary strong { color: var(--accent-soft); }
 .guide-preparation label { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 9px; padding: 10px 17px; border-top: 1px solid var(--border); color: var(--text-2); font-size: 13px; line-height: 1.45; }
 .guide-preparation input { width: 17px; height: 17px; margin: 1px 0 0; accent-color: var(--accent); }
+.guide-preparation .guide-presenter { grid-template-columns: minmax(0, 180px) minmax(0, 1fr); align-items: center; }
+.guide-presenter input { width: 100%; height: 36px; margin: 0; padding: 0 10px; box-sizing: border-box; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--text-1); font: inherit; }
+.guide-presenter input:focus { border-color: var(--accent); outline: none; }
 
 .guide-table-head { position: sticky; z-index: 5; top: 0; display: grid; grid-template-columns: 32% 68%; overflow: hidden; border: 1px solid var(--border); border-radius: 12px 12px 0 0; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(14px); }
 .guide-table-head span { padding: 11px 16px; color: var(--text-muted); font-size: 10px; font-weight: 850; letter-spacing: 0.1em; text-transform: uppercase; }
@@ -308,6 +323,7 @@ button:disabled { cursor: default; opacity: 0.38; }
   .step-criteria span { padding: 3px 5px; font-size: 7px; }
   .guide-footer { bottom: max(7px, env(safe-area-inset-bottom)); width: calc(100% - 14px); }
   .guide-footer button { min-height: 40px; padding: 0 10px; font-size: 11px; }
+  .guide-preparation .guide-presenter { grid-template-columns: 1fr; }
 }
 
 @media (prefers-reduced-motion: reduce) {

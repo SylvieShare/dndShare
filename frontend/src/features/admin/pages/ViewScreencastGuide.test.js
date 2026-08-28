@@ -26,9 +26,27 @@ describe('standalone screencast guide', () => {
     expect(screencastPreparation.length).toBeGreaterThanOrEqual(5)
     expect(pageSource).toContain('Что делать на сайте')
     expect(pageSource).toContain('Что говорить')
+    expect(pageSource).toContain('Имя автора для первой фразы')
+    expect(pageSource).toContain('presenterKey')
     expect(pageSource).toContain('wakeLock')
     expect(pageSource).toContain('@media (max-width: 640px)')
     expect(pageSource).toContain('localStorage')
+  })
+
+  it('presents the whole ecosystem instead of only the session workspace', () => {
+    const titles = screencastSteps.map(step => step.title)
+    const speech = screencastSteps.flatMap(step => step.speech).join(' ')
+
+    expect(titles).toEqual(expect.arrayContaining([
+      'Кто я и личная проблема',
+      'Визард создания героя',
+      'Живой лист персонажа',
+      'Иллюстрированный справочник',
+      'Нелинейный сюжет',
+    ]))
+    expect(speech).toContain('Меня зовут {{name}}')
+    expect(speech).toContain('единую экосистему')
+    expect(speech).toContain('Личные изменения доступны после входа')
   })
 
   it('uses a clean standalone route', () => {
