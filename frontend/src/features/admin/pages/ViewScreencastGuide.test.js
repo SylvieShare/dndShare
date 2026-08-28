@@ -46,7 +46,8 @@ describe('standalone screencast guide', () => {
     ]))
     expect(speech).toContain('Меня зовут {{name}}')
     expect(speech).toContain('единую экосистему')
-    expect(speech).toContain('Личные изменения доступны после входа')
+    expect(speech).toContain('В DnD Share четыре связанные части')
+    expect(speech).toContain('Визард собирает героя прямо из данных справочника')
   })
 
   it('uses a clean standalone route', () => {
