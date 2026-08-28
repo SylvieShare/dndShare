@@ -4,6 +4,7 @@
     class="enc-wrap"
     :class="{
       'enc-wrap--workspace': workspace,
+      'enc-wrap--compact-toolbar': compactToolbar,
       'enc-wrap--combat-starting': combatTransitionPhase === 'starting',
       'enc-wrap--combat-ending': combatTransitionPhase === 'ending',
     }"
@@ -328,7 +329,7 @@
 </template>
 
 <script setup>
-import { computed, provide, reactive, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, provide, reactive, ref } from 'vue'
 import {
   ArchiveRestore,
   BookOpen,
@@ -373,6 +374,29 @@ defineEmits(['view-participant'])
 const enc = props.encounter
 const shortcutLabels = sessionShortcutLabels()
 const encounterRoot = ref(null)
+const compactToolbar = ref(false)
+let toolbarResizeObserver = null
+
+function toolbarElement() {
+  return encounterRoot.value?.querySelector('.enc-toolbar') ?? null
+}
+
+function updateCompactToolbar(width = toolbarElement()?.getBoundingClientRect().width) {
+  compactToolbar.value = Number(width) <= 900
+}
+
+onMounted(() => {
+  updateCompactToolbar()
+  const toolbar = toolbarElement()
+  if (typeof ResizeObserver === 'undefined' || !toolbar) return
+  toolbarResizeObserver = new ResizeObserver(entries => {
+    updateCompactToolbar(entries[0]?.contentRect.width)
+  })
+  toolbarResizeObserver.observe(toolbar)
+})
+
+onBeforeUnmount(() => toolbarResizeObserver?.disconnect())
+
 const {
   transitioning: combatTransitioning,
   phase: combatTransitionPhase,

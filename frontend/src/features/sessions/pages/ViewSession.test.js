@@ -432,10 +432,13 @@ describe('ViewSession participant rail', () => {
     expect(encounterStylesSource).toContain('min-width: 144px;')
     expect(encounterStylesSource).toContain('height: 48px;')
     expect(encounterStylesSource).toContain('.enc-primary-label { line-height: 1; }')
-    expect(encounterStylesSource).toContain('container-type: inline-size;')
-    expect(encounterStylesSource).toContain('@container (max-width: 900px)')
-    expect(encounterStylesSource).toMatch(/@container \(max-width: 900px\)[\s\S]*\.enc-primary-label \{ display: none; \}/)
-    expect(encounterStylesSource).toMatch(/@container \(max-width: 900px\)[\s\S]*\.enc-toolbar-actions \{ justify-content: flex-start; \}/)
+    expect(encounterSource).toContain("'enc-wrap--compact-toolbar': compactToolbar")
+    expect(encounterSource).toContain('toolbarResizeObserver = new ResizeObserver(entries =>')
+    expect(encounterSource).toContain("encounterRoot.value?.querySelector('.enc-toolbar')")
+    expect(encounterSource).toContain('toolbarResizeObserver.observe(toolbar)')
+    expect(encounterSource).toContain('compactToolbar.value = Number(width) <= 900')
+    expect(encounterStylesSource).toContain('.enc-wrap--compact-toolbar .enc-primary-label { display: none; }')
+    expect(encounterStylesSource).toContain('.enc-wrap--compact-toolbar .enc-toolbar-actions { justify-content: flex-start; }')
   })
 
   it('opens row actions from the tile and keeps concrete controls independent', () => {
