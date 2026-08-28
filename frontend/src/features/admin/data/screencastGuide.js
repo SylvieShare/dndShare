@@ -29,22 +29,22 @@ export const screencastSteps = [
   },
   {
     id: 'ecosystem-auth',
-    time: '0:40–1:07',
-    durationSeconds: 27,
+    time: '0:40–1:10',
+    durationSeconds: 30,
     title: 'Экосистема и доступы',
     action: [
       'По очереди обозначь четыре раздела: «Лист персонажа», «Визард создания», «Справочник» и «Сессии».',
-      'Коротко наведи курсор на имя SylvieShare в панели аккаунта.',
-      'На последней фразе открой карточку «Визард создания».',
+      'На словах «один аккаунт» коротко наведи курсор на имя SylvieShare в панели аккаунта.',
+      'На фразе «начну с пути игрока» открой раздел «Визард создания».',
     ],
     speech: [
-      'В DnD Share четыре связанные части: визард создания, лист персонажа, справочник и пространство сессий. Они работают в одном контексте: визард использует данные справочника, готовый герой входит в кампанию, а мастер показывает группе только разрешённое. После входа сервер различает владельца персонажа, мастера, участника и публичный экран, поэтому секреты не уходят игрокам. Начну с пути игрока.',
+      'В DnD Share четыре связанные части: визард создания, лист персонажа, справочник и пространство сессий. У пользователя один аккаунт для всего проекта: собранный в визарде герой получает полноценный лист и затем может войти в кампанию. При этом мастер видит сценарий и секреты, игрок — своего героя и открытые материалы, а на общий экран попадает только то, что мастер решил показать. Начну с пути игрока.',
     ],
     criteria: ['Польза', 'Инженерное качество'],
   },
   {
     id: 'character-wizard',
-    time: '1:07–1:35',
+    time: '1:10–1:38',
     durationSeconds: 28,
     title: 'Визард создания героя',
     action: [
@@ -60,7 +60,7 @@ export const screencastSteps = [
   },
   {
     id: 'character-sheet',
-    time: '1:35–2:02',
+    time: '1:38–2:05',
     durationSeconds: 27,
     title: 'Живой лист персонажа',
     action: [
@@ -76,7 +76,7 @@ export const screencastSteps = [
   },
   {
     id: 'illustrated-handbook',
-    time: '2:02–2:31',
+    time: '2:05–2:34',
     durationSeconds: 29,
     title: 'Иллюстрированный справочник',
     action: [
@@ -92,7 +92,7 @@ export const screencastSteps = [
   },
   {
     id: 'sessions-result',
-    time: '2:31–2:49',
+    time: '2:34–2:52',
     durationSeconds: 18,
     title: 'Готовая кампания',
     action: [
@@ -107,7 +107,7 @@ export const screencastSteps = [
   },
   {
     id: 'campaign-graph',
-    time: '2:49–3:13',
+    time: '2:52–3:16',
     durationSeconds: 24,
     title: 'Нелинейный сюжет',
     action: [
@@ -123,7 +123,7 @@ export const screencastSteps = [
   },
   {
     id: 'scene-and-world',
-    time: '3:13–3:37',
+    time: '3:16–3:40',
     durationSeconds: 24,
     title: 'Сцены и связанный мир',
     action: [
@@ -139,7 +139,7 @@ export const screencastSteps = [
   },
   {
     id: 'player-screen',
-    time: '3:37–3:55',
+    time: '3:40–3:58',
     durationSeconds: 18,
     title: 'Общий экран игроков',
     action: [
@@ -154,7 +154,7 @@ export const screencastSteps = [
   },
   {
     id: 'engineering',
-    time: '3:55–4:23',
+    time: '3:58–4:26',
     durationSeconds: 28,
     title: 'Инженерная сложность',
     action: [
@@ -170,7 +170,7 @@ export const screencastSteps = [
   },
   {
     id: 'finish',
-    time: '4:23–4:43',
+    time: '4:26–4:46',
     durationSeconds: 20,
     title: 'Ценность и финал',
     action: [

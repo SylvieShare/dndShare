@@ -47,6 +47,7 @@ describe('standalone screencast guide', () => {
     expect(speech).toContain('Меня зовут {{name}}')
     expect(speech).toContain('единую экосистему')
     expect(speech).toContain('В DnD Share четыре связанные части')
+    expect(speech).toContain('мастер видит сценарий и секреты')
     expect(speech).toContain('Визард собирает героя прямо из данных справочника')
   })
 
