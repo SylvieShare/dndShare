@@ -87,7 +87,7 @@ const {
   loading, template, data, charCtx, isOwner, publicVisible,
   toolbarTabs, charName, charSub, toolbarBlocksList,
   load, loadPreview, blocksForTab, containerWidthForTab, getInitialTabs,
-  updateValue, updateVar, onPublicToggle: updatePublicVisible,
+  updateValue, updateValues, updateVar, onPublicToggle: updatePublicVisible,
 } = useCharacterData(props.uuid, isMobile)
 
 const pendingSessionEvents = []
@@ -95,6 +95,16 @@ const { saveStatus, pendingSecondsLeft, scheduleSave, retrySave, dismissSaveErro
   takeEvents: () => pendingSessionEvents.splice(0),
   restoreEvents: events => pendingSessionEvents.unshift(...events),
 })
+
+const canEdit = computed(() => !previewMode.value && (isOwner.value || props.isDm))
+
+function updateValuesAndSave(patch) {
+  if (!canEdit.value) return
+  updateValues(patch)
+  scheduleSave()
+}
+
+charCtx.updateValues = updateValuesAndSave
 
 charCtx.logSessionEvent = event => {
   if (previewMode.value) return
@@ -105,7 +115,6 @@ charCtx.logSessionEvent = event => {
   }
 }
 
-const canEdit = computed(() => !previewMode.value && (isOwner.value || props.isDm))
 const activeTab = ref(0)
 const visited = ref(new Set([0]))
 const visitedTabIndexes = computed(() => [...visited.value])

@@ -22,4 +22,13 @@ describe('embedded character sheet presentation', () => {
     expect(source).toContain("button[title='Редактировать']")
     expect(source).toContain('Предпросмотр черновика · только чтение')
   })
+
+  it('persists direct block mutations such as the Rage toggle', () => {
+    expect(source).toContain('updateValue, updateValues, updateVar')
+    expect(source).toContain('charCtx.updateValues = updateValuesAndSave')
+    expect(source).toContain('function updateValuesAndSave(patch)')
+    expect(source).toContain('if (!canEdit.value) return')
+    expect(source).toContain('updateValues(patch)')
+    expect(source).toContain('scheduleSave()')
+  })
 })
