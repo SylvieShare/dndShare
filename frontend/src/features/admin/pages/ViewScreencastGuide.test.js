@@ -47,8 +47,9 @@ describe('standalone screencast guide', () => {
     expect(speech).toContain('Меня зовут {{name}}')
     expect(speech).toContain('единую экосистему')
     expect(speech).toContain('В DnD Share четыре связанные части')
-    expect(speech).toContain('мастер видит сценарий и секреты')
-    expect(speech).toContain('Визард собирает героя прямо из данных справочника')
+    expect(speech).toContain('Мастер видит сюжет и секреты')
+    expect(speech).toContain('не позволяет пропустить обязательные решения')
+    expect(speech).toContain('серверные события обновляют бой и экран игроков без перезагрузки')
   })
 
   it('uses a clean standalone route', () => {
