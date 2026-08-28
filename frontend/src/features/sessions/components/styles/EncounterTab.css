@@ -4,6 +4,7 @@
   flex: 1;
   min-height: 0;
   flex-direction: column;
+  container-type: inline-size;
   overflow-y: auto;
   padding: 0 0 24px;
 }
@@ -501,6 +502,20 @@
   .enc-toolbar-actions { flex-wrap: wrap; }
   .enc-action-group-label { display: none; }
   .enc-add-row { flex-direction: column; }
+}
+
+@container (max-width: 560px) {
+  .enc-toolbar { grid-template-columns: minmax(0, 1fr) auto; }
+
+  .enc-toolbar :deep(.enc-icon-btn--primary) {
+    width: 48px;
+    min-width: 48px;
+    flex-basis: 48px;
+    padding: 0;
+  }
+
+  .enc-primary-label { display: none; }
+  .enc-toolbar-actions { justify-content: flex-start; }
 }
 
 @media (prefers-reduced-motion: reduce) {

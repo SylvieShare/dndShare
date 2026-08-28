@@ -426,12 +426,16 @@ describe('ViewSession participant rail', () => {
     expect(encounterStylesSource).toContain('.enc-action-group-controls')
   })
 
-  it('shows an enlarged labelled primary combat action', () => {
+  it('compacts the primary action and left-aligns toolbar actions when the combat workspace is narrow', () => {
     expect(encounterSource).toContain("{{ enc.encounter.active ? 'Закончить бой' : 'Начать бой' }}")
     expect(encounterSource).toContain('class="enc-primary-label"')
     expect(encounterStylesSource).toContain('min-width: 144px;')
     expect(encounterStylesSource).toContain('height: 48px;')
     expect(encounterStylesSource).toContain('.enc-primary-label { line-height: 1; }')
+    expect(encounterStylesSource).toContain('container-type: inline-size;')
+    expect(encounterStylesSource).toContain('@container (max-width: 560px)')
+    expect(encounterStylesSource).toMatch(/@container \(max-width: 560px\)[\s\S]*\.enc-primary-label \{ display: none; \}/)
+    expect(encounterStylesSource).toMatch(/@container \(max-width: 560px\)[\s\S]*\.enc-toolbar-actions \{ justify-content: flex-start; \}/)
   })
 
   it('opens row actions from the tile and keeps concrete controls independent', () => {

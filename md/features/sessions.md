@@ -639,10 +639,14 @@ central card. On desktop the combat workspace retains the same reserved right
 boundary whether the tool rail is open or empty, so hiding all right-side tools
 does not stretch the central combat column. The header uses one enlarged,
 labelled primary action, “Начать бой” or “Закончить бой”, while turn navigation
-remains compact and icon-only. Its growing secondary action row uses labelled
+remains compact and icon-only. When the combat workspace itself is narrow, a
+container query collapses the primary action to its icon while preserving its
+tooltip and accessible label. Its growing secondary action row uses labelled
 groups only for categories that currently contain multiple actions. The single
 pre-combat roll, “Убить” and “Кладбище” remain separate icon-only buttons without
-a group title or frame. Nested action components use the same
+a group title or frame. On the same narrow layout, the secondary row aligns to
+the left so its actions use the full available width instead of overflowing the
+right edge. Nested action components use the same
 icon-button geometry and interaction states as direct toolbar buttons.
 
 ## Encounter
