@@ -433,9 +433,9 @@ describe('ViewSession participant rail', () => {
     expect(encounterStylesSource).toContain('height: 48px;')
     expect(encounterStylesSource).toContain('.enc-primary-label { line-height: 1; }')
     expect(encounterStylesSource).toContain('container-type: inline-size;')
-    expect(encounterStylesSource).toContain('@container (max-width: 560px)')
-    expect(encounterStylesSource).toMatch(/@container \(max-width: 560px\)[\s\S]*\.enc-primary-label \{ display: none; \}/)
-    expect(encounterStylesSource).toMatch(/@container \(max-width: 560px\)[\s\S]*\.enc-toolbar-actions \{ justify-content: flex-start; \}/)
+    expect(encounterStylesSource).toContain('@container (max-width: 900px)')
+    expect(encounterStylesSource).toMatch(/@container \(max-width: 900px\)[\s\S]*\.enc-primary-label \{ display: none; \}/)
+    expect(encounterStylesSource).toMatch(/@container \(max-width: 900px\)[\s\S]*\.enc-toolbar-actions \{ justify-content: flex-start; \}/)
   })
 
   it('opens row actions from the tile and keeps concrete controls independent', () => {

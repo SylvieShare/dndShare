@@ -504,7 +504,7 @@
   .enc-add-row { flex-direction: column; }
 }
 
-@container (max-width: 560px) {
+@container (max-width: 900px) {
   .enc-toolbar { grid-template-columns: minmax(0, 1fr) auto; }
 
   .enc-toolbar :deep(.enc-icon-btn--primary) {
