@@ -230,19 +230,6 @@
 
 .enc-toolbar :deep(.enc-icon-btn--next) { color: var(--accent-soft); }
 
-.enc-toolbar :deep(.enc-icon-btn--labelled) {
-  display: inline-flex;
-  width: auto;
-  flex: 0 0 auto;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  padding: 0 11px;
-  font-size: 11px;
-  font-weight: 750;
-  white-space: nowrap;
-}
-
 .enc-toolbar :deep(.enc-icon-btn--challenge-active) {
   border-color: color-mix(in srgb, var(--warning) 58%, transparent);
   background: color-mix(in srgb, var(--warning) 17%, transparent);

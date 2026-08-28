@@ -2,14 +2,14 @@
   <button
     ref="trigger"
     type="button"
-    class="enc-graveyard-trigger"
+    class="enc-icon-btn enc-icon-btn--danger enc-graveyard-trigger"
     :class="{ 'enc-graveyard-trigger--active': open }"
     title="Открыть кладбище"
     aria-label="Кладбище погибших существ"
+    :aria-expanded="open"
     @click="open = !open"
   >
     <Bone :size="18" />
-    <span class="enc-graveyard-trigger-label">Кладбище</span>
     <span v-if="deadItems.length" class="enc-graveyard-count">{{ deadItems.length }}</span>
   </button>
 

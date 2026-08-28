@@ -120,14 +120,13 @@
         <button
           v-if="props.isDm"
           type="button"
-          class="enc-icon-btn enc-icon-btn--danger enc-icon-btn--labelled"
+          class="enc-icon-btn enc-icon-btn--danger"
           :disabled="deadMoveCount === 0"
           title="Убить выбранных — переместить на кладбище"
           aria-label="Убить выбранных — переместить на кладбище"
           @click="enc.sendSelectedTo('dead')"
         >
           <Skull :size="18" />
-          <span>Убить</span>
           <span v-if="deadMoveCount" class="enc-icon-count">{{ deadMoveCount }}</span>
         </button>
 

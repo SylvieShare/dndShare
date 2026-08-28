@@ -641,8 +641,8 @@ does not stretch the central combat column. The header uses one enlarged,
 labelled primary action, “Начать бой” or “Закончить бой”, while turn navigation
 remains compact and icon-only. Its growing secondary action row uses labelled
 groups only for categories that currently contain multiple actions. The single
-pre-combat roll remains a direct icon button, while “Убить” and “Кладбище” are
-separate labelled actions without a group title or frame. Nested action components use the same
+pre-combat roll, “Убить” and “Кладбище” remain separate icon-only buttons without
+a group title or frame. Nested action components use the same
 icon-button geometry and interaction states as direct toolbar buttons.
 
 ## Encounter
@@ -757,9 +757,10 @@ re-measures that inherited layout value after the parent DOM update. The
 spotlight chapter therefore animates to the new combat boundary instead of the
 normal-width player-rail position.
 
-The graveyard is not a separate workspace section. Two labelled actions live
-directly in the combat header: “Убить” moves the current selection to the
-graveyard, while “Кладбище” opens a `BasePopover` with dead combatants.
+The graveyard is not a separate workspace section. Two icon-only actions live
+directly in the combat header: the skull moves the current selection to the
+graveyard, while the bone opens a `BasePopover` with dead combatants. Both keep
+their text descriptions in browser tooltips and accessible labels.
 Selecting a combatant reveals view, restore and (for NPCs) delete actions. The
 popover can also delete all dead NPCs after a `ConfirmDialog` confirmation.
 
