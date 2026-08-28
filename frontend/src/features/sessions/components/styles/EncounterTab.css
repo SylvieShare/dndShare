@@ -515,6 +515,7 @@
 }
 
 .enc-wrap--compact-toolbar .enc-primary-label { display: none; }
+.enc-wrap--compact-toolbar .enc-action-group-label { display: none; }
 .enc-wrap--compact-toolbar .enc-toolbar-actions { justify-content: flex-start; }
 
 @media (prefers-reduced-motion: reduce) {

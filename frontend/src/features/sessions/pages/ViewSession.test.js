@@ -438,6 +438,7 @@ describe('ViewSession participant rail', () => {
     expect(encounterSource).toContain('toolbarResizeObserver.observe(toolbar)')
     expect(encounterSource).toContain('compactToolbar.value = Number(width) <= 900')
     expect(encounterStylesSource).toContain('.enc-wrap--compact-toolbar .enc-primary-label { display: none; }')
+    expect(encounterStylesSource).toContain('.enc-wrap--compact-toolbar .enc-action-group-label { display: none; }')
     expect(encounterStylesSource).toContain('.enc-wrap--compact-toolbar .enc-toolbar-actions { justify-content: flex-start; }')
   })
 
