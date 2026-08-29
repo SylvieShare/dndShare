@@ -112,7 +112,7 @@ const fontSizes = [17, 19, 21, 23, 25]
 const currentIndex = ref(0)
 const fontLevel = ref(1)
 const preparation = ref(screencastPreparation.map(() => false))
-const presenterName = ref('')
+const presenterName = ref('Андрей')
 const wakeLock = ref(null)
 const wakeLockActive = ref(false)
 const wakeLockRequested = ref(false)
@@ -197,7 +197,7 @@ watch(presenterName, value => localStorage.setItem(presenterKey, value))
 onMounted(() => {
   currentIndex.value = readStoredNumber(progressKey, 0, screencastSteps.length - 1)
   fontLevel.value = readStoredNumber(fontKey, 1, fontSizes.length - 1)
-  presenterName.value = localStorage.getItem(presenterKey) || ''
+  presenterName.value = localStorage.getItem(presenterKey) || 'Андрей'
   try {
     const stored = JSON.parse(localStorage.getItem(preparationKey) || '[]')
     if (Array.isArray(stored) && stored.length === screencastPreparation.length) preparation.value = stored.map(Boolean)
