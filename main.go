@@ -32,6 +32,11 @@ func main() {
 		log.Fatalf("store: %v", err)
 	}
 	defer st.Close()
+	if n, err := st.DeleteExpiredSessions(ctx); err != nil {
+		log.Printf("delete expired sessions: %v", err)
+	} else if n > 0 {
+		log.Printf("deleted %d expired sessions", n)
+	}
 
 	// После старта гасим админ-джобы, зависшие в RUNNING после рестарта (аналог @PostConstruct).
 	if n, err := st.MarkRunningJobsFailedAtBoot(ctx, "Прервано рестартом приложения"); err != nil {

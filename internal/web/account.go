@@ -98,10 +98,16 @@ func (s *Server) handleChangeAccountPassword(w http.ResponseWriter, r *http.Requ
 		serverError(w, err)
 		return
 	}
-	if err := s.store.UpdateUserPassword(r.Context(), userID, hash); err != nil {
+	token, err := newUUID()
+	if err != nil {
 		serverError(w, err)
 		return
 	}
+	if err := s.store.UpdateUserPasswordAndReplaceSession(r.Context(), userID, hash, token); err != nil {
+		serverError(w, err)
+		return
+	}
+	s.setSessionCookies(w, r, userID, token)
 	writeJSON(w, http.StatusNoContent, nil)
 }
 

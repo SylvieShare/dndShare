@@ -115,6 +115,10 @@ func (s *Server) handleAdminResetPassword(w http.ResponseWriter, r *http.Request
 		badRequest(w, "bad body")
 		return
 	}
+	if passwordLength := len([]rune(body.Password)); passwordLength < 4 || passwordLength > 256 {
+		badRequest(w, "Пароль должен содержать от 4 до 256 символов")
+		return
+	}
 	hash, err := hashPassword(body.Password)
 	if err != nil {
 		serverError(w, err)

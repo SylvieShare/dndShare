@@ -9,7 +9,8 @@ API реализован Go `net/http` в `internal/web`. Feature-файл ре�
 - Ошибка — JSON `{ "type": "...", "desc": "..." }`.
 - Session auth — cookies `sylvieshare-session-id` и
   `sylvieshare-session-uuid`; обе cookie имеют `HttpOnly`, `SameSite=Lax` и
-  `Max-Age=2592000` (30 дней).
+  `Max-Age=2592000` (30 дней). Сервер также отклоняет `users_session` старше
+  30 дней.
 - `shared/api/http.js` считает любой non-2xx ошибкой.
 - Старые route aliases и DTO fields не поддерживаются.
 - Health: `GET /api/health` возвращает status, DB state и build `commitSha`.
@@ -18,13 +19,16 @@ API реализован Go `net/http` в `internal/web`. Feature-файл ре�
 
 - `POST /api/user/auth`
 - `GET /api/user/checkAuth`
-- `GET /api/user/logout`
+- `POST /api/user/logout`
 - `POST /api/user/registration`
 
 Успешные `POST /api/user/auth` и `GET /api/user/checkAuth` возвращают в `user`
 `gameContext:{sourceId,sourceName,sourceVersionId,version}` вместе с id, login и
 roles, а также `hasCharacters` — признак наличия хотя бы одного неудалённого
 персонажа у пользователя.
+Login ограничен по паре client IP/login, registration — по client IP; превышение
+лимита возвращает `429` и `Retry-After`. Смена пароля отзывает прежние server
+sessions и выдаёт текущему браузеру новый token.
 
 ## Player account
 
@@ -246,7 +250,8 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
   `letter`, `dossier` or `arcane`;
 - `POST /api/storage/videos` accepts an authenticated multipart `file` up to
   100 MB, stores it in S3 and returns the same `{upload_id,url,key}` shape as
-  image upload;
+  image upload. Upload bodies are spooled to bounded temporary files rather than
+  copied into the Go heap; at most three S3 uploads execute concurrently;
 - `GET|POST /api/sessions/{uuid}/timers` lists owner-only session timers or
   starts one from `{description,durationMs,broadcast}`. Every list response includes
   `serverTime`; timer projections contain `{id,description,durationMs,

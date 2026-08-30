@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { fetchGet, fetchPost, fetchGetEmpty } from '@/shared/api/http'
+import { fetchGet, fetchPost } from '@/shared/api/http'
 
 export const useAccountStore = defineStore('account', {
   state: () => ({
@@ -53,7 +53,7 @@ export const useAccountStore = defineStore('account', {
       this.user.hasCharacters = !!value
     },
     async logout() {
-      await fetchGetEmpty('/user/logout')
+      await fetchPost('/user/logout')
       this.status = 'none'
       window.location.reload()
     },

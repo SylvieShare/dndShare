@@ -2,10 +2,13 @@ package store
 
 import (
 	"context"
+	"crypto/sha256"
 	_ "embed"
+	"errors"
 	"fmt"
 	"log"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -190,6 +193,12 @@ var schemaFrenzyActionSQL string
 //go:embed schema/57_class_action_automation.sql
 var schemaClassActionAutomationSQL string
 
+//go:embed schema/58_half_caster_spellcasting.sql
+var schemaHalfCasterSpellcastingSQL string
+
+//go:embed schema/59_session_security.sql
+var schemaSessionSecuritySQL string
+
 var schemaParts = []struct {
 	name string
 	sql  string
@@ -253,6 +262,57 @@ var schemaParts = []struct {
 	{"remove-status-suggest", schemaRemoveStatusSuggestSQL},
 	{"frenzy-action", schemaFrenzyActionSQL},
 	{"class-action-automation", schemaClassActionAutomationSQL},
+	{"half-caster-spellcasting", schemaHalfCasterSpellcastingSQL},
+	{"session-security", schemaSessionSecuritySQL},
+}
+
+const (
+	// A stable project-specific key serializes schema changes across concurrent starts.
+	schemaMigrationLockID = int64(0x444e445348415245)
+	// Databases created before versioned migrations already ran every part through 57
+	// on each application start. Bootstrap only those markers; part 58 remains pending.
+	legacySchemaBootstrapLast = "class-action-automation"
+)
+
+func schemaChecksum(sql string) string {
+	return fmt.Sprintf("%x", sha256.Sum256([]byte(sql)))
+}
+
+func schemaPartApplied(ctx context.Context, tx pgx.Tx, part struct {
+	name string
+	sql  string
+}) (bool, error) {
+	var checksum string
+	err := tx.QueryRow(ctx,
+		`SELECT checksum FROM dndshare.schema_migration WHERE code = $1`,
+		part.name,
+	).Scan(&checksum)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return false, nil
+	}
+	if err != nil {
+		return false, err
+	}
+	want := schemaChecksum(part.sql)
+	if checksum != want {
+		return false, fmt.Errorf("schema migration %s changed after it was applied", part.name)
+	}
+	return true, nil
+}
+
+func bootstrapLegacySchemaMigrations(ctx context.Context, tx pgx.Tx) error {
+	for _, part := range schemaParts {
+		if _, err := tx.Exec(ctx,
+			`INSERT INTO dndshare.schema_migration (code, checksum) VALUES ($1, $2)`,
+			part.name, schemaChecksum(part.sql),
+		); err != nil {
+			return fmt.Errorf("record legacy schema migration %s: %w", part.name, err)
+		}
+		if part.name == legacySchemaBootstrapLast {
+			return nil
+		}
+	}
+	return fmt.Errorf("legacy schema bootstrap boundary %q is missing", legacySchemaBootstrapLast)
 }
 
 func applySchema(ctx context.Context, pool *pgxpool.Pool) error {
@@ -261,8 +321,40 @@ func applySchema(ctx context.Context, pool *pgxpool.Pool) error {
 		return fmt.Errorf("begin schema transaction: %w", err)
 	}
 	defer func() { _ = tx.Rollback(ctx) }()
+	if _, err := tx.Exec(ctx, `SELECT pg_advisory_xact_lock($1)`, schemaMigrationLockID); err != nil {
+		return fmt.Errorf("lock schema migrations: %w", err)
+	}
+	var legacyDatabase bool
+	if err := tx.QueryRow(ctx, `SELECT to_regclass('dndshare.users') IS NOT NULL`).Scan(&legacyDatabase); err != nil {
+		return fmt.Errorf("detect legacy schema: %w", err)
+	}
+	if _, err := tx.Exec(ctx, `
+		CREATE SCHEMA IF NOT EXISTS dndshare;
+		CREATE TABLE IF NOT EXISTS dndshare.schema_migration (
+			code text PRIMARY KEY,
+			checksum text NOT NULL,
+			applied_at timestamptz DEFAULT now() NOT NULL
+		)`); err != nil {
+		return fmt.Errorf("create schema migration ledger: %w", err)
+	}
+	var appliedCount int
+	if err := tx.QueryRow(ctx, `SELECT count(*) FROM dndshare.schema_migration`).Scan(&appliedCount); err != nil {
+		return fmt.Errorf("count schema migrations: %w", err)
+	}
+	if legacyDatabase && appliedCount == 0 {
+		if err := bootstrapLegacySchemaMigrations(ctx, tx); err != nil {
+			return err
+		}
+	}
 
 	for _, part := range schemaParts {
+		applied, err := schemaPartApplied(ctx, tx, part)
+		if err != nil {
+			return fmt.Errorf("check schema part %s: %w", part.name, err)
+		}
+		if applied {
+			continue
+		}
 		if part.name == "remove-status-suggest" {
 			richStats, err := migrateLegacyRichContent(ctx, tx)
 			if err != nil {
@@ -293,6 +385,12 @@ func applySchema(ctx context.Context, pool *pgxpool.Pool) error {
 		}
 		if _, err := tx.Exec(ctx, part.sql); err != nil {
 			return fmt.Errorf("apply schema part %s: %w", part.name, err)
+		}
+		if _, err := tx.Exec(ctx,
+			`INSERT INTO dndshare.schema_migration (code, checksum) VALUES ($1, $2)`,
+			part.name, schemaChecksum(part.sql),
+		); err != nil {
+			return fmt.Errorf("record schema part %s: %w", part.name, err)
 		}
 	}
 	if err := tx.Commit(ctx); err != nil {

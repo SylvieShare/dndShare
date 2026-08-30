@@ -55,6 +55,7 @@ VM под systemd; Docker, JAR и Maven в production path не использу
 
 Основные переменные:
 
+- `APP_ENV=production`, `TRUST_PROXY_HEADERS=true`;
 - `DB_URL`, `DB_USER`, `DB_PASSWORD`;
 - `OBJECT_STORAGE_ENDPOINT`, `OBJECT_STORAGE_REGION`,
   `OBJECT_STORAGE_BUCKET`, `OBJECT_STORAGE_PUBLIC_URL`,
@@ -62,6 +63,10 @@ VM под systemd; Docker, JAR и Maven в production path не использу
 - `MCP_AUTH_TOKEN`, `MCP_WRITE_ENABLED`;
 - `SESSION_SECURE_COOKIE`;
 - `PORT`.
+
+В production приложение завершает запуск, если пароль БД, MCP token или S3
+credentials отсутствуют/оставлены dev-значениями, либо secure cookies явно
+отключены. Некорректные boolean env также считаются ошибкой конфигурации.
 
 В `dndshare.service` находятся только несекретные параметры и id Lockbox.
 `DB_PASSWORD`, storage credentials и MCP token приходят из Lockbox. Для ротации

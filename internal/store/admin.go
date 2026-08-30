@@ -107,10 +107,25 @@ func (s *Store) ListUsers(ctx context.Context) ([]AdminUser, error) {
 	return out, rows.Err()
 }
 
-// UpdateUserPassword ставит новый (уже захэшированный) пароль.
+// UpdateUserPassword ставит новый (уже захэшированный) пароль и отзывает все
+// активные сессии пользователя.
 func (s *Store) UpdateUserPassword(ctx context.Context, id int64, hash string) error {
-	_, err := s.pool.Exec(ctx, `UPDATE dndshare.users SET "password" = $2 WHERE id = $1`, id, hash)
-	return err
+	tx, err := s.pool.Begin(ctx)
+	if err != nil {
+		return err
+	}
+	defer func() { _ = tx.Rollback(ctx) }()
+	result, err := tx.Exec(ctx, `UPDATE dndshare.users SET "password" = $2 WHERE id = $1`, id, hash)
+	if err != nil {
+		return err
+	}
+	if result.RowsAffected() == 0 {
+		return ErrNotFound
+	}
+	if _, err := tx.Exec(ctx, `DELETE FROM dndshare.users_session WHERE user_id = $1`, id); err != nil {
+		return err
+	}
+	return tx.Commit(ctx)
 }
 
 // ListLogs возвращает последние логи в порядке убывания created_at (с ограничением, чтобы

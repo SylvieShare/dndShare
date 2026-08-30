@@ -15,7 +15,11 @@ global navigation can switch between `Создать персонажа` and `П
 
 Successful login and registration set two persistent `HttpOnly`, `SameSite=Lax`
 session cookies with a 30-day `Max-Age`, so authentication survives a browser
-restart. Logout deletes the current server session and both cookies.
+restart. The server rejects sessions older than the same 30-day lifetime and
+cleans expired rows at startup. Password changes revoke previous sessions.
+Logout is a state-changing `POST`, not `GET`, and deletes the current server
+session and both cookies. Login is limited per client/login pair; registration is
+limited per client IP.
 
 The global error-report launcher and inbox are mounted only for authenticated
 users. The public character wizard dispatches `dndshare:request-auth` only from

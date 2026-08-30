@@ -15,7 +15,11 @@ func init() { registerRoutes((*Server).routesAuth) }
 func (s *Server) routesAuth(mux *http.ServeMux) {
 	mux.HandleFunc("POST /api/user/auth", s.handleAuth)
 	mux.HandleFunc("GET /api/user/checkAuth", s.handleCheckAuth)
-	mux.HandleFunc("GET /api/user/logout", s.handleLogout)
+	mux.HandleFunc("POST /api/user/logout", s.handleLogout)
+	mux.HandleFunc("GET /api/user/logout", func(w http.ResponseWriter, _ *http.Request) {
+		w.Header().Set("Allow", http.MethodPost)
+		w.WriteHeader(http.StatusMethodNotAllowed)
+	})
 	mux.HandleFunc("POST /api/user/registration", s.handleRegistration)
 	mux.HandleFunc("GET /ping", func(w http.ResponseWriter, r *http.Request) {})
 }
@@ -66,6 +70,16 @@ func (s *Server) handleAuth(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "Некорректный запрос")
 		return
 	}
+	req.Login = strings.TrimSpace(req.Login)
+	if req.Login == "" || len([]rune(req.Login)) > 128 || req.Password == "" || len([]rune(req.Password)) > 256 {
+		writeJSON(w, http.StatusOK, checkAuthResponse{Auth: false})
+		return
+	}
+	loginKey := strings.ToLower(strings.TrimSpace(req.Login))
+	if ok, retryAfter := s.authLimiter.allow("login:"+s.clientIP(r)+":"+loginKey, 10, 5*time.Minute, time.Now()); !ok {
+		tooManyRequests(w, retryAfter)
+		return
+	}
 	user, err := s.store.FindUserByLogin(r.Context(), req.Login)
 	if err != nil {
 		if errors.Is(err, store.ErrNotFound) {
@@ -79,6 +93,7 @@ func (s *Server) handleAuth(w http.ResponseWriter, r *http.Request) {
 		writeJSON(w, http.StatusOK, checkAuthResponse{Auth: false})
 		return
 	}
+	s.authLimiter.reset("login:" + s.clientIP(r) + ":" + loginKey)
 	if err := s.establishSession(w, r, user.ID); err != nil {
 		serverError(w, err)
 		return
@@ -118,18 +133,20 @@ func (s *Server) handleCheckAuth(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) handleLogout(w http.ResponseWriter, r *http.Request) {
 	uid, ok := optionalUser(r)
-	if !ok {
-		unauthorized(w)
-		return
-	}
-	if c, err := r.Cookie(cookieSessionUUID); err == nil {
-		_ = s.store.DeleteSession(r.Context(), uid, c.Value)
+	if ok {
+		if c, err := r.Cookie(cookieSessionUUID); err == nil {
+			_ = s.store.DeleteSession(r.Context(), uid, c.Value)
+		}
 	}
 	s.clearSessionCookies(w, r)
 	writeJSON(w, http.StatusOK, nil)
 }
 
 func (s *Server) handleRegistration(w http.ResponseWriter, r *http.Request) {
+	if ok, retryAfter := s.authLimiter.allow("registration:"+s.clientIP(r), 10, 15*time.Minute, time.Now()); !ok {
+		tooManyRequests(w, retryAfter)
+		return
+	}
 	var req struct {
 		Login    string `json:"login"`
 		Password string `json:"password"`
@@ -138,8 +155,13 @@ func (s *Server) handleRegistration(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "Некорректный запрос")
 		return
 	}
-	if strings.TrimSpace(req.Login) == "" || req.Password == "" {
-		badRequest(w, "Логин и пароль обязательны")
+	req.Login = strings.TrimSpace(req.Login)
+	if loginLength := len([]rune(req.Login)); loginLength < 3 || loginLength > 64 {
+		badRequest(w, "Логин должен содержать от 3 до 64 символов")
+		return
+	}
+	if passwordLength := len([]rune(req.Password)); passwordLength < 4 || passwordLength > 256 {
+		badRequest(w, "Пароль должен содержать от 4 до 256 символов")
 		return
 	}
 	exists, err := s.store.ExistsByLogin(r.Context(), req.Login)
@@ -180,7 +202,10 @@ func (s *Server) handleRegistration(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) establishSession(w http.ResponseWriter, r *http.Request, userID int64) error {
-	token := newUUID()
+	token, err := newUUID()
+	if err != nil {
+		return err
+	}
 	if err := s.store.CreateSession(r.Context(), userID, token); err != nil {
 		return err
 	}

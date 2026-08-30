@@ -3,9 +3,12 @@ package store
 import (
 	"context"
 	"errors"
+	"time"
 
 	"github.com/jackc/pgx/v5"
 )
+
+const SessionLifetime = 30 * 24 * time.Hour
 
 // User — строка dndshare.users.
 type User struct {
@@ -131,14 +134,56 @@ func (s *Store) CreateSession(ctx context.Context, userID int64, session string)
 	return err
 }
 
-// CheckSession — валиден ли (userId, uuid) как активная сессия.
+// CheckSession — валиден ли (userId, uuid) как активная и неистёкшая сессия.
 func (s *Store) CheckSession(ctx context.Context, userID int64, session string) (bool, error) {
 	var exists bool
 	err := s.pool.QueryRow(ctx,
-		`SELECT EXISTS(SELECT 1 FROM dndshare.users_session WHERE user_id = $1 AND "session" = $2)`,
-		userID, session,
+		`SELECT EXISTS(
+			SELECT 1 FROM dndshare.users_session
+			WHERE user_id = $1 AND "session" = $2 AND created_at >= $3
+		)`,
+		userID, session, time.Now().Add(-SessionLifetime),
 	).Scan(&exists)
 	return exists, err
+}
+
+// DeleteExpiredSessions removes server-side state that can no longer authenticate.
+func (s *Store) DeleteExpiredSessions(ctx context.Context) (int64, error) {
+	result, err := s.pool.Exec(ctx,
+		`DELETE FROM dndshare.users_session WHERE created_at < $1`,
+		time.Now().Add(-SessionLifetime),
+	)
+	if err != nil {
+		return 0, err
+	}
+	return result.RowsAffected(), nil
+}
+
+// UpdateUserPasswordAndReplaceSession changes a password, revokes every existing
+// session and installs one fresh session for the current browser atomically.
+func (s *Store) UpdateUserPasswordAndReplaceSession(ctx context.Context, userID int64, hash, session string) error {
+	tx, err := s.pool.Begin(ctx)
+	if err != nil {
+		return err
+	}
+	defer func() { _ = tx.Rollback(ctx) }()
+	result, err := tx.Exec(ctx, `UPDATE dndshare.users SET "password" = $2 WHERE id = $1`, userID, hash)
+	if err != nil {
+		return err
+	}
+	if result.RowsAffected() == 0 {
+		return ErrNotFound
+	}
+	if _, err := tx.Exec(ctx, `DELETE FROM dndshare.users_session WHERE user_id = $1`, userID); err != nil {
+		return err
+	}
+	if _, err := tx.Exec(ctx,
+		`INSERT INTO dndshare.users_session (user_id, "session") VALUES ($1, $2)`,
+		userID, session,
+	); err != nil {
+		return err
+	}
+	return tx.Commit(ctx)
 }
 
 // DeleteSession удаляет конкретную сессию (при logout).

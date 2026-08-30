@@ -11,6 +11,8 @@ StartLimitBurst=4
 Type=simple
 User=sylvieshare
 WorkingDirectory=/home/sylvieshare
+Environment=APP_ENV=production
+Environment=TRUST_PROXY_HEADERS=true
 # run.sh тянет секреты из Lockbox (через YC service account, привязанный к VM),
 # грузит env и exec'ает бинарь. ID секрета 'dndshare-secrets' (не секрет):
 Environment=LOCKBOX_SECRET_ID=e6qc2l631pr9823st3lg

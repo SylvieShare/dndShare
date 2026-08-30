@@ -23,6 +23,8 @@ func TestHandlerRegistersAllRoutesWithoutConflict(t *testing.T) {
 	}{
 		{"GET", "/some/spa/route", 200},
 		{"GET", "/ping", 200},
+		{"GET", "/api/user/logout", 405},
+		{"POST", "/api/user/logout", 200},
 		{"POST", "/mcp", 401},
 		{"POST", "/api/error-reports", 400},
 		{"PATCH", "/api/admin-panel/error-reports/1/approval", 401},

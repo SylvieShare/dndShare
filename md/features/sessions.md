@@ -346,7 +346,9 @@ references an existing contextual image or map material rather than duplicating 
 its leading action broadcasts that material immediately. All uploaded material
 assets continue to use the ownership-aware `storage_image` registry and S3 URLs;
 video uploads are limited to 100 MB, while text and note bodies remain database
-content.
+content. Large media is spooled to a temporary file and uploaded with a global
+three-operation concurrency limit, so concurrent videos do not accumulate in the
+Go heap.
 
 Every session has at least one ordered arc. Arc order is the canonical campaign
 order; the UI renders it as a Roman number and rewrites `1..N` atomically after

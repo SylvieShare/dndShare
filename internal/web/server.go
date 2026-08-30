@@ -17,6 +17,7 @@ type Server struct {
 	jobs          *jobRunner
 	displayEvents *displayEventHub
 	sessionLive   *sessionLiveHub
+	authLimiter   *authRateLimiter
 }
 
 // routeRegistrars — реестр функций регистрации маршрутов. Каждый файл-фича добавляет
@@ -32,6 +33,7 @@ func New(cfg config.Config, st *store.Store, s3 *storage.Service) *Server {
 		cfg: cfg, store: st, s3: s3,
 		displayEvents: newDisplayEventHub(),
 		sessionLive:   newSessionLiveHub(),
+		authLimiter:   newAuthRateLimiter(),
 	}
 	s.jobs = newJobRunner(s)
 	return s
@@ -43,6 +45,10 @@ func (s *Server) Handler() http.Handler {
 	for _, reg := range routeRegistrars {
 		reg(s, mux)
 	}
+	// Unknown API/MCP paths must never fall through to the SPA document.
+	mux.HandleFunc("/api/", http.NotFound)
+	mux.HandleFunc("/mcp", http.NotFound)
+	mux.HandleFunc("/mcp/", http.NotFound)
 	mux.Handle("/", spaHandler())
 
 	var h http.Handler = mux

@@ -6,8 +6,12 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"runtime/debug"
 	"strconv"
 	"strings"
+	"time"
+
+	"dndshare/internal/store"
 )
 
 type ctxKey int
@@ -18,8 +22,8 @@ const userIDKey ctxKey = 0
 const (
 	cookieSessionID   = "sylvieshare-session-id"
 	cookieSessionUUID = "sylvieshare-session-uuid"
-	// Persistent login survives a browser restart for 30 days.
-	sessionCookieMaxAge = 30 * 24 * 60 * 60
+	// Persistent login survives a browser restart for the server-side session lifetime.
+	sessionCookieMaxAge = int(store.SessionLifetime / time.Second)
 )
 
 // Роли (dndshare.role.name).
@@ -44,10 +48,13 @@ func (s *Server) recoverer(next http.Handler) http.Handler {
 				panic(v)
 			}
 			msg := fmt.Sprintf("%v", v)
-			log.Printf("panic: %s %s: %v", r.Method, r.URL.Path, v)
+			trace := string(debug.Stack())
+			log.Printf("panic: %s %s: %v\n%s", r.Method, r.URL.Path, v, trace)
 			// Контекст запроса мог быть уже отменён (клиент отключился) — пишем лог без отмены.
-			s.store.LogError(context.WithoutCancel(r.Context()), r.URL.Path, "panic", msg, msg)
-			apiError(w, http.StatusInternalServerError, "RuntimeException", msg)
+			if s.store != nil {
+				s.store.LogError(context.WithoutCancel(r.Context()), r.URL.Path, "panic", msg, trace)
+			}
+			apiError(w, http.StatusInternalServerError, "RuntimeException", "Внутренняя ошибка")
 		}()
 		next.ServeHTTP(w, r)
 	})
@@ -208,10 +215,12 @@ func (s *Server) secure(r *http.Request) bool {
 }
 
 // newUUID генерирует случайный UUIDv4 в каноничном строковом виде.
-func newUUID() string {
+func newUUID() (string, error) {
 	b := make([]byte, 16)
-	_, _ = rand.Read(b)
+	if _, err := rand.Read(b); err != nil {
+		return "", fmt.Errorf("generate UUID: %w", err)
+	}
 	b[6] = (b[6] & 0x0f) | 0x40
 	b[8] = (b[8] & 0x3f) | 0x80
-	return fmt.Sprintf("%x-%x-%x-%x-%x", b[0:4], b[4:6], b[6:8], b[8:10], b[10:16])
+	return fmt.Sprintf("%x-%x-%x-%x-%x", b[0:4], b[4:6], b[6:8], b[8:10], b[10:16]), nil
 }

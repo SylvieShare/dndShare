@@ -43,7 +43,9 @@ owner or the system catalog; it never exposes the owner's music library.
 
 Audio is not streamed through PostgreSQL or the Go server. Metadata is
 relational and all object keys point to S3; system objects use the versioned
-`system-music/v1/` prefix. Playback URLs use a one-hour lifetime.
+`system-music/v1/` prefix. Upload input is spooled to a temporary file before S3
+and shares the global three-upload concurrency limit with images and video.
+Playback URLs use a one-hour lifetime.
 
 ## UI standards
 

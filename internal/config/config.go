@@ -10,10 +10,12 @@ import (
 
 // Config — конфигурация приложения из env.
 type Config struct {
-	Port         string
-	DSN          string
-	SecureCookie string // auto | true | false
-	DevOrigin    string // CORS-origin для vite (локальная разработка)
+	Environment       string
+	Port              string
+	DSN               string
+	SecureCookie      string // auto | true | false
+	DevOrigin         string // CORS-origin для vite (локальная разработка)
+	TrustProxyHeaders bool
 
 	MCPAuthToken    string
 	MCPWriteEnabled bool
@@ -34,22 +36,34 @@ type StorageConfig struct {
 
 // Load читает актуальный environment contract приложения.
 func Load() (Config, error) {
+	environment := strings.ToLower(env("APP_ENV", "development"))
+	dbPassword := env("DB_PASSWORD", "changeme")
 	dsn, err := buildDSN(
 		env("DB_URL", "jdbc:postgresql://localhost:5432/sylvieshare"),
 		env("DB_USER", "sylvie"),
-		env("DB_PASSWORD", "changeme"),
+		dbPassword,
 	)
 	if err != nil {
 		return Config{}, err
 	}
-	return Config{
-		Port:         env("PORT", "8080"),
-		DSN:          dsn,
-		SecureCookie: strings.ToLower(env("SESSION_SECURE_COOKIE", "auto")),
-		DevOrigin:    "http://localhost:5173",
+	mcpWriteEnabled, err := envBool("MCP_WRITE_ENABLED", false)
+	if err != nil {
+		return Config{}, err
+	}
+	trustProxyHeaders, err := envBool("TRUST_PROXY_HEADERS", false)
+	if err != nil {
+		return Config{}, err
+	}
+	cfg := Config{
+		Environment:       environment,
+		Port:              env("PORT", "8080"),
+		DSN:               dsn,
+		SecureCookie:      strings.ToLower(env("SESSION_SECURE_COOKIE", "auto")),
+		DevOrigin:         "http://localhost:5173",
+		TrustProxyHeaders: trustProxyHeaders,
 
 		MCPAuthToken:    env("MCP_AUTH_TOKEN", "dev-mcp-token-change-me"),
-		MCPWriteEnabled: envBool("MCP_WRITE_ENABLED", false),
+		MCPWriteEnabled: mcpWriteEnabled,
 
 		Storage: StorageConfig{
 			Endpoint:  env("OBJECT_STORAGE_ENDPOINT", "https://storage.yandexcloud.net"),
@@ -60,7 +74,40 @@ func Load() (Config, error) {
 			SecretKey: env("OBJECT_STORAGE_SECRET_KEY", ""),
 			KeyPrefix: env("OBJECT_STORAGE_KEY_PREFIX", "images/"),
 		},
-	}, nil
+	}
+	if err := cfg.validate(dbPassword); err != nil {
+		return Config{}, err
+	}
+	return cfg, nil
+}
+
+func (c Config) validate(dbPassword string) error {
+	switch c.Environment {
+	case "development", "test", "production":
+	default:
+		return fmt.Errorf("bad APP_ENV %q: want development, test or production", c.Environment)
+	}
+	switch c.SecureCookie {
+	case "auto", "true", "false":
+	default:
+		return fmt.Errorf("bad SESSION_SECURE_COOKIE %q: want auto, true or false", c.SecureCookie)
+	}
+	if c.Environment != "production" {
+		return nil
+	}
+	if dbPassword == "" || dbPassword == "changeme" {
+		return fmt.Errorf("DB_PASSWORD must be set to a non-default value in production")
+	}
+	if c.MCPAuthToken == "" || c.MCPAuthToken == "dev-mcp-token-change-me" {
+		return fmt.Errorf("MCP_AUTH_TOKEN must be set to a non-default value in production")
+	}
+	if c.Storage.AccessKey == "" || c.Storage.SecretKey == "" {
+		return fmt.Errorf("object storage credentials must be set in production")
+	}
+	if c.SecureCookie == "false" {
+		return fmt.Errorf("SESSION_SECURE_COOKIE=false is not allowed in production")
+	}
+	return nil
 }
 
 // buildDSN превращает JDBC-URL + user/password в DSN для pgx.
@@ -85,15 +132,15 @@ func env(key, def string) string {
 	return def
 }
 
-// envBool читает булев env (true/1/yes и т.п. через strconv.ParseBool); пусто/битое → def.
-func envBool(key string, def bool) bool {
+// envBool читает булев env (true/1/yes и т.п. через strconv.ParseBool).
+func envBool(key string, def bool) (bool, error) {
 	v := os.Getenv(key)
 	if v == "" {
-		return def
+		return def, nil
 	}
 	b, err := strconv.ParseBool(strings.TrimSpace(v))
 	if err != nil {
-		return def
+		return false, fmt.Errorf("bad %s %q: %w", key, v, err)
 	}
-	return b
+	return b, nil
 }

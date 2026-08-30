@@ -9,37 +9,59 @@ import (
 )
 
 func TestToolProficiencyCatalogIsEmbeddedAfterItemTypeHierarchy(t *testing.T) {
-	if len(schemaParts) < 28 {
-		t.Fatal("schemaParts must contain the final item catalogue sections")
+	expectedNames := []string{
+		"item-type-hierarchy", "tool-proficiency-catalog", "ability-resources",
+		"class-tool-choices", "ability-resource-catalog-fixes", "ability-resource-catalog-audit",
+		"ability-resource-colors", "ability-spell-grants", "equipped-armor",
+		"character-defenses-and-racial-grants", "ability-spell-cast-level", "ability-choices",
+		"racial-automation", "class-ability-automation", "feat-automation", "rogue-automation",
+		"rogue-catalog-fixes", "weapon-damage-actions", "feature-sheet-widgets", "roll-adjustments",
+		"feature-actions", "status-effects", "status-effect-levels", "activity-restrictions",
+		"status-effect-catalog", "remove-status-suggest", "frenzy-action", "class-action-automation",
 	}
-	hierarchy := schemaParts[len(schemaParts)-28]
-	tools := schemaParts[len(schemaParts)-27]
-	resources := schemaParts[len(schemaParts)-26]
-	classTools := schemaParts[len(schemaParts)-25]
-	resourceFixes := schemaParts[len(schemaParts)-24]
-	resourceAudit := schemaParts[len(schemaParts)-23]
-	resourceColors := schemaParts[len(schemaParts)-22]
-	spellGrants := schemaParts[len(schemaParts)-21]
-	equippedArmor := schemaParts[len(schemaParts)-20]
-	defenses := schemaParts[len(schemaParts)-19]
-	castLevel := schemaParts[len(schemaParts)-18]
-	choices := schemaParts[len(schemaParts)-17]
-	racialAutomation := schemaParts[len(schemaParts)-16]
-	classAutomation := schemaParts[len(schemaParts)-15]
-	featAutomation := schemaParts[len(schemaParts)-14]
-	rogueAutomation := schemaParts[len(schemaParts)-13]
-	rogueCatalogFixes := schemaParts[len(schemaParts)-12]
-	weaponDamageActions := schemaParts[len(schemaParts)-11]
-	featureSheetWidgets := schemaParts[len(schemaParts)-10]
-	rollAdjustments := schemaParts[len(schemaParts)-9]
-	featureActions := schemaParts[len(schemaParts)-8]
-	statusEffects := schemaParts[len(schemaParts)-7]
-	statusEffectLevels := schemaParts[len(schemaParts)-6]
-	activityRestrictions := schemaParts[len(schemaParts)-5]
-	statusEffectCatalog := schemaParts[len(schemaParts)-4]
-	removeStatusSuggest := schemaParts[len(schemaParts)-3]
-	frenzyAction := schemaParts[len(schemaParts)-2]
-	classActionAutomation := schemaParts[len(schemaParts)-1]
+	start := -1
+	for index, part := range schemaParts {
+		if part.name == expectedNames[0] {
+			start = index
+			break
+		}
+	}
+	if start < 0 || len(schemaParts) < start+len(expectedNames) {
+		t.Fatal("schemaParts must contain the final item catalogue sequence")
+	}
+	for offset, name := range expectedNames {
+		if got := schemaParts[start+offset].name; got != name {
+			t.Fatalf("schema part after %q: want %q, got %q", expectedNames[0], name, got)
+		}
+	}
+	hierarchy := schemaParts[start]
+	tools := schemaParts[start+1]
+	resources := schemaParts[start+2]
+	classTools := schemaParts[start+3]
+	resourceFixes := schemaParts[start+4]
+	resourceAudit := schemaParts[start+5]
+	resourceColors := schemaParts[start+6]
+	spellGrants := schemaParts[start+7]
+	equippedArmor := schemaParts[start+8]
+	defenses := schemaParts[start+9]
+	castLevel := schemaParts[start+10]
+	choices := schemaParts[start+11]
+	racialAutomation := schemaParts[start+12]
+	classAutomation := schemaParts[start+13]
+	featAutomation := schemaParts[start+14]
+	rogueAutomation := schemaParts[start+15]
+	rogueCatalogFixes := schemaParts[start+16]
+	weaponDamageActions := schemaParts[start+17]
+	featureSheetWidgets := schemaParts[start+18]
+	rollAdjustments := schemaParts[start+19]
+	featureActions := schemaParts[start+20]
+	statusEffects := schemaParts[start+21]
+	statusEffectLevels := schemaParts[start+22]
+	activityRestrictions := schemaParts[start+23]
+	statusEffectCatalog := schemaParts[start+24]
+	removeStatusSuggest := schemaParts[start+25]
+	frenzyAction := schemaParts[start+26]
+	classActionAutomation := schemaParts[start+27]
 	if hierarchy.name != "item-type-hierarchy" || hierarchy.sql == "" || hierarchy.sql != schemaItemTypeHierarchySQL {
 		t.Fatal("item-type-hierarchy schema must be embedded after the equipment catalogues")
 	}

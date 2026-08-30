@@ -68,7 +68,7 @@ frontend, PostgreSQL и S3-compatible object storage.
 ```text
 main.go             запуск, graceful shutdown, остановка зависших jobs на старте
 internal/config     env → Config, JDBC URL → pgx DSN, S3 и MCP
-internal/store      pgx pool, атомарная startup-схема из schema/*.sql и запросы фич
+internal/store      pgx pool, versioned schema migrations и запросы фич
 internal/storage    S3-клиент: upload, presign и delete
 internal/web        routes, session/CORS/recover middleware, jobs и MCP
 internal/assets     go:embed собранного frontend (dist)
@@ -80,14 +80,16 @@ scripts             исполняемые project guardrails для автом�
 
 ## Ключевые правила backend
 
-- Схема БД накатывается на старте идемпотентно из упорядоченных файлов
-  `internal/store/schema/*.sql` (`CREATE ... IF NOT EXISTS`,
-  `ON CONFLICT DO NOTHING`). `schema.go` встраивает их и выполняет одной
-  транзакцией, без Liquibase. Всё находится в схеме `dndshare`.
-- На существующей БД startup-схема также приводит данные к единственному
-  актуальному формату и удаляет старые колонки и JSON-ключи.
-- Runtime читает только текущую схему. Ломающее изменение сопровождается
-  startup data migration в соответствующем `schema/*.sql`; старые поля,
+- Схема БД накатывается на старте из упорядоченных файлов
+  `internal/store/schema/*.sql`. `schema.go` встраивает их, берёт PostgreSQL
+  advisory lock и выполняет ещё не отмеченные части одной транзакцией, без
+  Liquibase. Применённые checksum хранятся в `dndshare.schema_migration`.
+- Исторические data corrections не повторяются при каждом старте. На БД,
+  существовавшей до versioned runner, части 01–57 отмечаются как legacy baseline,
+  а следующие миграции выполняются по одному разу.
+- Runtime читает только текущую схему. Ломающее изменение сопровождается новым
+  последовательным файлом в `schema/*.sql`; уже применённые файлы неизменяемы,
+  старые поля,
   aliases, fallback-ветки и временные admin jobs после этого удаляются.
   Обратная совместимость со старыми форматами не поддерживается.
 - `jsonb` записывается как `json.RawMessage` через `CAST($n AS jsonb)`; `uuid`
@@ -95,7 +97,8 @@ scripts             исполняемые project guardrails для автом�
 - Отсутствующая строка возвращается как `store.ErrNotFound`.
 - Аутентификация использует cookie `sylvieshare-session-id` (`userId`) и
   `sylvieshare-session-uuid` (`uuid`), серверное состояние хранится в
-  `users_session`; обе cookie сохраняются браузером 30 дней.
+  `users_session`; обе cookie и серверная сессия действуют 30 дней. Смена пароля
+  отзывает прежние сессии, login и registration ограничены по частоте.
 - Роли: `ADMIN`, `HANDBOOK_ADMIN`, `ERROR_REPORT_AUTO_APPROVE`,
   `ERROR_REPORT_REVIEWER`.
 - Ошибка API имеет тело `{"type": ..., "desc": ...}`. Необработанная паника

@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strconv"
+	"time"
 )
 
 // maxJSONBody — верхний предел тела JSON-запроса. Крупнейший легитимный запрос —
@@ -65,6 +67,15 @@ func notFound(w http.ResponseWriter, desc string) {
 
 func conflict(w http.ResponseWriter, desc string) {
 	apiError(w, http.StatusConflict, "ConflictException", desc)
+}
+
+func tooManyRequests(w http.ResponseWriter, retryAfter time.Duration) {
+	seconds := int64(retryAfter.Round(time.Second) / time.Second)
+	if seconds < 1 {
+		seconds = 1
+	}
+	w.Header().Set("Retry-After", strconv.FormatInt(seconds, 10))
+	apiError(w, http.StatusTooManyRequests, "TooManyRequestsException", "Слишком много попыток. Попробуйте позже")
 }
 
 func decodeJSON(r *http.Request, dst any) error {

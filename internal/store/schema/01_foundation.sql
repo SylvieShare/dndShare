@@ -8,6 +8,13 @@
 CREATE SCHEMA IF NOT EXISTS dndshare;
 CREATE EXTENSION IF NOT EXISTS pg_trgm;
 
+CREATE TABLE IF NOT EXISTS dndshare.schema_migration (
+    code       text NOT NULL,
+    checksum   text NOT NULL,
+    applied_at timestamptz DEFAULT now() NOT NULL,
+    CONSTRAINT schema_migration_pk PRIMARY KEY (code)
+);
+
 -- ---------------------------------------------------------------------------
 -- Auth
 -- ---------------------------------------------------------------------------
