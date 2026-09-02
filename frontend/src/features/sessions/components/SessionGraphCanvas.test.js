@@ -58,13 +58,13 @@ describe('session graph canvas', () => {
     expect(source).toContain("'chapter-ancestor-click', 'scene-count'")
   })
 
-  it('keeps chapter and scenario action menus available during combat', () => {
+  it('keeps chapter and scenario action menus available outside combat', () => {
+    expect(source).toContain('v-if="showChapterAncestor && workspaceMode !== \'combat\'"')
+    expect(source).toContain('v-if="displayLevel === \'blocks\' && workspaceMode !== \'combat\' && selectedScene"')
     expect(source).toContain(':role="isDm ? \'button\' : undefined"')
     expect(source).toContain('if (!props.isDm || !selectedScene.value) return')
-    expect(source).not.toContain("props.workspaceMode === 'combat' || !selectedScene.value")
     expect(canvasSource).toContain('@click.stop="onLockedNodeClick($event, node)"')
     expect(canvasSource).toContain("if (props.locked) emit('node-click', node, event.currentTarget)")
-    expect(source).not.toContain("if (props.workspaceMode === 'combat') return")
     expect(navigationSource).toContain("emit('open-scenes', activeChapter.value)")
     expect(navigationSource).toContain("emit('open-chapters')")
     expect(source).toContain('syncWorkspaceScene(updated)')
@@ -100,11 +100,13 @@ describe('session graph canvas', () => {
     expect(canvasSource).toContain("{ flush: 'post' }")
   })
 
-  it('keeps the selected chapter and scenario mounted across combat mode', () => {
+  it('preserves the selected narrative context while hiding the story canvas in combat', () => {
     expect(navigationSource).toContain("const preservedNestedContext = previousMode === 'combat'")
     expect(navigationSource).toContain("if (previousMode !== 'scenes') displayLevel.value = 'chapters'")
     expect(navigationSource).not.toContain("if (mode === 'combat') {\n      rememberedChapterId = props.workspaceChapterId\n      displayLevel.value = 'chapters'")
-    expect(source).toContain("'session-graph-canvas__nested--combat-hidden': workspaceMode === 'combat' && displayLevel !== 'chapters'")
+    expect(source).toContain("'session-graph-canvas__nested--combat-hidden': workspaceMode === 'combat'")
+    expect(source).toContain("showChapterAncestor && workspaceMode !== 'combat'")
+    expect(source).toContain("displayLevel === 'blocks' && workspaceMode !== 'combat' && selectedScene")
     expect(stylesSource).toMatch(/\.session-graph-canvas__nested--combat-hidden\s*\{[^}]*opacity:\s*0;[^}]*pointer-events:\s*none;/s)
     expect(stylesSource).toContain('transition: left 0.42s cubic-bezier(0.22, 1, 0.36, 1);')
   })

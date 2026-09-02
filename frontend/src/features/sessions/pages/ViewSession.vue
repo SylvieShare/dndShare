@@ -111,7 +111,7 @@
           />
         </template>
         <SessionCenterWorkspace
-          v-if="workspaceMode === 'combat' && (workspaceRevealed || workspaceClosing)"
+          v-if="workspaceMode === 'combat' && (workspaceMotionMode === 'combat' || workspaceClosing)"
           v-show="primaryView === 'story'"
           ref="combatWorkspace"
           :closing="workspaceClosing"
@@ -120,8 +120,6 @@
           :participants="participants"
           :is-dm="isDm"
           :encounter="encounter"
-          :chapter="workspaceChapter"
-          :scene="workspaceScene"
           :show-shortcut-hints="showShortcutHints"
           @close="closeWorkspace"
           @view-participant="openParticipant"
@@ -543,7 +541,6 @@ const {
   workspaceScene,
   workspaceLevel,
   workspaceClosing,
-  workspaceRevealed,
   workspaceMotionMode,
   openChapterScenes,
 	openSceneWorkspace,

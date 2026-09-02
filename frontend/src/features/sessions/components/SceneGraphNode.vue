@@ -12,7 +12,7 @@
     </div>
     <div class="scene-graph-node-copy">
       <strong>{{ scene.name }}</strong>
-      <small>{{ context ? 'В контексте боя' : spotlight ? 'Двойной клик — к сценариям' : 'Двойной клик — открыть холст' }}</small>
+      <small>{{ spotlight ? 'Двойной клик — к сценариям' : 'Двойной клик — открыть холст' }}</small>
     </div>
   </article>
 </template>
@@ -26,7 +26,6 @@ const props = defineProps({
   scene: { type: Object, required: true },
   index: { type: Number, default: 0 },
   spotlight: { type: Boolean, default: false },
-  context: { type: Boolean, default: false },
 })
 
 const imageUrl = computed(() => sessionImageUrl(props.scene))

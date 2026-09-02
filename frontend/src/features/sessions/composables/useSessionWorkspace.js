@@ -26,7 +26,6 @@ export function useSessionWorkspace({ sessionUuid, chapterGraph }) {
   const workspaceScene = computed(() => state.scene)
   const workspaceLevel = computed(() => state.level)
   const workspaceClosing = computed(() => state.phase === 'closing')
-  const workspaceRevealed = computed(() => state.phase === 'open')
   const workspaceChapter = computed(() =>
     chapterGraph.chapters.value.find(chapter => chapter.id === state.chapterId) ?? null
   )
@@ -215,7 +214,6 @@ export function useSessionWorkspace({ sessionUuid, chapterGraph }) {
     workspaceScene,
     workspaceLevel,
     workspaceClosing,
-    workspaceRevealed,
     workspaceMotionMode,
     openChapterScenes,
 		openSceneWorkspace,

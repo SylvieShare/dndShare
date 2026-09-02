@@ -259,13 +259,14 @@ describe('ViewSession participant rail', () => {
 
   it('keeps combat in the overlay and scenario levels inside one persistent canvas', () => {
     expect(source).toContain('<SessionCenterWorkspace')
-    expect(source).toContain('v-if="workspaceMode === \'combat\' && (workspaceRevealed || workspaceClosing)"')
+    expect(source).toContain('v-if="workspaceMode === \'combat\' && (workspaceMotionMode === \'combat\' || workspaceClosing)"')
     expect(source).toContain(':locked="!!workspaceMode"')
     expect(source).toContain(':workspace-chapter-id="workspaceChapter?.id ?? null"')
     expect(source).toContain(':workspace-scene="workspaceScene"')
     expect(source).toContain(':workspace-mode="workspaceMode"')
     expect(source).toContain(':workspace-layout-mode="workspaceMotionMode"')
-    expect(source).toContain(':scene="workspaceScene"')
+    expect(source).not.toContain(':chapter="workspaceChapter"')
+    expect(source).not.toContain(':scene="workspaceScene"')
     expect(source).not.toContain('v-if="combatOpen"')
     expect(source).not.toContain('v-if="sceneWorkspaceChapter"')
     expect(centerWorkspaceSource).not.toContain('<SceneGraphWorkspace')
@@ -281,8 +282,10 @@ describe('ViewSession participant rail', () => {
     expect(centerWorkspaceSource).not.toContain('<SceneTab')
     expect(sessionGraphSource).toContain("emit('scene-count', activeChapterId.value, sceneGraph.scenes.value.length)")
     expect(sessionGraphSource).toContain("scene: displayLevel.value === 'blocks' ? combatSceneContext() : null")
-    expect(sessionGraphSource).toContain("workspaceMode === 'combat') && selectedScene")
-    expect(centerWorkspaceSource).toContain("scene ? '504px' : chapter ? '252px' : '0px'")
+    expect(sessionGraphSource).toContain("'session-graph-canvas__nested--combat-hidden': workspaceMode === 'combat'")
+    expect(centerWorkspaceSource).not.toContain('chapter: { type: Object')
+    expect(centerWorkspaceSource).not.toContain('scene: { type: Object')
+    expect(encounterStylesSource).toMatch(/\.enc-wrap--workspace > \.enc-toolbar\s*\{[^}]*left:\s*0;/s)
   })
 
   it('restores the open combat or chapter scenes workspace after a page reload', () => {
@@ -303,9 +306,9 @@ describe('ViewSession participant rail', () => {
     expect(source).toContain("restoredWorkspace && workspaceMode.value === 'combat'")
   })
 
-  it('overlaps chapter movement with center content in its second half', () => {
+  it('reveals combat immediately while preserving the shared workspace transition', () => {
     expect(workspaceSource).toContain('const CONTENT_REVEAL_DELAY_MS = 210')
-    expect(workspaceSource).toContain("const workspaceRevealed = computed(() => state.phase === 'open')")
+    expect(source).not.toContain('workspaceRevealed,')
     expect(workspaceSource).toContain('const workspaceMotionMode = computed(() =>')
     expect(workspaceSource).toContain("if (state.phase === 'opening') state.phase = 'open'")
     expect(workspaceSource).toContain("state.phase = 'closing'")

@@ -3,7 +3,7 @@
     <NestedGraphCanvas
       ref="canvas"
       class="session-graph-canvas__nested"
-      :class="{ 'session-graph-canvas__nested--combat-hidden': workspaceMode === 'combat' && displayLevel !== 'chapters' }"
+      :class="{ 'session-graph-canvas__nested--combat-hidden': workspaceMode === 'combat' }"
       :graph-key="activeGraphKey"
       :nodes="activeNodes"
       :edges="activeEdges"
@@ -78,7 +78,7 @@
     </button>
 
     <div
-      v-if="showChapterAncestor"
+      v-if="showChapterAncestor && workspaceMode !== 'combat'"
       class="session-graph-ancestor session-graph-ancestor--chapter"
       title="Действия с главой"
       :role="isDm ? 'button' : undefined"
@@ -99,7 +99,7 @@
       />
     </div>
     <div
-      v-if="(displayLevel === 'blocks' || workspaceMode === 'combat') && selectedScene"
+      v-if="displayLevel === 'blocks' && workspaceMode !== 'combat' && selectedScene"
       class="session-graph-ancestor session-graph-ancestor--scene"
       title="Действия со сценарием"
       :role="isDm ? 'button' : undefined"
@@ -112,7 +112,6 @@
       <SceneGraphNode
         :scene="selectedScene"
         :index="selectedScene.contextIndex ?? sceneIndex(selectedScene)"
-        :context="workspaceMode === 'combat'"
         spotlight
       />
     </div>
@@ -307,7 +306,7 @@ const activeError = computed(() => displayLevel.value === 'scenes' ? sceneGraph.
 const activeLinkingFrom = computed(() => displayLevel.value === 'chapters' ? props.chapterLinkingFrom : displayLevel.value === 'scenes' ? sceneLinkingFrom.value : blockLinkingFrom.value)
 const activeSpotlightId = computed(() => transitionSpotlight.value?.level === displayLevel.value
   ? transitionSpotlight.value.id
-  : props.workspaceMode === 'combat' && displayLevel.value === 'chapters' ? activeChapterId.value : null)
+  : null)
 const spotlightOffsetX = computed(() => transitionSpotlight.value?.level === displayLevel.value
   ? transitionSpotlight.value.offset
   : 0)

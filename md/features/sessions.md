@@ -479,9 +479,11 @@ viewport in one render. DOM keys include the graph identity so equal numeric IDs
 from different entity tables cannot reuse a node. Returning prepares the parent
 viewport before its payload appears and keeps the returning node in the ancestor
 position for one painted frame before animating it to its saved coordinates.
-Combat still overlaps its content reveal with the chapter movement; the
-participant rail width uses the same duration and easing as that movement, both
-on entry and exit. Reduced-motion users skip the delay.
+Combat appears together with the participant-rail transition and hides the
+narrative canvas for the duration of the workspace. The selected chapter,
+scenario and narrative level remain mounted as hidden state, so closing combat
+restores the same canvas without reloading or resetting it. Reduced-motion users
+skip the transition.
 A regular node click opens its action popover: its first action explicitly opens the chapter scenarios, then it can mark
 it as `Сейчас здесь`, change status, edit, start a transition, move to another
 arc or delete.
@@ -490,9 +492,8 @@ the chapter node. While scenarios or blocks are open, clicking the pinned
 chapter preview opens a reduced chapter menu with return-to-chapters, status
 change and edit actions. Outside combat, a single contextual back button below
 the pinned chain reads `К главам` on the scenario canvas and `К сценариям` on
-the block canvas, and always returns exactly one level. Combat keeps the pinned
-context cards but hides this story-navigation button. Double click remains a
-direct return shortcut.
+the block canvas, and always returns exactly one level. Combat hides the story
+canvas together with its pinned context cards and navigation controls.
 Double-clicking a chapter opens its scenario canvas directly.
 Moving a node to another arc removes its old transitions after confirmation
 because a transition cannot cross arc boundaries.
@@ -629,25 +630,18 @@ block CRUD remains in `session_scenes.go`; graph reads, positions and links are
 handled by `session_scene_graph.go`.
 
 Combat still uses the same canvas layer from the command bar. Entering it from
-an open block canvas preserves the visible chapter and scenario as two pinned
-context cards; the standalone combat header sits to their right. The command-bar
-combat action reads the same currently displayed canvas context, while a chapter-only
+an open block canvas hides the narrative canvas and lets the standalone combat
+header use the full center width. The command-bar combat action reads the same
+currently displayed canvas context, while a chapter-only
 canvas falls back to the current chapter. Chapter and scenario ids are saved with
 the active narrative level in workspace state and restored after reload. Closing
 combat returns to that saved scenario or block canvas instead of resetting the
-user to chapters. The pinned chapter and scenario keep their regular action
-menus in combat, including keyboard activation, so the DM can update their
-status or edit them without closing the encounter. Successful scenario edits
-and status changes immediately replace the scene stored in combat workspace
-state, including on the first entry after reload, rather than waiting for the
-scene graph to be reopened. Menu navigation and double click use the same level
-transitions as outside combat: the pinned scenario returns to its scenario
-canvas, the pinned chapter returns to chapters, and a spotlight chapter opens
-its scenarios. These transitions leave the encounter state intact. The player rail adds a
+user to chapters. Chapter and scenario editing stays on the narrative canvas;
+the encounter must be closed before using those controls. The player rail adds a
 combat-only “select all” action above its cards; it selects or clears every
 player combatant while preserving any NPC selection. The action is the same
-compact icon-only control used above the battle scene and NPC reserve. Without a scenario context the
-combat header sits immediately to the right of the focused chapter;
+compact icon-only control used above the battle scene and NPC reserve. With or
+without a scenario context, the combat header uses the full center width;
 combatants remain independent tiles below it rather than being wrapped in one
 central card. On desktop the combat workspace retains the same reserved right
 boundary whether the tool rail is open or empty, so hiding all right-side tools

@@ -1,8 +1,7 @@
 <template>
   <section
     class="session-center-workspace"
-    :class="{ 'session-center-workspace--closing': closing, 'session-center-workspace--without-chapter': !chapter }"
-    :style="{ '--session-workspace-header-left': scene ? '504px' : chapter ? '252px' : '0px' }"
+    :class="{ 'session-center-workspace--closing': closing }"
     aria-label="Бой"
   >
     <EncounterTab
@@ -42,8 +41,6 @@ defineProps({
   isDm: { type: Boolean, default: false },
   encounter: { type: Object, required: true },
   showShortcutHints: { type: Boolean, default: false },
-  chapter: { type: Object, default: null },
-  scene: { type: Object, default: null },
 })
 defineEmits(['close', 'view-participant'])
 

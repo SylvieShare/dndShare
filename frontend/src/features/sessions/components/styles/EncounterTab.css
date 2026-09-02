@@ -26,7 +26,7 @@
   position: absolute;
   top: 0;
   right: 0;
-  left: var(--session-workspace-header-left, 252px);
+  left: 0;
   box-sizing: border-box;
   min-height: 156px;
   max-height: 156px;

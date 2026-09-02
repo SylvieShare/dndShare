@@ -152,6 +152,7 @@ describe('chapter graph workspace', () => {
     expect(canvas).toContain('pan.value = constrainPan({')
     expect(sessionCanvas).toContain('session-graph-ancestor--chapter')
     expect(sessionCanvas).toContain('session-graph-ancestor--scene')
+    expect(sessionCanvas).toContain("showChapterAncestor && workspaceMode !== 'combat'")
     expect(sessionCanvas).toContain('@dblclick.stop="returnToChapters"')
     expect(sessionCanvas).toContain('@dblclick.stop="returnFromSceneAncestor"')
     expect(sessionCanvas).toContain('@click.stop="openChapterAncestorMenu"')
