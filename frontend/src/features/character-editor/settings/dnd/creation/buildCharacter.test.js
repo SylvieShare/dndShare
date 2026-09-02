@@ -234,8 +234,8 @@ describe('buildCharacterData starting equipment', () => {
     })
 
     expect(result.data.values.weapon).toEqual([
-      { item_id: 101, params: { magic_bonus: 0 }, stat_suggest_id: null, proficient: false, add_attacks: [], desc: '' },
-      { item_id: 101, params: { magic_bonus: 0 }, stat_suggest_id: null, proficient: false, add_attacks: [], desc: '' },
+      expect.objectContaining({ uid: expect.stringMatching(/^weapon-/), item_id: 101, params: { magic_bonus: 0 }, stat_suggest_id: null, proficient: false, add_attacks: [], desc: '' }),
+      expect.objectContaining({ uid: expect.stringMatching(/^weapon-/), item_id: 101, params: { magic_bonus: 0 }, stat_suggest_id: null, proficient: false, add_attacks: [], desc: '' }),
     ])
     expect(result.data.values.items.sections[0].items).toEqual([
       { uid: 'eq_0', item_id: 202, count: 1, params: { length_ft: 50 }, override: null },

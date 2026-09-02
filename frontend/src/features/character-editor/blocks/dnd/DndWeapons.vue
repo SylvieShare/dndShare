@@ -259,6 +259,7 @@ function weaponEffectContext(entry) {
     kind: 'attack',
     abilitySuggestId: weaponAbilitySuggestId(entry, base, propertyItems(entry), statsVar.value),
     weaponKind: base?.data?.is_long_range ? 'ranged' : 'melee',
+    targetId: entry.uid,
   }
 }
 
@@ -451,7 +452,8 @@ function removeAttack(index, attackIndex) {
 }
 
 function addWeapon(it) {
-  entries.value.push({ ...defaultEntry(), item_id: it.id, _key: nextKey() })
+  const entry = { ...defaultEntry(), item_id: it.id }
+  entries.value.push({ ...entry, _key: entry.uid })
   addItem(it)
   emitChange()
   logSessionEntryAdded(charCtx, {
@@ -460,9 +462,19 @@ function addWeapon(it) {
 }
 
 function deleteWeapon(index) {
-  if (activeNoteKey.value === entries.value[index]?._key) activeNoteKey.value = null
+  const entry = entries.value[index]
+  if (activeNoteKey.value === entry?._key) activeNoteKey.value = null
   entries.value.splice(index, 1)
-  emitChange()
+  const nextWeapons = entries.value.map(cleanEntry)
+  if (typeof charCtx.updateValues === 'function') {
+    const patch = { [props.block.id]: nextWeapons }
+    if (typeof charCtx.characterStatuses?.removeByParam === 'function') {
+      patch.states = charCtx.characterStatuses.removeByParam('weapon_uid', entry?.uid)
+    }
+    charCtx.updateValues(patch)
+  } else {
+    emit('update:value', props.block.id, nextWeapons)
+  }
 }
 
 function canMoveWeaponToItems(entry) {
@@ -475,10 +487,14 @@ function moveWeaponToItems(index) {
   const entry = entries.value[index]
   if (!canMoveWeaponToItems(entry)) return
   const nextWeapons = entries.value.filter((_, entryIndex) => entryIndex !== index).map(cleanEntry)
-  charCtx.updateValues({
+  const patch = {
     weapon: nextWeapons,
     items: appendInventoryEntry(charCtx.values?.items, weaponEntryToOwnedEntry(entry)),
-  })
+  }
+  if (typeof charCtx.characterStatuses?.removeByParam === 'function') {
+    patch.states = charCtx.characterStatuses.removeByParam('weapon_uid', entry.uid)
+  }
+  charCtx.updateValues(patch)
 }
 
 const sortable = useSortable({
@@ -562,13 +578,15 @@ provide('weaponsBlockCtx', reactive({
 
 watch(() => props.value, (nextValue, oldValue) => {
   if (oldValue !== undefined && isSameCleanValue(nextValue, entries.value)) return
-  entries.value = (props.value || []).map(entry => ({
-    ...defaultEntry(),
-    ...entry,
-    params: normalizeWeaponParams(entry.params),
-    add_attacks: normalizeAddAttacks(entry.add_attacks),
-    _key: entry._key || nextKey(),
-  }))
+  entries.value = (props.value || []).map(entry => {
+    const normalized = {
+      ...defaultEntry(),
+      ...entry,
+      params: normalizeWeaponParams(entry.params),
+      add_attacks: normalizeAddAttacks(entry.add_attacks),
+    }
+    return { ...normalized, _key: entry._key || normalized.uid || nextKey() }
+  })
   loadItems()
 }, { immediate: true, deep: true })
 

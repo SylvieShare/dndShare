@@ -4,7 +4,9 @@ import {
   collectCharacterStatuses,
   linkedStatusActive,
   removeStatusInstancesByEffect,
+  removeStatusInstancesByParam,
   statusEffectActive,
+  statusInstanceActiveByParam,
   removeStatusesBySource,
   setStatusInstanceLevel,
   statusEffectLinks,
@@ -102,5 +104,21 @@ describe('character statuses', () => {
     expect(collectCharacterStatuses(values, items)[0]).toMatchObject({ title: 'Благословение', polarity: 'positive' })
     expect(removeStatusesBySource(values, { kind: 'spell', item_id: 20, value_id: 'spells', entry_key: '20' }))
       .toMatchObject([{ uid: 'c' }])
+  })
+
+  it('finds and removes a targeted effect by its runtime parameter', () => {
+    const effect = { id: 12 }
+    const values = { states: [
+      { uid: 'sword', effect_id: 12, params: { weapon_uid: 'weapon-1' } },
+      { uid: 'bow', effect_id: 12, params: { weapon_uid: 'weapon-2' } },
+      { uid: 'blessing', effect_id: 13, params: {} },
+    ] }
+
+    expect(statusInstanceActiveByParam(values, effect, 'weapon_uid', 'weapon-1')).toBe(true)
+    expect(statusInstanceActiveByParam(values, effect, 'weapon_uid', 'weapon-3')).toBe(false)
+    expect(removeStatusInstancesByParam(values, 'weapon_uid', 'weapon-1')).toMatchObject([
+      { uid: 'bow' },
+      { uid: 'blessing' },
+    ])
   })
 })

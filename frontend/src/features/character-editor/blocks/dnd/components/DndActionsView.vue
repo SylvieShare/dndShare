@@ -101,6 +101,16 @@
               <template #suffix>{{ action.resource.value }}/{{ action.resource.total }}</template>
             </RowActionItem>
             <RowActionItem
+              v-if="canActivateTarget(action)"
+              :icon="Sparkles"
+              tone="accent"
+              :disabled="targetActivationDisabled(action)"
+              @click="activateTarget(action, close)"
+            >
+              Выбрать цель и применить
+              <template v-if="action.resource" #suffix>{{ action.resource.value }}/{{ action.resource.total }}</template>
+            </RowActionItem>
+            <RowActionItem
               v-for="effect in action.menu_effects || []"
               :key="effect.key"
               :icon="BatteryLow"
@@ -111,7 +121,7 @@
               {{ effect.title }}
               <template #suffix>{{ effect.suffix }}</template>
             </RowActionItem>
-            <RowActionSeparator v-if="(canSpendResource(action) || action.menu_effects?.length) && !action.readonly" />
+            <RowActionSeparator v-if="(canSpendResource(action) || canActivateTarget(action) || action.menu_effects?.length) && !action.readonly" />
             <RowActionItem v-if="!action.readonly" action="edit" @click="edit(action, close)">Редактировать</RowActionItem>
             <RowActionSeparator v-if="!action.readonly" />
             <RowActionItem v-if="!action.readonly" action="delete" tone="danger" @click="remove(action, close)">Удалить</RowActionItem>
@@ -151,7 +161,7 @@ const props = defineProps({
   panel: { type: Boolean, default: false },
   actionSuggestions: { type: Array, default: () => [] },
 })
-const emit = defineEmits(['manage', 'edit', 'remove', 'apply-effect', 'spend-resource', 'toggle-resource'])
+const emit = defineEmits(['manage', 'edit', 'remove', 'apply-effect', 'spend-resource', 'activate-target', 'toggle-resource'])
 const tooltip = ref({ visible: false, title: '', desc: '', x: 0, top: null, bottom: null })
 const suggestionsByCode = computed(() => new Map(props.actionSuggestions.map(item => [String(item.code || ''), item])))
 const RESOURCE_ORB_SIZE = 30
@@ -186,11 +196,20 @@ function applyEffect(action, effect, close) {
 }
 
 function canSpendResource(action) {
-  return !!action.resource && Number(action.resource_cost) > 0
+  return !action.target_kind && !!action.resource && Number(action.resource_cost) > 0
+}
+
+function canActivateTarget(action) {
+  return !!action.target_kind && !!action.status_effect_code
+}
+
+function targetActivationDisabled(action) {
+  const cost = Math.max(0, Number(action.resource_cost) || 0)
+  return cost > 0 && (!action.resource || Number(action.resource.value) < cost)
 }
 
 function canOpenActionMenu(action) {
-  return props.manage && (!action.readonly || canSpendResource(action) || !!action.menu_effects?.length)
+  return props.manage && (!action.readonly || canSpendResource(action) || canActivateTarget(action) || !!action.menu_effects?.length)
 }
 
 function resourceTotal(action) {
@@ -204,6 +223,11 @@ function resourceValue(action) {
 function spendResource(action, close) {
   close()
   emit('spend-resource', action)
+}
+
+function activateTarget(action, close) {
+  close()
+  emit('activate-target', action)
 }
 
 function showActionTooltip(event, item) {

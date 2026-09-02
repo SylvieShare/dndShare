@@ -92,6 +92,26 @@ describe('character feature actions', () => {
     })
   })
 
+  it('publishes a targeted status action for a weapon menu', () => {
+    const items = new Map([['21', {
+      id: 21,
+      name: 'Священное оружие',
+      data: { feature_actions: [{
+        title: 'Священное оружие',
+        target_kind: 'weapon',
+        status_effect_code: 'sacred_weapon',
+        target_parameter: 'weapon_uid',
+      }] },
+    }]])
+    const values = { lvl: { level: 3 }, abilities_class: [{ id: 21, uid: 'sacred-weapon' }] }
+
+    expect(collectCharacterFeatureActions(values, items)[0]).toMatchObject({
+      target_kind: 'weapon',
+      status_effect_code: 'sacred_weapon',
+      target_parameter: 'weapon_uid',
+    })
+  })
+
   it('uses the persisted per-sheet order and can include empty action groups', () => {
     const values = {
       actions: [

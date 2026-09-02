@@ -95,4 +95,29 @@ describe('class-derived effects', () => {
     expect(derivedActivityBlocks(effects, 'movement')).toEqual([])
     expect(derivedRollEffects(effects, { kind: 'ability_check', abilitySuggestId: 2 })).toEqual([])
   })
+
+  it('applies a status bonus only to its target and respects the minimum', () => {
+    const statusItems = new Map([['101', {
+      id: 101,
+      name: 'Священное оружие',
+      data: { derived_effects: [{
+        kind: 'weapon_attack_bonus',
+        ability_modifier: 6,
+        minimum: 1,
+        target_parameter: 'weapon_uid',
+      }] },
+    }]])
+    const active = {
+      CHA: { value: 8 },
+      states: [{ uid: 'sacred', effect_id: 101, params: { weapon_uid: 'weapon-1' } }],
+    }
+    const effects = collectCharacterDerivedEffects(active, statusItems)
+
+    expect(derivedNumericBonus(effects, 'weapon_attack_bonus', active, { targetId: 'weapon-1' }).total).toBe(1)
+    expect(derivedNumericBonus(effects, 'weapon_attack_bonus', active, { targetId: 'weapon-2' }).total).toBe(0)
+    expect(derivedNumericBonus(effects, 'weapon_attack_bonus', {
+      ...active,
+      CHA: { value: 18 },
+    }, { targetId: 'weapon-1' }).total).toBe(4)
+  })
 })

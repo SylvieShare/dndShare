@@ -21,6 +21,9 @@
       { "name": "Ключ общего ресурса", "key": "resource_pool_key", "type": "text" },
       { "name": "Ключ отдельного ресурса", "key": "resource_key", "type": "text" },
       { "name": "Расход ресурса", "key": "resource_cost", "type": "int", "default": 1 },
+      { "name": "Вид цели", "key": "target_kind", "type": "select", "options": [{ "value": "weapon", "label": "Оружие" }] },
+      { "name": "Код накладываемого эффекта", "key": "status_effect_code", "type": "text" },
+      { "name": "Параметр цели эффекта", "key": "target_parameter", "type": "text" },
       { "name": "Пункты меню", "key": "menu_effects", "type": "object_array", "fields": [{ "name": "Ключ", "key": "key", "type": "text" }, { "name": "Название", "key": "title", "type": "text" }, { "name": "Действие", "key": "kind", "type": "text" }, { "name": "Поле персонажа", "key": "value_id", "type": "text" }, { "name": "Ключ счётчика", "key": "counter_key", "type": "text" }, { "name": "Изменение", "key": "delta", "type": "int" }, { "name": "Минимум", "key": "min", "type": "int" }, { "name": "Максимум", "key": "max", "type": "int" }, { "name": "Тон", "key": "tone", "type": "text" }] },
       { "name": "Порядок", "key": "priority", "type": "int" },
       { "name": "С уровня", "key": "level", "type": "int", "default": 1 }

@@ -29,6 +29,10 @@ function choiceMatches(rule, entry) {
 }
 
 function targetMatches(rule, entry, context) {
+  const targetIds = asArray(rule?.target_ids)
+  if (targetIds.length) {
+    return context.targetId != null && targetIds.some(value => String(value) === String(context.targetId))
+  }
   if (!rule?.target_from_choice) return true
   const target = context.skillId ?? context.abilitySuggestId ?? context.targetId
   const prefix = rule.choice_value_prefix ? `${rule.choice_value_prefix}:` : ''
@@ -130,6 +134,7 @@ export function derivedNumericBonus(effects, kind, values, context = {}) {
       const mastery = stored?.auto === false ? number(stored.v) : proficiencyBonus(values?.lvl?.level)
       value += Math.floor((mastery + sumBonuses(stored?.bonuses)) * number(rule.proficiency_multiplier))
     }
+    if (rule.minimum != null) value = Math.max(number(rule.minimum), value)
     return sum + value
   }, 0)
   return { total, sources: active }

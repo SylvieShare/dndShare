@@ -319,7 +319,11 @@ function attackParts(entry, item) {
 }
 const attacks = computed(() => (Array.isArray(values.value.weapon) ? values.value.weapon : []).slice(0, 8).map((entry, index) => {
   const item = itemById(entry.item_id); const statMod = weaponStatMod(entry, item)
-  const sourceBonus = derivedNumericBonus(printDerivedEffects.value, 'weapon_attack_bonus', values.value, { kind: 'attack', weaponKind: item?.data?.is_long_range ? 'ranged' : 'melee' }).total
+  const sourceBonus = derivedNumericBonus(printDerivedEffects.value, 'weapon_attack_bonus', values.value, {
+    kind: 'attack',
+    weaponKind: item?.data?.is_long_range ? 'ranged' : 'melee',
+    targetId: entry.uid,
+  }).total
   return { key: `${entry.item_id}-${index}`, name: item?.name || `Оружие #${entry.item_id || '—'}`, bonus: statMod + (Number(entry.params?.magic_bonus) || 0) + (entry.proficient ? profBonus.value : 0) + sourceBonus, damage: attackParts(entry, item), properties: weaponProperties(item), description: entry.desc || '' }
 }))
 const attackBlankRows = computed(() => Math.max(0, 5 - attacks.value.length))

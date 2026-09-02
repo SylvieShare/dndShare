@@ -596,6 +596,14 @@ remains available when the action declares a positive cost. Other consequences
 declared by the action also stay in its row menu. Cunning Action is one source row linking Dash,
 Disengage and Hide rather than three duplicated rows. The block is available in
 the desktop side column and the mobile abilities tab.
+Targeted source actions open the domain-neutral character-entry picker before
+they spend a resource or create an effect. The picker receives already prepared
+rows and can therefore select owned weapons, spells or another character domain
+without knowing its storage format. Sacred Weapon uses it to bind a one-minute
+status to one weapon `uid`; only that weapon gains the Charisma attack bonus
+(minimum +1). Deleting the weapon or moving it to inventory removes the bound
+status. The light and magical-weapon clauses remain descriptive because they do
+not participate in a sheet calculation.
 The same picker is used for feats and abilities and opens above the active morph
 editor, so its filters and item selection are never hidden behind the morph.
 The list shows count as a badge and has no inline increment/decrement controls.

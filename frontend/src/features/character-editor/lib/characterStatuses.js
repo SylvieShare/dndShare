@@ -16,7 +16,7 @@ function numericScalingValue(item, values) {
 }
 
 export function statusEffectId(value) {
-  const raw = value?.effect_id ?? value?.effectId ?? value?.effect?.id ?? value?.effect
+  const raw = value?.effect_id ?? value?.effectId ?? value?.effect?.id ?? value?.effect ?? value?.id
   const id = Number(raw)
   return Number.isFinite(id) ? id : null
 }
@@ -127,6 +127,24 @@ export function removeStatusInstancesByEffect(values, effect) {
   return normalizeStatusInstances(values?.[STATUS_VALUE_ID]).filter(row => row.effect_id !== effectId)
 }
 
+export function removeStatusInstancesByParam(values, key, value) {
+  const parameter = String(key || '').trim()
+  if (!parameter) return normalizeStatusInstances(values?.[STATUS_VALUE_ID])
+  return normalizeStatusInstances(values?.[STATUS_VALUE_ID]).filter(row => (
+    String(row.params?.[parameter] ?? '') !== String(value ?? '')
+  ))
+}
+
+export function statusInstanceActiveByParam(values, effect, key, value) {
+  const effectId = statusEffectId(effect)
+  const parameter = String(key || '').trim()
+  if (effectId == null || !parameter) return false
+  return normalizeStatusInstances(values?.[STATUS_VALUE_ID]).some(row => (
+    row.effect_id === effectId
+    && String(row.params?.[parameter] ?? '') === String(value ?? '')
+  ))
+}
+
 export function removeStatusesBySource(values, source = {}) {
   const keys = ['kind', 'item_id', 'value_id', 'entry_key']
   return normalizeStatusInstances(values?.[STATUS_VALUE_ID]).filter(row => (
@@ -185,9 +203,11 @@ export function collectStatusDerivedEffects(values, itemsById) {
     asArray(status.item.data?.derived_effects).flatMap((rule, index) => {
       if (!rule?.kind) return []
       const parameter = String(rule.value_parameter || '').trim()
+      const targetParameter = String(rule.target_parameter || '').trim()
       return [{
         ...rule,
         ...(parameter ? { value: Number(status.params?.[parameter]) || 0 } : {}),
+        ...(targetParameter ? { target_ids: [status.params?.[targetParameter]].filter(value => value != null && value !== '') } : {}),
         key: `status:${status.uid}:derived:${index}`,
         source_label: status.title,
         source_entry: {},

@@ -61,6 +61,16 @@ describe('character action block', () => {
     expect(blockSource).toContain('characterResources?.setAvailable?.(action.resource.key, remaining)')
   })
 
+  it('opens the generic character-entry picker before applying a targeted action', () => {
+    expect(viewSource).toContain('v-if="canActivateTarget(action)"')
+    expect(viewSource).toContain("emit('activate-target', action)")
+    expect(blockSource).toContain('<CharacterEntryPickerModal')
+    expect(blockSource).toContain('subtitle="Выберите оружие"')
+    expect(blockSource).toContain('@select="activateTargetAction"')
+    expect(blockSource).toContain('[parameter]: target.uid')
+    expect(blockSource).toContain('characterStatuses.add(effect')
+  })
+
   it('renders linked resources as colored interactive spheres with rest rules', () => {
     expect(viewSource).not.toContain('<span v-if="action.resource" class="dav-resource"')
     expect(viewSource).toContain('v-if="resourceTotal(action) === 1"')

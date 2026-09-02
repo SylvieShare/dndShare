@@ -1,5 +1,7 @@
+import { makeUid } from './itemEntry'
+
 export function defaultEntry() {
-  return { item_id: null, params: { magic_bonus: 0 }, stat_suggest_id: null, proficient: false, add_attacks: [], desc: '' }
+  return { uid: makeUid('weapon'), item_id: null, params: { magic_bonus: 0 }, stat_suggest_id: null, proficient: false, add_attacks: [], desc: '' }
 }
 
 export function normalizeWeaponParams(params) {
@@ -17,6 +19,7 @@ export function normalizeAddAttacks(attacks) {
 
 export function cleanEntry(entry) {
   return {
+    uid: String(entry.uid || makeUid('weapon')),
     item_id: entry.item_id,
     params: normalizeWeaponParams(entry.params),
     stat_suggest_id: entry.stat_suggest_id ?? null,

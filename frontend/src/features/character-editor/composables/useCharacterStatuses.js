@@ -6,10 +6,12 @@ import {
   linkedStatusActive,
   normalizeStatusInstances,
   removeStatusInstancesByEffect,
+  removeStatusInstancesByParam,
   removeStatusInstance,
   removeStatusesBySource,
   setStatusInstanceLevel,
   statusEffectLinks,
+  statusInstanceActiveByParam,
   statusItemIds,
   toggleLinkedStatus,
 } from '@/features/character-editor/lib/characterStatuses'
@@ -63,12 +65,15 @@ export function useCharacterStatuses(values, characterResources) {
     links,
     normalized() { return normalizeStatusInstances(values.value?.states) },
     addManual(effect) { return addStatusInstance(values.value, effect, { source: { kind: 'manual' } }) },
+    add(effect, options) { return addStatusInstance(values.value, effect, options) },
     remove(uid) { return removeStatusInstance(values.value, uid) },
     setLevel(uid, level) { return setStatusInstanceLevel(values.value, uid, level) },
     itemByCode(code) {
       return [...itemsById.value.values()].find(item => item?.data?.code === code) || null
     },
     removeEffect(effect) { return removeStatusInstancesByEffect(values.value, effect) },
+    removeByParam(key, value) { return removeStatusInstancesByParam(values.value, key, value) },
+    activeByParam(effect, key, value) { return statusInstanceActiveByParam(values.value, effect, key, value) },
     removeBySource(source) { return removeStatusesBySource(values.value, source) },
     linkedActive(item, link, source) { return linkedStatusActive(values.value, item, link, source) },
     toggleLinked(effect, item, link, source) { return toggleLinkedStatus(values.value, effect, item, link, source) },
