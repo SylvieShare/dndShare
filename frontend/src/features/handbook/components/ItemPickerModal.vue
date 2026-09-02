@@ -8,7 +8,7 @@
     :z-index="zIndex"
     @close="$emit('close')"
   >
-    <div class="picker-modal">
+    <div class="picker-modal" :class="{ 'picker-modal--detail': !!selectedItem }">
 
         <div v-if="allTypes.length > 1" class="picker-tabs">
           <button
@@ -24,7 +24,7 @@
           </button>
         </div>
 
-        <div class="picker-body">
+        <div class="picker-body" :class="{ 'picker-body--detail': !!selectedItem }">
           <HandbookItemList
             :type="itemType"
             :selected-item="selectedItem"
@@ -45,19 +45,31 @@
             :popover-z-index="zIndex + 10"
             show-controls
             class="picker-list"
-            @select="selectedItem = $event"
+            @select="selectItem"
             @load-more="loadMore"
             @update:group-by="groupBy = $event"
             @update:search="searchQ = $event"
             @update:filters="updateFilters"
             @update:content-source-ids="contentSourceIds = $event"
           />
-          <HandbookItemDetail
-            :item="selectedItem"
-            :type="itemType"
-            :can-edit="false"
-            class="picker-detail"
-          />
+          <div class="picker-detail-shell">
+            <div class="picker-detail-nav">
+              <button type="button" class="picker-detail-back" @click="selectedItem = null">
+                <ArrowLeft :size="16" aria-hidden="true" />
+                К списку
+              </button>
+            </div>
+            <HandbookItemDetail
+              :item="selectedItem"
+              :type="itemType"
+              :can-edit="false"
+              class="picker-detail"
+              @touchstart="swipeBack.onTouchStart"
+              @touchmove="swipeBack.onTouchMove"
+              @touchend="swipeBack.onTouchEnd"
+              @touchcancel="swipeBack.onTouchCancel"
+            />
+          </div>
         </div>
 
         <div class="picker-footer">
@@ -112,6 +124,7 @@
 
 <script setup>
 import { computed, inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { ArrowLeft } from '@lucide/vue'
 import { fetchGet } from '@/shared/api/http'
 import { contentScopeQuery, contentSourcesApi, normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'
 import HandbookItemDetail from '@/features/handbook/components/HandbookItemDetail'
@@ -119,6 +132,7 @@ import HandbookItemList from '@/features/handbook/components/HandbookItemList'
 import ItemEditModal from '@/features/character-editor/components/ItemEditModal'
 import { AppModalFrame } from '@sylvieshare/share-ui'
 import { collectSuggestIds, getSuggestId, walkFieldsWithPath } from '@/features/handbook/objects/lib/schemaFields'
+import { useHandbookSwipeBack } from '@/features/handbook/composables/useHandbookSwipeBack'
 import { useItemTypesStore } from '@/stores/itemTypes'
 import { useSuggestStore } from '@/stores/suggest'
 
@@ -173,6 +187,9 @@ const filters = ref({ ...normalizedFixedFilters.value })
 const availableContentSources = ref([])
 const contentSourceIds = ref([])
 const createOpen = ref(false)
+const swipeBack = useHandbookSwipeBack(() => { selectedItem.value = null }, {
+  enabled: () => selectedItem.value != null,
+})
 let offset = 0
 let reqSeq = 0
 let searchTimer = null
@@ -255,6 +272,10 @@ function setActiveType(id) {
 
 function updateFilters(next) {
   filters.value = { ...(next || {}), ...normalizedFixedFilters.value }
+}
+
+function selectItem(item) {
+  selectedItem.value = item
 }
 
 function filtersQuery() {

@@ -92,6 +92,10 @@ entries and selected choices.
   status, named-NPC status and CR; the finite CR list is stored in schema
   metadata so the filter control is available before any dictionary request.
   Spell filters include the base class items referenced by `classes[].id`;
+- on screens up to `760px`, the item picker uses a mobile list-to-detail flow:
+  selecting a row replaces the list with the full detail, while an explicit
+  `К списку` action or a right swipe returns to the results. Type tabs are
+  hidden in detail view, and the quantity/confirmation footer remains fixed;
 - details open through the handbook `ItemViewModal`/modal stack; `ItemViewModal`
   uses the lower-level `AppModal` because the shared item header is its only
   header, and forwards an optional action slot into a fixed footer, so

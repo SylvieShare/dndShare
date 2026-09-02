@@ -27,4 +27,13 @@ describe('handbook item picker controls', () => {
     expect(source).toContain(':locked-filters="normalizedFixedFilters"')
     expect(source).toContain('...normalizedFixedFilters.value')
   })
+
+  it('uses a mobile list-to-detail flow with explicit and swipe back actions', () => {
+    expect(source).toContain("'picker-body--detail': !!selectedItem")
+    expect(source).toContain('class="picker-detail-shell"')
+    expect(source).toContain('class="picker-detail-back"')
+    expect(source).toContain('К списку')
+    expect(source).toContain('useHandbookSwipeBack')
+    expect(source).toContain('@touchstart="swipeBack.onTouchStart"')
+  })
 })

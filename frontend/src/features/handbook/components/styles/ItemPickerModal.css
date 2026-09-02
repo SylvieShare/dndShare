@@ -85,7 +85,15 @@
 }
 
 .picker-list { flex-shrink: 0; }
+.picker-detail-shell {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
 .picker-detail { flex: 1; min-width: 0; }
+.picker-detail-nav { display: none; }
 
 .picker-footer {
   display: flex;
@@ -206,34 +214,17 @@
 .picker-qty-input::-webkit-outer-spin-button,
 .picker-qty-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
-@media (max-width: 640px) {
-  .picker-footer {
-    flex-wrap: wrap;
-    gap: 8px;
-    padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
-  }
+@media (max-width: 760px) {
+  .picker-body--detail .picker-list { display: none; }
 
-  .picker-footer-name,
-  .picker-footer-hint,
-  .picker-footer-ineligible {
-    flex-basis: 100%;
-  }
+  .picker-detail-shell { display: none; }
+  .picker-body--detail .picker-detail-shell { display: flex; }
 
-  .picker-create-btn {
-    display: none;
-  }
-
-  .picker-add-btn {
-    margin-left: auto;
-  }
-}
-
-@media (max-width: 520px) {
-  /* HandbookItemList normally lets the page own scrolling at this width.
-     The picker has a fixed, overflow-hidden body, so it must keep its own
-     scroll container for native touch scrolling and sheet gesture arbitration. */
+  /* HandbookItemList normally lets the page own scrolling on narrow screens.
+     The picker has a fixed body, so the list keeps its own touch scroller. */
   .picker-list {
     flex: 1 1 auto;
+    width: 100%;
     min-height: 0;
     max-height: none;
     overflow: hidden;
@@ -246,5 +237,62 @@
     overscroll-behavior-y: contain;
     touch-action: pan-y;
     -webkit-overflow-scrolling: touch;
+  }
+
+  .picker-modal--detail .picker-tabs { display: none; }
+
+  .picker-detail-nav {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 12px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+  }
+
+  .picker-detail-back {
+    min-height: 36px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 8px;
+    border: 0;
+    border-radius: 7px;
+    background: transparent;
+    color: var(--text-2);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 650;
+    cursor: pointer;
+  }
+  .picker-detail-back:hover { background: var(--surface-active); color: var(--text-1); }
+
+  .picker-detail {
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+@media (max-width: 640px) {
+  .picker-footer {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
+  }
+
+  .picker-footer-hint,
+  .picker-footer-ineligible {
+    flex-basis: 100%;
+  }
+
+  .picker-footer-name { display: none; }
+
+  .picker-create-btn {
+    display: none;
+  }
+
+  .picker-add-btn {
+    margin-left: auto;
   }
 }
