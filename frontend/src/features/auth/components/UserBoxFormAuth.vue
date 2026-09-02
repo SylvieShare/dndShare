@@ -8,7 +8,7 @@
         type="button"
         :title="expanded ? undefined : 'Войти'"
         aria-label="Войти"
-        @click="mobileOpen = true"
+        @click="openLogin"
       >
         <LogIn v-if="!expanded" :size="18" aria-hidden="true" />
         <span v-else>Войти</span>
@@ -17,7 +17,8 @@
     </div>
 
     <!-- Модальное окно входа -->
-    <AppModalFrame v-if="mobileOpen" title="Вход" @close="mobileOpen = false">
+    <AppModalFrame v-if="mobileOpen" title="Вход" @close="closeLogin">
+      <p v-if="authHint" class="auth-hint">{{ authHint }}</p>
       <div class="auth-form" :class="{ shaking: showErrorShake }">
         <FormField label="Логин" vertical>
           <FormTextInput v-model:value="login" placeholder="Введите логин" autocomplete="username" :disabled="processAuth" />
@@ -78,9 +79,23 @@ const showError = ref(false)
 const showErrorShake = ref(false)
 const regOpen = ref(false)
 const mobileOpen = ref(false)
+const authHint = ref('')
 const reg = ref({ login: '', password: '', password2: '', busy: false, error: '' })
 let showErrorTimeout = null
-function openRequestedAuth() { mobileOpen.value = true }
+function openLogin() {
+  authHint.value = ''
+  mobileOpen.value = true
+}
+function closeLogin() {
+  mobileOpen.value = false
+  authHint.value = ''
+}
+function openRequestedAuth(event) {
+  authHint.value = event.detail?.reason === 'create-character'
+    ? 'Для создания персонажа войдите или зарегистрируйтесь.'
+    : ''
+  mobileOpen.value = true
+}
 onMounted(() => window.addEventListener('dndshare:request-auth', openRequestedAuth))
 onBeforeUnmount(() => window.removeEventListener('dndshare:request-auth', openRequestedAuth))
 
@@ -196,6 +211,17 @@ async function submitReg() {
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+.auth-hint {
+  margin: 0 0 14px;
+  padding: 9px 11px;
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--border));
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--accent) 9%, var(--surface));
+  color: var(--text-2);
+  font-size: 12px;
+  line-height: 1.45;
 }
 
 .reg-error {

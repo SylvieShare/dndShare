@@ -24,4 +24,6 @@ limited per client IP.
 The global error-report launcher and inbox are mounted only for authenticated
 users. The public character wizard dispatches `dndshare:request-auth` only from
 its final create action; `UserBoxFormAuth` opens the regular login modal in
-response.
+response and explains that login or registration is required to create the
+character. Only the chrome matching the current 640px breakpoint is mounted, so
+the mobile header and desktop sidebar cannot open duplicate auth modals.
