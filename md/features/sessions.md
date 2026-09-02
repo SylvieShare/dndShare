@@ -642,9 +642,11 @@ central card. With the right tool rail removed, the combat workspace uses the
 full width between the participant safe area and the viewport edge. The header uses one enlarged,
 labelled primary action, “Начать бой” or “Закончить бой”, while turn navigation
 remains compact and icon-only. The header has one stable composition at every
-width: its left side shows the scenario image and name, falling back to the
-chapter when no scenario is selected; it never hides the primary-action text or
-group labels. Secondary actions are grouped as `Броски` and `Выбранные`.
+width: its scenario image fills the header's complete left column and falls back
+to the chapter image when no scenario is selected. The right side has two
+levels: context and combat flow above, grouped actions below. It never hides the
+primary-action text or group labels. Secondary actions are grouped as `Броски`
+and `Выбранные`.
 `Выбранные` contains shared damage, return-to-reserve, graveyard, delete-NPC and
 graveyard-list actions. Shared damage consumes temporary HP first, updates NPC
 encounter state and persists each player character through the character API.
@@ -658,8 +660,13 @@ load/save, players, NPC item cache, HP, initiative, flow, states and dice.
 `useEncounter.js` composes them; row components remain presentation-only.
 
 The encounter workspace has no shared backing surface. Its header and every NPC
-row are separate `BaseTile` surfaces. Combat-scene rows are capped at 880px
-instead of stretching across the whole central workspace. In the chapter canvas the header is fixed
+row are separate `BaseTile` surfaces. During active combat, the workspace uses
+two columns. The left column, capped at 800px, contains the initiative queue and
+NPC reserve. The sticky right column follows the current turn: bestiary NPCs
+show live combat values plus their reference abilities and actions; simplified
+NPCs show the encounter values and description; players show a compact combat
+profile with a link to the full character sheet. Selection does not change this
+preview. In the chapter canvas the header is fixed
 beside the focused chapter while only the rows area scrolls. Row strips use the
 explicitly selected participant color for players or `iconColor` for NPCs; rows
 without an assigned color have no strip in either combat or the NPC reserve.

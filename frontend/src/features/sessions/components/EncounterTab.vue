@@ -10,56 +10,58 @@
   >
 
     <BaseTile class="enc-toolbar">
-      <div class="enc-workspace-heading">
-        <div class="enc-context-icon" :class="{ 'enc-context-icon--image': contextImageUrl }">
-          <img v-if="contextImageUrl" :src="contextImageUrl" alt="" />
-          <Clapperboard v-else-if="scene" :size="22" />
-          <BookOpenText v-else :size="22" />
-        </div>
-        <div class="enc-context-copy">
-          <span>{{ contextKind }}</span>
-          <strong :title="contextTitle">{{ contextTitle }}</strong>
-          <small>{{ encounterSummary }}</small>
-        </div>
+      <div class="enc-context-art" :class="{ 'enc-context-art--image': contextImageUrl }">
+        <img v-if="contextImageUrl" :src="contextImageUrl" alt="" />
+        <Clapperboard v-else-if="scene" :size="36" />
+        <BookOpenText v-else :size="36" />
       </div>
 
-      <div class="enc-toolbar-flow" aria-label="Управление боем">
-        <button
-          type="button"
-          class="enc-icon-btn enc-icon-btn--primary"
-          :class="{ 'enc-icon-btn--end': enc.encounter.active }"
-          :disabled="combatTransitioning || (!enc.encounter.active && startSelectionCount === 0)"
-          :title="enc.encounter.active ? 'Закончить бой' : `Начать бой (${startSelectionCount})`"
-          :aria-label="enc.encounter.active ? 'Закончить бой' : 'Начать бой'"
-          aria-keyshortcuts="Shift+Enter"
-          @click="toggleCombat"
-        >
-          <Square v-if="enc.encounter.active" :size="22" />
-          <Swords v-else :size="23" />
-          <span class="enc-primary-label">{{ enc.encounter.active ? 'Закончить бой' : 'Начать бой' }}</span>
-          <span v-if="!enc.encounter.active && startSelectionCount" class="enc-icon-count">{{ startSelectionCount }}</span>
-          <kbd v-if="showShortcutHints" class="enc-shortcut-hint" aria-hidden="true">{{ shortcutLabels.panel }}+Enter</kbd>
-        </button>
-
-        <template v-if="enc.encounter.active">
-          <div class="enc-round-wrap" title="Текущий раунд">
-            <span class="enc-round-label">Раунд</span>
-            <span class="enc-round-num">{{ enc.encounter.round }}</span>
+      <div class="enc-toolbar-body">
+        <div class="enc-toolbar-top">
+          <div class="enc-context-copy">
+            <span>{{ contextKind }}</span>
+            <strong :title="contextTitle">{{ contextTitle }}</strong>
+            <small>{{ encounterSummary }}</small>
           </div>
-          <div class="enc-turn-group">
-            <button class="enc-icon-btn" :disabled="enc.inCombat.length === 0" title="Предыдущий ход" aria-label="Предыдущий ход" aria-keyshortcuts="ArrowLeft" @click="enc.prevTurn">
-              <ChevronLeft :size="18" />
-              <kbd v-if="showShortcutHints" class="enc-shortcut-hint" aria-hidden="true">←</kbd>
-            </button>
-            <button class="enc-icon-btn enc-icon-btn--next" :disabled="enc.inCombat.length === 0" title="Следующий ход" aria-label="Следующий ход" aria-keyshortcuts="ArrowRight" @click="enc.nextTurn">
-              <ChevronRight :size="18" />
-              <kbd v-if="showShortcutHints" class="enc-shortcut-hint" aria-hidden="true">→</kbd>
-            </button>
-          </div>
-        </template>
-      </div>
 
-      <div class="enc-toolbar-actions">
+          <div class="enc-toolbar-flow" aria-label="Управление боем">
+            <button
+              type="button"
+              class="enc-icon-btn enc-icon-btn--primary"
+              :class="{ 'enc-icon-btn--end': enc.encounter.active }"
+              :disabled="combatTransitioning || (!enc.encounter.active && startSelectionCount === 0)"
+              :title="enc.encounter.active ? 'Закончить бой' : `Начать бой (${startSelectionCount})`"
+              :aria-label="enc.encounter.active ? 'Закончить бой' : 'Начать бой'"
+              aria-keyshortcuts="Shift+Enter"
+              @click="toggleCombat"
+            >
+              <Square v-if="enc.encounter.active" :size="22" />
+              <Swords v-else :size="23" />
+              <span class="enc-primary-label">{{ enc.encounter.active ? 'Закончить бой' : 'Начать бой' }}</span>
+              <span v-if="!enc.encounter.active && startSelectionCount" class="enc-icon-count">{{ startSelectionCount }}</span>
+              <kbd v-if="showShortcutHints" class="enc-shortcut-hint" aria-hidden="true">{{ shortcutLabels.panel }}+Enter</kbd>
+            </button>
+
+            <template v-if="enc.encounter.active">
+              <div class="enc-round-wrap" title="Текущий раунд">
+                <span class="enc-round-label">Раунд</span>
+                <span class="enc-round-num">{{ enc.encounter.round }}</span>
+              </div>
+              <div class="enc-turn-group">
+                <button class="enc-icon-btn" :disabled="enc.inCombat.length === 0" title="Предыдущий ход" aria-label="Предыдущий ход" aria-keyshortcuts="ArrowLeft" @click="enc.prevTurn">
+                  <ChevronLeft :size="18" />
+                  <kbd v-if="showShortcutHints" class="enc-shortcut-hint" aria-hidden="true">←</kbd>
+                </button>
+                <button class="enc-icon-btn enc-icon-btn--next" :disabled="enc.inCombat.length === 0" title="Следующий ход" aria-label="Следующий ход" aria-keyshortcuts="ArrowRight" @click="enc.nextTurn">
+                  <ChevronRight :size="18" />
+                  <kbd v-if="showShortcutHints" class="enc-shortcut-hint" aria-hidden="true">→</kbd>
+                </button>
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <div class="enc-toolbar-actions">
         <div v-if="props.isDm" class="enc-action-group" aria-label="Броски">
           <span class="enc-action-group-label">Броски</span>
           <div class="enc-action-group-controls">
@@ -121,124 +123,140 @@
             <EncounterGraveyardMenu :is-dm="props.isDm" @view-participant="$emit('view-participant', $event)" />
           </div>
         </div>
+        </div>
       </div>
     </BaseTile>
 
     <div class="enc-content">
-    <!-- ── Combat ── -->
-    <Transition name="enc-combat-scene">
-      <div v-if="enc.encounter.active" class="enc-combat-scene">
-        <div class="enc-block enc-block--combat">
-          <div class="enc-section-title-row">
-            <div class="enc-section-title-group">
-              <span class="enc-section-title">
-                <span class="enc-section-dot" />БОЕВАЯ СЦЕНА
-              </span>
-              <button
-                type="button"
-                class="enc-section-icon-btn"
-                :class="{ 'enc-section-icon-btn--active': allSelectedInCombat }"
-                :disabled="combatItems.length === 0"
-                :title="allSelectedInCombat ? 'Снять выбор с существ' : 'Выбрать всех существ'"
-                :aria-label="allSelectedInCombat ? 'Снять выбор с существ' : 'Выбрать всех существ'"
-                aria-keyshortcuts="Shift+A"
-                @click="toggleVisibleSelection(combatItems)"
-              >
-                <ListChecks :size="17" />
-                <kbd v-if="showShortcutHints" class="enc-shortcut-hint" aria-hidden="true">{{ shortcutLabels.panel }}+A</kbd>
-              </button>
+      <div
+        class="enc-combat-layout"
+        :class="{ 'enc-combat-layout--active': enc.encounter.active || combatTransitionPhase === 'ending' }"
+      >
+        <div class="enc-combat-primary">
+          <!-- ── Combat ── -->
+          <Transition name="enc-combat-scene">
+            <div v-if="enc.encounter.active" class="enc-combat-scene">
+              <div class="enc-block enc-block--combat">
+                <div class="enc-section-title-row">
+                  <div class="enc-section-title-group">
+                    <span class="enc-section-title">
+                      <span class="enc-section-dot" />БОЕВАЯ СЦЕНА
+                    </span>
+                    <button
+                      type="button"
+                      class="enc-section-icon-btn"
+                      :class="{ 'enc-section-icon-btn--active': allSelectedInCombat }"
+                      :disabled="combatItems.length === 0"
+                      :title="allSelectedInCombat ? 'Снять выбор с существ' : 'Выбрать всех существ'"
+                      :aria-label="allSelectedInCombat ? 'Снять выбор с существ' : 'Выбрать всех существ'"
+                      aria-keyshortcuts="Shift+A"
+                      @click="toggleVisibleSelection(combatItems)"
+                    >
+                      <ListChecks :size="17" />
+                      <kbd v-if="showShortcutHints" class="enc-shortcut-hint" aria-hidden="true">{{ shortcutLabels.panel }}+A</kbd>
+                    </button>
+                  </div>
+                  <div class="enc-section-actions">
+                    <button
+                      v-if="enc.encounter.active"
+                      type="button"
+                      class="enc-section-icon-btn enc-section-icon-btn--accent"
+                      :disabled="combatMoveCount === 0 || !props.isDm"
+                      title="Добавить выбранных на сцену"
+                      aria-label="Добавить выбранных на сцену"
+                      @click="enc.sendSelectedTo('combat')"
+                    >
+                      <LogIn :size="17" />
+                      <span v-if="combatMoveCount">{{ combatMoveCount }}</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="enc-section">
+                  <div
+                    v-if="combatItems.length === 0"
+                    class="enc-empty"
+                    data-sortable-container="combat"
+                  >
+                    {{ enc.encounter.active
+                        ? 'На боевой сцене пока нет участников'
+                        : 'Выберите игроков и существ, затем начните бой' }}
+                  </div>
+                  <div
+                    v-else
+                    class="enc-rows"
+                    data-sortable-container="combat"
+                  >
+                    <EncounterRow
+                      v-for="(c, idx) in combatItems"
+                      :key="c.uid"
+                      :combatant="c"
+                      section="combat"
+                      :idx="idx"
+                      :order="idx + 1"
+                      :is-current="enc.encounter.active && c.uid === currentTurnUid"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="enc-section-actions">
-              <button
-                v-if="enc.encounter.active"
-                type="button"
-                class="enc-section-icon-btn enc-section-icon-btn--accent"
-                :disabled="combatMoveCount === 0 || !props.isDm"
-                title="Добавить выбранных на сцену"
-                aria-label="Добавить выбранных на сцену"
-                @click="enc.sendSelectedTo('combat')"
-              >
-                <LogIn :size="17" />
-                <span v-if="combatMoveCount">{{ combatMoveCount }}</span>
-              </button>
-            </div>
-          </div>
-          <div class="enc-section">
-            <div
-              v-if="combatItems.length === 0"
-              class="enc-empty"
-              data-sortable-container="combat"
-            >
-              {{ enc.encounter.active
-                  ? 'На боевой сцене пока нет участников'
-                  : 'Выберите игроков и существ, затем начните бой' }}
-            </div>
-            <div
-              v-else
-              class="enc-rows"
-              data-sortable-container="combat"
-            >
-              <EncounterRow
-                v-for="(c, idx) in combatItems"
-                :key="c.uid"
-                :combatant="c"
-                section="combat"
-                :idx="idx"
-                :order="idx + 1"
-                :is-current="enc.encounter.active && c.uid === currentTurnUid"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </Transition>
+          </Transition>
 
-    <!-- ── NPC reserve ── -->
-    <div class="enc-block enc-block--npc" :class="{ 'enc-block--disabled': enc.npcReserveCollapsed }">
-      <div class="enc-section-title-row">
-        <div class="enc-section-title-group">
-          <span class="enc-section-title">
-            <span class="enc-section-dot" />ЗАПАС НПС<span v-if="enc.npcReserveCollapsed" class="enc-section-disabled-hint"> · недоступно для игроков</span>
-          </span>
-          <button
-            type="button"
-            class="enc-section-icon-btn"
-            :class="{ 'enc-section-icon-btn--active': allSelectedInNpcs }"
-            :disabled="npcItems.length === 0"
-            :title="allSelectedInNpcs ? 'Снять выбор' : 'Выбрать весь запас'"
-            :aria-label="allSelectedInNpcs ? 'Снять выбор' : 'Выбрать весь запас'"
-            aria-keyshortcuts="Shift+N"
-            @click="enc.selectAllInGroup('reserve-npc')"
-          >
-            <ListChecks :size="17" />
-            <kbd v-if="showShortcutHints" class="enc-shortcut-hint" aria-hidden="true">{{ shortcutLabels.panel }}+N</kbd>
-          </button>
+          <!-- ── NPC reserve ── -->
+          <div class="enc-block enc-block--npc" :class="{ 'enc-block--disabled': enc.npcReserveCollapsed }">
+            <div class="enc-section-title-row">
+              <div class="enc-section-title-group">
+                <span class="enc-section-title">
+                  <span class="enc-section-dot" />ЗАПАС НПС<span v-if="enc.npcReserveCollapsed" class="enc-section-disabled-hint"> · недоступно для игроков</span>
+                </span>
+                <button
+                  type="button"
+                  class="enc-section-icon-btn"
+                  :class="{ 'enc-section-icon-btn--active': allSelectedInNpcs }"
+                  :disabled="npcItems.length === 0"
+                  :title="allSelectedInNpcs ? 'Снять выбор' : 'Выбрать весь запас'"
+                  :aria-label="allSelectedInNpcs ? 'Снять выбор' : 'Выбрать весь запас'"
+                  aria-keyshortcuts="Shift+N"
+                  @click="enc.selectAllInGroup('reserve-npc')"
+                >
+                  <ListChecks :size="17" />
+                  <kbd v-if="showShortcutHints" class="enc-shortcut-hint" aria-hidden="true">{{ shortcutLabels.panel }}+N</kbd>
+                </button>
+              </div>
+            </div>
+            <div class="enc-section">
+              <div
+                v-if="npcItems.length"
+                class="enc-reserve-list"
+                data-sortable-container="reserve-npc"
+              >
+                <EncounterRow
+                  v-for="c in npcItems"
+                  :key="c.uid"
+                  :combatant="c"
+                  section="reserve-npc"
+                />
+              </div>
+              <div
+                v-else-if="!enc.npcReserveCollapsed"
+                class="enc-reserve-empty"
+                data-sortable-container="reserve-npc"
+              >Запас пуст</div>
+              <div class="enc-add-row">
+                <button class="enc-add-dashed" @click="enc.showNpcPicker = true"><BookOpen :size="17" />Добавить из бестиария</button>
+                <button class="enc-add-dashed enc-add-dashed--simple" @click="enc.showSimpleForm = true"><Plus :size="17" />Создать упрощённо</button>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="enc-section">
-        <div
-          v-if="npcItems.length"
-          class="enc-reserve-list"
-          data-sortable-container="reserve-npc"
-        >
-          <EncounterRow
-            v-for="c in npcItems"
-            :key="c.uid"
-            :combatant="c"
-            section="reserve-npc"
+
+        <Transition name="enc-turn-preview">
+          <EncounterTurnPreview
+            v-if="enc.encounter.active"
+            :combatant="currentTurnCombatant"
+            @view-participant="$emit('view-participant', $event)"
           />
-        </div>
-        <div
-          v-else-if="!enc.npcReserveCollapsed"
-          class="enc-reserve-empty"
-          data-sortable-container="reserve-npc"
-        >Запас пуст</div>
-        <div class="enc-add-row">
-          <button class="enc-add-dashed" @click="enc.showNpcPicker = true"><BookOpen :size="17" />Добавить из бестиария</button>
-          <button class="enc-add-dashed enc-add-dashed--simple" @click="enc.showSimpleForm = true"><Plus :size="17" />Создать упрощённо</button>
-        </div>
+        </Transition>
       </div>
-    </div>
     </div>
 
     <ItemPickerModal
@@ -342,6 +360,7 @@ import EncounterBulkDamageMenu from '@/features/sessions/components/EncounterBul
 import EncounterChallengeMenu from '@/features/sessions/components/EncounterChallengeMenu.vue'
 import EncounterGraveyardMenu from '@/features/sessions/components/EncounterGraveyardMenu.vue'
 import EncounterRow from '@/features/sessions/components/EncounterRow'
+import EncounterTurnPreview from '@/features/sessions/components/EncounterTurnPreview.vue'
 import { useEncounterCombatTransition } from '@/features/sessions/composables/useEncounterCombatTransition'
 import { currentChapterLabel } from '@/features/sessions/lib/chapterGraph'
 import { sessionImageUrl } from '@/features/sessions/lib/sessionImages'
@@ -383,6 +402,7 @@ const combatItems = computed(() => enc.sortable.displayItems('combat'))
 const npcItems = computed(() => enc.sortable.displayItems('reserve-npc'))
 
 const currentTurnUid = computed(() => enc.currentTurnUid)
+const currentTurnCombatant = computed(() => enc.inCombat.find(combatant => combatant.uid === currentTurnUid.value) ?? null)
 
 const startSelectionCount = computed(() => enc.selectedRerollCount)
 const combatMoveCount = computed(() => enc.selectedToMoveTo('combat'))

@@ -29,6 +29,7 @@ const encounterTransitionSource = readFileSync(fileURLToPath(new URL('../composa
 const encounterChallengeSource = readFileSync(fileURLToPath(new URL('../composables/useEncounterChallenge.js', import.meta.url)), 'utf8')
 const encounterChallengeMenuSource = readFileSync(fileURLToPath(new URL('../components/EncounterChallengeMenu.vue', import.meta.url)), 'utf8')
 const encounterBulkDamageSource = readFileSync(fileURLToPath(new URL('../components/EncounterBulkDamageMenu.vue', import.meta.url)), 'utf8')
+const encounterTurnPreviewSource = readFileSync(fileURLToPath(new URL('../components/EncounterTurnPreview.vue', import.meta.url)), 'utf8')
 const encounterChallengeResultSource = readFileSync(fileURLToPath(new URL('../components/EncounterChallengeResult.vue', import.meta.url)), 'utf8')
 const encounterOrderSource = readFileSync(fileURLToPath(new URL('../components/EncounterOrderMarker.vue', import.meta.url)), 'utf8')
 const sessionGraphSource = readFileSync(fileURLToPath(new URL('../components/SessionGraphCanvas.vue', import.meta.url)), 'utf8')
@@ -350,7 +351,7 @@ describe('ViewSession participant rail', () => {
   })
 
   it('keeps players in the combat scene and numbers every initiative row', () => {
-    expect(encounterSource).toContain('<div v-if="enc.encounter.active" class="enc-combat-scene">')
+    expect(encounterSource).toContain('v-if="enc.encounter.active" class="enc-combat-scene"')
     expect(encounterSource).toContain('<div class="enc-block enc-block--combat">')
     expect(encounterSource).toContain('class="enc-section-title-group"')
     expect(encounterSource).not.toContain('БОЙ ИДЁТ')
@@ -396,7 +397,7 @@ describe('ViewSession participant rail', () => {
     expect(encounterRowSource).toContain('@reroll="enc.rerollChallenge(combatant, $event)"')
     expect(encounterRowSource).toContain('height: 92px;')
     expect(encounterRowSource).toContain('.enc-row-shell[data-encounter-section="combat"]')
-    expect(encounterRowSource).toContain('max-width: 880px;')
+    expect(encounterRowSource).toContain('max-width: 100%;')
     expect(encounterRowSource).toContain('flex: 0 0 248px;')
     expect(encounterRowSource).toContain('max-width: 300px;')
     expect(encounterChallengeResultSource).toContain('<SystemDie')
@@ -442,8 +443,26 @@ describe('ViewSession participant rail', () => {
     expect(encounterSource).toContain('currentChapterLabel(props.chapter)')
     expect(encounterSource).toContain('<img v-if="contextImageUrl"')
     expect(encounterSource).toContain('<Clapperboard v-else-if="scene"')
-    expect(encounterStylesSource).toContain('.enc-context-icon')
+    expect(encounterSource).toContain('class="enc-context-art"')
+    expect(encounterSource).toContain('class="enc-toolbar-body"')
+    expect(encounterStylesSource).toContain('.enc-context-art')
+    expect(encounterStylesSource).toContain('.enc-context-art img { width: 100%; height: 100%; object-fit: cover; }')
+    expect(encounterStylesSource).toContain('grid-template-columns: 168px minmax(0, 1fr);')
     expect(encounterStylesSource).toContain('.enc-context-copy')
+  })
+
+  it('uses an 800px combat column and a current-turn reference panel', () => {
+    expect(encounterSource).toContain("'enc-combat-layout--active': enc.encounter.active || combatTransitionPhase === 'ending'")
+    expect(encounterSource).toContain(':combatant="currentTurnCombatant"')
+    expect(encounterSource).toContain('enc.inCombat.find(combatant => combatant.uid === currentTurnUid.value)')
+    expect(encounterStylesSource).toContain('grid-template-columns: minmax(0, 800px) minmax(280px, 1fr);')
+    expect(encounterStylesSource).toContain('.enc-combat-primary { min-width: 0; max-width: 800px; }')
+    expect(encounterTurnPreviewSource).toContain('Сейчас ходит')
+    expect(encounterTurnPreviewSource).toContain('aria-live="polite"')
+    expect(encounterTurnPreviewSource).toContain('<EnemyDetailContent')
+    expect(encounterTurnPreviewSource).toContain('v-else-if="isPlayer"')
+    expect(encounterTurnPreviewSource).toContain('Открыть лист персонажа')
+    expect(encounterTurnPreviewSource).toContain('Упрощённое существо')
   })
 
   it('opens row actions from the tile and keeps concrete controls independent', () => {

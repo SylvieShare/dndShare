@@ -386,6 +386,7 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
     ICON_COLOR_SWATCHES,
     ENCOUNTER_LETTERS,
     // players
+    findParticipant,
     playerDisplayName,
     getPlayerAva,
     participantColor,

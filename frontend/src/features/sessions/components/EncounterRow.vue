@@ -277,7 +277,7 @@ function commitNoteEdit() {
 
 .enc-row-shell[data-encounter-section="combat"] {
   width: 100%;
-  max-width: 880px;
+  max-width: 100%;
 }
 
 .enc-row-shell--placeholder :deep(.enc-row-order) { opacity: 0.25; }
