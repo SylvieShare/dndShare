@@ -1,6 +1,6 @@
 <template>
-  <DesktopSidebar v-if="!isStandaloneRoute" />
-  <AppHeader v-if="!isStandaloneRoute"/>
+  <DesktopSidebar v-if="!isStandaloneRoute && !usesMobileChrome" />
+  <AppHeader v-if="!isStandaloneRoute && usesMobileChrome"/>
   <!-- The character LIST is kept alive so returning from a character page restores
        its scroll position and avoids a refetch flash. -->
   <div
@@ -46,6 +46,7 @@ import { useGameContextStore } from '@/stores/gameContext'
 
 const route = useRoute()
 const isMobile = useIsMobile()
+const usesMobileChrome = useIsMobile(640)
 const isPrintRoute = computed(() => !!route.meta?.printView)
 const isStandaloneRoute = computed(() => isPrintRoute.value || !!route.meta?.standaloneView)
 const accountStore = useAccountStore()

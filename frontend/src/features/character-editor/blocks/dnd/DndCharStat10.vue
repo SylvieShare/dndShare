@@ -261,6 +261,7 @@ const skillsList = computed(() => {
 const skillsView = computed(() => skillsList.value.map(s => ({
   ...s,
   bonus: skillBonus(s.id),
+  bonusDetails: skillBonusDetails(s.id),
   rollMode: skillRollMode(s.id),
   rollModeSource: skillModeSource(s.id),
   rollModeCancelled: skillResolved(s.id).cancelled,
@@ -308,10 +309,38 @@ function skillBonus(id) {
   const skill = skillsMap.value[String(id)] || { up: 0 }
   const extra = sumBonuses(skill.bonuses)
   const rank = skillProficiencyRank(id)
-  const derived = charCtx.characterDerivedEffects?.bonus?.('skill_bonus', {
+  return mod.value + rank * profBonus.value + extra + derivedSkillBonus(id, rank).total
+}
+
+function derivedSkillBonus(id, rank = skillProficiencyRank(id)) {
+  const result = charCtx.characterDerivedEffects?.bonus?.('skill_bonus', {
     kind: 'skill_check', abilitySuggestId: titleSuggestId.value, skillId: id, proficient: rank > 0,
-  })?.total || 0
-  return mod.value + rank * profBonus.value + extra + derived
+  })
+  return {
+    total: Number(result?.total) || 0,
+    sources: Array.isArray(result?.sources) ? result.sources : [],
+  }
+}
+
+function skillBonusDetails(id) {
+  const skill = skillsMap.value[String(id)] || { up: 0, bonuses: [] }
+  const rank = skillProficiencyRank(id)
+  const manualBonuses = Array.isArray(skill.bonuses) ? skill.bonuses : []
+  const rows = [{ key: 'ability', label: `Модификатор: ${displayTitle.value}`, value: mod.value }]
+  if (rank > 0) {
+    rows.push({ key: 'proficiency', label: rank >= 2 ? 'Мастерство' : 'Владение', value: rank * profBonus.value })
+  }
+  manualBonuses.forEach((bonus, index) => {
+    const value = bonus && typeof bonus === 'object' ? bonus.value : bonus
+    const label = bonus && typeof bonus === 'object' ? (bonus.name || bonus.title) : ''
+    rows.push({ key: `manual-${index}`, label: label || 'Дополнительный бонус', value: Number(value) || 0 })
+  })
+  const derived = derivedSkillBonus(id, rank)
+  if (derived.total || derived.sources.length) {
+    const sources = [...new Set(derived.sources.map(rule => rule.source_label).filter(Boolean))]
+    rows.push({ key: 'derived', label: sources.length ? `Источники: ${sources.join(' · ')}` : 'Автоматический бонус', value: derived.total })
+  }
+  return rows
 }
 
 function derivedSkillProficiency(id) {

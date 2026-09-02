@@ -15,7 +15,7 @@
           :class="{ 'save-chip-active': saveUp }"
           @click.stop="$emit('roll-save')"
         >
-          <span class="save-shield-icon"></span>
+          <span class="save-label">спас</span>
           <span class="save-chip-val">{{ signed(save) }}</span>
           <RollModeBadge :mode="saveMode" :source="saveModeSource" :cancelled="saveModeCancelled" />
         </div>
@@ -45,12 +45,12 @@
         v-for="skill in skills"
         :key="skill.id"
         class="skill-item"
+        @mouseenter="showTooltip($event, skill)"
+        @mouseleave="hideTooltip"
       >
         <span
           class="skill-name"
           :class="{ 'skill-name-prof': skill.up > 0 }"
-          @mouseenter="showTooltip($event, skill)"
-          @mouseleave="hideTooltip"
         >{{ skill.title }}</span>
         <span class="skill-line"></span>
         <RollModeBadge :mode="skill.rollMode" :source="skill.rollModeSource" :cancelled="skill.rollModeCancelled" />
@@ -71,12 +71,25 @@
       :bottom="tooltip.bottom"
       :max-desc="tooltipMaxDesc"
       :width="tooltipWidth"
-    />
+    >
+      <template #details>
+        <div class="skill-tooltip-breakdown">
+          <div v-for="row in tooltip.bonuses" :key="row.key" class="skill-tooltip-row">
+            <span>{{ row.label }}</span>
+            <strong>{{ signed(row.value) }}</strong>
+          </div>
+          <div class="skill-tooltip-row skill-tooltip-total">
+            <span>Итого</span>
+            <strong>{{ signed(tooltip.total) }}</strong>
+          </div>
+        </div>
+      </template>
+    </ItemTooltip>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { onBeforeUnmount, ref } from 'vue'
 import { signedOrZero as signed } from '@/shared/lib/dnd'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip'
 import SheetBlockTitle from '@/shared/ui/SheetBlockTitle'
@@ -109,22 +122,34 @@ const props = defineProps({
 })
 defineEmits(['edit', 'roll-stat', 'roll-save', 'roll-skill'])
 
-const tooltip = ref({ visible: false, title: '', desc: '', x: 0, top: null, bottom: null })
+const TOOLTIP_DELAY_MS = 450
+const tooltip = ref({ visible: false, title: '', desc: '', bonuses: [], total: 0, x: 0, top: null, bottom: null })
+let tooltipTimer = null
 
 function showTooltip(event, skill) {
-  if (!skill.desc) return
+  hideTooltip()
   const rect = event.currentTarget.getBoundingClientRect()
   const placeAbove = window.innerHeight - rect.bottom < 180
-  tooltip.value = {
-    visible: true,
-    title: skill.title,
-    desc: skill.desc,
-    x: Math.max(8, Math.min(rect.left, window.innerWidth - 380)),
-    top: placeAbove ? null : rect.bottom + 8,
-    bottom: placeAbove ? window.innerHeight - rect.top + 8 : null,
-  }
+  tooltipTimer = window.setTimeout(() => {
+    tooltip.value = {
+      visible: true,
+      title: skill.title,
+      desc: skill.desc,
+      bonuses: skill.bonusDetails || [],
+      total: skill.bonus,
+      x: Math.max(8, Math.min(rect.left, window.innerWidth - 380)),
+      top: placeAbove ? null : rect.bottom + 8,
+      bottom: placeAbove ? window.innerHeight - rect.top + 8 : null,
+    }
+    tooltipTimer = null
+  }, TOOLTIP_DELAY_MS)
 }
-function hideTooltip() { tooltip.value.visible = false }
+function hideTooltip() {
+  if (tooltipTimer != null) window.clearTimeout(tooltipTimer)
+  tooltipTimer = null
+  tooltip.value.visible = false
+}
+onBeforeUnmount(hideTooltip)
 </script>
 
 <style scoped>
@@ -157,16 +182,18 @@ function hideTooltip() { tooltip.value.visible = false }
 @media (hover: hover) { .save-chip:hover { border-color: var(--border-strong); } }
 .save-chip-active { border-color: var(--sc, var(--accent)); }
 
-.save-shield-icon {
-  width: 13px;
-  height: 13px;
-  background-color: var(--text-muted);
-  mask: url("/static/shield.svg") center / contain no-repeat;
-  -webkit-mask: url("/static/shield.svg") center / contain no-repeat;
+.save-label {
+  color: var(--text-muted);
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: 0.025em;
+  line-height: 1;
   flex-shrink: 0;
-  transition: background-color 0.15s;
+  transition: color 0.15s;
 }
-.save-chip-active .save-shield-icon { background-color: var(--sc, var(--accent)); }
+.save-chip-active .save-label { color: var(--sc, var(--accent)); }
 
 .save-chip-val { color: var(--text-1); font-size: 13px; font-weight: 700; line-height: 1; }
 
@@ -260,6 +287,13 @@ function hideTooltip() { tooltip.value.visible = false }
 .skill-chip-master { border-width: 2px; border-color: color-mix(in srgb, var(--sc, var(--accent)) 75%, transparent); }
 @media (hover: hover) { .skill-chip:hover { border-color: var(--accent); background: var(--surface-active); } }
 
+.skill-tooltip-breakdown { display: grid; gap: 5px; width: 100%; min-width: 0; }
+.skill-tooltip-row { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; color: var(--text-muted); font-size: 11px; line-height: 1.25; }
+.skill-tooltip-row span { min-width: 0; overflow-wrap: anywhere; }
+.skill-tooltip-row strong { color: var(--text-1); font-size: 12px; font-variant-numeric: tabular-nums; }
+.skill-tooltip-total { margin-top: 2px; padding-top: 6px; border-top: 1px solid var(--border); color: var(--text-1); font-weight: 700; }
+.skill-tooltip-total strong { color: var(--sc, var(--accent)); }
+
 /* ── Mobile variant ── */
 .stat-view--mobile .skill-item { min-height: 32px; padding: 2px 4px; border-radius: 10px; gap: 8px; }
 .stat-view--mobile .skill-name { font-size: 15px; }
@@ -267,7 +301,7 @@ function hideTooltip() { tooltip.value.visible = false }
 .stat-view--mobile .skill-chip { padding: 4px 10px 5px; font-size: 16px; border-radius: 9px; }
 .stat-view--mobile .save-chip { padding: 5px 12px 5px 9px; gap: 7px; border-radius: 10px; }
 .stat-view--mobile .save-chip-val { font-size: 15px; }
-.stat-view--mobile .save-shield-icon { width: 16px; height: 16px; }
+.stat-view--mobile .save-label { font-size: 13px; }
 .stat-view--mobile .stat-mod { font-size: 44px; }
 .stat-view--mobile .stat-raw { font-size: 18px; }
 .stat-view--mobile .stat-name { font-size: 12px; }

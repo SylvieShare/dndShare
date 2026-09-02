@@ -273,7 +273,7 @@ function exit() {
 function createNow() {
   if (creating.value) return
   if (accountStore.authStatus !== 'success') {
-    window.dispatchEvent(new CustomEvent('dndshare:request-auth'))
+    requestCharacterCreationAuth()
     return
   }
   if (isComplete.value) submit()
@@ -283,10 +283,16 @@ function createNow() {
 function createIncomplete() {
   if (creating.value) return
   if (accountStore.authStatus !== 'success') {
-    window.dispatchEvent(new CustomEvent('dndshare:request-auth'))
+    requestCharacterCreationAuth()
     return
   }
   confirmOpen.value = true
+}
+
+function requestCharacterCreationAuth() {
+  window.dispatchEvent(new CustomEvent('dndshare:request-auth', {
+    detail: { reason: 'create-character' },
+  }))
 }
 
 const previewDraft = ref(null)

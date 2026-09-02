@@ -5,6 +5,8 @@ import { describe, expect, it } from 'vitest'
 const formSource = readFileSync(fileURLToPath(new URL('./UserBoxFormAuth.vue', import.meta.url)), 'utf8')
 const boxSource = readFileSync(fileURLToPath(new URL('./UserBox.vue', import.meta.url)), 'utf8')
 const sidebarSource = readFileSync(fileURLToPath(new URL('../../../shared/ui/DesktopSidebar.vue', import.meta.url)), 'utf8')
+const appSource = readFileSync(fileURLToPath(new URL('../../../App.vue', import.meta.url)), 'utf8')
+const wizardSource = readFileSync(fileURLToPath(new URL('../../character-list/pages/ViewCreateCharacter.vue', import.meta.url)), 'utf8')
 
 describe('guest account actions', () => {
   it('uses a labelled login icon in the collapsed desktop sidebar', () => {
@@ -15,5 +17,14 @@ describe('guest account actions', () => {
     expect(formSource).toContain('aria-label="Войти"')
     expect(formSource).toContain('<button v-if="expanded" class="reg-link"')
     expect(sidebarSource).not.toContain("content: '↪'")
+  })
+
+  it('opens one contextual auth modal from anonymous character creation', () => {
+    expect(appSource).toContain('<DesktopSidebar v-if="!isStandaloneRoute && !usesMobileChrome"')
+    expect(appSource).toContain('<AppHeader v-if="!isStandaloneRoute && usesMobileChrome"')
+    expect(appSource).toContain('const usesMobileChrome = useIsMobile(640)')
+    expect(wizardSource).toContain("detail: { reason: 'create-character' }")
+    expect(formSource).toContain("event.detail?.reason === 'create-character'")
+    expect(formSource).toContain('Для создания персонажа войдите или зарегистрируйтесь.')
   })
 })
