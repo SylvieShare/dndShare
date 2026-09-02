@@ -663,6 +663,10 @@ scenario is selected, `Бои сценария` lazily loads its combat blocks i
 choosing one imports the complete configured creature counts through the same
 encounter importer without leaving the combat workspace. Secondary actions are
 grouped as `Броски` and `Выбранные`.
+The combat header has no separate close control; starting and ending combat stays
+with the labelled primary action. During active combat the initiative column and
+the current-turn reference panel each scroll inside the same bounded workspace
+height, so scrolling one column never shifts the other.
 `Выбранные` contains shared damage, return-to-reserve, graveyard, delete-NPC and
 graveyard-list actions. Shared damage consumes temporary HP first, updates NPC
 encounter state and persists each player character through the character API.

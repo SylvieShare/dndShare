@@ -159,10 +159,11 @@ const abilities = computed(() => {
 <style scoped>
 .turn-preview {
   --turn-preview-accent: var(--accent);
-  position: sticky;
-  top: 0;
+  position: static;
   min-width: 0;
-  max-height: calc(100vh - var(--header-h) - var(--session-workspace-content-top, 172px) - 28px);
+  height: 100%;
+  min-height: 0;
+  max-height: none;
   box-sizing: border-box;
   overflow: auto;
   border: 1px solid var(--border);

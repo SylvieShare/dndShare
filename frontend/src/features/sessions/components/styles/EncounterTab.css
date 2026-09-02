@@ -43,6 +43,11 @@
   scrollbar-gutter: stable;
 }
 
+.enc-wrap--workspace > .enc-content--combat-active {
+  overflow: hidden;
+  scrollbar-gutter: auto;
+}
+
 .enc-toolbar {
   position: sticky;
   top: 0;
@@ -175,10 +180,13 @@
   gap: 3px;
 }
 
-.enc-toolbar :deep(.enc-scenario-combats-trigger) {
+.enc-toolbar :deep(.enc-icon-btn.enc-scenario-combats-trigger) {
   width: auto;
   min-width: 128px;
   display: inline-flex;
+  height: 36px;
+  flex: 0 0 auto;
+  flex-wrap: nowrap;
   align-items: center;
   justify-content: center;
   gap: 7px;
@@ -190,6 +198,8 @@
   font-weight: 750;
   white-space: nowrap;
 }
+.enc-toolbar :deep(.enc-scenario-combats-trigger > svg),
+.enc-toolbar :deep(.enc-scenario-combats-trigger > span) { flex: 0 0 auto; }
 .enc-toolbar :deep(.enc-scenario-combats-count) { min-width: 16px; height: 16px; display: grid; place-items: center; padding: 0 4px; border-radius: 999px; background: color-mix(in srgb, var(--danger) 18%, transparent); font-size: 9px; }
 
 .enc-turn-group {
@@ -383,12 +393,20 @@
 
 .enc-combat-layout--active {
   display: grid;
+  height: 100%;
+  min-height: 0;
   grid-template-columns: minmax(0, 800px) minmax(280px, 1fr);
-  align-items: start;
+  align-items: stretch;
   gap: 16px;
 }
 
 .enc-combat-primary { min-width: 0; max-width: 800px; }
+.enc-combat-layout--active > .enc-combat-primary {
+  height: 100%;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
 .enc-combat-scene { min-width: 0; }
 
 .enc-combat-scene > .enc-block {

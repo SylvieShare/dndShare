@@ -18,17 +18,6 @@
       @view-participant="$emit('view-participant', $event)"
       @import-combat-block="$emit('import-combat-block', $event)"
     />
-    <button
-      type="button"
-      class="session-center-workspace-close"
-      aria-label="Закрыть бой"
-      title="Закрыть"
-      @click="$emit('close')"
-    >
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-        <path d="M3 3l8 8M11 3l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-      </svg>
-    </button>
   </section>
 </template>
 
@@ -47,7 +36,7 @@ defineProps({
   scene: { type: Object, default: null },
   showShortcutHints: { type: Boolean, default: false },
 })
-defineEmits(['close', 'view-participant', 'import-combat-block'])
+defineEmits(['view-participant', 'import-combat-block'])
 
 const encounterTab = ref(null)
 defineExpose({ toggleCombat: () => encounterTab.value?.toggleCombat() })
@@ -79,36 +68,7 @@ defineExpose({ toggleCombat: () => encounterTab.value?.toggleCombat() })
   animation: none;
 }
 
-.session-center-workspace :deep(.enc-wrap),
-.session-center-workspace-close {
-  pointer-events: auto;
-}
-
-.session-center-workspace-close {
-  position: absolute;
-  z-index: 40;
-  top: 10px;
-  right: 10px;
-  width: 32px;
-  height: 32px;
-  display: grid;
-  place-items: center;
-  padding: 0;
-  border: 1px solid var(--border-strong);
-  border-radius: 8px;
-  background: color-mix(in srgb, var(--surface-raised) 92%, transparent);
-  color: var(--text-2);
-  box-shadow: var(--shadow-sm);
-  cursor: pointer;
-  backdrop-filter: blur(10px);
-  transition: color 0.15s, border-color 0.15s, background 0.15s;
-}
-
-.session-center-workspace-close:hover {
-  border-color: color-mix(in srgb, var(--danger) 48%, transparent);
-  background: color-mix(in srgb, var(--danger) 12%, var(--surface-raised));
-  color: var(--danger);
-}
+.session-center-workspace :deep(.enc-wrap) { pointer-events: auto; }
 
 @keyframes session-workspace-in {
   from { opacity: 0; transform: translateY(9px); }

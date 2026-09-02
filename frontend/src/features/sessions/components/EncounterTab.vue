@@ -132,7 +132,10 @@
       </div>
     </BaseTile>
 
-    <div class="enc-content">
+    <div
+      class="enc-content"
+      :class="{ 'enc-content--combat-active': enc.encounter.active || combatTransitionPhase === 'ending' }"
+    >
       <div
         class="enc-combat-layout"
         :class="{ 'enc-combat-layout--active': enc.encounter.active || combatTransitionPhase === 'ending' }"

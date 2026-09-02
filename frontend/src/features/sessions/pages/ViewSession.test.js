@@ -462,6 +462,8 @@ describe('ViewSession participant rail', () => {
     expect(encounterScenarioCombatMenuSource).toContain('await getSceneBlockGraph(props.sessionUuid, sceneId)')
     expect(encounterScenarioCombatMenuSource).toContain("filter(block => block?.type === 'combat')")
     expect(encounterScenarioCombatMenuSource).toContain("emit('pick', combat)")
+    expect(encounterStylesSource).toContain('.enc-icon-btn.enc-scenario-combats-trigger')
+    expect(encounterStylesSource).toMatch(/\.enc-icon-btn\.enc-scenario-combats-trigger\)[^{]*\{[^}]*display:\s*inline-flex;[^}]*flex-wrap:\s*nowrap;/s)
     expect(centerWorkspaceSource).toContain('@import-combat-block="$emit(\'import-combat-block\', $event)"')
     expect(source).toContain('@import-combat-block="importCombatBlock"')
     expect(source).toContain('async function importCombatBlock(block)')
@@ -474,12 +476,20 @@ describe('ViewSession participant rail', () => {
     expect(encounterSource).toContain('enc.inCombat.find(combatant => combatant.uid === currentTurnUid.value)')
     expect(encounterStylesSource).toContain('grid-template-columns: minmax(0, 800px) minmax(280px, 1fr);')
     expect(encounterStylesSource).toContain('.enc-combat-primary { min-width: 0; max-width: 800px; }')
+    expect(encounterStylesSource).toMatch(/\.enc-combat-layout--active > \.enc-combat-primary\s*\{[^}]*overflow-y:\s*auto;/s)
+    expect(encounterTurnPreviewSource).toMatch(/\.turn-preview\s*\{[^}]*height:\s*100%;[^}]*max-height:\s*none;/s)
     expect(encounterTurnPreviewSource).toContain('Сейчас ходит')
     expect(encounterTurnPreviewSource).toContain('aria-live="polite"')
     expect(encounterTurnPreviewSource).toContain('<EnemyDetailContent')
     expect(encounterTurnPreviewSource).toContain('v-else-if="isPlayer"')
     expect(encounterTurnPreviewSource).toContain('Открыть лист персонажа')
     expect(encounterTurnPreviewSource).toContain('Упрощённое существо')
+  })
+
+  it('keeps the combat header free of a floating close control', () => {
+    expect(centerWorkspaceSource).not.toContain('session-center-workspace-close')
+    expect(centerWorkspaceSource).not.toContain('aria-label="Закрыть бой"')
+    expect(centerWorkspaceSource).not.toContain("defineEmits(['close',")
   })
 
   it('opens row actions from the tile and keeps concrete controls independent', () => {

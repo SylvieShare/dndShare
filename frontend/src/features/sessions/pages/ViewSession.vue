@@ -117,7 +117,6 @@
           :chapter="workspaceChapter"
           :scene="workspaceScene"
           :show-shortcut-hints="showShortcutHints"
-          @close="closeWorkspace"
           @view-participant="openParticipant"
           @import-combat-block="importCombatBlock"
         />
