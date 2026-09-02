@@ -211,6 +211,11 @@ The current shape under `data.values` is:
   `resource_version` marks counters already migrated to the unified contract.
   Fixed and derived maxima remain handbook rules rather than copied character
   data (only `manual_size` stores `max_use` on the entry).
+- shared class resources: `class_resource_counts` maps a stable pool key to its
+  available charges. The class catalogue owns unlock levels, maxima and rest
+  rules. Contributions with the same key form one pool and use the highest
+  class-provided maximum rather than adding together; this implements the
+  shared `channel_divinity` counter for cleric/paladin multiclass characters.
 
 There are no `class/subclass` mirrors, scalar level/stat/hit-dice forms, array
 spellbook, flat inventory or array wallet.

@@ -80,6 +80,9 @@ template id, `source_version_id`, JSON документа, public/deleted flags,
 - `abilities_race`, `abilities_class`, `abilities_feats` — item-reference arrays
   with the available usage counter in `count`; a manual per-character maximum is
   present only when the handbook item enables `manual_size`.
+- `class_resource_counts` — available charges keyed by a shared class-resource
+  identity. Unlock levels, progression and rest rules remain on type-9 class
+  items in `class_resources`; equal keys across multiclass entries are one pool.
 
 Startup data correction переводит прежние значения в этот вид и удаляет старые
 ключи. Vue-компоненты знают только этот контракт.
@@ -190,6 +193,12 @@ other classes through this contract, including Bardic Inspiration, Second Wind,
 Wild Shape, cleric Channel Divinity options, ki techniques and sorcery-point
 features. Complex spell, form, companion and target-transfer systems remain
 outside this migration and are tracked in `md/class-automation-audit.md`.
+`60_shared_channel_divinity.sql` adds class-owned shared resource pools and
+`feature_actions[].resource_pool_key`. Cleric and paladin Channel Divinity use
+one `channel_divinity` counter: paladin levels unlock effects but do not add a
+charge, while cleric levels 6 and 18 raise the shared maximum. The migration
+preserves an existing cleric counter in `class_resource_counts` before retiring
+the former feature-owned resource fields.
 Section `34_ability_resource_catalog_fixes.sql` задаёт структурированные правила
 Харизмы для «Вдохновения барда» и Мудрости для «Гнева бури», удаляет прежний
 ручной максимум вдохновения и переводит его полные старые character entries на

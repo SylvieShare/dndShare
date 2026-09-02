@@ -66,6 +66,13 @@ function menuEffects(values, definitions) {
 }
 
 function matchingResource(resources, valueId, ownedEntry, definition) {
+  const poolKey = String(definition.resource_pool_key || '').trim()
+  if (poolKey) {
+    return resources.find(resource => (
+      resource.pool_key === poolKey
+      || resource.source?.poolKey === poolKey
+    )) || null
+  }
   const resourceItemId = Number(definition.resource_item_id)
   if (Number.isFinite(resourceItemId)) {
     return resources.find(resource => (

@@ -65,6 +65,33 @@ describe('character feature actions', () => {
     })
   })
 
+  it('binds class actions from different features to one shared resource pool', () => {
+    const items = new Map([
+      ['20', {
+        id: 20,
+        name: 'Клятвенный враг',
+        data: { feature_actions: [{
+          title: 'Клятвенный враг',
+          resource_pool_key: 'channel_divinity',
+          resource_cost: 1,
+        }] },
+      }],
+    ])
+    const values = { lvl: { level: 3 }, abilities_class: [{ id: 20, uid: 'vow-of-enmity' }] }
+    const resource = {
+      key: 'classes:channel_divinity',
+      pool_key: 'channel_divinity',
+      value: 1,
+      total: 1,
+      source: { poolKey: 'channel_divinity' },
+    }
+
+    expect(collectCharacterFeatureActions(values, items, [resource])[0]).toMatchObject({
+      resource,
+      resource_cost: 1,
+    })
+  })
+
   it('uses the persisted per-sheet order and can include empty action groups', () => {
     const values = {
       actions: [

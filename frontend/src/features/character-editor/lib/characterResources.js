@@ -73,6 +73,17 @@ function restoredAvailable(resource, kind, current, total) {
   return Math.min(total, current + nonNegativeInt(resource.short_rest_recovery))
 }
 
+function classResourceTotal(rule, classLevel) {
+  const unlockLevel = Math.max(1, nonNegativeInt(rule?.level) || 1)
+  if (classLevel < unlockLevel) return null
+  const rows = (Array.isArray(rule?.scaling) ? rule.scaling : [])
+    .filter((row) => row?.uses != null && nonNegativeInt(row.level) <= classLevel)
+    .sort((left, right) => nonNegativeInt(right.level) - nonNegativeInt(left.level))
+  if (rows.length) return nonNegativeInt(rows[0].uses)
+  if (rule?.max_use == null || rule.max_use === '') return null
+  return nonNegativeInt(rule.max_use)
+}
+
 /**
  * A resource source implements this small contract:
  * - itemIds(values): handbook ids it needs hydrated;
@@ -206,8 +217,97 @@ export function createAbilityResourceSource(valueId, color) {
   }
 }
 
+/**
+ * Resources granted by class levels live outside individual ability entries.
+ * Rules with the same key are one shared pool, so multiclass combinations can
+ * add more ways to spend it without creating extra charges.
+ */
+export function createClassResourceSource(valueId = 'class_resource_counts', color = '#fbbf24') {
+  return {
+    id: 'classes',
+    itemIds(values) {
+      return (Array.isArray(values?.classes) ? values.classes : [])
+        .map((entry) => entry?.id)
+        .filter((id) => id != null)
+    },
+    collect(values, itemsById) {
+      const groups = new Map()
+      for (const classEntry of (Array.isArray(values?.classes) ? values.classes : [])) {
+        const item = itemsById.get(String(classEntry?.id))
+        if (!item) continue
+        const classLevel = nonNegativeInt(classEntry?.level)
+        for (const rule of (Array.isArray(item.data?.class_resources) ? item.data.class_resources : [])) {
+          const key = String(rule?.key || '').trim()
+          const total = classResourceTotal(rule, classLevel)
+          if (!key || total == null || total <= 0) continue
+          const rest = abilityRestRule(rule, rule, { lvl: { level: classLevel } })
+          const current = groups.get(key)
+          groups.set(key, {
+            key: `classes:${key}`,
+            pool_key: key,
+            title: String(rule.title || current?.title || item.name || 'Ресурс класса'),
+            color_point: rule.resource_color || current?.color_point || color,
+            total: Math.max(total, current?.total || 0),
+            short_rest: !!(current?.short_rest || rest.short_rest),
+            long_rest: !!(current?.long_rest || rest.long_rest),
+            short_rest_recovery: Math.max(current?.short_rest_recovery || 0, rest.short_rest_recovery),
+            readonly: true,
+            source_label: 'класса',
+            source: {
+              sourceId: this.id,
+              valueId,
+              entryKey: key,
+              resourceKey: key,
+              poolKey: key,
+            },
+          })
+        }
+      }
+      const stored = values?.[valueId] && typeof values[valueId] === 'object' && !Array.isArray(values[valueId])
+        ? values[valueId]
+        : {}
+      return [...groups.values()].map((resource) => ({
+        ...resource,
+        value: stored[resource.pool_key] == null
+          ? resource.total
+          : Math.min(nonNegativeInt(stored[resource.pool_key]), resource.total),
+      }))
+    },
+    setAvailable(values, resource, available) {
+      const key = String(resource.source?.entryKey || '')
+      if (!key) return {}
+      const stored = values?.[valueId] && typeof values[valueId] === 'object' && !Array.isArray(values[valueId])
+        ? values[valueId]
+        : {}
+      return {
+        [valueId]: {
+          ...stored,
+          [key]: Math.min(nonNegativeInt(available), nonNegativeInt(resource.total)),
+        },
+      }
+    },
+    restore(values, itemsById, kind) {
+      const resources = this.collect(values, itemsById)
+      const stored = values?.[valueId] && typeof values[valueId] === 'object' && !Array.isArray(values[valueId])
+        ? values[valueId]
+        : {}
+      const next = { ...stored }
+      const recoveredNames = []
+      let changed = false
+      for (const resource of resources) {
+        if (!restoresOn(resource, kind) || resource.value >= resource.total) continue
+        next[resource.pool_key] = resource.total
+        recoveredNames.push(resource.title)
+        changed = true
+      }
+      return { patch: changed ? { [valueId]: next } : {}, recoveredNames }
+    },
+  }
+}
+
 export const DND_CHARACTER_RESOURCE_SOURCES = [
   createManualResourceSource('resources'),
+  createClassResourceSource(),
   createAbilityResourceSource('abilities_feats', '#c084fc'),
   createAbilityResourceSource('abilities_race', '#5aaf72'),
   createAbilityResourceSource('abilities_class', '#4f8fcc'),

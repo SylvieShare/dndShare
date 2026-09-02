@@ -129,6 +129,21 @@
     "type": "text"
   },
   {
+    "name": "Общие ресурсы класса",
+    "key": "class_resources",
+    "type": "object_array",
+    "fields": [
+      { "name": "Ключ", "key": "key", "type": "text" },
+      { "name": "Название", "key": "title", "type": "text" },
+      { "name": "С уровня", "key": "level", "type": "int", "default": 1 },
+      { "name": "Максимум", "key": "max_use", "type": "int" },
+      { "name": "Прогрессия", "key": "scaling", "type": "object_array", "fields": [{ "name": "Уровень", "key": "level", "type": "int" }, { "name": "Использований", "key": "uses", "type": "int" }] },
+      { "name": "После короткого отдыха", "key": "rollback_short_rest", "type": "bool" },
+      { "name": "После продолжительного отдыха", "key": "rollback_long_rest", "type": "bool" },
+      { "name": "Цвет", "key": "resource_color", "type": "color" }
+    ]
+  },
+  {
     "name": "Стартовое снаряжение",
     "key": "starting_equipment",
     "type": "description"

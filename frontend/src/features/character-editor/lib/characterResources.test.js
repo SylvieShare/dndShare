@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest'
 import {
   collectCharacterResources,
   createAbilityResourceSource,
+  createClassResourceSource,
   createManualResourceSource,
   restoreCharacterResources,
   setCharacterResourceAvailable,
@@ -11,6 +12,7 @@ import { abilityUseTotal, abilityUsesAreManual } from '@/shared/lib/dndAbilityUs
 
 const sources = [
   createManualResourceSource('resources'),
+  createClassResourceSource(),
   createAbilityResourceSource('abilities_race', '#123456'),
   createAbilityResourceSource('abilities_class', '#654321'),
 ]
@@ -33,6 +35,15 @@ const items = new Map([
     rollback_long_rest: true, short_rest_recovery: 4, short_rest_recovery_level: 20,
   } }],
   ['60', { id: 60, name: 'Цветная способность', data: { max_use: 1, resource_color: '#123abc' } }],
+  ['300', { id: 300, name: 'Жрец', data: { class_resources: [{
+    key: 'channel_divinity', title: 'Божественный канал', level: 2, max_use: 1,
+    scaling: [{ level: 6, uses: 2 }, { level: 18, uses: 3 }],
+    rollback_short_rest: true, rollback_long_rest: true,
+  }] } }],
+  ['400', { id: 400, name: 'Паладин', data: { class_resources: [{
+    key: 'channel_divinity', title: 'Божественный канал', level: 3, max_use: 1,
+    rollback_short_rest: true, rollback_long_rest: true,
+  }] } }],
 ])
 
 const values = {
@@ -159,6 +170,61 @@ describe('character resource sources', () => {
       value: 2,
       total: 2,
       long_rest: true,
+    })
+  })
+
+  it('combines cleric and paladin Channel Divinity into one class-level pool', () => {
+    const multiclass = {
+      lvl: { level: 9 },
+      classes: [{ id: 300, level: 6 }, { id: 400, level: 3 }],
+      class_resource_counts: { channel_divinity: 1 },
+    }
+    const resources = collectCharacterResources(multiclass, items, sources)
+    const channel = resources.find((resource) => resource.pool_key === 'channel_divinity')
+
+    expect(resources.filter((resource) => resource.pool_key === 'channel_divinity')).toHaveLength(1)
+    expect(channel).toMatchObject({
+      key: 'classes:channel_divinity',
+      title: 'Божественный канал',
+      value: 1,
+      total: 2,
+      short_rest: true,
+      long_rest: true,
+    })
+    expect(setCharacterResourceAvailable(multiclass, items, channel.key, 0, sources)).toEqual({
+      class_resource_counts: { channel_divinity: 0 },
+    })
+    expect(restoreCharacterResources({
+      ...multiclass,
+      class_resource_counts: { channel_divinity: 0 },
+    }, items, 'short', sources)).toEqual({
+      patch: { class_resource_counts: { channel_divinity: 2 } },
+      recoveredNames: ['Божественный канал'],
+    })
+  })
+
+  it('does not grant a second Channel Divinity use from paladin levels', () => {
+    const resources = collectCharacterResources({
+      lvl: { level: 9 },
+      classes: [{ id: 300, level: 2 }, { id: 400, level: 7 }],
+    }, items, sources)
+
+    expect(resources.find((resource) => resource.pool_key === 'channel_divinity')).toMatchObject({
+      value: 1,
+      total: 1,
+    })
+  })
+
+  it('unlocks the paladin Channel Divinity pool at paladin level three', () => {
+    const levelTwo = { lvl: { level: 2 }, classes: [{ id: 400, level: 2 }] }
+    const levelThree = { lvl: { level: 3 }, classes: [{ id: 400, level: 3 }] }
+
+    expect(collectCharacterResources(levelTwo, items, sources)
+      .some((resource) => resource.pool_key === 'channel_divinity')).toBe(false)
+    expect(collectCharacterResources(levelThree, items, sources)
+      .find((resource) => resource.pool_key === 'channel_divinity')).toMatchObject({
+      value: 1,
+      total: 1,
     })
   })
 

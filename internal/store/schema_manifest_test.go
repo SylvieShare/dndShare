@@ -65,13 +65,14 @@ func TestEverySchemaFileIsEmbeddedAndRegistered(t *testing.T) {
 	}
 }
 
-func TestHalfCasterMigrationRunsAfterClassActionAutomation(t *testing.T) {
-	if len(schemaParts) < 3 {
+func TestVersionedMigrationsRunAfterClassActionAutomation(t *testing.T) {
+	if len(schemaParts) < 4 {
 		t.Fatal("schema manifest is incomplete")
 	}
-	legacyLast := schemaParts[len(schemaParts)-3]
-	halfCaster := schemaParts[len(schemaParts)-2]
-	sessionSecurity := schemaParts[len(schemaParts)-1]
+	legacyLast := schemaParts[len(schemaParts)-4]
+	halfCaster := schemaParts[len(schemaParts)-3]
+	sessionSecurity := schemaParts[len(schemaParts)-2]
+	sharedChannelDivinity := schemaParts[len(schemaParts)-1]
 	if legacyLast.name != legacySchemaBootstrapLast {
 		t.Fatalf("legacy bootstrap must end at %q, got %q", legacySchemaBootstrapLast, legacyLast.name)
 	}
@@ -80,5 +81,8 @@ func TestHalfCasterMigrationRunsAfterClassActionAutomation(t *testing.T) {
 	}
 	if sessionSecurity.name != "session-security" || sessionSecurity.sql != schemaSessionSecuritySQL {
 		t.Fatalf("session security indexes must run after the half-caster data migration")
+	}
+	if sharedChannelDivinity.name != "shared-channel-divinity" || sharedChannelDivinity.sql != schemaSharedChannelDivinitySQL {
+		t.Fatalf("shared Channel Divinity must run after the session security migration")
 	}
 }

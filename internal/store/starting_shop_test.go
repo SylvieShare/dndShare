@@ -168,6 +168,39 @@ func TestClassActionAutomationPublishesCrossFeatureResourceActions(t *testing.T)
 	}
 }
 
+func TestSharedChannelDivinityUsesOneClassResourcePool(t *testing.T) {
+	for _, fragment := range []string{
+		`"key":"class_resources"`,
+		`"key":"resource_pool_key"`,
+		`"key":"channel_divinity"`,
+		`'class_resource_counts'`,
+		`(4020::bigint`,
+		`(4021::bigint`,
+		`'Vow of Enmity'`,
+		`'Channel Divinity'`,
+	} {
+		if !strings.Contains(schemaSharedChannelDivinitySQL, fragment) {
+			t.Fatalf("shared Channel Divinity migration must contain %q", fragment)
+		}
+	}
+	for _, typeID := range []string{"3", "4", "7"} {
+		contents, err := os.ReadFile(filepath.Join("..", "..", "resources", "items", "item_"+typeID+"_shema.json"))
+		if err != nil {
+			t.Fatalf("read ability schema %s: %v", typeID, err)
+		}
+		if !strings.Contains(string(contents), `"key": "resource_pool_key"`) {
+			t.Fatalf("ability schema %s must expose resource_pool_key", typeID)
+		}
+	}
+	classSchema, err := os.ReadFile(filepath.Join("..", "..", "resources", "items", "item_9_shema.json"))
+	if err != nil {
+		t.Fatalf("read class schema: %v", err)
+	}
+	if !strings.Contains(string(classSchema), `"key": "class_resources"`) {
+		t.Fatal("class schema must expose class_resources")
+	}
+}
+
 func TestFrenzyPublishesRageGatedBonusActionWithExhaustionConsequence(t *testing.T) {
 	for _, fragment := range []string{
 		`"required_status_codes"`,
