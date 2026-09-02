@@ -588,7 +588,8 @@ is rendered only when it contains actions. The shared block-title pencil opens
 one morph editor for the complete block: custom actions are created, edited and
 deleted there, while actions contributed by abilities are listed separately as
 read-only. Row menus retain direct editing, but group headers have no add
-controls. The block owns one shared tile; rows inside
+controls. A row without any available menu action is non-clickable and does not
+show hover or press feedback. The block owns one shared tile; rows inside
 it have no nested card background. A resource bound to a source action is shown
 on that action as the same color-coded charge spheres used by the resources
 tile: one charge stays at the right edge, while several charges wrap below the

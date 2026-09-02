@@ -20,12 +20,16 @@
           :key="action.key"
           block
           :title="`Действия: ${action.title}`"
-          :disabled="!manage || (group.actions.length < 2 && action.readonly && !action.menu_effects?.length && !canSpendResource(action))"
+          :disabled="!canOpenActionMenu(action)"
         >
           <template #trigger="{ open }">
             <article
               class="dav-action action-menu-source"
-              :class="{ 'dav-action--divided': actionIndex > 0, 'action-menu-source--open': open }"
+              :class="{
+                'dav-action--divided': actionIndex > 0,
+                'dav-action--clickable': canOpenActionMenu(action),
+                'action-menu-source--open': open,
+              }"
             >
               <span class="dav-action-icon" aria-hidden="true">
                 <ItemIcon v-if="action.item" :item="action.item" :size="34" :fallback-to-type="false" />
@@ -107,7 +111,7 @@
               {{ effect.title }}
               <template #suffix>{{ effect.suffix }}</template>
             </RowActionItem>
-            <RowActionSeparator v-if="(canSpendResource(action) || action.menu_effects?.length) && (group.actions.length > 1 || !action.readonly)" />
+            <RowActionSeparator v-if="(canSpendResource(action) || action.menu_effects?.length) && !action.readonly" />
             <RowActionItem v-if="!action.readonly" action="edit" @click="edit(action, close)">Редактировать</RowActionItem>
             <RowActionSeparator v-if="!action.readonly" />
             <RowActionItem v-if="!action.readonly" action="delete" tone="danger" @click="remove(action, close)">Удалить</RowActionItem>
@@ -185,6 +189,10 @@ function canSpendResource(action) {
   return !!action.resource && Number(action.resource_cost) > 0
 }
 
+function canOpenActionMenu(action) {
+  return props.manage && (!action.readonly || canSpendResource(action) || !!action.menu_effects?.length)
+}
+
 function resourceTotal(action) {
   return Math.max(0, Math.floor(Number(action.resource?.total) || 0))
 }
@@ -227,9 +235,10 @@ function hideActionTooltip() {
 .dav-group-head { display: grid; grid-template-columns: auto auto minmax(12px, 1fr); gap: 6px; align-items: center; color: var(--dav-tone); font-size: 9px; font-weight: 800; letter-spacing: .065em; text-transform: uppercase; }
 .dav-group-head i { height: 1px; background: color-mix(in srgb, var(--dav-tone) 24%, transparent); }
 .dav-list { display: flex; flex-direction: column; }
-.dav-action { display: grid; grid-template-columns: 36px minmax(0, 1fr) auto; gap: 9px; align-items: start; padding: 10px 2px; cursor: pointer; transition: background-color .12s; }
+.dav-action { display: grid; grid-template-columns: 36px minmax(0, 1fr) auto; gap: 9px; align-items: start; padding: 10px 2px; cursor: default; transition: background-color .12s; }
+.dav-action--clickable { cursor: pointer; }
 .dav-action--divided { border-top: 1px solid var(--border); }
-.dav-action:hover, .dav-action.action-menu-source--open { background: color-mix(in srgb, var(--dav-tone) 5%, transparent); }
+.dav-action--clickable:hover, .dav-action.action-menu-source--open { background: color-mix(in srgb, var(--dav-tone) 5%, transparent); }
 .dav-action-icon { display: grid; width: 36px; height: 36px; place-items: center; overflow: hidden; color: var(--dav-tone); }
 .dav-action-icon :deep(.item-icon) { width: 34px; height: 34px; }
 .dav-copy { display: flex; min-width: 0; flex-direction: column; gap: 3px; }
@@ -245,4 +254,5 @@ function hideActionTooltip() {
 .dav-resource--stacked { flex-wrap: wrap; margin-top: 4px; }
 .dav-resource-pips { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
 .dav-list :deep(.ram-custom-trigger:has(.dav-resource:active)) { transform: none; }
+.dav-list :deep(.ram-custom-trigger:has(.dav-action:not(.dav-action--clickable)):active) { transform: none; }
 </style>

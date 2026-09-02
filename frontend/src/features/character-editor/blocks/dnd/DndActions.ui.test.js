@@ -43,6 +43,10 @@ describe('character action block', () => {
   })
 
   it('applies generic source action consequences from the row menu', () => {
+    expect(viewSource).toContain(':disabled="!canOpenActionMenu(action)"')
+    expect(viewSource).toContain("'dav-action--clickable': canOpenActionMenu(action)")
+    expect(viewSource).toContain('function canOpenActionMenu(action)')
+    expect(viewSource).toContain('.dav-action:not(.dav-action--clickable)')
     expect(viewSource).toContain('v-for="effect in action.menu_effects || []"')
     expect(viewSource).toContain("emit('apply-effect', action, effect)")
     expect(blockSource).toContain('@apply-effect="applyActionEffect"')
