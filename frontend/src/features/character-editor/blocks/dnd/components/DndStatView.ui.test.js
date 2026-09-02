@@ -16,4 +16,11 @@ describe('DndStatView presentation', () => {
     expect(source).toContain('bonuses: skill.bonusDetails || []')
     expect(source).toContain('onBeforeUnmount(hideTooltip)')
   })
+
+  it('right-aligns bonus titles against a fixed numeric column', () => {
+    expect(source).toContain('grid-template-columns: minmax(0, 1fr) 3.25ch')
+    expect(source).toContain('column-gap: 12px')
+    expect(source).toContain('margin-left: auto')
+    expect(source).toContain('text-align: right')
+  })
 })

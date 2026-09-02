@@ -1,19 +1,21 @@
 <template>
   <teleport to="body">
-    <div
-      v-if="!blocked"
-      class="itt-box"
-      :style="boxStyle"
-    >
-      <div class="itt-title">{{ title }}</div>
-      <RichContent v-if="displayDesc" class="itt-desc dnd-rich-content" :html="displayDesc" />
-      <template v-if="$slots.details">
-        <div class="itt-sep"></div>
-        <div class="itt-details">
-          <slot name="details" />
-        </div>
-      </template>
-    </div>
+    <Transition name="itt-pop" appear>
+      <div
+        v-if="!blocked"
+        class="itt-box"
+        :style="boxStyle"
+      >
+        <div class="itt-title" :class="{ 'itt-title--separated': displayDesc || $slots.details }">{{ title }}</div>
+        <RichContent v-if="displayDesc" class="itt-desc dnd-rich-content" :html="displayDesc" />
+        <template v-if="$slots.details">
+          <div v-if="displayDesc" class="itt-sep"></div>
+          <div class="itt-details">
+            <slot name="details" />
+          </div>
+        </template>
+      </div>
+    </Transition>
   </teleport>
 </template>
 
@@ -91,6 +93,8 @@ const boxStyle = computed(() => {
     top: props.top != null ? props.top + 'px' : 'auto',
     bottom: props.bottom != null ? props.bottom + 'px' : 'auto',
     maxWidth: effectiveWidth + 'px',
+    '--itt-enter-y': props.bottom != null ? '4px' : '-4px',
+    transformOrigin: props.bottom != null ? 'left bottom' : 'left top',
     ...(props.width ? { width: effectiveWidth + 'px' } : {}),
   }
 })
@@ -106,11 +110,11 @@ const displayDesc = computed(() => {
 .itt-box {
   position: fixed;
   max-width: 360px;
-  min-width: 192px;
+  min-width: 208px;
   background: var(--popover-bg);
   border: 1px solid var(--border-strong);
-  border-radius: 10px;
-  padding: 10px 14px;
+  border-radius: 12px;
+  padding: 12px 14px 13px;
   box-shadow: var(--shadow-lg);
   z-index: 4000;
   pointer-events: none;
@@ -118,15 +122,23 @@ const displayDesc = computed(() => {
 
 .itt-title {
   color: var(--text-1);
-  font-size: 13px;
-  font-weight: bold;
-  margin-bottom: 4px;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1.15;
+}
+
+.itt-title--separated {
+  margin-bottom: 9px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
 }
 
 .itt-desc {
   color: var(--text-muted);
-  font-size: 12px;
-  line-height: 1.3;
+  font-size: 11px;
+  line-height: 1.45;
   margin: 0;
   text-align: left;
 }
@@ -134,7 +146,7 @@ const displayDesc = computed(() => {
 .itt-sep {
   height: 1px;
   background: var(--border);
-  margin: 8px 0;
+  margin: 10px 0 9px;
 }
 
 .itt-details {
@@ -142,5 +154,12 @@ const displayDesc = computed(() => {
   flex-wrap: wrap;
   align-items: center;
   gap: 5px;
+}
+
+.itt-pop-enter-active { transition: opacity 160ms ease-out, transform 160ms cubic-bezier(.2, .8, .2, 1); }
+.itt-pop-enter-from { opacity: 0; transform: translateY(var(--itt-enter-y)) scale(.985); }
+
+@media (prefers-reduced-motion: reduce) {
+  .itt-pop-enter-active { transition: none; }
 }
 </style>

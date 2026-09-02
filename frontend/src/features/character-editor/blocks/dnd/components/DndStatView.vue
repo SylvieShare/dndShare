@@ -287,10 +287,10 @@ onBeforeUnmount(hideTooltip)
 .skill-chip-master { border-width: 2px; border-color: color-mix(in srgb, var(--sc, var(--accent)) 75%, transparent); }
 @media (hover: hover) { .skill-chip:hover { border-color: var(--accent); background: var(--surface-active); } }
 
-.skill-tooltip-breakdown { display: grid; gap: 5px; width: 100%; min-width: 0; }
-.skill-tooltip-row { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; color: var(--text-muted); font-size: 11px; line-height: 1.25; }
-.skill-tooltip-row span { min-width: 0; overflow-wrap: anywhere; }
-.skill-tooltip-row strong { color: var(--text-1); font-size: 12px; font-variant-numeric: tabular-nums; }
+.skill-tooltip-breakdown { display: grid; gap: 6px; width: min(100%, 340px); min-width: 0; margin-left: auto; }
+.skill-tooltip-row { display: grid; grid-template-columns: minmax(0, 1fr) 3.25ch; align-items: baseline; column-gap: 12px; color: var(--text-muted); font-size: 11px; line-height: 1.25; }
+.skill-tooltip-row span { min-width: 0; overflow-wrap: anywhere; text-align: right; }
+.skill-tooltip-row strong { color: var(--text-1); font-size: 12px; font-variant-numeric: tabular-nums; text-align: right; }
 .skill-tooltip-total { margin-top: 2px; padding-top: 6px; border-top: 1px solid var(--border); color: var(--text-1); font-weight: 700; }
 .skill-tooltip-total strong { color: var(--sc, var(--accent)); }
 
