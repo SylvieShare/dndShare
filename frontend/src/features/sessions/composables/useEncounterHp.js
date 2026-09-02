@@ -285,7 +285,7 @@ export function useEncounterHp({
     if (!raw) return
     const norm = raw.replace(/[()]/g, '')
     const result = useDiceStore().roll('Хиты', norm, {
-      actor: { name: npcName ? npcName(c) : 'НПС', charUuid: null },
+      actor: { name: npcName ? npcName(c) : 'НПС', charUuid: null, itemId: c.itemId || null },
     })
     if (!result || !result.parts.length) return
     const val = Math.max(1, result.total)

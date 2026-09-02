@@ -27,6 +27,7 @@ describe('session event timeline store', () => {
     expect(api.createSessionEvent).toHaveBeenCalledWith('session-uuid', expect.objectContaining({
       type: 'spell_used',
       actorCharUuid: 'char-uuid',
+      actorItemId: null,
       actorName: null,
       data: { slotLevel: 3 },
     }))
@@ -83,12 +84,13 @@ describe('session event timeline store', () => {
     await store.publish({
       type: 'dice_roll',
       action: 'Короткий меч',
-      actor: { name: 'Кобольд', charUuid: null },
+      actor: { name: 'Кобольд', charUuid: null, itemId: 42 },
     })
 
     expect(api.createSessionEvent.mock.calls[0][1]).toMatchObject({
       action: 'Короткий меч',
       actorCharUuid: null,
+      actorItemId: 42,
       actorName: 'Кобольд',
     })
   })

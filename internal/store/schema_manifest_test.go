@@ -66,19 +66,20 @@ func TestEverySchemaFileIsEmbeddedAndRegistered(t *testing.T) {
 }
 
 func TestVersionedMigrationsRunAfterClassActionAutomation(t *testing.T) {
-	if len(schemaParts) < 10 {
+	if len(schemaParts) < 11 {
 		t.Fatal("schema manifest is incomplete")
 	}
-	legacyLast := schemaParts[len(schemaParts)-10]
-	halfCaster := schemaParts[len(schemaParts)-9]
-	sessionSecurity := schemaParts[len(schemaParts)-8]
-	sharedChannelDivinity := schemaParts[len(schemaParts)-7]
-	spellbookTabs := schemaParts[len(schemaParts)-6]
-	sacredWeaponEffect := schemaParts[len(schemaParts)-5]
-	spellbookGrantCleanup := schemaParts[len(schemaParts)-4]
-	sessionNPCBestiary := schemaParts[len(schemaParts)-3]
-	sessionSceneLocation := schemaParts[len(schemaParts)-2]
-	sessionSceneVisualSource := schemaParts[len(schemaParts)-1]
+	legacyLast := schemaParts[len(schemaParts)-11]
+	halfCaster := schemaParts[len(schemaParts)-10]
+	sessionSecurity := schemaParts[len(schemaParts)-9]
+	sharedChannelDivinity := schemaParts[len(schemaParts)-8]
+	spellbookTabs := schemaParts[len(schemaParts)-7]
+	sacredWeaponEffect := schemaParts[len(schemaParts)-6]
+	spellbookGrantCleanup := schemaParts[len(schemaParts)-5]
+	sessionNPCBestiary := schemaParts[len(schemaParts)-4]
+	sessionSceneLocation := schemaParts[len(schemaParts)-3]
+	sessionSceneVisualSource := schemaParts[len(schemaParts)-2]
+	sessionEventActorItem := schemaParts[len(schemaParts)-1]
 	if legacyLast.name != legacySchemaBootstrapLast {
 		t.Fatalf("legacy bootstrap must end at %q, got %q", legacySchemaBootstrapLast, legacyLast.name)
 	}
@@ -108,5 +109,8 @@ func TestVersionedMigrationsRunAfterClassActionAutomation(t *testing.T) {
 	}
 	if sessionSceneVisualSource.name != "session-scene-visual-source" || sessionSceneVisualSource.sql != schemaSessionSceneVisualSourceSQL {
 		t.Fatalf("session scene visual source constraint must run after the location link migration")
+	}
+	if sessionEventActorItem.name != "session-event-actor-item" || sessionEventActorItem.sql != schemaSessionEventActorItemSQL {
+		t.Fatalf("session event actor item link must run after the scene visual source migration")
 	}
 }

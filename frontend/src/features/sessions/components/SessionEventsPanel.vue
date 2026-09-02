@@ -91,9 +91,12 @@
             <time class="sep-time">{{ timeGroup.time }}</time>
             <div class="sep-time-content">
               <section v-for="actorGroup in timeGroup.actors" :key="actorGroup.key" class="sep-actor-group">
-                <div v-if="actorGroup.label" class="sep-actor-head">
-                  <span>{{ actorGroup.label }}</span>
-                  <small v-if="actorGroup.authorIsSessionOwner">ВЛАДЕЛЕЦ</small>
+                <div class="sep-actor-head">
+                  <SessionEventActorAvatar :event="actorGroup.actorEvent" :label="actorGroup.label" />
+                  <div class="sep-actor-meta">
+                    <span>{{ actorGroup.label || (actorGroup.kind === 'dm' ? 'Мастер' : 'Системное событие') }}</span>
+                    <small v-if="actorGroup.authorIsSessionOwner">ВЛАДЕЛЕЦ</small>
+                  </div>
                 </div>
                 <div class="sep-actor-events">
                   <article v-for="event in actorGroup.events" :key="event.id" class="sep-event" :class="`sep-event--${event.type}`">
@@ -159,6 +162,7 @@ import { computed, nextTick, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { BasePopover, FormSelect, MultiToggle } from '@sylvieshare/share-ui'
 import { useSessionEventsStore } from '@/stores/sessionEvents'
+import SessionEventActorAvatar from '@/features/sessions/components/SessionEventActorAvatar.vue'
 import { groupSessionEvents } from '@/features/sessions/lib/sessionEventView'
 import {
   filterSessionEvents,
@@ -332,7 +336,9 @@ watch([authorFilter, actorFilter, categoryFilters], async () => {
 .sep-time { padding-top: 1px; color: var(--text-muted); font-size: 9px; font-weight: 650; font-variant-numeric: tabular-nums; letter-spacing: .02em; }
 .sep-time-content { min-width: 0; }
 .sep-actor-group + .sep-actor-group { margin-top: 9px; }
-.sep-actor-head { display: flex; align-items: center; gap: 6px; color: var(--text-2); font-size: 10px; font-weight: 750; line-height: 1.3; overflow-wrap: anywhere; white-space: normal; }
+.sep-actor-head { display: flex; align-items: center; gap: 9px; color: var(--text-2); font-size: 10px; font-weight: 750; line-height: 1.3; overflow-wrap: anywhere; white-space: normal; }
+.sep-actor-meta { min-width: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 5px; }
+.sep-actor-meta > span { min-width: 0; overflow-wrap: anywhere; }
 .sep-actor-head small { flex: none; padding: 1px 4px; border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--border)); border-radius: 4px; color: var(--accent-soft); font-size: 7px; font-weight: 800; letter-spacing: .05em; }
 .sep-actor-events { min-width: 0; }
 .sep-actor-head + .sep-actor-events { margin-top: 5px; }

@@ -14,6 +14,13 @@ export function sessionEventActorKey(event) {
   return `${author}:${sessionEventActorIdentityKey(event)}`
 }
 
+export function sessionEventActorKind(event) {
+  if (event?.actorCharUuid || event?.actorCharId) return 'character'
+  if (event?.actorItemId || sessionEventActorLabel(event)) return 'creature'
+  if (event?.authorIsSessionOwner) return 'dm'
+  return 'system'
+}
+
 export function groupSessionEvents(events) {
   const sorted = [...(events || [])].sort((left, right) => {
     const timeDiff = new Date(right.createdAt).getTime() - new Date(left.createdAt).getTime()
@@ -40,6 +47,8 @@ export function groupSessionEvents(events) {
         key: `${actorKey}:${event.id}`,
         actorKey,
         label: sessionEventActorLabel(event),
+        kind: sessionEventActorKind(event),
+        actorEvent: event,
         authorIsSessionOwner: !!event.authorIsSessionOwner,
         events: [],
       }

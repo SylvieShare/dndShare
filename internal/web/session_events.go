@@ -31,6 +31,7 @@ type createSessionEventRequest struct {
 	Action         string          `json:"action"`
 	Data           json.RawMessage `json:"data"`
 	ActorCharUUID  *string         `json:"actorCharUuid"`
+	ActorItemID    *int64          `json:"actorItemId"`
 	ActorName      *string         `json:"actorName"`
 	Visibility     string          `json:"visibility"`
 	ClientActionID *string         `json:"clientActionId"`
@@ -58,7 +59,7 @@ func (s *Server) appendSessionEvent(ctx context.Context, sessionID, userID int64
 	if err != nil {
 		return
 	}
-	if _, err := s.store.CreateSessionEvent(ctx, sessionID, userID, nil, nil, eventType, action, raw, "public", nil); err == nil {
+	if _, err := s.store.CreateSessionEvent(ctx, sessionID, userID, nil, nil, nil, eventType, action, raw, "public", nil); err == nil {
 		s.publishSessionJournal(sessionID)
 	}
 }
@@ -169,6 +170,14 @@ func (s *Server) handleCreateSessionEvent(w http.ResponseWriter, r *http.Request
 		badRequest(w, "Некорректный персонаж события")
 		return
 	}
+	if req.ActorCharUUID != nil && req.ActorItemID != nil {
+		badRequest(w, "У события не может быть два действующих")
+		return
+	}
+	if req.ActorItemID != nil && session.OwnerUserID != userID {
+		forbidden(w)
+		return
+	}
 	var requestedActorName *string
 	if req.ActorName != nil {
 		name := strings.TrimSpace(*req.ActorName)
@@ -189,12 +198,24 @@ func (s *Server) handleCreateSessionEvent(w http.ResponseWriter, r *http.Request
 		}
 		return
 	}
+	actorItemID, itemName, err := s.store.ResolveSessionActorItem(r.Context(), userID, req.ActorItemID)
+	if err != nil {
+		if errors.Is(err, store.ErrNotFound) {
+			forbidden(w)
+		} else {
+			serverError(w, err)
+		}
+		return
+	}
 	actorName := characterName
 	if actorCharID == nil && session.OwnerUserID == userID {
 		actorName = requestedActorName
+		if actorName == nil {
+			actorName = itemName
+		}
 	}
 	event, err := s.store.CreateSessionEvent(
-		r.Context(), session.ID, userID, actorCharID, actorName, req.Type, req.Action,
+		r.Context(), session.ID, userID, actorCharID, actorItemID, actorName, req.Type, req.Action,
 		req.Data, visibility, req.ClientActionID,
 	)
 	if err != nil {

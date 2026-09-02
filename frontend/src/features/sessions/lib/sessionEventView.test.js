@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { groupSessionEvents, sessionEventActorKey, sessionEventActorLabel } from './sessionEventView'
+import { groupSessionEvents, sessionEventActorKey, sessionEventActorKind, sessionEventActorLabel } from './sessionEventView'
 
 describe('session event identity', () => {
   it('uses the immutable actor name stored with the event', () => {
@@ -18,6 +18,13 @@ describe('session event identity', () => {
     expect(sessionEventActorKey({ actorName: 'Кобольд', authorIsSessionOwner: true })).toBe('owner:name:кобольд')
   })
 
+  it('classifies actor visuals for characters, creatures and DM tools', () => {
+    expect(sessionEventActorKind({ actorCharUuid: 'char-1' })).toBe('character')
+    expect(sessionEventActorKind({ actorItemId: 42, actorName: 'Кобольд' })).toBe('creature')
+    expect(sessionEventActorKind({ actorName: 'Самодельный монстр' })).toBe('creature')
+    expect(sessionEventActorKind({ authorIsSessionOwner: true })).toBe('dm')
+  })
+
   it('groups newest events by minute and consecutive actor', () => {
     const events = [
       { id: 1, createdAt: '2026-08-14T10:40:10Z' },
@@ -32,6 +39,8 @@ describe('session event identity', () => {
     expect(groups).toHaveLength(2)
     expect(groups[0].actors.map(group => group.label)).toEqual(['Кобольд', '', 'Лиора'])
     expect(groups[0].actors.map(group => group.events.map(event => event.id))).toEqual([[5], [4], [3, 2]])
+    expect(groups[0].actors.map(group => group.kind)).toEqual(['creature', 'system', 'character'])
+    expect(groups[0].actors[0].actorEvent.id).toBe(5)
     expect(groups[1].actors[0].events[0].id).toBe(1)
   })
 })

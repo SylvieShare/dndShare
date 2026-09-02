@@ -20,6 +20,9 @@ type SessionEvent struct {
 	ActorCharUUID        *string         `json:"actorCharUuid,omitempty"`
 	ActorTemplateID      *int64          `json:"actorTemplateId,omitempty"`
 	ActorData            json.RawMessage `json:"actorData,omitempty"`
+	ActorItemID          *int64          `json:"actorItemId,omitempty"`
+	ActorImageURL        *string         `json:"actorImageUrl,omitempty"`
+	ActorSVG             *string         `json:"actorSvg,omitempty"`
 	ActorName            *string         `json:"actorName,omitempty"`
 	EventType            string          `json:"type"`
 	Action               string          `json:"action"`
@@ -42,10 +45,17 @@ const sessionEventSelect = `
 	SELECT e.id, e.session_id, e.author_user_id,
 	       event_session.owner_user_id = e.author_user_id,
 	       e.actor_char_id, c.uuid::text, c.template_id, c.data,
+	       e.actor_item_id,
+	       COALESCE(character_icon.url, actor_icon.url, actor_cover.url), actor_svg.data,
 	       e.actor_name, e.event_type, e.action, COALESCE(e.data, '{}'::jsonb), e.visibility, e.created_at
 	FROM dndshare.session_event e
 	JOIN dndshare."session" event_session ON event_session.id = e.session_id
 	LEFT JOIN dndshare."char" c ON c.id = e.actor_char_id
+	LEFT JOIN dndshare.storage_image character_icon ON character_icon.id = c.icon_image_id AND character_icon.deleted = false
+	LEFT JOIN dndshare.item actor_item ON actor_item.id = e.actor_item_id
+	LEFT JOIN dndshare.storage_image actor_icon ON actor_icon.id = actor_item.icon_image_id AND actor_icon.deleted = false
+	LEFT JOIN dndshare.storage_image actor_cover ON actor_cover.id = actor_item.cover_image_id AND actor_cover.deleted = false
+	LEFT JOIN dndshare.svg_storage actor_svg ON actor_svg.id = actor_item.icon_svg_id
 	WHERE e.deleted = false`
 
 func scanSessionEvent(row pgx.Row) (SessionEvent, error) {
@@ -55,6 +65,7 @@ func scanSessionEvent(row pgx.Row) (SessionEvent, error) {
 	err := row.Scan(
 		&event.ID, &event.SessionID, &event.AuthorUserID, &event.AuthorIsSessionOwner,
 		&event.ActorCharID, &event.ActorCharUUID, &event.ActorTemplateID, &actorData,
+		&event.ActorItemID, &event.ActorImageURL, &event.ActorSVG,
 		&event.ActorName, &event.EventType, &event.Action, &data, &event.Visibility, &event.CreatedAt,
 	)
 	if len(actorData) > 0 {
@@ -119,19 +130,42 @@ func (s *Store) ResolveSessionActor(ctx context.Context, sessionID, userID int64
 	return &charID, &actorName, nil
 }
 
+// ResolveSessionActorItem resolves a bestiary creature used by a DM action.
+// System creatures are available to every DM; custom creatures must belong to
+// the current user. The returned name is only a fallback because actor_name is
+// still stored as the immutable event label.
+func (s *Store) ResolveSessionActorItem(ctx context.Context, userID int64, itemID *int64) (*int64, *string, error) {
+	if itemID == nil {
+		return nil, nil, nil
+	}
+	var id int64
+	var name string
+	err := s.pool.QueryRow(ctx, `
+		SELECT id, name
+		FROM dndshare.item
+		WHERE id = $1 AND type_id = 6 AND (user_id IS NULL OR user_id = $2)`, *itemID, userID).Scan(&id, &name)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return nil, nil, ErrNotFound
+	}
+	if err != nil {
+		return nil, nil, err
+	}
+	return &id, &name, nil
+}
+
 // CreateSessionEvent appends an event and returns its complete projection.
-func (s *Store) CreateSessionEvent(ctx context.Context, sessionID, userID int64, actorCharID *int64, actorName *string, eventType, action string, data json.RawMessage, visibility string, clientActionID *string) (SessionEvent, error) {
+func (s *Store) CreateSessionEvent(ctx context.Context, sessionID, userID int64, actorCharID, actorItemID *int64, actorName *string, eventType, action string, data json.RawMessage, visibility string, clientActionID *string) (SessionEvent, error) {
 	if len(data) == 0 {
 		data = json.RawMessage("{}")
 	}
 	var id int64
 	err := s.pool.QueryRow(ctx, `
 		INSERT INTO dndshare.session_event
-		  (session_id, author_user_id, actor_char_id, actor_name, event_type, action, data, visibility, client_action_id)
-		VALUES ($1, $2, $3, $4, $5, $6, CAST($7 AS jsonb), $8, $9::uuid)
+		  (session_id, author_user_id, actor_char_id, actor_item_id, actor_name, event_type, action, data, visibility, client_action_id)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, CAST($8 AS jsonb), $9, $10::uuid)
 		ON CONFLICT (session_id, client_action_id) WHERE client_action_id IS NOT NULL
 		DO UPDATE SET client_action_id = EXCLUDED.client_action_id
-		RETURNING id`, sessionID, userID, actorCharID, actorName, eventType, action, string(data), visibility, clientActionID).Scan(&id)
+		RETURNING id`, sessionID, userID, actorCharID, actorItemID, actorName, eventType, action, string(data), visibility, clientActionID).Scan(&id)
 	if err != nil {
 		return SessionEvent{}, err
 	}

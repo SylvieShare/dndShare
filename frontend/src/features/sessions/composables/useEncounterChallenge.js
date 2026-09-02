@@ -117,7 +117,11 @@ export function useEncounterChallenge({
         {
           crit_mode: true,
           popup: false,
-          actor: { name: displayName(combatant), charUuid: participant?.charUuid || null },
+          actor: {
+            name: displayName(combatant),
+            charUuid: participant?.charUuid || null,
+            itemId: combatant.type === 'npc' ? combatant.itemId || null : null,
+          },
         },
       )
       const natural = roll?.parts
@@ -183,6 +187,7 @@ export function useEncounterChallenge({
       actor: {
         name: displayName(combatant),
         charUuid: combatant.type === 'player' ? findParticipant(combatant.charId)?.charUuid || null : null,
+        itemId: combatant.type === 'npc' ? combatant.itemId || null : null,
       },
       popup: false,
       outcome: kept === 20

@@ -220,6 +220,9 @@ var schemaSessionSceneLocationSQL string
 //go:embed schema/66_session_scene_visual_source.sql
 var schemaSessionSceneVisualSourceSQL string
 
+//go:embed schema/67_session_event_actor_item.sql
+var schemaSessionEventActorItemSQL string
+
 var schemaParts = []struct {
 	name string
 	sql  string
@@ -292,6 +295,7 @@ var schemaParts = []struct {
 	{"session-npc-bestiary", schemaSessionNPCBestiarySQL},
 	{"session-scene-location", schemaSessionSceneLocationSQL},
 	{"session-scene-visual-source", schemaSessionSceneVisualSourceSQL},
+	{"session-event-actor-item", schemaSessionEventActorItemSQL},
 }
 
 const (

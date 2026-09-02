@@ -39,7 +39,8 @@ describe('SessionEventsPanel timeline layout', () => {
   })
 
   it('renders the stored actor and action independently', () => {
-    expect(source).toContain('v-if="actorGroup.label"')
+    expect(source).toContain('<SessionEventActorAvatar :event="actorGroup.actorEvent"')
+    expect(source).toContain("actorGroup.kind === 'dm' ? 'Мастер'")
     expect(source).toContain('{{ event.action }}')
     expect(source).not.toContain('function eventTitle')
   })

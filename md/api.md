@@ -304,13 +304,15 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
   encounter challenge results are never returned;
 - `GET|POST /api/sessions/{uuid}/events` reads and appends the session timeline.
   The read endpoint accepts `after` and `limit`; the write endpoint accepts
-  `{type,action,data,actorCharUuid?,actorName?,visibility?,clientActionId?}`. The server
+  `{type,action,data,actorCharUuid?,actorItemId?,actorName?,visibility?,clientActionId?}`. The server
   derives the author from authentication, validates DM/participant access and
   resolves `actorCharUuid` to the participant whose page produced the action.
   A linked character's `actorName` is derived and snapshotted server-side;
-  only the DM may supply a standalone creature name without a character UUID.
+  only the DM may supply a standalone creature name or an accessible bestiary
+  `actorItemId` without a character UUID. Character and item actors are mutually exclusive.
   Event responses expose separate `actorName`, `action`, the required boolean
-  `authorIsSessionOwner` and actor character projection fields;
+  `authorIsSessionOwner`, actor character projection fields and resolved
+  `actorImageUrl` / `actorSvg` artwork when available;
   user login is not part of the timeline response. `clientActionId` makes
   retries idempotent. `entry_added` carries a typed `data.kind` (`item`,
   `potion`, `spell`, `feature` or `ability`) for additions to a character;

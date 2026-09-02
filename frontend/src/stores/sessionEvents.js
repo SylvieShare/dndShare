@@ -96,14 +96,19 @@ export const useSessionEventsStore = defineStore('session-events', () => {
     if (!uuid) return null
     try {
       const eventActor = actor === undefined
-        ? { charUuid: actorCharUuid.value, name: null }
-        : { charUuid: actor?.charUuid || null, name: String(actor?.name || '').trim() || null }
+        ? { charUuid: actorCharUuid.value, itemId: null, name: null }
+        : {
+            charUuid: actor?.charUuid || null,
+            itemId: actor?.itemId == null ? null : Number(actor.itemId),
+            name: String(actor?.name || '').trim() || null,
+          }
       const response = await sessionEventsApi.createSessionEvent(uuid, {
         type,
         action,
         data,
         visibility,
         actorCharUuid: eventActor.charUuid,
+        actorItemId: eventActor.itemId,
         actorName: eventActor.name,
         clientActionId: actionId(),
       })

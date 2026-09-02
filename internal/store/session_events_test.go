@@ -16,6 +16,20 @@ func TestSessionEventAlwaysExposesOwnerFlag(t *testing.T) {
 	}
 }
 
+func TestSessionEventProjectsActorArtwork(t *testing.T) {
+	for _, fragment := range []string{
+		"e.actor_item_id",
+		"character_icon.url",
+		"actor_icon.url",
+		"actor_cover.url",
+		"actor_svg.data",
+	} {
+		if !strings.Contains(sessionEventSelect, fragment) {
+			t.Fatalf("session event projection must contain %q", fragment)
+		}
+	}
+}
+
 func TestCharacterName(t *testing.T) {
 	tests := []struct {
 		name string
