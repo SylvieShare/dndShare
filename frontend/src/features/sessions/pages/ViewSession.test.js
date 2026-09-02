@@ -9,6 +9,8 @@ const styles = readFileSync(fileURLToPath(new URL('./styles/ViewSession.css', im
 const selectionSource = readFileSync(fileURLToPath(new URL('../composables/useSessionSelection.js', import.meta.url)), 'utf8')
 const workspaceSource = readFileSync(fileURLToPath(new URL('../composables/useSessionWorkspace.js', import.meta.url)), 'utf8')
 const dicePanelSource = readFileSync(fileURLToPath(new URL('../components/DicePanel.vue', import.meta.url)), 'utf8')
+const diceControlSource = readFileSync(fileURLToPath(new URL('../components/SessionDiceControl.vue', import.meta.url)), 'utf8')
+const chronicleWorkspaceSource = readFileSync(fileURLToPath(new URL('../components/SessionChronicleWorkspace.vue', import.meta.url)), 'utf8')
 const musicWorkspaceSource = readFileSync(fileURLToPath(new URL('../components/SessionMusicWorkspace.vue', import.meta.url)), 'utf8')
 const centerWorkspaceSource = readFileSync(fileURLToPath(new URL('../components/SessionCenterWorkspace.vue', import.meta.url)), 'utf8')
 const encounterSource = readFileSync(fileURLToPath(new URL('../components/EncounterTab.vue', import.meta.url)), 'utf8')
@@ -84,16 +86,16 @@ describe('ViewSession participant rail', () => {
     expect(sessionLiveSource).toContain('runCatchUp()')
   })
 
-  it('uses the chapter canvas as the full workspace with tools floating above it', () => {
+  it('uses the chapter canvas as the full workspace without a right tool rail', () => {
     expect(source).toContain('class="campaign-workspace"')
     expect(source).toContain('class="campaign-graph"')
     expect(source).toContain('workspace-dock workspace-dock--left')
-    expect(source).toContain('workspace-dock workspace-dock--right')
+    expect(source).not.toContain('workspace-dock workspace-dock--right')
     expect(styles).toContain('.campaign-workspace {')
     expect(styles).toContain('position: absolute;')
     expect(styles).toContain('--chapter-safe-left: 306px;')
-    expect(styles).toContain('.campaign-workspace--right-dock .campaign-graph')
-    expect(styles).toContain('--chapter-safe-right: 350px;')
+    expect(styles).not.toContain('.campaign-workspace--right-dock')
+    expect(styles).toContain('--chapter-safe-right: 0px;')
     expect(source).not.toContain('campaign-workspace--hotkeys')
     expect(styles).not.toContain('.campaign-workspace--hotkeys .workspace-dock--left')
     expect(source).not.toContain('<SlidingTabs')
@@ -123,17 +125,13 @@ describe('ViewSession participant rail', () => {
     expect(styles).toMatch(/\.campaign-workspace--combat \.workspace-dock--left\s*\{[^}]*width:\s*360px;/s)
   })
 
-  it('keeps session dice purple and removes the duplicated right-rail music player', () => {
+  it('keeps session dice purple and opens them from the header popover', () => {
     expect(dicePanelSource).toContain('color="var(--accent)"')
-    expect(styles).toMatch(/\.workspace-dock--right\s*\{[^}]*width:\s*328px;/s)
-    expect(source).not.toContain('class="workspace-tool-toggles"')
-    expect(source).toContain("const SESSION_TOOL_PANELS_STORAGE_KEY = 'dnd-share:session-tool-panels:v1'")
-    expect(source).toContain('localStorage.getItem(SESSION_TOOL_PANELS_STORAGE_KEY)')
-    expect(source).toContain('localStorage.setItem(SESSION_TOOL_PANELS_STORAGE_KEY')
-    expect(source).toContain('@toggle-dice="diceOpen = !diceOpen"')
-    expect(source).toContain('@toggle-events="eventsOpen = !eventsOpen"')
-    expect(source).toContain('<BaseTile v-show="diceOpen"')
-    expect(source).toContain('<BaseTile v-show="eventsOpen"')
+    expect(diceControlSource).toContain('<BasePopover')
+    expect(diceControlSource).toContain('<DicePanel ref="dicePanel"')
+    expect(source).not.toContain('SESSION_TOOL_PANELS_STORAGE_KEY')
+    expect(source).not.toContain('diceOpen')
+    expect(source).not.toContain('eventsOpen')
     expect(dicePanelSource).not.toContain('dice-panel-collapse')
     expect(source).not.toContain('musicOpen')
     expect(source).not.toContain('<MusicPanel')
@@ -156,10 +154,11 @@ describe('ViewSession participant rail', () => {
     expect(encounterNpcsSource).toContain('rollDiceExpression')
   })
 
-  it('switches session sections and tool panels and rolls dice while their panel is closed', () => {
+  it('switches session sections and rolls dice through the mounted popover controller', () => {
     expect(source).toContain('useSessionHotkeys({')
-    expect(source).toContain('rollDie: sides => dicePanel.value?.rollDie(sides)')
-    expect(source).toContain('<DicePanel ref="dicePanel"')
+    expect(source).toContain('rollDie: sides => chapterGraphTab.value?.rollDie(sides)')
+    expect(source).toContain("if (panel === 'dice') chapterGraphTab.value?.toggleDice()")
+    expect(diceControlSource).toContain('<DicePanel ref="dicePanel"')
     expect(dicePanelSource).toContain('defineExpose({ rollDie })')
     expect(dicePanelSource).toContain('class="dice-panel-shortcut"')
     expect(sessionHotkeysSource).toContain("command.type === 'select-view'")
@@ -194,19 +193,17 @@ describe('ViewSession participant rail', () => {
     expect(sessionHotkeysSource).toContain("command.type === 'toggle-encounter' && event.target?.closest?.(NATIVE_ACTIVATION_TARGET)")
   })
 
-  it('lets the canvas use the empty part of the right rail and moves actions right when every panel is closed', () => {
-    expect(source).toContain("'campaign-workspace--right-dock': rightDockOpen")
-    expect(source).toContain('<aside class="workspace-dock workspace-dock--right">')
-    expect(source).toContain('const rightDockOpen = computed(() => diceOpen.value || eventsOpen.value)')
-    expect(styles).toMatch(/\.workspace-dock--right\s*\{[^}]*pointer-events:\s*none;/s)
-    expect(styles).toMatch(/\.workspace-dock--right > \.workspace-tool-tile\s*\{[^}]*pointer-events:\s*auto;/s)
+  it('lets the canvas use the full right edge after removing the right rail', () => {
+    expect(source).not.toContain('campaign-workspace--right-dock')
+    expect(source).not.toContain('workspace-dock workspace-dock--right')
+    expect(styles).not.toContain('.workspace-dock--right')
     expect(styles).toMatch(/\.campaign-graph\s*\{[^}]*--chapter-safe-right:\s*0px;/s)
-    expect(styles).toMatch(/\.campaign-workspace--combat \.campaign-graph\s*\{[^}]*--chapter-safe-right:\s*350px;/s)
   })
 
-  it('keeps the event log in the right rail without a music mini-player', () => {
-    expect(source).toContain('<SessionEventsPanel')
-    expect(source).not.toContain('<MusicPanel')
+  it('renders the chronicle as a central session workspace', () => {
+    expect(source).toContain('<SessionChronicleWorkspace v-else-if="primaryView === \'events\'"')
+    expect(chronicleWorkspaceSource).toContain('<SessionEventsPanel')
+    expect(chronicleWorkspaceSource).toContain('class="session-chronicle-workspace"')
   })
 
   it('uses the opened character sheet as the actor for session dice rolls', () => {

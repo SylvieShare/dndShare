@@ -34,6 +34,16 @@ describe('session timer workspace', () => {
     expect(stack).toContain('timer.broadcast')
   })
 
+  it('renders each timer as a draggable window and remembers its position per session', () => {
+    expect(page).toContain(':session-uuid="sessionUuid"')
+    expect(stack).toContain('@pointerdown.stop="startDrag($event, timer, index)"')
+    expect(stack).toContain("window.addEventListener('pointermove', onPointerMove)")
+    expect(stack).toContain('dnd-share:session-timer-windows:v1:')
+    expect(stack).toContain('localStorage.setItem(storageKey()')
+    expect(stack).toContain('class="session-timer-windows"')
+    expect(control).toContain('Перетаскивайте окна за заголовок')
+  })
+
   it('persists timers through the owner-only session API and uses server clock offset', () => {
     expect(api).toContain('getSessionTimers')
     expect(api).toContain('/timers/${timerId}')

@@ -49,7 +49,6 @@
       :class="{
         'campaign-workspace--combat': primaryView === 'story' && workspaceMotionMode === 'combat',
         'campaign-workspace--players-collapsed': playersRailMode === 'compact',
-        'campaign-workspace--right-dock': rightDockOpen,
       }"
     >
       <ChapterGraphTab
@@ -67,8 +66,6 @@
         :workspace-mode="workspaceMode"
         :workspace-layout-mode="workspaceMotionMode"
         :encounter-active="encounter.encounter.active"
-        :dice-open="diceOpen"
-        :events-open="eventsOpen"
         :materials="sessionMaterials"
         :presentation="presentation"
         :timers="sessionTimers"
@@ -77,8 +74,6 @@
         @open-scenes="openChapterScenes"
         @select-view="selectSessionView"
         @open-combat="openCombatTab"
-        @toggle-dice="diceOpen = !diceOpen"
-        @toggle-events="eventsOpen = !eventsOpen"
         @update-setting="updateSessionSetting"
         @send-block-to-combat="sendBlockToCombat"
         @workspace-context-change="updateWorkspaceContext"
@@ -87,6 +82,7 @@
       >
         <template #primary-workspace>
           <SessionMusicWorkspace v-if="primaryView === 'music'" :is-dm="isDm" />
+          <SessionChronicleWorkspace v-else-if="primaryView === 'events'" :live-status="liveStatus" />
           <SessionWorldLayer
             v-else
             ref="worldLayer"
@@ -126,7 +122,7 @@
         />
       </ChapterGraphTab>
 
-      <SessionTimerStack v-if="isDm" :timers="sessionTimers" />
+      <SessionTimerStack v-if="isDm" :session-uuid="sessionUuid" :timers="sessionTimers" />
 
       <div v-if="combatWorkspaceError" class="combat-import-error" role="alert">{{ combatWorkspaceError }}</div>
 
@@ -227,15 +223,6 @@
         </div>
       </aside>
 
-      <aside class="workspace-dock workspace-dock--right">
-        <BaseTile v-show="diceOpen" class="side-tile workspace-tool-tile">
-          <DicePanel ref="dicePanel" :show-shortcut-hints="showShortcutHints" />
-        </BaseTile>
-        <BaseTile v-show="eventsOpen" class="side-tile workspace-tool-tile workspace-events-tile">
-          <SessionEventsPanel :live-status="liveStatus" />
-        </BaseTile>
-      </aside>
-
       <CharacterSheetModal
         v-if="sheetUuid"
         :uuid="sheetUuid"
@@ -269,15 +256,13 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, provide, reactive, ref, watch } from 'vue'
 import { ListChecks, LogIn, PanelLeftClose, PanelLeftOpen } from '@lucide/vue'
 import { useRoute, useRouter } from 'vue-router'
-import { BaseTile } from '@sylvieshare/share-ui'
 import { ConfirmDialog } from '@sylvieshare/share-ui'
 import { reorderByDrop, useSortable } from '@sylvieshare/share-ui'
 import CharacterCreateWizardModal from '@/features/character-list/components/CharacterCreateWizardModal.vue'
 import CharacterSheetModal from '@/features/character-editor/components/CharacterSheetModal.vue'
 import ChapterGraphTab from '@/features/sessions/components/ChapterGraphTab.vue'
-import DicePanel from '@/features/sessions/components/DicePanel.vue'
 import EncounterReviveModal from '@/features/sessions/components/EncounterReviveModal.vue'
-import SessionEventsPanel from '@/features/sessions/components/SessionEventsPanel.vue'
+import SessionChronicleWorkspace from '@/features/sessions/components/SessionChronicleWorkspace.vue'
 import SessionEditModal from '@/features/sessions/components/SessionEditModal.vue'
 import SessionJoinModal from '@/features/sessions/components/SessionJoinModal.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
@@ -359,40 +344,15 @@ provide('sessionWorld', sessionWorld)
 provide('sessionPresentation', presentation)
 const sessionEventsStore = useSessionEventsStore()
 const templateStore = useTemplateStore()
-const SESSION_TOOL_PANELS_STORAGE_KEY = 'dnd-share:session-tool-panels:v1'
-const savedToolPanels = readToolPanelVisibility()
-const diceOpen = ref(savedToolPanels.dice)
-const eventsOpen = ref(savedToolPanels.events)
-const dicePanel = ref(null)
 const showShortcutHints = ref(false)
 const shortcutLabels = sessionShortcutLabels()
 const chapterGraphTab = ref(null)
 const combatWorkspace = ref(null)
 const worldLayer = ref(null)
-const rightDockOpen = computed(() => diceOpen.value || eventsOpen.value)
 const combatImportError = ref('')
 
-watch([diceOpen, eventsOpen], ([dice, events]) => {
-  try {
-    localStorage.setItem(SESSION_TOOL_PANELS_STORAGE_KEY, JSON.stringify({ dice, events }))
-  } catch { /* localStorage can be unavailable in private mode */ }
-})
-
-function readToolPanelVisibility() {
-  try {
-    const saved = JSON.parse(localStorage.getItem(SESSION_TOOL_PANELS_STORAGE_KEY) || 'null')
-    return {
-      dice: saved?.dice !== false,
-      events: saved?.events !== false,
-    }
-  } catch {
-    return { dice: true, events: true }
-  }
-}
-
 function toggleToolPanel(panel) {
-  if (panel === 'dice') diceOpen.value = !diceOpen.value
-  if (panel === 'events') eventsOpen.value = !eventsOpen.value
+  if (panel === 'dice') chapterGraphTab.value?.toggleDice()
 }
 
 const sheetUuid = ref(null)
@@ -610,7 +570,7 @@ useSessionHotkeys({
   showHints: showShortcutHints,
   selectView: selectSessionView,
   togglePanel: toggleToolPanel,
-  rollDie: sides => dicePanel.value?.rollDie(sides),
+  rollDie: sides => chapterGraphTab.value?.rollDie(sides),
   listMode: computed(() => ['locations', 'npcs', 'quests', 'materials'].includes(primaryView.value)),
   previousListItem: () => worldLayer.value?.moveSelection(-1),
   nextListItem: () => worldLayer.value?.moveSelection(1),

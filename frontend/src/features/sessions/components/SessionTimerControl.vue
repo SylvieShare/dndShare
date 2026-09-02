@@ -54,7 +54,7 @@
 
         <div v-if="activeCount" class="session-timer-summary">
           <span><Layers3 :size="14" />{{ activeLabel }}</span>
-          <small>Управление доступно на карточках справа</small>
+          <small>Перетаскивайте окна за заголовок</small>
         </div>
         <p v-if="timers.error.value" class="session-timer-error" role="alert">{{ timers.error.value }}</p>
       </form>

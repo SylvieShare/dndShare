@@ -103,23 +103,17 @@ available for pan and node dragging.
 
 The session page is a campaign workspace rather than a stack of independent
 content pages. Its semantic header centers the switch between `Сюжет`, `Бой`,
-`Локации`, `NPC`, `Задания`, `Материалы` and `Музыка` independently of the title/arc and tool groups. `Сюжет` and `Бой`
+`Локации`, `NPC`, `Задания`, `Материалы`, `Музыка` and `Хроника` independently of the title/arc and tool groups. `Сюжет` and `Бой`
 form the first navigation group and a vertical divider separates them from the
 four world catalogues; a second divider separates the final music-library tab. The
 participant rail remains on the left and the
-dice and events tools remain in a 328px right rail, wide enough for the full
-three-option dice mode switch without label clipping. In `Сюжет` the chapter canvas fills
-all available width below `AppHeader`. CSS safe-area variables keep focus, zoom
-and newly created nodes in the uncovered part of the canvas. The catalogue
+right tool rail is removed. In `Сюжет` the chapter canvas fills all available
+width below `AppHeader`; only the participant rail reserves a horizontal safe
+area. CSS safe-area variables keep focus, zoom and newly created nodes in the
+uncovered part of the canvas. The catalogue
 workspaces start 8px after the visible participant rail and use an 8px internal gap,
 so their list column remains visually attached without sliding underneath the
-players. Only rendered right-side
-tiles receive pointer events: transparent space below a shorter stack remains
-available for canvas pan, selection and node dragging. When all three tiles are
-hidden, the right safe area collapses and canvas create actions move to the
-viewport edge. At widths up to `1360px` the right tool rail is hidden so the
-split location/NPC workspaces retain a useful detail width; the participant rail
-disappears only on mobile.
+players. The participant rail disappears only on mobile.
 
 The primary switch remains active at every story depth. `Музыка` opens the
 central session library and also acts as a compact always-visible player when a
@@ -135,17 +129,18 @@ its red live marker therefore remains visible on the inactive `Бой` tab. Each
 catalogue selection stays in its own query key, so
 returning to a catalogue restores the previously selected location, NPC, quest
 or material. The settings control is visually separated from the presentation,
-timer, dice and log controls by its own vertical divider.
+timer and dice controls by its own vertical divider.
 
-Постоянные icon-кнопки в командной шапке независимо открывают и закрывают
-панели кубиков и событий. Выбранная видимость сохраняется в
-`localStorage` и восстанавливается при следующем открытии страницы; состояние
-самих смонтированных панелей при временном скрытии также сохраняется. Внутренних
-кнопок сворачивания у панелей нет.
+Кнопка кубиков в командной шапке открывает `DicePanel` в `BasePopover`, по той
+же модели, что экран показа и таймеры. Контроллер остаётся смонтированным, поэтому
+горячие клавиши бросков работают и при закрытом popover. Отдельной карточки
+кубиков и состояния видимости правой панели больше нет.
 Отдельная master-only кнопка `Таймеры` открывает компактную форму с описанием,
 минутами/секундами и быстрыми пресетами. Каждый запущенный таймер появляется
-как стеклянная карточка справа под шапкой; при открытой колонке инструментов
-стек сдвигается влево и не перекрывает её. Карточка показывает серверно
+как отдельное плавающее стеклянное окно поверх рабочего пространства. Окно
+перетаскивается за заголовок, при взаимодействии поднимается наверх, не выходит
+за границы viewport, а его позиция сохраняется для текущей сессии в
+`localStorage`. Карточка показывает серверно
 синхронизированный отсчёт и прогресс, позволяет поставить таймер на паузу,
 продолжить и добавить одну или пять минут. После нуля карточка получает заметное
 завершённое состояние и кнопку `Убрать`; добавление времени запускает её снова.
@@ -154,7 +149,8 @@ timer, dice and log controls by its own vertical divider.
 флаг относится только к этому таймеру. Такие отсчёты появляются на анонимном
 экране с локально синхронизированным временем и прогрессом, остальные остаются
 только в рабочем пространстве мастера.
-`SessionEventsPanel` расположен в правой колонке после панели кубиков, занимает свободную высоту и
+`Хроника` открывает отдельный центральный workspace с `SessionEventsPanel` и
+доступна через `Alt`/`Option` + `7`. Панель занимает полезную высоту workspace и
 прокручивает только собственную хронику по вертикали; длинные имена, описания и
 результаты бросков переносятся без горизонтального скролла. Новые записи находятся сверху и
 группируются сначала по минуте, затем по последовательному субъекту действия.
@@ -422,7 +418,7 @@ scenarios; bulk scenario deletion also removes its blocks.
 Desktop session pages keep only the frameless `? · Горячие клавиши` affordance
 at the bottom-left. Pressing `?` or clicking it toggles contextual shortcut
 hints without reserving space or moving the participant rail: section hints sit
-under their header tabs, panel hints under the dice/log buttons, dice-roll
+under their header tabs, the panel hint sits under the dice button, dice-roll
 hints inside the corresponding dice, and canvas-only hints remain over the
 bottom-left of the canvas safe area, beside the participant rail. If the dice panel is closed, its header button
 temporarily shows the compact `1…7 · d4…d100` mapping instead. `Esc` hides the hints while preserving its
@@ -430,10 +426,10 @@ existing canvas action. The contextual help is hidden on touch and mobile
 layouts.
 
 Session-wide shortcuts use physical key codes and therefore do not depend on
-the current keyboard language. `Alt`/`Option` + `1…6` opens Story, Locations,
-NPCs, Quests, Materials and Music; `Shift` + `D` or `L` toggles the dice or
-session-log panel without conflicting with browser address-bar
-shortcuts. `Alt`/`Option` + `Shift` + `1…7` rolls d4, d6, d8,
+the current keyboard language. `Alt`/`Option` + `1…7` opens Story, Locations,
+NPCs, Quests, Materials, Music and Chronicle; `Shift` + `D` toggles the dice
+popover without conflicting with browser address-bar shortcuts.
+`Alt`/`Option` + `Shift` + `1…7` rolls d4, d6, d8,
 d10, d12, d20 or d100 using the currently selected normal/advantage/disadvantage
 mode. Dice rolling works while the dice panel is closed because its controller
 remains mounted. Section switching is DM-only, matching the visible navigation;
@@ -642,9 +638,8 @@ combat-only “select all” and “move selected to combat” actions above its
 both operate only on players and preserve any NPC selection. With or without a
 scenario context, the combat header uses the full center width;
 combatants remain independent tiles below it rather than being wrapped in one
-central card. On desktop the combat workspace retains the same reserved right
-boundary whether the tool rail is open or empty, so hiding all right-side tools
-does not stretch the central combat column. The header uses one enlarged,
+central card. With the right tool rail removed, the combat workspace uses the
+full width between the participant safe area and the viewport edge. The header uses one enlarged,
 labelled primary action, “Начать бой” or “Закончить бой”, while turn navigation
 remains compact and icon-only. The header has one stable composition at every
 width: its left side shows the scenario image and name, falling back to the

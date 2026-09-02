@@ -5,11 +5,11 @@ export const SESSION_VIEW_SHORTCUTS = Object.freeze({
   quests: 'Digit4',
   materials: 'Digit5',
   music: 'Digit6',
+  events: 'Digit7',
 })
 
 export const SESSION_PANEL_SHORTCUTS = Object.freeze({
   dice: 'KeyD',
-  events: 'KeyL',
 })
 
 export const SESSION_DICE_SHORTCUTS = Object.freeze([

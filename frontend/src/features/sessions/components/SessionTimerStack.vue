@@ -1,72 +1,182 @@
 <template>
-  <TransitionGroup v-if="timers.displayed.value.length || timers.error.value" name="session-timer" tag="aside" class="session-timer-stack" aria-label="Таймеры сессии">
-    <p v-if="timers.error.value" key="timer-error" class="session-timer-stack-error" role="alert">{{ timers.error.value }}</p>
-    <article
-      v-for="timer in timers.displayed.value"
-      :key="timer.id"
-      class="session-timer-card"
-      :class="{ 'session-timer-card--paused': timer.paused, 'session-timer-card--completed': timer.completed }"
-      :style="{ '--timer-progress': `${Math.round(timer.progress * 100)}%` }"
-    >
-      <div class="session-timer-card-head">
-        <span class="session-timer-card-icon"><BellRing v-if="timer.completed" :size="15" /><Timer v-else :size="15" /></span>
-        <strong>{{ timer.description }}</strong>
-        <span v-if="timer.broadcast" class="session-timer-live" title="Показывается в трансляции"><MonitorUp :size="13" /></span>
-        <button v-if="!timer.completed" type="button" class="session-timer-dismiss" title="Отменить таймер" aria-label="Отменить таймер" :disabled="timers.isPending(timer.id)" @click="run(() => timers.remove(timer.id))"><X :size="14" /></button>
-      </div>
+  <aside
+    v-if="timers.displayed.value.length || timers.error.value"
+    ref="workspace"
+    class="session-timer-windows"
+    aria-label="Таймеры сессии"
+  >
+    <p v-if="timers.error.value" class="session-timer-window-error" role="alert">{{ timers.error.value }}</p>
+    <TransitionGroup name="session-timer">
+      <article
+        v-for="(timer, index) in timers.displayed.value"
+        :key="timer.id"
+        :data-timer-id="timer.id"
+        class="session-timer-card"
+        :class="{
+          'session-timer-card--paused': timer.paused,
+          'session-timer-card--completed': timer.completed,
+          'session-timer-card--dragging': draggingId === String(timer.id),
+        }"
+        :style="timerStyle(timer, index)"
+        @pointerdown="bringToFront(timer.id)"
+      >
+        <div class="session-timer-card-head" @pointerdown.stop="startDrag($event, timer, index)">
+          <span class="session-timer-card-icon"><BellRing v-if="timer.completed" :size="15" /><Timer v-else :size="15" /></span>
+          <strong>{{ timer.description }}</strong>
+          <span v-if="timer.broadcast" class="session-timer-live" title="Показывается в трансляции"><MonitorUp :size="13" /></span>
+          <GripHorizontal class="session-timer-drag-mark" :size="14" aria-hidden="true" />
+          <button v-if="!timer.completed" type="button" class="session-timer-dismiss" title="Отменить таймер" aria-label="Отменить таймер" :disabled="timers.isPending(timer.id)" @pointerdown.stop @click="run(() => timers.remove(timer.id))"><X :size="14" /></button>
+        </div>
 
-      <div class="session-timer-readout">
-        <time>{{ formatTimerDuration(timer.remainingMs) }}</time>
-        <span v-if="timer.completed">Время вышло</span>
-        <span v-else-if="timer.paused">На паузе</span>
-        <span v-else>Осталось</span>
-      </div>
+        <div class="session-timer-readout">
+          <time>{{ formatTimerDuration(timer.remainingMs) }}</time>
+          <span v-if="timer.completed">Время вышло</span>
+          <span v-else-if="timer.paused">На паузе</span>
+          <span v-else>Осталось</span>
+        </div>
 
-      <div class="session-timer-progress" aria-hidden="true"><span /></div>
+        <div class="session-timer-progress" aria-hidden="true"><span :style="{ width: `${Math.round(timer.progress * 100)}%` }" /></div>
 
-      <div class="session-timer-actions">
-        <button v-if="timer.completed" type="button" class="session-timer-remove" :disabled="timers.isPending(timer.id)" @click="run(() => timers.remove(timer.id))"><Trash2 :size="13" />Убрать</button>
-        <button v-else type="button" :disabled="timers.isPending(timer.id)" @click="run(() => timer.paused ? timers.resume(timer.id) : timers.pause(timer.id))">
-          <Play v-if="timer.paused" :size="13" fill="currentColor" /><Pause v-else :size="13" fill="currentColor" />
-          {{ timer.paused ? 'Продолжить' : 'Пауза' }}
-        </button>
-        <span class="session-timer-actions-spacer" />
-        <button v-if="!timer.completed" type="button" :disabled="timers.isPending(timer.id)" @click="run(() => timers.subtractTime(timer.id, 300_000))">−5 мин</button>
-        <button v-if="!timer.completed" type="button" :disabled="timers.isPending(timer.id)" @click="run(() => timers.subtractTime(timer.id, 60_000))">−1 мин</button>
-        <button type="button" :disabled="timers.isPending(timer.id)" @click="run(() => timers.addTime(timer.id, 60_000))">+1 мин</button>
-        <button type="button" :disabled="timers.isPending(timer.id)" @click="run(() => timers.addTime(timer.id, 300_000))">+5 мин</button>
-      </div>
-    </article>
-  </TransitionGroup>
+        <div class="session-timer-actions">
+          <button v-if="timer.completed" type="button" class="session-timer-remove" :disabled="timers.isPending(timer.id)" @click="run(() => timers.remove(timer.id))"><Trash2 :size="13" />Убрать</button>
+          <button v-else type="button" :disabled="timers.isPending(timer.id)" @click="run(() => timer.paused ? timers.resume(timer.id) : timers.pause(timer.id))">
+            <Play v-if="timer.paused" :size="13" fill="currentColor" /><Pause v-else :size="13" fill="currentColor" />
+            {{ timer.paused ? 'Продолжить' : 'Пауза' }}
+          </button>
+          <span class="session-timer-actions-spacer" />
+          <button v-if="!timer.completed" type="button" :disabled="timers.isPending(timer.id)" @click="run(() => timers.subtractTime(timer.id, 300_000))">−5 мин</button>
+          <button v-if="!timer.completed" type="button" :disabled="timers.isPending(timer.id)" @click="run(() => timers.subtractTime(timer.id, 60_000))">−1 мин</button>
+          <button type="button" :disabled="timers.isPending(timer.id)" @click="run(() => timers.addTime(timer.id, 60_000))">+1 мин</button>
+          <button type="button" :disabled="timers.isPending(timer.id)" @click="run(() => timers.addTime(timer.id, 300_000))">+5 мин</button>
+        </div>
+      </article>
+    </TransitionGroup>
+  </aside>
 </template>
 
 <script setup>
-import { BellRing, MonitorUp, Pause, Play, Timer, Trash2, X } from '@lucide/vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { BellRing, GripHorizontal, MonitorUp, Pause, Play, Timer, Trash2, X } from '@lucide/vue'
 import { formatTimerDuration } from '@/features/sessions/lib/sessionTimers'
 
-const props = defineProps({ timers: { type: Object, required: true } })
+const props = defineProps({
+  sessionUuid: { type: String, required: true },
+  timers: { type: Object, required: true },
+})
+
+const workspace = ref(null)
+const positions = ref(readPositions())
+const layers = ref({})
+const draggingId = ref(null)
+let layer = 1
+let drag = null
+
+function storageKey() { return `dnd-share:session-timer-windows:v1:${props.sessionUuid}` }
+
+function readPositions() {
+  try {
+    const value = JSON.parse(localStorage.getItem(`dnd-share:session-timer-windows:v1:${props.sessionUuid}`) || '{}')
+    return value && typeof value === 'object' ? value : {}
+  } catch {
+    return {}
+  }
+}
+
+function savePositions() {
+  try { localStorage.setItem(storageKey(), JSON.stringify(positions.value)) } catch { /* localStorage may be unavailable */ }
+}
+
+function bounds() {
+  const width = workspace.value?.clientWidth || window.innerWidth
+  const height = workspace.value?.clientHeight || window.innerHeight
+  return { width, height, cardWidth: Math.min(290, Math.max(0, width - 20)), cardHeight: 142 }
+}
+
+function clampPosition(position) {
+  const frame = bounds()
+  return {
+    x: Math.max(10, Math.min(frame.width - frame.cardWidth - 10, Number(position?.x) || 10)),
+    y: Math.max(10, Math.min(frame.height - frame.cardHeight - 10, Number(position?.y) || 70)),
+  }
+}
+
+function defaultPosition(index) {
+  const frame = bounds()
+  return clampPosition({ x: frame.width - frame.cardWidth - 14, y: 70 + index * 154 })
+}
+
+function positionFor(timer, index) {
+  return clampPosition(positions.value[String(timer.id)] || defaultPosition(index))
+}
+
+function timerStyle(timer, index) {
+  const position = positionFor(timer, index)
+  return {
+    left: `${position.x}px`,
+    top: `${position.y}px`,
+    zIndex: layers.value[String(timer.id)] || 1,
+  }
+}
+
+function bringToFront(timerId) {
+  const id = String(timerId)
+  layer += 1
+  layers.value = { ...layers.value, [id]: layer }
+}
+
+function startDrag(event, timer, index) {
+  if (event.button !== 0 || event.target.closest('button')) return
+  const id = String(timer.id)
+  const position = positionFor(timer, index)
+  bringToFront(id)
+  draggingId.value = id
+  drag = { id, pointerId: event.pointerId, startX: event.clientX, startY: event.clientY, x: position.x, y: position.y }
+  event.currentTarget.setPointerCapture?.(event.pointerId)
+  window.addEventListener('pointermove', onPointerMove)
+  window.addEventListener('pointerup', stopDrag, { once: true })
+  window.addEventListener('pointercancel', stopDrag, { once: true })
+  event.preventDefault()
+}
+
+function onPointerMove(event) {
+  if (!drag || event.pointerId !== drag.pointerId) return
+  const next = clampPosition({ x: drag.x + event.clientX - drag.startX, y: drag.y + event.clientY - drag.startY })
+  positions.value = { ...positions.value, [drag.id]: next }
+}
+
+function stopDrag(event) {
+  if (drag && event?.pointerId != null && event.pointerId !== drag.pointerId) return
+  window.removeEventListener('pointermove', onPointerMove)
+  window.removeEventListener('pointerup', stopDrag)
+  window.removeEventListener('pointercancel', stopDrag)
+  draggingId.value = null
+  drag = null
+  savePositions()
+}
+
+function clampSavedPositions() {
+  const next = {}
+  for (const [id, position] of Object.entries(positions.value)) next[id] = clampPosition(position)
+  positions.value = next
+  savePositions()
+}
+
 async function run(action) { await action().catch(() => {}) }
+
+onMounted(() => window.addEventListener('resize', clampSavedPositions))
+onBeforeUnmount(() => {
+  stopDrag()
+  window.removeEventListener('resize', clampSavedPositions)
+})
 </script>
 
 <style scoped>
-.session-timer-stack {
-  position: absolute;
-  z-index: 18;
-  top: 70px;
-  right: 14px;
-  width: 290px;
-  max-height: calc(100% - 84px);
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
-  overflow-y: auto;
-  pointer-events: none;
-  scrollbar-width: thin;
-  transition: right .28s cubic-bezier(.22, 1, .36, 1);
-}
+.session-timer-windows { position: absolute; z-index: 18; inset: 0; overflow: hidden; pointer-events: none; }
+.session-timer-window-error { position: absolute; top: 70px; right: 14px; margin: 0; padding: 9px 11px; border: 1px solid color-mix(in srgb, var(--danger) 45%, var(--border)); border-radius: 9px; background: var(--popover-bg); color: var(--danger); box-shadow: var(--shadow-md); font-size: 9px; pointer-events: auto; }
 .session-timer-card {
-  position: relative;
-  flex: none;
+  position: absolute;
+  width: min(290px, calc(100% - 20px));
+  box-sizing: border-box;
   overflow: hidden;
   padding: 12px;
   border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--border));
@@ -79,13 +189,15 @@ async function run(action) { await action().catch(() => {}) }
   -webkit-backdrop-filter: blur(15px) saturate(1.12);
   transition: border-color .2s, background .2s, box-shadow .2s;
 }
-.session-timer-stack-error { margin: 0; padding: 9px 11px; border: 1px solid color-mix(in srgb, var(--danger) 45%, var(--border)); border-radius: 9px; background: var(--popover-bg); color: var(--danger); box-shadow: var(--shadow-md); font-size: 9px; pointer-events: auto; }
 .session-timer-card::before { position: absolute; top: 0; right: 0; left: 0; height: 2px; background: var(--accent); content: ''; opacity: .72; }
 .session-timer-card--paused { border-color: color-mix(in srgb, var(--warning) 38%, var(--border)); }
 .session-timer-card--paused::before { background: var(--warning); }
 .session-timer-card--completed { border-color: color-mix(in srgb, var(--danger) 62%, var(--border)); background: color-mix(in srgb, var(--danger) 9%, var(--popover-bg)); box-shadow: 0 10px 34px color-mix(in srgb, var(--danger) 17%, transparent); animation: session-timer-completed 1.4s ease-in-out 2; }
 .session-timer-card--completed::before { background: var(--danger); opacity: 1; }
-.session-timer-card-head { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; align-items: center; gap: 8px; }
+.session-timer-card--dragging { cursor: grabbing; box-shadow: 0 16px 44px color-mix(in srgb, var(--scrim) 55%, transparent); transition: none; }
+.session-timer-card-head { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto auto; align-items: center; gap: 7px; cursor: grab; touch-action: none; user-select: none; }
+.session-timer-card--dragging .session-timer-card-head { cursor: grabbing; }
+.session-timer-drag-mark { color: var(--text-muted); }
 .session-timer-live { width: 24px; height: 24px; display: grid; place-items: center; border-radius: 7px; background: color-mix(in srgb, var(--success) 13%, transparent); color: var(--success); }
 .session-timer-card-icon { width: 27px; height: 27px; display: grid; place-items: center; border-radius: 8px; background: color-mix(in srgb, var(--accent) 13%, transparent); color: var(--accent-soft); }
 .session-timer-card--paused .session-timer-card-icon { background: color-mix(in srgb, var(--warning) 12%, transparent); color: var(--warning); }
@@ -99,7 +211,7 @@ async function run(action) { await action().catch(() => {}) }
 .session-timer-card--paused .session-timer-readout span { color: var(--warning); }
 .session-timer-card--completed .session-timer-readout time, .session-timer-card--completed .session-timer-readout span { color: var(--danger); }
 .session-timer-progress { height: 3px; overflow: hidden; border-radius: 3px; background: color-mix(in srgb, var(--text-muted) 15%, transparent); }
-.session-timer-progress span { display: block; width: var(--timer-progress); height: 100%; border-radius: inherit; background: var(--accent); transition: width .25s linear; }
+.session-timer-progress span { display: block; height: 100%; border-radius: inherit; background: var(--accent); transition: width .25s linear; }
 .session-timer-card--paused .session-timer-progress span { background: var(--warning); }
 .session-timer-card--completed .session-timer-progress span { background: var(--danger); }
 .session-timer-actions { display: flex; align-items: center; gap: 5px; margin-top: 10px; }
@@ -109,12 +221,10 @@ async function run(action) { await action().catch(() => {}) }
 .session-timer-actions-spacer { flex: 1; }
 .session-timer-actions .session-timer-remove { border-color: color-mix(in srgb, var(--danger) 48%, var(--border)); background: color-mix(in srgb, var(--danger) 12%, transparent); color: var(--danger); }
 .session-timer-enter-active, .session-timer-leave-active { transition: opacity .2s, transform .24s cubic-bezier(.22, 1, .36, 1); }
-.session-timer-enter-from, .session-timer-leave-to { opacity: 0; transform: translateX(18px) scale(.97); }
-.session-timer-move { transition: transform .24s cubic-bezier(.22, 1, .36, 1); }
+.session-timer-enter-from, .session-timer-leave-to { opacity: 0; transform: translateY(-8px) scale(.97); }
 @keyframes session-timer-completed { 50% { box-shadow: 0 10px 38px color-mix(in srgb, var(--danger) 26%, transparent); } }
 @media (prefers-reduced-motion: reduce) {
-  .session-timer-stack, .session-timer-card, .session-timer-progress span, .session-timer-enter-active, .session-timer-leave-active, .session-timer-move { transition: none; }
+  .session-timer-card, .session-timer-progress span, .session-timer-enter-active, .session-timer-leave-active { transition: none; }
   .session-timer-card--completed { animation: none; }
 }
-@media (max-width: 760px) { .session-timer-stack { top: 126px; right: 10px; width: min(290px, calc(100% - 20px)); } }
 </style>

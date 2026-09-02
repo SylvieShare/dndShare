@@ -24,6 +24,7 @@ const quests = read('./SessionQuestsWorkspace.vue')
 const questEditor = read('./QuestEditorModal.vue')
 const materials = read('./SessionMaterialsWorkspace.vue')
 const music = read('./SessionMusicWorkspace.vue')
+const chronicle = read('./SessionChronicleWorkspace.vue')
 const entityDetail = read('./SessionEntityDetail.vue')
 const scenarioUsages = read('./ScenarioUsageList.vue')
 const imagePicker = read('./SessionImagePicker.vue')
@@ -48,6 +49,7 @@ describe('session world workspaces', () => {
     expect(toolbar).toContain("{ key: 'npcs', label: 'NPC'")
     expect(toolbar).toContain("{ key: 'quests', label: 'Задания'")
     expect(toolbar).toContain("{ key: 'music', label: 'Музыка'")
+    expect(toolbar).toContain("{ key: 'events', label: 'Хроника'")
     expect(graphTab).toContain('v-show="primaryView === \'story\'"')
     expect(graphTab).toContain('<slot v-if="primaryView !== \'story\'" name="primary-workspace" />')
     expect(sessionView).toContain('<SessionCenterWorkspace')
@@ -58,6 +60,7 @@ describe('session world workspaces', () => {
     expect(layer).toContain("activeView === 'npcs'")
     expect(layer).toContain("activeView === 'quests'")
     expect(sessionView).toContain('<SessionMusicWorkspace v-if="primaryView === \'music\'"')
+    expect(sessionView).toContain('<SessionChronicleWorkspace v-else-if="primaryView === \'events\'"')
     expect(toolbar.indexOf("{ key: 'quests', label: 'Задания'")).toBeLessThan(toolbar.indexOf("{ key: 'materials', label: 'Материалы'"))
   })
 
@@ -67,6 +70,13 @@ describe('session world workspaces', () => {
     expect(sessionView).not.toContain('MusicLibraryModal')
     expect(sessionView).not.toContain('musicLibraryOpen')
     expect(primaryView).toContain("'music'")
+  })
+
+  it('renders the chronicle as a central workspace instead of a right-side panel', () => {
+    expect(chronicle).toContain('class="session-chronicle-workspace"')
+    expect(chronicle).toContain('<SessionEventsPanel')
+    expect(primaryView).toContain("'events'")
+    expect(sessionView).not.toContain('workspace-dock workspace-dock--right')
   })
 
   it('uses one detail header and edit action for all session catalogues', () => {

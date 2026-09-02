@@ -1,6 +1,7 @@
 <template>
   <div class="chapter-graph-tab">
     <ChapterGraphToolbar
+      ref="toolbar"
       :arcs="graph.arcs.value"
       :selected-arc="graph.selectedArc.value"
       :current-arc="graph.currentArc.value"
@@ -11,8 +12,6 @@
       :reorder-pending="saving"
       :combat-active="workspaceLayoutMode === 'combat'"
       :encounter-active="encounterActive"
-      :dice-open="diceOpen"
-      :events-open="eventsOpen"
       :session-uuid="sessionUuid"
       :presentation="presentation"
       :timers="timers"
@@ -28,8 +27,6 @@
       @select-view="$emit('select-view', $event)"
       @edit-session="$emit('edit-session')"
       @open-combat="openCombat"
-      @toggle-dice="$emit('toggle-dice')"
-      @toggle-events="$emit('toggle-events')"
       @update-setting="(...args) => $emit('update-setting', ...args)"
     />
 
@@ -211,8 +208,6 @@ const props = defineProps({
   workspaceLevel: { type: String, default: 'chapters' },
   workspaceLayoutMode: { type: String, default: null },
   encounterActive: { type: Boolean, default: false },
-  diceOpen: { type: Boolean, default: true },
-  eventsOpen: { type: Boolean, default: true },
   presentation: { type: Object, default: null },
   timers: { type: Object, default: null },
   materials: { type: Object, default: null },
@@ -222,11 +217,12 @@ const props = defineProps({
 const emit = defineEmits([
   'open-scenes', 'open-combat', 'edit-session', 'open-chapters',
   'select-view',
-  'send-block-to-combat', 'workspace-context-change', 'toggle-dice', 'toggle-events',
+  'send-block-to-combat', 'workspace-context-change',
   'update-setting',
 ])
 
 const canvas = ref(null)
+const toolbar = ref(null)
 const actionError = ref('')
 const saving = ref(false)
 
@@ -457,6 +453,8 @@ function openCombat() {
 
 defineExpose({
   combatContext: () => props.primaryView === 'story' ? canvas.value?.combatContext?.() ?? {} : {},
+  toggleDice: () => toolbar.value?.toggleDice(),
+  rollDie: sides => toolbar.value?.rollDie(sides),
 })
 
 function returnToChapters() {

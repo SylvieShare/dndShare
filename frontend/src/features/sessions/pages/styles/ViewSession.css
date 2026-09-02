@@ -36,21 +36,12 @@
   height: 100%;
 }
 
-.campaign-workspace--right-dock .campaign-graph {
-  --chapter-safe-right: 350px;
-}
-
-.campaign-workspace--right-dock .session-timer-stack {
-  right: 356px;
-}
-
 .campaign-workspace--players-collapsed .campaign-graph {
   --chapter-safe-left: 94px;
 }
 
 .campaign-workspace--combat .campaign-graph {
   --chapter-safe-left: 402px;
-  --chapter-safe-right: 350px;
 }
 
 .workspace-dock {
@@ -79,23 +70,6 @@
 
 .campaign-workspace--combat .workspace-dock--left {
   width: 360px;
-}
-
-.workspace-dock--right {
-  right: 14px;
-  width: 328px;
-  gap: 16px;
-  pointer-events: none;
-}
-
-.workspace-dock--right > .workspace-tool-tile {
-  pointer-events: auto;
-}
-
-.workspace-tool-tile {
-  background: color-mix(in srgb, var(--surface) 91%, transparent);
-  backdrop-filter: blur(14px) saturate(1.1);
-  -webkit-backdrop-filter: blur(14px) saturate(1.1);
 }
 
 .col-section-title {
@@ -312,16 +286,6 @@
   padding: 2px;
 }
 
-.side-tile {
-  flex-shrink: 0;
-}
-
-.workspace-events-tile {
-  flex: 1 1 180px;
-  min-height: 150px;
-  overflow: hidden;
-}
-
 .loading-placeholder {
   flex: 1;
   margin: 24px;
@@ -334,19 +298,6 @@
 @keyframes sk-pulse {
   0%, 100% { opacity: 1; }
   50%       { opacity: 0.4; }
-}
-
-@media (max-width: 1360px) {
-  .campaign-workspace--right-dock .campaign-graph { --chapter-safe-right: 0px; }
-  .campaign-workspace--combat .campaign-graph { --chapter-safe-right: 0px; }
-
-  .workspace-dock--right {
-    display: none;
-  }
-
-  .campaign-workspace--right-dock .session-timer-stack {
-    right: 14px;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

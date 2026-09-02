@@ -161,6 +161,20 @@
           <span :style="{ width: `${musicProgressPct}%` }" />
         </span>
       </div>
+
+      <button
+        v-if="isDm"
+        type="button"
+        class="chapter-primary-tab"
+        :class="{ 'chapter-primary-tab--active': primaryView === chronicleView.key }"
+        :aria-current="primaryView === chronicleView.key ? 'page' : undefined"
+        :aria-keyshortcuts="`Alt+${chronicleView.shortcut}`"
+        @click="$emit('select-view', chronicleView.key)"
+      >
+        <History :size="14" />
+        <span>{{ chronicleView.label }}</span>
+        <kbd v-if="showShortcutHints" class="chapter-shortcut-hint" aria-hidden="true">{{ shortcutLabels.alt }}+{{ chronicleView.shortcut }}</kbd>
+      </button>
     </nav>
 
     <div class="chapter-toolbar-view">
@@ -171,19 +185,7 @@
         :presentation="presentation"
       />
       <SessionTimerControl v-if="isDm && timers" :timers="timers" />
-      <span v-if="isDm && (presentation || timers)" class="chapter-toolbar-rule" />
-
-      <div class="chapter-panel-tools" aria-label="Панели сессии">
-        <button type="button" class="chapter-tool-btn chapter-tool-btn--icon" :class="{ 'chapter-tool-btn--active': diceOpen }" title="Кубики" aria-label="Кубики" aria-keyshortcuts="Shift+D" :aria-pressed="diceOpen" @click="$emit('toggle-dice')">
-          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.8l5.3 3v6.4L8 14.2l-5.3-3V4.8L8 1.8zM2.9 4.9L8 8l5.1-3.1M8 8v6" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
-          <kbd v-if="showShortcutHints" class="chapter-shortcut-hint" aria-hidden="true">{{ shortcutLabels.panel }}+D</kbd>
-          <kbd v-if="showShortcutHints && !diceOpen" class="chapter-shortcut-hint chapter-shortcut-hint--dice-rolls" aria-hidden="true">{{ shortcutLabels.dice }}+1…7 · d4…d100</kbd>
-        </button>
-        <button type="button" class="chapter-tool-btn chapter-tool-btn--icon" :class="{ 'chapter-tool-btn--active': eventsOpen }" title="Лог сессии" aria-label="Лог сессии" aria-keyshortcuts="Shift+L" :aria-pressed="eventsOpen" @click="$emit('toggle-events')">
-          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 2.5h10v11H3zM5.5 5.5h5M5.5 8h5M5.5 10.5h3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-          <kbd v-if="showShortcutHints" class="chapter-shortcut-hint" aria-hidden="true">{{ shortcutLabels.panel }}+L</kbd>
-        </button>
-      </div>
+      <SessionDiceControl v-if="isDm" ref="diceControl" :show-shortcut-hints="showShortcutHints" />
       <span v-if="isDm" class="chapter-toolbar-rule chapter-toolbar-rule--settings" />
       <SessionSettingsControl
         v-if="isDm"
@@ -197,10 +199,11 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import { BookOpenText, Images, Map, Music2, Pause, Pencil, Play, ScrollText, SkipForward, Swords, UsersRound } from '@lucide/vue'
+import { BookOpenText, History, Images, Map, Music2, Pause, Pencil, Play, ScrollText, SkipForward, Swords, UsersRound } from '@lucide/vue'
 import { BasePopover, reorderByDrop, useSortable } from '@sylvieshare/share-ui'
 import { romanNumeral } from '@/features/sessions/lib/chapterGraph'
 import SessionPresentationControl from '@/features/sessions/components/SessionPresentationControl.vue'
+import SessionDiceControl from '@/features/sessions/components/SessionDiceControl.vue'
 import SessionSettingsControl from '@/features/sessions/components/SessionSettingsControl.vue'
 import SessionTimerControl from '@/features/sessions/components/SessionTimerControl.vue'
 import { sessionShortcutLabels } from '@/features/sessions/lib/sessionShortcuts'
@@ -217,8 +220,6 @@ const props = defineProps({
   reorderPending: { type: Boolean, default: false },
   combatActive: { type: Boolean, default: false },
   encounterActive: { type: Boolean, default: false },
-  diceOpen: { type: Boolean, default: true },
-  eventsOpen: { type: Boolean, default: true },
   sessionUuid: { type: String, required: true },
   presentation: { type: Object, default: null },
   timers: { type: Object, default: null },
@@ -232,7 +233,6 @@ const emit = defineEmits([
   'select-arc', 'create-arc', 'edit-arc', 'reorder-arcs',
   'select-view',
   'edit-session', 'open-combat',
-  'toggle-dice', 'toggle-events',
   'update-setting',
 ])
 const primaryViews = [
@@ -245,6 +245,8 @@ const primaryViews = [
 const shortcutLabels = sessionShortcutLabels()
 const storyView = primaryViews[0]
 const musicView = { key: 'music', label: 'Музыка', icon: Music2, shortcut: '6' }
+const chronicleView = { key: 'events', label: 'Хроника', icon: History, shortcut: '7' }
+const diceControl = ref(null)
 const musicStore = useMusicStore()
 const {
   state: musicState,
@@ -309,6 +311,11 @@ function toggleMusicPlayback() {
   if (musicState.value.playing) musicStore.pause()
   else musicStore.resume()
 }
+
+defineExpose({
+  toggleDice: () => diceControl.value?.toggle(),
+  rollDie: sides => diceControl.value?.rollDie(sides),
+})
 </script>
 
 <style scoped>
@@ -363,7 +370,6 @@ function toggleMusicPlayback() {
   transform: translateX(-50%);
   animation: chapter-shortcut-hint-in .16s cubic-bezier(.22, 1, .36, 1) both;
 }
-.chapter-shortcut-hint--dice-rolls { top: calc(100% + 27px); }
 @keyframes chapter-shortcut-hint-in {
   from { opacity: 0; transform: translate(-50%, -3px); }
 }
@@ -447,7 +453,6 @@ function toggleMusicPlayback() {
 .chapter-primary-tab--encounter-active .chapter-combat-running-indicator { opacity: 1; transform: scale(1); animation: chapter-combat-live 1.8s ease-in-out infinite; }
 @keyframes chapter-combat-live { 50% { box-shadow: 0 0 0 3px color-mix(in srgb, var(--danger) 18%, transparent); } }
 .chapter-primary-tab:disabled { cursor: not-allowed; opacity: 0.45; }
-.chapter-panel-tools { display: flex; align-items: center; gap: 7px; }
 .chapter-session { min-width: 0; max-width: 300px; display: flex; align-items: center; gap: 4px; }
 .chapter-session-title { min-width: 0; overflow: hidden; padding: 4px 6px; border: 0; border-radius: 6px; background: none; color: var(--text-1); font: inherit; font-family: var(--font-display); font-size: 21px; font-weight: 680; text-align: left; text-overflow: ellipsis; white-space: nowrap; }
 .chapter-session-title:not(:disabled) { cursor: pointer; }
@@ -455,18 +460,6 @@ function toggleMusicPlayback() {
 .chapter-session-title:disabled { opacity: 1; }
 .chapter-toolbar-rule { width: 1px; height: 22px; margin: 0 3px; background: var(--border-strong); }
 
-.chapter-tool-btn {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  border: 1px solid var(--border-strong);
-  border-radius: 7px;
-  background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
-  color: var(--text-2);
-  font: inherit;
-  font-size: 12px;
-}
 .chapter-arc-trigger { min-width: 0; max-width: 410px; display: inline-flex; align-items: center; gap: 7px; padding: 7px 9px; border: 0; border-radius: 7px; background: transparent; color: var(--text-1); font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; transition: background 0.15s, color 0.15s; }
 .chapter-arc-trigger:hover:not(:disabled), .chapter-arc-trigger[aria-expanded="true"] { background: color-mix(in srgb, var(--text-on-accent) 7%, transparent); }
 .chapter-arc-trigger:disabled { opacity: 0.48; cursor: not-allowed; }
@@ -475,12 +468,6 @@ function toggleMusicPlayback() {
 .chapter-arc-name { min-width: 0; flex: 0 1 auto; margin-left: -6px; overflow: hidden; text-align: left; text-overflow: ellipsis; white-space: nowrap; }
 .chapter-arc-chevron { flex: none; transition: transform 0.15s; }
 .chapter-arc-trigger[aria-expanded="true"] .chapter-arc-chevron { transform: rotate(180deg); }
-
-.chapter-tool-btn { padding: 7px 10px; cursor: pointer; transition: background 0.15s, color 0.15s; }
-.chapter-tool-btn:hover:not(:disabled) { background: color-mix(in srgb, var(--text-on-accent) 9%, transparent); color: var(--text-1); }
-.chapter-tool-btn:disabled { opacity: 0.35; cursor: not-allowed; }
-.chapter-tool-btn--icon { width: 31px; height: 31px; justify-content: center; padding: 0; }
-.chapter-tool-btn--active { background: color-mix(in srgb, var(--accent) 16%, transparent); border-color: color-mix(in srgb, var(--accent) 55%, var(--border)); color: var(--text-1); }
 
 .chapter-arc-list { display: flex; flex-direction: column; gap: 3px; padding: 5px; }
 .chapter-arc-row { display: flex; align-items: center; gap: 4px; border-radius: 7px; }

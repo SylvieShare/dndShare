@@ -1,5 +1,5 @@
 <template>
-  <div class="session-events-panel">
+  <div class="session-events-panel" :class="{ 'session-events-panel--workspace': workspace }">
     <header class="sep-head">
       <div class="sep-head-copy">
         <div class="sep-heading-line">
@@ -168,6 +168,7 @@ import {
 
 const props = defineProps({
   liveStatus: { type: String, default: 'idle' },
+  workspace: { type: Boolean, default: false },
 })
 
 const store = useSessionEventsStore()
@@ -281,6 +282,13 @@ watch([authorFilter, actorFilter, categoryFilters], async () => {
 
 <style scoped>
 .session-events-panel { padding: 12px; display: flex; flex-direction: column; min-height: 0; height: 100%; box-sizing: border-box; }
+.session-events-panel--workspace { padding: 20px 22px; }
+.session-events-panel--workspace .sep-title { font-size: 15px; }
+.session-events-panel--workspace .sep-count { font-size: 10px; }
+.session-events-panel--workspace .sep-list { padding-right: 10px; }
+.session-events-panel--workspace .sep-time-group { grid-template-columns: 54px minmax(0, 1fr); gap: 14px; padding-block: 10px 15px; }
+.session-events-panel--workspace .sep-time { font-size: 10px; }
+.session-events-panel--workspace .sep-event-title { font-size: 12px; }
 .sep-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 39px; padding: 0 2px 9px; border-bottom: 1px solid color-mix(in srgb, var(--text-on-accent) 8%, var(--border)); }
 .sep-head-copy { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
 .sep-heading-line { display: flex; align-items: center; gap: 7px; }
