@@ -577,20 +577,21 @@ ability-resource binding and links to standard combat-action codes from suggest
 type 24. Hovering those linked names shows the suggest description. The block
 merges source rows with editable custom actions from `values.actions`;
 source-provided rows use the ability icon, omit a duplicate textual source label
-and cannot be edited on the character. Both kinds can be reordered within their action-economy group;
-the stable row-key order is stored in `values.action_order`. Each group header
+and cannot be edited on the character. Existing stable row-key order from
+`values.action_order` is respected, but row menus do not offer manual reordering. Each group header
 is rendered only when it contains actions. The shared block-title pencil opens
 one morph editor for the complete block: custom actions are created, edited and
 deleted there, while actions contributed by abilities are listed separately as
-read-only. Row menus retain direct editing and within-group reordering, but
-group headers have no add controls. The block owns one shared tile; rows inside
+read-only. Row menus retain direct editing, but group headers have no add
+controls. The block owns one shared tile; rows inside
 it have no nested card background. A resource bound to a source action is shown
 on that action as the same color-coded charge spheres used by the resources
 tile: one charge stays at the right edge, while several charges wrap below the
 action text. Short- and long-rest recovery icons sit immediately to the right
 of the action name, and the bound resource is omitted from the shared resources
 tile to avoid a duplicate control. The spheres remain owner-interactive and
-write through the shared resource source contract; spending from the action menu
+write through the shared resource source contract without triggering the press
+animation of the surrounding action row; spending from the action menu
 remains available when the action declares a positive cost. Other consequences
 declared by the action also stay in its row menu. Cunning Action is one source row linking Dash,
 Disengage and Hide rather than three duplicated rows. The block is available in

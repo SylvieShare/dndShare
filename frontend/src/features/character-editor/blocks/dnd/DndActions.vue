@@ -7,7 +7,6 @@
         :action-suggestions="actionSuggestions"
         @manage="openEditor"
         @edit="editAction"
-        @move="moveAction"
         @remove="removeAction"
         @apply-effect="applyActionEffect"
         @spend-resource="spendActionResource"
@@ -113,20 +112,6 @@ function editAction(action) {
 
 function changeAction(uid, patch) {
   emitActions(manualActions.value.map(action => action.uid === uid ? { ...action, ...patch } : action))
-}
-
-function moveAction(action, direction) {
-  const group = actions.value.filter(entry => entry.action_type === action.action_type)
-  const index = group.findIndex(entry => entry.key === action.key)
-  const target = index + direction
-  if (index < 0 || target < 0 || target >= group.length) return
-  const reordered = [...group]
-  ;[reordered[index], reordered[target]] = [reordered[target], reordered[index]]
-  const groupKeys = new Set(group.map(entry => entry.key))
-  const next = actions.value.map(entry => entry.key).filter(key => !groupKeys.has(key))
-  const insertAt = actions.value.findIndex(entry => entry.action_type === action.action_type)
-  next.splice(insertAt, 0, ...reordered.map(entry => entry.key))
-  emitOrder(next)
 }
 
 function removeAction(action) {

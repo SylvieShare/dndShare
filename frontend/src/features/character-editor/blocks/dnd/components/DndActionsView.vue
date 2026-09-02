@@ -62,6 +62,7 @@
                       :size="RESOURCE_ORB_SIZE"
                       :color="action.resource.color_point || undefined"
                       :interactive="manage"
+                      @pointerdown.stop
                       @click.stop="manage && $emit('toggle-resource', action, pip)"
                     />
                   </span>
@@ -77,6 +78,7 @@
                   :size="RESOURCE_ORB_SIZE"
                   :color="action.resource.color_point || undefined"
                   :interactive="manage"
+                  @pointerdown.stop
                   @click.stop="manage && $emit('toggle-resource', action, 1)"
                 />
               </span>
@@ -106,9 +108,6 @@
               <template #suffix>{{ effect.suffix }}</template>
             </RowActionItem>
             <RowActionSeparator v-if="(canSpendResource(action) || action.menu_effects?.length) && (group.actions.length > 1 || !action.readonly)" />
-            <RowActionItem v-if="actionIndex > 0" :icon="ArrowUp" @click="move(action, -1, close)">Переместить выше</RowActionItem>
-            <RowActionItem v-if="actionIndex < group.actions.length - 1" :icon="ArrowDown" @click="move(action, 1, close)">Переместить ниже</RowActionItem>
-            <RowActionSeparator v-if="!action.readonly && group.actions.length > 1" />
             <RowActionItem v-if="!action.readonly" action="edit" @click="edit(action, close)">Редактировать</RowActionItem>
             <RowActionSeparator v-if="!action.readonly" />
             <RowActionItem v-if="!action.readonly" action="delete" tone="danger" @click="remove(action, close)">Удалить</RowActionItem>
@@ -131,7 +130,7 @@
 
 <script setup>
 import { computed, ref } from 'vue'
-import { ArrowDown, ArrowUp, BatteryLow, RotateCcw, Sparkles, Swords, Wind, Zap } from '@lucide/vue'
+import { BatteryLow, RotateCcw, Sparkles, Swords, Wind, Zap } from '@lucide/vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip.vue'
@@ -148,7 +147,7 @@ const props = defineProps({
   panel: { type: Boolean, default: false },
   actionSuggestions: { type: Array, default: () => [] },
 })
-const emit = defineEmits(['manage', 'edit', 'move', 'remove', 'apply-effect', 'spend-resource', 'toggle-resource'])
+const emit = defineEmits(['manage', 'edit', 'remove', 'apply-effect', 'spend-resource', 'toggle-resource'])
 const tooltip = ref({ visible: false, title: '', desc: '', x: 0, top: null, bottom: null })
 const suggestionsByCode = computed(() => new Map(props.actionSuggestions.map(item => [String(item.code || ''), item])))
 const RESOURCE_ORB_SIZE = 30
@@ -165,11 +164,6 @@ function groupIcon(type) {
 
 function linkedActions(action) {
   return (action.suggest_action_codes || []).map(code => suggestionsByCode.value.get(String(code))).filter(Boolean)
-}
-
-function move(action, direction, close) {
-  close()
-  emit('move', action, direction)
 }
 
 function edit(action, close) {
@@ -250,4 +244,5 @@ function hideActionTooltip() {
 .dav-resource--single { align-self: center; }
 .dav-resource--stacked { flex-wrap: wrap; margin-top: 4px; }
 .dav-resource-pips { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.dav-list :deep(.ram-custom-trigger:has(.dav-resource:active)) { transform: none; }
 </style>

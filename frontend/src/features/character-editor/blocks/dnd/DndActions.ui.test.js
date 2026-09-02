@@ -19,12 +19,12 @@ describe('character action block', () => {
     expect(viewSource).toContain('@edit="$emit(\'manage\')"')
   })
 
-  it('manages all custom actions from the block morph and keeps row reordering', () => {
+  it('manages all custom actions from the block morph without row reordering controls', () => {
     expect(viewSource).not.toContain('class="dav-add"')
     expect(blockSource).toContain('<BaseTile class="da-tile">')
     expect(blockSource).toContain(':readonly-actions="readonlyActions"')
-    expect(viewSource).toContain('Переместить выше')
-    expect(viewSource).toContain('Переместить ниже')
+    expect(viewSource).not.toContain('Переместить выше')
+    expect(viewSource).not.toContain('Переместить ниже')
     expect(viewSource).toContain('action="edit"')
     expect(editorSource).toContain('title="Свои действия"')
     expect(editorSource).toContain('title="Из листа"')
@@ -32,7 +32,7 @@ describe('character action block', () => {
     expect(editorSource).toContain('@input="change(action.uid, { requirements: draftLines($event.target.value) })"')
     expect(editorSource).toContain('@blur="change(action.uid, { requirements: lines($event.target.value) })"')
     expect(blockSource).toContain("makeUid('action')")
-    expect(blockSource).toContain("emit('update:value', 'action_order', next)")
+    expect(blockSource).not.toContain('function moveAction(')
     expect(viewSource).not.toContain('Использовать')
     expect(viewSource).not.toContain('<span>Добавить</span>')
   })
@@ -65,6 +65,8 @@ describe('character action block', () => {
     expect(viewSource).toContain('<span class="dav-title-row">')
     expect(viewSource).toContain('<ResourceRestIcons v-if="action.resource" :resource="action.resource" />')
     expect(viewSource).toContain("$emit('toggle-resource', action, pip)")
+    expect(viewSource.match(/@pointerdown\.stop/g)).toHaveLength(2)
+    expect(viewSource).toContain('.ram-custom-trigger:has(.dav-resource:active)')
     expect(blockSource).toContain('@toggle-resource="toggleActionResource"')
     expect(resourcesSource).toContain('featureActionResourceKeys(')
     expect(resourcesSource).toContain('!actionResourceKeys.value.has(String(resource.key))')
