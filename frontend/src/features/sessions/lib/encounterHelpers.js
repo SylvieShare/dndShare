@@ -38,6 +38,18 @@ export function matchesGroup(c, group) {
   return false
 }
 
+export function normalizeEncounterPosition(value) {
+  return value === 'combat' || value === 'reserve' || value === 'dead' ? value : 'reserve'
+}
+
+export function hpAfterDamage(hp = {}, rawAmount = 0) {
+  const amount = Math.max(0, Math.floor(Number(rawAmount) || 0))
+  const current = Math.max(0, Number(hp.current) || 0)
+  const temp = Math.max(0, Number(hp.temp) || 0)
+  const absorbed = Math.min(temp, amount)
+  return { ...hp, current: Math.max(0, current - (amount - absorbed)), temp: temp - absorbed }
+}
+
 export const SIDE_COLOR = {
   enemy:   'var(--side-enemy)',
   ally:    'var(--success)',

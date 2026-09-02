@@ -26,6 +26,7 @@ const encounterStatesSource = readFileSync(fileURLToPath(new URL('../composables
 const encounterTransitionSource = readFileSync(fileURLToPath(new URL('../composables/useEncounterCombatTransition.js', import.meta.url)), 'utf8')
 const encounterChallengeSource = readFileSync(fileURLToPath(new URL('../composables/useEncounterChallenge.js', import.meta.url)), 'utf8')
 const encounterChallengeMenuSource = readFileSync(fileURLToPath(new URL('../components/EncounterChallengeMenu.vue', import.meta.url)), 'utf8')
+const encounterBulkDamageSource = readFileSync(fileURLToPath(new URL('../components/EncounterBulkDamageMenu.vue', import.meta.url)), 'utf8')
 const encounterChallengeResultSource = readFileSync(fileURLToPath(new URL('../components/EncounterChallengeResult.vue', import.meta.url)), 'utf8')
 const encounterOrderSource = readFileSync(fileURLToPath(new URL('../components/EncounterOrderMarker.vue', import.meta.url)), 'utf8')
 const sessionGraphSource = readFileSync(fileURLToPath(new URL('../components/SessionGraphCanvas.vue', import.meta.url)), 'utf8')
@@ -261,8 +262,8 @@ describe('ViewSession participant rail', () => {
     expect(source).toContain(':workspace-scene="workspaceScene"')
     expect(source).toContain(':workspace-mode="workspaceMode"')
     expect(source).toContain(':workspace-layout-mode="workspaceMotionMode"')
-    expect(source).not.toContain(':chapter="workspaceChapter"')
-    expect(source).not.toContain(':scene="workspaceScene"')
+    expect(source).toContain(':chapter="workspaceChapter"')
+    expect(source).toContain(':scene="workspaceScene"')
     expect(source).not.toContain('v-if="combatOpen"')
     expect(source).not.toContain('v-if="sceneWorkspaceChapter"')
     expect(centerWorkspaceSource).not.toContain('<SceneGraphWorkspace')
@@ -279,8 +280,8 @@ describe('ViewSession participant rail', () => {
     expect(sessionGraphSource).toContain("emit('scene-count', activeChapterId.value, sceneGraph.scenes.value.length)")
     expect(sessionGraphSource).toContain("scene: displayLevel.value === 'blocks' ? combatSceneContext() : null")
     expect(sessionGraphSource).toContain("'session-graph-canvas__nested--combat-hidden': workspaceMode === 'combat'")
-    expect(centerWorkspaceSource).not.toContain('chapter: { type: Object')
-    expect(centerWorkspaceSource).not.toContain('scene: { type: Object')
+    expect(centerWorkspaceSource).toContain(':chapter="chapter"')
+    expect(centerWorkspaceSource).toContain(':scene="scene"')
     expect(encounterStylesSource).toMatch(/\.enc-wrap--workspace > \.enc-toolbar\s*\{[^}]*left:\s*0;/s)
   })
 
@@ -417,31 +418,35 @@ describe('ViewSession participant rail', () => {
     expect(encounterChallengeResultSource).not.toContain('expression')
   })
 
-  it('groups only multi-action combat toolbar categories', () => {
-    expect(encounterSource).not.toContain('class="enc-action-group-label">Экран</span>')
+  it('keeps combat controls in stable labelled groups', () => {
     expect(encounterSource).toContain('class="enc-action-group-label">Броски</span>')
-    expect(encounterSource).toContain('class="enc-action-group-label">Выбор</span>')
-    expect(encounterSource).not.toContain('class="enc-action-group-label">Погибшие</span>')
-    expect(encounterSource).toContain('v-if="props.isDm && enc.encounter.active" class="enc-action-group" aria-label="Броски"')
-    expect(encounterSource).toContain('v-else-if="props.isDm"')
+    expect(encounterSource).toContain('class="enc-action-group-label">Выбранные</span>')
+    expect(encounterSource).toContain('v-if="props.isDm" class="enc-action-group" aria-label="Броски"')
+    expect(encounterSource).toContain('<EncounterBulkDamageMenu />')
+    expect(encounterSource).toContain('<EncounterGraveyardMenu')
     expect(encounterStylesSource).toContain('.enc-toolbar :deep(.enc-icon-btn)')
     expect(encounterStylesSource).toContain('.enc-action-group-controls')
   })
 
-  it('compacts the primary action and left-aligns toolbar actions when the combat workspace is narrow', () => {
+  it('uses one combat header composition at every width and always labels the primary action', () => {
     expect(encounterSource).toContain("{{ enc.encounter.active ? 'Закончить бой' : 'Начать бой' }}")
     expect(encounterSource).toContain('class="enc-primary-label"')
     expect(encounterStylesSource).toContain('min-width: 144px;')
     expect(encounterStylesSource).toContain('height: 48px;')
     expect(encounterStylesSource).toContain('.enc-primary-label { line-height: 1; }')
-    expect(encounterSource).toContain("'enc-wrap--compact-toolbar': compactToolbar")
-    expect(encounterSource).toContain('toolbarResizeObserver = new ResizeObserver(entries =>')
-    expect(encounterSource).toContain("encounterRoot.value?.querySelector('.enc-toolbar')")
-    expect(encounterSource).toContain('toolbarResizeObserver.observe(toolbar)')
-    expect(encounterSource).toContain('compactToolbar.value = Number(width) <= 900')
-    expect(encounterStylesSource).toContain('.enc-wrap--compact-toolbar .enc-primary-label { display: none; }')
-    expect(encounterStylesSource).toContain('.enc-wrap--compact-toolbar .enc-action-group-label { display: none; }')
-    expect(encounterStylesSource).toContain('.enc-wrap--compact-toolbar .enc-toolbar-actions { justify-content: flex-start; }')
+    expect(encounterSource).not.toContain('compactToolbar')
+    expect(encounterSource).not.toContain('ResizeObserver')
+    expect(encounterStylesSource).not.toContain('.enc-wrap--compact-toolbar')
+  })
+
+  it('shows the scenario or chapter image and name in the combat header', () => {
+    expect(encounterSource).toContain('const contextEntity = computed(() => props.scene || props.chapter)')
+    expect(encounterSource).toContain("const contextKind = computed(() => props.scene ? 'Сценарий' : props.chapter ? 'Глава' : 'Сессия')")
+    expect(encounterSource).toContain('currentChapterLabel(props.chapter)')
+    expect(encounterSource).toContain('<img v-if="contextImageUrl"')
+    expect(encounterSource).toContain('<Clapperboard v-else-if="scene"')
+    expect(encounterStylesSource).toContain('.enc-context-icon')
+    expect(encounterStylesSource).toContain('.enc-context-copy')
   })
 
   it('opens row actions from the tile and keeps concrete controls independent', () => {
@@ -484,12 +489,25 @@ describe('ViewSession participant rail', () => {
     expect(encounterStylesSource).toContain('.enc-combat-scene-enter-from')
   })
 
-  it('keeps per-participant actions alongside the combat-only bulk selection control', () => {
+  it('keeps per-participant actions alongside combat-only bulk player controls', () => {
     expect(source).toContain('@view="openParticipant"')
     expect(source).toContain('@color="setParticipantColor"')
     expect(source).toContain('@kick="requestKickParticipant"')
     expect(source).not.toContain('Выбрать игроков для действия')
     expect(source).not.toContain('selectionMode')
+    expect(source).toContain('title="Переместить выбранных игроков в бой"')
+    expect(source).toContain(':disabled="selectedPlayersToCombat.length === 0"')
+    expect(source).not.toContain('if (!encounter.encounter.active) return')
+    expect(source).toContain("encounter.sendCombatantsTo(selectedPlayersToCombat.value, 'combat')")
+    expect(source).toContain("encounter.willMoveToGroup(combatant, 'combat')")
+  })
+
+  it('applies one damage amount to selected combatants', () => {
+    expect(encounterBulkDamageSource).toContain('enc.applyDamageToSelected(value)')
+    expect(encounterBulkDamageSource).toContain('Количество урона')
+    expect(encounterHpSource).toContain('const selectedDamageTargets = computed(')
+    expect(encounterHpSource).toContain('charactersApi.patchData(plan.participant.charUuid, plan.updates)')
+    expect(encounterComposableSource).toContain('selectedDamageCount:    hp.selectedDamageCount')
   })
 
   it('reorders participants by drag and persists the complete order', () => {

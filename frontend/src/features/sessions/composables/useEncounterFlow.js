@@ -113,13 +113,13 @@ export function useEncounterFlow({
     return n
   }
 
-  function sendSelectedTo(group) {
-    const targetIds = [...selectedUids.value]
-    if (!targetIds.length) return
+  function sendCombatantsTo(combatants, group) {
+    const targetIds = new Set((combatants || []).map(combatant => combatant?.uid).filter(Boolean))
+    if (!targetIds.size) return
     mutate(() => {
       let tb = nextTieBreak(encounter.value.combatants)
       for (const c of encounter.value.combatants) {
-        if (!targetIds.includes(c.uid)) continue
+        if (!targetIds.has(c.uid)) continue
         if (!willMoveToGroup(c, group)) continue
         if (group === 'combat') {
           c.position = 'combat'
@@ -128,12 +128,21 @@ export function useEncounterFlow({
         } else if (group === 'dead') {
           c.position = 'dead'
           c.initiative = null
+          c.surprised = false
         } else {
           c.position = 'reserve'
           c.initiative = null
+          c.surprised = false
         }
       }
     })
+  }
+
+  function sendSelectedTo(group) {
+    sendCombatantsTo(
+      encounter.value.combatants.filter(combatant => selectedUids.value.has(combatant.uid)),
+      group,
+    )
   }
 
   function sendToGraveyard(c) {
@@ -253,6 +262,7 @@ export function useEncounterFlow({
     prevTurn,
     willMoveToGroup,
     selectedToMoveTo,
+    sendCombatantsTo,
     sendSelectedTo,
     sendToReserve,
     sendToGraveyard,

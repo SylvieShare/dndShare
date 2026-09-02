@@ -57,11 +57,26 @@ export function useEncounterPlayers({ participants }) {
   }
 
   function reconcileParticipants(enc) {
-    const participantIds = new Set(participants.value.map(participant => String(participant.charId)))
+    const participantsById = new Map(participants.value.map(participant => [String(participant.charId), participant]))
     const beforeLength = enc.combatants.length
-    enc.combatants = enc.combatants.filter(combatant =>
-      combatant.type !== 'player' || participantIds.has(String(combatant.charId))
-    )
+    const seenPlayerIds = new Set()
+    let changed = false
+    enc.combatants = enc.combatants.filter(combatant => {
+      if (combatant.type !== 'player') return true
+      const key = String(combatant.charId)
+      const participant = participantsById.get(key)
+      if (!participant || seenPlayerIds.has(key)) {
+        changed = true
+        return false
+      }
+      seenPlayerIds.add(key)
+      if (combatant.charId !== participant.charId || combatant.charUuid !== participant.charUuid) {
+        combatant.charId = participant.charId
+        combatant.charUuid = participant.charUuid
+        changed = true
+      }
+      return true
+    })
     const known = new Set(enc.combatants
       .filter(combatant => combatant.type === 'player')
       .map(combatant => String(combatant.charId)))
@@ -75,8 +90,8 @@ export function useEncounterPlayers({ participants }) {
         added++
       }
     }
-    ensureCombatantLetters(enc.combatants)
-    return added > 0 || enc.combatants.length !== beforeLength
+    const lettersChanged = ensureCombatantLetters(enc.combatants)
+    return changed || added > 0 || lettersChanged || enc.combatants.length !== beforeLength
   }
 
   return {

@@ -19,6 +19,7 @@ import {
   bestiaryTypeRef,
   ensureBestiaryType,
   initRank,
+  normalizeEncounterPosition,
   sideOf,
 } from '@/features/sessions/lib/encounterHelpers'
 import { getSuggestId } from '@/features/handbook/objects/lib/schemaFields'
@@ -71,12 +72,20 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
     if (enc.active == null) enc.active = false
     if (enc.round == null) enc.round = 0
     if (enc.turnIndex == null) enc.turnIndex = 0
+    let positionsChanged = false
+    for (const combatant of enc.combatants) {
+      const position = normalizeEncounterPosition(combatant?.position)
+      if (combatant && combatant.position !== position) {
+        combatant.position = position
+        positionsChanged = true
+      }
+    }
     const participantsChanged = reconcileParticipants(enc)
     encounter.value = enc
     npcData.ensureNpcItems(enc.combatants)
     loaded.value = true
     persistence.markReady()
-    if (participantsChanged) persistence.scheduleSave()
+    if (positionsChanged || participantsChanged) persistence.scheduleSave()
   }
 
   watch(encounter, persistence.scheduleSave, { deep: true, flush: 'sync' })
@@ -155,6 +164,8 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
   const selection = useEncounterSelection({ encounter, listForGroup })
 
   const hp = useEncounterHp({
+    encounter,
+    selectedUids: selection.selectedUids,
     getCombatant,
     mutate,
     canEditPlayers,
@@ -396,6 +407,8 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
     hpCalcNpc:              hp.hpCalcNpc,
     hpEditNpc:              hp.hpEditNpc,
     hpCalcPlayer:           hp.hpCalcPlayer,
+    selectedDamageCount:    hp.selectedDamageCount,
+    applyDamageToSelected:  hp.applyDamageToSelected,
     displayAc:              hp.displayAc,
     hpPercent:              hp.hpPercent,
     hpTempPercent:          hp.hpTempPercent,
@@ -467,6 +480,8 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
     nextTurn:               flow.nextTurn,
     prevTurn:               flow.prevTurn,
     selectedToMoveTo:       flow.selectedToMoveTo,
+    willMoveToGroup:        flow.willMoveToGroup,
+    sendCombatantsTo:       flow.sendCombatantsTo,
     sendSelectedTo:         flow.sendSelectedTo,
     sendToReserve:          flow.sendToReserve,
     sendToGraveyard:        flow.sendToGraveyard,

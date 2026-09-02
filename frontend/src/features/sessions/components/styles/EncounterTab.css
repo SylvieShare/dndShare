@@ -49,7 +49,7 @@
   top: 0;
   z-index: 20;
   display: grid;
-  grid-template-columns: minmax(120px, 1fr) auto;
+  grid-template-columns: minmax(220px, 1fr) auto;
   grid-template-rows: 1fr auto;
   gap: 10px 14px;
   align-items: center;
@@ -60,18 +60,42 @@
 .enc-workspace-heading {
   display: flex;
   min-width: 0;
+  align-items: center;
+  gap: 10px;
+}
+
+.enc-context-icon {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  flex: 0 0 48px;
+  overflow: hidden;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--accent) 34%, var(--border));
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--accent) 10%, var(--surface-raised));
+  color: var(--accent-soft);
+}
+
+.enc-context-icon img { width: 100%; height: 100%; object-fit: cover; }
+.enc-context-icon--image { background: var(--surface-raised); }
+
+.enc-context-copy {
+  min-width: 0;
+  display: flex;
   flex-direction: column;
   gap: 2px;
 }
 
-.enc-workspace-heading > span {
+.enc-context-copy > span {
   color: var(--danger);
   font-size: 10px;
   font-weight: 850;
   letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
-.enc-workspace-heading strong {
+.enc-context-copy strong {
   overflow: hidden;
   color: var(--text-1);
   font-size: 16px;
@@ -81,7 +105,7 @@
   white-space: nowrap;
 }
 
-.enc-workspace-heading small {
+.enc-context-copy small {
   overflow: hidden;
   color: var(--text-muted);
   font-size: 11px;
@@ -89,14 +113,14 @@
   white-space: nowrap;
 }
 
-.enc-toolbar-main,
+.enc-toolbar-flow,
 .enc-toolbar-actions,
 .enc-turn-group {
   display: flex;
   align-items: center;
 }
 
-.enc-toolbar-main { gap: 8px; }
+.enc-toolbar-flow { justify-self: end; gap: 8px; }
 
 .enc-toolbar-actions {
   grid-column: 1 / -1;
@@ -263,6 +287,17 @@
 }
 
 .enc-toolbar :deep(.enc-icon-btn--danger) .enc-icon-count { background: var(--danger); }
+.enc-toolbar :deep(.enc-icon-btn--damage) {
+  border-color: color-mix(in srgb, var(--danger) 34%, transparent);
+  background: color-mix(in srgb, var(--danger) 11%, transparent);
+  color: var(--danger);
+}
+.enc-toolbar :deep(.enc-icon-btn--damage:hover:not(:disabled)) {
+  border-color: color-mix(in srgb, var(--danger) 62%, transparent);
+  background: color-mix(in srgb, var(--danger) 19%, transparent);
+  color: var(--danger);
+}
+.enc-toolbar :deep(.enc-icon-btn--damage) .enc-icon-count { background: var(--danger); }
 
 .enc-round-wrap {
   display: flex;
@@ -497,26 +532,8 @@
 }
 
 @media (max-width: 760px) {
-  .enc-wrap--workspace > .enc-toolbar { left: 0; }
-  .enc-toolbar-actions { flex-wrap: wrap; }
-  .enc-action-group-label { display: none; }
   .enc-add-row { flex-direction: column; }
 }
-
-.enc-wrap--compact-toolbar > .enc-toolbar {
-  grid-template-columns: minmax(0, 1fr) auto;
-}
-
-.enc-wrap--compact-toolbar .enc-toolbar :deep(.enc-icon-btn--primary) {
-  width: 48px;
-  min-width: 48px;
-  flex-basis: 48px;
-  padding: 0;
-}
-
-.enc-wrap--compact-toolbar .enc-primary-label { display: none; }
-.enc-wrap--compact-toolbar .enc-action-group-label { display: none; }
-.enc-wrap--compact-toolbar .enc-toolbar-actions { justify-content: flex-start; }
 
 @media (prefers-reduced-motion: reduce) {
   .enc-toolbar :deep(.enc-icon-btn),

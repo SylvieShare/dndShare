@@ -4,20 +4,26 @@
     class="enc-wrap"
     :class="{
       'enc-wrap--workspace': workspace,
-      'enc-wrap--compact-toolbar': compactToolbar,
       'enc-wrap--combat-starting': combatTransitionPhase === 'starting',
       'enc-wrap--combat-ending': combatTransitionPhase === 'ending',
     }"
   >
 
     <BaseTile class="enc-toolbar">
-      <div v-if="workspace" class="enc-workspace-heading">
-        <span>БОЙ</span>
-        <strong>{{ enc.encounter.active ? 'Сражение идёт' : 'Подготовка сцены' }}</strong>
-        <small>{{ encounterSummary }}</small>
+      <div class="enc-workspace-heading">
+        <div class="enc-context-icon" :class="{ 'enc-context-icon--image': contextImageUrl }">
+          <img v-if="contextImageUrl" :src="contextImageUrl" alt="" />
+          <Clapperboard v-else-if="scene" :size="22" />
+          <BookOpenText v-else :size="22" />
+        </div>
+        <div class="enc-context-copy">
+          <span>{{ contextKind }}</span>
+          <strong :title="contextTitle">{{ contextTitle }}</strong>
+          <small>{{ encounterSummary }}</small>
+        </div>
       </div>
 
-      <div class="enc-toolbar-main">
+      <div class="enc-toolbar-flow" aria-label="Управление боем">
         <button
           type="button"
           class="enc-icon-btn enc-icon-btn--primary"
@@ -54,7 +60,7 @@
       </div>
 
       <div class="enc-toolbar-actions">
-        <div v-if="props.isDm && enc.encounter.active" class="enc-action-group" aria-label="Броски">
+        <div v-if="props.isDm" class="enc-action-group" aria-label="Броски">
           <span class="enc-action-group-label">Броски</span>
           <div class="enc-action-group-controls">
             <EncounterChallengeMenu />
@@ -73,24 +79,10 @@
             </button>
           </div>
         </div>
-        <button
-          v-else-if="props.isDm"
-          type="button"
-          class="enc-icon-btn"
-          :disabled="enc.selectedRerollCount === 0"
-          title="Перебросить инициативу выбранным"
-          aria-label="Перебросить инициативу выбранным"
-          aria-keyshortcuts="Shift+R"
-          @click="enc.rerollSelectedInitiative"
-        >
-          <Dices :size="18" />
-          <span v-if="enc.selectedRerollCount" class="enc-icon-count">{{ enc.selectedRerollCount }}</span>
-          <kbd v-if="showShortcutHints" class="enc-shortcut-hint" aria-hidden="true">{{ shortcutLabels.panel }}+R</kbd>
-        </button>
-
         <div v-if="props.isDm" class="enc-action-group" aria-label="Действия с выбранными участниками">
-          <span class="enc-action-group-label">Выбор</span>
+          <span class="enc-action-group-label">Выбранные</span>
           <div class="enc-action-group-controls">
+            <EncounterBulkDamageMenu />
             <button
               type="button"
               class="enc-icon-btn"
@@ -105,9 +97,20 @@
             <button
               type="button"
               class="enc-icon-btn enc-icon-btn--danger"
+              :disabled="deadMoveCount === 0"
+              title="Убить выбранных — переместить на кладбище"
+              aria-label="Убить выбранных — переместить на кладбище"
+              @click="enc.sendSelectedTo('dead')"
+            >
+              <Skull :size="18" />
+              <span v-if="deadMoveCount" class="enc-icon-count">{{ deadMoveCount }}</span>
+            </button>
+            <button
+              type="button"
+              class="enc-icon-btn enc-icon-btn--danger"
               :disabled="enc.selectedNpcCount === 0"
-              title="Удалить выбранных существ"
-              aria-label="Удалить выбранных существ"
+              title="Удалить выбранных НПС"
+              aria-label="Удалить выбранных НПС"
               aria-keyshortcuts="Backspace"
               @click="enc.removeSelectedNpcs"
             >
@@ -115,23 +118,9 @@
               <span v-if="enc.selectedNpcCount" class="enc-icon-count">{{ enc.selectedNpcCount }}</span>
               <kbd v-if="showShortcutHints" class="enc-shortcut-hint" aria-hidden="true">⌫</kbd>
             </button>
+            <EncounterGraveyardMenu :is-dm="props.isDm" @view-participant="$emit('view-participant', $event)" />
           </div>
         </div>
-
-        <button
-          v-if="props.isDm"
-          type="button"
-          class="enc-icon-btn enc-icon-btn--danger"
-          :disabled="deadMoveCount === 0"
-          title="Убить выбранных — переместить на кладбище"
-          aria-label="Убить выбранных — переместить на кладбище"
-          @click="enc.sendSelectedTo('dead')"
-        >
-          <Skull :size="18" />
-          <span v-if="deadMoveCount" class="enc-icon-count">{{ deadMoveCount }}</span>
-        </button>
-
-        <EncounterGraveyardMenu :is-dm="props.isDm" @view-participant="$emit('view-participant', $event)" />
       </div>
     </BaseTile>
 
@@ -329,12 +318,14 @@
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, onMounted, provide, reactive, ref } from 'vue'
+import { computed, provide, reactive, ref } from 'vue'
 import {
   ArchiveRestore,
   BookOpen,
+  BookOpenText,
   ChevronLeft,
   ChevronRight,
+  Clapperboard,
   Dices,
   ListChecks,
   LogIn,
@@ -347,10 +338,13 @@ import {
 import { AppModalFrame } from '@sylvieshare/share-ui'
 import { BaseTile } from '@sylvieshare/share-ui'
 import DndHpCalcModal from '@/features/character-editor/blocks/dnd/DndHpCalcModal'
+import EncounterBulkDamageMenu from '@/features/sessions/components/EncounterBulkDamageMenu.vue'
 import EncounterChallengeMenu from '@/features/sessions/components/EncounterChallengeMenu.vue'
 import EncounterGraveyardMenu from '@/features/sessions/components/EncounterGraveyardMenu.vue'
 import EncounterRow from '@/features/sessions/components/EncounterRow'
 import { useEncounterCombatTransition } from '@/features/sessions/composables/useEncounterCombatTransition'
+import { currentChapterLabel } from '@/features/sessions/lib/chapterGraph'
+import { sessionImageUrl } from '@/features/sessions/lib/sessionImages'
 import { sessionShortcutLabels } from '@/features/sessions/lib/sessionShortcuts'
 import { FormActionButtons } from '@sylvieshare/share-ui'
 import { FormField } from '@sylvieshare/share-ui'
@@ -367,6 +361,8 @@ const props = defineProps({
   isDm: { type: Boolean, default: false },
   workspace: { type: Boolean, default: false },
   encounter: { type: Object, required: true },
+  chapter: { type: Object, default: null },
+  scene: { type: Object, default: null },
   showShortcutHints: { type: Boolean, default: false },
 })
 defineEmits(['view-participant'])
@@ -374,28 +370,6 @@ defineEmits(['view-participant'])
 const enc = props.encounter
 const shortcutLabels = sessionShortcutLabels()
 const encounterRoot = ref(null)
-const compactToolbar = ref(false)
-let toolbarResizeObserver = null
-
-function toolbarElement() {
-  return encounterRoot.value?.querySelector('.enc-toolbar') ?? null
-}
-
-function updateCompactToolbar(width = toolbarElement()?.getBoundingClientRect().width) {
-  compactToolbar.value = Number(width) <= 900
-}
-
-onMounted(() => {
-  updateCompactToolbar()
-  const toolbar = toolbarElement()
-  if (typeof ResizeObserver === 'undefined' || !toolbar) return
-  toolbarResizeObserver = new ResizeObserver(entries => {
-    updateCompactToolbar(entries[0]?.contentRect.width)
-  })
-  toolbarResizeObserver.observe(toolbar)
-})
-
-onBeforeUnmount(() => toolbarResizeObserver?.disconnect())
 
 const {
   transitioning: combatTransitioning,
@@ -414,6 +388,10 @@ const startSelectionCount = computed(() => enc.selectedRerollCount)
 const combatMoveCount = computed(() => enc.selectedToMoveTo('combat'))
 const reserveMoveCount = computed(() => enc.selectedToMoveTo('reserve'))
 const deadMoveCount = computed(() => enc.selectedToMoveTo('dead'))
+const contextEntity = computed(() => props.scene || props.chapter)
+const contextImageUrl = computed(() => sessionImageUrl(contextEntity.value))
+const contextKind = computed(() => props.scene ? 'Сценарий' : props.chapter ? 'Глава' : 'Сессия')
+const contextTitle = computed(() => props.scene?.name || currentChapterLabel(props.chapter) || props.session.name)
 const allSelectedInCombat = computed(() =>
   combatItems.value.length > 0 && combatItems.value.every(combatant => enc.isSelected(combatant))
 )

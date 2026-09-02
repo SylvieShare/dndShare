@@ -26,6 +26,7 @@ describe('encounter participant reconciliation', () => {
       uid: 'p-2',
       type: 'player',
       charId: 2,
+      charUuid: 'two',
       position: 'combat',
       initiative: 17,
       surprised: true,
@@ -35,5 +36,21 @@ describe('encounter participant reconciliation', () => {
 
     expect(players.reconcileParticipants(encounter)).toBe(false)
     expect(encounter.combatants).toEqual([persistedPlayer])
+  })
+
+  it('canonicalizes participant ids and removes duplicate legacy player entries', () => {
+    const participants = ref([{ charId: 2, charUuid: 'canonical' }])
+    const players = useEncounterPlayers({ participants })
+    const encounter = {
+      combatants: [
+        { uid: 'first', type: 'player', charId: '2', charUuid: 'old', position: 'combat' },
+        { uid: 'duplicate', type: 'player', charId: 2, charUuid: 'canonical', position: 'reserve' },
+      ],
+    }
+
+    expect(players.reconcileParticipants(encounter)).toBe(true)
+    expect(encounter.combatants).toEqual([
+      { uid: 'first', type: 'player', charId: 2, charUuid: 'canonical', position: 'combat' },
+    ])
   })
 })

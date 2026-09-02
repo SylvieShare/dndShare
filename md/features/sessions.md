@@ -637,27 +637,24 @@ canvas falls back to the current chapter. Chapter and scenario ids are saved wit
 the active narrative level in workspace state and restored after reload. Closing
 combat returns to that saved scenario or block canvas instead of resetting the
 user to chapters. Chapter and scenario editing stays on the narrative canvas;
-the encounter must be closed before using those controls. The player rail adds a
-combat-only “select all” action above its cards; it selects or clears every
-player combatant while preserving any NPC selection. The action is the same
-compact icon-only control used above the battle scene and NPC reserve. With or
-without a scenario context, the combat header uses the full center width;
+the encounter must be closed before using those controls. The player rail adds
+combat-only “select all” and “move selected to combat” actions above its cards;
+both operate only on players and preserve any NPC selection. With or without a
+scenario context, the combat header uses the full center width;
 combatants remain independent tiles below it rather than being wrapped in one
 central card. On desktop the combat workspace retains the same reserved right
 boundary whether the tool rail is open or empty, so hiding all right-side tools
 does not stretch the central combat column. The header uses one enlarged,
 labelled primary action, “Начать бой” or “Закончить бой”, while turn navigation
-remains compact and icon-only. When the combat header itself is narrow, its
-observed toolbar width switches the header to a compact state and collapses
-the primary action to its icon while preserving its tooltip and accessible
-label. Its growing secondary action row uses labelled
-groups only for categories that currently contain multiple actions; compact
-headers hide those group labels and keep their accessible names. The single
-pre-combat roll, “Убить” and “Кладбище” remain separate icon-only buttons without
-a group title or frame. On the same narrow layout, the secondary row aligns to
-the left so its actions use the full available width instead of overflowing the
-right edge. Nested action components use the same
-icon-button geometry and interaction states as direct toolbar buttons.
+remains compact and icon-only. The header has one stable composition at every
+width: its left side shows the scenario image and name, falling back to the
+chapter when no scenario is selected; it never hides the primary-action text or
+group labels. Secondary actions are grouped as `Броски` and `Выбранные`.
+`Выбранные` contains shared damage, return-to-reserve, graveyard, delete-NPC and
+graveyard-list actions. Shared damage consumes temporary HP first, updates NPC
+encounter state and persists each player character through the character API.
+Nested action components use the same icon-button geometry and interaction
+states as direct toolbar buttons.
 
 ## Encounter
 
@@ -798,6 +795,11 @@ The participant list is periodically refreshed while the page is visible;
 joining players are added to the encounter reserve and players removed from the
 session are removed from encounter state. Polling pauses in hidden tabs and an
 in-flight request cannot restart it after unmount.
+Hydration also normalizes missing or obsolete combatant positions to `reserve`,
+canonicalizes player character identifiers from the current participant list
+and removes duplicate legacy player entries. This prevents combatants from
+remaining outside every current group and persists the repaired state through
+the normal encounter save queue.
 
 Canonical combatants:
 

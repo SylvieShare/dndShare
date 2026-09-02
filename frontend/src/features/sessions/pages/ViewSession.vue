@@ -118,6 +118,8 @@
           :participants="participants"
           :is-dm="isDm"
           :encounter="encounter"
+          :chapter="workspaceChapter"
+          :scene="workspaceScene"
           :show-shortcut-hints="showShortcutHints"
           @close="closeWorkspace"
           @view-participant="openParticipant"
@@ -146,6 +148,18 @@
           >
             <ListChecks :size="17" />
             <kbd v-if="showShortcutHints" class="players-select-all-shortcut">{{ shortcutLabels.panel }}+P</kbd>
+          </button>
+          <button
+            v-if="playersRailMode === 'combat'"
+            type="button"
+            class="players-select-all players-send-to-combat"
+            :disabled="selectedPlayersToCombat.length === 0"
+            title="Переместить выбранных игроков в бой"
+            aria-label="Переместить выбранных игроков в бой"
+            @click="sendSelectedPlayersToCombat"
+          >
+            <LogIn :size="17" />
+            <span v-if="selectedPlayersToCombat.length" class="players-action-count">{{ selectedPlayersToCombat.length }}</span>
           </button>
           <span class="live-indicator" :class="[liveStatus, syncStatus]" :title="liveStatus === 'connected' ? 'Сессия синхронизирована' : 'Восстанавливаем связь с сессией'">
             <span class="live-bar" :class="{ running: syncRunning || liveCatchingUp }" />
@@ -253,7 +267,7 @@
 
 <script setup>
 import { computed, nextTick, onBeforeUnmount, onMounted, provide, reactive, ref, watch } from 'vue'
-import { ListChecks, PanelLeftClose, PanelLeftOpen } from '@lucide/vue'
+import { ListChecks, LogIn, PanelLeftClose, PanelLeftOpen } from '@lucide/vue'
 import { useRoute, useRouter } from 'vue-router'
 import { BaseTile } from '@sylvieshare/share-ui'
 import { ConfirmDialog } from '@sylvieshare/share-ui'
@@ -463,12 +477,19 @@ const allEncounterPlayersSelected = computed(() =>
   encounterPlayers.value.length > 0
   && encounterPlayers.value.every(combatant => encounter.isSelected(combatant))
 )
+const selectedPlayersToCombat = computed(() => encounterPlayers.value.filter(combatant =>
+  encounter.isSelected(combatant) && encounter.willMoveToGroup(combatant, 'combat')
+))
 
 function toggleAllEncounterPlayers() {
   const shouldSelect = !allEncounterPlayersSelected.value
   for (const combatant of encounterPlayers.value) {
     if (encounter.isSelected(combatant) !== shouldSelect) encounter.toggleSelected(combatant)
   }
+}
+
+function sendSelectedPlayersToCombat() {
+  encounter.sendCombatantsTo(selectedPlayersToCombat.value, 'combat')
 }
 
 function isEncounterPlayerSelected(charId) {

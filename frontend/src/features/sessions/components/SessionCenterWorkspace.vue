@@ -12,6 +12,8 @@
       :participants="participants"
       :is-dm="isDm"
       :encounter="encounter"
+      :chapter="chapter"
+      :scene="scene"
       :show-shortcut-hints="showShortcutHints"
       @view-participant="$emit('view-participant', $event)"
     />
@@ -40,6 +42,8 @@ defineProps({
   participants: { type: Array, default: () => [] },
   isDm: { type: Boolean, default: false },
   encounter: { type: Object, required: true },
+  chapter: { type: Object, default: null },
+  scene: { type: Object, default: null },
   showShortcutHints: { type: Boolean, default: false },
 })
 defineEmits(['close', 'view-participant'])

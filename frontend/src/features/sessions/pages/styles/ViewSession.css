@@ -145,6 +145,32 @@
 .players-select-all:disabled { cursor: default; opacity: 0.45; }
 .players-select-all:active:not(:disabled) { transform: scale(0.92); }
 
+.players-send-to-combat {
+  border-color: color-mix(in srgb, var(--danger) 32%, transparent);
+  background: color-mix(in srgb, var(--danger) 8%, transparent);
+  color: color-mix(in srgb, var(--danger) 78%, var(--text-1));
+}
+
+.players-send-to-combat:hover:not(:disabled) {
+  border-color: color-mix(in srgb, var(--danger) 62%, transparent);
+  background: color-mix(in srgb, var(--danger) 17%, transparent);
+  color: var(--danger);
+}
+
+.players-action-count {
+  min-width: 15px;
+  height: 15px;
+  display: grid;
+  place-items: center;
+  margin-left: 2px;
+  padding: 0 3px;
+  border-radius: 999px;
+  background: color-mix(in srgb, currentColor 14%, transparent);
+  font-size: 8px;
+  font-weight: 850;
+  line-height: 1;
+}
+
 .players-select-all-shortcut {
   position: absolute;
   z-index: 3;
