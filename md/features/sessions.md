@@ -7,12 +7,24 @@ and matching store files.
 ## Pages and access
 
 - `/sessions` — campaigns available to the user.
-- `/sessions/:uuid` — session workspace.
+- `/sessions/:uuid` — DM workspace or the participant-facing session page,
+  depending on the current user's role.
 - `/join/:code` — invitation flow.
 
 A session has DM/participant permissions, current chapter, participants,
 encounter and synchronized music state. Owner-only actions are checked on the
 server, not only hidden in UI.
+
+Opening a session as a participant renders a separate player composition instead
+of the DM canvas and tool rails. The page places the campaign context first, then
+uses the current chapter image, arc and title as the main visual block beside a
+responsive group roster. Every roster row shows the canonical character icon,
+name and setting subtitle. Public characters have a link to their sheet; the
+current player's own sheet remains accessible even when it is private. The view
+folds into one column on mobile and follows the session live stream so participant,
+campaign and current-chapter changes refresh without opening the DM-only APIs.
+Session cards now open this role-aware page for both roles rather than sending a
+participant directly to their character sheet.
 
 `GET /api/sessions` returns session cards with participant briefs and current
 chapter, including that chapter's image URL and focal point. The list renders

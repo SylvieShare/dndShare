@@ -1,0 +1,30 @@
+@media (max-width: 920px) {
+  .player-session__grid { grid-template-columns: 1fr; }
+  .current-chapter__art { min-height: 390px; }
+  .party-card { min-height: auto; }
+}
+
+@media (max-width: 600px) {
+  .player-session__content {
+    width: min(100% - 24px, 1180px);
+    padding: 28px 0 34px;
+  }
+
+  .player-session__intro { margin-bottom: 24px; }
+  .player-session__intro h1 { font-size: 36px; }
+  .player-session__grid { gap: 12px; }
+  .current-chapter__art { min-height: 360px; }
+  .current-chapter__topline { top: 17px; left: 17px; right: 17px; }
+  .current-chapter__arc { display: none; }
+  .current-chapter__copy { right: 20px; bottom: 21px; left: 20px; }
+  .current-chapter__copy h2 { font-size: 33px; }
+  .party-card { padding: 20px 15px 16px; }
+  .party-member { grid-template-columns: 44px minmax(0, 1fr) auto; padding-inline: 6px; }
+  .party-member__avatar { width: 44px; height: 44px; }
+  .party-member__link span { display: none; }
+  .party-member__link { padding: 9px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .current-chapter__art > img { transition: none; }
+}

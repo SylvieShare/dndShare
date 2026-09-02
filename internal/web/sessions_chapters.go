@@ -272,6 +272,7 @@ func (s *Server) handleSetCurrentChapter(w http.ResponseWriter, r *http.Request)
 		serverError(w, err)
 		return
 	}
+	s.publishSessionOverview(session.ID)
 	if selectedChapter != nil && (session.CurrentChapterID == nil || *session.CurrentChapterID != selectedChapter.ID) {
 		s.appendSessionEvent(r.Context(), session.ID, userID, "chapter_started", "Группа перешла в другую главу", map[string]any{
 			"chapterId": selectedChapter.ID,

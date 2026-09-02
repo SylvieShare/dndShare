@@ -34,6 +34,15 @@
       <div class="loading-placeholder" />
     </template>
 
+    <SessionPlayerView
+      v-else-if="session && !isDm"
+      :session="session"
+      :participants="participants"
+      :current-chapter="currentChapter"
+      :my-char-uuid="myCharUuid"
+      :live-status="liveStatus"
+    />
+
     <div
       v-else-if="session"
       class="campaign-workspace"
@@ -269,6 +278,7 @@ import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 import SessionCenterWorkspace from '@/features/sessions/components/SessionCenterWorkspace.vue'
 import SessionParticipantCard from '@/features/sessions/components/SessionParticipantCard'
+import SessionPlayerView from '@/features/sessions/components/SessionPlayerView.vue'
 import SessionShortcutHelp from '@/features/sessions/components/SessionShortcutHelp.vue'
 import SessionTimerStack from '@/features/sessions/components/SessionTimerStack.vue'
 import SessionMusicWorkspace from '@/features/sessions/components/SessionMusicWorkspace.vue'
@@ -318,6 +328,9 @@ const {
 
 const session = ref(null)
 const participants = ref([])
+const currentChapter = ref(null)
+const sessionRole = ref('')
+const myCharUuid = ref('')
 const loading = ref(true)
 const editOpen = ref(false)
 const coloringIds = ref(new Set())
@@ -392,6 +405,7 @@ watch(sheetUuid, actorUuid => {
 })
 
 const isDm = computed(() => {
+	if (sessionRole.value) return sessionRole.value === 'gm'
   const uid = accountStore.user?.id
   return !!(uid && session.value && session.value.ownerUserId === uid)
 })
@@ -620,6 +634,12 @@ const {
 async function refreshParticipants() {
   const fresh = await getSession(sessionUuid)
   if (!Array.isArray(fresh?.participants)) return
+	if (!isDm.value) {
+		session.value = fresh.session ?? session.value
+		currentChapter.value = fresh.currentChapter ?? null
+		sessionRole.value = fresh.myRole || 'player'
+		myCharUuid.value = fresh.myCharUuid || myCharUuid.value
+	}
   const localById = new Map(participants.value.map(participant => [String(participant.charId), participant]))
   const serverById = new Map(fresh.participants.map(participant => [String(participant.charId), participant]))
   const withPendingColor = participant => coloringIds.value.has(participant.charId)
@@ -631,6 +651,16 @@ async function refreshParticipants() {
         ...fresh.participants.filter(participant => !localById.has(String(participant.charId))),
       ].map(withPendingColor)
     : fresh.participants.map(withPendingColor)
+}
+
+async function refreshSessionOverview() {
+	const fresh = await getSession(sessionUuid)
+	if (fresh?.session) session.value = fresh.session
+	if (Array.isArray(fresh?.participants)) participants.value = fresh.participants
+	currentChapter.value = fresh?.currentChapter ?? null
+	sessionRole.value = fresh?.myRole || sessionRole.value
+	myCharUuid.value = fresh?.myCharUuid || myCharUuid.value
+	syncVersions()
 }
 
 const {
@@ -646,6 +676,7 @@ const {
   sessionUuid,
   onUpdate(update) {
     const tasks = []
+		if (update?.session && !isDm.value) tasks.push(refreshSessionOverview())
     if (update?.participants) tasks.push(requestParticipants())
     else if (Array.isArray(update?.characterIds) && update.characterIds.length) {
       tasks.push(requestCharacters(update.characterIds))
@@ -657,11 +688,11 @@ const {
     return Promise.all(tasks)
   },
   onCatchUp() {
-    return Promise.all([
-      requestParticipants(),
-      sessionEventsStore.refresh(),
-      isDm.value ? presentation.loadConnections() : Promise.resolve(),
-    ])
+		const tasks = [requestParticipants()]
+		if (isDm.value) {
+			tasks.push(sessionEventsStore.refresh(), presentation.loadConnections())
+		}
+		return Promise.all(tasks)
   },
 })
 
@@ -780,14 +811,17 @@ onMounted(async () => {
     const res = await getSession(sessionUuid)
     session.value = res?.session ?? null
     participants.value = res?.participants ?? []
+		currentChapter.value = res?.currentChapter ?? null
+		sessionRole.value = res?.myRole || ''
+		myCharUuid.value = res?.myCharUuid || ''
     syncVersions()
-    await encounter.load()
-    await chapterGraph.load()
-    musicStore.setContext({ uuid: sessionUuid, dm: isDm.value })
-    await sessionEventsStore.setContext({ uuid: sessionUuid, actorUuid: sheetUuid.value })
-    await musicStore.ensureLibrary().catch(() => {})
-    await musicStore.loadSessionState().catch(() => {})
     if (isDm.value) {
+			await encounter.load()
+			await chapterGraph.load()
+			musicStore.setContext({ uuid: sessionUuid, dm: true })
+			await sessionEventsStore.setContext({ uuid: sessionUuid, actorUuid: sheetUuid.value })
+			await musicStore.ensureLibrary().catch(() => {})
+			await musicStore.loadSessionState().catch(() => {})
       await Promise.all([
         sessionMaterials.load().catch(() => {}),
         presentation.load().catch(() => {}),
@@ -801,6 +835,7 @@ onMounted(async () => {
   } finally {
     loading.value = false
   }
+	if (!isDm.value) return
 
   // Render the chapter canvas at its saved position before restoring the
   // workspace, so the chapter has a real starting point for its entrance.

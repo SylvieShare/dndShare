@@ -317,7 +317,10 @@ describe('ViewSession participant rail', () => {
 
   it('reuses one encounter in the combat workspace and the expanding player rail', () => {
     expect(source).toContain('const encounter = reactive(useEncounter({')
-    expect(source).toContain('participants.value = res?.participants ?? []\n    syncVersions()\n    await encounter.load()')
+    expect(source).toContain('participants.value = res?.participants ?? []')
+    expect(source).toContain('if (isDm.value) {')
+    expect(source).toContain('await encounter.load()')
+    expect(source).toContain('if (!isDm.value) return')
     expect(encounterComposableSource).not.toContain('onMounted(() => {\n    load()')
     expect(encounterComposableSource).toContain('encounter,\n    load,')
     expect(source).toContain(':encounter="encounter"')

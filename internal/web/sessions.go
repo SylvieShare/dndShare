@@ -224,6 +224,8 @@ type sessionDetailResponse struct {
 	Session        store.GameSession              `json:"session"`
 	Participants   []store.SessionParticipantData `json:"participants"`
 	CurrentChapter *store.SessionChapter          `json:"currentChapter,omitempty"`
+	MyRole         string                         `json:"myRole"`
+	MyCharUUID     *string                        `json:"myCharUuid,omitempty"`
 }
 
 func (s *Server) handleGetSession(w http.ResponseWriter, r *http.Request) {
@@ -235,16 +237,36 @@ func (s *Server) handleGetSession(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		return
 	}
+	role := "gm"
+	var myCharUUID *string
 	if session.OwnerUserID != userID {
-		forbidden(w)
-		return
+		allowed, err := s.store.UserCanAccessSession(r.Context(), session.ID, userID)
+		if err != nil {
+			serverError(w, err)
+			return
+		}
+		if !allowed {
+			forbidden(w)
+			return
+		}
+		role = "player"
+		myCharacters, err := s.store.GetMyCharUuids(r.Context(), []int64{session.ID}, userID)
+		if err != nil {
+			serverError(w, err)
+			return
+		}
+		if uuid, ok := myCharacters[session.ID]; ok {
+			myCharUUID = &uuid
+		}
 	}
 	participants, err := s.store.GetSessionParticipants(r.Context(), session.ID)
 	if err != nil {
 		serverError(w, err)
 		return
 	}
-	resp := sessionDetailResponse{Session: session, Participants: nonNil(participants)}
+	resp := sessionDetailResponse{
+		Session: session, Participants: nonNil(participants), MyRole: role, MyCharUUID: myCharUUID,
+	}
 	if session.CurrentChapterID != nil {
 		chapter, err := s.store.GetChapterByID(r.Context(), *session.CurrentChapterID)
 		if err == nil {

@@ -166,11 +166,13 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
   `{charId,replaceExisting}`; without explicit replacement it returns `409` when
   the character belongs to another session, while confirmed replacement moves
   the character atomically;
-- `GET /api/sessions/{uuid}` returns participant snapshots with a technical
-  `version` next to each character payload. `GET /api/sessions/{uuid}/live` is
+- `GET /api/sessions/{uuid}` is available to the DM and attached participants.
+  It returns `myRole`, optional `myCharUuid`, the current chapter and participant
+  snapshots with `publicVisible` plus a technical `version` next to each character
+  payload. `GET /api/sessions/{uuid}/live` is
   the authenticated SSE invalidation stream shared by the session page. Its
   coalesced `update` events contain only changed domains:
-  `{participants?,characterIds?,journal?,connectedScreens?}`. Mutations remain
+  `{session?,participants?,characterIds?,journal?,connectedScreens?}`. Mutations remain
   ordinary REST requests, and clients reload the corresponding authoritative
   projections. Every reconnect performs a catch-up read because the in-process
   stream deliberately keeps no durable event backlog. DM access is permanent;

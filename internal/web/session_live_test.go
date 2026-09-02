@@ -7,7 +7,7 @@ func TestSessionLiveHubCoalescesTypedUpdates(t *testing.T) {
 	subscription, unsubscribe := hub.subscribe(42)
 	defer unsubscribe()
 
-	hub.publish(42, sessionLiveUpdate{Participants: true, CharacterIDs: []int64{9, 4}})
+	hub.publish(42, sessionLiveUpdate{Session: true, Participants: true, CharacterIDs: []int64{9, 4}})
 	count := 2
 	hub.publish(42, sessionLiveUpdate{CharacterIDs: []int64{9}, Journal: true, ConnectedScreens: &count})
 	<-subscription.wake
@@ -15,7 +15,7 @@ func TestSessionLiveHubCoalescesTypedUpdates(t *testing.T) {
 	if eventID != 2 {
 		t.Fatalf("event id = %d, want 2", eventID)
 	}
-	if !update.Participants || !update.Journal {
+	if !update.Session || !update.Participants || !update.Journal {
 		t.Fatalf("boolean invalidations were not merged: %#v", update)
 	}
 	if len(update.CharacterIDs) != 2 || update.CharacterIDs[0] != 4 || update.CharacterIDs[1] != 9 {

@@ -130,10 +130,6 @@ const menuBtnEl = ref(null)
 const isReadonly = computed(() => false)
 
 function onCardClick() {
-  if (props.session.myRole === 'player' && props.session.myCharUuid) {
-    router.push({ path: '/char/' + props.session.myCharUuid, query: { session: props.session.uuid } })
-    return
-  }
   router.push('/sessions/' + props.session.uuid)
 }
 
@@ -151,7 +147,7 @@ const chapterImageStyle = computed(() => ({
   objectPosition: `${(props.session.currentChapter?.imageFocalX ?? 0.5) * 100}% ${(props.session.currentChapter?.imageFocalY ?? 0.5) * 100}%`,
 }))
 const sessionInitial = computed(() => props.session.name?.trim().charAt(0).toUpperCase() || 'D')
-const openActionLabel = computed(() => props.session.myRole === 'player' && props.session.myCharUuid ? 'К персонажу' : 'Открыть сессию')
+const openActionLabel = computed(() => 'Открыть сессию')
 const openLabel = computed(() => `${openActionLabel.value} «${props.session.name}»`)
 
 const participantLabel = computed(() => {

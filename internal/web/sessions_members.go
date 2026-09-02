@@ -132,6 +132,7 @@ func (s *Server) handleUpdateSession(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	s.displayEvents.publish(session.ID)
+	s.publishSessionOverview(session.ID)
 	writeJSON(w, http.StatusNoContent, nil)
 }
 

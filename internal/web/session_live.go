@@ -19,6 +19,7 @@ const (
 // remains in the REST projections; the stream only tells clients what to
 // refresh and can therefore safely coalesce bursts.
 type sessionLiveUpdate struct {
+	Session          bool    `json:"session,omitempty"`
 	Participants     bool    `json:"participants,omitempty"`
 	CharacterIDs     []int64 `json:"characterIds,omitempty"`
 	Journal          bool    `json:"journal,omitempty"`
@@ -27,6 +28,7 @@ type sessionLiveUpdate struct {
 
 type sessionLivePending struct {
 	eventID          uint64
+	session          bool
 	participants     bool
 	characterIDs     map[int64]struct{}
 	journal          bool
@@ -71,7 +73,7 @@ func (h *sessionLiveHub) subscribe(sessionID int64) (*sessionLiveSubscription, f
 }
 
 func (h *sessionLiveHub) publish(sessionID int64, update sessionLiveUpdate) {
-	if !update.Participants && len(update.CharacterIDs) == 0 && !update.Journal && update.ConnectedScreens == nil {
+	if !update.Session && !update.Participants && len(update.CharacterIDs) == 0 && !update.Journal && update.ConnectedScreens == nil {
 		return
 	}
 	h.mu.Lock()
@@ -79,6 +81,7 @@ func (h *sessionLiveHub) publish(sessionID int64, update sessionLiveUpdate) {
 	for subscription := range h.subscribers[sessionID] {
 		pending := &subscription.pending
 		pending.eventID = h.nextID
+		pending.session = pending.session || update.Session
 		pending.participants = pending.participants || update.Participants
 		pending.journal = pending.journal || update.Journal
 		if len(update.CharacterIDs) > 0 && pending.characterIDs == nil {
@@ -110,9 +113,13 @@ func (h *sessionLiveHub) drain(subscription *sessionLiveSubscription) (uint64, s
 	}
 	sort.Slice(characterIDs, func(i, j int) bool { return characterIDs[i] < characterIDs[j] })
 	return pending.eventID, sessionLiveUpdate{
-		Participants: pending.participants, CharacterIDs: characterIDs,
+		Session: pending.session, Participants: pending.participants, CharacterIDs: characterIDs,
 		Journal: pending.journal, ConnectedScreens: pending.connectedScreens,
 	}
+}
+
+func (s *Server) publishSessionOverview(sessionID int64) {
+	s.sessionLive.publish(sessionID, sessionLiveUpdate{Session: true})
 }
 
 func (s *Server) publishSessionParticipants(sessionID int64) {

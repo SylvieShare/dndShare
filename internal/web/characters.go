@@ -349,6 +349,9 @@ func (s *Server) handleUpdatePublicChar(w http.ResponseWriter, r *http.Request) 
 		serverError(w, err)
 		return
 	}
+	if sessionID, attached, err := s.store.SessionIDForCharacter(r.Context(), char.ID); err == nil && attached {
+		s.publishSessionParticipants(sessionID)
+	}
 	w.WriteHeader(http.StatusNoContent)
 }
 

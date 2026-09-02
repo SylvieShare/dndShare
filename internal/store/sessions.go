@@ -29,15 +29,16 @@ type GameSession struct {
 
 // SessionParticipantData — участник сессии с данными персонажа (порт model/SessionParticipantData.kt).
 type SessionParticipantData struct {
-	CharID       int64          `json:"charId"`
-	CharUUID     string         `json:"charUuid"`
-	Version      int64          `json:"version"`
-	TemplateID   int64          `json:"templateId"`
-	TemplateName string         `json:"templateName"`
-	IconImageURL *string        `json:"iconImageUrl,omitempty"`
-	Data         map[string]any `json:"data"`
-	Role         string         `json:"role"`
-	Color        *string        `json:"color,omitempty"`
+	CharID        int64          `json:"charId"`
+	CharUUID      string         `json:"charUuid"`
+	Version       int64          `json:"version"`
+	TemplateID    int64          `json:"templateId"`
+	TemplateName  string         `json:"templateName"`
+	IconImageURL  *string        `json:"iconImageUrl,omitempty"`
+	Data          map[string]any `json:"data"`
+	Role          string         `json:"role"`
+	Color         *string        `json:"color,omitempty"`
+	PublicVisible bool           `json:"publicVisible"`
 }
 
 // ParticipantBrief — краткая инфа об участнике для списка сессий.
@@ -143,7 +144,7 @@ func (s *Store) GetGameSessionByInviteCode(ctx context.Context, code string) (Ga
 func (s *Store) GetSessionParticipants(ctx context.Context, sessionID int64) ([]SessionParticipantData, error) {
 	rows, err := s.pool.Query(ctx,
 		`SELECT sp.char_id, sp.role, sp.color, c.uuid::text AS char_uuid, c.version, c.data AS char_data,
-		        c.template_id, ct.name AS template_name, icon.url AS icon_image_url
+		        c.template_id, ct.name AS template_name, icon.url AS icon_image_url, c.public_visible
 		 FROM dndshare.session_participant sp
 		 JOIN dndshare."char" c ON c.id = sp.char_id AND c.deleted = false
 		 JOIN dndshare.char_template ct ON ct.id = c.template_id
@@ -160,7 +161,7 @@ func (s *Store) GetSessionParticipants(ctx context.Context, sessionID int64) ([]
 	for rows.Next() {
 		var p SessionParticipantData
 		var charData []byte
-		if err := rows.Scan(&p.CharID, &p.Role, &p.Color, &p.CharUUID, &p.Version, &charData, &p.TemplateID, &p.TemplateName, &p.IconImageURL); err != nil {
+		if err := rows.Scan(&p.CharID, &p.Role, &p.Color, &p.CharUUID, &p.Version, &charData, &p.TemplateID, &p.TemplateName, &p.IconImageURL, &p.PublicVisible); err != nil {
 			return nil, err
 		}
 		_ = json.Unmarshal(charData, &p.Data)
