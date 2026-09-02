@@ -29,7 +29,7 @@ export function spellSummary(item) {
 }
 
 export function countsTowardPreparation(spellRef, level) {
-  return Number(level) > 0 && !!spellRef?.prepared && !spellRef?.always_prepared
+  return Number(level) > 0 && !!spellRef?.prepared
 }
 
 export function groupTitle(level) {

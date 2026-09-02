@@ -26,7 +26,7 @@ export async function levelUpSessionAdditions({
       .map(entry => ({ kind: 'ability', itemId: entry.id })),
     ...addedEntries(values?.abilities_feats, updates?.abilities_feats)
       .map(entry => ({ kind: 'feature', itemId: entry.id })),
-    ...addedEntries(values?.spells?.spells, updates?.spells?.spells)
+    ...addedEntries(spellbookEntries(values?.spells), spellbookEntries(updates?.spells))
       .map(entry => ({ kind: 'spell', itemId: entry.id })),
   ]
   if (!additions.length) return []
@@ -47,3 +47,4 @@ export async function levelUpSessionAdditions({
     }[entry.kind],
   }))
 }
+import { spellbookEntries } from './spellbook'

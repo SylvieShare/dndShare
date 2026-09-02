@@ -1,11 +1,22 @@
 <template>
   <AppModalFrame :title="modalTitle" @close="$emit('close')">
-    <EditorSection v-if="showCastingConfig" title="Подготовка">
-      <ToggleSwitch
-        :model-value="preparation"
-        label="Подготовка заклинаний"
-        @update:model-value="$emit('set-preparation', $event)"
-      />
+    <EditorSection v-if="showTabConfig" title="Вкладка">
+      <div class="ssm-fields">
+        <FormField label="Название" vertical>
+          <FormTextInput :value="tabName" placeholder="Например, Волшебник" @update:value="$emit('set-tab-name', $event)" />
+        </FormField>
+        <FormField label="Класс" vertical>
+          <ValueSelect
+            :model-value="classItemId"
+            :options="availableClassOptions"
+            placeholder="Без класса"
+            @update:model-value="$emit('set-class-item', $event)"
+          />
+        </FormField>
+        <FormField label="Режим" vertical>
+          <ValueSelect :model-value="mode" :options="MODE_OPTIONS" @update:model-value="$emit('set-mode', $event)" />
+        </FormField>
+      </div>
     </EditorSection>
 
     <EditorSection v-if="showSlotConfig" title="Расчёт ячеек">
@@ -25,6 +36,10 @@
         @update:model-value="$emit('set-stat-path', $event)"
       />
     </EditorSection>
+
+    <button v-if="showTabConfig && allowDelete" type="button" class="ssm-delete" @click="$emit('delete-tab')">
+      Удалить вкладку
+    </button>
 
     <EditorSection v-if="showCastingConfig" title="Бонусы">
       <div class="ssm-bonus">
@@ -62,10 +77,16 @@ import { MultiToggle } from '@sylvieshare/share-ui'
 import { ToggleSwitch } from '@sylvieshare/share-ui'
 import { ValueSelect } from '@sylvieshare/share-ui'
 import { FormNumberInput } from '@sylvieshare/share-ui'
+import { FormField, FormTextInput } from '@sylvieshare/share-ui'
 
 const REST_OPTIONS = [
   { value: 'long_rest', label: 'Долгий отдых' },
   { value: 'short_rest', label: 'Короткий отдых' },
+]
+const MODE_OPTIONS = [
+  { value: 'known', label: 'Известные заклинания' },
+  { value: 'prepared', label: 'Подготавливаемые заклинания' },
+  { value: 'spellbook', label: 'Книга заклинаний' },
 ]
 
 const props = defineProps({
@@ -74,19 +95,30 @@ const props = defineProps({
   statOptions: { type: Array, default: () => [] },
   saveBonus:   { type: Number, default: 0 },
   attackBonus: { type: Number, default: 0 },
-  preparation: { type: Boolean, default: false },
   automaticSlots: { type: Boolean, default: true },
   showCastingConfig: { type: Boolean, default: true },
   castingLabel: { type: String, default: '' },
   showSlotConfig: { type: Boolean, default: true },
+  showTabConfig: { type: Boolean, default: false },
+  tabName: { type: String, default: '' },
+  classItemId: { default: null },
+  classOptions: { type: Array, default: () => [] },
+  usedClassItemIds: { type: Array, default: () => [] },
+  mode: { type: String, default: 'known' },
+  allowDelete: { type: Boolean, default: false },
 })
-defineEmits(['close', 'change', 'set-stat-path', 'set-save-bonus', 'set-attack-bonus', 'set-preparation', 'set-automatic-slots'])
+defineEmits(['close', 'change', 'set-stat-path', 'set-save-bonus', 'set-attack-bonus', 'set-automatic-slots', 'set-tab-name', 'set-class-item', 'set-mode', 'delete-tab'])
 
 const editingRest = ref('long_rest')
 const slots = computed(() => props.slotPools?.[editingRest.value] || [])
 const modalTitle = computed(() => props.showCastingConfig && props.castingLabel
   ? `Магия · ${props.castingLabel}`
   : 'Магия')
+const availableClassOptions = computed(() => {
+  const used = new Set(props.usedClassItemIds.map(String))
+  return [{ value: null, label: 'Без класса' }, ...props.classOptions.filter((option) =>
+    String(option.value) === String(props.classItemId) || !used.has(String(option.value)))]
+})
 </script>
 
 <style scoped>
@@ -103,6 +135,8 @@ const modalTitle = computed(() => props.showCastingConfig && props.castingLabel
 }
 
 .ssm-hint { margin: 6px 0 0; color: var(--text-muted); font-size: 11px; }
+.ssm-fields { display: grid; gap: 12px; }
+.ssm-delete { width: 100%; border: 1px solid color-mix(in srgb, var(--danger) 45%, var(--border)); border-radius: 9px; background: transparent; color: var(--danger); cursor: pointer; padding: 9px 12px; font: inherit; font-size: 12px; font-weight: 700; }
 
 .ssm-grid {
   display: grid;

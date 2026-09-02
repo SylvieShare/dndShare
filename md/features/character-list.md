@@ -320,13 +320,15 @@ Key rules:
   preferring the selected subrace and avoiding an unchanged consecutive result;
 - the Personality step uses the same fixed 3×3 D&D alignment enum as the sheet;
 - classes whose handbook `spellcasting.start_level` is 1 create a spellbook in
-  the creation wizard; when `spellcasting.prepares` is enabled, selected
+  the creation wizard; the class item becomes the unique owner of its tab.
+  When the tab mode supports preparation, selected
   cantrips are stored unprepared, selected leveled spells begin prepared, and
-  granted archetype/domain spells begin permanently prepared. Half-casters
+  granted archetype/domain spells are stored in the separate readonly grants
+  list. Half-casters
   with `start_level: 2` receive the spellbook from level-up instead;
-- every spell selected in the creation wizard stores its class
-  `spellcasting_source`; opening an older sheet repairs missing sources from the
-  spell's compatible class list;
+- every spell selected in the creation wizard is written directly into its
+  class tab; old sheets are migrated once on the server and are not repaired by
+  runtime heuristics;
 - spell-slot progression is read from `caster_progression` on class/subclass
   handbook data rather than inferred from English or localized names;
 - fixed racial, class-feature and feat `granted_spells` are added even for a

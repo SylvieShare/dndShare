@@ -23,7 +23,8 @@ describe('character PDF print styles', () => {
 
   it('prints casting parameters for every spellcasting source', () => {
     expect(pageSource).toContain('v-for="row in spellcastingSummaries"')
-    expect(pageSource).toContain('data.source_settings')
-    expect(pageSource).toContain('entry?.casting_ability_source')
+    expect(pageSource).toContain('values.value.spells?.tabs')
+    expect(pageSource).toContain('values.value.spells?.grants')
+    expect(pageSource).toContain('entry?.casting_ability')
   })
 })

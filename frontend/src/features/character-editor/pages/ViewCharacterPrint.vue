@@ -382,71 +382,40 @@ const equipmentPages = computed(() => {
   return pages
 })
 
-const rawSpells = computed(() => Array.isArray(values.value.spells?.spells) ? values.value.spells.spells : [])
+const spellTabs = computed(() => Array.isArray(values.value.spells?.tabs) ? values.value.spells.tabs : [])
+const grantedSpells = computed(() => Array.isArray(values.value.spells?.grants) ? values.value.spells.grants : [])
+const rawSpells = computed(() => [
+  ...spellTabs.value.flatMap((tab) => (tab.spells || []).map((entry) => ({ entry, tab, granted: false }))),
+  ...grantedSpells.value.map((entry) => ({
+    entry,
+    tab: spellTabs.value.find((tab) => tab.key === entry.tab_key) || null,
+    granted: true,
+  })),
+])
 const spellSlotSections = computed(() => {
-  const data = values.value.spells || {}
-  let canonical = data.slot_pools && typeof data.slot_pools === 'object' ? data.slot_pools : null
-  if (!canonical) {
-    canonical = { long_rest: [], short_rest: [] }
-    const legacyRest = data.slots_rest === 'short_rest' ? 'short_rest' : 'long_rest'
-    canonical[legacyRest] = Array.isArray(data.slots) ? data.slots : []
-    if (data.pact_slots) canonical.short_rest = [...canonical.short_rest, data.pact_slots]
-  }
+  const canonical = values.value.spells?.slot_pools || {}
   return ['long_rest', 'short_rest'].map((rest) => ({
     rest,
     slots: (Array.isArray(canonical[rest]) ? canonical[rest] : []).filter((slot) => Number(slot.total) > 0),
   })).filter((section) => section.slots.length)
 })
-const spellcastingClassLabels = computed(() => new Map((Array.isArray(values.value.classes) ? values.value.classes : []).map((entry) => [
-  `class:${entry?.id ?? ''}:${entry?.subclass?.id ?? ''}`,
-  text(entry?.name || entry?.class?.name || 'Класс'),
-])))
-const spellcastingSourceSettings = computed(() => {
-  const data = values.value.spells || {}
-  if (data.source_settings && typeof data.source_settings === 'object' && !Array.isArray(data.source_settings)) {
-    return data.source_settings
-  }
-  const fallbackKey = spellcastingClassLabels.value.size === 1
-    ? [...spellcastingClassLabels.value.keys()][0]
-    : 'other'
-  return { [fallbackKey]: {
-    stat_path: data.stat_path ?? '',
-    save_bonus: Number(data.save_bonus) || 0,
-    attack_bonus: Number(data.attack_bonus) || 0,
-    preparation: !!data.preparation,
-  } }
-})
-function printSpellcastingSummary(key, setting) {
-  const statKey = SUGGEST16_TO_STAT[Number(setting?.stat_path)]
+function printSpellcastingSummary(tab) {
+  const statKey = SUGGEST16_TO_STAT[Number(tab?.casting_ability)]
   const mod = statKey ? abilityModifier(abilityScore(statKey)) : 0
   return {
-    key,
-    label: key === 'other' ? 'Другие' : (spellcastingClassLabels.value.get(key) || 'Класс'),
+    key: tab.key,
+    label: tab.name || 'Магия',
     stat: statKey ? STAT_FULL[statKey] : '—',
-    saveDc: 8 + profBonus.value + mod + (Number(setting?.save_bonus) || 0),
-    attackBonus: profBonus.value + mod + (Number(setting?.attack_bonus) || 0),
+    saveDc: 8 + profBonus.value + mod + (Number(tab?.save_bonus) || 0),
+    attackBonus: profBonus.value + mod + (Number(tab?.attack_bonus) || 0),
   }
 }
-const spellcastingSummaries = computed(() => {
-  const settings = spellcastingSourceSettings.value
-  const classRows = [...spellcastingClassLabels.value.keys()]
-    .filter((key) => settings[key])
-    .map((key) => printSpellcastingSummary(key, settings[key]))
-  const hasOther = rawSpells.value.some((entry) => !spellcastingClassLabels.value.has(entry?.spellcasting_source))
-  if (hasOther && settings.other) classRows.push(printSpellcastingSummary('other', settings.other))
-  if (classRows.length) return classRows
-  const first = Object.entries(settings)[0]
-  return first ? [printSpellcastingSummary(first[0], first[1])] : []
-})
+const spellcastingSummaries = computed(() => spellTabs.value.map(printSpellcastingSummary))
 function spellDice(rows) { return (Array.isArray(rows) ? rows : []).map(row => { const die = diceLabel(row.dice_id); const typeValue = damageType(row.type); return [die ? `${Number(row.count) || 1}${die}` : '', typeValue].filter(Boolean).join(' ') }).filter(Boolean).join(' + ') }
-function spellEntryCasting(entry) {
-  const classKeys = spellcastingClassLabels.value
-  const fallbackKey = classKeys.size === 1 ? [...classKeys.keys()][0] : 'other'
-  const sourceKey = classKeys.has(entry?.spellcasting_source) ? entry.spellcasting_source : fallbackKey
-  const setting = spellcastingSourceSettings.value[sourceKey] || spellcastingSourceSettings.value.other || {}
-  const abilityId = entry?.casting_ability != null && entry?.casting_ability_source !== 'class'
-    ? entry.casting_ability
-    : setting.stat_path
+function spellEntryCasting(row) {
+  const entry = row.entry
+  const setting = row.tab || {}
+  const abilityId = entry?.casting_ability != null ? entry.casting_ability : setting.casting_ability
   const statKey = SUGGEST16_TO_STAT[Number(abilityId)]
   const mod = statKey ? abilityModifier(abilityScore(statKey)) : 0
   return {
@@ -455,31 +424,29 @@ function spellEntryCasting(entry) {
     attackBonus: profBonus.value + mod + (Number(setting.attack_bonus) || 0),
   }
 }
-function spellGrantLine(entry) {
-  const labels = [...new Set((Array.isArray(entry?.granted_by) ? entry.granted_by : [])
-    .map(source => text(source?.label)).filter(Boolean))]
-  if (!labels.length) return ''
-  const source = labels.join(', ')
-  const casting = spellEntryCasting(entry)
+function spellGrantLine(row) {
+  const source = text(row.entry?.source?.label)
+  if (!row.granted || !source) return ''
+  const casting = spellEntryCasting(row)
   const details = [
     casting.ability,
-    Number(entry?.cast_level) > 0 ? `${Number(entry.cast_level)} круг` : '',
+    Number(row.entry?.cast_level) > 0 ? `${Number(row.entry.cast_level)} круг` : '',
   ].filter(Boolean)
   return details.length ? `${source} · ${details.join(' · ')}` : source
 }
-function spellCombatLine(item, entry) {
+function spellCombatLine(item, row) {
   const data = item?.data || {}; const parts = []
-  const casting = spellEntryCasting(entry)
+  const casting = spellEntryCasting(row)
   if (data.damage?.range_attack) parts.push(`Атака заклинанием ${signed(casting.attackBonus)}`)
   if (data.damage?.save_ability) parts.push(`Спасбросок ${SAVE_ABBR[data.damage.save_ability] || String(data.damage.save_ability).toUpperCase()} Сл ${casting.saveDc}${data.damage.save_effect === 'half' ? ' — половина урона' : ''}`)
   const damage = spellDice(data.damage?.dices); if (damage) parts.push(`Урон: ${damage}`)
   const heal = spellDice(data.heal?.dices); if (heal) parts.push(`Лечение: ${heal}`)
   return parts.join(' · ')
 }
-const spellCards = computed(() => rawSpells.value.map((entry, index) => {
-  const item = itemById(entry.id); const data = item?.data || {}; const grantLine = spellGrantLine(entry); const length = plainLength(data.description) + plainLength(data.upper) + grantLine.length
+const spellCards = computed(() => rawSpells.value.map((row, index) => {
+  const entry = row.entry; const item = itemById(entry.id); const data = item?.data || {}; const grantLine = spellGrantLine(row); const length = plainLength(data.description) + plainLength(data.upper) + grantLine.length
   const span = length > 1150 ? 3 : length > 380 ? 2 : 1
-  return { ...entry, id: `${entry.id}-${index}`, itemId: entry.id, name: item?.name || `Заклинание #${entry.id}`, level: Number(data.lvl ?? -1), data, school: suggest.items(7).find(s => String(s.id) === String(data.schoolId))?.value || '', source: (item?.contentSources || []).map(source => source.name || source.code).filter(Boolean).join(', '), grantLine, combatLine: spellCombatLine(item, entry), span, textLength: length }
+  return { ...entry, id: entry.key || `${entry.id}-${index}`, itemId: entry.id, name: item?.name || `Заклинание #${entry.id}`, level: Number(data.lvl ?? -1), data, school: suggest.items(7).find(s => String(s.id) === String(data.schoolId))?.value || '', source: (item?.contentSources || []).map(source => source.name || source.code).filter(Boolean).join(', '), grantLine, combatLine: spellCombatLine(item, row), span, textLength: length }
 }))
 function estimatedCardHeight(card, columns) {
   const widthFactor = Math.max(1, Math.min(columns, card.span || 1)); const charsPerLine = columns === 3 ? 34 * widthFactor : 58 * widthFactor
@@ -531,7 +498,7 @@ function collectItemIds(data) {
   const ids = new Set(); const add = id => { if (id != null && id !== '') ids.add(id) }
   for (const entry of data.weapon || []) add(entry.item_id)
   const inv = normalizeValue(data.items); inv.equipped.forEach(entry => add(entry.item_id)); inv.sections.forEach(section => section.items.forEach(entry => add(entry.item_id)))
-  ;(Array.isArray(data.potions) ? data.potions : []).forEach(entry => add(entry.item_id)); (Array.isArray(data.tools) ? data.tools : []).forEach(entry => add(entry.item_id)); (data.spells?.spells || []).forEach(entry => add(entry.id))
+  ;(Array.isArray(data.potions) ? data.potions : []).forEach(entry => add(entry.item_id)); (Array.isArray(data.tools) ? data.tools : []).forEach(entry => add(entry.item_id)); (data.spells?.tabs || []).forEach(tab => (tab.spells || []).forEach(entry => add(entry.id))); (data.spells?.grants || []).forEach(entry => add(entry.id))
   for (const key of ['abilities_race', 'abilities_class', 'abilities_feats']) (data[key] || []).forEach(entry => add(entry.id))
   return [...ids]
 }

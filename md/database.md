@@ -67,14 +67,17 @@ template id, `source_version_id`, JSON документа, public/deleted flags,
 - `initiative` — `{base,bonuses,use_dex}`;
 - `ava` — `{url,upload_id?}`;
 - `hp.hitDice` — `[{die,total,used}]`;
-- `spells` — `{source_settings,slots_auto,spells,slot_pools,slots}`;
-  `source_settings` хранит независимые параметры магии по ключу
-  `class:<classId>:<subclassId>` и для ключа `other`: базовую характеристику,
-  бонус СЛ, бонус атаки и режим подготовки;
-  `slot_pools {long_rest:[...],short_rest:[...]}` хранит ячейки по типу
-  восстановления; `slots` временно зеркалит долгий пул для совместимости со
-  старым повышением уровня. Запись заклинания может хранить
-  `spellcasting_source` и собственную `casting_ability`;
+- `spells` — `{schema_version:2,slots_auto,slot_pools,tabs,grants}`;
+  `tabs` содержит независимые пользовательские вкладки
+  `{key,name,class_item_id,casting_ability,mode,save_bonus,attack_bonus,spells}`.
+  Непустой `class_item_id` уникален среди вкладок и связывает повышение уровня
+  с item базового класса; `mode` принимает `known`, `prepared` или `spellbook`.
+  Обычная запись заклинания имеет `{key,id,prepared}` и принадлежит ровно одной
+  вкладке, поэтому один item заклинания можно независимо хранить у нескольких
+  классов. `grants` — отдельный readonly-список внешних даров с `source` и
+  необязательными `tab_key`, `casting_ability`, `cast_level`, `slotless` и
+  `counts_as_known`. `slot_pools {long_rest:[...],short_rest:[...]}` хранит
+  общие ячейки по типу восстановления, а не по классу;
 - `items` — `{equipped,sections}`;
 - `money` — `{order,amounts}`.
 - `abilities_race`, `abilities_class`, `abilities_feats` — item-reference arrays
@@ -216,8 +219,11 @@ Section `36_ability_resource_colors.sql` задаёт тематический `
 Section `37_ability_spell_grants.sql` добавляет типам 3, 4 и 7 массив
 `granted_spells` с заклинанием, уровнем открытия, заклинательной характеристикой
 и флагом применения без ячейки. Он заполняет фиксированные расовые и классовые
-источники из PHB; лист сохраняет источник в `granted_by` и использует
-переопределённую характеристику только для конкретного заклинания.
+источники из PHB; лист сохраняет каждое такое заклинание отдельной записью в
+`spells.grants` и использует переопределённую характеристику только для него.
+`61_spellbook_tabs.sql` переносит прежний общий список и настройки источников
+во вкладки, неоднозначные обычные записи — во вкладку «Без источника», а
+внешние дары — в `grants`, после чего runtime старый формат не читает.
 Section `38_equipped_armor.sql` удаляет прежний снимок базового КД и щита из
 JSON персонажа, сохраняя только ручные `armor.bonuses`. Правила КД и ограничения
 берутся из записей типа 12 в `items.equipped`; для магического экземпляра

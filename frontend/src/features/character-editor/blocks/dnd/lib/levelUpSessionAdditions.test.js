@@ -8,12 +8,12 @@ describe('level-up session additions', () => {
       values: {
         abilities_class: [{ id: 10 }],
         abilities_feats: [{ id: 20 }],
-        spells: { spells: [] },
+        spells: { schema_version: 2, tabs: [], grants: [] },
       },
       updates: {
         abilities_class: [{ id: 10 }, { id: 11 }],
         abilities_feats: [{ id: 20 }, { id: 20 }],
-        spells: { spells: [{ id: 30 }] },
+        spells: { schema_version: 2, tabs: [{ key: 'class:1', spells: [{ key: 'spell:30', id: 30 }] }], grants: [] },
       },
       catalogItems: [{ id: 11, name: 'Дополнительная атака' }, { id: 20, name: 'Удачливый' }],
       loadItems,

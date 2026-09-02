@@ -111,18 +111,17 @@ describe('buildCharacterData spell preparation', () => {
       suggestValue: () => '',
     })
 
-    expect(result.data.values.spells.spells).toEqual([{
+    expect(result.data.values.spells.tabs).toEqual([])
+    expect(result.data.values.spells.grants).toEqual([{
+      key: 'ability:4092:spell:498',
       id: 498,
-      prepared: false,
-      external_only: true,
       casting_ability: 4,
-      casting_ability_source: 'ability',
-      granted_by: [{
+      source: {
         kind: 'ability',
         item_id: 4092,
         label: 'Природная иллюзия',
         casting_ability: 4,
-      }],
+      },
     }])
   })
 
@@ -133,7 +132,7 @@ describe('buildCharacterData spell preparation', () => {
       suggestValue: () => '',
     })
 
-    expect(result.data.values.spells.source_settings['class:2:'].preparation).toBe(true)
+    expect(result.data.values.spells.tabs[0]).toMatchObject({ class_item_id: 2, casting_ability: 5, mode: 'prepared' })
   })
 
   it('keeps preparation disabled for known-spell casters', () => {
@@ -143,10 +142,10 @@ describe('buildCharacterData spell preparation', () => {
       suggestValue: () => '',
     })
 
-    expect(result.data.values.spells.source_settings['class:2:'].preparation).toBe(false)
+    expect(result.data.values.spells.tabs[0]).toMatchObject({ class_item_id: 2, casting_ability: 6, mode: 'known' })
   })
 
-  it('keeps cantrips unprepared and marks granted leveled spells as permanent', () => {
+  it('keeps cantrips unprepared and stores granted class spells separately', () => {
     const result = buildCharacterData({
       race: selection(1, 'Человек'),
       charClass: selection(2, 'Жрец', { spellcasting: { ability: 5, prepares: true } }),
@@ -156,11 +155,14 @@ describe('buildCharacterData spell preparation', () => {
       suggestValue: () => '',
     })
 
-    expect(result.data.values.spells.spells).toEqual([
-      { id: 100, prepared: false, spellcasting_source: 'class:2:' },
-      { id: 101, prepared: true, spellcasting_source: 'class:2:' },
-      { id: 102, prepared: true, always_prepared: true, spellcasting_source: 'class:2:' },
+    expect(result.data.values.spells.tabs[0].spells).toMatchObject([
+      { id: 100, prepared: false },
+      { id: 101, prepared: true },
     ])
+    expect(result.data.values.spells.grants).toEqual([{
+      key: 'class:2:spell:102', id: 102, tab_key: 'class:2',
+      source: { kind: 'class', item_id: 2, label: 'Жрец' },
+    }])
   })
 
   it('assigns wizard-selected spells to the class even when the catalogue grant is incomplete', () => {
@@ -172,9 +174,10 @@ describe('buildCharacterData spell preparation', () => {
       suggestValue: () => '',
     })
 
-    expect(result.data.values.spells.spells).toEqual([
-      { id: 100, prepared: true, spellcasting_source: 'class:7:' },
-    ])
+    expect(result.data.values.spells.tabs[0]).toMatchObject({
+      key: 'class:7', class_item_id: 7,
+      spells: [{ id: 100, prepared: false }],
+    })
   })
 
   it('does not create level-one magic for a half-caster that starts at level two', () => {

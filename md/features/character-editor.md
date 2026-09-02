@@ -192,9 +192,11 @@ The current shape under `data.values` is:
   {base,bonuses,use_dex}`;
 - HP: `{current,max:{base,bonuses},temp,ds_success,ds_failure,
   hitDice:[{die,total,used}]}`; legacy numeric `max` remains read-compatible;
-- spellbook: `{stat_path,save_bonus,attack_bonus,slots_rest,preparation,
-  spells:[{id,prepared,always_prepared?,external_only?,granted_by?,
-  casting_ability?,slotless?}],slots:[{level,total,used}]}`;
+- spellbook: `{schema_version:2,slots_auto,slot_pools,tabs,grants}`. Each tab is
+  `{key,name,class_item_id,casting_ability,mode,save_bonus,attack_bonus,spells}`;
+  each editable spell is `{key,id,prepared}`. `class_item_id` is unique among
+  non-custom tabs. External readonly spells are independent `grants` with a
+  structured `source` and optional casting overrides;
 - inventory: `{equipped:[Entry],sections:[{id,name,items:[Entry]}]}`, where an
   owned item entry is `{uid,item_id,count,params,override}`;
 - potions: an independent array of the same owned entries; physical tools are
@@ -232,40 +234,25 @@ spellbook, flat inventory or array wallet.
 характеристик; владение инструментом автоматически добавляет бонус мастерства,
 а режим броска использует те же автоматические эффекты характеристики.
 
-Spell preparation applies only to spells of level 1 and higher. Cantrips never
-offer preparation actions, and stale preparation fields on them are cleared
-after handbook details load. Owners change regular and permanent preparation
-through the spell row action menu; the row has no standalone preparation
-checkbox. A prepared spell gets two compact rounded side brackets inset from
-the row edges. They occupy reserved horizontal space and therefore shorten the
-spell content instead of sitting behind it. Each bracket ends with its rounded
-arc, with no extended or fading horizontal arm. Its entire side edge is thicker
-than the top and bottom edges, without a separate central stripe. Regular
-preparation uses the accent tone; permanent preparation uses a thicker
-warning-tone bracket. No botanical background asset is rendered.
-`always_prepared` represents an archetype/domain spell learned for good: it
-always implies `prepared`, is excluded from the ordinary prepared-spell total,
-uses a richer vine print in the warning tone and can be assigned or removed
-separately through the same menu. Granted archetype spells receive this status
-during creation and level-up.
+Spell preparation applies only to editable spells of level 1 and higher in a
+tab whose mode is `prepared` or `spellbook`. Cantrips never offer preparation
+actions, and stale flags on cantrips or `known` tabs are cleared after handbook
+details load. The row menu toggles preparation; prepared spells receive compact
+accent brackets. Permanently granted archetype/domain spells are not modelled
+as a second preparation flag: they live in the readonly grants list.
 
 An ability, class feature or feat may contribute spells through its handbook
-`granted_spells` contract. Such a spell is shown in the ordinary spell list but
-is read-only while the character owns it only through that external source:
-the row cannot be reordered, prepared or deleted. `granted_by` records the
-source feature displayed to the player; `casting_ability` overrides the
-spellbook-wide ability for that spell's attack bonus and save DC, and is shown
-only when an override exists. `slotless` means that use does not spend an
-ordinary spell slot. `cast_level` may fix the rules-defined level of that cast,
-including damage/healing scaling, independently of the spell's base level.
-Removing the source removes an external-only entry, but a
-spell that the character also owns normally remains and only loses the source
-metadata. Creation, level-up and the live sheet use the same synchronization
-rule. The print sheet preserves both provenance and the per-spell casting math.
+`granted_spells` contract. Each source creates its own entry in `spells.grants`,
+shown under the slot pools and outside editable tabs. It cannot be reordered,
+prepared or deleted. `source` records the feature displayed to the player;
+`casting_ability` overrides the linked tab ability for this grant, `slotless`
+avoids spending a slot, and `cast_level` fixes a rules-defined cast level.
+Removing an automatic source removes only its grant; an independently learned
+copy in a tab remains. Creation, level-up, live sheet and print use this model.
 
-`internal/store/schema/03_characters.sql` and the later canonical migrations,
-including `28_item_instance_params.sql`, migrate existing rows before HTTP start
-and remove old keys. Components neither recognize nor write previous shapes.
+`internal/store/schema/61_spellbook_tabs.sql` migrates existing rows before HTTP
+start and removes the shared-list/source-settings shape. Components neither
+recognize nor write previous spellbook fields.
 
 ## Semantic accessors
 

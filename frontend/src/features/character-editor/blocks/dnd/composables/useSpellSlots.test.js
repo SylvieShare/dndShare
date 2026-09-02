@@ -12,13 +12,12 @@ function setup() {
 }
 
 describe('spell slot pools by recovery', () => {
-  it('migrates ordinary and Pact Magic slots into long and short rest pools', () => {
+  it('loads the canonical long and short rest pools', () => {
     const { api } = setup()
-    api.loadSlotPools({
-      slots_rest: 'long_rest',
-      slots: [{ level: 1, total: 3, used: 1 }],
-      pact_slots: { level: 2, total: 2, used: 1 },
-    })
+    api.loadSlotPools({ slot_pools: {
+      long_rest: [{ level: 1, total: 3, used: 1 }],
+      short_rest: [{ level: 2, total: 2, used: 1 }],
+    } })
     expect(api.serializedSlotPools()).toEqual({
       long_rest: [{ level: 1, total: 3, used: 1 }],
       short_rest: [{ level: 2, total: 2, used: 1 }],

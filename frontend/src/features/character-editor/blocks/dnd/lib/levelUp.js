@@ -101,52 +101,6 @@ export function pactSlots(warlockLevel) {
   }
 }
 
-/**
- * Slot totals (index 0 = 1st circle) for a set of class entries.
- * `itemsById` — handbook items for every class/subclass id in the entries.
- *
- * Single-class characters use their own class table (half/third casters round
- * up); a multiclass combination sums caster levels per the PHB rules (round
- * down) and reads the shared table. Warlock pact magic is a separate pool: it
- * lands in `pact` and is merged into `totals` only when there is no other
- * caster to share the slot row with.
- */
-export function computeSlots(entries, itemsById) {
-  const kinds = entries.map((e) => ({
-    e,
-    kind: casterKindOf(itemsById[e.id], e.subclass ? itemsById[e.subclass.id] : null),
-  })).filter((c) => c.kind)
-
-  const casters = kinds.filter((c) => c.kind !== 'pact')
-  let casterLevel = 0
-  if (casters.length === 1 && kinds.length === 1) {
-    const { e, kind } = casters[0]
-    casterLevel = kind === 'full' ? e.level
-      : kind === 'halfup' ? Math.ceil(e.level / 2)
-        : kind === 'half' ? (e.level < 2 ? 0 : Math.ceil(e.level / 2))
-          : (e.level < 3 ? 0 : Math.ceil(e.level / 3))
-  } else {
-    for (const { e, kind } of casters) {
-      casterLevel += kind === 'full' ? e.level
-        : kind === 'halfup' ? Math.ceil(e.level / 2)
-          : kind === 'half' ? Math.floor(e.level / 2)
-            : Math.floor(e.level / 3)
-    }
-  }
-
-  const totals = Array(9).fill(0)
-  if (casterLevel > 0) {
-    FULL_CASTER_SLOTS[Math.min(LEVEL_CAP, casterLevel) - 1].forEach((n, i) => { totals[i] = n })
-  }
-
-  const warlockLevel = kinds.filter((c) => c.kind === 'pact').reduce((s, c) => s + c.e.level, 0)
-  const pact = pactSlots(warlockLevel)
-  const pactMerged = !!pact && casterLevel === 0
-  if (pactMerged) totals[pact.slotLevel - 1] += pact.count
-
-  return { totals, casterLevel, pact, pactMerged, isCaster: casterLevel > 0 || !!pact }
-}
-
 // ─── granted spells (domain / oath / circle lists) ──────────────────────────
 
 /**

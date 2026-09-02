@@ -66,13 +66,14 @@ func TestEverySchemaFileIsEmbeddedAndRegistered(t *testing.T) {
 }
 
 func TestVersionedMigrationsRunAfterClassActionAutomation(t *testing.T) {
-	if len(schemaParts) < 4 {
+	if len(schemaParts) < 5 {
 		t.Fatal("schema manifest is incomplete")
 	}
-	legacyLast := schemaParts[len(schemaParts)-4]
-	halfCaster := schemaParts[len(schemaParts)-3]
-	sessionSecurity := schemaParts[len(schemaParts)-2]
-	sharedChannelDivinity := schemaParts[len(schemaParts)-1]
+	legacyLast := schemaParts[len(schemaParts)-5]
+	halfCaster := schemaParts[len(schemaParts)-4]
+	sessionSecurity := schemaParts[len(schemaParts)-3]
+	sharedChannelDivinity := schemaParts[len(schemaParts)-2]
+	spellbookTabs := schemaParts[len(schemaParts)-1]
 	if legacyLast.name != legacySchemaBootstrapLast {
 		t.Fatalf("legacy bootstrap must end at %q, got %q", legacySchemaBootstrapLast, legacyLast.name)
 	}
@@ -84,5 +85,8 @@ func TestVersionedMigrationsRunAfterClassActionAutomation(t *testing.T) {
 	}
 	if sharedChannelDivinity.name != "shared-channel-divinity" || sharedChannelDivinity.sql != schemaSharedChannelDivinitySQL {
 		t.Fatalf("shared Channel Divinity must run after the session security migration")
+	}
+	if spellbookTabs.name != "spellbook-tabs" || spellbookTabs.sql != schemaSpellbookTabsSQL {
+		t.Fatalf("spellbook tabs migration must run after the shared Channel Divinity migration")
 	}
 }

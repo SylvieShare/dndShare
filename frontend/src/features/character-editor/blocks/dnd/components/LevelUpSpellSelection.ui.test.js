@@ -6,9 +6,9 @@ const source = readFileSync(fileURLToPath(new URL('./LevelUpSpellSelection.vue',
 
 describe('level-up spell selection', () => {
   it('supports adding, removing and replacing class spells through one source-bound selection', () => {
-    expect(source).toContain('context.sourceKey')
-    expect(source).toContain('inferUnassigned')
-    expect(source).toContain('@click="remove(entry.id)"')
+    expect(source).toContain('context.tab')
+    expect(source).toContain('tab: { ...props.context.tab, spells: [] }')
+    expect(source).toContain('@click="remove(entry.key || entry.id)"')
     expect(source).toContain('<ItemPickerModal')
     expect(source).toContain("'classes.id'")
   })

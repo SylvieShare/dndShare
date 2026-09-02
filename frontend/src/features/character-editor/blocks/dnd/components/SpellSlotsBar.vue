@@ -5,7 +5,7 @@
         class="sp-mobile-panel-head"
         :title="castingPanelTitle"
         :show-edit="canInteract && showCastingConfig"
-        @edit="editOpen = true"
+        @edit="openEditor"
       />
       <div v-if="castingStats.length <= 1" class="sp-stats">
         <div class="sp-tile sp-tile--base">
@@ -76,7 +76,6 @@
       :stat-options="statOptions"
       :save-bonus="saveBonusExtra"
       :attack-bonus="attackBonusExtra"
-      :preparation="preparation"
       :automatic-slots="automaticSlots"
       :show-casting-config="showCastingConfig"
       :casting-label="castingLabel"
@@ -85,7 +84,6 @@
       @set-stat-path="$emit('set-stat-path', $event)"
       @set-save-bonus="$emit('set-save-bonus', $event)"
       @set-attack-bonus="$emit('set-attack-bonus', $event)"
-      @set-preparation="$emit('set-preparation', $event)"
       @set-automatic-slots="$emit('set-automatic-slots', $event)"
       @close="editOpen = false"
     />
@@ -112,7 +110,6 @@ const props = defineProps({
   attackBonus:     { type: Number, default: 0 },
   saveBonusExtra:   { type: Number, default: 0 },
   attackBonusExtra: { type: Number, default: 0 },
-  preparation:     { type: Boolean, default: false },
   activeSlotPools: { type: Array, default: () => [] },
   slotPools:       { type: Object, default: () => ({ long_rest: [], short_rest: [] }) },
   castingStats:    { type: Array, default: () => [] },
@@ -122,8 +119,14 @@ const props = defineProps({
   showStats: { type: Boolean, default: true },
   showSlots: { type: Boolean, default: true },
   showSlotConfig: { type: Boolean, default: true },
+  externalEditor: { type: Boolean, default: false },
 })
-defineEmits(['set-stat-path', 'set-total', 'set-save-bonus', 'set-attack-bonus', 'set-preparation', 'set-automatic-slots', 'toggle-slot'])
+const emit = defineEmits(['set-stat-path', 'set-total', 'set-save-bonus', 'set-attack-bonus', 'set-automatic-slots', 'toggle-slot', 'edit'])
+
+function openEditor() {
+  if (props.externalEditor) emit('edit')
+  else editOpen.value = true
+}
 
 function orbOrder(total) {
   return Array.from({ length: total }, (_, k) => total - k)

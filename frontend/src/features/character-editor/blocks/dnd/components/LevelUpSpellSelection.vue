@@ -15,11 +15,11 @@
     <div v-else class="lus-chips">
       <button
         v-for="entry in selected"
-        :key="entry.id"
+        :key="entry.key || entry.id"
         type="button"
         class="lus-chip"
         :title="`Убрать: ${entry.name}`"
-        @click="remove(entry.id)"
+        @click="remove(entry.key || entry.id)"
       >
         {{ entry.name }} <small>{{ entry.level === 0 ? 'заговор' : `${entry.level} круг` }}</small> ×
       </button>
@@ -85,13 +85,7 @@ const hint = computed(() => {
   return 'Изучи новые заклинания или замени уже известные.'
 })
 
-function isSelectableClassSpell(entry) {
-  if (entry?.external_only || entry?.always_prepared || entry?.source || entry?.casting_ability_source) return false
-  if (Array.isArray(entry?.granted_by) && entry.granted_by.length) return false
-  if (entry?.spellcasting_source === props.context.sourceKey) return true
-  if ((props.context.sourceAliases || []).includes(entry?.spellcasting_source)) return true
-  return !entry?.spellcasting_source && !!props.context.inferUnassigned
-}
+function isSelectableClassSpell(entry) { return entry?.id != null }
 
 function pickerEligibility(item) {
   const level = Number(item?.data?.lvl)
@@ -117,11 +111,8 @@ function pickerEligibility(item) {
 
 function notify() {
   emit('change', {
-    sourceKey: props.context.sourceKey,
-    sourceAliases: props.context.sourceAliases || [],
-    inferUnassigned: !!props.context.inferUnassigned,
-    prepares: !!rules.value.prepares,
-    entries: selected.value.map(({ id, level }) => ({ id, level })),
+    tab: { ...props.context.tab, spells: [] },
+    entries: selected.value.map(({ id, level, key }) => ({ id, level, ...(key ? { key } : {}) })),
   })
 }
 
@@ -132,8 +123,8 @@ function add(item) {
   notify()
 }
 
-function remove(id) {
-  selected.value = selected.value.filter((entry) => String(entry.id) !== String(id))
+function remove(key) {
+  selected.value = selected.value.filter((entry) => String(entry.key || entry.id) !== String(key))
   notify()
 }
 
@@ -148,6 +139,7 @@ onMounted(async () => {
       const item = itemMap[String(entry.id)]
       return {
         id: entry.id,
+        key: entry.key,
         name: item?.name || `Заклинание #${entry.id}`,
         level: Number(item?.data?.lvl) || 0,
       }
@@ -158,7 +150,7 @@ onMounted(async () => {
   }
 })
 
-watch(() => props.context.sourceKey, () => { pickerOpen.value = false })
+watch(() => props.context.tab?.key, () => { pickerOpen.value = false })
 </script>
 
 <style scoped>

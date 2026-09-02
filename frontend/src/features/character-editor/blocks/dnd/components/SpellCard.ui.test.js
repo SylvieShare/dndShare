@@ -29,13 +29,13 @@ describe('character spell card icon', () => {
     expect(source).not.toContain('class="sp-del"')
   })
 
-  it('moves both preparation statuses into actions and decorates leveled spells', () => {
+  it('keeps preparation as a tab-mode action for owned leveled spells', () => {
     expect(source).not.toContain('class="sp-prepared"')
-    expect(source).toContain('v-if="ctx.charCtx.ownerMode && canPrepare && !isAlwaysPrepared"')
+    expect(source).toContain('v-if="ctx.charCtx.ownerMode && canPrepare"')
     expect(source).toContain('baseLvl.value > 0')
-    expect(source).toContain('ctx.togglePrepared(props.entry.ref.id)')
-    expect(source).toContain('ctx.toggleAlwaysPrepared(props.entry.ref.id)')
-    expect(source).toContain(':permanent="isAlwaysPrepared"')
+    expect(source).toContain('ctx.togglePrepared(props.entry.ref.key)')
+    expect(source).toContain(':permanent="false"')
+    expect(source).not.toContain('isAlwaysPrepared')
   })
 
   it('uses a dice menu for normal and critical damage without a cast-level stepper', () => {

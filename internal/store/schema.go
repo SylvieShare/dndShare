@@ -202,6 +202,9 @@ var schemaSessionSecuritySQL string
 //go:embed schema/60_shared_channel_divinity.sql
 var schemaSharedChannelDivinitySQL string
 
+//go:embed schema/61_spellbook_tabs.sql
+var schemaSpellbookTabsSQL string
+
 var schemaParts = []struct {
 	name string
 	sql  string
@@ -268,6 +271,7 @@ var schemaParts = []struct {
 	{"half-caster-spellcasting", schemaHalfCasterSpellcastingSQL},
 	{"session-security", schemaSessionSecuritySQL},
 	{"shared-channel-divinity", schemaSharedChannelDivinitySQL},
+	{"spellbook-tabs", schemaSpellbookTabsSQL},
 }
 
 const (

@@ -23,34 +23,37 @@ describe('spellcasting restrictions', () => {
 })
 
 describe('multiclass spellcasting UI', () => {
-  it('keeps class sources and Pact Magic separate', () => {
-    expect(source).toContain('characterSpellcastingSources')
+  it('keeps class tabs and recovery-based slot pools separate', () => {
     expect(source).toContain('computeSpellSlotPools')
     expect(source).toContain(':active-slot-pools="activeSlotPools"')
-    expect(source).toContain('spellcasting_source')
+    expect(source).toContain('tabs: tabs.value.map')
+    expect(source).toContain('grants: grants.value.map')
     expect(cardSource).toContain("option.pool === 'short_rest'")
   })
 
-  it('shows only class tabs and keeps slots plus grants above them', () => {
+  it('uses the same tabs UI for zero, one and several sources', () => {
     expect(source).toContain('v-for="tab in spellTabs"')
-    expect(source).not.toContain("{ key: 'all', label: 'Все' }")
-    expect(source).not.toContain("{ key: 'other', label: 'Другие' }")
+    expect(source).toContain('class="sp-tab-add"')
+    expect(source).toContain('v-if="!tabs.length"')
     expect(source).toContain('class="sp-standalone"')
-    expect(source.indexOf(':show-stats="false"')).toBeLessThan(source.indexOf('aria-label="Класс заклинаний"'))
-    expect(source).toContain('spells.value.filter(spellMatchesActiveTab)')
+    expect(source.indexOf(':show-stats="false"')).toBeLessThan(source.indexOf('aria-label="Источники магии"'))
   })
 
-  it('stores casting ability, bonuses and preparation per active tab', () => {
-    expect(source).toContain('source_settings: serializeSpellcastingSettings')
-    expect(source).toContain('activeSettingsKey')
-    expect(source).toContain("updateActiveCastingSetting('preparation'")
-    expect(settingsSource).toContain('v-if="showCastingConfig" title="Подготовка"')
+  it('stores name, class association, mode, ability and bonuses per tab', () => {
+    expect(source).toContain('class_item_id: tab.class_item_id')
+    expect(source).toContain('casting_ability: tab.casting_ability')
+    expect(source).toContain('mode: tab.mode')
+    expect(settingsSource).toContain('label="Название"')
+    expect(settingsSource).toContain('label="Класс"')
+    expect(settingsSource).toContain('label="Режим"')
     expect(settingsSource).toContain('v-if="showCastingConfig" title="Базовая характеристика"')
   })
 
-  it('assigns legacy wizard-created spells to a compatible class source', () => {
-    expect(source).toContain('assignMissingSpellSources')
-    expect(source).toContain('inferredSpellcastingSource')
-    expect(source).toContain('classIds.has(String(source.listClassId')
+  it('reads only the canonical spellbook contract at runtime', () => {
+    expect(source).toContain('normalizedSpellTabs(raw.tabs)')
+    expect(source).toContain('Array.isArray(raw.grants)')
+    expect(source).not.toContain('source_settings')
+    expect(source).not.toContain('spellcasting_source')
+    expect(source).not.toContain('external_only')
   })
 })

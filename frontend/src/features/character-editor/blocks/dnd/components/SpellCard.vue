@@ -5,19 +5,18 @@
         class="spell-row action-menu-source"
         :class="{
           'spell-row-clickable': !!entry.item,
-          'spell-row-draggable': ctx.charCtx.ownerMode && !isReadonlyGrant && !standalone,
+          'spell-row-draggable': ctx.charCtx.ownerMode && !standalone,
           'spell-row-prepared': isPrepared,
-          'spell-row-permanent': isAlwaysPrepared,
           'sortable-placeholder': ctx.sortable.isSource(entry),
           'action-menu-source--open': menuOpen,
         }"
-        :data-sortable-key="entry.ref.id"
+        :data-sortable-key="entry.ref.key"
         @pointerdown="onRowDown"
       >
     <PreparedSpellBrackets
       v-if="isPrepared"
       class="sp-prepared-brackets"
-      :permanent="isAlwaysPrepared"
+      :permanent="false"
     />
 
     <div class="sp-lead">
@@ -78,7 +77,7 @@
     <template #default="{ close }">
       <RowActionItem action="view" @click="openDetails(close)">Открыть описание</RowActionItem>
       <RowActionItem
-        v-if="ctx.charCtx.ownerMode && canPrepare && !isAlwaysPrepared"
+        v-if="ctx.charCtx.ownerMode && canPrepare"
         action="prepare"
         :icon="Sprout"
         tone="accent"
@@ -100,20 +99,11 @@
             v-for="source in ctx.spellcastingSources"
             :key="source.key"
             action="source"
-            :tone="source.key === entry.ref.spellcasting_source ? 'accent' : 'default'"
+            :tone="source.key === ctx.activeTabKey ? 'accent' : 'default'"
             @click="setSource(source.key, closeSources, close)"
           >{{ source.label }}</RowActionItem>
         </template>
       </RowActionSubmenu>
-      <RowActionItem
-        v-if="ctx.charCtx.ownerMode && canPrepare"
-        action="always-prepare"
-        :icon="BookMarked"
-        tone="warning"
-        @click="toggleAlwaysPrepared(close)"
-      >
-        {{ isAlwaysPrepared ? 'Убрать постоянное изучение' : 'Изучено навсегда' }}
-      </RowActionItem>
       <RowActionSubmenu
         v-if="ctx.charCtx.ownerMode && canUse && hasHigherLevelChoice"
         label="Выберите ячейку"
@@ -189,7 +179,7 @@
 </template>
 
 <script setup>
-import { Activity, BookMarked, Sprout } from '@lucide/vue'
+import { Activity, Sprout } from '@lucide/vue'
 import { computed, inject, ref, watch } from 'vue'
 
 import AttackDamage from '@/features/character-editor/blocks/dnd/components/AttackDamage.vue'
@@ -214,17 +204,13 @@ const nameEn = computed(() => String(props.entry.item?.nameEn || '').trim())
 const dmg = computed(() => data.value.damage || {})
 const school = computed(() => ctx.schoolMeta(props.entry.item))
 
-// Круг каста: для slot-роста степпер от базового круга заклинания до макс. доступного героем.
 const baseLvl = computed(() => Number(data.value.lvl) || 0)
-const isReadonlyGrant = computed(() => !!props.entry.ref.external_only)
+const isReadonlyGrant = computed(() => props.standalone || !!props.entry.ref.source)
 const canPrepare = computed(() => !!ctx.spellCanPrepare(props.entry) && baseLvl.value > 0 && !isReadonlyGrant.value)
-const isAlwaysPrepared = computed(() => canPrepare.value && !!props.entry.ref.always_prepared)
-const isPrepared = computed(() => canPrepare.value && (isAlwaysPrepared.value || !!props.entry.ref.prepared))
+const isPrepared = computed(() => canPrepare.value && !!props.entry.ref.prepared)
 const grantSummary = computed(() => {
-  const sources = Array.isArray(props.entry.ref.granted_by) ? props.entry.ref.granted_by : []
-  const labels = [...new Set(sources.map((source) => String(source?.label || '').trim()).filter(Boolean))]
-  if (!labels.length) return ''
-  const sourceLabel = labels.join(', ')
+  const sourceLabel = String(props.entry.ref.source?.label || '').trim()
+  if (!sourceLabel) return ''
   const ability = props.entry.ref.casting_ability != null ? ctx.spellAbilityLabel(props.entry) : ''
   const castLevel = Number(props.entry.ref.cast_level) || 0
   const details = [ability, castLevel ? `${castLevel} круг` : ''].filter(Boolean)
@@ -270,12 +256,7 @@ function openDetails(close) {
 }
 
 function togglePreparation(close) {
-  ctx.togglePrepared(props.entry.ref.id)
-  close()
-}
-
-function toggleAlwaysPrepared(close) {
-  ctx.toggleAlwaysPrepared(props.entry.ref.id)
+  ctx.togglePrepared(props.entry.ref.key)
   close()
 }
 
@@ -309,7 +290,7 @@ function toggleStatus(link, closeSubmenu, closeMenu) {
 }
 
 function removeSpell(close) {
-  ctx.removeSpell(props.entry.ref.id)
+  ctx.removeSpell(props.entry.ref.key)
   close()
 }
 </script>
@@ -338,9 +319,6 @@ function removeSpell(close) {
   inset: 7px 10px;
   color: color-mix(in srgb, var(--accent) 62%, transparent);
   pointer-events: none;
-}
-.spell-row-permanent .sp-prepared-brackets {
-  color: color-mix(in srgb, var(--warning) 68%, transparent);
 }
 .spell-row-clickable { cursor: pointer; }
 .spell-row-draggable { cursor: grab; touch-action: pan-y; }

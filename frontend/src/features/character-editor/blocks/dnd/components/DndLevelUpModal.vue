@@ -145,9 +145,9 @@
       <div v-if="levelUpSpellContext" class="lu-sec">
         <div class="lu-sec-title">Заклинания класса</div>
         <LevelUpSpellSelection
-          :key="`${levelUpSpellContext.sourceKey}:${newClassLevel}`"
+          :key="`${levelUpSpellContext.tab.key}:${newClassLevel}`"
           :context="levelUpSpellContext"
-          :existing-spells="props.values?.spells?.spells || []"
+          :existing-spells="levelUpSpellContext.tab.spells"
           @change="classSpellSelection = $event"
         />
       </div>
@@ -212,11 +212,11 @@
           <li v-if="slotDiff.length">
             <label class="lu-slots-check">
               <input type="checkbox" v-model="applySlots" />
-              Ячейки заклинаний: <b>{{ slotDiff.map(d => `${d.level} круг ${d.from} → ${d.to}`).join(', ') }}</b>
+              Ячейки заклинаний: <b>{{ slotDiff.map(d => `${d.rest === 'short_rest' ? 'короткий' : 'долгий'} · ${d.level} круг ${d.from} → ${d.to}`).join(', ') }}</b>
             </label>
           </li>
-          <li v-if="slotsAfter?.pact && !slotsAfter.pactMerged" class="lu-muted">
-            Ячейки колдуна ({{ slotsAfter.pact.count }} × {{ slotsAfter.pact.slotLevel }} круга, короткий отдых) — отдельный ресурс, ячейки листа их не включают.
+          <li v-if="slotsAfter?.pact" class="lu-muted">
+            Короткий пул: {{ slotsAfter.pact.count }} × {{ slotsAfter.pact.slotLevel }} круга; им можно сотворять заклинания любой вкладки.
           </li>
         </ul>
       </div>
@@ -280,7 +280,7 @@ import { MultiToggle } from '@sylvieshare/share-ui'
 import { abilityModifier, proficiencyBonus, resolveNumValue } from '@/shared/lib/dnd'
 import { STAT_KEYS, STAT_SHORT } from '@/shared/lib/dndStats'
 import {
-  avgHitDie, chosenOptionLabels, classEntriesOf, computeSlots,
+  avgHitDie, chosenOptionLabels, classEntriesOf,
   dieFaceOf, grantedSpellsAt, multiclassCheck,
   MULTICLASS_PROFICIENCY_CHOICES, MULTICLASS_PROFICIENCY_GRANTS,
   multiclassProficiencyKey, parseAsiLevels, totalLevel,
@@ -303,7 +303,8 @@ import { itemMatchesChoiceFilter, parseItemChoiceFilter } from '@/features/items
 import { characterChoiceOptionEligibility } from '@/features/items/lib/characterChoiceEligibility'
 import LevelUpSpellSelection from './LevelUpSpellSelection.vue'
 import { spellcastingRulesAt } from '@/features/character-editor/blocks/dnd/lib/spellcastingRules'
-import { maximumSpellLevelForEntry } from '@/features/character-editor/blocks/dnd/lib/multiclassSpellcasting'
+import { computeSpellSlotPools, maximumSpellLevelForEntry } from '@/features/character-editor/blocks/dnd/lib/multiclassSpellcasting'
+import { findClassSpellTab, spellTabFromClass } from '@/features/character-editor/blocks/dnd/lib/spellbook'
 
 const CLASS_TYPE = 9
 const CLASS_ABIL_TYPE = 4
@@ -423,10 +424,12 @@ const grantedRows = computed(() => {
   return grantedSpellsAt(items, newClassLevel.value, { exact: true, options })
 })
 const grantedNewIds = computed(() => {
-  const have = new Set((props.values?.spells?.spells || []).map((s) => s.id))
-  return [...new Set(grantedRows.value.map((r) => r.spellId))].filter((id) => !have.has(id))
+  const sourceId = effectiveSubclassItem.value?.id ?? classItem.value?.id ?? ''
+  const have = new Set((props.values?.spells?.grants || []).map((entry) => entry.key))
+  return [...new Set(grantedRows.value.map((r) => r.spellId))]
+    .filter((id) => !have.has(`class:${sourceId}:spell:${id}`))
 })
-const { spellNames, spellLevels, grantedSpellList } = useGrantedSpellNames(grantedNewIds)
+const { spellNames, grantedSpellList } = useGrantedSpellNames(grantedNewIds)
 
 // ─── хиты ───────────────────────────────────────────────────────────────────
 const hitDieLabelOf = (item) => resolveHitDieLabel(item, dieLabel)
@@ -529,7 +532,7 @@ const slotsCatalog = computed(() => {
   if (subclassPick.value) map[subclassPick.value.id] = subclassPick.value
   return map
 })
-const slotsAfter = computed(() => (isPlain.value ? null : computeSlots(entriesAfter.value, slotsCatalog.value)))
+const slotsAfter = computed(() => (isPlain.value ? null : computeSpellSlotPools(entriesAfter.value, slotsCatalog.value)))
 const levelUpSpellContext = computed(() => {
   if (isPlain.value || !classItem.value) return null
   const resolvedRules = spellcastingRulesAt(effectiveSubclassItem.value, newClassLevel.value)
@@ -537,34 +540,34 @@ const levelUpSpellContext = computed(() => {
   if (!resolvedRules) return null
   const rules = { ...resolvedRules, listClassId: resolvedRules.listClassId ?? classItem.value.id }
   const subclassId = effectiveSubclass.value?.id ?? ''
-  const sourceKey = `class:${classItem.value.id}:${subclassId}`
   const entry = {
     id: classItem.value.id,
     level: newClassLevel.value,
     subclass: subclassId === '' ? null : { id: subclassId },
   }
-  const knownClassSources = Object.keys(props.values?.spells?.source_settings || {})
-    .filter((key) => key.startsWith('class:'))
-  const previousSourceKey = targetEntry.value
-    ? `class:${classItem.value.id}:${targetEntry.value.subclass?.id ?? ''}`
-    : null
+  const existingTab = findClassSpellTab(props.values?.spells?.tabs, classItem.value.id)
+  const tab = existingTab || spellTabFromClass(classItem.value, rules)
   return {
     rules,
-    sourceKey,
-    label: classItem.value.name,
+    tab,
+    label: tab.name,
     maxSpellLevel: maximumSpellLevelForEntry(entry, slotsCatalog.value),
-    inferUnassigned: knownClassSources.length <= 1,
-    sourceAliases: previousSourceKey && previousSourceKey !== sourceKey ? [previousSourceKey] : [],
   }
 })
 const slotDiff = computed(() => {
   if (!slotsAfter.value?.isCaster) return []
-  const cur = Array.isArray(props.values?.spells?.slots) ? props.values.spells.slots : []
   const out = []
-  slotsAfter.value.totals.forEach((n, i) => {
-    const from = Number(cur[i]?.total) || 0
-    if (n !== from) out.push({ level: i + 1, from, to: n })
-  })
+  const required = {
+    long_rest: slotsAfter.value.totals,
+    short_rest: Array.from({ length: 9 }, (_, index) => slotsAfter.value.pact?.slotLevel === index + 1 ? slotsAfter.value.pact.count : 0),
+  }
+  for (const rest of ['long_rest', 'short_rest']) {
+    const current = new Map((props.values?.spells?.slot_pools?.[rest] || []).map((slot) => [Number(slot.level), Number(slot.total) || 0]))
+    required[rest].forEach((to, index) => {
+      const from = current.get(index + 1) || 0
+      if (to !== from) out.push({ rest, level: index + 1, from, to })
+    })
+  }
   return out
 })
 
@@ -641,7 +644,7 @@ const canAccept = computed(() => {
   if (needSubclass.value && !subclassPick.value) return false
   if (asiNow.value && !asiSkipped.value && !asiComplete.value) return false
   if (!featureChoicesComplete.value) return false
-  if (levelUpSpellContext.value && classSpellSelection.value?.sourceKey !== levelUpSpellContext.value.sourceKey) return false
+  if (levelUpSpellContext.value && classSpellSelection.value?.tab?.key !== levelUpSpellContext.value.tab.key) return false
   return true
 })
 
@@ -670,7 +673,6 @@ async function accept() {
     slotDiff: slotDiff.value,
     slotsAfter: slotsAfter.value,
     grantedNewIds: grantedNewIds.value,
-    grantedSpellLevels: spellLevels.value,
     classItem: classItem.value,
     isMulticlass: isMulticlass.value,
     subclassItem: effectiveSubclassItem.value,

@@ -1,7 +1,6 @@
 import { resolveNumValue } from '@/shared/lib/dnd'
 import { STAT_KEYS } from '@/shared/lib/dndStats'
-import { castingAbilityIdOf, MULTICLASS_PROFICIENCY_GRANTS, multiclassProficiencyKey } from '@/features/character-editor/blocks/dnd/lib/levelUp'
-import { defaultSlots } from '@/features/character-editor/blocks/dnd/lib/spellEntry'
+import { MULTICLASS_PROFICIENCY_GRANTS, multiclassProficiencyKey } from '@/features/character-editor/blocks/dnd/lib/levelUp'
 import {
   featAbilityBonuses,
   featEntry,
@@ -19,6 +18,7 @@ import { abilitySpellGrantRows, syncAbilityGrantedSpells } from '@/features/char
 import { choicesForEntry } from '@/features/items/lib/itemChoices'
 import { hpMaximum, normalizeHpMaximum } from '@/features/character-editor/blocks/dnd/lib/hp'
 import { applyLevelUpSpellSelection } from '@/features/character-editor/blocks/dnd/lib/levelUpSpellSelection'
+import { emptySpellbook, mergeComputedSlotPools } from '@/features/character-editor/blocks/dnd/lib/spellbook'
 
 export function buildLevelUpUpdates({
   values,
@@ -42,7 +42,6 @@ export function buildLevelUpUpdates({
   slotDiff,
   slotsAfter,
   grantedNewIds,
-  grantedSpellLevels = {},
   classItem,
   isMulticlass = false,
   subclassItem = null,
@@ -222,71 +221,37 @@ export function buildLevelUpUpdates({
   const resolvedAbilityIds = new Set(abilityItems.map((item) => String(item.id)))
   const abilityItemsComplete = [...activeAbilityIds].every((id) => resolvedAbilityIds.has(id))
   const abilityGrantRows = abilitySpellGrantRows(abilityItems, nextValues)
-  const hasExistingAbilityGrants = (values.spells?.spells || []).some((entry) =>
-    (entry.granted_by || []).some((source) => source?.kind === 'ability'))
+  const hasExistingAbilityGrants = (values.spells?.grants || []).some((entry) => entry?.source?.kind === 'ability')
   if (applySlotChange || classSpellSelection || grantedNewIds.length || featSpellIds.length || (abilityItemsComplete && (abilityGrantRows.length || hasExistingAbilityGrants))) {
-    const spells = values.spells && typeof values.spells === 'object'
-      ? { ...values.spells }
-      : { source_settings: {}, spells: [], slots: defaultSlots() }
-    const castingAbility = castingAbilityIdOf(classItem, subclassItem) ?? ''
-    if (classSpellSelection?.sourceKey) {
-      const previousSettings = (classSpellSelection.sourceAliases || [])
-        .map((key) => spells.source_settings?.[key])
-        .find(Boolean)
-      spells.source_settings = {
-        ...(spells.source_settings || {}),
-        [classSpellSelection.sourceKey]: {
-          stat_path: castingAbility,
-          save_bonus: 0,
-          attack_bonus: 0,
-          preparation: !!classSpellSelection.prepares,
-          ...(previousSettings || {}),
-          ...(spells.source_settings?.[classSpellSelection.sourceKey] || {}),
-        },
-      }
-      for (const alias of classSpellSelection.sourceAliases || []) delete spells.source_settings[alias]
-    }
-    let spellEntries = applyLevelUpSpellSelection(spells.spells || [], classSpellSelection)
+    let spells = emptySpellbook(values.spells)
+    spells = applyLevelUpSpellSelection(spells, classSpellSelection)
     if (applySlotChange) {
-      const slots = Array.isArray(spells.slots) && spells.slots.length
-        ? spells.slots.map((slot) => ({ ...slot }))
-        : defaultSlots()
-      slotsAfter.totals.forEach((total, index) => {
-        slots[index] = { level: index + 1, used: 0, ...(slots[index] || {}), total }
-      })
-      spells.slots = slots
-      if (slotsAfter.pactMerged) spells.slots_rest = 'short_rest'
+      spells.slot_pools = mergeComputedSlotPools(spells.slot_pools, slotsAfter)
     }
     if (grantedNewIds.length) {
+      const sourceItem = subclassItem || classItem
       for (const id of grantedNewIds) {
-        const level = grantedSpellLevels[String(id)]
-        const prepared = level == null || Number(level) > 0
-        const existing = spellEntries.find((entry) => String(entry.id) === String(id))
-        if (existing) {
-          existing.prepared = prepared
-          if (prepared) existing.always_prepared = true
-          else delete existing.always_prepared
-          if (classSpellSelection?.sourceKey) existing.spellcasting_source = classSpellSelection.sourceKey
-        } else {
-          spellEntries.push({
-            id,
-            prepared,
-            ...(prepared ? { always_prepared: true } : {}),
-            ...(classSpellSelection?.sourceKey ? { spellcasting_source: classSpellSelection.sourceKey } : {}),
-          })
-        }
+        const key = `class:${sourceItem?.id ?? classItem?.id ?? ''}:spell:${id}`
+        if (spells.grants.some((entry) => entry.key === key)) continue
+        spells.grants.push({
+          key,
+          id,
+          source: { kind: 'class', item_id: sourceItem?.id ?? classItem?.id, label: sourceItem?.name || classItem?.name || 'Класс' },
+          ...(classSpellSelection?.tab?.key ? { tab_key: classSpellSelection.tab.key } : {}),
+        })
       }
     }
     if (featSpellIds.length) {
-      const existing = new Set(spellEntries.map((entry) => String(entry.id)))
-      const added = featSpellIds
-        .filter((id) => !existing.has(String(id)))
-        .map((id) => ({ id, prepared: true, source: 'feat' }))
-      spellEntries.push(...added)
+      for (const id of featSpellIds) {
+        const key = `feat:${featPick?.id ?? ''}:spell:${id}`
+        if (spells.grants.some((entry) => entry.key === key)) continue
+        spells.grants.push({
+          key, id,
+          source: { kind: 'feat', item_id: featPick?.id, label: featPick?.name || 'Черта' },
+        })
+      }
     }
-    spells.spells = abilityItemsComplete
-      ? syncAbilityGrantedSpells(spellEntries, abilityGrantRows)
-      : spellEntries
+    if (abilityItemsComplete) spells.grants = syncAbilityGrantedSpells(spells.grants, abilityGrantRows)
     updates.spells = spells
   }
 

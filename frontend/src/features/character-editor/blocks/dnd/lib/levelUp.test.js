@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
-import { casterKindOf, castingAbilityIdOf, computeSlots } from './levelUp'
+import { casterKindOf, castingAbilityIdOf } from './levelUp'
+import { computeSpellSlotPools } from './multiclassSpellcasting'
 
 describe('data-driven caster progression', () => {
   it('does not infer mechanics from class or subclass names', () => {
@@ -8,6 +9,6 @@ describe('data-driven caster progression', () => {
     const subclass = { nameEn: 'Something custom', data: { caster_progression: 'third', spellcasting: { ability: 4 } } }
     expect(casterKindOf(classItem, subclass)).toBe('third')
     expect(castingAbilityIdOf(classItem, subclass)).toBe(4)
-    expect(computeSlots([{ id: 1, level: 3, subclass: { id: 2 } }], { 1: classItem, 2: subclass }).totals[0]).toBe(2)
+    expect(computeSpellSlotPools([{ id: 1, level: 3, subclass: { id: 2 } }], { 1: classItem, 2: subclass }).totals[0]).toBe(2)
   })
 })

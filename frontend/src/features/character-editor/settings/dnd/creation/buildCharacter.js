@@ -11,8 +11,7 @@
 
 import { abilityModifier } from '@/shared/lib/dnd'
 import { STAT_KEYS, SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
-import { computeSlots } from '../../../blocks/dnd/lib/levelUp.js'
-import { defaultSlots } from '../../../blocks/dnd/lib/spellEntry.js'
+import { computeSpellSlotPools } from '../../../blocks/dnd/lib/multiclassSpellcasting.js'
 import { featAbilityBonuses, featEntry, featGrantedSpellIds, featGrants } from '@/features/items/lib/featRules'
 import { abilityUseTotal } from '@/shared/lib/dndAbilityUses'
 import { defaultEntry as defaultWeaponEntry } from '../../../blocks/dnd/lib/weaponEntry.js'
@@ -24,6 +23,7 @@ import { mergeEquipment } from './startingEquipment.js'
 import { isArmorEquipment } from './armorRules.js'
 import { abilitySpellGrantRows, syncAbilityGrantedSpells } from '../../../blocks/dnd/lib/abilitySpellGrants.js'
 import { normalizeHpMaximum } from '../../../blocks/dnd/lib/hp.js'
+import { slotPoolsFromComputation, spellEntry, spellTabFromClass } from '../../../blocks/dnd/lib/spellbook.js'
 
 const STATS = STAT_KEYS
 
@@ -233,51 +233,48 @@ export function buildCharacterData(input) {
       && all.findIndex((candidate) => String(candidate?.id) === String(item.id)) === index)
   const abilityGrantRows = abilitySpellGrantRows(abilityGrantItems, values)
 
-  // Spells (casters): known/prepared list + level-1 slots. Slot totals come from
-  // the shared caster table (full 2 / half 0 / artificer 2 / warlock pact 1).
-  // Granted subclass spells (cleric domains) are appended as prepared.
-  const grantedExtra = grantedSpellIds.filter((id) => !spellIds.includes(id))
-  const grantedSpellIdSet = new Set(grantedSpellIds.map((id) => String(id)))
-  if (grants.spellcasting || spellIds.length || grantedExtra.length || featSpellIds.length || abilityGrantRows.length) {
-    const classSpellcastingSource = charClass && (grants.spellcasting || spellIds.length || grantedExtra.length)
-      ? `class:${charClass.id ?? ''}:${subclass?.id ?? ''}`
-      : null
-    const classSpellIds = new Set([...spellIds, ...grantedExtra].map(String))
-    const slots = defaultSlots()
-    const slotInfo = charClass ? computeSlots(
+  // Canonical spellbook: class-owned entries live inside one tab, every
+  // read-only grant lives in the independent grants list, slots are global.
+  if (grants.spellcasting || spellIds.length || grantedSpellIds.length || featSpellIds.length || abilityGrantRows.length) {
+    const slotInfo = charClass ? computeSpellSlotPools(
       [{ id: charClass.id, level: 1, subclass: subclass ? { id: subclass.id } : null }],
       { [charClass.id]: charClass.item, ...(subclass?.item ? { [subclass.id]: subclass.item } : {}) },
     ) : null
-    if (slotInfo?.isCaster) slotInfo.totals.forEach((n, i) => { if (n) slots[i] = { ...slots[i], total: n } })
-    else if (grants.spellcasting) slots[0] = { ...slots[0], total: 2 }
-    const spellEntries = [...new Set([...spellIds, ...grantedExtra, ...featSpellIds])].map((id) => {
-      const level = spellLevels[String(id)]
-      const prepared = level == null || Number(level) > 0
-      const alwaysPrepared = prepared && grantedSpellIdSet.has(String(id))
-      return {
-        id,
-        prepared,
-        ...(alwaysPrepared ? { always_prepared: true } : {}),
-        ...(featSpellIds.some((featId) => String(featId) === String(id)) ? { source: 'feat' } : {}),
-        ...(classSpellcastingSource && classSpellIds.has(String(id))
-          ? { spellcasting_source: classSpellcastingSource }
-          : {}),
-      }
-    })
-    const defaultCastingSetting = {
-      stat_path: grants.spellcasting?.abilityId ?? '',
-      save_bonus: 0,
-      attack_bonus: 0,
-      preparation: !!grants.spellcasting?.prepares,
+    const classRules = {
+      ability: grants.spellcasting?.abilityId ?? charClass?.item?.data?.spellcasting?.ability,
+      prepares: !!grants.spellcasting?.prepares,
+      selectionMode: charClass?.item?.data?.spellcasting?.selection_mode
+        || (grants.spellcasting?.prepares ? 'prepared' : 'known'),
     }
+    const classTab = charClass && (grants.spellcasting || spellIds.length || grantedSpellIds.length)
+      ? spellTabFromClass(charClass.item || charClass, classRules, {
+          spells: [...new Set(spellIds)].map((id) => spellEntry(id, {
+            prepared: classRules.selectionMode !== 'known' && Number(spellLevels[String(id)]) > 0,
+          })),
+        })
+      : null
+    const classGrantSource = subclass?.item || charClass?.item || charClass
+    let grantedEntries = grantedSpellIds.map((id) => ({
+      key: `class:${classGrantSource?.id ?? ''}:spell:${id}`,
+      id,
+      source: { kind: 'class', item_id: classGrantSource?.id, label: classGrantSource?.name || 'Класс' },
+      ...(classTab ? { tab_key: classTab.key } : {}),
+    }))
+    grantedEntries.push(...feats.flatMap(({ item, choices: featChoices = {} }) =>
+      featGrantedSpellIds(item, featChoices).map((id) => ({
+        key: `feat:${item.id}:spell:${id}`,
+        id,
+        source: { kind: 'feat', item_id: item.id, label: item.name || 'Черта' },
+      }))))
+    grantedEntries = syncAbilityGrantedSpells(grantedEntries, abilityGrantRows)
     values.spells = {
-      source_settings: {
-        ...(classSpellcastingSource ? { [classSpellcastingSource]: defaultCastingSetting } : {}),
-        other: defaultCastingSetting,
-      },
-      spells: syncAbilityGrantedSpells(spellEntries, abilityGrantRows),
-      slots,
-      ...(slotInfo?.pactMerged ? { slots_rest: 'short_rest' } : {}),
+      schema_version: 2,
+      slots_auto: true,
+      slot_pools: slotInfo?.isCaster
+        ? slotPoolsFromComputation(slotInfo)
+        : { long_rest: [], short_rest: [] },
+      tabs: classTab ? [classTab] : [],
+      grants: grantedEntries,
     }
   }
 

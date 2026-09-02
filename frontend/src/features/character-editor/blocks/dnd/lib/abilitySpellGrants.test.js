@@ -12,15 +12,13 @@ const ability = {
 }
 
 describe('ability spell grants', () => {
-  it('creates a readonly external spell with its source and casting ability', () => {
+  it('creates an independent readonly grant with its source and casting ability', () => {
     const grants = abilitySpellGrantRows([ability], { lvl: { level: 1 } })
     expect(syncAbilityGrantedSpells([], grants)).toEqual([{
+      key: 'ability:4092:spell:498',
       id: 498,
-      prepared: false,
-      external_only: true,
       casting_ability: 4,
-      casting_ability_source: 'ability',
-      granted_by: [{ kind: 'ability', item_id: 4092, label: 'Природная иллюзия', casting_ability: 4 }],
+      source: { kind: 'ability', item_id: 4092, label: 'Природная иллюзия', casting_ability: 4 },
     }])
   })
 
@@ -37,8 +35,7 @@ describe('ability spell grants', () => {
       casting_ability: 6,
       slotless: true,
       cast_level: 2,
-      cast_level_source: 'ability',
-      external_only: true,
+      source: { kind: 'ability', item_id: 4087 },
     })
   })
 
@@ -78,11 +75,11 @@ describe('ability spell grants', () => {
     })).toEqual([])
   })
 
-  it('keeps a manually owned spell when its ability source disappears', () => {
-    const withGrant = syncAbilityGrantedSpells([{ id: 498, prepared: false }], abilitySpellGrantRows([ability], { lvl: { level: 1 } }))
-    expect(withGrant[0].external_only).toBeUndefined()
+  it('keeps grants from other source kinds when an ability source disappears', () => {
+    const manual = { key: 'custom:1', id: 498, source: { kind: 'custom', label: 'Домашнее правило' } }
+    const withGrant = syncAbilityGrantedSpells([manual], abilitySpellGrantRows([ability], { lvl: { level: 1 } }))
     const removed = syncAbilityGrantedSpells(withGrant, [])
-    expect(removed).toEqual([{ id: 498, prepared: false }])
+    expect(removed).toEqual([manual])
   })
 
   it('removes an external-only spell when the granting ability disappears', () => {
@@ -90,18 +87,14 @@ describe('ability spell grants', () => {
     expect(syncAbilityGrantedSpells(withGrant, [])).toEqual([])
   })
 
-  it('clears an old ability override when the grant no longer defines it', () => {
+  it('replaces an ability grant when its optional overrides disappear', () => {
     const entry = {
+      key: 'ability:4092:spell:498',
       id: 498,
-      prepared: false,
-      external_only: true,
-      granted_by: [{ kind: 'ability', item_id: 4092, label: 'Природная иллюзия' }],
+      source: { kind: 'ability', item_id: 4092, label: 'Природная иллюзия' },
       casting_ability: 4,
-      casting_ability_source: 'ability',
       slotless: true,
-      slotless_source: 'ability',
       cast_level: 2,
-      cast_level_source: 'ability',
     }
     const grants = [{
       spellId: 498,
@@ -112,10 +105,9 @@ describe('ability spell grants', () => {
     }]
 
     expect(syncAbilityGrantedSpells([entry], grants)).toEqual([{
+      key: 'ability:4092:spell:498',
       id: 498,
-      prepared: false,
-      external_only: true,
-      granted_by: [{ kind: 'ability', item_id: 4092, label: 'Природная иллюзия' }],
+      source: { kind: 'ability', item_id: 4092, label: 'Природная иллюзия' },
     }])
   })
 })

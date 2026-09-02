@@ -14,15 +14,6 @@ function normalizedSlots(saved) {
   return list
 }
 
-function mergeLegacyPact(slots, pactSlot) {
-  if (!pactSlot || Number(pactSlot.total) <= 0) return slots
-  const target = slots.find((slot) => slot.level === Number(pactSlot.level))
-  if (!target) return slots
-  target.total = Math.min(9, target.total + (Number(pactSlot.total) || 0))
-  target.used = Math.min(target.total, target.used + (Number(pactSlot.used) || 0))
-  return slots
-}
-
 export function useSpellSlots({ canInteract, emitChange }) {
   const slotPools = ref({
     long_rest: defaultSlots(),
@@ -35,20 +26,11 @@ export function useSpellSlots({ canInteract, emitChange }) {
   })).filter((pool) => pool.slots.length > 0))
 
   function loadSlotPools(saved = {}) {
-    const canonical = saved?.slot_pools && typeof saved.slot_pools === 'object' ? saved.slot_pools : null
-    if (canonical) {
-      slotPools.value = {
-        long_rest: normalizedSlots(canonical.long_rest),
-        short_rest: normalizedSlots(canonical.short_rest),
-      }
-      return
+    const pools = saved?.slot_pools && typeof saved.slot_pools === 'object' ? saved.slot_pools : {}
+    slotPools.value = {
+      long_rest: normalizedSlots(pools.long_rest),
+      short_rest: normalizedSlots(pools.short_rest),
     }
-
-    const legacyRest = saved?.slots_rest === 'short_rest' ? 'short_rest' : 'long_rest'
-    const next = { long_rest: defaultSlots(), short_rest: defaultSlots() }
-    next[legacyRest] = normalizedSlots(saved?.slots)
-    next.short_rest = mergeLegacyPact(next.short_rest, saved?.pact_slots)
-    slotPools.value = next
   }
 
   function serializedSlotPools() {

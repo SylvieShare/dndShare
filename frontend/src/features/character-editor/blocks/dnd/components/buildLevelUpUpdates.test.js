@@ -19,7 +19,10 @@ describe('buildLevelUpUpdates granted spells', () => {
         lvl: { level: 2 },
         hp: { max: 10, current: 10, hitDice: [{ die: 'd8', total: 2, used: 0 }] },
         abilities_race: [{ id: 4087 }],
-        spells: { spells: [{ id: 511, prepared: false }], slots: [] },
+        spells: {
+          schema_version: 2, slots_auto: true, slot_pools: { long_rest: [], short_rest: [] }, tabs: [],
+          grants: [{ key: 'ability:4087:spell:511', id: 511, casting_ability: 6, source: { kind: 'ability', item_id: 4087, label: 'Дроуская магия' } }],
+        },
       },
       newTotal: 3,
       isPlain: false,
@@ -44,20 +47,24 @@ describe('buildLevelUpUpdates granted spells', () => {
       classItem: {},
     })
 
-    expect(updates.spells.spells.find((entry) => entry.id === 627)).toMatchObject({
-      external_only: true,
+    expect(updates.spells.grants.find((entry) => entry.id === 627)).toMatchObject({
+      key: 'ability:4087:spell:627',
       casting_ability: 6,
       slotless: true,
-      granted_by: [{ kind: 'ability', item_id: 4087, label: 'Дроуская магия' }],
+      source: { kind: 'ability', item_id: 4087, label: 'Дроуская магия' },
     })
   })
 
-  it('marks leveled archetype spells permanent without preparing granted cantrips', () => {
+  it('stores class-granted spells separately without changing learned spells', () => {
     const updates = buildLevelUpUpdates({
       values: {
         lvl: { level: 1 },
         hp: { max: 10, current: 10, hitDice: [{ die: 'd8', total: 1, used: 0 }] },
-        spells: { spells: [{ id: 5, prepared: false }], slots: [] },
+        spells: {
+          schema_version: 2, slots_auto: true, slot_pools: { long_rest: [], short_rest: [] },
+          tabs: [{ key: 'class:1', name: 'Жрец', class_item_id: 1, casting_ability: 5, mode: 'prepared', save_bonus: 0, attack_bonus: 0, spells: [{ key: 'spell:5', id: 5, prepared: false }] }],
+          grants: [],
+        },
       },
       newTotal: 2,
       isPlain: false,
@@ -79,14 +86,14 @@ describe('buildLevelUpUpdates granted spells', () => {
       slotDiff: [],
       slotsAfter: null,
       grantedNewIds: [5, 6, 7],
-      grantedSpellLevels: { 5: 1, 6: 1, 7: 0 },
-      classItem: {},
+      classItem: { id: 1, name: 'Жрец' },
     })
 
-    expect(updates.spells.spells).toEqual([
-      { id: 5, prepared: true, always_prepared: true },
-      { id: 6, prepared: true, always_prepared: true },
-      { id: 7, prepared: false },
+    expect(updates.spells.tabs[0].spells).toEqual([{ key: 'spell:5', id: 5, prepared: false }])
+    expect(updates.spells.grants).toEqual([
+      { key: 'class:1:spell:5', id: 5, source: { kind: 'class', item_id: 1, label: 'Жрец' } },
+      { key: 'class:1:spell:6', id: 6, source: { kind: 'class', item_id: 1, label: 'Жрец' } },
+      { key: 'class:1:spell:7', id: 7, source: { kind: 'class', item_id: 1, label: 'Жрец' } },
     ])
   })
 })
@@ -139,8 +146,8 @@ describe('buildLevelUpUpdates subclass grants', () => {
       values: {
         lvl: { level: 2 }, hp: { max: 15, current: 15 }, proficiencies: { Инструменты: [] },
         spells: {
-          source_settings: { 'class:1:': { stat_path: 4, save_bonus: 1, attack_bonus: 0, preparation: false } },
-          spells: [{ id: 50, spellcasting_source: 'class:1:' }], slots: [],
+          schema_version: 2, slots_auto: true, slot_pools: { long_rest: [], short_rest: [] }, grants: [],
+          tabs: [{ key: 'class:1', name: 'Плут', class_item_id: 1, casting_ability: 4, mode: 'known', save_bonus: 1, attack_bonus: 0, spells: [{ key: 'spell:50', id: 50, prepared: false }] }],
         },
       },
       newTotal: 3,
@@ -158,14 +165,15 @@ describe('buildLevelUpUpdates subclass grants', () => {
       subclassItem: { data: { tool_prof: [24], spellcasting: { ability: 4 } } },
       subclassSelectedNow: true,
       classSpellSelection: {
-        sourceKey: 'class:1:2', sourceAliases: ['class:1:'], prepares: false, entries: [{ id: 50, level: 1 }],
+        tab: { key: 'class:1', name: 'Плут', class_item_id: 1, casting_ability: 4, mode: 'known', save_bonus: 1, attack_bonus: 0, spells: [] },
+        entries: [{ id: 50, key: 'spell:50', level: 1 }],
       },
     })
 
     expect(updates.proficiencies['Инструменты']).toEqual(['Набор для грима'])
-    expect(updates.spells.source_settings['class:1:2']).toMatchObject({ stat_path: 4, save_bonus: 1 })
-    expect(updates.spells.source_settings['class:1:']).toBeUndefined()
-    expect(updates.spells.spells[0].spellcasting_source).toBe('class:1:2')
+    expect(updates.spells.tabs).toHaveLength(1)
+    expect(updates.spells.tabs[0]).toMatchObject({ key: 'class:1', class_item_id: 1, casting_ability: 4, save_bonus: 1 })
+    expect(updates.spells.tabs[0].spells).toEqual([{ key: 'spell:50', id: 50, prepared: false }])
   })
 })
 
@@ -183,14 +191,13 @@ describe('buildLevelUpUpdates class spell selection', () => {
       slotsAfter: { totals: [2, 0, 0, 0, 0, 0, 0, 0, 0], isCaster: true },
       grantedNewIds: [], classItem: { data: { spellcasting_ability: 6 } },
       classSpellSelection: {
-        sourceKey: 'class:2:', prepares: true, entries: [{ id: 100, level: 1 }],
+        tab: { key: 'class:2', name: 'Паладин', class_item_id: 2, casting_ability: 6, mode: 'prepared', save_bonus: 0, attack_bonus: 0, spells: [] },
+        entries: [{ id: 100, level: 1 }],
       },
     })
 
-    expect(updates.spells.source_settings['class:2:']).toMatchObject({ stat_path: 6, preparation: true })
-    expect(updates.spells.spells).toEqual([
-      { id: 100, prepared: true, spellcasting_source: 'class:2:' },
-    ])
+    expect(updates.spells.tabs[0]).toMatchObject({ class_item_id: 2, casting_ability: 6, mode: 'prepared' })
+    expect(updates.spells.tabs[0].spells).toMatchObject([{ id: 100, prepared: true }])
   })
 })
 

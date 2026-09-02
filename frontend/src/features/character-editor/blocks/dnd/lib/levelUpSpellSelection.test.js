@@ -2,47 +2,35 @@ import { describe, expect, it } from 'vitest'
 
 import { applyLevelUpSpellSelection } from './levelUpSpellSelection'
 
-describe('level-up class spell selection', () => {
-  it('replaces one class list and assigns its source without touching grants or another class', () => {
-    const result = applyLevelUpSpellSelection([
-      { id: 1, prepared: false },
-      { id: 2, spellcasting_source: 'class:wizard:' },
-      { id: 3, spellcasting_source: 'class:cleric:' },
-      { id: 4, external_only: true, granted_by: [{ item_id: 9 }] },
-    ], {
-      sourceKey: 'class:wizard:',
-      inferUnassigned: true,
-      prepares: false,
-      entries: [{ id: 2, level: 1 }, { id: 5, level: 2 }],
+describe('applyLevelUpSpellSelection', () => {
+  it('replaces only the selected class tab and preserves grants plus duplicate spells in other tabs', () => {
+    const book = {
+      schema_version: 2, slots_auto: true, slot_pools: { long_rest: [], short_rest: [] },
+      tabs: [
+        { key: 'wizard', name: 'Волшебник', class_item_id: 1, casting_ability: 4, mode: 'spellbook', save_bonus: 0, attack_bonus: 0, spells: [{ key: 'old', id: 2 }] },
+        { key: 'cleric', name: 'Жрец', class_item_id: 2, casting_ability: 5, mode: 'prepared', save_bonus: 0, attack_bonus: 0, spells: [{ key: 'cleric-spell', id: 2 }] },
+      ],
+      grants: [{ key: 'grant', id: 4, source: { kind: 'ability', item_id: 9 } }],
+    }
+
+    const result = applyLevelUpSpellSelection(book, {
+      tab: book.tabs[0], entries: [{ id: 2, level: 1, key: 'old' }, { id: 5, level: 1 }],
     })
 
-    expect(result).toEqual([
-      { id: 2, prepared: false, spellcasting_source: 'class:wizard:' },
-      { id: 3, spellcasting_source: 'class:cleric:' },
-      { id: 4, external_only: true, granted_by: [{ item_id: 9 }] },
-      { id: 5, prepared: false, spellcasting_source: 'class:wizard:' },
+    expect(result.tabs[0].spells).toEqual([
+      { key: 'old', id: 2, prepared: true },
+      expect.objectContaining({ id: 5, prepared: true }),
     ])
+    expect(result.tabs[1].spells).toEqual([{ key: 'cleric-spell', id: 2, prepared: false }])
+    expect(result.grants).toEqual([{ key: 'grant', id: 4, source: { kind: 'ability', item_id: 9 } }])
   })
 
-  it('marks leveled spells prepared for a prepared caster but not cantrips', () => {
-    expect(applyLevelUpSpellSelection([], {
-      sourceKey: 'class:paladin:', prepares: true,
-      entries: [{ id: 10, level: 0 }, { id: 11, level: 1 }],
-    })).toEqual([
-      { id: 10, prepared: false, spellcasting_source: 'class:paladin:' },
-      { id: 11, prepared: true, spellcasting_source: 'class:paladin:' },
-    ])
-  })
-
-  it('moves spells from the pre-subclass source when an archetype is selected', () => {
-    expect(applyLevelUpSpellSelection([
-      { id: 20, spellcasting_source: 'class:wizard:' },
-    ], {
-      sourceKey: 'class:wizard:school',
-      sourceAliases: ['class:wizard:'],
-      entries: [{ id: 20, level: 1 }],
-    })).toEqual([
-      { id: 20, prepared: false, spellcasting_source: 'class:wizard:school' },
-    ])
+  it('creates the class tab when a half-caster starts casting', () => {
+    const result = applyLevelUpSpellSelection({ slot_pools: {}, tabs: [], grants: [] }, {
+      tab: { key: 'paladin', name: 'Паладин', class_item_id: 7, casting_ability: 6, mode: 'prepared', spells: [] },
+      entries: [{ id: 10, level: 1 }],
+    })
+    expect(result.tabs[0]).toMatchObject({ class_item_id: 7, casting_ability: 6, mode: 'prepared' })
+    expect(result.tabs[0].spells[0]).toMatchObject({ id: 10, prepared: true })
   })
 })

@@ -40,39 +40,3 @@ export function spellcastingRulesAt(item, level) {
     unrestrictedSpells: Math.max(0, number(unrestricted?.count) || 0),
   }
 }
-
-function sourceKey(entry) {
-  return `class:${entry?.id ?? ''}:${entry?.subclass?.id ?? ''}`
-}
-
-/** Every class owns its spell list, preparation rules and casting ability. */
-export function characterSpellcastingSources(entries, itemsById) {
-  const sources = []
-  for (const entry of (Array.isArray(entries) ? entries : [])) {
-    const classItem = itemsById?.[entry?.id]
-    const subclass = entry?.subclass?.id != null ? itemsById?.[entry.subclass.id] : null
-    const rules = spellcastingRulesAt(subclass, Number(entry.level) || 1)
-      || spellcastingRulesAt(classItem, Number(entry.level) || 1)
-    if (!rules) continue
-    sources.push({
-      ...rules,
-      key: sourceKey(entry),
-      classId: referenceId(entry?.id),
-      subclassId: referenceId(entry?.subclass?.id),
-      classLevel: Math.max(1, number(entry?.level) || 1),
-      label: String(classItem?.name || classItem?.nameEn || 'Класс'),
-      listClassId: rules.listClassId ?? referenceId(entry?.id),
-      entry,
-    })
-  }
-  return sources
-}
-
-/** Resolve the rules contributed by the selected class or subclass. */
-export function characterSpellcastingRules(entries, itemsById) {
-  return characterSpellcastingSources(entries, itemsById)[0] || null
-}
-
-export function spellCountsTowardKnown(ref) {
-  return !ref?.external_only || !!ref?.counts_as_known
-}
