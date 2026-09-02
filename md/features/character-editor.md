@@ -46,7 +46,9 @@ the shared row-action menu with **Посмотреть**, an owner-only
 and owner-only **Удалить**. Use spends that same normalized resource shown in
 the resources block and records `resource_used`; abilities with several
 independent resources remain usable from the resources block so the target
-counter is explicit. Feature widget toggles record `feature_state`, while
+counter is explicit. Short- and long-rest recovery are shown immediately to the
+right of the ability name with the same cup and moon icons as action rows.
+Feature widget toggles record `feature_state`, while
 linked spell-effect changes record `status_effect`; both are accepted by the
 atomic character-save event contract. The desktop base page is one continuous
 three-column row: characteristics on the left, identity/HP/statuses/inner tabs

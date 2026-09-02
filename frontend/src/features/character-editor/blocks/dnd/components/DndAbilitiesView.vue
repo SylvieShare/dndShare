@@ -40,8 +40,13 @@
             </span>
 
             <span class="abv-copy">
-              <span class="abv-name">
-                {{ entry.name }}<span v-if="entry.scaling_label" class="abv-scaling"> · {{ entry.scaling_label }}</span>
+              <span class="abv-title-row">
+                <span class="abv-name">
+                  {{ entry.name }}<span v-if="entry.scaling_label" class="abv-scaling"> · {{ entry.scaling_label }}</span>
+                </span>
+                <ResourceRestIcons
+                  :resource="{ short_rest: entry.rollback_short_rest, long_rest: entry.rollback_long_rest }"
+                />
               </span>
               <span v-if="entry.choice_summary" class="abv-choice">{{ entry.choice_summary }}</span>
               <DndRichContent v-if="expanded && entry.desc" class="abv-description" :html="entry.desc" />
@@ -69,8 +74,6 @@
               </span>
             </span>
 
-            <span v-if="entry.rollback_short_rest" class="abv-badge abv-sr" title="Восстанавливается на коротком отдыхе">КО</span>
-            <span v-if="entry.rollback_long_rest" class="abv-badge abv-lr" title="Восстанавливается на длинном отдыхе">ДО</span>
           </div>
         </template>
 
@@ -106,6 +109,7 @@ import SheetBlockTitle from '@/shared/ui/SheetBlockTitle'
 import SvgIcon from '@/shared/ui/SvgIcon.vue'
 import DndRichContent from '@/shared/ui/DndRichContent.vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
+import ResourceRestIcons from '@/features/character-editor/blocks/generic/components/ResourceRestIcons.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionSeparator from '@/shared/ui/RowActionSeparator.vue'
 
@@ -183,7 +187,14 @@ function select(entry, close, action) {
   flex-direction: column;
   gap: 1px;
 }
+.abv-title-row {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 6px;
+}
 .abv-name {
+  min-width: 0;
   color: var(--text-1);
   font-size: 13px;
   font-weight: 500;
@@ -203,20 +214,9 @@ function select(entry, close, action) {
 .abv-status--active { border-color: color-mix(in srgb, var(--danger) 45%, var(--border)); background: color-mix(in srgb, var(--danger) 9%, transparent); color: var(--danger); }
 .abv-status:disabled { cursor: default; opacity: .45; }
 
-.abv-badge {
-  font-size: 9px;
-  font-weight: bold;
-  letter-spacing: 0.05em;
-  padding: 2px 5px;
-  border-radius: 4px;
-  flex-shrink: 0;
-}
-.abv-sr { background-color: color-mix(in srgb, var(--success) 18%, transparent); color: var(--success); }
-.abv-lr { background-color: color-mix(in srgb, var(--info) 18%, transparent); color: var(--info); }
-
 .abv--expanded { gap: 8px; padding: 13px; }
 .abv--expanded .abv-list { gap: 0; }
-.abv--expanded .abv-card { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto; align-items: start; gap: 13px; min-height: 88px; padding: 13px 2px; border: 0; border-radius: 0; background: transparent; }
+.abv--expanded .abv-card { display: grid; grid-template-columns: 64px minmax(0, 1fr); align-items: start; gap: 13px; min-height: 88px; padding: 13px 2px; border: 0; border-radius: 0; background: transparent; }
 .abv--expanded .abv-card + .abv-card { border-top: 1px solid var(--border); }
 .abv--expanded .abv-card:hover { background: color-mix(in srgb, var(--accent) 4%, transparent); }
 .abv--expanded .abv-icon { width: 64px; height: 64px; color: var(--text-2); }
@@ -229,7 +229,7 @@ function select(entry, close, action) {
 .abv-add { display: grid; width: 25px; height: 25px; padding: 0; place-items: center; border: 1px dashed color-mix(in srgb, var(--accent) 52%, var(--border)); border-radius: 7px; background: transparent; color: var(--accent); cursor: pointer; }
 .abv-add:hover { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 7%, transparent); }
 @media (max-width: 520px) {
-  .abv--expanded .abv-card { grid-template-columns: 56px minmax(0, 1fr) auto; gap: 10px; padding: 10px; }
+  .abv--expanded .abv-card { grid-template-columns: 56px minmax(0, 1fr); gap: 10px; padding: 10px; }
   .abv--expanded .abv-icon { width: 56px; height: 56px; }
   .abv--expanded .abv-icon :deep(.item-icon) { width: 56px !important; height: 56px !important; }
 }
