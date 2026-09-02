@@ -98,7 +98,6 @@ BEGIN
             FROM jsonb_array_elements(old_spells) spell
             WHERE NOT COALESCE((spell ->> 'external_only')::boolean, false)
               AND NOT COALESCE((spell ->> 'always_prepared')::boolean, false)
-              AND NOT spell ? 'source'
               AND (
                 split_part(COALESCE(spell ->> 'spellcasting_source', ''), ':', 2) = class_id::text
                 OR (COALESCE(spell ->> 'spellcasting_source', '') = '' AND class_count = 1)
@@ -129,7 +128,6 @@ BEGIN
         WHERE COALESCE(spell ->> 'id', '') ~ '^[0-9]+$'
           AND NOT COALESCE((spell ->> 'external_only')::boolean, false)
           AND NOT COALESCE((spell ->> 'always_prepared')::boolean, false)
-          AND NOT spell ? 'source'
           AND (
             split_part(COALESCE(spell ->> 'spellcasting_source', ''), ':', 2) = class_id::text
             OR (COALESCE(spell ->> 'spellcasting_source', '') = '' AND class_count = 1)
@@ -159,7 +157,6 @@ BEGIN
     WHERE COALESCE(spell ->> 'id', '') ~ '^[0-9]+$'
       AND NOT COALESCE((spell ->> 'external_only')::boolean, false)
       AND NOT COALESCE((spell ->> 'always_prepared')::boolean, false)
-      AND NOT spell ? 'source'
       AND NOT EXISTS (
         SELECT 1 FROM jsonb_array_elements(classes) class_row
         WHERE COALESCE(class_row ->> 'id', '') = split_part(COALESCE(spell ->> 'spellcasting_source', ''), ':', 2)
@@ -192,20 +189,7 @@ BEGIN
                 WHEN jsonb_typeof(spell_row -> 'source') = 'object' THEN spell_row -> 'source'
                 WHEN spell_row ->> 'source' = 'feat' THEN jsonb_build_object('kind', 'feat', 'label', 'Черта')
                 WHEN split_part(COALESCE(spell_row ->> 'spellcasting_source', ''), ':', 1) = 'class'
-                    THEN jsonb_build_object(
-                        'kind', 'class',
-                        'item_id', COALESCE(
-                            NULLIF(split_part(spell_row ->> 'spellcasting_source', ':', 3), '')::bigint,
-                            NULLIF(split_part(spell_row ->> 'spellcasting_source', ':', 2), '')::bigint
-                        ),
-                        'label', COALESCE((
-                            SELECT item.name FROM dndshare.item item
-                            WHERE item.id = COALESCE(
-                                NULLIF(split_part(spell_row ->> 'spellcasting_source', ':', 3), '')::bigint,
-                                NULLIF(split_part(spell_row ->> 'spellcasting_source', ':', 2), '')::bigint
-                            )
-                        ), 'Класс')
-                    )
+                    THEN jsonb_build_object('kind', 'class', 'item_id', NULLIF(split_part(spell_row ->> 'spellcasting_source', ':', 2), '')::bigint, 'label', 'Класс')
                 ELSE jsonb_build_object('kind', 'legacy', 'label', 'Даровано особенностью')
             END;
             sources := jsonb_build_array(source_row);

@@ -208,6 +208,9 @@ var schemaSpellbookTabsSQL string
 //go:embed schema/62_sacred_weapon_effect.sql
 var schemaSacredWeaponEffectSQL string
 
+//go:embed schema/63_spellbook_grant_cleanup.sql
+var schemaSpellbookGrantCleanupSQL string
+
 var schemaParts = []struct {
 	name string
 	sql  string
@@ -276,6 +279,7 @@ var schemaParts = []struct {
 	{"shared-channel-divinity", schemaSharedChannelDivinitySQL},
 	{"spellbook-tabs", schemaSpellbookTabsSQL},
 	{"sacred-weapon-effect", schemaSacredWeaponEffectSQL},
+	{"spellbook-grant-cleanup", schemaSpellbookGrantCleanupSQL},
 }
 
 const (
