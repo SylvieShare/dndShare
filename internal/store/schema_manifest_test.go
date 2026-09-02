@@ -66,18 +66,19 @@ func TestEverySchemaFileIsEmbeddedAndRegistered(t *testing.T) {
 }
 
 func TestVersionedMigrationsRunAfterClassActionAutomation(t *testing.T) {
-	if len(schemaParts) < 9 {
+	if len(schemaParts) < 10 {
 		t.Fatal("schema manifest is incomplete")
 	}
-	legacyLast := schemaParts[len(schemaParts)-9]
-	halfCaster := schemaParts[len(schemaParts)-8]
-	sessionSecurity := schemaParts[len(schemaParts)-7]
-	sharedChannelDivinity := schemaParts[len(schemaParts)-6]
-	spellbookTabs := schemaParts[len(schemaParts)-5]
-	sacredWeaponEffect := schemaParts[len(schemaParts)-4]
-	spellbookGrantCleanup := schemaParts[len(schemaParts)-3]
-	sessionNPCBestiary := schemaParts[len(schemaParts)-2]
-	sessionSceneLocation := schemaParts[len(schemaParts)-1]
+	legacyLast := schemaParts[len(schemaParts)-10]
+	halfCaster := schemaParts[len(schemaParts)-9]
+	sessionSecurity := schemaParts[len(schemaParts)-8]
+	sharedChannelDivinity := schemaParts[len(schemaParts)-7]
+	spellbookTabs := schemaParts[len(schemaParts)-6]
+	sacredWeaponEffect := schemaParts[len(schemaParts)-5]
+	spellbookGrantCleanup := schemaParts[len(schemaParts)-4]
+	sessionNPCBestiary := schemaParts[len(schemaParts)-3]
+	sessionSceneLocation := schemaParts[len(schemaParts)-2]
+	sessionSceneVisualSource := schemaParts[len(schemaParts)-1]
 	if legacyLast.name != legacySchemaBootstrapLast {
 		t.Fatalf("legacy bootstrap must end at %q, got %q", legacySchemaBootstrapLast, legacyLast.name)
 	}
@@ -104,5 +105,8 @@ func TestVersionedMigrationsRunAfterClassActionAutomation(t *testing.T) {
 	}
 	if sessionSceneLocation.name != "session-scene-location" || sessionSceneLocation.sql != schemaSessionSceneLocationSQL {
 		t.Fatalf("session scene location link must run after the NPC bestiary migration")
+	}
+	if sessionSceneVisualSource.name != "session-scene-visual-source" || sessionSceneVisualSource.sql != schemaSessionSceneVisualSourceSQL {
+		t.Fatalf("session scene visual source constraint must run after the location link migration")
 	}
 }
