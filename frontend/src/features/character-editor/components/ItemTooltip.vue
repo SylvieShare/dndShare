@@ -123,7 +123,7 @@ const displayDesc = computed(() => {
 .itt-title {
   color: var(--text-1);
   font-family: var(--font-display);
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 700;
   letter-spacing: 0.01em;
   line-height: 1.15;
@@ -137,7 +137,7 @@ const displayDesc = computed(() => {
 
 .itt-desc {
   color: var(--text-muted);
-  font-size: 10px;
+  font-size: 9px;
   line-height: 1.45;
   margin: 0;
   text-align: left;

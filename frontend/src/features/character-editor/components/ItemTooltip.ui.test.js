@@ -14,8 +14,8 @@ describe('ItemTooltip presentation', () => {
   it('separates a display title from quieter descriptive content', () => {
     expect(source).toContain("'itt-title--separated': displayDesc || $slots.details")
     expect(source).toContain('font-family: var(--font-display)')
-    expect(source).toContain('font-size: 18px')
+    expect(source).toContain('font-size: 20px')
     expect(source).toContain('.itt-title--separated')
-    expect(source).toContain('font-size: 10px')
+    expect(source).toContain('font-size: 9px')
   })
 })
