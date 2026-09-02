@@ -26,6 +26,7 @@ const materials = read('./SessionMaterialsWorkspace.vue')
 const music = read('./SessionMusicWorkspace.vue')
 const chronicle = read('./SessionChronicleWorkspace.vue')
 const entityDetail = read('./SessionEntityDetail.vue')
+const editableField = read('./SessionEditableField.vue')
 const scenarioUsages = read('./ScenarioUsageList.vue')
 const imagePicker = read('./SessionImagePicker.vue')
 const primaryView = read('../composables/useSessionPrimaryView.js')
@@ -85,7 +86,24 @@ describe('session world workspaces', () => {
     }
     expect(entityDetail).toContain('session-entity-detail-head')
     expect(entityDetail).toContain('<Pencil :size="15" />Редактировать')
+    expect(entityDetail).toContain('session-entity-detail-title-edit')
+    expect(editableField).toContain('session-editable-field-pencil')
+    for (const workspace of [locations, npcs, quests, materials]) {
+      expect(workspace).toContain('<SessionEditableField')
+      expect(workspace).toContain('@save-title=')
+    }
     expect(materials).toContain('<div class="session-world-section-title"><span>Просмотр</span></div>')
+  })
+
+  it('keeps a ten-step back stack for universal relation navigation', () => {
+    expect(layer).toContain('useSessionEntityNavigationHistory')
+    expect(layer).toContain(':back-label="backLabel"')
+    expect(layer).toContain('@back="goBack"')
+    expect(entityDetail).toContain('session-entity-detail-back')
+    expect(entityDetail).toContain('{{ backLabel }}')
+    for (const workspace of [locations, npcs, quests, materials]) {
+      expect(workspace).toContain("emit('open-entity', item)")
+    }
   })
 
   it('navigates every visible catalogue with vertical arrows', () => {
@@ -178,6 +196,10 @@ describe('session world workspaces', () => {
     }
     expect(quests).toContain("[item.name,item.goal,item.condition,item.reward,item.consequences,item.notes]")
     expect(questEditor).not.toContain('draft.description')
+    for (const icon of ['Target', 'KeyRound', 'Gift', 'GitFork', 'NotebookPen']) {
+      expect(quests).toContain(icon)
+      expect(questEditor).toContain(icon)
+    }
   })
 
   it('opens one grouped image catalogue from the current image preview', () => {

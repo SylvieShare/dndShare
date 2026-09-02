@@ -10,20 +10,16 @@
 
     <div class="material-editor-layout">
       <div class="material-editor-form">
-        <FormField label="Название" vertical><FormTextInput v-model:value="draft.name" :maxlength="160" autofocus /></FormField>
+        <SessionEditableField v-model="draft.name" label="Название" :icon="LibraryBig" force-open :multiline="false" :maxlength="160" autofocus required />
 
-        <FormField v-if="draft.kind === 'text' || draft.kind === 'note'" :label="draft.kind === 'note' ? 'Текст записки' : 'Текст'" vertical>
-          <FormTextarea v-model:value="draft.content" :rows="9" :maxlength="20000" :placeholder="draft.kind === 'note' ? 'Что написано в записке…' : 'Текст для экрана игроков…'" />
-        </FormField>
+        <SessionEditableField v-if="draft.kind === 'text' || draft.kind === 'note'" v-model="draft.content" :label="draft.kind === 'note' ? 'Текст записки' : 'Текст'" :icon="AlignLeft" force-open :rows="9" :maxlength="20000" :placeholder="draft.kind === 'note' ? 'Что написано в записке…' : 'Текст для экрана игроков…'" required />
         <FormField v-if="draft.kind === 'note'" label="Оформление записки" vertical>
           <div class="note-style-grid">
             <button v-for="style in NOTE_STYLES" :key="style.key" type="button" :class="[`note-style--${style.key}`, { active: draft.noteStyle === style.key }]" @click="draft.noteStyle = style.key">{{ style.label }}</button>
           </div>
         </FormField>
 
-        <FormField v-if="draft.kind !== 'text' && draft.kind !== 'note'" label="Подпись для игроков" vertical>
-          <FormTextarea v-model:value="draft.caption" :rows="3" :maxlength="2000" placeholder="Необязательная подпись к материалу" />
-        </FormField>
+        <SessionEditableField v-if="draft.kind !== 'text' && draft.kind !== 'note'" v-model="draft.caption" label="Подпись для игроков" :icon="Captions" force-open :rows="3" :maxlength="2000" placeholder="Необязательная подпись к материалу" />
 
         <div v-if="draft.kind === 'image' || draft.kind === 'map'" class="material-asset-section">
           <strong>{{ draft.kind === 'map' ? 'Изображение карты' : 'Изображение' }}</strong>
@@ -62,7 +58,9 @@
 
 <script setup>
 import { computed, onBeforeUnmount, reactive, ref, watch } from 'vue'
-import { AppModalFrame, FormActionButtons, FormField, FormTextInput, FormTextarea } from '@sylvieshare/share-ui'
+import { AlignLeft, Captions, LibraryBig } from '@lucide/vue'
+import { AppModalFrame, FormActionButtons, FormField } from '@sylvieshare/share-ui'
+import SessionEditableField from '@/features/sessions/components/SessionEditableField.vue'
 import SessionImagePicker from '@/features/sessions/components/SessionImagePicker.vue'
 import UniversalRelationEditor from '@/features/sessions/components/UniversalRelationEditor.vue'
 import { MATERIAL_TYPES, NOTE_STYLES } from '@/features/sessions/lib/sessionMaterials'

@@ -17,9 +17,11 @@
     :selected-location-id="selectedLocationId"
     :is-dm="isDm"
 	:relation-items="relationItems"
+	:back-label="backLabel"
 	:show-shortcut-hints="showShortcutHints"
-    @select-location="$emit('select-location', $event)"
-    @open-npc="$emit('select-npc', $event)"
+	@back="goBack"
+    @select-location="navigateDirect('location', $event)"
+    @open-npc="navigateDirect('npc', $event)"
 	@open-entity="openEntity"
   />
   <SessionNpcsWorkspace
@@ -29,9 +31,11 @@
     :selected-npc-id="selectedNpcId"
     :is-dm="isDm"
 	:relation-items="relationItems"
+	:back-label="backLabel"
 	:show-shortcut-hints="showShortcutHints"
-    @select-npc="$emit('select-npc', $event)"
-    @open-location="$emit('select-location', $event)"
+	@back="goBack"
+    @select-npc="navigateDirect('npc', $event)"
+    @open-location="navigateDirect('location', $event)"
 	@open-entity="openEntity"
   />
   <SessionMaterialsWorkspace
@@ -42,10 +46,12 @@
     :is-dm="isDm"
 	:world="world"
 	:relation-items="relationItems"
+	:back-label="backLabel"
 	:selected-material-id="selectedMaterialId"
 	:show-shortcut-hints="showShortcutHints"
 	@open-entity="openEntity"
-	@select-material="$emit('select-material', $event)"
+	@back="goBack"
+	@select-material="navigateDirect('material', $event)"
   />
 	<SessionQuestsWorkspace
 		v-else-if="activeView === 'quests'"
@@ -54,8 +60,10 @@
 		:selected-quest-id="selectedQuestId"
 		:is-dm="isDm"
 		:relation-items="relationItems"
+		:back-label="backLabel"
 		:show-shortcut-hints="showShortcutHints"
-		@select-quest="$emit('select-quest', $event)"
+		@back="goBack"
+		@select-quest="navigateDirect('quest', $event)"
 		@open-entity="openEntity"
 	/>
 </template>
@@ -67,7 +75,8 @@ import SessionLocationsWorkspace from '@/features/sessions/components/SessionLoc
 import SessionNpcsWorkspace from '@/features/sessions/components/SessionNpcsWorkspace.vue'
 import SessionMaterialsWorkspace from '@/features/sessions/components/SessionMaterialsWorkspace.vue'
 import SessionQuestsWorkspace from '@/features/sessions/components/SessionQuestsWorkspace.vue'
-import { buildSessionEntityCatalog } from '@/features/sessions/lib/sessionEntityRelations'
+import { useSessionEntityNavigationHistory } from '@/features/sessions/composables/useSessionEntityNavigationHistory'
+import { buildSessionEntityCatalog, sessionEntityKey } from '@/features/sessions/lib/sessionEntityRelations'
 
 const props = defineProps({
   sessionUuid: { type: String, required: true },
@@ -86,6 +95,16 @@ const emit = defineEmits(['select-location', 'select-npc', 'select-quest', 'sele
 const world = props.world
 const activeWorkspace = ref(null)
 const relationItems = computed(() => buildSessionEntityCatalog(world, props.materials))
+const navigationHistory = useSessionEntityNavigationHistory(props.sessionUuid)
+const activeEntityType = computed(() => ({ locations: 'location', npcs: 'npc', quests: 'quest', materials: 'material' })[props.activeView] || null)
+const activeEntityId = computed(() => ({
+  location: props.selectedLocationId,
+  npc: props.selectedNpcId,
+  quest: props.selectedQuestId,
+  material: props.selectedMaterialId,
+})[activeEntityType.value] || null)
+const currentEntity = computed(() => relationItems.value.find(item => item.key === sessionEntityKey(activeEntityType.value, activeEntityId.value)) || null)
+const backLabel = computed(() => navigationHistory.backTarget.value ? `Назад к «${navigationHistory.backTarget.value.title}»` : '')
 
 watch(() => props.activeView, view => {
 	if (view !== 'story') {
@@ -112,11 +131,28 @@ watch(
 )
 
 function openEntity(item) {
-	if (item.type === 'location') emit('select-location', item.id)
-	if (item.type === 'npc') emit('select-npc', item.id)
-	if (item.type === 'quest') emit('select-quest', item.id)
-	if (item.type === 'material') emit('select-material', item.id)
-	if (item.type === 'scene') emit('open-scene', item.id)
+	if (item.type === 'scene') { emit('open-scene', item.id); return }
+  if (!['location', 'npc', 'quest', 'material'].includes(item.type)) return
+  const current = currentEntity.value
+  if (current && current.key !== sessionEntityKey(item.type, item.id)) navigationHistory.push(current)
+  emitEntity(item.type, item.id)
+}
+
+function emitEntity(type, id) {
+	if (type === 'location') emit('select-location', id)
+	if (type === 'npc') emit('select-npc', id)
+	if (type === 'quest') emit('select-quest', id)
+	if (type === 'material') emit('select-material', id)
+}
+
+function navigateDirect(type, id) {
+  navigationHistory.clear()
+  emitEntity(type, id)
+}
+
+function goBack() {
+  const target = navigationHistory.pop()
+  if (target) emitEntity(target.type, target.id)
 }
 
 defineExpose({

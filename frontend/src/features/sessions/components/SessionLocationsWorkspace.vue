@@ -52,8 +52,13 @@
       :accent="selectedKind.color"
       :cover-url="sessionImageUrl(selectedLocation)"
       :editable="isDm"
+      :title-editable="isDm"
+      :saving="world.saving.value"
+      :back-label="backLabel"
       edit-aria-label="Редактировать локацию"
       @edit="openEdit(selectedLocation)"
+      @save-title="saveLocationField('name', $event)"
+      @back="$emit('back')"
     >
       <template #visual><img :src="sessionImageUrl(selectedLocation)" alt="" /></template>
       <template #context>
@@ -78,11 +83,19 @@
 
       <section class="session-world-section session-world-description">
         <div class="session-world-section-title"><span>О месте</span></div>
-        <p v-if="selectedLocation.description">{{ selectedLocation.description }}</p>
-        <button v-else-if="isDm" type="button" class="session-world-inline-empty" @click="openEdit(selectedLocation)">
-          Добавить описание и атмосферу
-        </button>
-        <p v-else class="session-world-muted">Описание пока не добавлено.</p>
+        <SessionEditableField
+          :model-value="selectedLocation.description || ''"
+          label="Описание и атмосфера"
+          :icon="AlignLeft"
+          :editable="isDm"
+          :saving="world.saving.value"
+          :rows="7"
+          :maxlength="5000"
+          placeholder="Атмосфера, особенности, важные детали и заметки мастера"
+          empty-text="Описание пока не добавлено."
+          wide
+          @save="saveLocationField('description', $event)"
+        />
       </section>
 
       <section v-if="childLocations.length" class="session-world-section">
@@ -158,7 +171,7 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
 import {
-  Blocks, ChevronRight, Compass, DoorOpen, FolderPlus, House, Landmark,
+  AlignLeft, Blocks, ChevronRight, Compass, DoorOpen, FolderPlus, House, Landmark,
   Map, MapPin, MapPinned, Plus, Route, Search, Trees, UserPlus,
 } from '@lucide/vue'
 import { ConfirmDialog } from '@sylvieshare/share-ui'
@@ -166,6 +179,7 @@ import LocationEditorModal from '@/features/sessions/components/LocationEditorMo
 import LocationTreeRow from '@/features/sessions/components/LocationTreeRow.vue'
 import NpcEditorModal from '@/features/sessions/components/NpcEditorModal.vue'
 import SessionEntityDetail from '@/features/sessions/components/SessionEntityDetail.vue'
+import SessionEditableField from '@/features/sessions/components/SessionEditableField.vue'
 import SessionLibraryWorkspace from '@/features/sessions/components/SessionLibraryWorkspace.vue'
 import ScenarioUsageList from '@/features/sessions/components/ScenarioUsageList.vue'
 import UniversalRelationList from '@/features/sessions/components/UniversalRelationList.vue'
@@ -183,8 +197,9 @@ const props = defineProps({
   isDm: { type: Boolean, default: false },
 	relationItems: { type: Array, default: () => [] },
 	showShortcutHints: { type: Boolean, default: false },
+  backLabel: { type: String, default: '' },
 })
-const emit = defineEmits(['select-location', 'open-npc', 'open-entity'])
+const emit = defineEmits(['select-location', 'open-npc', 'open-entity', 'back'])
 const locations = computed(() => props.world.locations.value)
 const npcs = computed(() => props.world.npcs.value)
 const selectedLocation = computed(() => props.world.locationsById.value.get(Number(props.selectedLocationId)) || null)
@@ -254,9 +269,7 @@ function openEdit(location) {
 }
 function openNpcCreate() { npcEditorOpen.value = true }
 function openRelated(item) {
-	if (item.type === 'location') emit('select-location', item.id)
-	else if (item.type === 'npc') emit('open-npc', item.id)
-	else emit('open-entity', item)
+	emit('open-entity', item)
 }
 function openScenario(id) { emit('open-entity', { type: 'scene', id }) }
 function closeEditors() {
@@ -274,6 +287,24 @@ async function saveLocation(data) {
     }
     emit('select-location', id || editingLocation.value?.id)
   } catch { /* error is rendered */ }
+}
+function locationPayload(location, patch = {}) {
+  return {
+    parentLocationId: location.parentLocationId || null,
+    name: location.name,
+    kind: location.kind,
+    description: location.description || null,
+    imageId: location.imageId,
+    relations: (location.relations || []).map(relation => ({ ...relation })),
+    ...patch,
+  }
+}
+async function saveLocationField(field, value) {
+  const location = selectedLocation.value
+  if (!location) return
+  const normalized = field === 'name' ? value.trim() : (value.trim() || null)
+  if (field === 'name' && !normalized) return
+  try { await props.world.saveLocation(location, locationPayload(location, { [field]: normalized })) } catch { /* error is rendered */ }
 }
 async function saveNpc(data) {
   try { await props.world.saveNpc(null, data); closeEditors() } catch { /* error is rendered */ }

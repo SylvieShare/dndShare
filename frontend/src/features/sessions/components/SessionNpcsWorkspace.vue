@@ -54,17 +54,32 @@
       :eyebrow="`NPC · ${[selectedNpc.raceName, selectedNpc.role].filter(Boolean).join(' · ') || 'раса и роль не указаны'}`"
       :accent="selectedNpc.color"
       :editable="isDm"
+      :title-editable="isDm"
+      :saving="world.saving.value"
+      :back-label="backLabel"
       edit-aria-label="Редактировать NPC"
       @edit="openEdit(selectedNpc)"
+      @save-title="saveNpcField('name', $event)"
+      @back="$emit('back')"
     >
       <template #visual><img :src="npcImageUrl(selectedNpc)" alt="" :style="npcPortraitPosition(selectedNpc)" /></template>
       <template #meta><span><MapPin :size="12" />{{ selectedNpc.relations?.length || 0 }} связей</span></template>
 
       <section class="session-world-section session-world-description">
         <div class="session-world-section-title"><span>О персонаже</span></div>
-        <p v-if="selectedNpc.description">{{ selectedNpc.description }}</p>
-        <button v-else-if="isDm" type="button" class="session-world-inline-empty" @click="openEdit(selectedNpc)">Добавить характер, мотивацию и заметки</button>
-        <p v-else class="session-world-muted">Описание пока не добавлено.</p>
+        <SessionEditableField
+          :model-value="selectedNpc.description || ''"
+          label="Характер, мотивация и заметки"
+          :icon="NotebookPen"
+          :editable="isDm"
+          :saving="world.saving.value"
+          :rows="8"
+          :maxlength="5000"
+          placeholder="Характер, мотивация, внешность, голос и секреты"
+          empty-text="Описание пока не добавлено."
+          wide
+          @save="saveNpcField('description', $event)"
+        />
       </section>
 
       <section class="session-world-section">
@@ -112,11 +127,12 @@
 <script setup>
 import { computed, ref } from 'vue'
 import {
-	ContactRound, MapPin, Search, UserPlus, UsersRound,
+	ContactRound, MapPin, NotebookPen, Search, UserPlus, UsersRound,
 } from '@lucide/vue'
 import { ConfirmDialog } from '@sylvieshare/share-ui'
 import NpcEditorModal from '@/features/sessions/components/NpcEditorModal.vue'
 import SessionEntityDetail from '@/features/sessions/components/SessionEntityDetail.vue'
+import SessionEditableField from '@/features/sessions/components/SessionEditableField.vue'
 import SessionLibraryWorkspace from '@/features/sessions/components/SessionLibraryWorkspace.vue'
 import ScenarioUsageList from '@/features/sessions/components/ScenarioUsageList.vue'
 import UniversalRelationList from '@/features/sessions/components/UniversalRelationList.vue'
@@ -129,8 +145,9 @@ const props = defineProps({
   isDm: { type: Boolean, default: false },
 	relationItems: { type: Array, default: () => [] },
 	showShortcutHints: { type: Boolean, default: false },
+  backLabel: { type: String, default: '' },
 })
-const emit = defineEmits(['select-npc', 'open-location', 'open-entity'])
+const emit = defineEmits(['select-npc', 'open-location', 'open-entity', 'back'])
 const query = ref('')
 const editorOpen = ref(false)
 const editingNpc = ref(null)
@@ -152,9 +169,7 @@ function npcPlaceSummary(npc) {
 }
 function relationCount(npc) { return npc.relations?.length || 0 }
 function openRelated(item) {
-	if (item.type === 'location') emit('open-location', item.id)
-	else if (item.type === 'npc') emit('select-npc', item.id)
-	else emit('open-entity', item)
+	emit('open-entity', item)
 }
 function openScenario(id) { emit('open-entity', { type: 'scene', id }) }
 function npcPortraitPosition(npc) { return { objectPosition: `${(npc.imageFocalX ?? .5) * 100}% ${(npc.imageFocalY ?? .5) * 100}%` } }
@@ -168,6 +183,28 @@ async function saveNpc(data) {
     closeEditor()
     emit('select-npc', id || previous?.id)
   } catch { /* error is rendered */ }
+}
+function npcPayload(npc, patch = {}) {
+  return {
+    name: npc.name,
+    raceItemId: npc.raceItemId || null,
+    bestiaryItemId: npc.bestiaryItemId || null,
+    role: npc.role || null,
+    description: npc.description || null,
+    color: npc.color || '#7c5cff',
+    imageId: npc.imageId,
+    imageFocalX: npc.imageFocalX ?? 0.5,
+    imageFocalY: npc.imageFocalY ?? 0.5,
+    relations: (npc.relations || []).map(relation => ({ ...relation })),
+    ...patch,
+  }
+}
+async function saveNpcField(field, value) {
+  const npc = selectedNpc.value
+  if (!npc) return
+  const normalized = field === 'name' ? value.trim() : (value.trim() || null)
+  if (field === 'name' && !normalized) return
+  try { await props.world.saveNpc(npc, npcPayload(npc, { [field]: normalized })) } catch { /* error is rendered */ }
 }
 function requestDelete(npc) { editorOpen.value = false; pendingDelete.value = npc }
 async function deleteNpc() {

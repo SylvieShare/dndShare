@@ -5,14 +5,13 @@
         <div class="npc-editor-identity">
           <img class="npc-editor-avatar" :src="portraitPreview" alt="" :style="previewPosition" />
           <div class="npc-editor-name-fields">
-            <FormField label="Имя" vertical>
-              <div class="npc-editor-name-row">
-                <FormTextInput v-model:value="draft.name" :maxlength="160" autofocus placeholder="Имя или прозвище" @enter="submit" />
+            <SessionEditableField v-model="draft.name" label="Имя" :icon="UserRound" force-open :multiline="false" :maxlength="160" autofocus required placeholder="Имя или прозвище">
+              <template #actions>
                 <button type="button" class="npc-editor-random-name" :title="randomNameTitle" aria-label="Случайное имя" @click="randomizeName">
                   <Dices :size="17" />
                 </button>
-              </div>
-            </FormField>
+              </template>
+            </SessionEditableField>
             <div class="npc-editor-attribute-row">
               <FormField label="Раса" vertical>
                 <FormSelect v-model:value="draft.raceItemId" :disabled="racesLoading">
@@ -21,9 +20,7 @@
                 </FormSelect>
                 <small v-if="racesError" class="npc-editor-field-error">{{ racesError }}</small>
               </FormField>
-              <FormField label="Роль" vertical>
-                <FormTextInput v-model:value="draft.role" :maxlength="160" placeholder="Трактирщик, проводник…" @enter="submit" />
-              </FormField>
+              <SessionEditableField v-model="draft.role" label="Роль" :icon="Badge" force-open :multiline="false" :maxlength="160" placeholder="Трактирщик, проводник…" />
             </div>
           </div>
         </div>
@@ -56,14 +53,7 @@
           </div>
         </FormField>
 
-        <FormField label="Описание и заметки" vertical>
-          <FormTextarea
-            v-model:value="draft.description"
-            :rows="9"
-            :maxlength="5000"
-            placeholder="Характер, мотивация, внешность, голос и секреты"
-          />
-        </FormField>
+        <SessionEditableField v-model="draft.description" label="Описание и заметки" :icon="NotebookPen" force-open :rows="9" :maxlength="5000" placeholder="Характер, мотивация, внешность, голос и секреты" />
       </div>
 
       <div class="npc-editor-relations">
@@ -120,17 +110,16 @@
 
 <script setup>
 import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
-import { BookOpen, Dices, Link2, X } from '@lucide/vue'
+import { Badge, BookOpen, Dices, Link2, NotebookPen, UserRound, X } from '@lucide/vue'
 import {
   AppModalFrame,
   ColorPresetPicker,
   FormActionButtons,
   FormField,
   FormSelect,
-  FormTextInput,
-  FormTextarea,
 } from '@sylvieshare/share-ui'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
+import SessionEditableField from '@/features/sessions/components/SessionEditableField.vue'
 import SessionImagePicker from '@/features/sessions/components/SessionImagePicker.vue'
 import UniversalRelationEditor from '@/features/sessions/components/UniversalRelationEditor.vue'
 import { itemsApi } from '@/shared/api/itemsApi'

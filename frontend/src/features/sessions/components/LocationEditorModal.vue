@@ -2,9 +2,7 @@
   <AppModalFrame extra-wide :title="location ? 'Редактировать локацию' : 'Новая локация'" @close="$emit('close')">
     <div class="location-editor-layout">
       <div class="location-editor-form">
-        <FormField label="Название" vertical>
-          <FormTextInput v-model:value="draft.name" :maxlength="160" autofocus placeholder="Например, Старый город" @enter="submit" />
-        </FormField>
+        <SessionEditableField v-model="draft.name" label="Название" :icon="MapPin" force-open :multiline="false" :maxlength="160" autofocus required placeholder="Например, Старый город" />
 
         <div class="location-editor-row">
           <FormField label="Тип" vertical>
@@ -22,14 +20,7 @@
           </FormField>
         </div>
 
-        <FormField label="Описание" vertical>
-          <FormTextarea
-            v-model:value="draft.description"
-            :rows="7"
-            :maxlength="5000"
-            placeholder="Атмосфера, особенности, важные детали и заметки мастера"
-          />
-        </FormField>
+        <SessionEditableField v-model="draft.description" label="Описание и атмосфера" :icon="AlignLeft" force-open :rows="7" :maxlength="5000" placeholder="Атмосфера, особенности, важные детали и заметки мастера" />
       </div>
 
       <section class="location-editor-scenes">
@@ -66,14 +57,14 @@
 
 <script setup>
 import { computed, reactive } from 'vue'
+import { AlignLeft, MapPin } from '@lucide/vue'
 import {
   AppModalFrame,
   FormActionButtons,
   FormField,
   FormSelect,
-  FormTextInput,
-  FormTextarea,
 } from '@sylvieshare/share-ui'
+import SessionEditableField from '@/features/sessions/components/SessionEditableField.vue'
 import SessionImagePicker from '@/features/sessions/components/SessionImagePicker.vue'
 import UniversalRelationEditor from '@/features/sessions/components/UniversalRelationEditor.vue'
 import {

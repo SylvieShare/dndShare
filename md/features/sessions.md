@@ -231,7 +231,18 @@ selected entity. All four catalogues render the selected record through one
 `SessionEntityDetail` header and body shell. It owns the shared title,
 visual/accent, metadata, action layout and labelled `Редактировать` button;
 each catalogue supplies only its domain-specific visual, secondary actions and
-content sections.
+content sections. For a DM, the title and text cards also expose pencil actions:
+one field can be opened and saved without leaving the detail, while the full
+editor reuses the same `SessionEditableField` presentation with every field
+already open. Quest goal, condition, reward, consequences and notes keep separate
+cards with semantic icons.
+
+Opening a location, NPC, quest or material from `UniversalRelationList` pushes
+the current entity into a per-session navigation stack. The detail header then
+shows `Назад к «…»`; returning pops one level without creating a new entry. The
+ten newest relation transitions are persisted in local storage. Direct sidebar,
+tree and search-result selection starts a fresh chain, and scenario canvas links
+remain outside this entity stack.
 
 The four catalogue sidebars share keyboard navigation: `↑` and `↓` select the
 previous or next currently visible row and keep it inside the scroll viewport.

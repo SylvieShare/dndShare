@@ -39,8 +39,13 @@
       :eyebrow="materialType(selected.kind).label"
       :accent="materialType(selected.kind).color"
       :editable="isDm"
+      :title-editable="isDm"
+      :saving="saving"
+      :back-label="backLabel"
       edit-aria-label="Редактировать материал"
       @edit="editing = selected"
+      @save-title="saveMaterialField('name', $event)"
+      @back="$emit('back')"
     >
       <template #visual><component :is="materialType(selected.kind).icon" :size="32" /></template>
       <template v-if="selected.caption" #summary>{{ selected.caption }}</template>
@@ -55,6 +60,37 @@
           <video v-else-if="selected.kind === 'video'" :src="selected.assetUrl" controls playsinline preload="metadata" />
           <article v-else class="material-copy-content">{{ selected.content }}</article>
         </div>
+      </section>
+      <section v-if="isDm" class="session-world-section">
+        <div class="session-world-section-title"><span>Содержимое</span></div>
+        <SessionEditableField
+          v-if="selected.kind === 'text' || selected.kind === 'note'"
+          :model-value="selected.content || ''"
+          :label="selected.kind === 'note' ? 'Текст записки' : 'Текст материала'"
+          :icon="AlignLeft"
+          editable
+          required
+          :saving="saving"
+          :rows="9"
+          :maxlength="20000"
+          placeholder="Текст для экрана игроков…"
+          wide
+          @save="saveMaterialField('content', $event)"
+        />
+        <SessionEditableField
+          v-else
+          :model-value="selected.caption || ''"
+          label="Подпись для игроков"
+          :icon="Captions"
+          editable
+          :saving="saving"
+          :rows="3"
+          :maxlength="2000"
+          placeholder="Необязательная подпись к материалу"
+          empty-text="Подпись пока не добавлена."
+          wide
+          @save="saveMaterialField('caption', $event)"
+        />
       </section>
       <section class="session-world-section">
         <div class="session-world-section-title"><span>Связи</span><small>{{ selected.relations?.length || 0 }}</small></div>
@@ -77,9 +113,10 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue'
-import { Cast, LibraryBig, Plus, Search, Trash2 } from '@lucide/vue'
+import { AlignLeft, Captions, Cast, LibraryBig, Plus, Search, Trash2 } from '@lucide/vue'
 import MaterialEditorModal from '@/features/sessions/components/MaterialEditorModal.vue'
 import SessionEntityDetail from '@/features/sessions/components/SessionEntityDetail.vue'
+import SessionEditableField from '@/features/sessions/components/SessionEditableField.vue'
 import SessionLibraryWorkspace from '@/features/sessions/components/SessionLibraryWorkspace.vue'
 import ScenarioUsageList from '@/features/sessions/components/ScenarioUsageList.vue'
 import UniversalRelationList from '@/features/sessions/components/UniversalRelationList.vue'
@@ -91,8 +128,9 @@ const props = defineProps({
 	isDm: { type: Boolean, default: false },
 	world: { type: Object, required: true }, relationItems: { type: Array, default: () => [] }, selectedMaterialId: { type: [Number, String], default: null },
 	showShortcutHints: { type: Boolean, default: false },
+  backLabel: { type: String, default: '' },
 })
-const emit = defineEmits(['open-entity', 'select-material'])
+const emit = defineEmits(['open-entity', 'select-material', 'back'])
 const selectedId = ref(null)
 const editing = ref(false)
 const saving = ref(false)
@@ -134,8 +172,7 @@ function moveSelection(direction) {
 	scrollSessionListItemIntoView(listElement.value, id)
 }
 function openRelated(item) {
-	if (item.type === 'material') pickMaterial(item.id)
-	else emit('open-entity', item)
+	emit('open-entity', item)
 }
 function openScenario(id) { emit('open-entity', { type: 'scene', id }) }
 async function saveMaterial(payload) {
@@ -144,6 +181,30 @@ async function saveMaterial(payload) {
     const saved = editing.value ? await props.materials.update(editing.value.id, payload) : await props.materials.create(payload)
 		await props.world.load(true).catch(() => {})
     selectedId.value = saved.id; editing.value = false
+  } catch { actionError.value = 'Не удалось сохранить материал' } finally { saving.value = false }
+}
+function materialPayload(material, patch = {}) {
+  const needsAsset = !['text', 'note'].includes(material.kind)
+  return {
+    kind: material.kind,
+    name: material.name,
+    caption: needsAsset ? (material.caption || null) : null,
+    content: needsAsset ? null : (material.content || ''),
+    noteStyle: material.kind === 'note' ? material.noteStyle : null,
+    assetId: needsAsset ? material.assetId : null,
+    relations: (material.relations || []).map(relation => ({ ...relation })),
+    ...patch,
+  }
+}
+async function saveMaterialField(field, value) {
+  const material = selected.value
+  if (!material) return
+  const normalized = field === 'name' || field === 'content' ? value.trim() : (value.trim() || null)
+  if ((field === 'name' || field === 'content') && !normalized) return
+  saving.value = true; actionError.value = ''
+  try {
+    await props.materials.update(material.id, materialPayload(material, { [field]: normalized }))
+    await props.world.load(true).catch(() => {})
   } catch { actionError.value = 'Не удалось сохранить материал' } finally { saving.value = false }
 }
 async function removeSelected() {
