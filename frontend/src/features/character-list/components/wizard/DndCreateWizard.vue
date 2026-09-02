@@ -76,20 +76,7 @@
 
       <!-- Feature choices -->
       <section v-else-if="stepKey === 'features'" class="wz-sec">
-        <template v-for="fc in featureChoices" :key="fc.id">
-          <div class="wz-sec-title">{{ fc.name }} <span class="wz-count">{{ choiceSelected(fc.id).length }} / {{ fc.choice.count || 1 }}</span></div>
-          <p v-if="fc.choice.text" class="wz-muted">{{ fc.choice.text }}</p>
-          <label v-for="opt in choiceOptionList(fc)" :key="opt.value" class="wz-check">
-            <input
-              :type="(fc.choice.count || 1) === 1 ? 'radio' : 'checkbox'"
-              :name="'fc-' + fc.id"
-              :checked="choiceSelected(fc.id).some(v => String(v) === String(opt.value))"
-              :disabled="(fc.choice.count || 1) > 1 && !choiceSelected(fc.id).some(v => String(v) === String(opt.value)) && choiceSelected(fc.id).length >= (fc.choice.count || 1)"
-              @change="toggleChoice(fc.id, opt.value, fc.choice.count || 1)"
-            />
-            <span>{{ opt.label }}<small v-if="opt.desc" class="wz-muted"> — {{ opt.desc }}</small></span>
-          </label>
-        </template>
+        <StepChoices compact />
       </section>
 
       <!-- Spells -->
@@ -139,9 +126,10 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, provide, ref } from 'vue'
 import DndStatAssign from './DndStatAssign.vue'
 import CharacterSheetModal from '@/features/character-editor/components/CharacterSheetModal.vue'
+import StepChoices from '@/features/character-list/components/wizard/steps/StepChoices.vue'
 import { FormField } from '@sylvieshare/share-ui'
 import { FormTextInput } from '@sylvieshare/share-ui'
 import { featuresForBinding } from '@/features/character-editor/settings/dnd/creation/progression'
@@ -161,9 +149,10 @@ const {
   STATS, state, races, classes, subraces, subclasses, spellPool, loading,
   raceAbilities, classAbilities,
   grants, isCaster, skillOptions, skillLimit, finalScores, pointsLeft,
-  featureChoices, choiceOptionList, choiceSelected, toggleChoice, choicesComplete,
+  featureChoices, choicesComplete,
   suggestValue, load, loadSpells, setMethod, rollStats, scoresComplete, buildPayload,
 } = wz
+provide('createWizard', wz)
 
 onMounted(load)
 

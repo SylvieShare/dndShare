@@ -445,7 +445,12 @@ export function useDndCreateWizard() {
         })
         featureChoiceItemOptions[fc.id] = (response?.items || [])
           .filter((item) => itemMatchesChoiceFilter(item, fc.choice.item_filter))
-          .map((item) => ({ value: item.id, label: item.name, desc: item.data?.description || item.data?.desc || '' }))
+          .map((item) => ({
+            value: item.id,
+            label: item.name,
+            desc: item.data?.description || item.data?.desc || '',
+            item,
+          }))
       } catch {
         featureChoiceItemOptions[fc.id] = []
       }

@@ -16,4 +16,10 @@ describe('compact character creation wizard', () => {
     expect(modalSource).toContain(':template-name="selectedTemplate?.name || \'\'"')
     expect(modalSource).toContain(':source-version-id="sourceVersionId"')
   })
+
+  it('reuses the shared feature-choice presentation in the compact flow', () => {
+    expect(source).toContain('<StepChoices compact />')
+    expect(source).toContain("provide('createWizard', wz)")
+    expect(source).not.toContain('v-for="opt in choiceOptionList(fc)"')
+  })
 })

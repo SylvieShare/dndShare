@@ -192,7 +192,11 @@ button opens the full handbook entry without affecting the chosen spells. Select
 tiles retain their accent state; choices over the current limit remain readable
 and keep the handbook action available. Automatically granted archetype spells
 use the same tile in a selected read-only state, including their icon and handbook
-action. The responsive grid is capped at three tiles per row, then falls back to
+action. Race and class abilities whose shared item-choice contract points to
+spells use this tile as well, so choices such as the High Elf Wizard cantrip do
+not fall back to the generic radio-list presentation in either the full or the
+compact creation wizard. The responsive grid is
+capped at three tiles per row, then falls back to
 two and one so longer spell names retain useful width. Every available option is
 rendered directly in its circle section; the creation picker has no search or
 client-side filtering. The catalogue request is narrowed server-side to the

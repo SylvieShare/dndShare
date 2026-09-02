@@ -1,5 +1,5 @@
 <template>
-  <div class="step">
+  <div class="step" :class="{ 'step--compact': compact }">
     <template v-for="fc in list" :key="fc.id">
       <SkillPicker
         v-if="isSkillChoice(fc.choice)"
@@ -28,6 +28,19 @@
           placeholder="Найти язык…"
           @toggle="(id) => toggleChoice(fc.id, id, Number(fc.choice.count) || 1)"
         />
+
+        <div v-else-if="isSpellChoice(fc.choice)" class="spell-list">
+          <SpellSelectTile
+            v-for="opt in choiceOptionList(fc)"
+            :key="opt.value"
+            :spell="opt.item"
+            :school="schoolName(opt.item)"
+            :selected="isSel(fc, opt)"
+            :disabled="locked(fc, opt)"
+            @select="toggleChoice(fc.id, opt.value, Number(fc.choice.count) || 1)"
+            @details="viewId = opt.value"
+          />
+        </div>
 
         <div v-else-if="isChips(fc.choice)" class="chips">
           <button
@@ -58,18 +71,35 @@
         </div>
       </template>
     </template>
+
+    <ItemViewModal
+      v-if="viewId != null"
+      :item-type-id="5"
+      :item-id="viewId"
+      @close="viewId = null"
+    />
   </div>
 </template>
 
 <script setup>
-import { computed, inject } from 'vue'
+import { computed, inject, ref } from 'vue'
+import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
 import MultiSearchSelect from '@/features/character-list/components/wizard/MultiSearchSelect.vue'
 import SkillPicker from '@/features/character-list/components/wizard/SkillPicker.vue'
+import SpellSelectTile from '@/features/character-list/components/wizard/SpellSelectTile.vue'
 import { choicePresentation } from '@/features/character-list/components/wizard/choicePresentation'
+import { useSuggestStore } from '@/stores/suggest'
 
-const props = defineProps({ scope: { type: String, default: 'all' } })
+const props = defineProps({
+  scope: { type: String, default: 'all' },
+  compact: { type: Boolean, default: false },
+})
 const wz = inject('createWizard')
 const { featureChoices, raceFeatureChoices, classFeatureChoices, choiceOptionList, choiceSelected, toggleChoice } = wz
+const viewId = ref(null)
+const suggestStore = useSuggestStore()
+suggestStore.ensure(7)
+const schoolMap = computed(() => new Map(suggestStore.items(7).map((entry) => [String(entry.id), entry.value])))
 const list = computed(() => (
   props.scope === 'race' ? raceFeatureChoices.value
     : props.scope === 'class' ? classFeatureChoices.value
@@ -84,6 +114,8 @@ function locked(fc, opt) {
 function isChips(choice) { return choicePresentation(choice) === 'chips' }
 function isLangChoice(choice) { return choicePresentation(choice) === 'language' }
 function isSkillChoice(choice) { return choicePresentation(choice) === 'skill' }
+function isSpellChoice(choice) { return choice?.source === 'item' && Number(choice?.from_item_type_id) === 5 }
+function schoolName(spell) { return schoolMap.value.get(String(spell?.data?.schoolId)) || '' }
 function optionsFor(fc) { return choiceOptionList(fc).map((o) => ({ id: o.value, name: o.label })) }
 function skillOptionsFor(fc) { return choiceOptionList(fc).map((o) => ({ id: o.value, name: o.label, desc: o.desc || '' })) }
 </script>
@@ -103,6 +135,8 @@ function skillOptionsFor(fc) { return choiceOptionList(fc).map((o) => ({ id: o.v
 .chip.on { background: var(--accent); color: var(--text-on-accent); }
 .chip.off { opacity: 0.4; cursor: default; }
 .chip.off:hover { background: var(--surface); }
+.spell-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; margin-bottom: 4px; }
+.step--compact .spell-list { grid-template-columns: 1fr; }
 .list { display: flex; flex-direction: column; gap: 7px; margin-bottom: 4px; }
 .opt {
   display: flex; align-items: flex-start; gap: 11px;
@@ -123,4 +157,6 @@ function skillOptionsFor(fc) { return choiceOptionList(fc).map((o) => ({ id: o.v
 .opt-body { min-width: 0; }
 .opt-label { font-size: 14px; color: var(--text-1); font-weight: 500; }
 .opt-desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; line-height: 1.4; }
+@media (max-width: 900px) { .spell-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .spell-list { grid-template-columns: 1fr; } }
 </style>
