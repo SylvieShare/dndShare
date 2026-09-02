@@ -659,8 +659,10 @@ and medium armor include Dexterity and medium armor applies `dex_cap`. The
 semantic accessor, visible tile and printable sheet all use the same formula.
 Long rest restores half the total hit-dice pool automatically and does not ask
 the player to allocate recovery manually. Spell save DC and spell attack tiles
-expose their formulas as hover titles, and every spell-slot sphere has the same
-subtle hover enlargement regardless of spent/read-only state.
+expose their formulas as hover titles. Hovering an interactive resource or
+spell-slot sphere previews the continuous range affected by a click: a charged
+sphere and the charged spheres to its right, or a spent sphere and the spent
+spheres to its left. Read-only spheres do not show this interaction preview.
 
 Diary sessions animate their disclosure body. Session create/edit forms use a
 regular `AppModalFrame`; event create/edit retains the element-origin

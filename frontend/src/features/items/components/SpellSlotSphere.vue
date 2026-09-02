@@ -120,7 +120,9 @@ watch(() => props.spent, (v) => {
   cursor: pointer;
   transition: transform 0.12s;
 }
-.ss:hover { transform: scale(1.12); }
+.ss:not(.ss-ro):hover,
+.ss-on:not(.ss-ro):hover ~ .ss-on:not(.ss-ro),
+.ss-off:not(.ss-ro):has(~ .ss-off:not(.ss-ro):hover) { transform: scale(1.12); }
 .ss-ro { cursor: default; }
 
 /* glass — matches PotionVial's .pv-glass (dark fill + thin grey border, clips its own outer halo only) */
