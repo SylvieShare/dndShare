@@ -68,7 +68,6 @@
         :workspace-layout-mode="workspaceMotionMode"
         :encounter-active="encounter.encounter.active"
         :dice-open="diceOpen"
-        :music-open="musicOpen"
         :events-open="eventsOpen"
         :materials="sessionMaterials"
         :presentation="presentation"
@@ -79,7 +78,6 @@
         @select-view="selectSessionView"
         @open-combat="openCombatTab"
         @toggle-dice="diceOpen = !diceOpen"
-        @toggle-music="musicOpen = !musicOpen"
         @toggle-events="eventsOpen = !eventsOpen"
         @update-setting="updateSessionSetting"
         @send-block-to-combat="sendBlockToCombat"
@@ -219,9 +217,6 @@
         <BaseTile v-show="diceOpen" class="side-tile workspace-tool-tile">
           <DicePanel ref="dicePanel" :show-shortcut-hints="showShortcutHints" />
         </BaseTile>
-        <BaseTile v-show="musicOpen" class="side-tile workspace-tool-tile">
-          <MusicPanel :is-dm="isDm" />
-        </BaseTile>
         <BaseTile v-show="eventsOpen" class="side-tile workspace-tool-tile workspace-events-tile">
           <SessionEventsPanel :live-status="liveStatus" />
         </BaseTile>
@@ -268,7 +263,6 @@ import CharacterSheetModal from '@/features/character-editor/components/Characte
 import ChapterGraphTab from '@/features/sessions/components/ChapterGraphTab.vue'
 import DicePanel from '@/features/sessions/components/DicePanel.vue'
 import EncounterReviveModal from '@/features/sessions/components/EncounterReviveModal.vue'
-import MusicPanel from '@/features/sessions/components/MusicPanel.vue'
 import SessionEventsPanel from '@/features/sessions/components/SessionEventsPanel.vue'
 import SessionEditModal from '@/features/sessions/components/SessionEditModal.vue'
 import SessionJoinModal from '@/features/sessions/components/SessionJoinModal.vue'
@@ -354,7 +348,6 @@ const templateStore = useTemplateStore()
 const SESSION_TOOL_PANELS_STORAGE_KEY = 'dnd-share:session-tool-panels:v1'
 const savedToolPanels = readToolPanelVisibility()
 const diceOpen = ref(savedToolPanels.dice)
-const musicOpen = ref(savedToolPanels.music)
 const eventsOpen = ref(savedToolPanels.events)
 const dicePanel = ref(null)
 const showShortcutHints = ref(false)
@@ -362,12 +355,12 @@ const shortcutLabels = sessionShortcutLabels()
 const chapterGraphTab = ref(null)
 const combatWorkspace = ref(null)
 const worldLayer = ref(null)
-const rightDockOpen = computed(() => diceOpen.value || musicOpen.value || eventsOpen.value)
+const rightDockOpen = computed(() => diceOpen.value || eventsOpen.value)
 const combatImportError = ref('')
 
-watch([diceOpen, musicOpen, eventsOpen], ([dice, music, events]) => {
+watch([diceOpen, eventsOpen], ([dice, events]) => {
   try {
-    localStorage.setItem(SESSION_TOOL_PANELS_STORAGE_KEY, JSON.stringify({ dice, music, events }))
+    localStorage.setItem(SESSION_TOOL_PANELS_STORAGE_KEY, JSON.stringify({ dice, events }))
   } catch { /* localStorage can be unavailable in private mode */ }
 })
 
@@ -376,17 +369,15 @@ function readToolPanelVisibility() {
     const saved = JSON.parse(localStorage.getItem(SESSION_TOOL_PANELS_STORAGE_KEY) || 'null')
     return {
       dice: saved?.dice !== false,
-      music: saved?.music !== false,
       events: saved?.events !== false,
     }
   } catch {
-    return { dice: true, music: true, events: true }
+    return { dice: true, events: true }
   }
 }
 
 function toggleToolPanel(panel) {
   if (panel === 'dice') diceOpen.value = !diceOpen.value
-  if (panel === 'music') musicOpen.value = !musicOpen.value
   if (panel === 'events') eventsOpen.value = !eventsOpen.value
 }
 

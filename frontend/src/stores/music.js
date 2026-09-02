@@ -358,6 +358,19 @@ export const useMusicStore = defineStore('music', () => {
     return albumTracks[(idx + 1) % albumTracks.length].id
   }
 
+  const playbackNextTrack = computed(() => {
+    const nextId = state.nextTrackId || nextAlbumTrackId()
+    if (!nextId || nextId === state.trackId) return null
+    return trackById(nextId)
+  })
+
+  async function playNext({ immediate = false } = {}) {
+    const nextId = playbackNextTrack.value?.id
+    if (!nextId) return
+    if (state.nextTrackId === nextId) state.nextTrackId = null
+    await playTrack(nextId, { albumId: state.albumId, immediate })
+  }
+
   function attachEndedHandler() {
     if (!audioA || !audioB) return
     const onEnded = () => {
@@ -467,11 +480,11 @@ export const useMusicStore = defineStore('music', () => {
     addTrackTag, attachTrackTag, attachTracksTag, removeTrackTag, removeTracksTag,
     createTag, renameTag, deleteTag,
     // player state
-    state, currentTrack, nextTrack, remotePlayback,
+    state, currentTrack, nextTrack, playbackNextTrack, remotePlayback,
     setContext, loadSessionState,
     playTrack, pause, resume, seek,
     setVolume, setCrossfade, setRemotePlayback,
-    setNext, clearNext, playNextFromQueue, toggleLoopMode,
+    setNext, clearNext, playNext, playNextFromQueue, toggleLoopMode,
     dispose,
   }
 })

@@ -11,6 +11,7 @@ const selectionBar = readFileSync(fileURLToPath(new URL('./GraphSelectionBar.vue
 const actionDock = readFileSync(fileURLToPath(new URL('./CanvasActionDock.vue', import.meta.url)), 'utf8')
 const narrativeCanvas = readFileSync(fileURLToPath(new URL('../lib/narrativeCanvas.js', import.meta.url)), 'utf8')
 const toolbar = readFileSync(fileURLToPath(new URL('./ChapterGraphToolbar.vue', import.meta.url)), 'utf8')
+const musicStore = readFileSync(fileURLToPath(new URL('../../../stores/music.js', import.meta.url)), 'utf8')
 const arcEditor = readFileSync(fileURLToPath(new URL('./ArcEditorModal.vue', import.meta.url)), 'utf8')
 const node = readFileSync(fileURLToPath(new URL('./ChapterGraphNode.vue', import.meta.url)), 'utf8')
 const hotkeyHints = readFileSync(fileURLToPath(new URL('./CanvasHotkeyHints.vue', import.meta.url)), 'utf8')
@@ -30,13 +31,19 @@ describe('chapter graph workspace', () => {
     expect(canvas).not.toContain('<BaseTile')
   })
 
-  it('keeps dice, music and session log toggles in the header', () => {
+  it('keeps dice and session log toggles while moving playback into the music tab', () => {
     expect(toolbar).toContain('aria-label="Кубики"')
-    expect(toolbar).toContain('aria-label="Музыка"')
     expect(toolbar).toContain('aria-label="Лог сессии"')
     expect(toolbar).toContain("$emit('toggle-dice')")
-    expect(toolbar).toContain("$emit('toggle-music')")
     expect(toolbar).toContain("$emit('toggle-events')")
+    expect(toolbar).not.toContain("$emit('toggle-music')")
+    expect(toolbar).not.toContain('aria-keyshortcuts="Shift+M"')
+    expect(toolbar).toContain('class="chapter-music-progress"')
+    expect(toolbar).toContain('Поставить музыку на паузу')
+    expect(toolbar).toContain('Следующий трек')
+    expect(toolbar).toContain('musicStore.playNext()')
+    expect(musicStore).toContain('const playbackNextTrack = computed')
+    expect(musicStore).toContain('async function playNext(')
   })
 
   it('keeps combat in the central tabs and creation on the canvas', () => {

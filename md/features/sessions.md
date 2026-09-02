@@ -107,7 +107,7 @@ content pages. Its semantic header centers the switch between `Сюжет`, `Б�
 form the first navigation group and a vertical divider separates them from the
 four world catalogues; a second divider separates the final music-library tab. The
 participant rail remains on the left and the
-dice/events/music tools remain in a 328px right rail, wide enough for the full
+dice and events tools remain in a 328px right rail, wide enough for the full
 three-option dice mode switch without label clipping. In `Сюжет` the chapter canvas fills
 all available width below `AppHeader`. CSS safe-area variables keep focus, zoom
 and newly created nodes in the uncovered part of the canvas. The catalogue
@@ -122,9 +122,11 @@ split location/NPC workspaces retain a useful detail width; the participant rail
 disappears only on mobile.
 
 The primary switch remains active at every story depth. `Музыка` opens the
-central session library while the compact right-rail music tile remains the
-current-track player. There is no fullscreen library modal or local open/close
-state. Combat is represented
+central session library and also acts as a compact always-visible player when a
+track is selected: its bottom edge shows playback progress, while adjacent
+pause/resume and next-track controls do not change the selected workspace.
+There is no separate right-rail music tile, fullscreen library modal or local
+open/close state. Combat is represented
 as a real tab next to Story rather than a tool icon: selecting `Бой` opens the
 existing animated workspace, and selecting `Сюжет` runs the same closing
 transition back to the preserved chapter/scenario context. Selecting a world
@@ -132,11 +134,11 @@ catalogue closes the combat workspace without stopping an active encounter;
 its red live marker therefore remains visible on the inactive `Бой` tab. Each
 catalogue selection stays in its own query key, so
 returning to a catalogue restores the previously selected location, NPC, quest
-or material. The settings control is visually separated from the dice, music
-and log group by its own vertical divider.
+or material. The settings control is visually separated from the presentation,
+timer, dice and log controls by its own vertical divider.
 
 Постоянные icon-кнопки в командной шапке независимо открывают и закрывают
-целые панели кубиков, музыки и событий. Выбранная видимость сохраняется в
+панели кубиков и событий. Выбранная видимость сохраняется в
 `localStorage` и восстанавливается при следующем открытии страницы; состояние
 самих смонтированных панелей при временном скрытии также сохраняется. Внутренних
 кнопок сворачивания у панелей нет.
@@ -152,9 +154,7 @@ and log group by its own vertical divider.
 флаг относится только к этому таймеру. Такие отсчёты появляются на анонимном
 экране с локально синхронизированным временем и прогрессом, остальные остаются
 только в рабочем пространстве мастера.
-Заголовок music panel не дублирует название выбранного альбома; текущий трек
-остаётся в основном playback-блоке.
-`SessionEventsPanel` расположен под музыкой, занимает свободную высоту и
+`SessionEventsPanel` расположен в правой колонке после панели кубиков, занимает свободную высоту и
 прокручивает только собственную хронику по вертикали; длинные имена, описания и
 результаты бросков переносятся без горизонтального скролла. Новые записи находятся сверху и
 группируются сначала по минуте, затем по последовательному субъекту действия.
@@ -422,7 +422,7 @@ scenarios; bulk scenario deletion also removes its blocks.
 Desktop session pages keep only the frameless `? · Горячие клавиши` affordance
 at the bottom-left. Pressing `?` or clicking it toggles contextual shortcut
 hints without reserving space or moving the participant rail: section hints sit
-under their header tabs, panel hints under the dice/music/log buttons, dice-roll
+under their header tabs, panel hints under the dice/log buttons, dice-roll
 hints inside the corresponding dice, and canvas-only hints remain over the
 bottom-left of the canvas safe area, beside the participant rail. If the dice panel is closed, its header button
 temporarily shows the compact `1…7 · d4…d100` mapping instead. `Esc` hides the hints while preserving its
@@ -431,8 +431,8 @@ layouts.
 
 Session-wide shortcuts use physical key codes and therefore do not depend on
 the current keyboard language. `Alt`/`Option` + `1…6` opens Story, Locations,
-NPCs, Quests, Materials and Music; `Shift` + `D`, `M` or `L` toggles the dice,
-music or session-log panel without conflicting with browser address-bar
+NPCs, Quests, Materials and Music; `Shift` + `D` or `L` toggles the dice or
+session-log panel without conflicting with browser address-bar
 shortcuts. `Alt`/`Option` + `Shift` + `1…7` rolls d4, d6, d8,
 d10, d12, d20 or d100 using the currently selected normal/advantage/disadvantage
 mode. Dice rolling works while the dice panel is closed because its controller

@@ -65,8 +65,10 @@ It uses:
 
 No local modal backdrop, browser prompt/confirm or separate drag engine should
 be added. Tag/album pickers remain nested dialogs inside the workspace and obey
-the shared modal stack's Escape ordering. The compact right-rail `MusicPanel`
-is only the current-track player; it no longer opens a library window.
+the shared modal stack's Escape ordering. The session header's `Музыка` tab is
+also the compact player: it shows track progress and exposes pause/resume and
+next-track actions without changing the selected workspace. There is no
+right-rail music panel.
 
 System albums are shown in a separate sidebar section and show their CC0/source
 metadata. `Все треки` contains only personal tracks. Clicking a track selects

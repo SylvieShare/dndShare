@@ -17,7 +17,6 @@ const encounter = read('./EncounterTab.vue')
 const libraryShell = read('./SessionLibraryWorkspace.vue')
 const presentationState = read('../composables/useSessionPresentation.js')
 const displayMusic = read('../composables/useDisplayMusic.js')
-const musicPanel = read('./MusicPanel.vue')
 const sessionPage = read('../pages/ViewSession.vue')
 const sessionsApi = read('../../../shared/api/sessionsApi.js')
 
@@ -96,7 +95,7 @@ describe('session presentation workspace', () => {
     expect(displayMusic).toContain('runCrossfade')
     expect(displayMusic).toContain('blocked.value = true')
     expect(publicScreen).toContain('Включить звук')
-    expect(musicPanel).toContain('НА ЭКРАНЕ')
+    expect(toolbar).toContain('НА ЭКРАНЕ')
   })
 
   it('keeps live connected-screen state on the trigger without replacing the mode summary', () => {

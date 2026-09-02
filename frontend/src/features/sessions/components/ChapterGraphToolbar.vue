@@ -112,19 +112,55 @@
 
       <span v-if="isDm" class="chapter-primary-divider" role="separator" aria-orientation="vertical" />
 
-      <button
+      <div
         v-if="isDm"
-        type="button"
-        class="chapter-primary-tab"
-        :class="{ 'chapter-primary-tab--active': primaryView === musicView.key }"
-        :aria-current="primaryView === musicView.key ? 'page' : undefined"
-        :aria-keyshortcuts="`Alt+${musicView.shortcut}`"
-        @click="$emit('select-view', musicView.key)"
+        class="chapter-music-tab"
+        :class="{
+          'chapter-music-tab--active': primaryView === musicView.key,
+          'chapter-music-tab--playing': musicState.playing,
+        }"
+        role="group"
+        :aria-label="musicTabTitle"
       >
-        <component :is="musicView.icon" :size="14" />
-        <span>{{ musicView.label }}</span>
-        <kbd v-if="showShortcutHints" class="chapter-shortcut-hint" aria-hidden="true">{{ shortcutLabels.alt }}+{{ musicView.shortcut }}</kbd>
-      </button>
+        <button
+          type="button"
+          class="chapter-primary-tab chapter-primary-tab--music"
+          :title="musicTabTitle"
+          :aria-current="primaryView === musicView.key ? 'page' : undefined"
+          :aria-keyshortcuts="`Alt+${musicView.shortcut}`"
+          @click="$emit('select-view', musicView.key)"
+        >
+          <Music2 :size="14" />
+          <span>{{ musicView.label }}</span>
+          <span v-if="currentMusicTrack" class="chapter-music-state" aria-hidden="true" />
+          <kbd v-if="showShortcutHints" class="chapter-shortcut-hint" aria-hidden="true">{{ shortcutLabels.alt }}+{{ musicView.shortcut }}</kbd>
+        </button>
+        <div v-if="currentMusicTrack" class="chapter-music-controls">
+          <button
+            type="button"
+            class="chapter-music-control"
+            :title="musicState.playing ? 'Поставить музыку на паузу' : 'Продолжить музыку'"
+            :aria-label="musicState.playing ? 'Поставить музыку на паузу' : 'Продолжить музыку'"
+            @click="toggleMusicPlayback"
+          >
+            <Pause v-if="musicState.playing" :size="13" fill="currentColor" />
+            <Play v-else :size="13" fill="currentColor" />
+          </button>
+          <button
+            type="button"
+            class="chapter-music-control"
+            title="Следующий трек"
+            aria-label="Следующий трек"
+            :disabled="!playbackNextTrack"
+            @click="musicStore.playNext()"
+          >
+            <SkipForward :size="14" fill="currentColor" />
+          </button>
+        </div>
+        <span v-if="currentMusicTrack" class="chapter-music-progress" aria-hidden="true">
+          <span :style="{ width: `${musicProgressPct}%` }" />
+        </span>
+      </div>
     </nav>
 
     <div class="chapter-toolbar-view">
@@ -143,10 +179,6 @@
           <kbd v-if="showShortcutHints" class="chapter-shortcut-hint" aria-hidden="true">{{ shortcutLabels.panel }}+D</kbd>
           <kbd v-if="showShortcutHints && !diceOpen" class="chapter-shortcut-hint chapter-shortcut-hint--dice-rolls" aria-hidden="true">{{ shortcutLabels.dice }}+1…7 · d4…d100</kbd>
         </button>
-        <button type="button" class="chapter-tool-btn chapter-tool-btn--icon" :class="{ 'chapter-tool-btn--active': musicOpen }" title="Музыка" aria-label="Музыка" aria-keyshortcuts="Shift+M" :aria-pressed="musicOpen" @click="$emit('toggle-music')">
-          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 12.5V3.8l6-1.3v8.2M6 12.5a1.8 1.8 0 1 1-1.8-1.8A1.8 1.8 0 0 1 6 12.5zm6-1.8a1.8 1.8 0 1 1-1.8-1.8A1.8 1.8 0 0 1 12 10.7z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <kbd v-if="showShortcutHints" class="chapter-shortcut-hint" aria-hidden="true">{{ shortcutLabels.panel }}+M</kbd>
-        </button>
         <button type="button" class="chapter-tool-btn chapter-tool-btn--icon" :class="{ 'chapter-tool-btn--active': eventsOpen }" title="Лог сессии" aria-label="Лог сессии" aria-keyshortcuts="Shift+L" :aria-pressed="eventsOpen" @click="$emit('toggle-events')">
           <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 2.5h10v11H3zM5.5 5.5h5M5.5 8h5M5.5 10.5h3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
           <kbd v-if="showShortcutHints" class="chapter-shortcut-hint" aria-hidden="true">{{ shortcutLabels.panel }}+L</kbd>
@@ -164,13 +196,15 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue'
-import { BookOpenText, Images, Map, Music2, Pencil, ScrollText, Swords, UsersRound } from '@lucide/vue'
+import { storeToRefs } from 'pinia'
+import { BookOpenText, Images, Map, Music2, Pause, Pencil, Play, ScrollText, SkipForward, Swords, UsersRound } from '@lucide/vue'
 import { BasePopover, reorderByDrop, useSortable } from '@sylvieshare/share-ui'
 import { romanNumeral } from '@/features/sessions/lib/chapterGraph'
 import SessionPresentationControl from '@/features/sessions/components/SessionPresentationControl.vue'
 import SessionSettingsControl from '@/features/sessions/components/SessionSettingsControl.vue'
 import SessionTimerControl from '@/features/sessions/components/SessionTimerControl.vue'
 import { sessionShortcutLabels } from '@/features/sessions/lib/sessionShortcuts'
+import { useMusicStore } from '@/stores/music'
 
 const props = defineProps({
   arcs: { type: Array, default: () => [] },
@@ -184,7 +218,6 @@ const props = defineProps({
   combatActive: { type: Boolean, default: false },
   encounterActive: { type: Boolean, default: false },
   diceOpen: { type: Boolean, default: true },
-  musicOpen: { type: Boolean, default: true },
   eventsOpen: { type: Boolean, default: true },
   sessionUuid: { type: String, required: true },
   presentation: { type: Object, default: null },
@@ -199,7 +232,7 @@ const emit = defineEmits([
   'select-arc', 'create-arc', 'edit-arc', 'reorder-arcs',
   'select-view',
   'edit-session', 'open-combat',
-  'toggle-dice', 'toggle-music', 'toggle-events',
+  'toggle-dice', 'toggle-events',
   'update-setting',
 ])
 const primaryViews = [
@@ -212,6 +245,23 @@ const primaryViews = [
 const shortcutLabels = sessionShortcutLabels()
 const storyView = primaryViews[0]
 const musicView = { key: 'music', label: 'Музыка', icon: Music2, shortcut: '6' }
+const musicStore = useMusicStore()
+const {
+  state: musicState,
+  currentTrack: currentMusicTrack,
+  playbackNextTrack,
+  remotePlayback,
+} = storeToRefs(musicStore)
+const musicProgressPct = computed(() => musicState.value.durationSec
+  ? Math.min(100, Math.max(0, musicState.value.positionSec / musicState.value.durationSec * 100))
+  : 0)
+const musicTabTitle = computed(() => {
+  if (!currentMusicTrack.value) return 'Музыка'
+  const status = musicState.value.playing
+    ? remotePlayback.value ? 'НА ЭКРАНЕ' : 'ИГРАЕТ'
+    : 'ПАУЗА'
+  return `${currentMusicTrack.value.name} · ${status}`
+})
 const combatButtonState = computed(() => `${props.combatActive ? 'open' : 'closed'}-${props.encounterActive ? 'running' : 'stopped'}`)
 const combatButtonLabel = computed(() => `${props.combatActive ? 'Бой открыт' : 'Открыть бой'} · бой ${props.encounterActive ? 'идёт' : 'не запущен'}`)
 const visibleLibraryViews = computed(() => props.isDm ? primaryViews.slice(1) : [])
@@ -252,6 +302,12 @@ function editArc(arc) {
 function createArc() {
   arcOpen.value = false
   emit('create-arc')
+}
+
+function toggleMusicPlayback() {
+  if (!currentMusicTrack.value) return
+  if (musicState.value.playing) musicStore.pause()
+  else musicStore.resume()
 }
 </script>
 
@@ -327,6 +383,62 @@ function createArc() {
 .chapter-primary-tab:hover:not(:disabled) { background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); color: var(--text-1); }
 .chapter-primary-tab--active { color: var(--text-1); }
 .chapter-primary-tab--active::after { opacity: 1; transform: scaleX(1); }
+.chapter-music-tab {
+  position: relative;
+  display: inline-flex;
+  align-items: stretch;
+  overflow: hidden;
+  border-radius: 7px;
+  transition: background 0.15s, color 0.15s;
+}
+.chapter-music-tab--active { background: color-mix(in srgb, var(--accent) 10%, transparent); }
+.chapter-primary-tab--music::after { display: none; }
+.chapter-music-state {
+  width: 5px;
+  height: 5px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0.62;
+}
+.chapter-music-tab--playing .chapter-music-state {
+  opacity: 1;
+  animation: chapter-music-live 1.8s ease-in-out infinite;
+}
+.chapter-music-controls { display: inline-flex; align-items: center; padding-right: 3px; }
+.chapter-music-control {
+  width: 25px;
+  height: 25px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-left: 1px solid color-mix(in srgb, var(--border-strong) 70%, transparent);
+  background: transparent;
+  color: var(--text-2);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, opacity 0.15s;
+}
+.chapter-music-control:hover:not(:disabled) { background: color-mix(in srgb, var(--text-on-accent) 8%, transparent); color: var(--text-1); }
+.chapter-music-control:disabled { cursor: not-allowed; opacity: 0.28; }
+.chapter-music-progress {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  pointer-events: none;
+}
+.chapter-music-progress > span {
+  display: block;
+  height: 100%;
+  border-radius: 0 2px 2px 0;
+  background: var(--accent);
+  transition: width 0.45s linear;
+}
+@keyframes chapter-music-live { 50% { box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent); } }
 .chapter-primary-divider { width: 1px; height: 21px; flex: none; margin: 0 5px; background: var(--border-strong); }
 .chapter-primary-tab--combat { color: color-mix(in srgb, var(--danger) 62%, var(--text-muted)); }
 .chapter-primary-tab--encounter-active { background: color-mix(in srgb, var(--danger) 9%, transparent); color: var(--danger); }
@@ -397,5 +509,6 @@ function createArc() {
 @media (prefers-reduced-motion: reduce) {
   .chapter-shortcut-hint { animation: none; }
   .chapter-primary-tab--encounter-active .chapter-combat-running-indicator { animation: none; }
+  .chapter-music-tab--playing .chapter-music-state { animation: none; }
 }
 </style>

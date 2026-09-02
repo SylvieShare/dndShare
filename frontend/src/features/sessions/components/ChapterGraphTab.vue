@@ -12,7 +12,6 @@
       :combat-active="workspaceLayoutMode === 'combat'"
       :encounter-active="encounterActive"
       :dice-open="diceOpen"
-      :music-open="musicOpen"
       :events-open="eventsOpen"
       :session-uuid="sessionUuid"
       :presentation="presentation"
@@ -30,7 +29,6 @@
       @edit-session="$emit('edit-session')"
       @open-combat="openCombat"
       @toggle-dice="$emit('toggle-dice')"
-      @toggle-music="$emit('toggle-music')"
       @toggle-events="$emit('toggle-events')"
       @update-setting="(...args) => $emit('update-setting', ...args)"
     />
@@ -214,7 +212,6 @@ const props = defineProps({
   workspaceLayoutMode: { type: String, default: null },
   encounterActive: { type: Boolean, default: false },
   diceOpen: { type: Boolean, default: true },
-  musicOpen: { type: Boolean, default: true },
   eventsOpen: { type: Boolean, default: true },
   presentation: { type: Object, default: null },
   timers: { type: Object, default: null },
@@ -225,7 +222,7 @@ const props = defineProps({
 const emit = defineEmits([
   'open-scenes', 'open-combat', 'edit-session', 'open-chapters',
   'select-view',
-  'send-block-to-combat', 'workspace-context-change', 'toggle-dice', 'toggle-music', 'toggle-events',
+  'send-block-to-combat', 'workspace-context-change', 'toggle-dice', 'toggle-events',
   'update-setting',
 ])
 

@@ -9,7 +9,6 @@ const styles = readFileSync(fileURLToPath(new URL('./styles/ViewSession.css', im
 const selectionSource = readFileSync(fileURLToPath(new URL('../composables/useSessionSelection.js', import.meta.url)), 'utf8')
 const workspaceSource = readFileSync(fileURLToPath(new URL('../composables/useSessionWorkspace.js', import.meta.url)), 'utf8')
 const dicePanelSource = readFileSync(fileURLToPath(new URL('../components/DicePanel.vue', import.meta.url)), 'utf8')
-const musicPanelSource = readFileSync(fileURLToPath(new URL('../components/MusicPanel.vue', import.meta.url)), 'utf8')
 const musicWorkspaceSource = readFileSync(fileURLToPath(new URL('../components/SessionMusicWorkspace.vue', import.meta.url)), 'utf8')
 const centerWorkspaceSource = readFileSync(fileURLToPath(new URL('../components/SessionCenterWorkspace.vue', import.meta.url)), 'utf8')
 const encounterSource = readFileSync(fileURLToPath(new URL('../components/EncounterTab.vue', import.meta.url)), 'utf8')
@@ -123,7 +122,7 @@ describe('ViewSession participant rail', () => {
     expect(styles).toMatch(/\.campaign-workspace--combat \.workspace-dock--left\s*\{[^}]*width:\s*360px;/s)
   })
 
-  it('keeps session dice purple and controls all right-dock panels from the header', () => {
+  it('keeps session dice purple and removes the duplicated right-rail music player', () => {
     expect(dicePanelSource).toContain('color="var(--accent)"')
     expect(styles).toMatch(/\.workspace-dock--right\s*\{[^}]*width:\s*328px;/s)
     expect(source).not.toContain('class="workspace-tool-toggles"')
@@ -131,15 +130,12 @@ describe('ViewSession participant rail', () => {
     expect(source).toContain('localStorage.getItem(SESSION_TOOL_PANELS_STORAGE_KEY)')
     expect(source).toContain('localStorage.setItem(SESSION_TOOL_PANELS_STORAGE_KEY')
     expect(source).toContain('@toggle-dice="diceOpen = !diceOpen"')
-    expect(source).toContain('@toggle-music="musicOpen = !musicOpen"')
     expect(source).toContain('@toggle-events="eventsOpen = !eventsOpen"')
     expect(source).toContain('<BaseTile v-show="diceOpen"')
-    expect(source).toContain('<BaseTile v-show="musicOpen"')
     expect(source).toContain('<BaseTile v-show="eventsOpen"')
     expect(dicePanelSource).not.toContain('dice-panel-collapse')
-    expect(musicPanelSource).not.toContain('music-panel-collapse')
-    expect(musicPanelSource).not.toContain('music-panel-album')
-    expect(musicPanelSource).not.toContain('open-library')
+    expect(source).not.toContain('musicOpen')
+    expect(source).not.toContain('<MusicPanel')
     expect(source).toContain('<SessionMusicWorkspace v-if="primaryView === \'music\'"')
     expect(source).not.toContain('MusicLibraryModal')
     expect(source).not.toContain('musicLibraryOpen')
@@ -200,16 +196,16 @@ describe('ViewSession participant rail', () => {
   it('lets the canvas use the empty part of the right rail and moves actions right when every panel is closed', () => {
     expect(source).toContain("'campaign-workspace--right-dock': rightDockOpen")
     expect(source).toContain('<aside class="workspace-dock workspace-dock--right">')
-    expect(source).toContain('const rightDockOpen = computed(() => diceOpen.value || musicOpen.value || eventsOpen.value)')
+    expect(source).toContain('const rightDockOpen = computed(() => diceOpen.value || eventsOpen.value)')
     expect(styles).toMatch(/\.workspace-dock--right\s*\{[^}]*pointer-events:\s*none;/s)
     expect(styles).toMatch(/\.workspace-dock--right > \.workspace-tool-tile\s*\{[^}]*pointer-events:\s*auto;/s)
     expect(styles).toMatch(/\.campaign-graph\s*\{[^}]*--chapter-safe-right:\s*0px;/s)
     expect(styles).toMatch(/\.campaign-workspace--combat \.campaign-graph\s*\{[^}]*--chapter-safe-right:\s*350px;/s)
   })
 
-  it('places the event log below the music panel', () => {
-    expect(source.indexOf('<MusicPanel'))
-      .toBeLessThan(source.indexOf('<SessionEventsPanel'))
+  it('keeps the event log in the right rail without a music mini-player', () => {
+    expect(source).toContain('<SessionEventsPanel')
+    expect(source).not.toContain('<MusicPanel')
   })
 
   it('uses the opened character sheet as the actor for session dice rolls', () => {

@@ -9,7 +9,6 @@ export const SESSION_VIEW_SHORTCUTS = Object.freeze({
 
 export const SESSION_PANEL_SHORTCUTS = Object.freeze({
   dice: 'KeyD',
-  music: 'KeyM',
   events: 'KeyL',
 })
 
