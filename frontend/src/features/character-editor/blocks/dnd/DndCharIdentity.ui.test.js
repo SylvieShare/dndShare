@@ -68,10 +68,11 @@ describe('character identity summary', () => {
     expect(html).toContain('Воин 4')
   })
 
-  it('renders classes on a separate, width-bounded ellipsis row', () => {
+  it('wraps the class list without splitting an individual class', () => {
     expect(source).toContain('<div class="dci-main-row">')
-    expect(source).toContain('<span v-if="classPart" class="dci-classes" :title="classPart">{{ classPart }}</span>')
-    expect(source).toMatch(/\.dci-classes \{[^}]*max-width: 100%;[^}]*min-width: 0;[^}]*overflow: hidden;[^}]*text-overflow: ellipsis;[^}]*white-space: nowrap;/)
+    expect(source).toContain('<div v-if="classParts.length" class="dci-classes" :title="classPart">')
+    expect(source).toMatch(/\.dci-classes \{[^}]*display: flex;[^}]*flex-wrap: wrap;[^}]*max-width: 100%;[^}]*min-width: 0;/)
+    expect(source).toMatch(/\.dci-class-item \{[^}]*display: inline-flex;[^}]*max-width: 100%;[^}]*min-width: 0;[^}]*white-space: nowrap;/)
   })
 
   it('keeps portrait and icon editing out of the identity form', () => {

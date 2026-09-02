@@ -19,7 +19,12 @@
         </svg>
       </button>
     </div>
-    <span v-if="classPart" class="dci-classes" :title="classPart">{{ classPart }}</span>
+    <div v-if="classParts.length" class="dci-classes" :title="classPart">
+      <span v-for="(part, index) in classParts" :key="index" class="dci-class-item">
+        <span class="dci-class-label">{{ part }}</span>
+        <span v-if="index < classParts.length - 1" class="dci-class-sep" aria-hidden="true">·</span>
+      </span>
+    </div>
 
     <AppModalFrame v-if="windowOpen" title="Персонаж" @close="close">
       <div class="dciw-body">
@@ -163,10 +168,12 @@ const raceVal     = computed(() => nameOf(props.values?.[raceId.value]))
 const subraceVal  = computed(() => nameOf(props.values?.[subraceId.value]))
 
 const racePart  = computed(() => subraceVal.value || raceVal.value)
-const classPart = computed(() => classesLabel(classEntriesOf({
+const classEntries = computed(() => classEntriesOf({
   classes: props.values?.[classesId.value],
   lvl: props.values?.[lvlId.value],
-})))
+}))
+const classParts = computed(() => classEntries.value.map((entry) => classesLabel([entry])))
+const classPart = computed(() => classesLabel(classEntries.value))
 
 const nameColor = computed(() => props.block.content?.name_color || 'var(--text-1)')
 const nameStyle = computed(() => ({ color: nameColor.value }))
@@ -338,16 +345,32 @@ function close() {
 }
 
 .dci-classes {
-  display: block;
+  display: flex;
+  flex-wrap: wrap;
   width: 100%;
   max-width: 100%;
   min-width: 0;
-  overflow: hidden;
   color: var(--text-2);
   font-size: 14px;
   line-height: 1.1;
-  text-overflow: ellipsis;
+}
+
+.dci-class-item {
+  display: inline-flex;
+  max-width: 100%;
+  min-width: 0;
   white-space: nowrap;
+}
+
+.dci-class-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dci-class-sep {
+  flex: 0 0 auto;
+  margin: 0 6px;
 }
 
 .dci-edit {

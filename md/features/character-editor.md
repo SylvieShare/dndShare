@@ -77,9 +77,9 @@ desktop shell also occupies the full viewport because application navigation is
 provided by the fixed side rail and does not reserve a top-header offset. Its
 desktop identity summary uses the top-aligned frameless dedicated character icon to the left of the
 visible name, race, class list and HP. The full portrait lives in the inner **Личность** tab beside the
-appearance fields. The class list stays on a separate single line below the
-name and race; an overlong multiclass label is ellipsized instead of
-increasing the sheet width. The active tab still registers its DOM scroller
+appearance fields. The class list stays below the name and race and wraps by
+whole class entries without increasing the sheet width; an individual entry
+that is wider than the available row is ellipsized. The active tab still registers its DOM scroller
 through `useAppHeaderCollapse` so
 the compact common strip has one shared scroll/settle observer; regular routes
 keep the header in document flow. Completed tab changes are pushed into the
