@@ -34,8 +34,10 @@ describe('session timer workspace', () => {
     expect(stack).toContain('timer.broadcast')
   })
 
-  it('renders each timer as a draggable window and remembers its position per session', () => {
+  it('renders each timer as a draggable window below the session header and remembers its position per session', () => {
     expect(page).toContain(':session-uuid="sessionUuid"')
+    expect(page.indexOf('<SessionTimerStack')).toBeGreaterThan(page.indexOf('<ChapterGraphTab'))
+    expect(page.indexOf('<SessionTimerStack')).toBeLessThan(page.indexOf('</ChapterGraphTab>'))
     expect(stack).toContain('@pointerdown.stop="startDrag($event, timer, index)"')
     expect(stack).toContain("window.addEventListener('pointermove', onPointerMove)")
     expect(stack).toContain('dnd-share:session-timer-windows:v1:')

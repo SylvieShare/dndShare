@@ -120,9 +120,8 @@
           @view-participant="openParticipant"
           @import-combat-block="importCombatBlock"
         />
+        <SessionTimerStack v-if="isDm" :session-uuid="sessionUuid" :timers="sessionTimers" />
       </ChapterGraphTab>
-
-      <SessionTimerStack v-if="isDm" :session-uuid="sessionUuid" :timers="sessionTimers" />
 
       <div v-if="combatWorkspaceError" class="combat-import-error" role="alert">{{ combatWorkspaceError }}</div>
 
