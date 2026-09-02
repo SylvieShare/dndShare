@@ -69,6 +69,8 @@ func (s *Server) handleSessionTwoSegGET(w http.ResponseWriter, r *http.Request) 
 		s.handleGetMusicState(w, r)
 	case "events":
 		s.handleGetSessionEvents(w, r)
+	case "journal":
+		s.handleGetSessionJournal(w, r)
 	case "materials":
 		s.handleGetSessionMaterials(w, r)
 	case "presentation":

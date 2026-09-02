@@ -52,8 +52,8 @@
       <button
         class="dee-done"
         type="button"
-        @click="mode === 'create' ? $emit('save') : $emit('close')"
-      >{{ mode === 'create' ? 'Сохранить' : 'Готово' }}</button>
+        @click="$emit('save')"
+      >Сохранить</button>
     </div>
   </EditorPanel>
 </template>

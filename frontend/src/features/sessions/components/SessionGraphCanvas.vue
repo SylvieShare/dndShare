@@ -129,6 +129,7 @@
       @delete="requestBlockDelete"
       @send-to-combat="sendBlockToCombat"
       @broadcast="broadcastBlock"
+      @add-to-journal="addBlockToJournal"
     />
 
     <SceneGraphMenus
@@ -326,6 +327,7 @@ const {
   openBlockEdit,
   copyBlock,
   broadcastBlock,
+  addBlockToJournal,
   sendBlockToCombat,
   closeBlockEditor,
   saveBlock,

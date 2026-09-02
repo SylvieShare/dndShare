@@ -65,6 +65,11 @@ sessions и выдаёт текущему браузеру новый token.
   template JSON в ответ не включается.
 - `GET /api/char/{uuid}/version`
 - `GET /api/char/{uuid}/sessions`
+- `GET /api/char/{uuid}/journal` returns the selected accessible journal,
+  owner-only source choices and the effective edit/source-selection flags;
+- `POST /api/char/{uuid}/journals` creates and selects a personal journal;
+  `PUT /api/char/{uuid}/journal-source` selects an eligible personal or session
+  journal by UUID;
 - `PUT /api/char/{uuid}/data`
 - `PATCH /api/char/{uuid}/data-patch`
 - `PUT /api/char/{uuid}/public`
@@ -316,6 +321,14 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
   user login is not part of the timeline response. `clientActionId` makes
   retries idempotent. `entry_added` carries a typed `data.kind` (`item`,
   `potion`, `spell`, `feature` or `ability`) for additions to a character;
+- `GET|POST /api/sessions/{uuid}/journal` reads the shared campaign journal or
+  creates it (creation is DM-only). `POST
+  /api/sessions/{uuid}/journal/scenario-items/{itemId}` is also DM-only and
+  appends a typed entry with an immutable block/scene snapshot;
+- `GET /api/journals/{journalUuid}` and the nested `POST|PATCH|DELETE` routes
+  under `/sections`, `/sections/{sectionId}/entries` and `/entries/{entryId}`
+  provide the common journal CRUD contract. A personal journal is writable by
+  its owner; a session journal is writable by the DM and current participants;
 - `GET /api/sessions/{uuid}/chapters/{chapterId}/scene-graph` returns
   `{scenes,edges}`; scenario CRUD uses `POST .../chapters/{chapterId}/scenes`,
   `PATCH|DELETE .../scenes/{sceneId}` and `PATCH .../scenes/{sceneId}/position`.

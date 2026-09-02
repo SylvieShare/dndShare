@@ -223,6 +223,9 @@ var schemaSessionSceneVisualSourceSQL string
 //go:embed schema/67_session_event_actor_item.sql
 var schemaSessionEventActorItemSQL string
 
+//go:embed schema/68_journals.sql
+var schemaJournalsSQL string
+
 var schemaParts = []struct {
 	name string
 	sql  string
@@ -296,6 +299,7 @@ var schemaParts = []struct {
 	{"session-scene-location", schemaSessionSceneLocationSQL},
 	{"session-scene-visual-source", schemaSessionSceneVisualSourceSQL},
 	{"session-event-actor-item", schemaSessionEventActorItemSQL},
+	{"journals", schemaJournalsSQL},
 }
 
 const (

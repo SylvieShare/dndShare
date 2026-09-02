@@ -5,7 +5,8 @@ export const SESSION_VIEW_SHORTCUTS = Object.freeze({
   quests: 'Digit4',
   materials: 'Digit5',
   music: 'Digit6',
-  events: 'Digit7',
+  journal: 'Digit7',
+  events: 'Digit8',
 })
 
 export const SESSION_PANEL_SHORTCUTS = Object.freeze({

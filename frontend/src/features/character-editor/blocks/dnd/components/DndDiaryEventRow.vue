@@ -15,6 +15,7 @@
     </span>
     <div class="der-body">
       <div class="der-title" :class="{ 'der-title--empty': !event.title }">{{ event.title || meta.label }}</div>
+      <div v-if="sourceLabel" class="der-source"><Link2 :size="11" />{{ sourceLabel }}</div>
       <div v-if="event.type === 'dialog' && event.dialogue.length" class="der-dialogue">
         <div
           v-for="line in event.dialogue"
@@ -45,6 +46,7 @@
 
 <script setup>
 import { computed } from 'vue'
+import { Link2 } from '@lucide/vue'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 import { eventTypeMeta } from '@/features/character-editor/blocks/dnd/lib/diaryEntry'
 
@@ -53,6 +55,11 @@ const props = defineProps({
 })
 
 const meta = computed(() => eventTypeMeta(props.event.type))
+const sourceLabel = computed(() => {
+  if (!props.event.sourceSceneItemId) return ''
+  const sceneName = props.event.sourceSnapshot?.scene?.name
+  return sceneName ? `Из сценария · ${sceneName}` : 'Из сценария'
+})
 
 function combatantName(combatant) {
   if (combatant.source === 'handbook') {
@@ -114,6 +121,7 @@ const hasDesc = computed(() => descHtml.value.replace(/<[^>]*>/g, '').replace(/&
   overflow-wrap: anywhere;
 }
 .der-title--empty { color: var(--text-2); font-weight: 500; }
+.der-source { display: inline-flex; align-items: center; gap: 4px; width: fit-content; margin: 1px 0 2px; padding: 2px 6px; border-radius: 999px; background: color-mix(in srgb, var(--accent) 9%, transparent); color: var(--accent-soft); font-size: 9px; font-weight: 650; }
 
 .der-desc {
   font-size: 12.5px;

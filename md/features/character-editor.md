@@ -659,13 +659,17 @@ spell-slot sphere previews the continuous range affected by a click: a charged
 sphere and the charged spheres to its right, or a spent sphere and the spent
 spheres to its left. Read-only spheres do not show this interaction preview.
 
-Diary sessions animate their disclosure body. Session create/edit forms use a
-regular `AppModalFrame`; event create/edit retains the element-origin
-`MorphEditorShell` flow. The event clone in that morph keeps the same left
-offset and vertical timeline rail through its marker as the expanded diary
-card. Counter morph editors update their text fields live and treat Enter as
-completion of the current field by removing its focus without closing the
-editor.
+The diary block no longer stores collections in character JSON. It mounts the
+shared `JournalWorkspace` against the character UUID and lets the character
+owner choose one available source: any of their personal journals or the
+session journal of the campaign containing that character. Creating another
+personal journal selects it immediately; a DM or another participant may edit
+a linked session journal through the same UI when session access permits it.
+Diary sections animate their disclosure body. Section forms use a regular
+`AppModalFrame`; entry forms retain the element-origin `MorphEditorShell` flow.
+Both create and edit flows save explicitly to the journal API, so cancelling
+does not leak a partial shared edit. Imported scenario entries carry a visible
+source badge and an immutable source snapshot.
 
 Окна предметов восстанавливают фокус без прокрутки исходного листа. Общий
 `RowActionMenu` раскрывается короткой анимацией из точки trigger с учётом

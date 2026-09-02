@@ -82,6 +82,7 @@
       >
         <template #primary-workspace>
           <SessionMusicWorkspace v-if="primaryView === 'music'" :is-dm="isDm" />
+          <JournalWorkspace v-else-if="primaryView === 'journal'" :session-uuid="sessionUuid" />
           <SessionChronicleWorkspace v-else-if="primaryView === 'events'" :live-status="liveStatus" />
           <SessionWorldLayer
             v-else
@@ -272,6 +273,7 @@ import SessionPlayerView from '@/features/sessions/components/SessionPlayerView.
 import SessionShortcutHelp from '@/features/sessions/components/SessionShortcutHelp.vue'
 import SessionTimerStack from '@/features/sessions/components/SessionTimerStack.vue'
 import SessionMusicWorkspace from '@/features/sessions/components/SessionMusicWorkspace.vue'
+import JournalWorkspace from '@/features/journals/components/JournalWorkspace.vue'
 import SessionWorldLayer from '@/features/sessions/components/SessionWorldLayer.vue'
 import { useParticipantSync } from '@/features/sessions/composables/useParticipantSync'
 import { useChapterGraph } from '@/features/sessions/composables/useChapterGraph'

@@ -1,5 +1,5 @@
 <template>
-  <AppModalFrame :title="mode === 'create' ? 'Новая сессия' : 'Редактировать сессию'" @close="$emit('close')">
+  <AppModalFrame :title="mode === 'create' ? 'Новый раздел дневника' : 'Редактировать раздел'" @close="$emit('close')">
     <DndDiarySessionEditor
       :session="session"
       :title-placeholder="titlePlaceholder"
@@ -10,8 +10,8 @@
       <button v-if="mode === 'edit'" class="ddsm-delete" type="button" @click="$emit('remove')">Удалить</button>
       <div class="ddsm-actions">
         <button class="ddsm-cancel" type="button" @click="$emit('close')">Отмена</button>
-        <button class="ddsm-save" type="button" @click="mode === 'create' ? $emit('save') : $emit('close')">
-          {{ mode === 'create' ? 'Сохранить' : 'Готово' }}
+        <button class="ddsm-save" type="button" @click="$emit('save')">
+          Сохранить
         </button>
       </div>
     </template>

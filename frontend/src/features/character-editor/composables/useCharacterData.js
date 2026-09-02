@@ -48,6 +48,7 @@ export function useCharacterData(uuid, isMobile) {
 
   provide('charCtx', charCtx)
   Object.assign(charCtx, {
+    characterUuid: uuid,
     sourceVersionId,
     contentSources,
     iconImageId,

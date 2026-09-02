@@ -166,6 +166,20 @@
         v-if="isDm"
         type="button"
         class="chapter-primary-tab"
+        :class="{ 'chapter-primary-tab--active': primaryView === journalView.key }"
+        :aria-current="primaryView === journalView.key ? 'page' : undefined"
+        :aria-keyshortcuts="`Alt+${journalView.shortcut}`"
+        @click="$emit('select-view', journalView.key)"
+      >
+        <NotebookPen :size="14" />
+        <span>{{ journalView.label }}</span>
+        <kbd v-if="showShortcutHints" class="chapter-shortcut-hint" aria-hidden="true">{{ shortcutLabels.alt }}+{{ journalView.shortcut }}</kbd>
+      </button>
+
+      <button
+        v-if="isDm"
+        type="button"
+        class="chapter-primary-tab"
         :class="{ 'chapter-primary-tab--active': primaryView === chronicleView.key }"
         :aria-current="primaryView === chronicleView.key ? 'page' : undefined"
         :aria-keyshortcuts="`Alt+${chronicleView.shortcut}`"
@@ -199,7 +213,7 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import { BookOpenText, History, Images, Map, Music2, Pause, Pencil, Play, ScrollText, SkipForward, Swords, UsersRound } from '@lucide/vue'
+import { BookOpenText, History, Images, Map, Music2, NotebookPen, Pause, Pencil, Play, ScrollText, SkipForward, Swords, UsersRound } from '@lucide/vue'
 import { BasePopover, reorderByDrop, useSortable } from '@sylvieshare/share-ui'
 import { romanNumeral } from '@/features/sessions/lib/chapterGraph'
 import SessionPresentationControl from '@/features/sessions/components/SessionPresentationControl.vue'
@@ -245,7 +259,8 @@ const primaryViews = [
 const shortcutLabels = sessionShortcutLabels()
 const storyView = primaryViews[0]
 const musicView = { key: 'music', label: 'Музыка', icon: Music2, shortcut: '6' }
-const chronicleView = { key: 'events', label: 'Хроника', icon: History, shortcut: '7' }
+const journalView = { key: 'journal', label: 'Дневник', icon: NotebookPen, shortcut: '7' }
+const chronicleView = { key: 'events', label: 'Хроника', icon: History, shortcut: '8' }
 const diceControl = ref(null)
 const musicStore = useMusicStore()
 const {

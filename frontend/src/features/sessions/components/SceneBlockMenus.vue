@@ -8,6 +8,7 @@
         @click="run('send-to-combat', block)"
       >В бой</RowActionItem>
       <RowActionItem v-if="block.type === 'image' || block.type === 'material'" :icon="Cast" tone="accent" @click="run('broadcast', block)">Транслировать</RowActionItem>
+      <RowActionItem :icon="NotebookPen" tone="accent" @click="run('add-to-journal', block)">В дневник</RowActionItem>
       <span v-if="block.type === 'combat'" class="scene-block-menu-rule" />
       <RowActionItem action="edit" @click="run('edit', block)">Редактировать</RowActionItem>
       <RowActionItem action="copy" @click="run('copy', block)">Копировать</RowActionItem>
@@ -18,11 +19,11 @@
 
 <script setup>
 import { ref } from 'vue'
-import { Cast, Swords } from '@lucide/vue'
+import { Cast, NotebookPen, Swords } from '@lucide/vue'
 import { BasePopover } from '@sylvieshare/share-ui'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 
-const emit = defineEmits(['edit', 'copy', 'delete', 'send-to-combat', 'broadcast'])
+const emit = defineEmits(['edit', 'copy', 'delete', 'send-to-combat', 'broadcast', 'add-to-journal'])
 const open = ref(false)
 const anchor = ref(null)
 const block = ref(null)

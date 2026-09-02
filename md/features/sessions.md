@@ -103,7 +103,7 @@ available for pan and node dragging.
 
 The session page is a campaign workspace rather than a stack of independent
 content pages. Its semantic header centers the switch between `Сюжет`, `Бой`,
-`Локации`, `NPC`, `Задания`, `Материалы`, `Музыка` and `Хроника` independently of the title/arc and tool groups. `Сюжет` and `Бой`
+`Локации`, `NPC`, `Задания`, `Материалы`, `Музыка`, `Дневник` and `Хроника` independently of the title/arc and tool groups. `Сюжет` and `Бой`
 form the first navigation group and a vertical divider separates them from the
 four world catalogues; a second divider separates the final music-library tab. The
 participant rail remains on the left and the
@@ -149,8 +149,17 @@ timer and dice controls by its own vertical divider.
 флаг относится только к этому таймеру. Такие отсчёты появляются на анонимном
 экране с локально синхронизированным временем и прогрессом, остальные остаются
 только в рабочем пространстве мастера.
+`Дневник` открывает master workspace через `Alt`/`Option` + `7`. Он создаёт
+единственный дневник кампании и использует тот же `JournalWorkspace`, редакторы
+разделов/записей и визуальную ленту, что блок дневника персонажа. Все участники
+сессии получают одинаковые права редактирования после выбора этого дневника на
+своём листе; изменения страницы обновляются после мутации, при возврате во
+вкладку и фоновым коротким polling. В меню каждого блока сценария действие
+`В дневник` создаёт дневник/первый раздел при необходимости, преобразует диалог
+или бой в соответствующий тип записи и сохраняет снимок исходного блока.
+
 `Хроника` открывает отдельный центральный workspace с `SessionEventsPanel` и
-доступна через `Alt`/`Option` + `7`. Панель занимает полезную высоту workspace и
+доступна через `Alt`/`Option` + `8`. Панель занимает полезную высоту workspace и
 прокручивает только собственную хронику по вертикали; длинные имена, описания и
 результаты бросков переносятся без горизонтального скролла. Новые записи находятся сверху и
 группируются сначала по минуте, затем по последовательному субъекту действия.

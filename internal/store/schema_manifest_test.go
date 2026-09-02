@@ -66,20 +66,21 @@ func TestEverySchemaFileIsEmbeddedAndRegistered(t *testing.T) {
 }
 
 func TestVersionedMigrationsRunAfterClassActionAutomation(t *testing.T) {
-	if len(schemaParts) < 11 {
+	if len(schemaParts) < 12 {
 		t.Fatal("schema manifest is incomplete")
 	}
-	legacyLast := schemaParts[len(schemaParts)-11]
-	halfCaster := schemaParts[len(schemaParts)-10]
-	sessionSecurity := schemaParts[len(schemaParts)-9]
-	sharedChannelDivinity := schemaParts[len(schemaParts)-8]
-	spellbookTabs := schemaParts[len(schemaParts)-7]
-	sacredWeaponEffect := schemaParts[len(schemaParts)-6]
-	spellbookGrantCleanup := schemaParts[len(schemaParts)-5]
-	sessionNPCBestiary := schemaParts[len(schemaParts)-4]
-	sessionSceneLocation := schemaParts[len(schemaParts)-3]
-	sessionSceneVisualSource := schemaParts[len(schemaParts)-2]
-	sessionEventActorItem := schemaParts[len(schemaParts)-1]
+	legacyLast := schemaParts[len(schemaParts)-12]
+	halfCaster := schemaParts[len(schemaParts)-11]
+	sessionSecurity := schemaParts[len(schemaParts)-10]
+	sharedChannelDivinity := schemaParts[len(schemaParts)-9]
+	spellbookTabs := schemaParts[len(schemaParts)-8]
+	sacredWeaponEffect := schemaParts[len(schemaParts)-7]
+	spellbookGrantCleanup := schemaParts[len(schemaParts)-6]
+	sessionNPCBestiary := schemaParts[len(schemaParts)-5]
+	sessionSceneLocation := schemaParts[len(schemaParts)-4]
+	sessionSceneVisualSource := schemaParts[len(schemaParts)-3]
+	sessionEventActorItem := schemaParts[len(schemaParts)-2]
+	journals := schemaParts[len(schemaParts)-1]
 	if legacyLast.name != legacySchemaBootstrapLast {
 		t.Fatalf("legacy bootstrap must end at %q, got %q", legacySchemaBootstrapLast, legacyLast.name)
 	}
@@ -112,5 +113,8 @@ func TestVersionedMigrationsRunAfterClassActionAutomation(t *testing.T) {
 	}
 	if sessionEventActorItem.name != "session-event-actor-item" || sessionEventActorItem.sql != schemaSessionEventActorItemSQL {
 		t.Fatalf("session event actor item link must run after the scene visual source migration")
+	}
+	if journals.name != "journals" || journals.sql != schemaJournalsSQL {
+		t.Fatalf("journals migration must run after the session event actor item migration")
 	}
 }
