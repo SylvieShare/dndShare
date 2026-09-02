@@ -49,16 +49,17 @@ func TestNpcMutationNormalizesColorAndText(t *testing.T) {
 	role := "  Проводник  "
 	note := "  Старый долг  "
 	raceItemID := int64(42)
+	bestiaryItemID := int64(1635)
 	recorder := httptest.NewRecorder()
 	mutation, ok := npcMutation(recorder, npcMutationRequest{
-		Name: "  Мира  ", RaceItemID: &raceItemID, Role: &role, Color: "#A06CE8",
+		Name: "  Мира  ", RaceItemID: &raceItemID, BestiaryItemID: &bestiaryItemID, Role: &role, Color: "#A06CE8",
 		ImageID:   25,
 		Relations: []store.SessionEntityRelation{{Type: "npc", ID: 7, Note: &note}},
 	})
 	if !ok {
 		t.Fatalf("valid npc rejected: %s", recorder.Body.String())
 	}
-	if mutation.Name != "Мира" || mutation.RaceItemID == nil || *mutation.RaceItemID != 42 || mutation.Role == nil || *mutation.Role != "Проводник" || mutation.Color != "#a06ce8" {
+	if mutation.Name != "Мира" || mutation.RaceItemID == nil || *mutation.RaceItemID != 42 || mutation.BestiaryItemID == nil || *mutation.BestiaryItemID != 1635 || mutation.Role == nil || *mutation.Role != "Проводник" || mutation.Color != "#a06ce8" {
 		t.Fatalf("unexpected mutation: %+v", mutation)
 	}
 	if mutation.ImageID != 25 || mutation.Relations[0].Note == nil || *mutation.Relations[0].Note != "Старый долг" {
@@ -77,6 +78,12 @@ func TestNpcMutationNormalizesColorAndText(t *testing.T) {
 	recorder = httptest.NewRecorder()
 	if _, ok := npcMutation(recorder, npcMutationRequest{Name: "Мира", RaceItemID: &invalidRaceID, ImageID: 25}); ok {
 		t.Fatal("non-positive race item id accepted")
+	}
+
+	invalidBestiaryID := int64(-1)
+	recorder = httptest.NewRecorder()
+	if _, ok := npcMutation(recorder, npcMutationRequest{Name: "Мира", BestiaryItemID: &invalidBestiaryID, ImageID: 25}); ok {
+		t.Fatal("non-positive bestiary item id accepted")
 	}
 }
 

@@ -66,16 +66,18 @@ func TestEverySchemaFileIsEmbeddedAndRegistered(t *testing.T) {
 }
 
 func TestVersionedMigrationsRunAfterClassActionAutomation(t *testing.T) {
-	if len(schemaParts) < 5 {
+	if len(schemaParts) < 9 {
 		t.Fatal("schema manifest is incomplete")
 	}
-	legacyLast := schemaParts[len(schemaParts)-7]
-	halfCaster := schemaParts[len(schemaParts)-6]
-	sessionSecurity := schemaParts[len(schemaParts)-5]
-	sharedChannelDivinity := schemaParts[len(schemaParts)-4]
-	spellbookTabs := schemaParts[len(schemaParts)-3]
-	sacredWeaponEffect := schemaParts[len(schemaParts)-2]
-	spellbookGrantCleanup := schemaParts[len(schemaParts)-1]
+	legacyLast := schemaParts[len(schemaParts)-9]
+	halfCaster := schemaParts[len(schemaParts)-8]
+	sessionSecurity := schemaParts[len(schemaParts)-7]
+	sharedChannelDivinity := schemaParts[len(schemaParts)-6]
+	spellbookTabs := schemaParts[len(schemaParts)-5]
+	sacredWeaponEffect := schemaParts[len(schemaParts)-4]
+	spellbookGrantCleanup := schemaParts[len(schemaParts)-3]
+	sessionNPCBestiary := schemaParts[len(schemaParts)-2]
+	sessionSceneLocation := schemaParts[len(schemaParts)-1]
 	if legacyLast.name != legacySchemaBootstrapLast {
 		t.Fatalf("legacy bootstrap must end at %q, got %q", legacySchemaBootstrapLast, legacyLast.name)
 	}
@@ -96,5 +98,11 @@ func TestVersionedMigrationsRunAfterClassActionAutomation(t *testing.T) {
 	}
 	if spellbookGrantCleanup.name != "spellbook-grant-cleanup" || spellbookGrantCleanup.sql != schemaSpellbookGrantCleanupSQL {
 		t.Fatalf("spellbook grant cleanup must run after the Sacred Weapon migration")
+	}
+	if sessionNPCBestiary.name != "session-npc-bestiary" || sessionNPCBestiary.sql != schemaSessionNPCBestiarySQL {
+		t.Fatalf("session NPC bestiary link must run after the spellbook grant cleanup migration")
+	}
+	if sessionSceneLocation.name != "session-scene-location" || sessionSceneLocation.sql != schemaSessionSceneLocationSQL {
+		t.Fatalf("session scene location link must run after the NPC bestiary migration")
 	}
 }

@@ -37,3 +37,29 @@ func TestSceneItemWidth(t *testing.T) {
 		})
 	}
 }
+
+func TestValidSceneVisualChoice(t *testing.T) {
+	positive := int64(7)
+	zero := int64(0)
+	if !validSceneVisualChoice(&positive, nil) {
+		t.Fatal("location must be enough without an explicit image")
+	}
+	if !validSceneVisualChoice(nil, &positive) {
+		t.Fatal("explicit image must be enough without a location")
+	}
+	if validSceneVisualChoice(nil, nil) || validSceneVisualChoice(&zero, nil) {
+		t.Fatal("scene must have a location or an explicit image")
+	}
+}
+
+func TestSameOptionalSceneID(t *testing.T) {
+	one := int64(1)
+	anotherOne := int64(1)
+	two := int64(2)
+	if !sameOptionalSceneID(nil, nil) || !sameOptionalSceneID(&one, &anotherOne) {
+		t.Fatal("equal optional ids must match")
+	}
+	if sameOptionalSceneID(&one, nil) || sameOptionalSceneID(&one, &two) {
+		t.Fatal("different optional ids must not match")
+	}
+}

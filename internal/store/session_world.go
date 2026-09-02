@@ -29,22 +29,24 @@ type SessionLocation struct {
 }
 
 type SessionNPC struct {
-	ID              int64                   `json:"id"`
-	SessionID       int64                   `json:"sessionId"`
-	Name            string                  `json:"name"`
-	RaceItemID      *int64                  `json:"raceItemId,omitempty"`
-	RaceName        *string                 `json:"raceName,omitempty"`
-	Role            *string                 `json:"role,omitempty"`
-	Description     *string                 `json:"description,omitempty"`
-	Color           string                  `json:"color"`
-	ImageID         int64                   `json:"imageId"`
-	ImageURL        string                  `json:"imageUrl"`
-	ImageCatalogKey *string                 `json:"imageCatalogKey,omitempty"`
-	ImageFocalX     float64                 `json:"imageFocalX"`
-	ImageFocalY     float64                 `json:"imageFocalY"`
-	SortOrder       int                     `json:"sortOrder"`
-	Relations       []SessionEntityRelation `json:"relations"`
-	ScenarioUsages  []SessionScenarioUsage  `json:"scenarioUsages"`
+	ID               int64                   `json:"id"`
+	SessionID        int64                   `json:"sessionId"`
+	Name             string                  `json:"name"`
+	RaceItemID       *int64                  `json:"raceItemId,omitempty"`
+	RaceName         *string                 `json:"raceName,omitempty"`
+	BestiaryItemID   *int64                  `json:"bestiaryItemId,omitempty"`
+	BestiaryItemName *string                 `json:"bestiaryItemName,omitempty"`
+	Role             *string                 `json:"role,omitempty"`
+	Description      *string                 `json:"description,omitempty"`
+	Color            string                  `json:"color"`
+	ImageID          int64                   `json:"imageId"`
+	ImageURL         string                  `json:"imageUrl"`
+	ImageCatalogKey  *string                 `json:"imageCatalogKey,omitempty"`
+	ImageFocalX      float64                 `json:"imageFocalX"`
+	ImageFocalY      float64                 `json:"imageFocalY"`
+	SortOrder        int                     `json:"sortOrder"`
+	Relations        []SessionEntityRelation `json:"relations"`
+	ScenarioUsages   []SessionScenarioUsage  `json:"scenarioUsages"`
 }
 
 type SessionEntityRelation struct {
@@ -77,7 +79,8 @@ type SessionWorldScene struct {
 	ID              int64   `json:"id"`
 	ChapterID       int64   `json:"chapterId"`
 	Name            string  `json:"name"`
-	ImageID         int64   `json:"imageId"`
+	LocationID      *int64  `json:"locationId"`
+	ImageID         *int64  `json:"imageId"`
 	ImageURL        string  `json:"imageUrl"`
 	ImageCatalogKey *string `json:"imageCatalogKey,omitempty"`
 	ArcOrder        int     `json:"arcOrder"`
@@ -103,15 +106,16 @@ type SessionLocationMutation struct {
 }
 
 type SessionNPCMutation struct {
-	Name        string
-	RaceItemID  *int64
-	Role        *string
-	Description *string
-	Color       string
-	ImageID     int64
-	ImageFocalX float64
-	ImageFocalY float64
-	Relations   []SessionEntityRelation
+	Name           string
+	RaceItemID     *int64
+	BestiaryItemID *int64
+	Role           *string
+	Description    *string
+	Color          string
+	ImageID        int64
+	ImageFocalX    float64
+	ImageFocalY    float64
+	Relations      []SessionEntityRelation
 }
 
 type SessionQuestMutation struct {
@@ -144,6 +148,7 @@ func scanSessionNPC(row pgx.Row) (SessionNPC, error) {
 		&npc.ID, &npc.SessionID, &npc.Name, &npc.RaceItemID,
 		&npc.Role, &npc.Description, &npc.Color, &npc.SortOrder, &npc.RaceName,
 		&npc.ImageID, &npc.ImageURL, &npc.ImageCatalogKey, &npc.ImageFocalX, &npc.ImageFocalY,
+		&npc.BestiaryItemID, &npc.BestiaryItemName,
 	)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return SessionNPC{}, ErrNotFound
@@ -166,9 +171,11 @@ func (s *Store) GetSessionNPC(ctx context.Context, id int64) (SessionNPC, error)
 	return scanSessionNPC(s.pool.QueryRow(ctx, `
 		SELECT npc.id, npc.session_id, npc.name, npc.race_item_id, npc.role,
 		       npc.description, npc.color, npc.sort_order, race.name,
-		       npc.image_id, image.url, catalog.catalog_key, npc.image_focal_x, npc.image_focal_y
+		       npc.image_id, image.url, catalog.catalog_key, npc.image_focal_x, npc.image_focal_y,
+		       npc.bestiary_item_id, bestiary.name
 		FROM dndshare.session_npc npc
 		LEFT JOIN dndshare.item race ON race.id = npc.race_item_id
+		LEFT JOIN dndshare.item bestiary ON bestiary.id = npc.bestiary_item_id
 		JOIN dndshare.storage_image image ON image.id = npc.image_id AND image.deleted = false
 		LEFT JOIN dndshare.session_image_catalog catalog ON catalog.image_id = npc.image_id
 		WHERE npc.id = $1`, id))
@@ -211,9 +218,11 @@ func (s *Store) GetSessionWorld(ctx context.Context, sessionID int64) (SessionWo
 	npcRows, err := s.pool.Query(ctx, `
 		SELECT npc.id, npc.session_id, npc.name, npc.race_item_id, npc.role,
 		       npc.description, npc.color, npc.sort_order, race.name,
-		       npc.image_id, image.url, catalog.catalog_key, npc.image_focal_x, npc.image_focal_y
+		       npc.image_id, image.url, catalog.catalog_key, npc.image_focal_x, npc.image_focal_y,
+		       npc.bestiary_item_id, bestiary.name
 		FROM dndshare.session_npc npc
 		LEFT JOIN dndshare.item race ON race.id = npc.race_item_id
+		LEFT JOIN dndshare.item bestiary ON bestiary.id = npc.bestiary_item_id
 		JOIN dndshare.storage_image image ON image.id = npc.image_id AND image.deleted = false
 		LEFT JOIN dndshare.session_image_catalog catalog ON catalog.image_id = npc.image_id
 		WHERE npc.session_id = $1
@@ -261,13 +270,16 @@ func (s *Store) GetSessionWorld(ctx context.Context, sessionID int64) (SessionWo
 	questRows.Close()
 
 	sceneRows, err := s.pool.Query(ctx, `
-		SELECT scene.id, scene.chapter_id, scene.name, scene.image_id, image.url, catalog.catalog_key,
+		SELECT scene.id, scene.chapter_id, scene.name, scene.location_id, scene.image_id,
+		       COALESCE(scene_image.url, location_image.url, ''), catalog.catalog_key,
 		       arc."order", arc.name, chapter.number, chapter.name
 		FROM dndshare.session_scene scene
 		JOIN dndshare.session_chapter chapter ON chapter.id = scene.chapter_id
 		JOIN dndshare.session_arc arc ON arc.id = chapter.arc_id
-		JOIN dndshare.storage_image image ON image.id = scene.image_id AND image.deleted = false
-		LEFT JOIN dndshare.session_image_catalog catalog ON catalog.image_id = scene.image_id
+		LEFT JOIN dndshare.session_location location ON location.id = scene.location_id
+		LEFT JOIN dndshare.storage_image scene_image ON scene_image.id = scene.image_id AND scene_image.deleted = false
+		LEFT JOIN dndshare.storage_image location_image ON location_image.id = location.image_id AND location_image.deleted = false
+		LEFT JOIN dndshare.session_image_catalog catalog ON catalog.image_id = COALESCE(scene.image_id, location.image_id)
 		WHERE chapter.session_id = $1
 		ORDER BY arc."order", chapter.id, scene.id`, sessionID)
 	if err != nil {
@@ -276,7 +288,7 @@ func (s *Store) GetSessionWorld(ctx context.Context, sessionID int64) (SessionWo
 	for sceneRows.Next() {
 		scene := SessionWorldScene{}
 		if err := sceneRows.Scan(
-			&scene.ID, &scene.ChapterID, &scene.Name, &scene.ImageID, &scene.ImageURL, &scene.ImageCatalogKey,
+			&scene.ID, &scene.ChapterID, &scene.Name, &scene.LocationID, &scene.ImageID, &scene.ImageURL, &scene.ImageCatalogKey,
 			&scene.ArcOrder, &scene.ArcName, &scene.ChapterNumber, &scene.ChapterName,
 		); err != nil {
 			sceneRows.Close()

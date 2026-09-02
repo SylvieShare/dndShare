@@ -1,13 +1,16 @@
 <template>
   <div class="session-image-field">
     <div class="session-image-current">
-      <img v-if="displayedUrl" :src="displayedUrl" :alt="currentLabel" :style="customSelected ? customPreviewStyle : null" />
+      <img v-if="displayedUrl" :src="displayedUrl" :alt="displayedLabel" :style="customSelected ? customPreviewStyle : null" />
       <div v-else class="session-image-placeholder"><Images :size="22" /></div>
       <div class="session-image-current-copy">
         <small>Текущее изображение</small>
-        <strong>{{ currentLabel }}</strong>
+        <strong>{{ displayedLabel }}</strong>
       </div>
-      <button type="button" @click="pickerOpen = true"><Images :size="15" />Сменить</button>
+      <div class="session-image-current-actions">
+        <button type="button" @click="pickerOpen = true"><Images :size="15" />Сменить</button>
+        <button v-if="allowEmpty && modelValue" type="button" @click="clearImage">{{ emptyActionLabel }}</button>
+      </div>
     </div>
 
     <AppModalFrame v-if="pickerOpen" extra-wide title="Выбрать изображение" @close="pickerOpen = false">
@@ -62,6 +65,9 @@ const props = defineProps({
   customSelected: { type: Boolean, default: false },
   customPreview: { type: String, default: '' },
   customPreviewStyle: { type: Object, default: null },
+  allowEmpty: { type: Boolean, default: false },
+  emptyLabel: { type: String, default: 'Не выбрано' },
+  emptyActionLabel: { type: String, default: 'Не выбирать' },
 })
 const emit = defineEmits(['select', 'upload'])
 const pickerOpen = ref(false)
@@ -72,14 +78,16 @@ const sections = new Map()
 const categories = computed(() => groupSessionImages(images.value))
 const selectedImage = computed(() => images.value.find(image => image.id === props.modelValue))
 const displayedUrl = computed(() => props.customSelected ? props.customPreview : (selectedImage.value?.url || props.currentUrl))
-const currentLabel = computed(() => props.customSelected
-  ? 'Своё изображение'
-  : (selectedImage.value?.label || (props.currentUrl ? 'Своё изображение' : 'Не выбрано')))
+const displayedLabel = computed(() => {
+  if (props.customSelected) return 'Своё изображение'
+  if (!props.modelValue) return props.emptyLabel
+  return selectedImage.value?.label || (props.currentUrl ? 'Своё изображение' : 'Не выбрано')
+})
 
 onMounted(async () => {
   try {
     images.value = await loadSessionImageCatalog(props.catalog)
-    if (!props.modelValue && !props.customSelected && images.value[0]) {
+    if (!props.allowEmpty && !props.modelValue && !props.customSelected && images.value[0]) {
       emit('select', images.value.find(image => image.key === props.defaultKey) || images.value[0])
     }
   } catch {
@@ -95,6 +103,7 @@ function rememberSection(key, element) {
 }
 function scrollTo(key) { sections.get(key)?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }
 function selectImage(image) { emit('select', image); pickerOpen.value = false }
+function clearImage() { emit('select', { id: 0 }) }
 function requestUpload() { pickerOpen.value = false; emit('upload') }
 </script>
 
@@ -105,9 +114,10 @@ function requestUpload() { pickerOpen.value = false; emit('upload') }
 .session-image-current-copy { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
 .session-image-current-copy small { color: var(--text-muted); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; }
 .session-image-current-copy strong { overflow: hidden; color: var(--text-1); font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
-.session-image-current > button, .session-image-category-nav button { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--text-2); cursor: pointer; font: inherit; font-size: 12px; }
-.session-image-current > button { min-height: 36px; padding: 7px 11px; }
-.session-image-current > button:hover, .session-image-category-nav button:hover { border-color: var(--accent); color: var(--text-1); }
+.session-image-current-actions { display: flex; flex-direction: column; gap: 6px; }
+.session-image-current-actions button, .session-image-category-nav button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--text-2); cursor: pointer; font: inherit; font-size: 12px; }
+.session-image-current-actions button { min-height: 36px; padding: 7px 11px; }
+.session-image-current-actions button:hover, .session-image-category-nav button:hover { border-color: var(--accent); color: var(--text-1); }
 .session-image-browser { display: flex; flex-direction: column; gap: 14px; }
 .session-image-category-nav { position: sticky; z-index: 2; top: -1px; display: flex; flex-wrap: wrap; gap: 6px; padding: 4px 0 10px; background: var(--surface); }
 .session-image-category-nav button { padding: 6px 10px; border-radius: 999px; }
@@ -124,5 +134,5 @@ function requestUpload() { pickerOpen.value = false; emit('upload') }
 .session-image-option::after { content: ''; position: absolute; inset: 45% 0 0; background: linear-gradient(transparent, color-mix(in srgb, var(--bg) 88%, transparent)); }
 .session-image-option span { position: absolute; z-index: 1; right: 8px; bottom: 6px; left: 8px; overflow: hidden; font-size: 11px; font-weight: 700; text-align: left; text-overflow: ellipsis; text-shadow: 0 1px 3px var(--bg); white-space: nowrap; }
 .session-image-option.active { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent), 0 0 0 2px color-mix(in srgb, var(--accent) 18%, transparent); }
-@media (max-width: 640px) { .session-image-current { grid-template-columns: 92px minmax(0, 1fr); }.session-image-current > img, .session-image-placeholder { width: 92px; }.session-image-current > button { grid-column: 1 / -1; justify-content: center; }.session-image-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .session-image-current { grid-template-columns: 92px minmax(0, 1fr); }.session-image-current > img, .session-image-placeholder { width: 92px; }.session-image-current-actions { grid-column: 1 / -1; }.session-image-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 </style>

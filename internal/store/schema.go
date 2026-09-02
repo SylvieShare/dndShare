@@ -211,6 +211,12 @@ var schemaSacredWeaponEffectSQL string
 //go:embed schema/63_spellbook_grant_cleanup.sql
 var schemaSpellbookGrantCleanupSQL string
 
+//go:embed schema/64_session_npc_bestiary.sql
+var schemaSessionNPCBestiarySQL string
+
+//go:embed schema/65_session_scene_location.sql
+var schemaSessionSceneLocationSQL string
+
 var schemaParts = []struct {
 	name string
 	sql  string
@@ -280,6 +286,8 @@ var schemaParts = []struct {
 	{"spellbook-tabs", schemaSpellbookTabsSQL},
 	{"sacred-weapon-effect", schemaSacredWeaponEffectSQL},
 	{"spellbook-grant-cleanup", schemaSpellbookGrantCleanupSQL},
+	{"session-npc-bestiary", schemaSessionNPCBestiarySQL},
+	{"session-scene-location", schemaSessionSceneLocationSQL},
 }
 
 const (

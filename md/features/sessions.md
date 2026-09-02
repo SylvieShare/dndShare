@@ -254,6 +254,8 @@ and deletion is blocked until direct children are moved or deleted.
 
 Prepared NPCs live in one searchable session catalogue. A record has a name,
 an optional race item, optional role and description, card color and a portrait.
+The NPC editor can also link one existing type `6` bestiary creature without
+copying its stat block. Removing that handbook item clears the optional link.
 The portrait may come from an independent NPC preset catalogue or an uploaded
 storage image; it is not mixed with chapter/location backgrounds. The race picker reads type `8`
 handbook items, including subraces; the stored nullable FK is cleared if that
@@ -346,9 +348,9 @@ metadata, controls and counters remain in the UI face. Full NPC, location and
 quest detail paragraphs follow the same split; their list-card snippets remain
 UI text.
 
-A scenario participates in universal relations and edits them in its main
-editor. Opening a scenario relation navigates directly to its block canvas.
-Scenarios themselves are not a player-display mode: the master broadcasts a
+A scenario can directly select one session location in its main editor; this
+link is separate from universal entity relations and from location reference
+blocks on the scenario canvas. Scenarios themselves are not a player-display mode: the master broadcasts a
 specific material from the header library or a scenario block. The third-level `image` block
 references an existing contextual image or map material rather than duplicating its asset;
 its leading action broadcasts that material immediately. All uploaded material
@@ -513,7 +515,8 @@ four categories — settlements, wilderness, adventure or story — and then an
 image inside it. Story adds battle, investigation, negotiation, chase, puzzle
 and discovery covers to the original location catalogue. A chapter may instead
 use an image uploaded through the normal storage endpoint and adjust its focal
-point. Every entity stores the same `imageId` contract, and both catalogue and
+point. Chapters and locations store an image; a scenario may leave its own image
+empty and inherit the current image of its linked location. Both catalogue and
 custom files resolve through `storage_image` in S3.
 
 Scenarios belong to chapters and form a second directed graph. A chapter action
@@ -524,15 +527,19 @@ unchanged and the other nodes and edges fade out. Once the swap completes it is
 rendered as a fixed ancestor card above the same canvas. The scenario graph has
 its own persisted viewport, coordinates and direction-aware edges. Its illustrated
 nodes can be dragged and linked through the same right-side port pattern. The
-DM creates or edits the scenario name, lifecycle status and required shared-catalogue
-image, or deletes the scenario. Its optional top status chip uses the same
+DM creates or edits the scenario name, lifecycle status, optional location and
+optional shared-catalogue image, or deletes the scenario. At least the location
+or the image is required; an explicit image overrides the location image. Its optional top status chip uses the same
 semantic color as the menu and bulk action and is omitted for `none`; the lower
 title surface uses the same translucent treatment as a chapter and has no
-redundant `Сценарий` label. A single click anywhere on a scenario card opens
+redundant `Сценарий` label or generated scenario number. A single click anywhere on a scenario card opens
 its launch, open-elements, status, edit and delete actions without a separate
 ellipsis trigger; double click still opens the scenario block canvas. The scene
 image continues beneath the translucent lower copy surface just as it does on a
 chapter card, rather than ending above an opaque footer.
+Deleting a linked location clears the link; a scenario that inherited its image
+keeps the location's current image as its own so the card never loses its visual
+source.
 
 Double-clicking a scenario switches the same physical canvas to the third graph.
 The scenario node first moves to the top immediately to the right of its chapter
@@ -572,7 +579,8 @@ kind available in the current chapter/scenario, renders a type-aware preview
 and exposes the same direct broadcast action. Reference blocks use
 `SceneEntityBlockPreview` instead of a generic image/name row. Locations show
 their kind, hierarchy, description and nesting; NPCs show portrait, race, role,
-description and meeting places; quests show status and every filled goal,
+description and meeting places. A linked NPC also shows an `Открыть в бестиарии`
+button which navigates directly to the current handbook creature; quests show status and every filled goal,
 condition, reward, consequence and note; materials show their type, caption and
 actual image or written content. Every reference card also resolves and renders
 the current universal links, so edits to a catalogue object appear on the

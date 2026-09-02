@@ -68,6 +68,23 @@
 
       <div class="npc-editor-relations">
 		<section>
+		  <div class="npc-editor-section-title"><span>Бестиарий</span><small>Необязательная ссылка</small></div>
+		  <div v-if="draft.bestiaryItemId" class="npc-editor-bestiary-link">
+			<BookOpen :size="18" />
+			<div>
+			  <strong>{{ draft.bestiaryItemName || `Существо #${draft.bestiaryItemId}` }}</strong>
+			  <small>Характеристики берутся из текущей карточки бестиария</small>
+			</div>
+			<button type="button" @click="bestiaryPickerOpen = true">Заменить</button>
+			<button type="button" class="npc-editor-bestiary-unlink" aria-label="Убрать привязку к бестиарию" title="Убрать привязку" @click="clearBestiaryItem">
+			  <X :size="15" />
+			</button>
+		  </div>
+		  <button v-else type="button" class="npc-editor-bestiary-select" @click="bestiaryPickerOpen = true">
+			<Link2 :size="16" />Привязать существо из бестиария
+		  </button>
+		</section>
+		<section>
 		  <div class="npc-editor-section-title"><span>Связи</span><small>Локации, NPC, задания и материалы</small></div>
 		  <UniversalRelationEditor v-model="draft.relations" :items="relationItems" source-type="npc" :source-id="npc?.id" />
 		</section>
@@ -90,11 +107,20 @@
       </div>
     </template>
   </AppModalFrame>
+
+  <ItemPickerModal
+	v-if="bestiaryPickerOpen"
+	:item-type-ids="[6]"
+	title="Привязать существо из бестиария"
+	:z-index="9200"
+	@close="bestiaryPickerOpen = false"
+	@pick="pickBestiaryItem"
+  />
 </template>
 
 <script setup>
 import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
-import { Dices } from '@lucide/vue'
+import { BookOpen, Dices, Link2, X } from '@lucide/vue'
 import {
   AppModalFrame,
   ColorPresetPicker,
@@ -104,6 +130,7 @@ import {
   FormTextInput,
   FormTextarea,
 } from '@sylvieshare/share-ui'
+import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import SessionImagePicker from '@/features/sessions/components/SessionImagePicker.vue'
 import UniversalRelationEditor from '@/features/sessions/components/UniversalRelationEditor.vue'
 import { itemsApi } from '@/shared/api/itemsApi'
@@ -122,6 +149,7 @@ const emit = defineEmits(['close', 'save', 'delete'])
 const races = ref([])
 const racesLoading = ref(false)
 const racesError = ref('')
+const bestiaryPickerOpen = ref(false)
 const fileInput = ref(null)
 const selectedFile = ref(null)
 const objectUrl = ref('')
@@ -133,6 +161,8 @@ const customPreview = ref(props.npc?.imageUrl || '')
 const draft = reactive({
   name: props.npc?.name ?? '',
   raceItemId: String(props.npc?.raceItemId ?? ''),
+  bestiaryItemId: props.npc?.bestiaryItemId ?? null,
+  bestiaryItemName: props.npc?.bestiaryItemName ?? '',
   role: props.npc?.role ?? '',
   description: props.npc?.description ?? '',
   color: props.npc?.color ?? '#7c5cff',
@@ -176,6 +206,16 @@ function randomizeName() {
   draft.name = randomDndName(selectedRace.value, Math.random, draft.name)
 }
 
+function pickBestiaryItem(item) {
+  draft.bestiaryItemId = item.id
+  draft.bestiaryItemName = item.name
+}
+
+function clearBestiaryItem() {
+  draft.bestiaryItemId = null
+  draft.bestiaryItemName = ''
+}
+
 function pickCatalogImage(image) {
   source.value = 'catalog'
   draft.imageId = image.id
@@ -214,6 +254,7 @@ async function submit() {
     emit('save', {
       name: draft.name.trim(),
       raceItemId: Number(draft.raceItemId) || null,
+      bestiaryItemId: Number(draft.bestiaryItemId) || null,
       role: draft.role.trim() || null,
       description: draft.description.trim() || null,
       color: draft.color || '#7c5cff',
@@ -244,6 +285,16 @@ onBeforeUnmount(() => { if (objectUrl.value) URL.revokeObjectURL(objectUrl.value
 .npc-editor-relations section + section { padding-top: 14px; border-top: 1px solid var(--border); }
 .npc-editor-section-title { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; color: var(--text-1); font-size: 12px; font-weight: 700; }
 .npc-editor-section-title small { color: var(--text-muted); font-size: 10px; font-weight: 500; }
+.npc-editor-bestiary-link { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto 30px; align-items: center; gap: 9px; padding: 9px 10px; border: 1px solid color-mix(in srgb, var(--accent) 32%, var(--border)); border-radius: 9px; background: color-mix(in srgb, var(--accent) 7%, var(--surface-raised)); color: var(--accent-soft); }
+.npc-editor-bestiary-link > div { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.npc-editor-bestiary-link strong, .npc-editor-bestiary-link small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.npc-editor-bestiary-link strong { color: var(--text-1); font-size: 12px; }
+.npc-editor-bestiary-link small { color: var(--text-muted); font-size: 9px; }
+.npc-editor-bestiary-link button, .npc-editor-bestiary-select { border: 1px solid var(--border); border-radius: 8px; background: var(--surface-raised); color: var(--text-2); font: inherit; cursor: pointer; }
+.npc-editor-bestiary-link button { min-height: 30px; padding: 5px 8px; font-size: 10px; }
+.npc-editor-bestiary-link button:hover, .npc-editor-bestiary-select:hover { border-color: color-mix(in srgb, var(--accent) 55%, var(--border)); color: var(--text-1); }
+.npc-editor-bestiary-link .npc-editor-bestiary-unlink { width: 30px; display: grid; place-items: center; padding: 0; color: var(--text-muted); }
+.npc-editor-bestiary-select { min-height: 42px; display: flex; align-items: center; justify-content: center; gap: 7px; padding: 8px 12px; border-style: dashed; color: var(--accent-soft); font-size: 11px; }
 .npc-editor-footer { width: 100%; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
 .npc-editor-delete { margin-top: 4px; padding: 9px 0; border: 0; background: none; color: var(--danger); font: inherit; font-size: 13px; cursor: pointer; }
 .npc-editor-delete:hover:not(:disabled) { text-decoration: underline; }

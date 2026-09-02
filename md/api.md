@@ -200,13 +200,15 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
   cycles are rejected;
 - `POST /api/sessions/{uuid}/npcs`, `PATCH|DELETE
   /api/sessions/{uuid}/npcs/{npcId}` manage prepared NPCs with
-  `{name,raceItemId,role,description,color,imageId,
+  `{name,raceItemId,bestiaryItemId,role,description,color,imageId,
   imageFocalX,imageFocalY,relations}`. Each relation contains a target
   `type`, `id` and nullable note (up to 500 characters).
   `imageId` points either to the independent NPC system catalogue or to an
   uploaded image owned by the current user. `raceItemId`
-  is nullable and must reference an accessible handbook race item (type `8`);
-  aggregate NPC records also expose its current `raceName`. World mutations are
+  is nullable and must reference an accessible handbook race item (type `8`).
+  `bestiaryItemId` is nullable and must reference an accessible bestiary creature
+  (type `6`); aggregate NPC records expose the current `raceName` and
+  `bestiaryItemName`. World mutations are
   owner-only and return `{world,id}` so clients can replace every reverse
   association together;
 - `POST /api/sessions/{uuid}/quests`, `PATCH|DELETE
@@ -226,7 +228,8 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
   PATCH actions;
 - `POST /api/sessions/{uuid}/chapters/{chapterId}/scenes` and `PATCH
   /api/sessions/{uuid}/scenes/{sceneId}` accept a scenario card. Scenarios do
-  not accept or return universal relations;
+  not accept or return universal relations. Their nullable `locationId` is a
+  direct link to one location from the same session;
 - `PATCH /api/sessions/{uuid}/current-chapter`;
 - `PATCH /api/sessions/{uuid}/graph-nodes/positions` atomically persists a
   group movement as `{level,positions:[{id,x,y}]}`; `POST
@@ -314,9 +317,11 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
 - `GET /api/sessions/{uuid}/chapters/{chapterId}/scene-graph` returns
   `{scenes,edges}`; scenario CRUD uses `POST .../chapters/{chapterId}/scenes`,
   `PATCH|DELETE .../scenes/{sceneId}` and `PATCH .../scenes/{sceneId}/position`.
-  Create/update bodies contain `{name,status,imageId}` (creation
-  additionally accepts `x/y`), and every scenario response carries `imageId`, resolved
-  `imageUrl` and optional `imageCatalogKey`;
+  Create/update bodies contain `{name,status,locationId,imageId}` (creation
+  additionally accepts `x/y`). `locationId` and `imageId` are nullable, but at
+  least one must be set. Every scenario response carries both source ids,
+  resolved `imageUrl` and optional `imageCatalogKey`: an explicit scenario
+  image wins, otherwise the location image is returned;
 - `POST /api/sessions/{uuid}/scene-edges` and
   `PATCH|DELETE /api/sessions/{uuid}/scene-edges/{edgeId}` manage links inside
   one chapter. PATCH accepts the complete mutable edge
@@ -343,8 +348,9 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
 Arc, chapter and transition mutations are owner-only. Chapter `number` is a
 string. A chapter mutation uses `{arcId,number,name,description,status,
 imageId,imageFocalX,imageFocalY,positionX,positionY}`.
-Scenario create/update mutations use `{name,status,imageId}` plus
-creation coordinates; chapter and scenario status catalogues share canonical
+Scenario create/update mutations use `{name,status,locationId,imageId}` plus
+creation coordinates. The location must belong to the same session; a nullable
+scenario image inherits the linked location image. Chapter and scenario status catalogues share canonical
 keys and default to `none` (`Без статуса`).
 Every chapter returned by graph/chapter reads also has the derived integer
 `sceneCount`; it is not accepted as mutation input.

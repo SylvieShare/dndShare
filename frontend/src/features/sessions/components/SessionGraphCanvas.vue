@@ -55,7 +55,6 @@
         <SceneGraphNode
           v-else-if="displayLevel === 'scenes'"
           :scene="node"
-          :index="sceneIndex(node)"
           :spotlight="spotlight"
         />
         <SceneBlockNode
@@ -111,7 +110,6 @@
     >
       <SceneGraphNode
         :scene="selectedScene"
-        :index="selectedScene.contextIndex ?? sceneIndex(selectedScene)"
         spotlight
       />
     </div>
@@ -157,6 +155,7 @@
       v-if="scenePromptOpen"
       :scene="editingScene"
       :saving="saving"
+      :locations="sceneLocations"
       @close="closeScenePrompt"
       @save="saveScene"
     />
@@ -350,6 +349,7 @@ const {
 const referencePickerItems = computed(() => {
   return buildSessionEntityCatalog(sessionWorld, sessionMaterials)
 })
+const sceneLocations = computed(() => sessionWorld?.locations.value || [])
 
 const backLabel = computed(() => displayLevel.value === 'blocks' ? 'К сценариям' : 'К главам')
 
@@ -545,6 +545,7 @@ async function changeSceneStatus(scene, status) {
     const updated = await sceneGraph.updateScene(scene.id, {
       name: scene.name,
       status,
+      locationId: scene.locationId,
       imageId: scene.imageId,
     })
     syncWorkspaceScene(updated)

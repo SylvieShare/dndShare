@@ -3,7 +3,6 @@
     <div class="scene-graph-node-visual">
       <img v-if="imageUrl" :src="imageUrl" alt="" draggable="false" />
       <span class="scene-graph-node-shade" />
-      <span class="scene-graph-node-index">{{ String(index + 1).padStart(2, '0') }}</span>
       <span v-if="scene.status && scene.status !== 'none'" class="scene-graph-node-status" :style="{ color: status.color }">{{ status.label }}</span>
       <svg v-if="!imageUrl" viewBox="0 0 236 94" preserveAspectRatio="none" aria-hidden="true">
         <path d="M0 70 C42 28 82 88 128 43 C166 7 199 58 236 20 V94 H0Z" fill="currentColor" opacity=".13"/>
@@ -18,17 +17,22 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
 import { sessionImageUrl } from '@/features/sessions/lib/sessionImages'
 import { sceneStatus } from '@/features/sessions/lib/chapterGraph'
 
 const props = defineProps({
   scene: { type: Object, required: true },
-  index: { type: Number, default: 0 },
   spotlight: { type: Boolean, default: false },
 })
 
-const imageUrl = computed(() => sessionImageUrl(props.scene))
+const sessionWorld = inject('sessionWorld', null)
+const imageUrl = computed(() => {
+  if (props.scene.imageId || !props.scene.locationId) return sessionImageUrl(props.scene)
+  const location = sessionWorld?.locationsById.value.get(Number(props.scene.locationId))
+  if (location) return sessionImageUrl(location)
+  return sessionWorld?.loaded.value ? '' : sessionImageUrl(props.scene)
+})
 const status = computed(() => sceneStatus(props.scene.status))
 </script>
 
@@ -67,18 +71,6 @@ const status = computed(() => sceneStatus(props.scene.status))
   background: linear-gradient(110deg, color-mix(in srgb, var(--bg) 58%, transparent), transparent 68%);
 }
 .scene-graph-node-visual svg { position: absolute; inset: auto 0 0; width: 100%; height: 94px; }
-.scene-graph-node-index {
-  position: absolute;
-  z-index: 1;
-  top: 12px;
-  left: 14px;
-  color: color-mix(in srgb, var(--text-1) 82%, transparent);
-  font-family: var(--font-ui);
-  font-size: 30px;
-  font-weight: 800;
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-}
 .scene-graph-node-status {
   position: absolute;
   z-index: 1;

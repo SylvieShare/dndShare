@@ -43,15 +43,16 @@ type locationMutationRequest struct {
 }
 
 type npcMutationRequest struct {
-	Name        string                        `json:"name"`
-	RaceItemID  *int64                        `json:"raceItemId"`
-	Role        *string                       `json:"role"`
-	Description *string                       `json:"description"`
-	Color       string                        `json:"color"`
-	ImageID     int64                         `json:"imageId"`
-	ImageFocalX float64                       `json:"imageFocalX"`
-	ImageFocalY float64                       `json:"imageFocalY"`
-	Relations   []store.SessionEntityRelation `json:"relations"`
+	Name           string                        `json:"name"`
+	RaceItemID     *int64                        `json:"raceItemId"`
+	BestiaryItemID *int64                        `json:"bestiaryItemId"`
+	Role           *string                       `json:"role"`
+	Description    *string                       `json:"description"`
+	Color          string                        `json:"color"`
+	ImageID        int64                         `json:"imageId"`
+	ImageFocalX    float64                       `json:"imageFocalX"`
+	ImageFocalY    float64                       `json:"imageFocalY"`
+	Relations      []store.SessionEntityRelation `json:"relations"`
 }
 
 type sessionWorldMutationResponse struct {
@@ -125,6 +126,10 @@ func npcMutation(w http.ResponseWriter, req npcMutationRequest) (store.SessionNP
 		badRequest(w, "Некорректная раса NPC")
 		return store.SessionNPCMutation{}, false
 	}
+	if req.BestiaryItemID != nil && *req.BestiaryItemID <= 0 {
+		badRequest(w, "Некорректное существо бестиария")
+		return store.SessionNPCMutation{}, false
+	}
 	if !sessionWorldColor.MatchString(req.Color) {
 		badRequest(w, "Некорректный цвет NPC")
 		return store.SessionNPCMutation{}, false
@@ -138,7 +143,7 @@ func npcMutation(w http.ResponseWriter, req npcMutationRequest) (store.SessionNP
 		return store.SessionNPCMutation{}, false
 	}
 	return store.SessionNPCMutation{
-		Name: name, RaceItemID: req.RaceItemID, Role: cleanText(req.Role, 160),
+		Name: name, RaceItemID: req.RaceItemID, BestiaryItemID: req.BestiaryItemID, Role: cleanText(req.Role, 160),
 		Description: cleanText(req.Description, 5000), Color: strings.ToLower(req.Color),
 		ImageID:     req.ImageID,
 		ImageFocalX: clamp01(req.ImageFocalX), ImageFocalY: clamp01(req.ImageFocalY),

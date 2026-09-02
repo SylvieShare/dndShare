@@ -47,6 +47,18 @@ func TestSessionWorldSchemaRunsAfterSessionTables(t *testing.T) {
 	}
 }
 
+func TestSessionNPCBestiarySchemaAddsOptionalCreatureReference(t *testing.T) {
+	for _, fragment := range []string{
+		"ADD COLUMN IF NOT EXISTS bestiary_item_id",
+		"REFERENCES dndshare.item(id) ON DELETE SET NULL",
+		"idx_session_npc_bestiary_item",
+	} {
+		if !strings.Contains(schemaSessionNPCBestiarySQL, fragment) {
+			t.Fatalf("session NPC bestiary schema must contain %q", fragment)
+		}
+	}
+}
+
 func TestRichContentSchemaKeepsApprovedKoboldBootstrap(t *testing.T) {
 	for _, fragment := range []string{
 		"WHERE id = 1635",

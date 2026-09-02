@@ -27,6 +27,16 @@
         <span v-if="linkedLocations.length"><MapPin :size="12" />{{ linkedLocations.join(', ') }}</span>
         <span>{{ relationCountLabel }}</span>
       </div>
+      <button
+		v-if="entity.bestiaryItemId"
+		type="button"
+		class="scene-entity-bestiary-action"
+		@pointerdown.stop
+		@click.stop="openBestiaryItem"
+		@dblclick.stop
+	  >
+		<BookOpen :size="13" />Открыть в бестиарии
+	  </button>
     </template>
 
     <template v-else-if="type === 'quest'">
@@ -69,7 +79,8 @@
 
 <script setup>
 import { computed, inject } from 'vue'
-import { MapPin } from '@lucide/vue'
+import { useRouter } from 'vue-router'
+import { BookOpen, MapPin } from '@lucide/vue'
 import { locationBreadcrumb, locationKind, ruPlural } from '@/features/sessions/lib/sessionWorld'
 import { buildSessionEntityCatalog, questStatus, sessionEntityKey } from '@/features/sessions/lib/sessionEntityRelations'
 import { npcImageUrl, sessionImageUrl } from '@/features/sessions/lib/sessionImages'
@@ -82,6 +93,7 @@ const props = defineProps({
 
 const sessionMaterials = inject('sessionMaterials', null)
 const sessionWorld = inject('sessionWorld', null)
+const router = useRouter()
 
 const entity = computed(() => {
   const id = Number(props.referenceId)
@@ -120,6 +132,11 @@ const linkedLocations = computed(() => (entity.value?.relations || [])
   .map(relation => sessionWorld?.locationsById.value.get(Number(relation.id))?.name)
   .filter(Boolean))
 
+function openBestiaryItem() {
+  if (!entity.value?.bestiaryItemId) return
+  router.push({ path: '/handbook', query: { type: 6, item: entity.value.bestiaryItemId } })
+}
+
 const questMeta = computed(() => questStatus(entity.value?.status))
 const questFields = computed(() => [
   { key: 'goal', label: 'Цель', value: entity.value?.goal },
@@ -147,6 +164,8 @@ const questFields = computed(() => [
 .scene-entity-npc-head span { color: var(--block-color); font-size: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; }
 .scene-entity-npc-head strong { overflow-wrap: anywhere; color: var(--text-1); font-family: var(--font-display); font-size: 17px; line-height: 1.1; }
 .scene-entity-npc-head small { color: var(--text-muted); font-size: 9px; line-height: 1.35; }
+.scene-entity-bestiary-action { min-height: 29px; display: inline-flex; align-self: flex-start; align-items: center; gap: 6px; padding: 5px 9px; border: 1px solid color-mix(in srgb, var(--block-color) 38%, var(--border)); border-radius: 7px; background: color-mix(in srgb, var(--block-color) 7%, var(--surface-raised)); color: var(--text-2); font: inherit; font-size: 9px; font-weight: 700; cursor: pointer; }
+.scene-entity-bestiary-action:hover { border-color: color-mix(in srgb, var(--block-color) 70%, var(--border)); color: var(--text-1); }
 .scene-entity-quest-fields { display: flex; flex-direction: column; gap: 6px; }
 .scene-entity-quest-fields section { padding: 8px 9px; border: 1px solid var(--border); border-radius: 8px; background: color-mix(in srgb, var(--surface-raised) 75%, transparent); }
 .scene-entity-quest-fields section.primary { border-color: color-mix(in srgb, var(--block-color) 34%, var(--border)); background: color-mix(in srgb, var(--block-color) 6%, var(--surface-raised)); }

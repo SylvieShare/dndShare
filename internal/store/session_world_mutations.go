@@ -55,19 +55,19 @@ func validateLocationParentTx(
 	return nil
 }
 
-func validateNPCRaceItemTx(ctx context.Context, tx pgx.Tx, sessionID int64, raceItemID *int64) error {
-	if raceItemID == nil {
+func validateSessionNPCItemTx(ctx context.Context, tx pgx.Tx, sessionID int64, itemID *int64, typeID int64) error {
+	if itemID == nil {
 		return nil
 	}
 	var valid bool
 	err := tx.QueryRow(ctx, `
 		SELECT EXISTS (
 			SELECT 1
-			FROM dndshare.item race
+			FROM dndshare.item item
 			JOIN dndshare."session" session ON session.id = $1
-			WHERE race.id = $2 AND race.type_id = 8
-			  AND (race.user_id IS NULL OR race.user_id = session.owner_user_id)
-		)`, sessionID, *raceItemID,
+			WHERE item.id = $2 AND item.type_id = $3
+			  AND (item.user_id IS NULL OR item.user_id = session.owner_user_id)
+		)`, sessionID, *itemID, typeID,
 	).Scan(&valid)
 	if err != nil {
 		return err
@@ -76,6 +76,14 @@ func validateNPCRaceItemTx(ctx context.Context, tx pgx.Tx, sessionID int64, race
 		return ErrInvalidWorldReference
 	}
 	return nil
+}
+
+func validateNPCRaceItemTx(ctx context.Context, tx pgx.Tx, sessionID int64, raceItemID *int64) error {
+	return validateSessionNPCItemTx(ctx, tx, sessionID, raceItemID, 8)
+}
+
+func validateNPCBestiaryItemTx(ctx context.Context, tx pgx.Tx, sessionID int64, bestiaryItemID *int64) error {
+	return validateSessionNPCItemTx(ctx, tx, sessionID, bestiaryItemID, 6)
 }
 
 func (s *Store) CreateSessionLocation(
@@ -278,6 +286,17 @@ func (s *Store) DeleteSessionLocation(ctx context.Context, sessionID, locationID
 	if err := deleteSessionEntityRelationsTx(ctx, tx, sessionID, SessionEntityLocation, locationID); err != nil {
 		return err
 	}
+	if _, err := tx.Exec(ctx, `
+		UPDATE dndshare.session_scene scene
+		SET image_id = location.image_id
+		FROM dndshare.session_location location
+		JOIN dndshare.session_chapter chapter ON chapter.session_id = location.session_id
+		WHERE location.id = $1
+		  AND scene.chapter_id = chapter.id
+		  AND scene.location_id = location.id
+		  AND scene.image_id IS NULL`, locationID); err != nil {
+		return err
+	}
 	result, err := tx.Exec(ctx,
 		`DELETE FROM dndshare.session_location WHERE id = $1 AND session_id = $2`, locationID, sessionID)
 	if err != nil {
@@ -305,15 +324,18 @@ func (s *Store) CreateSessionNPC(
 	if err := validateNPCRaceItemTx(ctx, tx, sessionID, mutation.RaceItemID); err != nil {
 		return 0, err
 	}
+	if err := validateNPCBestiaryItemTx(ctx, tx, sessionID, mutation.BestiaryItemID); err != nil {
+		return 0, err
+	}
 	var id int64
 	err = tx.QueryRow(ctx, `
 		INSERT INTO dndshare.session_npc (
-			session_id, name, race_item_id, role, description, color,
+			session_id, name, race_item_id, bestiary_item_id, role, description, color,
 			image_id, image_focal_x, image_focal_y, sort_order
 		)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9,
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
 			(SELECT COALESCE(MAX(sort_order), -1) + 1 FROM dndshare.session_npc WHERE session_id = $1))
-		RETURNING id`, sessionID, mutation.Name, mutation.RaceItemID, mutation.Role, mutation.Description, mutation.Color,
+		RETURNING id`, sessionID, mutation.Name, mutation.RaceItemID, mutation.BestiaryItemID, mutation.Role, mutation.Description, mutation.Color,
 		mutation.ImageID, mutation.ImageFocalX, mutation.ImageFocalY,
 	).Scan(&id)
 	if err != nil {
@@ -344,13 +366,16 @@ func (s *Store) UpdateSessionNPC(
 	if err := validateNPCRaceItemTx(ctx, tx, sessionID, mutation.RaceItemID); err != nil {
 		return err
 	}
+	if err := validateNPCBestiaryItemTx(ctx, tx, sessionID, mutation.BestiaryItemID); err != nil {
+		return err
+	}
 	result, err := tx.Exec(ctx, `
 		UPDATE dndshare.session_npc
-		SET name = $3, race_item_id = $4, role = $5, description = $6, color = $7,
-		    image_id = $8, image_focal_x = $9, image_focal_y = $10,
+		SET name = $3, race_item_id = $4, bestiary_item_id = $5, role = $6, description = $7, color = $8,
+		    image_id = $9, image_focal_x = $10, image_focal_y = $11,
 		    changed_at = now()
 		WHERE id = $1 AND session_id = $2`,
-		npcID, sessionID, mutation.Name, mutation.RaceItemID, mutation.Role, mutation.Description, mutation.Color,
+		npcID, sessionID, mutation.Name, mutation.RaceItemID, mutation.BestiaryItemID, mutation.Role, mutation.Description, mutation.Color,
 		mutation.ImageID, mutation.ImageFocalX, mutation.ImageFocalY)
 	if err != nil {
 		return err

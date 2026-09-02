@@ -98,6 +98,37 @@ func (s *Server) requireSceneInSession(w http.ResponseWriter, r *http.Request, s
 	return scene, true
 }
 
+func validSceneVisualChoice(locationID, imageID *int64) bool {
+	return (locationID != nil && *locationID > 0) || (imageID != nil && *imageID > 0)
+}
+
+func sameOptionalSceneID(left, right *int64) bool {
+	if left == nil || right == nil {
+		return left == nil && right == nil
+	}
+	return *left == *right
+}
+
+func (s *Server) validateSceneLocation(w http.ResponseWriter, r *http.Request, sessionID int64, locationID *int64) bool {
+	if locationID == nil {
+		return true
+	}
+	location, err := s.store.GetSessionLocation(r.Context(), *locationID)
+	if err != nil {
+		if errors.Is(err, store.ErrNotFound) {
+			badRequest(w, "Локация не найдена")
+			return false
+		}
+		serverError(w, err)
+		return false
+	}
+	if location.SessionID != sessionID {
+		badRequest(w, "Локация принадлежит другой сессии")
+		return false
+	}
+	return true
+}
+
 func (s *Server) handleCreateScene(w http.ResponseWriter, r *http.Request) {
 	userID, ok := mustUser(w, r)
 	if !ok {
@@ -116,11 +147,12 @@ func (s *Server) handleCreateScene(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var req struct {
-		Name    string  `json:"name"`
-		Status  string  `json:"status"`
-		ImageID int64   `json:"imageId"`
-		X       float64 `json:"x"`
-		Y       float64 `json:"y"`
+		Name       string  `json:"name"`
+		Status     string  `json:"status"`
+		LocationID *int64  `json:"locationId"`
+		ImageID    *int64  `json:"imageId"`
+		X          float64 `json:"x"`
+		Y          float64 `json:"y"`
 	}
 	if err := decodeJSON(r, &req); err != nil {
 		badRequest(w, "bad body")
@@ -135,11 +167,18 @@ func (s *Server) handleCreateScene(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "Некорректный статус сценария")
 		return
 	}
-	if !s.validateSessionImage(w, r, userID, req.ImageID, "story") {
+	if !validSceneVisualChoice(req.LocationID, req.ImageID) {
+		badRequest(w, "Выберите локацию или изображение сценария")
+		return
+	}
+	if !s.validateSceneLocation(w, r, sess.ID, req.LocationID) {
+		return
+	}
+	if req.ImageID != nil && !s.validateSessionImage(w, r, userID, *req.ImageID, "story") {
 		return
 	}
 	scene, err := s.store.CreateScene(
-		r.Context(), chapterID, name, req.Status, req.ImageID, req.X, req.Y,
+		r.Context(), chapterID, name, req.Status, req.LocationID, req.ImageID, req.X, req.Y,
 	)
 	if err != nil {
 		serverError(w, err)
@@ -167,9 +206,10 @@ func (s *Server) handleUpdateScene(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var req struct {
-		Name    string `json:"name"`
-		Status  string `json:"status"`
-		ImageID int64  `json:"imageId"`
+		Name       string `json:"name"`
+		Status     string `json:"status"`
+		LocationID *int64 `json:"locationId"`
+		ImageID    *int64 `json:"imageId"`
 	}
 	if err := decodeJSON(r, &req); err != nil {
 		badRequest(w, "bad body")
@@ -184,17 +224,24 @@ func (s *Server) handleUpdateScene(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "Некорректный статус сценария")
 		return
 	}
-	if !s.validateSessionImage(w, r, userID, req.ImageID, "story") {
+	if !validSceneVisualChoice(req.LocationID, req.ImageID) {
+		badRequest(w, "Выберите локацию или изображение сценария")
+		return
+	}
+	if !s.validateSceneLocation(w, r, sess.ID, req.LocationID) {
+		return
+	}
+	if req.ImageID != nil && !s.validateSessionImage(w, r, userID, *req.ImageID, "story") {
 		return
 	}
 	if err := s.store.UpdateScene(
-		r.Context(), sceneID, name, req.Status, req.ImageID,
+		r.Context(), sceneID, name, req.Status, req.LocationID, req.ImageID,
 	); err != nil {
 		serverError(w, err)
 		return
 	}
-	if previous.ImageID != req.ImageID {
-		s.deleteOldImage(r, userID, previous.ImageID)
+	if previous.ImageID != nil && !sameOptionalSceneID(previous.ImageID, req.ImageID) {
+		s.deleteOldImage(r, userID, *previous.ImageID)
 	}
 	scene, err := s.store.GetSceneByID(r.Context(), sceneID)
 	if err != nil {
@@ -226,7 +273,9 @@ func (s *Server) handleDeleteScene(w http.ResponseWriter, r *http.Request) {
 		serverError(w, err)
 		return
 	}
-	s.deleteOldImage(r, userID, scene.ImageID)
+	if scene.ImageID != nil {
+		s.deleteOldImage(r, userID, *scene.ImageID)
+	}
 	writeJSON(w, http.StatusNoContent, nil)
 }
 
