@@ -17,8 +17,8 @@ as alternate cost formats.
 
 ## Detail components
 
-Specialized details exist for weapons, spells, enemies, potions, feats, armor
-and transport. Their data, UI and art contracts are documented in
+Specialized details exist for weapons, spells, enemies, potions, feats, armor,
+transport and status effects. Their data, UI and art contracts are documented in
 `md/features/weapons.md`, `md/features/armor.md` and
 `md/features/transport.md`.
 They receive the same current `item.data` that the editor writes. Generic item
@@ -148,6 +148,12 @@ entries and selected choices.
   A stat or rail icon is a larger translucent right-centered introductory mark
   rather than a small glyph prepended to the label; shared padding reserves its
   space on desktop and mobile;
+- status-effect details use a compact `320px` minimum `4:1` dashboard. The
+  effect icon stays in the reserved centre, while polarity, duration, stacking,
+  concentration and the number of structured rules remain readable around it.
+  Content below the cover renders thesis bullets, description, derived bonuses
+  and defenses as labelled rule cards instead of exposing schema keys. The
+  canonical six exhaustion penalties are shown as a numbered level track;
 - field labels and errors use shared form components;
 - direct color literals are rejected by `npm run check:colors`.
 
@@ -227,6 +233,28 @@ mechanic and the canonical mascot reference; do not use another finished cover
 as an intermediate character reference. Match the mascot and environment at
 the same detail density, and choose an expression specific to the scene instead
 of repeating the same neutral or stern face.
+
+### Status-effect icon art direction
+
+Status effects (type 15) use compact object emblems that communicate the active
+state before their internal detail is noticed. Positive and negative effects
+share one rendering family but keep distinct subjects and palettes.
+
+- Store each icon as a lossless `128×128` RGBA WebP with genuine alpha, centred
+  opaque bounds and a common safe margin. Inspect it at the production `64×64`
+  size on a dark surface before installation.
+- Build the silhouette from one dominant object or sign and at most two broad
+  supporting accents. Use the established thick deep-plum contour, broad
+  flat-cartoon shapes, saturated restrained fills and two-step shading.
+- Prefer a literal mechanic-bearing object: a broad consecrated blade for
+  Sacred Weapon and a cracked, nearly empty hourglass for Exhaustion. The icon
+  must not depend on a miniature scene or character portrait.
+- Do not add a background tile, frame, badge, text, letters, numbers, readable
+  runes, logo, watermark, cast shadow, detached particle cloud or micro-detail.
+  Empty canvas space must be transparent.
+- Generate at a larger size, extract the background, centre and downsample to
+  the exact contract, then install through `handbook_item_set_system_image` with
+  `slot="icon"`; use `preservePrevious=true` when replacing existing artwork.
 
 ### Static spell rune art direction
 

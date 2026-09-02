@@ -24,6 +24,9 @@
         <template v-else-if="isGear" #summary>
           <GearDetailSummary :item="item" :type="type" />
         </template>
+        <template v-else-if="isStatusEffect" #summary>
+          <StatusEffectDetailSummary :item="item" :type="type" />
+        </template>
         <template v-if="itemSourceLabel" #corner>
           <span
             class="item-detail-source"
@@ -147,6 +150,8 @@ import ItemDetailContent from '@/features/items/detail-components/ItemDetailCont
 import PotionDetailContent from '@/features/items/detail-components/PotionDetailContent'
 import SpellDetailContent from '@/features/items/detail-components/SpellDetailContent'
 import SpellDetailSummary from '@/features/items/detail-components/SpellDetailSummary.vue'
+import StatusEffectDetailContent from '@/features/items/detail-components/StatusEffectDetailContent.vue'
+import StatusEffectDetailSummary from '@/features/items/detail-components/StatusEffectDetailSummary.vue'
 import ToolDetailSummary from '@/features/items/detail-components/ToolDetailSummary.vue'
 import TransportDetailContent from '@/features/items/detail-components/TransportDetailContent'
 import TransportDetailSummary from '@/features/items/detail-components/TransportDetailSummary.vue'
@@ -168,6 +173,7 @@ const CUSTOM_RENDERERS = {
   12: ArmorDetailContent,
   13: TransportDetailContent,
   14: ItemDetailContent,
+  15: StatusEffectDetailContent,
 }
 
 const props = defineProps({
@@ -188,6 +194,7 @@ const isSpell = computed(() => props.type?.id === 5)
 const isTransport = computed(() => props.type?.id === 13)
 const isTool = computed(() => props.type?.id === 14)
 const isGear = computed(() => props.type?.id === 2)
+const isStatusEffect = computed(() => props.type?.id === 15)
 const customRendererProps = computed(() => {
   if (props.type?.id === 2 || props.type?.id === 14) return { economyInHeader: true }
   if (props.type?.id === 5) return { summaryInHeader: true }

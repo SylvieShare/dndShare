@@ -23,6 +23,8 @@ const gearContentSource = read('../../items/detail-components/ItemDetailContent.
 const toolSummarySource = read('../../items/detail-components/ToolDetailSummary.vue')
 const spellSummarySource = read('../../items/detail-components/SpellDetailSummary.vue')
 const spellContentSource = read('../../items/detail-components/SpellDetailContent.vue')
+const statusEffectSummarySource = read('../../items/detail-components/StatusEffectDetailSummary.vue')
+const statusEffectContentSource = read('../../items/detail-components/StatusEffectDetailContent.vue')
 
 describe('handbook item detail cover', () => {
   it('uses the intrinsic cover ratio without a shared maximum height', () => {
@@ -85,6 +87,20 @@ describe('handbook item detail cover', () => {
     expect(armorSummarySource).toContain('<CoverSummaryRail :columns="3">')
     expect(armorContentSource).toContain('label="Описание"')
     expect(armorContentSource).toContain('label="Правила ношения"')
+  })
+
+  it('shows status effects as a compact rules dashboard instead of raw schema fields', () => {
+    expect(headerSource).toContain("15: {\n    '--cover-min-height': '320px'")
+    expect(headerSource).toContain("if (typeId === 15) return '4 / 1'")
+    expect(detailSource).toContain('<StatusEffectDetailSummary :item="item" :type="type" />')
+    expect(detailSource).toContain('15: StatusEffectDetailContent')
+    expect(statusEffectSummarySource).toContain('<CoverSummaryLayout')
+    expect(statusEffectSummarySource).toContain('class="status-effect-emblem"')
+    expect(statusEffectSummarySource).toContain('label="Воздействие"')
+    expect(statusEffectSummarySource).toContain('label="Длительность"')
+    expect(statusEffectContentSource).toContain('label="Кратко"')
+    expect(statusEffectContentSource).toContain('label="Механика" tone="combat"')
+    expect(statusEffectContentSource).toContain('label="Уровни истощения" tone="combat"')
   })
 
   it('gives transport a 3:2 showcase with operational data around a safe center', () => {
