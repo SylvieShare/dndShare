@@ -119,6 +119,7 @@
           :show-shortcut-hints="showShortcutHints"
           @close="closeWorkspace"
           @view-participant="openParticipant"
+          @import-combat-block="importCombatBlock"
         />
       </ChapterGraphTab>
 
@@ -472,7 +473,7 @@ function setEncounterPlayerInitiative(charId, value) {
   if (combatant) encounter.setInitiative(combatant, value)
 }
 
-async function sendBlockToCombat({ block, chapter, scene, level }) {
+async function importCombatBlock(block) {
   combatImportError.value = ''
   const creatures = Array.isArray(block?.data?.creatures) ? block.data.creatures : []
   const handbookIds = [...new Set(creatures
@@ -495,7 +496,10 @@ async function sendBlockToCombat({ block, chapter, scene, level }) {
     if (creature?.kind !== 'simple') continue
     for (let index = 0; index < count; index += 1) encounter.addSimpleNpc(creature)
   }
+}
 
+async function sendBlockToCombat({ block, chapter, scene, level }) {
+  await importCombatBlock(block)
   await toggleCombatWorkspace({ chapter, scene, level })
 }
 

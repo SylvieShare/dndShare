@@ -14,16 +14,14 @@
         <img v-if="contextImageUrl" :src="contextImageUrl" alt="" />
         <Clapperboard v-else-if="scene" :size="36" />
         <BookOpenText v-else :size="36" />
+        <div class="enc-context-art-copy">
+          <span :title="contextParentTitle">{{ contextParentTitle }}</span>
+          <strong :title="contextTitle">{{ contextTitle }}</strong>
+        </div>
       </div>
 
       <div class="enc-toolbar-body">
         <div class="enc-toolbar-top">
-          <div class="enc-context-copy">
-            <span>{{ contextKind }}</span>
-            <strong :title="contextTitle">{{ contextTitle }}</strong>
-            <small>{{ encounterSummary }}</small>
-          </div>
-
           <div class="enc-toolbar-flow" aria-label="Управление боем">
             <button
               type="button"
@@ -59,70 +57,77 @@
               </div>
             </template>
           </div>
+          <span class="enc-combat-summary">{{ encounterSummary }}</span>
         </div>
 
         <div class="enc-toolbar-actions">
-        <div v-if="props.isDm" class="enc-action-group" aria-label="Броски">
-          <span class="enc-action-group-label">Броски</span>
-          <div class="enc-action-group-controls">
-            <EncounterChallengeMenu />
-            <button
-              type="button"
-              class="enc-icon-btn"
-              :disabled="enc.selectedRerollCount === 0"
-              title="Перебросить инициативу выбранным"
-              aria-label="Перебросить инициативу выбранным"
-              aria-keyshortcuts="Shift+R"
-              @click="enc.rerollSelectedInitiative"
-            >
-              <Dices :size="18" />
-              <span v-if="enc.selectedRerollCount" class="enc-icon-count">{{ enc.selectedRerollCount }}</span>
-              <kbd v-if="showShortcutHints" class="enc-shortcut-hint" aria-hidden="true">{{ shortcutLabels.panel }}+R</kbd>
-            </button>
+          <EncounterScenarioCombatMenu
+            v-if="props.isDm && scene"
+            :session-uuid="sessionUuid"
+            :scene="scene"
+            @pick="$emit('import-combat-block', $event)"
+          />
+          <div v-if="props.isDm" class="enc-action-group" aria-label="Броски">
+            <span class="enc-action-group-label">Броски</span>
+            <div class="enc-action-group-controls">
+              <EncounterChallengeMenu />
+              <button
+                type="button"
+                class="enc-icon-btn"
+                :disabled="enc.selectedRerollCount === 0"
+                title="Перебросить инициативу выбранным"
+                aria-label="Перебросить инициативу выбранным"
+                aria-keyshortcuts="Shift+R"
+                @click="enc.rerollSelectedInitiative"
+              >
+                <Dices :size="18" />
+                <span v-if="enc.selectedRerollCount" class="enc-icon-count">{{ enc.selectedRerollCount }}</span>
+                <kbd v-if="showShortcutHints" class="enc-shortcut-hint" aria-hidden="true">{{ shortcutLabels.panel }}+R</kbd>
+              </button>
+            </div>
           </div>
-        </div>
-        <div v-if="props.isDm" class="enc-action-group" aria-label="Действия с выбранными участниками">
-          <span class="enc-action-group-label">Выбранные</span>
-          <div class="enc-action-group-controls">
-            <EncounterBulkDamageMenu />
-            <button
-              type="button"
-              class="enc-icon-btn"
-              :disabled="reserveMoveCount === 0"
-              title="Вернуть выбранных в запас"
-              aria-label="Вернуть выбранных в запас"
-              @click="enc.sendSelectedTo('reserve')"
-            >
-              <ArchiveRestore :size="18" />
-              <span v-if="reserveMoveCount" class="enc-icon-count">{{ reserveMoveCount }}</span>
-            </button>
-            <button
-              type="button"
-              class="enc-icon-btn enc-icon-btn--danger"
-              :disabled="deadMoveCount === 0"
-              title="Убить выбранных — переместить на кладбище"
-              aria-label="Убить выбранных — переместить на кладбище"
-              @click="enc.sendSelectedTo('dead')"
-            >
-              <Skull :size="18" />
-              <span v-if="deadMoveCount" class="enc-icon-count">{{ deadMoveCount }}</span>
-            </button>
-            <button
-              type="button"
-              class="enc-icon-btn enc-icon-btn--danger"
-              :disabled="enc.selectedNpcCount === 0"
-              title="Удалить выбранных НПС"
-              aria-label="Удалить выбранных НПС"
-              aria-keyshortcuts="Backspace"
-              @click="enc.removeSelectedNpcs"
-            >
-              <Trash2 :size="18" />
-              <span v-if="enc.selectedNpcCount" class="enc-icon-count">{{ enc.selectedNpcCount }}</span>
-              <kbd v-if="showShortcutHints" class="enc-shortcut-hint" aria-hidden="true">⌫</kbd>
-            </button>
-            <EncounterGraveyardMenu :is-dm="props.isDm" @view-participant="$emit('view-participant', $event)" />
+          <div v-if="props.isDm" class="enc-action-group" aria-label="Действия с выбранными участниками">
+            <span class="enc-action-group-label">Выбранные</span>
+            <div class="enc-action-group-controls">
+              <EncounterBulkDamageMenu />
+              <button
+                type="button"
+                class="enc-icon-btn"
+                :disabled="reserveMoveCount === 0"
+                title="Вернуть выбранных в запас"
+                aria-label="Вернуть выбранных в запас"
+                @click="enc.sendSelectedTo('reserve')"
+              >
+                <ArchiveRestore :size="18" />
+                <span v-if="reserveMoveCount" class="enc-icon-count">{{ reserveMoveCount }}</span>
+              </button>
+              <button
+                type="button"
+                class="enc-icon-btn enc-icon-btn--danger"
+                :disabled="deadMoveCount === 0"
+                title="Убить выбранных — переместить на кладбище"
+                aria-label="Убить выбранных — переместить на кладбище"
+                @click="enc.sendSelectedTo('dead')"
+              >
+                <Skull :size="18" />
+                <span v-if="deadMoveCount" class="enc-icon-count">{{ deadMoveCount }}</span>
+              </button>
+              <button
+                type="button"
+                class="enc-icon-btn enc-icon-btn--danger"
+                :disabled="enc.selectedNpcCount === 0"
+                title="Удалить выбранных НПС"
+                aria-label="Удалить выбранных НПС"
+                aria-keyshortcuts="Backspace"
+                @click="enc.removeSelectedNpcs"
+              >
+                <Trash2 :size="18" />
+                <span v-if="enc.selectedNpcCount" class="enc-icon-count">{{ enc.selectedNpcCount }}</span>
+                <kbd v-if="showShortcutHints" class="enc-shortcut-hint" aria-hidden="true">⌫</kbd>
+              </button>
+              <EncounterGraveyardMenu :is-dm="props.isDm" @view-participant="$emit('view-participant', $event)" />
+            </div>
           </div>
-        </div>
         </div>
       </div>
     </BaseTile>
@@ -360,6 +365,7 @@ import EncounterBulkDamageMenu from '@/features/sessions/components/EncounterBul
 import EncounterChallengeMenu from '@/features/sessions/components/EncounterChallengeMenu.vue'
 import EncounterGraveyardMenu from '@/features/sessions/components/EncounterGraveyardMenu.vue'
 import EncounterRow from '@/features/sessions/components/EncounterRow'
+import EncounterScenarioCombatMenu from '@/features/sessions/components/EncounterScenarioCombatMenu.vue'
 import EncounterTurnPreview from '@/features/sessions/components/EncounterTurnPreview.vue'
 import { useEncounterCombatTransition } from '@/features/sessions/composables/useEncounterCombatTransition'
 import { currentChapterLabel } from '@/features/sessions/lib/chapterGraph'
@@ -384,7 +390,7 @@ const props = defineProps({
   scene: { type: Object, default: null },
   showShortcutHints: { type: Boolean, default: false },
 })
-defineEmits(['view-participant'])
+defineEmits(['view-participant', 'import-combat-block'])
 
 const enc = props.encounter
 const shortcutLabels = sessionShortcutLabels()
@@ -412,6 +418,9 @@ const contextEntity = computed(() => props.scene || props.chapter)
 const contextImageUrl = computed(() => sessionImageUrl(contextEntity.value))
 const contextKind = computed(() => props.scene ? 'Сценарий' : props.chapter ? 'Глава' : 'Сессия')
 const contextTitle = computed(() => props.scene?.name || currentChapterLabel(props.chapter) || props.session.name)
+const contextParentTitle = computed(() => props.scene
+  ? currentChapterLabel(props.chapter) || props.session.name
+  : contextKind.value)
 const allSelectedInCombat = computed(() =>
   combatItems.value.length > 0 && combatItems.value.every(combatant => enc.isSelected(combatant))
 )

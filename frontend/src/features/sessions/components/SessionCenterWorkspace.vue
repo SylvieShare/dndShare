@@ -16,6 +16,7 @@
       :scene="scene"
       :show-shortcut-hints="showShortcutHints"
       @view-participant="$emit('view-participant', $event)"
+      @import-combat-block="$emit('import-combat-block', $event)"
     />
     <button
       type="button"
@@ -46,7 +47,7 @@ defineProps({
   scene: { type: Object, default: null },
   showShortcutHints: { type: Boolean, default: false },
 })
-defineEmits(['close', 'view-participant'])
+defineEmits(['close', 'view-participant', 'import-combat-block'])
 
 const encounterTab = ref(null)
 defineExpose({ toggleCombat: () => encounterTab.value?.toggleCombat() })

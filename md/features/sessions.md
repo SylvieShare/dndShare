@@ -650,11 +650,15 @@ central card. With the right tool rail removed, the combat workspace uses the
 full width between the participant safe area and the viewport edge. The header uses one enlarged,
 labelled primary action, “Начать бой” or “Закончить бой”, while turn navigation
 remains compact and icon-only. The header has one stable composition at every
-width: its scenario image fills the header's complete left column and falls back
-to the chapter image when no scenario is selected. The right side has two
-levels: context and combat flow above, grouped actions below. It never hides the
-primary-action text or group labels. Secondary actions are grouped as `Броски`
-and `Выбранные`.
+width: its scenario image keeps its native aspect ratio, scales to the width of
+the complete left column and falls back to the chapter image when no scenario is
+selected. The chapter and scenario names are overlaid on that image. The right
+side keeps combat flow above and grouped actions below, with all controls aligned
+to the left. It never hides the primary-action text or group labels. When a
+scenario is selected, `Бои сценария` lazily loads its combat blocks in a popover;
+choosing one imports the complete configured creature counts through the same
+encounter importer without leaving the combat workspace. Secondary actions are
+grouped as `Броски` and `Выбранные`.
 `Выбранные` contains shared damage, return-to-reserve, graveyard, delete-NPC and
 graveyard-list actions. Shared damage consumes temporary HP first, updates NPC
 encounter state and persists each player character through the character API.
