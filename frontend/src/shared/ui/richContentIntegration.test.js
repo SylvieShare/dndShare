@@ -25,7 +25,7 @@ describe('DnD rich content integration', () => {
     expect(inputSource).toContain("openCreate('dice')")
     expect(inputSource).toContain("openCreate('item')")
     expect(inputSource).toContain("openCreate('suggest')")
-    expect(inputSource).toContain('BookOpenCheck, Dices, Ellipsis, Link2, PackageSearch')
+    expect(inputSource).toContain('BookOpenCheck, Dices, Ellipsis, HeartPulse, Link2, PackageSearch, Shield')
     expect(inputSource).toContain('openCreateFromMenu')
     expect(inputSource).toContain(':show-link-button="false"')
     expect(inputSource).toContain('openLinkFromMenu')
@@ -59,6 +59,11 @@ describe('DnD rich content integration', () => {
     expect(inlineSource).toContain('<ItemTooltip')
     expect(inlineSource).toContain('<ItemViewModal')
     expect(inlineSource).toContain('<BasePopover')
+    expect(inlineSource).toContain("node.kind === 'stat'")
+    expect(inlineSource).toContain('HeartPulse')
+    expect(inlineSource).toContain('Shield')
+    expect(inputSource).toContain("insertStat('ac')")
+    expect(inputSource).toContain("insertStat('hp')")
   })
 
   it('passes a creature name into embedded dice rolls', () => {
@@ -74,6 +79,8 @@ describe('DnD rich content integration', () => {
     expect(contentSource).toContain('class="dnd-rich-content"')
     expect(themeSource).toContain('--font-prose: "Literata"')
     expect(themeSource).toContain('body .rc.dnd-rich-content')
+    expect(themeSource).toContain('body .rc.dnd-rich-content table')
+    expect(themeSource).toContain('overflow-x: auto')
   })
 
   it('migrates only the approved kobold example', () => {

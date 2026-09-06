@@ -45,6 +45,17 @@
     <span class="rich-node-symbol" aria-hidden="true">◆</span>{{ suggest?.value || node.label }}
   </button>
 
+  <span
+    v-else-if="node.kind === 'stat'"
+    class="rich-node rich-node--stat"
+    :class="`rich-node--stat-${statKind}`"
+    :title="statKind === 'ac' ? 'Класс доспеха' : 'Хиты и очки жизни'"
+  >
+    <Shield v-if="statKind === 'ac'" :size="14" :stroke-width="2" aria-hidden="true" />
+    <HeartPulse v-else :size="14" :stroke-width="2" aria-hidden="true" />
+    <span>{{ node.label }}</span>
+  </span>
+
   <span v-else class="rich-node rich-node--unknown">{{ node.label }}</span>
 
   <ItemTooltip
@@ -85,6 +96,7 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
 import { BasePopover, RichContent } from '@sylvieshare/share-ui'
+import { HeartPulse, Shield } from '@lucide/vue'
 import { itemsApi } from '@/shared/api/itemsApi'
 import { parseDiceExpression } from '@/shared/lib/dice'
 import { useDiceStore } from '@/stores/dice'
@@ -109,6 +121,7 @@ const suggestStore = useSuggestStore()
 const diceStore = useDiceStore()
 
 const formula = computed(() => String(props.node.payload?.formula || ''))
+const statKind = computed(() => props.node.payload?.stat === 'ac' ? 'ac' : 'hp')
 const average = computed(() => {
   const raw = props.node.payload?.average
   if (raw == null || raw === '') return null
@@ -216,6 +229,22 @@ button.rich-node:active { transform: scale(.97); }
 .rich-node-or { margin: 0 2px; color: var(--text-muted); font-family: var(--font-prose); font-size: .95em; font-style: italic; font-weight: 600; letter-spacing: .025em; }
 .rich-node-sign { color: var(--text-muted); }
 .rich-node--unknown { color: var(--text-muted); }
+.rich-node--stat {
+  gap: 4px;
+  margin-inline: .16em;
+  padding: 1px 5px;
+  background: color-mix(in srgb, var(--rich-stat-color) 10%, var(--surface-raised));
+  color: color-mix(in srgb, var(--rich-stat-color) 72%, var(--text-1));
+  font-family: var(--font-ui);
+  font-size: .88em;
+  font-weight: 750;
+  line-height: 1.25;
+  vertical-align: .05em;
+  white-space: nowrap;
+}
+.rich-node--stat svg { flex: none; }
+.rich-node--stat-ac { --rich-stat-color: var(--info); }
+.rich-node--stat-hp { --rich-stat-color: var(--danger); }
 .rich-suggest-popover { display: flex; flex-direction: column; gap: 6px; max-width: 340px; color: var(--text-2); font-size: 12px; }
 .rich-suggest-popover strong { color: var(--text-1); font-size: 13px; }
 .rich-suggest-empty { color: var(--text-muted); }

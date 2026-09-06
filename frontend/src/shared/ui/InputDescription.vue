@@ -109,6 +109,14 @@
           <BookOpenCheck :size="17" aria-hidden="true" />
           <span>Термин справочника</span>
         </button>
+        <button type="button" role="menuitem" @mousedown.prevent="insertStat('ac')">
+          <Shield :size="17" aria-hidden="true" />
+          <span>Класс доспеха</span>
+        </button>
+        <button type="button" role="menuitem" @mousedown.prevent="insertStat('hp')">
+          <HeartPulse :size="17" aria-hidden="true" />
+          <span>Хиты</span>
+        </button>
       </div>
     </BasePopover>
 
@@ -123,7 +131,7 @@
         <span class="rich-node-menu-label">{{ nodeTypeLabel(selectedNode.node.kind) }}</span>
         <strong>{{ selectedNode.node.label }}</strong>
         <div class="rich-node-menu-actions">
-          <button type="button" @click="editSelectedNode">{{ selectedNode.node.kind === 'item' ? 'Заменить' : 'Изменить' }}</button>
+          <button v-if="selectedNode.node.kind !== 'stat'" type="button" @click="editSelectedNode">{{ selectedNode.node.kind === 'item' ? 'Заменить' : 'Изменить' }}</button>
           <button type="button" class="danger" @click="removeSelectedNode">Удалить</button>
         </div>
       </div>
@@ -158,7 +166,7 @@
 <script setup>
 import { computed, inject, ref } from 'vue'
 import { BasePopover, RichTextEditor } from '@sylvieshare/share-ui'
-import { BookOpenCheck, Dices, Ellipsis, Link2, PackageSearch } from '@lucide/vue'
+import { BookOpenCheck, Dices, Ellipsis, HeartPulse, Link2, PackageSearch, Shield } from '@lucide/vue'
 import { useItemTypesStore } from '@/stores/itemTypes'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import RichDiceNodeModal from '@/shared/ui/RichDiceNodeModal.vue'
@@ -210,7 +218,7 @@ const insertMenuTrigger = ref(null)
 const insertMenuOpen = ref(false)
 
 function nodeTypeLabel(kind) {
-  return ({ dice: 'Формула броска', item: 'Ссылка на предмет', suggest: 'Термин справочника' })[kind] || 'Встроенный элемент'
+  return ({ dice: 'Формула броска', item: 'Ссылка на предмет', suggest: 'Термин справочника', stat: 'Игровой показатель' })[kind] || 'Встроенный элемент'
 }
 
 function selectNode(selection) {
@@ -237,6 +245,15 @@ function toggleInsertMenu() {
 function openCreateFromMenu(kind) {
   insertMenuOpen.value = false
   openCreate(kind, false)
+}
+
+function insertStat(stat) {
+  insertMenuOpen.value = false
+  editorRef.value?.insertRichNode?.({
+    kind: 'stat',
+    payload: { stat },
+    label: stat === 'ac' ? 'КД' : 'хиты',
+  })
 }
 
 function openLink(anchor) {

@@ -169,6 +169,13 @@ Details are specialized by type where useful (weapon, spell, enemy, potion,
 feat, armor, transport), otherwise the generic field renderer is used. Item detail modals use
 `ItemViewModal` and fixed-chrome `AppModalFrame`; the standalone detail renderer
 keeps its own title, while the modal moves that title into the fixed header.
+Все публичные записи коллекции «Вещи» используют нормализованное расширенное
+описание. Для обычного снаряжения вместо технической заглушки хранится назначение
+предмета и, где применимо, игровая механика. Формулы можно бросить прямо из
+текста, ссылки на существующие сущности открывают локальную карточку, КД и хиты
+получают собственные инлайн-маркеры, а таблицы остаются читаемыми на desktop и
+mobile. Внешние и неразрешённые относительные ссылки в базовых описаниях вещей
+не сохраняются.
 An assigned raster or SVG item icon is shown in list rows, standard pickers,
 the global header search and detail/modal headings; raster has priority and the
 item-type raster emblem is the final fallback when both item formats are absent.

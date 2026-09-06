@@ -47,6 +47,51 @@ body .rc.dnd-rich-content {
   font-optical-sizing: auto;
 }
 
+body .rc.dnd-rich-content table {
+  display: block;
+  width: max-content;
+  min-width: min(100%, 440px);
+  max-width: 100%;
+  margin: 14px 0;
+  overflow-x: auto;
+  border: 1px solid color-mix(in srgb, var(--accent) 25%, var(--border));
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: var(--r-md);
+  background: color-mix(in srgb, var(--accent) 3%, var(--surface));
+  font-family: var(--font-prose);
+  font-size: .94em;
+}
+
+body .rc.dnd-rich-content th,
+body .rc.dnd-rich-content td {
+  min-width: 76px;
+  padding: 8px 11px;
+  border: 0;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+
+body .rc.dnd-rich-content th:last-child,
+body .rc.dnd-rich-content td:last-child { border-right: 0; }
+body .rc.dnd-rich-content tbody tr:last-child td { border-bottom: 0; }
+
+body .rc.dnd-rich-content th {
+  background: color-mix(in srgb, var(--accent) 11%, var(--surface-raised));
+  color: var(--text-1);
+  font-family: var(--font-ui);
+  font-size: .82em;
+  font-weight: 800;
+  letter-spacing: .045em;
+  text-transform: uppercase;
+}
+
+body .rc.dnd-rich-content tbody tr:nth-child(even) td {
+  background: color-mix(in srgb, var(--text-on-accent) 2.5%, transparent);
+}
+
 /* Action-menu triggers keep their source visible while the teleported menu is open. */
 .action-menu-source {
   transition: border-color 140ms ease, background-color 140ms ease, box-shadow 140ms ease, transform 140ms ease;

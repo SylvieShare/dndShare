@@ -226,6 +226,9 @@ var schemaSessionEventActorItemSQL string
 //go:embed schema/68_journals.sql
 var schemaJournalsSQL string
 
+//go:embed schema/70_item_rich_descriptions.sql
+var schemaItemRichDescriptionsSQL string
+
 var schemaParts = []struct {
 	name string
 	sql  string
@@ -300,6 +303,7 @@ var schemaParts = []struct {
 	{"session-scene-visual-source", schemaSessionSceneVisualSourceSQL},
 	{"session-event-actor-item", schemaSessionEventActorItemSQL},
 	{"journals", schemaJournalsSQL},
+	{"item-rich-descriptions", schemaItemRichDescriptionsSQL},
 }
 
 const (
@@ -421,6 +425,20 @@ func applySchema(ctx context.Context, pool *pgxpool.Pool) error {
 		}
 		if _, err := tx.Exec(ctx, part.sql); err != nil {
 			return fmt.Errorf("apply schema part %s: %w", part.name, err)
+		}
+		if part.name == "item-rich-descriptions" {
+			stats, err := migrateItemRichDescriptions(ctx, tx)
+			if err != nil {
+				return fmt.Errorf("migrate item rich descriptions: %w", err)
+			}
+			log.Printf(
+				"migrated item descriptions: items=%d dice=%d stats=%d item_links=%d removed_links=%d",
+				stats.Items,
+				stats.DiceNodes,
+				stats.StatNodes,
+				stats.ItemLinks,
+				stats.LinksClean,
+			)
 		}
 		if _, err := tx.Exec(ctx,
 			`INSERT INTO dndshare.schema_migration (code, checksum) VALUES ($1, $2)`,

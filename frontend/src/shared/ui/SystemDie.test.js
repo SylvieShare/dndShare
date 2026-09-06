@@ -29,6 +29,14 @@ describe('SystemDie', () => {
     expect(html).toContain('>1234</text>')
   })
 
+  it('shows the actual sides for a nonstandard die used by handbook formulas', async () => {
+    const html = await renderDie({ sides: 3, animated: false })
+
+    expect(html).toContain('aria-label="d3: 3"')
+    expect(html).toContain('>3</text>')
+    expect(html).toContain('M14 8 H42 A6 6 0 0 1 48 14')
+  })
+
   it('gives every rendered die unique SVG definition ids', async () => {
     const html = await renderToString(createSSRApp({
       render: () => h('div', [4, 6, 8].map((sides) => h(SystemDie, { sides }))),

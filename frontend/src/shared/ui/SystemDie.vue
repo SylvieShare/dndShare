@@ -102,7 +102,20 @@ const props = defineProps({
 })
 
 const fallback = SYSTEM_DICE.find((die) => die.sides === 20)
-const definition = computed(() => diceByValue(props.sides) || fallback)
+const definition = computed(() => {
+  const known = diceByValue(props.sides)
+  if (known) return known
+  const match = String(props.sides ?? '').trim().match(/^d?(\d+)$/i)
+  const sides = Number(match?.[1])
+  if (!Number.isInteger(sides) || sides < 2) return fallback
+  return {
+    id: `d${sides}`,
+    sides,
+    value: `d${sides}`,
+    color: fallback.color,
+    shape: sides <= 6 ? 'd6' : 'd20',
+  }
+})
 const shape = computed(() => SHAPES[definition.value.shape] || SHAPES.d20)
 const shownValue = computed(() => props.value ?? definition.value.sides)
 const fontSize = computed(() => {
