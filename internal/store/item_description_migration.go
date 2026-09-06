@@ -54,6 +54,14 @@ var (
 )
 
 func migrateItemRichDescriptions(ctx context.Context, tx pgx.Tx) (itemDescriptionMigrationStats, error) {
+	return migratePublicRichDescriptions(ctx, tx, 2)
+}
+
+func migratePotionRichDescriptions(ctx context.Context, tx pgx.Tx) (itemDescriptionMigrationStats, error) {
+	return migratePublicRichDescriptions(ctx, tx, 10)
+}
+
+func migratePublicRichDescriptions(ctx context.Context, tx pgx.Tx, typeID int64) (itemDescriptionMigrationStats, error) {
 	resolver, err := loadLegacyRichResolver(ctx, tx)
 	if err != nil {
 		return itemDescriptionMigrationStats{}, err
@@ -62,9 +70,9 @@ func migrateItemRichDescriptions(ctx context.Context, tx pgx.Tx) (itemDescriptio
 	rows, err := tx.Query(ctx, `
 		SELECT id, data ->> 'desc'
 		FROM dndshare.item
-		WHERE user_id IS NULL AND type_id = 2
+		WHERE user_id IS NULL AND type_id = $1
 		  AND jsonb_typeof(data -> 'desc') = 'string'
-		ORDER BY id`)
+		ORDER BY id`, typeID)
 	if err != nil {
 		return itemDescriptionMigrationStats{}, fmt.Errorf("query item descriptions: %w", err)
 	}

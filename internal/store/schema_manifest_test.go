@@ -66,23 +66,24 @@ func TestEverySchemaFileIsEmbeddedAndRegistered(t *testing.T) {
 }
 
 func TestVersionedMigrationsRunAfterClassActionAutomation(t *testing.T) {
-	if len(schemaParts) < 14 {
+	if len(schemaParts) < 15 {
 		t.Fatal("schema manifest is incomplete")
 	}
-	legacyLast := schemaParts[len(schemaParts)-14]
-	halfCaster := schemaParts[len(schemaParts)-13]
-	sessionSecurity := schemaParts[len(schemaParts)-12]
-	sharedChannelDivinity := schemaParts[len(schemaParts)-11]
-	spellbookTabs := schemaParts[len(schemaParts)-10]
-	sacredWeaponEffect := schemaParts[len(schemaParts)-9]
-	spellbookGrantCleanup := schemaParts[len(schemaParts)-8]
-	sessionNPCBestiary := schemaParts[len(schemaParts)-7]
-	sessionSceneLocation := schemaParts[len(schemaParts)-6]
-	sessionSceneVisualSource := schemaParts[len(schemaParts)-5]
-	sessionEventActorItem := schemaParts[len(schemaParts)-4]
-	journals := schemaParts[len(schemaParts)-3]
-	originCatalogs := schemaParts[len(schemaParts)-2]
-	itemRichDescriptions := schemaParts[len(schemaParts)-1]
+	legacyLast := schemaParts[len(schemaParts)-15]
+	halfCaster := schemaParts[len(schemaParts)-14]
+	sessionSecurity := schemaParts[len(schemaParts)-13]
+	sharedChannelDivinity := schemaParts[len(schemaParts)-12]
+	spellbookTabs := schemaParts[len(schemaParts)-11]
+	sacredWeaponEffect := schemaParts[len(schemaParts)-10]
+	spellbookGrantCleanup := schemaParts[len(schemaParts)-9]
+	sessionNPCBestiary := schemaParts[len(schemaParts)-8]
+	sessionSceneLocation := schemaParts[len(schemaParts)-7]
+	sessionSceneVisualSource := schemaParts[len(schemaParts)-6]
+	sessionEventActorItem := schemaParts[len(schemaParts)-5]
+	journals := schemaParts[len(schemaParts)-4]
+	originCatalogs := schemaParts[len(schemaParts)-3]
+	itemRichDescriptions := schemaParts[len(schemaParts)-2]
+	potionRichDescriptions := schemaParts[len(schemaParts)-1]
 	if legacyLast.name != legacySchemaBootstrapLast {
 		t.Fatalf("legacy bootstrap must end at %q, got %q", legacySchemaBootstrapLast, legacyLast.name)
 	}
@@ -124,5 +125,8 @@ func TestVersionedMigrationsRunAfterClassActionAutomation(t *testing.T) {
 	}
 	if itemRichDescriptions.name != "item-rich-descriptions" || itemRichDescriptions.sql != schemaItemRichDescriptionsSQL {
 		t.Fatalf("item rich descriptions migration must run after origin catalogs")
+	}
+	if potionRichDescriptions.name != "potion-rich-descriptions" || potionRichDescriptions.sql != schemaPotionRichDescriptionsSQL {
+		t.Fatalf("potion rich descriptions migration must run after item rich descriptions")
 	}
 }

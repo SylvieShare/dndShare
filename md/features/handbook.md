@@ -190,7 +190,10 @@ keeps its own title, while the modal moves that title into the fixed header.
 текста, ссылки на существующие сущности открывают локальную карточку, КД и хиты
 получают собственные инлайн-маркеры, а таблицы остаются читаемыми на desktop и
 mobile. Внешние и неразрешённые относительные ссылки в базовых описаниях вещей
-не сохраняются.
+не сохраняются. Публичные зелья и масла используют тот же rich-контракт:
+механика сформулирована без импортированных машинных оборотов, две таблицы
+рендерятся нативно, а формулы лечения, хиты, заклинания и состояния раскрываются
+как соответствующие инлайн-узлы.
 An assigned raster or SVG item icon is shown in list rows, standard pickers,
 the global header search and detail/modal headings; raster has priority and the
 item-type raster emblem is the final fallback when both item formats are absent.

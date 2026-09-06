@@ -232,6 +232,9 @@ var schemaOriginCatalogsSQL string
 //go:embed schema/70_item_rich_descriptions.sql
 var schemaItemRichDescriptionsSQL string
 
+//go:embed schema/71_potion_rich_descriptions.sql
+var schemaPotionRichDescriptionsSQL string
+
 var schemaParts = []struct {
 	name string
 	sql  string
@@ -308,6 +311,7 @@ var schemaParts = []struct {
 	{"journals", schemaJournalsSQL},
 	{"origin-catalogs", schemaOriginCatalogsSQL},
 	{"item-rich-descriptions", schemaItemRichDescriptionsSQL},
+	{"potion-rich-descriptions", schemaPotionRichDescriptionsSQL},
 }
 
 const (
@@ -437,6 +441,20 @@ func applySchema(ctx context.Context, pool *pgxpool.Pool) error {
 			}
 			log.Printf(
 				"migrated item descriptions: items=%d dice=%d stats=%d item_links=%d removed_links=%d",
+				stats.Items,
+				stats.DiceNodes,
+				stats.StatNodes,
+				stats.ItemLinks,
+				stats.LinksClean,
+			)
+		}
+		if part.name == "potion-rich-descriptions" {
+			stats, err := migratePotionRichDescriptions(ctx, tx)
+			if err != nil {
+				return fmt.Errorf("migrate potion rich descriptions: %w", err)
+			}
+			log.Printf(
+				"migrated potion descriptions: items=%d dice=%d stats=%d item_links=%d removed_links=%d",
 				stats.Items,
 				stats.DiceNodes,
 				stats.StatNodes,
