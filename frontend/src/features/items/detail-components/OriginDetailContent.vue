@@ -97,6 +97,7 @@ import {
   originRelationIds,
   plainOriginDescription,
   spellcastingLabel,
+  subclassSpellcastingLabel,
 } from '@/features/items/lib/originPresentation'
 
 const props = defineProps({ item: { type: Object, required: true }, type: { type: Object, default: null } })
@@ -143,7 +144,7 @@ const mechanics = computed(() => {
     add('Кость хитов', hitDieLabel(data.value))
     add('Ключевые характеристики', abilityNames(data.value.primary_abilities).join(', '), true)
     add('Спасброски', abilityNames(data.value.saves).join(', '), true)
-    add('Заклинательство', spellcastingLabel(data.value))
+    add('Заклинательство', kind.value === 'subclass' ? subclassSpellcastingLabel(data.value) : spellcastingLabel(data.value))
     add('Выбор подкласса', data.value.subclass_level ? `${data.value.subclass_level} уровень` : '')
     add('Уровни ASI', data.value.asi_levels)
   }

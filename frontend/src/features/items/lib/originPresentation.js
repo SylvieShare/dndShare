@@ -87,3 +87,12 @@ export function spellcastingLabel(data) {
   if (spellcasting.ability || data?.spellcasting_ability) return 'Заклинатель'
   return 'Без магии'
 }
+
+export function subclassSpellcastingLabel(data) {
+  const spellcasting = data?.spellcasting || {}
+  const hasOwnSpellcasting = data?.caster_progression
+    || spellcasting.progression
+    || spellcasting.ability
+    || data?.spellcasting_ability
+  return hasOwnSpellcasting ? spellcastingLabel(data) : 'По правилам класса'
+}

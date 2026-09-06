@@ -40,6 +40,7 @@ import {
   originRelationIds,
   plainOriginDescription,
   spellcastingLabel,
+  subclassSpellcastingLabel,
 } from '@/features/items/lib/originPresentation'
 
 const props = defineProps({
@@ -57,12 +58,12 @@ const imageUrl = computed(() => props.item.coverImageUrl || props.item.iconImage
 const monogram = computed(() => String(props.item.name || '?').trim().slice(0, 1).toLocaleUpperCase('ru'))
 const metricValue = computed(() => {
   if (kind.value === 'class') return hitDieLabel(data.value)
-  if (kind.value === 'subclass') return (data.value.granted_spells || []).length || '·'
+  if (kind.value === 'subclass') return (data.value.granted_spells || []).length
   return asiLabel(data.value)?.split(' · ')[0] || '·'
 })
 const metricLabel = computed(() => {
   if (kind.value === 'class') return 'кость'
-  if (kind.value === 'subclass') return 'закл.'
+  if (kind.value === 'subclass') return 'даров.'
   return 'бонус'
 })
 const relationBadge = computed(() => {
@@ -81,7 +82,7 @@ const subtitle = computed(() => {
   }
   return [
     kind.value === 'subclass' ? parentName.value : abilityNames(data.value.primary_abilities).join(', '),
-    kind.value === 'subclass' ? spellcastingLabel(data.value) : '',
+    kind.value === 'subclass' ? subclassSpellcastingLabel(data.value) : '',
     plainOriginDescription(props.item, 90),
   ].filter(Boolean).join(' · ')
 })

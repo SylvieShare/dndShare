@@ -46,6 +46,7 @@ import {
   originParentId,
   originRelationIds,
   spellcastingLabel,
+  subclassSpellcastingLabel,
 } from '@/features/items/lib/originPresentation'
 
 const props = defineProps({ item: { type: Object, required: true }, type: { type: Object, default: null } })
@@ -86,7 +87,7 @@ const rightValue = computed(() => kind.value.includes('class')
 const rightIcon = computed(() => kind.value.includes('class') ? ShieldCheck : Footprints)
 const rightSecondaryLabel = computed(() => kind.value.includes('class') ? 'Заклинательство' : 'Языки')
 const rightSecondaryValue = computed(() => kind.value.includes('class')
-  ? spellcastingLabel(data.value)
+  ? (kind.value === 'subclass' ? subclassSpellcastingLabel(data.value) : spellcastingLabel(data.value))
   : suggestLabels(6, data.value.languages).join(', '))
 const rightSecondaryIcon = computed(() => kind.value.includes('class') ? BookOpen : Languages)
 const relationLabel = computed(() => kind.value === 'race' ? 'Подрасы' : kind.value === 'class' ? 'Подклассы' : 'Родитель')
