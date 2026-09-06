@@ -14,6 +14,13 @@ import { itemsApi } from '@/shared/api/itemsApi'
 import { dieSides } from '@/shared/lib/systemDice'
 import { randomDndName } from '@/shared/lib/dndNames'
 import {
+  CLASS_ITEM_TYPE,
+  RACE_ITEM_TYPE,
+  SUBCLASS_ITEM_TYPE,
+  SUBRACE_ITEM_TYPE,
+  originChildren,
+} from '@/shared/lib/dndItemTypes'
+import {
   activeBackgroundChoices,
   backgroundChoiceProfile,
   backgroundChoicesComplete,
@@ -37,8 +44,6 @@ import {
 } from './dndCreateWizardStats'
 
 export { POINT_BUY_BUDGET, pointCost, STANDARD_ARRAY } from './dndCreateWizardStats'
-const RACE_TYPE = 8
-const CLASS_TYPE = 9
 const RACE_ABIL_TYPE = 3
 const CLASS_ABIL_TYPE = 4
 const SPELL_TYPE = 5
@@ -57,8 +62,10 @@ export function useDndCreateWizard() {
   ;[3, 4, 5, 6, 7, 15, 16].forEach((t) => suggestStore.ensure(t))
 
   const races = ref([])
+  const allSubraces = ref([])
   const raceSubracesByParent = ref(new Map())
   const classes = ref([])
+  const allSubclasses = ref([])
   const classSubclassesByParent = ref(new Map())
   const subraces = ref([])
   const subclasses = ref([])
@@ -89,32 +96,35 @@ export function useDndCreateWizard() {
   async function load() {
     loading.value = true
     try {
-      const [r, c, ra, ca, ft, bg] = await Promise.all([
-        fetchGet(`/items?typeId=${RACE_TYPE}&limit=300${sourceSuffix()}`),
-        fetchGet(`/items?typeId=${CLASS_TYPE}&limit=300${sourceSuffix()}`),
+      const [r, sr, c, sc, ra, ca, ft, bg] = await Promise.all([
+        fetchGet(`/items?typeId=${RACE_ITEM_TYPE}&limit=300${sourceSuffix()}`),
+        fetchGet(`/items?typeId=${SUBRACE_ITEM_TYPE}&limit=300${sourceSuffix()}`),
+        fetchGet(`/items?typeId=${CLASS_ITEM_TYPE}&limit=300${sourceSuffix()}`),
+        fetchGet(`/items?typeId=${SUBCLASS_ITEM_TYPE}&limit=300${sourceSuffix()}`),
         fetchGet(`/items?typeId=${RACE_ABIL_TYPE}&limit=500${sourceSuffix()}`),
         fetchGet(`/items?typeId=${CLASS_ABIL_TYPE}&limit=500${sourceSuffix()}`),
         fetchGet(`/items?typeId=${FEAT_TYPE}&limit=500${sourceSuffix()}`),
         fetchGet(`/items?typeId=${BG_TYPE}&limit=200${sourceSuffix()}`),
         equipment.loadEquipmentCatalogue(),
       ])
-      // Base races/classes only — subraces/subclasses are children (parentId set).
-      const raceItems = r?.items || []
-      races.value = raceItems.filter((i) => !i.parentId)
+      races.value = r?.items || []
+      allSubraces.value = sr?.items || []
       const subraceMap = new Map()
-      raceItems.filter((item) => item.parentId && item.typeId === RACE_TYPE).forEach((item) => {
-        const key = String(item.parentId)
-        subraceMap.set(key, [...(subraceMap.get(key) || []), item.name].filter(Boolean))
+      races.value.forEach((race) => {
+        const names = originChildren(race, allSubraces.value, 'subraces').map(item => item.name).filter(Boolean)
+        if (names.length) subraceMap.set(String(race.id), names)
       })
       raceSubracesByParent.value = subraceMap
-      const classItems = c?.items || []
-      classes.value = classItems.filter((i) => !i.parentId)
+      classes.value = c?.items || []
+      allSubclasses.value = sc?.items || []
       const subclassMap = new Map()
-      classItems.filter((item) => item.parentId && item.typeId === CLASS_TYPE).forEach((item) => {
-        const key = String(item.parentId)
-        subclassMap.set(key, [...(subclassMap.get(key) || []), item.name].filter(Boolean))
+      classes.value.forEach((charClass) => {
+        const names = originChildren(charClass, allSubclasses.value, 'subclasses').map(item => item.name).filter(Boolean)
+        if (names.length) subclassMap.set(String(charClass.id), names)
       })
       classSubclassesByParent.value = subclassMap
+      subraces.value = state.race ? originChildren(state.race, allSubraces.value, 'subraces') : []
+      subclasses.value = state.charClass ? originChildren(state.charClass, allSubclasses.value, 'subclasses') : []
       raceAbilities.value = ra?.items || []
       classAbilities.value = ca?.items || []
       featPool.value = ft?.items || []
@@ -135,17 +145,15 @@ export function useDndCreateWizard() {
     },
   )
 
-  watch(() => state.race, async (r) => {
+  watch(() => state.race, (r) => {
     if (hydrating) return
     state.subrace = null
     state.raceVariant = null
     subraces.value = []
     if (!r) return
-    const raceId = r.id
-    const items = ((await fetchGet(`/items/children?parentId=${raceId}${sourceSuffix()}`))?.items || []).filter((i) => i.typeId === RACE_TYPE)
-    if (state.race?.id === raceId) subraces.value = items
+    subraces.value = originChildren(r, allSubraces.value, 'subraces')
   })
-  watch(() => state.charClass, async (c) => {
+  watch(() => state.charClass, (c) => {
     if (hydrating) return
     state.subclass = null
     state.skillIds = []
@@ -154,9 +162,7 @@ export function useDndCreateWizard() {
     equipment.resetEquipmentForClass()
     subclasses.value = []
     if (!c) return
-    const classId = c.id
-    const items = ((await fetchGet(`/items/children?parentId=${classId}${sourceSuffix()}`))?.items || []).filter((i) => i.typeId === CLASS_TYPE)
-    if (state.charClass?.id === classId) subclasses.value = items
+    subclasses.value = originChildren(c, allSubclasses.value, 'subclasses')
   })
   // A different race/subrace/variant means a different set of race offers — clear the picks.
   watch(() => [state.race?.id, state.subrace?.id, state.raceVariant], () => {
@@ -680,8 +686,8 @@ export function useDndCreateWizard() {
     hydrating = true
     Object.assign(state, saved)
     state.contentSources = normalizeContentSourceSettings(state.contentSources)
-    if (state.race) subraces.value = ((await fetchGet(`/items/children?parentId=${state.race.id}${sourceSuffix()}`))?.items || []).filter((i) => i.typeId === RACE_TYPE)
-    if (state.charClass) subclasses.value = ((await fetchGet(`/items/children?parentId=${state.charClass.id}${sourceSuffix()}`))?.items || []).filter((i) => i.typeId === CLASS_TYPE)
+    if (state.race) subraces.value = originChildren(state.race, allSubraces.value, 'subraces')
+    if (state.charClass) subclasses.value = originChildren(state.charClass, allSubclasses.value, 'subclasses')
     if (isCaster.value) await loadSpells()
     // Let the reset watchers (guarded by `hydrating`) flush before unlocking, so
     // they can't wipe the restored subrace / variant / floating-ASI picks.

@@ -8,7 +8,7 @@ import (
 func TestSystemRaceIconQuerySeparatesBaseRacesAndSubraces(t *testing.T) {
 	for _, fragment := range []string{
 		"user_id IS NULL",
-		"type_id = 8",
+		"type_id = CASE WHEN $2::boolean THEN 16 ELSE 8 END",
 		"$2::boolean AND parent_id IS NOT NULL",
 		"NOT $2::boolean AND parent_id IS NULL",
 		"icon_image_id",

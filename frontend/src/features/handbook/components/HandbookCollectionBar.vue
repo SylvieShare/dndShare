@@ -189,7 +189,7 @@ watch(() => props.filterFields, async fields => {
   const next = {}
   await Promise.all((fields || []).filter(field => field.filter_item_type).map(async field => {
     const response = await fetchGet(`/items?typeId=${field.filter_item_type}&limit=500`).catch(() => null)
-    next[field.path] = (response?.items || []).filter(item => !item.parentId).map(item => ({ value: item.id, label: item.name }))
+    next[field.path] = (response?.items || []).map(item => ({ value: item.id, label: item.name }))
   }))
   itemFilterOptions.value = next
 }, { immediate: true })

@@ -68,7 +68,7 @@
     </div>
 
     <div class="iem-fields-grid">
-      <ItemSchemaField v-for="field in typeFields" :key="field.key" :field="field" />
+      <ItemSchemaField v-for="field in editableTypeFields" :key="field.key" :field="field" />
     </div>
 
     <ItemPickerModal
@@ -80,8 +80,9 @@
     />
     <template #footer>
       <div class="iem-actions">
+        <span v-if="missingRequiredFields.length" class="iem-required-hint">Заполните обязательные поля</span>
         <button class="iem-cancel" @click="$emit('close')">Отмена</button>
-        <button class="iem-submit" :disabled="!formName.trim() || saving" @click="submit">
+        <button class="iem-submit" :disabled="!canSubmit || saving" @click="submit">
           {{ saving ? '...' : (item ? 'Сохранить' : 'Создать') }}
         </button>
       </div>
@@ -123,12 +124,22 @@ const suggestStore = useSuggestStore()
 const itemTypesStore = useItemTypesStore()
 const nameInput = ref(null)
 const typeFields = ref([])
+const editableTypeFields = computed(() => typeFields.value.filter(field => !field.readonly))
 const contentSources = ref([])
 const selectedContentSourceIds = ref([])
 const formName = ref(props.initialName)
 const formNameEn = ref(props.initialNameEn)
 const formData = reactive({})
 const saving = ref(false)
+const missingRequiredFields = computed(() => editableTypeFields.value.filter((field) => {
+  if (!field.required) return false
+  const value = formData[field.key]
+  if (field.type === 'item') return !(Number(value) > 0)
+  if (Array.isArray(value)) return value.length === 0
+  if (typeof value === 'string') return !value.trim()
+  return value == null
+}))
+const canSubmit = computed(() => !!formName.value.trim() && missingRequiredFields.value.length === 0)
 const picker = reactive({ open: false, typeId: null, onPick: null })
 const iconFileInput = ref(null)
 const iconFile = ref(null)
@@ -215,7 +226,7 @@ function removeIcon() {
 }
 
 async function submit() {
-  if (!formName.value.trim() || saving.value) return
+  if (!canSubmit.value || saving.value) return
   saving.value = true
   try {
     const data = normalizeDataForSave({ ...formData }, typeFields.value)

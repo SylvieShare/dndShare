@@ -75,6 +75,7 @@
                   <TransportListItem v-else-if="type.id === 13" :item="item" :type="type" />
                   <ItemListItem v-else-if="type.id === 14" :item="item" :type="type" />
                   <FeatListItem v-else-if="type.id === 7" :item="item" :type="type" />
+                  <OriginListItem v-else-if="[8, 9, 16, 17].includes(type.id)" :item="item" :type="type" />
                   <ObjectListItem
                     v-else
                     :item="item"
@@ -105,6 +106,7 @@
               <TransportListItem v-else-if="type.id === 13" :item="item" :type="type" />
               <ItemListItem v-else-if="type.id === 14" :item="item" :type="type" />
               <FeatListItem v-else-if="type.id === 7" :item="item" :type="type" />
+              <OriginListItem v-else-if="[8, 9, 16, 17].includes(type.id)" :item="item" :type="type" />
               <ObjectListItem
                 v-else
                 :item="item"
@@ -138,6 +140,7 @@ import ArmorListItem from '@/features/items/list-components/ArmorListItem'
 import FeatListItem from '@/features/items/list-components/FeatListItem'
 import ItemListItem from '@/features/items/list-components/ItemListItem'
 import ObjectListItem from '@/features/items/list-components/ObjectListItem'
+import OriginListItem from '@/features/items/list-components/OriginListItem.vue'
 import PotionListItem from '@/features/items/list-components/PotionListItem'
 import SpellListItem from '@/features/items/list-components/SpellListItem'
 import TransportListItem from '@/features/items/list-components/TransportListItem'

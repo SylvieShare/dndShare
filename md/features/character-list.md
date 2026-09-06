@@ -106,7 +106,10 @@ upload. The portrait becomes `values.ava`; the square 256×256 icon is submitted
 When no icon is selected, character cards and sessions continue to fall back to the
 portrait.
 
-The race step uses full-width illustrated rows. Each built-in race has a consistent
+The race step loads base races from handbook type 8 and subraces from the
+separate type 16. It resolves the available variants through the synchronized
+`race.data.subraces[]` / `subrace.data.race` links, without treating children of
+type 8 as subraces. The race step uses full-width illustrated rows. Each built-in race has a consistent
 landscape portrait of a male and female character; beside it the row shows a short
 mechanics-free portrait from `item.data.short_description`, every base-race grant
 and the choices that will follow (for
@@ -153,7 +156,9 @@ locked states.
 On phones, choosing a race scrolls the newly revealed lore and dependent choices
 into view with a smooth transition instead of leaving them below the viewport.
 
-The class step follows the same selection flow. Base classes are full-width rows
+The class step follows the same selection flow. Base classes come from type 9,
+subclasses from type 17, and the wizard joins them through
+`class.data.subclasses[]` / `subclass.data.class`. Base classes are full-width rows
 whose illustration reads `coverImageUrl` and falls back to a monogram when no
 cover is assigned. A row presents its short handbook description,
 hit die, primary abilities, saving throws, proficiencies, level-one features and

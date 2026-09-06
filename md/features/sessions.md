@@ -281,8 +281,9 @@ an optional race item, optional role and description, card color and a portrait.
 The NPC editor can also link one existing type `6` bestiary creature without
 copying its stat block. Removing that handbook item clears the optional link.
 The portrait may come from an independent NPC preset catalogue or an uploaded
-storage image; it is not mixed with chapter/location backgrounds. The race picker reads type `8`
-handbook items, including subraces; the stored nullable FK is cleared if that
+storage image; it is not mixed with chapter/location backgrounds. The race picker
+combines base races from handbook type `8` and subraces from the separate type
+`16`, labelling a variant together with its linked `data.race`; the stored nullable FK is cleared if that
 item is removed. The name field has an explicit dice action backed by the same
 race-aware generator as the D&D character wizard. Standard race profiles combine
 at least 80 given-name/family-name variants each, while an unknown custom race

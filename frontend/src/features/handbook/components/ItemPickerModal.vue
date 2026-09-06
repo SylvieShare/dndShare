@@ -201,7 +201,7 @@ const excludeSet = computed(() =>
 const suggestStore = useSuggestStore()
 const filterFields = computed(() =>
   walkFieldsWithPath(itemType.value?.fields || [])
-    .filter(({ field }) => field.filter && field.type !== 'item')
+    .filter(({ field }) => field.filter)
     .map(({ field, path }) => ({ ...field, path: field.filter_path || path }))
 )
 const filterSuggests = computed(() => {

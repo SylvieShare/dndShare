@@ -122,9 +122,13 @@ import { ValueSelect } from '@sylvieshare/share-ui'
 import { classEntriesOf, classesLabel } from '@/features/character-editor/blocks/dnd/lib/levelUp'
 import { fetchGet } from '@/shared/api/http'
 import { contentScopeQuery } from '@/shared/api/contentSourcesApi'
-
-const RACE_TYPE = 8
-const CLASS_TYPE = 9
+import {
+  CLASS_ITEM_TYPE,
+  RACE_ITEM_TYPE,
+  SUBCLASS_ITEM_TYPE,
+  SUBRACE_ITEM_TYPE,
+  originFilterQuery,
+} from '@/shared/lib/dndItemTypes'
 
 const props = defineProps(['block', 'value', 'values'])
 const emit = defineEmits(['update:value'])
@@ -192,22 +196,20 @@ watch(() => JSON.stringify(charCtx.contentSources || {}), async () => {
 
 async function ensureBaseItems() {
   if (!races.value.length) {
-    const items = (await fetchGet(`/items?typeId=${RACE_TYPE}&limit=500${sourceSuffix()}`))?.items || []
-    races.value = items.filter((i) => i.parentId == null)
+    races.value = (await fetchGet(`/items?typeId=${RACE_ITEM_TYPE}&limit=500${sourceSuffix()}`))?.items || []
   }
   if (!classes.value.length) {
-    const items = (await fetchGet(`/items?typeId=${CLASS_TYPE}&limit=500${sourceSuffix()}`))?.items || []
-    classes.value = items.filter((i) => i.parentId == null)
+    classes.value = (await fetchGet(`/items?typeId=${CLASS_ITEM_TYPE}&limit=500${sourceSuffix()}`))?.items || []
   }
 }
 async function loadSubraces(parentId) {
   subraces.value = parentId
-    ? ((await fetchGet(`/items/children?parentId=${parentId}${sourceSuffix()}`))?.items || []).filter((i) => i.typeId === RACE_TYPE)
+    ? (await fetchGet(`/items?typeId=${SUBRACE_ITEM_TYPE}&limit=500${originFilterQuery('race', parentId)}${sourceSuffix()}`))?.items || []
     : []
 }
 async function loadRowSubclasses(row) {
   row.subclasses = row.classId
-    ? ((await fetchGet(`/items/children?parentId=${row.classId}${sourceSuffix()}`))?.items || []).filter((i) => i.typeId === CLASS_TYPE)
+    ? (await fetchGet(`/items?typeId=${SUBCLASS_ITEM_TYPE}&limit=500${originFilterQuery('class', row.classId)}${sourceSuffix()}`))?.items || []
     : []
 }
 

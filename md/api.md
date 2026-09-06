@@ -108,9 +108,13 @@ ability toggles and `status_effect` for adding or removing linked effects.
   `instanceFields` для типизированного `params` конкретного экземпляра и
   nullable `iconImageId`/`iconImageUrl`, `coverImageId`/`coverImageUrl`;
   прежнего поля `svg` у item type нет;
-- `GET /api/items`
+- `GET /api/items` (`typeId`, pagination, publication scope and schema
+  `filters`; например, подрасы: `typeId=16&filters={"race":123}`,
+  подклассы: `typeId=17&filters={"class":456}`)
 - `GET /api/items/by-ids?ids=`
-- `GET /api/items/children?parentId=`
+- `GET /api/items/children?parentId=` — generic legacy-friendly traversal по
+  `item.parent_id`; runtime выбора происхождения использует отдельные типы и
+  schema-фильтры выше;
 - `GET /api/items/search`, `GET /api/items/search-multi`; оба принимают
   publication scope, включая `sourceVersionId`, и ищут case-insensitive
   подстроку одновременно в русском `name` и английском `nameEn`.
@@ -125,6 +129,10 @@ Item DTO содержит `customSourceId` только у пользовате�
 `custom_item_source` владельца и записывает FK; клиент не передаёт ownership в
 JSON `data`. `contentSourceIds` остаётся отдельной метаданной публикаций и не
 заменяет персональный источник.
+Для типов 8/16 и 9/17 DTO возвращает взаимные item-ссылки в `data`:
+`subraces[]`/`race` и `subclasses[]`/`class`. Обратные массивы базовой записи
+readonly и пересчитываются БД; клиент изменяет обязательную связь со стороны
+варианта.
 
 Все item reads по id/parent и suggest reads по ids возвращают только базовые
 строки и строки текущего пользователя; анонимный и MCP catalogue read видит

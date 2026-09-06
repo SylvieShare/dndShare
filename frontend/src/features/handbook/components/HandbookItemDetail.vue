@@ -27,6 +27,9 @@
         <template v-else-if="isStatusEffect" #summary>
           <StatusEffectDetailSummary :item="item" :type="type" />
         </template>
+        <template v-else-if="isOrigin" #summary>
+          <OriginDetailSummary :item="item" :type="type" />
+        </template>
         <template v-if="itemSourceLabel" #corner>
           <span
             class="item-detail-source"
@@ -147,6 +150,8 @@ import EnemyDetailSummary from '@/features/items/detail-components/EnemyDetailSu
 import FeatDetailContent from '@/features/items/detail-components/FeatDetailContent'
 import GearDetailSummary from '@/features/items/detail-components/GearDetailSummary.vue'
 import ItemDetailContent from '@/features/items/detail-components/ItemDetailContent'
+import OriginDetailContent from '@/features/items/detail-components/OriginDetailContent.vue'
+import OriginDetailSummary from '@/features/items/detail-components/OriginDetailSummary.vue'
 import PotionDetailContent from '@/features/items/detail-components/PotionDetailContent'
 import SpellDetailContent from '@/features/items/detail-components/SpellDetailContent'
 import SpellDetailSummary from '@/features/items/detail-components/SpellDetailSummary.vue'
@@ -169,11 +174,15 @@ const CUSTOM_RENDERERS = {
   5: SpellDetailContent,
   6: EnemyDetailContent,
   7: FeatDetailContent,
+  8: OriginDetailContent,
+  9: OriginDetailContent,
   10: PotionDetailContent,
   12: ArmorDetailContent,
   13: TransportDetailContent,
   14: ItemDetailContent,
   15: StatusEffectDetailContent,
+  16: OriginDetailContent,
+  17: OriginDetailContent,
 }
 
 const props = defineProps({
@@ -195,6 +204,7 @@ const isTransport = computed(() => props.type?.id === 13)
 const isTool = computed(() => props.type?.id === 14)
 const isGear = computed(() => props.type?.id === 2)
 const isStatusEffect = computed(() => props.type?.id === 15)
+const isOrigin = computed(() => [8, 9, 16, 17].includes(props.type?.id))
 const customRendererProps = computed(() => {
   if (props.type?.id === 2 || props.type?.id === 14) return { economyInHeader: true }
   if (props.type?.id === 5) return { summaryInHeader: true }

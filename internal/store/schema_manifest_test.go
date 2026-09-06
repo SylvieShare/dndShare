@@ -66,21 +66,22 @@ func TestEverySchemaFileIsEmbeddedAndRegistered(t *testing.T) {
 }
 
 func TestVersionedMigrationsRunAfterClassActionAutomation(t *testing.T) {
-	if len(schemaParts) < 13 {
+	if len(schemaParts) < 14 {
 		t.Fatal("schema manifest is incomplete")
 	}
-	legacyLast := schemaParts[len(schemaParts)-13]
-	halfCaster := schemaParts[len(schemaParts)-12]
-	sessionSecurity := schemaParts[len(schemaParts)-11]
-	sharedChannelDivinity := schemaParts[len(schemaParts)-10]
-	spellbookTabs := schemaParts[len(schemaParts)-9]
-	sacredWeaponEffect := schemaParts[len(schemaParts)-8]
-	spellbookGrantCleanup := schemaParts[len(schemaParts)-7]
-	sessionNPCBestiary := schemaParts[len(schemaParts)-6]
-	sessionSceneLocation := schemaParts[len(schemaParts)-5]
-	sessionSceneVisualSource := schemaParts[len(schemaParts)-4]
-	sessionEventActorItem := schemaParts[len(schemaParts)-3]
-	journals := schemaParts[len(schemaParts)-2]
+	legacyLast := schemaParts[len(schemaParts)-14]
+	halfCaster := schemaParts[len(schemaParts)-13]
+	sessionSecurity := schemaParts[len(schemaParts)-12]
+	sharedChannelDivinity := schemaParts[len(schemaParts)-11]
+	spellbookTabs := schemaParts[len(schemaParts)-10]
+	sacredWeaponEffect := schemaParts[len(schemaParts)-9]
+	spellbookGrantCleanup := schemaParts[len(schemaParts)-8]
+	sessionNPCBestiary := schemaParts[len(schemaParts)-7]
+	sessionSceneLocation := schemaParts[len(schemaParts)-6]
+	sessionSceneVisualSource := schemaParts[len(schemaParts)-5]
+	sessionEventActorItem := schemaParts[len(schemaParts)-4]
+	journals := schemaParts[len(schemaParts)-3]
+	originCatalogs := schemaParts[len(schemaParts)-2]
 	itemRichDescriptions := schemaParts[len(schemaParts)-1]
 	if legacyLast.name != legacySchemaBootstrapLast {
 		t.Fatalf("legacy bootstrap must end at %q, got %q", legacySchemaBootstrapLast, legacyLast.name)
@@ -118,7 +119,10 @@ func TestVersionedMigrationsRunAfterClassActionAutomation(t *testing.T) {
 	if journals.name != "journals" || journals.sql != schemaJournalsSQL {
 		t.Fatalf("journals migration must run after the session event actor item migration")
 	}
+	if originCatalogs.name != "origin-catalogs" || originCatalogs.sql != schemaOriginCatalogsSQL {
+		t.Fatalf("origin catalog migration must run after journals")
+	}
 	if itemRichDescriptions.name != "item-rich-descriptions" || itemRichDescriptions.sql != schemaItemRichDescriptionsSQL {
-		t.Fatalf("item rich descriptions migration must run after journals")
+		t.Fatalf("item rich descriptions migration must run after origin catalogs")
 	}
 }

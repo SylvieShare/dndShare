@@ -382,9 +382,16 @@
 
 .iem-actions {
   display: flex;
+  align-items: center;
   justify-content: flex-end;
   gap: 8px;
   padding-top: 4px;
+}
+
+.iem-required-hint {
+  margin-right: auto;
+  color: var(--warning);
+  font-size: 11px;
 }
 
 .iem-cancel {

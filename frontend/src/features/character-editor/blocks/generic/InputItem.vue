@@ -27,6 +27,7 @@
 import { computed, inject, onMounted, ref, watch } from 'vue'
 import { fetchGet } from '@/shared/api/http'
 import { contentScopeQuery } from '@/shared/api/contentSourcesApi'
+import { originFilterQuery } from '@/shared/lib/dndItemTypes'
 
 const props = defineProps(['block', 'value', 'values'])
 const emit = defineEmits(['update:value'])
@@ -36,8 +37,10 @@ const sourceSuffix = () => contentScopeQuery(charCtx.contentSources, charCtx.sou
 const items = ref([])
 const children = ref([])
 const itemType = computed(() => Number(props.block.content?.item_type))
-// optional sub-item field (e.g. subrace/subclass): linked via item.parent_id
+// Optional sub-item field (for example a dedicated subrace/subclass type).
 const childId = computed(() => props.block.content?.child_id || '')
+const childItemType = computed(() => Number(props.block.content?.child_item_type))
+const childParentKey = computed(() => props.block.content?.child_parent_key || '')
 const childDisplay = computed(() => props.block.content?.child_display || 'paren')
 
 function refId(v) {
@@ -62,11 +65,11 @@ const display = computed(() => {
 async function loadBaseItems() {
   if (!itemType.value) return
   const res = await fetchGet(`/items?typeId=${itemType.value}&limit=500${sourceSuffix()}`)
-  items.value = (res?.items || []).filter((i) => i.parentId == null)
+  items.value = res?.items || []
 }
 async function loadChildren(parentId) {
-  children.value = (childId.value && parentId)
-    ? ((await fetchGet(`/items/children?parentId=${parentId}${sourceSuffix()}`))?.items || []).filter((i) => i.typeId === itemType.value)
+  children.value = (childId.value && childItemType.value && childParentKey.value && parentId)
+    ? (await fetchGet(`/items?typeId=${childItemType.value}&limit=500${originFilterQuery(childParentKey.value, parentId)}${sourceSuffix()}`))?.items || []
     : []
 }
 

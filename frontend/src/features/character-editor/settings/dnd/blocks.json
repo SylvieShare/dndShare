@@ -166,6 +166,8 @@
       "item_type": 8,
       "placeholder": "Раса",
       "child_id": "subrace",
+      "child_item_type": 16,
+      "child_parent_key": "race",
       "child_placeholder": "Без происхождения",
       "child_display": "replace"
     }
@@ -205,6 +207,8 @@
       "item_type": 9,
       "placeholder": "Класс",
       "child_id": "subclass",
+      "child_item_type": 17,
+      "child_parent_key": "class",
       "child_placeholder": "Без архетипа",
       "child_display": "paren"
     }

@@ -141,11 +141,14 @@
     ]
   },
   {
-    "name": "Архетипы",
+    "name": "Подклассы",
     "key": "subclass_ids",
     "type": "object_array",
+    "filter": true,
+    "filter_path": "subclass_ids.id",
+    "filter_item_type": 17,
     "fields": [
-      { "name": "Архетип", "key": "id", "type": "item", "item_type": 9 }
+      { "name": "Подкласс", "key": "id", "type": "item", "item_type": 17 }
     ]
   },
   {

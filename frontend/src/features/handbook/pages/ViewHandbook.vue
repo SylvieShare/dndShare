@@ -196,7 +196,7 @@ function getSuggests(suggestId) { return suggestStore.items(suggestId) || [] }
 
 const filterFields = computed(() =>
   walkFieldsWithPath(selectedType.value?.fields || [])
-    .filter(({ field }) => field.filter && field.type !== 'item')
+    .filter(({ field }) => field.filter)
     .map(({ field, path }) => ({ ...field, path: field.filter_path || path }))
 )
 const filterSuggests = computed(() => {

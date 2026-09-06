@@ -10,6 +10,7 @@ const weaponList = readFileSync(fileURLToPath(new URL('../../items/list-componen
 const weaponDamageMetric = readFileSync(fileURLToPath(new URL('../../items/components/WeaponDamageMetric.vue', import.meta.url)), 'utf8')
 const itemReference = readFileSync(fileURLToPath(new URL('../../items/components/ItemReferenceRow.vue', import.meta.url)), 'utf8')
 const transportList = readFileSync(fileURLToPath(new URL('../../items/list-components/TransportListItem.vue', import.meta.url)), 'utf8')
+const originList = readFileSync(fileURLToPath(new URL('../../items/list-components/OriginListItem.vue', import.meta.url)), 'utf8')
 
 describe('handbook list controls', () => {
   it('owns search and filters above the scrollable rows', () => {
@@ -47,6 +48,15 @@ describe('handbook list controls', () => {
     expect(transportList).toContain('#metric')
     expect(transportList).toContain('transport-list-cost')
     expect(transportList).toContain("sail_or_oar: 'Парус/вёсла'")
+  })
+
+  it('uses informative linked rows for races, classes and their variant collections', () => {
+    expect(source.match(/<OriginListItem v-else-if="\[8, 9, 16, 17\]\.includes\(type\.id\)"/g)).toHaveLength(2)
+    expect(originList).toContain('origin-list-portrait')
+    expect(originList).toContain('origin-list-metric')
+    expect(originList).toContain('origin-list-relation')
+    expect(originList).toContain('originParentId')
+    expect(originList).toContain('originRelationIds')
   })
 
   it('places weapon damage in the shared metric column and price at the trailing edge', () => {

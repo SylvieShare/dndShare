@@ -118,7 +118,7 @@ func publicOrOwnedPredicate(alias string, userID *int64, userParam int) string {
 	return fmt.Sprintf("(%s.user_id IS NULL OR %s.user_id = $%d)", alias, alias, userParam)
 }
 
-// FindChildren — дети по parent_id (подрасы/архетипы).
+// FindChildren — generic descendants by the normalized parent_id edge.
 func (s *Store) FindChildren(ctx context.Context, parentID int64, userID *int64, scope ContentScope) ([]Item, error) {
 	args := []any{parentID}
 	where := []string{"i.parent_id = $1"}
@@ -138,7 +138,7 @@ func (s *Store) FindChildren(ctx context.Context, parentID int64, userID *int64,
 	if err != nil {
 		return nil, err
 	}
-	return s.AttachItemContentSources(ctx, items)
+	return s.attachItemReadMetadata(ctx, items, userID)
 }
 
 // GetByTypeAndUser — базовые + пользовательские предметы типа с фильтрами/пагинацией.
@@ -293,7 +293,7 @@ func (s *Store) searchItems(ctx context.Context, typeID int64, q *string, userID
 	if err != nil {
 		return nil, err
 	}
-	return s.AttachItemContentSources(ctx, items)
+	return s.attachItemReadMetadata(ctx, items, userID)
 }
 
 func appendContentScopeSQL(where []string, args *[]any, scope ContentScope) []string {
@@ -375,7 +375,7 @@ func (s *Store) GetByIds(ctx context.Context, ids []int64, userID *int64) ([]Ite
 	if err != nil {
 		return nil, err
 	}
-	return s.AttachItemContentSources(ctx, out)
+	return s.attachItemReadMetadata(ctx, out, userID)
 }
 
 // SearchByTypesAndName — поиск сразу по нескольким типам (для search-multi).
@@ -413,7 +413,88 @@ func (s *Store) SearchByTypesAndName(ctx context.Context, typeIDs []int64, q str
 	if err != nil {
 		return nil, err
 	}
-	return s.AttachItemContentSources(ctx, items)
+	return s.attachItemReadMetadata(ctx, items, userID)
+}
+
+func (s *Store) attachItemReadMetadata(ctx context.Context, items []Item, userID *int64) ([]Item, error) {
+	items, err := s.AttachItemContentSources(ctx, items)
+	if err != nil {
+		return nil, err
+	}
+	return s.attachVisibleOriginRelations(ctx, items, userID)
+}
+
+// attachVisibleOriginRelations projects the reverse side of race/class links
+// for the current reader. Public base rows must not persist ids of another
+// user's private variants, so the complete accessible relation is assembled on
+// read from the normalized child parent_id edge.
+func (s *Store) attachVisibleOriginRelations(ctx context.Context, items []Item, userID *int64) ([]Item, error) {
+	baseIDs := make([]int64, 0, len(items))
+	byID := make(map[int64]int, len(items))
+	for index := range items {
+		if items[index].TypeID == 8 || items[index].TypeID == 9 {
+			baseIDs = append(baseIDs, items[index].ID)
+			byID[items[index].ID] = index
+		}
+	}
+	if len(baseIDs) == 0 {
+		return items, nil
+	}
+
+	args := []any{baseIDs}
+	if userID != nil {
+		args = append(args, *userID)
+	}
+	visibility := publicOrOwnedPredicate("child", userID, len(args))
+	rows, err := s.pool.Query(ctx,
+		`SELECT child.id, child.parent_id
+		   FROM dndshare.item child
+		  WHERE child.parent_id = ANY($1)
+		    AND child.type_id IN (16, 17)
+		    AND `+visibility+`
+		  ORDER BY child.name, child.id`,
+		args...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	relations := make(map[int64][]map[string]int64, len(baseIDs))
+	for rows.Next() {
+		var childID, parentID int64
+		if err := rows.Scan(&childID, &parentID); err != nil {
+			return nil, err
+		}
+		relations[parentID] = append(relations[parentID], map[string]int64{"id": childID})
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	for parentID, index := range byID {
+		data := map[string]any{}
+		if len(items[index].Data) > 0 {
+			if err := json.Unmarshal(items[index].Data, &data); err != nil || data == nil {
+				data = map[string]any{}
+			}
+		}
+		key := "subraces"
+		if items[index].TypeID == 9 {
+			key = "subclasses"
+		}
+		refs := relations[parentID]
+		if refs == nil {
+			refs = []map[string]int64{}
+		}
+		data[key] = refs
+		encoded, err := json.Marshal(data)
+		if err != nil {
+			return nil, err
+		}
+		items[index].Data = encoded
+	}
+	return items, nil
 }
 
 // FindBaseByTypeAndNameEn — базовый предмет по типу и nameEn (case-insensitive). ErrNotFound если нет.

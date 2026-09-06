@@ -105,9 +105,19 @@ Startup data correction переводит прежние значения в э
 `item_type` хранит schema fields типа, `item` — контент, `suggest_type/suggest`
 — словари. `item_type.parent_type_id` образует иерархию коллекций: «Оружие»,
 «Зелья», «Доспехи», «Транспорт» и «Инструменты» являются прямыми
-подразделами «Вещей». Корневая коллекция может включать предметы всех дочерних
-типов в picker, не смешивая сами справочные записи. `item.parent_id` — отдельная
-связь между записями для подрасы, подкласса и других вариантов.
+подразделами «Вещей»; тип 16 «Подрасы» является подразделом типа 8 «Расы», а
+тип 17 «Подклассы» — подразделом типа 9 «Классы». Корневая коллекция может
+включать предметы всех дочерних типов в picker, не смешивая сами справочные
+записи. Для происхождения `item.parent_id` нормализует явные schema-ссылки:
+`subrace.data.race` ↔ `race.data.subraces[]` и
+`subclass.data.class` ↔ `class.data.subclasses[]`; вариант без базовой записи
+не проходит trigger-валидацию.
+Startup migration `69_origin_catalogs.sql` сохраняет id существующих вариантов,
+переносит их из типов 8/9 в 16/17 и ставит trigger, поддерживающие обе стороны
+связи при последующих изменениях. Материализованный обратный массив содержит
+только item того же владельца, чтобы общая базовая запись не раскрывала id
+чужих личных вариантов; read-проекция дополняет его публичными и собственными
+вариантами текущего пользователя.
 Типы 3, 4 и 7 описывают использования единым ресурсным контрактом. Фиксированный
 максимум задаётся `max_use`; формула от характеристики использует
 `max_use_stat`, `max_use_stat_multiplier`, `max_use_bonus` и `max_use_min`;
@@ -129,6 +139,9 @@ spell pickers. Ability choices may combine dictionaries through
 `suggest_sources`, require an owned proficiency and exclude an already reached
 rank. `display_scaling [{level,label}]` is presentation data resolved against
 the owning class level.
+В схемах способностей `subrace_ids` ссылается на item типа 16, а
+`subclass_ids` — на item типа 17; `race_ids` и `class_ids` продолжают ссылаться
+на базовые типы 8 и 9.
 `weapon_damage` describes optional damage rolls contributed by abilities, race
 traits or feats: eligible weapon kind, damage die, fixed or level-scaled count,
 critical multiplication and menu labels. Section
@@ -273,7 +286,8 @@ startup section `27_background_equipment.sql` заменяет прежнее т
 на прозрачные PNG, встроенные во frontend под `/static/handbook-types/`.
 Startup section `24_handbook_type_icons.sql` идемпотентно назначает эмблемы
 типам 1–13 и удаляет прежний runtime-контракт `item_type.svg_id`; тип 14
-«Инструменты» наследует визуальную эмблему родительских «Вещей» при создании.
+«Инструменты» наследует визуальную эмблему родительских «Вещей» при создании,
+а migration 69 копирует icon/cover базовой расы и класса новым типам 16/17.
 Независимая `item_type.cover_image_id → storage_image/S3` хранит типовую
 обложку-заглушку коллекции. Item-level `cover_image_id` имеет приоритет, поэтому
 типовой визуал не копируется в каждую строку item и автоматически обслуживает
@@ -403,18 +417,18 @@ Versioned section `70_item_rich_descriptions.sql` заменяет пустые 
 загружаются ручным legacy-синхронизатором по стабильным ключам
 `system-race-images/v1/...`. Для каждой
 создаётся системная строка `storage_image(type='item_cover')`; базовые расы
-связываются только с item без `parent_id`, а подрасы — только с дочерними item
-типа 8 через `item.cover_image_id`. Отдельный синхронизатор загружает их
+связываются с item типа 8, а подрасы — с item типа 16 через
+`item.cover_image_id`. Отдельный синхронизатор загружает их
 геральдические иконки по ключам `system-race-icons/v1/...`, создаёт
 `storage_image(type='item_icon')` и назначает через `item.icon_image_id` с тем
 же разделением base/subrace.
 
 Пятнадцать встроенных базовых классов используют параллельный namespace
 `system-class-images/v1/*`. Startup seed создаёт системные
-`storage_image(type='item_icon')` и назначает их только системным item типа 9 без
-`parent_id`, у которых иконка отсутствует или всё ещё указывает в этот legacy-
+`storage_image(type='item_icon')` и назначает их только системным item типа 9,
+у которых иконка отсутствует или всё ещё указывает в этот legacy-
 namespace; MCP-иконки `system-item-media/v1/*` startup и ручной sync не
-перезаписывают. Дочерние подклассы не затрагиваются. Ручной legacy-синхронизатор
+перезаписывают. Подклассы типа 17 не затрагиваются. Ручной legacy-синхронизатор
 сверяет размер и SHA-256 встроенных JPEG перед загрузкой в S3.
 
 Для тех же классов startup seed поддерживает `data.short_description` как

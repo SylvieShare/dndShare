@@ -17,7 +17,7 @@
       </svg>
     </button>
 
-    <label v-else-if="!editor.isBoolField(field)" class="iem-label">{{ field.name }}</label>
+    <label v-else-if="!editor.isBoolField(field)" class="iem-label">{{ field.name }}<span v-if="field.required" aria-hidden="true"> *</span></label>
 
     <InputDescription
       v-if="field.type === 'description'"
@@ -74,6 +74,7 @@
       <button
         type="button"
         class="iem-item-ref-btn"
+        :aria-required="field.required || undefined"
         @click="editor.openItemPicker(field.item_type, (id) => editor.formData[field.key] = id)"
       >{{ editor.itemRefLabel(editor.formData[field.key]) }}</button>
       <button

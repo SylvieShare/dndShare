@@ -15,8 +15,18 @@ Frontend lives in `features/handbook`, item details/editors in
 - `item` — handbook entity.
 - `suggest_type/suggest` — dictionaries used by fields.
 
-`item.parentId` is the generic hierarchy edge: subrace→race,
-subclass→class and future variants. Items may link to several publications via
+Происхождение персонажа разделено на четыре каталога: тип 8 «Расы», тип 16
+«Подрасы» (`parentTypeId=8`), тип 9 «Классы» и тип 17 «Подклассы»
+(`parentTypeId=9`). У подрасы `data.race` ссылается на item типа 8, у подкласса
+`data.class` — на item типа 9. Обратные readonly-массивы
+`race.data.subraces` и `class.data.subclasses` содержат ссылки на item типов 16
+и 17. Родительская ссылка варианта обязательна. База нормализует эти поля через
+`item.parentId` и транзакционные trigger,
+поэтому обе стороны остаются согласованными при создании, переносе и удалении.
+При чтении обратный массив собирается в visibility scope пользователя: публичная
+базовая запись не хранит и не раскрывает id чужих личных вариантов.
+Generic `item.parentId` остаётся внутренним ребром и для будущих вариантов, но
+клиенты происхождения работают с явными полями схемы. Items may link to several publications via
 `contentSourceIds`. A user item additionally has an explicit `customSourceId`;
 the server assigns the owner's default «Мои материалы» source atomically on
 creation. The schema allows more non-default personal sources later.
@@ -73,7 +83,8 @@ evaluates native/compatible/legacy/blocked status for a target edition.
 ## Current field contracts
 
 - race/class features bind only with `race_ids`, `subrace_ids`, `class_ids`,
-  `subclass_ids` arrays of handbook item ids;
+  `subclass_ids` arrays of handbook item ids; базовые ссылки относятся к типам
+  8/9, а ссылки вариантов — к отдельным типам 16/17;
 - race/class features and feats share `choices`: each row has a stable `key`,
   required `count` and an inline, suggest-dictionary, union-of-dictionaries or
   handbook-item source; the chosen values are stored on the character's owned
@@ -105,11 +116,12 @@ rows use the opaque `--surface` level with distinct active and selected states.
 контекста. Переключение на landing локально для справочника: оно сохраняется при
 переходе в коллекцию и обратно, передаётся как `sourceVersionId`, но не изменяет
 профиль игрока и ссылку «Правила».
-Все 13 встроенных коллекций показывают собственную прозрачную растровую эмблему
+Типы 1–14 и 16–17 показывают собственную прозрачную растровую эмблему
 на landing, в мобильной сетке и во вкладках picker. Эмблема абстрактно обобщает
 визуальный язык item этой коллекции. Если у item нет ни собственной картинки,
 ни SVG, та же эмблема становится последним fallback в строке списка, глобальном
 поиске и picker; detail-шапка независимо использует item- или type-level cover.
+Эффекты типа 15 используют предметные визуалы и нейтральный fallback коллекции.
 Специализированная динамическая колба зелья сохраняет приоритет в своей строке.
 На landing коллекции собраны по три карточки в строке на широком экране, по две
 на среднем и по одной на узком. Текстовая часть карточки резервирует место под
@@ -121,10 +133,9 @@ rows use the opaque `--surface` level with distinct active and selected states.
 `race_ids`/`subrace_ids` и `class_ids`/`subclass_ids`, а черты остаются
 независимым выбираемым контентом. `parentTypeId` для этой категории не
 используется, потому что он означает рекурсивное включение каталога в picker.
-В коллекции расовых способностей доступен фильтр по базовой расе, а в
-коллекции классовых способностей — по базовому классу. Варианты фильтров
-загружаются из корневых элементов типов 8 и 9; особенности подрас и архетипов
-также попадают в результат через сохранённую у них связь с базовым владельцем.
+В коллекции расовых способностей доступны отдельные фильтры по расе типа 8 и
+подрасе типа 16, в коллекции классовых — по классу типа 9 и подклассу типа 17.
+Сами каталоги вариантов фильтруются по явным item-полям `race` и `class`.
 Каждый настоящий родительский каталог образует отдельную landing-группу со
 всеми своими подразделами; их состав строится из `parentTypeId`.
 Schema filter groups without available
@@ -166,7 +177,11 @@ Creature UI calls CR `Уровень опасности`, explains it for new pl
 semantic icons for AC, HP, proficiency and each movement type.
 
 Details are specialized by type where useful (weapon, spell, enemy, potion,
-feat, armor, transport), otherwise the generic field renderer is used. Item detail modals use
+feat, armor, transport, race, subrace, class and subclass), otherwise the generic field renderer is used.
+Записи происхождения получают отдельную информативную строку списка, cover-summary
+с ключевой механикой и секции описания, владений, заклинательства и снаряжения.
+Связанные раса/подрасы и класс/подклассы показаны кликабельными карточками и
+открываются в стандартном окне справочника. Item detail modals use
 `ItemViewModal` and fixed-chrome `AppModalFrame`; the standalone detail renderer
 keeps its own title, while the modal moves that title into the fixed header.
 Все публичные записи коллекции «Вещи» используют нормализованное расширенное

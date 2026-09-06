@@ -226,6 +226,9 @@ var schemaSessionEventActorItemSQL string
 //go:embed schema/68_journals.sql
 var schemaJournalsSQL string
 
+//go:embed schema/69_origin_catalogs.sql
+var schemaOriginCatalogsSQL string
+
 //go:embed schema/70_item_rich_descriptions.sql
 var schemaItemRichDescriptionsSQL string
 
@@ -303,6 +306,7 @@ var schemaParts = []struct {
 	{"session-scene-visual-source", schemaSessionSceneVisualSourceSQL},
 	{"session-event-actor-item", schemaSessionEventActorItemSQL},
 	{"journals", schemaJournalsSQL},
+	{"origin-catalogs", schemaOriginCatalogsSQL},
 	{"item-rich-descriptions", schemaItemRichDescriptionsSQL},
 }
 

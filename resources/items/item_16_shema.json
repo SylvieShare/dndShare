@@ -1,5 +1,14 @@
 [
   {
+    "name": "Раса",
+    "key": "race",
+    "type": "item",
+    "item_type": 8,
+    "required": true,
+    "filter": true,
+    "filter_item_type": 8
+  },
+  {
     "name": "Раса (словарь)",
     "key": "suggest_id",
     "type": "suggest",
@@ -69,14 +78,5 @@
     "name": "Описание",
     "key": "description",
     "type": "description"
-  },
-  {
-    "name": "Подрасы",
-    "key": "subraces",
-    "type": "object_array",
-    "readonly": true,
-    "fields": [
-      { "name": "Подраса", "key": "id", "type": "item", "item_type": 16 }
-    ]
   }
 ]

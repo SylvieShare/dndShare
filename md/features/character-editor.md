@@ -273,6 +273,10 @@ shared modal. Classes use only `values.classes`; each row can carry a subclass
 and level. `classEntriesOf` reads this list, `classesLabel` renders it. For a
 single class, `lvl.level` controls the effective level; for multiclass the
 per-class sum updates `lvl.level`.
+Списки происхождения больше не выводят варианты из базовых каталогов: расы
+загружаются из типа 8, подрасы — из типа 16 с фильтром `data.race`; классы — из
+типа 9, подклассы — из типа 17 с фильтром `data.class`. Тот же контракт
+используют generic-блоки `InputItem` и окно повышения уровня.
 
 Clicking the editable portrait opens actions for upload, crop, clear and a
 separate character-icon upload. An icon is uploaded directly without the crop

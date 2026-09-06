@@ -215,7 +215,9 @@ describe('session world workspaces', () => {
 
   it('selects an NPC race from handbook items and randomizes a race-aware name', () => {
     expect(npcEditor).toContain('<FormSelect v-model:value="draft.raceItemId"')
-    expect(npcEditor).toContain('itemsApi.list(8, 500)')
+    expect(npcEditor).toContain('itemsApi.list(RACE_ITEM_TYPE, 500)')
+    expect(npcEditor).toContain('itemsApi.list(SUBRACE_ITEM_TYPE, 500)')
+    expect(npcEditor).toContain('data?.race')
     expect(npcEditor).toContain('randomDndName(selectedRace.value, Math.random, draft.name)')
     expect(npcEditor).toContain('raceItemId: Number(draft.raceItemId) || null')
     expect(npcEditor).toContain('aria-label="Случайное имя"')

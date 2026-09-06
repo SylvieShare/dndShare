@@ -25,6 +25,8 @@ const spellSummarySource = read('../../items/detail-components/SpellDetailSummar
 const spellContentSource = read('../../items/detail-components/SpellDetailContent.vue')
 const statusEffectSummarySource = read('../../items/detail-components/StatusEffectDetailSummary.vue')
 const statusEffectContentSource = read('../../items/detail-components/StatusEffectDetailContent.vue')
+const originSummarySource = read('../../items/detail-components/OriginDetailSummary.vue')
+const originContentSource = read('../../items/detail-components/OriginDetailContent.vue')
 
 describe('handbook item detail cover', () => {
   it('uses the intrinsic cover ratio without a shared maximum height', () => {
@@ -43,7 +45,7 @@ describe('handbook item detail cover', () => {
 
   it('preloads and quickly crossfades covers without resetting bestiary geometry', () => {
     expect(headerSource).toContain("if ([3, 4, 5, 7, 10].includes(typeId)) return '5 / 2'")
-    expect(headerSource).toContain("if ([2, 8, 9, 11, 13, 14].includes(typeId)) return '3 / 2'")
+    expect(headerSource).toContain("if ([2, 8, 9, 11, 13, 14, 16, 17].includes(typeId)) return '3 / 2'")
     expect(headerSource).toContain("if (typeId === 1 || typeId === 6 || typeId === 12) return '4 / 3'")
     expect(headerSource).toContain("return ''")
     expect(headerSource).toContain('const image = new Image()')
@@ -104,7 +106,7 @@ describe('handbook item detail cover', () => {
   })
 
   it('gives transport a 3:2 showcase with operational data around a safe center', () => {
-    expect(headerSource).toContain("if ([2, 8, 9, 11, 13, 14].includes(typeId)) return '3 / 2'")
+    expect(headerSource).toContain("if ([2, 8, 9, 11, 13, 14, 16, 17].includes(typeId)) return '3 / 2'")
     expect(headerSource).toContain("13: {\n    '--cover-min-height': '400px'")
     expect(detailSource).toContain('<TransportDetailSummary :item="item" />')
     expect(detailSource).toContain('13: TransportDetailContent')
@@ -116,7 +118,7 @@ describe('handbook item detail cover', () => {
   })
 
   it('shows gear as a 3:2 cover with price and weight around a safe center', () => {
-    expect(headerSource).toContain("if ([2, 8, 9, 11, 13, 14].includes(typeId)) return '3 / 2'")
+    expect(headerSource).toContain("if ([2, 8, 9, 11, 13, 14, 16, 17].includes(typeId)) return '3 / 2'")
     expect(headerSource).toContain("2: {\n    '--cover-min-height': '400px'")
     expect(headerSource).toContain("14: {\n    '--cover-min-height': '400px'")
     expect(detailSource).toContain('<GearDetailSummary :item="item" :type="type" />')
@@ -139,6 +141,20 @@ describe('handbook item detail cover', () => {
     expect(toolSummarySource).toContain('suggestStore.ensure(5)')
     expect(toolSummarySource).toContain("labels.join(' или ')")
     expect(toolSummarySource).toContain("'Не требуется'")
+  })
+
+  it('renders races, classes and their variants as linked rules summaries', () => {
+    expect(headerSource).toContain("8: {\n    '--cover-min-height': '410px'")
+    expect(headerSource).toContain("16: {\n    '--cover-min-height': '410px'")
+    expect(headerSource).toContain("17: {\n    '--cover-min-height': '410px'")
+    expect(detailSource).toContain('<OriginDetailSummary :item="item" :type="type" />')
+    expect(detailSource).toContain('16: OriginDetailContent')
+    expect(detailSource).toContain('17: OriginDetailContent')
+    expect(originSummarySource).toContain('<CoverSummaryRail :columns="3">')
+    expect(originSummarySource).toContain(':label="relationLabel"')
+    expect(originContentSource).toContain('class="origin-relation-card"')
+    expect(originContentSource).toContain('<ItemViewModal')
+    expect(originContentSource).toContain('label="Правила и характеристики"')
   })
 
   it('uses the shared 4:3 object showcase for weapon damage, economy and OR proficiencies', () => {

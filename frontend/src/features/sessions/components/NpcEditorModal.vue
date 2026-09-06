@@ -124,6 +124,7 @@ import SessionImagePicker from '@/features/sessions/components/SessionImagePicke
 import UniversalRelationEditor from '@/features/sessions/components/UniversalRelationEditor.vue'
 import { itemsApi } from '@/shared/api/itemsApi'
 import { randomDndName } from '@/shared/lib/dndNames'
+import { RACE_ITEM_TYPE, SUBRACE_ITEM_TYPE, itemReferenceId } from '@/shared/lib/dndItemTypes'
 
 const props = defineProps({
   npc: { type: Object, default: null },
@@ -169,8 +170,8 @@ const raceOptions = computed(() => {
   const byId = new Map(races.value.map(race => [race.id, race]))
   return races.value.map(race => ({
     ...race,
-    label: race.parentId && byId.get(race.parentId)
-      ? `${byId.get(race.parentId).name} — ${race.name}`
+    label: itemReferenceId(race.data?.race) && byId.get(itemReferenceId(race.data?.race))
+      ? `${byId.get(itemReferenceId(race.data?.race)).name} — ${race.name}`
       : race.name,
   })).sort((left, right) => left.label.localeCompare(right.label, 'ru'))
 })
@@ -183,7 +184,11 @@ const randomNameTitle = computed(() => selectedRace.value
 onMounted(async () => {
   racesLoading.value = true
   try {
-    races.value = (await itemsApi.list(8, 500))?.items || []
+    const [base, variants] = await Promise.all([
+      itemsApi.list(RACE_ITEM_TYPE, 500),
+      itemsApi.list(SUBRACE_ITEM_TYPE, 500),
+    ])
+    races.value = [...(base?.items || []), ...(variants?.items || [])]
   } catch {
     racesError.value = 'Не удалось загрузить расы'
   } finally {

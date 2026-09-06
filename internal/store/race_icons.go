@@ -11,7 +11,7 @@ const systemRaceIconItemsSQL = `
 	SELECT id, icon_image_id
 	FROM dndshare.item
 	WHERE user_id IS NULL
-	  AND type_id = 8
+	  AND type_id = CASE WHEN $2::boolean THEN 16 ELSE 8 END
 	  AND (($2::boolean AND parent_id IS NOT NULL) OR (NOT $2::boolean AND parent_id IS NULL))
 	  AND (
 		regexp_replace(replace(lower(COALESCE(name_en, '')), 'ё', 'е'), '[^a-zа-я0-9]+', '', 'g') = ANY($1)

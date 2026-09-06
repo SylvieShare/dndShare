@@ -171,8 +171,8 @@ entries and selected choices.
   `item.cover_image_id` relations backed by `storage_image`; item types may own
   the same independent slots as collection-wide fallbacks. MCP stores their
   content-addressed objects under `system-item-media/v1/` in S3.
-- All 13 built-in item types own a production fallback cover. Types 1, 6 and 12
-  use opaque `1536×1152` JPEG (`4:3`); types 2, 8, 9, 11 and 13 use opaque
+- Fifteen system item types own a production fallback cover. Types 1, 6 and 12
+  use opaque `1536×1152` JPEG (`4:3`); types 2, 8, 9, 11, 13, 16 and 17 use opaque
   `1536×1024` JPEG (`3:2`); types 3, 4, 5, 7 and 10 use opaque `1600×640`
   lossy WebP (`5:2`). Item-level artwork always has priority without changing
   the detail layout.

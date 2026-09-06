@@ -158,10 +158,9 @@ const suggestTypes = ref([])
 const loadingTypes = ref(false)
 const loadingDicts = ref(false)
 
-// A landing category is presentation-only. Do not model it through
-// parentTypeId: that relation intentionally expands parent catalogues in item
-// pickers (for example, "Вещи" includes "Оружие"). Feature ownership remains
-// item-level data: race_ids/subrace_ids and class_ids/subclass_ids.
+// Landing groups follow the catalogue hierarchy: for example, races own the
+// subrace collection and classes own subclasses. Feature ownership remains in
+// item data: race_ids/subrace_ids and class_ids/subclass_ids.
 const featureTypeIds = new Set([3, 4, 7])
 
 const selectedSource = computed(() => sources.value.find(s => s.id === selectedSourceId.value) || null)

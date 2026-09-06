@@ -1,5 +1,14 @@
 [
   {
+    "name": "Класс",
+    "key": "class",
+    "type": "item",
+    "item_type": 9,
+    "required": true,
+    "filter": true,
+    "filter_item_type": 9
+  },
+  {
     "name": "Класс (словарь)",
     "key": "suggest_id",
     "type": "suggest",
@@ -152,14 +161,5 @@
     "name": "Описание",
     "key": "description",
     "type": "description"
-  },
-  {
-    "name": "Подклассы",
-    "key": "subclasses",
-    "type": "object_array",
-    "readonly": true,
-    "fields": [
-      { "name": "Подкласс", "key": "id", "type": "item", "item_type": 17 }
-    ]
   }
 ]

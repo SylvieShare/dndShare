@@ -144,8 +144,11 @@
     "name": "Подрасы",
     "key": "subrace_ids",
     "type": "object_array",
+    "filter": true,
+    "filter_path": "subrace_ids.id",
+    "filter_item_type": 16,
     "fields": [
-      { "name": "Подраса", "key": "id", "type": "item", "item_type": 8 }
+      { "name": "Подраса", "key": "id", "type": "item", "item_type": 16 }
     ]
   },
   {

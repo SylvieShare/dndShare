@@ -12,7 +12,7 @@ const assignSystemRaceCoverSQL = `
 	SET cover_image_id = $1,
 	    icon_image_id = CASE WHEN icon_image_id = $1 THEN NULL ELSE icon_image_id END
 	WHERE user_id IS NULL
-	  AND type_id = 8
+	  AND type_id = CASE WHEN $3::boolean THEN 16 ELSE 8 END
 	  AND (($3::boolean AND parent_id IS NOT NULL) OR (NOT $3::boolean AND parent_id IS NULL))
 	  AND (cover_image_id IS NULL OR cover_image_id = $1)
 	  AND (

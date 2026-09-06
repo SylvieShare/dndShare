@@ -289,6 +289,11 @@ import { featuresForBinding } from '@/features/character-editor/settings/dnd/cre
 import { fetchGet } from '@/shared/api/http'
 import { itemsApi } from '@/shared/api/itemsApi'
 import { contentScopeQuery } from '@/shared/api/contentSourcesApi'
+import {
+  CLASS_ITEM_TYPE,
+  SUBCLASS_ITEM_TYPE,
+  originFilterQuery,
+} from '@/shared/lib/dndItemTypes'
 import { useDiceStore } from '@/stores/dice'
 import { useSuggestStore } from '@/stores/suggest'
 import { dieLabel } from '@/shared/lib/systemDice'
@@ -306,7 +311,6 @@ import { spellcastingRulesAt } from '@/features/character-editor/blocks/dnd/lib/
 import { computeSpellSlotPools, maximumSpellLevelForEntry } from '@/features/character-editor/blocks/dnd/lib/multiclassSpellcasting'
 import { findClassSpellTab, spellTabFromClass } from '@/features/character-editor/blocks/dnd/lib/spellbook'
 
-const CLASS_TYPE = 9
 const CLASS_ABIL_TYPE = 4
 const STATS = STAT_KEYS
 
@@ -596,8 +600,8 @@ async function loadSubclasses(cls, currentLevel) {
   const d = cls?.data || {}
   const at = Number(d.subclass_level) || 99
   if (at > currentLevel) return
-  const res = await fetchGet(`/items/children?parentId=${cls.id}${sourceSuffix()}`)
-  subclassOptions.value = (res?.items || []).filter((i) => i.typeId === CLASS_TYPE)
+  const res = await fetchGet(`/items?typeId=${SUBCLASS_ITEM_TYPE}&limit=500${originFilterQuery('class', cls.id)}${sourceSuffix()}`)
+  subclassOptions.value = res?.items || []
 }
 
 async function chooseClass(i) {
@@ -701,14 +705,14 @@ onMounted(async () => {
     const [byIds, abils, classes] = await Promise.all([
       ids.size ? itemsApi.byIds([...ids]) : Promise.resolve({ items: [] }),
       fetchGet(`/items?typeId=${CLASS_ABIL_TYPE}&limit=500${sourceSuffix()}`),
-      fetchGet(`/items?typeId=${CLASS_TYPE}&limit=300${sourceSuffix()}`),
+      fetchGet(`/items?typeId=${CLASS_ITEM_TYPE}&limit=300${sourceSuffix()}`),
     ])
     const map = {}
     ;(byIds?.items || []).forEach((it) => { map[it.id] = it })
     ;(classes?.items || []).forEach((it) => { if (!map[it.id]) map[it.id] = it })
     itemsById.value = map
     abilityPool.value = abils?.items || []
-    baseClasses.value = (classes?.items || []).filter((i) => !i.parentId)
+    baseClasses.value = classes?.items || []
   } finally {
     loading.value = false
   }
