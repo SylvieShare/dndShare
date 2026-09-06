@@ -40,6 +40,7 @@ import {
   originRelationIds,
   plainOriginDescription,
   spellcastingLabel,
+  subclassGrantedSpellMetric,
   subclassSpellcastingLabel,
 } from '@/features/items/lib/originPresentation'
 
@@ -56,14 +57,15 @@ const relationIds = computed(() => originRelationIds(props.item))
 const parentName = computed(() => parentId.value == null ? '' : itemName(parentId.value))
 const imageUrl = computed(() => props.item.coverImageUrl || props.item.iconImageUrl || '')
 const monogram = computed(() => String(props.item.name || '?').trim().slice(0, 1).toLocaleUpperCase('ru'))
+const subclassSpellMetric = computed(() => subclassGrantedSpellMetric(data.value))
 const metricValue = computed(() => {
   if (kind.value === 'class') return hitDieLabel(data.value)
-  if (kind.value === 'subclass') return (data.value.granted_spells || []).length
+  if (kind.value === 'subclass') return subclassSpellMetric.value.value
   return asiLabel(data.value)?.split(' · ')[0] || '·'
 })
 const metricLabel = computed(() => {
   if (kind.value === 'class') return 'кость'
-  if (kind.value === 'subclass') return 'даров.'
+  if (kind.value === 'subclass') return subclassSpellMetric.value.label
   return 'бонус'
 })
 const relationBadge = computed(() => {

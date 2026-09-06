@@ -96,3 +96,12 @@ export function subclassSpellcastingLabel(data) {
     || data?.spellcasting_ability
   return hasOwnSpellcasting ? spellcastingLabel(data) : 'По правилам класса'
 }
+
+export function subclassGrantedSpellMetric(data) {
+  const rows = Array.isArray(data?.granted_spells) ? data.granted_spells : []
+  const options = [...new Set(rows.map(row => String(row?.option || '').trim()).filter(Boolean))]
+  if (options.length) {
+    return { value: options.length, label: 'вариант.', summary: `Вариантов заклинаний: ${options.length}` }
+  }
+  return { value: rows.length, label: 'даров.', summary: `Дарованных заклинаний: ${rows.length}` }
+}

@@ -46,6 +46,7 @@ import {
   originParentId,
   originRelationIds,
   spellcastingLabel,
+  subclassGrantedSpellMetric,
   subclassSpellcastingLabel,
 } from '@/features/items/lib/originPresentation'
 
@@ -104,7 +105,7 @@ const proficiencyLabel = computed(() => [
 const specialLabel = computed(() => kind.value.includes('class') ? 'Архетип' : 'Наследие')
 const specialValue = computed(() => {
   if (kind.value === 'class') return data.value.subclass_level ? `выбор на ${data.value.subclass_level} ур.` : 'по правилам класса'
-  if (kind.value === 'subclass') return `${(data.value.granted_spells || []).length} дарованных закл.`
+  if (kind.value === 'subclass') return subclassGrantedSpellMetric(data.value).summary
   const choice = data.value.asi_choice
   return choice ? `+${choice.bonus || 1} к ${choice.count || 1} на выбор` : (asiLabel(data.value) || 'особые черты')
 })
