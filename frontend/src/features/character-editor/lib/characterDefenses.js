@@ -109,6 +109,7 @@ export const DND_CHARACTER_DEFENSE_SOURCES = [
   createAbilityDefenseSource('abilities_feats'),
   createAbilityDefenseSource('abilities_race'),
   createAbilityDefenseSource('abilities_class'),
+  createAbilityDefenseSource('abilities_story'),
 ]
 
 export function defenseItemIds(values, sources = DND_CHARACTER_DEFENSE_SOURCES) {

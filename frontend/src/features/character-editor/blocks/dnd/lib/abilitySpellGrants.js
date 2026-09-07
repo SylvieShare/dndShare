@@ -1,3 +1,4 @@
+import { ABILITY_VALUE_IDS } from '@/shared/lib/abilityTypes'
 import { abilityOwnerLevel } from '@/shared/lib/dndAbilityUses'
 import { itemChoices } from '@/features/items/lib/itemChoices'
 
@@ -32,7 +33,7 @@ export function abilitySpellGrantRows(items, values = {}) {
   const rows = []
   for (const item of items || []) {
     const data = item?.data || {}
-    const ownedEntry = ['abilities_race', 'abilities_class', 'abilities_feats']
+    const ownedEntry = ABILITY_VALUE_IDS
       .flatMap((key) => Array.isArray(values?.[key]) ? values[key] : [])
       .find((entry) => String(entry?.id) === String(item.id))
     if (ownedEntry?.requirements_met === false) continue

@@ -107,7 +107,9 @@ ability toggles and `status_effect` for adding or removing linked effects.
 - `GET /api/item-types` → типы с `fields` для справочного `item.data`,
   `instanceFields` для типизированного `params` конкретного экземпляра и
   nullable `iconImageId`/`iconImageUrl`, `coverImageId`/`coverImageUrl`;
-  прежнего поля `svg` у item type нет;
+  прежнего поля `svg` у item type нет. Для типа 18 («Сюжетные способности»)
+  `countItems`/`count` считаются по публичным и собственным записям пользователя;
+  при нуле UI скрывает каталог в навигации, сохраняя доступ к его picker;
 - `GET /api/items` (`typeId`, pagination, publication scope and schema
   `filters`; например, подрасы: `typeId=16&filters={"race":123}`,
   подклассы: `typeId=17&filters={"class":456}`)

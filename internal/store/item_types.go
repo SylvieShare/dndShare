@@ -139,3 +139,12 @@ func (s *Store) SourceVersionExists(ctx context.Context, id int64) (bool, error)
 	).Scan(&exists)
 	return exists, err
 }
+
+// VisibleItemTypeCount is scoped to public and the current user's own entries.
+// Empty personal catalogues must not become visible because another user has content.
+func (s *Store) VisibleItemTypeCount(ctx context.Context, typeID int64, userID *int64) (int64, error) {
+	var count int64
+	err := s.pool.QueryRow(ctx, `SELECT COUNT(*) FROM dndshare.item
+		WHERE type_id = $1 AND (user_id IS NULL OR user_id = $2)`, typeID, userID).Scan(&count)
+	return count, err
+}

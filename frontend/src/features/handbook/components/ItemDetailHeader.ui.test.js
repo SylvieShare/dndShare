@@ -44,7 +44,7 @@ describe('handbook item detail cover', () => {
   })
 
   it('preloads and quickly crossfades covers without resetting bestiary geometry', () => {
-    expect(headerSource).toContain("if ([3, 4, 5, 7, 10].includes(typeId)) return '5 / 2'")
+    expect(headerSource).toContain("if ([3, 4, 5, 7, 10, 18].includes(typeId)) return '5 / 2'")
     expect(headerSource).toContain("if ([2, 8, 9, 11, 13, 14, 16, 17].includes(typeId)) return '3 / 2'")
     expect(headerSource).toContain("if (typeId === 1 || typeId === 6 || typeId === 12) return '4 / 3'")
     expect(headerSource).toContain("return ''")
@@ -59,7 +59,7 @@ describe('handbook item detail cover', () => {
 
   it('gives covered spells a 5:2 casting dashboard without duplicating its summary below', () => {
     expect(headerSource).toContain("5: {\n    '--cover-min-height': '300px'")
-    expect(headerSource).toContain("if ([3, 4, 5, 7, 10].includes(typeId)) return '5 / 2'")
+    expect(headerSource).toContain("if ([3, 4, 5, 7, 10, 18].includes(typeId)) return '5 / 2'")
     expect(detailSource).toContain('<SpellDetailSummary :item="item" :type="type" />')
     expect(detailSource).toContain('if (props.type?.id === 5) return { summaryInHeader: true }')
     expect(headerSource).toContain("props.item.coverImageUrl || props.type?.coverImageUrl || ''")
@@ -215,7 +215,7 @@ describe('handbook item detail cover', () => {
   })
 
   it('limits cover dimming for abilities and feats to the title panel', () => {
-    expect(headerSource).toContain('const titleOnlyShade = computed(() => [3, 4, 7].includes(props.type?.id))')
+    expect(headerSource).toContain('const titleOnlyShade = computed(() => [3, 4, 7, 18].includes(props.type?.id))')
     expect(headerSource).toContain("'item-detail-header-title-only-shade': titleOnlyShade")
     expect(headerSource).toContain('.item-detail-header-covered.item-detail-header-title-only-shade .item-detail-shade')
     expect(headerSource).toContain('.item-detail-header-covered.item-detail-header-title-only-shade .item-detail-title')

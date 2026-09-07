@@ -171,6 +171,7 @@ const CUSTOM_RENDERERS = {
   2: ItemDetailContent,
   3: AbilityDetailContent,
   4: AbilityDetailContent,
+  18: AbilityDetailContent,
   5: SpellDetailContent,
   6: EnemyDetailContent,
   7: FeatDetailContent,

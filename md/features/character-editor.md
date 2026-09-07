@@ -393,7 +393,7 @@ not met. Manual sheet editing deliberately allows it: the owned entry is marked
 «Требования не выполнены», and its bonuses, resources, defenses, passive rules,
 derived effects and granted spells are suppressed.
 
-Handbook item types 3, 4 and 7 use `max_use` for a fixed maximum. They also
+Handbook item types 3, 4, 7 and 18 use `max_use` for a fixed maximum. They also
 support formulas based on an ability modifier or owning class level, explicit
 `uses` progression, and several independently named counters. An explicit
 formula wins over a stale simultaneous `manual_size` flag. Charge pips are
@@ -416,7 +416,7 @@ Choice-dependent defenses use `choice_defenses`: a rule points to another owned
 ability entry and maps its stable choice value to a damage type. Dragonborn
 ancestry therefore drives resistance from the single Breath Weapon choice.
 
-`passive_effects` are rendered directly below the race/class ability or feat
+`passive_effects` are rendered directly below the race/class/story ability or feat
 that owns them. An entry without contextual text remains a compact name-only
 row; an entry such as Brave, Fey Ancestry or Sunlight Sensitivity expands only
 enough to show its contextual permission, advantage, immunity or limitation.
@@ -747,3 +747,20 @@ cd frontend
 npm test -- --run
 npm run build
 ```
+
+### Сюжетные способности
+
+На вкладке способностей desktop и mobile рядом с классовыми и расовыми находится
+раздел «Сюжетные», связанный с каталогом 18. `values.abilities_story` хранит тот же
+массив экземпляров `{id, uid?, choices?, count?, ...}`, что остальные способности.
+Пустой раздел скрыт; в режиме редактирования остаётся компактное действие
+«Добавить сюжетную способность», открывающее стандартный picker с созданием.
+Наличие записей определяется сохранённым массивом, поэтому ошибка загрузки
+каталога не удаляет данные. Редактор и меню записей общие с остальными способностями.
+
+`shared/lib/abilityTypes` задаёт общий список источников способностей. Сюжетные
+участвуют в ресурсах и отдыхе, дарованных заклинаниях и выборах, защитах, максимуме
+хитов, пассивных и производных эффектах, действиях, корректировках броска и виджетах.
+Печатный лист включает их отдельной группой. Без привязки к классу прогрессия
+использует общий уровень персонажа; автоматическое получение при повышении уровня
+по-прежнему относится только к связанным классовым способностям.

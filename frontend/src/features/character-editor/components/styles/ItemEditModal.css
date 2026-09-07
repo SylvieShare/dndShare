@@ -4,12 +4,6 @@
   gap: 14px 16px;
   align-items: start;
 }
-.iem-source-field { margin-bottom: 14px; }
-.iem-source-list { display: flex; flex-wrap: wrap; gap: 6px; }
-.iem-source { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--border-strong); border-radius: 999px; background: var(--surface-raised); color: var(--text-2); padding: 6px 9px; font: inherit; font-size: 11px; cursor: pointer; }
-.iem-source.selected { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 13%, var(--surface)); color: var(--text-1); }
-.iem-source-mark { width: 13px; height: 13px; display: grid; place-items: center; border: 1px solid currentColor; border-radius: 4px; font-size: 9px; }
-.iem-source small { color: var(--text-muted); font-size: 9px; }
 .iem-icon-editor { display: flex; align-items: center; gap: 12px; }
 .iem-icon-preview { width: 72px; height: 72px; flex: none; display: grid; place-items: center; border: 1px solid var(--border-strong); border-radius: 12px; background: var(--surface-raised); overflow: hidden; }
 .iem-icon-preview > img { width: 64px; height: 64px; object-fit: contain; }

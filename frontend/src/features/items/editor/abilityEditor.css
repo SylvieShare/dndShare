@@ -1,0 +1,49 @@
+.ability-editor { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; align-items: start; }
+.ability-editor-main, .ability-editor-mechanics { display: flex; flex-direction: column; min-width: 0; gap: 18px; }
+.ability-editor-main { position: sticky; top: 0; }
+.ability-editor-intro h3 { margin: 0 0 6px; color: var(--text-1); font: 600 22px var(--font-display); }
+.ability-editor-intro p, .ability-block-hint { margin: 0; color: var(--text-muted); font-size: 12px; line-height: 1.5; }
+.ability-rule-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 12px; }
+.ability-rule-field { position: relative; min-width: 0; }
+.ability-rule-field--wide, .ability-advanced { grid-column: 1 / -1; }
+.ability-rule-field > .form-field > .form-field-label { padding-right: 22px; }
+.ability-field-help { color: var(--text-muted); font-size: 12px; }
+.ability-field-help > summary { position: absolute; right: 0; top: 0; display: grid; place-items: center; width: 18px; height: 18px; cursor: help; font-weight: 600; border-radius: 50%; background: var(--surface-raised); list-style: none; }
+.ability-field-help > summary::-webkit-details-marker { display: none; }
+.ability-field-help p { margin: 8px 0 0; line-height: 1.5; }
+.ability-empty, .ability-dependency { padding: 16px; }
+.ability-empty { color: var(--text-muted); font-size: 12px; line-height: 1.6; }
+.ability-empty > svg { color: var(--accent); }
+.ability-empty p { color: var(--text-2); margin: 8px 0 4px; }
+.ability-rule-row { padding: 12px; }
+.ability-resource-fields, .ability-rule-rows, .ability-block-options, .ability-source-options { display: flex; flex-direction: column; gap: 12px; }
+.ability-block-options, .ability-source-options { margin-top: 16px; }
+.ability-rule-row summary, .ability-dependency > details > summary { cursor: pointer; color: var(--text-2); font-size: 13px; font-weight: 600; line-height: 1.5; overflow-wrap: anywhere; }
+.ability-rule-row details[open] > summary, .ability-dependency details[open] > summary { margin-bottom: 14px; }
+.ability-dependency .ability-block-hint { margin-bottom: 16px; }
+.ability-dependency .ability-link--danger { margin-top: 14px; }
+.ability-advanced > summary { color: var(--text-muted); font-size: 12px; cursor: pointer; }
+.ability-advanced > summary span { margin-left: 4px; opacity: .7; }
+.ability-advanced[open] > summary { margin-bottom: 16px; }
+.ability-reference, .ability-multi { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ability-reference > :first-child { flex: 1; text-align: left; }
+.ability-link { border: none; background: none; padding: 7px 0; color: var(--accent); cursor: pointer; font: inherit; font-size: 12px; text-align: left; overflow-wrap: anywhere; }
+.ability-link:hover { text-decoration: underline; }
+.ability-link--danger { color: var(--text-muted); }
+.ability-link--danger:hover { color: var(--danger); }
+.ability-add-dependency { display: flex; justify-content: center; align-items: center; gap: 8px; padding: 14px; border: 1px dashed var(--border-strong); border-radius: var(--r-lg); background: none; color: var(--accent); cursor: pointer; font: inherit; font-size: 13px; }
+.ability-add-dependency:hover { border-color: var(--accent); }
+.ability-block-option { padding: 14px; display: flex; flex-direction: column; gap: 5px; }
+.ability-block-option strong { color: var(--text-2); font-size: 14px; }
+.ability-block-option span { color: var(--text-muted); font-size: 12px; line-height: 1.5; }
+.ability-source-trigger { display: flex; align-items: center; gap: 10px; border: 0; background: none; padding: 8px 0; font: inherit; color: var(--text-2); cursor: pointer; text-align: left; width: 100%; }
+.ability-source-trigger > span { flex: 1; min-width: 0; font-size: 12px; }
+.ability-source-trigger small { display: block; margin-bottom: 3px; color: var(--text-muted); font-size: 10px; }
+.ability-source-trigger:hover { color: var(--accent); }
+@media (max-width: 760px) {
+  .ability-editor { grid-template-columns: 1fr; gap: 26px; }
+  .ability-editor-main { position: static; }
+}
+@media (max-width: 420px) {
+  .ability-rule-fields { grid-template-columns: 1fr; }
+}

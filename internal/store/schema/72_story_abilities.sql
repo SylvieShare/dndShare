@@ -1,3 +1,11 @@
+-- Racial, class and story abilities share one complete field contract.
+INSERT INTO dndshare.item_type (id, name, fields, source_id, color, important, description)
+SELECT 18, 'Сюжетные способности', '[]'::jsonb, source_id, color, false,
+       'Способности, полученные от мастера по ходу приключения: дары, благословения и особые умения.'
+FROM dndshare.item_type WHERE id = 4
+ON CONFLICT (id) DO NOTHING;
+
+UPDATE dndshare.item_type SET fields = $abilities$
 [
   {"name": "Описание", "key": "desc", "type": "description"},
   {"name": "Уровень получения", "key": "level", "type": "int", "default": 1, "filter": true},
@@ -240,3 +248,24 @@
     {"name": "Подпись", "key": "label", "type": "text"}
   ]}
 ]
+$abilities$::jsonb WHERE id IN (3, 4, 18);
+
+-- Schema editing is an operation on the whole family, including later changes.
+CREATE OR REPLACE FUNCTION dndshare.sync_ability_type_fields()
+RETURNS trigger LANGUAGE plpgsql AS $$
+BEGIN
+    IF pg_trigger_depth() = 1 THEN
+        UPDATE dndshare.item_type SET fields = NEW.fields
+        WHERE id IN (3, 4, 18) AND id <> NEW.id
+          AND fields IS DISTINCT FROM NEW.fields;
+    END IF;
+    RETURN NEW;
+END;
+$$;
+CREATE TRIGGER ability_type_fields
+AFTER UPDATE OF fields ON dndshare.item_type
+FOR EACH ROW WHEN (NEW.id IN (3, 4, 18))
+EXECUTE FUNCTION dndshare.sync_ability_type_fields();
+
+SELECT setval(pg_get_serial_sequence('dndshare.item_type', 'id'),
+              GREATEST((SELECT MAX(id) FROM dndshare.item_type), 18));

@@ -311,6 +311,7 @@ export const DND_CHARACTER_RESOURCE_SOURCES = [
   createAbilityResourceSource('abilities_feats', '#c084fc'),
   createAbilityResourceSource('abilities_race', '#5aaf72'),
   createAbilityResourceSource('abilities_class', '#4f8fcc'),
+  createAbilityResourceSource('abilities_story', 'var(--accent)'),
 ]
 
 export function resourceItemIds(values, sources = DND_CHARACTER_RESOURCE_SOURCES) {

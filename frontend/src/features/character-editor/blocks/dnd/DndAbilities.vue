@@ -1,12 +1,14 @@
 <template>
   <div
+    v-if="!block.content?.hide_empty || stored.length || ownerMode"
     class="ab-block"
     :class="{
       'ab-block--embedded': block.content?.embedded,
       'ab-block--divider': block.content?.divider,
     }"
   >
-    <component :is="block.content?.embedded ? 'div' : BaseTile" class="ab-tile">
+    <button v-if="block.content?.hide_empty && !stored.length && ownerMode" type="button" class="ab-story-add" @click="pickerOpen = true">+ Добавить сюжетную способность</button>
+    <component v-if="!block.content?.hide_empty || stored.length" :is="block.content?.embedded ? 'div' : BaseTile" class="ab-tile">
       <DndAbilitiesView
         :entries="entries"
         :loading="loading"
@@ -434,6 +436,8 @@ onMounted(async () => {
 
 <style scoped>
 .ab-block { min-width: 0; }
+.ab-story-add { border: 0; background: none; color: var(--text-muted); font: inherit; cursor: pointer; padding: 8px 0; }
+.ab-story-add:hover { color: var(--accent); }
 .ab-block--divider { padding-top: 13px; border-top: 1px solid var(--border); }
 
 .ab-tile {

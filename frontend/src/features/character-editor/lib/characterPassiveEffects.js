@@ -35,6 +35,7 @@ export const DND_CHARACTER_PASSIVE_EFFECT_SOURCES = [
   createAbilityPassiveEffectSource('abilities_feats'),
   createAbilityPassiveEffectSource('abilities_race'),
   createAbilityPassiveEffectSource('abilities_class'),
+  createAbilityPassiveEffectSource('abilities_story'),
 ]
 
 export function collectCharacterPassiveEffects(values, itemsById, sources = DND_CHARACTER_PASSIVE_EFFECT_SOURCES) {

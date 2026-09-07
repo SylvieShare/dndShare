@@ -66,24 +66,24 @@ func TestEverySchemaFileIsEmbeddedAndRegistered(t *testing.T) {
 }
 
 func TestVersionedMigrationsRunAfterClassActionAutomation(t *testing.T) {
-	if len(schemaParts) < 15 {
+	if len(schemaParts) < 16 {
 		t.Fatal("schema manifest is incomplete")
 	}
-	legacyLast := schemaParts[len(schemaParts)-15]
-	halfCaster := schemaParts[len(schemaParts)-14]
-	sessionSecurity := schemaParts[len(schemaParts)-13]
-	sharedChannelDivinity := schemaParts[len(schemaParts)-12]
-	spellbookTabs := schemaParts[len(schemaParts)-11]
-	sacredWeaponEffect := schemaParts[len(schemaParts)-10]
-	spellbookGrantCleanup := schemaParts[len(schemaParts)-9]
-	sessionNPCBestiary := schemaParts[len(schemaParts)-8]
-	sessionSceneLocation := schemaParts[len(schemaParts)-7]
-	sessionSceneVisualSource := schemaParts[len(schemaParts)-6]
-	sessionEventActorItem := schemaParts[len(schemaParts)-5]
-	journals := schemaParts[len(schemaParts)-4]
-	originCatalogs := schemaParts[len(schemaParts)-3]
-	itemRichDescriptions := schemaParts[len(schemaParts)-2]
-	potionRichDescriptions := schemaParts[len(schemaParts)-1]
+	legacyLast := schemaParts[len(schemaParts)-16]
+	halfCaster := schemaParts[len(schemaParts)-15]
+	sessionSecurity := schemaParts[len(schemaParts)-14]
+	sharedChannelDivinity := schemaParts[len(schemaParts)-13]
+	spellbookTabs := schemaParts[len(schemaParts)-12]
+	sacredWeaponEffect := schemaParts[len(schemaParts)-11]
+	spellbookGrantCleanup := schemaParts[len(schemaParts)-10]
+	sessionNPCBestiary := schemaParts[len(schemaParts)-9]
+	sessionSceneLocation := schemaParts[len(schemaParts)-8]
+	sessionSceneVisualSource := schemaParts[len(schemaParts)-7]
+	sessionEventActorItem := schemaParts[len(schemaParts)-6]
+	journals := schemaParts[len(schemaParts)-5]
+	originCatalogs := schemaParts[len(schemaParts)-4]
+	itemRichDescriptions := schemaParts[len(schemaParts)-3]
+	potionRichDescriptions := schemaParts[len(schemaParts)-2]
 	if legacyLast.name != legacySchemaBootstrapLast {
 		t.Fatalf("legacy bootstrap must end at %q, got %q", legacySchemaBootstrapLast, legacyLast.name)
 	}

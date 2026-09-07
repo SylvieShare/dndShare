@@ -1,10 +1,11 @@
+import { ABILITY_VALUE_IDS } from '@/shared/lib/abilityTypes'
 import { abilityModifier, proficiencyBonus, resolveNumValue, sumBonuses } from '@/shared/lib/dnd'
 import { abilityOwnerLevel } from '@/shared/lib/dndAbilityUses'
 import { SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
 import { featureEntryActive } from '@/features/character-editor/lib/featureEntryState'
 import { collectStatusDerivedEffects } from '@/features/character-editor/lib/characterStatuses'
 
-const VALUE_IDS = ['abilities_feats', 'abilities_race', 'abilities_class']
+const VALUE_IDS = ABILITY_VALUE_IDS
 
 function asArray(value) { return Array.isArray(value) ? value : [] }
 function number(value, fallback = 0) {

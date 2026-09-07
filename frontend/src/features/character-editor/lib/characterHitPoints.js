@@ -38,6 +38,7 @@ export function createAbilityHpBonusSource(valueId, category) {
 export const DND_CHARACTER_HP_BONUS_SOURCES = [
   createAbilityHpBonusSource('abilities_race', 'race'),
   createAbilityHpBonusSource('abilities_class', 'class'),
+  createAbilityHpBonusSource('abilities_story', 'story'),
   createAbilityHpBonusSource('abilities_feats', 'feat'),
 ]
 

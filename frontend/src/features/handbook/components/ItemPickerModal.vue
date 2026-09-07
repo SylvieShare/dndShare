@@ -114,6 +114,7 @@
           v-if="createOpen && activeTypeId != null"
           :type-id="activeTypeId"
           :show-name-en="createShowNameEn"
+          :z-index="Math.max(4500, zIndex + 100)"
           @close="createOpen = false"
           @saved="onItemCreated"
         />

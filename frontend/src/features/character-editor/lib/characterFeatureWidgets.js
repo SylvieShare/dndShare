@@ -1,8 +1,9 @@
+import { ABILITY_VALUE_IDS } from '@/shared/lib/abilityTypes'
 import { abilityOwnerLevel } from '@/shared/lib/dndAbilityUses'
 import { featureEntryActive } from './featureEntryState'
 import { ownedAbilityStatusSource, statusEffectActive, statusEffectLinks } from './characterStatuses'
 
-const VALUE_IDS = ['abilities_feats', 'abilities_race', 'abilities_class']
+const VALUE_IDS = ABILITY_VALUE_IDS
 
 function entryKey(entry) {
   return String(entry?.uid || entry?.id || '')

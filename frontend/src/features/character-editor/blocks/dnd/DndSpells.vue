@@ -207,6 +207,8 @@
 </template>
 
 <script setup>
+import { ABILITY_VALUE_IDS } from '@/shared/lib/abilityTypes'
+
 import { computed, inject, onMounted, provide, reactive, ref, watch } from 'vue'
 
 import { itemsApi } from '@/shared/api/itemsApi'
@@ -848,7 +850,7 @@ function spellAbilityLabel(entry) {
 }
 
 function abilityIds() {
-  return [...new Set(['abilities_race', 'abilities_class', 'abilities_feats']
+  return [...new Set(ABILITY_VALUE_IDS
     .flatMap((key) => Array.isArray(props.values?.[key]) ? props.values[key] : [])
     .map((entry) => entry?.id)
     .filter((id) => id != null))]
@@ -942,7 +944,7 @@ onMounted(async () => {
 
 watch(
   () => JSON.stringify({
-    abilities: ['abilities_race', 'abilities_class', 'abilities_feats']
+    abilities: ABILITY_VALUE_IDS
       .flatMap((key) => Array.isArray(props.values?.[key]) ? props.values[key] : [])
       .map((entry) => ({ id: entry.id, choices: entry.choices })),
     level: props.values?.lvl?.level,

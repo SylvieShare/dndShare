@@ -139,6 +139,7 @@
 </template>
 
 <script setup>
+import { visibleHandbookType } from "@/shared/lib/abilityTypes"
 import { computed, ref, watch } from 'vue'
 import { fetchGet } from '@/shared/api/http'
 import { useItemTypesStore } from '@/stores/itemTypes'
@@ -161,14 +162,14 @@ const loadingDicts = ref(false)
 // Landing groups follow the catalogue hierarchy: for example, races own the
 // subrace collection and classes own subclasses. Feature ownership remains in
 // item data: race_ids/subrace_ids and class_ids/subclass_ids.
-const featureTypeIds = new Set([3, 4, 7])
+const featureTypeIds = new Set([3, 4, 7, 18])
 
 const selectedSource = computed(() => sources.value.find(s => s.id === selectedSourceId.value) || null)
 const selectedVersion = computed(() => selectedSource.value?.versions?.find(
   version => Number(version.id) === Number(selectedSourceVersionId.value),
 ) || null)
 const collectionGroups = computed(() => {
-  const types = itemTypes.value
+  const types = itemTypes.value.filter(visibleHandbookType)
   const features = types.filter(type => featureTypeIds.has(Number(type.id)))
   const hierarchyTypes = types.filter(type => !featureTypeIds.has(Number(type.id)))
   const knownIds = new Set(hierarchyTypes.map(type => Number(type.id)))
@@ -203,7 +204,7 @@ const collectionGroups = computed(() => {
     groups.push({
       key: 'features',
       name: 'Способности и черты',
-      description: 'Расовые и классовые способности, а также выбираемые черты',
+      description: 'Расовые, классовые и сюжетные способности, а также черты',
       types: features,
     })
   }

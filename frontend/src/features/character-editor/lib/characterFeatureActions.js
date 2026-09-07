@@ -1,3 +1,4 @@
+import { ABILITY_VALUE_IDS } from '@/shared/lib/abilityTypes'
 import { abilityOwnerLevel } from '@/shared/lib/dndAbilityUses'
 import { featureEntryActive } from './featureEntryState'
 import { collectCharacterStatuses } from './characterStatuses'
@@ -11,7 +12,6 @@ export const FEATURE_ACTION_TYPES = [
 ]
 
 const TYPE_ORDER = new Map(FEATURE_ACTION_TYPES.map((entry, index) => [entry.value, index]))
-const ABILITY_VALUE_IDS = ['abilities_class', 'abilities_race', 'abilities_feats']
 
 function entryKey(entry) {
   return String(entry?.uid || entry?.id || '')

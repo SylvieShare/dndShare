@@ -153,6 +153,11 @@
             }
           },
           {
+            "ref": "abilities_story",
+            "kind": "block",
+            "content": { "expanded": true }
+          },
+          {
             "ref": "abilities_feats",
             "kind": "block",
             "content": {

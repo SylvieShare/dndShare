@@ -270,6 +270,8 @@
 </template>
 
 <script setup>
+import { ABILITY_VALUE_IDS } from '@/shared/lib/abilityTypes'
+
 import { computed, inject, onMounted, ref, watch } from 'vue'
 import { AppModalFrame } from '@sylvieshare/share-ui'
 import FeatChoiceModal from '@/features/character-editor/components/FeatChoiceModal.vue'
@@ -697,7 +699,7 @@ onMounted(async () => {
   try {
     const ids = new Set()
     entries.value.forEach((e) => { ids.add(e.id); if (e.subclass) ids.add(e.subclass.id) })
-    for (const key of ['abilities_race', 'abilities_class', 'abilities_feats']) {
+    for (const key of ABILITY_VALUE_IDS) {
       for (const entry of (Array.isArray(props.values?.[key]) ? props.values[key] : [])) {
         if (entry?.id != null) ids.add(entry.id)
       }

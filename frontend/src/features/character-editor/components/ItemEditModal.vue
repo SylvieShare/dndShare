@@ -1,84 +1,72 @@
 <template>
-  <AppModalFrame wide :title="item ? 'Редактировать предмет' : (typeName ? `Новый элемент в «${typeName}»` : 'Новый элемент')" :z-index="4500" @close="$emit('close')">
+  <AppModalFrame wide :extra-wide="isAbility" :title="item ? (isAbility ? 'Редактировать способность' : 'Редактировать предмет') : (isAbility ? 'Новая способность' : typeName ? `Новый элемент в «${typeName}»` : 'Новый элемент')" :z-index="zIndex" @close="$emit('close')">
 
-    <FormField label="Название" vertical>
-      <FormTextInput
-        ref="nameInput"
-        v-model:value="formName"
-        placeholder="Название..."
-        @enter="submit"
-      />
-    </FormField>
-
-    <FormField v-if="showNameEn" label="EN" vertical>
-      <FormTextInput
-        v-model:value="formNameEn"
-        placeholder="English name..."
-        @enter="submit"
-      />
-    </FormField>
-
-    <FormField v-if="typeId === 5" label="Иконка" hint="PNG или WebP, до 5 МБ" vertical>
-      <div class="iem-icon-editor">
-        <div class="iem-icon-preview" :class="{ empty: !hasIconPreview }">
-          <img v-if="iconPreviewUrl" :src="iconPreviewUrl" alt="" />
-          <ItemIcon
-            v-else-if="!iconRemoved && (item?.iconImageUrl || item?.svg)"
-            :item="item"
-            :fallback-to-type="false"
-            :size="64"
-          />
-          <span v-else>Нет иконки</span>
-        </div>
-        <div class="iem-icon-actions">
-          <button type="button" class="iem-icon-button" @click="iconFileInput?.click()">
-            {{ hasIconPreview ? 'Заменить' : 'Выбрать файл' }}
-          </button>
-          <button v-if="hasIconPreview" type="button" class="iem-icon-button danger" @click="removeIcon">
-            Удалить
-          </button>
-        </div>
-        <input
-          ref="iconFileInput"
-          type="file"
-          accept="image/png,image/webp,.png,.webp"
-          hidden
-          @change="onIconFileChange"
+    <div v-if="loadError" role="alert"><p>{{ loadError }}</p><button type="button" class="ability-link" @click="loadForm">Повторить загрузку</button></div>
+    <p v-else-if="!ready" class="iem-required-hint">Загрузка формы…</p>
+    <component v-else :is="isAbility ? AbilityEditor : 'div'" v-bind="isAbility ? { fields: editableTypeFields, data: formData, typeId, zIndex } : {}">
+      <FormField label="Название" title="Название способности или объекта в справочнике и на листе персонажа." vertical>
+        <FormTextInput
+          ref="nameInput"
+          v-model:value="formName"
+          placeholder="Название..."
+          @enter="submit"
         />
-      </div>
-    </FormField>
+      </FormField>
 
-    <div v-if="contentSources.length" class="iem-field iem-source-field">
-      <label class="iem-label">Источники</label>
-      <div class="iem-source-list">
-        <button
-          v-for="source in contentSources"
-          :key="source.id"
-          type="button"
-          class="iem-source"
-          :class="{ selected: contentSourceSelected(source.id) }"
-          :title="source.description || source.name"
-          @click="toggleContentSource(source.id)"
-        >
-          <span class="iem-source-mark">{{ contentSourceSelected(source.id) ? '✓' : '' }}</span>
-          <span>{{ source.name }}</span>
-          <small>{{ source.code }}</small>
-        </button>
-      </div>
-    </div>
+      <FormField v-if="showNameEn" label="Английское название" title="Необязательное оригинальное название для поиска." vertical>
+        <FormTextInput
+          v-model:value="formNameEn"
+          placeholder="English name..."
+          @enter="submit"
+        />
+      </FormField>
 
-    <div class="iem-fields-grid">
-      <ItemSchemaField v-for="field in editableTypeFields" :key="field.key" :field="field" />
-    </div>
+      <FormField v-if="typeId === 5" label="Иконка" hint="PNG или WebP, до 5 МБ" vertical>
+        <div class="iem-icon-editor">
+          <div class="iem-icon-preview" :class="{ empty: !hasIconPreview }">
+            <img v-if="iconPreviewUrl" :src="iconPreviewUrl" alt="" />
+            <ItemIcon
+              v-else-if="!iconRemoved && (item?.iconImageUrl || item?.svg)"
+              :item="item"
+              :fallback-to-type="false"
+              :size="64"
+            />
+            <span v-else>Нет иконки</span>
+          </div>
+          <div class="iem-icon-actions">
+            <button type="button" class="iem-icon-button" @click="iconFileInput?.click()">
+              {{ hasIconPreview ? 'Заменить' : 'Выбрать файл' }}
+            </button>
+            <button v-if="hasIconPreview" type="button" class="iem-icon-button danger" @click="removeIcon">
+              Удалить
+            </button>
+          </div>
+          <input
+            ref="iconFileInput"
+            type="file"
+            accept="image/png,image/webp,.png,.webp"
+            hidden
+            @change="onIconFileChange"
+          />
+        </div>
+      </FormField>
+
+      <ItemSourcePicker v-if="contentSources.length" v-model="selectedContentSourceIds" :sources="contentSources" :z-index="zIndex + 200" />
+      <div v-if="!isAbility" class="iem-fields-grid">
+        <ItemSchemaField v-for="field in editableTypeFields" :key="field.key" :field="field" />
+      </div>
+    </component>
 
     <ItemPickerModal
       v-if="picker.open"
       :item-type-ids="[picker.typeId]"
+      :z-index="zIndex + 400"
       title="Выбрать предмет"
       @pick="onItemPicked"
       @close="picker.open = false"
     />
     <template #footer>
+      <p v-if="saveError" role="alert" class="iem-required-hint">{{ saveError }}</p>
       <div class="iem-actions">
         <span v-if="missingRequiredFields.length" class="iem-required-hint">Заполните обязательные поля</span>
         <button class="iem-cancel" @click="$emit('close')">Отмена</button>
@@ -91,6 +79,10 @@
 </template>
 
 <script setup>
+import AbilityEditor from '@/features/items/editor/AbilityEditor.vue'
+import ItemSourcePicker from '@/features/items/editor/ItemSourcePicker.vue'
+import { ABILITY_TYPE_IDS } from '@/shared/lib/abilityTypes'
+import '@/features/items/editor/abilityEditor.css'
 import { computed, nextTick, onBeforeUnmount, onMounted, provide, reactive, ref } from 'vue'
 import { AppModalFrame } from '@sylvieshare/share-ui'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
@@ -112,6 +104,7 @@ import { itemFieldEditorKey, useItemFieldEditor } from './useItemFieldEditor'
 
 const props = defineProps({
   typeId:      { type: Number, required: true },
+  zIndex: { type: Number, default: 4500 },
   typeName:    { type: String, default: '' },
   item:        { type: Object, default: null },
   initialName: { type: String, default: '' },
@@ -123,6 +116,10 @@ const emit = defineEmits(['close', 'saved'])
 const suggestStore = useSuggestStore()
 const itemTypesStore = useItemTypesStore()
 const nameInput = ref(null)
+const ready = ref(false)
+const loadError = ref('')
+const saveError = ref('')
+const isAbility = computed(() => ABILITY_TYPE_IDS.includes(props.typeId))
 const typeFields = ref([])
 const editableTypeFields = computed(() => typeFields.value.filter(field => !field.readonly))
 const contentSources = ref([])
@@ -139,7 +136,7 @@ const missingRequiredFields = computed(() => editableTypeFields.value.filter((fi
   if (typeof value === 'string') return !value.trim()
   return value == null
 }))
-const canSubmit = computed(() => !!formName.value.trim() && missingRequiredFields.value.length === 0)
+const canSubmit = computed(() => ready.value && !!formName.value.trim() && missingRequiredFields.value.length === 0)
 const picker = reactive({ open: false, typeId: null, onPick: null })
 const iconFileInput = ref(null)
 const iconFile = ref(null)
@@ -151,45 +148,44 @@ provide(itemFieldEditorKey, fieldEditor)
 
 onBeforeUnmount(revokeIconPreview)
 
-onMounted(async () => {
-  const type = await itemTypesStore.ensureType(props.typeId)
-  typeFields.value = type?.fields || []
-  if (type?.sourceId != null) {
-    const sourceRes = await contentSourcesApi.listForSystem(type.sourceId)
-    contentSources.value = sourceRes?.sources || []
+onMounted(loadForm)
+
+async function loadForm() {
+  loadError.value = ''
+  try {
+    const type = await itemTypesStore.ensureType(props.typeId)
+    if (!type) throw new Error('Справочник не найден')
+    typeFields.value = type.fields || []
+    if (type?.sourceId != null) {
+      const sourceRes = await contentSourcesApi.listForSystem(type.sourceId)
+      contentSources.value = sourceRes?.sources || []
+    }
+
+    for (const id of schemaCollectSuggestIds(typeFields.value)) {
+      suggestStore.ensure(id)
+    }
+
+    if (props.item) {
+      formName.value = props.item.name || ''
+      formNameEn.value = props.item.nameEn || ''
+      Object.assign(formData, JSON.parse(JSON.stringify(props.item.data || {})))
+      selectedContentSourceIds.value = [...(props.item.contentSourceIds || [])]
+    } else {
+      Object.assign(formData, defaultDataForFields(isAbility.value ? typeFields.value.filter(field => field.key === 'level') : typeFields.value))
+      formName.value = props.initialName
+      formNameEn.value = props.initialNameEn
+      selectedContentSourceIds.value = contentSources.value.filter((source) => source.isDefault).map((source) => source.id)
+    }
+    if (!isAbility.value) fieldEditor.ensureContainerFields(typeFields.value)
+    fieldEditor.initSections(typeFields.value)
+    fieldEditor.ensureItemNames(fieldEditor.collectItemRefIds(typeFields.value, formData))
+
+    ready.value = true
+    await nextTick()
+    nameInput.value?.focus()
+  } catch (error) {
+    loadError.value = `Не удалось загрузить форму: ${error.message}`
   }
-
-  for (const id of schemaCollectSuggestIds(typeFields.value)) {
-    suggestStore.ensure(id)
-  }
-
-  if (props.item) {
-    formName.value = props.item.name || ''
-    formNameEn.value = props.item.nameEn || ''
-    Object.assign(formData, JSON.parse(JSON.stringify(props.item.data || {})))
-    selectedContentSourceIds.value = [...(props.item.contentSourceIds || [])]
-  } else {
-    Object.assign(formData, defaultDataForFields(typeFields.value))
-    formName.value = props.initialName
-    formNameEn.value = props.initialNameEn
-    selectedContentSourceIds.value = contentSources.value.filter((source) => source.isDefault).map((source) => source.id)
-  }
-  fieldEditor.ensureContainerFields(typeFields.value)
-  fieldEditor.initSections(typeFields.value)
-  fieldEditor.ensureItemNames(fieldEditor.collectItemRefIds(typeFields.value, formData))
-
-  await nextTick()
-  nameInput.value?.focus()
-})
-
-function contentSourceSelected(id) {
-  return selectedContentSourceIds.value.some((value) => String(value) === String(id))
-}
-
-function toggleContentSource(id) {
-  selectedContentSourceIds.value = contentSourceSelected(id)
-    ? selectedContentSourceIds.value.filter((value) => String(value) !== String(id))
-    : [...selectedContentSourceIds.value, id]
 }
 
 function openItemPicker(typeId, onPick) {
@@ -228,6 +224,7 @@ function removeIcon() {
 async function submit() {
   if (!canSubmit.value || saving.value) return
   saving.value = true
+  saveError.value = ''
   try {
     const data = normalizeDataForSave({ ...formData }, typeFields.value)
     let saved
@@ -251,8 +248,11 @@ async function submit() {
       await itemsApi.clearIcon(saved.id)
       saved = { ...saved, iconSvgId: null, iconImageId: null, svg: null, iconImageUrl: null }
     }
+    itemTypesStore.reset()
     emit('saved', saved)
     emit('close')
+  } catch (error) {
+    saveError.value = `Не удалось сохранить: ${error.message}`
   } finally {
     saving.value = false
   }

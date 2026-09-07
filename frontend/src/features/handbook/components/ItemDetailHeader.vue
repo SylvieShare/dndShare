@@ -101,7 +101,7 @@ const TYPE_COVER_STYLES = {
 
 function defaultCoverAspectRatio(typeId) {
   if ([2, 8, 9, 11, 13, 14, 16, 17].includes(typeId)) return '3 / 2'
-  if ([3, 4, 5, 7, 10].includes(typeId)) return '5 / 2'
+  if ([3, 4, 5, 7, 10, 18].includes(typeId)) return '5 / 2'
   if (typeId === 1 || typeId === 6 || typeId === 12) return '4 / 3'
   if (typeId === 15) return '4 / 1'
   return ''
@@ -122,7 +122,7 @@ let coverRequestVersion = 0
 let coverSwapTimer = null
 
 const coverImageAvailable = computed(() => Boolean(displayedCoverUrl.value) && !coverFailed.value)
-const titleOnlyShade = computed(() => [3, 4, 7].includes(props.type?.id))
+const titleOnlyShade = computed(() => [3, 4, 7, 18].includes(props.type?.id))
 const coverStyle = computed(() => ({
   ...(TYPE_COVER_STYLES[props.type?.id] || {}),
   ...(coverAspectRatio.value ? { '--cover-aspect-ratio': coverAspectRatio.value } : {}),

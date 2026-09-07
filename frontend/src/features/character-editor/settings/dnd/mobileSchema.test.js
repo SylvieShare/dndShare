@@ -42,6 +42,7 @@ describe('D&D mobile sheet schema', () => {
     expect(features.map(block => block.ref)).toEqual([
       'abilities_class',
       'abilities_race',
+      'abilities_story',
       'abilities_feats',
     ])
     expect(features.every(block => block.content?.expanded === true)).toBe(true)

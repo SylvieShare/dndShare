@@ -41,7 +41,7 @@ describe('handbook canvas', () => {
     expect(cardTop).toContain('padding-right: 118px;')
     expect(landingSource).toContain('v-for="group in collectionGroups"')
     expect(landingSource).toContain("name: 'Основные разделы'")
-    expect(landingSource).toContain('const featureTypeIds = new Set([3, 4, 7])')
+    expect(landingSource).toContain('const featureTypeIds = new Set([3, 4, 7, 18])')
     expect(landingSource).toContain("name: 'Способности и черты'")
     expect(landingSource).toContain('races own the')
     expect(landingSource).toContain('subrace collection and classes own subclasses')

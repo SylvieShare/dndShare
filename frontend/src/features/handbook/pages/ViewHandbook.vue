@@ -31,7 +31,7 @@
         <!-- ── Mobile: collection picker (full-screen type grid) ── -->
         <div class="handbook-type-grid">
           <button
-            v-for="type in types"
+            v-for="type in types.filter(visibleHandbookType)"
             :key="type.id"
             class="type-grid-card"
             :style="type.color ? { '--card-accent': type.color } : {}"
@@ -104,6 +104,7 @@
 </template>
 
 <script setup>
+import { visibleHandbookType } from "@/shared/lib/abilityTypes"
 import { computed, onBeforeUnmount, reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { fetchGet } from '@/shared/api/http'

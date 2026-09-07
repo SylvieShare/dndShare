@@ -178,6 +178,8 @@
 </template>
 
 <script setup>
+import { ABILITY_VALUE_IDS } from '@/shared/lib/abilityTypes'
+
 import { computed, defineComponent, h, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import PrintFeatureCard from '@/features/character-editor/components/print/PrintFeatureCard.vue'
@@ -484,7 +486,7 @@ const personalityFields = computed(() => [
 ].filter(field => text(field.value)))
 const hasPersonality = computed(() => avatar.value || appearanceFields.value.some(field => field.value) || personalityFields.value.length || text(values.value.notes) || text(values.value.person_backstory))
 const featureCards = computed(() => [
-  { group: 'Расовые особенности', value: values.value.abilities_race }, { group: 'Классовые особенности', value: values.value.abilities_class }, { group: 'Черты', value: values.value.abilities_feats },
+  { group: 'Расовые особенности', value: values.value.abilities_race }, { group: 'Классовые особенности', value: values.value.abilities_class }, { group: 'Сюжетные способности', value: values.value.abilities_story }, { group: 'Черты', value: values.value.abilities_feats },
 ].flatMap(group => (Array.isArray(group.value) ? group.value : []).map((entry, index) => {
   const item = itemById(entry.id); const description = item?.data?.description || item?.data?.desc || ''; const length = plainLength(description); const total = abilityUseTotal(item?.data, values.value, entry)
   const name = item?.name || entry.name || `Особенность #${entry.id || '—'}`
@@ -503,7 +505,7 @@ function collectItemIds(data) {
   for (const entry of data.weapon || []) add(entry.item_id)
   const inv = normalizeValue(data.items); inv.equipped.forEach(entry => add(entry.item_id)); inv.sections.forEach(section => section.items.forEach(entry => add(entry.item_id)))
   ;(Array.isArray(data.potions) ? data.potions : []).forEach(entry => add(entry.item_id)); (Array.isArray(data.tools) ? data.tools : []).forEach(entry => add(entry.item_id)); (data.spells?.tabs || []).forEach(tab => (tab.spells || []).forEach(entry => add(entry.id))); (data.spells?.grants || []).forEach(entry => add(entry.id))
-  for (const key of ['abilities_race', 'abilities_class', 'abilities_feats']) (data[key] || []).forEach(entry => add(entry.id))
+  for (const key of ABILITY_VALUE_IDS) (data[key] || []).forEach(entry => add(entry.id))
   return [...ids]
 }
 async function load() {

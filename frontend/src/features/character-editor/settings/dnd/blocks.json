@@ -513,6 +513,12 @@
       "item_id": 4
     }
   },
+  "abilities_story": {
+    "id": "abilities_story",
+    "type": "DND_ABILITIES",
+    "title": "Сюжетные",
+    "content": { "item_id": 18, "hide_empty": true }
+  },
   "abilities_feats": {
     "id": "abilities_feats",
     "type": "DND_ABILITIES",

@@ -127,7 +127,7 @@ rows use the opaque `--surface` level with distinct active and selected states.
 на среднем и по одной на узком. Текстовая часть карточки резервирует место под
 эмблему, поэтому название, описание и список подразделов никогда не заходят
 под изображение. Большинство самостоятельных каталогов
-собраны в группу «Основные разделы». Встроенные типы 3, 4 и 7 вынесены в
+собраны в группу «Основные разделы». Встроенные типы 3, 4, 7 и 18 вынесены в
 навигационную категорию «Способности и черты»: она не меняет модель данных,
 расовые и классовые способности по-прежнему связываются с владельцами через
 `race_ids`/`subrace_ids` и `class_ids`/`subclass_ids`, а черты остаются
@@ -146,7 +146,7 @@ has an id. `components/ItemPickerModal.vue`
 is the standard server-backed picker used by the character wizard/editor;
 `components/ItemViewModal.vue` is the standard detail window. Both belong to
 the handbook feature because they compose handbook API, stores and renderers.
-When a type 3, 4 or 7 item declares actionable `choices`, every character-sheet
+When a type 3, 4, 7 or 18 item declares actionable `choices`, every character-sheet
 picker completes those choices before attaching the item. The same dialog is
 used for abilities and feats; malformed empty choice rows do not block adding.
 The picker reuses `HandbookCollectionBar` and `HandbookItemList`, so it exposes
@@ -238,6 +238,37 @@ filters that dictionary to system-owned canonical codes. See
 `md/features/player-rules.md` for the content, search, routing, licensing and
 visual contracts.
 
+### Редактор способностей
+
+Тип 18 «Сюжетные способности» хранит дары, благословения и умения, выданные
+мастером по ходу приключения. В навигации справочник скрыт, пока в нём нет
+публичных или собственных записей текущего пользователя. Прямой picker типа
+доступен и для пустого справочника, поэтому первую запись можно создать с листа.
+
+Типы 3, 4 и 18 имеют строго одинаковый `fields`, включая расовые и классовые
+привязки. Миграция 72 объединяет полный контракт и устанавливает trigger,
+синхронизирующий изменения `fields` между всеми тремя типами. Контент существующих
+способностей не переписывается. Копии JSON-схем и SQL-снимок сверяются тестом.
+
+`ItemEditModal` использует общий профиль `features/items/editor/abilityEditorProfile`
+для этих трёх типов. Компоновка задана в коде для фиксированного семейства
+каталогов; типы полей, подписи, подсказки `hint` и условия `show_on` берутся из
+схемы. Слева — название, компактный источник, описание, уровень и подходящие
+каталогу привязки. Справа — только добавленные механики. На узком экране колонки
+становятся последовательными секциями. Общие form-controls, плитки и окна
+приходят из `share-ui`; локальные компоненты отвечают за правила способностей.
+
+«Добавить зависимость» открывает выбор с поиском: заклинания, ресурс, выборы,
+действия, эффекты, защиты, прогрессия и другие блоки текущей схемы. Сохранённые
+блоки видны сразу; пустые и старые служебные значения по умолчанию не загромождают
+форму. Удаление целого блока подтверждается и применяется при сохранении.
+Ресурс имеет явный способ расчёта; переключение убирает конкурирующие режимы.
+Объекты и массивы редактируются рекурсивно, дополнительные поля раскрываются
+отдельно, заполненные дополнительные настройки открываются автоматически.
+Все поля подписаны и имеют подсказку при наведении; кнопка «?» раскрывает тот же
+текст по клику или с клавиатуры. Источники публикации выбираются в отдельном
+окне с поиском, изменения применяются вместе с сохранением всей записи.
+
 ## Schemas
 
 Human-readable item-type schemas live in `resources/items/item_N_shema.json`.
@@ -249,7 +280,7 @@ Important types include weapons (1), items (2), race/class abilities (3/4),
 spells (5), bestiary (6), feats (7), races/classes (8/9), potions (10),
 backgrounds (11), armor (12) and transport (13).
 
-Ability types 3, 4 and 7 expose `granted_spells`. Each row references a spell,
+Ability types 3, 4, 7 and 18 expose `granted_spells`. Each row references a spell,
 its unlock level, an optional casting-ability override and whether the cast is
 slotless. An optional `cast_level` fixes the level at which an innate spell is
 cast. The same ability types expose level-gated `defenses` rows with a damage

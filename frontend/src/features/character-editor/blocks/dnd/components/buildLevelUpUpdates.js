@@ -1,3 +1,4 @@
+import { ABILITY_VALUE_IDS } from '@/shared/lib/abilityTypes'
 import { resolveNumValue } from '@/shared/lib/dnd'
 import { STAT_KEYS } from '@/shared/lib/dndStats'
 import { MULTICLASS_PROFICIENCY_GRANTS, multiclassProficiencyKey } from '@/features/character-editor/blocks/dnd/lib/levelUp'
@@ -211,7 +212,7 @@ export function buildLevelUpUpdates({
 
   const applySlotChange = applySlots && slotDiff.length && slotsAfter?.isCaster
   const nextValues = { ...values, ...updates }
-  const activeAbilityIds = new Set(['abilities_race', 'abilities_class', 'abilities_feats']
+  const activeAbilityIds = new Set(ABILITY_VALUE_IDS
     .flatMap((key) => Array.isArray(nextValues[key]) ? nextValues[key] : [])
     .map((entry) => String(entry.id)))
   const abilityItems = [...features, ...Object.values(itemsById || {}), ...(featPick ? [featPick] : [])]
