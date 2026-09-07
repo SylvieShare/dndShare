@@ -7,10 +7,6 @@
   min-height: 0;
   grid-template-columns: 310px minmax(0, 1fr);
   gap: 8px;
-  padding: 10px calc(var(--chapter-safe-right, 0px) + 10px) 10px max(8px, calc(var(--chapter-safe-left, 28px) - 20px));
-  background-color: var(--app-canvas-bg);
-  background-image: var(--app-canvas-pattern);
-  background-size: var(--app-canvas-dot-size) var(--app-canvas-dot-size);
 }
 
 .session-world-sidebar,
@@ -104,17 +100,13 @@
 .npc-catalog-copy small { color: var(--text-muted); font-size: 9px; }
 .npc-catalog-relations { min-width: 22px; padding: 3px 5px; border-radius: 999px; background: color-mix(in srgb, var(--entity-color) 13%, transparent); color: color-mix(in srgb, var(--entity-color) 70%, var(--text-1)); font-size: 8px; font-weight: 800; text-align: center; }
 
-@media (max-width: 1360px) {
-  .session-world-workspace { padding-right: 10px; }
-}
-
 @media (max-width: 840px) {
   .session-world-workspace { grid-template-columns: 270px minmax(0, 1fr); }
   .session-world-section-columns { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 760px) {
-  .session-world-workspace { grid-template-columns: 1fr; grid-template-rows: minmax(210px, 38%) minmax(0, 1fr); padding: 8px; }
+  .session-world-workspace { grid-template-columns: 1fr; grid-template-rows: minmax(210px, 38%) minmax(0, 1fr); }
   .session-world-sidebar { padding-top: 8px; }
   .session-world-detail-scroll { padding: 18px; }
 }

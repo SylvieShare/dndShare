@@ -68,7 +68,9 @@
         @send-block-to-combat="$emit('send-block-to-combat', $event)"
         @workspace-context-change="$emit('workspace-context-change', $event)"
       />
-      <slot v-if="primaryView !== 'story'" name="primary-workspace" />
+      <SessionTabWorkspace v-if="primaryView !== 'story'">
+        <slot name="primary-workspace" />
+      </SessionTabWorkspace>
       <slot />
     </div>
 
@@ -191,6 +193,7 @@ import ChapterEdgeModal from '@/features/sessions/components/ChapterEdgeModal.vu
 import ChapterEditorModal from '@/features/sessions/components/ChapterEditorModal.vue'
 import ChapterGraphToolbar from '@/features/sessions/components/ChapterGraphToolbar.vue'
 import SessionGraphCanvas from '@/features/sessions/components/SessionGraphCanvas.vue'
+import SessionTabWorkspace from '@/features/sessions/components/SessionTabWorkspace.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import { BasePopover, ConfirmDialog, RowActionSubmenu } from '@sylvieshare/share-ui'
 import { CHAPTER_STATUSES, romanNumeral } from '@/features/sessions/lib/chapterGraph'

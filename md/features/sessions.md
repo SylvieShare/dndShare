@@ -110,10 +110,15 @@ participant rail remains on the left and the
 right tool rail is removed. In `Сюжет` the chapter canvas fills all available
 width below `AppHeader`; only the participant rail reserves a horizontal safe
 area. CSS safe-area variables keep focus, zoom and newly created nodes in the
-uncovered part of the canvas. The catalogue
-workspaces start 8px after the visible participant rail and use an 8px internal gap,
-so their list column remains visually attached without sliding underneath the
-players. The participant rail disappears only on mobile.
+uncovered part of the canvas. All secondary tabs (world catalogues, music,
+journal and chronicle) share `SessionTabWorkspace`: it owns the canvas background,
+starts content 8px after the visible participant rail, and limits content width
+to 1440px, left-aligned with that rail. Collapsing the rail updates the same safe
+area for every tab. Catalogue columns retain an 8px internal gap. Story and
+combat are outside this wrapper and have no width limit. On mobile (up to 760px)
+the participant rail disappears and the shared wrapper uses 8px outer padding.
+Individual tab components own their internal layout and scrolling, not rail
+offsets or outer padding; this also applies to loading and error states.
 
 The primary switch remains active at every story depth. `Музыка` opens the
 central session library and also acts as a compact always-visible player when a

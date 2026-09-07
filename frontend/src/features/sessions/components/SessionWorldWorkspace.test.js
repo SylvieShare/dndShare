@@ -10,7 +10,7 @@ const read = path => readFileSync(fileURLToPath(new URL(path, import.meta.url)),
 const toolbar = read('./ChapterGraphToolbar.vue')
 const graphTab = read('./ChapterGraphTab.vue')
 const layer = read('./SessionWorldLayer.vue')
-const workspaceStyles = read('./styles/SessionWorldWorkspace.css')
+const tabWorkspace = read('./SessionTabWorkspace.vue')
 const locations = read('./SessionLocationsWorkspace.vue')
 const treeRow = read('./LocationTreeRow.vue')
 const locationEditor = read('./LocationEditorModal.vue')
@@ -52,7 +52,7 @@ describe('session world workspaces', () => {
     expect(toolbar).toContain("{ key: 'music', label: 'Музыка'")
     expect(toolbar).toContain("{ key: 'events', label: 'Хроника'")
     expect(graphTab).toContain('v-show="primaryView === \'story\'"')
-    expect(graphTab).toContain('<slot v-if="primaryView !== \'story\'" name="primary-workspace" />')
+    expect(graphTab).toMatch(/<SessionTabWorkspace v-if="primaryView !== 'story'">\s*<slot name="primary-workspace" \/>\s*<\/SessionTabWorkspace>/)
     expect(sessionView).toContain('<SessionCenterWorkspace')
     expect(sessionView).toContain('v-show="primaryView === \'story\'"')
     expect(sessionView).toContain("'campaign-workspace--combat': primaryView === 'story' && workspaceMotionMode === 'combat'")
@@ -119,11 +119,22 @@ describe('session world workspaces', () => {
     expect(treeRow).toContain(':data-session-list-id="node.id"')
   })
 
-  it('keeps the shared canvas dot field behind location, NPC and loading states', () => {
-    expect(workspaceStyles).toContain('background-image: var(--app-canvas-pattern);')
-    expect(workspaceStyles).toContain('background-size: var(--app-canvas-dot-size) var(--app-canvas-dot-size);')
-    expect(layer).toContain('background-image: var(--app-canvas-pattern);')
-    expect(layer).toContain('background-size: var(--app-canvas-dot-size) var(--app-canvas-dot-size);')
+  it('shares the rail inset, width limit and canvas background across secondary tabs', () => {
+    expect(tabWorkspace).toContain('background-image: var(--app-canvas-pattern);')
+    expect(tabWorkspace).toContain('background-size: var(--app-canvas-dot-size) var(--app-canvas-dot-size);')
+    expect(tabWorkspace).toContain('var(--chapter-safe-left, 28px)')
+    expect(tabWorkspace).toContain('max-width: 1440px;')
+    expect(tabWorkspace).toContain('@media (max-width: 760px)')
+    for (const source of [
+      read('./styles/SessionWorldWorkspace.css'),
+      read('./styles/SessionMusicWorkspace.css'),
+      read('../../journals/components/JournalWorkspace.css'),
+      chronicle,
+      layer,
+    ]) {
+      expect(source).not.toContain('--chapter-safe-left')
+      expect(source).not.toContain('--app-canvas-pattern')
+    }
   })
 
   it('persists the primary mode and exposes deep-linked selections', () => {
