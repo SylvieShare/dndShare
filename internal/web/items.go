@@ -224,7 +224,7 @@ func (s *Server) handleUpdateItem(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "bad body")
 		return
 	}
-	isAdmin, ok := s.hasRole(w, r, uid, RoleHandbookAdmin)
+	isAdmin, ok := s.hasRole(w, r, uid, RoleHandbookAdmin, RoleAdmin)
 	if !ok {
 		return
 	}
@@ -297,17 +297,19 @@ func writeItems(w http.ResponseWriter, items []store.Item) {
 	writeJSON(w, http.StatusOK, map[string]any{"items": nonNil(items)})
 }
 
-// hasRole вычисляет, есть ли у пользователя роль (аналог userRoleService.checkRoles, без 401).
+// hasRole проверяет наличие любой из указанных ролей без ответа 401.
 // Второй bool == false, если запрос ролей упал (ответ уже записан как 500).
-func (s *Server) hasRole(w http.ResponseWriter, r *http.Request, uid int64, role string) (bool, bool) {
+func (s *Server) hasRole(w http.ResponseWriter, r *http.Request, uid int64, allowedRoles ...string) (bool, bool) {
 	roles, err := s.store.RolesByUser(r.Context(), uid)
 	if err != nil {
 		serverError(w, err)
 		return false, false
 	}
 	for _, rr := range roles {
-		if rr == role {
-			return true, true
+		for _, role := range allowedRoles {
+			if rr == role {
+				return true, true
+			}
 		}
 	}
 	return false, true

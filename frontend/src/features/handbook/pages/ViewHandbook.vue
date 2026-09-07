@@ -122,6 +122,7 @@ import HandbookLanding from '@/features/handbook/pages/HandbookLanding'
 import HandbookCollectionBar from '@/features/handbook/components/HandbookCollectionBar'
 import HandbookItemList from '@/features/handbook/components/HandbookItemList'
 import HandbookItemDetail from '@/features/handbook/components/HandbookItemDetail'
+import { canEditHandbookItem } from '@/features/items/lib/itemPermissions'
 import ItemEditModal from '@/features/character-editor/components/ItemEditModal'
 
 // ── Router ──────────────────────────────────────────────────────────────────
@@ -163,8 +164,7 @@ const itemForm = reactive({ open: false, item: null, initialName: '', initialNam
 
 // ── Auth ─────────────────────────────────────────────────────────────────────
 const isAuth = computed(() => accountStore.authStatus === 'success')
-const isAdmin = computed(() => accountStore.user?.roles?.includes('HANDBOOK_ADMIN'))
-const canEdit = computed(() => isAuth.value && (selectedItem.value?.userId != null || isAdmin.value))
+const canEdit = computed(() => canEditHandbookItem(selectedItem.value, accountStore))
 
 // ── Mobile panel state ────────────────────────────────────────────────────────
 const mobilePanel = computed(() => {

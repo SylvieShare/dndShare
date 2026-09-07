@@ -51,7 +51,7 @@
         </div>
       </FormField>
 
-      <ItemSourcePicker v-if="contentSources.length" v-model="selectedContentSourceIds" :sources="contentSources" :z-index="zIndex + 200" />
+      <ItemSourcePicker v-if="showPublicationSources && contentSources.length" v-model="selectedContentSourceIds" :sources="contentSources" :z-index="zIndex + 200" />
       <div v-if="!isAbility" class="iem-fields-grid">
         <ItemSchemaField v-for="field in editableTypeFields" :key="field.key" :field="field" />
       </div>
@@ -79,6 +79,7 @@
 </template>
 
 <script setup>
+import { canSelectItemPublication } from '@/features/items/lib/itemPermissions'
 import AbilityEditor from '@/features/items/editor/AbilityEditor.vue'
 import ItemSourcePicker from '@/features/items/editor/ItemSourcePicker.vue'
 import { ABILITY_TYPE_IDS } from '@/shared/lib/abilityTypes'
@@ -122,6 +123,7 @@ const saveError = ref('')
 const isAbility = computed(() => ABILITY_TYPE_IDS.includes(props.typeId))
 const typeFields = ref([])
 const editableTypeFields = computed(() => typeFields.value.filter(field => !field.readonly))
+const showPublicationSources = computed(() => canSelectItemPublication(props.item))
 const contentSources = ref([])
 const selectedContentSourceIds = ref([])
 const formName = ref(props.initialName)
@@ -156,7 +158,7 @@ async function loadForm() {
     const type = await itemTypesStore.ensureType(props.typeId)
     if (!type) throw new Error('Справочник не найден')
     typeFields.value = type.fields || []
-    if (type?.sourceId != null) {
+    if (showPublicationSources.value && type?.sourceId != null) {
       const sourceRes = await contentSourcesApi.listForSystem(type.sourceId)
       contentSources.value = sourceRes?.sources || []
     }
@@ -231,8 +233,8 @@ async function submit() {
     const payload = {
       name: formName.value.trim(),
       data,
-      contentSourceIds: selectedContentSourceIds.value,
     }
+    if (showPublicationSources.value) payload.contentSourceIds = selectedContentSourceIds.value
     if (props.showNameEn) payload.nameEn = formNameEn.value.trim() || null
     if (props.item) {
       await fetchPut('/items/' + props.item.id, payload)

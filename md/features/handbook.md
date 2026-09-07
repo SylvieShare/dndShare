@@ -213,6 +213,11 @@ raster spell icon when assigned and otherwise keep the school symbol.
 Spell detail owns its canonical publication label, so the wrapper does not
 render a duplicate source chip for spells; other item types retain the wrapper
 source chip when no specialized publication label exists.
+Кнопка «Редактировать» находится внизу содержимого непосредственно слева от ID,
+включая просмотр с листа персонажа и picker. Она доступна автору записи
+(`item.userId` равен id текущего пользователя), `ADMIN` и `HANDBOOK_ADMIN`.
+После сохранения открытая карточка и выбранная запись обновляются сразу.
+
 Feature-specific mutations are passed into the fixed footer through the
 `actions` slot. Descriptions use the shared rich renderer.
 Specialized handbook details use the illustrated shared `DetailSection`
@@ -267,7 +272,11 @@ visual contracts.
 отдельно, заполненные дополнительные настройки открываются автоматически.
 Все поля подписаны и имеют подсказку при наведении; кнопка «?» раскрывает тот же
 текст по клику или с клавиатуры. Источники публикации выбираются в отдельном
-окне с поиском, изменения применяются вместе с сохранением всей записи.
+окне только при редактировании базовых записей. У новых и существующих
+пользовательских объектов источник не спрашивается и список публикаций не
+загружается. При сохранении пользовательской записи `contentSourceIds` не
+передаётся: ранее назначенные публикации сохраняются, а новые записи получают
+свой системный персональный источник «Мои материалы».
 
 ## Schemas
 

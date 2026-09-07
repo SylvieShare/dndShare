@@ -62,7 +62,8 @@
             <HandbookItemDetail
               :item="selectedItem"
               :type="itemType"
-              :can-edit="false"
+              :can-edit="canEditSelected"
+              @edit="editOpen = true"
               class="picker-detail"
               @touchstart="swipeBack.onTouchStart"
               @touchmove="swipeBack.onTouchMove"
@@ -111,6 +112,16 @@
         </div>
 
         <ItemEditModal
+          v-if="editOpen && selectedItem && canEditSelected"
+          :type-id="selectedItem.typeId || activeTypeId"
+          :item="selectedItem"
+          show-name-en
+          :z-index="Math.max(4500, zIndex + 100)"
+          @close="editOpen = false"
+          @saved="onItemEdited"
+        />
+
+        <ItemEditModal
           v-if="createOpen && activeTypeId != null"
           :type-id="activeTypeId"
           :show-name-en="createShowNameEn"
@@ -130,6 +141,8 @@ import { fetchGet } from '@/shared/api/http'
 import { contentScopeQuery, contentSourcesApi, normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'
 import HandbookItemDetail from '@/features/handbook/components/HandbookItemDetail'
 import HandbookItemList from '@/features/handbook/components/HandbookItemList'
+import { useAccountStore } from '@/stores/account'
+import { canEditHandbookItem } from '@/features/items/lib/itemPermissions'
 import ItemEditModal from '@/features/character-editor/components/ItemEditModal'
 import { AppModalFrame } from '@sylvieshare/share-ui'
 import { collectSuggestIds, getSuggestId, walkFieldsWithPath } from '@/features/handbook/objects/lib/schemaFields'
@@ -188,6 +201,9 @@ const filters = ref({ ...normalizedFixedFilters.value })
 const availableContentSources = ref([])
 const contentSourceIds = ref([])
 const createOpen = ref(false)
+const editOpen = ref(false)
+const accountStore = useAccountStore()
+const canEditSelected = computed(() => canEditHandbookItem(selectedItem.value, accountStore))
 const swipeBack = useHandbookSwipeBack(() => { selectedItem.value = null }, {
   enabled: () => selectedItem.value != null,
 })
@@ -378,6 +394,13 @@ function pick() {
   const qty = props.allowQuantity ? Math.max(1, Math.min(999, Math.floor(Number(quantity.value) || 1))) : 1
   emit('pick', selectedItem.value, qty)
   emit('close')
+}
+
+function onItemEdited(item) {
+  if (selectedItem.value?.id === item.id) Object.assign(selectedItem.value, item)
+  items.value = items.value.map(current => current.id === item.id ? item : current)
+  selectedItem.value = item
+  editOpen.value = false
 }
 
 function onItemCreated(item) {

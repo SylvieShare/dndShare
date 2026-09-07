@@ -265,7 +265,7 @@ describe('handbook item detail cover', () => {
     expect(headerSource).not.toContain('<ItemIcon')
     expect(headerSource).not.toContain('item-detail-header:not(.item-detail-header-covered)')
     expect(headerSource).not.toContain('class="item-detail-id"')
-    expect(detailSource).toContain('v-if="showTitle" class="detail-technical-meta"')
+    expect(detailSource).toContain('v-if="showTitle || canEdit" class="detail-technical-meta"')
     expect(detailSource).toContain('<span>ID {{ item.id }}</span>')
     expect(detailSource).toContain('margin-top: auto;')
   })

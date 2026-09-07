@@ -1,6 +1,7 @@
 <template>
   <AppModal
     ref="modal"
+    :z-index="zIndex"
     wide
     flush
     :show-close="false"
@@ -18,18 +19,31 @@
 
       <div class="iv-body">
         <div v-if="loading" class="iv-loading">Загрузка…</div>
-        <HandbookItemDetail v-else :item="item" :type="type" :can-edit="false" :show-title="true" :actor-name="actorName" />
+        <HandbookItemDetail v-else :item="item" :type="type" :can-edit="canEdit" @edit="editOpen = true" :show-title="true" :actor-name="actorName" />
       </div>
 
       <footer v-if="item && $slots.actions" class="iv-footer">
         <slot name="actions" :item="item" :type="type" />
       </footer>
     </section>
+    <ItemEditModal
+      v-if="editOpen && item && canEdit"
+      :type-id="item.typeId || itemTypeId"
+      :z-index="Math.max(4500, zIndex + 100)"
+      :type-name="type?.name || ''"
+      :item="item"
+      show-name-en
+      @close="editOpen = false"
+      @saved="onItemSaved"
+    />
   </AppModal>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
+import { useAccountStore } from '@/stores/account'
+import { canEditHandbookItem } from '@/features/items/lib/itemPermissions'
+import ItemEditModal from '@/features/character-editor/components/ItemEditModal.vue'
 import { itemsApi } from '@/shared/api/itemsApi'
 import { useItemTypesStore } from '@/stores/itemTypes'
 import { AppModal } from '@sylvieshare/share-ui'
@@ -53,17 +67,21 @@ async function loadItem(id) {
 
 const props = defineProps({
   itemTypeId: { type: Number, required: true },
+  zIndex: { type: Number, default: 3000 },
   itemId: { type: Number, default: null },
   item: { type: Object, default: null },
   actorName: { type: String, default: '' },
 })
 
-defineEmits(['close'])
+const emit = defineEmits(['close', 'saved'])
 
 const item = ref(props.item)
 const type = ref(null)
 const loading = ref(false)
 const modal = ref(null)
+const editOpen = ref(false)
+const accountStore = useAccountStore()
+const canEdit = computed(() => canEditHandbookItem(item.value, accountStore))
 
 const itemTypesStore = useItemTypesStore()
 async function load() {
@@ -81,6 +99,14 @@ async function load() {
 }
 
 watch(() => [props.itemId, props.itemTypeId, props.item], load, { immediate: true })
+
+function onItemSaved(saved) {
+  if (item.value?.id === saved.id) Object.assign(item.value, saved)
+  item.value = saved
+  itemCache.set(saved.id, saved)
+  editOpen.value = false
+  emit('saved', saved)
+}
 
 function close() {
   modal.value?.requestClose()

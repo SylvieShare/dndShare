@@ -36,12 +36,6 @@
             :title="itemSourceTitle"
           >{{ itemSourceLabel }}</span>
         </template>
-        <template #actions>
-          <button v-if="canEdit" class="btn-edit" @click="$emit('edit', item)">
-            <Pencil :size="14" aria-hidden="true" />
-            Редактировать
-          </button>
-        </template>
       </ItemDetailHeader>
 
       <!-- Custom renderer (Weapon, Spell, Enemy…) -->
@@ -117,16 +111,11 @@
         </template>
       </template>
 
-      <!-- Edit button for custom renderers -->
-      <div v-if="customRenderer && canEdit && !showTitle" class="detail-edit-row">
-        <span class="detail-id">ID {{ item.id }}</span>
-        <button class="btn-edit" @click="$emit('edit', item)">
+      <div v-if="showTitle || canEdit" class="detail-technical-meta">
+        <button v-if="canEdit" type="button" class="btn-edit" @click="$emit('edit', item)">
           <Pencil :size="14" aria-hidden="true" />
           Редактировать
         </button>
-      </div>
-
-      <div v-if="showTitle" class="detail-technical-meta">
         <span>ID {{ item.id }}</span>
       </div>
 
@@ -306,7 +295,6 @@ function formatSubValue(sub, value) {
   margin: auto 0;
 }
 
-.detail-id { font-size: 11px; color: var(--text-muted); }
 
 .item-detail-source {
   min-height: 27px;
@@ -330,6 +318,8 @@ function formatSubValue(sub, value) {
 
 .detail-technical-meta {
   display: flex;
+  align-items: center;
+  gap: 12px;
   justify-content: flex-end;
   margin-top: auto;
   padding-top: 24px;
@@ -415,16 +405,6 @@ function formatSubValue(sub, value) {
   font-size: 11px;
   color: var(--text-muted);
   white-space: nowrap;
-}
-
-/* ── Edit row for custom renderers ── */
-.detail-edit-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 16px;
-  padding-top: 14px;
-  border-top: 1px solid var(--border);
 }
 
 @media (max-width: 760px) {

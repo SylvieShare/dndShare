@@ -31,7 +31,7 @@ func (s *Server) handleUploadItemIconImage(w http.ResponseWriter, r *http.Reques
 		badRequest(w, "bad id")
 		return
 	}
-	isAdmin, ok := s.hasRole(w, r, uid, RoleHandbookAdmin)
+	isAdmin, ok := s.hasRole(w, r, uid, RoleHandbookAdmin, RoleAdmin)
 	if !ok {
 		return
 	}
@@ -106,7 +106,7 @@ func (s *Server) handleClearItemIcon(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "bad id")
 		return
 	}
-	isAdmin, ok := s.hasRole(w, r, uid, RoleHandbookAdmin)
+	isAdmin, ok := s.hasRole(w, r, uid, RoleHandbookAdmin, RoleAdmin)
 	if !ok {
 		return
 	}
