@@ -324,6 +324,7 @@ function onCoverError() {
   align-items: center;
   gap: 11px;
   padding: 18px 20px;
+  padding-right: calc(20px + var(--item-header-close-inset, 0px));
 }
 
 .item-detail-header-summary .item-detail-content {
@@ -422,6 +423,7 @@ function onCoverError() {
     align-items: flex-end;
     flex-wrap: wrap;
     padding: 16px 14px;
+    padding-right: calc(14px + var(--item-header-close-inset, 0px));
   }
 
   .item-detail-summary {

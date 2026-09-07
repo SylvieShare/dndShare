@@ -150,7 +150,7 @@ describe('handbook item detail cover', () => {
     expect(detailSource).toContain('<OriginDetailSummary :item="item" :type="type" />')
     expect(detailSource).toContain('16: OriginDetailContent')
     expect(detailSource).toContain('17: OriginDetailContent')
-    expect(originSummarySource).toContain('<CoverSummaryRail :columns="3">')
+    expect(originSummarySource).toContain('<CoverSummaryRail ')
     expect(originSummarySource).toContain(':label="relationLabel"')
     expect(originSummarySource).toContain('abilityNames(data.value.primary_abilities, { short: true })')
     expect(originSummarySource).toContain('abilityNames(data.value.saves, { short: true })')

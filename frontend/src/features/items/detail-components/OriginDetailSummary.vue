@@ -18,11 +18,10 @@
         <CoverStatCard v-if="rightSecondaryValue" :icon="rightSecondaryIcon" :label="rightSecondaryLabel" :value="rightSecondaryValue" size="compact" />
       </template>
 
-      <template #bottom>
-        <CoverSummaryRail :columns="3">
-          <CoverSummaryRailItem :icon="Link2" :label="relationLabel">{{ relationValue }}</CoverSummaryRailItem>
-          <CoverSummaryRailItem :icon="ShieldCheck" label="Владения">{{ proficiencyLabel }}</CoverSummaryRailItem>
-          <CoverSummaryRailItem :icon="Sparkles" :label="specialLabel">{{ specialValue }}</CoverSummaryRailItem>
+      <template v-if="kind !== 'subrace'" #bottom>
+        <CoverSummaryRail :columns="kind === 'class' ? 2 : 1">
+          <CoverSummaryRailItem v-if="kind === 'race' || kind === 'class'" :icon="Link2" :label="relationLabel">{{ relationValue }}</CoverSummaryRailItem>
+          <CoverSummaryRailItem v-if="kind.includes('class')" :icon="Sparkles" :label="specialLabel">{{ specialValue }}</CoverSummaryRailItem>
         </CoverSummaryRail>
       </template>
     </CoverSummaryLayout>
@@ -52,7 +51,7 @@ import {
 
 const props = defineProps({ item: { type: Object, required: true }, type: { type: Object, default: null } })
 const suggestStore = useSuggestStore()
-;[3, 4, 5, 6, 15, 16].forEach(id => suggestStore.ensure(id))
+;[6, 16].forEach(id => suggestStore.ensure(id))
 
 const data = computed(() => props.item.data || {})
 const kind = computed(() => originKind(props.type?.id || props.item.typeId))
@@ -96,18 +95,10 @@ const relationValue = computed(() => {
   if (kind.value === 'race' || kind.value === 'class') return relationIds.value.length || 'Нет'
   return parentName.value || 'Не связан'
 })
-const proficiencyLabel = computed(() => [
-  ...suggestLabels(3, data.value.armor_prof),
-  ...suggestLabels(4, data.value.weapon_prof),
-  ...suggestLabels(5, data.value.tool_prof),
-  ...suggestLabels(15, data.value.skill_prof),
-].slice(0, 3).join(', ') || 'Нет')
-const specialLabel = computed(() => kind.value.includes('class') ? 'Архетип' : 'Наследие')
+const specialLabel = computed(() => kind.value === 'class' ? 'Архетип' : 'Дарованные заклинания')
 const specialValue = computed(() => {
   if (kind.value === 'class') return data.value.subclass_level ? `выбор на ${data.value.subclass_level} ур.` : 'по правилам класса'
-  if (kind.value === 'subclass') return subclassGrantedSpellMetric(data.value).summary
-  const choice = data.value.asi_choice
-  return choice ? `+${choice.bonus || 1} к ${choice.count || 1} на выбор` : (asiLabel(data.value) || 'особые черты')
+  return subclassGrantedSpellMetric(data.value).summary
 })
 
 watch(parentId, id => id != null && ensureItemNames([id]), { immediate: true })

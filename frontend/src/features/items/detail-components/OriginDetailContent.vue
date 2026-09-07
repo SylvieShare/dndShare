@@ -5,6 +5,14 @@
       <RichContent class="origin-description" :html="description" />
     </DetailSection>
 
+    <ClassProgression
+      v-if="progressionClass"
+      :class-item="progressionClass"
+      :subclasses="kind === 'class' ? relationItems : []"
+      :fixed-subclass="kind === 'subclass' ? item : null"
+      @open-item="viewItem = $event"
+    />
+
     <DetailSection v-if="relationItems.length || relationLoading" :label="relationTitle">
       <template #icon><GitBranch /></template>
       <div v-if="relationLoading" class="origin-loading">Загрузка связей…</div>
@@ -72,7 +80,7 @@
 
     <ItemViewModal
       v-if="viewItem"
-      :item="viewItem"
+      :item="viewItem.data ? viewItem : null"
       :item-id="viewItem.id"
       :item-type-id="viewItem.typeId"
       @close="viewItem = null"
@@ -84,6 +92,7 @@
 import { computed, ref, watch } from 'vue'
 import { Backpack, BookOpen, ChevronRight, GitBranch, ListChecks, ShieldCheck, Sparkles, WandSparkles } from '@lucide/vue'
 import DetailSection from '@/shared/ui/DetailSection.vue'
+import ClassProgression from './ClassProgression.vue'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
 import { itemsApi } from '@/shared/api/itemsApi'
@@ -100,7 +109,11 @@ import {
   subclassSpellcastingLabel,
 } from '@/features/items/lib/originPresentation'
 
-const props = defineProps({ item: { type: Object, required: true }, type: { type: Object, default: null } })
+const props = defineProps({
+  item: { type: Object, required: true },
+  type: { type: Object, default: null },
+  summaryInHeader: { type: Boolean, default: false },
+})
 const suggestStore = useSuggestStore()
 ;[3, 4, 5, 6, 15].forEach(id => suggestStore.ensure(id))
 
@@ -125,6 +138,8 @@ const relationTitle = computed(() => ({
   class: 'Подклассы и архетипы',
   subclass: 'Базовый класс',
 })[kind.value] || 'Связанные записи')
+const progressionClass = computed(() => kind.value === 'class' ? props.item
+  : kind.value === 'subclass' ? relationItems.value.find(item => Number(item.typeId) === 9) : null)
 const relationItemLabel = computed(() => ({ race: 'подраса', subrace: 'раса', class: 'подкласс', subclass: 'класс' })[kind.value] || 'связь')
 const suggestLabels = (typeId, ids) => (Array.isArray(ids) ? ids : [])
   .map(id => suggestStore.items(typeId).find(item => String(item.id) === String(id))?.value)
@@ -148,7 +163,12 @@ const mechanics = computed(() => {
     add('Выбор подкласса', data.value.subclass_level ? `${data.value.subclass_level} уровень` : '')
     add('Уровни ASI', data.value.asi_levels)
   }
-  return result
+  if (!props.summaryInHeader) return result
+  // Keep only details that are not already shown in the cover summary/roadmap.
+  const uniqueLabels = kind.value === 'subrace'
+    ? ['Бонусы характеристик', 'Выбор навыков', 'Выбор языков']
+    : ['Выбор навыков', 'Выбор языков']
+  return result.filter(fact => uniqueLabels.includes(fact.label))
 })
 const proficiencyGroups = computed(() => [
   { label: 'Доспехи', values: suggestLabels(3, data.value.armor_prof) },

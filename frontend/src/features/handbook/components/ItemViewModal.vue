@@ -89,6 +89,7 @@ function close() {
 
 <style scoped>
 .iv-shell {
+  --item-header-close-inset: 42px;
   position: relative;
   flex: 1;
   min-height: 0;
