@@ -1,6 +1,6 @@
 <template>
   <div class="ability-resource-fields">
-    <FormField label="Как считать использования" title="Выберите один способ расчёта максимума ресурса." vertical>
+    <FormField label="Как считать использования" :title="mode === 'scaling' ? 'Количество использований берётся из блока «Прогрессия по уровням».' : 'Выберите один способ расчёта максимума ресурса.'" vertical>
       <FormSelect :value="mode" aria-label="Как считать использования" @update:value="changeMode">
         <option value="fixed">Фиксированное число</option>
         <option value="stat">От характеристики</option>
@@ -10,7 +10,6 @@
       </FormSelect>
     </FormField>
     <AbilityRuleFields :fields="visibleFields" :data="data" @update:data="value => Object.assign(data, value)" />
-    <p v-if="mode === 'scaling'" class="ability-block-hint">Добавьте блок «Прогрессия по уровням» и заполните количество использований для нужных уровней.</p>
     <details v-if="additionalFields.length" class="ability-advanced" :open="hasAdditionalValues || undefined">
       <summary>Особые правила восстановления и отдельные ресурсы</summary>
       <AbilityRuleFields :fields="additionalFields" :data="data" @update:data="value => Object.assign(data, value)" />

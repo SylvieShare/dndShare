@@ -66,23 +66,7 @@
                   :class="{ selected: selectedItem && selectedItem.id === item.id }"
                   @click="$emit('select', item)"
                 >
-                  <EnemyListItem v-if="type.id === 6" :item="item" :type="type" />
-                  <WeaponListItem v-else-if="type.id === 1" :item="item" :type="type" />
-                  <SpellListItem v-else-if="type.id === 5" :item="item" :type="type" />
-                  <ItemListItem v-else-if="type.id === 2" :item="item" :type="type" />
-                  <PotionListItem v-else-if="type.id === 10" :item="item" :type="type" />
-                  <ArmorListItem v-else-if="type.id === 12" :item="item" :type="type" />
-                  <TransportListItem v-else-if="type.id === 13" :item="item" :type="type" />
-                  <ItemListItem v-else-if="type.id === 14" :item="item" :type="type" />
-                  <FeatListItem v-else-if="type.id === 7" :item="item" :type="type" />
-                  <OriginListItem v-else-if="[8, 9, 16, 17].includes(type.id)" :item="item" :type="type" />
-                  <ObjectListItem
-                    v-else
-                    :item="item"
-                    :type="type"
-                    :name-en="item.nameEn || ''"
-                    :custom="item.userId != null"
-                  />
+                  <HandbookListItem :item="item" :type="type" />
                 </div>
               </template>
             </template>
@@ -97,23 +81,7 @@
               :class="{ selected: selectedItem && selectedItem.id === item.id }"
               @click="$emit('select', item)"
             >
-              <EnemyListItem v-if="type.id === 6" :item="item" :type="type" />
-              <WeaponListItem v-else-if="type.id === 1" :item="item" :type="type" />
-              <SpellListItem v-else-if="type.id === 5" :item="item" :type="type" />
-              <ItemListItem v-else-if="type.id === 2" :item="item" :type="type" />
-              <PotionListItem v-else-if="type.id === 10" :item="item" :type="type" />
-              <ArmorListItem v-else-if="type.id === 12" :item="item" :type="type" />
-              <TransportListItem v-else-if="type.id === 13" :item="item" :type="type" />
-              <ItemListItem v-else-if="type.id === 14" :item="item" :type="type" />
-              <FeatListItem v-else-if="type.id === 7" :item="item" :type="type" />
-              <OriginListItem v-else-if="[8, 9, 16, 17].includes(type.id)" :item="item" :type="type" />
-              <ObjectListItem
-                v-else
-                :item="item"
-                :type="type"
-                :name-en="item.nameEn || ''"
-                :custom="item.userId != null"
-              />
+              <HandbookListItem :item="item" :type="type" />
             </div>
           </template>
 
@@ -134,17 +102,8 @@
 import { computed, ref, watch } from 'vue'
 import { findFieldByPath, getByPath, getSuggestId, walkFieldsWithPath } from '@/features/handbook/objects/lib/schemaFields'
 import { useSuggestStore } from '@/stores/suggest'
+import HandbookListItem from '@/features/items/list-components/HandbookListItem.vue'
 import HandbookCollectionBar from '@/features/handbook/components/HandbookCollectionBar'
-import EnemyListItem from '@/features/items/list-components/EnemyListItem'
-import ArmorListItem from '@/features/items/list-components/ArmorListItem'
-import FeatListItem from '@/features/items/list-components/FeatListItem'
-import ItemListItem from '@/features/items/list-components/ItemListItem'
-import ObjectListItem from '@/features/items/list-components/ObjectListItem'
-import OriginListItem from '@/features/items/list-components/OriginListItem.vue'
-import PotionListItem from '@/features/items/list-components/PotionListItem'
-import SpellListItem from '@/features/items/list-components/SpellListItem'
-import TransportListItem from '@/features/items/list-components/TransportListItem'
-import WeaponListItem from '@/features/items/list-components/WeaponListItem'
 import { dieLabel } from '@/shared/lib/systemDice'
 
 const props = defineProps({

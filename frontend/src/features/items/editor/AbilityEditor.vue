@@ -11,7 +11,6 @@
       <BaseTile v-for="block in activeBlocks" :key="block.key" class="ability-dependency">
         <details open>
           <summary :title="block.hint">{{ block.name }}</summary>
-          <p v-if="block.hint" class="ability-block-hint">{{ block.hint }}</p>
           <AbilityResourceFields v-if="block.key === 'resources'" :fields="block.fields" :data="data" />
           <AbilityRuleFields v-else :fields="block.fields" :data="data" :advanced="block.key === 'resources'" @update:data="updateData" />
           <button type="button" class="ability-link ability-link--danger" @click="pendingRemove = block">Убрать блок</button>

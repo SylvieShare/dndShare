@@ -40,8 +40,8 @@ describe('handbook object list tile', () => {
     expect(read('EnemyListItem.vue')).toContain('#metric>')
     expect(read('PotionListItem.vue')).toContain('<template #icon-fallback>')
     expect(read('FeatListItem.vue')).toContain('<template #icon-fallback>')
-    expect(listSource).toContain('<ObjectListItem')
-    expect(listSource).toContain('v-else')
+    expect(listSource).toContain('<HandbookListItem')
+    expect(read('HandbookListItem.vue')).toContain('|| ObjectListItem')
     expect(listSource).not.toContain('hasRichRenderer')
   })
 

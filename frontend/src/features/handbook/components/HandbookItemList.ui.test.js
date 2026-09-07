@@ -10,6 +10,7 @@ const weaponList = readFileSync(fileURLToPath(new URL('../../items/list-componen
 const weaponDamageMetric = readFileSync(fileURLToPath(new URL('../../items/components/WeaponDamageMetric.vue', import.meta.url)), 'utf8')
 const itemReference = readFileSync(fileURLToPath(new URL('../../items/components/ItemReferenceRow.vue', import.meta.url)), 'utf8')
 const transportList = readFileSync(fileURLToPath(new URL('../../items/list-components/TransportListItem.vue', import.meta.url)), 'utf8')
+const listItem = readFileSync(fileURLToPath(new URL('../../items/list-components/HandbookListItem.vue', import.meta.url)), 'utf8')
 const originList = readFileSync(fileURLToPath(new URL('../../items/list-components/OriginListItem.vue', import.meta.url)), 'utf8')
 
 describe('handbook list controls', () => {
@@ -35,7 +36,7 @@ describe('handbook list controls', () => {
   })
 
   it('uses the shared rich row for armor with AC, material class and price', () => {
-    expect(source.match(/<ArmorListItem v-else-if="type.id === 12"/g)).toHaveLength(2)
+    expect(listItem).toContain('12: ArmorListItem')
     expect(armorList).toContain('<ObjectListItem')
     expect(armorList).toContain('#metric')
     expect(armorList).toContain('armor-list-cost')
@@ -43,7 +44,7 @@ describe('handbook list controls', () => {
   })
 
   it('uses the shared rich row for transport with movement and price', () => {
-    expect(source.match(/<TransportListItem v-else-if="type.id === 13"/g)).toHaveLength(2)
+    expect(listItem).toContain('13: TransportListItem')
     expect(transportList).toContain('<ObjectListItem')
     expect(transportList).toContain('#metric')
     expect(transportList).toContain('transport-list-cost')
@@ -51,7 +52,8 @@ describe('handbook list controls', () => {
   })
 
   it('uses informative linked rows for races, classes and their variant collections', () => {
-    expect(source.match(/<OriginListItem v-else-if="\[8, 9, 16, 17\]\.includes\(type\.id\)"/g)).toHaveLength(2)
+    expect(source.match(/<HandbookListItem /g)).toHaveLength(2)
+    for (const id of [8, 9, 16, 17]) expect(listItem).toContain(`${id}: OriginListItem`)
     expect(originList).toContain('origin-list-portrait')
     expect(originList).toContain('origin-list-metric')
     expect(originList).toContain('origin-list-relation')

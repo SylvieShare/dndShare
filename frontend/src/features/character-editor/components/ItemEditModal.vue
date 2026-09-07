@@ -21,7 +21,7 @@
         />
       </FormField>
 
-      <FormField v-if="typeId === 5" label="Иконка" hint="PNG или WebP, до 5 МБ" vertical>
+      <FormField v-if="typeId === 5" label="Иконка" title="PNG или WebP, до 5 МБ" vertical>
         <div class="iem-icon-editor">
           <div class="iem-icon-preview" :class="{ empty: !hasIconPreview }">
             <img v-if="iconPreviewUrl" :src="iconPreviewUrl" alt="" />
@@ -146,6 +146,7 @@ const iconPreviewUrl = ref('')
 const iconRemoved = ref(false)
 const hasIconPreview = computed(() => !!iconPreviewUrl.value || (!iconRemoved.value && !!(props.item?.iconImageUrl || props.item?.svg)))
 const fieldEditor = useItemFieldEditor(formData, openItemPicker)
+Object.defineProperty(fieldEditor, 'zIndex', { get: () => props.zIndex })
 provide(itemFieldEditorKey, fieldEditor)
 
 onBeforeUnmount(revokeIconPreview)

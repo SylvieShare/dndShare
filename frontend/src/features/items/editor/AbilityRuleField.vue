@@ -21,6 +21,14 @@
           <option v-for="option in options.filter(option => !(modelValue || []).includes(option.value))" :key="option.value" :value="option.value">{{ option.label }}</option>
         </FormSelect>
       </div>
+      <ItemMultiSelect
+        v-else-if="itemReference"
+        :model-value="(modelValue || []).map(row => row.id)"
+        :item-type-id="itemReference.item_type"
+        :label="field.name"
+        :z-index="editor.zIndex + 200"
+        @update:model-value="ids => set(itemSelectionRows(modelValue, ids))"
+      />
       <AbilityRuleFields v-else-if="field.type === 'object'" :fields="field.fields" :data="modelValue || {}" advanced @update:data="set" />
       <div v-else-if="field.type === 'object_array'" class="ability-rule-rows">
         <BaseTile v-for="(row, index) in modelValue || []" :key="rowKeys[index] || index" class="ability-rule-row">
@@ -34,16 +42,14 @@
       </div>
       <FormTextInput v-else :aria-label="field.name" :value="modelValue ?? ''" @update:value="set" />
     </FormField>
-    <details class="ability-field-help">
-      <summary :title="hint" :aria-label="`Подсказка: ${field.name}`">?</summary>
-      <p>{{ hint }}</p>
-    </details>
   </div>
 </template>
 
 <script setup>
 import { computed, inject, ref } from 'vue'
 import { BaseTile, ColorPresetPicker, FormField, FormTextInput, FormSelect, FormTextarea, ToggleSwitch } from '@sylvieshare/share-ui'
+import ItemMultiSelect from '@/features/handbook/components/ItemMultiSelect.vue'
+import { itemSelectionField, itemSelectionRows } from '@/features/handbook/objects/lib/itemSelection'
 import InputDescription from '@/shared/ui/InputDescription.vue'
 import AbilityRuleFields from './AbilityRuleFields.vue'
 import { itemFieldEditorKey } from '@/features/character-editor/components/useItemFieldEditor'
@@ -54,6 +60,7 @@ import { abilityFieldHint } from './abilityEditorProfile'
 const props = defineProps({ field: { type: Object, required: true }, modelValue: { default: undefined } })
 const emit = defineEmits(['update:modelValue'])
 const editor = inject(itemFieldEditorKey)
+const itemReference = computed(() => itemSelectionField(props.field))
 const hint = computed(() => abilityFieldHint(props.field))
 const wide = computed(() => ['description', 'object', 'object_array', 'text_array', 'suggest_array', 'textarea'].includes(props.field.type))
 const options = computed(() => {

@@ -6,11 +6,6 @@
 .ability-rule-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 12px; }
 .ability-rule-field { position: relative; min-width: 0; }
 .ability-rule-field--wide, .ability-advanced { grid-column: 1 / -1; }
-.ability-rule-field > .form-field > .form-field-label { padding-right: 22px; }
-.ability-field-help { color: var(--text-muted); font-size: 12px; }
-.ability-field-help > summary { position: absolute; right: 0; top: 0; display: grid; place-items: center; width: 18px; height: 18px; cursor: help; font-weight: 600; border-radius: 50%; background: var(--surface-raised); list-style: none; }
-.ability-field-help > summary::-webkit-details-marker { display: none; }
-.ability-field-help p { margin: 8px 0 0; line-height: 1.5; }
 .ability-empty, .ability-dependency { padding: 16px; }
 .ability-empty { color: var(--text-muted); font-size: 12px; line-height: 1.6; }
 .ability-empty > svg { color: var(--accent); }

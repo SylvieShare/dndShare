@@ -146,6 +146,14 @@
       </select>
     </div>
 
+    <ItemMultiSelect
+      v-else-if="itemReference"
+      :model-value="(editor.formData[field.key] || []).map(row => row.id)"
+      :item-type-id="itemReference.item_type"
+      :label="field.name"
+      :z-index="editor.zIndex + 200"
+      @update:model-value="ids => editor.formData[field.key] = itemSelectionRows(editor.formData[field.key], ids)"
+    />
     <ItemObjectField v-else-if="field.type === 'object'" :field="field" />
     <ItemObjectArrayField v-else-if="field.type === 'object_array'" :field="field" />
     <ItemBlocksField v-else-if="field.type === 'blocks'" :field="field" />
@@ -155,8 +163,10 @@
 </template>
 
 <script setup>
-import { inject } from 'vue'
+import { computed, inject } from 'vue'
 import { ColorPresetPicker } from '@sylvieshare/share-ui'
+import ItemMultiSelect from '@/features/handbook/components/ItemMultiSelect.vue'
+import { itemSelectionField, itemSelectionRows } from '@/features/handbook/objects/lib/itemSelection'
 import InputDescription from '@/shared/ui/InputDescription'
 import ItemBlocksField from './ItemBlocksField.vue'
 import ItemObjectArrayField from './ItemObjectArrayField.vue'
@@ -164,6 +174,7 @@ import ItemObjectField from './ItemObjectField.vue'
 import { itemFieldEditorKey } from './useItemFieldEditor'
 import { SYSTEM_DICE } from '@/shared/lib/systemDice'
 
-defineProps({ field: { type: Object, required: true } })
+const props = defineProps({ field: { type: Object, required: true } })
 const editor = inject(itemFieldEditorKey)
+const itemReference = computed(() => itemSelectionField(props.field))
 </script>

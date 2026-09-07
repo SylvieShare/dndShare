@@ -1,3 +1,4 @@
+import { itemSelectionField } from '@/features/handbook/objects/lib/itemSelection'
 import { reactive } from 'vue'
 import { useSuggestStore } from '@/stores/suggest'
 import { ensureItemNames, itemName } from '@/features/handbook/objects/lib/itemNames'
@@ -21,7 +22,7 @@ export function useItemFieldEditor(formData, openItemPicker) {
   const suggestStore = useSuggestStore()
   const sectionsOpen = reactive({})
 
-  const isCardField = (field) => CARD_TYPES.has(field.type)
+  const isCardField = (field) => CARD_TYPES.has(field.type) && !itemSelectionField(field)
   const isBoolField = (field) => isBooleanField(field)
   const fieldClasses = (field) => ({
     'iem-field--full': FULL_WIDTH_TYPES.has(field.type),

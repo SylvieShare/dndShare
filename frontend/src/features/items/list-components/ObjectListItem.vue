@@ -31,7 +31,7 @@
 
     <div class="oli-right">
       <slot name="trailing" />
-      <svg class="oli-chevron" viewBox="0 0 16 16" fill="none" width="14" height="14">
+      <svg v-if="showChevron" class="oli-chevron" viewBox="0 0 16 16" fill="none" width="14" height="14">
         <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </div>
@@ -51,6 +51,7 @@ const props = defineProps({
   custom: { type: Boolean, default: false },
   subtitle: { type: String, default: '' },
   nameCenter: { type: Boolean, default: false },
+  showChevron: { type: Boolean, default: true },
   iconFallbackToType: { type: Boolean, default: true },
 })
 
