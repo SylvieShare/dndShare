@@ -238,6 +238,9 @@ var schemaPotionRichDescriptionsSQL string
 //go:embed schema/72_story_abilities.sql
 var schemaStoryAbilitiesSQL string
 
+//go:embed schema/73_personal_character_journal.sql
+var schemaPersonalCharacterJournalSQL string
+
 var schemaParts = []struct {
 	name string
 	sql  string
@@ -316,6 +319,7 @@ var schemaParts = []struct {
 	{"item-rich-descriptions", schemaItemRichDescriptionsSQL},
 	{"potion-rich-descriptions", schemaPotionRichDescriptionsSQL},
 	{"story-abilities", schemaStoryAbilitiesSQL},
+	{"personal-character-journal", schemaPersonalCharacterJournalSQL},
 }
 
 const (

@@ -27,7 +27,9 @@ describe('D&D diary UI flows', () => {
   })
 
   it('presents source selection and a distinct journal cover', () => {
-    expect(workspaceSource).toContain('journal-source-select')
+    expect(workspaceSource).toContain('<JournalSourceSwitch')
+    expect(workspaceSource).not.toContain('journal-new-personal')
+    expect(workspaceSource).not.toContain('structuredClone')
     expect(workspaceSource).toContain('Создать дневник кампании')
     expect(workspaceStyles).toContain('.journal-cover')
     expect(workspaceStyles).toContain('linear-gradient')

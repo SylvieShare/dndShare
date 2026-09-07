@@ -67,9 +67,11 @@ sessions и выдаёт текущему браузеру новый token.
 - `GET /api/char/{uuid}/sessions`
 - `GET /api/char/{uuid}/journal` returns the selected accessible journal,
   owner-only source choices and the effective edit/source-selection flags;
-- `POST /api/char/{uuid}/journals` creates and selects a personal journal;
+- `POST /api/char/{uuid}/journals` creates the character's only personal journal
+  or selects and returns it if it already exists (including all sections);
   `PUT /api/char/{uuid}/journal-source` selects an eligible personal or session
-  journal by UUID;
+  journal by UUID. Personal choices are restricted to this character, not other
+  characters of the same owner; session choices exclude deleted sessions;
 - `PUT /api/char/{uuid}/data`
 - `PATCH /api/char/{uuid}/data-patch`
 - `PUT /api/char/{uuid}/public`

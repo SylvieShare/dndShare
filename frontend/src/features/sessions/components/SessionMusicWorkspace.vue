@@ -64,6 +64,7 @@
             :key="track.id"
             :track="track"
             :is-playing="state.playing && state.trackId === track.id"
+            :is-loading="state.loading && state.trackId === track.id"
             :is-current="state.trackId === track.id"
             :is-queued="isQueued(track.id)"
             :is-placeholder="organizer.sortable.isSource(track)"
@@ -244,7 +245,7 @@ function toggleTagFilter(id) {
 function isQueued(id) { return state.value.nextTrackId === id }
 function onPlay(track) {
   if (!props.isDm) return
-  if (state.value.trackId === track.id) state.value.playing ? musicStore.pause() : musicStore.resume()
+  if (state.value.trackId === track.id) (state.value.playing || state.value.loading) ? musicStore.pause() : musicStore.resume()
   else musicStore.playTrack(track.id, { albumId: selectedAlbumId.value })
 }
 function onQueueToggle(track) {

@@ -5,7 +5,16 @@
       <span>Открываем летопись…</span>
     </div>
 
-    <template v-else-if="!journal">
+    <JournalSourceSwitch
+      v-if="!loading && canSelectSource"
+      :journal="journal"
+      :sources="sources"
+      :busy="busy"
+      @select="uuid => selectSource(uuid).catch(() => {})"
+      @create-personal="createJournal"
+    />
+
+    <template v-if="!loading && !journal">
       <div class="journal-empty-hero">
         <span class="journal-empty-mark"><BookMarked :size="30" /></span>
         <div>
@@ -13,21 +22,6 @@
           <h2>{{ sessionUuid ? 'Дневник кампании ещё не создан' : 'Выберите дневник персонажа' }}</h2>
           <p>{{ emptyDescription }}</p>
         </div>
-      </div>
-
-      <div v-if="canSelectSource && sources.length" class="journal-source-grid">
-        <button
-          v-for="source in sources"
-          :key="source.uuid"
-          type="button"
-          :disabled="busy"
-          @click="selectSource(source.uuid)"
-        >
-          <UsersRound v-if="source.kind === 'session'" :size="18" />
-          <NotebookPen v-else :size="18" />
-          <span><strong>{{ source.name }}</strong><small>{{ sourceLabel(source) }}</small></span>
-          <ArrowRight :size="16" />
-        </button>
       </div>
 
       <form v-if="sessionUuid || canSelectSource" class="journal-create" @submit.prevent="createJournal">
@@ -39,7 +33,7 @@
       <p v-if="error" class="journal-error" role="alert">{{ error }}</p>
     </template>
 
-    <template v-else>
+    <template v-else-if="!loading && journal">
       <header class="journal-cover">
         <div class="journal-cover-icon"><BookMarked :size="27" /></div>
         <div class="journal-cover-copy">
@@ -47,27 +41,11 @@
           <h2>{{ journal.name }}</h2>
           <p>{{ sectionCountLabel }} · {{ eventCountLabel }}</p>
         </div>
-        <label v-if="canSelectSource && sources.length" class="journal-source-select">
-          <span>Источник</span>
-          <select :value="journal.uuid" :disabled="busy" @change="changeSource">
-            <option v-for="source in sources" :key="source.uuid" :value="source.uuid">
-              {{ source.kind === 'session' ? 'Кампания' : 'Личный' }} · {{ source.name }}
-            </option>
-          </select>
-        </label>
-        <button v-if="canSelectSource" class="journal-new-personal" type="button" :disabled="busy" @click="showCreate = !showCreate">
-          <Plus :size="14" /> личный
-        </button>
       </header>
-
-      <form v-if="showCreate" class="journal-create journal-create--attached" @submit.prevent="createJournal">
-        <input v-model="newJournalName" maxlength="160" placeholder="Название нового личного дневника" autofocus />
-        <button type="submit" :disabled="busy">Создать и выбрать</button>
-      </form>
 
       <div class="journal-toolbar">
         <div>
-          <span>Записи доступны всем участникам выбранного дневника</span>
+          <span>{{ journal.kind === 'session' ? 'Общая летопись мастера и игроков' : 'Личная летопись этого персонажа' }}</span>
           <small v-if="journal.kind === 'session'">Игроки могут выбрать его источником на странице персонажа</small>
         </div>
         <button v-if="canEdit" ref="addSectionButton" type="button" :disabled="busy" @click="addSection">
@@ -78,7 +56,7 @@
       <div v-if="displaySections.length" class="journal-sections">
         <DndDiarySessionCard
           v-for="entry in displaySections"
-          :key="entry.session.id"
+          :key="`${journal.uuid}:${entry.session.id}`"
           :session="entry.session"
           :number="entry.number"
           :owner-mode="canEdit"
@@ -141,8 +119,8 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
-import { ArrowRight, BookMarked, Feather, NotebookPen, Plus, UsersRound } from '@lucide/vue'
+import { computed, ref, watch } from 'vue'
+import { BookMarked, Feather, Plus } from '@lucide/vue'
 import { ConfirmDialog } from '@sylvieshare/share-ui'
 import DndDiaryEventEditor from '@/features/character-editor/blocks/dnd/components/DndDiaryEventEditor.vue'
 import DndDiaryEventRow from '@/features/character-editor/blocks/dnd/components/DndDiaryEventRow.vue'
@@ -150,8 +128,9 @@ import DndDiarySessionCard from '@/features/character-editor/blocks/dnd/componen
 import DndDiarySessionModal from '@/features/character-editor/blocks/dnd/components/DndDiarySessionModal.vue'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell.vue'
 import { useMorphOrigin } from '@/features/character-editor/composables/useMorphOrigin'
-import { defaultEvent, defaultSession, eventTypeMeta, patchEvent, patchSession } from '@/features/character-editor/blocks/dnd/lib/diaryEntry'
+import { defaultEvent, defaultSession, eventTypeMeta, normalizeEvent, normalizeSession, patchEvent, patchSession } from '@/features/character-editor/blocks/dnd/lib/diaryEntry'
 import { useJournalWorkspace } from '@/features/journals/composables/useJournalWorkspace'
+import JournalSourceSwitch from './JournalSourceSwitch.vue'
 
 const props = defineProps({
   characterUuid: { type: String, default: '' },
@@ -175,7 +154,6 @@ const emptyDescription = computed(() => props.sessionUuid
 const createPlaceholder = computed(() => props.sessionUuid ? 'Например, Летопись кампании' : 'Название личного дневника')
 
 const newJournalName = ref('')
-const showCreate = ref(false)
 const addSectionButton = ref(null)
 const editorKind = ref('')
 const draft = ref(null)
@@ -194,18 +172,9 @@ function plural(count, one, few, many) {
   return many
 }
 
-function sourceLabel(source) {
-  return source.kind === 'session' ? `Кампания · ${source.sessionName || 'сессия'}` : 'Только ваши персонажи'
-}
-
 async function createJournal() {
   await createRoot(newJournalName.value).catch(() => {})
   newJournalName.value = ''
-  showCreate.value = false
-}
-
-function changeSource(event) {
-  if (event.target.value !== journal.value?.uuid) selectSource(event.target.value).catch(() => {})
 }
 
 function addSection() {
@@ -215,7 +184,7 @@ function addSection() {
 function editSection(id, element) {
   const section = sections.value.find(item => String(item.id) === String(id))
   if (!section) return
-  editorKind.value = 'section'; creating.value = false; draft.value = structuredClone(section); openFrom(element)
+  editorKind.value = 'section'; creating.value = false; draft.value = normalizeSession(section); openFrom(element)
 }
 
 async function saveSection() {
@@ -234,7 +203,7 @@ function addEvent(sectionId, element) {
 function editEvent(sectionId, eventId, element) {
   const event = sections.value.find(item => String(item.id) === String(sectionId))?.events.find(item => String(item.id) === String(eventId))
   if (!event) return
-  editorKind.value = 'event'; creating.value = false; editingSectionId.value = sectionId; draft.value = structuredClone(event); openFrom(element)
+  editorKind.value = 'event'; creating.value = false; editingSectionId.value = sectionId; draft.value = normalizeEvent(event); openFrom(element)
 }
 
 async function saveEvent() {
@@ -249,6 +218,8 @@ async function removeEvent() {
 function closeEditor() {
   close(); editorKind.value = ''; draft.value = null; editingSectionId.value = null; creating.value = false
 }
+
+watch(() => journal.value?.uuid, () => { closeEditor(); removingSection.value = null })
 </script>
 
 <style scoped src="./JournalWorkspace.css"></style>

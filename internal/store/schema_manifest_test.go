@@ -66,67 +66,27 @@ func TestEverySchemaFileIsEmbeddedAndRegistered(t *testing.T) {
 }
 
 func TestVersionedMigrationsRunAfterClassActionAutomation(t *testing.T) {
-	if len(schemaParts) < 16 {
+	want := []string{
+		legacySchemaBootstrapLast, "half-caster-spellcasting", "session-security",
+		"shared-channel-divinity", "spellbook-tabs", "sacred-weapon-effect",
+		"spellbook-grant-cleanup", "session-npc-bestiary", "session-scene-location",
+		"session-scene-visual-source", "session-event-actor-item", "journals",
+		"origin-catalogs", "item-rich-descriptions", "potion-rich-descriptions",
+		"story-abilities", "personal-character-journal",
+	}
+	baseline := -1
+	for i, part := range schemaParts {
+		if part.name == legacySchemaBootstrapLast {
+			baseline = i
+			break
+		}
+	}
+	if baseline < 0 || len(schemaParts) < baseline+len(want) {
 		t.Fatal("schema manifest is incomplete")
 	}
-	legacyLast := schemaParts[len(schemaParts)-16]
-	halfCaster := schemaParts[len(schemaParts)-15]
-	sessionSecurity := schemaParts[len(schemaParts)-14]
-	sharedChannelDivinity := schemaParts[len(schemaParts)-13]
-	spellbookTabs := schemaParts[len(schemaParts)-12]
-	sacredWeaponEffect := schemaParts[len(schemaParts)-11]
-	spellbookGrantCleanup := schemaParts[len(schemaParts)-10]
-	sessionNPCBestiary := schemaParts[len(schemaParts)-9]
-	sessionSceneLocation := schemaParts[len(schemaParts)-8]
-	sessionSceneVisualSource := schemaParts[len(schemaParts)-7]
-	sessionEventActorItem := schemaParts[len(schemaParts)-6]
-	journals := schemaParts[len(schemaParts)-5]
-	originCatalogs := schemaParts[len(schemaParts)-4]
-	itemRichDescriptions := schemaParts[len(schemaParts)-3]
-	potionRichDescriptions := schemaParts[len(schemaParts)-2]
-	if legacyLast.name != legacySchemaBootstrapLast {
-		t.Fatalf("legacy bootstrap must end at %q, got %q", legacySchemaBootstrapLast, legacyLast.name)
-	}
-	if halfCaster.name != "half-caster-spellcasting" || halfCaster.sql != schemaHalfCasterSpellcastingSQL {
-		t.Fatalf("half-caster migration must be the first versioned migration after the legacy baseline")
-	}
-	if sessionSecurity.name != "session-security" || sessionSecurity.sql != schemaSessionSecuritySQL {
-		t.Fatalf("session security indexes must run after the half-caster data migration")
-	}
-	if sharedChannelDivinity.name != "shared-channel-divinity" || sharedChannelDivinity.sql != schemaSharedChannelDivinitySQL {
-		t.Fatalf("shared Channel Divinity must run after the session security migration")
-	}
-	if spellbookTabs.name != "spellbook-tabs" || spellbookTabs.sql != schemaSpellbookTabsSQL {
-		t.Fatalf("spellbook tabs migration must run after the shared Channel Divinity migration")
-	}
-	if sacredWeaponEffect.name != "sacred-weapon-effect" || sacredWeaponEffect.sql != schemaSacredWeaponEffectSQL {
-		t.Fatalf("Sacred Weapon effect must run after the spellbook tabs migration")
-	}
-	if spellbookGrantCleanup.name != "spellbook-grant-cleanup" || spellbookGrantCleanup.sql != schemaSpellbookGrantCleanupSQL {
-		t.Fatalf("spellbook grant cleanup must run after the Sacred Weapon migration")
-	}
-	if sessionNPCBestiary.name != "session-npc-bestiary" || sessionNPCBestiary.sql != schemaSessionNPCBestiarySQL {
-		t.Fatalf("session NPC bestiary link must run after the spellbook grant cleanup migration")
-	}
-	if sessionSceneLocation.name != "session-scene-location" || sessionSceneLocation.sql != schemaSessionSceneLocationSQL {
-		t.Fatalf("session scene location link must run after the NPC bestiary migration")
-	}
-	if sessionSceneVisualSource.name != "session-scene-visual-source" || sessionSceneVisualSource.sql != schemaSessionSceneVisualSourceSQL {
-		t.Fatalf("session scene visual source constraint must run after the location link migration")
-	}
-	if sessionEventActorItem.name != "session-event-actor-item" || sessionEventActorItem.sql != schemaSessionEventActorItemSQL {
-		t.Fatalf("session event actor item link must run after the scene visual source migration")
-	}
-	if journals.name != "journals" || journals.sql != schemaJournalsSQL {
-		t.Fatalf("journals migration must run after the session event actor item migration")
-	}
-	if originCatalogs.name != "origin-catalogs" || originCatalogs.sql != schemaOriginCatalogsSQL {
-		t.Fatalf("origin catalog migration must run after journals")
-	}
-	if itemRichDescriptions.name != "item-rich-descriptions" || itemRichDescriptions.sql != schemaItemRichDescriptionsSQL {
-		t.Fatalf("item rich descriptions migration must run after origin catalogs")
-	}
-	if potionRichDescriptions.name != "potion-rich-descriptions" || potionRichDescriptions.sql != schemaPotionRichDescriptionsSQL {
-		t.Fatalf("potion rich descriptions migration must run after item rich descriptions")
+	for i, name := range want {
+		if got := schemaParts[baseline+i].name; got != name {
+			t.Fatalf("migration after baseline at offset %d: want %s, got %s", i, name, got)
+		}
 	}
 }

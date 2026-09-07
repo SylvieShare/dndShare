@@ -192,11 +192,11 @@ func (s *Store) ListJournalSourcesForCharacter(ctx context.Context, charID, user
 		       session.uuid::text, session.name
 		FROM dndshare.journal journal
 		LEFT JOIN dndshare."session" session ON session.id = journal.session_id
-		WHERE journal.owner_user_id = $2
-		   OR journal.session_id IN (
+		WHERE (journal.personal_char_id = $1 AND journal.owner_user_id = $2)
+		   OR (session.deleted = false AND journal.session_id IN (
 			SELECT participant.session_id FROM dndshare.session_participant participant
 			WHERE participant.char_id = $1 AND participant.user_id = $2
-		   )
+		   ))
 		ORDER BY journal.session_id NULLS FIRST, journal.changed_at DESC`, charID, userID)
 	if err != nil {
 		return nil, err
@@ -220,8 +220,10 @@ func (s *Store) CreatePersonalJournal(ctx context.Context, charID, userID int64,
 	}
 	defer tx.Rollback(ctx)
 	journal, err := scanJournal(tx.QueryRow(ctx, `
-		INSERT INTO dndshare.journal (owner_user_id, name) VALUES ($1, $2)
-		RETURNING id, uuid::text, name, 'personal', NULL::text, NULL::text, changed_at`, userID, name))
+		INSERT INTO dndshare.journal (personal_char_id, owner_user_id, name) VALUES ($1, $2, $3)
+		ON CONFLICT (personal_char_id) DO UPDATE SET name = dndshare.journal.name
+		WHERE dndshare.journal.owner_user_id = EXCLUDED.owner_user_id
+		RETURNING id, uuid::text, name, 'personal', NULL::text, NULL::text, changed_at`, charID, userID, name))
 	if err != nil {
 		return Journal{}, err
 	}
@@ -233,8 +235,7 @@ func (s *Store) CreatePersonalJournal(ctx context.Context, charID, userID int64,
 	if err = tx.Commit(ctx); err != nil {
 		return Journal{}, err
 	}
-	journal.Sections = []JournalSection{}
-	return journal, nil
+	return s.loadJournalSections(ctx, journal)
 }
 
 func (s *Store) CreateSessionJournal(ctx context.Context, sessionID int64, name string) (Journal, error) {

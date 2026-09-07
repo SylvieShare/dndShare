@@ -2,7 +2,7 @@
   <div
     class="music-row"
     :class="{
-      'music-row--playing': isPlaying,
+      'music-row--playing': isPlaying && !isLoading,
       'music-row--queued': isQueued,
       'music-row--current': isCurrent && !isPlaying,
       'music-row--placeholder': isPlaceholder,
@@ -13,14 +13,16 @@
     @pointerdown="onPointerDown"
     @pointerup="onSelect"
   >
-    <button class="music-row-play" :title="isPlaying ? 'Пауза' : 'Играть'" @click.stop="onPlay" @pointerdown.stop>
-      <svg v-if="!isPlaying" width="12" height="12" viewBox="0 0 12 12"><path d="M3 1.5v9l7-4.5-7-4.5z" fill="currentColor"/></svg>
+    <button class="music-row-play" :title="playLabel" :aria-label="playLabel" :aria-busy="isLoading" @click.stop="onPlay" @pointerdown.stop>
+      <MusicLoadingIndicator v-if="isLoading" />
+      <svg v-else-if="!isPlaying" width="12" height="12" viewBox="0 0 12 12"><path d="M3 1.5v9l7-4.5-7-4.5z" fill="currentColor"/></svg>
       <svg v-else width="12" height="12" viewBox="0 0 12 12"><rect x="3" y="2" width="2.2" height="8" fill="currentColor"/><rect x="6.8" y="2" width="2.2" height="8" fill="currentColor"/></svg>
     </button>
     <div class="music-row-main">
       <span class="music-row-title" :title="track.name">{{ track.name }}</span>
       <span v-if="system" class="music-row-system" title="Системный файл защищён, но личные альбомы и теги доступны">системный</span>
-      <span v-if="isPlaying" class="music-row-state music-row-state--playing">ИГРАЕТ</span>
+      <span v-if="isLoading" class="music-row-state music-row-state--playing">ЗАГРУЗКА…</span>
+      <span v-else-if="isPlaying" class="music-row-state music-row-state--playing">ИГРАЕТ</span>
       <span v-else-if="isQueued" class="music-row-state music-row-state--queued">СЛЕДУЮЩИЙ</span>
     </div>
     <div class="music-row-tags">
@@ -50,12 +52,15 @@
 
 <script setup>
 import { ListMusic, Tags } from '@lucide/vue'
+import { computed } from 'vue'
+import MusicLoadingIndicator from './MusicLoadingIndicator.vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 
 const props = defineProps({
   track: { type: Object, required: true },
   isPlaying: { type: Boolean, default: false },
+  isLoading: { type: Boolean, default: false },
   isCurrent: { type: Boolean, default: false },
   isQueued: { type: Boolean, default: false },
   isPlaceholder: { type: Boolean, default: false },
@@ -65,6 +70,7 @@ const props = defineProps({
   onDragStart: { type: Function, default: null },
 })
 const emit = defineEmits(['select', 'play', 'queue-toggle', 'rename', 'delete', 'change-albums', 'change-tags'])
+const playLabel = computed(() => props.isLoading ? 'Загрузка трека — отменить' : props.isPlaying ? 'Пауза' : 'Играть')
 
 function onSelect(event) {
   if (event.target.closest('button, a, input, label, [role="menuitem"]')) return

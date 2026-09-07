@@ -117,7 +117,7 @@
         class="chapter-music-tab"
         :class="{
           'chapter-music-tab--active': primaryView === musicView.key,
-          'chapter-music-tab--playing': musicState.playing,
+          'chapter-music-tab--playing': musicState.playing && !musicState.loading,
         }"
         role="group"
         :aria-label="musicTabTitle"
@@ -139,11 +139,13 @@
           <button
             type="button"
             class="chapter-music-control"
-            :title="musicState.playing ? 'Поставить музыку на паузу' : 'Продолжить музыку'"
-            :aria-label="musicState.playing ? 'Поставить музыку на паузу' : 'Продолжить музыку'"
+            :title="musicPlayLabel"
+            :aria-label="musicPlayLabel"
+            :aria-busy="musicState.loading"
             @click="toggleMusicPlayback"
           >
-            <Pause v-if="musicState.playing" :size="13" fill="currentColor" />
+            <MusicLoadingIndicator v-if="musicState.loading" :size="13" />
+            <Pause v-else-if="musicState.playing" :size="13" fill="currentColor" />
             <Play v-else :size="13" fill="currentColor" />
           </button>
           <button
@@ -222,6 +224,7 @@ import SessionSettingsControl from '@/features/sessions/components/SessionSettin
 import SessionTimerControl from '@/features/sessions/components/SessionTimerControl.vue'
 import { sessionShortcutLabels } from '@/features/sessions/lib/sessionShortcuts'
 import { useMusicStore } from '@/stores/music'
+import MusicLoadingIndicator from './MusicLoadingIndicator.vue'
 
 const props = defineProps({
   arcs: { type: Array, default: () => [] },
@@ -274,11 +277,13 @@ const musicProgressPct = computed(() => musicState.value.durationSec
   : 0)
 const musicTabTitle = computed(() => {
   if (!currentMusicTrack.value) return 'Музыка'
-  const status = musicState.value.playing
+  const status = musicState.value.loading ? 'ЗАГРУЗКА…' : musicState.value.playbackError ? 'ОШИБКА ЗАГРУЗКИ' : musicState.value.playing
     ? remotePlayback.value ? 'НА ЭКРАНЕ' : 'ИГРАЕТ'
     : 'ПАУЗА'
   return `${currentMusicTrack.value.name} · ${status}`
 })
+const musicPlayLabel = computed(() => musicState.value.loading ? 'Загрузка трека — отменить'
+  : musicState.value.playing ? 'Поставить музыку на паузу' : 'Продолжить музыку')
 const combatButtonState = computed(() => `${props.combatActive ? 'open' : 'closed'}-${props.encounterActive ? 'running' : 'stopped'}`)
 const combatButtonLabel = computed(() => `${props.combatActive ? 'Бой открыт' : 'Открыть бой'} · бой ${props.encounterActive ? 'идёт' : 'не запущен'}`)
 const visibleLibraryViews = computed(() => props.isDm ? primaryViews.slice(1) : [])
@@ -323,7 +328,7 @@ function createArc() {
 
 function toggleMusicPlayback() {
   if (!currentMusicTrack.value) return
-  if (musicState.value.playing) musicStore.pause()
+  if (musicState.value.playing || musicState.value.loading) musicStore.pause()
   else musicStore.resume()
 }
 

@@ -1,8 +1,9 @@
 <template>
   <footer v-if="current" class="music-lib-foot">
     <div class="foot-current">
-      <button class="foot-play-btn" @click="onPlayPause">
-        <svg v-if="!state.playing" width="14" height="14" viewBox="0 0 14 14">
+      <button class="foot-play-btn" :title="playLabel" :aria-label="playLabel" :aria-busy="state.loading" @click="onPlayPause">
+        <MusicLoadingIndicator v-if="state.loading" :size="18" />
+        <svg v-else-if="!state.playing" width="14" height="14" viewBox="0 0 14 14">
           <path d="M3.5 2.5v9l8-4.5-8-4.5z" fill="currentColor"/>
         </svg>
         <svg v-else width="14" height="14" viewBox="0 0 14 14">
@@ -27,8 +28,9 @@
         </svg>
       </button>
       <div class="foot-text">
-        <div class="foot-status"><span class="foot-status-dot" />{{ state.playing ? 'ИГРАЕТ' : 'ПАУЗА' }}</div>
+        <div class="foot-status" role="status"><span class="foot-status-dot" />{{ state.loading ? 'ЗАГРУЗКА…' : state.playbackError ? 'ОШИБКА' : state.playing ? 'ИГРАЕТ' : 'ПАУЗА' }}</div>
         <div class="foot-title" :title="current.name">{{ current.name }}</div>
+        <div v-if="state.playbackError" class="foot-error" role="alert">{{ state.playbackError }}</div>
         <div class="foot-progress" :class="{ 'foot-progress--clickable': isDm }" @click="onSeek">
           <div class="foot-progress-bar" :style="{ width: progressPct + '%' }" />
         </div>
@@ -75,10 +77,12 @@ import { storeToRefs } from 'pinia'
 import { AppSlider } from '@sylvieshare/share-ui'
 import { fmtTime } from '@/features/sessions/lib/musicLibrary'
 import { useMusicStore } from '@/stores/music'
+import MusicLoadingIndicator from './MusicLoadingIndicator.vue'
 
 const props = defineProps({ isDm: { type: Boolean, default: false } })
 const musicStore = useMusicStore()
 const { state, currentTrack: current, nextTrack: next } = storeToRefs(musicStore)
+const playLabel = computed(() => state.value.loading ? 'Загрузка трека — отменить' : state.value.playing ? 'Пауза' : 'Играть')
 const nextAlbum = computed(() => state.value.albumId ? musicStore.albumById(state.value.albumId) : null)
 const progressPct = computed(() => state.value.durationSec
   ? Math.min(100, (state.value.positionSec / state.value.durationSec) * 100)
@@ -86,7 +90,7 @@ const progressPct = computed(() => state.value.durationSec
 
 function onPlayPause() {
   if (!props.isDm || !current.value) return
-  if (state.value.playing) musicStore.pause()
+  if (state.value.playing || state.value.loading) musicStore.pause()
   else musicStore.resume()
 }
 
@@ -120,6 +124,7 @@ function onToggleLoop() {
 .foot-text { min-width: 0; flex: 1; }
 .foot-status { display: flex; align-items: center; gap: 5px; color: var(--accent); font-size: 9px; font-weight: 700; letter-spacing: 0.1em; }
 .foot-status-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+.foot-error { margin-top: 5px; color: var(--danger); font-size: 10px; line-height: 1.4; }
 .foot-title { overflow: hidden; margin-top: 2px; color: var(--text-1); font-size: 14px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
 .foot-progress { height: 4px; overflow: hidden; margin-top: 6px; border-radius: 2px; background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); }
 .foot-progress--clickable { cursor: pointer; }

@@ -665,14 +665,22 @@ spheres to its left. Read-only spheres do not show this interaction preview.
 
 The diary block no longer stores collections in character JSON. It mounts the
 shared `JournalWorkspace` against the character UUID and lets the character
-owner choose one available source: any of their personal journals or the
-session journal of the campaign containing that character. Creating another
-personal journal selects it immediately; a DM or another participant may edit
+owner switch between `Личный` and `Сессии` with the shared `MultiToggle`.
+Each character has at most one personal journal, independent of its currently
+selected source; journals belonging to other characters are not offered. When
+switching back to personal, the existing journal is selected, or created once
+if it does not exist yet. There is no add-another-personal button. The session
+choice is disabled until an eligible campaign journal exists; multiple eligible
+sessions use `FormSelect`. A DM or another participant may edit
 a linked session journal through the same UI when session access permits it.
 Diary sections animate their disclosure body. Section forms use a regular
 `AppModalFrame`; entry forms retain the element-origin `MorphEditorShell` flow.
 Both create and edit flows save explicitly to the journal API, so cancelling
-does not leak a partial shared edit. Imported scenario entries carry a visible
+does not leak a partial shared edit. Editor drafts are copied through the diary
+normalizers, including nested dialogue/combatants, rather than cloning Vue
+proxies with `structuredClone`. Source changes close any open editor; background
+refreshes cannot overwrite a newer source selection and also refresh available
+sources. Imported scenario entries carry a visible
 source badge and an immutable source snapshot.
 
 Окна предметов восстанавливают фокус без прокрутки исходного листа. Общий

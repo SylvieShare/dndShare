@@ -1,6 +1,8 @@
 # Music
 
 Frontend music UI/store is under `features/sessions` and `stores/music`.
+The store owns the library; `useMusicPlayback` owns audio playback and its
+session synchronization lifecycle.
 Backend routes are in `internal/web/music.go`, persistence in
 `internal/store/music.go`. Personal and system files are in S3-compatible
 object storage; the system catalog manifest and provenance are under
@@ -69,6 +71,17 @@ the shared modal stack's Escape ordering. The session header's `Музыка` ta
 also the compact player: it shows track progress and exposes pause/resume and
 next-track actions without changing the selected workspace. There is no
 right-rail music panel.
+
+The selected track immediately enters `ЗАГРУЗКА…` while obtaining its signed
+URL and waiting for audio playback to start. The row, footer player and header
+tab replace play/pause with the same `MusicLoadingIndicator`; clicking it cancels
+the pending playback. `waiting`/`stalled` on the selected audio show loading
+again when its playable buffer runs out, and `playing` clears the indicator.
+This is playback readiness, not a claim that the entire file is downloaded.
+URL/media errors clear loading and show a recoverable error instead of reporting
+the track as playing. Request ordering protects rapid track changes and pause
+or disposal during a download; outgoing crossfade events do not alter the new
+track's loading state. Reduced-motion mode keeps the indicator static.
 
 System albums are shown in a separate sidebar section and show their CC0/source
 metadata. `Все треки` contains only personal tracks. Clicking a track selects

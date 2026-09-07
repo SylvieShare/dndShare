@@ -1,13 +1,33 @@
 import { describe, expect, it } from 'vitest'
+import { reactive } from 'vue'
 import {
   diaryEventsNewestFirst,
   normalizeCombatant,
   normalizeDiary,
   normalizeDialogueLine,
+  normalizeEvent,
+  normalizeSession,
   patchEvent,
 } from './diaryEntry'
 
 describe('diary entry', () => {
+  it('creates isolated editor drafts from Vue proxies, including nested rows', () => {
+    const section = reactive({ id: '12', title: 'Раздел', date: '', events: [
+      { id: '24', type: 'dialog', title: 'Беседа', desc: '<p>Текст</p>',
+        dialogue: [{ id: 'line', speaker: 'NPC', text: 'Привет' }],
+        combatants: [{ id: 'enemy', name: 'Волк', count: 1 }] },
+    ] })
+    const sectionDraft = normalizeSession(section)
+    const eventDraft = normalizeEvent(section.events[0])
+    sectionDraft.events[0].dialogue[0].speaker = 'Другой'
+    eventDraft.combatants[0].name = 'Медведь'
+    expect(section.events[0].dialogue[0].speaker).toBe('NPC')
+    expect(section.events[0].combatants[0].name).toBe('Волк')
+    expect(eventDraft.id).toBe('24')
+    expect(sectionDraft.id).toBe('12')
+    expect(eventDraft.desc).toBe('<p>Текст</p>')
+  })
+
   it('preserves chronological data and descriptions', () => {
     const value = [{
       id: 'session',

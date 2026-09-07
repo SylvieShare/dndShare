@@ -7,7 +7,6 @@ import {
   deleteJournalEntry,
   deleteJournalSection,
   getCharacterJournal,
-  getJournal,
   getSessionJournal,
   setCharacterJournal,
   updateJournalEntry,
@@ -57,6 +56,7 @@ export function useJournalWorkspace({ characterUuid = '', sessionUuid = '' }) {
   const busy = ref(false)
   const error = ref('')
   let pollTimer = null
+  let requestVersion = 0
 
   function apply(response) {
     journal.value = normalizedJournal(response?.journal)
@@ -67,15 +67,19 @@ export function useJournalWorkspace({ characterUuid = '', sessionUuid = '' }) {
   }
 
   async function load({ quiet = false } = {}) {
+    const version = ++requestVersion
     if (!quiet) loading.value = true
     try {
       const response = characterUuid
         ? await getCharacterJournal(characterUuid)
         : await getSessionJournal(sessionUuid)
+      if (version !== requestVersion) return null
+      // Empty source lists are omitted by the API, but must clear stale options.
+      sources.value = response?.sources || []
       error.value = ''
       return apply(response)
     } catch (reason) {
-      if (!quiet) error.value = reason?.message || 'Не удалось загрузить дневник'
+      if (!quiet && version === requestVersion) error.value = reason?.message || 'Не удалось загрузить дневник'
       return null
     } finally {
       if (!quiet) loading.value = false
@@ -83,15 +87,13 @@ export function useJournalWorkspace({ characterUuid = '', sessionUuid = '' }) {
   }
 
   async function refreshJournal() {
-    if (!journal.value?.uuid || busy.value) return
-    try {
-      apply(await getJournal(journal.value.uuid))
-      error.value = ''
-    } catch { /* keep the visible snapshot during transient refresh failures */ }
+    if (busy.value || loading.value) return
+    await load({ quiet: true })
   }
 
   async function mutate(request) {
     if (busy.value) return null
+    requestVersion += 1
     busy.value = true
     error.value = ''
     try {
@@ -130,6 +132,7 @@ export function useJournalWorkspace({ characterUuid = '', sessionUuid = '' }) {
     document.addEventListener('visibilitychange', onVisibilityChange)
   })
   onBeforeUnmount(() => {
+    requestVersion += 1
     window.clearInterval(pollTimer)
     document.removeEventListener('visibilitychange', onVisibilityChange)
   })
