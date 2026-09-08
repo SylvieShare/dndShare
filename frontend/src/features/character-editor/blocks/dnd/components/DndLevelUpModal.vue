@@ -112,7 +112,7 @@
                 :key="itemId"
                 class="lu-chip on"
                 @click="toggleFeatureChoice(f, choice, itemId)"
-              >{{ featureChoiceItemNames[itemId] || `#${itemId}` }} ×</button>
+              >{{ featureChoiceItemNames[itemId] || `#${itemId}` }} <Trash2 :size="14" aria-hidden="true" /></button>
               <button
                 v-if="choiceSel(f, choice).length < choiceCount(f, choice)"
                 class="lu-roll"
@@ -270,6 +270,7 @@
 </template>
 
 <script setup>
+import { Trash2 } from '@lucide/vue'
 import { ABILITY_VALUE_IDS } from '@/shared/lib/abilityTypes'
 
 import { computed, inject, onMounted, ref, watch } from 'vue'

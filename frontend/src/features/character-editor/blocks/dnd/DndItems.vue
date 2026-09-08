@@ -45,12 +45,8 @@
             >{{ section.name }}</button>
             <span v-if="visibleItems(section).length" class="di-section-count">{{ visibleItems(section).length }}</span>
             <span class="di-section-line" aria-hidden="true"></span>
-            <button
-              v-if="canManage && !section.locked && model.sections.length > 1"
-              class="di-section-del"
-              title="Удалить секцию"
-              @click="askDeleteSection(section)"
-            >×</button>
+            <RemoveButton icon="trash" label="Удалить секцию" v-if="canManage && !section.locked && model.sections.length > 1"
+              @click="askDeleteSection(section)" />
           </div>
 
           <div
@@ -230,6 +226,7 @@
 </template>
 
 <script setup>
+import { RemoveButton } from '@sylvieshare/share-ui'
 import { computed, inject, nextTick, onMounted, reactive, ref, watch } from 'vue'
 import { ArrowRightLeft, Dices } from '@lucide/vue'
 

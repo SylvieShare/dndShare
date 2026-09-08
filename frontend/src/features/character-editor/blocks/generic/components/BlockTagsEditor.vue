@@ -2,12 +2,12 @@
   <EditorPanel compact>
     <EditorSection v-for="sec in sections" :key="sec.title" :title="sec.title">
       <template v-if="sec.custom" #actions>
-        <RemoveButton label="Удалить раздел" @click="$emit('remove-section', sec.title)" />
+        <RemoveButton icon="trash" label="Удалить раздел" @click="$emit('remove-section', sec.title)" />
       </template>
       <div class="bte-body">
         <span v-for="(tag, i) in sec.tags" :key="i" class="sheet-tag-chip">
           {{ tag }}
-          <button class="sheet-tag-remove" @click="$emit('remove-tag', sec.title, i)">×</button>
+          <RemoveButton icon="trash" :label="`Удалить: ${tag}`" @click="$emit('remove-tag', sec.title, i)" />
         </span>
         <SuggestAdd
           :suggest-type-id="sec.suggest_id"

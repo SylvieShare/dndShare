@@ -1,6 +1,8 @@
 <template>
   <div class="ability-rule-field" :class="{ 'ability-rule-field--wide': wide }">
-    <FormField :label="field.name + (field.required ? ' *' : '')" vertical :title="hint">
+    <component :is="hideLabel ? 'div' : FormField"
+      v-bind="hideLabel ? { role: 'group', 'aria-label': field.name, title: hint } : { label: field.name + (field.required ? ' *' : ''), vertical: true, title: hint }"
+    >
       <InputDescription v-if="field.type === 'description'" editable :block="{ id: field.key, content: { placeholder: 'Как работает способность…' } }" :value="modelValue || ''" @update:value="(_, value) => set(value)" />
       <ToggleSwitch v-else-if="['bool', 'boolean'].includes(field.type)" :model-value="!!modelValue" :aria-label="field.name" @update:model-value="set" />
       <FormTextInput v-else-if="['int', 'float'].includes(field.type)" type="number" :step="field.type === 'float' ? 'any' : 1" :aria-label="field.name" :value="modelValue ?? ''" placeholder="Не задано" @update:value="value => set(numberOrNull(value))" />
@@ -41,7 +43,7 @@
         <button type="button" class="ability-link" @click="addRow">+ Добавить запись</button>
       </div>
       <FormTextInput v-else :aria-label="field.name" :value="modelValue ?? ''" @update:value="set" />
-    </FormField>
+    </component>
   </div>
 </template>
 
@@ -57,7 +59,7 @@ import { defaultDataForFields, numberOrNull } from '@/features/handbook/objects/
 import { SYSTEM_DICE } from '@/shared/lib/systemDice'
 import { abilityFieldHint } from './abilityEditorProfile'
 
-const props = defineProps({ field: { type: Object, required: true }, modelValue: { default: undefined } })
+const props = defineProps({ field: { type: Object, required: true }, modelValue: { default: undefined }, hideLabel: Boolean })
 const emit = defineEmits(['update:modelValue'])
 const editor = inject(itemFieldEditorKey)
 const itemReference = computed(() => itemSelectionField(props.field))

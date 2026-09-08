@@ -21,7 +21,7 @@
         :title="`Убрать: ${entry.name}`"
         @click="remove(entry.key || entry.id)"
       >
-        {{ entry.name }} <small>{{ entry.level === 0 ? 'заговор' : `${entry.level} круг` }}</small> ×
+        {{ entry.name }} <small>{{ entry.level === 0 ? 'заговор' : `${entry.level} круг` }}</small> <Trash2 :size="14" aria-hidden="true" />
       </button>
       <span v-if="!selected.length" class="lus-muted">Пока ничего не выбрано.</span>
     </div>
@@ -43,6 +43,7 @@
 </template>
 
 <script setup>
+import { Trash2 } from '@lucide/vue'
 import { computed, onMounted, ref, watch } from 'vue'
 
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'

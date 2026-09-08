@@ -23,7 +23,7 @@
               class="fcm-picked"
               @click="remove(choice, picked.id)"
             >
-              <span>{{ picked.name }}</span><b>×</b>
+              <span>{{ picked.name }}</span><Trash2 :size="14" aria-hidden="true" />
             </button>
             <button
               v-if="selected(choice).length < choice.count"
@@ -81,6 +81,7 @@
 </template>
 
 <script setup>
+import { Trash2 } from '@lucide/vue'
 import { computed, onMounted, reactive, watch } from 'vue'
 
 import { AppModalFrame } from '@sylvieshare/share-ui'

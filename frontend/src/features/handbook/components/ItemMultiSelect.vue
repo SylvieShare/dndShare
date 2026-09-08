@@ -5,7 +5,7 @@
         <button type="button" class="item-multi__row-button" :aria-label="`Открыть: ${item.name}`" @click="previewId = item.id">
           <HandbookListItem :item="item" :type="itemType" />
         </button>
-        <RemoveButton :label="`Убрать: ${item.name}`" variant="inline" @click="remove(item.id)" />
+        <RemoveButton icon="trash" :label="`Убрать: ${item.name}`" variant="inline" @click="remove(item.id)" />
       </BaseTile>
     </div>
     <div v-if="hydrationError" class="item-multi__status" role="status">

@@ -18,7 +18,7 @@
           >
             <option v-for="kind in DEFENSE_KINDS" :key="kind.value" :value="kind.value">{{ kind.label }}</option>
           </FormSelect>
-          <RemoveButton label="Удалить защиту" @click="$emit('remove', index)" />
+          <RemoveButton icon="trash" label="Удалить защиту" @click="$emit('remove', index)" />
         </div>
       </div>
       <AddButton block @click="$emit('add')">Защита</AddButton>

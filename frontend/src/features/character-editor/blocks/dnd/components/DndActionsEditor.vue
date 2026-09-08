@@ -17,7 +17,7 @@
             >
               <option v-for="type in FEATURE_ACTION_TYPES" :key="type.value" :value="type.value">{{ type.label }}</option>
             </FormSelect>
-            <RemoveButton label="Удалить действие" @click="$emit('remove', action)" />
+            <RemoveButton icon="trash" label="Удалить действие" @click="$emit('remove', action)" />
           </div>
 
           <label>

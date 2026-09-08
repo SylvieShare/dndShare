@@ -38,26 +38,20 @@
 
     <!-- ── Навыки ── -->
     <EditorSection title="Навыки">
-      <button
+      <div
         v-for="skill in skills"
         :key="skill.id"
         class="se-skill-row"
-        type="button"
-        @click="$emit('open-skill', skill.id)"
       >
-        <span class="se-skill-name">{{ skill.title }}</span>
-        <span class="se-skill-prof" :class="`se-skill-prof--${skill.up}`">{{ profLabel(skill.up) }}</span>
-        <RollModeBadge :mode="skill.rollMode" :source="skill.rollModeSource" :cancelled="skill.rollModeCancelled" />
-        <span class="se-skill-chip">{{ signed(skill.bonus) }}</span>
-        <span
-          v-if="skill.custom"
-          class="se-skill-del"
-          role="button"
-          title="Удалить навык"
-          @click.stop="$emit('delete-skill', skill.id)"
-        >×</span>
-        <span class="se-skill-arrow">›</span>
-      </button>
+        <button class="se-skill-open" type="button" @click="$emit('open-skill', skill.id)">
+          <span class="se-skill-name">{{ skill.title }}</span>
+          <span class="se-skill-prof" :class="`se-skill-prof--${skill.up}`">{{ profLabel(skill.up) }}</span>
+          <RollModeBadge :mode="skill.rollMode" :source="skill.rollModeSource" :cancelled="skill.rollModeCancelled" />
+          <span class="se-skill-chip">{{ signed(skill.bonus) }}</span>
+          <span class="se-skill-arrow">›</span>
+        </button>
+        <RemoveButton v-if="skill.custom" icon="trash" :label="`Удалить навык «${skill.title}»`" @click="$emit('delete-skill', skill.id)" />
+      </div>
 
       <AddButton
         v-if="allowAddSkills && !adding"
@@ -83,7 +77,7 @@
 <script setup>
 import { nextTick, ref } from 'vue'
 import { signedOrZero as signed } from '@/shared/lib/dnd'
-import { AddButton } from '@sylvieshare/share-ui'
+import { AddButton, RemoveButton } from '@sylvieshare/share-ui'
 import BonusList from '@/shared/ui/BonusList'
 import { EditorPanel } from '@sylvieshare/share-ui'
 import { EditorSection } from '@sylvieshare/share-ui'
@@ -182,6 +176,8 @@ function onAddSubmit() {
 }
 .se-skill-row:hover { border-color: var(--border-strong); background: var(--surface-active); }
 
+.se-skill-open { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; border: 0; padding: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+
 .se-skill-name {
   flex: 1;
   color: var(--text-1);
@@ -213,17 +209,6 @@ function onAddSubmit() {
   font-weight: 700;
   flex-shrink: 0;
 }
-
-.se-skill-del {
-  width: 18px;
-  text-align: center;
-  color: var(--danger);
-  font-size: 15px;
-  line-height: 1;
-  flex-shrink: 0;
-  border-radius: 4px;
-}
-.se-skill-del:hover { color: var(--danger); }
 
 .se-skill-arrow { color: var(--text-muted); font-size: 16px; flex-shrink: 0; }
 

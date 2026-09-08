@@ -7,7 +7,7 @@
     <template v-else>
       <FormTextInput class="bl-name" :value="bonus.name || bonus.title" placeholder="Название" @update:value="v => set(i, 'name', v)" />
       <FormNumberInput :value="bonus.value" @change="v => set(i, 'value', v)" />
-      <RemoveButton label="Удалить бонус" @click="remove(i)" />
+      <RemoveButton icon="trash" label="Удалить бонус" @click="remove(i)" />
     </template>
   </div>
   <AddButton v-if="allowAdd" block @click="add">Добавить бонус</AddButton>

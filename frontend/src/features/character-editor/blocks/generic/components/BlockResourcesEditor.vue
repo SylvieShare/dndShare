@@ -32,7 +32,7 @@
             @input="$emit('rename', row._id, $event.target.value)"
           />
           <FormNumberInput :value="row.total" :min="0" @change="v => $emit('set-total', row._id, v)" />
-          <RemoveButton label="Удалить ресурс" @click="$emit('remove', row._id)" />
+          <RemoveButton icon="trash" label="Удалить ресурс" @click="$emit('remove', row._id)" />
         </div>
 
         <div class="bre-rest">

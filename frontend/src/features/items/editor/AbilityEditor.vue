@@ -9,11 +9,11 @@
       <div class="ability-editor-intro"><h3>Механика и зависимости</h3><p>Добавьте только то, что даёт эта способность.</p></div>
       <BaseTile v-if="!activeBlocks.length" class="ability-empty"><Sparkles :size="24" /><p>Можно ограничиться описанием.</p><span>Заклинания, ресурсы и другие правила добавляются отдельными блоками.</span></BaseTile>
       <BaseTile v-for="block in activeBlocks" :key="block.key" class="ability-dependency">
+        <RemoveButton icon="trash" class="ability-dependency-remove" :label="`Удалить блок «${block.name}»`" :title="`Удалить блок «${block.name}»`" @click="pendingRemove = block" />
         <details open>
           <summary :title="block.hint">{{ block.name }}</summary>
           <AbilityResourceFields v-if="block.key === 'resources'" :fields="block.fields" :data="data" />
-          <AbilityRuleFields v-else :fields="block.fields" :data="data" :advanced="block.key === 'resources'" @update:data="updateData" />
-          <button type="button" class="ability-link ability-link--danger" @click="pendingRemove = block">Убрать блок</button>
+          <AbilityRuleFields v-else :fields="block.fields" :data="data" :hide-label-for="block.key" @update:data="updateData" />
         </details>
       </BaseTile>
       <button v-if="availableBlocks.length" type="button" class="ability-add-dependency" @click="adding = true"><Plus :size="16" /> Добавить зависимость</button>
@@ -33,7 +33,7 @@
 
 <script setup>
 import { computed, ref } from 'vue'
-import { AppModalFrame, BaseTile, ConfirmDialog, FormTextInput } from '@sylvieshare/share-ui'
+import { AppModalFrame, BaseTile, ConfirmDialog, FormTextInput, RemoveButton } from '@sylvieshare/share-ui'
 import { Plus, Sparkles } from '@lucide/vue'
 import AbilityResourceFields from './AbilityResourceFields.vue'
 import AbilityRuleFields from './AbilityRuleFields.vue'

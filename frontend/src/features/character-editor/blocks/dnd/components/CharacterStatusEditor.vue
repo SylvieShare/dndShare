@@ -15,7 +15,7 @@
             <strong>{{ status.title }}</strong>
             <small>{{ meta(status) }}</small>
           </span>
-          <RemoveButton label="Убрать эффект" @click="$emit('remove', status.uid)" />
+          <RemoveButton icon="trash" label="Убрать эффект" @click="$emit('remove', status.uid)" />
         </div>
       </div>
       <div v-else class="cse-empty">Активных эффектов нет</div>

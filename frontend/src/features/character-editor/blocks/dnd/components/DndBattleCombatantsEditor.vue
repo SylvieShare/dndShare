@@ -4,7 +4,7 @@
       <div v-for="(combatant, index) in modelValue" :key="combatant.id" class="dbce-card">
         <div class="dbce-head">
           <span class="dbce-number">Участник {{ index + 1 }}</span>
-          <button class="dbce-remove" type="button" title="Удалить участника" @click="remove(index)">×</button>
+          <RemoveButton icon="trash" label="Удалить участника" @click="remove(index)" />
         </div>
 
         <div class="dbce-count-row">
@@ -85,6 +85,7 @@
 </template>
 
 <script setup>
+import { RemoveButton } from '@sylvieshare/share-ui'
 import { ref } from 'vue'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import { FormNumberInput } from '@sylvieshare/share-ui'
@@ -149,21 +150,6 @@ function pickCreature(item) {
 .dbce-count-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .dbce-number { font-size: 11px; font-weight: 800; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.05em; }
 .dbce-label { font-size: 12px; color: var(--text-2); }
-.dbce-remove {
-  display: grid;
-  place-items: center;
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  border: none;
-  border-radius: 6px;
-  background: none;
-  color: var(--text-muted);
-  font: inherit;
-  font-size: 18px;
-  cursor: pointer;
-}
-.dbce-remove:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, transparent); }
 .dbce-pick {
   display: flex;
   align-items: center;

@@ -74,15 +74,8 @@
                   <span class="dciw-cls-lvl-label">ур.</span>
                   <FormNumberInput :value="row.level" :min="1" :max="20" @change="row.level = $event" />
                 </div>
-                <button
-                  v-if="form.classes.length > 1"
-                  class="dciw-cls-x"
-                  type="button"
-                  title="Убрать класс"
-                  @click="removeClassRow(i)"
-                >
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
-                </button>
+                <RemoveButton icon="trash" label="Убрать класс" v-if="form.classes.length > 1"
+                  @click="removeClassRow(i)" />
               </div>
               <ValueSelect
                 v-if="row.subclasses.length"
@@ -112,6 +105,7 @@
 </template>
 
 <script setup>
+import { RemoveButton } from '@sylvieshare/share-ui'
 import { computed, inject, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { AppModalFrame } from '@sylvieshare/share-ui'
 import { FormActionButtons } from '@sylvieshare/share-ui'
@@ -409,12 +403,6 @@ function close() {
 .dciw-cls-lvl { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
 .dciw-cls-lvl :deep(input) { width: 52px; }
 .dciw-cls-lvl-label { font-size: 11px; color: var(--text-muted); }
-.dciw-cls-x {
-  display: grid; place-items: center; width: 26px; height: 26px; flex-shrink: 0;
-  border: none; border-radius: 7px; background: none; color: var(--text-muted); cursor: pointer;
-}
-.dciw-cls-x:hover { background: color-mix(in srgb, var(--danger) 14%, transparent); color: var(--danger); }
-.dciw-cls-x svg { width: 13px; height: 13px; }
 .dciw-cls-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .dciw-cls-add {
   display: inline-flex; align-items: center; gap: 6px;

@@ -4,7 +4,7 @@
       <div v-for="(line, index) in modelValue" :key="line.id" class="ddle-line">
         <div class="ddle-line-head">
           <span class="ddle-number">{{ index + 1 }}</span>
-          <button class="ddle-remove" type="button" title="Удалить реплику" @click="remove(index)">×</button>
+          <RemoveButton icon="trash" label="Удалить реплику" @click="remove(index)" />
         </div>
         <FormTextInput
           :value="line.speaker"
@@ -25,6 +25,7 @@
 </template>
 
 <script setup>
+import { RemoveButton } from '@sylvieshare/share-ui'
 import { FormTextInput } from '@sylvieshare/share-ui'
 import { FormTextarea } from '@sylvieshare/share-ui'
 import { defaultDialogueLine } from '@/features/character-editor/blocks/dnd/lib/diaryEntry'
@@ -71,21 +72,6 @@ function remove(index) {
   font-size: 10px;
   font-weight: 800;
 }
-.ddle-remove {
-  display: grid;
-  place-items: center;
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  border: none;
-  border-radius: 6px;
-  background: none;
-  color: var(--text-muted);
-  font: inherit;
-  font-size: 18px;
-  cursor: pointer;
-}
-.ddle-remove:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, transparent); }
 .ddle-empty { font-size: 12px; color: var(--text-muted); font-style: italic; }
 .ddle-add {
   align-self: flex-start;

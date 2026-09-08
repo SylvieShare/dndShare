@@ -15,7 +15,8 @@
 .ability-block-options, .ability-source-options { margin-top: 16px; }
 .ability-rule-row summary, .ability-dependency > details > summary { cursor: pointer; color: var(--text-2); font-size: 13px; font-weight: 600; line-height: 1.5; overflow-wrap: anywhere; }
 .ability-rule-row details[open] > summary, .ability-dependency details[open] > summary { margin-bottom: 14px; }
-.ability-dependency .ability-block-hint { margin-bottom: 16px; }
+.ability-dependency > details > summary { padding-right: 32px; }
+.ability-dependency-remove { position: absolute; top: 15px; right: 16px; }
 .ability-dependency .ability-link--danger { margin-top: 14px; }
 .ability-advanced > summary { color: var(--text-muted); font-size: 12px; cursor: pointer; }
 .ability-advanced > summary span { margin-left: 4px; opacity: .7; }

@@ -50,7 +50,7 @@
           search-placeholder="Тип..."
           @update:model-value="ctx.setAttackField(index, attackIndex, 'type_suggest_id', $event)"
         />
-        <RemoveButton variant="boxed" label="Удалить урон" @click="ctx.removeAttack(index, attackIndex)" />
+        <RemoveButton icon="trash" variant="boxed" label="Удалить урон" @click="ctx.removeAttack(index, attackIndex)" />
       </div>
       <AddButton class="wed-add-btn" @click="ctx.addAttack(index)">доп. урон</AddButton>
     </EditorSection>

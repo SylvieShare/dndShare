@@ -119,9 +119,7 @@
             search-placeholder="Тип..."
             @update:model-value="ctx.setAttackField(index, attackIndex, 'type_suggest_id', $event)"
           />
-          <button class="w-mini-btn" type="button" title="Удалить" @click="ctx.removeAttack(index, attackIndex)">
-            <span class="w-cross" aria-hidden="true"></span>
-          </button>
+          <RemoveButton icon="trash" label="Удалить урон" @click="ctx.removeAttack(index, attackIndex)" />
         </div>
         <div class="w-damage-actions">
           <button class="w-add-damage" type="button" @click="ctx.addAttack(index)">+ доп. урон</button>
@@ -147,9 +145,7 @@
     </td>
 
     <td v-if="ctx.charCtx.ownerMode" class="w-delete-cell">
-      <button class="w-delete" type="button" title="Удалить оружие" @click="ctx.deleteWeapon(index)">
-        <span class="w-cross" aria-hidden="true"></span>
-      </button>
+      <RemoveButton icon="trash" label="Удалить оружие" @click="ctx.deleteWeapon(index)" />
     </td>
 
     <td v-if="!ctx.charCtx.ownerMode" class="w-props-text">
@@ -202,6 +198,7 @@
 </template>
 
 <script setup>
+import { RemoveButton } from '@sylvieshare/share-ui'
 import { computed, inject, ref } from 'vue'
 import InputDescription from '@/shared/ui/InputDescription'
 import RichContent from '@/shared/ui/DndRichContent.vue'
@@ -302,7 +299,7 @@ const colspan = computed(() => ctx.charCtx.ownerMode ? 6 : 4)
   flex-shrink: 0;
 }
 
-.w-note-btn, .w-info-btn, .w-mini-btn {
+.w-note-btn, .w-info-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -319,7 +316,7 @@ const colspan = computed(() => ctx.charCtx.ownerMode ? 6 : 4)
   font-weight: 700;
   transition: color 0.15s, background 0.12s, border-color 0.12s;
 }
-.w-note-btn:hover, .w-info-btn:hover, .w-mini-btn:hover {
+.w-note-btn:hover, .w-info-btn:hover {
   color: var(--text-1);
   border-color: color-mix(in srgb, var(--text-on-accent) 14%, transparent);
 }
@@ -446,34 +443,6 @@ const colspan = computed(() => ctx.charCtx.ownerMode ? 6 : 4)
 .w-add-damage:hover { color: var(--accent); border-color: var(--accent); }
 
 .w-delete-cell { text-align: center; padding: 6px 8px; }
-.w-delete {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 26px;
-  height: 26px;
-  background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
-  border: 1px solid color-mix(in srgb, var(--text-on-accent) 8%, transparent);
-  border-radius: 6px;
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: color 0.15s, border-color 0.12s;
-}
-.w-delete:hover { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 40%, transparent); }
-.w-cross {
-  position: relative;
-  width: 10px;
-  height: 10px;
-}
-.w-cross::before, .w-cross::after {
-  content: '';
-  position: absolute;
-  inset: 50% 0 auto 0;
-  height: 1.4px;
-  background: currentColor;
-}
-.w-cross::before { transform: rotate(45deg); }
-.w-cross::after { transform: rotate(-45deg); }
 
 .w-props-text {
   padding: 6px 10px;
