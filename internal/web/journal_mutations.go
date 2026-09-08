@@ -122,6 +122,10 @@ func (s *Server) handleUpdateJournalEntry(w http.ResponseWriter, r *http.Request
 			}
 		}
 	}
+	if req.ExpectedChangedAt.IsZero() {
+		badRequest(w, "Не указана версия редактируемого события. Обновите страницу.")
+		return
+	}
 	mutation, ok := cleanJournalEntry(w, req)
 	if !ok {
 		return

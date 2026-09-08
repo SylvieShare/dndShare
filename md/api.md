@@ -349,7 +349,9 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
   provide the common journal CRUD contract. A personal journal is writable by
   its owner; a session journal is writable by the DM and, when `playersCanEdit`
   is enabled, current participants. Responses include `canEdit` and `canManage`.
-  Existing entry types cannot be changed (HTTP 400);
+  Existing entry types cannot be changed (HTTP 400). Entry PATCH requires
+  `expectedChangedAt` from the loaded entry. A stale timestamp returns HTTP 409
+  without modifying the entry, its authorship or content; omission returns 400;
 - `PATCH /api/journals/{journalUuid}/settings` accepts `{playersCanEdit: boolean}`
   and is restricted to the campaign owner. Other users receive HTTP 403;
 - `PUT /api/journals/{journalUuid}/sections/{sectionId}/entries/order` accepts

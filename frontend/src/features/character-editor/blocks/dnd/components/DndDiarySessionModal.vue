@@ -7,10 +7,10 @@
     />
 
     <template #footer>
-      <button v-if="mode === 'edit'" class="ddsm-delete" type="button" @click="$emit('remove')">Удалить</button>
+      <button v-if="mode === 'edit'" class="ddsm-delete" type="button" :disabled="busy" @click="$emit('remove')">Удалить</button>
       <div class="ddsm-actions">
-        <button class="ddsm-cancel" type="button" @click="$emit('close')">Отмена</button>
-        <button class="ddsm-save" type="button" @click="$emit('save')">
+        <button class="ddsm-cancel" type="button" :disabled="busy" @click="$emit('close')">Отмена</button>
+        <button class="ddsm-save" type="button" :disabled="busy" @click="$emit('save')">
           Сохранить
         </button>
       </div>
@@ -26,6 +26,7 @@ defineProps({
   session: { type: Object, required: true },
   titlePlaceholder: { type: String, default: 'Название сессии' },
   mode: { type: String, default: 'edit' },
+  busy: Boolean,
 })
 defineEmits(['update', 'remove', 'close', 'save'])
 </script>

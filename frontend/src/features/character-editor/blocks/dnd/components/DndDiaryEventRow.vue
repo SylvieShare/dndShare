@@ -1,101 +1,96 @@
 <template>
-  <div v-if="event.type === 'newday'" class="der-day" :style="{ '--ec': meta.color }">
-    <span class="der-node der-node--day" :title="meta.label"><Sunrise :size="22" /></span>
-    <div class="der-day-copy"><strong class="der-day-title">{{ event.title || 'Без названия' }}</strong><DndDiaryEventMetadata :event="event" /></div>
-  </div>
-  <div v-else class="der" :class="'der--' + event.type" :style="{ '--ec': meta.color }">
-    <span class="der-node" :title="meta.label"><component :is="meta.icon" :size="21" :stroke-width="1.8" /></span>
-    <div class="der-body">
-      <header class="der-heading">
-        <h3>{{ event.title || 'Без названия' }}</h3>
-      </header>
-      <div v-if="event.type === 'dialog' && dialogue.length" class="der-dialogue">
-        <div v-for="(line, index) in dialogue" :key="index" class="der-line" :style="{ '--speaker-color': line.color || 'var(--text-muted)' }">
-          <span class="der-speaker">{{ line.left || 'Рассказчик' }}</span>
-          <span class="der-voice-line" aria-hidden="true" />
-          <span class="der-line-text">{{ line.right || '…' }}</span>
-        </div>
+  <BaseTile class="diary-event" :class="'diary-event--' + event.type" :color="meta.color" framed>
+    <header class="diary-event-header" :class="{ 'diary-event-header--draggable': draggable, 'diary-event-header--editing': editor?.kind === 'title' }"
+      :tabindex="draggable ? 0 : undefined" :aria-label="draggable ? 'Переместить событие: перетащите заголовок или используйте стрелки вверх и вниз' : undefined"
+      @pointerdown="drag" @keydown="move">
+      <span class="diary-event-icon" :style="{ color: meta.color }" :title="meta.label"><component :is="meta.icon" :size="24" /></span>
+      <div class="diary-event-title">
+        <JournalInlineForm v-if="editor?.kind === 'title'" label="Название события" :busy="busy || saving" :error="error" @save="submit({ title: editor.value })" @cancel="cancel">
+          <FormTextInput v-model:value="editor.value" aria-label="Название события" placeholder="Дайте этому моменту имя" :maxlength="255" autofocus @enter="submit({ title: editor.value })" />
+        </JournalInlineForm>
+        <template v-else><h3>{{ event.title || 'Без названия' }}</h3><JournalEditButton v-if="editable" :disabled="controlsDisabled" label="Изменить название" @click="start('title', event.title)" /></template>
       </div>
-      <div v-if="event.type === 'battle' && event.combatants.length" class="der-combatants">
-        <div v-for="combatant in event.combatants" :key="combatant.id" class="der-combatant">
-          <span class="der-combatant-emblem"><Swords :size="20" /></span>
-          <span class="der-combatant-name">{{ combatantName(combatant) }}</span>
-          <span class="der-combatant-count">×{{ combatant.count }}</span>
-          <div v-if="combatant.ac != null || combatant.hp != null" class="der-combatant-stats">
-            <span v-if="combatant.ac != null"><Shield :size="13" /> КБ {{ combatant.ac }}</span>
-            <span v-if="combatant.hp != null"><Heart :size="13" /> HP {{ combatant.hp }}</span>
-          </div>
-          <span v-if="combatant.desc" class="der-combatant-desc">{{ combatant.desc }}</span>
-        </div>
+      <RemoveButton v-if="editable" icon="trash" label="Удалить событие" :disabled="controlsDisabled" @click="$emit('remove', event)" />
+    </header>
+    <div v-if="event.type !== 'newday'" class="diary-event-content">
+      <DndDiaryDialogue v-if="event.type === 'dialog'" :lines="event.dialogue" :editable="editable" :busy="busy || locked || saving" :editor="editor" :error="error"
+        @edit="start" @save="submit" @cancel="cancel" />
+      <DndDiaryCombatants v-if="event.type === 'battle'" :combatants="event.combatants" :editable="editable" :busy="busy || locked || saving" :editor="editor" :error="error"
+        @edit="start" @save="submit" @cancel="cancel" />
+      <JournalInlineForm v-if="editor?.kind === 'desc'" label="Описание события" :busy="busy || saving" :error="error" @save="submit({ desc: editor.value })" @cancel="cancel">
+        <InputDescription :value="editor.value" :block="{ id: 'journal-desc', content: { placeholder: 'Что стоит запомнить?' } }" editable @update:value="(_id, value) => editor.value = value" />
+      </JournalInlineForm>
+      <div v-else-if="hasDesc || editable" class="diary-event-description">
+        <RichContent v-if="hasDesc" class="diary-event-prose" :html="descHtml" />
+        <span v-else class="diary-empty-copy">{{ event.type === 'event' ? 'Что произошло в этот момент?' : 'Добавить заметку' }}</span>
+        <JournalEditButton v-if="editable" :disabled="controlsDisabled" label="Редактировать описание" @click="start('desc', event.desc)" />
       </div>
-      <RichContent v-if="hasDesc" class="der-desc" :html="descHtml" />
-      <div v-else-if="event.type === 'event'" class="der-unwritten">Момент, который стоит запомнить.</div>
-      <DndDiaryEventMetadata :event="event" />
     </div>
-  </div>
+    <DndDiaryEventMetadata class="diary-event-footer" :event="event" />
+  </BaseTile>
 </template>
-
 <script setup>
-import { computed } from 'vue'
-import { Heart, Shield, Sunrise, Swords } from '@lucide/vue'
-import DndDiaryEventMetadata from './DndDiaryEventMetadata.vue'
+import { computed, watch } from 'vue'
+import JournalEditButton from '@/features/journals/components/JournalEditButton.vue'
+import { BaseTile, FormTextInput, RemoveButton } from '@sylvieshare/share-ui'
 import RichContent from '@/shared/ui/DndRichContent.vue'
+import InputDescription from '@/shared/ui/InputDescription.vue'
+import JournalInlineForm from '@/features/journals/components/JournalInlineForm.vue'
+import { useJournalInlineEdit } from '@/features/journals/composables/useJournalInlineEdit'
+import DndDiaryDialogue from './DndDiaryDialogue.vue'
+import DndDiaryCombatants from './DndDiaryCombatants.vue'
+import DndDiaryEventMetadata from './DndDiaryEventMetadata.vue'
 import { eventTypeMeta } from '../lib/diaryEntry'
-import { hydrateDialogueRows } from '@/features/sessions/lib/dialogueRows'
-
-const props = defineProps({ event: { type: Object, required: true } })
+const props = defineProps({ event: { type: Object, required: true }, editable: Boolean, busy: Boolean, locked: Boolean, focusTitle: Boolean, saveEvent: { type: Function, required: true } })
+const emit = defineEmits(['drag', 'move', 'remove', 'editing'])
+const { editor, error, saving, start, cancel, submit } = useJournalInlineEdit(props, emit)
 const meta = computed(() => eventTypeMeta(props.event.type))
-const dialogue = computed(() => hydrateDialogueRows((props.event.dialogue || []).map(line => ({
-  left: line.speaker, right: line.text, color: line.color,
-}))))
-function combatantName(combatant) {
-  if (combatant.source === 'handbook') return combatant.itemName || (combatant.itemId != null ? 'Существо #' + combatant.itemId : 'Существо не выбрано')
-  return combatant.name || 'Своё существо'
+const controlsDisabled = computed(() => props.busy || props.locked || saving.value || Boolean(editor.value))
+const draggable = computed(() => props.editable && !controlsDisabled.value)
+function drag(pointer) {
+  if (!draggable.value || pointer.target.closest('button, input, textarea, a, [contenteditable="true"]')) return
+  emit('drag', pointer)
 }
+function move(event) {
+  if (!draggable.value || event.target !== event.currentTarget || !['ArrowUp', 'ArrowDown'].includes(event.key)) return
+  event.preventDefault()
+  emit('move', event.key === 'ArrowUp' ? -1 : 1)
+}
+watch(() => props.focusTitle, value => { if (value) start('title', props.event.title) }, { immediate: true })
 function escapeHtml(text) { return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') }
-const descHtml = computed(() => {
-  const text = props.event.desc || ''
-  return /<[a-z][\s\S]*>/i.test(text) ? text : escapeHtml(text).split('\n').join('<br>')
-})
+const descHtml = computed(() => /<[a-z][\s\S]*>/i.test(props.event.desc || '') ? props.event.desc : escapeHtml(props.event.desc || '').replace(/\n/g, '<br>'))
 const hasDesc = computed(() => descHtml.value.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim() !== '')
 </script>
-
 <style scoped>
-.der { display: flex; align-items: flex-start; gap: 20px; min-width: 0; }
-.der-node { position: relative; z-index: 1; display: grid; place-items: center; width: 44px; height: 44px; flex-shrink: 0; margin-top: 16px; border-radius: 14px; background: color-mix(in srgb, var(--ec) 14%, var(--surface)); border: 1px solid color-mix(in srgb, var(--ec) 55%, var(--border)); color: var(--ec); box-shadow: 0 0 0 5px var(--surface), 0 4px 16px color-mix(in srgb, var(--ec) 14%, transparent); }
-.der-body { display: flex; flex: 1; flex-direction: column; gap: 18px; min-width: 0; padding: 24px 26px; border: 1px solid color-mix(in srgb, var(--ec) 24%, var(--border)); border-radius: 16px; background: linear-gradient(115deg, color-mix(in srgb, var(--ec) 6%, var(--surface-raised)), var(--surface) 60%); box-shadow: var(--shadow-sm); }
-.der-heading { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
-.der-heading h3 { margin: 0; font-family: var(--font-display); font-size: clamp(19px, 2vw, 25px); font-weight: 700; line-height: 1.25; color: var(--text-1); overflow-wrap: anywhere; }
-.der-desc { min-width: 0; color: var(--text-2); font-family: var(--font-prose); font-size: 15px; line-height: 1.8; overflow-wrap: anywhere; }
-.der-unwritten { color: var(--text-muted); font-size: 13px; font-style: italic; }
-.der--event .der-body { border-left: 3px solid color-mix(in srgb, var(--ec) 65%, var(--border)); }
-.der-dialogue { display: flex; flex-direction: column; min-width: 0; padding: 4px 0; }
-.der-line { display: grid; grid-template-columns: minmax(72px, .3fr) 3px minmax(0, 1fr); align-items: stretch; gap: 16px; padding: 15px 0; min-width: 0; }
-.der-line + .der-line { border-top: 1px solid var(--border); }
-.der-speaker { align-self: start; color: var(--speaker-color); font-size: 13px; font-weight: 800; line-height: 1.7; text-align: right; overflow-wrap: anywhere; }
-.der-voice-line { min-height: 30px; border-radius: 3px; background: var(--speaker-color); box-shadow: 0 0 12px color-mix(in srgb, var(--speaker-color) 16%, transparent); }
-.der-line-text { color: var(--text-2); font-family: var(--font-prose); font-size: 15px; line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; }
-.der--battle .der-body { background: linear-gradient(125deg, color-mix(in srgb, var(--danger) 10%, var(--surface-raised)), var(--surface) 70%); }
-.der-combatants { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 12px; }
-.der-combatant { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px 12px; padding: 16px; border: 1px solid color-mix(in srgb, var(--danger) 25%, var(--border)); border-radius: 12px; background: var(--surface); }
-.der-combatant-emblem { display: grid; place-items: center; width: 36px; height: 36px; grid-row: 1 / span 2; border-radius: 10px; background: color-mix(in srgb, var(--danger) 10%, var(--surface)); color: var(--danger); }
-.der-combatant-count { color: var(--danger); font-family: var(--font-display); font-size: 22px; font-weight: 700; }
-.der-combatant-name { color: var(--text-1); font-size: 14px; font-weight: 700; overflow-wrap: anywhere; }
-.der-combatant-stats { display: flex; grid-column: 2 / -1; flex-wrap: wrap; gap: 8px; }
-.der-combatant-stats > span { display: inline-flex; align-items: center; gap: 4px; padding: 4px 6px; border-radius: 5px; background: var(--surface-raised); color: var(--text-2); font-size: 11px; }
-.der-combatant-desc { grid-column: 1 / -1; color: var(--text-muted); font-size: 12px; line-height: 1.65; white-space: pre-wrap; overflow-wrap: anywhere; }
-.der-day { display: flex; align-items: center; gap: 20px; padding: 16px 0; min-width: 0; }
-.der-node--day { border-radius: 50%; margin-top: 0; }
-.der-day-copy { display: flex; flex: 1; flex-direction: column; gap: 6px; min-width: 0; padding: 18px 24px; border-top: 1px solid color-mix(in srgb, var(--ec) 50%, var(--border)); border-bottom: 1px solid color-mix(in srgb, var(--ec) 25%, var(--border)); background: linear-gradient(90deg, color-mix(in srgb, var(--ec) 9%, transparent), transparent); }
-.der-day-copy > strong { font-family: var(--font-display); font-size: 22px; color: var(--text-1); overflow-wrap: anywhere; }
+.diary-event { min-width: 0; --r-lg: 18px; }
+.diary-event-header { display: flex; align-items: flex-start; gap: 16px; padding: 24px 28px 20px; min-width: 0; border-radius: 18px 18px 0 0; }
+.diary-event-header--draggable { cursor: grab; touch-action: none; }
+.diary-event-header--draggable:active { cursor: grabbing; }
+.diary-event-header--draggable:hover { background: color-mix(in srgb, var(--tile-color) 4%, transparent); }
+.diary-event-icon { display: grid; place-items: center; flex: none; width: 44px; height: 44px; border-radius: 12px; background: color-mix(in srgb, var(--tile-color) 9%, transparent); }
+.diary-event-title { display: flex; flex: 1; min-width: 0; gap: 8px; align-items: center; min-height: 44px; }
+.diary-event-title h3 { margin: 0; color: var(--text-1); font: 700 clamp(21px, 2vw, 27px)/1.3 var(--font-display); overflow-wrap: anywhere; }
+.diary-event-title :deep(.journal-inline-form) { width: 100%; padding: 0; }
+.diary-event-header--editing { flex-wrap: wrap; }
+.diary-event-header--editing .diary-event-title { flex-basis: 100%; order: 3; }
+.diary-event-header--editing > :last-child { margin-left: auto; }
+.diary-event-header :deep(.remove-button) { margin-top: 7px; }
+.diary-event-content { display: flex; flex-direction: column; gap: 18px; padding: 0 28px 8px; }
+.diary-event-description { display: flex; align-items: flex-start; gap: 14px; min-width: 0; padding: 8px 0; }
+.diary-event-prose { flex: 1; min-width: 0; color: var(--text-2); font-family: var(--font-prose); font-size: 15px; line-height: 1.85; overflow-wrap: anywhere; }
+.diary-event-description > .diary-empty-copy { flex: 1; }
+.diary-event-footer { padding: 0 24px 16px; }
+.diary-event--newday .diary-event-header { padding-bottom: 14px; }
+.diary-event--newday .diary-event-icon { border-radius: 50%; }
+.diary-event :deep(.diary-inline-add) { display: inline-flex; align-self: flex-start; align-items: center; gap: 7px; margin-top: 12px; padding: 7px 0; border: 0; background: transparent; color: var(--accent); font: 600 12px var(--font-ui); cursor: pointer; }
+.diary-event :deep(.diary-inline-add:disabled) { opacity: .4; cursor: default; }
+.diary-event :deep(.diary-empty-copy) { color: var(--text-muted); font: italic 13px/1.7 var(--font-prose); }
 @media (max-width: 720px) {
-  .der, .der-day { gap: 12px; }
-  .der-node { width: 32px; height: 32px; border-radius: 10px; margin-top: 14px; }
-  .der-node :deep(svg) { width: 17px; height: 17px; }
-  .der-body { padding: 18px 16px; gap: 16px; }
-  .der-line { grid-template-columns: minmax(54px, .3fr) 2px minmax(0, 1fr); gap: 10px; }
-  .der-speaker { font-size: 11px; }
-  .der-line-text, .der-desc { font-size: 13px; }
-  .der-day-copy { padding: 16px; }
+  .diary-event-header { padding: 18px 16px; gap: 10px; }
+  .diary-event-icon { width: 34px; height: 34px; } .diary-event-icon svg { width: 20px; }
+  .diary-event-title { min-height: 34px; } .diary-event-title h3 { font-size: 20px; }
+  .diary-event-content { padding: 0 16px 8px; } .diary-event-prose { font-size: 14px; }
+  .diary-event-footer { padding: 0 12px 12px; }
 }
+@media (prefers-reduced-motion: reduce) { .diary-event { transition: none; } }
 </style>

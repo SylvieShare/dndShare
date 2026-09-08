@@ -34,6 +34,36 @@ afterEach(() => {
 })
 
 describe('journal source lifecycle', () => {
+  it('pauses background replacement while an inline draft is open and refreshes after closing', async () => {
+    vi.mocked(api.getCharacterJournal).mockResolvedValueOnce(response())
+    const workspace = useJournalWorkspace({ characterUuid: 'character' })
+    hooks.mounted()
+    await flush()
+    let finishPoll
+    vi.mocked(api.getCharacterJournal).mockReturnValueOnce(new Promise(resolve => { finishPoll = resolve }))
+    vi.advanceTimersByTime(12_000)
+    workspace.setInlineEditing(true)
+    finishPoll(response('stale'))
+    await flush()
+    await vi.advanceTimersByTimeAsync(24_000)
+    expect(api.getCharacterJournal).toHaveBeenCalledTimes(2)
+    expect(workspace.journal.value.uuid).toBe('personal')
+    vi.mocked(api.getCharacterJournal).mockResolvedValueOnce(response('fresh'))
+    workspace.setInlineEditing(false)
+    await flush()
+    expect(workspace.journal.value.uuid).toBe('fresh')
+  })
+
+  it('sends the draft version along with the current event content', async () => {
+    vi.mocked(api.getCharacterJournal).mockResolvedValueOnce(response())
+    const workspace = useJournalWorkspace({ characterUuid: 'character' })
+    hooks.mounted()
+    await flush()
+    vi.mocked(api.updateJournalEntry).mockResolvedValueOnce(response())
+    await workspace.updateEntry({ id: '2', type: 'event', title: 'Название', desc: 'Текст', changedAt: 'newer', expectedChangedAt: 'original' })
+    expect(api.updateJournalEntry).toHaveBeenCalledWith('personal', '2', expect.objectContaining({ expectedChangedAt: 'original', title: 'Название' }))
+  })
+
   it('applies player read-only access on refresh and persists DM settings', async () => {
     vi.mocked(api.getSessionJournal).mockResolvedValueOnce({ ...response('session'), canManage: true })
     const workspace = useJournalWorkspace({ sessionUuid: 'campaign' })

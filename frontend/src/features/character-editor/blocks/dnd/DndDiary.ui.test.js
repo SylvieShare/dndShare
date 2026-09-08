@@ -1,73 +1,66 @@
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
+import { createSSRApp } from 'vue'
+import { renderToString } from 'vue/server-renderer'
+import DndDiaryEventRow from './components/DndDiaryEventRow.vue'
 
 const read = path => readFileSync(fileURLToPath(new URL(path, import.meta.url)), 'utf8')
-const diarySource = read('./DndDiary.vue')
-const workspaceSource = read('../../../journals/components/JournalWorkspace.vue')
-const workspaceStyles = read('../../../journals/components/JournalWorkspace.css')
-const cardSource = read('./components/DndDiarySessionCard.vue')
-const eventRowSource = read('./components/DndDiaryEventRow.vue')
-const modalSource = read('./components/DndDiarySessionModal.vue')
-
-describe('D&D diary UI flows', () => {
-  it('uses one API-backed workspace on character and session pages', () => {
-    expect(diarySource).toContain('<JournalWorkspace')
-    expect(workspaceSource).toContain('characterUuid')
-    expect(workspaceSource).toContain('sessionUuid')
-    expect(workspaceSource).toMatch(/<DndDiarySessionModal[\s\S]*?editorKind === 'section'/)
-    expect(workspaceSource).toMatch(/<MorphEditorShell[\s\S]*?editorKind === 'event'/)
-    expect(modalSource).toContain('<AppModalFrame')
+const workspace = read('../../../journals/components/JournalWorkspace.vue')
+const timeline = read('./components/DndDiarySessionCard.vue')
+const row = read('./components/DndDiaryEventRow.vue')
+describe('journal reading and inline editing', () => {
+  it('puts the source switch in the cover and only renders the selected section', () => {
+    const cover = workspace.match(/<header class="journal-cover">[\s\S]*?<\/header>/)[0]
+    expect(cover).toContain('<JournalSourceSwitch')
+    expect(cover).toContain("sessionUuid && canManage && journal.kind === 'session'")
+    expect(workspace).toContain('<JournalSectionTabs')
+    expect(workspace).toContain('<DndDiarySessionCard v-if="selectedSection"')
+    expect(workspace).not.toContain('MorphEditorShell')
+    expect(workspace).not.toContain('DndDiaryEventEditor')
+    const tabs = read('../../../journals/components/JournalSectionTabs.vue')
+    expect(tabs).toContain('overflow-x: auto')
+    expect(tabs.indexOf('Новый раздел')).toBeLessThan(tabs.indexOf('role="tablist"'))
   })
-
-  it('animates expanding session content and disables that motion when requested', () => {
-    expect(cardSource).toContain('<Transition name="dsc-expand">')
-    expect(cardSource).toMatch(/grid-template-rows: 0fr/)
-    expect(cardSource).toMatch(/@media \(prefers-reduced-motion: reduce\)/)
+  it('connects event cards through the center and drags by their header', () => {
+    expect(timeline).toContain('left: calc(50% - 1px)')
+    expect(timeline).not.toContain('GripVertical')
+    expect(timeline).not.toContain('dsc-head')
+    expect(timeline).toContain('useSortable')
+    expect(row).toContain('@pointerdown="drag"')
+    expect(row).toContain("pointer.target.closest('button, input, textarea, a, [contenteditable=\"true\"]')")
+    expect(row).toContain('event.target !== event.currentTarget')
+    expect(timeline.indexOf('<JournalEventTypePicker')).toBeLessThan(timeline.indexOf('class="diary-timeline"'))
   })
-
-  it('presents source selection and a distinct journal cover', () => {
-    expect(workspaceSource).toContain('<JournalSourceSwitch')
-    expect(workspaceSource).not.toContain('journal-new-personal')
-    expect(workspaceSource).not.toContain('structuredClone')
-    expect(workspaceSource).toContain('Создать дневник кампании')
-    expect(workspaceStyles).toContain('.journal-cover')
-    expect(workspaceStyles).toContain('linear-gradient')
-    expect(eventRowSource).toMatch(/\.der-node \{[\s\S]*?width: 44px;[\s\S]*?height: 44px;/)
+  it('renders colored dialogue without type counters, with inline pencils and delete', async () => {
+    const html = await renderToString(createSSRApp(DndDiaryEventRow, {
+      event: { id: '1', type: 'dialog', title: 'У ворот', desc: '', dialogue: [{ id: 'a', speaker: 'Страж', text: 'Стой!' }], combatants: [] },
+      editable: true, saveEvent: async () => {},
+    }))
+    expect(html).toContain('У ворот')
+    expect(html).toContain('Страж')
+    expect(html).toContain('Стой!')
+    expect(html).toContain('--voice:')
+    expect(html).toContain('Редактировать реплику')
+    expect(html).toContain('Удалить событие')
+    expect(html).not.toContain('Голосов:')
+    expect(html).not.toContain('Участников:')
   })
-
-  it('keeps event creation above the upward timeline and uses shared sorting', () => {
-    expect(cardSource.indexOf('Добавить событие')).toBeLessThan(cardSource.indexOf('class="dsc-events"'))
-    expect(cardSource).toContain('useSortable')
-    expect(cardSource).toContain('@keydown.up.prevent')
-    expect(cardSource).toContain(".map(e => e.id).reverse()")
-    expect(cardSource).toContain('dragSnapshot === eventKey()')
+  it('keeps read-only entries free of editing and dragging controls', async () => {
+    const html = await renderToString(createSSRApp(DndDiaryEventRow, {
+      event: { id: '1', type: 'newday', title: 'Рассвет', desc: '', dialogue: [], combatants: [] }, saveEvent: async () => {},
+    }))
+    expect(html).toContain('Рассвет')
+    expect(html).not.toContain('Удалить событие')
+    expect(html).not.toContain('Изменить название')
+    expect(html).not.toContain('tabindex="0"')
+    expect(html).not.toContain('НОВЫЙ ДЕНЬ')
   })
-
-  it('shares scenario speaker colors and makes existing event types read-only', () => {
-    expect(eventRowSource).toContain('hydrateDialogueRows')
-    expect(eventRowSource).toContain('--speaker-color')
-    const editor = read('./components/DndDiaryEventEditor.vue')
-    expect(editor).toMatch(/<MultiToggle[\s\S]*?v-if="mode === 'create'"/)
-    expect(editor).toContain('Тип сохранённого события')
-    expect(workspaceSource).toContain('v-if="sessionUuid && canManage && journal.kind === \'session\'"')
-    expect(workspaceSource).toContain('Игроки могут редактировать дневник')
-  })
-
-  it('keeps settings inside the session cover and metadata at the event footer', () => {
-    const cover = workspaceSource.match(/<header class="journal-cover">[\s\S]*?<\/header>/)[0]
-    expect(cover).toContain('<ToggleSwitch')
-    expect(workspaceSource).not.toContain('class="journal-access"')
-    expect(eventRowSource).not.toContain('der-kind')
-    expect(eventRowSource).not.toContain('speakersCount')
-    expect(eventRowSource).not.toContain('combatantCount')
-    expect(eventRowSource).not.toContain('НОВЫЙ ДЕНЬ')
-    expect(eventRowSource.match(/<DndDiaryEventMetadata/g)).toHaveLength(2)
+  it('uses one shared footer for all event types', () => {
+    expect(row.match(/<DndDiaryEventMetadata/g)).toHaveLength(1)
     const metadata = read('./components/DndDiaryEventMetadata.vue')
-    expect(metadata).toContain('<footer')
-    expect(metadata).toContain('justify-content: flex-end')
     expect(metadata).toContain('<ItemTooltip')
     expect(metadata).toContain('@focus=')
-    expect(metadata).toContain('@click.stop')
+    expect(row).toContain('<BaseTile')
   })
 })

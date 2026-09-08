@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
 	"dndshare/internal/store"
 )
@@ -28,10 +29,11 @@ type journalSectionRequest struct {
 }
 
 type journalEntryRequest struct {
-	Type        string          `json:"type"`
-	Title       string          `json:"title"`
-	Description string          `json:"desc"`
-	Payload     json.RawMessage `json:"payload"`
+	ExpectedChangedAt time.Time       `json:"expectedChangedAt"`
+	Type              string          `json:"type"`
+	Title             string          `json:"title"`
+	Description       string          `json:"desc"`
+	Payload           json.RawMessage `json:"payload"`
 }
 
 func init() { registerRoutes((*Server).routesJournals) }
@@ -272,10 +274,14 @@ func cleanJournalEntry(w http.ResponseWriter, req journalEntryRequest) (store.Jo
 		badRequest(w, "Некорректные данные записи")
 		return store.JournalEntryMutation{}, false
 	}
-	return store.JournalEntryMutation{Type: req.Type, Title: req.Title, Description: req.Description, Payload: req.Payload}, true
+	return store.JournalEntryMutation{Type: req.Type, Title: req.Title, Description: req.Description, Payload: req.Payload, ExpectedChangedAt: req.ExpectedChangedAt}, true
 }
 
 func writeJournalError(w http.ResponseWriter, err error) {
+	if errors.Is(err, store.ErrJournalEntryConflict) {
+		conflict(w, "Событие уже изменено другим участником. Ваша правка сохранена в поле; скопируйте её, отмените редактирование и откройте обновлённую запись.")
+		return
+	}
 	if errors.Is(err, store.ErrJournalOrderConflict) {
 		conflict(w, "Состав событий изменился. Обновите дневник и повторите перестановку.")
 		return

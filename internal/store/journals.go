@@ -56,6 +56,7 @@ type JournalSource struct {
 }
 
 type JournalEntryMutation struct {
+	ExpectedChangedAt time.Time
 	Type              string
 	Title             string
 	Description       string
@@ -365,13 +366,14 @@ func (s *Store) UpdateJournalEntry(ctx context.Context, journalID, entryID, user
 			SET title = $4, description_html = $5, payload = CAST($6 AS jsonb), changed_at = now(), changed_by_user_id = $7
 			FROM dndshare.journal_section section
 			WHERE entry.id = $2 AND entry.section_id = section.id AND section.journal_id = $1 AND entry.entry_type = $3
+			  AND entry.changed_at = $8
 			RETURNING section.journal_id
 		)
 		UPDATE dndshare.journal SET changed_at = now()
 		FROM changed WHERE dndshare.journal.id = changed.journal_id`,
-		journalID, entryID, mutation.Type, mutation.Title, mutation.Description, string(payload), userID)
+		journalID, entryID, mutation.Type, mutation.Title, mutation.Description, string(payload), userID, mutation.ExpectedChangedAt)
 	if err == nil && command.RowsAffected() == 0 {
-		return ErrNotFound
+		return ErrJournalEntryConflict
 	}
 	return err
 }

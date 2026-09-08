@@ -39,6 +39,7 @@ func (s *Store) SetJournalPlayerEditing(ctx context.Context, journalID, userID i
 }
 
 var ErrJournalOrderConflict = errors.New("journal events changed; refresh before reordering")
+var ErrJournalEntryConflict = errors.New("journal entry has changed since editing started")
 
 func (s *Store) ReorderJournalEntries(ctx context.Context, journalID, sectionID int64, ids []int64) error {
 	tx, err := s.pool.Begin(ctx)

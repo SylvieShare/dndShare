@@ -42,6 +42,7 @@ function entryPayload(event) {
     type: event.type,
     title: event.title || '',
     desc: event.desc || '',
+    expectedChangedAt: event.expectedChangedAt || event.changedAt,
     payload: {
       dialogue: event.dialogue || [],
       combatants: event.combatants || [],
@@ -55,12 +56,14 @@ export function useJournalWorkspace({ characterUuid = '', sessionUuid = '' }) {
   const canEdit = ref(false)
   const canManage = ref(false)
   const dragging = ref(false)
+  const editing = ref(false)
   const canSelectSource = ref(false)
   const loading = ref(true)
   const busy = ref(false)
   const error = ref('')
   let pollTimer = null
   let requestVersion = 0
+  let disposed = false
 
   function apply(response) {
     journal.value = normalizedJournal(response?.journal)
@@ -92,12 +95,12 @@ export function useJournalWorkspace({ characterUuid = '', sessionUuid = '' }) {
   }
 
   async function refreshJournal() {
-    if (busy.value || loading.value || dragging.value) return
+    if (disposed || busy.value || loading.value || dragging.value || editing.value) return
     await load({ quiet: true })
   }
 
   async function mutate(request) {
-    if (busy.value) return null
+    if (busy.value) throw new Error('Дождитесь завершения предыдущего сохранения')
     requestVersion += 1
     busy.value = true
     error.value = ''
@@ -129,6 +132,12 @@ export function useJournalWorkspace({ characterUuid = '', sessionUuid = '' }) {
   const setPlayerEditing = enabled => mutate(() => setJournalPlayerEditing(journal.value.uuid, enabled))
   const reorderEntries = (sectionId, ids) => mutate(() => reorderJournalEntries(journal.value.uuid, sectionId, ids))
   function setDragging(value) { dragging.value = value; if (value) requestVersion += 1 }
+  function setInlineEditing(value) {
+    if (editing.value === value) return
+    editing.value = value
+    requestVersion += 1
+    if (!value) refreshJournal()
+  }
 
   function onVisibilityChange() {
     if (document.visibilityState === 'visible') refreshJournal()
@@ -140,6 +149,7 @@ export function useJournalWorkspace({ characterUuid = '', sessionUuid = '' }) {
     document.addEventListener('visibilitychange', onVisibilityChange)
   })
   onBeforeUnmount(() => {
+    disposed = true
     requestVersion += 1
     window.clearInterval(pollTimer)
     document.removeEventListener('visibilitychange', onVisibilityChange)
@@ -149,6 +159,6 @@ export function useJournalWorkspace({ characterUuid = '', sessionUuid = '' }) {
     journal, sources, canEdit, canManage, canSelectSource, loading, busy, error,
     load, createRoot, selectSource, createSection, updateSection, removeSection,
     createEntry, updateEntry, removeEntry,
-    setPlayerEditing, reorderEntries, setDragging,
+    setPlayerEditing, reorderEntries, setDragging, setInlineEditing,
   }
 }

@@ -2,6 +2,7 @@ package store
 
 import (
 	"context"
+	"errors"
 	"testing"
 )
 
@@ -29,10 +30,16 @@ func testJournalEntryAudit(t *testing.T, s *Store) {
 		created.ChangedByUserID == nil || *created.ChangedByUserID != 1 {
 		t.Fatalf("incorrect creation metadata: %+v", created)
 	}
-	if err := s.UpdateJournalEntry(ctx, 4, id, 2, JournalEntryMutation{Type: "event", Title: "Edited"}); err != nil {
+	if err := s.UpdateJournalEntry(ctx, 4, id, 2, JournalEntryMutation{Type: "event", Title: "Edited", ExpectedChangedAt: created.ChangedAt}); err != nil {
 		t.Fatal(err)
 	}
 	edited := read()
+	if err := s.UpdateJournalEntry(ctx, 4, id, 1, JournalEntryMutation{Type: "event", Title: "Stale overwrite", ExpectedChangedAt: created.ChangedAt}); !errors.Is(err, ErrJournalEntryConflict) {
+		t.Fatalf("stale edit must be rejected: %v", err)
+	}
+	if unchanged := read(); unchanged.Title != "Edited" || !unchanged.ChangedAt.Equal(edited.ChangedAt) {
+		t.Fatalf("stale edit modified stored data: %+v", unchanged)
+	}
 	if !edited.CreatedAt.Equal(created.CreatedAt) || !edited.ChangedAt.After(created.ChangedAt) ||
 		edited.AuthorName == nil || *edited.AuthorName != "Мастер" ||
 		edited.ChangedByName == nil || *edited.ChangedByName != "Игрок" ||
