@@ -151,7 +151,7 @@ import { BasePopover } from '@sylvieshare/share-ui'
 import { BaseTile } from '@sylvieshare/share-ui'
 import { FormActionButtons } from '@sylvieshare/share-ui'
 import { FormTextarea } from '@sylvieshare/share-ui'
-import { useItemReferenceMap } from '@/features/sessions/composables/useItemReferenceMap'
+import { useItemReferenceMap } from '@/features/items/composables/useItemReferenceMap'
 
 const props = defineProps({
   combatant: { type: Object, required: true },

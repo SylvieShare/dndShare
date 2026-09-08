@@ -9,7 +9,7 @@
       <article v-for="event in sortable.displayItems(group)" :key="event.id" :data-sortable-key="event.id" class="diary-timeline-event"
         :class="{ 'diary-timeline-event--placeholder': sortable.isSource(event), 'diary-timeline-event--day': event.type === 'newday' }">
         <DndDiaryEventRow :event="event" :editable="ownerMode" :busy="busy" :locked="Boolean(editingId) && editingId !== event.id"
-          :focus-title="focusEventId === event.id" :save-event="saveEvent"
+          :focus-title="focusEventId === event.id" :save-event="saveEvent" :items-by-id="itemsById"
           @drag="startDrag(event, $event)" @move="moveEvent(event, $event)" @remove="$emit('remove-event', $event)" @editing="value => $emit('editing', event.id, value)" />
       </article>
     </div>
@@ -24,11 +24,16 @@ import { reorderByDrop, useSortable } from '@sylvieshare/share-ui'
 import JournalEventTypePicker from '@/features/journals/components/JournalEventTypePicker.vue'
 import DndDiaryEventRow from './DndDiaryEventRow.vue'
 import { diaryEventsNewestFirst } from '../lib/diaryEntry'
+import { useItemReferenceMap } from '@/features/items/composables/useItemReferenceMap'
 const props = defineProps({ session: { type: Object, required: true }, ownerMode: Boolean, busy: Boolean, editingId: String, focusEventId: String, saveEvent: { type: Function, required: true } })
 const emit = defineEmits(['edit-session', 'create-event', 'remove-event', 'reorder-events', 'dragging', 'editing'])
 const group = 'diary-' + useId()
 const blocked = computed(() => props.busy || Boolean(props.editingId))
 const displayedEvents = computed(() => diaryEventsNewestFirst(props.session.events))
+const itemIds = computed(() => props.session.events
+  .filter(event => event.type === 'battle')
+  .flatMap(event => (event.combatants || []).filter(creature => creature.source === 'handbook').map(creature => creature.itemId)))
+const { itemsById } = useItemReferenceMap(itemIds)
 let dragSnapshot = ''
 const eventKey = () => displayedEvents.value.map(event => event.id).join(',')
 const sortable = useSortable({

@@ -63,4 +63,50 @@ describe('journal reading and inline editing', () => {
     expect(metadata).toContain('@focus=')
     expect(row).toContain('<BaseTile')
   })
+  it('renders bestiary artwork and resolves names for imported battles', async () => {
+    const html = await renderToString(createSSRApp(DndDiaryEventRow, {
+      event: { id: '1', type: 'battle', title: 'Засада', combatants: [
+        { id: 'a', source: 'handbook', itemId: 42, count: 3 },
+        { id: 'b', source: 'handbook', itemId: 43, itemName: 'Прежнее имя', count: 1 },
+      ] },
+      itemsById: new Map([
+        ['42', { id: 42, name: 'Гоблин', iconImageUrl: '/api/images/goblin' }],
+        ['43', { id: 43, name: 'Новое имя', svg: '<svg viewBox="0 0 24 24"><path d="M1 1L2 2" /></svg>' }],
+      ]),
+      saveEvent: async () => {},
+    }))
+    expect(html).toContain('src="/api/images/goblin"')
+    expect(html).toContain('item-icon__svg')
+    expect(html).toContain('Гоблин')
+    expect(html).toContain('Прежнее имя')
+    expect(html).not.toContain('Новое имя')
+    expect(html).toContain('×3')
+    expect(html).not.toContain('×1')
+    expect(html).not.toContain('diary-combatant-stats')
+  })
+  it('keeps unavailable creatures readable and does not resolve custom creatures by item id', async () => {
+    const html = await renderToString(createSSRApp(DndDiaryEventRow, {
+      event: { id: '1', type: 'battle', title: 'Засада', combatants: [
+        { id: 'a', source: 'handbook', itemId: 99, itemName: 'Василиск', count: 1 },
+        { id: 'b', source: 'handbook', itemId: 100, count: 1 },
+        { id: 'c', source: 'custom', itemId: 42, name: 'Стражник', count: 1, ac: 12, hp: 8 },
+      ] },
+      itemsById: new Map([['42', { id: 42, name: 'Гоблин', iconImageUrl: '/api/images/goblin' }]]),
+      saveEvent: async () => {},
+    }))
+    expect(html).toContain('Василиск')
+    expect(html).toContain('Существо #100')
+    expect(html).toContain('item-icon--placeholder')
+    expect(html).toContain('Стражник')
+    expect(html).toContain('diary-combatant-stats')
+    expect(html).not.toContain('Гоблин')
+    expect(html).not.toContain('/api/images/goblin')
+  })
+  it('loads creature references once per section rather than per battle row', () => {
+    expect(timeline).toContain('useItemReferenceMap(itemIds)')
+    expect(timeline).toContain("creature.source === 'handbook'")
+    expect(timeline).toContain(':items-by-id="itemsById"')
+    expect(row).toContain(':items-by-id="itemsById"')
+    expect(read('./components/DndDiaryCombatants.vue')).not.toContain('useItemReferenceMap')
+  })
 })

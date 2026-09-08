@@ -698,6 +698,12 @@ reversed before saving. Polling cannot overwrite an active drag. The section
 has no outer frame: a centered line connects `BaseTile` event cards, with type
 icons inside their headers. Dialogue rows retain scenario speaker colors;
 combatants are individual editable rows and new-day cards have a narrower shape.
+Bestiary combatants use the same `ItemIcon` as scenario cards, including raster
+and SVG artwork. One batched lookup per selected section resolves existing
+`itemId` references; imported battles without a saved name use the handbook name.
+Saved names remain unchanged. Missing or unavailable items retain their saved
+name (or item number) and a neutral placeholder. Combatant rows are compact, with
+quantity beside the name only when greater than one; empty stats take no space.
 Deleting an event uses its header trash button and confirmation. Permissions
 are still enforced server-side, including while an inline draft is open.
 Type labels and aggregate speaker/combatant counts are omitted from event cards.

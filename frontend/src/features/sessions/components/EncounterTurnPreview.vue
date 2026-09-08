@@ -90,7 +90,7 @@ import { Hourglass, UserRoundSearch } from '@lucide/vue'
 import EnemyDetailContent from '@/features/items/detail-components/EnemyDetailContent.vue'
 import EncounterAvatar from '@/features/sessions/components/EncounterAvatar.vue'
 import EncounterHpBar from '@/features/sessions/components/EncounterHpBar.vue'
-import { useItemReferenceMap } from '@/features/sessions/composables/useItemReferenceMap'
+import { useItemReferenceMap } from '@/features/items/composables/useItemReferenceMap'
 import { abilityModifier } from '@/shared/lib/dnd'
 import { useItemTypesStore } from '@/stores/itemTypes'
 

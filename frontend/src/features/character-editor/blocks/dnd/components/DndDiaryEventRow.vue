@@ -15,7 +15,7 @@
     <div v-if="event.type !== 'newday'" class="diary-event-content">
       <DndDiaryDialogue v-if="event.type === 'dialog'" :lines="event.dialogue" :editable="editable" :busy="busy || locked || saving" :editor="editor" :error="error"
         @edit="start" @save="submit" @cancel="cancel" />
-      <DndDiaryCombatants v-if="event.type === 'battle'" :combatants="event.combatants" :editable="editable" :busy="busy || locked || saving" :editor="editor" :error="error"
+      <DndDiaryCombatants v-if="event.type === 'battle'" :combatants="event.combatants" :items-by-id="itemsById" :editable="editable" :busy="busy || locked || saving" :editor="editor" :error="error"
         @edit="start" @save="submit" @cancel="cancel" />
       <JournalInlineForm v-if="editor?.kind === 'desc'" label="Описание события" :busy="busy || saving" :error="error" @save="submit({ desc: editor.value })" @cancel="cancel">
         <InputDescription :value="editor.value" :block="{ id: 'journal-desc', content: { placeholder: 'Что стоит запомнить?' } }" editable @update:value="(_id, value) => editor.value = value" />
@@ -41,7 +41,7 @@ import DndDiaryDialogue from './DndDiaryDialogue.vue'
 import DndDiaryCombatants from './DndDiaryCombatants.vue'
 import DndDiaryEventMetadata from './DndDiaryEventMetadata.vue'
 import { eventTypeMeta } from '../lib/diaryEntry'
-const props = defineProps({ event: { type: Object, required: true }, editable: Boolean, busy: Boolean, locked: Boolean, focusTitle: Boolean, saveEvent: { type: Function, required: true } })
+const props = defineProps({ event: { type: Object, required: true }, itemsById: { type: Map, default: () => new Map() }, editable: Boolean, busy: Boolean, locked: Boolean, focusTitle: Boolean, saveEvent: { type: Function, required: true } })
 const emit = defineEmits(['drag', 'move', 'remove', 'editing'])
 const { editor, error, saving, start, cancel, submit } = useJournalInlineEdit(props, emit)
 const meta = computed(() => eventTypeMeta(props.event.type))

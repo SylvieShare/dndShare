@@ -1,5 +1,5 @@
 import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
-import { useItemReferenceMap } from '@/features/sessions/composables/useItemReferenceMap'
+import { useItemReferenceMap } from '@/features/items/composables/useItemReferenceMap'
 import { useSceneBlockGraph } from '@/features/sessions/composables/useSceneBlockGraph'
 import { useSceneGraph } from '@/features/sessions/composables/useSceneGraph'
 

@@ -35,7 +35,7 @@ import { Gift, Trash2 } from '@lucide/vue'
 import { FormNumberInput } from '@sylvieshare/share-ui'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
-import { useItemReferenceMap } from '@/features/sessions/composables/useItemReferenceMap'
+import { useItemReferenceMap } from '@/features/items/composables/useItemReferenceMap'
 
 const props = defineProps({
   modelValue: { type: Array, default: () => [] },
