@@ -23,6 +23,13 @@
 .ability-advanced > summary { color: var(--text-muted); font-size: 12px; cursor: pointer; }
 .ability-advanced > summary span { margin-left: 4px; opacity: .7; }
 .ability-advanced[open] > summary { margin-bottom: 16px; }
+.ability-dependency > details[open] > :not(summary),
+.ability-rule-row > details[open] > :not(summary),
+.ability-advanced[open] > :not(summary) {
+  border-inline-start: 2px solid var(--border-strong);
+  padding-inline-start: 12px;
+  min-width: 0;
+}
 .ability-reference, .ability-multi { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .ability-reference > :first-child { flex: 1; text-align: left; }
 .ability-link { border: none; background: none; padding: 7px 0; color: var(--accent); cursor: pointer; font: inherit; font-size: 12px; text-align: left; overflow-wrap: anywhere; }

@@ -45,14 +45,18 @@ describe('action key generation', () => {
     expect(emit).toHaveBeenLastCalledWith('update:modelValue','boevaya_yarost')
     key.setManually('')
     props.title='Другое имя'
+    expect(key.generatedKey.value).toBe('drugoe_imya')
+    props.usedKeys.push('drugoe_imya')
+    expect(key.generatedKey.value).toBe('drugoe_imya_2')
     expect(emit).toHaveBeenLastCalledWith('update:modelValue','')
     scope.stop()
   })
   it('preserves existing manual keys and deliberately empty saved keys on reopen', () => {
     for (const modelValue of ['custom','']) {
       const scope=effectScope(), props=reactive({modelValue,title:'Название',usedKeys:[]}),emit=vi.fn()
-      scope.run(() => useRuleKey(props,emit))
+      const key = scope.run(() => useRuleKey(props,emit))
       props.title='Переименовано'
+      expect(key.generatedKey.value).toBe('pereimenovano')
       expect(emit).not.toHaveBeenCalled()
       scope.stop()
     }
