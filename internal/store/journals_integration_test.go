@@ -38,12 +38,12 @@ func TestPersonalJournalMigrationAndSources(t *testing.T) {
 		}
 	}
 	exec(`CREATE SCHEMA dndshare;
-		CREATE TABLE dndshare.users (id bigint PRIMARY KEY);
+		CREATE TABLE dndshare.users (id bigint PRIMARY KEY, login text);
 		CREATE TABLE dndshare."char" (id bigint PRIMARY KEY, uuid uuid DEFAULT gen_random_uuid(), user_id bigint, data json DEFAULT '{}', changed_at timestamptz DEFAULT now(), version bigint DEFAULT 1);
 		CREATE TABLE dndshare."session" (id bigint PRIMARY KEY, uuid uuid DEFAULT gen_random_uuid(), owner_user_id bigint, name text, deleted boolean DEFAULT false);
 		CREATE TABLE dndshare.session_participant (session_id bigint, char_id bigint, user_id bigint);
 		CREATE TABLE dndshare.session_scene_item (id bigint PRIMARY KEY);
-		INSERT INTO dndshare.users VALUES (1), (2);
+		INSERT INTO dndshare.users VALUES (1, 'Мастер'), (2, 'Игрок');
 		INSERT INTO dndshare."char" (id, user_id) VALUES (1,1), (25,1), (2,2), (3,1), (4,2);
 		UPDATE dndshare."char" SET uuid='cc503ec7-8250-4c00-a9a4-b830f39cdaf1' WHERE id=1;
 		INSERT INTO dndshare."session" (id,owner_user_id,name,deleted) VALUES (1,1,'Кампания',false), (2,1,'Удалённая',true);
@@ -73,6 +73,7 @@ func TestPersonalJournalMigrationAndSources(t *testing.T) {
 	if contentHash() != before {
 		t.Fatal("ownership migration must not change or delete any entries")
 	}
+	exec(schemaJournalEntryAuditSQL)
 	s := &Store{pool: pool}
 	original, err := s.GetCharacterJournal(ctx, 1)
 	if err != nil || original == nil || original.ID != 1 || len(original.Sections) != 2 || len(original.Sections[1].Entries) != 3 {
@@ -120,5 +121,8 @@ func TestPersonalJournalMigrationAndSources(t *testing.T) {
 	}
 	t.Run("editing permissions and ordering", func(t *testing.T) {
 		testJournalEditing(t, s)
+	})
+	t.Run("entry audit", func(t *testing.T) {
+		testJournalEntryAudit(t, s)
 	})
 }

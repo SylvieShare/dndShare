@@ -128,7 +128,7 @@ onBeforeUnmount(() => emit('dragging', false))
 .dsc-rail { position: absolute; top: 0; bottom: 24px; left: 21px; width: 3px; border-radius: 3px; background: linear-gradient(var(--accent), color-mix(in srgb, var(--accent) 30%, var(--border)) 35%, var(--border)); box-shadow: 0 0 14px color-mix(in srgb, var(--accent) 12%, transparent); }
 .dsc-event { position: relative; min-width: 0; }
 .dsc-event--editable { cursor: pointer; }
-.dsc-event--editable :deep(.der-heading), .dsc-event--editable :deep(.der-day-copy) { padding-right: 76px; }
+.dsc-event--editable :deep(.der-heading), .dsc-event--editable :deep(.der-day-title) { padding-right: 76px; }
 .dsc-event-actions { position: absolute; z-index: 2; top: 18px; right: 16px; display: flex; gap: 4px; }
 .dsc-event-actions .dsc-drag { cursor: grab; touch-action: none; }
 .dsc-event-actions .dsc-drag:active { cursor: grabbing; }

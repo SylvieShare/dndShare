@@ -101,7 +101,7 @@ func (s *Server) handleCreateJournalEntry(w http.ResponseWriter, r *http.Request
 }
 
 func (s *Server) handleUpdateJournalEntry(w http.ResponseWriter, r *http.Request) {
-	_, journal, ok := s.requireJournalWrite(w, r)
+	userID, journal, ok := s.requireJournalWrite(w, r)
 	if !ok {
 		return
 	}
@@ -126,7 +126,7 @@ func (s *Server) handleUpdateJournalEntry(w http.ResponseWriter, r *http.Request
 	if !ok {
 		return
 	}
-	if err := s.store.UpdateJournalEntry(r.Context(), journal.ID, entryID, mutation); err != nil {
+	if err := s.store.UpdateJournalEntry(r.Context(), journal.ID, entryID, userID, mutation); err != nil {
 		writeJournalError(w, err)
 		return
 	}

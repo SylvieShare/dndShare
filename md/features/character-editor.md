@@ -682,7 +682,10 @@ normalizers, including nested dialogue/combatants, rather than cloning Vue
 proxies with `structuredClone`. Source changes close any open editor; background
 refreshes cannot overwrite a newer source selection and also refresh available
 sources. Imported scenario entries carry a visible
-source badge and an immutable source snapshot. Event types can be selected only
+source icon in the bottom-right footer and an immutable source snapshot. The
+adjacent clock tooltip shows creation time/author and, if different, last edit
+time/author. Unknown historical editors are explicitly labelled as unknown.
+Event types can be selected only
 at creation. Events are displayed newest-first, with the add button above the
 list. The shared `useSortable` primitive handles within-section drag ordering;
 the drag handle also supports ↑/↓ keys. API order is chronological, so display
@@ -690,6 +693,9 @@ order is reversed before saving. Polling cannot overwrite an active drag.
 The journal uses spacious chapter cards, large connected timeline markers,
 speaker-colored dialogue rows (the scenario palette and saved colors), combatant
 cards and a distinct new-day divider. Revoked edit permission closes open forms.
+Type labels and aggregate speaker/combatant counts are omitted from event cards.
+The player-editing toggle is only in the session-page cover for its DM, never
+in the character journal, including when the character viewer is the DM.
 
 Окна предметов восстанавливают фокус без прокрутки исходного листа. Общий
 `RowActionMenu` раскрывается короткой анимацией из точки trigger с учётом

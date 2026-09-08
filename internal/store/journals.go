@@ -33,6 +33,10 @@ type JournalSection struct {
 type JournalEntry struct {
 	ID                int64           `json:"id"`
 	AuthorUserID      *int64          `json:"authorUserId,omitempty"`
+	AuthorName        *string         `json:"authorName,omitempty"`
+	CreatedAt         time.Time       `json:"createdAt"`
+	ChangedByUserID   *int64          `json:"changedByUserId,omitempty"`
+	ChangedByName     *string         `json:"changedByName,omitempty"`
 	Position          int             `json:"position"`
 	Type              string          `json:"type"`
 	Title             string          `json:"title"`
@@ -138,10 +142,14 @@ func (s *Store) loadJournalSections(ctx context.Context, journal Journal) (Journ
 		ids = append(ids, section.ID)
 	}
 	entryRows, err := s.pool.Query(ctx, `
-		SELECT section_id, id, author_user_id, position, entry_type, title,
-		       description_html, payload, source_scene_item_id, source_snapshot, changed_at
-		FROM dndshare.journal_entry WHERE section_id = ANY($1)
-		ORDER BY section_id, position, id`, ids)
+		SELECT e.section_id, e.id, e.author_user_id, e.position, e.entry_type, e.title,
+		       e.description_html, e.payload, e.source_scene_item_id, e.source_snapshot, e.changed_at,
+		       e.created_at, author.login, e.changed_by_user_id, editor.login
+		FROM dndshare.journal_entry e
+		LEFT JOIN dndshare.users author ON author.id = e.author_user_id
+		LEFT JOIN dndshare.users editor ON editor.id = e.changed_by_user_id
+		WHERE e.section_id = ANY($1)
+		ORDER BY e.section_id, e.position, e.id`, ids)
 	if err != nil {
 		return Journal{}, err
 	}
@@ -152,7 +160,8 @@ func (s *Store) loadJournalSections(ctx context.Context, journal Journal) (Journ
 		var payload, snapshot []byte
 		if err := entryRows.Scan(&sectionID, &entry.ID, &entry.AuthorUserID, &entry.Position,
 			&entry.Type, &entry.Title, &entry.Description, &payload, &entry.SourceSceneItemID,
-			&snapshot, &entry.ChangedAt); err != nil {
+			&snapshot, &entry.ChangedAt, &entry.CreatedAt, &entry.AuthorName,
+			&entry.ChangedByUserID, &entry.ChangedByName); err != nil {
 			return Journal{}, err
 		}
 		entry.Payload = json.RawMessage(payload)
@@ -318,10 +327,10 @@ func (s *Store) CreateJournalEntry(ctx context.Context, journalID, sectionID, us
 	var id int64
 	err = tx.QueryRow(ctx, `
 		INSERT INTO dndshare.journal_entry (
-			section_id, author_user_id, position, entry_type, title, description_html,
+			section_id, author_user_id, changed_by_user_id, position, entry_type, title, description_html,
 			payload, source_scene_item_id, source_snapshot
 		)
-		VALUES ($1, $2,
+		VALUES ($1, $2, $2,
 		       COALESCE((SELECT MAX(position) FROM dndshare.journal_entry WHERE section_id = $1), 0) + 1,
 		       $3, $4, $5, CAST($6 AS jsonb), $7, CAST($8 AS jsonb))
 		RETURNING id`, sectionID, userID, mutation.Type, mutation.Title, mutation.Description,
@@ -345,7 +354,7 @@ func nullableJSON(raw json.RawMessage) any {
 	return string(raw)
 }
 
-func (s *Store) UpdateJournalEntry(ctx context.Context, journalID, entryID int64, mutation JournalEntryMutation) error {
+func (s *Store) UpdateJournalEntry(ctx context.Context, journalID, entryID, userID int64, mutation JournalEntryMutation) error {
 	payload := mutation.Payload
 	if len(payload) == 0 {
 		payload = json.RawMessage("{}")
@@ -353,14 +362,14 @@ func (s *Store) UpdateJournalEntry(ctx context.Context, journalID, entryID int64
 	command, err := s.pool.Exec(ctx, `
 		WITH changed AS (
 			UPDATE dndshare.journal_entry entry
-			SET title = $4, description_html = $5, payload = CAST($6 AS jsonb), changed_at = now()
+			SET title = $4, description_html = $5, payload = CAST($6 AS jsonb), changed_at = now(), changed_by_user_id = $7
 			FROM dndshare.journal_section section
 			WHERE entry.id = $2 AND entry.section_id = section.id AND section.journal_id = $1 AND entry.entry_type = $3
 			RETURNING section.journal_id
 		)
 		UPDATE dndshare.journal SET changed_at = now()
 		FROM changed WHERE dndshare.journal.id = changed.journal_id`,
-		journalID, entryID, mutation.Type, mutation.Title, mutation.Description, string(payload))
+		journalID, entryID, mutation.Type, mutation.Title, mutation.Description, string(payload), userID)
 	if err == nil && command.RowsAffected() == 0 {
 		return ErrNotFound
 	}

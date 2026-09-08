@@ -78,7 +78,7 @@ func (s *Store) ReorderJournalEntries(ctx context.Context, journalID, sectionID 
 	if _, err = tx.Exec(ctx, `SET CONSTRAINTS dndshare.journal_entry_position_key DEFERRED`); err != nil {
 		return err
 	}
-	if _, err = tx.Exec(ctx, `UPDATE dndshare.journal_entry e SET position=ordered.position, changed_at=now()
+	if _, err = tx.Exec(ctx, `UPDATE dndshare.journal_entry e SET position=ordered.position
 		FROM unnest($2::bigint[]) WITH ORDINALITY AS ordered(id,position)
 		WHERE e.section_id=$1 AND e.id=ordered.id`, sectionID, ids); err != nil {
 		return err

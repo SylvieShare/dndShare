@@ -41,19 +41,15 @@
           <h2>{{ journal.name }}</h2>
           <p>{{ sectionCountLabel }} · {{ eventCountLabel }}</p>
         </div>
-      </header>
-
-      <div v-if="journal.kind === 'session'" class="journal-access">
-        <ToggleSwitch v-if="canManage" :model-value="journal.playersCanEdit" :disabled="busy"
+        <ToggleSwitch v-if="sessionUuid && canManage && journal.kind === 'session'" class="journal-cover-access"
+          :model-value="journal.playersCanEdit" :disabled="busy"
           label="Игроки могут редактировать дневник" @update:model-value="value => setPlayerEditing(value).catch(() => {})" />
-        <span v-else>{{ canEdit ? 'Вы можете дополнять общую летопись' : 'Только чтение · записи добавляет мастер' }}</span>
-        <small v-if="canManage">{{ journal.playersCanEdit ? 'Игроки могут добавлять, изменять, удалять и переставлять записи.' : 'Игроки видят записи, но менять их может только мастер.' }}</small>
-      </div>
+      </header>
 
       <div class="journal-toolbar">
         <div>
           <span>{{ journal.kind === 'session' ? 'Общая летопись мастера и игроков' : 'Личная летопись этого персонажа' }}</span>
-          <small v-if="journal.kind === 'session'">Игроки могут выбрать его источником на странице персонажа</small>
+          <small v-if="journal.kind === 'session'">{{ canEdit ? 'Игроки могут выбрать его источником на странице персонажа' : 'Только чтение · записи добавляет мастер' }}</small>
         </div>
         <button v-if="canEdit" ref="addSectionButton" type="button" :disabled="busy" @click="addSection">
           <Plus :size="15" /> Раздел

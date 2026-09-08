@@ -70,10 +70,10 @@ func testJournalEditing(t *testing.T, s *Store) {
 	if err := s.ReorderJournalEntries(ctx, 2, 1, want); !errors.Is(err, ErrNotFound) {
 		t.Fatalf("cross-journal reorder accepted: %v", err)
 	}
-	if err := s.UpdateJournalEntry(ctx, 1, 1, JournalEntryMutation{Type: "battle", Title: "Changed"}); !errors.Is(err, ErrNotFound) {
+	if err := s.UpdateJournalEntry(ctx, 1, 1, 1, JournalEntryMutation{Type: "battle", Title: "Changed"}); !errors.Is(err, ErrNotFound) {
 		t.Fatalf("changing an existing entry type accepted: %v", err)
 	}
-	if err := s.UpdateJournalEntry(ctx, 1, 1, JournalEntryMutation{Type: "event", Title: "Edited"}); err != nil {
+	if err := s.UpdateJournalEntry(ctx, 1, 1, 1, JournalEntryMutation{Type: "event", Title: "Edited"}); err != nil {
 		t.Fatalf("same-type edit rejected: %v", err)
 	}
 	newID, err := s.CreateJournalEntry(ctx, 1, 1, 1, JournalEntryMutation{Type: "event", Title: "New"})
