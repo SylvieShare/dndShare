@@ -98,6 +98,8 @@
           'nested-graph-node--dynamic-height': dynamicNodeHeight,
         }"
         :style="nodeStyle(node)"
+        tabindex="0" role="button" :aria-label="node.title || node.name || 'Событие'"
+        @keydown.enter.self.stop.prevent="$emit('node-click', node, $event.currentTarget)"
         @pointerdown="onNodeDown($event, node)"
         @click.stop="onLockedNodeClick($event, node)"
         @dblclick.stop="onNativeDoubleClick(node)"
@@ -158,18 +160,14 @@
 
 <script setup>
 import { computed, getCurrentInstance, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import GraphSelectionBar from '@/features/sessions/components/GraphSelectionBar.vue'
-import { useGraphViewPersistence } from '@/features/sessions/composables/useGraphViewPersistence'
-import { useGraphHotkeys } from '@/features/sessions/composables/useGraphHotkeys'
-import { graphNodeKey, useGraphSelection } from '@/features/sessions/composables/useGraphSelection'
-import { useRafLatest } from '@/features/sessions/composables/useRafLatest'
-import {
-  graphEdgeGeometry,
-  graphEdgeMidpoint,
-  graphEdgePathFromPoint,
-  graphEdgePathToPoint,
-} from '@/features/sessions/lib/graphGeometry'
-import { clampGraphPan, graphContentBounds, translateGraphPositions } from '@/features/sessions/lib/graphViewport'
+import GraphSelectionBar from '@/features/narrative-graph/components/GraphSelectionBar.vue'
+import { useNarrativeNodeGeometry } from '../composables/useNarrativeNodeGeometry'
+import { useNarrativeViewport } from '../composables/useNarrativeViewport'
+import { useGraphHotkeys } from '@/features/narrative-graph/composables/useGraphHotkeys'
+import { graphNodeKey, useGraphSelection } from '@/features/narrative-graph/composables/useGraphSelection'
+import { useRafLatest } from '@/features/narrative-graph/composables/useRafLatest'
+import { useNarrativeLinks } from '../composables/useNarrativeLinks'
+import { graphContentBounds, translateGraphPositions } from '@/features/narrative-graph/lib/graphViewport'
 
 const props = defineProps({
   graphKey: { type: String, required: true },
@@ -179,6 +177,8 @@ const props = defineProps({
   toKey: { type: String, required: true },
   nodeWidth: { type: Number, default: 236 },
   nodeHeight: { type: Number, default: 156 },
+  minZoom: { type: Number, default: 0.35 },
+  maxZoom: { type: Number, default: 1.8 },
   linkingFrom: { type: Object, default: null },
   locked: { type: Boolean, default: false },
   loading: { type: Boolean, default: false },
@@ -199,11 +199,12 @@ const props = defineProps({
   minNodeWidth: { type: Number, default: 220 },
   maxNodeWidth: { type: Number, default: 640 },
   statusOptions: { type: Array, default: () => [] },
+  multiSelect: { type: Boolean, default: true },
 })
 const emit = defineEmits([
   'node-click', 'node-double-click', 'edge-click', 'start-link', 'finish-link',
   'preview-positions', 'save-positions', 'preview-size', 'save-size', 'create-first',
-  'selection-change', 'delete-selection', 'change-selection-status', 'drag-start', 'rewire-edge',
+  'selection-change', 'delete-selection', 'change-selection-status', 'drag-start', 'rewire-edge', 'interaction',
 ])
 
 const instanceId = getCurrentInstance()?.uid ?? Math.random().toString(36).slice(2)
@@ -216,18 +217,16 @@ const gesture = ref(null)
 const linkPreviewTarget = ref(null)
 const hoveredEdgeId = ref(null)
 const viewportRevision = ref(0)
-const sizeRevision = ref(0)
-const measuredHeights = new Map()
 let lastNodeClick = null
 let viewportResizeObserver = null
-let nodeResizeObserver = null
-let preparedGraphKey = null
+const preparedGraphKey = ref(null)
 
 const worldStyle = computed(() => ({ transform: `translate(${pan.value.x}px, ${pan.value.y}px) scale(${zoom.value})` }))
 const gridStyle = computed(() => ({
   backgroundPosition: `${pan.value.x}px ${pan.value.y}px`,
   backgroundSize: `${24 * zoom.value}px ${24 * zoom.value}px`,
 }))
+const { nodeDimensions, nodeStyle, refreshNodeObservers, resetDimensions } = useNarrativeNodeGeometry({ props, viewport, pan, zoom, viewportRevision, safeFrame: () => safeFrame() })
 const nodeMap = computed(() => new Map(props.nodes.map(node => [node.id, node])))
 const {
   selectedNodes, isSelected, clearSelection, selectAll, selectionFrameStyle,
@@ -238,56 +237,22 @@ const {
 )
 const bulkSelectionOpen = computed(() => props.canEdit && !props.locked
   && !props.linkingFrom && props.spotlightNodeId == null && selectedNodes.value.length > 1)
-useGraphHotkeys({
-  enabled: () => props.canEdit && !props.locked && props.spotlightNodeId == null,
-  selectedNodes,
-  selectAll,
-  clearSelection,
-  cancelGesture: () => { if (props.linkingFrom) emit('start-link', null); cancelGesture() },
-  deleteSelection: ids => emit('delete-selection', ids),
-  zoomBy,
-})
-const renderedEdges = computed(() => props.edges.map(edge => {
-  const from = nodeMap.value.get(edge[props.fromKey])
-  const to = nodeMap.value.get(edge[props.toKey])
-  const geometry = from && to ? graphEdgeGeometry(from, to, nodeDimensions) : null
-  return from && to
-    ? { ...edge, raw: edge, ...geometry, mid: graphEdgeMidpoint(from, to, nodeDimensions) }
-    : null
-}).filter(Boolean))
-const labelledEdges = computed(() => renderedEdges.value.filter(edge => edge.label))
-const temporaryPath = computed(() => {
-  if (!cursorWorld.value) return ''
-  if (gesture.value?.type === 'edge') {
-    if (!gesture.value.moved) return ''
-    const target = gesture.value.hoveredTarget
-    if (target) {
-      return gesture.value.endpoint === 'to'
-        ? graphEdgeGeometry(gesture.value.from, target, nodeDimensions).path
-        : graphEdgeGeometry(target, gesture.value.to, nodeDimensions).path
-    }
-    return gesture.value.endpoint === 'to'
-      ? graphEdgePathToPoint(gesture.value.from, cursorWorld.value, nodeDimensions)
-      : graphEdgePathFromPoint(cursorWorld.value, gesture.value.to, nodeDimensions)
-  }
-  if (!props.linkingFrom) return ''
-  return linkPreviewTarget.value
-    ? graphEdgeGeometry(props.linkingFrom, linkPreviewTarget.value, nodeDimensions).path
-    : graphEdgePathToPoint(props.linkingFrom, cursorWorld.value, nodeDimensions)
-})
-const temporaryBidirectional = computed(() => gesture.value?.type === 'edge' && !!gesture.value.edge.bidirectional)
-const previewTargetNode = computed(() => gesture.value?.type === 'edge'
-  ? gesture.value.hoveredTarget ?? null
-  : linkPreviewTarget.value)
+
+const { renderedEdges, labelledEdges, temporaryPath, temporaryBidirectional, previewTargetNode } = useNarrativeLinks({ props, nodeMap, nodeDimensions, cursorWorld, gesture, linkPreviewTarget })
 const contentBounds = computed(() => graphContentBounds(props.nodes, nodeDimensions))
 const { schedule: emitPositionPreview, cancel: clearPositionPreviewFrame } = useRafLatest(
   positions => emit('preview-positions', positions),
 )
-const { read: readView, save: saveView } = useGraphViewPersistence({
-  pan,
-  zoom,
-  getKey: viewKey,
-  clamp: clampCurrentPan,
+const { viewKey, constrainPan, clampCurrentPan, loadView, prepareView, pointInWorld, safeFrame, onWheel, zoomBy, viewportCenter, focusNode, saveView, fitContent, hasSavedView } = useNarrativeViewport({ props, viewport, pan, zoom, contentBounds, nodeDimensions, preparedGraphKey })
+useGraphHotkeys({
+  element: viewport,
+  enabled: () => props.canEdit && !props.locked && props.spotlightNodeId == null,
+  selectedNodes,
+  selectAll: () => { if (props.multiSelect) selectAll() },
+  clearSelection,
+  cancelGesture: () => { if (props.linkingFrom) emit('start-link', null); cancelGesture() },
+  deleteSelection: ids => emit('delete-selection', ids),
+  zoomBy,
 })
 
 function isDraggedNode(node) {
@@ -314,98 +279,19 @@ function leaveEdgeEndpoint(edge) {
   if (hoveredEdgeId.value === edge.id && gesture.value?.type !== 'edge') hoveredEdgeId.value = null
 }
 
-function nodeDimensions(node) {
-  sizeRevision.value
-  const rawWidth = node?._graphWidth ?? (props.nodeWidthKey ? node?.[props.nodeWidthKey] : null)
-  const width = Number(rawWidth) || props.nodeWidth
-  const measured = measuredHeights.get(String(node?.id))
-  const height = Number(node?._graphHeight) || measured || props.nodeHeight
-  return { width, height }
-}
 
-function nodeStyle(node) {
-  viewportRevision.value
-  const spotlight = node.id === props.spotlightNodeId
-  const dimensions = nodeDimensions(node)
-  let position = { x: node.positionX, y: node.positionY, scale: 1 }
-  if (spotlight) {
-    const frame = safeFrame()
-    const spotlightX = props.spotlightX ?? (frame.left + props.spotlightOffsetX)
-    position = {
-        x: (spotlightX - pan.value.x) / zoom.value,
-        y: (props.spotlightY - pan.value.y) / zoom.value,
-        scale: 1 / zoom.value,
-      }
-  }
-  return {
-    width: `${dimensions.width}px`,
-    ...(props.dynamicNodeHeight
-      ? { minHeight: `${props.nodeHeight}px` }
-      : { height: `${dimensions.height}px` }),
-    transform: `translate(${position.x}px, ${position.y}px) scale(${position.scale})`,
-  }
-}
 
-function viewKey(graphKey = props.graphKey) {
-  return `nested-graph:view:${graphKey}`
-}
 
-function constrainPan(candidate, candidateZoom = zoom.value) {
-  return clampGraphPan({
-    pan: candidate,
-    zoom: candidateZoom,
-    frame: safeFrame(),
-    bounds: contentBounds.value,
-  })
-}
 
-function clampCurrentPan() {
-  const next = constrainPan(pan.value)
-  if (Math.abs(next.x - pan.value.x) < 0.01 && Math.abs(next.y - pan.value.y) < 0.01) return false
-  pan.value = next
-  return true
-}
 
-function loadView(graphKey = props.graphKey, initialTop = props.initialTop, constrain = true) {
-  const saved = readView(graphKey)
-  if (saved && Number.isFinite(saved.x) && Number.isFinite(saved.y) && Number.isFinite(saved.zoom)) {
-    zoom.value = Math.max(0.35, Math.min(1.8, saved.zoom))
-    const savedPan = { x: saved.x, y: saved.y }
-    pan.value = constrain ? constrainPan(savedPan, zoom.value) : savedPan
-    return
-  }
-  zoom.value = 1
-  const initialPan = { x: safeFrame().left + 48, y: initialTop }
-  pan.value = constrain ? constrainPan(initialPan, zoom.value) : initialPan
-}
 
-function prepareView(graphKey, initialTop) {
-  preparedGraphKey = graphKey
-  loadView(graphKey, initialTop, false)
-}
 
-function pointInWorld(event) {
-  const rect = viewport.value.getBoundingClientRect()
-  return {
-    x: (event.clientX - rect.left - pan.value.x) / zoom.value,
-    y: (event.clientY - rect.top - pan.value.y) / zoom.value,
-  }
-}
 
-function safeFrame() {
-  const element = viewport.value
-  const rect = element?.getBoundingClientRect()
-  if (!element || !rect) return { left: 0, right: 0, width: 0, height: 0 }
-  const styles = getComputedStyle(element)
-  const left = Number.parseFloat(styles.getPropertyValue('--chapter-safe-left')) || 0
-  const right = Number.parseFloat(styles.getPropertyValue('--chapter-safe-right')) || 0
-  return { left, right, width: Math.max(0, rect.width - left - right), height: rect.height }
-}
 
 function onCanvasDown(event) {
   if (props.locked || event.button !== 0) return
   if (event.target.closest('.nested-graph-node, .nested-graph-edge-label, .nested-graph-edge-hit, .nested-graph-edge-endpoint-zone')) return
-  if (props.canEdit && (event.ctrlKey || event.metaKey)) {
+  if (props.canEdit && props.multiSelect && (event.ctrlKey || event.metaKey)) {
     viewport.value.setPointerCapture(event.pointerId)
     gesture.value = beginFrameSelection(event, null, pointInWorld, viewport.value.getBoundingClientRect())
     return
@@ -453,7 +339,7 @@ function onNodeDown(event, node) {
     return
   }
   viewport.value.setPointerCapture(event.pointerId)
-  if (props.canEdit && (event.ctrlKey || event.metaKey)) {
+  if (props.canEdit && props.multiSelect && (event.ctrlKey || event.metaKey)) {
     gesture.value = beginFrameSelection(event, node, pointInWorld, viewport.value.getBoundingClientRect())
     return
   }
@@ -535,6 +421,7 @@ function onPointerMove(event) {
     updateFrameSelection(active, event, pointInWorld, nodeDimensions)
     return
   }
+  if (!props.canEdit) return
   const point = pointInWorld(event)
   const wasMoved = active.moved
   active.moved ||= Math.hypot(event.clientX - active.startClientX, event.clientY - active.startClientY) > 4
@@ -638,66 +525,11 @@ function cancelGesture(rollback = true) {
   gesture.value = null
 }
 
-function onWheel(event) {
-  if (props.locked) return
-  const rect = viewport.value.getBoundingClientRect()
-  const before = pointInWorld(event)
-  const next = Math.max(0.35, Math.min(1.8, zoom.value * Math.exp(-event.deltaY * 0.0012)))
-  zoom.value = next
-  pan.value = constrainPan({
-    x: event.clientX - rect.left - before.x * next,
-    y: event.clientY - rect.top - before.y * next,
-  }, next)
-  saveView()
-}
-
-function zoomBy(factor) {
-  if (props.locked || !viewport.value) return
-  const rect = viewport.value.getBoundingClientRect()
-  const frame = safeFrame()
-  const centerX = frame.left + frame.width / 2
-  const center = { clientX: rect.left + centerX, clientY: rect.top + rect.height / 2 }
-  const before = pointInWorld(center)
-  const next = Math.max(0.35, Math.min(1.8, zoom.value * factor))
-  zoom.value = next
-  pan.value = constrainPan({ x: centerX - before.x * next, y: rect.height / 2 - before.y * next }, next)
-  saveView()
-}
-
-function viewportCenter(nodeWidth = props.nodeWidth, nodeHeight = props.nodeHeight) {
-  const rect = viewport.value?.getBoundingClientRect()
-  if (!rect) return { x: 48, y: props.initialTop }
-  const frame = safeFrame()
-  return {
-    x: (frame.left + frame.width / 2 - pan.value.x) / zoom.value - nodeWidth / 2,
-    y: (rect.height / 2 - pan.value.y) / zoom.value - nodeHeight / 2,
-  }
-}
-
-function focusNode(node) {
-  if (!node || !viewport.value) return
-  const rect = viewport.value.getBoundingClientRect()
-  const frame = safeFrame()
-  const dimensions = nodeDimensions(node)
-  pan.value = constrainPan({
-    x: frame.left + frame.width / 2 - (node.positionX + dimensions.width / 2) * zoom.value,
-    y: rect.height / 2 - (node.positionY + dimensions.height / 2) * zoom.value,
-  })
-  saveView()
-}
-
-function refreshNodeObservers() {
-  nodeResizeObserver?.disconnect()
-  if (!props.dynamicNodeHeight || !viewport.value) return
-  for (const element of viewport.value.querySelectorAll('.nested-graph-node')) nodeResizeObserver?.observe(element)
-}
-
 watch(() => props.graphKey, graphKey => {
   clearSelection()
-  measuredHeights.clear()
-  sizeRevision.value += 1
-  if (graphKey === preparedGraphKey) {
-    preparedGraphKey = null
+  resetDimensions()
+  if (graphKey === preparedGraphKey.value) {
+    preparedGraphKey.value = null
     nextTick(() => {
       refreshNodeObservers()
       if (clampCurrentPan()) saveView()
@@ -710,6 +542,7 @@ watch(() => props.graphKey, graphKey => {
   })
 })
 watch(() => props.linkingFrom, () => { linkPreviewTarget.value = null })
+watch(gesture, value => emit('interaction', Boolean(value)), { flush: 'sync' })
 watch(() => [props.nodes.length, props.dynamicNodeHeight], () => nextTick(refreshNodeObservers), { flush: 'post' })
 watch(contentBounds, () => {
   if (['node', 'resize'].includes(gesture.value?.type)) return
@@ -734,25 +567,14 @@ onMounted(() => {
     if (clampCurrentPan()) saveView()
   })
   viewportResizeObserver.observe(viewport.value)
-  nodeResizeObserver = new ResizeObserver(entries => {
-    let changed = false
-    for (const entry of entries) {
-      const id = entry.target.dataset.graphNodeId
-      const height = entry.borderBoxSize?.[0]?.blockSize ?? entry.contentRect.height
-      if (!id || !Number.isFinite(height) || Math.abs((measuredHeights.get(id) || 0) - height) < 0.5) continue
-      measuredHeights.set(id, height)
-      changed = true
-    }
-    if (changed) sizeRevision.value += 1
-  })
+
   nextTick(refreshNodeObservers)
 })
 onBeforeUnmount(() => {
   viewportResizeObserver?.disconnect()
-  nodeResizeObserver?.disconnect()
 })
 
-defineExpose({ zoomBy, viewportCenter, focusNode, prepareView, clearSelection })
+defineExpose({ zoomBy, viewportCenter, focusNode, prepareView, clearSelection, fitContent, hasSavedView })
 </script>
 
 <style scoped src="./styles/NestedGraphCanvas.css"></style>

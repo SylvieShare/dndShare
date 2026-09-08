@@ -211,7 +211,7 @@ import CanvasHotkeyHints from '@/features/sessions/components/CanvasHotkeyHints.
 import ChapterEdgeModal from '@/features/sessions/components/ChapterEdgeModal.vue'
 import ChapterGraphNode from '@/features/sessions/components/ChapterGraphNode.vue'
 import GraphDeleteDialog from '@/features/sessions/components/GraphDeleteDialog.vue'
-import NestedGraphCanvas from '@/features/sessions/components/NestedGraphCanvas.vue'
+import NestedGraphCanvas from '@/features/narrative-graph/components/NarrativeGraphCanvas.vue'
 import NestedEdgeMenus from '@/features/sessions/components/NestedEdgeMenus.vue'
 import SceneBlockEditorModal from '@/features/sessions/components/SceneBlockEditorModal.vue'
 import SceneBlockMenus from '@/features/sessions/components/SceneBlockMenus.vue'

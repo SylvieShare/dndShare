@@ -69,6 +69,7 @@
 
       <!-- Right: menu -->
       <div class="tb-right">
+        <CharacterJournalButton />
         <div v-if="!modal || canEdit" class="menu-wrap" v-click-outside="closeMenu">
           <button class="menu-btn" :class="{ open: menuOpen }" title="Меню" @click="menuOpen = !menuOpen">
             <span class="bar"></span>
@@ -130,6 +131,7 @@
 </template>
 
 <script setup>
+import CharacterJournalButton from '@/features/journals/components/CharacterJournalButton.vue'
 import { computed, defineAsyncComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import ContentSourcesModal from '@/features/character-editor/components/ContentSourcesModal.vue'

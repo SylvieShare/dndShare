@@ -154,40 +154,36 @@ timer and dice controls by its own vertical divider.
 флаг относится только к этому таймеру. Такие отсчёты появляются на анонимном
 экране с локально синхронизированным временем и прогрессом, остальные остаются
 только в рабочем пространстве мастера.
-`Дневник` открывает master workspace через `Alt`/`Option` + `7`. Он создаёт
-единственный дневник кампании и использует тот же `JournalWorkspace`, редакторы
-разделов/записей и визуальную ленту, что блок дневника персонажа. Мастер управляет
-флажком `Игроки могут редактировать дневник` (по умолчанию включён) справа в
-шапке дневника. Он виден только DM на странице сессии, не на листе персонажа.
-Выключение
-оставляет участникам чтение, но запрещает добавление, изменение, удаление и
-перестановку разделов/записей на сервере. Сам мастер сохраняет редактирование.
-Изменения страницы и прав обновляются после мутации, при возврате во
-вкладку и фоновым коротким polling. В меню каждого блока сценария действие
-`В дневник` создаёт дневник/первый раздел при необходимости, преобразует диалог
-или бой в соответствующий тип записи и сохраняет снимок исходного блока,
-включая цвета говорящих. Лента идёт от новых событий к старым; кнопка добавления
-стоит над событиями раздела и открывает только выбор типа. Пустая запись сразу
-создаётся, её название открывается для ввода на месте. Раздел выбирается в
-горизонтальной прокручиваемой строке с кнопкой `Новый раздел` в начале; виден
-только выбранный раздел, без внешней рамки. Весь заголовок события служит ручкой
-перетаскивания; на сфокусированном заголовке работают ↑/↓. Поля и кнопки drag не
-начинают; во время drag фоновые обновления приостановлены.
-Существующий тип события неизменяем. Диалог выделяет каждого говорящего
-палитрой холста сценария, бой — отдельными строками участников, новый день —
-более узкой карточкой. Центральная вертикальная линия соединяет карточки,
-иконки типов находятся внутри их заголовков. Карандаши открывают локальную
-правку названия, описания, реплики или участника без морф-окна; у заголовка
-находится корзинка удаления с подтверждением. Пока есть открытая правка,
-переключение источника/раздела и polling приостановлены. Ошибка сохранения
-оставляет введённые данные в форме; проверка `expectedChangedAt` защищает от
-перезаписи параллельной правки другого участника.
-Типы не дублируются текстом, общие счётчики голосов и участников боя скрыты.
-Внизу справа каждой записи иконка источника открывает подсказку со сценой и
-названием исходного блока; соседние часы — дату/время создания и автора,
-а при отличии также последней правки и её автора. Подсказки используют общий
-`ItemTooltip`, доступны при наведении и фокусе. Перестановка не меняет историю
-правок содержимого. Для старых правок без сохранённого автора это явно указано.
+`Дневник` открывает master workspace через `Alt`/`Option` + `7`. Единственный
+дневник кампании использует тот же `JournalWorkspace` и `JournalGraphWorkspace`,
+что полноэкранное окно на странице персонажа. Отступы от панели игроков и
+предельную ширину задаёт общий `SessionTabWorkspace`.
+
+Справа в шапке только DM этой сессии видит `Игроки могут редактировать дневник`
+(по умолчанию включено). Выключение оставляет игрокам чтение, но сервер
+запрещает изменение содержимого, координат и связей. DM сохраняет редактирование.
+Разделы переключаются горизонтальной строкой с `Новый раздел` в начале.
+
+На холсте — компактные карточки, полное содержимое и карандаши полей — в правой
+панели выбранного события. Создание спрашивает только тип и открывает название
+для ввода на месте; существующий тип неизменяем. `Продолжить отсюда` создаёт
+событие после выбранного: повторное продолжение образует ветвь. Несколько
+входящих связей дают схождение. Соединение доступно через порт карточки или
+поиск события в панели; допускаются связи между разделами одного дневника.
+Клик по связи открывает её подпись и удаление без удаления событий.
+Карточки перетаскиваются целиком, камера поддерживает pan/zoom, а `Упорядочить`
+явно запускает авторасстановку вверх. Циклы запрещены.
+
+В меню каждого блока сценария `В дневник` сохраняет снимок источника, включая
+цвета диалогов и ссылки на существ бестиария. Импорт продолжает единственную
+конечную точку раздела; при нескольких концах создаёт отдельное событие,
+не угадывая нужную ветвь. Полная карточка в панели показывает иконки источника
+и истории правок с подсказками. Перемещение не меняет автора содержимого.
+
+Polling приостанавливается во время правки, drag, создания связи и раскладки.
+Черновик поля сохраняется при ошибке; `expectedChangedAt` защищает содержимое,
+`expectedRevision` — граф. При конфликте граф перечитывается без перезаписи
+чужой правки. Подробнее: [Дневники](./journals.md).
 
 `Хроника` открывает отдельный центральный workspace с `SessionEventsPanel` и
 доступна через `Alt`/`Option` + `8`. Панель занимает полезную высоту workspace и
@@ -439,7 +435,7 @@ rather than toolbar controls. Creation is contextual and lives on the canvas
 in a top-right vertical action dock, immediately left of the right tools rail;
 there is no chapter/scenario/block creation button in the header. There is no
 second nested switcher or session title bar. `SessionGraphCanvas` keeps one
-physical `NestedGraphCanvas` mounted for all narrative levels. The session name is
+physical `NarrativeGraphCanvas` mounted for all narrative levels. The session name is
 the largest text in the command bar. The unframed arc trigger reads
 `АРКА <Roman number> <name>` with the original muted uppercase label and a
 bold UI-font accent-colored Roman number, gains a quiet background only on
@@ -659,7 +655,7 @@ nested level returns to chapters. Thus the visible ancestor chain and its single
 contextual back button provide level navigation without duplicating a breadcrumb
 bar or physical canvas.
 
-`NestedGraphCanvas` owns pan, zoom, drag, link-port, edge and spotlight mechanics
+`NarrativeGraphCanvas` owns pan, zoom, drag, link-port, edge and spotlight mechanics
 for all three levels. `useSceneGraph` and `useSceneBlockGraph` own their server
 state and optimistic position/width previews. `useSessionGraphNavigation` owns
 the current level and selected scenario id, while `useSessionWorkspace` keeps a
@@ -837,7 +833,7 @@ collapses the scene and softly reveals the returned NPC reserve. Player tiles do
 not move between rails. Controls stay locked for the short transition, while
 reduced-motion users get the direct state change.
 
-When the combat rail changes the canvas safe-left inset, `NestedGraphCanvas`
+When the combat rail changes the canvas safe-left inset, `NarrativeGraphCanvas`
 re-measures that inherited layout value after the parent DOM update. The
 spotlight chapter therefore animates to the new combat boundary instead of the
 normal-width player-rail position.

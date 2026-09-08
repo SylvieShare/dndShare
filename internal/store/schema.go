@@ -247,6 +247,9 @@ var schemaJournalEditingSQL string
 //go:embed schema/75_journal_entry_audit.sql
 var schemaJournalEntryAuditSQL string
 
+//go:embed schema/76_journal_graph.sql
+var schemaJournalGraphSQL string
+
 var schemaParts = []struct {
 	name string
 	sql  string
@@ -328,6 +331,7 @@ var schemaParts = []struct {
 	{"personal-character-journal", schemaPersonalCharacterJournalSQL},
 	{"journal-editing", schemaJournalEditingSQL},
 	{"journal-entry-audit", schemaJournalEntryAuditSQL},
+	{"journal-graph", schemaJournalGraphSQL},
 }
 
 const (

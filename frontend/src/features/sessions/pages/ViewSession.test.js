@@ -34,7 +34,7 @@ const encounterTurnPreviewSource = readFileSync(fileURLToPath(new URL('../compon
 const encounterChallengeResultSource = readFileSync(fileURLToPath(new URL('../components/EncounterChallengeResult.vue', import.meta.url)), 'utf8')
 const encounterOrderSource = readFileSync(fileURLToPath(new URL('../components/EncounterOrderMarker.vue', import.meta.url)), 'utf8')
 const sessionGraphSource = readFileSync(fileURLToPath(new URL('../components/SessionGraphCanvas.vue', import.meta.url)), 'utf8')
-const nestedGraphSource = readFileSync(fileURLToPath(new URL('../components/NestedGraphCanvas.vue', import.meta.url)), 'utf8')
+const nestedGraphSource = readFileSync(fileURLToPath(new URL('../../narrative-graph/components/NarrativeGraphCanvas.vue', import.meta.url)), 'utf8') + ['useNarrativeViewport', 'useNarrativeNodeGeometry', 'useNarrativeLinks'].map(name => readFileSync(fileURLToPath(new URL('../../narrative-graph/composables/' + name + '.js', import.meta.url)), 'utf8')).join('\n')
 const createModalSource = readFileSync(fileURLToPath(new URL('../../character-list/components/CharacterCreateWizardModal.vue', import.meta.url)), 'utf8')
 const createWizardSource = readFileSync(fileURLToPath(new URL('../../character-list/pages/ViewCreateCharacter.vue', import.meta.url)), 'utf8')
 const participantSyncSource = readFileSync(fileURLToPath(new URL('../composables/useParticipantSync.js', import.meta.url)), 'utf8')

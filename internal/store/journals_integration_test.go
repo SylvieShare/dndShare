@@ -74,10 +74,18 @@ func TestPersonalJournalMigrationAndSources(t *testing.T) {
 		t.Fatal("ownership migration must not change or delete any entries")
 	}
 	exec(schemaJournalEntryAuditSQL)
+	beforeGraph := contentHash()
+	exec(schemaJournalGraphSQL)
+	if contentHash() != beforeGraph {
+		t.Fatal("graph migration must preserve all entry content and audit")
+	}
 	s := &Store{pool: pool}
 	original, err := s.GetCharacterJournal(ctx, 1)
 	if err != nil || original == nil || original.ID != 1 || len(original.Sections) != 2 || len(original.Sections[1].Entries) != 3 {
 		t.Fatalf("complete journal was not restored: %+v, %v", original, err)
+	}
+	if len(original.Graph.Nodes) != 7 || len(original.Graph.Links) != 5 {
+		t.Fatalf("migration must connect each section in its original order: %+v", original.Graph)
 	}
 	copy, err := s.GetCharacterJournal(ctx, 25)
 	if err != nil || copy == nil || copy.ID != 2 || len(copy.Sections[1].Entries) != 0 {
@@ -125,4 +133,5 @@ func TestPersonalJournalMigrationAndSources(t *testing.T) {
 	t.Run("entry audit", func(t *testing.T) {
 		testJournalEntryAudit(t, s)
 	})
+	t.Run("graph branches, merges and conflicts", func(t *testing.T) { testJournalGraph(t, s) })
 }

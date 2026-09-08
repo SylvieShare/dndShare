@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest'
 import SessionGraphCanvas from './SessionGraphCanvas.vue'
 
 const source = readFileSync(fileURLToPath(new URL('./SessionGraphCanvas.vue', import.meta.url)), 'utf8')
-const canvasSource = readFileSync(fileURLToPath(new URL('./NestedGraphCanvas.vue', import.meta.url)), 'utf8')
+const canvasSource = readFileSync(fileURLToPath(new URL('../../narrative-graph/components/NarrativeGraphCanvas.vue', import.meta.url)), 'utf8') + ['useNarrativeViewport', 'useNarrativeNodeGeometry', 'useNarrativeLinks'].map(name => readFileSync(fileURLToPath(new URL('../../narrative-graph/composables/' + name + '.js', import.meta.url)), 'utf8')).join('\n')
 const dockSource = readFileSync(fileURLToPath(new URL('./CanvasActionDock.vue', import.meta.url)), 'utf8')
 const blockSource = readFileSync(fileURLToPath(new URL('./SceneBlockNode.vue', import.meta.url)), 'utf8')
 const entityBlockSource = readFileSync(fileURLToPath(new URL('./SceneEntityBlockPreview.vue', import.meta.url)), 'utf8')

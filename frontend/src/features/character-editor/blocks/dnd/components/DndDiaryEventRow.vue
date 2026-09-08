@@ -1,5 +1,5 @@
 <template>
-  <BaseTile class="diary-event" :class="'diary-event--' + event.type" :color="meta.color" framed>
+  <BaseTile class="diary-event" :class="['diary-event--' + event.type, { 'diary-event--compact': compact }]" :color="meta.color" framed>
     <header class="diary-event-header" :class="{ 'diary-event-header--draggable': draggable, 'diary-event-header--editing': editor?.kind === 'title' }"
       :tabindex="draggable ? 0 : undefined" :aria-label="draggable ? 'Переместить событие: перетащите заголовок или используйте стрелки вверх и вниз' : undefined"
       @pointerdown="drag" @keydown="move">
@@ -41,12 +41,12 @@ import DndDiaryDialogue from './DndDiaryDialogue.vue'
 import DndDiaryCombatants from './DndDiaryCombatants.vue'
 import DndDiaryEventMetadata from './DndDiaryEventMetadata.vue'
 import { eventTypeMeta } from '../lib/diaryEntry'
-const props = defineProps({ event: { type: Object, required: true }, itemsById: { type: Map, default: () => new Map() }, editable: Boolean, busy: Boolean, locked: Boolean, focusTitle: Boolean, saveEvent: { type: Function, required: true } })
+const props = defineProps({ event: { type: Object, required: true }, itemsById: { type: Map, default: () => new Map() }, allowDrag: { type: Boolean, default: true }, compact: Boolean, editable: Boolean, busy: Boolean, locked: Boolean, focusTitle: Boolean, saveEvent: { type: Function, required: true } })
 const emit = defineEmits(['drag', 'move', 'remove', 'editing'])
 const { editor, error, saving, start, cancel, submit } = useJournalInlineEdit(props, emit)
 const meta = computed(() => eventTypeMeta(props.event.type))
 const controlsDisabled = computed(() => props.busy || props.locked || saving.value || Boolean(editor.value))
-const draggable = computed(() => props.editable && !controlsDisabled.value)
+const draggable = computed(() => props.allowDrag && props.editable && !controlsDisabled.value)
 function drag(pointer) {
   if (!draggable.value || pointer.target.closest('button, input, textarea, a, [contenteditable="true"]')) return
   emit('drag', pointer)
@@ -82,6 +82,12 @@ const hasDesc = computed(() => descHtml.value.replace(/<[^>]*>/g, '').replace(/&
 .diary-event-footer { padding: 0 24px 16px; }
 .diary-event--newday .diary-event-header { padding-bottom: 14px; }
 .diary-event--newday .diary-event-icon { border-radius: 50%; }
+.diary-event--compact .diary-event-header { padding: 18px 16px 12px; gap: 8px; }
+.diary-event--compact .diary-event-title h3 { font-size: 20px; }
+.diary-event--compact .diary-event-icon { width: 32px; height: 32px; }
+.diary-event--compact .diary-event-title { min-height: 32px; }
+.diary-event--compact .diary-event-content { padding: 0 16px 8px; gap: 12px; }
+.diary-event--compact .diary-event-prose { font-size: 14px; line-height: 1.65; }
 .diary-event :deep(.diary-inline-add) { display: inline-flex; align-self: flex-start; align-items: center; gap: 7px; margin-top: 12px; padding: 7px 0; border: 0; background: transparent; color: var(--accent); font: 600 12px var(--font-ui); cursor: pointer; }
 .diary-event :deep(.diary-inline-add:disabled) { opacity: .4; cursor: default; }
 .diary-event :deep(.diary-empty-copy) { color: var(--text-muted); font: italic 13px/1.7 var(--font-prose); }

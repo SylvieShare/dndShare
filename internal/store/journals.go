@@ -10,6 +10,7 @@ import (
 )
 
 type Journal struct {
+	Graph          JournalGraph     `json:"graph"`
 	PlayersCanEdit bool             `json:"playersCanEdit"`
 	ID             int64            `json:"id"`
 	UUID           string           `json:"uuid"`
@@ -56,13 +57,16 @@ type JournalSource struct {
 }
 
 type JournalEntryMutation struct {
-	ExpectedChangedAt time.Time
-	Type              string
-	Title             string
-	Description       string
-	Payload           json.RawMessage
-	SourceSceneItemID *int64
-	SourceSnapshot    json.RawMessage
+	ExpectedGraphRevision *int64
+	ParentIDs             []int64
+	GraphPosition         *JournalNode
+	ExpectedChangedAt     time.Time
+	Type                  string
+	Title                 string
+	Description           string
+	Payload               json.RawMessage
+	SourceSceneItemID     *int64
+	SourceSnapshot        json.RawMessage
 }
 
 const journalSelect = `
@@ -114,67 +118,6 @@ func (s *Store) GetSessionJournal(ctx context.Context, sessionID int64) (*Journa
 	}
 	loaded, err := s.loadJournalSections(ctx, journal)
 	return &loaded, err
-}
-
-func (s *Store) loadJournalSections(ctx context.Context, journal Journal) (Journal, error) {
-	rows, err := s.pool.Query(ctx, `
-		SELECT id, position, title, event_date, changed_at
-		FROM dndshare.journal_section WHERE journal_id = $1 ORDER BY position, id`, journal.ID)
-	if err != nil {
-		return Journal{}, err
-	}
-	defer rows.Close()
-	journal.Sections = []JournalSection{}
-	sectionByID := map[int64]int{}
-	for rows.Next() {
-		var section JournalSection
-		if err := rows.Scan(&section.ID, &section.Position, &section.Title, &section.Date, &section.ChangedAt); err != nil {
-			return Journal{}, err
-		}
-		section.Entries = []JournalEntry{}
-		sectionByID[section.ID] = len(journal.Sections)
-		journal.Sections = append(journal.Sections, section)
-	}
-	if err := rows.Err(); err != nil || len(journal.Sections) == 0 {
-		return journal, err
-	}
-	ids := make([]int64, 0, len(journal.Sections))
-	for _, section := range journal.Sections {
-		ids = append(ids, section.ID)
-	}
-	entryRows, err := s.pool.Query(ctx, `
-		SELECT e.section_id, e.id, e.author_user_id, e.position, e.entry_type, e.title,
-		       e.description_html, e.payload, e.source_scene_item_id, e.source_snapshot, e.changed_at,
-		       e.created_at, author.login, e.changed_by_user_id, editor.login
-		FROM dndshare.journal_entry e
-		LEFT JOIN dndshare.users author ON author.id = e.author_user_id
-		LEFT JOIN dndshare.users editor ON editor.id = e.changed_by_user_id
-		WHERE e.section_id = ANY($1)
-		ORDER BY e.section_id, e.position, e.id`, ids)
-	if err != nil {
-		return Journal{}, err
-	}
-	defer entryRows.Close()
-	for entryRows.Next() {
-		var sectionID int64
-		var entry JournalEntry
-		var payload, snapshot []byte
-		if err := entryRows.Scan(&sectionID, &entry.ID, &entry.AuthorUserID, &entry.Position,
-			&entry.Type, &entry.Title, &entry.Description, &payload, &entry.SourceSceneItemID,
-			&snapshot, &entry.ChangedAt, &entry.CreatedAt, &entry.AuthorName,
-			&entry.ChangedByUserID, &entry.ChangedByName); err != nil {
-			return Journal{}, err
-		}
-		entry.Payload = json.RawMessage(payload)
-		if len(snapshot) > 0 {
-			entry.SourceSnapshot = json.RawMessage(snapshot)
-		}
-		index, ok := sectionByID[sectionID]
-		if ok {
-			journal.Sections[index].Entries = append(journal.Sections[index].Entries, entry)
-		}
-	}
-	return journal, entryRows.Err()
 }
 
 func (s *Store) UserCanAccessJournal(ctx context.Context, journalID, userID int64) (bool, error) {
@@ -282,7 +225,15 @@ func (s *Store) CreateJournalSection(ctx context.Context, journalID int64, title
 }
 
 func (s *Store) UpdateJournalSection(ctx context.Context, journalID, sectionID int64, title, date string) error {
-	command, err := s.pool.Exec(ctx, `
+	tx, err := s.pool.Begin(ctx)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback(ctx)
+	if err = lockJournalGraph(ctx, tx, journalID, nil); err != nil {
+		return err
+	}
+	command, err := tx.Exec(ctx, `
 		WITH changed AS (
 			UPDATE dndshare.journal_section SET title = $3, event_date = $4, changed_at = now()
 			WHERE id = $2 AND journal_id = $1 RETURNING journal_id
@@ -292,11 +243,22 @@ func (s *Store) UpdateJournalSection(ctx context.Context, journalID, sectionID i
 	if err == nil && command.RowsAffected() == 0 {
 		return ErrNotFound
 	}
-	return err
+	if err != nil {
+		return err
+	}
+	return tx.Commit(ctx)
 }
 
 func (s *Store) DeleteJournalSection(ctx context.Context, journalID, sectionID int64) error {
-	command, err := s.pool.Exec(ctx, `
+	tx, err := s.pool.Begin(ctx)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback(ctx)
+	if err = lockJournalGraph(ctx, tx, journalID, nil); err != nil {
+		return err
+	}
+	command, err := tx.Exec(ctx, `
 		WITH changed AS (
 			DELETE FROM dndshare.journal_section WHERE id = $2 AND journal_id = $1 RETURNING journal_id
 		)
@@ -305,7 +267,10 @@ func (s *Store) DeleteJournalSection(ctx context.Context, journalID, sectionID i
 	if err == nil && command.RowsAffected() == 0 {
 		return ErrNotFound
 	}
-	return err
+	if err != nil {
+		return err
+	}
+	return tx.Commit(ctx)
 }
 
 func (s *Store) CreateJournalEntry(ctx context.Context, journalID, sectionID, userID int64, mutation JournalEntryMutation) (int64, error) {
@@ -318,6 +283,9 @@ func (s *Store) CreateJournalEntry(ctx context.Context, journalID, sectionID, us
 		return 0, err
 	}
 	defer tx.Rollback(ctx)
+	if err = lockJournalGraph(ctx, tx, journalID, mutation.ExpectedGraphRevision); err != nil {
+		return 0, err
+	}
 	var lockedID int64
 	if err := tx.QueryRow(ctx, `
 		SELECT id FROM dndshare.journal_section WHERE id = $2 AND journal_id = $1 FOR UPDATE`, journalID, sectionID).Scan(&lockedID); errors.Is(err, pgx.ErrNoRows) {
@@ -342,6 +310,9 @@ func (s *Store) CreateJournalEntry(ctx context.Context, journalID, sectionID, us
 	if err != nil {
 		return 0, err
 	}
+	if err = attachJournalEntry(ctx, tx, journalID, sectionID, id, mutation); err != nil {
+		return 0, err
+	}
 	if _, err = tx.Exec(ctx, `UPDATE dndshare.journal SET changed_at = now() WHERE id = $1`, journalID); err != nil {
 		return 0, err
 	}
@@ -360,7 +331,15 @@ func (s *Store) UpdateJournalEntry(ctx context.Context, journalID, entryID, user
 	if len(payload) == 0 {
 		payload = json.RawMessage("{}")
 	}
-	command, err := s.pool.Exec(ctx, `
+	tx, err := s.pool.Begin(ctx)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback(ctx)
+	if err = lockJournalGraph(ctx, tx, journalID, nil); err != nil {
+		return err
+	}
+	command, err := tx.Exec(ctx, `
 		WITH changed AS (
 			UPDATE dndshare.journal_entry entry
 			SET title = $4, description_html = $5, payload = CAST($6 AS jsonb), changed_at = now(), changed_by_user_id = $7
@@ -375,11 +354,22 @@ func (s *Store) UpdateJournalEntry(ctx context.Context, journalID, entryID, user
 	if err == nil && command.RowsAffected() == 0 {
 		return ErrJournalEntryConflict
 	}
-	return err
+	if err != nil {
+		return err
+	}
+	return tx.Commit(ctx)
 }
 
 func (s *Store) DeleteJournalEntry(ctx context.Context, journalID, entryID int64) error {
-	command, err := s.pool.Exec(ctx, `
+	tx, err := s.pool.Begin(ctx)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback(ctx)
+	if err = lockJournalGraph(ctx, tx, journalID, nil); err != nil {
+		return err
+	}
+	command, err := tx.Exec(ctx, `
 		WITH changed AS (
 			DELETE FROM dndshare.journal_entry entry USING dndshare.journal_section section
 			WHERE entry.id = $2 AND entry.section_id = section.id AND section.journal_id = $1
@@ -390,5 +380,8 @@ func (s *Store) DeleteJournalEntry(ctx context.Context, journalID, entryID int64
 	if err == nil && command.RowsAffected() == 0 {
 		return ErrNotFound
 	}
-	return err
+	if err != nil {
+		return err
+	}
+	return tx.Commit(ctx)
 }

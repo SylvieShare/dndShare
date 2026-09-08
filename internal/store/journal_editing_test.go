@@ -3,7 +3,6 @@ package store
 import (
 	"context"
 	"errors"
-	"reflect"
 	"testing"
 )
 
@@ -37,39 +36,14 @@ func testJournalEditing(t *testing.T, s *Store) {
 	if err != nil || journal.PlayersCanEdit {
 		t.Fatalf("editing setting was not persisted: %+v, %v", journal, err)
 	}
+	if err := s.UpdateJournalGraph(ctx, 4, 2, JournalGraphMutation{ExpectedRevision: journal.Graph.Revision, Links: []JournalLink{}}); !errors.Is(err, ErrJournalReadOnly) {
+		t.Fatalf("read-only player modified graph: %v", err)
+	}
 	if err := s.SetJournalPlayerEditing(ctx, 4, 1, true); err != nil {
 		t.Fatal(err)
 	}
 	permissions(4, 2, JournalPermissions{true, true, false})
 
-	want := []int64{4, 2, 1, 3}
-	if err := s.ReorderJournalEntries(ctx, 1, 1, want); err != nil {
-		t.Fatalf("permutation with occupied positions: %v", err)
-	}
-	assertOrder := func() {
-		t.Helper()
-		j, err := s.GetCharacterJournal(ctx, 1)
-		if err != nil {
-			t.Fatal(err)
-		}
-		var got []int64
-		for _, e := range j.Sections[0].Entries {
-			got = append(got, e.ID)
-		}
-		if !reflect.DeepEqual(got, want) {
-			t.Fatalf("order got %v, want %v", got, want)
-		}
-	}
-	assertOrder()
-	for _, ids := range [][]int64{{4, 2, 1}, {4, 2, 1, 1}, {4, 2, 1, 5}} {
-		if err := s.ReorderJournalEntries(ctx, 1, 1, ids); !errors.Is(err, ErrJournalOrderConflict) {
-			t.Fatalf("invalid order %v accepted: %v", ids, err)
-		}
-		assertOrder()
-	}
-	if err := s.ReorderJournalEntries(ctx, 2, 1, want); !errors.Is(err, ErrNotFound) {
-		t.Fatalf("cross-journal reorder accepted: %v", err)
-	}
 	if err := s.UpdateJournalEntry(ctx, 1, 1, 1, JournalEntryMutation{Type: "battle", Title: "Changed"}); !errors.Is(err, ErrJournalEntryConflict) {
 		t.Fatalf("changing an existing entry type accepted: %v", err)
 	}
@@ -77,16 +51,7 @@ func testJournalEditing(t *testing.T, s *Store) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := s.UpdateJournalEntry(ctx, 1, 1, 1, JournalEntryMutation{Type: "event", Title: "Edited", ExpectedChangedAt: current.Sections[0].Entries[2].ChangedAt}); err != nil {
+	if err := s.UpdateJournalEntry(ctx, 1, 1, 1, JournalEntryMutation{Type: "event", Title: "Edited", ExpectedChangedAt: current.Sections[0].Entries[0].ChangedAt}); err != nil {
 		t.Fatalf("same-type edit rejected: %v", err)
 	}
-	newID, err := s.CreateJournalEntry(ctx, 1, 1, 1, JournalEntryMutation{Type: "event", Title: "New"})
-	if err != nil {
-		t.Fatal(err)
-	}
-	if err := s.ReorderJournalEntries(ctx, 1, 1, want); !errors.Is(err, ErrJournalOrderConflict) {
-		t.Fatalf("stale reorder after insertion accepted: %v", err)
-	}
-	want = append(want, newID)
-	assertOrder()
 }

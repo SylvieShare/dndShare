@@ -10,8 +10,14 @@ import (
 type JournalPermissions struct{ Read, Edit, Manage bool }
 
 func (s *Store) JournalPermissions(ctx context.Context, journalID, userID int64) (JournalPermissions, error) {
+	return journalPermissions(ctx, s.pool, journalID, userID)
+}
+
+func journalPermissions(ctx context.Context, db interface {
+	QueryRow(context.Context, string, ...any) pgx.Row
+}, journalID, userID int64) (JournalPermissions, error) {
 	var p JournalPermissions
-	err := s.pool.QueryRow(ctx, `
+	err := db.QueryRow(ctx, `
 		SELECT personal OR dm OR member, personal OR dm OR (member AND players_can_edit), dm
 		FROM (
 			SELECT COALESCE(j.owner_user_id = $2, false) AS personal, j.players_can_edit,
@@ -38,54 +44,4 @@ func (s *Store) SetJournalPlayerEditing(ctx context.Context, journalID, userID i
 	return err
 }
 
-var ErrJournalOrderConflict = errors.New("journal events changed; refresh before reordering")
 var ErrJournalEntryConflict = errors.New("journal entry has changed since editing started")
-
-func (s *Store) ReorderJournalEntries(ctx context.Context, journalID, sectionID int64, ids []int64) error {
-	tx, err := s.pool.Begin(ctx)
-	if err != nil {
-		return err
-	}
-	defer tx.Rollback(ctx)
-	var locked int64
-	err = tx.QueryRow(ctx, `SELECT id FROM dndshare.journal_section WHERE journal_id=$1 AND id=$2 FOR UPDATE`, journalID, sectionID).Scan(&locked)
-	if errors.Is(err, pgx.ErrNoRows) {
-		return ErrNotFound
-	}
-	if err != nil {
-		return err
-	}
-	rows, err := tx.Query(ctx, `SELECT id FROM dndshare.journal_entry WHERE section_id=$1 FOR UPDATE`, sectionID)
-	if err != nil {
-		return err
-	}
-	current, err := pgx.CollectRows(rows, pgx.RowTo[int64])
-	if err != nil {
-		return err
-	}
-	if len(current) != len(ids) {
-		return ErrJournalOrderConflict
-	}
-	remaining := make(map[int64]bool, len(current))
-	for _, id := range current {
-		remaining[id] = true
-	}
-	for _, id := range ids {
-		if !remaining[id] {
-			return ErrJournalOrderConflict
-		}
-		delete(remaining, id)
-	}
-	if _, err = tx.Exec(ctx, `SET CONSTRAINTS dndshare.journal_entry_position_key DEFERRED`); err != nil {
-		return err
-	}
-	if _, err = tx.Exec(ctx, `UPDATE dndshare.journal_entry e SET position=ordered.position
-		FROM unnest($2::bigint[]) WITH ORDINALITY AS ordered(id,position)
-		WHERE e.section_id=$1 AND e.id=ordered.id`, sectionID, ids); err != nil {
-		return err
-	}
-	if _, err = tx.Exec(ctx, `UPDATE dndshare.journal SET changed_at=now() WHERE id=$1`, journalID); err != nil {
-		return err
-	}
-	return tx.Commit(ctx)
-}

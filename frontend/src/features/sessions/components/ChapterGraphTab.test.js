@@ -4,10 +4,10 @@ import { describe, expect, it } from 'vitest'
 import ChapterGraphTab from './ChapterGraphTab.vue'
 
 const tab = readFileSync(fileURLToPath(new URL('./ChapterGraphTab.vue', import.meta.url)), 'utf8')
-const canvas = readFileSync(fileURLToPath(new URL('./NestedGraphCanvas.vue', import.meta.url)), 'utf8')
-const canvasStyles = readFileSync(fileURLToPath(new URL('./styles/NestedGraphCanvas.css', import.meta.url)), 'utf8')
+const canvas = readFileSync(fileURLToPath(new URL('../../narrative-graph/components/NarrativeGraphCanvas.vue', import.meta.url)), 'utf8') + ['useNarrativeViewport', 'useNarrativeNodeGeometry', 'useNarrativeLinks'].map(name => readFileSync(fileURLToPath(new URL('../../narrative-graph/composables/' + name + '.js', import.meta.url)), 'utf8')).join('\n')
+const canvasStyles = readFileSync(fileURLToPath(new URL('../../narrative-graph/components/styles/NestedGraphCanvas.css', import.meta.url)), 'utf8')
 const sessionCanvas = readFileSync(fileURLToPath(new URL('./SessionGraphCanvas.vue', import.meta.url)), 'utf8')
-const selectionBar = readFileSync(fileURLToPath(new URL('./GraphSelectionBar.vue', import.meta.url)), 'utf8')
+const selectionBar = readFileSync(fileURLToPath(new URL('../../narrative-graph/components/GraphSelectionBar.vue', import.meta.url)), 'utf8')
 const actionDock = readFileSync(fileURLToPath(new URL('./CanvasActionDock.vue', import.meta.url)), 'utf8')
 const narrativeCanvas = readFileSync(fileURLToPath(new URL('../lib/narrativeCanvas.js', import.meta.url)), 'utf8')
 const toolbar = readFileSync(fileURLToPath(new URL('./ChapterGraphToolbar.vue', import.meta.url)), 'utf8')
@@ -16,7 +16,7 @@ const musicStore = readFileSync(fileURLToPath(new URL('../composables/useMusicPl
 const arcEditor = readFileSync(fileURLToPath(new URL('./ArcEditorModal.vue', import.meta.url)), 'utf8')
 const node = readFileSync(fileURLToPath(new URL('./ChapterGraphNode.vue', import.meta.url)), 'utf8')
 const hotkeyHints = readFileSync(fileURLToPath(new URL('./CanvasHotkeyHints.vue', import.meta.url)), 'utf8')
-const hotkeys = readFileSync(fileURLToPath(new URL('../composables/useGraphHotkeys.js', import.meta.url)), 'utf8')
+const hotkeys = readFileSync(fileURLToPath(new URL('../../narrative-graph/composables/useGraphHotkeys.js', import.meta.url)), 'utf8')
 const navigation = readFileSync(fileURLToPath(new URL('../composables/useSessionGraphNavigation.js', import.meta.url)), 'utf8')
 
 describe('chapter graph workspace', () => {

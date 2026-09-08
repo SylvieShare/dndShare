@@ -10,7 +10,7 @@
     </template>
   </div>
   <FormTextarea :value="value.desc" aria-label="Заметка об участнике" placeholder="Заметка об участнике" :rows="2" :maxlength="2000" @update:value="update({ desc: $event })" />
-  <ItemPickerModal v-if="picker" :item-type-ids="[6]" title="Бестиарий" search-placeholder="Поиск существ…" @close="picker = false" @pick="pick" />
+  <ItemPickerModal v-if="picker" :z-index="3800" :item-type-ids="[6]" title="Бестиарий" search-placeholder="Поиск существ…" @close="picker = false" @pick="pick" />
 </template>
 <script setup>
 import { computed, ref } from 'vue'

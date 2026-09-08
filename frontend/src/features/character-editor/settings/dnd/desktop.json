@@ -223,7 +223,9 @@
                                 {
                                   "ref": "abilities_story",
                                   "kind": "block",
-                                  "content": { "expanded": true }
+                                  "content": {
+                                    "expanded": true
+                                  }
                                 },
                                 {
                                   "ref": "abilities_feats",
@@ -510,7 +512,7 @@
                             }
                           },
                           {
-                            "title": "Дневник",
+                            "title": "Заметки",
                             "content": {
                               "kind": "layout",
                               "type": "column",
@@ -520,10 +522,6 @@
                               "children": [
                                 {
                                   "ref": "quests",
-                                  "kind": "block"
-                                },
-                                {
-                                  "ref": "diary",
                                   "kind": "block"
                                 },
                                 {

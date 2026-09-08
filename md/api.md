@@ -354,11 +354,25 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
   without modifying the entry, its authorship or content; omission returns 400;
 - `PATCH /api/journals/{journalUuid}/settings` accepts `{playersCanEdit: boolean}`
   and is restricted to the campaign owner. Other users receive HTTP 403;
-- `PUT /api/journals/{journalUuid}/sections/{sectionId}/entries/order` accepts
-  `{entryIds: number[]}` in storage order (oldest first). The exact current set
-  of IDs is required: stale, duplicate or foreign IDs return HTTP 409 without
-  modifying entries. Read-only participants receive HTTP 403 for this and all
-  other journal mutations;
+- Journal responses include `graph: {revision,nodes,links}`. Nodes contain
+  `{id,positionX,positionY}`, links `{fromId,toId,label}`. Sections, entries and
+  graph are read from one repeatable-read snapshot.
+- `PUT /api/journals/{journalUuid}/graph` accepts
+  `{expectedRevision, links?, positions?}`. `links`, when supplied, is the complete
+  proposed set for this journal (including other sections); `positions` updates
+  only supplied node IDs. Omitted fields remain unchanged. Limits: 20,000 links,
+  5,000 positions, coordinates within ±1,000,000, labels up to 240 characters.
+  Mutations lock the journal and check its revision and editing permissions.
+  Stale revision returns 409; cycles, duplicate/foreign links and invalid
+  coordinates return 400; read-only participants receive 403. Content and entry
+  audit timestamps are not changed by arranging nodes or connecting events.
+- Entry POST requires `expectedGraphRevision`, optionally `parentIds` and
+  `graphPosition: {positionX,positionY}`. Creation and connections are atomic.
+  Explicit `parentIds: []` creates a separate root; multiple parents create a
+  merge. Omission appends to the section's sole terminal event, or creates a
+  separate root if there is no unambiguous continuation. Scenario imports use
+  the same terminal-event rule. Deleting an event/section removes incident links,
+  preserves other events and does not automatically reconnect branches;
 - `GET /api/sessions/{uuid}/chapters/{chapterId}/scene-graph` returns
   `{scenes,edges}`; scenario CRUD uses `POST .../chapters/{chapterId}/scenes`,
   `PATCH|DELETE .../scenes/{sceneId}` and `PATCH .../scenes/{sceneId}/position`.

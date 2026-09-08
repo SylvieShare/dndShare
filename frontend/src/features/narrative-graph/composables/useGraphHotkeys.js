@@ -1,12 +1,15 @@
 import { onBeforeUnmount, onMounted, toValue } from 'vue'
 
 const EDITABLE_TARGET = 'input, textarea, select, [contenteditable="true"]'
-const FLOATING_UI = '.share-popover, [role="dialog"]'
 
-export function useGraphHotkeys({ enabled, selectedNodes, selectAll, clearSelection, cancelGesture, deleteSelection, zoomBy }) {
+export function useGraphHotkeys({ enabled, element, selectedNodes, selectAll, clearSelection, cancelGesture, deleteSelection, zoomBy }) {
   function onKey(event) {
     if (!toValue(enabled) || event.target?.closest?.(EDITABLE_TARGET)) return
-    if (document.querySelector(FLOATING_UI)) return
+    const canvas = toValue(element)
+    if (canvas && !canvas.getClientRects().length) return
+    if (document.querySelector('.share-popover')) return
+    const dialogs = [...document.querySelectorAll('[role="dialog"]')]
+    if (dialogs.length && !dialogs.at(-1).contains(toValue(element))) return
 
     const modifier = event.ctrlKey || event.metaKey
     if (modifier && (event.code === 'KeyA' || event.key.toLowerCase() === 'a')) {

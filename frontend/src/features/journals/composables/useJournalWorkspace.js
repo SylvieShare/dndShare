@@ -10,9 +10,9 @@ import {
   getSessionJournal,
   setCharacterJournal,
   setJournalPlayerEditing,
-  reorderJournalEntries,
   updateJournalEntry,
   updateJournalSection,
+  updateJournalGraph,
 } from '@/shared/api/journalsApi'
 import { normalizeEvent } from '@/features/character-editor/blocks/dnd/lib/diaryEntry'
 
@@ -20,6 +20,11 @@ function normalizedJournal(value) {
   if (!value) return null
   return {
     ...value,
+    graph: {
+      revision: value.graph?.revision ?? 0,
+      nodes: (value.graph?.nodes || []).map(node => ({ ...node, id: String(node.id) })),
+      links: (value.graph?.links || []).map(link => ({ ...link, fromId: String(link.fromId), toId: String(link.toId) })),
+    },
     sections: (value.sections || []).map(section => ({
       ...section,
       id: String(section.id),
@@ -126,11 +131,21 @@ export function useJournalWorkspace({ characterUuid = '', sessionUuid = '' }) {
   const createSection = section => mutate(() => createJournalSection(journal.value.uuid, section))
   const updateSection = section => mutate(() => updateJournalSection(journal.value.uuid, section.id, section))
   const removeSection = sectionId => mutate(() => deleteJournalSection(journal.value.uuid, sectionId))
-  const createEntry = (sectionId, event) => mutate(() => createJournalEntry(journal.value.uuid, sectionId, entryPayload(event)))
+  const createEntry = (sectionId, event, graph = {}) => mutate(() => createJournalEntry(journal.value.uuid, sectionId, {
+    ...entryPayload(event), expectedGraphRevision: journal.value.graph.revision, ...graph,
+  }))
   const updateEntry = event => mutate(() => updateJournalEntry(journal.value.uuid, event.id, entryPayload(event)))
   const removeEntry = entryId => mutate(() => deleteJournalEntry(journal.value.uuid, entryId))
   const setPlayerEditing = enabled => mutate(() => setJournalPlayerEditing(journal.value.uuid, enabled))
-  const reorderEntries = (sectionId, ids) => mutate(() => reorderJournalEntries(journal.value.uuid, sectionId, ids))
+  async function updateGraph(patch) {
+    try { return await mutate(() => updateJournalGraph(journal.value.uuid, patch)) }
+    catch (reason) {
+      const message = error.value
+      await load({ quiet: true })
+      error.value = message
+      throw reason
+    }
+  }
   function setDragging(value) { dragging.value = value; if (value) requestVersion += 1 }
   function setInlineEditing(value) {
     if (editing.value === value) return
@@ -158,7 +173,7 @@ export function useJournalWorkspace({ characterUuid = '', sessionUuid = '' }) {
   return {
     journal, sources, canEdit, canManage, canSelectSource, loading, busy, error,
     load, createRoot, selectSource, createSection, updateSection, removeSection,
-    createEntry, updateEntry, removeEntry,
-    setPlayerEditing, reorderEntries, setDragging, setInlineEditing,
+    createEntry, updateEntry, removeEntry, updateGraph,
+    setPlayerEditing, setDragging, setInlineEditing,
   }
 }

@@ -50,14 +50,18 @@ func testJournalEntryAudit(t *testing.T, s *Store) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := s.ReorderJournalEntries(ctx, 4, sectionID, []int64{otherID, id}); err != nil {
+	graphBefore, err := s.GetSessionJournal(ctx, 1)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := s.UpdateJournalGraph(ctx, 4, 2, JournalGraphMutation{ExpectedRevision: graphBefore.Graph.Revision, Positions: []JournalNode{{ID: otherID, PositionX: 100}, {ID: id, PositionY: 200}}}); err != nil {
 		t.Fatal(err)
 	}
 	j, err := s.GetSessionJournal(ctx, 1)
 	if err != nil {
 		t.Fatal(err)
 	}
-	reordered := j.Sections[0].Entries[1]
+	reordered := j.Sections[0].Entries[0]
 	if reordered.ID != id || !reordered.ChangedAt.Equal(edited.ChangedAt) || *reordered.ChangedByUserID != 2 {
 		t.Fatalf("reordering must not rewrite content edit history: %+v", reordered)
 	}

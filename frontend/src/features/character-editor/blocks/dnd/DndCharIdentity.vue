@@ -18,6 +18,7 @@
           <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
         </svg>
       </button>
+      <CharacterJournalButton class="dci-journal" />
     </div>
     <div v-if="classParts.length" class="dci-classes" :title="classPart">
       <span v-for="(part, index) in classParts" :key="index" class="dci-class-item">
@@ -105,6 +106,7 @@
 </template>
 
 <script setup>
+import CharacterJournalButton from '@/features/journals/components/CharacterJournalButton.vue'
 import { RemoveButton } from '@sylvieshare/share-ui'
 import { computed, inject, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { AppModalFrame } from '@sylvieshare/share-ui'
@@ -290,6 +292,8 @@ function close() {
 </script>
 
 <style scoped>
+.dci-journal { align-self: flex-start; }
+@media (max-width: 640px) { .dci-journal { display: none; } }
 .dci-wrap {
   display: flex;
   flex-direction: column;

@@ -29,18 +29,21 @@ type journalSectionRequest struct {
 }
 
 type journalEntryRequest struct {
-	ExpectedChangedAt time.Time       `json:"expectedChangedAt"`
-	Type              string          `json:"type"`
-	Title             string          `json:"title"`
-	Description       string          `json:"desc"`
-	Payload           json.RawMessage `json:"payload"`
+	ExpectedGraphRevision *int64             `json:"expectedGraphRevision"`
+	ParentIDs             []int64            `json:"parentIds"`
+	GraphPosition         *store.JournalNode `json:"graphPosition"`
+	ExpectedChangedAt     time.Time          `json:"expectedChangedAt"`
+	Type                  string             `json:"type"`
+	Title                 string             `json:"title"`
+	Description           string             `json:"desc"`
+	Payload               json.RawMessage    `json:"payload"`
 }
 
 func init() { registerRoutes((*Server).routesJournals) }
 
 func (s *Server) routesJournals(mux *http.ServeMux) {
+	mux.HandleFunc("PUT /api/journals/{journalUuid}/graph", s.handleUpdateJournalGraph)
 	mux.HandleFunc("PATCH /api/journals/{journalUuid}/settings", s.handleJournalPlayerEditing)
-	mux.HandleFunc("PUT /api/journals/{journalUuid}/sections/{sectionId}/entries/order", s.handleReorderJournalEntries)
 	mux.HandleFunc("GET /api/char/{uuid}/journal", s.handleGetCharacterJournal)
 	mux.HandleFunc("POST /api/char/{uuid}/journals", s.handleCreateCharacterJournal)
 	mux.HandleFunc("PUT /api/char/{uuid}/journal-source", s.handleSetCharacterJournal)
@@ -274,16 +277,25 @@ func cleanJournalEntry(w http.ResponseWriter, req journalEntryRequest) (store.Jo
 		badRequest(w, "Некорректные данные записи")
 		return store.JournalEntryMutation{}, false
 	}
-	return store.JournalEntryMutation{Type: req.Type, Title: req.Title, Description: req.Description, Payload: req.Payload, ExpectedChangedAt: req.ExpectedChangedAt}, true
+	return store.JournalEntryMutation{Type: req.Type, Title: req.Title, Description: req.Description, Payload: req.Payload, ExpectedChangedAt: req.ExpectedChangedAt,
+		ExpectedGraphRevision: req.ExpectedGraphRevision, ParentIDs: req.ParentIDs, GraphPosition: req.GraphPosition}, true
 }
 
 func writeJournalError(w http.ResponseWriter, err error) {
-	if errors.Is(err, store.ErrJournalEntryConflict) {
-		conflict(w, "Событие уже изменено другим участником. Ваша правка сохранена в поле; скопируйте её, отмените редактирование и откройте обновлённую запись.")
+	if errors.Is(err, store.ErrJournalReadOnly) {
+		forbidden(w)
 		return
 	}
-	if errors.Is(err, store.ErrJournalOrderConflict) {
-		conflict(w, "Состав событий изменился. Обновите дневник и повторите перестановку.")
+	if errors.Is(err, store.ErrJournalGraphConflict) {
+		conflict(w, "Связи или расположение событий изменились. Обновите дневник и повторите действие.")
+		return
+	}
+	if errors.Is(err, store.ErrJournalGraphInvalid) {
+		badRequest(w, "Недопустимая связь: нельзя создавать цикл, повторять связь или соединять разные дневники.")
+		return
+	}
+	if errors.Is(err, store.ErrJournalEntryConflict) {
+		conflict(w, "Событие уже изменено другим участником. Ваша правка сохранена в поле; скопируйте её, отмените редактирование и откройте обновлённую запись.")
 		return
 	}
 	if errors.Is(err, store.ErrNotFound) {

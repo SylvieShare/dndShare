@@ -663,52 +663,41 @@ spell-slot sphere previews the continuous range affected by a click: a charged
 sphere and the charged spheres to its right, or a spent sphere and the spent
 spheres to its left. Read-only spheres do not show this interaction preview.
 
-The diary block no longer stores collections in character JSON. It mounts the
-shared `JournalWorkspace` against the character UUID and lets the character
-owner switch between `Личный` and `Сессии` with the shared `MultiToggle`.
-Each character has at most one personal journal, independent of its currently
-selected source; journals belonging to other characters are not offered. When
-switching back to personal, the existing journal is selected, or created once
-if it does not exist yet. There is no add-another-personal button. The session
-choice is disabled until an eligible campaign journal exists; multiple eligible
-sessions use `FormSelect`. The DM can always edit a linked session journal;
-participants can edit only while its `playersCanEdit` setting is enabled.
-Read-only participants retain the same timeline without mutation controls.
-The source switch is inside the journal cover. Below it, a horizontal, scrollable
-chapter selector shows one section at a time, with a pinned new-section button
-at the beginning. The latest section is initially selected; each source's
-selection is remembered while the workspace is mounted. Section forms use a
-regular `AppModalFrame`. Events have no morph/editor window: creation asks only
-for the type, persists an empty card and opens its title inline. Quiet pencils
-edit title, rich description, one dialogue line or one combatant in place.
-Each draft has explicit save/cancel controls, remains local until save, and is
-retained on failure. The API requires the draft's `expectedChangedAt`; stale
-updates return 409 without overwriting another participant's edit. Polls pause
-while editing, and source/section navigation is disabled until save or cancel.
-Closing a draft resumes refresh. Imported scenario entries carry a visible
-source icon in the bottom-right footer and an immutable source snapshot. The
-adjacent clock tooltip shows creation time/author and, if different, last edit
-time/author. Unknown historical editors are explicitly labelled as unknown.
-Event types can be selected only
-at creation. Events are displayed newest-first, with the add button above the
-list. The shared `useSortable` primitive handles within-section drag ordering
-from the whole card header (excluding interactive fields/buttons). Focused
-headers also support ↑/↓ keys. API order is chronological, so display order is
-reversed before saving. Polling cannot overwrite an active drag. The section
-has no outer frame: a centered line connects `BaseTile` event cards, with type
-icons inside their headers. Dialogue rows retain scenario speaker colors;
-combatants are individual editable rows and new-day cards have a narrower shape.
-Bestiary combatants use the same `ItemIcon` as scenario cards, including raster
-and SVG artwork. One batched lookup per selected section resolves existing
-`itemId` references; imported battles without a saved name use the handbook name.
-Saved names remain unchanged. Missing or unavailable items retain their saved
-name (or item number) and a neutral placeholder. Combatant rows are compact, with
-quantity beside the name only when greater than one; empty stats take no space.
-Deleting an event uses its header trash button and confirmation. Permissions
-are still enforced server-side, including while an inline draft is open.
-Type labels and aggregate speaker/combatant counts are omitted from event cards.
-The player-editing toggle is only in the session-page cover for its DM, never
-in the character journal, including when the character viewer is the DM.
+The journal is opened with `CharacterJournalButton` in the character identity
+header (mobile: toolbar). It uses a fullscreen `JournalWindow`, not a sheet tab.
+The former diary tab is now `Заметки`; its quests and notes are preserved.
+Custom schemas using the diary block get the same launcher. Entries are stored
+in journal tables, not character JSON.
+
+The shared `JournalWorkspace` has the `Личный` / `Сессии` source switch in its
+header. Each character has at most one personal journal. The session option is
+disabled without an eligible campaign journal; multiple sessions use a select.
+The horizontal section selector shows one section at a time. Both character
+and DM views use `JournalGraphWorkspace`: compact event nodes on a canvas,
+with full content and inline pencils in the selected event's side panel.
+On mobile that panel overlays the canvas. New events ask only for a type and
+then open the title for inline editing; an existing type cannot be changed.
+
+Several outgoing links create branches; several incoming links merge them.
+Links can cross sections in the same journal, and the connections panel
+navigates to the target section. Cycles and cross-journal links are rejected.
+Dragging moves nodes without changing their contents or history; explicit
+`Упорядочить` uses a Worker-based layered layout, growing upwards.
+
+Dialogue voices keep scenario colors. Battle previews show up to three compact
+combatant rows with handbook `ItemIcon` artwork; the side panel shows all rows.
+One batched lookup per selected section resolves item references. Saved names
+are retained, with handbook names or neutral placeholders when appropriate.
+Types and aggregate participant/voice counts are not written as text.
+The full event footer shows source and audit tooltips, including known authors.
+
+Editing remains server-authorized: the DM always edits, participants only while
+`playersCanEdit` is enabled. This setting appears only in the DM's session-page
+header. Read-only users can navigate and zoom but cannot change nodes or links.
+Local inline drafts have save/cancel controls and survive failed saves.
+`expectedChangedAt` protects content; graph revisions protect links and positions.
+Polling pauses while editing, linking, dragging or arranging. Source/section
+switching is blocked during those interactions. See [Journals](./journals.md).
 
 Окна предметов восстанавливают фокус без прокрутки исходного листа. Общий
 `RowActionMenu` раскрывается короткой анимацией из точки trigger с учётом

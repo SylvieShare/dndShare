@@ -89,6 +89,10 @@ func (s *Server) handleCreateJournalEntry(w http.ResponseWriter, r *http.Request
 		badRequest(w, "Некорректный запрос")
 		return
 	}
+	if req.ExpectedGraphRevision == nil || *req.ExpectedGraphRevision < 0 {
+		badRequest(w, "Укажите версию графа дневника")
+		return
+	}
 	mutation, ok := cleanJournalEntry(w, req)
 	if !ok {
 		return
