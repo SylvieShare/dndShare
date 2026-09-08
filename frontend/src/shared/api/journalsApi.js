@@ -11,6 +11,8 @@ export const appendScenarioJournalItem = (sessionUuid, itemId) => (
 )
 
 export const getJournal = journalUuid => fetchGet(`/journals/${journalUuid}`, { cache: 'no-store' })
+export const setJournalPlayerEditing = (uuid, playersCanEdit) => fetchPatch(`/journals/${uuid}/settings`, { playersCanEdit })
+export const reorderJournalEntries = (uuid, sectionId, entryIds) => fetchPut(`/journals/${uuid}/sections/${sectionId}/entries/order`, { entryIds: entryIds.map(Number) })
 export const createJournalSection = (journalUuid, data) => fetchPost(`/journals/${journalUuid}/sections`, data)
 export const updateJournalSection = (journalUuid, sectionId, data) => fetchPatch(`/journals/${journalUuid}/sections/${sectionId}`, data)
 export const deleteJournalSection = (journalUuid, sectionId) => fetchDeleteJson(`/journals/${journalUuid}/sections/${sectionId}`)

@@ -14,8 +14,8 @@
   min-width: 0;
   min-height: 0;
   box-sizing: border-box;
-  /* Canvas safe area includes 28px after the rail; tabs need an 8px gap. */
-  padding: 10px calc(var(--chapter-safe-right, 0px) + 10px) 10px max(8px, calc(var(--chapter-safe-left, 28px) - 20px));
+  /* The canvas safe area already includes 28px after the participant rail. */
+  padding: 28px calc(var(--chapter-safe-right, 0px) + 28px) 28px max(28px, var(--chapter-safe-left, 28px));
   background-color: var(--app-canvas-bg);
   background-image: var(--app-canvas-pattern);
   background-size: var(--app-canvas-dot-size) var(--app-canvas-dot-size);
@@ -31,6 +31,6 @@
 }
 
 @media (max-width: 760px) {
-  .session-tab-workspace { padding: 8px; }
+  .session-tab-workspace { padding: 16px; }
 }
 </style>

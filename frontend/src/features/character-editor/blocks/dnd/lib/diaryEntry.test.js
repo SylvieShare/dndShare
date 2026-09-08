@@ -65,6 +65,13 @@ describe('diary entry', () => {
     })
   })
 
+  it('preserves valid scenario speaker colors through editor drafts and saves', () => {
+    const event = reactive({ type: 'dialog', dialogue: [{ speaker: 'Страж', text: 'Стой!', color: '#aAbBcC' }] })
+    const draft = normalizeEvent(event)
+    expect(patchEvent(draft, { title: 'Ворота' }).dialogue[0].color).toBe('#aAbBcC')
+    expect(normalizeDialogueLine({ color: 'url(unsafe)' })).not.toHaveProperty('color')
+  })
+
   it('normalizes handbook and custom combatants defensively', () => {
     expect(normalizeCombatant({
       id: 'book',

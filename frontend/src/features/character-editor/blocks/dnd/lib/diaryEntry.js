@@ -48,6 +48,7 @@ export function normalizeDialogueLine(line) {
     id: typeof src.id === 'string' && src.id ? src.id : makeDialogueLineId(),
     speaker: typeof src.speaker === 'string' ? src.speaker : '',
     text: typeof src.text === 'string' ? src.text : '',
+    ...(/^#[0-9a-f]{6}$/i.test(src.color || '') ? { color: src.color } : {}),
   }
 }
 

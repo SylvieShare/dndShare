@@ -43,6 +43,13 @@
         </div>
       </header>
 
+      <div v-if="journal.kind === 'session'" class="journal-access">
+        <ToggleSwitch v-if="canManage" :model-value="journal.playersCanEdit" :disabled="busy"
+          label="Игроки могут редактировать дневник" @update:model-value="value => setPlayerEditing(value).catch(() => {})" />
+        <span v-else>{{ canEdit ? 'Вы можете дополнять общую летопись' : 'Только чтение · записи добавляет мастер' }}</span>
+        <small v-if="canManage">{{ journal.playersCanEdit ? 'Игроки могут добавлять, изменять, удалять и переставлять записи.' : 'Игроки видят записи, но менять их может только мастер.' }}</small>
+      </div>
+
       <div class="journal-toolbar">
         <div>
           <span>{{ journal.kind === 'session' ? 'Общая летопись мастера и игроков' : 'Личная летопись этого персонажа' }}</span>
@@ -53,6 +60,7 @@
         </button>
       </div>
 
+      <p v-if="error" class="journal-error" role="alert">{{ error }}</p>
       <div v-if="displaySections.length" class="journal-sections">
         <DndDiarySessionCard
           v-for="entry in displaySections"
@@ -60,10 +68,13 @@
           :session="entry.session"
           :number="entry.number"
           :owner-mode="canEdit"
+          :busy="busy"
           :default-open="entry.number === sections.length"
           @edit-session="el => editSection(entry.session.id, el)"
           @edit-event="(eventId, el) => editEvent(entry.session.id, eventId, el)"
           @add-event="el => addEvent(entry.session.id, el)"
+          @reorder-events="ids => reorderEntries(entry.session.id, ids).catch(() => {})"
+          @dragging="setDragging"
         />
       </div>
       <div v-else class="journal-blank">
@@ -71,8 +82,6 @@
         <strong>Пока ни одной главы летописи</strong>
         <span>Создайте раздел для игрового вечера, главы или отдельной сюжетной арки.</span>
       </div>
-      <p v-if="error" class="journal-error" role="alert">{{ error }}</p>
-
       <DndDiarySessionModal
         v-if="editorOpen && editorKind === 'section' && draft"
         :session="draft"
@@ -121,7 +130,7 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
 import { BookMarked, Feather, Plus } from '@lucide/vue'
-import { ConfirmDialog } from '@sylvieshare/share-ui'
+import { ConfirmDialog, ToggleSwitch } from '@sylvieshare/share-ui'
 import DndDiaryEventEditor from '@/features/character-editor/blocks/dnd/components/DndDiaryEventEditor.vue'
 import DndDiaryEventRow from '@/features/character-editor/blocks/dnd/components/DndDiaryEventRow.vue'
 import DndDiarySessionCard from '@/features/character-editor/blocks/dnd/components/DndDiarySessionCard.vue'
@@ -138,9 +147,10 @@ const props = defineProps({
 })
 
 const {
-  journal, sources, canEdit, canSelectSource, loading, busy, error,
+  journal, sources, canEdit, canManage, canSelectSource, loading, busy, error,
   createRoot, selectSource, createSection, updateSection, removeSection: deleteSection,
   createEntry, updateEntry, removeEntry,
+  setPlayerEditing, reorderEntries, setDragging,
 } = useJournalWorkspace({ characterUuid: props.characterUuid, sessionUuid: props.sessionUuid })
 
 const sections = computed(() => journal.value?.sections || [])
@@ -220,6 +230,7 @@ function closeEditor() {
 }
 
 watch(() => journal.value?.uuid, () => { closeEditor(); removingSection.value = null })
+watch(canEdit, allowed => { if (!allowed) { closeEditor(); removingSection.value = null } })
 </script>
 
 <style scoped src="./JournalWorkspace.css"></style>

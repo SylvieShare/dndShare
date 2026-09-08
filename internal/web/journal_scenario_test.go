@@ -8,7 +8,7 @@ import (
 )
 
 func TestScenarioJournalMutationConvertsDialogueAndKeepsSnapshot(t *testing.T) {
-	raw := json.RawMessage(`{"rows":[{"left":"Смотритель","right":"Ворота закрыты"}]}`)
+	raw := json.RawMessage(`{"rows":[{"left":"Смотритель","right":"Ворота закрыты","color":"#aabbcc"}]}`)
 	item := store.SessionSceneItem{ID: 42, SceneID: 7, Type: "list", Title: "У ворот", Data: &raw}
 	mutation := scenarioJournalMutation(item, store.SessionScene{ID: 7, Name: "Северные ворота"})
 
@@ -21,6 +21,9 @@ func TestScenarioJournalMutationConvertsDialogueAndKeepsSnapshot(t *testing.T) {
 	}
 	if got := payload["dialogue"][0]["speaker"]; got != "Смотритель" {
 		t.Fatalf("unexpected speaker: %v", got)
+	}
+	if got := payload["dialogue"][0]["color"]; got != "#aabbcc" {
+		t.Fatalf("speaker color was not preserved: %v", got)
 	}
 	var snapshot map[string]any
 	if err := json.Unmarshal(mutation.SourceSnapshot, &snapshot); err != nil {

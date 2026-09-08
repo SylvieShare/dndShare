@@ -15,6 +15,7 @@ type scenarioJournalData struct {
 	Rows []struct {
 		Left  string `json:"left"`
 		Right string `json:"right"`
+		Color string `json:"color"`
 	} `json:"rows"`
 	Creatures []map[string]any `json:"creatures"`
 }
@@ -39,6 +40,7 @@ func scenarioJournalMutation(item store.SessionSceneItem, scene store.SessionSce
 				"id":      "scenario-" + stringID(item.ID) + "-line-" + stringID(int64(index+1)),
 				"speaker": row.Left,
 				"text":    row.Right,
+				"color":   row.Color,
 			})
 		}
 		payload["dialogue"] = dialogue

@@ -112,11 +112,11 @@ width below `AppHeader`; only the participant rail reserves a horizontal safe
 area. CSS safe-area variables keep focus, zoom and newly created nodes in the
 uncovered part of the canvas. All secondary tabs (world catalogues, music,
 journal and chronicle) share `SessionTabWorkspace`: it owns the canvas background,
-starts content 8px after the visible participant rail, and limits content width
+starts content 28px after the visible participant rail, and limits content width
 to 1440px, left-aligned with that rail. Collapsing the rail updates the same safe
 area for every tab. Catalogue columns retain an 8px internal gap. Story and
 combat are outside this wrapper and have no width limit. On mobile (up to 760px)
-the participant rail disappears and the shared wrapper uses 8px outer padding.
+the participant rail disappears and the shared wrapper uses 16px outer padding.
 Individual tab components own their internal layout and scrolling, not rail
 offsets or outer padding; this also applies to loading and error states.
 
@@ -156,12 +156,20 @@ timer and dice controls by its own vertical divider.
 только в рабочем пространстве мастера.
 `Дневник` открывает master workspace через `Alt`/`Option` + `7`. Он создаёт
 единственный дневник кампании и использует тот же `JournalWorkspace`, редакторы
-разделов/записей и визуальную ленту, что блок дневника персонажа. Все участники
-сессии получают одинаковые права редактирования после выбора этого дневника на
-своём листе; изменения страницы обновляются после мутации, при возврате во
+разделов/записей и визуальную ленту, что блок дневника персонажа. Мастер управляет
+флажком `Игроки могут редактировать дневник` (по умолчанию включён). Выключение
+оставляет участникам чтение, но запрещает добавление, изменение, удаление и
+перестановку разделов/записей на сервере. Сам мастер сохраняет редактирование.
+Изменения страницы и прав обновляются после мутации, при возврате во
 вкладку и фоновым коротким polling. В меню каждого блока сценария действие
 `В дневник` создаёт дневник/первый раздел при необходимости, преобразует диалог
-или бой в соответствующий тип записи и сохраняет снимок исходного блока.
+или бой в соответствующий тип записи и сохраняет снимок исходного блока,
+включая цвета говорящих. Лента идёт от новых событий к старым; кнопка добавления
+стоит над событиями раздела. Ручка перетаскивания и клавиши ↑/↓ на ней меняют
+порядок внутри раздела; во время drag фоновые обновления приостановлены.
+Существующий тип события неизменяем. Диалог выделяет каждого говорящего
+палитрой холста сценария, бой — отдельными карточками участников, новый день —
+разделительной полосой. Крупные маркеры соединяет контрастная вертикальная линия.
 
 `Хроника` открывает отдельный центральный workspace с `SessionEventsPanel` и
 доступна через `Alt`/`Option` + `8`. Панель занимает полезную высоту workspace и

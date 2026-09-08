@@ -2,11 +2,13 @@
   <EditorPanel compact>
     <EditorSection title="Тип">
       <MultiToggle
+        v-if="mode === 'create'"
         :options="typeOptions"
         :model-value="event.type"
         block
         @update:model-value="v => $emit('update', { type: v })"
       />
+      <div v-else class="dee-type"><component :is="eventTypeMeta(event.type).icon" :size="18" />{{ eventTypeMeta(event.type).label }}<small>Тип сохранённого события</small></div>
     </EditorSection>
 
     <EditorSection :title="event.type === 'newday' ? 'День' : 'Событие'">
@@ -66,7 +68,7 @@ import { EditorSection } from '@sylvieshare/share-ui'
 import { FormTextInput } from '@sylvieshare/share-ui'
 import InputDescription from '@/shared/ui/InputDescription'
 import { MultiToggle } from '@sylvieshare/share-ui'
-import { EVENT_TYPES } from '@/features/character-editor/blocks/dnd/lib/diaryEntry'
+import { EVENT_TYPES, eventTypeMeta } from '@/features/character-editor/blocks/dnd/lib/diaryEntry'
 
 const props = defineProps({
   event: { type: Object, required: true },
@@ -79,6 +81,8 @@ const descBlock = { id: 'desc', content: { placeholder: 'Что произошл
 </script>
 
 <style scoped>
+.dee-type { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; color: var(--text-1); font-size: 14px; font-weight: 700; }
+.dee-type small { width: 100%; color: var(--text-muted); font-size: 11px; font-weight: 400; }
 .dee-foot {
   display: flex;
   align-items: center;

@@ -33,6 +33,24 @@ describe('D&D diary UI flows', () => {
     expect(workspaceSource).toContain('Создать дневник кампании')
     expect(workspaceStyles).toContain('.journal-cover')
     expect(workspaceStyles).toContain('linear-gradient')
-    expect(eventRowSource).toMatch(/\.der-node \{[\s\S]*?width: 26px;[\s\S]*?height: 26px;/)
+    expect(eventRowSource).toMatch(/\.der-node \{[\s\S]*?width: 44px;[\s\S]*?height: 44px;/)
+  })
+
+  it('keeps event creation above the upward timeline and uses shared sorting', () => {
+    expect(cardSource.indexOf('Добавить событие')).toBeLessThan(cardSource.indexOf('class="dsc-events"'))
+    expect(cardSource).toContain('useSortable')
+    expect(cardSource).toContain('@keydown.up.prevent')
+    expect(cardSource).toContain(".map(e => e.id).reverse()")
+    expect(cardSource).toContain('dragSnapshot === eventKey()')
+  })
+
+  it('shares scenario speaker colors and makes existing event types read-only', () => {
+    expect(eventRowSource).toContain('hydrateDialogueRows')
+    expect(eventRowSource).toContain('--speaker-color')
+    const editor = read('./components/DndDiaryEventEditor.vue')
+    expect(editor).toMatch(/<MultiToggle[\s\S]*?v-if="mode === 'create'"/)
+    expect(editor).toContain('Тип сохранённого события')
+    expect(workspaceSource).toContain('v-if="canManage"')
+    expect(workspaceSource).toContain('Игроки могут редактировать дневник')
   })
 })

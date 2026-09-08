@@ -18,6 +18,7 @@ type journalResponse struct {
 	Journal         *store.Journal        `json:"journal"`
 	Sources         []store.JournalSource `json:"sources,omitempty"`
 	CanEdit         bool                  `json:"canEdit"`
+	CanManage       bool                  `json:"canManage"`
 	CanSelectSource bool                  `json:"canSelectSource,omitempty"`
 }
 
@@ -36,6 +37,8 @@ type journalEntryRequest struct {
 func init() { registerRoutes((*Server).routesJournals) }
 
 func (s *Server) routesJournals(mux *http.ServeMux) {
+	mux.HandleFunc("PATCH /api/journals/{journalUuid}/settings", s.handleJournalPlayerEditing)
+	mux.HandleFunc("PUT /api/journals/{journalUuid}/sections/{sectionId}/entries/order", s.handleReorderJournalEntries)
 	mux.HandleFunc("GET /api/char/{uuid}/journal", s.handleGetCharacterJournal)
 	mux.HandleFunc("POST /api/char/{uuid}/journals", s.handleCreateCharacterJournal)
 	mux.HandleFunc("PUT /api/char/{uuid}/journal-source", s.handleSetCharacterJournal)
@@ -65,14 +68,14 @@ func (s *Server) handleGetCharacterJournal(w http.ResponseWriter, r *http.Reques
 		return
 	}
 	owner := character.UserID == userID
-	canEdit := false
+	canRead := false
 	if journal != nil {
-		canEdit, err = s.store.UserCanAccessJournal(r.Context(), journal.ID, userID)
+		canRead, err = s.store.UserCanAccessJournal(r.Context(), journal.ID, userID)
 		if err != nil {
 			serverError(w, err)
 			return
 		}
-		if !canEdit {
+		if !canRead {
 			journal = nil
 		}
 	}
@@ -84,8 +87,8 @@ func (s *Server) handleGetCharacterJournal(w http.ResponseWriter, r *http.Reques
 			return
 		}
 	}
-	writeJSON(w, http.StatusOK, journalResponse{
-		Journal: journal, Sources: sources, CanEdit: canEdit, CanSelectSource: owner,
+	s.writeJournalResponse(w, r, http.StatusOK, journalResponse{
+		Journal: journal, Sources: sources, CanSelectSource: owner,
 	})
 }
 
@@ -110,7 +113,7 @@ func (s *Server) handleCreateCharacterJournal(w http.ResponseWriter, r *http.Req
 		serverError(w, err)
 		return
 	}
-	writeJSON(w, http.StatusCreated, journalResponse{Journal: &journal, CanEdit: true, CanSelectSource: true})
+	s.writeJournalResponse(w, r, http.StatusCreated, journalResponse{Journal: &journal, CanEdit: true, CanSelectSource: true})
 }
 
 func (s *Server) handleSetCharacterJournal(w http.ResponseWriter, r *http.Request) {
@@ -150,7 +153,7 @@ func (s *Server) handleSetCharacterJournal(w http.ResponseWriter, r *http.Reques
 		serverError(w, err)
 		return
 	}
-	writeJSON(w, http.StatusOK, journalResponse{Journal: &journal, Sources: sources, CanEdit: true, CanSelectSource: true})
+	s.writeJournalResponse(w, r, http.StatusOK, journalResponse{Journal: &journal, Sources: sources, CanEdit: true, CanSelectSource: true})
 }
 
 func (s *Server) handleGetSessionJournal(w http.ResponseWriter, r *http.Request) {
@@ -163,7 +166,7 @@ func (s *Server) handleGetSessionJournal(w http.ResponseWriter, r *http.Request)
 		serverError(w, err)
 		return
 	}
-	writeJSON(w, http.StatusOK, journalResponse{Journal: journal, CanEdit: true})
+	s.writeJournalResponse(w, r, http.StatusOK, journalResponse{Journal: journal, CanEdit: true})
 }
 
 func (s *Server) handleCreateSessionJournal(w http.ResponseWriter, r *http.Request) {
@@ -187,7 +190,7 @@ func (s *Server) handleCreateSessionJournal(w http.ResponseWriter, r *http.Reque
 		serverError(w, err)
 		return
 	}
-	writeJSON(w, http.StatusCreated, journalResponse{Journal: &journal, CanEdit: true})
+	s.writeJournalResponse(w, r, http.StatusCreated, journalResponse{Journal: &journal, CanEdit: true})
 }
 
 func journalName(w http.ResponseWriter, value, fallback string) (string, bool) {
@@ -232,7 +235,7 @@ func (s *Server) requireJournalAccess(w http.ResponseWriter, r *http.Request) (i
 func (s *Server) handleGetJournal(w http.ResponseWriter, r *http.Request) {
 	_, journal, ok := s.requireJournalAccess(w, r)
 	if ok {
-		writeJSON(w, http.StatusOK, journalResponse{Journal: &journal, CanEdit: true})
+		s.writeJournalResponse(w, r, http.StatusOK, journalResponse{Journal: &journal, CanEdit: true})
 	}
 }
 
@@ -273,6 +276,10 @@ func cleanJournalEntry(w http.ResponseWriter, req journalEntryRequest) (store.Jo
 }
 
 func writeJournalError(w http.ResponseWriter, err error) {
+	if errors.Is(err, store.ErrJournalOrderConflict) {
+		conflict(w, "Состав событий изменился. Обновите дневник и повторите перестановку.")
+		return
+	}
 	if errors.Is(err, store.ErrNotFound) {
 		notFound(w, "")
 		return

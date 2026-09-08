@@ -9,6 +9,8 @@ import {
   getCharacterJournal,
   getSessionJournal,
   setCharacterJournal,
+  setJournalPlayerEditing,
+  reorderJournalEntries,
   updateJournalEntry,
   updateJournalSection,
 } from '@/shared/api/journalsApi'
@@ -51,6 +53,8 @@ export function useJournalWorkspace({ characterUuid = '', sessionUuid = '' }) {
   const journal = ref(null)
   const sources = ref([])
   const canEdit = ref(false)
+  const canManage = ref(false)
+  const dragging = ref(false)
   const canSelectSource = ref(false)
   const loading = ref(true)
   const busy = ref(false)
@@ -62,6 +66,7 @@ export function useJournalWorkspace({ characterUuid = '', sessionUuid = '' }) {
     journal.value = normalizedJournal(response?.journal)
     if (Array.isArray(response?.sources)) sources.value = response.sources
     if (typeof response?.canEdit === 'boolean') canEdit.value = response.canEdit
+    if (typeof response?.canManage === 'boolean') canManage.value = response.canManage
     if (typeof response?.canSelectSource === 'boolean') canSelectSource.value = response.canSelectSource
     return journal.value
   }
@@ -87,7 +92,7 @@ export function useJournalWorkspace({ characterUuid = '', sessionUuid = '' }) {
   }
 
   async function refreshJournal() {
-    if (busy.value || loading.value) return
+    if (busy.value || loading.value || dragging.value) return
     await load({ quiet: true })
   }
 
@@ -121,6 +126,9 @@ export function useJournalWorkspace({ characterUuid = '', sessionUuid = '' }) {
   const createEntry = (sectionId, event) => mutate(() => createJournalEntry(journal.value.uuid, sectionId, entryPayload(event)))
   const updateEntry = event => mutate(() => updateJournalEntry(journal.value.uuid, event.id, entryPayload(event)))
   const removeEntry = entryId => mutate(() => deleteJournalEntry(journal.value.uuid, entryId))
+  const setPlayerEditing = enabled => mutate(() => setJournalPlayerEditing(journal.value.uuid, enabled))
+  const reorderEntries = (sectionId, ids) => mutate(() => reorderJournalEntries(journal.value.uuid, sectionId, ids))
+  function setDragging(value) { dragging.value = value; if (value) requestVersion += 1 }
 
   function onVisibilityChange() {
     if (document.visibilityState === 'visible') refreshJournal()
@@ -138,8 +146,9 @@ export function useJournalWorkspace({ characterUuid = '', sessionUuid = '' }) {
   })
 
   return {
-    journal, sources, canEdit, canSelectSource, loading, busy, error,
+    journal, sources, canEdit, canManage, canSelectSource, loading, busy, error,
     load, createRoot, selectSource, createSection, updateSection, removeSection,
     createEntry, updateEntry, removeEntry,
+    setPlayerEditing, reorderEntries, setDragging,
   }
 }

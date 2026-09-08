@@ -343,7 +343,16 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
 - `GET /api/journals/{journalUuid}` and the nested `POST|PATCH|DELETE` routes
   under `/sections`, `/sections/{sectionId}/entries` and `/entries/{entryId}`
   provide the common journal CRUD contract. A personal journal is writable by
-  its owner; a session journal is writable by the DM and current participants;
+  its owner; a session journal is writable by the DM and, when `playersCanEdit`
+  is enabled, current participants. Responses include `canEdit` and `canManage`.
+  Existing entry types cannot be changed (HTTP 400);
+- `PATCH /api/journals/{journalUuid}/settings` accepts `{playersCanEdit: boolean}`
+  and is restricted to the campaign owner. Other users receive HTTP 403;
+- `PUT /api/journals/{journalUuid}/sections/{sectionId}/entries/order` accepts
+  `{entryIds: number[]}` in storage order (oldest first). The exact current set
+  of IDs is required: stale, duplicate or foreign IDs return HTTP 409 without
+  modifying entries. Read-only participants receive HTTP 403 for this and all
+  other journal mutations;
 - `GET /api/sessions/{uuid}/chapters/{chapterId}/scene-graph` returns
   `{scenes,edges}`; scenario CRUD uses `POST .../chapters/{chapterId}/scenes`,
   `PATCH|DELETE .../scenes/{sceneId}` and `PATCH .../scenes/{sceneId}/position`.

@@ -10,11 +10,11 @@ func (s *Server) writeReloadedJournal(w http.ResponseWriter, r *http.Request, uu
 		writeJournalError(w, err)
 		return
 	}
-	writeJSON(w, status, journalResponse{Journal: &journal, CanEdit: true})
+	s.writeJournalResponse(w, r, status, journalResponse{Journal: &journal, CanEdit: true})
 }
 
 func (s *Server) handleCreateJournalSection(w http.ResponseWriter, r *http.Request) {
-	_, journal, ok := s.requireJournalAccess(w, r)
+	_, journal, ok := s.requireJournalWrite(w, r)
 	if !ok {
 		return
 	}
@@ -35,7 +35,7 @@ func (s *Server) handleCreateJournalSection(w http.ResponseWriter, r *http.Reque
 }
 
 func (s *Server) handleUpdateJournalSection(w http.ResponseWriter, r *http.Request) {
-	_, journal, ok := s.requireJournalAccess(w, r)
+	_, journal, ok := s.requireJournalWrite(w, r)
 	if !ok {
 		return
 	}
@@ -60,7 +60,7 @@ func (s *Server) handleUpdateJournalSection(w http.ResponseWriter, r *http.Reque
 }
 
 func (s *Server) handleDeleteJournalSection(w http.ResponseWriter, r *http.Request) {
-	_, journal, ok := s.requireJournalAccess(w, r)
+	_, journal, ok := s.requireJournalWrite(w, r)
 	if !ok {
 		return
 	}
@@ -76,7 +76,7 @@ func (s *Server) handleDeleteJournalSection(w http.ResponseWriter, r *http.Reque
 }
 
 func (s *Server) handleCreateJournalEntry(w http.ResponseWriter, r *http.Request) {
-	userID, journal, ok := s.requireJournalAccess(w, r)
+	userID, journal, ok := s.requireJournalWrite(w, r)
 	if !ok {
 		return
 	}
@@ -101,7 +101,7 @@ func (s *Server) handleCreateJournalEntry(w http.ResponseWriter, r *http.Request
 }
 
 func (s *Server) handleUpdateJournalEntry(w http.ResponseWriter, r *http.Request) {
-	_, journal, ok := s.requireJournalAccess(w, r)
+	_, journal, ok := s.requireJournalWrite(w, r)
 	if !ok {
 		return
 	}
@@ -113,6 +113,14 @@ func (s *Server) handleUpdateJournalEntry(w http.ResponseWriter, r *http.Request
 	if err := decodeJSON(r, &req); err != nil {
 		badRequest(w, "Некорректный запрос")
 		return
+	}
+	for _, section := range journal.Sections {
+		for _, entry := range section.Entries {
+			if entry.ID == entryID && entry.Type != req.Type {
+				badRequest(w, "Тип созданного события менять нельзя")
+				return
+			}
+		}
 	}
 	mutation, ok := cleanJournalEntry(w, req)
 	if !ok {
@@ -126,7 +134,7 @@ func (s *Server) handleUpdateJournalEntry(w http.ResponseWriter, r *http.Request
 }
 
 func (s *Server) handleDeleteJournalEntry(w http.ResponseWriter, r *http.Request) {
-	_, journal, ok := s.requireJournalAccess(w, r)
+	_, journal, ok := s.requireJournalWrite(w, r)
 	if !ok {
 		return
 	}

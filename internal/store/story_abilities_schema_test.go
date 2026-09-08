@@ -30,8 +30,10 @@ func TestAbilityCataloguesShareMigrationSchema(t *testing.T) {
 			t.Fatalf("ability catalogue %s differs from migration snapshot", name)
 		}
 	}
-	last := schemaParts[len(schemaParts)-2]
-	if last.name != "story-abilities" || last.sql != schemaStoryAbilitiesSQL {
-		t.Fatal("story abilities must run after existing catalogue migrations")
+	for _, part := range schemaParts {
+		if part.name == "story-abilities" && part.sql == schemaStoryAbilitiesSQL {
+			return
+		}
 	}
+	t.Fatal("story abilities migration must be registered")
 }

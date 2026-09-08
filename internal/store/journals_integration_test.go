@@ -69,6 +69,7 @@ func TestPersonalJournalMigrationAndSources(t *testing.T) {
 	}
 	before := contentHash()
 	exec(schemaPersonalCharacterJournalSQL)
+	exec(schemaJournalEditingSQL)
 	if contentHash() != before {
 		t.Fatal("ownership migration must not change or delete any entries")
 	}
@@ -117,4 +118,7 @@ func TestPersonalJournalMigrationAndSources(t *testing.T) {
 	if allowed, err := s.UserCanAccessJournal(ctx, original.ID, 2); err != nil || allowed {
 		t.Fatalf("personal journal access leaked: allowed=%v, err=%v", allowed, err)
 	}
+	t.Run("editing permissions and ordering", func(t *testing.T) {
+		testJournalEditing(t, s)
+	})
 }

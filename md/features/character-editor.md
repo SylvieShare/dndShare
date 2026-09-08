@@ -671,8 +671,9 @@ selected source; journals belonging to other characters are not offered. When
 switching back to personal, the existing journal is selected, or created once
 if it does not exist yet. There is no add-another-personal button. The session
 choice is disabled until an eligible campaign journal exists; multiple eligible
-sessions use `FormSelect`. A DM or another participant may edit
-a linked session journal through the same UI when session access permits it.
+sessions use `FormSelect`. The DM can always edit a linked session journal;
+participants can edit only while its `playersCanEdit` setting is enabled.
+Read-only participants retain the same timeline without mutation controls.
 Diary sections animate their disclosure body. Section forms use a regular
 `AppModalFrame`; entry forms retain the element-origin `MorphEditorShell` flow.
 Both create and edit flows save explicitly to the journal API, so cancelling
@@ -681,7 +682,14 @@ normalizers, including nested dialogue/combatants, rather than cloning Vue
 proxies with `structuredClone`. Source changes close any open editor; background
 refreshes cannot overwrite a newer source selection and also refresh available
 sources. Imported scenario entries carry a visible
-source badge and an immutable source snapshot.
+source badge and an immutable source snapshot. Event types can be selected only
+at creation. Events are displayed newest-first, with the add button above the
+list. The shared `useSortable` primitive handles within-section drag ordering;
+the drag handle also supports ↑/↓ keys. API order is chronological, so display
+order is reversed before saving. Polling cannot overwrite an active drag.
+The journal uses spacious chapter cards, large connected timeline markers,
+speaker-colored dialogue rows (the scenario palette and saved colors), combatant
+cards and a distinct new-day divider. Revoked edit permission closes open forms.
 
 Окна предметов восстанавливают фокус без прокрутки исходного листа. Общий
 `RowActionMenu` раскрывается короткой анимацией из точки trigger с учётом

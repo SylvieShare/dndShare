@@ -10,14 +10,15 @@ import (
 )
 
 type Journal struct {
-	ID          int64            `json:"id"`
-	UUID        string           `json:"uuid"`
-	Name        string           `json:"name"`
-	Kind        string           `json:"kind"`
-	SessionUUID *string          `json:"sessionUuid,omitempty"`
-	SessionName *string          `json:"sessionName,omitempty"`
-	Sections    []JournalSection `json:"sections"`
-	ChangedAt   time.Time        `json:"changedAt"`
+	PlayersCanEdit bool             `json:"playersCanEdit"`
+	ID             int64            `json:"id"`
+	UUID           string           `json:"uuid"`
+	Name           string           `json:"name"`
+	Kind           string           `json:"kind"`
+	SessionUUID    *string          `json:"sessionUuid,omitempty"`
+	SessionName    *string          `json:"sessionName,omitempty"`
+	Sections       []JournalSection `json:"sections"`
+	ChangedAt      time.Time        `json:"changedAt"`
 }
 
 type JournalSection struct {
@@ -62,14 +63,14 @@ type JournalEntryMutation struct {
 const journalSelect = `
 	SELECT journal.id, journal.uuid::text, journal.name,
 	       CASE WHEN journal.session_id IS NULL THEN 'personal' ELSE 'session' END,
-	       session.uuid::text, session.name, journal.changed_at
+	       session.uuid::text, session.name, journal.changed_at, journal.players_can_edit
 	FROM dndshare.journal journal
 	LEFT JOIN dndshare."session" session ON session.id = journal.session_id`
 
 func scanJournal(row pgx.Row) (Journal, error) {
 	var journal Journal
 	err := row.Scan(&journal.ID, &journal.UUID, &journal.Name, &journal.Kind,
-		&journal.SessionUUID, &journal.SessionName, &journal.ChangedAt)
+		&journal.SessionUUID, &journal.SessionName, &journal.ChangedAt, &journal.PlayersCanEdit)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return Journal{}, ErrNotFound
 	}
@@ -167,22 +168,8 @@ func (s *Store) loadJournalSections(ctx context.Context, journal Journal) (Journ
 }
 
 func (s *Store) UserCanAccessJournal(ctx context.Context, journalID, userID int64) (bool, error) {
-	var allowed bool
-	err := s.pool.QueryRow(ctx, `
-		SELECT EXISTS (
-			SELECT 1 FROM dndshare.journal journal
-			WHERE journal.id = $1 AND (
-				journal.owner_user_id = $2 OR EXISTS (
-					SELECT 1 FROM dndshare."session" session
-					WHERE session.id = journal.session_id AND session.deleted = false
-					  AND (session.owner_user_id = $2 OR EXISTS (
-						SELECT 1 FROM dndshare.session_participant participant
-						WHERE participant.session_id = session.id AND participant.user_id = $2
-					  ))
-				)
-			)
-		)`, journalID, userID).Scan(&allowed)
-	return allowed, err
+	p, err := s.JournalPermissions(ctx, journalID, userID)
+	return p.Read, err
 }
 
 func (s *Store) ListJournalSourcesForCharacter(ctx context.Context, charID, userID int64) ([]JournalSource, error) {
@@ -223,7 +210,7 @@ func (s *Store) CreatePersonalJournal(ctx context.Context, charID, userID int64,
 		INSERT INTO dndshare.journal (personal_char_id, owner_user_id, name) VALUES ($1, $2, $3)
 		ON CONFLICT (personal_char_id) DO UPDATE SET name = dndshare.journal.name
 		WHERE dndshare.journal.owner_user_id = EXCLUDED.owner_user_id
-		RETURNING id, uuid::text, name, 'personal', NULL::text, NULL::text, changed_at`, charID, userID, name))
+		RETURNING id, uuid::text, name, 'personal', NULL::text, NULL::text, changed_at, players_can_edit`, charID, userID, name))
 	if err != nil {
 		return Journal{}, err
 	}
@@ -244,7 +231,7 @@ func (s *Store) CreateSessionJournal(ctx context.Context, sessionID int64, name 
 		ON CONFLICT (session_id) DO UPDATE SET name = dndshare.journal.name
 		RETURNING id, uuid::text, name, 'session',
 		  (SELECT uuid::text FROM dndshare."session" WHERE id = $1),
-		  (SELECT name FROM dndshare."session" WHERE id = $1), changed_at`, sessionID, name))
+		  (SELECT name FROM dndshare."session" WHERE id = $1), changed_at, players_can_edit`, sessionID, name))
 	if err != nil {
 		return Journal{}, err
 	}
@@ -366,9 +353,9 @@ func (s *Store) UpdateJournalEntry(ctx context.Context, journalID, entryID int64
 	command, err := s.pool.Exec(ctx, `
 		WITH changed AS (
 			UPDATE dndshare.journal_entry entry
-			SET entry_type = $3, title = $4, description_html = $5, payload = CAST($6 AS jsonb), changed_at = now()
+			SET title = $4, description_html = $5, payload = CAST($6 AS jsonb), changed_at = now()
 			FROM dndshare.journal_section section
-			WHERE entry.id = $2 AND entry.section_id = section.id AND section.journal_id = $1
+			WHERE entry.id = $2 AND entry.section_id = section.id AND section.journal_id = $1 AND entry.entry_type = $3
 			RETURNING section.journal_id
 		)
 		UPDATE dndshare.journal SET changed_at = now()

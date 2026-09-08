@@ -72,7 +72,7 @@ func TestVersionedMigrationsRunAfterClassActionAutomation(t *testing.T) {
 		"spellbook-grant-cleanup", "session-npc-bestiary", "session-scene-location",
 		"session-scene-visual-source", "session-event-actor-item", "journals",
 		"origin-catalogs", "item-rich-descriptions", "potion-rich-descriptions",
-		"story-abilities", "personal-character-journal",
+		"story-abilities", "personal-character-journal", "journal-editing",
 	}
 	baseline := -1
 	for i, part := range schemaParts {
